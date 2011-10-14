@@ -44,7 +44,7 @@ except ImportError:
 # Pour passer des arguments aux callback
 import functools
     
-# Pour enregistrer
+# Pour enregistrer en xml
 import xml.etree.ElementTree as ET
 
 
@@ -71,38 +71,40 @@ CentresInterets = [u"Développement durable et compétitivité des produits",
                    ]
     
     
-Competences = [u"CO1.1. Justifier les choix des matériaux, des structures d'un système et les énergies mises en oeuvre dans une approche de développement durable",
-               u"CO1.2. Justifier le choix d'une solution selon des contraintes d'ergonomie et d'effets sur la santé de l'homme et du vivant",
-               u"CO2.1. Identifier les flux et la forme de l'énergie, caractériser ses transformations et/ou modulations et estimer l'efficacité énergétique globale d'un système",
-               u"CO2.2. Justifier les solutions constructives d'un système au regard des impacts environnementaux et économiques engendrés tout au long de son cycle de vie",
-               u"CO3.1. Décoder le cahier des charges fonctionnel d'un système",
-               u"CO3.2. Évaluer la compétitivité d'un système d'un point de vue technique et économique",
-               u"CO4.1. Identifier et caractériser les fonctions et les constituants d'un système ainsi que ses entrées/sorties",
-               u"CO4.2. Identifier et caractériser l'agencement  matériel et/ou logiciel d'un système", 
-               u"CO4.3. Identifier et caractériser le fonctionnement temporel d'un système",
-               u"CO4.4. Identifier et caractériser des solutions techniques relatives aux matériaux, à la structure, à l'énergie et aux informations (acquisition, traitement, transmission) d'un système",
-               u"CO5.1. Expliquer des éléments d'une modélisation proposée relative au comportement de tout ou partie d'un système",
-               u"CO5.2. Identifier des variables internes et externes utiles à une modélisation, simuler et valider le comportement du modèle",
-               u"CO5.3. Évaluer un écart entre le comportement du réel et le comportement du modèle en fonction des paramètres proposés",
-               u"CO6.1. Décrire une idée, un principe, une solution, un projet en utilisant des outils de représentation adaptés",
-               u"CO6.2. Décrire le fonctionnement et/ou l'exploitation d'un système en utilisant l'outil de description le plus pertinent",
-               u"CO6.3. Présenter et argumenter des démarches, des résultats, y compris dans une langue étrangère",
-               ]
+Competences = {"CO1.1" : u"Justifier les choix des matériaux, des structures d'un système et les énergies mises en oeuvre dans une approche de développement durable",
+               "CO1.2" : u"Justifier le choix d'une solution selon des contraintes d'ergonomie et d'effets sur la santé de l'homme et du vivant",
+               "CO2.1" : u"Identifier les flux et la forme de l'énergie, caractériser ses transformations et/ou modulations et estimer l'efficacité énergétique globale d'un système",
+               "CO2.2" : u"Justifier les solutions constructives d'un système au regard des impacts environnementaux et économiques engendrés tout au long de son cycle de vie",
+               "CO3.1" : u"Décoder le cahier des charges fonctionnel d'un système",
+               "CO3.2" : u"Évaluer la compétitivité d'un système d'un point de vue technique et économique",
+               "CO4.1" : u"Identifier et caractériser les fonctions et les constituants d'un système ainsi que ses entrées/sorties",
+               "CO4.2" : u"Identifier et caractériser l'agencement  matériel et/ou logiciel d'un système", 
+               "CO4.3" : u"Identifier et caractériser le fonctionnement temporel d'un système",
+               "CO4.4" : u"Identifier et caractériser des solutions techniques relatives aux matériaux, à la structure, à l'énergie et aux informations (acquisition, traitement, transmission) d'un système",
+               "CO5.1" : u"Expliquer des éléments d'une modélisation proposée relative au comportement de tout ou partie d'un système",
+               "CO5.2" : u"Identifier des variables internes et externes utiles à une modélisation, simuler et valider le comportement du modèle",
+               "CO5.3" : u"Évaluer un écart entre le comportement du réel et le comportement du modèle en fonction des paramètres proposés",
+               "CO6.1" : u"Décrire une idée, un principe, une solution, un projet en utilisant des outils de représentation adaptés",
+               "CO6.2" : u"Décrire le fonctionnement et/ou l'exploitation d'un système en utilisant l'outil de description le plus pertinent",
+               "CO6.3" : u"Présenter et argumenter des démarches, des résultats, y compris dans une langue étrangère",
+               }
 
 
-TypesActivite = [u"Activité d'étude de dossier",
-                 u"Activité pratique",
-                 u"Activité de projet",
-               ]
+TypesActivite = {"ED" : u"Activité d'étude de dossier",
+                 "AP" : u"Activité pratique",
+                 "P" : u"Activité de projet",
+                }
 
-TypesSeance = [u"Cours",
-               u"Synthèse d'activité",
-               u"Synthèse de séquence",
-               u"Evaluation",
-               ]
-TypesSeance.extend(TypesActivite)
-TypesSeance.extend([u"Rotation d'activités",
-                    u"Série d'activités"])
+TypesSeance = {"C" : u"Cours",
+               "SA" : u"Synthèse d'activité",
+               "SS" : u"Synthèse de séquence",
+               "E" : u"Evaluation",
+               }
+TypesSeance.update(TypesActivite)
+TypesSeance.update({"R" : u"Rotation d'activités",
+                    "S" : u"Série d'activités"})
+
+
 
 ####################################################################################
 #
@@ -123,20 +125,39 @@ class Sequence():
         self.parent = parent
         
     
+    ######################################################################################  
     def SetText(self, text):
         self.intitule = text
         
     
+    ######################################################################################  
     def AjouterSeance(self):
         seance = Seance(self.parent)
         self.seance.append(seance)
         return seance
     
+    ######################################################################################  
     def AjouterObjectif(self):
-        comp = Competence(self.parent)
-        self.obj.append(comp)
-        return comp
+        obj = Competence(self.parent)
+        self.obj.append(obj)
+        obj.ConstruireArbre(self.arbre, self.brancheObj)
+        return
     
+    
+    
+    ######################################################################################  
+    def SupprimerObjectif(self, item):
+        if len(self.obj) > 1:
+            comp = self.arbre.GetItemPyData(item)
+            self.obj.remove(comp)
+            self.arbre.Delete(item)
+        
+    
+            
+            
+    
+    
+    ######################################################################################  
     def SupprimerSeance(self, seance):
         if len(self.seance) > 1:
             self.seance.remove(seance)
@@ -144,19 +165,17 @@ class Sequence():
         return False
     
     
-    def SupprimerObjectif(self, obj):
-        if len(self.obj) > 1:
-            self.obj.remove(obj)
-            return True
-        return False
+    
 
 
+    ######################################################################################  
     def AjouterRotation(self, seance):
         seanceR1 = Seance(self.parent)
         seance.rotation.append(seanceR1)
         return seanceR1
         
         
+    ######################################################################################  
     def ConstruireArbre(self, arbre):
         self.arbre = arbre
         self.branche = arbre.AddRoot(u"Séquence pédagogique", data = self)
@@ -164,14 +183,14 @@ class Sequence():
 
         self.CI.ConstruireArbre(arbre, self.branche)
         
-        brancheObj = arbre.AppendItem(self.branche, u"Objectifs pédagogiques")
+        self.brancheObj = arbre.AppendItem(self.branche, u"Objectifs pédagogiques")
         for obj in self.obj:
-            obj.ConstruireArbre(arbre, brancheObj)
+            obj.ConstruireArbre(arbre, self.brancheObj)
             
         
-        brancheSce = arbre.AppendItem(self.branche, u"Séances")
+        self.brancheSce = arbre.AppendItem(self.branche, u"Séances")
         for sce in self.seance:
-            sce.ConstruireArbre(arbre, brancheSce)    
+            sce.ConstruireArbre(arbre, self.brancheSce)    
             
         
         
@@ -184,23 +203,34 @@ class Sequence():
 ####################################################################################
 class CentreInteret():
     def __init__(self, parent, numCI = 0):
-        self.num = numCI
-        self.CI = CentresInterets[numCI]
+        
+        self.SetNum(numCI)
+        
         self.panelPropriete = PanelPropriete_CI(parent, self)
         
     ######################################################################################  
     def getBranche(self):
-        root = ET.Element("CI"+str(self.num+1))
-#        root.set("Intitule", self.CI)
+        root = ET.Element(self.code)
         return root
     
+    ######################################################################################  
     def SetNum(self, num):
         self.num = num
-        self.CI = CentresInterets[num]
+        self.code = "CI"+str(self.num)
+        self.CI = CentresInterets[self.num]
         
+        if hasattr(self, 'arbre'):
+            self.SetCode()
+        
+    ######################################################################################  
+    def SetCode(self):
+        self.codeBranche.SetLabel(self.code)
+        
+    ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
         self.arbre = arbre
-        self.branche = arbre.AppendItem(branche, u"Centre d'intérêt", data = self)
+        self.codeBranche = wx.StaticText(self.arbre, -1, u"")
+        self.branche = arbre.AppendItem(branche, u"Centre d'intérêt :", wnd = self.codeBranche, data = self)
         
     
         
@@ -212,27 +242,40 @@ class CentreInteret():
 ####################################################################################
 class Competence():
     def __init__(self, parent, numComp = 0):
-        self.num = numComp
-        self.competence = Competences[numComp]
+        self.clefs = Competences.keys()
+        self.clefs.sort()
+        
+        self.SetNum(numComp)
+        
         self.panelPropriete = PanelPropriete_Competence(parent, self)
         
         
+        
+    ######################################################################################  
     def SetNum(self, num):
         self.num = num
-        self.competence = Competences[num]
+        self.code = self.clefs[self.num]
+        self.competence = Competences[self.code]
+        
+        if hasattr(self, 'arbre'):
+            self.SetCode()
+        
+    ######################################################################################  
+    def SetCode(self):
+        self.codeBranche.SetLabel(self.code)
+        
         
     ######################################################################################  
     def getBranche(self):
-        root = ET.Element(str(self.num))
-#        root.set("Intitule", self.competence)
+        root = ET.Element(self.code)
         return root
     
     
+    ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
         self.arbre = arbre
-        self.branche = arbre.AppendItem(branche, u"Compétence :", data = self)
-        
-        
+        self.codeBranche = wx.StaticText(self.arbre, -1, u"")
+        self.branche = arbre.AppendItem(branche, u"Compétence :", wnd = self.codeBranche, data = self)
         
 ####################################################################################
 #
@@ -240,11 +283,12 @@ class Competence():
 #
 ####################################################################################
 class Seance():
-    def __init__(self, parent, typeSeance = 0):
-        
+    def __init__(self, parent, typeSeance = "C"):
+        self.SetType(typeSeance)
         self.ordre = 1
         self.typeSeance = typeSeance
         self.duree = 1
+        self.intitule  = u""
         
         self.panelPropriete = PanelPropriete_Seance(parent)
         
@@ -252,10 +296,26 @@ class Seance():
         self.serie = []
         
         
+        
+    ######################################################################################  
+    def SetType(self, typ):
+        self.typeSeance = typ
+        self.code = self.typeSeance + str(self.ordre)
+    
+        if hasattr(self, 'arbre'):
+            self.SetCode()
+        
+        
+    ######################################################################################  
+    def SetCode(self):
+        self.codeBranche.SetLabel(self.code)
+        
+        
+        
     ######################################################################################  
     def getBranche(self):
         root = ET.Element(str(self.ordre))
-        root.set("Type de seance", TypesSeance[self.typeSeance])
+        root.set("Type", TypesSeance[self.typeSeance])
         root.set("Duree", TypesSeance[self.duree])
         
         if self.typeSeance == 7:
@@ -267,9 +327,11 @@ class Seance():
         return root
     
     
+    ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
         self.arbre = arbre
-        self.branche = arbre.AppendItem(branche, u"Séance :", data = self)
+        self.codeBranche = wx.StaticText(self.arbre, -1, u"")
+        self.branche = arbre.AppendItem(branche, u"Séance :", wnd = self.codeBranche, data = self)
         
 
 
@@ -678,8 +740,15 @@ class PanelPropriete_Competence(PanelPropriete):
     def __init__(self, parent, competence):
         PanelPropriete.__init__(self, parent)
         self.competence = competence
+        
+        listComp = []
+        l = Competences.items()
+        for c in l:
+            listComp.append(c[0] + " " + c[1])
+        listComp.sort()    
+        
         cb = wx.ComboBox(self, -1, u"Choisir un objectif",
-                         choices = Competences,
+                         choices = listComp,
                          style = wx.CB_DROPDOWN
                          | wx.TE_PROCESS_ENTER
                          #| wx.CB_SORT
@@ -698,17 +767,29 @@ class PanelPropriete_Competence(PanelPropriete):
 #
 ####################################################################################
 class PanelPropriete_Seance(PanelPropriete):
-    def __init__(self, parent, titre = u"", seance = None):
-        PanelPropriete.__init__(self, parent, titre, seance)
-        self.SetLabel(titre)
+    def __init__(self, parent, seance):
+        PanelPropriete.__init__(self, parent, seance)
+        
+
+        listType = []
+        l = TypesSeance.items()
+        for c in l:
+            listType.append(c[0] + " " + c[1])
+        listType.sort() 
+        
         cb = wx.ComboBox(self, -1, u"Choisir un type de séance",
-                         choices = TypesSeance,
+                         choices = listType,
                          style = wx.CB_DROPDOWN
                          | wx.TE_PROCESS_ENTER
                          #| wx.CB_SORT
                          )
         self.bsizer.Add(cb, 0, wx.EXPAND)
         self.bsizer.Layout()
+        self.Bind(wx.EVT_COMBOBOX, self.EvtComboBox, cb)
+        
+    def EvtComboBox(self, event):
+        self.seance.SetType(event.GetSelection())
+
 
 ####################################################################################
 #
@@ -932,13 +1013,12 @@ class ArbreSequence(CT.CustomTreeCtrl):
         
         
     def AjouterObjectif(self, event = None):
-        comp = self.sequence.AjouterObjectif()
-        self.lstObjectifs.append(self.AppendItem(self.objectifs, u"Compétence :", data = comp))
+        self.sequence.AjouterObjectif()
+        
         
     def SupprimerObjectif(self, event = None, item = None):
-        if self.sequence.SupprimerObjectif(self.GetItemPyData(item)):
-            self.lstObjectifs.remove(item)
-            self.Delete(item)
+        self.sequence.SupprimerObjectif(item)
+
             
     def AjouterSeance(self, event = None):
         seance = self.sequence.AjouterSeance()
