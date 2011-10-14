@@ -378,28 +378,33 @@ class Seance():
         return duree
                 
     ######################################################################################  
-    def SetDuree(self, duree):         
+    def SetDuree(self, duree): 
+        print "SetDuree"
         if self.typeSeance == "R" : # Rotation
             d = self.rotation[0].GetDuree()
             pb = False
+            print "  R:", d
             for s in self.rotation[1:]:
                 if s.GetDuree() != d:
                     pb = True
-            if pb : 
-                self.panelPropriete.MarquerProbleme()
+            if pb :
+                self.panelPropriete.MarquerProblemeDuree(False)
             else:
                 self.duree.v = duree
+                self.panelPropriete.MarquerProblemeDuree(True)
         
         elif self.typeSeance == "S" : # Serie
-            d = self.rotation[0].GetDuree()
+            d = self.serie[0].GetDuree()
             pb = False
-            for s in self.serie:
+            print "  S:", d
+            for s in self.serie[1:]:
                 if s.GetDuree() != d:
                     pb = True
             if pb : 
-                self.panelPropriete.MarquerProbleme()
+                self.panelPropriete.MarquerProblemeDuree(False)
             else:
                 self.duree.v = duree
+                self.panelPropriete.MarquerProblemeDuree(True)
         
     ######################################################################################  
     def SetIntitule(self, text):           
@@ -851,7 +856,7 @@ class PanelPropriete(wx.Panel):
         
 #        self.boxprop = wx.StaticBox(self, -1, u"")
         self.bsizer = wx.BoxSizer(wx.VERTICAL)
-
+        self.Hide()
         self.SetSizer(self.bsizer)
         self.SetAutoLayout(True)
  
@@ -874,7 +879,7 @@ class PanelPropriete_Sequence(PanelPropriete):
         self.bsizer.Layout()
         
         self.Bind(wx.EVT_TEXT, self.EvtText, textctrl)
-        self.Hide()
+        
     
     def EvtText(self, event):
         self.sequence.SetText(event.GetString())
@@ -893,6 +898,7 @@ class PanelPropriete_CI(PanelPropriete):
                          choices = CentresInterets,
                          style = wx.CB_DROPDOWN
                          | wx.TE_PROCESS_ENTER
+                         | wx.CB_READONLY
                          #| wx.CB_SORT
                          )
         self.bsizer.Add(cb, 0, wx.EXPAND)
@@ -929,6 +935,7 @@ class PanelPropriete_Competence(PanelPropriete):
                          choices = listComp,
                          style = wx.CB_DROPDOWN
                          | wx.TE_PROCESS_ENTER
+                         | wx.CB_READONLY
                          #| wx.CB_SORT
                          )
         
@@ -994,18 +1001,19 @@ class PanelPropriete_Seance(PanelPropriete):
                          choices = [],
                          style = wx.CB_DROPDOWN
                          | wx.TE_PROCESS_ENTER
+                         | wx.CB_READONLY
                          #| wx.CB_SORT
                          )
         self.Bind(wx.EVT_COMBOBOX, self.EvtComboBoxEff, cbEff)
         self.cbEff = cbEff
         
-#        neleve = wx.StaticText(self, -1, u"a")
-#        self.neleve = neleve
+        nombre = wx.StaticText(self, -1, u"")
+        self.nombre = nombre
         
         sizerEff = wx.BoxSizer(wx.HORIZONTAL)
         sizerEff.Add(titre, 0)
         sizerEff.Add(cbEff, 0, wx.EXPAND)
-#        sizerEff.Add(self.neleve, 0)
+        sizerEff.Add(self.nombre, 0)
         
         #
         # Mise en place
@@ -1021,7 +1029,7 @@ class PanelPropriete_Seance(PanelPropriete):
         
     def EvtText(self, event):
         self.seance.SetDuree(event.GetVar().v)
-        if self.seance.typeParent == 1: # séance en rotation (parent = séance "Rotation")
+        if self.seance.parent.typeSeance == "R": # séance en rotation (parent = séance "Rotation")
             self.seance.parent.SetDuree(self.seance.GetDuree())
         
     def EvtComboBox(self, event):
@@ -1089,6 +1097,10 @@ class PanelPropriete_Seance(PanelPropriete):
         self.cbEff.SetSelection(0)
         
         self.Refresh()
+        
+    def MarquerProblemeDuree(self, etat):
+        return
+#        self.vcDuree.marquerValid(etat)
         
 ####################################################################################
 #
