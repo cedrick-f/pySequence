@@ -47,6 +47,11 @@ import functools
 # Pour enregistrer en xml
 import xml.etree.ElementTree as ET
 
+# des widgets wx évolués "faits maison"
+from CedWidgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL
+
+
+
 
 ####################################################################################
 #
@@ -105,6 +110,13 @@ TypesSeance.update({"R" : u"Rotation d'activités",
                     "S" : u"Série d'activités"})
 
 listeTypeSeance = ["ED", "AP", "P", "C", "SA", "SS", "E", "R", "S"]
+
+Effectifs = {"C" : [u"Classe entière",      32],
+             "G" : [u"Effectif réduit",     16],
+             "D" : [u"Demi-groupe",         8],
+             "E" : [u"Etude et Projet",     4],
+             "P" : [u"Activité Pratique",   2],
+             }
 
 ####################################################################################
 #
@@ -179,7 +191,6 @@ class Sequence():
         self.arbre = arbre
         self.branche = arbre.AddRoot(Titres[0], data = self)
 
-
         self.CI.ConstruireArbre(arbre, self.branche)
         
         self.brancheObj = arbre.AppendItem(self.branche, Titres[1])
@@ -203,6 +214,8 @@ class Sequence():
         elif isinstance(self.arbre.GetItemPyData(itemArbre), Competence):
             self.arbre.GetItemPyData(itemArbre).AfficherMenuContextuel(itemArbre)
             
+        elif isinstance(self.arbre.GetItemPyData(itemArbre), Seance):
+            self.arbre.GetItemPyData(itemArbre).AfficherMenuContextuel(itemArbre)
             
         elif self.arbre.GetItemText(itemArbre) == Titres[1]: # Objectifs pédagogiques
             self.app.AfficherMenuContextuel([[u"Ajouter une compétence", self.AjouterObjectif]])
@@ -239,7 +252,7 @@ class CentreInteret():
     ######################################################################################  
     def SetNum(self, num):
         self.num = num
-        self.code = "CI"+str(self.num)
+        self.code = "CI"+str(self.num+1)
         self.CI = CentresInterets[self.num]
         
         if hasattr(self, 'arbre'):
@@ -328,15 +341,24 @@ class Seance():
                                                             1 = séance "Rotation"
                                                             2 = séance "Série"
         """
+        
+        # Les données sauvegardées
         self.ordre = 1
-        self.duree = 1
+        self.duree = Variable(u"Durée", lstVal = 1.0, nomNorm = "", typ = VAR_REEL_POS, 
+                 bornes = [0,8], modeLog = False,
+                 expression = None, multiple = False)
         self.intitule  = u""
+        self.effectif = "C"
+        
+        # Les autres données
         self.typeParent = typeParent
         self.parent = parent
+        self.panelParent = panelParent
         
         self.SetType(typeSeance)
         
         self.panelPropriete = PanelPropriete_Seance(panelParent, self)
+        self.panelPropriete.AdapterAuType()
         
         self.rotation = []
         self.serie = []
@@ -344,8 +366,51 @@ class Seance():
         
         
     ######################################################################################  
+    def GetDuree(self):
+        duree = 0
+        if self.typeSeance == "R":
+            for sce in self.rotation:
+                duree += sce.GetDuree()
+        elif self.typeSeance == "S":
+            duree += self.rotation[0].GetDuree()
+        else:
+            duree = self.duree.v
+        return duree
+                
+    ######################################################################################  
+    def SetDuree(self, duree):         
+        if self.typeSeance == "R" : # Rotation
+            d = self.rotation[0].GetDuree()
+            pb = False
+            for s in self.rotation[1:]:
+                if s.GetDuree() != d:
+                    pb = True
+            if pb : 
+                self.panelPropriete.MarquerProbleme()
+            else:
+                self.duree.v = duree
+        
+        elif self.typeSeance == "S" : # Serie
+            d = self.rotation[0].GetDuree()
+            pb = False
+            for s in self.serie:
+                if s.GetDuree() != d:
+                    pb = True
+            if pb : 
+                self.panelPropriete.MarquerProbleme()
+            else:
+                self.duree.v = duree
+        
+    ######################################################################################  
+    def SetIntitule(self, text):           
+        self.intitule = text
+        
+    ######################################################################################  
+    def SetEffectif(self, text):           
+        self.intitule = text   
+           
+    ######################################################################################  
     def SetType(self, typ):
-        print typ
         if type(typ) == str:
             self.typeSeance = typ
         else:
@@ -358,6 +423,9 @@ class Seance():
         
         if self.typeSeance in ["R","S"] : # Rotation ou Serie
             self.AjouterSeance()
+        
+        if hasattr(self, 'panelPropriete'):
+            self.panelPropriete.AdapterAuType()
         
         
     ######################################################################################  
@@ -390,11 +458,11 @@ class Seance():
         
         
     ######################################################################################  
-    def AjouterSeance(self):
+    def AjouterSeance(self, event = None):
         """ Ajoute une séance à la séance
             !! Uniquement pour les séances de type "Rotation" ou "Serie" !!
         """
-        seance = Seance(self.panelParent, typeParent = self.typeParent)
+        seance = Seance(self, self.panelParent, typeParent = self.typeParent)
         if self.typeSeance == "R" : # Rotation
             self.rotation.append(seance)
             
@@ -408,8 +476,10 @@ class Seance():
     ######################################################################################  
     def AfficherMenuContextuel(self, itemArbre):
         if itemArbre == self.branche:
-            self.parent.app.AfficherMenuContextuel([[u"Supprimer", functools.partial(self.parent.SupprimerSeance, item = itemArbre)]])
-            
+            listItems = [[u"Supprimer", functools.partial(self.parent.SupprimerSeance, item = itemArbre)]]
+            if self.typeSeance in ["R", "S"]:
+                listItems.append([u"Ajouter une séance", self.AjouterSeance])
+            self.parent.app.AfficherMenuContextuel(listItems)
 #            item2 = menu.Append(wx.ID_ANY, u"Créer une rotation")
 #            self.Bind(wx.EVT_MENU, functools.partial(self.AjouterRotation, item = item), item2)
 #            
@@ -439,14 +509,16 @@ class PanelConteneur(wx.Panel):
     
     
     def AfficherPanel(self, panel):
+        print "AfficherPanel"
         if self.panel != None:
             self.bsizer.Remove(self.panel)
             self.panel.Hide()
         self.bsizer.Add(panel, flag = wx.EXPAND)
         self.panel = panel
         self.panel.Show()
+        self.bsizer.FitInside(self)
         self.bsizer.Layout()
-        
+        self.Refresh()
     
 ####################################################################################
 #
@@ -775,7 +847,7 @@ class FicheSequence(wx.Panel):
 ####################################################################################
 class PanelPropriete(wx.Panel):
     def __init__(self, parent, titre = u"", objet = None):
-        wx.Panel.__init__(self, parent, -1, size = (-1, 200))
+        wx.Panel.__init__(self, parent, -1, size = (-1, 200), style = wx.BORDER_SIMPLE)
         
 #        self.boxprop = wx.StaticBox(self, -1, u"")
         self.bsizer = wx.BoxSizer(wx.VERTICAL)
@@ -802,6 +874,7 @@ class PanelPropriete_Sequence(PanelPropriete):
         self.bsizer.Layout()
         
         self.Bind(wx.EVT_TEXT, self.EvtText, textctrl)
+        self.Hide()
     
     def EvtText(self, event):
         self.sequence.SetText(event.GetString())
@@ -838,21 +911,28 @@ class PanelPropriete_CI(PanelPropriete):
 ####################################################################################
 class PanelPropriete_Competence(PanelPropriete):
     def __init__(self, parent, competence):
-        PanelPropriete.__init__(self, parent)
+        
         self.competence = competence
         
+        
+        PanelPropriete.__init__(self, parent)
+        
+        # Prévoir un truc pour que la liste des compétences tienne compte de celles déja choisies
+        # idée : utiliser cb.CLear, Clear.Append ou cb.Delete
         listComp = []
         l = Competences.items()
         for c in l:
             listComp.append(c[0] + " " + c[1])
         listComp.sort()    
         
-        cb = wx.ComboBox(self, -1, u"Choisir un objectif",
+        cb = wx.ComboBox(self, -1, u"Choisir une compétence",
                          choices = listComp,
                          style = wx.CB_DROPDOWN
                          | wx.TE_PROCESS_ENTER
                          #| wx.CB_SORT
                          )
+        
+        print dir(cb)
         self.bsizer.Add(cb, 0, wx.EXPAND)
         self.bsizer.Layout()
         self.Bind(wx.EVT_COMBOBOX, self.EvtComboBox, cb)
@@ -868,34 +948,148 @@ class PanelPropriete_Competence(PanelPropriete):
 ####################################################################################
 class PanelPropriete_Seance(PanelPropriete):
     def __init__(self, parent, seance):
-        PanelPropriete.__init__(self, parent, seance)
+        PanelPropriete.__init__(self, parent)
         self.seance = seance
 
+        
+        #
+        # Type de séance
+        #
+        titre = wx.StaticText(self, -1, u"Type =")
+        cbType = wx.ComboBox(self, -1, u"Choisir un type de séance",
+                         choices = [],
+                         style = wx.CB_DROPDOWN
+                         | wx.TE_PROCESS_ENTER
+                         #| wx.CB_SORT
+                         )
+        self.Bind(wx.EVT_COMBOBOX, self.EvtComboBox, cbType)
+        self.cbType = cbType
+        sizerType = wx.BoxSizer(wx.HORIZONTAL)
+        sizerType.Add(titre, 0)
+        sizerType.Add(cbType, 1, wx.EXPAND)
+        
+        #
+        # Intitulé de la séance
+        #
+        titre = wx.StaticText(self, -1, u"Intitulé =")
+        textctrl = wx.TextCtrl(self, -1, u"", style=wx.TE_MULTILINE)
+        self.Bind(wx.EVT_TEXT, self.EvtTextIntitule, textctrl)
+        sizerIntitule = wx.BoxSizer(wx.HORIZONTAL)
+        sizerIntitule.Add(titre, 0)
+        sizerIntitule.Add(textctrl, 1, wx.EXPAND)
+        
+        #
+        # Durée de la séance
+        #
+        vcDuree = VariableCtrl(self, seance.duree, coef = 0.5, labelMPL = False, signeEgal = True, slider = False, fct = None, help = "")
+#        textctrl = wx.TextCtrl(self, -1, u"1")
+        self.Bind(EVT_VAR_CTRL, self.EvtText, vcDuree)
+        self.vcDuree = vcDuree
+        
+        #
+        # Effectif
+        #
+        titre = wx.StaticText(self, -1, u"Effectif =")
+        cbEff = wx.ComboBox(self, -1, u"Effectif",
+                         choices = [],
+                         style = wx.CB_DROPDOWN
+                         | wx.TE_PROCESS_ENTER
+                         #| wx.CB_SORT
+                         )
+        self.Bind(wx.EVT_COMBOBOX, self.EvtComboBoxEff, cbEff)
+        self.cbEff = cbEff
+        
+#        neleve = wx.StaticText(self, -1, u"a")
+#        self.neleve = neleve
+        
+        sizerEff = wx.BoxSizer(wx.HORIZONTAL)
+        sizerEff.Add(titre, 0)
+        sizerEff.Add(cbEff, 0, wx.EXPAND)
+#        sizerEff.Add(self.neleve, 0)
+        
+        #
+        # Mise en place
+        #
+        self.bsizer.Add(sizerType, 1, wx.EXPAND)
+        self.bsizer.Add(sizerIntitule, 1, wx.EXPAND)
+        self.bsizer.Add(vcDuree, 1)
+        self.bsizer.Add(sizerEff, 1)
+        self.bsizer.Layout()
+    
+    def EvtTextIntitule(self, event):
+        self.seance.SetIntitule(event.GetString())
+        
+    def EvtText(self, event):
+        self.seance.SetDuree(event.GetVar().v)
+        if self.seance.typeParent == 1: # séance en rotation (parent = séance "Rotation")
+            self.seance.parent.SetDuree(self.seance.GetDuree())
+        
+    def EvtComboBox(self, event):
+        self.seance.SetType(event.GetSelection())
+        
+    def EvtComboBoxEff(self, event):
+#        print "EvtComboBoxEff", event.GetString()
+        self.seance.SetEffectif(event.GetSelection())  
+        l = Effectifs.values()
+        continuer = True
+        i = 0
+        while continuer:
+            if i>=len(l):
+                continuer = False
+            else:
+                if l[i][0] == event.GetString():
+                    n = l[i][1]
+                    continuer = False
+            i += 1
+        self.nombre.SetLabel(u" (" + str(n) + u" élèves)")
+        self.Refresh()
+        
+    def AdapterAuType(self):
+        print "AdapterAuType"
         #  séance "normale" (parent = séquence)
         listType = listeTypeSeance
-        if seance.typeParent == 1: #  séance en rotation (parent = séance "Rotation")
+        if self.seance.typeSeance == "R": #  séance en rotation
             listType = listeTypeSeance[:-1]
-        elif seance.typeParent == 1: #  séance en série (parent = séance "Serie")
+        elif self.seance.typeSeance == "S": #  séance en série
             listType = listeTypeSeance[:-2]
         
         listTypeS = []
         for t in listType:
             listTypeS.append(TypesSeance[t])
-            
-        cb = wx.ComboBox(self, -1, u"Choisir un type de séance",
-                         choices = listTypeS,
-                         style = wx.CB_DROPDOWN
-                         | wx.TE_PROCESS_ENTER
-                         #| wx.CB_SORT
-                         )
-        self.bsizer.Add(cb, 0, wx.EXPAND)
-        self.bsizer.Layout()
-        self.Bind(wx.EVT_COMBOBOX, self.EvtComboBox, cb)
         
-    def EvtComboBox(self, event):
-        self.seance.SetType(event.GetSelection())
+        n = self.cbType.GetSelection()   
+        self.cbType.Clear()
+        for s in listTypeS:
+            self.cbType.Append(s)
+        self.cbType.SetSelection(n)
         
-
+        # Durée
+        if self.seance.typeSeance == "R": #  séance en rotation
+            self.vcDuree.Activer(False)
+        elif self.seance.typeSeance == "S": #  séance en série
+            self.vcDuree.Activer(False)
+        
+        # Effectif
+        if self.seance.typeSeance in ["C", "E", "SS"]:
+            listEff = ["C"]
+        elif self.seance.typeSeance in ["R", "S"] or self.seance.typeSeance == "":
+            self.cbEff.Enable(False)
+            listEff = []
+        elif self.seance.typeSeance in ["ED", "P"]:
+            listEff = ["G", "D", "E", "P"]
+        elif self.seance.typeSeance in ["AP"]:
+            listEff = ["P"]
+        elif self.seance.typeSeance in ["SA"]:
+            listEff = ["C", "G"]
+        
+#        n = self.cbEff.GetSelection()   
+        self.cbEff.Clear()
+        for s in listEff:
+            self.cbEff.Append(Effectifs[s][0])
+        self.cbEff.SetSelection(0)
+        
+        self.Refresh()
+        
 ####################################################################################
 #
 #   Classe définissant l'arbre de structure de la séquence
@@ -995,9 +1189,11 @@ class ArbreSequence(CT.CustomTreeCtrl):
 #        numicons = il.GetImageCount()
         self.AssignImageList(il)
         
-
-
+        #
+        # On instancie un panel de propriétés vide pour les éléments qui n'ont pas de propriétés
+        #
         self.panelVide = PanelPropriete(self.panelProp)
+        self.panelVide.Hide()
         
         #
         # Construction de l'arbre
@@ -1017,102 +1213,102 @@ class ArbreSequence(CT.CustomTreeCtrl):
 
 
 
-        textctrl = wx.TextCtrl(self, -1, "I Am A Simple\nMultiline wx.TexCtrl", style=wx.TE_MULTILINE)
-        self.gauge = wx.Gauge(self, -1, 50, style=wx.GA_HORIZONTAL|wx.GA_SMOOTH)
-        self.gauge.SetValue(0)
-        combobox = wx.ComboBox(self, -1, choices=["That", "Was", "A", "Nice", "Holyday!"], style=wx.CB_READONLY|wx.CB_DROPDOWN)
-
-        textctrl.Bind(wx.EVT_CHAR, self.OnTextCtrl)
-        combobox.Bind(wx.EVT_COMBOBOX, self.OnComboBox)
-        lenArtIds = len(ArtIDs) - 2
-
-
-        
-        for x in range(15):
-            if x == 1:
-                child = self.AppendItem(self.root, "Item %d" % x + "\nHello World\nHappy wxPython-ing!")
-                self.SetItemBold(child, True)
-            else:
-                child = self.AppendItem(self.root, "Item %d" % x)
-            self.SetPyData(child, None)
-            self.SetItemImage(child, 24, CT.TreeItemIcon_Normal)
-            self.SetItemImage(child, 13, CT.TreeItemIcon_Expanded)
-
-            if random.randint(0, 3) == 0:
-                self.SetItemLeftImage(child, random.randint(0, lenArtIds))
-
-            for y in range(5):
-                if y == 0 and x == 1:
-                    last = self.AppendItem(child, "item %d-%s" % (x, chr(ord("a")+y)), ct_type=2, wnd=self.gauge)
-                elif y == 1 and x == 2:
-                    last = self.AppendItem(child, "Item %d-%s" % (x, chr(ord("a")+y)), ct_type=1, wnd=textctrl)
-                    if random.randint(0, 3) == 1:
-                        self.SetItem3State(last, True)
-                        
-                elif 2 < y < 4:
-                    last = self.AppendItem(child, "item %d-%s" % (x, chr(ord("a")+y)))
-                elif y == 4 and x == 1:
-                    last = self.AppendItem(child, "item %d-%s" % (x, chr(ord("a")+y)), wnd=combobox)
-                else:
-                    last = self.AppendItem(child, "item %d-%s" % (x, chr(ord("a")+y)), ct_type=2)
-                    
-                self.SetPyData(last, None)
-                self.SetItemImage(last, 24, CT.TreeItemIcon_Normal)
-                self.SetItemImage(last, 13, CT.TreeItemIcon_Expanded)
-
-                if random.randint(0, 3) == 0:
-                    self.SetItemLeftImage(last, random.randint(0, lenArtIds))
-                    
-                for z in range(5):
-                    if z > 2:
-                        item = self.AppendItem(last,  "item %d-%s-%d" % (x, chr(ord("a")+y), z), ct_type=1)
-                        if random.randint(0, 3) == 1:
-                            self.SetItem3State(item, True)
-                    elif 0 < z <= 2:
-                        item = self.AppendItem(last,  "item %d-%s-%d" % (x, chr(ord("a")+y), z), ct_type=2)
-                    elif z == 0:
-                        item = self.AppendItem(last,  "item %d-%s-%d" % (x, chr(ord("a")+y), z))
-                        self.SetItemHyperText(item, True)
-                    self.SetPyData(item, None)
-                    self.SetItemImage(item, 28, CT.TreeItemIcon_Normal)
-                    self.SetItemImage(item, numicons-1, CT.TreeItemIcon_Selected)
-
-                    if random.randint(0, 3) == 0:
-                        self.SetItemLeftImage(item, random.randint(0, lenArtIds))
-
-        self.Bind(wx.EVT_LEFT_DCLICK, self.OnLeftDClick)
-        self.Bind(wx.EVT_IDLE, self.OnIdle)
-
-        self.eventdict = {'EVT_TREE_BEGIN_DRAG': self.OnBeginDrag, 'EVT_TREE_BEGIN_LABEL_EDIT': self.OnBeginEdit,
-                          'EVT_TREE_BEGIN_RDRAG': self.OnBeginRDrag, 'EVT_TREE_DELETE_ITEM': self.OnDeleteItem,
-                          'EVT_TREE_END_DRAG': self.OnEndDrag, 'EVT_TREE_END_LABEL_EDIT': self.OnEndEdit,
-                          'EVT_TREE_ITEM_ACTIVATED': self.OnActivate, 'EVT_TREE_ITEM_CHECKED': self.OnItemCheck,
-                          'EVT_TREE_ITEM_CHECKING': self.OnItemChecking, 'EVT_TREE_ITEM_COLLAPSED': self.OnItemCollapsed,
-                          'EVT_TREE_ITEM_COLLAPSING': self.OnItemCollapsing, 'EVT_TREE_ITEM_EXPANDED': self.OnItemExpanded,
-                          'EVT_TREE_ITEM_EXPANDING': self.OnItemExpanding, 'EVT_TREE_ITEM_GETTOOLTIP': self.OnToolTip,
-                          'EVT_TREE_ITEM_MENU': self.OnItemMenu, 'EVT_TREE_ITEM_RIGHT_CLICK': self.OnRightDown,
-                          'EVT_TREE_KEY_DOWN': self.OnKey, 'EVT_TREE_SEL_CHANGED': self.OnSelChanged,
-                          'EVT_TREE_SEL_CHANGING': self.OnSelChanging, "EVT_TREE_ITEM_HYPERLINK": self.OnHyperLink}
-
-        mainframe = wx.GetTopLevelParent(self)
-        
-        if not hasattr(mainframe, "leftpanel"):
-            self.Bind(CT.EVT_TREE_ITEM_EXPANDED, self.OnItemExpanded)
-            self.Bind(CT.EVT_TREE_ITEM_COLLAPSED, self.OnItemCollapsed)
-            self.Bind(CT.EVT_TREE_SEL_CHANGED, self.OnSelChanged)
-            self.Bind(CT.EVT_TREE_SEL_CHANGING, self.OnSelChanging)
-            self.Bind(wx.EVT_RIGHT_DOWN, self.OnRightDown)
-            self.Bind(wx.EVT_RIGHT_UP, self.OnRightUp)
-        else:
-            for combos in mainframe.treeevents:
-                self.BindEvents(combos)
-
-        if hasattr(mainframe, "leftpanel"):
-            self.ChangeStyle(mainframe.treestyles)
-
-        if not(self.GetAGWWindowStyleFlag() & CT.TR_HIDE_ROOT):
-            self.SelectItem(self.root)
-            self.Expand(self.root)
+#        textctrl = wx.TextCtrl(self, -1, "I Am A Simple\nMultiline wx.TexCtrl", style=wx.TE_MULTILINE)
+#        self.gauge = wx.Gauge(self, -1, 50, style=wx.GA_HORIZONTAL|wx.GA_SMOOTH)
+#        self.gauge.SetValue(0)
+#        combobox = wx.ComboBox(self, -1, choices=["That", "Was", "A", "Nice", "Holyday!"], style=wx.CB_READONLY|wx.CB_DROPDOWN)
+#
+#        textctrl.Bind(wx.EVT_CHAR, self.OnTextCtrl)
+#        combobox.Bind(wx.EVT_COMBOBOX, self.OnComboBox)
+#        lenArtIds = len(ArtIDs) - 2
+#
+#
+#        
+#        for x in range(15):
+#            if x == 1:
+#                child = self.AppendItem(self.root, "Item %d" % x + "\nHello World\nHappy wxPython-ing!")
+#                self.SetItemBold(child, True)
+#            else:
+#                child = self.AppendItem(self.root, "Item %d" % x)
+#            self.SetPyData(child, None)
+#            self.SetItemImage(child, 24, CT.TreeItemIcon_Normal)
+#            self.SetItemImage(child, 13, CT.TreeItemIcon_Expanded)
+#
+#            if random.randint(0, 3) == 0:
+#                self.SetItemLeftImage(child, random.randint(0, lenArtIds))
+#
+#            for y in range(5):
+#                if y == 0 and x == 1:
+#                    last = self.AppendItem(child, "item %d-%s" % (x, chr(ord("a")+y)), ct_type=2, wnd=self.gauge)
+#                elif y == 1 and x == 2:
+#                    last = self.AppendItem(child, "Item %d-%s" % (x, chr(ord("a")+y)), ct_type=1, wnd=textctrl)
+#                    if random.randint(0, 3) == 1:
+#                        self.SetItem3State(last, True)
+#                        
+#                elif 2 < y < 4:
+#                    last = self.AppendItem(child, "item %d-%s" % (x, chr(ord("a")+y)))
+#                elif y == 4 and x == 1:
+#                    last = self.AppendItem(child, "item %d-%s" % (x, chr(ord("a")+y)), wnd=combobox)
+#                else:
+#                    last = self.AppendItem(child, "item %d-%s" % (x, chr(ord("a")+y)), ct_type=2)
+#                    
+#                self.SetPyData(last, None)
+#                self.SetItemImage(last, 24, CT.TreeItemIcon_Normal)
+#                self.SetItemImage(last, 13, CT.TreeItemIcon_Expanded)
+#
+#                if random.randint(0, 3) == 0:
+#                    self.SetItemLeftImage(last, random.randint(0, lenArtIds))
+#                    
+#                for z in range(5):
+#                    if z > 2:
+#                        item = self.AppendItem(last,  "item %d-%s-%d" % (x, chr(ord("a")+y), z), ct_type=1)
+#                        if random.randint(0, 3) == 1:
+#                            self.SetItem3State(item, True)
+#                    elif 0 < z <= 2:
+#                        item = self.AppendItem(last,  "item %d-%s-%d" % (x, chr(ord("a")+y), z), ct_type=2)
+#                    elif z == 0:
+#                        item = self.AppendItem(last,  "item %d-%s-%d" % (x, chr(ord("a")+y), z))
+#                        self.SetItemHyperText(item, True)
+#                    self.SetPyData(item, None)
+#                    self.SetItemImage(item, 28, CT.TreeItemIcon_Normal)
+#                    self.SetItemImage(item, numicons-1, CT.TreeItemIcon_Selected)
+#
+#                    if random.randint(0, 3) == 0:
+#                        self.SetItemLeftImage(item, random.randint(0, lenArtIds))
+#
+#        self.Bind(wx.EVT_LEFT_DCLICK, self.OnLeftDClick)
+#        self.Bind(wx.EVT_IDLE, self.OnIdle)
+#
+#        self.eventdict = {'EVT_TREE_BEGIN_DRAG': self.OnBeginDrag, 'EVT_TREE_BEGIN_LABEL_EDIT': self.OnBeginEdit,
+#                          'EVT_TREE_BEGIN_RDRAG': self.OnBeginRDrag, 'EVT_TREE_DELETE_ITEM': self.OnDeleteItem,
+#                          'EVT_TREE_END_DRAG': self.OnEndDrag, 'EVT_TREE_END_LABEL_EDIT': self.OnEndEdit,
+#                          'EVT_TREE_ITEM_ACTIVATED': self.OnActivate, 'EVT_TREE_ITEM_CHECKED': self.OnItemCheck,
+#                          'EVT_TREE_ITEM_CHECKING': self.OnItemChecking, 'EVT_TREE_ITEM_COLLAPSED': self.OnItemCollapsed,
+#                          'EVT_TREE_ITEM_COLLAPSING': self.OnItemCollapsing, 'EVT_TREE_ITEM_EXPANDED': self.OnItemExpanded,
+#                          'EVT_TREE_ITEM_EXPANDING': self.OnItemExpanding, 'EVT_TREE_ITEM_GETTOOLTIP': self.OnToolTip,
+#                          'EVT_TREE_ITEM_MENU': self.OnItemMenu, 'EVT_TREE_ITEM_RIGHT_CLICK': self.OnRightDown,
+#                          'EVT_TREE_KEY_DOWN': self.OnKey, 'EVT_TREE_SEL_CHANGED': self.OnSelChanged,
+#                          'EVT_TREE_SEL_CHANGING': self.OnSelChanging, "EVT_TREE_ITEM_HYPERLINK": self.OnHyperLink}
+#
+#        mainframe = wx.GetTopLevelParent(self)
+#        
+#        if not hasattr(mainframe, "leftpanel"):
+#            self.Bind(CT.EVT_TREE_ITEM_EXPANDED, self.OnItemExpanded)
+#            self.Bind(CT.EVT_TREE_ITEM_COLLAPSED, self.OnItemCollapsed)
+#            self.Bind(CT.EVT_TREE_SEL_CHANGED, self.OnSelChanged)
+#            self.Bind(CT.EVT_TREE_SEL_CHANGING, self.OnSelChanging)
+#            self.Bind(wx.EVT_RIGHT_DOWN, self.OnRightDown)
+#            self.Bind(wx.EVT_RIGHT_UP, self.OnRightUp)
+#        else:
+#            for combos in mainframe.treeevents:
+#                self.BindEvents(combos)
+#
+#        if hasattr(mainframe, "leftpanel"):
+#            self.ChangeStyle(mainframe.treestyles)
+#
+#        if not(self.GetAGWWindowStyleFlag() & CT.TR_HIDE_ROOT):
+#            self.SelectItem(self.root)
+#            self.Expand(self.root)
 
     
         
@@ -1417,30 +1613,6 @@ class ArbreSequence(CT.CustomTreeCtrl):
         self.SetItemImage(self.current, bitmaps[2], CT.TreeItemIcon_Expanded)
         self.SetItemImage(self.current, bitmaps[3], CT.TreeItemIcon_SelectedExpanded)
 
-
-    def OnItemInfo(self, event):
-
-        itemtext = self.itemdict["text"]
-        numchildren = str(self.itemdict["children"])
-        itemtype = self.itemdict["itemtype"]
-        pydata = repr(type(self.itemdict["pydata"]))
-
-        if itemtype == 0:
-            itemtype = "Normal"
-        elif itemtype == 1:
-            itemtype = "CheckBox"
-        else:
-            itemtype = "RadioButton"
-
-        strs = "Information On Selected Item:\n\n" + "Text: " + itemtext + "\n" \
-               "Number Of Children: " + numchildren + "\n" \
-               "Item Type: " + itemtype + "\n" \
-               "Item Data Type: " + pydata + "\n"
-
-        dlg = wx.MessageDialog(self, strs, "CustomTreeCtrlDemo Info", wx.OK | wx.ICON_INFORMATION)
-        dlg.ShowModal()
-        dlg.Destroy()
-                
         
 
     def OnItemDelete(self, event):
@@ -1555,13 +1727,7 @@ class ArbreSequence(CT.CustomTreeCtrl):
             self.log.write("OnItemCollapsed: %s" % self.GetItemText(item) + "\n")
             
 
-    def OnItemCollapsing(self, event):
-
-        item = event.GetItem()
-        if item:
-            self.log.write("OnItemCollapsing: %s" % self.GetItemText(item) + "\n")
     
-        event.Skip()
 
         
     def OnSelChanged(self, event):
@@ -1573,24 +1739,9 @@ class ArbreSequence(CT.CustomTreeCtrl):
         else:
             panelPropriete = data.panelPropriete
         self.panelProp.AfficherPanel(panelPropriete)
-        
-                
+#        wx.CallAfter(panelPropriete.Refresh)
         event.Skip()
 
-
-    def OnSelChanging(self, event):
-
-        item = event.GetItem()
-        olditem = event.GetOldItem()
-        
-        if item:
-            if not olditem:
-                olditemtext = "None"
-            else:
-                olditemtext = self.GetItemText(olditem)
-            self.log.write("OnSelChanging: From %s" % olditemtext + " To %s" % self.GetItemText(item) + "\n")
-                
-        event.Skip()
 
 
     def OnBeginDrag(self, event):
@@ -1602,14 +1753,6 @@ class ArbreSequence(CT.CustomTreeCtrl):
             event.Allow()
 
 
-    def OnBeginRDrag(self, event):
-
-        self.item = event.GetItem()
-        if self.item:
-            self.log.write("Beginning Right Drag..." + "\n")
-
-            event.Allow()
-        
 
     def OnEndDrag(self, event):
 
@@ -1631,20 +1774,7 @@ class ArbreSequence(CT.CustomTreeCtrl):
         event.Skip()
         
 
-    def OnItemCheck(self, event):
-
-        item = event.GetItem()
-        self.log.write("Item " + self.GetItemText(item) + " Has Been Checked!\n")
-        event.Skip()
-
-
-    def OnItemChecking(self, event):
-
-        item = event.GetItem()
-        self.log.write("Item " + self.GetItemText(item) + " Is Being Checked...\n")
-        event.Skip()
-        
-
+    
     def OnToolTip(self, event):
 
         item = event.GetItem()
