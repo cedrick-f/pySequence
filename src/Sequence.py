@@ -104,25 +104,30 @@ TypesSeance.update(TypesActivite)
 TypesSeance.update({"R" : u"Rotation d'activités",
                     "S" : u"Série d'activités"})
 
-
+listeTypeSeance = ["ED", "AP", "P", "C", "SA", "SS", "E", "R", "S"]
 
 ####################################################################################
 #
 #   Classe définissant les propriétés d'une séquence
 #
 ####################################################################################
+Titres = [u"Séquence pédagogique",
+          u"Objectifs pédagogiques",
+          u"Séances"]
+
 class Sequence():
-    def __init__(self, parent, intitule = u""):
+    def __init__(self, app, panelParent, intitule = u""):
         self.intitule = intitule
-        self.panelPropriete = PanelPropriete_Sequence(parent, self)
+        self.panelPropriete = PanelPropriete_Sequence(panelParent, self)
         
-        self.CI = CentreInteret(parent)
+        self.CI = CentreInteret(self, panelParent)
         
-        self.obj = [Competence(parent)]
+        self.obj = [Competence(self, panelParent)]
         
-        self.seance = [Seance(parent)]
+        self.seance = [Seance(self, panelParent)]
         
-        self.parent = parent
+        self.panelParent = panelParent
+        self.app = app
         
     
     ######################################################################################  
@@ -131,14 +136,15 @@ class Sequence():
         
     
     ######################################################################################  
-    def AjouterSeance(self):
-        seance = Seance(self.parent)
+    def AjouterSeance(self, event = None):
+        seance = Seance(self, self.panelParent)
         self.seance.append(seance)
+        seance.ConstruireArbre(self.arbre, self.brancheSce)
         return seance
     
     ######################################################################################  
-    def AjouterObjectif(self):
-        obj = Competence(self.parent)
+    def AjouterObjectif(self, event = None):
+        obj = Competence(self, self.panelParent)
         self.obj.append(obj)
         obj.ConstruireArbre(self.arbre, self.brancheObj)
         return
@@ -146,16 +152,12 @@ class Sequence():
     
     
     ######################################################################################  
-    def SupprimerObjectif(self, item):
+    def SupprimerObjectif(self, event = None, item = None):
         if len(self.obj) > 1:
             comp = self.arbre.GetItemPyData(item)
             self.obj.remove(comp)
             self.arbre.Delete(item)
         
-    
-            
-            
-    
     
     ######################################################################################  
     def SupprimerSeance(self, seance):
@@ -165,12 +167,9 @@ class Sequence():
         return False
     
     
-    
-
-
     ######################################################################################  
     def AjouterRotation(self, seance):
-        seanceR1 = Seance(self.parent)
+        seanceR1 = Seance(self.panelParent)
         seance.rotation.append(seanceR1)
         return seanceR1
         
@@ -178,21 +177,43 @@ class Sequence():
     ######################################################################################  
     def ConstruireArbre(self, arbre):
         self.arbre = arbre
-        self.branche = arbre.AddRoot(u"Séquence pédagogique", data = self)
+        self.branche = arbre.AddRoot(Titres[0], data = self)
 
 
         self.CI.ConstruireArbre(arbre, self.branche)
         
-        self.brancheObj = arbre.AppendItem(self.branche, u"Objectifs pédagogiques")
+        self.brancheObj = arbre.AppendItem(self.branche, Titres[1])
         for obj in self.obj:
             obj.ConstruireArbre(arbre, self.brancheObj)
             
         
-        self.brancheSce = arbre.AppendItem(self.branche, u"Séances")
+        self.brancheSce = arbre.AppendItem(self.branche, Titres[2])
         for sce in self.seance:
             sce.ConstruireArbre(arbre, self.brancheSce)    
             
+    ######################################################################################  
+    def AfficherMenuContextuel(self, itemArbre):    
+        """ Affiche le menu contextuel associé à la séquence
+            ... ou bien celui de itemArbre concerné ...
+        """
+        if itemArbre == self.branche:
+            self.app.AfficherMenuContextuel([[u"Enregistrer", self.app.commandeEnregistrer]])
+            
         
+        elif isinstance(self.arbre.GetItemPyData(itemArbre), Competence):
+            self.arbre.GetItemPyData(itemArbre).AfficherMenuContextuel(itemArbre)
+            
+            
+        elif self.arbre.GetItemText(itemArbre) == Titres[1]: # Objectifs pédagogiques
+            self.app.AfficherMenuContextuel([[u"Ajouter une compétence", self.AjouterObjectif]])
+            
+            
+        elif self.arbre.GetItemText(itemArbre) == Titres[2]: # Séances
+            self.app.AfficherMenuContextuel([[u"Ajouter une séance", self.AjouterSeance]])
+            
+            
+            
+            
         
         
         
@@ -202,14 +223,16 @@ class Sequence():
 #
 ####################################################################################
 class CentreInteret():
-    def __init__(self, parent, numCI = 0):
+    def __init__(self, parent, panelParent, numCI = 0):
         
         self.SetNum(numCI)
         
-        self.panelPropriete = PanelPropriete_CI(parent, self)
+        self.panelPropriete = PanelPropriete_CI(panelParent, self)
         
     ######################################################################################  
     def getBranche(self):
+        """ Renvoie la branche XML du centre d'intérêt pour enregistrement
+        """
         root = ET.Element(self.code)
         return root
     
@@ -241,13 +264,15 @@ class CentreInteret():
 #
 ####################################################################################
 class Competence():
-    def __init__(self, parent, numComp = 0):
+    def __init__(self, parent, panelParent, numComp = 0):
         self.clefs = Competences.keys()
         self.clefs.sort()
+        self.parent = parent
+        
         
         self.SetNum(numComp)
         
-        self.panelPropriete = PanelPropriete_Competence(parent, self)
+        self.panelPropriete = PanelPropriete_Competence(panelParent, self)
         
         
         
@@ -267,6 +292,8 @@ class Competence():
         
     ######################################################################################  
     def getBranche(self):
+        """ Renvoie la branche XML de la compétence pour enregistrement
+        """
         root = ET.Element(self.code)
         return root
     
@@ -277,20 +304,39 @@ class Competence():
         self.codeBranche = wx.StaticText(self.arbre, -1, u"")
         self.branche = arbre.AppendItem(branche, u"Compétence :", wnd = self.codeBranche, data = self)
         
+        
+    ######################################################################################  
+    def AfficherMenuContextuel(self, itemArbre):
+        if itemArbre == self.branche:
+            self.parent.app.AfficherMenuContextuel([[u"Supprimer", functools.partial(self.parent.SupprimerObjectif, item = itemArbre)]])
+            
+            
+            
+            
+
 ####################################################################################
 #
 #   Classe définissant les propriétés d'une compétence
 #
 ####################################################################################
 class Seance():
-    def __init__(self, parent, typeSeance = "C"):
-        self.SetType(typeSeance)
+    def __init__(self, parent, panelParent, typeSeance = "C", typeParent = 0):
+        """ Séance :
+                parent = le parent wx pour contenir "panelPropriete"
+                typeSceance = type de séance parmi "TypeSeance"
+                typeParent = type du parent de la séance :  0 = séquence
+                                                            1 = séance "Rotation"
+                                                            2 = séance "Série"
+        """
         self.ordre = 1
-        self.typeSeance = typeSeance
         self.duree = 1
         self.intitule  = u""
+        self.typeParent = typeParent
+        self.parent = parent
         
-        self.panelPropriete = PanelPropriete_Seance(parent)
+        self.SetType(typeSeance)
+        
+        self.panelPropriete = PanelPropriete_Seance(panelParent, self)
         
         self.rotation = []
         self.serie = []
@@ -299,11 +345,19 @@ class Seance():
         
     ######################################################################################  
     def SetType(self, typ):
-        self.typeSeance = typ
+        print typ
+        if type(typ) == str:
+            self.typeSeance = typ
+        else:
+            self.typeSeance = listeTypeSeance[typ]
+            
         self.code = self.typeSeance + str(self.ordre)
     
         if hasattr(self, 'arbre'):
             self.SetCode()
+        
+        if self.typeSeance in ["R","S"] : # Rotation ou Serie
+            self.AjouterSeance()
         
         
     ######################################################################################  
@@ -311,17 +365,18 @@ class Seance():
         self.codeBranche.SetLabel(self.code)
         
         
-        
     ######################################################################################  
     def getBranche(self):
+        """ Renvoie la branche XML de la séance pour enregistrement
+        """
         root = ET.Element(str(self.ordre))
         root.set("Type", TypesSeance[self.typeSeance])
         root.set("Duree", TypesSeance[self.duree])
         
-        if self.typeSeance == 7:
+        if self.typeSeance == "R":
             for sce in self.rotation:
                 root.append(sce.getBranche())
-        elif self.typeSeance == 8:
+        elif self.typeSeance == "S":
             for sce in self.serie:
                 root.append(sce.getBranche())
         return root
@@ -333,7 +388,36 @@ class Seance():
         self.codeBranche = wx.StaticText(self.arbre, -1, u"")
         self.branche = arbre.AppendItem(branche, u"Séance :", wnd = self.codeBranche, data = self)
         
+        
+    ######################################################################################  
+    def AjouterSeance(self):
+        """ Ajoute une séance à la séance
+            !! Uniquement pour les séances de type "Rotation" ou "Serie" !!
+        """
+        seance = Seance(self.panelParent, typeParent = self.typeParent)
+        if self.typeSeance == "R" : # Rotation
+            self.rotation.append(seance)
+            
+        elif self.typeSeance == "S" : # Serie
+            self.serie.append(seance)
+            
+        seance.ConstruireArbre(self.arbre, self.branche)
 
+
+
+    ######################################################################################  
+    def AfficherMenuContextuel(self, itemArbre):
+        if itemArbre == self.branche:
+            self.parent.app.AfficherMenuContextuel([[u"Supprimer", functools.partial(self.parent.SupprimerSeance, item = itemArbre)]])
+            
+#            item2 = menu.Append(wx.ID_ANY, u"Créer une rotation")
+#            self.Bind(wx.EVT_MENU, functools.partial(self.AjouterRotation, item = item), item2)
+#            
+#            item3 = menu.Append(wx.ID_ANY, u"Créer une série")
+#            self.Bind(wx.EVT_MENU, functools.partial(self.AjouterSerie, item = item), item3)
+            
+
+        
 
 
 ####################################################################################
@@ -399,7 +483,7 @@ class FenetreSequence(wx.Frame):
         #
         # La séquence
         #
-        self.sequence = Sequence(panelProp)
+        self.sequence = Sequence(self, panelProp)
         
         
         # Arbre de structure de la séquence
@@ -562,8 +646,24 @@ class FenetreSequence(wx.Frame):
             t += " **"
         self.SetTitle("Séquence" + t )
 
+    #############################################################################
     def MarquerFichierCourantModifie(self):
         self.definirNomFichierCourant(self.fichierCourant, True)
+        
+        
+    #############################################################################
+    def AfficherMenuContextuel(self, items):
+        """ Affiche un menu contextuel contenant les items spécifiés
+                items = [ [nom1, fct1], [nom2, fct2], ...]
+        """
+        menu = wx.Menu()
+        
+        for nom, fct in items:
+            item1 = menu.Append(wx.ID_ANY, nom)
+            self.Bind(wx.EVT_MENU, fct, item1)
+        
+        self.PopupMenu(menu)
+        menu.Destroy()
        
 ####################################################################################
 #
@@ -769,16 +869,21 @@ class PanelPropriete_Competence(PanelPropriete):
 class PanelPropriete_Seance(PanelPropriete):
     def __init__(self, parent, seance):
         PanelPropriete.__init__(self, parent, seance)
-        
+        self.seance = seance
 
-        listType = []
-        l = TypesSeance.items()
-        for c in l:
-            listType.append(c[0] + " " + c[1])
-        listType.sort() 
+        #  séance "normale" (parent = séquence)
+        listType = listeTypeSeance
+        if seance.typeParent == 1: #  séance en rotation (parent = séance "Rotation")
+            listType = listeTypeSeance[:-1]
+        elif seance.typeParent == 1: #  séance en série (parent = séance "Serie")
+            listType = listeTypeSeance[:-2]
         
+        listTypeS = []
+        for t in listType:
+            listTypeS.append(TypesSeance[t])
+            
         cb = wx.ComboBox(self, -1, u"Choisir un type de séance",
-                         choices = listType,
+                         choices = listTypeS,
                          style = wx.CB_DROPDOWN
                          | wx.TE_PROCESS_ENTER
                          #| wx.CB_SORT
@@ -789,7 +894,7 @@ class PanelPropriete_Seance(PanelPropriete):
         
     def EvtComboBox(self, event):
         self.seance.SetType(event.GetSelection())
-
+        
 
 ####################################################################################
 #
@@ -905,6 +1010,7 @@ class ArbreSequence(CT.CustomTreeCtrl):
         self.Bind(CT.EVT_TREE_SEL_CHANGED, self.OnSelChanged)
         self.Bind(CT.EVT_TREE_ITEM_RIGHT_CLICK, self.OnRightDown)
         
+        self.ExpandAll()
         
         return
 
@@ -1110,38 +1216,10 @@ class ArbreSequence(CT.CustomTreeCtrl):
 #        item, flags = self.HitTest(pt)
         item = event.GetItem()
 #        print dir(item)
-        menu = wx.Menu()
 
-        if self.GetItemText(item) == u"Séances":
-            item1 = menu.Append(wx.ID_ANY, u"Ajouter une séance")
-            self.Bind(wx.EVT_MENU, self.AjouterSeance, item1)
+        self.sequence.AfficherMenuContextuel(item)
         
-        elif self.GetItemText(item) == u"Objectifs pédagogiques":
-            item1 = menu.Append(wx.ID_ANY, u"Ajouter une compétence")
-            self.Bind(wx.EVT_MENU, self.AjouterObjectif, item1)
-            
-        elif isinstance(self.GetItemPyData(item), Seance):
-            item1 = menu.Append(wx.ID_ANY, u"Supprimer")
-            self.Bind(wx.EVT_MENU, functools.partial(self.SupprimerSeance, item = item), item1)
-            
-            item2 = menu.Append(wx.ID_ANY, u"Créer une rotation")
-            self.Bind(wx.EVT_MENU, functools.partial(self.AjouterRotation, item = item), item2)
-            
-            item3 = menu.Append(wx.ID_ANY, u"Créer une série")
-            self.Bind(wx.EVT_MENU, functools.partial(self.AjouterSerie, item = item), item3)
-            
-        elif isinstance(self.GetItemPyData(item), Competence):
-            item1 = menu.Append(wx.ID_ANY, u"Supprimer")
-            self.Bind(wx.EVT_MENU, functools.partial(self.SupprimerObjectif, item = item), item1)
-            
-            
-        elif isinstance(self.GetItemPyData(item), Sequence):
-            item1 = menu.Append(wx.ID_ANY, u"Enregistrer")
-            self.Bind(wx.EVT_MENU, self.parent.Parent.commandeEnregistrer, item1)
-            
-            
-        self.PopupMenu(menu)
-        menu.Destroy()
+        
 
 
 
