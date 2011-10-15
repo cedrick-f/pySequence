@@ -28,6 +28,8 @@ try:
     haveCairo = True
 except ImportError:
     haveCairo = False
+from assistCairo import *
+
 
 # Arbre
 try:
@@ -120,6 +122,21 @@ Effectifs = {"C" : [u"Classe entière",      32],
 
 ####################################################################################
 #
+#   Evenement perso pour détecter une modification de la séquence
+#
+####################################################################################
+myEVT_SEQ_MODIFIED = wx.NewEventType()
+EVT_SEQ_MODIFIED = wx.PyEventBinder(myEVT_SEQ_MODIFIED, 1)
+
+#----------------------------------------------------------------------
+class SeqEvent(wx.PyCommandEvent):
+    def __init__(self, evtType, id):
+        wx.PyCommandEvent.__init__(self, evtType, id)
+       
+
+    
+####################################################################################
+#
 #   Classe définissant les propriétés d'une séquence
 #
 ####################################################################################
@@ -144,8 +161,8 @@ class Sequence():
         #
         # Données pour le tracé
         #
-        self.posIntitule = (0.8, 0.1)
-        self.posCI = (0.1, 0.1)
+        self.posIntitule = (0.6, 0.1)
+        self.tailleIntitule = (0.1, 0.08)
         
         
     ######################################################################################  
@@ -231,8 +248,8 @@ class Sequence():
             self.app.AfficherMenuContextuel([[u"Ajouter une séance", self.AjouterSeance]])
             
             
-    def Redessiner(self):
-        self.app.ficheSeq.Redessiner()
+#    def Redessiner(self):
+#        self.app.ficheSeq.Redessiner()
         
         
     def Draw(self, ctx):
@@ -240,32 +257,31 @@ class Sequence():
         #
         #  Bordure
         #
-        ctx.set_line_width(0.1)
+        ctx.set_line_width(0.005)
         ctx.set_source_rgb(0, 0, 0)
-        ctx.rectangle(0, 0, 1, 1)
-        
+        ctx.rectangle(0, 0, 0.724, 1)
+        ctx.stroke()
         
         #
         #  Intitulé de la séquence
         #
+        x, y = self.posIntitule
+        w, h = self.tailleIntitule
         ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
                      cairo.FONT_WEIGHT_BOLD)
-        ctx.set_font_size(0.05)
-        ctx.move_to(self.posIntitule[0], self.posIntitule[1])
-        ctx.set_source_rgb(0, 0, 0)
-        ctx.show_text(self.intitule)
-
-
-        ctx.set_line_width(0.01)
-        ctx.move_to(0.1, 0.1)
-        ctx.line_to(0.2, 0.2)
-        ctx.rel_line_to(0.5, 0.1)
-        ctx.close_path()
-        ctx.set_source_rgba(0, 0, 0.5, 1)
+        if len(self.intitule) > 0:
+            show_text_rect(ctx, self.intitule, x, y, w, h)
         
-#        self.CI.Draw(ctx, self.posCI)
-        
+        ctx.set_line_width(0.005)
+        ctx.set_source_rgb(0, 0.8, 0)
+        ctx.rectangle(x, y, w, h)
         ctx.stroke()
+
+
+        
+        self.CI.Draw(ctx)
+        
+    
         
 ####################################################################################
 #
@@ -278,6 +294,12 @@ class CentreInteret():
         self.SetNum(numCI)
         
         self.panelPropriete = PanelPropriete_CI(panelParent, self)
+        
+        #
+        # Données pour le tracé
+        #
+        self.posCI = (0.1, 0.1)
+        self.tailleCI = (0.1, 0.08)
         
     ######################################################################################  
     def getBranche(self):
@@ -306,54 +328,12 @@ class CentreInteret():
         self.branche = arbre.AppendItem(branche, u"Centre d'intérét :", wnd = self.codeBranche, data = self)
         
     ######################################################################################  
-    def Draw(self, ctx, pos):
+    def Draw(self, ctx):
         #/* a custom shape, that could be wrapped in a function */
-        x0       = pos[0]   #/*< parameters like cairo_rectangle */
-        y0       = pos[0]
-        rect_width  = 0.2
-        rect_height = 0.2
-        radius = 0.05   #/*< and an approximate curvature radius */
+        x0, y0 = self.posCI
+        rect_width, rect_height  = self.tailleCI
         
-        x1=x0+rect_width
-        y1=y0+rect_height
-        #if (!rect_width || !rect_height)
-        #    return
-        if rect_width/2<radius:
-            if rect_height/2<radius:
-                ctx.move_to  (x0, (y0 + y1)/2)
-                ctx.curve_to (x0 ,y0, x0, y0, (x0 + x1)/2, y0)
-                ctx.curve_to (x1, y0, x1, y0, x1, (y0 + y1)/2)
-                ctx.curve_to (x1, y1, x1, y1, (x1 + x0)/2, y1)
-                ctx.curve_to (x0, y1, x0, y1, x0, (y0 + y1)/2)
-            else:
-                ctx.move_to  (x0, y0 + radius)
-                ctx.curve_to (x0 ,y0, x0, y0, (x0 + x1)/2, y0)
-                ctx.curve_to (x1, y0, x1, y0, x1, y0 + radius)
-                ctx.line_to (x1 , y1 - radius)
-                ctx.curve_to (x1, y1, x1, y1, (x1 + x0)/2, y1)
-                ctx.curve_to (x0, y1, x0, y1, x0, y1- radius)
-        
-        else:
-            if rect_height/2<radius:
-                ctx.move_to  (x0, (y0 + y1)/2)
-                ctx.curve_to (x0 , y0, x0 , y0, x0 + radius, y0)
-                ctx.line_to (x1 - radius, y0)
-                ctx.curve_to (x1, y0, x1, y0, x1, (y0 + y1)/2)
-                ctx.curve_to (x1, y1, x1, y1, x1 - radius, y1)
-                ctx.line_to (x0 + radius, y1)
-                ctx.curve_to (x0, y1, x0, y1, x0, (y0 + y1)/2)
-            else:
-                ctx.move_to  (x0, y0 + radius)
-                ctx.curve_to (x0 , y0, x0 , y0, x0 + radius, y0)
-                ctx.line_to (x1 - radius, y0)
-                ctx.curve_to (x1, y0, x1, y0, x1, y0 + radius)
-                ctx.line_to (x1 , y1 - radius)
-                ctx.curve_to (x1, y1, x1, y1, x1 - radius, y1)
-                ctx.line_to (x0 + radius, y1)
-                ctx.curve_to (x0, y1, x0, y1, x0, y1- radius)
-        
-        ctx.close_path ()
-        
+        curve_rect(ctx, x0, y0, rect_width, rect_height, 0.05)
         ctx.set_source_rgb (0.5,0.5,1)
         ctx.fill_preserve ()
         ctx.set_source_rgba (0.5,0,0,0.5)
@@ -364,8 +344,11 @@ class CentreInteret():
         #
         ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
                      cairo.FONT_WEIGHT_BOLD)
-        ctx.set_font_size(0.05)
-        ctx.move_to(pos[0], pos[1])
+        ctx.set_font_size(0.02)
+        xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(self.code)
+        xc=x0+rect_width/2-width/2
+        yc=y0+height+0.01
+        ctx.move_to(xc, yc)
         ctx.set_source_rgb(0, 0, 0)
         ctx.show_text(self.code)
         
@@ -374,10 +357,8 @@ class CentreInteret():
         #
         ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
                      cairo.FONT_WEIGHT_BOLD)
-        ctx.set_font_size(0.01)
-        ctx.move_to(pos[0], pos[1])
-        ctx.set_source_rgb(0, 0, 0)
-        ctx.show_text(self.code)
+        show_text_rect(ctx, self.CI, x0, yc, rect_width, rect_height - height-0.01)
+
         
 ####################################################################################
 #
@@ -758,6 +739,7 @@ class FenetreSequence(wx.Frame):
         self.mgr.Update()
         
         wx.CallAfter(self.ficheSeq.Redessiner)
+        self.Bind(EVT_SEQ_MODIFIED, self.ficheSeq.Redessiner)
         
 #        sizer = wx.BoxSizer(wx.HORIZONTAL)
 #        self.SetSizerAndFit(sizer)
@@ -898,6 +880,8 @@ class FicheSequence(wx.ScrolledWindow):
         
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_SIZE, self.OnResize)
+        
+
 
     #############################################################################            
     def OnResize(self, evt):
@@ -927,7 +911,7 @@ class FicheSequence(wx.ScrolledWindow):
 
         
     #############################################################################            
-    def Redessiner(self):  
+    def Redessiner(self, event = None):  
         print "REDESSINER"
         cdc = wx.ClientDC(self)
         dc = wx.BufferedDC(cdc, self.buffer, wx.BUFFER_VIRTUAL_AREA)
@@ -942,8 +926,8 @@ class FicheSequence(wx.ScrolledWindow):
     #############################################################################            
     def normalize(self, cr):
         w,h = self.GetVirtualSize()
-        cr.scale(w, h) 
-        print "normalize", w,h
+        cr.scale(h, h) 
+        print "normalize", h
         
         
 #    def OnPaint(self, evt = None):
@@ -1042,7 +1026,10 @@ class PanelPropriete(wx.Panel):
         self.SetSizer(self.bsizer)
         self.SetAutoLayout(True)
        
- 
+    #########################################################################################################
+    def sendEvent(self):
+        evt = SeqEvent(myEVT_SEQ_MODIFIED, self.GetId())
+        self.GetEventHandler().ProcessEvent(evt)
 
 
 
@@ -1065,7 +1052,7 @@ class PanelPropriete_Sequence(PanelPropriete):
     
     def EvtText(self, event):
         self.sequence.SetText(event.GetString())
-        self.sequence.Redessiner()
+        self.sendEvent()
         
 ####################################################################################
 #
@@ -1090,7 +1077,7 @@ class PanelPropriete_CI(PanelPropriete):
         
     def EvtComboBox(self, event):
         self.CI.SetNum(event.GetSelection())
-        
+        self.sendEvent()
         
 
 ####################################################################################
@@ -1209,14 +1196,17 @@ class PanelPropriete_Seance(PanelPropriete):
     
     def EvtTextIntitule(self, event):
         self.seance.SetIntitule(event.GetString())
+        self.sendEvent()
         
     def EvtText(self, event):
         self.seance.SetDuree(event.GetVar().v)
         if self.seance.parent.typeSeance == "R": # séance en rotation (parent = séance "Rotation")
             self.seance.parent.SetDuree(self.seance.GetDuree())
+        self.sendEvent()
         
     def EvtComboBox(self, event):
         self.seance.SetType(event.GetSelection())
+        self.sendEvent()
         
     def EvtComboBoxEff(self, event):
 #        print "EvtComboBoxEff", event.GetString()
@@ -1233,7 +1223,8 @@ class PanelPropriete_Seance(PanelPropriete):
                     continuer = False
             i += 1
         self.nombre.SetLabel(u" (" + str(n) + u" éléves)")
-#        self.Refresh()
+        self.sendEvent()
+
         
     def AdapterAuType(self):
         print "AdapterAuType"
