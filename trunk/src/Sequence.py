@@ -1,8 +1,8 @@
 #!/usr/bin/env python
-# -*- coding: ISO-8859-1 -*-
+# -*- coding: utf-8 -*-
 """
 Sequence.py
-Aide ‡ la rÈalisation de fiches pÈdagogiques de sÈquence
+Aide √© la r√©alisation de fiches p√©dagogiques de s√©quence
 *************
 *   STIDD   *
 *************
@@ -12,10 +12,10 @@ Copyright (C) 2011
 """
 ####################################################################################
 #
-#   Import des modules nÈcessaires
+#   Import des modules n√©cessaires
 #
 ####################################################################################
-# Outils "systËme"
+# Outils "syst√©me"
 import sys, os
 
 # GUI
@@ -47,7 +47,7 @@ import functools
 # Pour enregistrer en xml
 import xml.etree.ElementTree as ET
 
-# des widgets wx ÈvoluÈs "faits maison"
+# des widgets wx √©volu√©s "faits maison"
 from CedWidgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL
 
 
@@ -55,77 +55,77 @@ from CedWidgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL
 
 ####################################################################################
 #
-#   DÈfinition des constantes
+#   D√©finition des constantes
 #
 ####################################################################################
-CentresInterets = [u"DÈveloppement durable et compÈtitivitÈ des produits",
-                   u"Design, crÈativitÈ et innovation",
-                   u"CaractÈristiques des matÈriaux et structures",
-                   u"Solutions constructives des matÈriaux et des structures",
-                   u"Dimensionnement des structures et choix des matÈriaux",
-                   u"EfficacitÈ ÈnergÈtique liÈe au comportement des matÈriaux et des structures",
-                   u"Formes et caractÈristiques de l'Ènergie",
-                   u"Organisation structurelle et solutions constructives des chaÓnes d'Ènergie",
-                   u"AmÈlioration de l'efficacitÈ ÈnergÈtique dans les chaÓnes d'Ènergie",
-                   u"AmÈlioration de la gestion de l'Ènergie",
-                   u"Formes et caractÈristiques de l'information",
-                   u"Organisation structurelle et solutions constructives des chaÓnes d'information",
-                   u"Commande temporelle des systËmes",
-                   u"Informations liÈe au comportement des matÈriaux et des structures",
-                   u"Optimisation des paramËtres par simulation globale"
+CentresInterets = [u"D√©veloppement durable et comp√©titivit√© des produits",
+                   u"Design, cr√©ativit√© et innovation",
+                   u"Caract√©ristiques des mat√©riaux et structures",
+                   u"Solutions constructives des mat√©riaux et des structures",
+                   u"Dimensionnement des structures et choix des mat√©riaux",
+                   u"Efficacit√© √©nerg√©tique li√©e au comportement des mat√©riaux et des structures",
+                   u"Formes et caract√©ristiques de l'√©nergie",
+                   u"Organisation structurelle et solutions constructives des cha√©nes d'√©nergie",
+                   u"Am√©lioration de l'efficacit√© √©nerg√©tique dans les cha√©nes d'√©nergie",
+                   u"Am√©lioration de la gestion de l'√©nergie",
+                   u"Formes et caract√©ristiques de l'information",
+                   u"Organisation structurelle et solutions constructives des cha√©nes d'information",
+                   u"Commande temporelle des syst√©mes",
+                   u"Informations li√©e au comportement des mat√©riaux et des structures",
+                   u"Optimisation des param√©tres par simulation globale"
                    ]
     
     
-Competences = {"CO1.1" : u"Justifier les choix des matÈriaux, des structures d'un systËme et les Ènergies mises en oeuvre dans une approche de dÈveloppement durable",
-               "CO1.2" : u"Justifier le choix d'une solution selon des contraintes d'ergonomie et d'effets sur la santÈ de l'homme et du vivant",
-               "CO2.1" : u"Identifier les flux et la forme de l'Ènergie, caractÈriser ses transformations et/ou modulations et estimer l'efficacitÈ ÈnergÈtique globale d'un systËme",
-               "CO2.2" : u"Justifier les solutions constructives d'un systËme au regard des impacts environnementaux et Èconomiques engendrÈs tout au long de son cycle de vie",
-               "CO3.1" : u"DÈcoder le cahier des charges fonctionnel d'un systËme",
-               "CO3.2" : u"…valuer la compÈtitivitÈ d'un systËme d'un point de vue technique et Èconomique",
-               "CO4.1" : u"Identifier et caractÈriser les fonctions et les constituants d'un systËme ainsi que ses entrÈes/sorties",
-               "CO4.2" : u"Identifier et caractÈriser l'agencement  matÈriel et/ou logiciel d'un systËme", 
-               "CO4.3" : u"Identifier et caractÈriser le fonctionnement temporel d'un systËme",
-               "CO4.4" : u"Identifier et caractÈriser des solutions techniques relatives aux matÈriaux, ‡ la structure, ‡ l'Ènergie et aux informations (acquisition, traitement, transmission) d'un systËme",
-               "CO5.1" : u"Expliquer des ÈlÈments d'une modÈlisation proposÈe relative au comportement de tout ou partie d'un systËme",
-               "CO5.2" : u"Identifier des variables internes et externes utiles ‡ une modÈlisation, simuler et valider le comportement du modËle",
-               "CO5.3" : u"…valuer un Ècart entre le comportement du rÈel et le comportement du modËle en fonction des paramËtres proposÈs",
-               "CO6.1" : u"DÈcrire une idÈe, un principe, une solution, un projet en utilisant des outils de reprÈsentation adaptÈs",
-               "CO6.2" : u"DÈcrire le fonctionnement et/ou l'exploitation d'un systËme en utilisant l'outil de description le plus pertinent",
-               "CO6.3" : u"PrÈsenter et argumenter des dÈmarches, des rÈsultats, y compris dans une langue ÈtrangËre",
+Competences = {"CO1.1" : u"Justifier les choix des mat√©riaux, des structures d'un syst√©me et les √©nergies mises en oeuvre dans une approche de d√©veloppement durable",
+               "CO1.2" : u"Justifier le choix d'une solution selon des contraintes d'ergonomie et d'effets sur la sant√© de l'homme et du vivant",
+               "CO2.1" : u"Identifier les flux et la forme de l'√©nergie, caract√©riser ses transformations et/ou modulations et estimer l'efficacit√© √©nerg√©tique globale d'un syst√®me",
+               "CO2.2" : u"Justifier les solutions constructives d'un syst√©me au regard des impacts environnementaux et √©conomiques engendr√©s tout au long de son cycle de vie",
+               "CO3.1" : u"D√©coder le cahier des charges fonctionnel d'un syst√©me",
+               "CO3.2" : u"Evaluer la comp√©titivit√© d'un syst√®me d'un point de vue technique et √©conomique",
+               "CO4.1" : u"Identifier et caract√©riser les fonctions et les constituants d'un syst√®me ainsi que ses entr√©es/sorties",
+               "CO4.2" : u"Identifier et caract√©riser l'agencement  mat√©riel et/ou logiciel d'un syst√®me", 
+               "CO4.3" : u"Identifier et caract√©riser le fonctionnement temporel d'un syst√®me",
+               "CO4.4" : u"Identifier et caract√©riser des solutions techniques relatives aux mat√©riaux, √† la structure, √† l'√©nergie et aux informations (acquisition, traitement, transmission) d'un syst√®me",
+               "CO5.1" : u"Expliquer des √©l√©ments d'une mod√©lisation propos√©e relative au comportement de tout ou partie d'un syst√®me",
+               "CO5.2" : u"Identifier des variables internes et externes utiles √† une mod√©lisation, simuler et valider le comportement du mod√®le",
+               "CO5.3" : u"Evaluer un √©cart entre le comportement du r√©el et le comportement du mod√®le en fonction des param√®tres propos√©s",
+               "CO6.1" : u"D√©crire une id√©e, un principe, une solution, un projet en utilisant des outils de repr√©sentation adapt√©s",
+               "CO6.2" : u"D√©crire le fonctionnement et/ou l'exploitation d'un syst√®me en utilisant l'outil de description le plus pertinent",
+               "CO6.3" : u"Pr√©senter et argumenter des d√©marches, des r√©sultats, y compris dans une langue √©trang√©re",
                }
 
 
-TypesActivite = {"ED" : u"ActivitÈ d'Ètude de dossier",
-                 "AP" : u"ActivitÈ pratique",
-                 "P" : u"ActivitÈ de projet",
+TypesActivite = {"ED" : u"Activit√© d'√©tude de dossier",
+                 "AP" : u"Activit√© pratique",
+                 "P" : u"Activit√© de projet",
                 }
 
 TypesSeance = {"C" : u"Cours",
-               "SA" : u"SynthËse d'activitÈ",
-               "SS" : u"SynthËse de sÈquence",
+               "SA" : u"Synth√®se d'activit√©",
+               "SS" : u"Synth√®se de s√©quence",
                "E" : u"Evaluation",
                }
 TypesSeance.update(TypesActivite)
-TypesSeance.update({"R" : u"Rotation d'activitÈs",
-                    "S" : u"SÈrie d'activitÈs"})
+TypesSeance.update({"R" : u"Rotation d'activit√©s",
+                    "S" : u"S√©rie d'activit√©s"})
 
 listeTypeSeance = ["ED", "AP", "P", "C", "SA", "SS", "E", "R", "S"]
 
-Effectifs = {"C" : [u"Classe entiËre",      32],
-             "G" : [u"Effectif rÈduit",     16],
+Effectifs = {"C" : [u"Classe enti√®re",      32],
+             "G" : [u"Effectif r√©duit",     16],
              "D" : [u"Demi-groupe",         8],
              "E" : [u"Etude et Projet",     4],
-             "P" : [u"ActivitÈ Pratique",   2],
+             "P" : [u"Activit√© Pratique",   2],
              }
 
 ####################################################################################
 #
-#   Classe dÈfinissant les propriÈtÈs d'une sÈquence
+#   Classe d√©finissant les propri√©t√©s d'une s√©quence
 #
 ####################################################################################
-Titres = [u"SÈquence pÈdagogique",
-          u"Objectifs pÈdagogiques",
-          u"SÈances"]
+Titres = [u"S√©quence p√©dagogique",
+          u"Objectifs p√©dagogiques",
+          u"S√©ances"]
 
 class Sequence():
     def __init__(self, app, panelParent, intitule = u""):
@@ -204,8 +204,8 @@ class Sequence():
             
     ######################################################################################  
     def AfficherMenuContextuel(self, itemArbre):    
-        """ Affiche le menu contextuel associÈ ‡ la sÈquence
-            ... ou bien celui de itemArbre concernÈ ...
+        """ Affiche le menu contextuel associ√© √© la s√©quence
+            ... ou bien celui de itemArbre concern√© ...
         """
         if itemArbre == self.branche:
             self.app.AfficherMenuContextuel([[u"Enregistrer", self.app.commandeEnregistrer]])
@@ -217,12 +217,12 @@ class Sequence():
         elif isinstance(self.arbre.GetItemPyData(itemArbre), Seance):
             self.arbre.GetItemPyData(itemArbre).AfficherMenuContextuel(itemArbre)
             
-        elif self.arbre.GetItemText(itemArbre) == Titres[1]: # Objectifs pÈdagogiques
-            self.app.AfficherMenuContextuel([[u"Ajouter une compÈtence", self.AjouterObjectif]])
+        elif self.arbre.GetItemText(itemArbre) == Titres[1]: # Objectifs p√©dagogiques
+            self.app.AfficherMenuContextuel([[u"Ajouter une comp√©tence", self.AjouterObjectif]])
             
             
-        elif self.arbre.GetItemText(itemArbre) == Titres[2]: # SÈances
-            self.app.AfficherMenuContextuel([[u"Ajouter une sÈance", self.AjouterSeance]])
+        elif self.arbre.GetItemText(itemArbre) == Titres[2]: # S√©ances
+            self.app.AfficherMenuContextuel([[u"Ajouter une s√©ance", self.AjouterSeance]])
             
             
             
@@ -232,7 +232,7 @@ class Sequence():
         
 ####################################################################################
 #
-#   Classe dÈfinissant les propriÈtÈs d'une sÈquence
+#   Classe d√©finissant les propri√©t√©s d'une s√©quence
 #
 ####################################################################################
 class CentreInteret():
@@ -244,7 +244,7 @@ class CentreInteret():
         
     ######################################################################################  
     def getBranche(self):
-        """ Renvoie la branche XML du centre d'intÈrÍt pour enregistrement
+        """ Renvoie la branche XML du centre d'int√©r√©t pour enregistrement
         """
         root = ET.Element(self.code)
         return root
@@ -266,14 +266,14 @@ class CentreInteret():
     def ConstruireArbre(self, arbre, branche):
         self.arbre = arbre
         self.codeBranche = wx.StaticText(self.arbre, -1, u"")
-        self.branche = arbre.AppendItem(branche, u"Centre d'intÈrÍt :", wnd = self.codeBranche, data = self)
+        self.branche = arbre.AppendItem(branche, u"Centre d'int√©r√©t :", wnd = self.codeBranche, data = self)
         
     
         
         
 ####################################################################################
 #
-#   Classe dÈfinissant les propriÈtÈs d'une compÈtence
+#   Classe d√©finissant les propri√©t√©s d'une comp√©tence
 #
 ####################################################################################
 class Competence():
@@ -305,7 +305,7 @@ class Competence():
         
     ######################################################################################  
     def getBranche(self):
-        """ Renvoie la branche XML de la compÈtence pour enregistrement
+        """ Renvoie la branche XML de la comp√©tence pour enregistrement
         """
         root = ET.Element(self.code)
         return root
@@ -315,7 +315,7 @@ class Competence():
     def ConstruireArbre(self, arbre, branche):
         self.arbre = arbre
         self.codeBranche = wx.StaticText(self.arbre, -1, u"")
-        self.branche = arbre.AppendItem(branche, u"CompÈtence :", wnd = self.codeBranche, data = self)
+        self.branche = arbre.AppendItem(branche, u"Comp√©tence :", wnd = self.codeBranche, data = self)
         
         
     ######################################################################################  
@@ -329,28 +329,28 @@ class Competence():
 
 ####################################################################################
 #
-#   Classe dÈfinissant les propriÈtÈs d'une compÈtence
+#   Classe d√©finissant les propri√©t√©s d'une comp√©tence
 #
 ####################################################################################
 class Seance():
     def __init__(self, parent, panelParent, typeSeance = "C", typeParent = 0):
-        """ SÈance :
+        """ S√©ance :
                 parent = le parent wx pour contenir "panelPropriete"
-                typeSceance = type de sÈance parmi "TypeSeance"
-                typeParent = type du parent de la sÈance :  0 = sÈquence
-                                                            1 = sÈance "Rotation"
-                                                            2 = sÈance "SÈrie"
+                typeSceance = type de s√©ance parmi "TypeSeance"
+                typeParent = type du parent de la s√©ance :  0 = s√©quence
+                                                            1 = s√©ance "Rotation"
+                                                            2 = s√©ance "S√©rie"
         """
         
-        # Les donnÈes sauvegardÈes
+        # Les donn√©es sauvegard√©es
         self.ordre = 1
-        self.duree = Variable(u"DurÈe", lstVal = 1.0, nomNorm = "", typ = VAR_REEL_POS, 
+        self.duree = Variable(u"Dur√©e", lstVal = 1.0, nomNorm = "", typ = VAR_REEL_POS, 
                  bornes = [0,8], modeLog = False,
                  expression = None, multiple = False)
         self.intitule  = u""
         self.effectif = "C"
         
-        # Les autres donnÈes
+        # Les autres donn√©es
         self.typeParent = typeParent
         self.parent = parent
         self.panelParent = panelParent
@@ -440,7 +440,7 @@ class Seance():
         
     ######################################################################################  
     def getBranche(self):
-        """ Renvoie la branche XML de la sÈance pour enregistrement
+        """ Renvoie la branche XML de la s√©ance pour enregistrement
         """
         root = ET.Element(str(self.ordre))
         root.set("Type", TypesSeance[self.typeSeance])
@@ -459,13 +459,13 @@ class Seance():
     def ConstruireArbre(self, arbre, branche):
         self.arbre = arbre
         self.codeBranche = wx.StaticText(self.arbre, -1, u"")
-        self.branche = arbre.AppendItem(branche, u"SÈance :", wnd = self.codeBranche, data = self)
+        self.branche = arbre.AppendItem(branche, u"S√©ance :", wnd = self.codeBranche, data = self)
         
         
     ######################################################################################  
     def AjouterSeance(self, event = None):
-        """ Ajoute une sÈance ‡ la sÈance
-            !! Uniquement pour les sÈances de type "Rotation" ou "Serie" !!
+        """ Ajoute une s√©ance √© la s√©ance
+            !! Uniquement pour les s√©ances de type "Rotation" ou "Serie" !!
         """
         seance = Seance(self, self.panelParent, typeParent = self.typeParent)
         if self.typeSeance == "R" : # Rotation
@@ -483,12 +483,12 @@ class Seance():
         if itemArbre == self.branche:
             listItems = [[u"Supprimer", functools.partial(self.parent.SupprimerSeance, item = itemArbre)]]
             if self.typeSeance in ["R", "S"]:
-                listItems.append([u"Ajouter une sÈance", self.AjouterSeance])
+                listItems.append([u"Ajouter une s√©ance", self.AjouterSeance])
             self.parent.app.AfficherMenuContextuel(listItems)
-#            item2 = menu.Append(wx.ID_ANY, u"CrÈer une rotation")
+#            item2 = menu.Append(wx.ID_ANY, u"Cr√©er une rotation")
 #            self.Bind(wx.EVT_MENU, functools.partial(self.AjouterRotation, item = item), item2)
 #            
-#            item3 = menu.Append(wx.ID_ANY, u"CrÈer une sÈrie")
+#            item3 = menu.Append(wx.ID_ANY, u"Cr√©er une s√©rie")
 #            self.Bind(wx.EVT_MENU, functools.partial(self.AjouterSerie, item = item), item3)
             
 
@@ -497,7 +497,7 @@ class Seance():
 
 ####################################################################################
 #
-#   Classe dÈfinissant le panel conteneur des panels de propriÈtÈs
+#   Classe d√©finissant le panel conteneur des panels de propri√©t√©s
 #
 ####################################################################################    
 class PanelConteneur(wx.Panel):    
@@ -508,7 +508,7 @@ class PanelConteneur(wx.Panel):
         self.SetSizer(self.bsizer)
         
         #
-        # Le panel affichÈ
+        # Le panel affich√©
         #
         self.panel = None
     
@@ -527,7 +527,7 @@ class PanelConteneur(wx.Panel):
     
 ####################################################################################
 #
-#   Classe dÈfinissant la fenÍtre de l'application
+#   Classe d√©finissant la fen√©tre de l'application
 #
 ####################################################################################
 class FenetreSequence(wx.Frame):
@@ -535,11 +535,11 @@ class FenetreSequence(wx.Frame):
         wx.Frame.__init__(self, None, -1, "")
 
         #
-        # Taille et position de la fenÍtre
+        # Taille et position de la fen√©tre
         #
-        self.SetMinSize((800,570)) # Taille mini d'Ècran : 800x600
-        self.SetSize((1024,738)) # Taille pour Ècran 1024x768
-        # On centre la fenÍtre dans l'Ècran ...
+        self.SetMinSize((800,570)) # Taille mini d'√©cran : 800x600
+        self.SetSize((1024,738)) # Taille pour √©cran 1024x768
+        # On centre la fen√©tre dans l'√©cran ...
         self.CentreOnScreen(wx.BOTH)
         
         
@@ -553,20 +553,20 @@ class FenetreSequence(wx.Frame):
         self.mgr = aui.AuiManager()
         self.mgr.SetManagedWindow(pnl)
         
-        # panel de propriÈtÈs (conteneur)
+        # panel de propri√©t√©s (conteneur)
         panelProp = PanelConteneur(pnl)
         
         
         #
-        # La sÈquence
+        # La s√©quence
         #
         self.sequence = Sequence(self, panelProp)
         
         
-        # Arbre de structure de la sÈquence
+        # Arbre de structure de la s√©quence
         arbreSeq = ArbreSequence(pnl, self.sequence, panelProp)
         
-        # Zone graphique de la fiche de sÈquence
+        # Zone graphique de la fiche de s√©quence
         ficheSeq = FicheSequence(pnl, self.sequence)
         
         self.fichierCourant = ""
@@ -597,10 +597,11 @@ class FenetreSequence(wx.Frame):
                          Left().Layer(1).
                          Floatable(False).
                          BestSize((200, -1)).
+                         MinSize((200, -1)).
 #                         DockFixed().
 #                         Gripper(False).
 #                         Movable(False).
-#                         Maximize().
+                         Maximize().
                          Caption(u"Structure").
                          CaptionVisible(True).
 #                         PaneBorder(False).
@@ -609,7 +610,7 @@ class FenetreSequence(wx.Frame):
                          )
         
         #############################################################################################
-        # Mise en place du panel de propriÈtÈs
+        # Mise en place du panel de propri√©t√©s
         #############################################################################################
         self.mgr.AddPane(panelProp, 
                          aui.AuiPaneInfo().
@@ -617,11 +618,12 @@ class FenetreSequence(wx.Frame):
                          Bottom().Layer(1).
                          Floatable(False).
                          BestSize((200, 200)).
+                         MinSize((-1, 200)).
 #                         DockFixed().
 #                         Gripper(False).
 #                         Movable(False).
 #                         Maximize().
-                         Caption(u"PropriÈtÈs").
+                         Caption(u"Propri√©t√©s").
                          CaptionVisible(True).
 #                         PaneBorder(False).
                          CloseButton(False)
@@ -640,7 +642,7 @@ class FenetreSequence(wx.Frame):
         wx.BeginBusyCursor(wx.HOURGLASS_CURSOR)
         fichier = file(nomFichier, 'w')
         
-        # CrÈation de la racine
+        # Cr√©ation de la racine
         sequence = ET.Element("Sequence")
         sequence.set("Intitule", self.sequence.intitule)
         
@@ -665,10 +667,10 @@ class FenetreSequence(wx.Frame):
     
     #############################################################################
     def dialogEnregistrer(self):
-        mesFormats = "SÈquence (.seq)|*.seq|" \
+        mesFormats = "S√©quence (.seq)|*.seq|" \
                      "Tous les fichiers|*.*'"
         dlg = wx.FileDialog(
-            self, message=u"Enregistrer la sÈquence sous ...", defaultDir=self.DossierSauvegarde , 
+            self, message=u"Enregistrer la s√©quence sous ...", defaultDir=self.DossierSauvegarde , 
             defaultFile="", wildcard=mesFormats, style=wx.SAVE|wx.OVERWRITE_PROMPT|wx.CHANGE_DIR
             )
         dlg.SetFilterIndex(0)
@@ -685,10 +687,10 @@ class FenetreSequence(wx.Frame):
     def commandeEnregistrer(self, event = None):
 #        print "fichier courant :",self.fichierCourant
         if self.fichierCourant != '':
-            s = u"'Oui' pour enregistrer la sÈquence dans le fichier\n"
+            s = u"'Oui' pour enregistrer la s√©quence dans le fichier\n"
             s += self.fichierCourant
             s += ".\n\n"
-            s += u"'Non' pour enregistrer la sÈquence dans un autre fichier."
+            s += u"'Non' pour enregistrer la s√©quence dans un autre fichier."
             
             dlg = wx.MessageDialog(self, s,
                                    u'Enregistrement',
@@ -712,7 +714,7 @@ class FenetreSequence(wx.Frame):
         
     #############################################################################
     def definirNomFichierCourant(self, nomFichier = '', modif = False):
-#        if modif : print "Fichier courant modifiÈ !"
+#        if modif : print "Fichier courant modifi√© !"
         self.fichierCourant = nomFichier
         self.fichierCourantModifie = modif
         if self.fichierCourant == '':
@@ -721,7 +723,7 @@ class FenetreSequence(wx.Frame):
             t = ' - ' + self.fichierCourant
         if modif : 
             t += " **"
-        self.SetTitle("SÈquence" + t )
+        self.SetTitle("S√©quence" + t )
 
     #############################################################################
     def MarquerFichierCourantModifie(self):
@@ -730,7 +732,7 @@ class FenetreSequence(wx.Frame):
         
     #############################################################################
     def AfficherMenuContextuel(self, items):
-        """ Affiche un menu contextuel contenant les items spÈcifiÈs
+        """ Affiche un menu contextuel contenant les items sp√©cifi√©s
                 items = [ [nom1, fct1], [nom2, fct2], ...]
         """
         menu = wx.Menu()
@@ -744,17 +746,22 @@ class FenetreSequence(wx.Frame):
        
 ####################################################################################
 #
-#   Classe dÈfinissant la fenÍtre de la fiche de sÈquence
+#   Classe d√©finissant la fen√©tre de la fiche de s√©quence
 #
 ####################################################################################
-       
+
+
 class FicheSequence(wx.Panel):
     def __init__(self, parent, sequence):
         wx.Panel.__init__(self, parent, -1)
 
         self.Bind(wx.EVT_PAINT, self.OnPaint)
 
-
+    def normalize(self, cr):
+        size = min(self.GetClientSize())
+        cr.scale(size, size)
+        
+        
     def OnPaint(self, evt):
         #dc = wx.PaintDC(self)
         dc = wx.BufferedPaintDC(self)
@@ -765,21 +772,24 @@ class FicheSequence(wx.Panel):
 
 
     def Render(self, dc):
+        print "Render"
         # Draw some stuff on the plain dc
-        sz = self.GetSize()
-        dc.SetPen(wx.Pen("navy", 1))
-        x = y = 0
-        while x < sz.width * 2 or y < sz.height * 2:
-            x += 20
-            y += 20
-            dc.DrawLine(x, 0, 0, y)
+#        sz = self.GetSize()
+#        dc.SetPen(wx.Pen("navy", 1))
+#        x = y = 0
+#        while x < sz.width * 2 or y < sz.height * 2:
+#            x += 20
+#            y += 20
+#            dc.DrawLine(x, 0, 0, y)
+        
         
         # now draw something with cairo
         ctx = wx.lib.wxcairo.ContextFromDC(dc)
-        ctx.set_line_width(15)
-        ctx.move_to(125, 25)
-        ctx.line_to(225, 225)
-        ctx.rel_line_to(-200, 0)
+        self.normalize(ctx)
+        ctx.set_line_width(0.01)
+        ctx.move_to(0.1, 0.1)
+        ctx.line_to(0.2, 0.2)
+        ctx.rel_line_to(0.5, 0.1)
         ctx.close_path()
         ctx.set_source_rgba(0, 0, 0.5, 1)
         ctx.stroke()
@@ -794,27 +804,27 @@ class FicheSequence(wx.Panel):
 #        ctx.set_source_rgb(0, 0, 0)
 #        ctx.show_text("Hello")
 
-        # Text as a path, with fill and stroke
-        ctx.move_to(400, 220)
-        ctx.text_path("World")
-        ctx.set_source_rgb(0.39, 0.07, 0.78)
-        ctx.fill_preserve()
-        ctx.set_source_rgb(0,0,0)
-        ctx.set_line_width(2)
-        ctx.stroke()
+#        # Text as a path, with fill and stroke
+#        ctx.move_to(400, 220)
+#        ctx.text_path("World")
+#        ctx.set_source_rgb(0.39, 0.07, 0.78)
+#        ctx.fill_preserve()
+#        ctx.set_source_rgb(0,0,0)
+#        ctx.set_line_width(2)
+#        ctx.stroke()
 
-        # Show iterating and modifying a (text) path
-        ctx.new_path()
-        ctx.move_to(0, 0)
-        ctx.set_source_rgb(0.3, 0.3, 0.3)
-        ctx.set_font_size(30)
-        text = "This path was warped..."
-        ctx.text_path(text)
-        tw, th = ctx.text_extents(text)[2:4]
-        self.warpPath(ctx, tw, th, 360,300)
-        ctx.fill()
+#        # Show iterating and modifying a (text) path
+#        ctx.new_path()
+#        ctx.move_to(0, 0)
+#        ctx.set_source_rgb(0.3, 0.3, 0.3)
+#        ctx.set_font_size(30)
+#        text = "This path was warped..."
+#        ctx.text_path(text)
+#        tw, th = ctx.text_extents(text)[2:4]
+#        self.warpPath(ctx, tw, th, 360,300)
+#        ctx.fill()
 
-        ctx.paint()
+#        ctx.paint()
         
         
     def warpPath(self, ctx, tw, th, dx, dy):
@@ -847,7 +857,7 @@ class FicheSequence(wx.Panel):
                 
 ####################################################################################
 #
-#   Classe dÈfinissant le panel de propriÈtÈ par dÈfaut
+#   Classe d√©finissant le panel de propri√©t√© par d√©faut
 #
 ####################################################################################
 class PanelPropriete(wx.Panel):
@@ -866,7 +876,7 @@ class PanelPropriete(wx.Panel):
 
 ####################################################################################
 #
-#   Classe dÈfinissant le panel de propriÈtÈ de sÈquence
+#   Classe d√©finissant le panel de propri√©t√© de s√©quence
 #
 ####################################################################################
 class PanelPropriete_Sequence(PanelPropriete):
@@ -886,7 +896,7 @@ class PanelPropriete_Sequence(PanelPropriete):
         
 ####################################################################################
 #
-#   Classe dÈfinissant le panel de propriÈtÈ du CI
+#   Classe d√©finissant le panel de propri√©t√© du CI
 #
 ####################################################################################
 class PanelPropriete_CI(PanelPropriete):
@@ -912,7 +922,7 @@ class PanelPropriete_CI(PanelPropriete):
 
 ####################################################################################
 #
-#   Classe dÈfinissant le panel de propriÈtÈ de la compÈtence
+#   Classe d√©finissant le panel de propri√©t√© de la comp√©tence
 #
 ####################################################################################
 class PanelPropriete_Competence(PanelPropriete):
@@ -923,15 +933,15 @@ class PanelPropriete_Competence(PanelPropriete):
         
         PanelPropriete.__init__(self, parent)
         
-        # PrÈvoir un truc pour que la liste des compÈtences tienne compte de celles dÈja choisies
-        # idÈe : utiliser cb.CLear, Clear.Append ou cb.Delete
+        # Pr√©voir un truc pour que la liste des comp√©tences tienne compte de celles d√©ja choisies
+        # id√©e : utiliser cb.CLear, Clear.Append ou cb.Delete
         listComp = []
         l = Competences.items()
         for c in l:
             listComp.append(c[0] + " " + c[1])
         listComp.sort()    
         
-        cb = wx.ComboBox(self, -1, u"Choisir une compÈtence",
+        cb = wx.ComboBox(self, -1, u"Choisir une comp√©tence",
                          choices = listComp,
                          style = wx.CB_DROPDOWN
                          | wx.TE_PROCESS_ENTER
@@ -950,7 +960,7 @@ class PanelPropriete_Competence(PanelPropriete):
         
 ####################################################################################
 #
-#   Classe dÈfinissant le panel de propriÈtÈ de la sÈance
+#   Classe d√©finissant le panel de propri√©t√© de la s√©ance
 #
 ####################################################################################
 class PanelPropriete_Seance(PanelPropriete):
@@ -960,10 +970,10 @@ class PanelPropriete_Seance(PanelPropriete):
 
         
         #
-        # Type de sÈance
+        # Type de s√©ance
         #
         titre = wx.StaticText(self, -1, u"Type =")
-        cbType = wx.ComboBox(self, -1, u"Choisir un type de sÈance",
+        cbType = wx.ComboBox(self, -1, u"Choisir un type de s√©ance",
                          choices = [],
                          style = wx.CB_DROPDOWN
                          | wx.TE_PROCESS_ENTER
@@ -976,9 +986,9 @@ class PanelPropriete_Seance(PanelPropriete):
         sizerType.Add(cbType, 1, wx.EXPAND)
         
         #
-        # IntitulÈ de la sÈance
+        # Intitul√© de la s√©ance
         #
-        titre = wx.StaticText(self, -1, u"IntitulÈ =")
+        titre = wx.StaticText(self, -1, u"Intitul√© =")
         textctrl = wx.TextCtrl(self, -1, u"", style=wx.TE_MULTILINE)
         self.Bind(wx.EVT_TEXT, self.EvtTextIntitule, textctrl)
         sizerIntitule = wx.BoxSizer(wx.HORIZONTAL)
@@ -986,7 +996,7 @@ class PanelPropriete_Seance(PanelPropriete):
         sizerIntitule.Add(textctrl, 1, wx.EXPAND)
         
         #
-        # DurÈe de la sÈance
+        # Dur√©e de la s√©ance
         #
         vcDuree = VariableCtrl(self, seance.duree, coef = 0.5, labelMPL = False, signeEgal = True, slider = False, fct = None, help = "")
 #        textctrl = wx.TextCtrl(self, -1, u"1")
@@ -1029,7 +1039,7 @@ class PanelPropriete_Seance(PanelPropriete):
         
     def EvtText(self, event):
         self.seance.SetDuree(event.GetVar().v)
-        if self.seance.parent.typeSeance == "R": # sÈance en rotation (parent = sÈance "Rotation")
+        if self.seance.parent.typeSeance == "R": # s√©ance en rotation (parent = s√©ance "Rotation")
             self.seance.parent.SetDuree(self.seance.GetDuree())
         
     def EvtComboBox(self, event):
@@ -1049,16 +1059,16 @@ class PanelPropriete_Seance(PanelPropriete):
                     n = l[i][1]
                     continuer = False
             i += 1
-        self.nombre.SetLabel(u" (" + str(n) + u" ÈlËves)")
-        self.Refresh()
+        self.nombre.SetLabel(u" (" + str(n) + u" √©l√©ves)")
+#        self.Refresh()
         
     def AdapterAuType(self):
         print "AdapterAuType"
-        #  sÈance "normale" (parent = sÈquence)
+        #  s√©ance "normale" (parent = s√©quence)
         listType = listeTypeSeance
-        if self.seance.typeSeance == "R": #  sÈance en rotation
+        if self.seance.typeSeance == "R": #  s√©ance en rotation
             listType = listeTypeSeance[:-1]
-        elif self.seance.typeSeance == "S": #  sÈance en sÈrie
+        elif self.seance.typeSeance == "S": #  s√©ance en s√©rie
             listType = listeTypeSeance[:-2]
         
         listTypeS = []
@@ -1071,10 +1081,10 @@ class PanelPropriete_Seance(PanelPropriete):
             self.cbType.Append(s)
         self.cbType.SetSelection(n)
         
-        # DurÈe
-        if self.seance.typeSeance == "R": #  sÈance en rotation
+        # Dur√©e
+        if self.seance.typeSeance == "R": #  s√©ance en rotation
             self.vcDuree.Activer(False)
-        elif self.seance.typeSeance == "S": #  sÈance en sÈrie
+        elif self.seance.typeSeance == "S": #  s√©ance en s√©rie
             self.vcDuree.Activer(False)
         
         # Effectif
@@ -1096,15 +1106,15 @@ class PanelPropriete_Seance(PanelPropriete):
             self.cbEff.Append(Effectifs[s][0])
         self.cbEff.SetSelection(0)
         
-        self.Refresh()
+#        self.Refresh()
         
-    def MarquerProblemeDuree(self, etat):
-        return
+#    def MarquerProblemeDuree(self, etat):
+#        return
 #        self.vcDuree.marquerValid(etat)
         
 ####################################################################################
 #
-#   Classe dÈfinissant l'arbre de structure de la sÈquence
+#   Classe d√©finissant l'arbre de structure de la s√©quence
 #
 ####################################################################################
 
@@ -1133,15 +1143,15 @@ class PanelPropriete_Seance(PanelPropriete):
 ##        imageIdGenerator = getNextImageID(il.GetImageCount())
 #        
 #        #
-#        # IntitulÈ de la sÈquence
+#        # Intitul√© de la s√©quence
 #        #
-#        self.AddPage(PanelPropriete_Sequence(self, self.sequence), u"SÈquence")
+#        self.AddPage(PanelPropriete_Sequence(self, self.sequence), u"S√©quence")
 #        
 #        
 #        #
-#        # Centre d'intÈrÍt
+#        # Centre d'int√©r√©t
 #        #
-#        self.AddSubPage(PanelPropriete_CI(self, self.sequence.CI), u"Centre d'intÈrÍt")
+#        self.AddSubPage(PanelPropriete_CI(self, self.sequence.CI), u"Centre d'int√©r√©t")
 #        
 #        # Now make a bunch of panels for the list book
 ##        first = True
@@ -1179,12 +1189,12 @@ class ArbreSequence(CT.CustomTreeCtrl):
         self.parent = parent
         
         #
-        # La sÈquence 
+        # La s√©quence 
         #
         self.sequence = sequence
         
         #
-        # Le panel contenant les panel de propriÈtÈs des ÈlÈments de sÈquence
+        # Le panel contenant les panel de propri√©t√©s des √©l√©ments de s√©quence
         #
         self.panelProp = panelProp
         
@@ -1202,7 +1212,7 @@ class ArbreSequence(CT.CustomTreeCtrl):
         self.AssignImageList(il)
         
         #
-        # On instancie un panel de propriÈtÈs vide pour les ÈlÈments qui n'ont pas de propriÈtÈs
+        # On instancie un panel de propri√©t√©s vide pour les √©l√©ments qui n'ont pas de propri√©t√©s
         #
         self.panelVide = PanelPropriete(self.panelProp)
         self.panelVide.Hide()
@@ -1213,17 +1223,13 @@ class ArbreSequence(CT.CustomTreeCtrl):
         self.sequence.ConstruireArbre(self)
         
         #
-        # Gestion des Èvenements
+        # Gestion des √©venements
         #
         self.Bind(CT.EVT_TREE_SEL_CHANGED, self.OnSelChanged)
         self.Bind(CT.EVT_TREE_ITEM_RIGHT_CLICK, self.OnRightDown)
         
         self.ExpandAll()
         
-        return
-
-
-
 
 #        textctrl = wx.TextCtrl(self, -1, "I Am A Simple\nMultiline wx.TexCtrl", style=wx.TE_MULTILINE)
 #        self.gauge = wx.Gauge(self, -1, 50, style=wx.GA_HORIZONTAL|wx.GA_SMOOTH)
@@ -1336,17 +1342,17 @@ class ArbreSequence(CT.CustomTreeCtrl):
             
     def AjouterSeance(self, event = None):
         seance = self.sequence.AjouterSeance()
-        self.lstSeances.append(self.AppendItem(self.seances, u"SÈance :", data = seance))
+        self.lstSeances.append(self.AppendItem(self.seances, u"S√©ance :", data = seance))
         
     def AjouterRotation(self, event = None, item = None):
         seance = self.sequence.AjouterRotation(self.GetItemPyData(item))
         self.SetItemText(item, u"Rotation")
-        self.lstSeances.append(self.AppendItem(item, u"SÈance :", data = seance))
+        self.lstSeances.append(self.AppendItem(item, u"S√©ance :", data = seance))
         
     def AjouterSerie(self, event = None, item = None):
         seance = self.sequence.AjouterRotation(self.GetItemPyData(item))
         self.SetItemText(item, u"Rotation")
-        self.lstSeances.append(self.AppendItem(item, u"SÈance :", data = seance))
+        self.lstSeances.append(self.AppendItem(item, u"S√©ance :", data = seance))
         
     def SupprimerSeance(self, event = None, item = None):
         if self.sequence.SupprimerSeance(self.GetItemPyData(item)):
@@ -1354,68 +1360,68 @@ class ArbreSequence(CT.CustomTreeCtrl):
             self.Delete(item)
         
         
-    def BindEvents(self, choice, recreate=False):
+#    def BindEvents(self, choice, recreate=False):
+#
+#        value = choice.GetValue()
+#        text = choice.GetLabel()
+#        
+#        evt = "CT." + text
+#        binder = self.eventdict[text]
+#
+#        if value == 1:
+#            if evt == "CT.EVT_TREE_BEGIN_RDRAG":
+#                self.Bind(wx.EVT_RIGHT_DOWN, None)
+#                self.Bind(wx.EVT_RIGHT_UP, None)
+#            self.Bind(eval(evt), binder)
+#        else:
+#            self.Bind(eval(evt), None)
+#            if evt == "CT.EVT_TREE_BEGIN_RDRAG":
+#                self.Bind(wx.EVT_RIGHT_DOWN, self.OnRightDown)
+#                self.Bind(wx.EVT_RIGHT_UP, self.OnRightUp)
 
-        value = choice.GetValue()
-        text = choice.GetLabel()
-        
-        evt = "CT." + text
-        binder = self.eventdict[text]
 
-        if value == 1:
-            if evt == "CT.EVT_TREE_BEGIN_RDRAG":
-                self.Bind(wx.EVT_RIGHT_DOWN, None)
-                self.Bind(wx.EVT_RIGHT_UP, None)
-            self.Bind(eval(evt), binder)
-        else:
-            self.Bind(eval(evt), None)
-            if evt == "CT.EVT_TREE_BEGIN_RDRAG":
-                self.Bind(wx.EVT_RIGHT_DOWN, self.OnRightDown)
-                self.Bind(wx.EVT_RIGHT_UP, self.OnRightUp)
-
-
-    def ChangeStyle(self, combos):
-
-        style = 0
-        for combo in combos:
-            if combo.GetValue() == 1:
-                style = style | eval("CT." + combo.GetLabel())
-
-        if self.GetAGWWindowStyleFlag() != style:
-            self.SetAGWWindowStyleFlag(style)
-            
-
-    def OnCompareItems(self, item1, item2):
-        
-        t1 = self.GetItemText(item1)
-        t2 = self.GetItemText(item2)
-        
-        self.log.write('compare: ' + t1 + ' <> ' + t2 + "\n")
-
-        if t1 < t2:
-            return -1
-        if t1 == t2:
-            return 0
-
-        return 1
+#    def ChangeStyle(self, combos):
+#
+#        style = 0
+#        for combo in combos:
+#            if combo.GetValue() == 1:
+#                style = style | eval("CT." + combo.GetLabel())
+#
+#        if self.GetAGWWindowStyleFlag() != style:
+#            self.SetAGWWindowStyleFlag(style)
+#            
+#
+#    def OnCompareItems(self, item1, item2):
+#        
+#        t1 = self.GetItemText(item1)
+#        t2 = self.GetItemText(item2)
+#        
+#        self.log.write('compare: ' + t1 + ' <> ' + t2 + "\n")
+#
+#        if t1 < t2:
+#            return -1
+#        if t1 == t2:
+#            return 0
+#
+#        return 1
 
     
-    def OnIdle(self, event):
-
-        if self.gauge:
-            try:
-                if self.gauge.IsEnabled() and self.gauge.IsShown():
-                    self.count = self.count + 1
-
-                    if self.count >= 50:
-                        self.count = 0
-
-                    self.gauge.SetValue(self.count)
-
-            except:
-                self.gauge = None
-
-        event.Skip()
+#    def OnIdle(self, event):
+#
+#        if self.gauge:
+#            try:
+#                if self.gauge.IsEnabled() and self.gauge.IsShown():
+#                    self.count = self.count + 1
+#
+#                    if self.count >= 50:
+#                        self.count = 0
+#
+#                    self.gauge.SetValue(self.count)
+#
+#            except:
+#                self.gauge = None
+#
+#        event.Skip()
 
 
     def OnRightDown(self, event):
@@ -1431,241 +1437,241 @@ class ArbreSequence(CT.CustomTreeCtrl):
 
 
 
-    def OnRightUp(self, event):
-
-        item = self.item
-        
-        if not item:
-            event.Skip()
-            return
-
-        if not self.IsItemEnabled(item):
-            event.Skip()
-            return
-
-        # Item Text Appearance
-        ishtml = self.IsItemHyperText(item)
-        back = self.GetItemBackgroundColour(item)
-        fore = self.GetItemTextColour(item)
-        isbold = self.IsBold(item)
-        font = self.GetItemFont(item)
-
-        # Icons On Item
-        normal = self.GetItemImage(item, CT.TreeItemIcon_Normal)
-        selected = self.GetItemImage(item, CT.TreeItemIcon_Selected)
-        expanded = self.GetItemImage(item, CT.TreeItemIcon_Expanded)
-        selexp = self.GetItemImage(item, CT.TreeItemIcon_SelectedExpanded)
-
-        # Enabling/Disabling Windows Associated To An Item
-        haswin = self.GetItemWindow(item)
-
-        # Enabling/Disabling Items
-        enabled = self.IsItemEnabled(item)
-
-        # Generic Item's Info
-        children = self.GetChildrenCount(item)
-        itemtype = self.GetItemType(item)
-        text = self.GetItemText(item)
-        pydata = self.GetPyData(item)
-        
-        self.current = item
-        self.itemdict = {"ishtml": ishtml, "back": back, "fore": fore, "isbold": isbold,
-                         "font": font, "normal": normal, "selected": selected, "expanded": expanded,
-                         "selexp": selexp, "haswin": haswin, "children": children,
-                         "itemtype": itemtype, "text": text, "pydata": pydata, "enabled": enabled}
-        
-        menu = wx.Menu()
-
-        item1 = menu.Append(wx.ID_ANY, "Change Item Background Colour")
-        item2 = menu.Append(wx.ID_ANY, "Modify Item Text Colour")
-        menu.AppendSeparator()
-        if isbold:
-            strs = "Make Item Text Not Bold"
-        else:
-            strs = "Make Item Text Bold"
-        item3 = menu.Append(wx.ID_ANY, strs)
-        item4 = menu.Append(wx.ID_ANY, "Change Item Font")
-        menu.AppendSeparator()
-        if ishtml:
-            strs = "Set Item As Non-Hyperlink"
-        else:
-            strs = "Set Item As Hyperlink"
-        item5 = menu.Append(wx.ID_ANY, strs)
-        menu.AppendSeparator()
-        if haswin:
-            enabled = self.GetItemWindowEnabled(item)
-            if enabled:
-                strs = "Disable Associated Widget"
-            else:
-                strs = "Enable Associated Widget"
-        else:
-            strs = "Enable Associated Widget"
-        item6 = menu.Append(wx.ID_ANY, strs)
-
-        if not haswin:
-            item6.Enable(False)
-
-        item7 = menu.Append(wx.ID_ANY, "Disable Item")
-        
-        menu.AppendSeparator()
-        item8 = menu.Append(wx.ID_ANY, "Change Item Icons")
-        menu.AppendSeparator()
-        item9 = menu.Append(wx.ID_ANY, "Get Other Information For This Item")
-        menu.AppendSeparator()
-
-        item10 = menu.Append(wx.ID_ANY, "Delete Item")
-        if item == self.GetRootItem():
-            item10.Enable(False)
-        item11 = menu.Append(wx.ID_ANY, "Prepend An Item")
-        item12 = menu.Append(wx.ID_ANY, "Append An Item")
-
-        self.Bind(wx.EVT_MENU, self.OnItemBackground, item1)
-        self.Bind(wx.EVT_MENU, self.OnItemForeground, item2)
-        self.Bind(wx.EVT_MENU, self.OnItemBold, item3)
-        self.Bind(wx.EVT_MENU, self.OnItemFont, item4)
-        self.Bind(wx.EVT_MENU, self.OnItemHyperText, item5)
-        self.Bind(wx.EVT_MENU, self.OnEnableWindow, item6)
-        self.Bind(wx.EVT_MENU, self.OnDisableItem, item7)
-        self.Bind(wx.EVT_MENU, self.OnItemIcons, item8)
-        self.Bind(wx.EVT_MENU, self.OnItemInfo, item9)
-        self.Bind(wx.EVT_MENU, self.OnItemDelete, item10)
-        self.Bind(wx.EVT_MENU, self.OnItemPrepend, item11)
-        self.Bind(wx.EVT_MENU, self.OnItemAppend, item12)
-        
-        self.PopupMenu(menu)
-        menu.Destroy()
-        
-
-    def OnItemBackground(self, event):
-
-        colourdata = wx.ColourData()
-        colourdata.SetColour(self.itemdict["back"])
-        dlg = wx.ColourDialog(self, colourdata)
-        
-        dlg.GetColourData().SetChooseFull(True)
-
-        if dlg.ShowModal() == wx.ID_OK:
-            data = dlg.GetColourData()
-            col1 = data.GetColour().Get()
-            self.SetItemBackgroundColour(self.current, col1)
-        dlg.Destroy()
-
-
-    def OnItemForeground(self, event):
-
-        colourdata = wx.ColourData()
-        colourdata.SetColour(self.itemdict["fore"])
-        dlg = wx.ColourDialog(self, colourdata)
-        
-        dlg.GetColourData().SetChooseFull(True)
-
-        if dlg.ShowModal() == wx.ID_OK:
-            data = dlg.GetColourData()
-            col1 = data.GetColour().Get()
-            self.SetItemTextColour(self.current, col1)
-        dlg.Destroy()
-
-
-    def OnItemBold(self, event):
-
-        self.SetItemBold(self.current, not self.itemdict["isbold"])
-
-
-    def OnItemFont(self, event):
-
-        data = wx.FontData()
-        font = self.itemdict["font"]
-        
-        if font is None:
-            font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
-            
-        data.SetInitialFont(font)
-
-        dlg = wx.FontDialog(self, data)
-        
-        if dlg.ShowModal() == wx.ID_OK:
-            data = dlg.GetFontData()
-            font = data.GetChosenFont()
-            self.SetItemFont(self.current, font)
-
-        dlg.Destroy()
+#    def OnRightUp(self, event):
+#
+#        item = self.item
+#        
+#        if not item:
+#            event.Skip()
+#            return
+#
+#        if not self.IsItemEnabled(item):
+#            event.Skip()
+#            return
+#
+#        # Item Text Appearance
+#        ishtml = self.IsItemHyperText(item)
+#        back = self.GetItemBackgroundColour(item)
+#        fore = self.GetItemTextColour(item)
+#        isbold = self.IsBold(item)
+#        font = self.GetItemFont(item)
+#
+#        # Icons On Item
+#        normal = self.GetItemImage(item, CT.TreeItemIcon_Normal)
+#        selected = self.GetItemImage(item, CT.TreeItemIcon_Selected)
+#        expanded = self.GetItemImage(item, CT.TreeItemIcon_Expanded)
+#        selexp = self.GetItemImage(item, CT.TreeItemIcon_SelectedExpanded)
+#
+#        # Enabling/Disabling Windows Associated To An Item
+#        haswin = self.GetItemWindow(item)
+#
+#        # Enabling/Disabling Items
+#        enabled = self.IsItemEnabled(item)
+#
+#        # Generic Item's Info
+#        children = self.GetChildrenCount(item)
+#        itemtype = self.GetItemType(item)
+#        text = self.GetItemText(item)
+#        pydata = self.GetPyData(item)
+#        
+#        self.current = item
+#        self.itemdict = {"ishtml": ishtml, "back": back, "fore": fore, "isbold": isbold,
+#                         "font": font, "normal": normal, "selected": selected, "expanded": expanded,
+#                         "selexp": selexp, "haswin": haswin, "children": children,
+#                         "itemtype": itemtype, "text": text, "pydata": pydata, "enabled": enabled}
+#        
+#        menu = wx.Menu()
+#
+#        item1 = menu.Append(wx.ID_ANY, "Change Item Background Colour")
+#        item2 = menu.Append(wx.ID_ANY, "Modify Item Text Colour")
+#        menu.AppendSeparator()
+#        if isbold:
+#            strs = "Make Item Text Not Bold"
+#        else:
+#            strs = "Make Item Text Bold"
+#        item3 = menu.Append(wx.ID_ANY, strs)
+#        item4 = menu.Append(wx.ID_ANY, "Change Item Font")
+#        menu.AppendSeparator()
+#        if ishtml:
+#            strs = "Set Item As Non-Hyperlink"
+#        else:
+#            strs = "Set Item As Hyperlink"
+#        item5 = menu.Append(wx.ID_ANY, strs)
+#        menu.AppendSeparator()
+#        if haswin:
+#            enabled = self.GetItemWindowEnabled(item)
+#            if enabled:
+#                strs = "Disable Associated Widget"
+#            else:
+#                strs = "Enable Associated Widget"
+#        else:
+#            strs = "Enable Associated Widget"
+#        item6 = menu.Append(wx.ID_ANY, strs)
+#
+#        if not haswin:
+#            item6.Enable(False)
+#
+#        item7 = menu.Append(wx.ID_ANY, "Disable Item")
+#        
+#        menu.AppendSeparator()
+#        item8 = menu.Append(wx.ID_ANY, "Change Item Icons")
+#        menu.AppendSeparator()
+#        item9 = menu.Append(wx.ID_ANY, "Get Other Information For This Item")
+#        menu.AppendSeparator()
+#
+#        item10 = menu.Append(wx.ID_ANY, "Delete Item")
+#        if item == self.GetRootItem():
+#            item10.Enable(False)
+#        item11 = menu.Append(wx.ID_ANY, "Prepend An Item")
+#        item12 = menu.Append(wx.ID_ANY, "Append An Item")
+#
+#        self.Bind(wx.EVT_MENU, self.OnItemBackground, item1)
+#        self.Bind(wx.EVT_MENU, self.OnItemForeground, item2)
+#        self.Bind(wx.EVT_MENU, self.OnItemBold, item3)
+#        self.Bind(wx.EVT_MENU, self.OnItemFont, item4)
+#        self.Bind(wx.EVT_MENU, self.OnItemHyperText, item5)
+#        self.Bind(wx.EVT_MENU, self.OnEnableWindow, item6)
+#        self.Bind(wx.EVT_MENU, self.OnDisableItem, item7)
+#        self.Bind(wx.EVT_MENU, self.OnItemIcons, item8)
+#        self.Bind(wx.EVT_MENU, self.OnItemInfo, item9)
+#        self.Bind(wx.EVT_MENU, self.OnItemDelete, item10)
+#        self.Bind(wx.EVT_MENU, self.OnItemPrepend, item11)
+#        self.Bind(wx.EVT_MENU, self.OnItemAppend, item12)
+#        
+#        self.PopupMenu(menu)
+#        menu.Destroy()
         
 
-    def OnItemHyperText(self, event):
+#    def OnItemBackground(self, event):
+#
+#        colourdata = wx.ColourData()
+#        colourdata.SetColour(self.itemdict["back"])
+#        dlg = wx.ColourDialog(self, colourdata)
+#        
+#        dlg.GetColourData().SetChooseFull(True)
+#
+#        if dlg.ShowModal() == wx.ID_OK:
+#            data = dlg.GetColourData()
+#            col1 = data.GetColour().Get()
+#            self.SetItemBackgroundColour(self.current, col1)
+#        dlg.Destroy()
+#
+#
+#    def OnItemForeground(self, event):
+#
+#        colourdata = wx.ColourData()
+#        colourdata.SetColour(self.itemdict["fore"])
+#        dlg = wx.ColourDialog(self, colourdata)
+#        
+#        dlg.GetColourData().SetChooseFull(True)
+#
+#        if dlg.ShowModal() == wx.ID_OK:
+#            data = dlg.GetColourData()
+#            col1 = data.GetColour().Get()
+#            self.SetItemTextColour(self.current, col1)
+#        dlg.Destroy()
 
-        self.SetItemHyperText(self.current, not self.itemdict["ishtml"])
 
-
-    def OnEnableWindow(self, event):
-
-        enable = self.GetItemWindowEnabled(self.current)
-        self.SetItemWindowEnabled(self.current, not enable)
-
-
-    def OnDisableItem(self, event):
-
-        self.EnableItem(self.current, False)
+#    def OnItemBold(self, event):
+#
+#        self.SetItemBold(self.current, not self.itemdict["isbold"])
+#
+#
+#    def OnItemFont(self, event):
+#
+#        data = wx.FontData()
+#        font = self.itemdict["font"]
+#        
+#        if font is None:
+#            font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+#            
+#        data.SetInitialFont(font)
+#
+#        dlg = wx.FontDialog(self, data)
+#        
+#        if dlg.ShowModal() == wx.ID_OK:
+#            data = dlg.GetFontData()
+#            font = data.GetChosenFont()
+#            self.SetItemFont(self.current, font)
+#
+#        dlg.Destroy()
         
 
-    def OnItemIcons(self, event):
+#    def OnItemHyperText(self, event):
+#
+#        self.SetItemHyperText(self.current, not self.itemdict["ishtml"])
+#
+#
+#    def OnEnableWindow(self, event):
+#
+#        enable = self.GetItemWindowEnabled(self.current)
+#        self.SetItemWindowEnabled(self.current, not enable)
+#
+#
+#    def OnDisableItem(self, event):
+#
+#        self.EnableItem(self.current, False)
+#        
 
-        bitmaps = [self.itemdict["normal"], self.itemdict["selected"],
-                   self.itemdict["expanded"], self.itemdict["selexp"]]
+#    def OnItemIcons(self, event):
+#
+#        bitmaps = [self.itemdict["normal"], self.itemdict["selected"],
+#                   self.itemdict["expanded"], self.itemdict["selexp"]]
+#
+#        wx.BeginBusyCursor()        
+#        dlg = TreeIcons(self, -1, bitmaps=bitmaps)
+#        wx.EndBusyCursor()
+#        dlg.ShowModal()
 
-        wx.BeginBusyCursor()        
-        dlg = TreeIcons(self, -1, bitmaps=bitmaps)
-        wx.EndBusyCursor()
-        dlg.ShowModal()
 
-
-    def SetNewIcons(self, bitmaps):
-
-        self.SetItemImage(self.current, bitmaps[0], CT.TreeItemIcon_Normal)
-        self.SetItemImage(self.current, bitmaps[1], CT.TreeItemIcon_Selected)
-        self.SetItemImage(self.current, bitmaps[2], CT.TreeItemIcon_Expanded)
-        self.SetItemImage(self.current, bitmaps[3], CT.TreeItemIcon_SelectedExpanded)
+#    def SetNewIcons(self, bitmaps):
+#
+#        self.SetItemImage(self.current, bitmaps[0], CT.TreeItemIcon_Normal)
+#        self.SetItemImage(self.current, bitmaps[1], CT.TreeItemIcon_Selected)
+#        self.SetItemImage(self.current, bitmaps[2], CT.TreeItemIcon_Expanded)
+#        self.SetItemImage(self.current, bitmaps[3], CT.TreeItemIcon_SelectedExpanded)
 
         
 
-    def OnItemDelete(self, event):
-
-        strs = "Are You Sure You Want To Delete Item " + self.GetItemText(self.current) + "?"
-        dlg = wx.MessageDialog(None, strs, 'Deleting Item', wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_QUESTION)
-
-        if dlg.ShowModal() in [wx.ID_NO, wx.ID_CANCEL]:
-            dlg.Destroy()
-            return
-
-        dlg.Destroy()
-
-        self.DeleteChildren(self.current)
-        self.Delete(self.current)
-        self.current = None
-        
-
-
-    def OnItemPrepend(self, event):
-
-        dlg = wx.TextEntryDialog(self, "Please Enter The New Item Name", 'Item Naming', 'Python')
-
-        if dlg.ShowModal() == wx.ID_OK:
-            newname = dlg.GetValue()
-            newitem = self.PrependItem(self.current, newname)
-            self.EnsureVisible(newitem)
-
-        dlg.Destroy()
+#    def OnItemDelete(self, event):
+#
+#        strs = "Are You Sure You Want To Delete Item " + self.GetItemText(self.current) + "?"
+#        dlg = wx.MessageDialog(None, strs, 'Deleting Item', wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_QUESTION)
+#
+#        if dlg.ShowModal() in [wx.ID_NO, wx.ID_CANCEL]:
+#            dlg.Destroy()
+#            return
+#
+#        dlg.Destroy()
+#
+#        self.DeleteChildren(self.current)
+#        self.Delete(self.current)
+#        self.current = None
+#        
 
 
-    def OnItemAppend(self, event):
-
-        dlg = wx.TextEntryDialog(self, "Please Enter The New Item Name", 'Item Naming', 'Python')
-
-        if dlg.ShowModal() == wx.ID_OK:
-            newname = dlg.GetValue()
-            newitem = self.AppendItem(self.current, newname)
-            self.EnsureVisible(newitem)
-
-        dlg.Destroy()
+#    def OnItemPrepend(self, event):
+#
+#        dlg = wx.TextEntryDialog(self, "Please Enter The New Item Name", 'Item Naming', 'Python')
+#
+#        if dlg.ShowModal() == wx.ID_OK:
+#            newname = dlg.GetValue()
+#            newitem = self.PrependItem(self.current, newname)
+#            self.EnsureVisible(newitem)
+#
+#        dlg.Destroy()
+#
+#
+#    def OnItemAppend(self, event):
+#
+#        dlg = wx.TextEntryDialog(self, "Please Enter The New Item Name", 'Item Naming', 'Python')
+#
+#        if dlg.ShowModal() == wx.ID_OK:
+#            newname = dlg.GetValue()
+#            newitem = self.AppendItem(self.current, newname)
+#            self.EnsureVisible(newitem)
+#
+#        dlg.Destroy()
         
 
     def OnBeginEdit(self, event):
@@ -1865,7 +1871,7 @@ class ArbreSequence(CT.CustomTreeCtrl):
         event.Skip()
 
 #
-# Fonction pour indenter les XML gÈnÈrÈs par ElementTree
+# Fonction pour indenter les XML g√©n√©r√©s par ElementTree
 #
 def indent(elem, level=0):
     i = "\n" + level*"  "
@@ -1884,16 +1890,16 @@ def indent(elem, level=0):
 
 ####################################################################################
 #
-#   Classe dÈfinissant l'application
-#    --> rÈcupÈration des paramËtres passÈs en ligne de commande
+#   Classe d√©finissant l'application
+#    --> r√©cup√©ration des param√©tres pass√©s en ligne de commande
 #
 ####################################################################################
 class SeqApp(wx.App):
     def OnInit(self):
-        if len(sys.argv)>1: #un paramËtre a ÈtÈ passÈ
+        if len(sys.argv)>1: #un param√©tre a √©t√© pass√©
             for param in sys.argv:
                 parametre = param.upper()
-                # on verifie que le fichier passÈ en paramËtre existe
+                # on verifie que le fichier pass√© en param√©tre existe
                 
             
         frame = FenetreSequence()
