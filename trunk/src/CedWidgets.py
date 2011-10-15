@@ -26,7 +26,9 @@
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import wx
-import scipy
+
+# désactivation du module scipy
+# import scipy
 
 import time
 import  wx.lib.scrolledpanel as scrolled
@@ -174,9 +176,11 @@ safe_list = ['math', 'abs', 'ceil', 'cos', 'cosh', 'degrees', \
              'exp', 'fabs', 'floor', 'fmod', 'frexp', 'hypot', 'ldexp', 'log', 'log10', 'modf', \
              'pi', 'radians', 'sin', 'sinh', 'sqrt', 'tan', 'tanh']
 
-from numpy import abs, ceil, cos, cosh, degrees, \
-             exp, fabs, floor, fmod, frexp, hypot, ldexp, log, log10, modf, \
-             pi, radians, sin, sinh, sqrt, tan, tanh, errstate 
+#désactivation de numpy
+#from numpy import abs, ceil, cos, cosh, degrees, \
+#             exp, fabs, floor, fmod, frexp, hypot, ldexp, log, log10, modf, \
+#             pi, radians, sin, sinh, sqrt, tan, tanh, errstate 
+
 #use the list to filter the local namespace 
 safe_dict = dict([ (k, locals().get(k, None)) for k in safe_list ])
 
