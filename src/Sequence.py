@@ -163,6 +163,8 @@ class Sequence():
         #
         self.posIntitule = (0.6, 0.1)
         self.tailleIntitule = (0.1, 0.08)
+        self.posObj = (0.3, 0.1)
+        self.tailleObj = (0.1, 0.08)
         
         
     ######################################################################################  
@@ -277,10 +279,59 @@ class Sequence():
         ctx.rectangle(x, y, w, h)
         ctx.stroke()
 
-
+        #
+        #  Objectifs
+        #
+        txtObj = ''
+        for t in self.obj:
+            txtObj += t.code
         
+        # Rectangle arrondi
+        x0, y0 = self.posObj
+        rect_width, rect_height  = self.tailleObj
+        curve_rect(ctx, x0, y0, rect_width, rect_height, 0.1)
+        ctx.set_source_rgb (0.5,0.5,1)
+        ctx.fill_preserve ()
+        ctx.set_source_rgba (0.5,0,0,0.5)
+        ctx.stroke ()
+        
+        # Titre
+        ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+                     cairo.FONT_WEIGHT_BOLD)
+        ctx.set_font_size(0.02)
+        xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents("Objectifs")
+        xc=x0+rect_width/2-width/2
+        yc=y0+height+0.01
+        ctx.move_to(xc, yc)
+        ctx.set_source_rgb(0, 0, 0)
+        ctx.show_text("Objectifs")
+        
+        #
+        # Codes objectifs
+        #
+        ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+                     cairo.FONT_WEIGHT_BOLD)
+        show_text_rect(ctx, txtObj, x0, yc, rect_width, rect_height - height-0.01)
+        
+        x, y = self.posObj
+        w, h = self.tailleObj
+        ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+                     cairo.FONT_WEIGHT_BOLD)
+        
+        
+        
+#        
+        #
+        #  CI
+        #
         self.CI.Draw(ctx)
         
+        
+        #
+#        #  Séances
+#        #
+#        for p, s in enumerate(self.seance):
+#            s.Draw(p)
     
         
 ####################################################################################
@@ -329,7 +380,7 @@ class CentreInteret():
         
     ######################################################################################  
     def Draw(self, ctx):
-        #/* a custom shape, that could be wrapped in a function */
+        # Rectangle arrondi
         x0, y0 = self.posCI
         rect_width, rect_height  = self.tailleCI
         
@@ -1116,7 +1167,7 @@ class PanelPropriete_Competence(PanelPropriete):
         
     def EvtComboBox(self, event):
         self.competence.SetNum(event.GetSelection())
-        
+        self.sendEvent()
         
 ####################################################################################
 #
