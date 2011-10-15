@@ -66,21 +66,21 @@ CentresInterets = [u"Développement durable et compétitivité des produits",
                    u"Efficacité énergétique liée au comportement des matériaux et des structures",
                    u"Formes et caractéristiques de l'énergie",
                    u"Organisation structurelle et solutions constructives des chaînes d'énergie",
-                   u"Amélioration de l'efficacité énergétique dans les chaénes d'énergie",
+                   u"Amélioration de l'efficacité énergétique dans les chaînes d'énergie",
                    u"Amélioration de la gestion de l'énergie",
                    u"Formes et caractéristiques de l'information",
-                   u"Organisation structurelle et solutions constructives des chaénes d'information",
+                   u"Organisation structurelle et solutions constructives des chaînes d'information",
                    u"Commande temporelle des systémes",
-                   u"Informations liée au comportement des matériaux et des structures",
-                   u"Optimisation des paramétres par simulation globale"
+                   u"Informations liées au comportement des matériaux et des structures",
+                   u"Optimisation des paramètres par simulation globale"
                    ]
     
     
-Competences = {"CO1.1" : u"Justifier les choix des matériaux, des structures d'un systéme et les énergies mises en oeuvre dans une approche de développement durable",
+Competences = {"CO1.1" : u"Justifier les choix des matériaux, des structures d'un système et les énergies mises en oeuvre dans une approche de développement durable",
                "CO1.2" : u"Justifier le choix d'une solution selon des contraintes d'ergonomie et d'effets sur la santé de l'homme et du vivant",
                "CO2.1" : u"Identifier les flux et la forme de l'énergie, caractériser ses transformations et/ou modulations et estimer l'efficacité énergétique globale d'un système",
                "CO2.2" : u"Justifier les solutions constructives d'un systéme au regard des impacts environnementaux et économiques engendrés tout au long de son cycle de vie",
-               "CO3.1" : u"Décoder le cahier des charges fonctionnel d'un systéme",
+               "CO3.1" : u"Décoder le cahier des charges fonctionnel d'un système",
                "CO3.2" : u"Evaluer la compétitivité d'un système d'un point de vue technique et économique",
                "CO4.1" : u"Identifier et caractériser les fonctions et les constituants d'un système ainsi que ses entrées/sorties",
                "CO4.2" : u"Identifier et caractériser l'agencement  matériel et/ou logiciel d'un système", 
@@ -91,7 +91,7 @@ Competences = {"CO1.1" : u"Justifier les choix des matériaux, des structures d'
                "CO5.3" : u"Evaluer un écart entre le comportement du réel et le comportement du modèle en fonction des paramètres proposés",
                "CO6.1" : u"Décrire une idée, un principe, une solution, un projet en utilisant des outils de représentation adaptés",
                "CO6.2" : u"Décrire le fonctionnement et/ou l'exploitation d'un système en utilisant l'outil de description le plus pertinent",
-               "CO6.3" : u"Présenter et argumenter des démarches, des résultats, y compris dans une langue étrangére",
+               "CO6.3" : u"Présenter et argumenter des démarches, des résultats, y compris dans une langue étrangère",
                }
 
 
@@ -141,7 +141,13 @@ class Sequence():
         self.panelParent = panelParent
         self.app = app
         
-    
+        #
+        # Données pour le tracé
+        #
+        self.posIntitule = (0.8, 0.1)
+        self.posCI = (0.1, 0.1)
+        
+        
     ######################################################################################  
     def SetText(self, text):
         self.intitule = text
@@ -225,10 +231,41 @@ class Sequence():
             self.app.AfficherMenuContextuel([[u"Ajouter une séance", self.AjouterSeance]])
             
             
-            
-            
+    def Redessiner(self):
+        self.app.ficheSeq.Redessiner()
         
         
+    def Draw(self, ctx):
+        print "Draw séquence"
+        #
+        #  Bordure
+        #
+        ctx.set_line_width(0.1)
+        ctx.set_source_rgb(0, 0, 0)
+        ctx.rectangle(0, 0, 1, 1)
+        
+        
+        #
+        #  Intitulé de la séquence
+        #
+        ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+                     cairo.FONT_WEIGHT_BOLD)
+        ctx.set_font_size(0.05)
+        ctx.move_to(self.posIntitule[0], self.posIntitule[1])
+        ctx.set_source_rgb(0, 0, 0)
+        ctx.show_text(self.intitule)
+
+
+        ctx.set_line_width(0.01)
+        ctx.move_to(0.1, 0.1)
+        ctx.line_to(0.2, 0.2)
+        ctx.rel_line_to(0.5, 0.1)
+        ctx.close_path()
+        ctx.set_source_rgba(0, 0, 0.5, 1)
+        
+#        self.CI.Draw(ctx, self.posCI)
+        
+        ctx.stroke()
         
 ####################################################################################
 #
@@ -268,8 +305,79 @@ class CentreInteret():
         self.codeBranche = wx.StaticText(self.arbre, -1, u"")
         self.branche = arbre.AppendItem(branche, u"Centre d'intérét :", wnd = self.codeBranche, data = self)
         
-    
+    ######################################################################################  
+    def Draw(self, ctx, pos):
+        #/* a custom shape, that could be wrapped in a function */
+        x0       = pos[0]   #/*< parameters like cairo_rectangle */
+        y0       = pos[0]
+        rect_width  = 0.2
+        rect_height = 0.2
+        radius = 0.05   #/*< and an approximate curvature radius */
         
+        x1=x0+rect_width
+        y1=y0+rect_height
+        #if (!rect_width || !rect_height)
+        #    return
+        if rect_width/2<radius:
+            if rect_height/2<radius:
+                ctx.move_to  (x0, (y0 + y1)/2)
+                ctx.curve_to (x0 ,y0, x0, y0, (x0 + x1)/2, y0)
+                ctx.curve_to (x1, y0, x1, y0, x1, (y0 + y1)/2)
+                ctx.curve_to (x1, y1, x1, y1, (x1 + x0)/2, y1)
+                ctx.curve_to (x0, y1, x0, y1, x0, (y0 + y1)/2)
+            else:
+                ctx.move_to  (x0, y0 + radius)
+                ctx.curve_to (x0 ,y0, x0, y0, (x0 + x1)/2, y0)
+                ctx.curve_to (x1, y0, x1, y0, x1, y0 + radius)
+                ctx.line_to (x1 , y1 - radius)
+                ctx.curve_to (x1, y1, x1, y1, (x1 + x0)/2, y1)
+                ctx.curve_to (x0, y1, x0, y1, x0, y1- radius)
+        
+        else:
+            if rect_height/2<radius:
+                ctx.move_to  (x0, (y0 + y1)/2)
+                ctx.curve_to (x0 , y0, x0 , y0, x0 + radius, y0)
+                ctx.line_to (x1 - radius, y0)
+                ctx.curve_to (x1, y0, x1, y0, x1, (y0 + y1)/2)
+                ctx.curve_to (x1, y1, x1, y1, x1 - radius, y1)
+                ctx.line_to (x0 + radius, y1)
+                ctx.curve_to (x0, y1, x0, y1, x0, (y0 + y1)/2)
+            else:
+                ctx.move_to  (x0, y0 + radius)
+                ctx.curve_to (x0 , y0, x0 , y0, x0 + radius, y0)
+                ctx.line_to (x1 - radius, y0)
+                ctx.curve_to (x1, y0, x1, y0, x1, y0 + radius)
+                ctx.line_to (x1 , y1 - radius)
+                ctx.curve_to (x1, y1, x1, y1, x1 - radius, y1)
+                ctx.line_to (x0 + radius, y1)
+                ctx.curve_to (x0, y1, x0, y1, x0, y1- radius)
+        
+        ctx.close_path ()
+        
+        ctx.set_source_rgb (0.5,0.5,1)
+        ctx.fill_preserve ()
+        ctx.set_source_rgba (0.5,0,0,0.5)
+        ctx.stroke ()
+        
+        #
+        # code
+        #
+        ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+                     cairo.FONT_WEIGHT_BOLD)
+        ctx.set_font_size(0.05)
+        ctx.move_to(pos[0], pos[1])
+        ctx.set_source_rgb(0, 0, 0)
+        ctx.show_text(self.code)
+        
+        #
+        # intitulé
+        #
+        ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+                     cairo.FONT_WEIGHT_BOLD)
+        ctx.set_font_size(0.01)
+        ctx.move_to(pos[0], pos[1])
+        ctx.set_source_rgb(0, 0, 0)
+        ctx.show_text(self.code)
         
 ####################################################################################
 #
@@ -562,13 +670,28 @@ class FenetreSequence(wx.Frame):
         #
         self.sequence = Sequence(self, panelProp)
         
-        
+        #
         # Arbre de structure de la séquence
+        #
         arbreSeq = ArbreSequence(pnl, self.sequence, panelProp)
         
+        #
         # Zone graphique de la fiche de séquence
-        ficheSeq = FicheSequence(pnl, self.sequence)
+        #
         
+#        panelCentral = wx.ScrolledWindow(pnl, -1, style = wx.HSCROLL | wx.VSCROLL | wx.RETAINED)# | wx.BORDER_SIMPLE)
+#        sizerCentral = wx.GridSizer(1,1)
+        self.ficheSeq = FicheSequence(pnl, self.sequence)
+#        panelCentral.SetScrollRate(5,5)
+#        sizerCentral.Add(self.ficheSeq, flag = wx.ALIGN_CENTER|wx.ALL)#|wx.EXPAND)
+#        panelCentral.SetSizerAndFit(sizerCentral)
+        
+#        panelCentral.Bind(wx.EVT_SIZE, self.OnSize)
+#        self.panelCentral = panelCentral
+        
+        #
+        # Pour la sauvegarde
+        #
         self.fichierCourant = ""
         self.DossierSauvegarde = ""
         
@@ -576,7 +699,7 @@ class FenetreSequence(wx.Frame):
         #############################################################################################
         # Mise en place de la zone graphique
         #############################################################################################
-        self.mgr.AddPane(ficheSeq, 
+        self.mgr.AddPane(self.ficheSeq, 
                          aui.AuiPaneInfo().
                          CenterPane()
 #                         Caption(u"Bode").
@@ -633,9 +756,22 @@ class FenetreSequence(wx.Frame):
 
         
         self.mgr.Update()
+        
+        wx.CallAfter(self.ficheSeq.Redessiner)
+        
 #        sizer = wx.BoxSizer(wx.HORIZONTAL)
 #        self.SetSizerAndFit(sizer)
     
+    
+    ###############################################################################################
+    def OnSize(self, event):
+        print "OnSize fenetre",
+        w = self.panelCentral.GetClientSize()[0]
+        print w
+        self.panelCentral.SetVirtualSize((w,w*29/21)) # Mise au format A4
+#        self.ficheSeq.FitInside()
+        
+        
     ###############################################################################################
     def enregistrer(self, nomFichier):
 
@@ -751,48 +887,84 @@ class FenetreSequence(wx.Frame):
 ####################################################################################
 
 
-class FicheSequence(wx.Panel):
+class FicheSequence(wx.ScrolledWindow):
     def __init__(self, parent, sequence):
-        wx.Panel.__init__(self, parent, -1)
-
+#        wx.Panel.__init__(self, parent, -1)
+        wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
+        self.sequence = sequence
+        self.EnableScrolling(False, True)
+        self.SetScrollbars(20, 20, 50, 50);
+#        self.InitBuffer()
+        
         self.Bind(wx.EVT_PAINT, self.OnPaint)
+        self.Bind(wx.EVT_SIZE, self.OnResize)
 
-    def normalize(self, cr):
-        size = min(self.GetClientSize())
-        cr.scale(size, size)
-        
-        
+    #############################################################################            
+    def OnResize(self, evt):
+        print "OnSize fiche",
+        w = self.GetClientSize()[0]
+        print w
+        self.SetVirtualSize((w,w*29/21)) # Mise au format A4
+#        self.ficheSeq.FitInside()
+
+        self.InitBuffer()
+
+
+
+    #############################################################################            
     def OnPaint(self, evt):
-        #dc = wx.PaintDC(self)
-        dc = wx.BufferedPaintDC(self)
+#        print "PAINT"
+        dc = wx.BufferedPaintDC(self, self.buffer, wx.BUFFER_VIRTUAL_AREA)
+
+#        self.Redessiner()
+        
+        
+    #############################################################################            
+    def InitBuffer(self):
+        w,h = self.GetVirtualSize()
+        print "InitBuffer", w, h
+        self.buffer = wx.EmptyBitmap(w,h)
+
+        
+    #############################################################################            
+    def Redessiner(self):  
+        print "REDESSINER"
+        cdc = wx.ClientDC(self)
+        dc = wx.BufferedDC(cdc, self.buffer, wx.BUFFER_VIRTUAL_AREA)
         dc.SetBackground(wx.Brush('white'))
         dc.Clear()
-        
-        self.Render(dc)
-
-
-    def Render(self, dc):
-        print "Render"
-        # Draw some stuff on the plain dc
-#        sz = self.GetSize()
-#        dc.SetPen(wx.Pen("navy", 1))
-#        x = y = 0
-#        while x < sz.width * 2 or y < sz.height * 2:
-#            x += 20
-#            y += 20
-#            dc.DrawLine(x, 0, 0, y)
-        
-        
-        # now draw something with cairo
         ctx = wx.lib.wxcairo.ContextFromDC(dc)
+        dc.BeginDrawing()
         self.normalize(ctx)
-        ctx.set_line_width(0.01)
-        ctx.move_to(0.1, 0.1)
-        ctx.line_to(0.2, 0.2)
-        ctx.rel_line_to(0.5, 0.1)
-        ctx.close_path()
-        ctx.set_source_rgba(0, 0, 0.5, 1)
-        ctx.stroke()
+        self.sequence.Draw(ctx)
+        dc.EndDrawing()
+
+    #############################################################################            
+    def normalize(self, cr):
+        w,h = self.GetVirtualSize()
+        cr.scale(w, h) 
+        print "normalize", w,h
+        
+        
+#    def OnPaint(self, evt = None):
+#        #dc = wx.PaintDC(self)
+#        dc = wx.BufferedPaintDC(self)
+#        dc.SetBackground(wx.Brush('white'))
+#        dc.Clear()
+#        self.dc = dc
+        
+
+    
+#    def Render(self):
+#        print "Render"
+#        
+#        # now draw something with cairo
+#        ctx = wx.lib.wxcairo.ContextFromDC(self.dc)
+#        self.normalize(ctx)
+#        
+#        self.sequence.Draw(ctx)
+        
+        
 
 
 #        # Draw some text
@@ -869,7 +1041,7 @@ class PanelPropriete(wx.Panel):
         self.Hide()
         self.SetSizer(self.bsizer)
         self.SetAutoLayout(True)
- 
+       
  
 
 
@@ -893,6 +1065,7 @@ class PanelPropriete_Sequence(PanelPropriete):
     
     def EvtText(self, event):
         self.sequence.SetText(event.GetString())
+        self.sequence.Redessiner()
         
 ####################################################################################
 #
