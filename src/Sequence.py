@@ -427,6 +427,16 @@ class Sequence():
 #        for p, s in enumerate(self.seance):
 #            s.Draw(p)
     
+    def HitTest(self, x, y):
+        print "HitTest", x, y
+        rect = self.posIntitule + self.tailleIntitule
+        if dansRectangle(x, y, rect):
+            self.arbre.DoSelectItem(self.branche)
+        elif self.CI.HitTest(x, y):
+            return
+        elif dansRectangle(x, y, self.posObj + self.tailleObj):
+            self.arbre.DoSelectItem(self.brancheObj)
+        
         
 ####################################################################################
 #
@@ -523,6 +533,13 @@ class CentreInteret():
             show_text_rect(ctx, self.CI, x0, yc, rect_width, rect_height - height-0.01)
 
         
+    def HitTest(self, x, y):
+        rect = self.posCI + self.tailleCI
+        if dansRectangle(x, y, rect):
+            self.arbre.DoSelectItem(self.branche)
+        
+            
+            
 ####################################################################################
 #
 #   Classe définissant les propriétés d'une compétence
@@ -1169,11 +1186,29 @@ class FenetreSequence(wx.Frame):
        
     #############################################################################
     def exporterFiche(self, event = None):
+        
+        mesFormats = "pdf (.pdf)|*.pdf|"
+        dlg = wx.FileDialog(
+            self, message=u"Enregistrer la fiche sous ...", defaultDir=self.DossierSauvegarde , 
+            defaultFile="", wildcard=mesFormats, style=wx.SAVE|wx.OVERWRITE_PROMPT|wx.CHANGE_DIR
+            )
+        dlg.SetFilterIndex(0)
+        if dlg.ShowModal() == wx.ID_OK:
+            path = dlg.GetPath()
+            dlg.Destroy()
+            PDFsurface = cairo.PDFSurface(path, 595, 842)
+            ctx = cairo.Context (PDFsurface)
+            ctx.scale(820, 820) 
+            self.sequence.Draw(ctx)
+            self.DossierSauvegarde = os.path.split(path)[0]
+#            print "Nouveau dossier de sauvegarde", self.DossierSauvegarde
+        else:
+            dlg.Destroy()
 #        surface = self.ficheSeq.ctx.get_group_target()
-        PDFsurface = cairo.PDFSurface('testcairo.pdf', 595, 842)
-        ctx = cairo.Context (PDFsurface)
-        ctx.scale(820, 820) 
-        self.sequence.Draw(ctx)
+#        PDFsurface = cairo.PDFSurface('testcairo.pdf', 595, 842)
+#        ctx = cairo.Context (PDFsurface)
+#        ctx.scale(820, 820) 
+#        self.sequence.Draw(ctx)
         
         
         return
@@ -1197,8 +1232,17 @@ class FicheSequence(wx.ScrolledWindow):
         
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_SIZE, self.OnResize)
-        
+        self.Bind(wx.EVT_LEFT_UP, self.OnClick)
 
+    
+    #############################################################################            
+    def OnClick(self, evt):
+        print "OnClick"
+        x, y = evt.GetX(), evt.GetY()
+        _x, _y = self.CalcUnscrolledPosition(x, y)
+        xx, yy = self.ctx.device_to_user(_x, _y)
+#        print "  ", xx, yy
+        self.sequence.HitTest(xx, yy)
 
     #############################################################################            
     def OnResize(self, evt):
@@ -2418,7 +2462,8 @@ def indent(elem, level=0):
 
 
 
-
+def dansRectangle(x, y, rect):
+    return x > rect[0] and y > rect[1] and x < rect[0] + rect[2] and y < rect[1] + rect[3]
        
 
 
