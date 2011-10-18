@@ -80,7 +80,10 @@ def show_text_rect(ctx, texte, x, y, w, h, va = 'c', ha = 'c', b = 0.2, orient =
         xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(t)
         xt, yt = x+xbearing+(w-width)/2, y-ybearing+fheight*l+dy+height/2
 #        print "  ",xt, yt
-        ctx.move_to(xt, yt)
+        if ha == 'c':
+            ctx.move_to(xt, yt)
+        elif ha == 'g':
+            ctx.move_to(x, yt)
         
         ctx.show_text(t)
         l += 1
@@ -129,3 +132,34 @@ def curve_rect(ctx, x0, y0, rect_width, rect_height, radius):
     
     ctx.close_path ()
     
+def tableau(ctx, titres, x, y, w, ht, hl, nlignes = 0, va = 'c', ha = 'c', orient = 'h', coul = (0.9,0.9,0.9)):
+    wc = w/len(titres)
+    _x = x
+    _coul = ctx.get_source().get_rgba()
+    print "tableau", _coul
+    for titre in titres:
+        print "    ",titre
+        ctx.rectangle(_x, y, wc, ht)
+        ctx.set_source_rgb (coul[0], coul[1], coul[2])
+        ctx.fill_preserve ()
+        ctx.set_source_rgba (_coul[0], _coul[1], _coul[2], _coul[3])
+        show_text_rect(ctx, titre, _x, y, wc, ht, va = va, ha = ha, orient = orient)
+        ctx.stroke ()
+        _x += wc
+    
+    _x = x
+    _y = y+ht
+    for l in range(nlignes):
+        ctx.rectangle(_x, y, wc, hl)
+        _x += wc
+        _y += hl
+        
+    ctx.stroke ()
+    
+def rectangle_plein(ctx, x, y, w, h, coulBord, coulInter):
+    ctx.rectangle(x, y, w, h)
+    ctx.set_source_rgb (coulBord[0], coulBord[1], coulBord[2])
+    ctx.fill_preserve ()
+    ctx.set_source_rgba (coulInter[0], coulInter[1], coulInter[2], coulInter[3])
+    ctx.stroke ()
+        
