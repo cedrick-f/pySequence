@@ -166,24 +166,56 @@ class Sequence():
         #
         
         # Rectangle de l'intitulé
-        self.posIntitule = (0.6, 0.1)
-        self.tailleIntitule = (0.1, 0.08)
+        self.posIntitule = (0.72414-0.25, 0.05)
+        self.tailleIntitule = (0.2, 0.1)
+        self.IcoulIntitule = (0.2,0.8,0.2)
+        self.BcoulIntitule = (0.2,0.8,0.2)
         
-        # Rectangle du CI
-        self.posObj = (0.3, 0.1)
-        self.tailleObj = (0.1, 0.08)
+        # Objectifs
+        self.posCI = (0.05, 0.04)
+        self.tailleCI = (0.18, 0.12)
+        self.IcoulCI = (0.9,0.8,0.8)
+        self.BcoulCI = (0.3,0.2,0.25)
         
-        # Zone de séances
-        self.origineX = 0.05
-        self.wEff = {"C" : 0.1,
-                     "G" : 0.060,
-                     "D" : 0.045,
-                     "E" : 0.035,
-                     "P" : 0.025,
+        # Rectangle des objectifs
+        self.posObj = (0.262, 0.06)
+        self.tailleObj = (0.2, 0.08)
+        self.IcoulObj = (0.8,0.9,0.8)
+        self.BcoulObj = (0.25,0.3,0.2)
+        
+        # Zone d'organisation de la séquence (grand cadre)
+        self.posZOrganis = (0.05, 0.19)
+        self.tailleZOrganis = (0.72414-0.05, 0.95)
+        
+        # Zone de déroulement de la séquence
+        self.posZDeroul = (0.06, 0.2)
+        self.tailleZDeroul = [None, None]
+        
+        # Zone du tableau des Systèmes
+        self.posZSysteme = [None, 0.16]
+        self.tailleZSysteme = [None, None]
+        self.wColSysteme = 0.04
+        
+        # Zone du tableau des démarches
+        self.posZDemarche = [None, 0.16]
+        self.tailleZDemarche = [0.15, None]
+        
+        # Zone des intitulés des séances
+        self.posZIntSeances = [0.06, None]
+        self.tailleZIntSeances = [0.72414-0.06, None]
+        self.hIntSeance = 0.05
+        
+        # Zone des séances
+        self.posZSeances = (0.07, 0.24)
+        self.tailleZSeances = [None, None]
+        self.wEff = {"C" : None,
+                     "G" : None,
+                     "D" : None,
+                     "E" : None,
+                     "P" : None,
                      }
-        
-        self.origineY = 0.2
-        
+        self.hHoraire = None
+        self.ecartY = None
         # Un curseur pour placer les séances
         self.InitCurseur()
         
@@ -393,7 +425,62 @@ class Sequence():
             
     ######################################################################################  
     def InitCurseur(self):
-        self.curseur = [self.origineX, self.origineY]
+        self.curseur = [self.posZSeances[0], self.posZSeances[1]]
+        
+        
+    ######################################################################################  
+    def GetHoraireTotal(self):
+        h = 0
+        for s in self.seance:
+            h += s.GetDuree()
+        return h
+            
+    ######################################################################################  
+    def GetNbreSeances(self):
+        n = 0
+        for s in self.seance:
+            if s.typeSeance == "R":
+                n += len(s.rotation)
+            elif s.typeSeance == "S":
+                n += len(s.serie)
+            else:
+                n += 1
+        return n
+    
+    
+    ######################################################################################  
+    def DefinirZones(self):
+        """ Calcule les positions et dimensions des différentes zones de tracé
+            en fonction du nombre d'éléments (séances, systèmes)
+        """
+        # Zone des intitulés des séances
+        self.tailleZIntSeances[1] = self.GetNbreSeances()* self.hIntSeance
+        self.posZIntSeances[1] = self.posZOrganis[1] + self.tailleZOrganis[1] - self.tailleZIntSeances[1]
+        
+        # Zone du tableau des Systèmes
+        self.tailleZSysteme[0] = self.wColSysteme * len(self.systemes)
+        self.tailleZSysteme[1] = self.posZIntSeances[1] - self.posZSysteme[1] - 0.05
+        self.posZSysteme[0] = self.posZOrganis[0] + self.tailleZOrganis[0] - self.tailleZSysteme[0] - 0.05
+        
+        # Zone du tableau des démarches
+        self.posZDemarche[0] = self.posZSysteme[0] - self.tailleZDemarche[0] - 0.05
+        self.tailleZDemarche[1] = self.tailleZSysteme[1]
+        
+        # Zone de déroulement de la séquence
+        self.tailleZDeroul[0] = self.posZDemarche[0] - self.posZDeroul[0] - 0.05
+        self.tailleZDeroul[1] = self.tailleZSysteme[1]
+        
+        # Zone des séances
+        self.tailleZSeances[0] = self.tailleZDeroul[0] - 0.08
+        self.tailleZSeances[1] = self.tailleZSysteme[1] - self.posZSeances[1] + self.posZDeroul[1] - 0.05
+        self.wEff = {"C" : self.tailleZSeances[0],
+                     "G" : self.tailleZSeances[0]*4/5,
+                     "D" : self.tailleZSeances[0]*2/3,
+                     "E" : self.tailleZSeances[0]*1/2,
+                     "P" : self.tailleZSeances[0]*1/4,
+                     }
+        self.ecartY = 0.02
+        self.hHoraire = (self.tailleZSeances[1] - (len(self.seance)-1)*self.ecartY) / self.GetHoraireTotal()
         
         
         
@@ -401,6 +488,12 @@ class Sequence():
     def Draw(self, ctx):
         print "Draw séquence"
         self.InitCurseur()
+        
+        self.DefinirZones()
+        
+        options = ctx.get_font_options()
+        options.set_antialias(cairo.ANTIALIAS_SUBPIXEL)
+        ctx.set_font_options(options)
         
         #
         #  Bordure
@@ -416,12 +509,12 @@ class Sequence():
         x, y = self.posIntitule
         w, h = self.tailleIntitule
         ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
-                     cairo.FONT_WEIGHT_BOLD)
+                              cairo.FONT_WEIGHT_BOLD)
+        ctx.set_source_rgb(0, 0, 0)
         if len(self.intitule) > 0:
-            show_text_rect(ctx, self.intitule, x, y, w, h, orient = 'v')
-        
+            show_text_rect(ctx, self.intitule, x, y, w, h)
         ctx.set_line_width(0.005)
-        ctx.set_source_rgb(0, 0.8, 0)
+        ctx.set_source_rgb(self.BcoulIntitule[0], self.BcoulIntitule[1], self.BcoulIntitule[2])
         ctx.rectangle(x, y, w, h)
         ctx.stroke()
 
@@ -432,10 +525,10 @@ class Sequence():
         # Rectangle arrondi
         x0, y0 = self.posObj
         rect_width, rect_height  = self.tailleObj
-        curve_rect(ctx, x0, y0, rect_width, rect_height, 0.1)
-        ctx.set_source_rgb (0.5,0.5,1)
+        curve_rect(ctx, x0, y0, rect_width, rect_height, 0.3)
+        ctx.set_source_rgb (self.IcoulObj[0], self.IcoulObj[1], self.IcoulObj[2])
         ctx.fill_preserve ()
-        ctx.set_source_rgba (0.5,0,0,0.5)
+        ctx.set_source_rgba (self.BcoulObj[0], self.BcoulObj[1], self.BcoulObj[2])
         ctx.stroke ()
         
         # Titre
@@ -464,9 +557,6 @@ class Sequence():
             w, h = self.tailleObj
             ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
                                   cairo.FONT_WEIGHT_BOLD)
-        
-        
-        
 #        
         #
         #  CI
@@ -477,10 +567,28 @@ class Sequence():
         #
         #  Séances
         #
-        print self.seance
         for s in self.seance:
-            s.Draw(ctx)
+            s.Draw(ctx, self.curseur, self.wEff, self.ecartY, self.hHoraire)
+            
+        #
+        #  Tableau des systèmes
+        #    
+        nomsSystemes = []
+        for s in self.systemes:
+            nomsSystemes.append(s.nom)
+        if nomsSystemes != []:
+            ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+                                  cairo.FONT_WEIGHT_NORMAL)
+            ctx.set_source_rgb(0, 0, 0)
+            ctx.set_line_width(0.002)
+            tableau(ctx, nomsSystemes, self.posZSysteme[0], self.posZSysteme[1], 
+                    self.tailleZSysteme[0], self.posZSeances[1] - self.posZSysteme[1], 
+                    0, nlignes = 0, va = 'c', ha = 'g', orient = 'v', coul = (0.8,0.8,0.8))
     
+        
+    
+    
+    ######################################################################################  
     def HitTest(self, x, y):
         print "HitTest", x, y
         rect = self.posIntitule + self.tailleIntitule
@@ -511,14 +619,11 @@ class CentreInteret():
     def __init__(self, parent, panelParent, numCI = None):
         
         self.SetNum(numCI)
+        self.parent = parent
         
         self.panelPropriete = PanelPropriete_CI(panelParent, self)
         
-        #
-        # Données pour le tracé
-        #
-        self.posCI = (0.1, 0.1)
-        self.tailleCI = (0.1, 0.08)
+       
         
         
     ######################################################################################  
@@ -566,13 +671,13 @@ class CentreInteret():
     ######################################################################################  
     def Draw(self, ctx):
         # Rectangle arrondi
-        x0, y0 = self.posCI
-        rect_width, rect_height  = self.tailleCI
+        x0, y0 = self.parent.posCI
+        rect_width, rect_height  = self.parent.tailleCI
         
         curve_rect(ctx, x0, y0, rect_width, rect_height, 0.05)
-        ctx.set_source_rgb (0.5,0.5,1)
+        ctx.set_source_rgb (self.parent.IcoulCI[0], self.parent.IcoulCI[1], self.parent.IcoulCI[2])
         ctx.fill_preserve ()
-        ctx.set_source_rgba (0.5,0,0,0.5)
+        ctx.set_source_rgba (self.parent.BcoulCI[0], self.parent.BcoulCI[1], self.parent.BcoulCI[2])
         ctx.stroke ()
         
         #
@@ -580,7 +685,7 @@ class CentreInteret():
         #
         if self.num != None:
             ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
-                         cairo.FONT_WEIGHT_BOLD)
+                                  cairo.FONT_WEIGHT_BOLD)
             ctx.set_font_size(0.02)
             xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(self.code)
             xc=x0+rect_width/2-width/2
@@ -593,7 +698,7 @@ class CentreInteret():
             # intitulé
             #
             ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
-                         cairo.FONT_WEIGHT_BOLD)
+                                  cairo.FONT_WEIGHT_NORMAL)
             show_text_rect(ctx, self.CI, x0, yc, rect_width, rect_height - height-0.01)
 
         
@@ -707,17 +812,11 @@ class Seance():
         self.rotation = []
         self.serie = []
         
-        #
-        # Données pour le tracé
-        #
-        self.hHoraire = 0.05
-        self.ecartY = 0.02
-        
         
     
     ######################################################################################  
     def __repr__(self):
-        t = self.typeSeance + " " + str(self.ordre) 
+        t = self.typeSeance + str(self.ordre) 
         t += " " +str(self.GetDuree()) + "h"
         t += " " +str(self.effectif)
         return t
@@ -939,21 +1038,31 @@ class Seance():
 #            self.Bind(wx.EVT_MENU, functools.partial(self.AjouterSerie, item = item), item3)
             
     ######################################################################################  
-    def Draw(self, ctx):
-        if isinstance(self.parent, Sequence):
+    def Draw(self, ctx, curseur, wEff, ecartY, hHoraire, type = ""):
+        if not self.typeSeance in ["R", "S", ""]:
             print "Draw", self
-            x, y = self.parent.curseur
-            w = self.parent.wEff[self.effectif]
-            h = self.hHoraire * self.GetDuree()
+            x, y = curseur
+            w = wEff[self.effectif]
+            h = hHoraire * self.GetDuree()
             self.rect = (x, y, w, h)
-            ctx.rectangle(x, y, w, h)
-            ctx.set_source_rgb (0.5,0.5,0.1)
-            ctx.fill_preserve ()
-            ctx.set_source_rgba (0.5,0.5,0.05,0.5)
-            ctx.stroke ()
-            
-            self.parent.curseur[1] += h + self.ecartY
-            
+            rectangle_plein(ctx, x, y, w, h, (0.5,0.5,0.1), (0.5,0.5,0.05,0.5))
+            if type == "R":
+                curseur[1] += h
+            elif type == "S":
+                curseur[0] += w
+            else:
+                curseur[1] += h + ecartY
+        else:
+            if self.typeSeance == "R":
+                for s in self.rotation:
+                    s.Draw(ctx, curseur, wEff, ecartY, hHoraire, type = "R")
+                curseur[1] += ecartY
+            elif self.typeSeance == "S":
+                for s in self.serie:
+                    s.Draw(ctx, curseur, wEff, ecartY, hHoraire, type = "S")
+                curseur[0] = self.parent.parent.posZSeance[0]
+                curseur[1] += ecartY
+        
         return
         # Rectangle arrondi
         x0, y0 = self.posCI
@@ -986,10 +1095,27 @@ class Seance():
                          cairo.FONT_WEIGHT_BOLD)
             show_text_rect(ctx, self.CI, x0, yc, rect_width, rect_height - height-0.01)
     
+    
+    ######################################################################################  
     def HitTest(self, x, y):
         if hasattr(self, 'rect') and dansRectangle(x, y, self.rect):
             self.arbre.DoSelectItem(self.branche)
-        
+        else:
+            if self.typeSeance == "R":
+                ls = self.rotation
+            elif self.typeSeance == "S":
+                ls = self.rotation
+            else:
+                return
+            continuer = True
+            i = 0
+            while continuer:
+                if i >= len(ls):
+                    continuer = False
+                else:
+                    if ls[i].HitTest(x, y):
+                        continuer = False
+                i += 1
 
 ####################################################################################
 #
@@ -1212,13 +1338,13 @@ class FenetreSequence(wx.Frame):
     
     
     ###############################################################################################
-    def OnSize(self, event):
-        print "OnSize fenetre",
-        w = self.panelCentral.GetClientSize()[0]
-        print w
-        self.panelCentral.SetVirtualSize((w,w*29/21)) # Mise au format A4
-#        self.ficheSeq.FitInside()
-        
+#    def OnSize(self, event):
+#        print "OnSize fenetre",
+#        w = self.panelCentral.GetClientSize()[0]
+#        print w
+#        self.panelCentral.SetVirtualSize((w,w*29/21)) # Mise au format A4
+##        self.ficheSeq.FitInside()
+#        
         
     ###############################################################################################
     def enregistrer(self, nomFichier):
@@ -1431,7 +1557,8 @@ class FicheSequence(wx.ScrolledWindow):
 #        self.ficheSeq.FitInside()
 
         self.InitBuffer()
-
+        if w > 0:
+            self.Redessiner()
 
 
     #############################################################################            
@@ -1466,8 +1593,9 @@ class FicheSequence(wx.ScrolledWindow):
     #############################################################################            
     def normalize(self, cr):
         w,h = self.GetVirtualSize()
+        print "normalize", h
         cr.scale(h, h) 
-#        print "normalize", h
+        
         
         
 #    def OnPaint(self, evt = None):
@@ -1821,7 +1949,7 @@ class PanelPropriete_Seance(PanelPropriete):
 
         
     def AdapterAuType(self):
-#        print "AdapterAuType"
+        print "AdapterAuType"
         #  séance "normale" (parent = séquence)
         listType = listeTypeSeance
         if self.seance.typeSeance == "R": #  séance en rotation
@@ -1857,7 +1985,7 @@ class PanelPropriete_Seance(PanelPropriete):
             listEff = ["P"]
         elif self.seance.typeSeance in ["SA"]:
             listEff = ["C", "G"]
-        
+        print listEff
 #        n = self.cbEff.GetSelection()   
         self.cbEff.Clear()
         for s in listEff:
@@ -1875,7 +2003,8 @@ class PanelPropriete_Seance(PanelPropriete):
         self.cbType.SetSelection(self.cbType.GetStrings().index(TypesSeance[self.seance.typeSeance]))
         self.textctrl.ChangeValue(self.seance.intitule)
         self.vcDuree.mofifierValeursSsEvt()
-        self.cbEff.SetSelection(Effectifs.keys().index(self.seance.effectif))
+        if self.cbEff.IsEnabled():
+            self.cbEff.SetSelection(self.cbEff.GetStrings().index(Effectifs[self.seance.effectif][0]))
         
         if sendEvt:
             self.sendEvent()
