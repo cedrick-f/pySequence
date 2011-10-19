@@ -196,13 +196,13 @@ class Sequence():
         self.tailleZDeroul = [None, None]
         
         # Zone du tableau des Systèmes
-        self.posZSysteme = [None, 0.16]
+        self.posZSysteme = [None, 0.17]
         self.tailleZSysteme = [None, None]
-        self.wColSysteme = 0.04
+        self.wColSysteme = 0.035
         
         # Zone du tableau des démarches
-        self.posZDemarche = [None, 0.16]
-        self.tailleZDemarche = [0.15, None]
+        self.posZDemarche = [None, 0.17]
+        self.tailleZDemarche = [0.08, None]
         
         # Zone des intitulés des séances
         self.posZIntSeances = [0.06, None]
@@ -210,7 +210,7 @@ class Sequence():
         self.hIntSeance = 0.02
         
         # Zone des séances
-        self.posZSeances = (0.07, 0.24)
+        self.posZSeances = (0.07, 0.28)
         self.tailleZSeances = [None, None]
         self.wEff = {"C" : None,
                      "G" : None,
@@ -579,7 +579,8 @@ class Sequence():
         if self.obj[0].num != None:
             txtObj = ''
             for t in self.obj:
-                txtObj += " " + t.code
+                if hasattr(t, 'code'):
+                    txtObj += " " + t.code
             ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
                                   cairo.FONT_WEIGHT_BOLD)
             show_text_rect(ctx, txtObj, x0, yc, rect_width, rect_height - height-0.01)
@@ -615,15 +616,35 @@ class Sequence():
             tableauV(ctx, nomsSystemes, self.posZSysteme[0], self.posZSysteme[1], 
                     self.tailleZSysteme[0], self.posZSeances[1] - self.posZSysteme[1], 
                     0, nlignes = 0, va = 'c', ha = 'g', orient = 'v', coul = (0.8,0.8,0.8))
+            
+            wc = self.tailleZSysteme[0]/len(nomsSystemes)
+            _x = self.posZSysteme[0]
+            _y = self.posZSysteme[1]
+            for s in self.systemes:
+                s.rect = (_x, _y, wc, self.posZSeances[1] - self.posZSysteme[1])
+                _x += wc
     
-        
+        #
+        #  Tableau des démarches
+        #    
+        ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+                              cairo.FONT_WEIGHT_NORMAL)
+        ctx.set_source_rgb(0, 0, 0)
+        ctx.set_line_width(0.002)
+        tableauV(ctx, Demarches.values(), self.posZDemarche[0], self.posZDemarche[1], 
+                self.tailleZDemarche[0], self.posZSeances[1] - self.posZSysteme[1], 
+                0, nlignes = 0, va = 'c', ha = 'g', orient = 'v', coul = (0.8,0.8,0.8))
+
+    
         #
         #  Tableau des séances (en bas)
         #
         nomsSeances = []
+        intSeances = []
         for s in self.GetToutesSeances():
             if hasattr(s, 'code'):
                 nomsSeances.append(s.code)
+                intSeances.append(s.intitule)
         if nomsSeances != []:
             ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
                                   cairo.FONT_WEIGHT_NORMAL)
@@ -631,7 +652,8 @@ class Sequence():
             ctx.set_line_width(0.002)
             tableauH(ctx, nomsSeances, self.posZIntSeances[0], self.posZIntSeances[1], 
                     0.05, self.tailleZIntSeances[0]-0.05, self.tailleZIntSeances[1], 
-                    nCol = 1, va = 'c', ha = 'g', orient = 'h', coul = (0.8,0.8,0.8))
+                    nCol = 1, va = 'c', ha = 'g', orient = 'h', coul = (0.8,0.8,0.8), 
+                    contenu = [intSeances])
     
     ######################################################################################  
     def HitTest(self, x, y):
@@ -644,13 +666,14 @@ class Sequence():
         elif dansRectangle(x, y, self.posObj + self.tailleObj):
             self.arbre.DoSelectItem(self.brancheObj)
         else:
+            autresZones = self.seance + self.systemes
             continuer = True
             i = 0
             while continuer:
-                if i >= len(self.seance):
+                if i >= len(autresZones):
                     continuer = False
                 else:
-                    if self.seance[i].HitTest(x, y):
+                    if autresZones[i].HitTest(x, y):
                         continuer = False
                 i += 1
         
@@ -1296,7 +1319,10 @@ class Systeme():
         if itemArbre == self.branche:
             self.parent.app.AfficherMenuContextuel([[u"Supprimer", functools.partial(self.parent.SupprimerSysteme, item = itemArbre)]])
             
-
+    ######################################################################################  
+    def HitTest(self, x, y):
+        if hasattr(self, 'rect') and dansRectangle(x, y, self.rect):
+            self.arbre.DoSelectItem(self.branche)
 
 ####################################################################################
 #
@@ -1453,12 +1479,18 @@ class FenetreSequence(wx.Frame):
         self.mgr.Update()
         
         wx.CallAfter(self.ficheSeq.Redessiner)
-        self.Bind(EVT_SEQ_MODIFIED, self.ficheSeq.Redessiner)
+        self.Bind(EVT_SEQ_MODIFIED, self.OnSeqModified)
         
+        self.definirNomFichierCourant('')
 #        sizer = wx.BoxSizer(wx.HORIZONTAL)
 #        self.SetSizerAndFit(sizer)
     
-    
+    ###############################################################################################
+    def OnSeqModified(self, event):
+        self.ficheSeq.Redessiner()
+        self.MarquerFichierCourantModifie()
+        
+        
     ###############################################################################################
 #    def OnSize(self, event):
 #        print "OnSize fenetre",
@@ -1500,6 +1532,7 @@ class FenetreSequence(wx.Frame):
 #        except:
 #            pass
         fichier.close()
+        self.definirNomFichierCourant(nomFichier)
         self.ficheSeq.Redessiner()
         
         

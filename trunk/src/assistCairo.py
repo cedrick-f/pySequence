@@ -158,7 +158,8 @@ def tableauV(ctx, titres, x, y, w, ht, hl, nlignes = 0, va = 'c', ha = 'c', orie
         
     ctx.stroke ()
     
-def tableauH(ctx, titres, x, y, wt, wc, h, nCol = 0, va = 'c', ha = 'c', orient = 'h', coul = (0.9,0.9,0.9)):
+def tableauH(ctx, titres, x, y, wt, wc, h, nCol = 0, va = 'c', ha = 'c', orient = 'h', 
+             coul = (0.9,0.9,0.9), contenu = []):
     hc = h/len(titres)
     _y = y
     _coul = ctx.get_source().get_rgba()
@@ -178,6 +179,15 @@ def tableauH(ctx, titres, x, y, wt, wc, h, nCol = 0, va = 'c', ha = 'c', orient 
     for c in range(nCol):
         for l in range(len(titres)):
             ctx.rectangle(_x, _y, wc, hc)
+            _y += hc
+        _x += wc
+        _y = y
+    
+    _y = y
+    _x = x+wt
+    for c in contenu:
+        for l in c:
+            show_text_rect(ctx, l, _x, _y, wc, hc, va = va, ha = ha, orient = orient)
             _y += hc
         _x += wc
         _y = y
