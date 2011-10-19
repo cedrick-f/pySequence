@@ -50,7 +50,7 @@ import functools
 import xml.etree.ElementTree as ET
 
 # des widgets wx évolués "faits maison"
-from CedWidgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL
+from CedWidgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_ENTIER_POS
 
 
 
@@ -120,6 +120,10 @@ Effectifs = {"C" : [u"Classe entière",      32],
              "P" : [u"Activité Pratique",   2],
              }
 
+Demarches = {"I" : "Investigation",
+             "R" : "Résolution de problème",
+             "P" : "Projet"}
+
 ####################################################################################
 #
 #   Evenement perso pour détecter une modification de la séquence
@@ -153,10 +157,10 @@ class Sequence():
         self.CI = CentreInteret(self, panelParent)
         
         self.obj = [Competence(self, panelParent)]
-        
+        self.systemes = []
         self.seance = [Seance(self, panelParent)]
         
-        self.systemes = []
+        
         
         self.panelParent = panelParent
         self.app = app
@@ -271,7 +275,14 @@ class Sequence():
             comp = Competence(self, self.panelParent)
             comp.setBranche(obj)
             self.obj.append(comp)
-            
+        
+        brancheSys = branche.find("Systemes")
+        self.systemes = []
+        for sy in list(brancheSys):
+            systeme = Systeme(self, self.panelParent)
+            systeme.setBranche(sy)
+            self.systemes.append(systeme)    
+        
         brancheSce = branche.find("Seances")
         self.seance = []
         for sce in list(brancheSce):
@@ -279,14 +290,7 @@ class Sequence():
             seance.setBranche(sce)
             self.seance.append(seance)
         
-        brancheSys = branche.find("Systemes")
-        self.systemes = []
-        for sy in list(brancheSys):
-            systeme = Systeme(self, self.panelParent)
-            systeme.setBranche(sy)
-            self.systemes.append(systeme)
-
-        
+#        self.MiseAJourListeSystemes()
         self.panelPropriete.MiseAJour()
         
         
@@ -306,6 +310,13 @@ class Sequence():
         for sy in self.systemes:
             sy.SetCode()    
         
+        
+    ######################################################################################  
+    def MiseAJourListeSystemes(self):
+        for s in self.seance:
+            s.MiseAJourListeSystemes()
+    
+    
     ######################################################################################  
     def AjouterSeance(self, event = None):
         seance = Seance(self, self.panelParent)
@@ -354,6 +365,7 @@ class Sequence():
         sy = Systeme(self, self.panelParent)
         self.systemes.append(sy)
         sy.ConstruireArbre(self.arbre, self.brancheSys)
+        self.arbre.Expand(self.brancheSys)
         return
     
     
@@ -635,7 +647,13 @@ class CentreInteret():
     def getBranche(self):
         """ Renvoie la branche XML du centre d'intérét pour enregistrement
         """
-        root = ET.Element(self.code)
+        print "getBranche CI",
+        if hasattr(self, 'code'):
+            print self.code
+            root = ET.Element(self.code)
+        else:
+            print
+            root = ET.Element("")
         return root
     
     
@@ -703,7 +721,7 @@ class CentreInteret():
 
         
     def HitTest(self, x, y):
-        rect = self.posCI + self.tailleCI
+        rect = self.parent.posCI + self.parent.tailleCI
         if dansRectangle(x, y, rect):
             self.arbre.DoSelectItem(self.branche)
         
@@ -733,7 +751,13 @@ class Competence():
     def getBranche(self):
         """ Renvoie la branche XML de la compétence pour enregistrement
         """
-        root = ET.Element(self.code)
+        print "getBranche Comp",
+        if hasattr(self, 'code'):
+            print self.code
+            root = ET.Element(self.code)
+        else:
+            print
+            root = ET.Element("")
         return root
     
     ######################################################################################  
@@ -798,6 +822,12 @@ class Seance():
                               expression = None, multiple = False)
         self.intitule  = u""
         self.effectif = "C"
+        self.demarche = "I"
+        self.systemes = []
+        for i in range(8):
+            self.systemes.append(Variable(u"", lstVal = 0, nomNorm = "", typ = VAR_ENTIER_POS, 
+                                 bornes = [0,8], modeLog = False,
+                                 expression = None, multiple = False))
         
         # Les autres données
         self.typeParent = typeParent
@@ -805,12 +835,15 @@ class Seance():
         self.panelParent = panelParent
         
         self.SetType(typeSeance)
+        self.rotation = []
+        self.serie = []
+        
+        self.MiseAJourListeSystemes()
         
         self.panelPropriete = PanelPropriete_Seance(panelParent, self)
         self.panelPropriete.AdapterAuType()
         
-        self.rotation = []
-        self.serie = []
+        
         
         
     
@@ -830,18 +863,28 @@ class Seance():
     def getBranche(self):
         """ Renvoie la branche XML de la séance pour enregistrement
         """
+        print "getBranche Séance", self.code
         root = ET.Element("Seance"+str(self.ordre))
         root.set("Type", self.typeSeance)
         root.set("Duree", str(self.duree.v[0]))
         root.set("Effectif", self.effectif)
         root.set("Intitule", self.intitule)
+        root.set("Demarche", self.demarche)
         
         if self.typeSeance == "R":
             for sce in self.rotation:
                 root.append(sce.getBranche())
         elif self.typeSeance == "S":
             for sce in self.serie:
-                root.append(sce.getBranche())
+                root.append(sce.getBranche()) 
+        elif self.typeSeance in ["AP", "ED", "P"]:
+            self.branchesSys = []
+            for i, s in enumerate(self.systemes):
+                bs = ET.SubElement(root, "Systemes"+str(i))
+                self.branchesSys.append(bs)
+                bs.set("Nom", s.n)
+                bs.set("Nombre", str(s.v[0]))
+        
         return root    
         
     ######################################################################################  
@@ -852,6 +895,7 @@ class Seance():
         self.intitule  = branche.get("Intitule", "")
         self.effectif = branche.get("Effectif", "C")
         self.typeSeance = branche.get("Type", "C")
+        self.demarche = branche.get("Demarche", "I")
         
         if self.typeSeance == "R":
             self.rotation = []
@@ -866,9 +910,15 @@ class Seance():
                 seance = Seance(self, self.panelParent, typeParent = self.typeParent)
                 self.serie.append(seance)
                 seance.setBranche(sce)
-                
-        self.duree.v[0] = eval(branche.get("Duree", "1"))
+        elif self.typeSeance in ["AP", "ED", "P"]:   
+            for i, s in enumerate(list(branche)):
+                nom = s.get("Nom", "")
+                nombre = eval(s.get("Nombre", ""))
+                self.systemes[i].n = nom
+                self.systemes[i].v = [nombre]
         
+        self.duree.v[0] = eval(branche.get("Duree", "1"))
+        self.MiseAJourListeSystemes()
         self.panelPropriete.MiseAJour()
         print self
         
@@ -914,6 +964,7 @@ class Seance():
             else:
                 self.duree.v[0] = duree
                 self.panelPropriete.MarquerProblemeDuree(True)
+        
         
     ######################################################################################  
     def SetIntitule(self, text):           
@@ -1023,6 +1074,27 @@ class Seance():
     def SupprimerSousSeances(self):
         self.arbre.DeleteChildren(self.branche)
         return
+    
+    ######################################################################################  
+    def MiseAJourListeSystemes(self):
+        print "MiseAJourListeSystemes", self
+        if self.typeSeance in ["AP", "ED", "P", "C", "SS", "SA", "E"]:
+            if isinstance(self.parent, Sequence):
+                sequence = self.parent
+            else:
+                sequence = self.parent 
+            for i, s in enumerate(sequence.systemes):
+                self.systemes[i].n = s.nom
+            self.nSystemes = len(sequence.systemes)
+            
+        elif self.typeSeance == "R":
+            for s in self.rotation:
+                s.MiseAJourListeSystemes()
+        elif self.typeSeance == "S":
+            for s in self.serie:
+                s.MiseAJourListeSystemes()
+    
+    
     
     ######################################################################################  
     def AfficherMenuContextuel(self, itemArbre):
@@ -1139,7 +1211,7 @@ class Systeme():
         """ Renvoie la branche XML de la compétence pour enregistrement
         """
         root = ET.Element("Systeme")
-        root.set("Nom", self.Nom)
+        root.set("Nom", self.nom)
         return root
     
     ######################################################################################  
@@ -1201,6 +1273,8 @@ class PanelConteneur(wx.Panel):
             self.panel.Hide()
         self.bsizer.Add(panel, flag = wx.EXPAND)
         self.panel = panel
+        if isinstance(self.panel, PanelPropriete_Seance):
+            self.panel.AdapterAuxSystemes()
         self.panel.Show()
         self.bsizer.FitInside(self)
         self.bsizer.Layout()
@@ -1355,6 +1429,7 @@ class FenetreSequence(wx.Frame):
         sequence = self.sequence.getBranche()
         
         indent(sequence)
+        print sequence.text
         ET.ElementTree(sequence).write(fichier)
         fichier.close()
         self.definirNomFichierCourant(nomFichier)
@@ -1651,6 +1726,7 @@ class FicheSequence(wx.ScrolledWindow):
 #        ctx.paint()
         
         
+    #############################################################################            
     def warpPath(self, ctx, tw, th, dx, dy):
         def f(x, y):
             xn = x - tw/2
@@ -1689,9 +1765,9 @@ class PanelPropriete(wx.Panel):
         wx.Panel.__init__(self, parent, -1, size = (-1, 200))#, style = wx.BORDER_SIMPLE)
         
 #        self.boxprop = wx.StaticBox(self, -1, u"")
-        self.bsizer = wx.BoxSizer(wx.VERTICAL)
+        self.sizer = wx.GridBagSizer(5, 5)
         self.Hide()
-        self.SetSizer(self.bsizer)
+        self.SetSizer(self.sizer)
         self.SetAutoLayout(True)
        
     #########################################################################################################
@@ -1714,20 +1790,20 @@ class PanelPropriete_Sequence(PanelPropriete):
         titre = wx.StaticText(self, -1, u"Intitulé :")
         textctrl = wx.TextCtrl(self, -1, u"", style=wx.TE_MULTILINE)
         self.textctrl = textctrl
-        sizerInt = wx.BoxSizer(wx.HORIZONTAL)
-        sizerInt.Add(titre, 0)
-        sizerInt.Add(textctrl, 1, wx.EXPAND)
         
-        self.bsizer.Add(sizerInt, flag = wx.EXPAND)
-        self.bsizer.Layout()
+        self.sizer.Add(titre, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 2)
+        self.sizer.Add(textctrl, (0,1), flag = wx.EXPAND)
+        self.sizer.Layout()
         
         self.Bind(wx.EVT_TEXT, self.EvtText, textctrl)
         
     
+    #############################################################################            
     def EvtText(self, event):
         self.sequence.SetText(event.GetString())
         self.sendEvent()
         
+    #############################################################################            
     def MiseAJour(self, sendEvt = False):
         self.textctrl.ChangeValue(self.sequence.intitule)
         if sendEvt:
@@ -1754,20 +1830,19 @@ class PanelPropriete_CI(PanelPropriete):
         self.cb = cb
         self.titre = titre
         
-        sizerCI = wx.BoxSizer(wx.HORIZONTAL)
-        sizerCI.Add(titre, 0)
-        sizerCI.Add(cb, 1, wx.EXPAND)
-        
-        self.bsizer.Add(sizerCI, 0, wx.EXPAND)
-        self.bsizer.Layout()
+        self.sizer.Add(titre, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 2)
+        self.sizer.Add(cb, (0,1), flag = wx.EXPAND)
+        self.sizer.Layout()
         self.Bind(wx.EVT_COMBOBOX, self.EvtComboBox, cb)
         
+    #############################################################################            
     def EvtComboBox(self, event):
         self.CI.SetNum(event.GetSelection())
         self.titre.SetLabel(u"CI "+str(self.CI.num+1)+":")
         self.Layout()
         self.sendEvent()
         
+    #############################################################################            
     def MiseAJour(self, sendEvt = False):
         self.titre.SetLabel(u"CI "+str(self.CI.num+1)+":")
         self.cb.SetSelection(self.CI.num)
@@ -1806,19 +1881,18 @@ class PanelPropriete_Competence(PanelPropriete):
                          #| wx.CB_SORT
                          )
         self.cb = cb
-    
-        sizerC = wx.BoxSizer(wx.HORIZONTAL)
-        sizerC.Add(titre, 0)
-        sizerC.Add(cb, 1, wx.EXPAND)
         
-        self.bsizer.Add(sizerC, 0, wx.EXPAND)
-        self.bsizer.Layout()
+        self.sizer.Add(titre, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 2)
+        self.sizer.Add(cb, (0,1), flag = wx.EXPAND)
+        self.sizer.Layout()
         self.Bind(wx.EVT_COMBOBOX, self.EvtComboBox, cb)
         
+    #############################################################################            
     def EvtComboBox(self, event):
         self.competence.SetNum(event.GetSelection())
         self.sendEvent()
         
+    #############################################################################            
     def MiseAJour(self, sendEvt = False):
         self.cb.SetSelection(self.competence.num)
         if sendEvt:
@@ -1834,11 +1908,10 @@ class PanelPropriete_Seance(PanelPropriete):
         PanelPropriete.__init__(self, parent)
         self.seance = seance
 
-        
         #
         # Type de séance
         #
-        titre = wx.StaticText(self, -1, u"Type =")
+        titre = wx.StaticText(self, -1, u"Type :")
         cbType = wx.ComboBox(self, -1, u"Choisir un type de séance",
                              choices = [],
                              style = wx.CB_DROPDOWN
@@ -1848,20 +1921,18 @@ class PanelPropriete_Seance(PanelPropriete):
                              )
         self.Bind(wx.EVT_COMBOBOX, self.EvtComboBox, cbType)
         self.cbType = cbType
-        sizerType = wx.BoxSizer(wx.HORIZONTAL)
-        sizerType.Add(titre, 0)
-        sizerType.Add(cbType, 1, wx.EXPAND)
+        self.sizer.Add(titre, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 2)
+        self.sizer.Add(cbType, (0,1), flag = wx.EXPAND)
         
         #
         # Intitulé de la séance
         #
-        titre = wx.StaticText(self, -1, u"Intitulé =")
+        titre = wx.StaticText(self, -1, u"Intitulé :")
         textctrl = wx.TextCtrl(self, -1, u"", style=wx.TE_MULTILINE)
         self.textctrl = textctrl
         self.Bind(wx.EVT_TEXT, self.EvtTextIntitule, textctrl)
-        sizerIntitule = wx.BoxSizer(wx.HORIZONTAL)
-        sizerIntitule.Add(titre, 0)
-        sizerIntitule.Add(textctrl, 1, wx.EXPAND)
+        self.sizer.Add(titre, (1,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 2)
+        self.sizer.Add(textctrl, (1,1), flag = wx.EXPAND)
         
         #
         # Durée de la séance
@@ -1870,12 +1941,13 @@ class PanelPropriete_Seance(PanelPropriete):
 #        textctrl = wx.TextCtrl(self, -1, u"1")
         self.Bind(EVT_VAR_CTRL, self.EvtText, vcDuree)
         self.vcDuree = vcDuree
+        self.sizer.Add(vcDuree, (2,0), (1, 2))
         
         #
         # Effectif
         #
-        titre = wx.StaticText(self, -1, u"Effectif =")
-        cbEff = wx.ComboBox(self, -1, u"Effectif",
+        titre = wx.StaticText(self, -1, u"Effectif :")
+        cbEff = wx.ComboBox(self, -1, u"",
                          choices = [],
                          style = wx.CB_DROPDOWN
                          | wx.TE_PROCESS_ENTER
@@ -1888,30 +1960,68 @@ class PanelPropriete_Seance(PanelPropriete):
         nombre = wx.StaticText(self, -1, u"")
         self.nombre = nombre
         
-        sizerEff = wx.BoxSizer(wx.HORIZONTAL)
-        sizerEff.Add(titre, 0)
-        sizerEff.Add(cbEff, 0, wx.EXPAND)
-        sizerEff.Add(self.nombre, 0)
+        self.sizer.Add(titre, (3,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 2)
+        self.sizer.Add(cbEff, (3,1), flag = wx.EXPAND)
+        self.sizer.Add(self.nombre, (3,2))
         
+        #
+        # Démarche
+        #
+        titre = wx.StaticText(self, -1, u"Démarche :")
+        cbDem = wx.ComboBox(self, -1, u"",
+                         choices = [],
+                         style = wx.CB_DROPDOWN
+                         | wx.TE_PROCESS_ENTER
+                         | wx.CB_READONLY
+                         #| wx.CB_SORT
+                         )
+        self.Bind(wx.EVT_COMBOBOX, self.EvtComboBoxEff, cbDem)
+        self.cbDem = cbDem
+        
+        nombre = wx.StaticText(self, -1, u"")
+        self.nombre = nombre
+        
+        self.sizer.Add(titre, (4,0), flag = wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT|wx.LEFT, border = 2)
+        self.sizer.Add(cbDem, (4,1), flag = wx.EXPAND)
+        self.sizer.Add(self.nombre, (4,2))
+        
+        #
+        #Systèmes
+        #
+        self.box = wx.StaticBox(self, -1, u"Systèmes nécessaires")
+        self.bsizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
+        self.systemeCtrl = []
+        for s in range(8):
+            v = VariableCtrl(self, seance.systemes[s], labelMPL = False, signeEgal = False, slider = False, fct = None, help = "")
+            self.Bind(EVT_VAR_CTRL, self.EvtVarSysteme, v)
+            self.bsizer.Add(v, flag = wx.ALIGN_RIGHT) 
+            self.systemeCtrl.append(v)
+        self.sizer.Add(self.bsizer, (0,4), (5, 1), flag = wx.EXPAND)
+#        self.sizer.AddGrowableCol(4, proportion = 1)
+
         #
         # Mise en place
         #
-        self.bsizer.Add(sizerType, 1, wx.EXPAND)
-        self.bsizer.Add(sizerIntitule, 1, wx.EXPAND)
-        self.bsizer.Add(vcDuree, 1)
-        self.bsizer.Add(sizerEff, 1)
-        self.bsizer.Layout()
+        self.sizer.Layout()
     
+    
+    #############################################################################            
+    def EvtVarSysteme(self, event):
+        return
+    
+    #############################################################################            
     def EvtTextIntitule(self, event):
         self.seance.SetIntitule(event.GetString())
         self.sendEvent()
         
+    #############################################################################            
     def EvtText(self, event):
         self.seance.SetDuree(event.GetVar().v[0])
         if self.seance.parent.typeSeance == "R": # séance en rotation (parent = séance "Rotation")
             self.seance.parent.SetDuree(self.seance.GetDuree())
         self.sendEvent()
         
+    #############################################################################            
     def EvtComboBox(self, event):
         if self.seance.typeSeance in ["R", "S"] and listeTypeSeance[event.GetSelection()] not in ["R", "S"]:
             dlg = wx.MessageDialog(self, u"Modifier le type de cette séance entrainera la suppression de toutes les sous séances !\n" \
@@ -1927,8 +2037,11 @@ class PanelPropriete_Seance(PanelPropriete):
             else:
                 self.seance.SupprimerSousSeances()
         self.seance.SetType(event.GetSelection())
+        self.AdapterAuxSystemes()
+        self.seance.SetEffectif(self.cbEff.GetSelection())
         self.sendEvent()
         
+    #############################################################################            
     def EvtComboBoxEff(self, event):
         print "EvtComboBoxEff", 
         self.seance.SetEffectif(event.GetString())  
@@ -1944,10 +2057,33 @@ class PanelPropriete_Seance(PanelPropriete):
                     n = l[i][1]
                     continuer = False
             i += 1
-        self.nombre.SetLabel(u" (" + str(n) + u" éléves)")
+        self.nombre.SetLabel(u" (" + str(n) + u" élèves)")
         self.sendEvent()
 
-        
+    
+    #############################################################################            
+    def AdapterAuxSystemes(self):
+        self.Freeze()
+        print "AdapterAuxSystemes"
+        if self.seance.typeSeance in ["AP", "ED", "P"]:
+            self.box.Show()
+            for i in range(self.seance.nSystemes):
+                s = self.seance.systemes[i]
+                self.systemeCtrl[i].Renommer(s.n)
+#                self.systemeCtrl[i].mofifierValeursSsEvt()
+                self.systemeCtrl[i].Show()
+            for sc in self.systemeCtrl[self.seance.nSystemes:]:
+                sc.Hide()
+        else:
+            self.box.Hide()
+            for sc in self.systemeCtrl:
+                sc.Hide()
+        self.Layout()
+#        self.Fit()
+        self.Thaw()
+    
+      
+    #############################################################################            
     def AdapterAuType(self):
         print "AdapterAuType"
         #  séance "normale" (parent = séquence)
@@ -1992,12 +2128,28 @@ class PanelPropriete_Seance(PanelPropriete):
             self.cbEff.Append(Effectifs[s][0])
         self.cbEff.SetSelection(0)
         
-#        self.Refresh()
+        # Démarche
+        if self.seance.typeSeance in ["AP", "ED"]:
+            listDem = ["I", "R"]
+            self.cbDem.Enable(True)
+        elif self.seance.typeSeance == "P":
+            listDem = ["I", "R", "P"]
+            self.cbDem.Enable(True)
+        else:
+            self.cbDem.Enable(False)
+            listDem = []
         
+        self.cbDem.Clear()
+        for s in listDem:
+            self.cbDem.Append(Demarches[s])
+        self.cbDem.SetSelection(0)
+        
+    #############################################################################            
     def MarquerProblemeDuree(self, etat):
         return
         self.vcDuree.marquerValid(etat)
         
+    #############################################################################            
     def MiseAJour(self, sendEvt = False):
         self.AdapterAuType()
         self.cbType.SetSelection(self.cbType.GetStrings().index(TypesSeance[self.seance.typeSeance]))
@@ -2005,6 +2157,19 @@ class PanelPropriete_Seance(PanelPropriete):
         self.vcDuree.mofifierValeursSsEvt()
         if self.cbEff.IsEnabled():
             self.cbEff.SetSelection(self.cbEff.GetStrings().index(Effectifs[self.seance.effectif][0]))
+        
+        if self.cbDem.IsEnabled():
+            self.cbDem.SetSelection(self.cbDem.GetStrings().index(Demarches[self.seance.demarche]))
+            
+        
+        self.AdapterAuxSystemes()
+        
+        if self.seance.typeSeance in ["AP", "ED", "P"]:
+            for i in range(self.seance.nSystemes):
+                s = self.seance.systemes[i]
+                self.systemeCtrl[i].mofifierValeursSsEvt()
+
+
         
         if sendEvt:
             self.sendEvent()
@@ -2019,7 +2184,7 @@ class PanelPropriete_Systeme(PanelPropriete):
     def __init__(self, parent, systeme):
         
         self.systeme = systeme
-        
+        self.parent = parent
         
         PanelPropriete.__init__(self, parent)
         
@@ -2030,12 +2195,11 @@ class PanelPropriete_Systeme(PanelPropriete):
         
         textctrl = wx.TextCtrl(self, -1, u"")
         self.textctrl = textctrl
-        sizerInt = wx.BoxSizer(wx.HORIZONTAL)
-        sizerInt.Add(titre, 0)
-        sizerInt.Add(textctrl, 1, wx.EXPAND)
         
-        self.bsizer.Add(sizerInt, flag = wx.EXPAND)
-        self.bsizer.Layout()
+        self.sizer.Add(titre, (0,0))
+        self.sizer.Add(textctrl, (0,1), flag = wx.EXPAND)
+        
+        self.sizer.Layout()
         
         self.Bind(wx.EVT_TEXT, self.EvtText, textctrl)
         
@@ -2043,6 +2207,7 @@ class PanelPropriete_Systeme(PanelPropriete):
         
     def EvtText(self, event):
         self.systeme.SetNom(event.GetString())
+        self.systeme.parent.MiseAJourListeSystemes()
         self.sendEvent()
         
     def MiseAJour(self, sendEvt = False):
