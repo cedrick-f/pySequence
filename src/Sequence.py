@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Sequence.py
-Aide é la réalisation de fiches pédagogiques de séquence
+Aide à la réalisation de fiches pédagogiques de séquence
 *************
 *   STIDD   *
 *************
@@ -15,7 +15,7 @@ Copyright (C) 2011
 #   Import des modules nécessaires
 #
 ####################################################################################
-# Outils "systéme"
+# Outils "système"
 import sys, os
 
 # GUI
@@ -1052,6 +1052,7 @@ class Seance():
             
         self.OrdonnerSeances()
         seance.ConstruireArbre(self.arbre, self.branche)
+        self.arbre.Expand(self.branche)
         return
 
     ######################################################################################  
@@ -1082,7 +1083,7 @@ class Seance():
             if isinstance(self.parent, Sequence):
                 sequence = self.parent
             else:
-                sequence = self.parent 
+                sequence = self.parent.parent
             for i, s in enumerate(sequence.systemes):
                 self.systemes[i].n = s.nom
             self.nSystemes = len(sequence.systemes)
@@ -1296,8 +1297,6 @@ class FenetreSequence(wx.Frame):
         self.SetSize((1024,738)) # Taille pour écran 1024x768
         # On centre la fenétre dans l'écran ...
         self.CentreOnScreen(wx.BOTH)
-        
-        
         
         
         # Use a panel under the AUI panes in order to work around a
@@ -2037,9 +2036,13 @@ class PanelPropriete_Seance(PanelPropriete):
             else:
                 self.seance.SupprimerSousSeances()
         self.seance.SetType(event.GetSelection())
+#        self.AdapterAuType()
         self.AdapterAuxSystemes()
-        self.seance.SetEffectif(self.cbEff.GetSelection())
+        if self.cbEff.IsEnabled():
+            self.seance.SetEffectif(self.cbEff.GetStringSelection())
         self.sendEvent()
+       
+        
         
     #############################################################################            
     def EvtComboBoxEff(self, event):
