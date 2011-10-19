@@ -20,6 +20,8 @@ def show_text_rect(ctx, texte, x, y, w, h, va = 'c', ha = 'c', b = 0.2, orient =
     """
 #    print "show_text_rect", texte
 
+    if texte == "":
+        return
     if orient == 'v':
         ctx.rotate(-pi/2)
         show_text_rect(ctx, texte, -y-h, x, h, w, va, ha, b)

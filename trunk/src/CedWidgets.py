@@ -451,7 +451,7 @@ class VarEvent(wx.PyCommandEvent):
 class VariableCtrl(wx.Panel):
     def __init__(self, parent, variable, coef = None, labelMPL = True, signeEgal = True, 
                  slider = False, fct = None, help = ""):
-        wx.Panel.__init__(self, parent, -1)
+        wx.Panel.__init__(self, parent, -1)#, style = wx.BORDER_SIMPLE)
         
         if coef == None:
             if variable.t == VAR_ENTIER or variable.t == VAR_ENTIER_POS:
@@ -477,7 +477,8 @@ class VariableCtrl(wx.Panel):
         if labelMPL:
             txtnom = wx.StaticBitmap(self, -1, mathtext_to_wxbitmap(txt, taille = FONT_SIZE_VARIABLE))
         else:
-            txtnom = wx.StaticText(self, -1, txt)
+            txtnom = wx.StaticText(self, -1, txt, style = wx.ALIGN_RIGHT)
+        self.txtnom = txtnom
             
         if len(help) > 0:
             txtnom.SetToolTipString(help)
@@ -506,11 +507,11 @@ class VariableCtrl(wx.Panel):
         self.Bind(wx.EVT_SPIN_DOWN, self.OnSpinDown, self.spin)
         
         vs = wx.BoxSizer( wx.HORIZONTAL)
-        vs.Add( txtnom, 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_RIGHT|wx.LEFT, 4 )
+        vs.Add(txtnom,1, wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_RIGHT|wx.LEFT, 4 )
         vs.Add(self.text, 1, wx.ALIGN_CENTRE|wx.LEFT|wx.RIGHT, 5 )
         vs.Add(self.spin, 0, wx.ALIGN_CENTRE|wx.LEFT|wx.RIGHT, 5 )
         
-        sizer = wx.BoxSizer( wx.VERTICAL)
+        sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(vs)
         
         if slider:
@@ -528,6 +529,12 @@ class VariableCtrl(wx.Panel):
         
         self.SetSizerAndFit(sizer)
     
+    #########################################################################################################
+    def Renommer(self, nom):
+        self.txtnom.SetLabel(nom)
+        self.Layout()
+        self.Fit()
+        
     
     #########################################################################################################
     def sendEvent(self):
