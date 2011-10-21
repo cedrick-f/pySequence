@@ -53,7 +53,7 @@ import xml.etree.ElementTree as ET
 from CedWidgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_ENTIER_POS
 
 # les paramèters de configuration graphique de la fiche de séquence
-from configFiche import *
+import configFiche as cf
 
 
 
@@ -396,7 +396,7 @@ class Sequence():
             
     ######################################################################################  
     def InitCurseur(self):
-        self.curseur = [posZSeances[0], posZSeances[1]]
+        self.curseur = [cf.posZSeances[0], cf.posZSeances[1]]
         
         
     ######################################################################################  
@@ -432,39 +432,38 @@ class Sequence():
         """ Calcule les positions et dimensions des différentes zones de tracé
             en fonction du nombre d'éléments (séances, systèmes)
         """
-        global wEff, hHoraire, ecartY
         # Zone des intitulés des séances
-        tailleZIntSeances[1] = self.GetNbreSeances()* hIntSeance
-        posZIntSeances[1] = 1 - tailleZIntSeances[1]-0.05
+        cf.tailleZIntSeances[1] = self.GetNbreSeances()* cf.hIntSeance
+        cf.posZIntSeances[1] = 1 - cf.tailleZIntSeances[1]-0.05
         
         # Zone du tableau des Systèmes
-        tailleZSysteme[0] = wColSysteme * len(self.systemes)
-        tailleZSysteme[1] = posZIntSeances[1] - posZSysteme[1] - 0.05
-        posZSysteme[0] = posZOrganis[0] + tailleZOrganis[0] - tailleZSysteme[0] - 0.05
+        cf.tailleZSysteme[0] = cf.wColSysteme * len(self.systemes)
+        cf.tailleZSysteme[1] = cf.posZIntSeances[1] - cf.posZSysteme[1] - 0.05
+        cf.posZSysteme[0] = cf.posZOrganis[0] + cf.tailleZOrganis[0] - cf.tailleZSysteme[0] - 0.05
         
         # Zone du tableau des démarches
-        posZDemarche[0] = posZSysteme[0] - tailleZDemarche[0] - 0.05
-        tailleZDemarche[1] = tailleZSysteme[1]
-        xDemarche["I"] = posZDemarche[0] + tailleZDemarche[0]/6
-        xDemarche["R"] = posZDemarche[0] + tailleZDemarche[0]*3/6
-        xDemarche["P"] = posZDemarche[0] + tailleZDemarche[0]*5/6
+        cf.posZDemarche[0] = cf.posZSysteme[0] - cf.tailleZDemarche[0] - 0.05
+        cf.tailleZDemarche[1] = cf.tailleZSysteme[1]
+        cf.xDemarche["I"] = cf.posZDemarche[0] + cf.tailleZDemarche[0]/6
+        cf.xDemarche["R"] = cf.posZDemarche[0] + cf.tailleZDemarche[0]*3/6
+        cf.xDemarche["P"] = cf.posZDemarche[0] + cf.tailleZDemarche[0]*5/6
                      
         # Zone de déroulement de la séquence
-        tailleZDeroul[0] = posZDemarche[0] - posZDeroul[0] - 0.05
-        tailleZDeroul[1] = tailleZSysteme[1]
+        cf.tailleZDeroul[0] = cf.posZDemarche[0] - cf.posZDeroul[0] - 0.05
+        cf.tailleZDeroul[1] = cf.tailleZSysteme[1]
         
         
         # Zone des séances
-        tailleZSeances[0] = tailleZDeroul[0] - 0.08
-        tailleZSeances[1] = tailleZSysteme[1] - posZSeances[1] + posZDeroul[1] - 0.05
-        wEff = {"C" : tailleZSeances[0],
-                 "G" : tailleZSeances[0]*4/5,
-                 "D" : tailleZSeances[0]*2/3,
-                 "E" : tailleZSeances[0]*1/2,
-                 "P" : tailleZSeances[0]*1/4,
+        cf.tailleZSeances[0] = cf.tailleZDeroul[0] - 0.08
+        cf.tailleZSeances[1] = cf.tailleZSysteme[1] - cf.posZSeances[1] + cf.posZDeroul[1] - 0.05
+        cf.wEff = {"C" : cf.tailleZSeances[0],
+                 "G" : cf.tailleZSeances[0]*4/5,
+                 "D" : cf.tailleZSeances[0]*2/3,
+                 "E" : cf.tailleZSeances[0]*1/2,
+                 "P" : cf.tailleZSeances[0]*1/4,
                  }
-        ecartY = 0.02
-        hHoraire = (tailleZSeances[1] - (len(self.seance)-1)*ecartY) / self.GetHoraireTotal()
+        cf.ecartY = 0.02
+        cf.hHoraire = (cf.tailleZSeances[1] - (len(self.seance)-1)*cf.ecartY) / self.GetHoraireTotal()
         
         
         
@@ -490,15 +489,15 @@ class Sequence():
         #
         #  Intitulé de la séquence
         #
-        x, y = posIntitule
-        w, h = tailleIntitule
+        x, y = cf.posIntitule
+        w, h = cf.tailleIntitule
         ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
                               cairo.FONT_WEIGHT_BOLD)
         ctx.set_source_rgb(0, 0, 0)
         if len(self.intitule) > 0:
             show_text_rect(ctx, self.intitule, x, y, w, h)
         ctx.set_line_width(0.005)
-        ctx.set_source_rgb(BcoulIntitule[0], BcoulIntitule[1], BcoulIntitule[2])
+        ctx.set_source_rgb(cf.BcoulIntitule[0], cf.BcoulIntitule[1], cf.BcoulIntitule[2])
         ctx.rectangle(x, y, w, h)
         ctx.stroke()
 
@@ -507,12 +506,12 @@ class Sequence():
         #
         
         # Rectangle arrondi
-        x0, y0 = posObj
-        rect_width, rect_height  = tailleObj
+        x0, y0 = cf.posObj
+        rect_width, rect_height  = cf.tailleObj
         curve_rect(ctx, x0, y0, rect_width, rect_height, 0.3)
-        ctx.set_source_rgb (IcoulObj[0], IcoulObj[1], IcoulObj[2])
+        ctx.set_source_rgb (cf.IcoulObj[0], cf.IcoulObj[1], cf.IcoulObj[2])
         ctx.fill_preserve ()
-        ctx.set_source_rgba (BcoulObj[0], BcoulObj[1], BcoulObj[2])
+        ctx.set_source_rgba (cf.BcoulObj[0], cf.BcoulObj[1], cf.BcoulObj[2])
         ctx.stroke ()
         
         # Titre
@@ -538,8 +537,8 @@ class Sequence():
                                   cairo.FONT_WEIGHT_BOLD)
             show_text_rect(ctx, txtObj, x0, yc, rect_width, rect_height - height-0.01)
             
-            x, y = posObj
-            w, h = tailleObj
+            x, y = cf.posObj
+            w, h = cf.tailleObj
             ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
                                   cairo.FONT_WEIGHT_BOLD)
 #        
@@ -553,7 +552,7 @@ class Sequence():
         #  Séances
         #
         for s in self.seance:
-            s.Draw(ctx, self.curseur, wEff, ecartY, hHoraire)
+            s.Draw(ctx, self.curseur, cf.wEff, cf.ecartY, cf.hHoraire)
             
         #
         #  Tableau des systèmes
@@ -566,15 +565,15 @@ class Sequence():
                                   cairo.FONT_WEIGHT_NORMAL)
             ctx.set_source_rgb(0, 0, 0)
             ctx.set_line_width(0.002)
-            tableauV(ctx, nomsSystemes, posZSysteme[0], posZSysteme[1], 
-                    tailleZSysteme[0], posZSeances[1] - posZSysteme[1], 
+            tableauV(ctx, nomsSystemes, cf.posZSysteme[0], cf.posZSysteme[1], 
+                    cf.tailleZSysteme[0], cf.posZSeances[1] - cf.posZSysteme[1], 
                     0, nlignes = 0, va = 'c', ha = 'g', orient = 'v', coul = (0.8,0.8,0.8))
             
-            wc = tailleZSysteme[0]/len(nomsSystemes)
-            _x = posZSysteme[0]
-            _y = posZSysteme[1]
+            wc = cf.tailleZSysteme[0]/len(nomsSystemes)
+            _x = cf.posZSysteme[0]
+            _y = cf.posZSysteme[1]
             for s in self.systemes:
-                s.rect = (_x, _y, wc, posZSeances[1] - posZSysteme[1])
+                s.rect = (_x, _y, wc, cf.posZSeances[1] - cf.posZSysteme[1])
                 _x += wc
     
         #
@@ -584,8 +583,8 @@ class Sequence():
                               cairo.FONT_WEIGHT_NORMAL)
         ctx.set_source_rgb(0, 0, 0)
         ctx.set_line_width(0.002)
-        tableauV(ctx, Demarches.values(), posZDemarche[0], posZDemarche[1], 
-                tailleZDemarche[0], posZSeances[1] - posZSysteme[1], 
+        tableauV(ctx, Demarches.values(), cf.posZDemarche[0], cf.posZDemarche[1], 
+                cf.tailleZDemarche[0], cf.posZSeances[1] - cf.posZSysteme[1], 
                 0, nlignes = 0, va = 'c', ha = 'g', orient = 'v', coul = (0.8,0.8,0.8))
 
     
@@ -603,8 +602,8 @@ class Sequence():
                                   cairo.FONT_WEIGHT_NORMAL)
             ctx.set_source_rgb(0, 0, 0)
             ctx.set_line_width(0.002)
-            tableauH(ctx, nomsSeances, posZIntSeances[0], posZIntSeances[1], 
-                    0.05, tailleZIntSeances[0]-0.05, tailleZIntSeances[1], 
+            tableauH(ctx, nomsSeances, cf.posZIntSeances[0], cf.posZIntSeances[1], 
+                    0.05, cf.tailleZIntSeances[0]-0.05, cf.tailleZIntSeances[1], 
                     nCol = 1, va = 'c', ha = 'g', orient = 'h', coul = (0.8,0.8,0.8), 
                     contenu = [intSeances])
     
@@ -618,12 +617,12 @@ class Sequence():
     ######################################################################################  
     def HitTest(self, x, y):
         print "HitTest", x, y
-        rect = posIntitule + tailleIntitule
+        rect = cf.posIntitule + cf.tailleIntitule
         if dansRectangle(x, y, rect):
             self.arbre.DoSelectItem(self.branche)
         elif self.CI.HitTest(x, y):
             return
-        elif dansRectangle(x, y, posObj + tailleObj):
+        elif dansRectangle(x, y, cf.posObj + cf.tailleObj):
             self.arbre.DoSelectItem(self.brancheObj)
         else:
             autresZones = self.seance + self.systemes
@@ -705,13 +704,13 @@ class CentreInteret():
     ######################################################################################  
     def Draw(self, ctx):
         # Rectangle arrondi
-        x0, y0 = posCI
-        rect_width, rect_height  = tailleCI
+        x0, y0 = cf.posCI
+        rect_width, rect_height  = cf.tailleCI
         
         curve_rect(ctx, x0, y0, rect_width, rect_height, 0.05)
-        ctx.set_source_rgb (IcoulCI[0], IcoulCI[1], IcoulCI[2])
+        ctx.set_source_rgb (cf.IcoulCI[0], cf.IcoulCI[1], cf.IcoulCI[2])
         ctx.fill_preserve ()
-        ctx.set_source_rgba (BcoulCI[0], BcoulCI[1], BcoulCI[2])
+        ctx.set_source_rgba (cf.BcoulCI[0], cf.BcoulCI[1], cf.BcoulCI[2])
         ctx.stroke ()
         
         #
@@ -737,7 +736,7 @@ class CentreInteret():
 
         
     def HitTest(self, x, y):
-        rect = posCI + tailleCI
+        rect = cf.posCI + cf.tailleCI
         if dansRectangle(x, y, rect):
             self.arbre.DoSelectItem(self.branche)
         
@@ -1116,8 +1115,8 @@ class Seance():
         if not self.typeSeance in ["R", "S", ""]:
             print "Draw", self
             x, y = curseur
-            w = wEff[self.effectif]
-            h = hHoraire * self.GetDuree()
+            w = cf.wEff[self.effectif]
+            h = cf.hHoraire * self.GetDuree()
             self.rect = (x, y, w, h) # Pour clic
             ctx.set_line_width(0.002)
             rectangle_plein(ctx, x, y, w, h, (0.1,0.2,0.1), (0.6,0.9,0.4,1))
@@ -1134,16 +1133,16 @@ class Seance():
             elif typ == "S":
                 curseur[0] += w
             else:
-                curseur[1] += h + ecartY
+                curseur[1] += h + cf.ecartY
         else:
             if self.typeSeance in ["R", "S"]:
                 for s in self.sousSeances:
-                    s.Draw(ctx, curseur, wEff, ecartY, hHoraire, typ = self.typeSeance)
+                    s.Draw(ctx, curseur, cf.wEff, cf.ecartY, cf.hHoraire, typ = self.typeSeance)
 #                    if self.typeSeance == "S":
-                curseur[0] = posZSeances[0]
-                curseur[1] += ecartY
+                curseur[0] = cf.posZSeances[0]
+                curseur[1] += cf.ecartY
                 if self.typeSeance == "S":
-                    curseur[1] += hHoraire * self.GetDuree()
+                    curseur[1] += cf.hHoraire * self.GetDuree()
                 
         
         
@@ -1159,7 +1158,7 @@ class Seance():
         #
         # Croisements Séance/Démarche
         #
-        _x = xDemarche[self.demarche]
+        _x = cf.xDemarche[self.demarche]
 #        if self.typeSeance in ["AP", "ED", "P"]:
         boule(ctx, _x, y, 0.008)
 #        ctx.arc (_x, y, 0.006, 0, 2*pi)
@@ -1324,6 +1323,16 @@ class FenetreSequence(wx.Frame):
         # panel de propriétés (conteneur)
         panelProp = PanelConteneur(pnl)
         
+        #
+        # le fichier de configuration de la fiche
+        #
+        self.nomFichierConfig = "configFiche.cfg"
+        # on essaye de l'ouvrir
+        try:
+            cf.ouvrirConfigFiche(self.nomFichierConfig)
+            print cf.posObj
+        except:
+            pass 
         
         #
         # La séquence
@@ -1419,6 +1428,9 @@ class FenetreSequence(wx.Frame):
         
         wx.CallAfter(self.ficheSeq.Redessiner)
         self.Bind(EVT_SEQ_MODIFIED, self.OnSeqModified)
+        
+        # Interception de la demande de fermeture
+        self.Bind(wx.EVT_CLOSE, self.quitter)
         
         self.definirNomFichierCourant('')
 #        sizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -1612,7 +1624,40 @@ class FenetreSequence(wx.Frame):
             dlg.Destroy()
         return
     
-    
+    #############################################################################
+    def quitter(self, event = None):
+        try:
+            cf.enregistrerConfigFiche(self.nomFichierConfig)
+        except IOError:
+            print "   Permission d'enregistrer les options refusée...",
+        except:
+            print "   Erreur enregistrement options...",
+            
+#        event.Skip()
+        if not self.fichierCourantModifie:
+            self.fermer()
+            return
+        
+        texte = _(u"La séquence a été modifiée.\nVoulez vous enregistrer les changements ?")
+        if self.fichierCourant != '':
+            texte += "\n\n\t"+self.fichierCourant+"\n"
+            
+        dialog = wx.MessageDialog(self, texte, 
+                                  _(u"Confirmation"), wx.YES_NO | wx.CANCEL | wx.ICON_WARNING)
+        retCode = dialog.ShowModal()
+        if retCode == wx.ID_YES:
+            self.commandeEnregistrer()
+            self.fermer()
+        elif retCode == wx.ID_NO:
+            self.fermer()
+
+
+    def fermer(self):
+        self.Destroy()
+        sys.exit()
+        
+        
+        
 ####################################################################################
 #
 #   Classe définissant la fenétre de la fiche de séquence
