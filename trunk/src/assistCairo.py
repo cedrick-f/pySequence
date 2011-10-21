@@ -91,6 +91,7 @@ def show_text_rect(ctx, texte, x, y, w, h, va = 'c', ha = 'c', b = 0.2, orient =
         ctx.show_text(t)
         l += 1
     
+    ctx.stroke()
     return
 
 
