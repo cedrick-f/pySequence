@@ -54,7 +54,7 @@ from CedWidgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_E
 
 # les paramèters de configuration graphique de la fiche de séquence
 import configFiche as cf
-
+import ConfigParser
 
 
 ####################################################################################
@@ -62,6 +62,7 @@ import configFiche as cf
 #   Définition des constantes
 #
 ####################################################################################
+
 CentresInterets = [u"Développement durable et compétitivité des produits",
                    u"Design, créativité et innovation",
                    u"Caractéristiques des matériaux et structures",
@@ -78,7 +79,38 @@ CentresInterets = [u"Développement durable et compétitivité des produits",
                    u"Informations liées au comportement des matériaux et des structures",
                    u"Optimisation des paramètres par simulation globale"
                    ]
+
+Effectifs = {"C" : [u"Classe entière",      32],
+             "G" : [u"Effectif réduit",     16],
+             "D" : [u"Demi-groupe",         8],
+             "E" : [u"Etude et Projet",     4],
+             "P" : [u"Activité Pratique",   2],
+             }
+
+
+def ouvrirConfig():
+    print "ouvrirConfig"
+    global CentresInterets
     
+    config = ConfigParser.ConfigParser()
+    config.read('configuration.cfg')
+    
+    section = "Centres d'interet"
+    l = [""] * len(config.options(section))
+    for o in config.options(section):
+        print config.get(section,o)
+        l[eval(o)-1] = unicode(config.get(section,o), 'cp1252')
+    CentresInterets = l
+        
+    section = "Effectifs classe"
+    for k in Effectifs.keys():
+        Effectifs[k][1] = config.getint(section,k)
+        
+print CentresInterets
+
+
+ouvrirConfig()
+print CentresInterets
     
 Competences = {"CO1.1" : u"Justifier les choix des matériaux, des structures d'un système et les énergies mises en oeuvre dans une approche de développement durable",
                "CO1.2" : u"Justifier le choix d'une solution selon des contraintes d'ergonomie et d'effets sur la santé de l'homme et du vivant",
@@ -116,12 +148,7 @@ TypesSeance.update({"R" : u"Rotation d'activités",
 listeTypeSeance = ["ED", "AP", "P", "C", "SA", "SS", "E", "R", "S"]
 listeTypeActivite = ["ED", "AP", "P"]
 
-Effectifs = {"C" : [u"Classe entière",      32],
-             "G" : [u"Effectif réduit",     16],
-             "D" : [u"Demi-groupe",         8],
-             "E" : [u"Etude et Projet",     4],
-             "P" : [u"Activité Pratique",   2],
-             }
+
 
 Demarches = {"I" : "Investigation",
              "R" : "Résolution de problème",
@@ -1145,9 +1172,16 @@ class Seance():
             self.rect = (x, y, w, h) # Pour clic
             ctx.set_line_width(0.002)
             rectangle_plein(ctx, x, y, w, h, (0.1,0.2,0.1), (0.6,0.9,0.4,1))
-            
             if self.typeSeance in ["AP", "ED", "P"]:
-                self.DrawCroisements(ctx, x+w, y+h/2)
+                if self.EstSousSeance() and self.parent.typeSeance == "S":
+                    ns = len(self.parent.sousSeances)
+                    ys = y+(self.ordre+1) * h/(ns+1)
+                    print ns, ys, self.ordre
+                else:
+                    ys = y+h/2
+                self.DrawCroisements(ctx, x+w, ys)
+                self.DrawCroisementSystemes(ctx, ys)
+                
             
             if hasattr(self, 'code'):
                 ctx.set_source_rgb (0,0,0)
@@ -1169,22 +1203,45 @@ class Seance():
                 if self.typeSeance == "S":
                     curseur[1] += cf.hHoraire * self.GetDuree()
         
-        # 
-        # Croisement Seance/Systèmes
-        #
+#        # 
+#        # Croisement Seance/Systèmes
+#        #
+#        
+#        if self.typeSeance in ["AP", "ED", "P"]:
+##            and not (self.EstSousSeance() and self.parent.typeSeance == "S"):
+#            ns = self.GetNbrSystemes()
+#            for s, n in ns.items():
+#                if n > 0:
+#                    _x, _y = cf.xSystemes[s], curseur[1]+cf.hHoraire * self.GetDuree()/2
+#                    self.DrawCroisementSystemes(ctx, _x, _y, n)
+#        elif self.typeSeance == "S":
+#            self.DrawCroisements(ctx, x+w, y+h/2)
+#            ns = self.GetNbrSystemes()
+#            for s, n in ns.items():
+#                if n > 0:
+#                    _x, _y = cf.xSystemes[s], curseur[1]-cf.hHoraire * self.GetDuree()/2- cf.ecartY
+#                    self.DrawCroisementSystemes(ctx, _x, _y, n)
+            
+            
+            
+    ######################################################################################  
+    def DrawCroisementSystemes(self, ctx, y):
+#        if self.typeSeance in ["AP", "ED", "P"]:
+#            and not (self.EstSousSeance() and self.parent.typeSeance == "S"):
         r = 0.01
-        if self.typeSeance in ["AP", "ED", "P", "S"]:
-            ns = self.GetNbrSystemes()
-            for s, n in ns.items():
-                if n > 0:
-                    _x, _y = cf.xSystemes[s], y+h/2
-                    ctx.arc(_x, _y, r, 0, 2*pi)
-                    ctx.set_source_rgba (1,0.2,0.2,0.6)
-                    ctx.fill_preserve ()
-                    ctx.set_source_rgba (0,0,0,1)
-                    ctx.stroke ()
-                    show_text_rect(ctx, str(n), _x-r, _y-r, 2*r, 2*r)
-        
+        ns = self.GetNbrSystemes()
+        for s, n in ns.items():
+            if n > 0:
+                x = cf.xSystemes[s]
+                ctx.arc(x, y, r, 0, 2*pi)
+                ctx.set_source_rgba (1,0.2,0.2,0.6)
+                ctx.fill_preserve ()
+                ctx.set_source_rgba (0,0,0,1)
+                ctx.stroke ()
+                show_text_rect(ctx, str(n), x-r, y-r, 2*r, 2*r)
+            
+            
+            
     ######################################################################################  
     def GetNbrSystemes(self):
         d = {}
@@ -1196,7 +1253,7 @@ class Seance():
             for seance in self.sousSeances:
                 for s in seance.systemes:
                     if s.n <>"":
-                        if d.haskey(s.n):
+                        if d.has_key(s.n):
                             d[s.n] += s.v[0]
                         else:
                             d[s.n] = s.v[0]
