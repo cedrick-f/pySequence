@@ -52,6 +52,8 @@ import xml.etree.ElementTree as ET
 # des widgets wx évolués "faits maison"
 from CedWidgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_ENTIER_POS
 
+# les paramèters de configuration graphique de la fiche de séquence
+from configFiche import *
 
 
 
@@ -112,6 +114,7 @@ TypesSeance.update({"R" : u"Rotation d'activités",
                     "S" : u"Série d'activités"})
 
 listeTypeSeance = ["ED", "AP", "P", "C", "SA", "SS", "E", "R", "S"]
+listeTypeActivite = ["ED", "AP", "P"]
 
 Effectifs = {"C" : [u"Classe entière",      32],
              "G" : [u"Effectif réduit",     16],
@@ -123,6 +126,7 @@ Effectifs = {"C" : [u"Classe entière",      32],
 Demarches = {"I" : "Investigation",
              "R" : "Résolution de problème",
              "P" : "Projet"}
+listeDemarches = ["I", "R", "P"]
 
 ####################################################################################
 #
@@ -165,61 +169,7 @@ class Sequence():
         self.panelParent = panelParent
         self.app = app
         
-        #
-        # Données pour le tracé
-        #
         
-        # Rectangle de l'intitulé
-        self.posIntitule = (0.72414-0.25, 0.05)
-        self.tailleIntitule = (0.2, 0.1)
-        self.IcoulIntitule = (0.2,0.8,0.2)
-        self.BcoulIntitule = (0.2,0.8,0.2)
-        
-        # Objectifs
-        self.posCI = (0.05, 0.04)
-        self.tailleCI = (0.18, 0.12)
-        self.IcoulCI = (0.9,0.8,0.8)
-        self.BcoulCI = (0.3,0.2,0.25)
-        
-        # Rectangle des objectifs
-        self.posObj = (0.262, 0.06)
-        self.tailleObj = (0.2, 0.08)
-        self.IcoulObj = (0.8,0.9,0.8)
-        self.BcoulObj = (0.25,0.3,0.2)
-        
-        # Zone d'organisation de la séquence (grand cadre)
-        self.posZOrganis = (0.05, 0.19)
-        self.tailleZOrganis = (0.72414-0.05, 0.95)
-        
-        # Zone de déroulement de la séquence
-        self.posZDeroul = (0.06, 0.2)
-        self.tailleZDeroul = [None, None]
-        
-        # Zone du tableau des Systèmes
-        self.posZSysteme = [None, 0.17]
-        self.tailleZSysteme = [None, None]
-        self.wColSysteme = 0.035
-        
-        # Zone du tableau des démarches
-        self.posZDemarche = [None, 0.17]
-        self.tailleZDemarche = [0.08, None]
-        
-        # Zone des intitulés des séances
-        self.posZIntSeances = [0.06, None]
-        self.tailleZIntSeances = [0.72414-0.06, None]
-        self.hIntSeance = 0.02
-        
-        # Zone des séances
-        self.posZSeances = (0.07, 0.28)
-        self.tailleZSeances = [None, None]
-        self.wEff = {"C" : None,
-                     "G" : None,
-                     "D" : None,
-                     "E" : None,
-                     "P" : None,
-                     }
-        self.hHoraire = None
-        self.ecartY = None
         # Un curseur pour placer les séances
         self.InitCurseur()
         
@@ -386,7 +336,7 @@ class Sequence():
     ######################################################################################  
     def AjouterRotation(self, seance):
         seanceR1 = Seance(self.panelParent)
-        seance.rotation.append(seanceR1)
+        seance.sousSeances.append(seanceR1)
         return seanceR1
         
         
@@ -446,7 +396,7 @@ class Sequence():
             
     ######################################################################################  
     def InitCurseur(self):
-        self.curseur = [self.posZSeances[0], self.posZSeances[1]]
+        self.curseur = [posZSeances[0], posZSeances[1]]
         
         
     ######################################################################################  
@@ -460,10 +410,8 @@ class Sequence():
     def GetNbreSeances(self):
         n = 0
         for s in self.seance:
-            if s.typeSeance == "R":
-                n += len(s.rotation)
-            elif s.typeSeance == "S":
-                n += len(s.serie)
+            if s.typeSeance in ["R", "S"]:
+                n += len(s.sousSeances)
             n += 1
         return n
     
@@ -484,34 +432,39 @@ class Sequence():
         """ Calcule les positions et dimensions des différentes zones de tracé
             en fonction du nombre d'éléments (séances, systèmes)
         """
+        global wEff, hHoraire, ecartY
         # Zone des intitulés des séances
-        self.tailleZIntSeances[1] = self.GetNbreSeances()* self.hIntSeance
-        self.posZIntSeances[1] = 1 - self.tailleZIntSeances[1]-0.05
+        tailleZIntSeances[1] = self.GetNbreSeances()* hIntSeance
+        posZIntSeances[1] = 1 - tailleZIntSeances[1]-0.05
         
         # Zone du tableau des Systèmes
-        self.tailleZSysteme[0] = self.wColSysteme * len(self.systemes)
-        self.tailleZSysteme[1] = self.posZIntSeances[1] - self.posZSysteme[1] - 0.05
-        self.posZSysteme[0] = self.posZOrganis[0] + self.tailleZOrganis[0] - self.tailleZSysteme[0] - 0.05
+        tailleZSysteme[0] = wColSysteme * len(self.systemes)
+        tailleZSysteme[1] = posZIntSeances[1] - posZSysteme[1] - 0.05
+        posZSysteme[0] = posZOrganis[0] + tailleZOrganis[0] - tailleZSysteme[0] - 0.05
         
         # Zone du tableau des démarches
-        self.posZDemarche[0] = self.posZSysteme[0] - self.tailleZDemarche[0] - 0.05
-        self.tailleZDemarche[1] = self.tailleZSysteme[1]
-        
+        posZDemarche[0] = posZSysteme[0] - tailleZDemarche[0] - 0.05
+        tailleZDemarche[1] = tailleZSysteme[1]
+        xDemarche["I"] = posZDemarche[0] + tailleZDemarche[0]/6
+        xDemarche["R"] = posZDemarche[0] + tailleZDemarche[0]*3/6
+        xDemarche["P"] = posZDemarche[0] + tailleZDemarche[0]*5/6
+                     
         # Zone de déroulement de la séquence
-        self.tailleZDeroul[0] = self.posZDemarche[0] - self.posZDeroul[0] - 0.05
-        self.tailleZDeroul[1] = self.tailleZSysteme[1]
+        tailleZDeroul[0] = posZDemarche[0] - posZDeroul[0] - 0.05
+        tailleZDeroul[1] = tailleZSysteme[1]
+        
         
         # Zone des séances
-        self.tailleZSeances[0] = self.tailleZDeroul[0] - 0.08
-        self.tailleZSeances[1] = self.tailleZSysteme[1] - self.posZSeances[1] + self.posZDeroul[1] - 0.05
-        self.wEff = {"C" : self.tailleZSeances[0],
-                     "G" : self.tailleZSeances[0]*4/5,
-                     "D" : self.tailleZSeances[0]*2/3,
-                     "E" : self.tailleZSeances[0]*1/2,
-                     "P" : self.tailleZSeances[0]*1/4,
-                     }
-        self.ecartY = 0.02
-        self.hHoraire = (self.tailleZSeances[1] - (len(self.seance)-1)*self.ecartY) / self.GetHoraireTotal()
+        tailleZSeances[0] = tailleZDeroul[0] - 0.08
+        tailleZSeances[1] = tailleZSysteme[1] - posZSeances[1] + posZDeroul[1] - 0.05
+        wEff = {"C" : tailleZSeances[0],
+                 "G" : tailleZSeances[0]*4/5,
+                 "D" : tailleZSeances[0]*2/3,
+                 "E" : tailleZSeances[0]*1/2,
+                 "P" : tailleZSeances[0]*1/4,
+                 }
+        ecartY = 0.02
+        hHoraire = (tailleZSeances[1] - (len(self.seance)-1)*ecartY) / self.GetHoraireTotal()
         
         
         
@@ -537,15 +490,15 @@ class Sequence():
         #
         #  Intitulé de la séquence
         #
-        x, y = self.posIntitule
-        w, h = self.tailleIntitule
+        x, y = posIntitule
+        w, h = tailleIntitule
         ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
                               cairo.FONT_WEIGHT_BOLD)
         ctx.set_source_rgb(0, 0, 0)
         if len(self.intitule) > 0:
             show_text_rect(ctx, self.intitule, x, y, w, h)
         ctx.set_line_width(0.005)
-        ctx.set_source_rgb(self.BcoulIntitule[0], self.BcoulIntitule[1], self.BcoulIntitule[2])
+        ctx.set_source_rgb(BcoulIntitule[0], BcoulIntitule[1], BcoulIntitule[2])
         ctx.rectangle(x, y, w, h)
         ctx.stroke()
 
@@ -554,12 +507,12 @@ class Sequence():
         #
         
         # Rectangle arrondi
-        x0, y0 = self.posObj
-        rect_width, rect_height  = self.tailleObj
+        x0, y0 = posObj
+        rect_width, rect_height  = tailleObj
         curve_rect(ctx, x0, y0, rect_width, rect_height, 0.3)
-        ctx.set_source_rgb (self.IcoulObj[0], self.IcoulObj[1], self.IcoulObj[2])
+        ctx.set_source_rgb (IcoulObj[0], IcoulObj[1], IcoulObj[2])
         ctx.fill_preserve ()
-        ctx.set_source_rgba (self.BcoulObj[0], self.BcoulObj[1], self.BcoulObj[2])
+        ctx.set_source_rgba (BcoulObj[0], BcoulObj[1], BcoulObj[2])
         ctx.stroke ()
         
         # Titre
@@ -585,8 +538,8 @@ class Sequence():
                                   cairo.FONT_WEIGHT_BOLD)
             show_text_rect(ctx, txtObj, x0, yc, rect_width, rect_height - height-0.01)
             
-            x, y = self.posObj
-            w, h = self.tailleObj
+            x, y = posObj
+            w, h = tailleObj
             ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
                                   cairo.FONT_WEIGHT_BOLD)
 #        
@@ -600,7 +553,7 @@ class Sequence():
         #  Séances
         #
         for s in self.seance:
-            s.Draw(ctx, self.curseur, self.wEff, self.ecartY, self.hHoraire)
+            s.Draw(ctx, self.curseur, wEff, ecartY, hHoraire)
             
         #
         #  Tableau des systèmes
@@ -613,15 +566,15 @@ class Sequence():
                                   cairo.FONT_WEIGHT_NORMAL)
             ctx.set_source_rgb(0, 0, 0)
             ctx.set_line_width(0.002)
-            tableauV(ctx, nomsSystemes, self.posZSysteme[0], self.posZSysteme[1], 
-                    self.tailleZSysteme[0], self.posZSeances[1] - self.posZSysteme[1], 
+            tableauV(ctx, nomsSystemes, posZSysteme[0], posZSysteme[1], 
+                    tailleZSysteme[0], posZSeances[1] - posZSysteme[1], 
                     0, nlignes = 0, va = 'c', ha = 'g', orient = 'v', coul = (0.8,0.8,0.8))
             
-            wc = self.tailleZSysteme[0]/len(nomsSystemes)
-            _x = self.posZSysteme[0]
-            _y = self.posZSysteme[1]
+            wc = tailleZSysteme[0]/len(nomsSystemes)
+            _x = posZSysteme[0]
+            _y = posZSysteme[1]
             for s in self.systemes:
-                s.rect = (_x, _y, wc, self.posZSeances[1] - self.posZSysteme[1])
+                s.rect = (_x, _y, wc, posZSeances[1] - posZSysteme[1])
                 _x += wc
     
         #
@@ -631,8 +584,8 @@ class Sequence():
                               cairo.FONT_WEIGHT_NORMAL)
         ctx.set_source_rgb(0, 0, 0)
         ctx.set_line_width(0.002)
-        tableauV(ctx, Demarches.values(), self.posZDemarche[0], self.posZDemarche[1], 
-                self.tailleZDemarche[0], self.posZSeances[1] - self.posZSysteme[1], 
+        tableauV(ctx, Demarches.values(), posZDemarche[0], posZDemarche[1], 
+                tailleZDemarche[0], posZSeances[1] - posZSysteme[1], 
                 0, nlignes = 0, va = 'c', ha = 'g', orient = 'v', coul = (0.8,0.8,0.8))
 
     
@@ -650,20 +603,27 @@ class Sequence():
                                   cairo.FONT_WEIGHT_NORMAL)
             ctx.set_source_rgb(0, 0, 0)
             ctx.set_line_width(0.002)
-            tableauH(ctx, nomsSeances, self.posZIntSeances[0], self.posZIntSeances[1], 
-                    0.05, self.tailleZIntSeances[0]-0.05, self.tailleZIntSeances[1], 
+            tableauH(ctx, nomsSeances, posZIntSeances[0], posZIntSeances[1], 
+                    0.05, tailleZIntSeances[0]-0.05, tailleZIntSeances[1], 
                     nCol = 1, va = 'c', ha = 'g', orient = 'h', coul = (0.8,0.8,0.8), 
                     contenu = [intSeances])
     
+        
+                    
+        # 
+        # Croisement Seance/Systèmes
+        #
+        
+        
     ######################################################################################  
     def HitTest(self, x, y):
         print "HitTest", x, y
-        rect = self.posIntitule + self.tailleIntitule
+        rect = posIntitule + tailleIntitule
         if dansRectangle(x, y, rect):
             self.arbre.DoSelectItem(self.branche)
         elif self.CI.HitTest(x, y):
             return
-        elif dansRectangle(x, y, self.posObj + self.tailleObj):
+        elif dansRectangle(x, y, posObj + tailleObj):
             self.arbre.DoSelectItem(self.brancheObj)
         else:
             autresZones = self.seance + self.systemes
@@ -745,13 +705,13 @@ class CentreInteret():
     ######################################################################################  
     def Draw(self, ctx):
         # Rectangle arrondi
-        x0, y0 = self.parent.posCI
-        rect_width, rect_height  = self.parent.tailleCI
+        x0, y0 = posCI
+        rect_width, rect_height  = tailleCI
         
         curve_rect(ctx, x0, y0, rect_width, rect_height, 0.05)
-        ctx.set_source_rgb (self.parent.IcoulCI[0], self.parent.IcoulCI[1], self.parent.IcoulCI[2])
+        ctx.set_source_rgb (IcoulCI[0], IcoulCI[1], IcoulCI[2])
         ctx.fill_preserve ()
-        ctx.set_source_rgba (self.parent.BcoulCI[0], self.parent.BcoulCI[1], self.parent.BcoulCI[2])
+        ctx.set_source_rgba (BcoulCI[0], BcoulCI[1], BcoulCI[2])
         ctx.stroke ()
         
         #
@@ -777,7 +737,7 @@ class CentreInteret():
 
         
     def HitTest(self, x, y):
-        rect = self.parent.posCI + self.parent.tailleCI
+        rect = posCI + tailleCI
         if dansRectangle(x, y, rect):
             self.arbre.DoSelectItem(self.branche)
         
@@ -862,7 +822,7 @@ class Competence():
 #
 ####################################################################################
 class Seance():
-    def __init__(self, parent, panelParent, typeSeance = "C", typeParent = 0):
+    def __init__(self, parent, panelParent, typeSeance = "", typeParent = 0):
         """ Séance :
                 parent = le parent wx pour contenir "panelPropriete"
                 typeSceance = type de séance parmi "TypeSeance"
@@ -891,8 +851,8 @@ class Seance():
         self.panelParent = panelParent
         
         self.SetType(typeSeance)
-        self.rotation = []
-        self.serie = []
+        self.sousSeances = []
+        
         
         self.MiseAJourListeSystemes()
         
@@ -908,6 +868,8 @@ class Seance():
         t = self.typeSeance + str(self.ordre) 
         t += " " +str(self.GetDuree()) + "h"
         t += " " +str(self.effectif)
+        for s in self.sousSeances:
+            t += "  " + s.__repr__()
         return t
     
     ######################################################################################  
@@ -927,12 +889,9 @@ class Seance():
         root.set("Intitule", self.intitule)
         root.set("Demarche", self.demarche)
         
-        if self.typeSeance == "R":
-            for sce in self.rotation:
+        if self.typeSeance in ["R", "S"]:
+            for sce in self.sousSeances:
                 root.append(sce.getBranche())
-        elif self.typeSeance == "S":
-            for sce in self.serie:
-                root.append(sce.getBranche()) 
         elif self.typeSeance in ["AP", "ED", "P"]:
             self.branchesSys = []
             for i, s in enumerate(self.systemes):
@@ -953,18 +912,11 @@ class Seance():
         self.typeSeance = branche.get("Type", "C")
         self.demarche = branche.get("Demarche", "I")
         
-        if self.typeSeance == "R":
-            self.rotation = []
-#            print list(branche)
+        if self.typeSeance in ["R", "S"]:
+            self.sousSeances = []
             for sce in list(branche):
-                seance = Seance(self, self.panelParent, typeParent = self.typeParent)
-                self.rotation.append(seance)
-                seance.setBranche(sce)
-        elif self.typeSeance == "S":
-            self.serie = []
-            for sce in list(branche):
-                seance = Seance(self, self.panelParent, typeParent = self.typeParent)
-                self.serie.append(seance)
+                seance = Seance(self, self.panelParent)
+                self.sousSeances.append(seance)
                 seance.setBranche(sce)
         elif self.typeSeance in ["AP", "ED", "P"]:   
             for i, s in enumerate(list(branche)):
@@ -982,10 +934,10 @@ class Seance():
     def GetDuree(self):
         duree = 0
         if self.typeSeance == "R":
-            for sce in self.rotation:
+            for sce in self.sousSeances:
                 duree += sce.GetDuree()
         elif self.typeSeance == "S":
-            duree += self.rotation[0].GetDuree()
+            duree += self.sousSeances[0].GetDuree()
         else:
             duree = self.duree.v[0]
         return duree
@@ -994,12 +946,12 @@ class Seance():
                 
     ######################################################################################  
     def SetDuree(self, duree): 
-        print "SetDuree"
+#        print "SetDuree"
         if self.typeSeance == "R" : # Rotation
-            d = self.rotation[0].GetDuree()
+            d = self.sousSeances[0].GetDuree()
             pb = False
-            print "  R:", d
-            for s in self.rotation[1:]:
+#            print "  R:", d
+            for s in self.sousSeances[1:]:
                 if s.GetDuree() != d:
                     pb = True
             if pb :
@@ -1009,10 +961,10 @@ class Seance():
                 self.panelPropriete.MarquerProblemeDuree(True)
         
         elif self.typeSeance == "S" : # Serie
-            d = self.serie[0].GetDuree()
+            d = self.sousSeances[0].GetDuree()
             pb = False
-            print "  S:", d
-            for s in self.serie[1:]:
+#            print "  S:", d
+            for s in self.sousSeances[1:]:
                 if s.GetDuree() != d:
                     pb = True
             if pb : 
@@ -1033,7 +985,15 @@ class Seance():
                 codeEff = k
         self.effectif = codeEff
            
-           
+    
+    ######################################################################################  
+    def SetDemarche(self, text):   
+        for k, v in Demarches.items():
+            if v[0] == text[0]:
+                codeDem = k
+        self.demarche = codeDem
+        
+        
     ######################################################################################  
     def SetType(self, typ):
         if type(typ) == str:
@@ -1044,7 +1004,7 @@ class Seance():
         if hasattr(self, 'arbre'):
             self.SetCode()
         
-        if self.typeSeance in ["R","S"] : # Rotation ou Serie
+        if self.typeSeance in ["R","S"] and len(self.sousSeances) == 0: # Rotation ou Serie
             self.AjouterSeance()
         
         if hasattr(self, 'panelPropriete'):
@@ -1054,10 +1014,8 @@ class Seance():
     ######################################################################################  
     def GetToutesSeances(self):
         l = []
-        if self.typeSeance == "R" : # Rotation
-            l.extend(self.rotation)
-        elif self.typeSeance == "S" : # Serie
-            l.extend(self.serie)
+        if self.typeSeance in ["R", "S"] : # Séances en Rotation ou  Parallèle
+            l.extend(self.sousSeances)
         return l
         
         
@@ -1067,38 +1025,25 @@ class Seance():
         if hasattr(self, 'codeBranche'):
             self.codeBranche.SetLabel(self.code)
         
-        if self.typeSeance == "R" : # Rotation
-            for sce in self.rotation:
+        if self.typeSeance in ["R", "S"] : # Séances en Rotation ou  Parallèle
+            for sce in self.sousSeances:
                 sce.SetCode()
-            
-        elif self.typeSeance == "S" : # Serie
-            for sce in self.serie:
-                sce.SetCode()
+
         
-    
-    
-    
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
         self.arbre = arbre
         self.codeBranche = wx.StaticText(self.arbre, -1, u"")
         self.branche = arbre.AppendItem(branche, u"Séance :", wnd = self.codeBranche, data = self)
-        if self.typeSeance == "R" : # Rotation
-            for sce in self.rotation:
+        if self.typeSeance in ["R", "S"] : # Séances en Rotation ou  Parallèle
+            for sce in self.sousSeances:
                 sce.ConstruireArbre(arbre, self.branche)
             
-        elif self.typeSeance == "S" : # Serie
-            for sce in self.serie:
-                sce.ConstruireArbre(arbre, self.branche)
         
     ######################################################################################  
     def OrdonnerSeances(self):
-        if self.typeSeance == "R" : # Rotation
-            for i, sce in enumerate(self.rotation):
-                sce.ordre = i
-            
-        elif self.typeSeance == "S" : # Serie
-            for i, sce in enumerate(self.serie):
+        if self.typeSeance in ["R", "S"] : # Séances en Rotation ou  Parallèle
+            for i, sce in enumerate(self.sousSeances):
                 sce.ordre = i
         
         self.SetCode()
@@ -1109,30 +1054,22 @@ class Seance():
         """ Ajoute une séance é la séance
             !! Uniquement pour les séances de type "Rotation" ou "Serie" !!
         """
-        seance = Seance(self, self.panelParent, typeParent = self.typeParent)
-        if self.typeSeance == "R" : # Rotation
-            self.rotation.append(seance)
-            
-        elif self.typeSeance == "S" : # Serie
-            self.serie.append(seance)
+        seance = Seance(self, self.panelParent)
+        if self.typeSeance in ["R", "S"] : # Séances en Rotation ou  Parallèle
+            self.sousSeances.append(seance)
             
         self.OrdonnerSeances()
         seance.ConstruireArbre(self.arbre, self.branche)
         self.arbre.Expand(self.branche)
-        return
+
+
 
     ######################################################################################  
     def SupprimerSeance(self, event = None, item = None):
-        if self.typeSeance == "R" : # Rotation
-            if len(self.rotation) > 1: # On en laisse toujours une !!
+        if self.typeSeance in ["R", "S"] : # Séances en Rotation ou  Parallèle
+            if len(self.sousSeances) > 1: # On en laisse toujours une !!
                 seance = self.arbre.GetItemPyData(item)
-                self.rotation.remove(seance)
-                self.arbre.Delete(item)
-                self.OrdonnerSeances()
-        elif self.typeSeance == "S" : # Serie
-            if len(self.serie) > 1: # On en laisse toujours une !!
-                seance = self.arbre.GetItemPyData(item)
-                self.rotation.remove(seance)
+                self.sousSeances.remove(seance)
                 self.arbre.Delete(item)
                 self.OrdonnerSeances()
         return
@@ -1154,12 +1091,10 @@ class Seance():
                 self.systemes[i].n = s.nom
             self.nSystemes = len(sequence.systemes)
             
-        elif self.typeSeance == "R":
-            for s in self.rotation:
+        elif self.typeSeance in ["R", "S"] : # Séances en Rotation ou  Parallèle
+            for s in self.sousSeances:
                 s.MiseAJourListeSystemes()
-        elif self.typeSeance == "S":
-            for s in self.serie:
-                s.MiseAJourListeSystemes()
+        
     
     
     
@@ -1177,7 +1112,7 @@ class Seance():
 #            self.Bind(wx.EVT_MENU, functools.partial(self.AjouterSerie, item = item), item3)
             
     ######################################################################################  
-    def Draw(self, ctx, curseur, wEff, ecartY, hHoraire, type = ""):
+    def Draw(self, ctx, curseur, wEff, ecartY, hHoraire, typ = ""):
         if not self.typeSeance in ["R", "S", ""]:
             print "Draw", self
             x, y = curseur
@@ -1186,70 +1121,74 @@ class Seance():
             self.rect = (x, y, w, h) # Pour clic
             ctx.set_line_width(0.002)
             rectangle_plein(ctx, x, y, w, h, (0.1,0.2,0.1), (0.6,0.9,0.4,1))
+            
+            if self.typeSeance in ["AP", "ED", "P"]:
+                self.DrawCroisements(ctx, x+w, y+h/2)
+            
             if hasattr(self, 'code'):
                 ctx.set_source_rgb (0,0,0)
                 show_text_rect(ctx, self.code, x, y, w, h/2, ha = 'g')
-            if type == "R":
+            
+            if typ == "R":
                 curseur[1] += h
-            elif type == "S":
+            elif typ == "S":
                 curseur[0] += w
             else:
                 curseur[1] += h + ecartY
         else:
-            if self.typeSeance == "R":
-                for s in self.rotation:
-                    s.Draw(ctx, curseur, wEff, ecartY, hHoraire, type = "R")
+            if self.typeSeance in ["R", "S"]:
+                for s in self.sousSeances:
+                    s.Draw(ctx, curseur, wEff, ecartY, hHoraire, typ = self.typeSeance)
+#                    if self.typeSeance == "S":
+                curseur[0] = posZSeances[0]
                 curseur[1] += ecartY
-            elif self.typeSeance == "S":
-                for s in self.serie:
-                    s.Draw(ctx, curseur, wEff, ecartY, hHoraire, type = "S")
-                curseur[0] = self.parent.parent.posZSeance[0]
-                curseur[1] += ecartY
+                if self.typeSeance == "S":
+                    curseur[1] += hHoraire * self.GetDuree()
+                
         
         
-        
-        return
-        # Rectangle arrondi
-        x0, y0 = self.posCI
-        rect_width, rect_height  = self.tailleCI
-        
-        curve_rect(ctx, x0, y0, rect_width, rect_height, 0.05)
-        ctx.set_source_rgb (0.5,0.5,1)
-        ctx.fill_preserve ()
-        ctx.set_source_rgba (0.5,0,0,0.5)
-        ctx.stroke ()
-        
-        #
-        # code
-        #
-        if self.num != None:
-            ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
-                         cairo.FONT_WEIGHT_BOLD)
-            ctx.set_font_size(0.02)
-            xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(self.code)
-            xc=x0+rect_width/2-width/2
-            yc=y0+height+0.01
-            ctx.move_to(xc, yc)
-            ctx.set_source_rgb(0, 0, 0)
-            ctx.show_text(self.code)
-        
-            #
-            # intitulé
-            #
-            ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
-                         cairo.FONT_WEIGHT_BOLD)
-            show_text_rect(ctx, self.CI, x0, yc, rect_width, rect_height - height-0.01)
+    ######################################################################################  
+    def DrawCroisements(self, ctx, x, y):
     
-    
+        #
+        # Les lignes horizontales
+        #
+        if self.typeSeance in ["AP", "ED", "P"]:
+            self.DrawLigne(ctx, x, y)
+            
+        #
+        # Croisements Séance/Démarche
+        #
+        _x = xDemarche[self.demarche]
+#        if self.typeSeance in ["AP", "ED", "P"]:
+        boule(ctx, _x, y, 0.008)
+#        ctx.arc (_x, y, 0.006, 0, 2*pi)
+#        ctx.stroke ()
+
+
+                
+    ######################################################################################  
+    def DrawLigne(self, ctx, x, y):
+        dashes = [ 0.010,   # ink
+                   0.002,   # skip
+                   0.005,   # ink
+                   0.002,   # skip
+                   ]
+        ctx.set_source_rgba (0, 0.0, 0.2, 0.6)
+        ctx.set_line_width (0.002)
+        ctx.set_dash(dashes, 0)
+        ctx.move_to(0.7, y)
+        ctx.line_to(x, y)
+        ctx.stroke()
+        ctx.set_dash([], 0)
+        
     ######################################################################################  
     def HitTest(self, x, y):
         if hasattr(self, 'rect') and dansRectangle(x, y, self.rect):
             self.arbre.DoSelectItem(self.branche)
         else:
-            if self.typeSeance == "R":
-                ls = self.rotation
-            elif self.typeSeance == "S":
-                ls = self.rotation
+            if self.typeSeance in ["R", "S"]:
+                ls = self.sousSeances
             else:
                 return
             continuer = True
@@ -2057,7 +1996,7 @@ class PanelPropriete_Seance(PanelPropriete):
                          | wx.CB_READONLY
                          #| wx.CB_SORT
                          )
-        self.Bind(wx.EVT_COMBOBOX, self.EvtComboBoxEff, cbDem)
+        self.Bind(wx.EVT_COMBOBOX, self.EvtComboBoxDem, cbDem)
         self.cbDem = cbDem
         
         nombre = wx.StaticText(self, -1, u"")
@@ -2105,6 +2044,7 @@ class PanelPropriete_Seance(PanelPropriete):
         
     #############################################################################            
     def EvtComboBox(self, event):
+        print "EvtComboBox type"
         if self.seance.typeSeance in ["R", "S"] and listeTypeSeance[event.GetSelection()] not in ["R", "S"]:
             dlg = wx.MessageDialog(self, u"Modifier le type de cette séance entrainera la suppression de toutes les sous séances !\n" \
                                          u"Voulez-vous continuer ?",
@@ -2119,10 +2059,12 @@ class PanelPropriete_Seance(PanelPropriete):
             else:
                 self.seance.SupprimerSousSeances()
         self.seance.SetType(event.GetSelection())
-#        self.AdapterAuType()
-        self.AdapterAuxSystemes()
         if self.cbEff.IsEnabled():
             self.seance.SetEffectif(self.cbEff.GetStringSelection())
+
+        self.seance.MiseAJourListeSystemes()
+        self.AdapterAuxSystemes()
+        
         self.sendEvent()
        
         
@@ -2146,7 +2088,16 @@ class PanelPropriete_Seance(PanelPropriete):
         self.nombre.SetLabel(u" (" + str(n) + u" élèves)")
         self.sendEvent()
 
-    
+
+    #############################################################################            
+    def EvtComboBoxDem(self, event):
+        print "EvtComboBoxDem", event.GetString()
+         
+        self.seance.SetDemarche(event.GetString())  
+        
+        self.sendEvent()
+        
+        
     #############################################################################            
     def AdapterAuxSystemes(self):
         self.Freeze()
@@ -2171,13 +2122,22 @@ class PanelPropriete_Seance(PanelPropriete):
       
     #############################################################################            
     def AdapterAuType(self):
+        """ Adapte le panel au type de séance
+        """
         print "AdapterAuType"
-        #  séance "normale" (parent = séquence)
-        listType = listeTypeSeance
-        if self.seance.typeSeance == "R": #  séance en rotation
-            listType = listeTypeSeance[:-1]
-        elif self.seance.typeSeance == "S": #  séance en série
-            listType = listeTypeSeance[:-2]
+        
+        # Type de parent
+        if isinstance(self.seance.parent, Sequence):
+            listType = listeTypeSeance
+        else:
+            listType = listeTypeActivite
+        
+#        if self.seance.typeSeance == "R":       #  séance en rotation
+#            listType = listeTypeSeance
+#        elif self.seance.typeSeance == "S":     #  séance en série
+#            listType = listeTypeSeance
+#        else:                                   #  séance "normale" (parent = séquence)
+#            listType = listeTypeActivite          
         
         listTypeS = []
         for t in listType:
@@ -2190,29 +2150,32 @@ class PanelPropriete_Seance(PanelPropriete):
         self.cbType.SetSelection(n)
         
         # Durée
-        if self.seance.typeSeance == "R": #  séance en rotation
-            self.vcDuree.Activer(False)
-        elif self.seance.typeSeance == "S": #  séance en série
+        if self.seance.typeSeance in ["R", "S"]:
             self.vcDuree.Activer(False)
         
         # Effectif
         if self.seance.typeSeance in ["C", "E", "SS"]:
             listEff = ["C"]
+            self.cbEff.Enable(True)
         elif self.seance.typeSeance in ["R", "S"] or self.seance.typeSeance == "":
             self.cbEff.Enable(False)
             listEff = []
         elif self.seance.typeSeance in ["ED", "P"]:
             listEff = ["G", "D", "E", "P"]
+            self.cbEff.Enable(True)
         elif self.seance.typeSeance in ["AP"]:
             listEff = ["P"]
+            self.cbEff.Enable(True)
         elif self.seance.typeSeance in ["SA"]:
             listEff = ["C", "G"]
+            self.cbEff.Enable(True)
         print listEff
 #        n = self.cbEff.GetSelection()   
         self.cbEff.Clear()
         for s in listEff:
             self.cbEff.Append(Effectifs[s][0])
         self.cbEff.SetSelection(0)
+        
         
         # Démarche
         if self.seance.typeSeance in ["AP", "ED"]:

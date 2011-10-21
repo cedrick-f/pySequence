@@ -9,6 +9,7 @@ Copyright (C) 2011
 """
 import textwrap
 from math import sqrt, pi
+import cairo
 
 def show_text_rect(ctx, texte, x, y, w, h, va = 'c', ha = 'c', b = 0.2, orient = 'h'):
     """ Renvoie la taille de police et la position du texte
@@ -138,9 +139,9 @@ def tableauV(ctx, titres, x, y, w, ht, hl, nlignes = 0, va = 'c', ha = 'c', orie
     wc = w/len(titres)
     _x = x
     _coul = ctx.get_source().get_rgba()
-    print "tableau", _coul
+#    print "tableau", _coul
     for titre in titres:
-        print "    ",titre
+#        print "    ",titre
         ctx.rectangle(_x, y, wc, ht)
         ctx.set_source_rgb (coul[0], coul[1], coul[2])
         ctx.fill_preserve ()
@@ -163,9 +164,9 @@ def tableauH(ctx, titres, x, y, wt, wc, h, nCol = 0, va = 'c', ha = 'c', orient 
     hc = h/len(titres)
     _y = y
     _coul = ctx.get_source().get_rgba()
-    print "tableauH", _coul
+#    print "tableauH", _coul
     for titre in titres:
-        print "    ",titre
+#        print "    ",titre
         ctx.rectangle(x, _y, wt, hc)
         ctx.set_source_rgb (coul[0], coul[1], coul[2])
         ctx.fill_preserve ()
@@ -200,4 +201,13 @@ def rectangle_plein(ctx, x, y, w, h, coulBord, coulInter):
     ctx.fill_preserve ()
     ctx.set_source_rgb (coulBord[0], coulBord[1], coulBord[2])
     ctx.stroke ()
+    
+def boule(ctx, x, y, r):
+    pat = cairo.RadialGradient (x-r/2, y-r/2, r/4,
+                                x-r/3, y-r/3, 3*r/2)
+    pat.add_color_stop_rgba (0, 1, 1, 1, 1)
+    pat.add_color_stop_rgba (1, 0, 0, 0, 1)
+    ctx.set_source (pat)
+    ctx.arc (x, y, r, 0, 2*pi)
+    ctx.fill ()
         
