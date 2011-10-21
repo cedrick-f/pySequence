@@ -439,10 +439,13 @@ class Sequence():
         # Zone du tableau des Systèmes
         cf.tailleZSysteme[0] = cf.wColSysteme * len(self.systemes)
         cf.tailleZSysteme[1] = cf.posZIntSeances[1] - cf.posZSysteme[1] - 0.05
-        cf.posZSysteme[0] = cf.posZOrganis[0] + cf.tailleZOrganis[0] - cf.tailleZSysteme[0] - 0.05
+        cf.posZSysteme[0] = cf.posZOrganis[0] + cf.tailleZOrganis[0] - cf.tailleZSysteme[0]
+        for i, s in enumerate(self.systemes):
+            cf.xSystemes[s.nom] = cf.posZSysteme[0] + (i+0.5) * cf.wColSysteme
+        
         
         # Zone du tableau des démarches
-        cf.posZDemarche[0] = cf.posZSysteme[0] - cf.tailleZDemarche[0] - 0.05
+        cf.posZDemarche[0] = cf.posZSysteme[0] - cf.tailleZDemarche[0] - 0.03
         cf.tailleZDemarche[1] = cf.tailleZSysteme[1]
         cf.xDemarche["I"] = cf.posZDemarche[0] + cf.tailleZDemarche[0]/6
         cf.xDemarche["R"] = cf.posZDemarche[0] + cf.tailleZDemarche[0]*3/6
@@ -564,7 +567,7 @@ class Sequence():
             ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
                                   cairo.FONT_WEIGHT_NORMAL)
             ctx.set_source_rgb(0, 0, 0)
-            ctx.set_line_width(0.002)
+            ctx.set_line_width(0.001)
             tableauV(ctx, nomsSystemes, cf.posZSysteme[0], cf.posZSysteme[1], 
                     cf.tailleZSysteme[0], cf.posZSeances[1] - cf.posZSysteme[1], 
                     0, nlignes = 0, va = 'c', ha = 'g', orient = 'v', coul = (0.8,0.8,0.8))
@@ -574,7 +577,12 @@ class Sequence():
             _y = cf.posZSysteme[1]
             for s in self.systemes:
                 s.rect = (_x, _y, wc, cf.posZSeances[1] - cf.posZSysteme[1])
+                ctx.move_to(_x, _y + cf.posZSeances[1] - cf.posZSysteme[1])
+                ctx.line_to(_x, _y + cf.tailleZDemarche[1])
                 _x += wc
+            ctx.move_to(_x, _y + cf.posZSeances[1] - cf.posZSysteme[1])
+            ctx.line_to(_x, _y + cf.tailleZDemarche[1])   
+            ctx.stroke()
     
         #
         #  Tableau des démarches
@@ -582,12 +590,20 @@ class Sequence():
         ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
                               cairo.FONT_WEIGHT_NORMAL)
         ctx.set_source_rgb(0, 0, 0)
-        ctx.set_line_width(0.002)
+        ctx.set_line_width(0.001)
         tableauV(ctx, Demarches.values(), cf.posZDemarche[0], cf.posZDemarche[1], 
                 cf.tailleZDemarche[0], cf.posZSeances[1] - cf.posZSysteme[1], 
-                0, nlignes = 0, va = 'c', ha = 'g', orient = 'v', coul = (0.8,0.8,0.8))
-
-    
+                0, nlignes = 0, va = 'c', ha = 'g', orient = 'v', coul = (0.8,0.75,0.9))
+        ctx.move_to(cf.posZDemarche[0], cf.posZDemarche[1] + cf.posZSeances[1] - cf.posZSysteme[1])
+        ctx.line_to(cf.posZDemarche[0], cf.posZDemarche[1] + cf.tailleZDemarche[1])
+        ctx.move_to(cf.posZDemarche[0]+cf.tailleZDemarche[0]/3, cf.posZDemarche[1] + cf.posZSeances[1] - cf.posZSysteme[1])
+        ctx.line_to(cf.posZDemarche[0]+cf.tailleZDemarche[0]/3, cf.posZDemarche[1] + cf.tailleZDemarche[1])
+        ctx.move_to(cf.posZDemarche[0]+cf.tailleZDemarche[0]*2/3, cf.posZDemarche[1] + cf.posZSeances[1] - cf.posZSysteme[1])
+        ctx.line_to(cf.posZDemarche[0]+cf.tailleZDemarche[0]*2/3, cf.posZDemarche[1] + cf.tailleZDemarche[1])
+        ctx.move_to(cf.posZDemarche[0]+cf.tailleZDemarche[0], cf.posZDemarche[1] + cf.posZSeances[1] - cf.posZSysteme[1])
+        ctx.line_to(cf.posZDemarche[0]+cf.tailleZDemarche[0], cf.posZDemarche[1] + cf.tailleZDemarche[1])
+        ctx.stroke()
+        
         #
         #  Tableau des séances (en bas)
         #
@@ -875,6 +891,9 @@ class Seance():
     def GetApp(self):
         return self.parent.GetApp()
     
+    ######################################################################################  
+    def EstSousSeance(self):
+        return isinstance(self.parent, Seance)
     
     ######################################################################################  
     def getBranche(self):
@@ -883,21 +902,25 @@ class Seance():
         print "getBranche Séance", self.code
         root = ET.Element("Seance"+str(self.ordre))
         root.set("Type", self.typeSeance)
-        root.set("Duree", str(self.duree.v[0]))
-        root.set("Effectif", self.effectif)
         root.set("Intitule", self.intitule)
-        root.set("Demarche", self.demarche)
+        
         
         if self.typeSeance in ["R", "S"]:
             for sce in self.sousSeances:
                 root.append(sce.getBranche())
         elif self.typeSeance in ["AP", "ED", "P"]:
+            root.set("Demarche", self.demarche)
+            root.set("Duree", str(self.duree.v[0]))
+            root.set("Effectif", self.effectif)
             self.branchesSys = []
             for i, s in enumerate(self.systemes):
                 bs = ET.SubElement(root, "Systemes"+str(i))
                 self.branchesSys.append(bs)
                 bs.set("Nom", s.n)
                 bs.set("Nombre", str(s.v[0]))
+        else:
+            root.set("Duree", str(self.duree.v[0]))
+            root.set("Effectif", self.effectif)
         
         return root    
         
@@ -907,9 +930,7 @@ class Seance():
         self.ordre = eval(branche.tag[6:])
         
         self.intitule  = branche.get("Intitule", "")
-        self.effectif = branche.get("Effectif", "C")
         self.typeSeance = branche.get("Type", "C")
-        self.demarche = branche.get("Demarche", "I")
         
         if self.typeSeance in ["R", "S"]:
             self.sousSeances = []
@@ -918,12 +939,16 @@ class Seance():
                 self.sousSeances.append(seance)
                 seance.setBranche(sce)
         elif self.typeSeance in ["AP", "ED", "P"]:   
+            self.effectif = branche.get("Effectif", "C")
+            self.demarche = branche.get("Demarche", "I")
             for i, s in enumerate(list(branche)):
                 nom = s.get("Nom", "")
                 nombre = eval(s.get("Nombre", ""))
                 self.systemes[i].n = nom
                 self.systemes[i].v = [nombre]
-        
+        else:
+            self.effectif = branche.get("Effectif", "C")
+            
         self.duree.v[0] = eval(branche.get("Duree", "1"))
         self.MiseAJourListeSystemes()
         self.panelPropriete.MiseAJour()
@@ -1082,10 +1107,10 @@ class Seance():
     def MiseAJourListeSystemes(self):
         print "MiseAJourListeSystemes", self
         if self.typeSeance in ["AP", "ED", "P", "C", "SS", "SA", "E"]:
-            if isinstance(self.parent, Sequence):
-                sequence = self.parent
-            else:
+            if self.EstSousSeance():
                 sequence = self.parent.parent
+            else:
+                sequence = self.parent
             for i, s in enumerate(sequence.systemes):
                 self.systemes[i].n = s.nom
             self.nSystemes = len(sequence.systemes)
@@ -1126,7 +1151,7 @@ class Seance():
             
             if hasattr(self, 'code'):
                 ctx.set_source_rgb (0,0,0)
-                show_text_rect(ctx, self.code, x, y, w, h/2, ha = 'g')
+                show_text_rect(ctx, self.code, x, y, cf.wEff["P"], h/2, ha = 'g')
             
             if typ == "R":
                 curseur[1] += h
@@ -1143,9 +1168,40 @@ class Seance():
                 curseur[1] += cf.ecartY
                 if self.typeSeance == "S":
                     curseur[1] += cf.hHoraire * self.GetDuree()
-                
         
+        # 
+        # Croisement Seance/Systèmes
+        #
+        r = 0.01
+        if self.typeSeance in ["AP", "ED", "P", "S"]:
+            ns = self.GetNbrSystemes()
+            for s, n in ns.items():
+                if n > 0:
+                    _x, _y = cf.xSystemes[s], y+h/2
+                    ctx.arc(_x, _y, r, 0, 2*pi)
+                    ctx.set_source_rgba (1,0.2,0.2,0.6)
+                    ctx.fill_preserve ()
+                    ctx.set_source_rgba (0,0,0,1)
+                    ctx.stroke ()
+                    show_text_rect(ctx, str(n), _x-r, _y-r, 2*r, 2*r)
         
+    ######################################################################################  
+    def GetNbrSystemes(self):
+        d = {}
+        if not self.typeSeance == "S":
+            for s in self.systemes:
+                if s.n <>"":
+                    d[s.n] = s.v[0]
+        else:
+            for seance in self.sousSeances:
+                for s in seance.systemes:
+                    if s.n <>"":
+                        if d.haskey(s.n):
+                            d[s.n] += s.v[0]
+                        else:
+                            d[s.n] = s.v[0]
+        return d
+    
     ######################################################################################  
     def DrawCroisements(self, ctx, x, y):
     
@@ -1174,12 +1230,13 @@ class Seance():
                    0.002,   # skip
                    ]
         ctx.set_source_rgba (0, 0.0, 0.2, 0.6)
-        ctx.set_line_width (0.002)
+        ctx.set_line_width (0.001)
         ctx.set_dash(dashes, 0)
-        ctx.move_to(0.7, y)
+        ctx.move_to(cf.posZOrganis[0]+cf.tailleZOrganis[0], y)
         ctx.line_to(x, y)
         ctx.stroke()
         ctx.set_dash([], 0)
+        
         
     ######################################################################################  
     def HitTest(self, x, y):
@@ -1638,12 +1695,12 @@ class FenetreSequence(wx.Frame):
             self.fermer()
             return
         
-        texte = _(u"La séquence a été modifiée.\nVoulez vous enregistrer les changements ?")
+        texte = u"La séquence a été modifiée.\nVoulez vous enregistrer les changements ?"
         if self.fichierCourant != '':
             texte += "\n\n\t"+self.fichierCourant+"\n"
             
         dialog = wx.MessageDialog(self, texte, 
-                                  _(u"Confirmation"), wx.YES_NO | wx.CANCEL | wx.ICON_WARNING)
+                                  u"Confirmation", wx.YES_NO | wx.CANCEL | wx.ICON_WARNING)
         retCode = dialog.ShowModal()
         if retCode == wx.ID_YES:
             self.commandeEnregistrer()
@@ -2073,7 +2130,8 @@ class PanelPropriete_Seance(PanelPropriete):
     
     #############################################################################            
     def EvtVarSysteme(self, event):
-        return
+        self.sendEvent()
+        
     
     #############################################################################            
     def EvtTextIntitule(self, event):
@@ -2172,10 +2230,10 @@ class PanelPropriete_Seance(PanelPropriete):
         print "AdapterAuType"
         
         # Type de parent
-        if isinstance(self.seance.parent, Sequence):
-            listType = listeTypeSeance
-        else:
+        if self.seance.EstSousSeance():
             listType = listeTypeActivite
+        else:
+            listType = listeTypeSeance
         
 #        if self.seance.typeSeance == "R":       #  séance en rotation
 #            listType = listeTypeSeance
