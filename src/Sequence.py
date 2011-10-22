@@ -1281,7 +1281,7 @@ class Seance():
                                       cairo.FONT_WEIGHT_NORMAL)
                 ctx.set_source_rgb (0,0,0)
                 show_text_rect(ctx, self.intitule, x, y + cf.hHoraire/4, 
-                               w, cf.hHoraire*3/4, ha = 'g')
+                               w, h-cf.hHoraire/4, ha = 'g')
             
             if typParent == "R":
                 curseur[1] += h
@@ -1336,6 +1336,8 @@ class Seance():
                 ctx.fill_preserve ()
                 ctx.set_source_rgba (0,0,0,1)
                 ctx.stroke ()
+                ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+                                      cairo.FONT_WEIGHT_BOLD)
                 show_text_rect(ctx, str(n), x-r, y-r, 2*r, 2*r)
             
             
@@ -2501,6 +2503,8 @@ class PanelPropriete_Seance(PanelPropriete):
             for i in range(self.seance.nSystemes):
                 s = self.seance.systemes[i]
                 self.systemeCtrl[i].mofifierValeursSsEvt()
+        
+        self.cbInt.SetValue(self.seance.intituleDansDeroul)
         
         if sendEvt:
             self.sendEvent()
