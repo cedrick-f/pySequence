@@ -992,6 +992,7 @@ class Seance():
                 seance = Seance(self, self.panelParent)
                 self.sousSeances.append(seance)
                 seance.setBranche(sce)
+            self.duree.v[0] = self.GetDuree()
         elif self.typeSeance in ["AP", "ED", "P"]:   
             self.effectif = branche.get("Effectif", "C")
             self.demarche = branche.get("Demarche", "I")
@@ -1000,10 +1001,11 @@ class Seance():
                 nombre = eval(s.get("Nombre", ""))
                 self.systemes[i].n = nom
                 self.systemes[i].v = [nombre]
+            self.duree.v[0] = eval(branche.get("Duree", "1"))
         else:
             self.effectif = branche.get("Effectif", "C")
+            self.duree.v[0] = eval(branche.get("Duree", "1"))
             
-        self.duree.v[0] = eval(branche.get("Duree", "1"))
         self.MiseAJourListeSystemes()
         self.panelPropriete.MiseAJour()
         print self
@@ -1023,34 +1025,57 @@ class Seance():
                 
                 
     ######################################################################################  
-    def SetDuree(self, duree): 
+    def SetDuree(self, duree):
+        """ Modifie la durée des Rotation et séances en Parallèle et de tous leurs enfants
+            après une modification de durée d'un des enfants
+        """
 #        print "SetDuree"
+
+#        if not self.typeSeance in ["R", "S"] :
+#            if self.EstSousSeance() and self.parent.typeSeance == "R": # séance en rotation (parent = séance "Rotation")
+#                self.parent.SetDuree(self.seance.GetDuree())
+        
         if self.typeSeance == "R" : # Rotation
-            d = self.sousSeances[0].GetDuree()
-            pb = False
-#            print "  R:", d
-            for s in self.sousSeances[1:]:
-                if s.GetDuree() != d:
-                    pb = True
-            if pb :
-                self.panelPropriete.MarquerProblemeDuree(False)
-            else:
-                self.duree.v[0] = duree
-                self.panelPropriete.MarquerProblemeDuree(True)
+            self.duree.v[0] = self.GetDuree()
+            self.panelPropriete.MiseAJourDuree()
+            if self.EstSousSeance():
+                self.parent.SetDuree(self.GetDuree())
+#            d = self.sousSeances[0].GetDuree()
+#            pb = False
+##            print "  R:", d
+#            for s in self.sousSeances[1:]:
+#                if s.GetDuree() != d:
+#                    pb = True
+#            if pb :
+#                self.panelPropriete.MarquerProblemeDuree(False)
+#            else:
+#                self.duree.v[0] = duree
+#                self.panelPropriete.MarquerProblemeDuree(True)
         
         elif self.typeSeance == "S" : # Serie
-            d = self.sousSeances[0].GetDuree()
-            pb = False
-#            print "  S:", d
-            for s in self.sousSeances[1:]:
-                if s.GetDuree() != d:
-                    pb = True
-            if pb : 
-                self.panelPropriete.MarquerProblemeDuree(False)
-            else:
-                self.duree.v[0] = duree
-                self.panelPropriete.MarquerProblemeDuree(True)
+            self.duree.v[0] = duree
+            for s in self.sousSeances:
+                if s.typeSeance in ["R", "S"]:
+                    s.SetDuree(duree)
+                else:
+                    s.duree.v[0] = duree
+                    s.panelPropriete.MiseAJourDuree()
+            self.panelPropriete.MiseAJourDuree()
+            if self.EstSousSeance():
+                self.parent.SetDuree(self.GetDuree())
+#            d = self.sousSeances[0].GetDuree()
+#            pb = False
+##            print "  S:", d
+#            for s in self.sousSeances[1:]:
+#                if s.GetDuree() != d:
+#                    pb = True
+#            if pb : 
+#                self.panelPropriete.MarquerProblemeDuree(False)
+#            else:
+#                self.duree.v[0] = duree
+#                self.panelPropriete.MarquerProblemeDuree(True)
         
+            
         
     ######################################################################################  
     def SetIntitule(self, text):           
@@ -1204,7 +1229,7 @@ class Seance():
             fleche_verticale(ctx, cf.posZDeroul[0], curseur[1], 
                              h, 0.02, (0.9,0.8,0.8,0.5))
             ctx.set_source_rgb(0.5,0.8,0.8)
-            show_text_rect(ctx, str(self.GetDuree())+"h", cf.posZDeroul[0]-0.01, curseur[1], 0.02, h, orient = 'v')
+            show_text_rect(ctx, getHoraireTxt(self.GetDuree()), cf.posZDeroul[0]-0.01, curseur[1], 0.02, h, orient = 'v')
             
             
         if not self.typeSeance in ["R", "S", ""]:
@@ -2245,8 +2270,8 @@ class PanelPropriete_Seance(PanelPropriete):
     #############################################################################            
     def EvtText(self, event):
         self.seance.SetDuree(event.GetVar().v[0])
-        if self.seance.parent.typeSeance == "R": # séance en rotation (parent = séance "Rotation")
-            self.seance.parent.SetDuree(self.seance.GetDuree())
+        if self.seance.EstSousSeance() and self.seance.parent.typeSeance in ["R", "S"]: # séance en rotation (parent = séance "Rotation")
+            self.seance.parent.SetDuree(event.GetVar().v[0])
         self.sendEvent()
         
     #############################################################################            
@@ -2426,12 +2451,12 @@ class PanelPropriete_Seance(PanelPropriete):
             for i in range(self.seance.nSystemes):
                 s = self.seance.systemes[i]
                 self.systemeCtrl[i].mofifierValeursSsEvt()
-
-
         
         if sendEvt:
             self.sendEvent()
-        
+    
+    def MiseAJourDuree(self):
+        self.vcDuree.mofifierValeursSsEvt()
     
 ####################################################################################
 #
@@ -3255,6 +3280,7 @@ def indent(elem, level=0):
 
 def dansRectangle(x, y, rect):
     return x > rect[0] and y > rect[1] and x < rect[0] + rect[2] and y < rect[1] + rect[3]
+
        
 
 def get_key(dict, value):
@@ -3269,6 +3295,18 @@ def get_key(dict, value):
                 key = dict.keys()[i]
             i += 1
     return key
+
+
+
+def getHoraireTxt(v): 
+    h, m = divmod(v*60, 60)
+    h = str(int(h))
+    if m == 0:
+        m = ""
+    else:
+        m = str(int(m))
+    return h+"h"+m
+
 
 ####################################################################################
 #
