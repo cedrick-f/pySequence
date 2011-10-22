@@ -17,6 +17,13 @@ import ConfigParser
 #
 # Données pour le tracé
 #
+# Marges
+margeX = 0.04
+margeY = 0.05
+
+# Ecarts
+ecartX = 0.03
+ecartY = 0.03
 
 # Rectangle de l'intitulé
 posIntitule = (0.72414-0.25, 0.05)
@@ -63,7 +70,7 @@ tailleZIntSeances = [0.72414-0.12, None]
 hIntSeance = 0.02
 
 # Zone des séances
-posZSeances = (0.07, 0.28)
+posZSeances = (0.08, 0.28)
 tailleZSeances = [None, None]
 wEff = {"C" : None,
              "G" : None,
@@ -72,7 +79,7 @@ wEff = {"C" : None,
              "P" : None,
              }
 hHoraire = None
-ecartY = None
+ecartSeanceY = None
 
 
 

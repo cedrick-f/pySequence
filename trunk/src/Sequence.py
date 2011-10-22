@@ -98,19 +98,15 @@ def ouvrirConfig():
     section = "Centres d'interet"
     l = [""] * len(config.options(section))
     for o in config.options(section):
-        print config.get(section,o)
         l[eval(o)-1] = unicode(config.get(section,o), 'cp1252')
     CentresInterets = l
         
     section = "Effectifs classe"
     for k in Effectifs.keys():
         Effectifs[k][1] = config.getint(section,k)
-        
-print CentresInterets
-
 
 ouvrirConfig()
-print CentresInterets
+
     
 Competences = {"CO1.1" : u"Justifier les choix des matériaux, des structures d'un système et les énergies mises en oeuvre dans une approche de développement durable",
                "CO1.2" : u"Justifier le choix d'une solution selon des contraintes d'ergonomie et d'effets sur la santé de l'homme et du vivant",
@@ -461,45 +457,45 @@ class Sequence():
         """
         # Zone des intitulés des séances
         cf.tailleZIntSeances[1] = self.GetNbreSeances()* cf.hIntSeance
-        cf.posZIntSeances[1] = 1 - cf.tailleZIntSeances[1]-0.05
+        cf.posZIntSeances[1] = 1 - cf.tailleZIntSeances[1]-cf.margeY
         
         # Zone du tableau des Systèmes
         cf.tailleZSysteme[0] = cf.wColSysteme * len(self.systemes)
-        cf.tailleZSysteme[1] = cf.posZIntSeances[1] - cf.posZSysteme[1] - 0.05
+        cf.tailleZSysteme[1] = cf.posZIntSeances[1] - cf.posZSysteme[1] - cf.ecartY
         cf.posZSysteme[0] = cf.posZOrganis[0] + cf.tailleZOrganis[0] - cf.tailleZSysteme[0]
         for i, s in enumerate(self.systemes):
             cf.xSystemes[s.nom] = cf.posZSysteme[0] + (i+0.5) * cf.wColSysteme
         
         
         # Zone du tableau des démarches
-        cf.posZDemarche[0] = cf.posZSysteme[0] - cf.tailleZDemarche[0] - 0.03
+        cf.posZDemarche[0] = cf.posZSysteme[0] - cf.tailleZDemarche[0] - cf.ecartX
         cf.tailleZDemarche[1] = cf.tailleZSysteme[1]
         cf.xDemarche["I"] = cf.posZDemarche[0] + cf.tailleZDemarche[0]/6
         cf.xDemarche["R"] = cf.posZDemarche[0] + cf.tailleZDemarche[0]*3/6
         cf.xDemarche["P"] = cf.posZDemarche[0] + cf.tailleZDemarche[0]*5/6
                      
         # Zone de déroulement de la séquence
-        cf.tailleZDeroul[0] = cf.posZDemarche[0] - cf.posZDeroul[0] - 0.05
+        cf.tailleZDeroul[0] = cf.posZDemarche[0] - cf.posZDeroul[0] - cf.ecartX
         cf.tailleZDeroul[1] = cf.tailleZSysteme[1]
         
         
         # Zone des séances
-        cf.tailleZSeances[0] = cf.tailleZDeroul[0] - 0.08
+        cf.tailleZSeances[0] = cf.tailleZDeroul[0] - 0.05 # écart pour les durées
         cf.tailleZSeances[1] = cf.tailleZSysteme[1] - cf.posZSeances[1] + cf.posZDeroul[1] - 0.05
         cf.wEff = {"C" : cf.tailleZSeances[0],
-                 "G" : cf.tailleZSeances[0]*4/5,
-                 "D" : cf.tailleZSeances[0]*2/3,
-                 "E" : cf.tailleZSeances[0]*1/2,
-                 "P" : cf.tailleZSeances[0]*1/4,
+                 "G" : cf.tailleZSeances[0]*6/7,
+                 "D" : cf.tailleZSeances[0]*3/7,
+                 "E" : cf.tailleZSeances[0]*Effectifs["E"][1]/Effectifs["G"][1]*6/7,
+                 "P" : cf.tailleZSeances[0]*Effectifs["P"][1]/Effectifs["G"][1]*6/7,
                  }
-        cf.ecartY = 0.02
-        cf.hHoraire = (cf.tailleZSeances[1] - (len(self.seance)-1)*cf.ecartY) / self.GetHoraireTotal()
+        cf.ecartSeanceY = 0.02
+        cf.hHoraire = (cf.tailleZSeances[1] - (len(self.seance)-1)*cf.ecartSeanceY) / self.GetHoraireTotal()
         
         
         
     ######################################################################################  
     def Draw(self, ctx):
-        print "Draw séquence"
+#        print "Draw séquence"
         self.InitCurseur()
         
         self.DefinirZones()
@@ -508,13 +504,31 @@ class Sequence():
         options.set_antialias(cairo.ANTIALIAS_SUBPIXEL)
         ctx.set_font_options(options)
         
+        # 
+        # Effectifs
         #
-        #  Bordure
-        #
-        ctx.set_line_width(0.005)
-        ctx.set_source_rgb(0, 0, 0)
-        ctx.rectangle(0, 0, 0.724, 1)
-        ctx.stroke()
+        for i, e in enumerate(["C", "G", "D", "E", "P"]):
+            x = cf.posZSeances[0]
+            h = (cf.posZSeances[1]-cf.posZDemarche[1]-0.01) / 5
+            y = cf.posZDemarche[1] + i * h
+            w = cf.wEff[e]
+            ctx.set_line_width(0.001)
+            ctx.set_source_rgb(0.8, 0.9, 0.8)
+            ctx.rectangle(x, y, w, h)
+            ctx.stroke()
+            ctx.set_source_rgb(0.6, 0.8, 0.6)
+            show_text_rect(ctx, Effectifs[e][0], x, y, w, h)
+            ctx.stroke()
+            self.DrawLigneEff(ctx, x+w, y+h)
+            
+        
+#        #
+#        #  Bordure
+#        #
+#        ctx.set_line_width(0.005)
+#        ctx.set_source_rgb(0, 0, 0)
+#        ctx.rectangle(0, 0, 0.724, 1)
+#        ctx.stroke()
         
         #
         #  Intitulé de la séquence
@@ -582,7 +596,7 @@ class Sequence():
         #  Séances
         #
         for s in self.seance:
-            s.Draw(ctx, self.curseur, cf.wEff, cf.ecartY, cf.hHoraire)
+            s.Draw(ctx, self.curseur)
             
         #
         #  Tableau des systèmes
@@ -652,14 +666,27 @@ class Sequence():
     
         
                     
-        # 
-        # Croisement Seance/Systèmes
-        #
+        
         
         
     ######################################################################################  
+    def DrawLigneEff(self, ctx, x, y):
+        dashes = [ 0.010,   # ink
+                   0.002,   # skip
+                   0.005,   # ink
+                   0.002,   # skip
+                   ]
+        ctx.set_source_rgba (0.6, 0.8, 0.6)
+        ctx.set_line_width (0.001)
+        ctx.set_dash(dashes, 0)
+        ctx.move_to(x, cf.posZDemarche[1] + cf.tailleZDemarche[1])
+        ctx.line_to(x, y)
+        ctx.stroke()
+        ctx.set_dash([], 0)
+        
+    ######################################################################################  
     def HitTest(self, x, y):
-        print "HitTest", x, y
+#        print "HitTest", x, y
         rect = cf.posIntitule + cf.tailleIntitule
         if dansRectangle(x, y, rect):
             self.arbre.DoSelectItem(self.branche)
@@ -920,7 +947,7 @@ class Seance():
     
     ######################################################################################  
     def EstSousSeance(self):
-        return isinstance(self.parent, Seance)
+        return not isinstance(self.parent, Sequence)
     
     ######################################################################################  
     def getBranche(self):
@@ -1047,6 +1074,7 @@ class Seance():
         
     ######################################################################################  
     def SetType(self, typ):
+        print "SetType", typ
         if type(typ) == str:
             self.typeSeance = typ
         else:
@@ -1072,7 +1100,9 @@ class Seance():
         
     ######################################################################################  
     def SetCode(self):
+        print "SetCode",
         self.code = self.typeSeance + str(self.ordre)
+        print self.code
         if hasattr(self, 'codeBranche'):
             self.codeBranche.SetLabel(self.code)
         
@@ -1134,10 +1164,7 @@ class Seance():
     def MiseAJourListeSystemes(self):
         print "MiseAJourListeSystemes", self
         if self.typeSeance in ["AP", "ED", "P", "C", "SS", "SA", "E"]:
-            if self.EstSousSeance():
-                sequence = self.parent.parent
-            else:
-                sequence = self.parent
+            sequence = self.GetSequence()
             for i, s in enumerate(sequence.systemes):
                 self.systemes[i].n = s.nom
             self.nSystemes = len(sequence.systemes)
@@ -1147,7 +1174,15 @@ class Seance():
                 s.MiseAJourListeSystemes()
         
     
-    
+    def GetSequence(self):    
+        if self.EstSousSeance():
+            if self.parent.EstSousSeance():
+                sequence = self.parent.parent.parent
+            else:
+                sequence = self.parent.parent
+        else:
+            sequence = self.parent
+        return sequence
     
     ######################################################################################  
     def AfficherMenuContextuel(self, itemArbre):
@@ -1163,9 +1198,17 @@ class Seance():
 #            self.Bind(wx.EVT_MENU, functools.partial(self.AjouterSerie, item = item), item3)
             
     ######################################################################################  
-    def Draw(self, ctx, curseur, wEff, ecartY, hHoraire, typ = ""):
+    def Draw(self, ctx, curseur, typParent = ""):
+        if not self.EstSousSeance():
+            h = cf.hHoraire * self.GetDuree()
+            fleche_verticale(ctx, cf.posZDeroul[0], curseur[1], 
+                             h, 0.02, (0.9,0.8,0.8,0.5))
+            ctx.set_source_rgb(0.5,0.8,0.8)
+            show_text_rect(ctx, str(self.GetDuree())+"h", cf.posZDeroul[0]-0.01, curseur[1], 0.02, h, orient = 'v')
+            
+            
         if not self.typeSeance in ["R", "S", ""]:
-            print "Draw", self
+#            print "Draw", self
             x, y = curseur
             w = cf.wEff[self.effectif]
             h = cf.hHoraire * self.GetDuree()
@@ -1176,7 +1219,7 @@ class Seance():
                 if self.EstSousSeance() and self.parent.typeSeance == "S":
                     ns = len(self.parent.sousSeances)
                     ys = y+(self.ordre+1) * h/(ns+1)
-                    print ns, ys, self.ordre
+#                    print ns, ys, self.ordre
                 else:
                     ys = y+h/2
                 self.DrawCroisements(ctx, x+w, ys)
@@ -1187,21 +1230,25 @@ class Seance():
                 ctx.set_source_rgb (0,0,0)
                 show_text_rect(ctx, self.code, x, y, cf.wEff["P"], h/2, ha = 'g')
             
-            if typ == "R":
+            
+            
+            if typParent == "R":
                 curseur[1] += h
-            elif typ == "S":
+            elif typParent == "S":
                 curseur[0] += w
             else:
-                curseur[1] += h + cf.ecartY
+                curseur[1] += h + cf.ecartSeanceY
         else:
             if self.typeSeance in ["R", "S"]:
                 for s in self.sousSeances:
-                    s.Draw(ctx, curseur, cf.wEff, cf.ecartY, cf.hHoraire, typ = self.typeSeance)
+                    s.Draw(ctx, curseur, typParent = self.typeSeance)
 #                    if self.typeSeance == "S":
                 curseur[0] = cf.posZSeances[0]
-                curseur[1] += cf.ecartY
+                if typParent == "":
+                    curseur[1] += cf.ecartSeanceY
                 if self.typeSeance == "S":
                     curseur[1] += cf.hHoraire * self.GetDuree()
+        
         
 #        # 
 #        # Croisement Seance/Systèmes
@@ -2218,7 +2265,7 @@ class PanelPropriete_Seance(PanelPropriete):
                 return
             else:
                 self.seance.SupprimerSousSeances()
-        self.seance.SetType(event.GetSelection())
+        self.seance.SetType(get_key(TypesSeance, self.cbType.GetStringSelection()))
         if self.cbEff.IsEnabled():
             self.seance.SetEffectif(self.cbEff.GetStringSelection())
 
@@ -2289,6 +2336,8 @@ class PanelPropriete_Seance(PanelPropriete):
         # Type de parent
         if self.seance.EstSousSeance():
             listType = listeTypeActivite
+            if not self.seance.parent.EstSousSeance():
+                listType += ["S"]
         else:
             listType = listeTypeSeance
         
@@ -3208,7 +3257,18 @@ def dansRectangle(x, y, rect):
     return x > rect[0] and y > rect[1] and x < rect[0] + rect[2] and y < rect[1] + rect[3]
        
 
-
+def get_key(dict, value):
+    i = 0
+    continuer = True
+    while continuer:
+        if i > len(dict.keys()):
+            continuer = False
+        else:
+            if dict.values()[i] == value:
+                continuer = False
+                key = dict.keys()[i]
+            i += 1
+    return key
 
 ####################################################################################
 #
