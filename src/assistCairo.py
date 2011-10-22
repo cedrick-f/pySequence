@@ -169,7 +169,11 @@ def tableauH(ctx, titres, x, y, wt, wc, h, nCol = 0, va = 'c', ha = 'c', orient 
     for titre in titres:
 #        print "    ",titre
         ctx.rectangle(x, _y, wt, hc)
-        ctx.set_source_rgb (coul[0], coul[1], coul[2])
+        if type(coul) == dict :
+            col = coul[titre[:-1]]
+        else:
+            col = coul
+        ctx.set_source_rgb (col[0], col[1], col[2])
         ctx.fill_preserve ()
         ctx.set_source_rgba (_coul[0], _coul[1], _coul[2], _coul[3])
         show_text_rect(ctx, titre, x, _y, wt, hc, va = va, ha = ha, orient = orient)

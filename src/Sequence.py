@@ -456,7 +456,7 @@ class Sequence():
             en fonction du nombre d'éléments (séances, systèmes)
         """
         # Zone des intitulés des séances
-        cf.tailleZIntSeances[1] = self.GetNbreSeances()* cf.hIntSeance
+        cf.tailleZIntSeances[1] = len(self.GetIntituleSeances()[0])* cf.hIntSeance
         cf.posZIntSeances[1] = 1 - cf.tailleZIntSeances[1]-cf.margeY
         
         # Zone du tableau des Systèmes
@@ -561,10 +561,10 @@ class Sequence():
         # Titre
         ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
                               cairo.FONT_WEIGHT_BOLD)
-        ctx.set_font_size(0.02)
+        ctx.set_font_size(0.016)
         xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents("Objectifs")
         xc=x0+rect_width/2-width/2
-        yc=y0+height+0.01
+        yc=y0+height+0.008
         ctx.move_to(xc, yc)
         ctx.set_source_rgb(0, 0, 0)
         ctx.show_text("Objectifs")
@@ -573,19 +573,26 @@ class Sequence():
         # Codes objectifs
         #
         if self.obj[0].num != None:
+            no = len(self.obj)
             txtObj = ''
-            for t in self.obj:
+            for i, t in enumerate(self.obj):
                 if hasattr(t, 'code'):
                     txtObj += " " + t.code
-            ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
-                                  cairo.FONT_WEIGHT_BOLD)
-            show_text_rect(ctx, txtObj, x0, yc, rect_width, rect_height - height-0.01)
+                    ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+                                          cairo.FONT_WEIGHT_BOLD)
+                    show_text_rect(ctx, t.code, x0+i*rect_width/no, yc, 
+                                   rect_width/no, rect_height/4)
+                    ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+                                          cairo.FONT_WEIGHT_NORMAL)
+                    show_text_rect(ctx, Competences[t.code], x0+i*rect_width/no, y0+rect_height*2/5, 
+                                   rect_width/no, rect_height/2)
             
-            x, y = cf.posObj
-            w, h = cf.tailleObj
-            ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
-                                  cairo.FONT_WEIGHT_BOLD)
+#            x, y = cf.posObj
+#            w, h = cf.tailleObj
+                    ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+                                          cairo.FONT_WEIGHT_BOLD)
 #        
+ 
         #
         #  CI
         #
@@ -648,12 +655,8 @@ class Sequence():
         #
         #  Tableau des séances (en bas)
         #
-        nomsSeances = []
-        intSeances = []
-        for s in self.GetToutesSeances():
-            if hasattr(s, 'code'):
-                nomsSeances.append(s.code)
-                intSeances.append(s.intitule)
+        nomsSeances, intSeances = self.GetIntituleSeances()
+        print nomsSeances
         if nomsSeances != []:
             ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
                                   cairo.FONT_WEIGHT_NORMAL)
@@ -661,12 +664,21 @@ class Sequence():
             ctx.set_line_width(0.002)
             tableauH(ctx, nomsSeances, cf.posZIntSeances[0], cf.posZIntSeances[1], 
                     0.05, cf.tailleZIntSeances[0]-0.05, cf.tailleZIntSeances[1], 
-                    nCol = 1, va = 'c', ha = 'g', orient = 'h', coul = (0.8,0.8,0.8), 
+                    nCol = 1, va = 'c', ha = 'g', orient = 'h', coul = cf.ICoulSeance, 
                     contenu = [intSeances])
     
         
-                    
-        
+    ######################################################################################  
+    def GetIntituleSeances(self):
+        nomsSeances = []
+        intSeances = []
+        for s in self.GetToutesSeances():
+            print s
+            print s.intituleDansDeroul
+            if hasattr(s, 'code') and s.intitule != "" and not s.intituleDansDeroul:
+                nomsSeances.append(s.code)
+                intSeances.append(s.intitule)
+        return nomsSeances, intSeances
         
         
     ######################################################################################  
@@ -906,6 +918,7 @@ class Seance():
                               bornes = [0,8], modeLog = False,
                               expression = None, multiple = False)
         self.intitule  = u""
+        self.intituleDansDeroul = True
         self.effectif = "C"
         self.demarche = "I"
         self.systemes = []
@@ -937,8 +950,8 @@ class Seance():
         t = self.typeSeance + str(self.ordre) 
         t += " " +str(self.GetDuree()) + "h"
         t += " " +str(self.effectif)
-        for s in self.sousSeances:
-            t += "  " + s.__repr__()
+#        for s in self.sousSeances:
+#            t += "  " + s.__repr__()
         return t
     
     ######################################################################################  
@@ -976,6 +989,8 @@ class Seance():
             root.set("Duree", str(self.duree.v[0]))
             root.set("Effectif", self.effectif)
         
+        root.set("IntituleDansDeroul", str(self.intituleDansDeroul))
+        
         return root    
         
     ######################################################################################  
@@ -1005,7 +1020,9 @@ class Seance():
         else:
             self.effectif = branche.get("Effectif", "C")
             self.duree.v[0] = eval(branche.get("Duree", "1"))
-            
+        
+        self.intituleDansDeroul = eval(branche.get("IntituleDansDeroul", "True"))
+        
         self.MiseAJourListeSystemes()
         self.panelPropriete.MiseAJour()
         print self
@@ -1120,6 +1137,8 @@ class Seance():
         l = []
         if self.typeSeance in ["R", "S"] : # Séances en Rotation ou  Parallèle
             l.extend(self.sousSeances)
+            for s in self.sousSeances:
+                l.extend(s.GetToutesSeances())
         return l
         
         
@@ -1239,7 +1258,7 @@ class Seance():
             h = cf.hHoraire * self.GetDuree()
             self.rect = (x, y, w, h) # Pour clic
             ctx.set_line_width(0.002)
-            rectangle_plein(ctx, x, y, w, h, (0.1,0.2,0.1), (0.6,0.9,0.4,1))
+            rectangle_plein(ctx, x, y, w, h, cf.BCoulSeance[self.typeSeance], cf.ICoulSeance[self.typeSeance])
             if self.typeSeance in ["AP", "ED", "P"]:
                 if self.EstSousSeance() and self.parent.typeSeance == "S":
                     ns = len(self.parent.sousSeances)
@@ -1252,10 +1271,17 @@ class Seance():
                 
             
             if hasattr(self, 'code'):
+                ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+                                      cairo.FONT_WEIGHT_BOLD)
                 ctx.set_source_rgb (0,0,0)
-                show_text_rect(ctx, self.code, x, y, cf.wEff["P"], h/2, ha = 'g')
+                show_text_rect(ctx, self.code, x, y, cf.wEff["P"], cf.hHoraire/4, ha = 'g')
             
-            
+            if self.intituleDansDeroul and self.intitule != "":
+                ctx.select_font_face ("Sans", cairo.FONT_SLANT_ITALIC,
+                                      cairo.FONT_WEIGHT_NORMAL)
+                ctx.set_source_rgb (0,0,0)
+                show_text_rect(ctx, self.intitule, x, y + cf.hHoraire/4, 
+                               w, cf.hHoraire*3/4, ha = 'g')
             
             if typParent == "R":
                 curseur[1] += h
@@ -1487,8 +1513,9 @@ class PanelConteneur(wx.Panel):
 ####################################################################################
 class FenetreSequence(wx.Frame):
     def __init__(self):
-        wx.Frame.__init__(self, None, -1, "")
-
+        
+        wx.Frame.__init__(self, None, -1, "")#, style = wx.DEFAULT_FRAME_STYLE | wx.SYSTEM_MENU)
+#        self.SetExtraStyle(wx.FRAME_EX_CONTEXTHELP)
         #
         # Taille et position de la fenétre
         #
@@ -1497,7 +1524,7 @@ class FenetreSequence(wx.Frame):
         # On centre la fenétre dans l'écran ...
         self.CentreOnScreen(wx.BOTH)
         
-        
+#        
         # Use a panel under the AUI panes in order to work around a
         # bug on PPC Macs
         pnl = wx.Panel(self)
@@ -2039,12 +2066,13 @@ class PanelPropriete_Sequence(PanelPropriete):
         PanelPropriete.__init__(self, parent)
         self.sequence = sequence
         
-        titre = wx.StaticText(self, -1, u"Intitulé :")
+        titre = wx.StaticText(self, -1, u"Intitulé de la séquence:")
         textctrl = wx.TextCtrl(self, -1, u"", style=wx.TE_MULTILINE)
         self.textctrl = textctrl
         
         self.sizer.Add(titre, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 2)
         self.sizer.Add(textctrl, (0,1), flag = wx.EXPAND)
+        self.sizer.AddGrowableCol(1)
         self.sizer.Layout()
         
         self.Bind(wx.EVT_TEXT, self.EvtText, textctrl)
@@ -2179,12 +2207,20 @@ class PanelPropriete_Seance(PanelPropriete):
         #
         # Intitulé de la séance
         #
-        titre = wx.StaticText(self, -1, u"Intitulé :")
+        box = wx.StaticBox(self, -1, u"Intitulé")
+        bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
         textctrl = wx.TextCtrl(self, -1, u"", style=wx.TE_MULTILINE)
+        bsizer.Add(textctrl, flag = wx.EXPAND)
         self.textctrl = textctrl
         self.Bind(wx.EVT_TEXT, self.EvtTextIntitule, textctrl)
-        self.sizer.Add(titre, (1,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 2)
-        self.sizer.Add(textctrl, (1,1), flag = wx.EXPAND)
+        
+        cb = wx.CheckBox(self, -1, u"Montrer dans la zone de déroulement de la séquence")
+        cb.SetValue(self.seance.intituleDansDeroul)
+        bsizer.Add(cb, flag = wx.EXPAND)
+        self.Bind(wx.EVT_CHECKBOX, self.EvtCheckBox, cb)
+        self.cbInt = cb
+        self.sizer.Add(bsizer, (1,0), (1,2), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 2)
+#        self.sizer.Add(textctrl, (1,1), flag = wx.EXPAND)
         
         #
         # Durée de la séance
@@ -2208,6 +2244,7 @@ class PanelPropriete_Seance(PanelPropriete):
                          )
         self.Bind(wx.EVT_COMBOBOX, self.EvtComboBoxEff, cbEff)
         self.cbEff = cbEff
+        self.titreEff = titre
         
         nombre = wx.StaticText(self, -1, u"")
         self.nombre = nombre
@@ -2229,6 +2266,7 @@ class PanelPropriete_Seance(PanelPropriete):
                          )
         self.Bind(wx.EVT_COMBOBOX, self.EvtComboBoxDem, cbDem)
         self.cbDem = cbDem
+        self.titreDem = titre
         
         nombre = wx.StaticText(self, -1, u"")
         self.nombre = nombre
@@ -2261,6 +2299,10 @@ class PanelPropriete_Seance(PanelPropriete):
     def EvtVarSysteme(self, event):
         self.sendEvent()
         
+    #############################################################################            
+    def EvtCheckBox(self, event):
+        self.seance.intituleDansDeroul = event.IsChecked()
+        self.sendEvent()
     
     #############################################################################            
     def EvtTextIntitule(self, event):
@@ -2390,19 +2432,24 @@ class PanelPropriete_Seance(PanelPropriete):
         # Effectif
         if self.seance.typeSeance in ["C", "E", "SS"]:
             listEff = ["C"]
-            self.cbEff.Enable(True)
+            self.cbEff.Show(True)
+            self.titreEff.Show(True)
         elif self.seance.typeSeance in ["R", "S"] or self.seance.typeSeance == "":
-            self.cbEff.Enable(False)
+            self.cbEff.Show(False)
+            self.titreEff.Show(False)
             listEff = []
         elif self.seance.typeSeance in ["ED", "P"]:
             listEff = ["G", "D", "E", "P"]
-            self.cbEff.Enable(True)
+            self.cbEff.Show(True)
+            self.titreEff.Show(True)
         elif self.seance.typeSeance in ["AP"]:
             listEff = ["P"]
-            self.cbEff.Enable(True)
+            self.cbEff.Show(True)
+            self.titreEff.Show(True)
         elif self.seance.typeSeance in ["SA"]:
             listEff = ["C", "G"]
-            self.cbEff.Enable(True)
+            self.cbEff.Show(True)
+            self.titreEff.Show(True)
         print listEff
 #        n = self.cbEff.GetSelection()   
         self.cbEff.Clear()
@@ -2414,12 +2461,15 @@ class PanelPropriete_Seance(PanelPropriete):
         # Démarche
         if self.seance.typeSeance in ["AP", "ED"]:
             listDem = ["I", "R"]
-            self.cbDem.Enable(True)
+            self.cbDem.Show(True)
+            self.titreDem.Show(True)
         elif self.seance.typeSeance == "P":
             listDem = ["I", "R", "P"]
-            self.cbDem.Enable(True)
+            self.cbDem.Show(True)
+            self.titreDem.Show(True)
         else:
-            self.cbDem.Enable(False)
+            self.cbDem.Show(False)
+            self.titreDem.Show(False)
             listDem = []
         
         self.cbDem.Clear()
@@ -2438,10 +2488,10 @@ class PanelPropriete_Seance(PanelPropriete):
         self.cbType.SetSelection(self.cbType.GetStrings().index(TypesSeance[self.seance.typeSeance]))
         self.textctrl.ChangeValue(self.seance.intitule)
         self.vcDuree.mofifierValeursSsEvt()
-        if self.cbEff.IsEnabled():
+        if self.cbEff.IsEnabled() and self.cbEff.IsShown():
             self.cbEff.SetSelection(self.cbEff.GetStrings().index(Effectifs[self.seance.effectif][0]))
         
-        if self.cbDem.IsEnabled():
+        if self.cbDem.IsEnabled() and self.cbDem.IsShown():
             self.cbDem.SetSelection(self.cbDem.GetStrings().index(Demarches[self.seance.demarche]))
             
         
