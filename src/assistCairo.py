@@ -212,3 +212,21 @@ def boule(ctx, x, y, r):
     ctx.arc (x, y, r, 0, 2*pi)
     ctx.fill ()
         
+        
+def fleche_verticale(ctx, x, y, h, e, coul):
+    ctx.set_source_rgba (coul[0], coul[1], coul[2], coul[3])
+    ctx.move_to(x-e/2, y)
+    ctx.line_to(x-e/2, y+h-e/2)
+    ctx.line_to(x, y+h)
+    ctx.line_to(x+e/2, y+h-e/2)
+    ctx.line_to(x+e/2, y)
+    ctx.close_path ()
+    ctx.fill ()
+    
+    
+    
+    
+    
+    
+    
+    
