@@ -16,7 +16,7 @@ def show_text_rect(ctx, texte, x, y, w, h, va = 'c', ha = 'c', b = 0.2, orient =
         pour qu'il rentre dans le rectangle
         x, y, w, h : position et dimensions du rectangle
         va, ha : alignements vertical et horizontal ('h', 'c', 'b' et 'g', 'c', 'd')
-        b : écart du texte par rapport au bord (relativement aux dimension du rectangle)
+        b : écart mini du texte par rapport au bord (relativement aux dimensionx du rectangle)
         orient : orientation du texte ('h', 'v')
     """
 #    print "show_text_rect", texte
@@ -32,8 +32,9 @@ def show_text_rect(ctx, texte, x, y, w, h, va = 'c', ha = 'c', b = 0.2, orient =
     #
     # "réduction" du réctangle
     #
-    x, y = x+w*b/2, y+h*b/2
-    w, h = w*(1-b), h*(1-b)
+    ecart = min(w*b/2, h*b/2)
+    x, y = x+ecart, y+ecart
+    w, h = w-2*ecart, h-2*ecart
  
     
     #

@@ -1,0 +1,84 @@
+<Sequence Intitule="Premi&#232;re s&#233;quence">
+  <CentreInteret>
+    <CI14 />
+  </CentreInteret>
+  <Objectifs>
+    <CO6.3 />
+    <CO5.3 />
+  </Objectifs>
+  <Seances>
+    <Seance0 Duree="1.0" Effectif="C" Intitule="Apport de connaissances pr&#233;alable :  notion d'efficacit&#233; energ&#233;tique" IntituleDansDeroul="True" Type="C" />
+    <Seance1 Intitule="" IntituleDansDeroul="True" Type="R">
+      <Seance0 Intitule="" IntituleDansDeroul="True" Type="S">
+        <Seance0 Demarche="I" Duree="1.0" Effectif="P" Intitule="Consommation &#233;nerg&#233;tique du Drone" IntituleDansDeroul="True" Type="AP">
+          <Systemes0 Nom="Segway" Nombre="0" />
+          <Systemes1 Nom="BAES" Nombre="1" />
+          <Systemes2 Nom="Ardrone" Nombre="1" />
+          <Systemes3 Nom="" Nombre="0" />
+          <Systemes4 Nom="" Nombre="0" />
+          <Systemes5 Nom="" Nombre="0" />
+          <Systemes6 Nom="" Nombre="0" />
+          <Systemes7 Nom="" Nombre="0" />
+        </Seance0>
+        <Seance1 Demarche="I" Duree="1.0" Effectif="P" Intitule="" IntituleDansDeroul="True" Type="AP">
+          <Systemes0 Nom="Segway" Nombre="1" />
+          <Systemes1 Nom="BAES" Nombre="1" />
+          <Systemes2 Nom="Ardrone" Nombre="0" />
+          <Systemes3 Nom="" Nombre="0" />
+          <Systemes4 Nom="" Nombre="0" />
+          <Systemes5 Nom="" Nombre="0" />
+          <Systemes6 Nom="" Nombre="0" />
+          <Systemes7 Nom="" Nombre="0" />
+        </Seance1>
+      </Seance0>
+      <Seance1 Demarche="R" Duree="0.5" Effectif="E" Intitule="Enjeux de l'am&#233;lioration &#233;nerg&#233;tique du Drone" IntituleDansDeroul="False" Type="ED">
+        <Systemes0 Nom="Segway" Nombre="0" />
+        <Systemes1 Nom="BAES" Nombre="0" />
+        <Systemes2 Nom="Ardrone" Nombre="1" />
+        <Systemes3 Nom="" Nombre="0" />
+        <Systemes4 Nom="" Nombre="0" />
+        <Systemes5 Nom="" Nombre="0" />
+        <Systemes6 Nom="" Nombre="0" />
+        <Systemes7 Nom="" Nombre="0" />
+      </Seance1>
+    </Seance1>
+    <Seance2 Duree="1.0" Effectif="C" Intitule="Synth&#232;se des activit&#233;s" IntituleDansDeroul="True" Type="SA" />
+    <Seance3 Intitule="" IntituleDansDeroul="True" Type="S">
+      <Seance0 Demarche="I" Duree="1.5" Effectif="E" Intitule="" IntituleDansDeroul="True" Type="ED">
+        <Systemes0 Nom="Segway" Nombre="0" />
+        <Systemes1 Nom="BAES" Nombre="0" />
+        <Systemes2 Nom="Ardrone" Nombre="1" />
+        <Systemes3 Nom="" Nombre="0" />
+        <Systemes4 Nom="" Nombre="0" />
+        <Systemes5 Nom="" Nombre="0" />
+        <Systemes6 Nom="" Nombre="0" />
+        <Systemes7 Nom="" Nombre="0" />
+      </Seance0>
+      <Seance1 Demarche="I" Duree="1.5" Effectif="E" Intitule="" IntituleDansDeroul="True" Type="ED">
+        <Systemes0 Nom="Segway" Nombre="0" />
+        <Systemes1 Nom="BAES" Nombre="1" />
+        <Systemes2 Nom="Ardrone" Nombre="0" />
+        <Systemes3 Nom="" Nombre="0" />
+        <Systemes4 Nom="" Nombre="0" />
+        <Systemes5 Nom="" Nombre="0" />
+        <Systemes6 Nom="" Nombre="0" />
+        <Systemes7 Nom="" Nombre="0" />
+      </Seance1>
+      <Seance2 Demarche="I" Duree="1.5" Effectif="E" Intitule="" IntituleDansDeroul="True" Type="ED">
+        <Systemes0 Nom="Segway" Nombre="1" />
+        <Systemes1 Nom="BAES" Nombre="0" />
+        <Systemes2 Nom="Ardrone" Nombre="0" />
+        <Systemes3 Nom="" Nombre="0" />
+        <Systemes4 Nom="" Nombre="0" />
+        <Systemes5 Nom="" Nombre="0" />
+        <Systemes6 Nom="" Nombre="0" />
+        <Systemes7 Nom="" Nombre="0" />
+      </Seance2>
+    </Seance3>
+  </Seances>
+  <Systemes>
+    <Systeme Nom="Segway" />
+    <Systeme Nom="BAES" />
+    <Systeme Nom="Ardrone" />
+  </Systemes>
+</Sequence>
