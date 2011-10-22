@@ -31,15 +31,15 @@ tailleIntitule = (0.2, 0.1)
 IcoulIntitule = (0.2,0.8,0.2)
 BcoulIntitule = (0.2,0.8,0.2)
 
-# Objectifs
+# CI
 posCI = (0.05, 0.04)
 tailleCI = (0.18, 0.12)
 IcoulCI = (0.9,0.8,0.8)
 BcoulCI = (0.3,0.2,0.25)
 
 # Rectangle des objectifs
-posObj = (0.262, 0.06)
-tailleObj = (0.2, 0.08)
+posObj = (0.262, 0.05)
+tailleObj = (0.2, 0.1)
 IcoulObj = (0.8,0.9,0.8)
 BcoulObj = (0.25,0.3,0.2)
 
@@ -80,8 +80,24 @@ wEff = {"C" : None,
              }
 hHoraire = None
 ecartSeanceY = None
-
-
+BCoulSeance = {"ED" : (0.3,0.5,0.5), 
+               "AP" : (0.5,0.3,0.5), 
+               "P"  : (0.5,0.5,0.3), 
+               "C"  : (0.3,0.3,0.7), 
+               "SA" : (0.3,0.7,0.3), 
+               "SS" : (0.4,0.5,0.4), 
+               "E"  : (0.7,0.3,0.3), 
+               "R"  : (0.45,0.35,0.45), 
+               "S"  : (0.45,0.45,0.35)}
+ICoulSeance = {"ED" : (0.6, 0.8, 0.8), 
+               "AP" : (0.8, 0.6, 0.8), 
+               "P"  : (0.8, 0.8, 0.6), 
+               "C"  : (0.6, 0.6, 1.0), 
+               "SA" : (0.6, 1.0, 0.6), 
+               "SS" : (0.7, 0.8, 0.7), 
+               "E"  : (1.0, 0.6, 0.6), 
+               "R"  : (0.75, 0.65, 0.75), 
+               "S"  : (0.75, 0.75, 0.65)}
 
 def str2coord(str):
     l = str.split(',')
@@ -155,6 +171,10 @@ def enregistrerConfigFiche(nomFichier):
     section = "Seances"
     config.add_section(section)
     config.set(section, "pos", coord2str(posZSeances))
+    for k, v in BCoulSeance.items():
+        config.set(section, "Bcoul"+k, coul2str(v))
+    for k, v in ICoulSeance.items():
+        config.set(section, "Icoul"+k, coul2str(v))
         
     config.write(open(nomFichier,'w'))
     
@@ -215,7 +235,10 @@ def ouvrirConfigFiche(nomFichier):
     
     section = "Seances"
     posZSeances = str2coord(config.get(section,"pos"))
-    
+    for k in BCoulSeance.keys():
+        BCoulSeance[k] = str2coul(config.get(section, "Bcoul"+k))
+    for k in ICoulSeance.keys():
+        ICoulSeance[k] = str2coul(config.get(section, "Icoul"+k))
     
     
     
