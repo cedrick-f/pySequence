@@ -10,6 +10,22 @@ Copyright (C) 2011
 @author: Cedrick FAURY
 
 """
+__appname__= "pySyLiC"
+__author__ = u"Cédrick FAURY"
+__version__ = "1 beta"
+
+#
+# Les deuxlignes suivantes permettent de lancer le script sequence.py depuis n'importe
+# quel répertoire sans que l'utilisation de chemins
+# relatifs ne soit perturbée
+#
+import sys, os
+PATH = os.path.dirname(os.path.abspath(sys.argv[0]))
+#PATH = os.path.split(PATH)[0]
+os.chdir(PATH)
+sys.path.append(PATH)
+print "Dossier de l'application :",PATH
+
 ####################################################################################
 #
 #   Import des modules nécessaires
@@ -93,7 +109,7 @@ def ouvrirConfig():
     global CentresInterets
     
     config = ConfigParser.ConfigParser()
-    config.read('configuration.cfg')
+    config.read(os.path.join(PATH,'configuration.cfg'))
     
     section = "Centres d'interet"
     l = [""] * len(config.options(section))
@@ -1541,7 +1557,7 @@ class FenetreSequence(wx.Frame):
         #
         # le fichier de configuration de la fiche
         #
-        self.nomFichierConfig = "configFiche.cfg"
+        self.nomFichierConfig = os.path.join(PATH,"configFiche.cfg")
         # on essaye de l'ouvrir
         try:
             cf.ouvrirConfigFiche(self.nomFichierConfig)
@@ -2662,12 +2678,16 @@ class ArbreSequence(CT.CustomTreeCtrl):
         # Construction de l'arbre
         #
         self.sequence.ConstruireArbre(self)
+        self.itemDrag = None
         
         #
         # Gestion des évenements
         #
         self.Bind(CT.EVT_TREE_SEL_CHANGED, self.OnSelChanged)
         self.Bind(CT.EVT_TREE_ITEM_RIGHT_CLICK, self.OnRightDown)
+        self.Bind(CT.EVT_TREE_BEGIN_DRAG, self.OnBeginDrag)
+        self.Bind(CT.EVT_TREE_END_DRAG, self.OnEndDrag)
+        self.Bind(wx.EVT_MOTION, self.OnMove)
         
         self.ExpandAll()
         
@@ -2771,7 +2791,8 @@ class ArbreSequence(CT.CustomTreeCtrl):
 #            self.Expand(self.root)
 
     
-        
+#        self.CurseurInsert = wx.Cursor(wx.Image('CurseurInsert.png', wx.BITMAP_TYPE_PNG ))
+        self.CurseurInsert = wx.Cursor('CurseurInsert.ico', wx.BITMAP_TYPE_ICO )
         
         
     def AjouterObjectif(self, event = None):
@@ -3202,24 +3223,67 @@ class ArbreSequence(CT.CustomTreeCtrl):
 #        wx.CallAfter(panelPropriete.Refresh)
         event.Skip()
 
+    def OnCompareItems(self, item1, item2):
+        i1 = self.GetItemPyData(item1)
+        i2 = self.GetItemPyData(item2)
+        return i1.ordre - i2.ordre
 
-
+    def OnMove(self, event):
+        if self.itemDrag != None:
+            (id, flag) = self.HitTest(wx.Point(event.GetX(), event.GetY()))
+            if id != None:
+                dataTarget = self.GetItemPyData(id)
+                dataSource = self.GetItemPyData(self.itemDrag)
+                if not isinstance(dataSource, Seance):
+                    self.SetCursor(wx.StockCursor(wx.CURSOR_NO_ENTRY))
+                else:
+                    if not isinstance(dataTarget, Seance):
+                        self.SetCursor(wx.StockCursor(wx.CURSOR_NO_ENTRY))
+                    else:
+                        if dataTarget != dataSource and dataTarget.parent == dataSource.parent:
+                            self.SetCursor(self.CurseurInsert)
+                        else:
+                            self.SetCursor(wx.StockCursor(wx.CURSOR_ARROW))
+                    
+                        
+        event.Skip()
+        
     def OnBeginDrag(self, event):
-
-        self.item = event.GetItem()
+        print "OnBeginDrag", 
+        self.itemDrag = event.GetItem()
+        print self.itemDrag
         if self.item:
-            self.log.write("Beginning Drag..." + "\n")
-
             event.Allow()
 
 
 
     def OnEndDrag(self, event):
-
+        print "OnEndDrag",
         self.item = event.GetItem()
-        if self.item:
-            self.log.write("Ending Drag!" + "\n")
-
+        print self.itemDrag, self.item 
+        dataTarget = self.GetItemPyData(self.item)
+        dataSource = self.GetItemPyData(self.itemDrag)
+        if not isinstance(dataSource, Seance):
+            pass
+        else:
+            if not isinstance(dataTarget, Seance):
+                pass
+            else:
+                if dataTarget != dataSource and dataTarget.parent == dataSource.parent:
+                    if isinstance(dataTarget.parent, Sequence):
+                        lst = dataTarget.parent.seance
+                    else:
+                        lst = dataTarget.parent.sousSeances
+                    s = lst.index(dataSource)
+                    t = lst.index(dataTarget)
+                    lst[s] = dataTarget
+                    lst[t] = dataSource
+                    dataTarget.parent.OrdonnerSeances()
+                    self.SortChildren(self.GetItemParent(self.item))
+                    self.panelVide.sendEvent()
+                else:
+                    pass
+        self.itemDrag = None
         event.Skip()            
 
 

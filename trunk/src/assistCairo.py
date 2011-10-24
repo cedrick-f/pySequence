@@ -53,8 +53,10 @@ def show_text_rect(ctx, texte, x, y, w, h, va = 'c', ha = 'c', b = 0.2, orient =
     # Découpage du texte
     #
     nLignes = max(1,int(width/W))
+    lt = []
     wrap = len(texte)/nLignes
-    lt = textwrap.wrap(texte, wrap)
+    for l in texte.split("\n"):
+        lt.extend(textwrap.wrap(l, wrap))
     nLignes = len(lt)
     
     #
