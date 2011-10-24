@@ -655,7 +655,10 @@ class Sequence():
                               cairo.FONT_WEIGHT_NORMAL)
         ctx.set_source_rgb(0, 0, 0)
         ctx.set_line_width(0.001)
-        tableauV(ctx, Demarches.values(), cf.posZDemarche[0], cf.posZDemarche[1], 
+        l=[]
+        for d in listeDemarches : 
+            l.append(Demarches[d])
+        tableauV(ctx, l, cf.posZDemarche[0], cf.posZDemarche[1], 
                 cf.tailleZDemarche[0], cf.posZSeances[1] - cf.posZSysteme[1], 
                 0, nlignes = 0, va = 'c', ha = 'g', orient = 'v', coul = (0.8,0.75,0.9))
         ctx.move_to(cf.posZDemarche[0], cf.posZDemarche[1] + cf.posZSeances[1] - cf.posZSysteme[1])
