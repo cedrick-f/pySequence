@@ -1,0 +1,15 @@
+#summary Documentation de pySequence
+
+= Introduction =
+
+_*pySequence*_ est un logiciel d'aide à l'élaboration de *séquences
+pédagogiques*, sous forme de *fiches* exportables au format PDF.
+
+Il est élaboré en relation avec le _programme_ et le _document d'accompagnement_ des *enseignements technologiques transversaux* de la filière *STI2D*.
+
+= Table des matières =
+
+
+  * Fonctionnalités
+  * Mode d'emploi
+  * F.A.Q.
