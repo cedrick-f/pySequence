@@ -8,3 +8,7 @@
  # Ouverture/Enregistrement d'une séquence
  # Export de la fiche séquence au format PDF
  # Configuration de la fiche de séquence
+
+
+
+[Aide Sommaire de l'aide]
