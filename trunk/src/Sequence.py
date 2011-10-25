@@ -10,7 +10,7 @@ Copyright (C) 2011
 @author: Cedrick FAURY
 
 """
-__appname__= "pySyLiC"
+__appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
 __version__ = "1 beta"
 
@@ -33,9 +33,12 @@ print "Dossier de l'application :",PATH
 ####################################################################################
 # Outils "système"
 import sys, os
+import webbrowser
 
 # GUI
 import wx
+from wx.lib.wordwrap import wordwrap
+import wx.lib.hyperlink as hl
 
 # Graphiques vectoriels
 try:
@@ -1831,8 +1834,18 @@ class FenetreSequence(wx.Frame):
         
         self.mgr.Update()
         
+        self.CreateMenuBar()
+        
         wx.CallAfter(self.ficheSeq.Redessiner)
         self.Bind(EVT_SEQ_MODIFIED, self.OnSeqModified)
+        
+        self.Bind(wx.EVT_MENU, self.commandeOuvrir, id=11)
+        self.Bind(wx.EVT_MENU, self.commandeEnregistrer, id=12)
+        self.Bind(wx.EVT_MENU, self.exporterFiche, id=15)
+        self.Bind(wx.EVT_MENU, self.quitter, id=wx.ID_EXIT)
+        
+        self.Bind(wx.EVT_MENU, self.OnAide, id=21)
+        self.Bind(wx.EVT_MENU, self.OnAbout, id=22)
         
         # Interception de la demande de fermeture
         self.Bind(wx.EVT_CLOSE, self.quitter)
@@ -1841,6 +1854,29 @@ class FenetreSequence(wx.Frame):
 #        sizer = wx.BoxSizer(wx.HORIZONTAL)
 #        self.SetSizerAndFit(sizer)
     
+    
+    def CreateMenuBar(self):
+        # create menu
+        mb = wx.MenuBar()
+
+        file_menu = wx.Menu()
+        file_menu.Append(11, u"Ouvrir")
+        file_menu.Append(12, u"Enregistrer")
+        file_menu.AppendSeparator()
+        file_menu.Append(15, u"Exporter en PDF")
+        file_menu.AppendSeparator()
+        file_menu.Append(wx.ID_EXIT, u"Quitter")
+
+        help_menu = wx.Menu()
+        help_menu.Append(21, u"Aide en ligne")
+        help_menu.AppendSeparator()
+        help_menu.Append(22, u"A propos")
+
+        mb.Append(file_menu, "&Fichier")
+        mb.Append(help_menu, "&Aide")
+        
+        self.SetMenuBar(mb)
+        
     ###############################################################################################
     def OnSeqModified(self, event):
         self.sequence.VerifPb()
@@ -2059,10 +2095,19 @@ class FenetreSequence(wx.Frame):
             self.fermer()
 
 
+    #############################################################################
     def fermer(self):
         self.Destroy()
         sys.exit()
         
+    #############################################################################
+    def OnAbout(self, event):
+        win = A_propos(self)
+        win.ShowModal()
+        
+    #############################################################################
+    def OnAide(self, event):
+        webbrowser.open('http://code.google.com/p/pysequence/wiki/Aide')
         
         
 ####################################################################################
@@ -3628,6 +3673,114 @@ class SeqApp(wx.App):
         frame.Show()
         return True
     
+#############################################################################################################
+#
+# A propos ...
+# 
+#############################################################################################################
+class A_propos(wx.Dialog):
+    def __init__(self, parent):
+        wx.Dialog.__init__(self, parent, -1, u"A propos de "+ __appname__)
+        
+        self.app = parent
+        
+        sizer = wx.BoxSizer(wx.VERTICAL)
+        titre = wx.StaticText(self, -1, __appname__)
+        titre.SetFont(wx.Font(14, wx.DEFAULT, wx.NORMAL, wx.BOLD, False))
+        titre.SetForegroundColour(wx.NamedColour("BROWN"))
+        sizer.Add(titre, border = 10)
+        sizer.Add(wx.StaticText(self, -1, "Version : "+__version__), 
+                  flag=wx.ALIGN_RIGHT)
+#        sizer.Add(wx.StaticBitmap(self, -1, Images.Logo.GetBitmap()),
+#                  flag=wx.ALIGN_CENTER)
+        
+#        sizer.Add(20)
+        nb = wx.Notebook(self, -1, style=
+                             wx.BK_DEFAULT
+                             #wx.BK_TOP 
+                             #wx.BK_BOTTOM
+                             #wx.BK_LEFT
+                             #wx.BK_RIGHT
+                             # | wx.NB_MULTILINE
+                             )
+        
+        
+        # Auteurs
+        #---------
+        auteurs = wx.Panel(nb, -1)
+        fgs1 = wx.FlexGridSizer(cols=2, vgap=4, hgap=4)
+        
+        lstActeurs = ((u"Développement : ",(u"Cédrick FAURY", u"Jean-Claude FRICOU")),)#,
+#                      (_(u"Remerciements : "),()) 
+
+
+        
+        for ac in lstActeurs:
+            t = wx.StaticText(auteurs, -1, ac[0])
+            fgs1.Add(t, flag=wx.ALIGN_RIGHT | wx.ALIGN_CENTER_VERTICAL | wx.ALL, border=4)
+            for l in ac[1]:
+                t = wx.StaticText(auteurs, -1, l)
+                fgs1.Add(t , flag=wx.ALIGN_LEFT | wx.ALIGN_CENTER_VERTICAL| wx.ALL, border=4)
+                t = wx.StaticText(auteurs, -1, "")
+                fgs1.Add(t, flag=wx.ALIGN_RIGHT | wx.ALIGN_CENTER_VERTICAL | wx.LEFT, border=0)
+            t = wx.StaticText(auteurs, -1, "")
+            fgs1.Add(t, flag=wx.ALL, border=0)
+            
+        auteurs.SetSizer(fgs1)
+        
+        # licence
+        #---------
+        licence = wx.Panel(nb, -1)
+        try:
+            txt = open(os.path.join(PATH, "gpl.txt"))
+            lictext = txt.read()
+            txt.close()
+        except:
+            lictext = u"Le fichier de licence (gpl.txt) est introuvable !\n" \
+                      u"Veuillez réinstaller pySequence !"
+            dlg = wx.MessageDialog(self, lictext,
+                               'Licence introuvable',
+                               wx.OK | wx.ICON_ERROR
+                               #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
+                               )
+            dlg.ShowModal()
+            dlg.Destroy()
+            
+            
+        wx.TextCtrl(licence, -1, lictext, size = (400, -1), 
+                    style = wx.TE_READONLY|wx.TE_MULTILINE|wx.BORDER_NONE )
+        
+
+        
+        # Description
+        #-------------
+        descrip = wx.Panel(nb, -1)
+        wx.TextCtrl(descrip, -1, wordwrap(u"pySequence est un logiciel d'aide à l'élaboration de séquences pédagogiques,\n"
+                                          u"sous forme de fiches exportables au format PDF.\n"
+                                          u"Il est élaboré en relation avec le programme et le document d'accompagnement\n"
+                                          u"des enseignements technologiques transversaux de la filière STI2D.",
+                                            500, wx.ClientDC(self)),
+                        size = (400, -1),
+                        style = wx.TE_READONLY|wx.TE_MULTILINE|wx.BORDER_NONE) 
+        
+        nb.AddPage(descrip, u"Description")
+        nb.AddPage(auteurs, u"Auteurs")
+        nb.AddPage(licence, u"Licence")
+        
+        sizer.Add(hl.HyperLinkCtrl(self, wx.ID_ANY, u"Informations et téléchargement : http://code.google.com/p/pysequence/",
+                                   URL="http://code.google.com/p/pysequence/"),  
+                  flag = wx.ALIGN_RIGHT|wx.ALL, border = 5)
+        sizer.Add(nb)
+        
+        self.SetSizerAndFit(sizer)
+
+#        self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
+
+#    def OnCloseWindow(self, event):
+##        evt = wx.CommandEvent(wx.EVT_TOOL.typeId, 16)
+#        self.app.tb.ToggleTool(13, False)
+##        self.app.tb.GetEventHandler().ProcessEvent(evt)
+#        event.Skip()
     
 if __name__ == '__main__':
     app = SeqApp(False)
