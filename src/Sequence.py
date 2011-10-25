@@ -55,6 +55,7 @@ try:
     from agw import customtreectrl as CT
 except ImportError: # if it's not there locally, try the wxPython lib.
     import wx.lib.agw.customtreectrl as CT
+import images
 
 # Gestionnaire de pane
 try:
@@ -175,9 +176,9 @@ listeTypeActivite = ["ED", "AP", "P"]
 
 
 
-Demarches = {"I" : "Investigation",
-             "R" : "Résolution de problème",
-             "P" : "Projet"}
+Demarches = {"I" : u"Investigation",
+             "R" : u"Résolution de problème",
+             "P" : u"Projet"}
 listeDemarches = ["I", "R", "P"]
 
 ####################################################################################
@@ -400,11 +401,11 @@ class Sequence():
     def ConstruireArbre(self, arbre):
         print "ConstruireArbre séquence"
         self.arbre = arbre
-        self.branche = arbre.AddRoot(Titres[0], data = self)
+        self.branche = arbre.AddRoot(Titres[0], data = self, image = self.arbre.images["Seq"])
 
         self.CI.ConstruireArbre(arbre, self.branche)
         
-        self.brancheObj = arbre.AppendItem(self.branche, Titres[1])
+        self.brancheObj = arbre.AppendItem(self.branche, Titres[1], image = self.arbre.images["Obj"])
         for obj in self.obj:
             obj.ConstruireArbre(arbre, self.brancheObj)
             
@@ -817,7 +818,8 @@ class CentreInteret():
     def ConstruireArbre(self, arbre, branche):
         self.arbre = arbre
         self.codeBranche = wx.StaticText(self.arbre, -1, u"")
-        self.branche = arbre.AppendItem(branche, u"Centre d'intérét :", wnd = self.codeBranche, data = self)
+        self.branche = arbre.AppendItem(branche, u"Centre d'intérét :", wnd = self.codeBranche, data = self,
+                                        image = self.arbre.images["Ci"])
         
     ######################################################################################  
     def Draw(self, ctx):
@@ -921,7 +923,8 @@ class Competence():
     def ConstruireArbre(self, arbre, branche):
         self.arbre = arbre
         self.codeBranche = wx.StaticText(self.arbre, -1, u"")
-        self.branche = arbre.AppendItem(branche, u"Compétence :", wnd = self.codeBranche, data = self)
+        self.branche = arbre.AppendItem(branche, u"Compétence :", wnd = self.codeBranche, data = self,
+                                        image = self.arbre.images["Com"])
         
         
     ######################################################################################  
@@ -1921,7 +1924,7 @@ class FenetreSequence(wx.Frame):
         self.sequence.SetCodes()
         self.arbreSeq.ExpandAll()
         
-        print self.sequence
+#        print self.sequence
 #        except:
 #            pass
         fichier.close()
@@ -1932,8 +1935,8 @@ class FenetreSequence(wx.Frame):
         
     ###############################################################################################
     def commandeOuvrir(self, event = None, nomFichier=None):
-        mesFormats = "Séquence (.seq)|*.seq|" \
-                       "Tous les fichiers|*.*'"
+        mesFormats = u"Séquence (.seq)|*.seq|" \
+                       u"Tous les fichiers|*.*'"
   
         if nomFichier == None:
             dlg = wx.FileDialog(
@@ -1968,8 +1971,8 @@ class FenetreSequence(wx.Frame):
         
     #############################################################################
     def dialogEnregistrer(self):
-        mesFormats = "Séquence (.seq)|*.seq|" \
-                     "Tous les fichiers|*.*'"
+        mesFormats = u"Séquence (.seq)|*.seq|" \
+                     u"Tous les fichiers|*.*'"
         dlg = wx.FileDialog(
             self, message=u"Enregistrer la séquence sous ...", defaultDir=self.DossierSauvegarde , 
             defaultFile="", wildcard=mesFormats, style=wx.SAVE|wx.OVERWRITE_PROMPT|wx.CHANGE_DIR
@@ -2024,7 +2027,7 @@ class FenetreSequence(wx.Frame):
             t = ' - ' + self.fichierCourant
         if modif : 
             t += " **"
-        self.SetTitle("Séquence" + t )
+        self.SetTitle(__appname__ + t )
 
     #############################################################################
     def MarquerFichierCourantModifie(self):
@@ -2878,13 +2881,19 @@ class ArbreSequence(CT.CustomTreeCtrl):
         #
         # Les icones des branches
         #
-        il = wx.ImageList(16, 16)
-#        for items in ArtIDs[1:-1]:
-#            bmp = wx.ArtProvider_GetBitmap(eval(items), wx.ART_TOOLBAR, (16, 16))
-#            il.Add(bmp)
-
-#        smileidx = il.Add(images.Smiles.GetBitmap())
-#        numicons = il.GetImageCount()
+        dicimages = {"Seq" : images.Icone_sequence,
+                       "Rot" : images.Icone_rotation,
+                       "Cou" : images.Icone_cours,
+                       "Com" : images.Icone_competence,
+                       "Obj" : images.Icone_objectif,
+                       "Ci" : images.Icone_centreinteret,
+                       "Eva" : images.Icone_evaluation,
+                       "Par" : images.Icone_parallele
+                       }
+        self.images = {}
+        il = wx.ImageList(20, 20)
+        for k, i in dicimages.items():
+            self.images[k] = il.Add(i.GetBitmap())
         self.AssignImageList(il)
         
         #
@@ -3011,7 +3020,8 @@ class ArbreSequence(CT.CustomTreeCtrl):
 
     
 #        self.CurseurInsert = wx.Cursor(wx.Image('CurseurInsert.png', wx.BITMAP_TYPE_PNG ))
-        self.CurseurInsert = wx.Cursor('CurseurInsert.ico', wx.BITMAP_TYPE_ICO )
+#        self.CurseurInsert = wx.Cursor('CurseurInsert.ico', wx.BITMAP_TYPE_ICO )
+        self.CurseurInsert = wx.CursorFromImage(images.CurseurInsert.GetImage())
         
         
     def AjouterObjectif(self, event = None):
