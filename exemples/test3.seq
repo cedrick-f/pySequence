@@ -1,10 +1,10 @@
 <Sequence Intitule="Premi&#232;re s&#233;quence">
   <CentreInteret>
-    <CI14 />
+    <CI2 />
   </CentreInteret>
   <Objectifs>
-    <CO6.3 />
-    <CO5.3 />
+    <CO4.1 />
+    <CO1.1 />
   </Objectifs>
   <Seances>
     <Seance0 Duree="1.0" Effectif="C" Intitule="Apport de connaissances pr&#233;alable :  notion d'efficacit&#233; energ&#233;tique" IntituleDansDeroul="True" Type="C" />
@@ -31,7 +31,7 @@
           <Systemes7 Nom="" Nombre="0" />
         </Seance1>
       </Seance0>
-      <Seance1 Demarche="R" Duree="0.5" Effectif="E" Intitule="Enjeux de l'am&#233;lioration &#233;nerg&#233;tique du Drone" IntituleDansDeroul="False" Type="ED">
+      <Seance1 Demarche="R" Duree="1.0" Effectif="E" Intitule="Enjeux de l'am&#233;lioration &#233;nerg&#233;tique du Drone" IntituleDansDeroul="False" Type="ED">
         <Systemes0 Nom="Segway" Nombre="0" />
         <Systemes1 Nom="BAES" Nombre="0" />
         <Systemes2 Nom="Ardrone" Nombre="1" />
