@@ -10,6 +10,6 @@ Il est élaboré en relation avec le _programme_ et le _document d'accompagnemen
 = Table des matières =
 
 
-  * Fonctionnalités
+  * [Fonctionnalités]
   * Mode d'emploi
   * F.A.Q.
