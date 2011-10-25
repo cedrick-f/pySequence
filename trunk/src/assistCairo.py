@@ -173,7 +173,7 @@ def tableauH(ctx, titres, x, y, wt, wc, h, nCol = 0, va = 'c', ha = 'c', orient 
 #        print "    ",titre
         ctx.rectangle(x, _y, wt, hc)
         if type(coul) == dict :
-            col = coul[titre[:-1]]
+            col = coul[titre.rstrip("1234567890.")]
         else:
             col = coul
         ctx.set_source_rgb (col[0], col[1], col[2])

@@ -155,7 +155,17 @@ TypesSeance = {"C" : u"Cours",
                }
 TypesSeance.update(TypesActivite)
 TypesSeance.update({"R" : u"Rotation d'activités",
-                    "S" : u"Série d'activités"})
+                    "S" : u"Activités en parallèle"})
+
+TypesSeanceCourt = {"ED" : u"Etude de dossier",
+                    "AP" : u"Activité pratique",
+                    "P" : u"Projet",
+                    "C" : u"Cours",
+                    "SA" : u"Synt. d'activité",
+                    "SS" : u"Synt. de séquence",
+                    "E" : u"Evaluation",
+                    "R" : u"Rotation",
+                    "S" : u"Parallèle"}
 
 listeTypeSeance = ["ED", "AP", "P", "C", "SA", "SS", "E", "R", "S"]
 listeTypeActivite = ["ED", "AP", "P"]
@@ -299,6 +309,10 @@ class Sequence():
         for sy in self.systemes:
             sy.SetCode()    
         
+    ######################################################################################  
+    def VerifPb(self):
+        for s in self.seance:
+            s.VerifPb()
         
     ######################################################################################  
     def MiseAJourListeSystemes(self):
@@ -675,7 +689,7 @@ class Sequence():
         #  Tableau des séances (en bas)
         #
         nomsSeances, intSeances = self.GetIntituleSeances()
-        print nomsSeances
+#        print nomsSeances
         if nomsSeances != []:
             ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
                                   cairo.FONT_WEIGHT_NORMAL)
@@ -692,8 +706,8 @@ class Sequence():
         nomsSeances = []
         intSeances = []
         for s in self.GetToutesSeances():
-            print s
-            print s.intituleDansDeroul
+#            print s
+#            print s.intituleDansDeroul
             if hasattr(s, 'code') and s.intitule != "" and not s.intituleDansDeroul:
                 nomsSeances.append(s.code)
                 intSeances.append(s.intitule)
@@ -966,9 +980,9 @@ class Seance():
     
     ######################################################################################  
     def __repr__(self):
-        t = self.typeSeance + str(self.ordre) 
-        t += " " +str(self.GetDuree()) + "h"
-        t += " " +str(self.effectif)
+        t = self.typeSeance + self.code 
+#        t += " " +str(self.GetDuree()) + "h"
+#        t += " " +str(self.effectif)
 #        for s in self.sousSeances:
 #            t += "  " + s.__repr__()
         return t
@@ -985,7 +999,7 @@ class Seance():
     def getBranche(self):
         """ Renvoie la branche XML de la séance pour enregistrement
         """
-        print "getBranche Séance", self.code
+#        print "getBranche Séance", self.code
         root = ET.Element("Seance"+str(self.ordre))
         root.set("Type", self.typeSeance)
         root.set("Intitule", self.intitule)
@@ -1014,7 +1028,7 @@ class Seance():
         
     ######################################################################################  
     def setBranche(self, branche):
-        print "setBranche séance", 
+#        print "setBranche séance", 
         self.ordre = eval(branche.tag[6:])
         
         self.intitule  = branche.get("Intitule", "")
@@ -1044,8 +1058,118 @@ class Seance():
         
         self.MiseAJourListeSystemes()
         self.panelPropriete.MiseAJour()
-        print self
+#        print self
         
+    ######################################################################################  
+    def GetEffectif(self):
+        """ Renvoie l'effectif de la séance
+            1 = P
+            2 = E
+            4 = D
+            8 = G
+            16 = C
+        """
+        eff = 0
+        if self.typeSeance == "R":
+            eff += self.sousSeances[0].GetEffectif()
+        elif self.typeSeance == "S":
+            for sce in self.sousSeances:
+                eff += sce.GetEffectif()
+        else:
+            if self.effectif == "C":
+                eff = 16
+            elif self.effectif == "G":
+                eff = 8
+            elif self.effectif == "D":
+                eff = 4
+            elif self.effectif == "E":
+                eff = 2
+            elif self.effectif == "P":
+                eff = 1
+            else:
+                eff = 0
+#        print "effectif", self, eff
+        return eff
+    
+    ######################################################################################  
+    def SetEffectif(self, val):
+        """ Modifie l'effectif des Rotation et séances en Parallèle et de tous leurs enfants
+            après une modification de l'effectif d'un des enfants
+            1 = P
+            2 = E
+            4 = D
+            8 = G
+            16 = C
+        """
+        if type(val) == int:
+            if self.typeSeance == "R":
+                for s in self.sousSeances:
+                    s.SetEffectif(val)
+#            elif self.typeSeance == "S":
+#                self.effectif = self.GetEffectif()
+#                self.panelPropriete.MiseAJourEffectif()
+            else:
+                if val == 16:
+                    codeEff = "C"
+                elif val == 8:
+                    codeEff = "G"
+                elif val == 4:
+                    codeEff = "D"
+                elif val == 2:
+                    codeEff = "E"
+                elif val == 1:
+                    codeEff = "P"
+                else:
+                    codeEff = ""
+        else:
+            for k, v in Effectifs.items():
+                if v[0] == val:
+                    codeEff = k
+        self.effectif = codeEff
+        
+
+    ######################################################################################  
+    def VerifPb(self):
+        self.SignalerPbEffectif(self.IsEffectifOk())
+        if self.EstSousSeance():
+            for s in self.sousSeances:
+                self.VerifPb()
+        
+    ######################################################################################  
+    def IsEffectifOk(self):
+        print "IsEffectifOk",
+        ok = True
+        if self.typeSeance == "R" and len(self.sousSeances) > 0:
+            continuer = True
+            eff = self.sousSeances[0].GetEffectif()
+            i = 1
+            while continuer:
+                if i >= len(self.sousSeances):
+                    continuer = False
+                else:
+                    if self.sousSeances[i].GetEffectif() != eff:
+                        ok = False
+                        continuer = False
+                    i += 1
+        elif self.typeSeance == "S" and len(self.sousSeances) > 0:
+            if self.GetEffectif() > 16:
+                ok = False
+        print ok
+        return ok
+            
+    
+    
+    ######################################################################################  
+    def SignalerPbEffectif(self, etat):
+        if hasattr(self, 'codeBranche'):
+            if etat:
+                self.codeBranche.SetBackgroundColour('white')
+                self.codeBranche.SetToolTipString(u"")
+            else:
+                self.codeBranche.SetBackgroundColour('red')
+                self.codeBranche.SetToolTipString(u"Verifier les effectifs !")
+            self.codeBranche.Refresh()
+    
     ######################################################################################  
     def GetDuree(self):
         duree = 0
@@ -1061,21 +1185,23 @@ class Seance():
                 
                 
     ######################################################################################  
-    def SetDuree(self, duree):
+    def SetDuree(self, duree, recurs = True):
         """ Modifie la durée des Rotation et séances en Parallèle et de tous leurs enfants
             après une modification de durée d'un des enfants
         """
 #        print "SetDuree"
-
+        if recurs and self.EstSousSeance() and self.parent.typeSeance in ["R", "S"]: # séance en rotation (parent = séance "Rotation")
+            self.parent.SetDuree(duree)
+        
 #        if not self.typeSeance in ["R", "S"] :
 #            if self.EstSousSeance() and self.parent.typeSeance == "R": # séance en rotation (parent = séance "Rotation")
 #                self.parent.SetDuree(self.seance.GetDuree())
         
-        if self.typeSeance == "R" : # Rotation
-            self.duree.v[0] = self.GetDuree()
-            self.panelPropriete.MiseAJourDuree()
-            if self.EstSousSeance():
-                self.parent.SetDuree(self.GetDuree())
+#        if self.typeSeance == "R" : # Rotation
+#            self.duree.v[0] = self.GetDuree()
+#            self.panelPropriete.MiseAJourDuree()
+#            if self.EstSousSeance():
+#                self.parent.SetDuree(self.GetDuree())
 #            d = self.sousSeances[0].GetDuree()
 #            pb = False
 ##            print "  R:", d
@@ -1092,13 +1218,27 @@ class Seance():
             self.duree.v[0] = duree
             for s in self.sousSeances:
                 if s.typeSeance in ["R", "S"]:
-                    s.SetDuree(duree)
+                    s.SetDuree(duree, recurs = False)
                 else:
                     s.duree.v[0] = duree
                     s.panelPropriete.MiseAJourDuree()
             self.panelPropriete.MiseAJourDuree()
-            if self.EstSousSeance():
-                self.parent.SetDuree(self.GetDuree())
+
+        
+        elif self.typeSeance == "R" : # Serie
+            for s in self.sousSeances:
+                if s.typeSeance in ["R", "S"]:
+                    s.SetDuree(duree, recurs = False)
+                else:
+                    s.duree.v[0] = duree
+                    s.panelPropriete.MiseAJourDuree()
+            self.duree.v[0] = self.GetDuree()
+            self.panelPropriete.MiseAJourDuree()
+#            if self.EstSousSeance():
+#                self.parent.SetDuree(self.GetDuree())
+        
+#        if self.EstSousSeance() and self.parent.typeSeance in ["R", "S"]: # séance en rotation (parent = séance "Rotation")
+#            self.parent.SetDuree(duree)
 #            d = self.sousSeances[0].GetDuree()
 #            pb = False
 ##            print "  S:", d
@@ -1117,12 +1257,12 @@ class Seance():
     def SetIntitule(self, text):           
         self.intitule = text
         
-    ######################################################################################  
-    def SetEffectif(self, text):   
-        for k, v in Effectifs.items():
-            if v[0] == text:
-                codeEff = k
-        self.effectif = codeEff
+#    ######################################################################################  
+#    def SetEffectif(self, text):   
+#        for k, v in Effectifs.items():
+#            if v[0] == text:
+#                codeEff = k
+#        self.effectif = codeEff
            
     
     ######################################################################################  
@@ -1135,7 +1275,7 @@ class Seance():
         
     ######################################################################################  
     def SetType(self, typ):
-        print "SetType", typ
+#        print "SetType", typ
         if type(typ) == str:
             self.typeSeance = typ
         else:
@@ -1150,6 +1290,8 @@ class Seance():
         if hasattr(self, 'panelPropriete'):
             self.panelPropriete.AdapterAuType()
         
+        if self.EstSousSeance() and self.parent.typeSeance in ["R","S"]:
+            self.parent.SignalerPbEffectif(self.parent.IsEffectifOk())
         
     ######################################################################################  
     def GetToutesSeances(self):
@@ -1163,11 +1305,22 @@ class Seance():
         
     ######################################################################################  
     def SetCode(self):
-        print "SetCode",
-        self.code = self.typeSeance + str(self.ordre)
-        print self.code
+#        print "SetCode",
+        self.code = self.typeSeance
+        num = str(self.ordre+1)
+        if isinstance(self.parent, Seance):
+            num = str(self.parent.ordre+1)+"."+num
+            if isinstance(self.parent.parent, Seance):
+                num = str(self.parent.parent.ordre+1)+"."+num
+
+        self.code += num
+#        print self.code
         if hasattr(self, 'codeBranche'):
             self.codeBranche.SetLabel(self.code)
+            self.arbre.SetItemText(self.branche, TypesSeanceCourt[self.typeSeance])
+#        else:
+#            self.codeBranche.SetLabel("??")
+#            self.arbre.SetItemText(self.branche, u"Séance :")
         
         if self.typeSeance in ["R", "S"] : # Séances en Rotation ou  Parallèle
             for sce in self.sousSeances:
@@ -1225,7 +1378,7 @@ class Seance():
     
     ######################################################################################  
     def MiseAJourListeSystemes(self):
-        print "MiseAJourListeSystemes", self
+#        print "MiseAJourListeSystemes", self
         if self.typeSeance in ["AP", "ED", "P", "C", "SS", "SA", "E"]:
             sequence = self.GetSequence()
             for i, s in enumerate(sequence.systemes):
@@ -1302,6 +1455,9 @@ class Seance():
                 show_text_rect(ctx, self.intitule, x, y + cf.hHoraire/4, 
                                w, h-cf.hHoraire/4, ha = 'g')
             
+            
+                
+                
             if typParent == "R":
                 curseur[1] += h
             elif typParent == "S":
@@ -1318,7 +1474,8 @@ class Seance():
                     curseur[1] += cf.ecartSeanceY
                 if self.typeSeance == "S":
                     curseur[1] += cf.hHoraire * self.GetDuree()
-        
+#                if self.typeSeance == "R":
+                    
         
 #        # 
 #        # Croisement Seance/Systèmes
@@ -1514,7 +1671,7 @@ class PanelConteneur(wx.Panel):
     
     
     def AfficherPanel(self, panel):
-        print "AfficherPanel"
+#        print "AfficherPanel"
         if self.panel != None:
             self.bsizer.Remove(self.panel)
             self.panel.Hide()
@@ -1672,6 +1829,7 @@ class FenetreSequence(wx.Frame):
     
     ###############################################################################################
     def OnSeqModified(self, event):
+        self.sequence.VerifPb()
         self.ficheSeq.Redessiner()
         self.MarquerFichierCourantModifie()
         
@@ -2333,8 +2491,6 @@ class PanelPropriete_Seance(PanelPropriete):
     #############################################################################            
     def EvtText(self, event):
         self.seance.SetDuree(event.GetVar().v[0])
-        if self.seance.EstSousSeance() and self.seance.parent.typeSeance in ["R", "S"]: # séance en rotation (parent = séance "Rotation")
-            self.seance.parent.SetDuree(event.GetVar().v[0])
         self.sendEvent()
         
     #############################################################################            
@@ -2359,14 +2515,14 @@ class PanelPropriete_Seance(PanelPropriete):
 
         self.seance.MiseAJourListeSystemes()
         self.AdapterAuxSystemes()
-        
+        self.Fit()
         self.sendEvent()
        
         
         
     #############################################################################            
     def EvtComboBoxEff(self, event):
-        print "EvtComboBoxEff", 
+        print "EvtComboBoxEff", self,
         self.seance.SetEffectif(event.GetString())  
         print self.seance.effectif
         l = Effectifs.values()
@@ -2464,7 +2620,7 @@ class PanelPropriete_Seance(PanelPropriete):
             self.cbEff.Show(True)
             self.titreEff.Show(True)
         elif self.seance.typeSeance in ["AP"]:
-            listEff = ["P"]
+            listEff = ["P", "E"]
             self.cbEff.Show(True)
             self.titreEff.Show(True)
         elif self.seance.typeSeance in ["SA"]:
@@ -3283,7 +3439,7 @@ class ArbreSequence(CT.CustomTreeCtrl):
                     lst[t] = dataSource
                     dataTarget.parent.OrdonnerSeances()
                     self.SortChildren(self.GetItemParent(self.item))
-                    self.panelVide.sendEvent()
+                    self.panelVide.sendEvent() # Solution pour déclencher un "redessiner"
                 else:
                     pass
         self.itemDrag = None
