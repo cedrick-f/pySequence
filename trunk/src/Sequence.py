@@ -791,7 +791,7 @@ class CentreInteret():
     ######################################################################################  
     def setBranche(self, branche):
         code = list(branche)[0].tag
-        num = eval(code[2:])
+        num = eval(code[2:])-1
         self.SetNum(num)
         self.panelPropriete.MiseAJour()
 #        self.SetCode()
@@ -1137,7 +1137,7 @@ class Seance():
         
     ######################################################################################  
     def IsEffectifOk(self):
-        print "IsEffectifOk",
+#        print "IsEffectifOk",
         ok = True
         if self.typeSeance == "R" and len(self.sousSeances) > 0:
             continuer = True
@@ -1154,7 +1154,7 @@ class Seance():
         elif self.typeSeance == "S" and len(self.sousSeances) > 0:
             if self.GetEffectif() > 16:
                 ok = False
-        print ok
+#        print ok
         return ok
             
     
@@ -1192,27 +1192,7 @@ class Seance():
 #        print "SetDuree"
         if recurs and self.EstSousSeance() and self.parent.typeSeance in ["R", "S"]: # séance en rotation (parent = séance "Rotation")
             self.parent.SetDuree(duree)
-        
-#        if not self.typeSeance in ["R", "S"] :
-#            if self.EstSousSeance() and self.parent.typeSeance == "R": # séance en rotation (parent = séance "Rotation")
-#                self.parent.SetDuree(self.seance.GetDuree())
-        
-#        if self.typeSeance == "R" : # Rotation
-#            self.duree.v[0] = self.GetDuree()
-#            self.panelPropriete.MiseAJourDuree()
-#            if self.EstSousSeance():
-#                self.parent.SetDuree(self.GetDuree())
-#            d = self.sousSeances[0].GetDuree()
-#            pb = False
-##            print "  R:", d
-#            for s in self.sousSeances[1:]:
-#                if s.GetDuree() != d:
-#                    pb = True
-#            if pb :
-#                self.panelPropriete.MarquerProblemeDuree(False)
-#            else:
-#                self.duree.v[0] = duree
-#                self.panelPropriete.MarquerProblemeDuree(True)
+
         
         elif self.typeSeance == "S" : # Serie
             self.duree.v[0] = duree
@@ -1234,22 +1214,7 @@ class Seance():
                     s.panelPropriete.MiseAJourDuree()
             self.duree.v[0] = self.GetDuree()
             self.panelPropriete.MiseAJourDuree()
-#            if self.EstSousSeance():
-#                self.parent.SetDuree(self.GetDuree())
-        
-#        if self.EstSousSeance() and self.parent.typeSeance in ["R", "S"]: # séance en rotation (parent = séance "Rotation")
-#            self.parent.SetDuree(duree)
-#            d = self.sousSeances[0].GetDuree()
-#            pb = False
-##            print "  S:", d
-#            for s in self.sousSeances[1:]:
-#                if s.GetDuree() != d:
-#                    pb = True
-#            if pb : 
-#                self.panelPropriete.MarquerProblemeDuree(False)
-#            else:
-#                self.duree.v[0] = duree
-#                self.panelPropriete.MarquerProblemeDuree(True)
+
         
             
         
@@ -1414,13 +1379,14 @@ class Seance():
 #            self.Bind(wx.EVT_MENU, functools.partial(self.AjouterSerie, item = item), item3)
             
     ######################################################################################  
-    def Draw(self, ctx, curseur, typParent = ""):
+    def Draw(self, ctx, curseur, typParent = "", rotation = False):
         if not self.EstSousSeance():
             h = cf.hHoraire * self.GetDuree()
             fleche_verticale(ctx, cf.posZDeroul[0], curseur[1], 
                              h, 0.02, (0.9,0.8,0.8,0.5))
             ctx.set_source_rgb(0.5,0.8,0.8)
-            show_text_rect(ctx, getHoraireTxt(self.GetDuree()), cf.posZDeroul[0]-0.01, curseur[1], 0.02, h, orient = 'v')
+            show_text_rect(ctx, getHoraireTxt(self.GetDuree()), cf.posZDeroul[0]-0.01, curseur[1], 
+                           0.02, h, orient = 'v')
             
             
         if not self.typeSeance in ["R", "S", ""]:
@@ -1430,8 +1396,13 @@ class Seance():
             h = cf.hHoraire * self.GetDuree()
             self.rect = (x, y, w, h) # Pour clic
             ctx.set_line_width(0.002)
-            rectangle_plein(ctx, x, y, w, h, cf.BCoulSeance[self.typeSeance], cf.ICoulSeance[self.typeSeance])
-            if self.typeSeance in ["AP", "ED", "P"]:
+            if rotation:
+                alpha = 0.2
+            else:
+                alpha = 1
+            rectangle_plein(ctx, x, y, w, h, 
+                            cf.BCoulSeance[self.typeSeance], cf.ICoulSeance[self.typeSeance], alpha)
+            if not rotation and self.typeSeance in ["AP", "ED", "P"]:
                 if self.EstSousSeance() and self.parent.typeSeance == "S":
                     ns = len(self.parent.sousSeances)
                     ys = y+(self.ordre+1) * h/(ns+1)
@@ -1442,21 +1413,18 @@ class Seance():
                 self.DrawCroisementSystemes(ctx, ys)
                 
             
-            if hasattr(self, 'code'):
+            if not rotation and hasattr(self, 'code'):
                 ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
                                       cairo.FONT_WEIGHT_BOLD)
                 ctx.set_source_rgb (0,0,0)
                 show_text_rect(ctx, self.code, x, y, cf.wEff["P"], cf.hHoraire/4, ha = 'g')
             
-            if self.intituleDansDeroul and self.intitule != "":
+            if not rotation and self.intituleDansDeroul and self.intitule != "":
                 ctx.select_font_face ("Sans", cairo.FONT_SLANT_ITALIC,
                                       cairo.FONT_WEIGHT_NORMAL)
                 ctx.set_source_rgb (0,0,0)
                 show_text_rect(ctx, self.intitule, x, y + cf.hHoraire/4, 
                                w, h-cf.hHoraire/4, ha = 'g')
-            
-            
-                
                 
             if typParent == "R":
                 curseur[1] += h
@@ -1467,15 +1435,37 @@ class Seance():
         else:
             if self.typeSeance in ["R", "S"]:
                 for s in self.sousSeances:
-                    s.Draw(ctx, curseur, typParent = self.typeSeance)
+                    s.Draw(ctx, curseur, typParent = self.typeSeance, rotation = rotation)
 #                    if self.typeSeance == "S":
+                
+                if self.typeSeance == "R" and self.IsEffectifOk():
+                    l = self.sousSeances
+                    eff = self.GetEffectif()
+                    if eff == 16:
+                        codeEff = "C"
+                    elif eff == 8:
+                        codeEff = "G"
+                    elif eff == 4:
+                        codeEff = "D"
+                    elif eff == 2:
+                        codeEff = "E"
+                    elif eff == 1:
+                        codeEff = "P"
+                    curs = [curseur[0]+cf.wEff[codeEff], curseur[1]-cf.hHoraire * self.GetDuree()]
+                    for t in range(len(self.sousSeances)-1):
+                        l = permut(l)
+                        for s in l:
+                            s.Draw(ctx, curs, typParent = "R", rotation = True)
+                        curs[0] += cf.wEff[s.effectif]
+                
+                
                 curseur[0] = cf.posZSeances[0]
                 if typParent == "":
                     curseur[1] += cf.ecartSeanceY
                 if self.typeSeance == "S":
                     curseur[1] += cf.hHoraire * self.GetDuree()
-#                if self.typeSeance == "R":
-                    
+
+                
         
 #        # 
 #        # Croisement Seance/Systèmes
@@ -2126,7 +2116,7 @@ class FicheSequence(wx.ScrolledWindow):
     #############################################################################            
     def normalize(self, cr):
         w,h = self.GetVirtualSize()
-        print "normalize", h
+#        print "normalize", h
         cr.scale(h, h) 
         
         
@@ -3574,7 +3564,14 @@ def get_key(dict, value):
     return key
 
 
-
+def permut(liste):
+    l = []
+    for a in liste[1:]:
+        l.append(a)
+    l.append(liste[0])
+    return l
+    
+    
 def getHoraireTxt(v): 
     h, m = divmod(v*60, 60)
     h = str(int(h))

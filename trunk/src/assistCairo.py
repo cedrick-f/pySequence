@@ -203,11 +203,11 @@ def tableauH(ctx, titres, x, y, wt, wc, h, nCol = 0, va = 'c', ha = 'c', orient 
         
     ctx.stroke ()
     
-def rectangle_plein(ctx, x, y, w, h, coulBord, coulInter):
+def rectangle_plein(ctx, x, y, w, h, coulBord, coulInter, alpha = 1):
     ctx.rectangle(x, y, w, h)
-    ctx.set_source_rgba (coulInter[0], coulInter[1], coulInter[2], coulInter[3])
+    ctx.set_source_rgba (coulInter[0], coulInter[1], coulInter[2], alpha)
     ctx.fill_preserve ()
-    ctx.set_source_rgb (coulBord[0], coulBord[1], coulBord[2])
+    ctx.set_source_rgba (coulBord[0], coulBord[1], coulBord[2], alpha)
     ctx.stroke ()
     
 def boule(ctx, x, y, r):
