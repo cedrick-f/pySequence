@@ -1,0 +1,14 @@
+#summary Fonctionnalités de pySequence
+
+= Fonctionnalités =
+
+_*pySequence*_ fourni une aide pour créer des séquences pédagogiques.
+La séquence a une structure en arborescence :
+ Séquence
+   Centre d'intérêt abordé
+   Objectifs (compétences attendues
+   Déroulement (scénario) de la séquence
+      Enchainement de séances
+      Séances en rotation ou bien en parallèle
+      ...
+   Systèmes mis en œuvre dans la séquence.
