@@ -654,7 +654,7 @@ class Sequence():
             _x = cf.posZSysteme[0]
             _y = cf.posZSysteme[1]
             for s in self.systemes:
-                s.rect = (_x, _y, wc, cf.posZSeances[1] - cf.posZSysteme[1])
+                s.rect=((_x, _y, wc, cf.posZSeances[1] - cf.posZSysteme[1]),)
                 ctx.move_to(_x, _y + cf.posZSeances[1] - cf.posZSysteme[1])
                 ctx.line_to(_x, _y + cf.tailleZDemarche[1])
                 _x += wc
@@ -733,11 +733,11 @@ class Sequence():
     def HitTest(self, x, y):
 #        print "HitTest", x, y
         rect = cf.posIntitule + cf.tailleIntitule
-        if dansRectangle(x, y, rect):
+        if dansRectangle(x, y, (rect,)):
             self.arbre.DoSelectItem(self.branche)
         elif self.CI.HitTest(x, y):
             return
-        elif dansRectangle(x, y, cf.posObj + cf.tailleObj):
+        elif dansRectangle(x, y, (cf.posObj + cf.tailleObj,)):
             self.arbre.DoSelectItem(self.brancheObj)
         else:
             autresZones = self.seance + self.systemes
@@ -852,7 +852,7 @@ class CentreInteret():
         
     def HitTest(self, x, y):
         rect = cf.posCI + cf.tailleCI
-        if dansRectangle(x, y, rect):
+        if dansRectangle(x, y, (rect,)):
             self.arbre.DoSelectItem(self.branche)
         
             
@@ -1137,23 +1137,33 @@ class Seance():
         
     ######################################################################################  
     def IsEffectifOk(self):
+        """ Teste s'il y a un problème d'effectif pour les séances en rotation ou en parallèle
+            0 : pas de problème
+            1 : tout le groupe "effectif réduit" n'est pas occupé
+            2 : effectif de la séance supperieur à celui du groupe "effectif réduit"
+            3 : séances en rotation d'effectifs différents !!
+        """
 #        print "IsEffectifOk",
-        ok = True
-        if self.typeSeance == "R" and len(self.sousSeances) > 0:
-            continuer = True
-            eff = self.sousSeances[0].GetEffectif()
-            i = 1
-            while continuer:
-                if i >= len(self.sousSeances):
-                    continuer = False
-                else:
-                    if self.sousSeances[i].GetEffectif() != eff:
-                        ok = False
+        ok = 0 # pas de problème
+        if self.typeSeance in ["R", "S"] and len(self.sousSeances) > 0:
+            if self.GetEffectif() < 8:
+                ok = 1 # Tout le groupe "effectif réduit" n'est pas occupé
+            if self.typeSeance == "R":
+                continuer = True
+                eff = self.sousSeances[0].GetEffectif()
+                i = 1
+                while continuer:
+                    if i >= len(self.sousSeances):
                         continuer = False
-                    i += 1
-        elif self.typeSeance == "S" and len(self.sousSeances) > 0:
-            if self.GetEffectif() > 16:
-                ok = False
+                    else:
+                        if self.sousSeances[i].GetEffectif() != eff:
+                            ok = 3 # séance en rotation d'effectifs différents !!
+                            continuer = False
+                        i += 1
+            elif self.typeSeance == "S":
+                if self.GetEffectif() > 16:
+                    ok = 2 # Effectif de la séance supperieur à celui du groupe "effectif réduit"
+         
 #        print ok
         return ok
             
@@ -1162,12 +1172,18 @@ class Seance():
     ######################################################################################  
     def SignalerPbEffectif(self, etat):
         if hasattr(self, 'codeBranche'):
-            if etat:
+            if etat == 0:
                 self.codeBranche.SetBackgroundColour('white')
                 self.codeBranche.SetToolTipString(u"")
-            else:
+            elif etat == 1 :
+                self.codeBranche.SetBackgroundColour('gold')
+                self.codeBranche.SetToolTipString(u"Tout le groupe \"effectif réduit\" n'est pas occupé")
+            elif etat == 2:
+                self.codeBranche.SetBackgroundColour('orange')
+                self.codeBranche.SetToolTipString(u"Effectif de la séance supperieur à celui du groupe \"effectif réduit\"")
+            elif etat == 3:
                 self.codeBranche.SetBackgroundColour('red')
-                self.codeBranche.SetToolTipString(u"Verifier les effectifs !")
+                self.codeBranche.SetToolTipString(u"Séances en rotation d'effectifs différents !!")
             self.codeBranche.Refresh()
     
     ######################################################################################  
@@ -1394,7 +1410,10 @@ class Seance():
             x, y = curseur
             w = cf.wEff[self.effectif]
             h = cf.hHoraire * self.GetDuree()
-            self.rect = (x, y, w, h) # Pour clic
+            if rotation:
+                self.rect.append((x, y, w, h))
+            else:
+                self.rect=[(x, y, w, h),] # Rectangles pour clic
             ctx.set_line_width(0.002)
             if rotation:
                 alpha = 0.2
@@ -1438,7 +1457,10 @@ class Seance():
                     s.Draw(ctx, curseur, typParent = self.typeSeance, rotation = rotation)
 #                    if self.typeSeance == "S":
                 
-                if self.typeSeance == "R" and self.IsEffectifOk():
+                #
+                # Aperçu en filigrane de la rotation
+                #
+                if self.typeSeance == "R" and self.IsEffectifOk() < 2:
                     l = self.sousSeances
                     eff = self.GetEffectif()
                     if eff == 16:
@@ -1505,7 +1527,7 @@ class Seance():
                 ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
                                       cairo.FONT_WEIGHT_BOLD)
                 show_text_rect(ctx, str(n), x-r, y-r, 2*r, 2*r)
-            
+                self.rect.append((x-r, y-r, 2*r, 2*r))
             
             
     ######################################################################################  
@@ -1539,7 +1561,9 @@ class Seance():
         #
         _x = cf.xDemarche[self.demarche]
 #        if self.typeSeance in ["AP", "ED", "P"]:
-        boule(ctx, _x, y, 0.008)
+        r = 0.008
+        boule(ctx, _x, y, r)
+        self.rect.append((_x -r , y - r, 2*r, 2*r))
 #        ctx.arc (_x, y, 0.006, 0, 2*pi)
 #        ctx.stroke ()
 
@@ -1867,6 +1891,7 @@ class FenetreSequence(wx.Frame):
         fichier.close()
         self.definirNomFichierCourant(nomFichier)
         self.ficheSeq.Redessiner()
+        self.sequence.VerifPb()
         
         
     ###############################################################################################
@@ -3546,7 +3571,10 @@ def indent(elem, level=0):
 
 
 def dansRectangle(x, y, rect):
-    return x > rect[0] and y > rect[1] and x < rect[0] + rect[2] and y < rect[1] + rect[3]
+    for r in rect:
+        if x > r[0] and y > r[1] and x < r[0] + r[2] and y < r[1] + r[3]:
+            return True
+    return False
 
        
 
