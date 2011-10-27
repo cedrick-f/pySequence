@@ -118,13 +118,13 @@ Competences = {"CO1.1" : u"Justifier les choix des matériaux, des structures d'
 
 TypesActivite = {"ED" : u"Activité d'étude de dossier",
                  "AP" : u"Activité pratique",
-                 "P" : u"Activité de projet",
+                 "P"  : u"Activité de projet",
                 }
 
-TypesSeance = {"C" : u"Cours",
+TypesSeance = {"C"  : u"Cours",
                "SA" : u"Synthèse d'activité",
                "SS" : u"Synthèse de séquence",
-               "E" : u"Evaluation",
+               "E"  : u"Evaluation",
                }
 TypesSeance.update(TypesActivite)
 TypesSeance.update({"R" : u"Rotation d'activités",
@@ -132,13 +132,13 @@ TypesSeance.update({"R" : u"Rotation d'activités",
 
 TypesSeanceCourt = {"ED" : u"Etude de dossier",
                     "AP" : u"Activité pratique",
-                    "P" : u"Projet",
-                    "C" : u"Cours",
+                    "P"  : u"Projet",
+                    "C"  : u"Cours",
                     "SA" : u"Synt. d'activité",
                     "SS" : u"Synt. de séquence",
-                    "E" : u"Evaluation",
-                    "R" : u"Rotation",
-                    "S" : u"Parallèle"}
+                    "E"  : u"Evaluation",
+                    "R"  : u"Rotation",
+                    "S"  : u"Parallèle"}
 
 listeTypeSeance = ["ED", "AP", "P", "C", "SA", "SS", "E", "R", "S"]
 listeTypeActivite = ["ED", "AP", "P"]
@@ -150,4 +150,135 @@ Demarches = {"I" : u"Investigation",
              "P" : u"Projet"}
 listeDemarches = ["I", "R", "P"]
 
+dicSavoirs = {"1" : [u"Principes de conception des systèmes de développement durable",
+                  {"1.1" : [u"Compétitivité et créativité",
+                            {"1.1.1" : [u"Paramètres de la compétitivité ",
+                                        [u"Importance du service rendu (besoin réel et besoin induit)",
+                                         u"Innovation (de produit, de procédé, de marketing)",
+                                         u"Recherche de solutions techniques (brevets) et créativité, stratégie de propriété industrielle (protection du nom, du design et de l’aspect technique), enjeux de la normalisation",
+                                         u"Design produit et architecture",
+                                         u"Ergonomie : notion de confort, d’efficacité, de  sécurité dans les relations homme – produit, homme – système"]],
+                             "1.1.2" : [u"Cycle de vie d'un produit et choix techniques, économiques et environnementaux",
+                                        [u"Les étapes du cycle de vie d’un système",
+                                         u"Prise en compte globale du cycle de vie"]],
+                             "1.1.3" : [u"Compromis complexité – efficacité – coût",
+                                        [u"Relation Fonction/Coût/Besoin",
+                                         u"Relation Fonction/Coût/Réalisation",
+                                         u"Relation Fonction/Impact environnemental"]]}],
+                   "1.2" : [u"Éco conception",
+                            {"1.2.1" : [u"Étapes de la démarche de conception",
+                                        [u"Expression du besoin",
+                                         u"Spécifications fonctionnelles d’un système (cahier des charges fonctionnel)"]],
+                             "1.2.2" : [u"Mise à disposition des ressources",
+                                        [u"Coûts relatifs, disponibilité, impacts environnementaux des matériaux",
+                                         u"Enjeux énergétiques mondiaux : extraction et transport, production centralisée, production locale"]],
+                             "1.2.3" : [u"Utilisation raisonnée des ressources",
+                                        [u"Propriétés physico-chimiques, mécaniques et thermiques des matériaux",
+                                         u"Impacts environnementaux associés au cycle de vie du produit",
+                                         u"Efficacité énergétique d’un système",
+                                         u"Apport de la chaîne d’information associée à la commande pour améliorer l’efficacité globale d’un système"]]}]}
+                  ],
+           "2" : [u"Outils et méthodes d’analyse et de description des systèmes",
+                  {"2.1" : [u"Approche fonctionnelle des systèmes",
+                            {"2.1.1" : [u"Organisation fonctionnelle d’une chaîne d'énergie",
+                                        [u"Caractérisation des fonctions relatives à l’énergie : production, transport, distribution, stockage, transformation, modulation.",]],
+                             "2.1.2" : [u"Organisation fonctionnelle d’une chaîne d’information",
+                                        [u"Caractérisation des fonctions relatives à l'information : acquisition et restitution, codage et traitement, transmission",]]}],
+                   "2.2" : [u"Outils de représentation",
+                            {"2.2.1" : [u"Représentation du réel",
+                                        [u"Croquis (design produit, architecture)",
+                                         u"Représentation volumique numérique des systèmes",
+                                         u"Exploitation des représentations numériques"]],
+                             "2.2.2" : [u"Représentation du symboliques",
+                                        [u"Représentation symbolique associée à la modélisation des systèmes : diagrammes adaptés SysML, graphe de flux d’énergie, schéma cinématique, schéma électrique, schéma fluidique.",
+                                         u"Schéma architectural (mécanique, énergétique, informationnel)",
+                                         u"Représentations des répartitions et de l’évolution des grandeurs énergétiques (diagramme, vidéo, image)",
+                                         u"Représentations associées au codage de l’information : variables, encapsulation des données"]]}],
+                   "2.3" : [u"Approche comportementale",
+                            {"2.3.1" : [u"Modèles de comportement",
+                                        [u"Principes généraux d’utilisation",
+                                         u"Identification et limites des modèles de comportements,  paramétrage associé aux progiciels de simulation",
+                                         u"Identification des variables du modèle, simulation et comparaison des résultats obtenus au système réel ou à son cahier des charges"]],
+                             "2.3.2" : [u"Comportement des matériaux",
+                                        [u"Matériaux composites, nano matériaux. Classification et typologie des matériaux",
+                                         u"Comportements caractéristiques des matériaux selon les points de vue",
+                                         u"Mécaniques (efforts, frottements, élasticité, dureté, ductilité)",
+                                         u"Thermiques (échauffement par conduction, convection et rayonnement, fusion, écoulement)",
+                                         u"Ėlectrique (résistivité, perméabilité, permittivité)"]],
+                             "2.3.3" : [u"Comportement mécaniques des systèmes",
+                                        [u"Équilibre des solides : modélisation des liaisons, actions mécaniques, principe fondamental de la statique, résolution d’un problème de statique plane",
+                                         u"Résistance des matériaux : hypothèses et modèle poutre, types de sollicitations simples, notion de contrainte et de déformation, loi de Hooke et module d’Young, limite élastique, étude d’une sollicitation simple"]],
+                             "2.3.4" : [u"Structures porteuses",
+                                        [u"Aspects vibratoires",
+                                         u"Transfert de charges"]],
+                             "2.3.5" : [u"Comportement énergétique des systèmes",
+                                        [u"Analyse des pertes de charges fluidiques, caractéristiques des composants",
+                                         u"Les paramètres de gestion de l’énergie liés au stockage et aux transformations",
+                                         u"Conservation d’énergie, pertes et rendements, principe de réversibilité",
+                                         u"Natures et caractéristiques des sources et des charges",
+                                         u"Caractérisation des échanges d’énergie entre source et charge : disponibilité, puissance, reconfiguration, qualité, adaptabilité au profil de charge, régularité"]],
+                             "2.3.6" : [u"Comportements informationnels des systèmes",
+                                        [u"Caractérisation de l’information : expression, visualisation, interprétation, caractérisations temporelle et fréquentielle",
+                                         u"Modèles de description en statique et en dynamique",
+                                         u"Modèles algorithmiques : structures algorithmiques élémentaires (boucles, conditions, transitions conditionnelles). Variables"]]}]}
+                  ], 
+           "3" : [u"Solutions technologiques",
+                  {"3.1" : [u"Structures matérielles et/ou logicielles",
+                            {"3.1.1" : [u"Choix des matériaux",
+                                        [u"Principes de choix, indices de performances, méthodes structurées d’optimisation d’un choix, conception multi contraintes et multi objectifs",]],
+                             "3.1.2" : [u"Typologie des solutions constructives des liaisons entre solides",
+                                        [u"Caractérisation des liaisons sur les systèmes",
+                                         u"Relation avec les mouvements / déformations et les efforts"]],
+                             "3.1.3" : [u"Typologie des solutions constructives de l’énergie",
+                                        [u"Système énergétique mono source",
+                                         u"Système énergétique multi source et  hybride"]],
+                             "3.1.4" : [u"Traitement de l’information",
+                                        [u"Codage (binaire, hexadécimal, ASCII) et transcodage de l’information, compression, correction",
+                                         u"Programmation objet : structures élémentaires de classe, concept d'instanciation",
+                                         u"Traitement programmé : structure à base de microcontrôleurs et structures spécialisées (composants analogiques et/ou numériques programmables)",
+                                         u"Systèmes événementiels : logique combinatoire, logique séquentielle",
+                                         u"Traitement analogique de l’information : opérations élémentaires (addition, soustraction, multiplication, saturation)"]]}],
+                   "3.2" : [u"Constituants d’un système",
+                            {"3.2.1" : [u"Transformateurs et Modulateurs d’énergie associés",
+                                        [u"Adaptateurs d’énergie : réducteurs mécaniques, transformateurs électriques parfaits et échangeurs thermiques",
+                                         u"Actionneurs et modulateurs : moteurs électriques et modulateurs, vérins pneumatiques et interfaces, vannes pilotées dans l’habitat pour des applications hydrauliques et thermiques",
+                                         u"Accouplements permanents ou non, freins",
+                                         u"Convertisseurs d'énergie : ventilateurs, pompes, compresseurs, moteur thermique",
+                                         u"Éclairage"]],
+                             "3.2.2" : [u"Stockage d’énergie",
+                                        [u"Constituants permettant le stockage sous forme :\n" \
+                                         u"- mécanique, hydraulique ou pneumatique : sous forme potentielle et/ou cinétique\n" \
+                                         u"- chimique : piles et accumulateurs, combustibles, carburants, comburants\n" \
+                                         u"- électrostatique : condensateur et super condensateur\n" \
+                                         u"- électromagnétique\n" \
+                                         u"- thermique : chaleur latente et chaleur sensible",]],
+                             "3.2.3" : [u"Acquisition et codage de l’information",
+                                        [u"Capteurs : approche qualitative des capteurs, grandeur mesurée et grandeurs d’influence (parasitage, sensibilité, linéarité)",
+                                         u"Conditionnement et adaptation du capteur à la chaîne d’information, échantillonnage, blocage",
+                                         u"Filtrage de l’information : types de filtres (approche par gabarit)",
+                                         u"Restitution de l’information : approche qualitative des démodulations (transducteurs Voix, Données, Images ; commande des  pré-actionneurs)"]],
+                             "3.2.4" : [u"Transmission de l’information, réseaux et internet",
+                                        [u"Transmission de l’information (modulations d’amplitude, modulations de fréquence, modulations de phase)",
+                                         u"Caractéristiques d’un canal de transmission, multiplexage",
+                                         u"Organisations matérielle et logicielle d’un dispositif communicant : constituants et interfaçages",
+                                         u"Modèles en couche des réseaux, protocoles et encapsulation des données",
+                                         u"Adresse physique (MAC) du protocole Ethernet et adresse logique (IP) du protocole IP. Lien adresse MAC/IP : protocole ARP",
+                                         u"Architecture client/serveur : protocoles FTP et HTTP",
+                                         u"Gestion d'un nœud de réseau par le paramétrage d'un routeur : adresses IP, NAT/PAT, DNS, pare-feu"]]}]}
+                  ]}
+
+
+def getSavoir(code, dic = dicSavoirs, c = None):
+    if c == None:
+        c = len(code.split("."))
+#    print "getSavoir", code, c,
+    if dic.has_key(code):
+#        print
+        return dic[code][0]
+        
+    else:
+        cd = code[:-2*(c-1)]
+#        print "-->" ,cd
+        return getSavoir(code, dic[cd][1], c-1)
+    
 

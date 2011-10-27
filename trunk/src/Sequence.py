@@ -39,6 +39,7 @@ import webbrowser
 import wx
 from wx.lib.wordwrap import wordwrap
 import wx.lib.hyperlink as hl
+import  wx.lib.scrolledpanel as scrolled
 
 # Graphiques vectoriels
 try:
@@ -47,7 +48,6 @@ try:
     haveCairo = True
 except ImportError:
     haveCairo = False
-from assistCairo import *
 
 
 # Arbre
@@ -55,9 +55,11 @@ try:
     from agw import customtreectrl as CT
 except ImportError: # if it's not there locally, try the wxPython lib.
     import wx.lib.agw.customtreectrl as CT
+
+# Les icones des branches de l'abre et un curseur perso
 import images
 
-# Gestionnaire de pane
+# Gestionnaire de "pane"
 try:
     from agw import aui
 except ImportError:
@@ -72,117 +74,13 @@ import xml.etree.ElementTree as ET
 # des widgets wx évolués "faits maison"
 from CedWidgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_ENTIER_POS
 
-## les paramèters de configuration graphique de la fiche de séquence
-#import configFiche as cf
-#import ConfigParser
-
-#from draw_cairo import Draw
+# Les constantes et les fonctions de dessin
 import draw_cairo
+
+# Les constantes partagées
 from constantes import *
 
-#####################################################################################
-##
-##   Définition des constantes
-##
-#####################################################################################
-#
-#CentresInterets = [u"Développement durable et compétitivité des produits",
-#                   u"Design, créativité et innovation",
-#                   u"Caractéristiques des matériaux et structures",
-#                   u"Solutions constructives des matériaux et des structures",
-#                   u"Dimensionnement des structures et choix des matériaux",
-#                   u"Efficacité énergétique liée au comportement des matériaux et des structures",
-#                   u"Formes et caractéristiques de l'énergie",
-#                   u"Organisation structurelle et solutions constructives des chaînes d'énergie",
-#                   u"Amélioration de l'efficacité énergétique dans les chaînes d'énergie",
-#                   u"Amélioration de la gestion de l'énergie",
-#                   u"Formes et caractéristiques de l'information",
-#                   u"Organisation structurelle et solutions constructives des chaînes d'information",
-#                   u"Commande temporelle des systémes",
-#                   u"Informations liées au comportement des matériaux et des structures",
-#                   u"Optimisation des paramètres par simulation globale"
-#                   ]
-#
-#Effectifs = {"C" : [u"Classe entière",      32],
-#             "G" : [u"Effectif réduit",     16],
-#             "D" : [u"Demi-groupe",         8],
-#             "E" : [u"Etude et Projet",     4],
-#             "P" : [u"Activité Pratique",   2],
-#             }
-#
-#
-#def ouvrirConfig():
-#    print "ouvrirConfig"
-#    global CentresInterets
-#    
-#    config = ConfigParser.ConfigParser()
-#    config.read(os.path.join(PATH,'configuration.cfg'))
-#    
-#    section = "Centres d'interet"
-#    l = [""] * len(config.options(section))
-#    for o in config.options(section):
-#        l[eval(o)-1] = unicode(config.get(section,o), 'cp1252')
-#    CentresInterets = l
-#        
-#    section = "Effectifs classe"
-#    for k in Effectifs.keys():
-#        Effectifs[k][1] = config.getint(section,k)
-#
-#ouvrirConfig()
-#
-#    
-#Competences = {"CO1.1" : u"Justifier les choix des matériaux, des structures d'un système et les énergies mises en oeuvre dans une approche de développement durable",
-#               "CO1.2" : u"Justifier le choix d'une solution selon des contraintes d'ergonomie et d'effets sur la santé de l'homme et du vivant",
-#               "CO2.1" : u"Identifier les flux et la forme de l'énergie, caractériser ses transformations et/ou modulations et estimer l'efficacité énergétique globale d'un système",
-#               "CO2.2" : u"Justifier les solutions constructives d'un systéme au regard des impacts environnementaux et économiques engendrés tout au long de son cycle de vie",
-#               "CO3.1" : u"Décoder le cahier des charges fonctionnel d'un système",
-#               "CO3.2" : u"Evaluer la compétitivité d'un système d'un point de vue technique et économique",
-#               "CO4.1" : u"Identifier et caractériser les fonctions et les constituants d'un système ainsi que ses entrées/sorties",
-#               "CO4.2" : u"Identifier et caractériser l'agencement  matériel et/ou logiciel d'un système", 
-#               "CO4.3" : u"Identifier et caractériser le fonctionnement temporel d'un système",
-#               "CO4.4" : u"Identifier et caractériser des solutions techniques relatives aux matériaux, à la structure, à l'énergie et aux informations (acquisition, traitement, transmission) d'un système",
-#               "CO5.1" : u"Expliquer des éléments d'une modélisation proposée relative au comportement de tout ou partie d'un système",
-#               "CO5.2" : u"Identifier des variables internes et externes utiles à une modélisation, simuler et valider le comportement du modèle",
-#               "CO5.3" : u"Evaluer un écart entre le comportement du réel et le comportement du modèle en fonction des paramètres proposés",
-#               "CO6.1" : u"Décrire une idée, un principe, une solution, un projet en utilisant des outils de représentation adaptés",
-#               "CO6.2" : u"Décrire le fonctionnement et/ou l'exploitation d'un système en utilisant l'outil de description le plus pertinent",
-#               "CO6.3" : u"Présenter et argumenter des démarches, des résultats, y compris dans une langue étrangère",
-#               }
-#
-#
-#TypesActivite = {"ED" : u"Activité d'étude de dossier",
-#                 "AP" : u"Activité pratique",
-#                 "P" : u"Activité de projet",
-#                }
-#
-#TypesSeance = {"C" : u"Cours",
-#               "SA" : u"Synthèse d'activité",
-#               "SS" : u"Synthèse de séquence",
-#               "E" : u"Evaluation",
-#               }
-#TypesSeance.update(TypesActivite)
-#TypesSeance.update({"R" : u"Rotation d'activités",
-#                    "S" : u"Activités en parallèle"})
-#
-#TypesSeanceCourt = {"ED" : u"Etude de dossier",
-#                    "AP" : u"Activité pratique",
-#                    "P" : u"Projet",
-#                    "C" : u"Cours",
-#                    "SA" : u"Synt. d'activité",
-#                    "SS" : u"Synt. de séquence",
-#                    "E" : u"Evaluation",
-#                    "R" : u"Rotation",
-#                    "S" : u"Parallèle"}
-#
-#listeTypeSeance = ["ED", "AP", "P", "C", "SA", "SS", "E", "R", "S"]
-#listeTypeActivite = ["ED", "AP", "P"]
-#
-#
-#
-#Demarches = {"I" : u"Investigation",
-#             "R" : u"Résolution de problème",
-#             "P" : u"Projet"}
-#listeDemarches = ["I", "R", "P"]
+
 
 ####################################################################################
 #
@@ -205,6 +103,7 @@ class SeqEvent(wx.PyCommandEvent):
 #
 ####################################################################################
 Titres = [u"Séquence pédagogique",
+          u"Prérequis",
           u"Objectifs pédagogiques",
           u"Séances",
           u"Systèmes"]
@@ -213,6 +112,8 @@ class Sequence():
     def __init__(self, app, panelParent, intitule = u""):
         self.intitule = intitule
         self.panelPropriete = PanelPropriete_Sequence(panelParent, self)
+        
+        self.prerequis = Savoirs(self, panelParent)
         
         self.CI = CentreInteret(self, panelParent)
         
@@ -225,9 +126,6 @@ class Sequence():
         self.panelParent = panelParent
         self.app = app
         
-        
-        # Un curseur pour placer les séances
-#        self.InitCurseur()
         
         
     ######################################################################################  
@@ -253,6 +151,9 @@ class Sequence():
         ci = ET.SubElement(sequence, "CentreInteret")
         ci.append(self.CI.getBranche())
         
+        prerequis = ET.SubElement(sequence, "Prerequis")
+        prerequis.append(self.prerequis.getBranche())
+            
         objectifs = ET.SubElement(sequence, "Objectifs")
         for obj in self.obj:
             objectifs.append(obj.getBranche())
@@ -275,6 +176,11 @@ class Sequence():
         brancheCI = branche.find("CentreInteret")
         self.CI.setBranche(brancheCI)
         
+        branchePre = branche.find("Prerequis")
+        if branchePre != None:
+            savoirs = branchePre.find("Savoirs")
+            self.prerequis.setBranche(savoirs)
+        
         brancheObj = branche.find("Objectifs")
         self.obj = []
         for obj in list(brancheObj):
@@ -295,8 +201,7 @@ class Sequence():
             seance = Seance(self, self.panelParent)
             seance.setBranche(sce)
             self.seance.append(seance)
-        
-#        self.MiseAJourListeSystemes()
+
         self.panelPropriete.MiseAJour()
         
         
@@ -406,18 +311,29 @@ class Sequence():
         self.arbre = arbre
         self.branche = arbre.AddRoot(Titres[0], data = self, image = self.arbre.images["Seq"])
 
+        #
+        # LE centre d'intérêt
+        #
         self.CI.ConstruireArbre(arbre, self.branche)
         
-        self.brancheObj = arbre.AppendItem(self.branche, Titres[1], image = self.arbre.images["Obj"])
+        #
+        # Les prérequis
+        #
+        self.branchePre = arbre.AppendItem(self.branche, Titres[1], data = self.prerequis)
+        
+        #
+        # Les objectifs
+        #
+        self.brancheObj = arbre.AppendItem(self.branche, Titres[2], image = self.arbre.images["Obj"])
         for obj in self.obj:
             obj.ConstruireArbre(arbre, self.brancheObj)
             
         
-        self.brancheSce = arbre.AppendItem(self.branche, Titres[2])
+        self.brancheSce = arbre.AppendItem(self.branche, Titres[3])
         for sce in self.seance:
             sce.ConstruireArbre(arbre, self.brancheSce) 
             
-        self.brancheSys = arbre.AppendItem(self.branche, Titres[3])
+        self.brancheSys = arbre.AppendItem(self.branche, Titres[4])
         for sy in self.systemes:
             sy.ConstruireArbre(arbre, self.brancheSys)    
             
@@ -484,228 +400,8 @@ class Sequence():
             if s.typeSeance in ["R", "S"]:
                 l.extend(s.GetToutesSeances())
             
-        return l
-    
-    
-#    ######################################################################################  
-#    def DefinirZones(self):
-#        """ Calcule les positions et dimensions des différentes zones de tracé
-#            en fonction du nombre d'éléments (séances, systèmes)
-#        """
-#        # Zone des intitulés des séances
-#        cf.tailleZIntSeances[1] = len(self.GetIntituleSeances()[0])* cf.hIntSeance
-#        cf.posZIntSeances[1] = 1 - cf.tailleZIntSeances[1]-cf.margeY
-#        
-#        # Zone du tableau des Systèmes
-#        cf.tailleZSysteme[0] = cf.wColSysteme * len(self.systemes)
-#        cf.tailleZSysteme[1] = cf.posZIntSeances[1] - cf.posZSysteme[1] - cf.ecartY
-#        cf.posZSysteme[0] = cf.posZOrganis[0] + cf.tailleZOrganis[0] - cf.tailleZSysteme[0]
-#        for i, s in enumerate(self.systemes):
-#            cf.xSystemes[s.nom] = cf.posZSysteme[0] + (i+0.5) * cf.wColSysteme
-#        
-#        
-#        # Zone du tableau des démarches
-#        cf.posZDemarche[0] = cf.posZSysteme[0] - cf.tailleZDemarche[0] - cf.ecartX
-#        cf.tailleZDemarche[1] = cf.tailleZSysteme[1]
-#        cf.xDemarche["I"] = cf.posZDemarche[0] + cf.tailleZDemarche[0]/6
-#        cf.xDemarche["R"] = cf.posZDemarche[0] + cf.tailleZDemarche[0]*3/6
-#        cf.xDemarche["P"] = cf.posZDemarche[0] + cf.tailleZDemarche[0]*5/6
-#                     
-#        # Zone de déroulement de la séquence
-#        cf.tailleZDeroul[0] = cf.posZDemarche[0] - cf.posZDeroul[0] - cf.ecartX
-#        cf.tailleZDeroul[1] = cf.tailleZSysteme[1]
-#        
-#        
-#        # Zone des séances
-#        cf.tailleZSeances[0] = cf.tailleZDeroul[0] - 0.05 # écart pour les durées
-#        cf.tailleZSeances[1] = cf.tailleZSysteme[1] - cf.posZSeances[1] + cf.posZDeroul[1] - 0.05
-#        cf.wEff = {"C" : cf.tailleZSeances[0],
-#                 "G" : cf.tailleZSeances[0]*6/7,
-#                 "D" : cf.tailleZSeances[0]*3/7,
-#                 "E" : cf.tailleZSeances[0]*Effectifs["E"][1]/Effectifs["G"][1]*6/7,
-#                 "P" : cf.tailleZSeances[0]*Effectifs["P"][1]/Effectifs["G"][1]*6/7,
-#                 }
-#        cf.ecartSeanceY = 0.02
-#        cf.hHoraire = (cf.tailleZSeances[1] - (len(self.seance)-1)*cf.ecartSeanceY) / self.GetHoraireTotal()
-        
-        
-        
-#    ######################################################################################  
-#    def Draw(self, ctx):
-##        print "Draw séquence"
-#        self.InitCurseur()
-#        
-#        self.DefinirZones()
-#        
-#        options = ctx.get_font_options()
-#        options.set_antialias(cairo.ANTIALIAS_SUBPIXEL)
-#        ctx.set_font_options(options)
-#        
-#        # 
-#        # Effectifs
-#        #
-#        for i, e in enumerate(["C", "G", "D", "E", "P"]):
-#            x = cf.posZSeances[0]
-#            h = (cf.posZSeances[1]-cf.posZDemarche[1]-0.01) / 5
-#            y = cf.posZDemarche[1] + i * h
-#            w = cf.wEff[e]
-#            ctx.set_line_width(0.001)
-#            ctx.set_source_rgb(0.8, 0.9, 0.8)
-#            ctx.rectangle(x, y, w, h)
-#            ctx.stroke()
-#            ctx.set_source_rgb(0.6, 0.8, 0.6)
-#            show_text_rect(ctx, Effectifs[e][0], x, y, w, h)
-#            ctx.stroke()
-#            self.DrawLigneEff(ctx, x+w, y+h)
-#            
-#        
-##        #
-##        #  Bordure
-##        #
-##        ctx.set_line_width(0.005)
-##        ctx.set_source_rgb(0, 0, 0)
-##        ctx.rectangle(0, 0, 0.724, 1)
-##        ctx.stroke()
-#        
-#        #
-#        #  Intitulé de la séquence
-#        #
-#        x, y = cf.posIntitule
-#        w, h = cf.tailleIntitule
-#        ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
-#                              cairo.FONT_WEIGHT_BOLD)
-#        ctx.set_source_rgb(0, 0, 0)
-#        if len(self.intitule) > 0:
-#            show_text_rect(ctx, self.intitule, x, y, w, h)
-#        ctx.set_line_width(0.005)
-#        ctx.set_source_rgb(cf.BcoulIntitule[0], cf.BcoulIntitule[1], cf.BcoulIntitule[2])
-#        ctx.rectangle(x, y, w, h)
-#        ctx.stroke()
-#
-#        #
-#        #  Objectifs
-#        #
-#        
-#        # Rectangle arrondi
-#        x0, y0 = cf.posObj
-#        rect_width, rect_height  = cf.tailleObj
-#        curve_rect(ctx, x0, y0, rect_width, rect_height, 0.3)
-#        ctx.set_source_rgb (cf.IcoulObj[0], cf.IcoulObj[1], cf.IcoulObj[2])
-#        ctx.fill_preserve ()
-#        ctx.set_source_rgba (cf.BcoulObj[0], cf.BcoulObj[1], cf.BcoulObj[2])
-#        ctx.stroke ()
-#        
-#        # Titre
-#        ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
-#                              cairo.FONT_WEIGHT_BOLD)
-#        ctx.set_font_size(0.016)
-#        xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents("Objectifs")
-#        xc=x0+rect_width/2-width/2
-#        yc=y0+height+0.008
-#        ctx.move_to(xc, yc)
-#        ctx.set_source_rgb(0, 0, 0)
-#        ctx.show_text("Objectifs")
-#        
-#        #
-#        # Codes objectifs
-#        #
-#        if self.obj[0].num != None:
-#            no = len(self.obj)
-#            txtObj = ''
-#            for i, t in enumerate(self.obj):
-#                if hasattr(t, 'code'):
-#                    txtObj += " " + t.code
-#                    ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
-#                                          cairo.FONT_WEIGHT_BOLD)
-#                    show_text_rect(ctx, t.code, x0+i*rect_width/no, yc, 
-#                                   rect_width/no, rect_height/4)
-#                    ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
-#                                          cairo.FONT_WEIGHT_NORMAL)
-#                    show_text_rect(ctx, Competences[t.code], x0+i*rect_width/no, y0+rect_height*2/5, 
-#                                   rect_width/no, rect_height/2)
-#            
-##            x, y = cf.posObj
-##            w, h = cf.tailleObj
-#                    ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
-#                                          cairo.FONT_WEIGHT_BOLD)
-##        
-# 
-#        #
-#        #  CI
-#        #
-#        self.CI.Draw(ctx)
-#        
-#        
-#        #
-#        #  Séances
-#        #
-#        for s in self.seance:
-#            s.Draw(ctx, self.curseur)
-#            
-#        #
-#        #  Tableau des systèmes
-#        #    
-#        nomsSystemes = []
-#        for s in self.systemes:
-#            nomsSystemes.append(s.nom)
-#        if nomsSystemes != []:
-#            ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
-#                                  cairo.FONT_WEIGHT_NORMAL)
-#            ctx.set_source_rgb(0, 0, 0)
-#            ctx.set_line_width(0.001)
-#            tableauV(ctx, nomsSystemes, cf.posZSysteme[0], cf.posZSysteme[1], 
-#                    cf.tailleZSysteme[0], cf.posZSeances[1] - cf.posZSysteme[1], 
-#                    0, nlignes = 0, va = 'c', ha = 'g', orient = 'v', coul = (0.8,0.8,0.8))
-#            
-#            wc = cf.tailleZSysteme[0]/len(nomsSystemes)
-#            _x = cf.posZSysteme[0]
-#            _y = cf.posZSysteme[1]
-#            for s in self.systemes:
-#                s.rect=((_x, _y, wc, cf.posZSeances[1] - cf.posZSysteme[1]),)
-#                ctx.move_to(_x, _y + cf.posZSeances[1] - cf.posZSysteme[1])
-#                ctx.line_to(_x, _y + cf.tailleZDemarche[1])
-#                _x += wc
-#            ctx.move_to(_x, _y + cf.posZSeances[1] - cf.posZSysteme[1])
-#            ctx.line_to(_x, _y + cf.tailleZDemarche[1])   
-#            ctx.stroke()
-#    
-#        #
-#        #  Tableau des démarches
-#        #    
-#        ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
-#                              cairo.FONT_WEIGHT_NORMAL)
-#        ctx.set_source_rgb(0, 0, 0)
-#        ctx.set_line_width(0.001)
-#        l=[]
-#        for d in listeDemarches : 
-#            l.append(Demarches[d])
-#        tableauV(ctx, l, cf.posZDemarche[0], cf.posZDemarche[1], 
-#                cf.tailleZDemarche[0], cf.posZSeances[1] - cf.posZSysteme[1], 
-#                0, nlignes = 0, va = 'c', ha = 'g', orient = 'v', coul = (0.8,0.75,0.9))
-#        ctx.move_to(cf.posZDemarche[0], cf.posZDemarche[1] + cf.posZSeances[1] - cf.posZSysteme[1])
-#        ctx.line_to(cf.posZDemarche[0], cf.posZDemarche[1] + cf.tailleZDemarche[1])
-#        ctx.move_to(cf.posZDemarche[0]+cf.tailleZDemarche[0]/3, cf.posZDemarche[1] + cf.posZSeances[1] - cf.posZSysteme[1])
-#        ctx.line_to(cf.posZDemarche[0]+cf.tailleZDemarche[0]/3, cf.posZDemarche[1] + cf.tailleZDemarche[1])
-#        ctx.move_to(cf.posZDemarche[0]+cf.tailleZDemarche[0]*2/3, cf.posZDemarche[1] + cf.posZSeances[1] - cf.posZSysteme[1])
-#        ctx.line_to(cf.posZDemarche[0]+cf.tailleZDemarche[0]*2/3, cf.posZDemarche[1] + cf.tailleZDemarche[1])
-#        ctx.move_to(cf.posZDemarche[0]+cf.tailleZDemarche[0], cf.posZDemarche[1] + cf.posZSeances[1] - cf.posZSysteme[1])
-#        ctx.line_to(cf.posZDemarche[0]+cf.tailleZDemarche[0], cf.posZDemarche[1] + cf.tailleZDemarche[1])
-#        ctx.stroke()
-#        
-#        #
-#        #  Tableau des séances (en bas)
-#        #
-#        nomsSeances, intSeances = self.GetIntituleSeances()
-##        print nomsSeances
-#        if nomsSeances != []:
-#            ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
-#                                  cairo.FONT_WEIGHT_NORMAL)
-#            ctx.set_source_rgb(0, 0, 0)
-#            ctx.set_line_width(0.002)
-#            tableauH(ctx, nomsSeances, cf.posZIntSeances[0], cf.posZIntSeances[1], 
-#                    0.05, cf.tailleZIntSeances[0]-0.05, cf.tailleZIntSeances[1], 
-#                    nCol = 1, va = 'c', ha = 'g', orient = 'h', coul = cf.ICoulSeance, 
-#                    contenu = [intSeances])
+        return l 
+
     
         
     ######################################################################################  
@@ -721,20 +417,7 @@ class Sequence():
         return nomsSeances, intSeances
         
         
-#    ######################################################################################  
-#    def DrawLigneEff(self, ctx, x, y):
-#        dashes = [ 0.010,   # ink
-#                   0.002,   # skip
-#                   0.005,   # ink
-#                   0.002,   # skip
-#                   ]
-#        ctx.set_source_rgba (0.6, 0.8, 0.6)
-#        ctx.set_line_width (0.001)
-#        ctx.set_dash(dashes, 0)
-#        ctx.move_to(x, cf.posZDemarche[1] + cf.tailleZDemarche[1])
-#        ctx.line_to(x, y)
-#        ctx.stroke()
-#        ctx.set_dash([], 0)
+
         
     ######################################################################################  
     def HitTest(self, x, y):
@@ -746,6 +429,8 @@ class Sequence():
             return
         elif dansRectangle(x, y, (draw_cairo.posObj + draw_cairo.tailleObj,)):
             self.arbre.DoSelectItem(self.brancheObj)
+        elif dansRectangle(x, y, (draw_cairo.posPre + draw_cairo.taillePre,)):
+            self.arbre.DoSelectItem(self.branchePre)
         else:
             autresZones = self.seance + self.systemes
             continuer = True
@@ -824,38 +509,6 @@ class CentreInteret():
         self.branche = arbre.AppendItem(branche, u"Centre d'intérét :", wnd = self.codeBranche, data = self,
                                         image = self.arbre.images["Ci"])
         
-#    ######################################################################################  
-#    def Draw(self, ctx):
-#        # Rectangle arrondi
-#        x0, y0 = cf.posCI
-#        rect_width, rect_height  = cf.tailleCI
-#        
-#        curve_rect(ctx, x0, y0, rect_width, rect_height, 0.05)
-#        ctx.set_source_rgb (cf.IcoulCI[0], cf.IcoulCI[1], cf.IcoulCI[2])
-#        ctx.fill_preserve ()
-#        ctx.set_source_rgba (cf.BcoulCI[0], cf.BcoulCI[1], cf.BcoulCI[2])
-#        ctx.stroke ()
-#        
-#        #
-#        # code
-#        #
-#        if self.num != None:
-#            ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
-#                                  cairo.FONT_WEIGHT_BOLD)
-#            ctx.set_font_size(0.02)
-#            xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(self.code)
-#            xc=x0+rect_width/2-width/2
-#            yc=y0+height+0.01
-#            ctx.move_to(xc, yc)
-#            ctx.set_source_rgb(0, 0, 0)
-#            ctx.show_text(self.code)
-#        
-#            #
-#            # intitulé
-#            #
-#            ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
-#                                  cairo.FONT_WEIGHT_NORMAL)
-#            show_text_rect(ctx, self.CI, x0, yc, rect_width, rect_height - height-0.01)
 
         
     def HitTest(self, x, y):
@@ -936,7 +589,76 @@ class Competence():
             self.parent.app.AfficherMenuContextuel([[u"Supprimer", functools.partial(self.parent.SupprimerObjectif, item = itemArbre)]])
             
             
+####################################################################################
+#
+#   Classe définissant les propriétés de savoirs
+#
+####################################################################################
+class Savoirs():
+    def __init__(self, parent, panelParent, num = None):
+
+        self.parent = parent
+        self.num = num
+        self.savoirs = []
+        
+
+        
+        self.panelPropriete = PanelPropriete_Savoirs(panelParent, self)
+        
+    ######################################################################################  
+    def __repr__(self):
+        return self.savoirs
+        
+    ######################################################################################  
+    def getBranche(self):
+        """ Renvoie la branche XML du savoir pour enregistrement
+        """
+        print "getBranche Savoir",
+        root = ET.Element("Savoirs")
+        for i, s in enumerate(self.savoirs):
+            root.set("S"+str(i), s)
+        return root
+    
+    ######################################################################################  
+    def setBranche(self, branche):
+        print "setBranche Savoir",branche.keys()
+        self.savoirs = []
+        for i, s in enumerate(branche.keys()):
+            self.savoirs.append(branche.get("S"+str(i), ""))
+        self.panelPropriete.MiseAJour()
+        
+    
+        
+         
+#    ######################################################################################  
+#    def SetNum(self, num):
+#        self.num = num
+#        if num != None:
+#            self.code = self.clefs[self.num]
+#            self.savoir = Savoirs[self.code]
+#            
+#            if hasattr(self, 'arbre'):
+#                self.SetCode()
+        
+#    ######################################################################################  
+#    def SetCode(self):
+#        self.codeBranche.SetLabel(self.code)
+        
+
+#    ######################################################################################  
+#    def ConstruireArbre(self, arbre, branche):
+#        self.arbre = arbre
+#        self.codeBranche = wx.StaticText(self.arbre, -1, u"")
+#        self.branche = arbre.AppendItem(branche, u"Savoirs :", wnd = self.codeBranche, data = self,
+#                                        image = self.arbre.images["Com"])
+#        
+#        
+#    ######################################################################################  
+#    def AfficherMenuContextuel(self, itemArbre):
+#        if itemArbre == self.branche:
+#            self.parent.app.AfficherMenuContextuel([[u"Supprimer", functools.partial(self.parent.SupprimerObjectif, item = itemArbre)]])
             
+                  
             
 
 ####################################################################################
@@ -1403,141 +1125,7 @@ class Seance():
 #            item3 = menu.Append(wx.ID_ANY, u"Créer une série")
 #            self.Bind(wx.EVT_MENU, functools.partial(self.AjouterSerie, item = item), item3)
             
-#    ######################################################################################  
-#    def Draw(self, ctx, curseur, typParent = "", rotation = False):
-#        if not self.EstSousSeance():
-#            h = cf.hHoraire * self.GetDuree()
-#            fleche_verticale(ctx, cf.posZDeroul[0], curseur[1], 
-#                             h, 0.02, (0.9,0.8,0.8,0.5))
-#            ctx.set_source_rgb(0.5,0.8,0.8)
-#            show_text_rect(ctx, getHoraireTxt(self.GetDuree()), cf.posZDeroul[0]-0.01, curseur[1], 
-#                           0.02, h, orient = 'v')
-#            
-#            
-#        if not self.typeSeance in ["R", "S", ""]:
-##            print "Draw", self
-#            x, y = curseur
-#            w = cf.wEff[self.effectif]
-#            h = cf.hHoraire * self.GetDuree()
-#            if rotation:
-#                self.rect.append((x, y, w, h))
-#            else:
-#                self.rect=[(x, y, w, h),] # Rectangles pour clic
-#            ctx.set_line_width(0.002)
-#            if rotation:
-#                alpha = 0.2
-#            else:
-#                alpha = 1
-#            rectangle_plein(ctx, x, y, w, h, 
-#                            cf.BCoulSeance[self.typeSeance], cf.ICoulSeance[self.typeSeance], alpha)
-#            if not rotation and self.typeSeance in ["AP", "ED", "P"]:
-#                if self.EstSousSeance() and self.parent.typeSeance == "S":
-#                    ns = len(self.parent.sousSeances)
-#                    ys = y+(self.ordre+1) * h/(ns+1)
-##                    print ns, ys, self.ordre
-#                else:
-#                    ys = y+h/2
-#                self.DrawCroisements(ctx, x+w, ys)
-#                self.DrawCroisementSystemes(ctx, ys)
-#                
-#            
-#            if not rotation and hasattr(self, 'code'):
-#                ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
-#                                      cairo.FONT_WEIGHT_BOLD)
-#                ctx.set_source_rgb (0,0,0)
-#                show_text_rect(ctx, self.code, x, y, cf.wEff["P"], cf.hHoraire/4, ha = 'g')
-#            
-#            if not rotation and self.intituleDansDeroul and self.intitule != "":
-#                ctx.select_font_face ("Sans", cairo.FONT_SLANT_ITALIC,
-#                                      cairo.FONT_WEIGHT_NORMAL)
-#                ctx.set_source_rgb (0,0,0)
-#                show_text_rect(ctx, self.intitule, x, y + cf.hHoraire/4, 
-#                               w, h-cf.hHoraire/4, ha = 'g')
-#                
-#            if typParent == "R":
-#                curseur[1] += h
-#            elif typParent == "S":
-#                curseur[0] += w
-#            else:
-#                curseur[1] += h + cf.ecartSeanceY
-#        else:
-#            if self.typeSeance in ["R", "S"]:
-#                for s in self.sousSeances:
-#                    s.Draw(ctx, curseur, typParent = self.typeSeance, rotation = rotation)
-##                    if self.typeSeance == "S":
-#                
-#                #
-#                # Aperçu en filigrane de la rotation
-#                #
-#                if self.typeSeance == "R" and self.IsEffectifOk() < 2:
-#                    l = self.sousSeances
-#                    eff = self.GetEffectif()
-#                    if eff == 16:
-#                        codeEff = "C"
-#                    elif eff == 8:
-#                        codeEff = "G"
-#                    elif eff == 4:
-#                        codeEff = "D"
-#                    elif eff == 2:
-#                        codeEff = "E"
-#                    elif eff == 1:
-#                        codeEff = "P"
-#                    curs = [curseur[0]+cf.wEff[codeEff], curseur[1]-cf.hHoraire * self.GetDuree()]
-#                    for t in range(len(self.sousSeances)-1):
-#                        l = permut(l)
-#                        for s in l:
-#                            s.Draw(ctx, curs, typParent = "R", rotation = True)
-#                        curs[0] += cf.wEff[s.effectif]
-#                
-#                
-#                curseur[0] = cf.posZSeances[0]
-#                if typParent == "":
-#                    curseur[1] += cf.ecartSeanceY
-#                if self.typeSeance == "S":
-#                    curseur[1] += cf.hHoraire * self.GetDuree()
-#
-#                
-#        
-##        # 
-##        # Croisement Seance/Systèmes
-##        #
-##        
-##        if self.typeSeance in ["AP", "ED", "P"]:
-###            and not (self.EstSousSeance() and self.parent.typeSeance == "S"):
-##            ns = self.GetNbrSystemes()
-##            for s, n in ns.items():
-##                if n > 0:
-##                    _x, _y = cf.xSystemes[s], curseur[1]+cf.hHoraire * self.GetDuree()/2
-##                    self.DrawCroisementSystemes(ctx, _x, _y, n)
-##        elif self.typeSeance == "S":
-##            self.DrawCroisements(ctx, x+w, y+h/2)
-##            ns = self.GetNbrSystemes()
-##            for s, n in ns.items():
-##                if n > 0:
-##                    _x, _y = cf.xSystemes[s], curseur[1]-cf.hHoraire * self.GetDuree()/2- cf.ecartY
-##                    self.DrawCroisementSystemes(ctx, _x, _y, n)
-#            
-#            
-#            
-#    ######################################################################################  
-#    def DrawCroisementSystemes(self, ctx, y):
-##        if self.typeSeance in ["AP", "ED", "P"]:
-##            and not (self.EstSousSeance() and self.parent.typeSeance == "S"):
-#        r = 0.01
-#        ns = self.GetNbrSystemes()
-#        for s, n in ns.items():
-#            if n > 0:
-#                x = cf.xSystemes[s]
-#                ctx.arc(x, y, r, 0, 2*pi)
-#                ctx.set_source_rgba (1,0.2,0.2,0.6)
-#                ctx.fill_preserve ()
-#                ctx.set_source_rgba (0,0,0,1)
-#                ctx.stroke ()
-#                ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
-#                                      cairo.FONT_WEIGHT_BOLD)
-#                show_text_rect(ctx, str(n), x-r, y-r, 2*r, 2*r)
-#                self.rect.append((x-r, y-r, 2*r, 2*r))
-#            
+
             
     ######################################################################################  
     def GetNbrSystemes(self):
@@ -1555,43 +1143,6 @@ class Seance():
                         else:
                             d[s.n] = s.v[0]
         return d
-    
-#    ######################################################################################  
-#    def DrawCroisements(self, ctx, x, y):
-#    
-#        #
-#        # Les lignes horizontales
-#        #
-#        if self.typeSeance in ["AP", "ED", "P"]:
-#            self.DrawLigne(ctx, x, y)
-#            
-#        #
-#        # Croisements Séance/Démarche
-#        #
-#        _x = cf.xDemarche[self.demarche]
-##        if self.typeSeance in ["AP", "ED", "P"]:
-#        r = 0.008
-#        boule(ctx, _x, y, r)
-#        self.rect.append((_x -r , y - r, 2*r, 2*r))
-##        ctx.arc (_x, y, 0.006, 0, 2*pi)
-##        ctx.stroke ()
-
-
-                
-#    ######################################################################################  
-#    def DrawLigne(self, ctx, x, y):
-#        dashes = [ 0.010,   # ink
-#                   0.002,   # skip
-#                   0.005,   # ink
-#                   0.002,   # skip
-#                   ]
-#        ctx.set_source_rgba (0, 0.0, 0.2, 0.6)
-#        ctx.set_line_width (0.001)
-#        ctx.set_dash(dashes, 0)
-#        ctx.move_to(draw_cairo.posZOrganis[0]+draw_cairo.tailleZOrganis[0], y)
-#        ctx.line_to(x, y)
-#        ctx.stroke()
-#        ctx.set_dash([], 0)
         
         
     ######################################################################################  
@@ -1744,9 +1295,8 @@ class FenetreSequence(wx.Frame):
         # on essaye de l'ouvrir
         try:
             draw_cairo.ouvrirConfigFiche(self.nomFichierConfig)
-            print draw_cairo.posObj
         except:
-            pass 
+            print "Erreur à l'ouverture de configFiche.cfg" 
         
         #
         # La séquence
@@ -2284,12 +1834,13 @@ class FicheSequence(wx.ScrolledWindow):
 #   Classe définissant le panel de propriété par défaut
 #
 ####################################################################################
-class PanelPropriete(wx.Panel):
+class PanelPropriete(scrolled.ScrolledPanel):
     def __init__(self, parent, titre = u"", objet = None):
-        wx.Panel.__init__(self, parent, -1, size = (-1, 200))#, style = wx.BORDER_SIMPLE)
-        
+        scrolled.ScrolledPanel.__init__(self, parent, -1, size = (-1, 200), style = wx.VSCROLL | wx.RETAINED)#, style = wx.BORDER_SIMPLE)
+        self.SetScrollRate(20,20)
+        self.EnableScrolling(True, True)
 #        self.boxprop = wx.StaticBox(self, -1, u"")
-        self.sizer = wx.GridBagSizer(5, 5)
+        self.sizer = wx.GridBagSizer()
         self.Hide()
         self.SetSizer(self.sizer)
         self.SetAutoLayout(True)
@@ -2423,6 +1974,70 @@ class PanelPropriete_Competence(PanelPropriete):
         if sendEvt:
             self.sendEvent()
         
+
+
+####################################################################################
+#
+#   Classe définissant le panel de propriété de savoirs
+#
+####################################################################################
+class PanelPropriete_Savoirs(PanelPropriete):
+    def __init__(self, parent, savoirs):
+        
+        self.savoirs = savoirs
+        
+        PanelPropriete.__init__(self, parent)
+#        self.Bind(wx.EVT_SIZE, self.OnSize)
+        
+#        win = scrolled.ScrolledPanel(self, -1, size = (-1, -1))
+#        self.win = win
+        
+        arbre = ArbreSavoirs(self, self.savoirs)
+        self.arbre = arbre
+#        arbre.FitInside()
+        
+#        win.SetScrollRate(20,20)
+#        self.sizer = wx.BoxSizer(wx.VERTICAL)
+#        self.sizer.Add(win, 1, flag = wx.EXPAND)
+        self.sizer.Add(arbre, (0,0), flag = wx.EXPAND)
+        self.sizer.AddGrowableCol(0)
+        self.sizer.AddGrowableRow(0)
+#        self.SetSizer(self.sizer)
+#        self.sizer.FitInside(self)
+#        self.win.FitInside()
+        
+        self.Layout()
+        
+
+
+    def OnSize(self, event):
+        print self.GetClientSize()
+        self.win.SetMinSize(self.GetClientSize())
+        self.Layout()
+        event.Skip()
+
+    ######################################################################################  
+    def SetSavoirs(self): 
+#        self.savoirs.savoirs = lst
+        print self.savoirs.savoirs
+        self.sendEvent()
+        
+    #############################################################################            
+    def MiseAJour(self, sendEvt = False):
+        print "MiseAJour"
+        self.arbre.UnselectAll()
+        for s in self.savoirs.savoirs:
+            i = self.arbre.get_item_by_label(s, self.arbre.GetRootItem())
+            print i
+            if i.IsOk():
+                print i
+                self.arbre.CheckItem2(i)
+        
+        if sendEvt:
+            self.sendEvent()
+            
+            
+            
 ####################################################################################
 #
 #   Classe définissant le panel de propriété de la séance
@@ -3608,7 +3223,98 @@ class ArbreSequence(CT.CustomTreeCtrl):
         self.log.write("CHOICE FROM COMBOBOX: You Chose '" + selection + "'\n")
         event.Skip()
 
-#
+
+class ArbreSavoirs(CT.CustomTreeCtrl):
+    def __init__(self, parent, savoirs):
+
+        CT.CustomTreeCtrl.__init__(self, parent, -1, style = wx.TR_DEFAULT_STYLE|wx.TR_MULTIPLE|wx.TR_HIDE_ROOT)
+        
+        self.parent = parent
+        self.savoirs = savoirs
+        
+        self.root = self.AddRoot(u"Savoirs")
+        self.Construire(self.root, dicSavoirs)
+        
+        self.ExpandAll()
+        
+        #
+        # Les icones des branches
+        #
+#        dicimages = {"Seq" : images.Icone_sequence,
+#                       "Rot" : images.Icone_rotation,
+#                       "Cou" : images.Icone_cours,
+#                       "Com" : images.Icone_competence,
+#                       "Obj" : images.Icone_objectif,
+#                       "Ci" : images.Icone_centreinteret,
+#                       "Eva" : images.Icone_evaluation,
+#                       "Par" : images.Icone_parallele
+#                       }
+#        self.images = {}
+        il = wx.ImageList(20, 20)
+#        for k, i in dicimages.items():
+#            self.images[k] = il.Add(i.GetBitmap())
+        self.AssignImageList(il)
+        
+        
+        #
+        # Gestion des évenements
+        #
+#        self.Bind(CT.EVT_TREE_SEL_CHANGED, self.OnSelChanged)
+        self.Bind(CT.EVT_TREE_ITEM_CHECKED, self.OnItemCheck)
+        
+    def Construire(self, branche, dic):
+#        print "Construire", dic
+        clefs = dic.keys()
+        clefs.sort()
+        for k in clefs:
+            b = self.AppendItem(branche, k+" "+dic[k][0], ct_type=1)
+            if type(dic[k][1]) == dict:
+                self.Construire(b, dic[k][1])
+
+        
+    def OnItemCheck(self, event):
+        item = event.GetItem()
+        code = self.GetItemText(item).split()[0]
+        if item.GetValue():
+            self.parent.savoirs.savoirs.append(code)
+        else:
+            self.parent.savoirs.savoirs.remove(code)
+        self.parent.SetSavoirs()
+        event.Skip()
+        
+    def traverse(self, parent=None):
+        if parent is None:
+            parent = self.GetRootItem()
+        nc = self.GetChildrenCount(parent, True)
+
+        def GetFirstChild(parent, cookie):
+            return self.GetFirstChild(parent)
+        
+        GetChild = GetFirstChild
+        cookie = 1
+        for i in range(nc):
+            child, cookie = GetChild(parent, cookie)
+            GetChild = self.GetNextChild
+            yield child
+            
+
+    def get_item_by_label(self, search_text, root_item):
+#        print "get_item_by_label", search_text, root_item
+        item, cookie = self.GetFirstChild(root_item)
+    
+        while item != None and item.IsOk():
+            text = self.GetItemText(item)
+#            print "   ", text
+            if text.split()[0] == search_text:
+                return item
+            if self.ItemHasChildren(item):
+                match = self.get_item_by_label(search_text, item)
+                if match.IsOk():
+                    return match
+            item, cookie = self.GetNextChild(root_item, cookie)
+    
+        return wx.TreeItemId()
+
 # Fonction pour indenter les XML générés par ElementTree
 #
 def indent(elem, level=0):

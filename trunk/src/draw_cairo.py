@@ -34,58 +34,64 @@ Created on 26 oct. 2011
 
 
 import textwrap
-from math import sqrt, pi
+from math import sqrt, pi, cos, sin
 import cairo
 
 import ConfigParser
 
-from constantes import Effectifs, listeDemarches, Demarches, Competences
+from constantes import Effectifs, listeDemarches, Demarches, Competences, getSavoir
 
 #
 # Données pour le tracé
 #
 # Marges
 margeX = 0.04
-margeY = 0.05
+margeY = 0.04
 
 # Ecarts
 ecartX = 0.03
 ecartY = 0.03
 
-# Rectangle de l'intitulé
-posIntitule = (0.72414-0.25, 0.05)
-tailleIntitule = (0.2, 0.1)
-IcoulIntitule = (0.2,0.8,0.2)
-BcoulIntitule = (0.2,0.8,0.2)
-
 # CI
-posCI = (0.05, 0.04)
-tailleCI = (0.18, 0.12)
+tailleCI = (0.12, 0.10)
+posCI = ((0.72414-tailleCI[0])/2, 0.04)
 IcoulCI = (0.9,0.8,0.8)
 BcoulCI = (0.3,0.2,0.25)
 
 # Rectangle des objectifs
-posObj = (0.262, 0.05)
-tailleObj = (0.2, 0.1)
+tailleObj = (0.23, 0.16)
+posObj = (0.72414-margeX-tailleObj[0], margeY)
 IcoulObj = (0.8,0.9,0.8)
 BcoulObj = (0.25,0.3,0.2)
 
+# Rectangle des prerequis
+taillePre = (0.23, 0.16)
+posPre = (margeX, margeY)
+IcoulPre = (0.8,0.9,0.8)
+BcoulPre = (0.25,0.3,0.2)
+
 # Zone d'organisation de la séquence (grand cadre)
-posZOrganis = (0.05, 0.19)
-tailleZOrganis = (0.72414-0.1, 0.95)
+posZOrganis = (0.05, 0.26)
+tailleZOrganis = (0.72414-0.1, 1-posZOrganis[1]-margeY)
+
+# Rectangle de l'intitulé
+tailleIntitule = (0.4, 0.04)
+posIntitule = ((0.72414-tailleIntitule[0])/2, posZOrganis[1]-tailleIntitule[1])
+IcoulIntitule = (0.2,0.8,0.2)
+BcoulIntitule = (0.2,0.8,0.2)
 
 # Zone de déroulement de la séquence
-posZDeroul = (0.06, 0.2)
+posZDeroul = (0.06, 0.3)
 tailleZDeroul = [None, None]
 
 # Zone du tableau des Systèmes
-posZSysteme = [None, 0.17]
+posZSysteme = [None, 0.265]
 tailleZSysteme = [None, None]
 wColSysteme = 0.035
 xSystemes = {}
 
 # Zone du tableau des démarches
-posZDemarche = [None, 0.17]
+posZDemarche = [None, 0.265]
 tailleZDemarche = [0.08, None]
 xDemarche = {"I" : None,
              "R" : None,
@@ -97,7 +103,7 @@ tailleZIntSeances = [0.72414-0.12, None]
 hIntSeance = 0.02
 
 # Zone des séances
-posZSeances = (0.08, 0.28)
+posZSeances = (0.08, 0.35)
 tailleZSeances = [None, None]
 wEff = {"C" : None,
              "G" : None,
@@ -170,6 +176,13 @@ def enregistrerConfigFiche(nomFichier):
     config.set(section, "coulInt", coul2str(IcoulObj))
     config.set(section, "coulBord", coul2str(BcoulObj))
 
+    section = "Prerequis"
+    config.add_section(section)
+    config.set(section, "pos", coord2str(posPre))
+    config.set(section, "dim", coord2str(taillePre))
+    config.set(section, "coulInt", coul2str(IcoulPre))
+    config.set(section, "coulBord", coul2str(BcoulPre))
+
     section = "Zone d'organisation"
     config.add_section(section)
     config.set(section, "pos", coord2str(posZOrganis))
@@ -240,6 +253,12 @@ def ouvrirConfigFiche(nomFichier):
     IcoulObj = str2coul(config.get(section,"coulInt"))
     BcoulObj = str2coul(config.get(section,"coulBord"))
 
+    section = "Prerequis"
+    posPre = str2coord(config.get(section,"pos"))
+    taillePre = str2coord(config.get(section,"dim"))
+    IcoulPre = str2coul(config.get(section,"coulInt"))
+    BcoulPre = str2coul(config.get(section,"coulBord"))
+    
     section = "Zone d'organisation"
     posZOrganis = str2coord(config.get(section,"pos"))
     tailleZOrganis = str2coord(config.get(section,"dim"))
@@ -331,7 +350,15 @@ def Draw(ctx, seq):
     
     options = ctx.get_font_options()
     options.set_antialias(cairo.ANTIALIAS_SUBPIXEL)
+    options.set_hint_style(cairo.HINT_STYLE_NONE)
+    options.set_hint_metrics(cairo.HINT_METRICS_OFF)
     ctx.set_font_options(options)
+    
+    rayon = 0.25
+    alpha = 80
+    y = posObj[1]+tailleObj[1] - rayon*cos(alpha*pi/360)
+    fleche_ronde(ctx, 0.72414/2, y, rayon, alpha, 0.035, 0.06, (0.8, 0.9, 0.8, 1))
+    
     
     # 
     # Effectifs
@@ -375,6 +402,59 @@ def Draw(ctx, seq):
     ctx.stroke()
 
     #
+    #  Bordure Organisation
+    #
+    ctx.set_line_width(0.005)
+    ctx.set_source_rgb(BcoulIntitule[0], BcoulIntitule[1], BcoulIntitule[2])
+    ctx.rectangle(posZOrganis[0]-0.01, posZOrganis[1], tailleZOrganis[0]+0.02, tailleZOrganis[1]+0.01)
+    ctx.stroke()
+
+
+    #
+    #  Prerequis
+    #
+    
+    # Rectangle arrondi
+    x0, y0 = posPre
+    rect_width, rect_height  = taillePre
+    curve_rect(ctx, x0, y0, rect_width, rect_height, 0.3)
+    ctx.set_source_rgb (IcoulPre[0], IcoulPre[1], IcoulPre[2])
+    ctx.fill_preserve ()
+    ctx.set_source_rgba (BcoulPre[0], BcoulPre[1], BcoulPre[2])
+    ctx.stroke ()
+    
+    # Titre
+    ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+                          cairo.FONT_WEIGHT_BOLD)
+    ctx.set_font_size(0.016)
+    xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(u"Prérequis")
+    xc=x0+rect_width/2-width/2
+    yc=y0+height+0.008
+    ctx.move_to(xc, yc)
+    ctx.set_source_rgb(0, 0, 0)
+    ctx.show_text(u"Prérequis")
+    
+    #
+    # Codes prerequis
+    #
+    if len(seq.prerequis.savoirs) > 0:
+        no = len(seq.prerequis.savoirs)
+        e = 0.01
+        for i, t in enumerate(seq.prerequis.savoirs):
+            hl = (rect_height-height-0.015)/no
+            ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+                                  cairo.FONT_WEIGHT_BOLD)
+            show_text_rect(ctx, t.split()[0], x0+e, yc+i*hl, 
+                           rect_width/6-e, hl, b = 0.2, ha = 'g', max_font = 0.012, wrap = False)
+            ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+                                  cairo.FONT_WEIGHT_NORMAL)
+            show_text_rect(ctx, getSavoir(t.split()[0]), x0+rect_width/6, yc+i*hl, 
+                           rect_width*5/6-e, hl, b = 0.2, ha = 'g')
+
+            ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+                                  cairo.FONT_WEIGHT_BOLD)
+    
+    #
     #  Objectifs
     #
     
@@ -391,30 +471,32 @@ def Draw(ctx, seq):
     ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
                           cairo.FONT_WEIGHT_BOLD)
     ctx.set_font_size(0.016)
-    xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents("Objectifs")
+    xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(u"Objectifs")
     xc=x0+rect_width/2-width/2
     yc=y0+height+0.008
     ctx.move_to(xc, yc)
     ctx.set_source_rgb(0, 0, 0)
-    ctx.show_text("Objectifs")
+    ctx.show_text(u"Objectifs")
     
     #
     # Codes objectifs
     #
     if seq.obj[0].num != None:
         no = len(seq.obj)
+        e = 0.01
         txtObj = ''
+        hl = (rect_height-height-0.015)/no
         for i, t in enumerate(seq.obj):
             if hasattr(t, 'code'):
                 txtObj += " " + t.code
                 ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
                                       cairo.FONT_WEIGHT_BOLD)
-                show_text_rect(ctx, t.code, x0+i*rect_width/no, yc, 
-                               rect_width/no, rect_height/4)
+                show_text_rect(ctx, t.code, x0+e, yc+i*hl, 
+                               rect_width/5-e, hl, max_font = 0.012, ha = 'g', wrap = False)
                 ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
                                       cairo.FONT_WEIGHT_NORMAL)
-                show_text_rect(ctx, Competences[t.code], x0+i*rect_width/no, y0+rect_height*2/5, 
-                               rect_width/no, rect_height/2)
+                show_text_rect(ctx, Competences[t.code], x0+rect_width/5, yc+i*hl, 
+                               rect_width*4/5-e, hl, ha = 'g')
         
 #            x, y = posObj
 #            w, h = tailleObj
@@ -594,7 +676,7 @@ def Draw_seance(ctx, seance, curseur, typParent = "", rotation = False):
             ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
                                   cairo.FONT_WEIGHT_BOLD)
             ctx.set_source_rgb (0,0,0)
-            show_text_rect(ctx, seance.code, x, y, wEff["P"], hHoraire/4, ha = 'g')
+            show_text_rect(ctx, seance.code, x, y, wEff["P"], hHoraire/4, ha = 'g', wrap = False)
         
         if not rotation and seance.intituleDansDeroul and seance.intitule != "":
             ctx.select_font_face ("Sans", cairo.FONT_SLANT_ITALIC,
@@ -728,7 +810,8 @@ def getHoraireTxt(v):
 #   Fonction générales de tracé de figures avancées
 #
 ######################################################################################           
-def show_text_rect(ctx, texte, x, y, w, h, va = 'c', ha = 'c', b = 0.2, orient = 'h'):
+def show_text_rect(ctx, texte, x, y, w, h, va = 'c', ha = 'c', b = 0.2, orient = 'h', 
+                   max_font = None, wrap = True):
     """ Renvoie la taille de police et la position du texte
         pour qu'il rentre dans le rectangle
         x, y, w, h : position et dimensions du rectangle
@@ -757,10 +840,10 @@ def show_text_rect(ctx, texte, x, y, w, h, va = 'c', ha = 'c', b = 0.2, orient =
     #
     # Estimation de l'encombrement du texte (pour une taille de police de 1)
     # 
-    ctx.set_font_size(1)
+    ctx.set_font_size(1.0)
     fascent, fdescent, fheight, fxadvance, fyadvance = ctx.font_extents()
     xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(texte)
-    volumeTexte = 1.0*width*fheight
+    volumeTexte = 1.0*width*(fascent-fdescent)
 
     ratioRect = 1.0*h/w
     W = sqrt(volumeTexte/ratioRect)
@@ -769,13 +852,63 @@ def show_text_rect(ctx, texte, x, y, w, h, va = 'c', ha = 'c', b = 0.2, orient =
     #
     # Découpage du texte
     #
-    nLignes = max(1,int(width/W))
-    lt = []
-    wrap = len(texte)/nLignes
-    for l in texte.split("\n"):
-        lt.extend(textwrap.wrap(l, wrap))
-    nLignes = len(lt)
-    
+    if wrap:
+        continuer = True
+        wrap = 0
+        for l in texte.split("\n"):
+            wrap = max(wrap, len(l))
+        i = 0
+        while continuer:
+            lt = []
+            i += 1
+            for l in texte.split("\n"):
+                lt.extend(textwrap.wrap(l, wrap))
+            maxw = 0
+            for t in lt:
+                xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(t)
+                maxw = max(maxw, width)
+            _w, _h = maxw, (fascent+fdescent) * len(lt)
+            if _w/_h <= w/h:
+                continuer = False
+            else:
+                wrap += -1
+        wrap += 1
+        lt = []
+        for l in texte.split("\n"):
+            lt.extend(textwrap.wrap(l, wrap))
+        nLignes = len(lt)
+        
+        
+        
+        
+        
+        
+#        r1 = round(H/(fascent-fdescent))
+#        r2 = round(width/W)
+#        print r1, r2
+#        nLignes = max(1,int((r1+r2)/2))
+#    #    nLignes += texte.count("\n")
+#        print nLignes
+#        
+#        wrap = len(texte)/nLignes
+#        continuer = True
+#        i = 0
+#        while continuer:
+#            lt = []
+#            i += 1
+#            for l in texte.split("\n"):
+#                lt.extend(textwrap.wrap(l, wrap))
+#            nL = len(lt)
+#            if nL == nLignes or i > len(texte):
+#                continuer = False
+#            elif nL > nLignes:
+#                wrap += 1
+#            else:
+#                wrap += -1
+#        nLignes = nL
+    else:
+        nLignes = 1
+        lt = [texte]
     #
     # Calcul de la taille de police nécessaire pour que ça rentre
     #
@@ -783,9 +916,23 @@ def show_text_rect(ctx, texte, x, y, w, h, va = 'c', ha = 'c', b = 0.2, orient =
     for t in lt:
         xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(t)
         maxw = max(maxw, width)
-    hTotale = (fheight+fdescent)*nLignes
+    hTotale = (fascent+fdescent)*nLignes
 #    print "hTotale", hTotale
     fontSize = min(w/maxw, h/(hTotale))
+#    print "fontSize 1", fontSize
+    if max_font != None:
+        fontSize = min(fontSize, max_font)
+    ctx.set_font_size(fontSize)
+    
+    # 2 ème tour
+    fascent, fdescent, fheight, fxadvance, fyadvance = ctx.font_extents()
+    maxw = 0
+    for t in lt:
+        xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(t)
+        maxw = max(maxw, width)
+    fontSize = min(fontSize, fontSize*w/maxw)
+#    print "fontSize 2", fontSize
+    
 #    print "fontSize", fontSize
     ctx.set_font_size(fontSize)
     fascent, fdescent, fheight, fxadvance, fyadvance = ctx.font_extents()
@@ -794,14 +941,15 @@ def show_text_rect(ctx, texte, x, y, w, h, va = 'c', ha = 'c', b = 0.2, orient =
     #
     # On dessine toutes les lignes de texte
     #
-    l = 0
-    dy = (h-(fheight+fdescent)*nLignes)/2
+    
+    dy = (h-(fascent+fdescent)*nLignes)/2
+    
 #    print "dy", dy
     
-    for t in lt:
+    for l, t in enumerate(lt):
 #        print "  ",t
         xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(t)
-        xt, yt = x+xbearing+(w-width)/2, y-ybearing+fheight*l+dy+height/2
+        xt, yt = x+xbearing+(w-width)/2, y + (fascent+fdescent)*l - fdescent + fheight + dy
 #        print "  ",xt, yt
         if ha == 'c':
             ctx.move_to(xt, yt)
@@ -809,7 +957,7 @@ def show_text_rect(ctx, texte, x, y, w, h, va = 'c', ha = 'c', b = 0.2, orient =
             ctx.move_to(x, yt)
         
         ctx.show_text(t)
-        l += 1
+        
     
     ctx.stroke()
     return
@@ -947,6 +1095,24 @@ def fleche_verticale(ctx, x, y, h, e, coul):
     ctx.close_path ()
     ctx.fill ()
     
+
+def fleche_ronde(ctx, x, y, r, a, e, f, coul):
+    ctx.set_line_width (e)
+    ctx.set_source_rgba (coul[0], coul[1], coul[2], coul[3])
+    a0 = (90-a/2) * pi/180 + f/r/2
+    a1 = (90+a/2) * pi/180 + f/r/2
+    a2 = a/2 * pi/180
+    ctx.arc (x, y, r, a0, a1)
+    ctx.stroke ()
+
+    af = pi/5
+    _x, _y = x+r*sin(a2), y+r*cos(a2)
+    ctx.move_to(_x, _y)
+    ctx.line_to(_x-f*cos(af-a2), _y-f*sin(af-a2))
+    ctx.line_to(_x-f*cos(-a2-af), _y-f*sin(-a2-af))
+
+    ctx.close_path ()
+    ctx.fill ()
     
     
     
