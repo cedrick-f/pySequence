@@ -9,7 +9,7 @@ Created on 24 oct. 2011
 import xlrd
 
 # ouverture du fichier Excel 
-wb = xlrd.open_workbook('testxy.xls')
+wb = xlrd.open_workbook('CI_savoirs.xls')
  
 # feuilles dans le classeur
 [u'Feuil1', u'Feuil2', u'Feuil3']
