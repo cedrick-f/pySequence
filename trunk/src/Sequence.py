@@ -421,7 +421,6 @@ class Sequence():
         
     ######################################################################################  
     def HitTest(self, x, y):
-#        print "HitTest", x, y
         rect = draw_cairo.posIntitule + draw_cairo.tailleIntitule
         if dansRectangle(x, y, (rect,)):
             self.arbre.DoSelectItem(self.branche)
