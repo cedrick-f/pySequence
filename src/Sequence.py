@@ -117,7 +117,8 @@ class Sequence():
         
         self.CI = CentreInteret(self, panelParent)
         
-        self.obj = [Competence(self, panelParent)]
+        self.obj = {"C" : Competences(self, panelParent),
+                    "S" : Savoirs(self, panelParent)}
         self.systemes = []
         self.seance = [Seance(self, panelParent)]
         
@@ -132,7 +133,7 @@ class Sequence():
     def __repr__(self):
         t = u"Séquence :"+self.intitule + "\n"
         t += "   " + self.CI.__repr__() + "\n"
-        for c in self.obj:
+        for c in self.obj.values():
             t += "   " + c.__repr__() + "\n"
         for s in self.seance:
             t += "   " + s.__repr__() + "\n"
@@ -155,7 +156,7 @@ class Sequence():
         prerequis.append(self.prerequis.getBranche())
             
         objectifs = ET.SubElement(sequence, "Objectifs")
-        for obj in self.obj:
+        for obj in self.obj.values():
             objectifs.append(obj.getBranche())
             
         seances = ET.SubElement(sequence, "Seances")
@@ -182,11 +183,13 @@ class Sequence():
             self.prerequis.setBranche(savoirs)
         
         brancheObj = branche.find("Objectifs")
-        self.obj = []
-        for obj in list(brancheObj):
-            comp = Competence(self, self.panelParent)
-            comp.setBranche(obj)
-            self.obj.append(comp)
+#        self.obj = []
+#        for obj in list(brancheObj):
+#            comp = Competence(self, self.panelParent)
+#            comp.setBranche(obj)
+#            self.obj.append(comp)
+        self.obj["C"].setBranche(list(brancheObj)[0])
+        self.obj["S"].setBranche(list(brancheObj)[1])
         
         brancheSys = branche.find("Systemes")
         self.systemes = []
@@ -212,8 +215,10 @@ class Sequence():
     ######################################################################################  
     def SetCodes(self):
         self.CI.SetCode()
-        for comp in self.obj:
-            comp.SetCode()
+#        for comp in self.obj:
+#            comp.SetCode()
+#        self.obj["C"].SetCode()
+#        self.obj["S"].SetCode()
         
         for sce in self.seance:
             sce.SetCode()    
@@ -261,22 +266,22 @@ class Sequence():
         
         self.SetCodes()
     
-    ######################################################################################  
-    def AjouterObjectif(self, event = None):
-        obj = Competence(self, self.panelParent)
-        self.obj.append(obj)
-        obj.ConstruireArbre(self.arbre, self.brancheObj)
-        self.panelPropriete.sendEvent()
-        return
+#    ######################################################################################  
+#    def AjouterObjectif(self, event = None):
+#        obj = Competence(self, self.panelParent)
+#        self.obj.append(obj)
+#        obj.ConstruireArbre(self.arbre, self.brancheObj)
+#        self.panelPropriete.sendEvent()
+#        return
     
     
-    ######################################################################################  
-    def SupprimerObjectif(self, event = None, item = None):
-        if len(self.obj) > 1:
-            comp = self.arbre.GetItemPyData(item)
-            self.obj.remove(comp)
-            self.arbre.Delete(item)
-            self.panelPropriete.sendEvent()
+#    ######################################################################################  
+#    def SupprimerObjectif(self, event = None, item = None):
+#        if len(self.obj) > 1:
+#            comp = self.arbre.GetItemPyData(item)
+#            self.obj.remove(comp)
+#            self.arbre.Delete(item)
+#            self.panelPropriete.sendEvent()
         
     
     ######################################################################################  
@@ -325,7 +330,7 @@ class Sequence():
         # Les objectifs
         #
         self.brancheObj = arbre.AppendItem(self.branche, Titres[2], image = self.arbre.images["Obj"])
-        for obj in self.obj:
+        for obj in self.obj.values():
             obj.ConstruireArbre(arbre, self.brancheObj)
             
         
@@ -522,16 +527,16 @@ class CentreInteret():
 #   Classe définissant les propriétés d'une compétence
 #
 ####################################################################################
-class Competence():
+class Competences():
     def __init__(self, parent, panelParent, numComp = None):
-        self.clefs = Competences.keys()
-        self.clefs.sort()
+#        self.clefs = Competences.keys()
+#        self.clefs.sort()
         self.parent = parent
         self.num = numComp
+        self.competences = []
+#        self.SetNum(numComp)
         
-        self.SetNum(numComp)
-        
-        self.panelPropriete = PanelPropriete_Competence(panelParent, self)
+        self.panelPropriete = PanelPropriete_Competences(panelParent, self)
         
     ######################################################################################  
     def __repr__(self):
@@ -541,51 +546,65 @@ class Competence():
     def getBranche(self):
         """ Renvoie la branche XML de la compétence pour enregistrement
         """
-        print "getBranche Comp",
-        if hasattr(self, 'code'):
-            print self.code
-            root = ET.Element(self.code)
-        else:
-            print
-            root = ET.Element("")
+        print "getBranche competences",
+        root = ET.Element("Competences")
+        for i, s in enumerate(self.competences):
+            root.set("C"+str(i), s)
         return root
+    
+    
+#        print "getBranche Comp",
+#        if hasattr(self, 'code'):
+#            print self.code
+#            root = ET.Element(self.code)
+#        else:
+#            print
+#            root = ET.Element("")
+#        return root
     
     ######################################################################################  
     def setBranche(self, branche):
-        code = branche.tag
-        num = Competences.keys().index(code)
-        self.SetNum(num)
+        print "setBranche competences",branche.keys()
+        self.competences = []
+        for i, s in enumerate(branche.keys()):
+            self.competences.append(branche.get("C"+str(i), ""))
         self.panelPropriete.MiseAJour()
+        
+        
+#        code = branche.tag
+#        num = Competences.keys().index(code)
+#        self.SetNum(num)
+#        self.panelPropriete.MiseAJour()
 #        self.SetCode()
         
          
-    ######################################################################################  
-    def SetNum(self, num):
-        self.num = num
-        if num != None:
-            self.code = self.clefs[self.num]
-            self.competence = Competences[self.code]
-            
-            if hasattr(self, 'arbre'):
-                self.SetCode()
-        
-    ######################################################################################  
-    def SetCode(self):
-        self.codeBranche.SetLabel(self.code)
+#    ######################################################################################  
+#    def SetNum(self, num):
+#        self.num = num
+#        if num != None:
+#            self.code = self.clefs[self.num]
+#            self.competence = Competences[self.code]
+#            
+#            if hasattr(self, 'arbre'):
+#                self.SetCode()
+#        
+#    ######################################################################################  
+#    def SetCode(self):
+#        self.codeBranche.SetLabel(self.code)
         
 
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
         self.arbre = arbre
         self.codeBranche = wx.StaticText(self.arbre, -1, u"")
-        self.branche = arbre.AppendItem(branche, u"Compétence :", wnd = self.codeBranche, data = self,
+        self.branche = arbre.AppendItem(branche, u"Compétences", wnd = self.codeBranche, data = self,
                                         image = self.arbre.images["Com"])
         
         
-    ######################################################################################  
-    def AfficherMenuContextuel(self, itemArbre):
-        if itemArbre == self.branche:
-            self.parent.app.AfficherMenuContextuel([[u"Supprimer", functools.partial(self.parent.SupprimerObjectif, item = itemArbre)]])
+#    ######################################################################################  
+#    def AfficherMenuContextuel(self, itemArbre):
+#        if itemArbre == self.branche:
+#            self.parent.app.AfficherMenuContextuel([[u"Supprimer", functools.partial(self.parent.SupprimerObjectif, item = itemArbre)]])
             
             
 ####################################################################################
@@ -599,8 +618,6 @@ class Savoirs():
         self.parent = parent
         self.num = num
         self.savoirs = []
-        
-
         
         self.panelPropriete = PanelPropriete_Savoirs(panelParent, self)
         
@@ -627,7 +644,12 @@ class Savoirs():
         self.panelPropriete.MiseAJour()
         
     
-        
+    ######################################################################################  
+    def ConstruireArbre(self, arbre, branche):
+        self.arbre = arbre
+        self.codeBranche = wx.StaticText(self.arbre, -1, u"")
+        self.branche = arbre.AppendItem(branche, u"Savoirs", wnd = self.codeBranche, data = self)
+#                                        image = self.arbre.images["Com"])
          
 #    ######################################################################################  
 #    def SetNum(self, num):
@@ -1026,7 +1048,7 @@ class Seance():
 
         self.code += num
 #        print self.code
-        if hasattr(self, 'codeBranche'):
+        if hasattr(self, 'codeBranche') and self.typeSeance != "":
             self.codeBranche.SetLabel(self.code)
             self.arbre.SetItemText(self.branche, TypesSeanceCourt[self.typeSeance])
 #        else:
@@ -1930,7 +1952,7 @@ class PanelPropriete_CI(PanelPropriete):
 #   Classe définissant le panel de propriété de la compétence
 #
 ####################################################################################
-class PanelPropriete_Competence(PanelPropriete):
+class PanelPropriete_Competences(PanelPropriete):
     def __init__(self, parent, competence):
         
         self.competence = competence
@@ -1938,40 +1960,83 @@ class PanelPropriete_Competence(PanelPropriete):
         
         PanelPropriete.__init__(self, parent)
         
-        titre = wx.StaticText(self, -1, u"Compétence :")
+        arbre = ArbreCompetences(self, self.competence)
+        self.arbre = arbre
+#        arbre.FitInside()
         
-        # Prévoir un truc pour que la liste des compétences tienne compte de celles déja choisies
-        # idée : utiliser cb.CLear, Clear.Append ou cb.Delete
-        listComp = []
-        l = Competences.items()
-        for c in l:
-            listComp.append(c[0] + " " + c[1])
-        listComp.sort()    
+#        win.SetScrollRate(20,20)
+#        self.sizer = wx.BoxSizer(wx.VERTICAL)
+#        self.sizer.Add(win, 1, flag = wx.EXPAND)
+        self.sizer.Add(arbre, (0,0), flag = wx.EXPAND)
+        self.sizer.AddGrowableCol(0)
+        self.sizer.AddGrowableRow(0)
+#        self.SetSizer(self.sizer)
+#        self.sizer.FitInside(self)
+#        self.win.FitInside()
         
-        cb = wx.ComboBox(self, -1, u"Choisir une compétence",
-                         choices = listComp,
-                         style = wx.CB_DROPDOWN
-                         | wx.TE_PROCESS_ENTER
-                         | wx.CB_READONLY
-                         #| wx.CB_SORT
-                         )
-        self.cb = cb
+        self.Layout()
         
-        self.sizer.Add(titre, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 2)
-        self.sizer.Add(cb, (0,1), flag = wx.EXPAND)
-        self.sizer.Layout()
-        self.Bind(wx.EVT_COMBOBOX, self.EvtComboBox, cb)
+
+
+    def OnSize(self, event):
+        print self.GetClientSize()
+        self.win.SetMinSize(self.GetClientSize())
+        self.Layout()
+        event.Skip()
         
-    #############################################################################            
-    def EvtComboBox(self, event):
-        self.competence.SetNum(event.GetSelection())
+    ######################################################################################  
+    def SetCompetences(self): 
+#        self.savoirs.savoirs = lst
+        print self.competence.competences
         self.sendEvent()
         
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
-        self.cb.SetSelection(self.competence.num)
+        print "MiseAJour"
+        self.arbre.UnselectAll()
+        for s in self.competence.competences:
+            i = self.arbre.get_item_by_label(s, self.arbre.GetRootItem())
+            print i
+            if i.IsOk():
+                print i
+                self.arbre.CheckItem2(i)
+        
         if sendEvt:
             self.sendEvent()
+#        titre = wx.StaticText(self, -1, u"Compétence :")
+#        
+#        # Prévoir un truc pour que la liste des compétences tienne compte de celles déja choisies
+#        # idée : utiliser cb.CLear, Clear.Append ou cb.Delete
+#        listComp = []
+#        l = Competences.items()
+#        for c in l:
+#            listComp.append(c[0] + " " + c[1])
+#        listComp.sort()    
+#        
+#        cb = wx.ComboBox(self, -1, u"Choisir une compétence",
+#                         choices = listComp,
+#                         style = wx.CB_DROPDOWN
+#                         | wx.TE_PROCESS_ENTER
+#                         | wx.CB_READONLY
+#                         #| wx.CB_SORT
+#                         )
+#        self.cb = cb
+#        
+#        self.sizer.Add(titre, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 2)
+#        self.sizer.Add(cb, (0,1), flag = wx.EXPAND)
+#        self.sizer.Layout()
+#        self.Bind(wx.EVT_COMBOBOX, self.EvtComboBox, cb)
+        
+#    #############################################################################            
+#    def EvtComboBox(self, event):
+#        self.competence.SetNum(event.GetSelection())
+#        self.sendEvent()
+#        
+#    #############################################################################            
+#    def MiseAJour(self, sendEvt = False):
+#        self.cb.SetSelection(self.competence.num)
+#        if sendEvt:
+#            self.sendEvent()
         
 
 
@@ -2342,7 +2407,8 @@ class PanelPropriete_Seance(PanelPropriete):
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
         self.AdapterAuType()
-        self.cbType.SetSelection(self.cbType.GetStrings().index(TypesSeance[self.seance.typeSeance]))
+        if self.seance.typeSeance != "":
+            self.cbType.SetSelection(self.cbType.GetStrings().index(TypesSeance[self.seance.typeSeance]))
         self.textctrl.ChangeValue(self.seance.intitule)
         self.vcDuree.mofifierValeursSsEvt()
         if self.cbEff.IsEnabled() and self.cbEff.IsShown():
@@ -3314,6 +3380,98 @@ class ArbreSavoirs(CT.CustomTreeCtrl):
     
         return wx.TreeItemId()
 
+
+class ArbreCompetences(CT.CustomTreeCtrl):
+    def __init__(self, parent, savoirs):
+
+        CT.CustomTreeCtrl.__init__(self, parent, -1, style = wx.TR_DEFAULT_STYLE|wx.TR_MULTIPLE|wx.TR_HIDE_ROOT)
+        
+        self.parent = parent
+        self.savoirs = savoirs
+        
+        self.root = self.AddRoot(u"Compétences")
+        self.Construire(self.root, dicCompetences)
+        
+        self.ExpandAll()
+        
+        #
+        # Les icones des branches
+        #
+#        dicimages = {"Seq" : images.Icone_sequence,
+#                       "Rot" : images.Icone_rotation,
+#                       "Cou" : images.Icone_cours,
+#                       "Com" : images.Icone_competence,
+#                       "Obj" : images.Icone_objectif,
+#                       "Ci" : images.Icone_centreinteret,
+#                       "Eva" : images.Icone_evaluation,
+#                       "Par" : images.Icone_parallele
+#                       }
+#        self.images = {}
+        il = wx.ImageList(20, 20)
+#        for k, i in dicimages.items():
+#            self.images[k] = il.Add(i.GetBitmap())
+        self.AssignImageList(il)
+        
+        
+        #
+        # Gestion des évenements
+        #
+#        self.Bind(CT.EVT_TREE_SEL_CHANGED, self.OnSelChanged)
+        self.Bind(CT.EVT_TREE_ITEM_CHECKED, self.OnItemCheck)
+        
+    def Construire(self, branche, dic, ct_type = 0):
+#        print "Construire", dic
+        clefs = dic.keys()
+        clefs.sort()
+        for k in clefs:
+            b = self.AppendItem(branche, k+" "+dic[k][0], ct_type=ct_type)
+            if len(dic[k])>1 and type(dic[k][1]) == dict:
+                self.Construire(b, dic[k][1], ct_type=1)
+
+        
+    def OnItemCheck(self, event):
+        item = event.GetItem()
+        code = self.GetItemText(item).split()[0]
+        if item.GetValue():
+            self.parent.competence.competences.append(code)
+        else:
+            self.parent.competence.competences.remove(code)
+        self.parent.SetCompetences()
+        event.Skip()
+
+    def traverse(self, parent=None):
+        if parent is None:
+            parent = self.GetRootItem()
+        nc = self.GetChildrenCount(parent, True)
+
+        def GetFirstChild(parent, cookie):
+            return self.GetFirstChild(parent)
+        
+        GetChild = GetFirstChild
+        cookie = 1
+        for i in range(nc):
+            child, cookie = GetChild(parent, cookie)
+            GetChild = self.GetNextChild
+            yield child
+            
+
+    def get_item_by_label(self, search_text, root_item):
+#        print "get_item_by_label", search_text, root_item
+        item, cookie = self.GetFirstChild(root_item)
+    
+        while item != None and item.IsOk():
+            text = self.GetItemText(item)
+#            print "   ", text
+            if text.split()[0] == search_text:
+                return item
+            if self.ItemHasChildren(item):
+                match = self.get_item_by_label(search_text, item)
+                if match.IsOk():
+                    return match
+            item, cookie = self.GetNextChild(root_item, cookie)
+    
+        return wx.TreeItemId()
+#
 # Fonction pour indenter les XML générés par ElementTree
 #
 def indent(elem, level=0):
