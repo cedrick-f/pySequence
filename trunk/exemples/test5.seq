@@ -1,0 +1,16 @@
+<Sequence Intitule="">
+  <CentreInteret>
+    <CI1 />
+  </CentreInteret>
+  <Prerequis>
+    <Savoirs S0="1" S1="1.2.1" />
+  </Prerequis>
+  <Objectifs>
+    <Competences C0="CO1.1" C1="CO1.2" />
+    <Savoirs S0="1.1.1" />
+  </Objectifs>
+  <Seances>
+    <Seance1 Duree="1.0" Effectif="C" Intitule="" IntituleDansDeroul="True" Type="" />
+  </Seances>
+  <Systemes />
+</Sequence>

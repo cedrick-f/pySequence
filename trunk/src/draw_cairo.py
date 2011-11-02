@@ -39,7 +39,7 @@ import cairo
 
 import ConfigParser
 
-from constantes import Effectifs, listeDemarches, Demarches, Competences, getSavoir
+from constantes import Effectifs, listeDemarches, Demarches, Competences, getSavoir, getCompetence
 
 #
 # Données pour le tracé
@@ -437,22 +437,31 @@ def Draw(ctx, seq):
     #
     # Codes prerequis
     #
-    if len(seq.prerequis.savoirs) > 0:
-        no = len(seq.prerequis.savoirs)
-        e = 0.01
-        for i, t in enumerate(seq.prerequis.savoirs):
-            hl = (rect_height-height-0.015)/no
-            ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
-                                  cairo.FONT_WEIGHT_BOLD)
-            show_text_rect(ctx, t.split()[0], x0+e, yc+i*hl, 
-                           rect_width/6-e, hl, b = 0.2, ha = 'g', max_font = 0.012, wrap = False)
-            ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
-                                  cairo.FONT_WEIGHT_NORMAL)
-            show_text_rect(ctx, getSavoir(t.split()[0]), x0+rect_width/6, yc+i*hl, 
-                           rect_width*5/6-e, hl, b = 0.2, ha = 'g')
-
-            ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
-                                  cairo.FONT_WEIGHT_BOLD)
+    lstTexte = []
+    for c in seq.prerequis.savoirs:
+        lstTexte.append(getSavoir(c))
+    e = 0.01
+    hl = rect_height-height-0.015
+    liste_code_texte(ctx, seq.prerequis.savoirs, lstTexte, x0, yc, rect_width, hl, e)
+    
+    
+    
+#    if len(seq.prerequis.savoirs) > 0:
+#        no = len(seq.prerequis.savoirs)
+#        e = 0.01
+#        for i, t in enumerate(seq.prerequis.savoirs):
+#            hl = (rect_height-height-0.015)/no
+#            ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+#                                  cairo.FONT_WEIGHT_BOLD)
+#            show_text_rect(ctx, t.split()[0], x0+e, yc+i*hl, 
+#                           rect_width/6-e, hl, b = 0.2, ha = 'g', max_font = 0.012, wrap = False)
+#            ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+#                                  cairo.FONT_WEIGHT_NORMAL)
+#            show_text_rect(ctx, getSavoir(t.split()[0]), x0+rect_width/6, yc+i*hl, 
+#                           rect_width*5/6-e, hl, b = 0.2, ha = 'g')
+#
+#            ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+#                                  cairo.FONT_WEIGHT_BOLD)
     
     #
     #  Objectifs
@@ -481,27 +490,46 @@ def Draw(ctx, seq):
     #
     # Codes objectifs
     #
-    if seq.obj[0].num != None:
-        no = len(seq.obj)
-        e = 0.01
-        txtObj = ''
-        hl = (rect_height-height-0.015)/no
-        for i, t in enumerate(seq.obj):
-            if hasattr(t, 'code'):
-                txtObj += " " + t.code
-                ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
-                                      cairo.FONT_WEIGHT_BOLD)
-                show_text_rect(ctx, t.code, x0+e, yc+i*hl, 
-                               rect_width/5-e, hl, max_font = 0.012, ha = 'g', wrap = False)
-                ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
-                                      cairo.FONT_WEIGHT_NORMAL)
-                show_text_rect(ctx, Competences[t.code], x0+rect_width/5, yc+i*hl, 
-                               rect_width*4/5-e, hl, ha = 'g')
-        
-#            x, y = posObj
-#            w, h = tailleObj
-                ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
-                                      cairo.FONT_WEIGHT_BOLD)
+    lstTexteC = []
+    for c in seq.obj["C"].competences:
+        lstTexteC.append(getCompetence(c))
+    lstTexteS = []   
+    for c in seq.obj["S"].savoirs:
+        lstTexteS.append(getSavoir(c))
+    h = rect_height-height-0.015  
+    
+    if len(lstTexteS) > 0 or len(lstTexteC) > 0:
+        hC = h*len(lstTexteC)/(len(lstTexteC) + len(lstTexteS))
+        hS = h*len(lstTexteS)/(len(lstTexteC) + len(lstTexteS))
+        liste_code_texte(ctx, seq.obj["C"].competences, lstTexteC, x0, yc, rect_width, hC, 0.01) 
+        ctx.set_source_rgba (0.0, 0.0, 0.5, 1.0)
+        liste_code_texte(ctx, seq.obj["S"].savoirs, lstTexteS, x0, yc+hC, rect_width, hS, 0.01)
+    
+    
+    
+#    lstCS = seq.obj["C"].competences + seq.obj["S"].savoirs
+#    print "Draw objectifs", lstCS
+#    if len(lstCS) > 0:
+#        no = len(lstCS)
+#        e = 0.01
+#        txtObj = ''
+#        hl = (rect_height-height-0.015)/no
+#        for i, t in enumerate(lstCS):
+#            if hasattr(t, 'code'):
+#                txtObj += " " + t.code
+#                ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+#                                      cairo.FONT_WEIGHT_BOLD)
+#                show_text_rect(ctx, t.code, x0+e, yc+i*hl, 
+#                               rect_width/5-e, hl, max_font = 0.012, ha = 'g', wrap = False)
+#                ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+#                                      cairo.FONT_WEIGHT_NORMAL)
+#                show_text_rect(ctx, Competences[t.code], x0+rect_width/5, yc+i*hl, 
+#                               rect_width*4/5-e, hl, ha = 'g')
+#        
+##            x, y = posObj
+##            w, h = tailleObj
+#                ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+#                                      cairo.FONT_WEIGHT_BOLD)
 #        
 
     #
@@ -1116,4 +1144,37 @@ def fleche_ronde(ctx, x, y, r, a, e, f, coul):
     
     
     
+def liste_code_texte(ctx, lstCodes, lstTexte, x, y, w, h, e):
+    no = len(lstCodes)
+    if no > 0:
+        hl = h/no
+        for i, t in enumerate(lstCodes):
+            ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+                                  cairo.FONT_WEIGHT_BOLD)
+            show_text_rect(ctx, t, x+e, y+i*hl, 
+                           w/6-e, hl, b = 0.2, ha = 'g', max_font = 0.012, wrap = False)
+            ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+                                  cairo.FONT_WEIGHT_NORMAL)
+            show_text_rect(ctx, lstTexte[i], x+w/6, y+i*hl, 
+                           w*5/6-e, hl, b = 0.2, ha = 'g')
+    
+            ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+                                  cairo.FONT_WEIGHT_BOLD)
+    
+    
+#    no = len(lstCodes)
+#    e = 0.01
+#    for i, t in enumerate(lstCodes):
+#        hl = (rect_height-htitre-0.015)/no
+#        ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+#                              cairo.FONT_WEIGHT_BOLD)
+#        show_text_rect(ctx, t, x0+e, ytitre+i*hl, 
+#                       rect_width/6-e, hl, b = 0.2, ha = 'g', max_font = 0.012, wrap = False)
+#        ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+#                              cairo.FONT_WEIGHT_NORMAL)
+#        show_text_rect(ctx, lstTexte[i], x0+rect_width/6, ytitre+i*hl, 
+#                       rect_width*5/6-e, hl, b = 0.2, ha = 'g')
+#
+#        ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+#                              cairo.FONT_WEIGHT_BOLD)
     
