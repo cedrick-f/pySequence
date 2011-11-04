@@ -244,6 +244,9 @@ class Sequence():
         self.OrdonnerSeances()
         seance.ConstruireArbre(self.arbre, self.brancheSce)
         self.panelPropriete.sendEvent()
+        
+        self.arbre.SelectItem(seance.branche)
+        
         return seance
     
     
@@ -291,6 +294,8 @@ class Sequence():
         sy.ConstruireArbre(self.arbre, self.brancheSys)
         self.arbre.Expand(self.brancheSys)
         self.panelPropriete.sendEvent()
+        self.arbre.SelectItem(sy.branche)
+        
         return
     
     
@@ -324,7 +329,7 @@ class Sequence():
         #
         # Les prérequis
         #
-        self.branchePre = arbre.AppendItem(self.branche, Titres[1], data = self.prerequis)
+        self.branchePre = arbre.AppendItem(self.branche, Titres[1], data = self.prerequis, image = self.arbre.images["Sav"])
         
         #
         # Les objectifs
@@ -353,9 +358,14 @@ class Sequence():
                                              [u"Ouvrir", self.app.commandeOuvrir],
                                              [u"Exporter la fiche en PDF", self.app.exporterFiche]])
             
+#        [u"Séquence pédagogique",
+#          u"Prérequis",
+#          u"Objectifs pédagogiques",
+#          u"Séances",
+#          u"Systèmes"]
         
-        elif isinstance(self.arbre.GetItemPyData(itemArbre), Competence):
-            self.arbre.GetItemPyData(itemArbre).AfficherMenuContextuel(itemArbre)
+#        elif isinstance(self.arbre.GetItemPyData(itemArbre), Competences):
+#            self.arbre.GetItemPyData(itemArbre).AfficherMenuContextuel(itemArbre)
             
         elif isinstance(self.arbre.GetItemPyData(itemArbre), Seance):
             self.arbre.GetItemPyData(itemArbre).AfficherMenuContextuel(itemArbre)
@@ -363,14 +373,15 @@ class Sequence():
         elif isinstance(self.arbre.GetItemPyData(itemArbre), Systeme):
             self.arbre.GetItemPyData(itemArbre).AfficherMenuContextuel(itemArbre)
             
-        elif self.arbre.GetItemText(itemArbre) == Titres[1]: # Objectifs pédagogiques
-            self.app.AfficherMenuContextuel([[u"Ajouter une compétence", self.AjouterObjectif]])
+#        elif self.arbre.GetItemText(itemArbre) == Titres[1]: # Objectifs pédagogiques
+#            self.app.AfficherMenuContextuel([[u"Ajouter une compétence", self.AjouterObjectif]])
             
             
-        elif self.arbre.GetItemText(itemArbre) == Titres[2]: # Séances
+        elif self.arbre.GetItemText(itemArbre) == Titres[3]: # Séances
+            print u"Menu Séances"
             self.app.AfficherMenuContextuel([[u"Ajouter une séance", self.AjouterSeance]])
             
-        elif self.arbre.GetItemText(itemArbre) == Titres[3]: # Système
+        elif self.arbre.GetItemText(itemArbre) == Titres[4]: # Système
             self.app.AfficherMenuContextuel([[u"Ajouter un système", self.AjouterSysteme]])
          
          
@@ -458,7 +469,7 @@ class CentreInteret():
         
         self.SetNum(numCI)
         self.parent = parent
-        
+        self.code = ""
         self.panelPropriete = PanelPropriete_CI(panelParent, self)
         
        
@@ -648,8 +659,8 @@ class Savoirs():
     def ConstruireArbre(self, arbre, branche):
         self.arbre = arbre
         self.codeBranche = wx.StaticText(self.arbre, -1, u"")
-        self.branche = arbre.AppendItem(branche, u"Savoirs", wnd = self.codeBranche, data = self)
-#                                        image = self.arbre.images["Com"])
+        self.branche = arbre.AppendItem(branche, u"Savoirs", wnd = self.codeBranche, data = self,
+                                        image = self.arbre.images["Sav"])
          
 #    ######################################################################################  
 #    def SetNum(self, num):
@@ -688,6 +699,8 @@ class Savoirs():
 #
 ####################################################################################
 class Seance():
+    
+                  
     def __init__(self, parent, panelParent, typeSeance = "", typeParent = 0):
         """ Séance :
                 parent = le parent wx pour contenir "panelPropriete"
@@ -1026,6 +1039,9 @@ class Seance():
         if self.EstSousSeance() and self.parent.typeSeance in ["R","S"]:
             self.parent.SignalerPbEffectif(self.parent.IsEffectifOk())
         
+        if hasattr(self, 'arbre'):
+            self.arbre.SetItemImage(self.branche, self.arbre.images[self.typeSeance])
+        
     ######################################################################################  
     def GetToutesSeances(self):
         l = []
@@ -1064,7 +1080,12 @@ class Seance():
     def ConstruireArbre(self, arbre, branche):
         self.arbre = arbre
         self.codeBranche = wx.StaticText(self.arbre, -1, u"")
-        self.branche = arbre.AppendItem(branche, u"Séance :", wnd = self.codeBranche, data = self)
+        if self.typeSeance != "":
+            image = self.arbre.images[self.typeSeance]
+        else:
+            image = -1
+        self.branche = arbre.AppendItem(branche, u"Séance :", wnd = self.codeBranche, 
+                                        data = self, image = image)
         if self.typeSeance in ["R", "S"] : # Séances en Rotation ou  Parallèle
             for sce in self.sousSeances:
                 sce.ConstruireArbre(arbre, self.branche)
@@ -1091,6 +1112,8 @@ class Seance():
         self.OrdonnerSeances()
         seance.ConstruireArbre(self.arbre, self.branche)
         self.arbre.Expand(self.branche)
+        
+        self.arbre.SelectItem(seance.branche)
 
 
 
@@ -1706,7 +1729,12 @@ class FicheSequence(wx.ScrolledWindow):
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_SIZE, self.OnResize)
         self.Bind(wx.EVT_LEFT_UP, self.OnClick)
+        self.Bind(wx.EVT_ENTER_WINDOW, self.OnEnter)
 
+    ######################################################################################################
+    def OnEnter(self, event):
+#        print "OnEnter"
+        self.SetFocus()
     
     #############################################################################            
     def OnClick(self, evt):
@@ -1865,6 +1893,13 @@ class PanelPropriete(scrolled.ScrolledPanel):
         self.Hide()
         self.SetSizer(self.sizer)
         self.SetAutoLayout(True)
+        
+        self.Bind(wx.EVT_ENTER_WINDOW, self.OnEnter)
+
+    ######################################################################################################
+    def OnEnter(self, event):
+#        print "OnEnter"
+        self.SetFocus()
        
     #########################################################################################################
     def sendEvent(self):
@@ -1916,33 +1951,56 @@ class PanelPropriete_CI(PanelPropriete):
         PanelPropriete.__init__(self, parent)
         self.CI = CI
         
-        titre = wx.StaticText(self, -1, u"CI :")
-        cb = wx.ComboBox(self, -1, u"Choisir un CI",
-                         choices = CentresInterets,
-                         style = wx.CB_DROPDOWN
-                         | wx.TE_PROCESS_ENTER
-                         | wx.CB_READONLY
-                         #| wx.CB_SORT
-                         )
-        self.cb = cb
-        self.titre = titre
+#        titre = wx.StaticText(self, -1, u"CI :")
         
-        self.sizer.Add(titre, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 2)
-        self.sizer.Add(cb, (0,1), flag = wx.EXPAND)
+#        cb = wx.RadioBox(
+#                self, -1, u"Choisir un CI", wx.DefaultPosition, wx.DefaultSize,
+#                CentresInterets, 1, wx.RA_SPECIFY_COLS
+#                )
+        
+        grid1 = wx.FlexGridSizer( 0, 2, 0, 0 )
+        self.group_ctrls = []
+        for i, ci in enumerate(CentresInterets):
+            if i == 0 : s = wx.RB_GROUP
+            else: s = 0
+            r = wx.RadioButton(self, -1, "CI"+str(i+1), style = s )
+            t = wx.StaticText(self, -1, ci)
+            grid1.Add( r, 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_LEFT|wx.LEFT|wx.RIGHT|wx.TOP, 2 )
+            grid1.Add( t, 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_LEFT|wx.LEFT|wx.RIGHT, 5 )
+            self.group_ctrls.append((r, t))
+            
+#        cb = wx.ComboBox(self, -1, u"Choisir un CI",
+#                         choices = CentresInterets,
+#                         style = wx.CB_DROPDOWN
+#                         | wx.TE_PROCESS_ENTER
+#                         | wx.CB_READONLY
+#                         #| wx.CB_SORT
+#                         )
+#        self.cb = cb
+#        self.titre = titre
+        
+#        self.sizer.Add(titre, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 2)
+        self.sizer.Add(grid1, (0,1), flag = wx.EXPAND)
         self.sizer.Layout()
-        self.Bind(wx.EVT_COMBOBOX, self.EvtComboBox, cb)
+#        self.Bind(wx.EVT_COMBOBOX, self.EvtComboBox, cb)
+        for radio, text in self.group_ctrls:
+            self.Bind(wx.EVT_RADIOBUTTON, self.EvtComboBox, radio )
         
     #############################################################################            
     def EvtComboBox(self, event):
-        self.CI.SetNum(event.GetSelection())
-        self.titre.SetLabel(u"CI "+str(self.CI.num+1)+":")
+        print "EvtComboBox",
+        radio_selected = eval(event.GetEventObject().GetLabel()[2:])
+        print radio_selected
+        self.CI.SetNum(radio_selected-1)
+
         self.Layout()
         self.sendEvent()
         
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
-        self.titre.SetLabel(u"CI "+str(self.CI.num+1)+":")
-        self.cb.SetSelection(self.CI.num)
+#        self.titre.SetLabel(u"CI "+str(self.CI.num+1)+":")
+        self.group_ctrls[self.CI.num][0].SetValue(True)
+#        self.cb.SetSelection(self.CI.num)
         self.Layout()
         if sendEvt:
             self.sendEvent()
@@ -2255,7 +2313,7 @@ class PanelPropriete_Seance(PanelPropriete):
             else:
                 self.seance.SupprimerSousSeances()
         self.seance.SetType(get_key(TypesSeance, self.cbType.GetStringSelection()))
-        if self.cbEff.IsEnabled():
+        if self.cbEff.IsEnabled() and self.cbEff.IsShown():
             self.seance.SetEffectif(self.cbEff.GetStringSelection())
 
         self.seance.MiseAJourListeSystemes()
@@ -2565,17 +2623,28 @@ class ArbreSequence(CT.CustomTreeCtrl):
         # Les icones des branches
         #
         dicimages = {"Seq" : images.Icone_sequence,
-                       "Rot" : images.Icone_rotation,
-                       "Cou" : images.Icone_cours,
+#                       "Rot" : images.Icone_rotation,
+#                       "Cou" : images.Icone_cours,
                        "Com" : images.Icone_competence,
+                       "Sav" : images.Icone_savoirs,
                        "Obj" : images.Icone_objectif,
                        "Ci" : images.Icone_centreinteret,
-                       "Eva" : images.Icone_evaluation,
-                       "Par" : images.Icone_parallele
+#                       "Eva" : images.Icone_evaluation,
+#                       "Par" : images.Icone_parallele
                        }
+        imagesSeance = {"R" : images.Icone_rotation,
+                        "S" : images.Icone_parallele,
+                        "E" : images.Icone_evaluation,
+                        "C" : images.Icone_cours,
+                        
+                        "ED" : images.Icone_cours,
+                        "AP" : images.Icone_cours,
+                        "P"  : images.Icone_cours,
+                        "SA" : images.Icone_cours,
+                        "SS" : images.Icone_cours}
         self.images = {}
         il = wx.ImageList(20, 20)
-        for k, i in dicimages.items():
+        for k, i in dicimages.items() + imagesSeance.items():
             self.images[k] = il.Add(i.GetBitmap())
         self.AssignImageList(il)
         
