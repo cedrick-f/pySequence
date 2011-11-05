@@ -76,6 +76,12 @@ Effectifs = {"C" : [u"Classe entière",      32],
              "P" : [u"Activité Pratique",   2],
              }
 
+EffectifsCourt = {"C" : [u"Classe entière",      32],
+                  "G" : [u"Effectif réduit",     16],
+                  "D" : [u"Demi-groupe",         8],
+                  "E" : [u"Etude et Projet",     4],
+                  "P" : [u"Act. Pratique",   2],
+                     }
 
 def ouvrirConfig():
     print "ouvrirConfig"
