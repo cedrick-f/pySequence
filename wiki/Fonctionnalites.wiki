@@ -23,6 +23,6 @@ Chaque élément de séquence possède des propriétés :
 Au fur et à mesure de sa création, la séquence apparait sous forme graphique (*fiche*) dans la _fenêtre centrale_.
 Cela permet de visualiser graphiquement son déroulement, ce qui offre notamment une aide pour élaborer des séries de séance en rotation ou en parallèle (compatibilité des durées, des effectifs élève, ...)
 
-[http://pysequence.googlecode.com/svn/trunk/src/images/Icone_savoirs.png]
+http://pysequence.googlecode.com/svn/trunk/images/Icone_savoirs.png
 
 [Aide Sommaire de l'aide]
