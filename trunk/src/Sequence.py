@@ -1041,6 +1041,7 @@ class Seance():
         
         if hasattr(self, 'arbre'):
             self.arbre.SetItemImage(self.branche, self.arbre.images[self.typeSeance])
+            self.arbre.Refresh()
         
     ######################################################################################  
     def GetToutesSeances(self):
@@ -1113,6 +1114,11 @@ class Seance():
         seance.ConstruireArbre(self.arbre, self.branche)
         self.arbre.Expand(self.branche)
         
+        if self.typeSeance == "R":
+            seance.SetDuree(self.sousSeances[0].GetDuree())
+        else:
+            seance.SetDuree(self.GetDuree())
+        
         self.arbre.SelectItem(seance.branche)
 
 
@@ -1125,6 +1131,7 @@ class Seance():
                 self.sousSeances.remove(seance)
                 self.arbre.Delete(item)
                 self.OrdonnerSeances()
+                self.panelPropriete.sendEvent()
         return
     
     ######################################################################################  
@@ -1257,7 +1264,8 @@ class Systeme():
     def ConstruireArbre(self, arbre, branche):
         self.arbre = arbre
         self.codeBranche = wx.StaticText(self.arbre, -1, u"")
-        self.branche = arbre.AppendItem(branche, u"Système :", wnd = self.codeBranche, data = self)
+        self.branche = arbre.AppendItem(branche, u"Système :", wnd = self.codeBranche, data = self,
+                                        image = self.arbre.images["Sys"])
         
         
     ######################################################################################  
@@ -2318,7 +2326,8 @@ class PanelPropriete_Seance(PanelPropriete):
 
         self.seance.MiseAJourListeSystemes()
         self.AdapterAuxSystemes()
-        self.Fit()
+        self.Layout()
+#        self.Fit()
         self.sendEvent()
        
         
@@ -2623,22 +2632,20 @@ class ArbreSequence(CT.CustomTreeCtrl):
         # Les icones des branches
         #
         dicimages = {"Seq" : images.Icone_sequence,
-#                       "Rot" : images.Icone_rotation,
-#                       "Cou" : images.Icone_cours,
                        "Com" : images.Icone_competence,
                        "Sav" : images.Icone_savoirs,
                        "Obj" : images.Icone_objectif,
                        "Ci" : images.Icone_centreinteret,
-#                       "Eva" : images.Icone_evaluation,
-#                       "Par" : images.Icone_parallele
+                       "Sys" : images.Icone_systeme,
+
                        }
         imagesSeance = {"R" : images.Icone_rotation,
                         "S" : images.Icone_parallele,
                         "E" : images.Icone_evaluation,
                         "C" : images.Icone_cours,
+                        "ED" : images.Icone_ED,
+                        "AP" : images.Icone_AP,
                         
-                        "ED" : images.Icone_cours,
-                        "AP" : images.Icone_cours,
                         "P"  : images.Icone_cours,
                         "SA" : images.Icone_cours,
                         "SS" : images.Icone_cours}

@@ -39,7 +39,7 @@ import cairo
 
 import ConfigParser
 
-from constantes import Effectifs, listeDemarches, Demarches, Competences, getSavoir, getCompetence
+from constantes import Effectifs, listeDemarches, Demarches, Competences, getSavoir, getCompetence, EffectifsCourt
 
 #
 # Données pour le tracé
@@ -373,7 +373,7 @@ def Draw(ctx, seq):
         ctx.rectangle(x, y, w, h)
         ctx.stroke()
         ctx.set_source_rgb(0.6, 0.8, 0.6)
-        show_text_rect(ctx, Effectifs[e][0], x, y, w, h)
+        show_text_rect(ctx, EffectifsCourt[e][0], x, y, w, h)
         ctx.stroke()
         DrawLigneEff(ctx, x+w, y+h)
         
@@ -669,6 +669,8 @@ def Draw_seance(ctx, seance, curseur, typParent = "", rotation = False):
         fleche_verticale(ctx, posZDeroul[0], curseur[1], 
                          h, 0.02, (0.9,0.8,0.8,0.5))
         ctx.set_source_rgb(0.5,0.8,0.8)
+        ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+                                  cairo.FONT_WEIGHT_BOLD)
         show_text_rect(ctx, getHoraireTxt(seance.GetDuree()), posZDeroul[0]-0.01, curseur[1], 
                        0.02, h, orient = 'v')
         
@@ -741,13 +743,17 @@ def Draw_seance(ctx, seance, curseur, typParent = "", rotation = False):
                     codeEff = "E"
                 elif eff == 1:
                     codeEff = "P"
-                curs = [curseur[0]+wEff[codeEff], curseur[1]-hHoraire * seance.GetDuree()]
+                
                 for t in range(len(seance.sousSeances)-1):
+                    curs = [curseur[0]+wEff[codeEff]*(t+1), curseur[1]-hHoraire * seance.GetDuree()]
                     l = permut(l)
-                    for s in l:
+                    for i, s in enumerate(l):
+                        print "filigrane", s, curs
                         Draw_seance(ctx, s, curs, typParent = "R", rotation = True)
-                    curs[0] += wEff[s.effectif]
-            
+                        if s.typeSeance == "S":
+                            curs[0]  += wEff[codeEff]*(i+1)
+#                    curs[0] += wEff[codeEff]
+#                    curs[1] = curseur[1]-hHoraire * seance.GetDuree()
             
             curseur[0] = posZSeances[0]
             if typParent == "":
