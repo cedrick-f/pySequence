@@ -80,7 +80,7 @@ EffectifsCourt = {"C" : [u"Classe entière",      32],
                   "G" : [u"Effectif réduit",     16],
                   "D" : [u"Demi-groupe",         8],
                   "E" : [u"Etude et Projet",     4],
-                  "P" : [u"Act. Pratique",   2],
+                  "P" : [u"A Pratique",   2],
                      }
 
 def ouvrirConfig():
