@@ -67,8 +67,8 @@ BcoulObj = (0.25,0.3,0.2)
 # Rectangle des prerequis
 taillePre = (0.23, 0.16)
 posPre = (margeX, margeY)
-IcoulPre = (0.8,0.9,0.8)
-BcoulPre = (0.25,0.3,0.2)
+IcoulPre = (0.8,0.8,0.9)
+BcoulPre = (0.2,0.25,0.3)
 
 # Zone d'organisation de la séquence (grand cadre)
 posZOrganis = (0.05, 0.26)
@@ -155,6 +155,13 @@ def coul2str(rgba):
 def enregistrerConfigFiche(nomFichier):
     config = ConfigParser.ConfigParser()
 
+    section = "General"
+    config.add_section(section)
+    config.set(section, "margeX", str(margeX))
+    config.set(section, "margeY", str(margeY))
+    config.set(section, "ecartX", str(ecartX))
+    config.set(section, "ecartY", str(ecartY))
+    
     section = "Intitule de la sequence"
     config.add_section(section)
     config.set(section, "pos", coord2str(posIntitule))
@@ -229,11 +236,19 @@ def ouvrirConfigFiche(nomFichier):
            posCI, tailleCI, IcoulCI, BcoulCI, \
            posObj, tailleObj, IcoulObj, BcoulObj, \
            posZOrganis, tailleZOrganis, \
-           posZDeroul, wColSysteme, hIntSeance, posZSeances
+           posZDeroul, wColSysteme, hIntSeance, posZSeances, \
+           margeX, margeY, ecartX, ecartY
            
            
     config = ConfigParser.ConfigParser()
     config.read(nomFichier)
+    
+    section = "General"
+    margeX = eval(config.get(section,"margeX"))
+    margeY = eval(config.get(section,"margeY"))
+    ecartX = eval(config.get(section,"ecartX"))
+    ecartY = eval(config.get(section,"ecartY"))
+    
     
     section = "Intitule de la sequence"
     posIntitule = str2coord(config.get(section,"pos"))
@@ -564,9 +579,17 @@ def Draw(ctx, seq):
         _y = posZSysteme[1]
         for s in seq.systemes:
             s.rect=((_x, _y, wc, posZSeances[1] - posZSysteme[1]),)
+            ctx.set_source_rgb(0, 0, 0)
             ctx.move_to(_x, _y + posZSeances[1] - posZSysteme[1])
             ctx.line_to(_x, _y + tailleZDemarche[1])
+            ctx.stroke()
+            
+            ctx.set_source_rgba(0.8,0.8,0.8, 0.2)
+            ctx.rectangle(_x, _y+ posZSeances[1] - posZSysteme[1], 
+                          wc, tailleZDemarche[1]-posZSeances[1] + posZSysteme[1])
+            ctx.fill()
             _x += wc
+        ctx.set_source_rgb(0, 0, 0)
         ctx.move_to(_x, _y + posZSeances[1] - posZSysteme[1])
         ctx.line_to(_x, _y + tailleZDemarche[1])   
         ctx.stroke()
@@ -748,7 +771,7 @@ def Draw_seance(ctx, seance, curseur, typParent = "", rotation = False):
                     curs = [curseur[0]+wEff[codeEff]*(t+1), curseur[1]-hHoraire * seance.GetDuree()]
                     l = permut(l)
                     for i, s in enumerate(l):
-                        print "filigrane", s, curs
+#                        print "filigrane", s, curs
                         Draw_seance(ctx, s, curs, typParent = "R", rotation = True)
                         if s.typeSeance == "S":
                             curs[0]  += wEff[codeEff]*(i+1)
@@ -769,13 +792,13 @@ def Draw_seance(ctx, seance, curseur, typParent = "", rotation = False):
 def DrawCroisementSystemes(ctx, seance, y):
 #        if self.typeSeance in ["AP", "ED", "P"]:
 #            and not (self.EstSousSeance() and self.parent.typeSeance == "S"):
-    r = 0.01
+    r = wColSysteme/3
     ns = seance.GetNbrSystemes()
     for s, n in ns.items():
         if n > 0:
             x = xSystemes[s]
             ctx.arc(x, y, r, 0, 2*pi)
-            ctx.set_source_rgba (1,0.2,0.2,0.6)
+            ctx.set_source_rgba (1,0.2,0.2,1.0)
             ctx.fill_preserve ()
             ctx.set_source_rgba (0,0,0,1)
             ctx.stroke ()

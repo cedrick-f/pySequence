@@ -1404,8 +1404,8 @@ class FenetreSequence(wx.Frame):
 #                         Name(u"Structure").
                          Left().Layer(1).
                          Floatable(False).
-                         BestSize((200, -1)).
-                         MinSize((200, -1)).
+                         BestSize((250, -1)).
+                         MinSize((250, -1)).
 #                         DockFixed().
 #                         Gripper(False).
 #                         Movable(False).
@@ -2393,16 +2393,9 @@ class PanelPropriete_Seance(PanelPropriete):
         if self.seance.EstSousSeance():
             listType = listeTypeActivite
             if not self.seance.parent.EstSousSeance():
-                listType += ["S"]
+                listType = listeTypeActivite + ["S"]
         else:
             listType = listeTypeSeance
-        
-#        if self.seance.typeSeance == "R":       #  séance en rotation
-#            listType = listeTypeSeance
-#        elif self.seance.typeSeance == "S":     #  séance en série
-#            listType = listeTypeSeance
-#        else:                                   #  séance "normale" (parent = séquence)
-#            listType = listeTypeActivite          
         
         listTypeS = []
         for t in listType:
