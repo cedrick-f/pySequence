@@ -48,7 +48,7 @@ print "Dossier de l'application :",PATH
 
 ####################################################################################
 #
-#   Définition des constantes
+#   Définition des constantes pour l'enseignement transversal
 #
 ####################################################################################
 import ConfigParser
@@ -178,7 +178,8 @@ Demarches = {"I" : u"Investigation",
              "P" : u"Projet"}
 listeDemarches = ["I", "R", "P"]
 
-dicSavoirs = {"1" : [u"Principes de conception des systèmes de développement durable",
+dicSavoirs = {"0" : u"Aucun",
+              "1" : [u"Principes de conception des systèmes de développement durable",
                   {"1.1" : [u"Compétitivité et créativité",
                             {"1.1.1" : [u"Paramètres de la compétitivité ",
                                         [u"Importance du service rendu (besoin réel et besoin induit)",
@@ -293,7 +294,7 @@ dicSavoirs = {"1" : [u"Principes de conception des systèmes de développement d
                                          u"Adresse physique (MAC) du protocole Ethernet et adresse logique (IP) du protocole IP. Lien adresse MAC/IP : protocole ARP",
                                          u"Architecture client/serveur : protocoles FTP et HTTP",
                                          u"Gestion d'un nœud de réseau par le paramétrage d'un routeur : adresses IP, NAT/PAT, DNS, pare-feu"]]}]}
-                  ]}
+                  ],}
 
 
 def getSavoir(code, dic = dicSavoirs, c = None):
@@ -324,3 +325,16 @@ def getCompetence(code, dic = dicCompetences, c = None):
         print "-->" ,cd
         return getCompetence(code, dic[cd][1], c-1)
 
+####################################################################################
+#
+#   Définition des constantes pour la spécialité ITEC
+#
+####################################################################################
+
+CentresInteretsItec = [u"Besoin et performance d'un système",
+                   u"Compétitivité, design et ergonomie des systèmes",
+                   u"Eco-conception des mécanismes",
+                   u"Structure, matériaux et protections d'un système",
+                   u"Transmission de mouvement et de puissance d'un système",
+                   u"Procédés de réalisation"
+                   ]
