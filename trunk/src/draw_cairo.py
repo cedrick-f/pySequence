@@ -720,16 +720,6 @@ def Draw_seance(ctx, seance, curseur, typParent = "", rotation = False, ):
             ctx.set_line_width(0.002)
             rectangle_plein(ctx, x+w*i, y, w, h, 
                             BCoulSeance[seance.typeSeance], ICoulSeance[seance.typeSeance], alpha)
-            if not rotation and seance.typeSeance in ["AP", "ED", "P"]:
-                if seance.EstSousSeance() and seance.parent.typeSeance == "S":
-                    ns = len(seance.parent.sousSeances)
-                    ys = y+(seance.ordre+1) * h/(ns+1)
-    #                    print ns, ys, self.ordre
-                else:
-                    ys = y+h/2
-                DrawCroisements(ctx, seance, x+w, ys)
-                DrawCroisementSystemes(ctx, seance, ys)
-                
             
             if not rotation and hasattr(seance, 'code'):
                 ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
@@ -743,6 +733,20 @@ def Draw_seance(ctx, seance, curseur, typParent = "", rotation = False, ):
                 ctx.set_source_rgb (0,0,0)
                 show_text_rect(ctx, seance.intitule, x+w*i, y + hHoraire/4, 
                                w, h-hHoraire/4, ha = 'g')
+        
+        
+        # Les croisements "Démarche" et "Systèmes"
+        if not rotation and seance.typeSeance in ["AP", "ED", "P"]:
+            if seance.EstSousSeance() and seance.parent.typeSeance == "S":
+                ns = len(seance.parent.sousSeances)
+                ys = y+(seance.ordre+1) * h/(ns+1)
+#                    print ns, ys, self.ordre
+            else:
+                ys = y+h/2           
+                
+            DrawCroisements(ctx, seance, x+w*seance.nombre.v[0], ys)
+            DrawCroisementSystemes(ctx, seance, ys)      
+                
             
         if typParent == "R":
             curseur[1] += h
