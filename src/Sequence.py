@@ -906,9 +906,12 @@ class Seance():
                 eff = 1
             else:
                 eff = 0
+            eff = eff * self.nombre.v[0]
 #        print "effectif", self, eff
         return eff
     
+    def GetNbrSystemesUtil(self):
+        return 
     ######################################################################################  
     def SetEffectif(self, val):
         """ Modifie l'effectif des Rotation et séances en Parallèle et de tous leurs enfants
@@ -1240,15 +1243,15 @@ class Seance():
         if not self.typeSeance == "S":
             for s in self.systemes:
                 if s.n <>"":
-                    d[s.n] = s.v[0]
+                    d[s.n] = s.v[0]*self.nombre.v[0]
         else:
             for seance in self.sousSeances:
                 for s in seance.systemes:
                     if s.n <>"":
                         if d.has_key(s.n):
-                            d[s.n] += s.v[0]
+                            d[s.n] += s.v[0]*self.nombre.v[0]
                         else:
-                            d[s.n] = s.v[0]
+                            d[s.n] = s.v[0]*self.nombre.v[0]
         return d
         
         
