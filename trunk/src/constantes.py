@@ -180,7 +180,7 @@ Demarches = {"I" : u"Investigation",
              "P" : u"Projet"}
 listeDemarches = ["I", "R", "P"]
 
-dicSavoirs = {"0" : u"Aucun",
+dicSavoirs = {"0" : [u"Aucun",[]],
               "1" : [u"Principes de conception des systèmes de développement durable",
                   {"1.1" : [u"Compétitivité et créativité",
                             {"1.1.1" : [u"Paramètres de la compétitivité ",
