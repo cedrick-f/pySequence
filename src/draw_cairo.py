@@ -455,10 +455,13 @@ def Draw(ctx, seq):
     lstTexte = []
     for c in seq.prerequis.savoirs:
         lstTexte.append(getSavoir(c))
-    e = 0.01
-    hl = rect_height-height-0.015
-    liste_code_texte(ctx, seq.prerequis.savoirs, lstTexte, x0, yc, rect_width, hl, e)
-    
+    hl = rect_height-height-0.015   
+    if len(lstTexte) > 0:
+        e = 0.01
+        
+        liste_code_texte(ctx, seq.prerequis.savoirs, lstTexte, x0, yc, rect_width, hl, e)
+    else:
+        show_text_rect(ctx, u"Aucun", x0, yc, rect_width, hl, max_font = 0.015)
     
     
 #    if len(seq.prerequis.savoirs) > 0:
@@ -686,7 +689,7 @@ def Draw_CI(ctx, CI):
    
    
 ######################################################################################  
-def Draw_seance(ctx, seance, curseur, typParent = "", rotation = False):
+def Draw_seance(ctx, seance, curseur, typParent = "", rotation = False, ):
     if not seance.EstSousSeance():
         h = hHoraire * seance.GetDuree()
         fleche_verticale(ctx, posZDeroul[0], curseur[1], 
@@ -707,36 +710,39 @@ def Draw_seance(ctx, seance, curseur, typParent = "", rotation = False):
             seance.rect.append((x, y, w, h))
         else:
             seance.rect=[(x, y, w, h),] # Rectangles pour clic
-        ctx.set_line_width(0.002)
+        
         if rotation:
             alpha = 0.2
         else:
             alpha = 1
-        rectangle_plein(ctx, x, y, w, h, 
-                        BCoulSeance[seance.typeSeance], ICoulSeance[seance.typeSeance], alpha)
-        if not rotation and seance.typeSeance in ["AP", "ED", "P"]:
-            if seance.EstSousSeance() and seance.parent.typeSeance == "S":
-                ns = len(seance.parent.sousSeances)
-                ys = y+(seance.ordre+1) * h/(ns+1)
-#                    print ns, ys, self.ordre
-            else:
-                ys = y+h/2
-            DrawCroisements(ctx, seance, x+w, ys)
-            DrawCroisementSystemes(ctx, seance, ys)
+        
+        for i in range(int(seance.nombre.v[0])):
+            ctx.set_line_width(0.002)
+            rectangle_plein(ctx, x+w*i, y, w, h, 
+                            BCoulSeance[seance.typeSeance], ICoulSeance[seance.typeSeance], alpha)
+            if not rotation and seance.typeSeance in ["AP", "ED", "P"]:
+                if seance.EstSousSeance() and seance.parent.typeSeance == "S":
+                    ns = len(seance.parent.sousSeances)
+                    ys = y+(seance.ordre+1) * h/(ns+1)
+    #                    print ns, ys, self.ordre
+                else:
+                    ys = y+h/2
+                DrawCroisements(ctx, seance, x+w, ys)
+                DrawCroisementSystemes(ctx, seance, ys)
+                
             
-        
-        if not rotation and hasattr(seance, 'code'):
-            ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
-                                  cairo.FONT_WEIGHT_BOLD)
-            ctx.set_source_rgb (0,0,0)
-            show_text_rect(ctx, seance.code, x, y, wEff["P"], hHoraire/4, ha = 'g', wrap = False)
-        
-        if not rotation and seance.intituleDansDeroul and seance.intitule != "":
-            ctx.select_font_face ("Sans", cairo.FONT_SLANT_ITALIC,
-                                  cairo.FONT_WEIGHT_NORMAL)
-            ctx.set_source_rgb (0,0,0)
-            show_text_rect(ctx, seance.intitule, x, y + hHoraire/4, 
-                           w, h-hHoraire/4, ha = 'g')
+            if not rotation and hasattr(seance, 'code'):
+                ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+                                      cairo.FONT_WEIGHT_BOLD)
+                ctx.set_source_rgb (0,0,0)
+                show_text_rect(ctx, seance.code, x+w*i, y, wEff["P"], hHoraire/4, ha = 'g', wrap = False)
+            
+            if not rotation and seance.intituleDansDeroul and seance.intitule != "":
+                ctx.select_font_face ("Sans", cairo.FONT_SLANT_ITALIC,
+                                      cairo.FONT_WEIGHT_NORMAL)
+                ctx.set_source_rgb (0,0,0)
+                show_text_rect(ctx, seance.intitule, x+w*i, y + hHoraire/4, 
+                               w, h-hHoraire/4, ha = 'g')
             
         if typParent == "R":
             curseur[1] += h
@@ -784,9 +790,11 @@ def Draw_seance(ctx, seance, curseur, typParent = "", rotation = False):
             if seance.typeSeance == "S":
                 curseur[1] += hHoraire * seance.GetDuree()
 
-            
-
-        
+#        elif seance.typeSeance in ["AP", "ED"] and seance.Nombre.v[0]>0:
+#            curs = [curseur[0]+wEff[codeEff]*(t+1), curseur[1]-hHoraire * seance.GetDuree()]
+#            for i in range(seance.Nombre.v[0] -1):
+#                Draw_seance(ctx, s, curseur, typParent = seance.typeSeance, rotation = rotation)
+#        
         
 ######################################################################################  
 def DrawCroisementSystemes(ctx, seance, y):

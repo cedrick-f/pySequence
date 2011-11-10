@@ -12,38 +12,46 @@ import win32com.client
 import wx
 #import excel
 
-
-xl = win32com.client.Dispatch("Excel.Application")
-xl.Visible = 1
-print xl
+xl = None
+def lancerExcel():
+    global xl
+    xl = win32com.client.Dispatch("Excel.Application")
+    
 
 
 def ouvrirFichierExcel(nomFichier = None):
-    mesFormats = u"Classeur Excel (.xls)|*.xls|" \
-                       u"Tous les fichiers|*.*'"
-  
-    if nomFichier == None:
-        dlg = wx.FileDialog(
-                            None, message=u"Ouvrir un classeur Excel",
-#                                defaultDir = self.DossierSauvegarde, 
-                            defaultFile = "",
-                            wildcard = mesFormats,
-                            style=wx.OPEN | wx.MULTIPLE | wx.CHANGE_DIR
-                            )
-        
-        if dlg.ShowModal() == wx.ID_OK:
-            paths = dlg.GetPaths()
-            nomFichier = paths[0]
-        else:
-            nomFichier = ''
-        
-        dlg.Destroy()
-
-    if nomFichier != '':
-        wx.BeginBusyCursor(wx.HOURGLASS_CURSOR)
-        xl.Workbooks.Open(nomFichier)
-        wx.EndBusyCursor()
+    if xl == None:
+        lancerExcel()
+    
+    print xl.ActiveWorkbook
+    if xl.ActiveWorkbook == None:
+        mesFormats = u"Classeur Excel (.xls)|*.xls|" \
+                           u"Tous les fichiers|*.*'"
+      
+        if nomFichier == None:
+            dlg = wx.FileDialog(
+                                None, message=u"Ouvrir un classeur Excel",
+    #                                defaultDir = self.DossierSauvegarde, 
+                                defaultFile = "",
+                                wildcard = mesFormats,
+                                style=wx.OPEN | wx.MULTIPLE | wx.CHANGE_DIR
+                                )
+            
+            if dlg.ShowModal() == wx.ID_OK:
+                paths = dlg.GetPaths()
+                nomFichier = paths[0]
+            else:
+                nomFichier = ''
+            
+            dlg.Destroy()
+    
+        if nomFichier != '':
+            wx.BeginBusyCursor(wx.HOURGLASS_CURSOR)
+            xl.Workbooks.Open(nomFichier)
+            xl.Visible = 1
+            wx.EndBusyCursor()
     return
+
 
 def getSelectionExcel():
     return xl.Selection()

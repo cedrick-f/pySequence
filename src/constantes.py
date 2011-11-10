@@ -72,9 +72,30 @@ CentresInterets = [u"Développement durable et compétitivité des produits",
 Effectifs = {"C" : [u"Classe entière",      32],
              "G" : [u"Effectif réduit",     16],
              "D" : [u"Demi-groupe",         8],
-             "E" : [u"Etude et Projet",     4],
+             "E" : [u"Etude ou Projet",     4],
              "P" : [u"Activité Pratique",   2],
              }
+
+def strEffectif(e):
+    eff = Effectifs[e]
+    if eff[1] == 1:
+        eleves = "élève"
+    else:
+        eleves = "élèves"
+    return eff[0]+" ("+str(eff[1])+" "+eleves+")"
+
+def findEffectif(lst, eff):
+    continuer = True
+    i = 0
+    while continuer:
+        if i > len(lst):
+            continuer = False
+        else:
+            if lst[i][:2] == Effectifs[eff][0][:2]:
+                continuer = False
+            i += 1 
+    return i
+
 
 EffectifsCourt = {"C" : [u"Classe entière",      32],
                   "G" : [u"Effectif réduit",     16],
@@ -180,8 +201,7 @@ Demarches = {"I" : u"Investigation",
              "P" : u"Projet"}
 listeDemarches = ["I", "R", "P"]
 
-dicSavoirs = {"0" : [u"Aucun",[]],
-              "1" : [u"Principes de conception des systèmes de développement durable",
+dicSavoirs = {"1" : [u"Principes de conception des systèmes de développement durable",
                   {"1.1" : [u"Compétitivité et créativité",
                             {"1.1.1" : [u"Paramètres de la compétitivité ",
                                         [u"Importance du service rendu (besoin réel et besoin induit)",
