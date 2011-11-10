@@ -34,6 +34,7 @@ __version__ = "1 beta"
 # Outils "système"
 import sys, os
 import webbrowser
+import win32com
 
 # GUI
 import wx
@@ -80,7 +81,19 @@ import draw_cairo
 # Les constantes partagées
 from constantes import *
 
-
+# Pour lire les classeurs Excel
+import xlrd
+#import xlsgrid as XG
+#from wx.lib.activexwrapper import *
+#from comtypes.client import CreateObject
+#from threading import Event, Thread
+#if wx.Platform == '__WXMSW__':       
+#    from wx.lib.activexwrapper import MakeActiveXClass       
+#    import excel
+#    import word
+#    import wx.lib.iewin as iewin
+    
+import recup_excel
 
 ####################################################################################
 #
@@ -295,9 +308,20 @@ class Sequence():
         self.arbre.Expand(self.brancheSys)
         self.panelPropriete.sendEvent()
         self.arbre.SelectItem(sy.branche)
-        
         return
     
+    ######################################################################################  
+    def AjouterListeSystemes(self, propr = []):
+        for p in propr:
+            sy = Systeme(self, self.panelParent)
+            self.systemes.append(sy)
+            sy.ConstruireArbre(self.arbre, self.brancheSys)
+            self.arbre.Expand(self.brancheSys)
+            sy.SetNom(unicode(p[0]))
+            sy.panelPropriete.MiseAJour()
+        self.panelPropriete.sendEvent()
+        self.MiseAJourListeSystemes()
+        return
     
     ######################################################################################  
     def SupprimerSysteme(self, event = None, item = None):
@@ -306,6 +330,24 @@ class Sequence():
         self.arbre.Delete(item)
         self.panelPropriete.sendEvent()
     
+    
+    ######################################################################################  
+    def SelectSystemes(self, event = None):
+        recup_excel.ouvrirFichierExcel()
+        dlg = wx.MessageDialog(self.app, u"Sélectionner une liste de systèmes, en colonne,\n" \
+                                     u"dans le classeur qui vient de s'ouvrir.",
+                                     u'Selection de systèmes',
+                                     wx.ICON_INFORMATION | wx.YES_NO | wx.CANCEL
+                                     )
+        res = dlg.ShowModal()
+        dlg.Destroy() 
+        if res == wx.ID_YES:
+            ls = recup_excel.getSelectionExcel()
+            self.AjouterListeSystemes(ls)
+        elif res == wx.ID_NO:
+            print "Rien"
+                
+        return
     
     
     ######################################################################################  
@@ -382,7 +424,8 @@ class Sequence():
             self.app.AfficherMenuContextuel([[u"Ajouter une séance", self.AjouterSeance]])
             
         elif self.arbre.GetItemText(itemArbre) == Titres[4]: # Système
-            self.app.AfficherMenuContextuel([[u"Ajouter un système", self.AjouterSysteme]])
+            self.app.AfficherMenuContextuel([[u"Ajouter un système", self.AjouterSysteme], 
+                                             [u"Selectionner depuis un fichier", self.SelectSystemes]])
          
          
             
@@ -1277,7 +1320,33 @@ class Systeme():
     def HitTest(self, x, y):
         if hasattr(self, 'rect') and dansRectangle(x, y, self.rect):
             self.arbre.DoSelectItem(self.branche)
+         
+    
+    
+       
+    ######################################################################################  
+    def OuvrirListeSystemes(self, nomFichier):
+        fichier = open(nomFichier,'r')
+#        try:
+        systemes = ET.parse(fichier).getroot()
+        self.setBranche(systemes)
+        
+        fichier.close()
 
+    ######################################################################################  
+    def EnregistrerListeSystemes(self, nomFichier):
+        wx.BeginBusyCursor(wx.HOURGLASS_CURSOR)
+        fichier = file(nomFichier, 'w')
+        
+        systemes = self.getBranche()
+        indent(systemes)
+        
+        ET.ElementTree(systemes).write(fichier)
+        fichier.close()
+        
+        wx.EndBusyCursor()
+        
+        
 ####################################################################################
 #
 #   Classe définissant le panel conteneur des panels de propriétés
@@ -1350,29 +1419,119 @@ class FenetreSequence(wx.Frame):
         except:
             print "Erreur à l'ouverture de configFiche.cfg" 
         
+        
+        
         #
         # La séquence
         #
         self.sequence = Sequence(self, panelProp)
+        
         
         #
         # Arbre de structure de la séquence
         #
         arbreSeq = ArbreSequence(pnl, self.sequence, panelProp)
         self.arbreSeq = arbreSeq
+        
+        
+        
+        self.nb = wx.Notebook(pnl, -1)
         #
         # Zone graphique de la fiche de séquence
         #
         
 #        panelCentral = wx.ScrolledWindow(pnl, -1, style = wx.HSCROLL | wx.VSCROLL | wx.RETAINED)# | wx.BORDER_SIMPLE)
 #        sizerCentral = wx.GridSizer(1,1)
-        self.ficheSeq = FicheSequence(pnl, self.sequence)
+        self.ficheSeq = FicheSequence(self.nb, self.sequence)
 #        panelCentral.SetScrollRate(5,5)
 #        sizerCentral.Add(self.ficheSeq, flag = wx.ALIGN_CENTER|wx.ALL)#|wx.EXPAND)
 #        panelCentral.SetSizerAndFit(sizerCentral)
         
 #        panelCentral.Bind(wx.EVT_SIZE, self.OnSize)
 #        self.panelCentral = panelCentral
+        self.nb.AddPage(self.ficheSeq, u"Fiche Séquence")
+        
+        #
+        # Le tableau des systèmes
+        #
+#        self.tabSystemes = wx.Panel(self.nb, wx.ID_ANY)
+#        self.nb.AddPage(self.tabSystemes, u"Systèmes")
+        
+        filename = os.path.join(os.getcwd(), "testxy.xls")
+#        book = xlrd.open_workbook(filename, formatting_info=1)
+#        sheetname = "Feuil1"
+#        sheet = book.sheet_by_name(sheetname)
+#        rows, cols = sheet.nrows, sheet.ncols
+#        comments, texts = XG.ReadExcelCOM(filename, sheetname, rows, cols)
+# 
+#        xlsGrid = XG.XLSGrid(self.tabSystemes)
+#        xlsGrid.PopulateGrid(book, sheet, texts, comments)
+        
+        ## Test 1
+#        excelModule =win32com.client.gencache.EnsureModule('{00020813-0000-0000-C000-000000000046}',0,1,0)
+#        excelModule =win32com.client.Dispatch("Word.Application")
+#        win32com.client.gencache.EnsureModule('{00020813-0000-0000-C000-000000000046}', 0, 1, 7)
+#        excelModule = win32com.client.Dispatch("Excel.Application.14")
+#        excelModule = CreateObject("Word.Application")
+
+#        excelModule.Visible=1
+
+#        self.excel = None
+#
+#        # this function creates a new class that can be used as a # wxWindow, but contains the given ActiveX control. 
+#        ActiveXWrapper = MakeActiveXClass(excelModule.Application)
+#
+#        # create an instance of the new class 
+#        self.excel = ActiveXWrapper( self.tabSystemes, -1, style=wx.SUNKEN_BORDER) 
+
+
+        ## Test IE
+#        IEmodule=win32com.client.gencache.EnsureModule('{E AB22AC0-30C1-11CF-A7EB-0000C05BAE0B}',0,1,1)
+#        
+#        InternetExplorerActiveXClass = MakeActiveXClass(IEmodule.WebBrowser, eventObj = self.nb)
+#        self.excel = InternetExplorerActiveXClass(self.nb,-1)
+
+#        InternetExplorerActiveXClass = MakeActiveXClass(IEmodule.WebBrowser,
+#                                                        eventObj = self)
+#        self.WebBrowser = InternetExplorerActiveXClass(self.tabSystemes,-1)
+#        self.WebBrowser.Navigate2(filename)
+#        browserModule=win32com.client.gencache.EnsureModule("{EAB22AC0-30C1-11CF-A7EB-0000C05BAE0B}", 0, 1, 1)
+#        print browserModule
+##        excelModule =win32com.client.Dispatch("Excel.Application")
+#        theClass=MakeActiveXClass(browserModule.WebBrowser, eventObj=self.nb)
+##        theClass=MakeActiveXClass(excelModule.Application, eventObj=self.nb)
+#        self.ie=theClass(self.nb, -1)
+##        lc=wx.LayoutConstraints()
+##        lc.right.SameAs(self.nb , wx.Right)
+##        lc.left.SameAs(self.tabSystemes, wx.Left)
+##        lc.top.SameAs(self.tabSystemes, wx.Top)
+##        lc.bottom.SameAs(self.tabSystemes, wx.Bottom)
+##        self.ie.SetConstraints(lc)
+#        self.whenDocComplete=None
+#
+#        self.ie.Navigate2("http://www.google.fr")
+
+#        Thread(target=self.doSomethingWithIE).start()
+        
+        
+        # Test 3 'excel.py'
+#        browserModule=word
+#        browserModule.Visible = 1
+#        print dir(browserModule)
+#        theClass=MakeActiveXClass(browserModule.Application)#, eventObj=self.nb)
+#        self.excel = theClass(self.nb, -1)
+#        
+#        
+#        self.Layout()
+        
+        
+        # Test 4 IEwin
+#        self.excel = iewin.IEHtmlWindow(self.nb)
+#        self.excel.AddEventSink(self.nb)
+#        print dir(self.excel)
+#        
+#        self.excel.LoadUrl(filename)
+#        self.nb.AddPage(self.excel, u"Systèmes")
         
         #
         # Pour la sauvegarde
@@ -1384,7 +1543,7 @@ class FenetreSequence(wx.Frame):
         #############################################################################################
         # Mise en place de la zone graphique
         #############################################################################################
-        self.mgr.AddPane(self.ficheSeq, 
+        self.mgr.AddPane(self.nb, 
                          aui.AuiPaneInfo().
                          CenterPane()
 #                         Caption(u"Bode").
@@ -1462,6 +1621,29 @@ class FenetreSequence(wx.Frame):
 #        sizer = wx.BoxSizer(wx.HORIZONTAL)
 #        self.SetSizerAndFit(sizer)
     
+#        wx.EVT_WINDOW_DESTROY(self, self.OnDestroy)
+#
+#    def OnDestroy(self, evt):
+#        if self.excel:
+#            self.excel.Cleanup()
+#            self.excel = None 
+                        
+#    def OnDocumentComplete(self, *others):
+#        print "... inside OnDocumentComplete"
+#        self.whenDocComplete.set()
+#        print "    event set inside OnDocumentComplete"
+#        raise Exception, "... inside OnDocumentComplete"
+#
+#    def doSomethingWithIE(self):
+#        print "... inside doSomethingWithIE"
+#        if self.ie.ReadyState!=4:
+#            print "    creating event inside doSomethingWithIE"
+#            self.whenDocComplete=Event()
+#            print "    waiting inside doSomethingWithIE"
+#            self.whenDocComplete.wait()
+#        print "... obtaining an item from IE document"
+#        print "    item obtained: %s" % self.ie.Document.getElementsByTagName("input") [ 0 ].name
+#        raise Exception, "... inside doSomethingWithIE"
     
     def CreateMenuBar(self):
         # create menu
@@ -1536,6 +1718,7 @@ class FenetreSequence(wx.Frame):
         self.definirNomFichierCourant(nomFichier)
         self.ficheSeq.Redessiner()
         self.sequence.VerifPb()
+        
         
         
     ###############################################################################################
@@ -1755,14 +1938,14 @@ class FicheSequence(wx.ScrolledWindow):
 
     #############################################################################            
     def OnResize(self, evt):
-#        print "OnSize fiche",
+        print "OnSize fiche",
         w = self.GetClientSize()[0]
-#        print w
+        print w
         self.SetVirtualSize((w,w*29/21)) # Mise au format A4
 #        self.ficheSeq.FitInside()
 
         self.InitBuffer()
-        if w > 0:
+        if w > 0 and self.IsShown():
             self.Redessiner()
 
 
