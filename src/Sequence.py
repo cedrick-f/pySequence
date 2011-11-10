@@ -2822,7 +2822,7 @@ class ArbreSequence(CT.CustomTreeCtrl):
                         "ED" : images.Icone_ED,
                         "AP" : images.Icone_AP,
                         
-                        "P"  : images.Icone_cours,
+                        "P"  : images.Icone_projet,
                         "SA" : images.Icone_cours,
                         "SS" : images.Icone_cours}
         self.images = {}
