@@ -103,23 +103,23 @@ def ouvrirConfig():
 ouvrirConfig()
 
     
-Competences = {"CO1.1" : u"Justifier les choix des matériaux, des structures d'un système et les énergies mises en oeuvre dans une approche de développement durable",
-               "CO1.2" : u"Justifier le choix d'une solution selon des contraintes d'ergonomie et d'effets sur la santé de l'homme et du vivant",
-               "CO2.1" : u"Identifier les flux et la forme de l'énergie, caractériser ses transformations et/ou modulations et estimer l'efficacité énergétique globale d'un système",
-               "CO2.2" : u"Justifier les solutions constructives d'un système au regard des impacts environnementaux et économiques engendrés tout au long de son cycle de vie",
-               "CO3.1" : u"Décoder le cahier des charges fonctionnel d'un système",
-               "CO3.2" : u"Evaluer la compétitivité d'un système d'un point de vue technique et économique",
-               "CO4.1" : u"Identifier et caractériser les fonctions et les constituants d'un système ainsi que ses entrées/sorties",
-               "CO4.2" : u"Identifier et caractériser l'agencement  matériel et/ou logiciel d'un système", 
-               "CO4.3" : u"Identifier et caractériser le fonctionnement temporel d'un système",
-               "CO4.4" : u"Identifier et caractériser des solutions techniques relatives aux matériaux, à la structure, à l'énergie et aux informations (acquisition, traitement, transmission) d'un système",
-               "CO5.1" : u"Expliquer des éléments d'une modélisation proposée relative au comportement de tout ou partie d'un système",
-               "CO5.2" : u"Identifier des variables internes et externes utiles à une modélisation, simuler et valider le comportement du modèle",
-               "CO5.3" : u"Evaluer un écart entre le comportement du réel et le comportement du modèle en fonction des paramètres proposés",
-               "CO6.1" : u"Décrire une idée, un principe, une solution, un projet en utilisant des outils de représentation adaptés",
-               "CO6.2" : u"Décrire le fonctionnement et/ou l'exploitation d'un système en utilisant l'outil de description le plus pertinent",
-               "CO6.3" : u"Présenter et argumenter des démarches, des résultats, y compris dans une langue étrangère",
-               }
+#Competences = {"CO1.1" : u"Justifier les choix des matériaux, des structures d'un système et les énergies mises en oeuvre dans une approche de développement durable",
+#               "CO1.2" : u"Justifier le choix d'une solution selon des contraintes d'ergonomie et d'effets sur la santé de l'homme et du vivant",
+#               "CO2.1" : u"Identifier les flux et la forme de l'énergie, caractériser ses transformations et/ou modulations et estimer l'efficacité énergétique globale d'un système",
+#               "CO2.2" : u"Justifier les solutions constructives d'un système au regard des impacts environnementaux et économiques engendrés tout au long de son cycle de vie",
+#               "CO3.1" : u"Décoder le cahier des charges fonctionnel d'un système",
+#               "CO3.2" : u"Evaluer la compétitivité d'un système d'un point de vue technique et économique",
+#               "CO4.1" : u"Identifier et caractériser les fonctions et les constituants d'un système ainsi que ses entrées/sorties",
+#               "CO4.2" : u"Identifier et caractériser l'agencement  matériel et/ou logiciel d'un système", 
+#               "CO4.3" : u"Identifier et caractériser le fonctionnement temporel d'un système",
+#               "CO4.4" : u"Identifier et caractériser des solutions techniques relatives aux matériaux, à la structure, à l'énergie et aux informations (acquisition, traitement, transmission) d'un système",
+#               "CO5.1" : u"Expliquer des éléments d'une modélisation proposée relative au comportement de tout ou partie d'un système",
+#               "CO5.2" : u"Identifier des variables internes et externes utiles à une modélisation, simuler et valider le comportement du modèle",
+#               "CO5.3" : u"Evaluer un écart entre le comportement du réel et le comportement du modèle en fonction des paramètres proposés",
+#               "CO6.1" : u"Décrire une idée, un principe, une solution, un projet en utilisant des outils de représentation adaptés",
+#               "CO6.2" : u"Décrire le fonctionnement et/ou l'exploitation d'un système en utilisant l'outil de description le plus pertinent",
+#               "CO6.3" : u"Présenter et argumenter des démarches, des résultats, y compris dans une langue étrangère",
+#               }
 
 dicCompetences = {"O1" : [u"Caractériser des systèmes privilégiant un usage raisonné du point de vue développement durable",
                           {"CO1.1" : [u"Justifier les choix des matériaux, des structures d'un système et les énergies mises en oeuvre dans une approche de développement durable",],
@@ -143,6 +143,8 @@ dicCompetences = {"O1" : [u"Caractériser des systèmes privilégiant un usage r
                           {"CO6.1" : [u"Décrire une idée, un principe, une solution, un projet en utilisant des outils de représentation adaptés"],
                            "CO6.2" : [u"Décrire le fonctionnement et/ou l'exploitation d'un système en utilisant l'outil de description le plus pertinent"],
                            "CO6.3" : [u"Présenter et argumenter des démarches, des résultats, y compris dans une langue étrangère",]}]}
+
+
 
 TypesActivite = {"ED" : u"Activité d'étude de dossier",
                  "AP" : u"Activité pratique",
@@ -297,17 +299,15 @@ dicSavoirs = {"0" : u"Aucun",
                   ],}
 
 
+
+
 def getSavoir(code, dic = dicSavoirs, c = None):
     if c == None:
         c = len(code.split("."))
-#    print "getSavoir", code, c,
     if dic.has_key(code):
-#        print
         return dic[code][0]
-        
     else:
         cd = code[:-2*(c-1)]
-#        print "-->" ,cd
         return getSavoir(code, dic[cd][1], c-1)
     
     
@@ -315,14 +315,10 @@ def getSavoir(code, dic = dicSavoirs, c = None):
 def getCompetence(code, dic = dicCompetences, c = None):
     if c == None:
         c = len(code.split("."))
-    print "getCompetence", code, c,
     if dic.has_key(code):
-        print
         return dic[code][0]
-        
     else:
         cd = code[1:-2*(c-1)]
-        print "-->" ,cd
         return getCompetence(code, dic[cd][1], c-1)
 
 ####################################################################################

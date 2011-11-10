@@ -8,6 +8,49 @@ Created on 24 oct. 2011
 
 #import du module permettant la liaison avec excel
 import xlrd
+import win32com.client
+import wx
+#import excel
+
+
+xl = win32com.client.Dispatch("Excel.Application")
+xl.Visible = 1
+print xl
+
+
+def ouvrirFichierExcel(nomFichier = None):
+    mesFormats = u"Classeur Excel (.xls)|*.xls|" \
+                       u"Tous les fichiers|*.*'"
+  
+    if nomFichier == None:
+        dlg = wx.FileDialog(
+                            None, message=u"Ouvrir un classeur Excel",
+#                                defaultDir = self.DossierSauvegarde, 
+                            defaultFile = "",
+                            wildcard = mesFormats,
+                            style=wx.OPEN | wx.MULTIPLE | wx.CHANGE_DIR
+                            )
+        
+        if dlg.ShowModal() == wx.ID_OK:
+            paths = dlg.GetPaths()
+            nomFichier = paths[0]
+        else:
+            nomFichier = ''
+        
+        dlg.Destroy()
+
+    if nomFichier != '':
+        wx.BeginBusyCursor(wx.HOURGLASS_CURSOR)
+        xl.Workbooks.Open(nomFichier)
+        wx.EndBusyCursor()
+    return
+
+def getSelectionExcel():
+    return xl.Selection()
+    return xl.ActiveCell()
+    return xl.ActiveWorkbook.ActiveSheet.ActiveCell()
+
+
 
 # ouverture du fichier Excel 
 wb = xlrd.open_workbook('CI_savoirs.xls')

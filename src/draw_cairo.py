@@ -39,7 +39,7 @@ import cairo
 
 import ConfigParser
 
-from constantes import Effectifs, listeDemarches, Demarches, Competences, getSavoir, getCompetence, EffectifsCourt
+from constantes import Effectifs, listeDemarches, Demarches, getSavoir, getCompetence, EffectifsCourt
 
 #
 # Données pour le tracé

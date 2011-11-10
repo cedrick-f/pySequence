@@ -19,7 +19,8 @@ from glob import glob
 # Fichiers MSVC
 data_files = [("Microsoft.VC90.CRT", glob(r'msvcr90.dll')), 
               ("Microsoft.VC90.CRT", glob(r'Microsoft.VC90.CRT.manifest')),
-              "configuration.cfg", "gpl.txt", "CurseurInsert.ico"]
+              "configuration.cfg", "gpl.txt", 
+              ]
 
 
 options = {    "py2exe" : { "compressed": True,
