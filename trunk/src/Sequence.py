@@ -73,7 +73,7 @@ import functools
 import xml.etree.ElementTree as ET
 
 # des widgets wx évolués "faits maison"
-from CedWidgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_ENTIER_POS
+from CedWidgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_ENTIER_POS, VAR_REEL_POS_STRICT
 
 # Les constantes et les fonctions de dessin
 import draw_cairo
@@ -335,18 +335,18 @@ class Sequence():
     def SelectSystemes(self, event = None):
         recup_excel.ouvrirFichierExcel()
         dlg = wx.MessageDialog(self.app, u"Sélectionner une liste de systèmes, en colonne,\n" \
-                                     u"dans le classeur qui vient de s'ouvrir.",
-                                     u'Selection de systèmes',
-                                     wx.ICON_INFORMATION | wx.YES_NO | wx.CANCEL
-                                     )
+                                         u"dans le classeur Excel qui vient de s'ouvrir,\n", \
+                                         u"puis appuyer sur Ok."
+                                         u'Sélection de systèmes',
+                                         wx.ICON_INFORMATION | wx.YES_NO | wx.CANCEL
+                                         )
         res = dlg.ShowModal()
         dlg.Destroy() 
         if res == wx.ID_YES:
             ls = recup_excel.getSelectionExcel()
             self.AjouterListeSystemes(ls)
         elif res == wx.ID_NO:
-            print "Rien"
-                
+            print "Rien" 
         return
     
     
@@ -389,6 +389,11 @@ class Sequence():
         for sy in self.systemes:
             sy.ConstruireArbre(arbre, self.brancheSys)    
             
+            
+    def reconstruireBrancheSeances(self):
+        self.arbre.DeleteChildren(self.brancheSce)
+        for sce in self.seance:
+            sce.ConstruireArbre(self.arbre, self.brancheSce) 
             
     ######################################################################################  
     def AfficherMenuContextuel(self, itemArbre):    
@@ -763,10 +768,15 @@ class Seance():
         self.effectif = "C"
         self.demarche = "I"
         self.systemes = []
+        self.code = u""
+        
         for i in range(8):
             self.systemes.append(Variable(u"", lstVal = 0, nomNorm = "", typ = VAR_ENTIER_POS, 
                                  bornes = [0,8], modeLog = False,
                                  expression = None, multiple = False))
+        self.nombre = Variable(u"Nombre", lstVal = 1, nomNorm = "", typ = VAR_ENTIER_POS, 
+                              bornes = [1,10], modeLog = False,
+                              expression = None, multiple = False)
         
         # Les autres données
         self.typeParent = typeParent
@@ -788,7 +798,7 @@ class Seance():
     
     ######################################################################################  
     def __repr__(self):
-        t = self.typeSeance + self.code 
+        t = self.code 
 #        t += " " +str(self.GetDuree()) + "h"
 #        t += " " +str(self.effectif)
 #        for s in self.sousSeances:
@@ -931,7 +941,7 @@ class Seance():
                     codeEff = ""
         else:
             for k, v in Effectifs.items():
-                if v[0] == val:
+                if v[0][:2] == val[:2]: # On ne compare que les 2 premières lettres
                     codeEff = k
         self.effectif = codeEff
         
@@ -1040,6 +1050,9 @@ class Seance():
             self.panelPropriete.MiseAJourDuree()
 
         
+    ######################################################################################  
+    def SetNombre(self, nombre):
+        self.nombre.v[0] = nombre
             
         
     ######################################################################################  
@@ -1123,7 +1136,7 @@ class Seance():
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
         self.arbre = arbre
-        self.codeBranche = wx.StaticText(self.arbre, -1, u"")
+        self.codeBranche = wx.StaticText(self.arbre, -1, self.code)
         if self.typeSeance != "":
             image = self.arbre.images[self.typeSeance]
         else:
@@ -2398,7 +2411,8 @@ class PanelPropriete_Seance(PanelPropriete):
         #
         # Durée de la séance
         #
-        vcDuree = VariableCtrl(self, seance.duree, coef = 0.5, labelMPL = False, signeEgal = True, slider = False, fct = None, help = "")
+        vcDuree = VariableCtrl(self, seance.duree, coef = 0.5, labelMPL = False, signeEgal = True, slider = False,
+                               help = u"Durée de la séance en heures")
 #        textctrl = wx.TextCtrl(self, -1, u"1")
         self.Bind(EVT_VAR_CTRL, self.EvtText, vcDuree)
         self.vcDuree = vcDuree
@@ -2419,12 +2433,12 @@ class PanelPropriete_Seance(PanelPropriete):
         self.cbEff = cbEff
         self.titreEff = titre
         
-        nombre = wx.StaticText(self, -1, u"")
-        self.nombre = nombre
+#        nombre = wx.StaticText(self, -1, u"")
+#        self.nombre = nombre
         
         self.sizer.Add(titre, (3,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 2)
         self.sizer.Add(cbEff, (3,1), flag = wx.EXPAND)
-        self.sizer.Add(self.nombre, (3,2))
+#        self.sizer.Add(self.nombre, (3,2))
         
         #
         # Démarche
@@ -2441,12 +2455,22 @@ class PanelPropriete_Seance(PanelPropriete):
         self.cbDem = cbDem
         self.titreDem = titre
         
-        nombre = wx.StaticText(self, -1, u"")
-        self.nombre = nombre
+#        nombre = wx.StaticText(self, -1, u"")
+#        self.nombre = nombre
         
         self.sizer.Add(titre, (4,0), flag = wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT|wx.LEFT, border = 2)
         self.sizer.Add(cbDem, (4,1), flag = wx.EXPAND)
-        self.sizer.Add(self.nombre, (4,2))
+#        self.sizer.Add(self.nombre, (4,2))
+        
+        #
+        # Nombre de séances en parallèle
+        #
+        vcNombre = VariableCtrl(self, seance.nombre, labelMPL = False, signeEgal = True, slider = False, 
+                                help = u"Nombre de groupes réalisant simultanément la même séance")
+        self.Bind(EVT_VAR_CTRL, self.EvtText, vcNombre)
+        self.vcNombre = vcNombre
+        self.sizer.Add(vcNombre, (5,0), (1, 2))
+        
         
         #
         #Systèmes
@@ -2484,7 +2508,10 @@ class PanelPropriete_Seance(PanelPropriete):
         
     #############################################################################            
     def EvtText(self, event):
-        self.seance.SetDuree(event.GetVar().v[0])
+        if event.GetId() == self.vcDuree:
+            self.seance.SetDuree(event.GetVar().v[0])
+        elif event.GetId() == self.vcNombre:
+            self.seance.SetNombre(event.GetVar().v[0])
         self.sendEvent()
         
     #############################################################################            
@@ -2520,18 +2547,18 @@ class PanelPropriete_Seance(PanelPropriete):
         print "EvtComboBoxEff", self,
         self.seance.SetEffectif(event.GetString())  
         print self.seance.effectif
-        l = Effectifs.values()
-        continuer = True
-        i = 0
-        while continuer:
-            if i>=len(l):
-                continuer = False
-            else:
-                if l[i][0] == event.GetString():
-                    n = l[i][1]
-                    continuer = False
-            i += 1
-        self.nombre.SetLabel(u" (" + str(n) + u" élèves)")
+#        l = Effectifs.values()
+#        continuer = True
+#        i = 0
+#        while continuer:
+#            if i>=len(l):
+#                continuer = False
+#            else:
+#                if l[i][0] == event.GetString():
+#                    n = l[i][1]
+#                    continuer = False
+#            i += 1
+#        self.nombre.SetLabel(u" (" + str(n) + u" élèves)")
         self.sendEvent()
 
 
@@ -2619,7 +2646,7 @@ class PanelPropriete_Seance(PanelPropriete):
 #        n = self.cbEff.GetSelection()   
         self.cbEff.Clear()
         for s in listEff:
-            self.cbEff.Append(Effectifs[s][0])
+            self.cbEff.Append(strEffectif(s))
         self.cbEff.SetSelection(0)
         
         
@@ -2637,6 +2664,12 @@ class PanelPropriete_Seance(PanelPropriete):
             self.titreDem.Show(False)
             listDem = []
         
+        # Nombre
+        if self.seance.typeSeance in ["AP", "ED"]:
+            self.vcNombre.Show(True)
+        else:
+            self.vcNombre.Show(False) 
+            
         self.cbDem.Clear()
         for s in listDem:
             self.cbDem.Append(Demarches[s])
@@ -2655,7 +2688,7 @@ class PanelPropriete_Seance(PanelPropriete):
         self.textctrl.ChangeValue(self.seance.intitule)
         self.vcDuree.mofifierValeursSsEvt()
         if self.cbEff.IsEnabled() and self.cbEff.IsShown():
-            self.cbEff.SetSelection(self.cbEff.GetStrings().index(Effectifs[self.seance.effectif][0]))
+            self.cbEff.SetSelection(findEffectif(self.cbEff.GetStrings(), self.seance.effectif))
         
         if self.cbDem.IsEnabled() and self.cbDem.IsShown():
             self.cbDem.SetSelection(self.cbDem.GetStrings().index(Demarches[self.seance.demarche]))
@@ -3404,7 +3437,7 @@ class ArbreSequence(CT.CustomTreeCtrl):
                     if not isinstance(dataTarget, Seance):
                         self.SetCursor(wx.StockCursor(wx.CURSOR_NO_ENTRY))
                     else:
-                        if dataTarget != dataSource and dataTarget.parent == dataSource.parent:
+                        if dataTarget != dataSource:# and dataTarget.parent == dataSource.parent:
                             self.SetCursor(self.CurseurInsert)
                         else:
                             self.SetCursor(wx.StockCursor(wx.CURSOR_ARROW))
@@ -3444,6 +3477,30 @@ class ArbreSequence(CT.CustomTreeCtrl):
                     lst[t] = dataSource
                     dataTarget.parent.OrdonnerSeances()
                     self.SortChildren(self.GetItemParent(self.item))
+                    self.panelVide.sendEvent() # Solution pour déclencher un "redessiner"
+                
+                elif dataTarget != dataSource and dataTarget.parent != dataSource.parent:
+                    if isinstance(dataTarget.parent, Sequence):
+                        lstT = dataTarget.parent.seance
+                    else:
+                        lstT = dataTarget.parent.sousSeances
+                    
+                    if isinstance(dataSource.parent, Sequence):
+                        lstS = dataSource.parent.seance
+                    else:
+                        lstS = dataSource.parent.sousSeances
+                    print lstS
+                    print lstT
+                    s = lstS.index(dataSource)
+                    t = lstT.index(dataTarget)
+                    lstT[t+1:t+1] = [dataSource]
+                    del lstS[s]
+                    p = dataSource.parent
+                    dataSource.parent = dataTarget.parent
+                    dataTarget.parent = p
+                    dataSource.parent.OrdonnerSeances()
+                    dataTarget.parent.OrdonnerSeances()
+                    self.sequence.reconstruireBrancheSeances()
                     self.panelVide.sendEvent() # Solution pour déclencher un "redessiner"
                 else:
                     pass
