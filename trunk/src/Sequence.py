@@ -2823,8 +2823,8 @@ class ArbreSequence(CT.CustomTreeCtrl):
                         "AP" : images.Icone_AP,
                         
                         "P"  : images.Icone_projet,
-                        "SA" : images.Icone_cours,
-                        "SS" : images.Icone_cours}
+                        "SA" : images.Icone_synthese_Act,
+                        "SS" : images.Icone_synthese_Seq}
         self.images = {}
         il = wx.ImageList(20, 20)
         for k, i in dicimages.items() + imagesSeance.items():
