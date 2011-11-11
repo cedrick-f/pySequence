@@ -3,7 +3,7 @@ from wx.lib.embeddedimage import PyEmbeddedImage
 ######################################################################################################
 # Supprimer tout ce qui suit avant compilation
 #####################################################################################################
-#----------------------------------------------------------------------
+
 #----------------------------------------------------------------------
 Icone_AP = PyEmbeddedImage(
     "iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IArs4c6QAAAAZiS0dE"
@@ -274,28 +274,6 @@ getCurseurInsertData = CurseurInsert.GetData
 getCurseurInsertImage = CurseurInsert.GetImage
 getCurseurInsertBitmap = CurseurInsert.GetBitmap
 getCurseurInsertIcon = CurseurInsert.GetIcon
-
-#----------------------------------------------------------------------
-v = PyEmbeddedImage(
-    "iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAMAAAC6V+0/AAAAB3RJTUUH2wsKDwQaPhLsegAA"
-    "AAlwSFlzAABOIAAATiABFn2Z3gAAAARnQU1BAACxjwv8YQUAAAE7UExURf///9jY2XyDgmho"
-    "Z2VpXV5hZWRdZWpscoeHh7S2qvHr7XdpbZzEqGaLcWeGZGqTY2WJXIGrbN3l41pbV7W1uKy0"
-    "s0bDKCuXJi+lIy2nGy21FjGpHDG1FyuUGePy3qqdqjSIKjGXJzXGGoKyfW13crKrrCqLJkSY"
-    "JHSKa3R2axp6C+fm5xuLE0KeFXqYdXh4eDBzLOXX5uba8ry6wrzEw664xLnEuMLqvC+KMIKZ"
-    "fMW6xsGuv7aqt6yrst3a4S2VMKipqB9wIYKme3x4gsXGx/Pr9YZ6hsi70j2nQ0uEVMjlyFKw"
-    "UuHc20SpOoWohmOyWVy1YoqnlX2khIKGfGe5Z13BYez284mWh3PGdH7LgYe2hpK1jHqHd5HW"
-    "kYPQfJHji5zYo6HanUKIJaPdobHSqih3GLCdqpyXofH17ZgnD6UAAAABdFJOUwBA5thmAAAB"
-    "P0lEQVR42m2QfTMCURSHz6ai9Eqcvd3NWi8rNr3YUEoRsVwUiqJVifj+n8DZmOEPzzlz58xz"
-    "58xv7gUA+IR/6I3V8XisqqpzfPgm7tUeDUdOT3h7z0gAxX7fJgb2hMFgGLgHKNP44mD/kFwD"
-    "KHX/8PTc7fYyAGbnl3Qdap0iyYNWu0W0qZr+h3q09ehI0RCNZlOIpsgZxm1D3FHQuWxdVC4t"
-    "ISzpSqpcC+vGBXCKCKZZR8yapplCxNoZraNeKJUPK9WjsnmMqFdrJ5ROl9l83tzN7+0jagW9"
-    "SOsxdGxOkqQdJssaamlKj+mJBJO3DMNIbTPGvuW6zhjn8Q0IKpwzpmFyE0Bd1mTOFWJFUcji"
-    "Kr19YRFlFudKXOFxzhIJvkRB/tlAMBQKO0Qi4XB0bj5Gnyy5ptwej9vr8VK7p2d88AVxgUhf"
-    "Wykl+gAAAABJRU5ErkJggg==")
-getvData = v.GetData
-getvImage = v.GetImage
-getvBitmap = v.GetBitmap
-getvIcon = v.GetIcon
 
 #----------------------------------------------------------------------
 Icone_centreinteret = PyEmbeddedImage(
