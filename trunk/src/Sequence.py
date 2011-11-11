@@ -41,6 +41,7 @@ import wx
 from wx.lib.wordwrap import wordwrap
 import wx.lib.hyperlink as hl
 import  wx.lib.scrolledpanel as scrolled
+import wx.combo
 
 # Graphiques vectoriels
 try:
@@ -57,8 +58,6 @@ try:
 except ImportError: # if it's not there locally, try the wxPython lib.
     import wx.lib.agw.customtreectrl as CT
 
-# Les icones des branches de l'abre et un curseur perso
-import images
 
 # Gestionnaire de "pane"
 try:
@@ -755,7 +754,7 @@ class Seance():
                 typeSceance = type de séance parmi "TypeSeance"
                 typeParent = type du parent de la séance :  0 = séquence
                                                             1 = séance "Rotation"
-                                                            2 = séance "Série"
+                                                            2 = séance "parallèle"
         """
         
         # Les données sauvegardées
@@ -951,10 +950,11 @@ class Seance():
 
     ######################################################################################  
     def VerifPb(self):
-        self.SignalerPbEffectif(self.IsEffectifOk())
-        if self.EstSousSeance():
+        print "VerifPb", self
+        self.SignalerPb(self.IsEffectifOk(), self.IsNSystemesOk())
+        if self.typeSeance in ["R", "S"] and len(self.sousSeances) > 0:
             for s in self.sousSeances:
-                self.VerifPb()
+                s.VerifPb()
         
     ######################################################################################  
     def IsEffectifOk(self):
@@ -984,28 +984,59 @@ class Seance():
             elif self.typeSeance == "S":
                 if self.GetEffectif() > 16:
                     ok = 2 # Effectif de la séance supperieur à celui du groupe "effectif réduit"
-         
+        elif self.typeSeance in ["AP", "ED"] and not self.EstSousSeance():
+            if self.GetEffectif() < 8:
+                ok = 1 # Tout le groupe "effectif réduit" n'est pas occupé
 #        print ok
         return ok
             
-    
+    ######################################################################################  
+    def IsNSystemesOk(self):
+        """ Teste s'il y a un problème de nombre de systèmes disponibles
+        """
+        ok = 0 # pas de problème
+        if self.typeSeance in ["AP", "ED"]:
+            print "IsNSystemeOk", self
+            n = self.GetNbrSystemes()
+#            print n
+            seq = self.GetApp().sequence
+#            print seq.systemes
+            for i, s in enumerate(seq.systemes):
+                if n.has_key(s.nom) and n[s.nom] > s.nbrDispo.v[0]:
+                    ok = 1
+        return ok
     
     ######################################################################################  
-    def SignalerPbEffectif(self, etat):
+    def SignalerPb(self, etatEff, etatSys):
         if hasattr(self, 'codeBranche'):
+            etat = max(etatEff, etatSys)
             if etat == 0:
-                self.codeBranche.SetBackgroundColour('white')
-                self.codeBranche.SetToolTipString(u"")
+                couleur = 'white'
             elif etat == 1 :
-                self.codeBranche.SetBackgroundColour('gold')
-                self.codeBranche.SetToolTipString(u"Tout le groupe \"effectif réduit\" n'est pas occupé")
+                couleur = 'gold'
             elif etat == 2:
-                self.codeBranche.SetBackgroundColour('orange')
-                self.codeBranche.SetToolTipString(u"Effectif de la séance supperieur à celui du groupe \"effectif réduit\"")
+                couleur = 'orange'
             elif etat == 3:
-                self.codeBranche.SetBackgroundColour('red')
-                self.codeBranche.SetToolTipString(u"Séances en rotation d'effectifs différents !!")
+                couleur = 'red'
+            
+            if etatEff == 0:
+                message = u""
+            elif etatEff == 1 :
+                message = u"Tout le groupe \"effectif réduit\" n'est pas occupé"
+            elif etatEff == 2:
+                message = u"Effectif de la séance supperieur à celui du groupe \"effectif réduit\""
+            elif etatEff == 3:
+                message = u"Séances en rotation d'effectifs différents !!"
+                
+            if etatSys == 0:
+                message += u""
+            elif etatSys == 1 :
+                message += u"Nombre de systèmes nécessaires supérieur au nombre de systèmes disponibles."
+                
+            self.codeBranche.SetBackgroundColour(couleur)
+            self.codeBranche.SetToolTipString(message)
             self.codeBranche.Refresh()
+    
     
     ######################################################################################  
     def GetDuree(self):
@@ -1096,8 +1127,11 @@ class Seance():
             self.panelPropriete.AdapterAuType()
         
         if self.EstSousSeance() and self.parent.typeSeance in ["R","S"]:
-            self.parent.SignalerPbEffectif(self.parent.IsEffectifOk())
+            self.parent.SignalerPb(self.parent.IsEffectifOk(), 0)
         
+        if self.typeSeance in ["AP","ED"]:
+            self.SignalerPb(0, self.IsNSystemesOk())
+            
         if hasattr(self, 'arbre'):
             self.arbre.SetItemImage(self.branche, self.arbre.images[self.typeSeance])
             self.arbre.Refresh()
@@ -1284,12 +1318,16 @@ class Systeme():
         
         self.parent = parent
         self.nom = nom
+        self.nbrDispo = Variable(u"Nombre dispo", lstVal = 1, nomNorm = "", typ = VAR_ENTIER_POS, 
+                              bornes = [0,20], modeLog = False,
+                              expression = None, multiple = False)
+        self.image = wx.EmptyBitmap(100,100)
         
         self.panelPropriete = PanelPropriete_Systeme(panelParent, self)
         
     ######################################################################################  
     def __repr__(self):
-        return self.nom
+        return self.nom+"("+str(self.nbrDispo.v[0])+")"
         
     ######################################################################################  
     def getBranche(self):
@@ -1305,7 +1343,9 @@ class Systeme():
         self.SetNom(nom)
         self.panelPropriete.MiseAJour()
 
-        
+    ######################################################################################  
+    def SetNombre(self):
+        self.parent.VerifPb()
          
     ######################################################################################  
     def SetNom(self, nom):
@@ -1868,7 +1908,8 @@ class FenetreSequence(wx.Frame):
             PDFsurface = cairo.PDFSurface(path, 595, 842)
             ctx = cairo.Context (PDFsurface)
             ctx.scale(820, 820) 
-            self.sequence.Draw(ctx)
+#            self.sequence.Draw(ctx)
+            draw_cairo.Draw(ctx, self.sequence)
             self.DossierSauvegarde = os.path.split(path)[0]
         else:
             dlg.Destroy()
@@ -2381,7 +2422,7 @@ class PanelPropriete_Seance(PanelPropriete):
         # Type de séance
         #
         titre = wx.StaticText(self, -1, u"Type :")
-        cbType = wx.ComboBox(self, -1, u"Choisir un type de séance",
+        cbType = wx.combo.BitmapComboBox(self, -1, u"Choisir un type de séance",
                              choices = [],
                              style = wx.CB_DROPDOWN
                              | wx.TE_PROCESS_ENTER
@@ -2602,7 +2643,9 @@ class PanelPropriete_Seance(PanelPropriete):
         """
         print "AdapterAuType"
         
+        #
         # Type de parent
+        #
         if self.seance.EstSousSeance():
             listType = listeTypeActivite
             if not self.seance.parent.EstSousSeance():
@@ -2612,15 +2655,17 @@ class PanelPropriete_Seance(PanelPropriete):
         
         listTypeS = []
         for t in listType:
-            listTypeS.append(TypesSeance[t])
+            listTypeS.append((TypesSeance[t], imagesSeance[t].GetBitmap()))
         
         n = self.cbType.GetSelection()   
         self.cbType.Clear()
         for s in listTypeS:
-            self.cbType.Append(s)
+            self.cbType.Append(s[0], s[1])
         self.cbType.SetSelection(n)
         
+        #
         # Durée
+        #
         if self.seance.typeSeance in ["R", "S"]:
             self.vcDuree.Activer(False)
         
@@ -2725,28 +2770,103 @@ class PanelPropriete_Systeme(PanelPropriete):
         
         PanelPropriete.__init__(self, parent)
         
+        #
+        # Nom
+        #
         titre = wx.StaticText(self, -1, u"Nom du système :")
-        
-        # Prévoir un truc pour que la liste des compétences tienne compte de celles déja choisies
-        # idée : utiliser cb.CLear, Clear.Append ou cb.Delete
-        
         textctrl = wx.TextCtrl(self, -1, u"")
         self.textctrl = textctrl
         
         self.sizer.Add(titre, (0,0))
         self.sizer.Add(textctrl, (0,1), flag = wx.EXPAND)
         
+        #
+        # Nombre de systèmes disponibles en parallèle
+        #
+        vcNombre = VariableCtrl(self, systeme.nbrDispo, labelMPL = False, signeEgal = True, slider = False, 
+                                help = u"Nombre de d'exemplaires de ce système disponibles simultanément.")
+        self.Bind(EVT_VAR_CTRL, self.EvtVar, vcNombre)
+        self.vcNombre = vcNombre
+        self.sizer.Add(vcNombre, (1,0), (1, 2))
+        
+        #
+        # Image
+        #
+        box = wx.StaticBox(self, -1, u"Image du système")
+        bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
+        image = wx.StaticBitmap(self, -1, wx.NullBitmap)
+        self.image = image
+        self.SetImage()
+        bsizer.Add(image, flag = wx.EXPAND)
+        
+        
+        bt = wx.Button(self, -1, u"Changer l'image")
+        bsizer.Add(bt, flag = wx.EXPAND)
+        self.Bind(wx.EVT_BUTTON, self.OnClick, bt)
+        self.sizer.Add(bsizer, (0,3), (2,1), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 2)
+
+        
+        
+        
         self.sizer.Layout()
         
         self.Bind(wx.EVT_TEXT, self.EvtText, textctrl)
         
         
+    #############################################################################            
+    def OnClick(self, event):
         
+        print event.GetId()
+        mesFormats = u"Fichier Image|*.bmp;*.png;*.jpg;*.jpeg;*.gif;*.pcx;*.pnm;*.tif;*.tiff;*.tga;*.iff;*.xpm;*.ico;*.ico;*.cur;*.ani|" \
+                       u"Tous les fichiers|*.*'"
+        
+        dlg = wx.FileDialog(
+                            self, message=u"Ouvrir une image",
+#                            defaultDir = self.DossierSauvegarde, 
+                            defaultFile = "",
+                            wildcard = mesFormats,
+                            style=wx.OPEN | wx.MULTIPLE | wx.CHANGE_DIR
+                            )
+            
+        # Show the dialog and retrieve the user response. If it is the OK response, 
+        # process the data.
+        if dlg.ShowModal() == wx.ID_OK:
+            # This returns a Python list of files that were selected.
+            paths = dlg.GetPaths()
+            nomFichier = paths[0]
+            self.systeme.image = wx.Image(nomFichier).ConvertToBitmap()
+            self.SetImage()
+        
+        
+        
+        dlg.Destroy()
+        
+    #############################################################################            
+    def SetImage(self):
+        w, h = self.systeme.image.GetSize()
+        print w, h, "-->",
+        wf, hf = 200.0, 100.0
+        r = max(w/wf, h/hf)
+        _w, _h = w/r, h/r
+        print _w, _h
+        img = self.systeme.image.ConvertToImage().Scale(_w, _h).ConvertToBitmap()
+        self.image.SetBitmap(img)
+        
+        
+    #############################################################################            
     def EvtText(self, event):
         self.systeme.SetNom(event.GetString())
         self.systeme.parent.MiseAJourListeSystemes()
         self.sendEvent()
         
+    #############################################################################            
+    def EvtVar(self, event):
+        print "EvtVar"
+#        if event.GetId() == self.vcNombre:
+        self.systeme.SetNombre()
+        self.sendEvent()
+        
+    #############################################################################            
     def MiseAJour(self, sendEvt = False):
         self.textctrl.ChangeValue(self.systeme.nom)
         if sendEvt:
@@ -2843,24 +2963,7 @@ class ArbreSequence(CT.CustomTreeCtrl):
         #
         # Les icones des branches
         #
-        dicimages = {"Seq" : images.Icone_sequence,
-                       "Com" : images.Icone_competence,
-                       "Sav" : images.Icone_savoirs,
-                       "Obj" : images.Icone_objectif,
-                       "Ci" : images.Icone_centreinteret,
-                       "Sys" : images.Icone_systeme,
-
-                       }
-        imagesSeance = {"R" : images.Icone_rotation,
-                        "S" : images.Icone_parallele,
-                        "E" : images.Icone_evaluation,
-                        "C" : images.Icone_cours,
-                        "ED" : images.Icone_ED,
-                        "AP" : images.Icone_AP,
-                        
-                        "P"  : images.Icone_projet,
-                        "SA" : images.Icone_synthese_Act,
-                        "SS" : images.Icone_synthese_Seq}
+        
         self.images = {}
         il = wx.ImageList(20, 20)
         for k, i in dicimages.items() + imagesSeance.items():

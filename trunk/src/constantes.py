@@ -33,6 +33,8 @@ Created on 26 oct. 2011
 @author: Cedrick
 '''
 
+# Les icones des branches de l'abre et un curseur perso
+import images
 
 #
 # Les deuxlignes suivantes permettent de lancer le script sequence.py depuis n'importe
@@ -340,6 +342,33 @@ def getCompetence(code, dic = dicCompetences, c = None):
     else:
         cd = code[1:-2*(c-1)]
         return getCompetence(code, dic[cd][1], c-1)
+
+
+####################################################################################
+#
+#   Définition des constantes pour la spécialité ITEC
+#
+####################################################################################
+dicimages = {"Seq" : images.Icone_sequence,
+               "Com" : images.Icone_competence,
+               "Sav" : images.Icone_savoirs,
+               "Obj" : images.Icone_objectif,
+               "Ci" : images.Icone_centreinteret,
+               "Sys" : images.Icone_systeme,
+
+                       }
+imagesSeance = {"R" : images.Icone_rotation,
+                "S" : images.Icone_parallele,
+                "E" : images.Icone_evaluation,
+                "C" : images.Icone_cours,
+                "ED" : images.Icone_ED,
+                "AP" : images.Icone_AP,
+                
+                "P"  : images.Icone_projet,
+                "SA" : images.Icone_synthese_Act,
+                "SS" : images.Icone_synthese_Seq}
+
+
 
 ####################################################################################
 #
