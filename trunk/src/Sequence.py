@@ -94,6 +94,9 @@ import xlrd
     
 import recup_excel
 
+import Options
+
+
 ####################################################################################
 #
 #   Evenement perso pour détecter une modification de la séquence
@@ -505,6 +508,12 @@ class Sequence():
                         continuer = False
                 i += 1
         
+    #############################################################################
+    def AppliquerOptions(self):
+        self.CI.AppliquerOptions()
+        for o in self.obj.values():
+            o.AppliquerOptions()
+        self.prerequis.AppliquerOptions()
         
 ####################################################################################
 #
@@ -555,7 +564,7 @@ class CentreInteret():
         self.num = num
         if num != None:
             self.code = "CI"+str(self.num+1)
-            self.CI = CentresInterets[self.num]
+            self.CI = CentresInterets[TYPE_ENSEIGNEMENT][self.num]
             
             if hasattr(self, 'arbre'):
                 self.SetCode()
@@ -573,11 +582,15 @@ class CentreInteret():
         
 
         
+    #############################################################################
     def HitTest(self, x, y):
         rect = draw_cairo.posCI + draw_cairo.tailleCI
         if dansRectangle(x, y, (rect,)):
             self.arbre.DoSelectItem(self.branche)
         
+    #############################################################################
+    def AppliquerOptions(self):
+        self.panelPropriete.construire()
             
             
 ####################################################################################
@@ -659,6 +672,9 @@ class Competences():
                                         image = self.arbre.images["Com"])
         
         
+    #############################################################################
+    def AppliquerOptions(self):
+        return
 #    ######################################################################################  
 #    def AfficherMenuContextuel(self, itemArbre):
 #        if itemArbre == self.branche:
@@ -709,6 +725,10 @@ class Savoirs():
         self.branche = arbre.AppendItem(branche, u"Savoirs", wnd = self.codeBranche, data = self,
                                         image = self.arbre.images["Sav"])
          
+    #############################################################################
+    def AppliquerOptions(self):
+        return
+    
 #    ######################################################################################  
 #    def SetNum(self, num):
 #        self.num = num
@@ -1475,7 +1495,27 @@ class FenetreSequence(wx.Frame):
         except:
             print "Erreur à l'ouverture de configFiche.cfg" 
         
+        #
+        # Pour la sauvegarde
+        #
+        self.fichierCourant = ""
+        self.DossierSauvegarde = ""
+        self.fichierCourantModifie = False
         
+        #############################################################################################
+        # Instanciation et chargement des options
+        #############################################################################################
+        options = Options.Options()
+        if options.fichierExiste():
+            try :
+                options.ouvrir()
+            except:
+                print "Fichier d'options corrompus ou inexistant !! Initialisation ..."
+                options.defaut()
+
+        
+        # On applique les options ...
+        self.DefinirOptions(options)
         
         #
         # La séquence
@@ -1589,11 +1629,9 @@ class FenetreSequence(wx.Frame):
 #        self.excel.LoadUrl(filename)
 #        self.nb.AddPage(self.excel, u"Systèmes")
         
-        #
-        # Pour la sauvegarde
-        #
-        self.fichierCourant = ""
-        self.DossierSauvegarde = ""
+        
+        
+        
         
         
         #############################################################################################
@@ -1670,6 +1708,8 @@ class FenetreSequence(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnAide, id=21)
         self.Bind(wx.EVT_MENU, self.OnAbout, id=22)
         
+        self.Bind(wx.EVT_MENU, self.OnOptions, id=31)
+        
         # Interception de la demande de fermeture
         self.Bind(wx.EVT_CLOSE, self.quitter)
         
@@ -1677,30 +1717,9 @@ class FenetreSequence(wx.Frame):
 #        sizer = wx.BoxSizer(wx.HORIZONTAL)
 #        self.SetSizerAndFit(sizer)
     
-#        wx.EVT_WINDOW_DESTROY(self, self.OnDestroy)
-#
-#    def OnDestroy(self, evt):
-#        if self.excel:
-#            self.excel.Cleanup()
-#            self.excel = None 
-                        
-#    def OnDocumentComplete(self, *others):
-#        print "... inside OnDocumentComplete"
-#        self.whenDocComplete.set()
-#        print "    event set inside OnDocumentComplete"
-#        raise Exception, "... inside OnDocumentComplete"
-#
-#    def doSomethingWithIE(self):
-#        print "... inside doSomethingWithIE"
-#        if self.ie.ReadyState!=4:
-#            print "    creating event inside doSomethingWithIE"
-#            self.whenDocComplete=Event()
-#            print "    waiting inside doSomethingWithIE"
-#            self.whenDocComplete.wait()
-#        print "... obtaining an item from IE document"
-#        print "    item obtained: %s" % self.ie.Document.getElementsByTagName("input") [ 0 ].name
-#        raise Exception, "... inside doSomethingWithIE"
+
     
+    ###############################################################################################
     def CreateMenuBar(self):
         # create menu
         mb = wx.MenuBar()
@@ -1713,15 +1732,20 @@ class FenetreSequence(wx.Frame):
         file_menu.AppendSeparator()
         file_menu.Append(wx.ID_EXIT, u"Quitter")
 
+        tool_menu = wx.Menu()
+        tool_menu.Append(31, u"Options")
+
         help_menu = wx.Menu()
         help_menu.Append(21, u"Aide en ligne")
         help_menu.AppendSeparator()
         help_menu.Append(22, u"A propos")
 
         mb.Append(file_menu, "&Fichier")
+        mb.Append(tool_menu, "&Outils")
         mb.Append(help_menu, "&Aide")
         
         self.SetMenuBar(mb)
+        
         
     ###############################################################################################
     def OnSeqModified(self, event):
@@ -1745,22 +1769,66 @@ class FenetreSequence(wx.Frame):
         wx.BeginBusyCursor(wx.HOURGLASS_CURSOR)
         fichier = file(nomFichier, 'w')
         
+        
+        
+        # La séquence
         sequence = self.sequence.getBranche()
         
-        indent(sequence)
-        print sequence.text
-        ET.ElementTree(sequence).write(fichier)
+        # La classe
+        classe = ET.Element("Classe")
+        classe.set("Type", TYPE_ENSEIGNEMENT)
+        eff = ET.SubElement(classe, "Effectifs")
+        for e in listeEffectifs:
+            eff.set(e, str(Effectifs[e][1]))
+            
+        if TYPE_ENSEIGNEMENT == 'ET':
+            ci = ET.SubElement(classe, "CentreInteret")
+            for i,c in enumerate(CentresInterets[TYPE_ENSEIGNEMENT]):
+                ci.set("CI"+str(i+1), c)
+        
+        # La racine
+        root = ET.Element("Sequence_Classe")
+        root.append(sequence)
+        root.append(classe)
+        indent(root)
+        
+        ET.ElementTree(root).write(fichier)
+        
+        
         fichier.close()
         self.definirNomFichierCourant(nomFichier)
         wx.EndBusyCursor()
         
     ###############################################################################################
     def ouvrir(self, nomFichier):
+        global TYPE_ENSEIGNEMENT
         print "ouvrir", nomFichier
         fichier = open(nomFichier,'r')
 #        try:
-        sequence = ET.parse(fichier).getroot()
+        root = ET.parse(fichier).getroot()
+        
+        # La séquence
+        sequence = root.find("Sequence")
         self.sequence.setBranche(sequence)
+        
+        # La classe
+        classe = root.find("Classe")
+        te = classe.get("Type")
+        if te == 'ET':
+            ci = classe.find("CentreInteret")
+            if ci != None:
+                lstCI = []
+                for i,c in enumerate(CentresInterets[TYPE_ENSEIGNEMENT]):
+                    lstCI.append(ci.get("CI"+str(i+1)))
+        
+        TYPE_ENSEIGNEMENT = te
+        eff = classe.find("Effectifs")
+        for e in listeEffectifs:
+            Effectifs[e][1] = eval(eff.get(e))
+        if te == 'ET':
+            CentresInterets[TYPE_ENSEIGNEMENT] = lstCI
+        
+        
         
         self.arbreSeq.DeleteAllItems()
         self.sequence.ConstruireArbre(self.arbreSeq)
@@ -1924,6 +1992,13 @@ class FenetreSequence(wx.Frame):
         except:
             print "   Erreur enregistrement options...",
             
+        try:
+            self.options.enregistrer()
+        except IOError:
+            print "   Permission d'enregistrer les options refusée...",
+        except:
+            print "   Erreur enregistrement options...",
+            
 #        event.Skip()
         if not self.fichierCourantModifie:
             self.fermer()
@@ -1957,6 +2032,58 @@ class FenetreSequence(wx.Frame):
     def OnAide(self, event):
         webbrowser.open('http://code.google.com/p/pysequence/wiki/Aide')
         
+    #############################################################################
+    def OnOptions(self, event, page = 0):
+        options = self.options.copie()
+#        print options
+        dlg = Options.FenOptions(self, options)
+        dlg.CenterOnScreen()
+        dlg.nb.SetSelection(page)
+
+        # this does not return until the dialog is closed.
+        val = dlg.ShowModal()
+    
+        if val == wx.ID_OK:
+#            print options
+            self.DefinirOptions(options)
+            self.AppliquerOptions()
+            
+        else:
+            pass
+#            print "You pressed Cancel"
+
+        dlg.Destroy()
+        
+    #############################################################################
+    def DefinirOptions(self, options):
+        global TYPE_ENSEIGNEMENT
+        self.options = options.copie()
+        #
+        # Options de Classe
+        #
+        
+        te = self.options.optClasse["TypeEnseignement"]
+        lstCI = self.options.optClasse["CentresInteretET"]
+        if self.fichierCourantModifie and (te != TYPE_ENSEIGNEMENT \
+           or (te == 'ET' and getTextCI(CentresInterets[TYPE_ENSEIGNEMENT]) != lstCI)):
+            dlg = wx.MessageDialog(self, u"Type de classe incompatible !\n\n" \
+                                         u"Fermer la séquence en cours d'élaboration\n" \
+                                         u"avant de modifier des options de la classe.",
+                               'Type de classe incompatible',
+                               wx.OK | wx.ICON_INFORMATION
+                               #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
+                               )
+            dlg.ShowModal()
+            dlg.Destroy()
+        else:
+            TYPE_ENSEIGNEMENT = te
+            setValEffectifs(self.options.optClasse["Effectifs"])
+            if te == 'ET':
+                CentresInterets[TYPE_ENSEIGNEMENT] = getListCI(lstCI)
+           
+    #############################################################################
+    def AppliquerOptions(self):
+        self.sequence.AppliquerOptions()
         
 ####################################################################################
 #
@@ -1995,9 +2122,9 @@ class FicheSequence(wx.ScrolledWindow):
 
     #############################################################################            
     def OnResize(self, evt):
-        print "OnSize fiche",
+#        print "OnSize fiche",
         w = self.GetClientSize()[0]
-        print w
+#        print w
         self.SetVirtualSize((w,w*29/21)) # Mise au format A4
 #        self.ficheSeq.FitInside()
 
@@ -2206,16 +2333,8 @@ class PanelPropriete_CI(PanelPropriete):
 #                CentresInterets, 1, wx.RA_SPECIFY_COLS
 #                )
         
-        grid1 = wx.FlexGridSizer( 0, 2, 0, 0 )
-        self.group_ctrls = []
-        for i, ci in enumerate(CentresInterets):
-            if i == 0 : s = wx.RB_GROUP
-            else: s = 0
-            r = wx.RadioButton(self, -1, "CI"+str(i+1), style = s )
-            t = wx.StaticText(self, -1, ci)
-            grid1.Add( r, 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_LEFT|wx.LEFT|wx.RIGHT|wx.TOP, 2 )
-            grid1.Add( t, 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_LEFT|wx.LEFT|wx.RIGHT, 5 )
-            self.group_ctrls.append((r, t))
+       
+        self.construire()
             
 #        cb = wx.ComboBox(self, -1, u"Choisir un CI",
 #                         choices = CentresInterets,
@@ -2228,17 +2347,35 @@ class PanelPropriete_CI(PanelPropriete):
 #        self.titre = titre
         
 #        self.sizer.Add(titre, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 2)
-        self.sizer.Add(grid1, (0,1), flag = wx.EXPAND)
-        self.sizer.Layout()
+#        self.sizer.Add(self.grid1, (0,1), flag = wx.EXPAND)
+#        self.sizer.Layout()
 #        self.Bind(wx.EVT_COMBOBOX, self.EvtComboBox, cb)
         for radio, text in self.group_ctrls:
             self.Bind(wx.EVT_RADIOBUTTON, self.EvtComboBox, radio )
         
     #############################################################################            
+    def construire(self):
+        self.DestroyChildren()
+        if hasattr(self, 'grid1'):
+            self.sizer.Remove(self.grid1)
+        self.grid1 = wx.FlexGridSizer( 0, 2, 0, 0 )
+        self.group_ctrls = []
+        for i, ci in enumerate(CentresInterets[TYPE_ENSEIGNEMENT]):
+            if i == 0 : s = wx.RB_GROUP
+            else: s = 0
+            r = wx.RadioButton(self, -1, "CI"+str(i+1), style = s )
+            t = wx.StaticText(self, -1, ci)
+            self.grid1.Add( r, 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_LEFT|wx.LEFT|wx.RIGHT|wx.TOP, 2 )
+            self.grid1.Add( t, 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_LEFT|wx.LEFT|wx.RIGHT, 5 )
+            self.group_ctrls.append((r, t))
+        self.sizer.Add(self.grid1, (0,1), flag = wx.EXPAND)
+        self.sizer.Layout()
+        
+    #############################################################################            
     def EvtComboBox(self, event):
-        print "EvtComboBox",
+#        print "EvtComboBox",
         radio_selected = eval(event.GetEventObject().GetLabel()[2:])
-        print radio_selected
+#        print radio_selected
         self.CI.SetNum(radio_selected-1)
 
         self.Layout()
@@ -2285,7 +2422,7 @@ class PanelPropriete_Competences(PanelPropriete):
 
 
     def OnSize(self, event):
-        print self.GetClientSize()
+#        print self.GetClientSize()
         self.win.SetMinSize(self.GetClientSize())
         self.Layout()
         event.Skip()
@@ -2293,18 +2430,18 @@ class PanelPropriete_Competences(PanelPropriete):
     ######################################################################################  
     def SetCompetences(self): 
 #        self.savoirs.savoirs = lst
-        print self.competence.competences
+#        print self.competence.competences
         self.sendEvent()
         
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
-        print "MiseAJour"
+#        print "MiseAJour"
         self.arbre.UnselectAll()
         for s in self.competence.competences:
             i = self.arbre.get_item_by_label(s, self.arbre.GetRootItem())
-            print i
+#            print i
             if i.IsOk():
-                print i
+#                print i
                 self.arbre.CheckItem2(i)
         
         if sendEvt:
@@ -3713,7 +3850,7 @@ class ArbreSavoirs(CT.CustomTreeCtrl):
         self.savoirs = savoirs
         
         self.root = self.AddRoot(u"Savoirs")
-        self.Construire(self.root, dicSavoirs)
+        self.Construire(self.root, dicSavoirs[TYPE_ENSEIGNEMENT])
         
         self.ExpandAll()
         
@@ -3805,7 +3942,7 @@ class ArbreCompetences(CT.CustomTreeCtrl):
         self.savoirs = savoirs
         
         self.root = self.AddRoot(u"Compétences")
-        self.Construire(self.root, dicCompetences)
+        self.Construire(self.root, dicCompetences[TYPE_ENSEIGNEMENT])
         
         self.ExpandAll()
         
@@ -3904,7 +4041,15 @@ def indent(elem, level=0):
         if level and (not elem.tail or not elem.tail.strip()):
             elem.tail = i
 
-
+def listesEgales(l1, l2):
+    if len(l1) != len(l2):
+        return False
+    else:
+        
+        for e1, e2 in zip(l1,l2):
+            if e1 != e2:
+                return False
+    return True
 
 def dansRectangle(x, y, rect):
     for r in rect:

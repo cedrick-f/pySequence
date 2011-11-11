@@ -39,7 +39,7 @@ import cairo
 
 import ConfigParser
 
-from constantes import Effectifs, listeDemarches, Demarches, getSavoir, getCompetence, EffectifsCourt
+from constantes import Effectifs, listeDemarches, Demarches, getSavoir, getCompetence
 
 #
 # Données pour le tracé
@@ -388,7 +388,7 @@ def Draw(ctx, seq):
         ctx.rectangle(x, y, w, h)
         ctx.stroke()
         ctx.set_source_rgb(0.6, 0.8, 0.6)
-        show_text_rect(ctx, EffectifsCourt[e][0], x, y, w, h)
+        show_text_rect(ctx, Effectifs[e][2], x, y, w, h)
         ctx.stroke()
         DrawLigneEff(ctx, x+w, y+h)
         

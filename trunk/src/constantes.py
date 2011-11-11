@@ -48,103 +48,40 @@ os.chdir(PATH)
 sys.path.append(PATH)
 print "Dossier de l'application :",PATH
 
+import ConfigParser
+
+####################################################################################
+#
+#   Définition des images
+#
+####################################################################################
+dicimages = {"Seq" : images.Icone_sequence,
+               "Com" : images.Icone_competence,
+               "Sav" : images.Icone_savoirs,
+               "Obj" : images.Icone_objectif,
+               "Ci" : images.Icone_centreinteret,
+               "Sys" : images.Icone_systeme,
+
+                       }
+imagesSeance = {"R" : images.Icone_rotation,
+                "S" : images.Icone_parallele,
+                "E" : images.Icone_evaluation,
+                "C" : images.Icone_cours,
+                "ED" : images.Icone_ED,
+                "AP" : images.Icone_AP,
+                
+                "P"  : images.Icone_projet,
+                "SA" : images.Icone_synthese_Act,
+                "SS" : images.Icone_synthese_Seq}
+
+
+
 ####################################################################################
 #
 #   Définition des constantes pour l'enseignement transversal
 #
 ####################################################################################
-import ConfigParser
-CentresInterets = [u"Développement durable et compétitivité des produits",
-                   u"Design, créativité et innovation",
-                   u"Caractéristiques des matériaux et structures",
-                   u"Solutions constructives des matériaux et des structures",
-                   u"Dimensionnement des structures et choix des matériaux",
-                   u"Efficacité énergétique liée au comportement des matériaux et des structures",
-                   u"Formes et caractéristiques de l'énergie",
-                   u"Organisation structurelle et solutions constructives des chaînes d'énergie",
-                   u"Amélioration de l'efficacité énergétique dans les chaînes d'énergie",
-                   u"Amélioration de la gestion de l'énergie",
-                   u"Formes et caractéristiques de l'information",
-                   u"Organisation structurelle et solutions constructives des chaînes d'information",
-                   u"Commande temporelle des systèmes",
-                   u"Informations liées au comportement des matériaux et des structures",
-                   u"Optimisation des paramètres par simulation globale"
-                   ]
-
-Effectifs = {"C" : [u"Classe entière",      32],
-             "G" : [u"Effectif réduit",     16],
-             "D" : [u"Demi-groupe",         8],
-             "E" : [u"Etude ou Projet",     4],
-             "P" : [u"Activité Pratique",   2],
-             }
-
-def strEffectif(e):
-    eff = Effectifs[e]
-    if eff[1] == 1:
-        eleves = "élève"
-    else:
-        eleves = "élèves"
-    return eff[0]+" ("+str(eff[1])+" "+eleves+")"
-
-def findEffectif(lst, eff):
-    continuer = True
-    i = 0
-    while continuer:
-        if i > len(lst):
-            continuer = False
-        else:
-            if lst[i][:2] == Effectifs[eff][0][:2]:
-                continuer = False
-            i += 1 
-    return i
-
-
-EffectifsCourt = {"C" : [u"Classe entière",      32],
-                  "G" : [u"Effectif réduit",     16],
-                  "D" : [u"Demi-groupe",         8],
-                  "E" : [u"Etude et Projet",     4],
-                  "P" : [u"A Pratique",   2],
-                     }
-
-def ouvrirConfig():
-    print "ouvrirConfig"
-    global CentresInterets
-    
-    config = ConfigParser.ConfigParser()
-    config.read(os.path.join(PATH,'configuration.cfg'))
-    
-    section = "Centres d'interet"
-    l = [""] * len(config.options(section))
-    for o in config.options(section):
-        l[eval(o)-1] = unicode(config.get(section,o), 'cp1252')
-    CentresInterets = l
-        
-    section = "Effectifs classe"
-    for k in Effectifs.keys():
-        Effectifs[k][1] = config.getint(section,k)
-
-ouvrirConfig()
-
-    
-#Competences = {"CO1.1" : u"Justifier les choix des matériaux, des structures d'un système et les énergies mises en oeuvre dans une approche de développement durable",
-#               "CO1.2" : u"Justifier le choix d'une solution selon des contraintes d'ergonomie et d'effets sur la santé de l'homme et du vivant",
-#               "CO2.1" : u"Identifier les flux et la forme de l'énergie, caractériser ses transformations et/ou modulations et estimer l'efficacité énergétique globale d'un système",
-#               "CO2.2" : u"Justifier les solutions constructives d'un système au regard des impacts environnementaux et économiques engendrés tout au long de son cycle de vie",
-#               "CO3.1" : u"Décoder le cahier des charges fonctionnel d'un système",
-#               "CO3.2" : u"Evaluer la compétitivité d'un système d'un point de vue technique et économique",
-#               "CO4.1" : u"Identifier et caractériser les fonctions et les constituants d'un système ainsi que ses entrées/sorties",
-#               "CO4.2" : u"Identifier et caractériser l'agencement  matériel et/ou logiciel d'un système", 
-#               "CO4.3" : u"Identifier et caractériser le fonctionnement temporel d'un système",
-#               "CO4.4" : u"Identifier et caractériser des solutions techniques relatives aux matériaux, à la structure, à l'énergie et aux informations (acquisition, traitement, transmission) d'un système",
-#               "CO5.1" : u"Expliquer des éléments d'une modélisation proposée relative au comportement de tout ou partie d'un système",
-#               "CO5.2" : u"Identifier des variables internes et externes utiles à une modélisation, simuler et valider le comportement du modèle",
-#               "CO5.3" : u"Evaluer un écart entre le comportement du réel et le comportement du modèle en fonction des paramètres proposés",
-#               "CO6.1" : u"Décrire une idée, un principe, une solution, un projet en utilisant des outils de représentation adaptés",
-#               "CO6.2" : u"Décrire le fonctionnement et/ou l'exploitation d'un système en utilisant l'outil de description le plus pertinent",
-#               "CO6.3" : u"Présenter et argumenter des démarches, des résultats, y compris dans une langue étrangère",
-#               }
-
-dicCompetences = {"O1" : [u"Caractériser des systèmes privilégiant un usage raisonné du point de vue développement durable",
+dicCompetencesET = {"O1" : [u"Caractériser des systèmes privilégiant un usage raisonné du point de vue développement durable",
                           {"CO1.1" : [u"Justifier les choix des matériaux, des structures d'un système et les énergies mises en oeuvre dans une approche de développement durable",],
                            "CO1.2" : [u"Justifier le choix d'une solution selon des contraintes d'ergonomie et d'effets sur la santé de l'homme et du vivant",]}],
                   "O2" : [u"Identifier les éléments permettant la limitation de l’Impact environnemental d’un système et de ses constituants",
@@ -169,41 +106,9 @@ dicCompetences = {"O1" : [u"Caractériser des systèmes privilégiant un usage r
 
 
 
-TypesActivite = {"ED" : u"Activité d'étude de dossier",
-                 "AP" : u"Activité pratique",
-                 "P"  : u"Activité de projet",
-                }
-
-TypesSeance = {"C"  : u"Cours",
-               "SA" : u"Synthèse d'activité",
-               "SS" : u"Synthèse de séquence",
-               "E"  : u"Evaluation",
-               }
-TypesSeance.update(TypesActivite)
-TypesSeance.update({"R" : u"Rotation d'activités",
-                    "S" : u"Activités en parallèle"})
-
-TypesSeanceCourt = {"ED" : u"Etude de dossier",
-                    "AP" : u"Activité pratique",
-                    "P"  : u"Projet",
-                    "C"  : u"Cours",
-                    "SA" : u"Synt. d'activité",
-                    "SS" : u"Synt. de séquence",
-                    "E"  : u"Evaluation",
-                    "R"  : u"Rotation",
-                    "S"  : u"Parallèle"}
-
-listeTypeSeance = ["ED", "AP", "P", "C", "SA", "SS", "E", "R", "S"]
-listeTypeActivite = ["ED", "AP", "P"]
 
 
-
-Demarches = {"I" : u"Investigation",
-             "R" : u"Résolution de problème",
-             "P" : u"Projet"}
-listeDemarches = ["I", "R", "P"]
-
-dicSavoirs = {"1" : [u"Principes de conception des systèmes de développement durable",
+dicSavoirsET = {"1" : [u"Principes de conception des systèmes de développement durable",
                   {"1.1" : [u"Compétitivité et créativité",
                             {"1.1.1" : [u"Paramètres de la compétitivité ",
                                         [u"Importance du service rendu (besoin réel et besoin induit)",
@@ -321,9 +226,202 @@ dicSavoirs = {"1" : [u"Principes de conception des systèmes de développement d
                   ],}
 
 
+####################################################################################
+#
+#   Définition des constantes pour la spécialité ITEC
+#
+####################################################################################
+
+CentresInteretsITEC = [u"Besoin et performance d'un système",
+                       u"Compétitivité, design et ergonomie des systèmes",
+                       u"Eco-conception des mécanismes",
+                       u"Structure, matériaux et protections d'un système",
+                       u"Transmission de mouvement et de puissance d'un système",
+                       u"Procédés de réalisation"
+                       ]
 
 
-def getSavoir(code, dic = dicSavoirs, c = None):
+
+####################################################################################
+#
+#   Les constantes valables pour tous les enseignements
+#
+####################################################################################
+TypesActivite = {"ED" : u"Activité d'étude de dossier",
+                 "AP" : u"Activité pratique",
+                 "P"  : u"Activité de projet",
+                }
+
+TypesSeance = {"C"  : u"Cours",
+               "SA" : u"Synthèse d'activité",
+               "SS" : u"Synthèse de séquence",
+               "E"  : u"Evaluation",
+               }
+TypesSeance.update(TypesActivite)
+TypesSeance.update({"R" : u"Rotation d'activités",
+                    "S" : u"Activités en parallèle"})
+
+TypesSeanceCourt = {"ED" : u"Etude de dossier",
+                    "AP" : u"Activité pratique",
+                    "P"  : u"Projet",
+                    "C"  : u"Cours",
+                    "SA" : u"Synt. d'activité",
+                    "SS" : u"Synt. de séquence",
+                    "E"  : u"Evaluation",
+                    "R"  : u"Rotation",
+                    "S"  : u"Parallèle"}
+
+listeTypeSeance = ["ED", "AP", "P", "C", "SA", "SS", "E", "R", "S"]
+listeTypeActivite = ["ED", "AP", "P"]
+
+
+
+Demarches = {"I" : u"Investigation",
+             "R" : u"Résolution de problème",
+             "P" : u"Projet"}
+
+listeDemarches = ["I", "R", "P"]
+listEnseigmenent = ['ET', 'ITEC', 'AC', 'EE', 'SIN']
+listeEffectifs = ["C", "G", "D" ,"E" ,"P"]
+
+####################################################################################
+#
+#   Définition des options de la classe
+#
+####################################################################################
+TYPE_ENSEIGNEMENT = 'ET'
+CentresInteretsET = None
+Effectifs = {"C" : [u"Classe entière",      32, u"Classe entière"],
+             "G" : [u"Effectif réduit",     16, u"Effectif réduit"],
+             "D" : [u"Demi-groupe",         8,  u"Demi-groupe"],
+             "E" : [u"Etude et Projet",     4,  u"Etude ou Projet"],
+             "P" : [u"Activité Pratique",   2,  u"A Pratique"],
+             }
+
+def DefOptionsDefaut():
+    global  TYPE_ENSEIGNEMENT, CentresInteretsET
+    
+    #
+    # Options générales
+    #
+    TYPE_ENSEIGNEMENT = 'ET'
+    CentresInteretsET = [u"Développement durable et compétitivité des produits",
+                       u"Design, créativité et innovation",
+                       u"Caractéristiques des matériaux et structures",
+                       u"Solutions constructives des matériaux et des structures",
+                       u"Dimensionnement des structures et choix des matériaux",
+                       u"Efficacité énergétique liée au comportement des matériaux et des structures",
+                       u"Formes et caractéristiques de l'énergie",
+                       u"Organisation structurelle et solutions constructives des chaînes d'énergie",
+                       u"Amélioration de l'efficacité énergétique dans les chaînes d'énergie",
+                       u"Amélioration de la gestion de l'énergie",
+                       u"Formes et caractéristiques de l'information",
+                       u"Organisation structurelle et solutions constructives des chaînes d'information",
+                       u"Commande temporelle des systèmes",
+                       u"Informations liées au comportement des matériaux et des structures",
+                       u"Optimisation des paramètres par simulation globale"
+                       ]
+
+    
+    Effectifs["C"][1] = 32
+    Effectifs["G"][1] = 16
+    Effectifs["D"][1] = 8
+    Effectifs["E"][1] = 4
+    Effectifs["P"][1] = 2
+                 
+    
+DefOptionsDefaut()
+
+####################################################################################
+#
+#   Les constantes par Enseignement
+#
+####################################################################################
+CentresInterets = {'ET'     : CentresInteretsET,
+                   'ITEC'   : CentresInteretsITEC, 
+                   'AC'     : CentresInteretsET, 
+                   'EE'     : CentresInteretsET, 
+                   'SIN'    : CentresInteretsET}
+
+dicCompetences = {'ET'     : dicCompetencesET,
+                  'ITEC'   : dicCompetencesET, 
+                  'AC'     : dicCompetencesET, 
+                  'EE'     : dicCompetencesET, 
+                  'SIN'    : dicCompetencesET}
+
+dicSavoirs = {'ET'     : dicSavoirsET,
+              'ITEC'   : dicSavoirsET, 
+              'AC'     : dicSavoirsET, 
+              'EE'     : dicSavoirsET, 
+              'SIN'    : dicSavoirsET}
+
+def getListCI(txt):
+    return txt.splitlines()
+
+def getTextCI(lst):
+    t = u""
+    print lst
+    for i, ci in enumerate(lst):
+        print i, ci
+        t += ci
+        if i != len(lst)-1:
+            t += "\n"
+    return t
+
+def getTxtEffectifs():
+    t = u""
+    for i, eff in enumerate(listeEffectifs):
+        t += str(Effectifs[eff][1]) +" "
+    return t
+
+
+    
+def setValEffectifs(txt):
+    lst = txt.split()
+    for i, eff in enumerate(listeEffectifs):
+        Effectifs[eff][1] = eval(lst[i])
+    print Effectifs
+
+
+def strEffectif(e):
+    eff = Effectifs[e]
+    if eff[1] == 1:
+        eleves = "élève"
+    else:
+        eleves = "élèves"
+    return eff[0]+" ("+str(eff[1])+" "+eleves+")"
+
+def findEffectif(lst, eff):
+    continuer = True
+    i = 0
+    while continuer:
+        if i > len(lst):
+            continuer = False
+        else:
+            if lst[i][:2] == Effectifs[eff][0][:2]:
+                continuer = False
+            i += 1 
+    return i
+
+
+#def ouvrirConfig():
+#    print "ouvrirConfig"
+#    global CentresInterets
+#    
+#    config = ConfigParser.ConfigParser()
+#    config.read(os.path.join(PATH,'configuration.cfg'))
+#    
+#    section = "Centres d'interet"
+#    l = [""] * len(config.options(section))
+#    for o in config.options(section):
+#        l[eval(o)-1] = unicode(config.get(section,o), 'cp1252')
+#    CentresInterets = l
+#        
+#    section = "Effectifs classe"
+#    for k in Effectifs.keys():
+#        Effectifs[k][1] = config.getint(section,k)
+
+def getSavoir(code, dic = dicSavoirs[TYPE_ENSEIGNEMENT], c = None):
     if c == None:
         c = len(code.split("."))
     if dic.has_key(code):
@@ -334,7 +432,7 @@ def getSavoir(code, dic = dicSavoirs, c = None):
     
     
     
-def getCompetence(code, dic = dicCompetences, c = None):
+def getCompetence(code, dic = dicCompetences[TYPE_ENSEIGNEMENT], c = None):
     if c == None:
         c = len(code.split("."))
     if dic.has_key(code):
@@ -342,44 +440,6 @@ def getCompetence(code, dic = dicCompetences, c = None):
     else:
         cd = code[1:-2*(c-1)]
         return getCompetence(code, dic[cd][1], c-1)
+    
+#ouvrirConfig()
 
-
-####################################################################################
-#
-#   Définition des constantes pour la spécialité ITEC
-#
-####################################################################################
-dicimages = {"Seq" : images.Icone_sequence,
-               "Com" : images.Icone_competence,
-               "Sav" : images.Icone_savoirs,
-               "Obj" : images.Icone_objectif,
-               "Ci" : images.Icone_centreinteret,
-               "Sys" : images.Icone_systeme,
-
-                       }
-imagesSeance = {"R" : images.Icone_rotation,
-                "S" : images.Icone_parallele,
-                "E" : images.Icone_evaluation,
-                "C" : images.Icone_cours,
-                "ED" : images.Icone_ED,
-                "AP" : images.Icone_AP,
-                
-                "P"  : images.Icone_projet,
-                "SA" : images.Icone_synthese_Act,
-                "SS" : images.Icone_synthese_Seq}
-
-
-
-####################################################################################
-#
-#   Définition des constantes pour la spécialité ITEC
-#
-####################################################################################
-
-CentresInteretsItec = [u"Besoin et performance d'un système",
-                   u"Compétitivité, design et ergonomie des systèmes",
-                   u"Eco-conception des mécanismes",
-                   u"Structure, matériaux et protections d'un système",
-                   u"Transmission de mouvement et de puissance d'un système",
-                   u"Procédés de réalisation"
-                   ]
