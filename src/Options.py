@@ -29,7 +29,7 @@
 
 import ConfigParser
 import os.path
-#import wx
+import recup_excel
 
 import wx.combo
 from constantes import *
@@ -314,7 +314,16 @@ class pnlClasse(wx.Panel):
                           style = wx.TE_MULTILINE)
         sbs1.Add(txt, flag = wx.EXPAND|wx.ALL, border = 5)
         txt.Bind(wx.EVT_TEXT, self.EvtTxtCI)
-        self.ns.Add(sbs1, flag = wx.EXPAND|wx.ALL)
+        self.txtCi = txt
+        if self.opt["TypeEnseignement"] != 'ET' :
+            self.txtCi.Enable(False)
+        btn = wx.Button(self, -1, u"Sélectionner")
+        help = u"Sélectionner depuis un fichier Excel"
+        btn.SetToolTip(wx.ToolTip(help))
+        btn.SetHelpText(help)
+        sbs1.Add(btn, flag = wx.EXPAND|wx.ALL, border = 5)
+        self.Bind(wx.EVT_BUTTON, self.SelectCI, btn)
+        self.ns.Add(sbs1, flag = wx.EXPAND|wx.ALL)    
         
         #
         # Effectifs
@@ -330,19 +339,28 @@ class pnlClasse(wx.Panel):
             vc = VariableCtrl(self, v, coef = 1, labelMPL = False, signeEgal = False,
                               help = u"Nombre d'élèves")
             self.Bind(EVT_VAR_CTRL, self.EvtVariableEff, vc)
-            sbs3.Add(vc, flag = wx.EXPAND|wx.ALL, border = 5)
+            sbs3.Add(vc, flag = wx.EXPAND|wx.ALL, border = 2)
         self.ns.Add(sbs3, flag = wx.EXPAND|wx.ALL)
         self.varEff = varEff
         self.SetSizerAndFit(self.ns)
     
     
-    def EvtComboBox(self, event):
-        self.opt["TypeEnseignement"] = event.GetEventObject().GetSelection()
         
+    ######################################################################################  
+    def EvtComboBox(self, event):
+        print event.GetEventObject().GetValue()
+        self.opt["TypeEnseignement"] = event.GetEventObject().GetValue()
+        if self.opt["TypeEnseignement"] != 'ET' :
+            self.txtCi.Enable(False)
+        else:
+            self.txtCi.Enable(True)
+        
+    ######################################################################################  
     def EvtTxtCI(self, event):
         self.opt["CentresInteretET"] =  event.GetString()
         
         
+    ######################################################################################  
     def EvtVariableEff(self, event):
         i = self.varEff.index(event.GetVar())
         te = self.opt["Effectifs"].split()
@@ -351,7 +369,26 @@ class pnlClasse(wx.Panel):
         self.opt["Effectifs"] = t.join(te)
 
 
-
+    ######################################################################################  
+    def SelectCI(self, event = None):
+        if recup_excel.ouvrirFichierExcel():
+            dlg = wx.MessageDialog(self.Parent, u"Sélectionner une liste de CI\n" \
+                                             u"dans le classeur Excel qui vient de s'ouvrir,\n" \
+                                             u"puis appuyer sur Ok.\n\n" \
+                                             u"Format attendu de la selection :\n" \
+                                             u"Liste des CI sur une colonne.",
+                                             u'Sélection de CI',
+                                             wx.ICON_INFORMATION | wx.YES_NO | wx.CANCEL
+                                             )
+            res = dlg.ShowModal()
+            dlg.Destroy() 
+            if res == wx.ID_YES:
+                ls = recup_excel.getColonne(c = 0)
+                ci = getTextCI(ls)
+                self.txtCi.ChangeValue(ci)
+                self.opt["CentresInteretET"] = ci
+            elif res == wx.ID_NO:
+                print "Rien" 
 
 ##########################################################################################################
 #

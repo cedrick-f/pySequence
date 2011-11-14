@@ -441,5 +441,7 @@ def getCompetence(code, dic = dicCompetences[TYPE_ENSEIGNEMENT], c = None):
         cd = code[1:-2*(c-1)]
         return getCompetence(code, dic[cd][1], c-1)
     
+    
+
 #ouvrirConfig()
 

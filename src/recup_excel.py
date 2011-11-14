@@ -50,15 +50,28 @@ def ouvrirFichierExcel(nomFichier = None):
             xl.Workbooks.Open(nomFichier)
             xl.Visible = 1
             wx.EndBusyCursor()
-    return
+            return True
+        else:
+            return False
+    return True
 
 
 def getSelectionExcel():
     return xl.Selection()
-    return xl.ActiveCell()
-    return xl.ActiveWorkbook.ActiveSheet.ActiveCell()
+#    return xl.ActiveCell()
+#    return xl.ActiveWorkbook.ActiveSheet.ActiveCell()
 
-
+def getColonne(sel = None, c = None):
+    """ Renvoie les colonnes (ou seulement la colonne <c>
+        depuis une selection dans une feuille Excel
+    """
+    if sel == None:
+        sel = getSelectionExcel()
+    if c == None:
+        return zip(*sel)
+    else:
+        return zip(*sel)[c]
+        
 
 # ouverture du fichier Excel 
 wb = xlrd.open_workbook('CI_savoirs.xls')

@@ -335,21 +335,26 @@ class Sequence():
     
     ######################################################################################  
     def SelectSystemes(self, event = None):
-        recup_excel.ouvrirFichierExcel()
-        dlg = wx.MessageDialog(self.app, u"Sélectionner une liste de systèmes, en colonne,\n" \
-                                         u"dans le classeur Excel qui vient de s'ouvrir,\n", \
-                                         u"puis appuyer sur Ok."
-                                         u'Sélection de systèmes',
-                                         wx.ICON_INFORMATION | wx.YES_NO | wx.CANCEL
-                                         )
-        res = dlg.ShowModal()
-        dlg.Destroy() 
-        if res == wx.ID_YES:
-            ls = recup_excel.getSelectionExcel()
-            self.AjouterListeSystemes(ls)
-        elif res == wx.ID_NO:
-            print "Rien" 
-        return
+        if recup_excel.ouvrirFichierExcel():
+            dlg = wx.MessageDialog(self.app, u"Sélectionner une liste de systèmes\n" \
+                                             u"dans le classeur Excel qui vient de s'ouvrir,\n" \
+                                             u"puis appuyer sur Ok.\n\n" \
+                                             u"Format attendu de la selection :\n" \
+                                             u"|    colonne 1\t|    colonne 2 \t|    colonne 3  \t|\n" \
+                                             u"|                  \t|    (optionnelle)  \t|    (optionnelle)   \t|\n" \
+                                             u"|  systèmes  \t|  nombre dispo\t| fichiers image\t|\n" \
+                                             u"|  ...               \t|  ...                \t|  ...               \t|\n",
+                                             u'Sélection de systèmes',
+                                             wx.ICON_INFORMATION | wx.YES_NO | wx.CANCEL
+                                             )
+            res = dlg.ShowModal()
+            dlg.Destroy() 
+            if res == wx.ID_YES:
+                ls = recup_excel.getSelectionExcel()
+                self.AjouterListeSystemes(ls)
+            elif res == wx.ID_NO:
+                print "Rien" 
+        
     
     
     ######################################################################################  
@@ -490,13 +495,17 @@ class Sequence():
         rect = draw_cairo.posIntitule + draw_cairo.tailleIntitule
         if dansRectangle(x, y, (rect,)):
             self.arbre.DoSelectItem(self.branche)
+            return self.branche
         elif self.CI.HitTest(x, y):
-            return
+            return self.CI.HitTest(x, y)
         elif dansRectangle(x, y, (draw_cairo.posObj + draw_cairo.tailleObj,)):
             self.arbre.DoSelectItem(self.brancheObj)
+            return self.brancheObj
         elif dansRectangle(x, y, (draw_cairo.posPre + draw_cairo.taillePre,)):
             self.arbre.DoSelectItem(self.branchePre)
+            return self.branchePre
         else:
+            branche = None
             autresZones = self.seance + self.systemes
             continuer = True
             i = 0
@@ -504,9 +513,11 @@ class Sequence():
                 if i >= len(autresZones):
                     continuer = False
                 else:
-                    if autresZones[i].HitTest(x, y):
+                    branche = autresZones[i].HitTest(x, y)
+                    if branche:
                         continuer = False
                 i += 1
+            return branche
         
     #############################################################################
     def AppliquerOptions(self):
@@ -587,6 +598,7 @@ class CentreInteret():
         rect = draw_cairo.posCI + draw_cairo.tailleCI
         if dansRectangle(x, y, (rect,)):
             self.arbre.DoSelectItem(self.branche)
+            return self.branche
         
     #############################################################################
     def AppliquerOptions(self):
@@ -674,7 +686,8 @@ class Competences():
         
     #############################################################################
     def AppliquerOptions(self):
-        return
+        self.panelPropriete.construire()
+        
 #    ######################################################################################  
 #    def AfficherMenuContextuel(self, itemArbre):
 #        if itemArbre == self.branche:
@@ -727,7 +740,7 @@ class Savoirs():
          
     #############################################################################
     def AppliquerOptions(self):
-        return
+        self.panelPropriete.construire()
     
 #    ######################################################################################  
 #    def SetNum(self, num):
@@ -1313,6 +1326,7 @@ class Seance():
     def HitTest(self, x, y):
         if hasattr(self, 'rect') and dansRectangle(x, y, self.rect):
             self.arbre.DoSelectItem(self.branche)
+            return self.branche
         else:
             if self.typeSeance in ["R", "S"]:
                 ls = self.sousSeances
@@ -1320,14 +1334,18 @@ class Seance():
                 return
             continuer = True
             i = 0
+            branche = None
             while continuer:
                 if i >= len(ls):
                     continuer = False
                 else:
-                    if ls[i].HitTest(x, y):
+                    branche = ls[i].HitTest(x, y)
+                    if branche:
                         continuer = False
                 i += 1
-
+            return branche
+        
+        
 ####################################################################################
 #
 #   Classe définissant les propriétés d'un système
@@ -2104,6 +2122,8 @@ class FicheSequence(wx.ScrolledWindow):
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_SIZE, self.OnResize)
         self.Bind(wx.EVT_LEFT_UP, self.OnClick)
+        self.Bind(wx.EVT_LEFT_DCLICK, self.OnDClick)
+        self.Bind(wx.EVT_RIGHT_UP, self.OnRClick)
         self.Bind(wx.EVT_ENTER_WINDOW, self.OnEnter)
 
     ######################################################################################################
@@ -2118,7 +2138,20 @@ class FicheSequence(wx.ScrolledWindow):
         _x, _y = self.CalcUnscrolledPosition(x, y)
         xx, yy = self.ctx.device_to_user(_x, _y)
 #        print "  ", xx, yy
-        self.sequence.HitTest(xx, yy)
+        return self.sequence.HitTest(xx, yy)
+    
+    #############################################################################            
+    def OnDClick(self, evt):
+        print "DClick"
+        self.OnClick(evt)
+        
+    #############################################################################            
+    def OnRClick(self, evt):
+        item = self.OnClick(evt)
+        print "RClick", item
+        if item != None:
+            self.sequence.AfficherMenuContextuel(item)
+        
 
     #############################################################################            
     def OnResize(self, evt):
@@ -2403,24 +2436,22 @@ class PanelPropriete_Competences(PanelPropriete):
         
         PanelPropriete.__init__(self, parent)
         
-        arbre = ArbreCompetences(self, self.competence)
-        self.arbre = arbre
-#        arbre.FitInside()
-        
-#        win.SetScrollRate(20,20)
-#        self.sizer = wx.BoxSizer(wx.VERTICAL)
-#        self.sizer.Add(win, 1, flag = wx.EXPAND)
-        self.sizer.Add(arbre, (0,0), flag = wx.EXPAND)
-        self.sizer.AddGrowableCol(0)
-        self.sizer.AddGrowableRow(0)
-#        self.SetSizer(self.sizer)
-#        self.sizer.FitInside(self)
-#        self.win.FitInside()
+        self.construire()
         
         self.Layout()
         
+    ######################################################################################  
+    def construire(self):
+        self.DestroyChildren()
+#        if hasattr(self, 'arbre'):
+#            self.sizer.Remove(self.arbre)
+        self.arbre = ArbreCompetences(self, self.competence)
+        self.sizer.Add(self.arbre, (0,0), flag = wx.EXPAND)
+        self.sizer.AddGrowableCol(0)
+        self.sizer.AddGrowableRow(0)
+        self.Layout()
 
-
+    ######################################################################################  
     def OnSize(self, event):
 #        print self.GetClientSize()
         self.win.SetMinSize(self.GetClientSize())
@@ -2494,29 +2525,25 @@ class PanelPropriete_Savoirs(PanelPropriete):
         self.savoirs = savoirs
         
         PanelPropriete.__init__(self, parent)
-#        self.Bind(wx.EVT_SIZE, self.OnSize)
         
-#        win = scrolled.ScrolledPanel(self, -1, size = (-1, -1))
-#        self.win = win
+        self.construire()
+
         
-        arbre = ArbreSavoirs(self, self.savoirs)
-        self.arbre = arbre
-#        arbre.FitInside()
         
-#        win.SetScrollRate(20,20)
-#        self.sizer = wx.BoxSizer(wx.VERTICAL)
-#        self.sizer.Add(win, 1, flag = wx.EXPAND)
-        self.sizer.Add(arbre, (0,0), flag = wx.EXPAND)
+        
+    ######################################################################################  
+    def construire(self):
+        self.DestroyChildren()
+#        if hasattr(self, 'arbre'):
+#            self.sizer.Remove(self.arbre)
+        self.arbre = ArbreSavoirs(self, self.savoirs)
+        self.sizer.Add(self.arbre, (0,0), flag = wx.EXPAND)
         self.sizer.AddGrowableCol(0)
         self.sizer.AddGrowableRow(0)
-#        self.SetSizer(self.sizer)
-#        self.sizer.FitInside(self)
-#        self.win.FitInside()
-        
         self.Layout()
         
-
-
+        
+    ######################################################################################  
     def OnSize(self, event):
         print self.GetClientSize()
         self.win.SetMinSize(self.GetClientSize())
