@@ -35,6 +35,8 @@ __version__ = "1 beta"
 import sys, os
 import webbrowser
 import win32com
+import subprocess
+import urllib
 
 # GUI
 import wx
@@ -95,7 +97,7 @@ import xlrd
 import recup_excel
 
 import Options
-
+from wx.lib.embeddedimage import PyEmbeddedImage
 
 ####################################################################################
 #
@@ -123,6 +125,39 @@ Titres = [u"Séquence pédagogique",
           u"Séances",
           u"Systèmes"]
 
+class ElementDeSequence():
+    ######################################################################################  
+    def CreerLien(self, event):
+        print "CreerLien"
+        dlg = URLDialog(None, self.lien)
+        res = dlg.ShowModal()
+        print res
+        url = dlg.GetURL()
+        if os.path.exists(self.lien):
+            try:
+                url = os.path.relpath(url,PATH)
+            except:
+                pass
+        dlg.Destroy() 
+        if res == wx.ID_OK and url != "":
+            self.lien = url
+            print "Lien =", self.lien
+        elif res == wx.ID_CANCEL:
+            print "Rien" 
+        return
+    
+    ######################################################################################  
+    def AfficherLien(self):
+        print "AfficherLien", self.lien
+        if os.path.exists(self.lien):
+            if os.path.isfile(self.lien):
+                os.startfile(self.lien)
+            elif os.path.isdir(self.lien):
+                subprocess.Popen(["explorer", self.lien])
+        else:
+            urllib.urlopen(self.lien)
+#            elif os.path.isabs(self.lien):
+                
 class Sequence():
     def __init__(self, app, panelParent, intitule = u""):
         self.intitule = intitule
@@ -164,8 +199,10 @@ class Sequence():
         sequence = ET.Element("Sequence")
         sequence.set("Intitule", self.intitule)
         
-        ci = ET.SubElement(sequence, "CentreInteret")
-        ci.append(self.CI.getBranche())
+        brancheCI = self.CI.getBranche()
+        if brancheCI:
+            ci = ET.SubElement(sequence, "CentreInteret")
+            ci.append(brancheCI)
         
         prerequis = ET.SubElement(sequence, "Prerequis")
         prerequis.append(self.prerequis.getBranche())
@@ -190,7 +227,8 @@ class Sequence():
         self.intitule = branche.get("Intitule", u"")
         
         brancheCI = branche.find("CentreInteret")
-        self.CI.setBranche(brancheCI)
+        if brancheCI:
+            self.CI.setBranche(brancheCI)
         
         branchePre = branche.find("Prerequis")
         if branchePre != None:
@@ -397,11 +435,17 @@ class Sequence():
             sy.ConstruireArbre(arbre, self.brancheSys)    
             
             
+    ######################################################################################  
     def reconstruireBrancheSeances(self):
         self.arbre.DeleteChildren(self.brancheSce)
         for sce in self.seance:
             sce.ConstruireArbre(self.arbre, self.brancheSce) 
             
+    ######################################################################################  
+    def AfficherLien(self, item):
+        data = self.arbre.GetItemPyData(item)
+        data.AfficherLien()
+        
     ######################################################################################  
     def AfficherMenuContextuel(self, itemArbre):    
         """ Affiche le menu contextuel associé é la séquence
@@ -555,10 +599,8 @@ class CentreInteret():
         if hasattr(self, 'code'):
             print self.code
             root = ET.Element(self.code)
-        else:
-            print
-            root = ET.Element("")
-        return root
+            return root
+        
     
     
     
@@ -778,7 +820,7 @@ class Savoirs():
 #   Classe définissant les propriétés d'une compétence
 #
 ####################################################################################
-class Seance():
+class Seance(ElementDeSequence):
     
                   
     def __init__(self, parent, panelParent, typeSeance = "", typeParent = 0):
@@ -789,6 +831,7 @@ class Seance():
                                                             1 = séance "Rotation"
                                                             2 = séance "parallèle"
         """
+    
         
         # Les données sauvegardées
         self.ordre = 1
@@ -801,6 +844,7 @@ class Seance():
         self.demarche = "I"
         self.systemes = []
         self.code = u""
+        self.lien = ""
         
         for i in range(8):
             self.systemes.append(Variable(u"", lstVal = 0, nomNorm = "", typ = VAR_ENTIER_POS, 
@@ -1292,7 +1336,8 @@ class Seance():
     ######################################################################################  
     def AfficherMenuContextuel(self, itemArbre):
         if itemArbre == self.branche:
-            listItems = [[u"Supprimer", functools.partial(self.parent.SupprimerSeance, item = itemArbre)]]
+            listItems = [[u"Supprimer", functools.partial(self.parent.SupprimerSeance, item = itemArbre)],
+                         [u"Créer un lien", self.CreerLien]]
             if self.typeSeance in ["R", "S"]:
                 listItems.append([u"Ajouter une séance", self.AjouterSeance])
             self.GetApp().AfficherMenuContextuel(listItems)
@@ -1351,7 +1396,7 @@ class Seance():
 #   Classe définissant les propriétés d'un système
 #
 ####################################################################################
-class Systeme():
+class Systeme(ElementDeSequence):
     def __init__(self, parent, panelParent, nom = u""):
         
         self.parent = parent
@@ -1360,7 +1405,7 @@ class Systeme():
                               bornes = [0,20], modeLog = False,
                               expression = None, multiple = False)
         self.image = wx.EmptyBitmap(100,100)
-        
+        self.lien = ""
         self.panelPropriete = PanelPropriete_Systeme(panelParent, self)
         
     ######################################################################################  
@@ -1371,14 +1416,26 @@ class Systeme():
     def getBranche(self):
         """ Renvoie la branche XML de la compétence pour enregistrement
         """
+        print "getBranche systeme", self.nom
         root = ET.Element("Systeme")
         root.set("Nom", self.nom)
+        root.set("Lien", self.lien)
+        root.set("Nbr", str(self.nbrDispo.v[0]))
+        root.set("Image", img2str(self.image.ConvertToImage()))
+        
         return root
     
     ######################################################################################  
     def setBranche(self, branche):
         nom  = branche.get("Nom", "")
         self.SetNom(nom)
+        self.lien = branche.get("Lien", "")
+        self.nbrDispo.v[0] = branche.get("Nbr", 1)
+        self.SetNombre()
+        data = branche.get("Image", "")
+        if data != "":
+            self.image = PyEmbeddedImage(data).GetBitmap()
+        self.panelPropriete.SetImage()
         self.panelPropriete.MiseAJour()
 
     ######################################################################################  
@@ -1408,16 +1465,19 @@ class Systeme():
     ######################################################################################  
     def AfficherMenuContextuel(self, itemArbre):
         if itemArbre == self.branche:
-            self.parent.app.AfficherMenuContextuel([[u"Supprimer", functools.partial(self.parent.SupprimerSysteme, item = itemArbre)]])
+            self.parent.app.AfficherMenuContextuel([[u"Supprimer", functools.partial(self.parent.SupprimerSysteme, item = itemArbre)],
+                                                    [u"Créer un lien", self.CreerLien]])
+            
             
     ######################################################################################  
     def HitTest(self, x, y):
         if hasattr(self, 'rect') and dansRectangle(x, y, self.rect):
             self.arbre.DoSelectItem(self.branche)
-         
+            return self.branche
     
     
-       
+    
+        
     ######################################################################################  
     def OuvrirListeSystemes(self, nomFichier):
         fichier = open(nomFichier,'r')
@@ -2143,7 +2203,8 @@ class FicheSequence(wx.ScrolledWindow):
     #############################################################################            
     def OnDClick(self, evt):
         print "DClick"
-        self.OnClick(evt)
+        item = self.OnClick(evt)
+        self.sequence.AfficherLien(item)
         
     #############################################################################            
     def OnRClick(self, evt):
@@ -3013,8 +3074,8 @@ class PanelPropriete_Systeme(PanelPropriete):
         r = max(w/wf, h/hf)
         _w, _h = w/r, h/r
         print _w, _h
-        img = self.systeme.image.ConvertToImage().Scale(_w, _h).ConvertToBitmap()
-        self.image.SetBitmap(img)
+        self.systeme.image = self.systeme.image.ConvertToImage().Scale(_w, _h).ConvertToBitmap()
+        self.image.SetBitmap(self.systeme.image)
         
         
     #############################################################################            
@@ -3154,6 +3215,7 @@ class ArbreSequence(CT.CustomTreeCtrl):
         self.Bind(CT.EVT_TREE_BEGIN_DRAG, self.OnBeginDrag)
         self.Bind(CT.EVT_TREE_END_DRAG, self.OnEndDrag)
         self.Bind(wx.EVT_MOTION, self.OnMove)
+        self.Bind(wx.EVT_LEFT_DCLICK, self.OnLeftDClick)
         
         self.ExpandAll()
         
@@ -3639,16 +3701,12 @@ class ArbreSequence(CT.CustomTreeCtrl):
 
 
     def OnLeftDClick(self, event):
-        
         pt = event.GetPosition()
-#        item, flags = self.HitTest(pt)
-#        if item and (flags & CT.TREE_HITTEST_ONITEMLABEL):
-#            if self.GetAGWWindowStyleFlag() & CT.TR_EDIT_LABELS:
-#                self.log.write("OnLeftDClick: %s (manually starting label edit)"% self.GetItemText(item) + "\n")
-#                self.EditLabel(item)
-#            else:
-#                self.log.write("OnLeftDClick: Cannot Start Manual Editing, Missing Style TR_EDIT_LABELS\n")
-
+        item, flags = self.HitTest(pt)
+        print item
+        if item:
+            print "DClick (arbre)"
+            self.sequence.AfficherLien(item)
         event.Skip()                
         
 
@@ -4135,7 +4193,182 @@ class SeqApp(wx.App):
         frame = FenetreSequence()
         frame.Show()
         return True
+
+##########################################################################################################
+#
+#  Dialogue de sélection d'URL
+#
+##########################################################################################################
+class URLDialog(wx.Dialog):
+    def __init__(self, parent, lien = ""):
+        wx.Dialog.__init__(self, parent, -1)
+        pre = wx.PreDialog()
+        pre.SetExtraStyle(wx.DIALOG_EX_CONTEXTHELP)
+        pre.Create(parent, -1, u"Sélection de lien")
+
+        self.PostCreate(pre)
+
+        sizer = wx.BoxSizer(wx.VERTICAL)
+
+        label = wx.StaticText(self, -1, u"Sélectionner un fichier, un dossier ou une URL")
+        label.SetHelpText(u"Sélectionner un fichier, un dossier ou une URL")
+        sizer.Add(label, 0, wx.ALIGN_CENTRE|wx.ALL, 5)
+
+        box = wx.BoxSizer(wx.HORIZONTAL)
+
+        label = wx.StaticText(self, -1, "Lien :")
+#        label.SetHelpText("This is the help text for the label")
+        box.Add(label, 0, wx.ALIGN_CENTRE|wx.ALL, 5)
+
+        url = URLSelectorCombo(self, -1, lien, size=(80,-1))
+#        text.SetHelpText("Here's some help text for field #1")
+        box.Add(url, 1, wx.ALIGN_CENTRE|wx.ALL, 5)
+        self.url = url
+        
+        sizer.Add(box, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5)
+
+        line = wx.StaticLine(self, -1, size=(20,-1), style=wx.LI_HORIZONTAL)
+        sizer.Add(line, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP, 5)
+
+        btnsizer = wx.StdDialogButtonSizer()
+        
+        if wx.Platform != "__WXMSW__":
+            btn = wx.ContextHelpButton(self)
+            btnsizer.AddButton(btn)
+        
+        btn = wx.Button(self, wx.ID_OK)
+        btn.SetHelpText("The OK button completes the dialog")
+        btn.SetDefault()
+        btnsizer.AddButton(btn)
+
+        btn = wx.Button(self, wx.ID_CANCEL)
+        btn.SetHelpText("The Cancel button cancels the dialog. (Cool, huh?)")
+        btnsizer.AddButton(btn)
+        btnsizer.Realize()
+
+        sizer.Add(btnsizer, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5)
+
+        self.SetSizer(sizer)
+        sizer.Fit(self)
+
+    def GetURL(self):
+        return self.url.GetValue()
+
     
+class URLSelectorCombo(wx.combo.ComboCtrl):
+    def __init__(self, *args, **kw):
+        wx.combo.ComboCtrl.__init__(self, *args, **kw)
+
+        # make a custom bitmap showing "..."
+        bw, bh = 14, 16
+        bmp = wx.EmptyBitmap(bw,bh)
+        dc = wx.MemoryDC(bmp)
+
+        # clear to a specific background colour
+        bgcolor = wx.Colour(255,254,255)
+        dc.SetBackground(wx.Brush(bgcolor))
+        dc.Clear()
+
+        # draw the label onto the bitmap
+        label = "..."
+        font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        font.SetWeight(wx.FONTWEIGHT_BOLD)
+        dc.SetFont(font)
+        tw,th = dc.GetTextExtent(label)
+        dc.DrawText(label, (bw-tw)/2, (bw-tw)/2)
+        del dc
+
+        # now apply a mask using the bgcolor
+        bmp.SetMaskColour(bgcolor)
+
+        # and tell the ComboCtrl to use it
+        self.SetButtonBitmaps(bmp, True)
+        
+
+    # Overridden from ComboCtrl, called when the combo button is clicked
+    def OnButtonClick(self):
+        # In this case we include a "New directory" button. 
+#        dlg = wx.FileDialog(self, "Choisir un fichier modèle", path, name,
+#                            "Rich Text Format (*.rtf)|*.rtf", wx.FD_OPEN)
+        dlg = wx.FileDialog(self, "Choisir un fichier",
+#                           defaultPath = globdef.DOSSIER_EXEMPLES,
+                           style = wx.DD_DEFAULT_STYLE
+                           #| wx.DD_DIR_MUST_EXIST
+                           #| wx.DD_CHANGE_DIR
+                           )
+
+        # If the user selects OK, then we process the dialog's data.
+        # This is done by getting the path data from the dialog - BEFORE
+        # we destroy it. 
+        if dlg.ShowModal() == wx.ID_OK:
+            self.SetValue(dlg.GetPath())
+
+        # Only destroy a dialog after you're done with it.
+        dlg.Destroy()
+        
+        self.SetFocus()
+
+    # Overridden from ComboCtrl to avoid assert since there is no ComboPopup
+    def DoSetPopupControl(self, popup):
+        pass
+
+#############################################################################################################
+#
+# Pour convertir les images en texte
+# 
+#############################################################################################################
+import base64
+try:
+    b64encode = base64.b64encode
+except AttributeError:
+    b64encode = base64.encodestring
+    
+#def img2str(img):
+#    
+#    print "img2str"
+#   
+#    data = b64encode(img.GetData())
+##    while data:
+##        part = data[:72]
+##        data = data[72:]
+##        output = '    "%s"' % part
+##        lines+=output
+##    data = lines
+#    print data
+#    return data
+
+
+import tempfile
+
+def img2str(img):
+    """
+    """
+    
+    global app
+    if not wx.GetApp():
+        app = wx.PySimpleApp()
+        
+    # convert the image file to a temporary file
+    tfname = tempfile.mktemp()
+    try:
+        img.SaveFile(tfname, wx.BITMAP_TYPE_PNG)
+
+        lines = []
+        data = b64encode(open(tfname, "rb").read())
+#        while data:
+#            part = data[:72]
+#            data = data[72:]
+#            output = '    "%s"' % part
+#            if not data:
+#                output += ")"
+#            lines.append(output)
+#        data = "\n".join(lines)
+    finally:
+        if os.path.exists(tfname):
+            os.remove(tfname)
+            
+    return data
+
 #############################################################################################################
 #
 # A propos ...

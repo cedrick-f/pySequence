@@ -1,61 +1,21 @@
 <Sequence_Classe>
   <Sequence Intitule="">
-    <CentreInteret>
-      <CI4 />
-    </CentreInteret>
     <Prerequis>
-      <Savoirs S0="1" />
+      <Savoirs />
     </Prerequis>
     <Objectifs>
-      <Competences C0="CO1.1" />
+      <Competences />
       <Savoirs />
     </Objectifs>
     <Seances>
-      <Seance0 Duree="1.0" Effectif="C" Intitule="" IntituleDansDeroul="True" Type="C" />
-      <Seance1 Intitule="" IntituleDansDeroul="True" Type="R">
-        <Seance0 Intitule="" IntituleDansDeroul="True" Type="S">
-          <Seance0 Demarche="I" Duree="1.5" Effectif="P" Intitule="" IntituleDansDeroul="True" Type="AP">
-            <Systemes0 Nom="Lego NXT" Nombre="0" />
-            <Systemes1 Nom="Segway" Nombre="1" />
-            <Systemes2 Nom="" Nombre="0" />
-            <Systemes3 Nom="" Nombre="0" />
-            <Systemes4 Nom="" Nombre="0" />
-            <Systemes5 Nom="" Nombre="0" />
-            <Systemes6 Nom="" Nombre="0" />
-            <Systemes7 Nom="" Nombre="0" />
-          </Seance0>
-          <Seance1 Demarche="I" Duree="1.5" Effectif="P" Intitule="" IntituleDansDeroul="True" Type="AP">
-            <Systemes0 Nom="Lego NXT" Nombre="0" />
-            <Systemes1 Nom="Segway" Nombre="0" />
-            <Systemes2 Nom="" Nombre="0" />
-            <Systemes3 Nom="" Nombre="0" />
-            <Systemes4 Nom="" Nombre="0" />
-            <Systemes5 Nom="" Nombre="0" />
-            <Systemes6 Nom="" Nombre="0" />
-            <Systemes7 Nom="" Nombre="0" />
-          </Seance1>
-        </Seance0>
-        <Seance1 Demarche="I" Duree="1.5" Effectif="E" Intitule="" IntituleDansDeroul="True" Type="ED">
-          <Systemes0 Nom="Lego NXT" Nombre="1" />
-          <Systemes1 Nom="Segway" Nombre="0" />
-          <Systemes2 Nom="" Nombre="0" />
-          <Systemes3 Nom="" Nombre="0" />
-          <Systemes4 Nom="" Nombre="0" />
-          <Systemes5 Nom="" Nombre="0" />
-          <Systemes6 Nom="" Nombre="0" />
-          <Systemes7 Nom="" Nombre="0" />
-        </Seance1>
-      </Seance1>
-      <Seance2 Duree="1.0" Effectif="C" Intitule="" IntituleDansDeroul="True" Type="SA" />
-      <Seance3 Duree="1.0" Effectif="C" Intitule="" IntituleDansDeroul="True" Type="E" />
+      <Seance1 Duree="1.0" Effectif="C" Intitule="" IntituleDansDeroul="True" Type="" />
     </Seances>
     <Systemes>
-      <Systeme Nom="Lego NXT" />
-      <Systeme Nom="Segway" />
+      <Systeme Image="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" Lien="" Nbr="1" Nom="" />
     </Systemes>
   </Sequence>
   <Classe Type="ET">
     <Effectifs C="32" D="8" E="4" G="16" P="2" />
-    <CentreInteret CI1="D&#233;veloppement durable et comp&#233;titivit&#233; des produits" CI10="Am&#233;lioration de la gestion de l'&#233;nergie" CI11="Formes et caract&#233;ristiques de l'information" CI12="Organisation structurelle et solutions constructives des cha&#238;nes d'information" CI13="Commande temporelle des syst&#232;mes" CI14="Informations li&#233;es au comportement des mat&#233;riaux et des structures" CI15="Optimisation des param&#232;tres par simulation globale" CI2="Design, cr&#233;ativit&#233; et innovation" CI3="Caract&#233;ristiques des mat&#233;riaux et structures" CI4="Solutions constructives des mat&#233;riaux et des structures" CI5="Dimensionnement des structures et choix des mat&#233;riaux" CI6="Efficacit&#233; &#233;nerg&#233;tique li&#233;e au comportement des mat&#233;riaux et des structures" CI7="Formes et caract&#233;ristiques de l'&#233;nergie" CI8="Organisation structurelle et solutions constructives des cha&#238;nes d'&#233;nergie" CI9="Am&#233;lioration de l'efficacit&#233; &#233;nerg&#233;tique dans les cha&#238;nes d'&#233;nergie" />
+    <CentreInteret CI1="D&#195;&#169;veloppement durable et comp&#195;&#169;titivit&#195;&#169; des produits" CI10="Efficacit&#195;&#169; &#195;&#169;nerg&#195;&#169;tique li&#195;&#169;e &#195;&#160; la gestion de l'information" CI11="Commande temporelle des syst&#195;&#168;mes" CI2="Design, architecture et innovations technologiques" CI3="Caract&#195;&#169;risation des mat&#195;&#169;riaux et structures" CI4="Dimensionnement et choix des mat&#195;&#169;riaux et structures" CI5="Efficacit&#195;&#169; &#195;&#169;nerg&#195;&#169;tique dans l'habitat et les transports" CI6="Efficacit&#195;&#169; &#195;&#169;nerg&#195;&#169;tique li&#195;&#169; au comportement des mat&#195;&#169;riaux" CI7="Formes et caract&#195;&#169;ristiques de l'&#195;&#169;nergie" CI8="Caract&#195;&#169;risation des chaines d'&#195;&#169;nergie" CI9="Am&#195;&#169;lioration de l'efficacit&#195;&#169; &#195;&#169;nerg&#195;&#169;tique dans les cha&#195;&#174;nes d'&#195;&#169;nergie" />
   </Classe>
 </Sequence_Classe>
