@@ -123,7 +123,8 @@ Titres = [u"Séquence pédagogique",
           u"Prérequis",
           u"Objectifs pédagogiques",
           u"Séances",
-          u"Systèmes"]
+          u"Systèmes",
+          u"Classe"]
 
 class ElementDeSequence():
     ######################################################################################  
@@ -157,10 +158,55 @@ class ElementDeSequence():
         else:
             urllib.urlopen(self.lien)
 #            elif os.path.isabs(self.lien):
-                
-class Sequence():
+  
+class Classe():
     def __init__(self, app, panelParent, intitule = u""):
         self.intitule = intitule
+        
+        self.typeEnseignement = 'ET'
+        
+        self.ci_ET = CentresInteretsET
+        
+        self.effectifs = Effectifs
+        self.panelPropriete = PanelPropriete_Classe(panelParent, self)
+        self.panelParent = panelParent
+        self.app = app
+        
+    ######################################################################################  
+    def getBranche(self):
+        # La classe
+        classe = ET.Element("Classe")
+        classe.set("Type", self.typeEnseignement)
+        eff = ET.SubElement(classe, "Effectifs")
+        for e in listeEffectifs:
+            eff.set(e, str(self.effectifs[e][1]))
+            
+        if self.typeEnseignement == 'ET':
+            ci = ET.SubElement(classe, "CentreInteret")
+            for i,c in enumerate(self.ci_ET[self.typeEnseignement]):
+                ci.set("CI"+str(i+1), c)
+        
+    ######################################################################################  
+    def setBranche(self, branche):
+        print "setBranche classe"
+        self.typeEnseignement = branche.get("Type", "ET")
+        
+        self.ci_ET = getListCI(branche.get("CentreInteret", ""))
+        
+        setEffectifs(branche.get("Effectifs"), self.effectifs)
+        
+        
+    ######################################################################################  
+    def ConstruireArbre(self, arbre, branche):
+        print "ConstruireArbre classe"
+        self.arbre = arbre
+        self.branche = arbre.AppendItem(branche, Titres[5], data = self)#, image = self.arbre.images["Seq"])
+
+                      
+class Sequence():
+    def __init__(self, app, classe, panelParent, intitule = u""):
+        self.intitule = intitule
+        self.classe = classe
         self.panelPropriete = PanelPropriete_Sequence(panelParent, self)
         
         self.prerequis = Savoirs(self, panelParent)
@@ -403,10 +449,10 @@ class Sequence():
         
         
     ######################################################################################  
-    def ConstruireArbre(self, arbre):
+    def ConstruireArbre(self, arbre, branche):
         print "ConstruireArbre séquence"
         self.arbre = arbre
-        self.branche = arbre.AddRoot(Titres[0], data = self, image = self.arbre.images["Seq"])
+        self.branche = arbre.AppendItem(branche, Titres[0], data = self, image = self.arbre.images["Seq"])
 
         #
         # LE centre d'intérêt
@@ -453,7 +499,7 @@ class Sequence():
         """
         if itemArbre == self.branche:
             self.app.AfficherMenuContextuel([[u"Enregistrer", self.app.commandeEnregistrer],
-                                             [u"Ouvrir", self.app.commandeOuvrir],
+#                                             [u"Ouvrir", self.app.commandeOuvrir],
                                              [u"Exporter la fiche en PDF", self.app.exporterFiche]])
             
 #        [u"Séquence pédagogique",
@@ -1535,14 +1581,13 @@ class PanelConteneur(wx.Panel):
     
 ####################################################################################
 #
-#   Classe définissant la fenétre de l'application
+#   Classes définissant la fenétre de l'application
 #
 ####################################################################################
-class FenetreSequence(wx.Frame):
+class FenetreSequences(aui.AuiMDIParentFrame):
     def __init__(self):
+        aui.AuiMDIParentFrame.__init__(self, None, -1, u"pySéquence",style=wx.DEFAULT_FRAME_STYLE)
         
-        wx.Frame.__init__(self, None, -1, "")#, style = wx.DEFAULT_FRAME_STYLE | wx.SYSTEM_MENU)
-#        self.SetExtraStyle(wx.FRAME_EX_CONTEXTHELP)
         #
         # Taille et position de la fenétre
         #
@@ -1550,18 +1595,6 @@ class FenetreSequence(wx.Frame):
         self.SetSize((1024,738)) # Taille pour écran 1024x768
         # On centre la fenétre dans l'écran ...
         self.CentreOnScreen(wx.BOTH)
-        
-#        
-        # Use a panel under the AUI panes in order to work around a
-        # bug on PPC Macs
-        pnl = wx.Panel(self)
-        self.pnl = pnl
-        
-        self.mgr = aui.AuiManager()
-        self.mgr.SetManagedWindow(pnl)
-        
-        # panel de propriétés (conteneur)
-        panelProp = PanelConteneur(pnl)
         
         #
         # le fichier de configuration de la fiche
@@ -1572,14 +1605,8 @@ class FenetreSequence(wx.Frame):
             draw_cairo.ouvrirConfigFiche(self.nomFichierConfig)
         except:
             print "Erreur à l'ouverture de configFiche.cfg" 
-        
-        #
-        # Pour la sauvegarde
-        #
-        self.fichierCourant = ""
-        self.DossierSauvegarde = ""
-        self.fichierCourantModifie = False
-        
+            
+            
         #############################################################################################
         # Instanciation et chargement des options
         #############################################################################################
@@ -1595,19 +1622,259 @@ class FenetreSequence(wx.Frame):
         # On applique les options ...
         self.DefinirOptions(options)
         
+        self.CreateMenuBar()
+        self.Bind(wx.EVT_MENU, self.commandeNouveau, id=10)
+        self.Bind(wx.EVT_MENU, self.commandeOuvrir, id=11)
+        self.Bind(wx.EVT_MENU, self.commandeEnregistrer, id=12)
+        self.Bind(wx.EVT_MENU, self.exporterFiche, id=15)
+        self.Bind(wx.EVT_MENU, self.OnDoClose, id=wx.ID_EXIT)
+        
+        self.Bind(wx.EVT_MENU, self.OnAide, id=21)
+        self.Bind(wx.EVT_MENU, self.OnAbout, id=22)
+        
+        self.Bind(wx.EVT_MENU, self.OnOptions, id=31)
+        
+        self.Bind(wx.EVT_CLOSE, self.OnDoClose)
+        # Interception de la demande de fermeture
+        
+        child = FenetreSequence(self)
+        child.Show()
+        
+    ###############################################################################################
+    def CreateMenuBar(self):
+        # create menu
+        mb = wx.MenuBar()
+
+        file_menu = wx.Menu()
+        file_menu.Append(10, u"Nouvelle séquence")
+        file_menu.Append(11, u"Ouvrir")
+        file_menu.Append(12, u"Enregistrer")
+        file_menu.AppendSeparator()
+        file_menu.Append(15, u"Exporter en PDF")
+        file_menu.AppendSeparator()
+        file_menu.Append(wx.ID_EXIT, u"Quitter")
+
+        tool_menu = wx.Menu()
+        tool_menu.Append(31, u"Options")
+
+        help_menu = wx.Menu()
+        help_menu.Append(21, u"Aide en ligne")
+        help_menu.AppendSeparator()
+        help_menu.Append(22, u"A propos")
+
+        mb.Append(file_menu, "&Fichier")
+        mb.Append(tool_menu, "&Outils")
+        mb.Append(help_menu, "&Aide")
+        
+        
+        self.SetMenuBar(mb)
+        
+    #############################################################################
+    def DefinirOptions(self, options):
+        global TYPE_ENSEIGNEMENT
+        self.options = options.copie()
+        #
+        # Options de Classe
+        #
+        
+#        te = self.options.optClasse["TypeEnseignement"]
+        lstCI = self.options.optClasse["CentresInteretET"]
+        if False:
+            pass
+#        if self.fichierCourantModifie and (te != TYPE_ENSEIGNEMENT \
+#           or (te == 'ET' and getTextCI(CentresInterets[TYPE_ENSEIGNEMENT]) != lstCI)):
+#            dlg = wx.MessageDialog(self, u"Type de classe incompatible !\n\n" \
+#                                         u"Fermer la séquence en cours d'élaboration\n" \
+#                                         u"avant de modifier des options de la classe.",
+#                               'Type de classe incompatible',
+#                               wx.OK | wx.ICON_INFORMATION
+#                               #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
+#                               )
+#            dlg.ShowModal()
+#            dlg.Destroy()
+        else:
+#            TYPE_ENSEIGNEMENT = te
+            setValEffectifs(self.options.optClasse["Effectifs"])
+     
+            CentresInteretsET = getListCI(lstCI)
+                
+                
+    #############################################################################
+    def OnAbout(self, event):
+        win = A_propos(self)
+        win.ShowModal()
+        
+    #############################################################################
+    def OnAide(self, event):
+        webbrowser.open('http://code.google.com/p/pysequence/wiki/Aide')
+        
+    #############################################################################
+    def OnOptions(self, event, page = 0):
+        options = self.options.copie()
+#        print options
+        dlg = Options.FenOptions(self, options)
+        dlg.CenterOnScreen()
+        dlg.nb.SetSelection(page)
+
+        # this does not return until the dialog is closed.
+        val = dlg.ShowModal()
+    
+        if val == wx.ID_OK:
+#            print options
+            self.DefinirOptions(options)
+            self.AppliquerOptions()
+            
+        else:
+            pass
+#            print "You pressed Cancel"
+
+        dlg.Destroy()
+        
+    ###############################################################################################
+    def commandeNouveau(self, event = None):
+        child = FenetreSequence(self)
+        child.Show()
+        return child
+        
+    ###############################################################################################
+    def commandeOuvrir(self, event = None, nomFichier=None):
+        mesFormats = u"Séquence (.seq)|*.seq|" \
+                       u"Tous les fichiers|*.*'"
+  
+        if nomFichier == None:
+            dlg = wx.FileDialog(
+                                self, message=u"Ouvrir une séquence",
+#                                defaultDir = self.DossierSauvegarde, 
+                                defaultFile = "",
+                                wildcard = mesFormats,
+                                style=wx.OPEN | wx.MULTIPLE | wx.CHANGE_DIR
+                                )
+
+            if dlg.ShowModal() == wx.ID_OK:
+                paths = dlg.GetPaths()
+                nomFichier = paths[0]
+            else:
+                nomFichier = ''
+            
+            dlg.Destroy()
+        
+        if nomFichier != '':
+            if not nomFichier in self.GetNomsFichiers():
+                wx.BeginBusyCursor(wx.HOURGLASS_CURSOR)
+                child = self.commandeNouveau()
+                child.ouvrir(nomFichier)
+                wx.EndBusyCursor()
+            else:
+                child = self.GetChild(nomFichier)
+                texte = u"La séquence est déja ouverte.\nVoulez vous ignorer les changements et rouvrir la séquence ?"
+                if child.fichierCourant != '':
+                    texte += "\n\n\t"+child.fichierCourant+"\n"
+                    
+                dialog = wx.MessageDialog(self, texte, 
+                                          u"Confirmation", wx.YES_NO | wx.ICON_WARNING)
+                retCode = dialog.ShowModal()
+                if retCode == wx.ID_YES:
+                    child.ouvrir()
+                
+        self.Refresh()
+                
+    #############################################################################
+    def GetChild(self, nomFichier):
+        for m in self.GetChildren():
+            if isinstance(m, aui.AuiMDIClientWindow):
+                for k in m.GetChildren():
+                    if isinstance(k, FenetreSequence):
+                        if k.fichierCourant == nomFichier:
+                            return k
+        return
+    
+    #############################################################################
+    def GetNomsFichiers(self):
+        lst = []
+        for m in self.GetChildren():
+            if isinstance(m, aui.AuiMDIClientWindow):
+                for k in m.GetChildren():
+                    if isinstance(k, FenetreSequence):
+                        lst.append(k.fichierCourant)
+        return lst
+    
+    
+    #############################################################################
+    def commandeEnregistrer(self, event = None):
+        self.GetActiveChild.commandeEnregistrer(event)
+    
+    #############################################################################
+    def exporterFiche(self, event = None):
+        self.GetActiveChild.exporterFiche(event)
+    
+    def OnDoClose(self, evt):
+        try:
+            draw_cairo.enregistrerConfigFiche(self.nomFichierConfig)
+        except IOError:
+            print "   Permission d'enregistrer les options refusée...",
+        except:
+            print "   Erreur enregistrement options...",
+            
+        try:
+            self.options.enregistrer()
+        except IOError:
+            print "   Permission d'enregistrer les options refusée...",
+        except:
+            print "   Erreur enregistrement options...",
+            
+#        event.Skip()
+#        
+        # Close all ChildFrames first else Python crashes
+        for m in self.GetChildren():
+            if isinstance(m, aui.AuiMDIClientWindow):
+                for k in m.GetChildren():
+                    if isinstance(k, FenetreSequence):
+                        k.Close()  
+        evt.Skip()
+        
+        
+        
+class FenetreSequence(aui.AuiMDIChildFrame):
+    def __init__(self, parent):
+        
+        aui.AuiMDIChildFrame.__init__(self, parent, -1, "")#, style = wx.DEFAULT_FRAME_STYLE | wx.SYSTEM_MENU)
+#        self.SetExtraStyle(wx.FRAME_EX_CONTEXTHELP)
+#        
+        # Use a panel under the AUI panes in order to work around a
+        # bug on PPC Macs
+        pnl = wx.Panel(self)
+        self.pnl = pnl
+        
+        self.mgr = aui.AuiManager()
+        self.mgr.SetManagedWindow(pnl)
+        
+        # panel de propriétés (conteneur)
+        panelProp = PanelConteneur(pnl)
+        
+        
+        
+        #
+        # Pour la sauvegarde
+        #
+        self.fichierCourant = ""
+        self.DossierSauvegarde = ""
+        self.fichierCourantModifie = False
+        
+        #
+        # La classe
+        #
+        self.classe = Classe(self, panelProp)
+        
         #
         # La séquence
         #
-        self.sequence = Sequence(self, panelProp)
-        
+        self.sequence = Sequence(self, self.classe, panelProp)
         
         #
         # Arbre de structure de la séquence
         #
-        arbreSeq = ArbreSequence(pnl, self.sequence, panelProp)
+        arbreSeq = ArbreSequence(pnl, self.sequence, self.classe,  panelProp)
         self.arbreSeq = arbreSeq
-        
-        
         
         self.nb = wx.Notebook(pnl, -1)
         #
@@ -1631,7 +1898,6 @@ class FenetreSequence(wx.Frame):
 #        self.tabSystemes = wx.Panel(self.nb, wx.ID_ANY)
 #        self.nb.AddPage(self.tabSystemes, u"Systèmes")
         
-        filename = os.path.join(os.getcwd(), "testxy.xls")
 #        book = xlrd.open_workbook(filename, formatting_info=1)
 #        sheetname = "Feuil1"
 #        sheet = book.sheet_by_name(sheetname)
@@ -1773,56 +2039,17 @@ class FenetreSequence(wx.Frame):
         
         self.mgr.Update()
         
-        self.CreateMenuBar()
-        
-        wx.CallAfter(self.ficheSeq.Redessiner)
         self.Bind(EVT_SEQ_MODIFIED, self.OnSeqModified)
-        
-        self.Bind(wx.EVT_MENU, self.commandeOuvrir, id=11)
-        self.Bind(wx.EVT_MENU, self.commandeEnregistrer, id=12)
-        self.Bind(wx.EVT_MENU, self.exporterFiche, id=15)
-        self.Bind(wx.EVT_MENU, self.quitter, id=wx.ID_EXIT)
-        
-        self.Bind(wx.EVT_MENU, self.OnAide, id=21)
-        self.Bind(wx.EVT_MENU, self.OnAbout, id=22)
-        
-        self.Bind(wx.EVT_MENU, self.OnOptions, id=31)
-        
-        # Interception de la demande de fermeture
         self.Bind(wx.EVT_CLOSE, self.quitter)
         
         self.definirNomFichierCourant('')
-#        sizer = wx.BoxSizer(wx.HORIZONTAL)
-#        self.SetSizerAndFit(sizer)
     
-
+        sizer = wx.BoxSizer()
+        sizer.Add(pnl, 1, wx.EXPAND)
+        self.SetSizer(sizer)
+        wx.CallAfter(self.Layout)
+        wx.CallAfter(self.ficheSeq.Redessiner)
     
-    ###############################################################################################
-    def CreateMenuBar(self):
-        # create menu
-        mb = wx.MenuBar()
-
-        file_menu = wx.Menu()
-        file_menu.Append(11, u"Ouvrir")
-        file_menu.Append(12, u"Enregistrer")
-        file_menu.AppendSeparator()
-        file_menu.Append(15, u"Exporter en PDF")
-        file_menu.AppendSeparator()
-        file_menu.Append(wx.ID_EXIT, u"Quitter")
-
-        tool_menu = wx.Menu()
-        tool_menu.Append(31, u"Options")
-
-        help_menu = wx.Menu()
-        help_menu.Append(21, u"Aide en ligne")
-        help_menu.AppendSeparator()
-        help_menu.Append(22, u"A propos")
-
-        mb.Append(file_menu, "&Fichier")
-        mb.Append(tool_menu, "&Outils")
-        mb.Append(help_menu, "&Aide")
-        
-        self.SetMenuBar(mb)
         
         
     ###############################################################################################
@@ -1847,22 +2074,10 @@ class FenetreSequence(wx.Frame):
         wx.BeginBusyCursor(wx.HOURGLASS_CURSOR)
         fichier = file(nomFichier, 'w')
         
-        
-        
         # La séquence
         sequence = self.sequence.getBranche()
         
-        # La classe
-        classe = ET.Element("Classe")
-        classe.set("Type", TYPE_ENSEIGNEMENT)
-        eff = ET.SubElement(classe, "Effectifs")
-        for e in listeEffectifs:
-            eff.set(e, str(Effectifs[e][1]))
-            
-        if TYPE_ENSEIGNEMENT == 'ET':
-            ci = ET.SubElement(classe, "CentreInteret")
-            for i,c in enumerate(CentresInterets[TYPE_ENSEIGNEMENT]):
-                ci.set("CI"+str(i+1), c)
+        classe = self.classe.getBranche()
         
         # La racine
         root = ET.Element("Sequence_Classe")
@@ -1871,7 +2086,6 @@ class FenetreSequence(wx.Frame):
         indent(root)
         
         ET.ElementTree(root).write(fichier)
-        
         
         fichier.close()
         self.definirNomFichierCourant(nomFichier)
@@ -1896,68 +2110,29 @@ class FenetreSequence(wx.Frame):
             ci = classe.find("CentreInteret")
             if ci != None:
                 lstCI = []
-                for i,c in enumerate(CentresInterets[TYPE_ENSEIGNEMENT]):
+                for i,c in enumerate(CentresInterets[self.classe.typeEnseignement]):
                     lstCI.append(ci.get("CI"+str(i+1)))
         
-        TYPE_ENSEIGNEMENT = te
+        self.classe.typeEnseignement = te
         eff = classe.find("Effectifs")
         for e in listeEffectifs:
             Effectifs[e][1] = eval(eff.get(e))
         if te == 'ET':
-            CentresInterets[TYPE_ENSEIGNEMENT] = lstCI
-        
-        
+            CentresInterets[self.classe.typeEnseignement] = lstCI
         
         self.arbreSeq.DeleteAllItems()
-        self.sequence.ConstruireArbre(self.arbreSeq)
+        root = self.arbreSeq.AddRoot("")
+        self.classe.ConstruireArbre(self.arbreSeq, root)
+        self.sequence.ConstruireArbre(self.arbreSeq, root)
         self.sequence.SetCodes()
         self.arbreSeq.ExpandAll()
         
-#        print self.sequence
-#        except:
-#            pass
         fichier.close()
         self.definirNomFichierCourant(nomFichier)
         self.ficheSeq.Redessiner()
         self.sequence.VerifPb()
         
         
-        
-    ###############################################################################################
-    def commandeOuvrir(self, event = None, nomFichier=None):
-        mesFormats = u"Séquence (.seq)|*.seq|" \
-                       u"Tous les fichiers|*.*'"
-  
-        if nomFichier == None:
-            dlg = wx.FileDialog(
-                                self, message=u"Ouvrir une séquence",
-                                defaultDir = self.DossierSauvegarde, 
-                                defaultFile = "",
-                                wildcard = mesFormats,
-                                style=wx.OPEN | wx.MULTIPLE | wx.CHANGE_DIR
-                                )
-                
-            # Show the dialog and retrieve the user response. If it is the OK response, 
-            # process the data.
-            if dlg.ShowModal() == wx.ID_OK:
-                # This returns a Python list of files that were selected.
-                paths = dlg.GetPaths()
-                nomFichier = paths[0]
-            else:
-                nomFichier = ''
-            
-            dlg.Destroy()
-            
-        self.Refresh()
-        
-        print ""
-        if nomFichier != '':
-            raz = True
-                
-            if raz:
-                wx.BeginBusyCursor(wx.HOURGLASS_CURSOR)
-                self.ouvrir(nomFichier)
-                wx.EndBusyCursor()
         
     #############################################################################
     def dialogEnregistrer(self):
@@ -2011,13 +2186,14 @@ class FenetreSequence(wx.Frame):
 #        if modif : print "Fichier courant modifié !"
         self.fichierCourant = nomFichier
         self.fichierCourantModifie = modif
+        t = self.classe.typeEnseignement
         if self.fichierCourant == '':
-            t = ''
+            t += u" - Nouvelle séquence"
         else:
-            t = ' - ' + self.fichierCourant
+            t += u" - "+os.path.splitext(os.path.basename(self.fichierCourant))[0]
         if modif : 
             t += " **"
-        self.SetTitle(__appname__ + t )
+        self.SetTitle(t)
 
     #############################################################################
     def MarquerFichierCourantModifie(self):
@@ -2063,25 +2239,19 @@ class FenetreSequence(wx.Frame):
     
     #############################################################################
     def quitter(self, event = None):
-        try:
-            draw_cairo.enregistrerConfigFiche(self.nomFichierConfig)
-        except IOError:
-            print "   Permission d'enregistrer les options refusée...",
-        except:
-            print "   Erreur enregistrement options...",
-            
-        try:
-            self.options.enregistrer()
-        except IOError:
-            print "   Permission d'enregistrer les options refusée...",
-        except:
-            print "   Erreur enregistrement options...",
-            
-#        event.Skip()
         if not self.fichierCourantModifie:
             self.fermer()
             return
+
+        def fctYes():
+            self.commandeEnregistrer()
+            self.fermer()
+            
+        self.DialogSequenceModif(fctYes, self.fermer)
         
+
+    #############################################################################
+    def DialogSequenceModif(self, fctYes, fctNo = None, fctCancel = None):
         texte = u"La séquence a été modifiée.\nVoulez vous enregistrer les changements ?"
         if self.fichierCourant != '':
             texte += "\n\n\t"+self.fichierCourant+"\n"
@@ -2090,74 +2260,21 @@ class FenetreSequence(wx.Frame):
                                   u"Confirmation", wx.YES_NO | wx.CANCEL | wx.ICON_WARNING)
         retCode = dialog.ShowModal()
         if retCode == wx.ID_YES:
-            self.commandeEnregistrer()
-            self.fermer()
+            fctYes()
         elif retCode == wx.ID_NO:
-            self.fermer()
-
-
+            if fctNo != None:
+                fctNo()
+        else:
+            if fctCancel != None:
+                fctCancel()
+        
     #############################################################################
     def fermer(self):
         self.Destroy()
         sys.exit()
         
-    #############################################################################
-    def OnAbout(self, event):
-        win = A_propos(self)
-        win.ShowModal()
-        
-    #############################################################################
-    def OnAide(self, event):
-        webbrowser.open('http://code.google.com/p/pysequence/wiki/Aide')
-        
-    #############################################################################
-    def OnOptions(self, event, page = 0):
-        options = self.options.copie()
-#        print options
-        dlg = Options.FenOptions(self, options)
-        dlg.CenterOnScreen()
-        dlg.nb.SetSelection(page)
-
-        # this does not return until the dialog is closed.
-        val = dlg.ShowModal()
     
-        if val == wx.ID_OK:
-#            print options
-            self.DefinirOptions(options)
-            self.AppliquerOptions()
-            
-        else:
-            pass
-#            print "You pressed Cancel"
-
-        dlg.Destroy()
-        
-    #############################################################################
-    def DefinirOptions(self, options):
-        global TYPE_ENSEIGNEMENT
-        self.options = options.copie()
-        #
-        # Options de Classe
-        #
-        
-        te = self.options.optClasse["TypeEnseignement"]
-        lstCI = self.options.optClasse["CentresInteretET"]
-        if self.fichierCourantModifie and (te != TYPE_ENSEIGNEMENT \
-           or (te == 'ET' and getTextCI(CentresInterets[TYPE_ENSEIGNEMENT]) != lstCI)):
-            dlg = wx.MessageDialog(self, u"Type de classe incompatible !\n\n" \
-                                         u"Fermer la séquence en cours d'élaboration\n" \
-                                         u"avant de modifier des options de la classe.",
-                               'Type de classe incompatible',
-                               wx.OK | wx.ICON_INFORMATION
-                               #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
-                               )
-            dlg.ShowModal()
-            dlg.Destroy()
-        else:
-            TYPE_ENSEIGNEMENT = te
-            setValEffectifs(self.options.optClasse["Effectifs"])
-            if te == 'ET':
-                CentresInterets[TYPE_ENSEIGNEMENT] = getListCI(lstCI)
+    
            
     #############################################################################
     def AppliquerOptions(self):
@@ -2409,6 +2526,125 @@ class PanelPropriete_Sequence(PanelPropriete):
         self.textctrl.ChangeValue(self.sequence.intitule)
         if sendEvt:
             self.sendEvent()
+
+
+####################################################################################
+#
+#   Classe définissant le panel de propriété de la classe
+#
+####################################################################################
+class PanelPropriete_Classe(PanelPropriete):
+    def __init__(self, parent, classe):
+        PanelPropriete.__init__(self, parent)
+        self.classe = classe
+        
+        
+        
+        #
+        # Type d'enseignement
+        #
+        sb0 = wx.StaticBox(self, -1, u"Type d'enseignement", size = (200,-1))
+        sbs0 = wx.StaticBoxSizer(sb0,wx.VERTICAL)
+        
+        
+        cb = wx.ComboBox(self, -1,"", size = (40, -1), 
+                         choices = listEnseigmenent,
+                         style = wx.CB_DROPDOWN|wx.CB_READONLY )
+        cb.SetStringSelection(self.classe.typeEnseignement)
+        cb.SetToolTip(wx.ToolTip(u"Choisir le type d'enseignement" ))
+        sbs0.Add(cb, flag = wx.EXPAND|wx.ALL, border = 5)
+        self.Bind(wx.EVT_COMBOBOX, self.EvtComboBox, cb)
+        self.sizer.Add(sbs0, (0,0), flag = wx.EXPAND|wx.ALL)
+        
+        
+        #
+        # Centres d'intérêt
+        #
+        sb1 = wx.StaticBox(self, -1, u"Centres d'intérêt ET", size = (200,-1))
+        sbs1 = wx.StaticBoxSizer(sb1,wx.VERTICAL)
+        txt = wx.TextCtrl(self, -1, getTextCI(self.classe.ci_ET),
+                          style = wx.TE_MULTILINE)
+        sbs1.Add(txt, flag = wx.EXPAND|wx.ALL, border = 5)
+        txt.Bind(wx.EVT_TEXT, self.EvtTxtCI)
+        self.txtCi = txt
+        if self.classe.typeEnseignement != 'ET' :
+            self.txtCi.Enable(False)
+        btn = wx.Button(self, -1, u"Sélectionner")
+        help = u"Sélectionner depuis un fichier Excel"
+        btn.SetToolTip(wx.ToolTip(help))
+        btn.SetHelpText(help)
+        sbs1.Add(btn, flag = wx.EXPAND|wx.ALL, border = 5)
+        self.Bind(wx.EVT_BUTTON, self.SelectCI, btn)
+        self.sizer.Add(sbs1, (0,1), (2,1), flag = wx.EXPAND|wx.ALL)    
+        
+        #
+        # Effectifs
+        #
+        sb3 = wx.StaticBox(self, -1, u"Effectifs", size = (200,-1))
+        sbs3 = wx.StaticBoxSizer(sb3,wx.VERTICAL)
+        varEff = []
+        for i, eff in enumerate(listeEffectifs):
+            v = Variable(Effectifs[eff][0],  
+                         lstVal = self.classe.effectifs[eff][1], 
+                         typ = VAR_ENTIER_POS, bornes = [1,40])
+            varEff.append(v)
+            vc = VariableCtrl(self, v, coef = 1, labelMPL = False, signeEgal = False,
+                              help = u"Nombre d'élèves")
+            self.Bind(EVT_VAR_CTRL, self.EvtVariableEff, vc)
+            sbs3.Add(vc, flag = wx.EXPAND|wx.ALL, border = 1)
+        self.sizer.Add(sbs3, (1,0), flag = wx.EXPAND|wx.ALL)
+        self.varEff = varEff
+        self.sizer.AddGrowableCol(0)
+        self.sizer.AddGrowableCol(1)
+        
+    
+    
+        
+    ######################################################################################  
+    def EvtComboBox(self, event):
+        print event.GetEventObject().GetValue()
+        self.classe.typeEnseignement = event.GetEventObject().GetValue()
+        if self.classe.typeEnseignement != 'ET' :
+            self.txtCi.Enable(False)
+        else:
+            self.txtCi.Enable(True)
+        
+    ######################################################################################  
+    def EvtTxtCI(self, event):
+        self.classe.ci_ET =  event.GetString()
+        
+        
+    ######################################################################################  
+    def EvtVariableEff(self, event):
+        i = self.varEff.index(event.GetVar())
+        te = self.classe.effectifs.split()
+        te[i] = str(event.GetVar().v[0])
+        t = " "
+        self.classe.effectifs = t.join(te)
+
+
+    ######################################################################################  
+    def SelectCI(self, event = None):
+        if recup_excel.ouvrirFichierExcel():
+            dlg = wx.MessageDialog(self.Parent, u"Sélectionner une liste de CI\n" \
+                                             u"dans le classeur Excel qui vient de s'ouvrir,\n" \
+                                             u"puis appuyer sur Ok.\n\n" \
+                                             u"Format attendu de la selection :\n" \
+                                             u"Liste des CI sur une colonne.",
+                                             u'Sélection de CI',
+                                             wx.ICON_INFORMATION | wx.YES_NO | wx.CANCEL
+                                             )
+            res = dlg.ShowModal()
+            dlg.Destroy() 
+            if res == wx.ID_YES:
+                ls = recup_excel.getColonne(c = 0)
+                ci = getTextCI(ls)
+                self.txtCi.ChangeValue(ci)
+                self.classe.ci_ET = ci
+            elif res == wx.ID_NO:
+                print "Rien" 
+        
+        
         
 ####################################################################################
 #
@@ -2454,7 +2690,7 @@ class PanelPropriete_CI(PanelPropriete):
             self.sizer.Remove(self.grid1)
         self.grid1 = wx.FlexGridSizer( 0, 2, 0, 0 )
         self.group_ctrls = []
-        for i, ci in enumerate(CentresInterets[TYPE_ENSEIGNEMENT]):
+        for i, ci in enumerate(CentresInterets[self.CI.parent.classe.typeEnseignement]):
             if i == 0 : s = wx.RB_GROUP
             else: s = 0
             r = wx.RadioButton(self, -1, "CI"+str(i+1), style = s )
@@ -2584,7 +2820,7 @@ class PanelPropriete_Savoirs(PanelPropriete):
     def __init__(self, parent, savoirs):
         
         self.savoirs = savoirs
-        
+
         PanelPropriete.__init__(self, parent)
         
         self.construire()
@@ -3163,11 +3399,11 @@ class PanelPropriete_Systeme(PanelPropriete):
 ##        wx.FutureCall(100, self.AdjustSize)
 
 class ArbreSequence(CT.CustomTreeCtrl):
-    def __init__(self, parent, sequence, panelProp,
+    def __init__(self, parent, sequence, classe, panelProp,
                  pos = wx.DefaultPosition,
                  size = wx.DefaultSize,
                  style = wx.SUNKEN_BORDER|wx.WANTS_CHARS,
-                 agwStyle = CT.TR_HAS_BUTTONS|CT.TR_HAS_VARIABLE_ROW_HEIGHT,
+                 agwStyle = CT.TR_HAS_BUTTONS|CT.TR_HAS_VARIABLE_ROW_HEIGHT | CT.TR_HIDE_ROOT,
                  ):
 
         CT.CustomTreeCtrl.__init__(self, parent, -1, pos, size, style, agwStyle)
@@ -3180,10 +3416,14 @@ class ArbreSequence(CT.CustomTreeCtrl):
         self.sequence = sequence
         
         #
+        # La classe 
+        #
+        self.classe = classe
+        
+        #
         # Le panel contenant les panel de propriétés des éléments de séquence
         #
         self.panelProp = panelProp
-        
         
         #
         # Les icones des branches
@@ -3204,7 +3444,10 @@ class ArbreSequence(CT.CustomTreeCtrl):
         #
         # Construction de l'arbre
         #
-        self.sequence.ConstruireArbre(self)
+        root = self.AddRoot("")
+        self.classe.ConstruireArbre(self, root)
+        self.sequence.ConstruireArbre(self, root)
+        
         self.itemDrag = None
         
         #
@@ -3935,7 +4178,7 @@ class ArbreSavoirs(CT.CustomTreeCtrl):
         self.savoirs = savoirs
         
         self.root = self.AddRoot(u"Savoirs")
-        self.Construire(self.root, dicSavoirs[TYPE_ENSEIGNEMENT])
+        self.Construire(self.root, dicSavoirs[savoirs.parent.classe.typeEnseignement])
         
         self.ExpandAll()
         
@@ -4027,7 +4270,7 @@ class ArbreCompetences(CT.CustomTreeCtrl):
         self.savoirs = savoirs
         
         self.root = self.AddRoot(u"Compétences")
-        self.Construire(self.root, dicCompetences[TYPE_ENSEIGNEMENT])
+        self.Construire(self.root, dicCompetences[savoirs.parent.classe.typeEnseignement])
         
         self.ExpandAll()
         
@@ -4190,7 +4433,7 @@ class SeqApp(wx.App):
                 # on verifie que le fichier passé en paramétre existe
                 
             
-        frame = FenetreSequence()
+        frame = FenetreSequences()
         frame.Show()
         return True
 
@@ -4220,7 +4463,7 @@ class URLDialog(wx.Dialog):
 #        label.SetHelpText("This is the help text for the label")
         box.Add(label, 0, wx.ALIGN_CENTRE|wx.ALL, 5)
 
-        url = URLSelectorCombo(self, -1, lien, size=(80,-1))
+        url = URLSelectorCombo(self, lien)
 #        text.SetHelpText("Here's some help text for field #1")
         box.Add(url, 1, wx.ALIGN_CENTRE|wx.ALL, 5)
         self.url = url
@@ -4252,65 +4495,65 @@ class URLDialog(wx.Dialog):
         sizer.Fit(self)
 
     def GetURL(self):
-        return self.url.GetValue()
+        return self.url.GetPath()
 
     
-class URLSelectorCombo(wx.combo.ComboCtrl):
-    def __init__(self, *args, **kw):
-        wx.combo.ComboCtrl.__init__(self, *args, **kw)
+class URLSelectorCombo(wx.Panel):
+    def __init__(self, parent, lien):
+        wx.Panel.__init__(self, parent, -1)
 
-        # make a custom bitmap showing "..."
-        bw, bh = 14, 16
-        bmp = wx.EmptyBitmap(bw,bh)
-        dc = wx.MemoryDC(bmp)
-
-        # clear to a specific background colour
-        bgcolor = wx.Colour(255,254,255)
-        dc.SetBackground(wx.Brush(bgcolor))
-        dc.Clear()
-
-        # draw the label onto the bitmap
-        label = "..."
-        font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        font.SetWeight(wx.FONTWEIGHT_BOLD)
-        dc.SetFont(font)
-        tw,th = dc.GetTextExtent(label)
-        dc.DrawText(label, (bw-tw)/2, (bw-tw)/2)
-        del dc
-
-        # now apply a mask using the bgcolor
-        bmp.SetMaskColour(bgcolor)
-
-        # and tell the ComboCtrl to use it
-        self.SetButtonBitmaps(bmp, True)
+        sizer = wx.BoxSizer(wx.HORIZONTAL)
         
+        self.texte = wx.TextCtrl(self, -1, lien, size = (300, -1))
+        bt1 =wx.BitmapButton(self, 100, wx.ArtProvider_GetBitmap(wx.ART_FOLDER))
+        bt1.SetToolTipString(u"Sélectionner un dossier")
+        bt2 =wx.BitmapButton(self, 101, wx.ArtProvider_GetBitmap(wx.ART_NORMAL_FILE))
+        bt2.SetToolTipString(u"Sélectionner un fichier")
+        self.Bind(wx.EVT_BUTTON, self.OnClick, bt1)
+        self.Bind(wx.EVT_BUTTON, self.OnClick, bt2)
+        
+        sizer.Add(self.texte,flag = wx.EXPAND)
+        sizer.Add(bt1)
+        sizer.Add(bt2)
+        
+        self.SetSizerAndFit(sizer)
+        self.path = lien
 
     # Overridden from ComboCtrl, called when the combo button is clicked
-    def OnButtonClick(self):
-        # In this case we include a "New directory" button. 
-#        dlg = wx.FileDialog(self, "Choisir un fichier modèle", path, name,
-#                            "Rich Text Format (*.rtf)|*.rtf", wx.FD_OPEN)
-        dlg = wx.FileDialog(self, "Choisir un fichier",
-#                           defaultPath = globdef.DOSSIER_EXEMPLES,
-                           style = wx.DD_DEFAULT_STYLE
+    def OnClick(self, event):
+        
+        if event.GetId() == 100:
+            dlg = wx.DirDialog(self, u"Sélectionner un dossier",
+                          style=wx.DD_DEFAULT_STYLE
                            #| wx.DD_DIR_MUST_EXIST
                            #| wx.DD_CHANGE_DIR
                            )
-
-        # If the user selects OK, then we process the dialog's data.
-        # This is done by getting the path data from the dialog - BEFORE
-        # we destroy it. 
-        if dlg.ShowModal() == wx.ID_OK:
-            self.SetValue(dlg.GetPath())
-
-        # Only destroy a dialog after you're done with it.
-        dlg.Destroy()
+            if dlg.ShowModal() == wx.ID_OK:
+                self.SetPath(dlg.GetPath())
+    
+            dlg.Destroy()
+        else:
+            dlg = wx.FileDialog(self, u"Sélectionner un fichier",
+    #                           defaultPath = globdef.DOSSIER_EXEMPLES,
+                               style = wx.DD_DEFAULT_STYLE
+                               #| wx.DD_DIR_MUST_EXIST
+                               #| wx.DD_CHANGE_DIR
+                               )
+    
+            if dlg.ShowModal() == wx.ID_OK:
+                self.SetPath(dlg.GetPath())
+    
+            dlg.Destroy()
         
         self.SetFocus()
 
-    # Overridden from ComboCtrl to avoid assert since there is no ComboPopup
-    def DoSetPopupControl(self, popup):
-        pass
+
+    def GetPath(self):
+        return self.path
+    
+    def SetPath(self, path):
+        self.path = path
+        self.texte.SetValue(path)
 
 #############################################################################################################
 #
@@ -4323,21 +4566,6 @@ try:
 except AttributeError:
     b64encode = base64.encodestring
     
-#def img2str(img):
-#    
-#    print "img2str"
-#   
-#    data = b64encode(img.GetData())
-##    while data:
-##        part = data[:72]
-##        data = data[72:]
-##        output = '    "%s"' % part
-##        lines+=output
-##    data = lines
-#    print data
-#    return data
-
-
 import tempfile
 
 def img2str(img):
@@ -4352,17 +4580,7 @@ def img2str(img):
     tfname = tempfile.mktemp()
     try:
         img.SaveFile(tfname, wx.BITMAP_TYPE_PNG)
-
-        lines = []
         data = b64encode(open(tfname, "rb").read())
-#        while data:
-#            part = data[:72]
-#            data = data[72:]
-#            output = '    "%s"' % part
-#            if not data:
-#                output += ")"
-#            lines.append(output)
-#        data = "\n".join(lines)
     finally:
         if os.path.exists(tfname):
             os.remove(tfname)

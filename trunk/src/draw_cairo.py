@@ -454,7 +454,7 @@ def Draw(ctx, seq):
     #
     lstTexte = []
     for c in seq.prerequis.savoirs:
-        lstTexte.append(getSavoir(c))
+        lstTexte.append(getSavoir(seq, c))
     hl = rect_height-height-0.015   
     if len(lstTexte) > 0:
         e = 0.01
@@ -510,10 +510,10 @@ def Draw(ctx, seq):
     #
     lstTexteC = []
     for c in seq.obj["C"].competences:
-        lstTexteC.append(getCompetence(c))
+        lstTexteC.append(getCompetence(seq, c))
     lstTexteS = []   
     for c in seq.obj["S"].savoirs:
-        lstTexteS.append(getSavoir(c))
+        lstTexteS.append(getSavoir(seq, c))
     h = rect_height-height-0.015  
     
     if len(lstTexteS) > 0 or len(lstTexteC) > 0:
