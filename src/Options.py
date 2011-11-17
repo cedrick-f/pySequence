@@ -177,9 +177,9 @@ class Options:
 #        print "defaut"
         DefOptionsDefaut()
         
-        self.optClasse["TypeEnseignement"] = TYPE_ENSEIGNEMENT
+#        self.optClasse["TypeEnseignement"] = TYPE_ENSEIGNEMENT
         self.optClasse["Effectifs"] = getTxtEffectifs()
-        self.optClasse["CentresInteretET"] = getTextCI(CentresInterets[TYPE_ENSEIGNEMENT])
+        self.optClasse["CentresInteretET"] = getTextCI(CentresInteretsET)
         
 
     ###########################################################################
