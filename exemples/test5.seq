@@ -1,11 +1,11 @@
 <Sequence_Classe>
   <Sequence Intitule="">
     <Prerequis>
-      <Savoirs />
+      <Savoirs S0="1.2" />
     </Prerequis>
     <Objectifs>
-      <Competences />
-      <Savoirs />
+      <Competences C0="CO1.1" />
+      <Savoirs S0="1.1.2" S1="1.1.1" />
     </Objectifs>
     <Seances>
       <Seance0 Duree="1.0" Effectif="C" Intitule="" IntituleDansDeroul="True" Type="C" />

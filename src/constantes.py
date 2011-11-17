@@ -488,7 +488,7 @@ def findEffectif(lst, eff):
 
 def getSavoir(seq, code, dic = None, c = None):
     if dic == None:
-        dic = dicSavoirs[seq.classe.typeEseignement]
+        dic = dicSavoirs[seq.classe.typeEnseignement]
     if c == None:
         c = len(code.split("."))
     if dic.has_key(code):
