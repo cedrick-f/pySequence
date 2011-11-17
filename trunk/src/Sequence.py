@@ -676,7 +676,7 @@ class CentreInteret():
         self.num = num
         if num != None:
             self.code = "CI"+str(self.num+1)
-            self.CI = CentresInterets[TYPE_ENSEIGNEMENT][self.num]
+            self.CI = CentresInterets[self.parent.classe.typeEnseignement][self.num]
             
             if hasattr(self, 'arbre'):
                 self.SetCode()
