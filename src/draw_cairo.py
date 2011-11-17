@@ -52,31 +52,36 @@ margeY = 0.04
 ecartX = 0.03
 ecartY = 0.03
 
-# CI
-tailleCI = (0.12, 0.10)
-posCI = ((0.72414-tailleCI[0])/2, 0.04)
-IcoulCI = (0.9,0.8,0.8)
-BcoulCI = (0.3,0.2,0.25)
-
-# Rectangle des objectifs
-tailleObj = (0.23, 0.16)
-posObj = (0.72414-margeX-tailleObj[0], margeY)
-IcoulObj = (0.8,0.9,0.8)
-BcoulObj = (0.25,0.3,0.2)
-
 # Rectangle des prerequis
-taillePre = (0.23, 0.16)
+taillePre = (0.20, 0.16)
 posPre = (margeX, margeY)
 IcoulPre = (0.8,0.8,0.9)
 BcoulPre = (0.2,0.25,0.3)
 
+# CI
+tailleCI = (0.12, 0.10)
+posCI = (posPre[0] + taillePre[0]+ecartX, 0.1)
+IcoulCI = (0.9,0.8,0.8)
+BcoulCI = (0.3,0.2,0.25)
+
+# Rectangle des objectifs
+posObj = (posCI[0] + tailleCI[0]+ecartX, margeY)
+tailleObj = (0.72414-posObj[0]-margeX, 0.16)
+IcoulObj = (0.8,0.9,0.8)
+BcoulObj = (0.25,0.3,0.2)
+
+# Zone de commentaire
+posComm = [0.05, None]
+tailleComm = [0.72414-0.1, None]
+
+
 # Zone d'organisation de la séquence (grand cadre)
 posZOrganis = (0.05, 0.26)
-tailleZOrganis = (0.72414-0.1, 1-posZOrganis[1]-margeY)
+tailleZOrganis = [0.72414-0.1, None]
 
 # Rectangle de l'intitulé
 tailleIntitule = (0.4, 0.04)
-posIntitule = ((0.72414-tailleIntitule[0])/2, posZOrganis[1]-tailleIntitule[1])
+posIntitule = [(0.72414-tailleIntitule[0])/2, posZOrganis[1]-tailleIntitule[1]]
 IcoulIntitule = (0.2,0.8,0.2)
 BcoulIntitule = (0.2,0.8,0.2)
 
@@ -134,7 +139,7 @@ ICoulSeance = {"ED" : (0.6, 0.8, 0.8),
 
 def str2coord(str):
     l = str.split(',')
-    return eval(l[0]), eval(l[1])
+    return [eval(l[0]), eval(l[1])]
 
 def coord2str(xy):
     return str(xy[0])+","+str(xy[1])
@@ -310,13 +315,26 @@ def DefinirZones(seq):
     """
     global wEff, hHoraire, ecartSeanceY
     
+    # Zone de commentaire
+    if seq.commentaire == "":
+        tailleComm[1] = 0
+    else:
+        tailleComm[1] = min(0.1, 1.0*len(seq.commentaire)/200)
+    posComm[1] = 1-tailleComm[1]-margeY
+    
+    # Zone d'organisation de la séquence (grand cadre)
+    tailleZOrganis[1] = 1-posZOrganis[1]-margeY-tailleComm[1]
+
+    # Rectangle de l'intitulé
+    posIntitule[1] = posZOrganis[1]-tailleIntitule[1]
+
     # Zone des intitulés des séances
     tailleZIntSeances[1] = len(seq.GetIntituleSeances()[0])* hIntSeance
     posZIntSeances[1] = 1 - tailleZIntSeances[1]-margeY
     
     # Zone du tableau des Systèmes
     tailleZSysteme[0] = wColSysteme * len(seq.systemes)
-    tailleZSysteme[1] = posZIntSeances[1] - posZSysteme[1] - ecartY
+    tailleZSysteme[1] = posZIntSeances[1] - posZSysteme[1] - ecartY - tailleComm[1]
     posZSysteme[0] = posZOrganis[0] + tailleZOrganis[0] - tailleZSysteme[0]
     for i, s in enumerate(seq.systemes):
         xSystemes[s.nom] = posZSysteme[0] + (i+0.5) * wColSysteme
@@ -375,6 +393,23 @@ def Draw(ctx, seq):
     y = posObj[1]+tailleObj[1] - rayon*cos(alpha*pi/360)
     fleche_ronde(ctx, 0.72414/2, y, rayon, alpha, 0.035, 0.06, (0.8, 0.9, 0.8, 1))
     
+    #
+    # Type
+    #
+    ctx.set_font_size(0.002)
+    ctx.set_source_rgb(0.1,0.1,0.1)
+    ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+                                      cairo.FONT_WEIGHT_BOLD)
+    show_text_rect(ctx, seq.classe.typeEnseignement, posCI[0], posCI[1] - 0.08, tailleCI[0], tailleCI[1], ha = 'c', wrap = False, max_font = 0.04)
+    
+    #
+    # Commentaires
+    #
+    if tailleComm[1] > 0:
+        ctx.set_source_rgb(0.1,0.1,0.1)
+        ctx.select_font_face ("Sans", cairo.FONT_SLANT_ITALIC,
+                                          cairo.FONT_WEIGHT_NORMAL)
+        show_text_rect(ctx, u"Commentaires : " + seq.commentaire, posComm[0], posComm[1], tailleComm[0], tailleComm[1], ha = 'g', max_font = 0.02)
     
     # 
     # Effectifs
@@ -848,116 +883,116 @@ def DrawSeanceRacine(ctx, seance):
     #
     bloc.DrawCoisement() 
     
-######################################################################################  
-def Draw_seance2(ctx, seance, curseur, typParent = "", rotation = False, ):
-    if not seance.EstSousSeance():
-        h = hHoraire * seance.GetDuree()
-        fleche_verticale(ctx, posZDeroul[0], curseur[1], 
-                         h, 0.02, (0.9,0.8,0.8,0.5))
-        ctx.set_source_rgb(0.5,0.8,0.8)
-        ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
-                                  cairo.FONT_WEIGHT_BOLD)
-        show_text_rect(ctx, getHoraireTxt(seance.GetDuree()), posZDeroul[0]-0.01, curseur[1], 
-                       0.02, h, orient = 'v')
-        
-        
-    if not seance.typeSeance in ["R", "S", ""]:
-#            print "Draw", self
-        x, y = curseur
-        w = wEff[seance.effectif]
-        h = hHoraire * seance.GetDuree()
-        if rotation:
-            seance.rect.append((x, y, w, h))
-        else:
-            seance.rect=[(x, y, w, h),] # Rectangles pour clic
-        
-        if rotation:
-            alpha = 0.2
-        else:
-            alpha = 1
-        
-        for i in range(int(seance.nombre.v[0])):
-            ctx.set_line_width(0.002)
-            rectangle_plein(ctx, x+w*i, y, w, h, 
-                            BCoulSeance[seance.typeSeance], ICoulSeance[seance.typeSeance], alpha)
-            
-            if not rotation and hasattr(seance, 'code'):
-                ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
-                                      cairo.FONT_WEIGHT_BOLD)
-                ctx.set_source_rgb (0,0,0)
-                show_text_rect(ctx, seance.code, x+w*i, y, wEff["P"], hHoraire/4, ha = 'g', wrap = False)
-            
-            if not rotation and seance.intituleDansDeroul and seance.intitule != "":
-                ctx.select_font_face ("Sans", cairo.FONT_SLANT_ITALIC,
-                                      cairo.FONT_WEIGHT_NORMAL)
-                ctx.set_source_rgb (0,0,0)
-                show_text_rect(ctx, seance.intitule, x+w*i, y + hHoraire/4, 
-                               w, h-hHoraire/4, ha = 'g')
-        
-        
-        # Les croisements "Démarche" et "Systèmes"
-        if not rotation and seance.typeSeance in ["AP", "ED", "P"]:
-            if seance.EstSousSeance() and seance.parent.typeSeance == "S":
-                ns = len(seance.parent.sousSeances)
-                ys = y+(seance.ordre+1) * h/(ns+1)
-#                    print ns, ys, self.ordre
-            else:
-                ys = y+h/2           
-                
-            DrawCroisements(ctx, seance, x+w*seance.nombre.v[0], ys)
-            DrawCroisementSystemes(ctx, seance, ys)      
-                
-            
-        if typParent == "R":
-            curseur[1] += h
-        elif typParent == "S":
-            curseur[0] += w
-        else:
-            curseur[1] += h + ecartSeanceY
-    else:
-        if seance.typeSeance in ["R", "S"]:
-            for s in seance.sousSeances:
-                Draw_seance(ctx, s, curseur, typParent = seance.typeSeance, rotation = rotation)
-#                    if self.typeSeance == "S":
-            
-            #
-            # Aperçu en filigrane de la rotation
-            #
-            if seance.typeSeance == "R" and seance.IsEffectifOk() < 2:
-                l = seance.sousSeances
-                eff = seance.GetEffectif()
-                if eff == 16:
-                    codeEff = "C"
-                elif eff == 8:
-                    codeEff = "G"
-                elif eff == 4:
-                    codeEff = "D"
-                elif eff == 2:
-                    codeEff = "E"
-                elif eff == 1:
-                    codeEff = "P"
-                
-                for t in range(len(seance.sousSeances)-1):
-                    curs = [curseur[0]+wEff[codeEff]*(t+1), curseur[1]-hHoraire * seance.GetDuree()]
-                    l = permut(l)
-                    for i, s in enumerate(l):
-#                        print "filigrane", s, curs
-                        Draw_seance(ctx, s, curs, typParent = "R", rotation = True)
-                        if s.typeSeance == "S":
-                            curs[0]  += wEff[codeEff]*(i+1)
-#                    curs[0] += wEff[codeEff]
-#                    curs[1] = curseur[1]-hHoraire * seance.GetDuree()
-            
-            curseur[0] = posZSeances[0]
-            if typParent == "":
-                curseur[1] += ecartSeanceY
-            if seance.typeSeance == "S":
-                curseur[1] += hHoraire * seance.GetDuree()
-
-#        elif seance.typeSeance in ["AP", "ED"] and seance.Nombre.v[0]>0:
-#            curs = [curseur[0]+wEff[codeEff]*(t+1), curseur[1]-hHoraire * seance.GetDuree()]
-#            for i in range(seance.Nombre.v[0] -1):
+#######################################################################################  
+#def Draw_seance2(ctx, seance, curseur, typParent = "", rotation = False, ):
+#    if not seance.EstSousSeance():
+#        h = hHoraire * seance.GetDuree()
+#        fleche_verticale(ctx, posZDeroul[0], curseur[1], 
+#                         h, 0.02, (0.9,0.8,0.8,0.5))
+#        ctx.set_source_rgb(0.5,0.8,0.8)
+#        ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+#                                  cairo.FONT_WEIGHT_BOLD)
+#        show_text_rect(ctx, getHoraireTxt(seance.GetDuree()), posZDeroul[0]-0.01, curseur[1], 
+#                       0.02, h, orient = 'v')
+#        
+#        
+#    if not seance.typeSeance in ["R", "S", ""]:
+##            print "Draw", self
+#        x, y = curseur
+#        w = wEff[seance.effectif]
+#        h = hHoraire * seance.GetDuree()
+#        if rotation:
+#            seance.rect.append((x, y, w, h))
+#        else:
+#            seance.rect=[(x, y, w, h),] # Rectangles pour clic
+#        
+#        if rotation:
+#            alpha = 0.2
+#        else:
+#            alpha = 1
+#        
+#        for i in range(int(seance.nombre.v[0])):
+#            ctx.set_line_width(0.002)
+#            rectangle_plein(ctx, x+w*i, y, w, h, 
+#                            BCoulSeance[seance.typeSeance], ICoulSeance[seance.typeSeance], alpha)
+#            
+#            if not rotation and hasattr(seance, 'code'):
+#                ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+#                                      cairo.FONT_WEIGHT_BOLD)
+#                ctx.set_source_rgb (0,0,0)
+#                show_text_rect(ctx, seance.code, x+w*i, y, wEff["P"], hHoraire/4, ha = 'g', wrap = False)
+#            
+#            if not rotation and seance.intituleDansDeroul and seance.intitule != "":
+#                ctx.select_font_face ("Sans", cairo.FONT_SLANT_ITALIC,
+#                                      cairo.FONT_WEIGHT_NORMAL)
+#                ctx.set_source_rgb (0,0,0)
+#                show_text_rect(ctx, seance.intitule, x+w*i, y + hHoraire/4, 
+#                               w, h-hHoraire/4, ha = 'g')
+#        
+#        
+#        # Les croisements "Démarche" et "Systèmes"
+#        if not rotation and seance.typeSeance in ["AP", "ED", "P"]:
+#            if seance.EstSousSeance() and seance.parent.typeSeance == "S":
+#                ns = len(seance.parent.sousSeances)
+#                ys = y+(seance.ordre+1) * h/(ns+1)
+##                    print ns, ys, self.ordre
+#            else:
+#                ys = y+h/2           
+#                
+#            DrawCroisements(ctx, seance, x+w*seance.nombre.v[0], ys)
+#            DrawCroisementSystemes(ctx, seance, ys)      
+#                
+#            
+#        if typParent == "R":
+#            curseur[1] += h
+#        elif typParent == "S":
+#            curseur[0] += w
+#        else:
+#            curseur[1] += h + ecartSeanceY
+#    else:
+#        if seance.typeSeance in ["R", "S"]:
+#            for s in seance.sousSeances:
 #                Draw_seance(ctx, s, curseur, typParent = seance.typeSeance, rotation = rotation)
+##                    if self.typeSeance == "S":
+#            
+#            #
+#            # Aperçu en filigrane de la rotation
+#            #
+#            if seance.typeSeance == "R" and seance.IsEffectifOk() < 2:
+#                l = seance.sousSeances
+#                eff = seance.GetEffectif()
+#                if eff == 16:
+#                    codeEff = "C"
+#                elif eff == 8:
+#                    codeEff = "G"
+#                elif eff == 4:
+#                    codeEff = "D"
+#                elif eff == 2:
+#                    codeEff = "E"
+#                elif eff == 1:
+#                    codeEff = "P"
+#                
+#                for t in range(len(seance.sousSeances)-1):
+#                    curs = [curseur[0]+wEff[codeEff]*(t+1), curseur[1]-hHoraire * seance.GetDuree()]
+#                    l = permut(l)
+#                    for i, s in enumerate(l):
+##                        print "filigrane", s, curs
+#                        Draw_seance(ctx, s, curs, typParent = "R", rotation = True)
+#                        if s.typeSeance == "S":
+#                            curs[0]  += wEff[codeEff]*(i+1)
+##                    curs[0] += wEff[codeEff]
+##                    curs[1] = curseur[1]-hHoraire * seance.GetDuree()
+#            
+#            curseur[0] = posZSeances[0]
+#            if typParent == "":
+#                curseur[1] += ecartSeanceY
+#            if seance.typeSeance == "S":
+#                curseur[1] += hHoraire * seance.GetDuree()
+#
+##        elif seance.typeSeance in ["AP", "ED"] and seance.Nombre.v[0]>0:
+##            curs = [curseur[0]+wEff[codeEff]*(t+1), curseur[1]-hHoraire * seance.GetDuree()]
+##            for i in range(seance.Nombre.v[0] -1):
+##                Draw_seance(ctx, s, curseur, typParent = seance.typeSeance, rotation = rotation)
 #        
         
 ######################################################################################  
