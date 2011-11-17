@@ -226,7 +226,7 @@ class Sequence():
         self.systemes = []
         self.seance = [Seance(self, panelParent)]
         
-        
+        self.commentaire = u""
         
         self.panelParent = panelParent
         self.app = app
@@ -318,6 +318,10 @@ class Sequence():
     ######################################################################################  
     def SetText(self, text):
         self.intitule = text
+      
+    ######################################################################################  
+    def SetCommentaire(self, text):
+        self.commentaire = text  
         
     ######################################################################################  
     def SetCodes(self):
@@ -2520,21 +2524,31 @@ class PanelPropriete_Sequence(PanelPropriete):
         PanelPropriete.__init__(self, parent)
         self.sequence = sequence
         
-        titre = wx.StaticText(self, -1, u"Intitulé de la séquence:")
+        titre = wx.StaticText(self, -1, u"Intitulé de la séquence :")
         textctrl = wx.TextCtrl(self, -1, u"", style=wx.TE_MULTILINE)
         self.textctrl = textctrl
-        
         self.sizer.Add(titre, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 2)
         self.sizer.Add(textctrl, (0,1), flag = wx.EXPAND)
+        self.Bind(wx.EVT_TEXT, self.EvtText, textctrl)
+        
+        titre = wx.StaticText(self, -1, u"Commentaires :")
+        commctrl = wx.TextCtrl(self, -1, u"", style=wx.TE_MULTILINE)
+        self.commctrl = commctrl
+        self.sizer.Add(titre, (1,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 2)
+        self.sizer.Add(commctrl, (1,1), flag = wx.EXPAND)
+        self.Bind(wx.EVT_TEXT, self.EvtText, commctrl)
         self.sizer.AddGrowableCol(1)
         self.sizer.Layout()
         
-        self.Bind(wx.EVT_TEXT, self.EvtText, textctrl)
+        
         
     
     #############################################################################            
     def EvtText(self, event):
-        self.sequence.SetText(event.GetString())
+        if event.GetEventObject() == self.textctrl:
+            self.sequence.SetText(event.GetString())
+        else:
+            self.sequence.SetCommentaire(event.GetString())
         self.sendEvent()
         
     #############################################################################            
@@ -2633,11 +2647,12 @@ class PanelPropriete_Classe(PanelPropriete):
         
         self.classe.codeBranche.SetLabel(self.classe.typeEnseignement)
         self.classe.sequence.MiseAJourTypeEnseignement()
+        self.sendEvent()
         
     ######################################################################################  
     def EvtTxtCI(self, event):
         self.classe.ci_ET =  event.GetString()
-        
+        self.sendEvent()
         
     ######################################################################################  
     def EvtVariableEff(self, event):
@@ -2645,8 +2660,7 @@ class PanelPropriete_Classe(PanelPropriete):
         var = event.GetVar()
         i = leff.index(var)
         self.classe.effectifs[le[i]][1] = var.v[0]
-        print self.classe.effectifs
-
+        self.sendEvent()
 
     ######################################################################################  
     def SelectCI(self, event = None):
@@ -2666,6 +2680,7 @@ class PanelPropriete_Classe(PanelPropriete):
                 ci = getTextCI(ls)
                 self.txtCi.ChangeValue(ci)
                 self.classe.ci_ET = ci
+                self.sendEvent()
             elif res == wx.ID_NO:
                 print "Rien" 
         
