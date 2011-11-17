@@ -62,10 +62,11 @@ except ImportError: # if it's not there locally, try the wxPython lib.
 
 
 # Gestionnaire de "pane"
-try:
-    from agw import aui
-except ImportError:
-    import wx.lib.agw.aui as aui
+import wx.aui as aui
+#try:
+#    from agw import aui
+#except ImportError:
+#    import wx.lib.agw.aui as aui
 
 # Pour passer des arguments aux callback
 import functools
@@ -1595,8 +1596,8 @@ class PanelConteneur(wx.Panel):
 #
 ####################################################################################
 class FenetreSequences(aui.AuiMDIParentFrame):
-    def __init__(self):
-        aui.AuiMDIParentFrame.__init__(self, None, -1, u"pySéquence",style=wx.DEFAULT_FRAME_STYLE)
+    def __init__(self, parent):
+        aui.AuiMDIParentFrame.__init__(self, parent, -1, u"pySéquence",style=wx.DEFAULT_FRAME_STYLE)
         
         #
         # Taille et position de la fenétre
@@ -1637,15 +1638,16 @@ class FenetreSequences(aui.AuiMDIParentFrame):
         self.Bind(wx.EVT_MENU, self.commandeOuvrir, id=11)
         self.Bind(wx.EVT_MENU, self.commandeEnregistrer, id=12)
         self.Bind(wx.EVT_MENU, self.exporterFiche, id=15)
-        self.Bind(wx.EVT_MENU, self.OnDoClose, id=wx.ID_EXIT)
+        self.Bind(wx.EVT_MENU, self.OnClose, id=wx.ID_EXIT)
         
         self.Bind(wx.EVT_MENU, self.OnAide, id=21)
         self.Bind(wx.EVT_MENU, self.OnAbout, id=22)
         
         self.Bind(wx.EVT_MENU, self.OnOptions, id=31)
         
-        self.Bind(wx.EVT_CLOSE, self.OnDoClose)
         # Interception de la demande de fermeture
+        self.Bind(wx.EVT_CLOSE, self.OnClose)
+        
         
         child = FenetreSequence(self)
         child.Show()
@@ -1744,6 +1746,7 @@ class FenetreSequences(aui.AuiMDIParentFrame):
     def commandeNouveau(self, event = None):
         child = FenetreSequence(self)
         child.Show()
+        
         return child
         
     ###############################################################################################
@@ -1785,7 +1788,7 @@ class FenetreSequences(aui.AuiMDIParentFrame):
                 retCode = dialog.ShowModal()
                 if retCode == wx.ID_YES:
                     child.ouvrir()
-                
+        
         self.Refresh()
                 
     #############################################################################
@@ -1805,8 +1808,9 @@ class FenetreSequences(aui.AuiMDIParentFrame):
             if isinstance(m, aui.AuiMDIClientWindow):
                 for k in m.GetChildren():
                     if isinstance(k, FenetreSequence):
+#                        print k.IsEnabled()
                         lst.append(k.fichierCourant)
-        print lst
+#        print lst
         return lst
     
     
@@ -1819,7 +1823,7 @@ class FenetreSequences(aui.AuiMDIParentFrame):
         self.GetActiveChild().exporterFiche(event)
     
     #############################################################################
-    def OnDoClose(self, evt):
+    def OnClose(self, evt):
         try:
             draw_cairo.enregistrerConfigFiche(self.nomFichierConfig)
         except IOError:
@@ -1833,17 +1837,18 @@ class FenetreSequences(aui.AuiMDIParentFrame):
             print "   Permission d'enregistrer les options refusée...",
         except:
             print "   Erreur enregistrement options...",
-            
-#        event.Skip()
-#        
+        
         # Close all ChildFrames first else Python crashes
         for m in self.GetChildren():
             if isinstance(m, aui.AuiMDIClientWindow):
                 for k in m.GetChildren():
                     if isinstance(k, FenetreSequence):
-                        k.Close()  
-        evt.Skip()
+                        k.quitter()  
         
+#        print "OnClose fini"
+        evt.Skip()
+        sys.exit()
+#        print self.Destroy()
         
         
 class FenetreSequence(aui.AuiMDIChildFrame):
@@ -2267,21 +2272,22 @@ class FenetreSequence(aui.AuiMDIChildFrame):
             retCode = dialog.ShowModal()
             if retCode == wx.ID_YES:
                 self.commandeEnregistrer()
-                event.Skip()
-                self.Destroy()
+#                event.Skip()
+                self.fermer()
             elif retCode == wx.ID_NO:
-                event.Skip()
-                self.Destroy()
+#                event.Skip()
+                self.fermer()
         else:
-            event.Skip()
-            self.Destroy()
+#            
+            self.fermer()
+#            event.Skip()
 
-    
         
-#    #############################################################################
-#    def fermer(self):
-#        self.Destroy()
-#        sys.exit()
+    #############################################################################
+    def fermer(self):
+#        self.Reparent(None)
+        self.Destroy()
+
 #        
     
     
@@ -4117,53 +4123,53 @@ class ArbreSequence(CT.CustomTreeCtrl):
             event.SetToolTip(wx.ToolTip(self.GetItemText(item)))
 
 
-    def OnItemMenu(self, event):
-
-        item = event.GetItem()
-        if item:
-            self.log.write("OnItemMenu: %s" % self.GetItemText(item) + "\n")
-    
-        event.Skip()
-
-
-    def OnKey(self, event):
-
-        keycode = event.GetKeyCode()
-#        keyname = keyMap.get(keycode, None)
-#                
-#        if keycode == wx.WXK_BACK:
-#            self.log.write("OnKeyDown: HAHAHAHA! I Vetoed Your Backspace! HAHAHAHA\n")
-#            return
+#    def OnItemMenu(self, event):
 #
-#        if keyname is None:
-#            if "unicode" in wx.PlatformInfo:
-#                keycode = event.GetUnicodeKey()
-#                if keycode <= 127:
-#                    keycode = event.GetKeyCode()
-#                keyname = "\"" + unichr(event.GetUnicodeKey()) + "\""
-#                if keycode < 27:
-#                    keyname = "Ctrl-%s" % chr(ord('A') + keycode-1)
+#        item = event.GetItem()
+#        if item:
+#            self.log.write("OnItemMenu: %s" % self.GetItemText(item) + "\n")
+#    
+#        event.Skip()
+
+
+#    def OnKey(self, event):
+#
+#        keycode = event.GetKeyCode()
+##        keyname = keyMap.get(keycode, None)
+##                
+##        if keycode == wx.WXK_BACK:
+##            self.log.write("OnKeyDown: HAHAHAHA! I Vetoed Your Backspace! HAHAHAHA\n")
+##            return
+##
+##        if keyname is None:
+##            if "unicode" in wx.PlatformInfo:
+##                keycode = event.GetUnicodeKey()
+##                if keycode <= 127:
+##                    keycode = event.GetKeyCode()
+##                keyname = "\"" + unichr(event.GetUnicodeKey()) + "\""
+##                if keycode < 27:
+##                    keyname = "Ctrl-%s" % chr(ord('A') + keycode-1)
+##                
+##            elif keycode < 256:
+##                if keycode == 0:
+##                    keyname = "NUL"
+##                elif keycode < 27:
+##                    keyname = "Ctrl-%s" % chr(ord('A') + keycode-1)
+##                else:
+##                    keyname = "\"%s\"" % chr(keycode)
+##            else:
+##                keyname = "unknown (%s)" % keycode
 #                
-#            elif keycode < 256:
-#                if keycode == 0:
-#                    keyname = "NUL"
-#                elif keycode < 27:
-#                    keyname = "Ctrl-%s" % chr(ord('A') + keycode-1)
-#                else:
-#                    keyname = "\"%s\"" % chr(keycode)
-#            else:
-#                keyname = "unknown (%s)" % keycode
-                
-
-        event.Skip()
+#
+#        event.Skip()
         
         
-    def OnActivate(self, event):
-        
-        if self.item:
-            self.log.write("OnActivate: %s" % self.GetItemText(self.item) + "\n")
-
-        event.Skip()
+#    def OnActivate(self, event):
+#        
+#        if self.item:
+#            self.log.write("OnActivate: %s" % self.GetItemText(self.item) + "\n")
+#
+#        event.Skip()
 
         
     def OnHyperLink(self, event):
@@ -4173,19 +4179,19 @@ class ArbreSequence(CT.CustomTreeCtrl):
             self.log.write("OnHyperLink: %s" % self.GetItemText(self.item) + "\n")
             
 
-    def OnTextCtrl(self, event):
+#    def OnTextCtrl(self, event):
+#
+#        char = chr(event.GetKeyCode())
+#        self.log.write("EDITING THE TEXTCTRL: You Wrote '" + char + \
+#                       "' (KeyCode = " + str(event.GetKeyCode()) + ")\n")
+#        event.Skip()
 
-        char = chr(event.GetKeyCode())
-        self.log.write("EDITING THE TEXTCTRL: You Wrote '" + char + \
-                       "' (KeyCode = " + str(event.GetKeyCode()) + ")\n")
-        event.Skip()
 
-
-    def OnComboBox(self, event):
-
-        selection = event.GetEventObject().GetValue()
-        self.log.write("CHOICE FROM COMBOBOX: You Chose '" + selection + "'\n")
-        event.Skip()
+#    def OnComboBox(self, event):
+#
+#        selection = event.GetEventObject().GetValue()
+#        self.log.write("CHOICE FROM COMBOBOX: You Chose '" + selection + "'\n")
+#        event.Skip()
 
 
 class ArbreSavoirs(CT.CustomTreeCtrl):
@@ -4452,8 +4458,9 @@ class SeqApp(wx.App):
                 # on verifie que le fichier passé en paramétre existe
                 
             
-        frame = FenetreSequences()
+        frame = FenetreSequences(None)
         frame.Show()
+        self.SetTopWindow(frame)
         return True
 
 ##########################################################################################################
