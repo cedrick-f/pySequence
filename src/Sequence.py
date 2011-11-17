@@ -168,10 +168,15 @@ class Classe():
         self.ci_ET = CentresInteretsET
         
         self.effectifs = Effectifs
+        
         self.panelPropriete = PanelPropriete_Classe(panelParent, self)
         self.panelParent = panelParent
         self.app = app
         
+    ######################################################################################  
+    def SetSequence(self, sequence):   
+        self.sequence = sequence 
+    
     ######################################################################################  
     def getBranche(self):
         # La classe
@@ -183,9 +188,10 @@ class Classe():
             
         if self.typeEnseignement == 'ET':
             ci = ET.SubElement(classe, "CentreInteret")
-            for i,c in enumerate(self.ci_ET[self.typeEnseignement]):
+            for i,c in enumerate(self.ci_ET):
                 ci.set("CI"+str(i+1), c)
-        
+        return classe
+    
     ######################################################################################  
     def setBranche(self, branche):
         print "setBranche classe"
@@ -200,7 +206,8 @@ class Classe():
     def ConstruireArbre(self, arbre, branche):
         print "ConstruireArbre classe"
         self.arbre = arbre
-        self.branche = arbre.AppendItem(branche, Titres[5], data = self)#, image = self.arbre.images["Seq"])
+        self.codeBranche = wx.StaticText(self.arbre, -1, self.typeEnseignement)
+        self.branche = arbre.AppendItem(branche, Titres[5]+" :", wnd = self.codeBranche, data = self)#, image = self.arbre.images["Seq"])
 
                       
 class Sequence():
@@ -610,11 +617,12 @@ class Sequence():
             return branche
         
     #############################################################################
-    def AppliquerOptions(self):
-        self.CI.AppliquerOptions()
+    def MiseAJourTypeEnseignement(self):
+        self.app.SetTitre()
+        self.CI.MiseAJourTypeEnseignement()
         for o in self.obj.values():
-            o.AppliquerOptions()
-        self.prerequis.AppliquerOptions()
+            o.MiseAJourTypeEnseignement()
+        self.prerequis.MiseAJourTypeEnseignement()
         
 ####################################################################################
 #
@@ -689,7 +697,7 @@ class CentreInteret():
             return self.branche
         
     #############################################################################
-    def AppliquerOptions(self):
+    def MiseAJourTypeEnseignement(self):
         self.panelPropriete.construire()
             
             
@@ -773,7 +781,7 @@ class Competences():
         
         
     #############################################################################
-    def AppliquerOptions(self):
+    def MiseAJourTypeEnseignement(self):
         self.panelPropriete.construire()
         
 #    ######################################################################################  
@@ -827,7 +835,7 @@ class Savoirs():
                                         image = self.arbre.images["Sav"])
          
     #############################################################################
-    def AppliquerOptions(self):
+    def MiseAJourTypeEnseignement(self):
         self.panelPropriete.construire()
     
 #    ######################################################################################  
@@ -952,6 +960,7 @@ class Seance(ElementDeSequence):
             root.set("Demarche", self.demarche)
             root.set("Duree", str(self.duree.v[0]))
             root.set("Effectif", self.effectif)
+            root.set("Nombre", str(self.nombre.v[0]))
             self.branchesSys = []
             for i, s in enumerate(self.systemes):
                 bs = ET.SubElement(root, "Systemes"+str(i))
@@ -984,6 +993,7 @@ class Seance(ElementDeSequence):
         elif self.typeSeance in ["AP", "ED", "P"]:   
             self.effectif = branche.get("Effectif", "C")
             self.demarche = branche.get("Demarche", "I")
+            self.nombre.v[0] = eval(branche.get("Nombre", "1"))
             for i, s in enumerate(list(branche)):
                 nom = s.get("Nom", "")
                 nombre = eval(s.get("Nombre", ""))
@@ -1796,17 +1806,19 @@ class FenetreSequences(aui.AuiMDIParentFrame):
                 for k in m.GetChildren():
                     if isinstance(k, FenetreSequence):
                         lst.append(k.fichierCourant)
+        print lst
         return lst
     
     
     #############################################################################
     def commandeEnregistrer(self, event = None):
-        self.GetActiveChild.commandeEnregistrer(event)
+        self.GetActiveChild().commandeEnregistrer(event)
     
     #############################################################################
     def exporterFiche(self, event = None):
-        self.GetActiveChild.exporterFiche(event)
+        self.GetActiveChild().exporterFiche(event)
     
+    #############################################################################
     def OnDoClose(self, evt):
         try:
             draw_cairo.enregistrerConfigFiche(self.nomFichierConfig)
@@ -1869,6 +1881,7 @@ class FenetreSequence(aui.AuiMDIChildFrame):
         # La séquence
         #
         self.sequence = Sequence(self, self.classe, panelProp)
+        self.classe.SetSequence(self.sequence)
         
         #
         # Arbre de structure de la séquence
@@ -2047,6 +2060,7 @@ class FenetreSequence(aui.AuiMDIChildFrame):
         sizer = wx.BoxSizer()
         sizer.Add(pnl, 1, wx.EXPAND)
         self.SetSizer(sizer)
+        self.Layout()
         wx.CallAfter(self.Layout)
         wx.CallAfter(self.ficheSeq.Redessiner)
     
@@ -2089,6 +2103,7 @@ class FenetreSequence(aui.AuiMDIChildFrame):
         
         fichier.close()
         self.definirNomFichierCourant(nomFichier)
+        self.MarquerFichierCourantModifie(False)
         wx.EndBusyCursor()
         
     ###############################################################################################
@@ -2182,10 +2197,12 @@ class FenetreSequence(aui.AuiMDIChildFrame):
         return os.path.splitext(os.path.split(self.fichierCourant)[-1])[0]
         
     #############################################################################
-    def definirNomFichierCourant(self, nomFichier = '', modif = False):
-#        if modif : print "Fichier courant modifié !"
+    def definirNomFichierCourant(self, nomFichier = ''):
         self.fichierCourant = nomFichier
-        self.fichierCourantModifie = modif
+        self.SetTitre()
+
+    #############################################################################
+    def SetTitre(self, modif = False):
         t = self.classe.typeEnseignement
         if self.fichierCourant == '':
             t += u" - Nouvelle séquence"
@@ -2194,10 +2211,11 @@ class FenetreSequence(aui.AuiMDIChildFrame):
         if modif : 
             t += " **"
         self.SetTitle(t)
-
+        
     #############################################################################
-    def MarquerFichierCourantModifie(self):
-        self.definirNomFichierCourant(self.fichierCourant, True)
+    def MarquerFichierCourantModifie(self, modif = True):
+        self.fichierCourantModifie = modif
+        self.SetTitre(modif)
         
         
     #############################################################################
@@ -2239,40 +2257,32 @@ class FenetreSequence(aui.AuiMDIChildFrame):
     
     #############################################################################
     def quitter(self, event = None):
-        if not self.fichierCourantModifie:
-            self.fermer()
-            return
-
-        def fctYes():
-            self.commandeEnregistrer()
-            self.fermer()
-            
-        self.DialogSequenceModif(fctYes, self.fermer)
-        
-
-    #############################################################################
-    def DialogSequenceModif(self, fctYes, fctNo = None, fctCancel = None):
-        texte = u"La séquence a été modifiée.\nVoulez vous enregistrer les changements ?"
-        if self.fichierCourant != '':
-            texte += "\n\n\t"+self.fichierCourant+"\n"
-            
-        dialog = wx.MessageDialog(self, texte, 
-                                  u"Confirmation", wx.YES_NO | wx.CANCEL | wx.ICON_WARNING)
-        retCode = dialog.ShowModal()
-        if retCode == wx.ID_YES:
-            fctYes()
-        elif retCode == wx.ID_NO:
-            if fctNo != None:
-                fctNo()
+        if self.fichierCourantModifie:
+            texte = u"La séquence a été modifiée.\nVoulez vous enregistrer les changements ?"
+            if self.fichierCourant != '':
+                texte += "\n\n\t"+self.fichierCourant+"\n"
+                
+            dialog = wx.MessageDialog(self, texte, 
+                                      u"Confirmation", wx.YES_NO | wx.CANCEL | wx.ICON_WARNING)
+            retCode = dialog.ShowModal()
+            if retCode == wx.ID_YES:
+                self.commandeEnregistrer()
+                event.Skip()
+                self.Destroy()
+            elif retCode == wx.ID_NO:
+                event.Skip()
+                self.Destroy()
         else:
-            if fctCancel != None:
-                fctCancel()
+            event.Skip()
+            self.Destroy()
+
+    
         
-    #############################################################################
-    def fermer(self):
-        self.Destroy()
-        sys.exit()
-        
+#    #############################################################################
+#    def fermer(self):
+#        self.Destroy()
+#        sys.exit()
+#        
     
     
            
@@ -2538,8 +2548,6 @@ class PanelPropriete_Classe(PanelPropriete):
         PanelPropriete.__init__(self, parent)
         self.classe = classe
         
-        
-        
         #
         # Type d'enseignement
         #
@@ -2573,6 +2581,7 @@ class PanelPropriete_Classe(PanelPropriete):
         help = u"Sélectionner depuis un fichier Excel"
         btn.SetToolTip(wx.ToolTip(help))
         btn.SetHelpText(help)
+        self.btn = btn
         sbs1.Add(btn, flag = wx.EXPAND|wx.ALL, border = 5)
         self.Bind(wx.EVT_BUTTON, self.SelectCI, btn)
         self.sizer.Add(sbs1, (0,1), (2,1), flag = wx.EXPAND|wx.ALL)    
@@ -2582,21 +2591,25 @@ class PanelPropriete_Classe(PanelPropriete):
         #
         sb3 = wx.StaticBox(self, -1, u"Effectifs", size = (200,-1))
         sbs3 = wx.StaticBoxSizer(sb3,wx.VERTICAL)
-        varEff = []
+        varEff = {}
+#        ctrlEff = {}
         for i, eff in enumerate(listeEffectifs):
-            v = Variable(Effectifs[eff][0],  
-                         lstVal = self.classe.effectifs[eff][1], 
+            v = Variable(classe.effectifs[eff][0],  
+                         lstVal = classe.effectifs[eff][1], 
                          typ = VAR_ENTIER_POS, bornes = [1,40])
-            varEff.append(v)
+            varEff[eff] = v
             vc = VariableCtrl(self, v, coef = 1, labelMPL = False, signeEgal = False,
                               help = u"Nombre d'élèves")
+#            ctrlEff[eff] = vc
             self.Bind(EVT_VAR_CTRL, self.EvtVariableEff, vc)
             sbs3.Add(vc, flag = wx.EXPAND|wx.ALL, border = 1)
         self.sizer.Add(sbs3, (1,0), flag = wx.EXPAND|wx.ALL)
         self.varEff = varEff
+#        self.ctrlEff = ctrlEff
         self.sizer.AddGrowableCol(0)
         self.sizer.AddGrowableCol(1)
         
+    
     
     
         
@@ -2604,10 +2617,16 @@ class PanelPropriete_Classe(PanelPropriete):
     def EvtComboBox(self, event):
         print event.GetEventObject().GetValue()
         self.classe.typeEnseignement = event.GetEventObject().GetValue()
+            
         if self.classe.typeEnseignement != 'ET' :
             self.txtCi.Enable(False)
+            self.btn.Enable(False)
         else:
             self.txtCi.Enable(True)
+            self.btn.Enable(True)
+        
+        self.classe.codeBranche.SetLabel(self.classe.typeEnseignement)
+        self.classe.sequence.MiseAJourTypeEnseignement()
         
     ######################################################################################  
     def EvtTxtCI(self, event):
@@ -2616,11 +2635,11 @@ class PanelPropriete_Classe(PanelPropriete):
         
     ######################################################################################  
     def EvtVariableEff(self, event):
-        i = self.varEff.index(event.GetVar())
-        te = self.classe.effectifs.split()
-        te[i] = str(event.GetVar().v[0])
-        t = " "
-        self.classe.effectifs = t.join(te)
+        le, leff = zip(*self.varEff.items())
+        var = event.GetVar()
+        i = leff.index(var)
+        self.classe.effectifs[le[i]][1] = var.v[0]
+        print self.classe.effectifs
 
 
     ######################################################################################  
