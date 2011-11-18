@@ -106,6 +106,7 @@ xDemarche = {"I" : None,
 posZIntSeances = [0.06, None]
 tailleZIntSeances = [0.72414-0.12, None]
 hIntSeance = 0.02
+intituleSeances = []
 
 # Zone des séances
 posZSeances = (0.08, 0.35)
@@ -309,11 +310,11 @@ def ouvrirConfigFiche(nomFichier):
     
 
 ######################################################################################  
-def DefinirZones(seq):
+def DefinirZones(seq, ctx = None):
     """ Calcule les positions et dimensions des différentes zones de tracé
         en fonction du nombre d'éléments (séances, systèmes)
     """
-    global wEff, hHoraire, ecartSeanceY
+    global wEff, hHoraire, ecartSeanceY, intituleSeances
     
     # Zone de commentaire
     if seq.commentaire == "":
@@ -329,6 +330,9 @@ def DefinirZones(seq):
     posIntitule[1] = posZOrganis[1]-tailleIntitule[1]
 
     # Zone des intitulés des séances
+#    intituleSeances = []
+#    for intS in seq.GetIntituleSeances():
+#        intituleSeances.append([intS[0]]+calc_h_texte(ctx, intS[1], tailleZIntSeances[0]))
     tailleZIntSeances[1] = len(seq.GetIntituleSeances()[0])* hIntSeance
     posZIntSeances[1] = 1 - tailleZIntSeances[1]-margeY
     
@@ -671,6 +675,8 @@ def Draw(ctx, seq):
                 0.05, tailleZIntSeances[0]-0.05, tailleZIntSeances[1], 
                 nCol = 1, va = 'c', ha = 'g', orient = 'h', coul = ICoulSeance, 
                 contenu = [intSeances])
+    
+    
     
 
 ######################################################################################  
@@ -1074,9 +1080,78 @@ def getHoraireTxt(v):
 #   Fonction générales de tracé de figures avancées
 #
 ######################################################################################           
+def calc_h_texte(ctx, texte, w, taille, va = 'c', ha = 'c', b = 0.2, orient = 'h'):
+    """ Renvoie la hauteur du rectangle et le texte wrappé
+        x, y, w : position et dimensions du rectangle
+        va, ha : alignements vertical et horizontal ('h', 'c', 'b' et 'g', 'c', 'd')
+        b : écart mini du texte par rapport au bord (relativement aux dimensionx du rectangle)
+        orient : orientation du texte ('h', 'v')
+    """
+    if texte == "":
+        return
+#    if orient == 'v':
+#        ctx.rotate(-pi/2)
+#        calc_h_texte(ctx, texte, -y-h, x, h, w, va, ha, b)
+#        ctx.rotate(pi/2)
+#        return
+    
+    #
+    # "réduction" du réctangle
+    #
+    ecart = w*b/2
+    x, y = x+ecart, y+ecart
+    w = w-2*ecart
+    
+    ctx.set_font_size(taille)
+    
+    ll = []
+    lt = texte.split()
+    i = 0
+    j = 1
+    continuer = True
+    while continuer:
+        if j > len(lt):
+            continuer = False
+            ll.append(" ".join(lt[i:j-1]))
+        else:
+            t = " ".join(lt[i:j])
+            width = ctx.text_extents(t)[2]
+            if width > w:
+                if j - i == 1:
+                    lt[i:j] = textwrap.wrap(lt[i], int(0.1*len(lt)*w/width))
+                else:
+                    ll.append(" ".join(lt[i:j-1]))
+                    i = j
+            else:
+                j += 1
+    print ll
+    fascent, fdescent, fheight, fxadvance, fyadvance = ctx.font_extents()
+    return (fascent+fdescent)*len(ll), ll
+#    #
+#    # On dessine toutes les lignes de texte
+#    #
+#    
+#    h = (fascent+fdescent)*len(ll)
+#    for l, t in enumerate(ll):
+##        print "  ",t
+#        xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(t)
+#        xt, yt = x+xbearing+(w-width)/2, y + (fascent+fdescent)*l - fdescent + fheight
+##        print "  ",xt, yt
+#        if ha == 'c':
+#            ctx.move_to(xt, yt)
+#        elif ha == 'g':
+#            ctx.move_to(x, yt)
+#        
+#        ctx.show_text(t)
+#        
+#    
+#    ctx.stroke()
+   
+    
+    
 def show_text_rect(ctx, texte, x, y, w, h, va = 'c', ha = 'c', b = 0.2, orient = 'h', 
                    max_font = None, wrap = True):
-    """ Renvoie la taille de police et la position du texte
+    """ Affiche un texte en adaptant la taille de police et sa position
         pour qu'il rentre dans le rectangle
         x, y, w, h : position et dimensions du rectangle
         va, ha : alignements vertical et horizontal ('h', 'c', 'b' et 'g', 'c', 'd')
@@ -1331,6 +1406,47 @@ def tableauH(ctx, titres, x, y, wt, wc, h, nCol = 0, va = 'c', ha = 'c', orient 
         _y = y
         
     ctx.stroke ()
+
+def tableauH_var(ctx, titres, x, y, wt, wc, hl, nCol = 0, va = 'c', ha = 'c', orient = 'h', 
+             coul = (0.9,0.9,0.9), contenu = []):
+    hc = h/len(titres)
+    _y = y
+    _coul = ctx.get_source().get_rgba()
+#    print "tableauH", _coul
+    for titre in titres:
+#        print "    ",titre
+        ctx.rectangle(x, _y, wt, hc)
+        if type(coul) == dict :
+            col = coul[titre.rstrip("1234567890.")]
+        else:
+            col = coul
+        ctx.set_source_rgb (col[0], col[1], col[2])
+        ctx.fill_preserve ()
+        ctx.set_source_rgba (_coul[0], _coul[1], _coul[2], _coul[3])
+        show_text_rect(ctx, titre, x, _y, wt, hc, va = va, ha = ha, orient = orient)
+        ctx.stroke ()
+        _y += hc
+    
+    _x = x+wt
+    _y = y
+    for c in range(nCol):
+        for l in range(len(titres)):
+            ctx.rectangle(_x, _y, wc, hc)
+            _y += hc
+        _x += wc
+        _y = y
+    
+    _y = y
+    _x = x+wt
+    for c in contenu:
+        for l in c:
+            show_text_rect(ctx, l, _x, _y, wc, hc, va = va, ha = ha, orient = orient)
+            _y += hc
+        _x += wc
+        _y = y
+        
+    ctx.stroke ()
+    
     
 def rectangle_plein(ctx, x, y, w, h, coulBord, coulInter, alpha = 1):
     ctx.rectangle(x, y, w, h)
