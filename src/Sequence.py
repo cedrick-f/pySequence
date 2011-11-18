@@ -502,7 +502,8 @@ class Sequence():
         self.brancheSys = arbre.AppendItem(self.branche, Titres[4])
         for sy in self.systemes:
             sy.ConstruireArbre(arbre, self.brancheSys)    
-            
+        
+        
             
     ######################################################################################  
     def reconstruireBrancheSeances(self):
@@ -1499,11 +1500,11 @@ class Systeme(ElementDeSequence):
     
     ######################################################################################  
     def setBranche(self, branche):
-        nom  = branche.get("Nom", "")
-        self.SetNom(nom)
+        self.nom  = branche.get("Nom", "")
+#        self.SetNom(nom)
         self.lien = branche.get("Lien", "")
         self.nbrDispo.v[0] = branche.get("Nbr", 1)
-        self.SetNombre()
+#        self.SetNombre()
         data = branche.get("Image", "")
         if data != "":
             self.image = PyEmbeddedImage(data).GetBitmap()
@@ -1529,10 +1530,11 @@ class Systeme(ElementDeSequence):
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
         self.arbre = arbre
-        self.codeBranche = wx.StaticText(self.arbre, -1, u"")
+        self.codeBranche = wx.StaticText(self.arbre, -1, self.nom)
         self.branche = arbre.AppendItem(branche, u"Système :", wnd = self.codeBranche, data = self,
                                         image = self.arbre.images["Sys"])
-        
+#        self.SetNom(self.nom)
+        self.SetNombre()
         
     ######################################################################################  
     def AfficherMenuContextuel(self, itemArbre):
@@ -2165,12 +2167,15 @@ class FenetreSequence(aui.AuiMDIChildFrame):
         self.classe.ConstruireArbre(self.arbreSeq, root)
         self.sequence.ConstruireArbre(self.arbreSeq, root)
         self.sequence.SetCodes()
+        self.sequence.VerifPb()
+        
         self.arbreSeq.ExpandAll()
+        wx.CallAfter(self.arbreSeq.Layout)
         
         fichier.close()
         self.definirNomFichierCourant(nomFichier)
         self.ficheSeq.Redessiner()
-        self.sequence.VerifPb()
+        
         
         
         
@@ -3265,6 +3270,7 @@ class PanelPropriete_Seance(PanelPropriete):
             for i in range(self.seance.nSystemes):
                 s = self.seance.systemes[i]
                 self.systemeCtrl[i].mofifierValeursSsEvt()
+            self.vcNombre.mofifierValeursSsEvt()
         
         self.cbInt.SetValue(self.seance.intituleDansDeroul)
         
