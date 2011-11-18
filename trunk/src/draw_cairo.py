@@ -103,6 +103,7 @@ xDemarche = {"I" : None,
              "P" : None}
 
 # Zone des intitulés des séances
+fontIntSeances = 0.01
 posZIntSeances = [0.06, None]
 tailleZIntSeances = [0.72414-0.12, None]
 hIntSeance = 0.02
@@ -310,11 +311,11 @@ def ouvrirConfigFiche(nomFichier):
     
 
 ######################################################################################  
-def DefinirZones(seq, ctx = None):
+def DefinirZones(seq, ctx):
     """ Calcule les positions et dimensions des différentes zones de tracé
         en fonction du nombre d'éléments (séances, systèmes)
     """
-    global wEff, hHoraire, ecartSeanceY, intituleSeances
+    global wEff, hHoraire, ecartSeanceY, intituleSeances, fontIntSeances
     
     # Zone de commentaire
     if seq.commentaire == "":
@@ -330,11 +331,14 @@ def DefinirZones(seq, ctx = None):
     posIntitule[1] = posZOrganis[1]-tailleIntitule[1]
 
     # Zone des intitulés des séances
-#    intituleSeances = []
-#    for intS in seq.GetIntituleSeances():
-#        intituleSeances.append([intS[0]]+calc_h_texte(ctx, intS[1], tailleZIntSeances[0]))
-    tailleZIntSeances[1] = len(seq.GetIntituleSeances()[0])* hIntSeance
-    posZIntSeances[1] = 1 - tailleZIntSeances[1]-margeY
+    intituleSeances = []
+    tailleZIntSeances[1] = 0
+    for intS in seq.GetIntituleSeances()[1]:
+        h, t = calc_h_texte(ctx, intS, tailleZIntSeances[0], fontIntSeances)
+        intituleSeances.append([intS[0],h,t])
+        tailleZIntSeances[1] += h
+#    tailleZIntSeances[1] = len(seq.GetIntituleSeances()[0])* hIntSeance
+    posZIntSeances[1] = posZOrganis[1] + tailleZOrganis[1] - tailleZIntSeances[1]
     
     # Zone du tableau des Systèmes
     tailleZSysteme[0] = wColSysteme * len(seq.systemes)
@@ -384,7 +388,7 @@ def Draw(ctx, seq):
 #        print "Draw séquence"
     InitCurseur()
     
-    DefinirZones(seq)
+    DefinirZones(seq, ctx)
     
     options = ctx.get_font_options()
     options.set_antialias(cairo.ANTIALIAS_SUBPIXEL)
@@ -671,10 +675,16 @@ def Draw(ctx, seq):
                               cairo.FONT_WEIGHT_NORMAL)
         ctx.set_source_rgb(0, 0, 0)
         ctx.set_line_width(0.002)
-        tableauH(ctx, nomsSeances, posZIntSeances[0], posZIntSeances[1], 
-                0.05, tailleZIntSeances[0]-0.05, tailleZIntSeances[1], 
+        tableauH_var(ctx, nomsSeances, posZIntSeances[0], posZIntSeances[1], 
+                0.05, tailleZIntSeances[0]-0.05, zip(*intituleSeances)[1], fontIntSeances, 
                 nCol = 1, va = 'c', ha = 'g', orient = 'h', coul = ICoulSeance, 
-                contenu = [intSeances])
+                contenu = [zip(*intituleSeances)[2]])
+        
+
+#        tableauH(ctx, nomsSeances, posZIntSeances[0], posZIntSeances[1], 
+#                0.05, tailleZIntSeances[0]-0.05, tailleZIntSeances[1], 
+#                nCol = 1, va = 'c', ha = 'g', orient = 'h', coul = ICoulSeance, 
+#                contenu = [intSeances])
     
     
     
@@ -849,7 +859,13 @@ def DrawSeanceRacine(ctx, seance):
     #
     bloc = Bloc()
     if not seance.typeSeance in ["R", "S", ""]:
-        bloc.contenu.append([Cadre(ctx, seance)])
+        if seance.typeSeance in ["AP", "ED", "P"]:
+            l = []
+            for i in range(int(seance.nombre.v[0])):
+                l.append(Cadre(ctx, seance))
+            bloc.contenu.append(l)
+        else:
+            bloc.contenu.append([Cadre(ctx, seance)])
     else:
         if seance.typeSeance == "R":
             for s in seance.sousSeances:
@@ -1099,7 +1115,7 @@ def calc_h_texte(ctx, texte, w, taille, va = 'c', ha = 'c', b = 0.2, orient = 'h
     # "réduction" du réctangle
     #
     ecart = w*b/2
-    x, y = x+ecart, y+ecart
+#    x, y = x+ecart, y+ecart
     w = w-2*ecart
     
     ctx.set_font_size(taille)
@@ -1124,7 +1140,8 @@ def calc_h_texte(ctx, texte, w, taille, va = 'c', ha = 'c', b = 0.2, orient = 'h
                     i = j
             else:
                 j += 1
-    print ll
+    print texte
+    print "-->", ll
     fascent, fdescent, fheight, fxadvance, fyadvance = ctx.font_extents()
     return (fascent+fdescent)*len(ll), ll
 #    #
@@ -1407,15 +1424,15 @@ def tableauH(ctx, titres, x, y, wt, wc, h, nCol = 0, va = 'c', ha = 'c', orient 
         
     ctx.stroke ()
 
-def tableauH_var(ctx, titres, x, y, wt, wc, hl, nCol = 0, va = 'c', ha = 'c', orient = 'h', 
+def tableauH_var(ctx, titres, x, y, wt, wc, hl, taille, nCol = 0, va = 'c', ha = 'c', orient = 'h', 
              coul = (0.9,0.9,0.9), contenu = []):
-    hc = h/len(titres)
+#    hc = h/len(titres)
     _y = y
     _coul = ctx.get_source().get_rgba()
 #    print "tableauH", _coul
-    for titre in titres:
+    for i, titre in enumerate(titres):
 #        print "    ",titre
-        ctx.rectangle(x, _y, wt, hc)
+        ctx.rectangle(x, _y, wt, hl[i])
         if type(coul) == dict :
             col = coul[titre.rstrip("1234567890.")]
         else:
@@ -1423,25 +1440,47 @@ def tableauH_var(ctx, titres, x, y, wt, wc, hl, nCol = 0, va = 'c', ha = 'c', or
         ctx.set_source_rgb (col[0], col[1], col[2])
         ctx.fill_preserve ()
         ctx.set_source_rgba (_coul[0], _coul[1], _coul[2], _coul[3])
-        show_text_rect(ctx, titre, x, _y, wt, hc, va = va, ha = ha, orient = orient)
+        show_text_rect(ctx, titre, x, _y, wt, hl[i], va = va, ha = ha, orient = orient, max_font = taille)
         ctx.stroke ()
-        _y += hc
+        _y += hl[i]
     
     _x = x+wt
     _y = y
     for c in range(nCol):
         for l in range(len(titres)):
-            ctx.rectangle(_x, _y, wc, hc)
-            _y += hc
+            ctx.rectangle(_x, _y, wc, hl[c])
+            _y += hl[c]
         _x += wc
         _y = y
     
     _y = y
     _x = x+wt
+    ctx.set_font_size(taille)
+    fascent, fdescent, fheight, fxadvance, fyadvance = ctx.font_extents()
     for c in contenu:
-        for l in c:
-            show_text_rect(ctx, l, _x, _y, wc, hc, va = va, ha = ha, orient = orient)
-            _y += hc
+        for j, l in enumerate(c):
+            #
+            # On dessine toutes les lignes de texte
+            #
+            
+#            h = (fascent+fdescent)*len(ll)
+            for i, t in enumerate(l):
+        #        print "  ",t
+                xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(t)
+                xt, yt = _x+xbearing+(wc-width)/2, _y + (fascent+fdescent)*i - fdescent + fheight
+        #        print "  ",xt, yt
+                if ha == 'c':
+                    ctx.move_to(xt, yt)
+                elif ha == 'g':
+                    ctx.move_to(_x, yt)
+                
+                ctx.show_text(t)
+            
+            
+            
+            
+#            show_text_rect(ctx, l, _x, _y, wc, hl[c], va = va, ha = ha, orient = orient, max_font = taille)
+            _y += hl[j]
         _x += wc
         _y = y
         
