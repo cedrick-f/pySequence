@@ -183,6 +183,7 @@ class Classe():
         # La classe
         classe = ET.Element("Classe")
         classe.set("Type", self.typeEnseignement)
+        
         eff = ET.SubElement(classe, "Effectifs")
         for e in listeEffectifs:
             eff.set(e, str(self.effectifs[e][1]))
@@ -200,7 +201,17 @@ class Classe():
         
         self.ci_ET = getListCI(branche.get("CentreInteret", ""))
         
-        setEffectifs(branche.get("Effectifs"), self.effectifs)
+        self.ci_ET = []
+        brancheCI = branche.find("CentreInteret")
+        listCI = list(brancheCI)
+        listCI.sort()
+        for i,c in list(listCI):
+            self.ci_ET.append(brancheCI.get("CI"+str(i+1), ""))
+                      
+        brancheEff = branche.find("Effectifs")
+        for e in listeEffectifs:
+            self.effectifs[e][1] = eval(brancheEff.get(e, "1"))
+#        setEffectifs(branche.get("Effectifs"), self.effectifs)
         
         
     ######################################################################################  
@@ -2125,24 +2136,29 @@ class FenetreSequence(aui.AuiMDIChildFrame):
         
         # La séquence
         sequence = root.find("Sequence")
-        self.sequence.setBranche(sequence)
+        if sequence == None:
+            self.sequence.setBranche(root)
+        else:
+            self.sequence.setBranche(sequence)
         
-        # La classe
-        classe = root.find("Classe")
-        te = classe.get("Type")
-        if te == 'ET':
-            ci = classe.find("CentreInteret")
-            if ci != None:
-                lstCI = []
-                for i,c in enumerate(CentresInterets[self.classe.typeEnseignement]):
-                    lstCI.append(ci.get("CI"+str(i+1)))
+            # La classe
+            classe = root.find("Classe")
+            self.classe.setBranche(classe)
         
-        self.classe.typeEnseignement = te
-        eff = classe.find("Effectifs")
-        for e in listeEffectifs:
-            Effectifs[e][1] = eval(eff.get(e))
-        if te == 'ET':
-            CentresInterets[self.classe.typeEnseignement] = lstCI
+#        te = classe.get("Type")
+#        if te == 'ET':
+#            ci = classe.find("CentreInteret")
+#            if ci != None:
+#                lstCI = []
+#                for i,c in enumerate(CentresInterets[self.classe.typeEnseignement]):
+#                    lstCI.append(ci.get("CI"+str(i+1)))
+#        
+#        self.classe.typeEnseignement = te
+#        eff = classe.find("Effectifs")
+#        for e in listeEffectifs:
+#            Effectifs[e][1] = eval(eff.get(e))
+#        if te == 'ET':
+#            CentresInterets[self.classe.typeEnseignement] = lstCI
         
         self.arbreSeq.DeleteAllItems()
         root = self.arbreSeq.AddRoot("")
