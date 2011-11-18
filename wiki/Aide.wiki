@@ -11,5 +11,5 @@ Il est élaboré en relation avec le _programme_ et le _document d'accompagnemen
 
 
   * [Fonctionnalites Fonctionnalités]
-  * Utilisation
+  * [Utilisation]
   * F.A.Q.
