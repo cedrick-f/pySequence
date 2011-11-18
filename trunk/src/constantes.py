@@ -226,6 +226,40 @@ dicSavoirsET = {"1" : [u"Principes de conception des systèmes de développement
                   ],}
 
 
+
+                         
+
+
+####################################################################################
+#
+#   Définition des constantes pour la spécialité ITEC
+#
+####################################################################################
+
+CentresInteretsITEC = [u"Besoin et performance d'un système",
+                       u"Compétitivité, design et ergonomie des systèmes",
+                       u"Eco-conception des mécanismes",
+                       u"Structure, matériaux et protections d'un système",
+                       u"Transmission de mouvement et de puissance d'un système",
+                       u"Procédés de réalisation"
+                       ]
+
+dicCompetencesITEC = {"O7" : [u"Imaginer une solution, répondre à un besoin",
+                          {"CO7.itec1" : [u"Identifier et justifier un problème technique à partir de l'analyse globale d'un système (approche Matière - Energie - Information"],
+                           "CO7.itec2" : [u"Proposer des solutions à un problème technique identifié en participant à des démarches de créativité, choisir et justifier la solution retenue"],
+                           "CO7.itec3" : [u"Définir, à l'aide d'un modeleur numérique, les formes et dimensions d'une pièce d'un mécanisme à partir des contraintes fonctionnelles, de son principe de réalisation et de son matériau"],
+                           "CO7.itec4" : [u"Définir, à l'aide d'un modeleur numérique, les modifications d'un mécanisme à partir des contraintes fonctionnelles"],}],
+                  "O8" : [u"Valider des solutions techniques",
+                          {"CO8.itec1" : [u"Paramétrer un logiciel de simulation mécanique pour obtenir les caractéristiques d'une loi d'entrée/sortie d'un mécanisme simple"],
+                           "CO8.itec2" : [u"Interpréter les résultats d'une simulation mécanique pour valider une solution ou modifier une pièce ou un mécanisme"],
+                           "CO8.itec3" : [u"Mettre en oeuvre un protocole d'essais et de mesures, interpréter les résultats"],
+                           "CO8.itec4" : [u"Comparer et interpréter le résultat d'une simulation d'un comportement mécanique avec un comportement réel"],}],
+                  "O9" : [u"Gérer la vie du produit",
+                          {"CO9.itec1" : [u"Expérimenter des procédés pour caractériser les paramètres de transformation de la matière et leurs conséquences sur la définition et l'obtention de pièces"],
+                           "CO9.itec2" : [u"Réaliser et valider un prototype obtenu par rapport à tout ou partie du cahier des charges initial"],
+                           "CO9.itec3" : [u"Intégrer les pièces prototypes dans le système à modifier pour valider son comportement et ses performances",]}]}
+
+
 dicSavoirsITEC = {"1" : [u"Projet technologique",
                          {"1.1" : [u"La démarche de projet",
                                    {"1.1.1" : [u"Les projets industriels",
@@ -284,22 +318,106 @@ dicSavoirsITEC = {"1" : [u"Projet technologique",
                                     u"Mesure et validation de performances : essais de caractérisation sur une pièce ou sur tout ou partie d'un système (efforts, déformation, matériau, dimensions, comportements statique, cinématique, énergétique)"]]
                           }]
                   }
-                         
-
 
 ####################################################################################
 #
-#   Définition des constantes pour la spécialité ITEC
+#   Définition des constantes pour la spécialité EE
 #
 ####################################################################################
 
-CentresInteretsITEC = [u"Besoin et performance d'un système",
-                       u"Compétitivité, design et ergonomie des systèmes",
-                       u"Eco-conception des mécanismes",
-                       u"Structure, matériaux et protections d'un système",
-                       u"Transmission de mouvement et de puissance d'un système",
-                       u"Procédés de réalisation"
+CentresInteretsEE = [u"Typologie des sytèmes énergétiques",
+                       u"Production d'énergie",
+                       u"Transport, stockage et distribution de l'énergie et réseaux spécifiques",
+                       u"Efficacité énergétique passive",
+                       u"Efficacité énergétique passive"
                        ]
+
+dicCompetencesEE = {"O7" : [u"Imaginer une solution, répondre à un besoin",
+                          {"CO7.ee1" : [u"Participer à une démarche de conception dans le but de proposer plusieurs solutions possibles à un problème technique identifié en lien avec un enjeu énergétique"],
+                           "CO7.ee2" : [u"Justifier une solution retenue en intégrant les conséquences des choix sur le triptyque Matériau - Energie - Information"],
+                           "CO7.ee3" : [u"Définir la structure, la constitution d'un système en fonction des caractéristiques technico-économiques et environnementales attendues"],
+                           "CO7.ee4" : [u"Définir les modifications de la structure, les choix de constituants et du type de système de gestion d'une chaîne d'énergie afin de répondre à une évolution d'un cahier des charges"],}],
+                  "O8" : [u"Valider des solutions techniques",
+                          {"CO8.ee1" : [u"Renseigner un logiciel de simulation du comportement énergétique avec les caractéristiques du système et les paramètres externes pour un point de fonctionnement donné"],
+                           "CO8.ee2" : [u"Interpréter les résultats d'une simulation afin de valider une solution ou l'optimiser"],
+                           "CO8.ee3" : [u"Comparer et interpréter le résultat d'une simulation d'un comportement d'un système avec un comportement réel"],
+                           "CO8.ee4" : [u"Mettre en oeuvre un protocole d'essais et de mesures sur le prototype d'une chaîne d'énergie, interpréter les résultats"],}],
+                  "O9" : [u"Gérer la vie d'un système",
+                          {"CO9.ee1" : [u"Expérimenter des procédés de stockage, de production, de transport, de transformation, d'énergie pour aider à la conception d'une chaîne d'énergie"],
+                           "CO9.ee2" : [u"Réaliser et valider un prototype obtenu en réponse à tout ou partie du cahier des charges initial"],
+                           "CO9.ee3" : [u"Intégrer un prototype dans un système à modifier pour valider son comportement et ses performances",]}]}
+
+
+dicSavoirsEE = {"1" : [u"Projet technologique",
+                         {"1.1" : [u"La démarche de projet",
+                                   {"1.1.1" : [u"Les projets industriels",
+                                               [u"Typologie des entreprises industrielles et des projets techniques associés (projets locaux, transversaux, \"joint venture\")",
+                                                u"Phases d'un projet industriel (marketing, pré conception, pré industrialisation et conception détaillé, industrialisation, maintenance et fin de vie)",
+                                                u"Principes d'organisation et planification d'un projet (développement séquentiel, chemin critique, découpage du projet en fonctions élémentaires ou en phases) Gestion, suivi et finalisation d'un projet (coût, budget, bilan d'expérience)"]
+                                               ],
+                                    "1.1.2" : [u"Les projets pédagogiques et technologiques",
+                                               [u"Etapes et planification d'un projet technologique (revues de projets, travail collaboratif en équipe projet : ENT, base de données, formats d'échange, carte mentale, flux opérationnels)",
+                                                u"Animation d'une revue de projet ou management d'une équipe projet",
+                                                u"Evaluation de la prise de risque dans un projet par le choix des solutions technologiques (innovations technologiques, notion de coût global, veille technologique)"]
+                                               ]
+                                    }],
+                          "1.2" : [u"Paramètres de la compétitivité",
+                                   [u"Conformité à une norme. L'ergonomie : sécurité dans les relations homme - système, maintenabilité, fiabilité. Innovation technologique : intégration des fonctions et optimisation du fonctionnement, solutions intégrant des énergies renouvelables. Influence de la durée de vie des constituants"]
+                                   ],
+                          "1.3" : [u"Vérification des performances",          
+                                    [u"Contraintes du cahier des charges : performances, qualité, sécurité, temps caractéristiques",
+                                    u"Recette du prototype au regard des besoins formalisés dans le cahier des charges",
+                                    u"Intégration des fonctions et optimisation du fonctionnement : approche pluritechnologique et transferts de technologie"]],
+                          "1.4" : [u"Communication technique",
+                                   [u"Compte rendu d'une activité de projet. Présentation d'une intention de conception ou d'une solution. Animation d'une revue de projet"]]
+                         }],
+                  "2" : [u"Conception d'un système",
+                         {"2.1" : [u"Approche fonctionnelle d'une chaîne d'énergie",
+                                   [u"Structure fonctionnelle d'une chaîne d'énergie, graphe de structure d'une chaîne d'énergie",
+                                    u"Schéma de transfert d'énergie",
+                                    u"Structures d'alimentation en énergie multi-transformateur"]],
+                                    
+                          "2.2" : [u"Approche fonctionnelle du système de gestion de la chaîne d'énergie",
+                                   [u"Gestion de l'information dédiée aux applications énergétiques, caractéristiques des fonctions des systèmes",
+                                    u"Fonctions de communication homme-système : types et caractéristiques",
+                                    u"Autour d'un point de fonctionnement donné, systèmes asservis ou régulés : - représentation fonctionnelle (schéma blocs, chaîne d'action et de retour, correcteur - grandeur réglée, réglante et pertubatrice"]],
+                          "2.3" : [u"Paramètre influent la conception",
+                                    [u"Efficacité énergétique passive et active d'un système"]],
+                          "2.4" : [u"Approche comportementale",
+                                    {"2.4.1" : [u"Comportement énergétique des systèmes",
+                                                [u"Comportement dynamique d'un mécanisme. Théorème de l'énergie cinétique. Inertie ramenée sur l'arbre primaire. Exploitation d'une maquette numérique et d'un résultat de simulation",
+                                                 u"Comportement temporel des constituants d'une chaîne d'énergie, représentation. Caractéristiques et comportements thermique et acoustique des matériaux et parois d'un bâtiment",
+                                                 u"Charge d'une chaîne d'énergie : définition, types de charges, caractérisation",
+                                                 u"Optimisation des échanges d'énergie entre source et charge, amélioration de l'efficacité énergétique : disponibilité, puissance, reconfiguration, qualité, adaptabilité au profil de charge, inertie, régularité, modes de fonctionnement (marche, arrêt, intermittence)"]],
+                                     "2.4.2" : [u"Gestion de l'énergie en temps réel",
+                                                [u"Contrôle instantané du fonctionnement du système en vue d'un maintien au plus près d'un point de fonctionnement",
+                                                 u"Diagramme états - transitions pour un système évènementiel"]],
+                                     "2.4.3" : [u"Validation comportementale par simulation",
+                                                [u"Loi de dcommande, paramètres du modèle de comportement, paramètres de l'environnement. Validation du comportement énergétique d'une structure par simulation. Validation du comportement du système de gestion d'une chaîne d'énergie par simulation"]],
+                            "2.5" : [u"Critères de choix de solutions",
+                                     [u"Constituants matériels et logiciels associés aux fonctions techniques assurées par la chaîne d'énergie et répondant aux performances attendues. Type de système de gestion de l'énergie. Interfaces entre le système de gestion de l'énergie et la chaîne d'énergie. Capteurs. Protections contre les surintensités et contre les surcharges. Conducteurs",
+                                      u"Coût global d'un système : investissement initial, maintenance, entretien, adaptation à l'usage, consommation énergétique"]]
+                          }],
+                          
+                  "3" : [u"Transports et distribution d'énergie, études de dossiers technologiques",
+                         {"3.1" : [u"Produstion et transport d'énergie",
+                                   [u"Types et caractéristiques des centrales électriques, hydrauliques, thermiques. Types de solutions de production d'énergies renouvelables, caractéristiques",
+                                    u"Structure d'un réseau de transport et de distribution d'énergie électrique, caractéristiques et pertes",
+                                    u"Distribution de l'énergie électrique",
+                                    u"Structure d'un réseau de production, de transport et de distribution de fluides",
+                                    u"Gestion du réseau de transport. Comptage et facturation de l'énergie. Impact environnemental"]]}],
+                "4" : [u"Réalisation et qualification d'un prototype",
+                       {"4.1" : [u"Réalisation d'un prototype",
+                                 [u"Décodage de notices techniques et des procédures d'installation",
+                                  u"Agencement, paramétrage et interconnexion de constituants de la chaîne d'énergie",
+                                  u"Mise en oeuvre d'un système local de gestion de l'énergie",
+                                  u"Mise en oeuvre d'un système de télégestion et de télésurveillance"]],
+                        "4.2" : [u"Sécurité",
+                                 ["Techniques liées à la sécurité : notion de redondance, auto-surveillance. Prévention des risques : prévention intrinsèque, protection, information"]],
+                        "4.3" : [u"Essais et réglages en vue d'assurer le fonctionnement et d'améliorer les performances",
+                                 [u"Protocole d'essais, essais et caractérisation des écarts par rapport au comportement attendu. Essais hors énergie, essais statiques en énergie, essais dynamiques. Démarche raisonnée d'identification des causes des écarts et de résolution des problèmes. Paramètres à ajuster pour un fonctionnement spécifié d'un système ou d'un constituant"]]}]
+                          }]
+                  }
 
 
 
