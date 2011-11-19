@@ -128,12 +128,16 @@ Titres = [u"Séquence pédagogique",
           u"Classe"]
 
 class ElementDeSequence():
+    def __init__(self):
+        self.lien = ""
+        
+        
     ######################################################################################  
     def CreerLien(self, event):
-        print "CreerLien"
+
         dlg = URLDialog(None, self.lien)
         res = dlg.ShowModal()
-        print res
+
         url = dlg.GetURL()
         if os.path.exists(self.lien):
             try:
@@ -143,23 +147,44 @@ class ElementDeSequence():
         dlg.Destroy() 
         if res == wx.ID_OK and url != "":
             self.lien = url
-            print "Lien =", self.lien
+        
         elif res == wx.ID_CANCEL:
             print "Rien" 
+
+        self.SetLien()
         return
     
+    
+    ######################################################################################  
+    def SetLien(self, lien = None):
+        self.tip.SetLien(self.lien, self.GetTypeLien())
+        
+        
     ######################################################################################  
     def AfficherLien(self):
         print "AfficherLien", self.lien
+        
+        t = self.GetTypeLien()
+        if t == "f":
+            os.startfile(self.lien)
+        elif t == 'd':
+            subprocess.Popen(["explorer", self.lien])
+        elif t == 'u':
+            urllib.urlopen(self.lien)
+
+  
+    ######################################################################################  
+    def GetTypeLien(self):
+        if self.lien == "":
+            return ""
         if os.path.exists(self.lien):
             if os.path.isfile(self.lien):
-                os.startfile(self.lien)
+                return 'f'
             elif os.path.isdir(self.lien):
-                subprocess.Popen(["explorer", self.lien])
+                return 'd'
         else:
-            urllib.urlopen(self.lien)
-#            elif os.path.isabs(self.lien):
-  
+            return 'u'
+        
 class Classe():
     def __init__(self, app, panelParent, intitule = u""):
         self.intitule = intitule
@@ -226,6 +251,7 @@ class Sequence():
     def __init__(self, app, classe, panelParent, intitule = u""):
         self.intitule = intitule
         self.classe = classe
+        self.app = app
         self.panelPropriete = PanelPropriete_Sequence(panelParent, self)
         
         self.prerequis = Savoirs(self, panelParent)
@@ -240,7 +266,7 @@ class Sequence():
         self.commentaire = u""
         
         self.panelParent = panelParent
-        self.app = app
+        
         
         
         
@@ -347,6 +373,14 @@ class Sequence():
             
         for sy in self.systemes:
             sy.SetCode()    
+    
+    ######################################################################################  
+    def SetLiens(self):
+        for sce in self.seance:
+            sce.SetLien()    
+            
+        for sy in self.systemes:
+            sy.SetLien()  
         
     ######################################################################################  
     def VerifPb(self):
@@ -608,15 +642,15 @@ class Sequence():
     def HitTest(self, x, y):
         rect = draw_cairo.posIntitule + draw_cairo.tailleIntitule
         if dansRectangle(x, y, (rect,)):
-            self.arbre.DoSelectItem(self.branche)
+#            self.arbre.DoSelectItem(self.branche)
             return self.branche
         elif self.CI.HitTest(x, y):
             return self.CI.HitTest(x, y)
         elif dansRectangle(x, y, (draw_cairo.posObj + draw_cairo.tailleObj,)):
-            self.arbre.DoSelectItem(self.brancheObj)
+#            self.arbre.DoSelectItem(self.brancheObj)
             return self.brancheObj
         elif dansRectangle(x, y, (draw_cairo.posPre + draw_cairo.taillePre,)):
-            self.arbre.DoSelectItem(self.branchePre)
+#            self.arbre.DoSelectItem(self.branchePre)
             return self.branchePre
         else:
             branche = None
@@ -633,6 +667,7 @@ class Sequence():
                 i += 1
             return branche
         
+    
     #############################################################################
     def MiseAJourTypeEnseignement(self):
         self.app.SetTitre()
@@ -710,7 +745,7 @@ class CentreInteret():
     def HitTest(self, x, y):
         rect = draw_cairo.posCI + draw_cairo.tailleCI
         if dansRectangle(x, y, (rect,)):
-            self.arbre.DoSelectItem(self.branche)
+#            self.arbre.DoSelectItem(self.branche)
             return self.branche
         
     #############################################################################
@@ -933,6 +968,8 @@ class Seance(ElementDeSequence):
         self.SetType(typeSeance)
         self.sousSeances = []
         
+        # Tip
+        self.tip = PopupInfo(self.GetApp())
         
         self.MiseAJourListeSystemes()
         
@@ -978,6 +1015,7 @@ class Seance(ElementDeSequence):
             root.set("Duree", str(self.duree.v[0]))
             root.set("Effectif", self.effectif)
             root.set("Nombre", str(self.nombre.v[0]))
+            root.set("Lien", self.lien)
             self.branchesSys = []
             for i, s in enumerate(self.systemes):
                 bs = ET.SubElement(root, "Systemes"+str(i))
@@ -1011,6 +1049,7 @@ class Seance(ElementDeSequence):
             self.effectif = branche.get("Effectif", "C")
             self.demarche = branche.get("Demarche", "I")
             self.nombre.v[0] = eval(branche.get("Nombre", "1"))
+            self.lien = branche.get("Lien", "")
             for i, s in enumerate(list(branche)):
                 nom = s.get("Nom", "")
                 nombre = eval(s.get("Nombre", ""))
@@ -1319,6 +1358,9 @@ class Seance(ElementDeSequence):
             for sce in self.sousSeances:
                 sce.SetCode()
 
+        # Tip
+        self.tip.SetMessage("Séance : "+ self.code)
+        
         
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
@@ -1443,7 +1485,7 @@ class Seance(ElementDeSequence):
     ######################################################################################  
     def HitTest(self, x, y):
         if hasattr(self, 'rect') and dansRectangle(x, y, self.rect):
-            self.arbre.DoSelectItem(self.branche)
+#            self.arbre.DoSelectItem(self.branche)
             return self.branche
         else:
             if self.typeSeance in ["R", "S"]:
@@ -1480,6 +1522,9 @@ class Systeme(ElementDeSequence):
         self.image = wx.EmptyBitmap(100,100)
         self.lien = ""
         self.panelPropriete = PanelPropriete_Systeme(panelParent, self)
+        
+        # Tip
+        self.tip = PopupInfo(parent.app)
         
     ######################################################################################  
     def __repr__(self):
@@ -1525,7 +1570,9 @@ class Systeme(ElementDeSequence):
     ######################################################################################  
     def SetCode(self):
         self.codeBranche.SetLabel(self.nom)
-        
+        # Tip
+        self.tip.SetMessage(u"Système : "+ self.nom + "\n" \
+                            u"Nombre : " + str(self.nbrDispo.v[0]))
 
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
@@ -1546,7 +1593,7 @@ class Systeme(ElementDeSequence):
     ######################################################################################  
     def HitTest(self, x, y):
         if hasattr(self, 'rect') and dansRectangle(x, y, self.rect):
-            self.arbre.DoSelectItem(self.branche)
+#            self.arbre.DoSelectItem(self.branche)
             return self.branche
     
     
@@ -1919,6 +1966,9 @@ class FenetreSequence(aui.AuiMDIChildFrame):
 #        panelCentral = wx.ScrolledWindow(pnl, -1, style = wx.HSCROLL | wx.VSCROLL | wx.RETAINED)# | wx.BORDER_SIMPLE)
 #        sizerCentral = wx.GridSizer(1,1)
         self.ficheSeq = FicheSequence(self.nb, self.sequence)
+#        self.popUpInfo = PopupInfo("test")
+#        self.popUpInfo.SetTarget(self.ficheSeq)
+#        self.popUpInfo.SetMessage("test")
 #        panelCentral.SetScrollRate(5,5)
 #        sizerCentral.Add(self.ficheSeq, flag = wx.ALIGN_CENTER|wx.ALL)#|wx.EXPAND)
 #        panelCentral.SetSizerAndFit(sizerCentral)
@@ -2167,6 +2217,7 @@ class FenetreSequence(aui.AuiMDIChildFrame):
         self.classe.ConstruireArbre(self.arbreSeq, root)
         self.sequence.ConstruireArbre(self.arbreSeq, root)
         self.sequence.SetCodes()
+        self.sequence.SetLiens()
         self.sequence.VerifPb()
         
         self.arbreSeq.ExpandAll()
@@ -2343,11 +2394,40 @@ class FicheSequence(wx.ScrolledWindow):
         self.Bind(wx.EVT_LEFT_DCLICK, self.OnDClick)
         self.Bind(wx.EVT_RIGHT_UP, self.OnRClick)
         self.Bind(wx.EVT_ENTER_WINDOW, self.OnEnter)
+        self.Bind(wx.EVT_LEAVE_WINDOW, self.OnLeave)
+        self.Bind(wx.EVT_MOTION, self.OnMove)
+
+    ######################################################################################################
+    def OnLeave(self, evt = None):
+        if hasattr(self, 'call') and self.call.IsRunning():
+            self.call.Stop()
+#        if hasattr(self, 'tip') 
+#            self.tip.Show(False)
+            
+    ######################################################################################################
+    def OnMove(self, evt):
+        if hasattr(self, 'tip'):
+            self.tip.Show(False)
+            self.call.Stop()
+        x, y = evt.GetPosition()
+        _x, _y = self.CalcUnscrolledPosition(x, y)
+        xx, yy = self.ctx.device_to_user(_x, _y)
+        branche = self.sequence.HitTest(xx, yy)
+        if branche != None:
+            elem = branche.GetData()
+            if hasattr(elem, 'tip'):
+                x, y = self.ClientToScreen((x, y))
+                elem.tip.Position((x,y), (0,0))
+                self.call = wx.CallLater(1000, elem.tip.Show, True)
+                self.tip = elem.tip
+        evt.Skip()
 
     ######################################################################################################
     def OnEnter(self, event):
 #        print "OnEnter"
+#        self.OnLeave()
         self.SetFocus()
+        event.Skip()
     
     #############################################################################            
     def OnClick(self, evt):
@@ -2356,7 +2436,10 @@ class FicheSequence(wx.ScrolledWindow):
         _x, _y = self.CalcUnscrolledPosition(x, y)
         xx, yy = self.ctx.device_to_user(_x, _y)
 #        print "  ", xx, yy
-        return self.sequence.HitTest(xx, yy)
+        branche = self.sequence.HitTest(xx, yy)
+        if branche != None:
+            self.sequence.arbre.DoSelectItem(branche)
+        return branche
     
     #############################################################################            
     def OnDClick(self, evt):
@@ -4649,6 +4732,130 @@ def img2str(img):
             os.remove(tfname)
             
     return data
+
+#############################################################################################################
+#
+# Information PopUp
+# 
+#############################################################################################################
+class PopupInfo(wx.PopupWindow):
+    def __init__(self, parent):
+        wx.PopupWindow.__init__(self, parent)
+        sizer = wx.BoxSizer(wx.VERTICAL)
+        self.message = wx.StaticText(self, -1, "aaa")
+        sizer.Add(self.message, flag = wx.ALL, border = 5)
+        
+        self.ctrlLien = wx.BitmapButton(self, -1, wx.NullBitmap)
+        self.ctrlLien.Show(False)
+        self.typeLien = ""
+        self.Bind(wx.EVT_BUTTON, self.OnClick, self.ctrlLien)
+        sizer.Add(self.ctrlLien, flag = wx.ALL, border = 5)
+        self.SetSizerAndFit(sizer)
+#        sz = self.message.GetBestSize()
+#        self.SetSize( (sz.width+20, sz.height+20) )
+        
+        self.Bind(wx.EVT_LEAVE_WINDOW, self.OnLeave)
+    
+    def OnLeave(self, event):
+        x, y = event.GetPosition()
+        w, h = self.GetSize()
+        if not ( x > 0 and y > 0 and x < w and y < h):
+            self.Show(False)
+        event.Skip()
+        
+        
+    def SetMessage(self, message):
+        self.message.SetLabel(message)
+        self.Layout()
+        self.Fit()
+        
+    def SetLien(self, lien, typ):
+        self.typeLien = typ
+        self.lien = lien
+        if typ == "":
+            self.ctrlLien.Show(False)
+            self.ctrlLien.SetToolTipString(self.lien)
+        else:
+            self.ctrlLien.SetToolTipString(self.lien)
+            if typ == "f":
+                self.ctrlLien.SetBitmapLabel(wx.ArtProvider_GetBitmap(wx.ART_NORMAL_FILE))
+                self.ctrlLien.Show(True)
+            elif typ == 'd':
+                self.ctrlLien.SetBitmapLabel(wx.ArtProvider_GetBitmap(wx.ART_FOLDER))
+                self.ctrlLien.Show(True)
+            elif typ == 'u':
+                self.ctrlLien.SetBitmapLabel(images.Icone_web.GetBitmap())
+                self.ctrlLien.Show(True)
+
+        
+        self.Layout()
+        self.Fit()
+        
+    def OnClick(self, evt):
+        if self.typeLien == "f":
+            os.startfile(self.lien)
+        elif self.typeLien == 'd':
+            subprocess.Popen(["explorer", self.lien])
+        elif self.typeLien == 'u':
+            urllib.urlopen(self.lien)
+
+
+       
+#class PopupInfo(wx.PopupWindow):
+#    """Adds a bit of text and mouse movement to the wx.PopupWindow"""
+#    def __init__(self, parent, message):
+#        wx.PopupWindow.__init__(self, parent)
+#        self.SetBackgroundColour("CADET BLUE")
+#
+#        st = wx.StaticText(self, -1,
+#                          "This is a special kind of top level\n"
+#                          "window that can be used for\n"
+#                          "popup menus, combobox popups\n"
+#                          "and such.\n\n"
+#                          "Try positioning the demo near\n"
+#                          "the bottom of the screen and \n"
+#                          "hit the button again.\n\n"
+#                          "In this demo this window can\n"
+#                          "be dragged with the left button\n"
+#                          "and closed with the right."
+#                          ,
+#                          pos=(10,10))
+#
+#        sz = st.GetBestSize()
+#        self.SetSize( (sz.width+20, sz.height+20) )
+#
+#        self.Bind(wx.EVT_LEFT_DOWN, self.OnMouseLeftDown)
+#        self.Bind(wx.EVT_MOTION, self.OnMouseMotion)
+#        self.Bind(wx.EVT_LEFT_UP, self.OnMouseLeftUp)
+#        self.Bind(wx.EVT_RIGHT_UP, self.OnRightUp)
+#
+#        st.Bind(wx.EVT_LEFT_DOWN, self.OnMouseLeftDown)
+#        st.Bind(wx.EVT_MOTION, self.OnMouseMotion)
+#        st.Bind(wx.EVT_LEFT_UP, self.OnMouseLeftUp)
+#        st.Bind(wx.EVT_RIGHT_UP, self.OnRightUp)
+#
+#        wx.CallAfter(self.Refresh)
+#
+#    def OnMouseLeftDown(self, evt):
+#        self.Refresh()
+#        self.ldPos = evt.GetEventObject().ClientToScreen(evt.GetPosition())
+#        self.wPos = self.ClientToScreen((0,0))
+#        self.CaptureMouse()
+#
+#    def OnMouseMotion(self, evt):
+#        if evt.Dragging() and evt.LeftIsDown():
+#            dPos = evt.GetEventObject().ClientToScreen(evt.GetPosition())
+#            nPos = (self.wPos.x + (dPos.x - self.ldPos.x),
+#                    self.wPos.y + (dPos.y - self.ldPos.y))
+#            self.Move(nPos)
+#
+#    def OnMouseLeftUp(self, evt):
+#        self.ReleaseMouse()
+#
+#    def OnRightUp(self, evt):
+#        self.Show(False)
+#        self.Destroy()
+
 
 #############################################################################################################
 #
