@@ -71,13 +71,15 @@ IcoulObj = (0.8,0.9,0.8)
 BcoulObj = (0.25,0.3,0.2)
 
 # Zone de commentaire
+fontIntComm = 0.01
 posComm = [0.05, None]
 tailleComm = [0.72414-0.1, None]
-
+intComm = []
 
 # Zone d'organisation de la séquence (grand cadre)
 posZOrganis = (0.05, 0.26)
 tailleZOrganis = [0.72414-0.1, None]
+bordureZOrganis = 0.01
 
 # Rectangle de l'intitulé
 tailleIntitule = (0.4, 0.04)
@@ -315,17 +317,19 @@ def DefinirZones(seq, ctx):
     """ Calcule les positions et dimensions des différentes zones de tracé
         en fonction du nombre d'éléments (séances, systèmes)
     """
-    global wEff, hHoraire, ecartSeanceY, intituleSeances, fontIntSeances
+    global wEff, hHoraire, ecartSeanceY, intituleSeances, fontIntSeances, fontIntComm, intComm
     
     # Zone de commentaire
     if seq.commentaire == "":
         tailleComm[1] = 0
     else:
-        tailleComm[1] = min(0.1, 1.0*len(seq.commentaire)/200)
+        
+        tailleComm[1], intComm = calc_h_texte(ctx, u"Commentaires : " + seq.commentaire, tailleComm[0], fontIntComm)
+
     posComm[1] = 1-tailleComm[1]-margeY
     
     # Zone d'organisation de la séquence (grand cadre)
-    tailleZOrganis[1] = 1-posZOrganis[1]-margeY-tailleComm[1]
+    tailleZOrganis[1] = posComm[1]-posZOrganis[1]-bordureZOrganis
 
     # Rectangle de l'intitulé
     posIntitule[1] = posZOrganis[1]-tailleIntitule[1]
@@ -342,7 +346,7 @@ def DefinirZones(seq, ctx):
     
     # Zone du tableau des Systèmes
     tailleZSysteme[0] = wColSysteme * len(seq.systemes)
-    tailleZSysteme[1] = posZIntSeances[1] - posZSysteme[1] - ecartY - tailleComm[1]
+    tailleZSysteme[1] = tailleZOrganis[1] - ecartY - tailleZIntSeances[1]
     posZSysteme[0] = posZOrganis[0] + tailleZOrganis[0] - tailleZSysteme[0]
     for i, s in enumerate(seq.systemes):
         xSystemes[s.nom] = posZSysteme[0] + (i+0.5) * wColSysteme
@@ -413,11 +417,27 @@ def Draw(ctx, seq):
     #
     # Commentaires
     #
+    print posComm[1], 
     if tailleComm[1] > 0:
         ctx.set_source_rgb(0.1,0.1,0.1)
         ctx.select_font_face ("Sans", cairo.FONT_SLANT_ITALIC,
                                           cairo.FONT_WEIGHT_NORMAL)
-        show_text_rect(ctx, u"Commentaires : " + seq.commentaire, posComm[0], posComm[1], tailleComm[0], tailleComm[1], ha = 'g', max_font = 0.02)
+        ctx.set_font_size(fontIntComm)
+        _x, _y = posComm
+        fascent, fdescent, fheight, fxadvance, fyadvance = ctx.font_extents()
+        #
+        # On dessine toutes les lignes de texte
+        #
+        for i, t in enumerate(intComm):
+    #        print "  ",t
+#            xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(t)
+            yt = _y + (fascent+fdescent)*i  + fheight #- fdescent
+    #        print "  ",xt, yt
+            ctx.move_to(_x, yt)
+            ctx.show_text(t)
+                
+                
+#        show_text_rect(ctx, u"Commentaires : " + seq.commentaire, posComm[0], posComm[1], tailleComm[0], tailleComm[1], ha = 'g', max_font = 0.02)
     
     # 
     # Effectifs
@@ -465,7 +485,7 @@ def Draw(ctx, seq):
     #
     ctx.set_line_width(0.005)
     ctx.set_source_rgb(BcoulIntitule[0], BcoulIntitule[1], BcoulIntitule[2])
-    ctx.rectangle(posZOrganis[0]-0.01, posZOrganis[1], tailleZOrganis[0]+0.02, tailleZOrganis[1]+0.01)
+    ctx.rectangle(posZOrganis[0]-bordureZOrganis, posZOrganis[1], tailleZOrganis[0]+bordureZOrganis*2, tailleZOrganis[1]+bordureZOrganis)
     ctx.stroke()
 
 
@@ -674,7 +694,7 @@ def Draw(ctx, seq):
         ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
                               cairo.FONT_WEIGHT_NORMAL)
         ctx.set_source_rgb(0, 0, 0)
-        ctx.set_line_width(0.002)
+        ctx.set_line_width(0.001)
         tableauH_var(ctx, nomsSeances, posZIntSeances[0], posZIntSeances[1], 
                 0.05, tailleZIntSeances[0]-0.05, zip(*intituleSeances)[1], fontIntSeances, 
                 nCol = 1, va = 'c', ha = 'g', orient = 'h', coul = ICoulSeance, 
