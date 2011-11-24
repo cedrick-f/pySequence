@@ -1,0 +1,86 @@
+<Sequence Intitule="Utilisation des &#233;nergies renouvelables pour l'habitat">
+  <CentreInteret>
+    <CI9 />
+  </CentreInteret>
+  <Prerequis>
+    <Savoirs />
+  </Prerequis>
+  <Objectifs>
+    <Competences C0="CO2.1" C1="CO4.1" C2="CO5.2" />
+    <Savoirs />
+  </Objectifs>
+  <Seances>
+    <Seance0 Demarche="I" Duree="2.0" Effectif="G" Intitule="Le phare de l&apos;ile noire" IntituleDansDeroul="True" Type="ED">
+      <Systemes0 Nom="PC" Nombre="0" />
+      <Systemes1 Nom="Jeu de cellules" Nombre="0" />
+      <Systemes2 Nom="Panneau PV" Nombre="0" />
+      <Systemes3 Nom="" Nombre="0" />
+      <Systemes4 Nom="" Nombre="0" />
+      <Systemes5 Nom="" Nombre="0" />
+      <Systemes6 Nom="" Nombre="0" />
+      <Systemes7 Nom="" Nombre="0" />
+    </Seance0>
+    <Seance1 Duree="1.0" Effectif="C" Intitule="" IntituleDansDeroul="True" Type="SA" />
+    <Seance2 Intitule="" IntituleDansDeroul="True" Type="S">
+      <Seance0 Demarche="I" Duree="2.0" Effectif="P" Intitule="Etude exp&#233;rimentale des cellules de technologie diff&#233;rentes" IntituleDansDeroul="False" Type="AP">
+        <Systemes0 Nom="PC" Nombre="0" />
+        <Systemes1 Nom="Jeu de cellules" Nombre="0" />
+        <Systemes2 Nom="Panneau PV" Nombre="2" />
+        <Systemes3 Nom="" Nombre="0" />
+        <Systemes4 Nom="" Nombre="0" />
+        <Systemes5 Nom="" Nombre="0" />
+        <Systemes6 Nom="" Nombre="0" />
+        <Systemes7 Nom="" Nombre="0" />
+      </Seance0>
+      <Seance1 Demarche="I" Duree="2.0" Effectif="P" Intitule="" IntituleDansDeroul="True" Type="AP">
+        <Systemes0 Nom="PC" Nombre="0" />
+        <Systemes1 Nom="Jeu de cellules" Nombre="8" />
+        <Systemes2 Nom="Panneau PV" Nombre="0" />
+        <Systemes3 Nom="" Nombre="0" />
+        <Systemes4 Nom="" Nombre="0" />
+        <Systemes5 Nom="" Nombre="0" />
+        <Systemes6 Nom="" Nombre="0" />
+        <Systemes7 Nom="" Nombre="0" />
+      </Seance1>
+    </Seance2>
+    <Seance3 Duree="2.0" Effectif="C" Intitule="Exploitation des r&#233;sultats &#233;tablis pour le TD" IntituleDansDeroul="True" Type="SA" />
+    <Seance4 Duree="1.0" Effectif="C" Intitule="" IntituleDansDeroul="True" Type="E" />
+    <Seance5 Intitule="" IntituleDansDeroul="True" Type="R">
+      <Seance0 Demarche="I" Duree="1.0" Effectif="E" Intitule="" IntituleDansDeroul="True" Type="AP">
+        <Systemes0 Nom="PC" Nombre="0" />
+        <Systemes1 Nom="Jeu de cellules" Nombre="0" />
+        <Systemes2 Nom="Panneau PV" Nombre="0" />
+        <Systemes3 Nom="" Nombre="0" />
+        <Systemes4 Nom="" Nombre="0" />
+        <Systemes5 Nom="" Nombre="0" />
+        <Systemes6 Nom="" Nombre="0" />
+        <Systemes7 Nom="" Nombre="0" />
+      </Seance0>
+      <Seance1 Demarche="I" Duree="1.0" Effectif="E" Intitule="" IntituleDansDeroul="True" Type="AP">
+        <Systemes0 Nom="PC" Nombre="0" />
+        <Systemes1 Nom="Jeu de cellules" Nombre="0" />
+        <Systemes2 Nom="Panneau PV" Nombre="0" />
+        <Systemes3 Nom="" Nombre="0" />
+        <Systemes4 Nom="" Nombre="0" />
+        <Systemes5 Nom="" Nombre="0" />
+        <Systemes6 Nom="" Nombre="0" />
+        <Systemes7 Nom="" Nombre="0" />
+      </Seance1>
+      <Seance2 Demarche="I" Duree="1.0" Effectif="E" Intitule="" IntituleDansDeroul="True" Type="AP">
+        <Systemes0 Nom="PC" Nombre="0" />
+        <Systemes1 Nom="Jeu de cellules" Nombre="0" />
+        <Systemes2 Nom="Panneau PV" Nombre="0" />
+        <Systemes3 Nom="" Nombre="0" />
+        <Systemes4 Nom="" Nombre="0" />
+        <Systemes5 Nom="" Nombre="0" />
+        <Systemes6 Nom="" Nombre="0" />
+        <Systemes7 Nom="" Nombre="0" />
+      </Seance2>
+    </Seance5>
+  </Seances>
+  <Systemes>
+    <Systeme Nom="PC" />
+    <Systeme Nom="Jeu de cellules" />
+    <Systeme Nom="Panneau PV" />
+  </Systemes>
+</Sequence>

@@ -131,7 +131,8 @@ class ElementDeSequence():
     def __init__(self):
         self.lien = ""
         
-        
+    
+
     ######################################################################################  
     def CreerLien(self, event):
 
@@ -185,8 +186,61 @@ class ElementDeSequence():
         else:
             return 'u'
         
+        
+        
+class LienSequence():
+    def __init__(self, parent, panelParent, path = ""):
+        self.path = path
+        self.parent = parent
+        self.panelPropriete = PanelPropriete_LienSequence(panelParent, self)
+        self.panelParent = panelParent
+        
+    
+    
+    ######################################################################################  
+    def getBranche(self):
+        """ Renvoie la branche XML du lien de sequence pour enregistrement
+        """
+        root = ET.Element("Sequence")
+        root.set("dir", self.path)
+        return root
+    
+    ######################################################################################  
+    def setBranche(self, branche):
+        self.path = branche.get("dir", "")
+        if hasattr(self, 'panelPropriete'):
+            self.panelPropriete.MiseAJour()
+        
+
+    ######################################################################################  
+    def ConstruireArbre(self, arbre, branche):
+        self.arbre = arbre
+        self.codeBranche = wx.StaticText(self.arbre, -1, u"")
+        self.branche = arbre.AppendItem(branche, u"Sequence :", wnd = self.codeBranche, data = self,
+                                        image = self.arbre.images["Seq"])
+        
+        
+    ######################################################################################  
+    def AfficherMenuContextuel(self, itemArbre):
+        if itemArbre == self.branche:
+            self.parent.app.AfficherMenuContextuel([[u"Supprimer", functools.partial(self.parent.SupprimerSequencePre, item = itemArbre)],
+                                                    ])
+            
+    ######################################################################################  
+    def SetLabel(self):
+        if hasattr(self, 'codeBranche'):
+            self.codeBranche.SetLabel(self.GetNomFichier())
+    
+    
+    ######################################################################################  
+    def GetNomFichier(self):
+        return os.path.splitext(os.path.basename(self.path))[0]
+     
+     
+     
+            
 class Classe():
-    def __init__(self, app, panelParent, intitule = u""):
+    def __init__(self, app, panelParent = None, intitule = u""):
         self.intitule = intitule
         
         self.typeEnseignement = 'ET'
@@ -195,7 +249,8 @@ class Classe():
         
         self.effectifs = Effectifs
         
-        self.panelPropriete = PanelPropriete_Classe(panelParent, self)
+        if panelParent:
+            self.panelPropriete = PanelPropriete_Classe(panelParent, self)
         self.panelParent = panelParent
         self.app = app
         
@@ -246,15 +301,36 @@ class Classe():
         self.codeBranche = wx.StaticText(self.arbre, -1, self.typeEnseignement)
         self.branche = arbre.AppendItem(branche, Titres[5]+" :", wnd = self.codeBranche, data = self)#, image = self.arbre.images["Seq"])
 
+
+    ######################################################################################  
+    def Verrouiller(self, etat):
+        self.panelPropriete.Verrouiller(etat)
+        if etat:
+            couleur = 'white'
+            message = u""
+        else:
+            couleur = 'green'
+            message = u"Les paramètres de la classe sont verrouillés !\n" \
+                      u"Pour pouvoir les modifier, supprimer le centre d'intérêt\n"\
+                      u"ainsi que les prérequis et les objectifs."
+        if hasattr(self, 'codeBranche'):
+            self.codeBranche.SetBackgroundColour(couleur)
+            self.codeBranche.SetToolTipString(message)
+            self.codeBranche.Refresh()
+
+
                       
 class Sequence():
-    def __init__(self, app, classe, panelParent, intitule = u""):
+    def __init__(self, app, classe = None, panelParent = None, intitule = u""):
+
         self.intitule = intitule
         self.classe = classe
         self.app = app
-        self.panelPropriete = PanelPropriete_Sequence(panelParent, self)
+        if panelParent:
+            self.panelPropriete = PanelPropriete_Sequence(panelParent, self)
         
         self.prerequis = Savoirs(self, panelParent)
+        self.prerequisSeance = []
         
         self.CI = CentreInteret(self, panelParent)
         
@@ -266,6 +342,7 @@ class Sequence():
         self.commentaire = u""
         
         self.panelParent = panelParent
+        
         
         
         
@@ -285,19 +362,33 @@ class Sequence():
         return self.app
     
     ######################################################################################  
+    def GetApercu(self, mult = 3):
+        imagesurface = cairo.ImageSurface(cairo.FORMAT_ARGB32,  210*mult, 297*mult)#cairo.FORMAT_ARGB32,cairo.FORMAT_RGB24
+        ctx = cairo.Context(imagesurface)
+        ctx.scale(297*mult, 297*mult) 
+        draw_cairo.Draw(ctx, self)
+        bmp = wx.lib.wxcairo.BitmapFromImageSurface(imagesurface)
+#        print bmp.GetWidth(), bmp.GetHeight()
+        return bmp
+    
+    
+    ######################################################################################  
     def getBranche(self):
         # Création de la racine
         sequence = ET.Element("Sequence")
         sequence.set("Intitule", self.intitule)
         
         brancheCI = self.CI.getBranche()
-        if brancheCI:
+        print "brancheCI", brancheCI
+        if brancheCI != None:
             ci = ET.SubElement(sequence, "CentreInteret")
             ci.append(brancheCI)
         
         prerequis = ET.SubElement(sequence, "Prerequis")
         prerequis.append(self.prerequis.getBranche())
-            
+        for ps in self.prerequisSeance:
+            prerequis.append(ps.getBranche())
+        
         objectifs = ET.SubElement(sequence, "Objectifs")
         for obj in self.obj.values():
             objectifs.append(obj.getBranche())
@@ -325,6 +416,13 @@ class Sequence():
         if branchePre != None:
             savoirs = branchePre.find("Savoirs")
             self.prerequis.setBranche(savoirs)
+            lst = list(branchePre)
+            lst.remove(savoirs)
+            self.prerequisSeance = []
+            for bsp in lst:
+                sp = LienSequence(self, self.panelParent)
+                sp.setBranche(bsp)
+                self.prerequisSeance.append(sp)
         
         brancheObj = branche.find("Objectifs")
 #        self.obj = []
@@ -349,7 +447,8 @@ class Sequence():
             seance.setBranche(sce)
             self.seance.append(seance)
 
-        self.panelPropriete.MiseAJour()
+        if hasattr(self, 'panelPropriete'):
+            self.panelPropriete.MiseAJour()
         
         
     ######################################################################################  
@@ -362,7 +461,7 @@ class Sequence():
         
     ######################################################################################  
     def SetCodes(self):
-        self.CI.SetCode()
+#        self.CI.SetNum()
 #        for comp in self.obj:
 #            comp.SetCode()
 #        self.obj["C"].SetCode()
@@ -373,6 +472,9 @@ class Sequence():
             
         for sy in self.systemes:
             sy.SetCode()    
+        
+        for ps in self.prerequisSeance:
+            ps.SetLabel()
     
     ######################################################################################  
     def SetLiens(self):
@@ -434,15 +536,22 @@ class Sequence():
 #        return
     
     
-#    ######################################################################################  
-#    def SupprimerObjectif(self, event = None, item = None):
-#        if len(self.obj) > 1:
-#            comp = self.arbre.GetItemPyData(item)
-#            self.obj.remove(comp)
-#            self.arbre.Delete(item)
-#            self.panelPropriete.sendEvent()
+    ######################################################################################  
+    def SupprimerSequencePre(self, event = None, item = None):
+        ps = self.arbre.GetItemPyData(item)
+        self.prerequisSeance.remove(ps)
+        self.arbre.Delete(item)
+        self.panelPropriete.sendEvent()
         
-    
+    ######################################################################################  
+    def AjouterSequencePre(self, event = None):
+        ps = LienSequence(self, self.panelParent)
+        self.prerequisSeance.append(ps)
+        ps.ConstruireArbre(self.arbre, self.branchePre)
+        self.panelPropriete.sendEvent()
+        self.arbre.SelectItem(ps.branche)
+        
+        
     ######################################################################################  
     def AjouterSysteme(self, event = None):
         sy = Systeme(self, self.panelParent)
@@ -520,7 +629,8 @@ class Sequence():
         # Les prérequis
         #
         self.branchePre = arbre.AppendItem(self.branche, Titres[1], data = self.prerequis, image = self.arbre.images["Sav"])
-        
+        for ps in self.prerequisSeance:
+            ps.ConstruireArbre(arbre, self.branchePre)
         #
         # Les objectifs
         #
@@ -538,7 +648,7 @@ class Sequence():
             sy.ConstruireArbre(arbre, self.brancheSys)    
         
         
-            
+        
     ######################################################################################  
     def reconstruireBrancheSeances(self):
         self.arbre.DeleteChildren(self.brancheSce)
@@ -558,7 +668,8 @@ class Sequence():
         if itemArbre == self.branche:
             self.app.AfficherMenuContextuel([[u"Enregistrer", self.app.commandeEnregistrer],
 #                                             [u"Ouvrir", self.app.commandeOuvrir],
-                                             [u"Exporter la fiche en PDF", self.app.exporterFiche]])
+                                             [u"Exporter la fiche en PDF", self.app.exporterFiche],
+                                            ])
             
 #        [u"Séquence pédagogique",
 #          u"Prérequis",
@@ -575,6 +686,9 @@ class Sequence():
         elif isinstance(self.arbre.GetItemPyData(itemArbre), Systeme):
             self.arbre.GetItemPyData(itemArbre).AfficherMenuContextuel(itemArbre)
             
+        elif isinstance(self.arbre.GetItemPyData(itemArbre), LienSequence):
+            self.arbre.GetItemPyData(itemArbre).AfficherMenuContextuel(itemArbre)
+            
 #        elif self.arbre.GetItemText(itemArbre) == Titres[1]: # Objectifs pédagogiques
 #            self.app.AfficherMenuContextuel([[u"Ajouter une compétence", self.AjouterObjectif]])
             
@@ -587,6 +701,9 @@ class Sequence():
             self.app.AfficherMenuContextuel([[u"Ajouter un système", self.AjouterSysteme], 
                                              [u"Selectionner depuis un fichier", self.SelectSystemes]])
          
+        elif self.arbre.GetItemText(itemArbre) == Titres[1]: # Prérequis
+            self.app.AfficherMenuContextuel([[u"Ajouter une séquence", self.AjouterSequencePre], 
+                                             ])
          
             
 #    ######################################################################################  
@@ -676,6 +793,18 @@ class Sequence():
             o.MiseAJourTypeEnseignement()
         self.prerequis.MiseAJourTypeEnseignement()
         
+        
+    #############################################################################
+    def VerrouillerClasse(self):
+        if hasattr(self, 'CI') \
+            and (self.CI.num != None or self.prerequis.savoirs != [] \
+                 or self.obj['C'].competences != [] or self.obj['S'].savoirs != []):
+            self.classe.Verrouiller(False)
+        else:
+            if self.classe != None:
+                self.classe.Verrouiller(True)
+        
+        
 ####################################################################################
 #
 #   Classe définissant les propriétés d'une séquence
@@ -683,11 +812,12 @@ class Sequence():
 ####################################################################################
 class CentreInteret():
     def __init__(self, parent, panelParent, numCI = None):
-        
-        self.SetNum(numCI)
         self.parent = parent
+        self.SetNum(numCI)
+        
         self.code = ""
-        self.panelPropriete = PanelPropriete_CI(panelParent, self)
+        if panelParent:
+            self.panelPropriete = PanelPropriete_CI(panelParent, self)
         
        
         
@@ -708,15 +838,13 @@ class CentreInteret():
             return root
         
     
-    
-    
     ######################################################################################  
     def setBranche(self, branche):
         code = list(branche)[0].tag
         num = eval(code[2:])-1
         self.SetNum(num)
         self.panelPropriete.MiseAJour()
-#        self.SetCode()
+
         
     ######################################################################################  
     def SetNum(self, num):
@@ -724,13 +852,21 @@ class CentreInteret():
         if num != None:
             self.code = "CI"+str(self.num+1)
             self.CI = CentresInterets[self.parent.classe.typeEnseignement][self.num]
+
+        else:
+            self.code = ""
+            self.CI = ""
             
-            if hasattr(self, 'arbre'):
-                self.SetCode()
+        if hasattr(self, 'arbre'):
+            self.SetCode()
+        
+        self.parent.VerrouillerClasse()
+        
         
     ######################################################################################  
     def SetCode(self):
-        self.codeBranche.SetLabel(self.code)
+        if hasattr(self, 'codeBranche'):
+            self.codeBranche.SetLabel(self.code)
         
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
@@ -766,12 +902,12 @@ class Competences():
         self.num = numComp
         self.competences = []
 #        self.SetNum(numComp)
-        
-        self.panelPropriete = PanelPropriete_Competences(panelParent, self)
+        if panelParent:
+            self.panelPropriete = PanelPropriete_Competences(panelParent, self)
         
     ######################################################################################  
     def __repr__(self):
-        return self.code
+        return ""#self.code
         
     ######################################################################################  
     def getBranche(self):
@@ -799,7 +935,8 @@ class Competences():
         self.competences = []
         for i, s in enumerate(branche.keys()):
             self.competences.append(branche.get("C"+str(i), ""))
-        self.panelPropriete.MiseAJour()
+        if hasattr(self, 'panelPropriete'):
+            self.panelPropriete.MiseAJour()
         
         
 #        code = branche.tag
@@ -853,8 +990,8 @@ class Savoirs():
         self.parent = parent
         self.num = num
         self.savoirs = []
-        
-        self.panelPropriete = PanelPropriete_Savoirs(panelParent, self)
+        if panelParent:
+            self.panelPropriete = PanelPropriete_Savoirs(panelParent, self)
         
     ######################################################################################  
     def __repr__(self):
@@ -872,11 +1009,12 @@ class Savoirs():
     
     ######################################################################################  
     def setBranche(self, branche):
-        print "setBranche Savoir",branche.keys()
+#        print "setBranche Savoir",branche.keys()
         self.savoirs = []
         for i, s in enumerate(branche.keys()):
             self.savoirs.append(branche.get("S"+str(i), ""))
-        self.panelPropriete.MiseAJour()
+        if hasattr(self, 'panelPropriete'):
+            self.panelPropriete.MiseAJour()
         
     
     ######################################################################################  
@@ -938,6 +1076,7 @@ class Seance(ElementDeSequence):
                                                             2 = séance "parallèle"
         """
     
+        ElementDeSequence.__init__(self)
         
         # Les données sauvegardées
         self.ordre = 1
@@ -950,7 +1089,7 @@ class Seance(ElementDeSequence):
         self.demarche = "I"
         self.systemes = []
         self.code = u""
-        self.lien = ""
+        
         
         for i in range(8):
             self.systemes.append(Variable(u"", lstVal = 0, nomNorm = "", typ = VAR_ENTIER_POS, 
@@ -969,12 +1108,14 @@ class Seance(ElementDeSequence):
         self.sousSeances = []
         
         # Tip
-        self.tip = PopupInfo(self.GetApp())
+        if self.GetApp():
+            self.tip = PopupInfo(self.GetApp())
         
         self.MiseAJourListeSystemes()
         
-        self.panelPropriete = PanelPropriete_Seance(panelParent, self)
-        self.panelPropriete.AdapterAuType()
+        if panelParent:
+            self.panelPropriete = PanelPropriete_Seance(panelParent, self)
+            self.panelPropriete.AdapterAuType()
         
         
         
@@ -1063,7 +1204,8 @@ class Seance(ElementDeSequence):
         self.intituleDansDeroul = eval(branche.get("IntituleDansDeroul", "True"))
         
         self.MiseAJourListeSystemes()
-        self.panelPropriete.MiseAJour()
+        if hasattr(self, 'panelPropriete'):
+            self.panelPropriete.MiseAJour()
 #        print self
         
     ######################################################################################  
@@ -1514,17 +1656,21 @@ class Seance(ElementDeSequence):
 class Systeme(ElementDeSequence):
     def __init__(self, parent, panelParent, nom = u""):
         
+        ElementDeSequence.__init__(self)
+        
         self.parent = parent
         self.nom = nom
         self.nbrDispo = Variable(u"Nombre dispo", lstVal = 1, nomNorm = "", typ = VAR_ENTIER_POS, 
                               bornes = [0,20], modeLog = False,
                               expression = None, multiple = False)
         self.image = wx.EmptyBitmap(100,100)
-        self.lien = ""
-        self.panelPropriete = PanelPropriete_Systeme(panelParent, self)
         
         # Tip
         self.tip = PopupInfo(parent.app)
+        if panelParent:
+            self.panelPropriete = PanelPropriete_Systeme(panelParent, self)
+        
+        
         
     ######################################################################################  
     def __repr__(self):
@@ -1553,8 +1699,9 @@ class Systeme(ElementDeSequence):
         data = branche.get("Image", "")
         if data != "":
             self.image = PyEmbeddedImage(data).GetBitmap()
-        self.panelPropriete.SetImage()
-        self.panelPropriete.MiseAJour()
+        if hasattr(self, 'panelPropriete'):
+            self.panelPropriete.SetImage()
+            self.panelPropriete.MiseAJour()
 
     ######################################################################################  
     def SetNombre(self):
@@ -1569,11 +1716,17 @@ class Systeme(ElementDeSequence):
         
     ######################################################################################  
     def SetCode(self):
-        self.codeBranche.SetLabel(self.nom)
+        if hasattr(self, 'codeBranche'):
+            self.codeBranche.SetLabel(self.nom)
         # Tip
-        self.tip.SetMessage(u"Système : "+ self.nom + "\n" \
-                            u"Nombre : " + str(self.nbrDispo.v[0]))
+        if hasattr(self, 'tip'):
+            self.tip.SetMessage(u"Système : "+ self.nom + "\n" \
+                                u"Nombre : " + str(self.nbrDispo.v[0]))
 
+    ######################################################################################  
+    def SetImage(self):
+        self.tip.SetImage(self.image)
+        
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
         self.arbre = arbre
@@ -1629,9 +1782,9 @@ class Systeme(ElementDeSequence):
 ####################################################################################    
 class PanelConteneur(wx.Panel):    
     def __init__(self, parent):
-        wx.Panel.__init__(self, parent, -1)
+        wx.Panel.__init__(self, parent, -1)#, style = wx.BORDER_SIMPLE)
         
-        self.bsizer = wx.BoxSizer(wx.VERTICAL)
+        self.bsizer = wx.BoxSizer(wx.HORIZONTAL)
         self.SetSizer(self.bsizer)
         
         #
@@ -1641,16 +1794,16 @@ class PanelConteneur(wx.Panel):
     
     
     def AfficherPanel(self, panel):
-#        print "AfficherPanel"
+        print "AfficherPanel"
         if self.panel != None:
             self.bsizer.Remove(self.panel)
             self.panel.Hide()
-        self.bsizer.Add(panel, flag = wx.EXPAND)
         self.panel = panel
+        self.bsizer.Add(self.panel, 1, flag = wx.EXPAND|wx.GROW)
+        
         if isinstance(self.panel, PanelPropriete_Seance):
             self.panel.AdapterAuxSystemes()
         self.panel.Show()
-        self.bsizer.FitInside(self)
         self.bsizer.Layout()
         self.Refresh()
     
@@ -1932,8 +2085,6 @@ class FenetreSequence(aui.AuiMDIChildFrame):
         # panel de propriétés (conteneur)
         panelProp = PanelConteneur(pnl)
         
-        
-        
         #
         # Pour la sauvegarde
         #
@@ -1957,6 +2108,7 @@ class FenetreSequence(aui.AuiMDIChildFrame):
         #
         arbreSeq = ArbreSequence(pnl, self.sequence, self.classe,  panelProp)
         self.arbreSeq = arbreSeq
+        self.arbreSeq.SelectItem(self.classe.branche)
         
         self.nb = wx.Notebook(pnl, -1)
         #
@@ -2107,7 +2259,7 @@ class FenetreSequence(aui.AuiMDIChildFrame):
 #                         Name(u"Structure").
                          Bottom().Layer(1).
                          Floatable(False).
-                         BestSize((200, 200)).
+                         BestSize((-1, 200)).
                          MinSize((-1, 200)).
 #                         DockFixed().
 #                         Gripper(False).
@@ -2219,7 +2371,8 @@ class FenetreSequence(aui.AuiMDIChildFrame):
         self.sequence.SetCodes()
         self.sequence.SetLiens()
         self.sequence.VerifPb()
-        
+        self.sequence.VerrouillerClasse()
+        self.arbreSeq.SelectItem(self.classe.branche)
         self.arbreSeq.ExpandAll()
         wx.CallAfter(self.arbreSeq.Layout)
         
@@ -2595,14 +2748,16 @@ class FicheSequence(wx.ScrolledWindow):
 ####################################################################################
 class PanelPropriete(scrolled.ScrolledPanel):
     def __init__(self, parent, titre = u"", objet = None):
-        scrolled.ScrolledPanel.__init__(self, parent, -1, size = (-1, 200), style = wx.VSCROLL | wx.RETAINED)#, style = wx.BORDER_SIMPLE)
-        self.SetScrollRate(20,20)
-        self.EnableScrolling(True, True)
-#        self.boxprop = wx.StaticBox(self, -1, u"")
+        scrolled.ScrolledPanel.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)#|wx.BORDER_SIMPLE)
+        
         self.sizer = wx.GridBagSizer()
         self.Hide()
+        
         self.SetSizer(self.sizer)
         self.SetAutoLayout(True)
+#        self.SetScrollRate(20,20)
+        self.SetupScrolling()
+#        self.EnableScrolling(True, True)
         
         self.Bind(wx.EVT_ENTER_WINDOW, self.OnEnter)
 
@@ -2610,6 +2765,8 @@ class PanelPropriete(scrolled.ScrolledPanel):
     def OnEnter(self, event):
 #        print "OnEnter"
         self.SetFocus()
+#        self.sizer.RecalcSizes()
+#        self.Layout()
        
     #########################################################################################################
     def sendEvent(self):
@@ -2642,11 +2799,13 @@ class PanelPropriete_Sequence(PanelPropriete):
         self.sizer.Add(commctrl, (1,1), flag = wx.EXPAND)
         self.Bind(wx.EVT_TEXT, self.EvtText, commctrl)
         self.sizer.AddGrowableCol(1)
+        
+        
         self.sizer.Layout()
+        wx.CallAfter(self.Layout)
         
+#        self.Fit()
         
-        
-    
     #############################################################################            
     def EvtText(self, event):
         if event.GetEventObject() == self.textctrl:
@@ -2658,6 +2817,7 @@ class PanelPropriete_Sequence(PanelPropriete):
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
         self.textctrl.ChangeValue(self.sequence.intitule)
+        self.Layout()
         if sendEvt:
             self.sendEvent()
 
@@ -2701,10 +2861,10 @@ class PanelPropriete_Classe(PanelPropriete):
         self.txtCi = txt
         if self.classe.typeEnseignement != 'ET' :
             self.txtCi.Enable(False)
-        btn = wx.Button(self, -1, u"Sélectionner")
-        help = u"Sélectionner depuis un fichier Excel"
-        btn.SetToolTip(wx.ToolTip(help))
-        btn.SetHelpText(help)
+        btn = wx.Button(self, -1, u"Sélectionner depuis un fichier Excel (.xls)")
+        aide = u"Sélectionner depuis un fichier Excel (.xls)"
+        btn.SetToolTip(wx.ToolTip(aide))
+        btn.SetHelpText(aide)
         self.btn = btn
         sbs1.Add(btn, flag = wx.EXPAND|wx.ALL, border = 5)
         self.Bind(wx.EVT_BUTTON, self.SelectCI, btn)
@@ -2788,6 +2948,10 @@ class PanelPropriete_Classe(PanelPropriete):
             elif res == wx.ID_NO:
                 print "Rien" 
         
+    ######################################################################################  
+    def Verrouiller(self, etat):
+        for c in self.GetChildren():
+            self.Enable(etat)
         
         
 ####################################################################################
@@ -2827,6 +2991,10 @@ class PanelPropriete_CI(PanelPropriete):
         for radio, text in self.group_ctrls:
             self.Bind(wx.EVT_RADIOBUTTON, self.EvtComboBox, radio )
         
+    ######################################################################################################
+    def OnEnter(self, event):
+        return
+    
     #############################################################################            
     def construire(self):
         self.DestroyChildren()
@@ -2835,21 +3003,25 @@ class PanelPropriete_CI(PanelPropriete):
         self.grid1 = wx.FlexGridSizer( 0, 2, 0, 0 )
         self.group_ctrls = []
         for i, ci in enumerate(CentresInterets[self.CI.parent.classe.typeEnseignement]):
-            if i == 0 : s = wx.RB_GROUP
-            else: s = 0
-            r = wx.RadioButton(self, -1, "CI"+str(i+1), style = s )
+#            if i == 0 : s = wx.RB_GROUP
+#            else: s = 0
+            r = wx.RadioButton(self, -1, "CI"+str(i+1))#, style = s )
             t = wx.StaticText(self, -1, ci)
             self.grid1.Add( r, 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_LEFT|wx.LEFT|wx.RIGHT|wx.TOP, 2 )
             self.grid1.Add( t, 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_LEFT|wx.LEFT|wx.RIGHT, 5 )
             self.group_ctrls.append((r, t))
-        self.sizer.Add(self.grid1, (0,1), flag = wx.EXPAND)
+        self.sizer.Add(self.grid1, (0,0), flag = wx.EXPAND)
+        
+        btn = wx.Button(self, -1, u"Effacer")
+        self.Bind(wx.EVT_BUTTON, self.OnClick, btn)
+        self.sizer.Add(btn, (0,1))
+        
         self.sizer.Layout()
         
     #############################################################################            
     def EvtComboBox(self, event):
-#        print "EvtComboBox",
+#        print "EvtComboBox"
         radio_selected = eval(event.GetEventObject().GetLabel()[2:])
-#        print radio_selected
         self.CI.SetNum(radio_selected-1)
 
         self.Layout()
@@ -2857,13 +3029,121 @@ class PanelPropriete_CI(PanelPropriete):
         
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
-#        self.titre.SetLabel(u"CI "+str(self.CI.num+1)+":")
         self.group_ctrls[self.CI.num][0].SetValue(True)
-#        self.cb.SetSelection(self.CI.num)
         self.Layout()
         if sendEvt:
             self.sendEvent()
+            
+    def OnClick(self, event):
+        if self.CI.num != None:
+            self.group_ctrls[self.CI.num][0].SetValue(False)
+            self.CI.SetNum(None)
+            self.sendEvent()
         
+####################################################################################
+#
+#   Classe définissant le panel de propriété d'un lien vers une séquence
+#
+####################################################################################
+class PanelPropriete_LienSequence(PanelPropriete):
+    def __init__(self, parent, lien):
+        PanelPropriete.__init__(self, parent)
+        self.lien = lien
+        self.sequence = None
+        self.classe = None
+        self.construire()
+            
+        
+    #############################################################################            
+    def construire(self):
+        #
+        # Sélection du ficier de séquence
+        #
+        sb0 = wx.StaticBox(self, -1, u"Fichier de la séquence", size = (200,-1))
+        sbs0 = wx.StaticBoxSizer(sb0,wx.HORIZONTAL)
+        self.texte = wx.TextCtrl(self, -1, self.lien.path, size = (300, -1))
+        bt2 =wx.BitmapButton(self, 101, wx.ArtProvider_GetBitmap(wx.ART_NORMAL_FILE))
+        bt2.SetToolTipString(u"Sélectionner un fichier")
+        self.Bind(wx.EVT_BUTTON, self.OnClick, bt2)
+        sbs0.Add(self.texte)#, flag = wx.EXPAND)
+        sbs0.Add(bt2)
+        
+        #
+        # Aperçu de la séquence
+        #
+        sb1 = wx.StaticBox(self, -1, u"Aperçu de la séquence", size = (210,297))
+        sbs1 = wx.StaticBoxSizer(sb1,wx.HORIZONTAL)
+        sbs1.SetMinSize((210,297))
+        self.apercu = wx.StaticBitmap(self, -1, wx.NullBitmap)
+        sbs1.Add(self.apercu, 1)
+        
+        self.sizer.Add(sbs0, (0,0), flag = wx.EXPAND)
+        self.sizer.Add(sbs1, (0,1), (2,1))#, flag = wx.EXPAND)
+        
+        self.sizer.Layout()
+        
+    #############################################################################            
+    def OnClick(self, event):
+        mesFormats = u"Séquence (.seq)|*.seq|" \
+                       u"Tous les fichiers|*.*'"
+                       
+        dlg = wx.FileDialog(self, u"Sélectionner un fichier séquence",
+                            defaultFile = "",
+                            wildcard = mesFormats,
+#                           defaultPath = globdef.DOSSIER_EXEMPLES,
+                            style = wx.DD_DEFAULT_STYLE
+                            #| wx.DD_DIR_MUST_EXIST
+                            #| wx.DD_CHANGE_DIR
+                            )
+
+        if dlg.ShowModal() == wx.ID_OK:
+            self.lien.path = dlg.GetPath()
+            self.MiseAJour()
+        dlg.Destroy()
+        
+        self.SetFocus()
+        
+    #############################################################################            
+    def MiseAJour(self, sendEvt = False):
+        self.texte.SetValue(self.lien.path)
+        self.sequence = Sequence(self.lien.parent.app)
+        
+        fichier = open(self.lien.path,'r')
+#        try:
+        root = ET.parse(fichier).getroot()
+        
+        # La séquence
+        sequence = root.find("Sequence")
+        if sequence == None:
+            self.sequence.setBranche(root)
+        else:
+            self.sequence.setBranche(sequence)
+        
+            # La classe
+            classe = root.find("Classe")
+            self.sequence.classe = Classe(self)
+            self.sequence.classe.setBranche(classe)
+            self.sequence.SetCodes()
+            self.sequence.SetLiens()
+            self.sequence.VerifPb()
+        fichier.close()
+        
+#        print self.sequence
+#        except:
+#            self.sequence = None
+        if self.sequence:
+            bmp = self.sequence.GetApercu().ConvertToImage().Scale(210, 297).ConvertToBitmap()
+            self.apercu.SetBitmap(bmp)
+            self.lien.SetLabel()
+#        self.FitInside()
+        self.Layout()
+        
+#        print self.GetSize()
+        if sendEvt:
+            self.sendEvent()
+            
+            
+            
 ####################################################################################
 #
 #   Classe définissant le panel de propriété de la compétence
@@ -2903,6 +3183,7 @@ class PanelPropriete_Competences(PanelPropriete):
     def SetCompetences(self): 
 #        self.savoirs.savoirs = lst
 #        print self.competence.competences
+        self.competence.parent.VerrouillerClasse()
         self.sendEvent()
         
     #############################################################################            
@@ -2984,28 +3265,29 @@ class PanelPropriete_Savoirs(PanelPropriete):
         self.Layout()
         
         
-    ######################################################################################  
-    def OnSize(self, event):
-        print self.GetClientSize()
-        self.win.SetMinSize(self.GetClientSize())
-        self.Layout()
-        event.Skip()
+#    ######################################################################################  
+#    def OnSize(self, event):
+##        print self.GetClientSize()
+#        self.win.SetMinSize(self.GetClientSize())
+#        self.Layout()
+#        event.Skip()
 
     ######################################################################################  
     def SetSavoirs(self): 
 #        self.savoirs.savoirs = lst
-        print self.savoirs.savoirs
+#        print self.savoirs.savoirs
+        self.savoirs.parent.VerrouillerClasse()
         self.sendEvent()
         
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
-        print "MiseAJour"
+#        print "MiseAJour"
         self.arbre.UnselectAll()
         for s in self.savoirs.savoirs:
             i = self.arbre.get_item_by_label(s, self.arbre.GetRootItem())
-            print i
+#            print i
             if i.IsOk():
-                print i
+#                print i
                 self.arbre.CheckItem2(i)
         
         if sendEvt:
@@ -3449,14 +3731,15 @@ class PanelPropriete_Systeme(PanelPropriete):
         
     #############################################################################            
     def SetImage(self):
-        w, h = self.systeme.image.GetSize()
-        print w, h, "-->",
-        wf, hf = 200.0, 100.0
-        r = max(w/wf, h/hf)
-        _w, _h = w/r, h/r
-        print _w, _h
-        self.systeme.image = self.systeme.image.ConvertToImage().Scale(_w, _h).ConvertToBitmap()
-        self.image.SetBitmap(self.systeme.image)
+        if self.systeme.image != wx.NullBitmap:
+            w, h = self.systeme.image.GetSize()
+            wf, hf = 200.0, 100.0
+            r = max(w/wf, h/hf)
+            _w, _h = w/r, h/r
+            self.systeme.image = self.systeme.image.ConvertToImage().Scale(_w, _h).ConvertToBitmap()
+            self.image.SetBitmap(self.systeme.image)
+        self.systeme.SetImage()
+        
         
         
     #############################################################################            
@@ -4751,8 +5034,10 @@ class PopupInfo(wx.PopupWindow):
         self.Bind(wx.EVT_BUTTON, self.OnClick, self.ctrlLien)
         sizer.Add(self.ctrlLien, flag = wx.ALL, border = 5)
         self.SetSizerAndFit(sizer)
-#        sz = self.message.GetBestSize()
-#        self.SetSize( (sz.width+20, sz.height+20) )
+
+        self.image = wx.StaticBitmap(self, -1, wx.NullBitmap)
+        self.image.Show(False)
+        sizer.Add(self.image, flag = wx.ALL, border = 5)
         
         self.Bind(wx.EVT_LEAVE_WINDOW, self.OnLeave)
     
@@ -4788,6 +5073,15 @@ class PopupInfo(wx.PopupWindow):
                 self.ctrlLien.Show(True)
 
         
+        self.Layout()
+        self.Fit()
+        
+    def SetImage(self, image):
+        if image == wx.NullBitmap:
+            self.image.Show(False)
+        else:
+            self.image.SetBitmap(image)
+            self.image.Show(True)
         self.Layout()
         self.Fit()
         

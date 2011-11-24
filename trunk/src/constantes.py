@@ -698,30 +698,30 @@ DefOptionsDefaut()
 ####################################################################################
 CentresInterets = {'ET'     : CentresInteretsET,
                    'ITEC'   : CentresInteretsITEC, 
-                   'AC'     : CentresInteretsET, 
-                   'EE'     : CentresInteretsET, 
-                   'SIN'    : CentresInteretsET}
+                   'AC'     : CentresInteretsAC, 
+                   'EE'     : CentresInteretsEE, 
+                   'SIN'    : CentresInteretsSIN}
 
 dicCompetences = {'ET'     : dicCompetencesET,
-                  'ITEC'   : dicCompetencesET, 
-                  'AC'     : dicCompetencesET, 
-                  'EE'     : dicCompetencesET, 
-                  'SIN'    : dicCompetencesET}
+                  'ITEC'   : dicCompetencesITEC, 
+                  'AC'     : dicCompetencesAC, 
+                  'EE'     : dicCompetencesEE, 
+                  'SIN'    : dicCompetencesSIN}
 
 dicSavoirs = {'ET'     : dicSavoirsET,
               'ITEC'   : dicSavoirsITEC, 
-              'AC'     : dicSavoirsET, 
-              'EE'     : dicSavoirsET, 
-              'SIN'    : dicSavoirsET}
+              'AC'     : dicSavoirsAC, 
+              'EE'     : dicSavoirsEE, 
+              'SIN'    : dicSavoirsSIN}
 
 def getListCI(txt):
     return txt.splitlines()
 
 def getTextCI(lst):
     t = u""
-    print lst
+#    print lst
     for i, ci in enumerate(lst):
-        print i, ci
+#        print i, ci
         t += ci
         if i != len(lst)-1:
             t += "\n"

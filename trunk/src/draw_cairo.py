@@ -52,20 +52,21 @@ margeY = 0.04
 ecartX = 0.03
 ecartY = 0.03
 
-# Rectangle des prerequis
-taillePre = (0.20, 0.16)
-posPre = (margeX, margeY)
-IcoulPre = (0.8,0.8,0.9)
-BcoulPre = (0.2,0.25,0.3)
-
 # CI
-tailleCI = (0.12, 0.10)
-posCI = (posPre[0] + taillePre[0]+ecartX, 0.1)
+tailleCI = (0.16, 0.07)
+#posCI = (posPre[0] + taillePre[0]+ecartX, 0.1)
+posCI = (margeX, margeY)
 IcoulCI = (0.9,0.8,0.8)
 BcoulCI = (0.3,0.2,0.25)
 
+# Rectangle des prerequis
+taillePre = (0.28, 0.16 - tailleCI[1] - ecartY/2)
+posPre = (margeX, posCI[1] + tailleCI[1] + ecartY/2)
+IcoulPre = (0.8,0.8,0.9)
+BcoulPre = (0.2,0.25,0.3)
+
 # Rectangle des objectifs
-posObj = (posCI[0] + tailleCI[0]+ecartX, margeY)
+posObj = (posPre[0] + taillePre[0] + ecartX, margeY)
 tailleObj = (0.72414-posObj[0]-margeX, 0.16)
 IcoulObj = (0.8,0.9,0.8)
 BcoulObj = (0.25,0.3,0.2)
@@ -82,7 +83,7 @@ tailleZOrganis = [0.72414-0.1, None]
 bordureZOrganis = 0.01
 
 # Rectangle de l'intitulé
-tailleIntitule = (0.4, 0.04)
+tailleIntitule = [0.4, 0.04]
 posIntitule = [(0.72414-tailleIntitule[0])/2, posZOrganis[1]-tailleIntitule[1]]
 IcoulIntitule = (0.2,0.8,0.2)
 BcoulIntitule = (0.2,0.8,0.2)
@@ -394,25 +395,45 @@ def Draw(ctx, seq):
     
     DefinirZones(seq, ctx)
     
+    #
+    # Options générales
+    #
     options = ctx.get_font_options()
     options.set_antialias(cairo.ANTIALIAS_SUBPIXEL)
     options.set_hint_style(cairo.HINT_STYLE_NONE)
     options.set_hint_metrics(cairo.HINT_METRICS_OFF)
     ctx.set_font_options(options)
     
-    rayon = 0.25
-    alpha = 80
-    y = posObj[1]+tailleObj[1] - rayon*cos(alpha*pi/360)
-    fleche_ronde(ctx, 0.72414/2, y, rayon, alpha, 0.035, 0.06, (0.8, 0.9, 0.8, 1))
+    #
+    # Flèche
+    #
+    rayon = 0.30
+    alpha0 = 55
+    alpha1 = 155
+    y = posObj[1]+tailleObj[1] - rayon*sin(alpha0*pi/180)
+    fleche_ronde(ctx, 0.72414/2, y, rayon, alpha0, alpha1, 0.035, 0.06, (0.8, 0.9, 0.8, 1))
     
     #
-    # Type
+    # Type d'enseignement
     #
-    ctx.set_font_size(0.002)
-    ctx.set_source_rgb(0.1,0.1,0.1)
+    ctx.set_font_size(0.05)
+#    ctx.set_source_rgb(0.1,0.1,0.1)
     ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
                                       cairo.FONT_WEIGHT_BOLD)
-    show_text_rect(ctx, seq.classe.typeEnseignement, posCI[0], posCI[1] - 0.08, tailleCI[0], tailleCI[1], ha = 'c', wrap = False, max_font = 0.04)
+#    show_text_rect(ctx, seq.classe.typeEnseignement, posCI[0], posCI[1] - 0.08, tailleCI[0], tailleCI[1], ha = 'c', wrap = False, max_font = 0.04)
+    
+    xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(seq.classe.typeEnseignement)
+    ctx.move_to (posCI[0] + tailleCI[0] + ecartX/2 , posCI[1] + height)
+    ctx.text_path (seq.classe.typeEnseignement)
+    ctx.set_source_rgb (0.5, 0.5, 1)
+    ctx.fill_preserve ()
+    ctx.set_source_rgb (0, 0, 0)
+    ctx.set_line_width (0.002)
+    ctx.stroke ()
+    
+    
+    
+    
     
     #
     # Commentaires
@@ -496,7 +517,7 @@ def Draw(ctx, seq):
     # Rectangle arrondi
     x0, y0 = posPre
     rect_width, rect_height  = taillePre
-    curve_rect(ctx, x0, y0, rect_width, rect_height, 0.3)
+    curve_rect(ctx, x0, y0, rect_width, rect_height, 0.05)
     ctx.set_source_rgb (IcoulPre[0], IcoulPre[1], IcoulPre[2])
     ctx.fill_preserve ()
     ctx.set_source_rgba (BcoulPre[0], BcoulPre[1], BcoulPre[2])
@@ -519,11 +540,19 @@ def Draw(ctx, seq):
     lstTexte = []
     for c in seq.prerequis.savoirs:
         lstTexte.append(getSavoir(seq, c))
-    hl = rect_height-height-0.015   
-    if len(lstTexte) > 0:
-        e = 0.01
         
-        liste_code_texte(ctx, seq.prerequis.savoirs, lstTexte, x0, yc, rect_width, hl, e)
+    lstTexteS = []   
+    for c in seq.prerequisSeance:
+        lstTexteS.append(c.GetNomFichier())    
+        
+    hl = rect_height-height-0.015   
+    if len(lstTexte) + len(lstTexteS) > 0:
+        e = 0.01
+        hC = hl*len(lstTexte)/(len(lstTexte) + len(lstTexteS))
+        hS = hl*len(lstTexteS)/(len(lstTexte) + len(lstTexteS))
+        liste_code_texte(ctx, seq.prerequis.savoirs, lstTexte, x0, yc, rect_width, hC, e)
+        ctx.set_source_rgba (0.0, 0.0, 0.5, 1.0)
+        liste_code_texte(ctx, ["Seq."]*len(lstTexteS), lstTexteS, x0, yc+hC, rect_width, hS, 0.01)
     else:
         show_text_rect(ctx, u"Aucun", x0, yc, rect_width, hl, max_font = 0.015)
     
@@ -552,7 +581,7 @@ def Draw(ctx, seq):
     # Rectangle arrondi
     x0, y0 = posObj
     rect_width, rect_height  = tailleObj
-    curve_rect(ctx, x0, y0, rect_width, rect_height, 0.3)
+    curve_rect(ctx, x0, y0, rect_width, rect_height, 0.05)
     ctx.set_source_rgb (IcoulObj[0], IcoulObj[1], IcoulObj[2])
     ctx.fill_preserve ()
     ctx.set_source_rgba (BcoulObj[0], BcoulObj[1], BcoulObj[2])
@@ -1116,7 +1145,7 @@ def getHoraireTxt(v):
 #   Fonction générales de tracé de figures avancées
 #
 ######################################################################################           
-def calc_h_texte(ctx, texte, w, taille, va = 'c', ha = 'c', b = 0.2, orient = 'h'):
+def calc_h_texte(ctx, texte, w, taille, va = 'c', ha = 'c', b = 0.1, orient = 'h'):
     """ Renvoie la hauteur du rectangle et le texte wrappé
         x, y, w : position et dimensions du rectangle
         va, ha : alignements vertical et horizontal ('h', 'c', 'b' et 'g', 'c', 'd')
@@ -1154,10 +1183,10 @@ def calc_h_texte(ctx, texte, w, taille, va = 'c', ha = 'c', b = 0.2, orient = 'h
             width = ctx.text_extents(t)[2]
             if width > w:
                 if j - i == 1:
-                    lt[i:j] = textwrap.wrap(lt[i], int(0.1*len(lt)*w/width))
+                    lt[i:j] = textwrap.wrap(lt[i], int(1.0*len(lt)*w/width))
                 else:
                     ll.append(" ".join(lt[i:j-1]))
-                    i = j
+                    i = j-1
             else:
                 j += 1
     print texte
@@ -1535,15 +1564,28 @@ def fleche_verticale(ctx, x, y, h, e, coul):
     ctx.fill ()
     
 
-def fleche_ronde(ctx, x, y, r, a, e, f, coul):
+def fleche_ronde(ctx, x, y, r, a0, a1, e, f, coul):
+    """ Dessine une flèche
+        x, y = centre
+        r = rayon
+        a0, a1 = angles de départ et d'arrivée (en degrés)
+        e = épaisseur
+        f = taille du bout de flèche
+    """
     ctx.set_line_width (e)
     ctx.set_source_rgba (coul[0], coul[1], coul[2], coul[3])
-    a0 = (90-a/2) * pi/180 + f/r/2
-    a1 = (90+a/2) * pi/180 + f/r/2
-    a2 = a/2 * pi/180
+#    a0 = (90-a/2) * pi/180 + f/r/2
+#    a1 = (90+a/2) * pi/180 + f/r/2
+    a2 = (90-a0) * pi/180
+    a0 = a0 * pi/180+ f/r/2
+    a1 = a1 * pi/180 
+    
+#    a2 = a/2 * pi/180
+    
     ctx.arc (x, y, r, a0, a1)
     ctx.stroke ()
 
+    # angle du bout de flèche
     af = pi/5
     _x, _y = x+r*sin(a2), y+r*cos(a2)
     ctx.move_to(_x, _y)
