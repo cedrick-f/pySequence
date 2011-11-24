@@ -100,6 +100,8 @@ import recup_excel
 import Options
 from wx.lib.embeddedimage import PyEmbeddedImage
 
+import register
+
 ####################################################################################
 #
 #   Evenement perso pour détecter une modification de la séquence
@@ -1831,7 +1833,7 @@ class PanelConteneur(wx.Panel):
 #
 ####################################################################################
 class FenetreSequences(aui.AuiMDIParentFrame):
-    def __init__(self, parent):
+    def __init__(self, parent, fichier):
         aui.AuiMDIParentFrame.__init__(self, parent, -1, u"pySéquence",style=wx.DEFAULT_FRAME_STYLE)
         
         #
@@ -1879,6 +1881,7 @@ class FenetreSequences(aui.AuiMDIParentFrame):
         self.Bind(wx.EVT_MENU, self.OnAbout, id=22)
         
         self.Bind(wx.EVT_MENU, self.OnOptions, id=31)
+        self.Bind(wx.EVT_MENU, self.OnRegister, id=32)
         
         # Interception de la demande de fermeture
         self.Bind(wx.EVT_CLOSE, self.OnClose)
@@ -1886,6 +1889,10 @@ class FenetreSequences(aui.AuiMDIParentFrame):
         
         child = FenetreSequence(self)
         child.Show()
+        
+        if fichier != "":
+            child.ouvrir(fichier)
+        
         
     ###############################################################################################
     def CreateMenuBar(self):
@@ -1903,6 +1910,9 @@ class FenetreSequences(aui.AuiMDIParentFrame):
 
         tool_menu = wx.Menu()
         tool_menu.Append(31, u"Options")
+        self.menuReg = tool_menu.Append(32, u"a")
+        self.MiseAJourMenu()
+        
 
         help_menu = wx.Menu()
         help_menu.Append(21, u"Aide en ligne")
@@ -1916,6 +1926,12 @@ class FenetreSequences(aui.AuiMDIParentFrame):
         
         self.SetMenuBar(mb)
         
+    def MiseAJourMenu(self):
+        if register.IsRegistered():
+            self.menuReg.SetText(u"Désinscrire de la base de registre")
+        else:
+            self.menuReg.SetText(u"Inscrire dans la base de registre")
+            
     #############################################################################
     def DefinirOptions(self, options):
         global TYPE_ENSEIGNEMENT
@@ -1946,6 +1962,24 @@ class FenetreSequences(aui.AuiMDIParentFrame):
             CentresInteretsET = getListCI(lstCI)
                 
                 
+    #############################################################################
+    def OnRegister(self, event): 
+        if register.IsRegistered():
+            ok = register.UnRegister()
+        else:
+            ok = register.Register(PATH)
+        if not ok:
+            dlg = wx.MessageDialog(self, u"Accès à la base de registre refusé !\n" \
+                                         u"Redémarrer pySequence en tant qu'administrateur.",
+                               u"Accès refusé",
+                               wx.OK | wx.ICON_WARNING
+                               #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
+                               )
+            dlg.ShowModal()
+            dlg.Destroy()
+        else:
+            self.MiseAJourMenu()
+         
     #############################################################################
     def OnAbout(self, event):
         win = A_propos(self)
@@ -4888,13 +4922,16 @@ def get_key(dict, value):
 ####################################################################################
 class SeqApp(wx.App):
     def OnInit(self):
+        fichier = ""
         if len(sys.argv)>1: #un paramétre a été passé
-            for param in sys.argv:
-                parametre = param.upper()
-                # on verifie que le fichier passé en paramétre existe
-                
-            
-        frame = FenetreSequences(None)
+            parametre = sys.argv[1]
+#            for param in sys.argv:
+#                parametre = param.upper()
+#                # on verifie que le fichier passé en paramétre existe
+            if os.path.isfile(parametre):
+                fichier = unicode(parametre, 'cp1252')
+        
+        frame = FenetreSequences(None, fichier)
         frame.Show()
         self.SetTopWindow(frame)
         return True
