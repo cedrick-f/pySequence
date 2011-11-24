@@ -552,11 +552,14 @@ def Draw(ctx, seq):
         hS = hl*len(lstTexteS)/(len(lstTexte) + len(lstTexteS))
         liste_code_texte(ctx, seq.prerequis.savoirs, lstTexte, x0, yc, rect_width, hC, e)
         ctx.set_source_rgba (0.0, 0.0, 0.5, 1.0)
-        liste_code_texte(ctx, ["Seq."]*len(lstTexteS), lstTexteS, x0, yc+hC, rect_width, hS, 0.01)
+        lstRect = liste_code_texte(ctx, ["Seq."]*len(lstTexteS), lstTexteS, x0, yc+hC, rect_width, hS, 0.01)
+        for i, c in enumerate(seq.prerequisSeance): 
+            c.rect = [lstRect[i]]
     else:
         show_text_rect(ctx, u"Aucun", x0, yc, rect_width, hl, max_font = 0.015)
     
     
+        
 #    if len(seq.prerequis.savoirs) > 0:
 #        no = len(seq.prerequis.savoirs)
 #        e = 0.01
@@ -1189,8 +1192,8 @@ def calc_h_texte(ctx, texte, w, taille, va = 'c', ha = 'c', b = 0.1, orient = 'h
                     i = j-1
             else:
                 j += 1
-    print texte
-    print "-->", ll
+#    print texte
+#    print "-->", ll
     fascent, fdescent, fheight, fxadvance, fyadvance = ctx.font_extents()
     return (fascent+fdescent)*len(ll), ll
 #    #
@@ -1598,6 +1601,7 @@ def fleche_ronde(ctx, x, y, r, a0, a1, e, f, coul):
     
     
 def liste_code_texte(ctx, lstCodes, lstTexte, x, y, w, h, e):
+    lstRect = []
     no = len(lstCodes)
     if no > 0:
         hl = h/no
@@ -1613,6 +1617,8 @@ def liste_code_texte(ctx, lstCodes, lstTexte, x, y, w, h, e):
     
             ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
                                   cairo.FONT_WEIGHT_BOLD)
+            lstRect.append((x+e, y+i*hl, w, hl))
+    return lstRect
     
     
 #    no = len(lstCodes)

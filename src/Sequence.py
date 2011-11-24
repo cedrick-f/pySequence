@@ -194,7 +194,8 @@ class LienSequence():
         self.parent = parent
         self.panelPropriete = PanelPropriete_LienSequence(panelParent, self)
         self.panelParent = panelParent
-        
+        # Tip
+        self.tip = PopupInfoSysteme(self.parent.app, u"Séquence requise")
     
     
     ######################################################################################  
@@ -230,13 +231,25 @@ class LienSequence():
     def SetLabel(self):
         if hasattr(self, 'codeBranche'):
             self.codeBranche.SetLabel(self.GetNomFichier())
-    
-    
+        
+    ######################################################################################  
+    def SetImage(self, bmp):
+        self.tip.SetImage(bmp)
+
+    ######################################################################################  
+    def SetLien(self):
+        self.tip.SetLien(self.path, 's')
+        
     ######################################################################################  
     def GetNomFichier(self):
         return os.path.splitext(os.path.basename(self.path))[0]
      
-     
+    ######################################################################################  
+    def HitTest(self, x, y):
+        if hasattr(self, 'rect') and dansRectangle(x, y, self.rect):
+            return self.branche
+
+        
      
             
 class Classe():
@@ -475,6 +488,7 @@ class Sequence():
         
         for ps in self.prerequisSeance:
             ps.SetLabel()
+            
     
     ######################################################################################  
     def SetLiens(self):
@@ -767,6 +781,10 @@ class Sequence():
 #            self.arbre.DoSelectItem(self.brancheObj)
             return self.brancheObj
         elif dansRectangle(x, y, (draw_cairo.posPre + draw_cairo.taillePre,)):
+            for ls in self.prerequisSeance:
+                h = ls.HitTest(x,y)
+                if h != None:
+                    return h
 #            self.arbre.DoSelectItem(self.branchePre)
             return self.branchePre
         else:
@@ -1109,7 +1127,7 @@ class Seance(ElementDeSequence):
         
         # Tip
         if self.GetApp():
-            self.tip = PopupInfo(self.GetApp())
+            self.tip = PopupInfoSysteme(self.GetApp(), u"Séance")
         
         self.MiseAJourListeSystemes()
         
@@ -1666,7 +1684,7 @@ class Systeme(ElementDeSequence):
         self.image = wx.EmptyBitmap(100,100)
         
         # Tip
-        self.tip = PopupInfo(parent.app)
+        self.tip = PopupInfoSysteme(parent.app, u"Système")
         if panelParent:
             self.panelPropriete = PanelPropriete_Systeme(panelParent, self)
         
@@ -1720,8 +1738,8 @@ class Systeme(ElementDeSequence):
             self.codeBranche.SetLabel(self.nom)
         # Tip
         if hasattr(self, 'tip'):
-            self.tip.SetMessage(u"Système : "+ self.nom + "\n" \
-                                u"Nombre : " + str(self.nbrDispo.v[0]))
+            self.tip.SetMessage(self.nom + "\n" \
+                                u"Nombre disponible : " + str(self.nbrDispo.v[0]))
 
     ######################################################################################  
     def SetImage(self):
@@ -2074,6 +2092,8 @@ class FenetreSequence(aui.AuiMDIChildFrame):
         aui.AuiMDIChildFrame.__init__(self, parent, -1, "")#, style = wx.DEFAULT_FRAME_STYLE | wx.SYSTEM_MENU)
 #        self.SetExtraStyle(wx.FRAME_EX_CONTEXTHELP)
 #        
+        self.parent = parent
+        
         # Use a panel under the AUI panes in order to work around a
         # bug on PPC Macs
         pnl = wx.Panel(self)
@@ -3108,7 +3128,18 @@ class PanelPropriete_LienSequence(PanelPropriete):
         self.texte.SetValue(self.lien.path)
         self.sequence = Sequence(self.lien.parent.app)
         
-        fichier = open(self.lien.path,'r')
+        try:
+            fichier = open(self.lien.path,'r')
+        except:
+            dlg = wx.MessageDialog(self, u"Le fichier %s\nn'a pas pu être ouvert !" %self.lien.path,
+                               u"Erreur d'ouverture du fichier",
+                               wx.OK | wx.ICON_WARNING
+                               #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
+                               )
+            dlg.ShowModal()
+            dlg.Destroy()
+            return
+            
 #        try:
         root = ET.parse(fichier).getroot()
         
@@ -3135,6 +3166,8 @@ class PanelPropriete_LienSequence(PanelPropriete):
             bmp = self.sequence.GetApercu().ConvertToImage().Scale(210, 297).ConvertToBitmap()
             self.apercu.SetBitmap(bmp)
             self.lien.SetLabel()
+            self.lien.SetImage(bmp)
+            self.lien.SetLien()
 #        self.FitInside()
         self.Layout()
         
@@ -5022,23 +5055,17 @@ def img2str(img):
 # 
 #############################################################################################################
 class PopupInfo(wx.PopupWindow):
-    def __init__(self, parent):
+    def __init__(self, parent, titre):
         wx.PopupWindow.__init__(self, parent)
-        sizer = wx.BoxSizer(wx.VERTICAL)
-        self.message = wx.StaticText(self, -1, "aaa")
-        sizer.Add(self.message, flag = wx.ALL, border = 5)
+        self.parent = parent
+        self.sizer = wx.GridBagSizer()
+        self.titre = wx.StaticText(self, -1, titre)
+        font = wx.Font(18, wx.SWISS, wx.NORMAL, wx.NORMAL)
+        self.titre.SetFont(font)
+        self.sizer.Add(self.titre, (0,0), flag = wx.ALL|wx.ALIGN_CENTER, border = 5)
         
-        self.ctrlLien = wx.BitmapButton(self, -1, wx.NullBitmap)
-        self.ctrlLien.Show(False)
-        self.typeLien = ""
-        self.Bind(wx.EVT_BUTTON, self.OnClick, self.ctrlLien)
-        sizer.Add(self.ctrlLien, flag = wx.ALL, border = 5)
-        self.SetSizerAndFit(sizer)
-
-        self.image = wx.StaticBitmap(self, -1, wx.NullBitmap)
-        self.image.Show(False)
-        sizer.Add(self.image, flag = wx.ALL, border = 5)
         
+        self.SetSizerAndFit(self.sizer)
         self.Bind(wx.EVT_LEAVE_WINDOW, self.OnLeave)
     
     def OnLeave(self, event):
@@ -5047,35 +5074,70 @@ class PopupInfo(wx.PopupWindow):
         if not ( x > 0 and y > 0 and x < w and y < h):
             self.Show(False)
         event.Skip()
+    
+
+
+
+class PopupInfoSysteme(PopupInfo):
+    def __init__(self, parent, titre):
+        PopupInfo.__init__(self, parent, titre)
         
+        self.message = wx.StaticText(self, -1, "")
+        self.sizer.Add(self.message, (1,0), flag = wx.ALL, border = 5)
         
+        self.titreLien = wx.StaticText(self, -1, "")
+        self.ctrlLien = wx.BitmapButton(self, -1, wx.NullBitmap)
+        self.ctrlLien.Show(False)
+        self.typeLien = ""
+        self.Bind(wx.EVT_BUTTON, self.OnClick, self.ctrlLien)
+        sizerLien = wx.BoxSizer(wx.HORIZONTAL)
+        sizerLien.Add(self.titreLien, flag = wx.ALIGN_CENTER_VERTICAL)
+        sizerLien.Add(self.ctrlLien)
+        self.sizer.Add(sizerLien, (2,0), flag = wx.ALL, border = 5)
+        
+
+        self.image = wx.StaticBitmap(self, -1, wx.NullBitmap)
+        self.image.Show(False)
+        self.sizer.Add(self.image, (3,0), flag = wx.ALL, border = 5)
+       
+    
+    ##########################################################################################
     def SetMessage(self, message):
         self.message.SetLabel(message)
         self.Layout()
         self.Fit()
         
+    ##########################################################################################
     def SetLien(self, lien, typ):
         self.typeLien = typ
         self.lien = lien
         if typ == "":
             self.ctrlLien.Show(False)
+            self.titreLien.Show(False)
             self.ctrlLien.SetToolTipString(self.lien)
         else:
             self.ctrlLien.SetToolTipString(self.lien)
             if typ == "f":
+                self.titreLien.SetLabel(u"Fichier :")
                 self.ctrlLien.SetBitmapLabel(wx.ArtProvider_GetBitmap(wx.ART_NORMAL_FILE))
                 self.ctrlLien.Show(True)
             elif typ == 'd':
+                self.titreLien.SetLabel(u"Dossier :")
                 self.ctrlLien.SetBitmapLabel(wx.ArtProvider_GetBitmap(wx.ART_FOLDER))
                 self.ctrlLien.Show(True)
             elif typ == 'u':
+                self.titreLien.SetLabel(u"Lien web :")
                 self.ctrlLien.SetBitmapLabel(images.Icone_web.GetBitmap())
                 self.ctrlLien.Show(True)
+            elif typ == 's':
+                self.titreLien.SetLabel(u"Séquence :")
+                self.ctrlLien.SetBitmapLabel(images.Icone_sequence.GetBitmap())
+                self.ctrlLien.Show(True)
 
-        
         self.Layout()
         self.Fit()
         
+    ##########################################################################################
     def SetImage(self, image):
         if image == wx.NullBitmap:
             self.image.Show(False)
@@ -5085,6 +5147,7 @@ class PopupInfo(wx.PopupWindow):
         self.Layout()
         self.Fit()
         
+    ##########################################################################################
     def OnClick(self, evt):
         if self.typeLien == "f":
             os.startfile(self.lien)
@@ -5092,9 +5155,12 @@ class PopupInfo(wx.PopupWindow):
             subprocess.Popen(["explorer", self.lien])
         elif self.typeLien == 'u':
             urllib.urlopen(self.lien)
-
-
-       
+        elif self.typeLien == 's':
+            self.Show(False)
+            child = self.parent.parent.commandeNouveau()
+            child.ouvrir(self.lien)
+            
+            
 #class PopupInfo(wx.PopupWindow):
 #    """Adds a bit of text and mouse movement to the wx.PopupWindow"""
 #    def __init__(self, parent, message):

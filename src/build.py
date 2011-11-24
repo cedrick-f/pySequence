@@ -19,6 +19,7 @@ from glob import glob
 # Fichiers MSVC
 data_files = [("Microsoft.VC90.CRT", glob(r'msvcr90.dll')), 
               ("Microsoft.VC90.CRT", glob(r'Microsoft.VC90.CRT.manifest')),
+              ("exemples", glob(r'../exemples/*.*')),
               "gpl.txt", 
               ]
 
