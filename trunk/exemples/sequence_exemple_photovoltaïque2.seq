@@ -5,7 +5,7 @@
     </CentreInteret>
     <Prerequis>
       <Savoirs S0="2.1.1" />
-      <Sequence dir="D:\DropBox\strategie_peda\sequence_exemple\sequence_exemple_photovolta&#239;que.seq" />
+      <Sequence dir="D:\DropBox\strategie_peda\sequence_exemple\sequence_exemple_photovolta&#239;que3.seq" />
     </Prerequis>
     <Objectifs>
       <Competences C0="CO2.1" C1="CO4.1" C2="CO4.3" C3="CO4.4" C4="CO5.2" C5="CO5.3" C6="CO6.3" />

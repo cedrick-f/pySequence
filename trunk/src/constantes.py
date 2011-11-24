@@ -750,9 +750,9 @@ def setEffectifs(txt, effectifs):
 def strEffectif(e):
     eff = Effectifs[e]
     if eff[1] == 1:
-        eleves = "élève"
+        eleves = u"élève"
     else:
-        eleves = "élèves"
+        eleves = u"élèves"
     return eff[0]+" ("+str(eff[1])+" "+eleves+")"
 
 def findEffectif(lst, eff):
