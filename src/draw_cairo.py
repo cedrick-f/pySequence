@@ -44,6 +44,9 @@ from constantes import Effectifs, listeDemarches, Demarches, getSavoir, getCompe
 #
 # Données pour le tracé
 #
+
+minFont = 0.008
+
 # Marges
 margeX = 0.04
 margeY = 0.04
@@ -64,12 +67,14 @@ taillePre = (0.28, 0.16 - tailleCI[1] - ecartY/2)
 posPre = (margeX, posCI[1] + tailleCI[1] + ecartY/2)
 IcoulPre = (0.8,0.8,0.9)
 BcoulPre = (0.2,0.25,0.3)
+fontPre = 0.014
 
 # Rectangle des objectifs
 posObj = (posPre[0] + taillePre[0] + ecartX, margeY)
 tailleObj = (0.72414-posObj[0]-margeX, 0.16)
 IcoulObj = (0.8,0.9,0.8)
 BcoulObj = (0.25,0.3,0.2)
+fontObj = 0.014
 
 # Zone de commentaire
 fontIntComm = 0.01
@@ -438,7 +443,7 @@ def Draw(ctx, seq):
     #
     # Commentaires
     #
-    print posComm[1], 
+#    print posComm[1], 
     if tailleComm[1] > 0:
         ctx.set_source_rgb(0.1,0.1,0.1)
         ctx.select_font_face ("Sans", cairo.FONT_SLANT_ITALIC,
@@ -458,8 +463,6 @@ def Draw(ctx, seq):
             ctx.show_text(t)
                 
                 
-#        show_text_rect(ctx, u"Commentaires : " + seq.commentaire, posComm[0], posComm[1], tailleComm[0], tailleComm[1], ha = 'g', max_font = 0.02)
-    
     # 
     # Effectifs
     #
@@ -526,10 +529,10 @@ def Draw(ctx, seq):
     # Titre
     ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
                           cairo.FONT_WEIGHT_BOLD)
-    ctx.set_font_size(0.016)
+    ctx.set_font_size(fontPre)
     xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(u"Prérequis")
     xc=x0+rect_width/2-width/2
-    yc=y0+height+0.008
+    yc=y0+height+0.004
     ctx.move_to(xc, yc)
     ctx.set_source_rgb(0, 0, 0)
     ctx.show_text(u"Prérequis")
@@ -547,7 +550,7 @@ def Draw(ctx, seq):
         
     hl = rect_height-height-0.015   
     if len(lstTexte) + len(lstTexteS) > 0:
-        e = 0.01
+        e = 0.008
         hC = hl*len(lstTexte)/(len(lstTexte) + len(lstTexteS))
         hS = hl*len(lstTexteS)/(len(lstTexte) + len(lstTexteS))
         liste_code_texte(ctx, seq.prerequis.savoirs, lstTexte, x0, yc, rect_width, hC, e)
@@ -593,10 +596,10 @@ def Draw(ctx, seq):
     # Titre
     ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
                           cairo.FONT_WEIGHT_BOLD)
-    ctx.set_font_size(0.016)
+    ctx.set_font_size(fontObj)
     xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(u"Objectifs")
     xc=x0+rect_width/2-width/2
-    yc=y0+height+0.008
+    yc=y0+height+0.004
     ctx.move_to(xc, yc)
     ctx.set_source_rgb(0, 0, 0)
     ctx.show_text(u"Objectifs")
@@ -615,9 +618,9 @@ def Draw(ctx, seq):
     if len(lstTexteS) > 0 or len(lstTexteC) > 0:
         hC = h*len(lstTexteC)/(len(lstTexteC) + len(lstTexteS))
         hS = h*len(lstTexteS)/(len(lstTexteC) + len(lstTexteS))
-        liste_code_texte(ctx, seq.obj["C"].competences, lstTexteC, x0, yc, rect_width, hC, 0.01) 
+        liste_code_texte(ctx, seq.obj["C"].competences, lstTexteC, x0, yc, rect_width, hC, 0.008) 
         ctx.set_source_rgba (0.0, 0.0, 0.5, 1.0)
-        liste_code_texte(ctx, seq.obj["S"].savoirs, lstTexteS, x0, yc+hC, rect_width, hS, 0.01)
+        liste_code_texte(ctx, seq.obj["S"].savoirs, lstTexteS, x0, yc+hC, rect_width, hS, 0.008)
     
     
     
@@ -1219,18 +1222,21 @@ def calc_h_texte(ctx, texte, w, taille, va = 'c', ha = 'c', b = 0.1, orient = 'h
     
     
 def show_text_rect(ctx, texte, x, y, w, h, va = 'c', ha = 'c', b = 0.2, orient = 'h', 
-                   max_font = None, wrap = True):
+                   max_font = None, min_font = None, wrap = True):
     """ Affiche un texte en adaptant la taille de police et sa position
         pour qu'il rentre dans le rectangle
         x, y, w, h : position et dimensions du rectangle
         va, ha : alignements vertical et horizontal ('h', 'c', 'b' et 'g', 'c', 'd')
         b : écart mini du texte par rapport au bord (relativement aux dimensionx du rectangle)
         orient : orientation du texte ('h', 'v')
+        max_font : taille maxi de la font
+        min_font : le texte peut être tronqué (1 ligne)
     """
 #    print "show_text_rect", texte
 
     if texte == "":
         return
+    
     if orient == 'v':
         ctx.rotate(-pi/2)
         show_text_rect(ctx, texte, -y-h, x, h, w, va, ha, b)
@@ -1244,7 +1250,15 @@ def show_text_rect(ctx, texte, x, y, w, h, va = 'c', ha = 'c', b = 0.2, orient =
     x, y = x+ecart, y+ecart
     w, h = w-2*ecart, h-2*ecart
  
-    
+    if min_font:
+        ctx.set_font_size(min_font)
+        fascent, fdescent, fheight, fxadvance, fyadvance = ctx.font_extents()
+        hf = fascent - fdescent
+        min_font = min(min_font, min_font*h/hf)
+        ctx.set_font_size(min_font)
+        fascent, fdescent, fheight, fxadvance, fyadvance = ctx.font_extents()
+        nLignesMaxi = int(h // hf)
+        
     #
     # Estimation de l'encombrement du texte (pour une taille de police de 1)
     # 
@@ -1286,37 +1300,11 @@ def show_text_rect(ctx, texte, x, y, w, h, va = 'c', ha = 'c', b = 0.2, orient =
             lt.extend(textwrap.wrap(l, wrap))
         nLignes = len(lt)
         
-        
-        
-        
-        
-        
-#        r1 = round(H/(fascent-fdescent))
-#        r2 = round(width/W)
-#        print r1, r2
-#        nLignes = max(1,int((r1+r2)/2))
-#    #    nLignes += texte.count("\n")
-#        print nLignes
-#        
-#        wrap = len(texte)/nLignes
-#        continuer = True
-#        i = 0
-#        while continuer:
-#            lt = []
-#            i += 1
-#            for l in texte.split("\n"):
-#                lt.extend(textwrap.wrap(l, wrap))
-#            nL = len(lt)
-#            if nL == nLignes or i > len(texte):
-#                continuer = False
-#            elif nL > nLignes:
-#                wrap += 1
-#            else:
-#                wrap += -1
-#        nLignes = nL
     else:
         nLignes = 1
         lt = [texte]
+        
+        
     #
     # Calcul de la taille de police nécessaire pour que ça rentre
     #
@@ -1330,6 +1318,12 @@ def show_text_rect(ctx, texte, x, y, w, h, va = 'c', ha = 'c', b = 0.2, orient =
 #    print "fontSize 1", fontSize
     if max_font != None:
         fontSize = min(fontSize, max_font)
+    
+    if min_font and fontSize < min_font:
+        show_text_rect_fix(ctx, texte, x, y, w, h, min_font, nLignesMaxi, va, ha)
+        return
+            
+        
     ctx.set_font_size(fontSize)
     
     # 2 ème tour
@@ -1365,10 +1359,103 @@ def show_text_rect(ctx, texte, x, y, w, h, va = 'c', ha = 'c', b = 0.2, orient =
             ctx.move_to(x, yt)
         
         ctx.show_text(t)
+    
+    ctx.stroke()
+    return fontSize
+
+
+
+
+
+def show_text_rect_fix(ctx, texte, x, y, w, h, fontSize, Nlignes, va = 'c', ha = 'c'):
+    """ Affiche un texte en tronquant sa longueur
+        pour qu'il rentre dans le rectangle
+        x, y, w, h : position et dimensions du rectangle
+        va, ha : alignements vertical et horizontal ('h', 'c', 'b' et 'g', 'c', 'd')
+    """
+#    print "show_text_rect", texte
+
+    if texte == "":
+        return
+         
+    ctx.set_font_size(fontSize)
+
+    #
+    # Découpage du texte
+    #
+    continuer = True
+    wrap = 0
+    for l in texte.split("\n"):
+        wrap = max(wrap, len(l))
+    i = 0
+    while continuer:
+        lt = []
+        i += 1
+        for l in texte.split("\n"):
+            lt.extend(textwrap.wrap(l, wrap))
+        maxw = 0
+        for t in lt:
+            xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(t)
+            maxw = max(maxw, width)
+        _w = maxw
+        if _w <= w:
+            continuer = False
+        else:
+            wrap += -1
+    wrap += 1
+    lt = []
+    for l in texte.split("\n"):
+        lt.extend(textwrap.wrap(l, wrap))
+#    print lt
+#    print w
+    
+    #
+    # Tronquage du texte
+    #
+    if len(lt) > Nlignes:
+        dl = lt[Nlignes-1]
+        continuer = True
+        while continuer:
+#            print "   ", dl
+            width = ctx.text_extents(dl+" ...")[2]
+            if width <= w:
+                continuer = False
+            else:
+                dll = dl.split()
+                if len(dll) > 1:
+                    dl = " ".join(dll[:-1])
+                else:
+                    continuer = False
+                
+        lt[Nlignes-1] = dl + " ..."
+        
+    lt = lt[:Nlignes]
+    
+    #
+    # On dessine toutes les lignes de texte
+    #
+    fascent, fdescent, fheight, fxadvance, fyadvance = ctx.font_extents()
+    dy = (h-(fascent+fdescent)*len(lt))/2
+    
+#    print "dy", dy
+    
+    for l, t in enumerate(lt):
+#        print "  ",t
+        xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(t)
+        xt, yt = x+xbearing+(w-width)/2, y + (fascent+fdescent)*l - fdescent + fheight + dy
+#        print "  ",xt, yt
+        if ha == 'c':
+            ctx.move_to(xt, yt)
+        elif ha == 'g':
+            ctx.move_to(x, yt)
+        
+        ctx.show_text(t)
         
     
     ctx.stroke()
     return
+
+
 
 
 def curve_rect(ctx, x0, y0, rect_width, rect_height, radius):
@@ -1603,20 +1690,24 @@ def fleche_ronde(ctx, x, y, r, a0, a1, e, f, coul):
 def liste_code_texte(ctx, lstCodes, lstTexte, x, y, w, h, e):
     lstRect = []
     no = len(lstCodes)
+    
     if no > 0:
         hl = h/no
+        wt = 0
+        fs = None
         for i, t in enumerate(lstCodes):
             ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
                                   cairo.FONT_WEIGHT_BOLD)
             show_text_rect(ctx, t, x+e, y+i*hl, 
                            w/6-e, hl, b = 0.2, ha = 'g', max_font = 0.012, wrap = False)
+            width = ctx.text_extents(t)[2]
+            wt = max(wt, width)
+        for i, t in enumerate(lstCodes):
             ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
                                   cairo.FONT_WEIGHT_NORMAL)
-            show_text_rect(ctx, lstTexte[i], x+w/6, y+i*hl, 
-                           w*5/6-e, hl, b = 0.2, ha = 'g')
-    
-            ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
-                                  cairo.FONT_WEIGHT_BOLD)
+            show_text_rect(ctx, lstTexte[i], x+wt+2*e, y+i*hl, 
+                           w-wt-3*e, hl, b = 0.2, ha = 'g', min_font = minFont)
+
             lstRect.append((x+e, y+i*hl, w, hl))
     return lstRect
     
