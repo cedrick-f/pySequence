@@ -20,7 +20,7 @@ from glob import glob
 data_files = [("Microsoft.VC90.CRT", glob(r'msvcr90.dll')), 
               ("Microsoft.VC90.CRT", glob(r'Microsoft.VC90.CRT.manifest')),
               ("exemples", glob(r'../exemples/*.*')),
-              "gpl.txt", 
+              "gpl.txt", "D:\\Developpement\\Sequence\\src\\logo.ico",
               ]
 
 
@@ -57,7 +57,7 @@ options = {    "py2exe" : { "compressed": True,
                             #"packages": [ 'scipy.factorial'],
                                    }     }
 
-#icon = "D:\\Documents\\Developpement\\PySyLic\\PySyLiC 0.31\\Images\\icone.ico"
+icon = "D:\\Developpement\\Sequence\\src\\logo.ico"
 setup(
       #com_server=['myserver'],
       options = options,
@@ -65,7 +65,7 @@ setup(
 #      console=["PySyLic.py"],
       data_files = data_files,
       windows=[{"script" :"Sequence.py",
-#                "icon_resources":[(1, icon)],
+                "icon_resources":[(1, icon)],
                 #"other_resources": [(24,1,manifest)]
                 }]
     )

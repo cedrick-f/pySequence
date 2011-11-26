@@ -1834,7 +1834,7 @@ class PanelConteneur(wx.Panel):
 ####################################################################################
 class FenetreSequences(aui.AuiMDIParentFrame):
     def __init__(self, parent, fichier):
-        aui.AuiMDIParentFrame.__init__(self, parent, -1, u"pySéquence",style=wx.DEFAULT_FRAME_STYLE)
+        aui.AuiMDIParentFrame.__init__(self, parent, -1, __appname__,style=wx.DEFAULT_FRAME_STYLE)
         
         #
         # Taille et position de la fenétre
@@ -1891,7 +1891,7 @@ class FenetreSequences(aui.AuiMDIParentFrame):
         child.Show()
         
         if fichier != "":
-            child.ouvrir(fichier)
+            child.ouvrir(fichier, redessiner = False)
         
         
     ###############################################################################################
@@ -2385,39 +2385,34 @@ class FenetreSequence(aui.AuiMDIChildFrame):
         wx.EndBusyCursor()
         
     ###############################################################################################
-    def ouvrir(self, nomFichier):
+    def ouvrir(self, nomFichier, redessiner = True):
         global TYPE_ENSEIGNEMENT
         print "ouvrir", nomFichier
         fichier = open(nomFichier,'r')
-#        try:
-        root = ET.parse(fichier).getroot()
+        try:
+            root = ET.parse(fichier).getroot()
+            
+            # La séquence
+            sequence = root.find("Sequence")
+            if sequence == None:
+                self.sequence.setBranche(root)
+            else:
+                self.sequence.setBranche(sequence)
+            
+                # La classe
+                classe = root.find("Classe")
+                self.classe.setBranche(classe)
         
-        # La séquence
-        sequence = root.find("Sequence")
-        if sequence == None:
-            self.sequence.setBranche(root)
-        else:
-            self.sequence.setBranche(sequence)
-        
-            # La classe
-            classe = root.find("Classe")
-            self.classe.setBranche(classe)
-        
-#        te = classe.get("Type")
-#        if te == 'ET':
-#            ci = classe.find("CentreInteret")
-#            if ci != None:
-#                lstCI = []
-#                for i,c in enumerate(CentresInterets[self.classe.typeEnseignement]):
-#                    lstCI.append(ci.get("CI"+str(i+1)))
-#        
-#        self.classe.typeEnseignement = te
-#        eff = classe.find("Effectifs")
-#        for e in listeEffectifs:
-#            Effectifs[e][1] = eval(eff.get(e))
-#        if te == 'ET':
-#            CentresInterets[self.classe.typeEnseignement] = lstCI
-        
+        except:
+            dlg = wx.MessageDialog(self, u"La séquence pédagogique\n%s\n n'a pas pu être ouverte !",
+                               u"Erreur d'ouverture",
+                               wx.OK | wx.ICON_WARNING
+                               #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
+                               )
+            dlg.ShowModal()
+            dlg.Destroy()
+            fichier.close()
+            return
         self.arbreSeq.DeleteAllItems()
         root = self.arbreSeq.AddRoot("")
         self.classe.ConstruireArbre(self.arbreSeq, root)
@@ -2427,12 +2422,15 @@ class FenetreSequence(aui.AuiMDIChildFrame):
         self.sequence.VerifPb()
         self.sequence.VerrouillerClasse()
         self.arbreSeq.SelectItem(self.classe.branche)
+        
         self.arbreSeq.ExpandAll()
         wx.CallAfter(self.arbreSeq.Layout)
         
         fichier.close()
         self.definirNomFichierCourant(nomFichier)
-        self.ficheSeq.Redessiner()
+        if redessiner:
+            self.ficheSeq.Redessiner()
+        
         
         
         
@@ -2692,7 +2690,7 @@ class FicheSequence(wx.ScrolledWindow):
         
     #############################################################################            
     def Redessiner(self, event = None):  
-#        print "REDESSINER"
+        print "REDESSINER"
         cdc = wx.ClientDC(self)
         dc = wx.BufferedDC(cdc, self.buffer, wx.BUFFER_VIRTUAL_AREA)
         dc.SetBackground(wx.Brush('white'))
