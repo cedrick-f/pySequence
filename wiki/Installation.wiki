@@ -1,0 +1,16 @@
+= Installation =
+
+_*pySequence*_ est un logiciel *portable*, c'est à dire qu'il ne nécessite pas d'installation, et a fortiori, il n'est pas nécessaire d'être _administrateur_ de l'ordinateur pour pouvoir s'en servir.
+
+
+== Téléchargement ==
+
+Télécharger la dernière version de _*pySequence*_ depuis la page d'accueil de ce site.
+
+== Installation ==
+Dézipper l'archive sur le disque dur de l'ordinateur (à l'emplacement {{{C:}}} par exemple), sur un disque dur portable ou sur une clef USB.
+
+== Lancement de l'application ==
+Double-cliquer sur le raccourcis PySequence.
+
+_Remarque : si _*pySequence*_ est installé sur le disque dur d'un ordinateur, il est possible, depuis _*pySequence*_, d'inscrire des informations dans sa _base de registre_ afin que l'ordinateur reconnaisse les fichiers _Séquence pédagogique STI2D_ (.seq)._
