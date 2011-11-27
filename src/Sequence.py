@@ -12,7 +12,7 @@ Copyright (C) 2011
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "1 beta"
+__version__ = "1.0"
 
 ##
 ## Les deuxlignes suivantes permettent de lancer le script sequence.py depuis n'importe
@@ -114,8 +114,16 @@ EVT_SEQ_MODIFIED = wx.PyEventBinder(myEVT_SEQ_MODIFIED, 1)
 class SeqEvent(wx.PyCommandEvent):
     def __init__(self, evtType, id):
         wx.PyCommandEvent.__init__(self, evtType, id)
-       
-
+        self.seq = None
+        
+        
+    ######################################################################################  
+    def SetSequence(self, seq):
+        self.seq = seq
+        
+    ######################################################################################  
+    def GetSequence(self):
+        return self.seq
     
 ####################################################################################
 #
@@ -165,7 +173,7 @@ class ElementDeSequence():
         
     ######################################################################################  
     def AfficherLien(self):
-        print "AfficherLien", self.lien
+#        print "AfficherLien", self.lien
         
         t = self.GetTypeLien()
         if t == "f":
@@ -210,10 +218,11 @@ class LienSequence():
     
     ######################################################################################  
     def setBranche(self, branche):
+#        print "setBranche lien seq"
         self.path = branche.get("dir", "")
         if hasattr(self, 'panelPropriete'):
             self.panelPropriete.MiseAJour()
-        
+#        print "..."
 
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
@@ -291,7 +300,7 @@ class Classe():
     
     ######################################################################################  
     def setBranche(self, branche):
-        print "setBranche classe"
+#        print "setBranche classe"
         self.typeEnseignement = branche.get("Type", "ET")
         
         self.ci_ET = getListCI(branche.get("CentreInteret", ""))
@@ -311,7 +320,7 @@ class Classe():
         
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
-        print "ConstruireArbre classe"
+#        print "ConstruireArbre classe"
         self.arbre = arbre
         self.codeBranche = wx.StaticText(self.arbre, -1, self.typeEnseignement)
         self.branche = arbre.AppendItem(branche, Titres[5]+" :", wnd = self.codeBranche, data = self)#, image = self.arbre.images["Seq"])
@@ -362,20 +371,31 @@ class Sequence():
         
         
         
-    ######################################################################################  
-    def __repr__(self):
-        t = u"Séquence :"+self.intitule + "\n"
-        t += "   " + self.CI.__repr__() + "\n"
-        for c in self.obj.values():
-            t += "   " + c.__repr__() + "\n"
-        for s in self.seance:
-            t += "   " + s.__repr__() + "\n"
-        return t
+#    ######################################################################################  
+#    def __repr__(self):
+#        return self.intitule
+#        t = u"Séquence :"+ + "\n"
+#        t += "   " + self.CI.__repr__() + "\n"
+#        for c in self.obj.values():
+#            t += "   " + c.__repr__() + "\n"
+#        for s in self.seance:
+#            t += "   " + s.__repr__() + "\n"
+#        return t
     
     ######################################################################################  
     def GetApp(self):
         return self.app
     
+    
+    ######################################################################################  
+    def GetDuree(self):
+        duree = 0
+        for s in self.seance:
+            duree += s.GetDuree()
+        return duree
+                
+                
+                
     ######################################################################################  
     def GetApercu(self, mult = 3):
         imagesurface = cairo.ImageSurface(cairo.FORMAT_ARGB32,  210*mult, 297*mult)#cairo.FORMAT_ARGB32,cairo.FORMAT_RGB24
@@ -394,7 +414,7 @@ class Sequence():
         sequence.set("Intitule", self.intitule)
         
         brancheCI = self.CI.getBranche()
-        print "brancheCI", brancheCI
+#        print "brancheCI", brancheCI
         if brancheCI != None:
             ci = ET.SubElement(sequence, "CentreInteret")
             ci.append(brancheCI)
@@ -420,7 +440,7 @@ class Sequence():
         
     ######################################################################################  
     def setBranche(self, branche):
-        print "setBranche séquence"
+#        print "setBranche séquence", self
         self.intitule = branche.get("Intitule", u"")
         
         brancheCI = branche.find("CentreInteret")
@@ -632,7 +652,7 @@ class Sequence():
         
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
-        print "ConstruireArbre séquence"
+#        print "ConstruireArbre séquence"
         self.arbre = arbre
         self.branche = arbre.AppendItem(branche, Titres[0], data = self, image = self.arbre.images["Seq"])
 
@@ -674,7 +694,11 @@ class Sequence():
     ######################################################################################  
     def AfficherLien(self, item):
         data = self.arbre.GetItemPyData(item)
-        data.AfficherLien()
+        if data and data != self and hasattr(data, 'AfficherLien'):
+            data.AfficherLien()
+#        else:
+#            self.arbre.ExpandAllChildren(self.branche)
+#            self.arbre.Expand(self.branche)
         
     ######################################################################################  
     def AfficherMenuContextuel(self, itemArbre):    
@@ -710,7 +734,7 @@ class Sequence():
             
             
         elif self.arbre.GetItemText(itemArbre) == Titres[3]: # Séances
-            print u"Menu Séances"
+#            print u"Menu Séances"
             self.app.AfficherMenuContextuel([[u"Ajouter une séance", self.AjouterSeance]])
             
         elif self.arbre.GetItemText(itemArbre) == Titres[4]: # Système
@@ -851,15 +875,16 @@ class CentreInteret():
     def getBranche(self):
         """ Renvoie la branche XML du centre d'intérét pour enregistrement
         """
-        print "getBranche CI",
+#        print "getBranche CI",
         if hasattr(self, 'code'):
-            print self.code
+#            print self.code
             root = ET.Element(self.code)
             return root
         
     
     ######################################################################################  
     def setBranche(self, branche):
+#        print "setBranche CI"
         code = list(branche)[0].tag
         num = eval(code[2:])-1
         self.SetNum(num)
@@ -933,7 +958,7 @@ class Competences():
     def getBranche(self):
         """ Renvoie la branche XML de la compétence pour enregistrement
         """
-        print "getBranche competences",
+#        print "getBranche competences",
         root = ET.Element("Competences")
         for i, s in enumerate(self.competences):
             root.set("C"+str(i), s)
@@ -951,7 +976,7 @@ class Competences():
     
     ######################################################################################  
     def setBranche(self, branche):
-        print "setBranche competences",branche.keys()
+#        print "setBranche competences"
         self.competences = []
         for i, s in enumerate(branche.keys()):
             self.competences.append(branche.get("C"+str(i), ""))
@@ -1021,7 +1046,7 @@ class Savoirs():
     def getBranche(self):
         """ Renvoie la branche XML du savoir pour enregistrement
         """
-        print "getBranche Savoir",
+#        print "getBranche Savoir",
         root = ET.Element("Savoirs")
         for i, s in enumerate(self.savoirs):
             root.set("S"+str(i), s)
@@ -1029,7 +1054,7 @@ class Savoirs():
     
     ######################################################################################  
     def setBranche(self, branche):
-#        print "setBranche Savoir",branche.keys()
+#        print "setBranche Savoir"
         self.savoirs = []
         for i, s in enumerate(branche.keys()):
             self.savoirs.append(branche.get("S"+str(i), ""))
@@ -1193,7 +1218,7 @@ class Seance(ElementDeSequence):
         
     ######################################################################################  
     def setBranche(self, branche):
-#        print "setBranche séance", 
+#        print "setBranche séance"
         self.ordre = eval(branche.tag[6:])
         
         self.intitule  = branche.get("Intitule", "")
@@ -1301,7 +1326,7 @@ class Seance(ElementDeSequence):
 
     ######################################################################################  
     def VerifPb(self):
-        print "VerifPb", self
+#        print "VerifPb", self
         self.SignalerPb(self.IsEffectifOk(), self.IsNSystemesOk())
         if self.typeSeance in ["R", "S"] and len(self.sousSeances) > 0:
             for s in self.sousSeances:
@@ -1347,7 +1372,7 @@ class Seance(ElementDeSequence):
         """
         ok = 0 # pas de problème
         if self.typeSeance in ["AP", "ED"]:
-            print "IsNSystemeOk", self
+#            print "IsNSystemeOk", self
             n = self.GetNbrSystemes()
 #            print n
             seq = self.GetApp().sequence
@@ -1700,7 +1725,7 @@ class Systeme(ElementDeSequence):
     def getBranche(self):
         """ Renvoie la branche XML de la compétence pour enregistrement
         """
-        print "getBranche systeme", self.nom
+#        print "getBranche systeme", self.nom
         root = ET.Element("Systeme")
         root.set("Nom", self.nom)
         root.set("Lien", self.lien)
@@ -1711,6 +1736,7 @@ class Systeme(ElementDeSequence):
     
     ######################################################################################  
     def setBranche(self, branche):
+#        print "setBranche systeme"
         self.nom  = branche.get("Nom", "")
 #        self.SetNom(nom)
         self.lien = branche.get("Lien", "")
@@ -1814,7 +1840,7 @@ class PanelConteneur(wx.Panel):
     
     
     def AfficherPanel(self, panel):
-        print "AfficherPanel"
+#        print "AfficherPanel"
         if self.panel != None:
             self.bsizer.Remove(self.panel)
             self.panel.Hide()
@@ -1886,13 +1912,10 @@ class FenetreSequences(aui.AuiMDIParentFrame):
         # Interception de la demande de fermeture
         self.Bind(wx.EVT_CLOSE, self.OnClose)
         
-        
         child = FenetreSequence(self)
-        child.Show()
-        
         if fichier != "":
-            child.ouvrir(fichier, redessiner = False)
-        
+            child.ouvrir(fichier)
+        child.Show()
         
     ###############################################################################################
     def CreateMenuBar(self):
@@ -1909,7 +1932,7 @@ class FenetreSequences(aui.AuiMDIParentFrame):
         file_menu.Append(wx.ID_EXIT, u"Quitter")
 
         tool_menu = wx.Menu()
-        tool_menu.Append(31, u"Options")
+#        tool_menu.Append(31, u"Options")
         self.menuReg = tool_menu.Append(32, u"a")
         self.MiseAJourMenu()
         
@@ -2014,7 +2037,7 @@ class FenetreSequences(aui.AuiMDIParentFrame):
     ###############################################################################################
     def commandeNouveau(self, event = None):
         child = FenetreSequence(self)
-        child.Show()
+        wx.CallAfter(child.Show)
         
         return child
         
@@ -2042,9 +2065,11 @@ class FenetreSequences(aui.AuiMDIParentFrame):
         
         if nomFichier != '':
             if not nomFichier in self.GetNomsFichiers():
+#                print "Debut ouvrir"
                 wx.BeginBusyCursor(wx.HOURGLASS_CURSOR)
                 child = self.commandeNouveau()
                 child.ouvrir(nomFichier)
+#                print "2"
                 wx.EndBusyCursor()
             else:
                 child = self.GetChild(nomFichier)
@@ -2058,7 +2083,7 @@ class FenetreSequences(aui.AuiMDIParentFrame):
                 if retCode == wx.ID_YES:
                     child.ouvrir()
         
-        self.Refresh()
+#        self.Refresh()
                 
     #############################################################################
     def GetChild(self, nomFichier):
@@ -2172,6 +2197,7 @@ class FenetreSequence(aui.AuiMDIChildFrame):
 #        panelCentral = wx.ScrolledWindow(pnl, -1, style = wx.HSCROLL | wx.VSCROLL | wx.RETAINED)# | wx.BORDER_SIMPLE)
 #        sizerCentral = wx.GridSizer(1,1)
         self.ficheSeq = FicheSequence(self.nb, self.sequence)
+        
 #        self.popUpInfo = PopupInfo("test")
 #        self.popUpInfo.SetTarget(self.ficheSeq)
 #        self.popUpInfo.SetMessage("test")
@@ -2338,17 +2364,21 @@ class FenetreSequence(aui.AuiMDIChildFrame):
         sizer = wx.BoxSizer()
         sizer.Add(pnl, 1, wx.EXPAND)
         self.SetSizer(sizer)
-        self.Layout()
+   
+#        self.Layout()
+#        print "Fin instanciation Seq"
         wx.CallAfter(self.Layout)
-        wx.CallAfter(self.ficheSeq.Redessiner)
+#        wx.CallAfter(self.ficheSeq.Redessiner)
     
         
         
     ###############################################################################################
     def OnSeqModified(self, event):
-        self.sequence.VerifPb()
-        self.ficheSeq.Redessiner()
-        self.MarquerFichierCourantModifie()
+#        print "OnSeqModified"
+        if event.GetSequence() == self.sequence:
+            self.sequence.VerifPb()
+            self.ficheSeq.Redessiner()
+            self.MarquerFichierCourantModifie()
         
         
     ###############################################################################################
@@ -2386,7 +2416,6 @@ class FenetreSequence(aui.AuiMDIChildFrame):
         
     ###############################################################################################
     def ouvrir(self, nomFichier, redessiner = True):
-        global TYPE_ENSEIGNEMENT
         print "ouvrir", nomFichier
         fichier = open(nomFichier,'r')
         try:
@@ -2396,15 +2425,17 @@ class FenetreSequence(aui.AuiMDIChildFrame):
             sequence = root.find("Sequence")
             if sequence == None:
                 self.sequence.setBranche(root)
+                
             else:
                 self.sequence.setBranche(sequence)
-            
+                
                 # La classe
                 classe = root.find("Classe")
                 self.classe.setBranche(classe)
+            
         
         except:
-            dlg = wx.MessageDialog(self, u"La séquence pédagogique\n%s\n n'a pas pu être ouverte !",
+            dlg = wx.MessageDialog(self, u"La séquence pédagogique\n%s\n n'a pas pu être ouverte !" %nomFichier,
                                u"Erreur d'ouverture",
                                wx.OK | wx.ICON_WARNING
                                #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
@@ -2423,13 +2454,21 @@ class FenetreSequence(aui.AuiMDIChildFrame):
         self.sequence.VerrouillerClasse()
         self.arbreSeq.SelectItem(self.classe.branche)
         
+#        self.arbreSeq.RefreshSubtree(root)
+#        
+#        self.arbreSeq.HideWindows()
+        self.arbreSeq.Layout()
+#        self.arbreSeq.ExpandAll()
         self.arbreSeq.ExpandAll()
-        wx.CallAfter(self.arbreSeq.Layout)
+        self.arbreSeq.CalculatePositions()
+        
+#        wx.CallAfter(self.arbreSeq.Layout)
+#        wx.CallAfter(self.arbreSeq.ExpandAll)
         
         fichier.close()
         self.definirNomFichierCourant(nomFichier)
-        if redessiner:
-            self.ficheSeq.Redessiner()
+#        if redessiner:
+#            self.ficheSeq.Redessiner()
         
         
         
@@ -2522,21 +2561,23 @@ class FenetreSequence(aui.AuiMDIChildFrame):
        
     #############################################################################
     def exporterFiche(self, event = None):
-        mesFormats = "pdf (.pdf)|*.pdf|"
+        mesFormats = "pdf (.pdf)|*.pdf"
         dlg = wx.FileDialog(
             self, message=u"Enregistrer la fiche sous ...", defaultDir=self.DossierSauvegarde , 
-            defaultFile="", wildcard=mesFormats, style=wx.SAVE|wx.OVERWRITE_PROMPT|wx.CHANGE_DIR
+            defaultFile = os.path.splitext(self.fichierCourant)[0]+".pdf", 
+            wildcard=mesFormats, style=wx.SAVE|wx.OVERWRITE_PROMPT|wx.CHANGE_DIR
             )
         dlg.SetFilterIndex(0)
         if dlg.ShowModal() == wx.ID_OK:
-            path = dlg.GetPath()
+            path = dlg.GetPath().encode('cp1252')
             dlg.Destroy()
             PDFsurface = cairo.PDFSurface(path, 595, 842)
             ctx = cairo.Context (PDFsurface)
             ctx.scale(820, 820) 
-#            self.sequence.Draw(ctx)
             draw_cairo.Draw(ctx, self.sequence)
             self.DossierSauvegarde = os.path.split(path)[0]
+            PDFsurface.finish()
+            os.startfile(path)
         else:
             dlg.Destroy()
         return
@@ -2591,7 +2632,6 @@ class FicheSequence(wx.ScrolledWindow):
         self.sequence = sequence
         self.EnableScrolling(False, True)
         self.SetScrollbars(20, 20, 50, 50);
-#        self.InitBuffer()
         
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_SIZE, self.OnResize)
@@ -2648,14 +2688,14 @@ class FicheSequence(wx.ScrolledWindow):
     
     #############################################################################            
     def OnDClick(self, evt):
-        print "DClick"
+#        print "DClick"
         item = self.OnClick(evt)
         self.sequence.AfficherLien(item)
         
     #############################################################################            
     def OnRClick(self, evt):
         item = self.OnClick(evt)
-        print "RClick", item
+#        print "RClick", item
         if item != None:
             self.sequence.AfficherMenuContextuel(item)
         
@@ -2663,9 +2703,10 @@ class FicheSequence(wx.ScrolledWindow):
     #############################################################################            
     def OnResize(self, evt):
 #        print "OnSize fiche",
-        w = self.GetClientSize()[0]
-#        print w
+        w, h = self.GetClientSize()
+#        print self.GetScrollThumb(wx.VERTICAL)
         self.SetVirtualSize((w,w*29/21)) # Mise au format A4
+#        print w
 #        self.ficheSeq.FitInside()
 
         self.InitBuffer()
@@ -2690,7 +2731,7 @@ class FicheSequence(wx.ScrolledWindow):
         
     #############################################################################            
     def Redessiner(self, event = None):  
-        print "REDESSINER"
+#        print "REDESSINER"
         cdc = wx.ClientDC(self)
         dc = wx.BufferedDC(cdc, self.buffer, wx.BUFFER_VIRTUAL_AREA)
         dc.SetBackground(wx.Brush('white'))
@@ -2823,6 +2864,7 @@ class PanelPropriete(scrolled.ScrolledPanel):
     #########################################################################################################
     def sendEvent(self):
         evt = SeqEvent(myEVT_SEQ_MODIFIED, self.GetId())
+        evt.SetSequence(self.GetSequence())
         self.GetEventHandler().ProcessEvent(evt)
 
 
@@ -2873,7 +2915,12 @@ class PanelPropriete_Sequence(PanelPropriete):
         if sendEvt:
             self.sendEvent()
 
-
+    #############################################################################            
+    def GetSequence(self):
+        return self.sequence
+    
+    
+    
 ####################################################################################
 #
 #   Classe définissant le panel de propriété de la classe
@@ -2947,11 +2994,13 @@ class PanelPropriete_Classe(PanelPropriete):
         
     
     
-    
+    #############################################################################            
+    def GetSequence(self):
+        return self.classe.sequence
         
     ######################################################################################  
     def EvtComboBox(self, event):
-        print event.GetEventObject().GetValue()
+#        print event.GetEventObject().GetValue()
         self.classe.typeEnseignement = event.GetEventObject().GetValue()
             
         if self.classe.typeEnseignement != 'ET' :
@@ -3043,6 +3092,10 @@ class PanelPropriete_CI(PanelPropriete):
         for radio, text in self.group_ctrls:
             self.Bind(wx.EVT_RADIOBUTTON, self.EvtComboBox, radio )
         
+    #############################################################################            
+    def GetSequence(self):
+        return self.CI.parent
+    
     ######################################################################################################
     def OnEnter(self, event):
         return
@@ -3104,7 +3157,11 @@ class PanelPropriete_LienSequence(PanelPropriete):
         self.sequence = None
         self.classe = None
         self.construire()
-            
+        self.parent = parent
+        
+    #############################################################################            
+    def GetSequence(self):
+        return self.lien.parent
         
     #############################################################################            
     def construire(self):
@@ -3226,6 +3283,10 @@ class PanelPropriete_Competences(PanelPropriete):
         
         self.Layout()
         
+    #############################################################################            
+    def GetSequence(self):
+        return self.competence.parent
+    
     ######################################################################################  
     def construire(self):
         self.DestroyChildren()
@@ -3316,7 +3377,9 @@ class PanelPropriete_Savoirs(PanelPropriete):
         self.construire()
 
         
-        
+    #############################################################################            
+    def GetSequence(self):
+        return self.savoirs.parent
         
     ######################################################################################  
     def construire(self):
@@ -3487,6 +3550,10 @@ class PanelPropriete_Seance(PanelPropriete):
         #
         self.sizer.Layout()
     
+    #############################################################################            
+    def GetSequence(self):
+        return self.seance.GetSequence()
+    
     
     #############################################################################            
     def EvtVarSysteme(self, event):
@@ -3512,7 +3579,7 @@ class PanelPropriete_Seance(PanelPropriete):
         
     #############################################################################            
     def EvtComboBox(self, event):
-        print "EvtComboBox type"
+#        print "EvtComboBox type"
         if self.seance.typeSeance in ["R", "S"] and listeTypeSeance[event.GetSelection()] not in ["R", "S"]:
             dlg = wx.MessageDialog(self, u"Modifier le type de cette séance entrainera la suppression de toutes les sous séances !\n" \
                                          u"Voulez-vous continuer ?",
@@ -3540,9 +3607,9 @@ class PanelPropriete_Seance(PanelPropriete):
         
     #############################################################################            
     def EvtComboBoxEff(self, event):
-        print "EvtComboBoxEff", self,
+#        print "EvtComboBoxEff", self,
         self.seance.SetEffectif(event.GetString())  
-        print self.seance.effectif
+#        print self.seance.effectif
 #        l = Effectifs.values()
 #        continuer = True
 #        i = 0
@@ -3560,7 +3627,7 @@ class PanelPropriete_Seance(PanelPropriete):
 
     #############################################################################            
     def EvtComboBoxDem(self, event):
-        print "EvtComboBoxDem", event.GetString()
+#        print "EvtComboBoxDem", event.GetString()
          
         self.seance.SetDemarche(event.GetString())  
         
@@ -3570,7 +3637,7 @@ class PanelPropriete_Seance(PanelPropriete):
     #############################################################################            
     def AdapterAuxSystemes(self):
         self.Freeze()
-        print "AdapterAuxSystemes"
+#        print "AdapterAuxSystemes"
         if self.seance.typeSeance in ["AP", "ED", "P"]:
             self.box.Show()
             for i in range(self.seance.nSystemes):
@@ -3593,7 +3660,7 @@ class PanelPropriete_Seance(PanelPropriete):
     def AdapterAuType(self):
         """ Adapte le panel au type de séance
         """
-        print "AdapterAuType"
+#        print "AdapterAuType"
         
         #
         # Type de parent
@@ -3642,7 +3709,7 @@ class PanelPropriete_Seance(PanelPropriete):
             listEff = ["C", "G"]
             self.cbEff.Show(True)
             self.titreEff.Show(True)
-        print listEff
+#        print listEff
 #        n = self.cbEff.GetSelection()   
         self.cbEff.Clear()
         for s in listEff:
@@ -3765,11 +3832,14 @@ class PanelPropriete_Systeme(PanelPropriete):
         
         self.Bind(wx.EVT_TEXT, self.EvtText, textctrl)
         
-        
+    #############################################################################            
+    def GetSequence(self):
+        return self.systeme.parent
+    
     #############################################################################            
     def OnClick(self, event):
         
-        print event.GetId()
+#        print event.GetId()
         mesFormats = u"Fichier Image|*.bmp;*.png;*.jpg;*.jpeg;*.gif;*.pcx;*.pnm;*.tif;*.tiff;*.tga;*.iff;*.xpm;*.ico;*.ico;*.cur;*.ani|" \
                        u"Tous les fichiers|*.*'"
         
@@ -3815,7 +3885,7 @@ class PanelPropriete_Systeme(PanelPropriete):
         
     #############################################################################            
     def EvtVar(self, event):
-        print "EvtVar"
+#        print "EvtVar"
 #        if event.GetId() == self.vcNombre:
         self.systeme.SetNombre()
         self.sendEvent()
@@ -4153,7 +4223,7 @@ class ArbreSequence(CT.CustomTreeCtrl):
 
 
     def OnRightDown(self, event):
-        print "OnRightDown"
+#        print "OnRightDown"
 #        pt = event.GetPosition()
 #        item, flags = self.HitTest(pt)
         item = event.GetItem()
@@ -4439,9 +4509,9 @@ class ArbreSequence(CT.CustomTreeCtrl):
     def OnLeftDClick(self, event):
         pt = event.GetPosition()
         item, flags = self.HitTest(pt)
-        print item
+#        print item
         if item:
-            print "DClick (arbre)"
+#            print "DClick (arbre)"
             self.sequence.AfficherLien(item)
         event.Skip()                
         
@@ -4473,7 +4543,7 @@ class ArbreSequence(CT.CustomTreeCtrl):
 
         
     def OnSelChanged(self, event):
-        print "OnSelChanged"
+#        print "OnSelChanged"
         self.item = event.GetItem()
         data = self.GetItemPyData(self.item)
         if data == None:
@@ -4510,7 +4580,7 @@ class ArbreSequence(CT.CustomTreeCtrl):
         event.Skip()
         
     def OnBeginDrag(self, event):
-        print "OnBeginDrag", 
+#        print "OnBeginDrag", 
         self.itemDrag = event.GetItem()
         print self.itemDrag
         if self.item:
@@ -4519,9 +4589,9 @@ class ArbreSequence(CT.CustomTreeCtrl):
 
 
     def OnEndDrag(self, event):
-        print "OnEndDrag",
+#        print "OnEndDrag",
         self.item = event.GetItem()
-        print self.itemDrag, self.item 
+#        print self.itemDrag, self.item 
         dataTarget = self.GetItemPyData(self.item)
         dataSource = self.GetItemPyData(self.itemDrag)
         if not isinstance(dataSource, Seance):
@@ -4553,8 +4623,8 @@ class ArbreSequence(CT.CustomTreeCtrl):
                         lstS = dataSource.parent.seance
                     else:
                         lstS = dataSource.parent.sousSeances
-                    print lstS
-                    print lstT
+#                    print lstS
+#                    print lstT
                     s = lstS.index(dataSource)
                     t = lstT.index(dataTarget)
                     lstT[t+1:t+1] = [dataSource]
@@ -5095,7 +5165,7 @@ class PopupInfo(wx.PopupWindow):
         self.parent = parent
         self.sizer = wx.GridBagSizer()
         self.titre = wx.StaticText(self, -1, titre)
-        font = wx.Font(18, wx.SWISS, wx.NORMAL, wx.NORMAL)
+        font = wx.Font(15, wx.SWISS, wx.NORMAL, wx.NORMAL)
         self.titre.SetFont(font)
         self.sizer.Add(self.titre, (0,0), flag = wx.ALL|wx.ALIGN_CENTER, border = 5)
         
