@@ -5,7 +5,7 @@ _*pySequence*_ est un logiciel *portable*, c'est à dire qu'il ne nécessite pas
 
 == Téléchargement ==
 
-Télécharger la dernière version de _*pySequence*_ depuis la page d'accueil de ce site.
+Télécharger la dernière version de _*pySequence*_ depuis la [http://code.google.com/p/pysequence/ page d'accueil] de ce site.
 
 == Installation ==
 Dézipper l'archive sur le disque dur de l'ordinateur (à l'emplacement {{{C:}}} par exemple), sur un disque dur portable ou sur une clef USB.
