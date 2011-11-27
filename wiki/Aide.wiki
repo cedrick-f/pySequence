@@ -1,4 +1,5 @@
 #summary Documentation de pySequence
+#labels Featured
 
 = Introduction =
 
