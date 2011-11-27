@@ -739,7 +739,7 @@ def setValEffectifs(txt):
     lst = txt.split()
     for i, eff in enumerate(listeEffectifs):
         Effectifs[eff][1] = eval(lst[i])
-    print Effectifs
+#    print Effectifs
 
 def setEffectifs(txt, effectifs):
     lst = txt.split()

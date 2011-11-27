@@ -436,8 +436,15 @@ def Draw(ctx, seq):
     ctx.set_line_width (0.002)
     ctx.stroke ()
     
-    
-    
+    #
+    # Durée de la séquence
+    #
+    ctx.set_source_rgb(0.5,0.8,0.8)
+    ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+                              cairo.FONT_WEIGHT_BOLD)
+    show_text_rect(ctx, getHoraireTxt(seq.GetDuree()), 
+                   posZDeroul[0]-0.01, posZDemarche[1] + tailleZDemarche[1] - ecartY /2, 
+                   0.1, 0.02, ha = 'g', b = 0)
     
     
     #
@@ -824,14 +831,15 @@ class Cadre():
             self.ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
                                   cairo.FONT_WEIGHT_BOLD)
             self.ctx.set_source_rgb (0,0,0)
-            show_text_rect(self.ctx, self.seance.code, x, y, wEff["P"], hHoraire/4, ha = 'g', wrap = False)
+            show_text_rect(self.ctx, self.seance.code, x, y, wEff["P"], hHoraire/4, ha = 'g', 
+                           wrap = False, min_font = minFont)
         
         if not self.filigrane and self.seance.intituleDansDeroul and self.seance.intitule != "":
             self.ctx.select_font_face ("Sans", cairo.FONT_SLANT_ITALIC,
                                   cairo.FONT_WEIGHT_NORMAL)
             self.ctx.set_source_rgb (0,0,0)
             show_text_rect(self.ctx, self.seance.intitule, x, y + hHoraire/4, 
-                           self.w, self.h-hHoraire/4, ha = 'g')
+                           self.w, self.h-hHoraire/4, ha = 'g', min_font = minFont)
             
         # Sauvegarde de la position du bord droit pour les lignes de croisement
         self.xd = x+self.w
@@ -1221,7 +1229,7 @@ def calc_h_texte(ctx, texte, w, taille, va = 'c', ha = 'c', b = 0.1, orient = 'h
    
     
     
-def show_text_rect(ctx, texte, x, y, w, h, va = 'c', ha = 'c', b = 0.2, orient = 'h', 
+def show_text_rect(ctx, texte, x, y, w, h, va = 'c', ha = 'c', b = 0.4, orient = 'h', 
                    max_font = None, min_font = None, wrap = True):
     """ Affiche un texte en adaptant la taille de police et sa position
         pour qu'il rentre dans le rectangle
@@ -1247,6 +1255,7 @@ def show_text_rect(ctx, texte, x, y, w, h, va = 'c', ha = 'c', b = 0.2, orient =
     # "réduction" du réctangle
     #
     ecart = min(w*b/2, h*b/2)
+#    ecartX, ecartY = w*b/2, h*b/2
     x, y = x+ecart, y+ecart
     w, h = w-2*ecart, h-2*ecart
  
@@ -1337,30 +1346,9 @@ def show_text_rect(ctx, texte, x, y, w, h, va = 'c', ha = 'c', b = 0.2, orient =
     
 #    print "fontSize", fontSize
     ctx.set_font_size(fontSize)
-    fascent, fdescent, fheight, fxadvance, fyadvance = ctx.font_extents()
     
+    show_lignes(ctx, lt, x, y, w, h, ha, va)
     
-    #
-    # On dessine toutes les lignes de texte
-    #
-    
-    dy = (h-(fascent+fdescent)*nLignes)/2
-    
-#    print "dy", dy
-    
-    for l, t in enumerate(lt):
-#        print "  ",t
-        xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(t)
-        xt, yt = x+xbearing+(w-width)/2, y + (fascent+fdescent)*l - fdescent + fheight + dy
-#        print "  ",xt, yt
-        if ha == 'c':
-            ctx.move_to(xt, yt)
-        elif ha == 'g':
-            ctx.move_to(x, yt)
-        
-        ctx.show_text(t)
-    
-    ctx.stroke()
     return fontSize
 
 
@@ -1373,7 +1361,7 @@ def show_text_rect_fix(ctx, texte, x, y, w, h, fontSize, Nlignes, va = 'c', ha =
         x, y, w, h : position et dimensions du rectangle
         va, ha : alignements vertical et horizontal ('h', 'c', 'b' et 'g', 'c', 'd')
     """
-#    print "show_text_rect", texte
+#    print "show_text_rect_fix", fontSize, Nlignes, texte
 
     if texte == "":
         return
@@ -1389,23 +1377,26 @@ def show_text_rect_fix(ctx, texte, x, y, w, h, fontSize, Nlignes, va = 'c', ha =
         wrap = max(wrap, len(l))
     i = 0
     while continuer:
-        lt = []
         i += 1
+        # On fait une découpe à "wrap" ...
+        lt = []
         for l in texte.split("\n"):
             lt.extend(textwrap.wrap(l, wrap))
+        
+        # On teste si ça rentre ...
         maxw = 0
         for t in lt:
             xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(t)
             maxw = max(maxw, width)
-        _w = maxw
-        if _w <= w:
+    
+        if maxw <= w: # Ca rentre !
             continuer = False
-        else:
+        else: # Ca ne rentre pas --> on coupe plus raz.
             wrap += -1
-    wrap += 1
-    lt = []
-    for l in texte.split("\n"):
-        lt.extend(textwrap.wrap(l, wrap))
+#    wrap += 1
+#    lt = []
+#    for l in texte.split("\n"):
+#        lt.extend(textwrap.wrap(l, wrap))
 #    print lt
 #    print w
     
@@ -1431,15 +1422,30 @@ def show_text_rect_fix(ctx, texte, x, y, w, h, fontSize, Nlignes, va = 'c', ha =
         
     lt = lt[:Nlignes]
     
+    show_lignes(ctx, lt, x, y, w, h, ha, va)
+    
+    return
+
+
+
+
+def show_lignes(ctx, lignes, x, y, w, h, ha, va):
+    
+    fascent, fdescent, fheight, fxadvance, fyadvance = ctx.font_extents()
+    # pour centrer verticalement
+    
+    if va == 'c':
+        dy = (h-(fascent+fdescent)*len(lignes))/2
+    else:
+        dy = 0
+        
     #
     # On dessine toutes les lignes de texte
     #
-    fascent, fdescent, fheight, fxadvance, fyadvance = ctx.font_extents()
-    dy = (h-(fascent+fdescent)*len(lt))/2
     
 #    print "dy", dy
     
-    for l, t in enumerate(lt):
+    for l, t in enumerate(lignes):
 #        print "  ",t
         xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(t)
         xt, yt = x+xbearing+(w-width)/2, y + (fascent+fdescent)*l - fdescent + fheight + dy
@@ -1453,7 +1459,6 @@ def show_text_rect_fix(ctx, texte, x, y, w, h, fontSize, Nlignes, va = 'c', ha =
         
     
     ctx.stroke()
-    return
 
 
 
@@ -1706,7 +1711,7 @@ def liste_code_texte(ctx, lstCodes, lstTexte, x, y, w, h, e):
             ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
                                   cairo.FONT_WEIGHT_NORMAL)
             show_text_rect(ctx, lstTexte[i], x+wt+2*e, y+i*hl, 
-                           w-wt-3*e, hl, b = 0.2, ha = 'g', min_font = minFont)
+                           w-wt-3*e, hl, b = 0.4, ha = 'g', max_font = 0.012, min_font = minFont)
 
             lstRect.append((x+e, y+i*hl, w, hl))
     return lstRect
