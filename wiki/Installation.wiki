@@ -11,6 +11,6 @@ Télécharger la dernière version de _*pySequence*_ depuis la page d'accueil de
 Dézipper l'archive sur le disque dur de l'ordinateur (à l'emplacement {{{C:}}} par exemple), sur un disque dur portable ou sur une clef USB.
 
 == Lancement de l'application ==
-Double-cliquer sur le fichier [image_aide\fichier_exe.png].
+Double-cliquer sur le fichier http://pysequence.googlecode.com/svn/trunk/images_aide/Fichier_exe.png.
 
 _Remarque : si _*pySequence*_ est installé sur le disque dur d'un ordinateur, il est possible, depuis _*pySequence*_, d'inscrire des informations dans sa _base de registre_ afin que l'ordinateur reconnaisse les fichiers _Séquence pédagogique STI2D_ (.seq)._
