@@ -265,7 +265,7 @@ class ElementDeSequence():
     
     ######################################################################################  
     def SetLien(self, lien = None):
-        print "SetLien", self.lien
+#        print "SetLien", self.lien
         self.tip.SetLien(self.lien)
         
         

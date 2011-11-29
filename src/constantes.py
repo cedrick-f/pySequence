@@ -245,7 +245,7 @@ CentresInteretsITEC = [u"Besoin et performance d'un système",
                        ]
 
 dicCompetencesITEC = {"O7" : [u"Imaginer une solution, répondre à un besoin",
-                          {"CO7.itec1" : [u"Identifier et justifier un problème technique à partir de l'analyse globale d'un système (approche Matière - Energie - Information"],
+                          {"CO7.itec1" : [u"Identifier et justifier un problème technique à partir de l'analyse globale d'un système (approche Matière - Energie - Information)"],
                            "CO7.itec2" : [u"Proposer des solutions à un problème technique identifié en participant à des démarches de créativité, choisir et justifier la solution retenue"],
                            "CO7.itec3" : [u"Définir, à l'aide d'un modeleur numérique, les formes et dimensions d'une pièce d'un mécanisme à partir des contraintes fonctionnelles, de son principe de réalisation et de son matériau"],
                            "CO7.itec4" : [u"Définir, à l'aide d'un modeleur numérique, les modifications d'un mécanisme à partir des contraintes fonctionnelles"],}],
@@ -799,6 +799,7 @@ def getSavoir(seq, code, dic = None, c = None):
     
     
 def getCompetence(seq, code, dic = None, c = None):
+#    print "getCompetence", code, dic, c
     if dic == None:
         dic = dicCompetences[seq.classe.typeEnseignement]
     if c == None:
@@ -806,7 +807,8 @@ def getCompetence(seq, code, dic = None, c = None):
     if dic.has_key(code):
         return dic[code][0]
     else:
-        cd = code[1:-2*(c-1)]
+#        cd = code[1:-2*(c-1)]
+        cd = code.split(".")[0][1:]
         return getCompetence(seq, code, dic[cd][1], c-1)
     
     
