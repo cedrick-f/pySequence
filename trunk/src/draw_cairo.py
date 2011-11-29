@@ -39,7 +39,7 @@ import cairo
 
 import ConfigParser
 
-from constantes import Effectifs, listeDemarches, Demarches, getSavoir, getCompetence
+from constantes import Effectifs, listeDemarches, Demarches, getSavoir, getCompetence, DemarchesCourt
 
 #
 # Données pour le tracé
@@ -53,7 +53,7 @@ margeY = 0.04
 
 # Ecarts
 ecartX = 0.03
-ecartY = 0.03
+ecartY = 0.02
 
 # CI
 tailleCI = (0.16, 0.07)
@@ -379,8 +379,12 @@ def DefinirZones(seq, ctx):
              "E" : tailleZSeances[0]*Effectifs["E"][1]/Effectifs["G"][1]*6/7,
              "P" : tailleZSeances[0]*Effectifs["P"][1]/Effectifs["G"][1]*6/7,
              }
-    ecartSeanceY = 0.02
-    hHoraire = (tailleZSeances[1] - (len(seq.seance)-1)*ecartSeanceY) / seq.GetHoraireTotal()
+
+    hHoraire = tailleZSeances[1] / (seq.GetHoraireTotal() + 0.25*(len(seq.seance)-1))
+    ecartSeanceY = hHoraire/4
+    if ecartSeanceY > 0.02:
+        ecartSeanceY = 0.02
+        hHoraire = (tailleZSeances[1] - (len(seq.seance)-1)*ecartSeanceY) / seq.GetHoraireTotal()
 
 
 ######################################################################################
@@ -443,8 +447,8 @@ def Draw(ctx, seq):
     ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
                               cairo.FONT_WEIGHT_BOLD)
     show_text_rect(ctx, getHoraireTxt(seq.GetDuree()), 
-                   posZDeroul[0]-0.01, posZDemarche[1] + tailleZDemarche[1] - ecartY /2, 
-                   0.1, 0.02, ha = 'g', b = 0)
+                   posZDeroul[0]-0.01, posZDemarche[1] + tailleZDemarche[1] - 0.015, 
+                   0.1, 0.015, ha = 'g', b = 0)
     
     
     #
@@ -713,7 +717,7 @@ def Draw(ctx, seq):
     ctx.set_line_width(0.001)
     l=[]
     for d in listeDemarches : 
-        l.append(Demarches[d])
+        l.append(DemarchesCourt[d])
     tableauV(ctx, l, posZDemarche[0], posZDemarche[1], 
             tailleZDemarche[0], posZSeances[1] - posZSysteme[1], 
             0, nlignes = 0, va = 'c', ha = 'g', orient = 'v', coul = (0.8,0.75,0.9))
@@ -911,8 +915,6 @@ def DrawSeanceRacine(ctx, seance):
                 # On en profite pour calculer les positions des lignes de croisement
                 if not filigrane:
                     l[-1].dy = l[-1].h/2
-        
-        
         return l
     
     
@@ -927,6 +929,7 @@ def DrawSeanceRacine(ctx, seance):
             for i in range(int(seance.nombre.v[0])):
                 l.append(Cadre(ctx, seance))
             bloc.contenu.append(l)
+            l[-1].dy = l[-1].h/2
         else:
             bloc.contenu.append([Cadre(ctx, seance)])
     else:

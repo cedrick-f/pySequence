@@ -450,7 +450,7 @@ class VarEvent(wx.PyCommandEvent):
 
 class VariableCtrl(wx.Panel):
     def __init__(self, parent, variable, coef = None, labelMPL = True, signeEgal = True, 
-                 slider = False, fct = None, help = ""):
+                 slider = False, fct = None, help = "", sizeh = -1):
         wx.Panel.__init__(self, parent, -1)#, style = wx.BORDER_SIMPLE)
         
         if coef == None:
@@ -486,7 +486,7 @@ class VariableCtrl(wx.Panel):
         #
         # Valeur de la variable
         #
-        self.text = wx.TextCtrl(self, -1, self.lstToText(self.variable.v))#,
+        self.text = wx.TextCtrl(self, -1, self.lstToText(self.variable.v), size = (sizeh, -1))#,
         if self.variable.nn == "":
             txtn = u"de la variable "+self.variable.n
         else:
@@ -506,32 +506,34 @@ class VariableCtrl(wx.Panel):
         self.Bind(wx.EVT_SPIN_UP, self.OnSpinUp, self.spin)
         self.Bind(wx.EVT_SPIN_DOWN, self.OnSpinDown, self.spin)
         
-        vs = wx.BoxSizer( wx.HORIZONTAL)
-        vs.Add(txtnom,1, wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_RIGHT|wx.LEFT, 4 )
-        vs.Add(self.text, 1, wx.ALIGN_CENTRE|wx.LEFT|wx.RIGHT, 5 )
-        vs.Add(self.spin, 0, wx.ALIGN_CENTRE|wx.LEFT|wx.RIGHT, 5 )
+        sizer = wx.BoxSizer( wx.HORIZONTAL)
+        sizer.Add(txtnom, 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_RIGHT|wx.LEFT, 4 )
+        sizer.Add(self.text, 0, wx.ALIGN_CENTRE|wx.LEFT|wx.RIGHT, 5 )
+        sizer.Add(self.spin, 0, wx.ALIGN_CENTRE|wx.LEFT|wx.RIGHT, 5 )
         
-        sizer = wx.BoxSizer(wx.VERTICAL)
-        sizer.Add(vs)
+#        sizer = wx.BoxSizer(wx.VERTICAL)
+#        sizer.Add(vs, flag = wx.ALIGN_RIGHT)#|wx.EXPAND)
+#        self.vs = vs
+#        
+#        if slider:
+#            self.sli = wx.Slider(self, -1, 0, -100, 100, 
+#                                 size = (self.text.GetSize()[0] + self.spin.GetSize()[0] + 20, 20),
+#                                 style = wx.SL_TOP)
+#            self.sli.SetToolTipString(_(u"Agir ici pour augmenter/diminuer la valeur ")+txtn)
+#
+##            self.Bind(wx.EVT_LEAVE_WINDOW, self.OnLeave)
+#            self.Bind(wx.EVT_SCROLL_CHANGED, self.OnScroll, self.sli)
+#            self.Bind(wx.EVT_SCROLL_THUMBTRACK, self.OnScroll, self.sli)
+#            self.Bind(wx.EVT_SCROLL_THUMBRELEASE, self.OnScrollRelease, self.sli)
+#            sizer.Add(self.sli, flag = wx.ALIGN_RIGHT|wx.BOTTOM, border = 4)
+#            self.lastPos = 0
         
-        if slider:
-            self.sli = wx.Slider(self, -1, 0, -100, 100, 
-                                 size = (self.text.GetSize()[0] + self.spin.GetSize()[0] + 20, 20),
-                                 style = wx.SL_TOP)
-            self.sli.SetToolTipString(_(u"Agir ici pour augmenter/diminuer la valeur ")+txtn)
-
-#            self.Bind(wx.EVT_LEAVE_WINDOW, self.OnLeave)
-            self.Bind(wx.EVT_SCROLL_CHANGED, self.OnScroll, self.sli)
-            self.Bind(wx.EVT_SCROLL_THUMBTRACK, self.OnScroll, self.sli)
-            self.Bind(wx.EVT_SCROLL_THUMBRELEASE, self.OnScrollRelease, self.sli)
-            sizer.Add(self.sli, flag = wx.ALIGN_RIGHT|wx.BOTTOM, border = 4)
-            self.lastPos = 0
-        
-        self.SetSizerAndFit(sizer)
+        self.SetSizer(sizer)
     
     #########################################################################################################
     def Renommer(self, nom):
         self.txtnom.SetLabel(nom)
+#        self.vs.Layout()
         self.Layout()
         self.Fit()
         

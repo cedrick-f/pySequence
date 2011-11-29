@@ -631,11 +631,27 @@ class Sequence():
             s.VerifPb()
         
     ######################################################################################  
-    def MiseAJourListeSystemes(self):
+    def MiseAJourNomsSystemes(self):
         for s in self.seance:
-            s.MiseAJourListeSystemes()
+            s.MiseAJourNomsSystemes()
     
-    
+    ######################################################################################  
+    def AjouterSystemeSeance(self):
+        for s in self.seance:
+            s.AjouterSysteme()
+            
+    ######################################################################################  
+    def AjouterListeSystemesSeance(self, lstSys):
+        for s in self.seance:
+            s.AjouterListeSystemes(lstSys)
+            
+    ######################################################################################  
+    def SupprimerSystemeSeance(self, i):
+        for s in self.seance:
+            s.SupprimerSysteme(i) 
+            
+            
+                   
     ######################################################################################  
     def AjouterSeance(self, event = None):
         seance = Seance(self, self.panelParent)
@@ -716,28 +732,32 @@ class Sequence():
         self.arbre.Expand(self.brancheSys)
         self.panelPropriete.sendEvent()
         self.arbre.SelectItem(sy.branche)
+        self.AjouterSystemeSeance()
         return
     
     ######################################################################################  
     def AjouterListeSystemes(self, propr = []):
+        nouvListe = []
         for p in propr:
             sy = Systeme(self, self.panelParent)
             self.systemes.append(sy)
+            nouvListe.append(sy.nom)
             sy.ConstruireArbre(self.arbre, self.brancheSys)
             self.arbre.Expand(self.brancheSys)
             sy.SetNom(unicode(p[0]))
             sy.panelPropriete.MiseAJour()
         self.panelPropriete.sendEvent()
-        self.MiseAJourListeSystemes()
+        self.AjouterListeSystemesSeance(nouvListe)
         return
     
     ######################################################################################  
     def SupprimerSysteme(self, event = None, item = None):
         sy = self.arbre.GetItemPyData(item)
+        i = self.systemes.index(sy)
         self.systemes.remove(sy)
         self.arbre.Delete(item)
+        self.SupprimerSystemeSeance(i)
         self.panelPropriete.sendEvent()
-    
     
     ######################################################################################  
     def SelectSystemes(self, event = None):
@@ -1257,10 +1277,10 @@ class Seance(ElementDeSequence):
         self.code = u""
         
         
-        for i in range(8):
-            self.systemes.append(Variable(u"", lstVal = 0, nomNorm = "", typ = VAR_ENTIER_POS, 
-                                 bornes = [0,8], modeLog = False,
-                                 expression = None, multiple = False))
+#        for i in range(8):
+#            self.systemes.append(Variable(u"", lstVal = 0, nomNorm = "", typ = VAR_ENTIER_POS, 
+#                                 bornes = [0,8], modeLog = False,
+#                                 expression = None, multiple = False))
         self.nombre = Variable(u"Nombre", lstVal = 1, nomNorm = "", typ = VAR_ENTIER_POS, 
                               bornes = [1,10], modeLog = False,
                               expression = None, multiple = False)
@@ -1277,7 +1297,7 @@ class Seance(ElementDeSequence):
         if self.GetApp():
             self.tip = PopupInfoSysteme(self.GetApp(), u"Séance")
         
-        self.MiseAJourListeSystemes()
+        self.AjouterListeSystemes(self.GetSequence().systemes)
         
         if panelParent:
             self.panelPropriete = PanelPropriete_Seance(panelParent, self)
@@ -1357,11 +1377,18 @@ class Seance(ElementDeSequence):
             self.demarche = branche.get("Demarche", "I")
             self.nombre.v[0] = eval(branche.get("Nombre", "1"))
             self.lien.setBranche(branche)
+            
+            # Les systèmes nécessaires
+            lstSys = []
+            lstNSys = []
             for i, s in enumerate(list(branche)):
                 nom = s.get("Nom", "")
-                nombre = eval(s.get("Nombre", ""))
-                self.systemes[i].n = nom
-                self.systemes[i].v = [nombre]
+                if nom != "":
+                    lstSys.append(nom)
+                    lstNSys.append(eval(s.get("Nombre", "")))
+            self.AjouterListeSystemes(lstSys, lstNSys)
+            
+            # Durée
             self.duree.v[0] = eval(branche.get("Duree", "1"))
         else:
             self.effectif = branche.get("Effectif", "C")
@@ -1369,8 +1396,9 @@ class Seance(ElementDeSequence):
         
         self.intituleDansDeroul = eval(branche.get("IntituleDansDeroul", "True"))
         
-        self.MiseAJourListeSystemes()
+#        self.MiseAJourListeSystemes()
         if hasattr(self, 'panelPropriete'):
+            self.panelPropriete.ConstruireListeSystemes()
             self.panelPropriete.MiseAJour()
 #        print self
         
@@ -1737,19 +1765,60 @@ class Seance(ElementDeSequence):
         return
     
     ######################################################################################  
-    def MiseAJourListeSystemes(self):
-#        print "MiseAJourListeSystemes", self
-        if self.typeSeance in ["AP", "ED", "P", "C", "SS", "SA", "E"]:
+    def MiseAJourNomsSystemes(self):
+#        print "MiseAJourNomsSystemes", self
+        if self.typeSeance in ["AP", "ED", "P"]:
             sequence = self.GetSequence()
             for i, s in enumerate(sequence.systemes):
                 self.systemes[i].n = s.nom
-            self.nSystemes = len(sequence.systemes)
+#            self.nSystemes = len(sequence.systemes)
+            self.panelPropriete.MiseAJourListeSystemes()
+                                 
+        elif self.typeSeance in ["R", "S"] : # Séances en Rotation ou  Parallèle
+            for s in self.sousSeances:
+                s.MiseAJourNomsSystemes()
+        
+    ######################################################################################  
+    def SupprimerSysteme(self, id):
+#        print "SupprimerSysteme", self,id
+#        print self.systemes
+        if self.typeSeance in ["AP", "ED", "P"]:
+            del self.systemes[id]
+            self.panelPropriete.ConstruireListeSystemes()
+        elif self.typeSeance in ["R", "S"] : # Séances en Rotation ou  Parallèle
+            for s in self.sousSeances:
+                s.SupprimerSysteme(id)
+        print self.systemes
+        
+        
+    ######################################################################################  
+    def AjouterSysteme(self, nom = "", nombre = 0, construire = True):
+        if self.typeSeance in ["AP", "ED", "P"]:
+            self.systemes.append(Variable(nom, lstVal = nombre, nomNorm = "", typ = VAR_ENTIER_POS, 
+                                          bornes = [0,8], modeLog = False,
+                                          expression = None, multiple = False))
+            if construire:
+                self.panelPropriete.ConstruireListeSystemes()
+        elif self.typeSeance in ["R", "S"] : # Séances en Rotation ou  Parallèle
+            for s in self.sousSeances:
+                s.AjouterSysteme(nom, nombre)
+    
+    
+    ######################################################################################  
+    def AjouterListeSystemes(self, lstSys, lstNSys = None):
+        if self.typeSeance in ["AP", "ED", "P"]:
+            if lstNSys == None:
+                lstNSys = [0]*len(lstSys)
+            for i, s in enumerate(lstSys):
+                self.AjouterSysteme(s, lstNSys[i], construire = False)
+            self.panelPropriete.ConstruireListeSystemes()
             
         elif self.typeSeance in ["R", "S"] : # Séances en Rotation ou  Parallèle
             for s in self.sousSeances:
-                s.MiseAJourListeSystemes()
-        
-    
+                s.AjouterListeSystemes(lstSys, lstNSys) 
+                
+                
+    ######################################################################################  
     def GetSequence(self):    
         if self.EstSousSeance():
             if self.parent.EstSousSeance():
@@ -1791,6 +1860,7 @@ class Seance(ElementDeSequence):
                             d[s.n] += s.v[0]*self.nombre.v[0]
                         else:
                             d[s.n] = s.v[0]*self.nombre.v[0]
+     
         return d
         
         
@@ -1970,8 +2040,9 @@ class PanelConteneur(wx.Panel):
         self.panel = panel
         self.bsizer.Add(self.panel, 1, flag = wx.EXPAND|wx.GROW)
         
-        if isinstance(self.panel, PanelPropriete_Seance):
-            self.panel.AdapterAuxSystemes()
+#        if isinstance(self.panel, PanelPropriete_Seance):
+#            self.panel.AdapterAuxSystemes()
+            
         self.panel.Show()
         self.bsizer.Layout()
         self.Refresh()
@@ -2543,31 +2614,31 @@ class FenetreSequence(aui.AuiMDIChildFrame):
     def ouvrir(self, nomFichier, redessiner = True):
         print "ouvrir", nomFichier
         fichier = open(nomFichier,'r')
-        try:
-            root = ET.parse(fichier).getroot()
+#        try:
+        root = ET.parse(fichier).getroot()
+        
+        # La séquence
+        sequence = root.find("Sequence")
+        if sequence == None:
+            self.sequence.setBranche(root)
             
-            # La séquence
-            sequence = root.find("Sequence")
-            if sequence == None:
-                self.sequence.setBranche(root)
-                
-            else:
-                self.sequence.setBranche(sequence)
-                
-                # La classe
-                classe = root.find("Classe")
-                self.classe.setBranche(classe)
+        else:
+            self.sequence.setBranche(sequence)
             
-        except:
-            dlg = wx.MessageDialog(self, u"La séquence pédagogique\n%s\n n'a pas pu être ouverte !" %nomFichier,
-                               u"Erreur d'ouverture",
-                               wx.OK | wx.ICON_WARNING
-                               #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
-                               )
-            dlg.ShowModal()
-            dlg.Destroy()
-            fichier.close()
-            return
+            # La classe
+            classe = root.find("Classe")
+            self.classe.setBranche(classe)
+            
+#        except:
+#            dlg = wx.MessageDialog(self, u"La séquence pédagogique\n%s\n n'a pas pu être ouverte !" %nomFichier,
+#                               u"Erreur d'ouverture",
+#                               wx.OK | wx.ICON_WARNING
+#                               #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
+#                               )
+#            dlg.ShowModal()
+#            dlg.Destroy()
+#            fichier.close()
+#            return
         
         self.arbreSeq.DeleteAllItems()
         root = self.arbreSeq.AddRoot("")
@@ -3059,7 +3130,7 @@ class PanelPropriete_Classe(PanelPropriete):
         #
         # Type d'enseignement
         #
-        sb0 = wx.StaticBox(self, -1, u"Type d'enseignement", size = (200,-1))
+        sb0 = wx.StaticBox(self, -1, u"Type d'enseignement", size = (100,-1))
         sbs0 = wx.StaticBoxSizer(sb0,wx.VERTICAL)
         
         
@@ -3097,7 +3168,7 @@ class PanelPropriete_Classe(PanelPropriete):
         #
         # Effectifs
         #
-        sb3 = wx.StaticBox(self, -1, u"Effectifs", size = (200,-1))
+        sb3 = wx.StaticBox(self, -1, u"Effectifs", size = (100,-1))
         sbs3 = wx.StaticBoxSizer(sb3,wx.VERTICAL)
         varEff = {}
 #        ctrlEff = {}
@@ -3107,14 +3178,14 @@ class PanelPropriete_Classe(PanelPropriete):
                          typ = VAR_ENTIER_POS, bornes = [1,40])
             varEff[eff] = v
             vc = VariableCtrl(self, v, coef = 1, labelMPL = False, signeEgal = False,
-                              help = u"Nombre d'élèves")
+                              help = u"Nombre d'élèves", sizeh = 30)
 #            ctrlEff[eff] = vc
             self.Bind(EVT_VAR_CTRL, self.EvtVariableEff, vc)
-            sbs3.Add(vc, flag = wx.EXPAND|wx.ALL, border = 1)
-        self.sizer.Add(sbs3, (1,0), flag = wx.EXPAND|wx.ALL)
+            sbs3.Add(vc, flag = wx.ALL|wx.ALIGN_RIGHT, border = 1)
+        self.sizer.Add(sbs3, (1,0), flag = wx.EXPAND|wx.ALL|wx.ALIGN_RIGHT)
         self.varEff = varEff
 #        self.ctrlEff = ctrlEff
-        self.sizer.AddGrowableCol(0)
+#        self.sizer.AddGrowableCol(0)
         self.sizer.AddGrowableCol(1)
         
     
@@ -3669,12 +3740,9 @@ class PanelPropriete_Seance(PanelPropriete):
         self.box = wx.StaticBox(self, -1, u"Systèmes nécessaires")
         self.bsizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
         self.systemeCtrl = []
-        for s in range(8):
-            v = VariableCtrl(self, seance.systemes[s], labelMPL = False, signeEgal = False, slider = False, fct = None, help = "")
-            self.Bind(EVT_VAR_CTRL, self.EvtVarSysteme, v)
-            self.bsizer.Add(v, flag = wx.ALIGN_RIGHT) 
-            self.systemeCtrl.append(v)
-        self.sizer.Add(self.bsizer, (0,4), (5, 1), flag = wx.EXPAND)
+        self.ConstruireListeSystemes()
+        self.sizer.Add(self.bsizer, (0,4), (6, 1), flag = wx.EXPAND)
+        
 #        self.sizer.AddGrowableCol(4, proportion = 1)
 
         #
@@ -3682,7 +3750,40 @@ class PanelPropriete_Seance(PanelPropriete):
         #
         self.sizer.Layout()
     
+    ############################################################################            
+    def ConstruireListeSystemes(self):
+        if self.seance.typeSeance in ["AP", "ED", "P"]:
+            self.Freeze()
+            self.box.Show()
+            for ss in self.systemeCtrl:
+                self.bsizer.Detach(ss)
+                ss.Destroy()
+            self.systemeCtrl = []
+            for s in self.seance.systemes:
+                v = VariableCtrl(self, s, labelMPL = False, signeEgal = False, 
+                                 slider = False, fct = None, help = "", sizeh = 30)
+                self.Bind(EVT_VAR_CTRL, self.EvtVarSysteme, v)
+                self.bsizer.Add(v, flag = wx.ALIGN_RIGHT)#|wx.EXPAND) 
+                self.systemeCtrl.append(v)
+            self.bsizer.Layout()
+            self.Thaw()
+        else:
+            self.box.Hide()
+        self.Layout()
+    
     #############################################################################            
+    def MiseAJourListeSystemes(self):
+        self.Freeze()
+        print "MiseAJourListeSystemes", self.seance
+        if self.seance.typeSeance in ["AP", "ED", "P"]:
+            self.Freeze()
+            for i, s in enumerate(self.seance.systemes):
+                self.systemeCtrl[i].Renommer(s.n)
+            self.bsizer.Layout()
+            self.Layout()
+            self.Thaw()
+
+    ############################################################################            
     def GetSequence(self):
         return self.seance.GetSequence()
     
@@ -3729,9 +3830,10 @@ class PanelPropriete_Seance(PanelPropriete):
         if self.cbEff.IsEnabled() and self.cbEff.IsShown():
             self.seance.SetEffectif(self.cbEff.GetStringSelection())
 
-        self.seance.MiseAJourListeSystemes()
-        self.AdapterAuxSystemes()
+        self.ConstruireListeSystemes()
+#        self.AdapterAuxSystemes()
         self.Layout()
+        
 #        self.Fit()
         self.sendEvent()
        
@@ -3766,26 +3868,28 @@ class PanelPropriete_Seance(PanelPropriete):
         self.sendEvent()
         
         
-    #############################################################################            
-    def AdapterAuxSystemes(self):
-        self.Freeze()
-#        print "AdapterAuxSystemes"
-        if self.seance.typeSeance in ["AP", "ED", "P"]:
-            self.box.Show()
-            for i in range(self.seance.nSystemes):
-                s = self.seance.systemes[i]
-                self.systemeCtrl[i].Renommer(s.n)
-#                self.systemeCtrl[i].mofifierValeursSsEvt()
-                self.systemeCtrl[i].Show()
-            for sc in self.systemeCtrl[self.seance.nSystemes:]:
-                sc.Hide()
-        else:
-            self.box.Hide()
-            for sc in self.systemeCtrl:
-                sc.Hide()
-        self.Layout()
+#    #############################################################################            
+#    def AdapterAuxSystemes(self):
+#        self.Freeze()
+#        print "AdapterAuxSystemes", self.seance
+#        if self.seance.typeSeance in ["AP", "ED", "P"]:
+#            self.box.Show()
+#            for i in range(self.seance.nSystemes):
+#                s = self.seance.systemes[i]
+#                self.systemeCtrl[i].Renommer(s.n)
+##                self.systemeCtrl[i].mofifierValeursSsEvt()
+#                self.systemeCtrl[i].Show()
+#            for sc in self.systemeCtrl[self.seance.nSystemes:]:
+#                sc.Hide()
+#        else:
+#            self.box.Hide()
+#            for sc in self.systemeCtrl:
+#                sc.Hide()
+#        
+#        self.bsizer.Layout()
+#        self.Layout()
 #        self.Fit()
-        self.Thaw()
+#        self.Thaw()
     
       
     #############################################################################            
@@ -3893,13 +3997,13 @@ class PanelPropriete_Seance(PanelPropriete):
             self.cbDem.SetSelection(self.cbDem.GetStrings().index(Demarches[self.seance.demarche]))
             
         
-        self.AdapterAuxSystemes()
+#        self.AdapterAuxSystemes()
         
-        if self.seance.typeSeance in ["AP", "ED", "P"]:
-            for i in range(self.seance.nSystemes):
-                s = self.seance.systemes[i]
-                self.systemeCtrl[i].mofifierValeursSsEvt()
-            self.vcNombre.mofifierValeursSsEvt()
+#        if self.seance.typeSeance in ["AP", "ED", "P"]:
+#            for i in range(self.seance.nSystemes):
+#                s = self.seance.systemes[i]
+#                self.systemeCtrl[i].mofifierValeursSsEvt()
+#            self.vcNombre.mofifierValeursSsEvt()
         
         self.cbInt.SetValue(self.seance.intituleDansDeroul)
         
@@ -4013,8 +4117,8 @@ class PanelPropriete_Systeme(PanelPropriete):
     #############################################################################            
     def EvtText(self, event):
         self.systeme.SetNom(event.GetString())
-        self.systeme.parent.MiseAJourListeSystemes()
-        self.sendEvent()
+        self.systeme.parent.MiseAJourNomsSystemes()
+        wx.CallLater(0.1, self.sendEvent)
         
     #############################################################################            
     def EvtVar(self, event):

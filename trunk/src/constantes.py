@@ -640,6 +640,10 @@ Demarches = {"I" : u"Investigation",
              "R" : u"Résolution de problème",
              "P" : u"Projet"}
 
+DemarchesCourt = {"I" : u"Investigation",
+             "R" : u"Rés. de problème",
+             "P" : u"Projet"}
+
 listeDemarches = ["I", "R", "P"]
 listEnseigmenent = ['ET', 'ITEC', 'AC', 'EE', 'SIN']
 listeEffectifs = ["C", "G", "D" ,"E" ,"P"]
@@ -654,7 +658,7 @@ Effectifs = {"C" : [u"Classe entière",      32, u"Classe entière"],
              "G" : [u"Effectif réduit",     16, u"Effectif réduit"],
              "D" : [u"Demi-groupe",         8,  u"Demi-groupe"],
              "E" : [u"Etude et Projet",     4,  u"Etude ou Projet"],
-             "P" : [u"Activité Pratique",   2,  u"A Pratique"],
+             "P" : [u"Activité Pratique",   2,  u"Act. Pra."],
              }
 
 def DefOptionsDefaut():
