@@ -125,6 +125,103 @@ class SeqEvent(wx.PyCommandEvent):
     def GetSequence(self):
         return self.seq
     
+    
+    
+    
+class Lien():
+    def __init__(self, path = "", typ = ""):
+        self.path = path
+        self.type = typ
+        
+    def __repr__(self):
+        return self.type + " : " + self.path
+        
+    ######################################################################################  
+    def DialogCreer(self):
+        dlg = URLDialog(None, self)
+        res = dlg.ShowModal()
+        dlg.Destroy() 
+        url = dlg.GetURL()
+        
+        def testRel(lien):
+            try:
+                return os.path.relpath(url,PATH)
+            except:
+                return lien
+            
+        if res == wx.ID_OK and url != "":
+            if os.path.exists(url):
+                if os.path.isfile(url):
+                    self.type = 'f'
+                    url = testRel(url)
+                elif os.path.isdir(url):
+                    self.type = 'd'
+                    url = testRel(url)
+                else:
+                    self.type = 'u'
+                self.path = url
+                
+        elif res == wx.ID_CANCEL:
+            print "Rien" 
+            
+
+    ######################################################################################  
+    def Afficher(self, fenSeq = None):
+        if self.type == "f":
+            os.startfile(self.path)
+        elif self.type == 'd':
+            subprocess.Popen(["explorer", self.path])
+        elif self.type == 'u':
+            lien_safe = urllib.quote_plus(self.path)
+            try:
+                urllib.urlopen(lien_safe)
+            except:
+                dlg = wx.MessageDialog(self, u"Impossible d'ouvrir l'url\n%s!\n" %lien_safe ,
+                               u"Ouverture impossible",
+                               wx.OK | wx.ICON_WARNING
+                               #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
+                               )
+                dlg.ShowModal()
+                dlg.Destroy()
+        elif self.type == 's':
+            if os.path.isfile(self.path):
+#                self.Show(False)
+                child = fenSeq.commandeNouveau()
+                child.ouvrir(self.path)
+
+  
+    def EvalLien(self):
+        if os.path.exists(self.path):
+            if os.path.isfile(self.path):
+                self.type = 'f'
+            elif os.path.isdir(self.path):
+                self.type = 'd'
+            else:
+                self.type = 'u'
+                
+    def getBranche(self, branche):
+        branche.set("Lien", self.path)
+        branche.set("TypeLien", self.type)
+        
+        
+    def setBranche(self, branche):
+        self.path = branche.get("Lien", "")
+        self.type = branche.get("TypeLien", "")
+        if self.type == "" and self.path != "":
+            self.EvalLien()
+            
+#    ######################################################################################  
+#    def GetType(self):
+#        if self.lien == "":
+#            return ""
+#        if os.path.exists(self.lien):
+#            if os.path.isfile(self.lien):
+#                return 'f'
+#            elif os.path.isdir(self.lien):
+#                return 'd'
+#        else:
+#            return 'u'
+    
 ####################################################################################
 #
 #   Classe définissant les propriétés d'une séquence
@@ -139,63 +236,65 @@ Titres = [u"Séquence pédagogique",
 
 class ElementDeSequence():
     def __init__(self):
-        self.lien = ""
+        self.lien = Lien()
         
     
 
     ######################################################################################  
     def CreerLien(self, event):
-
-        dlg = URLDialog(None, self.lien)
-        res = dlg.ShowModal()
-
-        url = dlg.GetURL()
-        if os.path.exists(self.lien):
-            try:
-                url = os.path.relpath(url,PATH)
-            except:
-                pass
-        dlg.Destroy() 
-        if res == wx.ID_OK and url != "":
-            self.lien = url
-        
-        elif res == wx.ID_CANCEL:
-            print "Rien" 
-
+        self.lien.DialogCreer()
+#        dlg = URLDialog(None, self.lien)
+#        res = dlg.ShowModal()
+#
+#        url = dlg.GetURL()
+#        if os.path.exists(self.lien.):
+#            try:
+#                url = os.path.relpath(url,PATH)
+#            except:
+#                pass
+#        dlg.Destroy() 
+#        if res == wx.ID_OK and url != "":
+#            self.lien = url
+#        
+#        elif res == wx.ID_CANCEL:
+#            print "Rien" 
+#
         self.SetLien()
-        return
+#        return
     
     
     ######################################################################################  
     def SetLien(self, lien = None):
-        self.tip.SetLien(self.lien, self.GetTypeLien())
+        print "SetLien", self.lien
+        self.tip.SetLien(self.lien)
         
         
-    ######################################################################################  
-    def AfficherLien(self):
-#        print "AfficherLien", self.lien
-        
-        t = self.GetTypeLien()
-        if t == "f":
-            os.startfile(self.lien)
-        elif t == 'd':
-            subprocess.Popen(["explorer", self.lien])
-        elif t == 'u':
-            urllib.urlopen(self.lien)
-
-  
-    ######################################################################################  
-    def GetTypeLien(self):
-        if self.lien == "":
-            return ""
-        if os.path.exists(self.lien):
-            if os.path.isfile(self.lien):
-                return 'f'
-            elif os.path.isdir(self.lien):
-                return 'd'
-        else:
-            return 'u'
-        
+#    ######################################################################################  
+#    def AfficherLien(self):
+##        print "AfficherLien", self.lien
+#        
+#        t = self.GetTypeLien()
+#        if t == "f":
+#            os.startfile(self.lien)
+#        elif t == 'd':
+#            subprocess.Popen(["explorer", self.lien])
+#        elif t == 'u':
+#            lien_safe = urllib.quote_plus(self.lien)
+#            urllib.urlopen(self.lien)
+#
+#  
+#    ######################################################################################  
+#    def GetTypeLien(self):
+#        if self.lien == "":
+#            return ""
+#        if os.path.exists(self.lien):
+#            if os.path.isfile(self.lien):
+#                return 'f'
+#            elif os.path.isdir(self.lien):
+#                return 'd'
+#        else:
+#            return 'u'
+#        
         
         
 class LienSequence():
@@ -218,11 +317,11 @@ class LienSequence():
     
     ######################################################################################  
     def setBranche(self, branche):
-#        print "setBranche lien seq"
+        print "setBranche lien seq"
         self.path = branche.get("dir", "")
         if hasattr(self, 'panelPropriete'):
-            self.panelPropriete.MiseAJour()
-#        print "..."
+            ok = self.panelPropriete.MiseAJour()
+        print "..."
 
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
@@ -249,7 +348,7 @@ class LienSequence():
 
     ######################################################################################  
     def SetLien(self):
-        self.tip.SetLien(self.path, 's')
+        self.tip.SetLien(Lien(self.path, 's'))
         
     ######################################################################################  
     def GetNomFichier(self):
@@ -459,6 +558,7 @@ class Sequence():
                 sp.setBranche(bsp)
                 self.prerequisSeance.append(sp)
         
+        print "suite"
         brancheObj = branche.find("Objectifs")
 #        self.obj = []
 #        for obj in list(brancheObj):
@@ -1201,7 +1301,7 @@ class Seance(ElementDeSequence):
             root.set("Duree", str(self.duree.v[0]))
             root.set("Effectif", self.effectif)
             root.set("Nombre", str(self.nombre.v[0]))
-            root.set("Lien", self.lien)
+            self.lien.getBranche(root)
             self.branchesSys = []
             for i, s in enumerate(self.systemes):
                 bs = ET.SubElement(root, "Systemes"+str(i))
@@ -1218,7 +1318,7 @@ class Seance(ElementDeSequence):
         
     ######################################################################################  
     def setBranche(self, branche):
-#        print "setBranche séance"
+        print "setBranche séance", self
         self.ordre = eval(branche.tag[6:])
         
         self.intitule  = branche.get("Intitule", "")
@@ -1235,7 +1335,7 @@ class Seance(ElementDeSequence):
             self.effectif = branche.get("Effectif", "C")
             self.demarche = branche.get("Demarche", "I")
             self.nombre.v[0] = eval(branche.get("Nombre", "1"))
-            self.lien = branche.get("Lien", "")
+            self.lien.setBranche(branche)
             for i, s in enumerate(list(branche)):
                 nom = s.get("Nom", "")
                 nombre = eval(s.get("Nombre", ""))
@@ -1546,7 +1646,7 @@ class Seance(ElementDeSequence):
                 sce.SetCode()
 
         # Tip
-        self.tip.SetMessage("Séance : "+ self.code)
+        self.tip.SetMessage(u"Séance : "+ self.code)
         
         
     ######################################################################################  
@@ -1728,7 +1828,7 @@ class Systeme(ElementDeSequence):
 #        print "getBranche systeme", self.nom
         root = ET.Element("Systeme")
         root.set("Nom", self.nom)
-        root.set("Lien", self.lien)
+        self.lien.getBranche(root)
         root.set("Nbr", str(self.nbrDispo.v[0]))
         root.set("Image", img2str(self.image.ConvertToImage()))
         
@@ -1738,10 +1838,8 @@ class Systeme(ElementDeSequence):
     def setBranche(self, branche):
 #        print "setBranche systeme"
         self.nom  = branche.get("Nom", "")
-#        self.SetNom(nom)
-        self.lien = branche.get("Lien", "")
+        self.lien.setBranche(branche)
         self.nbrDispo.v[0] = branche.get("Nbr", 1)
-#        self.SetNombre()
         data = branche.get("Image", "")
         if data != "":
             self.image = PyEmbeddedImage(data).GetBitmap()
@@ -2366,7 +2464,7 @@ class FenetreSequence(aui.AuiMDIChildFrame):
         self.SetSizer(sizer)
    
 #        self.Layout()
-#        print "Fin instanciation Seq"
+        print "Fin instanciation Seq"
         wx.CallAfter(self.Layout)
 #        wx.CallAfter(self.ficheSeq.Redessiner)
     
@@ -2418,32 +2516,32 @@ class FenetreSequence(aui.AuiMDIChildFrame):
     def ouvrir(self, nomFichier, redessiner = True):
         print "ouvrir", nomFichier
         fichier = open(nomFichier,'r')
-        try:
-            root = ET.parse(fichier).getroot()
+#        try:
+        root = ET.parse(fichier).getroot()
+        
+        # La séquence
+        sequence = root.find("Sequence")
+        if sequence == None:
+            self.sequence.setBranche(root)
             
-            # La séquence
-            sequence = root.find("Sequence")
-            if sequence == None:
-                self.sequence.setBranche(root)
-                
-            else:
-                self.sequence.setBranche(sequence)
-                
-                # La classe
-                classe = root.find("Classe")
-                self.classe.setBranche(classe)
+        else:
+            self.sequence.setBranche(sequence)
+            
+            # La classe
+            classe = root.find("Classe")
+            self.classe.setBranche(classe)
             
         
-        except:
-            dlg = wx.MessageDialog(self, u"La séquence pédagogique\n%s\n n'a pas pu être ouverte !" %nomFichier,
-                               u"Erreur d'ouverture",
-                               wx.OK | wx.ICON_WARNING
-                               #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
-                               )
-            dlg.ShowModal()
-            dlg.Destroy()
-            fichier.close()
-            return
+#        except:
+#            dlg = wx.MessageDialog(self, u"La séquence pédagogique\n%s\n n'a pas pu être ouverte !" %nomFichier,
+#                               u"Erreur d'ouverture",
+#                               wx.OK | wx.ICON_WARNING
+#                               #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
+#                               )
+#            dlg.ShowModal()
+#            dlg.Destroy()
+#            fichier.close()
+#            return
         self.arbreSeq.DeleteAllItems()
         root = self.arbreSeq.AddRoot("")
         self.classe.ConstruireArbre(self.arbreSeq, root)
@@ -2467,8 +2565,8 @@ class FenetreSequence(aui.AuiMDIChildFrame):
         
         fichier.close()
         self.definirNomFichierCourant(nomFichier)
-#        if redessiner:
-#            self.ficheSeq.Redessiner()
+        if redessiner:
+            wx.CallAfter(self.ficheSeq.Redessiner)
         
         
         
@@ -2663,7 +2761,7 @@ class FicheSequence(wx.ScrolledWindow):
             if hasattr(elem, 'tip'):
                 x, y = self.ClientToScreen((x, y))
                 elem.tip.Position((x,y), (0,0))
-                self.call = wx.CallLater(1000, elem.tip.Show, True)
+                self.call = wx.CallLater(800, elem.tip.Show, True)
                 self.tip = elem.tip
         evt.Skip()
 
@@ -3089,8 +3187,7 @@ class PanelPropriete_CI(PanelPropriete):
 #        self.sizer.Add(self.grid1, (0,1), flag = wx.EXPAND)
 #        self.sizer.Layout()
 #        self.Bind(wx.EVT_COMBOBOX, self.EvtComboBox, cb)
-        for radio, text in self.group_ctrls:
-            self.Bind(wx.EVT_RADIOBUTTON, self.EvtComboBox, radio )
+        
         
     #############################################################################            
     def GetSequence(self):
@@ -3116,7 +3213,8 @@ class PanelPropriete_CI(PanelPropriete):
             self.grid1.Add( t, 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_LEFT|wx.LEFT|wx.RIGHT, 5 )
             self.group_ctrls.append((r, t))
         self.sizer.Add(self.grid1, (0,0), flag = wx.EXPAND)
-        
+        for radio, text in self.group_ctrls:
+            self.Bind(wx.EVT_RADIOBUTTON, self.EvtRadio, radio )
         btn = wx.Button(self, -1, u"Effacer")
         self.Bind(wx.EVT_BUTTON, self.OnClick, btn)
         self.sizer.Add(btn, (0,1))
@@ -3124,8 +3222,8 @@ class PanelPropriete_CI(PanelPropriete):
         self.sizer.Layout()
         
     #############################################################################            
-    def EvtComboBox(self, event):
-#        print "EvtComboBox"
+    def EvtRadio(self, event):
+        print "EvtRadio CI"
         radio_selected = eval(event.GetEventObject().GetLabel()[2:])
         self.CI.SetNum(radio_selected-1)
 
@@ -3215,10 +3313,11 @@ class PanelPropriete_LienSequence(PanelPropriete):
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
         self.texte.SetValue(self.lien.path)
-        self.sequence = Sequence(self.lien.parent.app)
         
         try:
             fichier = open(self.lien.path,'r')
+            self.texte.SetBackgroundColour("white")
+            self.texte.SetToolTipString(u"Lien vers un fichier Séquence")
         except:
             dlg = wx.MessageDialog(self, u"Le fichier %s\nn'a pas pu être ouvert !" %self.lien.path,
                                u"Erreur d'ouverture du fichier",
@@ -3227,8 +3326,11 @@ class PanelPropriete_LienSequence(PanelPropriete):
                                )
             dlg.ShowModal()
             dlg.Destroy()
-            return
-            
+            self.texte.SetBackgroundColour("pink")
+            self.texte.SetToolTipString(u"Le lien vers le fichier Séquence est rompu !")
+            return False
+        
+        self.sequence = Sequence(self.lien.parent.app)
 #        try:
         root = ET.parse(fichier).getroot()
         
@@ -3264,7 +3366,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
         if sendEvt:
             self.sendEvent()
             
-            
+        return True
             
 ####################################################################################
 #
@@ -5010,7 +5112,7 @@ class SeqApp(wx.App):
 #
 ##########################################################################################################
 class URLDialog(wx.Dialog):
-    def __init__(self, parent, lien = ""):
+    def __init__(self, parent, lien):
         wx.Dialog.__init__(self, parent, -1)
         pre = wx.PreDialog()
         pre.SetExtraStyle(wx.DIALOG_EX_CONTEXTHELP)
@@ -5071,7 +5173,7 @@ class URLSelectorCombo(wx.Panel):
 
         sizer = wx.BoxSizer(wx.HORIZONTAL)
         
-        self.texte = wx.TextCtrl(self, -1, lien, size = (300, -1))
+        self.texte = wx.TextCtrl(self, -1, lien.path, size = (300, -1))
         bt1 =wx.BitmapButton(self, 100, wx.ArtProvider_GetBitmap(wx.ART_FOLDER))
         bt1.SetToolTipString(u"Sélectionner un dossier")
         bt2 =wx.BitmapButton(self, 101, wx.ArtProvider_GetBitmap(wx.ART_NORMAL_FILE))
@@ -5084,7 +5186,7 @@ class URLSelectorCombo(wx.Panel):
         sizer.Add(bt2)
         
         self.SetSizerAndFit(sizer)
-        self.path = lien
+        self.lien = lien
 
     # Overridden from ComboCtrl, called when the combo button is clicked
     def OnClick(self, event):
@@ -5116,11 +5218,11 @@ class URLSelectorCombo(wx.Panel):
 
 
     def GetPath(self):
-        return self.path
+        return self.lien
     
-    def SetPath(self, path):
-        self.path = path
-        self.texte.SetValue(path)
+    def SetPath(self, lien):
+        self.lien = lien
+        self.texte.SetValue(lien.path)
 
 #############################################################################################################
 #
@@ -5213,28 +5315,27 @@ class PopupInfoSysteme(PopupInfo):
         self.Fit()
         
     ##########################################################################################
-    def SetLien(self, lien, typ):
-        self.typeLien = typ
+    def SetLien(self, lien):
         self.lien = lien
-        if typ == "":
+        if lien.type == "":
             self.ctrlLien.Show(False)
             self.titreLien.Show(False)
-            self.ctrlLien.SetToolTipString(self.lien)
+            self.ctrlLien.SetToolTipString(self.lien.path)
         else:
-            self.ctrlLien.SetToolTipString(self.lien)
-            if typ == "f":
+            self.ctrlLien.SetToolTipString(self.lien.path)
+            if lien.type == "f":
                 self.titreLien.SetLabel(u"Fichier :")
                 self.ctrlLien.SetBitmapLabel(wx.ArtProvider_GetBitmap(wx.ART_NORMAL_FILE))
                 self.ctrlLien.Show(True)
-            elif typ == 'd':
+            elif lien.type == 'd':
                 self.titreLien.SetLabel(u"Dossier :")
                 self.ctrlLien.SetBitmapLabel(wx.ArtProvider_GetBitmap(wx.ART_FOLDER))
                 self.ctrlLien.Show(True)
-            elif typ == 'u':
+            elif lien.type == 'u':
                 self.titreLien.SetLabel(u"Lien web :")
                 self.ctrlLien.SetBitmapLabel(images.Icone_web.GetBitmap())
                 self.ctrlLien.Show(True)
-            elif typ == 's':
+            elif lien.type == 's':
                 self.titreLien.SetLabel(u"Séquence :")
                 self.ctrlLien.SetBitmapLabel(images.Icone_sequence.GetBitmap())
                 self.ctrlLien.Show(True)
@@ -5254,16 +5355,20 @@ class PopupInfoSysteme(PopupInfo):
         
     ##########################################################################################
     def OnClick(self, evt):
-        if self.typeLien == "f":
-            os.startfile(self.lien)
-        elif self.typeLien == 'd':
-            subprocess.Popen(["explorer", self.lien])
-        elif self.typeLien == 'u':
-            urllib.urlopen(self.lien)
-        elif self.typeLien == 's':
-            self.Show(False)
-            child = self.parent.parent.commandeNouveau()
-            child.ouvrir(self.lien)
+        self.lien.Afficher(self.parent.parent)
+#        if self.typeLien == "f":
+#            os.startfile(self.lien)
+#        elif self.typeLien == 'd':
+#            subprocess.Popen(["explorer", self.lien])
+#        elif self.typeLien == 'u':
+#            try:
+#                urllib.urlopen(self.lien.encode('ascii', 'xmlcharrefreplace'))
+#            except: #IOError
+#                pass
+#        elif self.typeLien == 's':
+#            self.Show(False)
+#            child = self.parent.parent.commandeNouveau()
+#            child.ouvrir(self.lien)
             
             
 #class PopupInfo(wx.PopupWindow):

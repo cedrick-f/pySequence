@@ -621,7 +621,7 @@ def Draw(ctx, seq):
     for c in seq.obj["S"].savoirs:
         lstTexteS.append(getSavoir(seq, c))
     h = rect_height-height-0.015  
-    
+#    print "Objectifs", lstTexteC
     if len(lstTexteS) > 0 or len(lstTexteC) > 0:
         hC = h*len(lstTexteC)/(len(lstTexteC) + len(lstTexteS))
         hS = h*len(lstTexteS)/(len(lstTexteC) + len(lstTexteS))
@@ -832,7 +832,7 @@ class Cadre():
                                   cairo.FONT_WEIGHT_BOLD)
             self.ctx.set_source_rgb (0,0,0)
             show_text_rect(self.ctx, self.seance.code, x, y, wEff["P"], hHoraire/4, ha = 'g', 
-                           wrap = False, min_font = minFont)
+                           wrap = False, min_font = minFont, b = 0.2)
         
         if not self.filigrane and self.seance.intituleDansDeroul and self.seance.intitule != "":
             self.ctx.select_font_face ("Sans", cairo.FONT_SLANT_ITALIC,
@@ -886,7 +886,7 @@ def DrawSeanceRacine(ctx, seance):
     ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
                               cairo.FONT_WEIGHT_BOLD)
     show_text_rect(ctx, getHoraireTxt(seance.GetDuree()), posZDeroul[0]-0.01, cursY, 
-                   0.02, h, orient = 'v')
+                   0.02, h, orient = 'v', b = 0.2)
         
     #
     # Fonction pour obtenir les lignes de séances du bloc
