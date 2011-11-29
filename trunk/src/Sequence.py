@@ -349,6 +349,10 @@ class LienSequence():
     ######################################################################################  
     def SetLien(self):
         self.tip.SetLien(Lien(self.path, 's'))
+    
+    ######################################################################################  
+    def SetTitre(self, titre):
+        self.tip.SetCode(titre)
         
     ######################################################################################  
     def GetNomFichier(self):
@@ -427,7 +431,8 @@ class Classe():
 
     ######################################################################################  
     def Verrouiller(self, etat):
-        self.panelPropriete.Verrouiller(etat)
+        if hasattr(self, 'panelPropriete'):
+            self.panelPropriete.Verrouiller(etat)
         if etat:
             couleur = 'white'
             message = u""
@@ -671,6 +676,21 @@ class Sequence():
 #        self.panelPropriete.sendEvent()
 #        return
     
+    ######################################################################################  
+    def SupprimerItem(self, item):
+        data = self.arbre.GetItemPyData(item)
+        if isinstance(data, Seance):
+            if data.EstSousSeance():
+                data.parent.SupprimerSeance(item = item)
+            else:
+                self.SupprimerSeance(item = item)
+            
+        elif isinstance(data, Systeme):
+            self.SupprimerSysteme(item = item)
+            
+        elif isinstance(data, LienSequence):
+            self.SupprimerSequencePre(item = item)           
+        
     
     ######################################################################################  
     def SupprimerSequencePre(self, event = None, item = None):
@@ -988,7 +1008,8 @@ class CentreInteret():
         code = list(branche)[0].tag
         num = eval(code[2:])-1
         self.SetNum(num)
-        self.panelPropriete.MiseAJour()
+        if hasattr(self, 'panelPropriete'):
+            self.panelPropriete.MiseAJour()
 
         
     ######################################################################################  
@@ -1318,7 +1339,7 @@ class Seance(ElementDeSequence):
         
     ######################################################################################  
     def setBranche(self, branche):
-        print "setBranche séance", self
+#        print "setBranche séance", self
         self.ordre = eval(branche.tag[6:])
         
         self.intitule  = branche.get("Intitule", "")
@@ -1646,7 +1667,11 @@ class Seance(ElementDeSequence):
                 sce.SetCode()
 
         # Tip
-        self.tip.SetMessage(u"Séance : "+ self.code)
+        self.tip.SetCode(u"Repère : "+ self.code)
+        if self.intitule != "":
+            self.tip.SetMessage(u"Intitulé : "+ self.intitule)
+        else:
+            self.tip.SetMessage(u"")
         
         
     ######################################################################################  
@@ -1864,8 +1889,8 @@ class Systeme(ElementDeSequence):
             self.codeBranche.SetLabel(self.nom)
         # Tip
         if hasattr(self, 'tip'):
-            self.tip.SetMessage(self.nom + "\n" \
-                                u"Nombre disponible : " + str(self.nbrDispo.v[0]))
+            self.tip.SetCode(u"Nom : "+self.nom)
+            self.tip.SetMessage(u"Nombre disponible : " + str(self.nbrDispo.v[0]))
 
     ######################################################################################  
     def SetImage(self):
@@ -2468,8 +2493,10 @@ class FenetreSequence(aui.AuiMDIChildFrame):
         wx.CallAfter(self.Layout)
 #        wx.CallAfter(self.ficheSeq.Redessiner)
     
-        
-        
+    
+    
+            
+            
     ###############################################################################################
     def OnSeqModified(self, event):
 #        print "OnSeqModified"
@@ -2516,32 +2543,32 @@ class FenetreSequence(aui.AuiMDIChildFrame):
     def ouvrir(self, nomFichier, redessiner = True):
         print "ouvrir", nomFichier
         fichier = open(nomFichier,'r')
-#        try:
-        root = ET.parse(fichier).getroot()
+        try:
+            root = ET.parse(fichier).getroot()
+            
+            # La séquence
+            sequence = root.find("Sequence")
+            if sequence == None:
+                self.sequence.setBranche(root)
+                
+            else:
+                self.sequence.setBranche(sequence)
+                
+                # La classe
+                classe = root.find("Classe")
+                self.classe.setBranche(classe)
+            
+        except:
+            dlg = wx.MessageDialog(self, u"La séquence pédagogique\n%s\n n'a pas pu être ouverte !" %nomFichier,
+                               u"Erreur d'ouverture",
+                               wx.OK | wx.ICON_WARNING
+                               #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
+                               )
+            dlg.ShowModal()
+            dlg.Destroy()
+            fichier.close()
+            return
         
-        # La séquence
-        sequence = root.find("Sequence")
-        if sequence == None:
-            self.sequence.setBranche(root)
-            
-        else:
-            self.sequence.setBranche(sequence)
-            
-            # La classe
-            classe = root.find("Classe")
-            self.classe.setBranche(classe)
-            
-        
-#        except:
-#            dlg = wx.MessageDialog(self, u"La séquence pédagogique\n%s\n n'a pas pu être ouverte !" %nomFichier,
-#                               u"Erreur d'ouverture",
-#                               wx.OK | wx.ICON_WARNING
-#                               #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
-#                               )
-#            dlg.ShowModal()
-#            dlg.Destroy()
-#            fichier.close()
-#            return
         self.arbreSeq.DeleteAllItems()
         root = self.arbreSeq.AddRoot("")
         self.classe.ConstruireArbre(self.arbreSeq, root)
@@ -3305,7 +3332,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
 
         if dlg.ShowModal() == wx.ID_OK:
             self.lien.path = dlg.GetPath()
-            self.MiseAJour()
+            self.MiseAJour(sendEvt = True)
         dlg.Destroy()
         
         self.SetFocus()
@@ -3330,39 +3357,42 @@ class PanelPropriete_LienSequence(PanelPropriete):
             self.texte.SetToolTipString(u"Le lien vers le fichier Séquence est rompu !")
             return False
         
-        self.sequence = Sequence(self.lien.parent.app)
-#        try:
-        root = ET.parse(fichier).getroot()
+        classe = Classe(self.lien.parent.app)
+        self.sequence = Sequence(self.lien.parent.app, classe)
+        classe.SetSequence(self.sequence)
         
-        # La séquence
-        sequence = root.find("Sequence")
-        if sequence == None:
-            self.sequence.setBranche(root)
-        else:
-            self.sequence.setBranche(sequence)
+        try:
+            root = ET.parse(fichier).getroot()
+            
+            # La séquence
+            sequence = root.find("Sequence")
+            if sequence == None:
+                self.sequence.setBranche(root)
+            else:
+                self.sequence.setBranche(sequence)
+            
+                # La classe
+                classe = root.find("Classe")
+                self.sequence.classe.setBranche(classe)
+                self.sequence.SetCodes()
+                self.sequence.SetLiens()
+                self.sequence.VerifPb()
+            fichier.close()
         
-            # La classe
-            classe = root.find("Classe")
-            self.sequence.classe = Classe(self)
-            self.sequence.classe.setBranche(classe)
-            self.sequence.SetCodes()
-            self.sequence.SetLiens()
-            self.sequence.VerifPb()
-        fichier.close()
-        
-#        print self.sequence
-#        except:
-#            self.sequence = None
+        except:
+            self.sequence = None
+
+    
         if self.sequence:
             bmp = self.sequence.GetApercu().ConvertToImage().Scale(210, 297).ConvertToBitmap()
             self.apercu.SetBitmap(bmp)
             self.lien.SetLabel()
             self.lien.SetImage(bmp)
             self.lien.SetLien()
-#        self.FitInside()
+            self.lien.SetTitre(self.sequence.intitule)
+
         self.Layout()
         
-#        print self.GetSize()
         if sendEvt:
             self.sendEvent()
             
@@ -3900,7 +3930,7 @@ class PanelPropriete_Systeme(PanelPropriete):
         self.textctrl = textctrl
         
         self.sizer.Add(titre, (0,0))
-        self.sizer.Add(textctrl, (0,1), flag = wx.EXPAND)
+        self.sizer.Add(textctrl, (0,1), flag = wx.EXPAND|wx.ALIGN_CENTER_VERTICAL)
         
         #
         # Nombre de systèmes disponibles en parallèle
@@ -3923,6 +3953,7 @@ class PanelPropriete_Systeme(PanelPropriete):
         
         
         bt = wx.Button(self, -1, u"Changer l'image")
+        bt.SetToolTipString(u"Cliquer ici pour sélectionner un fichier image")
         bsizer.Add(bt, flag = wx.EXPAND)
         self.Bind(wx.EVT_BUTTON, self.OnClick, bt)
         self.sizer.Add(bsizer, (0,3), (2,1), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 2)
@@ -4124,6 +4155,7 @@ class ArbreSequence(CT.CustomTreeCtrl):
         self.Bind(CT.EVT_TREE_END_DRAG, self.OnEndDrag)
         self.Bind(wx.EVT_MOTION, self.OnMove)
         self.Bind(wx.EVT_LEFT_DCLICK, self.OnLeftDClick)
+        self.Bind(wx.EVT_KEY_DOWN, self.OnKey)
         
         self.ExpandAll()
         
@@ -4231,6 +4263,14 @@ class ArbreSequence(CT.CustomTreeCtrl):
 #        self.CurseurInsert = wx.Cursor('CurseurInsert.ico', wx.BITMAP_TYPE_ICO )
         self.CurseurInsert = wx.CursorFromImage(images.CurseurInsert.GetImage())
         
+    ###############################################################################################
+    def OnKey(self, evt):
+        keycode = evt.GetKeyCode()
+        print keycode
+        if keycode == wx.WXK_DELETE:
+            item = self.GetSelection()
+            self.sequence.SupprimerItem(item)
+            
         
     def AjouterObjectif(self, event = None):
         self.sequence.AjouterObjectif()
@@ -5263,7 +5303,7 @@ def img2str(img):
 #############################################################################################################
 class PopupInfo(wx.PopupWindow):
     def __init__(self, parent, titre):
-        wx.PopupWindow.__init__(self, parent)
+        wx.PopupWindow.__init__(self, parent, wx.BORDER_SIMPLE)
         self.parent = parent
         self.sizer = wx.GridBagSizer()
         self.titre = wx.StaticText(self, -1, titre)
@@ -5289,8 +5329,11 @@ class PopupInfoSysteme(PopupInfo):
     def __init__(self, parent, titre):
         PopupInfo.__init__(self, parent, titre)
         
+        self.code = wx.StaticText(self, -1, "")
+        self.sizer.Add(self.code, (1,0), flag = wx.ALL, border = 5)
+        
         self.message = wx.StaticText(self, -1, "")
-        self.sizer.Add(self.message, (1,0), flag = wx.ALL, border = 5)
+        self.sizer.Add(self.message, (2,0), flag = wx.ALL, border = 5)
         
         self.titreLien = wx.StaticText(self, -1, "")
         self.ctrlLien = wx.BitmapButton(self, -1, wx.NullBitmap)
@@ -5300,14 +5343,20 @@ class PopupInfoSysteme(PopupInfo):
         sizerLien = wx.BoxSizer(wx.HORIZONTAL)
         sizerLien.Add(self.titreLien, flag = wx.ALIGN_CENTER_VERTICAL)
         sizerLien.Add(self.ctrlLien)
-        self.sizer.Add(sizerLien, (2,0), flag = wx.ALL, border = 5)
+        self.sizer.Add(sizerLien, (3,0), flag = wx.ALL, border = 5)
         
 
         self.image = wx.StaticBitmap(self, -1, wx.NullBitmap)
         self.image.Show(False)
-        self.sizer.Add(self.image, (3,0), flag = wx.ALL, border = 5)
+        self.sizer.Add(self.image, (4,0), flag = wx.ALL, border = 5)
        
     
+    ##########################################################################################
+    def SetCode(self, message):
+        self.code.SetLabel(message)
+        self.Layout()
+        self.Fit()
+        
     ##########################################################################################
     def SetMessage(self, message):
         self.message.SetLabel(message)
@@ -5336,7 +5385,7 @@ class PopupInfoSysteme(PopupInfo):
                 self.ctrlLien.SetBitmapLabel(images.Icone_web.GetBitmap())
                 self.ctrlLien.Show(True)
             elif lien.type == 's':
-                self.titreLien.SetLabel(u"Séquence :")
+                self.titreLien.SetLabel(u"Fichier séquence :")
                 self.ctrlLien.SetBitmapLabel(images.Icone_sequence.GetBitmap())
                 self.ctrlLien.Show(True)
 
