@@ -836,15 +836,16 @@ class Cadre():
             self.ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
                                   cairo.FONT_WEIGHT_BOLD)
             self.ctx.set_source_rgb (0,0,0)
-            show_text_rect(self.ctx, self.seance.code, x, y, wEff["P"], hHoraire/4, ha = 'g', 
+            hc = max(hHoraire/4, 0.01)
+            show_text_rect(self.ctx, self.seance.code, x, y, wEff["P"], hc, ha = 'g', 
                            wrap = False, min_font = minFont, b = 0.2)
         
         if not self.filigrane and self.seance.intituleDansDeroul and self.seance.intitule != "":
             self.ctx.select_font_face ("Sans", cairo.FONT_SLANT_ITALIC,
                                   cairo.FONT_WEIGHT_NORMAL)
             self.ctx.set_source_rgb (0,0,0)
-            show_text_rect(self.ctx, self.seance.intitule, x, y + hHoraire/4, 
-                           self.w, self.h-hHoraire/4, ha = 'g', min_font = minFont)
+            show_text_rect(self.ctx, self.seance.intitule, x, y + hc, 
+                           self.w, self.h-hc, ha = 'g', min_font = minFont)
             
         if not self.filigrane and self.signEgal:
             dx = wEff["P"]/4
