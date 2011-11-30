@@ -807,7 +807,7 @@ def Draw_CI(ctx, CI):
 
 
 class Cadre():  
-    def __init__(self, ctx, seance, filigrane = False): 
+    def __init__(self, ctx, seance, filigrane = False, signEgal = False): 
         self.seance = seance
         self.ctx = ctx
         self.w = wEff[seance.effectif]
@@ -817,6 +817,7 @@ class Cadre():
         self.y = None
         self.dy = None
         self.seance.rect = []
+        self.signEgal = signEgal
         
     def __repr__(self):
         return self.seance.code
@@ -844,6 +845,17 @@ class Cadre():
             self.ctx.set_source_rgb (0,0,0)
             show_text_rect(self.ctx, self.seance.intitule, x, y + hHoraire/4, 
                            self.w, self.h-hHoraire/4, ha = 'g', min_font = minFont)
+            
+        if not self.filigrane and self.signEgal:
+            dx = wEff["P"]/4
+            dy = hHoraire/16
+            self.ctx.set_source_rgba (0, 0.0, 0.2, 0.6)
+            self.ctx.set_line_width (0.002)
+            self.ctx.move_to(x-dx, y+self.h/2 - dy)
+            self.ctx.line_to(x+dx, y+self.h/2 - dy)
+            self.ctx.move_to(x-dx, y+self.h/2 + dy)
+            self.ctx.line_to(x+dx, y+self.h/2 + dy)
+            self.ctx.stroke()
             
         # Sauvegarde de la position du bord droit pour les lignes de croisement
         self.xd = x+self.w
@@ -901,7 +913,7 @@ def DrawSeanceRacine(ctx, seance):
             for j,ss in enumerate(s.sousSeances):
                 if ss.typeSeance != '':
                     for i in range(int(ss.nombre.v[0])):
-                        l.append(Cadre(ctx, ss, filigrane = filigrane))
+                        l.append(Cadre(ctx, ss, filigrane = filigrane, signEgal = (i>0)))
                     
                     # On en profite pour calculer les positions des lignes de croisement
                     if not filigrane:
@@ -910,7 +922,7 @@ def DrawSeanceRacine(ctx, seance):
         else:
             if s.typeSeance != '':
                 for i in range(int(s.nombre.v[0])):
-                    l.append(Cadre(ctx, s, filigrane = filigrane))
+                    l.append(Cadre(ctx, s, filigrane = filigrane, signEgal = (i>0)))
                 
                 # On en profite pour calculer les positions des lignes de croisement
                 if not filigrane:
@@ -927,7 +939,7 @@ def DrawSeanceRacine(ctx, seance):
         if seance.typeSeance in ["AP", "ED", "P"]:
             l = []
             for i in range(int(seance.nombre.v[0])):
-                l.append(Cadre(ctx, seance))
+                l.append(Cadre(ctx, seance, signEgal = (i>0)))
             bloc.contenu.append(l)
             l[-1].dy = l[-1].h/2
         else:

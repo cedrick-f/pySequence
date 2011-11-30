@@ -2927,7 +2927,7 @@ class FicheSequence(wx.ScrolledWindow):
         
     #############################################################################            
     def Redessiner(self, event = None):  
-#        print "REDESSINER"
+        print "REDESSINER"
         cdc = wx.ClientDC(self)
         dc = wx.BufferedDC(cdc, self.buffer, wx.BUFFER_VIRTUAL_AREA)
         dc.SetBackground(wx.Brush('white'))
@@ -3035,6 +3035,7 @@ class FicheSequence(wx.ScrolledWindow):
 #   Classe définissant le panel de propriété par défaut
 #
 ####################################################################################
+DELAY = 100 # Delai en millisecondes avant de rafraichir l'affichage suite à un saisie au clavier
 class PanelPropriete(scrolled.ScrolledPanel):
     def __init__(self, parent, titre = u"", objet = None):
         scrolled.ScrolledPanel.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)#|wx.BORDER_SIMPLE)
@@ -3047,7 +3048,7 @@ class PanelPropriete(scrolled.ScrolledPanel):
 #        self.SetScrollRate(20,20)
         self.SetupScrolling()
 #        self.EnableScrolling(True, True)
-        
+        self.eventAttente = False
         self.Bind(wx.EVT_ENTER_WINDOW, self.OnEnter)
 
     ######################################################################################################
@@ -3062,7 +3063,7 @@ class PanelPropriete(scrolled.ScrolledPanel):
         evt = SeqEvent(myEVT_SEQ_MODIFIED, self.GetId())
         evt.SetSequence(self.GetSequence())
         self.GetEventHandler().ProcessEvent(evt)
-
+        self.eventAttente = False
 
 
 ####################################################################################
@@ -3102,7 +3103,9 @@ class PanelPropriete_Sequence(PanelPropriete):
             self.sequence.SetText(event.GetString())
         else:
             self.sequence.SetCommentaire(event.GetString())
-        self.sendEvent()
+        if not self.eventAttente:
+            wx.CallLater(DELAY, self.sendEvent)
+            self.eventAttente = True
         
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
@@ -3213,7 +3216,9 @@ class PanelPropriete_Classe(PanelPropriete):
     ######################################################################################  
     def EvtTxtCI(self, event):
         self.classe.ci_ET =  event.GetString()
-        self.sendEvent()
+        if not self.eventAttente:
+            wx.CallLater(DELAY, self.sendEvent)
+            self.eventAttente = True
         
     ######################################################################################  
     def EvtVariableEff(self, event):
@@ -3774,7 +3779,7 @@ class PanelPropriete_Seance(PanelPropriete):
     #############################################################################            
     def MiseAJourListeSystemes(self):
         self.Freeze()
-        print "MiseAJourListeSystemes", self.seance
+#        print "MiseAJourListeSystemes", self.seance
         if self.seance.typeSeance in ["AP", "ED", "P"]:
             self.Freeze()
             for i, s in enumerate(self.seance.systemes):
@@ -3800,7 +3805,9 @@ class PanelPropriete_Seance(PanelPropriete):
     #############################################################################            
     def EvtTextIntitule(self, event):
         self.seance.SetIntitule(event.GetString())
-        self.sendEvent()
+        if not self.eventAttente:
+            wx.CallLater(DELAY, self.sendEvent)
+            self.eventAttente = True
         
     #############################################################################            
     def EvtText(self, event):
@@ -3808,7 +3815,9 @@ class PanelPropriete_Seance(PanelPropriete):
             self.seance.SetDuree(event.GetVar().v[0])
         elif event.GetId() == self.vcNombre:
             self.seance.SetNombre(event.GetVar().v[0])
-        self.sendEvent()
+        if not self.eventAttente:
+            wx.CallLater(DELAY, self.sendEvent)
+            self.eventAttente = True
         
     #############################################################################            
     def EvtComboBox(self, event):
@@ -4118,14 +4127,18 @@ class PanelPropriete_Systeme(PanelPropriete):
     def EvtText(self, event):
         self.systeme.SetNom(event.GetString())
         self.systeme.parent.MiseAJourNomsSystemes()
-        wx.CallLater(0.1, self.sendEvent)
+        if not self.eventAttente:
+            wx.CallLater(DELAY, self.sendEvent)
+            self.eventAttente = True
         
     #############################################################################            
     def EvtVar(self, event):
 #        print "EvtVar"
 #        if event.GetId() == self.vcNombre:
         self.systeme.SetNombre()
-        self.sendEvent()
+        if not self.eventAttente:
+            wx.CallLater(DELAY, self.sendEvent)
+            self.eventAttente = True
         
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
