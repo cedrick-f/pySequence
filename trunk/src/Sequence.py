@@ -4010,7 +4010,7 @@ class PanelPropriete_Seance(PanelPropriete):
         if self.cbEff.IsShown():#self.cbEff.IsEnabled() and 
             self.cbEff.SetSelection(findEffectif(self.cbEff.GetStrings(), self.seance.effectif))
         
-        if self.cbDem.IsEnabled() and self.cbDem.IsShown():
+        if self.cbDem.IsShown():#self.cbDem.IsEnabled() and :
             self.cbDem.SetSelection(self.cbDem.GetStrings().index(Demarches[self.seance.demarche]))
             
 
@@ -4877,8 +4877,11 @@ class ArbreSequence(CT.CustomTreeCtrl):
                         lst = dataTarget.parent.sousSeances
                     s = lst.index(dataSource)
                     t = lst.index(dataTarget)
-                    lst[s] = dataTarget
-                    lst[t] = dataSource
+                    
+                    if t > s:
+                        lst.insert(t, lst.pop(s))
+                    else:
+                        lst.insert(t+1, lst.pop(s))
                     dataTarget.parent.OrdonnerSeances()
                     self.SortChildren(self.GetItemParent(self.item))
                     self.panelVide.sendEvent(self.sequence) # Solution pour déclencher un "redessiner"
@@ -4901,8 +4904,8 @@ class ArbreSequence(CT.CustomTreeCtrl):
                     del lstS[s]
                     p = dataSource.parent
                     dataSource.parent = dataTarget.parent
-                    dataTarget.parent = p
-                    dataSource.parent.OrdonnerSeances()
+#                    dataTarget.parent = p
+                    p.OrdonnerSeances()
                     dataTarget.parent.OrdonnerSeances()
                     self.sequence.reconstruireBrancheSeances()
                     self.panelVide.sendEvent(self.sequence) # Solution pour déclencher un "redessiner"
