@@ -760,6 +760,7 @@ def strEffectif(e):
     return eff[0]+" ("+str(eff[1])+" "+eleves+")"
 
 def findEffectif(lst, eff):
+#    print "findEffectif", lst, eff
     continuer = True
     i = 0
     while continuer:
@@ -768,7 +769,8 @@ def findEffectif(lst, eff):
         else:
             if lst[i][:2] == Effectifs[eff][0][:2]:
                 continuer = False
-            i += 1 
+            else:
+                i += 1 
     return i
 
 

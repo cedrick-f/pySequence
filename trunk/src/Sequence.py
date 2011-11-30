@@ -1584,8 +1584,9 @@ class Seance(ElementDeSequence):
         """ Modifie la durée des Rotation et séances en Parallèle et de tous leurs enfants
             après une modification de durée d'un des enfants
         """
-#        print "SetDuree"
+#        print "SetDuree", self.EstSousSeance()
         if recurs and self.EstSousSeance() and self.parent.typeSeance in ["R", "S"]: # séance en rotation (parent = séance "Rotation")
+            
             self.parent.SetDuree(duree)
 
         
@@ -2572,7 +2573,7 @@ class FenetreSequence(aui.AuiMDIChildFrame):
             
     ###############################################################################################
     def OnSeqModified(self, event):
-        print "OnSeqModified",event.GetSequence(), self.sequence
+#        print "OnSeqModified",event.GetSequence(), self.sequence
         if event.GetSequence() == self.sequence:
             self.sequence.VerifPb()
             self.ficheSeq.Redessiner()
@@ -2929,7 +2930,7 @@ class FicheSequence(wx.ScrolledWindow):
         
     #############################################################################            
     def Redessiner(self, event = None):  
-        print "REDESSINER"
+#        print "REDESSINER"
         cdc = wx.ClientDC(self)
         dc = wx.BufferedDC(cdc, self.buffer, wx.BUFFER_VIRTUAL_AREA)
         dc.SetBackground(wx.Brush('white'))
@@ -3062,7 +3063,7 @@ class PanelPropriete(scrolled.ScrolledPanel):
        
     #########################################################################################################
     def sendEvent(self, seq = None):
-        print "sendEvent", seq
+#        print "sendEvent", seq
         evt = SeqEvent(myEVT_SEQ_MODIFIED, self.GetId())
         if seq != None:
             evt.SetSequence(seq)
@@ -3817,9 +3818,10 @@ class PanelPropriete_Seance(PanelPropriete):
         
     #############################################################################            
     def EvtText(self, event):
-        if event.GetId() == self.vcDuree:
+#        print "EvtText", self.seance, event.GetId(), self.vcDuree.GetId()
+        if event.GetId() == self.vcDuree.GetId():
             self.seance.SetDuree(event.GetVar().v[0])
-        elif event.GetId() == self.vcNombre:
+        elif event.GetId() == self.vcNombre.GetId():
             self.seance.SetNombre(event.GetVar().v[0])
         if not self.eventAttente:
             wx.CallLater(DELAY, self.sendEvent)
@@ -4005,12 +4007,15 @@ class PanelPropriete_Seance(PanelPropriete):
             self.cbType.SetSelection(self.cbType.GetStrings().index(TypesSeance[self.seance.typeSeance]))
         self.textctrl.ChangeValue(self.seance.intitule)
         self.vcDuree.mofifierValeursSsEvt()
-        if self.cbEff.IsEnabled() and self.cbEff.IsShown():
+        if self.cbEff.IsShown():#self.cbEff.IsEnabled() and 
             self.cbEff.SetSelection(findEffectif(self.cbEff.GetStrings(), self.seance.effectif))
         
         if self.cbDem.IsEnabled() and self.cbDem.IsShown():
             self.cbDem.SetSelection(self.cbDem.GetStrings().index(Demarches[self.seance.demarche]))
             
+
+        if self.seance.typeSeance in ["AP", "ED", "P"]:
+            self.vcNombre.mofifierValeursSsEvt()
         
 #        self.AdapterAuxSystemes()
         
