@@ -102,6 +102,8 @@ from wx.lib.embeddedimage import PyEmbeddedImage
 
 import register
 
+import textwrap
+
 ####################################################################################
 #
 #   Evenement perso pour détecter une modification de la séquence
@@ -1697,7 +1699,7 @@ class Seance(ElementDeSequence):
         # Tip
         self.tip.SetCode(u"Repère : "+ self.code)
         if self.intitule != "":
-            self.tip.SetMessage(u"Intitulé : "+ self.intitule)
+            self.tip.SetMessage(u"Intitulé : "+ "\n".join(textwrap.wrap(self.intitule, 40)))
         else:
             self.tip.SetMessage(u"")
         
@@ -2570,7 +2572,7 @@ class FenetreSequence(aui.AuiMDIChildFrame):
             
     ###############################################################################################
     def OnSeqModified(self, event):
-#        print "OnSeqModified"
+        print "OnSeqModified",event.GetSequence(), self.sequence
         if event.GetSequence() == self.sequence:
             self.sequence.VerifPb()
             self.ficheSeq.Redessiner()
@@ -3059,9 +3061,13 @@ class PanelPropriete(scrolled.ScrolledPanel):
 #        self.Layout()
        
     #########################################################################################################
-    def sendEvent(self):
+    def sendEvent(self, seq = None):
+        print "sendEvent", seq
         evt = SeqEvent(myEVT_SEQ_MODIFIED, self.GetId())
-        evt.SetSequence(self.GetSequence())
+        if seq != None:
+            evt.SetSequence(seq)
+        else:
+            evt.SetSequence(self.GetSequence())
         self.GetEventHandler().ProcessEvent(evt)
         self.eventAttente = False
 
@@ -4870,7 +4876,7 @@ class ArbreSequence(CT.CustomTreeCtrl):
                     lst[t] = dataSource
                     dataTarget.parent.OrdonnerSeances()
                     self.SortChildren(self.GetItemParent(self.item))
-                    self.panelVide.sendEvent() # Solution pour déclencher un "redessiner"
+                    self.panelVide.sendEvent(self.sequence) # Solution pour déclencher un "redessiner"
                 
                 elif dataTarget != dataSource and dataTarget.parent != dataSource.parent:
                     if isinstance(dataTarget.parent, Sequence):
@@ -4894,7 +4900,7 @@ class ArbreSequence(CT.CustomTreeCtrl):
                     dataSource.parent.OrdonnerSeances()
                     dataTarget.parent.OrdonnerSeances()
                     self.sequence.reconstruireBrancheSeances()
-                    self.panelVide.sendEvent() # Solution pour déclencher un "redessiner"
+                    self.panelVide.sendEvent(self.sequence) # Solution pour déclencher un "redessiner"
                 else:
                     pass
         self.itemDrag = None
