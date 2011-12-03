@@ -127,7 +127,12 @@ class SeqEvent(wx.PyCommandEvent):
     def GetSequence(self):
         return self.seq
     
-    
+
+def testRel(lien, path):
+    try:
+        return os.path.relpath(lien,path)
+    except:
+        return lien
     
     
 class Lien():
@@ -139,30 +144,14 @@ class Lien():
         return self.type + " : " + self.path
         
     ######################################################################################  
-    def DialogCreer(self):
+    def DialogCreer(self, fichierCourant):
         dlg = URLDialog(None, self)
         res = dlg.ShowModal()
         dlg.Destroy() 
         url = dlg.GetURL()
-        
-        def testRel(lien):
-            try:
-                return os.path.relpath(url,PATH)
-            except:
-                return lien
             
         if res == wx.ID_OK and url != "":
-            if os.path.exists(url):
-                if os.path.isfile(url):
-                    self.type = 'f'
-                    url = testRel(url)
-                elif os.path.isdir(url):
-                    self.type = 'd'
-                    url = testRel(url)
-                else:
-                    self.type = 'u'
-                self.path = url
-                
+            self.EvalLien(url, fichierCourant)
         elif res == wx.ID_CANCEL:
             print "Rien" 
             
@@ -192,7 +181,8 @@ class Lien():
                 child.ouvrir(self.path)
 
   
-    def EvalLien(self):
+    ######################################################################################  
+    def EvalTypeLien(self):
         if os.path.exists(self.path):
             if os.path.isfile(self.path):
                 self.type = 'f'
@@ -201,6 +191,35 @@ class Lien():
             else:
                 self.type = 'u'
                 
+                
+    ######################################################################################  
+    def EvalLien(self, path, fichierCourant):
+        
+        def testRel(lien):
+            pathseq = os.path.split(fichierCourant)[0]
+            print pathseq
+            try:
+                return os.path.relpath(lien,pathseq)
+            except:
+                return lien
+            
+        if os.path.exists(path):
+            pathseq = os.path.split(fichierCourant)[0]
+            print pathseq
+            if os.path.isfile(path):
+                self.type = 'f'
+                path = testRel(path, pathseq)
+            elif os.path.isdir(path):
+                self.type = 'd'
+                path = testRel(path, pathseq)
+            else:
+                self.type = 'u'
+            self.path = path
+            print "-->",self.path
+                
+                
+                
+    ######################################################################################  
     def getBranche(self, branche):
         branche.set("Lien", self.path)
         branche.set("TypeLien", self.type)
@@ -210,7 +229,7 @@ class Lien():
         self.path = branche.get("Lien", "")
         self.type = branche.get("TypeLien", "")
         if self.type == "" and self.path != "":
-            self.EvalLien()
+            self.EvalTypeLien()
             
 #    ######################################################################################  
 #    def GetType(self):
@@ -244,7 +263,7 @@ class ElementDeSequence():
 
     ######################################################################################  
     def CreerLien(self, event):
-        self.lien.DialogCreer()
+        self.lien.DialogCreer(self.parent.app.fichierCourant)
 #        dlg = URLDialog(None, self.lien)
 #        res = dlg.ShowModal()
 #
@@ -492,6 +511,9 @@ class Sequence():
     def GetApp(self):
         return self.app
     
+    ######################################################################################  
+    def GetPath(self):
+        return os.path.split(self.app.fichierCourant)[0]
     
     ######################################################################################  
     def GetDuree(self):
@@ -545,7 +567,7 @@ class Sequence():
         return sequence
         
     ######################################################################################  
-    def setBranche(self, branche):
+    def setBranche(self, branche, ):
 #        print "setBranche séquence", self
         self.intitule = branche.get("Intitule", u"")
         
@@ -560,12 +582,13 @@ class Sequence():
             lst = list(branchePre)
             lst.remove(savoirs)
             self.prerequisSeance = []
-            for bsp in lst:
-                sp = LienSequence(self, self.panelParent)
-                sp.setBranche(bsp)
-                self.prerequisSeance.append(sp)
+            if hasattr(self, 'panelPropriete'):
+                for bsp in lst:
+                    sp = LienSequence(self, self.panelParent)
+                    sp.setBranche(bsp)
+                    self.prerequisSeance.append(sp)
         
-        print "suite"
+#        print "suite"
         brancheObj = branche.find("Objectifs")
 #        self.obj = []
 #        for obj in list(brancheObj):
@@ -1775,7 +1798,8 @@ class Seance(ElementDeSequence):
             for i, s in enumerate(sequence.systemes):
                 self.systemes[i].n = s.nom
 #            self.nSystemes = len(sequence.systemes)
-            self.panelPropriete.MiseAJourListeSystemes()
+            if hasattr(self, 'panelPropriete'):
+                self.panelPropriete.MiseAJourListeSystemes()
                                  
         elif self.typeSeance in ["R", "S"] : # Séances en Rotation ou  Parallèle
             for s in self.sousSeances:
@@ -1787,7 +1811,8 @@ class Seance(ElementDeSequence):
 #        print self.systemes
         if self.typeSeance in ["AP", "ED", "P"]:
             del self.systemes[id]
-            self.panelPropriete.ConstruireListeSystemes()
+            if hasattr(self, 'panelPropriete'):
+                self.panelPropriete.ConstruireListeSystemes()
         elif self.typeSeance in ["R", "S"] : # Séances en Rotation ou  Parallèle
             for s in self.sousSeances:
                 s.SupprimerSysteme(id)
@@ -1800,7 +1825,7 @@ class Seance(ElementDeSequence):
             self.systemes.append(Variable(nom, lstVal = nombre, nomNorm = "", typ = VAR_ENTIER_POS, 
                                           bornes = [0,8], modeLog = False,
                                           expression = None, multiple = False))
-            if construire:
+            if construire and hasattr(self, 'panelPropriete'):
                 self.panelPropriete.ConstruireListeSystemes()
         elif self.typeSeance in ["R", "S"] : # Séances en Rotation ou  Parallèle
             for s in self.sousSeances:
@@ -1814,7 +1839,8 @@ class Seance(ElementDeSequence):
                 lstNSys = [0]*len(lstSys)
             for i, s in enumerate(lstSys):
                 self.AjouterSysteme(s, lstNSys[i], construire = False)
-            self.panelPropriete.ConstruireListeSystemes()
+            if hasattr(self, 'panelPropriete'):
+                self.panelPropriete.ConstruireListeSystemes()
             
         elif self.typeSeance in ["R", "S"] : # Séances en Rotation ou  Parallèle
             for s in self.sousSeances:
@@ -3378,10 +3404,13 @@ class PanelPropriete_LienSequence(PanelPropriete):
         #
         sb0 = wx.StaticBox(self, -1, u"Fichier de la séquence", size = (200,-1))
         sbs0 = wx.StaticBoxSizer(sb0,wx.HORIZONTAL)
-        self.texte = wx.TextCtrl(self, -1, self.lien.path, size = (300, -1))
+        self.texte = wx.TextCtrl(self, -1, self.lien.path, size = (300, -1),
+                                 style = wx.TE_PROCESS_ENTER)
         bt2 =wx.BitmapButton(self, 101, wx.ArtProvider_GetBitmap(wx.ART_NORMAL_FILE))
         bt2.SetToolTipString(u"Sélectionner un fichier")
         self.Bind(wx.EVT_BUTTON, self.OnClick, bt2)
+        self.Bind(wx.EVT_TEXT_ENTER, self.OnText, self.texte)
+        self.texte.Bind(wx.EVT_KILL_FOCUS, self.OnLoseFocus)
         sbs0.Add(self.texte)#, flag = wx.EXPAND)
         sbs0.Add(bt2)
         
@@ -3414,22 +3443,40 @@ class PanelPropriete_LienSequence(PanelPropriete):
                             )
 
         if dlg.ShowModal() == wx.ID_OK:
-            self.lien.path = dlg.GetPath()
+            self.lien.path = testRel(dlg.GetPath(), 
+                                     self.GetSequence().GetPath())
             self.MiseAJour(sendEvt = True)
         dlg.Destroy()
         
         self.SetFocus()
         
+        
+    #############################################################################            
+    def OnText(self, event):
+#        print "OnText", event.GetString()
+        self.lien.path = event.GetString()
+        self.MiseAJour()
+        event.Skip()     
+                            
+    def OnLoseFocus(self, event):  
+#        print "OnLooseFocus"
+        self.lien.path = self.texte.GetValue()
+        self.MiseAJour()
+        event.Skip()   
+                   
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
         self.texte.SetValue(self.lien.path)
         
         try:
-            fichier = open(self.lien.path,'r')
+            if os.path.isfile(self.lien.path):
+                fichier = open(self.lien.path,'r')
+            else:
+                fichier = open(os.path.join(self.GetSequence().GetPath(), self.lien.path),'r')
             self.texte.SetBackgroundColour("white")
             self.texte.SetToolTipString(u"Lien vers un fichier Séquence")
         except:
-            dlg = wx.MessageDialog(self, u"Le fichier %s\nn'a pas pu être ouvert !" %self.lien.path,
+            dlg = wx.MessageDialog(self, u"Le fichier %s\nn'a pas pu être trouvé !" %self.lien.path,
                                u"Erreur d'ouverture du fichier",
                                wx.OK | wx.ICON_WARNING
                                #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
@@ -3464,6 +3511,15 @@ class PanelPropriete_LienSequence(PanelPropriete):
         
         except:
             self.sequence = None
+            dlg = wx.MessageDialog(self, u"Le fichier %s\nn'a pas pu être ouvert !" %self.lien.path,
+                               u"Erreur d'ouverture du fichier",
+                               wx.OK | wx.ICON_WARNING
+                               #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
+                               )
+            dlg.ShowModal()
+            dlg.Destroy()
+            self.texte.SetBackgroundColour("pink")
+            self.texte.SetToolTipString(u"Fichier Séquence corrompu !")
 
     
         if self.sequence:
