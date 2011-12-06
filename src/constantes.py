@@ -36,19 +36,118 @@ Created on 26 oct. 2011
 # Les icones des branches de l'abre et un curseur perso
 import images
 
+import ConfigParser
+
+
 #
 # Les deuxlignes suivantes permettent de lancer le script sequence.py depuis n'importe
 # quel répertoire sans que l'utilisation de chemins
 # relatifs ne soit perturbée
 #
 import sys, os
+import _winreg
+
 PATH = os.path.dirname(os.path.abspath(sys.argv[0]))
 #PATH = os.path.split(PATH)[0]
 os.chdir(PATH)
 sys.path.append(PATH)
 print "Dossier de l'application :",PATH
 
-import ConfigParser
+
+# 
+# On récupère là le dossier "Application data" 
+# où devra être enregistré le fichier .cfg de pysylic
+#
+
+# On récupère le répertoire d'installation de pySyLiC
+try:
+    regkey = _winreg.OpenKey( _winreg.HKEY_CLASSES_ROOT, 'pySequence.sequence\\DefaultIcon',0, _winreg.KEY_READ)
+    (value,keytype) = _winreg.QueryValueEx(regkey , '') 
+    INSTALL_PATH = os.path.split(os.path.dirname(value))[0]
+except:
+    INSTALL_PATH = None # Pas installé sur cet ordi
+    
+print "Dossier d'installation :", INSTALL_PATH
+PORTABLE = INSTALL_PATH != PATH 
+
+if not PORTABLE: # Ce n'est pas une version portable qui tourne
+    # On lit la clef de registre indiquant le type d'installation
+    try: # Machine 32 bits
+        regkey = _winreg.OpenKey(_winreg.HKEY_LOCAL_MACHINE, 'SOFTWARE\\pySequence', 0, _winreg.KEY_READ )
+    except: # Machine 64 bits
+        regkey = _winreg.OpenKey(_winreg.HKEY_LOCAL_MACHINE, 'SOFTWARE\\Wow6432Node\\pySequence', 0, _winreg.KEY_READ )
+    
+    try:
+        (value,keytype) = _winreg.QueryValueEx(regkey, 'DataFolder' ) 
+        APP_DATA_PATH = value
+    except:
+        import wx
+        dlg = wx.MessageDialog(None, u"L'installation de pySequence est incorrecte !\nVeuillez désinstaller pySequence puis le réinstaller." ,
+                               u"Installation incorrecte",
+                               wx.OK | wx.ICON_WARNING
+                               #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
+                               )
+        dlg.ShowModal()
+        dlg.Destroy()
+        APP_DATA_PATH = PATH
+        
+    if not os.path.exists(APP_DATA_PATH):
+        os.mkdir(APP_DATA_PATH)    
+        
+else: # C'est une version portable qui tourne
+    APP_DATA_PATH = PATH
+    print "Version portable !!"
+        
+print "Dossier pour les données :", APP_DATA_PATH
+    
+    
+####################################################################################
+#
+#  Gestion des erreurs
+#
+####################################################################################    
+ERROR_FILE = os.path.join(APP_DATA_PATH, 'pySyLiC.exe' + '.log')
+print "Fichier erreur :",ERROR_FILE
+
+import traceback
+
+def _exceptionhook(typ, value, traceb):
+    """ On catch une exception """
+    frame=traceb.tb_frame
+    print >>sys.stderr,"\n"
+    traceback.print_tb(traceb)
+    print >>sys.stderr,"\nType : ",typ,"\n"
+    print >>sys.stderr,"ValueError : ",value
+    sys.exit()
+
+sys.excepthook = _exceptionhook
+
+class RedirectErr:
+    #
+    # Redirige la sortie des erreurs pour envoyer l'erreur par mail
+    #
+    def __init__(self,stderr):
+        self.stderr=stderr
+        self.content=""
+        self.error_occured=False
+        self.file_error=None
+
+    def write(self,text):
+        #
+        # A la premiere erreur, on enregistrer la fonction de sortie
+        #
+        if not self.error_occured:
+            #
+            # Première erreur
+            # on ouvre le fichier qui contient les erreurs
+            self.file_error=open(ERROR_FILE,'w')
+            self.error_occured=True
+        if self.file_error is not None:
+            self.file_error.write(text)
+            self.file_error.flush()
+
+sys.stderr=RedirectErr(sys.stderr)
+
 
 ####################################################################################
 #

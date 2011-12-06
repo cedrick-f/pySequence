@@ -195,13 +195,13 @@ class Lien():
     ######################################################################################  
     def EvalLien(self, path, fichierCourant):
         
-        def testRel(lien):
-            pathseq = os.path.split(fichierCourant)[0]
-            print pathseq
-            try:
-                return os.path.relpath(lien,pathseq)
-            except:
-                return lien
+#        def testRel(lien):
+#            pathseq = os.path.split(fichierCourant)[0]
+#            print pathseq
+#            try:
+#                return os.path.relpath(lien,pathseq)
+#            except:
+#                return lien
             
         if os.path.exists(path):
             pathseq = os.path.split(fichierCourant)[0]
@@ -263,7 +263,7 @@ class ElementDeSequence():
 
     ######################################################################################  
     def CreerLien(self, event):
-        self.lien.DialogCreer(self.parent.app.fichierCourant)
+        self.lien.DialogCreer(self.GetApp().fichierCourant)
 #        dlg = URLDialog(None, self.lien)
 #        res = dlg.ShowModal()
 #
@@ -1358,6 +1358,7 @@ class Seance(ElementDeSequence):
         root.set("Type", self.typeSeance)
         root.set("Intitule", self.intitule)
         
+        self.lien.getBranche(root)
         
         if self.typeSeance in ["R", "S"]:
             for sce in self.sousSeances:
@@ -1367,7 +1368,7 @@ class Seance(ElementDeSequence):
             root.set("Duree", str(self.duree.v[0]))
             root.set("Effectif", self.effectif)
             root.set("Nombre", str(self.nombre.v[0]))
-            self.lien.getBranche(root)
+            
             self.branchesSys = []
             for i, s in enumerate(self.systemes):
                 bs = ET.SubElement(root, "Systemes"+str(i))
@@ -1389,6 +1390,8 @@ class Seance(ElementDeSequence):
         
         self.intitule  = branche.get("Intitule", "")
         self.typeSeance = branche.get("Type", "C")
+        
+        self.lien.setBranche(branche)
         
         if self.typeSeance in ["R", "S"]:
             self.sousSeances = []
@@ -2096,7 +2099,7 @@ class FenetreSequences(aui.AuiMDIParentFrame):
         #
         # le fichier de configuration de la fiche
         #
-        self.nomFichierConfig = os.path.join(PATH,"configFiche.cfg")
+        self.nomFichierConfig = os.path.join(APP_DATA_PATH,"configFiche.cfg")
         # on essaye de l'ouvrir
         try:
             draw_cairo.ouvrirConfigFiche(self.nomFichierConfig)
@@ -2356,15 +2359,17 @@ class FenetreSequences(aui.AuiMDIParentFrame):
             print "   Erreur enregistrement options...",
         
         # Close all ChildFrames first else Python crashes
+        toutferme = True
         for m in self.GetChildren():
             if isinstance(m, aui.AuiMDIClientWindow):
                 for k in m.GetChildren():
                     if isinstance(k, FenetreSequence):
-                        k.quitter()  
+                        toutferme = toutferme and k.quitter()  
         
-#        print "OnClose fini"
-        evt.Skip()
-        sys.exit()
+        print "OnClose fini"
+        if toutferme:
+            evt.Skip()
+            sys.exit()
 #        print self.Destroy()
         
         
@@ -2643,31 +2648,31 @@ class FenetreSequence(aui.AuiMDIChildFrame):
     def ouvrir(self, nomFichier, redessiner = True):
         print "ouvrir", nomFichier
         fichier = open(nomFichier,'r')
-#        try:
-        root = ET.parse(fichier).getroot()
-        
-        # La séquence
-        sequence = root.find("Sequence")
-        if sequence == None:
-            self.sequence.setBranche(root)
+        try:
+            root = ET.parse(fichier).getroot()
             
-        else:
-            self.sequence.setBranche(sequence)
+            # La séquence
+            sequence = root.find("Sequence")
+            if sequence == None:
+                self.sequence.setBranche(root)
+                
+            else:
+                self.sequence.setBranche(sequence)
+                
+                # La classe
+                classe = root.find("Classe")
+                self.classe.setBranche(classe)
             
-            # La classe
-            classe = root.find("Classe")
-            self.classe.setBranche(classe)
-            
-#        except:
-#            dlg = wx.MessageDialog(self, u"La séquence pédagogique\n%s\n n'a pas pu être ouverte !" %nomFichier,
-#                               u"Erreur d'ouverture",
-#                               wx.OK | wx.ICON_WARNING
-#                               #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
-#                               )
-#            dlg.ShowModal()
-#            dlg.Destroy()
-#            fichier.close()
-#            return
+        except:
+            dlg = wx.MessageDialog(self, u"La séquence pédagogique\n%s\n n'a pas pu être ouverte !" %nomFichier,
+                               u"Erreur d'ouverture",
+                               wx.OK | wx.ICON_WARNING
+                               #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
+                               )
+            dlg.ShowModal()
+            dlg.Destroy()
+            fichier.close()
+            return
         
         self.arbreSeq.DeleteAllItems()
         root = self.arbreSeq.AddRoot("")
@@ -2820,13 +2825,18 @@ class FenetreSequence(aui.AuiMDIChildFrame):
             if retCode == wx.ID_YES:
                 self.commandeEnregistrer()
 #                event.Skip()
-                self.fermer()
+                return self.fermer()
+    
             elif retCode == wx.ID_NO:
 #                event.Skip()
-                self.fermer()
+                return self.fermer()
+                 
+            else:
+                return False
         else:
 #            
-            self.fermer()
+            return self.fermer()
+             
 #            event.Skip()
 
         
@@ -2834,6 +2844,7 @@ class FenetreSequence(aui.AuiMDIChildFrame):
     def fermer(self):
 #        self.Reparent(None)
         self.Destroy()
+        return True
 
 #        
     
@@ -5317,6 +5328,9 @@ def get_key(dict, value):
 #    --> récupération des paramétres passés en ligne de commande
 #
 ####################################################################################
+from asyncore import dispatcher, loop
+import sys, time, socket, threading
+
 class SeqApp(wx.App):
     def OnInit(self):
         fichier = ""
@@ -5328,9 +5342,76 @@ class SeqApp(wx.App):
             if os.path.isfile(parametre):
                 fichier = unicode(parametre, 'cp1252')
         
+#        self.serveur = Server(fichier)
+#        loop()
+#        self.a = threading.Thread(None, loop)
+#        self.a.start()
+
+        
         frame = FenetreSequences(None, fichier)
         frame.Show()
         self.SetTopWindow(frame)
+        return True
+
+    def OnExit(self):
+        self.a.stop()
+        
+#        
+def lanceServeur(fichier):
+    serveur = Server(fichier)
+    loop()
+    return serveur
+
+
+
+#class lanceServeur(threading.Thread):
+#    def __init__(self, fichier = ''):
+#        threading.Thread.__init__(self)
+#        self.fichier = fichier
+#        self.Terminated = False
+#    
+#    def run(self):
+#        i = 0
+#        while not self.Terminated:
+#            print self.nom, i
+#            i += 1
+#            time.sleep(2.0)
+#        print "le thread "+self.nom +" s'est termine proprement"
+#    def stop(self):
+#        self.Terminated = True    
+        
+        
+        
+class Server( dispatcher ):
+    def __init__(self, nomfichier):
+        dispatcher.__init__(self)
+        self.create_socket( socket.AF_INET, socket.SOCK_STREAM )
+        self.buffer = ""
+        self.fichier = nomfichier
+        try:
+            self.bind( ( '', 50000 ) )
+        except:
+            self.connect(( '', 50000 ))
+            self.send(nomfichier)
+            sys.exit()
+        self.listen(1)
+    
+    def handle_write(self):
+        sent = self.send(self.buffer)
+        self.buffer = self.buffer[sent:]
+
+    def writable(self):
+        return (len(self.buffer) > 0)
+
+    def handle_read(self):
+        s = self.recv(len(self.buffer))
+        print "Recv", s
+        
+    def handle_close(self):
+        print 'close'
+        self.close()
+        
+    def handle_accept(self):
         return True
 
 ##########################################################################################################
@@ -5449,7 +5530,7 @@ class URLSelectorCombo(wx.Panel):
     
     def SetPath(self, lien):
         self.lien = lien
-        self.texte.SetValue(lien.path)
+        self.texte.SetValue(lien)
 
 #############################################################################################################
 #
@@ -5662,7 +5743,31 @@ class PopupInfoSysteme(PopupInfo):
 #        self.Show(False)
 #        self.Destroy()
 
-
+#def pySequenceRunning():
+#    #
+#    # Cette fonction teste si pySyLiC.exe est déjà lancé, auquel cas on arrete tout.
+#    #
+#    try:
+#        import wmi
+#        HAVE_WMI=True
+#    except:
+#        HAVE_WMI=False
+#        
+#    if not HAVE_WMI:
+#        return False
+#    else:
+#        nb_instances=0
+#        try:
+#            controler = wmi.WMI()
+#            seqexe = []
+#            for elem in controler.Win32_Process(name = "Sequence.exe"):
+#                seqexe.append(elem)
+#            print seqexe
+#            if nb_instances>=2:
+#                print seqexe[0]
+#                print dir(seqexe[0].methods)
+#        except:
+#            pass
 #############################################################################################################
 #
 # A propos ...
@@ -5772,7 +5877,20 @@ class A_propos(wx.Dialog):
 ##        self.app.tb.GetEventHandler().ProcessEvent(evt)
 #        event.Skip()
     
+
+ 
+
+        
+        
+
+#try:
+#  Server()
+#except:
+#  print 'Déjà en service !'
+#  sys.exit()
+  
 if __name__ == '__main__':
+#    pySequenceRunning()
     app = SeqApp(False)
     app.MainLoop()
     
