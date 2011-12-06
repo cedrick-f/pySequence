@@ -65,7 +65,7 @@ class Options:
         
         
         # Le fichier où seront sauvées les options
-        self.fichierOpt = os.path.join(PATH, "sequence.cfg")
+        self.fichierOpt = os.path.join(APP_DATA_PATH, "sequence.cfg")
 
     #########################################################################################################
     def __repr__(self):
