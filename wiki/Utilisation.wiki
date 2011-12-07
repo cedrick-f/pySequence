@@ -3,7 +3,7 @@
 = Utilisation =
 
  # Installation
- # Première_utilisation
+ # [Première_utilisation]
  # Élaboration d'une séquence
  # Ouverture/Enregistrement d'une séquence
  # Export de la fiche séquence au format PDF
