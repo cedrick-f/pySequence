@@ -9,6 +9,6 @@
  # Export de la fiche séquence au format PDF
  # Configuration de la fiche de séquence
 
-[test]
+
 
 [Aide Sommaire de l'aide]
