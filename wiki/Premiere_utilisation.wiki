@@ -1,1 +1,3 @@
 Première utilisation
+
+http://code.google.com/p/pysequence/source/browse/trunk/images_aide/presentation.png
