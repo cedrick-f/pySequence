@@ -12,7 +12,7 @@ Copyright (C) 2011
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "1.0"
+__version__ = "1.5"
 
 ##
 ## Les deuxlignes suivantes permettent de lancer le script sequence.py depuis n'importe
@@ -363,11 +363,11 @@ class LienSequence():
     
     ######################################################################################  
     def setBranche(self, branche):
-        print "setBranche lien seq"
+#        print "setBranche lien seq"
         self.path = branche.get("dir", "")
         if hasattr(self, 'panelPropriete'):
             ok = self.panelPropriete.MiseAJour()
-        print "..."
+#        print "..."
 
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
@@ -2693,7 +2693,7 @@ class FenetreSequence(aui.AuiMDIChildFrame):
         
     ###############################################################################################
     def ouvrir(self, nomFichier, redessiner = True):
-        print "ouvrir", nomFichier
+#        print "ouvrir", nomFichier
         fichier = open(nomFichier,'r')
         self.definirNomFichierCourant(nomFichier)
         try:
@@ -2732,7 +2732,7 @@ class FenetreSequence(aui.AuiMDIChildFrame):
         self.sequence.VerifPb()
         self.sequence.VerrouillerClasse()
         self.arbreSeq.SelectItem(self.classe.branche)
-        print self.sequence
+#        print self.sequence
         
         
 #        self.arbreSeq.RefreshSubtree(root)
@@ -3531,7 +3531,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
         self.texte.SetValue(self.lien.path)
-        print "MiseAJour", self.lien.path
+#        print "MiseAJour", self.lien.path
         try:
             if os.path.isfile(self.lien.path):
                 fichier = open(self.lien.path,'r')

@@ -63,7 +63,7 @@ print "Dossier de l'application :",PATH
 try:
     regkey = _winreg.OpenKey( _winreg.HKEY_CLASSES_ROOT, 'pySequence.sequence\\DefaultIcon',0, _winreg.KEY_READ)
     (value,keytype) = _winreg.QueryValueEx(regkey , '') 
-    INSTALL_PATH = os.path.split(os.path.dirname(value))[0]
+    INSTALL_PATH = os.path.dirname(value)
 except:
     INSTALL_PATH = None # Pas installé sur cet ordi
     
