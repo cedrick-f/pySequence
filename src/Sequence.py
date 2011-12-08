@@ -313,7 +313,12 @@ class ElementDeSequence():
     def SetLien(self, lien = None):
 #        print "SetLien", self.lien
         self.tip.SetLien(self.lien)
+     
+     
         
+    ######################################################################################  
+    def AfficherLien(self): 
+        self.lien.Afficher()
         
 #    ######################################################################################  
 #    def AfficherLien(self):
@@ -884,6 +889,7 @@ class Sequence():
     ######################################################################################  
     def AfficherLien(self, item):
         data = self.arbre.GetItemPyData(item)
+        print data
         if data and data != self and hasattr(data, 'AfficherLien'):
             data.AfficherLien()
 #        else:
@@ -2696,31 +2702,31 @@ class FenetreSequence(aui.AuiMDIChildFrame):
 #        print "ouvrir", nomFichier
         fichier = open(nomFichier,'r')
         self.definirNomFichierCourant(nomFichier)
-        try:
-            root = ET.parse(fichier).getroot()
+#        try:
+        root = ET.parse(fichier).getroot()
+        
+        # La séquence
+        sequence = root.find("Sequence")
+        if sequence == None:
+            self.sequence.setBranche(root)
             
-            # La séquence
-            sequence = root.find("Sequence")
-            if sequence == None:
-                self.sequence.setBranche(root)
-                
-            else:
-                self.sequence.setBranche(sequence)
-                
-                # La classe
-                classe = root.find("Classe")
-                self.classe.setBranche(classe)
+        else:
+            self.sequence.setBranche(sequence)
             
-        except:
-            dlg = wx.MessageDialog(self, u"La séquence pédagogique\n%s\n n'a pas pu être ouverte !" %nomFichier,
-                               u"Erreur d'ouverture",
-                               wx.OK | wx.ICON_WARNING
-                               #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
-                               )
-            dlg.ShowModal()
-            dlg.Destroy()
-            fichier.close()
-            return
+            # La classe
+            classe = root.find("Classe")
+            self.classe.setBranche(classe)
+            
+#        except:
+#            dlg = wx.MessageDialog(self, u"La séquence pédagogique\n%s\n n'a pas pu être ouverte !" %nomFichier,
+#                               u"Erreur d'ouverture",
+#                               wx.OK | wx.ICON_WARNING
+#                               #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
+#                               )
+#            dlg.ShowModal()
+#            dlg.Destroy()
+#            fichier.close()
+#            return
         
         
         self.arbreSeq.DeleteAllItems()
@@ -2970,7 +2976,9 @@ class FicheSequence(wx.ScrolledWindow):
 #        print "  ", xx, yy
         branche = self.sequence.HitTest(xx, yy)
         if branche != None:
-            self.sequence.arbre.DoSelectItem(branche)
+            self.sequence.arbre.SelectItem(branche)
+            wx.CallAfter(self.sequence.arbre.Layout)
+            wx.CallAfter(self.sequence.arbre.CalculatePositions)
         return branche
     
     #############################################################################            
@@ -3878,6 +3886,22 @@ class PanelPropriete_Seance(PanelPropriete):
         
 #        self.sizer.AddGrowableCol(4, proportion = 1)
 
+
+        #
+        # Lien
+        #
+        box = wx.StaticBox(self, -1, u"Lien externe")
+        bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
+        self.selec = URLSelectorCombo(self, self.seance.lien)
+        bsizer.Add(self.selec, flag = wx.EXPAND)
+        self.btnlien = wx.Button(self, -1, u"Ouvrir le lien externe")
+        self.btnlien.Hide()
+        self.Bind(wx.EVT_BUTTON, self.OnClick, self.btnlien)
+        bsizer.Add(self.btnlien)
+        
+        
+        self.sizer.Add(bsizer, (0,5), (6, 1), flag = wx.EXPAND)
+        
         #
         # Mise en place
         #
@@ -3997,6 +4021,7 @@ class PanelPropriete_Seance(PanelPropriete):
         self.sendEvent()
 
 
+
     #############################################################################            
     def EvtComboBoxDem(self, event):
 #        print "EvtComboBoxDem", event.GetString()
@@ -4004,6 +4029,14 @@ class PanelPropriete_Seance(PanelPropriete):
         self.seance.SetDemarche(event.GetString())  
         
         self.sendEvent()
+       
+       
+        
+    #############################################################################            
+    def OnClick(self, event):
+        self.seance.AfficherLien()
+        
+        
         
         
 #    #############################################################################            
@@ -4148,6 +4181,9 @@ class PanelPropriete_Seance(PanelPropriete):
         
         self.cbInt.SetValue(self.seance.intituleDansDeroul)
         
+        self.selec.SetPath(self.seance.lien.path)
+        self.btnlien.Show(self.seance.lien.path != "")
+        
         if sendEvt:
             self.sendEvent()
     
@@ -4203,7 +4239,18 @@ class PanelPropriete_Systeme(PanelPropriete):
         self.Bind(wx.EVT_BUTTON, self.OnClick, bt)
         self.sizer.Add(bsizer, (0,3), (2,1), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 2)
 
-        
+        #
+        # Lien
+        #
+        box = wx.StaticBox(self, -1, u"Lien externe")
+        bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
+        self.selec = URLSelectorCombo(self, self.systeme.lien)
+        bsizer.Add(self.selec, flag = wx.EXPAND)
+        self.btnlien = wx.Button(self, -1, u"Ouvrir le lien externe")
+        self.btnlien.Hide()
+        self.Bind(wx.EVT_BUTTON, self.OnClick, self.btnlien)
+        bsizer.Add(self.btnlien)
+        self.sizer.Add(bsizer, (0,4), (2, 1), flag = wx.EXPAND)
         
         
         self.sizer.Layout()
@@ -4216,31 +4263,33 @@ class PanelPropriete_Systeme(PanelPropriete):
     
     #############################################################################            
     def OnClick(self, event):
-        
-#        print event.GetId()
-        mesFormats = u"Fichier Image|*.bmp;*.png;*.jpg;*.jpeg;*.gif;*.pcx;*.pnm;*.tif;*.tiff;*.tga;*.iff;*.xpm;*.ico;*.ico;*.cur;*.ani|" \
-                       u"Tous les fichiers|*.*'"
-        
-        dlg = wx.FileDialog(
-                            self, message=u"Ouvrir une image",
-#                            defaultDir = self.DossierSauvegarde, 
-                            defaultFile = "",
-                            wildcard = mesFormats,
-                            style=wx.OPEN | wx.MULTIPLE | wx.CHANGE_DIR
-                            )
+        if event.GetId() == self.btnlien.GetId():
+            self.systeme.AfficherLien()
+        else:
+    #        print event.GetId()
+            mesFormats = u"Fichier Image|*.bmp;*.png;*.jpg;*.jpeg;*.gif;*.pcx;*.pnm;*.tif;*.tiff;*.tga;*.iff;*.xpm;*.ico;*.ico;*.cur;*.ani|" \
+                           u"Tous les fichiers|*.*'"
             
-        # Show the dialog and retrieve the user response. If it is the OK response, 
-        # process the data.
-        if dlg.ShowModal() == wx.ID_OK:
-            # This returns a Python list of files that were selected.
-            paths = dlg.GetPaths()
-            nomFichier = paths[0]
-            self.systeme.image = wx.Image(nomFichier).ConvertToBitmap()
-            self.SetImage()
-        
-        
-        
-        dlg.Destroy()
+            dlg = wx.FileDialog(
+                                self, message=u"Ouvrir une image",
+    #                            defaultDir = self.DossierSauvegarde, 
+                                defaultFile = "",
+                                wildcard = mesFormats,
+                                style=wx.OPEN | wx.MULTIPLE | wx.CHANGE_DIR
+                                )
+                
+            # Show the dialog and retrieve the user response. If it is the OK response, 
+            # process the data.
+            if dlg.ShowModal() == wx.ID_OK:
+                # This returns a Python list of files that were selected.
+                paths = dlg.GetPaths()
+                nomFichier = paths[0]
+                self.systeme.image = wx.Image(nomFichier).ConvertToBitmap()
+                self.SetImage()
+            
+            
+            
+            dlg.Destroy()
         
     #############################################################################            
     def SetImage(self):
@@ -4275,6 +4324,8 @@ class PanelPropriete_Systeme(PanelPropriete):
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
         self.textctrl.ChangeValue(self.systeme.nom)
+        self.selec.SetPath(self.systeme.lien.path)
+        self.btnlien.Show(self.systeme.lien.path != "")
         if sendEvt:
             self.sendEvent()
             
@@ -4902,7 +4953,7 @@ class ArbreSequence(CT.CustomTreeCtrl):
         item, flags = self.HitTest(pt)
 #        print item
         if item:
-#            print "DClick (arbre)"
+            print "DClick (arbre)"
             self.sequence.AfficherLien(item)
         event.Skip()                
         
@@ -5589,8 +5640,9 @@ class URLSelectorCombo(wx.Panel):
         return self.lien
     
     def SetPath(self, lien):
-        self.lien = lien
+        self.lien.path = lien
         self.texte.SetValue(lien)
+        
 
 #############################################################################################################
 #
