@@ -246,7 +246,7 @@ def enregistrerConfigFiche(nomFichier):
     
     
 def ouvrirConfigFiche(nomFichier):
-    print "ouvrirConfigFiche"
+#    print "ouvrirConfigFiche"
     global posIntitule, tailleIntitule, IcoulIntitule, BcoulIntitule, \
            posCI, tailleCI, IcoulCI, BcoulCI, \
            posObj, tailleObj, IcoulObj, BcoulObj, \

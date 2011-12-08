@@ -120,7 +120,7 @@ def _exceptionhook(typ, value, traceb):
     print >>sys.stderr,"ValueError : ",value
     sys.exit()
 
-sys.excepthook = _exceptionhook
+
 
 class RedirectErr:
     #
@@ -146,7 +146,9 @@ class RedirectErr:
             self.file_error.write(text)
             self.file_error.flush()
 
-sys.stderr=RedirectErr(sys.stderr)
+if not PORTABLE:
+    sys.excepthook = _exceptionhook
+    sys.stderr=RedirectErr(sys.stderr)
 
 
 ####################################################################################
