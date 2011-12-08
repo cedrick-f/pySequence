@@ -6,7 +6,7 @@
 Télécharger la dernière version de _*pySequence*_ depuis la [http://code.google.com/p/pysequence/ page d'accueil] de ce site.
 
 pySequence existe en 2 versions :
- * une version "portable" [#Version "portable"]
+ * une  [version "portable" #Version_"portable"]
  * une version "installable"
 
 
