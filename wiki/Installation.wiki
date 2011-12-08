@@ -9,11 +9,11 @@ _*pySequence*_ existe en 2 versions :
  * une [Installation#Version_%22portable%22 version "portable"]
  * une [Installation#Version_%22installable%22 version "installable"]
 
-
+----
 
 
 == Version "portable" ==
-_*pySequence*_ en version *portable* ne nécessite pas d'installation au sens de Windows, et a fortiori, il n'est pas nécessaire d'être _administrateur_ de l'ordinateur pour pouvoir s'en servir.
+_*pySequence*_ en version *portable* ne nécessite pas d'installation (au sens de Windows), et a fortiori, il n'est pas nécessaire d'être _administrateur_ de l'ordinateur pour pouvoir s'en servir.
 
 === Installation ===
 Dézipper l'archive sur le disque dur de l'ordinateur (à l'emplacement {{{C:}}} par exemple), sur un disque dur portable ou sur une clef USB.
@@ -24,7 +24,7 @@ Double-cliquer sur le fichier http://pysequence.googlecode.com/svn/trunk/images_
 _Remarque : si _*pySequence*_ est installé sur le disque dur d'un ordinateur, il est possible, depuis _*pySequence*_, d'inscrire des informations dans sa _base de registre_ afin que l'ordinateur reconnaisse les fichiers _Séquence pédagogique STI2D_ (.seq) [Outils/inscrire dans la base de registre]._
 
 
-
+----
 
 
 == Version "installable" ==
