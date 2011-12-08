@@ -120,8 +120,6 @@ def _exceptionhook(typ, value, traceb):
     print >>sys.stderr,"ValueError : ",value
     sys.exit()
 
-
-
 class RedirectErr:
     #
     # Redirige la sortie des erreurs pour envoyer l'erreur par mail
