@@ -104,6 +104,8 @@ import register
 
 import textwrap
 
+import serveur
+
 ####################################################################################
 #
 #   Evenement perso pour détecter une modification de la séquence
@@ -127,7 +129,30 @@ class SeqEvent(wx.PyCommandEvent):
     def GetSequence(self):
         return self.seq
     
+####################################################################################
+#
+#   Evenement perso pour détecter une modification de la séquence
+#
+####################################################################################
+myEVT_APPEL_OUVRIR = wx.NewEventType()
+EVT_APPEL_OUVRIR = wx.PyEventBinder(myEVT_APPEL_OUVRIR, 1)
 
+#----------------------------------------------------------------------
+class AppelEvent(wx.PyCommandEvent):
+    def __init__(self, evtType, id):
+        wx.PyCommandEvent.__init__(self, evtType, id)
+        self.file = None
+        
+        
+    ######################################################################################  
+    def SetFile(self, file):
+        self.file = file
+        
+    ######################################################################################  
+    def GetFile(self):
+        return self.file
+    
+    
 def testRel(lien, path):
     try:
         return os.path.relpath(lien,path)
@@ -496,16 +521,16 @@ class Sequence():
         
         
         
-#    ######################################################################################  
-#    def __repr__(self):
-#        return self.intitule
-#        t = u"Séquence :"+ + "\n"
-#        t += "   " + self.CI.__repr__() + "\n"
-#        for c in self.obj.values():
-#            t += "   " + c.__repr__() + "\n"
-#        for s in self.seance:
-#            t += "   " + s.__repr__() + "\n"
-#        return t
+    ######################################################################################  
+    def __repr__(self):
+        return self.intitule
+        t = u"Séquence :"+ + "\n"
+        t += "   " + self.CI.__repr__() + "\n"
+        for c in self.obj.values():
+            t += "   " + c.__repr__() + "\n"
+        for s in self.seance:
+            t += "   " + s.__repr__() + "\n"
+        return t
     
     ######################################################################################  
     def GetApp(self):
@@ -2135,6 +2160,9 @@ class FenetreSequences(aui.AuiMDIParentFrame):
         self.Bind(wx.EVT_MENU, self.OnOptions, id=31)
         self.Bind(wx.EVT_MENU, self.OnRegister, id=32)
         
+        
+        self.Bind(EVT_APPEL_OUVRIR, self.OnAppelOuvrir)
+        
         # Interception de la demande de fermeture
         self.Bind(wx.EVT_CLOSE, self.OnClose)
         
@@ -2260,12 +2288,50 @@ class FenetreSequences(aui.AuiMDIParentFrame):
 
         dlg.Destroy()
         
+    
+    ###############################################################################################
+    def OnAppelOuvrir(self, evt):
+        wx.CallAfter(self.ouvrir, evt.GetFile())
+        
+        
+    ###############################################################################################
+    def AppelOuvrir(self, nomFichier):
+        evt = AppelEvent(myEVT_APPEL_OUVRIR, self.GetId())
+        evt.SetFile(nomFichier)
+        self.GetEventHandler().ProcessEvent(evt)
+        
+        
+        
     ###############################################################################################
     def commandeNouveau(self, event = None):
         child = FenetreSequence(self)
         wx.CallAfter(child.Show)
-        
+#        child.Show()
         return child
+        
+    ###############################################################################################
+    def ouvrir(self, nomFichier):
+        if nomFichier != '':
+            if not nomFichier in self.GetNomsFichiers():
+                print "Debut ouvrir"
+                wx.BeginBusyCursor(wx.HOURGLASS_CURSOR)
+                child = self.commandeNouveau()
+                child.ouvrir(nomFichier)
+                print "2"
+                wx.EndBusyCursor()
+            else:
+                child = self.GetChild(nomFichier)
+                texte = u"La séquence est déja ouverte.\nVoulez vous ignorer les changements et rouvrir la séquence ?"
+                if child.fichierCourant != '':
+                    texte += "\n\n\t"+child.fichierCourant+"\n"
+                    
+                dialog = wx.MessageDialog(self, texte, 
+                                          u"Confirmation", wx.YES_NO | wx.ICON_WARNING)
+                retCode = dialog.ShowModal()
+                if retCode == wx.ID_YES:
+                    child.ouvrir()
+        
+        
         
     ###############################################################################################
     def commandeOuvrir(self, event = None, nomFichier=None):
@@ -2289,27 +2355,7 @@ class FenetreSequences(aui.AuiMDIParentFrame):
             
             dlg.Destroy()
         
-        if nomFichier != '':
-            if not nomFichier in self.GetNomsFichiers():
-#                print "Debut ouvrir"
-                wx.BeginBusyCursor(wx.HOURGLASS_CURSOR)
-                child = self.commandeNouveau()
-                child.ouvrir(nomFichier)
-#                print "2"
-                wx.EndBusyCursor()
-            else:
-                child = self.GetChild(nomFichier)
-                texte = u"La séquence est déja ouverte.\nVoulez vous ignorer les changements et rouvrir la séquence ?"
-                if child.fichierCourant != '':
-                    texte += "\n\n\t"+child.fichierCourant+"\n"
-                    
-                dialog = wx.MessageDialog(self, texte, 
-                                          u"Confirmation", wx.YES_NO | wx.ICON_WARNING)
-                retCode = dialog.ShowModal()
-                if retCode == wx.ID_YES:
-                    child.ouvrir()
-        
-#        self.Refresh()
+        self.ouvrir(nomFichier)
                 
     #############################################################################
     def GetChild(self, nomFichier):
@@ -2596,6 +2642,7 @@ class FenetreSequence(aui.AuiMDIChildFrame):
 #        self.Layout()
         print "Fin instanciation Seq"
         wx.CallAfter(self.Layout)
+        self.Layout()
 #        wx.CallAfter(self.ficheSeq.Redessiner)
     
     
@@ -2648,6 +2695,7 @@ class FenetreSequence(aui.AuiMDIChildFrame):
     def ouvrir(self, nomFichier, redessiner = True):
         print "ouvrir", nomFichier
         fichier = open(nomFichier,'r')
+        self.definirNomFichierCourant(nomFichier)
         try:
             root = ET.parse(fichier).getroot()
             
@@ -2674,6 +2722,7 @@ class FenetreSequence(aui.AuiMDIChildFrame):
             fichier.close()
             return
         
+        
         self.arbreSeq.DeleteAllItems()
         root = self.arbreSeq.AddRoot("")
         self.classe.ConstruireArbre(self.arbreSeq, root)
@@ -2683,6 +2732,8 @@ class FenetreSequence(aui.AuiMDIChildFrame):
         self.sequence.VerifPb()
         self.sequence.VerrouillerClasse()
         self.arbreSeq.SelectItem(self.classe.branche)
+        print self.sequence
+        
         
 #        self.arbreSeq.RefreshSubtree(root)
 #        
@@ -2696,7 +2747,7 @@ class FenetreSequence(aui.AuiMDIChildFrame):
 #        wx.CallAfter(self.arbreSeq.ExpandAll)
         
         fichier.close()
-        self.definirNomFichierCourant(nomFichier)
+#        self.definirNomFichierCourant(nomFichier)
         if redessiner:
             wx.CallAfter(self.ficheSeq.Redessiner)
         
@@ -2968,6 +3019,7 @@ class FicheSequence(wx.ScrolledWindow):
     #############################################################################            
     def Redessiner(self, event = None):  
 #        print "REDESSINER"
+
         cdc = wx.ClientDC(self)
         dc = wx.BufferedDC(cdc, self.buffer, wx.BUFFER_VIRTUAL_AREA)
         dc.SetBackground(wx.Brush('white'))
@@ -2979,6 +3031,7 @@ class FicheSequence(wx.ScrolledWindow):
         dc.EndDrawing()
         self.ctx = ctx
         self.Refresh()
+
 
     #############################################################################            
     def normalize(self, cr):
@@ -3478,11 +3531,12 @@ class PanelPropriete_LienSequence(PanelPropriete):
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
         self.texte.SetValue(self.lien.path)
-        
+        print "MiseAJour", self.lien.path
         try:
             if os.path.isfile(self.lien.path):
                 fichier = open(self.lien.path,'r')
             else:
+                print self.GetSequence().GetPath()
                 fichier = open(os.path.join(self.GetSequence().GetPath(), self.lien.path),'r')
             self.texte.SetBackgroundColour("white")
             self.texte.SetToolTipString(u"Lien vers un fichier Séquence")
@@ -5328,8 +5382,8 @@ def get_key(dict, value):
 #    --> récupération des paramétres passés en ligne de commande
 #
 ####################################################################################
-from asyncore import dispatcher, loop
-import sys, time, socket, threading
+#from asyncore import dispatcher, loop
+#import sys, time, socket, threading
 
 class SeqApp(wx.App):
     def OnInit(self):
@@ -5350,17 +5404,23 @@ class SeqApp(wx.App):
         
         frame = FenetreSequences(None, fichier)
         frame.Show()
+        
+        server.app = frame
+        
         self.SetTopWindow(frame)
         return True
 
-    def OnExit(self):
-        self.a.stop()
+#    def OnExit(self):
+#        self.a.stop()
         
+#    def OuvrirSequence(self, nomFichier):
+#        print "ordre ouverture", nomFichier
+#        self.frame.ouvrir(nomFichier)
 #        
-def lanceServeur(fichier):
-    serveur = Server(fichier)
-    loop()
-    return serveur
+#def lanceServeur(fichier):
+#    serveur = Server(fichier)
+#    loop()
+#    return serveur
 
 
 
@@ -5382,37 +5442,37 @@ def lanceServeur(fichier):
         
         
         
-class Server( dispatcher ):
-    def __init__(self, nomfichier):
-        dispatcher.__init__(self)
-        self.create_socket( socket.AF_INET, socket.SOCK_STREAM )
-        self.buffer = ""
-        self.fichier = nomfichier
-        try:
-            self.bind( ( '', 50000 ) )
-        except:
-            self.connect(( '', 50000 ))
-            self.send(nomfichier)
-            sys.exit()
-        self.listen(1)
-    
-    def handle_write(self):
-        sent = self.send(self.buffer)
-        self.buffer = self.buffer[sent:]
-
-    def writable(self):
-        return (len(self.buffer) > 0)
-
-    def handle_read(self):
-        s = self.recv(len(self.buffer))
-        print "Recv", s
-        
-    def handle_close(self):
-        print 'close'
-        self.close()
-        
-    def handle_accept(self):
-        return True
+#class Server( dispatcher ):
+#    def __init__(self, nomfichier):
+#        dispatcher.__init__(self)
+#        self.create_socket( socket.AF_INET, socket.SOCK_STREAM )
+#        self.buffer = ""
+#        self.fichier = nomfichier
+#        try:
+#            self.bind( ( '', 50000 ) )
+#        except:
+#            self.connect(( '', 50000 ))
+#            self.send(nomfichier)
+#            sys.exit()
+#        self.listen(1)
+#    
+#    def handle_write(self):
+#        sent = self.send(self.buffer)
+#        self.buffer = self.buffer[sent:]
+#
+#    def writable(self):
+#        return (len(self.buffer) > 0)
+#
+#    def handle_read(self):
+#        s = self.recv(len(self.buffer))
+#        print "Recv", s
+#        
+#    def handle_close(self):
+#        print 'close'
+#        self.close()
+#        
+#    def handle_accept(self):
+#        return True
 
 ##########################################################################################################
 #
@@ -5888,10 +5948,21 @@ class A_propos(wx.Dialog):
 #except:
 #  print 'Déjà en service !'
 #  sys.exit()
-  
+
+import socket
+
 if __name__ == '__main__':
 #    pySequenceRunning()
-    app = SeqApp(False)
-    app.MainLoop()
+
+    HOST, PORT = socket.gethostname(), 61955
+
+    server = None
+    try:
+        serveur.client(HOST, PORT, ' '.join(sys.argv))
+        sys.exit()
+    except socket.error:
+        server = serveur.start_server(HOST, PORT)
+        app = SeqApp(False)
+        app.MainLoop()
     
     
