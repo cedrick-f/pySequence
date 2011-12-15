@@ -2,7 +2,9 @@
 
 = Elaboration d'une fiche de séquence =
 
-Add your content here.
+1 - Choisir le type d'enseignement (transversal, ITEC, EE, AC, SIN).
+
+http://pysequence.googlecode.com/svn/trunk/images_aide/type d enseignement.png
 
 
 = Details =
