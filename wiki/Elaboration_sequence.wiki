@@ -29,7 +29,7 @@ http://pysequence.googlecode.com/svn/trunk/images_aide/saisir_CI1.png
 _résultat sur la fiche_
 http://pysequence.googlecode.com/svn/trunk/images_aide/affichage_CI1.png
 
-===*4 - Si besoin, définir des savoirs ou une autre séquence comme prérequis (par défaut : aucun)*===
+===*4 - Si besoin, définir des _savoirs_ ou _une autre séquence_ comme prérequis (par défaut : aucun)*===
 
 ====*- SAVOIRS*====
 
@@ -43,7 +43,7 @@ http://pysequence.googlecode.com/svn/trunk/images_aide/saisir_prerequis1.png
 _résultat sur la fiche_
 http://pysequence.googlecode.com/svn/trunk/images_aide/affichage_prerequis1.png
 
-====*- UNE AUTRE FICHE DE SEQUENCE*====
+====*- UNE AUTRE SEQUENCE*====
 
 Dans l'arborescence, cliquer avec le bouton droit de la souris sur *"prérequis"* puis cliquer sur *"ajouter une séquence"*.
 
