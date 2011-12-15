@@ -4,7 +4,7 @@
 
 1 - Choisir le type d'enseignement (transversal, ITEC, EE, AC, SIN).
 
-http://pysequence.googlecode.com/svn/trunk/images_aide/type d enseignement.png
+http://pysequence.googlecode.com/svn/trunk/images_aide/type_d_enseignement.png
 
 
 = Details =
