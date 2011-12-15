@@ -1,7 +1,7 @@
 = Première utilisation =
 
-Avant de démarrer la création des fiches de séquence, il est préférable de définir correctement les effectifs.
+Avant de démarrer la création des fiches de séquence, il est préférable de *définir* correctement *les effectifs*.
 
-Par défaut, les centres d'intérêt sont définies pour l'académie de Clermont-Ferrand mais il est possible de les modifier à partir d'une sélection d'un fichier Excel.
+Par défaut, les centres d'intérêt sont définies pour l'académie de *Clermont-Ferrand* mais il est possible de les modifier à partir d'une sélection d'un fichier Excel.
 
 http://pysequence.googlecode.com/svn/trunk/images_aide/presentation.png
