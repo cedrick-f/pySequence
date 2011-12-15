@@ -2,15 +2,23 @@
 
 = Elaboration d'une fiche de séquence =
 
-1 - Choisir le type d'enseignement (transversal, ITEC, EE, AC, SIN).
+*1 - Choisir le type d'enseignement (transversal, ITEC, EE, AC, SIN).*
 
 http://pysequence.googlecode.com/svn/trunk/images_aide/type_d_enseignement.png
 
-2 - Nommer la séquence.
+*2 - Nommer la séquence.*
 
-img
+Dans l'arborescence, cliquer sur *"séquence pédagogique"*
 
-3 - Définir le centre d'intérêt.
+http://pysequence.googlecode.com/svn/trunk/images_aide/nom_sequence.png
+
+Dans propriétés saisir le nom 
+
+http://pysequence.googlecode.com/svn/trunk/images_aide/saisir_nom_sequence.png
+
+
+
+*3 - Définir le centre d'intérêt.*
 
 img
 
