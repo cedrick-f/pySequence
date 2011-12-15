@@ -2,11 +2,11 @@
 
 = Elaboration d'une fiche de séquence =
 
-*1 - Choisir le type d'enseignement (transversal, ITEC, EE, AC, SIN).*
+===*1 - Choisir le type d'enseignement (transversal, ITEC, EE, AC, SIN).*===
 
 http://pysequence.googlecode.com/svn/trunk/images_aide/type_d_enseignement.png
 
-*2 - Nommer la séquence.*
+===*2 - Nommer la séquence.*===
 
 Dans l'arborescence, cliquer sur *"séquence pédagogique"*
 
@@ -17,7 +17,7 @@ Dans propriétés saisir le nom
 http://pysequence.googlecode.com/svn/trunk/images_aide/saisir_nom_sequence.png
 
 
-*3 - Définir le centre d'intérêt.*
+===*3 - Définir le centre d'intérêt.*===
 
 Dans l'arborescence, cliquer sur *"Centre d'intérêt"*.
 
@@ -29,9 +29,9 @@ http://pysequence.googlecode.com/svn/trunk/images_aide/saisir_CI1.png
 _résultat sur la fiche_
 http://pysequence.googlecode.com/svn/trunk/images_aide/affichage_CI1.png
 
-*4 - Si besoin, définir des savoirs ou une autre séquence comme prérequis (par défaut : aucun)*
+===*4 - Si besoin, définir des savoirs ou une autre séquence comme prérequis (par défaut : aucun)*===
 
-*- SAVOIRS*
+====*- SAVOIRS*====
 
 Dans l'arborescence, sélectionner *"prérequis"*.
 
@@ -43,7 +43,7 @@ http://pysequence.googlecode.com/svn/trunk/images_aide/saisir_prerequis1.png
 _résultat sur la fiche_
 http://pysequence.googlecode.com/svn/trunk/images_aide/affichage_prerequis1.png
 
-*- UNE AUTRE FICHE DE SEQUENCE*
+====*- UNE AUTRE FICHE DE SEQUENCE*====
 
 Dans l'arborescence, cliquer avec le bouton droit de la souris sur *"prérequis"* puis cliquer sur *"ajouter une séquence"*.
 
@@ -54,6 +54,6 @@ Dans *"propriétés"* sélectionner le fichier .seq correspondant à la fiche de
 _résultat surla fiche_
 http://pysequence.googlecode.com/svn/trunk/images_aide/affichage_prerequis_seq.png
 
-*5 - Création des séances*
+===*5 - Création des séances*===
 
 [creation_seance détails]
