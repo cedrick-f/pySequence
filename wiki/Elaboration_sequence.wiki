@@ -17,12 +17,13 @@ Dans propriétés saisir le nom
 http://pysequence.googlecode.com/svn/trunk/images_aide/saisir_nom_sequence.png
 
 
-
 *3 - Définir le centre d'intérêt.*
 
-img
+Dans l'arborescence, cliquer sur *"Centre d'intérêt"*
 
-4 - Si besoin, définir le ou les prérequis (par défaut : aucun)
+http://pysequence.googlecode.com/svn/trunk/images_aide/centre_interet.png
+
+*4 - Si besoin, définir le ou les prérequis (par défaut : aucun)*
 
 img
 
