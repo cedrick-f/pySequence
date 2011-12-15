@@ -29,9 +29,7 @@ http://pysequence.googlecode.com/svn/trunk/images_aide/saisir_CI1.png
 _résultat sur la fiche_
 http://pysequence.googlecode.com/svn/trunk/images_aide/affichage_CI1.png
 
-*4 - Si besoin, définir le ou les prérequis (par défaut : aucun)*
-
-Les prérequis peuvent être un savoirs ou une autre séquence
+*4 - Si besoin, définir des savoirs ou une autre séquence comme prérequis (par défaut : aucun)*
 
 *- SAVOIRS*
 
@@ -51,9 +49,14 @@ Dans l'arborescence, cliquer avec le bouton droit de la souris sur *"prérequis"
 
 http://pysequence.googlecode.com/svn/trunk/images_aide/prerequis_fiche.png
 
+Dans *"propriétés"* sélectionner le fichier .seq correspondant à la fiche de séquence pré-requise. 
 
+_résultat surla fiche_
+http://pysequence.googlecode.com/svn/trunk/images_aide/affichage_prerequis_seq.png
 
-5 - 
+*5 - Création des séances*
+
+[creation_seance détails]
 
 = Details =
 
