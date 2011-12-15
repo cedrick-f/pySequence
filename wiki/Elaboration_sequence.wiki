@@ -19,13 +19,39 @@ http://pysequence.googlecode.com/svn/trunk/images_aide/saisir_nom_sequence.png
 
 *3 - Définir le centre d'intérêt.*
 
-Dans l'arborescence, cliquer sur *"Centre d'intérêt"*
+Dans l'arborescence, cliquer sur *"Centre d'intérêt"*.
 
-http://pysequence.googlecode.com/svn/trunk/images_aide/centre_interet.png
+http://pysequence.googlecode.com/svn/trunk/images_aide/centre_interet1.png
+
+Dans *propriétés*, sélectionner le centre d'intérêt correspondant à la séquence.
+
+http://pysequence.googlecode.com/svn/trunk/images_aide/saisir_CI1.png
+_résultat sur la fiche_
+http://pysequence.googlecode.com/svn/trunk/images_aide/affichage_CI1.png
 
 *4 - Si besoin, définir le ou les prérequis (par défaut : aucun)*
 
-img
+Les prérequis peuvent être un savoirs ou une autre séquence
+
+*- SAVOIRS*
+
+Dans l'arborescence, sélectionner *"prérequis"*.
+
+http://pysequence.googlecode.com/svn/trunk/images_aide/Prerequis1.png
+
+Dans *propriétés*, sélectionner le ou les prérequis.
+
+http://pysequence.googlecode.com/svn/trunk/images_aide/saisir_prerequis1.png
+_résultat sur la fiche_
+http://pysequence.googlecode.com/svn/trunk/images_aide/affichage_prerequis1.png
+
+*- UNE AUTRE FICHE DE SEQUENCE*
+
+Dans l'arborescence, cliquer avec le bouton droit de la souris sur *"prérequis"* puis cliquer sur *"ajouter une séquence"*.
+
+http://pysequence.googlecode.com/svn/trunk/images_aide/prerequis_fiche.png
+
+
 
 5 - 
 
