@@ -5,3 +5,9 @@ Avant de démarrer la création des fiches de séquence, il est préférable de 
 Par défaut, les centres d'intérêt sont définies pour l'académie de *Clermont-Ferrand* mais il est possible de les modifier à partir d'une sélection d'un fichier Excel.
 
 http://pysequence.googlecode.com/svn/trunk/images_aide/presentation.png
+
+*Afin que votre PC reconnaisse le type de fichier .seq, il est nécessaire d'enregistrer le logiciel dans la base de registre.*
+
+http://pysequence.googlecode.com/svn/trunk/images_aide/registre.png
+
+
