@@ -57,10 +57,3 @@ http://pysequence.googlecode.com/svn/trunk/images_aide/affichage_prerequis_seq.p
 *5 - Création des séances*
 
 [creation_seance détails]
-
-= Details =
-
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
