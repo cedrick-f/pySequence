@@ -1,6 +1,6 @@
-#summary One-sentence summary of this page.
+#summary Comment élaborer une fiche de séquence
 
-= Elaboration d'une fiche de séquence =
+= Élaboration d'une fiche de séquence =
 
 ===*1 - Choisir le type d'enseignement (transversal, ITEC, EE, AC, SIN).*===
 
