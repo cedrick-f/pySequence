@@ -2,12 +2,10 @@
 
 Avant de démarrer la création des fiches de séquence, il est préférable de *définir* correctement *les effectifs*.
 
-Par défaut, les centres d'intérêt sont définies pour l'académie de *Clermont-Ferrand* mais il est possible de les modifier à partir d'une sélection d'un fichier Excel.
+Par défaut, les centres d'intérêt sont définis pour l'académie de *Clermont-Ferrand*, mais il est possible de les modifier à partir d'une sélection d'un fichier _Excel_, ou bien manuellement.
 
 http://pysequence.googlecode.com/svn/trunk/images_aide/presentation.png
 
-*Afin que votre PC reconnaisse le type de fichier .seq, il est nécessaire d'enregistrer le logiciel dans la base de registre.*
+En cas d'utilisation de la version *portable* de _*pySequence*_, et afin que votre PC reconnaisse le type de fichier *.seq*, il est nécessaire d'enregistrer le logiciel dans la base de registre.*
 
 http://pysequence.googlecode.com/svn/trunk/images_aide/registre.png
-
-
