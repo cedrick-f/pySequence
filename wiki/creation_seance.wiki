@@ -1,6 +1,6 @@
 #summary One-sentence summary of this page.
 
-= Cration des séances =
+= Création des séances =
 
 Cliquer avec le bouton droit de la souris sur *"séances"* puis choisir *"ajouter une séance"*
 
@@ -11,3 +11,10 @@ La partie *"propriétés"* change et vous permet de définir différents types d
 
 http://pysequence.googlecode.com/svn/trunk/images_aide/types_seance.png
 
+||http://pysequence.googlecode.com/svn/trunk/images_aide/ED.png||http://pysequence.googlecode.com/svn/trunk/images_aide/AP.png||http://pysequence.googlecode.com/svn/trunk/images_aide/APR.png||http://pysequence.googlecode.com/svn/trunk/images_aide/C.png||http://pysequence.googlecode.com/svn/trunk/images_aide/SA.png||
+
+
+
+
+
+= Prise en compte des systèmes =
