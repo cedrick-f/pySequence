@@ -12,7 +12,7 @@ Copyright (C) 2011
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "1.5"
+__version__ = "1.6"
 
 ##
 ## Les deuxlignes suivantes permettent de lancer le script sequence.py depuis n'importe
@@ -1705,6 +1705,11 @@ class Seance(ElementDeSequence):
         if hasattr(self, 'arbre'):
             self.SetCode()
         
+        if self.typeSeance in ["AP", "ED", "P"]:
+            for sy in self.GetSequence().systemes:
+                self.AjouterSysteme(nom = sy.nom, construire = False)
+            
+            
         if self.typeSeance in ["R","S"] and len(self.sousSeances) == 0: # Rotation ou Serie
             self.AjouterSeance()
         
@@ -1966,7 +1971,7 @@ class Systeme(ElementDeSequence):
         self.nbrDispo = Variable(u"Nombre dispo", lstVal = 1, nomNorm = "", typ = VAR_ENTIER_POS, 
                               bornes = [0,20], modeLog = False,
                               expression = None, multiple = False)
-        self.image = wx.EmptyBitmap(100,100)
+        self.image = None
         
         # Tip
         self.tip = PopupInfoSysteme(parent.app, u"Système")
@@ -1988,7 +1993,8 @@ class Systeme(ElementDeSequence):
         root.set("Nom", self.nom)
         self.lien.getBranche(root)
         root.set("Nbr", str(self.nbrDispo.v[0]))
-        root.set("Image", img2str(self.image.ConvertToImage()))
+        if self.image != None:
+            root.set("Image", img2str(self.image.ConvertToImage()))
         
         return root
     
@@ -2033,8 +2039,13 @@ class Systeme(ElementDeSequence):
     def ConstruireArbre(self, arbre, branche):
         self.arbre = arbre
         self.codeBranche = wx.StaticText(self.arbre, -1, self.nom)
+#        print "image",self.arbre.images["Sys"], self.image.GetWidth()
+#        if self.image == None or self.image == wx.NullBitmap:
+        image = self.arbre.images["Sys"]
+#        else:
+#            image = self.image.ConvertToImage().Scale(20, 20).ConvertToBitmap()
         self.branche = arbre.AppendItem(branche, u"Système :", wnd = self.codeBranche, data = self,
-                                        image = self.arbre.images["Sys"])
+                                        image = image)
 #        self.SetNom(self.nom)
         self.SetNombre()
         
@@ -2977,8 +2988,8 @@ class FicheSequence(wx.ScrolledWindow):
         branche = self.sequence.HitTest(xx, yy)
         if branche != None:
             self.sequence.arbre.SelectItem(branche)
-            wx.CallAfter(self.sequence.arbre.Layout)
-            wx.CallAfter(self.sequence.arbre.CalculatePositions)
+#            wx.CallAfter(self.sequence.arbre.Layout)
+#            wx.CallAfter(self.sequence.arbre.CalculatePositions)
         return branche
     
     #############################################################################            
@@ -4293,7 +4304,7 @@ class PanelPropriete_Systeme(PanelPropriete):
         
     #############################################################################            
     def SetImage(self):
-        if self.systeme.image != wx.NullBitmap:
+        if self.systeme.image != None:
             w, h = self.systeme.image.GetSize()
             wf, hf = 200.0, 100.0
             r = max(w/wf, h/hf)
@@ -5774,7 +5785,7 @@ class PopupInfoSysteme(PopupInfo):
         
     ##########################################################################################
     def SetImage(self, image):
-        if image == wx.NullBitmap:
+        if image == None:
             self.image.Show(False)
         else:
             self.image.SetBitmap(image)
