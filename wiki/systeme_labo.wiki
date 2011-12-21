@@ -1,0 +1,13 @@
+#summary One-sentence summary of this page.
+
+= Systèmes =
+
+Il existe deux façons pour déclarer les systèmes : un à un dans Pyséquence, ou en passant par une liste Excel.
+
+
+===dans Pyséquence===
+
+
+Cliquer avec le bouton droit de la souris sur *"systèmes"*.
+
+
