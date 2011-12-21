@@ -64,3 +64,8 @@ http://pysequence.googlecode.com/svn/trunk/images_aide/affichage_prerequis_seq.p
 Permettra d'associer un ou des systèmes à chaque activité.
 
 [systeme_labo systèmes]
+
+
+
+
+[Aide Sommaire de l'aide]
