@@ -9,3 +9,5 @@ http://pysequence.googlecode.com/svn/trunk/images_aide/presentation.png
 En cas d'utilisation de la version *portable* de _*pySequence*_, et afin que votre PC reconnaisse le type de fichier *.seq*, il est nécessaire d'enregistrer le logiciel dans la base de registre.*
 
 http://pysequence.googlecode.com/svn/trunk/images_aide/registre.png
+
+[Aide Sommaire de l'aide]
