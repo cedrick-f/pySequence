@@ -68,5 +68,28 @@ def IsRegistered():
         return False
     
     
+    
+def getIcone(nomFichier):
+    extension = os.path.splitext(nomFichier)[1]
+    print extension
+    key_ext = _winreg.OpenKey(_winreg.HKEY_CLASSES_ROOT, extension)
+    (valeur,typevaleur) = _winreg.QueryValueEx(key_ext,'')
+    print valeur
+    _winreg.CloseKey(key_ext)
+    key_ico = _winreg.OpenKey(_winreg.HKEY_CLASSES_ROOT, valeur+"\\DefaultIcon")
+    (valeur,typevaleur) = _winreg.QueryValueEx(key_ico,'')
+    _winreg.CloseKey(key_ico)
+    fichier = valeur.split(',')[0]
+    if os.path.splitext(fichier)[1] == '.ico':
+        print fichier
+    
+    return
 #Register(u"\"D:\\Developpement\\Sequence\\src\\dist\\Sequence.exe\" \"%1\"")
 #UnRegister()
+
+
+#getIcone(u'D:\\DropBox\\strategie_peda\\Formation_vague2\\Répartition pôle-référent-version4.pdf')
+
+
+
+
