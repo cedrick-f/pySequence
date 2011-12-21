@@ -1,13 +1,13 @@
 #summary One-sentence summary of this page.
 
-= Introduction =
+= Cration des séances =
 
-Cliquer avec le bouton droit de la souris sur "séances" puis choisir "
+Cliquer avec le bouton droit de la souris sur *"séances"* puis choisir *"ajouter une séance"*
+
+http://pysequence.googlecode.com/svn/trunk/images_aide/seances.png
 
 
-= Details =
+La partie *"propriétés"* change et vous permet de définir différents types d'activités.
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+http://pysequence.googlecode.com/svn/trunk/images_aide/types_seance.png
+
