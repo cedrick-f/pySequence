@@ -21,3 +21,6 @@ Cliquer avec la bouton droit de la souris sur *"systèmes"* puis choisir *"Séle
 http://pysequence.googlecode.com/svn/trunk/images_aide/systemes_excel.png
 
 Une fenêtre apparaît, *"ouvrir"* le fichier Excel puis sélectionner la listes des systèmes.
+
+
+[Aide Sommaire de l'aide]
