@@ -36,3 +36,5 @@ Exécuter pySequence_1.x.exe (en tant qu'administrateur de l'ordinateur) et suiv
 Trouver un des raccourcis vers l'application _*pySequence*_ (menu Démarrer, Bureau, ...)
 ou bien
 Double-cliquer sur un fichier .seq depuis l'Explorateur de Windows.
+
+[Aide Sommaire de l'aide]
