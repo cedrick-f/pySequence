@@ -2,7 +2,7 @@
 
 = Utilisation =
 
- # Installation
+ # [Installation]
  # [Premiere_utilisation Première utilisation]
  # [Elaboration_sequence Élaboration d'une séquence]
  # Ouverture/Enregistrement d'une séquence
