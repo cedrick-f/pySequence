@@ -57,3 +57,8 @@ http://pysequence.googlecode.com/svn/trunk/images_aide/affichage_prerequis_seq.p
 ===*5 - Création des séances*===
 
 [creation_seance détails]
+
+
+===*6 - Prise en compte des systèmes du labo*===
+
+[systeme_labo systèmes]
