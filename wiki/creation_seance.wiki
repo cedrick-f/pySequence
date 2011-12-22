@@ -1,13 +1,13 @@
-#summary One-sentence summary of this page.
+#Comment créer une séance pédagogique
 
 = Création des séances =
 
-Cliquer avec le bouton droit de la souris sur *"séances"* puis choisir *"ajouter une séance"*
+Cliquer avec le bouton droit de la souris sur *"Séances"* puis choisir *"Ajouter une séance"*
 
 http://pysequence.googlecode.com/svn/trunk/images_aide/seances.png
 
 
-La partie *"propriétés"* change et vous permet de définir différents types d'activités.
+La partie *"propriétés"* change et permet de définir différents types de séance (cours, synthèses, activités...)
 
 http://pysequence.googlecode.com/svn/trunk/images_aide/types_seance.png
 
