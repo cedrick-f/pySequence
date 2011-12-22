@@ -1,3 +1,5 @@
+#summary Premiers pas avec pySequence
+
 = Première utilisation =
 
 Avant de démarrer la création des fiches de séquence, il est préférable de *définir* correctement *les effectifs*.
