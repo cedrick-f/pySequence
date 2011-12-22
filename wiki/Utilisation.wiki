@@ -5,6 +5,7 @@
  # [Installation]
  # [Premiere_utilisation Première utilisation]
  # [Elaboration_sequence Élaboration d'une séquence]
+ # [lier_fichiers Lier des fichiers aux activités]
  # [ouverture_enregistrement Ouverture/Enregistrement d'une séquence]
  # [Alarme Alarme effectif ou matériel]
  # Configuration de la fiche de séquence
