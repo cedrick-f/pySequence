@@ -7,7 +7,7 @@ Cliquer avec le bouton droit de la souris sur *"Séances"* puis choisir *"Ajoute
 http://pysequence.googlecode.com/svn/trunk/images_aide/seances.png
 
 
-La partie *"propriétés"* change et permet de définir différents types de séance (cours, synthèses, activités...)
+La partie *"Propriétés"* change et permet de définir différents types de séance (cours, synthèses, activités...)
 
 http://pysequence.googlecode.com/svn/trunk/images_aide/types_seance.png
 
