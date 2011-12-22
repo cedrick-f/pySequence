@@ -1,0 +1,10 @@
+#summary One-sentence summary of this page.
+
+= Lier des fichiers à la fiche pédagogique =
+
+Il est possible d'associer un fichier aux activités de la séquence.
+
+Cliquer avec le bouton droit de la souris sur une activité puis choisir *"choisir un lien"*.
+
+
+
