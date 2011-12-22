@@ -9,15 +9,16 @@ http://pysequence.googlecode.com/svn/trunk/images_aide/seances.png
 
 La partie *"Propriétés"* change et permet de définir différents types de séance (cours, synthèses, activités...)
 
-http://pysequence.googlecode.com/svn/trunk/images_aide/types_seance.png
+http://pysequence.googlecode.com/svn/trunk/images_aide/proprietes_activite_systeme.png
 
 ||http://pysequence.googlecode.com/svn/trunk/images_aide/ED.png||http://pysequence.googlecode.com/svn/trunk/images_aide/AP.png||http://pysequence.googlecode.com/svn/trunk/images_aide/APR.png||http://pysequence.googlecode.com/svn/trunk/images_aide/C.png||http://pysequence.googlecode.com/svn/trunk/images_aide/SA.png||
+||http://pysequence.googlecode.com/svn/trunk/images_aide/SS.png||http://pysequence.googlecode.com/svn/trunk/images_aide/E.png||http://pysequence.googlecode.com/svn/trunk/images_aide/rot.png||http://pysequence.googlecode.com/svn/trunk/images_aide/paral.png||
 
 
 
 
 
-= Prise en compte des systèmes =
+[= Prise en compte des systèmes = systems]
 
 
 [Aide Sommaire de l'aide]
