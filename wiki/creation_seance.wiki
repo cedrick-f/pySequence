@@ -1,4 +1,4 @@
-#Comment créer une séance pédagogique
+#summary Comment créer une séance pédagogique
 
 = Création des séances =
 
