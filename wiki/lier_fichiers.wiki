@@ -4,7 +4,5 @@
 
 Il est possible d'associer un fichier aux activités de la séquence.
 
-Cliquer avec le bouton droit de la souris sur une activité puis choisir *"choisir un lien"*.
-
-
+Cliquer avec le bouton droit de la souris sur une activité puis choisir *"Céer un lien"*.
 
