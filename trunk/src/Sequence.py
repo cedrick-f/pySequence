@@ -1704,10 +1704,6 @@ class Seance(ElementDeSequence):
             
         if hasattr(self, 'arbre'):
             self.SetCode()
-        
-        if self.typeSeance in ["AP", "ED", "P"]:
-            for sy in self.GetSequence().systemes:
-                self.AjouterSysteme(nom = sy.nom, construire = False)
             
             
         if self.typeSeance in ["R","S"] and len(self.sousSeances) == 0: # Rotation ou Serie
@@ -3920,8 +3916,9 @@ class PanelPropriete_Seance(PanelPropriete):
     
     ############################################################################            
     def ConstruireListeSystemes(self):
+        self.Freeze()
         if self.seance.typeSeance in ["AP", "ED", "P"]:
-            self.Freeze()
+            
             self.box.Show()
             for ss in self.systemeCtrl:
                 self.bsizer.Detach(ss)
@@ -3934,10 +3931,17 @@ class PanelPropriete_Seance(PanelPropriete):
                 self.bsizer.Add(v, flag = wx.ALIGN_RIGHT)#|wx.EXPAND) 
                 self.systemeCtrl.append(v)
             self.bsizer.Layout()
-            self.Thaw()
+            
         else:
+            
             self.box.Hide()
+            for ss in self.systemeCtrl:
+                self.bsizer.Detach(ss)
+                ss.Destroy()
+            self.systemeCtrl = []
+    
         self.Layout()
+        self.Thaw()
     
     #############################################################################            
     def MiseAJourListeSystemes(self):
@@ -3999,7 +4003,18 @@ class PanelPropriete_Seance(PanelPropriete):
                 return
             else:
                 self.seance.SupprimerSousSeances()
+        
+        deja = self.seance.typeSeance in ["AP", "ED", "P"]
+        
         self.seance.SetType(get_key(TypesSeance, self.cbType.GetStringSelection()))
+        
+        if self.seance.typeSeance in ["AP", "ED", "P"]:
+            if not deja:
+                for sy in self.seance.GetSequence().systemes:
+                    self.seance.AjouterSysteme(nom = sy.nom, construire = False)
+        else:
+            self.seance.systemes = []
+            
         if self.cbEff.IsEnabled() and self.cbEff.IsShown():
             self.seance.SetEffectif(self.cbEff.GetStringSelection())
 
