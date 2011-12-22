@@ -7,7 +7,7 @@ La séquence a une structure en arborescence :
    * *Centre d'intérêt* abordé
    * *Objectifs* (compétences ou savoir attendus)
    * Déroulement (scénario) de la séquence
-      * Enchainement de *séances*
+      * Enchainement de *[creation_seance séances]*
       * Séances en _rotation_ ou bien en _parallèle_
          * ...
          * ...
