@@ -2,16 +2,16 @@
 
 = Systèmes =
 
-Il existe deux façons pour déclarer les systèmes : un à un dans Pyséquence, ou en passant par une liste Excel.
+Il existe deux façons pour déclarer les systèmes : un à un dans pySequence, ou en passant par une liste Excel.
 
 
-===dans Pyséquence===
+===dans pySequence===
 
 
-Cliquer avec le bouton droit de la souris sur *"systèmes"* puis choisir *"Ajouter un système"*.
+Cliquer avec le bouton droit de la souris sur *"Systèmes :"* puis choisir *"Ajouter un système"*.
 
-||http://pysequence.googlecode.com/svn/trunk/images_aide/systemes.png||<p>La partie *"propriétés"* change et permet de saisir le nom, la quantité et l'image du système.
-http://pysequence.googlecode.com/svn/trunk/images_aide/images_systeme.png</p>||
+||http://pysequence.googlecode.com/svn/trunk/images_aide/systemes.png||<La partie *"propriétés"* change et permet de saisir le nom, la quantité et l'image du système.
+http://pysequence.googlecode.com/svn/trunk/images_aide/images_systeme.png/>||
 
 ||L'arbre de création et la fiche se mettent à jour automatiquement||http://pysequence.googlecode.com/svn/trunk/images_aide/systeme_arbre.png||http://pysequence.googlecode.com/svn/trunk/images_aide/systemes_fiche.png||
 
