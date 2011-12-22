@@ -1,4 +1,4 @@
-#Renseigner les systèmes utilisés dans une séquence
+#summary Renseigner les systèmes utilisés dans une séquence
 
 = Systèmes =
 
