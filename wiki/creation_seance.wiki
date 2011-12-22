@@ -18,3 +18,6 @@ http://pysequence.googlecode.com/svn/trunk/images_aide/types_seance.png
 
 
 = Prise en compte des systèmes =
+
+
+[Aide Sommaire de l'aide]
