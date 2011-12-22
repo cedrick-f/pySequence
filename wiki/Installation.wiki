@@ -1,3 +1,5 @@
+#summary Comment installer pySequence sur un PC
+
 = Installation =
 
 
