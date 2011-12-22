@@ -6,3 +6,16 @@ Il est possible d'associer un fichier aux activités de la séquence.
 
 Cliquer avec le bouton droit de la souris sur une activité puis choisir *"Céer un lien"*.
 
+
+http://pysequence.googlecode.com/svn/trunk/images_aide/lien.png
+
+Une fenêtre apparaît, permettant de choisir le fichier correspondant à l'activité
+
+http://pysequence.googlecode.com/svn/trunk/images_aide/selection_lien.png
+
+
+Dorénavant, en passant avec la souris sur l'activité, il sera possible d'ouvrir directement le fichier.
+
+http://pysequence.googlecode.com/svn/trunk/images_aide/fichier_seance.png
+
+*Afin de ne pas perdre les chemins d'accès des fichiers, il est préférable de mettre les fichiers dans le même répertoire que Pysequence.*
