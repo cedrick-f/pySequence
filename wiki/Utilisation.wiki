@@ -5,8 +5,8 @@
  # [Installation]
  # [Premiere_utilisation Première utilisation]
  # [Elaboration_sequence Élaboration d'une séquence]
- # Ouverture/Enregistrement d'une séquence
- # Export de la fiche séquence au format PDF
+ # [ouverture_enregistrement Ouverture/Enregistrement d'une séquence]
+ # [Alarme Alarme effectif ou matériel]
  # Configuration de la fiche de séquence
 
 
