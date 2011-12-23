@@ -1,15 +1,15 @@
-#summary One-sentence summary of this page.
+#summary Liens externes
 
-= Lier des fichiers à la fiche pédagogique =
+= Associer des liens à la fiche pédagogique =
 
-Il est possible d'associer un fichier aux activités de la séquence.
+Il est possible d'associer des liens (Internet, fichiers ou dossiers) aux séances et aux systèmes de la séquence.
 
-Cliquer avec le bouton droit de la souris sur une activité puis choisir *"Céer un lien"*.
+Cliquer avec le bouton droit de la souris sur une activité puis choisir *"Créer un lien"*.
 
 
 http://pysequence.googlecode.com/svn/trunk/images_aide/lien.png
 
-Une fenêtre apparaît, permettant de choisir le fichier correspondant à l'activité
+Une fenêtre apparaît, permettant de choisir le fichier, le dossier correspondant à l'activité
 
 http://pysequence.googlecode.com/svn/trunk/images_aide/selection_lien.png
 
