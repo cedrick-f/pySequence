@@ -40,7 +40,8 @@ Cette fiche est très simplement exportable au format pdf.
 ----
 == Un seul fichier au centre des documents pédagogiques ==
 La séquence est sauvegardée dans un fichier (extension .seq).
-Depuis _*pySequence*_, il est possible d'accéder à l'ensemble des documents qui la constitue : ressources pédagogique, activités, liens vers des sites Internet ...
+
+Grâce à des [lier_fichiers liens], depuis _*pySequence*_, il est possible d'accéder à l'ensemble des documents qui la constitue : ressources pédagogique, activités, liens vers des sites Internet ...
 
 [Fonctionnalites#Fonctionnalit%C3A9s Sommaire des Fonctionnalités ]
 ----
