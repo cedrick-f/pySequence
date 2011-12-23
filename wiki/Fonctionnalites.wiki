@@ -5,10 +5,12 @@
  * [Fonctionnalites#Une%20structure%20en%20arborescence Une structure en arborescence]
  * [Fonctionnalites#Une%20fiche%20p%C3A9dagogique%20graphique Une fiche pédagogique graphique]
  * [Fonctionnalites#Un%20seul%20fichier%20au%20centre%20des%20documents%20p%C3A9dagogiques Un seul fichier au centre des documents pédagogiques]
+ 
+
  * [Fonctionnalites#Adaptable%20%C3%A0%20toutes%20les%20sp%C3%A9cialit%C3%A9s%20de%20STI2D
  Adaptable à toutes les spécialités de STI2D]
 
-http://code.google.com/p/pysequence/wiki/Fonctionnalites?ts=1324628612&updated=Fonctionnalites#Adaptable_%C3%A0_toutes_les_sp%C3%A9cialit%C3%A9s_de_STI2D
+ * [Fonctionnalites#Adaptable_%C3%A0_toutes_les_sp%C3%A9cialit%C3%A9s_de_STI2D Adaptable à toutes les spécialités de STI2D]
 
 
 ----
