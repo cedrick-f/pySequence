@@ -2,7 +2,7 @@
 
 = Associer des liens à la fiche pédagogique =
 
-Il est possible d'associer des liens (Internet, fichiers ou dossiers) aux [creer_seance séances] et aux [systeme_labo systèmes] de la séquence.
+Il est possible d'associer des liens (Internet, fichiers ou dossiers) aux [creation_seance séances] et aux [systeme_labo systèmes] de la séquence.
 
 Cliquer avec le bouton droit de la souris sur une activité puis choisir *"Créer un lien"*.
 
@@ -14,7 +14,7 @@ Dans la fenêtre qui apparaît, saisir le lien vers une page Internet, un fichie
 http://pysequence.googlecode.com/svn/trunk/images_aide/selection_lien.png
 
 
-Dorénavant, en passant avec la souris sur la [creer_seance séance] ou le [systeme_labo système], ou en double-cliquant dessus, il sera possible d'ouvrir directement le fichier, d'accéder au dossier ou à la page Internet..
+Dorénavant, en passant avec la souris sur la [creation_seance séance] ou le [systeme_labo système], ou en double-cliquant dessus, il sera possible d'ouvrir directement le fichier, d'accéder au dossier ou à la page Internet..
 
 http://pysequence.googlecode.com/svn/trunk/images_aide/fichier_seance.png
 
