@@ -3,9 +3,11 @@
 = Fonctionnalités =
 
  * [Fonctionnalites#Une%20structure%20en%20arborescence Une structure en arborescence]
- * [Fonctionnalites#Une%20fiche%20pédagogique%20graphique Une fiche pédagogique graphique]
- * 
+ * [Fonctionnalites#Une%20fiche%20p%C3A9dagogique%20graphique Une fiche pédagogique graphique]
+ * [Fonctionnalites#Un%20seul%20fichier%20au%20centre%20des%20documents%20pédagogiques Un seul fichier au centre des documents pédagogiques
 
+
+----
 == Une structure en arborescence ==
 _*pySequence*_ fourni une aide pour créer des séquences pédagogiques.
 La séquence a une structure en _arborescence_ :
@@ -26,16 +28,21 @@ Chaque élément de séquence possède des propriétés :
  * [creation_seance Séances] : intitulé, type, démarche, effectif, durée, ...
  * [systeme_labo Systèmes] : nom, quantité, ...
 
+[Fonctionnalites#Fonctionnalit%C3A9s Fonctionnalités ]
+----
 == Une fiche pédagogique graphique ==
 Au fur et à mesure de sa création, la séquence apparait sous forme graphique (*fiche*) dans la _fenêtre centrale_.
 Cela permet de visualiser graphiquement son déroulement, ce qui offre notamment une aide pour élaborer des [creation_seance séances] un peu complexes, comme des séries d'activités en rotation ou en parallèle (compatibilité des durées, des effectifs élève, ...)
 
 Cette fiche est très simplement exportable au format pdf.
 
+[Fonctionnalites#Fonctionnalit%C3A9s Fonctionnalités ]
+----
 == Un seul fichier au centre des documents pédagogiques ==
 La séquence est sauvegardée dans un fichier (extension .seq).
+Depuis _*pySequence*_, il est possible d'accéder à l'ensemble des documents qui la constitue : ressources pédagogique, activités, liens vers des sites Internet ...
 
-
-
+[Fonctionnalites#Fonctionnalit%C3A9s Fonctionnalités ]
+----
 
 [Aide Sommaire de l'aide]
