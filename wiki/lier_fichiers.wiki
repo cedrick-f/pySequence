@@ -14,6 +14,6 @@ Dans la fenêtre qui apparaît, saisir le lien vers une page Internet, un fichie
 http://pysequence.googlecode.com/svn/trunk/images_aide/selection_lien.png
 
 
-||Dorénavant, en passant avec la souris sur la [creation_seance séance] ou le [systeme_labo système], ou en double-cliquant dessus, il sera possible d'ouvrir directement le fichier, d'accéder au dossier ou à la page Internet.||http://pysequence.googlecode.com/svn/trunk/images_aide/fichier_seance.png||
+||Dorénavant, en passant avec la souris sur la [creation_seance séance] ou le [systeme_labo système],<br>ou en double-cliquant dessus, il sera possible d'ouvrir directement le fichier, d'accéder au dossier ou à la page Internet.||http://pysequence.googlecode.com/svn/trunk/images_aide/fichier_seance.png||
 
 _*Remarque :*_ _*pySequence*_ mémorise les lien de manière _relative_. Aussi, afin de ne pas perdre les chemins d'accès aux fichiers ou dossiers en cas de déplacement du _fichier séquence_, il est préférable de mettre les fichiers dans le *même dossier*, ou dans des *dossiers "enfants"* du fichier séquence.
