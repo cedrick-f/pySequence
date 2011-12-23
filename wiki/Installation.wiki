@@ -26,7 +26,7 @@ Double-cliquer sur le fichier http://pysequence.googlecode.com/svn/trunk/images_
 _Remarque : si _*pySequence*_ est installé sur le disque dur d'un ordinateur, il est possible, depuis _*pySequence*_, d'inscrire des informations dans sa _base de registre_ afin que l'ordinateur reconnaisse les fichiers _Séquence pédagogique STI2D_ (.seq) [Outils/inscrire dans la base de registre]._
 
 
-[Installation#Téléchargement]
+[Installation#Téléchargement Téléchargement]
 ----
 
 
@@ -40,6 +40,6 @@ Trouver un des raccourcis vers l'application _*pySequence*_ (menu Démarrer, Bur
 ou bien
 Double-cliquer sur un fichier .seq depuis l'Explorateur de Windows.
 
-[Installation#Téléchargement]
+[Installation#Téléchargement Téléchargement]
 ----
 [Aide Sommaire de l'aide]
