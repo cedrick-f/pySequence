@@ -1319,6 +1319,8 @@ def show_text_rect(ctx, texte, x, y, w, h, va = 'c', ha = 'c', b = 0.4, orient =
                 continuer = False
             else:
                 wrap += -1
+                if wrap == 0:
+                    continuer = False
         wrap += 1
         lt = []
         for l in texte.split("\n"):

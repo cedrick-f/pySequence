@@ -169,16 +169,17 @@ class Lien():
         return self.type + " : " + self.path
         
     ######################################################################################  
-    def DialogCreer(self, fichierCourant):
-        dlg = URLDialog(None, self)
+    def DialogCreer(self, pathseq):
+        dlg = URLDialog(None, self, pathseq)
         res = dlg.ShowModal()
         dlg.Destroy() 
-        url = dlg.GetURL()
-            
-        if res == wx.ID_OK and url != "":
-            self.EvalLien(url, fichierCourant)
-        elif res == wx.ID_CANCEL:
-            print "Rien" 
+#        url = dlg.GetURL().path
+#            
+#        if res == wx.ID_OK and url != "":
+#            self.EvalLien(url, pathseq)
+#            
+#        elif res == wx.ID_CANCEL:
+#            print "Rien" 
             
 
     ######################################################################################  
@@ -218,19 +219,8 @@ class Lien():
                 
                 
     ######################################################################################  
-    def EvalLien(self, path, fichierCourant):
-        
-#        def testRel(lien):
-#            pathseq = os.path.split(fichierCourant)[0]
-#            print pathseq
-#            try:
-#                return os.path.relpath(lien,pathseq)
-#            except:
-#                return lien
-            
+    def EvalLien(self, path, pathseq):
         if os.path.exists(path):
-            pathseq = os.path.split(fichierCourant)[0]
-            print pathseq
             if os.path.isfile(path):
                 self.type = 'f'
                 path = testRel(path, pathseq)
@@ -241,6 +231,9 @@ class Lien():
                 self.type = 'u'
             self.path = path
             print "-->",self.path
+            return True
+        else:
+            return False
                 
                 
                 
@@ -285,35 +278,31 @@ class ElementDeSequence():
         self.lien = Lien()
         
     
-
+    ######################################################################################  
+    def GetPath(self):
+        return self.parent.GetPath()
+    
+    
     ######################################################################################  
     def CreerLien(self, event):
-        self.lien.DialogCreer(self.GetApp().fichierCourant)
-#        dlg = URLDialog(None, self.lien)
-#        res = dlg.ShowModal()
-#
-#        url = dlg.GetURL()
-#        if os.path.exists(self.lien.):
-#            try:
-#                url = os.path.relpath(url,PATH)
-#            except:
-#                pass
-#        dlg.Destroy() 
-#        if res == wx.ID_OK and url != "":
-#            self.lien = url
-#        
-#        elif res == wx.ID_CANCEL:
-#            print "Rien" 
-#
+        self.lien.DialogCreer(self.GetPath())
         self.SetLien()
-#        return
+        if hasattr(self, 'panelPropriete'): 
+            self.panelPropriete.sendEvent()
     
     
     ######################################################################################  
     def SetLien(self, lien = None):
 #        print "SetLien", self.lien
         self.tip.SetLien(self.lien)
-     
+        if hasattr(self, 'panelPropriete'): 
+            self.panelPropriete.MiseAJourLien()
+          
+            
+    ######################################################################################  
+    def SetPathSeq(self, pathSeq):
+        if hasattr(self, 'panelPropriete'): 
+            self.panelPropriete.SetPathSeq(pathSeq)
      
         
     ######################################################################################  
@@ -400,6 +389,7 @@ class LienSequence():
     ######################################################################################  
     def SetLien(self):
         self.tip.SetLien(Lien(self.path, 's'))
+#        self.panelPropriete.MiseAJour()
     
     ######################################################################################  
     def SetTitre(self, titre):
@@ -541,18 +531,27 @@ class Sequence():
     def GetApp(self):
         return self.app
     
+    
     ######################################################################################  
     def GetPath(self):
         return os.path.split(self.app.fichierCourant)[0]
     
+    
+    ######################################################################################  
+    def SetPath(self, fichierCourant):
+        pathseq = os.path.split(fichierCourant)[0]
+        for sce in self.seance:
+            sce.SetPathSeq(pathseq)    
+        for sy in self.systemes:
+            sy.SetPathSeq(pathseq) 
+        
     ######################################################################################  
     def GetDuree(self):
         duree = 0
         for s in self.seance:
             duree += s.GetDuree()
         return duree
-                
-                
+                        
                 
     ######################################################################################  
     def GetApercu(self, mult = 3):
@@ -1376,6 +1375,8 @@ class Seance(ElementDeSequence):
     def GetApp(self):
         return self.parent.GetApp()
     
+    
+    
     ######################################################################################  
     def EstSousSeance(self):
         return not isinstance(self.parent, Sequence)
@@ -1975,6 +1976,9 @@ class Systeme(ElementDeSequence):
             self.panelPropriete = PanelPropriete_Systeme(panelParent, self)
         
         
+    ######################################################################################  
+    def GetApp(self):
+        return self.parent.GetApp()
         
     ######################################################################################  
     def __repr__(self):
@@ -2818,6 +2822,7 @@ class FenetreSequence(aui.AuiMDIChildFrame):
     #############################################################################
     def definirNomFichierCourant(self, nomFichier = ''):
         self.fichierCourant = nomFichier
+        self.sequence.SetPath(nomFichier)
         self.SetTitre()
 
     #############################################################################
@@ -3899,7 +3904,7 @@ class PanelPropriete_Seance(PanelPropriete):
         #
         box = wx.StaticBox(self, -1, u"Lien externe")
         bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
-        self.selec = URLSelectorCombo(self, self.seance.lien)
+        self.selec = URLSelectorCombo(self, self.seance.lien, self.seance.GetPath())
         bsizer.Add(self.selec, flag = wx.EXPAND)
         self.btnlien = wx.Button(self, -1, u"Ouvrir le lien externe")
         self.btnlien.Hide()
@@ -3913,6 +3918,19 @@ class PanelPropriete_Seance(PanelPropriete):
         # Mise en place
         #
         self.sizer.Layout()
+    
+    
+    ######################################################################################  
+    def SetPathSeq(self, pathSeq):
+        self.selec.SetPathSeq(pathSeq)
+        
+        
+    ######################################################################################  
+    def OnPathModified(self, lien):
+        self.btnlien.Show(self.seance.lien.path != "")
+        self.Layout()
+        self.Refresh()
+        
     
     ############################################################################            
     def ConstruireListeSystemes(self):
@@ -4206,12 +4224,20 @@ class PanelPropriete_Seance(PanelPropriete):
 #            self.vcNombre.mofifierValeursSsEvt()
         
         self.cbInt.SetValue(self.seance.intituleDansDeroul)
-        
-        self.selec.SetPath(self.seance.lien.path)
-        self.btnlien.Show(self.seance.lien.path != "")
-        
         if sendEvt:
             self.sendEvent()
+        
+        self.MiseAJourLien()
+        
+        
+        
+    #############################################################################            
+    def MiseAJourLien(self):
+        self.selec.SetPath(self.seance.lien.path)
+        self.btnlien.Show(self.seance.lien.path != "")
+        self.Layout()
+        
+        
     
     def MiseAJourDuree(self):
         self.vcDuree.mofifierValeursSsEvt()
@@ -4236,8 +4262,8 @@ class PanelPropriete_Systeme(PanelPropriete):
         textctrl = wx.TextCtrl(self, -1, u"")
         self.textctrl = textctrl
         
-        self.sizer.Add(titre, (0,0))
-        self.sizer.Add(textctrl, (0,1), flag = wx.EXPAND|wx.ALIGN_CENTER_VERTICAL)
+        self.sizer.Add(titre, (0,0), flag = wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM|wx.LEFT, border = 3)
+        self.sizer.Add(textctrl, (0,1), flag = wx.EXPAND|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM|wx.RIGHT, border = 3)
         
         #
         # Nombre de systèmes disponibles en parallèle
@@ -4246,7 +4272,7 @@ class PanelPropriete_Systeme(PanelPropriete):
                                 help = u"Nombre de d'exemplaires de ce système disponibles simultanément.")
         self.Bind(EVT_VAR_CTRL, self.EvtVar, vcNombre)
         self.vcNombre = vcNombre
-        self.sizer.Add(vcNombre, (1,0), (1, 2))
+        self.sizer.Add(vcNombre, (1,0), (1, 2), flag = wx.TOP|wx.BOTTOM, border = 3)
         
         #
         # Image
@@ -4263,14 +4289,14 @@ class PanelPropriete_Systeme(PanelPropriete):
         bt.SetToolTipString(u"Cliquer ici pour sélectionner un fichier image")
         bsizer.Add(bt, flag = wx.EXPAND)
         self.Bind(wx.EVT_BUTTON, self.OnClick, bt)
-        self.sizer.Add(bsizer, (0,3), (2,1), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 2)
+        self.sizer.Add(bsizer, (0,3), (2,1), flag =  wx.EXPAND|wx.ALIGN_RIGHT|wx.LEFT, border = 2)#wx.ALIGN_CENTER_VERTICAL |
 
         #
         # Lien
         #
         box = wx.StaticBox(self, -1, u"Lien externe")
         bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
-        self.selec = URLSelectorCombo(self, self.systeme.lien)
+        self.selec = URLSelectorCombo(self, self.systeme.lien, self.systeme.GetPath())
         bsizer.Add(self.selec, flag = wx.EXPAND)
         self.btnlien = wx.Button(self, -1, u"Ouvrir le lien externe")
         self.btnlien.Hide()
@@ -4283,9 +4309,22 @@ class PanelPropriete_Systeme(PanelPropriete):
         
         self.Bind(wx.EVT_TEXT, self.EvtText, textctrl)
         
+        
+    ######################################################################################  
+    def SetPathSeq(self, pathSeq):
+        self.selec.SetPathSeq(pathSeq)
+        
+        
+    ######################################################################################  
+    def OnPathModified(self, lien):
+        self.btnlien.Show(self.systeme.lien.path != "")
+        self.Layout()
+        self.Refresh()
+        
     #############################################################################            
     def GetSequence(self):
         return self.systeme.parent
+    
     
     #############################################################################            
     def OnClick(self, event):
@@ -4327,6 +4366,7 @@ class PanelPropriete_Systeme(PanelPropriete):
             self.systeme.image = self.systeme.image.ConvertToImage().Scale(_w, _h).ConvertToBitmap()
             self.image.SetBitmap(self.systeme.image)
         self.systeme.SetImage()
+        self.Layout()
         
         
         
@@ -4350,11 +4390,17 @@ class PanelPropriete_Systeme(PanelPropriete):
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
         self.textctrl.ChangeValue(self.systeme.nom)
-        self.selec.SetPath(self.systeme.lien.path)
-        self.btnlien.Show(self.systeme.lien.path != "")
         if sendEvt:
             self.sendEvent()
-            
+        self.MiseAJourLien()
+        
+        
+        
+    #############################################################################            
+    def MiseAJourLien(self):
+        self.selec.SetPath(self.systeme.lien.path)
+        self.btnlien.Show(self.systeme.lien.path != "")
+        self.Layout()
             
 ####################################################################################
 #
@@ -5557,7 +5603,7 @@ class SeqApp(wx.App):
 #
 ##########################################################################################################
 class URLDialog(wx.Dialog):
-    def __init__(self, parent, lien):
+    def __init__(self, parent, lien, pathseq):
         wx.Dialog.__init__(self, parent, -1)
         pre = wx.PreDialog()
         pre.SetExtraStyle(wx.DIALOG_EX_CONTEXTHELP)
@@ -5577,7 +5623,7 @@ class URLDialog(wx.Dialog):
 #        label.SetHelpText("This is the help text for the label")
         box.Add(label, 0, wx.ALIGN_CENTRE|wx.ALL, 5)
 
-        url = URLSelectorCombo(self, lien)
+        url = URLSelectorCombo(self, lien, pathseq)
 #        text.SetHelpText("Here's some help text for field #1")
         box.Add(url, 1, wx.ALIGN_CENTRE|wx.ALL, 5)
         self.url = url
@@ -5608,12 +5654,21 @@ class URLDialog(wx.Dialog):
         self.SetSizer(sizer)
         sizer.Fit(self)
 
+
+    ######################################################################################  
     def GetURL(self):
         return self.url.GetPath()
 
+
+    ######################################################################################  
+    def OnPathModified(self, lien):
+        return
+
+
+
     
 class URLSelectorCombo(wx.Panel):
-    def __init__(self, parent, lien):
+    def __init__(self, parent, lien, pathseq):
         wx.Panel.__init__(self, parent, -1)
 
         sizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -5625,6 +5680,7 @@ class URLSelectorCombo(wx.Panel):
         bt2.SetToolTipString(u"Sélectionner un fichier")
         self.Bind(wx.EVT_BUTTON, self.OnClick, bt1)
         self.Bind(wx.EVT_BUTTON, self.OnClick, bt2)
+        self.Bind(wx.EVT_TEXT, self.EvtText, self.texte)
         
         sizer.Add(self.texte,flag = wx.EXPAND)
         sizer.Add(bt1)
@@ -5632,13 +5688,15 @@ class URLSelectorCombo(wx.Panel):
         
         self.SetSizerAndFit(sizer)
         self.lien = lien
+        self.SetPathSeq(pathseq)
 
     # Overridden from ComboCtrl, called when the combo button is clicked
     def OnClick(self, event):
         
         if event.GetId() == 100:
             dlg = wx.DirDialog(self, u"Sélectionner un dossier",
-                          style=wx.DD_DEFAULT_STYLE
+                          style=wx.DD_DEFAULT_STYLE,
+                          defaultPath = self.pathseq
                            #| wx.DD_DIR_MUST_EXIST
                            #| wx.DD_CHANGE_DIR
                            )
@@ -5662,13 +5720,34 @@ class URLSelectorCombo(wx.Panel):
         self.SetFocus()
 
 
+    ##########################################################################################
+    def EvtText(self, event):
+        path = event.GetString()
+        self.SetPath(path)
+
+
+    ##########################################################################################
     def GetPath(self):
         return self.lien
     
+    
+    ##########################################################################################
     def SetPath(self, lien):
-        self.lien.path = lien
-        self.texte.SetValue(lien)
+        """ lien doit être de type 'String'
+        """
+        if self.lien.EvalLien(lien, self.pathseq):
+            self.texte.ChangeValue(self.lien.path)
+            self.texte.SetBackgroundColour(("white"))
+        else:
+            self.texte.SetBackgroundColour(("pink"))
+        self.Parent.OnPathModified(self.lien)
         
+        
+    ##########################################################################################
+    def SetPathSeq(self, pathseq):
+        self.pathseq = pathseq
+
+
 
 #############################################################################################################
 #
@@ -5721,6 +5800,7 @@ class PopupInfo(wx.PopupWindow):
         self.SetSizerAndFit(self.sizer)
         self.Bind(wx.EVT_LEAVE_WINDOW, self.OnLeave)
     
+    ##########################################################################################
     def OnLeave(self, event):
         x, y = event.GetPosition()
         w, h = self.GetSize()
