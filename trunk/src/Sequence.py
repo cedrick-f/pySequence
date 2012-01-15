@@ -6,25 +6,14 @@ Aide à la réalisation de fiches pédagogiques de séquence
 *************
 *   STIDD   *
 *************
-Copyright (C) 2011  
+Copyright (C) 2011-2012  
 @author: Cedrick FAURY
 
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "1.6"
+__version__ = "1.8"
 
-##
-## Les deuxlignes suivantes permettent de lancer le script sequence.py depuis n'importe
-## quel répertoire sans que l'utilisation de chemins
-## relatifs ne soit perturbée
-##
-#import sys, os
-#PATH = os.path.dirname(os.path.abspath(sys.argv[0]))
-##PATH = os.path.split(PATH)[0]
-#os.chdir(PATH)
-#sys.path.append(PATH)
-#print "Dossier de l'application :",PATH
 
 ####################################################################################
 #
@@ -33,8 +22,20 @@ __version__ = "1.6"
 ####################################################################################
 # Outils "système"
 import sys, os
+if hasattr(sys, 'setdefaultencoding'):
+    sys.setdefaultencoding('utf8')
+    import locale
+    loc = locale.getdefaultlocale()
+    if loc[1]:
+        encoding = loc[1]
+        sys.setdefaultencoding(encoding)
+
+DEFAUT_ENCODING = sys.getdefaultencoding()
+#print "DEFAUT_ENCODING", DEFAUT_ENCODING
+
+
 import webbrowser
-import win32com
+#import win32com
 import subprocess
 import urllib
 
@@ -75,7 +76,7 @@ import functools
 import xml.etree.ElementTree as ET
 
 # des widgets wx évolués "faits maison"
-from CedWidgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_ENTIER_POS, VAR_REEL_POS_STRICT
+from CedWidgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_ENTIER_POS
 
 # Les constantes et les fonctions de dessin
 import draw_cairo
@@ -84,17 +85,6 @@ import draw_cairo
 from constantes import *
 
 # Pour lire les classeurs Excel
-import xlrd
-#import xlsgrid as XG
-#from wx.lib.activexwrapper import *
-#from comtypes.client import CreateObject
-#from threading import Event, Thread
-#if wx.Platform == '__WXMSW__':       
-#    from wx.lib.activexwrapper import MakeActiveXClass       
-#    import excel
-#    import word
-#    import wx.lib.iewin as iewin
-    
 import recup_excel
 
 import Options
@@ -106,6 +96,12 @@ import textwrap
 
 import serveur
 
+FILE_ENCODING = sys.getfilesystemencoding() #'cp1252'#
+#DEFAUT_ENCODING = sys.getdefaultencoding()
+
+print "FILE_ENCODING", FILE_ENCODING
+print "DEFAUT_ENCODING", DEFAUT_ENCODING
+
 ####################################################################################
 #
 #   Evenement perso pour détecter une modification de la séquence
@@ -116,8 +112,8 @@ EVT_SEQ_MODIFIED = wx.PyEventBinder(myEVT_SEQ_MODIFIED, 1)
 
 #----------------------------------------------------------------------
 class SeqEvent(wx.PyCommandEvent):
-    def __init__(self, evtType, id):
-        wx.PyCommandEvent.__init__(self, evtType, id)
+    def __init__(self, evtType, idd):
+        wx.PyCommandEvent.__init__(self, evtType, idd)
         self.seq = None
         
         
@@ -128,6 +124,8 @@ class SeqEvent(wx.PyCommandEvent):
     ######################################################################################  
     def GetSequence(self):
         return self.seq
+    
+    
     
 ####################################################################################
 #
@@ -160,6 +158,11 @@ def testRel(lien, path):
         return lien
     
     
+####################################################################################
+#
+#   Objet lien vers un fichier, un dossier ou bien un site web
+#
+####################################################################################
 class Lien():
     def __init__(self, path = "", typ = ""):
         self.path = path
@@ -183,17 +186,19 @@ class Lien():
             
 
     ######################################################################################  
-    def Afficher(self, fenSeq = None):
+    def Afficher(self, pathseq, fenSeq = None):
+#        print "Afficher :", self.path
+        path = self.GetAbsPath(pathseq)
         if self.type == "f":
-            os.startfile(self.path)
+            os.startfile(path)
         elif self.type == 'd':
-            subprocess.Popen(["explorer", self.path])
+            subprocess.Popen(["explorer", path])
         elif self.type == 'u':
-            lien_safe = urllib.quote_plus(self.path)
             try:
+                lien_safe = urllib.quote_plus(self.path)
                 urllib.urlopen(lien_safe)
             except:
-                dlg = wx.MessageDialog(self, u"Impossible d'ouvrir l'url\n%s!\n" %lien_safe ,
+                dlg = wx.MessageDialog(None, u"Impossible d'ouvrir l'url\n%s!\n" %self.path ,
                                u"Ouverture impossible",
                                wx.OK | wx.ICON_WARNING
                                #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
@@ -201,65 +206,108 @@ class Lien():
                 dlg.ShowModal()
                 dlg.Destroy()
         elif self.type == 's':
-            if os.path.isfile(self.path):
+            if os.path.isfile(path):
 #                self.Show(False)
                 child = fenSeq.commandeNouveau()
-                child.ouvrir(self.path)
+                child.ouvrir(path)
 
   
     ######################################################################################  
-    def EvalTypeLien(self):
-        if os.path.exists(self.path):
-            if os.path.isfile(self.path):
-                self.type = 'f'
-            elif os.path.isdir(self.path):
-                self.type = 'd'
-            else:
-                self.type = 'u'
-                
-                
-    ######################################################################################  
-    def EvalLien(self, path, pathseq):
+    def EvalTypeLien(self, pathseq):
+        print "EvalTypeLien"
+        
+        path = self.GetAbsPath(pathseq)
+        
+#        print path
         if os.path.exists(path):
             if os.path.isfile(path):
                 self.type = 'f'
-                path = testRel(path, pathseq)
             elif os.path.isdir(path):
                 self.type = 'd'
-                path = testRel(path, pathseq)
-            else:
-                self.type = 'u'
-            self.path = path
-            print "-->",self.path
-            return True
+    
         else:
-            return False
+            self.type = 'u'
+        
+                
+    ######################################################################################  
+    def EvalLien(self, path, pathseq):
+#        print "EvalLien", self
+#        path = self.Encode(path)
+#        pathseq = self.Encode(pathseq)
+        path = self.GetAbsPath(pathseq, path)
+        
+#        print "-->", path
+        if os.path.exists(path):
+            if os.path.isfile(path):
+                self.type = 'f'
+                self.path = testRel(path, pathseq)
+            elif os.path.isdir(path):
+                self.type = 'd'
+                self.path = testRel(path, pathseq)
+        else:
+            self.type = 'u'
+            self.path = path
+#        print "==>", self.type
+#            print "-->",self.path
+#            return True
+#        else:
+#            return True
+              
+              
+    ######################################################################################  
+    def GetAbsPath(self, pathseq, path = None):
+        if path == None:
+            path = self.path
+        
+        path = self.Encode(path)
+        if os.path.exists(path):
+            path = path
+        else:
+            pathseq = self.Encode(pathseq)
+            path = os.path.join(pathseq, path)
+        return path
+    
+    
+    ######################################################################################  
+    def GetDecode(self): 
+#        try:
+        path = self.path.decode(FILE_ENCODING)
+        path = path.encode(DEFAUT_ENCODING)
+        return path  
+#        except:
+#            return self.path    
                 
                 
-                
+    ######################################################################################  
+    def DoEncode(self):
+        path = self.path.decode(DEFAUT_ENCODING)
+        self.path = path.encode(FILE_ENCODING)
+        
+        
+    ######################################################################################  
+    def Encode(self, path):
+        try:
+            path = path.decode(DEFAUT_ENCODING)
+            return path.encode(FILE_ENCODING)
+        except:
+            return path
+        
+    
     ######################################################################################  
     def getBranche(self, branche):
         branche.set("Lien", self.path)
         branche.set("TypeLien", self.type)
         
         
-    def setBranche(self, branche):
+    ######################################################################################  
+    def setBranche(self, branche, pathseq):
         self.path = branche.get("Lien", "")
         self.type = branche.get("TypeLien", "")
         if self.type == "" and self.path != "":
-            self.EvalTypeLien()
+            self.EvalTypeLien(pathseq)
             
-#    ######################################################################################  
-#    def GetType(self):
-#        if self.lien == "":
-#            return ""
-#        if os.path.exists(self.lien):
-#            if os.path.isfile(self.lien):
-#                return 'f'
-#            elif os.path.isdir(self.lien):
-#                return 'd'
-#        else:
-#            return 'u'
+
+
     
 ####################################################################################
 #
@@ -306,8 +354,14 @@ class ElementDeSequence():
      
         
     ######################################################################################  
-    def AfficherLien(self): 
-        self.lien.Afficher()
+    def AfficherLien(self, pathseq): 
+        self.lien.Afficher(pathseq)
+        
+        
+    ######################################################################################  
+    def OnPathModified(self):
+        self.tip.SetLien(self.lien)
+        
         
 #    ######################################################################################  
 #    def AfficherLien(self):
@@ -888,9 +942,9 @@ class Sequence():
     ######################################################################################  
     def AfficherLien(self, item):
         data = self.arbre.GetItemPyData(item)
-        print data
+#        print data
         if data and data != self and hasattr(data, 'AfficherLien'):
-            data.AfficherLien()
+            data.AfficherLien(self.GetPath())
 #        else:
 #            self.arbre.ExpandAllChildren(self.branche)
 #            self.arbre.Expand(self.branche)
@@ -1423,7 +1477,9 @@ class Seance(ElementDeSequence):
         self.intitule  = branche.get("Intitule", "")
         self.typeSeance = branche.get("Type", "C")
         
-        self.lien.setBranche(branche)
+        self.lien.setBranche(branche, self.GetPath())
+#        print self.lien
+#        self.SetLien()
         
         if self.typeSeance in ["R", "S"]:
             self.sousSeances = []
@@ -1436,7 +1492,7 @@ class Seance(ElementDeSequence):
             self.effectif = branche.get("Effectif", "C")
             self.demarche = branche.get("Demarche", "I")
             self.nombre.v[0] = eval(branche.get("Nombre", "1"))
-            self.lien.setBranche(branche)
+#            self.lien.setBranche(branche)
             
             # Les systèmes nécessaires
             lstSys = []
@@ -2002,7 +2058,8 @@ class Systeme(ElementDeSequence):
     def setBranche(self, branche):
 #        print "setBranche systeme"
         self.nom  = branche.get("Nom", "")
-        self.lien.setBranche(branche)
+        self.lien.setBranche(branche, self.GetPath())
+#        self.SetLien()
         self.nbrDispo.v[0] = branche.get("Nbr", 1)
         data = branche.get("Image", "")
         if data != "":
@@ -2188,6 +2245,8 @@ class FenetreSequences(aui.AuiMDIParentFrame):
             child.ouvrir(fichier)
         child.Show()
         
+        
+        
     ###############################################################################################
     def CreateMenuBar(self):
         # create menu
@@ -2334,7 +2393,7 @@ class FenetreSequences(aui.AuiMDIParentFrame):
                 wx.BeginBusyCursor(wx.HOURGLASS_CURSOR)
                 child = self.commandeNouveau()
                 child.ouvrir(nomFichier)
-                print "2"
+        
                 wx.EndBusyCursor()
             else:
                 child = self.GetChild(nomFichier)
@@ -2346,7 +2405,7 @@ class FenetreSequences(aui.AuiMDIParentFrame):
                                           u"Confirmation", wx.YES_NO | wx.ICON_WARNING)
                 retCode = dialog.ShowModal()
                 if retCode == wx.ID_YES:
-                    child.ouvrir()
+                    child.ouvrir(nomFichier)
         
         
         
@@ -2373,6 +2432,7 @@ class FenetreSequences(aui.AuiMDIParentFrame):
             dlg.Destroy()
         
         self.ouvrir(nomFichier)
+      
                 
     #############################################################################
     def GetChild(self, nomFichier):
@@ -2383,6 +2443,12 @@ class FenetreSequences(aui.AuiMDIParentFrame):
                         if k.fichierCourant == nomFichier:
                             return k
         return
+    
+    
+    #############################################################################
+    def GetSequenceActive(self):
+        return self.GetActiveChild().sequence
+    
     
     #############################################################################
     def GetNomsFichiers(self):
@@ -2868,7 +2934,7 @@ class FenetreSequence(aui.AuiMDIChildFrame):
             )
         dlg.SetFilterIndex(0)
         if dlg.ShowModal() == wx.ID_OK:
-            path = dlg.GetPath().encode('cp1252')
+            path = dlg.GetPath().encode(FILE_ENCODING)
             dlg.Destroy()
             PDFsurface = cairo.PDFSurface(path, 595, 842)
             ctx = cairo.Context (PDFsurface)
@@ -3927,6 +3993,7 @@ class PanelPropriete_Seance(PanelPropriete):
         
     ######################################################################################  
     def OnPathModified(self, lien):
+        self.seance.OnPathModified()
         self.btnlien.Show(self.seance.lien.path != "")
         self.Layout()
         self.Refresh()
@@ -4078,7 +4145,7 @@ class PanelPropriete_Seance(PanelPropriete):
         
     #############################################################################            
     def OnClick(self, event):
-        self.seance.AfficherLien()
+        self.seance.AfficherLien(self.GetSequence().GetPath())
         
         
         
@@ -4317,6 +4384,7 @@ class PanelPropriete_Systeme(PanelPropriete):
         
     ######################################################################################  
     def OnPathModified(self, lien):
+        self.systeme.OnPathModified()
         self.btnlien.Show(self.systeme.lien.path != "")
         self.Layout()
         self.Refresh()
@@ -4329,7 +4397,7 @@ class PanelPropriete_Systeme(PanelPropriete):
     #############################################################################            
     def OnClick(self, event):
         if event.GetId() == self.btnlien.GetId():
-            self.systeme.AfficherLien()
+            self.systeme.AfficherLien(self.GetSequence().GetPath())
         else:
     #        print event.GetId()
             mesFormats = u"Fichier Image|*.bmp;*.png;*.jpg;*.jpeg;*.gif;*.pcx;*.pnm;*.tif;*.tiff;*.tga;*.iff;*.xpm;*.ico;*.ico;*.cur;*.ani|" \
@@ -5517,7 +5585,7 @@ class SeqApp(wx.App):
 #                parametre = param.upper()
 #                # on verifie que le fichier passé en paramétre existe
             if os.path.isfile(parametre):
-                fichier = unicode(parametre, 'cp1252')
+                fichier = unicode(parametre, FILE_ENCODING)
         
 #        self.serveur = Server(fichier)
 #        loop()
@@ -5735,11 +5803,13 @@ class URLSelectorCombo(wx.Panel):
     def SetPath(self, lien):
         """ lien doit être de type 'String'
         """
-        if self.lien.EvalLien(lien, self.pathseq):
-            self.texte.ChangeValue(self.lien.path)
-            self.texte.SetBackgroundColour(("white"))
-        else:
-            self.texte.SetBackgroundColour(("pink"))
+        
+        self.lien.EvalLien(lien, self.pathseq)
+        
+        self.texte.ChangeValue(self.lien.GetDecode())
+#            self.texte.SetBackgroundColour(("white"))
+#        else:
+#            self.texte.SetBackgroundColour(("pink"))
         self.Parent.OnPathModified(self.lien)
         
         
@@ -5855,9 +5925,9 @@ class PopupInfoSysteme(PopupInfo):
         if lien.type == "":
             self.ctrlLien.Show(False)
             self.titreLien.Show(False)
-            self.ctrlLien.SetToolTipString(self.lien.path)
+            self.ctrlLien.SetToolTipString(self.lien.GetDecode())
         else:
-            self.ctrlLien.SetToolTipString(self.lien.path)
+            self.ctrlLien.SetToolTipString(self.lien.GetDecode())
             if lien.type == "f":
                 self.titreLien.SetLabel(u"Fichier :")
                 self.ctrlLien.SetBitmapLabel(wx.ArtProvider_GetBitmap(wx.ART_NORMAL_FILE))
@@ -5890,7 +5960,7 @@ class PopupInfoSysteme(PopupInfo):
         
     ##########################################################################################
     def OnClick(self, evt):
-        self.lien.Afficher(self.parent.parent)
+        self.lien.Afficher(self.parent.sequence.GetPath(), self.parent.parent)
 #        if self.typeLien == "f":
 #            os.startfile(self.lien)
 #        elif self.typeLien == 'd':
@@ -6087,36 +6157,21 @@ class A_propos(wx.Dialog):
         
         self.SetSizerAndFit(sizer)
 
-#        self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
 
-#    def OnCloseWindow(self, event):
-##        evt = wx.CommandEvent(wx.EVT_TOOL.typeId, 16)
-#        self.app.tb.ToggleTool(13, False)
-##        self.app.tb.GetEventHandler().ProcessEvent(evt)
-#        event.Skip()
-    
-
- 
-
-        
-        
-
-#try:
-#  Server()
-#except:
-#  print 'Déjà en service !'
-#  sys.exit()
 
 import socket
 
 if __name__ == '__main__':
-#    pySequenceRunning()
 
     HOST, PORT = socket.gethostname(), 61955
 
     server = None
     try:
-        serveur.client(HOST, PORT, ' '.join(sys.argv))
+        if len(sys.argv) > 1:
+            arg = sys.argv[1]
+        else:
+            arg = ''
+        serveur.client(HOST, PORT, arg)
         sys.exit()
     except socket.error:
         server = serveur.start_server(HOST, PORT)

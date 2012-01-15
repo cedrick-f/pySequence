@@ -47,6 +47,8 @@ import ConfigParser
 import sys, os
 import _winreg
 
+FILE_ENCODING = sys.getfilesystemencoding()
+
 PATH = os.path.dirname(os.path.abspath(sys.argv[0]))
 #PATH = os.path.split(PATH)[0]
 os.chdir(PATH)
@@ -63,20 +65,25 @@ print "Dossier de l'application :",PATH
 try:
     regkey = _winreg.OpenKey( _winreg.HKEY_CLASSES_ROOT, 'pySequence.sequence\\DefaultIcon',0, _winreg.KEY_READ)
     (value,keytype) = _winreg.QueryValueEx(regkey , '') 
-    INSTALL_PATH = os.path.dirname(value)
+    INSTALL_PATH = os.path.dirname(value.encode(FILE_ENCODING))
 except:
-    INSTALL_PATH = None # Pas installé sur cet ordi
+    INSTALL_PATH = '' # Pas installé sur cet ordi
     
 print "Dossier d'installation :", INSTALL_PATH
-PORTABLE = INSTALL_PATH != PATH 
+PORTABLE = not(os.path.abspath(INSTALL_PATH) == os.path.abspath(PATH))
+
 
 if not PORTABLE: # Ce n'est pas une version portable qui tourne
     # On lit la clef de registre indiquant le type d'installation
     try: # Machine 32 bits
         regkey = _winreg.OpenKey(_winreg.HKEY_LOCAL_MACHINE, 'SOFTWARE\\pySequence', 0, _winreg.KEY_READ )
     except: # Machine 64 bits
-        regkey = _winreg.OpenKey(_winreg.HKEY_LOCAL_MACHINE, 'SOFTWARE\\Wow6432Node\\pySequence', 0, _winreg.KEY_READ )
+        try :
+            regkey = _winreg.OpenKey(_winreg.HKEY_LOCAL_MACHINE, 'SOFTWARE\\Wow6432Node\\pySequence', 0, _winreg.KEY_READ )
+        except:
+            PORTABLE = True # en fait, pySequence n'est pas installé !!!
     
+if not PORTABLE:
     try:
         (value,keytype) = _winreg.QueryValueEx(regkey, 'DataFolder' ) 
         APP_DATA_PATH = value
