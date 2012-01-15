@@ -22,16 +22,18 @@ class MyFrame(wx.Frame):
         self.static = wx.StaticText(panel, -1, fread, (45, 25), style=wx.ALIGN_CENTRE)
         self.Centre()
         
-        
+FILE_ENCODING = sys.getfilesystemencoding()
+
 class ThreadedTCPRequestHandler(SocketServer.BaseRequestHandler):
     def handle(self):
 #        print "ThreadedTCPRequestHandler"
         data = self.request.recv(1024)
         cur_thread = threading.currentThread()
 
-        data = unicode(data, 'cp1252')
-        data = data.split()
-        gfile = os.path.abspath(data[-1])
+#        print "data =",data
+        gfile = unicode(data, FILE_ENCODING)
+#        data = data.split()
+#        gfile = os.path.abspath(data[-1])
 #        gfile = unicode(gfile, 'cp1252')
 #        print gfile
         
