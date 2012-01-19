@@ -113,7 +113,7 @@ print "Dossier pour les données :", APP_DATA_PATH
 #  Gestion des erreurs
 #
 ####################################################################################    
-ERROR_FILE = os.path.join(APP_DATA_PATH, 'pySyLiC.exe' + '.log')
+ERROR_FILE = os.path.join(APP_DATA_PATH, 'pySequence.exe' + '.log')
 print "Fichier erreur :",ERROR_FILE
 
 import traceback
@@ -487,7 +487,7 @@ dicSavoirsEE = {"1" : [u"Projet technologique",
                                    [u"Gestion de l'information dédiée aux applications énergétiques, caractéristiques des fonctions des systèmes",
                                     u"Fonctions de communication homme-système : types et caractéristiques",
                                     u"Autour d'un point de fonctionnement donné, systèmes asservis ou régulés : - représentation fonctionnelle (schéma blocs, chaîne d'action et de retour, correcteur - grandeur réglée, réglante et pertubatrice"]],
-                          "2.3" : [u"Paramètre influent la conception",
+                          "2.3" : [u"Paramètres influant la conception",
                                     [u"Efficacité énergétique passive et active d'un système"]],
                           "2.4" : [u"Approche comportementale",
                                     {"2.4.1" : [u"Comportement énergétique des systèmes",
