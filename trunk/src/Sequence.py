@@ -12,7 +12,7 @@ Copyright (C) 2011-2012
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "1.8"
+__version__ = "1.9"
 
 
 ####################################################################################
@@ -95,6 +95,11 @@ import register
 import textwrap
 
 import serveur
+
+# Pour l'export en swf
+import tempfile
+import svg_export
+
 
 FILE_ENCODING = sys.getfilesystemencoding() #'cp1252'#
 #DEFAUT_ENCODING = sys.getdefaultencoding()
@@ -473,6 +478,7 @@ class Classe():
         
         if panelParent:
             self.panelPropriete = PanelPropriete_Classe(panelParent, self)
+            
         self.panelParent = panelParent
         self.app = app
         
@@ -505,16 +511,21 @@ class Classe():
         
         self.ci_ET = []
         brancheCI = branche.find("CentreInteret")
-        listCI = list(brancheCI)
-        listCI.sort()
-        for i,c in list(listCI):
-            self.ci_ET.append(brancheCI.get("CI"+str(i+1), ""))
+        if brancheCI != None:
+            listCI = list(brancheCI)
+            listCI.sort()
+            for i,c in list(listCI):
+                self.ci_ET.append(brancheCI.get("CI"+str(i+1), ""))
                       
         brancheEff = branche.find("Effectifs")
         for e in listeEffectifs:
             self.effectifs[e][1] = eval(brancheEff.get(e, "1"))
 #        setEffectifs(branche.get("Effectifs"), self.effectifs)
         
+        if hasattr(self, 'panelPropriete'):
+            self.panelPropriete.MiseAJour()
+        
+        self.sequence.MiseAJourTypeEnseignement()
         
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
@@ -1529,7 +1540,8 @@ class Seance(ElementDeSequence):
         """
         eff = 0
         if self.typeSeance == "R":
-            eff += self.sousSeances[0].GetEffectif()
+            for sce in self.sousSeances:
+                eff += sce.GetEffectif() #self.sousSeances[0].GetEffectif()
         elif self.typeSeance == "S":
             for sce in self.sousSeances:
                 eff += sce.GetEffectif()
@@ -2788,11 +2800,13 @@ class FenetreSequence(aui.AuiMDIChildFrame):
             self.sequence.setBranche(root)
             
         else:
-            self.sequence.setBranche(sequence)
-            
             # La classe
             classe = root.find("Classe")
             self.classe.setBranche(classe)
+            
+            self.sequence.setBranche(sequence)
+            
+            
             
 #        except:
 #            dlg = wx.MessageDialog(self, u"La séquence pédagogique\n%s\n n'a pas pu être ouverte !" %nomFichier,
@@ -2926,7 +2940,9 @@ class FenetreSequence(aui.AuiMDIChildFrame):
        
     #############################################################################
     def exporterFiche(self, event = None):
-        mesFormats = "pdf (.pdf)|*.pdf"
+        mesFormats = "pdf (.pdf)|*.pdf|" \
+                     "svg (.svg)|*.svg|" \
+                     "swf (.swf)|*.swf"
         dlg = wx.FileDialog(
             self, message=u"Enregistrer la fiche sous ...", defaultDir=self.DossierSauvegarde , 
             defaultFile = os.path.splitext(self.fichierCourant)[0]+".pdf", 
@@ -2935,14 +2951,34 @@ class FenetreSequence(aui.AuiMDIChildFrame):
         dlg.SetFilterIndex(0)
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath().encode(FILE_ENCODING)
+            ext = os.path.splitext(path)[1]
             dlg.Destroy()
-            PDFsurface = cairo.PDFSurface(path, 595, 842)
-            ctx = cairo.Context (PDFsurface)
-            ctx.scale(820, 820) 
-            draw_cairo.Draw(ctx, self.sequence)
-            self.DossierSauvegarde = os.path.split(path)[0]
-            PDFsurface.finish()
-            os.startfile(path)
+            print ext
+            if ext == ".pdf":
+                PDFsurface = cairo.PDFSurface(path, 595, 842)
+                ctx = cairo.Context (PDFsurface)
+                ctx.scale(820, 820) 
+                draw_cairo.Draw(ctx, self.sequence)
+                self.DossierSauvegarde = os.path.split(path)[0]
+                PDFsurface.finish()
+                os.startfile(path)
+            elif ext == ".svg":
+                SVGsurface = cairo.SVGSurface(path, 595, 842)
+                ctx = cairo.Context (SVGsurface)
+                ctx.scale(820, 820) 
+                draw_cairo.Draw(ctx, self.sequence)
+                self.DossierSauvegarde = os.path.split(path)[0]
+                SVGsurface.finish()
+#                os.startfile(path)
+#            elif ext == ".swf":
+#                fichierTempo = tempfile.NamedTemporaryFile(delete=False)
+#                SVGsurface = cairo.SVGSurface(fichierTempo, 595, 842)
+#                ctx = cairo.Context (SVGsurface)
+#                ctx.scale(820, 820) 
+#                draw_cairo.Draw(ctx, self.sequence)
+#                self.DossierSauvegarde = os.path.split(path)[0]
+#                SVGsurface.finish()
+#                svg_export.saveSWF(fichierTempo, path)
         else:
             dlg.Destroy()
         return
@@ -3312,7 +3348,7 @@ class PanelPropriete_Classe(PanelPropriete):
     def __init__(self, parent, classe):
         PanelPropriete.__init__(self, parent)
         self.classe = classe
-        
+        self.pasVerrouille = True
         #
         # Type d'enseignement
         #
@@ -3328,7 +3364,7 @@ class PanelPropriete_Classe(PanelPropriete):
         sbs0.Add(cb, flag = wx.EXPAND|wx.ALL, border = 5)
         self.Bind(wx.EVT_COMBOBOX, self.EvtComboBox, cb)
         self.sizer.Add(sbs0, (0,0), flag = wx.EXPAND|wx.ALL)
-        
+        self.cb_type = cb
         
         #
         # Centres d'intérêt
@@ -3357,7 +3393,7 @@ class PanelPropriete_Classe(PanelPropriete):
         sb3 = wx.StaticBox(self, -1, u"Effectifs", size = (100,-1))
         sbs3 = wx.StaticBoxSizer(sb3,wx.VERTICAL)
         varEff = {}
-#        ctrlEff = {}
+        ctrlEff = {}
         for i, eff in enumerate(listeEffectifs):
             v = Variable(classe.effectifs[eff][0],  
                          lstVal = classe.effectifs[eff][1], 
@@ -3365,12 +3401,12 @@ class PanelPropriete_Classe(PanelPropriete):
             varEff[eff] = v
             vc = VariableCtrl(self, v, coef = 1, labelMPL = False, signeEgal = False,
                               help = u"Nombre d'élèves", sizeh = 30)
-#            ctrlEff[eff] = vc
+            ctrlEff[eff] = vc
             self.Bind(EVT_VAR_CTRL, self.EvtVariableEff, vc)
             sbs3.Add(vc, flag = wx.ALL|wx.ALIGN_RIGHT, border = 1)
         self.sizer.Add(sbs3, (1,0), flag = wx.EXPAND|wx.ALL|wx.ALIGN_RIGHT)
         self.varEff = varEff
-#        self.ctrlEff = ctrlEff
+        self.ctrlEff = ctrlEff
 #        self.sizer.AddGrowableCol(0)
         self.sizer.AddGrowableCol(1)
         
@@ -3385,17 +3421,29 @@ class PanelPropriete_Classe(PanelPropriete):
 #        print event.GetEventObject().GetValue()
         self.classe.typeEnseignement = event.GetEventObject().GetValue()
             
-        if self.classe.typeEnseignement != 'ET' :
-            self.txtCi.Enable(False)
-            self.btn.Enable(False)
-        else:
-            self.txtCi.Enable(True)
-            self.btn.Enable(True)
+        self.MiseAJourType()
         
         self.classe.codeBranche.SetLabel(self.classe.typeEnseignement)
         self.classe.sequence.MiseAJourTypeEnseignement()
         self.sendEvent()
         
+        
+    ######################################################################################  
+    def MiseAJourType(self):
+        self.txtCi.Enable(self.pasVerrouille and self.classe.typeEnseignement == 'ET')
+        self.btn.Enable(self.pasVerrouille and self.classe.typeEnseignement == 'ET')
+            
+    ######################################################################################  
+    def MiseAJour(self):
+        self.MiseAJourType()
+        self.cb_type.SetSelection(self.cb_type.GetStrings().index(self.classe.typeEnseignement))
+        self.txtCi.SetValue(getTextCI(self.classe.ci_ET))
+        for eff in listeEffectifs:
+            self.varEff[eff].v[0] = self.classe.effectifs[eff][1]
+            self.ctrlEff[eff].mofifierValeursSsEvt()
+            
+    
+            
     ######################################################################################  
     def EvtTxtCI(self, event):
         self.classe.ci_ET =  event.GetString()
@@ -3435,8 +3483,12 @@ class PanelPropriete_Classe(PanelPropriete):
         
     ######################################################################################  
     def Verrouiller(self, etat):
-        for c in self.GetChildren():
-            self.Enable(etat)
+        self.cb_type.Enable(etat)
+        self.txtCi.Enable(etat and (self.classe.typeEnseignement == 'ET'))
+        self.btn.Enable(etat and (self.classe.typeEnseignement == 'ET'))
+        self.pasVerrouille = etat
+#        for c in self.GetChildren():
+#            self.Enable(etat)
         
         
 ####################################################################################
