@@ -12,7 +12,7 @@ Copyright (C) 2011-2012
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "1.9"
+__version__ = "1.10"
 
 
 ####################################################################################
@@ -219,17 +219,15 @@ class Lien():
   
     ######################################################################################  
     def EvalTypeLien(self, pathseq):
-        print "EvalTypeLien"
-        
         path = self.GetAbsPath(pathseq)
         
-#        print path
         if os.path.exists(path):
             if os.path.isfile(path):
                 self.type = 'f'
+                
             elif os.path.isdir(path):
                 self.type = 'd'
-    
+
         else:
             self.type = 'u'
         
@@ -237,11 +235,14 @@ class Lien():
     ######################################################################################  
     def EvalLien(self, path, pathseq):
 #        print "EvalLien", self
-#        path = self.Encode(path)
-#        pathseq = self.Encode(pathseq)
+
+        if path == "" or path.split() == []:
+            self.path = ""
+            self.type = ""
+            return
+        
         path = self.GetAbsPath(pathseq, path)
         
-#        print "-->", path
         if os.path.exists(path):
             if os.path.isfile(path):
                 self.type = 'f'
@@ -252,12 +253,7 @@ class Lien():
         else:
             self.type = 'u'
             self.path = path
-#        print "==>", self.type
-#            print "-->",self.path
-#            return True
-#        else:
-#            return True
-              
+
               
     ######################################################################################  
     def GetAbsPath(self, pathseq, path = None):
@@ -350,6 +346,10 @@ class ElementDeSequence():
         self.tip.SetLien(self.lien)
         if hasattr(self, 'panelPropriete'): 
             self.panelPropriete.MiseAJourLien()
+        
+        if hasattr(self, 'sousSeances'):
+            for sce in self.sousSeances:
+                sce.SetLien()
           
             
     ######################################################################################  
@@ -662,7 +662,7 @@ class Sequence():
         
     ######################################################################################  
     def setBranche(self, branche, ):
-#        print "setBranche séquence", self
+#        print "setBranche séquence"
         self.intitule = branche.get("Intitule", u"")
         
         brancheCI = branche.find("CentreInteret")
@@ -682,7 +682,7 @@ class Sequence():
                     sp.setBranche(bsp)
                     self.prerequisSeance.append(sp)
         
-#        print "suite"
+        
         brancheObj = branche.find("Objectifs")
 #        self.obj = []
 #        for obj in list(brancheObj):
@@ -691,24 +691,23 @@ class Sequence():
 #            self.obj.append(comp)
         self.obj["C"].setBranche(list(brancheObj)[0])
         self.obj["S"].setBranche(list(brancheObj)[1])
-        
         brancheSys = branche.find("Systemes")
         self.systemes = []
         for sy in list(brancheSys):
             systeme = Systeme(self, self.panelParent)
             systeme.setBranche(sy)
             self.systemes.append(systeme)    
-        
+
         brancheSce = branche.find("Seances")
         self.seance = []
-        for sce in list(brancheSce):
+        for sce in list(brancheSce):         
             seance = Seance(self, self.panelParent)
             seance.setBranche(sce)
             self.seance.append(seance)
-
+        
         if hasattr(self, 'panelPropriete'):
             self.panelPropriete.MiseAJour()
-        
+
         
     ######################################################################################  
     def SetText(self, text):
@@ -740,9 +739,10 @@ class Sequence():
     def SetLiens(self):
         for sce in self.seance:
             sce.SetLien()    
-            
+
         for sy in self.systemes:
             sy.SetLien()  
+
         
     ######################################################################################  
     def VerifPb(self):
@@ -945,11 +945,13 @@ class Sequence():
         
         
     ######################################################################################  
-    def reconstruireBrancheSeances(self):
+    def reconstruireBrancheSeances(self, b1, b2):
         self.arbre.DeleteChildren(self.brancheSce)
         for sce in self.seance:
             sce.ConstruireArbre(self.arbre, self.brancheSce) 
-            
+        self.arbre.Expand(b1.branche)
+        self.arbre.Expand(b2.branche)
+        
     ######################################################################################  
     def AfficherLien(self, item):
         data = self.arbre.GetItemPyData(item)
@@ -1482,14 +1484,14 @@ class Seance(ElementDeSequence):
         
     ######################################################################################  
     def setBranche(self, branche):
-#        print "setBranche séance", self
+#        print "setBranche séance"
         self.ordre = eval(branche.tag[6:])
         
         self.intitule  = branche.get("Intitule", "")
         self.typeSeance = branche.get("Type", "C")
         
         self.lien.setBranche(branche, self.GetPath())
-#        print self.lien
+#        print "Lien séance", self.typeSeance, self.ordre,":", self.lien
 #        self.SetLien()
         
         if self.typeSeance in ["R", "S"]:
@@ -1499,6 +1501,7 @@ class Seance(ElementDeSequence):
                 self.sousSeances.append(seance)
                 seance.setBranche(sce)
             self.duree.v[0] = self.GetDuree()
+            
         elif self.typeSeance in ["AP", "ED", "P"]:   
             self.effectif = branche.get("Effectif", "C")
             self.demarche = branche.get("Demarche", "I")
@@ -1527,7 +1530,8 @@ class Seance(ElementDeSequence):
         if hasattr(self, 'panelPropriete'):
             self.panelPropriete.ConstruireListeSystemes()
             self.panelPropriete.MiseAJour()
-#        print self
+        
+
         
     ######################################################################################  
     def GetEffectif(self):
@@ -2804,9 +2808,7 @@ class FenetreSequence(aui.AuiMDIChildFrame):
             classe = root.find("Classe")
             self.classe.setBranche(classe)
             
-            self.sequence.setBranche(sequence)
-            
-            
+            self.sequence.setBranche(sequence)  
             
 #        except:
 #            dlg = wx.MessageDialog(self, u"La séquence pédagogique\n%s\n n'a pas pu être ouverte !" %nomFichier,
@@ -2818,19 +2820,19 @@ class FenetreSequence(aui.AuiMDIChildFrame):
 #            dlg.Destroy()
 #            fichier.close()
 #            return
-        
-        
+
         self.arbreSeq.DeleteAllItems()
         root = self.arbreSeq.AddRoot("")
         self.classe.ConstruireArbre(self.arbreSeq, root)
         self.sequence.ConstruireArbre(self.arbreSeq, root)
+        
         self.sequence.SetCodes()
+        
         self.sequence.SetLiens()
         self.sequence.VerifPb()
         self.sequence.VerrouillerClasse()
         self.arbreSeq.SelectItem(self.classe.branche)
-#        print self.sequence
-        
+
         
 #        self.arbreSeq.RefreshSubtree(root)
 #        
@@ -2847,8 +2849,6 @@ class FenetreSequence(aui.AuiMDIChildFrame):
 #        self.definirNomFichierCourant(nomFichier)
         if redessiner:
             wx.CallAfter(self.ficheSeq.Redessiner)
-        
-        
         
         
         
@@ -2920,6 +2920,7 @@ class FenetreSequence(aui.AuiMDIChildFrame):
     def MarquerFichierCourantModifie(self, modif = True):
         self.fichierCourantModifie = modif
         self.SetTitre(modif)
+        print "modif !"
         
         
     #############################################################################
@@ -3275,7 +3276,7 @@ class PanelPropriete(scrolled.ScrolledPanel):
        
     #########################################################################################################
     def sendEvent(self, seq = None):
-#        print "sendEvent", seq
+        print "sendEvent", seq
         evt = SeqEvent(myEVT_SEQ_MODIFIED, self.GetId())
         if seq != None:
             evt.SetSequence(seq)
@@ -3437,7 +3438,7 @@ class PanelPropriete_Classe(PanelPropriete):
     def MiseAJour(self):
         self.MiseAJourType()
         self.cb_type.SetSelection(self.cb_type.GetStrings().index(self.classe.typeEnseignement))
-        self.txtCi.SetValue(getTextCI(self.classe.ci_ET))
+        self.txtCi.ChangeValue(getTextCI(self.classe.ci_ET))
         for eff in listeEffectifs:
             self.varEff[eff].v[0] = self.classe.effectifs[eff][1]
             self.ctrlEff[eff].mofifierValeursSsEvt()
@@ -4320,10 +4321,12 @@ class PanelPropriete_Seance(PanelPropriete):
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
         self.AdapterAuType()
+        
         if self.seance.typeSeance != "":
             self.cbType.SetSelection(self.cbType.GetStrings().index(TypesSeance[self.seance.typeSeance]))
         self.textctrl.ChangeValue(self.seance.intitule)
         self.vcDuree.mofifierValeursSsEvt()
+        
         if self.cbEff.IsShown():#self.cbEff.IsEnabled() and 
             self.cbEff.SetSelection(findEffectif(self.cbEff.GetStrings(), self.seance.effectif))
         
@@ -5255,13 +5258,14 @@ class ArbreSequence(CT.CustomTreeCtrl):
                         lstT = dataTarget.parent.seance
                     else:
                         lstT = dataTarget.parent.sousSeances
+                        if len(lstT) > 0:
+                            dataSource.duree.v[0] = lstT[0].GetDuree()
                     
                     if isinstance(dataSource.parent, Sequence):
                         lstS = dataSource.parent.seance
                     else:
                         lstS = dataSource.parent.sousSeances
-#                    print lstS
-#                    print lstT
+                        
                     s = lstS.index(dataSource)
                     t = lstT.index(dataTarget)
                     lstT[t+1:t+1] = [dataSource]
@@ -5271,7 +5275,8 @@ class ArbreSequence(CT.CustomTreeCtrl):
 #                    dataTarget.parent = p
                     p.OrdonnerSeances()
                     dataTarget.parent.OrdonnerSeances()
-                    self.sequence.reconstruireBrancheSeances()
+                    
+                    self.sequence.reconstruireBrancheSeances(dataTarget.parent, p)
                     self.panelVide.sendEvent(self.sequence) # Solution pour déclencher un "redessiner"
                 else:
                     pass
