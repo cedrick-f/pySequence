@@ -12,7 +12,7 @@ Copyright (C) 2011-2012
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "1.10"
+__version__ = "1.12"
 
 
 ####################################################################################
@@ -475,6 +475,8 @@ class Classe():
         self.ci_ET = CentresInteretsET
         
         self.effectifs = Effectifs
+        self.nbrGroupes = NbrGroupes
+        calculerEffectifs(self)
         
         if panelParent:
             self.panelPropriete = PanelPropriete_Classe(panelParent, self)
@@ -493,9 +495,11 @@ class Classe():
         classe.set("Type", self.typeEnseignement)
         
         eff = ET.SubElement(classe, "Effectifs")
-        for e in listeEffectifs:
-            eff.set(e, str(self.effectifs[e][1]))
-            
+        eff.set('eC', str(self.effectifs['C']))
+        eff.set('nG', str(self.nbrGroupes['G']))
+        eff.set('nE', str(self.nbrGroupes['E']))
+        eff.set('nP', str(self.nbrGroupes['P']))
+                      
         if self.typeEnseignement == 'ET':
             ci = ET.SubElement(classe, "CentreInteret")
             for i,c in enumerate(self.ci_ET):
@@ -517,15 +521,28 @@ class Classe():
             for i,c in list(listCI):
                 self.ci_ET.append(brancheCI.get("CI"+str(i+1), ""))
                       
+        # Ancien format : <Effectifs C="9" D="3" E="2" G="9" P="3" />
+        # Nouveau format : <Effectifs eC="9" nE="2" nG="9" nP="3" />
         brancheEff = branche.find("Effectifs")
-        for e in listeEffectifs:
-            self.effectifs[e][1] = eval(brancheEff.get(e, "1"))
-#        setEffectifs(branche.get("Effectifs"), self.effectifs)
+        
+        if brancheEff.get('eC') == None: # Ancienne version
+            print "Ancienne version"
+            self.effectifs['C'] = eval(brancheEff.get('C', "1"))
+            revCalculerEffectifs(self, eval(brancheEff.get('G', "1")), eval(brancheEff.get('E', "1")), eval(brancheEff.get('P', "1")))
+
+        else:
+            self.effectifs['C'] = eval(brancheEff.get('eC', "1"))
+            self.nbrGroupes['G'] = eval(brancheEff.get('nG', "1"))
+            self.nbrGroupes['E'] = eval(brancheEff.get('nE', "1"))
+            self.nbrGroupes['P'] = eval(brancheEff.get('nP', "1"))
+            calculerEffectifs(self)
         
         if hasattr(self, 'panelPropriete'):
             self.panelPropriete.MiseAJour()
         
         self.sequence.MiseAJourTypeEnseignement()
+        
+        
         
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
@@ -535,6 +552,25 @@ class Classe():
         self.branche = arbre.AppendItem(branche, Titres[5]+" :", wnd = self.codeBranche, data = self)#, image = self.arbre.images["Seq"])
 
 
+
+    ######################################################################################  
+    def GetEffectifNorm(self, eff):
+        """ Renvoie les effectifs des groupes sous forme normalisée
+            (portion de classe entière)
+        """
+        if eff == 'C':
+            return 1.0
+        elif eff == 'G':
+            return 1.0 / self.nbrGroupes['G']
+        elif eff == 'D':
+            return self.GetEffectifNorm('G') / 2
+        elif eff == 'E':
+            return self.GetEffectifNorm('G') / self.nbrGroupes['E']
+        elif eff == 'P':
+            return self.GetEffectifNorm('G') / self.nbrGroupes['P']
+        
+        
+        
     ######################################################################################  
     def Verrouiller(self, etat):
         if hasattr(self, 'panelPropriete'):
@@ -1536,32 +1572,17 @@ class Seance(ElementDeSequence):
     ######################################################################################  
     def GetEffectif(self):
         """ Renvoie l'effectif de la séance
-            1 = P
-            2 = E
-            4 = D
-            8 = G
-            16 = C
+            n : portion de classe
         """
         eff = 0
-        if self.typeSeance == "R":
+        if self.typeSeance in ["R", "S"]:
             for sce in self.sousSeances:
                 eff += sce.GetEffectif() #self.sousSeances[0].GetEffectif()
-        elif self.typeSeance == "S":
-            for sce in self.sousSeances:
-                eff += sce.GetEffectif()
+#        elif self.typeSeance == "S":
+#            for sce in self.sousSeances:
+#                eff += sce.GetEffectif()
         else:
-            if self.effectif == "C":
-                eff = 16
-            elif self.effectif == "G":
-                eff = 8
-            elif self.effectif == "D":
-                eff = 4
-            elif self.effectif == "E":
-                eff = 2
-            elif self.effectif == "P":
-                eff = 1
-            else:
-                eff = 0
+            eff = self.GetClasse().GetEffectifNorm(self.effectif)
             eff = eff * self.nombre.v[0]
 #        print "effectif", self, eff
         return eff
@@ -1579,7 +1600,7 @@ class Seance(ElementDeSequence):
             16 = C
         """
         if type(val) == int:
-            if self.typeSeance == "R":
+            if self.typeSeanc == "R":
                 for s in self.sousSeances:
                     s.SetEffectif(val)
 #            elif self.typeSeance == "S":
@@ -1599,7 +1620,7 @@ class Seance(ElementDeSequence):
                 else:
                     codeEff = ""
         else:
-            for k, v in Effectifs.items():
+            for k, v in NomsEffectifs.items():
                 if v[0][:2] == val[:2]: # On ne compare que les 2 premières lettres
                     codeEff = k
         self.effectif = codeEff
@@ -1624,8 +1645,10 @@ class Seance(ElementDeSequence):
 #        print "IsEffectifOk",
         ok = 0 # pas de problème
         if self.typeSeance in ["R", "S"] and len(self.sousSeances) > 0:
-            if self.GetEffectif() < 8:
+            if self.GetEffectif() < self.GetClasse().GetEffectifNorm('G'):
                 ok = 1 # Tout le groupe "effectif réduit" n'est pas occupé
+            elif self.GetEffectif() > self.GetClasse().GetEffectifNorm('G'):
+                ok = 2 # Effectif de la séance supperieur à celui du groupe "effectif réduit"    
             if self.typeSeance == "R":
                 continuer = True
                 eff = self.sousSeances[0].GetEffectif()
@@ -1638,11 +1661,9 @@ class Seance(ElementDeSequence):
                             ok = 3 # séance en rotation d'effectifs différents !!
                             continuer = False
                         i += 1
-            elif self.typeSeance == "S":
-                if self.GetEffectif() > 16:
-                    ok = 2 # Effectif de la séance supperieur à celui du groupe "effectif réduit"
+            
         elif self.typeSeance in ["AP", "ED"] and not self.EstSousSeance():
-            if self.GetEffectif() < 8:
+            if self.GetEffectif() < self.GetClasse().GetEffectifNorm('G'):
                 ok = 1 # Tout le groupe "effectif réduit" n'est pas occupé
 #        print ok
         return ok
@@ -1965,6 +1986,12 @@ class Seance(ElementDeSequence):
         else:
             sequence = self.parent
         return sequence
+    
+    
+    ######################################################################################  
+    def GetClasse(self):
+        return self.GetSequence().classe
+    
     
     ######################################################################################  
     def AfficherMenuContextuel(self, itemArbre):
@@ -3100,7 +3127,8 @@ class FicheSequence(wx.ScrolledWindow):
     def OnDClick(self, evt):
 #        print "DClick"
         item = self.OnClick(evt)
-        self.sequence.AfficherLien(item)
+        if item != None:
+            self.sequence.AfficherLien(item)
         
     #############################################################################            
     def OnRClick(self, evt):
@@ -3350,22 +3378,33 @@ class PanelPropriete_Classe(PanelPropriete):
         PanelPropriete.__init__(self, parent)
         self.classe = classe
         self.pasVerrouille = True
+        
         #
         # Type d'enseignement
         #
-        sb0 = wx.StaticBox(self, -1, u"Type d'enseignement", size = (100,-1))
-        sbs0 = wx.StaticBoxSizer(sb0,wx.VERTICAL)
+        rb = wx.RadioBox(
+                self, -1, u"Type d'enseignement", wx.DefaultPosition, (120,-1),
+                listEnseigmenent, 1, wx.RA_SPECIFY_COLS
+                )
+        rb.SetToolTip(wx.ToolTip(u"Choisir le type d'enseignement" ))
+        for i, e in enumerate(listEnseigmenent):
+            rb.SetItemToolTip(i, Enseigmenent[e])
+        self.Bind(wx.EVT_RADIOBOX, self.EvtRadioBox, rb)
         
         
-        cb = wx.ComboBox(self, -1,"", size = (40, -1), 
-                         choices = listEnseigmenent,
-                         style = wx.CB_DROPDOWN|wx.CB_READONLY )
-        cb.SetStringSelection(self.classe.typeEnseignement)
-        cb.SetToolTip(wx.ToolTip(u"Choisir le type d'enseignement" ))
-        sbs0.Add(cb, flag = wx.EXPAND|wx.ALL, border = 5)
-        self.Bind(wx.EVT_COMBOBOX, self.EvtComboBox, cb)
-        self.sizer.Add(sbs0, (0,0), flag = wx.EXPAND|wx.ALL)
-        self.cb_type = cb
+#        sb0 = wx.StaticBox(self, -1, u"Type d'enseignement", size = (100,-1))
+#        sbs0 = wx.StaticBoxSizer(sb0,wx.VERTICAL)
+#        
+#        
+#        cb = wx.ComboBox(self, -1,"", size = (40, -1), 
+#                         choices = listEnseigmenent,
+#                         style = wx.CB_DROPDOWN|wx.CB_READONLY )
+#        cb.SetStringSelection(self.classe.typeEnseignement)
+#        cb.SetToolTip(wx.ToolTip(u"Choisir le type d'enseignement" ))
+#        sbs0.Add(cb, flag = wx.EXPAND|wx.ALL, border = 5)
+#        self.Bind(wx.EVT_COMBOBOX, self.EvtComboBox, cb)
+        self.sizer.Add(rb, (0,0), flag = wx.EXPAND|wx.ALL)
+        self.cb_type = rb
         
         #
         # Centres d'intérêt
@@ -3386,31 +3425,34 @@ class PanelPropriete_Classe(PanelPropriete):
         self.btn = btn
         sbs1.Add(btn, flag = wx.EXPAND|wx.ALL, border = 5)
         self.Bind(wx.EVT_BUTTON, self.SelectCI, btn)
-        self.sizer.Add(sbs1, (0,1), (2,1), flag = wx.EXPAND|wx.ALL)    
+        self.sizer.Add(sbs1, (0,2), flag = wx.EXPAND|wx.ALL)    
         
+        self.sizer.AddGrowableCol(2)
         #
         # Effectifs
         #
-        sb3 = wx.StaticBox(self, -1, u"Effectifs", size = (100,-1))
-        sbs3 = wx.StaticBoxSizer(sb3,wx.VERTICAL)
-        varEff = {}
-        ctrlEff = {}
-        for i, eff in enumerate(listeEffectifs):
-            v = Variable(classe.effectifs[eff][0],  
-                         lstVal = classe.effectifs[eff][1], 
-                         typ = VAR_ENTIER_POS, bornes = [1,40])
-            varEff[eff] = v
-            vc = VariableCtrl(self, v, coef = 1, labelMPL = False, signeEgal = False,
-                              help = u"Nombre d'élèves", sizeh = 30)
-            ctrlEff[eff] = vc
-            self.Bind(EVT_VAR_CTRL, self.EvtVariableEff, vc)
-            sbs3.Add(vc, flag = wx.ALL|wx.ALIGN_RIGHT, border = 1)
-        self.sizer.Add(sbs3, (1,0), flag = wx.EXPAND|wx.ALL|wx.ALIGN_RIGHT)
-        self.varEff = varEff
-        self.ctrlEff = ctrlEff
-#        self.sizer.AddGrowableCol(0)
-        self.sizer.AddGrowableCol(1)
+#        sb3 = wx.StaticBox(self, -1, u"Effectifs", size = (100,-1))
+#        sbs3 = wx.StaticBoxSizer(sb3,wx.VERTICAL)
+#        varEff = {}
+#        ctrlEff = {}
+#        for i, eff in enumerate(listeEffectifs):
+#            v = Variable(classe.effectifs[eff][0],  
+#                         lstVal = classe.effectifs[eff][1], 
+#                         typ = VAR_ENTIER_POS, bornes = [1,40])
+#            varEff[eff] = v
+#            vc = VariableCtrl(self, v, coef = 1, labelMPL = False, signeEgal = False,
+#                              help = u"Nombre d'élèves", sizeh = 30)
+#            ctrlEff[eff] = vc
+#            self.Bind(EVT_VAR_CTRL, self.EvtVariableEff, vc)
+#            sbs3.Add(vc, flag = wx.ALL|wx.ALIGN_RIGHT, border = 1)
+#        self.sizer.Add(sbs3, (1,0), flag = wx.EXPAND|wx.ALL|wx.ALIGN_RIGHT)
+#        self.varEff = varEff
+#        self.ctrlEff = ctrlEff
+##        self.sizer.AddGrowableCol(0)
         
+        
+        self.ec = PanelEffectifsClasse(self, classe)
+        self.sizer.Add(self.ec, (0,1), flag = wx.EXPAND|wx.ALL|wx.ALIGN_RIGHT)
     
     
     #############################################################################            
@@ -3418,9 +3460,9 @@ class PanelPropriete_Classe(PanelPropriete):
         return self.classe.sequence
         
     ######################################################################################  
-    def EvtComboBox(self, event):
+    def EvtRadioBox(self, event):
 #        print event.GetEventObject().GetValue()
-        self.classe.typeEnseignement = event.GetEventObject().GetValue()
+        self.classe.typeEnseignement = self.cb_type.GetItemLabel(event.GetInt())
             
         self.MiseAJourType()
         
@@ -3437,11 +3479,10 @@ class PanelPropriete_Classe(PanelPropriete):
     ######################################################################################  
     def MiseAJour(self):
         self.MiseAJourType()
-        self.cb_type.SetSelection(self.cb_type.GetStrings().index(self.classe.typeEnseignement))
+        self.cb_type.SetStringSelection(self.classe.typeEnseignement)
         self.txtCi.ChangeValue(getTextCI(self.classe.ci_ET))
-        for eff in listeEffectifs:
-            self.varEff[eff].v[0] = self.classe.effectifs[eff][1]
-            self.ctrlEff[eff].mofifierValeursSsEvt()
+        self.ec.MiseAJour()
+
             
     
             
@@ -3452,13 +3493,13 @@ class PanelPropriete_Classe(PanelPropriete):
             wx.CallLater(DELAY, self.sendEvent)
             self.eventAttente = True
         
-    ######################################################################################  
-    def EvtVariableEff(self, event):
-        le, leff = zip(*self.varEff.items())
-        var = event.GetVar()
-        i = leff.index(var)
-        self.classe.effectifs[le[i]][1] = var.v[0]
-        self.sendEvent()
+#    ######################################################################################  
+#    def EvtVariableEff(self, event):
+#        le, leff = zip(*self.varEff.items())
+#        var = event.GetVar()
+#        i = leff.index(var)
+#        self.classe.effectifs[le[i]][1] = var.v[0]
+#        self.sendEvent()
 
     ######################################################################################  
     def SelectCI(self, event = None):
@@ -3490,6 +3531,223 @@ class PanelPropriete_Classe(PanelPropriete):
         self.pasVerrouille = etat
 #        for c in self.GetChildren():
 #            self.Enable(etat)
+        
+
+####################################################################################
+#
+#   Classe définissant le panel de réglage des effectifs
+#
+####################################################################################     
+class PanelEffectifsClasse(wx.Panel):
+    """ Classe définissant le panel de réglage des effectifs
+    
+        Rappel :
+        listeEffectifs = ["C", "G", "D" ,"E" ,"P"]
+        NbrGroupes = {"G" : 2, # Par classe
+                      "E" : 2, # Par grp Eff réduit
+                      "P" : 4, # Par grp Eff réduit
+                      }
+                      
+    """
+    def __init__(self, parent, classe):
+        wx.Panel.__init__(self, parent, -1)
+        self.classe = classe
+        
+        #
+        # Box "Classe"
+        #
+        boxClasse = wx.StaticBox(self, -1, u"Effectifs "+NomsEffectifs['C'][0], style = wx.BORDER_RAISED)
+#        print boxClasse.GetClassDefaultAttributes()
+#        print dir(boxClasse)
+#        boxClasse.GetClassDefaultAttributes().colFg = wx.RED
+        
+        r,v,b = CouleursGroupes['C']
+        coulClasse = wx.Colour(r*255,v*255,b*255)
+        boxClasse.SetOwnForegroundColour(coulClasse)
+        
+        r,v,b = CouleursGroupes['G']
+        self.coulEffRed = wx.Colour(r*255,v*255,b*255)
+        
+        r,v,b = CouleursGroupes['E']
+        self.coulEP = wx.Colour(r*255,v*255,b*255)
+        
+        r,v,b = CouleursGroupes['P']
+        self.coulAP = wx.Colour(r*255,v*255,b*255)
+        
+#        self.boxClasse = boxClasse
+        bsizerClasse = wx.StaticBoxSizer(boxClasse, wx.VERTICAL)
+        sizerClasse_h = wx.BoxSizer(wx.HORIZONTAL)
+        sizerClasse_b = wx.BoxSizer(wx.HORIZONTAL)
+        self.sizerClasse_b = sizerClasse_b
+        bsizerClasse.Add(sizerClasse_h)
+        bsizerClasse.Add(sizerClasse_b)
+        
+        # Effectif de la classe
+        self.vEffClas = Variable(u"Nombre d'élèves",  
+                            lstVal = classe.effectifs['C'], 
+                            typ = VAR_ENTIER_POS, bornes = [4,40])
+        self.cEffClas = VariableCtrl(self, self.vEffClas, coef = 1, labelMPL = False, signeEgal = False,
+                                help = u"Nombre d'élèves dans la classe entière", sizeh = 30, color = coulClasse)
+        self.Bind(EVT_VAR_CTRL, self.EvtVariableEff, self.cEffClas)
+        sizerClasse_h.Add(self.cEffClas, 0, wx.TOP|wx.BOTTOM|wx.LEFT, 5)
+        
+        # Nombre de groupes à effectif réduits
+        self.vNbERed = Variable(u"Nbr de groupes\nà effectif réduit",  
+                                lstVal = classe.nbrGroupes['G'], 
+                                typ = VAR_ENTIER_POS, bornes = [1,3])
+        self.cNbERed = VariableCtrl(self, self.vNbERed, coef = 1, labelMPL = False, signeEgal = False,
+                                    help = u"Nombre de groupes à effectif réduit dans la classe", sizeh = 20, color = self.coulEffRed)
+        self.Bind(EVT_VAR_CTRL, self.EvtVariableEff, self.cNbERed)
+        sizerClasse_h.Add(self.cNbERed, 0, wx.TOP|wx.LEFT, 5)
+        
+        
+        #
+        # Boxes Effectif Réduit
+        #
+        boxEffRed = wx.StaticBox(self, -1, u"")
+        boxEffRed.SetOwnForegroundColour(self.coulEffRed)
+        self.boxEffRed = boxEffRed
+        bsizerEffRed = wx.StaticBoxSizer(boxEffRed, wx.HORIZONTAL)
+        self.sizerEffRed_g = wx.BoxSizer(wx.VERTICAL)
+        self.sizerEffRed_d = wx.BoxSizer(wx.VERTICAL)
+        bsizerEffRed.Add(self.sizerEffRed_g, flag = wx.EXPAND)
+        bsizerEffRed.Add(wx.StaticLine(self, -1, style = wx.VERTICAL), flag = wx.EXPAND)
+        bsizerEffRed.Add(self.sizerEffRed_d, flag = wx.EXPAND)
+        sizerClasse_b.Add(bsizerEffRed)
+        
+        # Nombre de groupes d'étude/projet
+        self.vNbEtPr = Variable(u"Nbr de groupes\n\"Etudes et Projets\"",  
+                            lstVal = classe.nbrGroupes['E'], 
+                            typ = VAR_ENTIER_POS, bornes = [1,5])
+        self.cNbEtPr = VariableCtrl(self, self.vNbEtPr, coef = 1, labelMPL = False, signeEgal = False,
+                                help = u"Nombre de groupes d'étude/projet par groupe à effectif réduit", sizeh = 20, color = self.coulEP)
+        self.Bind(EVT_VAR_CTRL, self.EvtVariableEff, self.cNbEtPr)
+        self.sizerEffRed_g.Add(self.cNbEtPr, 0, wx.TOP|wx.BOTTOM|wx.LEFT, 3)
+        
+        self.BoxEP = wx.StaticBox(self, -1, u"", size = (30, -1))
+        self.BoxEP.SetOwnForegroundColour(self.coulEP)
+        self.BoxEP.SetMinSize((30, -1))     
+        bsizer = wx.StaticBoxSizer(self.BoxEP, wx.VERTICAL)
+        self.sizerEffRed_g.Add(bsizer, flag = wx.EXPAND|wx.LEFT|wx.RIGHT, border = 5)
+            
+        # Nombre de groupes d'activité pratique
+        self.vNbActP = Variable(u"Nbr de groupes\n\"Activités pratiques\"",  
+                            lstVal = classe.nbrGroupes['P'], 
+                            typ = VAR_ENTIER_POS, bornes = [2,10])
+        self.cNbActP = VariableCtrl(self, self.vNbActP, coef = 1, labelMPL = False, signeEgal = False,
+                                help = u"Nombre de groupes d'activité pratique par groupe à effectif réduit", sizeh = 20, color = self.coulAP)
+        self.Bind(EVT_VAR_CTRL, self.EvtVariableEff, self.cNbActP)
+        self.sizerEffRed_d.Add(self.cNbActP, 0, wx.TOP|wx.BOTTOM|wx.LEFT, 3)
+        
+        self.BoxAP = wx.StaticBox(self, -1, u"", size = (30, -1))
+        self.BoxAP.SetOwnForegroundColour(self.coulAP)
+        self.BoxAP.SetMinSize((30, -1))     
+        bsizer = wx.StaticBoxSizer(self.BoxAP, wx.VERTICAL)
+        self.sizerEffRed_d.Add(bsizer, flag = wx.EXPAND|wx.LEFT|wx.RIGHT, border = 5)
+        
+        
+        self.lstBoxEffRed = []
+        self.lstBoxEP = []
+        self.lstBoxAP = []
+        
+        self.AjouterGroupesVides()
+        
+        self.MiseAJourNbrEleve()
+
+        border = wx.BoxSizer()
+        border.Add(bsizerClasse, 1, wx.EXPAND)
+        self.SetSizer(border)
+        
+#        self.SetSizerAndFit(bsizerClasse)
+    
+    
+    def EvtVariableEff(self, event):
+        var = event.GetVar()
+        if var == self.vEffClas:
+            self.classe.effectifs['C'] = var.v[0]
+        elif var == self.vNbERed:
+            self.classe.nbrGroupes['G'] = var.v[0]
+        elif var == self.vNbEtPr:
+            self.classe.nbrGroupes['E'] = var.v[0]
+        elif var == self.vNbActP:
+            self.classe.nbrGroupes['P'] = var.v[0]
+        calculerEffectifs(self.classe)
+            
+        self.Parent.sendEvent()
+        self.AjouterGroupesVides()
+        self.MiseAJourNbrEleve()
+        
+    def AjouterGroupesVides(self):
+        return
+        for g in self.lstBoxEP:
+            self.sizerEffRed_g.Remove(g)
+        for g in self.lstBoxAP:
+            self.sizerEffRed_d.Remove(g)    
+        for g in self.lstBoxEffRed:
+            self.sizerClasse_b.Remove(g)
+        
+        self.lstBoxEffRed = []
+        self.lstBoxEP = []
+        self.lstBoxAP = []    
+        
+        for g in range(self.classe.nbrGroupes['G'] - 1):
+            box = wx.StaticBox(self, -1, u"Eff Red", size = (30, -1))
+            box.SetOwnForegroundColour(self.coulEffRed)
+            box.SetMinSize((30, -1))
+            self.lstBoxEffRed.append(box)
+            bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
+            bsizer.Add(wx.Panel(self, -1, size = (20, -1)))
+            self.sizerClasse_b.Add(bsizer, flag = wx.EXPAND)
+        
+        for g in range(self.classe.nbrGroupes['E']):
+            box = wx.StaticBox(self, -1, u"E/P", size = (30, -1))
+            box.SetOwnForegroundColour(self.coulEP)
+            box.SetMinSize((30, -1))
+            self.lstBoxEP.append(box)
+            bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
+#            bsizer.Add(wx.Panel(self, -1, size = (20, -1)))
+            self.sizerEffRed_g.Add(bsizer, flag = wx.EXPAND|wx.LEFT|wx.RIGHT, border = 5)
+            
+        
+        for g in range(self.classe.nbrGroupes['P']):
+            box = wx.StaticBox(self, -1, u"AP", size = (30, -1))
+            box.SetOwnForegroundColour(self.coulAP)
+            box.SetMinSize((30, -1))
+            self.lstBoxAP.append(box)
+            bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
+#            bsizer.Add(wx.Panel(self, -1, size = (20, -1)))
+            self.sizerEffRed_d.Add(bsizer, flag = wx.EXPAND|wx.LEFT|wx.RIGHT, border = 5)
+        
+        self.Layout()
+        
+    
+    def MiseAJourNbrEleve(self):
+        self.boxEffRed.SetLabel(strEffectifComplet(self.classe, 'G', -1))
+        t = u"groupes de "
+        self.BoxEP.SetLabel(t+strEffectif(self.classe, 'E', -1))
+        self.BoxAP.SetLabel(t+strEffectif(self.classe, 'P', -1))
+        
+        self.Refresh()
+        
+        
+    def MiseAJour(self):
+#        print "MiseAJour PanelEffClasse"
+        self.vEffClas.v[0] = self.classe.effectifs['C']
+        self.vNbERed.v[0] = self.classe.nbrGroupes['G']
+        self.vNbEtPr.v[0] = self.classe.nbrGroupes['E']
+        self.vNbActP.v[0] = self.classe.nbrGroupes['P']
+#        print self.classe.effectifs
+#        print self.classe.nbrGroupes
+        
+        self.cEffClas.mofifierValeursSsEvt()
+        self.cNbERed.mofifierValeursSsEvt()
+        self.cNbEtPr.mofifierValeursSsEvt()
+        self.cNbActP.mofifierValeursSsEvt()
+        
+        self.AjouterGroupesVides()
+        self.MiseAJourNbrEleve()
+        
+
         
         
 ####################################################################################
@@ -4284,7 +4542,7 @@ class PanelPropriete_Seance(PanelPropriete):
 #        n = self.cbEff.GetSelection()   
         self.cbEff.Clear()
         for s in listEff:
-            self.cbEff.Append(strEffectif(s))
+            self.cbEff.Append(strEffectifComplet(self.seance.GetSequence().classe, s, -1))
         self.cbEff.SetSelection(0)
         
         

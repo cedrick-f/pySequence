@@ -39,7 +39,7 @@ import cairo
 
 import ConfigParser
 
-from constantes import Effectifs, listeDemarches, Demarches, getSavoir, getCompetence, DemarchesCourt
+from constantes import Effectifs, NomsEffectifs, listeDemarches, Demarches, getSavoir, getCompetence, DemarchesCourt
 
 #
 # Données pour le tracé
@@ -376,8 +376,10 @@ def DefinirZones(seq, ctx):
     wEff = {"C" : tailleZSeances[0],
              "G" : tailleZSeances[0]*6/7,
              "D" : tailleZSeances[0]*3/7,
-             "E" : tailleZSeances[0]*Effectifs["E"][1]/Effectifs["G"][1]*6/7,
-             "P" : tailleZSeances[0]*Effectifs["P"][1]/Effectifs["G"][1]*6/7,
+             "E" : tailleZSeances[0]/seq.classe.nbrGroupes['E']*6/7,
+             "P" : tailleZSeances[0]/seq.classe.nbrGroupes['P']*6/7,
+#             "E" : tailleZSeances[0]*Effectifs["E"][1]/Effectifs["G"][1]*6/7,
+#             "P" : tailleZSeances[0]*Effectifs["P"][1]/Effectifs["G"][1]*6/7,
              }
 
     hHoraire = tailleZSeances[1] / (seq.GetHoraireTotal() + 0.25*(len(seq.seance)-1))
@@ -487,7 +489,7 @@ def Draw(ctx, seq):
         ctx.rectangle(x, y, w, h)
         ctx.stroke()
         ctx.set_source_rgb(0.6, 0.8, 0.6)
-        show_text_rect(ctx, Effectifs[e][2], x, y, w, h)
+        show_text_rect(ctx, NomsEffectifs[e][1], x, y, w, h)
         ctx.stroke()
         DrawLigneEff(ctx, x+w, y+h)
         
