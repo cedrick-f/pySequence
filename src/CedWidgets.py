@@ -450,7 +450,7 @@ class VarEvent(wx.PyCommandEvent):
 
 class VariableCtrl(wx.Panel):
     def __init__(self, parent, variable, coef = None, labelMPL = True, signeEgal = True, 
-                 slider = False, fct = None, help = "", sizeh = -1):
+                 slider = False, fct = None, help = "", sizeh = -1, color = wx.BLACK):
         wx.Panel.__init__(self, parent, -1)#, style = wx.BORDER_SIMPLE)
         
         if coef == None:
@@ -478,6 +478,7 @@ class VariableCtrl(wx.Panel):
             txtnom = wx.StaticBitmap(self, -1, mathtext_to_wxbitmap(txt, taille = FONT_SIZE_VARIABLE))
         else:
             txtnom = wx.StaticText(self, -1, txt, style = wx.ALIGN_RIGHT)
+            txtnom.SetForegroundColour(color)
         self.txtnom = txtnom
             
         if len(help) > 0:
@@ -507,9 +508,9 @@ class VariableCtrl(wx.Panel):
         self.Bind(wx.EVT_SPIN_DOWN, self.OnSpinDown, self.spin)
         
         sizer = wx.BoxSizer( wx.HORIZONTAL)
-        sizer.Add(txtnom, 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_RIGHT|wx.LEFT, 4 )
-        sizer.Add(self.text, 0, wx.ALIGN_CENTRE|wx.LEFT|wx.RIGHT, 5 )
-        sizer.Add(self.spin, 0, wx.ALIGN_CENTRE|wx.LEFT|wx.RIGHT, 5 )
+        sizer.Add(txtnom, 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_RIGHT|wx.LEFT, 3 )
+        sizer.Add(self.text, 0, wx.ALIGN_CENTRE|wx.LEFT, 4 )
+        sizer.Add(self.spin, 0, wx.ALIGN_CENTRE|wx.LEFT|wx.RIGHT, 4 )
         
 #        sizer = wx.BoxSizer(wx.VERTICAL)
 #        sizer.Add(vs, flag = wx.ALIGN_RIGHT)#|wx.EXPAND)
@@ -677,6 +678,8 @@ class VariableCtrl(wx.Panel):
 #        print val#+chr(key)
         vals = val.split()
         if len(vals) > 1 and not self.multiple:
+            valid = False
+        elif val == "" or vals == []:
             valid = False
         else:
             valid = True

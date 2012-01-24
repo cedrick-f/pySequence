@@ -752,7 +752,12 @@ DemarchesCourt = {"I" : u"Investigation",
 
 listeDemarches = ["I", "R", "P"]
 listEnseigmenent = ['ET', 'ITEC', 'AC', 'EE', 'SIN']
-listeEffectifs = ["C", "G", "D" ,"E" ,"P"]
+Enseigmenent = {'ET'   : u"Enseignement technologique transversal",
+                'ITEC' : u"Innovation technologique et éco-conception",
+                'AC'   : u"Architecture et construction",
+                'EE'   : u"Energies et environnement",
+                'SIN'  : u"Systèmes d'information et numérique"}
+
 
 ####################################################################################
 #
@@ -760,12 +765,149 @@ listeEffectifs = ["C", "G", "D" ,"E" ,"P"]
 #
 ####################################################################################
 CentresInteretsET = None
-Effectifs = {"C" : [u"Classe entière",      32, u"Classe entière"],
-             "G" : [u"Effectif réduit",     16, u"Effectif réduit"],
-             "D" : [u"Demi-groupe",         8,  u"Demi-groupe"],
-             "E" : [u"Etude et Projet",     4,  u"Etude ou Projet"],
-             "P" : [u"Activité Pratique",   2,  u"Act. Pra."],
+Effectifs = {"C" : 32,
+             "G" : None,
+             "D" : None, 
+             "E" : None, 
+             "P" : None,
              }
+
+NomsEffectifs= {"C" : [u"Classe entière",       u"Classe entière"],
+                 "G" : [u"Effectif réduit",      u"Effectif réduit"],
+                 "D" : [u"Demi-groupe",          u"Demi-groupe"],
+                 "E" : [u"Etude et Projet",      u"Etude ou Projet"],
+                 "P" : [u"Activité Pratique",    u"Act. Pra."],
+                 }
+
+
+# Tout ce qui concerne les effectifs
+listeEffectifs = ["C", "G", "D" ,"E" ,"P"]
+
+NbrGroupes = {"G" : 2, # Par classe
+              "E" : 4, # Par grp Eff réduit
+              "P" : 8, # Par grp Eff réduit
+              }
+
+CouleursGroupes = {"C" : (0.3,0.3,0.7),
+                   "G" : (0.4,0.5,0.4),
+                   "D" : (0.7,0.3,0.3),
+                   "E" : (0.3,0.5,0.5), 
+                   "P" : (0.5,0.3,0.5), 
+                   }
+
+def getTxtEffectifs():
+    """ Pour les OPTIONS :
+        Met les paramètres d'effectifs à la queue dans un string
+    """
+    return ""
+    t = u""
+    for i, eff in enumerate(listeEffectifs):
+        t += str(Effectifs[eff]) +" "
+    return t
+
+
+def setValEffectifs(txt):
+    """ Pour les OPTIONS :
+        Récupère les paramètes d'effectifs à partir d'un string
+    """
+    return
+    lst = txt.split()
+    for i, eff in enumerate(listeEffectifs):
+        Effectifs[eff] = eval(lst[i])
+
+
+
+#def setEffectifs(txt, effectifs):
+#    lst = txt.split()
+#    for i, eff in enumerate(listeEffectifs):
+#        effectifs[eff][1] = eval(lst[i])
+    
+    
+def strEffectif(classe, e, n = 0, eleve = True):
+    if e == "C":
+        return str(classe.effectifs[e])
+    else:
+        lsteff = classe.effectifs[e]
+        if type(lsteff[0]) == list:
+            lsteff = lsteff[0]
+        if n == -1:
+            mini, maxi = min(lsteff), max(lsteff)
+            if mini != maxi:
+                eff_str = str(mini) + "-" + str(maxi)
+            else:
+                eff_str = str(mini)
+            eleves = u"élèves"
+        else:
+            eff_str = str(lsteff[n])
+            if lsteff[n] == 1:
+                eleves = u"élève"
+            else:
+                eleves = u"élèves"
+        if eleve:
+            return eff_str+" "+eleves
+        else:
+            return eff_str
+
+def strEffectifComplet(classe, e, n = 0):
+#    print NomsEffectifs[e]
+    tit_eff = NomsEffectifs[e][0]
+    return tit_eff+" ("+strEffectif(classe, e, n)+")"
+
+
+def partitionne(total, ngroupe):
+    if type(total) != list:
+        d, r = divmod(total, ngroupe)
+        lst = [d] * ngroupe
+        for i in range(r):
+            lst[i] += 1
+        return lst
+    else:
+        lst = []
+        for tot in total:
+            lst.append(partitionne(tot, ngroupe))
+        return lst
+        
+#    l = []
+#    for tot in total:
+#        d, r = divmod(tot, ngroupe)
+#        lst = [d] * ngroupe
+#        for i in range(r):
+#            lst[i] += 1
+#        l.append(lst)
+#    return l
+
+def calculerEffectifs(classe):
+#    print "calculerEffectifs"
+    classe.effectifs['G'] = partitionne(classe.effectifs['C'], classe.nbrGroupes['G'])
+    classe.effectifs['D'] = partitionne(classe.effectifs['G'], 2)
+    classe.effectifs['E'] = partitionne(classe.effectifs['G'], classe.nbrGroupes['E'])
+    classe.effectifs['P'] = partitionne(classe.effectifs['G'], classe.nbrGroupes['P'])
+    
+#    print classe.effectifs
+    
+# Calcul inverse UNIQUEMENT POUR COMPATIBILITE !!
+def revCalculerEffectifs(classe, effG, effE, effP):
+    classe.nbrGroupes['G'] = classe.effectifs['C'] // effG
+    classe.nbrGroupes['E'] = effG // effE
+    classe.nbrGroupes['P'] = effG // effP
+    calculerEffectifs(classe)
+    
+
+def findEffectif(lst, eff):
+#    print "findEffectif", lst, eff
+    continuer = True
+    i = 0
+    while continuer:
+        if i > len(lst):
+            continuer = False
+        else:
+            if lst[i][:2] == NomsEffectifs[eff][0][:2]:
+                continuer = False
+            else:
+                i += 1 
+    return i
+
+
 
 def DefOptionsDefaut():
     global  CentresInteretsET
@@ -792,11 +934,11 @@ def DefOptionsDefaut():
                        ]
 
     
-    Effectifs["C"][1] = 32
-    Effectifs["G"][1] = 16
-    Effectifs["D"][1] = 8
-    Effectifs["E"][1] = 4
-    Effectifs["P"][1] = 2
+#    Effectifs["C"][1] = 32
+#    Effectifs["G"][1] = 16
+#    Effectifs["D"][1] = 8
+#    Effectifs["E"][1] = 4
+#    Effectifs["P"][1] = 2
                  
     
 DefOptionsDefaut()
@@ -837,47 +979,10 @@ def getTextCI(lst):
             t += "\n"
     return t
 
-def getTxtEffectifs():
-    t = u""
-    for i, eff in enumerate(listeEffectifs):
-        t += str(Effectifs[eff][1]) +" "
-    return t
+
 
 
     
-def setValEffectifs(txt):
-    lst = txt.split()
-    for i, eff in enumerate(listeEffectifs):
-        Effectifs[eff][1] = eval(lst[i])
-#    print Effectifs
-
-def setEffectifs(txt, effectifs):
-    lst = txt.split()
-    for i, eff in enumerate(listeEffectifs):
-        effectifs[eff][1] = eval(lst[i])
-    
-    
-def strEffectif(e):
-    eff = Effectifs[e]
-    if eff[1] == 1:
-        eleves = u"élève"
-    else:
-        eleves = u"élèves"
-    return eff[0]+" ("+str(eff[1])+" "+eleves+")"
-
-def findEffectif(lst, eff):
-#    print "findEffectif", lst, eff
-    continuer = True
-    i = 0
-    while continuer:
-        if i > len(lst):
-            continuer = False
-        else:
-            if lst[i][:2] == Effectifs[eff][0][:2]:
-                continuer = False
-            else:
-                i += 1 
-    return i
 
 
 #def ouvrirConfig():
