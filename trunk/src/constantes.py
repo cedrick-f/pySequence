@@ -499,7 +499,8 @@ dicSavoirsEE = {"1" : [u"Projet technologique",
                                                 [u"Contrôle instantané du fonctionnement du système en vue d'un maintien au plus près d'un point de fonctionnement",
                                                  u"Diagramme états - transitions pour un système évènementiel"]],
                                      "2.4.3" : [u"Validation comportementale par simulation",
-                                                [u"Loi de dcommande, paramètres du modèle de comportement, paramètres de l'environnement. Validation du comportement énergétique d'une structure par simulation. Validation du comportement du système de gestion d'une chaîne d'énergie par simulation"]],
+                                                [u"Loi de dcommande, paramètres du modèle de comportement, paramètres de l'environnement. Validation du comportement énergétique d'une structure par simulation. Validation du comportement du système de gestion d'une chaîne d'énergie par simulation"]]
+                                     }],
                             "2.5" : [u"Critères de choix de solutions",
                                      [u"Constituants matériels et logiciels associés aux fonctions techniques assurées par la chaîne d'énergie et répondant aux performances attendues. Type de système de gestion de l'énergie. Interfaces entre le système de gestion de l'énergie et la chaîne d'énergie. Capteurs. Protections contre les surintensités et contre les surcharges. Conducteurs",
                                       u"Coût global d'un système : investissement initial, maintenance, entretien, adaptation à l'usage, consommation énergétique"]]
@@ -521,8 +522,9 @@ dicSavoirsEE = {"1" : [u"Projet technologique",
                         "4.2" : [u"Sécurité",
                                  ["Techniques liées à la sécurité : notion de redondance, auto-surveillance. Prévention des risques : prévention intrinsèque, protection, information"]],
                         "4.3" : [u"Essais et réglages en vue d'assurer le fonctionnement et d'améliorer les performances",
-                                 [u"Protocole d'essais, essais et caractérisation des écarts par rapport au comportement attendu. Essais hors énergie, essais statiques en énergie, essais dynamiques. Démarche raisonnée d'identification des causes des écarts et de résolution des problèmes. Paramètres à ajuster pour un fonctionnement spécifié d'un système ou d'un constituant"]]}]
-                          }]
+                                 [u"Protocole d'essais, essais et caractérisation des écarts par rapport au comportement attendu. Essais hors énergie, essais statiques en énergie, essais dynamiques. Démarche raisonnée d'identification des causes des écarts et de résolution des problèmes. Paramètres à ajuster pour un fonctionnement spécifié d'un système ou d'un constituant"]]
+                        }]
+                          
                   }
 
 ####################################################################################
@@ -1004,6 +1006,7 @@ def getTextCI(lst):
 
 def getSavoir(seq, code, dic = None, c = None):
     if dic == None:
+#        print seq.classe.typeEnseignement
         dic = dicSavoirs[seq.classe.typeEnseignement]
     if c == None:
         c = len(code.split("."))

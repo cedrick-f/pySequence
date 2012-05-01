@@ -46,6 +46,9 @@ from constantes import Effectifs, NomsEffectifs, listeDemarches, Demarches, getS
 #
 
 minFont = 0.008
+maxFont = 0.1
+
+font_family = "arial"
 
 # Marges
 margeX = 0.04
@@ -404,16 +407,43 @@ def Draw(ctx, seq):
 #        print "Draw séquence"
     InitCurseur()
     
-    DefinirZones(seq, ctx)
     
     #
     # Options générales
     #
     options = ctx.get_font_options()
     options.set_antialias(cairo.ANTIALIAS_SUBPIXEL)
-    options.set_hint_style(cairo.HINT_STYLE_NONE)
-    options.set_hint_metrics(cairo.HINT_METRICS_OFF)
+    options.set_hint_style(cairo.HINT_STYLE_NONE)#cairo.HINT_STYLE_FULL)#
+    options.set_hint_metrics(cairo.HINT_METRICS_OFF)#cairo.HINT_METRICS_ON)#
     ctx.set_font_options(options)
+    
+
+    print ctx.get_font_face().get_family()
+#    surf = ctx.get_target()
+##    print dir(surf)
+##    options = surf.get_font_options()
+##    options.set_hint_metrics(cairo.HINT_METRICS_OFF)
+##    options.set_hint_style(cairo.HINT_STYLE_NONE)
+##    options.set_antialias(cairo.ANTIALIAS_SUBPIXEL)
+##    surf.set_font_options(options)
+#    
+#    
+#    ctx.set_antialias(cairo.ANTIALIAS_SUBPIXEL)
+#    print ctx.get_antialias()
+#    
+#    
+#    print surf
+#    print surf.get_font_options().get_hint_metrics()
+#    print ctx.get_font_options().get_hint_metrics()
+#    print cairo.HINT_METRICS_OFF
+##    testRapport(ctx)
+#    
+#    ff = ctx.get_font_face()
+#    
+#    font = cairo.ScaledFont(ff, ctx.get_font_matrix(), ctx.get_matrix(), options)
+#    ctx.set_font_face(font)
+    
+    DefinirZones(seq, ctx)
     
     #
     # Flèche
@@ -429,8 +459,8 @@ def Draw(ctx, seq):
     #
     ctx.set_font_size(0.05)
 #    ctx.set_source_rgb(0.1,0.1,0.1)
-    ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
-                                      cairo.FONT_WEIGHT_BOLD)
+    ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+                                       cairo.FONT_WEIGHT_BOLD)
 #    show_text_rect(ctx, seq.classe.typeEnseignement, posCI[0], posCI[1] - 0.08, tailleCI[0], tailleCI[1], ha = 'c', wrap = False, max_font = 0.04)
     
     xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(seq.classe.typeEnseignement)
@@ -446,11 +476,11 @@ def Draw(ctx, seq):
     # Durée de la séquence
     #
     ctx.set_source_rgb(0.5,0.8,0.8)
-    ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
-                              cairo.FONT_WEIGHT_BOLD)
+    ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+                                       cairo.FONT_WEIGHT_BOLD)
     show_text_rect(ctx, getHoraireTxt(seq.GetDuree()), 
-                   posZDeroul[0]-0.01, posZDemarche[1] + tailleZDemarche[1] - 0.015, 
-                   0.1, 0.015, ha = 'g', b = 0)
+                   (posZDeroul[0]-0.01, posZDemarche[1] + tailleZDemarche[1] - 0.015, 
+                   0.1, 0.015), ha = 'g', b = 0)
     
     
     #
@@ -459,7 +489,7 @@ def Draw(ctx, seq):
 #    print posComm[1], 
     if tailleComm[1] > 0:
         ctx.set_source_rgb(0.1,0.1,0.1)
-        ctx.select_font_face ("Sans", cairo.FONT_SLANT_ITALIC,
+        ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
                                           cairo.FONT_WEIGHT_NORMAL)
         ctx.set_font_size(fontIntComm)
         _x, _y = posComm
@@ -489,7 +519,7 @@ def Draw(ctx, seq):
         ctx.rectangle(x, y, w, h)
         ctx.stroke()
         ctx.set_source_rgb(0.6, 0.8, 0.6)
-        show_text_rect(ctx, NomsEffectifs[e][1], x, y, w, h)
+        show_text_rect(ctx, NomsEffectifs[e][1], (x, y, w, h))
         ctx.stroke()
         DrawLigneEff(ctx, x+w, y+h)
         
@@ -507,11 +537,11 @@ def Draw(ctx, seq):
     #
     x, y = posIntitule
     w, h = tailleIntitule
-    ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+    ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                           cairo.FONT_WEIGHT_BOLD)
     ctx.set_source_rgb(0, 0, 0)
     if len(seq.intitule) > 0:
-        show_text_rect(ctx, seq.intitule, x, y, w, h)
+        show_text_rect(ctx, seq.intitule, (x, y, w, h))
     ctx.set_line_width(0.005)
     ctx.set_source_rgb(BcoulIntitule[0], BcoulIntitule[1], BcoulIntitule[2])
     ctx.rectangle(x, y, w, h)
@@ -540,7 +570,7 @@ def Draw(ctx, seq):
     ctx.stroke ()
     
     # Titre
-    ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+    ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                           cairo.FONT_WEIGHT_BOLD)
     ctx.set_font_size(fontPre)
     xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(u"Prérequis")
@@ -561,7 +591,8 @@ def Draw(ctx, seq):
     for c in seq.prerequisSeance:
         lstTexteS.append(c.GetNomFichier())    
         
-    hl = rect_height-height-0.015   
+    hl = rect_height-height-0.01   
+    yc = yc + 0.004
     if len(lstTexte) + len(lstTexteS) > 0:
         e = 0.008
         hC = hl*len(lstTexte)/(len(lstTexte) + len(lstTexteS))
@@ -572,7 +603,7 @@ def Draw(ctx, seq):
         for i, c in enumerate(seq.prerequisSeance): 
             c.rect = [lstRect[i]]
     else:
-        show_text_rect(ctx, u"Aucun", x0, yc, rect_width, hl, max_font = 0.015)
+        show_text_rect(ctx, u"Aucun", (x0, yc, rect_width, hl), fontsize = (-1, 0.015))
     
     
         
@@ -581,16 +612,16 @@ def Draw(ctx, seq):
 #        e = 0.01
 #        for i, t in enumerate(seq.prerequis.savoirs):
 #            hl = (rect_height-height-0.015)/no
-#            ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+#            ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
 #                                  cairo.FONT_WEIGHT_BOLD)
 #            show_text_rect(ctx, t.split()[0], x0+e, yc+i*hl, 
 #                           rect_width/6-e, hl, b = 0.2, ha = 'g', max_font = 0.012, wrap = False)
-#            ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+#            ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
 #                                  cairo.FONT_WEIGHT_NORMAL)
 #            show_text_rect(ctx, getSavoir(t.split()[0]), x0+rect_width/6, yc+i*hl, 
 #                           rect_width*5/6-e, hl, b = 0.2, ha = 'g')
 #
-#            ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+#            ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
 #                                  cairo.FONT_WEIGHT_BOLD)
     
     #
@@ -607,7 +638,7 @@ def Draw(ctx, seq):
     ctx.stroke ()
     
     # Titre
-    ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+    ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                           cairo.FONT_WEIGHT_BOLD)
     ctx.set_font_size(fontObj)
     xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(u"Objectifs")
@@ -647,18 +678,18 @@ def Draw(ctx, seq):
 #        for i, t in enumerate(lstCS):
 #            if hasattr(t, 'code'):
 #                txtObj += " " + t.code
-#                ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+#                ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
 #                                      cairo.FONT_WEIGHT_BOLD)
 #                show_text_rect(ctx, t.code, x0+e, yc+i*hl, 
 #                               rect_width/5-e, hl, max_font = 0.012, ha = 'g', wrap = False)
-#                ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+#                ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
 #                                      cairo.FONT_WEIGHT_NORMAL)
 #                show_text_rect(ctx, Competences[t.code], x0+rect_width/5, yc+i*hl, 
 #                               rect_width*4/5-e, hl, ha = 'g')
 #        
 ##            x, y = posObj
 ##            w, h = tailleObj
-#                ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+#                ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
 #                                      cairo.FONT_WEIGHT_BOLD)
 #        
 
@@ -682,7 +713,7 @@ def Draw(ctx, seq):
     for s in seq.systemes:
         nomsSystemes.append(s.nom)
     if nomsSystemes != []:
-        ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                               cairo.FONT_WEIGHT_NORMAL)
         ctx.set_source_rgb(0, 0, 0)
         ctx.set_line_width(0.001)
@@ -713,7 +744,7 @@ def Draw(ctx, seq):
     #
     #  Tableau des démarches
     #    
-    ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+    ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                           cairo.FONT_WEIGHT_NORMAL)
     ctx.set_source_rgb(0, 0, 0)
     ctx.set_line_width(0.001)
@@ -739,7 +770,7 @@ def Draw(ctx, seq):
     nomsSeances, intSeances = seq.GetIntituleSeances()
 #        print nomsSeances
     if nomsSeances != []:
-        ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                               cairo.FONT_WEIGHT_NORMAL)
         ctx.set_source_rgb(0, 0, 0)
         ctx.set_line_width(0.001)
@@ -789,7 +820,7 @@ def Draw_CI(ctx, CI):
     # code
     #
     if CI.num != None:
-        ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                               cairo.FONT_WEIGHT_BOLD)
         ctx.set_font_size(0.02)
         xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(CI.code)
@@ -802,9 +833,9 @@ def Draw_CI(ctx, CI):
         #
         # intitulé
         #
-        ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                               cairo.FONT_WEIGHT_NORMAL)
-        show_text_rect(ctx, CI.CI, x0, yc, rect_width, rect_height - height-0.01)
+        show_text_rect(ctx, CI.CI, (x0, yc, rect_width, rect_height - height-0.01))
 
 
 
@@ -831,23 +862,23 @@ class Cadre():
             alpha = 1
             
         self.ctx.set_line_width(0.002)
-        rectangle_plein(self.ctx, x, y, self.w, self.h, 
+        print rectangle_plein(self.ctx, x, y, self.w, self.h, 
                         BCoulSeance[self.seance.typeSeance], ICoulSeance[self.seance.typeSeance], alpha)
         
         if not self.filigrane and hasattr(self.seance, 'code'):
-            self.ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+            self.ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                   cairo.FONT_WEIGHT_BOLD)
             self.ctx.set_source_rgb (0,0,0)
             hc = max(hHoraire/4, 0.01)
-            show_text_rect(self.ctx, self.seance.code, x, y, wEff["P"], hc, ha = 'g', 
-                           wrap = False, min_font = minFont, b = 0.2)
+            show_text_rect(self.ctx, self.seance.code, (x, y, wEff["P"], hc), ha = 'g', 
+                           wrap = False, fontsize = (minFont, -1), b = 0.2)
         
         if not self.filigrane and self.seance.intituleDansDeroul and self.seance.intitule != "":
-            self.ctx.select_font_face ("Sans", cairo.FONT_SLANT_ITALIC,
+            self.ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
                                   cairo.FONT_WEIGHT_NORMAL)
             self.ctx.set_source_rgb (0,0,0)
-            show_text_rect(self.ctx, self.seance.intitule, x, y + hc, 
-                           self.w, self.h-hc, ha = 'g', min_font = minFont)
+            show_text_rect(self.ctx, self.seance.intitule, (x, y + hc, 
+                           self.w, self.h-hc), ha = 'g', fontsize = (minFont, -1))
             
         if not self.filigrane and self.signEgal:
             dx = wEff["P"]/4
@@ -902,10 +933,11 @@ def DrawSeanceRacine(ctx, seance):
     fleche_verticale(ctx, posZDeroul[0], cursY, 
                      h, 0.02, (0.9,0.8,0.8,0.5))
     ctx.set_source_rgb(0.5,0.8,0.8)
-    ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+    ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                               cairo.FONT_WEIGHT_BOLD)
-    show_text_rect(ctx, getHoraireTxt(seance.GetDuree()), posZDeroul[0]-0.01, cursY, 
-                   0.02, h, orient = 'v', b = 0.2)
+    show_text_rect(ctx, getHoraireTxt(seance.GetDuree()), 
+                   (posZDeroul[0]-0.01, cursY, 0.02, h), 
+                   orient = 'v', b = 0.2)
         
     #
     # Fonction pour obtenir les lignes de séances du bloc
@@ -993,7 +1025,7 @@ def DrawSeanceRacine(ctx, seance):
 #        fleche_verticale(ctx, posZDeroul[0], curseur[1], 
 #                         h, 0.02, (0.9,0.8,0.8,0.5))
 #        ctx.set_source_rgb(0.5,0.8,0.8)
-#        ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+#        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
 #                                  cairo.FONT_WEIGHT_BOLD)
 #        show_text_rect(ctx, getHoraireTxt(seance.GetDuree()), posZDeroul[0]-0.01, curseur[1], 
 #                       0.02, h, orient = 'v')
@@ -1020,13 +1052,13 @@ def DrawSeanceRacine(ctx, seance):
 #                            BCoulSeance[seance.typeSeance], ICoulSeance[seance.typeSeance], alpha)
 #            
 #            if not rotation and hasattr(seance, 'code'):
-#                ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+#                ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
 #                                      cairo.FONT_WEIGHT_BOLD)
 #                ctx.set_source_rgb (0,0,0)
 #                show_text_rect(ctx, seance.code, x+w*i, y, wEff["P"], hHoraire/4, ha = 'g', wrap = False)
 #            
 #            if not rotation and seance.intituleDansDeroul and seance.intitule != "":
-#                ctx.select_font_face ("Sans", cairo.FONT_SLANT_ITALIC,
+#                ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
 #                                      cairo.FONT_WEIGHT_NORMAL)
 #                ctx.set_source_rgb (0,0,0)
 #                show_text_rect(ctx, seance.intitule, x+w*i, y + hHoraire/4, 
@@ -1112,9 +1144,9 @@ def DrawCroisementSystemes(ctx, seance, y):
             ctx.fill_preserve ()
             ctx.set_source_rgba (0,0,0,1)
             ctx.stroke ()
-            ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+            ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                   cairo.FONT_WEIGHT_BOLD)
-            show_text_rect(ctx, str(n), x-r, y-r, 2*r, 2*r)
+            show_text_rect(ctx, str(n), (x-r, y-r, 2*r, 2*r))
             seance.rect.append((x-r, y-r, 2*r, 2*r)) 
             
 ######################################################################################  
@@ -1247,8 +1279,8 @@ def calc_h_texte(ctx, texte, w, taille, va = 'c', ha = 'c', b = 0.1, orient = 'h
    
     
     
-def show_text_rect(ctx, texte, x, y, w, h, va = 'c', ha = 'c', b = 0.4, orient = 'h', 
-                   max_font = None, min_font = None, wrap = True):
+def show_text_rect(ctx, texte, rect, va = 'c', ha = 'c', b = 0.4, orient = 'h', 
+                   fontsize = (-1, -1), wrap = True):
     """ Affiche un texte en adaptant la taille de police et sa position
         pour qu'il rentre dans le rectangle
         x, y, w, h : position et dimensions du rectangle
@@ -1258,16 +1290,27 @@ def show_text_rect(ctx, texte, x, y, w, h, va = 'c', ha = 'c', b = 0.4, orient =
         max_font : taille maxi de la font
         min_font : le texte peut être tronqué (1 ligne)
     """
-#    print "show_text_rect", texte
+    print "show_text_rect", texte
 
     if texte == "":
         return
     
+    x, y, w, h = rect
+    
+    fontsize = [fontsize[0], fontsize[1]]
+    if fontsize[0] == -1:
+        fontsize = [minFont, fontsize[1]]
+    if fontsize[1] == -1:
+        fontsize = [fontsize[0], maxFont]
+#    print "fontsize", fontsize
+    
     if orient == 'v':
         ctx.rotate(-pi/2)
-        show_text_rect(ctx, texte, -y-h, x, h, w, va, ha, b)
+        r = (-y-h, x, h, w)
+        show_text_rect(ctx, texte, r, va, ha, b, fontsize = fontsize, wrap = wrap)
         ctx.rotate(pi/2)
         return
+    
     
     #
     # "réduction" du réctangle
@@ -1277,14 +1320,14 @@ def show_text_rect(ctx, texte, x, y, w, h, va = 'c', ha = 'c', b = 0.4, orient =
     x, y = x+ecart, y+ecart
     w, h = w-2*ecart, h-2*ecart
  
-    if min_font:
-        ctx.set_font_size(min_font)
-        fascent, fdescent, fheight, fxadvance, fyadvance = ctx.font_extents()
-        hf = fascent - fdescent
-        min_font = min(min_font, min_font*h/hf)
-        ctx.set_font_size(min_font)
-        fascent, fdescent, fheight, fxadvance, fyadvance = ctx.font_extents()
-        nLignesMaxi = int(h // hf)
+#    if min_font:
+    ctx.set_font_size(fontsize[0])
+    fascent, fdescent, fheight, fxadvance, fyadvance = ctx.font_extents()
+    hf = fascent + fdescent
+    fontsize[0] = min(fontsize[0], fontsize[0]*(h/hf))#-int(b*5)))
+    ctx.set_font_size(fontsize[0])
+    fascent, fdescent, fheight, fxadvance, fyadvance = ctx.font_extents()
+    nLignesMaxi = max(1,int(h // hf))
         
     #
     # Estimation de l'encombrement du texte (pour une taille de police de 1)
@@ -1332,27 +1375,30 @@ def show_text_rect(ctx, texte, x, y, w, h, va = 'c', ha = 'c', b = 0.4, orient =
     else:
         nLignes = 1
         lt = [texte]
-        
+    
         
     #
     # Calcul de la taille de police nécessaire pour que ça rentre
     #
     maxw = 0
+#    et = "." * int(b*5)
     for t in lt:
         xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(t)
         maxw = max(maxw, width)
-    hTotale = (fascent+fdescent)*nLignes
+    hTotale = (fascent+fdescent)*(nLignes)#+int(b*5))
 #    print "hTotale", hTotale
     fontSize = min(w/maxw, h/(hTotale))
 #    print "fontSize 1", fontSize
-    if max_font != None:
-        fontSize = min(fontSize, max_font)
     
-    if min_font and fontSize < min_font:
-        show_text_rect_fix(ctx, texte, x, y, w, h, min_font, nLignesMaxi, va, ha)
+    fontSize = min(fontSize, fontsize[1])
+#    print "fontSize", fontSize
+    
+    if fontSize < fontsize[0]:
+        print "FIX"
+        show_text_rect_fix(ctx, texte, x, y, w, h, fontsize[0], nLignesMaxi, va, ha)
         return
             
-        
+#    print lt, nLignes    
     ctx.set_font_size(fontSize)
     
     # 2 ème tour
@@ -1372,7 +1418,143 @@ def show_text_rect(ctx, texte, x, y, w, h, va = 'c', ha = 'c', b = 0.4, orient =
     return fontSize
 
 
+def show_text_rect2(ctx, texte, rect, va = 'c', ha = 'c', b = 0.4, orient = 'h', 
+                   fontsize = (-1, -1), wrap = True):
+    """ Affiche un texte en adaptant la taille de police et sa position
+        pour qu'il rentre dans le rectangle
+        rect = (x, y, w, h) : position et dimensions du rectangle
+        va, ha : alignements vertical et horizontal ('h', 'c', 'b' et 'g', 'c', 'd')
+        b : écart mini du texte par rapport au bord (en fraction de caractère)
+        orient : orientation du texte ('h', 'v')
+        fontsize : taille maxi/mini de la font (-1 = auto)
+    """
+#    print "show_text_rect", texte
 
+    print "show_text_rect", texte
+    
+    if texte == "":
+        return
+    
+    x, y, w, h = rect
+    
+    fontsize = [fontsize[0], fontsize[1]]
+    if fontsize[0] == -1:
+        fontsize = [minFont, fontsize[1]]
+    if fontsize[1] == -1:
+        fontsize = [fontsize[0], 0.1]
+    
+    if orient == 'v':
+        ctx.rotate(-pi/2)
+        r = (-y-h, x, h, w)
+        show_text_rect(ctx, texte, r, va, ha, b, fontsize = fontsize, wrap = wrap)
+        ctx.rotate(pi/2)
+        return
+    
+    def ajuster_text_rect(txt, _w, _h, fsize):
+        print "   ajuster_text_rect", txt, fsize
+        
+        ctx.set_font_size(fsize)
+        fascent, fdescent, fheight, fxadvance, fyadvance = ctx.font_extents()
+        
+        dx = ctx.text_extents("a")[2] * b
+        
+        #
+        # Découpage du texte
+        #
+        continu = True
+        wr = 0
+        for l in txt.split("\n"):
+            wr = max(wr, len(l))
+        i = 0
+#        trop = False
+        while continu:
+            i += 1
+            # On fait une découpe à "wrap" ...
+            lt = []
+            for l in txt.split("\n"):
+                lt.extend(textwrap.wrap(l, wr))
+            
+            # On teste si ça rentre ...
+            maxw = 0
+            for t in lt:
+                xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(t)
+                maxw = max(maxw, width+2*dx)
+        
+            if maxw <= _w: # Ca rentre !
+                continu = False
+            else: # Ca ne rentre pas --> on coupe plus raz.
+                wr += -1
+#                if wr <= 0:
+#                    trop = True
+#                    continu == False
+        
+        #
+        # Calcul du nombre de lignes nécessaires
+        #
+        print "    ",fascent , fdescent
+        hf = fascent + fdescent
+        Nlignes = int(_h // hf)
+        rapport = hf*len(lt) / _h
+        print "    ", len(lt), "*", hf, "/", _h, "=", rapport
+        print "    ", Nlignes, fsize/hf
+        
+
+#        if rapport > 1:
+#            Nlignes = max(len(lt), Nlignes + 1)
+        #
+        # Tronquage du texte
+        #
+        tronque = False
+        if len(lt) > Nlignes:
+            tronque = True
+            dl = lt[Nlignes-1]
+            continu = True
+            while continu:
+    #            print "   ", dl
+                width = ctx.text_extents(dl+" ...")[2]
+                if width <= w:
+                    continu = False
+                else:
+                    dll = dl.split()
+                    if len(dll) > 1:
+                        dl = " ".join(dll[:-1])
+                    else:
+                        continu = False
+                    
+            lt[Nlignes-1] = dl + " ..."
+            
+        lt = lt[:Nlignes]
+    
+
+        return lt, tronque, rapport, dx, hf*b
+    
+    continuer = True
+    size = min(fontsize[1], min(w, h))
+    old_size = size
+    c = 0
+    while continuer:
+        lst_lgn, tronq, rapp, dx, dy = ajuster_text_rect(texte, w, h, size)
+        c += 1
+        if abs(rapp - 1) < 0.01 or abs(size - fontsize[0]) < 0.001 or c>10:
+            continuer = False
+        else:
+#            old_old_size = old_size
+            old_size = size
+#            size = max(fontsize[0], size/rapp)
+            size = size/sqrt(rapp)
+#            if size == fontsize[0]:
+#                continuer = False
+#            print old_old_size, old_size, size
+#            if abs(old_old_size - size) < 0.001:
+##                size = (size+old_size)/2
+#                size = min(size,old_size)
+#                continuer = False
+            
+    ctx.set_font_size(size)
+    
+    show_lignes(ctx, lst_lgn, x+dx, y+dy, w-2*dx, h-2*dy, ha, va)
+    
+    return size
 
 
 def show_text_rect_fix(ctx, texte, x, y, w, h, fontSize, Nlignes, va = 'c', ha = 'c'):
@@ -1381,7 +1563,7 @@ def show_text_rect_fix(ctx, texte, x, y, w, h, fontSize, Nlignes, va = 'c', ha =
         x, y, w, h : position et dimensions du rectangle
         va, ha : alignements vertical et horizontal ('h', 'c', 'b' et 'g', 'c', 'd')
     """
-#    print "show_text_rect_fix", fontSize, Nlignes, texte
+    print "show_text_rect_fix", fontSize, Nlignes, texte
 
     if texte == "":
         return
@@ -1417,7 +1599,7 @@ def show_text_rect_fix(ctx, texte, x, y, w, h, fontSize, Nlignes, va = 'c', ha =
 #    lt = []
 #    for l in texte.split("\n"):
 #        lt.extend(textwrap.wrap(l, wrap))
-#    print lt
+    print lt
 #    print w
     
     #
@@ -1427,7 +1609,7 @@ def show_text_rect_fix(ctx, texte, x, y, w, h, fontSize, Nlignes, va = 'c', ha =
         dl = lt[Nlignes-1]
         continuer = True
         while continuer:
-#            print "   ", dl
+            print "   ", dl
             width = ctx.text_extents(dl+" ...")[2]
             if width <= w:
                 continuer = False
@@ -1464,7 +1646,7 @@ def show_lignes(ctx, lignes, x, y, w, h, ha, va):
     #
     
 #    print "dy", dy
-    
+    print "show_lignes", lignes
     for l, t in enumerate(lignes):
 #        print "  ",t
         xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(t)
@@ -1535,7 +1717,7 @@ def tableauV(ctx, titres, x, y, w, ht, hl, nlignes = 0, va = 'c', ha = 'c', orie
         ctx.set_source_rgb (coul[0], coul[1], coul[2])
         ctx.fill_preserve ()
         ctx.set_source_rgba (_coul[0], _coul[1], _coul[2], _coul[3])
-        show_text_rect(ctx, titre, _x, y, wc, ht, va = va, ha = ha, orient = orient)
+        show_text_rect(ctx, titre, (_x, y, wc, ht), va = va, ha = ha, orient = orient)
         ctx.stroke ()
         _x += wc
     
@@ -1564,7 +1746,7 @@ def tableauH(ctx, titres, x, y, wt, wc, h, nCol = 0, va = 'c', ha = 'c', orient 
         ctx.set_source_rgb (col[0], col[1], col[2])
         ctx.fill_preserve ()
         ctx.set_source_rgba (_coul[0], _coul[1], _coul[2], _coul[3])
-        show_text_rect(ctx, titre, x, _y, wt, hc, va = va, ha = ha, orient = orient)
+        show_text_rect(ctx, titre, (x, _y, wt, hc), va = va, ha = ha, orient = orient)
         ctx.stroke ()
         _y += hc
     
@@ -1581,7 +1763,7 @@ def tableauH(ctx, titres, x, y, wt, wc, h, nCol = 0, va = 'c', ha = 'c', orient 
     _x = x+wt
     for c in contenu:
         for l in c:
-            show_text_rect(ctx, l, _x, _y, wc, hc, va = va, ha = ha, orient = orient)
+            show_text_rect(ctx, l, (_x, _y, wc, hc), va = va, ha = ha, orient = orient)
             _y += hc
         _x += wc
         _y = y
@@ -1604,7 +1786,7 @@ def tableauH_var(ctx, titres, x, y, wt, wc, hl, taille, nCol = 0, va = 'c', ha =
         ctx.set_source_rgb (col[0], col[1], col[2])
         ctx.fill_preserve ()
         ctx.set_source_rgba (_coul[0], _coul[1], _coul[2], _coul[3])
-        show_text_rect(ctx, titre, x, _y, wt, hl[i], va = va, ha = ha, orient = orient, max_font = taille)
+        show_text_rect(ctx, titre, (x, _y, wt, hl[i]), va = va, ha = ha, orient = orient, fontsize = (-1, taille))
         ctx.stroke ()
         _y += hl[i]
     
@@ -1721,35 +1903,65 @@ def liste_code_texte(ctx, lstCodes, lstTexte, x, y, w, h, e):
         wt = 0
         fs = None
         for i, t in enumerate(lstCodes):
-            ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+            ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                   cairo.FONT_WEIGHT_BOLD)
-            show_text_rect(ctx, t, x+e, y+i*hl, 
-                           w/6-e, hl, b = 0.2, ha = 'g', max_font = 0.012, wrap = False)
+            show_text_rect(ctx, t, (x+e, y+i*hl, 
+                           w/6-e, hl), b = 0.2, ha = 'g', fontsize = (-1, 0.012), wrap = False)
             width = ctx.text_extents(t)[2]
             wt = max(wt, width)
         for i, t in enumerate(lstCodes):
-            ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+            ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                   cairo.FONT_WEIGHT_NORMAL)
-            show_text_rect(ctx, lstTexte[i], x+wt+2*e, y+i*hl, 
-                           w-wt-3*e, hl, b = 0.4, ha = 'g', max_font = 0.012, min_font = minFont)
+            show_text_rect(ctx, lstTexte[i], (x+wt+2*e, y+i*hl, 
+                           w-wt-3*e, hl), b = 0.4, ha = 'g', fontsize = (-1, 0.012))
 
             lstRect.append((x+e, y+i*hl, w, hl))
     return lstRect
     
     
+def show_texte(ctx, texte, x, y):
+    glyphs = []
+    _x, _y = x, y
+    for c in texte:
+        xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(c)
+        glyphs.append((ord(c), _x, _y))
+        _x += width
+    ctx.show_glyphs(glyphs)
+    
+def drange(start, stop, step):
+    r = start
+    while r < stop:
+        yield r
+        r += step    
+    
+    
+
+
+
+def testRapport(ctx):
+    f = open("testRapport.txt", 'w')
+    for i in drange(0.008, 0.1, 0.0001):
+        ctx.set_font_size(i)
+        fascent, fdescent, fheight, fxadvance, fyadvance = ctx.font_extents()
+        f.write(str(i)+ " " + str(fascent+fdescent)+"\n")
+    f.close()
+        
+        
+        
+        
 #    no = len(lstCodes)
 #    e = 0.01
 #    for i, t in enumerate(lstCodes):
 #        hl = (rect_height-htitre-0.015)/no
-#        ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+#        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
 #                              cairo.FONT_WEIGHT_BOLD)
 #        show_text_rect(ctx, t, x0+e, ytitre+i*hl, 
 #                       rect_width/6-e, hl, b = 0.2, ha = 'g', max_font = 0.012, wrap = False)
-#        ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+#        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
 #                              cairo.FONT_WEIGHT_NORMAL)
 #        show_text_rect(ctx, lstTexte[i], x0+rect_width/6, ytitre+i*hl, 
 #                       rect_width*5/6-e, hl, b = 0.2, ha = 'g')
 #
-#        ctx.select_font_face ("Sans", cairo.FONT_SLANT_NORMAL,
+#        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
 #                              cairo.FONT_WEIGHT_BOLD)
     

@@ -12,7 +12,7 @@ Copyright (C) 2011-2012
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "1.12"
+__version__ = "1.13"
 
 
 ####################################################################################
@@ -31,7 +31,6 @@ if hasattr(sys, 'setdefaultencoding'):
         sys.setdefaultencoding(encoding)
 
 DEFAUT_ENCODING = sys.getdefaultencoding()
-#print "DEFAUT_ENCODING", DEFAUT_ENCODING
 
 
 import webbrowser
@@ -1006,7 +1005,7 @@ class Sequence():
         if itemArbre == self.branche:
             self.app.AfficherMenuContextuel([[u"Enregistrer", self.app.commandeEnregistrer],
 #                                             [u"Ouvrir", self.app.commandeOuvrir],
-                                             [u"Exporter la fiche en PDF", self.app.exporterFiche],
+                                             [u"Exporter la fiche (PDF ou SVG)", self.app.exporterFiche],
                                             ])
             
 #        [u"Séquence pédagogique",
@@ -1157,7 +1156,7 @@ class CentreInteret():
         self.parent = parent
         self.SetNum(numCI)
         
-        self.code = ""
+        self.code = "_"
         if panelParent:
             self.panelPropriete = PanelPropriete_CI(panelParent, self)
         
@@ -1175,7 +1174,7 @@ class CentreInteret():
         """
 #        print "getBranche CI",
         if hasattr(self, 'code'):
-#            print self.code
+#            print "code CI", self.code
             root = ET.Element(self.code)
             return root
         
@@ -1184,10 +1183,14 @@ class CentreInteret():
     def setBranche(self, branche):
 #        print "setBranche CI"
         code = list(branche)[0].tag
-        num = eval(code[2:])-1
-        self.SetNum(num)
-        if hasattr(self, 'panelPropriete'):
-            self.panelPropriete.MiseAJour()
+        if code == "_":
+            num = None
+            self.SetNum(num)
+        else:
+            num = eval(code[2:])-1
+            self.SetNum(num)
+            if hasattr(self, 'panelPropriete'):
+                self.panelPropriete.MiseAJour()
 
         
     ######################################################################################  
@@ -1230,7 +1233,8 @@ class CentreInteret():
         
     #############################################################################
     def MiseAJourTypeEnseignement(self):
-        self.panelPropriete.construire()
+        if hasattr(self, 'panelPropriete'):
+            self.panelPropriete.construire()
             
             
 ####################################################################################
@@ -1315,7 +1319,8 @@ class Competences():
         
     #############################################################################
     def MiseAJourTypeEnseignement(self):
-        self.panelPropriete.construire()
+        if hasattr(self, 'panelPropriete'):
+            self.panelPropriete.construire()
         
 #    ######################################################################################  
 #    def AfficherMenuContextuel(self, itemArbre):
@@ -1370,7 +1375,8 @@ class Savoirs():
          
     #############################################################################
     def MiseAJourTypeEnseignement(self):
-        self.panelPropriete.construire()
+        if hasattr(self, 'panelPropriete'):
+            self.panelPropriete.construire()
     
 #    ######################################################################################  
 #    def SetNum(self, num):
@@ -2766,7 +2772,7 @@ class FenetreSequence(aui.AuiMDIChildFrame):
         self.SetSizer(sizer)
    
 #        self.Layout()
-        print "Fin instanciation Seq"
+#        print "Fin instanciation Seq"
         wx.CallAfter(self.Layout)
         self.Layout()
 #        wx.CallAfter(self.ficheSeq.Redessiner)
@@ -2822,31 +2828,31 @@ class FenetreSequence(aui.AuiMDIChildFrame):
 #        print "ouvrir", nomFichier
         fichier = open(nomFichier,'r')
         self.definirNomFichierCourant(nomFichier)
-#        try:
-        root = ET.parse(fichier).getroot()
-        
-        # La séquence
-        sequence = root.find("Sequence")
-        if sequence == None:
-            self.sequence.setBranche(root)
+        try:
+            root = ET.parse(fichier).getroot()
             
-        else:
-            # La classe
-            classe = root.find("Classe")
-            self.classe.setBranche(classe)
+            # La séquence
+            sequence = root.find("Sequence")
+            if sequence == None:
+                self.sequence.setBranche(root)
+                
+            else:
+                # La classe
+                classe = root.find("Classe")
+                self.classe.setBranche(classe)
+                
+                self.sequence.setBranche(sequence)  
             
-            self.sequence.setBranche(sequence)  
-            
-#        except:
-#            dlg = wx.MessageDialog(self, u"La séquence pédagogique\n%s\n n'a pas pu être ouverte !" %nomFichier,
-#                               u"Erreur d'ouverture",
-#                               wx.OK | wx.ICON_WARNING
-#                               #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
-#                               )
-#            dlg.ShowModal()
-#            dlg.Destroy()
-#            fichier.close()
-#            return
+        except:
+            dlg = wx.MessageDialog(self, u"La séquence pédagogique\n%s\n n'a pas pu être ouverte !" %nomFichier,
+                               u"Erreur d'ouverture",
+                               wx.OK | wx.ICON_WARNING
+                               #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
+                               )
+            dlg.ShowModal()
+            dlg.Destroy()
+            fichier.close()
+            return
 
         self.arbreSeq.DeleteAllItems()
         root = self.arbreSeq.AddRoot("")
@@ -2938,7 +2944,7 @@ class FenetreSequence(aui.AuiMDIChildFrame):
         if self.fichierCourant == '':
             t += u" - Nouvelle séquence"
         else:
-            t += u" - "+os.path.splitext(os.path.basename(self.fichierCourant))[0]
+            t += u" - "+os.path.splitext(os.path.basename(self.fichierCourant))[0].decode(FILE_ENCODING)
         if modif : 
             t += " **"
         self.SetTitle(t)
@@ -3058,7 +3064,21 @@ class FenetreSequence(aui.AuiMDIChildFrame):
 #   Classe définissant la fenétre de la fiche de séquence
 #
 ####################################################################################
-
+#class FicheSequence(wx.Panel):
+#        def __init__(self, parent):
+#                wx.Panel.__init__(self, parent, style=wx.BORDER_SIMPLE)
+#                self.Bind(wx.EVT_PAINT, self.OnPaint)
+#                self.text = 'Hello World!'
+#
+#        def OnPaint(self, evt):
+#                #Here we do some magic WX stuff.
+#                dc = wx.PaintDC(self)
+#                width, height = self.GetClientSize()
+#                cr = wx.lib.wxcairo.ContextFromDC(dc)
+#
+#                #Here's actual Cairo drawing
+#                size = min(width, height)
+#                cr.scale(size, size)
 
 class FicheSequence(wx.ScrolledWindow):
     def __init__(self, parent, sequence):
@@ -3076,6 +3096,19 @@ class FicheSequence(wx.ScrolledWindow):
         self.Bind(wx.EVT_ENTER_WINDOW, self.OnEnter)
         self.Bind(wx.EVT_LEAVE_WINDOW, self.OnLeave)
         self.Bind(wx.EVT_MOTION, self.OnMove)
+
+#    def OnPaint(self, evt):
+#        #Here we do some magic WX stuff.
+#        dc = wx.PaintDC(self)
+#        width, height = self.GetClientSize()
+#        ctx = wx.lib.wxcairo.ContextFromDC(dc)
+#
+#        #Here's actual Cairo drawing
+#        size = min(width, height)
+#        self.normalize(ctx)
+#        draw_cairo.Draw(ctx, self.sequence)
+#        self.ctx = ctx
+##        self.Refresh()
 
     ######################################################################################################
     def OnLeave(self, evt = None):
@@ -3154,11 +3187,8 @@ class FicheSequence(wx.ScrolledWindow):
 
     #############################################################################            
     def OnPaint(self, evt):
-#        print "PAINT"
         dc = wx.BufferedPaintDC(self, self.buffer, wx.BUFFER_VIRTUAL_AREA)
 
-#        self.Redessiner()
-        
         
     #############################################################################            
     def InitBuffer(self):
@@ -3176,6 +3206,8 @@ class FicheSequence(wx.ScrolledWindow):
         dc.SetBackground(wx.Brush('white'))
         dc.Clear()
         ctx = wx.lib.wxcairo.ContextFromDC(dc)
+#        face = wx.lib.wxcairo.FontFaceFromFont(wx.FFont(10, wx.SWISS, wx.FONTFLAG_BOLD))
+#        ctx.set_font_face(face)
         dc.BeginDrawing()
         self.normalize(ctx)
         draw_cairo.Draw(ctx, self.sequence)
