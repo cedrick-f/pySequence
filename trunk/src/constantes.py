@@ -435,7 +435,7 @@ CentresInteretsEE = [u"Typologie des sytèmes énergétiques",
                        u"Production d'énergie",
                        u"Transport, stockage et distribution de l'énergie et réseaux spécifiques",
                        u"Efficacité énergétique passive",
-                       u"Efficacité énergétique passive"
+                       u"Efficacité énergétique active"
                        ]
 
 dicCompetencesEE = {"O7" : [u"Imaginer une solution, répondre à un besoin",
