@@ -99,6 +99,8 @@ import serveur
 import tempfile
 import svg_export
 
+# Pour les descriptions
+import richtext
 
 FILE_ENCODING = sys.getfilesystemencoding() #'cp1252'#
 #DEFAUT_ENCODING = sys.getdefaultencoding()
@@ -451,7 +453,7 @@ class LienSequence():
     
     ######################################################################################  
     def SetTitre(self, titre):
-        self.tip.SetCode(titre)
+        self.tip.SetMessage(titre)
         
     ######################################################################################  
     def GetNomFichier(self):
@@ -769,7 +771,17 @@ class Sequence():
         for ps in self.prerequisSeance:
             ps.SetLabel()
             
-    
+    ######################################################################################  
+    def PubDescription(self):
+        for sce in self.seance:
+            sce.PubDescription()    
+#            
+#        for sy in self.systemes:
+#            sy.SetDescription()    
+        
+
+            
+            
     ######################################################################################  
     def SetLiens(self):
         for sce in self.seance:
@@ -1172,17 +1184,20 @@ class CentreInteret():
     def getBranche(self):
         """ Renvoie la branche XML du centre d'intérét pour enregistrement
         """
-#        print "getBranche CI",
+        print "getBranche CI",
         if hasattr(self, 'code'):
-#            print "code CI", self.code
+            print "code CI", self.code
+            if self.code == "":
+                self.code = "_"
             root = ET.Element(self.code)
             return root
         
     
     ######################################################################################  
     def setBranche(self, branche):
-#        print "setBranche CI"
+        print "setBranche CI"
         code = list(branche)[0].tag
+        print code
         if code == "_":
             num = None
             self.SetNum(num)
@@ -1439,7 +1454,8 @@ class Seance(ElementDeSequence):
         self.demarche = "I"
         self.systemes = []
         self.code = u""
-        
+        self.description = u""
+#        self.description = ['<?xml version="1.0" encoding="UTF-8"?>\n<richtext version="1.0.0.0" xmlns="http://www.wxwidgets.org">\n']
         
 #        for i in range(8):
 #            self.systemes.append(Variable(u"", lstVal = 0, nomNorm = "", typ = VAR_ENTIER_POS, 
@@ -1459,7 +1475,7 @@ class Seance(ElementDeSequence):
         
         # Tip
         if self.GetApp():
-            self.tip = PopupInfoSysteme(self.GetApp(), u"Séance")
+            self.tip = PopupInfoSeance(self.GetApp(), u"Séance", self)
         
         self.AjouterListeSystemes(self.GetSequence().systemes)
         
@@ -1498,6 +1514,7 @@ class Seance(ElementDeSequence):
         root = ET.Element("Seance"+str(self.ordre))
         root.set("Type", self.typeSeance)
         root.set("Intitule", self.intitule)
+        root.set("Description", self.description)
         
         self.lien.getBranche(root)
         
@@ -1531,6 +1548,7 @@ class Seance(ElementDeSequence):
         
         self.intitule  = branche.get("Intitule", "")
         self.typeSeance = branche.get("Type", "C")
+        self.description = branche.get("Description", u"")
         
         self.lien.setBranche(branche, self.GetPath())
 #        print "Lien séance", self.typeSeance, self.ordre,":", self.lien
@@ -1593,8 +1611,12 @@ class Seance(ElementDeSequence):
 #        print "effectif", self, eff
         return eff
     
+    
+    
     def GetNbrSystemesUtil(self):
         return 
+    
+    
     ######################################################################################  
     def SetEffectif(self, val):
         """ Modifie l'effectif des Rotation et séances en Parallèle et de tous leurs enfants
@@ -1777,6 +1799,10 @@ class Seance(ElementDeSequence):
     ######################################################################################  
     def SetIntitule(self, text):           
         self.intitule = text
+        if self.intitule != "":
+            self.tip.SetMessage(u"Intitulé : "+ "\n".join(textwrap.wrap(self.intitule, 40)))
+        else:
+            self.tip.SetMessage(u"")
         
 #    ######################################################################################  
 #    def SetEffectif(self, text):   
@@ -1831,7 +1857,23 @@ class Seance(ElementDeSequence):
                 l.extend(s.GetToutesSeances())
         return l
         
-        
+    ######################################################################################  
+    def PubDescription(self):
+        self.tip.SetDescription()
+        if hasattr(self, 'panelPropriete'):
+            self.panelPropriete.rtc.Ouvrir()
+        if self.typeSeance in ["R", "S"]:
+            for sce in self.sousSeances:
+                sce.PubDescription() 
+                
+    ######################################################################################  
+    def SetDescription(self, description):   
+#        print "SetDescription", description
+        self.description = description
+        if hasattr(self, 'panelPropriete'):
+            self.panelPropriete.sendEvent()
+        self.tip.SetDescription()
+            
     ######################################################################################  
     def SetCode(self):
 #        print "SetCode",
@@ -1856,7 +1898,11 @@ class Seance(ElementDeSequence):
                 sce.SetCode()
 
         # Tip
-        self.tip.SetCode(u"Repère : "+ self.code)
+        self.tip.SetTitre(u"Séance "+ self.code)
+        if self.typeSeance != "":
+            self.tip.SetCode(u"Type : "+ TypesSeance[self.typeSeance])
+        else:
+            self.tip.SetCode(u"")
         if self.intitule != "":
             self.tip.SetMessage(u"Intitulé : "+ "\n".join(textwrap.wrap(self.intitule, 40)))
         else:
@@ -2828,31 +2874,31 @@ class FenetreSequence(aui.AuiMDIChildFrame):
 #        print "ouvrir", nomFichier
         fichier = open(nomFichier,'r')
         self.definirNomFichierCourant(nomFichier)
-        try:
-            root = ET.parse(fichier).getroot()
+#        try:
+        root = ET.parse(fichier).getroot()
+        
+        # La séquence
+        sequence = root.find("Sequence")
+        if sequence == None:
+            self.sequence.setBranche(root)
             
-            # La séquence
-            sequence = root.find("Sequence")
-            if sequence == None:
-                self.sequence.setBranche(root)
-                
-            else:
-                # La classe
-                classe = root.find("Classe")
-                self.classe.setBranche(classe)
-                
-                self.sequence.setBranche(sequence)  
+        else:
+            # La classe
+            classe = root.find("Classe")
+            self.classe.setBranche(classe)
             
-        except:
-            dlg = wx.MessageDialog(self, u"La séquence pédagogique\n%s\n n'a pas pu être ouverte !" %nomFichier,
-                               u"Erreur d'ouverture",
-                               wx.OK | wx.ICON_WARNING
-                               #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
-                               )
-            dlg.ShowModal()
-            dlg.Destroy()
-            fichier.close()
-            return
+            self.sequence.setBranche(sequence)  
+            
+#        except:
+#            dlg = wx.MessageDialog(self, u"La séquence pédagogique\n%s\n n'a pas pu être ouverte !" %nomFichier,
+#                               u"Erreur d'ouverture",
+#                               wx.OK | wx.ICON_WARNING
+#                               #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
+#                               )
+#            dlg.ShowModal()
+#            dlg.Destroy()
+#            fichier.close()
+#            return
 
         self.arbreSeq.DeleteAllItems()
         root = self.arbreSeq.AddRoot("")
@@ -2860,7 +2906,7 @@ class FenetreSequence(aui.AuiMDIChildFrame):
         self.sequence.ConstruireArbre(self.arbreSeq, root)
         
         self.sequence.SetCodes()
-        
+        self.sequence.PubDescription()
         self.sequence.SetLiens()
         self.sequence.VerifPb()
         self.sequence.VerrouillerClasse()
@@ -4222,7 +4268,8 @@ class PanelPropriete_Seance(PanelPropriete):
         textctrl = wx.TextCtrl(self, -1, u"", style=wx.TE_MULTILINE)
         bsizer.Add(textctrl, flag = wx.EXPAND)
         self.textctrl = textctrl
-        self.Bind(wx.EVT_TEXT, self.EvtTextIntitule, textctrl)
+#        self.Bind(wx.EVT_TEXT, self.EvtTextIntitule, textctrl)
+        self.textctrl.Bind(wx.EVT_KILL_FOCUS, self.EvtTextIntitule)
         
         cb = wx.CheckBox(self, -1, u"Montrer dans la zone de déroulement de la séquence")
         cb.SetValue(self.seance.intituleDansDeroul)
@@ -4231,6 +4278,8 @@ class PanelPropriete_Seance(PanelPropriete):
         self.cbInt = cb
         self.sizer.Add(bsizer, (1,0), (1,2), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 2)
 #        self.sizer.Add(textctrl, (1,1), flag = wx.EXPAND)
+        
+        
         
         #
         # Durée de la séance
@@ -4300,6 +4349,7 @@ class PanelPropriete_Seance(PanelPropriete):
         #Systèmes
         #
         self.box = wx.StaticBox(self, -1, u"Systèmes nécessaires")
+        
         self.bsizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
         self.systemeCtrl = []
         self.ConstruireListeSystemes()
@@ -4319,9 +4369,20 @@ class PanelPropriete_Seance(PanelPropriete):
         self.btnlien.Hide()
         self.Bind(wx.EVT_BUTTON, self.OnClick, self.btnlien)
         bsizer.Add(self.btnlien)
+        self.sizer.Add(bsizer, (4,5), (2, 1), flag = wx.EXPAND)
         
-        
-        self.sizer.Add(bsizer, (0,5), (6, 1), flag = wx.EXPAND)
+        #
+        # Description de la séance
+        #
+        dbox = wx.StaticBox(self, -1, u"Description")
+        dbsizer = wx.StaticBoxSizer(dbox, wx.VERTICAL)
+        bd = wx.Button(self, -1, u"Editer")
+        tc = richtext.RichTextPanel(self, self.seance)
+        dbsizer.Add(bd, flag = wx.EXPAND)
+        dbsizer.Add(tc, 1, flag = wx.EXPAND)
+        self.Bind(wx.EVT_BUTTON, self.EvtClick, bd)
+        self.sizer.Add(dbsizer, (0,5), (4, 1), flag = wx.EXPAND)
+        self.rtc = tc
         
         #
         # Mise en place
@@ -4346,11 +4407,10 @@ class PanelPropriete_Seance(PanelPropriete):
     def ConstruireListeSystemes(self):
         self.Freeze()
         if self.seance.typeSeance in ["AP", "ED", "P"]:
-            
-            self.box.Show()
             for ss in self.systemeCtrl:
                 self.bsizer.Detach(ss)
                 ss.Destroy()
+                
             self.systemeCtrl = []
             for s in self.seance.systemes:
                 v = VariableCtrl(self, s, labelMPL = False, signeEgal = False, 
@@ -4360,14 +4420,18 @@ class PanelPropriete_Seance(PanelPropriete):
                 self.systemeCtrl.append(v)
             self.bsizer.Layout()
             
+            if len(self.seance.systemes) > 0:
+                self.box.Show()
+            else:
+                self.box.Hide()
         else:
-            
-            self.box.Hide()
             for ss in self.systemeCtrl:
                 self.bsizer.Detach(ss)
                 ss.Destroy()
             self.systemeCtrl = []
-    
+            self.box.Hide()
+            
+        self.box.SetMinSize((100,-1))
         self.Layout()
         self.Thaw()
     
@@ -4387,7 +4451,15 @@ class PanelPropriete_Seance(PanelPropriete):
     def GetSequence(self):
         return self.seance.GetSequence()
     
-    
+    #############################################################################            
+    def EvtClick(self, event):
+#        print "EvtClick"
+#        print self.seance.description
+        win = richtext.RichTextFrame(u"Description de la séance "+ self.seance.code, self.seance)
+        
+        win.Show(True)
+        
+        
     #############################################################################            
     def EvtVarSysteme(self, event):
         self.sendEvent()
@@ -4399,7 +4471,7 @@ class PanelPropriete_Seance(PanelPropriete):
     
     #############################################################################            
     def EvtTextIntitule(self, event):
-        self.seance.SetIntitule(event.GetString())
+        self.seance.SetIntitule(self.textctrl.GetValue())
         if not self.eventAttente:
             wx.CallLater(DELAY, self.sendEvent)
             self.eventAttente = True
@@ -6204,7 +6276,7 @@ def img2str(img):
 # 
 #############################################################################################################
 class PopupInfo(wx.PopupWindow):
-    def __init__(self, parent, titre):
+    def __init__(self, parent, titre = ""):
         wx.PopupWindow.__init__(self, parent, wx.BORDER_SIMPLE)
         self.parent = parent
         self.sizer = wx.GridBagSizer()
@@ -6224,19 +6296,25 @@ class PopupInfo(wx.PopupWindow):
         if not ( x > 0 and y > 0 and x < w and y < h):
             self.Show(False)
         event.Skip()
-    
 
 
+    ##########################################################################################
+    def SetTitre(self, titre):
+        self.titre.SetLabel(titre)
+        
 
 class PopupInfoSysteme(PopupInfo):
     def __init__(self, parent, titre):
         PopupInfo.__init__(self, parent, titre)
         
+        
         self.code = wx.StaticText(self, -1, "")
         self.sizer.Add(self.code, (1,0), flag = wx.ALL, border = 5)
+#        
         
         self.message = wx.StaticText(self, -1, "")
         self.sizer.Add(self.message, (2,0), flag = wx.ALL, border = 5)
+        
         
         self.titreLien = wx.StaticText(self, -1, "")
         self.ctrlLien = wx.BitmapButton(self, -1, wx.NullBitmap)
@@ -6254,15 +6332,24 @@ class PopupInfoSysteme(PopupInfo):
         self.sizer.Add(self.image, (4,0), flag = wx.ALL, border = 5)
        
     
+    
     ##########################################################################################
     def SetCode(self, message):
-        self.code.SetLabel(message)
+        if message == "":
+            self.code.Show(False)
+        else:
+            self.code.SetLabel(message)
+            self.code.Show(True)
         self.Layout()
         self.Fit()
         
     ##########################################################################################
     def SetMessage(self, message):
-        self.message.SetLabel(message)
+        if message == "":
+            self.message.Show(False)
+        else:
+            self.message.SetLabel(message)
+            self.message.Show(True)
         self.Layout()
         self.Fit()
         
@@ -6308,7 +6395,79 @@ class PopupInfoSysteme(PopupInfo):
     ##########################################################################################
     def OnClick(self, evt):
         self.lien.Afficher(self.parent.sequence.GetPath(), self.parent.parent)
-#        if self.typeLien == "f":
+        
+        
+#import wx.html
+import cStringIO
+import wx.richtext as rt
+
+class PopupInfoSeance(PopupInfoSysteme):
+    def __init__(self, parent, titre, objet):
+        PopupInfoSysteme.__init__(self, parent, titre)
+        
+        self.titreDescr = wx.StaticText(self, -1, u"Description :")
+        self.rtp = richtext.RichTextPanel(self, objet, size = (300, 200))
+        self.sizer.Add(self.titreDescr, (5,0), flag = wx.ALL, border = 5)
+        self.sizer.Add(self.rtp, (6,0), flag = wx.ALL|wx.EXPAND, border = 5)
+        
+#        self.Bind(wx.EVT_CLOSE, self.OnClose)
+        
+#    def estVide(self, description):
+#        handler = rt.RichTextHTMLHandler()
+#        handler.SetFlags(rt.RICHTEXT_HANDLER_SAVE_IMAGES_TO_MEMORY)
+#        handler.SetFontSizeMapping([7,9,11,12,14,22,100])
+#        stream = cStringIO.StringIO()
+#        stream.write(description)
+#        handler.DeleteTemporaryImages()
+#        
+#        handler = rt.RichTextFileHandler()
+#        stream2 = cStringIO.StringIO()
+#        handler.SaveStream(stream, stream2)
+#        print stream
+#        print stream2
+#        
+#        return stream2 ==""
+        
+#    def OnClose(self, evt):
+##        print "OnClose richtext",
+#        handler = rt.RichTextXMLHandler()
+#        handler.SetFlags(rt.RICHTEXT_HANDLER_SAVE_IMAGES_TO_MEMORY)
+##        handler.SetFontSizeMapping([7,9,11,12,14,22,100])
+#
+#        import cStringIO
+#        stream = cStringIO.StringIO()
+#        if not handler.SaveStream(self.rtc.GetBuffer(), stream):
+#            return
+#        
+#        self.objet.description = stream.getvalue()
+#        self.objet.tip.SetDescription(self.objet.description)
+##        print self.texte
+#        
+#        evt.Skip()
+        
+    def SetDescription(self):
+        self.rtp.Ouvrir()
+#        handler = rt.RichTextHTMLHandler()
+#        handler.SetFlags(rt.RICHTEXT_HANDLER_SAVE_IMAGES_TO_MEMORY)
+#        handler.SetFontSizeMapping([7,9,11,12,14,22,100])
+#
+#        
+#        stream = cStringIO.StringIO()
+#        stream.write(description)
+#        
+#        self.html.SetPage(stream.getvalue())
+#
+#        handler.DeleteTemporaryImages()
+#        if self.html.ToText() == "":
+#            self.titreDescr.Show(False)
+#            self.html.Show(False)
+#        else:
+#            self.titreDescr.Show(True)
+#            self.html.Show(True)
+#        
+#        self.sizer.Layout()
+#        self.Fit()
+##        if self.typeLien == "f":
 #            os.startfile(self.lien)
 #        elif self.typeLien == 'd':
 #            subprocess.Popen(["explorer", self.lien])
