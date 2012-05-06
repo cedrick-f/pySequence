@@ -418,7 +418,7 @@ def Draw(ctx, seq):
     ctx.set_font_options(options)
     
 
-    print ctx.get_font_face().get_family()
+#    print ctx.get_font_face().get_family()
 #    surf = ctx.get_target()
 ##    print dir(surf)
 ##    options = surf.get_font_options()
@@ -603,7 +603,7 @@ def Draw(ctx, seq):
         for i, c in enumerate(seq.prerequisSeance): 
             c.rect = [lstRect[i]]
     else:
-        show_text_rect(ctx, u"Aucun", (x0, yc, rect_width, hl), fontsize = (-1, 0.015))
+        show_text_rect(ctx, u"Aucun", (x0, yc, rect_width, hl), fontsizeMinMax = (-1, 0.015))
     
     
         
@@ -871,14 +871,14 @@ class Cadre():
             self.ctx.set_source_rgb (0,0,0)
             hc = max(hHoraire/4, 0.01)
             show_text_rect(self.ctx, self.seance.code, (x, y, wEff["P"], hc), ha = 'g', 
-                           wrap = False, fontsize = (minFont, -1), b = 0.2)
+                           wrap = False, fontsizeMinMax = (minFont, -1), b = 0.2)
         
         if not self.filigrane and self.seance.intituleDansDeroul and self.seance.intitule != "":
             self.ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
                                   cairo.FONT_WEIGHT_NORMAL)
             self.ctx.set_source_rgb (0,0,0)
             show_text_rect(self.ctx, self.seance.intitule, (x, y + hc, 
-                           self.w, self.h-hc), ha = 'g', fontsize = (minFont, -1))
+                           self.w, self.h-hc), ha = 'g', fontsizeMinMax = (minFont, -1))
             
         if not self.filigrane and self.signEgal:
             dx = wEff["P"]/4
@@ -1280,7 +1280,7 @@ def calc_h_texte(ctx, texte, w, taille, va = 'c', ha = 'c', b = 0.1, orient = 'h
     
     
 def show_text_rect(ctx, texte, rect, va = 'c', ha = 'c', b = 0.4, orient = 'h', 
-                   fontsize = (-1, -1), wrap = True):
+                   fontsizeMinMax = (-1, -1), wrap = True):
     """ Affiche un texte en adaptant la taille de police et sa position
         pour qu'il rentre dans le rectangle
         x, y, w, h : position et dimensions du rectangle
@@ -1290,42 +1290,42 @@ def show_text_rect(ctx, texte, rect, va = 'c', ha = 'c', b = 0.4, orient = 'h',
         max_font : taille maxi de la font
         min_font : le texte peut être tronqué (1 ligne)
     """
-    print "show_text_rect", texte
+#    print "show_text_rect", texte
 
     if texte == "":
         return
     
     x, y, w, h = rect
     
-    fontsize = [fontsize[0], fontsize[1]]
-    if fontsize[0] == -1:
-        fontsize = [minFont, fontsize[1]]
-    if fontsize[1] == -1:
-        fontsize = [fontsize[0], maxFont]
-#    print "fontsize", fontsize
+    fontsizeMinMax = [fontsizeMinMax[0], fontsizeMinMax[1]]
+    if fontsizeMinMax[0] == -1:
+        fontsizeMinMax = [minFont, fontsizeMinMax[1]]
+    if fontsizeMinMax[1] == -1:
+        fontsizeMinMax = [fontsizeMinMax[0], maxFont]
+#    print "fontsizeMinMax", fontsizeMinMax
     
     if orient == 'v':
         ctx.rotate(-pi/2)
         r = (-y-h, x, h, w)
-        show_text_rect(ctx, texte, r, va, ha, b, fontsize = fontsize, wrap = wrap)
+        show_text_rect(ctx, texte, r, va, ha, b, fontsizeMinMax = fontsizeMinMax, wrap = wrap)
         ctx.rotate(pi/2)
         return
     
     
-    #
-    # "réduction" du réctangle
-    #
-    ecart = min(w*b/2, h*b/2)
+#    #
+#    # "réduction" du réctangle
+#    #
+##    ecart = min(w*b/2, h*b/2)
 #    ecartX, ecartY = w*b/2, h*b/2
-    x, y = x+ecart, y+ecart
-    w, h = w-2*ecart, h-2*ecart
+#    x, y = x+ecartX, y+ecartY
+#    w, h = w-2*ecartX, h-2*ecartY
  
 #    if min_font:
-    ctx.set_font_size(fontsize[0])
+    ctx.set_font_size(fontsizeMinMax[0])
     fascent, fdescent, fheight, fxadvance, fyadvance = ctx.font_extents()
     hf = fascent + fdescent
-    fontsize[0] = min(fontsize[0], fontsize[0]*(h/hf))#-int(b*5)))
-    ctx.set_font_size(fontsize[0])
+    fontsizeMinMax[0] = min(fontsizeMinMax[0], fontsizeMinMax[0]*(h/hf))#-int(b*5)))
+    ctx.set_font_size(fontsizeMinMax[0])
     fascent, fdescent, fheight, fxadvance, fyadvance = ctx.font_extents()
     nLignesMaxi = max(1,int(h // hf))
         
@@ -1390,12 +1390,25 @@ def show_text_rect(ctx, texte, rect, va = 'c', ha = 'c', b = 0.4, orient = 'h',
     fontSize = min(w/maxw, h/(hTotale))
 #    print "fontSize 1", fontSize
     
-    fontSize = min(fontSize, fontsize[1])
+    #
+    # "réduction" du réctangle
+    #
+    ctx.set_font_size(fontSize)
+    ecart = min(w*b/2, h*b/2)
+    ecart = min(ecart, ctx.font_extents()[2])
+#    ecart = min(w*b/2, h*b/2)
+#    ecartX, ecartY = w*b/2, h*b/2
+    x, y = x+ecart, y+ecart
+    w, h = w-2*ecart, h-2*ecart
+    fontSize = min(w/maxw, h/(hTotale))
+    
+    
+    fontSize = min(fontSize, fontsizeMinMax[1])
 #    print "fontSize", fontSize
     
-    if fontSize < fontsize[0]:
+    if fontSize < fontsizeMinMax[0]:
         print "FIX"
-        show_text_rect_fix(ctx, texte, x, y, w, h, fontsize[0], nLignesMaxi, va, ha)
+        show_text_rect_fix(ctx, texte, x, y, w, h, fontsizeMinMax[0], nLignesMaxi, va, ha)
         return
             
 #    print lt, nLignes    
@@ -1646,7 +1659,7 @@ def show_lignes(ctx, lignes, x, y, w, h, ha, va):
     #
     
 #    print "dy", dy
-    print "show_lignes", lignes
+#    print "show_lignes", lignes
     for l, t in enumerate(lignes):
 #        print "  ",t
         xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(t)
@@ -1786,7 +1799,7 @@ def tableauH_var(ctx, titres, x, y, wt, wc, hl, taille, nCol = 0, va = 'c', ha =
         ctx.set_source_rgb (col[0], col[1], col[2])
         ctx.fill_preserve ()
         ctx.set_source_rgba (_coul[0], _coul[1], _coul[2], _coul[3])
-        show_text_rect(ctx, titre, (x, _y, wt, hl[i]), va = va, ha = ha, orient = orient, fontsize = (-1, taille))
+        show_text_rect(ctx, titre, (x, _y, wt, hl[i]), va = va, ha = ha, orient = orient, fontsizeMinMax = (-1, taille))
         ctx.stroke ()
         _y += hl[i]
     
@@ -1906,14 +1919,14 @@ def liste_code_texte(ctx, lstCodes, lstTexte, x, y, w, h, e):
             ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                   cairo.FONT_WEIGHT_BOLD)
             show_text_rect(ctx, t, (x+e, y+i*hl, 
-                           w/6-e, hl), b = 0.2, ha = 'g', fontsize = (-1, 0.012), wrap = False)
+                           w/6-e, hl), b = 0.2, ha = 'g', fontsizeMinMax = (-1, 0.012), wrap = False)
             width = ctx.text_extents(t)[2]
             wt = max(wt, width)
         for i, t in enumerate(lstCodes):
             ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                   cairo.FONT_WEIGHT_NORMAL)
             show_text_rect(ctx, lstTexte[i], (x+wt+2*e, y+i*hl, 
-                           w-wt-3*e, hl), b = 0.4, ha = 'g', fontsize = (-1, 0.012))
+                           w-wt-3*e, hl), b = 0.4, ha = 'g', fontsizeMinMax = (-1, 0.012))
 
             lstRect.append((x+e, y+i*hl, w, hl))
     return lstRect
