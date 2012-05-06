@@ -12,7 +12,7 @@ Copyright (C) 2011-2012
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "1.13"
+__version__ = "1.14"
 
 
 ####################################################################################
@@ -1184,9 +1184,9 @@ class CentreInteret():
     def getBranche(self):
         """ Renvoie la branche XML du centre d'intérét pour enregistrement
         """
-        print "getBranche CI",
+#        print "getBranche CI",
         if hasattr(self, 'code'):
-            print "code CI", self.code
+#            print "code CI", self.code
             if self.code == "":
                 self.code = "_"
             root = ET.Element(self.code)
@@ -1195,9 +1195,9 @@ class CentreInteret():
     
     ######################################################################################  
     def setBranche(self, branche):
-        print "setBranche CI"
+#        print "setBranche CI"
         code = list(branche)[0].tag
-        print code
+#        print code
         if code == "_":
             num = None
             self.SetNum(num)
@@ -1869,10 +1869,11 @@ class Seance(ElementDeSequence):
     ######################################################################################  
     def SetDescription(self, description):   
 #        print "SetDescription", description
-        self.description = description
-        if hasattr(self, 'panelPropriete'):
-            self.panelPropriete.sendEvent()
-        self.tip.SetDescription()
+        if self.description != description:
+            self.description = description
+            if hasattr(self, 'panelPropriete'):
+                self.panelPropriete.sendEvent()
+            self.tip.SetDescription()
             
     ######################################################################################  
     def SetCode(self):
@@ -2874,31 +2875,31 @@ class FenetreSequence(aui.AuiMDIChildFrame):
 #        print "ouvrir", nomFichier
         fichier = open(nomFichier,'r')
         self.definirNomFichierCourant(nomFichier)
-#        try:
-        root = ET.parse(fichier).getroot()
-        
-        # La séquence
-        sequence = root.find("Sequence")
-        if sequence == None:
-            self.sequence.setBranche(root)
+        try:
+            root = ET.parse(fichier).getroot()
             
-        else:
-            # La classe
-            classe = root.find("Classe")
-            self.classe.setBranche(classe)
-            
-            self.sequence.setBranche(sequence)  
-            
-#        except:
-#            dlg = wx.MessageDialog(self, u"La séquence pédagogique\n%s\n n'a pas pu être ouverte !" %nomFichier,
-#                               u"Erreur d'ouverture",
-#                               wx.OK | wx.ICON_WARNING
-#                               #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
-#                               )
-#            dlg.ShowModal()
-#            dlg.Destroy()
-#            fichier.close()
-#            return
+            # La séquence
+            sequence = root.find("Sequence")
+            if sequence == None:
+                self.sequence.setBranche(root)
+                
+            else:
+                # La classe
+                classe = root.find("Classe")
+                self.classe.setBranche(classe)
+                
+                self.sequence.setBranche(sequence)  
+                
+        except:
+            dlg = wx.MessageDialog(self, u"La séquence pédagogique\n%s\n n'a pas pu être ouverte !" %nomFichier,
+                               u"Erreur d'ouverture",
+                               wx.OK | wx.ICON_WARNING
+                               #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
+                               )
+            dlg.ShowModal()
+            dlg.Destroy()
+            fichier.close()
+            return
 
         self.arbreSeq.DeleteAllItems()
         root = self.arbreSeq.AddRoot("")
