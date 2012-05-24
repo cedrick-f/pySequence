@@ -672,15 +672,17 @@ class Sequence():
     
     ######################################################################################  
     def getBranche(self):
+        """ Renvoie la branche XML de la séquence pour enregistrement
+        """
         # Création de la racine
         sequence = ET.Element("Sequence")
         sequence.set("Intitule", self.intitule)
         
         brancheCI = self.CI.getBranche()
 #        print "brancheCI", brancheCI
-        if brancheCI != None:
-            ci = ET.SubElement(sequence, "CentreInteret")
-            ci.append(brancheCI)
+#        if brancheCI != None:
+#            ci = ET.SubElement(sequence, "CentreInteret")
+#            ci.append(brancheCI)
         
         prerequis = ET.SubElement(sequence, "Prerequis")
         prerequis.append(self.prerequis.getBranche())
@@ -1154,7 +1156,7 @@ class Sequence():
     #############################################################################
     def VerrouillerClasse(self):
         if hasattr(self, 'CI') \
-            and (self.CI.num != None or self.prerequis.savoirs != [] \
+            and (self.CI.numCI != [] or self.prerequis.savoirs != [] \
                  or self.obj['C'].competences != [] or self.obj['S'].savoirs != []):
             self.classe.Verrouiller(False)
         else:
@@ -1168,11 +1170,12 @@ class Sequence():
 #
 ####################################################################################
 class CentreInteret():
-    def __init__(self, parent, panelParent, numCI = None):
+    def __init__(self, parent, panelParent, numCI = []):
         self.parent = parent
+        self.numCI = numCI
         self.SetNum(numCI)
         
-        self.code = "_"
+        
         if panelParent:
             self.panelPropriete = PanelPropriete_CI(panelParent, self)
         
@@ -1188,6 +1191,12 @@ class CentreInteret():
     def getBranche(self):
         """ Renvoie la branche XML du centre d'intérét pour enregistrement
         """
+        root = ET.Element("CentresInteret")
+        for i, num in enumerate(self.numCI):
+            root.set("C"+str(i), num)
+        return root
+    
+    
 #        print "getBranche CI",
         if hasattr(self, 'code'):
 #            print "code CI", self.code
@@ -1199,11 +1208,18 @@ class CentreInteret():
     
     ######################################################################################  
     def setBranche(self, branche):
+        self.numCI = []
+        for i, s in enumerate(branche.keys()):
+            self.numCI.append(eval(branche.get("C"+str(i), "")))
+        if hasattr(self, 'panelPropriete'):
+            self.panelPropriete.MiseAJour()
+        return
+            
 #        print "setBranche CI"
         code = list(branche)[0].tag
 #        print code
         if code == "_":
-            num = None
+            num = []
             self.SetNum(num)
         else:
             num = eval(code[2:])-1
@@ -1211,28 +1227,50 @@ class CentreInteret():
             if hasattr(self, 'panelPropriete'):
                 self.panelPropriete.MiseAJour()
 
+    ######################################################################################  
+    def AddNum(self, num): 
+        self.numCI.append(num)
+        self.SetNum()
         
     ######################################################################################  
-    def SetNum(self, num):
-        self.num = num
-        if num != None:
-            self.code = "CI"+str(self.num+1)
-            self.CI = CentresInterets[self.parent.classe.typeEnseignement][self.num]
-
-        else:
-            self.code = ""
-            self.CI = ""
+    def DelNum(self, num): 
+        self.numCI.remove(num)
+        self.SetNum()
+        
+    ######################################################################################  
+    def SetNum(self, numCI = None):
+        if numCI != None:
+            self.numCI = numCI
             
         if hasattr(self, 'arbre'):
-            self.SetCode()
+            self.MaJArbre()
         
-        self.parent.VerrouillerClasse()
-        
+        if len(self.numCI) > 0 :
+            self.parent.VerrouillerClasse()
         
     ######################################################################################  
-    def SetCode(self):
+    def GetIntit(self, num):
+        return CentresInterets[self.parent.classe.typeEnseignement][self.numCI[num]]
+    
+    
+    ######################################################################################  
+    def GetCode(self, num = None):
+        if num == None:
+            s = ""
+            for i, n in enumerate(self.numCI):
+                s = s + self.GetCode(i)
+                if i < len(self.numCI)-1:
+                    s += " - "
+            return s
+        
+        else :
+            return "CI"+str(self.numCI[num]+1)
+    
+    
+    ######################################################################################  
+    def MaJArbre(self):
         if hasattr(self, 'codeBranche'):
-            self.codeBranche.SetLabel(self.code)
+            self.codeBranche.SetLabel(self.GetCode())
         
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
@@ -3841,36 +3879,10 @@ class PanelEffectifsClasse(wx.Panel):
 class PanelPropriete_CI(PanelPropriete):
     def __init__(self, parent, CI):
         PanelPropriete.__init__(self, parent)
-        self.CI = CI
-        self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
-#        titre = wx.StaticText(self, -1, u"CI :")
-        
-#        cb = wx.RadioBox(
-#                self, -1, u"Choisir un CI", wx.DefaultPosition, wx.DefaultSize,
-#                CentresInterets, 1, wx.RA_SPECIFY_COLS
-#                )
-        
-        self.backGround = self.GetBackgroundColour()
+        self.CI = CI       
         self.construire()
-        self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBackground)
-        self.Bind(wx.EVT_PAINT, self.OnPaint)
         
-#        cb = wx.ComboBox(self, -1, u"Choisir un CI",
-#                         choices = CentresInterets,
-#                         style = wx.CB_DROPDOWN
-#                         | wx.TE_PROCESS_ENTER
-#                         | wx.CB_READONLY
-#                         #| wx.CB_SORT
-#                         )
-#        self.cb = cb
-#        self.titre = titre
-        
-#        self.sizer.Add(titre, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 2)
-#        self.sizer.Add(self.grid1, (0,1), flag = wx.EXPAND)
-#        self.sizer.Layout()
-#        self.Bind(wx.EVT_COMBOBOX, self.EvtComboBox, cb)
-        
-        
+
     #############################################################################            
     def GetSequence(self):
         return self.CI.parent
@@ -3878,68 +3890,23 @@ class PanelPropriete_CI(PanelPropriete):
     ######################################################################################################
     def OnEnter(self, event):
         return
-    
-    
-    ######################################################################################################
-    def OnPaint(self, evt):
-#        print "On paint"
-        
-        dc = wx.PaintDC(self)
-#        gc = wx.GraphicsContext.Create(dc)
-        dc.SetBackground(wx.Brush(self.backGround))
-        dc.Clear()
-        bmp = images.Cible.GetBitmap()
-        dc.DrawBitmap(bmp, 0, 0)
-        
-        evt.Skip()
-        
-        
-    ######################################################################################################
-    def OnEraseBackground(self, evt):
-        """
-        Add a picture to the background
-        """
-        # yanked from ColourDB.py
-        dc = evt.GetDC()
- 
-        if not dc:
-            dc = wx.ClientDC(self)
-            rect = self.GetUpdateRegion().GetBox()
-            dc.SetClippingRect(rect)
-        dc.SetBackgroundMode(wx.TRANSPARENT)
-        color = wx.SystemSettings.GetColour(wx.SYS_COLOUR_BACKGROUND)
-        dc.SetBackground(wx.Brush(self.backGround))
-        dc.Clear()
-        bmp = images.Cible.GetBitmap()
-        dc.DrawBitmap(bmp, 0, 0)
         
     #############################################################################            
     def construire(self):
         self.group_ctrls = []
-        if self.CI.parent.classe.typeEnseignement == 'ET':
-            rayons = [90,90,60,40,20,30,60,40,20,30,60,40,20,30,0]
-            angles = [-100,100,0,0,0,60,120,120,120,180,-120,-120,-120,-60,0]
-            centre = [96, 88]
-#            dc = wx.ClientDC(self)
-#            dc.DrawBitmap(images.Cible.GetBitmap(), 100, 100)
-#            img = wx.StaticBitmap(self, -1, images.Cible.GetBitmap())
+        if self.CI.parent.classe.typeEnseignement == 'ET': # Rajouter la condition "Clermont" !!!
+            panel_cible = Panel_Cible(self, self.CI)
+            self.sizer.Add(panel_cible, (0,0), flag = wx.EXPAND)
+            
+            self.grid1 = wx.FlexGridSizer( 0, 1, 0, 0 )
+            
             for i, ci in enumerate(CentresInterets[self.CI.parent.classe.typeEnseignement]):
-                pos = (centre[0] + rayons[i] * sin(angles[i]*pi/180) ,
-                       centre[1] - rayons[i] * cos(angles[i]*pi/180))
-                bmp = imagesCI[i].GetBitmap()
-#                bmp.SetMaskColour(self.backGround)
-#                mask = wx.Mask(bmp, self.backGround)
-#                bmp.SetMask(mask)
-#                bmp.SetMaskColour(wx.NullColour)
-#                r = CustomCheckBox(self, 100+i, pos = pos, style = wx.NO_BORDER)
-                r = platebtn.PlateButton(self, 100+i, "", bmp, pos = pos, 
-                                         style=platebtn.PB_STYLE_GRADIENT|platebtn.PB_STYLE_TOGGLE|platebtn.PB_STYLE_NOBG)#platebtn.PB_STYLE_DEFAULT|
-                r.SetPressColor(wx.Colour(245, 55, 245))
-#                r = buttons.GenBitmapToggleButton(self, 100+i, bmp, pos = pos, style=wx.BORDER_NONE)
-#                r.SetBackgroundColour(wx.NullColour)
-                self.group_ctrls.append((r, 0))
-                self.Bind(wx.EVT_CHECKBOX, self.EvtCheck, r )
+                t = wx.StaticText(self, -1, "CI"+str(i+1)+" : "+ci)
+                self.grid1.Add( t, 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_LEFT|wx.LEFT|wx.RIGHT, 5 )
                 
+            self.sizer.Add(self.grid1, (0,1), flag = wx.EXPAND)
+            self.sizer.Layout()
+            
         else:
             self.DestroyChildren()
             if hasattr(self, 'grid1'):
@@ -3974,7 +3941,7 @@ class PanelPropriete_CI(PanelPropriete):
         
     #############################################################################            
     def EvtCheck(self, event):
-        print "EvtRadio CI",
+        print "EvtCheck CI",
         check_selected = event.GetEventObject().GetId()-100
         print check_selected 
         self.CI.AddNum(check_selected)
@@ -3982,6 +3949,7 @@ class PanelPropriete_CI(PanelPropriete):
         self.Layout()
         self.sendEvent()
         
+    
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
         self.group_ctrls[self.CI.num][0].SetValue(True)
@@ -3994,6 +3962,98 @@ class PanelPropriete_CI(PanelPropriete):
             self.group_ctrls[self.CI.num][0].SetValue(False)
             self.CI.SetNum(None)
             self.sendEvent()
+
+####################################################################################
+#
+#   Classe définissant le panel conteneur de la Cible MEI
+#
+#################################################################################### 
+class Panel_Cible(wx.Panel):
+    def __init__(self, parent, CI):
+        wx.Panel.__init__(self, parent, -1)
+        self.CI = CI
+        self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
+        self.backGround = self.GetBackgroundColour()
+        
+        rayons = [90,90,60,40,20,30,60,40,20,30,60,40,20,30,0]
+        angles = [-100,100,0,0,0,60,120,120,120,180,-120,-120,-120,-60,0]
+        centre = [96, 88]
+        
+#            dc = wx.ClientDC(self)
+#            dc.DrawBitmap(images.Cible.GetBitmap(), 100, 100)
+#            img = wx.StaticBitmap(self, -1, images.Cible.GetBitmap())
+        for i, ci in enumerate(CentresInterets[self.CI.parent.classe.typeEnseignement]):
+            pos = (centre[0] + rayons[i] * sin(angles[i]*pi/180) ,
+                   centre[1] - rayons[i] * cos(angles[i]*pi/180))
+            bmp = imagesCI[i].GetBitmap()
+#                bmp.SetMaskColour(self.backGround)
+#                mask = wx.Mask(bmp, self.backGround)
+#                bmp.SetMask(mask)
+#                bmp.SetMaskColour(wx.NullColour)
+#                r = CustomCheckBox(self, 100+i, pos = pos, style = wx.NO_BORDER)
+            r = platebtn.PlateButton(self, 100+i, "", bmp, pos = pos, 
+                                     style=platebtn.PB_STYLE_GRADIENT|platebtn.PB_STYLE_TOGGLE|platebtn.PB_STYLE_NOBG)#platebtn.PB_STYLE_DEFAULT|
+            r.SetPressColor(wx.Colour(245, 55, 245))
+#                r = buttons.GenBitmapToggleButton(self, 100+i, bmp, pos = pos, style=wx.BORDER_NONE)
+#                r.SetBackgroundColour(wx.NullColour)
+#                self.group_ctrls.append((r, 0))
+#                self.Bind(wx.EVT_CHECKBOX, self.EvtCheck, r )
+        
+        self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBackground)
+        self.Bind(wx.EVT_PAINT, self.OnPaint)
+        self.Bind(wx.EVT_TOGGLEBUTTON, self.OnButton)
+        bmp = images.Cible.GetBitmap()
+        self.SetSize((bmp.GetWidth(), bmp.GetHeight()))
+        self.SetMinSize((bmp.GetWidth(), bmp.GetHeight()))
+        
+    ######################################################################################################
+    def OnPaint(self, evt):
+#        print "On paint"
+        
+        dc = wx.PaintDC(self)
+#        gc = wx.GraphicsContext.Create(dc)
+        dc.SetBackground(wx.Brush(self.backGround))
+        dc.Clear()
+        bmp = images.Cible.GetBitmap()
+        dc.DrawBitmap(bmp, 0, 0)
+        
+        evt.Skip()
+        
+        
+    ######################################################################################################
+    def OnEraseBackground(self, evt):
+        """
+        Add a picture to the background
+        """
+        # yanked from ColourDB.py
+        dc = evt.GetDC()
+ 
+        if not dc:
+            dc = wx.ClientDC(self)
+            rect = self.GetUpdateRegion().GetBox()
+            dc.SetClippingRect(rect)
+        dc.SetBackgroundMode(wx.TRANSPARENT)
+        color = wx.SystemSettings.GetColour(wx.SYS_COLOUR_BACKGROUND)
+        dc.SetBackground(wx.Brush(self.backGround))
+        dc.Clear()
+        bmp = images.Cible.GetBitmap()
+        dc.DrawBitmap(bmp, 0, 0)    
+    
+    #############################################################################            
+    def OnButton(self, event):
+        print "OnButton CI",
+        button_selected = event.GetEventObject().GetId()-100
+        print button_selected 
+        
+        if event.GetEventObject().IsPressed():
+            self.CI.AddNum(button_selected)
+        else:
+            self.CI.DelNum(button_selected)
+
+        self.Layout()
+        self.Parent.sendEvent()    
+        
+        
         
 ####################################################################################
 #

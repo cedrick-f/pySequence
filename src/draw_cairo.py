@@ -64,6 +64,7 @@ tailleCI = (0.16, 0.07)
 posCI = (margeX, margeY)
 IcoulCI = (0.9,0.8,0.8)
 BcoulCI = (0.3,0.2,0.25)
+fontCI = 0.014
 
 # Rectangle des prerequis
 taillePre = (0.28, 0.16 - tailleCI[1] - ecartY/2)
@@ -417,31 +418,6 @@ def Draw(ctx, seq):
     options.set_hint_metrics(cairo.HINT_METRICS_OFF)#cairo.HINT_METRICS_ON)#
     ctx.set_font_options(options)
     
-
-#    print ctx.get_font_face().get_family()
-#    surf = ctx.get_target()
-##    print dir(surf)
-##    options = surf.get_font_options()
-##    options.set_hint_metrics(cairo.HINT_METRICS_OFF)
-##    options.set_hint_style(cairo.HINT_STYLE_NONE)
-##    options.set_antialias(cairo.ANTIALIAS_SUBPIXEL)
-##    surf.set_font_options(options)
-#    
-#    
-#    ctx.set_antialias(cairo.ANTIALIAS_SUBPIXEL)
-#    print ctx.get_antialias()
-#    
-#    
-#    print surf
-#    print surf.get_font_options().get_hint_metrics()
-#    print ctx.get_font_options().get_hint_metrics()
-#    print cairo.HINT_METRICS_OFF
-##    testRapport(ctx)
-#    
-#    ff = ctx.get_font_face()
-#    
-#    font = cairo.ScaledFont(ff, ctx.get_font_matrix(), ctx.get_matrix(), options)
-#    ctx.set_font_face(font)
     
     DefinirZones(seq, ctx)
     
@@ -486,7 +462,6 @@ def Draw(ctx, seq):
     #
     # Commentaires
     #
-#    print posComm[1], 
     if tailleComm[1] > 0:
         ctx.set_source_rgb(0.1,0.1,0.1)
         ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
@@ -498,10 +473,7 @@ def Draw(ctx, seq):
         # On dessine toutes les lignes de texte
         #
         for i, t in enumerate(intComm):
-    #        print "  ",t
-#            xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(t)
             yt = _y + (fascent+fdescent)*i  + fheight #- fdescent
-    #        print "  ",xt, yt
             ctx.move_to(_x, yt)
             ctx.show_text(t)
                 
@@ -523,14 +495,6 @@ def Draw(ctx, seq):
         ctx.stroke()
         DrawLigneEff(ctx, x+w, y+h)
         
-    
-#        #
-#        #  Bordure
-#        #
-#        ctx.set_line_width(0.005)
-#        ctx.set_source_rgb(0, 0, 0)
-#        ctx.rectangle(0, 0, 0.724, 1)
-#        ctx.stroke()
     
     #
     #  Intitulé de la séquence
@@ -563,22 +527,7 @@ def Draw(ctx, seq):
     # Rectangle arrondi
     x0, y0 = posPre
     rect_width, rect_height  = taillePre
-    curve_rect(ctx, x0, y0, rect_width, rect_height, 0.05)
-    ctx.set_source_rgb (IcoulPre[0], IcoulPre[1], IcoulPre[2])
-    ctx.fill_preserve ()
-    ctx.set_source_rgba (BcoulPre[0], BcoulPre[1], BcoulPre[2])
-    ctx.stroke ()
-    
-    # Titre
-    ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-                          cairo.FONT_WEIGHT_BOLD)
-    ctx.set_font_size(fontPre)
-    xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(u"Prérequis")
-    xc=x0+rect_width/2-width/2
-    yc=y0+height+0.004
-    ctx.move_to(xc, yc)
-    ctx.set_source_rgb(0, 0, 0)
-    ctx.show_text(u"Prérequis")
+    curve_rect_titre(ctx, u"Prérequis",  (x0, y0, rect_width, rect_height), BcoulPre, IcoulPre, fontPre)
     
     #
     # Codes prerequis
@@ -591,63 +540,32 @@ def Draw(ctx, seq):
     for c in seq.prerequisSeance:
         lstTexteS.append(c.GetNomFichier())    
         
-    hl = rect_height-height-0.01   
-    yc = yc + 0.004
+    hl = rect_height+0.0001
+    
     if len(lstTexte) + len(lstTexteS) > 0:
         e = 0.008
         hC = hl*len(lstTexte)/(len(lstTexte) + len(lstTexteS))
         hS = hl*len(lstTexteS)/(len(lstTexte) + len(lstTexteS))
-        liste_code_texte(ctx, seq.prerequis.savoirs, lstTexte, x0, yc, rect_width, hC, e)
+        liste_code_texte(ctx, seq.prerequis.savoirs, lstTexte, x0, y0, rect_width, hC, e)
         ctx.set_source_rgba (0.0, 0.0, 0.5, 1.0)
-        lstRect = liste_code_texte(ctx, ["Seq."]*len(lstTexteS), lstTexteS, x0, yc+hC, rect_width, hS, 0.01)
+        lstRect = liste_code_texte(ctx, ["Seq."]*len(lstTexteS), lstTexteS, x0, y0+hC, rect_width, hS, 0.01)
         for i, c in enumerate(seq.prerequisSeance): 
             c.rect = [lstRect[i]]
     else:
-        show_text_rect(ctx, u"Aucun", (x0, yc, rect_width, hl), fontsizeMinMax = (-1, 0.015))
+        show_text_rect(ctx, u"Aucun", (x0, y0, rect_width, hl), fontsizeMinMax = (-1, 0.015))
     
-    
-        
-#    if len(seq.prerequis.savoirs) > 0:
-#        no = len(seq.prerequis.savoirs)
-#        e = 0.01
-#        for i, t in enumerate(seq.prerequis.savoirs):
-#            hl = (rect_height-height-0.015)/no
-#            ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-#                                  cairo.FONT_WEIGHT_BOLD)
-#            show_text_rect(ctx, t.split()[0], x0+e, yc+i*hl, 
-#                           rect_width/6-e, hl, b = 0.2, ha = 'g', max_font = 0.012, wrap = False)
-#            ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-#                                  cairo.FONT_WEIGHT_NORMAL)
-#            show_text_rect(ctx, getSavoir(t.split()[0]), x0+rect_width/6, yc+i*hl, 
-#                           rect_width*5/6-e, hl, b = 0.2, ha = 'g')
-#
-#            ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-#                                  cairo.FONT_WEIGHT_BOLD)
     
     #
     #  Objectifs
     #
     
     # Rectangle arrondi
+    # Rectangle arrondi
     x0, y0 = posObj
     rect_width, rect_height  = tailleObj
-    curve_rect(ctx, x0, y0, rect_width, rect_height, 0.05)
-    ctx.set_source_rgb (IcoulObj[0], IcoulObj[1], IcoulObj[2])
-    ctx.fill_preserve ()
-    ctx.set_source_rgba (BcoulObj[0], BcoulObj[1], BcoulObj[2])
-    ctx.stroke ()
+    curve_rect_titre(ctx, u"Objectifs",  (x0, y0, rect_width, rect_height), BcoulObj, IcoulObj, fontObj)
     
-    # Titre
-    ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-                          cairo.FONT_WEIGHT_BOLD)
-    ctx.set_font_size(fontObj)
-    xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(u"Objectifs")
-    xc=x0+rect_width/2-width/2
-    yc=y0+height+0.004
-    ctx.move_to(xc, yc)
-    ctx.set_source_rgb(0, 0, 0)
-    ctx.show_text(u"Objectifs")
-    
+
     #
     # Codes objectifs
     #
@@ -657,41 +575,15 @@ def Draw(ctx, seq):
     lstTexteS = []   
     for c in seq.obj["S"].savoirs:
         lstTexteS.append(getSavoir(seq, c))
-    h = rect_height-height-0.015  
+    h = rect_height+0.0001
 #    print "Objectifs", lstTexteC
     if len(lstTexteS) > 0 or len(lstTexteC) > 0:
         hC = h*len(lstTexteC)/(len(lstTexteC) + len(lstTexteS))
         hS = h*len(lstTexteS)/(len(lstTexteC) + len(lstTexteS))
-        liste_code_texte(ctx, seq.obj["C"].competences, lstTexteC, x0, yc, rect_width, hC, 0.008) 
+        liste_code_texte(ctx, seq.obj["C"].competences, lstTexteC, x0, y0, rect_width, hC, 0.008) 
         ctx.set_source_rgba (0.0, 0.0, 0.5, 1.0)
-        liste_code_texte(ctx, seq.obj["S"].savoirs, lstTexteS, x0, yc+hC, rect_width, hS, 0.008)
-    
-    
-    
-#    lstCS = seq.obj["C"].competences + seq.obj["S"].savoirs
-#    print "Draw objectifs", lstCS
-#    if len(lstCS) > 0:
-#        no = len(lstCS)
-#        e = 0.01
-#        txtObj = ''
-#        hl = (rect_height-height-0.015)/no
-#        for i, t in enumerate(lstCS):
-#            if hasattr(t, 'code'):
-#                txtObj += " " + t.code
-#                ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-#                                      cairo.FONT_WEIGHT_BOLD)
-#                show_text_rect(ctx, t.code, x0+e, yc+i*hl, 
-#                               rect_width/5-e, hl, max_font = 0.012, ha = 'g', wrap = False)
-#                ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-#                                      cairo.FONT_WEIGHT_NORMAL)
-#                show_text_rect(ctx, Competences[t.code], x0+rect_width/5, yc+i*hl, 
-#                               rect_width*4/5-e, hl, ha = 'g')
-#        
-##            x, y = posObj
-##            w, h = tailleObj
-#                ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-#                                      cairo.FONT_WEIGHT_BOLD)
-#        
+        liste_code_texte(ctx, seq.obj["S"].savoirs, lstTexteS, x0, y0+hC, rect_width, hS, 0.008)
+
 
     #
     #  CI
@@ -809,33 +701,25 @@ def Draw_CI(ctx, CI):
     # Rectangle arrondi
     x0, y0 = posCI
     rect_width, rect_height  = tailleCI
-    
-    curve_rect(ctx, x0, y0, rect_width, rect_height, 0.05)
-    ctx.set_source_rgb (IcoulCI[0], IcoulCI[1], IcoulCI[2])
-    ctx.fill_preserve ()
-    ctx.set_source_rgba (BcoulCI[0], BcoulCI[1], BcoulCI[2])
-    ctx.stroke ()
+    if len(CI.numCI) <= 1:
+        t = u"Centre d'intérêt"
+    else:
+        t = u"Centres d'intérêt"
+    curve_rect_titre(ctx, t,  (x0, y0, rect_width, rect_height), BcoulCI, IcoulCI, fontCI)
     
     #
-    # code
+    # code et intitulé des CI
     #
-    if CI.num != None:
-        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-                              cairo.FONT_WEIGHT_BOLD)
-        ctx.set_font_size(0.02)
-        xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(CI.code)
-        xc=x0+rect_width/2-width/2
-        yc=y0+height+0.01
-        ctx.move_to(xc, yc)
-        ctx.set_source_rgb(0, 0, 0)
-        ctx.show_text(CI.code)
-    
-        #
-        # intitulé
-        #
-        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-                              cairo.FONT_WEIGHT_NORMAL)
-        show_text_rect(ctx, CI.CI, (x0, yc, rect_width, rect_height - height-0.01))
+    lstCodes = []
+    lstIntit = []
+    for i, c in enumerate(CI.numCI):
+        lstCodes.append(CI.GetCode(i))
+        lstIntit.append(CI.GetIntit(i))
+        
+    if CI.numCI != []:
+        e = 0.008
+        liste_code_texte(ctx, lstCodes, lstIntit, x0, y0+0.0001, rect_width, rect_height, e)
+        
 
 
 
@@ -1676,9 +1560,43 @@ def show_lignes(ctx, lignes, x, y, w, h, ha, va):
     ctx.stroke()
 
 
+def curve_rect_titre(ctx, titre, rect, coul_bord, coul_int, taille_font = 0.01, rayon = 0.025, epaiss = 0.003):
+    ctx.set_line_width(epaiss)
+    x0, y0, rect_width, rect_height = rect
+    
+    ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+                          cairo.FONT_WEIGHT_BOLD)
+    ctx.set_font_size(taille_font)
+    fascent, fdescent, fheight, fxadvance, fyadvance = ctx.font_extents()
+    xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(titre)
+    
+    curve_rect(ctx, x0, y0, rect_width, rect_height, rayon, ouverture = width + fheight)
+    ctx.set_source_rgb (coul_int[0], coul_int[1], coul_int[2])
+    ctx.fill_preserve ()
+    ctx.set_source_rgba (coul_bord[0], coul_bord[1], coul_bord[2])
+    ctx.stroke ()
+    
+    xc = x0 + rayon
+    yc = y0 + height/2
+    mask = cairo.LinearGradient (xc, y0, xc, y0 - height)
+    mask.add_color_stop_rgba (1, 1, 1, 1, 0)
+    mask.add_color_stop_rgba (0, coul_int[0], coul_int[1], coul_int[2],1)
+    ctx.rectangle (xc, y0 - height/2, width + fheight, height)
+    ctx.set_source (mask)
+    ctx.fill ()
+#    ctx.stroke ()
+    
+    xc = x0 + rayon + fheight/2
+    yc = y0 + height/2
+    
+    ctx.move_to(xc, yc)
+    ctx.set_source_rgb(0, 0, 0)
+    ctx.show_text(titre)
+    
+    
+    return
 
-
-def curve_rect(ctx, x0, y0, rect_width, rect_height, radius):
+def curve_rect(ctx, x0, y0, rect_width, rect_height, radius, ouverture = 0):
     x1=x0+rect_width
     y1=y0+rect_height
     #if (!rect_width || !rect_height)
@@ -1701,23 +1619,36 @@ def curve_rect(ctx, x0, y0, rect_width, rect_height, radius):
     else:
         if rect_height/2<radius:
             ctx.move_to  (x0, (y0 + y1)/2)
-            ctx.curve_to (x0 , y0, x0 , y0, x0 + radius, y0)
             ctx.line_to (x1 - radius, y0)
             ctx.curve_to (x1, y0, x1, y0, x1, (y0 + y1)/2)
             ctx.curve_to (x1, y1, x1, y1, x1 - radius, y1)
             ctx.line_to (x0 + radius, y1)
             ctx.curve_to (x0, y1, x0, y1, x0, (y0 + y1)/2)
-        else:
-            ctx.move_to  (x0, y0 + radius)
+            ctx.line_to  (x0, (y0 + y1)/2)
             ctx.curve_to (x0 , y0, x0 , y0, x0 + radius, y0)
+            
+        else:
+            ctx.move_to  (x0 + radius + ouverture, y0)
             ctx.line_to (x1 - radius, y0)
             ctx.curve_to (x1, y0, x1, y0, x1, y0 + radius)
             ctx.line_to (x1 , y1 - radius)
             ctx.curve_to (x1, y1, x1, y1, x1 - radius, y1)
             ctx.line_to (x0 + radius, y1)
             ctx.curve_to (x0, y1, x0, y1, x0, y1- radius)
+            ctx.line_to (x0, y0+radius)
+            ctx.curve_to (x0 , y0, x0 , y0, x0 + radius, y0)
+            
+#            ctx.move_to  (x0, y0 + radius)
+#            ctx.curve_to (x0 , y0, x0 , y0, x0 + radius, y0)
+#            ctx.move_to  (x0 + radius + ouverture, y0)
+#            ctx.line_to (x1 - radius, y0)
+#            ctx.curve_to (x1, y0, x1, y0, x1, y0 + radius)
+#            ctx.line_to (x1 , y1 - radius)
+#            ctx.curve_to (x1, y1, x1, y1, x1 - radius, y1)
+#            ctx.line_to (x0 + radius, y1)
+#            ctx.curve_to (x0, y1, x0, y1, x0, y1- radius)
     
-    ctx.close_path ()
+    #ctx.close_path ()
     
 def tableauV(ctx, titres, x, y, w, ht, hl, nlignes = 0, va = 'c', ha = 'c', orient = 'h', coul = (0.9,0.9,0.9)):
     wc = w/len(titres)
