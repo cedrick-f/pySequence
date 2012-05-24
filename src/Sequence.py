@@ -12,7 +12,7 @@ Copyright (C) 2011-2012
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "1.14"
+__version__ = "2.0"
 
 
 ####################################################################################
@@ -44,6 +44,8 @@ from wx.lib.wordwrap import wordwrap
 import wx.lib.hyperlink as hl
 import  wx.lib.scrolledpanel as scrolled
 import wx.combo
+import wx.lib.platebtn as platebtn
+import  wx.lib.buttons  as  buttons
 
 # Graphiques vectoriels
 try:
@@ -76,7 +78,7 @@ import xml.etree.ElementTree as ET
 
 # des widgets wx évolués "faits maison"
 from CedWidgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_ENTIER_POS
-
+from CustomCheckBox import CustomCheckBox
 # Les constantes et les fonctions de dessin
 import draw_cairo
 
@@ -101,6 +103,8 @@ import svg_export
 
 # Pour les descriptions
 import richtext
+
+from math import sin,cos,pi
 
 FILE_ENCODING = sys.getfilesystemencoding() #'cp1252'#
 #DEFAUT_ENCODING = sys.getdefaultencoding()
@@ -3838,7 +3842,7 @@ class PanelPropriete_CI(PanelPropriete):
     def __init__(self, parent, CI):
         PanelPropriete.__init__(self, parent)
         self.CI = CI
-        
+        self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
 #        titre = wx.StaticText(self, -1, u"CI :")
         
 #        cb = wx.RadioBox(
@@ -3846,9 +3850,11 @@ class PanelPropriete_CI(PanelPropriete):
 #                CentresInterets, 1, wx.RA_SPECIFY_COLS
 #                )
         
-       
+        self.backGround = self.GetBackgroundColour()
         self.construire()
-            
+        self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBackground)
+        self.Bind(wx.EVT_PAINT, self.OnPaint)
+        
 #        cb = wx.ComboBox(self, -1, u"Choisir un CI",
 #                         choices = CentresInterets,
 #                         style = wx.CB_DROPDOWN
@@ -3873,35 +3879,105 @@ class PanelPropriete_CI(PanelPropriete):
     def OnEnter(self, event):
         return
     
+    
+    ######################################################################################################
+    def OnPaint(self, evt):
+#        print "On paint"
+        
+        dc = wx.PaintDC(self)
+#        gc = wx.GraphicsContext.Create(dc)
+        dc.SetBackground(wx.Brush(self.backGround))
+        dc.Clear()
+        bmp = images.Cible.GetBitmap()
+        dc.DrawBitmap(bmp, 0, 0)
+        
+        evt.Skip()
+        
+        
+    ######################################################################################################
+    def OnEraseBackground(self, evt):
+        """
+        Add a picture to the background
+        """
+        # yanked from ColourDB.py
+        dc = evt.GetDC()
+ 
+        if not dc:
+            dc = wx.ClientDC(self)
+            rect = self.GetUpdateRegion().GetBox()
+            dc.SetClippingRect(rect)
+        dc.SetBackgroundMode(wx.TRANSPARENT)
+        color = wx.SystemSettings.GetColour(wx.SYS_COLOUR_BACKGROUND)
+        dc.SetBackground(wx.Brush(self.backGround))
+        dc.Clear()
+        bmp = images.Cible.GetBitmap()
+        dc.DrawBitmap(bmp, 0, 0)
+        
     #############################################################################            
     def construire(self):
-        self.DestroyChildren()
-        if hasattr(self, 'grid1'):
-            self.sizer.Remove(self.grid1)
-        self.grid1 = wx.FlexGridSizer( 0, 2, 0, 0 )
         self.group_ctrls = []
-        for i, ci in enumerate(CentresInterets[self.CI.parent.classe.typeEnseignement]):
-#            if i == 0 : s = wx.RB_GROUP
-#            else: s = 0
-            r = wx.RadioButton(self, -1, "CI"+str(i+1))#, style = s )
-            t = wx.StaticText(self, -1, ci)
-            self.grid1.Add( r, 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_LEFT|wx.LEFT|wx.RIGHT|wx.TOP, 2 )
-            self.grid1.Add( t, 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_LEFT|wx.LEFT|wx.RIGHT, 5 )
-            self.group_ctrls.append((r, t))
-        self.sizer.Add(self.grid1, (0,0), flag = wx.EXPAND)
-        for radio, text in self.group_ctrls:
-            self.Bind(wx.EVT_RADIOBUTTON, self.EvtRadio, radio )
-        btn = wx.Button(self, -1, u"Effacer")
-        self.Bind(wx.EVT_BUTTON, self.OnClick, btn)
-        self.sizer.Add(btn, (0,1))
-        
-        self.sizer.Layout()
+        if self.CI.parent.classe.typeEnseignement == 'ET':
+            rayons = [90,90,60,40,20,30,60,40,20,30,60,40,20,30,0]
+            angles = [-100,100,0,0,0,60,120,120,120,180,-120,-120,-120,-60,0]
+            centre = [96, 88]
+#            dc = wx.ClientDC(self)
+#            dc.DrawBitmap(images.Cible.GetBitmap(), 100, 100)
+#            img = wx.StaticBitmap(self, -1, images.Cible.GetBitmap())
+            for i, ci in enumerate(CentresInterets[self.CI.parent.classe.typeEnseignement]):
+                pos = (centre[0] + rayons[i] * sin(angles[i]*pi/180) ,
+                       centre[1] - rayons[i] * cos(angles[i]*pi/180))
+                bmp = imagesCI[i].GetBitmap()
+#                bmp.SetMaskColour(self.backGround)
+#                mask = wx.Mask(bmp, self.backGround)
+#                bmp.SetMask(mask)
+#                bmp.SetMaskColour(wx.NullColour)
+#                r = CustomCheckBox(self, 100+i, pos = pos, style = wx.NO_BORDER)
+                r = platebtn.PlateButton(self, 100+i, "", bmp, pos = pos, 
+                                         style=platebtn.PB_STYLE_GRADIENT|platebtn.PB_STYLE_TOGGLE|platebtn.PB_STYLE_NOBG)#platebtn.PB_STYLE_DEFAULT|
+                r.SetPressColor(wx.Colour(245, 55, 245))
+#                r = buttons.GenBitmapToggleButton(self, 100+i, bmp, pos = pos, style=wx.BORDER_NONE)
+#                r.SetBackgroundColour(wx.NullColour)
+                self.group_ctrls.append((r, 0))
+                self.Bind(wx.EVT_CHECKBOX, self.EvtCheck, r )
+                
+        else:
+            self.DestroyChildren()
+            if hasattr(self, 'grid1'):
+                self.sizer.Remove(self.grid1)
+            self.grid1 = wx.FlexGridSizer( 0, 2, 0, 0 )
+            
+            for i, ci in enumerate(CentresInterets[self.CI.parent.classe.typeEnseignement]):
+    #            if i == 0 : s = wx.RB_GROUP
+    #            else: s = 0
+                r = wx.RadioButton(self, -1, "CI"+str(i+1), style = wx.RB_GROUP )
+                t = wx.StaticText(self, -1, ci)
+                self.grid1.Add( r, 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_LEFT|wx.LEFT|wx.RIGHT|wx.TOP, 2 )
+                self.grid1.Add( t, 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_LEFT|wx.LEFT|wx.RIGHT, 5 )
+                self.group_ctrls.append((r, t))
+            self.sizer.Add(self.grid1, (0,0), flag = wx.EXPAND)
+            for radio, text in self.group_ctrls:
+                self.Bind(wx.EVT_RADIOBUTTON, self.EvtRadio, radio )
+            btn = wx.Button(self, -1, u"Effacer")
+            self.Bind(wx.EVT_BUTTON, self.OnClick, btn)
+            self.sizer.Add(btn, (0,1))
+            
+            self.sizer.Layout()
         
     #############################################################################            
     def EvtRadio(self, event):
         print "EvtRadio CI"
         radio_selected = eval(event.GetEventObject().GetLabel()[2:])
         self.CI.SetNum(radio_selected-1)
+
+        self.Layout()
+        self.sendEvent()
+        
+    #############################################################################            
+    def EvtCheck(self, event):
+        print "EvtRadio CI",
+        check_selected = event.GetEventObject().GetId()-100
+        print check_selected 
+        self.CI.AddNum(check_selected)
 
         self.Layout()
         self.sendEvent()
@@ -4379,11 +4455,15 @@ class PanelPropriete_Seance(PanelPropriete):
         dbsizer = wx.StaticBoxSizer(dbox, wx.VERTICAL)
         bd = wx.Button(self, -1, u"Editer")
         tc = richtext.RichTextPanel(self, self.seance)
+        tc.SetMaxSize((-1, 150))
         dbsizer.Add(bd, flag = wx.EXPAND)
         dbsizer.Add(tc, 1, flag = wx.EXPAND)
         self.Bind(wx.EVT_BUTTON, self.EvtClick, bd)
         self.sizer.Add(dbsizer, (0,5), (4, 1), flag = wx.EXPAND)
         self.rtc = tc
+        # Pour indiquer qu'une édition est déja en cours ...
+        self.edition = False  
+        
         
         #
         # Mise en place
@@ -4456,9 +4536,12 @@ class PanelPropriete_Seance(PanelPropriete):
     def EvtClick(self, event):
 #        print "EvtClick"
 #        print self.seance.description
-        win = richtext.RichTextFrame(u"Description de la séance "+ self.seance.code, self.seance)
-        
-        win.Show(True)
+        if not self.edition:
+            self.win = richtext.RichTextFrame(u"Description de la séance "+ self.seance.code, self.seance)
+            self.edition = True
+            self.win.Show(True)
+        else:
+            self.win.SetFocus()
         
         
     #############################################################################            
@@ -6666,6 +6749,7 @@ class A_propos(wx.Dialog):
 
 
 
+        
 import socket
 
 if __name__ == '__main__':
