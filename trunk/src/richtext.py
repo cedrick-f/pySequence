@@ -271,6 +271,7 @@ class RichTextFrame(wx.Frame):
         self.rtp.Sauver()
         if hasattr(self.objet, 'panelPropriete'):
             self.objet.panelPropriete.rtc.Ouvrir()
+            self.objet.panelPropriete.edition = False
         evt.Skip()
         
     def OnURL(self, evt):

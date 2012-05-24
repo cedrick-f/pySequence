@@ -180,7 +180,10 @@ imagesSeance = {"R" : images.Icone_rotation,
                 "SA" : images.Icone_synthese_Act,
                 "SS" : images.Icone_synthese_Seq}
 
-
+imagesCI = [images.CI_1, images.CI_2, images.CI_3, images.CI_4,
+            images.CI_5, images.CI_6, images.CI_7, images.CI_8,
+            images.CI_9, images.CI_10, images.CI_11, images.CI_12,
+            images.CI_13, images.CI_14, images.CI_15, images.CI_16]
 
 ####################################################################################
 #
