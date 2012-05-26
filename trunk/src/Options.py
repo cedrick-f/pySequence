@@ -10,7 +10,7 @@
 #############################################################################
 #############################################################################
 
-## Copyright (C) 2009 Cédrick FAURY
+## Copyright (C) 2012 Cédrick FAURY
 
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -30,9 +30,11 @@
 import ConfigParser
 import os.path
 import recup_excel
+import io
 
 import wx.combo
-from constantes import *
+#from constantes import *
+import constantes
 from CedWidgets import *
 
 ##############################################################################
@@ -65,7 +67,9 @@ class Options:
         
         
         # Le fichier où seront sauvées les options
-        self.fichierOpt = os.path.join(APP_DATA_PATH, "sequence.cfg")
+        self.fichierOpt = os.path.join(constantes.APP_DATA_PATH, "sequence.cfg")
+        
+        
 
     #########################################################################################################
     def __repr__(self):
@@ -76,8 +80,9 @@ class Options:
             elif type(o[1]) == bool:
                 tt = str(o[1])
             else:
-                print tt, type(tt)
-                tt = o[1]
+                tt = ""
+                ttt = o[1]
+                print ttt, type(ttt)
             t += "\t" + o[0] + " = " + tt +"\n"
         return t
     
@@ -103,8 +108,15 @@ class Options:
             titre = titre.encode('utf-8')
             config.add_section(titre)
             for opt in dicopt.items():
+                
                 if type(opt[1]) == list:
-                    config.set(titre, opt[0], opt[1])
+                    for i,v in enumerate(opt[1]):
+                        config.set(titre, opt[0]+"_"+str(i), "-"+v+"-")
+                
+                elif type(opt[1]) == dict:
+                    for k,v in opt[1].items():
+                        config.set(titre, opt[0]+"_"+k, v)
+                
                 else:
                     config.set(titre, opt[0], opt[1])
         
@@ -117,8 +129,10 @@ class Options:
         """ Ouvre un fichier d'options 
         """
         config = ConfigParser.ConfigParser()
-        config.read(self.fichierOpt)
-#        print "ouverture :",self.fichierOpt
+        with io.open(self.fichierOpt, 'r', encoding='utf_8_sig') as fp:
+            config.readfp(fp)
+#        config.read(self.fichierOpt)
+        print "ouverture :",self.fichierOpt
         for titre in self.typesOptions.keys():
             titreUtf = titre.encode('utf-8')
             for titreopt in self.typesOptions[titre].keys():
@@ -135,14 +149,33 @@ class Options:
                 elif isinstance(opt, wx._gdi.Colour):
                     v = eval(config.get(titreUtf, titreopt))
                     opt = wx.Colour(v[0], v[1], v[2], v[3])
+                elif type(opt) == list:
+                    d = {}
+                    for n, v in config.items(titreUtf):
+#                        print titreopt, n
+                        if titreopt.lower() in n:
+                            d[eval(n.rsplit("_")[-1])] = config.get(titreUtf, n)
+#                    print d, "-->",
                     
-                
+                    l = []
+                    for i in range(len(d)):
+                        l.append(d[i][1:-1])
+                    opt = l
+#                    print l
+                    
+                elif type(opt) == dict:
+                    d = {}
+                    for n, v in config.items(titreUtf):
+                        if titreopt.lower() in n:
+                            d[n.rsplit("_")[-1].upper()] = eval(config.get(titreUtf, n))
+                    opt = d
+                    
                 # pour un passage correct de la version 2.5 à 2.6
                 try:
                     v = eval(opt)
                     if type(v) == tuple:
                         opt = wx.Colour(v[0], v[1], v[2]).GetAsString(wx.C2S_HTML_SYNTAX)
-                    print "  ", opt
+#                    print "  ", opt
                 except:
                     pass
                 
@@ -163,6 +196,7 @@ class Options:
                 options.typesOptions[titre][opt[0]] = opt[1]
 #                nopt[opt[0]] = opt[1]
 #            options.typesOptions[titre] = (options.typesOptions[titre][0], nopt)
+      
         return options
                 
 #        self.proposerAnimMont.set(options.proposerAnimMont.get())
@@ -174,12 +208,20 @@ class Options:
         
     ############################################################################
     def defaut(self):
-#        print "defaut"
-        DefOptionsDefaut()
+        print "Options defaut"
+        constantes.DefOptionsDefaut()
+        self.definir()
+      
         
+    ############################################################################
+    def definir(self):
 #        self.optClasse["TypeEnseignement"] = TYPE_ENSEIGNEMENT
-        self.optClasse["Effectifs"] = getTxtEffectifs()
-        self.optClasse["CentresInteretET"] = getTextCI(CentresInteretsET)
+        self.optClasse["Effectifs"] = {"C" : constantes.Effectifs["C"],
+                                       "G" : constantes.NbrGroupes["G"],
+                                       "E" : constantes.NbrGroupes["E"],
+                                       "P" : constantes.NbrGroupes["P"]}
+        self.optClasse["CentresInteretET"] = constantes.CentresInteretsET
+        self.optClasse["PositionsCI_ET"] = constantes.PositionCibleCIET
         
 
     ###########################################################################
@@ -296,7 +338,7 @@ class pnlClasse(wx.Panel):
         
         
         cb = wx.ComboBox(self, -1,"", size = (40, -1), 
-                         choices = listEnseigmenent,
+                         choices = constantes.listEnseigmenent,
                          style = wx.CB_DROPDOWN|wx.CB_READONLY )
         cb.SetStringSelection(self.opt["TypeEnseignement"])
         cb.SetToolTip(wx.ToolTip(u"Choisir le type d'enseignement" ))
@@ -331,8 +373,8 @@ class pnlClasse(wx.Panel):
         sb3 = wx.StaticBox(self, -1, u"Effectifs", size = (200,-1))
         sbs3 = wx.StaticBoxSizer(sb3,wx.VERTICAL)
         varEff = []
-        for i, eff in enumerate(listeEffectifs):
-            v = Variable(Effectifs[eff][0],  
+        for i, eff in enumerate(constantes.listeEffectifs):
+            v = Variable(constantes.Effectifs[eff][0],  
                          lstVal = self.opt["Effectifs"].split()[i], 
                          typ = VAR_ENTIER_POS, bornes = [1,40])
             varEff.append(v)

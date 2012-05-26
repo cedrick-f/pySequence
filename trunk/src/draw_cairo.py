@@ -40,6 +40,12 @@ import cairo
 import ConfigParser
 
 from constantes import Effectifs, NomsEffectifs, listeDemarches, Demarches, getSavoir, getCompetence, DemarchesCourt
+import constantes
+
+# Pour dessiner la cible ...
+import os
+import tempfile
+import wx
 
 #
 # Données pour le tracé
@@ -56,29 +62,51 @@ margeY = 0.04
 
 # Ecarts
 ecartX = 0.03
-ecartY = 0.02
+ecartY = 0.03
+
+LargeurTotale = 0.72414 # Pour faire du A4
+
+
 
 # CI
-tailleCI = (0.16, 0.07)
+tailleCI = (0.17, 0.085)
 #posCI = (posPre[0] + taillePre[0]+ecartX, 0.1)
 posCI = (margeX, margeY)
-IcoulCI = (0.9,0.8,0.8)
-BcoulCI = (0.3,0.2,0.25)
+IcoulCI = (0.9, 0.8, 0.8, 0.85)
+BcoulCI = (0.3, 0.2, 0.25, 1)
 fontCI = 0.014
 
+
 # Rectangle des prerequis
-taillePre = (0.28, 0.16 - tailleCI[1] - ecartY/2)
+taillePre = (0.29, 0.18 - tailleCI[1] - ecartY/2)
 posPre = (margeX, posCI[1] + tailleCI[1] + ecartY/2)
-IcoulPre = (0.8,0.8,0.9)
-BcoulPre = (0.2,0.25,0.3)
+IcoulPre = (0.8, 0.8, 0.9, 0.85)
+BcoulPre = (0.2, 0.25, 0.3, 1)
 fontPre = 0.014
 
+# Position dans l'année
+posPos = (posPre[0] + taillePre[0] + ecartX/2, margeY)
+taillePos = (0.72414-posPos[0]-margeX, 0.03)
+IcoulPos = (0.8, 0.8, 1, 0.85)
+BcoulPos = (0.1, 0.1, 0.25, 1)
+AcoulPos = (1, 0.4, 0, 1)
+fontPos = 0.014
+
+
 # Rectangle des objectifs
-posObj = (posPre[0] + taillePre[0] + ecartX, margeY)
-tailleObj = (0.72414-posObj[0]-margeX, 0.16)
-IcoulObj = (0.8,0.9,0.8)
-BcoulObj = (0.25,0.3,0.2)
+posObj = (posPos[0], margeY + taillePos[1] + ecartY/2)
+tailleObj = (taillePos[0], posPre[1] + taillePre[1] - posObj[1])
+IcoulObj = (0.8, 0.9, 0.8, 0.85)
+BcoulObj = (0.25, 0.3, 0.2, 1)
 fontObj = 0.014
+
+# Cible
+posCib = (posCI[0] + tailleCI[0] + ecartX/4, margeY - ecartY/2)
+tailleCib = (posObj[0] - posCI[0] - tailleCI[0] - ecartX/2, None)
+IcoulCib = (0.8, 0.8, 1, 0.85)
+BcoulCib = (0.1, 0.1, 0.25, 1)
+centreCib = (posCib[0] + tailleCib[0] / 2 + 0.0006, posCib[1] + tailleCib[0] / 2 - 0.004)
+
 
 # Zone de commentaire
 fontIntComm = 0.01
@@ -87,15 +115,16 @@ tailleComm = [0.72414-0.1, None]
 intComm = []
 
 # Zone d'organisation de la séquence (grand cadre)
-posZOrganis = (0.05, 0.26)
+posZOrganis = (0.05, 0.24)
 tailleZOrganis = [0.72414-0.1, None]
 bordureZOrganis = 0.01
 
 # Rectangle de l'intitulé
 tailleIntitule = [0.4, 0.04]
 posIntitule = [(0.72414-tailleIntitule[0])/2, posZOrganis[1]-tailleIntitule[1]]
-IcoulIntitule = (0.2,0.8,0.2)
-BcoulIntitule = (0.2,0.8,0.2)
+IcoulIntitule = (0.98, 0.99, 0.98, 0.8)
+BcoulIntitule = (0.2, 0.8, 0.2, 1)
+FontIntitule = 0.02
 
 # Zone de déroulement de la séquence
 posZDeroul = (0.06, 0.3)
@@ -386,11 +415,11 @@ def DefinirZones(seq, ctx):
 #             "P" : tailleZSeances[0]*Effectifs["P"][1]/Effectifs["G"][1]*6/7,
              }
 
-    hHoraire = tailleZSeances[1] / (seq.GetHoraireTotal() + 0.25*(len(seq.seance)-1))
+    hHoraire = tailleZSeances[1] / (seq.GetDureeGraph() + 0.25*(len(seq.seance)-1))
     ecartSeanceY = hHoraire/4
     if ecartSeanceY > 0.02:
         ecartSeanceY = 0.02
-        hHoraire = (tailleZSeances[1] - (len(seq.seance)-1)*ecartSeanceY) / seq.GetHoraireTotal()
+        hHoraire = (tailleZSeances[1] - (len(seq.seance)-1)*ecartSeanceY) / seq.GetDureeGraph()
 
 
 ######################################################################################
@@ -405,6 +434,7 @@ def Draw(ctx, seq):
     """ Dessine une fiche de séquence de la séquence <seq>
         dans un contexte cairo <ctx>
     """
+    
 #        print "Draw séquence"
     InitCurseur()
     
@@ -418,8 +448,8 @@ def Draw(ctx, seq):
     options.set_hint_metrics(cairo.HINT_METRICS_OFF)#cairo.HINT_METRICS_ON)#
     ctx.set_font_options(options)
     
-    
     DefinirZones(seq, ctx)
+    
     
     #
     # Flèche
@@ -431,23 +461,100 @@ def Draw(ctx, seq):
     fleche_ronde(ctx, 0.72414/2, y, rayon, alpha0, alpha1, 0.035, 0.06, (0.8, 0.9, 0.8, 1))
     
     #
+    #  Cadre et Intitulé de la séquence
+    #
+    curve_rect_titre(ctx, seq.intitule,  
+                     (posZOrganis[0]-bordureZOrganis, posZOrganis[1], tailleZOrganis[0]+bordureZOrganis*2, tailleZOrganis[1]+bordureZOrganis), 
+                     BcoulIntitule, IcoulIntitule, FontIntitule)
+    
+    
+    #
     # Type d'enseignement
     #
-    ctx.set_font_size(0.05)
-#    ctx.set_source_rgb(0.1,0.1,0.1)
+    ctx.set_font_size(0.04)
     ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                        cairo.FONT_WEIGHT_BOLD)
-#    show_text_rect(ctx, seq.classe.typeEnseignement, posCI[0], posCI[1] - 0.08, tailleCI[0], tailleCI[1], ha = 'c', wrap = False, max_font = 0.04)
-    
     xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(seq.classe.typeEnseignement)
-    ctx.move_to (posCI[0] + tailleCI[0] + ecartX/2 , posCI[1] + height)
+#    fascent, fdescent, fheight, fxadvance, fyadvance = ctx.font_extents()
+    ctx.move_to (posObj[0] , posCI[1] - ybearing - 0.01)
     ctx.text_path (seq.classe.typeEnseignement)
-    ctx.set_source_rgb (0.5, 0.5, 1)
+    ctx.set_source_rgb (0.6, 0.6, 0.9)
     ctx.fill_preserve ()
     ctx.set_source_rgb (0, 0, 0)
-    ctx.set_line_width (0.002)
+    ctx.set_line_width (0.0015)
     ctx.stroke ()
+    tailleTypeEns = width
     
+    #
+    # Position dans l'année
+    #
+    DrawPeriodes(ctx, seq.position, tailleTypeEns = tailleTypeEns)
+    
+    #
+    # Cible
+    #
+    if seq.classe.typeEnseignement == "ET":
+        tfname = tempfile.mktemp()
+        bmp = constantes.images.Cible.GetBitmap()
+        try:
+            bmp.SaveFile(tfname, wx.BITMAP_TYPE_PNG)
+            image = cairo.ImageSurface.create_from_png(tfname)
+        finally:
+            if os.path.exists(tfname):
+                os.remove(tfname)  
+    #    image = cairo.ImageSurface.create_from_png("D:\Developpement\Sequence\images\Cible.png")
+        w = image.get_width()
+        h = image.get_height()
+        ctx.save()
+        ctx.translate(posCib[0], posCib[1])
+        ctx.scale(tailleCib[0]/w, tailleCib[0]/w)
+        ctx.set_source_surface(image, 0, 0)
+        ctx.paint ()
+        ctx.restore()
+    
+        rayons = {"F" : tailleCib[0] * 0.28, 
+                  "S" : tailleCib[0] * 0.19, 
+                  "C" : tailleCib[0] * 0.1,
+                  "_" : tailleCib[0] * 0.45}
+        angles = {"M" : 0,
+                  "E" : 120,
+                  "I" : -120,
+                  "_" : -98}
+        
+        for i, ci in enumerate(seq.CI.numCI):
+            mei, fsc = seq.CI.GetPosCible(i).split("_")
+            mei = mei.replace(" ", "")
+            fsc = fsc.replace(" ", "")
+            
+            if len(fsc) == 0:
+                ray = 0
+            else:
+                ray = 0
+                for j in fsc:
+                    ray += rayons[j]
+                ray = ray/len(fsc)
+            
+            if len(mei) == 0:
+                ray = rayons["_"]
+                ang = angles["_"]
+                angles["_"] = -angles["_"] # on inverse le coté pour pouvoir mettre 2 CI en orbite
+            elif len(mei) == 3:
+                ray = 0
+                ang = 0
+            elif len(mei) == 2:
+                ang = (angles[mei[1]] + angles[mei[0]])/2
+                if ang == 0:
+                    ang = 180
+                
+            else:
+                ang = angles[mei[0]]
+                    
+            pos = (centreCib[0] + ray * sin(ang*pi/180) ,
+                   centreCib[1] - ray * cos(ang*pi/180))
+            boule(ctx, pos[0], pos[1], 0.005, (0.95, 1, 0.9, 1), (0.1, 0.3, 0.05, 1))
+            
+            
+            
     #
     # Durée de la séquence
     #
@@ -496,29 +603,7 @@ def Draw(ctx, seq):
         DrawLigneEff(ctx, x+w, y+h)
         
     
-    #
-    #  Intitulé de la séquence
-    #
-    x, y = posIntitule
-    w, h = tailleIntitule
-    ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-                          cairo.FONT_WEIGHT_BOLD)
-    ctx.set_source_rgb(0, 0, 0)
-    if len(seq.intitule) > 0:
-        show_text_rect(ctx, seq.intitule, (x, y, w, h))
-    ctx.set_line_width(0.005)
-    ctx.set_source_rgb(BcoulIntitule[0], BcoulIntitule[1], BcoulIntitule[2])
-    ctx.rectangle(x, y, w, h)
-    ctx.stroke()
-
-    #
-    #  Bordure Organisation
-    #
-    ctx.set_line_width(0.005)
-    ctx.set_source_rgb(BcoulIntitule[0], BcoulIntitule[1], BcoulIntitule[2])
-    ctx.rectangle(posZOrganis[0]-bordureZOrganis, posZOrganis[1], tailleZOrganis[0]+bordureZOrganis*2, tailleZOrganis[1]+bordureZOrganis)
-    ctx.stroke()
-
+    
 
     #
     #  Prerequis
@@ -671,11 +756,16 @@ def Draw(ctx, seq):
                 nCol = 1, va = 'c', ha = 'g', orient = 'h', coul = ICoulSeance, 
                 contenu = [zip(*intituleSeances)[2]])
         
+    #
+    # Informations
+    #
+    ctx.select_font_face ("Sans", cairo.FONT_SLANT_ITALIC,
+                     cairo.FONT_WEIGHT_BOLD)
+    ctx.set_font_size (0.006)
+    ctx.set_source_rgb(0.6, 0.6, 0.6)
+    ctx.move_to (margeX, 1 - margeY + 0.02)
+    ctx.show_text ("Fiche créée avec le logiciel pySequence (http://code.google.com/p/pysequence)")
 
-#        tableauH(ctx, nomsSeances, posZIntSeances[0], posZIntSeances[1], 
-#                0.05, tailleZIntSeances[0]-0.05, tailleZIntSeances[1], 
-#                nCol = 1, va = 'c', ha = 'g', orient = 'h', coul = ICoulSeance, 
-#                contenu = [intSeances])
     
     
     
@@ -695,7 +785,43 @@ def DrawLigneEff(ctx, x, y):
     ctx.stroke()
     ctx.set_dash([], 0)
 
-
+######################################################################################  
+def DrawPeriodes(ctx, pos = None, tailleTypeEns = 0, origine = False):
+    ctx.set_line_width (0.001)
+    if origine:
+        x = 0
+        y = 0
+    else:
+        x = posPos[0] + tailleTypeEns + ecartX
+        y = posPos[1]
+    
+    wt = taillePos[0] - tailleTypeEns - ecartX
+    dx = 0.005
+    w = (wt - 8 * dx)/8
+    h = taillePos[1]/2
+    
+    ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+                                       cairo.FONT_WEIGHT_NORMAL)
+    show_text_rect_fix(ctx, u"1ère", x, y, wt/2, h/2, fontPos, 1)
+    ctx.stroke ()
+    show_text_rect_fix(ctx, u"Tale", x+wt/2, y, wt/2, h/2, fontPos, 1)
+    ctx.stroke ()
+    
+    for p in range(8):
+        ctx.rectangle (x, y+0.01, w, h)
+        if pos == p:
+            ctx.set_source_rgba (AcoulPos[0], AcoulPos[1], AcoulPos[2], AcoulPos[3])
+        else:
+            ctx.set_source_rgba (IcoulPos[0], IcoulPos[1], IcoulPos[2], IcoulPos[3])
+        ctx.fill_preserve ()
+        ctx.set_source_rgba (BcoulPos[0], BcoulPos[1], BcoulPos[2], BcoulPos[3])
+        ctx.stroke ()
+        if p == 3:
+            x += dx
+        x+= dx + w
+    
+    
+    
 ######################################################################################  
 def Draw_CI(ctx, CI):
     # Rectangle arrondi
@@ -728,7 +854,7 @@ class Cadre():
         self.seance = seance
         self.ctx = ctx
         self.w = wEff[seance.effectif]
-        self.h = hHoraire * seance.GetDuree()
+        self.h = hHoraire * seance.GetDureeGraph()
         self.filigrane = filigrane
         self.xd = None
         self.y = None
@@ -762,7 +888,7 @@ class Cadre():
                                   cairo.FONT_WEIGHT_NORMAL)
             self.ctx.set_source_rgb (0,0,0)
             show_text_rect(self.ctx, self.seance.intitule, (x, y + hc, 
-                           self.w, self.h-hc), ha = 'g', fontsizeMinMax = (minFont, -1))
+                           self.w, self.h-hc), ha = 'g', fontsizeMinMax = (minFont, 0.015))
             
         if not self.filigrane and self.signEgal:
             dx = wEff["P"]/4
@@ -813,7 +939,7 @@ def DrawSeanceRacine(ctx, seance):
     #
     # Flèche indiquant la durée
     #
-    h = hHoraire * seance.GetDuree()
+    h = hHoraire * seance.GetDureeGraph()
     fleche_verticale(ctx, posZDeroul[0], cursY, 
                      h, 0.02, (0.9,0.8,0.8,0.5))
     ctx.set_source_rgb(0.5,0.8,0.8)
@@ -1286,12 +1412,15 @@ def show_text_rect(ctx, texte, rect, va = 'c', ha = 'c', b = 0.4, orient = 'h',
     w, h = w-2*ecart, h-2*ecart
     fontSize = min(w/maxw, h/(hTotale))
     
+    if fontSize > fontsizeMinMax[1]:
+        show_text_rect_fix(ctx, texte, x, y, w, h, fontsizeMinMax[1], 100, va = va, ha = ha)
+        return
     
     fontSize = min(fontSize, fontsizeMinMax[1])
 #    print "fontSize", fontSize
     
     if fontSize < fontsizeMinMax[0]:
-        print "FIX"
+#        print "FIX"
         show_text_rect_fix(ctx, texte, x, y, w, h, fontsizeMinMax[0], nLignesMaxi, va, ha)
         return
             
@@ -1460,7 +1589,7 @@ def show_text_rect_fix(ctx, texte, x, y, w, h, fontSize, Nlignes, va = 'c', ha =
         x, y, w, h : position et dimensions du rectangle
         va, ha : alignements vertical et horizontal ('h', 'c', 'b' et 'g', 'c', 'd')
     """
-    print "show_text_rect_fix", fontSize, Nlignes, texte
+#    print "show_text_rect_fix", fontSize, Nlignes, texte
 
     if texte == "":
         return
@@ -1496,7 +1625,7 @@ def show_text_rect_fix(ctx, texte, x, y, w, h, fontSize, Nlignes, va = 'c', ha =
 #    lt = []
 #    for l in texte.split("\n"):
 #        lt.extend(textwrap.wrap(l, wrap))
-    print lt
+#    print lt
 #    print w
     
     #
@@ -1569,29 +1698,35 @@ def curve_rect_titre(ctx, titre, rect, coul_bord, coul_int, taille_font = 0.01, 
     ctx.set_font_size(taille_font)
     fascent, fdescent, fheight, fxadvance, fyadvance = ctx.font_extents()
     xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(titre)
-    
-    curve_rect(ctx, x0, y0, rect_width, rect_height, rayon, ouverture = width + fheight)
-    ctx.set_source_rgb (coul_int[0], coul_int[1], coul_int[2])
+#    if width > rect_width-2*rayon:
+#    
+#    continuer = True
+      
+    curve_rect(ctx, x0, y0, rect_width, rect_height, rayon, 
+               ouverture = min(width + fheight, rect_width-2*rayon))
+    ctx.set_source_rgba (coul_int[0], coul_int[1], coul_int[2], coul_int[3])
     ctx.fill_preserve ()
-    ctx.set_source_rgba (coul_bord[0], coul_bord[1], coul_bord[2])
+    ctx.set_source_rgba (coul_bord[0], coul_bord[1], coul_bord[2], coul_bord[3])
     ctx.stroke ()
     
     xc = x0 + rayon
     yc = y0 + height/2
-    mask = cairo.LinearGradient (xc, y0, xc, y0 - height)
+    mask = cairo.LinearGradient (xc, y0, xc, y0 - height*1.5)
     mask.add_color_stop_rgba (1, 1, 1, 1, 0)
-    mask.add_color_stop_rgba (0, coul_int[0], coul_int[1], coul_int[2],1)
-    ctx.rectangle (xc, y0 - height/2, width + fheight, height)
-    ctx.set_source (mask)
+    mask.add_color_stop_rgba (0, coul_int[0], coul_int[1], coul_int[2], coul_int[3])
+    ctx.rectangle (xc, y0 - height, min(width + fheight, rect_width-2*rayon), height)
+    ctx.set_source (mask) 
     ctx.fill ()
 #    ctx.stroke ()
     
     xc = x0 + rayon + fheight/2
-    yc = y0 + height/2
+    yc = y0 - height
     
     ctx.move_to(xc, yc)
     ctx.set_source_rgb(0, 0, 0)
-    ctx.show_text(titre)
+#    ctx.show_text(titre)
+    
+    show_text_rect_fix(ctx, titre, xc, yc, rect_width-2*rayon, fheight, taille_font, 1, ha = "g")
     
     
     return
@@ -1784,11 +1919,11 @@ def rectangle_plein(ctx, x, y, w, h, coulBord, coulInter, alpha = 1):
     ctx.set_source_rgba (coulBord[0], coulBord[1], coulBord[2], alpha)
     ctx.stroke ()
     
-def boule(ctx, x, y, r):
+def boule(ctx, x, y, r, color0 = (1, 1, 1, 1), color1 = (0, 0, 0, 1)):
     pat = cairo.RadialGradient (x-r/2, y-r/2, r/4,
                                 x-r/3, y-r/3, 3*r/2)
-    pat.add_color_stop_rgba (0, 1, 1, 1, 1)
-    pat.add_color_stop_rgba (1, 0, 0, 0, 1)
+    pat.add_color_stop_rgba (0, color0[0], color0[1], color0[2], color0[3])
+    pat.add_color_stop_rgba (1, color1[0], color1[1], color1[2], color1[3])
     ctx.set_source (pat)
     ctx.arc (x, y, r, 0, 2*pi)
     ctx.fill ()
