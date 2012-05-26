@@ -22,32 +22,34 @@ __version__ = "2.0"
 ####################################################################################
 # Outils "système"
 import sys, os
-if hasattr(sys, 'setdefaultencoding'):
-    sys.setdefaultencoding('utf8')
-    import locale
-    loc = locale.getdefaultlocale()
-    if loc[1]:
-        encoding = loc[1]
-        sys.setdefaultencoding(encoding)
+
+#if hasattr(sys, 'setdefaultencoding'):
+#sys.setdefaultencoding('utf8')
+import locale
+loc = locale.getdefaultlocale()
+print loc
+#if loc[1]:
+#    encoding = loc[1]
+#    sys.setdefaultencoding(encoding)
 
 DEFAUT_ENCODING = sys.getdefaultencoding()
 
-
 import webbrowser
-#import win32com
 import subprocess
 import urllib
 
-# GUI
+# GUI wxpython
 import wx
 from wx.lib.wordwrap import wordwrap
 import wx.lib.hyperlink as hl
 import  wx.lib.scrolledpanel as scrolled
 import wx.combo
 import wx.lib.platebtn as platebtn
-import  wx.lib.buttons  as  buttons
+#import  wx.lib.buttons  as  buttons
+from wx.lib.agw import ultimatelistctrl as ULC
 
 # Graphiques vectoriels
+import draw_cairo
 try:
     import wx.lib.wxcairo
     import cairo
@@ -62,13 +64,8 @@ try:
 except ImportError: # if it's not there locally, try the wxPython lib.
     import wx.lib.agw.customtreectrl as CT
 
-
 # Gestionnaire de "pane"
 import wx.aui as aui
-#try:
-#    from agw import aui
-#except ImportError:
-#    import wx.lib.agw.aui as aui
 
 # Pour passer des arguments aux callback
 import functools
@@ -78,12 +75,13 @@ import xml.etree.ElementTree as ET
 
 # des widgets wx évolués "faits maison"
 from CedWidgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_ENTIER_POS
-from CustomCheckBox import CustomCheckBox
+#from CustomCheckBox import CustomCheckBox
 # Les constantes et les fonctions de dessin
-import draw_cairo
+
 
 # Les constantes partagées
-from constantes import *
+from constantes import calculerEffectifs, revCalculerEffectifs, APP_DATA_PATH, PATH, findEffectif, getTextCI, strEffectifComplet, strEffectif, getListCI
+import constantes
 
 # Pour lire les classeurs Excel
 import recup_excel
@@ -163,9 +161,31 @@ class AppelEvent(wx.PyCommandEvent):
     
 def testRel(lien, path):
     try:
+#        print "1"
         return os.path.relpath(lien,path)
+        
     except:
         return lien
+    
+######################################################################################  
+def toDefautEncoding(path): 
+#        try:
+    path = path.decode(FILE_ENCODING)
+    path = path.encode(DEFAUT_ENCODING)
+    return path  
+#        except:
+#            return self.path    
+            
+            
+
+    
+######################################################################################  
+def toFileEncoding(path):
+    try:
+        path = path.decode(DEFAUT_ENCODING)
+        return path.encode(FILE_ENCODING)
+    except:
+        return path
     
     
 ####################################################################################
@@ -239,16 +259,18 @@ class Lien():
                 
     ######################################################################################  
     def EvalLien(self, path, pathseq):
-#        print "EvalLien", self
+        print "EvalLien", self
 
         if path == "" or path.split() == []:
             self.path = ""
             self.type = ""
             return
-        
+        path = toFileEncoding(path)
+        pathseq = toFileEncoding(pathseq)
         path = self.GetAbsPath(pathseq, path)
-        
+        print "   ", path
         if os.path.exists(path):
+            print "   exist"
             if os.path.isfile(path):
                 self.type = 'f'
                 self.path = testRel(path, pathseq)
@@ -259,45 +281,23 @@ class Lien():
             self.type = 'u'
             self.path = path
 
+        print "Fin EvalLien", self.type, self
               
     ######################################################################################  
     def GetAbsPath(self, pathseq, path = None):
         if path == None:
             path = self.path
         
-        path = self.Encode(path)
+#        path = self.GetEncode(path)
         if os.path.exists(path):
             path = path
         else:
-            pathseq = self.Encode(pathseq)
+#            pathseq = self.GetEncode(pathseq)
             path = os.path.join(pathseq, path)
         return path
     
     
-    ######################################################################################  
-    def GetDecode(self): 
-#        try:
-        path = self.path.decode(FILE_ENCODING)
-        path = path.encode(DEFAUT_ENCODING)
-        return path  
-#        except:
-#            return self.path    
-                
-                
-    ######################################################################################  
-    def DoEncode(self):
-        path = self.path.decode(DEFAUT_ENCODING)
-        self.path = path.encode(FILE_ENCODING)
-        
-        
-    ######################################################################################  
-    def Encode(self, path):
-        try:
-            path = path.decode(DEFAUT_ENCODING)
-            return path.encode(FILE_ENCODING)
-        except:
-            return path
-        
+   
     
     ######################################################################################  
     def getBranche(self, branche):
@@ -477,10 +477,11 @@ class Classe():
         
         self.typeEnseignement = 'ET'
         
-        self.ci_ET = CentresInteretsET
+        self.ci_ET = constantes.CentresInteretsET
+        self.posCI_ET = constantes.PositionCibleCIET
         
-        self.effectifs = Effectifs
-        self.nbrGroupes = NbrGroupes
+        self.effectifs = constantes.Effectifs
+        self.nbrGroupes = constantes.NbrGroupes
         calculerEffectifs(self)
         
         if panelParent:
@@ -489,6 +490,11 @@ class Classe():
         self.panelParent = panelParent
         self.app = app
         
+    ######################################################################################  
+    def __repr__(self):
+        return self.posCI_ET[0] + " " + self.ci_ET[0]
+    
+    
     ######################################################################################  
     def SetSequence(self, sequence):   
         self.sequence = sequence 
@@ -509,6 +515,7 @@ class Classe():
             ci = ET.SubElement(classe, "CentreInteret")
             for i,c in enumerate(self.ci_ET):
                 ci.set("CI"+str(i+1), c)
+                ci.set("pos"+str(i+1), self.posCI_ET[i])
         return classe
     
     ######################################################################################  
@@ -516,16 +523,22 @@ class Classe():
 #        print "setBranche classe"
         self.typeEnseignement = branche.get("Type", "ET")
         
-        self.ci_ET = getListCI(branche.get("CentreInteret", ""))
+#        self.ci_ET = getListCI(branche.get("CentreInteret", ""))
         
-        self.ci_ET = []
+        
         brancheCI = branche.find("CentreInteret")
         if brancheCI != None:
             listCI = list(brancheCI)
             listCI.sort()
+            ci_ET = []
+            posCI_ET = []
             for i,c in list(listCI):
-                self.ci_ET.append(brancheCI.get("CI"+str(i+1), ""))
-                      
+                ci_ET.append(brancheCI.get("CI"+str(i+1), ""))
+                posCI_ET.append(brancheCI.get("pos"+str(i+1), "O"))    
+            if len(ci_ET) > 0:
+                self.ci_ET = ci_ET
+                self.posCI_ET = posCI_ET
+                
         # Ancien format : <Effectifs C="9" D="3" E="2" G="9" P="3" />
         # Nouveau format : <Effectifs eC="9" nE="2" nG="9" nP="3" />
         brancheEff = branche.find("Effectifs")
@@ -601,6 +614,8 @@ class Sequence():
         self.intitule = intitule
         self.classe = classe
         self.app = app
+        self.position = 0
+        
         if panelParent:
             self.panelPropriete = PanelPropriete_Sequence(panelParent, self)
         
@@ -615,6 +630,7 @@ class Sequence():
         self.seance = [Seance(self, panelParent)]
         
         self.commentaire = u""
+        
         
         self.panelParent = panelParent
         
@@ -658,7 +674,13 @@ class Sequence():
             duree += s.GetDuree()
         return duree
                         
-                
+    ######################################################################################  
+    def GetDureeGraph(self):
+        duree = 0
+        for s in self.seance:
+            duree += s.GetDureeGraph()
+        return duree
+            
     ######################################################################################  
     def GetApercu(self, mult = 3):
         imagesurface = cairo.ImageSurface(cairo.FORMAT_ARGB32,  210*mult, 297*mult)#cairo.FORMAT_ARGB32,cairo.FORMAT_RGB24
@@ -676,9 +698,18 @@ class Sequence():
         """
         # Création de la racine
         sequence = ET.Element("Sequence")
-        sequence.set("Intitule", self.intitule)
         
-        brancheCI = self.CI.getBranche()
+        sequence.set("Intitule", self.intitule)
+#        print ET.tostring(sequence)
+        
+        print self.commentaires
+        if self.commentaires != u"":
+            sequence.set("Commentaires", self.commentaires)
+#        print ET.tostring(sequence)
+        sequence.set("Position", str(self.position))
+#        print ET.tostring(sequence)
+        
+        sequence.append(self.CI.getBranche())
 #        print "brancheCI", brancheCI
 #        if brancheCI != None:
 #            ci = ET.SubElement(sequence, "CentreInteret")
@@ -708,6 +739,10 @@ class Sequence():
 #        print "setBranche séquence"
         self.intitule = branche.get("Intitule", u"")
         
+        self.commentaires = branche.get("Commentaires", u"")
+        
+        self.position = eval(branche.get("Position", "0"))
+
         brancheCI = branche.find("CentreInteret")
         if brancheCI:
             self.CI.setBranche(brancheCI)
@@ -755,7 +790,13 @@ class Sequence():
     ######################################################################################  
     def SetText(self, text):
         self.intitule = text
-      
+    
+    
+    ######################################################################################  
+    def SetPosition(self, pos):
+        self.position = pos  
+        
+        
     ######################################################################################  
     def SetCommentaire(self, text):
         self.commentaire = text  
@@ -1066,12 +1107,7 @@ class Sequence():
 #        self.curseur = [cf.posZSeances[0], cf.posZSeances[1]]
         
         
-    ######################################################################################  
-    def GetHoraireTotal(self):
-        h = 0
-        for s in self.seance:
-            h += s.GetDuree()
-        return h
+    
             
     ######################################################################################  
     def GetNbreSeances(self):
@@ -1191,9 +1227,11 @@ class CentreInteret():
     def getBranche(self):
         """ Renvoie la branche XML du centre d'intérét pour enregistrement
         """
+        print "getBranche CI"
         root = ET.Element("CentresInteret")
         for i, num in enumerate(self.numCI):
-            root.set("C"+str(i), num)
+            root.set("C"+str(i), str(num))
+#        print ET.tostring(root)
         return root
     
     
@@ -1209,8 +1247,20 @@ class CentreInteret():
     ######################################################################################  
     def setBranche(self, branche):
         self.numCI = []
+        
         for i, s in enumerate(branche.keys()):
             self.numCI.append(eval(branche.get("C"+str(i), "")))
+        
+        # Pour rétro compatibilité
+        if self.numCI == []:
+            code = list(branche)[0].tag
+            if code == "_":
+                num = []
+                self.AddNum(num)
+            else:
+                num = eval(code[2:])-1
+                self.AddNum(num)
+                
         if hasattr(self, 'panelPropriete'):
             self.panelPropriete.MiseAJour()
         return
@@ -1231,6 +1281,7 @@ class CentreInteret():
     def AddNum(self, num): 
         self.numCI.append(num)
         self.SetNum()
+    
         
     ######################################################################################  
     def DelNum(self, num): 
@@ -1245,12 +1296,12 @@ class CentreInteret():
         if hasattr(self, 'arbre'):
             self.MaJArbre()
         
-        if len(self.numCI) > 0 :
-            self.parent.VerrouillerClasse()
+#        if len(self.numCI) > 0 :
+        self.parent.VerrouillerClasse()
         
     ######################################################################################  
     def GetIntit(self, num):
-        return CentresInterets[self.parent.classe.typeEnseignement][self.numCI[num]]
+        return constantes.CentresInterets[self.parent.classe.typeEnseignement][self.numCI[num]]
     
     
     ######################################################################################  
@@ -1266,6 +1317,10 @@ class CentreInteret():
         else :
             return "CI"+str(self.numCI[num]+1)
     
+    ######################################################################################  
+    def GetPosCible(self, num):
+        if constantes.PositionCibleCIET != None:
+            return constantes.PositionCibleCIET[self.numCI[num]]
     
     ######################################################################################  
     def MaJArbre(self):
@@ -1488,7 +1543,7 @@ class Seance(ElementDeSequence):
         # Les données sauvegardées
         self.ordre = 1
         self.duree = Variable(u"Durée", lstVal = 1.0, nomNorm = "", typ = VAR_REEL_POS, 
-                              bornes = [0,8], modeLog = False,
+                              bornes = [0.25,30], modeLog = False,
                               expression = None, multiple = False)
         self.intitule  = u""
         self.intituleDansDeroul = True
@@ -1690,7 +1745,7 @@ class Seance(ElementDeSequence):
                 else:
                     codeEff = ""
         else:
-            for k, v in NomsEffectifs.items():
+            for k, v in constantes.NomsEffectifs.items():
                 if v[0][:2] == val[:2]: # On ne compare que les 2 premières lettres
                     codeEff = k
         self.effectif = codeEff
@@ -1798,7 +1853,9 @@ class Seance(ElementDeSequence):
             duree = self.duree.v[0]
         return duree
                 
-                
+    ######################################################################################  
+    def GetDureeGraph(self):
+        return min(self.GetDuree(), 8)           
                 
     ######################################################################################  
     def SetDuree(self, duree, recurs = True):
@@ -1856,7 +1913,7 @@ class Seance(ElementDeSequence):
     
     ######################################################################################  
     def SetDemarche(self, text):   
-        for k, v in Demarches.items():
+        for k, v in constantes.Demarches.items():
             if v[0] == text[0]:
                 codeDem = k
         self.demarche = codeDem
@@ -1868,7 +1925,7 @@ class Seance(ElementDeSequence):
         if type(typ) == str:
             self.typeSeance = typ
         else:
-            self.typeSeance = listeTypeSeance[typ]
+            self.typeSeance = constantes.listeTypeSeance[typ]
             
         if hasattr(self, 'arbre'):
             self.SetCode()
@@ -1916,6 +1973,7 @@ class Seance(ElementDeSequence):
             if hasattr(self, 'panelPropriete'):
                 self.panelPropriete.sendEvent()
             self.tip.SetDescription()
+#        print "Fini"
             
     ######################################################################################  
     def SetCode(self):
@@ -1931,7 +1989,7 @@ class Seance(ElementDeSequence):
 #        print self.code
         if hasattr(self, 'codeBranche') and self.typeSeance != "":
             self.codeBranche.SetLabel(self.code)
-            self.arbre.SetItemText(self.branche, TypesSeanceCourt[self.typeSeance])
+            self.arbre.SetItemText(self.branche, constantes.TypesSeanceCourt[self.typeSeance])
 #        else:
 #            self.codeBranche.SetLabel("??")
 #            self.arbre.SetItemText(self.branche, u"Séance :")
@@ -1943,7 +2001,7 @@ class Seance(ElementDeSequence):
         # Tip
         self.tip.SetTitre(u"Séance "+ self.code)
         if self.typeSeance != "":
-            self.tip.SetCode(u"Type : "+ TypesSeance[self.typeSeance])
+            self.tip.SetCode(u"Type : "+ constantes.TypesSeance[self.typeSeance])
         else:
             self.tip.SetCode(u"")
         if self.intitule != "":
@@ -2165,7 +2223,7 @@ class Systeme(ElementDeSequence):
         self.image = None
         
         # Tip
-        self.tip = PopupInfoSysteme(parent.app, u"Système")
+        self.tip = PopupInfoSysteme(parent.app, u"Système ou matériel")
         if panelParent:
             self.panelPropriete = PanelPropriete_Systeme(panelParent, self)
         
@@ -2239,7 +2297,7 @@ class Systeme(ElementDeSequence):
         image = self.arbre.images["Sys"]
 #        else:
 #            image = self.image.ConvertToImage().Scale(20, 20).ConvertToBitmap()
-        self.branche = arbre.AppendItem(branche, u"Système :", wnd = self.codeBranche, data = self,
+        self.branche = arbre.AppendItem(branche, u"Système ou matériel:", wnd = self.codeBranche, data = self,
                                         image = image)
 #        self.SetNom(self.nom)
         self.SetNombre()
@@ -2349,16 +2407,20 @@ class FenetreSequences(aui.AuiMDIParentFrame):
         #############################################################################################
         options = Options.Options()
         if options.fichierExiste():
-            try :
-                options.ouvrir()
-            except:
-                print "Fichier d'options corrompus ou inexistant !! Initialisation ..."
-                options.defaut()
+#            try :
+            options.ouvrir()
+#            except:
+#                print "Fichier d'options corrompus ou inexistant !! Initialisation ..."
+#                options.defaut()
 
+#        print options
         
         # On applique les options ...
         self.DefinirOptions(options)
         
+        #############################################################################################
+        # Création du menu
+        #############################################################################################
         self.CreateMenuBar()
         self.Bind(wx.EVT_MENU, self.commandeNouveau, id=10)
         self.Bind(wx.EVT_MENU, self.commandeOuvrir, id=11)
@@ -2423,9 +2485,11 @@ class FenetreSequences(aui.AuiMDIParentFrame):
         else:
             self.menuReg.SetText(u"Inscrire dans la base de registre")
             
+            
+            
     #############################################################################
     def DefinirOptions(self, options):
-        global TYPE_ENSEIGNEMENT
+        
         self.options = options.copie()
         #
         # Options de Classe
@@ -2448,9 +2512,15 @@ class FenetreSequences(aui.AuiMDIParentFrame):
 #            dlg.Destroy()
         else:
 #            TYPE_ENSEIGNEMENT = te
-            setValEffectifs(self.options.optClasse["Effectifs"])
-     
-            CentresInteretsET = getListCI(lstCI)
+#            print self.options
+            constantes.Effectifs["C"] = self.options.optClasse["Effectifs"]["C"]
+            constantes.NbrGroupes["G"] = self.options.optClasse["Effectifs"]["G"]
+            constantes.NbrGroupes["E"] = self.options.optClasse["Effectifs"]["E"]
+            constantes.NbrGroupes["P"] = self.options.optClasse["Effectifs"]["P"]
+                          
+            constantes.CentresInteretsET = lstCI
+                
+            constantes.PositionCibleCIET = self.options.optClasse["PositionsCI_ET"]
                 
                 
     #############################################################################
@@ -2619,6 +2689,7 @@ class FenetreSequences(aui.AuiMDIParentFrame):
             print "   Erreur enregistrement options...",
             
         try:
+            self.options.definir()
             self.options.enregistrer()
         except IOError:
             print "   Permission d'enregistrer les options refusée...",
@@ -2662,8 +2733,8 @@ class FenetreSequence(aui.AuiMDIChildFrame):
         #
         # Pour la sauvegarde
         #
-        self.fichierCourant = ""
-        self.DossierSauvegarde = ""
+        self.fichierCourant = u""
+        self.DossierSauvegarde = u""
         self.fichierCourantModifie = False
         
         #
@@ -2896,7 +2967,7 @@ class FenetreSequence(aui.AuiMDIChildFrame):
         
         # La séquence
         sequence = self.sequence.getBranche()
-        
+#        print ET.tostring(sequence)
         classe = self.classe.getBranche()
         
         # La racine
@@ -2917,31 +2988,31 @@ class FenetreSequence(aui.AuiMDIChildFrame):
 #        print "ouvrir", nomFichier
         fichier = open(nomFichier,'r')
         self.definirNomFichierCourant(nomFichier)
-        try:
-            root = ET.parse(fichier).getroot()
+#        try:
+        root = ET.parse(fichier).getroot()
+        
+        # La séquence
+        sequence = root.find("Sequence")
+        if sequence == None:
+            self.sequence.setBranche(root)
             
-            # La séquence
-            sequence = root.find("Sequence")
-            if sequence == None:
-                self.sequence.setBranche(root)
+        else:
+            # La classe
+            classe = root.find("Classe")
+            self.classe.setBranche(classe)
+            
+            self.sequence.setBranche(sequence)  
                 
-            else:
-                # La classe
-                classe = root.find("Classe")
-                self.classe.setBranche(classe)
-                
-                self.sequence.setBranche(sequence)  
-                
-        except:
-            dlg = wx.MessageDialog(self, u"La séquence pédagogique\n%s\n n'a pas pu être ouverte !" %nomFichier,
-                               u"Erreur d'ouverture",
-                               wx.OK | wx.ICON_WARNING
-                               #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
-                               )
-            dlg.ShowModal()
-            dlg.Destroy()
-            fichier.close()
-            return
+#        except:
+#            dlg = wx.MessageDialog(self, u"La séquence pédagogique\n%s\n n'a pas pu être ouverte !" %nomFichier,
+#                               u"Erreur d'ouverture",
+#                               wx.OK | wx.ICON_WARNING
+#                               #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
+#                               )
+#            dlg.ShowModal()
+#            dlg.Destroy()
+#            fichier.close()
+#            return
 
         self.arbreSeq.DeleteAllItems()
         root = self.arbreSeq.AddRoot("")
@@ -3033,10 +3104,10 @@ class FenetreSequence(aui.AuiMDIChildFrame):
         if self.fichierCourant == '':
             t += u" - Nouvelle séquence"
         else:
-            t += u" - "+os.path.splitext(os.path.basename(self.fichierCourant))[0].decode(FILE_ENCODING)
+            t += u" - "+os.path.splitext(os.path.basename(self.fichierCourant))[0].encode(DEFAUT_ENCODING)#decode(FILE_ENCODING).
         if modif : 
             t += " **"
-        self.SetTitle(t)
+        self.SetTitle(t.encode(DEFAUT_ENCODING))
         
     #############################################################################
     def MarquerFichierCourantModifie(self, modif = True):
@@ -3076,7 +3147,7 @@ class FenetreSequence(aui.AuiMDIChildFrame):
             path = dlg.GetPath().encode(FILE_ENCODING)
             ext = os.path.splitext(path)[1]
             dlg.Destroy()
-            print ext
+#            print ext
             if ext == ".pdf":
                 PDFsurface = cairo.PDFSurface(path, 595, 842)
                 ctx = cairo.Context (PDFsurface)
@@ -3445,26 +3516,62 @@ class PanelPropriete_Sequence(PanelPropriete):
         PanelPropriete.__init__(self, parent)
         self.sequence = sequence
         
-        titre = wx.StaticText(self, -1, u"Intitulé de la séquence :")
+        titre = wx.StaticBox(self, -1, u"Intitulé de la séquence")
+        sb = wx.StaticBoxSizer(titre)
         textctrl = wx.TextCtrl(self, -1, u"", style=wx.TE_MULTILINE)
+        sb.Add(textctrl, 1, flag = wx.EXPAND)
         self.textctrl = textctrl
-        self.sizer.Add(titre, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 2)
-        self.sizer.Add(textctrl, (0,1), flag = wx.EXPAND)
+        self.sizer.Add(sb, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.EXPAND, border = 2)
+#        self.sizer.Add(textctrl, (0,1), flag = wx.EXPAND)
         self.Bind(wx.EVT_TEXT, self.EvtText, textctrl)
         
-        titre = wx.StaticText(self, -1, u"Commentaires :")
+        titre = wx.StaticBox(self, -1, u"Commentaires")
+        sb = wx.StaticBoxSizer(titre)
         commctrl = wx.TextCtrl(self, -1, u"", style=wx.TE_MULTILINE)
+        sb.Add(commctrl, 1, flag = wx.EXPAND)
         self.commctrl = commctrl
-        self.sizer.Add(titre, (1,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 2)
-        self.sizer.Add(commctrl, (1,1), flag = wx.EXPAND)
+        self.sizer.Add(sb, (0,1), (2,1),  flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.EXPAND, border = 2)
+#        self.sizer.Add(commctrl, (1,1), flag = wx.EXPAND)
         self.Bind(wx.EVT_TEXT, self.EvtText, commctrl)
         self.sizer.AddGrowableCol(1)
         
+        titre = wx.StaticBox(self, -1, u"Position")
+        sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
+        self.bmp = wx.StaticBitmap(self, -1, self.getBitmapPeriode(250))
+        position = wx.Slider(self, -1, self.sequence.position, 0, 7, (30, 60), (250, -1), 
+            wx.SL_HORIZONTAL | wx.SL_AUTOTICKS |wx.SL_TOP 
+            )
+        sb.Add(self.bmp)
+        sb.Add(position)
+        self.position = position
+        self.sizer.Add(sb, (1,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 2)
+        position.Bind(wx.EVT_SCROLL_CHANGED, self.onChanged)
         
         self.sizer.Layout()
         wx.CallAfter(self.Layout)
         
 #        self.Fit()
+        
+    
+    #############################################################################            
+    def getBitmapPeriode(self, larg):
+        w, h = draw_cairo.taillePos
+        w = w - draw_cairo.ecartX
+        imagesurface = cairo.ImageSurface(cairo.FORMAT_ARGB32,  larg, int(h/w*larg))#cairo.FORMAT_ARGB32,cairo.FORMAT_RGB24
+        ctx = cairo.Context(imagesurface)
+        ctx.scale(larg/w, larg/w) 
+        draw_cairo.DrawPeriodes(ctx, self.sequence.position, origine = True)
+
+        bmp = wx.lib.wxcairo.BitmapFromImageSurface(imagesurface)
+#        print bmp.GetWidth(), bmp.GetHeight()
+        return bmp
+         
+    
+    #############################################################################            
+    def onChanged(self, evt):
+        self.sequence.SetPosition(evt.EventObject.GetValue())
+        self.sendEvent()
+        self.bmp.SetBitmap(self.getBitmapPeriode(250))
         
     #############################################################################            
     def EvtText(self, event):
@@ -3505,25 +3612,13 @@ class PanelPropriete_Classe(PanelPropriete):
         #
         rb = wx.RadioBox(
                 self, -1, u"Type d'enseignement", wx.DefaultPosition, (120,-1),
-                listEnseigmenent, 1, wx.RA_SPECIFY_COLS
+                constantes.listEnseigmenent, 1, wx.RA_SPECIFY_COLS
                 )
         rb.SetToolTip(wx.ToolTip(u"Choisir le type d'enseignement" ))
-        for i, e in enumerate(listEnseigmenent):
-            rb.SetItemToolTip(i, Enseigmenent[e])
+        for i, e in enumerate(constantes.listEnseigmenent):
+            rb.SetItemToolTip(i, constantes.Enseigmenent[e])
         self.Bind(wx.EVT_RADIOBOX, self.EvtRadioBox, rb)
-        
-        
-#        sb0 = wx.StaticBox(self, -1, u"Type d'enseignement", size = (100,-1))
-#        sbs0 = wx.StaticBoxSizer(sb0,wx.VERTICAL)
-#        
-#        
-#        cb = wx.ComboBox(self, -1,"", size = (40, -1), 
-#                         choices = listEnseigmenent,
-#                         style = wx.CB_DROPDOWN|wx.CB_READONLY )
-#        cb.SetStringSelection(self.classe.typeEnseignement)
-#        cb.SetToolTip(wx.ToolTip(u"Choisir le type d'enseignement" ))
-#        sbs0.Add(cb, flag = wx.EXPAND|wx.ALL, border = 5)
-#        self.Bind(wx.EVT_COMBOBOX, self.EvtComboBox, cb)
+
         self.sizer.Add(rb, (0,0), flag = wx.EXPAND|wx.ALL)
         self.cb_type = rb
         
@@ -3532,13 +3627,62 @@ class PanelPropriete_Classe(PanelPropriete):
         #
         sb1 = wx.StaticBox(self, -1, u"Centres d'intérêt ET", size = (200,-1))
         sbs1 = wx.StaticBoxSizer(sb1,wx.VERTICAL)
-        txt = wx.TextCtrl(self, -1, getTextCI(self.classe.ci_ET),
-                          style = wx.TE_MULTILINE)
-        sbs1.Add(txt, flag = wx.EXPAND|wx.ALL, border = 5)
-        txt.Bind(wx.EVT_TEXT, self.EvtTxtCI)
-        self.txtCi = txt
+        list = ULC.UltimateListCtrl(self, -1, 
+                                    agwStyle=wx.LC_REPORT
+                                         #| wx.BORDER_SUNKEN
+                                         | wx.BORDER_NONE
+                                         #| wx.ULC_EDIT_LABELS
+                                         #| wx.LC_SORT_ASCENDING
+                                         #| wx.LC_NO_HEADER
+                                         | wx.LC_VRULES
+                                         | wx.LC_HRULES
+                                         #| wx.LC_SINGLE_SEL
+                                         | ULC.ULC_HAS_VARIABLE_ROW_HEIGHT)
+        
+        info = ULC.UltimateListItem()
+        info._mask = wx.LIST_MASK_TEXT | wx.LIST_MASK_FORMAT
+        info._format = wx.LIST_FORMAT_LEFT
+        info._text = u"CI"
+         
+        list.InsertColumnInfo(0, info)
+
+        info = ULC.UltimateListItem()
+        info._format = wx.LIST_FORMAT_LEFT
+        info._mask = wx.LIST_MASK_TEXT | wx.LIST_MASK_FORMAT | ULC.ULC_MASK_FONT
+        info._text = u"Intitulé"
+        
+        list.InsertColumnInfo(1, info)
+        
+        list.SetColumnWidth(0, 35)
+        list.SetColumnWidth(1, -3)
+        
+        
+        for i,p in enumerate(['M', 'E', 'I', 'F', 'S', 'C']):
+            info = ULC.UltimateListItem()
+            info._mask = wx.LIST_MASK_TEXT
+            info._format = wx.LIST_FORMAT_CENTER
+            info._text = p
+            
+            list.InsertColumnInfo(i+2, info)
+            list.SetColumnWidth(i+2, 20)
+        
+            
+        
+        self.list = list
+        self.PeuplerListe()
+        
+        self.list.Bind(wx.EVT_LEFT_UP, self.OnLeftUp)
+        self.list.Bind(wx.EVT_LEFT_DOWN, self.OnLeftDown)
+        self.leftDown = False
+        
+#        txt = wx.TextCtrl(self, -1, getTextCI(self.classe.ci_ET),
+#                          style = wx.TE_MULTILINE)
+        sbs1.Add(list, flag = wx.EXPAND|wx.ALL, border = 5)
+#        txt.Bind(wx.EVT_TEXT, self.EvtTxtCI)
+#        self.txtCi = txt
         if self.classe.typeEnseignement != 'ET' :
-            self.txtCi.Enable(False)
+            self.list.Enable(False)
+        
         btn = wx.Button(self, -1, u"Sélectionner depuis un fichier Excel (.xls)")
         aide = u"Sélectionner depuis un fichier Excel (.xls)"
         btn.SetToolTip(wx.ToolTip(aide))
@@ -3549,29 +3693,12 @@ class PanelPropriete_Classe(PanelPropriete):
         self.sizer.Add(sbs1, (0,2), flag = wx.EXPAND|wx.ALL)    
         
         self.sizer.AddGrowableCol(2)
+        
+        
+        
         #
         # Effectifs
         #
-#        sb3 = wx.StaticBox(self, -1, u"Effectifs", size = (100,-1))
-#        sbs3 = wx.StaticBoxSizer(sb3,wx.VERTICAL)
-#        varEff = {}
-#        ctrlEff = {}
-#        for i, eff in enumerate(listeEffectifs):
-#            v = Variable(classe.effectifs[eff][0],  
-#                         lstVal = classe.effectifs[eff][1], 
-#                         typ = VAR_ENTIER_POS, bornes = [1,40])
-#            varEff[eff] = v
-#            vc = VariableCtrl(self, v, coef = 1, labelMPL = False, signeEgal = False,
-#                              help = u"Nombre d'élèves", sizeh = 30)
-#            ctrlEff[eff] = vc
-#            self.Bind(EVT_VAR_CTRL, self.EvtVariableEff, vc)
-#            sbs3.Add(vc, flag = wx.ALL|wx.ALIGN_RIGHT, border = 1)
-#        self.sizer.Add(sbs3, (1,0), flag = wx.EXPAND|wx.ALL|wx.ALIGN_RIGHT)
-#        self.varEff = varEff
-#        self.ctrlEff = ctrlEff
-##        self.sizer.AddGrowableCol(0)
-        
-        
         self.ec = PanelEffectifsClasse(self, classe)
         self.sizer.Add(self.ec, (0,1), flag = wx.EXPAND|wx.ALL|wx.ALIGN_RIGHT)
     
@@ -3593,26 +3720,111 @@ class PanelPropriete_Classe(PanelPropriete):
         
         
     ######################################################################################  
+    def EvtCheckBox(self, event):
+        cb = event.GetEventObject()
+        numCI = cb.GetId()-100
+        posCI = cb.GetName()
+        
+        i = 'MEI_FSC'.index(posCI)
+#        print i, ":", 
+        s = self.classe.posCI_ET[numCI] 
+        if not event.IsChecked():
+            t = " "
+        else:
+            t = posCI
+        s = s[:i]+t+s[i+1:]    
+#        print self.classe.posCI_ET[numCI], "-->",
+        self.classe.posCI_ET[numCI] = s
+#        print self.classe.posCI_ET[numCI]
+#        print self.classe
+        self.classe.sequence.CI.panelPropriete.construire()
+        self.sendEvent()
+        
+        
+    ######################################################################################  
     def MiseAJourType(self):
-        self.txtCi.Enable(self.pasVerrouille and self.classe.typeEnseignement == 'ET')
+        self.list.Enable(self.pasVerrouille and self.classe.typeEnseignement == 'ET')
         self.btn.Enable(self.pasVerrouille and self.classe.typeEnseignement == 'ET')
             
     ######################################################################################  
     def MiseAJour(self):
         self.MiseAJourType()
         self.cb_type.SetStringSelection(self.classe.typeEnseignement)
-        self.txtCi.ChangeValue(getTextCI(self.classe.ci_ET))
+        
+        self.PeuplerListe()
+                
         self.ec.MiseAJour()
 
+    ######################################################################################  
+    def PeuplerListe(self):
+        # Peuplement de la liste
+        self.list.DeleteAllItems()
+        for i,ci in enumerate(self.classe.ci_ET):
+#            item = ULC.UltimateListItem()
+#            item.SetText("CI"+str(i))
+            index = self.list.InsertStringItem(sys.maxint, "CI"+str(i+1))
+#            item = self.list.GetItem(i, 1)
+#            tx = wx.TextCtrl(self.list, 200+i, ci)
+#            item.SetWindow(tx)
+#            self.list.SetItem(item)
+            self.list.SetStringItem(index, 1, ci)
             
-    
+#            w = self.list.GetColumnWidth(1)
+           
+            for j,p in enumerate(['M', 'E', 'I', 'F', 'S', 'C']):
+                item = self.list.GetItem(i, j+2)
+                
+                cb = wx.CheckBox(self.list, 100+i,"", name = p)
+                cb.SetValue(p in self.classe.posCI_ET[i])
+                self.Bind(wx.EVT_CHECKBOX, self.EvtCheckBox, cb)
+                item.SetWindow(cb)
+#                item.Enable(False)
+                self.list.SetItem(item)
+        self.list.Update()
+        
+    ######################################################################################  
+    def OnLeftDown(self, event):
+        x = event.GetX()
+        y = event.GetY()
+
+        item, flags = self.list.HitTest((x, y))
+
+        if item != wx.NOT_FOUND and flags & wx.LIST_HITTEST_ONITEM:
+            if not self.list.IsSelected(item):
+                self.leftDown = True
+            else:
+                self.leftDown = False
+                
+        event.Skip()
+            
             
     ######################################################################################  
-    def EvtTxtCI(self, event):
-        self.classe.ci_ET =  event.GetString()
-        if not self.eventAttente:
-            wx.CallLater(DELAY, self.sendEvent)
-            self.eventAttente = True
+    def OnLeftUp(self, event):
+        x = event.GetX()
+        y = event.GetY()
+
+        item, flags = self.list.HitTest((x, y))
+
+        if item != wx.NOT_FOUND and flags & wx.LIST_HITTEST_ONITEM:
+            if self.list.IsSelected(item) and not self.leftDown:
+                x0, y0 = self.list.GetScreenPosition()
+                x, y, w, h = self.list.GetItemRect(item, ULC.ULC_RECT_BOUNDS)#ULC.ULC_RECT_LABEL)#
+                
+               
+                ed = Editeur(self.classe, self.list, item, self.list.GetItem(item, 1).GetText(),
+                             pos = (x0+x+self.list.GetColumnWidth(0), y0+y), 
+                             size = (self.list.GetColumnWidth(1), -1))
+                ed.Show()
+                
+
+        event.Skip()
+        
+#    ######################################################################################  
+#    def EvtTxtCI(self, event):
+#        self.classe.ci_ET =  event.GetString()
+#        if not self.eventAttente:
+#            wx.CallLater(DELAY, self.sendEvent)
+#            self.eventAttente = True
         
 #    ######################################################################################  
 #    def EvtVariableEff(self, event):
@@ -3647,13 +3859,42 @@ class PanelPropriete_Classe(PanelPropriete):
     ######################################################################################  
     def Verrouiller(self, etat):
         self.cb_type.Enable(etat)
-        self.txtCi.Enable(etat and (self.classe.typeEnseignement == 'ET'))
+        self.list.Enable(etat and (self.classe.typeEnseignement == 'ET'))
         self.btn.Enable(etat and (self.classe.typeEnseignement == 'ET'))
         self.pasVerrouille = etat
 #        for c in self.GetChildren():
 #            self.Enable(etat)
-        
 
+
+
+
+
+class Editeur(wx.Frame):  
+    def __init__(self, classe, liste, index, texte, pos, size):
+        wx.Frame.__init__(self, None, -1, pos = pos, 
+                          size = size, style = wx.BORDER_NONE)
+        self.index = index
+        self.liste = liste
+        self.classe = classe
+        txt = wx.TextCtrl(self, -1, texte, size = size)
+        txt.Bind(wx.EVT_KILL_FOCUS, self.OnKillFocus)
+#        self.Bind(wx.EVT_TEXT_ENTER, self.OnKillFocus, txt)
+        self.Fit()
+        
+    def OnKillFocus(self, evt):
+#        print "OnKillFocus"
+        txtctrl = evt.GetEventObject()
+#        print txtctrl.GetValue()
+        self.liste.SetStringItem(self.index, 1, txtctrl.GetValue())
+        self.classe.ci_ET[self.index] = txtctrl.GetValue()
+        self.classe.sequence.CI.panelPropriete.construire()
+#        self.item.SetText(txtctrl.GetValue())
+        self.Destroy() 
+        evt.Skip()
+        return
+    
+        
+        
 ####################################################################################
 #
 #   Classe définissant le panel de réglage des effectifs
@@ -3677,22 +3918,23 @@ class PanelEffectifsClasse(wx.Panel):
         #
         # Box "Classe"
         #
-        boxClasse = wx.StaticBox(self, -1, u"Effectifs "+NomsEffectifs['C'][0], style = wx.BORDER_RAISED)
+#        boxClasse = wx.StaticBox(self, -1, u"Effectifs "+constantes.NomsEffectifs['C'][0], style = wx.BORDER_RAISED)
+        boxClasse = wx.StaticBox(self, -1, u"Découpage de la classe", style = wx.BORDER_RAISED)
 #        print boxClasse.GetClassDefaultAttributes()
 #        print dir(boxClasse)
 #        boxClasse.GetClassDefaultAttributes().colFg = wx.RED
         
-        r,v,b = CouleursGroupes['C']
+        r,v,b = constantes.CouleursGroupes['C']
         coulClasse = wx.Colour(r*255,v*255,b*255)
         boxClasse.SetOwnForegroundColour(coulClasse)
         
-        r,v,b = CouleursGroupes['G']
+        r,v,b = constantes.CouleursGroupes['G']
         self.coulEffRed = wx.Colour(r*255,v*255,b*255)
         
-        r,v,b = CouleursGroupes['E']
+        r,v,b = constantes.CouleursGroupes['E']
         self.coulEP = wx.Colour(r*255,v*255,b*255)
         
-        r,v,b = CouleursGroupes['P']
+        r,v,b = constantes.CouleursGroupes['P']
         self.coulAP = wx.Colour(r*255,v*255,b*255)
         
 #        self.boxClasse = boxClasse
@@ -3894,74 +4136,104 @@ class PanelPropriete_CI(PanelPropriete):
     #############################################################################            
     def construire(self):
         self.group_ctrls = []
+        self.DestroyChildren()
+        if hasattr(self, 'grid1'):
+            self.sizer.Remove(self.grid1)
+            
         if self.CI.parent.classe.typeEnseignement == 'ET': # Rajouter la condition "Clermont" !!!
-            panel_cible = Panel_Cible(self, self.CI)
-            self.sizer.Add(panel_cible, (0,0), flag = wx.EXPAND)
             
-            self.grid1 = wx.FlexGridSizer( 0, 1, 0, 0 )
+            self.panel_cible = Panel_Cible(self, self.CI)
+            self.sizer.Add(self.panel_cible, (0,0), flag = wx.EXPAND)
             
-            for i, ci in enumerate(CentresInterets[self.CI.parent.classe.typeEnseignement]):
+            self.grid1 = wx.FlexGridSizer( 0, 2, 0, 0 )
+            
+            for i, ci in enumerate(constantes.CentresInterets[self.CI.parent.classe.typeEnseignement]):
+                r = wx.CheckBox(self, 200+i, "")
                 t = wx.StaticText(self, -1, "CI"+str(i+1)+" : "+ci)
+                self.group_ctrls.append((r, t))
+                self.grid1.Add( r, 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_LEFT|wx.LEFT|wx.RIGHT|wx.TOP, 2 )
                 self.grid1.Add( t, 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_LEFT|wx.LEFT|wx.RIGHT, 5 )
-                
+            for radio, text in self.group_ctrls:
+                self.Bind(wx.EVT_CHECKBOX, self.OnCheck, radio )
             self.sizer.Add(self.grid1, (0,1), flag = wx.EXPAND)
             self.sizer.Layout()
             
         else:
-            self.DestroyChildren()
-            if hasattr(self, 'grid1'):
-                self.sizer.Remove(self.grid1)
+            
             self.grid1 = wx.FlexGridSizer( 0, 2, 0, 0 )
             
-            for i, ci in enumerate(CentresInterets[self.CI.parent.classe.typeEnseignement]):
+            for i, ci in enumerate(constantes.CentresInterets[self.CI.parent.classe.typeEnseignement]):
     #            if i == 0 : s = wx.RB_GROUP
     #            else: s = 0
-                r = wx.RadioButton(self, -1, "CI"+str(i+1), style = wx.RB_GROUP )
+                r = wx.CheckBox(self, 200+i, "CI"+str(i+1), style = wx.RB_GROUP )
                 t = wx.StaticText(self, -1, ci)
                 self.grid1.Add( r, 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_LEFT|wx.LEFT|wx.RIGHT|wx.TOP, 2 )
                 self.grid1.Add( t, 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_LEFT|wx.LEFT|wx.RIGHT, 5 )
                 self.group_ctrls.append((r, t))
             self.sizer.Add(self.grid1, (0,0), flag = wx.EXPAND)
             for radio, text in self.group_ctrls:
-                self.Bind(wx.EVT_RADIOBUTTON, self.EvtRadio, radio )
-            btn = wx.Button(self, -1, u"Effacer")
-            self.Bind(wx.EVT_BUTTON, self.OnClick, btn)
-            self.sizer.Add(btn, (0,1))
+                self.Bind(wx.EVT_CHECKBOX, self.OnCheck, radio )
+#            btn = wx.Button(self, -1, u"Effacer")
+#            self.Bind(wx.EVT_BUTTON, self.OnClick, btn)
+#            self.sizer.Add(btn, (0,1))
             
             self.sizer.Layout()
         
+#    #############################################################################            
+#    def EvtRadio(self, event):
+#        print "EvtRadio CI"
+#        radio_selected = eval(event.GetEventObject().GetLabel()[2:])
+#        self.CI.SetNum(radio_selected-1)
+#
+#        self.Layout()
+#        self.sendEvent()
+#        
+#    #############################################################################            
+#    def EvtCheck(self, event):
+#        print "EvtCheck CI",
+#        check_selected = event.GetEventObject().GetId()-100
+#        print check_selected 
+#        self.CI.AddNum(check_selected)
+#
+#        self.Layout()
+#        self.sendEvent()
+#        
     #############################################################################            
-    def EvtRadio(self, event):
-        print "EvtRadio CI"
-        radio_selected = eval(event.GetEventObject().GetLabel()[2:])
-        self.CI.SetNum(radio_selected-1)
-
+    def OnCheck(self, event):
+        print "OnCheck CI",
+        button_selected = event.GetEventObject().GetId()-200
+        print button_selected 
+        
+        if event.GetEventObject().IsChecked():
+            self.CI.AddNum(button_selected)
+        else:
+            self.CI.DelNum(button_selected)
+        
+        self.panel_cible.bouton[button_selected].SetState(event.GetEventObject().IsChecked())
+        self.panel_cible.GererBoutons()
+        
         self.Layout()
         self.sendEvent()
-        
-    #############################################################################            
-    def EvtCheck(self, event):
-        print "EvtCheck CI",
-        check_selected = event.GetEventObject().GetId()-100
-        print check_selected 
-        self.CI.AddNum(check_selected)
-
-        self.Layout()
-        self.sendEvent()
-        
     
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
-        self.group_ctrls[self.CI.num][0].SetValue(True)
-        self.Layout()
+        if self.CI.parent.classe.typeEnseignement == 'ET':
+            self.panel_cible.GererBoutons(True)
+        else:
+            for num in self.CI.numCI:
+                self.group_ctrls[num][0].SetValue(True)
+            self.Layout()
         if sendEvt:
             self.sendEvent()
             
+    #############################################################################            
     def OnClick(self, event):
         if self.CI.num != None:
             self.group_ctrls[self.CI.num][0].SetValue(False)
             self.CI.SetNum(None)
             self.sendEvent()
+
+
 
 ####################################################################################
 #
@@ -3972,6 +4244,7 @@ class Panel_Cible(wx.Panel):
     def __init__(self, parent, CI):
         wx.Panel.__init__(self, parent, -1)
         self.CI = CI
+        self.bouton = []
         self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
         self.backGround = self.GetBackgroundColour()
         
@@ -3979,13 +4252,49 @@ class Panel_Cible(wx.Panel):
         angles = [-100,100,0,0,0,60,120,120,120,180,-120,-120,-120,-60,0]
         centre = [96, 88]
         
+        rayons = {"F" : 60, 
+                  "S" : 40, 
+                  "C" : 20,
+                  "_" : 90}
+        angles = {"M" : 0,
+                  "E" : 120,
+                  "I" : -120,
+                  "_" : -100}
+        
 #            dc = wx.ClientDC(self)
 #            dc.DrawBitmap(images.Cible.GetBitmap(), 100, 100)
 #            img = wx.StaticBitmap(self, -1, images.Cible.GetBitmap())
-        for i, ci in enumerate(CentresInterets[self.CI.parent.classe.typeEnseignement]):
-            pos = (centre[0] + rayons[i] * sin(angles[i]*pi/180) ,
-                   centre[1] - rayons[i] * cos(angles[i]*pi/180))
-            bmp = imagesCI[i].GetBitmap()
+        for i, ci in enumerate(constantes.CentresInterets[self.CI.parent.classe.typeEnseignement]):
+            mei, fsc = constantes.PositionCibleCIET[i].split("_")
+            mei = mei.replace(" ", "")
+            fsc = fsc.replace(" ", "")
+            
+            if len(fsc) == 0:
+                ray = 0
+            else:
+                ray = 0
+                for j in fsc:
+                    ray += rayons[j]
+                ray = ray/len(fsc)
+            
+            if len(mei) == 0:
+                ray = rayons["_"]
+                ang = angles["_"]
+                angles["_"] = -angles["_"] # on inverse le coté pour pouvoir mettre 2 CI en orbite
+            elif len(mei) == 3:
+                ray = 0
+                ang = 0
+            elif len(mei) == 2:
+                ang = (angles[mei[1]] + angles[mei[0]])/2
+                if ang == 0:
+                    ang = 180
+                
+            else:
+                ang = angles[mei[0]]
+                    
+            pos = (centre[0] + ray * sin(ang*pi/180) ,
+                   centre[1] - ray * cos(ang*pi/180))
+            bmp = constantes.imagesCI[i].GetBitmap()
 #                bmp.SetMaskColour(self.backGround)
 #                mask = wx.Mask(bmp, self.backGround)
 #                bmp.SetMask(mask)
@@ -3994,6 +4303,7 @@ class Panel_Cible(wx.Panel):
             r = platebtn.PlateButton(self, 100+i, "", bmp, pos = pos, 
                                      style=platebtn.PB_STYLE_GRADIENT|platebtn.PB_STYLE_TOGGLE|platebtn.PB_STYLE_NOBG)#platebtn.PB_STYLE_DEFAULT|
             r.SetPressColor(wx.Colour(245, 55, 245))
+            self.bouton.append(r)
 #                r = buttons.GenBitmapToggleButton(self, 100+i, bmp, pos = pos, style=wx.BORDER_NONE)
 #                r.SetBackgroundColour(wx.NullColour)
 #                self.group_ctrls.append((r, 0))
@@ -4002,7 +4312,7 @@ class Panel_Cible(wx.Panel):
         self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBackground)
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_TOGGLEBUTTON, self.OnButton)
-        bmp = images.Cible.GetBitmap()
+        bmp = constantes.images.Cible.GetBitmap()
         self.SetSize((bmp.GetWidth(), bmp.GetHeight()))
         self.SetMinSize((bmp.GetWidth(), bmp.GetHeight()))
         
@@ -4014,7 +4324,7 @@ class Panel_Cible(wx.Panel):
 #        gc = wx.GraphicsContext.Create(dc)
         dc.SetBackground(wx.Brush(self.backGround))
         dc.Clear()
-        bmp = images.Cible.GetBitmap()
+        bmp = constantes.images.Cible.GetBitmap()
         dc.DrawBitmap(bmp, 0, 0)
         
         evt.Skip()
@@ -4036,8 +4346,9 @@ class Panel_Cible(wx.Panel):
         color = wx.SystemSettings.GetColour(wx.SYS_COLOUR_BACKGROUND)
         dc.SetBackground(wx.Brush(self.backGround))
         dc.Clear()
-        bmp = images.Cible.GetBitmap()
+        bmp = constantes.images.Cible.GetBitmap()
         dc.DrawBitmap(bmp, 0, 0)    
+    
     
     #############################################################################            
     def OnButton(self, event):
@@ -4050,11 +4361,44 @@ class Panel_Cible(wx.Panel):
         else:
             self.CI.DelNum(button_selected)
 
+        self.GererBoutons()
+        
         self.Layout()
+        self.Parent.group_ctrls[button_selected][0].SetValue(event.GetEventObject().IsPressed())
         self.Parent.sendEvent()    
         
         
-        
+    #############################################################################            
+    def GererBoutons(self, appuyer = False):
+        if len(self.CI.numCI) == 0:
+            l = range(16)
+            
+        elif len(self.CI.numCI) == 1:
+            l = [0, 1, self.CI.numCI[0]-1]
+            for i,p in enumerate(constantes.PositionCibleCIET):
+                for pp in self.CI.GetPosCible(0):
+                    if pp in p or pp == "O":
+                        l.append(i)
+
+        else:
+            l = self.CI.numCI
+            
+                
+        for i, b in enumerate(self.bouton):
+            if i in l:
+                b.Show(True)
+            else:
+                b.Show(False)
+                
+        if appuyer:
+            for i, b in enumerate(self.bouton):
+                if i in l:
+                    b.SetState(True)
+                else:
+                    b.SetState(False)
+                    
+                    
+                    
 ####################################################################################
 #
 #   Classe définissant le panel de propriété d'un lien vers une séquence
@@ -4483,10 +4827,10 @@ class PanelPropriete_Seance(PanelPropriete):
         
         
         #
-        #Systèmes
+        # Systèmes
         #
-        self.box = wx.StaticBox(self, -1, u"Systèmes nécessaires")
-        
+        self.box = wx.StaticBox(self, -1, u"Systèmes ou matériels nécessaires", size = (200,200))
+        self.box.SetMinSize((200,200))
         self.bsizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
         self.systemeCtrl = []
         self.ConstruireListeSystemes()
@@ -4562,7 +4906,7 @@ class PanelPropriete_Seance(PanelPropriete):
             self.bsizer.Layout()
             
             if len(self.seance.systemes) > 0:
-                self.box.Show()
+                self.box.Show(True)
             else:
                 self.box.Hide()
         else:
@@ -4572,7 +4916,7 @@ class PanelPropriete_Seance(PanelPropriete):
             self.systemeCtrl = []
             self.box.Hide()
             
-        self.box.SetMinSize((100,-1))
+        self.box.SetMinSize((200,200))
         self.Layout()
         self.Thaw()
     
@@ -4634,7 +4978,7 @@ class PanelPropriete_Seance(PanelPropriete):
     #############################################################################            
     def EvtComboBox(self, event):
 #        print "EvtComboBox type"
-        if self.seance.typeSeance in ["R", "S"] and listeTypeSeance[event.GetSelection()] not in ["R", "S"]:
+        if self.seance.typeSeance in ["R", "S"] and constantes.listeTypeSeance[event.GetSelection()] not in ["R", "S"]:
             dlg = wx.MessageDialog(self, u"Modifier le type de cette séance entrainera la suppression de toutes les sous séances !\n" \
                                          u"Voulez-vous continuer ?",
                                     u"Modification du type de séance",
@@ -4650,7 +4994,7 @@ class PanelPropriete_Seance(PanelPropriete):
         
         deja = self.seance.typeSeance in ["AP", "ED", "P"]
         
-        self.seance.SetType(get_key(TypesSeance, self.cbType.GetStringSelection()))
+        self.seance.SetType(get_key(constantes.TypesSeance, self.cbType.GetStringSelection()))
         
         if self.seance.typeSeance in ["AP", "ED", "P"]:
             if not deja:
@@ -4743,15 +5087,15 @@ class PanelPropriete_Seance(PanelPropriete):
         # Type de parent
         #
         if self.seance.EstSousSeance():
-            listType = listeTypeActivite
+            listType = constantes.listeTypeActivite
             if not self.seance.parent.EstSousSeance():
-                listType = listeTypeActivite + ["S"]
+                listType = constantes.listeTypeActivite + ["S"]
         else:
-            listType = listeTypeSeance
+            listType = constantes.listeTypeSeance
         
         listTypeS = []
         for t in listType:
-            listTypeS.append((TypesSeance[t], imagesSeance[t].GetBitmap()))
+            listTypeS.append((constantes.TypesSeance[t], constantes.imagesSeance[t].GetBitmap()))
         
         n = self.cbType.GetSelection()   
         self.cbType.Clear()
@@ -4816,7 +5160,7 @@ class PanelPropriete_Seance(PanelPropriete):
             
         self.cbDem.Clear()
         for s in listDem:
-            self.cbDem.Append(Demarches[s])
+            self.cbDem.Append(constantes.Demarches[s])
         self.cbDem.SetSelection(0)
         
     #############################################################################            
@@ -4829,7 +5173,7 @@ class PanelPropriete_Seance(PanelPropriete):
         self.AdapterAuType()
         
         if self.seance.typeSeance != "":
-            self.cbType.SetSelection(self.cbType.GetStrings().index(TypesSeance[self.seance.typeSeance]))
+            self.cbType.SetSelection(self.cbType.GetStrings().index(constantes.TypesSeance[self.seance.typeSeance]))
         self.textctrl.ChangeValue(self.seance.intitule)
         self.vcDuree.mofifierValeursSsEvt()
         
@@ -4837,7 +5181,7 @@ class PanelPropriete_Seance(PanelPropriete):
             self.cbEff.SetSelection(findEffectif(self.cbEff.GetStrings(), self.seance.effectif))
         
         if self.cbDem.IsShown():#self.cbDem.IsEnabled() and :
-            self.cbDem.SetSelection(self.cbDem.GetStrings().index(Demarches[self.seance.demarche]))
+            self.cbDem.SetSelection(self.cbDem.GetStrings().index(constantes.Demarches[self.seance.demarche]))
             
 
         if self.seance.typeSeance in ["AP", "ED", "P"]:
@@ -5128,7 +5472,7 @@ class ArbreSequence(CT.CustomTreeCtrl):
         
         self.images = {}
         il = wx.ImageList(20, 20)
-        for k, i in dicimages.items() + imagesSeance.items():
+        for k, i in constantes.dicimages.items() + constantes.imagesSeance.items():
             self.images[k] = il.Add(i.GetBitmap())
         self.AssignImageList(il)
         
@@ -5262,7 +5606,7 @@ class ArbreSequence(CT.CustomTreeCtrl):
     
 #        self.CurseurInsert = wx.Cursor(wx.Image('CurseurInsert.png', wx.BITMAP_TYPE_PNG ))
 #        self.CurseurInsert = wx.Cursor('CurseurInsert.ico', wx.BITMAP_TYPE_ICO )
-        self.CurseurInsert = wx.CursorFromImage(images.CurseurInsert.GetImage())
+        self.CurseurInsert = wx.CursorFromImage(constantes.images.CurseurInsert.GetImage())
         
     ###############################################################################################
     def OnKey(self, evt):
@@ -5889,7 +6233,7 @@ class ArbreSavoirs(CT.CustomTreeCtrl):
         self.savoirs = savoirs
         
         self.root = self.AddRoot(u"Savoirs")
-        self.Construire(self.root, dicSavoirs[savoirs.parent.classe.typeEnseignement])
+        self.Construire(self.root, constantes.dicSavoirs[savoirs.parent.classe.typeEnseignement])
         
         self.ExpandAll()
         
@@ -5981,7 +6325,7 @@ class ArbreCompetences(CT.CustomTreeCtrl):
         self.savoirs = savoirs
         
         self.root = self.AddRoot(u"Compétences")
-        self.Construire(self.root, dicCompetences[savoirs.parent.classe.typeEnseignement])
+        self.Construire(self.root, constantes.dicCompetences[savoirs.parent.classe.typeEnseignement])
         
         self.ExpandAll()
         
@@ -6369,7 +6713,7 @@ class URLSelectorCombo(wx.Panel):
         
         self.lien.EvalLien(lien, self.pathseq)
         
-        self.texte.ChangeValue(self.lien.GetDecode())
+        self.texte.ChangeValue(toDefautEncoding(self.lien.path)) # On le met en DEFAUT_ENCODING
 #            self.texte.SetBackgroundColour(("white"))
 #        else:
 #            self.texte.SetBackgroundColour(("pink"))
@@ -6503,9 +6847,9 @@ class PopupInfoSysteme(PopupInfo):
         if lien.type == "":
             self.ctrlLien.Show(False)
             self.titreLien.Show(False)
-            self.ctrlLien.SetToolTipString(self.lien.GetDecode())
+            self.ctrlLien.SetToolTipString(toDefautEncoding(self.lien.path))
         else:
-            self.ctrlLien.SetToolTipString(self.lien.GetDecode())
+            self.ctrlLien.SetToolTipString(toDefautEncoding(self.lien.path))
             if lien.type == "f":
                 self.titreLien.SetLabel(u"Fichier :")
                 self.ctrlLien.SetBitmapLabel(wx.ArtProvider_GetBitmap(wx.ART_NORMAL_FILE))
@@ -6516,11 +6860,11 @@ class PopupInfoSysteme(PopupInfo):
                 self.ctrlLien.Show(True)
             elif lien.type == 'u':
                 self.titreLien.SetLabel(u"Lien web :")
-                self.ctrlLien.SetBitmapLabel(images.Icone_web.GetBitmap())
+                self.ctrlLien.SetBitmapLabel(constantes.images.Icone_web.GetBitmap())
                 self.ctrlLien.Show(True)
             elif lien.type == 's':
                 self.titreLien.SetLabel(u"Fichier séquence :")
-                self.ctrlLien.SetBitmapLabel(images.Icone_sequence.GetBitmap())
+                self.ctrlLien.SetBitmapLabel(constantes.images.Icone_sequence.GetBitmap())
                 self.ctrlLien.Show(True)
 
         self.Layout()

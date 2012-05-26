@@ -757,11 +757,11 @@ DemarchesCourt = {"I" : u"Investigation",
 
 listeDemarches = ["I", "R", "P"]
 listEnseigmenent = ['ET', 'ITEC', 'AC', 'EE', 'SIN']
-Enseigmenent = {'ET'   : u"Enseignement technologique transversal",
-                'ITEC' : u"Innovation technologique et éco-conception",
-                'AC'   : u"Architecture et construction",
-                'EE'   : u"Energies et environnement",
-                'SIN'  : u"Systèmes d'information et numérique"}
+Enseigmenent = {'ET'   : u"Enseignement Technologique Transversal",
+                'ITEC' : u"Innovation Technologique et éco-conception",
+                'AC'   : u"Architecture et Construction",
+                'EE'   : u"Energies et Environnement",
+                'SIN'  : u"Systèmes d'Information et Numérique"}
 
 
 ####################################################################################
@@ -770,6 +770,8 @@ Enseigmenent = {'ET'   : u"Enseignement technologique transversal",
 #
 ####################################################################################
 CentresInteretsET = None
+PositionCibleCIET = None
+
 Effectifs = {"C" : 32,
              "G" : None,
              "D" : None, 
@@ -915,7 +917,7 @@ def findEffectif(lst, eff):
 
 
 def DefOptionsDefaut():
-    global  CentresInteretsET
+    global  CentresInteretsET, PositionCibleCIET
     
     #
     # Options générales
@@ -938,7 +940,23 @@ def DefOptionsDefaut():
                        u"Optimisation des paramètres par simulation globale"
                        ]
 
-    
+    PositionCibleCIET = ['   _   ',
+                         '   _   ',
+                         'M  _F  ',
+                         'M  _ S ',
+                         'M  _  C',
+                         'ME _ SC',
+                         ' E _F  ',
+                         ' E _ S ',
+                         ' E _  C',
+                         ' EI_ SC',
+                         '  I_F  ',
+                         '  I_ S ',
+                         '  I_  C',
+                         'M I_ SC',
+                         'MEI_   '
+                       ]
+
 #    Effectifs["C"][1] = 32
 #    Effectifs["G"][1] = 16
 #    Effectifs["D"][1] = 8
@@ -983,6 +1001,19 @@ def getTextCI(lst):
         if i != len(lst)-1:
             t += "\n"
     return t
+#
+#def getTextPosCI(lst):
+#    return "-"+getTextCI+"-"
+#
+#
+#def getListPosCI(txt):
+#    txt = txt[1:-1]
+#    l = []
+#    for i in range(len(txt)/7):
+#        l.append(txt[:7])
+#        txt = txt[8:]
+#    return l
+
 
 
 
