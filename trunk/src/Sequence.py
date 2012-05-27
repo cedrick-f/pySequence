@@ -2988,31 +2988,31 @@ class FenetreSequence(aui.AuiMDIChildFrame):
 #        print "ouvrir", nomFichier
         fichier = open(nomFichier,'r')
         self.definirNomFichierCourant(nomFichier)
-#        try:
-        root = ET.parse(fichier).getroot()
-        
-        # La séquence
-        sequence = root.find("Sequence")
-        if sequence == None:
-            self.sequence.setBranche(root)
+        try:
+            root = ET.parse(fichier).getroot()
             
-        else:
-            # La classe
-            classe = root.find("Classe")
-            self.classe.setBranche(classe)
-            
-            self.sequence.setBranche(sequence)  
+            # La séquence
+            sequence = root.find("Sequence")
+            if sequence == None:
+                self.sequence.setBranche(root)
                 
-#        except:
-#            dlg = wx.MessageDialog(self, u"La séquence pédagogique\n%s\n n'a pas pu être ouverte !" %nomFichier,
-#                               u"Erreur d'ouverture",
-#                               wx.OK | wx.ICON_WARNING
-#                               #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
-#                               )
-#            dlg.ShowModal()
-#            dlg.Destroy()
-#            fichier.close()
-#            return
+            else:
+                # La classe
+                classe = root.find("Classe")
+                self.classe.setBranche(classe)
+                
+                self.sequence.setBranche(sequence)  
+                
+        except:
+            dlg = wx.MessageDialog(self, u"La séquence pédagogique\n%s\n n'a pas pu être ouverte !" %nomFichier,
+                               u"Erreur d'ouverture",
+                               wx.OK | wx.ICON_WARNING
+                               #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
+                               )
+            dlg.ShowModal()
+            dlg.Destroy()
+            fichier.close()
+            return
 
         self.arbreSeq.DeleteAllItems()
         root = self.arbreSeq.AddRoot("")
@@ -3839,7 +3839,7 @@ class PanelPropriete_Classe(PanelPropriete):
         if recup_excel.ouvrirFichierExcel():
             dlg = wx.MessageDialog(self.Parent, u"Sélectionner une liste de CI\n" \
                                              u"dans le classeur Excel qui vient de s'ouvrir,\n" \
-                                             u"puis appuyer sur Ok.\n\n" \
+                                             u'puis appuyer sur "Oui".\n\n' \
                                              u"Format attendu de la selection :\n" \
                                              u"Liste des CI sur une colonne.",
                                              u'Sélection de CI',
@@ -3849,9 +3849,10 @@ class PanelPropriete_Classe(PanelPropriete):
             dlg.Destroy() 
             if res == wx.ID_YES:
                 ls = recup_excel.getColonne(c = 0)
-                ci = getTextCI(ls)
-                self.txtCi.ChangeValue(ci)
-                self.classe.ci_ET = ci
+#                ci = getTextCI(ls)
+#                self.txtCi.ChangeValue(ci)
+                self.classe.ci_ET = ls
+                self.MiseAJour()
                 self.sendEvent()
             elif res == wx.ID_NO:
                 print "Rien" 
@@ -4233,7 +4234,19 @@ class PanelPropriete_CI(PanelPropriete):
             self.CI.SetNum(None)
             self.sendEvent()
 
-
+    #############################################################################            
+    def GererCases(self, liste):
+        """ Permet de cacher les cases des CI au fur et à mesure que l'on selectionne des CI
+            <liste> : liste des CI à activer
+        """ 
+        for i, b in enumerate(self.group_ctrls):
+            if i in liste:
+                b[0].Enable(True)
+            else:
+                b[0].Enable(False)
+                
+        
+                    
 
 ####################################################################################
 #
@@ -4370,15 +4383,28 @@ class Panel_Cible(wx.Panel):
         
     #############################################################################            
     def GererBoutons(self, appuyer = False):
+        """ Permet de cacher les boutons des CI au fur et à mesure que l'on selectionne des CI
+            Règles :
+             - Maximum 2 CI
+             - CI voisins sur la cible
+            <appuyer> : pour initialisation : si vrai = appuie sur les boutons
+        """
         if len(self.CI.numCI) == 0:
             l = range(16)
             
         elif len(self.CI.numCI) == 1:
-            l = [0, 1, self.CI.numCI[0]-1]
+            l = []
             for i,p in enumerate(constantes.PositionCibleCIET):
-                for pp in self.CI.GetPosCible(0):
-                    if pp in p or pp == "O":
-                        l.append(i)
+                p = p[:3].strip()
+                c = self.CI.GetPosCible(0)[:3].strip()
+                print c
+                if len(p) == 0 or len(c) == 0: # Cas des CI "en orbite"
+                    l.append(i)
+                else:       # Autres cas
+                    for d in c:
+                        if d in p:  
+                            l.append(i)
+                            break
 
         else:
             l = self.CI.numCI
@@ -4396,7 +4422,8 @@ class Panel_Cible(wx.Panel):
                     b.SetState(True)
                 else:
                     b.SetState(False)
-                    
+                
+        self.Parent.GererCases(l)    
                     
                     
 ####################################################################################
