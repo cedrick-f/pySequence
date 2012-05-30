@@ -64,7 +64,7 @@ setup(
 #      zipfile = None,
 #      console=["PySyLic.py"],
       data_files = data_files,
-      windows=[{"script" :"Sequence.py",
+      windows=[{"script" :"Sequence.py",#console=[{"script" :"Sequence.py",
                 "icon_resources":[(1, icon)],
                 #"other_resources": [(24,1,manifest)]
                 }]

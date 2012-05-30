@@ -85,8 +85,8 @@ BcoulPre = (0.2, 0.25, 0.3, 1)
 fontPre = 0.014
 
 # Position dans l'année
-posPos = (posPre[0] + taillePre[0] + ecartX/2, margeY)
-taillePos = (0.72414-posPos[0]-margeX, 0.03)
+posPos = [None, margeY - ecartY/2]
+taillePos = [None, 0.04]
 IcoulPos = (0.8, 0.8, 1, 0.85)
 BcoulPos = (0.1, 0.1, 0.25, 1)
 AcoulPos = (1, 0.4, 0, 1)
@@ -94,15 +94,16 @@ fontPos = 0.014
 
 
 # Rectangle des objectifs
-posObj = (posPos[0], margeY + taillePos[1] + ecartY/2)
+posObj = (posPre[0] + taillePre[0] + ecartX/2, margeY + taillePos[1] + ecartY/2)
 tailleObj = (taillePos[0], posPre[1] + taillePre[1] - posObj[1])
 IcoulObj = (0.8, 0.9, 0.8, 0.85)
 BcoulObj = (0.25, 0.3, 0.2, 1)
 fontObj = 0.014
 
 # Cible
-posCib = (posCI[0] + tailleCI[0] + ecartX/4, margeY - ecartY/2)
-tailleCib = (posObj[0] - posCI[0] - tailleCI[0] - ecartX/2, None)
+posCib = [posCI[0] + tailleCI[0] + ecartX/4, margeY - ecartY/2]
+tailleCib = [posObj[0] - posCI[0] - tailleCI[0] - ecartX/2, None]
+tailleCib[1] = tailleCib[0] 
 IcoulCib = (0.8, 0.8, 1, 0.85)
 BcoulCib = (0.1, 0.1, 0.25, 1)
 centreCib = (posCib[0] + tailleCib[0] / 2 + 0.0006, posCib[1] + tailleCib[0] / 2 - 0.004)
@@ -359,11 +360,11 @@ def DefinirZones(seq, ctx):
     global wEff, hHoraire, ecartSeanceY, intituleSeances, fontIntSeances, fontIntComm, intComm
     
     # Zone de commentaire
-    if seq.commentaire == "":
+    if seq.commentaires == u"":
         tailleComm[1] = 0
     else:
         
-        tailleComm[1], intComm = calc_h_texte(ctx, u"Commentaires : " + seq.commentaire, tailleComm[0], fontIntComm)
+        tailleComm[1], intComm = calc_h_texte(ctx, u"Commentaires : " + seq.commentaires, tailleComm[0], fontIntComm)
 
     posComm[1] = 1-tailleComm[1]-margeY
     
@@ -384,10 +385,11 @@ def DefinirZones(seq, ctx):
     posZIntSeances[1] = posZOrganis[1] + tailleZOrganis[1] - tailleZIntSeances[1]
     
     # Zone du tableau des Systèmes
-    tailleZSysteme[0] = wColSysteme * len(seq.systemes)
+    systemes = seq.GetSystemesUtilises()
+    tailleZSysteme[0] = wColSysteme * len(systemes)
     tailleZSysteme[1] = tailleZOrganis[1] - ecartY - tailleZIntSeances[1]
     posZSysteme[0] = posZOrganis[0] + tailleZOrganis[0] - tailleZSysteme[0]
-    for i, s in enumerate(seq.systemes):
+    for i, s in enumerate(systemes):
         xSystemes[s.nom] = posZSysteme[0] + (i+0.5) * wColSysteme
     
     
@@ -460,12 +462,14 @@ def Draw(ctx, seq):
     y = posObj[1]+tailleObj[1] - rayon*sin(alpha0*pi/180)
     fleche_ronde(ctx, 0.72414/2, y, rayon, alpha0, alpha1, 0.035, 0.06, (0.8, 0.9, 0.8, 1))
     
+    
     #
     #  Cadre et Intitulé de la séquence
     #
     curve_rect_titre(ctx, seq.intitule,  
                      (posZOrganis[0]-bordureZOrganis, posZOrganis[1], tailleZOrganis[0]+bordureZOrganis*2, tailleZOrganis[1]+bordureZOrganis), 
                      BcoulIntitule, IcoulIntitule, FontIntitule)
+    seq.rect = [(posZOrganis[0]-bordureZOrganis, posZOrganis[1], tailleZOrganis[0]+bordureZOrganis*2, tailleZOrganis[1]+bordureZOrganis)]
     
     
     #
@@ -485,14 +489,20 @@ def Draw(ctx, seq):
     ctx.stroke ()
     tailleTypeEns = width
     
+   
     #
     # Position dans l'année
     #
-    DrawPeriodes(ctx, seq.position, tailleTypeEns = tailleTypeEns)
+    posPos[0] = posPre[0] + taillePre[0] + ecartX + tailleTypeEns
+    taillePos[0] =  0.72414 - posPos[0] - margeX
+    seq.rectPos = DrawPeriodes(ctx, seq.position, tailleTypeEns = tailleTypeEns)
+    seq.rect.append(posPos+taillePos)
+    
     
     #
     # Cible
     #
+    seq.CI.rect = []
     if seq.classe.typeEnseignement == "ET":
         tfname = tempfile.mktemp()
         bmp = constantes.images.Cible.GetBitmap()
@@ -502,7 +512,6 @@ def Draw(ctx, seq):
         finally:
             if os.path.exists(tfname):
                 os.remove(tfname)  
-    #    image = cairo.ImageSurface.create_from_png("D:\Developpement\Sequence\images\Cible.png")
         w = image.get_width()
         h = image.get_height()
         ctx.save()
@@ -512,6 +521,8 @@ def Draw(ctx, seq):
         ctx.paint ()
         ctx.restore()
     
+        seq.CI.rect.append((posCib+tailleCib))
+        
         rayons = {"F" : tailleCib[0] * 0.28, 
                   "S" : tailleCib[0] * 0.19, 
                   "C" : tailleCib[0] * 0.1,
@@ -552,8 +563,49 @@ def Draw(ctx, seq):
             pos = (centreCib[0] + ray * sin(ang*pi/180) ,
                    centreCib[1] - ray * cos(ang*pi/180))
             boule(ctx, pos[0], pos[1], 0.005, (0.95, 1, 0.9, 1), (0.1, 0.3, 0.05, 1))
-            
-            
+    
+    else:
+        ctx.save()
+#        xc, yc = posCib[0] + tailleCib[0]/2, posCib[1] + tailleCib[0]/2
+#        r = tailleCib[0]/6
+#        mask = cairo.RadialGradient (xc, yc, r, xc, yc, tailleCib[0]/2)
+#        mask.add_color_stop_rgba (0, 0, 0, 0, 1)
+#        mask.add_color_stop_rgba (1, 0, 0, 0, 0)
+        
+        
+#        ctx.arc(xc, yc, 0.02, 0, 2*pi)
+#        ctx.clip()
+        
+        
+        
+        if seq.classe.typeEnseignement == "AC":
+            bmp = constantes.images.ImageAC.GetBitmap()
+        elif seq.classe.typeEnseignement == "SIN":
+            bmp = constantes.images.ImageSIN.GetBitmap()
+        elif seq.classe.typeEnseignement == "ITEC":
+            bmp = constantes.images.ImageITEC.GetBitmap()
+        elif seq.classe.typeEnseignement == "EE":
+            bmp = constantes.images.ImageEE.GetBitmap()
+        
+        tfname = tempfile.mktemp()
+        try:
+            bmp.SaveFile(tfname, wx.BITMAP_TYPE_PNG)
+            image = cairo.ImageSurface.create_from_png(tfname)
+        finally:
+            if os.path.exists(tfname):
+                os.remove(tfname)  
+                
+        w = image.get_width()*1.1
+        h = image.get_height()*1.1
+        
+        ctx.translate(posCib[0], posCib[1])
+        ctx.scale(tailleCib[0]/w, tailleCib[0]/w)
+        ctx.set_source_surface(image, 0, 0)
+#        ctx.mask(mask)
+        ctx.paint ()
+        
+        ctx.restore()
+        
             
     #
     # Durée de la séquence
@@ -614,6 +666,7 @@ def Draw(ctx, seq):
     rect_width, rect_height  = taillePre
     curve_rect_titre(ctx, u"Prérequis",  (x0, y0, rect_width, rect_height), BcoulPre, IcoulPre, fontPre)
     
+    
     #
     # Codes prerequis
     #
@@ -643,9 +696,6 @@ def Draw(ctx, seq):
     #
     #  Objectifs
     #
-    
-    # Rectangle arrondi
-    # Rectangle arrondi
     x0, y0 = posObj
     rect_width, rect_height  = tailleObj
     curve_rect_titre(ctx, u"Objectifs",  (x0, y0, rect_width, rect_height), BcoulObj, IcoulObj, fontObj)
@@ -661,14 +711,14 @@ def Draw(ctx, seq):
     for c in seq.obj["S"].savoirs:
         lstTexteS.append(getSavoir(seq, c))
     h = rect_height+0.0001
-#    print "Objectifs", lstTexteC
     if len(lstTexteS) > 0 or len(lstTexteC) > 0:
         hC = h*len(lstTexteC)/(len(lstTexteC) + len(lstTexteS))
         hS = h*len(lstTexteS)/(len(lstTexteC) + len(lstTexteS))
         liste_code_texte(ctx, seq.obj["C"].competences, lstTexteC, x0, y0, rect_width, hC, 0.008) 
         ctx.set_source_rgba (0.0, 0.0, 0.5, 1.0)
         liste_code_texte(ctx, seq.obj["S"].savoirs, lstTexteS, x0, y0+hC, rect_width, hS, 0.008)
-
+        seq.obj["C"].rect = [(x0, y0, rect_width, hC)]
+        seq.obj["S"].rect = [(x0, y0+hC, rect_width, hS)]
 
     #
     #  CI
@@ -687,7 +737,8 @@ def Draw(ctx, seq):
     #  Tableau des systèmes
     #    
     nomsSystemes = []
-    for s in seq.systemes:
+    systemes = seq.GetSystemesUtilises()
+    for s in systemes:
         nomsSystemes.append(s.nom)
     if nomsSystemes != []:
         ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
@@ -701,7 +752,7 @@ def Draw(ctx, seq):
         wc = tailleZSysteme[0]/len(nomsSystemes)
         _x = posZSysteme[0]
         _y = posZSysteme[1]
-        for s in seq.systemes:
+        for s in systemes:
             s.rect=((_x, _y, wc, posZSeances[1] - posZSysteme[1]),)
             ctx.set_source_rgb(0, 0, 0)
             ctx.move_to(_x, _y + posZSeances[1] - posZSysteme[1])
@@ -717,6 +768,7 @@ def Draw(ctx, seq):
         ctx.move_to(_x, _y + posZSeances[1] - posZSysteme[1])
         ctx.line_to(_x, _y + tailleZDemarche[1])   
         ctx.stroke()
+
 
     #
     #  Tableau des démarches
@@ -791,24 +843,46 @@ def DrawPeriodes(ctx, pos = None, tailleTypeEns = 0, origine = False):
     if origine:
         x = 0
         y = 0
+        wt = 0.04*5
+        ht = 0.04
     else:
-        x = posPos[0] + tailleTypeEns + ecartX
+        x = posPos[0]# + ecartX
         y = posPos[1]
+        wt = taillePos[0]# - ecartX
+        ht = taillePos[1]
     
-    wt = taillePos[0] - tailleTypeEns - ecartX
-    dx = 0.005
-    w = (wt - 8 * dx)/8
-    h = taillePos[1]/2
+    pat = cairo.LinearGradient (x, y,  x + wt, y)
+    pat.add_color_stop_rgba (1, 0.90, 0.55, 0.65, 1)
+    pat.add_color_stop_rgba (0, 0.98, 0.88, 0.98, 1)
+    ctx.rectangle (x, y, wt, ht)
+    src = ctx.get_source()
+    ctx.set_source (pat)
+    ctx.fill ()
+    ctx.set_source(src)
     
     ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                        cairo.FONT_WEIGHT_NORMAL)
-    show_text_rect_fix(ctx, u"1ère", x, y, wt/2, h/2, fontPos, 1)
+    
+    pm = show_text_rect_fix(ctx, u"1", x, y, wt/2, ht*2/3, fontPos, 1)
+ 
     ctx.stroke ()
-    show_text_rect_fix(ctx, u"Tale", x+wt/2, y, wt/2, h/2, fontPos, 1)
+    show_text_rect_fix(ctx, u"ère", pm+0.002, y, wt/2, ht/3, fontPos*0.9, 1, ha = 'g')
     ctx.stroke ()
     
+    pm = show_text_rect_fix(ctx, u"T", x+wt/2, y, wt/2, ht*2/3, fontPos, 1)
+
+    ctx.stroke ()
+    show_text_rect_fix(ctx, u"ale", pm+0.002, y, wt/2, ht/3, fontPos*0.9, 1, ha = 'g')
+    ctx.stroke ()
+    
+    dx = 0.005
+    x += dx
+    h = ht/2-2*dx
+    w = (wt - 10 * dx)/8
+    rect = []
     for p in range(8):
-        ctx.rectangle (x, y+0.01, w, h)
+        ctx.rectangle (x, y+ht/2+dx, w, h)
+        rect.append((x, y+ht/2+dx, w, h))
         if pos == p:
             ctx.set_source_rgba (AcoulPos[0], AcoulPos[1], AcoulPos[2], AcoulPos[3])
         else:
@@ -819,7 +893,7 @@ def DrawPeriodes(ctx, pos = None, tailleTypeEns = 0, origine = False):
         if p == 3:
             x += dx
         x+= dx + w
-    
+    return rect
     
     
 ######################################################################################  
@@ -832,6 +906,9 @@ def Draw_CI(ctx, CI):
     else:
         t = u"Centres d'intérêt"
     curve_rect_titre(ctx, t,  (x0, y0, rect_width, rect_height), BcoulCI, IcoulCI, fontCI)
+    
+    CI.rect.append((x0, y0, rect_width, rect_height))
+    
     
     #
     # code et intitulé des CI
@@ -872,7 +949,7 @@ class Cadre():
             alpha = 1
             
         self.ctx.set_line_width(0.002)
-        print rectangle_plein(self.ctx, x, y, self.w, self.h, 
+        rectangle_plein(self.ctx, x, y, self.w, self.h, 
                         BCoulSeance[self.seance.typeSeance], ICoulSeance[self.seance.typeSeance], alpha)
         
         if not self.filigrane and hasattr(self.seance, 'code'):
@@ -1588,11 +1665,13 @@ def show_text_rect_fix(ctx, texte, x, y, w, h, fontSize, Nlignes, va = 'c', ha =
         pour qu'il rentre dans le rectangle
         x, y, w, h : position et dimensions du rectangle
         va, ha : alignements vertical et horizontal ('h', 'c', 'b' et 'g', 'c', 'd')
+        
+        Renvoie la position la plus extrème à droite (pour éventuellement écrire une suite au texte)
     """
 #    print "show_text_rect_fix", fontSize, Nlignes, texte
 
     if texte == "":
-        return
+        return 0
          
     ctx.set_font_size(fontSize)
 
@@ -1635,7 +1714,7 @@ def show_text_rect_fix(ctx, texte, x, y, w, h, fontSize, Nlignes, va = 'c', ha =
         dl = lt[Nlignes-1]
         continuer = True
         while continuer:
-            print "   ", dl
+#            print "   ", dl
             width = ctx.text_extents(dl+" ...")[2]
             if width <= w:
                 continuer = False
@@ -1652,13 +1731,15 @@ def show_text_rect_fix(ctx, texte, x, y, w, h, fontSize, Nlignes, va = 'c', ha =
     
     show_lignes(ctx, lt, x, y, w, h, ha, va)
     
-    return
+    return show_lignes(ctx, lt, x, y, w, h, ha, va)
 
 
 
 
 def show_lignes(ctx, lignes, x, y, w, h, ha, va):
-    
+    """ Affiche une série de lignes de texte
+        Renvoie la position la plus extrème à droite (pour éventuellement écrire une suite au texte)
+    """
     fascent, fdescent, fheight, fxadvance, fyadvance = ctx.font_extents()
     # pour centrer verticalement
     
@@ -1670,24 +1751,28 @@ def show_lignes(ctx, lignes, x, y, w, h, ha, va):
     #
     # On dessine toutes les lignes de texte
     #
-    
+    posmax = x
 #    print "dy", dy
 #    print "show_lignes", lignes
     for l, t in enumerate(lignes):
 #        print "  ",t
         xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(t)
-        xt, yt = x+xbearing+(w-width)/2, y + (fascent+fdescent)*l - fdescent + fheight + dy
-#        print "  ",xt, yt
-        if ha == 'c':
-            ctx.move_to(xt, yt)
-        elif ha == 'g':
-            ctx.move_to(x, yt)
         
+        if ha == 'c':
+            xt = x+xbearing+(w-width)/2
+        elif ha == 'g':
+            xt = x
+        
+        yt = y + (fascent+fdescent)*l - fdescent + fheight + dy
+
+        ctx.move_to(xt, yt)
         ctx.show_text(t)
         
+        posmax = max(posmax, xt+width)
     
     ctx.stroke()
-
+    
+    return posmax
 
 def curve_rect_titre(ctx, titre, rect, coul_bord, coul_int, taille_font = 0.01, rayon = 0.025, epaiss = 0.003):
     ctx.set_line_width(epaiss)

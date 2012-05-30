@@ -12,7 +12,7 @@ Copyright (C) 2011-2012
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "2.0"
+__version__ = "2.1"
 
 
 ####################################################################################
@@ -23,14 +23,14 @@ __version__ = "2.0"
 # Outils "système"
 import sys, os
 
-#if hasattr(sys, 'setdefaultencoding'):
-#sys.setdefaultencoding('utf8')
-import locale
-loc = locale.getdefaultlocale()
-print loc
-#if loc[1]:
-#    encoding = loc[1]
-#    sys.setdefaultencoding(encoding)
+if hasattr(sys, 'setdefaultencoding'):
+    sys.setdefaultencoding('utf8')
+    import locale
+    loc = locale.getdefaultlocale()
+    print loc
+    if loc[1]:
+        encoding = loc[1]
+        sys.setdefaultencoding(encoding)
 
 DEFAUT_ENCODING = sys.getdefaultencoding()
 
@@ -259,7 +259,7 @@ class Lien():
                 
     ######################################################################################  
     def EvalLien(self, path, pathseq):
-        print "EvalLien", self
+#        print "EvalLien", self
 
         if path == "" or path.split() == []:
             self.path = ""
@@ -268,9 +268,9 @@ class Lien():
         path = toFileEncoding(path)
         pathseq = toFileEncoding(pathseq)
         path = self.GetAbsPath(pathseq, path)
-        print "   ", path
+#        print "   ", path
         if os.path.exists(path):
-            print "   exist"
+#            print "   exist"
             if os.path.isfile(path):
                 self.type = 'f'
                 self.path = testRel(path, pathseq)
@@ -281,7 +281,7 @@ class Lien():
             self.type = 'u'
             self.path = path
 
-        print "Fin EvalLien", self.type, self
+#        print "Fin EvalLien", self.type, self
               
     ######################################################################################  
     def GetAbsPath(self, pathseq, path = None):
@@ -324,7 +324,7 @@ Titres = [u"Séquence pédagogique",
           u"Prérequis",
           u"Objectifs pédagogiques",
           u"Séances",
-          u"Systèmes",
+          u"Systèmes et matériels",
           u"Classe"]
 
 class ElementDeSequence():
@@ -609,7 +609,7 @@ class Classe():
 
                       
 class Sequence():
-    def __init__(self, app, classe = None, panelParent = None, intitule = u""):
+    def __init__(self, app, classe = None, panelParent = None, intitule = u"Intitulé de la séquence pédagogique"):
 
         self.intitule = intitule
         self.classe = classe
@@ -629,7 +629,7 @@ class Sequence():
         self.systemes = []
         self.seance = [Seance(self, panelParent)]
         
-        self.commentaire = u""
+        self.commentaires = u""
         
         
         self.panelParent = panelParent
@@ -702,7 +702,7 @@ class Sequence():
         sequence.set("Intitule", self.intitule)
 #        print ET.tostring(sequence)
         
-        print self.commentaires
+#        print self.commentaires
         if self.commentaires != u"":
             sequence.set("Commentaires", self.commentaires)
 #        print ET.tostring(sequence)
@@ -743,9 +743,15 @@ class Sequence():
         
         self.position = eval(branche.get("Position", "0"))
 
-        brancheCI = branche.find("CentreInteret")
-        if brancheCI:
+        brancheCI = branche.find("CentresInteret")
+        if brancheCI != None:
             self.CI.setBranche(brancheCI)
+        
+        # Pour rétro compatibilité
+        if self.CI.numCI == []:
+            brancheCI = branche.find("CentreInteret")
+            if brancheCI:
+                self.CI.setBranche(brancheCI)
         
         branchePre = branche.find("Prerequis")
         if branchePre != None:
@@ -799,7 +805,7 @@ class Sequence():
         
     ######################################################################################  
     def SetCommentaire(self, text):
-        self.commentaire = text  
+        self.commentaires = text  
         
     ######################################################################################  
     def SetCodes(self):
@@ -1102,11 +1108,23 @@ class Sequence():
                                              ])
          
             
-#    ######################################################################################  
-#    def InitCurseur(self):
-#        self.curseur = [cf.posZSeances[0], cf.posZSeances[1]]
-        
-        
+    ######################################################################################       
+    def GetSystemesUtilises(self):
+#        print "GetSystemesUtilises"
+        lst = []
+#        print "  ", self.systemes
+        for s in self.systemes:
+            n = 0
+#            print "    ", self.seance
+            for se in self.seance:
+                ns = se.GetNbrSystemes(complet = True)
+#                print "      ", ns
+                if s.nom in ns.keys():
+                    n += ns[s.nom]
+            if n > 0:
+                lst.append(s)
+#        print lst
+        return lst
     
             
     ######################################################################################  
@@ -1148,15 +1166,17 @@ class Sequence():
         
     ######################################################################################  
     def HitTest(self, x, y):
-        rect = draw_cairo.posIntitule + draw_cairo.tailleIntitule
-        if dansRectangle(x, y, (rect,)):
-#            self.arbre.DoSelectItem(self.branche)
-            return self.branche
-        elif self.CI.HitTest(x, y):
+#        rect = draw_cairo.posIntitule + draw_cairo.tailleIntitule
+#        posi = draw_cairo.posPos + draw_cairo.taillePos
+#        print self.rect
+
+        
+        
+        if self.CI.HitTest(x, y):
             return self.CI.HitTest(x, y)
-        elif dansRectangle(x, y, (draw_cairo.posObj + draw_cairo.tailleObj,)):
-#            self.arbre.DoSelectItem(self.brancheObj)
-            return self.brancheObj
+#        elif dansRectangle(x, y, (draw_cairo.posObj + draw_cairo.tailleObj,)):
+##            self.arbre.DoSelectItem(self.brancheObj)
+#            return self.brancheObj
         elif dansRectangle(x, y, (draw_cairo.posPre + draw_cairo.taillePre,)):
             for ls in self.prerequisSeance:
                 h = ls.HitTest(x,y)
@@ -1166,7 +1186,7 @@ class Sequence():
             return self.branchePre
         else:
             branche = None
-            autresZones = self.seance + self.systemes
+            autresZones = self.seance + self.systemes + self.obj.values()
             continuer = True
             i = 0
             while continuer:
@@ -1177,9 +1197,22 @@ class Sequence():
                     if branche:
                         continuer = False
                 i += 1
+            
+            if branche == None:
+                if hasattr(self, 'rect') and dansRectangle(x, y, self.rect):
+                    return self.branche
+                
             return branche
         
-    
+    ######################################################################################  
+    def HitTestPosition(self, x, y):
+        if hasattr(self, 'rectPos'):
+            for i, rectPos in enumerate(self.rectPos):
+                if dansRectangle(x, y, (rectPos,)):
+                    return i
+                    
+                                    
+                                    
     #############################################################################
     def MiseAJourTypeEnseignement(self):
         self.app.SetTitre()
@@ -1220,7 +1253,8 @@ class CentreInteret():
         
     ######################################################################################  
     def __repr__(self):
-        return self.code
+        print self.numCI
+        return ""
     
     
     ######################################################################################  
@@ -1246,20 +1280,23 @@ class CentreInteret():
     
     ######################################################################################  
     def setBranche(self, branche):
+#        print "setBranche CI"
         self.numCI = []
-        
+#        print branche.keys()
         for i, s in enumerate(branche.keys()):
             self.numCI.append(eval(branche.get("C"+str(i), "")))
+#        print self.numCI
         
         # Pour rétro compatibilité
         if self.numCI == []:
-            code = list(branche)[0].tag
-            if code == "_":
-                num = []
-                self.AddNum(num)
-            else:
-                num = eval(code[2:])-1
-                self.AddNum(num)
+            if len(list(branche)) > 0:
+                code = list(branche)[0].tag
+                if code == "_":
+                    num = []
+                    self.AddNum(num)
+                else:
+                    num = eval(code[2:])-1
+                    self.AddNum(num)
                 
         if hasattr(self, 'panelPropriete'):
             self.panelPropriete.MiseAJour()
@@ -1338,10 +1375,12 @@ class CentreInteret():
         
     #############################################################################
     def HitTest(self, x, y):
-        rect = draw_cairo.posCI + draw_cairo.tailleCI
-        if dansRectangle(x, y, (rect,)):
-#            self.arbre.DoSelectItem(self.branche)
+        if hasattr(self, 'rect') and dansRectangle(x, y, self.rect):
             return self.branche
+#        rect = draw_cairo.posCI + draw_cairo.tailleCI
+#        if dansRectangle(x, y, (rect,)):
+##            self.arbre.DoSelectItem(self.branche)
+#            return self.branche
         
     #############################################################################
     def MiseAJourTypeEnseignement(self):
@@ -1395,6 +1434,7 @@ class Competences():
         self.competences = []
         for i, s in enumerate(branche.keys()):
             self.competences.append(branche.get("C"+str(i), ""))
+        
         if hasattr(self, 'panelPropriete'):
             self.panelPropriete.MiseAJour()
         
@@ -1419,7 +1459,11 @@ class Competences():
 #    ######################################################################################  
 #    def SetCode(self):
 #        self.codeBranche.SetLabel(self.code)
-        
+    
+    #############################################################################
+    def HitTest(self, x, y):
+        if hasattr(self, 'rect') and dansRectangle(x, y, self.rect):
+            return self.branche
 
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
@@ -1485,6 +1529,13 @@ class Savoirs():
         self.branche = arbre.AppendItem(branche, u"Savoirs", wnd = self.codeBranche, data = self,
                                         image = self.arbre.images["Sav"])
          
+    
+    #############################################################################
+    def HitTest(self, x, y):
+        if hasattr(self, 'rect') and dansRectangle(x, y, self.rect):
+            return self.branche
+        
+        
     #############################################################################
     def MiseAJourTypeEnseignement(self):
         if hasattr(self, 'panelPropriete'):
@@ -1551,7 +1602,7 @@ class Seance(ElementDeSequence):
         self.demarche = "I"
         self.systemes = []
         self.code = u""
-        self.description = u""
+        self.description = None
 #        self.description = ['<?xml version="1.0" encoding="UTF-8"?>\n<richtext version="1.0.0.0" xmlns="http://www.wxwidgets.org">\n']
         
 #        for i in range(8):
@@ -1611,7 +1662,9 @@ class Seance(ElementDeSequence):
         root = ET.Element("Seance"+str(self.ordre))
         root.set("Type", self.typeSeance)
         root.set("Intitule", self.intitule)
-        root.set("Description", self.description)
+#        print self.description
+        if self.description != None:
+            root.set("Description", self.description)
         
         self.lien.getBranche(root)
         
@@ -1645,7 +1698,7 @@ class Seance(ElementDeSequence):
         
         self.intitule  = branche.get("Intitule", "")
         self.typeSeance = branche.get("Type", "C")
-        self.description = branche.get("Description", u"")
+        self.description = branche.get("Description", None)
         
         self.lien.setBranche(branche, self.GetPath())
 #        print "Lien séance", self.typeSeance, self.ordre,":", self.lien
@@ -1958,6 +2011,9 @@ class Seance(ElementDeSequence):
         
     ######################################################################################  
     def PubDescription(self):
+        """ Publie toutes les descriptions de séance
+            (à l'ouverture)
+        """
         self.tip.SetDescription()
         if hasattr(self, 'panelPropriete'):
             self.panelPropriete.rtc.Ouvrir()
@@ -1968,11 +2024,14 @@ class Seance(ElementDeSequence):
     ######################################################################################  
     def SetDescription(self, description):   
 #        print "SetDescription", description
+#        if description == None:
+#            self.description
         if self.description != description:
             self.description = description
             if hasattr(self, 'panelPropriete'):
                 self.panelPropriete.sendEvent()
             self.tip.SetDescription()
+        
 #        print "Fini"
             
     ######################################################################################  
@@ -2163,20 +2222,26 @@ class Seance(ElementDeSequence):
 
             
     ######################################################################################  
-    def GetNbrSystemes(self):
+    def GetNbrSystemes(self, complet = False):
         d = {}
-        if not self.typeSeance == "S":
+        if self.typeSeance in ["S", "R"]:
+            if self.typeSeance == "S" or complet:
+                for seance in self.sousSeances:
+                    for s in seance.systemes:
+                        if s.n <>"":
+                            if d.has_key(s.n):
+                                d[s.n] += s.v[0]*self.nombre.v[0]
+                            else:
+                                d[s.n] = s.v[0]*self.nombre.v[0]
+            else:
+                for s in self.systemes:
+                    if s.n <>"":
+                        d[s.n] = s.v[0]*self.nombre.v[0]
+        else:
             for s in self.systemes:
                 if s.n <>"":
                     d[s.n] = s.v[0]*self.nombre.v[0]
-        else:
-            for seance in self.sousSeances:
-                for s in seance.systemes:
-                    if s.n <>"":
-                        if d.has_key(s.n):
-                            d[s.n] += s.v[0]*self.nombre.v[0]
-                        else:
-                            d[s.n] = s.v[0]*self.nombre.v[0]
+        
      
         return d
         
@@ -2186,6 +2251,7 @@ class Seance(ElementDeSequence):
         if hasattr(self, 'rect') and dansRectangle(x, y, self.rect):
 #            self.arbre.DoSelectItem(self.branche)
             return self.branche
+        
         else:
             if self.typeSeance in ["R", "S"]:
                 ls = self.sousSeances
@@ -2234,7 +2300,7 @@ class Systeme(ElementDeSequence):
         
     ######################################################################################  
     def __repr__(self):
-        return self.nom+"("+str(self.nbrDispo.v[0])+")"
+        return self.nom+" ("+str(self.nbrDispo.v[0])+")"
         
     ######################################################################################  
     def getBranche(self):
@@ -2271,14 +2337,20 @@ class Systeme(ElementDeSequence):
     ######################################################################################  
     def SetNom(self, nom):
         self.nom = nom
-        if nom != u"":
-            if hasattr(self, 'arbre'):
-                self.SetCode()
+#        if nom != u"":
+        if hasattr(self, 'arbre'):
+            self.SetCode()
         
     ######################################################################################  
     def SetCode(self):
         if hasattr(self, 'codeBranche'):
-            self.codeBranche.SetLabel(self.nom)
+#            self.codeBranche.SetLabel(self.nom)
+            if self.nom != "":
+                t = self.nom
+            else:
+                t = u"Système ou matériel"
+            self.arbre.SetItemText(self.branche, t)
+            
         # Tip
         if hasattr(self, 'tip'):
             self.tip.SetCode(u"Nom : "+self.nom)
@@ -2297,7 +2369,7 @@ class Systeme(ElementDeSequence):
         image = self.arbre.images["Sys"]
 #        else:
 #            image = self.image.ConvertToImage().Scale(20, 20).ConvertToBitmap()
-        self.branche = arbre.AppendItem(branche, u"Système ou matériel:", wnd = self.codeBranche, data = self,
+        self.branche = arbre.AppendItem(branche, u"Système ou matériel", wnd = self.codeBranche, data = self,
                                         image = image)
 #        self.SetNom(self.nom)
         self.SetNombre()
@@ -2408,7 +2480,7 @@ class FenetreSequences(aui.AuiMDIParentFrame):
         options = Options.Options()
         if options.fichierExiste():
 #            try :
-            options.ouvrir()
+            options.ouvrir(DEFAUT_ENCODING)
 #            except:
 #                print "Fichier d'options corrompus ou inexistant !! Initialisation ..."
 #                options.defaut()
@@ -2457,7 +2529,7 @@ class FenetreSequences(aui.AuiMDIParentFrame):
         file_menu.Append(11, u"Ouvrir")
         file_menu.Append(12, u"Enregistrer")
         file_menu.AppendSeparator()
-        file_menu.Append(15, u"Exporter en PDF")
+        file_menu.Append(15, u"Exporter (PDF ou SVG)")
         file_menu.AppendSeparator()
         file_menu.Append(wx.ID_EXIT, u"Quitter")
 
@@ -2688,13 +2760,13 @@ class FenetreSequences(aui.AuiMDIParentFrame):
         except:
             print "   Erreur enregistrement options...",
             
-        try:
-            self.options.definir()
-            self.options.enregistrer()
-        except IOError:
-            print "   Permission d'enregistrer les options refusée...",
-        except:
-            print "   Erreur enregistrement options...",
+#        try:
+        self.options.definir()
+        self.options.enregistrer()
+#        except IOError:
+#            print "   Permission d'enregistrer les options refusée...",
+#        except:
+#            print "   Erreur enregistrement options...",
         
         # Close all ChildFrames first else Python crashes
         toutferme = True
@@ -3003,7 +3075,7 @@ class FenetreSequence(aui.AuiMDIChildFrame):
                 
                 self.sequence.setBranche(sequence)  
                 
-        except:
+        except Exception as inst:
             dlg = wx.MessageDialog(self, u"La séquence pédagogique\n%s\n n'a pas pu être ouverte !" %nomFichier,
                                u"Erreur d'ouverture",
                                wx.OK | wx.ICON_WARNING
@@ -3104,10 +3176,10 @@ class FenetreSequence(aui.AuiMDIChildFrame):
         if self.fichierCourant == '':
             t += u" - Nouvelle séquence"
         else:
-            t += u" - "+os.path.splitext(os.path.basename(self.fichierCourant))[0].encode(DEFAUT_ENCODING)#decode(FILE_ENCODING).
-        if modif : 
+            t += u" - "+os.path.splitext(os.path.basename(self.fichierCourant))[0]
+        if modif :
             t += " **"
-        self.SetTitle(t.encode(DEFAUT_ENCODING))
+        self.SetTitle(t)#toDefautEncoding(t))
         
     #############################################################################
     def MarquerFichierCourantModifie(self, modif = True):
@@ -3308,12 +3380,24 @@ class FicheSequence(wx.ScrolledWindow):
         x, y = evt.GetX(), evt.GetY()
         _x, _y = self.CalcUnscrolledPosition(x, y)
         xx, yy = self.ctx.device_to_user(_x, _y)
-#        print "  ", xx, yy
+        
+        #
+        # Changement de branche sur l'arbre
+        #
         branche = self.sequence.HitTest(xx, yy)
         if branche != None:
             self.sequence.arbre.SelectItem(branche)
-#            wx.CallAfter(self.sequence.arbre.Layout)
-#            wx.CallAfter(self.sequence.arbre.CalculatePositions)
+
+
+        #
+        # Autres actions
+        #
+        position = self.sequence.HitTestPosition(xx, yy)
+        if position != None:
+            self.sequence.SetPosition(position)
+            if hasattr(self.sequence, 'panelPropriete'):
+                self.sequence.panelPropriete.SetBitmapPosition(bougerSlider = position)
+            
         return branche
     
     #############################################################################            
@@ -3555,8 +3639,8 @@ class PanelPropriete_Sequence(PanelPropriete):
     
     #############################################################################            
     def getBitmapPeriode(self, larg):
-        w, h = draw_cairo.taillePos
-        w = w - draw_cairo.ecartX
+        w, h = 0.04*5, 0.04
+#        w = 0.5 - draw_cairo.ecartX
         imagesurface = cairo.ImageSurface(cairo.FORMAT_ARGB32,  larg, int(h/w*larg))#cairo.FORMAT_ARGB32,cairo.FORMAT_RGB24
         ctx = cairo.Context(imagesurface)
         ctx.scale(larg/w, larg/w) 
@@ -3570,8 +3654,15 @@ class PanelPropriete_Sequence(PanelPropriete):
     #############################################################################            
     def onChanged(self, evt):
         self.sequence.SetPosition(evt.EventObject.GetValue())
+        self.SetBitmapPosition()
+        
+        
+    #############################################################################            
+    def SetBitmapPosition(self, bougerSlider = None):
         self.sendEvent()
         self.bmp.SetBitmap(self.getBitmapPeriode(250))
+        if bougerSlider != None:
+            self.position.SetValue(bougerSlider)
         
     #############################################################################            
     def EvtText(self, event):
@@ -4210,8 +4301,8 @@ class PanelPropriete_CI(PanelPropriete):
         else:
             self.CI.DelNum(button_selected)
         
-        self.panel_cible.bouton[button_selected].SetState(event.GetEventObject().IsChecked())
-        self.panel_cible.GererBoutons()
+#        self.panel_cible.bouton[button_selected].SetState(event.GetEventObject().IsChecked())
+        self.panel_cible.GererBoutons(True)
         
         self.Layout()
         self.sendEvent()
@@ -4235,7 +4326,7 @@ class PanelPropriete_CI(PanelPropriete):
             self.sendEvent()
 
     #############################################################################            
-    def GererCases(self, liste):
+    def GererCases(self, liste, appuyer = False):
         """ Permet de cacher les cases des CI au fur et à mesure que l'on selectionne des CI
             <liste> : liste des CI à activer
         """ 
@@ -4245,7 +4336,10 @@ class PanelPropriete_CI(PanelPropriete):
             else:
                 b[0].Enable(False)
                 
-        
+        if appuyer:
+            for i, b in enumerate(self.group_ctrls):
+                b[0].SetValue(i in self.CI.numCI)
+                
                     
 
 ####################################################################################
@@ -4372,7 +4466,10 @@ class Panel_Cible(wx.Panel):
         if event.GetEventObject().IsPressed():
             self.CI.AddNum(button_selected)
         else:
-            self.CI.DelNum(button_selected)
+            try: # sinon problème avec les doubles clics
+                self.CI.DelNum(button_selected)
+            except:
+                pass
 
         self.GererBoutons()
         
@@ -4397,7 +4494,7 @@ class Panel_Cible(wx.Panel):
             for i,p in enumerate(constantes.PositionCibleCIET):
                 p = p[:3].strip()
                 c = self.CI.GetPosCible(0)[:3].strip()
-                print c
+#                print c
                 if len(p) == 0 or len(c) == 0: # Cas des CI "en orbite"
                     l.append(i)
                 else:       # Autres cas
@@ -4418,12 +4515,13 @@ class Panel_Cible(wx.Panel):
                 
         if appuyer:
             for i, b in enumerate(self.bouton):
-                if i in l:
-                    b.SetState(True)
+                if i in self.CI.numCI:
+                    b.SetState(platebtn.PLATE_PRESSED)
                 else:
-                    b.SetState(False)
+                    b.SetState(platebtn.PLATE_NORMAL)
+                b._pressed = i in self.CI.numCI
                 
-        self.Parent.GererCases(l)    
+        self.Parent.GererCases(l, True)    
                     
                     
 ####################################################################################
@@ -6467,7 +6565,12 @@ def dansRectangle(x, y, rect):
             return True
     return False
 
-       
+#def dansRectangles(x, y, rect):
+#    for r in rect:
+#        print r
+#        if dansRectangle(x, y, r):
+#            return True
+#    return False
 
 def get_key(dict, value):
     i = 0
@@ -6911,172 +7014,36 @@ class PopupInfoSysteme(PopupInfo):
     def OnClick(self, evt):
         self.lien.Afficher(self.parent.sequence.GetPath(), self.parent.parent)
         
-        
-#import wx.html
+
+
+#############################################################################################################
+#
+# Le tip d'information pour les descriptions de séance
+# 
+#############################################################################################################
 import cStringIO
 import wx.richtext as rt
 
 class PopupInfoSeance(PopupInfoSysteme):
     def __init__(self, parent, titre, objet):
         PopupInfoSysteme.__init__(self, parent, titre)
-        
+        self.objet = objet
         self.titreDescr = wx.StaticText(self, -1, u"Description :")
         self.rtp = richtext.RichTextPanel(self, objet, size = (300, 200))
         self.sizer.Add(self.titreDescr, (5,0), flag = wx.ALL, border = 5)
         self.sizer.Add(self.rtp, (6,0), flag = wx.ALL|wx.EXPAND, border = 5)
-        
-#        self.Bind(wx.EVT_CLOSE, self.OnClose)
-        
-#    def estVide(self, description):
-#        handler = rt.RichTextHTMLHandler()
-#        handler.SetFlags(rt.RICHTEXT_HANDLER_SAVE_IMAGES_TO_MEMORY)
-#        handler.SetFontSizeMapping([7,9,11,12,14,22,100])
-#        stream = cStringIO.StringIO()
-#        stream.write(description)
-#        handler.DeleteTemporaryImages()
-#        
-#        handler = rt.RichTextFileHandler()
-#        stream2 = cStringIO.StringIO()
-#        handler.SaveStream(stream, stream2)
-#        print stream
-#        print stream2
-#        
-#        return stream2 ==""
-        
-#    def OnClose(self, evt):
-##        print "OnClose richtext",
-#        handler = rt.RichTextXMLHandler()
-#        handler.SetFlags(rt.RICHTEXT_HANDLER_SAVE_IMAGES_TO_MEMORY)
-##        handler.SetFontSizeMapping([7,9,11,12,14,22,100])
-#
-#        import cStringIO
-#        stream = cStringIO.StringIO()
-#        if not handler.SaveStream(self.rtc.GetBuffer(), stream):
-#            return
-#        
-#        self.objet.description = stream.getvalue()
-#        self.objet.tip.SetDescription(self.objet.description)
-##        print self.texte
-#        
-#        evt.Skip()
+        self.SetDescription()
         
     def SetDescription(self):
+#        print "SetDescription TIP", self.objet.description != None
+        self.rtp.Show(self.objet.description != None)
+        self.titreDescr.Show(self.objet.description != None)
         self.rtp.Ouvrir()
-#        handler = rt.RichTextHTMLHandler()
-#        handler.SetFlags(rt.RICHTEXT_HANDLER_SAVE_IMAGES_TO_MEMORY)
-#        handler.SetFontSizeMapping([7,9,11,12,14,22,100])
-#
-#        
-#        stream = cStringIO.StringIO()
-#        stream.write(description)
-#        
-#        self.html.SetPage(stream.getvalue())
-#
-#        handler.DeleteTemporaryImages()
-#        if self.html.ToText() == "":
-#            self.titreDescr.Show(False)
-#            self.html.Show(False)
-#        else:
-#            self.titreDescr.Show(True)
-#            self.html.Show(True)
-#        
-#        self.sizer.Layout()
-#        self.Fit()
-##        if self.typeLien == "f":
-#            os.startfile(self.lien)
-#        elif self.typeLien == 'd':
-#            subprocess.Popen(["explorer", self.lien])
-#        elif self.typeLien == 'u':
-#            try:
-#                urllib.urlopen(self.lien.encode('ascii', 'xmlcharrefreplace'))
-#            except: #IOError
-#                pass
-#        elif self.typeLien == 's':
-#            self.Show(False)
-#            child = self.parent.parent.commandeNouveau()
-#            child.ouvrir(self.lien)
-            
-            
-#class PopupInfo(wx.PopupWindow):
-#    """Adds a bit of text and mouse movement to the wx.PopupWindow"""
-#    def __init__(self, parent, message):
-#        wx.PopupWindow.__init__(self, parent)
-#        self.SetBackgroundColour("CADET BLUE")
-#
-#        st = wx.StaticText(self, -1,
-#                          "This is a special kind of top level\n"
-#                          "window that can be used for\n"
-#                          "popup menus, combobox popups\n"
-#                          "and such.\n\n"
-#                          "Try positioning the demo near\n"
-#                          "the bottom of the screen and \n"
-#                          "hit the button again.\n\n"
-#                          "In this demo this window can\n"
-#                          "be dragged with the left button\n"
-#                          "and closed with the right."
-#                          ,
-#                          pos=(10,10))
-#
-#        sz = st.GetBestSize()
-#        self.SetSize( (sz.width+20, sz.height+20) )
-#
-#        self.Bind(wx.EVT_LEFT_DOWN, self.OnMouseLeftDown)
-#        self.Bind(wx.EVT_MOTION, self.OnMouseMotion)
-#        self.Bind(wx.EVT_LEFT_UP, self.OnMouseLeftUp)
-#        self.Bind(wx.EVT_RIGHT_UP, self.OnRightUp)
-#
-#        st.Bind(wx.EVT_LEFT_DOWN, self.OnMouseLeftDown)
-#        st.Bind(wx.EVT_MOTION, self.OnMouseMotion)
-#        st.Bind(wx.EVT_LEFT_UP, self.OnMouseLeftUp)
-#        st.Bind(wx.EVT_RIGHT_UP, self.OnRightUp)
-#
-#        wx.CallAfter(self.Refresh)
-#
-#    def OnMouseLeftDown(self, evt):
-#        self.Refresh()
-#        self.ldPos = evt.GetEventObject().ClientToScreen(evt.GetPosition())
-#        self.wPos = self.ClientToScreen((0,0))
-#        self.CaptureMouse()
-#
-#    def OnMouseMotion(self, evt):
-#        if evt.Dragging() and evt.LeftIsDown():
-#            dPos = evt.GetEventObject().ClientToScreen(evt.GetPosition())
-#            nPos = (self.wPos.x + (dPos.x - self.ldPos.x),
-#                    self.wPos.y + (dPos.y - self.ldPos.y))
-#            self.Move(nPos)
-#
-#    def OnMouseLeftUp(self, evt):
-#        self.ReleaseMouse()
-#
-#    def OnRightUp(self, evt):
-#        self.Show(False)
-#        self.Destroy()
+        self.Layout()
+        self.Fit()
 
-#def pySequenceRunning():
-#    #
-#    # Cette fonction teste si pySyLiC.exe est déjà lancé, auquel cas on arrete tout.
-#    #
-#    try:
-#        import wmi
-#        HAVE_WMI=True
-#    except:
-#        HAVE_WMI=False
-#        
-#    if not HAVE_WMI:
-#        return False
-#    else:
-#        nb_instances=0
-#        try:
-#            controler = wmi.WMI()
-#            seqexe = []
-#            for elem in controler.Win32_Process(name = "Sequence.exe"):
-#                seqexe.append(elem)
-#            print seqexe
-#            if nb_instances>=2:
-#                print seqexe[0]
-#                print dir(seqexe[0].methods)
-#        except:
-#            pass
+
+
 #############################################################################################################
 #
 # A propos ...

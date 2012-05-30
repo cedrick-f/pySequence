@@ -21,12 +21,12 @@
 ;Informations générales sur l'application
 
 AppName=pySequence
-AppVersion=1.14
-AppVerName=pySequence 1.14
+AppVersion=2.0
+AppVerName=pySequence 2.0
 
 AppPublisher=Cédrick Faury
 AppCopyright=Copyright © 2011-2012 Cédrick Faury
-VersionInfoVersion = 1.14.0.0
+VersionInfoVersion = 2.0.0.0
 
 ;Répertoire de base contenant les fichiers
 SourceDir=D:\Developpement\Sequence
@@ -45,7 +45,7 @@ SolidCompression=yes
 PrivilegesRequired=none
 
 ;Nom du fichier généré et répertoire de destination
-OutputBaseFilename=pySequence_1.14
+OutputBaseFilename=pySequence_2.0
 OutputDir=releases
 
 UninstallDisplayIcon={app}\logo.ico
@@ -63,7 +63,7 @@ AlwaysUsePersonalGroup=no
 
 
 [Messages]
-BeveledLabel=pySequence 1.14 installation
+BeveledLabel=pySequence 2.0 installation
 
 [Languages]
 Name: fr; MessagesFile: "compiler:Languages\French.isl"
@@ -85,7 +85,7 @@ fr.AllUsers=Tous les utilisateurs
 fr.JustMe=Seulement moi
 fr.ShortCut=Raccourcis :
 fr.Association=Association de fichier :
-version = 1.14
+version = 2.0
 
 
 [Files]
@@ -124,7 +124,7 @@ Name: {group}\{cm:uninstall} pySequence; Filename: {app}\unins000.exe;IconFileNa
 ;
 ; On ajoute sur le Bureau l'icône pySequence
 ;
-Name: {code:DefDesktop}\pySequence 1.14;   Filename: {app}\bin\Sequence.exe; WorkingDir: {app}\bin; MinVersion: 4,4; Tasks: desktopicon2; IconFileName: {app}\bin\Sequence.exe
+Name: {code:DefDesktop}\pySequence 2.0;   Filename: {app}\bin\Sequence.exe; WorkingDir: {app}\bin; MinVersion: 4,4; Tasks: desktopicon2; IconFileName: {app}\bin\Sequence.exe
 
 
 [_ISTool]
