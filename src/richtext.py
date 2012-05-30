@@ -36,8 +36,7 @@ class RichTextPanel(wx.Panel):
         wx.Panel.__init__(self, parent, -1, style = wx.BORDER_SUNKEN)
         
         self.objet = objet
-        if objet.description == "":
-            objet.description = '<?xml version="1.0" encoding="UTF-8"?>\n<richtext version="1.0.0.0" xmlns="http://www.wxwidgets.org">\n  <paragraphlayout textcolor="#000000" fontsize="8" fontstyle="90" fontweight="90" fontunderlined="0" fontface="MS Shell Dlg 2" alignment="1" parspacingafter="10" parspacingbefore="0" linespacing="10">\n    <paragraph>\n      <text></text>\n    </paragraph>\n  </paragraphlayout>\n</richtext>\n'
+        self.xmlvide = '<?xml version="1.0" encoding="UTF-8"?>\n<richtext version="1.0.0.0" xmlns="http://www.wxwidgets.org">\n  <paragraphlayout textcolor="#000000" fontsize="8" fontstyle="90" fontweight="90" fontunderlined="0" fontface="MS Shell Dlg 2" alignment="1" parspacingafter="10" parspacingbefore="0" linespacing="10">\n    <paragraph>\n      <text></text>\n    </paragraph>\n  </paragraphlayout>\n</richtext>\n'
         
         self.rtc = rt.RichTextCtrl(self, size = size, style=wx.VSCROLL|wx.HSCROLL|wx.NO_BORDER);
         self.sizer = wx.BoxSizer(wx.VERTICAL)
@@ -54,18 +53,24 @@ class RichTextPanel(wx.Panel):
         handler = rt.RichTextXMLHandler()
         buff = self.rtc.GetBuffer()
         buff.AddHandler(handler)
-        out.write(self.objet.description)
+        if self.objet.description == None:
+            out.write(self.xmlvide)
+        else:
+            out.write(self.objet.description)
         out.seek(0)
         handler.LoadStream(buff, out)
         self.rtc.Refresh()
         
     def Sauver(self, evt = None):
-        handler = rt.RichTextXMLHandler()
-        handler.SetFlags(rt.RICHTEXT_HANDLER_SAVE_IMAGES_TO_MEMORY)
-        stream = cStringIO.StringIO()
-        if not handler.SaveStream(self.rtc.GetBuffer(), stream):
-            return
-        self.objet.SetDescription(stream.getvalue())
+        if self.rtc.GetValue() == "":
+            self.objet.SetDescription(None)
+        else:
+            handler = rt.RichTextXMLHandler()
+            handler.SetFlags(rt.RICHTEXT_HANDLER_SAVE_IMAGES_TO_MEMORY)
+            stream = cStringIO.StringIO()
+            if not handler.SaveStream(self.rtc.GetBuffer(), stream):
+                return
+            self.objet.SetDescription(stream.getvalue())
         if evt != None:
             evt.Skip()
         

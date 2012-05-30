@@ -125,12 +125,16 @@ class Options:
 
 
     ############################################################################
-    def ouvrir(self):
+    def ouvrir(self, encoding = 'utf_8_sig'):
         """ Ouvre un fichier d'options 
         """
         config = ConfigParser.ConfigParser()
-        with io.open(self.fichierOpt, 'r', encoding='utf_8_sig') as fp:
-            config.readfp(fp)
+        try :
+            with io.open(self.fichierOpt, 'r', encoding=encoding) as fp:
+                config.readfp(fp)
+        except:
+            with io.open(self.fichierOpt, 'r', encoding='utf_8_sig') as fp:
+                config.readfp(fp)
 #        config.read(self.fichierOpt)
         print "ouverture :",self.fichierOpt
         for titre in self.typesOptions.keys():
