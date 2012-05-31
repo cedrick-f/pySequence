@@ -18,13 +18,15 @@ Dans _propriétés_ saisir :
  * des commentaires
 
 
-===*3 - Définir le centre d'intérêt.*===
+===*3 - Définir les centres d'intérêt.*===
 
-Dans l'arborescence, cliquer sur *"Centre d'intérêt"*.
+Dans l'arborescence, cliquer sur *"Centres d'intérêt"*.
 
 http://pysequence.googlecode.com/svn/trunk/images_aide/centre_interet1.png
 
-Dans *propriétés*, sélectionner le centre d'intérêt correspondant à la séquence.
+Dans *propriétés*, sélectionner les centres d'intérêt correspondant à la séquence.
+La sélection peut se faire soit depuis la cible, soit avec les cases à cocher.
+Il n'est possible de sélectionner que *2 CI* adjacents.
 
 http://pysequence.googlecode.com/svn/trunk/images_aide/saisir_CI1.png
 _résultat sur la fiche_
