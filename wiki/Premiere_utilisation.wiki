@@ -6,6 +6,7 @@
 
 Avant de démarrer la création des fiches de séquence, il est préférable de *configurer* correctement *la classe* :
  * type d'enseignement (ETT ou spécialité)
+   http://pysequence.googlecode.com/svn/trunk/images_aide/type_d_enseignement.png
  * découpage de la classe en groupes
  * centres d'intérêt choisis pour l'ETT
 
