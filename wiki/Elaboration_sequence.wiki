@@ -51,21 +51,21 @@ http://pysequence.googlecode.com/svn/trunk/images_aide/prerequis_fiche.png
 
 Dans *"propriétés"* sélectionner le fichier .seq correspondant à la fiche de séquence pré-requise. 
 
-_résultat surla fiche_
+_résultat sur la fiche_
 http://pysequence.googlecode.com/svn/trunk/images_aide/affichage_prerequis_seq.png
 
 ===*5 - Création des séances*===
 
-[creation_seance détails]
+[creation_seance Définir une séance]
 
 
 ===*6 - Prise en compte des systèmes du labo*===
 
-Permettra d'associer un ou des systèmes aux activités.
+[systeme_labo Associer des systèmes ou du matériel aux activités]
 
-[systeme_labo systèmes]
 
 
 
 
 [Aide Sommaire de l'aide]
+   [Utilisation Utilisation de pySequence]
