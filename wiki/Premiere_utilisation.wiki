@@ -4,7 +4,10 @@
 
 == Configuration de la classe ==
 
-Avant de démarrer la création des fiches de séquence, il est préférable de *définir* correctement *les effectifs*.
+Avant de démarrer la création des fiches de séquence, il est préférable de *configurer* correctement *la classe* :
+ * type d'enseignement (ETT ou spécialité)
+ * découpage de la classe en groupes
+ * centres d'intérêt choisis pour l'ETT
 
 Par défaut, les *centres d'intérêt* sont définis pour l'académie de *Clermont-Ferrand*, mais il est possible de les modifier à partir d'une sélection d'un fichier _Excel_, ou bien manuellement.
 
