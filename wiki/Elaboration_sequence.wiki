@@ -14,7 +14,7 @@ http://pysequence.googlecode.com/svn/trunk/images_aide/nom_sequence.png
 
 Dans propriétés saisir :
  * le nom 
- * la positionhttp://pysequence.googlecode.com/svn/trunk/images_aide/saisir_nom_sequence.png
+ * la position http://pysequence.googlecode.com/svn/trunk/images_aide/saisir_nom_sequence.png
  * des commentaires
 
 
