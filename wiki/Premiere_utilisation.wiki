@@ -12,9 +12,10 @@ http://pysequence.googlecode.com/svn/trunk/images_aide/presentation.png
 
 == Enregistrement de pySequence ==
 
-En cas d'utilisation de la version *portable* de _*pySequence*_, et afin que votre PC reconnaisse le type de fichier *.seq*, il est nécessaire d'enregistrer le logiciel dans la _base de registre_ de Windows. 
-* Lancer _*pySequence*_ (il faut pour cela avoir les *droits d'Administrateur*, et sous Windows *Vista* ou *Seven*, exécuter _*pySequence*_ *"en tant qu'administrateur"*)
-* Depuis le menu, faire Outils/Inscrire dans la base de registre
+En cas d'utilisation de la version *portable* de _*pySequence*_, et afin que votre PC reconnaisse le type de fichier *.seq*, il est nécessaire d'enregistrer le logiciel dans la _base de registre_ de Windows.
+
+ * Lancer _*pySequence*_ (il faut pour cela avoir les *droits d'Administrateur*, et sous Windows *Vista* ou *Seven*, exécuter _*pySequence*_ *"en tant qu'administrateur"*)
+ * Depuis le menu, faire Outils/Inscrire dans la base de registre
 
 http://pysequence.googlecode.com/svn/trunk/images_aide/registre.png
 
