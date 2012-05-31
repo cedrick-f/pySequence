@@ -12,8 +12,8 @@ Dans l'arborescence, cliquer sur *"séquence pédagogique"*
 
 http://pysequence.googlecode.com/svn/trunk/images_aide/nom_sequence.png
 
-Dans propriétés saisir :
- * le nom 
+Dans _propriétés_ saisir :
+ * l'intitulé de la séquence
  * la position http://pysequence.googlecode.com/svn/trunk/images_aide/saisir_nom_sequence.png
  * des commentaires
 
