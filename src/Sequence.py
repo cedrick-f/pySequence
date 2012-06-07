@@ -12,7 +12,7 @@ Copyright (C) 2011-2012
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "2.1"
+__version__ = "2.2"
 
 
 ####################################################################################
@@ -2343,13 +2343,13 @@ class Systeme(ElementDeSequence):
         
     ######################################################################################  
     def SetCode(self):
-        if hasattr(self, 'codeBranche'):
+#        if hasattr(self, 'codeBranche'):
 #            self.codeBranche.SetLabel(self.nom)
-            if self.nom != "":
-                t = self.nom
-            else:
-                t = u"Système ou matériel"
-            self.arbre.SetItemText(self.branche, t)
+        if self.nom != "":
+            t = self.nom
+        else:
+            t = u"Système ou matériel"
+        self.arbre.SetItemText(self.branche, t)
             
         # Tip
         if hasattr(self, 'tip'):
@@ -2363,13 +2363,13 @@ class Systeme(ElementDeSequence):
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
         self.arbre = arbre
-        self.codeBranche = wx.StaticText(self.arbre, -1, self.nom)
+#        self.codeBranche = wx.StaticText(self.arbre, -1, self.nom)
 #        print "image",self.arbre.images["Sys"], self.image.GetWidth()
 #        if self.image == None or self.image == wx.NullBitmap:
         image = self.arbre.images["Sys"]
 #        else:
 #            image = self.image.ConvertToImage().Scale(20, 20).ConvertToBitmap()
-        self.branche = arbre.AppendItem(branche, u"Système ou matériel", wnd = self.codeBranche, data = self,
+        self.branche = arbre.AppendItem(branche, u"Système ou matériel", data = self,#, wnd = self.codeBranche
                                         image = image)
 #        self.SetNom(self.nom)
         self.SetNombre()
@@ -3351,6 +3351,7 @@ class FicheSequence(wx.ScrolledWindow):
             
     ######################################################################################################
     def OnMove(self, evt):
+        print "OnMove"
         if hasattr(self, 'tip'):
             self.tip.Show(False)
             self.call.Stop()
