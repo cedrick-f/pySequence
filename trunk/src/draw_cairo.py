@@ -95,7 +95,7 @@ fontPos = 0.014
 
 # Rectangle des objectifs
 posObj = (posPre[0] + taillePre[0] + ecartX/2, margeY + taillePos[1] + ecartY/2)
-tailleObj = (taillePos[0], posPre[1] + taillePre[1] - posObj[1])
+tailleObj = [taillePos[0], posPre[1] + taillePre[1] - posObj[1]]
 IcoulObj = (0.8, 0.9, 0.8, 0.85)
 BcoulObj = (0.25, 0.3, 0.2, 1)
 fontObj = 0.014
@@ -495,6 +495,7 @@ def Draw(ctx, seq):
     #
     posPos[0] = posPre[0] + taillePre[0] + ecartX + tailleTypeEns
     taillePos[0] =  0.72414 - posPos[0] - margeX
+    
     seq.rectPos = DrawPeriodes(ctx, seq.position, tailleTypeEns = tailleTypeEns)
     seq.rect.append(posPos+taillePos)
     
@@ -697,6 +698,7 @@ def Draw(ctx, seq):
     #  Objectifs
     #
     x0, y0 = posObj
+    tailleObj[0] =  taillePos[0]
     rect_width, rect_height  = tailleObj
     curve_rect_titre(ctx, u"Objectifs",  (x0, y0, rect_width, rect_height), BcoulObj, IcoulObj, fontObj)
     
