@@ -80,7 +80,7 @@ from CedWidgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_E
 
 
 # Les constantes partagées
-from constantes import calculerEffectifs, revCalculerEffectifs, APP_DATA_PATH, PATH, findEffectif, getTextCI, strEffectifComplet, strEffectif, getListCI
+from constantes import calculerEffectifs, revCalculerEffectifs, APP_DATA_PATH, PATH, findEffectif, getTextCI, strEffectifComplet, strEffectif, getListCI, getElementFiltre
 import constantes
 
 # Pour lire les classeurs Excel
@@ -96,8 +96,8 @@ import textwrap
 import serveur
 
 # Pour l'export en swf
-import tempfile
-import svg_export
+#import tempfile
+#import svg_export
 
 # Pour les descriptions
 import richtext
@@ -673,7 +673,20 @@ class Sequence():
         for s in self.seance:
             duree += s.GetDuree()
         return duree
-                        
+                  
+    ######################################################################################  
+    def GetPtCaract(self): 
+        """ Renvoie la liste des points caractéristiques des zones actives de la fiche
+            (pour l'animation SVG)
+        """
+        lst = []
+        lst.extend(self.obj["C"].GetPtCaract())
+        lst.extend(self.obj["S"].GetPtCaract())
+        lst.extend(self.prerequis.GetPtCaract())
+        lst.extend(self.CI.GetPtCaract())
+        for s in self.seance:
+            lst.extend(s.GetPtCaract())
+        return lst    
     ######################################################################################  
     def GetDureeGraph(self):
         duree = 0
@@ -1314,6 +1327,21 @@ class CentreInteret():
             if hasattr(self, 'panelPropriete'):
                 self.panelPropriete.MiseAJour()
 
+    
+    ######################################################################################  
+    def GetPtCaract(self): 
+        """ Renvoie la liste des points caractéristiques des zones actives de la fiche
+            (pour l'animation SVG)
+        """
+        lst = []
+        if hasattr(self, 'pt_caract' ):
+            intitule = ''
+            for i, n in enumerate(self.numCI):
+                intitule += self.GetIntit(i) + '\n'
+            lst.append((self.pt_caract, intitule, ""))
+        return lst
+    
+    
     ######################################################################################  
     def AddNum(self, num): 
         self.numCI.append(num)
@@ -1437,7 +1465,19 @@ class Competences():
         
         if hasattr(self, 'panelPropriete'):
             self.panelPropriete.MiseAJour()
-        
+    
+    ######################################################################################  
+    def GetPtCaract(self): 
+        """ Renvoie la liste des points caractéristiques des zones actives de la fiche
+            (pour l'animation SVG)
+        """
+        lst = []
+        if hasattr(self, 'pt_caract' ):
+            intitule = ''
+            for i, n in enumerate(self.competences):
+                intitule += n + '\n'
+            lst.append((self.pt_caract, intitule, ""))
+        return lst
         
 #        code = branche.tag
 #        num = Competences.keys().index(code)
@@ -1521,6 +1561,18 @@ class Savoirs():
         if hasattr(self, 'panelPropriete'):
             self.panelPropriete.MiseAJour()
         
+    ######################################################################################  
+    def GetPtCaract(self): 
+        """ Renvoie la liste des points caractéristiques des zones actives de la fiche
+            (pour l'animation SVG)
+        """
+        lst = []
+        if hasattr(self, 'pt_caract' ):
+            intitule = ''
+            for i, n in enumerate(self.savoirs):
+                intitule += n + '\n'
+            lst.append((self.pt_caract, intitule, ""))
+        return lst
     
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
@@ -1742,7 +1794,19 @@ class Seance(ElementDeSequence):
             self.panelPropriete.MiseAJour()
         
 
-        
+    ######################################################################################  
+    def GetPtCaract(self): 
+        """ Renvoie la liste des points caractéristiques des zones actives de la fiche
+            (pour l'animation SVG)
+        """
+        lst = []
+        if hasattr(self, 'pt_caract' ):
+            lst.append((self.pt_caract, self.intitule, self.lien.path))
+        if self.typeSeance in ["R", "S"]:
+            for sce in self.sousSeances:
+                lst.extend(sce.GetPtCaract())
+        return lst
+    
     ######################################################################################  
     def GetEffectif(self):
         """ Renvoie l'effectif de la séance
@@ -3232,9 +3296,11 @@ class FenetreSequence(aui.AuiMDIChildFrame):
                 SVGsurface = cairo.SVGSurface(path, 595, 842)
                 ctx = cairo.Context (SVGsurface)
                 ctx.scale(820, 820) 
-                draw_cairo.Draw(ctx, self.sequence)
+                draw_cairo.Draw(ctx, self.sequence, mouchard = True)
                 self.DossierSauvegarde = os.path.split(path)[0]
                 SVGsurface.finish()
+                self.enrichirSVG(path)
+                
 #                os.startfile(path)
 #            elif ext == ".swf":
 #                fichierTempo = tempfile.NamedTemporaryFile(delete=False)
@@ -3248,6 +3314,55 @@ class FenetreSequence(aui.AuiMDIChildFrame):
         else:
             dlg.Destroy()
         return
+    
+    
+    def enrichirSVG(self, path):
+        d, e = os.path.splitext(path)
+        npath = d+'_'+e
+        
+#        f = os.open(npath, os.O_CREAT)
+        
+#        svg = f.readlines()
+#        for l in svg:
+        epsilon = 0.001
+#        root = ET.parse(path).getroot()
+#        print list(root)
+        from xml.dom.minidom import parse
+        doc = parse(path)
+        
+        f = open(path, 'w')
+
+        defs = doc.getElementsByTagName("defs")[0]
+        defs.appendChild(getElementFiltre(constantes.FILTRE1))
+        
+
+        
+        def match(p0, p1):
+            return abs(p0[0]-p1[0])<epsilon and abs(p0[1]-p1[1])<epsilon
+        
+        for p in doc.getElementsByTagName("path"):
+            a = p.getAttribute("d")
+            a = str(a).translate(None, 'MCLZ')
+            l = a.split()
+            if len(l) > 1:
+                x, y = l[0], l[1]
+                x, y = eval(x), eval(y)
+                
+                
+                for pt, titre, lien in self.sequence.GetPtCaract():
+                    if match((x, y), pt) :
+                        aa = doc.createElement("a")
+                        p.setAttribute("filter",  "")
+                        p.setAttribute("onmouseout",  "setAttribute('filter', '')")
+                        p.setAttribute("onmouseover", "setAttribute('filter', 'url(#f1)')")
+                        aa.setAttribute("xlink:title", titre)
+                        aa.setAttribute("xlink:href", lien)
+                        parent=p.parentNode
+                        parent.insertBefore(aa, p)
+#                        parent.removeChild(p)
+                        break 
+        doc.writexml(f, '   ')
+        f.close
     
     #############################################################################
     def quitter(self, event = None):
@@ -3351,7 +3466,7 @@ class FicheSequence(wx.ScrolledWindow):
             
     ######################################################################################################
     def OnMove(self, evt):
-        print "OnMove"
+#        print "OnMove"
         if hasattr(self, 'tip'):
             self.tip.Show(False)
             self.call.Stop()

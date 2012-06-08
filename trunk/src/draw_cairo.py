@@ -432,7 +432,7 @@ def InitCurseur():
     cursY = posZSeances[1]
     
 ######################################################################################  
-def Draw(ctx, seq):
+def Draw(ctx, seq, mouchard = False):
     """ Dessine une fiche de séquence de la séquence <seq>
         dans un contexte cairo <ctx>
     """
@@ -466,11 +466,17 @@ def Draw(ctx, seq):
     #
     #  Cadre et Intitulé de la séquence
     #
-    curve_rect_titre(ctx, seq.intitule,  
-                     (posZOrganis[0]-bordureZOrganis, posZOrganis[1], tailleZOrganis[0]+bordureZOrganis*2, tailleZOrganis[1]+bordureZOrganis), 
-                     BcoulIntitule, IcoulIntitule, FontIntitule)
-    seq.rect = [(posZOrganis[0]-bordureZOrganis, posZOrganis[1], tailleZOrganis[0]+bordureZOrganis*2, tailleZOrganis[1]+bordureZOrganis)]
+    seq.rect = [(posZOrganis[0]-bordureZOrganis, posZOrganis[1], 
+                 tailleZOrganis[0]+bordureZOrganis*2, tailleZOrganis[1]+bordureZOrganis)]
+    seq.pt_caract = curve_rect_titre(ctx, seq.intitule,  
+                                     seq.rect[0], 
+                                     BcoulIntitule, IcoulIntitule, FontIntitule)
     
+    
+    
+#    if mouchard:
+#        ctx.rectangle(1,1,1,1)
+#        ctx.stroke()
     
     #
     # Type d'enseignement
@@ -665,7 +671,7 @@ def Draw(ctx, seq):
     # Rectangle arrondi
     x0, y0 = posPre
     rect_width, rect_height  = taillePre
-    curve_rect_titre(ctx, u"Prérequis",  (x0, y0, rect_width, rect_height), BcoulPre, IcoulPre, fontPre)
+    seq.prerequis.pt_caract = curve_rect_titre(ctx, u"Prérequis",  (x0, y0, rect_width, rect_height), BcoulPre, IcoulPre, fontPre)
     
     
     #
@@ -700,8 +706,8 @@ def Draw(ctx, seq):
     x0, y0 = posObj
     tailleObj[0] =  taillePos[0]
     rect_width, rect_height  = tailleObj
-    curve_rect_titre(ctx, u"Objectifs",  (x0, y0, rect_width, rect_height), BcoulObj, IcoulObj, fontObj)
-    
+    seq.obj["C"].pt_caract = curve_rect_titre(ctx, u"Objectifs",  (x0, y0, rect_width, rect_height), BcoulObj, IcoulObj, fontObj)
+    seq.obj["S"].pt_caract = seq.obj["C"].pt_caract
 
     #
     # Codes objectifs
@@ -907,7 +913,7 @@ def Draw_CI(ctx, CI):
         t = u"Centre d'intérêt"
     else:
         t = u"Centres d'intérêt"
-    curve_rect_titre(ctx, t,  (x0, y0, rect_width, rect_height), BcoulCI, IcoulCI, fontCI)
+    CI.pt_caract = curve_rect_titre(ctx, t,  (x0, y0, rect_width, rect_height), BcoulCI, IcoulCI, fontCI)
     
     CI.rect.append((x0, y0, rect_width, rect_height))
     
@@ -949,10 +955,13 @@ class Cadre():
             alpha = 0.2
         else:
             alpha = 1
+            self.seance.pt_caract = (x, y)
             
         self.ctx.set_line_width(0.002)
         rectangle_plein(self.ctx, x, y, self.w, self.h, 
                         BCoulSeance[self.seance.typeSeance], ICoulSeance[self.seance.typeSeance], alpha)
+        
+        
         
         if not self.filigrane and hasattr(self.seance, 'code'):
             self.ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
@@ -1789,7 +1798,7 @@ def curve_rect_titre(ctx, titre, rect, coul_bord, coul_int, taille_font = 0.01, 
 #    
 #    continuer = True
       
-    curve_rect(ctx, x0, y0, rect_width, rect_height, rayon, 
+    c = curve_rect(ctx, x0, y0, rect_width, rect_height, rayon, 
                ouverture = min(width + fheight, rect_width-2*rayon))
     ctx.set_source_rgba (coul_int[0], coul_int[1], coul_int[2], coul_int[3])
     ctx.fill_preserve ()
@@ -1816,7 +1825,7 @@ def curve_rect_titre(ctx, titre, rect, coul_bord, coul_int, taille_font = 0.01, 
     show_text_rect_fix(ctx, titre, xc, yc, rect_width-2*rayon, fheight, taille_font, 1, ha = "g")
     
     
-    return
+    return c
 
 def curve_rect(ctx, x0, y0, rect_width, rect_height, radius, ouverture = 0):
     x1=x0+rect_width
@@ -1859,7 +1868,8 @@ def curve_rect(ctx, x0, y0, rect_width, rect_height, radius, ouverture = 0):
             ctx.curve_to (x0, y1, x0, y1, x0, y1- radius)
             ctx.line_to (x0, y0+radius)
             ctx.curve_to (x0 , y0, x0 , y0, x0 + radius, y0)
-            
+    
+    return x0 + radius + ouverture, y0 # Renvoie les coordonnées du 1er point = caractéristique du path SVG
 #            ctx.move_to  (x0, y0 + radius)
 #            ctx.curve_to (x0 , y0, x0 , y0, x0 + radius, y0)
 #            ctx.move_to  (x0 + radius + ouverture, y0)

@@ -1068,4 +1068,55 @@ def getCompetence(seq, code, dic = None, c = None):
     
 
 #ouvrirConfig()
+#filterUnits="userSpaceOnUse"
+FILTRE1 = """<filter id="f1"  x="-10%" y="-10%" width="200%" height="200%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="0.003" result="blur"/>
+      <feOffset in="blur" dx="0.003" dy="0.003" result="offsetBlur"/>
+      <feSpecularLighting in="blur" surfaceScale="5" specularConstant=".75" 
+                          specularExponent="20" lighting-color="#bbbbbb"  
+                          result="specOut">
+        <fePointLight x="-5000" y="-10000" z="20000"/>
+      </feSpecularLighting>
+      <feComposite in="specOut" in2="SourceAlpha" operator="in" result="specOut"/>
+      <feComposite in="SourceGraphic" in2="specOut" operator="arithmetic" 
+                   k1="0" k2="1" k3="1" k4="0" result="litPaint"/>
+      <feMerge>
+        <feMergeNode in="offsetBlur"/>
+        <feMergeNode in="litPaint"/>
+      </feMerge>
+    </filter>"""
+    
+FILTRE2 = """<filter id="f1" x="0" y="0" width="200%" height="200%">
+              <feOffset result="offOut" in="SourceAlpha" dx="0.006" dy="0.006" />
+              <feGaussianBlur result="blurOut" in="offOut" stdDeviation="0.003" />
+              <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
+                </filter>"""
 
+FILTRE3 = """<filter id = "f1">
+        <feGaussianBlur in = "SourceAlpha" stdDeviation = "0.02" result = "blur1"/>
+        <feSpecularLighting result = "specOut" in = "blur1" specularConstant = "1.2" specularExponent = "12" lighting-color = "#bbbbbb">
+            <feDistantLight azimuth = "45" elevation = "45"/>
+        </feSpecularLighting>
+        <feComposite in = "SourceGraphic" in2 = "specOut" operator = "arithmetic" k1 = "0" k2 = "1" k3 = "1" k4 = "0"/>
+    </filter>
+            """
+            
+FILTRE4 = """
+<filter id='f1'  x='0' y='0' width='200%' height='200%'>      
+    <feGaussianBlur id='fgb' in='SourceAlpha' stdDeviation='0.004' result='blur'/>      
+    <feOffset id='fof' in='blur' dx='0.004' dy='0.004' result='offsetBlur'/>      
+    <feSpecularLighting id='fsl' in='blur' surfaceScale='4' specularConstant='.75' specularExponent='32' lighting-color='gray' result='specOut'>        
+        <fePointLight id='fpl' x='-5000' y='-10000' z='20000'/>      </feSpecularLighting>      
+    <feComposite in='specOut' in2='SourceAlpha' operator='in' result='specOut'/>      
+    <feComposite id='fco' in='SourceGraphic' in2='specOut' operator='arithmetic' k1='0' k2='1' k3='1' k4='0' result='litPaint'/>      
+    <feMerge>        
+        <feMergeNode in='offsetBlur'/>        
+        <feMergeNode in='litPaint'/>      
+    </feMerge>    
+</filter>
+"""
+
+def getElementFiltre(filtre):
+    from xml.dom.minidom import parseString
+    doc = parseString(filtre)
+    return doc.documentElement
