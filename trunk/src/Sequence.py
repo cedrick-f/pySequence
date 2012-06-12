@@ -36,7 +36,7 @@ DEFAUT_ENCODING = sys.getdefaultencoding()
 
 import webbrowser
 import subprocess
-import urllib
+#import urllib
 
 # GUI wxpython
 import wx
@@ -218,23 +218,48 @@ class Lien():
     ######################################################################################  
     def Afficher(self, pathseq, fenSeq = None):
 #        print "Afficher :", self.path
+        
+        
         path = self.GetAbsPath(pathseq)
+        
         if self.type == "f":
-            os.startfile(path)
-        elif self.type == 'd':
-            subprocess.Popen(["explorer", path])
-        elif self.type == 'u':
             try:
-                lien_safe = urllib.quote_plus(self.path)
-                urllib.urlopen(lien_safe)
+                os.startfile(path)
             except:
-                dlg = wx.MessageDialog(None, u"Impossible d'ouvrir l'url\n%s!\n" %self.path ,
+                dlg = wx.MessageDialog(None, u"Impossible d'ouvrir le fichier\n%s!\n" %toDefautEncoding(path) ,
                                u"Ouverture impossible",
                                wx.OK | wx.ICON_WARNING
                                #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
                                )
                 dlg.ShowModal()
                 dlg.Destroy()
+                
+        elif self.type == 'd':
+            try:
+                subprocess.Popen(["explorer", path])
+            except:
+                dlg = wx.MessageDialog(None, u"Impossible d'accéder au dossier\n%s!\n" %toDefautEncoding(path) ,
+                               u"Ouverture impossible",
+                               wx.OK | wx.ICON_WARNING
+                               #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
+                               )
+                dlg.ShowModal()
+                dlg.Destroy()
+            
+        elif self.type == 'u':
+            try:
+#                lien_safe = urllib.quote_plus(self.path)
+    #            urllib.urlopen(lien_safe)
+                webbrowser.open(self.path)
+            except:
+                dlg = wx.MessageDialog(None, u"Impossible d'ouvrir l'url\n%s!\n" %toDefautEncoding(self.path) ,
+                               u"Ouverture impossible",
+                               wx.OK | wx.ICON_WARNING
+                               #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
+                               )
+                dlg.ShowModal()
+                dlg.Destroy()
+        
         elif self.type == 's':
             if os.path.isfile(path):
 #                self.Show(False)
@@ -265,18 +290,19 @@ class Lien():
             self.path = ""
             self.type = ""
             return
+        
         path = toFileEncoding(path)
         pathseq = toFileEncoding(pathseq)
-        path = self.GetAbsPath(pathseq, path)
-#        print "   ", path
-        if os.path.exists(path):
+        abspath = self.GetAbsPath(pathseq, path)
+#        print "   ", abspath
+        if os.path.exists(abspath):
 #            print "   exist"
-            if os.path.isfile(path):
+            if os.path.isfile(abspath):
                 self.type = 'f'
-                self.path = testRel(path, pathseq)
-            elif os.path.isdir(path):
+                self.path = testRel(abspath, pathseq)
+            elif os.path.isdir(abspath):
                 self.type = 'd'
-                self.path = testRel(path, pathseq)
+                self.path = testRel(abspath, pathseq)
         else:
             self.type = 'u'
             self.path = path
@@ -336,6 +362,21 @@ class ElementDeSequence():
     def GetPath(self):
         return self.parent.GetPath()
     
+    ######################################################################################  
+    def GetLien(self):
+        return self.lien.path
+    
+    ######################################################################################  
+    def GetLienHTML(self):
+#        lien = os.path.join(os.path.abspath(os.path.dirname(self.lien.path) ), os.readlink(self.lien.path))
+        
+        if self.lien.type in ['f', 'd', 's']:
+            if self.lien.path != '':
+                return 'file:///' + os.path.abspath(self.lien.path)
+            else:
+                return ''
+        else:
+            return self.lien.path
     
     ######################################################################################  
     def CreerLien(self, event):
@@ -468,8 +509,124 @@ class LienSequence():
         if hasattr(self, 'rect') and dansRectangle(x, y, self.rect):
             return self.branche
 
+
+class Objet_sequence():
+    def __init__(self):
+        self.elem = None
         
+    def SetSVGTitre(self, p, titre):
+        self.elem.setAttribute("xlink:title", titre)
      
+    def SetSVGLien(self, p, lien):
+        self.elem.setAttribute("xlink:href", lien)
+        self.elem.setAttribute("target", "_top")
+        
+    def EncapsuleSVG(self, doc, p):
+        self.elem = doc.createElement("a")
+        parent=p.parentNode
+        parent.insertBefore(self.elem, p)
+        self.elem.appendChild(p)
+        return self.elem
+
+#    ######################################################################################  
+#    def EnrichiSVG(self, doc):
+#
+#        pid = ''
+#        c = None
+#        for p, f in self.cadre:
+#            if type(f) == str:
+#                pid = f
+#                p.setAttribute('filter', '')
+#                p.setAttribute("onmouseout",  "setAttribute('filter', '')")
+#                p.setAttribute("onmouseover", "setAttribute('filter', 'url(#f1)')")
+#                c = p
+#                
+#                break
+#        
+#        for p, f in self.cadre:
+#            if type(f) != str:
+#                nid = pid+str(f)
+#                a = self.EncapsuleSVG(doc, p)
+#                a.setAttribute('id', nid)
+#                n = self.GetCode(f)
+#                titre = n + " : " + self.GetIntit(f)
+#                self.SetSVGTitre(p, titre)
+#                
+#                if c != None:
+#                    s = doc.createElement("set")
+#                    c.appendChild(s)
+#                    s.setAttribute('attributeName', 'filter')
+#                    s.setAttribute('to', 'url(#f1)')
+#                    s.setAttribute('begin', '%s.mouseover' %nid)
+#                    s.setAttribute('end', '%s.mouseout' %nid)
+#        
+    ######################################################################################  
+    def EnrichiSVG(self, doc, seance = False):
+
+        pid = ''
+        for p, f in self.cadre:
+#            print self
+#            print p, f
+            if type(f) == str:
+                pid = f
+                p.setAttribute('filter', 'none')
+                p.setAttribute("id",  pid)
+                p.setAttribute("onmouseout",  "setAttribute('filter', 'none')")
+                p.setAttribute("onmouseover", "setAttribute('filter', 'url(#f1)')")
+                break
+        
+        for i, (p, f) in enumerate(self.cadre):
+            if type(f) != str:
+                a = self.EncapsuleSVG(doc, p)
+                titre = self.GetCode(f) + " : " + self.GetIntit(f)
+                self.SetSVGTitre(p, titre)
+                p.setAttribute("id",  self.GetCode(f)+str(f))
+                p.setAttribute("pointer-events",  'all')
+                
+                if pid == '':
+                    p.setAttribute("onmouseout",  "setAttribute('filter', 'none')")
+                    p.setAttribute("onmouseover", "setAttribute('filter', 'url(#f1)')")
+                    
+                else:
+                    p.setAttribute("onmouseout",  "evt.target.parentNode.parentNode.parentNode.getElementById('%s').setAttribute('filter', 'none');" %pid)
+                    p.setAttribute("onmouseover", "evt.target.parentNode.parentNode.parentNode.getElementById('%s').setAttribute('filter', 'url(#f1)');" %pid)
+        
+                if hasattr(self, 'GetLien'):
+                    lien = toDefautEncoding(self.GetLienHTML())
+                    if lien != '':
+                        self.SetSVGLien(p, lien)
+        
+            if seance:
+                att0 = p.getAttribute("onmouseout")
+                att1 = p.getAttribute("onmouseover")
+                
+                n = range(len(self.cadre))
+                n.remove(i)
+                for j in n:
+                    Id = self.GetCode(f)+str(j)
+                    att0 += "; evt.target.parentNode.parentNode.parentNode.getElementById('%s').setAttribute('filter', 'none')" %Id
+                    att1 += "; evt.target.parentNode.parentNode.parentNode.getElementById('%s').setAttribute('filter', 'url(#f1)')" %Id
+
+                p.setAttribute("onmouseout", att0)
+                p.setAttribute("onmouseover", att1)
+        
+    ######################################################################################  
+    def GetPtCaract(self): 
+        """ Renvoie la liste des points caractéristiques des zones actives de la fiche
+            (pour l'animation SVG)
+        """
+        lst = []
+        if hasattr(self, 'pts_caract' ):
+            for i, pt in enumerate(self.pts_caract):
+                lst.append((pt, self, i))
+        
+        if hasattr(self, 'pt_caract' ):
+            lst.append((self.pt_caract[0], self, self.pt_caract[1]))
+            
+        self.cadre = []
+        return lst
+    
+    
             
 class Classe():
     def __init__(self, app, panelParent = None, intitule = u""):
@@ -687,6 +844,18 @@ class Sequence():
         for s in self.seance:
             lst.extend(s.GetPtCaract())
         return lst    
+    
+    
+    ######################################################################################  
+    def EnrichiSVG(self, doc):
+        self.obj["C"].EnrichiSVG(doc)
+        self.obj["S"].EnrichiSVG(doc)
+        self.prerequis.EnrichiSVG(doc)
+        self.CI.EnrichiSVG(doc)
+        for s in self.seance:
+            s.EnrichiSVGse(doc)
+        
+        
     ######################################################################################  
     def GetDureeGraph(self):
         duree = 0
@@ -1251,8 +1420,9 @@ class Sequence():
 #   Classe définissant les propriétés d'une séquence
 #
 ####################################################################################
-class CentreInteret():
+class CentreInteret(Objet_sequence):
     def __init__(self, parent, panelParent, numCI = []):
+        Objet_sequence.__init__(self)
         self.parent = parent
         self.numCI = numCI
         self.SetNum(numCI)
@@ -1328,18 +1498,7 @@ class CentreInteret():
                 self.panelPropriete.MiseAJour()
 
     
-    ######################################################################################  
-    def GetPtCaract(self): 
-        """ Renvoie la liste des points caractéristiques des zones actives de la fiche
-            (pour l'animation SVG)
-        """
-        lst = []
-        if hasattr(self, 'pt_caract' ):
-            intitule = ''
-            for i, n in enumerate(self.numCI):
-                intitule += self.GetIntit(i) + '\n'
-            lst.append((self.pt_caract, intitule, ""))
-        return lst
+    
     
     
     ######################################################################################  
@@ -1421,8 +1580,9 @@ class CentreInteret():
 #   Classe définissant les propriétés d'une compétence
 #
 ####################################################################################
-class Competences():
+class Competences(Objet_sequence):
     def __init__(self, parent, panelParent, numComp = None):
+        Objet_sequence.__init__(self)
 #        self.clefs = Competences.keys()
 #        self.clefs.sort()
         self.parent = parent
@@ -1434,7 +1594,11 @@ class Competences():
         
     ######################################################################################  
     def __repr__(self):
-        return ""#self.code
+        t = ''
+        for n in self.competences:
+            t += n
+        
+        return t
         
     ######################################################################################  
     def getBranche(self):
@@ -1466,25 +1630,16 @@ class Competences():
         if hasattr(self, 'panelPropriete'):
             self.panelPropriete.MiseAJour()
     
+    
     ######################################################################################  
-    def GetPtCaract(self): 
-        """ Renvoie la liste des points caractéristiques des zones actives de la fiche
-            (pour l'animation SVG)
-        """
-        lst = []
-        if hasattr(self, 'pt_caract' ):
-            intitule = ''
-            for i, n in enumerate(self.competences):
-                intitule += n + '\n'
-            lst.append((self.pt_caract, intitule, ""))
-        return lst
-        
-#        code = branche.tag
-#        num = Competences.keys().index(code)
-#        self.SetNum(num)
-#        self.panelPropriete.MiseAJour()
-#        self.SetCode()
-        
+    def GetCode(self, num):
+        return self.competences[num]
+    
+    ######################################################################################  
+    def GetIntit(self, num):
+        return constantes.getCompetence(self.parent, self.competences[num])
+    
+    
          
 #    ######################################################################################  
 #    def SetNum(self, num):
@@ -1529,9 +1684,9 @@ class Competences():
 #   Classe définissant les propriétés de savoirs
 #
 ####################################################################################
-class Savoirs():
+class Savoirs(Objet_sequence):
     def __init__(self, parent, panelParent, num = None):
-
+        Objet_sequence.__init__(self)
         self.parent = parent
         self.num = num
         self.savoirs = []
@@ -1540,7 +1695,10 @@ class Savoirs():
         
     ######################################################################################  
     def __repr__(self):
-        return self.savoirs
+        t = ''
+        for n in self.savoirs:
+            t += n
+        return t
         
     ######################################################################################  
     def getBranche(self):
@@ -1562,17 +1720,12 @@ class Savoirs():
             self.panelPropriete.MiseAJour()
         
     ######################################################################################  
-    def GetPtCaract(self): 
-        """ Renvoie la liste des points caractéristiques des zones actives de la fiche
-            (pour l'animation SVG)
-        """
-        lst = []
-        if hasattr(self, 'pt_caract' ):
-            intitule = ''
-            for i, n in enumerate(self.savoirs):
-                intitule += n + '\n'
-            lst.append((self.pt_caract, intitule, ""))
-        return lst
+    def GetCode(self, num):
+        return self.savoirs[num]
+    
+    ######################################################################################  
+    def GetIntit(self, num):
+        return constantes.getSavoir(self.parent, self.GetCode(num))  
     
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
@@ -1629,7 +1782,7 @@ class Savoirs():
 #   Classe définissant les propriétés d'une compétence
 #
 ####################################################################################
-class Seance(ElementDeSequence):
+class Seance(ElementDeSequence, Objet_sequence):
     
                   
     def __init__(self, parent, panelParent, typeSeance = "", typeParent = 0):
@@ -1642,6 +1795,7 @@ class Seance(ElementDeSequence):
         """
     
         ElementDeSequence.__init__(self)
+        Objet_sequence.__init__(self)
         
         # Les données sauvegardées
         self.ordre = 1
@@ -1800,13 +1954,36 @@ class Seance(ElementDeSequence):
             (pour l'animation SVG)
         """
         lst = []
-        if hasattr(self, 'pt_caract' ):
-            lst.append((self.pt_caract, self.intitule, self.lien.path))
+        if hasattr(self, 'pts_caract' ):
+            for i, pt in enumerate(self.pts_caract):
+                lst.append((pt, self, i))
+                
         if self.typeSeance in ["R", "S"]:
             for sce in self.sousSeances:
                 lst.extend(sce.GetPtCaract())
+                
+        self.cadre = []
+        
         return lst
     
+    def GetCode(self, num):
+        return self.code
+    
+    def GetIntit(self, num):
+        return self.intitule
+    
+    
+    
+    ######################################################################################  
+    def EnrichiSVGse(self, doc):
+        if self.typeSeance in ["R", "S"]:
+            for se in self.sousSeances:
+                se.EnrichiSVG(doc, seance = True)
+        else:
+            self.EnrichiSVG(doc, seance = True)
+        
+        
+        
     ######################################################################################  
     def GetEffectif(self):
         """ Renvoie l'effectif de la séance
@@ -3185,8 +3362,9 @@ class FenetreSequence(aui.AuiMDIChildFrame):
     def dialogEnregistrer(self):
         mesFormats = u"Séquence (.seq)|*.seq|" \
                      u"Tous les fichiers|*.*'"
+        print self.DossierSauvegarde
         dlg = wx.FileDialog(
-            self, message=u"Enregistrer la séquence sous ...", defaultDir=self.DossierSauvegarde , 
+            self, message=u"Enregistrer la séquence sous ...", defaultDir=toDefautEncoding(self.DossierSauvegarde) , 
             defaultFile="", wildcard=mesFormats, style=wx.SAVE|wx.OVERWRITE_PROMPT|wx.CHANGE_DIR
             )
         dlg.SetFilterIndex(0)
@@ -3274,7 +3452,7 @@ class FenetreSequence(aui.AuiMDIChildFrame):
                      "svg (.svg)|*.svg|" \
                      "swf (.swf)|*.swf"
         dlg = wx.FileDialog(
-            self, message=u"Enregistrer la fiche sous ...", defaultDir=self.DossierSauvegarde , 
+            self, message=u"Enregistrer la fiche sous ...", defaultDir=toDefautEncoding(self.DossierSauvegarde) , 
             defaultFile = os.path.splitext(self.fichierCourant)[0]+".pdf", 
             wildcard=mesFormats, style=wx.SAVE|wx.OVERWRITE_PROMPT|wx.CHANGE_DIR
             )
@@ -3284,6 +3462,7 @@ class FenetreSequence(aui.AuiMDIChildFrame):
             ext = os.path.splitext(path)[1]
             dlg.Destroy()
 #            print ext
+            wx.BeginBusyCursor()
             if ext == ".pdf":
                 PDFsurface = cairo.PDFSurface(path, 595, 842)
                 ctx = cairo.Context (PDFsurface)
@@ -3300,7 +3479,8 @@ class FenetreSequence(aui.AuiMDIChildFrame):
                 self.DossierSauvegarde = os.path.split(path)[0]
                 SVGsurface.finish()
                 self.enrichirSVG(path)
-                
+            wx.EndBusyCursor()
+
 #                os.startfile(path)
 #            elif ext == ".swf":
 #                fichierTempo = tempfile.NamedTemporaryFile(delete=False)
@@ -3317,16 +3497,14 @@ class FenetreSequence(aui.AuiMDIChildFrame):
     
     
     def enrichirSVG(self, path):
-        d, e = os.path.splitext(path)
-        npath = d+'_'+e
-        
-#        f = os.open(npath, os.O_CREAT)
-        
-#        svg = f.readlines()
-#        for l in svg:
+        """ Enrichissement de l'image SVG avec :
+             - mise en surbrillance des éléments actifs
+             - infobulles sur les éléments actifs
+             - liens 
+             - ...
+        """
         epsilon = 0.001
-#        root = ET.parse(path).getroot()
-#        print list(root)
+
         from xml.dom.minidom import parse
         doc = parse(path)
         
@@ -3335,10 +3513,10 @@ class FenetreSequence(aui.AuiMDIChildFrame):
         defs = doc.getElementsByTagName("defs")[0]
         defs.appendChild(getElementFiltre(constantes.FILTRE1))
         
-
-        
         def match(p0, p1):
             return abs(p0[0]-p1[0])<epsilon and abs(p0[1]-p1[1])<epsilon
+        
+        pts_caract = self.sequence.GetPtCaract()
         
         for p in doc.getElementsByTagName("path"):
             a = p.getAttribute("d")
@@ -3348,19 +3526,15 @@ class FenetreSequence(aui.AuiMDIChildFrame):
                 x, y = l[0], l[1]
                 x, y = eval(x), eval(y)
                 
-                
-                for pt, titre, lien in self.sequence.GetPtCaract():
+                for pt, obj, flag in pts_caract:
                     if match((x, y), pt) :
-                        aa = doc.createElement("a")
-                        p.setAttribute("filter",  "")
-                        p.setAttribute("onmouseout",  "setAttribute('filter', '')")
-                        p.setAttribute("onmouseover", "setAttribute('filter', 'url(#f1)')")
-                        aa.setAttribute("xlink:title", titre)
-                        aa.setAttribute("xlink:href", lien)
-                        parent=p.parentNode
-                        parent.insertBefore(aa, p)
-#                        parent.removeChild(p)
-                        break 
+#                        print "Trouvé", pt, flag, obj
+                        obj.cadre.append((p, flag))
+                        if type(flag) != str:
+                            break 
+        
+        self.sequence.EnrichiSVG(doc)
+            
         doc.writexml(f, '   ')
         f.close
     
