@@ -2692,7 +2692,7 @@ class PanelConteneur(wx.Panel):
 #   Classes définissant la fenétre de l'application
 #
 ####################################################################################
-class FenetreSequences(aui.AuiMDIParentFrame):
+class FenetrePrincipale(aui.AuiMDIParentFrame):
     def __init__(self, parent, fichier):
         aui.AuiMDIParentFrame.__init__(self, parent, -1, __appname__,style=wx.DEFAULT_FRAME_STYLE)
         
@@ -3024,9 +3024,16 @@ class FenetreSequences(aui.AuiMDIParentFrame):
 #        print self.Destroy()
         
         
-class FenetreSequence(aui.AuiMDIChildFrame):
+########################################################################################
+#
+#
+#  Classe définissant la fenêtre "Document" (séquence, projet, ...)
+#     qui apparait en onglet
+#
+#
+########################################################################################
+class FenetreDocument(aui.AuiMDIChildFrame):
     def __init__(self, parent):
-        
         aui.AuiMDIChildFrame.__init__(self, parent, -1, "")#, style = wx.DEFAULT_FRAME_STYLE | wx.SYSTEM_MENU)
 #        self.SetExtraStyle(wx.FRAME_EX_CONTEXTHELP)
 #        
@@ -3041,7 +3048,7 @@ class FenetreSequence(aui.AuiMDIChildFrame):
         self.mgr.SetManagedWindow(pnl)
         
         # panel de propriétés (conteneur)
-        panelProp = PanelConteneur(pnl)
+        self.panelProp = PanelConteneur(pnl)
         
         #
         # Pour la sauvegarde
@@ -3049,131 +3056,14 @@ class FenetreSequence(aui.AuiMDIChildFrame):
         self.fichierCourant = u""
         self.DossierSauvegarde = u""
         self.fichierCourantModifie = False
-        
+            
         #
-        # La classe
+        # Un NoteBook comme conteneur de la fiche
         #
-        self.classe = Classe(self, panelProp)
+        self.nb = wx.Notebook(self.pnl, -1)
         
-        #
-        # La séquence
-        #
-        self.sequence = Sequence(self, self.classe, panelProp)
-        self.classe.SetSequence(self.sequence)
-        
-        #
-        # Arbre de structure de la séquence
-        #
-        arbreSeq = ArbreSequence(pnl, self.sequence, self.classe,  panelProp)
-        self.arbreSeq = arbreSeq
-        self.arbreSeq.SelectItem(self.classe.branche)
-        
-        self.nb = wx.Notebook(pnl, -1)
-        #
-        # Zone graphique de la fiche de séquence
-        #
-        
-#        panelCentral = wx.ScrolledWindow(pnl, -1, style = wx.HSCROLL | wx.VSCROLL | wx.RETAINED)# | wx.BORDER_SIMPLE)
-#        sizerCentral = wx.GridSizer(1,1)
-        self.ficheSeq = FicheSequence(self.nb, self.sequence)
-        
-#        self.popUpInfo = PopupInfo("test")
-#        self.popUpInfo.SetTarget(self.ficheSeq)
-#        self.popUpInfo.SetMessage("test")
-#        panelCentral.SetScrollRate(5,5)
-#        sizerCentral.Add(self.ficheSeq, flag = wx.ALIGN_CENTER|wx.ALL)#|wx.EXPAND)
-#        panelCentral.SetSizerAndFit(sizerCentral)
-        
-#        panelCentral.Bind(wx.EVT_SIZE, self.OnSize)
-#        self.panelCentral = panelCentral
-        self.nb.AddPage(self.ficheSeq, u"Fiche Séquence")
-        
-        #
-        # Le tableau des systèmes
-        #
-#        self.tabSystemes = wx.Panel(self.nb, wx.ID_ANY)
-#        self.nb.AddPage(self.tabSystemes, u"Systèmes")
-        
-#        book = xlrd.open_workbook(filename, formatting_info=1)
-#        sheetname = "Feuil1"
-#        sheet = book.sheet_by_name(sheetname)
-#        rows, cols = sheet.nrows, sheet.ncols
-#        comments, texts = XG.ReadExcelCOM(filename, sheetname, rows, cols)
-# 
-#        xlsGrid = XG.XLSGrid(self.tabSystemes)
-#        xlsGrid.PopulateGrid(book, sheet, texts, comments)
-        
-        ## Test 1
-#        excelModule =win32com.client.gencache.EnsureModule('{00020813-0000-0000-C000-000000000046}',0,1,0)
-#        excelModule =win32com.client.Dispatch("Word.Application")
-#        win32com.client.gencache.EnsureModule('{00020813-0000-0000-C000-000000000046}', 0, 1, 7)
-#        excelModule = win32com.client.Dispatch("Excel.Application.14")
-#        excelModule = CreateObject("Word.Application")
-
-#        excelModule.Visible=1
-
-#        self.excel = None
-#
-#        # this function creates a new class that can be used as a # wxWindow, but contains the given ActiveX control. 
-#        ActiveXWrapper = MakeActiveXClass(excelModule.Application)
-#
-#        # create an instance of the new class 
-#        self.excel = ActiveXWrapper( self.tabSystemes, -1, style=wx.SUNKEN_BORDER) 
-
-
-        ## Test IE
-#        IEmodule=win32com.client.gencache.EnsureModule('{E AB22AC0-30C1-11CF-A7EB-0000C05BAE0B}',0,1,1)
-#        
-#        InternetExplorerActiveXClass = MakeActiveXClass(IEmodule.WebBrowser, eventObj = self.nb)
-#        self.excel = InternetExplorerActiveXClass(self.nb,-1)
-
-#        InternetExplorerActiveXClass = MakeActiveXClass(IEmodule.WebBrowser,
-#                                                        eventObj = self)
-#        self.WebBrowser = InternetExplorerActiveXClass(self.tabSystemes,-1)
-#        self.WebBrowser.Navigate2(filename)
-#        browserModule=win32com.client.gencache.EnsureModule("{EAB22AC0-30C1-11CF-A7EB-0000C05BAE0B}", 0, 1, 1)
-#        print browserModule
-##        excelModule =win32com.client.Dispatch("Excel.Application")
-#        theClass=MakeActiveXClass(browserModule.WebBrowser, eventObj=self.nb)
-##        theClass=MakeActiveXClass(excelModule.Application, eventObj=self.nb)
-#        self.ie=theClass(self.nb, -1)
-##        lc=wx.LayoutConstraints()
-##        lc.right.SameAs(self.nb , wx.Right)
-##        lc.left.SameAs(self.tabSystemes, wx.Left)
-##        lc.top.SameAs(self.tabSystemes, wx.Top)
-##        lc.bottom.SameAs(self.tabSystemes, wx.Bottom)
-##        self.ie.SetConstraints(lc)
-#        self.whenDocComplete=None
-#
-#        self.ie.Navigate2("http://www.google.fr")
-
-#        Thread(target=self.doSomethingWithIE).start()
-        
-        
-        # Test 3 'excel.py'
-#        browserModule=word
-#        browserModule.Visible = 1
-#        print dir(browserModule)
-#        theClass=MakeActiveXClass(browserModule.Application)#, eventObj=self.nb)
-#        self.excel = theClass(self.nb, -1)
-#        
-#        
-#        self.Layout()
-        
-        
-        # Test 4 IEwin
-#        self.excel = iewin.IEHtmlWindow(self.nb)
-#        self.excel.AddEventSink(self.nb)
-#        print dir(self.excel)
-#        
-#        self.excel.LoadUrl(filename)
-#        self.nb.AddPage(self.excel, u"Systèmes")
-        
-        
-        
-        
-        
-        
+    
+    def miseEnPlace(self):
         #############################################################################################
         # Mise en place de la zone graphique
         #############################################################################################
@@ -3192,7 +3082,7 @@ class FenetreSequence(aui.AuiMDIChildFrame):
         #############################################################################################
         # Mise en place de l'arbre
         #############################################################################################
-        self.mgr.AddPane(arbreSeq, 
+        self.mgr.AddPane(self.arbreSeq, 
                          aui.AuiPaneInfo().
 #                         Name(u"Structure").
                          Left().Layer(1).
@@ -3213,7 +3103,7 @@ class FenetreSequence(aui.AuiMDIChildFrame):
         #############################################################################################
         # Mise en place du panel de propriétés
         #############################################################################################
-        self.mgr.AddPane(panelProp, 
+        self.mgr.AddPane(self.panelProp, 
                          aui.AuiPaneInfo().
 #                         Name(u"Structure").
                          Bottom().Layer(1).
@@ -3241,7 +3131,7 @@ class FenetreSequence(aui.AuiMDIChildFrame):
         self.definirNomFichierCourant('')
     
         sizer = wx.BoxSizer()
-        sizer.Add(pnl, 1, wx.EXPAND)
+        sizer.Add(self.pnl, 1, wx.EXPAND)
         self.SetSizer(sizer)
    
 #        self.Layout()
@@ -3249,10 +3139,78 @@ class FenetreSequence(aui.AuiMDIChildFrame):
         wx.CallAfter(self.Layout)
         self.Layout()
 #        wx.CallAfter(self.ficheSeq.Redessiner)
+        
+        
+
+    #############################################################################
+    def fermer(self):
+#        self.Reparent(None)
+        self.Destroy()
+        return True
+        
+    #############################################################################
+    def getNomFichierCourantCourt(self):
+        return os.path.splitext(os.path.split(self.fichierCourant)[-1])[0]
+    
+    #############################################################################
+    def MarquerFichierCourantModifie(self, modif = True):
+        self.fichierCourantModifie = modif
+        self.SetTitre(modif)
+        print "modif !"
+        
+    #############################################################################
+    def AfficherMenuContextuel(self, items):
+        """ Affiche un menu contextuel contenant les items spécifiés
+                items = [ [nom1, fct1], [nom2, fct2], ...]
+        """
+        menu = wx.Menu()
+        
+        for nom, fct in items:
+            item1 = menu.Append(wx.ID_ANY, nom)
+            self.Bind(wx.EVT_MENU, fct, item1)
+        
+        self.PopupMenu(menu)
+        menu.Destroy()
     
     
-    
-            
+########################################################################################
+#
+#
+#  Classe définissant la fenêtre "Séquence"
+#
+#
+########################################################################################
+class FenetreSequence(FenetreDocument):
+    def __init__(self, parent):
+        FenetreDocument.__init__(self, parent)
+        
+        #
+        # La classe
+        #
+        self.classe = Classe(self, self.panelProp)
+        
+        #
+        # La séquence
+        #
+        self.sequence = Sequence(self, self.classe, self.panelProp)
+        self.classe.SetSequence(self.sequence)
+        
+        #
+        # Arbre de structure de la séquence
+        #
+        arbreSeq = ArbreSequence(self.pnl, self.sequence, self.classe,  self.panelProp)
+        self.arbreSeq = arbreSeq
+        self.arbreSeq.SelectItem(self.classe.branche)
+        
+        #
+        # Zone graphique de la fiche de séquence
+        #
+        self.ficheSeq = FicheSequence(self.nb, self.sequence)
+        
+        self.nb.AddPage(self.ficheSeq, u"Fiche Séquence")
+        
+        self.miseEnPlace()
+     
             
     ###############################################################################################
     def OnSeqModified(self, event):
@@ -3261,16 +3219,7 @@ class FenetreSequence(aui.AuiMDIChildFrame):
             self.sequence.VerifPb()
             self.ficheSeq.Redessiner()
             self.MarquerFichierCourantModifie()
-        
-        
-    ###############################################################################################
-#    def OnSize(self, event):
-#        print "OnSize fenetre",
-#        w = self.panelCentral.GetClientSize()[0]
-#        print w
-#        self.panelCentral.SetVirtualSize((w,w*29/21)) # Mise au format A4
-##        self.ficheSeq.FitInside()
-#        
+              
         
     ###############################################################################################
     def enregistrer(self, nomFichier):
@@ -3295,6 +3244,8 @@ class FenetreSequence(aui.AuiMDIChildFrame):
         self.definirNomFichierCourant(nomFichier)
         self.MarquerFichierCourantModifie(False)
         wx.EndBusyCursor()
+        
+        
         
     ###############################################################################################
     def ouvrir(self, nomFichier, redessiner = True):
@@ -3401,10 +3352,6 @@ class FenetreSequence(aui.AuiMDIChildFrame):
         else:
             self.dialogEnregistrer()
             
-            
-    #############################################################################
-    def getNomFichierCourantCourt(self):
-        return os.path.splitext(os.path.split(self.fichierCourant)[-1])[0]
         
     #############################################################################
     def definirNomFichierCourant(self, nomFichier = ''):
@@ -3423,26 +3370,7 @@ class FenetreSequence(aui.AuiMDIChildFrame):
             t += " **"
         self.SetTitle(t)#toDefautEncoding(t))
         
-    #############################################################################
-    def MarquerFichierCourantModifie(self, modif = True):
-        self.fichierCourantModifie = modif
-        self.SetTitre(modif)
-        print "modif !"
-        
-        
-    #############################################################################
-    def AfficherMenuContextuel(self, items):
-        """ Affiche un menu contextuel contenant les items spécifiés
-                items = [ [nom1, fct1], [nom2, fct2], ...]
-        """
-        menu = wx.Menu()
-        
-        for nom, fct in items:
-            item1 = menu.Append(wx.ID_ANY, nom)
-            self.Bind(wx.EVT_MENU, fct, item1)
-        
-        self.PopupMenu(menu)
-        menu.Destroy()
+    
        
        
        
@@ -3566,11 +3494,7 @@ class FenetreSequence(aui.AuiMDIChildFrame):
 #            event.Skip()
 
         
-    #############################################################################
-    def fermer(self):
-#        self.Reparent(None)
-        self.Destroy()
-        return True
+    
 
 #        
     
@@ -6920,7 +6844,7 @@ class SeqApp(wx.App):
 #        self.a.start()
 
         
-        frame = FenetreSequences(None, fichier)
+        frame = FenetrePrincipale(None, fichier)
         frame.Show()
         
         server.app = frame
