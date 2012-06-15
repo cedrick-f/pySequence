@@ -2,4 +2,4 @@
 
 http://pysequence.googlecode.com/svn/trunk/images_aide/CaptureEcran.png
 
-http://pysequence.googlecode.com/svn/trunk/images_aide/CaptureEcran.png
+http://pysequence.googlecode.com/svn/trunk/images_aide/CaptureEcran2.png
