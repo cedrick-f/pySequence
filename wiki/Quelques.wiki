@@ -1,0 +1,4 @@
+#Quelques captures d'écran pour illustrer les fonctionnalités de pySequence
+
+CaptureEcran.png
+CaptureEcran.png
