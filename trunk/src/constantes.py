@@ -1120,3 +1120,46 @@ def getElementFiltre(filtre):
     from xml.dom.minidom import parseString
     doc = parseString(filtre)
     return doc.documentElement
+
+
+
+#######################################################################################
+#
+#    Données pour la gestion des fichiers .seq et .prj
+#
+#######################################################################################
+FORMAT_FICHIER = {'seq' : u"Séquence (.seq)|*.seq|",
+                  'prj' : u"Projet (.prj)|*.prj|"}
+TOUS_FICHIER = u"Tous les fichiers|*.*'"
+
+MESSAGE_ENR = {'seq' : u"Enregistrer la séquence sous ...",
+               'prj' : u"Enregistrer le projet sous ..."}
+MESSAGE_DEJA = {'seq' : u"La séquence est déja ouverte.\nVoulez vous ignorer les changements et rouvrir la séquence ?",
+                'prj' : u"Le projet est déja ouvert.\nVoulez vous ignorer les changements et rouvrir le projet ?"}
+TITRE_DEFAUT = {'seq' : u"Nouvelle séquence",
+                'prj' : u"Nouveau projet"}
+MESSAGE_FERMER = {'seq' : u"La séquence a été modifiée.\nVoulez vous enregistrer les changements ?",
+                  'prj' : u"Le projeta été modifié.\nVoulez vous enregistrer les changements ?"}
+
+
+
+#######################################################################################
+#
+#    Données concernant les projets
+#
+#######################################################################################
+
+PHASE_TACHE = ['Ana', 'Con', 'Rea', 'Val']
+NOM_PHASE_TACHE = {'Ana' : u"Analyse du besoin", 
+                   'Con' : u"Conception", 
+                   'Rea' : u"Réalisation", 
+                   'Val' : u"Validation"}
+
+
+
+
+
+
+
+
+
