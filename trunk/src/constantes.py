@@ -161,7 +161,7 @@ if not PORTABLE:
 #   Définition des images
 #
 ####################################################################################
-dicimages = {"Seq" : images.Icone_sequence,
+dicimages =   {"Seq" : images.Icone_sequence,
                "Com" : images.Icone_competence,
                "Sav" : images.Icone_savoirs,
                "Obj" : images.Icone_objectif,
@@ -179,6 +179,18 @@ imagesSeance = {"R" : images.Icone_rotation,
                 "P"  : images.Icone_projet,
                 "SA" : images.Icone_synthese_Act,
                 "SS" : images.Icone_synthese_Seq}
+
+imagesProjet = {"Prj" : images.Icone_projet,
+                "Elv" : images.Icone_projet,
+                "Sup" : images.Icone_projet,
+                "Tac" : images.Icone_projet
+                }
+
+imagesTaches =  {'Ana' : images.Icone_projet, 
+                 'Con' : images.Icone_projet, 
+                 'Rea' : images.Icone_projet, 
+                 'Val' : images.Icone_projet
+                }
 
 imagesCI = [images.CI_1, images.CI_2, images.CI_3, images.CI_4,
             images.CI_5, images.CI_6, images.CI_7, images.CI_8,
