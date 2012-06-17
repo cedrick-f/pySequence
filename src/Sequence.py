@@ -49,7 +49,7 @@ import wx.lib.platebtn as platebtn
 from wx.lib.agw import ultimatelistctrl as ULC
 
 # Graphiques vectoriels
-import draw_cairo
+import draw_cairo, draw_cairo_prj
 try:
     import wx.lib.wxcairo
     import cairo
@@ -123,6 +123,7 @@ class SeqEvent(wx.PyCommandEvent):
     def __init__(self, evtType, idd):
         wx.PyCommandEvent.__init__(self, evtType, idd)
         self.seq = None
+        self.prj = None
         
         
     ######################################################################################  
@@ -133,7 +134,13 @@ class SeqEvent(wx.PyCommandEvent):
     def GetSequence(self):
         return self.seq
     
-    
+    ######################################################################################  
+    def SetProjet(self, prj):
+        self.prj = prj
+        
+    ######################################################################################  
+    def GetProjet(self):
+        return self.prj
     
 ####################################################################################
 #
@@ -354,7 +361,8 @@ Titres = [u"Séquence pédagogique",
           u"Classe",
           u"Elèves",
           u"Support",
-          u"Tâches"]
+          u"Tâches",
+          u"Projet"]
 
 class ElementDeSequence():
     def __init__(self):
@@ -1416,7 +1424,7 @@ class Projet(BaseDoc):
         self.taches = []
         self.equipe = []
         
-        self.support = Support()
+        self.support = Support(self, panelParent)
         
         self.problematique = u""
         
@@ -1654,27 +1662,27 @@ class Projet(BaseDoc):
     def AjouterEleve(self, event = None):
         e = Eleve(self, self.panelParent)
         self.eleves.append(e)
-        sy.ConstruireArbre(self.arbre, self.brancheSys)
-        self.arbre.Expand(self.brancheSys)
+        e.ConstruireArbre(self.arbre, self.brancheElv)
+        self.arbre.Expand(self.brancheElv)
         self.panelPropriete.sendEvent()
         self.arbre.SelectItem(e.branche)
 #        self.AjouterSystemeSeance()
         return
     
-    ######################################################################################  
-    def AjouterListeSystemes(self, propr = []):
-        nouvListe = []
-        for p in propr:
-            sy = Systeme(self, self.panelParent)
-            self.systemes.append(sy)
-            nouvListe.append(sy.nom)
-            sy.ConstruireArbre(self.arbre, self.brancheSys)
-            self.arbre.Expand(self.brancheSys)
-            sy.SetNom(unicode(p[0]))
-            sy.panelPropriete.MiseAJour()
-        self.panelPropriete.sendEvent()
-        self.AjouterListeSystemesSeance(nouvListe)
-        return
+#    ######################################################################################  
+#    def AjouterListeEleves(self, propr = []):
+#        nouvListe = []
+#        for p in propr:
+#            sy = Systeme(self, self.panelParent)
+#            self.systemes.append(sy)
+#            nouvListe.append(sy.nom)
+#            sy.ConstruireArbre(self.arbre, self.brancheEle)
+#            self.arbre.Expand(self.brancheEle)
+#            sy.SetNom(unicode(p[0]))
+#            sy.panelPropriete.MiseAJour()
+#        self.panelPropriete.sendEvent()
+#        self.AjouterListeSystemesSeance(nouvListe)
+#        return
     
     ######################################################################################  
     def SupprimerEleve(self, event = None, item = None):
@@ -1712,7 +1720,7 @@ class Projet(BaseDoc):
     def ConstruireArbre(self, arbre, branche):
 #        print "ConstruireArbre séquence"
         self.arbre = arbre
-        self.branche = arbre.AppendItem(branche, Titres[0], data = self, image = self.arbre.images["Prj"])
+        self.branche = arbre.AppendItem(branche, Titres[9], data = self, image = self.arbre.images["Prj"])
 
         #
         # Le support
@@ -1764,30 +1772,24 @@ class Projet(BaseDoc):
 #        elif isinstance(self.arbre.GetItemPyData(itemArbre), Competences):
 #            self.arbre.GetItemPyData(itemArbre).AfficherMenuContextuel(itemArbre)
             
-        elif isinstance(self.arbre.GetItemPyData(itemArbre), Seance):
+        elif isinstance(self.arbre.GetItemPyData(itemArbre), Eleve):
             self.arbre.GetItemPyData(itemArbre).AfficherMenuContextuel(itemArbre)
             
-        elif isinstance(self.arbre.GetItemPyData(itemArbre), Systeme):
+        elif isinstance(self.arbre.GetItemPyData(itemArbre), Tache):
             self.arbre.GetItemPyData(itemArbre).AfficherMenuContextuel(itemArbre)
             
         elif isinstance(self.arbre.GetItemPyData(itemArbre), LienSequence):
-            self.arbre.GetItemPyData(itemArbre).AfficherMenuContextuel(itemArbre)
+            self.arbre.GetItemPyData(itemArbre).AfficherMenuContextuel(itemArbre)           
             
-#        elif self.arbre.GetItemText(itemArbre) == Titres[1]: # Objectifs pédagogiques
-#            self.app.AfficherMenuContextuel([[u"Ajouter une compétence", self.AjouterObjectif]])
-            
-            
-        elif self.arbre.GetItemText(itemArbre) == Titres[3]: # Séances
+        elif self.arbre.GetItemText(itemArbre) == Titres[6]: # Eleve
 #            print u"Menu Séances"
-            self.app.AfficherMenuContextuel([[u"Ajouter une séance", self.AjouterSeance]])
+            self.app.AfficherMenuContextuel([[u"Ajouter un élève", self.AjouterEleve]])
             
-        elif self.arbre.GetItemText(itemArbre) == Titres[4]: # Système
-            self.app.AfficherMenuContextuel([[u"Ajouter un système", self.AjouterSysteme], 
-                                             [u"Selectionner depuis un fichier", self.SelectSystemes]])
+        elif self.arbre.GetItemText(itemArbre) == Titres[8]: # Tache
+            self.app.AfficherMenuContextuel([[u"Ajouter une tâche", self.AjouterTache]])
          
-        elif self.arbre.GetItemText(itemArbre) == Titres[1]: # Prérequis
-            self.app.AfficherMenuContextuel([[u"Ajouter une séquence", self.AjouterSequencePre], 
-                                             ])
+        
+                                             
          
             
     ######################################################################################       
@@ -1852,7 +1854,7 @@ class Projet(BaseDoc):
 #        posi = draw_cairo.posPos + draw_cairo.taillePos
 #        print self.rect
 
-        
+        return
         
         if self.CI.HitTest(x, y):
             return self.CI.HitTest(x, y)
@@ -3044,7 +3046,15 @@ class Tache(Objet_sequence):
                               expression = None, multiple = False)
         self.intitule  = u""
         self.intituleDansDeroul = True
+        
+        # Les élèves concernés
         self.eleves = []
+        
+        # Les compétences abordées
+        self.competences = []
+        
+        
+        
         self.code = u""
         self.description = None
 
@@ -3478,28 +3488,307 @@ class Systeme(ElementDeSequence):
     
     
         
-    ######################################################################################  
-    def OuvrirListeSystemes(self, nomFichier):
-        fichier = open(nomFichier,'r')
-#        try:
-        systemes = ET.parse(fichier).getroot()
-        self.setBranche(systemes)
+#    ######################################################################################  
+#    def OuvrirListeSystemes(self, nomFichier):
+#        fichier = open(nomFichier,'r')
+##        try:
+#        systemes = ET.parse(fichier).getroot()
+#        self.setBranche(systemes)
+#        
+#        fichier.close()
+
+#    ######################################################################################  
+#    def EnregistrerListeSystemes(self, nomFichier):
+#        wx.BeginBusyCursor(wx.HOURGLASS_CURSOR)
+#        fichier = file(nomFichier, 'w')
+#        
+#        systemes = self.getBranche()
+#        indent(systemes)
+#        
+#        ET.ElementTree(systemes).write(fichier)
+#        fichier.close()
+#        
+#        wx.EndBusyCursor()
+  
+
+
+
+
+
+
+
+
+
+
+####################################################################################
+#
+#   Classe définissant les propriétés d'un support de projet
+#
+####################################################################################
+class Support(ElementDeSequence):
+    def __init__(self, parent, panelParent, nom = u""):
         
-        fichier.close()
+        ElementDeSequence.__init__(self)
+        
+        self.parent = parent
+        self.nom = nom
+        self.description = None
+        
+        self.image = None
+        
+        # Tip
+        self.tip = PopupInfoSysteme(parent.app, u"Support")
+        if panelParent:
+            self.panelPropriete = PanelPropriete_Support(panelParent, self)
+        
+        
+    ######################################################################################  
+    def GetApp(self):
+        return self.parent.GetApp()
+        
+    ######################################################################################  
+    def __repr__(self):
+        return self.nom
+        
+    ######################################################################################  
+    def getBranche(self):
+        """ Renvoie la branche XML de la compétence pour enregistrement
+        """
+#        print "getBranche systeme", self.nom
+        root = ET.Element("Support")
+        root.set("Nom", self.nom)
+        self.lien.getBranche(root)
+        if self.description != None:
+            root.set("Description", self.description)
+        if self.image != None:
+            root.set("Image", img2str(self.image.ConvertToImage()))
+        
+        return root
+    
+    ######################################################################################  
+    def setBranche(self, branche):
+#        print "setBranche systeme"
+        self.nom  = branche.get("Nom", "")
+        self.description = branche.get("Description", None)
+        self.lien.setBranche(branche, self.GetPath())
+
+        data = branche.get("Image", "")
+        if data != "":
+            self.image = PyEmbeddedImage(data).GetBitmap()
+            
+        if hasattr(self, 'panelPropriete'):
+            self.panelPropriete.SetImage()
+            self.panelPropriete.MiseAJour()
+
+    
+         
+    ######################################################################################  
+    def SetNom(self, nom):
+        self.nom = nom
+#        if nom != u"":
+        if hasattr(self, 'arbre'):
+            self.SetCode()
+        
+    ######################################################################################  
+    def PubDescription(self):
+        """ Publie toutes les descriptions de séance
+            (à l'ouverture)
+        """
+        self.tip.SetDescription()
+        if hasattr(self, 'panelPropriete'):
+            self.panelPropriete.rtc.Ouvrir()
+        
+                
+    ######################################################################################  
+    def SetDescription(self, description):   
+        if self.description != description:
+            self.description = description
+            if hasattr(self, 'panelPropriete'):
+                self.panelPropriete.sendEvent()
+            self.tip.SetDescription()
+            
+    ######################################################################################  
+    def SetCode(self):
+#        if hasattr(self, 'codeBranche'):
+#            self.codeBranche.SetLabel(self.nom)
+        if self.nom != "":
+            t = self.nom
+        else:
+            t = u"Support"
+        
+        if hasattr(self, 'arbre'):
+            self.arbre.SetItemText(self.branche, t)
+            
+        # Tip
+        if hasattr(self, 'tip'):
+            self.tip.SetCode(u"Nom : "+self.nom)
+            
 
     ######################################################################################  
-    def EnregistrerListeSystemes(self, nomFichier):
-        wx.BeginBusyCursor(wx.HOURGLASS_CURSOR)
-        fichier = file(nomFichier, 'w')
+    def SetImage(self):
+        self.tip.SetImage(self.image)
         
-        systemes = self.getBranche()
-        indent(systemes)
+    ######################################################################################  
+    def ConstruireArbre(self, arbre, branche):
+        self.arbre = arbre
+        image = self.arbre.images["Sup"]
+        self.branche = arbre.AppendItem(branche, u"Support", data = self,#, wnd = self.codeBranche
+                                        image = image)
+
+
         
-        ET.ElementTree(systemes).write(fichier)
-        fichier.close()
+    ######################################################################################  
+    def AfficherMenuContextuel(self, itemArbre):
+        if itemArbre == self.branche:
+            self.parent.app.AfficherMenuContextuel([[u"Créer un lien", self.CreerLien]])
+            
+            
+    ######################################################################################  
+    def HitTest(self, x, y):
+        if hasattr(self, 'rect') and dansRectangle(x, y, self.rect):
+#            self.arbre.DoSelectItem(self.branche)
+            return self.branche
+    
+    
+    
         
-        wx.EndBusyCursor()
+
+
+
+
+
+
+
+
+####################################################################################
+#
+#   Classe définissant les propriétés d'un élève
+#
+####################################################################################
+class Eleve():
+    def __init__(self, parent, panelParent):
+        self.parent = parent
+        self.nom = u""
+        self.prenom = u""
+        self.avatar = None
         
+        # Tip
+        self.tip = PopupInfoSysteme(parent.app, u"Eleve")
+        if panelParent:
+            self.panelPropriete = PanelPropriete_Eleve(panelParent, self)
+        
+        
+    ######################################################################################  
+    def GetApp(self):
+        return self.parent.GetApp()
+        
+    ######################################################################################  
+    def __repr__(self):
+        return self.nom+" "+self.prenom
+        
+    ######################################################################################  
+    def getBranche(self):
+        """ Renvoie la branche XML de la compétence pour enregistrement
+        """
+#        print "getBranche eleve", self.nom
+        root = ET.Element("Eleve")
+        root.set("Nom", self.nom)
+        root.set("Prenom", self.nom)
+        if self.image != None:
+            root.set("Avatar", img2str(self.avatar.ConvertToImage()))
+        
+        return root
+    
+    ######################################################################################  
+    def setBranche(self, branche):
+#        print "setBranche systeme"
+        self.nom  = branche.get("Nom", "")
+        self.prenom  = branche.get("Prenom", "")
+        data = branche.get("Avatar", "")
+        if data != "":
+            self.avatar = PyEmbeddedImage(data).GetBitmap()
+        if hasattr(self, 'panelPropriete'):
+            self.panelPropriete.SetImage()
+            self.panelPropriete.MiseAJour()
+
+    
+         
+    ######################################################################################  
+    def SetNom(self, nom):
+        self.nom = nom
+        if hasattr(self, 'arbre'):
+            self.SetCode()
+        
+    ######################################################################################  
+    def SetPrenom(self, prenom):
+        self.prenom = prenom
+#        if nom != u"":
+        if hasattr(self, 'arbre'):
+            self.SetCode()
+        
+    ######################################################################################  
+    def SetCode(self):
+#        if hasattr(self, 'codeBranche'):
+#            self.codeBranche.SetLabel(self.nom)
+        if self.nom != "":
+            t = self.nom + ' ' + self.prenom
+        else:
+            t = u"Elève"
+        
+        if hasattr(self, 'arbre'):
+            self.arbre.SetItemText(self.branche, t)
+            
+        # Tip
+        if hasattr(self, 'tip'):
+            self.tip.SetCode(u"Nom : "+self.nom + ' ' + self.prenom)
+            
+
+    ######################################################################################  
+    def SetImage(self):
+        self.tip.SetImage(self.avatar)
+        
+    ######################################################################################  
+    def ConstruireArbre(self, arbre, branche):
+        self.arbre = arbre
+#        self.codeBranche = wx.StaticText(self.arbre, -1, self.nom)
+#        print "image",self.arbre.images["Sys"], self.image.GetWidth()
+#        if self.image == None or self.image == wx.NullBitmap:
+        image = self.arbre.images["Elv"]
+#        else:
+#            image = self.image.ConvertToImage().Scale(20, 20).ConvertToBitmap()
+        self.branche = arbre.AppendItem(branche, u"Elève", data = self,#, wnd = self.codeBranche
+                                        image = image)
+
+        
+    ######################################################################################  
+    def AfficherMenuContextuel(self, itemArbre):
+        if itemArbre == self.branche:
+            self.parent.app.AfficherMenuContextuel([[u"Supprimer", functools.partial(self.parent.SupprimerEleve, item = itemArbre)]]
+                                                    )
+            
+            
+    ######################################################################################  
+    def HitTest(self, x, y):
+        if hasattr(self, 'rect') and dansRectangle(x, y, self.rect):
+#            self.arbre.DoSelectItem(self.branche)
+            return self.branche
+    
+    
+    
+        
+    
+
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+              
         
 ####################################################################################
 #
@@ -3755,7 +4044,13 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         elif ext == 'prj':
             child = FenetreSequence(self)  # A faire : FenetreProjet
         else:
-            child = FenetreSequence(self)  # A faire : Dialog choix seq/prj
+            dlg = DialogChoixDoc(self)
+            val = dlg.ShowModal()
+            if val == 1:
+                child = FenetreSequence(self)  
+            elif val == 2:
+                child = FenetreProjet(self)
+            dlg.Destroy()
 #        child.Show()
         wx.CallAfter(child.Show)
         return child
@@ -3938,7 +4233,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         #############################################################################################
         # Mise en place de l'arbre
         #############################################################################################
-        self.mgr.AddPane(self.arbreSeq, 
+        self.mgr.AddPane(self.arbre, 
                          aui.AuiPaneInfo().
 #                         Name(u"Structure").
                          Left().Layer(1).
@@ -4219,9 +4514,10 @@ class FenetreSequence(FenetreDocument):
         #
         # Arbre de structure de la séquence
         #
-        arbreSeq = ArbreSequence(self.pnl, self.sequence, self.classe,  self.panelProp)
-        self.arbreSeq = arbreSeq
-        self.arbreSeq.SelectItem(self.classe.branche)
+        arbre = ArbreSequence(self.pnl, self.sequence, self.classe,  self.panelProp)
+        self.arbre = arbre
+        self.arbre.SelectItem(self.classe.branche)
+        self.arbre.ExpandAll()
         
         #
         # Zone graphique de la fiche de séquence
@@ -4300,21 +4596,21 @@ class FenetreSequence(FenetreDocument):
             wx.EndBusyCursor()
             return
 
-        self.arbreSeq.DeleteAllItems()
-        root = self.arbreSeq.AddRoot("")
-        self.classe.ConstruireArbre(self.arbreSeq, root)
-        self.sequence.ConstruireArbre(self.arbreSeq, root)
+        self.arbre.DeleteAllItems()
+        root = self.arbre.AddRoot("")
+        self.classe.ConstruireArbre(self.arbre, root)
+        self.sequence.ConstruireArbre(self.arbre, root)
         
         self.sequence.SetCodes()
         self.sequence.PubDescription()
         self.sequence.SetLiens()
         self.sequence.VerifPb()
         self.sequence.VerrouillerClasse()
-        self.arbreSeq.SelectItem(self.classe.branche)
+        self.arbre.SelectItem(self.classe.branche)
 
-        self.arbreSeq.Layout()
-        self.arbreSeq.ExpandAll()
-        self.arbreSeq.CalculatePositions()
+        self.arbre.Layout()
+        self.arbre.ExpandAll()
+        self.arbre.CalculatePositions()
         
         fichier.close()
 
@@ -4360,9 +4656,10 @@ class FenetreProjet(FenetreDocument):
         #
         # Arbre de structure du projet
         #
-        arbrePrj = ArbreProjet(self.pnl, self.projet, self.classe,  self.panelProp)
-        self.arbrePrj = arbrePrj
-        self.arbrePrj.SelectItem(self.classe.branche)
+        arbre = ArbreProjet(self.pnl, self.projet, self.classe,  self.panelProp)
+        self.arbre = arbre
+        self.arbre.SelectItem(self.classe.branche)
+        self.arbre.ExpandAll()
         
         #
         # Zone graphique de la fiche de projet
@@ -4440,21 +4737,21 @@ class FenetreProjet(FenetreDocument):
             wx.EndBusyCursor()
             return
 
-        self.arbrePrj.DeleteAllItems()
-        root = self.arbrePrj.AddRoot("")
-        self.classe.ConstruireArbre(self.arbrePrj, root)
-        self.projet.ConstruireArbre(self.arbrePrj, root)
+        self.arbre.DeleteAllItems()
+        root = self.arbre.AddRoot("")
+        self.classe.ConstruireArbre(self.arbre, root)
+        self.projet.ConstruireArbre(self.arbre, root)
         
         self.projet.SetCodes()
         self.projet.PubDescription()
         self.projet.SetLiens()
         self.projet.VerifPb()
         self.projet.VerrouillerClasse()
-        self.arbreSeq.SelectItem(self.classe.branche)
+        self.arbre.SelectItem(self.classe.branche)
 
-        self.arbrePrj.Layout()
-        self.arbrePrj.ExpandAll()
-        self.arbrePrj.CalculatePositions()
+        self.arbre.Layout()
+        self.arbre.ExpandAll()
+        self.arbre.CalculatePositions()
         
         fichier.close()
 
@@ -4499,30 +4796,14 @@ class FenetreProjet(FenetreDocument):
         
 ####################################################################################
 #
-#   Classe définissant la fenétre de la fiche de séquence
+#   Classe définissant la base de la fenétre de fiche
 #
 ####################################################################################
-#class FicheSequence(wx.Panel):
-#        def __init__(self, parent):
-#                wx.Panel.__init__(self, parent, style=wx.BORDER_SIMPLE)
-#                self.Bind(wx.EVT_PAINT, self.OnPaint)
-#                self.text = 'Hello World!'
-#
-#        def OnPaint(self, evt):
-#                #Here we do some magic WX stuff.
-#                dc = wx.PaintDC(self)
-#                width, height = self.GetClientSize()
-#                cr = wx.lib.wxcairo.ContextFromDC(dc)
-#
-#                #Here's actual Cairo drawing
-#                size = min(width, height)
-#                cr.scale(size, size)
-
-class FicheSequence(wx.ScrolledWindow):
-    def __init__(self, parent, sequence):
+class BaseFiche(wx.ScrolledWindow):
+    def __init__(self, parent):
 #        wx.Panel.__init__(self, parent, -1)
         wx.ScrolledWindow.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)
-        self.sequence = sequence
+        
         self.EnableScrolling(False, True)
         self.SetScrollbars(20, 20, 50, 50);
         
@@ -4535,18 +4816,6 @@ class FicheSequence(wx.ScrolledWindow):
         self.Bind(wx.EVT_LEAVE_WINDOW, self.OnLeave)
         self.Bind(wx.EVT_MOTION, self.OnMove)
 
-#    def OnPaint(self, evt):
-#        #Here we do some magic WX stuff.
-#        dc = wx.PaintDC(self)
-#        width, height = self.GetClientSize()
-#        ctx = wx.lib.wxcairo.ContextFromDC(dc)
-#
-#        #Here's actual Cairo drawing
-#        size = min(width, height)
-#        self.normalize(ctx)
-#        draw_cairo.Draw(ctx, self.sequence)
-#        self.ctx = ctx
-##        self.Refresh()
 
     ######################################################################################################
     def OnLeave(self, evt = None):
@@ -4554,6 +4823,81 @@ class FicheSequence(wx.ScrolledWindow):
             self.call.Stop()
 #        if hasattr(self, 'tip') 
 #            self.tip.Show(False)
+
+    ######################################################################################################
+    def OnEnter(self, event):
+#        print "OnEnter"
+#        self.OnLeave()
+        self.SetFocus()
+        event.Skip()
+        
+    #############################################################################            
+    def OnResize(self, evt):
+#        print "OnSize fiche",
+        w, h = self.GetClientSize()
+#        print self.GetScrollThumb(wx.VERTICAL)
+        self.SetVirtualSize((w,w*29/21)) # Mise au format A4
+#        print w
+#        self.ficheSeq.FitInside()
+
+        self.InitBuffer()
+        if w > 0 and self.IsShown():
+            self.Redessiner()
+
+
+    #############################################################################            
+    def OnPaint(self, evt):
+        dc = wx.BufferedPaintDC(self, self.buffer, wx.BUFFER_VIRTUAL_AREA)
+
+        
+    #############################################################################            
+    def InitBuffer(self):
+        w,h = self.GetVirtualSize()
+#        print "InitBuffer", w, h
+        self.buffer = wx.EmptyBitmap(w,h)
+
+    #############################################################################            
+    def Redessiner(self, event = None):  
+#        print "REDESSINER"
+
+        cdc = wx.ClientDC(self)
+        dc = wx.BufferedDC(cdc, self.buffer, wx.BUFFER_VIRTUAL_AREA)
+        dc.SetBackground(wx.Brush('white'))
+        dc.Clear()
+        ctx = wx.lib.wxcairo.ContextFromDC(dc)
+#        face = wx.lib.wxcairo.FontFaceFromFont(wx.FFont(10, wx.SWISS, wx.FONTFLAG_BOLD))
+#        ctx.set_font_face(face)
+        dc.BeginDrawing()
+        self.normalize(ctx)
+        self.Draw(ctx)
+        dc.EndDrawing()
+        self.ctx = ctx
+        self.Refresh()
+    
+    
+    #############################################################################            
+    def normalize(self, cr):
+        w,h = self.GetVirtualSize()
+#        print "normalize", h
+        cr.scale(h, h) 
+        
+        
+        
+        
+        
+        
+        
+        
+####################################################################################
+#
+#   Classe définissant la fenétre de la fiche de séquence
+#
+####################################################################################
+class FicheSequence(BaseFiche):
+    def __init__(self, parent, sequence):
+        BaseFiche.__init__(self, parent)
+        self.sequence = sequence
+
             
     ######################################################################################################
     def OnMove(self, evt):
@@ -4574,13 +4918,12 @@ class FicheSequence(wx.ScrolledWindow):
                 self.tip = elem.tip
         evt.Skip()
 
-    ######################################################################################################
-    def OnEnter(self, event):
-#        print "OnEnter"
-#        self.OnLeave()
-        self.SetFocus()
-        event.Skip()
-    
+
+    #############################################################################            
+    def Draw(self, ctx):
+        draw_cairo.Draw(ctx, self.sequence)
+        
+        
     #############################################################################            
     def OnClick(self, evt):
 #        print "OnClick"
@@ -4621,141 +4964,93 @@ class FicheSequence(wx.ScrolledWindow):
         if item != None:
             self.sequence.AfficherMenuContextuel(item)
         
-
-    #############################################################################            
-    def OnResize(self, evt):
-#        print "OnSize fiche",
-        w, h = self.GetClientSize()
-#        print self.GetScrollThumb(wx.VERTICAL)
-        self.SetVirtualSize((w,w*29/21)) # Mise au format A4
-#        print w
-#        self.ficheSeq.FitInside()
-
-        self.InitBuffer()
-        if w > 0 and self.IsShown():
-            self.Redessiner()
+    
 
 
-    #############################################################################            
-    def OnPaint(self, evt):
-        dc = wx.BufferedPaintDC(self, self.buffer, wx.BUFFER_VIRTUAL_AREA)
-
-        
-    #############################################################################            
-    def InitBuffer(self):
-        w,h = self.GetVirtualSize()
-#        print "InitBuffer", w, h
-        self.buffer = wx.EmptyBitmap(w,h)
-
-        
-    #############################################################################            
-    def Redessiner(self, event = None):  
-#        print "REDESSINER"
-
-        cdc = wx.ClientDC(self)
-        dc = wx.BufferedDC(cdc, self.buffer, wx.BUFFER_VIRTUAL_AREA)
-        dc.SetBackground(wx.Brush('white'))
-        dc.Clear()
-        ctx = wx.lib.wxcairo.ContextFromDC(dc)
-#        face = wx.lib.wxcairo.FontFaceFromFont(wx.FFont(10, wx.SWISS, wx.FONTFLAG_BOLD))
-#        ctx.set_font_face(face)
-        dc.BeginDrawing()
-        self.normalize(ctx)
-        draw_cairo.Draw(ctx, self.sequence)
-        dc.EndDrawing()
-        self.ctx = ctx
-        self.Refresh()
 
 
-    #############################################################################            
-    def normalize(self, cr):
-        w,h = self.GetVirtualSize()
-#        print "normalize", h
-        cr.scale(h, h) 
-        
-        
-        
-#    def OnPaint(self, evt = None):
-#        #dc = wx.PaintDC(self)
-#        dc = wx.BufferedPaintDC(self)
-#        dc.SetBackground(wx.Brush('white'))
-#        dc.Clear()
-#        self.dc = dc
-        
 
     
-#    def Render(self):
-#        print "Render"
-#        
-#        # now draw something with cairo
-#        ctx = wx.lib.wxcairo.ContextFromDC(self.dc)
-#        self.normalize(ctx)
-#        
-#        self.sequence.Draw(ctx)
-        
-        
+####################################################################################
+#
+#   Classe définissant la fenétre de la fiche de séquence
+#
+####################################################################################
+class FicheProjet(BaseFiche):
+    def __init__(self, parent, projet):
+        BaseFiche.__init__(self, parent)
+        self.projet = projet
+
+            
+    ######################################################################################################
+    def OnMove(self, evt):
+#        print "OnMove"
+        if hasattr(self, 'tip'):
+            self.tip.Show(False)
+            self.call.Stop()
+        x, y = evt.GetPosition()
+        _x, _y = self.CalcUnscrolledPosition(x, y)
+        xx, yy = self.ctx.device_to_user(_x, _y)
+        branche = self.projet.HitTest(xx, yy)
+        if branche != None:
+            elem = branche.GetData()
+            if hasattr(elem, 'tip'):
+                x, y = self.ClientToScreen((x, y))
+                elem.tip.Position((x,y), (0,0))
+                self.call = wx.CallLater(800, elem.tip.Show, True)
+                self.tip = elem.tip
+        evt.Skip()
 
 
-#        # Draw some text
-#        face = wx.lib.wxcairo.FontFaceFromFont(
-#            wx.FFont(10, wx.SWISS, wx.FONTFLAG_BOLD))
-#        ctx.set_font_face(face)
-#        ctx.set_font_size(60)
-#        ctx.move_to(360, 180)
-#        ctx.set_source_rgb(0, 0, 0)
-#        ctx.show_text("Hello")
-
-#        # Text as a path, with fill and stroke
-#        ctx.move_to(400, 220)
-#        ctx.text_path("World")
-#        ctx.set_source_rgb(0.39, 0.07, 0.78)
-#        ctx.fill_preserve()
-#        ctx.set_source_rgb(0,0,0)
-#        ctx.set_line_width(2)
-#        ctx.stroke()
-
-#        # Show iterating and modifying a (text) path
-#        ctx.new_path()
-#        ctx.move_to(0, 0)
-#        ctx.set_source_rgb(0.3, 0.3, 0.3)
-#        ctx.set_font_size(30)
-#        text = "This path was warped..."
-#        ctx.text_path(text)
-#        tw, th = ctx.text_extents(text)[2:4]
-#        self.warpPath(ctx, tw, th, 360,300)
-#        ctx.fill()
-
-#        ctx.paint()
+    #############################################################################            
+    def Draw(self, ctx):
+        draw_cairo_prj.Draw(ctx, self.projet)
         
         
     #############################################################################            
-    def warpPath(self, ctx, tw, th, dx, dy):
-        def f(x, y):
-            xn = x - tw/2
-            yn = y+ xn ** 3 / ((tw/2)**3) * 70
-            return xn+dx, yn+dy
+    def OnClick(self, evt):
+#        print "OnClick"
+        x, y = evt.GetX(), evt.GetY()
+        _x, _y = self.CalcUnscrolledPosition(x, y)
+        xx, yy = self.ctx.device_to_user(_x, _y)
+        
+        #
+        # Changement de branche sur l'arbre
+        #
+        branche = self.projet.HitTest(xx, yy)
+        if branche != None:
+            self.projet.arbre.SelectItem(branche)
 
-        path = ctx.copy_path()
-        ctx.new_path()
-        for type, points in path:
-            if type == cairo.PATH_MOVE_TO:
-                x, y = f(*points)
-                ctx.move_to(x, y)
 
-            elif type == cairo.PATH_LINE_TO:
-                x, y = f(*points)
-                ctx.line_to(x, y)
-
-            elif type == cairo.PATH_CURVE_TO:
-                x1, y1, x2, y2, x3, y3 = points
-                x1, y1 = f(x1, y1)
-                x2, y2 = f(x2, y2)
-                x3, y3 = f(x3, y3)
-                ctx.curve_to(x1, y1, x2, y2, x3, y3)
-
-            elif type == cairo.PATH_CLOSE_PATH:
-                ctx.close_path()
-                
+        #
+        # Autres actions
+        #
+        position = self.projet.HitTestPosition(xx, yy)
+        if position != None:
+            self.projet.SetPosition(position)
+            if hasattr(self.projet, 'panelPropriete'):
+                self.projet.panelPropriete.SetBitmapPosition(bougerSlider = position)
+            
+        return branche
+    
+    #############################################################################            
+    def OnDClick(self, evt):
+#        print "DClick"
+        item = self.OnClick(evt)
+        if item != None:
+            self.projet.AfficherLien(item)
+        
+    #############################################################################            
+    def OnRClick(self, evt):
+        item = self.OnClick(evt)
+#        print "RClick", item
+        if item != None:
+            self.projet.AfficherMenuContextuel(item)
+            
+            
+            
+            
+                         
                 
 ####################################################################################
 #
@@ -4786,13 +5081,19 @@ class PanelPropriete(scrolled.ScrolledPanel):
 #        self.Layout()
        
     #########################################################################################################
-    def sendEvent(self, seq = None):
-        print "sendEvent", seq
+    def sendEvent(self, doc = None):
+        print "sendEvent", doc
         evt = SeqEvent(myEVT_DOC_MODIFIED, self.GetId())
-        if seq != None:
-            evt.SetSequence(seq)
+        if doc != None:
+            if hasattr(self, 'GetSequence'):
+                evt.SetSequence(doc)
+            else:
+                evt.SetProjet(doc)
         else:
-            evt.SetSequence(self.GetSequence())
+            if hasattr(self, 'GetSequence'):
+                evt.SetSequence(self.GetSequence())
+            else:
+                evt.SetProjet(self.GetProjet())
         self.GetEventHandler().ProcessEvent(evt)
         self.eventAttente = False
 
@@ -4925,7 +5226,7 @@ class PanelPropriete_Projet(PanelPropriete):
         titre = wx.StaticBox(self, -1, u"Position")
         sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
         self.bmp = wx.StaticBitmap(self, -1, self.getBitmapPeriode(250))
-        position = wx.Slider(self, -1, self.projet.position, 0, 7, (30, 60), (250, -1), 
+        position = wx.Slider(self, -1, self.projet.position, 0, 5, (30, 60), (190, -1), 
             wx.SL_HORIZONTAL | wx.SL_AUTOTICKS |wx.SL_TOP 
             )
         sb.Add(self.bmp)
@@ -5101,6 +5402,10 @@ class PanelPropriete_Classe(PanelPropriete):
     #############################################################################            
     def GetSequence(self):
         return self.classe.sequence
+    
+    #############################################################################            
+    def GetProjet(self):
+        return self.classe.projet
         
     ######################################################################################  
     def EvtRadioBox(self, event):
@@ -6018,7 +6323,7 @@ class PanelPropriete_Competences(PanelPropriete):
         self.DestroyChildren()
 #        if hasattr(self, 'arbre'):
 #            self.sizer.Remove(self.arbre)
-        self.arbre = ArbreCompetences(self, self.competence)
+        self.arbre = ArbreCompetences(self, self.competence.parent.classe.typeEnseignement)
         self.sizer.Add(self.arbre, (0,0), flag = wx.EXPAND)
         self.sizer.AddGrowableCol(0)
         self.sizer.AddGrowableRow(0)
@@ -6693,7 +6998,7 @@ class PanelPropriete_Tache(PanelPropriete):
 #        self.Bind(wx.EVT_TEXT, self.EvtTextIntitule, textctrl)
         self.textctrl.Bind(wx.EVT_KILL_FOCUS, self.EvtTextIntitule)
         
-        cb = wx.CheckBox(self, -1, u"Montrer dans la zone de déroulement de la séquence")
+        cb = wx.CheckBox(self, -1, u"Montrer dans la zone de déroulement du projet")
         cb.SetValue(self.tache.intituleDansDeroul)
         bsizer.Add(cb, flag = wx.EXPAND)
         self.Bind(wx.EVT_CHECKBOX, self.EvtCheckBox, cb)
@@ -6731,8 +7036,9 @@ class PanelPropriete_Tache(PanelPropriete):
         dbox = wx.StaticBox(self, -1, u"Description")
         dbsizer = wx.StaticBoxSizer(dbox, wx.VERTICAL)
         bd = wx.Button(self, -1, u"Editer")
-        tc = richtext.RichTextPanel(self, self.seance)
+        tc = richtext.RichTextPanel(self, self.tache)
         tc.SetMaxSize((-1, 150))
+        tc.SetMinSize((150, -1))
         dbsizer.Add(bd, flag = wx.EXPAND)
         dbsizer.Add(tc, 1, flag = wx.EXPAND)
         self.Bind(wx.EVT_BUTTON, self.EvtClick, bd)
@@ -6741,6 +7047,13 @@ class PanelPropriete_Tache(PanelPropriete):
         # Pour indiquer qu'une édition est déja en cours ...
         self.edition = False  
         
+        #
+        # Compétences abordées
+        #
+        self.arbre = ArbreCompetences(self, tache.parent.classe.typeEnseignement)
+        self.sizer.Add(self.arbre, (0,6), (4,1), flag = wx.EXPAND)
+        self.sizer.AddGrowableCol(6)
+        self.sizer.AddGrowableRow(6)
         
         #
         # Mise en place
@@ -6758,14 +7071,15 @@ class PanelPropriete_Tache(PanelPropriete):
             ss.Destroy()
             
         self.elevesCtrl = []
-        for s in self.tache.eleves:
-            v = wx.CheckBox(self, -1, self.GetProjet().eleves[s])
+        for i,s in enumerate(self.GetProjet().eleves):
+            v = wx.CheckBox(self, 100+i, s.nom + ' ' + s.prenom)
+            v.SetValue(i in self.tache.eleves)
             self.Bind(wx.EVT_CHECKBOX, self.EvtCheckEleve, v)
             self.bsizer.Add(v, flag = wx.ALIGN_RIGHT)#|wx.EXPAND) 
             self.elevesCtrl.append(v)
         self.bsizer.Layout()
         
-        if len(self.tache.systemes) > 0:
+        if len(self.tache.eleves) > 0:
             self.box.Show(True)
         else:
             self.box.Hide()
@@ -6810,6 +7124,16 @@ class PanelPropriete_Tache(PanelPropriete):
     def EvtCheckBox(self, event):
         self.tache.intituleDansDeroul = event.IsChecked()
         self.sendEvent()
+        
+        
+    #############################################################################            
+    def EvtCheckEleve(self, event):
+        lst = []
+        for i,s in enumerate(self.GetProjet().eleves):
+            if self.elevesCtrl[i].IsChecked():
+                lst.append(i)
+        self.tache.eleves = lst
+        self.sendEvent()    
     
     #############################################################################            
     def EvtTextIntitule(self, event):
@@ -7011,73 +7335,340 @@ class PanelPropriete_Systeme(PanelPropriete):
         self.selec.SetPath(self.systeme.lien.path)
         self.btnlien.Show(self.systeme.lien.path != "")
         self.Layout()
+
+
+
+
+
+
+
+
+####################################################################################
+#
+#   Classe définissant le panel de propriété d'un système
+#
+####################################################################################
+class PanelPropriete_Eleve(PanelPropriete):
+    def __init__(self, parent, eleve):
+        
+        self.eleve = eleve
+        self.parent = parent
+        
+        PanelPropriete.__init__(self, parent)
+        
+        #
+        # Nom
+        #
+        titre = wx.StaticText(self, -1, u"Nom :")
+        textctrl = wx.TextCtrl(self, 1, u"")
+        self.textctrln = textctrl
+        
+        self.sizer.Add(titre, (0,0), flag = wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM|wx.LEFT, border = 3)
+        self.sizer.Add(textctrl, (0,1), flag = wx.EXPAND|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM|wx.RIGHT, border = 3)
+        self.Bind(wx.EVT_TEXT, self.EvtText, textctrl)
+        
+        #
+        # Prénom
+        #
+        titre = wx.StaticText(self, -1, u"Prénom :")
+        textctrl = wx.TextCtrl(self, 2, u"")
+        self.textctrlp = textctrl
+        
+        self.sizer.Add(titre, (1,0), flag = wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM|wx.LEFT, border = 3)
+        self.sizer.Add(textctrl, (1,1), flag = wx.EXPAND|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM|wx.RIGHT, border = 3)
+        self.Bind(wx.EVT_TEXT, self.EvtText, textctrl)
+        
+        #
+        # Avatar
+        #
+        box = wx.StaticBox(self, -1, u"Avatar")
+        bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
+        image = wx.StaticBitmap(self, -1, wx.NullBitmap)
+        self.image = image
+        self.SetImage()
+        bsizer.Add(image, flag = wx.EXPAND)
+        
+        bt = wx.Button(self, -1, u"Changer l'avatar")
+        bt.SetToolTipString(u"Cliquer ici pour sélectionner un fichier image")
+        bsizer.Add(bt, flag = wx.EXPAND)
+        self.Bind(wx.EVT_BUTTON, self.OnClick, bt)
+        self.sizer.Add(bsizer, (0,3), (2,1), flag =  wx.EXPAND|wx.ALIGN_RIGHT|wx.LEFT, border = 2)#wx.ALIGN_CENTER_VERTICAL |
+        
+        
+        self.sizer.Layout()
+        
+        
+        
+        
+    
+        
+    #############################################################################            
+    def GetSequence(self):
+        return self.eleve.parent
+    
+    
+    #############################################################################            
+    def OnClick(self, event):
+        mesFormats = u"Fichier Image|*.bmp;*.png;*.jpg;*.jpeg;*.gif;*.pcx;*.pnm;*.tif;*.tiff;*.tga;*.iff;*.xpm;*.ico;*.ico;*.cur;*.ani|" \
+                       u"Tous les fichiers|*.*'"
+        
+        dlg = wx.FileDialog(
+                            self, message=u"Ouvrir une image",
+#                            defaultDir = self.DossierSauvegarde, 
+                            defaultFile = "",
+                            wildcard = mesFormats,
+                            style=wx.OPEN | wx.MULTIPLE | wx.CHANGE_DIR
+                            )
             
+        # Show the dialog and retrieve the user response. If it is the OK response, 
+        # process the data.
+        if dlg.ShowModal() == wx.ID_OK:
+            # This returns a Python list of files that were selected.
+            paths = dlg.GetPaths()
+            nomFichier = paths[0]
+            self.eleve.avatar = wx.Image(nomFichier).ConvertToBitmap()
+            self.SetImage()
+        
+        dlg.Destroy()
+        
+    #############################################################################            
+    def SetImage(self):
+        if self.eleve.avatar != None:
+            w, h = self.eleve.avatar.GetSize()
+            wf, hf = 200.0, 100.0
+            r = max(w/wf, h/hf)
+            _w, _h = w/r, h/r
+            self.eleve.avatar = self.eleve.avatar.ConvertToImage().Scale(_w, _h).ConvertToBitmap()
+            self.image.SetBitmap(self.eleve.avatar)
+        self.eleve.SetImage()
+        self.Layout()
+        
+        
+        
+    #############################################################################            
+    def EvtText(self, event):
+        if event.GetId() == 1:
+            self.eleve.SetNom(event.GetString())
+        else:
+            self.eleve.SetPrenom(event.GetString())
+#        self.eleve.parent.MiseAJourNomsEleves()
+        if not self.eventAttente:
+            wx.CallLater(DELAY, self.sendEvent)
+            self.eventAttente = True
+        
+
+        
+    #############################################################################            
+    def MiseAJour(self, sendEvt = False):
+        self.textctrln.ChangeValue(self.eleve.nom)
+        self.textctrlp.ChangeValue(self.eleve.prenom)
+        if sendEvt:
+            self.sendEvent()
+     
+        
+        
+        
+    #############################################################################            
+    def MiseAJourLien(self):
+        self.selec.SetPath(self.systeme.lien.path)
+        self.btnlien.Show(self.systeme.lien.path != "")
+        self.Layout()
+        
+        
+        
+        
+        
+        
+        
+
 ####################################################################################
 #
-#   Classe définissant l'arbre de structure de la séquence
+#   Classe définissant le panel de propriété d'un support de projet
 #
 ####################################################################################
+class PanelPropriete_Support(PanelPropriete):
+    def __init__(self, parent, support):
+        
+        self.support = support
+        self.parent = parent
+        
+        PanelPropriete.__init__(self, parent)
+        
+        #
+        # Nom
+        #
+        titre = wx.StaticText(self, -1, u"Nom du support :")
+        textctrl = wx.TextCtrl(self, -1, u"")
+        self.textctrl = textctrl
+        
+        self.sizer.Add(titre, (0,0), flag = wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM|wx.LEFT, border = 3)
+        self.sizer.Add(textctrl, (0,1), flag = wx.EXPAND|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM|wx.RIGHT, border = 3)
+        
+        
+        
+        #
+        # Image
+        #
+        box = wx.StaticBox(self, -1, u"Image du support")
+        bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
+        image = wx.StaticBitmap(self, -1, wx.NullBitmap)
+        self.image = image
+        self.SetImage()
+        bsizer.Add(image, flag = wx.EXPAND)
+        
+        
+        bt = wx.Button(self, -1, u"Changer l'image")
+        bt.SetToolTipString(u"Cliquer ici pour sélectionner un fichier image")
+        bsizer.Add(bt, flag = wx.EXPAND)
+        self.Bind(wx.EVT_BUTTON, self.OnClick, bt)
+        self.sizer.Add(bsizer, (0,3), (2,1), flag =  wx.EXPAND|wx.ALIGN_RIGHT|wx.LEFT, border = 2)#wx.ALIGN_CENTER_VERTICAL |
 
-#class ArbreSequence(wx.Treebook):
-#    def __init__(self, parent):
-#        wx.Treebook.__init__(self, parent, -1, size = (),
-#                             style=
-#                             #wx.BK_DEFAULT
-#                             wx.BK_TOP
-#                             #wx.BK_BOTTOM
-#                             #wx.BK_LEFT
-#                             #wx.BK_RIGHT
-#                            )
-#
-#
-#        self.sequence = Sequence()
-#        
-#        
-#        # make an image list using the LBXX images
-#        il = wx.ImageList(16, 16)
-##        for x in range(12):
-##            obj = getattr(images, 'LB%02d' % (x+1))
-##            bmp = obj.GetBitmap()
-##            il.Add(bmp)
-#        self.AssignImageList(il)
-##        imageIdGenerator = getNextImageID(il.GetImageCount())
-#        
-#        #
-#        # Intitulé de la séquence
-#        #
-#        self.AddPage(PanelPropriete_Sequence(self, self.sequence), u"Séquence")
-#        
-#        
-#        #
-#        # Centre d'intérét
-#        #
-#        self.AddSubPage(PanelPropriete_CI(self, self.sequence.CI), u"Centre d'intérét")
-#        
-#        # Now make a bunch of panels for the list book
-##        first = True
-##        for colour in colourList:
-##            win = self.makeColorPanel(colour)
-##            self.AddPage(win, colour, imageId=imageIdGenerator.next())
-##            if first:
-##                st = wx.StaticText(win.win, -1,
-##                          "You can put nearly any type of window here,\n"
-##                          "and the wx.TreeCtrl can be on either side of the\n"
-##                          "Treebook",
-##                          wx.Point(10, 10))
-##                first = False
-##
-##            win = self.makeColorPanel(colour)
-##            st = wx.StaticText(win.win, -1, "this is a sub-page", (10,10))
-##            self.AddSubPage(win, 'a sub-page', imageId=imageIdGenerator.next())
-#
-##        self.Bind(wx.EVT_TREEBOOK_PAGE_CHANGED, self.OnPageChanged)
-##        self.Bind(wx.EVT_TREEBOOK_PAGE_CHANGING, self.OnPageChanging)
-#
-#        # This is a workaround for a sizing bug on Mac...
-##        wx.FutureCall(100, self.AdjustSize)
+        #
+        # Lien
+        #
+        box = wx.StaticBox(self, -1, u"Lien externe")
+        bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
+        self.selec = URLSelectorCombo(self, self.support.lien, self.support.GetPath())
+        bsizer.Add(self.selec, flag = wx.EXPAND)
+        self.btnlien = wx.Button(self, -1, u"Ouvrir le lien externe")
+        self.btnlien.Hide()
+        self.Bind(wx.EVT_BUTTON, self.OnClick, self.btnlien)
+        bsizer.Add(self.btnlien)
+        self.sizer.Add(bsizer, (0,4), (2, 1), flag = wx.EXPAND)
+        
+        #
+        # Description du support
+        #
+        dbox = wx.StaticBox(self, -1, u"Description")
+        dbsizer = wx.StaticBoxSizer(dbox, wx.VERTICAL)
+        bd = wx.Button(self, -1, u"Editer")
+        tc = richtext.RichTextPanel(self, self.support)
+        tc.SetMaxSize((-1, 150))
+        dbsizer.Add(bd, flag = wx.EXPAND)
+        dbsizer.Add(tc, 1, flag = wx.EXPAND)
+        self.Bind(wx.EVT_BUTTON, self.EvtClick, bd)
+        self.sizer.Add(dbsizer, (0,5), (4, 1), flag = wx.EXPAND)
+        self.rtc = tc
+        # Pour indiquer qu'une édition est déja en cours ...
+        self.edition = False  
+        
+        
+        self.sizer.Layout()
+        
+        self.Bind(wx.EVT_TEXT, self.EvtText, textctrl)
+        
+        
+    ######################################################################################  
+    def SetPathSeq(self, pathSeq):
+        self.selec.SetPathSeq(pathSeq)
+        
+        
+    ######################################################################################  
+    def OnPathModified(self, lien):
+        self.support.OnPathModified()
+        self.btnlien.Show(self.support.lien.path != "")
+        self.Layout()
+        self.Refresh()
+        
+    #############################################################################            
+    def GetProjet(self):
+        return self.support.parent
+    
+    
+    #############################################################################            
+    def OnClick(self, event):
+        if event.GetId() == self.btnlien.GetId():
+            self.support.AfficherLien(self.GetProjet().GetPath())
+        else:
+    #        print event.GetId()
+            mesFormats = u"Fichier Image|*.bmp;*.png;*.jpg;*.jpeg;*.gif;*.pcx;*.pnm;*.tif;*.tiff;*.tga;*.iff;*.xpm;*.ico;*.ico;*.cur;*.ani|" \
+                           u"Tous les fichiers|*.*'"
+            
+            dlg = wx.FileDialog(
+                                self, message=u"Ouvrir une image",
+    #                            defaultDir = self.DossierSauvegarde, 
+                                defaultFile = "",
+                                wildcard = mesFormats,
+                                style=wx.OPEN | wx.MULTIPLE | wx.CHANGE_DIR
+                                )
+                
+            # Show the dialog and retrieve the user response. If it is the OK response, 
+            # process the data.
+            if dlg.ShowModal() == wx.ID_OK:
+                # This returns a Python list of files that were selected.
+                paths = dlg.GetPaths()
+                nomFichier = paths[0]
+                self.support.image = wx.Image(nomFichier).ConvertToBitmap()
+                self.SetImage()
+            
+            
+            
+            dlg.Destroy()
+        
+    #############################################################################            
+    def SetImage(self):
+        if self.support.image != None:
+            w, h = self.support.image.GetSize()
+            wf, hf = 200.0, 100.0
+            r = max(w/wf, h/hf)
+            _w, _h = w/r, h/r
+            self.support.image = self.support.image.ConvertToImage().Scale(_w, _h).ConvertToBitmap()
+            self.image.SetBitmap(self.support.image)
+        self.support.SetImage()
+        self.Layout()
+        
+        
+        
+    #############################################################################            
+    def EvtText(self, event):
+        self.support.SetNom(event.GetString())
+        self.support.parent.MiseAJourNomsSystemes()
+        if not self.eventAttente:
+            wx.CallLater(DELAY, self.sendEvent)
+            self.eventAttente = True
+        
+    #############################################################################            
+    def EvtClick(self, event):
+#        print "EvtClick"
+#        print self.seance.description
+        if not self.edition:
+            self.win = richtext.RichTextFrame(u"Description du support "+ self.support.nom, self.support)
+            self.edition = True
+            self.win.Show(True)
+        else:
+            self.win.SetFocus()
+        
+    #############################################################################            
+    def MiseAJour(self, sendEvt = False):
+        self.textctrl.ChangeValue(self.support.nom)
+        if sendEvt:
+            self.sendEvent()
+        self.MiseAJourLien()
+        
+        
+        
+    #############################################################################            
+    def MiseAJourLien(self):
+        self.selec.SetPath(self.systeme.lien.path)
+        self.btnlien.Show(self.systeme.lien.path != "")
+        self.Layout()
+        
+        
+        
+        
+        
+        
+        
+        
+        
 
-class ArbreSequence(CT.CustomTreeCtrl):
-    def __init__(self, parent, sequence, classe, panelProp,
+####################################################################################
+#
+#   Classe définissant l'arbre de structure de base d'un document
+#
+####################################################################################*
+class ArbreDoc(CT.CustomTreeCtrl):
+    def __init__(self, parent, classe, panelProp,
                  pos = wx.DefaultPosition,
                  size = wx.DefaultSize,
                  style = wx.SUNKEN_BORDER|wx.WANTS_CHARS,
@@ -7085,33 +7676,16 @@ class ArbreSequence(CT.CustomTreeCtrl):
                  ):
 
         CT.CustomTreeCtrl.__init__(self, parent, -1, pos, size, style, agwStyle)
-        
-        self.parent = parent
-        
-        #
-        # La séquence 
-        #
-        self.sequence = sequence
-        
-        #
-        # La classe 
-        #
-        self.classe = classe
-        
+
         #
         # Le panel contenant les panel de propriétés des éléments de séquence
         #
         self.panelProp = panelProp
-        
+
         #
-        # Les icones des branches
+        # La classe 
         #
-        
-        self.images = {}
-        il = wx.ImageList(20, 20)
-        for k, i in constantes.dicimages.items() + constantes.imagesSeance.items():
-            self.images[k] = il.Add(i.GetBitmap())
-        self.AssignImageList(il)
+        self.classe = classe
         
         #
         # On instancie un panel de propriétés vide pour les éléments qui n'ont pas de propriétés
@@ -7124,7 +7698,7 @@ class ArbreSequence(CT.CustomTreeCtrl):
         #
         root = self.AddRoot("")
         self.classe.ConstruireArbre(self, root)
-        self.sequence.ConstruireArbre(self, root)
+        self.root = root
         
         self.itemDrag = None
         
@@ -7141,531 +7715,7 @@ class ArbreSequence(CT.CustomTreeCtrl):
         
         self.ExpandAll()
         
-        self.panelProp.AfficherPanel(self.sequence.panelPropriete)
-        
-#        textctrl = wx.TextCtrl(self, -1, "I Am A Simple\nMultiline wx.TexCtrl", style=wx.TE_MULTILINE)
-#        self.gauge = wx.Gauge(self, -1, 50, style=wx.GA_HORIZONTAL|wx.GA_SMOOTH)
-#        self.gauge.SetValue(0)
-#        combobox = wx.ComboBox(self, -1, choices=["That", "Was", "A", "Nice", "Holyday!"], style=wx.CB_READONLY|wx.CB_DROPDOWN)
-#
-#        textctrl.Bind(wx.EVT_CHAR, self.OnTextCtrl)
-#        combobox.Bind(wx.EVT_COMBOBOX, self.OnComboBox)
-#        lenArtIds = len(ArtIDs) - 2
-#
-#
-#        
-#        for x in range(15):
-#            if x == 1:
-#                child = self.AppendItem(self.root, "Item %d" % x + "\nHello World\nHappy wxPython-ing!")
-#                self.SetItemBold(child, True)
-#            else:
-#                child = self.AppendItem(self.root, "Item %d" % x)
-#            self.SetPyData(child, None)
-#            self.SetItemImage(child, 24, CT.TreeItemIcon_Normal)
-#            self.SetItemImage(child, 13, CT.TreeItemIcon_Expanded)
-#
-#            if random.randint(0, 3) == 0:
-#                self.SetItemLeftImage(child, random.randint(0, lenArtIds))
-#
-#            for y in range(5):
-#                if y == 0 and x == 1:
-#                    last = self.AppendItem(child, "item %d-%s" % (x, chr(ord("a")+y)), ct_type=2, wnd=self.gauge)
-#                elif y == 1 and x == 2:
-#                    last = self.AppendItem(child, "Item %d-%s" % (x, chr(ord("a")+y)), ct_type=1, wnd=textctrl)
-#                    if random.randint(0, 3) == 1:
-#                        self.SetItem3State(last, True)
-#                        
-#                elif 2 < y < 4:
-#                    last = self.AppendItem(child, "item %d-%s" % (x, chr(ord("a")+y)))
-#                elif y == 4 and x == 1:
-#                    last = self.AppendItem(child, "item %d-%s" % (x, chr(ord("a")+y)), wnd=combobox)
-#                else:
-#                    last = self.AppendItem(child, "item %d-%s" % (x, chr(ord("a")+y)), ct_type=2)
-#                    
-#                self.SetPyData(last, None)
-#                self.SetItemImage(last, 24, CT.TreeItemIcon_Normal)
-#                self.SetItemImage(last, 13, CT.TreeItemIcon_Expanded)
-#
-#                if random.randint(0, 3) == 0:
-#                    self.SetItemLeftImage(last, random.randint(0, lenArtIds))
-#                    
-#                for z in range(5):
-#                    if z > 2:
-#                        item = self.AppendItem(last,  "item %d-%s-%d" % (x, chr(ord("a")+y), z), ct_type=1)
-#                        if random.randint(0, 3) == 1:
-#                            self.SetItem3State(item, True)
-#                    elif 0 < z <= 2:
-#                        item = self.AppendItem(last,  "item %d-%s-%d" % (x, chr(ord("a")+y), z), ct_type=2)
-#                    elif z == 0:
-#                        item = self.AppendItem(last,  "item %d-%s-%d" % (x, chr(ord("a")+y), z))
-#                        self.SetItemHyperText(item, True)
-#                    self.SetPyData(item, None)
-#                    self.SetItemImage(item, 28, CT.TreeItemIcon_Normal)
-#                    self.SetItemImage(item, numicons-1, CT.TreeItemIcon_Selected)
-#
-#                    if random.randint(0, 3) == 0:
-#                        self.SetItemLeftImage(item, random.randint(0, lenArtIds))
-#
-#        self.Bind(wx.EVT_LEFT_DCLICK, self.OnLeftDClick)
-#        self.Bind(wx.EVT_IDLE, self.OnIdle)
-#
-#        self.eventdict = {'EVT_TREE_BEGIN_DRAG': self.OnBeginDrag, 'EVT_TREE_BEGIN_LABEL_EDIT': self.OnBeginEdit,
-#                          'EVT_TREE_BEGIN_RDRAG': self.OnBeginRDrag, 'EVT_TREE_DELETE_ITEM': self.OnDeleteItem,
-#                          'EVT_TREE_END_DRAG': self.OnEndDrag, 'EVT_TREE_END_LABEL_EDIT': self.OnEndEdit,
-#                          'EVT_TREE_ITEM_ACTIVATED': self.OnActivate, 'EVT_TREE_ITEM_CHECKED': self.OnItemCheck,
-#                          'EVT_TREE_ITEM_CHECKING': self.OnItemChecking, 'EVT_TREE_ITEM_COLLAPSED': self.OnItemCollapsed,
-#                          'EVT_TREE_ITEM_COLLAPSING': self.OnItemCollapsing, 'EVT_TREE_ITEM_EXPANDED': self.OnItemExpanded,
-#                          'EVT_TREE_ITEM_EXPANDING': self.OnItemExpanding, 'EVT_TREE_ITEM_GETTOOLTIP': self.OnToolTip,
-#                          'EVT_TREE_ITEM_MENU': self.OnItemMenu, 'EVT_TREE_ITEM_RIGHT_CLICK': self.OnRightDown,
-#                          'EVT_TREE_KEY_DOWN': self.OnKey, 'EVT_TREE_SEL_CHANGED': self.OnSelChanged,
-#                          'EVT_TREE_SEL_CHANGING': self.OnSelChanging, "EVT_TREE_ITEM_HYPERLINK": self.OnHyperLink}
-#
-#        mainframe = wx.GetTopLevelParent(self)
-#        
-#        if not hasattr(mainframe, "leftpanel"):
-#            self.Bind(CT.EVT_TREE_ITEM_EXPANDED, self.OnItemExpanded)
-#            self.Bind(CT.EVT_TREE_ITEM_COLLAPSED, self.OnItemCollapsed)
-#            self.Bind(CT.EVT_TREE_SEL_CHANGED, self.OnSelChanged)
-#            self.Bind(CT.EVT_TREE_SEL_CHANGING, self.OnSelChanging)
-#            self.Bind(wx.EVT_RIGHT_DOWN, self.OnRightDown)
-#            self.Bind(wx.EVT_RIGHT_UP, self.OnRightUp)
-#        else:
-#            for combos in mainframe.treeevents:
-#                self.BindEvents(combos)
-#
-#        if hasattr(mainframe, "leftpanel"):
-#            self.ChangeStyle(mainframe.treestyles)
-#
-#        if not(self.GetAGWWindowStyleFlag() & CT.TR_HIDE_ROOT):
-#            self.SelectItem(self.root)
-#            self.Expand(self.root)
-
-    
-#        self.CurseurInsert = wx.Cursor(wx.Image('CurseurInsert.png', wx.BITMAP_TYPE_PNG ))
-#        self.CurseurInsert = wx.Cursor('CurseurInsert.ico', wx.BITMAP_TYPE_ICO )
-        self.CurseurInsert = wx.CursorFromImage(constantes.images.CurseurInsert.GetImage())
-        
-    ###############################################################################################
-    def OnKey(self, evt):
-        keycode = evt.GetKeyCode()
-        print keycode
-        if keycode == wx.WXK_DELETE:
-            item = self.GetSelection()
-            self.sequence.SupprimerItem(item)
-            
-        
-    def AjouterObjectif(self, event = None):
-        self.sequence.AjouterObjectif()
-        
-        
-    def SupprimerObjectif(self, event = None, item = None):
-        self.sequence.SupprimerObjectif(item)
-
-            
-    def AjouterSeance(self, event = None):
-        seance = self.sequence.AjouterSeance()
-        self.lstSeances.append(self.AppendItem(self.seances, u"Séance :", data = seance))
-        
-    def AjouterRotation(self, event = None, item = None):
-        seance = self.sequence.AjouterRotation(self.GetItemPyData(item))
-        self.SetItemText(item, u"Rotation")
-        self.lstSeances.append(self.AppendItem(item, u"Séance :", data = seance))
-        
-    def AjouterSerie(self, event = None, item = None):
-        seance = self.sequence.AjouterRotation(self.GetItemPyData(item))
-        self.SetItemText(item, u"Rotation")
-        self.lstSeances.append(self.AppendItem(item, u"Séance :", data = seance))
-        
-    def SupprimerSeance(self, event = None, item = None):
-        if self.sequence.SupprimerSeance(self.GetItemPyData(item)):
-            self.lstSeances.remove(item)
-            self.Delete(item)
-        
-        
-#    def BindEvents(self, choice, recreate=False):
-#
-#        value = choice.GetValue()
-#        text = choice.GetLabel()
-#        
-#        evt = "CT." + text
-#        binder = self.eventdict[text]
-#
-#        if value == 1:
-#            if evt == "CT.EVT_TREE_BEGIN_RDRAG":
-#                self.Bind(wx.EVT_RIGHT_DOWN, None)
-#                self.Bind(wx.EVT_RIGHT_UP, None)
-#            self.Bind(eval(evt), binder)
-#        else:
-#            self.Bind(eval(evt), None)
-#            if evt == "CT.EVT_TREE_BEGIN_RDRAG":
-#                self.Bind(wx.EVT_RIGHT_DOWN, self.OnRightDown)
-#                self.Bind(wx.EVT_RIGHT_UP, self.OnRightUp)
-
-
-#    def ChangeStyle(self, combos):
-#
-#        style = 0
-#        for combo in combos:
-#            if combo.GetValue() == 1:
-#                style = style | eval("CT." + combo.GetLabel())
-#
-#        if self.GetAGWWindowStyleFlag() != style:
-#            self.SetAGWWindowStyleFlag(style)
-#            
-#
-#    def OnCompareItems(self, item1, item2):
-#        
-#        t1 = self.GetItemText(item1)
-#        t2 = self.GetItemText(item2)
-#        
-#        self.log.write('compare: ' + t1 + ' <> ' + t2 + "\n")
-#
-#        if t1 < t2:
-#            return -1
-#        if t1 == t2:
-#            return 0
-#
-#        return 1
-
-    
-#    def OnIdle(self, event):
-#
-#        if self.gauge:
-#            try:
-#                if self.gauge.IsEnabled() and self.gauge.IsShown():
-#                    self.count = self.count + 1
-#
-#                    if self.count >= 50:
-#                        self.count = 0
-#
-#                    self.gauge.SetValue(self.count)
-#
-#            except:
-#                self.gauge = None
-#
-#        event.Skip()
-
-
-    def OnRightDown(self, event):
-#        print "OnRightDown"
-#        pt = event.GetPosition()
-#        item, flags = self.HitTest(pt)
-        item = event.GetItem()
-#        print dir(item)
-
-        self.sequence.AfficherMenuContextuel(item)
-        
-        
-
-
-
-#    def OnRightUp(self, event):
-#
-#        item = self.item
-#        
-#        if not item:
-#            event.Skip()
-#            return
-#
-#        if not self.IsItemEnabled(item):
-#            event.Skip()
-#            return
-#
-#        # Item Text Appearance
-#        ishtml = self.IsItemHyperText(item)
-#        back = self.GetItemBackgroundColour(item)
-#        fore = self.GetItemTextColour(item)
-#        isbold = self.IsBold(item)
-#        font = self.GetItemFont(item)
-#
-#        # Icons On Item
-#        normal = self.GetItemImage(item, CT.TreeItemIcon_Normal)
-#        selected = self.GetItemImage(item, CT.TreeItemIcon_Selected)
-#        expanded = self.GetItemImage(item, CT.TreeItemIcon_Expanded)
-#        selexp = self.GetItemImage(item, CT.TreeItemIcon_SelectedExpanded)
-#
-#        # Enabling/Disabling Windows Associated To An Item
-#        haswin = self.GetItemWindow(item)
-#
-#        # Enabling/Disabling Items
-#        enabled = self.IsItemEnabled(item)
-#
-#        # Generic Item's Info
-#        children = self.GetChildrenCount(item)
-#        itemtype = self.GetItemType(item)
-#        text = self.GetItemText(item)
-#        pydata = self.GetPyData(item)
-#        
-#        self.current = item
-#        self.itemdict = {"ishtml": ishtml, "back": back, "fore": fore, "isbold": isbold,
-#                         "font": font, "normal": normal, "selected": selected, "expanded": expanded,
-#                         "selexp": selexp, "haswin": haswin, "children": children,
-#                         "itemtype": itemtype, "text": text, "pydata": pydata, "enabled": enabled}
-#        
-#        menu = wx.Menu()
-#
-#        item1 = menu.Append(wx.ID_ANY, "Change Item Background Colour")
-#        item2 = menu.Append(wx.ID_ANY, "Modify Item Text Colour")
-#        menu.AppendSeparator()
-#        if isbold:
-#            strs = "Make Item Text Not Bold"
-#        else:
-#            strs = "Make Item Text Bold"
-#        item3 = menu.Append(wx.ID_ANY, strs)
-#        item4 = menu.Append(wx.ID_ANY, "Change Item Font")
-#        menu.AppendSeparator()
-#        if ishtml:
-#            strs = "Set Item As Non-Hyperlink"
-#        else:
-#            strs = "Set Item As Hyperlink"
-#        item5 = menu.Append(wx.ID_ANY, strs)
-#        menu.AppendSeparator()
-#        if haswin:
-#            enabled = self.GetItemWindowEnabled(item)
-#            if enabled:
-#                strs = "Disable Associated Widget"
-#            else:
-#                strs = "Enable Associated Widget"
-#        else:
-#            strs = "Enable Associated Widget"
-#        item6 = menu.Append(wx.ID_ANY, strs)
-#
-#        if not haswin:
-#            item6.Enable(False)
-#
-#        item7 = menu.Append(wx.ID_ANY, "Disable Item")
-#        
-#        menu.AppendSeparator()
-#        item8 = menu.Append(wx.ID_ANY, "Change Item Icons")
-#        menu.AppendSeparator()
-#        item9 = menu.Append(wx.ID_ANY, "Get Other Information For This Item")
-#        menu.AppendSeparator()
-#
-#        item10 = menu.Append(wx.ID_ANY, "Delete Item")
-#        if item == self.GetRootItem():
-#            item10.Enable(False)
-#        item11 = menu.Append(wx.ID_ANY, "Prepend An Item")
-#        item12 = menu.Append(wx.ID_ANY, "Append An Item")
-#
-#        self.Bind(wx.EVT_MENU, self.OnItemBackground, item1)
-#        self.Bind(wx.EVT_MENU, self.OnItemForeground, item2)
-#        self.Bind(wx.EVT_MENU, self.OnItemBold, item3)
-#        self.Bind(wx.EVT_MENU, self.OnItemFont, item4)
-#        self.Bind(wx.EVT_MENU, self.OnItemHyperText, item5)
-#        self.Bind(wx.EVT_MENU, self.OnEnableWindow, item6)
-#        self.Bind(wx.EVT_MENU, self.OnDisableItem, item7)
-#        self.Bind(wx.EVT_MENU, self.OnItemIcons, item8)
-#        self.Bind(wx.EVT_MENU, self.OnItemInfo, item9)
-#        self.Bind(wx.EVT_MENU, self.OnItemDelete, item10)
-#        self.Bind(wx.EVT_MENU, self.OnItemPrepend, item11)
-#        self.Bind(wx.EVT_MENU, self.OnItemAppend, item12)
-#        
-#        self.PopupMenu(menu)
-#        menu.Destroy()
-        
-
-#    def OnItemBackground(self, event):
-#
-#        colourdata = wx.ColourData()
-#        colourdata.SetColour(self.itemdict["back"])
-#        dlg = wx.ColourDialog(self, colourdata)
-#        
-#        dlg.GetColourData().SetChooseFull(True)
-#
-#        if dlg.ShowModal() == wx.ID_OK:
-#            data = dlg.GetColourData()
-#            col1 = data.GetColour().Get()
-#            self.SetItemBackgroundColour(self.current, col1)
-#        dlg.Destroy()
-#
-#
-#    def OnItemForeground(self, event):
-#
-#        colourdata = wx.ColourData()
-#        colourdata.SetColour(self.itemdict["fore"])
-#        dlg = wx.ColourDialog(self, colourdata)
-#        
-#        dlg.GetColourData().SetChooseFull(True)
-#
-#        if dlg.ShowModal() == wx.ID_OK:
-#            data = dlg.GetColourData()
-#            col1 = data.GetColour().Get()
-#            self.SetItemTextColour(self.current, col1)
-#        dlg.Destroy()
-
-
-#    def OnItemBold(self, event):
-#
-#        self.SetItemBold(self.current, not self.itemdict["isbold"])
-#
-#
-#    def OnItemFont(self, event):
-#
-#        data = wx.FontData()
-#        font = self.itemdict["font"]
-#        
-#        if font is None:
-#            font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
-#            
-#        data.SetInitialFont(font)
-#
-#        dlg = wx.FontDialog(self, data)
-#        
-#        if dlg.ShowModal() == wx.ID_OK:
-#            data = dlg.GetFontData()
-#            font = data.GetChosenFont()
-#            self.SetItemFont(self.current, font)
-#
-#        dlg.Destroy()
-        
-
-#    def OnItemHyperText(self, event):
-#
-#        self.SetItemHyperText(self.current, not self.itemdict["ishtml"])
-#
-#
-#    def OnEnableWindow(self, event):
-#
-#        enable = self.GetItemWindowEnabled(self.current)
-#        self.SetItemWindowEnabled(self.current, not enable)
-#
-#
-#    def OnDisableItem(self, event):
-#
-#        self.EnableItem(self.current, False)
-#        
-
-#    def OnItemIcons(self, event):
-#
-#        bitmaps = [self.itemdict["normal"], self.itemdict["selected"],
-#                   self.itemdict["expanded"], self.itemdict["selexp"]]
-#
-#        wx.BeginBusyCursor()        
-#        dlg = TreeIcons(self, -1, bitmaps=bitmaps)
-#        wx.EndBusyCursor()
-#        dlg.ShowModal()
-
-
-#    def SetNewIcons(self, bitmaps):
-#
-#        self.SetItemImage(self.current, bitmaps[0], CT.TreeItemIcon_Normal)
-#        self.SetItemImage(self.current, bitmaps[1], CT.TreeItemIcon_Selected)
-#        self.SetItemImage(self.current, bitmaps[2], CT.TreeItemIcon_Expanded)
-#        self.SetItemImage(self.current, bitmaps[3], CT.TreeItemIcon_SelectedExpanded)
-
-        
-
-#    def OnItemDelete(self, event):
-#
-#        strs = "Are You Sure You Want To Delete Item " + self.GetItemText(self.current) + "?"
-#        dlg = wx.MessageDialog(None, strs, 'Deleting Item', wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_QUESTION)
-#
-#        if dlg.ShowModal() in [wx.ID_NO, wx.ID_CANCEL]:
-#            dlg.Destroy()
-#            return
-#
-#        dlg.Destroy()
-#
-#        self.DeleteChildren(self.current)
-#        self.Delete(self.current)
-#        self.current = None
-#        
-
-
-#    def OnItemPrepend(self, event):
-#
-#        dlg = wx.TextEntryDialog(self, "Please Enter The New Item Name", 'Item Naming', 'Python')
-#
-#        if dlg.ShowModal() == wx.ID_OK:
-#            newname = dlg.GetValue()
-#            newitem = self.PrependItem(self.current, newname)
-#            self.EnsureVisible(newitem)
-#
-#        dlg.Destroy()
-#
-#
-#    def OnItemAppend(self, event):
-#
-#        dlg = wx.TextEntryDialog(self, "Please Enter The New Item Name", 'Item Naming', 'Python')
-#
-#        if dlg.ShowModal() == wx.ID_OK:
-#            newname = dlg.GetValue()
-#            newitem = self.AppendItem(self.current, newname)
-#            self.EnsureVisible(newitem)
-#
-#        dlg.Destroy()
-        
-
-    def OnBeginEdit(self, event):
-        
-        self.log.write("OnBeginEdit" + "\n")
-        # show how to prevent edit...
-        item = event.GetItem()
-        if item and self.GetItemText(item) == "The Root Item":
-            wx.Bell()
-            self.log.write("You can't edit this one..." + "\n")
-
-            # Lets just see what's visible of its children
-            cookie = 0
-            root = event.GetItem()
-            (child, cookie) = self.GetFirstChild(root)
-
-            while child:
-                self.log.write("Child [%s] visible = %d" % (self.GetItemText(child), self.IsVisible(child)) + "\n")
-                (child, cookie) = self.GetNextChild(root, cookie)
-
-            event.Veto()
-
-
-    def OnEndEdit(self, event):
-        pass
-#        self.log.write("OnEndEdit: %s %s" %(event.IsEditCancelled(), event.GetLabel()))
-#        # show how to reject edit, we'll not allow any digits
-#        for x in event.GetLabel():
-#            if x in string.digits:
-#                self.log.write(", You can't enter digits..." + "\n")
-#                event.Veto()
-#                return
-#            
-#        self.log.write("\n")
-
-
-    def OnLeftDClick(self, event):
-        pt = event.GetPosition()
-        item, flags = self.HitTest(pt)
-#        print item
-        if item:
-            print "DClick (arbre)"
-            self.sequence.AfficherLien(item)
-        event.Skip()                
-        
-
-    def OnItemExpanded(self, event):
-        
-        item = event.GetItem()
-        if item:
-            self.log.write("OnItemExpanded: %s" % self.GetItemText(item) + "\n")
-
-
-    def OnItemExpanding(self, event):
-        
-        item = event.GetItem()
-        if item:
-            self.log.write("OnItemExpanding: %s" % self.GetItemText(item) + "\n")
-            
-        event.Skip()
-
-        
-    def OnItemCollapsed(self, event):
-
-        item = event.GetItem()
-        if item:
-            self.log.write("OnItemCollapsed: %s" % self.GetItemText(item) + "\n")
-            
-
-    
-
-        
+    ####################################################################################
     def OnSelChanged(self, event):
 #        print "OnSelChanged"
         self.item = event.GetItem()
@@ -7677,12 +7727,129 @@ class ArbreSequence(CT.CustomTreeCtrl):
         self.panelProp.AfficherPanel(panelPropriete)
 #        wx.CallAfter(panelPropriete.Refresh)
         event.Skip()
+        
+    ####################################################################################
+    def OnBeginDrag(self, event):
+#        print "OnBeginDrag", 
+        self.itemDrag = event.GetItem()
+#        print self.itemDrag
+        if self.item:
+            event.Allow()
 
+        
+        
+        
+        
+
+####################################################################################
+#
+#   Classe définissant l'arbre de structure de la séquence
+#
+####################################################################################
+class ArbreSequence(ArbreDoc):
+    def __init__(self, parent, sequence, classe, panelProp):
+
+        ArbreDoc.__init__(self, parent, classe, panelProp)
+        
+        self.parent = parent
+        
+        #
+        # La séquence 
+        #
+        self.sequence = sequence
+        
+        #
+        # Les icones des branches
+        #
+        self.images = {}
+        il = wx.ImageList(20, 20)
+        for k, i in constantes.dicimages.items() + constantes.imagesSeance.items():
+            self.images[k] = il.Add(i.GetBitmap())
+        self.AssignImageList(il)
+        
+        
+        #
+        # Construction de l'arbre
+        #
+        self.sequence.ConstruireArbre(self, self.root)
+        
+        
+        self.panelProp.AfficherPanel(self.sequence.panelPropriete)
+
+        self.CurseurInsert = wx.CursorFromImage(constantes.images.CurseurInsert.GetImage())
+        
+    ###############################################################################################
+    def OnKey(self, evt):
+        keycode = evt.GetKeyCode()
+#        print keycode
+        if keycode == wx.WXK_DELETE:
+            item = self.GetSelection()
+            self.sequence.SupprimerItem(item)
+            
+        
+    ####################################################################################
+    def AjouterObjectif(self, event = None):
+        self.sequence.AjouterObjectif()
+        
+        
+    ####################################################################################
+    def SupprimerObjectif(self, event = None, item = None):
+        self.sequence.SupprimerObjectif(item)
+
+            
+    ####################################################################################
+    def AjouterSeance(self, event = None):
+        seance = self.sequence.AjouterSeance()
+        self.lstSeances.append(self.AppendItem(self.seances, u"Séance :", data = seance))
+        
+    ####################################################################################
+    def AjouterRotation(self, event = None, item = None):
+        seance = self.sequence.AjouterRotation(self.GetItemPyData(item))
+        self.SetItemText(item, u"Rotation")
+        self.lstSeances.append(self.AppendItem(item, u"Séance :", data = seance))
+        
+    ####################################################################################
+    def AjouterSerie(self, event = None, item = None):
+        seance = self.sequence.AjouterRotation(self.GetItemPyData(item))
+        self.SetItemText(item, u"Rotation")
+        self.lstSeances.append(self.AppendItem(item, u"Séance :", data = seance))
+        
+    ####################################################################################
+    def SupprimerSeance(self, event = None, item = None):
+        if self.sequence.SupprimerSeance(self.GetItemPyData(item)):
+            self.lstSeances.remove(item)
+            self.Delete(item)
+
+
+    ####################################################################################
+    def OnRightDown(self, event):
+#        print "OnRightDown"
+#        pt = event.GetPosition()
+#        item, flags = self.HitTest(pt)
+        item = event.GetItem()
+#        print dir(item)
+
+        self.sequence.AfficherMenuContextuel(item)
+
+    
+    ####################################################################################
+    def OnLeftDClick(self, event):
+        pt = event.GetPosition()
+        item, flags = self.HitTest(pt)
+#        print item
+        if item:
+#            print "DClick (arbre)"
+            self.sequence.AfficherLien(item)
+        event.Skip()                
+        
+
+    ####################################################################################
     def OnCompareItems(self, item1, item2):
         i1 = self.GetItemPyData(item1)
         i2 = self.GetItemPyData(item2)
         return i1.ordre - i2.ordre
 
+    ####################################################################################
     def OnMove(self, event):
         if self.itemDrag != None:
             (id, flag) = self.HitTest(wx.Point(event.GetX(), event.GetY()))
@@ -7699,19 +7866,11 @@ class ArbreSequence(CT.CustomTreeCtrl):
                             self.SetCursor(self.CurseurInsert)
                         else:
                             self.SetCursor(wx.StockCursor(wx.CURSOR_ARROW))
-                    
                         
         event.Skip()
         
-    def OnBeginDrag(self, event):
-#        print "OnBeginDrag", 
-        self.itemDrag = event.GetItem()
-        print self.itemDrag
-        if self.item:
-            event.Allow()
-
-
-
+        
+    ####################################################################################
     def OnEndDrag(self, event):
 #        print "OnEndDrag",
         self.item = event.GetItem()
@@ -7770,19 +7929,187 @@ class ArbreSequence(CT.CustomTreeCtrl):
         self.itemDrag = None
         event.Skip()            
 
-
-    def OnDeleteItem(self, event):
+    
+    ####################################################################################
+    def OnToolTip(self, event):
 
         item = event.GetItem()
+        if item:
+            event.SetToolTip(wx.ToolTip(self.GetItemText(item)))
 
-        if not item:
-            return
-
-        self.log.write("Deleting Item: %s" % self.GetItemText(item) + "\n")
-        event.Skip()
         
+    
+####################################################################################
+#
+#   Classe définissant l'arbre de structure d'un projet
+#
+####################################################################################
+class ArbreProjet(ArbreDoc):
+    def __init__(self, parent, projet, classe, panelProp):
+
+        ArbreDoc.__init__(self, parent, classe, panelProp)
+        
+        self.parent = parent
+        
+        #
+        # La séquence 
+        #
+        self.projet = projet
+        
+        #
+        # Les icones des branches
+        #
+        self.images = {}
+        il = wx.ImageList(20, 20)
+        for k, i in constantes.imagesProjet.items() + constantes.imagesTaches.items():
+            self.images[k] = il.Add(i.GetBitmap())
+        self.AssignImageList(il)
+        
+        #
+        # Construction de l'arbre
+        #
+        self.projet.ConstruireArbre(self, self.root)
+        
+        self.panelProp.AfficherPanel(self.projet.panelPropriete)
+
+        self.CurseurInsert = wx.CursorFromImage(constantes.images.CurseurInsert.GetImage())
+        
+    ###############################################################################################
+    def OnKey(self, evt):
+        keycode = evt.GetKeyCode()
+#        print keycode
+        if keycode == wx.WXK_DELETE:
+            item = self.GetSelection()
+            self.projet.SupprimerItem(item)
+            
+        
+    ####################################################################################
+    def AjouterEleve(self, event = None):
+        self.projet.AjouterEleve()
+        
+        
+    ####################################################################################
+    def SupprimerEleve(self, event = None, item = None):
+        self.projet.SupprimerEleve(item)
+
+            
+    ####################################################################################
+    def AjouterTache(self, event = None):
+        tache = self.projet.AjouterTache()
+        self.lstTaches.append(self.AppendItem(self.taches, u"Tâche :", data = tache))
+        
+    ####################################################################################
+    def SupprimerTache(self, event = None, item = None):
+        if self.projet.SupprimerTache(self.GetItemPyData(item)):
+            self.lstTaches.remove(item)
+            self.Delete(item)
+
+
+    ####################################################################################
+    def OnRightDown(self, event):
+        item = event.GetItem()
+        self.projet.AfficherMenuContextuel(item)
 
     
+    ####################################################################################
+    def OnLeftDClick(self, event):
+        pt = event.GetPosition()
+        item, flags = self.HitTest(pt)
+#        print item
+        if item:
+#            print "DClick (arbre)"
+            self.projet.AfficherLien(item)
+        event.Skip()                
+        
+
+    ####################################################################################
+    def OnCompareItems(self, item1, item2):
+        i1 = self.GetItemPyData(item1)
+        i2 = self.GetItemPyData(item2)
+        return i1.ordre - i2.ordre
+
+    ####################################################################################
+    def OnMove(self, event):
+        if self.itemDrag != None:
+            (id, flag) = self.HitTest(wx.Point(event.GetX(), event.GetY()))
+            if id != None:
+                dataTarget = self.GetItemPyData(id)
+                dataSource = self.GetItemPyData(self.itemDrag)
+                if not isinstance(dataSource, Seance):
+                    self.SetCursor(wx.StockCursor(wx.CURSOR_NO_ENTRY))
+                else:
+                    if not isinstance(dataTarget, Seance):
+                        self.SetCursor(wx.StockCursor(wx.CURSOR_NO_ENTRY))
+                    else:
+                        if dataTarget != dataSource:# and dataTarget.parent == dataSource.parent:
+                            self.SetCursor(self.CurseurInsert)
+                        else:
+                            self.SetCursor(wx.StockCursor(wx.CURSOR_ARROW))
+                        
+        event.Skip()
+        
+        
+    ####################################################################################
+    def OnEndDrag(self, event):
+#        print "OnEndDrag",
+        self.item = event.GetItem()
+#        print self.itemDrag, self.item 
+        dataTarget = self.GetItemPyData(self.item)
+        dataSource = self.GetItemPyData(self.itemDrag)
+        if not isinstance(dataSource, Seance):
+            pass
+        else:
+            if not isinstance(dataTarget, Seance):
+                pass
+            else:
+                if dataTarget != dataSource and dataTarget.parent == dataSource.parent:
+                    if isinstance(dataTarget.parent, Sequence):
+                        lst = dataTarget.parent.seance
+                    else:
+                        lst = dataTarget.parent.sousSeances
+                    s = lst.index(dataSource)
+                    t = lst.index(dataTarget)
+                    
+                    if t > s:
+                        lst.insert(t, lst.pop(s))
+                    else:
+                        lst.insert(t+1, lst.pop(s))
+                    dataTarget.parent.OrdonnerSeances()
+                    self.SortChildren(self.GetItemParent(self.item))
+                    self.panelVide.sendEvent(self.sequence) # Solution pour déclencher un "redessiner"
+                
+                elif dataTarget != dataSource and dataTarget.parent != dataSource.parent:
+                    if isinstance(dataTarget.parent, Sequence):
+                        lstT = dataTarget.parent.seance
+                    else:
+                        lstT = dataTarget.parent.sousSeances
+                        if len(lstT) > 0:
+                            dataSource.duree.v[0] = lstT[0].GetDuree()
+                    
+                    if isinstance(dataSource.parent, Sequence):
+                        lstS = dataSource.parent.seance
+                    else:
+                        lstS = dataSource.parent.sousSeances
+                        
+                    s = lstS.index(dataSource)
+                    t = lstT.index(dataTarget)
+                    lstT[t+1:t+1] = [dataSource]
+                    del lstS[s]
+                    p = dataSource.parent
+                    dataSource.parent = dataTarget.parent
+#                    dataTarget.parent = p
+                    p.OrdonnerSeances()
+                    dataTarget.parent.OrdonnerSeances()
+                    
+                    self.sequence.reconstruireBrancheSeances(dataTarget.parent, p)
+                    self.panelVide.sendEvent(self.sequence) # Solution pour déclencher un "redessiner"
+                else:
+                    pass
+        self.itemDrag = None
+        event.Skip()            
+
+    
+    ####################################################################################
     def OnToolTip(self, event):
 
         item = event.GetItem()
@@ -7790,75 +8117,12 @@ class ArbreSequence(CT.CustomTreeCtrl):
             event.SetToolTip(wx.ToolTip(self.GetItemText(item)))
 
 
-#    def OnItemMenu(self, event):
-#
-#        item = event.GetItem()
-#        if item:
-#            self.log.write("OnItemMenu: %s" % self.GetItemText(item) + "\n")
-#    
-#        event.Skip()
 
 
-#    def OnKey(self, event):
-#
-#        keycode = event.GetKeyCode()
-##        keyname = keyMap.get(keycode, None)
-##                
-##        if keycode == wx.WXK_BACK:
-##            self.log.write("OnKeyDown: HAHAHAHA! I Vetoed Your Backspace! HAHAHAHA\n")
-##            return
-##
-##        if keyname is None:
-##            if "unicode" in wx.PlatformInfo:
-##                keycode = event.GetUnicodeKey()
-##                if keycode <= 127:
-##                    keycode = event.GetKeyCode()
-##                keyname = "\"" + unichr(event.GetUnicodeKey()) + "\""
-##                if keycode < 27:
-##                    keyname = "Ctrl-%s" % chr(ord('A') + keycode-1)
-##                
-##            elif keycode < 256:
-##                if keycode == 0:
-##                    keyname = "NUL"
-##                elif keycode < 27:
-##                    keyname = "Ctrl-%s" % chr(ord('A') + keycode-1)
-##                else:
-##                    keyname = "\"%s\"" % chr(keycode)
-##            else:
-##                keyname = "unknown (%s)" % keycode
-#                
-#
-#        event.Skip()
-        
-        
-#    def OnActivate(self, event):
-#        
-#        if self.item:
-#            self.log.write("OnActivate: %s" % self.GetItemText(self.item) + "\n")
-#
-#        event.Skip()
 
-        
-    def OnHyperLink(self, event):
 
-        item = event.GetItem()
-        if item:
-            self.log.write("OnHyperLink: %s" % self.GetItemText(self.item) + "\n")
             
 
-#    def OnTextCtrl(self, event):
-#
-#        char = chr(event.GetKeyCode())
-#        self.log.write("EDITING THE TEXTCTRL: You Wrote '" + char + \
-#                       "' (KeyCode = " + str(event.GetKeyCode()) + ")\n")
-#        event.Skip()
-
-
-#    def OnComboBox(self, event):
-#
-#        selection = event.GetEventObject().GetValue()
-#        self.log.write("CHOICE FROM COMBOBOX: You Chose '" + selection + "'\n")
-#        event.Skip()
 
 
 class ArbreSavoirs(CT.CustomTreeCtrl):
@@ -7954,15 +8218,15 @@ class ArbreSavoirs(CT.CustomTreeCtrl):
 
 
 class ArbreCompetences(CT.CustomTreeCtrl):
-    def __init__(self, parent, savoirs):
+    def __init__(self, parent, type_ens):
 
         CT.CustomTreeCtrl.__init__(self, parent, -1, style = wx.TR_DEFAULT_STYLE|wx.TR_MULTIPLE|wx.TR_HIDE_ROOT)
         
         self.parent = parent
-        self.savoirs = savoirs
+        
         
         self.root = self.AddRoot(u"Compétences")
-        self.Construire(self.root, constantes.dicCompetences[savoirs.parent.classe.typeEnseignement])
+        self.Construire(self.root, constantes.dicCompetences[type_ens])
         
         self.ExpandAll()
         
@@ -8553,6 +8817,47 @@ class PopupInfoSeance(PopupInfoSysteme):
         self.rtp.Ouvrir()
         self.Layout()
         self.Fit()
+
+
+#############################################################################################################
+#
+# Dialog pour choisir le type de document à créer
+# 
+#############################################################################################################
+class DialogChoixDoc(wx.Dialog):
+    def __init__(self, parent,
+                 style=wx.DEFAULT_DIALOG_STYLE 
+                 ):
+
+        wx.Dialog.__init__(self, parent, -1, u"Créer ...", style = style, size = wx.DefaultSize)
+        self.SetMinSize((200,100))
+        sizer = wx.BoxSizer(wx.VERTICAL)
+        button = wx.Button(self, -1, u"Nouvelle Séquence")
+        button.SetToolTipString(u"Créer une nouvelle séquence pédagogique")
+        self.Bind(wx.EVT_BUTTON, self.OnSeq, button)
+        sizer.Add(button,0, wx.ALIGN_CENTRE|wx.ALL, 5)
+        
+        button = wx.Button(self, -1, u"Nouveau Projet")
+        button.SetToolTipString(u"Créer un nouveau projet")
+        self.Bind(wx.EVT_BUTTON, self.OnPrj, button)
+        sizer.Add(button,0,  wx.ALIGN_CENTRE|wx.ALL, 5)
+    
+        self.SetSizer(sizer)
+        sizer.Fit(self)
+        
+        self.SetReturnCode(0)
+        
+
+    def OnSeq(self, event):
+        print "seq"
+        self.SetReturnCode(1)
+        self.EndModal(1)
+
+    def OnPrj(self, event):
+        print "prj"
+        self.SetReturnCode(2)
+        self.EndModal(2)
+
 
 
 
