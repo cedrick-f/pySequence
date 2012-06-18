@@ -181,15 +181,15 @@ imagesSeance = {"R" : images.Icone_rotation,
                 "SS" : images.Icone_synthese_Seq}
 
 imagesProjet = {"Prj" : images.Icone_projet,
-                "Elv" : images.Icone_projet,
+                "Elv" : images.Icone_eleve,
                 "Sup" : images.Icone_projet,
                 "Tac" : images.Icone_projet
                 }
 
-imagesTaches =  {'Ana' : images.Icone_projet, 
-                 'Con' : images.Icone_projet, 
-                 'Rea' : images.Icone_projet, 
-                 'Val' : images.Icone_projet
+imagesTaches =  {'Ana' : images.Icone_CdCF, 
+                 'Con' : images.Icone_conception, 
+                 'Rea' : images.Icone_fabrication, 
+                 'Val' : images.Icone_validation
                 }
 
 imagesCI = [images.CI_1, images.CI_2, images.CI_3, images.CI_4,
@@ -1166,7 +1166,11 @@ NOM_PHASE_TACHE = {'Ana' : u"Analyse du besoin",
                    'Con' : u"Conception", 
                    'Rea' : u"Réalisation", 
                    'Val' : u"Validation"}
-
+def getLstPhase():
+    lst = []
+    for k in PHASE_TACHE:
+        lst.append(NOM_PHASE_TACHE[k])
+    return lst
 
 
 
