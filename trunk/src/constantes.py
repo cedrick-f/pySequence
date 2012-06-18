@@ -162,6 +162,7 @@ if not PORTABLE:
 #
 ####################################################################################
 dicimages =   {"Seq" : images.Icone_sequence,
+               "Cla" : images.Icone_classe,
                "Com" : images.Icone_competence,
                "Sav" : images.Icone_savoirs,
                "Obj" : images.Icone_objectif,
@@ -182,6 +183,7 @@ imagesSeance = {"R" : images.Icone_rotation,
 
 imagesProjet = {"Prj" : images.Icone_projet,
                 "Elv" : images.Icone_eleve,
+                'Prf' : images.Icone_prof,
                 "Sup" : images.Icone_projet,
                 "Tac" : images.Icone_projet
                 }
@@ -1013,42 +1015,8 @@ def getTextCI(lst):
         if i != len(lst)-1:
             t += "\n"
     return t
-#
-#def getTextPosCI(lst):
-#    return "-"+getTextCI+"-"
-#
-#
-#def getListPosCI(txt):
-#    txt = txt[1:-1]
-#    l = []
-#    for i in range(len(txt)/7):
-#        l.append(txt[:7])
-#        txt = txt[8:]
-#    return l
 
 
-
-
-
-    
-
-
-#def ouvrirConfig():
-#    print "ouvrirConfig"
-#    global CentresInterets
-#    
-#    config = ConfigParser.ConfigParser()
-#    config.read(os.path.join(PATH,'configuration.cfg'))
-#    
-#    section = "Centres d'interet"
-#    l = [""] * len(config.options(section))
-#    for o in config.options(section):
-#        l[eval(o)-1] = unicode(config.get(section,o), 'cp1252')
-#    CentresInterets = l
-#        
-#    section = "Effectifs classe"
-#    for k in Effectifs.keys():
-#        Effectifs[k][1] = config.getint(section,k)
 
 def getSavoir(seq, code, dic = None, c = None):
     if dic == None:
@@ -1078,6 +1046,16 @@ def getCompetence(seq, code, dic = None, c = None):
         return getCompetence(seq, code, dic[cd][1], c-1)
     
     
+def getAllCodes(dic):
+    lst = dic.keys()
+    for k in lst:
+        if type(dic[k]) == dict:
+            lst.extend(getAllCodes(dic[k]))
+    return lst
+
+
+
+
 
 #ouvrirConfig()
 #filterUnits="userSpaceOnUse"

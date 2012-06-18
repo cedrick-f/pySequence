@@ -362,7 +362,8 @@ Titres = [u"Séquence pédagogique",
           u"Elèves",
           u"Support",
           u"Tâches",
-          u"Projet"]
+          u"Projet", 
+          u"Equipe pédagogique"]
 
 class ElementDeSequence():
     def __init__(self):
@@ -1447,6 +1448,13 @@ class Projet(BaseDoc):
         return duree
                   
     ######################################################################################  
+    def GetDureeGraph(self):
+        duree = 0
+        for t in self.taches:
+            duree += t.GetDureeGraph()
+        return duree
+    
+    ######################################################################################  
     def GetPtCaract(self): 
         """ Renvoie la liste des points caractéristiques des zones actives de la fiche
             (pour l'animation SVG)
@@ -1489,8 +1497,8 @@ class Projet(BaseDoc):
         projet.set("Position", str(self.position))
         
         equipe = ET.SubElement(projet, "Equipe")
-        for i, e in enumerate(self.equipe):
-            equipe.set("Prof"+str(i), e)
+        for p in enumerate(self.equipe):
+            equipe.append(p.getBranche())
         
         projet.append(self.support.getBranche())
         
@@ -1514,8 +1522,11 @@ class Projet(BaseDoc):
         self.position = eval(branche.get("Position", "0"))
 
         brancheEqu = branche.find("Equipe")
+        self.equipe = []
         for i,e in enumerate(list(brancheEqu)):
-            self.equipe.append(brancheEqu.get("Prof"+str(i)))
+            prof = Prof(self, self.panelParent)
+            prof.setBranche(e)
+            self.equipe.append(prof)
 
         brancheSup = branche.find("Support")
         if brancheSup:
@@ -1582,7 +1593,11 @@ class Projet(BaseDoc):
         for t in self.taches:
             t.MiseAJourNomsEleves()
         
-    
+        
+    ######################################################################################  
+    def MiseAJourDureeEleves(self):
+        for e in self.eleves:
+            e.MiseAJourCodeBranche()
     
 #    ######################################################################################  
 #    def AjouterSystemeSeance(self):
@@ -1719,6 +1734,25 @@ class Projet(BaseDoc):
         self.SupprimerEleveDansPanelTache(i)
         self.panelPropriete.sendEvent()
     
+    
+    ######################################################################################  
+    def AjouterProf(self, event = None):
+        e = Prof(self, self.panelParent, len(self.equipe))
+        self.equipe.append(e)
+        e.ConstruireArbre(self.arbre, self.branchePrf)
+        self.arbre.Expand(self.branchePrf)
+        self.panelPropriete.sendEvent()
+        self.arbre.SelectItem(e.branche)
+        return
+    
+    ######################################################################################  
+    def SupprimerProf(self, event = None, item = None):
+        e = self.arbre.GetItemPyData(item)
+        i = self.equipe.index(e)
+        self.equipe.remove(e)
+        self.arbre.Delete(item)
+        self.panelPropriete.sendEvent()
+        
 #    ######################################################################################  
 #    def SelectSystemes(self, event = None):
 #        if recup_excel.ouvrirFichierExcel():
@@ -1741,13 +1775,23 @@ class Projet(BaseDoc):
 #            elif res == wx.ID_NO:
 #                print "Rien" 
         
-        
+    
+    
+    
+    
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
 #        print "ConstruireArbre séquence"
         self.arbre = arbre
         self.branche = arbre.AppendItem(branche, Titres[9], data = self, image = self.arbre.images["Prj"])
 
+        #
+        # Les profs
+        #
+        self.branchePrf = arbre.AppendItem(self.branche, Titres[10])
+        for e in self.equipe:
+            e.ConstruireArbre(arbre, self.branchePrf) 
+            
         #
         # Le support
         #
@@ -1814,26 +1858,25 @@ class Projet(BaseDoc):
         elif self.arbre.GetItemText(itemArbre) == Titres[8]: # Tache
             self.app.AfficherMenuContextuel([[u"Ajouter une tâche", self.AjouterTache]])
          
-        
+        elif self.arbre.GetItemText(itemArbre) == Titres[10]: # Eleve
+#            print u"Menu Séances"
+            self.app.AfficherMenuContextuel([[u"Ajouter un professeur", self.AjouterProf]])
                                              
          
             
     ######################################################################################       
-    def GetSystemesUtilises(self):
-#        print "GetSystemesUtilises"
+    def GetCompetencesUtil(self):
+        """ Renvoie les listes des codes 
+            des compétences utiles
+            (pour tracé fiche)
+        """
         lst = []
 #        print "  ", self.systemes
-        for s in self.systemes:
-            n = 0
-#            print "    ", self.seance
-            for se in self.seance:
-                ns = se.GetNbrSystemes(complet = True)
-#                print "      ", ns
-                if s.nom in ns.keys():
-                    n += ns[s.nom]
-            if n > 0:
-                lst.append(s)
-#        print lst
+        for c in constantes.getAllCodes(constantes.dicCompetences[self.classe.typeEnseignement]):
+            for t in self.taches:
+                if c in t.competences and not c in lst:
+                    lst.append(c)
+
         return lst
     
             
@@ -1847,29 +1890,21 @@ class Projet(BaseDoc):
         return n
     
     
-    ######################################################################################  
-    def GetToutesSeances(self):
-        l = []
-        for s in self.seance:
-            l.append(s)
-            if s.typeSeance in ["R", "S"]:
-                l.extend(s.GetToutesSeances())
-            
-        return l 
-
     
         
     ######################################################################################  
-    def GetIntituleSeances(self):
-        nomsSeances = []
-        intSeances = []
-        for s in self.GetToutesSeances():
-#            print s
-#            print s.intituleDansDeroul
+    def GetIntituleTaches(self):
+        """ Renvoie les listes des codes et des intitulés 
+            de toutes les tâches
+            (pour tracé fiche)
+        """
+        codTaches = []
+        intTaches = []
+        for s in self.taches:
             if hasattr(s, 'code') and s.intitule != "" and not s.intituleDansDeroul:
-                nomsSeances.append(s.code)
-                intSeances.append(s.intitule)
-        return nomsSeances, intSeances
+                codTaches.append(s.code)
+                intTaches.append(s.intitule)
+        return codTaches, intTaches
         
         
 
@@ -3205,6 +3240,9 @@ class Tache(Objet_sequence):
     def GetDuree(self):
         return self.duree.v[0]
                 
+    ######################################################################################  
+    def GetDureeGraph(self):
+        return min(self.GetDuree(), 8)       
     
     ######################################################################################  
     def SetDuree(self, duree):
@@ -3213,7 +3251,7 @@ class Tache(Objet_sequence):
 #        print "SetDuree", self.EstSousSeance()
         self.duree.v[0] = duree
         self.panelPropriete.MiseAJourDuree()
-            
+        self.parent.MiseAJourDureeEleves()
         
     ######################################################################################  
     def SetIntitule(self, text):           
@@ -3801,7 +3839,15 @@ class Eleve():
         if hasattr(self, 'tip'):
             self.tip.SetCode(u"Nom : "+self.GetNomPrenom())
             
-
+    ######################################################################################  
+    def GetDuree(self):
+        d = 0
+        for t in self.parent.taches:
+            if self.id in t.eleves:
+                d += t.GetDuree()
+        return d
+        
+        
     ######################################################################################  
     def SetImage(self):
         self.tip.SetImage(self.avatar)
@@ -3809,13 +3855,13 @@ class Eleve():
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
         self.arbre = arbre
-#        self.codeBranche = wx.StaticText(self.arbre, -1, self.nom)
+        self.codeBranche = wx.StaticText(self.arbre, -1, "")
 #        print "image",self.arbre.images["Sys"], self.image.GetWidth()
 #        if self.image == None or self.image == wx.NullBitmap:
         image = self.arbre.images["Elv"]
 #        else:
 #            image = self.image.ConvertToImage().Scale(20, 20).ConvertToBitmap()
-        self.branche = arbre.AppendItem(branche, u"Elève "+str(self.id), data = self,#, wnd = self.codeBranche
+        self.branche = arbre.AppendItem(branche, u"Elève "+str(self.id), data = self, wnd = self.codeBranche,
                                         image = image)
 
         
@@ -3833,15 +3879,63 @@ class Eleve():
             return self.branche
     
     
+    ######################################################################################  
+    def MiseAJourCodeBranche(self):
+        duree = self.GetDuree()
+        self.codeBranche.SetLabel(str(duree))
+        tol = 5
+        if abs(duree-70) < tol:
+            self.codeBranche.SetBackgroundColour(wx.GREEN)
+        else:
+            self.codeBranche.SetBackgroundColour(wx.RED)
+            if duree < 70:
+                self.codeBranche.SetToolTipString(u"Durée de travail insuffisante")
+            else:
+                self.codeBranche.SetToolTipString(u"Durée de travail trop importante")
     
         
     
 
-    
+####################################################################################
+#
+#   Classe définissant les propriétés d'un élève
+#
+####################################################################################
+class Prof(Eleve):
+    def __init__(self, parent, panelParent, id = 0):
+        Eleve.__init__(self, parent, panelParent, id)
+        
+    ######################################################################################  
+    def ConstruireArbre(self, arbre, branche):
+        self.arbre = arbre
+        self.codeBranche = wx.StaticText(self.arbre, -1, "")
+#        print "image",self.arbre.images["Sys"], self.image.GetWidth()
+#        if self.image == None or self.image == wx.NullBitmap:
+        image = self.arbre.images["Prf"]
+#        else:
+#            image = self.image.ConvertToImage().Scale(20, 20).ConvertToBitmap()
+        self.branche = arbre.AppendItem(branche, u"Prof "+str(self.id), data = self, wnd = self.codeBranche,
+                                        image = image)
         
         
+    ######################################################################################  
+    def getBranche(self):
+        """ Renvoie la branche XML de la compétence pour enregistrement
+        """
+#        print "getBranche eleve", self.nom
+        root = ET.Element("Prof")
+        root.set("Id", str(self.id))
+        root.set("Nom", self.nom)
+        root.set("Prenom", self.prenom)
+        if self.avatar != None:
+            root.set("Avatar", img2str(self.avatar.ConvertToImage()))
         
+        return root
         
+    ######################################################################################  
+    def AfficherMenuContextuel(self, itemArbre):
+        if itemArbre == self.branche:
+            self.parent.app.AfficherMenuContextuel([[u"Supprimer", functools.partial(self.parent.SupprimerProf, item = itemArbre)]])
         
         
         
@@ -4800,19 +4894,12 @@ class FenetreProjet(FenetreDocument):
         
         
         self.classe.ConstruireArbre(self.arbre, root)
-        print "0"
         self.projet.ConstruireArbre(self.arbre, root)
         
-        print "1"
-        
         self.projet.OrdonnerTaches()
-        print "2"
         self.projet.PubDescription()
-        print "3"
         self.projet.SetLiens()
-        print "4"
-        self.projet.VerifPb()
-        print "5"
+        self.projet.MiseAJourDureeEleves()
         self.projet.VerrouillerClasse()
         self.arbre.SelectItem(self.classe.branche)
 
@@ -5281,7 +5368,7 @@ class PanelPropriete_Projet(PanelPropriete):
 #        self.sizer.Add(textctrl, (0,1), flag = wx.EXPAND)
         self.Bind(wx.EVT_TEXT, self.EvtText, textctrl)
         
-        titre = wx.StaticBox(self, -1, u"Commentaires")
+        titre = wx.StaticBox(self, -1, u"Problématique")
         sb = wx.StaticBoxSizer(titre)
         commctrl = wx.TextCtrl(self, -1, u"", style=wx.TE_MULTILINE)
         sb.Add(commctrl, 1, flag = wx.EXPAND)
