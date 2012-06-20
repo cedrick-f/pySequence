@@ -57,7 +57,7 @@ maxFont = 0.1
 font_family = "arial"
 
 # Marges
-margeX = 0.04
+margeX = 0.02
 margeY = 0.04
 
 # Ecarts
@@ -143,7 +143,7 @@ BCoulCompS = (0.4, 0.2, 0.3, 1)      # couleur "Soutenance"
 
 
 # Zone des tâches
-posZTaches = [posZDeroul[0] + wPhases + wDuree + ecartX*3/2, None]
+posZTaches = [posZDeroul[0] + wPhases + wDuree + ecartX*3/4, None]
 tailleZTaches = [None, None]
 hHoraire = None
 ecartTacheY = None  # Ecartement entre les tâches de phase différente
@@ -588,21 +588,37 @@ def Draw(ctx, prj, mouchard = False):
     for e in prj.eleves : 
         l.append(e.GetNomPrenom())
     if len(l) > 0:
+        
         tableauH(ctx, l, posZElevesH[0], posZElevesH[1], 
                 tailleZElevesH[0], 0, tailleZElevesH[1], 
-                va = 'c', ha = 'g', orient = 'h', coul = (0.8,0.75,0.9))
+                va = 'c', ha = 'g', orient = 'h', coul = constantes.COUL_ELEVES)
         
         for i, e in enumerate(prj.eleves):
+            Ic = constantes.COUL_ELEVES[i][0]
+            Bc = constantes.COUL_ELEVES[i][1]
             x = posZElevesV[0]+(i+0.5)*tailleZElevesV[0]/len(prj.eleves)
             y = posZElevesH[1]+(i+0.5)*tailleZElevesH[1]/len(prj.eleves)
             
-            ctx.set_source_rgb(0.8,0.75,0.9)
+            ctx.set_source_rgb(Ic[0],Ic[1],Ic[2])
             ctx.set_line_width(0.003)
-            ctx.move_to(x, y)
-            ctx.line_to(x, posZElevesV[1] + tailleZElevesV[1])
             
             ctx.move_to(posZElevesH[0]+tailleZElevesH[0], y)
             ctx.line_to(posZComp[0]+tailleZComp[0], y)
+            
+            ctx.stroke()
+            
+            
+        for i, e in enumerate(prj.eleves):
+            Ic = constantes.COUL_ELEVES[i][0]
+            Bc = constantes.COUL_ELEVES[i][1]
+            x = posZElevesV[0]+(i+0.5)*tailleZElevesV[0]/len(prj.eleves)
+            y = posZElevesH[1]+(i+0.5)*tailleZElevesH[1]/len(prj.eleves)
+            
+            ctx.set_source_rgb(Ic[0],Ic[1],Ic[2])
+            ctx.set_line_width(0.003)
+            
+            ctx.move_to(x, y)
+            ctx.line_to(x, posZElevesV[1] + tailleZElevesV[1])
             
             ctx.stroke()
             
@@ -610,6 +626,7 @@ def Draw(ctx, prj, mouchard = False):
             
         
         e = 0.003
+        ctx.set_line_width(0.003)
         for i in range(len(prj.eleves)) :
             x = posZElevesV[0]+(i+0.5)*tailleZElevesV[0]/len(prj.eleves)
             y = posZElevesH[1]+(i+0.5)*tailleZElevesH[1]/len(prj.eleves)+e
@@ -642,8 +659,11 @@ def Draw(ctx, prj, mouchard = False):
         if phase != t.phase:
             if phase != None:
                 yh_phase[t.phase][1] = y - yh_phase[t.phase][0]
-            
                 hp = y-yp
+                
+                ctx.set_source_rgb(BCoulTache[phase][0],BCoulTache[phase][1],BCoulTache[phase][2])
+                ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
+                                                   cairo.FONT_WEIGHT_NORMAL)
                 show_text_rect(ctx, constantes.NOM_PHASE_TACHE[phase], 
                        (posZDeroul[0] + ecartX/4, yp, 
                         wPhases, hp), ha = 'c', orient = 'v', b = 0.1) 
@@ -655,6 +675,17 @@ def Draw(ctx, prj, mouchard = False):
         if t.phase != '':  
             y = DrawTacheRacine(ctx, t, y)    
             phase = t.phase
+        
+    if phase != None:
+        yh_phase[t.phase][1] = y - yh_phase[t.phase][0]
+        hp = y-yp
+        ctx.set_source_rgb(BCoulTache[phase][0],BCoulTache[phase][1],BCoulTache[phase][2])
+        ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
+                                           cairo.FONT_WEIGHT_NORMAL)
+        show_text_rect(ctx, constantes.NOM_PHASE_TACHE[phase], 
+               (posZDeroul[0] + ecartX/4, yp, 
+                wPhases, hp), ha = 'c', orient = 'v', b = 0.1)    
+        
         
     #
     # Durée de la séquence
@@ -1652,17 +1683,23 @@ def tableauV(ctx, titres, x, y, w, ht, hl, nlignes = 0, va = 'c', ha = 'c', orie
     
 def tableauH(ctx, titres, x, y, wt, wc, h, nCol = 0, va = 'c', ha = 'c', orient = 'h', 
              coul = (0.9,0.9,0.9), contenu = []):
+    
+
     hc = h/len(titres)
     _y = y
     _coul = ctx.get_source().get_rgba()
-#    print "tableauH", _coul
-    for titre in titres:
+
+    for i, titre in enumerate(titres):
         ctx.rectangle(x, _y, wt, hc)
         if type(coul) == dict :
             col = coul[titre.rstrip("1234567890.")]
         else:
-            col = coul
-        ctx.set_source_rgb (col[0], col[1], col[2])
+            print type(coul[0])
+            if type(coul[0]) == tuple:
+                col = coul[i]
+            else:
+                col = coul
+        ctx.set_source_rgb (col[0][0], col[0][1], col[0][2])
         ctx.fill_preserve ()
         ctx.set_source_rgba (_coul[0], _coul[1], _coul[2], _coul[3])
         show_text_rect(ctx, titre, (x, _y, wt, hc), va = va, ha = ha, orient = orient)
