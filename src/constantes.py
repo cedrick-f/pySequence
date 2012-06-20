@@ -199,17 +199,30 @@ imagesCI = [images.CI_1, images.CI_2, images.CI_3, images.CI_4,
             images.CI_9, images.CI_10, images.CI_11, images.CI_12,
             images.CI_13, images.CI_14, images.CI_15, images.CI_16]
 
+
+def getCompetencesProjet(dic):
+    d = {"O1" : dicCompetencesET["O1"],
+         "O2" : dicCompetencesET["O2"],
+         "O6" : dicCompetencesET["O6"]
+         }
+
+    d.update(dic)
+    
+    d["O8"][1]["CO8.es"] = [u"Justifier des éléments d'une simulation relative au comportement de tout ou partie d'un système et les écarts par rapport au réel", 5, True]
+    return d
+
+
 ####################################################################################
 #
 #   Définition des constantes pour l'enseignement transversal
 #
 ####################################################################################
 dicCompetencesET = {"O1" : [u"Caractériser des systèmes privilégiant un usage raisonné du point de vue développement durable",
-                          {"CO1.1" : [u"Justifier les choix des matériaux, des structures d'un système et les énergies mises en oeuvre dans une approche de développement durable",],
-                           "CO1.2" : [u"Justifier le choix d'une solution selon des contraintes d'ergonomie et d'effets sur la santé de l'homme et du vivant",]}],
+                          {"CO1.1" : [u"Justifier les choix des matériaux, des structures d'un système et les énergies mises en oeuvre dans une approche de développement durable",5, True],
+                           "CO1.2" : [u"Justifier le choix d'une solution selon des contraintes d'ergonomie et d'effets sur la santé de l'homme et du vivant",3, True]}],
                   "O2" : [u"Identifier les éléments permettant la limitation de l’Impact environnemental d’un système et de ses constituants",
-                          {"CO2.1" : [u"Identifier les flux et la forme de l'énergie, caractériser ses transformations et/ou modulations et estimer l'efficacité énergétique globale d'un système"],
-                           "CO2.2" : [u"Justifier les solutions constructives d'un système au regard des impacts environnementaux et économiques engendrés tout au long de son cycle de vie"],}],
+                          {"CO2.1" : [u"Identifier les flux et la forme de l'énergie, caractériser ses transformations et/ou modulations et estimer l'efficacité énergétique globale d'un système",4, True],
+                           "CO2.2" : [u"Justifier les solutions constructives d'un système au regard des impacts environnementaux et économiques engendrés tout au long de son cycle de vie",5, True],}],
                   "O3" : [u"Identifier les éléments influents du développement d’un système",
                           {"CO3.1" : [u"Décoder le cahier des charges fonctionnel d'un système"],
                            "CO3.2" : [u"Evaluer la compétitivité d'un système d'un point de vue technique et économique"],}],
@@ -223,10 +236,9 @@ dicCompetencesET = {"O1" : [u"Caractériser des systèmes privilégiant un usage
                            "CO5.2" : [u"Identifier des variables internes et externes utiles à une modélisation, simuler et valider le comportement du modèle"],
                            "CO5.3" : [u"Evaluer un écart entre le comportement du réel et le comportement du modèle en fonction des paramètres proposés"]}],
                   "O6" : [u"Communiquer une idée, un principe ou une solution technique, un projet, y compris en langue étrangère",
-                          {"CO6.1" : [u"Décrire une idée, un principe, une solution, un projet en utilisant des outils de représentation adaptés"],
-                           "CO6.2" : [u"Décrire le fonctionnement et/ou l'exploitation d'un système en utilisant l'outil de description le plus pertinent"],
-                           "CO6.3" : [u"Présenter et argumenter des démarches, des résultats, y compris dans une langue étrangère",]}]}
-
+                          {"CO6.1" : [u"Décrire une idée, un principe, une solution, un projet en utilisant des outils de représentation adaptés",3, True],
+                           "CO6.2" : [u"Décrire le fonctionnement et/ou l'exploitation d'un système en utilisant l'outil de description le plus pertinent",3, True],
+                           "CO6.3" : [u"Présenter et argumenter des démarches, des résultats, y compris dans une langue étrangère",5, True]}]}
 
 
 
@@ -368,20 +380,21 @@ CentresInteretsITEC = [u"Besoin et performance d'un système",
                        ]
 
 dicCompetencesITEC = {"O7" : [u"Imaginer une solution, répondre à un besoin",
-                          {"CO7.itec1" : [u"Identifier et justifier un problème technique à partir de l'analyse globale d'un système (approche Matière - Energie - Information)"],
-                           "CO7.itec2" : [u"Proposer des solutions à un problème technique identifié en participant à des démarches de créativité, choisir et justifier la solution retenue"],
-                           "CO7.itec3" : [u"Définir, à l'aide d'un modeleur numérique, les formes et dimensions d'une pièce d'un mécanisme à partir des contraintes fonctionnelles, de son principe de réalisation et de son matériau"],
-                           "CO7.itec4" : [u"Définir, à l'aide d'un modeleur numérique, les modifications d'un mécanisme à partir des contraintes fonctionnelles"],}],
+                          {"CO7.itec1" : [u"Identifier et justifier un problème technique à partir de l'analyse globale d'un système (approche Matière - Energie - Information)",5],
+                           "CO7.itec2" : [u"Proposer des solutions à un problème technique identifié en participant à des démarches de créativité, choisir et justifier la solution retenue",6],
+                           "CO7.itec3" : [u"Définir, à l'aide d'un modeleur numérique, les formes et dimensions d'une pièce d'un mécanisme à partir des contraintes fonctionnelles, de son principe de réalisation et de son matériau",3],
+                           "CO7.itec4" : [u"Définir, à l'aide d'un modeleur numérique, les modifications d'un mécanisme à partir des contraintes fonctionnelles",2],}],
                   "O8" : [u"Valider des solutions techniques",
-                          {"CO8.itec1" : [u"Paramétrer un logiciel de simulation mécanique pour obtenir les caractéristiques d'une loi d'entrée/sortie d'un mécanisme simple"],
-                           "CO8.itec2" : [u"Interpréter les résultats d'une simulation mécanique pour valider une solution ou modifier une pièce ou un mécanisme"],
-                           "CO8.itec3" : [u"Mettre en oeuvre un protocole d'essais et de mesures, interpréter les résultats"],
-                           "CO8.itec4" : [u"Comparer et interpréter le résultat d'une simulation d'un comportement mécanique avec un comportement réel"],}],
+                          {"CO8.itec1" : [u"Paramétrer un logiciel de simulation mécanique pour obtenir les caractéristiques d'une loi d'entrée/sortie d'un mécanisme simple",3],
+                           "CO8.itec2" : [u"Interpréter les résultats d'une simulation mécanique pour valider une solution ou modifier une pièce ou un mécanisme",4],
+                           "CO8.itec3" : [u"Mettre en oeuvre un protocole d'essais et de mesures, interpréter les résultats",5],
+                           "CO8.itec4" : [u"Comparer et interpréter le résultat d'une simulation d'un comportement mécanique avec un comportement réel",3],}],
                   "O9" : [u"Gérer la vie du produit",
-                          {"CO9.itec1" : [u"Expérimenter des procédés pour caractériser les paramètres de transformation de la matière et leurs conséquences sur la définition et l'obtention de pièces"],
-                           "CO9.itec2" : [u"Réaliser et valider un prototype obtenu par rapport à tout ou partie du cahier des charges initial"],
-                           "CO9.itec3" : [u"Intégrer les pièces prototypes dans le système à modifier pour valider son comportement et ses performances",]}]}
+                          {"CO9.itec1" : [u"Expérimenter des procédés pour caractériser les paramètres de transformation de la matière et leurs conséquences sur la définition et l'obtention de pièces",3],
+                           "CO9.itec2" : [u"Réaliser et valider un prototype obtenu par rapport à tout ou partie du cahier des charges initial",4],
+                           "CO9.itec3" : [u"Intégrer les pièces prototypes dans le système à modifier pour valider son comportement et ses performances",4]}]}
 
+dicCompetencesITEC_prj = getCompetencesProjet(dicCompetencesITEC)
 
 dicSavoirsITEC = {"1" : [u"Projet technologique",
                          {"1.1" : [u"La démarche de projet",
@@ -456,20 +469,21 @@ CentresInteretsEE = [u"Typologie des sytèmes énergétiques",
                        ]
 
 dicCompetencesEE = {"O7" : [u"Imaginer une solution, répondre à un besoin",
-                          {"CO7.ee1" : [u"Participer à une démarche de conception dans le but de proposer plusieurs solutions possibles à un problème technique identifié en lien avec un enjeu énergétique"],
-                           "CO7.ee2" : [u"Justifier une solution retenue en intégrant les conséquences des choix sur le triptyque Matériau - Energie - Information"],
-                           "CO7.ee3" : [u"Définir la structure, la constitution d'un système en fonction des caractéristiques technico-économiques et environnementales attendues"],
-                           "CO7.ee4" : [u"Définir les modifications de la structure, les choix de constituants et du type de système de gestion d'une chaîne d'énergie afin de répondre à une évolution d'un cahier des charges"],}],
+                          {"CO7.ee1" : [u"Participer à une démarche de conception dans le but de proposer plusieurs solutions possibles à un problème technique identifié en lien avec un enjeu énergétique",7],
+                           "CO7.ee2" : [u"Justifier une solution retenue en intégrant les conséquences des choix sur le triptyque Matériau - Energie - Information",6],
+                           "CO7.ee3" : [u"Définir la structure, la constitution d'un système en fonction des caractéristiques technico-économiques et environnementales attendues",4],
+                           "CO7.ee4" : [u"Définir les modifications de la structure, les choix de constituants et du type de système de gestion d'une chaîne d'énergie afin de répondre à une évolution d'un cahier des charges",4],}],
                   "O8" : [u"Valider des solutions techniques",
-                          {"CO8.ee1" : [u"Renseigner un logiciel de simulation du comportement énergétique avec les caractéristiques du système et les paramètres externes pour un point de fonctionnement donné"],
-                           "CO8.ee2" : [u"Interpréter les résultats d'une simulation afin de valider une solution ou l'optimiser"],
-                           "CO8.ee3" : [u"Comparer et interpréter le résultat d'une simulation d'un comportement d'un système avec un comportement réel"],
-                           "CO8.ee4" : [u"Mettre en oeuvre un protocole d'essais et de mesures sur le prototype d'une chaîne d'énergie, interpréter les résultats"],}],
+                          {"CO8.ee1" : [u"Renseigner un logiciel de simulation du comportement énergétique avec les caractéristiques du système et les paramètres externes pour un point de fonctionnement donné",3],
+                           "CO8.ee2" : [u"Interpréter les résultats d'une simulation afin de valider une solution ou l'optimiser",4],
+                           "CO8.ee3" : [u"Comparer et interpréter le résultat d'une simulation d'un comportement d'un système avec un comportement réel",3],
+                           "CO8.ee4" : [u"Mettre en oeuvre un protocole d'essais et de mesures sur le prototype d'une chaîne d'énergie, interpréter les résultats",5],}],
                   "O9" : [u"Gérer la vie d'un système",
-                          {"CO9.ee1" : [u"Expérimenter des procédés de stockage, de production, de transport, de transformation, d'énergie pour aider à la conception d'une chaîne d'énergie"],
-                           "CO9.ee2" : [u"Réaliser et valider un prototype obtenu en réponse à tout ou partie du cahier des charges initial"],
-                           "CO9.ee3" : [u"Intégrer un prototype dans un système à modifier pour valider son comportement et ses performances",]}]}
+                          {"CO9.ee1" : [u"Expérimenter des procédés de stockage, de production, de transport, de transformation, d'énergie pour aider à la conception d'une chaîne d'énergie",3],
+                           "CO9.ee2" : [u"Réaliser et valider un prototype obtenu en réponse à tout ou partie du cahier des charges initial",4],
+                           "CO9.ee3" : [u"Intégrer un prototype dans un système à modifier pour valider son comportement et ses performances",4]}]}
 
+dicCompetencesEE_prj = getCompetencesProjet(dicCompetencesEE)
 
 dicSavoirsEE = {"1" : [u"Projet technologique",
                          {"1.1" : [u"La démarche de projet",
@@ -561,17 +575,19 @@ CentresInteretsAC = [u"Participation à une étude architecturale",
                        ]
 
 dicCompetencesAC = {"O7" : [u"Imaginer une solution, répondre à un besoin",
-                          {"CO7.ac1" : [u"PArticiper à une étude architecturale, dans une démarche de développement durable"],
-                           "CO7.ac2" : [u"Proposer/Choisir des solutions techniques répondant aux contraintes et attentes d'une construction"],
-                           "CO7.ac3" : [u"Concevoir une organisation de réalisation"],}],
+                          {"CO7.ac1" : [u"PArticiper à une étude architecturale, dans une démarche de développement durable",5],
+                           "CO7.ac2" : [u"Proposer/Choisir des solutions techniques répondant aux contraintes et attentes d'une construction",7],
+                           "CO7.ac3" : [u"Concevoir une organisation de réalisation",4],}],
                   "O8" : [u"Valider des solutions techniques",
-                          {"CO8.ac1" : [u"Simuler un comportement structurel, thermique et acoustique de tout ou partie d'une construction"],
-                           "CO8.ac2" : [u"Analyser les résultats issus de simulations ou d'essais de laboratoire"],
-                           "CO8.ac3" : [u"Analyser/Valider les choix structurels et de confort"],}],
+                          {"CO8.ac1" : [u"Simuler un comportement structurel, thermique et acoustique de tout ou partie d'une construction",4],
+                           "CO8.ac2" : [u"Analyser les résultats issus de simulations ou d'essais de laboratoire",4],
+                           "CO8.ac3" : [u"Analyser/Valider les choix structurels et de confort",4],}],
                   "O9" : [u"Gérer la vie d'un système",
-                          {"CO9.ac1" : [u"Améliorer les performances d'une construction du point de vue énergétique, domotique et informationnel"],
-                           "CO9.ac2" : [u"Identifier et décrire les causes de désordre dans une construction"],
-                           "CO9.ac3" : [u"Valoriser la fin de vie du produit : déconstruction, gestion des déchets, valorisation des produits",]}]}
+                          {"CO9.ac1" : [u"Améliorer les performances d'une construction du point de vue énergétique, domotique et informationnel",5],
+                           "CO9.ac2" : [u"Identifier et décrire les causes de désordre dans une construction",3],
+                           "CO9.ac3" : [u"Valoriser la fin de vie du produit : déconstruction, gestion des déchets, valorisation des produits",3]}]}
+
+dicCompetencesAC_prj = getCompetencesProjet(dicCompetencesAC)
 
 
 dicSavoirsAC = {"1" : [u"Projet technologique",
@@ -643,19 +659,22 @@ CentresInteretsSIN = [u"Configuration et performances du traitement de l'informa
                        ]
 
 dicCompetencesSIN = {"O7" : [u"Imaginer une solution, répondre à un besoin",
-                          {"CO7.sin1" : [u"Décoder la notice technique d'un système, vérifier la conformité du fonctionnement"],
-                           "CO7.sin2" : [u"Décoder le cahier des charges fonctionnel décrivant le besoin exprimé, identifier la fonction définie par un besoin exprimé, faire des mesures pour caractériser cette fonction et conclure sur sa conformité"],
-                           "CO7.sin3" : [u"Exprimer le principe de fonctionnement d'un système à partir des diagrammes SysML pertinents. Repérer les constituants de la chaîne d'énergie et d'information"],}],
+                          {"CO7.sin1" : [u"Décoder la notice technique d'un système, vérifier la conformité du fonctionnement",4],
+                           "CO7.sin2" : [u"Décoder le cahier des charges fonctionnel décrivant le besoin exprimé, identifier la fonction définie par un besoin exprimé, faire des mesures pour caractériser cette fonction et conclure sur sa conformité",5],
+                           "CO7.sin3" : [u"Exprimer le principe de fonctionnement d'un système à partir des diagrammes SysML pertinents. Repérer les constituants de la chaîne d'énergie et d'information",4],}],
                   "O8" : [u"Valider des solutions techniques",
-                          {"CO8.sin1" : [u"Rechercher et choisir une solution logicielle ou matérielle au regard de la définition d'un système"],
-                           "CO8.sin2" : [u"Etablir pour une fonction précédemment identifiée, un modèle de comportement à partir de mesures faites sur le sytème"],
-                           "CO8.sin3" : [u"Traduire sous forme graphique l'architecture de la chaîne d'information identifiée pour un système et définir les paramètres d'utilisation du simulateur"],
-                           "CO8.sin4" : [u"Identifier les variables simulées et mesurées sur un système pour valider le choix d'une solution"],}],
+                          {"CO8.sin1" : [u"Rechercher et choisir une solution logicielle ou matérielle au regard de la définition d'un système",3],
+                           "CO8.sin2" : [u"Etablir pour une fonction précédemment identifiée, un modèle de comportement à partir de mesures faites sur le sytème",4],
+                           "CO8.sin3" : [u"Traduire sous forme graphique l'architecture de la chaîne d'information identifiée pour un système et définir les paramètres d'utilisation du simulateur",3],
+                           "CO8.sin4" : [u"Identifier les variables simulées et mesurées sur un système pour valider le choix d'une solution",4],}],
                   "O9" : [u"Gérer la vie d'un système",
-                          {"CO9.sin1" : [u"Utiliser les outils adaptés pour planifier un projet (diagramme de Gantt, chemin critique, données économiques, réunions de projet)"],
-                           "CO9.sin2" : [u"Installer, configurer et instrumenter un système réel. Mettre en oeuvre la chaîne d'acquisition puis acquérir, traiter, transmettre et restituer l'information"],
-                           "CO9.sin3" : [u"Rechercher des évolutions de constituants dans le cadre d'une démarche de veille technologique, analyser la structure d'un système pour intervenir sur les constituants dans le cadre d'une opération de maintenance"],
-                           "CO9.sin4" : [u"Rechercher et choisir de nouveaux constituants d'un système (ou d'un projet finalisé) au regard d'évolutions technologiques, socioéconomiques spécifiées dans un cahier des charges. Organiser le projet permettant de maquettiser la solution choisie",]}]}
+                          {"CO9.sin1" : [u"Utiliser les outils adaptés pour planifier un projet (diagramme de Gantt, chemin critique, données économiques, réunions de projet)",3],
+                           "CO9.sin2" : [u"Installer, configurer et instrumenter un système réel. Mettre en oeuvre la chaîne d'acquisition puis acquérir, traiter, transmettre et restituer l'information",5],
+                           "CO9.sin3" : [u"Rechercher des évolutions de constituants dans le cadre d'une démarche de veille technologique, analyser la structure d'un système pour intervenir sur les constituants dans le cadre d'une opération de maintenance",4],
+                           "CO9.sin4" : [u"Rechercher et choisir de nouveaux constituants d'un système (ou d'un projet finalisé) au regard d'évolutions technologiques, socioéconomiques spécifiées dans un cahier des charges. Organiser le projet permettant de maquettiser la solution choisie",5]}]}
+
+dicCompetencesSIN_prj = getCompetencesProjet(dicCompetencesSIN)
+
 
 dicSavoirsSIN = {"1" : [u"Projet technologique",
                          {"1.1" : [u"La démarche de projet",
@@ -997,6 +1016,19 @@ dicCompetences = {'ET'     : dicCompetencesET,
                   'EE'     : dicCompetencesEE, 
                   'SIN'    : dicCompetencesSIN}
 
+dicCompetences_prj = {'ITEC'   : dicCompetencesITEC_prj, 
+                      'AC'     : dicCompetencesAC_prj, 
+                      'EE'     : dicCompetencesEE_prj, 
+                      'SIN'    : dicCompetencesSIN_prj}
+
+
+dicCompetences_prj_simple = {}
+for k,v in dicCompetences_prj.items():
+    dic = {}
+    for d in v.values():
+        dic.update(d[1])
+    dicCompetences_prj_simple[k] = dic
+
 dicSavoirs = {'ET'     : dicSavoirsET,
               'ITEC'   : dicSavoirsITEC, 
               'AC'     : dicSavoirsAC, 
@@ -1051,7 +1083,7 @@ def getAllCodes(dic):
     lst = dic.keys()
     for k in dic.keys():
 #        print dic[k]
-        if len(dic[k]) > 1:
+        if len(dic[k]) > 1 and type(dic[k][1]) == dict:
             lst.extend(getAllCodes(dic[k][1]))
     return lst
 

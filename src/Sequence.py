@@ -606,20 +606,24 @@ class Objet_sequence():
     
             
 class Classe():
-    def __init__(self, app, panelParent = None, intitule = u""):
+    def __init__(self, app, panelParent = None, intitule = u"", pourProjet = False):
         self.intitule = intitule
         
-        self.typeEnseignement = 'ET'
+        if pourProjet:
+            self.typeEnseignement = 'ITEC'
+        else:
+            self.typeEnseignement = 'ET'
         
-        self.ci_ET = constantes.CentresInteretsET
-        self.posCI_ET = constantes.PositionCibleCIET
+        if not pourProjet:
+            self.ci_ET = constantes.CentresInteretsET
+            self.posCI_ET = constantes.PositionCibleCIET
         
         self.effectifs = constantes.Effectifs
         self.nbrGroupes = constantes.NbrGroupes
         calculerEffectifs(self)
         
         if panelParent:
-            self.panelPropriete = PanelPropriete_Classe(panelParent, self)
+            self.panelPropriete = PanelPropriete_Classe(panelParent, self, pourProjet)
             
         self.panelParent = panelParent
         self.app = app
@@ -1712,7 +1716,7 @@ class Projet(BaseDoc):
                   
     ######################################################################################  
     def AjouterEleve(self, event = None):
-        if len(self.eleves < 6):
+        if len(self.eleves) < 6:
             e = Eleve(self, self.panelParent, len(self.eleves))
             self.eleves.append(e)
             e.ConstruireArbre(self.arbre, self.brancheElv)
@@ -1883,22 +1887,14 @@ class Projet(BaseDoc):
             (pour tracé fiche)
         """
         lst = []
-        for c in constantes.getAllCodes(constantes.dicCompetences[self.classe.typeEnseignement]):
+        for c in constantes.getAllCodes(constantes.dicCompetences_prj[self.classe.typeEnseignement]):
             for t in self.taches:
                 if c in t.competences and not c in lst:
                     lst.append(c)
         lst.sort()
         return lst
     
-            
-    ######################################################################################  
-    def GetNbreSeances(self):
-        n = 0
-        for s in self.seance:
-            if s.typeSeance in ["R", "S"]:
-                n += len(s.sousSeances)
-            n += 1
-        return n
+    
     
     
     ######################################################################################  
@@ -3811,7 +3807,10 @@ class Personne():
 
     ######################################################################################  
     def GetNomPrenom(self):
-        return self.nom.upper() + ' ' + self.prenom.capitalize()
+        if self.nom == "" and self.prenom == "":
+            return self.titre.capitalize()+' '+str(self.id)
+        else:
+            return self.nom.upper() + ' ' + self.prenom.capitalize()
          
     ######################################################################################  
     def SetNom(self, nom):
@@ -3830,11 +3829,9 @@ class Personne():
     def SetCode(self):
 #        if hasattr(self, 'codeBranche'):
 #            self.codeBranche.SetLabel(self.nom)
-        if self.nom != "":
-            t = self.GetNomPrenom()
-        else:
-            t = self.titre.capitalize()
-        
+
+        t = self.GetNomPrenom()
+
         if hasattr(self, 'arbre'):
             self.arbre.SetItemText(self.branche, t)
             
@@ -3860,7 +3857,7 @@ class Personne():
 
 
 ######################################################################################  
-def supprime_accent(self, ligne):
+def supprime_accent(ligne):
     """ supprime les accents du texte source """
     accents = { 'a': ['à', 'ã', 'á', 'â'],
                 'e': ['é', 'è', 'ê', 'ë'],
@@ -4838,7 +4835,7 @@ class FenetreProjet(FenetreDocument):
         #
         # La classe
         #
-        self.classe = Classe(self, self.panelProp)
+        self.classe = Classe(self, self.panelProp, pourProjet = True)
         
         #
         # Le projet
@@ -5488,11 +5485,12 @@ class PanelPropriete_Projet(PanelPropriete):
 #
 ####################################################################################
 class PanelPropriete_Classe(PanelPropriete):
-    def __init__(self, parent, classe):
+    def __init__(self, parent, classe, pourProjet):
         PanelPropriete.__init__(self, parent)
         self.classe = classe
         self.pasVerrouille = True
         
+
         #
         # Type d'enseignement
         #
@@ -5504,81 +5502,84 @@ class PanelPropriete_Classe(PanelPropriete):
         for i, e in enumerate(constantes.listEnseigmenent):
             rb.SetItemToolTip(i, constantes.Enseigmenent[e])
         self.Bind(wx.EVT_RADIOBOX, self.EvtRadioBox, rb)
-
+        if pourProjet:
+            rb.EnableItem(0, False) 
+            
         self.sizer.Add(rb, (0,0), flag = wx.EXPAND|wx.ALL)
         self.cb_type = rb
         
         #
         # Centres d'intérêt
         #
-        sb1 = wx.StaticBox(self, -1, u"Centres d'intérêt ET", size = (200,-1))
-        sbs1 = wx.StaticBoxSizer(sb1,wx.VERTICAL)
-        list = ULC.UltimateListCtrl(self, -1, 
-                                    agwStyle=wx.LC_REPORT
-                                         #| wx.BORDER_SUNKEN
-                                         | wx.BORDER_NONE
-                                         #| wx.ULC_EDIT_LABELS
-                                         #| wx.LC_SORT_ASCENDING
-                                         #| wx.LC_NO_HEADER
-                                         | wx.LC_VRULES
-                                         | wx.LC_HRULES
-                                         #| wx.LC_SINGLE_SEL
-                                         | ULC.ULC_HAS_VARIABLE_ROW_HEIGHT)
-        
-        info = ULC.UltimateListItem()
-        info._mask = wx.LIST_MASK_TEXT | wx.LIST_MASK_FORMAT
-        info._format = wx.LIST_FORMAT_LEFT
-        info._text = u"CI"
-         
-        list.InsertColumnInfo(0, info)
-
-        info = ULC.UltimateListItem()
-        info._format = wx.LIST_FORMAT_LEFT
-        info._mask = wx.LIST_MASK_TEXT | wx.LIST_MASK_FORMAT | ULC.ULC_MASK_FONT
-        info._text = u"Intitulé"
-        
-        list.InsertColumnInfo(1, info)
-        
-        list.SetColumnWidth(0, 35)
-        list.SetColumnWidth(1, -3)
-        
-        
-        for i,p in enumerate(['M', 'E', 'I', 'F', 'S', 'C']):
+        if not pourProjet:
+            sb1 = wx.StaticBox(self, -1, u"Centres d'intérêt ET", size = (200,-1))
+            sbs1 = wx.StaticBoxSizer(sb1,wx.VERTICAL)
+            list = ULC.UltimateListCtrl(self, -1, 
+                                        agwStyle=wx.LC_REPORT
+                                             #| wx.BORDER_SUNKEN
+                                             | wx.BORDER_NONE
+                                             #| wx.ULC_EDIT_LABELS
+                                             #| wx.LC_SORT_ASCENDING
+                                             #| wx.LC_NO_HEADER
+                                             | wx.LC_VRULES
+                                             | wx.LC_HRULES
+                                             #| wx.LC_SINGLE_SEL
+                                             | ULC.ULC_HAS_VARIABLE_ROW_HEIGHT)
+            
             info = ULC.UltimateListItem()
-            info._mask = wx.LIST_MASK_TEXT
-            info._format = wx.LIST_FORMAT_CENTER
-            info._text = p
+            info._mask = wx.LIST_MASK_TEXT | wx.LIST_MASK_FORMAT
+            info._format = wx.LIST_FORMAT_LEFT
+            info._text = u"CI"
+             
+            list.InsertColumnInfo(0, info)
+    
+            info = ULC.UltimateListItem()
+            info._format = wx.LIST_FORMAT_LEFT
+            info._mask = wx.LIST_MASK_TEXT | wx.LIST_MASK_FORMAT | ULC.ULC_MASK_FONT
+            info._text = u"Intitulé"
             
-            list.InsertColumnInfo(i+2, info)
-            list.SetColumnWidth(i+2, 20)
-        
+            list.InsertColumnInfo(1, info)
             
-        
-        self.list = list
-        self.PeuplerListe()
-        
-        self.list.Bind(wx.EVT_LEFT_UP, self.OnLeftUp)
-        self.list.Bind(wx.EVT_LEFT_DOWN, self.OnLeftDown)
-        self.leftDown = False
-        
-#        txt = wx.TextCtrl(self, -1, getTextCI(self.classe.ci_ET),
-#                          style = wx.TE_MULTILINE)
-        sbs1.Add(list, flag = wx.EXPAND|wx.ALL, border = 5)
-#        txt.Bind(wx.EVT_TEXT, self.EvtTxtCI)
-#        self.txtCi = txt
-        if self.classe.typeEnseignement != 'ET' :
-            self.list.Enable(False)
-        
-        btn = wx.Button(self, -1, u"Sélectionner depuis un fichier Excel (.xls)")
-        aide = u"Sélectionner depuis un fichier Excel (.xls)"
-        btn.SetToolTip(wx.ToolTip(aide))
-        btn.SetHelpText(aide)
-        self.btn = btn
-        sbs1.Add(btn, flag = wx.EXPAND|wx.ALL, border = 5)
-        self.Bind(wx.EVT_BUTTON, self.SelectCI, btn)
-        self.sizer.Add(sbs1, (0,2), flag = wx.EXPAND|wx.ALL)    
-        
-        self.sizer.AddGrowableCol(2)
+            list.SetColumnWidth(0, 35)
+            list.SetColumnWidth(1, -3)
+            
+            
+            for i,p in enumerate(['M', 'E', 'I', 'F', 'S', 'C']):
+                info = ULC.UltimateListItem()
+                info._mask = wx.LIST_MASK_TEXT
+                info._format = wx.LIST_FORMAT_CENTER
+                info._text = p
+                
+                list.InsertColumnInfo(i+2, info)
+                list.SetColumnWidth(i+2, 20)
+            
+                
+            
+            self.list = list
+            self.PeuplerListe()
+            
+            self.list.Bind(wx.EVT_LEFT_UP, self.OnLeftUp)
+            self.list.Bind(wx.EVT_LEFT_DOWN, self.OnLeftDown)
+            self.leftDown = False
+            
+    #        txt = wx.TextCtrl(self, -1, getTextCI(self.classe.ci_ET),
+    #                          style = wx.TE_MULTILINE)
+            sbs1.Add(list, flag = wx.EXPAND|wx.ALL, border = 5)
+    #        txt.Bind(wx.EVT_TEXT, self.EvtTxtCI)
+    #        self.txtCi = txt
+            if self.classe.typeEnseignement != 'ET' :
+                self.list.Enable(False)
+            
+            btn = wx.Button(self, -1, u"Sélectionner depuis un fichier Excel (.xls)")
+            aide = u"Sélectionner depuis un fichier Excel (.xls)"
+            btn.SetToolTip(wx.ToolTip(aide))
+            btn.SetHelpText(aide)
+            self.btn = btn
+            sbs1.Add(btn, flag = wx.EXPAND|wx.ALL, border = 5)
+            self.Bind(wx.EVT_BUTTON, self.SelectCI, btn)
+            self.sizer.Add(sbs1, (0,2), flag = wx.EXPAND|wx.ALL)    
+            
+            self.sizer.AddGrowableCol(2)
         
         
         
@@ -5631,15 +5632,17 @@ class PanelPropriete_Classe(PanelPropriete):
         
     ######################################################################################  
     def MiseAJourType(self):
-        self.list.Enable(self.pasVerrouille and self.classe.typeEnseignement == 'ET')
-        self.btn.Enable(self.pasVerrouille and self.classe.typeEnseignement == 'ET')
+        if hasattr(self, 'list'):
+            self.list.Enable(self.pasVerrouille and self.classe.typeEnseignement == 'ET')
+            self.btn.Enable(self.pasVerrouille and self.classe.typeEnseignement == 'ET')
             
     ######################################################################################  
     def MiseAJour(self):
         self.MiseAJourType()
         self.cb_type.SetStringSelection(self.classe.typeEnseignement)
         
-        self.PeuplerListe()
+        if hasattr(self, 'list'):
+            self.PeuplerListe()
                 
         self.ec.MiseAJour()
 
@@ -5748,8 +5751,9 @@ class PanelPropriete_Classe(PanelPropriete):
     ######################################################################################  
     def Verrouiller(self, etat):
         self.cb_type.Enable(etat)
-        self.list.Enable(etat and (self.classe.typeEnseignement == 'ET'))
-        self.btn.Enable(etat and (self.classe.typeEnseignement == 'ET'))
+        if hasattr(self, 'list'):
+            self.list.Enable(etat and (self.classe.typeEnseignement == 'ET'))
+            self.btn.Enable(etat and (self.classe.typeEnseignement == 'ET'))
         self.pasVerrouille = etat
 #        for c in self.GetChildren():
 #            self.Enable(etat)
@@ -7250,7 +7254,7 @@ class PanelPropriete_Tache(PanelPropriete):
         #
         cbox = wx.StaticBox(self, -1, u"Compétences employées")
         cbsizer = wx.StaticBoxSizer(cbox, wx.HORIZONTAL)
-        self.arbre = ArbreCompetences(self, tache.parent.classe.typeEnseignement, cacheRacine = True)
+        self.arbre = ArbreCompetencesPrj(self, tache.parent.classe.typeEnseignement, cacheRacine = True)
         cbsizer.Add(self.arbre,1, flag = wx.EXPAND|wx.GROW)
         self.sizer.Add(cbsizer, (0,3), (4,1), flag = wx.EXPAND)
         self.sizer.AddGrowableCol(3)
@@ -7397,7 +7401,8 @@ class PanelPropriete_Tache(PanelPropriete):
         
         self.textctrl.SetValue(self.tache.intitule)
         
-        self.cbPhas.SetStringSelection(constantes.NOM_PHASE_TACHE[self.tache.phase])
+        if self.tache.phase != '':
+            self.cbPhas.SetStringSelection(constantes.NOM_PHASE_TACHE[self.tache.phase])
         
         if sendEvt:
             self.sendEvent()
@@ -8476,7 +8481,7 @@ class ArbreCompetences(CT.CustomTreeCtrl):
         self.parent = parent
         
         self.root = self.AddRoot(u"Compétences")
-        self.Construire(self.root, constantes.dicCompetences[type_ens])
+        self.Construire(self.root, type_ens = type_ens)
         
         self.ExpandAll()
         
@@ -8490,8 +8495,10 @@ class ArbreCompetences(CT.CustomTreeCtrl):
         self.Bind(CT.EVT_TREE_ITEM_CHECKED, self.OnItemCheck)
         
     ####################################################################################
-    def Construire(self, branche, dic, ct_type = 0):
+    def Construire(self, branche, dic = None, type_ens = None, ct_type = 0):
 #        print "Construire", dic
+        if dic == None:
+            dic = constantes.dicCompetences[type_ens]
         clefs = dic.keys()
         clefs.sort()
         for k in clefs:
@@ -8546,9 +8553,22 @@ class ArbreCompetences(CT.CustomTreeCtrl):
 
 
 
+class ArbreCompetencesPrj(ArbreCompetences):
+    def __init__(self, parent, type_ens, cacheRacine = False):
+        ArbreCompetences.__init__(self, parent, type_ens, cacheRacine)
+        
 
-
-
+    ####################################################################################
+    def Construire(self, branche, dic = None, type_ens = None, ct_type = 0):
+#        print "Construire", dic
+        if dic == None:
+            dic = constantes.dicCompetences_prj[type_ens]
+        clefs = dic.keys()
+        clefs.sort()
+        for k in clefs:
+            b = self.AppendItem(branche, k+" "+dic[k][0], ct_type=ct_type)
+            if len(dic[k])>1 and type(dic[k][1]) == dict:
+                self.Construire(b, dic[k][1], ct_type=1)
 
 
 
