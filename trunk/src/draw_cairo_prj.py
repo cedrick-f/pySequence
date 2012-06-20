@@ -110,7 +110,7 @@ centreImg = (posImg[0] + tailleImg[0] / 2 + 0.0006, posImg[1] + tailleImg[0] / 2
 # Zone d'organisation du projet (grand cadre)
 posZOrganis = (margeX, 0.24)
 bordureZOrganis = 0.01
-tailleZOrganis = (0.72414-0.1, 1-ecartY-posZOrganis[1]-bordureZOrganis)
+tailleZOrganis = (LargeurTotale-2*margeX, 1-ecartY-posZOrganis[1]-bordureZOrganis)
 
 # Zone de déroulement du projet
 posZDeroul = [margeX, None]
@@ -118,16 +118,16 @@ tailleZDeroul = [None, None]
 IcoulZDeroul = (1, 1, 0.7, 0.85)
 BcoulZDeroul = (0.4, 0.4, 0.03, 1)
 fontZDeroul = 0.014
-wPhases = 0.03      # Taille du label "phases"
-wDuree = 0.02       # Taille de la fleche "duree"
+wPhases = 0.02      # Taille du label "phases"
+wDuree = 0.015       # Taille de la fleche "duree"
 
 
 # Zones des tableaux des éléves
-posZElevesV = [None, 0.265]
+posZElevesV = [None, 0.24]
 tailleZElevesV = [None, None]
 posZElevesH = [posZDeroul[0], posZElevesV[1]]
 tailleZElevesH = [None, None]
-wColEleves = 0.025
+wColEleves = 0.020
 xEleves = []
 yEleves = []
 
@@ -136,6 +136,10 @@ posZComp = [None, None]
 tailleZComp = [None, None]
 wColComp = 0.018
 xComp = {}
+ICoulCompR = (0.85, 0.7, 0.95, 0.2)      # couleur "Revue"
+ICoulCompS = (0.95, 0.7, 0.85, 0.2)      # couleur "Soutenance"
+BCoulCompR = (0.3, 0.2, 0.4, 1)      # couleur "Revue"
+BCoulCompS = (0.4, 0.2, 0.3, 1)      # couleur "Soutenance"
 
 
 # Zone des tâches
@@ -546,7 +550,7 @@ def Draw(ctx, prj, mouchard = False):
         ctx.set_line_width(0.001)
         tableauV(ctx, competences, posZComp[0], posZComp[1], 
                 tailleZComp[0], tailleZComp[1], 
-                0, nlignes = 0, va = 'c', ha = 'g', orient = 'v', coul = (0.8,0.8,0.8))
+                0, nlignes = 0, va = 'c', ha = 'g', orient = 'v', coul = BCoulCompS)
         
         wc = tailleZComp[0]/len(competences)
         _x = posZComp[0]
@@ -557,8 +561,10 @@ def Draw(ctx, prj, mouchard = False):
             ctx.move_to(_x, _y0)# + posZTaches[1] - posZComp[1])
             ctx.line_to(_x, _y1)
             ctx.stroke()
-            
-            ctx.set_source_rgba(0.8,0.8,0.8, 0.2)
+            if len(constantes.dicCompetences_prj_simple[prj.classe.typeEnseignement][s]) > 2:
+                ctx.set_source_rgba(ICoulCompS[0], ICoulCompS[1], ICoulCompS[2], 0.2)
+            else:
+                ctx.set_source_rgba(ICoulCompR[0], ICoulCompR[1], ICoulCompR[2], 0.2)
             ctx.rectangle(_x, _y0,  
                           wc, _y1-_y0)
             ctx.fill()
@@ -628,6 +634,7 @@ def Draw(ctx, prj, mouchard = False):
     y = posZTaches[1]
     yh_phase = {}
     phase = None
+    yp = y
     for t in prj.taches:
         if not t.phase in yh_phase.keys():
             yh_phase[t.phase] = [y,None]
@@ -635,7 +642,15 @@ def Draw(ctx, prj, mouchard = False):
         if phase != t.phase:
             if phase != None:
                 yh_phase[t.phase][1] = y - yh_phase[t.phase][0]
+            
+                hp = y-yp
+                show_text_rect(ctx, constantes.NOM_PHASE_TACHE[phase], 
+                       (posZDeroul[0] + ecartX/4, yp, 
+                        wPhases, hp), ha = 'c', orient = 'v', b = 0.1) 
+            
             y += ecartTacheY
+            yp = y
+            
         
         if t.phase != '':  
             y = DrawTacheRacine(ctx, t, y)    
@@ -865,14 +880,14 @@ def DrawTacheRacine(ctx, tache, y):
     # Flèche indiquant la durée
     #
     h = hHoraire * tache.GetDureeGraph()
-    fleche_verticale(ctx, posZTaches[0] - wDuree/2 - ecartX/2, y, 
+    fleche_verticale(ctx, posZTaches[0] - wDuree/2 - ecartX/4, y, 
                      h, wDuree, (0.9,0.8,0.8,0.5))
     ctx.set_source_rgb(0.5,0.8,0.8)
     ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                               cairo.FONT_WEIGHT_BOLD)
     show_text_rect(ctx, getHoraireTxt(tache.GetDuree()), 
-                   (posZTaches[0] - wDuree - ecartX/2, y, 0.02, h), 
-                   orient = 'v', b = 0.2)
+                   (posZTaches[0] - wDuree - ecartX/4, y, wDuree, h), 
+                   orient = 'v', b = 0.1)
     
     #
     # Rectangles actifs et points caractéristiques
