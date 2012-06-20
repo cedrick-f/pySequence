@@ -1928,39 +1928,26 @@ class Projet(BaseDoc):
 #        posi = draw_cairo.posPos + draw_cairo.taillePos
 #        print self.rect
 
-        return
+
         
-        if self.CI.HitTest(x, y):
-            return self.CI.HitTest(x, y)
-#        elif dansRectangle(x, y, (draw_cairo.posObj + draw_cairo.tailleObj,)):
-##            self.arbre.DoSelectItem(self.brancheObj)
-#            return self.brancheObj
-        elif dansRectangle(x, y, (draw_cairo.posPre + draw_cairo.taillePre,)):
-            for ls in self.prerequisSeance:
-                h = ls.HitTest(x,y)
-                if h != None:
-                    return h
-#            self.arbre.DoSelectItem(self.branchePre)
-            return self.branchePre
-        else:
-            branche = None
-            autresZones = self.seance + self.systemes + self.obj.values()
-            continuer = True
-            i = 0
-            while continuer:
-                if i >= len(autresZones):
+        branche = None
+        autresZones = self.taches + self.eleves + [self.support]
+        continuer = True
+        i = 0
+        while continuer:
+            if i >= len(autresZones):
+                continuer = False
+            else:
+                branche = autresZones[i].HitTest(x, y)
+                if branche:
                     continuer = False
-                else:
-                    branche = autresZones[i].HitTest(x, y)
-                    if branche:
-                        continuer = False
-                i += 1
-            
-            if branche == None:
-                if hasattr(self, 'rect') and dansRectangle(x, y, self.rect):
-                    return self.branche
-                
-            return branche
+            i += 1
+        
+        if branche == None:
+            if hasattr(self, 'rect') and dansRectangle(x, y, self.rect):
+                return self.branche
+#        print branche
+        return branche
         
     ######################################################################################  
     def HitTestPosition(self, x, y):
@@ -3438,23 +3425,7 @@ class Tache(Objet_sequence):
 #            self.arbre.DoSelectItem(self.branche)
             return self.branche
         
-        else:
-            if self.typeSeance in ["R", "S"]:
-                ls = self.sousSeances
-            else:
-                return
-            continuer = True
-            i = 0
-            branche = None
-            while continuer:
-                if i >= len(ls):
-                    continuer = False
-                else:
-                    branche = ls[i].HitTest(x, y)
-                    if branche:
-                        continuer = False
-                i += 1
-            return branche
+        
         
         
         
