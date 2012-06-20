@@ -93,7 +93,7 @@ fontPos = 0.014
 
 
 # Problématique
-posPro = (posEqu[0] + tailleEqu[0] + ecartX/2, margeY + taillePos[1] + ecartY/2)
+posPro = [posEqu[0] + tailleEqu[0] + ecartX/2, margeY + taillePos[1] + ecartY/2]
 taillePro = [LargeurTotale - margeX - posPro[0], posEqu[1] + tailleEqu[1] - posPro[1]]
 IcoulPro = (0.8, 0.9, 0.8, 0.85)
 BcoulPro = (0.25, 0.3, 0.2, 1)
@@ -107,56 +107,42 @@ IcoulImg = (0.8, 0.8, 1, 0.85)
 BcoulImg = (0.1, 0.1, 0.25, 1)
 centreImg = (posImg[0] + tailleImg[0] / 2 + 0.0006, posImg[1] + tailleImg[0] / 2 - 0.004)
 
-
-# Zone de commentaire
-fontIntComm = 0.01
-posComm = [0.05, None]
-tailleComm = [0.72414-0.1, None]
-intComm = []
-
 # Zone d'organisation du projet (grand cadre)
-posZOrganis = (0.05, 0.24)
-tailleZOrganis = [0.72414-0.1, None]
+posZOrganis = (margeX, 0.24)
 bordureZOrganis = 0.01
-
-# Rectangle de l'intitulé
-tailleIntitule = [0.4, 0.04]
-posIntitule = [(0.72414-tailleIntitule[0])/2, posZOrganis[1]-tailleIntitule[1]]
-IcoulIntitule = (0.98, 0.99, 0.98, 0.8)
-BcoulIntitule = (0.2, 0.8, 0.2, 1)
-FontIntitule = 0.02
+tailleZOrganis = (0.72414-0.1, 1-ecartY-posZOrganis[1]-bordureZOrganis)
 
 # Zone de déroulement du projet
-posZDeroul = (0.06, 0.3)
+posZDeroul = [margeX, None]
 tailleZDeroul = [None, None]
+IcoulZDeroul = (1, 1, 0.7, 0.85)
+BcoulZDeroul = (0.4, 0.4, 0.03, 1)
+fontZDeroul = 0.014
+wPhases = 0.03      # Taille du label "phases"
+wDuree = 0.02       # Taille de la fleche "duree"
+
+
+# Zones des tableaux des éléves
+posZElevesV = [None, 0.265]
+tailleZElevesV = [None, None]
+posZElevesH = [posZDeroul[0], posZElevesV[1]]
+tailleZElevesH = [None, None]
+wColEleves = 0.025
+xEleves = []
+yEleves = []
 
 # Zone du tableau des compétences
-posZComp = [None, 0.265]
+posZComp = [None, None]
 tailleZComp = [None, None]
-wColComp = 0.025
+wColComp = 0.018
 xComp = {}
 
-# Zone du tableau des éléves
-posZEleves = [None, 0.265]
-tailleZEleves = [0.07, None]
-wColEleves = 0.025
-xEleves = {"I" : None,
-             "R" : None,
-             "P" : None}
-
-# Zone des intitulés des tâches
-fontIntTaches = 0.01
-posZIntTaches = [0.06, None]
-tailleZIntTaches = [0.72414-0.12, None]
-hIntTache = 0.02
-intituleTaches = []
 
 # Zone des tâches
-posZTaches = (0.08, 0.35)
+posZTaches = [posZDeroul[0] + wPhases + wDuree + ecartX*3/2, None]
 tailleZTaches = [None, None]
-
 hHoraire = None
-ecartTacheY = None
+ecartTacheY = None  # Ecartement entre les tâches de phase différente
 BCoulTache = {'Ana' : (0.3,0.5,0.5), 
               'Con' : (0.5,0.3,0.5), 
               'Rea' : (0.5,0.5,0.3), 
@@ -166,6 +152,8 @@ ICoulTache = {'Ana' : (0.6, 0.8, 0.8),
               'Con' : (0.8, 0.6, 0.8), 
               'Rea' : (0.8, 0.8, 0.6), 
               'Val' : (0.6, 0.6, 1.0)}
+
+ecartYElevesTaches = 0.05
 
 
 def str2coord(str):
@@ -242,8 +230,8 @@ def enregistrerConfigFiche(nomFichier):
 
     section = "Tableau demarche"
     config.add_section(section)
-    config.set(section, "posY", str(posZEleves[1]))
-    config.set(section, "dimX", str(tailleZEleves[0]))
+    config.set(section, "posY", str(posZElevesV[1]))
+    config.set(section, "dimX", str(tailleZElevesV[0]))
     
     section = "Intitule des seances"
     config.add_section(section)
@@ -322,8 +310,8 @@ def ouvrirConfigFiche(nomFichier):
     wColComp = config.getfloat(section,"col")
 
     section = "Tableau demarche"
-    posZEleves[1] = config.getfloat(section,"posY")
-    tailleZEleves[0] = config.getfloat(section,"dimX")
+    posZElevesV[1] = config.getfloat(section,"posY")
+    tailleZElevesV[0] = config.getfloat(section,"dimX")
     
     section = "Intitule des seances"
     posZIntTaches[0] = config.getfloat(section,"posX")
@@ -342,74 +330,64 @@ def ouvrirConfigFiche(nomFichier):
 ######################################################################################  
 def DefinirZones(prj, ctx):
     """ Calcule les positions et dimensions des différentes zones de tracé
-        en fonction du nombre d'éléments (séances, systèmes)
+        en fonction du nombre d'éléments (élèves, tâches, compétences)
     """
-    global wEff, hHoraire, ecartTacheY, intituleTaches, fontIntTaches, fontIntComm, intComm
+    global hHoraire, ecartTacheY, intituleTaches, fontIntTaches, xEleves, yEleves
     
-#    # Zone de commentaire
-#    if prj.commentaires == u"":
-#        tailleComm[1] = 0
-#    else:
-#        
-#        tailleComm[1], intComm = calc_h_texte(ctx, u"Commentaires : " + prj.commentaires, tailleComm[0], fontIntComm)
-#
-#    posComm[1] = 1-tailleComm[1]-margeY
-    
-    # Zone d'organisation de la séquence (grand cadre)
-    tailleZOrganis[1] = 1-ecartY-posZOrganis[1]-bordureZOrganis
-
-    # Rectangle de l'intitulé
-    posIntitule[1] = posZOrganis[1]-tailleIntitule[1]
-
-    # Zone des intitulés des tâches
-    intituleTaches = []
-    tailleZIntTaches[1] = 0
-    for intS in prj.GetIntituleTaches()[1]:
-        h, t = calc_h_texte(ctx, intS, tailleZIntTaches[0], fontIntTaches)
-        intituleTaches.append([intS[0],h,t])
-        tailleZIntTaches[1] += h
-    posZIntTaches[1] = posZOrganis[1] + tailleZOrganis[1] - tailleZIntTaches[1]
-    
-    # Zone du tableau des compétences
+    #
+    # Zone du tableau des compétences - X
+    #
     competences = prj.GetCompetencesUtil()
     tailleZComp[0] = wColComp * len(competences)
-    tailleZComp[1] = tailleZOrganis[1] - ecartY - tailleZIntTaches[1]
     posZComp[0] = posZOrganis[0] + tailleZOrganis[0] - tailleZComp[0]
     for i, s in enumerate(competences):
-        xComp[s.nom] = posZComp[0] + (i+0.5) * wColComp
+        xComp[s] = posZComp[0] + (i+0.5) * wColComp
     
-    
+    #
     # Zone du tableau des élèves
-    tailleZEleves[0] = wColEleves * len(prj.eleves)
-    posZEleves[0] = posZComp[0] - tailleZEleves[0] - ecartX
-    tailleZEleves[1] = tailleZComp[1]
-    for i, e in enumerate(prj.eleves):
-        xEleves[e.id] = posZEleves[0] + (i+0.5) * wColEleves
+    #
+    tailleZElevesV[0] = wColEleves * len(prj.eleves)
+    tailleZElevesH[1] = tailleZElevesV[0]
+    posZElevesV[0] = posZComp[0] - tailleZElevesV[0] - ecartX/2
+    tailleZElevesH[0] = posZElevesV[0]-posZElevesH[0]
+    tailleZElevesV[1] = posZOrganis[1] + tailleZOrganis[1] - posZElevesV[1]
+    xEleves = []
+    yEleves = []
+    for i in range(len(prj.eleves)):
+        xEleves.append(posZElevesV[0] + (i+0.5) * wColEleves)
+        yEleves.append(posZElevesH[1] + (i+0.5) * wColEleves)
 
+
+    # Zone du tableau des compétences - Y
+    posZComp[1] = posZElevesH[1] + tailleZElevesH[1]
+    tailleZComp[1] = ecartYElevesTaches            
+                 
                  
     # Zone de déroulement du projet
-    tailleZDeroul[0] = posZEleves[0] - posZDeroul[0] - ecartX
-    tailleZDeroul[1] = tailleZComp[1]
+    posZDeroul[1] = posZElevesH[1] + tailleZElevesH[1] + tailleZComp[1]
+    tailleZDeroul[0] = posZElevesV[0] - posZDeroul[0] - ecartX/2
+    tailleZDeroul[1] = posZOrganis[1] + tailleZOrganis[1] - posZDeroul[1]
     
     
     # Zone des tâches
-    tailleZTaches[0] = tailleZDeroul[0] - 0.05 # écart pour les durées
-    tailleZTaches[1] = tailleZComp[1] - posZTaches[1] + posZDeroul[1] - 0.05
+    posZTaches[1] = posZDeroul[1] + ecartY/2
+    tailleZTaches[0] = posZDeroul[0] + tailleZDeroul[0] - posZTaches[0] - ecartX/2
+    tailleZTaches[1] = tailleZDeroul[1] - ecartY - 0.05    # écart pour la durée totale
     
-
-    hHoraire = tailleZTaches[1] / (prj.GetDureeGraph() + 0.25*(len(prj.taches)-1))
+    
+    hHoraire = tailleZTaches[1] / (prj.GetDureeGraph() + 0.25*(prj.GetNbrPhases()-1))
     ecartTacheY = hHoraire/4
     if ecartTacheY > 0.02:
         ecartTacheY = 0.02
-        hHoraire = (tailleZTaches[1] - (len(prj.taches)-1)*ecartTacheY) / prj.GetDureeGraph()
+        hHoraire = (tailleZTaches[1] - (prj.GetNbrPhases()-1)*ecartTacheY) / prj.GetDureeGraph()
 
 
-######################################################################################
-curseur = None 
-def InitCurseur():
-    global cursY
-#    curseur = [posZTaches[0], posZTaches[1]]
-    cursY = posZTaches[1]
+#######################################################################################
+#curseur = None 
+#def InitCurseur():
+#    global cursY
+##    curseur = [posZTaches[0], posZTaches[1]]
+#    cursY = posZTaches[1]
     
     
 def getPts(lst_rect):
@@ -424,8 +402,9 @@ def Draw(ctx, prj, mouchard = False):
         dans un contexte cairo <ctx>
     """
     
+    
 #        print "Draw séquence"
-    InitCurseur()
+#    InitCurseur()
     
     
     #
@@ -438,26 +417,16 @@ def Draw(ctx, prj, mouchard = False):
     ctx.set_font_options(options)
     
     DefinirZones(prj, ctx)
-    
-    
+
+    prj.pt_caract = []
 #    #
-#    # Flèche
+#    #  Cadre et Intitulé du projet
 #    #
-#    rayon = 0.30
-#    alpha0 = 55
-#    alpha1 = 155
-#    y = posPro[1]+taillePro[1] - rayon*sin(alpha0*pi/180)
-#    fleche_ronde(ctx, 0.72414/2, y, rayon, alpha0, alpha1, 0.035, 0.06, (0.8, 0.9, 0.8, 1))
-    
-    
-    #
-    #  Cadre et Intitulé du projet
-    #
-    prj.rect = [(posZOrganis[0]-bordureZOrganis, posZOrganis[1], 
-                 tailleZOrganis[0]+bordureZOrganis*2, tailleZOrganis[1]+bordureZOrganis)]
-    prj.pt_caract = [curve_rect_titre(ctx, prj.intitule,  
-                                     prj.rect[0], 
-                                     BcoulIntitule, IcoulIntitule, FontIntitule)]
+#    prj.rect = [(posZOrganis[0]-bordureZOrganis, posZOrganis[1], 
+#                 tailleZOrganis[0]+bordureZOrganis*2, tailleZOrganis[1]+bordureZOrganis)]
+#    prj.pt_caract = [curve_rect_titre(ctx, prj.intitule,  
+#                                     prj.rect[0], 
+#                                     BcoulIntitule, IcoulIntitule, FontIntitule)]
     
     
     
@@ -486,7 +455,7 @@ def Draw(ctx, prj, mouchard = False):
     taillePos[0] =  0.72414 - posPos[0] - margeX
     ctx.set_line_width (0.0015)
     prj.rectPos = DrawPeriodes(ctx, prj.position, tailleTypeEns = tailleTypeEns)
-    prj.rect.append(posPos+taillePos)
+#    prj.rect.append(posPos+taillePos)
     
     
     #
@@ -507,13 +476,171 @@ def Draw(ctx, prj, mouchard = False):
         w = image.get_width()*1.1
         h = image.get_height()*1.1
         
+        s = min(tailleImg[0]/w, tailleImg[1]/h)
         ctx.translate(posImg[0], posImg[1])
-        ctx.scale(tailleImg[0]/w, tailleImg[0]/w)
+        ctx.scale(s, s)
         ctx.set_source_surface(image, 0, 0)
         ctx.paint ()
         ctx.restore()
         
             
+    
+    
+
+    #
+    #  Equipe
+    #
+    rectEqu = posEqu + tailleEqu
+    prj.pt_caract.append(curve_rect_titre(ctx, u"Equipe pédagogique",  rectEqu, BcoulEqu, IcoulEqu, fontEqu))
+    
+    lstTexte = []
+    for p in prj.equipe:
+        lstTexte.append(p.GetNomPrenom())
+    lstCodes = ["*"] * len(lstTexte)
+
+    if len(lstTexte) > 0:
+        r = liste_code_texte(ctx, lstCodes, lstTexte, posEqu[0], posEqu[1], tailleEqu[0], tailleEqu[1]+0.0001, 0.008)
+
+#        prj.pts_caract.append(getPts(r))
+        
+
+    #
+    #  Problématique
+    #
+    prj.pt_caract.append(posPro)
+    rectPro = posPro + taillePro
+    prj.pt_caract.append(curve_rect_titre(ctx, u"Problématique",  rectPro, BcoulPro, IcoulPro, fontPro))
+    ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+                                       cairo.FONT_WEIGHT_NORMAL)
+    show_text_rect(ctx, prj.problematique, 
+                   rectPro, ha = 'g', b = 0.2,
+                   fontsizeMinMax = (-1, 0.016))
+    
+    
+    #
+    #  Support
+    #
+    prj.support.pt_caract = []
+    rectSup = posSup+tailleSup
+    prj.support.pt_caract.append(curve_rect_titre(ctx, u"Support",  rectSup, BcoulSup, IcoulSup, fontSup))
+    ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+                                       cairo.FONT_WEIGHT_NORMAL)
+    show_text_rect(ctx, prj.support.nom, 
+                   rectSup, ha = 'c', b = 0.2,
+                   fontsizeMinMax = (-1, 0.016))
+    
+    
+    
+    
+        
+        
+    #
+    #  Tableau des compétenecs
+    #    
+    competences = prj.GetCompetencesUtil()
+    
+    if competences != []:
+        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+                              cairo.FONT_WEIGHT_NORMAL)
+        ctx.set_source_rgb(0, 0, 0)
+        ctx.set_line_width(0.001)
+        tableauV(ctx, competences, posZComp[0], posZComp[1], 
+                tailleZComp[0], tailleZComp[1], 
+                0, nlignes = 0, va = 'c', ha = 'g', orient = 'v', coul = (0.8,0.8,0.8))
+        
+        wc = tailleZComp[0]/len(competences)
+        _x = posZComp[0]
+        _y0, _y1 = posZElevesH[1], posZDeroul[1] + tailleZDeroul[1]
+        for s in competences:
+#            s.rect=((_x, _y, wc, posZTaches[1] - posZComp[1]),)
+            ctx.set_source_rgb(0, 0, 0)
+            ctx.move_to(_x, _y0)# + posZTaches[1] - posZComp[1])
+            ctx.line_to(_x, _y1)
+            ctx.stroke()
+            
+            ctx.set_source_rgba(0.8,0.8,0.8, 0.2)
+            ctx.rectangle(_x, _y0,  
+                          wc, _y1-_y0)
+            ctx.fill()
+            _x += wc
+        ctx.set_source_rgb(0, 0, 0)
+        ctx.move_to(_x, _y0)# + posZTaches[1] - posZComp[1])
+        ctx.line_to(_x, _y1)   
+        ctx.stroke()
+
+    
+
+
+    #
+    #  Tableau des élèves
+    #    
+    ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+                          cairo.FONT_WEIGHT_NORMAL)
+    ctx.set_source_rgb(0, 0, 0)
+    ctx.set_line_width(0.001)
+    l=[]
+    for e in prj.eleves : 
+        l.append(e.GetNomPrenom())
+    if len(l) > 0:
+        tableauH(ctx, l, posZElevesH[0], posZElevesH[1], 
+                tailleZElevesH[0], 0, tailleZElevesH[1], 
+                va = 'c', ha = 'g', orient = 'h', coul = (0.8,0.75,0.9))
+        
+        for i, e in enumerate(prj.eleves):
+            x = posZElevesV[0]+(i+0.5)*tailleZElevesV[0]/len(prj.eleves)
+            y = posZElevesH[1]+(i+0.5)*tailleZElevesH[1]/len(prj.eleves)
+            
+            ctx.set_source_rgb(0.8,0.75,0.9)
+            ctx.set_line_width(0.003)
+            ctx.move_to(x, y)
+            ctx.line_to(x, posZElevesV[1] + tailleZElevesV[1])
+            
+            ctx.move_to(posZElevesH[0]+tailleZElevesH[0], y)
+            ctx.line_to(posZComp[0]+tailleZComp[0], y)
+            
+            ctx.stroke()
+            
+            DrawCroisementsElevesCompetences(ctx, e, y)
+            
+        
+        e = 0.003
+        for i in range(len(prj.eleves)) :
+            x = posZElevesV[0]+(i+0.5)*tailleZElevesV[0]/len(prj.eleves)
+            y = posZElevesH[1]+(i+0.5)*tailleZElevesH[1]/len(prj.eleves)+e
+            ctx.set_source_rgb(1,1,1)
+            ctx.move_to(x+e, y)
+            ctx.line_to(x+e, posZElevesV[1] + tailleZElevesV[1])
+            ctx.move_to(x-e, y)
+            ctx.line_to(x-e, posZElevesV[1] + tailleZElevesV[1])
+        ctx.stroke()
+        
+    
+    
+    
+    
+    #
+    #  Tâches
+    #
+    curve_rect_titre(ctx, u"Tâches à réaliser",  
+                     (posZDeroul[0], posZDeroul[1], 
+                      tailleZDeroul[0], tailleZDeroul[1]), 
+                     BcoulZDeroul, IcoulZDeroul, fontZDeroul)
+    y = posZTaches[1]
+    yh_phase = {}
+    phase = None
+    for t in prj.taches:
+        if not t.phase in yh_phase.keys():
+            yh_phase[t.phase] = [y,None]
+            
+        if phase != t.phase:
+            if phase != None:
+                yh_phase[t.phase][1] = y - yh_phase[t.phase][0]
+            y += ecartTacheY
+        
+        if t.phase != '':  
+            y = DrawTacheRacine(ctx, t, y)    
+            phase = t.phase
+        
     #
     # Durée de la séquence
     #
@@ -521,210 +648,13 @@ def Draw(ctx, prj, mouchard = False):
     ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                        cairo.FONT_WEIGHT_BOLD)
     show_text_rect(ctx, getHoraireTxt(prj.GetDuree()), 
-                   (posZDeroul[0]-0.01, posZEleves[1] + tailleZEleves[1] - 0.015, 
-                   0.1, 0.015), ha = 'g', b = 0)
+                   (posZTaches[0] - wDuree*3/2 - ecartX/2, posZTaches[1] + tailleZTaches[1] + ecartY/2, 
+                    wDuree*2, wDuree), ha = 'c', b = 0)    
     
     
-#    #
-#    # problematique
-#    #
-#    if tailleComm[1] > 0:
-#        ctx.set_source_rgb(0.1,0.1,0.1)
-#        ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
-#                                          cairo.FONT_WEIGHT_NORMAL)
-#        ctx.set_font_size(fontIntComm)
-#        _x, _y = posComm
-#        fascent, fdescent, fheight, fxadvance, fyadvance = ctx.font_extents()
-#        #
-#        # On dessine toutes les lignes de texte
-#        #
-#        for i, t in enumerate(intComm):
-#            yt = _y + (fascent+fdescent)*i  + fheight #- fdescent
-#            ctx.move_to(_x, yt)
-#            ctx.show_text(t) 
-
-            
-#    # 
-#    # Effectifs
-#    #
-#    for i, e in enumerate(["C", "G", "D", "E", "P"]):
-#        x = posZTaches[0]
-#        h = (posZTaches[1]-posZEleves[1]-0.01) / 5
-#        y = posZEleves[1] + i * h
-#        w = wEff[e]
-#        ctx.set_line_width(0.001)
-#        ctx.set_source_rgb(0.8, 0.9, 0.8)
-#        ctx.rectangle(x, y, w, h)
-#        ctx.stroke()
-#        ctx.set_source_rgb(0.6, 0.8, 0.6)
-#        show_text_rect(ctx, NomsEffectifs[e][1], (x, y, w, h))
-#        ctx.stroke()
-#        DrawLigneEff(ctx, x+w, y+h)
-#        
-    
-
-    #
-    #  Equipe
-    #
-    
-    # Rectangle arrondi
-    x0, y0 = posEqu
-    rect_width, rect_height  = tailleEqu
-    prj.pt_caract.append(curve_rect_titre(ctx, u"Equipe pédagogique",  (x0, y0, rect_width, rect_height), BcoulEqu, IcoulEqu, fontEqu))
-    
-    return
-    #
-    # Codes prerequis
-    #
-    lstTexte = []
-    for c in prj.prerequis.savoirs:
-        lstTexte.append(getSavoir(prj, c))
-        
-    lstTexteS = []   
-    for c in prj.prerequisSeance:
-        lstTexteS.append(c.GetNomFichier())    
-        
-    hl = rect_height+0.0001
-    
-    if len(lstTexte) + len(lstTexteS) > 0:
-        e = 0.008
-        hC = hl*len(lstTexte)/(len(lstTexte) + len(lstTexteS))
-        hS = hl*len(lstTexteS)/(len(lstTexte) + len(lstTexteS))
-        r = liste_code_texte(ctx, prj.prerequis.savoirs, lstTexte, x0, y0, rect_width, hC, e)
-        ctx.set_source_rgba (0.0, 0.0, 0.5, 1.0)
-        prj.prerequis.pts_caract = getPts(r)
-        lstRect = liste_code_texte(ctx, ["Seq."]*len(lstTexteS), lstTexteS, x0, y0+hC, rect_width, hS, 0.01)
-        for i, c in enumerate(prj.prerequisSeance): 
-            c.rect = [lstRect[i]]
-    else:
-        show_text_rect(ctx, u"Aucun", (x0, y0, rect_width, hl), fontsizeMinMax = (-1, 0.015))
     
     
-    #
-    #  Objectifs
-    #
-    x0, y0 = posPro
-#    taillePro[0] =  taillePos[0]
-    rect_width, rect_height  = taillePro
-    prj.obj["S"].pt_caract = (curve_rect_titre(ctx, u"Objectifs",  (x0, y0, rect_width, rect_height), BcoulPro, IcoulPro, fontPro),
-                              'obj')
-    prj.obj["C"].pt_caract = prj.obj["S"].pt_caract
-
     
-    
-    #
-    # Codes objectifs
-    #
-    lstTexteC = []
-    for c in prj.obj["C"].competences:
-        lstTexteC.append(getCompetence(prj, c))
-    lstTexteS = []   
-    for c in prj.obj["S"].savoirs:
-        lstTexteS.append(getSavoir(prj, c))
-    h = rect_height+0.0001
-    hC = hS = h/2
-    if len(lstTexteS) > 0 or len(lstTexteC) > 0:
-        hC = h*len(lstTexteC)/(len(lstTexteC) + len(lstTexteS))
-        hS = h*len(lstTexteS)/(len(lstTexteC) + len(lstTexteS))
-        r = liste_code_texte(ctx, prj.obj["C"].competences, lstTexteC, x0, y0, rect_width, hC, 0.008) 
-        prj.obj["C"].pts_caract = getPts(r)
-        ctx.set_source_rgba (0.0, 0.0, 0.5, 1.0)
-        r = liste_code_texte(ctx, prj.obj["S"].savoirs, lstTexteS, x0, y0+hC, rect_width, hS, 0.008)
-        prj.obj["S"].pts_caract = getPts(r)
-    
-    prj.obj["C"].rect = [(x0, y0, rect_width, hC)]
-    prj.obj["S"].rect = [(x0, y0+hC, rect_width, hS)]
-    
-    
-    #
-    #  CI
-    #
-    Draw_CI(ctx, prj.CI)
-    
-    
-    #
-    #  Séances
-    #
-    for s in prj.seance:
-#        Draw_seance(ctx, s, curseur)
-        DrawSeanceRacine(ctx, s)
-        
-    #
-    #  Tableau des systèmes
-    #    
-    
-    nomsSystemes = []
-    systemes = prj.GetSystemesUtilises()
-    for s in systemes:
-        nomsSystemes.append(s.nom)
-    if nomsSystemes != []:
-        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-                              cairo.FONT_WEIGHT_NORMAL)
-        ctx.set_source_rgb(0, 0, 0)
-        ctx.set_line_width(0.001)
-        tableauV(ctx, nomsSystemes, posZComp[0], posZComp[1], 
-                tailleZComp[0], posZTaches[1] - posZComp[1], 
-                0, nlignes = 0, va = 'c', ha = 'g', orient = 'v', coul = (0.8,0.8,0.8))
-        
-        wc = tailleZComp[0]/len(nomsSystemes)
-        _x = posZComp[0]
-        _y = posZComp[1]
-        for s in systemes:
-            s.rect=((_x, _y, wc, posZTaches[1] - posZComp[1]),)
-            ctx.set_source_rgb(0, 0, 0)
-            ctx.move_to(_x, _y + posZTaches[1] - posZComp[1])
-            ctx.line_to(_x, _y + tailleZEleves[1])
-            ctx.stroke()
-            
-            ctx.set_source_rgba(0.8,0.8,0.8, 0.2)
-            ctx.rectangle(_x, _y+ posZTaches[1] - posZComp[1], 
-                          wc, tailleZEleves[1]-posZTaches[1] + posZComp[1])
-            ctx.fill()
-            _x += wc
-        ctx.set_source_rgb(0, 0, 0)
-        ctx.move_to(_x, _y + posZTaches[1] - posZComp[1])
-        ctx.line_to(_x, _y + tailleZEleves[1])   
-        ctx.stroke()
-
-
-    #
-    #  Tableau des démarches
-    #    
-    ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-                          cairo.FONT_WEIGHT_NORMAL)
-    ctx.set_source_rgb(0, 0, 0)
-    ctx.set_line_width(0.001)
-    l=[]
-    for d in listeDemarches : 
-        l.append(DemarchesCourt[d])
-    tableauV(ctx, l, posZEleves[0], posZEleves[1], 
-            tailleZEleves[0], posZTaches[1] - posZComp[1], 
-            0, nlignes = 0, va = 'c', ha = 'g', orient = 'v', coul = (0.8,0.75,0.9))
-    ctx.move_to(posZEleves[0], posZEleves[1] + posZTaches[1] - posZComp[1])
-    ctx.line_to(posZEleves[0], posZEleves[1] + tailleZEleves[1])
-    ctx.move_to(posZEleves[0]+tailleZEleves[0]/3, posZEleves[1] + posZTaches[1] - posZComp[1])
-    ctx.line_to(posZEleves[0]+tailleZEleves[0]/3, posZEleves[1] + tailleZEleves[1])
-    ctx.move_to(posZEleves[0]+tailleZEleves[0]*2/3, posZEleves[1] + posZTaches[1] - posZComp[1])
-    ctx.line_to(posZEleves[0]+tailleZEleves[0]*2/3, posZEleves[1] + tailleZEleves[1])
-    ctx.move_to(posZEleves[0]+tailleZEleves[0], posZEleves[1] + posZTaches[1] - posZComp[1])
-    ctx.line_to(posZEleves[0]+tailleZEleves[0], posZEleves[1] + tailleZEleves[1])
-    ctx.stroke()
-    
-    #
-    #  Tableau des séances (en bas)
-    #
-    nomsSeances, intSeances = prj.GetIntituleSeances()
-#        print nomsSeances
-    if nomsSeances != []:
-        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-                              cairo.FONT_WEIGHT_NORMAL)
-        ctx.set_source_rgb(0, 0, 0)
-        ctx.set_line_width(0.001)
-        tableauH_var(ctx, nomsSeances, posZIntTaches[0], posZIntTaches[1], 
-                0.05, tailleZIntTaches[0]-0.05, zip(*intituleTaches)[1], fontIntTaches, 
-                nCol = 1, va = 'c', ha = 'g', orient = 'h', coul = ICoulTache, 
-                contenu = [zip(*intituleTaches)[2]])
-        
     #
     # Informations
     #
@@ -749,7 +679,7 @@ def DrawLigneEff(ctx, x, y):
     ctx.set_source_rgba (0.6, 0.8, 0.6)
     ctx.set_line_width (0.001)
     ctx.set_dash(dashes, 0)
-    ctx.move_to(x, posZEleves[1] + tailleZEleves[1])
+    ctx.move_to(x, posZElevesV[1] + tailleZElevesV[1])
     ctx.line_to(x, y)
     ctx.stroke()
     ctx.set_dash([], 0)
@@ -857,324 +787,141 @@ def Draw_CI(ctx, CI):
 
 
 
-class Cadre():  
-    def __init__(self, ctx, seance, filigrane = False, signEgal = False): 
-        self.seance = seance
-        self.ctx = ctx
-        self.w = wEff[seance.effectif]
-        self.h = hHoraire * seance.GetDureeGraph()
-        self.filigrane = filigrane
-        self.xd = None
-        self.y = None
-        self.dy = None
-        self.seance.rect = []
-        self.signEgal = signEgal
-        
-    def __repr__(self):
-        return self.seance.code
-    
-    def Draw(self, x, y):
-        if self.filigrane:
-            alpha = 0.2
-        else:
-            alpha = 1
-            self.seance.pts_caract.append((x, y))
-            
-        self.ctx.set_line_width(0.002)
-        rectangle_plein(self.ctx, x, y, self.w, self.h, 
-                        BCoulTache[self.seance.typeSeance], ICoulTache[self.seance.typeSeance], alpha)
-        
-        
-        
-        if not self.filigrane and hasattr(self.seance, 'code'):
-            self.ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-                                  cairo.FONT_WEIGHT_BOLD)
-            self.ctx.set_source_rgb (0,0,0)
-            hc = max(hHoraire/4, 0.01)
-            show_text_rect(self.ctx, self.seance.code, (x, y, wEff["P"], hc), ha = 'g', 
-                           wrap = False, fontsizeMinMax = (minFont, -1), b = 0.2)
-        
-        if not self.filigrane and self.seance.intituleDansDeroul and self.seance.intitule != "":
-            self.ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
-                                  cairo.FONT_WEIGHT_NORMAL)
-            self.ctx.set_source_rgb (0,0,0)
-            show_text_rect(self.ctx, self.seance.intitule, (x, y + hc, 
-                           self.w, self.h-hc), ha = 'g', fontsizeMinMax = (minFont, 0.015))
-            
-        if not self.filigrane and self.signEgal:
-            dx = wEff["P"]/4
-            dy = hHoraire/16
-            self.ctx.set_source_rgba (0, 0.0, 0.2, 0.6)
-            self.ctx.set_line_width (0.002)
-            self.ctx.move_to(x-dx, y+self.h/2 - dy)
-            self.ctx.line_to(x+dx, y+self.h/2 - dy)
-            self.ctx.move_to(x-dx, y+self.h/2 + dy)
-            self.ctx.line_to(x+dx, y+self.h/2 + dy)
-            self.ctx.stroke()
-            
-        # Sauvegarde de la position du bord droit pour les lignes de croisement
-        self.xd = x+self.w
-        self.y = y
-        
-        self.seance.rect.append([x, y, self.w, self.h])
-        
+#class Cadre():  
+#    def __init__(self, ctx, tache): 
+#        self.tache = tache
+#        self.ctx = ctx
+#        self.w = wTache
+#        self.h = hHoraire * tache.GetDureeGraph()
+#        self.xd = None
+#        self.y = None
+#        self.dy = None
+#        self.tache.rect = []
+#        
+#        
+#    def __repr__(self):
+#        return self.tache.code
+#    
+#    def Draw(self, x, y):
+#        
+#        alpha = 1
+#        self.tache.pts_caract.append((x, y))
+#            
+#        self.ctx.set_line_width(0.002)
+#        rectangle_plein(self.ctx, x, y, self.w, self.h, 
+#                        BCoulTache[self.tache.phase], ICoulTache[self.tache.phase], alpha)
+#        
+#        if hasattr(self.tache, 'code'):
+#            self.ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+#                                  cairo.FONT_WEIGHT_BOLD)
+#            self.ctx.set_source_rgb (0,0,0)
+#            hc = max(hHoraire/4, 0.01)
+#            show_text_rect(self.ctx, self.tache.code, (x, y, wTache, hc), ha = 'g', 
+#                           wrap = False, fontsizeMinMax = (minFont, -1), b = 0.2)
+#        
+#        if self.tache.intituleDansDeroul and self.tache.intitule != "":
+#            self.ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
+#                                  cairo.FONT_WEIGHT_NORMAL)
+#            self.ctx.set_source_rgb (0,0,0)
+#            show_text_rect(self.ctx, self.tache.intitule, (x, y + hc, 
+#                           self.w, self.h-hc), ha = 'g', fontsizeMinMax = (minFont, 0.015))
+#            
+#        # Sauvegarde de la position du bord droit pour les lignes de croisement
+#        self.xd = x+self.w
+#        self.y = y
+#        
+#        self.tache.rect.append([x, y, self.w, self.h])
+#        
 
-class Bloc():
-    def __init__(self):
-        self.contenu = []
-        
-        
-    def Draw(self, y):
-        
-        for ligne in self.contenu:
-            x = posZTaches[0]
-            for cadre in ligne:
-                cadre.Draw(x, y)
-                x += cadre.w
-            if len(ligne) > 0:
-                y += cadre.h
-        y += ecartTacheY
-        return y
-    
-    def DrawCoisement(self):
-        for ligne in self.contenu:
-            for cadre in ligne:
-                if cadre.seance.typeSeance in ["AP", "ED", "P"] and not cadre.filigrane and cadre.dy:
-                    DrawCroisements(cadre.ctx, cadre.seance, cadre.xd, cadre.y + cadre.dy)
-                    DrawCroisementSystemes(cadre.ctx, cadre.seance, cadre.y + cadre.dy) 
+#class Bloc():
+#    def __init__(self):
+#        self.contenu = []
+#        
+#        
+#    def Draw(self, y):
+#        
+#        for ligne in self.contenu:
+#            x = posZTaches[0]
+#            for cadre in ligne:
+#                cadre.Draw(x, y)
+#                x += cadre.w
+#            if len(ligne) > 0:
+#                y += cadre.h
+#        y += ecartTacheY
+#        return y
+#    
+#    def DrawCoisement(self):
+#        for ligne in self.contenu:
+#            for cadre in ligne:
+#                DrawCroisementsEleves(cadre.ctx, cadre.tache, cadre.xd, cadre.y + cadre.dy)
+#                DrawCroisementsCompetences(cadre.ctx, cadre.tache, cadre.y + cadre.dy) 
                
     
 ######################################################################################  
-def DrawSeanceRacine(ctx, seance):
-    global cursY
+def DrawTacheRacine(ctx, tache, y):
+    
     
     #
     # Flèche indiquant la durée
     #
-    h = hHoraire * seance.GetDureeGraph()
-    fleche_verticale(ctx, posZDeroul[0], cursY, 
-                     h, 0.02, (0.9,0.8,0.8,0.5))
+    h = hHoraire * tache.GetDureeGraph()
+    fleche_verticale(ctx, posZTaches[0] - wDuree/2 - ecartX/2, y, 
+                     h, wDuree, (0.9,0.8,0.8,0.5))
     ctx.set_source_rgb(0.5,0.8,0.8)
     ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                               cairo.FONT_WEIGHT_BOLD)
-    show_text_rect(ctx, getHoraireTxt(seance.GetDuree()), 
-                   (posZDeroul[0]-0.01, cursY, 0.02, h), 
+    show_text_rect(ctx, getHoraireTxt(tache.GetDuree()), 
+                   (posZTaches[0] - wDuree - ecartX/2, y, 0.02, h), 
                    orient = 'v', b = 0.2)
+    
+    #
+    # Rectangles actifs et points caractéristiques
+    #
+    tache.pts_caract = []
+    tache.rect = []
+    
+    
+    #
+    # Tracé du cadre de la tâche
+    #
+    x = posZTaches[0]
+    h = hHoraire * tache.GetDureeGraph()
+    tache.pts_caract.append((x, y))
+        
+    ctx.set_line_width(0.002)
+    rectangle_plein(ctx, x, y, tailleZTaches[0], h, 
+                    BCoulTache[tache.phase], ICoulTache[tache.phase], 1)
+    
+    if hasattr(tache, 'code'):
+        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+                              cairo.FONT_WEIGHT_BOLD)
+        ctx.set_source_rgb (0,0,0)
+        hc = max(hHoraire/4, 0.01)
+        show_text_rect(ctx, tache.code, (x, y, tailleZTaches[0], hc), ha = 'g', 
+                       wrap = False, fontsizeMinMax = (minFont, -1), b = 0.2)
+    
+    if tache.intituleDansDeroul and tache.intitule != "":
+        ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
+                              cairo.FONT_WEIGHT_NORMAL)
+        ctx.set_source_rgb (0,0,0)
+        show_text_rect(ctx, tache.intitule, (x, y + hc, 
+                       tailleZTaches[0], h-hc), ha = 'g', fontsizeMinMax = (minFont, 0.015))
+        
+    
+    tache.rect.append([x, y, tailleZTaches[0], h])
+        
         
     #
-    # Fonction pour obtenir les lignes de séances du bloc
+    # Tracé des croisements "Tâches" et "Eleves"
     #
-    def getLigne(s, filigrane = False):
-        l = []
-        if s.typeSeance == "S":
-            for j,ss in enumerate(s.sousSeances):
-                if ss.typeSeance != '':
-                    ss.pts_caract = []
-                    for i in range(int(ss.nombre.v[0])):
-                        l.append(Cadre(ctx, ss, filigrane = filigrane, signEgal = (i>0)))
-                    
-                    # On en profite pour calculer les positions des lignes de croisement
-                    if not filigrane:
-                        l[-1].dy = (j+1) * l[-1].h/(len(s.sousSeances)+1)
+    DrawCroisementsElevesTaches(ctx, tache, x + tailleZTaches[0], y + h/2)
+    DrawCroisementsCompetencesTaches(ctx, tache, y + h/2)
+    
+    y += h
+    return y
         
-        else:
-            if s.typeSeance != '':
-                s.pts_caract = []
-                for i in range(int(s.nombre.v[0])):
-                    l.append(Cadre(ctx, s, filigrane = filigrane, signEgal = (i>0)))
-                
-                # On en profite pour calculer les positions des lignes de croisement
-                if not filigrane:
-                    l[-1].dy = l[-1].h/2
-        return l
-    
-    
-    
-    #
-    # Remplissage du bloc
-    #
-    bloc = Bloc()
-    if not seance.typeSeance in ["R", "S", ""]:
-        seance.pts_caract = []
-        if seance.typeSeance in ["AP", "ED", "P"]:
-            l = []
-            
-            for i in range(int(seance.nombre.v[0])):
-                l.append(Cadre(ctx, seance, signEgal = (i>0)))
-            bloc.contenu.append(l)
-            l[-1].dy = l[-1].h/2
-        else:
-            bloc.contenu.append([Cadre(ctx, seance)])
-    else:
-        if seance.typeSeance == "R":
-            for s in seance.sousSeances:
-                bloc.contenu.append(getLigne(s))
-                
-            #
-            # Aperçu en filigrane de la rotation
-            #
-            if seance.IsEffectifOk() < 2:
-                l = seance.sousSeances
-                eff = seance.GetEffectif()
-                if eff == 16:
-                    codeEff = "C"
-                elif eff == 8:
-                    codeEff = "G"
-                elif eff == 4:
-                    codeEff = "D"
-                elif eff == 2:
-                    codeEff = "E"
-                elif eff == 1:
-                    codeEff = "P"
-                
-                for t in range(len(seance.sousSeances)-1):
-                    l = permut(l)
-                    for i, s in enumerate(l):
-                        bloc.contenu[i].extend(getLigne(s, filigrane = True))
-
-        elif seance.typeSeance == "S":
-            bloc.contenu.append(getLigne(seance))
-    #
-    # Tracé des cadres de séance
-    #
-    cursY = bloc.Draw(cursY)
-    
-    #
-    # Tracé des croisements "Démarche" et "Systèmes"
-    #
-    bloc.DrawCoisement() 
-    
-#######################################################################################  
-#def Draw_seance2(ctx, seance, curseur, typParent = "", rotation = False, ):
-#    if not seance.EstSousSeance():
-#        h = hHoraire * seance.GetDuree()
-#        fleche_verticale(ctx, posZDeroul[0], curseur[1], 
-#                         h, 0.02, (0.9,0.8,0.8,0.5))
-#        ctx.set_source_rgb(0.5,0.8,0.8)
-#        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-#                                  cairo.FONT_WEIGHT_BOLD)
-#        show_text_rect(ctx, getHoraireTxt(seance.GetDuree()), posZDeroul[0]-0.01, curseur[1], 
-#                       0.02, h, orient = 'v')
-#        
-#        
-#    if not seance.typeSeance in ["R", "S", ""]:
-##            print "Draw", self
-#        x, y = curseur
-#        w = wEff[seance.effectif]
-#        h = hHoraire * seance.GetDuree()
-#        if rotation:
-#            seance.rect.append((x, y, w, h))
-#        else:
-#            seance.rect=[(x, y, w, h),] # Rectangles pour clic
-#        
-#        if rotation:
-#            alpha = 0.2
-#        else:
-#            alpha = 1
-#        
-#        for i in range(int(seance.nombre.v[0])):
-#            ctx.set_line_width(0.002)
-#            rectangle_plein(ctx, x+w*i, y, w, h, 
-#                            BCoulTache[seance.typeSeance], ICoulTache[seance.typeSeance], alpha)
-#            
-#            if not rotation and hasattr(seance, 'code'):
-#                ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-#                                      cairo.FONT_WEIGHT_BOLD)
-#                ctx.set_source_rgb (0,0,0)
-#                show_text_rect(ctx, seance.code, x+w*i, y, wEff["P"], hHoraire/4, ha = 'g', wrap = False)
-#            
-#            if not rotation and seance.intituleDansDeroul and seance.intitule != "":
-#                ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
-#                                      cairo.FONT_WEIGHT_NORMAL)
-#                ctx.set_source_rgb (0,0,0)
-#                show_text_rect(ctx, seance.intitule, x+w*i, y + hHoraire/4, 
-#                               w, h-hHoraire/4, ha = 'g')
-#        
-#        
-#        # Les croisements "Démarche" et "Systèmes"
-#        if not rotation and seance.typeSeance in ["AP", "ED", "P"]:
-#            if seance.EstSousSeance() and seance.parent.typeSeance == "S":
-#                ns = len(seance.parent.sousSeances)
-#                ys = y+(seance.ordre+1) * h/(ns+1)
-##                    print ns, ys, self.ordre
-#            else:
-#                ys = y+h/2           
-#                
-#            DrawCroisements(ctx, seance, x+w*seance.nombre.v[0], ys)
-#            DrawCroisementSystemes(ctx, seance, ys)      
-#                
-#            
-#        if typParent == "R":
-#            curseur[1] += h
-#        elif typParent == "S":
-#            curseur[0] += w
-#        else:
-#            curseur[1] += h + ecartTacheY
-#    else:
-#        if seance.typeSeance in ["R", "S"]:
-#            for s in seance.sousSeances:
-#                Draw_seance(ctx, s, curseur, typParent = seance.typeSeance, rotation = rotation)
-##                    if self.typeSeance == "S":
-#            
-#            #
-#            # Aperçu en filigrane de la rotation
-#            #
-#            if seance.typeSeance == "R" and seance.IsEffectifOk() < 2:
-#                l = seance.sousSeances
-#                eff = seance.GetEffectif()
-#                if eff == 16:
-#                    codeEff = "C"
-#                elif eff == 8:
-#                    codeEff = "G"
-#                elif eff == 4:
-#                    codeEff = "D"
-#                elif eff == 2:
-#                    codeEff = "E"
-#                elif eff == 1:
-#                    codeEff = "P"
-#                
-#                for t in range(len(seance.sousSeances)-1):
-#                    curs = [curseur[0]+wEff[codeEff]*(t+1), curseur[1]-hHoraire * seance.GetDuree()]
-#                    l = permut(l)
-#                    for i, s in enumerate(l):
-##                        print "filigrane", s, curs
-#                        Draw_seance(ctx, s, curs, typParent = "R", rotation = True)
-#                        if s.typeSeance == "S":
-#                            curs[0]  += wEff[codeEff]*(i+1)
-##                    curs[0] += wEff[codeEff]
-##                    curs[1] = curseur[1]-hHoraire * seance.GetDuree()
-#            
-#            curseur[0] = posZTaches[0]
-#            if typParent == "":
-#                curseur[1] += ecartTacheY
-#            if seance.typeSeance == "S":
-#                curseur[1] += hHoraire * seance.GetDuree()
-#
-##        elif seance.typeSeance in ["AP", "ED"] and seance.Nombre.v[0]>0:
-##            curs = [curseur[0]+wEff[codeEff]*(t+1), curseur[1]-hHoraire * seance.GetDuree()]
-##            for i in range(seance.Nombre.v[0] -1):
-##                Draw_seance(ctx, s, curseur, typParent = seance.typeSeance, rotation = rotation)
-#        
         
-######################################################################################  
-def DrawCroisementSystemes(ctx, seance, y):
-#        if self.typeSeance in ["AP", "ED", "P"]:
-#            and not (self.EstSousSeance() and self.parent.typeSeance == "S"):
-    r = wColComp/3
-    ns = seance.GetNbrSystemes()
-    for s, n in ns.items():
-        if n > 0:
-            x = xComp[s]
-            ctx.arc(x, y, r, 0, 2*pi)
-            ctx.set_source_rgba (1,0.2,0.2,1.0)
-            ctx.fill_preserve ()
-            ctx.set_source_rgba (0,0,0,1)
-            ctx.stroke ()
-            ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-                                  cairo.FONT_WEIGHT_BOLD)
-            show_text_rect(ctx, str(n), (x-r, y-r, 2*r, 2*r))
-            seance.rect.append((x-r, y-r, 2*r, 2*r)) 
-            
+        
 ######################################################################################  
 def DrawLigne(ctx, x, y):
     dashes = [ 0.010,   # ink
@@ -1188,29 +935,67 @@ def DrawLigne(ctx, x, y):
     ctx.move_to(posZOrganis[0]+tailleZOrganis[0], y)
     ctx.line_to(x, y)
     ctx.stroke()
-    ctx.set_dash([], 0)
+    ctx.set_dash([], 0)       
+    
+    
+     
+        
+######################################################################################  
+def DrawCroisementsCompetencesTaches(ctx, tache, y):
+#        if self.typeSeance in ["AP", "ED", "P"]:
+#            and not (self.EstSousSeance() and self.parent.typeSeance == "S"):
+    r = wColComp/3
+    ns = tache.competences
+    for s in ns:
+        x = xComp[s]
+        ctx.arc(x, y, r, 0, 2*pi)
+        ctx.set_source_rgba (1,0.2,0.2,1.0)
+        ctx.fill_preserve ()
+        ctx.set_source_rgba (0,0,0,1)
+        ctx.stroke ()
+        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+                              cairo.FONT_WEIGHT_BOLD)
+#        show_text_rect(ctx, str(n), (x-r, y-r, 2*r, 2*r))
+        tache.rect.append((x-r, y-r, 2*r, 2*r)) 
           
 
 #####################################################################################  
-def DrawCroisements(ctx, seance, x, y):
+def DrawCroisementsElevesTaches(ctx, tache, x, y):
 
     #
     # Les lignes horizontales
     #
-    if seance.typeSeance in ["AP", "ED", "P"]:
-        DrawLigne(ctx, x, y)
+    DrawLigne(ctx, x, y)
         
     #
-    # Croisements Séance/Démarche
+    # Croisements Tâche/Eleves
     #
-    _x = xEleves[seance.demarche]
-#        if self.typeSeance in ["AP", "ED", "P"]:
     r = 0.008
-    boule(ctx, _x, y, r)
-    seance.rect.append((_x -r , y - r, 2*r, 2*r))
+    for i in tache.eleves:
+        _x = xEleves[i]
+        boule(ctx, _x, y, r, constantes.COUL_ELEVES[i][0], constantes.COUL_ELEVES[i][1])
+        tache.rect.append((_x -r , y - r, 2*r, 2*r))
 
 
-
+######################################################################################  
+def DrawCroisementsElevesCompetences(ctx, eleve, y):
+#        if self.typeSeance in ["AP", "ED", "P"]:
+#            and not (self.EstSousSeance() and self.parent.typeSeance == "S"):
+    r = wColComp/3
+    ns = eleve.GetCompetences()
+    ctx.set_line_width(0.001)
+    for s in ns:
+        x = xComp[s]
+        ctx.arc(x, y, r, 0, 2*pi)
+        ctx.set_source_rgba (1,0.2,0.2,1.0)
+        ctx.fill_preserve ()
+        ctx.set_source_rgba (0,0,0,1)
+        ctx.stroke ()
+        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+                              cairo.FONT_WEIGHT_BOLD)
+#        show_text_rect(ctx, str(n), (x-r, y-r, 2*r, 2*r))
+#        tache.rect.append((x-r, y-r, 2*r, 2*r)) 
+        
 
 def permut(liste):
     l = []
@@ -1320,7 +1105,7 @@ def show_text_rect(ctx, texte, rect, va = 'c', ha = 'c', b = 0.4, orient = 'h',
 
     if texte == "":
         return
-    
+#    print rect
     x, y, w, h = rect
     
     fontsizeMinMax = [fontsizeMinMax[0], fontsizeMinMax[1]]
@@ -1472,7 +1257,7 @@ def show_text_rect2(ctx, texte, rect, va = 'c', ha = 'c', b = 0.4, orient = 'h',
     """
 #    print "show_text_rect", texte
 
-    print "show_text_rect", texte
+#    print "show_text_rect", texte
     
     if texte == "":
         return
@@ -1493,7 +1278,7 @@ def show_text_rect2(ctx, texte, rect, va = 'c', ha = 'c', b = 0.4, orient = 'h',
         return
     
     def ajuster_text_rect(txt, _w, _h, fsize):
-        print "   ajuster_text_rect", txt, fsize
+#        print "   ajuster_text_rect", txt, fsize
         
         ctx.set_font_size(fsize)
         fascent, fdescent, fheight, fxadvance, fyadvance = ctx.font_extents()
@@ -1533,12 +1318,12 @@ def show_text_rect2(ctx, texte, rect, va = 'c', ha = 'c', b = 0.4, orient = 'h',
         #
         # Calcul du nombre de lignes nécessaires
         #
-        print "    ",fascent , fdescent
+#        print "    ",fascent , fdescent
         hf = fascent + fdescent
         Nlignes = int(_h // hf)
         rapport = hf*len(lt) / _h
-        print "    ", len(lt), "*", hf, "/", _h, "=", rapport
-        print "    ", Nlignes, fsize/hf
+#        print "    ", len(lt), "*", hf, "/", _h, "=", rapport
+#        print "    ", Nlignes, fsize/hf
         
 
 #        if rapport > 1:
@@ -1857,7 +1642,6 @@ def tableauH(ctx, titres, x, y, wt, wc, h, nCol = 0, va = 'c', ha = 'c', orient 
     _coul = ctx.get_source().get_rgba()
 #    print "tableauH", _coul
     for titre in titres:
-#        print "    ",titre
         ctx.rectangle(x, _y, wt, hc)
         if type(coul) == dict :
             col = coul[titre.rstrip("1234567890.")]
@@ -1960,6 +1744,7 @@ def rectangle_plein(ctx, x, y, w, h, coulBord, coulInter, alpha = 1):
     ctx.set_source_rgba (coulBord[0], coulBord[1], coulBord[2], alpha)
     ctx.stroke ()
     
+    
 def boule(ctx, x, y, r, color0 = (1, 1, 1, 1), color1 = (0, 0, 0, 1)):
     pat = cairo.RadialGradient (x-r/2, y-r/2, r/4,
                                 x-r/3, y-r/3, 3*r/2)
@@ -2023,35 +1808,37 @@ def liste_code_texte(ctx, lstCodes, lstTexte, x, y, w, h, e):
         wt = 0
         fs = None
         for i, t in enumerate(lstCodes):
-            ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-                                  cairo.FONT_WEIGHT_BOLD)
-            show_text_rect(ctx, t, (x+e, y+i*hl, 
-                           w/6-e, hl), b = 0.2, ha = 'g', fontsizeMinMax = (-1, 0.012), wrap = False)
-            width = ctx.text_extents(t)[2]
-            wt = max(wt, width)
+            if t.strip() != "":
+                ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+                                      cairo.FONT_WEIGHT_BOLD)
+                show_text_rect(ctx, t, (x+e, y+i*hl, 
+                               w/6-e, hl), b = 0.2, ha = 'g', fontsizeMinMax = (-1, 0.012), wrap = False)
+                width = ctx.text_extents(t)[2]
+                wt = max(wt, width)
         
         for i, t in enumerate(lstCodes):
-            ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-                                  cairo.FONT_WEIGHT_NORMAL)
-            show_text_rect(ctx, lstTexte[i], (x+wt+2*e, y+i*hl, 
-                           w-wt-3*e, hl), b = 0.4, ha = 'g', fontsizeMinMax = (-1, 0.012))
-
-            rect = (x, y+i*hl, w, hl)
-            lstRect.append(rect)
-            
-            # Un rectangle invisible pour la séléction
-            ep = ctx.get_line_width()
-            co = ctx.get_source().get_rgba()
-            ctx.set_line_width(0.0001)
-            ctx.set_source_rgba (0.5, 0.5, 0.5, 0)
-            ctx.rectangle(rect[0], rect[1], rect[2], rect[3])
-            
-            ctx.fill_preserve()
-            
-            ctx.stroke()
-            ctx.set_line_width(ep)
-            ctx.set_source_rgba (co[0],co[1],co[2],co[3])
-#            ctx.restore()
+            if lstTexte[i].strip() != "":
+                ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+                                      cairo.FONT_WEIGHT_NORMAL)
+                show_text_rect(ctx, lstTexte[i], (x+wt+2*e, y+i*hl, 
+                               w-wt-3*e, hl), b = 0.4, ha = 'g', fontsizeMinMax = (-1, 0.012))
+    
+                rect = (x, y+i*hl, w, hl)
+                lstRect.append(rect)
+                
+                # Un rectangle invisible pour la séléction
+                ep = ctx.get_line_width()
+                co = ctx.get_source().get_rgba()
+                ctx.set_line_width(0.0001)
+                ctx.set_source_rgba (0.5, 0.5, 0.5, 0)
+                ctx.rectangle(rect[0], rect[1], rect[2], rect[3])
+                
+                ctx.fill_preserve()
+                
+                ctx.stroke()
+                ctx.set_line_width(ep)
+                ctx.set_source_rgba (co[0],co[1],co[2],co[3])
+    #            ctx.restore()
     
     return lstRect
     

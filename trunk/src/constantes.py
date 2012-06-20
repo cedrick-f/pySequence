@@ -1047,10 +1047,12 @@ def getCompetence(seq, code, dic = None, c = None):
     
     
 def getAllCodes(dic):
+#    print "getAllCodes" , dic
     lst = dic.keys()
-    for k in lst:
-        if type(dic[k]) == dict:
-            lst.extend(getAllCodes(dic[k]))
+    for k in dic.keys():
+#        print dic[k]
+        if len(dic[k]) > 1:
+            lst.extend(getAllCodes(dic[k][1]))
     return lst
 
 
@@ -1151,7 +1153,12 @@ def getLstPhase():
     return lst
 
 
-
+COUL_ELEVES = [((0.3,0.3,0.7,1), (0.7,0.7,0.3,1)),
+               ((0.7,0.3,0.3,1), (0.3,0.7,0.7,1)),
+               ((0.3,0.7,0.3,1), (0.7,0.3,0.7,1)),
+               ((0.2,0.2,0.9,1), (0.9,0.9,0.2,1)),
+               ((0.9,0.2,0.2,1), (0.2,0.9,0.9,1)),
+               ((0.2,0.9,0.2,1), (0.9,0.2,0.9,1))]
 
 
 
