@@ -1802,16 +1802,16 @@ class Projet(BaseDoc):
         self.branche = arbre.AppendItem(branche, Titres[9], data = self, image = self.arbre.images["Prj"])
 
         #
+        # Le support
+        #
+        
+        self.support.ConstruireArbre(arbre, self.branche)
+        #
         # Les profs
         #
         self.branchePrf = arbre.AppendItem(self.branche, Titres[10])
         for e in self.equipe:
             e.ConstruireArbre(arbre, self.branchePrf) 
-            
-        #
-        # Le support
-        #
-        self.support.ConstruireArbre(arbre, self.branche)
         
         #
         # Les élèves
@@ -1970,13 +1970,8 @@ class Projet(BaseDoc):
         
     #############################################################################
     def VerrouillerClasse(self):
-        if hasattr(self, 'CI') \
-            and (self.CI.numCI != [] or self.prerequis.savoirs != [] \
-                 or self.obj['C'].competences != [] or self.obj['S'].savoirs != []):
-            self.classe.Verrouiller(False)
-        else:
-            if self.classe != None:
-                self.classe.Verrouiller(True)
+        self.classe.Verrouiller(len(self.GetCompetencesUtil()) == 0)
+        
                 
                 
                 
@@ -3185,6 +3180,8 @@ class Tache(Objet_sequence):
         self.phase = branche.get("Phase", "C")
         self.description = branche.get("Description", None)
         
+        self.duree.v[0] = eval(branche.get("Duree", "1"))
+        
         brancheElv = branche.find("Eleves")
         self.eleves = []
         for i, e in enumerate(brancheElv.keys()):
@@ -3289,12 +3286,13 @@ class Tache(Objet_sequence):
             
     ######################################################################################  
     def SetCode(self):
-#        print "SetCode",
-#        self.code = self.phase
         num = str(self.ordre+1)
 
-        self.code = num
-#        print self.code
+        if self.phase != "":
+            self.code = self.phase[0]+num
+        else:
+            self.code = num
+
         if hasattr(self, 'codeBranche') and self.phase != "":
             self.codeBranche.SetLabel(self.code)
             self.arbre.SetItemText(self.branche, constantes.NOM_PHASE_TACHE[self.phase])
@@ -3781,7 +3779,7 @@ class Personne():
         if self.nom == "" and self.prenom == "":
             return self.titre.capitalize()+' '+str(self.id)
         else:
-            return self.nom.upper() + ' ' + self.prenom.capitalize()
+            return self.prenom.capitalize() + ' ' + self.nom.upper()
          
     ######################################################################################  
     def SetNom(self, nom):
@@ -3860,7 +3858,26 @@ class Eleve(Personne):
                 d += t.GetDuree()
         return d
         
-        
+    ######################################################################################  
+    def GetEvaluabilite(self):
+        """ Renvoie l'évaluabilité
+            % revue
+            % soutenance
+        """
+        print "GetEvaluabilite", self, ":", 
+        r = s = 0
+        for c in self.GetCompetences():
+            comp = constantes.dicCompetences_prj_simple[self.parent.classe.typeEnseignement][c]
+            if len(comp) > 2:
+                r += comp[1]
+            else:
+                s += comp[1]
+                
+        r = 1.0*r/constantes.NRB_COEF_COMP_R
+        s = 1.0*s/constantes.NRB_COEF_COMP_S[self.parent.classe.typeEnseignement]   
+        print r,s
+        return r, s
+    
     ######################################################################################  
     def GetCompetences(self):
         lst = []
@@ -3897,7 +3914,7 @@ class Eleve(Personne):
         if abs(duree-70) < tol:
             self.codeBranche.SetBackgroundColour(wx.GREEN)
         else:
-            self.codeBranche.SetBackgroundColour(wx.RED)
+            self.codeBranche.SetBackgroundColour(wx.NamedColor('PINK'))
             if duree < 70:
                 self.codeBranche.SetToolTipString(u"Durée de travail insuffisante")
             else:
@@ -4190,9 +4207,12 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                 child = FenetreSequence(self)  
             elif val == 2:
                 child = FenetreProjet(self)
+            else:
+                child = None
             dlg.Destroy()
 #        child.Show()
-        wx.CallAfter(child.Show)
+        if child != None:
+            wx.CallAfter(child.Show)
         return child
         
     ###############################################################################################
@@ -5480,6 +5500,7 @@ class PanelPropriete_Classe(PanelPropriete):
         self.Bind(wx.EVT_RADIOBOX, self.EvtRadioBox, rb)
         if pourProjet:
             rb.EnableItem(0, False) 
+            rb.SetStringSelection(self.classe.typeEnseignement)
             
         self.sizer.Add(rb, (0,0), flag = wx.EXPAND|wx.ALL)
         self.cb_type = rb
@@ -5580,7 +5601,7 @@ class PanelPropriete_Classe(PanelPropriete):
         self.MiseAJourType()
         
         self.classe.codeBranche.SetLabel(self.classe.typeEnseignement)
-        self.classe.sequence.MiseAJourTypeEnseignement()
+        self.classe.doc.MiseAJourTypeEnseignement()
         self.sendEvent()
         
         
@@ -5602,7 +5623,7 @@ class PanelPropriete_Classe(PanelPropriete):
         self.classe.posCI_ET[numCI] = s
 #        print self.classe.posCI_ET[numCI]
 #        print self.classe
-        self.classe.sequence.CI.panelPropriete.construire()
+        self.classe.doc.CI.panelPropriete.construire()
         self.sendEvent()
         
         
@@ -6514,8 +6535,6 @@ class PanelPropriete_Competences(PanelPropriete):
         
     ######################################################################################  
     def SetCompetences(self): 
-#        self.savoirs.savoirs = lst
-#        print self.competence.competences
         self.competence.parent.VerrouillerClasse()
         self.sendEvent()
         
@@ -7253,6 +7272,7 @@ class PanelPropriete_Tache(PanelPropriete):
     ############################################################################            
     def SetCompetences(self):
         self.sendEvent()
+        self.tache.parent.VerrouillerClasse()
         
 #        self.tache.SetCompetences()
         
@@ -7360,12 +7380,13 @@ class PanelPropriete_Tache(PanelPropriete):
     
     #############################################################################            
     def MiseAJourDuree(self):
+        print "MiseAJourDuree"
         self.vcDuree.mofifierValeursSsEvt()
         
         
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
-#        print "MiseAJour PanelPropriete_Tache"
+        print "MiseAJour PanelPropriete_Tache"
         self.arbre.UnselectAll()
         root = self.arbre.GetRootItem()
         for s in self.tache.competences:

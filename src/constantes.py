@@ -201,6 +201,10 @@ imagesCI = [images.CI_1, images.CI_2, images.CI_3, images.CI_4,
 
 
 def getCompetencesProjet(dic):
+    """ Renvoie un dict des compétences à évaluer en projet :
+        = certaines compétences de l'ET
+        + les compétences de l'enseignement de spécialité
+    """
     d = {"O1" : dicCompetencesET["O1"],
          "O2" : dicCompetencesET["O2"],
          "O6" : dicCompetencesET["O6"]
@@ -1022,18 +1026,41 @@ dicCompetences_prj = {'ITEC'   : dicCompetencesITEC_prj,
                       'SIN'    : dicCompetencesSIN_prj}
 
 
+NRB_COEF_COMP_S = {'ITEC'   : 0, # Nombres de coef pour les compétences "Soutenance"
+                   'AC'     : 0, 
+                   'EE'     : 0, 
+                   'SIN'    : 0}     
+
 dicCompetences_prj_simple = {}
 for k,v in dicCompetences_prj.items():
+    NRB_COEF_COMP_R = 0     # Nombre de coef pour les compétences "Revue"
     dic = {}
     for d in v.values():
+
         dic.update(d[1])
+        
+        for l in d[1].values():
+            if len(l) > 2:
+                NRB_COEF_COMP_R += l[1]
+            else:
+                NRB_COEF_COMP_S[k] += l[1]
+                
     dicCompetences_prj_simple[k] = dic
+
+
+print NRB_COEF_COMP_S
+print NRB_COEF_COMP_R
+
+
 
 dicSavoirs = {'ET'     : dicSavoirsET,
               'ITEC'   : dicSavoirsITEC, 
               'AC'     : dicSavoirsAC, 
               'EE'     : dicSavoirsEE, 
               'SIN'    : dicSavoirsSIN}
+
+
+
 
 def getListCI(txt):
     return txt.splitlines()
@@ -1174,7 +1201,7 @@ MESSAGE_FERMER = {'seq' : u"La séquence a été modifiée.\nVoulez vous enregis
 #######################################################################################
 
 PHASE_TACHE = ['Ana', 'Con', 'Rea', 'Val']
-NOM_PHASE_TACHE = {'Ana' : u"Analyse du besoin", 
+NOM_PHASE_TACHE = {'Ana' : u"Analyse", 
                    'Con' : u"Conception", 
                    'Rea' : u"Réalisation", 
                    'Val' : u"Validation"}
@@ -1185,14 +1212,14 @@ def getLstPhase():
     return lst
 
 
-COUL_ELEVES = [((0.3,0.3,0.7,1), (0.7,0.7,0.3,1)),
-               ((0.7,0.3,0.3,1), (0.3,0.7,0.7,1)),
-               ((0.3,0.7,0.3,1), (0.7,0.3,0.7,1)),
-               ((0.2,0.2,0.9,1), (0.9,0.9,0.2,1)),
-               ((0.9,0.2,0.2,1), (0.2,0.9,0.9,1)),
-               ((0.2,0.9,0.2,1), (0.9,0.2,0.9,1))]
+COUL_ELEVES = [((0.85,0.85,0.95,1), (0,0,0,1)),
+               ((0.7,0.7,0.8,1), (0,0,0,1)),
+               ((0.85,0.85,0.95,1), (0,0,0,1)),
+               ((0.7,0.7,0.8,1), (0,0,0,1)),
+               ((0.85,0.85,0.95,1), (0,0,0,1)),
+               ((0.7,0.7,0.8,1), (0,0,0,1))]
 
-
+DUREE_PRJ = 70
 
 
 
