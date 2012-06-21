@@ -127,7 +127,8 @@ posZElevesV = [None, 0.24]
 tailleZElevesV = [None, None]
 posZElevesH = [posZDeroul[0], posZElevesV[1]]
 tailleZElevesH = [None, None]
-wColEleves = 0.020
+wEleves = 0.020
+hEleves = 0.020
 xEleves = []
 yEleves = []
 
@@ -136,10 +137,10 @@ posZComp = [None, None]
 tailleZComp = [None, None]
 wColComp = 0.018
 xComp = {}
-ICoulCompR = (0.85, 0.7, 0.95, 0.2)      # couleur "Revue"
-ICoulCompS = (0.95, 0.7, 0.85, 0.2)      # couleur "Soutenance"
-BCoulCompR = (0.3, 0.2, 0.4, 1)      # couleur "Revue"
-BCoulCompS = (0.4, 0.2, 0.3, 1)      # couleur "Soutenance"
+ICoulCompR = (0.7, 0.6, 1, 0.2)      # couleur "Revue"
+ICoulCompS = (1, 0.6, 0.7, 0.2)      # couleur "Soutenance"
+#BCoulCompR = (0.3, 0.2, 0.4, 1)      # couleur "Revue"
+BCoulCompS = (0.7, 0.7, 0.7, 1)      # couleur "Soutenance"
 
 
 # Zone des tâches
@@ -350,7 +351,7 @@ def DefinirZones(prj, ctx):
     #
     # Zone du tableau des élèves
     #
-    tailleZElevesV[0] = wColEleves * len(prj.eleves)
+    tailleZElevesV[0] = wEleves * len(prj.eleves)
     tailleZElevesH[1] = tailleZElevesV[0]
     posZElevesV[0] = posZComp[0] - tailleZElevesV[0] - ecartX/2
     tailleZElevesH[0] = posZElevesV[0]-posZElevesH[0]
@@ -358,8 +359,8 @@ def DefinirZones(prj, ctx):
     xEleves = []
     yEleves = []
     for i in range(len(prj.eleves)):
-        xEleves.append(posZElevesV[0] + (i+0.5) * wColEleves)
-        yEleves.append(posZElevesH[1] + (i+0.5) * wColEleves)
+        xEleves.append(posZElevesV[0] + (i+0.5) * wEleves)
+        yEleves.append(posZElevesH[1] + (i+0.5) * hEleves)
 
 
     # Zone du tableau des compétences - Y
@@ -376,13 +377,14 @@ def DefinirZones(prj, ctx):
     # Zone des tâches
     posZTaches[1] = posZDeroul[1] + ecartY/2
     tailleZTaches[0] = posZDeroul[0] + tailleZDeroul[0] - posZTaches[0] - ecartX/2
-    tailleZTaches[1] = tailleZDeroul[1] - ecartY - 0.05    # écart pour la durée totale
+    tailleZTaches[1] = tailleZDeroul[1] - ecartY/2 - 0.03    # écart pour la durée totale
     
     
-    hHoraire = tailleZTaches[1] / (prj.GetDureeGraph() + 0.25*(prj.GetNbrPhases()-1))
-    ecartTacheY = hHoraire/4
-    if ecartTacheY > 0.02:
-        ecartTacheY = 0.02
+#    hHoraire = tailleZTaches[1] / (prj.GetDureeGraph() + 0.25*(prj.GetNbrPhases()-1))
+#    ecartTacheY = hHoraire/4
+#    if ecartTacheY > 0.02:
+    ecartTacheY = ecartY/2
+    if prj.GetDureeGraph() > 0:
         hHoraire = (tailleZTaches[1] - (prj.GetNbrPhases()-1)*ecartTacheY) / prj.GetDureeGraph()
 
 
@@ -570,6 +572,8 @@ def Draw(ctx, prj, mouchard = False):
     
 
 
+
+
     #
     #  Tableau des élèves
     #    
@@ -582,59 +586,65 @@ def Draw(ctx, prj, mouchard = False):
         l.append(e.GetNomPrenom())
     
     if len(l) > 0:
-        
-        r = tableauH(ctx, l, posZElevesH[0], posZElevesH[1], 
+        rec = tableauH(ctx, l, posZElevesH[0], posZElevesH[1], 
                      tailleZElevesH[0], 0, tailleZElevesH[1], 
-                     va = 'c', ha = 'g', orient = 'h', coul = constantes.COUL_ELEVES)
-        
+                     va = 'c', ha = 'd', orient = 'h', coul = constantes.COUL_ELEVES)
+        # Barres d'évaluabilité
         for i, e in enumerate(prj.eleves):
-            
-            e.rect = [r[i]]
-            
+            r, s = e.GetEvaluabilite()
+            y = posZElevesH[1] + i*hEleves
+            wr = tailleZElevesH[0]*r
+            ws = tailleZElevesH[0]*s
+            src = ctx.get_source()
+            pat = cairo.LinearGradient (0.0, y,  0.0, y+hEleves/2)
+            pat.add_color_stop_rgba (1, 0, 0, 0, 0.5)
+            pat.add_color_stop_rgba (0.5, 1, 1, 1, 0.3)
+            pat.add_color_stop_rgba (0, 0, 0, 0, 0.5)
+            ctx.rectangle (posZElevesH[0],y,wr,hEleves/2)
+            ctx.set_source (pat)
+            ctx.fill ()
+            ctx.set_source(src)
+        
+        
+        
+        
+        # Lignes horizontales
+        for i, e in enumerate(prj.eleves):
+            e.rect = [rec[i]]
             Ic = constantes.COUL_ELEVES[i][0]
-            Bc = constantes.COUL_ELEVES[i][1]
-            x = posZElevesV[0]+(i+0.5)*tailleZElevesV[0]/len(prj.eleves)
-            y = posZElevesH[1]+(i+0.5)*tailleZElevesH[1]/len(prj.eleves)
             
             ctx.set_source_rgb(Ic[0],Ic[1],Ic[2])
             ctx.set_line_width(0.003)
-            
-            ctx.move_to(posZElevesH[0]+tailleZElevesH[0], y)
-            ctx.line_to(posZComp[0]+tailleZComp[0], y)
-            
+            ctx.move_to(posZElevesH[0]+tailleZElevesH[0], yEleves[i])
+            ctx.line_to(posZComp[0]+tailleZComp[0], yEleves[i])
             ctx.stroke()
             
-            
+        # Lignes verticales
         for i, e in enumerate(prj.eleves):
             Ic = constantes.COUL_ELEVES[i][0]
-            Bc = constantes.COUL_ELEVES[i][1]
-            x = posZElevesV[0]+(i+0.5)*tailleZElevesV[0]/len(prj.eleves)
-            y = posZElevesH[1]+(i+0.5)*tailleZElevesH[1]/len(prj.eleves)
             
             ctx.set_source_rgb(Ic[0],Ic[1],Ic[2])
             ctx.set_line_width(0.003)
-            
-            ctx.move_to(x, y)
-            ctx.line_to(x, posZElevesV[1] + tailleZElevesV[1])
-            
+            ctx.move_to(xEleves[i], yEleves[i])
+            ctx.line_to(xEleves[i], posZTaches[1] + tailleZTaches[1] + (i % 2)*(ecartY/2))
             ctx.stroke()
             
-            DrawCroisementsElevesCompetences(ctx, e, y)
+            DrawCroisementsElevesCompetences(ctx, e, yEleves[i])
             
-        
+        # Ombres des lignes verticales
         e = 0.003
         ctx.set_line_width(0.003)
         for i in range(len(prj.eleves)) :
-            x = posZElevesV[0]+(i+0.5)*tailleZElevesV[0]/len(prj.eleves)
-            y = posZElevesH[1]+(i+0.5)*tailleZElevesH[1]/len(prj.eleves)+e
+            y = posZTaches[1] + tailleZTaches[1] + (i % 2)*(ecartY/2)
             ctx.set_source_rgb(1,1,1)
-            ctx.move_to(x+e, y)
-            ctx.line_to(x+e, posZElevesV[1] + tailleZElevesV[1])
-            ctx.move_to(x-e, y)
-            ctx.line_to(x-e, posZElevesV[1] + tailleZElevesV[1])
+            ctx.move_to(xEleves[i]+e, yEleves[i]+e)
+            ctx.line_to(xEleves[i]+e, y)
+            ctx.move_to(xEleves[i]-e, yEleves[i]+e)
+            ctx.line_to(xEleves[i]-e, y)
         ctx.stroke()
         
-    
+        
+            
     
     
     
@@ -654,6 +664,7 @@ def Draw(ctx, prj, mouchard = False):
             yh_phase[t.phase] = [y,None]
             
         if phase != t.phase:
+            # Noms des phases
             if phase != None:
                 yh_phase[t.phase][1] = y - yh_phase[t.phase][0]
                 hp = y-yp
@@ -665,14 +676,15 @@ def Draw(ctx, prj, mouchard = False):
                        (posZDeroul[0] + ecartX/4, yp, 
                         wPhases, hp), ha = 'c', orient = 'v', b = 0.1) 
             
-            y += ecartTacheY
-            yp = y
+                y += ecartTacheY
+                yp = y
             
         
         if t.phase != '':  
             y = DrawTacheRacine(ctx, t, y)    
             phase = t.phase
         
+    # Nom de la dernière phase
     if phase != None:
         yh_phase[t.phase][1] = y - yh_phase[t.phase][0]
         hp = y-yp
@@ -684,18 +696,32 @@ def Draw(ctx, prj, mouchard = False):
                 wPhases, hp), ha = 'c', orient = 'v', b = 0.1)    
         
         
+        
+        
+        
+        
     #
-    # Durée de la séquence
+    # Durées du projet (totale et durées élèves)
     #
     ctx.set_source_rgb(0.5,0.8,0.8)
     ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                        cairo.FONT_WEIGHT_BOLD)
+    y = posZTaches[1] + tailleZTaches[1] + ecartY/4
+    
     show_text_rect(ctx, getHoraireTxt(prj.GetDuree()), 
-                   (posZTaches[0] - wDuree*3/2 - ecartX/2, posZTaches[1] + tailleZTaches[1] + ecartY/2, 
-                    wDuree*2, wDuree), ha = 'c', b = 0)    
+                   (posZTaches[0] - wDuree*3/2 - ecartX/2, y, 
+                    wDuree*2, ecartY/2), ha = 'c', b = 0)    
     
-    
-    
+    for i, e in enumerate(prj.eleves):
+        x = posZElevesV[0]+i*tailleZElevesV[0]/len(prj.eleves)
+        y = posZTaches[1] + tailleZTaches[1] + (i % 2)*(ecartY/2)
+        d = e.GetDuree()
+        if d < constantes.DUREE_PRJ:
+            ctx.set_source_rgb(1,0.1,0.1)
+        else:
+            ctx.set_source_rgb(0.1,1,0.1)
+        show_text_rect(ctx, getHoraireTxt(d), 
+                       (x, y, wEleves, ecartY/2), ha = 'c', b = 0)
     
     
     #
@@ -928,7 +954,7 @@ def DrawTacheRacine(ctx, tache, y):
     # Tracé du cadre de la tâche
     #
     x = posZTaches[0]
-    h = hHoraire * tache.GetDureeGraph()
+
     tache.pts_caract.append((x, y))
         
     ctx.set_line_width(0.002)
@@ -1545,6 +1571,8 @@ def show_lignes(ctx, lignes, x, y, w, h, ha, va):
             xt = x+xbearing+(w-width)/2
         elif ha == 'g':
             xt = x
+        elif ha == 'd':
+            xt = x+xbearing+w-width
         
         yt = y + (fascent+fdescent)*l - fdescent + fheight + dy
 
