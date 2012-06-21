@@ -3880,9 +3880,13 @@ class Eleve(Personne):
             
     ######################################################################################  
     def HitTest(self, x, y):
-        if hasattr(self, 'rect') and dansRectangle(x, y, self.rect):
-#            self.arbre.DoSelectItem(self.branche)
-            return self.branche
+        if hasattr(self, 'rect'):
+#            print self.rect
+            if dansRectangle(x, y, self.rect):
+                return self.branche
+#            for r in self.rect:
+#                if dansRectangle(x, y, r):
+#                    return self.branche
     
     
     ######################################################################################  
@@ -5439,6 +5443,7 @@ class PanelPropriete_Projet(PanelPropriete):
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
         self.textctrl.ChangeValue(self.projet.intitule)
+        self.commctrl.ChangeValue(self.projet.problematique)
         self.Layout()
         if sendEvt:
             self.sendEvent()

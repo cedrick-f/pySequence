@@ -423,16 +423,7 @@ def Draw(ctx, prj, mouchard = False):
     DefinirZones(prj, ctx)
 
     prj.pt_caract = []
-#    #
-#    #  Cadre et Intitulé du projet
-#    #
-#    prj.rect = [(posZOrganis[0]-bordureZOrganis, posZOrganis[1], 
-#                 tailleZOrganis[0]+bordureZOrganis*2, tailleZOrganis[1]+bordureZOrganis)]
-#    prj.pt_caract = [curve_rect_titre(ctx, prj.intitule,  
-#                                     prj.rect[0], 
-#                                     BcoulIntitule, IcoulIntitule, FontIntitule)]
-    
-    
+    prj.rect = []
     
     #
     # Type d'enseignement
@@ -459,7 +450,7 @@ def Draw(ctx, prj, mouchard = False):
     taillePos[0] =  0.72414 - posPos[0] - margeX
     ctx.set_line_width (0.0015)
     prj.rectPos = DrawPeriodes(ctx, prj.position, tailleTypeEns = tailleTypeEns)
-#    prj.rect.append(posPos+taillePos)
+    prj.rect.append(posPos+taillePos)
     
     
     #
@@ -487,6 +478,7 @@ def Draw(ctx, prj, mouchard = False):
         ctx.paint ()
         ctx.restore()
         
+        prj.support.rect.append(posImg + tailleImg)
             
     
     
@@ -505,6 +497,7 @@ def Draw(ctx, prj, mouchard = False):
     if len(lstTexte) > 0:
         r = liste_code_texte(ctx, lstCodes, lstTexte, posEqu[0], posEqu[1], tailleEqu[0], tailleEqu[1]+0.0001, 0.008)
 
+    prj.rect.append(rectEqu)
 #        prj.pts_caract.append(getPts(r))
         
 
@@ -519,7 +512,7 @@ def Draw(ctx, prj, mouchard = False):
     show_text_rect(ctx, prj.problematique, 
                    rectPro, ha = 'g', b = 0.2,
                    fontsizeMinMax = (-1, 0.016))
-    
+    prj.rect.append(rectPro)
     
     #
     #  Support
@@ -533,7 +526,7 @@ def Draw(ctx, prj, mouchard = False):
                    rectSup, ha = 'c', b = 0.2,
                    fontsizeMinMax = (-1, 0.016))
     
-    
+    prj.support.rect.append(rectSup)
     
     
         
@@ -587,13 +580,17 @@ def Draw(ctx, prj, mouchard = False):
     l=[]
     for e in prj.eleves : 
         l.append(e.GetNomPrenom())
+    
     if len(l) > 0:
         
-        tableauH(ctx, l, posZElevesH[0], posZElevesH[1], 
-                tailleZElevesH[0], 0, tailleZElevesH[1], 
-                va = 'c', ha = 'g', orient = 'h', coul = constantes.COUL_ELEVES)
+        r = tableauH(ctx, l, posZElevesH[0], posZElevesH[1], 
+                     tailleZElevesH[0], 0, tailleZElevesH[1], 
+                     va = 'c', ha = 'g', orient = 'h', coul = constantes.COUL_ELEVES)
         
         for i, e in enumerate(prj.eleves):
+            
+            e.rect = [r[i]]
+            
             Ic = constantes.COUL_ELEVES[i][0]
             Bc = constantes.COUL_ELEVES[i][1]
             x = posZElevesV[0]+(i+0.5)*tailleZElevesV[0]/len(prj.eleves)
@@ -1684,7 +1681,7 @@ def tableauV(ctx, titres, x, y, w, ht, hl, nlignes = 0, va = 'c', ha = 'c', orie
 def tableauH(ctx, titres, x, y, wt, wc, h, nCol = 0, va = 'c', ha = 'c', orient = 'h', 
              coul = (0.9,0.9,0.9), contenu = []):
     
-
+    rect = []
     hc = h/len(titres)
     _y = y
     _coul = ctx.get_source().get_rgba()
@@ -1694,7 +1691,6 @@ def tableauH(ctx, titres, x, y, wt, wc, h, nCol = 0, va = 'c', ha = 'c', orient 
         if type(coul) == dict :
             col = coul[titre.rstrip("1234567890.")]
         else:
-            print type(coul[0])
             if type(coul[0]) == tuple:
                 col = coul[i]
             else:
@@ -1703,6 +1699,7 @@ def tableauH(ctx, titres, x, y, wt, wc, h, nCol = 0, va = 'c', ha = 'c', orient 
         ctx.fill_preserve ()
         ctx.set_source_rgba (_coul[0], _coul[1], _coul[2], _coul[3])
         show_text_rect(ctx, titre, (x, _y, wt, hc), va = va, ha = ha, orient = orient)
+        rect.append((x, _y, wt, hc))
         ctx.stroke ()
         _y += hc
     
@@ -1725,6 +1722,8 @@ def tableauH(ctx, titres, x, y, wt, wc, h, nCol = 0, va = 'c', ha = 'c', orient 
         _y = y
         
     ctx.stroke ()
+    
+    return rect
 
 def tableauH_var(ctx, titres, x, y, wt, wc, hl, taille, nCol = 0, va = 'c', ha = 'c', orient = 'h', 
              coul = (0.9,0.9,0.9), contenu = []):
