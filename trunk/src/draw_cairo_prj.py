@@ -597,10 +597,23 @@ def Draw(ctx, prj, mouchard = False):
             ws = tailleZElevesH[0]*s
             src = ctx.get_source()
             pat = cairo.LinearGradient (0.0, y,  0.0, y+hEleves/2)
-            pat.add_color_stop_rgba (1, 0, 0, 0, 0.5)
-            pat.add_color_stop_rgba (0.5, 1, 1, 1, 0.3)
-            pat.add_color_stop_rgba (0, 0, 0, 0, 0.5)
+            pat.add_color_stop_rgba (1, ICoulCompR[0], ICoulCompR[1], ICoulCompR[2], 0.5)
+            if r > 0.5:
+                pat.add_color_stop_rgba (0.5, 0, 1, 0, 0.2)
+            else:
+                pat.add_color_stop_rgba (0.5, 1, 0, 0, 0.2)
+            pat.add_color_stop_rgba (0, ICoulCompR[0], ICoulCompR[1], ICoulCompR[2], 0.5)
             ctx.rectangle (posZElevesH[0],y,wr,hEleves/2)
+            ctx.set_source (pat)
+            ctx.fill ()
+            pat = cairo.LinearGradient (0.0, y+hEleves/2,  0.0, y+hEleves)
+            pat.add_color_stop_rgba (1, ICoulCompS[0], ICoulCompS[1], ICoulCompS[2], 0.5)
+            if s > 0.5:
+                pat.add_color_stop_rgba (0.5, 0, 1, 0, 0.2)
+            else:
+                pat.add_color_stop_rgba (0.5, 1, 0, 0, 0.2)
+            pat.add_color_stop_rgba (0, ICoulCompS[0], ICoulCompS[1], ICoulCompS[2], 0.5)
+            ctx.rectangle (posZElevesH[0],y+hEleves/2,ws,hEleves/2)
             ctx.set_source (pat)
             ctx.fill ()
             ctx.set_source(src)
