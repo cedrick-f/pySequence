@@ -3815,7 +3815,16 @@ class Personne():
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
         self.arbre = arbre
-        self.codeBranche = wx.StaticText(self.arbre, -1, "")
+        self.codeBranche = wx.Panel(self.arbre, -1)
+        sz = wx.BoxSizer(wx.HORIZONTAL)
+        self.codeDuree = wx.StaticText(self.codeBranche, -1, "")
+        self.evaluR = wx.StaticText(self.codeBranche, -1, "")
+        self.evaluS = wx.StaticText(self.codeBranche, -1, "")
+        sz.Add(self.codeDuree)
+        sz.Add(self.evaluR)
+        sz.Add(self.evaluS)
+        self.codeBranche.SetSizerAndFit(sz)
+        
 #        print "image",self.arbre.images["Sys"], self.image.GetWidth()
 #        if self.image == None or self.image == wx.NullBitmap:
         image = self.arbre.images[self.code]
@@ -3863,8 +3872,7 @@ class Eleve(Personne):
         """ Renvoie l'évaluabilité
             % revue
             % soutenance
-        """
-        print "GetEvaluabilite", self, ":", 
+        """ 
         r = s = 0
         for c in self.GetCompetences():
             comp = constantes.dicCompetences_prj_simple[self.parent.classe.typeEnseignement][c]
@@ -3875,7 +3883,6 @@ class Eleve(Personne):
                 
         r = 1.0*r/constantes.NRB_COEF_COMP_R
         s = 1.0*s/constantes.NRB_COEF_COMP_S[self.parent.classe.typeEnseignement]   
-        print r,s
         return r, s
     
     ######################################################################################  
@@ -3909,18 +3916,39 @@ class Eleve(Personne):
     ######################################################################################  
     def MiseAJourCodeBranche(self):
         duree = int(self.GetDuree())
-        self.codeBranche.SetLabel("("+str(duree)+"h)")
+        lab = "("+str(duree)+"h) "
+        self.codeDuree.SetLabel(lab)
         tol = 5
         if abs(duree-70) < tol:
-            self.codeBranche.SetBackgroundColour(wx.GREEN)
+            self.codeDuree.SetBackgroundColour(wx.GREEN)
         else:
-            self.codeBranche.SetBackgroundColour(wx.NamedColor('PINK'))
+            self.codeDuree.SetBackgroundColour(wx.NamedColor('PINK'))
             if duree < 70:
-                self.codeBranche.SetToolTipString(u"Durée de travail insuffisante")
+                self.codeDuree.SetToolTipString(u"Durée de travail insuffisante")
             else:
-                self.codeBranche.SetToolTipString(u"Durée de travail trop importante")
-    
+                self.codeDuree.SetToolTipString(u"Durée de travail trop importante")
         
+        
+        er, es = self.GetEvaluabilite()
+        labr = str(int(er*100))+"% "
+        labs = str(int(es*100))+"%"
+        self.evaluR.SetLabel(labr)
+        self.evaluS.SetLabel(labs)
+        t = u"L'élève ne mobilise pas suffisamment de compétences pour être évalué lors "
+        if er >= 0.5:
+            self.evaluR.SetBackgroundColour(wx.GREEN)
+        else:
+            self.evaluR.SetBackgroundColour(wx.NamedColor('PINK'))
+            self.evaluR.SetToolTipString(t+u"des revues")
+        
+        if es >= 0.5:
+            self.evaluS.SetBackgroundColour(wx.GREEN)
+        else:
+            self.evaluS.SetBackgroundColour(wx.NamedColor('PINK'))
+            self.evaluS.SetToolTipString(t+u"de la soutenance")
+
+        self.codeBranche.Layout()
+        self.codeBranche.Fit()
     
 
 ####################################################################################
@@ -4325,7 +4353,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         for m in self.GetChildren():
             if isinstance(m, aui.AuiMDIClientWindow):
                 for k in m.GetChildren():
-                    if isinstance(k, FenetreSequence):
+                    if isinstance(k, FenetreDocument):
                         toutferme = toutferme and k.quitter()  
         
         print "OnClose fini"
@@ -4595,6 +4623,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
     
     #############################################################################
     def quitter(self, event = None):
+        print "quitter"
         if self.fichierCourantModifie:
             texte = constantes.MESSAGE_FERMER[self.typ]
             if self.fichierCourant != '':
@@ -4957,27 +4986,7 @@ class FenetreProjet(FenetreDocument):
         self.projet.AppliquerOptions() 
     
     
-#        print "fichier courant :",self.fichierCourant
-#        if self.fichierCourant != '':
-#            s = u"'Oui' pour enregistrer la séquence dans le fichier\n"
-#            s += self.fichierCourant
-#            s += ".\n\n"
-#            s += u"'Non' pour enregistrer la séquence dans un autre fichier."
-#            
-#            dlg = wx.MessageDialog(self, s,
-#                                   u'Enregistrement',
-#                                     wx.ICON_INFORMATION | wx.YES_NO | wx.CANCEL
-#                                     )
-#            res = dlg.ShowModal()
-#            dlg.Destroy() 
-#            if res == wx.ID_YES:
-#                self.enregistrer(self.fichierCourant)
-#            elif res == wx.ID_NO:
-#                self.dialogEnregistrer('seq')
-#            
-#            
-#        else:
-#            self.dialogEnregistrer('seq')
+
             
 
         
@@ -5443,6 +5452,7 @@ class PanelPropriete_Projet(PanelPropriete):
         self.SetBitmapPosition()
         
         
+        
     #############################################################################            
     def SetBitmapPosition(self, bougerSlider = None):
         self.sendEvent()
@@ -5464,6 +5474,8 @@ class PanelPropriete_Projet(PanelPropriete):
     def MiseAJour(self, sendEvt = False):
         self.textctrl.ChangeValue(self.projet.intitule)
         self.commctrl.ChangeValue(self.projet.problematique)
+        self.bmp.SetBitmap(self.getBitmapPeriode(250))
+        self.position.SetValue(self.projet.position)
         self.Layout()
         if sendEvt:
             self.sendEvent()
