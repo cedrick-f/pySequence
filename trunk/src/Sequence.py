@@ -64,6 +64,12 @@ try:
 except ImportError: # if it's not there locally, try the wxPython lib.
     import wx.lib.agw.customtreectrl as CT
 
+try:
+    from agw import hypertreelist as HTL
+except ImportError: # if it's not there locally, try the wxPython lib.
+    import wx.lib.agw.hypertreelist as HTL
+    
+    
 # Gestionnaire de "pane"
 import wx.aui as aui
 
@@ -396,7 +402,7 @@ class ElementDeSequence():
     ######################################################################################  
     def SetLien(self, lien = None):
 #        print "SetLien", self.lien
-        self.tip.SetLien(self.lien)
+        self.tip.SetLien(self.lien, self.tip_titrelien, self.tip_ctrllien)
         if hasattr(self, 'panelPropriete'): 
             self.panelPropriete.MiseAJourLien()
         
@@ -418,7 +424,7 @@ class ElementDeSequence():
         
     ######################################################################################  
     def OnPathModified(self):
-        self.tip.SetLien(self.lien)
+        self.tip.SetLien(self.lien, self.tip_titrelien, self.tip_ctrllien)
         
         
 #    ######################################################################################  
@@ -455,9 +461,14 @@ class LienSequence():
         self.parent = parent
         self.panelPropriete = PanelPropriete_LienSequence(panelParent, self)
         self.panelParent = panelParent
-        # Tip
-        self.tip = PopupInfoSysteme(self.parent.app, u"Séquence requise")
-    
+        
+        #
+        # Création du Tip (PopupInfo)
+        #
+        self.tip = PopupInfo(self.parent.app, u"Séquence requise")
+        self.tip_titre = self.tip.CreerTexte((1,0))
+        self.tip_titrelien, self.tip_ctrllien = self.tip.CreerLien((2,0))
+        self.tip_image = self.tip.CreerImage((3,0))
     
     ######################################################################################  
     def getBranche(self):
@@ -496,16 +507,15 @@ class LienSequence():
         
     ######################################################################################  
     def SetImage(self, bmp):
-        self.tip.SetImage(bmp)
+        self.tip.SetImage(bmp, self.tip_image)
 
     ######################################################################################  
     def SetLien(self):
-        self.tip.SetLien(Lien(self.path, 's'))
-#        self.panelPropriete.MiseAJour()
+        self.tip.SetLien(Lien(self.path, 's'), self.tip_titrelien, self.tip_ctrllien)
     
     ######################################################################################  
     def SetTitre(self, titre):
-        self.tip.SetMessage(titre)
+        self.tip.SetTexte(titre, self.tip_titre)
         
     ######################################################################################  
     def GetNomFichier(self):
@@ -2388,9 +2398,15 @@ class Seance(ElementDeSequence, Objet_sequence):
         self.SetType(typeSeance)
         self.sousSeances = []
         
-        # Tip
+        #
+        # Création du Tip (PopupInfo)
+        #
         if self.GetApp():
-            self.tip = PopupInfoSeance(self.GetApp(), u"Séance", self)
+            self.tip = PopupInfo(self.GetApp(), u"Séance")
+            self.tip_type = self.tip.CreerTexte((1,0))
+            self.tip_intitule = self.tip.CreerTexte((2,0))
+            self.tip_titrelien, self.tip_ctrllien = self.tip.CreerLien((3,0))
+            self.tip_description = self.tip.CreerRichTexte(self, (4,0))
         
         self.AjouterListeSystemes(self.GetDocument().systemes)
         
@@ -2754,16 +2770,10 @@ class Seance(ElementDeSequence, Objet_sequence):
     def SetIntitule(self, text):           
         self.intitule = text
         if self.intitule != "":
-            self.tip.SetMessage(u"Intitulé : "+ "\n".join(textwrap.wrap(self.intitule, 40)))
+            texte = u"Intitulé : "+ "\n".join(textwrap.wrap(self.intitule, 40))
         else:
-            self.tip.SetMessage(u"")
-        
-#    ######################################################################################  
-#    def SetEffectif(self, text):   
-#        for k, v in Effectifs.items():
-#            if v[0] == text:
-#                codeEff = k
-#        self.effectif = codeEff
+            texte = u""
+        self.tip.SetTexte(texte, self.tip_intitule)
            
     
     ######################################################################################  
@@ -2816,7 +2826,7 @@ class Seance(ElementDeSequence, Objet_sequence):
         """ Publie toutes les descriptions de séance
             (à l'ouverture)
         """
-        self.tip.SetDescription()
+        self.tip.SetRichTexte()
         if hasattr(self, 'panelPropriete'):
             self.panelPropriete.rtc.Ouvrir()
         if self.typeSeance in ["R", "S"]:
@@ -2832,7 +2842,7 @@ class Seance(ElementDeSequence, Objet_sequence):
             self.description = description
             if hasattr(self, 'panelPropriete'):
                 self.panelPropriete.sendEvent()
-            self.tip.SetDescription()
+            self.tip.SetRichTexte()
         
 #        print "Fini"
             
@@ -2862,15 +2872,24 @@ class Seance(ElementDeSequence, Objet_sequence):
         # Tip
         self.tip.SetTitre(u"Séance "+ self.code)
         if self.typeSeance != "":
-            self.tip.SetCode(u"Type : "+ constantes.TypesSeance[self.typeSeance])
+            t = u"Type : "+ constantes.TypesSeance[self.typeSeance]
         else:
-            self.tip.SetCode(u"")
+            t = u""
+        self.tip.SetTexte(t, self.tip_type)    
+            
         if self.intitule != "":
-            self.tip.SetMessage(u"Intitulé : "+ "\n".join(textwrap.wrap(self.intitule, 40)))
+            t = u"Intitulé : "+ "\n".join(textwrap.wrap(self.intitule, 40))
         else:
-            self.tip.SetMessage(u"")
+            t = u""
+        self.tip.SetTexte(t, self.tip_intitule)  
         
         
+        
+    
+            
+            
+            
+            
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
         self.arbre = arbre
@@ -3119,9 +3138,14 @@ class Tache(Objet_sequence):
         
         self.phase = phaseTache
         
-        # Tip
+        #
+        # Création du Tip (PopupInfo)
+        #
         if self.GetApp():
-            self.tip = PopupInfoSeance(self.GetApp(), u"Tâche", self)
+            self.tip = PopupInfo(self.GetApp(), u"Tâche")
+            self.tip_phase = self.tip.CreerTexte((1,0))
+            self.tip_intitule = self.tip.CreerTexte((2,0))
+            self.tip_description = self.tip.CreerRichTexte(self, (3,0))
         
         
         if panelParent:
@@ -3249,11 +3273,14 @@ class Tache(Objet_sequence):
     def SetIntitule(self, text):           
         self.intitule = text
         if self.intitule != "":
-            self.tip.SetMessage(u"Intitulé : "+ "\n".join(textwrap.wrap(self.intitule, 40)))
+            t = u"Intitulé : "+ "\n".join(textwrap.wrap(self.intitule, 40))
         else:
-            self.tip.SetMessage(u"")
+            t = u""
+        self.tip.SetTexte(t, self.tip_intitule)
         
         
+            
+            
     ######################################################################################  
     def SetPhase(self, phase):
         self.phase = phase
@@ -3271,7 +3298,7 @@ class Tache(Objet_sequence):
         """ Publie toutes les descriptions de tâche
             (à l'ouverture)
         """
-        self.tip.SetDescription()
+        self.tip.SetRichTexte()
         if hasattr(self, 'panelPropriete'):
             self.panelPropriete.rtc.Ouvrir()
 
@@ -3282,7 +3309,7 @@ class Tache(Objet_sequence):
             self.description = description
             if hasattr(self, 'panelPropriete'):
                 self.panelPropriete.sendEvent()
-            self.tip.SetDescription()
+            self.tip.SetRichTexte()
             
     ######################################################################################  
     def SetCode(self):
@@ -3301,15 +3328,21 @@ class Tache(Objet_sequence):
         # Tip
         self.tip.SetTitre(u"Tâche "+ self.code)
         if self.phase != "":
-            self.tip.SetCode(u"Phase : "+ constantes.NOM_PHASE_TACHE[self.phase])
+            t = u"Phase : "+ constantes.NOM_PHASE_TACHE[self.phase]
         else:
-            self.tip.SetCode(u"")
+            t = u""
+        self.tip.SetTexte(t, self.tip_phase)
+        
         if self.intitule != "":
-            self.tip.SetMessage(u"Intitulé : "+ "\n".join(textwrap.wrap(self.intitule, 40)))
+            t = u"Intitulé : "+ "\n".join(textwrap.wrap(self.intitule, 40))
         else:
-            self.tip.SetMessage(u"")
+            t = u""
+        self.tip.SetTexte(t, self.tip_intitule)
         
         
+            
+            
+            
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
         self.arbre = arbre
@@ -3453,8 +3486,15 @@ class Systeme(ElementDeSequence):
                               expression = None, multiple = False)
         self.image = None
         
-        # Tip
-        self.tip = PopupInfoSysteme(parent.app, u"Système ou matériel")
+        #
+        # Création du Tip (PopupInfo)
+        #
+        self.tip = PopupInfo(self.parent.app, u"Système ou matériel")
+        self.tip_nom = self.tip.CreerTexte((1,0))
+        self.tip_nombre, self.tip_ctrllien = self.tip.CreerLien((2,0))
+        self.tip_image = self.tip.CreerImage((3,0))
+        
+        
         if panelParent:
             self.panelPropriete = PanelPropriete_Systeme(panelParent, self)
         
@@ -3520,13 +3560,14 @@ class Systeme(ElementDeSequence):
             
         # Tip
         if hasattr(self, 'tip'):
-            self.tip.SetCode(u"Nom : "+self.nom)
-            self.tip.SetMessage(u"Nombre disponible : " + str(self.nbrDispo.v[0]))
+            self.tip.SetTexte(u"Nom : "+self.nom, self.tip_nom)
+            self.tip.SetTexte(u"Nombre disponible : " + str(self.nbrDispo.v[0]), self.tip_nombre)
 
     ######################################################################################  
     def SetImage(self):
-        self.tip.SetImage(self.image)
+        self.tip.SetImage(self.image, self.tip_image)
         
+
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
         self.arbre = arbre
@@ -3605,8 +3646,14 @@ class Support(ElementDeSequence):
         
         self.image = None
         
-        # Tip
-        self.tip = PopupInfoSysteme(parent.app, u"Support")
+        #
+        # Création du Tip (PopupInfo)
+        #
+        self.tip = PopupInfo(self.parent.app, u"Support")
+        self.tip_nom = self.tip.CreerTexte((1,0))
+        self.tip_titrelien, self.tip_ctrllien = self.tip.CreerLien((2,0))
+        self.tip_image = self.tip.CreerImage((3,0))
+        
         if panelParent:
             self.panelPropriete = PanelPropriete_Support(panelParent, self)
         
@@ -3663,7 +3710,7 @@ class Support(ElementDeSequence):
         """ Publie toutes les descriptions de séance
             (à l'ouverture)
         """
-        self.tip.SetDescription()
+        self.tip.SetRichTexte()
         if hasattr(self, 'panelPropriete'):
             self.panelPropriete.rtc.Ouvrir()
         
@@ -3674,7 +3721,7 @@ class Support(ElementDeSequence):
             self.description = description
             if hasattr(self, 'panelPropriete'):
                 self.panelPropriete.sendEvent()
-            self.tip.SetDescription()
+            self.tip.RichTexte()
             
     ######################################################################################  
     def SetCode(self):
@@ -3690,12 +3737,12 @@ class Support(ElementDeSequence):
             
         # Tip
         if hasattr(self, 'tip'):
-            self.tip.SetCode(u"Nom : "+self.nom)
+            self.tip.SetTexte(u"Nom : "+self.nom, self.tip_nom)
             
 
     ######################################################################################  
     def SetImage(self):
-        self.tip.SetImage(self.image)
+        self.tip.SetImage(self.image, self.tip_image)
         
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
@@ -3733,8 +3780,15 @@ class Personne():
         self.avatar = None
         self.id = id # Un identifiant unique = nombre > 0
 
-        # Tip
-        self.tip = PopupInfoSysteme(parent.app, self.titre.capitalize())
+        #
+        # Création du Tip (PopupInfo)
+        #
+        self.tip = PopupInfo(self.parent.app, u"")
+        self.tip_nom = self.tip.CreerTexte((1,0), flag = wx.ALIGN_CENTER|wx.TOP)
+        self.tip_avatar = self.tip.CreerImage((2,0))
+        self.tip.SetTitre(self.titre.capitalize())
+        self.tip_nom.SetFont(wx.Font(10, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD))
+        
         if panelParent:
             self.panelPropriete = PanelPropriete_Personne(panelParent, self)
 
@@ -3806,11 +3860,12 @@ class Personne():
             
         # Tip
         if hasattr(self, 'tip'):
-            self.tip.SetCode(u"Nom : "+self.GetNomPrenom())
+            self.tip.SetTexte(self.GetNomPrenom(), self.tip_nom)
+            self.tip.SetImage(self.avatar, self.tip_avatar)
 
     ######################################################################################  
     def SetImage(self):
-        self.tip.SetImage(self.avatar)
+        self.tip.SetImage(self.avatar, self.tip_avatar)
         
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
@@ -3858,6 +3913,33 @@ class Eleve(Personne):
         self.titre = u"élève"
         self.code = "Elv"
         Personne.__init__(self, parent, panelParent, id)
+        
+        #
+        # Création du Tip (PopupInfo) - plus complexe pour pour une personne "standard"
+        #
+        dc = self.tip.CreerTexte((3,0), (1,2), txt = u"Durée d'activité :", flag = wx.ALIGN_RIGHT|wx.TOP|wx.BOTTOM|wx.LEFT)
+        ec = self.tip.CreerTexte((4,0), (1,2), txt = u"Evaluabilité :", flag = wx.ALIGN_RIGHT|wx.TOP|wx.LEFT)
+        rc = self.tip.CreerTexte((5,1), (1,1), txt = u"Revue :", flag = wx.ALIGN_RIGHT|wx.RIGHT)
+        sc = self.tip.CreerTexte((6,1), (1,1), txt = u"Soutenance :", flag = wx.ALIGN_RIGHT|wx.RIGHT|wx.BOTTOM)
+        
+        self.tip_duree = self.tip.CreerTexte((3,2), flag = wx.ALIGN_LEFT|wx.TOP|wx.BOTTOM|wx.RIGHT|wx.LEFT)
+        self.tip_evalR = self.tip.CreerTexte((5,2), flag = wx.ALIGN_LEFT|wx.RIGHT)
+        self.tip_evalS = self.tip.CreerTexte((6,2), flag = wx.ALIGN_LEFT|wx.RIGHT|wx.BOTTOM)
+        
+        dc.SetFont(wx.Font(10, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.NORMAL, underline = True))
+        ec.SetFont(wx.Font(10, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.NORMAL, underline = True))
+        rc.SetFont(wx.Font(9, wx.SWISS, wx.FONTSTYLE_ITALIC, wx.NORMAL))
+        sc.SetFont(wx.Font(9, wx.SWISS, wx.FONTSTYLE_ITALIC, wx.NORMAL))
+        self.tip_duree.SetFont(wx.Font(10, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.NORMAL))
+        self.tip_evalR.SetFont(wx.Font(9, wx.SWISS, wx.FONTSTYLE_ITALIC, wx.NORMAL))
+        self.tip_evalS.SetFont(wx.Font(9, wx.SWISS, wx.FONTSTYLE_ITALIC, wx.NORMAL))
+               
+        self.tip.DeplacerItem(self.tip_avatar, span = (1,3)) 
+        self.tip.DeplacerItem(self.tip_nom, span = (1,3))      
+        self.tip.DeplacerItem(None, span = (1,3))                        
+        
+        
+        
             
     ######################################################################################  
     def GetDuree(self):
@@ -3921,6 +4003,7 @@ class Eleve(Personne):
         tol = 5
         if abs(duree-70) < tol:
             self.codeDuree.SetBackgroundColour(wx.GREEN)
+            self.codeDuree.SetToolTipString(u"Durée de travail conforme")
         else:
             self.codeDuree.SetBackgroundColour(wx.NamedColor('PINK'))
             if duree < 70:
@@ -3937,12 +4020,14 @@ class Eleve(Personne):
         t = u"L'élève ne mobilise pas suffisamment de compétences pour être évalué lors "
         if er >= 0.5:
             self.evaluR.SetBackgroundColour(wx.GREEN)
+            self.evaluR.SetToolTipString(u"Evaluabilité des revues")
         else:
             self.evaluR.SetBackgroundColour(wx.NamedColor('PINK'))
             self.evaluR.SetToolTipString(t+u"des revues")
         
         if es >= 0.5:
             self.evaluS.SetBackgroundColour(wx.GREEN)
+            self.evaluS.SetToolTipString(u"Evaluabilité de la soutenance")
         else:
             self.evaluS.SetBackgroundColour(wx.NamedColor('PINK'))
             self.evaluS.SetToolTipString(t+u"de la soutenance")
@@ -3950,7 +4035,45 @@ class Eleve(Personne):
         self.codeBranche.Layout()
         self.codeBranche.Fit()
     
+    ######################################################################################  
+    def SetCode(self):
+#        if hasattr(self, 'codeBranche'):
+#            self.codeBranche.SetLabel(self.nom)
 
+        t = self.GetNomPrenom()
+
+        if hasattr(self, 'arbre'):
+            self.arbre.SetItemText(self.branche, t)
+            
+        # Tip
+        if hasattr(self, 'tip'):
+            self.tip.SetTexte(self.GetNomPrenom(), self.tip_nom)
+            er, es = self.GetEvaluabilite()
+            duree = self.GetDuree()
+            labr = str(int(er*100))+"% "
+            labs = str(int(es*100))+"%"
+            lab = draw_cairo_prj.getHoraireTxt(duree)
+            self.tip.SetTexte(lab, self.tip_duree)
+            self.tip.SetTexte(labr, self.tip_evalR)
+            self.tip.SetTexte(labs, self.tip_evalS)
+            self.tip.SetImage(self.avatar, self.tip_avatar)
+            
+            tol = 5
+            if abs(duree-70) < tol:
+                self.tip_duree.SetBackgroundColour(wx.GREEN)
+            else:
+                self.tip_duree.SetBackgroundColour(wx.NamedColor('PINK'))
+            
+            if er >= 0.5:
+                self.tip_evalR.SetBackgroundColour(wx.GREEN)
+            else:
+                self.tip_evalR.SetBackgroundColour(wx.NamedColor('PINK'))
+            
+            if es >= 0.5:
+                self.tip_evalS.SetBackgroundColour(wx.GREEN)
+            else:
+                self.tip_evalS.SetBackgroundColour(wx.NamedColor('PINK'))
+            
 ####################################################################################
 #
 #   Classe définissant les propriétés d'un professeur
@@ -7261,7 +7384,7 @@ class PanelPropriete_Tache(PanelPropriete):
         #
         cbox = wx.StaticBox(self, -1, u"Compétences employées")
         cbsizer = wx.StaticBoxSizer(cbox, wx.HORIZONTAL)
-        self.arbre = ArbreCompetencesPrj(self, tache.parent.classe.typeEnseignement, cacheRacine = True)
+        self.arbre = ArbreCompetencesPrj(self, tache.parent.classe.typeEnseignement)
         cbsizer.Add(self.arbre,1, flag = wx.EXPAND|wx.GROW)
         self.sizer.Add(cbsizer, (0,3), (4,1), flag = wx.EXPAND)
         self.sizer.AddGrowableCol(3)
@@ -8477,18 +8600,15 @@ class ArbreSavoirs(CT.CustomTreeCtrl):
         return wx.TreeItemId()
 
 
-class ArbreCompetences(CT.CustomTreeCtrl):
-    def __init__(self, parent, type_ens, cacheRacine = False):
-
+class ArbreCompetences(HTL.HyperTreeList):
+    def __init__(self, parent, type_ens, agwStyle = CT.TR_MULTIPLE):
         
-        if cacheRacine :
-            agwStyle = CT.TR_MULTIPLE|CT.TR_HIDE_ROOT
-        else:
-            agwStyle = CT.TR_MULTIPLE
-        CT.CustomTreeCtrl.__init__(self, parent, -1, agwStyle = agwStyle)#wx.TR_DEFAULT_STYLE|
+        HTL.HyperTreeList.__init__(self, parent, -1, style = wx.WANTS_CHARS, agwStyle = agwStyle)#wx.TR_DEFAULT_STYLE|
         
         self.parent = parent
         
+        self.AddColumn("Compétences")
+        self.SetMainColumn(0) # the one with the tree in it...
         self.root = self.AddRoot(u"Compétences")
         self.Construire(self.root, type_ens = type_ens)
         
@@ -8563,24 +8683,69 @@ class ArbreCompetences(CT.CustomTreeCtrl):
 
 
 class ArbreCompetencesPrj(ArbreCompetences):
-    def __init__(self, parent, type_ens, cacheRacine = False):
-        ArbreCompetences.__init__(self, parent, type_ens, cacheRacine)
+    def __init__(self, parent, type_ens):
+        ArbreCompetences.__init__(self, parent, type_ens, 
+                                  agwStyle = CT.TR_MULTIPLE|CT.TR_HIDE_ROOT|CT.TR_HAS_VARIABLE_ROW_HEIGHT)
+        self.Bind(wx.EVT_SIZE, self.OnSize2)
+        self.Bind(CT.EVT_TREE_ITEM_GETTOOLTIP, self.OnToolTip)
+#        self.Bind(CT.EVT_TREE_ITEM_GETTOOLTIP, self.OnToolTip)
+        
         
 
     ####################################################################################
     def Construire(self, branche, dic = None, type_ens = None, ct_type = 0):
 #        print "Construire", dic
+        
+        
+        
         if dic == None:
             dic = constantes.dicCompetences_prj[type_ens]
+            self.AddColumn("Poids")
+            self.SetColumnWidth(1, 60)
+            
         clefs = dic.keys()
         clefs.sort()
+        self.poids_ctrl = {}
         for k in clefs:
+            if ct_type == 1:
+                self.poids_ctrl[k] = wx.TextCtrl(self, -1, str(dic[k][1]), size = (30,-1))
+                self.poids_ctrl[k].Bind(wx.EVT_CHAR, self.OnTextCtrl)
+                win = self.poids_ctrl[k]
+            else:
+                win = None
             b = self.AppendItem(branche, k+" "+dic[k][0], ct_type=ct_type)
+            
+            if win != None:
+                self.SetItemWindow(b, win, 1)
+            
             if len(dic[k])>1 and type(dic[k][1]) == dict:
                 self.Construire(b, dic[k][1], ct_type=1)
+        
+        
 
-
-
+    def OnTextCtrl(self, evt):
+        print "OnTextCtrl"
+        
+    
+    def OnSize2(self, evt):
+        print "OnSize", self.GetSize()[0]
+        w = self.GetClientSize()[0] - 30 - 17
+        self.SetColumnWidth(0, w)
+        evt.Skip()
+#        
+        
+#    def OnToolTip(self, evt):
+#        print "OnToolTip"
+#        evt.Skip()   
+#        return
+#        self.SetToolTip(dic[k][0])
+        
+        
+    def OnToolTip(self, event):
+        print "OnToolTip" 
+        item = event.GetItem()
+        if item:
+            event.SetToolTip(wx.ToolTip(self.GetItemText(item)))
 #
 # Fonction pour indenter les XML générés par ElementTree
 #
@@ -8943,11 +9108,22 @@ def img2str(img):
 # Information PopUp
 # 
 #############################################################################################################
+import cStringIO
+import wx.richtext as rt
+
 class PopupInfo(wx.PopupWindow):
     def __init__(self, parent, titre = ""):
         wx.PopupWindow.__init__(self, parent, wx.BORDER_SIMPLE)
         self.parent = parent
+        
+        #
+        # Un sizer "tableau", comme ça, on y met ce q'on veut où on veut ...
+        #
         self.sizer = wx.GridBagSizer()
+        
+        #
+        # Un titre
+        #
         self.titre = wx.StaticText(self, -1, titre)
         font = wx.Font(15, wx.SWISS, wx.NORMAL, wx.NORMAL)
         self.titre.SetFont(font)
@@ -8956,6 +9132,8 @@ class PopupInfo(wx.PopupWindow):
         
         self.SetSizerAndFit(self.sizer)
         self.Bind(wx.EVT_LEAVE_WINDOW, self.OnLeave)
+        
+        
     
     ##########################################################################################
     def OnLeave(self, event):
@@ -8970,127 +9148,233 @@ class PopupInfo(wx.PopupWindow):
     def SetTitre(self, titre):
         self.titre.SetLabel(titre)
         
-
-class PopupInfoSysteme(PopupInfo):
-    def __init__(self, parent, titre):
-        PopupInfo.__init__(self, parent, titre)
         
-        
-        self.code = wx.StaticText(self, -1, "")
-        self.sizer.Add(self.code, (1,0), flag = wx.ALL, border = 5)
-#        
-        
-        self.message = wx.StaticText(self, -1, "")
-        self.sizer.Add(self.message, (2,0), flag = wx.ALL, border = 5)
-        
-        
-        self.titreLien = wx.StaticText(self, -1, "")
-        self.ctrlLien = wx.BitmapButton(self, -1, wx.NullBitmap)
-        self.ctrlLien.Show(False)
-        self.typeLien = ""
-        self.Bind(wx.EVT_BUTTON, self.OnClick, self.ctrlLien)
+    ##########################################################################################
+    def CreerLien(self, position = (3,0), span = (1,1)):
+        titreLien = wx.StaticText(self, -1, "")
+        ctrlLien = wx.BitmapButton(self, -1, wx.NullBitmap)
+        ctrlLien.Show(False)
+        self.Bind(wx.EVT_BUTTON, self.OnClickLien, ctrlLien)
         sizerLien = wx.BoxSizer(wx.HORIZONTAL)
-        sizerLien.Add(self.titreLien, flag = wx.ALIGN_CENTER_VERTICAL)
-        sizerLien.Add(self.ctrlLien)
-        self.sizer.Add(sizerLien, (3,0), flag = wx.ALL, border = 5)
-        
+        sizerLien.Add(titreLien, flag = wx.ALIGN_CENTER_VERTICAL)
+        sizerLien.Add(ctrlLien)
+        self.sizer.Add(sizerLien, position, span, flag = wx.ALL, border = 5)
+        return titreLien, ctrlLien
 
-        self.image = wx.StaticBitmap(self, -1, wx.NullBitmap)
-        self.image.Show(False)
-        self.sizer.Add(self.image, (4,0), flag = wx.ALL, border = 5)
-       
-    
-    
     ##########################################################################################
-    def SetCode(self, message):
-        if message == "":
-            self.code.Show(False)
-        else:
-            self.code.SetLabel(message)
-            self.code.Show(True)
-        self.Layout()
-        self.Fit()
-        
-    ##########################################################################################
-    def SetMessage(self, message):
-        if message == "":
-            self.message.Show(False)
-        else:
-            self.message.SetLabel(message)
-            self.message.Show(True)
-        self.Layout()
-        self.Fit()
-        
-    ##########################################################################################
-    def SetLien(self, lien):
-        self.lien = lien
+    def SetLien(self, lien, titreLien, ctrlLien):
+        self.lien = lien # ATTENTION ! Cette façon de faire n'autorise qu'un seul lien par PopupInfo !
         if lien.type == "":
-            self.ctrlLien.Show(False)
-            self.titreLien.Show(False)
-            self.ctrlLien.SetToolTipString(toDefautEncoding(self.lien.path))
+            ctrlLien.Show(False)
+            titreLien.Show(False)
+            ctrlLien.SetToolTipString(toDefautEncoding(lien.path))
         else:
-            self.ctrlLien.SetToolTipString(toDefautEncoding(self.lien.path))
+            ctrlLien.SetToolTipString(toDefautEncoding(lien.path))
             if lien.type == "f":
-                self.titreLien.SetLabel(u"Fichier :")
-                self.ctrlLien.SetBitmapLabel(wx.ArtProvider_GetBitmap(wx.ART_NORMAL_FILE))
-                self.ctrlLien.Show(True)
+                titreLien.SetLabel(u"Fichier :")
+                ctrlLien.SetBitmapLabel(wx.ArtProvider_GetBitmap(wx.ART_NORMAL_FILE))
+                ctrlLien.Show(True)
             elif lien.type == 'd':
-                self.titreLien.SetLabel(u"Dossier :")
-                self.ctrlLien.SetBitmapLabel(wx.ArtProvider_GetBitmap(wx.ART_FOLDER))
-                self.ctrlLien.Show(True)
+                titreLien.SetLabel(u"Dossier :")
+                ctrlLien.SetBitmapLabel(wx.ArtProvider_GetBitmap(wx.ART_FOLDER))
+                ctrlLien.Show(True)
             elif lien.type == 'u':
-                self.titreLien.SetLabel(u"Lien web :")
-                self.ctrlLien.SetBitmapLabel(constantes.images.Icone_web.GetBitmap())
-                self.ctrlLien.Show(True)
+                titreLien.SetLabel(u"Lien web :")
+                ctrlLien.SetBitmapLabel(constantes.images.Icone_web.GetBitmap())
+                ctrlLien.Show(True)
             elif lien.type == 's':
-                self.titreLien.SetLabel(u"Fichier séquence :")
-                self.ctrlLien.SetBitmapLabel(constantes.images.Icone_sequence.GetBitmap())
-                self.ctrlLien.Show(True)
+                titreLien.SetLabel(u"Fichier séquence :")
+                ctrlLien.SetBitmapLabel(constantes.images.Icone_sequence.GetBitmap())
+                ctrlLien.Show(True)
 
         self.Layout()
         self.Fit()
         
     ##########################################################################################
-    def SetImage(self, image):
-        if image == None:
-            self.image.Show(False)
-        else:
-            self.image.SetBitmap(image)
-            self.image.Show(True)
-        self.Layout()
-        self.Fit()
-        
-    ##########################################################################################
-    def OnClick(self, evt):
+    def OnClickLien(self, evt):
         self.lien.Afficher(self.parent.sequence.GetPath(), self.parent.parent)
         
-
-
-#############################################################################################################
-#
-# Le tip d'information pour les descriptions de séance
-# 
-#############################################################################################################
-import cStringIO
-import wx.richtext as rt
-
-class PopupInfoSeance(PopupInfoSysteme):
-    def __init__(self, parent, titre, objet):
-        PopupInfoSysteme.__init__(self, parent, titre)
-        self.objet = objet
-        self.titreDescr = wx.StaticText(self, -1, u"Description :")
-        self.rtp = richtext.RichTextPanel(self, objet, size = (300, 200))
-        self.sizer.Add(self.titreDescr, (5,0), flag = wx.ALL, border = 5)
-        self.sizer.Add(self.rtp, (6,0), flag = wx.ALL|wx.EXPAND, border = 5)
-        self.SetDescription()
+    ##########################################################################################
+    def CreerImage(self, position = (4,0), span = (1,1), flag = wx.ALIGN_CENTER):
+        image = wx.StaticBitmap(self, -1, wx.NullBitmap)
+        image.Show(False)
+        self.sizer.Add(image, position, span, flag = flag|wx.ALL, border = 5)
+        return image
+    
+    ##########################################################################################
+    def SetImage(self, image, ctrlImage):
+        if image == None:
+            ctrlImage.Show(False)
+        else:
+            ctrlImage.SetBitmap(image)
+            ctrlImage.Show(True)
+        self.Layout()
+        self.Fit()
         
-    def SetDescription(self):
-#        print "SetDescription TIP", self.objet.description != None
+    
+    ##########################################################################################
+    def CreerTexte(self, position = (1,0), span = (1,1), txt = u"", flag = wx.ALIGN_CENTER):
+        ctrlTxt = wx.StaticText(self, -1, txt)
+        self.sizer.Add(ctrlTxt, position, span, flag = flag, border = 5)
+        return ctrlTxt
+    
+    ##########################################################################################
+    def SetTexte(self, texte, ctrlTxt):
+        if texte == "":
+            ctrlTxt.Show(False)
+        else:
+            ctrlTxt.SetLabel(texte)
+            ctrlTxt.Show(True)
+        self.Layout()
+        self.Fit()
+    
+    ##########################################################################################
+    def CreerRichTexte(self, objet, position = (6,0), span = (1,1)):
+        self.objet = objet # ATTENTION ! Cette façon de faire n'autorise qu'un seul objet par PopupInfo !
+        self.rtp = richtext.RichTextPanel(self, objet, size = (300, 200))
+        self.sizer.Add(self.rtp, position, span, flag = wx.ALL|wx.EXPAND, border = 5)
+        self.SetRichTexte()
+        return self.rtp
+    
+    ##########################################################################################
+    def SetRichTexte(self):
         self.rtp.Show(self.objet.description != None)
-        self.titreDescr.Show(self.objet.description != None)
         self.rtp.Ouvrir()
         self.Layout()
         self.Fit()
+        
+    ##########################################################################################
+    def DeplacerItem(self, item, pos = None, span = None):
+        if item == None:
+            item = self.titre
+        if pos != None:
+            print self.sizer.SetItemPosition(item, pos) 
+        if span != None:
+            print self.sizer.SetItemSpan(item, span) 
+        
+        
+        
+        
+#class PopupInfoSysteme(PopupInfo):
+#    def __init__(self, parent, titre):
+#        PopupInfo.__init__(self, parent, titre)
+#        
+#        
+#        self.code = wx.StaticText(self, -1, "")
+#        self.sizer.Add(self.code, (1,0), flag = wx.ALL, border = 5)
+##        
+#        
+#        self.message = wx.StaticText(self, -1, "")
+#        self.sizer.Add(self.message, (2,0), flag = wx.ALL, border = 5)
+#        
+#        
+#        self.titreLien = wx.StaticText(self, -1, "")
+#        self.ctrlLien = wx.BitmapButton(self, -1, wx.NullBitmap)
+#        self.ctrlLien.Show(False)
+# 
+#        self.Bind(wx.EVT_BUTTON, self.OnClick, self.ctrlLien)
+#        sizerLien = wx.BoxSizer(wx.HORIZONTAL)
+#        sizerLien.Add(self.titreLien, flag = wx.ALIGN_CENTER_VERTICAL)
+#        sizerLien.Add(self.ctrlLien)
+#        self.sizer.Add(sizerLien, (3,0), flag = wx.ALL, border = 5)
+#        
+#
+#        self.image = wx.StaticBitmap(self, -1, wx.NullBitmap)
+#        self.image.Show(False)
+#        self.sizer.Add(self.image, (4,0), flag = wx.ALL, border = 5)
+#       
+#    
+#    
+#    ##########################################################################################
+#    def SetCode(self, message):
+#        if message == "":
+#            self.code.Show(False)
+#        else:
+#            self.code.SetLabel(message)
+#            self.code.Show(True)
+#        self.Layout()
+#        self.Fit()
+#        
+#    ##########################################################################################
+#    def SetMessage(self, message):
+#        if message == "":
+#            self.message.Show(False)
+#        else:
+#            self.message.SetLabel(message)
+#            self.message.Show(True)
+#        self.Layout()
+#        self.Fit()
+#        
+#    ##########################################################################################
+#    def SetLien(self, lien):
+#        self.lien = lien
+#        if lien.type == "":
+#            self.ctrlLien.Show(False)
+#            self.titreLien.Show(False)
+#            self.ctrlLien.SetToolTipString(toDefautEncoding(self.lien.path))
+#        else:
+#            self.ctrlLien.SetToolTipString(toDefautEncoding(self.lien.path))
+#            if lien.type == "f":
+#                self.titreLien.SetLabel(u"Fichier :")
+#                self.ctrlLien.SetBitmapLabel(wx.ArtProvider_GetBitmap(wx.ART_NORMAL_FILE))
+#                self.ctrlLien.Show(True)
+#            elif lien.type == 'd':
+#                self.titreLien.SetLabel(u"Dossier :")
+#                self.ctrlLien.SetBitmapLabel(wx.ArtProvider_GetBitmap(wx.ART_FOLDER))
+#                self.ctrlLien.Show(True)
+#            elif lien.type == 'u':
+#                self.titreLien.SetLabel(u"Lien web :")
+#                self.ctrlLien.SetBitmapLabel(constantes.images.Icone_web.GetBitmap())
+#                self.ctrlLien.Show(True)
+#            elif lien.type == 's':
+#                self.titreLien.SetLabel(u"Fichier séquence :")
+#                self.ctrlLien.SetBitmapLabel(constantes.images.Icone_sequence.GetBitmap())
+#                self.ctrlLien.Show(True)
+#
+#        self.Layout()
+#        self.Fit()
+#        
+#    ##########################################################################################
+#    def SetImage(self, image):
+#        if image == None:
+#            self.image.Show(False)
+#        else:
+#            self.image.SetBitmap(image)
+#            self.image.Show(True)
+#        self.Layout()
+#        self.Fit()
+#        
+#    ##########################################################################################
+#    def OnClick(self, evt):
+#        self.lien.Afficher(self.parent.sequence.GetPath(), self.parent.parent)
+#        
+#
+#
+##############################################################################################################
+##
+## Le tip d'information pour les descriptions de séance
+## 
+##############################################################################################################
+#import cStringIO
+#import wx.richtext as rt
+#
+#class PopupInfoSeance(PopupInfoSysteme):
+#    def __init__(self, parent, titre, objet):
+#        PopupInfoSysteme.__init__(self, parent, titre)
+#        self.objet = objet
+#        self.titreDescr = wx.StaticText(self, -1, u"Description :")
+#        self.rtp = richtext.RichTextPanel(self, objet, size = (300, 200))
+#        self.sizer.Add(self.titreDescr, (5,0), flag = wx.ALL, border = 5)
+#        self.sizer.Add(self.rtp, (6,0), flag = wx.ALL|wx.EXPAND, border = 5)
+#        self.SetDescription()
+#        
+#    def SetDescription(self):
+##        print "SetDescription TIP", self.objet.description != None
+#        self.rtp.Show(self.objet.description != None)
+#        self.titreDescr.Show(self.objet.description != None)
+#        self.rtp.Ouvrir()
+#        self.Layout()
+#        self.Fit()
 
 
 #############################################################################################################
