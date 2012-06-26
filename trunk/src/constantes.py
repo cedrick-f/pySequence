@@ -155,6 +155,15 @@ if not PORTABLE:
     sys.excepthook = _exceptionhook
     sys.stderr=RedirectErr(sys.stderr)
 
+####################################################################################
+#
+#   Quelques couleurs ...
+#
+####################################################################################
+COUL_OK  = "GREEN3"
+COUL_NON = "TOMATO1"
+COUL_BIEN = "GOLD"
+COUL_BOF = "ORANGE"
 
 ####################################################################################
 #
@@ -190,9 +199,11 @@ imagesProjet = {"Prj" : images.Icone_projet,
 
 imagesTaches =  {'Ana' : images.Icone_CdCF, 
                  'Con' : images.Icone_conception, 
+                 'DCo' : images.Icone_conception,
                  'Rea' : images.Icone_fabrication, 
-                 'Val' : images.Icone_validation
-                }
+                 'Val' : images.Icone_validation}
+                
+
 
 imagesCI = [images.CI_1, images.CI_2, images.CI_3, images.CI_4,
             images.CI_5, images.CI_6, images.CI_7, images.CI_8,
@@ -1048,10 +1059,6 @@ for k,v in dicCompetences_prj.items():
     dicCompetences_prj_simple[k] = dic
 
 
-print NRB_COEF_COMP_S
-print NRB_COEF_COMP_R
-
-
 
 dicSavoirs = {'ET'     : dicSavoirsET,
               'ITEC'   : dicSavoirsITEC, 
@@ -1200,11 +1207,12 @@ MESSAGE_FERMER = {'seq' : u"La séquence a été modifiée.\nVoulez vous enregis
 #
 #######################################################################################
 
-PHASE_TACHE = ['Ana', 'Con', 'Rea', 'Val']
-NOM_PHASE_TACHE = {'Ana' : u"Analyse", 
-                   'Con' : u"Conception", 
-                   'Rea' : u"Réalisation", 
-                   'Val' : u"Validation"}
+PHASE_TACHE = ['Ana', 'Con', 'DCo', 'Rea', 'Val']
+NOM_PHASE_TACHE = {'Ana' : u"Spécification - Planification", 
+                   'Con' : u"Conception préliminaire",
+                   'DCo' : u"Conception détaillée",
+                   'Rea' : u"Prototypage", 
+                   'Val' : u"Qualification - Intégration - Validation"}
 def getLstPhase():
     lst = []
     for k in PHASE_TACHE:
@@ -1220,6 +1228,24 @@ COUL_ELEVES = [((0.85,0.85,0.95,1), (0,0,0,1)),
                ((0.7,0.7,0.8,1), (0,0,0,1))]
 
 DUREE_PRJ = 70
+DELTA_DUREE = 5
+DELTA_DUREE2 = 15
+
+DISCIPLINES = ['Tec', 'Phy', 'Mat', 'LV1', 'Phi', 'Spo']
+NOM_DISCIPLINES = {'Tec' : u"Technologie", 
+                   'Phy' : u"Physique/Chimie", 
+                   'Mat' : u"Mathématiques", 
+                   'Phi' : u"Philosophie", 
+                   'LV1' : u"Langue vivante",
+                   'Spo' : u"Education physique",
+                   'Aut' : u"Autre discipline"}
+def getLstDisciplines():
+    lst = []
+    for k in DISCIPLINES:
+        lst.append(NOM_DISCIPLINES[k])
+    return lst
 
 
-
+NOM_JALONS = {'R1' : u"Revue de projet n°1",
+              'R2' : u"Revue de projet n°2",
+              'S' : u"Soutenance finale"}

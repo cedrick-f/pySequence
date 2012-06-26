@@ -150,11 +150,13 @@ hHoraire = None
 ecartTacheY = None  # Ecartement entre les tâches de phase différente
 BCoulTache = {'Ana' : (0.3,0.5,0.5), 
               'Con' : (0.5,0.3,0.5), 
+              'DCo' : (0.55,0.3,0.45),
               'Rea' : (0.5,0.5,0.3), 
               'Val' : (0.3,0.3,0.7)}
 
 ICoulTache = {'Ana' : (0.6, 0.8, 0.8), 
-              'Con' : (0.8, 0.6, 0.8), 
+              'Con' : (0.8, 0.6, 0.8),
+              'DCo' : (0.9, 0.6, 0.7),
               'Rea' : (0.8, 0.8, 0.6), 
               'Val' : (0.6, 0.6, 1.0)}
 
@@ -426,6 +428,7 @@ def Draw(ctx, prj, mouchard = False):
 
     prj.pt_caract = []
     prj.rect = []
+    prj.rectComp = {}
     
     #
     # Type d'enseignement
@@ -459,6 +462,7 @@ def Draw(ctx, prj, mouchard = False):
     # Image
     #
     prj.support.rect = []
+    prj.support.pts_caract = []
     bmp = prj.support.image
     if bmp != None:
         ctx.save()
@@ -481,7 +485,7 @@ def Draw(ctx, prj, mouchard = False):
         ctx.restore()
         
         prj.support.rect.append(posImg + tailleImg)
-            
+        prj.support.pts_caract.append(posImg)
     
     
 
@@ -529,6 +533,7 @@ def Draw(ctx, prj, mouchard = False):
                    fontsizeMinMax = (-1, 0.016))
     
     prj.support.rect.append(rectSup)
+    prj.support.pts_caract.append(posSup)
     
     
         
@@ -583,6 +588,7 @@ def Draw(ctx, prj, mouchard = False):
     ctx.set_line_width(0.001)
     l=[]
     for e in prj.eleves : 
+        e.pts_caract = []
         l.append(e.GetNomPrenom())
     
     if len(l) > 0:
@@ -670,6 +676,7 @@ def Draw(ctx, prj, mouchard = False):
                      BcoulZDeroul, IcoulZDeroul, fontZDeroul)
     y = posZTaches[1]
     yh_phase = {}
+    y_jalon = {}
     phase = None
     yp = y
     for t in prj.taches:
@@ -688,15 +695,24 @@ def Draw(ctx, prj, mouchard = False):
                 show_text_rect(ctx, constantes.NOM_PHASE_TACHE[phase], 
                        (posZDeroul[0] + ecartX/4, yp, 
                         wPhases, hp), ha = 'c', orient = 'v', b = 0.1) 
-            
+                
+                if phase == 'Con':
+                    y_jalon['R1'] = y
+                elif phase == 'Rea':
+                    y_jalon['R2'] = y 
+                
                 y += ecartTacheY
-                yp = y
-            
+                print phase, t.phase
+                if t.phase != '':
+                    yp = y
+                   
         
         if t.phase != '':  
             y = DrawTacheRacine(ctx, t, y)    
             phase = t.phase
         
+    y_jalon['S'] = y
+    
     # Nom de la dernière phase
     if phase != None:
         yh_phase[t.phase][1] = y - yh_phase[t.phase][0]
@@ -709,21 +725,35 @@ def Draw(ctx, prj, mouchard = False):
                 wPhases, hp), ha = 'c', orient = 'v', b = 0.1)    
         
         
+    # Les "jalons"    
+    if prj.position == 5: # LE projet
+        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+                                           cairo.FONT_WEIGHT_NORMAL)
+        for k, y in y_jalon.items():
+            if k == "S":
+                ctx.set_source_rgba(ICoulCompS[0]/2, ICoulCompS[1]/3, ICoulCompS[2]/3, 1)
+            else:
+                ctx.set_source_rgba(ICoulCompR[0]/3, ICoulCompR[1]/3, ICoulCompR[2]/2, 1)
+                
+            show_text_rect(ctx, constantes.NOM_JALONS[k], 
+                       (posZTaches[0] + ecartX/4, y, 
+                        tailleZTaches[0], ecartTacheY), ha = 'g', orient = 'h', b = 0.2)
+            
         
         
         
         
     #
-    # Durées du projet (totale et durées élèves)
+    # Durées du projet (durées élèves)
     #
-    ctx.set_source_rgb(0.5,0.8,0.8)
-    ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-                                       cairo.FONT_WEIGHT_BOLD)
-    y = posZTaches[1] + tailleZTaches[1] + ecartY/4
-    
-    show_text_rect(ctx, getHoraireTxt(prj.GetDuree()), 
-                   (posZTaches[0] - wDuree*3/2 - ecartX/2, y, 
-                    wDuree*2, ecartY/2), ha = 'c', b = 0)    
+#    ctx.set_source_rgb(0.5,0.8,0.8)
+#    ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+#                                       cairo.FONT_WEIGHT_BOLD)
+#    y = posZTaches[1] + tailleZTaches[1] + ecartY/4
+#    
+#    show_text_rect(ctx, getHoraireTxt(prj.GetDuree()), 
+#                   (posZTaches[0] - wDuree*3/2 - ecartX/2, y, 
+#                    wDuree*2, ecartY/2), ha = 'c', b = 0)    
     
     for i, e in enumerate(prj.eleves):
         x = posZElevesV[0]+i*tailleZElevesV[0]/len(prj.eleves)
@@ -1031,15 +1061,20 @@ def DrawCroisementsCompetencesTaches(ctx, tache, y):
     for s in ns:
         x = xComp[s]
         ctx.arc(x, y, r, 0, 2*pi)
-        ctx.set_source_rgba (1,0.2,0.2,1.0)
+        if len(constantes.dicCompetences_prj_simple[tache.parent.classe.typeEnseignement][s]) > 2:
+            ctx.set_source_rgba (ICoulCompS[0],ICoulCompS[1],ICoulCompS[2],1.0)
+        else:
+            ctx.set_source_rgba (ICoulCompR[0],ICoulCompR[1],ICoulCompR[2],1.0)
         ctx.fill_preserve ()
         ctx.set_source_rgba (0,0,0,1)
         ctx.stroke ()
         ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                               cairo.FONT_WEIGHT_BOLD)
-#        show_text_rect(ctx, str(n), (x-r, y-r, 2*r, 2*r))
-        tache.rect.append((x-r, y-r, 2*r, 2*r)) 
-          
+        if tache.parent.rectComp[s] != None:
+            tache.parent.rectComp[s].append((x-r, y-r, 2*r, 2*r))
+        else:
+            tache.parent.rectComp[s] = [(x-r, y-r, 2*r, 2*r)]
+        
 
 #####################################################################################  
 def DrawCroisementsElevesTaches(ctx, tache, x, y):
@@ -1056,8 +1091,9 @@ def DrawCroisementsElevesTaches(ctx, tache, x, y):
     for i in tache.eleves:
         _x = xEleves[i]
         boule(ctx, _x, y, r, constantes.COUL_ELEVES[i][0], constantes.COUL_ELEVES[i][1])
-        tache.rect.append((_x -r , y - r, 2*r, 2*r))
-
+        tache.parent.eleves[i].rect.append((_x -r , y - r, 2*r, 2*r))
+        tache.parent.eleves[i].pts_caract.append((_x,y))
+        
 
 ######################################################################################  
 def DrawCroisementsElevesCompetences(ctx, eleve, y):
@@ -1069,7 +1105,10 @@ def DrawCroisementsElevesCompetences(ctx, eleve, y):
     for s in ns:
         x = xComp[s]
         ctx.arc(x, y, r, 0, 2*pi)
-        ctx.set_source_rgba (1,0.2,0.2,1.0)
+        if len(constantes.dicCompetences_prj_simple[eleve.parent.classe.typeEnseignement][s]) > 2:
+            ctx.set_source_rgba (ICoulCompS[0],ICoulCompS[1],ICoulCompS[2],1.0)
+        else:
+            ctx.set_source_rgba (ICoulCompR[0],ICoulCompR[1],ICoulCompR[2],1.0)
         ctx.fill_preserve ()
         ctx.set_source_rgba (0,0,0,1)
         ctx.stroke ()
@@ -1077,7 +1116,13 @@ def DrawCroisementsElevesCompetences(ctx, eleve, y):
                               cairo.FONT_WEIGHT_BOLD)
 #        show_text_rect(ctx, str(n), (x-r, y-r, 2*r, 2*r))
 #        tache.rect.append((x-r, y-r, 2*r, 2*r)) 
+        if s in eleve.parent.rectComp.keys():
+            eleve.parent.rectComp[s].append((x-r, y-r, 2*r, 2*r))
+        else:
+            eleve.parent.rectComp[s] = [(x-r, y-r, 2*r, 2*r)]
         
+        eleve.pts_caract.append((x,y))
+            
 
 def permut(liste):
     l = []
