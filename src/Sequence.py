@@ -51,7 +51,7 @@ import wx.lib.colourdb
 import  wx.lib.fancytext as fancytext
 
 # Graphiques vectoriels
-import draw_cairo, draw_cairo_prj
+import draw_cairo_seq, draw_cairo_prj, draw_cairo
 try:
     import wx.lib.wxcairo
     import cairo
@@ -571,7 +571,7 @@ class Objet_sequence():
         for i, (p, f) in enumerate(self.cadre):
             if type(f) != str:
                 a = self.EncapsuleSVG(doc, p)
-                titre = self.GetCode(f) + " : " + self.GetIntit(f)
+                titre = self.GetBulleSVG(f)
                 self.SetSVGTitre(p, titre)
                 p.setAttribute("id",  self.GetCode(f)+str(f))
                 p.setAttribute("pointer-events",  'all')
@@ -619,6 +619,9 @@ class Objet_sequence():
         self.cadre = []
         return lst
     
+    ######################################################################################  
+    def GetBulleSVG(self, i):
+        return self.GetCode(i) + " : " + self.GetIntit(i)
     
             
 class Classe():
@@ -849,7 +852,7 @@ class Sequence(BaseDoc):
         self.systemes = []
         self.seance = [Seance(self, panelParent)]
         
-        self.draw = draw_cairo
+        self.draw = draw_cairo_seq
         
         
     ######################################################################################  
@@ -1374,7 +1377,7 @@ class Sequence(BaseDoc):
 #        elif dansRectangle(x, y, (draw_cairo.posObj + draw_cairo.tailleObj,)):
 ##            self.arbre.DoSelectItem(self.brancheObj)
 #            return self.brancheObj
-        elif dansRectangle(x, y, (draw_cairo.posPre + draw_cairo.taillePre,)):
+        elif dansRectangle(x, y, (draw_cairo_seq.posPre + draw_cairo_seq.taillePre,)):
             for ls in self.prerequisSeance:
                 h = ls.HitTest(x,y)
                 if h != None:
@@ -1433,9 +1436,10 @@ class Sequence(BaseDoc):
         
         
 ####################################################################################################
-class Projet(BaseDoc):
+class Projet(BaseDoc, Objet_sequence):
     def __init__(self, app, classe = None, panelParent = None, intitule = u"Intitulé du projet"):
         BaseDoc.__init__(self, app, classe, panelParent, intitule)
+        Objet_sequence.__init__(self)
         
         if panelParent:
             self.panelPropriete = PanelPropriete_Projet(panelParent, self)
@@ -1496,18 +1500,28 @@ class Projet(BaseDoc):
             (pour l'animation SVG)
         """
         lst = []
+        
+        for i, pt in enumerate(self.pt_caract_comp):
+            lst.append((pt, self, i))
+            
+        for i, pt in enumerate(self.pt_caract_eleve):
+            lst.append((pt, self, -1-i))    
+            
         lst.extend(self.support.GetPtCaract())
+        
         for s in self.taches + self.eleves:
             lst.extend(s.GetPtCaract())
+            
+        self.cadre = []
         return lst    
     
     
     ######################################################################################  
-    def EnrichiSVG(self, doc):
+    def EnrichiObjetsSVG(self, doc):
         for s in self.taches:
             s.EnrichiSVG(doc)
         self.support.EnrichiSVG(doc)
-        
+        self.EnrichiSVG(doc)
 #        self.obj["C"].EnrichiSVG(doc)
 #        self.obj["S"].EnrichiSVG(doc)
 #        self.prerequis.EnrichiSVG(doc)
@@ -1517,7 +1531,27 @@ class Projet(BaseDoc):
         return
             
     
-    
+    ######################################################################################  
+    def GetBulleSVG(self, i):
+        if i >= 0:
+            c = self.GetCompetencesUtil()
+            return c[i] + " : " + constantes.dicCompetences_prj_simple[self.classe.typeEnseignement][c[i]][0]
+        else:
+            print i, self.eleves, -1-i
+            e = self.eleves[-1-i]
+            t = e.GetNomPrenom()+"\n"
+            t += u"Durée d'activité : "+draw_cairo.getHoraireTxt(e.GetDuree())+"\n"
+            t += u"Evaluabilité :\n"
+            r, s = e.GetEvaluabilite()
+            t += u"\trevues : "+str(int(r*100))+"%\n"
+            t += u"\tsoutenance : "+str(int(s*100))+"%\n"
+            return t
+            
+            
+            
+    ######################################################################################  
+    def GetCode(self, i = None):
+        return u"Projet"
     
     ######################################################################################  
     def getBranche(self):
@@ -3710,10 +3744,11 @@ class Systeme(ElementDeSequence):
 #   Classe définissant les propriétés d'un support de projet
 #
 ####################################################################################
-class Support(ElementDeSequence):
+class Support(ElementDeSequence, Objet_sequence):
     def __init__(self, parent, panelParent, nom = u""):
         
         ElementDeSequence.__init__(self)
+        Objet_sequence.__init__(self)
         
         self.parent = parent
         self.nom = nom
@@ -3812,6 +3847,14 @@ class Support(ElementDeSequence):
                 self.panelPropriete.sendEvent()
             self.tip.RichTexte()
             
+    ######################################################################################  
+    def GetCode(self, i = None):
+        return u"Support"
+
+    ######################################################################################  
+    def GetIntit(self, i = None):
+        return self.nom
+    
     ######################################################################################  
     def SetCode(self):
 #        if hasattr(self, 'codeBranche'):
@@ -4177,7 +4220,7 @@ class Eleve(Personne):
             duree = self.GetDuree()
             labr = str(int(er*100))+"% "
             labs = str(int(es*100))+"%"
-            lab = draw_cairo_prj.getHoraireTxt(duree)
+            lab = draw_cairo.getHoraireTxt(duree)
             self.tip.SetTexte(lab, self.tip_duree)
             self.tip.SetTexte(labr, self.tip_evalR)
             self.tip.SetTexte(labs, self.tip_evalS)
@@ -4288,12 +4331,12 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         #
         # le fichier de configuration de la fiche
         #
-        self.nomFichierConfig = os.path.join(APP_DATA_PATH,"configFiche.cfg")
-        # on essaye de l'ouvrir
-        try:
-            draw_cairo.ouvrirConfigFiche(self.nomFichierConfig)
-        except:
-            print "Erreur à l'ouverture de configFiche.cfg" 
+#        self.nomFichierConfig = os.path.join(APP_DATA_PATH,"configFiche.cfg")
+#        # on essaye de l'ouvrir
+#        try:
+#            draw_cairo_seq.ouvrirConfigFiche(self.nomFichierConfig)
+#        except:
+#            print "Erreur à l'ouverture de configFiche.cfg" 
             
             
         #############################################################################################
@@ -4594,12 +4637,12 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     
     #############################################################################
     def OnClose(self, evt):
-        try:
-            draw_cairo.enregistrerConfigFiche(self.nomFichierConfig)
-        except IOError:
-            print "   Permission d'enregistrer les options refusée...",
-        except:
-            print "   Erreur enregistrement options...",
+#        try:
+#            draw_cairo.enregistrerConfigFiche(self.nomFichierConfig)
+#        except IOError:
+#            print "   Permission d'enregistrer les options refusée...",
+#        except:
+#            print "   Erreur enregistrement options...",
             
 #        try:
         self.options.definir()
@@ -4843,7 +4886,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
                 ctx = cairo.Context (PDFsurface)
                 ctx.scale(820, 820) 
                 if self.typ == 'seq':
-                    draw_cairo.Draw(ctx, self.sequence)
+                    draw_cairo_seq.Draw(ctx, self.sequence)
                 elif self.typ == 'prj':
                     draw_cairo_prj.Draw(ctx, self.projet)
                 self.DossierSauvegarde = os.path.split(path)[0]
@@ -4860,7 +4903,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
                 ctx = cairo.Context (SVGsurface)
                 ctx.scale(820, 820) 
                 if self.typ == 'seq':
-                    draw_cairo.Draw(ctx, self.sequence, mouchard = True)
+                    draw_cairo_seq.Draw(ctx, self.sequence, mouchard = True)
                 elif self.typ == 'prj':
                     draw_cairo_prj.Draw(ctx, self.projet)
                 self.DossierSauvegarde = os.path.split(path)[0]
@@ -4933,6 +4976,8 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         else:
             pts_caract = self.projet.GetPtCaract()
         
+        print pts_caract
+        
         for p in doc.getElementsByTagName("path"):
             a = p.getAttribute("d")
             a = str(a).translate(None, 'MCLZ')
@@ -4943,7 +4988,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
                 
                 for pt, obj, flag in pts_caract:
                     if match((x, y), pt) :
-#                        print "Trouvé", pt, flag, obj
+                        print "Trouvé", pt, flag, obj
                         obj.cadre.append((p, flag))
                         if type(flag) != str:
                             break 
@@ -4951,7 +4996,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         if self.typ == 'seq':
             self.sequence.EnrichiSVG(doc)
         elif self.typ == 'prj':
-            self.projet.EnrichiSVG(doc)
+            self.projet.EnrichiObjetsSVG(doc)
             
         doc.writexml(f, '   ')
         f.close
@@ -5381,7 +5426,7 @@ class FicheSequence(BaseFiche):
 
     #############################################################################            
     def Draw(self, ctx):
-        draw_cairo.Draw(ctx, self.sequence)
+        draw_cairo_seq.Draw(ctx, self.sequence)
         
         
     #############################################################################            
@@ -5682,7 +5727,7 @@ class PanelPropriete_Sequence(PanelPropriete):
         imagesurface = cairo.ImageSurface(cairo.FORMAT_ARGB32,  larg, int(h/w*larg))#cairo.FORMAT_ARGB32,cairo.FORMAT_RGB24
         ctx = cairo.Context(imagesurface)
         ctx.scale(larg/w, larg/w) 
-        draw_cairo.DrawPeriodes(ctx, self.sequence.position, origine = True)
+        draw_cairo_seq.DrawPeriodes(ctx, self.sequence.position, origine = True)
 
         bmp = wx.lib.wxcairo.BitmapFromImageSurface(imagesurface)
 #        print bmp.GetWidth(), bmp.GetHeight()
@@ -8843,7 +8888,7 @@ class ArbreSavoirs(CT.CustomTreeCtrl):
 
 
 class ArbreCompetences(HTL.HyperTreeList):
-    def __init__(self, parent, type_ens, agwStyle = CT.TR_MULTIPLE|CT.TR_HIDE_ROOT):
+    def __init__(self, parent, type_ens, agwStyle = CT.TR_MULTIPLE|CT.TR_HIDE_ROOT):#|HTL.TR_NO_HEADER):
         
         HTL.HyperTreeList.__init__(self, parent, -1, style = wx.WANTS_CHARS, agwStyle = agwStyle)#wx.TR_DEFAULT_STYLE|
         
@@ -8865,6 +8910,12 @@ class ArbreCompetences(HTL.HyperTreeList):
         #
 #        self.Bind(CT.EVT_TREE_SEL_CHANGED, self.OnSelChanged)
         self.Bind(CT.EVT_TREE_ITEM_CHECKED, self.OnItemCheck)
+        self.Bind(wx.EVT_SIZE, self.OnSize2)
+        
+        
+    def OnSize2(self, evt):
+        self.SetColumnWidth(0, self.GetClientSize()[0]-20)
+        evt.Skip()
         
     ####################################################################################
     def Construire(self, branche, dic = None, type_ens = None, ct_type = 0):
@@ -8877,6 +8928,9 @@ class ArbreCompetences(HTL.HyperTreeList):
             b = self.AppendItem(branche, k+" "+dic[k][0], ct_type=ct_type)
             if len(dic[k])>1 and type(dic[k][1]) == dict:
                 self.Construire(b, dic[k][1], ct_type=1)
+            
+            if ct_type == 0:
+                self.SetItemBold(b, True)
         
     ####################################################################################
     def OnItemCheck(self, event):
@@ -9076,22 +9130,7 @@ def get_key(dict, value):
     return key
 
 
-#def permut(liste):
-#    l = []
-#    for a in liste[1:]:
-#        l.append(a)
-#    l.append(liste[0])
-#    return l
-#    
-#    
-#def getHoraireTxt(v): 
-#    h, m = divmod(v*60, 60)
-#    h = str(int(h))
-#    if m == 0:
-#        m = ""
-#    else:
-#        m = str(int(m))
-#    return h+"h"+m
+
 
 
 ####################################################################################
