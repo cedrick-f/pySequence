@@ -1537,7 +1537,7 @@ class Projet(BaseDoc, Objet_sequence):
             c = self.GetCompetencesUtil()
             return c[i] + " : " + constantes.dicCompetences_prj_simple[self.classe.typeEnseignement][c[i]][0]
         else:
-            print i, self.eleves, -1-i
+#            print i, self.eleves, -1-i
             e = self.eleves[-1-i]
             t = e.GetNomPrenom()+"\n"
             t += u"Durée d'activité : "+draw_cairo.getHoraireTxt(e.GetDuree())+"\n"
@@ -4976,7 +4976,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         else:
             pts_caract = self.projet.GetPtCaract()
         
-        print pts_caract
+#        print pts_caract
         
         for p in doc.getElementsByTagName("path"):
             a = p.getAttribute("d")
@@ -4988,7 +4988,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
                 
                 for pt, obj, flag in pts_caract:
                     if match((x, y), pt) :
-                        print "Trouvé", pt, flag, obj
+#                        print "Trouvé", pt, flag, obj
                         obj.cadre.append((p, flag))
                         if type(flag) != str:
                             break 
