@@ -5659,7 +5659,7 @@ class PanelPropriete_Racine(wx.Panel):
 
     def OnPaint(self, evt):
         dc = wx.PaintDC(self)
-
+      
         w, h = fancytext.GetExtent(self.texte, dc)
         fancytext.RenderToDC(self.texte, dc, 20, 20)
 
