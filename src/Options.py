@@ -73,6 +73,9 @@ class Options:
 
     #########################################################################################################
     def __repr__(self):
+        print self.optClasse
+        return ""
+    
         t = "Options :\n"
         for o in self.optClasse.items():
             if type(o[1]) == int or type(o[1]) == float:
@@ -214,7 +217,9 @@ class Options:
     def defaut(self):
         print "Options defaut"
         constantes.DefOptionsDefaut()
+#        print self
         self.definir()
+#        print self
       
         
     ############################################################################

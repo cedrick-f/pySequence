@@ -145,13 +145,19 @@ BCoulTache = {'Ana' : (0.3,0.5,0.5),
               'Con' : (0.5,0.3,0.5), 
               'DCo' : (0.55,0.3,0.45),
               'Rea' : (0.5,0.5,0.3), 
-              'Val' : (0.3,0.3,0.7)}
+              'Val' : (0.3,0.3,0.7),
+              'Rev' : (0.6,0.3,0.3),
+              'R1' : (0.6,0.3,0.3),
+              'R2' : (0.6,0.3,0.3)}
 
 ICoulTache = {'Ana' : (0.6, 0.8, 0.8), 
               'Con' : (0.8, 0.6, 0.8),
               'DCo' : (0.9, 0.6, 0.7),
               'Rea' : (0.8, 0.8, 0.6), 
-              'Val' : (0.6, 0.6, 1.0)}
+              'Val' : (0.6, 0.6, 1.0),
+              'Rev' : (0.9,0.6,0.6),
+              'R1' : (0.9,0.6,0.6),
+              'R2' : (0.9,0.6,0.6)}
 
 ecartYElevesTaches = 0.05
 
@@ -686,23 +692,24 @@ def Draw(ctx, prj, mouchard = False):
         if phase != t.phase:
             # Noms des phases
             if phase != None:
-                yh_phase[t.phase][1] = y - yh_phase[t.phase][0]
-                hp = y-yp
-                
-                ctx.set_source_rgb(BCoulTache[phase][0],BCoulTache[phase][1],BCoulTache[phase][2])
-                ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
-                                                   cairo.FONT_WEIGHT_NORMAL)
-                show_text_rect(ctx, constantes.NOM_PHASE_TACHE[phase], 
-                       (posZDeroul[0] + ecartX/4, yp, 
-                        wPhases, hp), ha = 'c', orient = 'v', b = 0.1) 
-                
-                if phase == 'Con':
-                    y_jalon['R1'] = y
-                elif phase == 'Rea':
-                    y_jalon['R2'] = y 
+                if not phase in ["R1", "R2"]:
+                    yh_phase[t.phase][1] = y - yh_phase[t.phase][0]
+                    hp = y-yp
+                    
+                    ctx.set_source_rgb(BCoulTache[phase][0],BCoulTache[phase][1],BCoulTache[phase][2])
+                    ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
+                                                       cairo.FONT_WEIGHT_NORMAL)
+                    show_text_rect(ctx, constantes.NOM_PHASE_TACHE[phase], 
+                           (posZDeroul[0] + ecartX/4, yp, 
+                            wPhases, hp), ha = 'c', orient = 'v', b = 0.1) 
+                    
+    #                if phase == 'Con':
+    #                    y_jalon['R1'] = y
+    #                elif phase == 'Rea':
+    #                    y_jalon['R2'] = y 
                 
                 y += ecartTacheY
-                print phase, t.phase
+            
                 if t.phase != '':
                     yp = y
                    
@@ -977,14 +984,15 @@ def DrawTacheRacine(ctx, tache, y):
     # Flèche indiquant la durée
     #
     h = hHoraire * tache.GetDureeGraph()
-    fleche_verticale(ctx, posZTaches[0] - wDuree/2 - ecartX/4, y, 
-                     h, wDuree, (0.9,0.8,0.8,0.5))
-    ctx.set_source_rgb(0.5,0.8,0.8)
-    ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-                              cairo.FONT_WEIGHT_BOLD)
-    show_text_rect(ctx, getHoraireTxt(tache.GetDuree()), 
-                   (posZTaches[0] - wDuree - ecartX/4, y, wDuree, h), 
-                   orient = 'v', b = 0.1)
+    if not tache.phase in ["R1", "R2"]:
+        fleche_verticale(ctx, posZTaches[0] - wDuree/2 - ecartX/4, y, 
+                         h, wDuree, (0.9,0.8,0.8,0.5))
+        ctx.set_source_rgb(0.5,0.8,0.8)
+        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+                                  cairo.FONT_WEIGHT_BOLD)
+        show_text_rect(ctx, getHoraireTxt(tache.GetDuree()), 
+                       (posZTaches[0] - wDuree - ecartX/4, y, wDuree, h), 
+                       orient = 'v', b = 0.1)
     
     #
     # Rectangles actifs et points caractéristiques
@@ -996,7 +1004,10 @@ def DrawTacheRacine(ctx, tache, y):
     #
     # Tracé du cadre de la tâche
     #
-    x = posZTaches[0]
+    if not tache.phase in ["R1", "R2"]:
+        x = posZTaches[0]
+    else:
+        x = posZTaches[0] - wDuree/2 - ecartX/4
 
     tache.pts_caract.append((x, y))
         
@@ -1009,10 +1020,14 @@ def DrawTacheRacine(ctx, tache, y):
                               cairo.FONT_WEIGHT_BOLD)
         ctx.set_source_rgb (0,0,0)
         hc = max(hHoraire/4, 0.01)
-        show_text_rect(ctx, tache.code, (x, y, tailleZTaches[0], hc), ha = 'g', 
+        if not tache.phase in ["R1", "R2"]:
+            t = tache.code
+        else:
+            t = tache.intitule
+        show_text_rect(ctx, t, (x, y, tailleZTaches[0], hc), ha = 'g', 
                        wrap = False, fontsizeMinMax = (minFont, -1), b = 0.2)
     
-    if tache.intituleDansDeroul and tache.intitule != "":
+    if tache.intituleDansDeroul and tache.intitule != "" and not tache.phase in ["R1", "R2"]:
         ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
                               cairo.FONT_WEIGHT_NORMAL)
         ctx.set_source_rgb (0,0,0)

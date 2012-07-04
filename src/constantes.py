@@ -192,8 +192,8 @@ imagesSeance = {"R" : images.Icone_rotation,
 
 imagesProjet = {"Prj" : images.Icone_projet,
                 "Elv" : images.Icone_eleve,
-                'Prf' : images.Icone_prof,
-                "Sup" : images.Icone_projet,
+                'Prf' : images.Icone_prof2,
+                "Sup" : images.Icone_support,
                 "Tac" : images.Icone_projet
                 }
 
@@ -201,7 +201,10 @@ imagesTaches =  {'Ana' : images.Icone_CdCF,
                  'Con' : images.Icone_conception, 
                  'DCo' : images.Icone_conception,
                  'Rea' : images.Icone_fabrication, 
-                 'Val' : images.Icone_validation}
+                 'Val' : images.Icone_validation,
+                 'Rev' : images.Icone_evaluation,
+                 'R1'  : images.Icone_evaluation,
+                 'R2'  : images.Icone_evaluation}
                 
 
 
@@ -904,7 +907,6 @@ def strEffectif(classe, e, n = 0, eleve = True):
             return eff_str
 
 def strEffectifComplet(classe, e, n = 0):
-#    print NomsEffectifs[e]
     tit_eff = NomsEffectifs[e][0]
     return tit_eff+" ("+strEffectif(classe, e, n)+")"
 
@@ -922,23 +924,15 @@ def partitionne(total, ngroupe):
             lst.append(partitionne(tot, ngroupe))
         return lst
         
-#    l = []
-#    for tot in total:
-#        d, r = divmod(tot, ngroupe)
-#        lst = [d] * ngroupe
-#        for i in range(r):
-#            lst[i] += 1
-#        l.append(lst)
-#    return l
+
 
 def calculerEffectifs(classe):
-#    print "calculerEffectifs"
     classe.effectifs['G'] = partitionne(classe.effectifs['C'], classe.nbrGroupes['G'])
     classe.effectifs['D'] = partitionne(classe.effectifs['G'], 2)
     classe.effectifs['E'] = partitionne(classe.effectifs['G'], classe.nbrGroupes['E'])
     classe.effectifs['P'] = partitionne(classe.effectifs['G'], classe.nbrGroupes['P'])
     
-#    print classe.effectifs
+
     
 # Calcul inverse UNIQUEMENT POUR COMPATIBILITE !!
 def revCalculerEffectifs(classe, effG, effE, effP):
@@ -949,7 +943,6 @@ def revCalculerEffectifs(classe, effG, effE, effP):
     
 
 def findEffectif(lst, eff):
-#    print "findEffectif", lst, eff
     continuer = True
     i = 0
     while continuer:
@@ -1074,9 +1067,7 @@ def getListCI(txt):
 
 def getTextCI(lst):
     t = u""
-#    print lst
     for i, ci in enumerate(lst):
-#        print i, ci
         t += ci
         if i != len(lst)-1:
             t += "\n"
@@ -1086,7 +1077,6 @@ def getTextCI(lst):
 
 def getSavoir(seq, code, dic = None, c = None):
     if dic == None:
-#        print seq.classe.typeEnseignement
         dic = dicSavoirs[seq.classe.typeEnseignement]
     if c == None:
         c = len(code.split("."))
@@ -1099,7 +1089,6 @@ def getSavoir(seq, code, dic = None, c = None):
     
     
 def getCompetence(seq, code, dic = None, c = None):
-#    print "getCompetence", code, dic, c
     if dic == None:
         dic = dicCompetences[seq.classe.typeEnseignement]
     if c == None:
@@ -1113,10 +1102,8 @@ def getCompetence(seq, code, dic = None, c = None):
     
     
 def getAllCodes(dic):
-#    print "getAllCodes" , dic
     lst = dic.keys()
     for k in dic.keys():
-#        print dic[k]
         if len(dic[k]) > 1 and type(dic[k][1]) == dict:
             lst.extend(getAllCodes(dic[k][1]))
     return lst
@@ -1206,17 +1193,34 @@ MESSAGE_FERMER = {'seq' : u"La séquence a été modifiée.\nVoulez vous enregis
 #    Données concernant les projets
 #
 #######################################################################################
+NOM_JALONS = {'S' : u"Soutenance finale"}
 
-PHASE_TACHE = ['Ana', 'Con', 'DCo', 'Rea', 'Val']
+
+PHASE_TACHE = ['Ana', 'Con', 'DCo', 'Rea', 'Val', 'Rev']
 NOM_PHASE_TACHE = {'Ana' : u"Spécification - Planification", 
                    'Con' : u"Conception préliminaire",
                    'DCo' : u"Conception détaillée",
                    'Rea' : u"Prototypage", 
-                   'Val' : u"Qualification - Intégration - Validation"}
+                   'Val' : u"Qualification - Intégration - Validation",
+                   'R1'  : u"Revue de projet n°1",
+                   'R2'  : u"Revue de projet n°2",
+                   'Rev' : u"Revue intermédiaire"}
+
+CODE_PHASE_TACHE = {'Ana' : u"SP", 
+                    'Con' : u"Cp",
+                    'DCo' : u"Cd",
+                    'Rea' : u"Pr", 
+                    'Val' : u"QIV",
+                    'R1'  : u"R1",
+                    'R2'  : u"R2",
+                    'Rev' : u"Ri"}
+
+
 def getLstPhase():
     lst = []
     for k in PHASE_TACHE:
-        lst.append(NOM_PHASE_TACHE[k])
+        if not k in ["R1", "R2"]:
+            lst.append(NOM_PHASE_TACHE[k])
     return lst
 
 
@@ -1230,6 +1234,8 @@ COUL_ELEVES = [((0.85,0.85,0.95,0.2), (0,0,0,1)),
 DUREE_PRJ = 70
 DELTA_DUREE = 5
 DELTA_DUREE2 = 15
+
+
 
 DISCIPLINES = ['Tec', 'Phy', 'Mat', 'LV1', 'Phi', 'Spo']
 NOM_DISCIPLINES = {'Tec' : u"Technologie", 
@@ -1246,6 +1252,3 @@ def getLstDisciplines():
     return lst
 
 
-NOM_JALONS = {'R1' : u"Revue de projet n°1",
-              'R2' : u"Revue de projet n°2",
-              'S' : u"Soutenance finale"}

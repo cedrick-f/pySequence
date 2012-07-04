@@ -1235,7 +1235,6 @@ def DrawCroisementSystemes(ctx, seance, y):
     r = wColSysteme/3
     ns = seance.GetNbrSystemes()
     for s, n in ns.items():
-        print n, s
         if n > 0:
             x = xSystemes[s]
             ctx.arc(x, y, r, 0, 2*pi)
