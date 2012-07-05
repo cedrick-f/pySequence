@@ -1035,6 +1035,7 @@ NRB_COEF_COMP_S = {'ITEC'   : 0, # Nombres de coef pour les compétences "Souten
                    'EE'     : 0, 
                    'SIN'    : 0}     
 
+
 dicCompetences_prj_simple = {}
 for k,v in dicCompetences_prj.items():
     NRB_COEF_COMP_R = 0     # Nombre de coef pour les compétences "Revue"
@@ -1052,6 +1053,24 @@ for k,v in dicCompetences_prj.items():
     dicCompetences_prj_simple[k] = dic
 
 
+dicCompetences_prj_revues = {}
+for k,v in dicCompetences_prj.items():
+    dic = {}
+#    print k
+    for c, d in v.items():
+#        print "   ", c,d
+        ddic = {}
+#        print dic
+        for kk, vv in d[1].items():
+#            print "      ", kk, vv
+            if len(vv) > 2:
+                ddic[kk] = d[1][kk]
+        if ddic != {}:
+            dic.update({c : [d[0], ddic]})
+        
+        
+    dicCompetences_prj_revues[k] = dic
+print dicCompetences_prj_revues["ITEC"]
 
 dicSavoirs = {'ET'     : dicSavoirsET,
               'ITEC'   : dicSavoirsITEC, 

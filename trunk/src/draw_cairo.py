@@ -1001,11 +1001,19 @@ def rectangle_plein(ctx, x, y, w, h, coulBord, coulInter, alpha = 1):
     ctx.set_source_rgba (coulBord[0], coulBord[1], coulBord[2], alpha)
     ctx.stroke ()
     
-def boule(ctx, x, y, r, color0 = (1, 1, 1, 1), color1 = (0, 0, 0, 1)):
+def boule(ctx, x, y, r, 
+          color0 = (1, 1, 1, 1), color1 = (0, 0, 0, 1), 
+          transparent = True):
     pat = cairo.RadialGradient (x-r/2, y-r/2, r/4,
                                 x-r/3, y-r/3, 3*r/2)
-    pat.add_color_stop_rgba (0, color0[0], color0[1], color0[2], color0[3])
-    pat.add_color_stop_rgba (1, color1[0], color1[1], color1[2], color1[3])
+    if transparent:
+        alpha0 = color0[3]
+        alpha1 = color1[3]
+    else:
+        alpha0 = 1
+        alpha1 = 1
+    pat.add_color_stop_rgba (0, color0[0], color0[1], color0[2], alpha0)
+    pat.add_color_stop_rgba (1, color1[0], color1[1], color1[2], alpha1)
     ctx.set_source (pat)
     ctx.arc (x, y, r, 0, 2*pi)
     ctx.fill ()

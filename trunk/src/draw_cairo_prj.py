@@ -34,7 +34,7 @@ Created on 26 oct. 2011
 
 from draw_cairo import *
 #import textwrap
-#from math import sqrt, pi, cos, sin
+from math import log
 #import cairo
 #
 #import ConfigParser
@@ -139,7 +139,11 @@ BCoulCompS = (0.7, 0.7, 0.7, 0.2)      # couleur "Soutenance"
 # Zone des tâches
 posZTaches = [posZDeroul[0] + wPhases + wDuree + ecartX*3/4, None]
 tailleZTaches = [None, None]
-hHoraire = None
+hTacheMini = ecartY/2
+# paramètres pour la fonction qui calcule la hauteur des tâches 
+# en fonction de leur durée
+a = b = None 
+
 ecartTacheY = None  # Ecartement entre les tâches de phase différente
 BCoulTache = {'Ana' : (0.3,0.5,0.5), 
               'Con' : (0.5,0.3,0.5), 
@@ -158,6 +162,7 @@ ICoulTache = {'Ana' : (0.6, 0.8, 0.8),
               'Rev' : (0.9,0.6,0.6),
               'R1' : (0.9,0.6,0.6),
               'R2' : (0.9,0.6,0.6)}
+
 
 ecartYElevesTaches = 0.05
 
@@ -331,14 +336,16 @@ def ouvrirConfigFiche(nomFichier):
     for k in ICoulTache.keys():
         ICoulTache[k] = str2coul(config.get(section, "Icoul"+k))
     
-    
+
+def calcH(t):
+    return a*log(t)+b
 
 ######################################################################################  
 def DefinirZones(prj, ctx):
     """ Calcule les positions et dimensions des différentes zones de tracé
         en fonction du nombre d'éléments (élèves, tâches, compétences)
     """
-    global hHoraire, ecartTacheY, intituleTaches, fontIntTaches, xEleves, yEleves
+    global ecartTacheY, intituleTaches, fontIntTaches, xEleves, yEleves, a, b
     
     #
     # Zone du tableau des compétences - X
@@ -384,9 +391,22 @@ def DefinirZones(prj, ctx):
 #    hHoraire = tailleZTaches[1] / (prj.GetDureeGraph() + 0.25*(prj.GetNbrPhases()-1))
 #    ecartTacheY = hHoraire/4
 #    if ecartTacheY > 0.02:
-    ecartTacheY = ecartY/2
-    if prj.GetDureeGraph() > 0:
-        hHoraire = (tailleZTaches[1] - (prj.GetNbrPhases()-1)*ecartTacheY) / prj.GetDureeGraph()
+    ecartTacheY = ecartY/3
+    sommeEcarts = (prj.GetNbrPhases()-1)*ecartTacheY
+    
+    # Calcul des paramètres de la fonction hauteur = f(durée)
+    # hauteur = a * log(durée) + b
+    b = 0
+    a = 1
+    h = ecartTacheY
+    for t in prj.taches:
+        h += calcH(t.GetDuree())
+    
+    b = hTacheMini
+    a = (tailleZTaches[1] - sommeEcarts - b*len(prj.taches)) / h
+    
+#    if prj.GetDureeGraph() > 0:
+#        hHoraire = (tailleZTaches[1] - sommeEcarts) / prj.GetDureeGraph()
 
 
 #######################################################################################
@@ -692,7 +712,7 @@ def Draw(ctx, prj, mouchard = False):
         if phase != t.phase:
             # Noms des phases
             if phase != None:
-                if not phase in ["R1", "R2"]:
+                if not phase in ["R1", "R2", "Rev"]:
                     yh_phase[t.phase][1] = y - yh_phase[t.phase][0]
                     hp = y-yp
                     
@@ -744,7 +764,7 @@ def Draw(ctx, prj, mouchard = False):
                 
             show_text_rect(ctx, constantes.NOM_JALONS[k], 
                        (posZTaches[0] + ecartX/4, y, 
-                        tailleZTaches[0], ecartTacheY), ha = 'g', orient = 'h', b = 0.2)
+                        tailleZTaches[0], ecartTacheY*2), ha = 'g', orient = 'h', b = 0.2)
             
         
         
@@ -983,8 +1003,9 @@ def DrawTacheRacine(ctx, tache, y):
     #
     # Flèche indiquant la durée
     #
-    h = hHoraire * tache.GetDureeGraph()
-    if not tache.phase in ["R1", "R2"]:
+#    h = hHoraire * tache.GetDureeGraph()
+    h = calcH(tache.GetDuree())
+    if not tache.phase in ["R1", "R2", "Rev"]:
         fleche_verticale(ctx, posZTaches[0] - wDuree/2 - ecartX/4, y, 
                          h, wDuree, (0.9,0.8,0.8,0.5))
         ctx.set_source_rgb(0.5,0.8,0.8)
@@ -1004,7 +1025,7 @@ def DrawTacheRacine(ctx, tache, y):
     #
     # Tracé du cadre de la tâche
     #
-    if not tache.phase in ["R1", "R2"]:
+    if not tache.phase in ["R1", "R2", "Rev"]:
         x = posZTaches[0]
     else:
         x = posZTaches[0] - wDuree/2 - ecartX/4
@@ -1019,7 +1040,7 @@ def DrawTacheRacine(ctx, tache, y):
         ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                               cairo.FONT_WEIGHT_BOLD)
         ctx.set_source_rgb (0,0,0)
-        hc = max(hHoraire/4, 0.01)
+        hc = max(hTacheMini, 0.01)
         if not tache.phase in ["R1", "R2"]:
             t = tache.code
         else:
@@ -1105,7 +1126,9 @@ def DrawCroisementsElevesTaches(ctx, tache, x, y):
     r = 0.008
     for i in tache.eleves:
         _x = xEleves[i]
-        boule(ctx, _x, y, r, constantes.COUL_ELEVES[i][0], constantes.COUL_ELEVES[i][1])
+        boule(ctx, _x, y, r, 
+              constantes.COUL_ELEVES[i][0], constantes.COUL_ELEVES[i][1],
+              transparent = False)
         tache.parent.eleves[i].rect.append((_x -r , y - r, 2*r, 2*r))
         tache.parent.eleves[i].pts_caract.append((_x,y))
         
