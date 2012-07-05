@@ -1377,8 +1377,7 @@ class Projet(BaseDoc, Objet_sequence):
         
         self.eleves = []
         
-        self.taches = [Tache(self, self.panelParent, intitule = u"Revue de projet n°1", phaseTache = "R1"), 
-                       Tache(self, self.panelParent, intitule = u"Revue de projet n°2", phaseTache = "R2")]
+        self.taches = self.getTachesRevue()
         for sce in self.taches:
             sce.SetCode()
             
@@ -1436,6 +1435,12 @@ class Projet(BaseDoc, Objet_sequence):
             
         self.cadre = []
         return lst    
+    
+    
+    ######################################################################################  
+    def getTachesRevue(self):
+        return [Tache(self, self.panelParent, intitule = u"Revue de projet n°1", phaseTache = "R1"), 
+               Tache(self, self.panelParent, intitule = u"Revue de projet n°2", phaseTache = "R2")]
     
     
     ######################################################################################  
@@ -1555,14 +1560,18 @@ class Projet(BaseDoc, Objet_sequence):
         #
         brancheTac = branche.find("Taches")
         self.taches = []
+        tachesRevue = self.getTachesRevue()
         for i,e in enumerate(list(brancheTac)):
-            tache = Tache(self, self.panelParent)
-            tache.setBranche(e)
-            self.taches.append(tache)
+            phase = e.get("Phase")
+            if phase in ["R1", "R2"]:
+                num = eval(phase[1])-1
+                tachesRevue[num].setBranche(e)
+                self.taches.append(tachesRevue[num])
+            else:
+                tache = Tache(self, self.panelParent)
+                tache.setBranche(e)
+                self.taches.append(tache)
         
-        
-            
-            
         if hasattr(self, 'panelPropriete'):
             self.panelPropriete.MiseAJour()
 
@@ -1667,6 +1676,29 @@ class Projet(BaseDoc, Objet_sequence):
     
     
     ######################################################################################  
+    def InsererRevue(self, event = None, item = None):
+        tache_avant = self.arbre.GetItemPyData(item)
+        tache = Tache(self, self.panelParent, phaseTache = "Rev")
+        tache.ordre = tache_avant.ordre+1
+        for t in self.taches[tache_avant.ordre:]:
+            t.ordre += 1
+        self.taches.append(tache)
+        self.taches.sort(key=attrgetter('ordre'))
+        
+        tache.ConstruireArbre(self.arbre, self.brancheTac)
+        tache.SetCode()
+        if hasattr(tache, 'panelPropriete'):
+            tache.panelPropriete.MiseAJour()
+        self.arbre.Ordonner(self.brancheTac)
+        self.panelPropriete.sendEvent()
+        self.arbre.SelectItem(tache.branche)
+        
+#        self.SetCodes()
+##        print "   ", self.taches
+#        self.arbre.Ordonner(self.brancheTac)
+            
+        
+    ######################################################################################  
     def SupprimerTache(self, event = None, item = None):
         if len(self.taches) > 1: # On en laisse toujours une !!
             tache = self.arbre.GetItemPyData(item)
@@ -1754,7 +1786,7 @@ class Projet(BaseDoc, Objet_sequence):
                 R2.append(t)
         
         # On trie les paquets       
-        for c in [Ana, Con, Rea, DCo, Val, Rev, R1, R2]:
+        for c in [Ana, Con, Rea, DCo, Val, R1, R2]:
             c.sort(key=attrgetter('ordre'))
         
         #
@@ -1770,7 +1802,7 @@ class Projet(BaseDoc, Objet_sequence):
                 self.taches.insert(0, r)
             else:
                 i = self.taches.index(q)
-                self.taches.insert(i, r)
+                self.taches.insert(i+1, r)
         
 #        print "   ", self.taches
         self.SetOrdresTaches()
@@ -1840,7 +1872,7 @@ class Projet(BaseDoc, Objet_sequence):
     ######################################################################################  
     def SupprimerItem(self, item):
         data = self.arbre.GetItemPyData(item)
-        if isinstance(data, Tache):
+        if isinstance(data, Tache) and data.phase not in ["R1", "R2"]:
             self.SupprimerTache(item = item)
             
         elif isinstance(data, Eleve):
@@ -2063,7 +2095,7 @@ class Projet(BaseDoc, Objet_sequence):
     def GetNbrPhases(self):
         p = []
         for t in self.taches:
-            if not t.phase in p:
+            if not t.phase in p or t.phase == "Rev":
                 p.append(t.phase)
         return len(p)
         
@@ -3271,11 +3303,12 @@ class Tache(Objet_sequence):
             self.tip = PopupInfo(self.GetApp(), u"Tâche")
             self.tip.sizer.SetItemSpan(self.tip.titre, (1,2))
             
-            p = self.tip.CreerTexte((1,0), txt = u"Phase :", flag = wx.ALIGN_RIGHT|wx.ALL)
-            p.SetFont(wx.Font(9, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.NORMAL, underline = True))
-            
-            i = self.tip.CreerTexte((2,0), txt = u"Intitulé :", flag = wx.ALIGN_RIGHT|wx.ALL)
-            i.SetFont(wx.Font(9, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.NORMAL, underline = True))
+            if not self.phase in ["R1", "R2"]:
+                p = self.tip.CreerTexte((1,0), txt = u"Phase :", flag = wx.ALIGN_RIGHT|wx.ALL)
+                p.SetFont(wx.Font(9, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.NORMAL, underline = True))
+                
+                i = self.tip.CreerTexte((2,0), txt = u"Intitulé :", flag = wx.ALIGN_RIGHT|wx.ALL)
+                i.SetFont(wx.Font(9, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.NORMAL, underline = True))
             
             self.tip_phase = self.tip.CreerTexte((1,1), flag = wx.ALIGN_LEFT|wx.BOTTOM|wx.TOP|wx.LEFT)
             self.tip_phase.SetFont(wx.Font(9, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.NORMAL))
@@ -3360,6 +3393,7 @@ class Tache(Objet_sequence):
             self.panelPropriete.MiseAJourDuree()
             self.panelPropriete.MiseAJour()
             self.panelPropriete.MiseAJourPoidsCompetences()
+
         
 
     ######################################################################################  
@@ -3474,18 +3508,25 @@ class Tache(Objet_sequence):
         
         
         # Tip
-        self.tip.SetTitre(u"Tâche "+ self.code)
-        if self.phase != "":
-            t = constantes.NOM_PHASE_TACHE[self.phase]
+        if self.phase in ["R1", "R2"]:
+            self.tip.SetTitre(constantes.NOM_PHASE_TACHE[self.phase])
+        elif self.phase == "Rev":
+            self.tip.SetTitre(constantes.NOM_PHASE_TACHE[self.phase])
         else:
-            t = u""
-        self.tip.SetTexte(t, self.tip_phase)
+            self.tip.SetTitre(u"Tâche "+ self.code)
+            if self.phase != "":
+                t = constantes.NOM_PHASE_TACHE[self.phase]
+            else:
+                t = u""
+            self.tip.SetTexte(t, self.tip_phase)
+            
+            if self.intitule != "":
+                t = textwrap.fill(self.intitule, 50)
+            else:
+                t = u""
+            self.tip.SetTexte(t, self.tip_intitule)
         
-        if self.intitule != "":
-            t = textwrap.fill(self.intitule, 50)
-        else:
-            t = u""
-        self.tip.SetTexte(t, self.tip_intitule)
+            
         
         
             
@@ -3504,6 +3545,8 @@ class Tache(Objet_sequence):
                                         data = self, image = image)
         if self.phase in ["R1", "R2"]:
             arbre.SetItemTextColour(self.branche, "red")
+        elif self.phase == "Rev":
+            arbre.SetItemTextColour(self.branche, "ORANGE")
         
     
     
@@ -3568,7 +3611,11 @@ class Tache(Objet_sequence):
     ######################################################################################  
     def AfficherMenuContextuel(self, itemArbre):
         if itemArbre == self.branche:
-            listItems = [[u"Supprimer", functools.partial(self.parent.SupprimerTache, item = itemArbre)]]
+            if not self.phase in ["R1", "R2"]:
+                listItems = [[u"Supprimer", functools.partial(self.parent.SupprimerTache, item = itemArbre)]]
+            else:
+                listItems = []
+            listItems.append([u"Insérer une revue après", functools.partial(self.parent.InsererRevue, item = itemArbre)])
             self.GetApp().AfficherMenuContextuel(listItems)
 #            item2 = menu.Append(wx.ID_ANY, u"Créer une rotation")
 #            self.Bind(wx.EVT_MENU, functools.partial(self.AjouterRotation, item = item), item2)
@@ -5262,7 +5309,6 @@ class FenetreProjet(FenetreDocument):
         self.projet.SetLiens()
         self.projet.MiseAJourDureeEleves()
         self.projet.MiseAJourNomProfs()
-#        self.projet.MiseAJourNomProfs()
         self.projet.VerrouillerClasse()
         self.arbre.SelectItem(self.classe.branche)
 
@@ -7443,60 +7489,61 @@ class PanelPropriete_Seance(PanelPropriete):
 #
 ####################################################################################
 class PanelPropriete_Tache(PanelPropriete):
-    def __init__(self, parent, tache):
+    def __init__(self, parent, tache, revue = 0):
         PanelPropriete.__init__(self, parent)
         self.tache = tache
-
+        
         #
         # Phase
         #
-        titre = wx.StaticText(self, -1, u"Phase :")
-        cbPhas = wx.combo.BitmapComboBox(self, -1, u"Selectionner la phase",
-                             choices = constantes.getLstPhase(),
-                             style = wx.CB_DROPDOWN
-                             | wx.TE_PROCESS_ENTER
-                             | wx.CB_READONLY
-                             #| wx.CB_SORT
-                             )
-        for i, k in enumerate(constantes.PHASE_TACHE):
-            cbPhas.SetItemBitmap(i, constantes.imagesTaches[k].GetBitmap())
-        self.Bind(wx.EVT_COMBOBOX, self.EvtComboBox, cbPhas)
-        self.cbPhas = cbPhas
-        self.sizer.Add(titre, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 2)
-        self.sizer.Add(cbPhas, (0,1), flag = wx.EXPAND)
+        if tache.phase in ["R1", "R2", "Rev"]:
+            titre = wx.StaticText(self, -1, u"Phase : "+constantes.NOM_PHASE_TACHE[tache.phase])
+            self.sizer.Add(titre, (0,0), (1,2), flag = wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_LEFT|wx.ALL, border = 5)
+        else:
+            titre = wx.StaticText(self, -1, u"Phase :")
+            cbPhas = wx.combo.BitmapComboBox(self, -1, u"Selectionner la phase",
+                                 choices = constantes.getLstPhase(),
+                                 style = wx.CB_DROPDOWN
+                                 | wx.TE_PROCESS_ENTER
+                                 | wx.CB_READONLY
+                                 #| wx.CB_SORT
+                                 )
+            for i, k in enumerate(constantes.PHASE_TACHE):
+                cbPhas.SetItemBitmap(i, constantes.imagesTaches[k].GetBitmap())
+            self.Bind(wx.EVT_COMBOBOX, self.EvtComboBox, cbPhas)
+            self.cbPhas = cbPhas
+            self.sizer.Add(titre, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 5)
+            self.sizer.Add(cbPhas, (0,1), flag = wx.EXPAND)
+        
         
             
         
         #
         # Intitulé de la tache
         #
-        box = wx.StaticBox(self, -1, u"Intitulé")
-        bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
-        textctrl = wx.TextCtrl(self, -1, u"", style=wx.TE_MULTILINE)
-        bsizer.Add(textctrl, flag = wx.EXPAND)
-        self.textctrl = textctrl
-#        self.Bind(wx.EVT_TEXT, self.EvtTextIntitule, textctrl)
-        self.textctrl.Bind(wx.EVT_KILL_FOCUS, self.EvtTextIntitule)
-        
-        cb = wx.CheckBox(self, -1, u"Montrer dans la zone de déroulement du projet")
-        cb.SetValue(self.tache.intituleDansDeroul)
-        bsizer.Add(cb, flag = wx.EXPAND)
-        self.Bind(wx.EVT_CHECKBOX, self.EvtCheckBox, cb)
-        self.cbInt = cb
-        self.sizer.Add(bsizer, (1,0), (1,2), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 2)
-#        self.sizer.Add(textctrl, (1,1), flag = wx.EXPAND)
+        if not tache.phase in ["R1", "R2", "Rev"]:
+            box = wx.StaticBox(self, -1, u"Intitulé")
+            bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
+            textctrl = wx.TextCtrl(self, -1, u"", style=wx.TE_MULTILINE)
+            bsizer.Add(textctrl, flag = wx.EXPAND)
+            self.textctrl = textctrl
+            self.boxInt = box
+            self.textctrl.Bind(wx.EVT_KILL_FOCUS, self.EvtTextIntitule)
+            self.sizer.Add(bsizer, (1,0), (1,2), 
+                           flag = wx.EXPAND|wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 2)
+
         
         
         
         #
         # Durée de la tache
         #
-        vcDuree = VariableCtrl(self, tache.duree, coef = 0.5, labelMPL = False, signeEgal = True, slider = False,
-                               help = u"Durée de la tâche en heures")
-#        textctrl = wx.TextCtrl(self, -1, u"1")
-        self.Bind(EVT_VAR_CTRL, self.EvtText, vcDuree)
-        self.vcDuree = vcDuree
-        self.sizer.Add(vcDuree, (2,0), (1, 2))
+        if not tache.phase in ["R1", "R2", "Rev"]:
+            vcDuree = VariableCtrl(self, tache.duree, coef = 0.5, labelMPL = False, signeEgal = True, slider = False,
+                                   help = u"Volume horaire de la tâche en heures")
+            self.Bind(EVT_VAR_CTRL, self.EvtText, vcDuree)
+            self.vcDuree = vcDuree
+            self.sizer.Add(vcDuree, (2,0), (1, 2))
         
         
         #
@@ -7507,7 +7554,7 @@ class PanelPropriete_Tache(PanelPropriete):
         self.bsizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
         self.elevesCtrl = []
         self.ConstruireListeEleves()
-        self.sizer.Add(self.bsizer, (0,2), (5, 1), flag = wx.EXPAND)
+        self.sizer.Add(self.bsizer, (0,2), (4, 1), flag = wx.EXPAND)
         
         
         #
@@ -7517,12 +7564,15 @@ class PanelPropriete_Tache(PanelPropriete):
         dbsizer = wx.StaticBoxSizer(dbox, wx.VERTICAL)
         bd = wx.Button(self, -1, u"Editer")
         tc = richtext.RichTextPanel(self, self.tache)
-        tc.SetMaxSize((-1, 150))
+#        tc.SetMaxSize((-1, 150))
         tc.SetMinSize((150, -1))
         dbsizer.Add(tc, 1, flag = wx.EXPAND)
         dbsizer.Add(bd, flag = wx.EXPAND)
         self.Bind(wx.EVT_BUTTON, self.EvtClick, bd)
-        self.sizer.Add(dbsizer, (3,0), (1, 2), flag = wx.EXPAND)
+        if tache.phase in ["R1", "R2", "Rev"]:
+            self.sizer.Add(dbsizer, (1,0), (3, 2), flag = wx.EXPAND)
+        else:
+            self.sizer.Add(dbsizer, (3,0), (1, 2), flag = wx.EXPAND)
         self.rtc = tc
         # Pour indiquer qu'une édition est déja en cours ...
         self.edition = False  
@@ -7532,9 +7582,11 @@ class PanelPropriete_Tache(PanelPropriete):
         #
         cbox = wx.StaticBox(self, -1, u"Compétences employées")
         cbsizer = wx.StaticBoxSizer(cbox, wx.HORIZONTAL)
-        self.arbre = ArbreCompetencesPrj(self, tache.parent.classe.typeEnseignement)
+        self.arbre = ArbreCompetencesPrj(self, tache.parent.classe.typeEnseignement,
+                                         revue = self.tache.phase in ["R1", "R2", "Rev"])
         cbsizer.Add(self.arbre,1, flag = wx.EXPAND|wx.GROW)
         self.sizer.Add(cbsizer, (0,3), (4,1), flag = wx.EXPAND)
+        
         self.sizer.AddGrowableCol(3)
         self.sizer.AddGrowableRow(3)
         
@@ -7543,15 +7595,7 @@ class PanelPropriete_Tache(PanelPropriete):
         #
         self.sizer.Layout()
         
-        if self.tache.phase in ["R1", "R2"]:
-            print "R"
-            self.cbPhas.Enable(False)
-            self.vcDuree.Show(False)
-            self.textctrl.Enable(False)
-            
-            
-            
-
+        
         
     ######################################################################################  
     def AjouterCompetence(self, code):
@@ -7664,17 +7708,33 @@ class PanelPropriete_Tache(PanelPropriete):
     #############################################################################            
     def EvtComboBox(self, event):
         self.tache.SetPhase(get_key(constantes.NOM_PHASE_TACHE, self.cbPhas.GetStringSelection()))
+        
         self.Layout()
         self.sendEvent()
         
     
     #############################################################################            
     def MiseAJourDuree(self):
-        self.vcDuree.mofifierValeursSsEvt()
+        if hasattr(self, 'vcDuree'):
+            self.vcDuree.mofifierValeursSsEvt()
         
-        
+    
+#    #############################################################################            
+#    def TransformerEnRevue(self):
+#        if self.tache.phase in ["R1", "R2"]:
+#            print "R", constantes.NOM_PHASE_TACHE[self.tache.phase]
+#            self.cbPhas.Destroy()
+#            self.cbPhas = wx.StaticText(self, -1, constantes.NOM_PHASE_TACHE[self.tache.phase])
+#            self.sizer.Add(self.cbPhas, (0,1), flag = wx.EXPAND|wx.ALL, border = 5)
+#            self.vcDuree.Destroy()
+#            self.textctrl.Destroy()
+#            self.boxInt.Destroy()
+#            self.sizer.Layout()
+
+            
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
+#        print "MiseAJour",self.tache.phase
         self.arbre.UnselectAll()
         root = self.arbre.GetRootItem()
         for s in self.tache.competences:
@@ -7682,11 +7742,12 @@ class PanelPropriete_Tache(PanelPropriete):
             if i.IsOk():
                 self.arbre.CheckItem2(i)
         
-        self.textctrl.SetValue(self.tache.intitule)
+        if hasattr(self, 'textctrl'):
+            self.textctrl.SetValue(self.tache.intitule)
         
-        if self.tache.phase != '':
+        if hasattr(self, 'cbPhas') and self.tache.phase != '':
             self.cbPhas.SetStringSelection(constantes.NOM_PHASE_TACHE[self.tache.phase])
-        
+            
         if sendEvt:
             self.sendEvent()
         
@@ -8600,7 +8661,8 @@ class ArbreProjet(ArbreDoc):
                 if not isinstance(dataSource, Tache):
                     self.SetCursor(wx.StockCursor(wx.CURSOR_NO_ENTRY))
                 else:
-                    if not isinstance(dataTarget, Tache) or dataTarget.phase != dataSource.phase:
+                    if not isinstance(dataTarget, Tache) \
+                        or (dataTarget.phase != dataSource.phase and dataSource.phase !="Rev"):
                         self.SetCursor(wx.StockCursor(wx.CURSOR_NO_ENTRY))
                     else:
                         if dataTarget != dataSource:# and dataTarget.parent == dataSource.parent:
@@ -8622,7 +8684,8 @@ class ArbreProjet(ArbreDoc):
             if not isinstance(dataTarget, Tache):
                 pass
             else:
-                if dataTarget != dataSource and dataTarget.phase == dataSource.phase:
+                if dataTarget != dataSource \
+                    and (dataTarget.phase == dataSource.phase or dataSource.phase =="Rev"):
                     lst = dataTarget.parent.taches
 
                     s = lst.index(dataSource)
@@ -8837,7 +8900,8 @@ class ArbreCompetences(HTL.HyperTreeList):
 
 
 class ArbreCompetencesPrj(ArbreCompetences):
-    def __init__(self, parent, type_ens):
+    def __init__(self, parent, type_ens, revue = False):
+        self.revue = revue
         ArbreCompetences.__init__(self, parent, type_ens, 
                                   agwStyle = CT.TR_MULTIPLE|CT.TR_HIDE_ROOT|CT.TR_HAS_VARIABLE_ROW_HEIGHT)
         self.Bind(wx.EVT_SIZE, self.OnSize2)
@@ -8849,12 +8913,17 @@ class ArbreCompetencesPrj(ArbreCompetences):
     ####################################################################################
     def Construire(self, branche, dic = None, type_ens = None, ct_type = 0):
         if dic == None: # Construction de la racine
-            dic = constantes.dicCompetences_prj[type_ens]
+            if self.revue:
+#                print "revue"
+                dic = constantes.dicCompetences_prj_revues[type_ens]
+            else:
+                dic = constantes.dicCompetences_prj[type_ens]
             self.AddColumn(u"Poids")
             self.SetColumnWidth(1, 60)
             self.poids_ctrl = {}
             
         clefs = dic.keys()
+#        if self.revue: print clefs
         clefs.sort()
         for k in clefs:
             if ct_type == 1:
@@ -8906,7 +8975,8 @@ class ArbreCompetencesPrj(ArbreCompetences):
     def MiseAJour(self, code = None):
         if code == None:
             for k, v in constantes.dicCompetences_prj_simple[self.type_ens].items():
-                self.poids_ctrl[k].ChangeValue(str(v[1]))
+                if k in self.poids_ctrl.keys():
+                    self.poids_ctrl[k].ChangeValue(str(v[1]))
         else:
             self.poids_ctrl[code].ChangeValue(str(constantes.dicCompetences_prj_simple[self.type_ens][code][1]))
             
