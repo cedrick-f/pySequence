@@ -204,7 +204,8 @@ imagesTaches =  {'Ana' : images.Icone_CdCF,
                  'Val' : images.Icone_validation,
                  'Rev' : images.Icone_evaluation,
                  'R1'  : images.Icone_evaluation,
-                 'R2'  : images.Icone_evaluation}
+                 'R2'  : images.Icone_evaluation,
+                 'S'  : images.Icone_evaluation}
                 
 
 
@@ -1212,7 +1213,7 @@ MESSAGE_FERMER = {'seq' : u"La séquence a été modifiée.\nVoulez vous enregis
 #    Données concernant les projets
 #
 #######################################################################################
-NOM_JALONS = {'S' : u"Soutenance finale"}
+#NOM_JALONS = {'S' : u"Soutenance finale"}
 
 
 PHASE_TACHE = ['Ana', 'Con', 'DCo', 'Rea', 'Val', 'Rev']
@@ -1223,7 +1224,8 @@ NOM_PHASE_TACHE = {'Ana' : u"Spécification - Planification",
                    'Val' : u"Qualification - Intégration - Validation",
                    'R1'  : u"Revue de projet n°1",
                    'R2'  : u"Revue de projet n°2",
-                   'Rev' : u"Revue intermédiaire"}
+                   'Rev' : u"Revue intermédiaire",
+                   'S'   : u"Soutenance finale"}
 
 CODE_PHASE_TACHE = {'Ana' : u"SP", 
                     'Con' : u"Cp",
@@ -1232,13 +1234,14 @@ CODE_PHASE_TACHE = {'Ana' : u"SP",
                     'Val' : u"QIV",
                     'R1'  : u"R1",
                     'R2'  : u"R2",
-                    'Rev' : u"Ri"}
+                    'Rev' : u"Ri",
+                    'S'   : u"S"}
 
 
 def getLstPhase():
     lst = []
     for k in PHASE_TACHE:
-        if not k in ["R1", "R2"]:
+        if not k in ["R1", "R2", "S"]:
             lst.append(NOM_PHASE_TACHE[k])
     return lst
 
@@ -1264,6 +1267,16 @@ NOM_DISCIPLINES = {'Tec' : u"Technologie",
                    'LV1' : u"Langue vivante",
                    'Spo' : u"Education physique",
                    'Aut' : u"Autre discipline"}
+
+COUL_DISCIPLINES = {'Tec' : u"Technologie", 
+                    'Phy' : u"Physique/Chimie", 
+                    'Mat' : u"Mathématiques", 
+                    'Phi' : u"Philosophie", 
+                    'LV1' : u"Langue vivante",
+                    'Spo' : u"Education physique",
+                    'Aut' : u"Autre discipline"}
+
+
 def getLstDisciplines():
     lst = []
     for k in DISCIPLINES:

@@ -1378,8 +1378,6 @@ class Projet(BaseDoc, Objet_sequence):
         self.eleves = []
         
         self.taches = self.getTachesRevue()
-        for sce in self.taches:
-            sce.SetCode()
             
         self.equipe = []
         
@@ -1439,8 +1437,12 @@ class Projet(BaseDoc, Objet_sequence):
     
     ######################################################################################  
     def getTachesRevue(self):
-        return [Tache(self, self.panelParent, intitule = u"Revue de projet n°1", phaseTache = "R1"), 
-               Tache(self, self.panelParent, intitule = u"Revue de projet n°2", phaseTache = "R2")]
+        lst = []
+        for p in ["R1", "R2", "S"]:
+            lst.append(Tache(self, self.panelParent, 
+                             intitule = constantes.NOM_PHASE_TACHE[p], 
+                             phaseTache = p))
+        return lst
     
     
     ######################################################################################  
@@ -1563,7 +1565,7 @@ class Projet(BaseDoc, Objet_sequence):
         tachesRevue = self.getTachesRevue()
         for i,e in enumerate(list(brancheTac)):
             phase = e.get("Phase")
-            if phase in ["R1", "R2"]:
+            if phase in ["R1", "R2", "S"]:
                 num = eval(phase[1])-1
                 tachesRevue[num].setBranche(e)
                 self.taches.append(tachesRevue[num])
@@ -1769,6 +1771,7 @@ class Projet(BaseDoc, Objet_sequence):
         Val = []
         R1 = []
         R2 = []
+        S = []
         for t in self.taches:
             if t.phase == 'Ana':
                 Ana.append(t)
@@ -1784,15 +1787,17 @@ class Projet(BaseDoc, Objet_sequence):
                 R1.append(t)
             elif t.phase == 'R2':
                 R2.append(t)
+            elif t.phase == 'S':
+                S.append(t)
         
         # On trie les paquets       
-        for c in [Ana, Con, Rea, DCo, Val, R1, R2]:
+        for c in [Ana, Con, Rea, DCo, Val]:
             c.sort(key=attrgetter('ordre'))
         
         #
         # On assemble les paquets
         #
-        self.taches = Ana + Con + R1 + DCo + Rea + R2 + Val
+        self.taches = Ana + Con + R1 + DCo + Rea + R2 + Val + S
            
         #
         # On ajoute les revues intermédiaires
@@ -1872,7 +1877,7 @@ class Projet(BaseDoc, Objet_sequence):
     ######################################################################################  
     def SupprimerItem(self, item):
         data = self.arbre.GetItemPyData(item)
-        if isinstance(data, Tache) and data.phase not in ["R1", "R2"]:
+        if isinstance(data, Tache) and data.phase not in ["R1", "R2", "S"]:
             self.SupprimerTache(item = item)
             
         elif isinstance(data, Eleve):
@@ -3303,7 +3308,7 @@ class Tache(Objet_sequence):
             self.tip = PopupInfo(self.GetApp(), u"Tâche")
             self.tip.sizer.SetItemSpan(self.tip.titre, (1,2))
             
-            if not self.phase in ["R1", "R2"]:
+            if not self.phase in ["R1", "R2", "S", "Rev"]:
                 p = self.tip.CreerTexte((1,0), txt = u"Phase :", flag = wx.ALIGN_RIGHT|wx.ALL)
                 p.SetFont(wx.Font(9, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.NORMAL, underline = True))
                 
@@ -3482,7 +3487,6 @@ class Tache(Objet_sequence):
             
     ######################################################################################  
     def SetCode(self):
-#        print "SetCode", 
         i = 0
         for t in self.parent.taches:
             if t.phase == self.phase:
@@ -3492,23 +3496,27 @@ class Tache(Objet_sequence):
         num = str(i+1)
 
         if self.phase != "":
-            if self.phase in ["R1", "R2"]:
+            if self.phase in ["R1", "R2", "S"]:
                 self.code = self.phase
             else:
                 self.code = constantes.CODE_PHASE_TACHE[self.phase]+num
         else:
             self.code = num
 
-#        print self.code
         
         
         if hasattr(self, 'codeBranche') and self.phase != "":
-            self.codeBranche.SetLabel(self.code)
-            self.arbre.SetItemText(self.branche, constantes.NOM_PHASE_TACHE[self.phase]+u" :")
+            if self.phase in ["R1", "R2", "S"]:
+                self.codeBranche.SetLabel(u"")
+                t = u""
+            else:
+                self.codeBranche.SetLabel(self.code)
+                t = u" :"
+            self.arbre.SetItemText(self.branche, constantes.NOM_PHASE_TACHE[self.phase]+t)
         
         
         # Tip
-        if self.phase in ["R1", "R2"]:
+        if self.phase in ["R1", "R2", "S"]:
             self.tip.SetTitre(constantes.NOM_PHASE_TACHE[self.phase])
         elif self.phase == "Rev":
             self.tip.SetTitre(constantes.NOM_PHASE_TACHE[self.phase])
@@ -3547,7 +3555,8 @@ class Tache(Objet_sequence):
             arbre.SetItemTextColour(self.branche, "red")
         elif self.phase == "Rev":
             arbre.SetItemTextColour(self.branche, "ORANGE")
-        
+        elif self.phase == "S":
+            arbre.SetItemTextColour(self.branche, "PURPLE")
     
     
     ######################################################################################  
@@ -3611,7 +3620,7 @@ class Tache(Objet_sequence):
     ######################################################################################  
     def AfficherMenuContextuel(self, itemArbre):
         if itemArbre == self.branche:
-            if not self.phase in ["R1", "R2"]:
+            if not self.phase in ["R1", "R2", "S"]:
                 listItems = [[u"Supprimer", functools.partial(self.parent.SupprimerTache, item = itemArbre)]]
             else:
                 listItems = []
@@ -5226,6 +5235,9 @@ class FenetreProjet(FenetreDocument):
         self.arbre = arbre
         self.arbre.SelectItem(self.classe.branche)
         self.arbre.ExpandAll()
+        
+        for t in self.projet.taches:
+            t.SetCode()
         
         #
         # Zone graphique de la fiche de projet
@@ -7496,7 +7508,7 @@ class PanelPropriete_Tache(PanelPropriete):
         #
         # Phase
         #
-        if tache.phase in ["R1", "R2", "Rev"]:
+        if tache.phase in ["R1", "R2", "S", "Rev"]:
             titre = wx.StaticText(self, -1, u"Phase : "+constantes.NOM_PHASE_TACHE[tache.phase])
             self.sizer.Add(titre, (0,0), (1,2), flag = wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_LEFT|wx.ALL, border = 5)
         else:
@@ -7521,7 +7533,7 @@ class PanelPropriete_Tache(PanelPropriete):
         #
         # Intitulé de la tache
         #
-        if not tache.phase in ["R1", "R2", "Rev"]:
+        if not tache.phase in ["R1", "R2", "S", "Rev"]:
             box = wx.StaticBox(self, -1, u"Intitulé")
             bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
             textctrl = wx.TextCtrl(self, -1, u"", style=wx.TE_MULTILINE)
@@ -7538,7 +7550,7 @@ class PanelPropriete_Tache(PanelPropriete):
         #
         # Durée de la tache
         #
-        if not tache.phase in ["R1", "R2", "Rev"]:
+        if not tache.phase in ["R1", "R2", "S", "Rev"]:
             vcDuree = VariableCtrl(self, tache.duree, coef = 0.5, labelMPL = False, signeEgal = True, slider = False,
                                    help = u"Volume horaire de la tâche en heures")
             self.Bind(EVT_VAR_CTRL, self.EvtText, vcDuree)
@@ -7569,7 +7581,7 @@ class PanelPropriete_Tache(PanelPropriete):
         dbsizer.Add(tc, 1, flag = wx.EXPAND)
         dbsizer.Add(bd, flag = wx.EXPAND)
         self.Bind(wx.EVT_BUTTON, self.EvtClick, bd)
-        if tache.phase in ["R1", "R2", "Rev"]:
+        if tache.phase in ["R1", "R2", "S", "Rev"]:
             self.sizer.Add(dbsizer, (1,0), (3, 2), flag = wx.EXPAND)
         else:
             self.sizer.Add(dbsizer, (3,0), (1, 2), flag = wx.EXPAND)
@@ -7583,7 +7595,7 @@ class PanelPropriete_Tache(PanelPropriete):
         cbox = wx.StaticBox(self, -1, u"Compétences employées")
         cbsizer = wx.StaticBoxSizer(cbox, wx.HORIZONTAL)
         self.arbre = ArbreCompetencesPrj(self, tache.parent.classe.typeEnseignement,
-                                         revue = self.tache.phase in ["R1", "R2", "Rev"])
+                                         revue = self.tache.phase in ["R1", "R2", "S", "Rev"])
         cbsizer.Add(self.arbre,1, flag = wx.EXPAND|wx.GROW)
         self.sizer.Add(cbsizer, (0,3), (4,1), flag = wx.EXPAND)
         
