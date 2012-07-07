@@ -175,7 +175,7 @@ dicimages =   {"Seq" : images.Icone_sequence,
                "Com" : images.Icone_competence,
                "Sav" : images.Icone_savoirs,
                "Obj" : images.Icone_objectif,
-               "Ci" : images.Icone_centreinteret,
+               "Ci"  : images.Icone_centreinteret,
                "Sys" : images.Icone_systeme,
 
                        }

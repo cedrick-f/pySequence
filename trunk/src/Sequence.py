@@ -1574,6 +1574,7 @@ class Projet(BaseDoc, Objet_sequence):
                 tache.setBranche(e)
                 self.taches.append(tache)
         
+        
         if hasattr(self, 'panelPropriete'):
             self.panelPropriete.MiseAJour()
 
