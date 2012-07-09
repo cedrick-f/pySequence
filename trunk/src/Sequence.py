@@ -50,6 +50,8 @@ from wx.lib.agw import ultimatelistctrl as ULC
 import wx.lib.colourdb
 import  wx.lib.fancytext as fancytext
 
+import images
+
 # Graphiques vectoriels
 import draw_cairo_seq, draw_cairo_prj, draw_cairo
 try:
@@ -588,7 +590,7 @@ class Classe():
         if not pourProjet:
             self.ci_ET = constantes.CentresInteretsET
             self.posCI_ET = constantes.PositionCibleCIET
-        
+            
         self.effectifs = constantes.Effectifs
         self.nbrGroupes = constantes.NbrGroupes
         calculerEffectifs(self)
@@ -774,15 +776,10 @@ class Sequence(BaseDoc):
         
         if panelParent:
             self.panelPropriete = PanelPropriete_Sequence(panelParent, self)
-            self.panelSeances = PanelPropriete_Racine(panelParent, 
-                                                      u"\nPour ajouter une séance, faire un clic droit sur la branche \"Séances\".\n" \
-                                                      u"\nPour en supprimer une, fair un clic droit sur la séance à supprimer.\n" \
-                                                      u"\nPour déplacer une séance, la faire glisser à l'emplacement souhaité.")
-            self.panelObjectifs = PanelPropriete_Racine(panelParent, 
-                                                        u"\nSélectionner les objectifs pédagogiques de la séquence dans les branches \"Compétences\" et \"Savoirs\"")
-            self.panelSystemes = PanelPropriete_Racine(panelParent, 
-                                                       u"\nPour ajouter un système ou un autre matériel, faire un clic droit sur la branche \"Systèmes et matériels\".\n" \
-                                                       u"\nPour en supprimer un, fair un clic droit sur le système ou autre matériel à supprimer.\n")
+            self.panelSeances = PanelPropriete_Racine(panelParent, constantes.TxtRacineSeance)
+            self.panelObjectifs = PanelPropriete_Racine(panelParent, constantes.TxtRacineObjectif)
+            self.panelSystemes = PanelPropriete_Racine(panelParent, constantes.TxtRacineSysteme)
+        
         
         self.prerequis = Savoirs(self, panelParent)
         self.prerequisSeance = []
@@ -1364,16 +1361,9 @@ class Projet(BaseDoc, Objet_sequence):
         
         if panelParent:
             self.panelPropriete = PanelPropriete_Projet(panelParent, self)
-            self.panelEleves = PanelPropriete_Racine(panelParent, 
-                                                     u"\nPour ajouter un élève , faire un clic-droit sur la branche \"Elèves\".\n" \
-                                                     u"\nPour en supprimer un, faire un clic-droit sur l'élève à supprimer.\n")
-            self.panelTaches = PanelPropriete_Racine(panelParent, 
-                                                     u"\nPour ajouter une tâche, faire un clic-droit sur la branche \"Tâches\".\n" \
-                                                     u"\nPour en supprimer une, faire un clic-droit sur la tâche à supprimer.\n" \
-                                                     u"\nPour déplacer une tâche, la faire glisser à la souris vers l'emplacement souhaité.")
-            self.panelEquipe = PanelPropriete_Racine(panelParent, 
-                                                     u"\nPour ajouter un professeur à l'équipe pédagogique, faire un clic-droit sur la branche \"Equipe pédagogique\".\n" \
-                                                     u"\nPour en supprimer un, faire un clic-droit sur le professeur à supprimer.\n")
+            self.panelEleves = PanelPropriete_Racine(panelParent, constantes.TxtRacineEleve)
+            self.panelTaches = PanelPropriete_Racine(panelParent, constantes.TxtRacineTache)
+            self.panelEquipe = PanelPropriete_Racine(panelParent, constantes.TxtRacineEquipe)
         
         self.eleves = []
         
@@ -1953,8 +1943,13 @@ class Projet(BaseDoc, Objet_sequence):
         e = self.arbre.GetItemPyData(item)
         i = self.eleves.index(e)
         self.eleves.remove(e)
+                
         self.arbre.Delete(item)
         self.SupprimerEleveDansPanelTache(i)
+        
+        for i, e in enumerate(self.eleves):
+            e.id = i
+        
         self.panelPropriete.sendEvent()
     
     
@@ -2069,6 +2064,9 @@ class Projet(BaseDoc, Objet_sequence):
 #            self.arbre.GetItemPyData(itemArbre).AfficherMenuContextuel(itemArbre)
             
         elif isinstance(self.arbre.GetItemPyData(itemArbre), Eleve):
+            self.arbre.GetItemPyData(itemArbre).AfficherMenuContextuel(itemArbre)
+            
+        elif isinstance(self.arbre.GetItemPyData(itemArbre), Prof):
             self.arbre.GetItemPyData(itemArbre).AfficherMenuContextuel(itemArbre)
             
         elif isinstance(self.arbre.GetItemPyData(itemArbre), Tache):
@@ -3603,10 +3601,11 @@ class Tache(Objet_sequence):
     def SupprimerEleve(self, i):
         if i in self.eleves:
             self.eleves.remove(i)
-        for id in self.eleves:
+
+        for i, id in enumerate(self.eleves):
             if id > i:
-                self.eleves.remove(id)
-                self.eleves.append(id-1)
+                self.eleves[i] = id-1
+
         if hasattr(self, 'panelPropriete'):
             self.panelPropriete.ConstruireListeEleves()
         
@@ -4403,6 +4402,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         # On centre la fenétre dans l'écran ...
         self.CentreOnScreen(wx.BOTH)
         
+        self.SetIcon(images.getlogoIcon())
         #
         # le fichier de configuration de la fiche
         #
@@ -5154,31 +5154,31 @@ class FenetreSequence(FenetreDocument):
         
         fichier = open(nomFichier,'r')
         self.definirNomFichierCourant(nomFichier)
-#        try:
-        root = ET.parse(fichier).getroot()
-        
-        # La séquence
-        sequence = root.find("Sequence")
-        if sequence == None:
-            self.sequence.setBranche(root)
+        try:
+            root = ET.parse(fichier).getroot()
             
-        else:
-            # La classe
-            classe = root.find("Classe")
-            self.classe.setBranche(classe)
-            
-            self.sequence.setBranche(sequence)  
+            # La séquence
+            sequence = root.find("Sequence")
+            if sequence == None:
+                self.sequence.setBranche(root)
                 
-#        except Exception as inst:
-#            dlg = wx.MessageDialog(self, u"La séquence pédagogique\n%s\n n'a pas pu être ouverte !" %nomFichier,
-#                               u"Erreur d'ouverture",
-#                               wx.OK | wx.ICON_WARNING
-#                               )
-#            dlg.ShowModal()
-#            dlg.Destroy()
-#            fichier.close()
-#            wx.EndBusyCursor()
-#            return
+            else:
+                # La classe
+                classe = root.find("Classe")
+                self.classe.setBranche(classe)
+                
+                self.sequence.setBranche(sequence)  
+                
+        except Exception as inst:
+            dlg = wx.MessageDialog(self, u"La séquence pédagogique\n%s\n n'a pas pu être ouverte !" %nomFichier,
+                               u"Erreur d'ouverture",
+                               wx.OK | wx.ICON_WARNING
+                               )
+            dlg.ShowModal()
+            dlg.Destroy()
+            fichier.close()
+            wx.EndBusyCursor()
+            return
 
         self.arbre.DeleteAllItems()
         root = self.arbre.AddRoot("")
@@ -5693,17 +5693,37 @@ class PanelPropriete(scrolled.ScrolledPanel):
 #   Classe définissant le panel "racine" 
 #
 ####################################################################################
+import wx.richtext as rt
 class PanelPropriete_Racine(wx.Panel):
     def __init__(self, parent, texte):
         wx.Panel.__init__(self, parent, -1)
-        self.texte = texte
-        self.Bind(wx.EVT_PAINT, self.OnPaint)
+        self.Hide()
+#        wildcard, types = rt.RichTextBuffer.GetExtWildcard(save=False)
+#        print types
+        self.rtc = rt.RichTextCtrl(self, style=rt.RE_READONLY|wx.NO_BORDER)
+        sizer = wx.BoxSizer(wx.VERTICAL)
+        sizer.Add(self.rtc, 1,flag = wx.EXPAND)
+        self.SetSizer(sizer)
+#        self.rtc.LoadFile(os.path.join(PATH, fichier))
 
-    def OnPaint(self, evt):
-        dc = wx.PaintDC(self)
-      
-        w, h = fancytext.GetExtent(self.texte, dc)
-        fancytext.RenderToDC(self.texte, dc, 20, 20)
+        out = cStringIO.StringIO()
+        handler = rt.RichTextXMLHandler()
+        buff = self.rtc.GetBuffer()
+        buff.AddHandler(handler)
+        out.write(texte)
+        out.seek(0)
+        handler.LoadStream(buff, out)
+        self.rtc.Refresh()
+        
+        sizer.Layout()
+        wx.CallAfter(self.Layout)
+#        self.Bind(wx.EVT_PAINT, self.OnPaint)
+#
+#    def OnPaint(self, evt):
+#        dc = wx.PaintDC(self)
+#      
+#        w, h = fancytext.GetExtent(self.texte, dc)
+#        fancytext.RenderToDC(self.texte, dc, 20, 20)
 
         
         
@@ -7570,12 +7590,13 @@ class PanelPropriete_Tache(PanelPropriete):
         #
         # Elèves impliqués
         #
-        self.box = wx.StaticBox(self, -1, u"Elèves impliqués", size = (200,200))
-        self.box.SetMinSize((150,200))
-        self.bsizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
-        self.elevesCtrl = []
-        self.ConstruireListeEleves()
-        self.sizer.Add(self.bsizer, (0,2), (4, 1), flag = wx.EXPAND)
+        if tache.phase != "S":
+            self.box = wx.StaticBox(self, -1, u"Elèves impliqués", size = (200,200))
+            self.box.SetMinSize((150,200))
+            self.bsizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
+            self.elevesCtrl = []
+            self.ConstruireListeEleves()
+            self.sizer.Add(self.bsizer, (0,2), (4, 1), flag = wx.EXPAND)
         
         
         #
@@ -7586,8 +7607,8 @@ class PanelPropriete_Tache(PanelPropriete):
         bd = wx.Button(self, -1, u"Editer")
         tc = richtext.RichTextPanel(self, self.tache)
 #        tc.SetMaxSize((-1, 150))
-        tc.SetMinSize((150, -1))
-        dbsizer.Add(tc, 1, flag = wx.EXPAND)
+        tc.SetMinSize((150, 60))
+        dbsizer.Add(tc,1, flag = wx.EXPAND)
         dbsizer.Add(bd, flag = wx.EXPAND)
         self.Bind(wx.EVT_BUTTON, self.EvtClick, bd)
         if tache.phase in ["R1", "R2", "S", "Rev"]:
@@ -7601,16 +7622,17 @@ class PanelPropriete_Tache(PanelPropriete):
         #
         # Compétences employées
         #
-        cbox = wx.StaticBox(self, -1, u"Compétences employées")
-        cbsizer = wx.StaticBoxSizer(cbox, wx.HORIZONTAL)
-        self.arbre = ArbreCompetencesPrj(self, tache.parent.classe.typeEnseignement,
-                                         revue = self.tache.phase in ["R1", "R2", "S", "Rev"])
-        cbsizer.Add(self.arbre,1, flag = wx.EXPAND|wx.GROW)
-        self.sizer.Add(cbsizer, (0,3), (4,1), flag = wx.EXPAND)
-        
-        self.sizer.AddGrowableCol(3)
-        self.sizer.AddGrowableRow(3)
-        
+        if tache.phase != "S":
+            cbox = wx.StaticBox(self, -1, u"Compétences employées")
+            cbsizer = wx.StaticBoxSizer(cbox, wx.HORIZONTAL)
+            self.arbre = ArbreCompetencesPrj(self, tache.parent.classe.typeEnseignement,
+                                             revue = self.tache.phase in ["R1", "R2", "S", "Rev"])
+            cbsizer.Add(self.arbre,1, flag = wx.EXPAND|wx.GROW)
+            self.sizer.Add(cbsizer, (0,3), (4,1), flag = wx.EXPAND)
+            
+            self.sizer.AddGrowableCol(3)
+            self.sizer.AddGrowableRow(3)
+            
         #
         # Mise en place
         #
@@ -7636,42 +7658,44 @@ class PanelPropriete_Tache(PanelPropriete):
         
     ############################################################################            
     def ConstruireListeEleves(self):
-        self.Freeze()
-        
-        for ss in self.elevesCtrl:
-            self.bsizer.Detach(ss)
-            ss.Destroy()
+        if hasattr(self, 'elevesCtrl'):
+            self.Freeze()
             
-        self.elevesCtrl = []
-        for i, e in enumerate(self.GetDocument().eleves):
-            v = wx.CheckBox(self, 100+i, e.GetNomPrenom())
-            v.SetMinSize((200,-1))
-            v.SetValue(i in self.tache.eleves)
-            self.Bind(wx.EVT_CHECKBOX, self.EvtCheckEleve, v)
-            self.bsizer.Add(v, flag = wx.ALIGN_LEFT|wx.ALL, border = 3)#|wx.EXPAND) 
-            self.elevesCtrl.append(v)
-        self.bsizer.Layout()
-        
-        if len(self.GetDocument().eleves) > 0:
-            self.box.Show(True)
-        else:
-            self.box.Hide()
-
-        self.box.SetMinSize((200,200))
-        self.Layout()
-        self.Thaw()
+            for ss in self.elevesCtrl:
+                self.bsizer.Detach(ss)
+                ss.Destroy()
+                
+            self.elevesCtrl = []
+            for i, e in enumerate(self.GetDocument().eleves):
+                v = wx.CheckBox(self, 100+i, e.GetNomPrenom())
+                v.SetMinSize((200,-1))
+                v.SetValue(i in self.tache.eleves)
+                self.Bind(wx.EVT_CHECKBOX, self.EvtCheckEleve, v)
+                self.bsizer.Add(v, flag = wx.ALIGN_LEFT|wx.ALL, border = 3)#|wx.EXPAND) 
+                self.elevesCtrl.append(v)
+            self.bsizer.Layout()
+            
+            if len(self.GetDocument().eleves) > 0:
+                self.box.Show(True)
+            else:
+                self.box.Hide()
+    
+            self.box.SetMinSize((200,200))
+            self.Layout()
+            self.Thaw()
         
         
     #############################################################################            
     def MiseAJourListeEleves(self):
         """ Met à jour la liste des élèves
         """
-        self.Freeze()
-        for i, e in enumerate(self.GetDocument().eleves):
-            self.elevesCtrl[i].SetLabel(e.GetNomPrenom())
-        self.bsizer.Layout()
-        self.Layout()
-        self.Thaw()
+        if self.tache.phase != "S":
+            self.Freeze()
+            for i, e in enumerate(self.GetDocument().eleves):
+                self.elevesCtrl[i].SetLabel(e.GetNomPrenom())
+            self.bsizer.Layout()
+            self.Layout()
+            self.Thaw()
 
     
         
@@ -7756,13 +7780,14 @@ class PanelPropriete_Tache(PanelPropriete):
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
 #        print "MiseAJour",self.tache.phase
-        self.arbre.UnselectAll()
-        root = self.arbre.GetRootItem()
-        for s in self.tache.competences:
-            i = self.arbre.FindItem(root, s)
-            if i.IsOk():
-                self.arbre.CheckItem2(i)
-        
+        if hasattr(self, 'arbre'):
+            self.arbre.UnselectAll()
+            root = self.arbre.GetRootItem()
+            for s in self.tache.competences:
+                i = self.arbre.FindItem(root, s)
+                if i.IsOk():
+                    self.arbre.CheckItem2(i)
+            
         if hasattr(self, 'textctrl'):
             self.textctrl.SetValue(self.tache.intitule)
         
@@ -7774,7 +7799,8 @@ class PanelPropriete_Tache(PanelPropriete):
         
     ######################################################################################  
     def MiseAJourPoidsCompetences(self, code = None):
-        self.arbre.MiseAJour(code)
+        if hasattr(self, 'arbre'):
+            self.arbre.MiseAJour(code)
         
         
         
@@ -9609,4 +9635,4 @@ if __name__ == '__main__':
         app = SeqApp(False)
         app.MainLoop()
     
-    
+
