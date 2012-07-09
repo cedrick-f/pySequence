@@ -1074,8 +1074,13 @@ def DrawTacheRacine(ctx, tache, y):
         ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
                               cairo.FONT_WEIGHT_NORMAL)
         ctx.set_source_rgb (0,0,0)
-        show_text_rect(ctx, tache.intitule, (x, y + hc, 
-                       tailleZTaches[0], h-hc), ha = 'g', fontsizeMinMax = (minFont, 0.015))
+        if h-hc < minFont:
+            width = ctx.text_extents(tache.intitule)[2]
+            rect = (x + width, y, tailleZTaches[0] - width, hc)
+        else:
+            rect = (x, y + hc, tailleZTaches[0], h-hc)
+        show_text_rect(ctx, tache.intitule, rect, 
+                       ha = 'g', fontsizeMinMax = (minFont, 0.015))
         
     
     tache.rect.append([x, y, tailleZTaches[0], h])

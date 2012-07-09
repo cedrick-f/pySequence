@@ -216,7 +216,8 @@ class Options:
     ############################################################################
     def defaut(self):
         print "Options defaut"
-        constantes.DefOptionsDefaut()
+        import constantes_ETT
+#        constantes.DefOptionsDefaut()
 #        print self
         self.definir()
 #        print self

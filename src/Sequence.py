@@ -1563,17 +1563,25 @@ class Projet(BaseDoc, Objet_sequence):
         brancheTac = branche.find("Taches")
         self.taches = []
         tachesRevue = self.getTachesRevue()
+        adapterVersion = True
         for i,e in enumerate(list(brancheTac)):
             phase = e.get("Phase")
             if phase in ["R1", "R2", "S"]:
-                num = eval(phase[1])-1
+                if phase == "S":
+                    num = 2
+                else:
+                    num = eval(phase[1])-1
                 tachesRevue[num].setBranche(e)
                 self.taches.append(tachesRevue[num])
+                adapterVersion = False
             else:
                 tache = Tache(self, self.panelParent)
                 tache.setBranche(e)
                 self.taches.append(tache)
         
+        # Pour récupérer les prj créés avec la version beta1
+        if adapterVersion:
+            self.taches.extend(tachesRevue)
         
         if hasattr(self, 'panelPropriete'):
             self.panelPropriete.MiseAJour()
