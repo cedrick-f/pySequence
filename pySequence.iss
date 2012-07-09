@@ -21,12 +21,12 @@
 ;Informations générales sur l'application
 
 AppName=pySequence
-AppVersion=2.2
-AppVerName=pySequence 2.2
+AppVersion=3.0
+AppVerName=pySequence 3.0
 
 AppPublisher=Cédrick Faury
 AppCopyright=Copyright © 2011-2012 Cédrick Faury
-VersionInfoVersion = 2.2.0.0
+VersionInfoVersion = 3.0.0.0
 
 ;Répertoire de base contenant les fichiers
 SourceDir=D:\Developpement\Sequence
@@ -45,7 +45,7 @@ SolidCompression=yes
 PrivilegesRequired=none
 
 ;Nom du fichier généré et répertoire de destination
-OutputBaseFilename=pySequence_2.2
+OutputBaseFilename=pySequence_3.0
 OutputDir=releases
 
 UninstallDisplayIcon={app}\logo.ico
@@ -55,15 +55,13 @@ WindowResizable=false
 WindowStartMaximized=true
 WindowShowCaption=true
 BackColorDirection=lefttoright
-;WizardImageFile = D:\Documents\Developpement\PyVot 0.6\Images\grand_logo.bmp
-;WizardSmallImageFile = D:\Documents\Developpement\PyVot 0.6\Images\petit_logo.bmp
 
 AlwaysUsePersonalGroup=no
 
 
 
 [Messages]
-BeveledLabel=pySequence 2.2 installation
+BeveledLabel=pySequence 3.0 installation
 
 [Languages]
 Name: fr; MessagesFile: "compiler:Languages\French.isl"
@@ -76,16 +74,18 @@ fr.uninstall=Désinstaller
 fr.gpl_licence=Prendre connaissance du contrat de licence pour le logiciel
 fr.fdl_licence=Prendre connaissance du contrat de licence pour la documentation associée
 fr.CreateDesktopIcon=Créer un raccourci sur le bureau vers
-fr.AssocFileExtension=&Associer le programme pySequence à l'extension .seq
+fr.AssocFileExtension=&Associer le programme pySequence aux extensions .seq et .prj
 fr.CreateQuickLaunchIcon=Créer un icône dans la barre de lancement rapide
-fr.FileExtensionName=Séquence pédagogique STI2D
-fr.FileExtension=pySequence.sequence
+fr.FileExtensionNameSeq=Fiche de Séquence pédagogique
+fr.FileExtensionSeq=pySequence.sequence
+fr.FileExtensionNamePrj=Fiche de validation de Projet
+fr.FileExtensionPrj=pySequence.projet
 fr.InstallFor=Installer pour :
 fr.AllUsers=Tous les utilisateurs
 fr.JustMe=Seulement moi
 fr.ShortCut=Raccourcis :
 fr.Association=Association de fichier :
-version = 2.2
+version = 3.0
 
 
 [Files]
@@ -102,7 +102,7 @@ Source: src\dist\*.*; DestDir: {app}\bin; Flags : ignoreversion recursesubdirs;
 ; Fichiers exemples
 ;
 Source: Exemples\*.seq; DestDir: {app}\Exemples; Flags : ignoreversion;
-;Source: Exemples\*.csv; DestDir: {app}\Exemples; Flags : ignoreversion;
+Source: Exemples\*.prj; DestDir: {app}\Exemples; Flags : ignoreversion;
 
 
 ; les dll C++
@@ -132,11 +132,17 @@ Use7zip=true
 
 
 [Registry]
-; Tout ce qui concerne les fichiers .seq
-Root: HKCR; SubKey: .seq; ValueType: string; ValueData: {cm:FileExtension}; Flags: uninsdeletekey
-Root: HKCR; SubKey: {cm:FileExtension}; ValueType: string; Flags: uninsdeletekey; ValueData: {cm:FileExtensionName}
-Root: HKCR; SubKey: {cm:FileExtension}\Shell\Open\Command; ValueType: string; ValueData: """{app}\bin\Sequence.exe"" ""%1"""; Flags: uninsdeletekey;
-Root: HKCR; Subkey: {cm:FileExtension}\DefaultIcon; ValueType: string; ValueData: {app}\bin\logo.ico,0; Flags: uninsdeletekey;
+; Tout ce qui concerne les fichiers .seq et .prj
+Root: HKCR; SubKey: .seq; ValueType: string; ValueData: {cm:FileExtensionSeq}; Flags: uninsdeletekey
+Root: HKCR; SubKey: {cm:FileExtensionSeq}; ValueType: string; Flags: uninsdeletekey; ValueData: {cm:FileExtensionNameSeq}
+Root: HKCR; SubKey: {cm:FileExtensionSeq}\Shell\Open\Command; ValueType: string; ValueData: """{app}\bin\Sequence.exe"" ""%1"""; Flags: uninsdeletekey;
+Root: HKCR; Subkey: {cm:FileExtensionSeq}\DefaultIcon; ValueType: string; ValueData: {app}\bin\fichier_seq.ico,0; Flags: uninsdeletekey;
+
+Root: HKCR; SubKey: .prj; ValueType: string; ValueData: {cm:FileExtensionPrj}; Flags: uninsdeletekey
+Root: HKCR; SubKey: {cm:FileExtensionPrj}; ValueType: string; Flags: uninsdeletekey; ValueData: {cm:FileExtensionNamePrj}
+Root: HKCR; SubKey: {cm:FileExtensionPrj}\Shell\Open\Command; ValueType: string; ValueData: """{app}\bin\Sequence.exe"" ""%1"""; Flags: uninsdeletekey;
+Root: HKCR; Subkey: {cm:FileExtensionPrj}\DefaultIcon; ValueType: string; ValueData: {app}\bin\fichier_prj.ico,0; Flags: uninsdeletekey;
+
 
 ; Pour stocker le style d'installation : "All users" ou "Current user"
 Root: HKLM; Subkey: SOFTWARE\pySequence; ValueType: string; ValueName: DataFolder; ValueData: {code:DefAppDataFolder}\pySequence ; Flags: uninsdeletekey;

@@ -16,6 +16,7 @@ import wx.richtext as rt
 from wx.lib.embeddedimage import PyEmbeddedImage
 import os
 import cStringIO
+from constantes import xmlVide
 
 typesImg = {".bmp" : wx.BITMAP_TYPE_BMP, 
             ".gif" : wx.BITMAP_TYPE_GIF,
@@ -36,7 +37,6 @@ class RichTextPanel(wx.Panel):
         wx.Panel.__init__(self, parent, -1, style = wx.BORDER_SUNKEN)
         
         self.objet = objet
-        self.xmlvide = '<?xml version="1.0" encoding="UTF-8"?>\n<richtext version="1.0.0.0" xmlns="http://www.wxwidgets.org">\n  <paragraphlayout textcolor="#000000" fontsize="8" fontstyle="90" fontweight="90" fontunderlined="0" fontface="MS Shell Dlg 2" alignment="1" parspacingafter="10" parspacingbefore="0" linespacing="10">\n    <paragraph>\n      <text></text>\n    </paragraph>\n  </paragraphlayout>\n</richtext>\n'
         
         self.rtc = rt.RichTextCtrl(self, size = size, style=wx.VSCROLL|wx.HSCROLL|wx.NO_BORDER);
         self.sizer = wx.BoxSizer(wx.VERTICAL)
@@ -54,7 +54,7 @@ class RichTextPanel(wx.Panel):
         buff = self.rtc.GetBuffer()
         buff.AddHandler(handler)
         if self.objet.description == None:
-            out.write(self.xmlvide)
+            out.write(xmlVide)
         else:
             out.write(self.objet.description)
         out.seek(0)

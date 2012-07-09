@@ -1134,7 +1134,7 @@ def DrawCroisementsCompetencesTaches(ctx, tache, y):
         ctx.stroke ()
         ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                               cairo.FONT_WEIGHT_BOLD)
-        if tache.parent.rectComp[s] != None:
+        if s in tache.parent.rectComp.keys() and tache.parent.rectComp[s] != None:
             tache.parent.rectComp[s].append((x-r, y-r, 2*r, 2*r))
         else:
             tache.parent.rectComp[s] = [(x-r, y-r, 2*r, 2*r)]

@@ -13,30 +13,56 @@ Copyright (C) 2011
 
 import _winreg, os
 
-EXT_FICHIER = ".seq"
-TYPE_FICHIER = u"Séquence Pédagogique STI2D"
-KEY_TYPE = "pySequence.sequence"
-ICON = "logo.ico"
+EXT_FICHIER_SEQ = ".seq"
+TYPE_FICHIER_SEQ = u"Fiche de Séquence Pédagogique"
+KEY_TYPE_SEQ = "pySequence.sequence"
+ICON_SEQ = "fichier_seq.ico"
+
+EXT_FICHIER_PRJ = ".prj"
+TYPE_FICHIER_PRJ = u"Fiche de validation de Projet"
+KEY_TYPE_PRJ = "pySequence.projet"
+ICON_PRJ = "fichier_prj.ico"
 
 
 def Register(PATH):
     try:
-        key_ext = _winreg.CreateKey(_winreg.HKEY_CLASSES_ROOT, EXT_FICHIER)
-        _winreg.SetValueEx(key_ext, '', 0, _winreg.REG_SZ, KEY_TYPE)
+        app = "\""+os.path.join(PATH, "Sequence.exe")+"\" \"%1\""
+        # Clefs relatives aux "séquences"
+        key_ext = _winreg.CreateKey(_winreg.HKEY_CLASSES_ROOT, EXT_FICHIER_SEQ)
+        _winreg.SetValueEx(key_ext, '', 0, _winreg.REG_SZ, KEY_TYPE_SEQ)
         _winreg.CloseKey(key_ext)
         
-        app = "\""+os.path.join(PATH, "Sequence.exe")+"\" \"%1\""
-        key_typ = _winreg.CreateKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE+"\\shell\\open\\command")#, 0, _winreg.KEY_NOTIFY)
+        
+        key_typ = _winreg.CreateKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE_SEQ+"\\shell\\open\\command")#, 0, _winreg.KEY_NOTIFY)
         _winreg.SetValueEx(key_typ, '', 0, _winreg.REG_SZ, app)
         _winreg.CloseKey(key_typ)
         
-        icone = os.path.join(PATH, ICON)
-        key_ico = _winreg.CreateKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE+"\\DefaultIcon")#, 0, _winreg.KEY_NOTIFY)
+        icone = os.path.join(PATH, ICON_SEQ)
+        key_ico = _winreg.CreateKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE_SEQ+"\\DefaultIcon")#, 0, _winreg.KEY_NOTIFY)
         _winreg.SetValueEx(key_ico, '', 0, _winreg.REG_SZ, icone)
         _winreg.CloseKey(key_ico)
         
-        key_typ = _winreg.CreateKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE)#, 0, _winreg.KEY_NOTIFY)
-        _winreg.SetValueEx(key_typ, '', 0, _winreg.REG_SZ, TYPE_FICHIER)
+        key_typ = _winreg.CreateKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE_SEQ)#, 0, _winreg.KEY_NOTIFY)
+        _winreg.SetValueEx(key_typ, '', 0, _winreg.REG_SZ, TYPE_FICHIER_SEQ)
+        _winreg.CloseKey(key_typ)
+        
+        
+        # Clefs relatives aux "projets"
+        key_ext = _winreg.CreateKey(_winreg.HKEY_CLASSES_ROOT, EXT_FICHIER_PRJ)
+        _winreg.SetValueEx(key_ext, '', 0, _winreg.REG_SZ, KEY_TYPE_PRJ)
+        _winreg.CloseKey(key_ext)
+        
+        key_typ = _winreg.CreateKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE_PRJ+"\\shell\\open\\command")#, 0, _winreg.KEY_NOTIFY)
+        _winreg.SetValueEx(key_typ, '', 0, _winreg.REG_SZ, app)
+        _winreg.CloseKey(key_typ)
+        
+        icone = os.path.join(PATH, ICON_PRJ)
+        key_ico = _winreg.CreateKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE_PRJ+"\\DefaultIcon")#, 0, _winreg.KEY_NOTIFY)
+        _winreg.SetValueEx(key_ico, '', 0, _winreg.REG_SZ, icone)
+        _winreg.CloseKey(key_ico)
+        
+        key_typ = _winreg.CreateKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE_PRJ)#, 0, _winreg.KEY_NOTIFY)
+        _winreg.SetValueEx(key_typ, '', 0, _winreg.REG_SZ, TYPE_FICHIER_PRJ)
         _winreg.CloseKey(key_typ)
         
         return True
@@ -48,12 +74,21 @@ def Register(PATH):
 
 def UnRegister():
     try:
-        _winreg.DeleteKey(_winreg.HKEY_CLASSES_ROOT, EXT_FICHIER)
-        _winreg.DeleteKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE+"\\shell\\open\\command")
-        _winreg.DeleteKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE+"\\shell\\open")
-        _winreg.DeleteKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE+"\\shell")
-        _winreg.DeleteKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE+"\\DefaultIcon")
-        _winreg.DeleteKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE)
+        _winreg.DeleteKey(_winreg.HKEY_CLASSES_ROOT, EXT_FICHIER_SEQ)
+        _winreg.DeleteKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE_SEQ+"\\shell\\open\\command")
+        _winreg.DeleteKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE_SEQ+"\\shell\\open")
+        _winreg.DeleteKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE_SEQ+"\\shell")
+        _winreg.DeleteKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE_SEQ+"\\DefaultIcon")
+        _winreg.DeleteKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE_SEQ)
+        try:
+            _winreg.DeleteKey(_winreg.HKEY_CLASSES_ROOT, EXT_FICHIER_PRJ)
+            _winreg.DeleteKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE_PRJ+"\\shell\\open\\command")
+            _winreg.DeleteKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE_PRJ+"\\shell\\open")
+            _winreg.DeleteKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE_PRJ+"\\shell")
+            _winreg.DeleteKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE_PRJ+"\\DefaultIcon")
+            _winreg.DeleteKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE_PRJ)
+        except:
+            pass
         return True
     except:
         return False
@@ -61,8 +96,8 @@ def UnRegister():
     
 def IsRegistered():
     try:
-        _winreg.OpenKey(_winreg.HKEY_CLASSES_ROOT, EXT_FICHIER)
-        _winreg.OpenKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE)
+        _winreg.OpenKey(_winreg.HKEY_CLASSES_ROOT, EXT_FICHIER_SEQ)
+        _winreg.OpenKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE_SEQ)
         return True
     except:
         return False
