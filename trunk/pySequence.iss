@@ -45,7 +45,7 @@ SolidCompression=yes
 PrivilegesRequired=none
 
 ;Nom du fichier généré et répertoire de destination
-OutputBaseFilename=pySequence_3.0
+OutputBaseFilename=pySequence_3.0beta2
 OutputDir=releases
 
 UninstallDisplayIcon={app}\logo.ico

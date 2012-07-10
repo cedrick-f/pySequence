@@ -1607,6 +1607,7 @@ class Projet(BaseDoc, Objet_sequence):
             
     ######################################################################################  
     def PubDescription(self):
+        self.support.PubDescription()   
         for t in self.taches:
             t.PubDescription()       
          
@@ -2990,6 +2991,7 @@ class Seance(ElementDeSequence, Objet_sequence):
         self.tip.SetRichTexte()
         if hasattr(self, 'panelPropriete'):
             self.panelPropriete.rtc.Ouvrir()
+        
         if self.typeSeance in ["R", "S"]:
             for sce in self.sousSeances:
                 sce.PubDescription() 
@@ -3844,6 +3846,7 @@ class Support(ElementDeSequence, Objet_sequence):
         self.tip_nom = self.tip.CreerTexte((1,0))
         self.tip_titrelien, self.tip_ctrllien = self.tip.CreerLien((2,0))
         self.tip_image = self.tip.CreerImage((3,0))
+        self.tip_description = self.tip.CreerRichTexte(self, (4,0))
         
         if panelParent:
             self.panelPropriete = PanelPropriete_Support(panelParent, self)
@@ -3924,7 +3927,7 @@ class Support(ElementDeSequence, Objet_sequence):
             self.description = description
             if hasattr(self, 'panelPropriete'):
                 self.panelPropriete.sendEvent()
-            self.tip.RichTexte()
+            self.tip.SetRichTexte()
             
     ######################################################################################  
     def GetCode(self, i = None):
@@ -5698,13 +5701,11 @@ class PanelPropriete_Racine(wx.Panel):
     def __init__(self, parent, texte):
         wx.Panel.__init__(self, parent, -1)
         self.Hide()
-#        wildcard, types = rt.RichTextBuffer.GetExtWildcard(save=False)
-#        print types
+
         self.rtc = rt.RichTextCtrl(self, style=rt.RE_READONLY|wx.NO_BORDER)
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(self.rtc, 1,flag = wx.EXPAND)
         self.SetSizer(sizer)
-#        self.rtc.LoadFile(os.path.join(PATH, fichier))
 
         out = cStringIO.StringIO()
         handler = rt.RichTextXMLHandler()
@@ -5717,23 +5718,9 @@ class PanelPropriete_Racine(wx.Panel):
         
         sizer.Layout()
         wx.CallAfter(self.Layout)
-#        self.Bind(wx.EVT_PAINT, self.OnPaint)
-#
-#    def OnPaint(self, evt):
-#        dc = wx.PaintDC(self)
-#      
-#        w, h = fancytext.GetExtent(self.texte, dc)
-#        fancytext.RenderToDC(self.texte, dc, 20, 20)
 
-        
-        
-#class PanelPropriete_Racine(PanelPropriete):
-#    def __init__(self, parent, texte):
-#        PanelPropriete.__init__(self, parent)
-#        st = wx.StaticText(self, -1, texte) 
-#        self.sizer.Add(st, (0,0), flag = wx.ALIGN_CENTER |wx.ALL|wx.EXPAND, border = 2)
-#        
-        
+
+     
 
 ####################################################################################
 #

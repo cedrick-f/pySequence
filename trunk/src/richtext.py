@@ -441,10 +441,10 @@ class RichTextFrame(wx.Frame):
         fileMenu = wx.Menu()
         doBind( fileMenu.Append(-1, u"&Ouvrir\tCtrl+O", u"Ouvrir un fichier"),
                 self.OnFileOpen )
-        doBind( fileMenu.Append(-1, u"&Enregistrer\tCtrl+S", u"Enregistrer le fichier"),
-                self.OnFileSave )
-        doBind( fileMenu.Append(-1, u"&Enregistrer sous...\tF12", u"Enregistrer dans un nouveau fichier"),
-                self.OnFileSaveAs )
+#        doBind( fileMenu.Append(-1, u"&Enregistrer\tCtrl+S", u"Enregistrer le fichier"),
+#                self.OnFileSave )
+#        doBind( fileMenu.Append(-1, u"&Enregistrer sous...\tF12", u"Enregistrer dans un nouveau fichier"),
+#                self.OnFileSaveAs )
         fileMenu.AppendSeparator()
         doBind( fileMenu.Append(-1, "&Visualiser en HTML", u"Visualiser en HTML"),
                 self.OnFileViewHTML)
@@ -517,8 +517,8 @@ class RichTextFrame(wx.Frame):
         tbar = self.CreateToolBar()
         doBind( tbar.AddTool(-1, _rt_open.GetBitmap(),
                             shortHelpString=u"Ouvrir"), self.OnFileOpen)
-        doBind( tbar.AddTool(-1, _rt_save.GetBitmap(),
-                            shortHelpString=u"Enregistrer"), self.OnFileSave)
+#        doBind( tbar.AddTool(-1, _rt_save.GetBitmap(),
+#                            shortHelpString=u"Enregistrer"), self.OnFileSave)
         tbar.AddSeparator()
         doBind( tbar.AddTool(wx.ID_CUT, _rt_cut.GetBitmap(),
                             shortHelpString=u"Couper"), self.ForwardEvent, self.ForwardEvent)
