@@ -1017,7 +1017,28 @@ def boule(ctx, x, y, r,
     ctx.set_source (pat)
     ctx.arc (x, y, r, 0, 2*pi)
     ctx.fill ()
-        
+      
+def barreH(ctx, x, y, w, r, e, coul0, coul1, coul):
+    """ Dessine une barre horizontale de poucentage/progression
+    """
+    src = ctx.get_source()
+    pat = cairo.LinearGradient (x, y-e/2,  x, y+e/2)
+    
+    if r > 0.5:
+        pat.add_color_stop_rgba (0.0, coul1[0], coul1[1], coul1[2], coul1[3])
+        pat.add_color_stop_rgba (0.5, coul[0],  coul[1],  coul[2],  coul[3])
+        pat.add_color_stop_rgba (1.0, coul1[0], coul1[1], coul1[2], coul1[3])
+    else:
+        pat.add_color_stop_rgba (0.0, coul0[0], coul0[1], coul0[2], coul0[3])
+        pat.add_color_stop_rgba (0.5, coul[0],  coul[1],  coul[2],  coul[3])
+        pat.add_color_stop_rgba (1.0, coul0[0], coul0[1], coul0[2], coul0[3])
+    
+    ctx.rectangle (x,y-e/2,w*r,e)
+    ctx.set_source (pat)
+    ctx.fill ()
+    ctx.set_source(src)
+    
+    
         
 def fleche_verticale(ctx, x, y, h, e, coul):
     ctx.set_source_rgba (coul[0], coul[1], coul[2], coul[3])
