@@ -56,7 +56,7 @@ margeX = 0.02
 margeY = 0.04
 
 # Ecarts
-ecartX = 0.03
+ecartX = 0.02
 ecartY = 0.03
 
 
@@ -111,8 +111,8 @@ tailleZDeroul = [None, None]
 IcoulZDeroul = (1, 1, 0.7, 0.85)
 BcoulZDeroul = (0.4, 0.4, 0.03, 1)
 fontZDeroul = 0.014
-wPhases = 0.02      # Taille du label "phases"
-wDuree = 0.015       # Taille de la fleche "duree"
+wPhases = 0.03      # Taille du label "phases"
+wDuree = 0.012       # Taille de la fleche "duree"
 
 
 # Zones des tableaux des éléves
@@ -120,7 +120,7 @@ posZElevesV = [None, 0.24]
 tailleZElevesV = [None, None]
 posZElevesH = [posZDeroul[0], posZElevesV[1]]
 tailleZElevesH = [None, None]
-wEleves = 0.020
+wEleves = 0.015
 hEleves = 0.020
 xEleves = []
 yEleves = []
@@ -340,7 +340,7 @@ def ouvrirConfigFiche(nomFichier):
     
 
 def calcH(t):
-    return a*log(t)+b
+    return a*log(t*2)+b
 
 ######################################################################################  
 def DefinirZones(prj, ctx):
@@ -362,7 +362,7 @@ def DefinirZones(prj, ctx):
     # Zone du tableau des élèves
     #
     tailleZElevesV[0] = wEleves * len(prj.eleves)
-    tailleZElevesH[1] = tailleZElevesV[0]
+    tailleZElevesH[1] = hEleves * len(prj.eleves)
     posZElevesV[0] = posZComp[0] - tailleZElevesV[0] - ecartX/2
     tailleZElevesH[0] = posZElevesV[0]-posZElevesH[0]
     tailleZElevesV[1] = posZOrganis[1] + tailleZOrganis[1] - posZElevesV[1]
@@ -737,6 +737,7 @@ def Draw(ctx, prj, mouchard = False):
             
         phase = t.phase
     
+    # Nom des phases
     for phase, yh in yh_phase.items():
 #        print phase, yh
         if len(yh[0]) > 0:
@@ -747,61 +748,8 @@ def Draw(ctx, prj, mouchard = False):
                                                cairo.FONT_WEIGHT_NORMAL)
             show_text_rect(ctx, constantes.NOM_PHASE_TACHE[phase], 
                    (posZDeroul[0] + ecartX/4, yh[0], 
-                    wPhases, yh[1]-yh[0]), ha = 'c', orient = 'v', b = 0.1) 
-           
-#    for t in prj.taches:
-#        if not t.phase in yh_phase.keys():
-#            yh_phase[t.phase] = [y,None]        
-#        if phase != t.phase:
-#            # Noms des phases
-#            if phase != None:
-#                if not phase in ["R1", "R2", "S", "Rev"] :
-#                     
-#                    
-#                    
-#                
-#                y += ecartTacheY
-#            
-#                if t.phase != '':
-#                    yp = y
-#                   
-#        
-        
-        
-    
-        
-        
-        
-#    y_jalon['S'] = y
-    
-#    # Nom de la dernière phase
-#    if phase != None and not phase in ["R1", "R2", "S", "Rev"]:
-#        yh_phase[t.phase][1] = y - yh_phase[t.phase][0]
-#        hp = y-yp
-#        ctx.set_source_rgb(BCoulTache[phase][0],BCoulTache[phase][1],BCoulTache[phase][2])
-#        ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
-#                                           cairo.FONT_WEIGHT_NORMAL)
-#        show_text_rect(ctx, constantes.NOM_PHASE_TACHE[phase], 
-#               (posZDeroul[0] + ecartX/4, yp, 
-#                wPhases, hp), ha = 'c', orient = 'v', b = 0.1)    
-        
-        
-#    # Les "jalons"    
-#    if prj.position == 5: # LE projet
-#        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-#                                           cairo.FONT_WEIGHT_NORMAL)
-#        for k, y in y_jalon.items():
-#            if k == "S":
-#                ctx.set_source_rgba(ICoulCompS[0]/2, ICoulCompS[1]/3, ICoulCompS[2]/3, 1)
-#            else:
-#                ctx.set_source_rgba(ICoulCompR[0]/3, ICoulCompR[1]/3, ICoulCompR[2]/2, 1)
-#                
-#            show_text_rect(ctx, constantes.NOM_JALONS[k], 
-#                       (posZTaches[0] + ecartX/4, y, 
-#                        tailleZTaches[0], ecartTacheY*2), ha = 'g', orient = 'h', b = 0.2)
-#            
-#        
-#        
+                    wPhases, yh[1]-yh[0]), ha = 'c', orient = 'v', b = 0) 
+
         
         
     #

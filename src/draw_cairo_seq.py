@@ -389,11 +389,16 @@ def DefinirZones(seq, ctx):
     
     
     # Zone du tableau des démarches
-    posZDemarche[0] = posZSysteme[0] - tailleZDemarche[0] - ecartX
-    tailleZDemarche[1] = tailleZSysteme[1]
-    xDemarche["I"] = posZDemarche[0] + tailleZDemarche[0]/6
-    xDemarche["R"] = posZDemarche[0] + tailleZDemarche[0]*3/6
-    xDemarche["P"] = posZDemarche[0] + tailleZDemarche[0]*5/6
+    if seq.classe.typeEnseignement != "SSI":
+        tailleZDemarche[0] = 0.07
+        posZDemarche[0] = posZSysteme[0] - tailleZDemarche[0] - ecartX
+        tailleZDemarche[1] = tailleZSysteme[1]
+        xDemarche["I"] = posZDemarche[0] + tailleZDemarche[0]/6
+        xDemarche["R"] = posZDemarche[0] + tailleZDemarche[0]*3/6
+        xDemarche["P"] = posZDemarche[0] + tailleZDemarche[0]*5/6
+    else:
+        tailleZDemarche[0] = 0
+        posZDemarche[0] = posZSysteme[0] - tailleZDemarche[0] - ecartX
                  
     # Zone de déroulement de la séquence
     tailleZDeroul[0] = posZDemarche[0] - posZDeroul[0] - ecartX
@@ -578,6 +583,8 @@ def Draw(ctx, seq, mouchard = False):
             bmp = constantes.images.ImageITEC.GetBitmap()
         elif seq.classe.typeEnseignement == "EE":
             bmp = constantes.images.ImageEE.GetBitmap()
+        elif seq.classe.typeEnseignement == "SSI":
+            bmp = constantes.images.SSI_ASR.GetBitmap()
         
         tfname = tempfile.mktemp()
         try:
@@ -774,25 +781,26 @@ def Draw(ctx, seq, mouchard = False):
     #
     #  Tableau des démarches
     #    
-    ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-                          cairo.FONT_WEIGHT_NORMAL)
-    ctx.set_source_rgb(0, 0, 0)
-    ctx.set_line_width(0.001)
-    l=[]
-    for d in listeDemarches : 
-        l.append(DemarchesCourt[d])
-    tableauV(ctx, l, posZDemarche[0], posZDemarche[1], 
-            tailleZDemarche[0], posZSeances[1] - posZSysteme[1], 
-            0, nlignes = 0, va = 'c', ha = 'g', orient = 'v', coul = (0.8,0.75,0.9))
-    ctx.move_to(posZDemarche[0], posZDemarche[1] + posZSeances[1] - posZSysteme[1])
-    ctx.line_to(posZDemarche[0], posZDemarche[1] + tailleZDemarche[1])
-    ctx.move_to(posZDemarche[0]+tailleZDemarche[0]/3, posZDemarche[1] + posZSeances[1] - posZSysteme[1])
-    ctx.line_to(posZDemarche[0]+tailleZDemarche[0]/3, posZDemarche[1] + tailleZDemarche[1])
-    ctx.move_to(posZDemarche[0]+tailleZDemarche[0]*2/3, posZDemarche[1] + posZSeances[1] - posZSysteme[1])
-    ctx.line_to(posZDemarche[0]+tailleZDemarche[0]*2/3, posZDemarche[1] + tailleZDemarche[1])
-    ctx.move_to(posZDemarche[0]+tailleZDemarche[0], posZDemarche[1] + posZSeances[1] - posZSysteme[1])
-    ctx.line_to(posZDemarche[0]+tailleZDemarche[0], posZDemarche[1] + tailleZDemarche[1])
-    ctx.stroke()
+    if seq.classe.typeEnseignement != "SSI":
+        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+                              cairo.FONT_WEIGHT_NORMAL)
+        ctx.set_source_rgb(0, 0, 0)
+        ctx.set_line_width(0.001)
+        l=[]
+        for d in listeDemarches : 
+            l.append(DemarchesCourt[d])
+        tableauV(ctx, l, posZDemarche[0], posZDemarche[1], 
+                tailleZDemarche[0], posZSeances[1] - posZSysteme[1], 
+                0, nlignes = 0, va = 'c', ha = 'g', orient = 'v', coul = (0.8,0.75,0.9))
+        ctx.move_to(posZDemarche[0], posZDemarche[1] + posZSeances[1] - posZSysteme[1])
+        ctx.line_to(posZDemarche[0], posZDemarche[1] + tailleZDemarche[1])
+        ctx.move_to(posZDemarche[0]+tailleZDemarche[0]/3, posZDemarche[1] + posZSeances[1] - posZSysteme[1])
+        ctx.line_to(posZDemarche[0]+tailleZDemarche[0]/3, posZDemarche[1] + tailleZDemarche[1])
+        ctx.move_to(posZDemarche[0]+tailleZDemarche[0]*2/3, posZDemarche[1] + posZSeances[1] - posZSysteme[1])
+        ctx.line_to(posZDemarche[0]+tailleZDemarche[0]*2/3, posZDemarche[1] + tailleZDemarche[1])
+        ctx.move_to(posZDemarche[0]+tailleZDemarche[0], posZDemarche[1] + posZSeances[1] - posZSysteme[1])
+        ctx.line_to(posZDemarche[0]+tailleZDemarche[0], posZDemarche[1] + tailleZDemarche[1])
+        ctx.stroke()
     
     #
     #  Tableau des séances (en bas)
@@ -1012,8 +1020,9 @@ class Bloc():
         for ligne in self.contenu:
             for cadre in ligne:
                 if cadre.seance.typeSeance in ["AP", "ED", "P"] and not cadre.filigrane and cadre.dy:
-                    DrawCroisements(cadre.ctx, cadre.seance, cadre.xd, cadre.y + cadre.dy)
-                    DrawCroisementSystemes(cadre.ctx, cadre.seance, cadre.y + cadre.dy) 
+                    if cadre.seance.GetClasse().typeEnseignement != "SSI":
+                        DrawCroisementsDemarche(cadre.ctx, cadre.seance, cadre.y + cadre.dy)
+                    DrawCroisementSystemes(cadre.ctx, cadre.seance, cadre.xd, cadre.y + cadre.dy) 
                
     
 ######################################################################################  
@@ -1172,7 +1181,7 @@ def DrawSeanceRacine(ctx, seance):
 #            else:
 #                ys = y+h/2           
 #                
-#            DrawCroisements(ctx, seance, x+w*seance.nombre.v[0], ys)
+#            DrawCroisementsDemarche(ctx, seance, x+w*seance.nombre.v[0], ys)
 #            DrawCroisementSystemes(ctx, seance, ys)      
 #                
 #            
@@ -1229,9 +1238,16 @@ def DrawSeanceRacine(ctx, seance):
 #        
         
 ######################################################################################  
-def DrawCroisementSystemes(ctx, seance, y):
+def DrawCroisementSystemes(ctx, seance, x, y):
 #        if self.typeSeance in ["AP", "ED", "P"]:
 #            and not (self.EstSousSeance() and self.parent.typeSeance == "S"):
+    #
+    # Les lignes horizontales
+    #
+    if seance.typeSeance in ["AP", "ED", "P"]:
+        DrawLigne(ctx, x, y)
+        
+        
     r = wColSysteme/3
     ns = seance.GetNbrSystemes()
     for s, n in ns.items():
@@ -1264,13 +1280,7 @@ def DrawLigne(ctx, x, y):
           
 
 #####################################################################################  
-def DrawCroisements(ctx, seance, x, y):
-
-    #
-    # Les lignes horizontales
-    #
-    if seance.typeSeance in ["AP", "ED", "P"]:
-        DrawLigne(ctx, x, y)
+def DrawCroisementsDemarche(ctx, seance, y):
         
     #
     # Croisements Séance/Démarche

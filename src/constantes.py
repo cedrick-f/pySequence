@@ -39,7 +39,7 @@ from constantes_SIN import *
 from constantes_AC import *
 from constantes_ITEC import *
 from constantes_EE import *
-#from constantes_SSI import *
+from constantes_SSI import *
 
 # Les icones des branches de l'abre et un curseur perso
 import images
@@ -292,12 +292,13 @@ DemarchesCourt = {"I" : u"Investigation",
              "P" : u"Projet"}
 
 listeDemarches = ["I", "R", "P"]
-listEnseigmenent = ['ET', 'ITEC', 'AC', 'EE', 'SIN']
+listEnseigmenent = ['ET', 'ITEC', 'AC', 'EE', 'SIN', 'SSI']
 Enseigmenent = {'ET'   : u"Enseignement Technologique Transversal",
                 'ITEC' : u"Innovation Technologique et éco-conception",
                 'AC'   : u"Architecture et Construction",
                 'EE'   : u"Energies et Environnement",
-                'SIN'  : u"Systèmes d'Information et Numérique"}
+                'SIN'  : u"Systèmes d'Information et Numérique",
+                'SSI'  : u"Sciences de l'ingénieur"}
 
 
 ####################################################################################
@@ -497,29 +498,55 @@ CentresInterets = {'ET'     : CentresInteretsET,
                    'ITEC'   : CentresInteretsITEC, 
                    'AC'     : CentresInteretsAC, 
                    'EE'     : CentresInteretsEE, 
-                   'SIN'    : CentresInteretsSIN}
+                   'SIN'    : CentresInteretsSIN,
+                   'SSI'    : CentresInteretsSSI}
 
 dicCompetences = {'ET'     : dicCompetencesET,
                   'ITEC'   : dicCompetencesITEC, 
                   'AC'     : dicCompetencesAC, 
                   'EE'     : dicCompetencesEE, 
-                  'SIN'    : dicCompetencesSIN}
+                  'SIN'    : dicCompetencesSIN,
+                  'SSI'    : dicCompetencesSSI}
 
 dicCompetences_prj = {'ITEC'   : dicCompetencesITEC_prj, 
                       'AC'     : dicCompetencesAC_prj, 
                       'EE'     : dicCompetencesEE_prj, 
-                      'SIN'    : dicCompetencesSIN_prj}
+                      'SIN'    : dicCompetencesSIN_prj,
+                      'SSI'    : dicCompetencesSSI_prj}
 
 
 NRB_COEF_COMP_S = {'ITEC'   : 0, # Nombres de coef pour les compétences "Soutenance"
                    'AC'     : 0, 
                    'EE'     : 0, 
-                   'SIN'    : 0}     
+                   'SIN'    : 0,
+                   'SSI'    : 0}     
+
+NRB_COEF_COMP_R = {'ITEC'   : 0, # Nombres de coef pour les compétences "Revue"
+                   'AC'     : 0, 
+                   'EE'     : 0, 
+                   'SIN'    : 0,
+                   'SSI'    : 0}     
 
 
-dicCompetences_prj_simple = {}
+def getCompetencesPrjRevues(v):
+    dic = {}
+    for c, d in v.items():
+        ddic = {}
+        for kk, vv in d[1].items():
+            if len(vv) > 2:
+                ddic[kk] = d[1][kk]
+        if ddic != {}:
+            dic.update({c : [d[0], ddic]})
+    return dic
+
+dicCompetences_prj_revues = {}
 for k,v in dicCompetences_prj.items():
-    NRB_COEF_COMP_R = 0     # Nombre de coef pour les compétences "Revue"
+    dicCompetences_prj_revues[k] = getCompetencesPrjRevues(v)
+
+            
+def getCompetencesPrjSimple(k,v):
+    global NRB_COEF_COMP_R, NRB_COEF_COMP_S
+    NRB_COEF_COMP_R[k] = 0     # Nombre de coef pour les compétences "Revue"
     dic = {}
     for d in v.values():
 
@@ -527,37 +554,23 @@ for k,v in dicCompetences_prj.items():
         
         for l in d[1].values():
             if len(l) > 2:
-                NRB_COEF_COMP_R += l[1]
+                NRB_COEF_COMP_R[k] += l[1]
             else:
                 NRB_COEF_COMP_S[k] += l[1]
-                
-    dicCompetences_prj_simple[k] = dic
+    return dic
 
 
-dicCompetences_prj_revues = {}
+dicCompetences_prj_simple = {}
 for k,v in dicCompetences_prj.items():
-    dic = {}
-#    print k
-    for c, d in v.items():
-#        print "   ", c,d
-        ddic = {}
-#        print dic
-        for kk, vv in d[1].items():
-#            print "      ", kk, vv
-            if len(vv) > 2:
-                ddic[kk] = d[1][kk]
-        if ddic != {}:
-            dic.update({c : [d[0], ddic]})
-        
-        
-    dicCompetences_prj_revues[k] = dic
-#print dicCompetences_prj_revues["ITEC"]
+    dicCompetences_prj_simple[k] = getCompetencesPrjSimple(k,v)
+
 
 dicSavoirs = {'ET'     : dicSavoirsET,
               'ITEC'   : dicSavoirsITEC, 
               'AC'     : dicSavoirsAC, 
               'EE'     : dicSavoirsEE, 
-              'SIN'    : dicSavoirsSIN}
+              'SIN'    : dicSavoirsSIN,
+              'SSI'    : dicSavoirsSSI}
 
 
 
@@ -673,7 +686,8 @@ def getElementFiltre(filtre):
 #    Données pour la gestion des fichiers .seq et .prj
 #
 #######################################################################################
-FORMAT_FICHIER = {'seq' : u"Séquence (.seq)|*.seq|",
+FORMAT_FICHIER = {'seqprj' : u"Séquence ou Projet (.seq ou .prj)|*.seq;*.prj|",
+                  'seq' : u"Séquence (.seq)|*.seq|",
                   'prj' : u"Projet (.prj)|*.prj|"}
 TOUS_FICHIER = u"Tous les fichiers|*.*'"
 

@@ -1338,6 +1338,8 @@ class Sequence(BaseDoc):
         for o in self.obj.values():
             o.MiseAJourTypeEnseignement()
         self.prerequis.MiseAJourTypeEnseignement()
+        for s in self.seance:
+            s.MiseAJourTypeEnseignement()
         
         
     #############################################################################
@@ -1358,6 +1360,7 @@ class Projet(BaseDoc, Objet_sequence):
     def __init__(self, app, classe = None, panelParent = None, intitule = u"Intitulé du projet"):
         BaseDoc.__init__(self, app, classe, panelParent, intitule)
         Objet_sequence.__init__(self)
+        self.position = 5
         
         if panelParent:
             self.panelPropriete = PanelPropriete_Projet(panelParent, self)
@@ -1374,6 +1377,9 @@ class Projet(BaseDoc, Objet_sequence):
         self.support = Support(self, panelParent)
         
         self.problematique = u""
+        
+        self.SetPosition(5)
+        
         
         
     ######################################################################################  
@@ -1431,7 +1437,7 @@ class Projet(BaseDoc, Objet_sequence):
         for p in ["R1", "R2", "S"]:
             lst.append(Tache(self, self.panelParent, 
                              intitule = constantes.NOM_PHASE_TACHE[p], 
-                             phaseTache = p))
+                             phaseTache = p, duree = 0.5))
         return lst
     
     
@@ -1576,6 +1582,26 @@ class Projet(BaseDoc, Objet_sequence):
         if hasattr(self, 'panelPropriete'):
             self.panelPropriete.MiseAJour()
 
+    ######################################################################################  
+    def SetPosition(self, pos):
+        print "SetPosition", pos
+        if pos == 5 and self.position != 5:
+            lst = self.getTachesRevue()
+            for t in lst:
+                self.AjouterTache(tache = t)
+                t.SetCode()
+                
+        elif pos !=5 and self.position == 5:
+            lst = []
+            for t in self.taches:
+                if t.phase in ["R1", "R2", "S"]:
+                    lst.append(t.branche)
+            for a in lst:
+                self.SupprimerTache(item = a)
+        self.position = pos
+        
+        if hasattr(self, 'panelPropriete'):
+            self.panelPropriete.MiseAJour()
         
     ######################################################################################  
     def SetProblematique(self, pb):
@@ -1667,8 +1693,9 @@ class Projet(BaseDoc, Objet_sequence):
             
                    
     ######################################################################################  
-    def AjouterTache(self, event = None):
-        tache = Tache(self, self.panelParent)
+    def AjouterTache(self, event = None, tache = None):
+        if tache == None:
+            tache = Tache(self, self.panelParent)
         self.taches.append(tache)
         tache.ConstruireArbre(self.arbre, self.brancheTac)
         self.panelPropriete.sendEvent()
@@ -1702,14 +1729,11 @@ class Projet(BaseDoc, Objet_sequence):
         
     ######################################################################################  
     def SupprimerTache(self, event = None, item = None):
-        if len(self.taches) > 1: # On en laisse toujours une !!
-            tache = self.arbre.GetItemPyData(item)
-            self.taches.remove(tache)
-            self.arbre.Delete(item)
-            self.SetOrdresTaches()
-            self.panelPropriete.sendEvent()
-            return True
-        return False
+        tache = self.arbre.GetItemPyData(item)
+        self.taches.remove(tache)
+        self.arbre.Delete(item)
+        self.SetOrdresTaches()
+        self.panelPropriete.sendEvent()
     
     
     
@@ -2168,8 +2192,12 @@ class Projet(BaseDoc, Objet_sequence):
                                     
     #############################################################################
     def MiseAJourTypeEnseignement(self):
+        print "MiseAJourTypeEnseignement"
         self.app.SetTitre()
-        return
+        for t in self.taches:
+            if t.phase in ["R1", "R2", "S"]:
+                t.MiseAJourTypeEnseignement(self.classe.typeEnseignement)
+            
 #        self.CI.MiseAJourTypeEnseignement()
 #        for o in self.obj.values():
 #            o.MiseAJourTypeEnseignement()
@@ -3110,6 +3138,14 @@ class Seance(ElementDeSequence, Objet_sequence):
         self.arbre.DeleteChildren(self.branche)
         return
     
+    #############################################################################
+    def MiseAJourTypeEnseignement(self):
+        if self.typeSeance in ["R", "S"]:
+            for s in self.sousSeances:
+                s.MiseAJourTypeEnseignement()
+        else:
+            self.panelPropriete.MiseAJourTypeEnseignement()
+        
     ######################################################################################  
     def MiseAJourNomsSystemes(self):
         if self.typeSeance in ["AP", "ED", "P"]:
@@ -3278,7 +3314,7 @@ class Seance(ElementDeSequence, Objet_sequence):
 class Tache(Objet_sequence):
     
                   
-    def __init__(self, parent, panelParent, intitule = u"", phaseTache = ""):
+    def __init__(self, parent, panelParent, intitule = u"", phaseTache = "", duree = 1.0):
         """ Séance :
                 parent = le parent wx pour contenir "panelPropriete"
                 phaseTache = phase de la tache parmi 'Ana', 'Con', 'Rea', 'Val'
@@ -3288,8 +3324,8 @@ class Tache(Objet_sequence):
         
         # Les données sauvegardées
         self.ordre = 1
-        self.duree = Variable(u"Volume horaire", lstVal = 1.0, nomNorm = "", typ = VAR_REEL_POS, 
-                              bornes = [0.25,30], modeLog = False,
+        self.duree = Variable(u"Volume horaire", lstVal = duree, nomNorm = "", typ = VAR_REEL_POS, 
+                              bornes = [0.5,40], modeLog = False,
                               expression = None, multiple = False)
         self.intitule  = intitule
         self.intituleDansDeroul = True
@@ -3387,7 +3423,10 @@ class Tache(Objet_sequence):
         self.phase = branche.get("Phase", "C")
         self.description = branche.get("Description", None)
         
-        self.duree.v[0] = eval(branche.get("Duree", "1"))
+        if not self.phase in ["R1", "R2", "S", "Rev"]:
+            self.duree.v[0] = eval(branche.get("Duree", "1"))
+        else:
+            self.duree.v[0] = 0.5
         
         brancheElv = branche.find("Eleves")
         self.eleves = []
@@ -3580,7 +3619,10 @@ class Tache(Objet_sequence):
         if hasattr(self, 'panelPropriete'):
             self.panelPropriete.MiseAJourListeEleves()
                                  
-        
+    
+    #############################################################################
+    def MiseAJourTypeEnseignement(self, type_ens):
+        self.panelPropriete.MiseAJourTypeEnseignement(type_ens)
         
     ######################################################################################  
     def SupprimerSysteme(self, id):
@@ -4202,7 +4244,7 @@ class Eleve(Personne):
             else:
                 s += comp[1]
                 
-        r = 1.0*r/constantes.NRB_COEF_COMP_R
+        r = 1.0*r/constantes.NRB_COEF_COMP_R[self.parent.classe.typeEnseignement]
         s = 1.0*s/constantes.NRB_COEF_COMP_S[self.parent.classe.typeEnseignement]   
         return r, s
     
@@ -4648,7 +4690,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
     ###############################################################################################
     def commandeOuvrir(self, event = None, nomFichier=None):
-        mesFormats = constantes.FORMAT_FICHIER['seq'] + constantes.FORMAT_FICHIER['prj'] + constantes.TOUS_FICHIER
+        mesFormats = constantes.FORMAT_FICHIER['seqprj'] + constantes.FORMAT_FICHIER['seq'] + constantes.FORMAT_FICHIER['prj'] + constantes.TOUS_FICHIER
   
         if nomFichier == None:
             dlg = wx.FileDialog(
@@ -5157,31 +5199,31 @@ class FenetreSequence(FenetreDocument):
         
         fichier = open(nomFichier,'r')
         self.definirNomFichierCourant(nomFichier)
-        try:
-            root = ET.parse(fichier).getroot()
+#        try:
+        root = ET.parse(fichier).getroot()
+        
+        # La séquence
+        sequence = root.find("Sequence")
+        if sequence == None:
+            self.sequence.setBranche(root)
             
-            # La séquence
-            sequence = root.find("Sequence")
-            if sequence == None:
-                self.sequence.setBranche(root)
+        else:
+            # La classe
+            classe = root.find("Classe")
+            self.classe.setBranche(classe)
+            
+            self.sequence.setBranche(sequence)  
                 
-            else:
-                # La classe
-                classe = root.find("Classe")
-                self.classe.setBranche(classe)
-                
-                self.sequence.setBranche(sequence)  
-                
-        except Exception as inst:
-            dlg = wx.MessageDialog(self, u"La séquence pédagogique\n%s\n n'a pas pu être ouverte !" %nomFichier,
-                               u"Erreur d'ouverture",
-                               wx.OK | wx.ICON_WARNING
-                               )
-            dlg.ShowModal()
-            dlg.Destroy()
-            fichier.close()
-            wx.EndBusyCursor()
-            return
+#        except Exception as inst:
+#            dlg = wx.MessageDialog(self, u"La séquence pédagogique\n%s\n n'a pas pu être ouverte !" %nomFichier,
+#                               u"Erreur d'ouverture",
+#                               wx.OK | wx.ICON_WARNING
+#                               )
+#            dlg.ShowModal()
+#            dlg.Destroy()
+#            fichier.close()
+#            wx.EndBusyCursor()
+#            return
 
         self.arbre.DeleteAllItems()
         root = self.arbre.AddRoot("")
@@ -5298,30 +5340,30 @@ class FenetreProjet(FenetreDocument):
     def ouvrir(self, nomFichier, redessiner = True):
         fichier = open(nomFichier,'r')
         self.definirNomFichierCourant(nomFichier)
-#        try:
-        root = ET.parse(fichier).getroot()
-        
-        # Le projet
-        projet = root.find("Projet")
-        if projet == None:
-            self.projet.setBranche(root)
+        try:
+            root = ET.parse(fichier).getroot()
             
-        else:
-            # La classe
-            classe = root.find("Classe")
-            self.classe.setBranche(classe)
-            self.projet.setBranche(projet)  
+            # Le projet
+            projet = root.find("Projet")
+            if projet == None:
+                self.projet.setBranche(root)
                 
-#        except Exception as inst:
-#            dlg = wx.MessageDialog(self, u"Le projet\n%s\n n'a pas pu être ouvert !" %nomFichier,
-#                               u"Erreur d'ouverture",
-#                               wx.OK | wx.ICON_WARNING
-#                               )
-#            dlg.ShowModal()
-#            dlg.Destroy()
-#            fichier.close()
-#            wx.EndBusyCursor()
-#            return
+            else:
+                # La classe
+                classe = root.find("Classe")
+                self.classe.setBranche(classe)
+                self.projet.setBranche(projet)  
+                
+        except Exception as inst:
+            dlg = wx.MessageDialog(self, u"Le projet\n%s\n n'a pas pu être ouvert !" %nomFichier,
+                               u"Erreur d'ouverture",
+                               wx.OK | wx.ICON_WARNING
+                               )
+            dlg.ShowModal()
+            dlg.Destroy()
+            fichier.close()
+            wx.EndBusyCursor()
+            return
 
         self.arbre.DeleteAllItems()
         root = self.arbre.AddRoot("")
@@ -5547,16 +5589,24 @@ class FicheProjet(BaseFiche):
         self.tip_comp.SetForegroundColour("DARK SLATE BLUE")
         self.tip_comp.SetFont(wx.Font(11, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.NORMAL))
         
-        p = popup.CreerTexte((2,0), txt = u"Poids :", flag = wx.ALIGN_RIGHT|wx.RIGHT)
+        self.lab_indic = popup.CreerTexte((2,0), txt = u"Indicateur :", flag = wx.ALIGN_RIGHT|wx.RIGHT)
+        self.lab_indic.SetFont(wx.Font(9, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.NORMAL, underline = True))
+        self.lab_indic.SetForegroundColour("FIREBRICK")
+        self.tip_indic = popup.CreerTexte((2,1), flag = wx.ALIGN_LEFT|wx.LEFT)
+        self.tip_indic.SetFont(wx.Font(9, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.NORMAL))
+        self.tip_indic.SetForegroundColour("FIREBRICK")
+        self.MiseAJourTypeEnseignement(self.projet.classe.typeEnseignement)
+        
+        p = popup.CreerTexte((3,0), txt = u"Poids :", flag = wx.ALIGN_RIGHT|wx.RIGHT)
         p.SetFont(wx.Font(9, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.NORMAL, underline = True))
         
-        self.tip_poids = popup.CreerTexte((2,1), flag = wx.ALIGN_LEFT|wx.LEFT)
+        self.tip_poids = popup.CreerTexte((3,1), flag = wx.ALIGN_LEFT|wx.LEFT)
         self.tip_poids.SetFont(wx.Font(9, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.NORMAL))
         
-        e = popup.CreerTexte((3,0), txt = u"Evaluation :", flag = wx.ALIGN_RIGHT|wx.LEFT|wx.TOP|wx.RIGHT)
+        e = popup.CreerTexte((4,0), txt = u"Evaluation :", flag = wx.ALIGN_RIGHT|wx.LEFT|wx.TOP|wx.RIGHT)
         e.SetFont(wx.Font(9, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.NORMAL, underline = True))
         
-        self.tip_eval = popup.CreerTexte((3,1), flag = wx.ALIGN_LEFT|wx.BOTTOM|wx.TOP|wx.LEFT)
+        self.tip_eval = popup.CreerTexte((4,1), flag = wx.ALIGN_LEFT|wx.BOTTOM|wx.TOP|wx.LEFT)
         self.tip_eval.SetFont(wx.Font(9, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.NORMAL))
         
         self.popup = popup
@@ -5591,9 +5641,19 @@ class FicheProjet(BaseFiche):
                 
                 competence = constantes.dicCompetences_prj_simple[self.projet.classe.typeEnseignement][kComp]
 
-                self.popup.SetTexte(textwrap.fill(competence[0], 50), self.tip_comp)
                 self.popup.SetTexte(str(competence[1]), self.tip_poids)
-                self.popup.SetTitre(u"Compétence "+kComp)
+                
+                self.MiseAJourTypeEnseignement(self.projet.classe.typeEnseignement)
+                if self.projet.classe.typeEnseignement == "SSI":
+                    code = kComp.split('.')[0]
+                    comp = constantes.dicCompetencesSSI_prj[code][0]
+                    self.popup.SetTitre(u"Compétence "+code)
+                    self.popup.SetTexte(textwrap.fill(competence[0], 50), self.tip_indic)
+                    self.popup.SetTexte(textwrap.fill(comp, 50), self.tip_comp)
+                else:
+                    self.popup.SetTitre(u"Compétence "+kComp)
+                    self.popup.SetTexte(textwrap.fill(competence[0], 50), self.tip_comp)
+                
                 if len(competence) > 2 :
                     t = u"Revues"
                 else:
@@ -5606,6 +5666,12 @@ class FicheProjet(BaseFiche):
         evt.Skip()
 
 
+    #############################################################################
+    def MiseAJourTypeEnseignement(self, type_ens):
+        self.lab_indic.Show(type_ens == "SSI")
+        self.tip_indic.Show(type_ens == "SSI")
+            
+        
     #############################################################################            
     def Draw(self, ctx):
         draw_cairo_prj.Draw(ctx, self.projet)
@@ -7245,6 +7311,7 @@ class PanelPropriete_Seance(PanelPropriete):
         self.Layout()
         self.Thaw()
     
+    
     #############################################################################            
     def MiseAJourListeSystemes(self):
         self.Freeze()
@@ -7256,6 +7323,11 @@ class PanelPropriete_Seance(PanelPropriete):
             self.Layout()
             self.Thaw()
 
+    #############################################################################
+    def MiseAJourTypeEnseignement(self):
+        self.cbDem.Show(self.seance.GetClasse().typeEnseignement != "SSI")
+        self.titreDem.Show(self.seance.GetClasse().typeEnseignement != "SSI")
+        
     ############################################################################            
     def GetDocument(self):
         return self.seance.GetDocument()
@@ -7430,12 +7502,12 @@ class PanelPropriete_Seance(PanelPropriete):
         # Démarche
         if self.seance.typeSeance in ["AP", "ED"]:
             listDem = ["I", "R"]
-            self.cbDem.Show(True)
-            self.titreDem.Show(True)
+            self.cbDem.Show(True and self.seance.GetClasse().typeEnseignement != "SSI")
+            self.titreDem.Show(True and self.seance.GetClasse().typeEnseignement != "SSI")
         elif self.seance.typeSeance == "P":
             listDem = ["I", "R", "P"]
-            self.cbDem.Show(True)
-            self.titreDem.Show(True)
+            self.cbDem.Show(True and self.seance.GetClasse().typeEnseignement != "SSI")
+            self.titreDem.Show(True and self.seance.GetClasse().typeEnseignement != "SSI")
         else:
             self.cbDem.Show(False)
             self.titreDem.Show(False)
@@ -7789,7 +7861,10 @@ class PanelPropriete_Tache(PanelPropriete):
         if hasattr(self, 'arbre'):
             self.arbre.MiseAJour(code)
         
-        
+    #############################################################################
+    def MiseAJourTypeEnseignement(self, type_ens):
+        if hasattr(self, 'arbre'):
+            self.arbre.MiseAJourTypeEnseignement(type_ens)
         
         
 ####################################################################################
@@ -8955,7 +9030,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
             self.AddColumn(u"Poids")
             self.SetColumnWidth(1, 60)
             self.poids_ctrl = {}
-            
+
         clefs = dic.keys()
 #        if self.revue: print clefs
         clefs.sort()
@@ -9014,7 +9089,16 @@ class ArbreCompetencesPrj(ArbreCompetences):
         else:
             self.poids_ctrl[code].ChangeValue(str(constantes.dicCompetences_prj_simple[self.type_ens][code][1]))
             
-            
+    #############################################################################
+    def MiseAJourTypeEnseignement(self, type_ens):
+        self.type_ens = type_ens
+        self.DeleteChildren(self.root)
+        t = u"Compétences"
+        if type_ens == "SSI":
+            t += u" et indicateurs"
+        self.SetColumnText(0,t)
+        self.Construire(self.root, type_ens = type_ens)
+        self.ExpandAll()
             
             
             
@@ -9378,11 +9462,11 @@ class PopupInfo(wx.PopupWindow):
                 ctrlLien.Show(True)
             elif lien.type == 'u':
                 titreLien.SetLabel(u"Lien web :")
-                ctrlLien.SetBitmapLabel(constantes.images.Icone_web.GetBitmap())
+                ctrlLien.SetBitmapLabel(images.Icone_web.GetBitmap())
                 ctrlLien.Show(True)
             elif lien.type == 's':
                 titreLien.SetLabel(u"Fichier séquence :")
-                ctrlLien.SetBitmapLabel(constantes.images.Icone_sequence.GetBitmap())
+                ctrlLien.SetBitmapLabel(images.Icone_sequence.GetBitmap())
                 ctrlLien.Show(True)
             self.Layout()
             self.Fit()
