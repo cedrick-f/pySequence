@@ -341,7 +341,7 @@ def show_text_rect(ctx, texte, rect, va = 'c', ha = 'c', b = 0.4, orient = 'h',
         max_font : taille maxi de la font
         min_font : le texte peut être tronqué (1 ligne)
     """
-#    print "show_text_rect", texte
+#    print "show_text_rect", texte, rect
 
     if texte == "":
         return
@@ -387,7 +387,7 @@ def show_text_rect(ctx, texte, rect, va = 'c', ha = 'c', b = 0.4, orient = 'h',
     fascent, fdescent, fheight, fxadvance, fyadvance = ctx.font_extents()
     xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(texte)
     volumeTexte = 1.0*width*(fascent-fdescent)
-
+#    print "volumeTexte", volumeTexte, width
     ratioRect = 1.0*h/w
     W = sqrt(volumeTexte/ratioRect)
     H = ratioRect*W

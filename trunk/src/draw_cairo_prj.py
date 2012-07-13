@@ -727,7 +727,7 @@ def Draw(ctx, prj, mouchard = False):
     for t in prj.taches:
         if phase != t.phase:
             y += ecartTacheY
-                    
+#        print "tache", t, t.phase
         if t.phase != '':  
             yb = DrawTacheRacine(ctx, t, y)
             if t.phase in ["Ana", "Con", "DCo", "Rea", "Val"] :
@@ -1034,13 +1034,16 @@ def DrawTacheRacine(ctx, tache, y):
         ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
                               cairo.FONT_WEIGHT_NORMAL)
         ctx.set_source_rgb (0,0,0)
+        
+        # Si on ne peut pas afficher l'intitulé dessous, on le met à coté
         if h-hc < minFont:
-            width = ctx.text_extents(tache.intitule)[2]
+            width = ctx.text_extents(t)[2]*1.2
             rect = (x + width, y, tailleZTaches[0] - width, hc)
         else:
             rect = (x, y + hc, tailleZTaches[0], h-hc)
-        show_text_rect(ctx, tache.intitule, rect, 
-                       ha = 'g', fontsizeMinMax = (minFont, 0.015))
+        if rect[2] > 0:
+            show_text_rect(ctx, tache.intitule, rect, 
+                           ha = 'g', fontsizeMinMax = (minFont, 0.015))
         
     
     tache.rect.append([x, y, tailleZTaches[0], h])
