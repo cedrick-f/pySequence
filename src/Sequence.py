@@ -1584,7 +1584,7 @@ class Projet(BaseDoc, Objet_sequence):
 
     ######################################################################################  
     def SetPosition(self, pos):
-        print "SetPosition", pos
+#        print "SetPosition", pos
         if pos == 5 and self.position != 5:
             lst = self.getTachesRevue()
             for t in lst:
@@ -1697,10 +1697,28 @@ class Projet(BaseDoc, Objet_sequence):
         if tache == None:
             tache = Tache(self, self.panelParent)
         self.taches.append(tache)
-        tache.ConstruireArbre(self.arbre, self.brancheTac)
-        self.panelPropriete.sendEvent()
-        self.arbre.SelectItem(tache.branche)
         
+#        self.arbre.Freeze()
+        tache.ConstruireArbre(self.arbre, self.brancheTac)
+        
+        
+#        self.arbre.ExpandAll()
+#        self.arbre.CalculatePositions()
+#        self.arbre.Layout()
+#        self.arbre.Update()
+#        self.arbre.SelectItem(self.arbre.GetRootItem())
+        
+        
+        self.brancheTac.Collapse()
+#        self.arbre.SelectItem(tache.branche)
+#        self.brancheTac.Expand()
+        self.arbre.CalculatePositions()
+        
+#        self.arbre.AdjustMyScrollbars()
+#        wx.CallAfter(self.arbre.CalculatePositions)
+
+        self.panelPropriete.sendEvent()
+#        self.arbre.Thaw()
         return tache
     
     
@@ -1718,6 +1736,7 @@ class Projet(BaseDoc, Objet_sequence):
         tache.SetCode()
         if hasattr(tache, 'panelPropriete'):
             tache.panelPropriete.MiseAJour()
+        
         self.arbre.Ordonner(self.brancheTac)
         self.panelPropriete.sendEvent()
         self.arbre.SelectItem(tache.branche)
@@ -1763,6 +1782,7 @@ class Projet(BaseDoc, Objet_sequence):
     def SetOrdresTaches(self):
         for i, tt in enumerate(self.taches):
             tt.ordre = i+1
+            tt.SetCode()
         
         
         
@@ -1796,6 +1816,7 @@ class Projet(BaseDoc, Objet_sequence):
         R1 = []
         R2 = []
         S = []
+        Rien = []
         for t in self.taches:
             if t.phase == 'Ana':
                 Ana.append(t)
@@ -1813,6 +1834,8 @@ class Projet(BaseDoc, Objet_sequence):
                 R2.append(t)
             elif t.phase == 'S':
                 S.append(t)
+            else:
+                Rien.append(t)
         
         # On trie les paquets       
         for c in [Ana, Con, Rea, DCo, Val]:
@@ -1821,7 +1844,7 @@ class Projet(BaseDoc, Objet_sequence):
         #
         # On assemble les paquets
         #
-        self.taches = Ana + Con + R1 + DCo + Rea + R2 + Val + S
+        self.taches = Ana + Con + R1 + DCo + Rea + R2 + Val + Rien + S
            
         #
         # On ajoute les revues intermédiaires
@@ -2192,7 +2215,7 @@ class Projet(BaseDoc, Objet_sequence):
                                     
     #############################################################################
     def MiseAJourTypeEnseignement(self):
-        print "MiseAJourTypeEnseignement"
+#        print "MiseAJourTypeEnseignement"
         self.app.SetTitre()
         for t in self.taches:
             if t.phase in ["R1", "R2", "S"]:
@@ -3323,7 +3346,7 @@ class Tache(Objet_sequence):
         Objet_sequence.__init__(self)
         
         # Les données sauvegardées
-        self.ordre = 1
+        self.ordre = 100
         self.duree = Variable(u"Volume horaire", lstVal = duree, nomNorm = "", typ = VAR_REEL_POS, 
                               bornes = [0.5,40], modeLog = False,
                               expression = None, multiple = False)
@@ -3420,7 +3443,7 @@ class Tache(Objet_sequence):
         self.ordre = eval(branche.tag[5:])
         
         self.intitule  = branche.get("Intitule", "")
-        self.phase = branche.get("Phase", "C")
+        self.phase = branche.get("Phase", "")
         self.description = branche.get("Description", None)
         
         if not self.phase in ["R1", "R2", "S", "Rev"]:
@@ -3507,6 +3530,7 @@ class Tache(Objet_sequence):
     def SetPhase(self, phase):
         self.phase = phase
         self.parent.OrdonnerTaches()
+        
         if hasattr(self, 'arbre'):
             self.SetCode()
             
@@ -4112,7 +4136,7 @@ class Personne():
     ######################################################################################  
     def GetNomPrenom(self):
         if self.nom == "" and self.prenom == "":
-            return self.titre.capitalize()+' '+str(self.id)
+            return self.titre.capitalize()+' '+str(self.id+1)
         else:
             return self.prenom.capitalize() + ' ' + self.nom.upper()
          
@@ -4416,14 +4440,10 @@ class PanelConteneur(wx.Panel):
     
     def AfficherPanel(self, panel):
         if self.panel != None:
-            self.bsizer.Remove(self.panel)
+            self.bsizer.Detach(self.panel)
             self.panel.Hide()
         self.panel = panel
         self.bsizer.Add(self.panel, 1, flag = wx.EXPAND|wx.GROW)
-        
-#        if isinstance(self.panel, PanelPropriete_Seance):
-#            self.panel.AdapterAu()
-            
         self.panel.Show()
         self.bsizer.Layout()
         self.Refresh()
@@ -4649,7 +4669,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         if ext == 'seq':
             child = FenetreSequence(self)
         elif ext == 'prj':
-            child = FenetreProjet(self)  # A faire : FenetreProjet
+            child = FenetreProjet(self)
         else:
             dlg = DialogChoixDoc(self)
             val = dlg.ShowModal()
@@ -4660,7 +4680,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             else:
                 child = None
             dlg.Destroy()
-#        child.Show()
+
         if child != None:
             wx.CallAfter(child.Show)
         return child
@@ -5301,7 +5321,7 @@ class FenetreProjet(FenetreDocument):
         self.nb.AddPage(self.fichePrj, u"Fiche Projet")
         
         self.miseEnPlace()
-     
+        
             
     ###############################################################################################
     def OnDocModified(self, event):
@@ -5371,12 +5391,15 @@ class FenetreProjet(FenetreDocument):
         self.classe.ConstruireArbre(self.arbre, root)
         self.projet.ConstruireArbre(self.arbre, root)
         self.projet.OrdonnerTaches()
+
         self.projet.PubDescription()
         self.projet.SetLiens()
         self.projet.MiseAJourDureeEleves()
         self.projet.MiseAJourNomProfs()
         self.projet.VerrouillerClasse()
-        self.arbre.SelectItem(self.classe.branche)
+
+#        self.arbre.SelectItem(self.classe.branche)
+
 
         self.arbre.Layout()
         self.arbre.ExpandAll()
@@ -6692,7 +6715,7 @@ class Panel_Cible(wx.Panel):
         self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBackground)
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_TOGGLEBUTTON, self.OnButton)
-        bmp = constantes.images.Cible.GetBitmap()
+        bmp = images.Cible.GetBitmap()
         self.SetSize((bmp.GetWidth(), bmp.GetHeight()))
         self.SetMinSize((bmp.GetWidth(), bmp.GetHeight()))
         
@@ -6701,7 +6724,7 @@ class Panel_Cible(wx.Panel):
         dc = wx.PaintDC(self)
         dc.SetBackground(wx.Brush(self.backGround))
         dc.Clear()
-        bmp = constantes.images.Cible.GetBitmap()
+        bmp = images.Cible.GetBitmap()
         dc.DrawBitmap(bmp, 0, 0)
         
         evt.Skip()
@@ -8401,11 +8424,12 @@ class ArbreDoc(CT.CustomTreeCtrl):
                  pos = wx.DefaultPosition,
                  size = wx.DefaultSize,
                  style = wx.SUNKEN_BORDER|wx.WANTS_CHARS,
-                 agwStyle = CT.TR_HAS_BUTTONS|CT.TR_HAS_VARIABLE_ROW_HEIGHT | CT.TR_HIDE_ROOT,
+                 agwStyle = CT.TR_HAS_BUTTONS|CT.TR_HAS_VARIABLE_ROW_HEIGHT | CT.TR_HIDE_ROOT|CT.TR_TOOLTIP_ON_LONG_ITEMS, 
                  ):
 
         CT.CustomTreeCtrl.__init__(self, parent, -1, pos, size, style, agwStyle)
-
+        self.SetBackgroundColour(wx.WHITE)
+        
         #
         # Le panel contenant les panel de propriétés des éléments de séquence
         #
@@ -8455,7 +8479,9 @@ class ArbreDoc(CT.CustomTreeCtrl):
                 panelPropriete = data
             else:
                 panelPropriete = data.panelPropriete
+
         self.panelProp.AfficherPanel(panelPropriete)
+        
 #        wx.CallAfter(panelPropriete.Refresh)
         event.Skip()
         
@@ -8946,7 +8972,17 @@ class ArbreCompetences(HTL.HyperTreeList):
         
         
     def OnSize2(self, evt):
-        self.SetColumnWidth(0, self.GetClientSize()[0]-20)
+        
+        w = self.GetClientSize()[0]-20
+        self.SetColumnWidth(0, w)
+        item = -1
+        while 1:
+            item = self.GetNextItem(item, wx.LIST_NEXT_ALL, wx.LIST_STATE_DONTCARE)
+            text = self.GetItemText(0)
+            text = wordwrap(text, w, wx.ClientDC(self))
+            self.SetItemText(0, text)
+            if item == -1:
+                break
         evt.Skip()
         
     ####################################################################################
@@ -9012,7 +9048,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
     def __init__(self, parent, type_ens, revue = False):
         self.revue = revue
         ArbreCompetences.__init__(self, parent, type_ens, 
-                                  agwStyle = CT.TR_MULTIPLE|CT.TR_HIDE_ROOT|CT.TR_HAS_VARIABLE_ROW_HEIGHT)
+                                  agwStyle = CT.TR_MULTIPLE|CT.TR_HIDE_ROOT|CT.TR_HAS_VARIABLE_ROW_HEIGHT)#|CT.TR_ELLIPSIZE_LONG_ITEMS)#|CT.TR_TOOLTIP_ON_LONG_ITEMS)#
         self.Bind(wx.EVT_SIZE, self.OnSize2)
         self.Bind(CT.EVT_TREE_ITEM_GETTOOLTIP, self.OnToolTip)
 #        self.Bind(CT.EVT_TREE_ITEM_GETTOOLTIP, self.OnToolTip)
@@ -9071,7 +9107,19 @@ class ArbreCompetencesPrj(ArbreCompetences):
     
     def OnSize2(self, evt):
         w = self.GetClientSize()[0] - 30 - 17
-        self.SetColumnWidth(0, w)
+        if w != self.GetColumnWidth(0):
+            self.SetColumnWidth(0, w)
+            if self.parent.IsShown():
+                item = self.GetRootItem()
+                while 1:
+                    item = self.GetNext(item)
+                    if item == None:
+                        break
+                    text = self.GetItemText(item, 0).replace("\n", "")
+                    text = wordwrap(text, w-item.GetX(), wx.ClientDC(self.parent))
+        #            print text
+                    self.SetItemText(item, text, 0)
+            
         evt.Skip()
 
         
