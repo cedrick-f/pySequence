@@ -33,7 +33,7 @@ Dans _propriétés_ :
  * changer l'image du support
  * rajouter une description, si besoin
 
-http://pysequence.googlecode.com/svn/trunk/images_aide/propriete_support.png 
+http://pysequence.googlecode.com/svn/trunk/images_aide/propriete_support1.png 
 
 ----
 
