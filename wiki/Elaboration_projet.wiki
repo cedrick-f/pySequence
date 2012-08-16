@@ -72,3 +72,9 @@ Recommencer autant de fois que nécessaire.
 ----
 _résultat sur la fiche_ http://pysequence.googlecode.com/svn/trunk/images_aide/res_propriete_eleves.png
 ----
+
+===*6 - Définir les tâches*===
+
+Les premiers éléments du projet étant définis, il reste à décrire les différentes taches, à les attribuer à un ou des élèves et y associer des compétences.
+
+[definition_taches Définir les tâches du projet]
