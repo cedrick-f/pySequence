@@ -1,0 +1,25 @@
+#summary One-sentence summary of this page.
+
+#summary Comment élaborer une fiche de validation de projet
+
+= Élaboration d'une fiche de validation de projet =
+
+===*1 - Configurer la classe*===
+
+[Premiere_utilisation Configurer la classe] (Il est impératif de configurer la classe *avant* de définir les autres paramètres de la séquence)
+
+
+===*2 -  Définir les propriétés du projet *===
+
+Dans l'arborescence, cliquer sur *"Projet"*
+
+http://pysequence.googlecode.com/svn/trunk/images_aide/propriete_projet.png
+
+Dans _propriétés_ saisir :
+ * l'intitulé du projet
+ * la position http://pysequence.googlecode.com/svn/trunk/images_aide/intitulé_projet.png
+ * la problématique
+
+_résultat sur la fiche_ http://pysequence.googlecode.com/svn/trunk/images_aide/res_intitulé_projet.png
+
+===*3 - Définir le support d'étude*===
