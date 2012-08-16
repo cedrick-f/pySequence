@@ -11,7 +11,7 @@
 
 ===*2 -  Définir les propriétés du projet *===
 
-Dans l'arborescence, cliquer sur *"Projet"*
+Dans l'arborescence, cliquer sur *"Projet"*.
 
 http://pysequence.googlecode.com/svn/trunk/images_aide/propriete_projet.png
 
@@ -20,6 +20,25 @@ Dans _propriétés_ saisir :
  * la position http://pysequence.googlecode.com/svn/trunk/images_aide/intitulé_projet.png
  * la problématique
 
-_résultat sur la fiche_ http://pysequence.googlecode.com/svn/trunk/images_aide/res_intitulé_projet.png
 
 ===*3 - Définir le support d'étude*===
+
+Dans l'arborescence, cliquer sur *"support"*.
+
+http://pysequence.googlecode.com/svn/trunk/images_aide/support.png
+
+Dans _propriétés_ :
+ * préciser le nom du support
+ * créer un lien vers un dossier ou un fichier donnant des précisions sur le support
+ * changer l'image du support
+ * rajouter une description, si besoin
+
+http://pysequence.googlecode.com/svn/trunk/images_aide/propriete_support.png 
+
+----
+
+_résultat sur la fiche_ http://pysequence.googlecode.com/svn/trunk/images_aide/res_propriete_support.png
+----
+
+
+===*4 - Définir l'équipe pédagogique*===
