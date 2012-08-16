@@ -1,5 +1,7 @@
 #summary Comment élaborer une fiche de validation de projet
 
+_Cette fiche permettra de décrire un projet mais surtout de vérifier que chaque élève pourra être évalué sur plus de 50% des compétences._
+
 = Élaboration d'une fiche de validation de projet =
 
 ===*1 - Configurer la classe*===
