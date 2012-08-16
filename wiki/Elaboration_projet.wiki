@@ -42,3 +42,19 @@ _résultat sur la fiche_ http://pysequence.googlecode.com/svn/trunk/images_aide/
 
 
 ===*4 - Définir l'équipe pédagogique*===
+
+Dans l'arborescence, cliquer avec le bouton droit de la souris sur *"Equipe pédagogique"*, puis cliquer sur *"Ajouter un professeur"*.
+
+http://pysequence.googlecode.com/svn/trunk/images_aide/equip_peda.png
+
+Dans _propriétés_, saisir le nom et le prénom du professeur.
+
+http://pysequence.googlecode.com/svn/trunk/images_aide/propriete_equip_peda.png
+
+Recommencer autant que nécessaire
+
+http://pysequence.googlecode.com/svn/trunk/images_aide/rajout_equip_peda.png
+
+----
+_résultat sur la fiche_ http://pysequence.googlecode.com/svn/trunk/images_aide/res_propriete_equip_peda.png
+----
