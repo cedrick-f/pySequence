@@ -1,5 +1,3 @@
-#summary One-sentence summary of this page.
-
 #summary Comment élaborer une fiche de validation de projet
 
 = Élaboration d'une fiche de validation de projet =
@@ -37,7 +35,7 @@ http://pysequence.googlecode.com/svn/trunk/images_aide/propriete_support1.png
 
 ----
 
-_résultat sur la fiche_ http://pysequence.googlecode.com/svn/trunk/images_aide/res_propriete_support.png
+_résultat sur la fiche_ http://pysequence.googlecode.com/svn/trunk/images_aide/res_propriete_support1.png
 ----
 
 
