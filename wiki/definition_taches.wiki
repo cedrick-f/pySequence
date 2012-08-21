@@ -31,3 +31,6 @@ http://pysequence.googlecode.com/svn/trunk/images_aide/propriete_taches.png
 _résultat sur la fiche_ http://pysequence.googlecode.com/svn/trunk/images_aide/res_taches.png
 
 ----
+
+
+= Analyse des données =
