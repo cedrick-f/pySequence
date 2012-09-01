@@ -12,7 +12,7 @@ Copyright (C) 2011-2012
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "3.0beta2"
+__version__ = "3.0"
 
 
 ####################################################################################
@@ -5347,7 +5347,7 @@ class FenetreProjet(FenetreDocument):
         root.append(classe)
         indent(root)
         
-        ET.ElementTree(root).write(fichier)
+        ET.ElementTree(root).write(fichier)#, encoding = DEFAUT_ENCODING)
         
         fichier.close()
         self.definirNomFichierCourant(nomFichier)
@@ -5473,18 +5473,23 @@ class BaseFiche(wx.ScrolledWindow):
 
     #############################################################################            
     def OnPaint(self, evt):
-        dc = wx.BufferedPaintDC(self, self.buffer, wx.BUFFER_VIRTUAL_AREA)
-
+#        dc = wx.BufferedPaintDC(self, self.buffer, wx.BUFFER_VIRTUAL_AREA)
+        dc = wx.PaintDC(self)
+        self.PrepareDC(dc)
+        dc.DrawBitmap(self.buffer, 0,0) 
         
     #############################################################################            
     def InitBuffer(self):
+#        print "InitBuffer", 
         w,h = self.GetVirtualSize()
+#        print w,h
         self.buffer = wx.EmptyBitmap(w,h)
 
 
     #############################################################################            
     def Redessiner(self, event = None):  
         cdc = wx.ClientDC(self)
+        self.PrepareDC(cdc) 
         dc = wx.BufferedDC(cdc, self.buffer, wx.BUFFER_VIRTUAL_AREA)
         dc.SetBackground(wx.Brush('white'))
         dc.Clear()
@@ -6600,7 +6605,8 @@ class PanelPropriete_CI(PanelPropriete):
             self.CI.DelNum(button_selected)
         
 #        self.panel_cible.bouton[button_selected].SetState(event.GetEventObject().IsChecked())
-        self.panel_cible.GererBoutons(True)
+        if self.CI.parent.classe.typeEnseignement == 'ET':
+            self.panel_cible.GererBoutons(True)
         
         self.Layout()
         self.sendEvent()
@@ -7005,8 +7011,10 @@ class PanelPropriete_Competences(PanelPropriete):
 #            self.sizer.Remove(self.arbre)
         self.arbre = ArbreCompetences(self, self.competence.parent.classe.typeEnseignement)
         self.sizer.Add(self.arbre, (0,0), flag = wx.EXPAND)
-        self.sizer.AddGrowableCol(0)
-        self.sizer.AddGrowableRow(0)
+        if not self.sizer.IsColGrowable(0):
+            self.sizer.AddGrowableCol(0)
+        if not self.sizer.IsRowGrowable(0):
+            self.sizer.AddGrowableRow(0)
         self.Layout()
 
     ######################################################################################  
@@ -7104,8 +7112,10 @@ class PanelPropriete_Savoirs(PanelPropriete):
 #            self.sizer.Remove(self.arbre)
         self.arbre = ArbreSavoirs(self, self.savoirs)
         self.sizer.Add(self.arbre, (0,0), flag = wx.EXPAND)
-        self.sizer.AddGrowableCol(0)
-        self.sizer.AddGrowableRow(0)
+        if not self.sizer.IsColGrowable(0):
+            self.sizer.AddGrowableCol(0)
+        if not self.sizer.IsRowGrowable(0):
+            self.sizer.AddGrowableRow(0)
         self.Layout()
         
     
@@ -8972,18 +8982,24 @@ class ArbreCompetences(HTL.HyperTreeList):
         
         
     def OnSize2(self, evt):
-        
         w = self.GetClientSize()[0]-20
-        self.SetColumnWidth(0, w)
-        item = -1
-        while 1:
-            item = self.GetNextItem(item, wx.LIST_NEXT_ALL, wx.LIST_STATE_DONTCARE)
-            text = self.GetItemText(0)
-            text = wordwrap(text, w, wx.ClientDC(self))
-            self.SetItemText(0, text)
-            if item == -1:
-                break
+        if w != self.GetColumnWidth(0):
+            self.SetColumnWidth(0, w)
+            if self.parent.IsShown():
+                self.wrap(w)
         evt.Skip()
+        
+    ####################################################################################
+    def wrap(self,w):
+        item = self.GetRootItem()
+        while 1:
+            item = self.GetNext(item)
+            if item == None:
+                break
+            text = self.GetItemText(item, 0).replace("\n", "")
+            text = wordwrap(text, w-item.GetX(), wx.ClientDC(self.parent))
+#            print text
+            self.SetItemText(item, text, 0)
         
     ####################################################################################
     def Construire(self, branche, dic = None, type_ens = None, ct_type = 0):
@@ -9104,22 +9120,14 @@ class ArbreCompetencesPrj(ArbreCompetences):
         constantes.dicCompetences_prj_simple[self.type_ens][k][1] = s
         self.parent.GetDocument().MiseAJourPoidsCompetences(k)
         self.parent.sendEvent()
-    
+
+
     def OnSize2(self, evt):
         w = self.GetClientSize()[0] - 30 - 17
         if w != self.GetColumnWidth(0):
             self.SetColumnWidth(0, w)
             if self.parent.IsShown():
-                item = self.GetRootItem()
-                while 1:
-                    item = self.GetNext(item)
-                    if item == None:
-                        break
-                    text = self.GetItemText(item, 0).replace("\n", "")
-                    text = wordwrap(text, w-item.GetX(), wx.ClientDC(self.parent))
-        #            print text
-                    self.SetItemText(item, text, 0)
-            
+                self.wrap(w)
         evt.Skip()
 
         
