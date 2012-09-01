@@ -610,7 +610,10 @@ def getCompetence(seq, code, dic = None, c = None):
         return dic[code][0]
     else:
 #        cd = code[1:-2*(c-1)]
-        cd = code.split(".")[0][1:]
+        if seq.classe.typeEnseignement == "SSI":
+            cd = code.split(".")[0]
+        else:
+            cd = code.split(".")[0][1:]
         return getCompetence(seq, code, dic[cd][1], c-1)
     
     
