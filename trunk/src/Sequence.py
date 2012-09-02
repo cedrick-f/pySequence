@@ -12,7 +12,7 @@ Copyright (C) 2011-2012
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "3.0"
+__version__ = "3.0beta4"
 
 
 ####################################################################################
@@ -286,6 +286,7 @@ class Lien():
                 
     ######################################################################################  
     def EvalLien(self, path, pathseq):
+#        print "EvalLien"
         if path == "" or path.split() == []:
             self.path = ""
             self.type = ""
@@ -295,17 +296,24 @@ class Lien():
         pathseq = toFileEncoding(pathseq)
         abspath = self.GetAbsPath(pathseq, path)
 
-        if os.path.exists(abspath):
-            if os.path.isfile(abspath):
+#        print path
+#        print pathseq
+#        print abspath
+#        print os.path.relpath(path)
+        
+        relpath = testRel(abspath, pathseq)
+        if os.path.exists(relpath):
+            if os.path.isfile(relpath):
                 self.type = 'f'
-                self.path = testRel(abspath, pathseq)
-            elif os.path.isdir(abspath):
+                self.path = relpath
+            elif os.path.isdir(relpath):
                 self.type = 'd'
-                self.path = testRel(abspath, pathseq)
+                self.path = relpath
         else:
             self.type = 'u'
             self.path = path
-
+        
+#        print "-->", self.type
               
     ######################################################################################  
     def GetAbsPath(self, pathseq, path = None):
@@ -392,6 +400,7 @@ class ElementDeSequence():
         if hasattr(self, 'tip_titrelien'):
             self.tip.SetLien(self.lien, self.tip_titrelien, self.tip_ctrllien)
             
+        print "&"
         if hasattr(self, 'panelPropriete'): 
             self.panelPropriete.MiseAJourLien()
         
@@ -5205,7 +5214,7 @@ class FenetreSequence(FenetreDocument):
         root.append(classe)
         indent(root)
         
-        ET.ElementTree(root).write(fichier)
+        ET.ElementTree(root).write(fichier, encoding = DEFAUT_ENCODING)
         
         fichier.close()
         self.definirNomFichierCourant(nomFichier)
@@ -5219,31 +5228,31 @@ class FenetreSequence(FenetreDocument):
         
         fichier = open(nomFichier,'r')
         self.definirNomFichierCourant(nomFichier)
-#        try:
-        root = ET.parse(fichier).getroot()
-        
-        # La séquence
-        sequence = root.find("Sequence")
-        if sequence == None:
-            self.sequence.setBranche(root)
+        try:
+            root = ET.parse(fichier).getroot()
             
-        else:
-            # La classe
-            classe = root.find("Classe")
-            self.classe.setBranche(classe)
-            
-            self.sequence.setBranche(sequence)  
+            # La séquence
+            sequence = root.find("Sequence")
+            if sequence == None:
+                self.sequence.setBranche(root)
                 
-#        except Exception as inst:
-#            dlg = wx.MessageDialog(self, u"La séquence pédagogique\n%s\n n'a pas pu être ouverte !" %nomFichier,
-#                               u"Erreur d'ouverture",
-#                               wx.OK | wx.ICON_WARNING
-#                               )
-#            dlg.ShowModal()
-#            dlg.Destroy()
-#            fichier.close()
+            else:
+                # La classe
+                classe = root.find("Classe")
+                self.classe.setBranche(classe)
+                
+                self.sequence.setBranche(sequence)  
+                
+        except Exception as inst:
+            dlg = wx.MessageDialog(self, u"La séquence pédagogique\n%s\n n'a pas pu être ouverte !" %nomFichier,
+                               u"Erreur d'ouverture",
+                               wx.OK | wx.ICON_WARNING
+                               )
+            dlg.ShowModal()
+            dlg.Destroy()
+            fichier.close()
 #            wx.EndBusyCursor()
-#            return
+            return
 
         self.arbre.DeleteAllItems()
         root = self.arbre.AddRoot("")
@@ -5347,7 +5356,7 @@ class FenetreProjet(FenetreDocument):
         root.append(classe)
         indent(root)
         
-        ET.ElementTree(root).write(fichier)#, encoding = DEFAUT_ENCODING)
+        ET.ElementTree(root).write(fichier, encoding = DEFAUT_ENCODING)
         
         fichier.close()
         self.definirNomFichierCourant(nomFichier)
@@ -5382,7 +5391,7 @@ class FenetreProjet(FenetreDocument):
             dlg.ShowModal()
             dlg.Destroy()
             fichier.close()
-            wx.EndBusyCursor()
+#            wx.EndBusyCursor()
             return
 
         self.arbre.DeleteAllItems()
@@ -9529,7 +9538,11 @@ class PopupInfo(wx.PopupWindow):
         
     ##########################################################################################
     def OnClickLien(self, evt):
-        self.lien.Afficher(self.parent.sequence.GetPath(), self.parent.parent)
+        if self.parent.typ == 'seq':
+            path = self.parent.sequence.GetPath()
+        else:
+            path = self.parent.projet.GetPath()
+        self.lien.Afficher(path, self.parent.parent)
         
     ##########################################################################################
     def CreerImage(self, position = (4,0), span = (1,1), flag = wx.ALIGN_CENTER):

@@ -517,12 +517,15 @@ def Draw(ctx, prj, mouchard = False):
     prj.pt_caract.append(curve_rect_titre(ctx, u"Equipe pédagogique",  rectEqu, BcoulEqu, IcoulEqu, fontEqu))
     
     lstTexte = []
-    for p in prj.equipe:
+    g = None
+    for i, p in enumerate(prj.equipe):
         lstTexte.append(p.GetNomPrenom())
+        if p.referent:
+            g = i
     lstCodes = ["*"] * len(lstTexte)
 
     if len(lstTexte) > 0:
-        r = liste_code_texte(ctx, lstCodes, lstTexte, posEqu[0], posEqu[1], tailleEqu[0], tailleEqu[1]+0.0001, 0.008)
+        r = liste_code_texte(ctx, lstCodes, lstTexte, posEqu[0], posEqu[1], tailleEqu[0], tailleEqu[1]+0.0001, 0.008, gras = g)
 
     prj.rect.append(rectEqu)
 #        prj.pts_caract.append(getPts(r))
