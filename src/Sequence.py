@@ -12,7 +12,7 @@ Copyright (C) 2011-2012
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "3.0beta4"
+__version__ = "3.0beta5"
 
 
 ####################################################################################
@@ -4487,6 +4487,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
 #        except:
 #            print "Erreur à l'ouverture de configFiche.cfg" 
             
+        
             
         #############################################################################################
         # Instanciation et chargement des options
@@ -4806,7 +4807,6 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                     if isinstance(k, FenetreDocument):
                         toutferme = toutferme and k.quitter()  
         
-        print "OnClose fini"
         if toutferme:
             evt.Skip()
             sys.exit()
@@ -4926,11 +4926,12 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         wx.CallAfter(self.Layout)
         self.Layout()
 
-        
-        
+         
 
     #############################################################################
     def fermer(self):
+        self.mgr.UnInit()
+        del self.mgr
         self.Destroy()
         return True
         
@@ -5080,13 +5081,15 @@ class FenetreDocument(aui.AuiMDIChildFrame):
                 return self.fermer()
     
             elif retCode == wx.ID_NO:
+                
                 return self.fermer()
                  
             else:
                 return False
         
         else:            
-            return self.fermer() 
+            
+            return self.fermer()
 
 
     #############################################################################
