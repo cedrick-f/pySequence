@@ -116,3 +116,24 @@ dicSavoirsITEC = {"1" : [u"Projet technologique",
                                     u"Mesure et validation de performances : essais de caractérisation sur une pièce ou sur tout ou partie d'un système (efforts, déformation, matériau, dimensions, comportements statique, cinématique, énergétique)"]]
                           }]
                   }
+
+dicIndicateurITEC = {"ICO71" : [u"Le besoin relatif au projet est identifié et justifié",
+                                u"Les fonctions principales du projet sont identifiées",
+                                u"Les critères du CDC du projet sont décodés",
+                                u"La démarche d'analyse du problème est pertinente",
+                                u"Les principaux points de vigilance relatifs au projet sont identifiés"
+                                ],
+                     "ICO72" : [u"Les grandes étapes d'une démarche de créativité sont franchies de manière cohérente",
+                                u"Les moyens conventionnels de représentation des solutions sont correctement utilisés (croquis, schémas, ...)",
+                                u"Les contraintes de normes, propriétés industrielle et brevet sont identifiées",
+                                u"Les solutions techniques proposées sont pertinentes",
+                                u"Les caractéristiques comportementales de la solution retenue répondent au CDC",
+                                u"Les choix sont explicités et la solution justifiée en regard des paramètres choisis"
+                                ],
+                     "ICO73" : [u"La démarche de création est rationnelle",
+                                u"Les contraintes fonctionnelles sont traduites de manière complète",
+                                u"Les formes et dimensions sont compatibles avec le principe de réalisation, le matériau choisi et les contraintes subies"
+                                ],
+                     "ICO74" : [u"Les modifications respectent les contraintes fonctionnelles",
+                                u"La procédure de modification est rationnelle"
+                                ]}
