@@ -117,23 +117,56 @@ dicSavoirsITEC = {"1" : [u"Projet technologique",
                           }]
                   }
 
-dicIndicateurITEC = {"ICO71" : [u"Le besoin relatif au projet est identifié et justifié",
-                                u"Les fonctions principales du projet sont identifiées",
-                                u"Les critères du CDC du projet sont décodés",
-                                u"La démarche d'analyse du problème est pertinente",
-                                u"Les principaux points de vigilance relatifs au projet sont identifiés"
-                                ],
-                     "ICO72" : [u"Les grandes étapes d'une démarche de créativité sont franchies de manière cohérente",
-                                u"Les moyens conventionnels de représentation des solutions sont correctement utilisés (croquis, schémas, ...)",
-                                u"Les contraintes de normes, propriétés industrielle et brevet sont identifiées",
-                                u"Les solutions techniques proposées sont pertinentes",
-                                u"Les caractéristiques comportementales de la solution retenue répondent au CDC",
-                                u"Les choix sont explicités et la solution justifiée en regard des paramètres choisis"
-                                ],
-                     "ICO73" : [u"La démarche de création est rationnelle",
-                                u"Les contraintes fonctionnelles sont traduites de manière complète",
-                                u"Les formes et dimensions sont compatibles avec le principe de réalisation, le matériau choisi et les contraintes subies"
-                                ],
-                     "ICO74" : [u"Les modifications respectent les contraintes fonctionnelles",
-                                u"La procédure de modification est rationnelle"
-                                ]}
+dicIndicateurITEC = {"CO7.itec1" : [u"Le besoin relatif au projet est identifié et justifié",
+                                    u"Les fonctions principales du projet sont identifiées",
+                                    u"Les critères du CDC du projet sont décodés",
+                                    u"La démarche d'analyse du problème est pertinente",
+                                    u"Les principaux points de vigilance relatifs au projet sont identifiés"
+                                    ],
+                     "CO7.itec2" : [u"Les grandes étapes d'une démarche de créativité sont franchies de manière cohérente",
+                                    u"Les moyens conventionnels de représentation des solutions sont correctement utilisés (croquis, schémas, ...)",
+                                    u"Les contraintes de normes, propriétés industrielle et brevet sont identifiées",
+                                    u"Les solutions techniques proposées sont pertinentes",
+                                    u"Les caractéristiques comportementales de la solution retenue répondent au CDC",
+                                    u"Les choix sont explicités et la solution justifiée en regard des paramètres choisis"
+                                    ],
+                     "CO7.itec3" : [u"La démarche de création est rationnelle",
+                                    u"Les contraintes fonctionnelles sont traduites de manière complète",
+                                    u"Les formes et dimensions sont compatibles avec le principe de réalisation, le matériau choisi et les contraintes subies"
+                                    ],
+                     "CO7.itec4" : [u"Les modifications respectent les contraintes fonctionnelles",
+                                    u"La procédure de modification est rationnelle"
+                                    ],
+                     "CO8.itec1" : [u"Les variables du modèle sont identifiées",
+                                    u"Leurs influences respectives sont identifiées",
+                                    u"Les paramètres saisis sont réalistes"
+                                    ],
+                     "CO8.itec2" : [u"Les scénarios de simulation sont identifiés",
+                                    u"Les paramètres influents sont identifiés",
+                                    u"Les conséquences sur le mécanisme sont identifiées",
+                                    u"Les modifications proposées sont pertinentes"
+                                    ],
+                     "CO8.itec3" : [u"Les conditions de l'essai sont identifiées et justifiées",
+                                    u"Le protocole est adapté à l'objectif",
+                                    u"Les observations et mesures sont méthodiquement menées",
+                                    u"Les incertitudes sont estimées",
+                                    u"L'interprétation des résultats est cohérente"
+                                    ],
+                     "CO8.itec4" : [u"Les résultats de la simulation et les mesures sont corrélés",
+                                    u"L'analyse des écarts est méthodique",
+                                    u"L'interprétation des résultats est cohérente"
+                                    ],
+                     "CO9.itec1" : [u"Les paramètres significatifs à observer sont identifiés",
+                                    u"Le protocole est adapté à l'objectif",
+                                    u"Des conséquences pertinentes sont identifiées"
+                                    ],
+                     "CO9.itec2" : [u"Un moyen de prototypage réaliste est choisi en regard de la partie de CDC à respecter",
+                                    u"La réalisation du prototype est conforme à une procédure valide",
+                                    u"Les caractéristiques à valider sont identifiées",
+                                    u"La corrélation des caractéristiques permet de valider le prototype par rapport au CDC"
+                                    ],
+                     "CO9.itec3" : [u"Les pièces prototypes s'insèrent dans le mécanisme",
+                                    u"Une procédure d'essai pertinente est définie",
+                                    u"L'essai est méthodiquement réalisé et le comportement du mécanisme relevé",
+                                    u"L'interprétation des résultats est pertinente"
+                                    ]}
