@@ -124,4 +124,61 @@ dicSavoirsSIN = {"1" : [u"Projet technologique",
                                   u"Etude prospective technique et économique",
                                   u"Proposition d'une solution et organisation du nouveau projet"]]
                         }]}
+
+dicIndicateurITEC = {"CO7.sin1" : [u"La traduction de la notice du système permet de décrire une procédure",
+                                    u"Le système est installé et paramétré",
+                                    u"Les critères du CDC du projet sont décodés",
+                                    u"Les mesures sont effectuées et comparées aux caractéristiques de la notice technique",
+                                    u"Un rapport de mise en oeuvre et d'essais est rédigé"
+                                    ],
+                     "CO7.sin2" : [u"Le besoin est identifié",
+                                    u"La fonction est identifiée",
+                                    u"Une procédure pertinente est proposée et mise en oeuvre",
+                                    u"La fonction est caractérisée",
+                                    u"Un rapport de conformité est rédigé"
+                                    ],
+                     "CO7.sin3" : [u"Le système est modélisé à l'aide de diagrammes conformes",
+                                    u"Les diagrammes permettant d'exprimer le principe de fonctionnement sont utilisés",
+                                    u"Les interactions avec la chaîne d'énergie sont identifiées",
+                                    u"Les constituants sont identifiés"
+                                    ],
+                     "CO8.sin1" : [u"La définition du système est exprimée correctement",
+                                    u"Une liste non exhaustive de solutions pertinentes est établie",
+                                    u"Le choix de la solution est argumenté"
+                                    ],
+                     "CO8.sin2" : [u"Les mesures nécessaires sont effectuées",
+                                    u"Un modèle de comportement pertinent est établi",
+                                    u"Les paramètres du modèle sont renseignés pour limiter les écarts avec les mesures",
+                                    u"Le modèle de comportement est complété si nécessaire"
+                                    ],
+                     "CO8.sin3" : [u"La chaîne d'information est modélisée par des diagrammes adaptés (SysML)",
+                                    u"Le diagramme états/transitions est programmé",
+                                    u"Le diagramme paramétrique est renseigné"
+                                    ],
+                     "CO8.sin4" : [u"Les grandeurs caractéristiques du système simulé sont identifiées",
+                                    u"Les variables caractéristiques du système mesuré sont identifiées",
+                                    u"Les paramètres du système simulé sont affinés pour réduire les écarts avec le système réel",
+                                    u"Les conditions de simulation sont argumentées pour valider le choix d'une solution"
+                                    ],
+                     "CO9.sin1" : [u"Le CDC fonctionnel est analysé et reformulé",
+                                    u"Les données économiques sont identifiées",
+                                    u"Les chemins critiques sont mis en évidence et les dates de réunions de projet sont fixées"
+                                    ],
+                     "CO9.sin2" : [u"La notice du système est décodée",
+                                    u"Le système est installé et paramétré",
+                                    u"Les grandeurs caractéristiques sont identifiées et le système est instrumenté de manière adaptée",
+                                    u"Les grandeurs sont acquises, traitées et transmises",
+                                    u"Les contraintes temporelles et fréquentielles sont respectées, l'information est restituée"
+                                    ],
+                     "CO9.sin3" : [u"Une veille technologique est effectuée et une liste non exhaustive de l'évolution des constituants est établie",
+                                    u"Les procédures adaptées d'intervention sur les contsituants sont proposées",
+                                    u"L'intervention de maintenance sur le système est planifiée et la continuité de service assurée",
+                                    u"Le rapport de maintenance est établi"
+                                    ],
+                     "CO9.sin4" : [u"Le nouveau cahier des charges fonctionnel est décodé et traduit en proposition d'action",
+                                   u"Les contraintes socio-économiques sont identifiées",
+                                   u"Des constituants sont choisis et justifiés",
+                                   u"Un diagramme de Gantt est établi",
+                                   u"Le prototypage rapide de la solution est organisé"
+                                   ]}
                   
