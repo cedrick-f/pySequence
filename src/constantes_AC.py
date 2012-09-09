@@ -111,5 +111,52 @@ dicSavoirsAC = {"1" : [u"Projet technologique",
                                     }]}
 
 
-
+dicIndicateurAC = {"CO7.ac1" : [u"Le besoin relatif au projet est identifié",
+                                    u"Les fonctions principales du projet sont identifiées",
+                                    u"Les critères du CDC du projet sont décodés",
+                                    u"La démarche d'analyse du problème est mise en oeuvre",
+                                    u"Les principaux points de vigilance (économiques, développement durable, intégration en site) relatifs au projet sont identifiés"
+                                    ],
+                     "CO7.ac2" : [u"Des pratiques de travail collaboratives sont mise en oeuvre",
+                                    u"Les moyens conventionnels de représentation des solutions sont correctement utilisés (croquis, schémas, ...)",
+                                    u"Les contraintes de normes, propriétés industrielle et brevet sont identifiées",
+                                    u"Les solutions techniques proposées sont pertinentes des points de vue développement durable et économique",
+                                    u"Les caractéristiques comportementales de la solution retenue répondent au CDC",
+                                    u"Les choix sont explicités dans une démarche d'analyse globale de réponse au CDC",
+                                    u"Une recherche systématique de produit innovant est effectuée"
+                                    ],
+                     "CO7.ac3" : [u"Le phasage des opérations de réalisation est réaliste, le chemin critique est identifié",
+                                    u"Les procédés de mise en oeuvre sont choisis et justifiés",
+                                    u"La logistique de réalisation répond aux contraintes techniques et de site du chantier",
+                                    u"Les impacts environnementaux sont identifiés, des solutions de limitation sont proposées"
+                                    ],
+                     "CO8.ac1" : [u"Les variables du modèle sont identifiées",
+                                    u"Leurs influences respectives sont identifiées",
+                                    u"Les scénarios de simulation sont appliqués",
+                                    u"Les conditions de l'essai sont identifiées et justifiées"
+                                    ],
+                     "CO8.ac2" : [u"Les observations et mesures sont méthodiquement menées",
+                                    u"Les incertitudes sont estimées",
+                                    u"L'interprétation des résultats est cohérente",
+                                    u"Les résultats de la simulation et les mesures sont corrélés (validation des modèles)"
+                                    ],
+                     "CO8.ac3" : [u"Une démarche d'analyse de la structure est mise en oeuvre",
+                                    u"Les écarts entre les performances attendues et celles consécutives aux choix effectués sont établis",
+                                    u"Les contraintes de normes, proporiétés industrielles et brevets sont identifiées",
+                                    u"Les impacts environnementaux sont identifiés, des solutions de limitation sont proposées"
+                                    ],
+                     "CO9.ac1" : [u"Un bilan des performances de la construction existante est établi",
+                                    u"Les besoins de l'usager sont traduits en solutions technologiques",
+                                    u"Le contexte normatif est précisé",
+                                    u"Une réalisation permet de constater les améliorations attendues",
+                                    u"L'adaptabilité de la construction rénovée est prise en compte"
+                                    ],
+                     "CO9.ac2" : [u"Une investigation est réalisée",
+                                    u"Les désordres et leurs causes sont identifiés",
+                                    u"Des solutions de remédiation sont envisagées"
+                                    ],
+                     "CO9.ac3" : [u"Une analyse de cycle de vie de tout ou partie d'une construction est menée",
+                                    u"Les contraintes normatives (au sens du développement durable) sont répertoriées",
+                                    u"Une procédure de valorisation des produits est proposée"
+                                  ]}
 
