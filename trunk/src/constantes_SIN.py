@@ -125,7 +125,7 @@ dicSavoirsSIN = {"1" : [u"Projet technologique",
                                   u"Proposition d'une solution et organisation du nouveau projet"]]
                         }]}
 
-dicIndicateurITEC = {"CO7.sin1" : [u"La traduction de la notice du système permet de décrire une procédure",
+dicIndicateurSIN = {"CO7.sin1" : [u"La traduction de la notice du système permet de décrire une procédure",
                                     u"Le système est installé et paramétré",
                                     u"Les critères du CDC du projet sont décodés",
                                     u"Les mesures sont effectuées et comparées aux caractéristiques de la notice technique",
