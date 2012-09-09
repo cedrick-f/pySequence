@@ -173,10 +173,10 @@ dicIndicateurEE = {"CO7.ee1" : [u"Le besoin relatif au projet est identifié et 
                                     u"Les incertitudes sont estimées",
                                     u"L'interprétation des résultats est cohérente et pertinente"
                                     ],
-                     "CO9.itec1" : [u"Les paramètres significatifs à observer sont identifiés",
+                     "CO9.ee1" : [u"Les paramètres significatifs à observer sont identifiés",
                                     u"Le protocole est adapté à l'objectif",
                                     u"Des caractéristiques pertinentes et leurs conséquences constructives sont identifiées"
                                     ],
-                     "CO9.itec2" : [u"Un type de prototype est choisi en regard de la partie de CDC à respecter",
+                     "CO9.ee2" : [u"Un type de prototype est choisi en regard de la partie de CDC à respecter",
                                     u"La réalisation du prototype est conforme à une procédure valide"
                                     ]}
