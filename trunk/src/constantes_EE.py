@@ -128,3 +128,55 @@ dicSavoirsEE = {"1" : [u"Projet technologique",
                         }]
                           
                   }
+
+dicIndicateurEE = {"CO7.ee1" : [u"Le besoin relatif au projet est identifié et justifié",
+                                    u"Les fonctions principales du projet sont identifiées",
+                                    u"Les critères du CDC du projet sont décodés",
+                                    u"Les contraintes de normes, propriété industrielle et brevets sont identifiées",
+                                    u"La démarche d'analyse du problème est pertinente",
+                                    u"Les principaux points de vigilance relatifs au projet sont identifiés",
+                                    u"Les grandes étapes d'une démarche de créativité sont franchies de manière cohérente"
+                                    ],
+                   "CO7.ee2" : [u"Les solutions techniques proposées sont pertinentes",
+                                    u"Les caractéristiques comportementales de la solution retenue répondent au CDC",
+                                    u"Les choix sont explicités et la solution justifiée en intégrant les conséquences sur le tryptique (matériau - énergie - information)",
+                                    u"Les moyens conventionnels de représentation des solutions sont correctement utilisés (croquis, schémas, ...)",
+                                    u"Les moyens informatiques de représentation sont correctement utilisés",
+                                    u"La structure est correctement définie"
+                                    ],
+                     "CO7.ee3" : [u"La solution choisie pour la gestion de l'énergie est adaptée à l'évolution du CDC",
+                                    u"Les modifications proposées répondent à l'évolution du CDC",
+                                    u"La procédure de modification est rationnelle",
+                                    u"Le choix des constituants et l'organisation de la chaîne d'énergie est pertinente"
+                                    ],
+                     "CO7.ee4" : [u"Le type de système de gestion de l'énergie choisi est adapté à la demande",
+                                    u"Les modifications respectent les contraintes du CDC",
+                                    u"La procédure de modification est rationnelle",
+                                    u"Le choix des constituants est pertinent"
+                                    ],
+                     "CO8.ee1" : [u"Les variables du modèle sont identifiées",
+                                    u"Leurs influences respectives sont identifiées",
+                                    u"Les paramètres saisis sont réalistes"
+                                    ],
+                     "CO8.ee2" : [u"Les scénarios de simulation sont identifiés",
+                                    u"Les paramètres influents sont identifiés",
+                                    u"Les conséquences sur le mécanisme sont identifiées",
+                                    u"Les modifications proposées sont pertinentes"
+                                    ],
+                     "CO8.ee3" : [u"Les résultats de la simulation et les mesures sont corrélés",
+                                    u"L'analyse des écarts est méthodique",
+                                    u"L'interprétation des résultats est cohérente"
+                                    ],
+                     "CO8.ee4" : [u"Les conditions de l'essai sont identifiées et justifiées",
+                                    u"Le protocole est adapté à l'objectif",
+                                    u"Les observations et mesures sont méthodiquement menées",
+                                    u"Les incertitudes sont estimées",
+                                    u"L'interprétation des résultats est cohérente et pertinente"
+                                    ],
+                     "CO9.itec1" : [u"Les paramètres significatifs à observer sont identifiés",
+                                    u"Le protocole est adapté à l'objectif",
+                                    u"Des caractéristiques pertinentes et leurs conséquences constructives sont identifiées"
+                                    ],
+                     "CO9.itec2" : [u"Un type de prototype est choisi en regard de la partie de CDC à respecter",
+                                    u"La réalisation du prototype est conforme à une procédure valide"
+                                    ]}
