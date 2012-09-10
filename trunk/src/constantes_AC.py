@@ -111,7 +111,7 @@ dicSavoirsAC = {"1" : [u"Projet technologique",
                                     }]}
 
 
-dicIndicateurAC = {"CO7.ac1" : [u"Le besoin relatif au projet est identifié",
+dicIndicateursAC = {"CO7.ac1" : [u"Le besoin relatif au projet est identifié",
                                     u"Les fonctions principales du projet sont identifiées",
                                     u"Les critères du CDC du projet sont décodés",
                                     u"La démarche d'analyse du problème est mise en oeuvre",
