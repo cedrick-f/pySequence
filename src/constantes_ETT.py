@@ -209,7 +209,7 @@ dicSavoirsET = {"1" : [u"Principes de conception des systèmes de développement
                                          u"Gestion d'un nœud de réseau par le paramétrage d'un routeur : adresses IP, NAT/PAT, DNS, pare-feu"]]}]}
                   ],}
 
-dicIndicateur_prj = {"CO1.1" : [u"La justification des propriétés physico-chimiques, mécaniques ou thermiques des matériaux est claire et concise",
+dicIndicateursET = {"CO1.1" : [u"La justification des propriétés physico-chimiques, mécaniques ou thermiques des matériaux est claire et concise",
                                     u"Les coûts relatifs, la disponibilité et les impacts environnementaux des matériaux sont évoqués",
                                     u"La relation entre la morphologie des structures et les moyens de réalisation est explicitée de manière claire et concise",
                                     u"La morphologie des structures est justifiée par l'usage et le comportement mécanique",

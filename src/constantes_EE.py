@@ -129,7 +129,7 @@ dicSavoirsEE = {"1" : [u"Projet technologique",
                           
                   }
 
-dicIndicateurEE = {"CO7.ee1" : [u"Le besoin relatif au projet est identifié et justifié",
+dicIndicateursEE = {"CO7.ee1" : [u"Le besoin relatif au projet est identifié et justifié",
                                     u"Les fonctions principales du projet sont identifiées",
                                     u"Les critères du CDC du projet sont décodés",
                                     u"Les contraintes de normes, propriété industrielle et brevets sont identifiées",

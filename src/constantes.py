@@ -514,11 +514,15 @@ dicCompetences_prj = {'ITEC'   : dicCompetencesITEC_prj,
                       'SIN'    : dicCompetencesSIN_prj,
                       'SSI'    : dicCompetencesSSI_prj}
 
+dicIndicateursITEC.update(dicIndicateursET)
+dicIndicateursAC.update(dicIndicateursET)
+dicIndicateursEE.update(dicIndicateursET)
+dicIndicateursSIN.update(dicIndicateursET)
+
 dicIndicateurs = {'ITEC'   : dicIndicateursITEC, 
                   'AC'     : dicIndicateursAC, 
                   'EE'     : dicIndicateursEE, 
-                  'SIN'    : dicIndicateursSIN,
-                  'SSI'    : dicIndicateursSSI}
+                  'SIN'    : dicIndicateursSIN}
 
 
 NRB_COEF_COMP_S = {'ITEC'   : 0, # Nombres de coef pour les compétences "Soutenance"
@@ -592,7 +596,18 @@ def getTextCI(lst):
             t += "\n"
     return t
 
+def toList(txt):
+    lst = txt.split()
+    l = []
+    for i in lst:
+        l.append(eval(i))
+    return l
 
+def toTxt(lst):
+    t = ''
+    for i in lst:
+        t += str(i) + ' '
+    return t
 
 def getSavoir(seq, code, dic = None, c = None):
     if dic == None:
