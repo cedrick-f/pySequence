@@ -347,3 +347,4 @@ dicCompetencesSSI_prj =  {"B3" : [u"Modéliser : simuler le fonctionnement de to
                                    "D2.4" : [u"La production respecte le cahier des charges (écrit/oral, texte/vidéo, durée, public visé, …)",20]}],
                           }
 
+dicIndicateursSSI = {}

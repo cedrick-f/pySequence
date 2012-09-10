@@ -117,7 +117,7 @@ dicSavoirsITEC = {"1" : [u"Projet technologique",
                           }]
                   }
 
-dicIndicateurITEC = {"CO7.itec1" : [u"Le besoin relatif au projet est identifié et justifié",
+dicIndicateursITEC = {"CO7.itec1" : [u"Le besoin relatif au projet est identifié et justifié",
                                     u"Les fonctions principales du projet sont identifiées",
                                     u"Les critères du CDC du projet sont décodés",
                                     u"La démarche d'analyse du problème est pertinente",

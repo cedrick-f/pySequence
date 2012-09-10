@@ -514,6 +514,12 @@ dicCompetences_prj = {'ITEC'   : dicCompetencesITEC_prj,
                       'SIN'    : dicCompetencesSIN_prj,
                       'SSI'    : dicCompetencesSSI_prj}
 
+dicIndicateurs = {'ITEC'   : dicIndicateursITEC, 
+                  'AC'     : dicIndicateursAC, 
+                  'EE'     : dicIndicateursEE, 
+                  'SIN'    : dicIndicateursSIN,
+                  'SSI'    : dicIndicateursSSI}
+
 
 NRB_COEF_COMP_S = {'ITEC'   : 0, # Nombres de coef pour les compétences "Soutenance"
                    'AC'     : 0, 
@@ -701,7 +707,7 @@ MESSAGE_DEJA = {'seq' : u"La séquence est déja ouverte.\nVoulez vous ignorer l
 TITRE_DEFAUT = {'seq' : u"Nouvelle séquence",
                 'prj' : u"Nouveau projet"}
 MESSAGE_FERMER = {'seq' : u"La séquence a été modifiée.\nVoulez vous enregistrer les changements ?",
-                  'prj' : u"Le projeta été modifié.\nVoulez vous enregistrer les changements ?"}
+                  'prj' : u"Le projet a été modifié.\nVoulez vous enregistrer les changements ?"}
 
 
 

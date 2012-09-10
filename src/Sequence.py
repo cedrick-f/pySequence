@@ -587,6 +587,12 @@ class Objet_sequence():
         return self.GetCode(i) + " : " + self.GetIntit(i)
     
             
+    ######################################################################################  
+    def GetTypeEnseignement(self):
+        return self.parent.classe.typeEnseignement
+        
+        
+        
 class Classe():
     def __init__(self, app, panelParent = None, intitule = u"", pourProjet = False):
         self.intitule = intitule
@@ -1379,7 +1385,7 @@ class Projet(BaseDoc, Objet_sequence):
         
         self.eleves = []
         
-        self.taches = self.getTachesRevue()
+        self.taches = self.creerTachesRevue()
             
         self.equipe = []
         
@@ -1441,15 +1447,24 @@ class Projet(BaseDoc, Objet_sequence):
     
     
     ######################################################################################  
-    def getTachesRevue(self):
+    def creerTachesRevue(self):
         lst = []
         for p in ["R1", "R2", "S"]:
+            print "creer Tache", p
             lst.append(Tache(self, self.panelParent, 
                              intitule = constantes.NOM_PHASE_TACHE[p], 
                              phaseTache = p, duree = 0.5))
         return lst
     
-    
+    ######################################################################################  
+    def getTachesRevue(self):
+        lst = []
+        for t in self.taches:
+            if t.phase in ["R1", "R2", "S"]:
+                lst.append(t)
+        return lst
+        
+        
     ######################################################################################  
     def EnrichiObjetsSVG(self, doc):
         for s in self.taches:
@@ -1566,8 +1581,9 @@ class Projet(BaseDoc, Objet_sequence):
         # Les tâches
         #
         brancheTac = branche.find("Taches")
-        self.taches = []
+#        self.SupprimerTaches()
         tachesRevue = self.getTachesRevue()
+        self.taches = []
         adapterVersion = True
         for i,e in enumerate(list(brancheTac)):
             phase = e.get("Phase")
@@ -1580,6 +1596,7 @@ class Projet(BaseDoc, Objet_sequence):
                 self.taches.append(tachesRevue[num])
                 adapterVersion = False
             else:
+                print "init Tache", phase
                 tache = Tache(self, self.panelParent)
                 tache.setBranche(e)
                 self.taches.append(tache)
@@ -1704,6 +1721,7 @@ class Projet(BaseDoc, Objet_sequence):
     ######################################################################################  
     def AjouterTache(self, event = None, tache = None):
         if tache == None:
+            print "init Tache ajout", tache
             tache = Tache(self, self.panelParent)
         self.taches.append(tache)
         
@@ -1722,7 +1740,8 @@ class Projet(BaseDoc, Objet_sequence):
 #        self.arbre.SelectItem(tache.branche)
 #        self.brancheTac.Expand()
         self.arbre.CalculatePositions()
-        
+        self.arbre.Expand(self.brancheTac)
+        self.arbre.SelectItem(tache.branche)
 #        self.arbre.AdjustMyScrollbars()
 #        wx.CallAfter(self.arbre.CalculatePositions)
 
@@ -1734,6 +1753,7 @@ class Projet(BaseDoc, Objet_sequence):
     ######################################################################################  
     def InsererRevue(self, event = None, item = None):
         tache_avant = self.arbre.GetItemPyData(item)
+        print "init Tache revue"
         tache = Tache(self, self.panelParent, phaseTache = "Rev")
         tache.ordre = tache_avant.ordre+1
         for t in self.taches[tache_avant.ordre:]:
@@ -1763,7 +1783,19 @@ class Projet(BaseDoc, Objet_sequence):
         self.SetOrdresTaches()
         self.panelPropriete.sendEvent()
     
-    
+#    ######################################################################################  
+#    def SupprimerTaches(self):
+#        print "SupprimerTaches", self.taches
+#        for t in self.taches:
+##            t.panelPropriete.Destroy()
+#            self.arbre.Delete(t.branche)
+#            
+#        self.arbre.lstTaches=[]
+#            
+#        self.taches = []
+#
+#        self.SetOrdresTaches()
+#        self.app.Update()
     
 #    ######################################################################################  
 #    def PlacerTache(self, tache):
@@ -1797,8 +1829,6 @@ class Projet(BaseDoc, Objet_sequence):
         
     ######################################################################################  
     def OrdonnerTaches(self):
-#        print "OrdonnerTaches"
-#        print "   ", self.taches
         
         #
         # On enregistre les positions des revues intermédiaires (après qui ?)
@@ -1810,8 +1840,6 @@ class Projet(BaseDoc, Objet_sequence):
                     Rev.append((t, self.taches[i-1]))
                 else:
                     Rev.append((t, None))
-        
-#        print "   ", Rev
              
         #
         # On fait des paquets par catégorie
@@ -1843,7 +1871,7 @@ class Projet(BaseDoc, Objet_sequence):
                 R2.append(t)
             elif t.phase == 'S':
                 S.append(t)
-            else:
+            elif t.phase == '':
                 Rien.append(t)
         
         # On trie les paquets       
@@ -1868,7 +1896,6 @@ class Projet(BaseDoc, Objet_sequence):
 #        print "   ", self.taches
         self.SetOrdresTaches()
         self.SetCodes()
-#        print "   ", self.taches
         self.arbre.Ordonner(self.brancheTac)
         return
 #        
@@ -1938,6 +1965,9 @@ class Projet(BaseDoc, Objet_sequence):
             
         elif isinstance(data, Eleve):
             self.SupprimerEleve(item = item)
+        
+        elif isinstance(data, Prof):
+            self.SupprimerProf(item = item)
             
 #        elif isinstance(data, LienSequence):
 #            self.SupprimerSequencePre(item = item)           
@@ -2345,7 +2375,7 @@ class CentreInteret(Objet_sequence):
         
     ######################################################################################  
     def GetIntit(self, num):
-        return constantes.CentresInterets[self.parent.classe.typeEnseignement][self.numCI[num]]
+        return constantes.CentresInterets[self.GetTypeEnseignement()][self.numCI[num]]
     
     
     ######################################################################################  
@@ -3402,6 +3432,7 @@ class Tache(Objet_sequence):
         
         
         if panelParent:
+            print "init PanelPropriete_Tache"
             self.panelPropriete = PanelPropriete_Tache(panelParent, self)
             
         
@@ -4061,7 +4092,7 @@ class Support(ElementDeSequence, Objet_sequence):
 #   Classe définissant les propriétés d'une personne
 #
 ####################################################################################
-class Personne():
+class Personne(Objet_sequence):
     def __init__(self, parent, panelParent, id = 0):
         self.parent = parent
         self.nom = u""
@@ -4271,14 +4302,14 @@ class Eleve(Personne):
         """ 
         r = s = 0
         for c in self.GetCompetences():
-            comp = constantes.dicCompetences_prj_simple[self.parent.classe.typeEnseignement][c]
+            comp = constantes.dicCompetences_prj_simple[self.GetTypeEnseignement()][c]
             if len(comp) > 2:
                 r += comp[1]
             else:
                 s += comp[1]
                 
-        r = 1.0*r/constantes.NRB_COEF_COMP_R[self.parent.classe.typeEnseignement]
-        s = 1.0*s/constantes.NRB_COEF_COMP_S[self.parent.classe.typeEnseignement]   
+        r = 1.0*r/constantes.NRB_COEF_COMP_R[self.GetTypeEnseignement()]
+        s = 1.0*s/constantes.NRB_COEF_COMP_S[self.GetTypeEnseignement()]   
         return r, s
     
     ######################################################################################  
@@ -5799,6 +5830,37 @@ class PanelPropriete(scrolled.ScrolledPanel):
 
 ####################################################################################
 #
+#   Classe définissant le panel de propriété de type Book
+#
+####################################################################################
+class PanelProprieteBook(wx.Notebook, PanelPropriete):
+    def __init__(self, parent, titre = u"", objet = None):
+        wx.Notebook.__init__(self, parent, -1,  style= wx.BK_DEFAULT)#| wx.BORDER_SIMPLE)
+        
+#        self.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
+
+
+    def OnPageChanged(self, event):
+        old = event.GetOldSelection()
+        new = event.GetSelection()
+        sel = self.GetSelection()
+        
+        event.Skip()
+
+#    #########################################################################################################
+#    def sendEvent(self, doc = None):
+#        evt = SeqEvent(myEVT_DOC_MODIFIED, self.GetId())
+#        if doc != None:
+#            evt.SetDocument(doc)
+#        else:
+#            evt.SetDocument(self.GetDocument())
+#        
+#        self.GetEventHandler().ProcessEvent(evt)
+#        self.eventAttente = False
+        
+        
+####################################################################################
+#
 #   Classe définissant le panel "racine" 
 #
 ####################################################################################
@@ -6566,14 +6628,14 @@ class PanelPropriete_CI(PanelPropriete):
         if hasattr(self, 'grid1'):
             self.sizer.Remove(self.grid1)
             
-        if self.CI.parent.classe.typeEnseignement == 'ET': # Rajouter la condition "Clermont" !!!
+        if self.CI.GetTypeEnseignement() == 'ET': # Rajouter la condition "Clermont" !!!
             
             self.panel_cible = Panel_Cible(self, self.CI)
             self.sizer.Add(self.panel_cible, (0,0), flag = wx.EXPAND)
             
             self.grid1 = wx.FlexGridSizer( 0, 2, 0, 0 )
             
-            for i, ci in enumerate(constantes.CentresInterets[self.CI.parent.classe.typeEnseignement]):
+            for i, ci in enumerate(constantes.CentresInterets[self.CI.GetTypeEnseignement()]):
                 r = wx.CheckBox(self, 200+i, "")
                 t = wx.StaticText(self, -1, "CI"+str(i+1)+" : "+ci)
                 self.group_ctrls.append((r, t))
@@ -6588,7 +6650,7 @@ class PanelPropriete_CI(PanelPropriete):
             
             self.grid1 = wx.FlexGridSizer( 0, 2, 0, 0 )
             
-            for i, ci in enumerate(constantes.CentresInterets[self.CI.parent.classe.typeEnseignement]):
+            for i, ci in enumerate(constantes.CentresInterets[self.CI.GetTypeEnseignement()]):
     #            if i == 0 : s = wx.RB_GROUP
     #            else: s = 0
                 r = wx.CheckBox(self, 200+i, "CI"+str(i+1), style = wx.RB_GROUP )
@@ -6617,7 +6679,7 @@ class PanelPropriete_CI(PanelPropriete):
             self.CI.DelNum(button_selected)
         
 #        self.panel_cible.bouton[button_selected].SetState(event.GetEventObject().IsChecked())
-        if self.CI.parent.classe.typeEnseignement == 'ET':
+        if self.CI.GetTypeEnseignement() == 'ET':
             self.panel_cible.GererBoutons(True)
         
         self.Layout()
@@ -6625,7 +6687,7 @@ class PanelPropriete_CI(PanelPropriete):
     
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
-        if self.CI.parent.classe.typeEnseignement == 'ET':
+        if self.CI.GetTypeEnseignement() == 'ET':
             self.panel_cible.GererBoutons(True)
         else:
             for num in self.CI.numCI:
@@ -6685,7 +6747,7 @@ class Panel_Cible(wx.Panel):
                   "_" : -100}
         
 
-        for i, ci in enumerate(constantes.CentresInterets[self.CI.parent.classe.typeEnseignement]):
+        for i, ci in enumerate(constantes.CentresInterets[self.CI.GetTypeEnseignement()]):
             mei, fsc = constantes.PositionCibleCIET[i].split("_")
             mei = mei.replace(" ", "")
             fsc = fsc.replace(" ", "")
@@ -7021,7 +7083,7 @@ class PanelPropriete_Competences(PanelPropriete):
         self.DestroyChildren()
 #        if hasattr(self, 'arbre'):
 #            self.sizer.Remove(self.arbre)
-        self.arbre = ArbreCompetences(self, self.competence.parent.classe.typeEnseignement)
+        self.arbre = ArbreCompetences(self, self.competence.GetTypeEnseignement())
         self.sizer.Add(self.arbre, (0,0), flag = wx.EXPAND)
         if not self.sizer.IsColGrowable(0):
             self.sizer.AddGrowableCol(0)
@@ -7633,20 +7695,26 @@ class PanelPropriete_Seance(PanelPropriete):
 #   Classe définissant le panel de propriété de la tache
 #
 ####################################################################################
-class PanelPropriete_Tache(PanelPropriete):
+class PanelPropriete_Tache(PanelProprieteBook):
     def __init__(self, parent, tache, revue = 0):
-        PanelPropriete.__init__(self, parent)
+        PanelProprieteBook.__init__(self, parent)
         self.tache = tache
+        self.revue = revue
         
+        pageGen = PanelPropriete(self)
+  
+        bg_color = self.Parent.GetBackgroundColour()
+        pageGen.SetBackgroundColour(bg_color)
+        self.pageGen = pageGen
         #
         # Phase
         #
         if tache.phase in ["R1", "R2", "S", "Rev"]:
-            titre = wx.StaticText(self, -1, u"Phase : "+constantes.NOM_PHASE_TACHE[tache.phase])
-            self.sizer.Add(titre, (0,0), (1,2), flag = wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_LEFT|wx.ALL, border = 5)
+            titre = wx.StaticText(pageGen, -1, u"Phase : "+constantes.NOM_PHASE_TACHE[tache.phase])
+            pageGen.sizer.Add(titre, (0,0), (1,2), flag = wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_LEFT|wx.ALL, border = 5)
         else:
-            titre = wx.StaticText(self, -1, u"Phase :")
-            cbPhas = wx.combo.BitmapComboBox(self, -1, u"Selectionner la phase",
+            titre = wx.StaticText(pageGen, -1, u"Phase :")
+            cbPhas = wx.combo.BitmapComboBox(pageGen, -1, u"Selectionner la phase",
                                  choices = constantes.getLstPhase(),
                                  style = wx.CB_DROPDOWN
                                  | wx.TE_PROCESS_ENTER
@@ -7655,10 +7723,10 @@ class PanelPropriete_Tache(PanelPropriete):
                                  )
             for i, k in enumerate(constantes.PHASE_TACHE):
                 cbPhas.SetItemBitmap(i, constantes.imagesTaches[k].GetBitmap())
-            self.Bind(wx.EVT_COMBOBOX, self.EvtComboBox, cbPhas)
+            pageGen.Bind(wx.EVT_COMBOBOX, self.EvtComboBox, cbPhas)
             self.cbPhas = cbPhas
-            self.sizer.Add(titre, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 5)
-            self.sizer.Add(cbPhas, (0,1), flag = wx.EXPAND)
+            pageGen.sizer.Add(titre, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 5)
+            pageGen.sizer.Add(cbPhas, (0,1), flag = wx.EXPAND)
         
         
             
@@ -7667,14 +7735,14 @@ class PanelPropriete_Tache(PanelPropriete):
         # Intitulé de la tache
         #
         if not tache.phase in ["R1", "R2", "S", "Rev"]:
-            box = wx.StaticBox(self, -1, u"Intitulé")
+            box = wx.StaticBox(pageGen, -1, u"Intitulé")
             bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
-            textctrl = wx.TextCtrl(self, -1, u"", style=wx.TE_MULTILINE)
+            textctrl = wx.TextCtrl(pageGen, -1, u"", style=wx.TE_MULTILINE)
             bsizer.Add(textctrl, flag = wx.EXPAND)
             self.textctrl = textctrl
             self.boxInt = box
             self.textctrl.Bind(wx.EVT_KILL_FOCUS, self.EvtTextIntitule)
-            self.sizer.Add(bsizer, (1,0), (1,2), 
+            pageGen.sizer.Add(bsizer, (1,0), (1,2), 
                            flag = wx.EXPAND|wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 2)
 
         
@@ -7684,65 +7752,116 @@ class PanelPropriete_Tache(PanelPropriete):
         # Durée de la tache
         #
         if not tache.phase in ["R1", "R2", "S", "Rev"]:
-            vcDuree = VariableCtrl(self, tache.duree, coef = 0.5, labelMPL = False, signeEgal = True, slider = False,
+            vcDuree = VariableCtrl(pageGen, tache.duree, coef = 0.5, labelMPL = False, signeEgal = True, slider = False,
                                    help = u"Volume horaire de la tâche en heures")
-            self.Bind(EVT_VAR_CTRL, self.EvtText, vcDuree)
+            pageGen.Bind(EVT_VAR_CTRL, self.EvtText, vcDuree)
             self.vcDuree = vcDuree
-            self.sizer.Add(vcDuree, (2,0), (1, 2))
+            pageGen.sizer.Add(vcDuree, (2,0), (1, 2))
         
         
         #
         # Elèves impliqués
         #
         if tache.phase != "S":
-            self.box = wx.StaticBox(self, -1, u"Elèves impliqués", size = (200,200))
+            self.box = wx.StaticBox(pageGen, -1, u"Elèves impliqués", size = (200,200))
             self.box.SetMinSize((150,200))
             self.bsizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
             self.elevesCtrl = []
             self.ConstruireListeEleves()
-            self.sizer.Add(self.bsizer, (0,2), (4, 1), flag = wx.EXPAND)
+            pageGen.sizer.Add(self.bsizer, (0,2), (4, 1), flag = wx.EXPAND)
         
         
         #
         # Description de la tâche
         #
-        dbox = wx.StaticBox(self, -1, u"Description")
+        dbox = wx.StaticBox(pageGen, -1, u"Description")
         dbsizer = wx.StaticBoxSizer(dbox, wx.VERTICAL)
-        bd = wx.Button(self, -1, u"Editer")
-        tc = richtext.RichTextPanel(self, self.tache)
+        bd = wx.Button(pageGen, -1, u"Editer")
+        tc = richtext.RichTextPanel(pageGen, self.tache)
 #        tc.SetMaxSize((-1, 150))
         tc.SetMinSize((150, 60))
         dbsizer.Add(tc,1, flag = wx.EXPAND)
         dbsizer.Add(bd, flag = wx.EXPAND)
-        self.Bind(wx.EVT_BUTTON, self.EvtClick, bd)
+        pageGen.Bind(wx.EVT_BUTTON, self.EvtClick, bd)
         if tache.phase in ["R1", "R2", "S", "Rev"]:
-            self.sizer.Add(dbsizer, (1,0), (3, 2), flag = wx.EXPAND)
+            pageGen.sizer.Add(dbsizer, (1,0), (3, 2), flag = wx.EXPAND)
+            pageGen.sizer.AddGrowableCol(0)
         else:
-            self.sizer.Add(dbsizer, (3,0), (1, 2), flag = wx.EXPAND)
+            pageGen.sizer.Add(dbsizer, (0,3), (4, 1), flag = wx.EXPAND)
+            pageGen.sizer.AddGrowableCol(3)
         self.rtc = tc
         # Pour indiquer qu'une édition est déja en cours ...
         self.edition = False  
         
+        
+        
+        
+        self.AddPage(pageGen, u"Générales")
+        pageGen.sizer.Layout()
+        
+        
+        
+        
+
+        
+        pageCom = PanelPropriete(self)
+        
+        
+        pageCom.SetBackgroundColour(wx.SystemSettings_GetColour(wx.SYS_COLOUR_WINDOW))
+        self.pageCom = pageCom
         #
         # Compétences employées
         #
         if tache.phase != "S":
-            cbox = wx.StaticBox(self, -1, u"Compétences employées")
+            cbox = wx.StaticBox(pageCom, -1, u"Compétences employées")
             cbsizer = wx.StaticBoxSizer(cbox, wx.HORIZONTAL)
-            self.arbre = ArbreCompetencesPrj(self, tache.parent.classe.typeEnseignement,
+            self.arbre = ArbreCompetencesPrj(pageCom, tache.GetTypeEnseignement(),
                                              revue = self.tache.phase in ["R1", "R2", "S", "Rev"])
+            self.arbre.Bind(CT.EVT_TREE_SEL_CHANGED, self.OnSelChanged)
             cbsizer.Add(self.arbre,1, flag = wx.EXPAND|wx.GROW)
-            self.sizer.Add(cbsizer, (0,3), (4,1), flag = wx.EXPAND)
+            pageCom.sizer.Add(cbsizer, (0,0), (1,1), flag = wx.EXPAND)
             
-            self.sizer.AddGrowableCol(3)
-            self.sizer.AddGrowableRow(3)
+            pageCom.sizer.AddGrowableCol(0)
+            pageCom.sizer.AddGrowableRow(0)
+
+            ibox = wx.StaticBox(pageCom, -1, u"Indicateurs")
+            self.ibsizer = wx.StaticBoxSizer(ibox, wx.HORIZONTAL)
+            self.liste = None
             
+            pageCom.sizer.Add(self.ibsizer, (0,1), (1,1), flag = wx.EXPAND)
+            
+            
+    
+        self.AddPage(pageCom, u"Compétences") 
+        pageCom.sizer.Layout() 
+        
         #
         # Mise en place
         #
-        self.sizer.Layout()
+        self.Layout()
+        self.FitInside()
+        wx.CallAfter(self.PostSizeEvent)
+        self.Show()
+#        wx.CallAfter(self.Layout)
         
+    ####################################################################################
+    def OnSelChanged(self, event):
+        item = event.GetItem() 
+        competence = self.arbre.GetItemText(item).split()[0]
+        print competence
+        self.MiseAJourIndicateurs(competence)
         
+    #############################################################################            
+    def MiseAJourIndicateurs(self, competence):
+        if self.revue:
+            dic = constantes.dicIndicateurs[self.tache.GetTypeEnseignement()]
+        else:
+            dic = constantes.dicIndicateurs[self.tache.GetTypeEnseignement()]
+        if self.liste != None:
+            self.ibsizer.Remove(self.liste)
+        self.liste = wx.CheckListBox(self.pageCom, -1, choices = dic[competence])
+        self.Bind(wx.EVT_CHECKLISTBOX, self.EvtCheckListBox, self.liste)
+        self.ibsizer.Add(self.liste,1, flag = wx.EXPAND|wx.GROW)
         
     ######################################################################################  
     def AjouterCompetence(self, code):
@@ -7763,7 +7882,7 @@ class PanelPropriete_Tache(PanelPropriete):
     ############################################################################            
     def ConstruireListeEleves(self):
         if hasattr(self, 'elevesCtrl'):
-            self.Freeze()
+            self.pageGen.Freeze()
             
             for ss in self.elevesCtrl:
                 self.bsizer.Detach(ss)
@@ -7771,10 +7890,10 @@ class PanelPropriete_Tache(PanelPropriete):
                 
             self.elevesCtrl = []
             for i, e in enumerate(self.GetDocument().eleves):
-                v = wx.CheckBox(self, 100+i, e.GetNomPrenom())
+                v = wx.CheckBox(self.pageGen, 100+i, e.GetNomPrenom())
                 v.SetMinSize((200,-1))
                 v.SetValue(i in self.tache.eleves)
-                self.Bind(wx.EVT_CHECKBOX, self.EvtCheckEleve, v)
+                self.pageGen.Bind(wx.EVT_CHECKBOX, self.EvtCheckEleve, v)
                 self.bsizer.Add(v, flag = wx.ALIGN_LEFT|wx.ALL, border = 3)#|wx.EXPAND) 
                 self.elevesCtrl.append(v)
             self.bsizer.Layout()
@@ -7785,8 +7904,8 @@ class PanelPropriete_Tache(PanelPropriete):
                 self.box.Hide()
     
             self.box.SetMinSize((200,200))
-            self.Layout()
-            self.Thaw()
+            self.pageGen.Layout()
+            self.pageGen.Thaw()
         
         
     #############################################################################            
@@ -7794,12 +7913,12 @@ class PanelPropriete_Tache(PanelPropriete):
         """ Met à jour la liste des élèves
         """
         if self.tache.phase != "S":
-            self.Freeze()
+            self.pageGen.Freeze()
             for i, e in enumerate(self.GetDocument().eleves):
                 self.elevesCtrl[i].SetLabel(e.GetNomPrenom())
             self.bsizer.Layout()
-            self.Layout()
-            self.Thaw()
+            self.pageGen.Layout()
+            self.pageGen.Thaw()
 
     
         
@@ -7858,7 +7977,7 @@ class PanelPropriete_Tache(PanelPropriete):
     def EvtComboBox(self, event):
         self.tache.SetPhase(get_key(constantes.NOM_PHASE_TACHE, self.cbPhas.GetStringSelection()))
         
-        self.Layout()
+        self.pageGen.Layout()
         self.sendEvent()
         
     
@@ -7883,6 +8002,7 @@ class PanelPropriete_Tache(PanelPropriete):
             
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
+        return
 #        print "MiseAJour",self.tache.phase
         if hasattr(self, 'arbre'):
             self.arbre.UnselectAll()
@@ -7903,11 +8023,13 @@ class PanelPropriete_Tache(PanelPropriete):
         
     ######################################################################################  
     def MiseAJourPoidsCompetences(self, code = None):
+        return
         if hasattr(self, 'arbre'):
             self.arbre.MiseAJour(code)
         
     #############################################################################
     def MiseAJourTypeEnseignement(self, type_ens):
+        return
         if hasattr(self, 'arbre'):
             self.arbre.MiseAJourTypeEnseignement(type_ens)
         
@@ -8887,7 +9009,7 @@ class ArbreSavoirs(CT.CustomTreeCtrl):
         self.savoirs = savoirs
         
         self.root = self.AddRoot(u"Savoirs")
-        self.Construire(self.root, constantes.dicSavoirs[savoirs.parent.classe.typeEnseignement])
+        self.Construire(self.root, constantes.dicSavoirs[savoirs.GetTypeEnseignement()])
         
         self.ExpandAll()
         
@@ -9079,9 +9201,11 @@ class ArbreCompetencesPrj(ArbreCompetences):
                                   agwStyle = CT.TR_MULTIPLE|CT.TR_HIDE_ROOT|CT.TR_HAS_VARIABLE_ROW_HEIGHT)#|CT.TR_ELLIPSIZE_LONG_ITEMS)#|CT.TR_TOOLTIP_ON_LONG_ITEMS)#
         self.Bind(wx.EVT_SIZE, self.OnSize2)
         self.Bind(CT.EVT_TREE_ITEM_GETTOOLTIP, self.OnToolTip)
+        
 #        self.Bind(CT.EVT_TREE_ITEM_GETTOOLTIP, self.OnToolTip)
         
-        
+       
+    
 
     ####################################################################################
     def Construire(self, branche, dic = None, type_ens = None, ct_type = 0):
@@ -9169,7 +9293,71 @@ class ArbreCompetencesPrj(ArbreCompetences):
         self.ExpandAll()
             
             
+class ArbreIndicateursPrj(wx.CheckListBox):
+    def __init__(self, parent):
+        
+        wx.CheckListBox.__init__(self, parent, -1)
+        
+        self.parent = parent
+        
+        
+    
+        
+    ####################################################################################
+    def Construire(self, type_ens, competence = None):
+        dic = constantes.dicIndicateurs[competence]
+        clefs = dic.keys()
+        clefs.sort()
+        for k in clefs:
+            b = self.AppendItem(branche, k+" "+dic[k][0], ct_type=ct_type)
+            if len(dic[k])>1 and type(dic[k][1]) == dict:
+                self.Construire(b, dic[k][1], ct_type=1)
             
+            if ct_type == 0:
+                self.SetItemBold(b, True)
+        
+    ####################################################################################
+    def OnItemCheck(self, event):
+        item = event.GetItem()
+        code = self.GetItemText(item).split()[0]
+        if item.GetValue():
+            self.parent.AjouterCompetence(code)
+        else:
+            self.parent.EnleverCompetence(code)
+        self.parent.SetCompetences()
+        event.Skip()
+
+    ####################################################################################
+    def traverse(self, parent=None):
+        if parent is None:
+            parent = self.GetRootItem()
+        nc = self.GetChildrenCount(parent, True)
+
+        def GetFirstChild(parent, cookie):
+            return self.GetFirstChild(parent)
+        
+        GetChild = GetFirstChild
+        cookie = 1
+        for i in range(nc):
+            child, cookie = GetChild(parent, cookie)
+            GetChild = self.GetNextChild
+            yield child
+            
+    ####################################################################################
+    def get_item_by_label(self, search_text, root_item):
+        item, cookie = self.GetFirstChild(root_item)
+    
+        while item != None and item.IsOk():
+            text = self.GetItemText(item)
+            if text.split()[0] == search_text:
+                return item
+            if self.ItemHasChildren(item):
+                match = self.get_item_by_label(search_text, item)
+                if match.IsOk():
+                    return match
+            item, cookie = self.GetNextChild(root_item, cookie)
+    
+        return wx.TreeItemId()      
             
             
 #

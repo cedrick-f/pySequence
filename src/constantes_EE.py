@@ -109,7 +109,7 @@ dicSavoirsEE = {"1" : [u"Projet technologique",
                           }],
                           
                   "3" : [u"Transports et distribution d'énergie, études de dossiers technologiques",
-                         {"3.1" : [u"Produstion et transport d'énergie",
+                         {"3.1" : [u"Production et transport d'énergie",
                                    [u"Types et caractéristiques des centrales électriques, hydrauliques, thermiques. Types de solutions de production d'énergies renouvelables, caractéristiques",
                                     u"Structure d'un réseau de transport et de distribution d'énergie électrique, caractéristiques et pertes",
                                     u"Distribution de l'énergie électrique",
