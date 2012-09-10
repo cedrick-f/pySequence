@@ -208,3 +208,45 @@ dicSavoirsET = {"1" : [u"Principes de conception des systèmes de développement
                                          u"Architecture client/serveur : protocoles FTP et HTTP",
                                          u"Gestion d'un nœud de réseau par le paramétrage d'un routeur : adresses IP, NAT/PAT, DNS, pare-feu"]]}]}
                   ],}
+
+dicIndicateur_prj = {"CO1.1" : [u"La justification des propriétés physico-chimiques, mécaniques ou thermiques des matériaux est claire et concise",
+                                    u"Les coûts relatifs, la disponibilité et les impacts environnementaux des matériaux sont évoqués",
+                                    u"La relation entre la morphologie des structures et les moyens de réalisation est explicitée de manière claire et concise",
+                                    u"La morphologie des structures est justifiée par l'usage et le comportement mécanique",
+                                    u"Le choix des énergies mises en oeuvre est justifié, l'efficacité énergétique est évoqué"
+                                    ],
+                     "CO1.2" : [u"La justification des paramètres de confort et la réponse apportée par le système est abordée",
+                                    u"Les contraintes de sécurité sont signalés",
+                                    u"La prévention des conséquences prévisibles sur la santé est expliquée"
+                                    ],
+                     "CO2.1" : [u"Les flux d'énergie sont décrits",
+                                    u"La forme de l'énergie est précisée",
+                                    u"Les caractéristiques des transformations ou modulations sont précisées",
+                                    u"La quantification de l'efficacité énergétique globale est précisée"
+                                    ],
+                     "CO2.2" : [u"Les solutions constructives sont identifiées",
+                                    u"Le cycle de vie du système et de ses composants est identifié",
+                                    u"La relation fonction/Impact environnemental est précisée aux étapes essentielles",
+                                    u"La relation Fonction/Coût/Besoin est justifiée",
+                                    u"Le compromis technico-économique est justifié"
+                                    ],
+                     "CO6.1" : [u"L'(les outil(s) de représentation est (sont) correctement utilisé(s) pour la description",
+                                    u"Les outils de représentation sont correctement décodés",
+                                    u"La description est compréhensible"
+                                    ],
+                     "CO6.2" : [u"L'(les) outil(s) de description utilisé(s) est (sont) adapté(s) au propos",
+                                    u"L'(les) outil(s) de description est (sont) correctement utilisé(s)",
+                                    u"La description du fonctionnement est concise et correcte"
+                                    ],
+                     "CO6.3" : [u"La présentation est claire et concise",
+                                    u"La démarche est argumentée",
+                                    u"Les résultats sont présentés et commentés de manière claire et concise",
+                                    u"L'expression est claire et rigoureuse",
+                                    u"Le vocabulaire nécessaire est maîtrisé"
+                                    ],
+                     "CO8" : [u"Les paramètres du modèle sont justifiés",
+                                    u"Leurs influences respectives sont explicitées",
+                                    u"La limite d'utilisation du modèle est justifiée",
+                                    u"Les variables mesurées sont pertinentes",
+                                    u"Les écarts sont expliqués de manière cohérente pour valider une solution technique"
+                                    ]}
