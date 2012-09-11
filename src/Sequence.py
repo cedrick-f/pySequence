@@ -90,9 +90,9 @@ from CedWidgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_E
 
 
 # Les constantes partagées
-from constantes import calculerEffectifs, revCalculerEffectifs, APP_DATA_PATH, PATH, findEffectif, getTextCI, \
-                        strEffectifComplet, strEffectif, getListCI, getElementFiltre, COUL_OK, COUL_NON, COUL_BOF, COUL_BIEN, \
-                        toList, toTxt
+from constantes import calculerEffectifs, revCalculerEffectifs, PATH, findEffectif, \
+                        strEffectifComplet, strEffectif, getElementFiltre, COUL_OK, COUL_NON, COUL_BOF, COUL_BIEN, \
+                        toList, toTxt, estCompetenceRevue
 import constantes
 
 # Pour lire les classeurs Excel
@@ -4333,13 +4333,37 @@ class Eleve(Personne):
             % soutenance
         """ 
         r = s = 0
-        for c in self.GetCompetences():
-            comp = constantes.dicCompetences_prj_simple[self.GetTypeEnseignement()][c]
-            if len(comp) > 2:
-                r += comp[1]
-            else:
-                s += comp[1]
-                
+        indic = {}
+        for t in self.GetTaches():
+            for c in t.competences:
+                if c in t.indicateurs.keys():
+                    if c in indic.keys():
+                        indic[c] = indic[c] and t.indicateurs[c]
+                    else:
+                        indic[c] = t.indicateurs[c]
+                else:
+                    if c in indic.keys():
+                        indic[c] = indic[c] and [True]*len(constantes.dicIndicateurs[t.GetTypeEnseignement()][c])
+                    else:
+                        indic[c] = [True]*len(constantes.dicIndicateurs[t.GetTypeEnseignement()][c])
+        
+        for k, i in indic.items():
+            for n in i:
+                if n:
+                    if estCompetenceRevue(self.GetTypeEnseignement(), k):
+#                    len(constantes.dicCompetences_prj_simple[self.GetTypeEnseignement()][k]) > 1:
+                        r += 1
+                    else:
+                        s += 1
+        
+        
+#        for c in self.GetCompetences():
+#            comp = constantes.dicCompetences_prj_simple[self.GetTypeEnseignement()][c]
+#            if len(comp) > 2:
+#                r += comp[1]
+#            else:
+#                s += comp[1]
+        
         r = 1.0*r/constantes.NRB_COEF_COMP_R[self.GetTypeEnseignement()]
         s = 1.0*s/constantes.NRB_COEF_COMP_S[self.GetTypeEnseignement()]   
         return r, s
@@ -4353,7 +4377,14 @@ class Eleve(Personne):
         lst = list(set(lst))
         return lst
         
-        
+    ######################################################################################  
+    def GetTaches(self):
+        lst = []
+        for t in self.parent.taches:
+            if self.id in t.eleves:
+                lst.append(t)
+        lst = list(set(lst))
+        return lst
         
     ######################################################################################  
     def AfficherMenuContextuel(self, itemArbre):
@@ -7831,10 +7862,7 @@ class PanelPropriete_Tache(PanelProprieteBook):
         self.AddPage(pageGen, u"Générales")
         pageGen.sizer.Layout()
         
-        
-        
-        
-
+    
         
         pageCom = PanelPropriete(self)
         
@@ -7887,31 +7915,45 @@ class PanelPropriete_Tache(PanelProprieteBook):
         
     #############################################################################            
     def MiseAJourIndicateurs(self, competence):
-        if self.revue:
-            dic = constantes.dicIndicateurs[self.tache.GetTypeEnseignement()]
-        else:
-            dic = constantes.dicIndicateurs[self.tache.GetTypeEnseignement()]
+        indicateurs = constantes.dicIndicateurs[self.tache.GetTypeEnseignement()]
         
+        self.Freeze()
+        
+        # On supprime l'ancienne CheckListBox
         if self.liste != None:
 #            print self.liste
             self.ibsizer.Detach(self.liste)
             self.liste.Destroy()
-        if competence in dic.keys():
-            if self.competence in self.tache.indicateurs.keys():
-                lst = self.tache.indicateurs[self.competence]
+        
+#        print competence, self.tache.competences, self.tache.indicateurs
+        if competence in indicateurs.keys():
+            if competence in self.tache.competences:
+                if competence in self.tache.indicateurs.keys():
+                    lst = self.tache.indicateurs[competence]
+                else:
+                    lst = [competence in self.tache.competences]*len(indicateurs[competence])
+                    self.tache.indicateurs[competence] = lst
             else:
-                lst = [competence in self.tache.competences]*len(dic[competence])
-                self.tache.indicateurs[self.competence] = lst
-            self.liste = wx.CheckListBox(self.pageCom, -1, choices = dic[competence])
+                lst = [competence in self.tache.competences]*len(indicateurs[competence])
+                self.tache.indicateurs[competence] = lst
+            
+#            print lst
+            
+            self.liste = wx.CheckListBox(self.pageCom, -1, choices = indicateurs[competence])
+            
             for i, c in enumerate(lst):
                 self.liste.Check(i, c)
+                
             self.Bind(wx.EVT_CHECKLISTBOX, self.EvtCheckListBox, self.liste)
             self.ibsizer.Add(self.liste,1, flag = wx.EXPAND|wx.GROW)
         else:
             self.liste = None
+            
         self.arbre.Layout()
         self.ibsizer.Layout()
         self.pageCom.sizer.Layout()
+        
+        self.Thaw()
         
         
     ######################################################################################  
@@ -7951,18 +7993,20 @@ class PanelPropriete_Tache(PanelProprieteBook):
     ######################################################################################  
     def AjouterCompetence(self, code):
         self.tache.competences.append(code)
+        self.MiseAJourIndicateurs(code)
         
     ######################################################################################  
     def EnleverCompetence(self, code):
         self.tache.competences.remove(code)
+        if code in self.tache.indicateurs.keys():
+            del self.tache.indicateurs[code]
+        self.MiseAJourIndicateurs(code)
         
     ############################################################################            
     def SetCompetences(self):
         self.GetDocument().MiseAJourDureeEleves()
         self.sendEvent()
         self.tache.parent.VerrouillerClasse()
-        
-#        self.tache.SetCompetences()
         
     ############################################################################            
     def ConstruireListeEleves(self):
