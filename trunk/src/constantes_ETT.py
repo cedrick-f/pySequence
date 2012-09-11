@@ -244,7 +244,7 @@ dicIndicateursET = {"CO1.1" : [u"La justification des propriétés physico-chimi
                                     u"L'expression est claire et rigoureuse",
                                     u"Le vocabulaire nécessaire est maîtrisé"
                                     ],
-                     "CO8" : [u"Les paramètres du modèle sont justifiés",
+                     "CO8.es" : [u"Les paramètres du modèle sont justifiés",
                                     u"Leurs influences respectives sont explicitées",
                                     u"La limite d'utilisation du modèle est justifiée",
                                     u"Les variables mesurées sont pertinentes",

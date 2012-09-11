@@ -170,3 +170,5 @@ dicIndicateursITEC = {"CO7.itec1" : [u"Le besoin relatif au projet est identifi�
                                     u"L'essai est méthodiquement réalisé et le comportement du mécanisme relevé",
                                     u"L'interprétation des résultats est pertinente"
                                     ]}
+
+# Nombre indicateurs = 42

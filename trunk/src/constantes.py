@@ -222,31 +222,6 @@ imagesCI = [images.CI_1, images.CI_2, images.CI_3, images.CI_4,
             images.CI_13, images.CI_14, images.CI_15, images.CI_16]             
 
 
-####################################################################################
-#
-#   Définition des compétences les projets
-#
-####################################################################################
-def getCompetencesProjet(dic):
-    """ Renvoie un dict des compétences à évaluer en projet :
-        = certaines compétences de l'ET
-        + les compétences de l'enseignement de spécialité
-    """
-    d = {"O1" : dicCompetencesET["O1"],
-         "O2" : dicCompetencesET["O2"],
-         "O6" : dicCompetencesET["O6"]
-         }
-
-    d.update(dic)
-    
-    d["O8"][1]["CO8.es"] = [u"Justifier des éléments d'une simulation relative au comportement de tout ou partie d'un système et les écarts par rapport au réel", 5, True]
-    return d
-
-dicCompetencesITEC_prj = getCompetencesProjet(dicCompetencesITEC)
-dicCompetencesEE_prj = getCompetencesProjet(dicCompetencesEE)
-dicCompetencesAC_prj = getCompetencesProjet(dicCompetencesAC)
-dicCompetencesSIN_prj = getCompetencesProjet(dicCompetencesSIN)
-
 
 
 ####################################################################################
@@ -508,35 +483,42 @@ dicCompetences = {'ET'     : dicCompetencesET,
                   'SIN'    : dicCompetencesSIN,
                   'SSI'    : dicCompetencesSSI}
 
-dicCompetences_prj = {'ITEC'   : dicCompetencesITEC_prj, 
-                      'AC'     : dicCompetencesAC_prj, 
-                      'EE'     : dicCompetencesEE_prj, 
-                      'SIN'    : dicCompetencesSIN_prj,
+dicSavoirs = {'ET'     : dicSavoirsET,
+              'ITEC'   : dicSavoirsITEC, 
+              'AC'     : dicSavoirsAC, 
+              'EE'     : dicSavoirsEE, 
+              'SIN'    : dicSavoirsSIN,
+              'SSI'    : dicSavoirsSSI}
+
+
+####################################################################################
+#
+#   Définition des compétences pour les projets
+#
+####################################################################################
+def getCompetencesProjet(dic):
+    """ Renvoie un dict des compétences à évaluer en projet :
+        = certaines compétences de l'ET
+        + les compétences de l'enseignement de spécialité
+    """
+    d = {"O1" : dicCompetencesET["O1"],
+         "O2" : dicCompetencesET["O2"],
+         "O6" : dicCompetencesET["O6"]
+         }
+
+    d.update(dic)
+    
+    d["O8"][1]["CO8.es"] = [u"Justifier des éléments d'une simulation relative au comportement de tout ou partie d'un système et les écarts par rapport au réel", 5, True]
+    return d
+
+dicCompetences_prj = {'ITEC'   : getCompetencesProjet(dicCompetencesITEC), 
+                      'AC'     : getCompetencesProjet(dicCompetencesAC), 
+                      'EE'     : getCompetencesProjet(dicCompetencesEE), 
+                      'SIN'    : getCompetencesProjet(dicCompetencesSIN),
                       'SSI'    : dicCompetencesSSI_prj}
 
-dicIndicateursITEC.update(dicIndicateursET)
-dicIndicateursAC.update(dicIndicateursET)
-dicIndicateursEE.update(dicIndicateursET)
-dicIndicateursSIN.update(dicIndicateursET)
-
-dicIndicateurs = {'ITEC'   : dicIndicateursITEC, 
-                  'AC'     : dicIndicateursAC, 
-                  'EE'     : dicIndicateursEE, 
-                  'SIN'    : dicIndicateursSIN}
-
-
-NRB_COEF_COMP_S = {'ITEC'   : 0, # Nombres de coef pour les compétences "Soutenance"
-                   'AC'     : 0, 
-                   'EE'     : 0, 
-                   'SIN'    : 0,
-                   'SSI'    : 0}     
-
-NRB_COEF_COMP_R = {'ITEC'   : 0, # Nombres de coef pour les compétences "Revue"
-                   'AC'     : 0, 
-                   'EE'     : 0, 
-                   'SIN'    : 0,
-                   'SSI'    : 0}     
-
+def estCompetenceRevue(typeEns, codeComp):
+    return len(dicCompetences_prj_simple[typeEns][codeComp]) > 2
 
 def getCompetencesPrjRevues(v):
     dic = {}
@@ -553,20 +535,58 @@ dicCompetences_prj_revues = {}
 for k,v in dicCompetences_prj.items():
     dicCompetences_prj_revues[k] = getCompetencesPrjRevues(v)
 
-            
-def getCompetencesPrjSimple(k,v):
-    global NRB_COEF_COMP_R, NRB_COEF_COMP_S
-    NRB_COEF_COMP_R[k] = 0     # Nombre de coef pour les compétences "Revue"
-    dic = {}
-    for d in v.values():
+######################################################################################
+#
+#   Regroupement et comptage des indicateurs de compétences
+#        (pour les projets)
+# 
+######################################################################################
+dicIndicateurs = {'ITEC'   : dicIndicateursITEC, 
+                  'AC'     : dicIndicateursAC, 
+                  'EE'     : dicIndicateursEE, 
+                  'SIN'    : dicIndicateursSIN}
 
+for e, i in dicIndicateurs.items():
+    i.update(dicIndicateursET)
+
+NRB_COEF_COMP_S = {'ITEC'   : 0, # Nombres de coef pour les compétences "Soutenance"
+                   'AC'     : 0, 
+                   'EE'     : 0, 
+                   'SIN'    : 0,
+                   'SSI'    : 0}     
+
+NRB_COEF_COMP_R = {'ITEC'   : 0, # Nombres de coef pour les compétences "Revue"
+                   'AC'     : 0, 
+                   'EE'     : 0, 
+                   'SIN'    : 0,
+                   'SSI'    : 0}     
+           
+######################################################################################
+#
+#   Forme simplifié des Compétences abordées en Projet :
+#        clef = code de la compétence
+#        valeur = [intitulé, poids, "revue"]
+# 
+######################################################################################
+def getCompetencesPrjSimple(k,v):
+    global NRB_COEF_COMP_R, NRB_COEF_COMP_S 
+    dic = {}
+    for c, d in v.items():
         dic.update(d[1])
-        
-        for l in d[1].values():
-            if len(l) > 2:
-                NRB_COEF_COMP_R[k] += l[1]
-            else:
-                NRB_COEF_COMP_S[k] += l[1]
+        if k == "SSI":
+            for l in d[1].values():
+                if len(l) > 2:
+                    NRB_COEF_COMP_R[k] += l[1]
+                else:
+                    NRB_COEF_COMP_S[k] += l[1]
+        else:
+            for C, l in d[1].items():
+                if C in dicIndicateurs[k].keys():
+                    if len(l) > 2:
+                        NRB_COEF_COMP_R[k] += len(dicIndicateurs[k][C])
+                    else:
+                        NRB_COEF_COMP_S[k] += len(dicIndicateurs[k][C])
+            
     return dic
 
 
@@ -575,27 +595,28 @@ for k,v in dicCompetences_prj.items():
     dicCompetences_prj_simple[k] = getCompetencesPrjSimple(k,v)
 
 
-dicSavoirs = {'ET'     : dicSavoirsET,
-              'ITEC'   : dicSavoirsITEC, 
-              'AC'     : dicSavoirsAC, 
-              'EE'     : dicSavoirsEE, 
-              'SIN'    : dicSavoirsSIN,
-              'SSI'    : dicSavoirsSSI}
 
 
 
 
-def getListCI(txt):
-    return txt.splitlines()
+######################################################################################
+#
+#   Quelques fonctions partagées
+# 
+######################################################################################
+#def getListCI(txt):
+#    return txt.splitlines()
+#
+#def getTextCI(lst):
+#    t = u""
+#    for i, ci in enumerate(lst):
+#        t += ci
+#        if i != len(lst)-1:
+#            t += "\n"
+#    return t
 
-def getTextCI(lst):
-    t = u""
-    for i, ci in enumerate(lst):
-        t += ci
-        if i != len(lst)-1:
-            t += "\n"
-    return t
 
+# pour convertir "liste d'indicateurs selectionnés" <--> "texte pour engegistrement"
 def toList(txt):
     lst = txt.split()
     l = []
@@ -609,6 +630,8 @@ def toTxt(lst):
         t += str(i) + ' '
     return t
 
+# Pour obtenir l'intitulé d'un savoir à partir de son code 
+#        fonction recursive
 def getSavoir(seq, code, dic = None, c = None):
     if dic == None:
         dic = dicSavoirs[seq.classe.typeEnseignement]
@@ -621,7 +644,8 @@ def getSavoir(seq, code, dic = None, c = None):
         return getSavoir(seq, code, dic[cd][1], c-1)
     
     
-    
+# Pour obtenir l'intitulé d'une compétence à partir de son code 
+#        fonction recursive    
 def getCompetence(seq, code, dic = None, c = None):
     if dic == None:
         dic = dicCompetences[seq.classe.typeEnseignement]
