@@ -2267,7 +2267,52 @@ class Projet(BaseDoc, Objet_sequence):
     def VerrouillerClasse(self):
         self.classe.Verrouiller(len(self.GetCompetencesUtil()) == 0)
         
+    #############################################################################
+    def SetCompetencesRevuesSoutenance(self):
+        print "SetCompetencesRevuesSoutenance"
+        competences = []
+        indicateurs = {}
+#        tachesPrecR = []
+#        tachesPrecS = []
+        for t in self.taches:
+            if t.phase in ["R1", "R2", "S"]:
+                lstR = []
+                lstS = []
+                for c in competences:
+                    if estCompetenceRevue(self.classe.typeEnseignement, c):
+                        lstR.append(c)
+                    else:
+                        lstS.append(c)
+                if t.phase == "S":
+                    t.competences = lstS
+                else:
+                    t.competences = lstR
                 
+                t.initIndicateurs()
+                for c in t.competences:
+                    t.indicateurs[c] = indicateurs[c]
+                
+                
+#                competences = []
+#                tachesPrec = []
+        
+            else:
+#                tachesPrec.append(t)
+                competences.extend(t.competences)
+                competences = list(set(competences))
+                if self.classe.typeEnseignement == "SSI":
+                    for c in t.competences:
+                        if c in indicateurs.keys():
+                            indicateurs[c] = max(indicateurs[c], t.indicateurs[c])
+                        else:
+                            indicateurs[c] = t.indicateurs[c]
+                else:
+                    for c in t.competences:
+                        if c in indicateurs.keys():
+                            indicateurs[c] = [x or y for x,y in zip(indicateurs[c], t.indicateurs[c])]
+                        else:
+                            indicateurs[c] = t.indicateurs[c]
+                     
                 
                 
                 
@@ -3395,11 +3440,7 @@ class Tache(Objet_sequence):
         # Les compétences abordées
         self.competences = []
         
-        # Les indicateurs séléctionnés ou bien les poids des indicateurs 
-        #     clef = code compétence
-        #     Pour la SSI :  valeur = poids
-        #     Pour la STI2D : valeur = liste d'index
-        self.indicateurs = {}
+        
         
         self.code = u""
         self.description = None
@@ -3409,6 +3450,9 @@ class Tache(Objet_sequence):
         self.panelParent = panelParent
         
         self.phase = phaseTache
+        
+        self.initIndicateurs()
+        
         
         #
         # Création du Tip (PopupInfo)
@@ -3451,7 +3495,22 @@ class Tache(Objet_sequence):
     def GetApp(self):
         return self.parent.GetApp()
 
-    
+    ######################################################################################  
+    def initIndicateurs(self):
+        # Les indicateurs séléctionnés ou bien les poids des indicateurs 
+        #     clef = code compétence
+        #     Pour la SSI :  valeur = poids
+        #     Pour la STI2D : valeur = liste d'index
+        typeEns = self.GetTypeEnseignement()
+        if typeEns == "SSI":
+            indicateurs = constantes.dicCompetences_prj_simple[typeEns]
+            self.indicateurs = dict(zip(indicateurs.keys(), indicateurs.values()[1]))
+        else:
+            indicateurs = constantes.dicIndicateurs[typeEns]
+            self.indicateurs = dict(zip(indicateurs.keys(), [[]]*len(indicateurs)))
+            for c in self.indicateurs.keys():
+                self.indicateurs[c] = [True]*len(constantes.dicIndicateurs[self.GetTypeEnseignement()][c])
+        
     ######################################################################################  
     def getBranche(self):
         """ Renvoie la branche XML de la tâche pour enregistrement
@@ -3469,25 +3528,30 @@ class Tache(Objet_sequence):
         root.append(brancheElv)
         for i, e in enumerate(self.eleves):
             brancheElv.set("Eleve"+str(i), str(e))
-            
-        brancheCmp = ET.Element("Competences")
-        root.append(brancheCmp)
-        for i, c in enumerate(self.competences):
-            brancheCmp.set("Comp"+str(i), c)
         
         
-        if self.GetTypeEnseignement() == "SSI":
-            brancheInd = ET.Element("PoidsIndicateurs")
-        else:
-            brancheInd = ET.Element("Indicateurs")
-        root.append(brancheInd)
-        for i, c in enumerate(self.competences):
+        if not self.phase in ["R1", "R2", "S"]:
+            # Structure des indicateurs :
+            # <Competences Comp0="CO6.1" Comp1="CO6.2" ..... />
+            brancheCmp = ET.Element("Competences")
+            root.append(brancheCmp)
+            for i, c in enumerate(self.competences):
+                brancheCmp.set("Comp"+str(i), c)
+        
+            # Structure des indicateurs :
+            # <Indicateurs Indic0="True False True " Indic1="True False False True " ..... />
             if self.GetTypeEnseignement() == "SSI":
-                if c in self.indicateurs.keys():
-                    brancheInd.set("Poids"+str(i), str(self.indicateurs[c]))
+                brancheInd = ET.Element("PoidsIndicateurs")
             else:
-                if c in self.indicateurs.keys():
-                    brancheInd.set("Indic"+str(i), toTxt(self.indicateurs[c]))
+                brancheInd = ET.Element("Indicateurs")
+            root.append(brancheInd)
+            for i, c in enumerate(self.competences):
+                if self.GetTypeEnseignement() == "SSI":
+                    if c in self.indicateurs.keys():
+                        brancheInd.set("Poids"+str(i), str(self.indicateurs[c]))
+                else:
+                    if c in self.indicateurs.keys():
+                        brancheInd.set("Indic"+str(i), toTxt(self.indicateurs[c]))
             
             
         root.set("IntituleDansDeroul", str(self.intituleDansDeroul))
@@ -3496,6 +3560,7 @@ class Tache(Objet_sequence):
         
     ######################################################################################  
     def setBranche(self, branche):
+#        print "setBranche", self
         self.ordre = eval(branche.tag[5:])
         
         self.intitule  = branche.get("Intitule", "")
@@ -3512,27 +3577,28 @@ class Tache(Objet_sequence):
         for i, e in enumerate(brancheElv.keys()):
             self.eleves.append(eval(brancheElv.get("Eleve"+str(i))))
             
-        brancheCmp = branche.find("Competences")
-        self.competences = []
-        for i, e in enumerate(brancheCmp.keys()):
-            self.competences.append(brancheCmp.get("Comp"+str(i)))
-        
-        if self.GetTypeEnseignement() == "SSI":
-            brancheInd = branche.find("PoidsIndicateurs")
-        else:
-            brancheInd = branche.find("Indicateurs")
-        self.indicateurs = {}
-        if brancheInd != None:
-            for i, e in enumerate(brancheInd.keys()):
-                if self.GetTypeEnseignement() == "SSI":
-                    self.indicateurs[self.competences[i]] = brancheInd.get("Poids"+str(i))
-                else:
-                    indic = brancheInd.get("Indic"+str(i))
-                    if indic != None:
-                        self.indicateurs[self.competences[i]] = toList(indic)
-        
+        if not self.phase in ["R1", "R2", "S"]:
+            brancheCmp = branche.find("Competences")
+            self.competences = []
+            for i, e in enumerate(brancheCmp.keys()):
+                self.competences.append(brancheCmp.get("Comp"+str(i)))
             
-            
+            if self.GetTypeEnseignement() == "SSI":
+                brancheInd = branche.find("PoidsIndicateurs")
+            else:
+                brancheInd = branche.find("Indicateurs")
+            self.initIndicateurs()
+            if brancheInd != None:
+                for i, c in enumerate(self.competences):#brancheInd.keys()):
+                    if self.GetTypeEnseignement() == "SSI":
+                        self.indicateurs[c] = brancheInd.get("Poids"+str(i))
+                    else:
+                        indic = brancheInd.get("Indic"+str(i))
+                        if indic != []:
+                            self.indicateurs[c] = toList(indic)
+                        else:
+                            self.indicateurs[c] = [True]*len(constantes.dicIndicateurs[self.GetTypeEnseignement()][c])
+                
             
         self.intituleDansDeroul = eval(branche.get("IntituleDansDeroul", "True"))
         
@@ -4333,41 +4399,42 @@ class Eleve(Personne):
             % soutenance
         """ 
         r = s = 0
-        indic = {}
-        for t in self.GetTaches():
-            for c in t.competences:
-                if c in t.indicateurs.keys():
-                    if c in indic.keys():
-                        indic[c] = indic[c] and t.indicateurs[c]
+        if self.GetTypeEnseignement() != "SSI":
+            indic = {}
+            for t in self.GetTaches():
+                for c in t.competences:
+                    if c in t.indicateurs.keys():
+                        if c in indic.keys():
+                            indic[c] = indic[c] and t.indicateurs[c]
+                        else:
+                            indic[c] = t.indicateurs[c]
                     else:
-                        indic[c] = t.indicateurs[c]
+                        if c in indic.keys():
+                            indic[c] = indic[c] and [True]*len(constantes.dicIndicateurs[t.GetTypeEnseignement()][c])
+                        else:
+                            indic[c] = [True]*len(constantes.dicIndicateurs[t.GetTypeEnseignement()][c])
+            
+            for k, i in indic.items():
+                for n in i:
+                    if n:
+                        if estCompetenceRevue(self.GetTypeEnseignement(), k):
+    #                    len(constantes.dicCompetences_prj_simple[self.GetTypeEnseignement()][k]) > 1:
+                            r += 1
+                        else:
+                            s += 1
+        else:
+            for c in self.GetCompetences():
+                comp = constantes.dicCompetences_prj_simple[self.GetTypeEnseignement()][c]
+                if len(comp) <= 2:
+                    r += comp[1]
                 else:
-                    if c in indic.keys():
-                        indic[c] = indic[c] and [True]*len(constantes.dicIndicateurs[t.GetTypeEnseignement()][c])
-                    else:
-                        indic[c] = [True]*len(constantes.dicIndicateurs[t.GetTypeEnseignement()][c])
-        
-        for k, i in indic.items():
-            for n in i:
-                if n:
-                    if estCompetenceRevue(self.GetTypeEnseignement(), k):
-#                    len(constantes.dicCompetences_prj_simple[self.GetTypeEnseignement()][k]) > 1:
-                        r += 1
-                    else:
-                        s += 1
-        
-        
-#        for c in self.GetCompetences():
-#            comp = constantes.dicCompetences_prj_simple[self.GetTypeEnseignement()][c]
-#            if len(comp) > 2:
-#                r += comp[1]
-#            else:
-#                s += comp[1]
+                    s += comp[1]
         
         r = 1.0*r/constantes.NRB_COEF_COMP_R[self.GetTypeEnseignement()]
         s = 1.0*s/constantes.NRB_COEF_COMP_S[self.GetTypeEnseignement()]   
         return r, s
     
+
     ######################################################################################  
     def GetCompetences(self):
         lst = []
@@ -4376,6 +4443,31 @@ class Eleve(Personne):
                 lst.extend(t.competences)
         lst = list(set(lst))
         return lst
+    
+    ######################################################################################  
+    def GetCompetencesEtIndicateurs(self):
+        lst = []
+        indicateurs = {}
+        for t in self.parent.taches:
+            if self.id in t.eleves:
+                lst.extend(t.competences)
+                
+                
+                if self.GetTypeEnseignement() == "SSI":
+                    for c in t.competences:
+                        if c in indicateurs.keys():
+                            indicateurs[c] = max(indicateurs[c], t.indicateurs[c])
+                        else:
+                            indicateurs[c] = t.indicateurs[c]
+                else:
+                    for c in t.competences:
+                        if c in indicateurs.keys():
+                            indicateurs[c] = [x or y for x,y in zip(indicateurs[c], t.indicateurs[c])]
+                        else:
+                            indicateurs[c] = t.indicateurs[c]
+        
+        lst = list(set(lst))
+        return lst, indicateurs
         
     ######################################################################################  
     def GetTaches(self):
@@ -5433,6 +5525,7 @@ class FenetreProjet(FenetreDocument):
     def OnDocModified(self, event):
         if event.GetDocument() == self.projet:
             self.projet.VerifPb()
+            self.projet.SetCompetencesRevuesSoutenance()
             self.fichePrj.Redessiner()
             self.MarquerFichierCourantModifie()
               
@@ -5497,7 +5590,7 @@ class FenetreProjet(FenetreDocument):
         self.classe.ConstruireArbre(self.arbre, root)
         self.projet.ConstruireArbre(self.arbre, root)
         self.projet.OrdonnerTaches()
-
+        self.projet.SetCompetencesRevuesSoutenance()
         self.projet.PubDescription()
         self.projet.SetLiens()
         self.projet.MiseAJourDureeEleves()
@@ -5860,8 +5953,8 @@ class FicheProjet(BaseFiche):
 ####################################################################################
 DELAY = 100 # Delai en millisecondes avant de rafraichir l'affichage suite à un saisie au clavier
 class PanelPropriete(scrolled.ScrolledPanel):
-    def __init__(self, parent, titre = u"", objet = None):
-        scrolled.ScrolledPanel.__init__(self, parent, -1, style = wx.VSCROLL | wx.RETAINED)#|wx.BORDER_SIMPLE)
+    def __init__(self, parent, titre = u"", objet = None, style = wx.VSCROLL | wx.RETAINED):
+        scrolled.ScrolledPanel.__init__(self, parent, -1, style = style)#|wx.BORDER_SIMPLE)
         
         self.sizer = wx.GridBagSizer()
         self.Hide()
@@ -5899,7 +5992,7 @@ class PanelPropriete(scrolled.ScrolledPanel):
 class PanelProprieteBook(wx.Notebook, PanelPropriete):
     def __init__(self, parent, titre = u"", objet = None):
         wx.Notebook.__init__(self, parent, -1,  style= wx.BK_DEFAULT)#| wx.BORDER_SIMPLE)
-        
+        self.eventAttente = False
 #        self.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
 
 
@@ -7090,6 +7183,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
             self.sequence.SetCodes()
             self.sequence.SetLiens()
             self.sequence.VerifPb()
+            
         fichier.close()
         
 #        except:
@@ -7758,17 +7852,27 @@ class PanelPropriete_Seance(PanelPropriete):
 #   Classe définissant le panel de propriété de la tache
 #
 ####################################################################################
-class PanelPropriete_Tache(PanelProprieteBook):
+class PanelPropriete_Tache(PanelProprieteBook, PanelPropriete):
     def __init__(self, parent, tache, revue = 0):
-        PanelProprieteBook.__init__(self, parent)
+        
         self.tache = tache
         self.revue = revue
         
-        pageGen = PanelPropriete(self)
-  
-        bg_color = self.Parent.GetBackgroundColour()
-        pageGen.SetBackgroundColour(bg_color)
-        self.pageGen = pageGen
+        if not tache.phase in ["R1", "R2", "S"]:
+            #
+            # La page "Généralités"
+            #
+            PanelProprieteBook.__init__(self, parent)
+            pageGen = PanelPropriete(self)
+      
+            bg_color = self.Parent.GetBackgroundColour()
+            pageGen.SetBackgroundColour(bg_color)
+            self.pageGen = pageGen
+        else:
+            PanelPropriete.__init__(self, parent)
+            pageGen = self
+            self.pageGen = pageGen
+            
         #
         # Phase
         #
@@ -7791,9 +7895,6 @@ class PanelPropriete_Tache(PanelProprieteBook):
             pageGen.sizer.Add(titre, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 5)
             pageGen.sizer.Add(cbPhas, (0,1), flag = wx.EXPAND)
         
-        
-            
-        
         #
         # Intitulé de la tache
         #
@@ -7808,9 +7909,7 @@ class PanelPropriete_Tache(PanelProprieteBook):
             pageGen.sizer.Add(bsizer, (1,0), (1,2), 
                            flag = wx.EXPAND|wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 2)
 
-        
-        
-        
+
         #
         # Durée de la tache
         #
@@ -7856,47 +7955,51 @@ class PanelPropriete_Tache(PanelProprieteBook):
         # Pour indiquer qu'une édition est déja en cours ...
         self.edition = False  
         
-        
-        
-        
-        self.AddPage(pageGen, u"Générales")
+        if not tache.phase in ["R1", "R2", "S"]:
+            self.AddPage(pageGen, u"Propriétés générales")
         pageGen.sizer.Layout()
         
+        if not tache.phase in ["R1", "R2", "S"]:
+            #
+            # La page "Compétences"
+            #
+    #        pageCom = PanelPropriete(self, style = wx.RETAINED)
+            pageCom = wx.Panel(self, -1)
     
+    #        pageCom.SetBackgroundColour(wx.SystemSettings_GetColour(wx.SYS_COLOUR_WINDOW))
+            self.pageCom = pageCom
+            pageComsizer = wx.BoxSizer(wx.HORIZONTAL)
+            #
+            # Compétences employées
+            #
+            if tache.phase != "S":
+    #            cbox = wx.StaticBox(pageCom, -1, u"Compétences employées")
+    #            cbsizer = wx.StaticBoxSizer(cbox, wx.HORIZONTAL)
+                self.arbre = ArbreCompetencesPrj(pageCom, tache.GetTypeEnseignement(), self,
+                                                 revue = self.tache.phase in ["R1", "R2", "S", "Rev"])
+                
+                
+                
+    #            cbsizer.Add(self.arbre,1, flag = wx.EXPAND|wx.GROW)
+                pageComsizer.Add(self.arbre, 1, flag = wx.EXPAND)
+                
+                if tache.GetTypeEnseignement() != "SSI":
+                    self.arbre.Bind(CT.EVT_TREE_SEL_CHANGED, self.OnSelChanged)
+                    ibox = wx.StaticBox(pageCom, -1, u"")
+                    self.ibsizer = wx.StaticBoxSizer(ibox, wx.HORIZONTAL)
+                    self.liste = None
+                    pageComsizer.Add(self.ibsizer, 1, flag = wx.EXPAND)
+                    self.ibox = ibox
+                    self.ibsizer.Layout()
+                else:
+                    for c in constantes.dicCompetences_prj_simple["SSI"].keys():
+                        self.MiseAJourIndicateurs(c)
+                
+            pageCom.SetSizer(pageComsizer)
+            self.AddPage(pageCom, u"Compétences à mobiliser") 
+            pageComsizer.Layout() 
+            self.pageComsizer = pageComsizer
         
-        pageCom = PanelPropriete(self)
-        
-        
-        pageCom.SetBackgroundColour(wx.SystemSettings_GetColour(wx.SYS_COLOUR_WINDOW))
-        self.pageCom = pageCom
-        #
-        # Compétences employées
-        #
-        if tache.phase != "S":
-            cbox = wx.StaticBox(pageCom, -1, u"Compétences employées")
-            cbsizer = wx.StaticBoxSizer(cbox, wx.HORIZONTAL)
-            self.arbre = ArbreCompetencesPrj(pageCom, tache.GetTypeEnseignement(), self,
-                                             revue = self.tache.phase in ["R1", "R2", "S", "Rev"])
-            
-            cbsizer.Add(self.arbre,1, flag = wx.EXPAND|wx.GROW)
-            pageCom.sizer.Add(cbsizer, (0,0), (1,1), flag = wx.EXPAND)
-            
-            if tache.GetTypeEnseignement() != "SSI":
-                self.arbre.Bind(CT.EVT_TREE_SEL_CHANGED, self.OnSelChanged)
-                ibox = wx.StaticBox(pageCom, -1, u"Indicateurs")
-                self.ibsizer = wx.StaticBoxSizer(ibox, wx.HORIZONTAL)
-                self.liste = None
-                pageCom.sizer.Add(self.ibsizer, (0,1), (1,1), flag = wx.EXPAND)
-            
-                pageCom.sizer.AddGrowableCol(1, 1)
-            
-            pageCom.sizer.AddGrowableCol(0, 1)
-            pageCom.sizer.AddGrowableRow(0)
-            
-            self.ibsizer.Layout()
-            
-        self.AddPage(pageCom, u"Compétences") 
-        pageCom.sizer.Layout() 
         
         #
         # Mise en place
@@ -7915,44 +8018,43 @@ class PanelPropriete_Tache(PanelProprieteBook):
         
     #############################################################################            
     def MiseAJourIndicateurs(self, competence):
-        indicateurs = constantes.dicIndicateurs[self.tache.GetTypeEnseignement()]
-        
         self.Freeze()
-        
-        # On supprime l'ancienne CheckListBox
-        if self.liste != None:
-#            print self.liste
-            self.ibsizer.Detach(self.liste)
-            self.liste.Destroy()
-        
-#        print competence, self.tache.competences, self.tache.indicateurs
-        if competence in indicateurs.keys():
-            if competence in self.tache.competences:
-                if competence in self.tache.indicateurs.keys():
-                    lst = self.tache.indicateurs[competence]
-                else:
-                    lst = [competence in self.tache.competences]*len(indicateurs[competence])
-                    self.tache.indicateurs[competence] = lst
-            else:
-                lst = [competence in self.tache.competences]*len(indicateurs[competence])
-                self.tache.indicateurs[competence] = lst
+        if self.tache.GetTypeEnseignement() != "SSI":
+            indicateurs = constantes.dicIndicateurs[self.tache.GetTypeEnseignement()]
+            lab = u"Indicateurs"
             
-#            print lst
+            # On supprime l'ancienne CheckListBox
+            if self.liste != None:
+                self.ibsizer.Detach(self.liste)
+                self.liste.Destroy()
             
-            self.liste = wx.CheckListBox(self.pageCom, -1, choices = indicateurs[competence])
-            
-            for i, c in enumerate(lst):
-                self.liste.Check(i, c)
+            if competence in indicateurs.keys():
+                self.liste = wx.CheckListBox(self.pageCom, -1, choices = indicateurs[competence], style = wx.BORDER_NONE)
+    
+                lst = self.tache.indicateurs[competence]
+                for i, c in enumerate(lst):
+                    self.liste.Check(i, c)
                 
-            self.Bind(wx.EVT_CHECKLISTBOX, self.EvtCheckListBox, self.liste)
-            self.ibsizer.Add(self.liste,1, flag = wx.EXPAND|wx.GROW)
-        else:
-            self.liste = None
-            
-        self.arbre.Layout()
-        self.ibsizer.Layout()
-        self.pageCom.sizer.Layout()
+                self.ibox.SetLabel(lab+u" "+competence)
+                self.Bind(wx.EVT_CHECKLISTBOX, self.EvtCheckListBox, self.liste)
+                
+            else:
+                self.liste = wx.StaticText(self.pageCom, -1, u"Selectionner une compétence pour afficher les indicateurs associés.")
+                self.ibox.SetLabel(lab)
+                
+            self.ibsizer.Add(self.liste,1 , flag = wx.EXPAND)
+                
+            self.arbre.Layout()
+            self.ibsizer.Layout()
+            self.pageComsizer.Layout()
         
+        else:
+            if competence in self.tache.indicateurs.keys():
+                self.arbre.MiseAJour(competence, self.tache.indicateurs[competence])
+            else:
+                self.arbre.MiseAJour(competence, constantes.dicCompetences_prj_simple[self.tache.GetTypeEnseignement()][competence][1])
+            
+            
         self.Thaw()
         
         
@@ -7993,13 +8095,20 @@ class PanelPropriete_Tache(PanelProprieteBook):
     ######################################################################################  
     def AjouterCompetence(self, code):
         self.tache.competences.append(code)
+        if self.tache.GetTypeEnseignement() != "SSI":
+            if not True in self.tache.indicateurs[code]:
+                self.tache.indicateurs[code] = [True]*len(constantes.dicIndicateurs[self.tache.GetTypeEnseignement()][code])
+                
+        else:
+            self.tache.indicateurs[code] = constantes.dicCompetences_prj_simple[self.tache.GetTypeEnseignement()][code][1]
         self.MiseAJourIndicateurs(code)
         
     ######################################################################################  
     def EnleverCompetence(self, code):
         self.tache.competences.remove(code)
-        if code in self.tache.indicateurs.keys():
-            del self.tache.indicateurs[code]
+#        if code in self.tache.indicateurs.keys():
+#            del self.tache.indicateurs[code]
+        
         self.MiseAJourIndicateurs(code)
         
     ############################################################################            
@@ -8131,14 +8240,20 @@ class PanelPropriete_Tache(PanelProprieteBook):
             
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
-        print "MiseAJour", self.tache.phase, self.tache.competences
+#        print "MiseAJour", self.tache.phase, self.tache.competences
         if hasattr(self, 'arbre'):
             self.arbre.UnselectAll()
+            
             root = self.arbre.GetRootItem()
             for s in self.tache.competences:
-                i = self.arbre.FindItem(root, s)
-                if i.IsOk():
-                    self.arbre.CheckItem2(i)
+                self.arbre.CheckItem2(self.arbre.items[s])
+                
+                
+#                print "   ", s
+#                i = self.arbre.FindItem(root, s)
+#                print "      ", i#.GetText()
+#                if i.IsOk():
+#                    self.arbre.CheckItem2(i)
             
         if hasattr(self, 'textctrl'):
             self.textctrl.SetValue(self.tache.intitule)
@@ -9217,7 +9332,7 @@ class ArbreSavoirs(CT.CustomTreeCtrl):
 
 
 class ArbreCompetences(HTL.HyperTreeList):
-    def __init__(self, parent, type_ens, pptache = None, agwStyle = CT.TR_MULTIPLE|CT.TR_HIDE_ROOT):#|HTL.TR_NO_HEADER):
+    def __init__(self, parent, type_ens, pptache = None, agwStyle = CT.TR_HIDE_ROOT):#|HTL.TR_NO_HEADER):
         
         HTL.HyperTreeList.__init__(self, parent, -1, style = wx.WANTS_CHARS, agwStyle = agwStyle)#wx.TR_DEFAULT_STYLE|
         
@@ -9228,10 +9343,12 @@ class ArbreCompetences(HTL.HyperTreeList):
             self.pptache = pptache
         self.type_ens = type_ens
         
+        self.items = {}
+        
         self.AddColumn(u"Compétences")
         self.SetMainColumn(0) # the one with the tree in it...
         self.root = self.AddRoot(u"Compétences")
-        self.Construire(self.root, type_ens = type_ens)
+        self.MiseAJourTypeEnseignement(type_ens)
         
         self.ExpandAll()
         
@@ -9247,10 +9364,10 @@ class ArbreCompetences(HTL.HyperTreeList):
         
         
     def OnSize2(self, evt):
-        w = self.GetClientSize()[0]-20
+        w = self.GetClientSize()[0]-17-self.GetColumnWidth(1)
         if w != self.GetColumnWidth(0):
             self.SetColumnWidth(0, w)
-            if self.parent.IsShown():
+            if self.IsShown():
                 self.wrap(w)
         evt.Skip()
         
@@ -9261,9 +9378,17 @@ class ArbreCompetences(HTL.HyperTreeList):
             item = self.GetNext(item)
             if item == None:
                 break
+             
+            # Coefficient pour le texte en gras (plus large)
+            # Et position en X du texte
+            if item._type == 0:
+                W = w*0.93 - 5
+            else:
+                W = w - 35
+                
             text = self.GetItemText(item, 0).replace("\n", "")
-            text = wordwrap(text, w-item.GetX(), wx.ClientDC(self.parent))
-#            print text
+#            print text, item.GetTextX()
+            text = wordwrap(text, W, wx.ClientDC(self))
             self.SetItemText(item, text, 0)
         
     ####################################################################################
@@ -9329,7 +9454,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
     def __init__(self, parent, type_ens, pptache, revue = False):
         self.revue = revue
         ArbreCompetences.__init__(self, parent, type_ens, pptache,
-                                  agwStyle = CT.TR_MULTIPLE|CT.TR_HIDE_ROOT|CT.TR_HAS_VARIABLE_ROW_HEIGHT)#|CT.TR_ELLIPSIZE_LONG_ITEMS)#|CT.TR_TOOLTIP_ON_LONG_ITEMS)#
+                                  agwStyle = CT.TR_HIDE_ROOT|CT.TR_HAS_VARIABLE_ROW_HEIGHT)#|CT.TR_ELLIPSIZE_LONG_ITEMS)#|CT.TR_TOOLTIP_ON_LONG_ITEMS)#
         self.Bind(wx.EVT_SIZE, self.OnSize2)
         self.Bind(CT.EVT_TREE_ITEM_GETTOOLTIP, self.OnToolTip)
         
@@ -9350,13 +9475,16 @@ class ArbreCompetencesPrj(ArbreCompetences):
                 self.SetColumnWidth(1, 60)
                 self.poids_ctrl = {}
             else:
-                self.SetAGWWindowStyleFlag(CT.TR_MULTIPLE|CT.TR_HIDE_ROOT|HTL.TR_NO_HEADER|CT.TR_HAS_VARIABLE_ROW_HEIGHT)
+                self.SetAGWWindowStyleFlag(CT.TR_HIDE_ROOT|HTL.TR_NO_HEADER|CT.TR_HAS_VARIABLE_ROW_HEIGHT)#
+                self.AddColumn(u"")
+                self.SetColumnWidth(1, 0)
         clefs = dic.keys()
 
         clefs.sort()
+        
         for k in clefs:
             if ct_type == 1 and type_ens == "SSI":
-                self.poids_ctrl[k] = wx.TextCtrl(self, -1, str(dic[k][1]), size = (30,-1), name = k)
+                self.poids_ctrl[k] = wx.TextCtrl(self, -1, u"", size = (30,-1), name = k)
                 self.poids_ctrl[k].Bind(wx.EVT_TEXT, self.OnTextCtrl)
                 win = self.poids_ctrl[k]
             else:
@@ -9371,8 +9499,9 @@ class ArbreCompetencesPrj(ArbreCompetences):
             
             # On parcourt une branche plus haute
             if len(dic[k])>1 and type(dic[k][1]) == dict:
-                self.Construire(b, dic[k][1], ct_type=1)
+                self.Construire(b, dic[k][1], type_ens = type_ens, ct_type=1)
         
+            self.items[k] = b
         
 
     def OnTextCtrl(self, evt):
@@ -9392,13 +9521,14 @@ class ArbreCompetencesPrj(ArbreCompetences):
         self.parent.sendEvent()
 
 
-    def OnSize2(self, evt):
-        w = self.GetClientSize()[0] - 30 - 17
-        if w != self.GetColumnWidth(0):
-            self.SetColumnWidth(0, w)
-            if self.parent.IsShown():
-                self.wrap(w)
-        evt.Skip()
+#    def OnSize2(self, evt):
+#        w = self.GetClientSize()[0] - 17
+#        print "OnSize2", w
+#        if w != self.GetColumnWidth(0):
+#            self.SetColumnWidth(0, w)
+#            if self.parent.IsShown():
+#                self.wrap(w)
+#        evt.Skip()
 
         
     def OnToolTip(self, event):
@@ -9407,13 +9537,14 @@ class ArbreCompetencesPrj(ArbreCompetences):
             event.SetToolTip(wx.ToolTip(self.GetItemText(item)))
             
             
-    def MiseAJour(self, code = None):
+    def MiseAJour(self, code = None, value = None):
+        print "MiseAJour arbre", code, value
         if code == None:
             for k, v in constantes.dicCompetences_prj_simple[self.type_ens].items():
                 if k in self.poids_ctrl.keys():
                     self.poids_ctrl[k].ChangeValue(str(v[1]))
         else:
-            self.poids_ctrl[code].ChangeValue(str(constantes.dicCompetences_prj_simple[self.type_ens][code][1]))
+            self.poids_ctrl[code].ChangeValue(str(value))
             
     #############################################################################
     def MiseAJourTypeEnseignement(self, type_ens):
@@ -9437,18 +9568,18 @@ class ArbreIndicateursPrj(wx.CheckListBox):
         
     
         
-    ####################################################################################
-    def Construire(self, type_ens, competence = None):
-        dic = constantes.dicIndicateurs[competence]
-        clefs = dic.keys()
-        clefs.sort()
-        for k in clefs:
-            b = self.AppendItem(branche, k+" "+dic[k][0], ct_type=ct_type)
-            if len(dic[k])>1 and type(dic[k][1]) == dict:
-                self.Construire(b, dic[k][1], ct_type=1)
-            
-            if ct_type == 0:
-                self.SetItemBold(b, True)
+#    ####################################################################################
+#    def Construire(self, type_ens, competence = None):
+#        dic = constantes.dicIndicateurs[competence]
+#        clefs = dic.keys()
+#        clefs.sort()
+#        for k in clefs:
+#            b = self.AppendItem(branche, k+" "+dic[k][0], ct_type=ct_type)
+#            if len(dic[k])>1 and type(dic[k][1]) == dict:
+#                self.Construire(b, dic[k][1], ct_type=1)
+#            
+#            if ct_type == 0:
+#                self.SetItemBold(b, True)
         
     ####################################################################################
     def OnItemCheck(self, event):

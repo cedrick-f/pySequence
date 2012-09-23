@@ -518,7 +518,7 @@ dicCompetences_prj = {'ITEC'   : getCompetencesProjet(dicCompetencesITEC),
                       'SSI'    : dicCompetencesSSI_prj}
 
 def estCompetenceRevue(typeEns, codeComp):
-    return len(dicCompetences_prj_simple[typeEns][codeComp]) > 2
+    return len(dicCompetences_prj_simple[typeEns][codeComp]) <= 2
 
 def getCompetencesPrjRevues(v):
     dic = {}
@@ -576,16 +576,16 @@ def getCompetencesPrjSimple(k,v):
         if k == "SSI":
             for l in d[1].values():
                 if len(l) > 2:
-                    NRB_COEF_COMP_R[k] += l[1]
-                else:
                     NRB_COEF_COMP_S[k] += l[1]
+                else:
+                    NRB_COEF_COMP_R[k] += l[1]
         else:
             for C, l in d[1].items():
                 if C in dicIndicateurs[k].keys():
                     if len(l) > 2:
-                        NRB_COEF_COMP_R[k] += len(dicIndicateurs[k][C])
-                    else:
                         NRB_COEF_COMP_S[k] += len(dicIndicateurs[k][C])
+                    else:
+                        NRB_COEF_COMP_R[k] += len(dicIndicateurs[k][C])
             
     return dic
 
