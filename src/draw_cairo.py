@@ -1022,21 +1022,44 @@ def barreH(ctx, x, y, w, r, e, coul0, coul1, coul):
     """ Dessine une barre horizontale de poucentage/progression
     """
     src = ctx.get_source()
-    pat = cairo.LinearGradient (x, y-e/2,  x, y+e/2)
     
     if r > 0.5:
-        pat.add_color_stop_rgba (0.0, coul1[0], coul1[1], coul1[2], coul1[3])
-        pat.add_color_stop_rgba (0.5, coul[0],  coul[1],  coul[2],  coul[3])
-        pat.add_color_stop_rgba (1.0, coul1[0], coul1[1], coul1[2], coul1[3])
+        coulEtat = coul1
     else:
-        pat.add_color_stop_rgba (0.0, coul0[0], coul0[1], coul0[2], coul0[3])
-        pat.add_color_stop_rgba (0.5, coul[0],  coul[1],  coul[2],  coul[3])
-        pat.add_color_stop_rgba (1.0, coul0[0], coul0[1], coul0[2], coul0[3])
+        coulEtat = coul0
+        
+    ctx.set_source_rgba(coul[0],  coul[1],  coul[2],  coul[3])
+    ctx.rectangle (x, y-e/2, w*r, e)
+    ctx.fill_preserve ()    
+    ctx.set_source_rgba(0.4,  0.4,  0.4,  1)
+    ctx.set_line_width(0.001)
+    ctx.stroke()
     
-    ctx.rectangle (x,y-e/2,w*r,e)
-    ctx.set_source (pat)
+    ctx.set_source_rgba(coulEtat[0], coulEtat[1], coulEtat[2], coulEtat[3])
+    ctx.rectangle (x+w*r-e, y-e/2, e, e)
     ctx.fill ()
+    
+    
+    
     ctx.set_source(src)
+    
+    
+#    src = ctx.get_source()
+#    pat = cairo.LinearGradient (x, y-e/2,  x, y+e/2)
+#    
+#    if r > 0.5:
+#        pat.add_color_stop_rgba (0.0, coul1[0], coul1[1], coul1[2], coul1[3])
+#        pat.add_color_stop_rgba (0.5, coul[0],  coul[1],  coul[2],  coul[3])
+#        pat.add_color_stop_rgba (1.0, coul1[0], coul1[1], coul1[2], coul1[3])
+#    else:
+#        pat.add_color_stop_rgba (0.0, coul0[0], coul0[1], coul0[2], coul0[3])
+#        pat.add_color_stop_rgba (0.5, coul[0],  coul[1],  coul[2],  coul[3])
+#        pat.add_color_stop_rgba (1.0, coul0[0], coul0[1], coul0[2], coul0[3])
+#    
+#    ctx.rectangle (x,y-e/2,w*r,e)
+#    ctx.set_source (pat)
+#    ctx.fill ()
+#    ctx.set_source(src)
     
     
         
@@ -1048,7 +1071,10 @@ def fleche_verticale(ctx, x, y, h, e, coul):
     ctx.line_to(x+e/2, y+h-e/2)
     ctx.line_to(x+e/2, y)
     ctx.close_path ()
-    ctx.fill ()
+    ctx.fill_preserve ()    
+    ctx.set_source_rgba(0.4,  0.4,  0.4,  1)
+    ctx.set_line_width(0.0006)
+    ctx.stroke ()
     
 
 def fleche_ronde(ctx, x, y, r, a0, a1, e, f, coul):

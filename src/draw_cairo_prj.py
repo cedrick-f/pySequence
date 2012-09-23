@@ -39,7 +39,8 @@ from math import log
 #
 #import ConfigParser
 
-from constantes import Effectifs, NomsEffectifs, listeDemarches, Demarches, getSavoir, getCompetence, DemarchesCourt
+from constantes import Effectifs, NomsEffectifs, listeDemarches, Demarches, getSavoir, getCompetence, \
+                        DemarchesCourt, estCompetenceRevue
 import constantes
 
 ## Pour dessiner la cible ...
@@ -111,7 +112,7 @@ tailleZDeroul = [None, None]
 IcoulZDeroul = (1, 1, 0.7, 0.85)
 BcoulZDeroul = (0.4, 0.4, 0.03, 1)
 fontZDeroul = 0.014
-wPhases = 0.03      # Taille du label "phases"
+wPhases = 0.04      # Taille du label "phases"
 wDuree = 0.012       # Taille de la fleche "duree"
 
 
@@ -137,7 +138,7 @@ BCoulCompS = (0.7, 0.7, 0.7, 0.2)      # couleur "Soutenance"
 
 
 # Zone des tâches
-posZTaches = [posZDeroul[0] + wPhases + wDuree + ecartX*3/4, None]
+posZTaches = [posZDeroul[0] + wPhases + wDuree + ecartX*3/6, None]
 tailleZTaches = [None, None]
 hTacheMini = ecartY/2
 # paramètres pour la fonction qui calcule la hauteur des tâches 
@@ -189,154 +190,154 @@ def coul2str(rgba):
 
 
 
-def enregistrerConfigFiche(nomFichier):
-    config = ConfigParser.ConfigParser()
-
-    section = "General"
-    config.add_section(section)
-    config.set(section, "margeX", str(margeX))
-    config.set(section, "margeY", str(margeY))
-    config.set(section, "ecartX", str(ecartX))
-    config.set(section, "ecartY", str(ecartY))
-    
-    section = "Intitule de la sequence"
-    config.add_section(section)
-    config.set(section, "pos", coord2str(posIntitule))
-    config.set(section, "dim", coord2str(tailleIntitule))
-    config.set(section, "coulInt", coul2str(IcoulIntitule))
-    config.set(section, "coulBord", coul2str(BcoulIntitule))
-    
-    section = "Centre d'interet"
-    config.add_section(section)
-    config.set(section, "pos", coord2str(posSup))
-    config.set(section, "dim", coord2str(tailleSup))
-    config.set(section, "coulInt", coul2str(IcoulSup))
-    config.set(section, "coulBord", coul2str(BcoulSup))
-    
-    section = "Objectifs"
-    config.add_section(section)
-    config.set(section, "pos", coord2str(posPro))
-    config.set(section, "dim", coord2str(taillePro))
-    config.set(section, "coulInt", coul2str(IcoulPro))
-    config.set(section, "coulBord", coul2str(BcoulPro))
-
-    section = "Prerequis"
-    config.add_section(section)
-    config.set(section, "pos", coord2str(posEqu))
-    config.set(section, "dim", coord2str(tailleEqu))
-    config.set(section, "coulInt", coul2str(IcoulEqu))
-    config.set(section, "coulBord", coul2str(BcoulEqu))
-
-    section = "Zone d'organisation"
-    config.add_section(section)
-    config.set(section, "pos", coord2str(posZOrganis))
-    config.set(section, "dim", coord2str(tailleZOrganis))
-
-    section = "Zone de deroulement"
-    config.add_section(section)
-    config.set(section, "pos", coord2str(posZDeroul))
-
-    section = "Tableau systemes"
-    config.add_section(section)
-    config.set(section, "posY", str(posZComp[1]))
-    config.set(section, "col", str(wColComp))
-
-    section = "Tableau demarche"
-    config.add_section(section)
-    config.set(section, "posY", str(posZElevesV[1]))
-    config.set(section, "dimX", str(tailleZElevesV[0]))
-    
-    section = "Intitule des seances"
-    config.add_section(section)
-    config.set(section, "posX", str(posZIntTaches[0]))
-    config.set(section, "dimX", str(tailleZIntTaches[0]))
-    config.set(section, "haut", str(hIntTache))
-
-    section = "Seances"
-    config.add_section(section)
-    config.set(section, "pos", coord2str(posZTaches))
-    for k, v in BCoulTache.items():
-        config.set(section, "Bcoul"+k, coul2str(v))
-    for k, v in ICoulTache.items():
-        config.set(section, "Icoul"+k, coul2str(v))
-        
-    config.write(open(nomFichier,'w'))
-    
-    
-    
-    
-    
-    
-def ouvrirConfigFiche(nomFichier):
-#    print "ouvrirConfigFiche"
-    global posIntitule, tailleIntitule, IcoulIntitule, BcoulIntitule, \
-           posSup, tailleSup, IcoulSup, BcoulSup, \
-           posPro, taillePro, IcoulPro, BcoulPro, \
-           posZOrganis, tailleZOrganis, \
-           posZDeroul, wColComp, hIntTache, posZTaches, \
-           margeX, margeY, ecartX, ecartY
-           
-           
-    config = ConfigParser.ConfigParser()
-    config.read(nomFichier)
-    
-    section = "General"
-    margeX = eval(config.get(section,"margeX"))
-    margeY = eval(config.get(section,"margeY"))
-    ecartX = eval(config.get(section,"ecartX"))
-    ecartY = eval(config.get(section,"ecartY"))
-    
-    
-    section = "Intitule de la sequence"
-    posIntitule = str2coord(config.get(section,"pos"))
-    tailleIntitule = str2coord(config.get(section,"dim"))
-    IcoulIntitule = str2coul(config.get(section,"coulInt"))
-    BcoulIntitule = str2coul(config.get(section,"coulBord"))
-    
-    section = "Centre d'interet"
-    posSup = str2coord(config.get(section,"pos"))
-    tailleSup = str2coord(config.get(section,"dim"))
-    IcoulSup = str2coul(config.get(section,"coulInt"))
-    BcoulSup = str2coul(config.get(section,"coulBord"))
-    
-    section = "Objectifs"
-    posPro = str2coord(config.get(section,"pos"))
-    taillePro = str2coord(config.get(section,"dim"))
-    IcoulPro = str2coul(config.get(section,"coulInt"))
-    BcoulPro = str2coul(config.get(section,"coulBord"))
-
-    section = "Prerequis"
-    posEqu = str2coord(config.get(section,"pos"))
-    tailleEqu = str2coord(config.get(section,"dim"))
-    IcoulEqu = str2coul(config.get(section,"coulInt"))
-    BcoulEqu = str2coul(config.get(section,"coulBord"))
-    
-    section = "Zone d'organisation"
-    posZOrganis = str2coord(config.get(section,"pos"))
-    tailleZOrganis = str2coord(config.get(section,"dim"))
-    
-    section = "Zone de deroulement"
-    posZDeroul = str2coord(config.get(section,"pos"))
-
-    section = "Tableau systemes"
-    posZComp[1] = config.getfloat(section,"posY")
-    wColComp = config.getfloat(section,"col")
-
-    section = "Tableau demarche"
-    posZElevesV[1] = config.getfloat(section,"posY")
-    tailleZElevesV[0] = config.getfloat(section,"dimX")
-    
-    section = "Intitule des seances"
-    posZIntTaches[0] = config.getfloat(section,"posX")
-    tailleZIntTaches[0] = config.getfloat(section,"dimX")
-    hIntTache = config.getfloat(section,"haut")
-    
-    section = "Seances"
-    posZTaches = str2coord(config.get(section,"pos"))
-    for k in BCoulTache.keys():
-        BCoulTache[k] = str2coul(config.get(section, "Bcoul"+k))
-    for k in ICoulTache.keys():
-        ICoulTache[k] = str2coul(config.get(section, "Icoul"+k))
+#def enregistrerConfigFiche(nomFichier):
+#    config = ConfigParser.ConfigParser()
+#
+#    section = "General"
+#    config.add_section(section)
+#    config.set(section, "margeX", str(margeX))
+#    config.set(section, "margeY", str(margeY))
+#    config.set(section, "ecartX", str(ecartX))
+#    config.set(section, "ecartY", str(ecartY))
+#    
+#    section = "Intitule de la sequence"
+#    config.add_section(section)
+#    config.set(section, "pos", coord2str(posIntitule))
+#    config.set(section, "dim", coord2str(tailleIntitule))
+#    config.set(section, "coulInt", coul2str(IcoulIntitule))
+#    config.set(section, "coulBord", coul2str(BcoulIntitule))
+#    
+#    section = "Centre d'interet"
+#    config.add_section(section)
+#    config.set(section, "pos", coord2str(posSup))
+#    config.set(section, "dim", coord2str(tailleSup))
+#    config.set(section, "coulInt", coul2str(IcoulSup))
+#    config.set(section, "coulBord", coul2str(BcoulSup))
+#    
+#    section = "Objectifs"
+#    config.add_section(section)
+#    config.set(section, "pos", coord2str(posPro))
+#    config.set(section, "dim", coord2str(taillePro))
+#    config.set(section, "coulInt", coul2str(IcoulPro))
+#    config.set(section, "coulBord", coul2str(BcoulPro))
+#
+#    section = "Prerequis"
+#    config.add_section(section)
+#    config.set(section, "pos", coord2str(posEqu))
+#    config.set(section, "dim", coord2str(tailleEqu))
+#    config.set(section, "coulInt", coul2str(IcoulEqu))
+#    config.set(section, "coulBord", coul2str(BcoulEqu))
+#
+#    section = "Zone d'organisation"
+#    config.add_section(section)
+#    config.set(section, "pos", coord2str(posZOrganis))
+#    config.set(section, "dim", coord2str(tailleZOrganis))
+#
+#    section = "Zone de deroulement"
+#    config.add_section(section)
+#    config.set(section, "pos", coord2str(posZDeroul))
+#
+#    section = "Tableau systemes"
+#    config.add_section(section)
+#    config.set(section, "posY", str(posZComp[1]))
+#    config.set(section, "col", str(wColComp))
+#
+#    section = "Tableau demarche"
+#    config.add_section(section)
+#    config.set(section, "posY", str(posZElevesV[1]))
+#    config.set(section, "dimX", str(tailleZElevesV[0]))
+#    
+#    section = "Intitule des seances"
+#    config.add_section(section)
+#    config.set(section, "posX", str(posZIntTaches[0]))
+#    config.set(section, "dimX", str(tailleZIntTaches[0]))
+#    config.set(section, "haut", str(hIntTache))
+#
+#    section = "Seances"
+#    config.add_section(section)
+#    config.set(section, "pos", coord2str(posZTaches))
+#    for k, v in BCoulTache.items():
+#        config.set(section, "Bcoul"+k, coul2str(v))
+#    for k, v in ICoulTache.items():
+#        config.set(section, "Icoul"+k, coul2str(v))
+#        
+#    config.write(open(nomFichier,'w'))
+#    
+#    
+#    
+#    
+#    
+#    
+#def ouvrirConfigFiche(nomFichier):
+##    print "ouvrirConfigFiche"
+#    global posIntitule, tailleIntitule, IcoulIntitule, BcoulIntitule, \
+#           posSup, tailleSup, IcoulSup, BcoulSup, \
+#           posPro, taillePro, IcoulPro, BcoulPro, \
+#           posZOrganis, tailleZOrganis, \
+#           posZDeroul, wColComp, hIntTache, posZTaches, \
+#           margeX, margeY, ecartX, ecartY
+#           
+#           
+#    config = ConfigParser.ConfigParser()
+#    config.read(nomFichier)
+#    
+#    section = "General"
+#    margeX = eval(config.get(section,"margeX"))
+#    margeY = eval(config.get(section,"margeY"))
+#    ecartX = eval(config.get(section,"ecartX"))
+#    ecartY = eval(config.get(section,"ecartY"))
+#    
+#    
+#    section = "Intitule de la sequence"
+#    posIntitule = str2coord(config.get(section,"pos"))
+#    tailleIntitule = str2coord(config.get(section,"dim"))
+#    IcoulIntitule = str2coul(config.get(section,"coulInt"))
+#    BcoulIntitule = str2coul(config.get(section,"coulBord"))
+#    
+#    section = "Centre d'interet"
+#    posSup = str2coord(config.get(section,"pos"))
+#    tailleSup = str2coord(config.get(section,"dim"))
+#    IcoulSup = str2coul(config.get(section,"coulInt"))
+#    BcoulSup = str2coul(config.get(section,"coulBord"))
+#    
+#    section = "Objectifs"
+#    posPro = str2coord(config.get(section,"pos"))
+#    taillePro = str2coord(config.get(section,"dim"))
+#    IcoulPro = str2coul(config.get(section,"coulInt"))
+#    BcoulPro = str2coul(config.get(section,"coulBord"))
+#
+#    section = "Prerequis"
+#    posEqu = str2coord(config.get(section,"pos"))
+#    tailleEqu = str2coord(config.get(section,"dim"))
+#    IcoulEqu = str2coul(config.get(section,"coulInt"))
+#    BcoulEqu = str2coul(config.get(section,"coulBord"))
+#    
+#    section = "Zone d'organisation"
+#    posZOrganis = str2coord(config.get(section,"pos"))
+#    tailleZOrganis = str2coord(config.get(section,"dim"))
+#    
+#    section = "Zone de deroulement"
+#    posZDeroul = str2coord(config.get(section,"pos"))
+#
+#    section = "Tableau systemes"
+#    posZComp[1] = config.getfloat(section,"posY")
+#    wColComp = config.getfloat(section,"col")
+#
+#    section = "Tableau demarche"
+#    posZElevesV[1] = config.getfloat(section,"posY")
+#    tailleZElevesV[0] = config.getfloat(section,"dimX")
+#    
+#    section = "Intitule des seances"
+#    posZIntTaches[0] = config.getfloat(section,"posX")
+#    tailleZIntTaches[0] = config.getfloat(section,"dimX")
+#    hIntTache = config.getfloat(section,"haut")
+#    
+#    section = "Seances"
+#    posZTaches = str2coord(config.get(section,"pos"))
+#    for k in BCoulTache.keys():
+#        BCoulTache[k] = str2coul(config.get(section, "Bcoul"+k))
+#    for k in ICoulTache.keys():
+#        ICoulTache[k] = str2coul(config.get(section, "Icoul"+k))
     
 
 def calcH(t):
@@ -364,7 +365,7 @@ def DefinirZones(prj, ctx):
     tailleZElevesV[0] = wEleves * len(prj.eleves)
     tailleZElevesH[1] = hEleves * len(prj.eleves)
     posZElevesV[0] = posZComp[0] - tailleZElevesV[0] - ecartX/2
-    tailleZElevesH[0] = posZElevesV[0]-posZElevesH[0]
+    tailleZElevesH[0] = posZElevesV[0]-posZElevesH[0]- ecartX/2
     tailleZElevesV[1] = posZOrganis[1] + tailleZOrganis[1] - posZElevesV[1]
     xEleves = []
     yEleves = []
@@ -379,7 +380,7 @@ def DefinirZones(prj, ctx):
                  
                  
     # Zone de déroulement du projet
-    posZDeroul[1] = posZElevesH[1] + tailleZElevesH[1] + tailleZComp[1]
+    posZDeroul[1] = posZElevesH[1] + tailleZElevesH[1] + tailleZComp[1] - ecartY/2
     tailleZDeroul[0] = posZElevesV[0] - posZDeroul[0] - ecartX/2
     tailleZDeroul[1] = posZOrganis[1] + tailleZOrganis[1] - posZDeroul[1]
     
@@ -387,7 +388,7 @@ def DefinirZones(prj, ctx):
     # Zone des tâches
     posZTaches[1] = posZDeroul[1] + ecartY/2
     tailleZTaches[0] = posZDeroul[0] + tailleZDeroul[0] - posZTaches[0] - ecartX/2
-    tailleZTaches[1] = tailleZDeroul[1] - ecartY/2 - 0.03    # écart pour la durée totale
+    tailleZTaches[1] = tailleZDeroul[1] - ecartY/2 - 0.04    # écart pour la durée totale
     
     
 #    hHoraire = tailleZTaches[1] / (prj.GetDureeGraph() + 0.25*(prj.GetNbrPhases()-1))
@@ -580,7 +581,7 @@ def Draw(ctx, prj, mouchard = False):
             ctx.move_to(_x, _y0)# + posZTaches[1] - posZComp[1])
             ctx.line_to(_x, _y1)
             ctx.stroke()
-            if len(constantes.dicCompetences_prj_simple[prj.classe.typeEnseignement][s]) > 2:
+            if estCompetenceRevue(prj.classe.typeEnseignement, s):
                 ctx.set_source_rgba(ICoulCompS[0], ICoulCompS[1], ICoulCompS[2], 0.2)
             else:
                 ctx.set_source_rgba(ICoulCompR[0], ICoulCompR[1], ICoulCompR[2], 0.2)
@@ -627,16 +628,16 @@ def Draw(ctx, prj, mouchard = False):
             y = posZElevesH[1] + i*hEleves
 #            wr = tailleZElevesH[0]*r
 #            ws = tailleZElevesH[0]*s
-            hb = hEleves/4
+            hb = hEleves/3
 #            y = posZElevesH[1] + (2*i*hb)+hb/2
             
             barreH(ctx, posZElevesH[0], y+hb, tailleZElevesH[0], r, hb, 
                    (1, 0, 0, 0.7), (0, 1, 0, 0.7), 
-                   (ICoulCompR[0], ICoulCompR[1], ICoulCompR[2], 0.7))
+                   (ICoulCompR[0], ICoulCompR[1], ICoulCompR[2], 1))
             
-            barreH(ctx, posZElevesH[0], y+3*hb, tailleZElevesH[0], s, hb, 
+            barreH(ctx, posZElevesH[0], y+2*hb, tailleZElevesH[0], s, hb, 
                    (1, 0, 0, 0.7), (0, 1, 0, 0.7), 
-                   (ICoulCompR[0], ICoulCompR[1], ICoulCompR[2], 0.7))
+                   (ICoulCompS[0], ICoulCompS[1], ICoulCompS[2], 1))
             
             
 #            src = ctx.get_source()
@@ -688,7 +689,7 @@ def Draw(ctx, prj, mouchard = False):
             ctx.set_source_rgb(Ic[0],Ic[1],Ic[2])
             ctx.set_line_width(0.003)
             ctx.move_to(xEleves[i], yEleves[i])
-            ctx.line_to(xEleves[i], posZTaches[1] + tailleZTaches[1] + (i % 2)*(ecartY/2))
+            ctx.line_to(xEleves[i], posZTaches[1] + tailleZTaches[1] + (i % 2)*(ecartY/2) + ecartY/2)
             ctx.stroke()
             
             DrawCroisementsElevesCompetences(ctx, e, yEleves[i])
@@ -697,7 +698,7 @@ def Draw(ctx, prj, mouchard = False):
         e = 0.003
         ctx.set_line_width(0.003)
         for i in range(len(prj.eleves)) :
-            y = posZTaches[1] + tailleZTaches[1] + (i % 2)*(ecartY/2)
+            y = posZTaches[1] + tailleZTaches[1] + (i % 2)*(ecartY/2) + ecartY/2
             ctx.set_source_rgb(1,1,1)
             ctx.move_to(xEleves[i]+e, yEleves[i]+e)
             ctx.line_to(xEleves[i]+e, y)
@@ -750,7 +751,7 @@ def Draw(ctx, prj, mouchard = False):
             ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
                                                cairo.FONT_WEIGHT_NORMAL)
             show_text_rect(ctx, constantes.NOM_PHASE_TACHE[phase], 
-                   (posZDeroul[0] + ecartX/4, yh[0], 
+                   (posZDeroul[0] + ecartX/6, yh[0], 
                     wPhases, yh[1]-yh[0]), ha = 'c', orient = 'v', b = 0) 
 
         
@@ -768,15 +769,16 @@ def Draw(ctx, prj, mouchard = False):
 #                    wDuree*2, ecartY/2), ha = 'c', b = 0)    
     
     for i, e in enumerate(prj.eleves):
-        x = posZElevesV[0]+i*tailleZElevesV[0]/len(prj.eleves)
-        y = posZTaches[1] + tailleZTaches[1] + (i % 2)*(ecartY/2)
+#        x = posZElevesV[0]+i*tailleZElevesV[0]/len(prj.eleves)-wEleves/2
+        x = xEleves[i]-wEleves*3/4
+        y = posZTaches[1] + tailleZTaches[1] + (i % 2)*(ecartY/2)+ecartY/2
         d = e.GetDuree()
         if d < constantes.DUREE_PRJ:
             ctx.set_source_rgb(1,0.1,0.1)
         else:
             ctx.set_source_rgb(0.1,1,0.1)
         show_text_rect(ctx, getHoraireTxt(d), 
-                       (x, y, wEleves, ecartY/2), ha = 'c', b = 0)
+                       (x, y, wEleves*3/2, ecartY/2), ha = 'c', b = 0)
     
     
     #
@@ -784,7 +786,7 @@ def Draw(ctx, prj, mouchard = False):
     #
     ctx.select_font_face ("Sans", cairo.FONT_SLANT_ITALIC,
                      cairo.FONT_WEIGHT_BOLD)
-    ctx.set_font_size (0.006)
+    ctx.set_font_size (0.007)
     ctx.set_source_rgb(0.6, 0.6, 0.6)
     ctx.move_to (margeX, 1 - margeY + 0.02)
     ctx.show_text ("Fiche créée avec le logiciel pySequence (http://code.google.com/p/pysequence)")
@@ -1055,9 +1057,9 @@ def DrawTacheRacine(ctx, tache, y):
     #
     # Tracé des croisements "Tâches" et "Eleves"
     #
-    if tache.phase != "S":
-        DrawCroisementsElevesTaches(ctx, tache, x + tailleZTaches[0], y + h/2)
-        DrawCroisementsCompetencesTaches(ctx, tache, y + h/2)
+#    if tache.phase != "S":
+    DrawCroisementsElevesTaches(ctx, tache, x + tailleZTaches[0], y + h/2)
+    DrawCroisementsCompetencesTaches(ctx, tache, y + h/2)
     
     y += h
     return y
@@ -1065,14 +1067,17 @@ def DrawTacheRacine(ctx, tache, y):
         
         
 ######################################################################################  
-def DrawLigne(ctx, x, y):
+def DrawLigne(ctx, x, y, gras = False):
     dashes = [ 0.010,   # ink
                0.002,   # skip
                0.005,   # ink
                0.002,   # skip
                ]
     ctx.set_source_rgba (0, 0.0, 0.2, 0.6)
-    ctx.set_line_width (0.001)
+    if gras:
+        ctx.set_line_width (0.002)
+    else:
+        ctx.set_line_width (0.001)
     ctx.set_dash(dashes, 0)
     ctx.move_to(posZOrganis[0]+tailleZOrganis[0], y)
     ctx.line_to(x, y)
@@ -1084,41 +1089,63 @@ def DrawLigne(ctx, x, y):
         
 ######################################################################################  
 def DrawCroisementsCompetencesTaches(ctx, tache, y):
+#    print "DrawCroisementsCompetencesTaches", tache
 #        if self.typeSeance in ["AP", "ED", "P"]:
 #            and not (self.EstSousSeance() and self.parent.typeSeance == "S"):
-    r = wColComp/3
-    ns = tache.competences
-    for s in ns:
-        x = xComp[s]
-        ctx.arc(x, y, r, 0, 2*pi)
-        if len(constantes.dicCompetences_prj_simple[tache.parent.classe.typeEnseignement][s]) > 2:
-            ctx.set_source_rgba (ICoulCompS[0],ICoulCompS[1],ICoulCompS[2],1.0)
-        else:
-            ctx.set_source_rgba (ICoulCompR[0],ICoulCompR[1],ICoulCompR[2],1.0)
-        ctx.fill_preserve ()
-        ctx.set_source_rgba (0,0,0,1)
-        ctx.stroke ()
-        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-                              cairo.FONT_WEIGHT_BOLD)
-        if s in tache.parent.rectComp.keys() and tache.parent.rectComp[s] != None:
-            tache.parent.rectComp[s].append((x-r, y-r, 2*r, 2*r))
-        else:
-            tache.parent.rectComp[s] = [(x-r, y-r, 2*r, 2*r)]
+    
+    DrawBoutonCompetence(ctx, tache, tache.competences, tache.indicateurs, y)
+    
+#    r = wColComp/3
+#    ctx.set_line_width (0.001)
+#    for s in tache.competences:
+#        x = xComp[s]
+#        ctx.arc(x, y, r, 0, 2*pi)
+#        if len(constantes.dicCompetences_prj_simple[tache.parent.classe.typeEnseignement][s]) > 2:
+#            ctx.set_source_rgba (ICoulCompS[0],ICoulCompS[1],ICoulCompS[2],1.0)
+#        else:
+#            ctx.set_source_rgba (ICoulCompR[0],ICoulCompR[1],ICoulCompR[2],1.0)
+#        ctx.fill_preserve ()
+#        ctx.set_source_rgba (0,0,0,1)
+#        ctx.stroke ()
+#        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+#                              cairo.FONT_WEIGHT_BOLD)
+#        if s in tache.parent.rectComp.keys() and tache.parent.rectComp[s] != None:
+#            tache.parent.rectComp[s].append((x-r, y-r, 2*r, 2*r))
+#        else:
+#            tache.parent.rectComp[s] = [(x-r, y-r, 2*r, 2*r)]
+#        
+#        indic = tache.indicateurs[s]
+#        dangle = 2*pi/len(indic)
+#        for a, i in enumerate(indic):
+##            ctx.move_to (x, y)
+##            ctx.rel_line_to (r*cos(dangle*a)+pi/2, r*sin(dangle*a)+pi/2)
+#
+#            if i:
+#                ctx.set_source_rgba (0,0,0,1)
+#            else:
+#                ctx.set_source_rgba (1,1,1,1)
+#            ctx.arc(x+r*cos(-dangle*a-pi/2)/2, y+r*sin(-dangle*a-pi/2)/2, r/4, 0, 2*pi)
+#            ctx.fill()
+#            ctx.stroke()
         
-
+        
 #####################################################################################  
 def DrawCroisementsElevesTaches(ctx, tache, x, y):
 
     #
     # Les lignes horizontales
     #
-    DrawLigne(ctx, x, y)
+    DrawLigne(ctx, x, y, tache.phase in ["R1", "R2", "S"])
         
     #
     # Croisements Tâche/Eleves
     #
-    r = 0.008
-    for i in tache.eleves:
+    r = 0.006
+    if tache.phase in ["R1", "R2", "S"]:
+        lstElv = range(len(tache.parent.eleves))
+    else:
+        lstElv = tache.eleves
+    for i in lstElv:
         _x = xEleves[i]
         boule(ctx, _x, y, r, 
               constantes.COUL_ELEVES[i][0], constantes.COUL_ELEVES[i][1],
@@ -1131,13 +1158,44 @@ def DrawCroisementsElevesTaches(ctx, tache, x, y):
 def DrawCroisementsElevesCompetences(ctx, eleve, y):
 #        if self.typeSeance in ["AP", "ED", "P"]:
 #            and not (self.EstSousSeance() and self.parent.typeSeance == "S"):
+    
+    comp, indic = eleve.GetCompetencesEtIndicateurs()
+    DrawBoutonCompetence(ctx, eleve, comp, indic, y)
+    
+#    r = wColComp/3
+#    ns = eleve.GetCompetences()
+#    ctx.set_line_width(0.001)
+#    for s in ns:
+#        x = xComp[s]
+#        ctx.arc(x, y, r, 0, 2*pi)
+#        if estCompetenceRevue(eleve.parent.classe.typeEnseignement, s):
+##        if len(constantes.dicCompetences_prj_simple[eleve.parent.classe.typeEnseignement][s]) > 2:
+#            ctx.set_source_rgba (ICoulCompS[0],ICoulCompS[1],ICoulCompS[2],1.0)
+#        else:
+#            ctx.set_source_rgba (ICoulCompR[0],ICoulCompR[1],ICoulCompR[2],1.0)
+#        ctx.fill_preserve ()
+#        ctx.set_source_rgba (0,0,0,1)
+#        ctx.stroke ()
+#        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+#                              cairo.FONT_WEIGHT_BOLD)
+##        show_text_rect(ctx, str(n), (x-r, y-r, 2*r, 2*r))
+##        tache.rect.append((x-r, y-r, 2*r, 2*r)) 
+#        if s in eleve.parent.rectComp.keys():
+#            eleve.parent.rectComp[s].append((x-r, y-r, 2*r, 2*r))
+#        else:
+#            eleve.parent.rectComp[s] = [(x-r, y-r, 2*r, 2*r)]
+#        
+#        eleve.pts_caract.append((x,y))
+            
+######################################################################################  
+def DrawBoutonCompetence(ctx, objet, listComp, dicIndic, y):
     r = wColComp/3
-    ns = eleve.GetCompetences()
-    ctx.set_line_width(0.001)
-    for s in ns:
+    ctx.set_line_width (0.001)
+    for s in listComp:
         x = xComp[s]
         ctx.arc(x, y, r, 0, 2*pi)
-        if len(constantes.dicCompetences_prj_simple[eleve.parent.classe.typeEnseignement][s]) > 2:
+        if estCompetenceRevue(objet.parent.classe.typeEnseignement, s):
+#        if len(constantes.dicCompetences_prj_simple[tache.parent.classe.typeEnseignement][s]) > 2:
             ctx.set_source_rgba (ICoulCompS[0],ICoulCompS[1],ICoulCompS[2],1.0)
         else:
             ctx.set_source_rgba (ICoulCompR[0],ICoulCompR[1],ICoulCompR[2],1.0)
@@ -1146,13 +1204,27 @@ def DrawCroisementsElevesCompetences(ctx, eleve, y):
         ctx.stroke ()
         ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                               cairo.FONT_WEIGHT_BOLD)
-#        show_text_rect(ctx, str(n), (x-r, y-r, 2*r, 2*r))
-#        tache.rect.append((x-r, y-r, 2*r, 2*r)) 
-        if s in eleve.parent.rectComp.keys():
-            eleve.parent.rectComp[s].append((x-r, y-r, 2*r, 2*r))
+        if s in objet.parent.rectComp.keys() and objet.parent.rectComp[s] != None:
+            objet.parent.rectComp[s].append((x-r, y-r, 2*r, 2*r))
         else:
-            eleve.parent.rectComp[s] = [(x-r, y-r, 2*r, 2*r)]
+            objet.parent.rectComp[s] = [(x-r, y-r, 2*r, 2*r)]
         
-        eleve.pts_caract.append((x,y))
-            
+        objet.pts_caract.append((x,y))
+        
+        if objet.GetTypeEnseignement() != "SSI":
+            indic = dicIndic[s]
+            dangle = 2*pi/len(indic)
+            for a, i in enumerate(indic):
+    #            ctx.move_to (x, y)
+    #            ctx.rel_line_to (r*cos(dangle*a)+pi/2, r*sin(dangle*a)+pi/2)
+    
+                if i:
+                    ctx.set_source_rgba (0,0,0,1)
+                else:
+                    ctx.set_source_rgba (1,1,1,1)
+                ctx.arc(x+r*cos(-dangle*a-pi/2)/2, y+r*sin(-dangle*a-pi/2)/2, r/4, 0, 2*pi)
+                ctx.fill()
+                ctx.stroke()
 
+        else:
+            show_text_rect_fix(ctx, str(dicIndic[s]), x-r, y-r, 2*r, 2*r, 0.006, 1, va = 'c', ha = 'c')

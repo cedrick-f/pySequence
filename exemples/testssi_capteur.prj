@@ -1,0 +1,37 @@
+<Projet_Classe>
+  <Projet Intitule="Intitulé du projet" Position="5" Problematique="Réaliser un capteur de couple capable de mesurer des couples de 0 à 3 Nm, adaptable sur n&apos;importe quel type d&apos;arbre (jusqu&apos;à 13 mm de diamètre). Mesure de couple statique. Affichage digital.">
+    <Equipe>
+      <Prof Discipline="Tec" Id="0" Nom="faury" Prenom="cédrick" Referent="True" />
+    </Equipe>
+    <Support Lien="" Nom="Capteur de couple numérique" TypeLien="" />
+    <Taches>
+      <Tache1 Duree="2.0" Intitule="Etude détaillée du CdCF" IntituleDansDeroul="True" Phase="Ana">
+        <Eleves Eleve0="0" Eleve1="1" Eleve2="2" />
+        <Competences Comp0="D1.1" />
+        <PoidsIndicateurs Poids0="0" />
+      </Tache1>
+      <Tache2 Duree="4.0" Intitule="Recherche de documentation sur la mesure par jauges d&apos;extensométrie." IntituleDansDeroul="True" Phase="Ana">
+        <Eleves Eleve0="0" Eleve1="1" Eleve2="2" />
+        <Competences Comp0="D1.3" Comp1="D1.2" Comp2="D1.1" Comp3="D1.4" Comp4="B3.1" />
+        <PoidsIndicateurs Poids0="0" Poids1="0" Poids2="0" Poids3="0" Poids4="20" />
+      </Tache2>
+      <Tache3 Duree="0.5" Intitule="Revue de projet n°1" IntituleDansDeroul="True" Phase="R1">
+        <Eleves />
+      </Tache3>
+      <Tache4 Duree="0.5" Intitule="Revue de projet n°2" IntituleDansDeroul="True" Phase="R2">
+        <Eleves />
+      </Tache4>
+      <Tache5 Duree="0.5" Intitule="Soutenance finale" IntituleDansDeroul="True" Phase="S">
+        <Eleves />
+      </Tache5>
+    </Taches>
+    <Eleves>
+      <Eleve Id="0" Nom="" Prenom="" />
+      <Eleve Id="1" Nom="" Prenom="" />
+      <Eleve Id="2" Nom="" Prenom="" />
+    </Eleves>
+  </Projet>
+  <Classe Type="SSI">
+    <Effectifs eC="32" nE="4" nG="2" nP="8" />
+  </Classe>
+</Projet_Classe>
