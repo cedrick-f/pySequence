@@ -3596,7 +3596,7 @@ class Tache(Objet_sequence):
                         self.indicateurs[c] = brancheInd.get("Poids"+str(i))
                     else:
                         indic = brancheInd.get("Indic"+str(i))
-                        if indic != []:
+                        if indic != None:
                             self.indicateurs[c] = toList(indic)
                         else:
                             self.indicateurs[c] = [True]*len(constantes.dicIndicateurs[self.GetTypeEnseignement()][c])
@@ -9532,10 +9532,10 @@ class ArbreCompetencesPrj(ArbreCompetences):
             c.SetBackgroundColour("pink")
             c.Refresh()
             return
-        self.tache.indicateurs[k] = s
+        self.pptache.tache.indicateurs[k] = s
 #        constantes.dicCompetences_prj_simple[self.type_ens][k][1] = s
 #        self.parent.GetDocument().MiseAJourPoidsCompetences(k)
-        self.parent.sendEvent()
+        self.pptache.sendEvent()
 
 
 #    def OnSize2(self, evt):

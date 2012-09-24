@@ -8,7 +8,7 @@
       <Tache1 Duree="2.0" Intitule="Etude détaillée du CdCF" IntituleDansDeroul="True" Phase="Ana">
         <Eleves Eleve0="0" Eleve1="1" Eleve2="2" />
         <Competences Comp0="D1.1" />
-        <PoidsIndicateurs Poids0="0" />
+        <PoidsIndicateurs Poids0="7" />
       </Tache1>
       <Tache2 Duree="4.0" Intitule="Recherche de documentation sur la mesure par jauges d&apos;extensométrie." IntituleDansDeroul="True" Phase="Ana">
         <Eleves Eleve0="0" Eleve1="1" Eleve2="2" />
