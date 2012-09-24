@@ -4224,7 +4224,9 @@ class Personne(Objet_sequence):
     def getBranche(self):
         """ Renvoie la branche XML de la compétence pour enregistrement
         """
-        root = ET.Element(supprime_accent(self.titre).capitalize())
+        root = ET.Element(toDefautEncoding(supprime_accent(self.titre).capitalize()))
+        print supprime_accent(self.titre).capitalize()
+        
         root.set("Id", str(self.id))
         root.set("Nom", self.nom)
         root.set("Prenom", self.prenom)
@@ -5884,9 +5886,9 @@ class FicheProjet(BaseFiche):
                     self.popup.SetTexte(textwrap.fill(competence[0], 50), self.tip_comp)
                 
                 if len(competence) > 2 :
-                    t = u"Revues"
-                else:
                     t = u"Soutenance"
+                else:
+                    t = u"Revue"
                 self.popup.SetTexte(t, self.tip_eval)
                 self.popup.Position((x,y), (0,0))
                 self.call = wx.CallLater(500, self.popup.Show, True)
