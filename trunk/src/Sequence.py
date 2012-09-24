@@ -3504,7 +3504,7 @@ class Tache(Objet_sequence):
         typeEns = self.GetTypeEnseignement()
         if typeEns == "SSI":
             indicateurs = constantes.dicCompetences_prj_simple[typeEns]
-            self.indicateurs = dict(zip(indicateurs.keys(), indicateurs.values()[1]))
+            self.indicateurs = dict(zip(indicateurs.keys(), [x[1] for x in indicateurs.values()]))
         else:
             indicateurs = constantes.dicIndicateurs[typeEns]
             self.indicateurs = dict(zip(indicateurs.keys(), [[]]*len(indicateurs)))
@@ -3560,7 +3560,7 @@ class Tache(Objet_sequence):
         
     ######################################################################################  
     def setBranche(self, branche):
-#        print "setBranche", self
+        print "setBranche", self
         self.ordre = eval(branche.tag[5:])
         
         self.intitule  = branche.get("Intitule", "")
@@ -3582,12 +3582,14 @@ class Tache(Objet_sequence):
             self.competences = []
             for i, e in enumerate(brancheCmp.keys()):
                 self.competences.append(brancheCmp.get("Comp"+str(i)))
+            print "   ", self.competences
             
             if self.GetTypeEnseignement() == "SSI":
                 brancheInd = branche.find("PoidsIndicateurs")
             else:
                 brancheInd = branche.find("Indicateurs")
             self.initIndicateurs()
+            
             if brancheInd != None:
                 for i, c in enumerate(self.competences):#brancheInd.keys()):
                     if self.GetTypeEnseignement() == "SSI":
@@ -3598,7 +3600,7 @@ class Tache(Objet_sequence):
                             self.indicateurs[c] = toList(indic)
                         else:
                             self.indicateurs[c] = [True]*len(constantes.dicIndicateurs[self.GetTypeEnseignement()][c])
-                
+            print "   ", self.phase, self.indicateurs
             
         self.intituleDansDeroul = eval(branche.get("IntituleDansDeroul", "True"))
         
@@ -5595,10 +5597,10 @@ class FenetreProjet(FenetreDocument):
         self.projet.SetLiens()
         self.projet.MiseAJourDureeEleves()
         self.projet.MiseAJourNomProfs()
+#        print "1", self.projet.taches[0].indicateurs
         self.projet.VerrouillerClasse()
 
 #        self.arbre.SelectItem(self.classe.branche)
-
 
         self.arbre.Layout()
         self.arbre.ExpandAll()
@@ -7864,11 +7866,14 @@ class PanelPropriete_Tache(PanelProprieteBook, PanelPropriete):
             #
             PanelProprieteBook.__init__(self, parent)
             pageGen = PanelPropriete(self)
-      
             bg_color = self.Parent.GetBackgroundColour()
             pageGen.SetBackgroundColour(bg_color)
             self.pageGen = pageGen
+            self.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
         else:
+            #
+            # Pas de book pour les revues et soutenance
+            #
             PanelPropriete.__init__(self, parent)
             pageGen = self
             self.pageGen = pageGen
@@ -7992,14 +7997,12 @@ class PanelPropriete_Tache(PanelProprieteBook, PanelPropriete):
                     self.ibox = ibox
                     self.ibsizer.Layout()
                 else:
-                    for c in constantes.dicCompetences_prj_simple["SSI"].keys():
-                        self.MiseAJourIndicateurs(c)
+                    self.MiseAJourPoids()
                 
             pageCom.SetSizer(pageComsizer)
             self.AddPage(pageCom, u"Compétences à mobiliser") 
             pageComsizer.Layout() 
             self.pageComsizer = pageComsizer
-        
         
         #
         # Mise en place
@@ -8010,6 +8013,18 @@ class PanelPropriete_Tache(PanelProprieteBook, PanelPropriete):
         self.Show()
 #        wx.CallAfter(self.Layout)
         
+    
+    ####################################################################################
+    def OnPageChanged(self, event):
+        sel = self.GetSelection()
+        self.MiseAJourPoids()
+        event.Skip()
+        
+    ####################################################################################
+    def MiseAJourPoids(self):
+        for c in self.tache.indicateurs.keys():
+            self.MiseAJourIndicateurs(c)
+            
     ####################################################################################
     def OnSelChanged(self, event):
         item = event.GetItem() 
@@ -8018,6 +8033,7 @@ class PanelPropriete_Tache(PanelProprieteBook, PanelPropriete):
         
     #############################################################################            
     def MiseAJourIndicateurs(self, competence):
+#        print "MiseAJourIndicateurs"
         self.Freeze()
         if self.tache.GetTypeEnseignement() != "SSI":
             indicateurs = constantes.dicIndicateurs[self.tache.GetTypeEnseignement()]
@@ -8049,6 +8065,7 @@ class PanelPropriete_Tache(PanelProprieteBook, PanelPropriete):
             self.pageComsizer.Layout()
         
         else:
+#            print self.tache, self.tache.indicateurs
             if competence in self.tache.indicateurs.keys():
                 self.arbre.MiseAJour(competence, self.tache.indicateurs[competence])
             else:
