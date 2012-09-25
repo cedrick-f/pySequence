@@ -401,7 +401,7 @@ class ElementDeSequence():
         if hasattr(self, 'tip_titrelien'):
             self.tip.SetLien(self.lien, self.tip_titrelien, self.tip_ctrllien)
             
-        print "&"
+#        print "&"
         if hasattr(self, 'panelPropriete'): 
             self.panelPropriete.MiseAJourLien()
         
@@ -495,7 +495,7 @@ class LienSequence():
      
     ######################################################################################  
     def HitTest(self, x, y):
-        if hasattr(self, 'rect') and dansRectangle(x, y, self.rect):
+        if hasattr(self, 'rect') and dansRectangle(x, y, self.rect)[0]:
             return self.branche
 
 
@@ -591,6 +591,15 @@ class Objet_sequence():
     ######################################################################################  
     def GetTypeEnseignement(self):
         return self.parent.classe.typeEnseignement
+        
+    ######################################################################################  
+    def HitTest(self, x, y):
+        if hasattr(self, 'rect') and dansRectangle(x, y, self.rect)[0]:
+            return self.branche
+        
+        
+        
+        
         
         
         
@@ -1311,7 +1320,7 @@ class Sequence(BaseDoc):
         if self.CI.HitTest(x, y):
             return self.CI.HitTest(x, y)
 
-        elif dansRectangle(x, y, (draw_cairo_seq.posPre + draw_cairo_seq.taillePre,)):
+        elif dansRectangle(x, y, (draw_cairo_seq.posPre + draw_cairo_seq.taillePre,))[0]:
             for ls in self.prerequisSeance:
                 h = ls.HitTest(x,y)
                 if h != None:
@@ -1333,7 +1342,7 @@ class Sequence(BaseDoc):
                 i += 1
             
             if branche == None:
-                if hasattr(self, 'rect') and dansRectangle(x, y, self.rect):
+                if hasattr(self, 'rect') and dansRectangle(x, y, self.rect)[0]:
                     return self.branche
                 
             return branche
@@ -1342,7 +1351,7 @@ class Sequence(BaseDoc):
     def HitTestPosition(self, x, y):
         if hasattr(self, 'rectPos'):
             for i, rectPos in enumerate(self.rectPos):
-                if dansRectangle(x, y, (rectPos,)):
+                if dansRectangle(x, y, (rectPos,))[0]:
                     return i
                     
                                     
@@ -2228,7 +2237,7 @@ class Projet(BaseDoc, Objet_sequence):
             i += 1
         
         if branche == None:
-            if hasattr(self, 'rect') and dansRectangle(x, y, self.rect):
+            if hasattr(self, 'rect') and dansRectangle(x, y, self.rect)[0]:
                 return self.branche
 
         return branche
@@ -2236,15 +2245,18 @@ class Projet(BaseDoc, Objet_sequence):
     ######################################################################################  
     def HitTestCompetence(self, x, y):
         if hasattr(self, 'rectComp'):
-            for k, rect in self.rectComp.items():
-                if dansRectangle(x, y, rect):
-                    return k
+            for k, ro in self.rectComp.items():
+                rect = [r[:-1] for r in ro]
+                obj = [o[-1] for o in ro]
+                ok, i = dansRectangle(x, y, rect)
+                if ok:
+                    return k, obj[i]
     
     ######################################################################################  
     def HitTestPosition(self, x, y):
         if hasattr(self, 'rectPos'):
             for i, rectPos in enumerate(self.rectPos):
-                if dansRectangle(x, y, (rectPos,)):
+                if dansRectangle(x, y, (rectPos,))[0]:
                     return i
                     
                                     
@@ -2269,7 +2281,7 @@ class Projet(BaseDoc, Objet_sequence):
         
     #############################################################################
     def SetCompetencesRevuesSoutenance(self):
-        print "SetCompetencesRevuesSoutenance"
+#        print "SetCompetencesRevuesSoutenance"
         competences = []
         indicateurs = {}
 #        tachesPrecR = []
@@ -2452,10 +2464,10 @@ class CentreInteret(Objet_sequence):
         
 
         
-    #############################################################################
-    def HitTest(self, x, y):
-        if hasattr(self, 'rect') and dansRectangle(x, y, self.rect):
-            return self.branche
+#    #############################################################################
+#    def HitTest(self, x, y):
+#        if hasattr(self, 'rect') and dansRectangle(x, y, self.rect)[0]:
+#            return self.branche
 #        rect = draw_cairo.posCI + draw_cairo.tailleCI
 #        if dansRectangle(x, y, (rect,)):
 ##            self.arbre.DoSelectItem(self.branche)
@@ -2536,10 +2548,10 @@ class Competences(Objet_sequence):
 #    def SetCode(self):
 #        self.codeBranche.SetLabel(self.code)
     
-    #############################################################################
-    def HitTest(self, x, y):
-        if hasattr(self, 'rect') and dansRectangle(x, y, self.rect):
-            return self.branche
+#    #############################################################################
+#    def HitTest(self, x, y):
+#        if hasattr(self, 'rect') and dansRectangle(x, y, self.rect)[0]:
+#            return self.branche
 
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
@@ -2614,10 +2626,10 @@ class Savoirs(Objet_sequence):
                                         image = self.arbre.images["Sav"])
          
     
-    #############################################################################
-    def HitTest(self, x, y):
-        if hasattr(self, 'rect') and dansRectangle(x, y, self.rect):
-            return self.branche
+#    #############################################################################
+#    def HitTest(self, x, y):
+#        if hasattr(self, 'rect') and dansRectangle(x, y, self.rect)[0]:
+#            return self.branche
         
         
     #############################################################################
@@ -3380,7 +3392,7 @@ class Seance(ElementDeSequence, Objet_sequence):
         
     ######################################################################################  
     def HitTest(self, x, y):
-        if hasattr(self, 'rect') and dansRectangle(x, y, self.rect):
+        if hasattr(self, 'rect') and dansRectangle(x, y, self.rect)[0]:
 #            self.arbre.DoSelectItem(self.branche)
             return self.branche
         
@@ -3560,7 +3572,7 @@ class Tache(Objet_sequence):
         
     ######################################################################################  
     def setBranche(self, branche):
-        print "setBranche", self
+#        print "setBranche", self
         self.ordre = eval(branche.tag[5:])
         
         self.intitule  = branche.get("Intitule", "")
@@ -3582,7 +3594,7 @@ class Tache(Objet_sequence):
             self.competences = []
             for i, e in enumerate(brancheCmp.keys()):
                 self.competences.append(brancheCmp.get("Comp"+str(i)))
-            print "   ", self.competences
+#            print "   ", self.competences
             
             if self.GetTypeEnseignement() == "SSI":
                 brancheInd = branche.find("PoidsIndicateurs")
@@ -3600,7 +3612,7 @@ class Tache(Objet_sequence):
                             self.indicateurs[c] = toList(indic)
                         else:
                             self.indicateurs[c] = [True]*len(constantes.dicIndicateurs[self.GetTypeEnseignement()][c])
-            print "   ", self.phase, self.indicateurs
+#            print "   ", self.phase, self.indicateurs
             
         self.intituleDansDeroul = eval(branche.get("IntituleDansDeroul", "True"))
         
@@ -3850,11 +3862,11 @@ class Tache(Objet_sequence):
         
         
         
-    ######################################################################################  
-    def HitTest(self, x, y):
-        if hasattr(self, 'rect') and dansRectangle(x, y, self.rect):
-#            self.arbre.DoSelectItem(self.branche)
-            return self.branche
+#    ######################################################################################  
+#    def HitTest(self, x, y):
+#        if hasattr(self, 'rect') and dansRectangle(x, y, self.rect)[0]:
+##            self.arbre.DoSelectItem(self.branche)
+#            return self.branche
         
         
         
@@ -3874,7 +3886,7 @@ class Tache(Objet_sequence):
 #   Classe définissant les propriétés d'un système
 #
 ####################################################################################
-class Systeme(ElementDeSequence):
+class Systeme(ElementDeSequence, Objet_sequence):
     def __init__(self, parent, panelParent, nom = u""):
         
         ElementDeSequence.__init__(self)
@@ -3987,11 +3999,11 @@ class Systeme(ElementDeSequence):
                                                     [u"Créer un lien", self.CreerLien]])
             
             
-    ######################################################################################  
-    def HitTest(self, x, y):
-        if hasattr(self, 'rect') and dansRectangle(x, y, self.rect):
-#            self.arbre.DoSelectItem(self.branche)
-            return self.branche
+#    ######################################################################################  
+#    def HitTest(self, x, y):
+#        if hasattr(self, 'rect') and dansRectangle(x, y, self.rect)[0]:
+##            self.arbre.DoSelectItem(self.branche)
+#            return self.branche
     
     
     
@@ -4179,11 +4191,11 @@ class Support(ElementDeSequence, Objet_sequence):
             self.parent.app.AfficherMenuContextuel([[u"Créer un lien", self.CreerLien]])
             
             
-    ######################################################################################  
-    def HitTest(self, x, y):
-        if hasattr(self, 'rect') and dansRectangle(x, y, self.rect):
-#            self.arbre.DoSelectItem(self.branche)
-            return self.branche
+#    ######################################################################################  
+#    def HitTest(self, x, y):
+#        if hasattr(self, 'rect') and dansRectangle(x, y, self.rect)[0]:
+##            self.arbre.DoSelectItem(self.branche)
+#            return self.branche
     
     
     
@@ -4354,7 +4366,7 @@ def supprime_accent(ligne):
 #   Classe définissant les propriétés d'un élève
 #
 ####################################################################################
-class Eleve(Personne):
+class Eleve(Personne, Objet_sequence):
     def __init__(self, parent, panelParent, id = 0):
         
         self.titre = u"élève"
@@ -4488,11 +4500,11 @@ class Eleve(Personne):
             self.parent.app.AfficherMenuContextuel([[u"Supprimer", functools.partial(self.parent.SupprimerEleve, item = itemArbre)]]
                                                     )
             
-    ######################################################################################  
-    def HitTest(self, x, y):
-        if hasattr(self, 'rect'):
-            if dansRectangle(x, y, self.rect):
-                return self.branche
+#    ######################################################################################  
+#    def HitTest(self, x, y):
+#        if hasattr(self, 'rect'):
+#            if dansRectangle(x, y, self.rect)[0]:
+#                return self.branche
 #            for r in self.rect:
 #                if dansRectangle(x, y, r):
 #                    return self.branche
@@ -5823,29 +5835,31 @@ class FicheProjet(BaseFiche):
         self.lab_indic = popup.CreerTexte((2,0), txt = u"Indicateur :", flag = wx.ALIGN_RIGHT|wx.RIGHT)
         self.lab_indic.SetFont(wx.Font(9, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.NORMAL, underline = True))
         self.lab_indic.SetForegroundColour("FIREBRICK")
-        self.tip_indic = popup.CreerTexte((2,1), flag = wx.ALIGN_LEFT|wx.LEFT)
-        self.tip_indic.SetFont(wx.Font(9, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.NORMAL))
-        self.tip_indic.SetForegroundColour("FIREBRICK")
-        self.MiseAJourTypeEnseignement(self.projet.classe.typeEnseignement)
+        self.tip_indic = []
+#        self.tip_indic = popup.CreerTexte((2,1), flag = wx.ALIGN_LEFT|wx.LEFT)
+#        self.tip_indic.SetFont(wx.Font(9, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.NORMAL))
+#        self.tip_indic.SetForegroundColour("FIREBRICK")
         
-        p = popup.CreerTexte((3,0), txt = u"Poids :", flag = wx.ALIGN_RIGHT|wx.RIGHT)
-        p.SetFont(wx.Font(9, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.NORMAL, underline = True))
+        
+        self.lab_poids = popup.CreerTexte((3,0), txt = u"Poids :", flag = wx.ALIGN_RIGHT|wx.RIGHT)
+        self.lab_poids.SetFont(wx.Font(9, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.NORMAL, underline = True))
         
         self.tip_poids = popup.CreerTexte((3,1), flag = wx.ALIGN_LEFT|wx.LEFT)
         self.tip_poids.SetFont(wx.Font(9, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.NORMAL))
         
-        e = popup.CreerTexte((4,0), txt = u"Evaluation :", flag = wx.ALIGN_RIGHT|wx.LEFT|wx.TOP|wx.RIGHT)
-        e.SetFont(wx.Font(9, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.NORMAL, underline = True))
+        self.lab_eval = popup.CreerTexte((4,0), txt = u"Evaluation :", flag = wx.ALIGN_RIGHT|wx.LEFT|wx.TOP|wx.RIGHT)
+        self.lab_eval.SetFont(wx.Font(9, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.NORMAL, underline = True))
         
         self.tip_eval = popup.CreerTexte((4,1), flag = wx.ALIGN_LEFT|wx.BOTTOM|wx.TOP|wx.LEFT)
         self.tip_eval.SetFont(wx.Font(9, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.NORMAL))
         
         self.popup = popup
-        
+        self.MiseAJourTypeEnseignement(self.projet.classe.typeEnseignement)
         
             
     ######################################################################################################
     def OnMove(self, evt):
+        
         if hasattr(self, 'tip'):
             self.tip.Show(False)
             self.call.Stop()
@@ -5865,26 +5879,61 @@ class FicheProjet(BaseFiche):
                 evt.Skip()
                 return    
         
-        kComp = self.projet.HitTestCompetence(xx, yy)
-        if kComp != None:
+        kCompObj = self.projet.HitTestCompetence(xx, yy)
+        if kCompObj != None:
+#            print "OnMove"
+            kComp, obj = kCompObj
+#            print kComp, type(obj)
             if hasattr(self, 'popup'):
+                for tip in self.tip_indic:
+                    tip.Destroy()
+                self.tip_indic = []
                 x, y = self.ClientToScreen((x, y))
+                type_ens = self.projet.classe.typeEnseignement
+                competence = constantes.dicCompetences_prj_simple[type_ens][kComp]
                 
-                competence = constantes.dicCompetences_prj_simple[self.projet.classe.typeEnseignement][kComp]
-
-                self.popup.SetTexte(str(competence[1]), self.tip_poids)
+                if isinstance(obj, Tache):
+                    indicTache = obj.indicateurs[kComp]
+                else:
+                    if type_ens == "SSI":
+                        indicTache = competence[1]
+                    else:
+                        indicTache = [True]*7
                 
-                self.MiseAJourTypeEnseignement(self.projet.classe.typeEnseignement)
-                if self.projet.classe.typeEnseignement == "SSI":
+                self.MiseAJourTypeEnseignement(type_ens)
+                if type_ens == "SSI":
                     code = kComp.split('.')[0]
                     comp = constantes.dicCompetencesSSI_prj[code][0]
                     self.popup.SetTitre(u"Compétence "+code)
-                    self.popup.SetTexte(textwrap.fill(competence[0], 50), self.tip_indic)
+                    self.tip_indic.append(self.popup.CreerTexte((2,1), flag = wx.ALIGN_LEFT|wx.LEFT))
+                    self.tip_indic[0].SetFont(wx.Font(9, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.NORMAL))
+                    self.tip_indic[0].SetForegroundColour("FIREBRICK")
+                    self.popup.SetTexte(textwrap.fill(competence[0], 50), self.tip_indic[0])
+                    self.popup.SetTexte(str(indicTache), self.tip_poids)
                     self.popup.SetTexte(textwrap.fill(comp, 50), self.tip_comp)
+                    self.popup.DeplacerItem(self.lab_poids, (3, 0))
+                    self.popup.DeplacerItem(self.tip_poids, (3, 1))
+                    self.popup.DeplacerItem(self.lab_eval, (4, 0))
+                    self.popup.DeplacerItem(self.tip_eval, (4, 1))
                 else:
+                    indicateurs = constantes.dicIndicateurs[type_ens][kComp]
                     self.popup.SetTitre(u"Compétence "+kComp)
+                    self.popup.DeplacerItem(self.lab_poids, (3+len(indicateurs)-1, 0))
+                    self.popup.DeplacerItem(self.tip_poids, (3+len(indicateurs)-1, 1))
+                    self.popup.DeplacerItem(self.lab_eval, (4+len(indicateurs)-1, 0))
+                    self.popup.DeplacerItem(self.tip_eval, (4+len(indicateurs)-1, 1))
+                    for i, indic in enumerate(indicateurs):
+                        if indicTache[i]:
+                            coul = "FIREBRICK"
+                        else:
+                            coul = "LIGHTGREY"
+                        self.tip_indic.append(self.popup.CreerTexte((2+i,1), flag = wx.ALIGN_LEFT|wx.LEFT))
+                        self.tip_indic[i].SetFont(wx.Font(9, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.NORMAL))
+                        self.tip_indic[i].SetForegroundColour(coul)
+
+                        self.popup.SetTexte(textwrap.fill(indic, 50), self.tip_indic[i])
                     self.popup.SetTexte(textwrap.fill(competence[0], 50), self.tip_comp)
-                
+                    
                 if len(competence) > 2 :
                     t = u"Soutenance"
                 else:
@@ -5899,8 +5948,12 @@ class FicheProjet(BaseFiche):
 
     #############################################################################
     def MiseAJourTypeEnseignement(self, type_ens):
-        self.lab_indic.Show(type_ens == "SSI")
-        self.tip_indic.Show(type_ens == "SSI")
+        texte = u"Indicateur"
+        if type_ens != "SSI":
+            texte += u"s"
+        self.popup.SetTexte(texte, self.lab_indic)
+        self.lab_poids.Show(type_ens == "SSI")
+        self.tip_poids.Show(type_ens == "SSI")
             
         
     #############################################################################            
@@ -8215,6 +8268,7 @@ class PanelPropriete_Tache(PanelProprieteBook, PanelPropriete):
     
     #############################################################################            
     def EvtTextIntitule(self, event):
+#        print "EvtTextIntitule"
         self.tache.SetIntitule(self.textctrl.GetValue())
         if not self.eventAttente:
             wx.CallLater(DELAY, self.sendEvent)
@@ -9557,7 +9611,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
             
             
     def MiseAJour(self, code = None, value = None):
-        print "MiseAJour arbre", code, value
+#        print "MiseAJour arbre", code, value
         if code == None:
             for k, v in constantes.dicCompetences_prj_simple[self.type_ens].items():
                 if k in self.poids_ctrl.keys():
@@ -9678,12 +9732,12 @@ def indent(elem, level=0):
 # Fonction pour vérifier si un point x, y est dans un rectangle (x0, y0, x1, y1)
 #
 def dansRectangle(x, y, rect):
-    """ Renvoie True si le point x, y est dans le rectangle rect(xr, yr, wr, hr)
+    """ Renvoie True si le point x, y est dans un des rectangles de la liste de rectangles r(xr, yr, wr, hr)
     """
-    for r in rect:
+    for i, r in enumerate(rect):
         if x > r[0] and y > r[1] and x < r[0] + r[2] and y < r[1] + r[3]:
-            return True
-    return False
+            return True, i
+    return False, 0
 
 
 
