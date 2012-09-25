@@ -230,7 +230,7 @@ dicIndicateursET = {"CO1.1" : [u"La justification des propriétés physico-chimi
                                     u"La relation Fonction/Coût/Besoin est justifiée",
                                     u"Le compromis technico-économique est justifié"
                                     ],
-                     "CO6.1" : [u"L'(les outil(s) de représentation est (sont) correctement utilisé(s) pour la description",
+                     "CO6.1" : [u"L'(les) outil(s) de représentation est (sont) correctement utilisé(s) pour la description",
                                     u"Les outils de représentation sont correctement décodés",
                                     u"La description est compréhensible"
                                     ],

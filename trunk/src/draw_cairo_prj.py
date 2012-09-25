@@ -988,9 +988,8 @@ def DrawTacheRacine(ctx, tache, y):
     
     
     #
-    # Flèche indiquant la durée
+    # Flèche verticale indiquant la durée de la tâche
     #
-#    h = hHoraire * tache.GetDureeGraph()
     h = calcH(tache.GetDuree())
     if not tache.phase in ["R1", "R2", "S", "Rev"]:
         fleche_verticale(ctx, posZTaches[0] - wDuree/2 - ecartX/4, y, 
@@ -1003,7 +1002,7 @@ def DrawTacheRacine(ctx, tache, y):
                        orient = 'v', b = 0.1)
     
     #
-    # Rectangles actifs et points caractéristiques
+    # Rectangles actifs et points caractéristiques : initialisation
     #
     tache.pts_caract = []
     tache.rect = []
@@ -1023,18 +1022,28 @@ def DrawTacheRacine(ctx, tache, y):
     rectangle_plein(ctx, x, y, tailleZTaches[0], h, 
                     BCoulTache[tache.phase], ICoulTache[tache.phase], 1)
     
+    
+    #
+    # Affichage du code de la tâche
+    #
     if hasattr(tache, 'code'):
         ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                               cairo.FONT_WEIGHT_BOLD)
         ctx.set_source_rgb (0,0,0)
-        hc = max(hTacheMini, 0.01)
+        
         if not tache.phase in ["R1", "R2", "S"]:
             t = tache.code
+            hc = max(hTacheMini/2, 0.01)
         else:
             t = tache.intitule
+            hc = h
         show_text_rect(ctx, t, (x, y, tailleZTaches[0], hc), ha = 'g', 
                        wrap = False, fontsizeMinMax = (minFont, -1), b = 0.2)
     
+    
+    #
+    # Affichage de l'intitulé de la tâche
+    #
     if tache.intituleDansDeroul and tache.intitule != "" and not tache.phase in ["R1", "R2", "S"]:
         ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
                               cairo.FONT_WEIGHT_NORMAL)
@@ -1057,7 +1066,6 @@ def DrawTacheRacine(ctx, tache, y):
     #
     # Tracé des croisements "Tâches" et "Eleves"
     #
-#    if tache.phase != "S":
     DrawCroisementsElevesTaches(ctx, tache, x + tailleZTaches[0], y + h/2)
     DrawCroisementsCompetencesTaches(ctx, tache, y + h/2)
     
@@ -1205,9 +1213,9 @@ def DrawBoutonCompetence(ctx, objet, listComp, dicIndic, y):
         ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                               cairo.FONT_WEIGHT_BOLD)
         if s in objet.parent.rectComp.keys() and objet.parent.rectComp[s] != None:
-            objet.parent.rectComp[s].append((x-r, y-r, 2*r, 2*r))
+            objet.parent.rectComp[s].append((x-r, y-r, 2*r, 2*r, objet))
         else:
-            objet.parent.rectComp[s] = [(x-r, y-r, 2*r, 2*r)]
+            objet.parent.rectComp[s] = [(x-r, y-r, 2*r, 2*r, objet)]
         
         objet.pts_caract.append((x,y))
         
