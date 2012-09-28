@@ -472,22 +472,22 @@ def findEffectif(lst, eff):
 CentresInterets = {'ET'     : CentresInterets_ET,
                    'ITEC'   : CentresInterets_ITEC, 
                    'AC'     : CentresInterets_AC, 
-                   'EE'     : CentresInteretsEE, 
-                   'SIN'    : CentresInteretsSIN,
+                   'EE'     : CentresInterets_EE, 
+                   'SIN'    : CentresInterets_SIN,
                    'SSI'    : CentresInterets_SSI}
 
 dicCompetences = {'ET'     : dicCompetences_ET,
                   'ITEC'   : dicCompetences_ITEC, 
                   'AC'     : dicCompetences_AC, 
-                  'EE'     : dicCompetencesEE, 
-                  'SIN'    : dicCompetencesSIN,
+                  'EE'     : dicCompetences_EE, 
+                  'SIN'    : dicCompetences_SIN,
                   'SSI'    : dicCompetences_SSI}
 
 dicSavoirs = {'ET'     : dicSavoirs_ET,
               'ITEC'   : dicSavoirs_ITEC, 
               'AC'     : dicSavoirs_AC, 
-              'EE'     : dicSavoirsEE, 
-              'SIN'    : dicSavoirsSIN,
+              'EE'     : dicSavoirs_EE, 
+              'SIN'    : dicSavoirs_SIN,
               'SSI'    : dicSavoirs_SSI}
 
 
@@ -513,9 +513,9 @@ def getCompetencesProjet(dic):
     return d
 
 dicCompetences_prj = {'ITEC'   : getCompetencesProjet(dicCompetences_ITEC), 
-#                      'AC'     : getCompetencesProjet(dicCompetencesAC), 
+                      'AC'     : getCompetencesProjet(dicCompetences_AC), 
 #                      'EE'     : getCompetencesProjet(dicCompetencesEE), 
-#                      'SIN'    : getCompetencesProjet(dicCompetencesSIN),
+                      'SIN'    : getCompetencesProjet(dicCompetences_SIN),
                       'SSI'    : dicCompetences_prj_SSI}
 
 def estCompetenceRevue(typeEns, codeComp):
@@ -545,7 +545,7 @@ for k,v in dicCompetences_prj.items():
 dicIndicateurs = {'ITEC'   : dicIndicateurs_prj_ITEC, 
                   'AC'     : dicIndicateurs_prj_AC, 
 #                  'EE'     : dicIndicateursEE, 
-#                  'SIN'    : dicIndicateursSIN, 
+                  'SIN'    : dicIndicateurs_prj_SIN, 
                   'SSI'    : dicIndicateurs_prj_SSI}
 
 for e, i in dicIndicateurs.items():
@@ -568,7 +568,7 @@ NRB_COEF_COMP_R = {'ITEC'   : 0, # Nombres de coef pour les compétences "Revue"
 dicPoidsIndicateurs = {'ITEC'   : dicPoidsIndicateurs_prj_ITEC, 
                        'AC'     : dicPoidsIndicateurs_prj_AC, 
     #                  'EE'     : dicPoidsIndicateursEE, 
-    #                  'SIN'    : dicPoidsIndicateursSIN, 
+                       'SIN'    : dicPoidsIndicateurs_prj_SIN, 
                        'SSI'    : dicPoidsIndicateurs_prj_SSI}
 
 for e, i in dicPoidsIndicateurs.items():
