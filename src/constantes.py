@@ -514,7 +514,7 @@ def getCompetencesProjet(dic):
 
 dicCompetences_prj = {'ITEC'   : getCompetencesProjet(dicCompetences_ITEC), 
                       'AC'     : getCompetencesProjet(dicCompetences_AC), 
-#                      'EE'     : getCompetencesProjet(dicCompetencesEE), 
+                      'EE'     : getCompetencesProjet(dicCompetences_EE), 
                       'SIN'    : getCompetencesProjet(dicCompetences_SIN),
                       'SSI'    : dicCompetences_prj_SSI}
 
@@ -544,7 +544,7 @@ for k,v in dicCompetences_prj.items():
 ######################################################################################
 dicIndicateurs = {'ITEC'   : dicIndicateurs_prj_ITEC, 
                   'AC'     : dicIndicateurs_prj_AC, 
-#                  'EE'     : dicIndicateursEE, 
+                  'EE'     : dicIndicateurs_prj_EE, 
                   'SIN'    : dicIndicateurs_prj_SIN, 
                   'SSI'    : dicIndicateurs_prj_SSI}
 
@@ -567,7 +567,7 @@ NRB_COEF_COMP_R = {'ITEC'   : 0, # Nombres de coef pour les compétences "Revue"
 
 dicPoidsIndicateurs = {'ITEC'   : dicPoidsIndicateurs_prj_ITEC, 
                        'AC'     : dicPoidsIndicateurs_prj_AC, 
-    #                  'EE'     : dicPoidsIndicateursEE, 
+                       'EE'     : dicPoidsIndicateurs_prj_EE, 
                        'SIN'    : dicPoidsIndicateurs_prj_SIN, 
                        'SSI'    : dicPoidsIndicateurs_prj_SSI}
 
