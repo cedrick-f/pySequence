@@ -619,6 +619,21 @@ def Draw(ctx, prj, mouchard = False):
         e.pts_caract = []
         l.append(e.GetNomPrenom())
     
+    
+    #
+    # Graduation
+    #
+    y = posZElevesH[1] + tailleZElevesH[1]
+    w = tailleZElevesH[0]
+    h = hEleves/2
+    for t, ha in [("0%", 'g'), ("50%", 'c'), ("100%", 'd')]:
+        show_text_rect(ctx, t, 
+                       (posZElevesH[0], y, w, h), ha = ha, b = 0.1,
+                       fontsizeMinMax = (-1, 0.016))
+    
+    #
+    # Barres
+    #
     if len(l) > 0:
         
         
@@ -638,32 +653,7 @@ def Draw(ctx, prj, mouchard = False):
             barreH(ctx, posZElevesH[0], y+2*hb, tailleZElevesH[0], s, hb, 
                    (1, 0, 0, 0.7), (0, 1, 0, 0.7), 
                    (ICoulCompS[0], ICoulCompS[1], ICoulCompS[2], 1))
-            
-            
-#            src = ctx.get_source()
-#            pat = cairo.LinearGradient (0.0, y,  0.0, y+hEleves/2)
-#            pat.add_color_stop_rgba (1, ICoulCompR[0], ICoulCompR[1], ICoulCompR[2], 0.5)
-#            if r > 0.5:
-#                pat.add_color_stop_rgba (0.5, 0, 1, 0, 0.2)
-#            else:
-#                pat.add_color_stop_rgba (0.5, 1, 0, 0, 0.2)
-#            pat.add_color_stop_rgba (0, ICoulCompR[0], ICoulCompR[1], ICoulCompR[2], 0.5)
-#            ctx.rectangle (posZElevesH[0],y,wr,hEleves/2)
-#            ctx.set_source (pat)
-#            ctx.fill ()
-#            pat = cairo.LinearGradient (0.0, y+hEleves/2,  0.0, y+hEleves)
-#            pat.add_color_stop_rgba (1, ICoulCompS[0], ICoulCompS[1], ICoulCompS[2], 0.5)
-#            if s > 0.5:
-#                pat.add_color_stop_rgba (0.5, 0, 1, 0, 0.2)
-#            else:
-#                pat.add_color_stop_rgba (0.5, 1, 0, 0, 0.2)
-#            pat.add_color_stop_rgba (0, ICoulCompS[0], ICoulCompS[1], ICoulCompS[2], 0.5)
-#            ctx.rectangle (posZElevesH[0],y+hEleves/2,ws,hEleves/2)
-#            ctx.set_source (pat)
-#            ctx.fill ()
-#            ctx.set_source(src)
-        
-        
+
         rec = tableauH(ctx, l, posZElevesH[0], posZElevesH[1], 
                      tailleZElevesH[0], 0, tailleZElevesH[1], 
                      va = 'c', ha = 'd', orient = 'h', coul = constantes.COUL_ELEVES)
@@ -1013,13 +1003,15 @@ def DrawTacheRacine(ctx, tache, y):
     #
     if not tache.phase in ["R1", "R2", "S", "Rev"]:
         x = posZTaches[0]
+        w = tailleZTaches[0]
     else:
         x = posZTaches[0] - wDuree/2 - ecartX/4
+        w = posZComp[0] + tailleZComp[0] + ecartX/4 - x
 
     tache.pts_caract.append((x, y))
         
     ctx.set_line_width(0.002)
-    rectangle_plein(ctx, x, y, tailleZTaches[0], h, 
+    rectangle_plein(ctx, x, y, w, h, 
                     BCoulTache[tache.phase], ICoulTache[tache.phase], 1)
     
     
@@ -1143,7 +1135,8 @@ def DrawCroisementsElevesTaches(ctx, tache, x, y):
     #
     # Les lignes horizontales
     #
-    DrawLigne(ctx, x, y, tache.phase in ["R1", "R2", "S"])
+    if not tache.phase in ["R1", "R2", "S"]:
+        DrawLigne(ctx, x, y)
         
     #
     # Croisements Tâche/Eleves

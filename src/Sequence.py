@@ -9824,7 +9824,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
             
             
     def MiseAJour(self, code = None, value = None):
-        print "MiseAJour arbre", code, value
+#        print "MiseAJour arbre", code, value
         if code == None:
             for k, v in constantes.dicCompetences_prj_simple[self.type_ens].items():
                 if k in self.poids_ctrl.keys():
