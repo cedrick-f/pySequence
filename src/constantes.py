@@ -471,21 +471,21 @@ def findEffectif(lst, eff):
 ####################################################################################
 CentresInterets = {'ET'     : CentresInterets_ET,
                    'ITEC'   : CentresInterets_ITEC, 
-                   'AC'     : CentresInteretsAC, 
+                   'AC'     : CentresInterets_AC, 
                    'EE'     : CentresInteretsEE, 
                    'SIN'    : CentresInteretsSIN,
                    'SSI'    : CentresInterets_SSI}
 
 dicCompetences = {'ET'     : dicCompetences_ET,
                   'ITEC'   : dicCompetences_ITEC, 
-                  'AC'     : dicCompetencesAC, 
+                  'AC'     : dicCompetences_AC, 
                   'EE'     : dicCompetencesEE, 
                   'SIN'    : dicCompetencesSIN,
                   'SSI'    : dicCompetences_SSI}
 
 dicSavoirs = {'ET'     : dicSavoirs_ET,
               'ITEC'   : dicSavoirs_ITEC, 
-              'AC'     : dicSavoirsAC, 
+              'AC'     : dicSavoirs_AC, 
               'EE'     : dicSavoirsEE, 
               'SIN'    : dicSavoirsSIN,
               'SSI'    : dicSavoirs_SSI}
@@ -543,7 +543,7 @@ for k,v in dicCompetences_prj.items():
 # 
 ######################################################################################
 dicIndicateurs = {'ITEC'   : dicIndicateurs_prj_ITEC, 
-#                  'AC'     : dicIndicateursAC, 
+                  'AC'     : dicIndicateurs_prj_AC, 
 #                  'EE'     : dicIndicateursEE, 
 #                  'SIN'    : dicIndicateursSIN, 
                   'SSI'    : dicIndicateurs_prj_SSI}
@@ -566,7 +566,7 @@ NRB_COEF_COMP_R = {'ITEC'   : 0, # Nombres de coef pour les compétences "Revue"
            
 
 dicPoidsIndicateurs = {'ITEC'   : dicPoidsIndicateurs_prj_ITEC, 
-    #                  'AC'     : dicPoidsIndicateursAC, 
+                       'AC'     : dicPoidsIndicateurs_prj_AC, 
     #                  'EE'     : dicPoidsIndicateursEE, 
     #                  'SIN'    : dicPoidsIndicateursSIN, 
                        'SSI'    : dicPoidsIndicateurs_prj_SSI}
