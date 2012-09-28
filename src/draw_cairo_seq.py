@@ -970,7 +970,8 @@ class Cadre():
             self.ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                   cairo.FONT_WEIGHT_BOLD)
             self.ctx.set_source_rgb (0,0,0)
-            hc = max(hHoraire/4, 0.01)
+#            hc = max(hHoraire/4, 0.01)
+            hc = max(ecartY/4, 0.01)
             show_text_rect(self.ctx, self.seance.code, (x, y, wEff["P"], hc), ha = 'g', 
                            wrap = False, fontsizeMinMax = (minFont, -1), b = 0.2)
         
