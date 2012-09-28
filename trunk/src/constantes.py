@@ -469,26 +469,26 @@ def findEffectif(lst, eff):
 #   Les constantes par Enseignement
 #
 ####################################################################################
-CentresInterets = {'ET'     : CentresInteretsET,
-                   'ITEC'   : CentresInteretsITEC, 
+CentresInterets = {'ET'     : CentresInterets_ET,
+                   'ITEC'   : CentresInterets_ITEC, 
                    'AC'     : CentresInteretsAC, 
                    'EE'     : CentresInteretsEE, 
                    'SIN'    : CentresInteretsSIN,
-                   'SSI'    : CentresInteretsSSI}
+                   'SSI'    : CentresInterets_SSI}
 
-dicCompetences = {'ET'     : dicCompetencesET,
-                  'ITEC'   : dicCompetencesITEC, 
+dicCompetences = {'ET'     : dicCompetences_ET,
+                  'ITEC'   : dicCompetences_ITEC, 
                   'AC'     : dicCompetencesAC, 
                   'EE'     : dicCompetencesEE, 
                   'SIN'    : dicCompetencesSIN,
-                  'SSI'    : dicCompetencesSSI}
+                  'SSI'    : dicCompetences_SSI}
 
-dicSavoirs = {'ET'     : dicSavoirsET,
-              'ITEC'   : dicSavoirsITEC, 
+dicSavoirs = {'ET'     : dicSavoirs_ET,
+              'ITEC'   : dicSavoirs_ITEC, 
               'AC'     : dicSavoirsAC, 
               'EE'     : dicSavoirsEE, 
               'SIN'    : dicSavoirsSIN,
-              'SSI'    : dicSavoirsSSI}
+              'SSI'    : dicSavoirs_SSI}
 
 
 ####################################################################################
@@ -501,21 +501,22 @@ def getCompetencesProjet(dic):
         = certaines compétences de l'ET
         + les compétences de l'enseignement de spécialité
     """
-    d = {"O1" : dicCompetencesET["O1"],
-         "O2" : dicCompetencesET["O2"],
-         "O6" : dicCompetencesET["O6"]
+    d = {"O1" : dicCompetences_ET["O1"],
+         "O2" : dicCompetences_ET["O2"],
+         "O6" : dicCompetences_ET["O6"]
          }
 
     d.update(dic)
-    
-    d["O8"][1]["CO8.es"] = [u"Justifier des éléments d'une simulation relative au comportement de tout ou partie d'un système et les écarts par rapport au réel", 5, True]
+    d.update({"O8s" : [u"Valider des solutions techniques",
+                       {"CO8.es" : u"Justifier des éléments d'une simulation relative au comportement de tout ou partie d'un système et les écarts par rapport au réel"}]})
+#    d["O8s"][1]["CO8.es"] = u"Justifier des éléments d'une simulation relative au comportement de tout ou partie d'un système et les écarts par rapport au réel"
     return d
 
-dicCompetences_prj = {'ITEC'   : getCompetencesProjet(dicCompetencesITEC), 
-                      'AC'     : getCompetencesProjet(dicCompetencesAC), 
-                      'EE'     : getCompetencesProjet(dicCompetencesEE), 
-                      'SIN'    : getCompetencesProjet(dicCompetencesSIN),
-                      'SSI'    : dicCompetencesSSI_prj}
+dicCompetences_prj = {'ITEC'   : getCompetencesProjet(dicCompetences_ITEC), 
+#                      'AC'     : getCompetencesProjet(dicCompetencesAC), 
+#                      'EE'     : getCompetencesProjet(dicCompetencesEE), 
+#                      'SIN'    : getCompetencesProjet(dicCompetencesSIN),
+                      'SSI'    : dicCompetences_prj_SSI}
 
 def estCompetenceRevue(typeEns, codeComp):
     return len(dicCompetences_prj_simple[typeEns][codeComp]) <= 2
@@ -541,13 +542,15 @@ for k,v in dicCompetences_prj.items():
 #        (pour les projets)
 # 
 ######################################################################################
-dicIndicateurs = {'ITEC'   : dicIndicateursITEC, 
-                  'AC'     : dicIndicateursAC, 
-                  'EE'     : dicIndicateursEE, 
-                  'SIN'    : dicIndicateursSIN}
+dicIndicateurs = {'ITEC'   : dicIndicateurs_prj_ITEC, 
+#                  'AC'     : dicIndicateursAC, 
+#                  'EE'     : dicIndicateursEE, 
+#                  'SIN'    : dicIndicateursSIN, 
+                  'SSI'    : dicIndicateurs_prj_SSI}
 
 for e, i in dicIndicateurs.items():
-    i.update(dicIndicateursET)
+    if e != "SSI":
+        i.update(dicIndicateurs_prj_ET)
 
 NRB_COEF_COMP_S = {'ITEC'   : 0, # Nombres de coef pour les compétences "Soutenance"
                    'AC'     : 0, 
@@ -561,6 +564,53 @@ NRB_COEF_COMP_R = {'ITEC'   : 0, # Nombres de coef pour les compétences "Revue"
                    'SIN'    : 0,
                    'SSI'    : 0}     
            
+
+dicPoidsIndicateurs = {'ITEC'   : dicPoidsIndicateurs_prj_ITEC, 
+    #                  'AC'     : dicPoidsIndicateursAC, 
+    #                  'EE'     : dicPoidsIndicateursEE, 
+    #                  'SIN'    : dicPoidsIndicateursSIN, 
+                       'SSI'    : dicPoidsIndicateurs_prj_SSI}
+
+for e, i in dicPoidsIndicateurs.items():
+    if e != "SSI":
+        i.update(dicPoidsIndicateurs_prj_ET)
+        
+#######################################################################################
+##
+##   Forme simplifié des Indicateurs des compétences abordées en Projet :
+##        clef = code de la compétence
+##        valeur = [intitulé, poids, "revue"]
+## 
+#######################################################################################
+#def getIndicateursPrjSimple(k,v):
+#    global NRB_COEF_COMP_R, NRB_COEF_COMP_S 
+#    dic = {}
+#    for c, d in v.items():
+#        dic.update(d[1])
+#        
+##        if k == "SSI":
+##            for l in d[1].values():
+##                if len(l) > 2:
+##                    NRB_COEF_COMP_S[k] += l[1]
+##                else:
+##                    NRB_COEF_COMP_R[k] += l[1]
+##        else:
+##            for C, l in d[1].items():
+##                if C in dicIndicateurs[k].keys():
+##                    if len(l) > 2:
+##                        NRB_COEF_COMP_S[k] += len(dicIndicateurs[k][C])
+##                    else:
+##                        NRB_COEF_COMP_R[k] += len(dicIndicateurs[k][C])
+#            
+#    return dic
+#
+#
+#dicIndicateurs_prj_simple = {}
+#for k,v in dicIndicateurs.items():
+#    dicIndicateurs_prj_simple[k] = getIndicateursPrjSimple(k,v)
+
+#print dicIndicateurs_prj_simple["SSI"]
+
 ######################################################################################
 #
 #   Forme simplifié des Compétences abordées en Projet :
@@ -572,20 +622,26 @@ def getCompetencesPrjSimple(k,v):
     global NRB_COEF_COMP_R, NRB_COEF_COMP_S 
     dic = {}
     for c, d in v.items():
-        dic.update(d[1])
         if k == "SSI":
-            for l in d[1].values():
-                if len(l) > 2:
-                    NRB_COEF_COMP_S[k] += l[1]
-                else:
-                    NRB_COEF_COMP_R[k] += l[1]
-        else:
-            for C, l in d[1].items():
-                if C in dicIndicateurs[k].keys():
-                    if len(l) > 2:
-                        NRB_COEF_COMP_S[k] += len(dicIndicateurs[k][C])
-                    else:
-                        NRB_COEF_COMP_R[k] += len(dicIndicateurs[k][C])
+            nd = {}
+            for cc, v in d[1].items():
+                nd[cc] = v[0]
+            dic.update(nd)
+        else: 
+            dic.update(d[1])
+#        if k == "SSI":
+#            for l in d[1].values():
+#                if len(l) > 2:
+#                    NRB_COEF_COMP_S[k] += l[1]
+#                else:
+#                    NRB_COEF_COMP_R[k] += l[1]
+#        else:
+#            for C, l in d[1].items():
+#                if C in dicIndicateurs[k].keys():
+#                    if len(l) > 2:
+#                        NRB_COEF_COMP_S[k] += len(dicIndicateurs[k][C])
+#                    else:
+#                        NRB_COEF_COMP_R[k] += len(dicIndicateurs[k][C])
             
     return dic
 
@@ -663,6 +719,11 @@ def getCompetence(seq, code, dic = None, c = None):
     
     
 def getAllCodes(dic):
+    lst = []
+    
+    
+    
+    
     lst = dic.keys()
     for k in dic.keys():
         if len(dic[k]) > 1 and type(dic[k][1]) == dict:

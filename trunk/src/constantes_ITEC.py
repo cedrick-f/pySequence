@@ -33,7 +33,7 @@
 #
 ####################################################################################
 
-CentresInteretsITEC = [u"Besoin et performance d'un système",
+CentresInterets_ITEC = [u"Besoin et performance d'un système",
                        u"Compétitivité, design et ergonomie des systèmes",
                        u"Eco-conception des mécanismes",
                        u"Structure, matériaux et protections d'un système",
@@ -41,24 +41,9 @@ CentresInteretsITEC = [u"Besoin et performance d'un système",
                        u"Procédés de réalisation"
                        ]
 
-dicCompetencesITEC = {"O7" : [u"Imaginer une solution, répondre à un besoin",
-                          {"CO7.itec1" : [u"Identifier et justifier un problème technique à partir de l'analyse globale d'un système (approche Matière - Energie - Information)",5],
-                           "CO7.itec2" : [u"Proposer des solutions à un problème technique identifié en participant à des démarches de créativité, choisir et justifier la solution retenue",6],
-                           "CO7.itec3" : [u"Définir, à l'aide d'un modeleur numérique, les formes et dimensions d'une pièce d'un mécanisme à partir des contraintes fonctionnelles, de son principe de réalisation et de son matériau",3],
-                           "CO7.itec4" : [u"Définir, à l'aide d'un modeleur numérique, les modifications d'un mécanisme à partir des contraintes fonctionnelles",2],}],
-                  "O8" : [u"Valider des solutions techniques",
-                          {"CO8.itec1" : [u"Paramétrer un logiciel de simulation mécanique pour obtenir les caractéristiques d'une loi d'entrée/sortie d'un mécanisme simple",3],
-                           "CO8.itec2" : [u"Interpréter les résultats d'une simulation mécanique pour valider une solution ou modifier une pièce ou un mécanisme",4],
-                           "CO8.itec3" : [u"Mettre en oeuvre un protocole d'essais et de mesures, interpréter les résultats",5],
-                           "CO8.itec4" : [u"Comparer et interpréter le résultat d'une simulation d'un comportement mécanique avec un comportement réel",3],}],
-                  "O9" : [u"Gérer la vie du produit",
-                          {"CO9.itec1" : [u"Expérimenter des procédés pour caractériser les paramètres de transformation de la matière et leurs conséquences sur la définition et l'obtention de pièces",3],
-                           "CO9.itec2" : [u"Réaliser et valider un prototype obtenu par rapport à tout ou partie du cahier des charges initial",4],
-                           "CO9.itec3" : [u"Intégrer les pièces prototypes dans le système à modifier pour valider son comportement et ses performances",4]}]}
 
 
-
-dicSavoirsITEC = {"1" : [u"Projet technologique",
+dicSavoirs_ITEC = {"1" : [u"Projet technologique",
                          {"1.1" : [u"La démarche de projet",
                                    {"1.1.1" : [u"Les projets industriels",
                                                [u"Typologie des entreprises industrielles et des projets techniques associés (projets locaux, transversaux, \"joint venture\")",
@@ -117,58 +102,103 @@ dicSavoirsITEC = {"1" : [u"Projet technologique",
                           }]
                   }
 
-dicIndicateursITEC = {"CO7.itec1" : [u"Le besoin relatif au projet est identifié et justifié",
-                                    u"Les fonctions principales du projet sont identifiées",
-                                    u"Les critères du CDC du projet sont décodés",
-                                    u"La démarche d'analyse du problème est pertinente",
-                                    u"Les principaux points de vigilance relatifs au projet sont identifiés"
-                                    ],
-                     "CO7.itec2" : [u"Les grandes étapes d'une démarche de créativité sont franchies de manière cohérente",
-                                    u"Les moyens conventionnels de représentation des solutions sont correctement utilisés (croquis, schémas, ...)",
-                                    u"Les contraintes de normes, propriétés industrielle et brevet sont identifiées",
-                                    u"Les solutions techniques proposées sont pertinentes",
-                                    u"Les caractéristiques comportementales de la solution retenue répondent au CDC",
-                                    u"Les choix sont explicités et la solution justifiée en regard des paramètres choisis"
-                                    ],
-                     "CO7.itec3" : [u"La démarche de création est rationnelle",
-                                    u"Les contraintes fonctionnelles sont traduites de manière complète",
-                                    u"Les formes et dimensions sont compatibles avec le principe de réalisation, le matériau choisi et les contraintes subies"
-                                    ],
-                     "CO7.itec4" : [u"Les modifications respectent les contraintes fonctionnelles",
-                                    u"La procédure de modification est rationnelle"
-                                    ],
-                     "CO8.itec1" : [u"Les variables du modèle sont identifiées",
-                                    u"Leurs influences respectives sont identifiées",
-                                    u"Les paramètres saisis sont réalistes"
-                                    ],
-                     "CO8.itec2" : [u"Les scénarios de simulation sont identifiés",
-                                    u"Les paramètres influents sont identifiés",
-                                    u"Les conséquences sur le mécanisme sont identifiées",
-                                    u"Les modifications proposées sont pertinentes"
-                                    ],
-                     "CO8.itec3" : [u"Les conditions de l'essai sont identifiées et justifiées",
-                                    u"Le protocole est adapté à l'objectif",
-                                    u"Les observations et mesures sont méthodiquement menées",
-                                    u"Les incertitudes sont estimées",
-                                    u"L'interprétation des résultats est cohérente"
-                                    ],
-                     "CO8.itec4" : [u"Les résultats de la simulation et les mesures sont corrélés",
-                                    u"L'analyse des écarts est méthodique",
-                                    u"L'interprétation des résultats est cohérente"
-                                    ],
-                     "CO9.itec1" : [u"Les paramètres significatifs à observer sont identifiés",
-                                    u"Le protocole est adapté à l'objectif",
-                                    u"Des conséquences pertinentes sont identifiées"
-                                    ],
-                     "CO9.itec2" : [u"Un moyen de prototypage réaliste est choisi en regard de la partie de CDC à respecter",
-                                    u"La réalisation du prototype est conforme à une procédure valide",
-                                    u"Les caractéristiques à valider sont identifiées",
-                                    u"La corrélation des caractéristiques permet de valider le prototype par rapport au CDC"
-                                    ],
-                     "CO9.itec3" : [u"Les pièces prototypes s'insèrent dans le mécanisme",
-                                    u"Une procédure d'essai pertinente est définie",
-                                    u"L'essai est méthodiquement réalisé et le comportement du mécanisme relevé",
-                                    u"L'interprétation des résultats est pertinente"
-                                    ]}
+
+
+dicCompetences_ITEC = {"O7" : [u"Imaginer une solution, répondre à un besoin",
+                              {"CO7.itec1" : u"Identifier et justifier un problème technique à partir de l'analyse globale d'un système (approche Matière - Energie - Information)",
+                               "CO7.itec2" : u"Proposer des solutions à un problème technique identifié en participant à des démarches de créativité, choisir et justifier la solution retenue",
+                               "CO7.itec3" : u"Définir, à l'aide d'un modeleur numérique, les formes et dimensions d'une pièce d'un mécanisme à partir des contraintes fonctionnelles, de son principe de réalisation et de son matériau",
+                               "CO7.itec4" : u"Définir, à l'aide d'un modeleur numérique, les modifications d'un mécanisme à partir des contraintes fonctionnelles"}],
+                      "O8" : [u"Valider des solutions techniques",
+                              {"CO8.itec1" : u"Paramétrer un logiciel de simulation mécanique pour obtenir les caractéristiques d'une loi d'entrée/sortie d'un mécanisme simple",
+                               "CO8.itec2" : u"Interpréter les résultats d'une simulation mécanique pour valider une solution ou modifier une pièce ou un mécanisme",
+                               "CO8.itec3" : u"Mettre en oeuvre un protocole d'essais et de mesures, interpréter les résultats",
+                               "CO8.itec4" : u"Comparer et interpréter le résultat d'une simulation d'un comportement mécanique avec un comportement réel"}],
+                      "O9" : [u"Gérer la vie du produit",
+                              {"CO9.itec1" : u"Expérimenter des procédés pour caractériser les paramètres de transformation de la matière et leurs conséquences sur la définition et l'obtention de pièces",
+                               "CO9.itec2" : u"Réaliser et valider un prototype obtenu par rapport à tout ou partie du cahier des charges initial",
+                               "CO9.itec3" : u"Intégrer les pièces prototypes dans le système à modifier pour valider son comportement et ses performances"}]}
+
+
+#################################################################################################################################
+#
+#        Les indicateurs de compétences
+#                (True = revue ; False = soutenance)
+#
+#################################################################################################################################
+dicIndicateurs_prj_ITEC = {"CO7.itec1" : [[u"Le besoin relatif au projet est identifié et justifié", True],
+                                           [u"Les fonctions principales du projet sont identifiées", True],
+                                           [u"Les critères du CDC du projet sont décodés", True],
+                                           [u"La démarche d'analyse du problème est pertinente", True],
+                                           [u"Les principaux points de vigilance relatifs au projet sont identifiés", True]
+                                          ],
+                           "CO7.itec2" : [[u"Les grandes étapes d'une démarche de créativité sont franchies de manière cohérente", True],
+                                          [u"Les moyens conventionnels de représentation des solutions sont correctement utilisés (croquis, schémas, ...)", True],
+                                          [u"Les contraintes de normes, propriétés industrielle et brevet sont identifiées", True],
+                                          [u"Les solutions techniques proposées sont pertinentes", True],
+                                          [u"Les caractéristiques comportementales de la solution retenue répondent au CDC", True],
+                                          [u"Les choix sont explicités et la solution justifiée en regard des paramètres choisis", True],
+                                          ],
+                           "CO7.itec3" : [[u"La démarche de création est rationnelle", True],
+                                          [u"Les contraintes fonctionnelles sont traduites de manière complète", True],
+                                          [u"Les formes et dimensions sont compatibles avec le principe de réalisation, le matériau choisi et les contraintes subies", True]
+                                          ],
+                           "CO7.itec4" : [[u"Les modifications respectent les contraintes fonctionnelles", True],
+                                          [u"La procédure de modification est rationnelle", True]
+                                          ],
+                           "CO8.itec1" : [[u"Les variables du modèle sont identifiées", True],
+                                          [u"Leurs influences respectives sont identifiées", True],
+                                          [u"Les paramètres saisis sont réalistes", True]
+                                          ],
+                           "CO8.itec2" : [[u"Les scénarios de simulation sont identifiés", True],
+                                          [u"Les paramètres influents sont identifiés", True],
+                                          [u"Les conséquences sur le mécanisme sont identifiées", True],
+                                          [u"Les modifications proposées sont pertinentes", True],
+                                         ],
+                           "CO8.itec3" : [[u"Les conditions de l'essai sont identifiées et justifiées", True],
+                                          [u"Le protocole est adapté à l'objectif", True],
+                                          [u"Les observations et mesures sont méthodiquement menées", True],
+                                          [u"Les incertitudes sont estimées", True],
+                                          [u"L'interprétation des résultats est cohérente", True]
+                                         ],
+                           "CO8.itec4" : [[u"Les résultats de la simulation et les mesures sont corrélés", True],
+                                          [u"L'analyse des écarts est méthodique", True],
+                                          [u"L'interprétation des résultats est cohérente", True]
+                                          ],
+                           "CO9.itec1" : [[u"Les paramètres significatifs à observer sont identifiés", True],
+                                          [u"Le protocole est adapté à l'objectif", True],
+                                          [u"Des conséquences pertinentes sont identifiées", True]
+                                         ],
+                           "CO9.itec2" : [[u"Un moyen de prototypage réaliste est choisi en regard de la partie de CDC à respecter", True],
+                                          [u"La réalisation du prototype est conforme à une procédure valide", True],
+                                          [u"Les caractéristiques à valider sont identifiées", True],
+                                          [u"La corrélation des caractéristiques permet de valider le prototype par rapport au CDC", True]
+                                         ],
+                           "CO9.itec3" : [[u"Les pièces prototypes s'insèrent dans le mécanisme", True],
+                                          [u"Une procédure d'essai pertinente est définie", True],
+                                          [u"L'essai est méthodiquement réalisé et le comportement du mécanisme relevé", True],
+                                          [u"L'interprétation des résultats est pertinente", True]
+                                         ]}
+
+
+#################################################################################################################################
+#
+#        Les poids des indicateurs de compétences
+#
+#################################################################################################################################
+dicPoidsIndicateurs_prj_ITEC =   {"O7" : [40, 
+                                          {"CO7.itec1" : [5,5,5,7,7],
+                                           "CO7.itec2" : [5,5,5,7,7,7],
+                                           "CO7.itec3" : [7,7,7],
+                                           "CO7.itec4" : [7,7]}],
+                                  "O8" : [40, 
+                                          {"CO8.itec1" : [7,6,7],
+                                           "CO8.itec2" : [6,7,7,7],
+                                           "CO8.itec3" : [6,7,6,6,7],
+                                           "CO8.itec4" : [7,7,7]}],
+                                  "O9" : [20,
+                                          {"CO9.itec1" : [9,9,9],
+                                           "CO9.itec2" : [9,9,9,9],
+                                           "CO9.itec3" : [9,9,9,10]}]}
 
 # Nombre indicateurs = 42

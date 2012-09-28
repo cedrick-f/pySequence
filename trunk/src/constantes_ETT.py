@@ -32,7 +32,7 @@
 #   Définition des constantes pour l'enseignement transversal
 #
 ####################################################################################
-CentresInteretsET = [u"Développement durable et compétitivité des produits",
+CentresInterets_ET = [u"Développement durable et compétitivité des produits",
                    u"Design, créativité et innovation",
                    u"Caractéristiques des matériaux et structures",
                    u"Solutions constructives des matériaux et des structures",
@@ -49,7 +49,7 @@ CentresInteretsET = [u"Développement durable et compétitivité des produits",
                    u"Optimisation des paramètres par simulation globale"
                    ]
 
-PositionCibleCIET = ['   _   ',
+PositionCibleCI_ET = ['   _   ',
                      '   _   ',
                      'M  _F  ',
                      'M  _ S ',
@@ -66,33 +66,11 @@ PositionCibleCIET = ['   _   ',
                      'MEI_   '
                    ]
 
-dicCompetencesET = {"O1" : [u"Caractériser des systèmes privilégiant un usage raisonné du point de vue développement durable",
-                          {"CO1.1" : [u"Justifier les choix des matériaux, des structures d'un système et les énergies mises en oeuvre dans une approche de développement durable",5, True],
-                           "CO1.2" : [u"Justifier le choix d'une solution selon des contraintes d'ergonomie et d'effets sur la santé de l'homme et du vivant",3, True]}],
-                  "O2" : [u"Identifier les éléments permettant la limitation de l’Impact environnemental d’un système et de ses constituants",
-                          {"CO2.1" : [u"Identifier les flux et la forme de l'énergie, caractériser ses transformations et/ou modulations et estimer l'efficacité énergétique globale d'un système",4, True],
-                           "CO2.2" : [u"Justifier les solutions constructives d'un système au regard des impacts environnementaux et économiques engendrés tout au long de son cycle de vie",5, True],}],
-                  "O3" : [u"Identifier les éléments influents du développement d’un système",
-                          {"CO3.1" : [u"Décoder le cahier des charges fonctionnel d'un système"],
-                           "CO3.2" : [u"Evaluer la compétitivité d'un système d'un point de vue technique et économique"],}],
-                  "O4" : [u"Décoder l’organisation fonctionnelle, structurelle et logicielle d’un système",
-                          {"CO4.1" : [u"Identifier et caractériser les fonctions et les constituants d'un système ainsi que ses entrées/sorties"],
-                           "CO4.2" : [u"Identifier et caractériser l'agencement  matériel et/ou logiciel d'un système"],
-                           "CO4.3" : [u"Identifier et caractériser le fonctionnement temporel d'un système"],
-                           "CO4.4" : [u"Identifier et caractériser des solutions techniques relatives aux matériaux, à la structure, à l'énergie et aux informations (acquisition, traitement, transmission) d'un système"]}],
-                  "O5" : [u"Utiliser un modèle de comportement pour prédire un fonctionnement ou valider une performance",
-                          {"CO5.1" : [u"Expliquer des éléments d'une modélisation proposée relative au comportement de tout ou partie d'un système"],
-                           "CO5.2" : [u"Identifier des variables internes et externes utiles à une modélisation, simuler et valider le comportement du modèle"],
-                           "CO5.3" : [u"Evaluer un écart entre le comportement du réel et le comportement du modèle en fonction des paramètres proposés"]}],
-                  "O6" : [u"Communiquer une idée, un principe ou une solution technique, un projet, y compris en langue étrangère",
-                          {"CO6.1" : [u"Décrire une idée, un principe, une solution, un projet en utilisant des outils de représentation adaptés",3, True],
-                           "CO6.2" : [u"Décrire le fonctionnement et/ou l'exploitation d'un système en utilisant l'outil de description le plus pertinent",3, True],
-                           "CO6.3" : [u"Présenter et argumenter des démarches, des résultats, y compris dans une langue étrangère",5, True]}]}
 
 
 
 
-dicSavoirsET = {"1" : [u"Principes de conception des systèmes de développement durable",
+dicSavoirs_ET = {"1" : [u"Principes de conception des systèmes de développement durable",
                   {"1.1" : [u"Compétitivité et créativité",
                             {"1.1.1" : [u"Paramètres de la compétitivité ",
                                         [u"Importance du service rendu (besoin réel et besoin induit)",
@@ -209,44 +187,99 @@ dicSavoirsET = {"1" : [u"Principes de conception des systèmes de développement
                                          u"Gestion d'un nœud de réseau par le paramétrage d'un routeur : adresses IP, NAT/PAT, DNS, pare-feu"]]}]}
                   ],}
 
-dicIndicateursET = {"CO1.1" : [u"La justification des propriétés physico-chimiques, mécaniques ou thermiques des matériaux est claire et concise",
-                                    u"Les coûts relatifs, la disponibilité et les impacts environnementaux des matériaux sont évoqués",
-                                    u"La relation entre la morphologie des structures et les moyens de réalisation est explicitée de manière claire et concise",
-                                    u"La morphologie des structures est justifiée par l'usage et le comportement mécanique",
-                                    u"Le choix des énergies mises en oeuvre est justifié, l'efficacité énergétique est évoqué"
-                                    ],
-                     "CO1.2" : [u"La justification des paramètres de confort et la réponse apportée par le système est abordée",
-                                    u"Les contraintes de sécurité sont signalés",
-                                    u"La prévention des conséquences prévisibles sur la santé est expliquée"
-                                    ],
-                     "CO2.1" : [u"Les flux d'énergie sont décrits",
-                                    u"La forme de l'énergie est précisée",
-                                    u"Les caractéristiques des transformations ou modulations sont précisées",
-                                    u"La quantification de l'efficacité énergétique globale est précisée"
-                                    ],
-                     "CO2.2" : [u"Les solutions constructives sont identifiées",
-                                    u"Le cycle de vie du système et de ses composants est identifié",
-                                    u"La relation fonction/Impact environnemental est précisée aux étapes essentielles",
-                                    u"La relation Fonction/Coût/Besoin est justifiée",
-                                    u"Le compromis technico-économique est justifié"
-                                    ],
-                     "CO6.1" : [u"L'(les) outil(s) de représentation est (sont) correctement utilisé(s) pour la description",
-                                    u"Les outils de représentation sont correctement décodés",
-                                    u"La description est compréhensible"
-                                    ],
-                     "CO6.2" : [u"L'(les) outil(s) de description utilisé(s) est (sont) adapté(s) au propos",
-                                    u"L'(les) outil(s) de description est (sont) correctement utilisé(s)",
-                                    u"La description du fonctionnement est concise et correcte"
-                                    ],
-                     "CO6.3" : [u"La présentation est claire et concise",
-                                    u"La démarche est argumentée",
-                                    u"Les résultats sont présentés et commentés de manière claire et concise",
-                                    u"L'expression est claire et rigoureuse",
-                                    u"Le vocabulaire nécessaire est maîtrisé"
-                                    ],
-                     "CO8.es" : [u"Les paramètres du modèle sont justifiés",
-                                    u"Leurs influences respectives sont explicitées",
-                                    u"La limite d'utilisation du modèle est justifiée",
-                                    u"Les variables mesurées sont pertinentes",
-                                    u"Les écarts sont expliqués de manière cohérente pour valider une solution technique"
-                                    ]}
+
+
+
+dicCompetences_ET =  {"O1" : [u"Caractériser des systèmes privilégiant un usage raisonné du point de vue développement durable",
+                              {"CO1.1" : u"Justifier les choix des matériaux, des structures d'un système et les énergies mises en oeuvre dans une approche de développement durable",
+                               "CO1.2" : u"Justifier le choix d'une solution selon des contraintes d'ergonomie et d'effets sur la santé de l'homme et du vivant"}],
+                      "O2" : [u"Identifier les éléments permettant la limitation de l’Impact environnemental d’un système et de ses constituants",
+                              {"CO2.1" : u"Identifier les flux et la forme de l'énergie, caractériser ses transformations et/ou modulations et estimer l'efficacité énergétique globale d'un système",
+                               "CO2.2" : u"Justifier les solutions constructives d'un système au regard des impacts environnementaux et économiques engendrés tout au long de son cycle de vie"}],
+                      "O3" : [u"Identifier les éléments influents du développement d’un système",
+                              {"CO3.1" : u"Décoder le cahier des charges fonctionnel d'un système",
+                               "CO3.2" : u"Evaluer la compétitivité d'un système d'un point de vue technique et économique"}],
+                      "O4" : [u"Décoder l’organisation fonctionnelle, structurelle et logicielle d’un système",
+                              {"CO4.1" : u"Identifier et caractériser les fonctions et les constituants d'un système ainsi que ses entrées/sorties",
+                               "CO4.2" : u"Identifier et caractériser l'agencement  matériel et/ou logiciel d'un système",
+                               "CO4.3" : u"Identifier et caractériser le fonctionnement temporel d'un système",
+                               "CO4.4" : u"Identifier et caractériser des solutions techniques relatives aux matériaux, à la structure, à l'énergie et aux informations (acquisition, traitement, transmission) d'un système"}],
+                      "O5" : [u"Utiliser un modèle de comportement pour prédire un fonctionnement ou valider une performance",
+                              {"CO5.1" : u"Expliquer des éléments d'une modélisation proposée relative au comportement de tout ou partie d'un système",
+                               "CO5.2" : u"Identifier des variables internes et externes utiles à une modélisation, simuler et valider le comportement du modèle",
+                               "CO5.3" : u"Evaluer un écart entre le comportement du réel et le comportement du modèle en fonction des paramètres proposés"}],
+                      "O6" : [u"Communiquer une idée, un principe ou une solution technique, un projet, y compris en langue étrangère",
+                              {"CO6.1" : u"Décrire une idée, un principe, une solution, un projet en utilisant des outils de représentation adaptés",
+                               "CO6.2" : u"Décrire le fonctionnement et/ou l'exploitation d'un système en utilisant l'outil de description le plus pertinent",
+                               "CO6.3" : u"Présenter et argumenter des démarches, des résultats, y compris dans une langue étrangère"}]}
+
+
+#################################################################################################################################
+#
+#        Les indicateurs de compétences
+#                (True = revue ; False = soutenance)
+#
+#################################################################################################################################
+dicIndicateurs_prj_ET = {"CO1.1" : [[u"La justification des propriétés physico-chimiques, mécaniques ou thermiques des matériaux est claire et concise", False],
+                                    [u"Les coûts relatifs, la disponibilité et les impacts environnementaux des matériaux sont évoqués", False],
+                                    [u"La relation entre la morphologie des structures et les moyens de réalisation est explicitée de manière claire et concise", False],
+                                    [u"La morphologie des structures est justifiée par l'usage et le comportement mécanique", False],
+                                    [u"Le choix des énergies mises en oeuvre est justifié, l'efficacité énergétique est évoqué", False]
+                                   ],
+                         "CO1.2" : [[u"La justification des paramètres de confort et la réponse apportée par le système est abordée", False],
+                                    [u"Les contraintes de sécurité sont signalés", False],
+                                    [u"La prévention des conséquences prévisibles sur la santé est expliquée", False]
+                                   ],
+                         "CO2.1" : [[u"Les flux d'énergie sont décrits", False],
+                                    [u"La forme de l'énergie est précisée", False],
+                                    [u"Les caractéristiques des transformations ou modulations sont précisées", False],
+                                    [u"La quantification de l'efficacité énergétique globale est précisée", False]
+                                   ],
+                         "CO2.2" : [[u"Les solutions constructives sont identifiées", False],
+                                    [u"Le cycle de vie du système et de ses composants est identifié", False],
+                                    [u"La relation fonction/Impact environnemental est précisée aux étapes essentielles", False],
+                                    [u"La relation Fonction/Coût/Besoin est justifiée", False],
+                                    [u"Le compromis technico-économique est justifié", False]
+                                   ],
+                         "CO6.1" : [[u"L'(les) outil(s) de représentation est (sont) correctement utilisé(s) pour la description", False],
+                                    [u"Les outils de représentation sont correctement décodés", False],
+                                    [u"La description est compréhensible", False]
+                                   ],
+                         "CO6.2" : [[u"L'(les) outil(s) de description utilisé(s) est (sont) adapté(s) au propos", False],
+                                    [u"L'(les) outil(s) de description est (sont) correctement utilisé(s)", False],
+                                    [u"La description du fonctionnement est concise et correcte", False]
+                                   ],
+                         "CO6.3" : [[u"La présentation est claire et concise", False],
+                                    [u"La démarche est argumentée", False],
+                                    [u"Les résultats sont présentés et commentés de manière claire et concise", False],
+                                    [u"L'expression est claire et rigoureuse", False],
+                                    [u"Le vocabulaire nécessaire est maîtrisé", False]
+                                   ],
+                         "CO8.es" : [[u"Les paramètres du modèle sont justifiés", False],
+                                     [u"Leurs influences respectives sont explicitées", False],
+                                     [u"La limite d'utilisation du modèle est justifiée", False],
+                                     [u"Les variables mesurées sont pertinentes", False],
+                                     [u"Les écarts sont expliqués de manière cohérente pour valider une solution technique", False]
+                                    ]
+                     }
+
+#################################################################################################################################
+#
+#        Les poids des indicateurs de compétences
+#
+#################################################################################################################################
+dicPoidsIndicateurs_prj_ET = {"O1" : [20,
+                                     {"CO1.1" : [20,10,10,15,20], 
+                                      "CO1.2" : [5,15,5]}],
+                              "O2" : [15,
+                                      {"CO2.1" : [10,10,10,10],
+                                       "CO2.2" : [15,15,10,10,10]}],
+                              "O6" : [45,
+                                      {"CO6.1" : [8,8,10],
+                                       "CO6.2" : [8,8,10],
+                                       "CO6.3" : [8,10,10,10,10]}],
+                              "O8s" : [20,
+                                       {"CO8.es" : [20,15,15,20,30]}]
+                              }
+
+

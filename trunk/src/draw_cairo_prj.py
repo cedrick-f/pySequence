@@ -581,7 +581,7 @@ def Draw(ctx, prj, mouchard = False):
             ctx.move_to(_x, _y0)# + posZTaches[1] - posZComp[1])
             ctx.line_to(_x, _y1)
             ctx.stroke()
-            if estCompetenceRevue(prj.classe.typeEnseignement, s):
+            if True :#estCompetenceRevue(prj.classe.typeEnseignement, s):
                 ctx.set_source_rgba(ICoulCompS[0], ICoulCompS[1], ICoulCompS[2], 0.2)
             else:
                 ctx.set_source_rgba(ICoulCompR[0], ICoulCompR[1], ICoulCompR[2], 0.2)
@@ -1101,7 +1101,7 @@ def DrawCroisementsCompetencesTaches(ctx, tache, y):
 #        if self.typeSeance in ["AP", "ED", "P"]:
 #            and not (self.EstSousSeance() and self.parent.typeSeance == "S"):
     
-    DrawBoutonCompetence(ctx, tache, tache.competences, tache.indicateurs, y)
+    DrawBoutonCompetence(ctx, tache, tache.GetDicIndicateurs(), y)
     
 #    r = wColComp/3
 #    ctx.set_line_width (0.001)
@@ -1167,8 +1167,9 @@ def DrawCroisementsElevesCompetences(ctx, eleve, y):
 #        if self.typeSeance in ["AP", "ED", "P"]:
 #            and not (self.EstSousSeance() and self.parent.typeSeance == "S"):
     
-    comp, indic = eleve.GetCompetencesEtIndicateurs()
-    DrawBoutonCompetence(ctx, eleve, comp, indic, y)
+    indic = eleve.GetDicIndicateurs()
+#    print eleve, indic
+    DrawBoutonCompetence(ctx, eleve, indic, y)
     
 #    r = wColComp/3
 #    ns = eleve.GetCompetences()
@@ -1194,15 +1195,69 @@ def DrawCroisementsElevesCompetences(ctx, eleve, y):
 #            eleve.parent.rectComp[s] = [(x-r, y-r, 2*r, 2*r)]
 #        
 #        eleve.pts_caract.append((x,y))
-            
+    
 ######################################################################################  
-def DrawBoutonCompetence(ctx, objet, listComp, dicIndic, y):
+def DrawBoutonCompetence(ctx, objet, dicIndic, y):
+#    print "DrawBoutonCompetence", objet, dicIndic
+    r = wColComp/3
+    ctx.set_line_width (0.0006)
+    for s in dicIndic.keys():
+        x = xComp[s]-wColComp/2
+#        ctx.arc(x, y, r, 0, 2*pi)
+#        if True:#estCompetenceRevue(objet.parent.classe.typeEnseignement, s):
+##        if len(constantes.dicCompetences_prj_simple[tache.parent.classe.typeEnseignement][s]) > 2:
+#            ctx.set_source_rgba (ICoulCompS[0],ICoulCompS[1],ICoulCompS[2],1.0)
+#        else:
+#            ctx.set_source_rgba (ICoulCompR[0],ICoulCompR[1],ICoulCompR[2],1.0)
+#        ctx.fill_preserve ()
+#        ctx.set_source_rgba (0,0,0,1)
+#        ctx.stroke ()
+#        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+#                              cairo.FONT_WEIGHT_BOLD)
+        
+        if s in objet.parent.rectComp.keys() and objet.parent.rectComp[s] != None:
+            objet.parent.rectComp[s].append((x-r, y-r, 2*r, 2*r, objet))
+        else:
+            objet.parent.rectComp[s] = [(x-r, y-r, 2*r, 2*r, objet)]
+        
+        objet.pts_caract.append((x,y))
+        
+        if True:#objet.GetTypeEnseignement() != "SSI":
+            indic = dicIndic[s]
+#            dangle = 2*pi/len(indic)
+            dx = wColComp/len(indic)
+            for a, i in enumerate(indic):
+    #            ctx.move_to (x, y)
+    #            ctx.rel_line_to (r*cos(dangle*a)+pi/2, r*sin(dangle*a)+pi/2)
+    
+                if i:
+                    if constantes.dicIndicateurs[objet.parent.classe.typeEnseignement][s][a][1]:
+                        ctx.set_source_rgba (ICoulCompS[0],ICoulCompS[1],ICoulCompS[2],1.0)
+                    else:
+                        ctx.set_source_rgba (ICoulCompR[0],ICoulCompR[1],ICoulCompR[2],1.0)
+                else:
+                    ctx.set_source_rgba (1,1,1,1)
+                
+                ctx.rectangle(x+a*dx, y-r, dx, 2*r)
+#                ctx.arc(x+r*cos(-dangle*a-pi/2)/2, y+r*sin(-dangle*a-pi/2)/2, r/4, 0, 2*pi)
+                ctx.fill_preserve ()
+                ctx.set_source_rgba (0,0,0,1)
+                ctx.stroke ()
+                ctx.stroke()
+
+        else:
+            show_text_rect_fix(ctx, str(dicIndic[s]), x-r, y-r, 2*r, 2*r, 0.006, 1, va = 'c', ha = 'c')
+
+    
+######################################################################################  
+def DrawBoutonCompetence2(ctx, objet, dicIndic, y):
+#    print "DrawBoutonCompetence", objet, dicIndic
     r = wColComp/3
     ctx.set_line_width (0.001)
-    for s in listComp:
+    for s in dicIndic.keys():
         x = xComp[s]
         ctx.arc(x, y, r, 0, 2*pi)
-        if estCompetenceRevue(objet.parent.classe.typeEnseignement, s):
+        if True:#estCompetenceRevue(objet.parent.classe.typeEnseignement, s):
 #        if len(constantes.dicCompetences_prj_simple[tache.parent.classe.typeEnseignement][s]) > 2:
             ctx.set_source_rgba (ICoulCompS[0],ICoulCompS[1],ICoulCompS[2],1.0)
         else:
@@ -1219,7 +1274,7 @@ def DrawBoutonCompetence(ctx, objet, listComp, dicIndic, y):
         
         objet.pts_caract.append((x,y))
         
-        if objet.GetTypeEnseignement() != "SSI":
+        if True:#objet.GetTypeEnseignement() != "SSI":
             indic = dicIndic[s]
             dangle = 2*pi/len(indic)
             for a, i in enumerate(indic):

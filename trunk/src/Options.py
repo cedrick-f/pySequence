@@ -230,8 +230,8 @@ class Options:
                                        "G" : constantes.NbrGroupes["G"],
                                        "E" : constantes.NbrGroupes["E"],
                                        "P" : constantes.NbrGroupes["P"]}
-        self.optClasse["CentresInteretET"] = constantes.CentresInteretsET
-        self.optClasse["PositionsCI_ET"] = constantes.PositionCibleCIET
+        self.optClasse["CentresInteretET"] = constantes.CentresInterets_ET
+        self.optClasse["PositionsCI_ET"] = constantes.PositionCibleCI_ET
         
 
     ###########################################################################
