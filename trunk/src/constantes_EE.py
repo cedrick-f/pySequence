@@ -33,14 +33,14 @@
 #
 ####################################################################################
 
-CentresInteretsEE = [u"Typologie des sytèmes énergétiques",
+CentresInterets_EE = [u"Typologie des sytèmes énergétiques",
                        u"Production d'énergie",
                        u"Transport, stockage et distribution de l'énergie et réseaux spécifiques",
                        u"Efficacité énergétique passive",
                        u"Efficacité énergétique active"
                        ]
 
-dicCompetencesEE = {"O7" : [u"Imaginer une solution, répondre à un besoin",
+dicCompetences_EE = {"O7" : [u"Imaginer une solution, répondre à un besoin",
                           {"CO7.ee1" : [u"Participer à une démarche de conception dans le but de proposer plusieurs solutions possibles à un problème technique identifié en lien avec un enjeu énergétique",7],
                            "CO7.ee2" : [u"Justifier une solution retenue en intégrant les conséquences des choix sur le triptyque Matériau - Energie - Information",6],
                            "CO7.ee3" : [u"Définir la structure, la constitution d'un système en fonction des caractéristiques technico-économiques et environnementales attendues",4],
@@ -56,7 +56,7 @@ dicCompetencesEE = {"O7" : [u"Imaginer une solution, répondre à un besoin",
                            "CO9.ee3" : [u"Intégrer un prototype dans un système à modifier pour valider son comportement et ses performances",4]}]}
 
 
-dicSavoirsEE = {"1" : [u"Projet technologique",
+dicSavoirs_EE = {"1" : [u"Projet technologique",
                          {"1.1" : [u"La démarche de projet",
                                    {"1.1.1" : [u"Les projets industriels",
                                                [u"Typologie des entreprises industrielles et des projets techniques associés (projets locaux, transversaux, \"joint venture\")",
