@@ -708,7 +708,7 @@ def getCompetence(seq, code, dic = None, c = None):
     if c == None:
         c = len(code.split("."))
     if dic.has_key(code):
-        return dic[code][0]
+        return dic[code]
     else:
 #        cd = code[1:-2*(c-1)]
         if seq.classe.typeEnseignement == "SSI":
