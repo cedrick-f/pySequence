@@ -1682,7 +1682,6 @@ class Projet(BaseDoc, Objet_sequence):
         
     ######################################################################################  
     def VerifPb(self):
-        print "Sert à rien"
         return
 
         
@@ -4366,7 +4365,7 @@ class Personne(Objet_sequence):
         """ Renvoie la branche XML de la compétence pour enregistrement
         """
         root = ET.Element(toDefautEncoding(supprime_accent(self.titre).capitalize()))
-        print supprime_accent(self.titre).capitalize()
+#        print supprime_accent(self.titre).capitalize()
         
         root.set("Id", str(self.id))
         root.set("Nom", self.nom)
