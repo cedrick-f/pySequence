@@ -7,56 +7,46 @@
     <Taches>
       <Tache1 Duree="2.0" Intitule="Etude détaillée du CdCF" IntituleDansDeroul="True" Phase="Ana">
         <Eleves Eleve0="0" Eleve1="1" Eleve2="2" />
-        <Competences Comp0="D1.1" />
-        <PoidsIndicateurs Poids0="7" />
+        <Indicateurs Indic0="D1_1" />
       </Tache1>
       <Tache2 Duree="4.0" Intitule="Recherche de documentation sur la mesure par jauges d&apos;extensométrie." IntituleDansDeroul="True" Phase="Ana">
         <Eleves Eleve0="0" Eleve1="1" Eleve2="2" />
-        <Competences Comp0="D1.3" Comp1="D1.2" Comp2="D1.1" Comp3="D1.4" Comp4="B3.1" />
-        <PoidsIndicateurs Poids0="0" Poids1="0" Poids2="0" Poids3="0" Poids4="20" />
+        <Indicateurs Indic0="D1_3" Indic1="D1_2" Indic2="D1_1" Indic3="D1_4" Indic4="B3_1" />
       </Tache2>
       <Tache3 Duree="6" Intitule="Recherce de solutions : partie piece déformable + jauges" IntituleDansDeroul="True" Phase="Con">
         <Eleves Eleve0="0" />
-        <Competences />
-        <PoidsIndicateurs />
+        <Indicateurs />
       </Tache3>
       <Tache4 Duree="6" Intitule="Recherche de solutions : partie conditionnement du signal" IntituleDansDeroul="True" Phase="Con">
         <Eleves Eleve0="1" />
-        <Competences />
-        <PoidsIndicateurs />
+        <Indicateurs />
       </Tache4>
       <Tache5 Duree="6" Intitule="Recherche de solutions : partie acquisition et traitement des données" IntituleDansDeroul="True" Phase="Con">
         <Eleves Eleve0="2" />
-        <Competences />
-        <PoidsIndicateurs />
+        <Indicateurs />
       </Tache5>
       <Tache6 Duree="0.5" Intitule="Revue de projet n°1" IntituleDansDeroul="True" Phase="R1">
         <Eleves />
       </Tache6>
       <Tache7 Duree="8" Intitule="Recherche des formes de la pièce déformable par simulation SW" IntituleDansDeroul="True" Phase="DCo">
         <Eleves Eleve0="0" />
-        <Competences />
-        <PoidsIndicateurs />
+        <Indicateurs Indic0="C1_5" Indic1="C1_4" Indic2="C1_3" Indic3="C1_2" Indic4="C1_1" />
       </Tache7>
       <Tache8 Duree="8" Intitule="Réalisation d&apos;un modèle de circuit de conditionnement du signal (Simulink)" IntituleDansDeroul="True" Phase="DCo">
         <Eleves Eleve0="1" />
-        <Competences />
-        <PoidsIndicateurs />
+        <Indicateurs />
       </Tache8>
       <Tache9 Duree="8" Intitule="Choix d&apos;un matériel d&apos;acquisition et réalisation d&apos;une interface (Labview)" IntituleDansDeroul="True" Phase="DCo">
         <Eleves Eleve0="2" />
-        <Competences />
-        <PoidsIndicateurs />
+        <Indicateurs />
       </Tache9>
       <Tache10 Duree="6" Intitule="Réalisation d&apos;un prototype (imprimante 3D) et réalisation de mesures" IntituleDansDeroul="True" Phase="Rea">
         <Eleves Eleve0="0" />
-        <Competences />
-        <PoidsIndicateurs />
+        <Indicateurs />
       </Tache10>
-      <Tache11 Duree="6" Intitule="Réalisation d&apos;un prototype de circuit de conditionnementtt" IntituleDansDeroul="True" Phase="Rea">
+      <Tache11 Duree="6" Intitule="Réalisation d&apos;un prototype de circuit de conditionnement" IntituleDansDeroul="True" Phase="Rea">
         <Eleves Eleve0="1" />
-        <Competences />
-        <PoidsIndicateurs />
+        <Indicateurs />
       </Tache11>
       <Tache12 Duree="0.5" Intitule="Revue de projet n°2" IntituleDansDeroul="True" Phase="R2">
         <Eleves />

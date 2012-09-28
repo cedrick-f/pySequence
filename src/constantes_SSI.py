@@ -32,7 +32,7 @@
 #   Définition des constantes pour la spécialité SIN
 #
 ####################################################################################
-PointsDeVueSSI =  [u"Système souhaité",
+PointsDeVue_SSI =  [u"Système souhaité",
                    u"Système réel",
                    u"Système réel",
                    u"Système simulé",
@@ -40,7 +40,7 @@ PointsDeVueSSI =  [u"Système souhaité",
                    ]
 
 
-CentresInteretsSSI = [u"Analyser un système fonctionnellement et structurellement",
+CentresInterets_SSI = [u"Analyser un système fonctionnellement et structurellement",
                        u"Expérimenter et mesurer sur un système réel pour évaluer ses performances",
                        u"Analyser des constituants d’un système réel d’un point de vue structurel et comportemental",
                        u"Concevoir et utiliser un modèle relatif à un système en vue d’évaluer les performances de la chaîne d’information",
@@ -49,58 +49,11 @@ CentresInteretsSSI = [u"Analyser un système fonctionnellement et structurelleme
 
 
 
-dicCompetencesSSI =  {"A1" : [u"Analyser le besoin",
-                              {"A1.1" : [u"définir le besoin",4],
-                               "A1.2" : [u"définir les fonctions de service",5],
-                               "A1.3" : [u"identifier les contraintes",4],
-                               "A1.4" : [u"traduire un besoin fonctionnel en problématique technique",4]}],
-                      "A2" : [u"Analyser le système",
-                              {"A2.1" : [u"identifier et ordonner les fonctions techniques qui réalisent les fonctions de services et respectent les contraintes",3],
-                               "A2.2" : [u"identifier les éléments transformés et les flux",4],
-                               "A2.3" : [u"décrire les liaisons entre les blocs fonctionnels",3],
-                               "A2.4" : [u"identifier l’organisation structurelle",4],
-                               "A2.5" : [u"identifier les matériaux des constituants et leurs propriétés en relation avec les fonctions et les contraintes",4],}],
-                      "A3" : [u"Caractériser des écarts",
-                              {"A3.1" : [u"comparer les résultats expérimentaux avec les résultats simulés et interpréter les écarts",3],
-                               "A3.2" : [u"comparer les résultats expérimentaux avec les critères du cahier des charges et interpréter les écarts",5],
-                               "A3.3" : [u"comparer les résultats simulés avec les critères du cahier des charges et interpréter les écarts",5]}],
-                      
-                      "B1" : [u"Identifier et caractériser les grandeurs agissant sur un système",
-                              {"B1.1" : [u"définir, justifier la frontière de tout ou partie d’un système et répertorier les interactions",4],
-                               "B1.2" : [u"choisir les grandeurs et les paramètres influents en vue de les modéliser",4]}],
-                      "B2" : [u"Proposer ou justifier un modèle",
-                              {"B2.1" : [u"associer un modèle à un système ou à son comportement",3],
-                               "B2.2" : [u"préciser ou justifier les limites de validité du modèle envisagé",4],}],
-                      "B3" : [u"Résoudre et simuler",
-                              {"B3.1" : [u"choisir et mettre en oeuvre une méthode de résolution",3],
-                               "B3.2" : [u"simuler le fonctionnement de tout ou partie d’un système à l’aide d’un modèle fourni",5]}],
-                      "B4" : [u"Valider un modèle",
-                              {"B4.1" : [u"interpréter les résultats obtenus",3],
-                               "B4.2" : [u"préciser les limites de validité du modèle utilisé",5],
-                               "B4.3" : [u"modifier les paramètres du modèle pour répondre au cahier des charges ou aux résultats expérimentaux",5],
-                               "B4.4" : [u"valider un modèle optimisé fourni",5]}],
-                      
-                      "C1" : [u"Justifier le choix d’un protocole expérimental",
-                              {"C1.1" : [u"identifier les grandeurs physiques à mesurer",4],
-                               "C1.2" : [u"décrire une chaîne d’acquisition",4],
-                               "C1.3" : [u"identifier le comportement des composants",4],
-                               "C1.4" : [u"justifier le choix des essais réalisés",4]}],
-                      "C2" : [u"Mettre en oeuvre un protocole expérimental",
-                              {"C2.1" : [u"conduire les essais en respectant les consignes de sécurité à partir d’un protocole fourni",3],
-                               "C2.2" : [u"traiter les données mesurées en vue d’analyser les écarts",4],}],
-                      
-                      "D1" : [u"Rechercher et traiter des informations",
-                              {"D1.1" : [u"rechercher des informations",3],
-                               "D1.2" : [u"analyser, choisir et classer des informations",5]}],
-                      "D2" : [u"Mettre en oeuvre une communication",
-                              {"D2.1" : [u"choisir un support de communication et un média adapté, argumenter",3],
-                               "D2.2" : [u"produire un support de communication",5],
-                               "D2.3" : [u"adapter sa stratégie de communication au contexte",5]}],
-                      }
 
 
 
-dicSavoirsSSI = {"A1" : [u"Analyser le besoin",
+
+dicSavoirs_SSI = {"A1" : [u"Analyser le besoin",
                          {"A1.1" : [u"Besoin, finalités, contraintes, cahier des charges",
                                    [u"Décrire le besoin",
                                     u"Présenter la fonction globale",
@@ -311,39 +264,125 @@ dicSavoirsSSI = {"A1" : [u"Analyser le besoin",
                  }
 
 
-dicCompetencesSSI_prj =  {"B3" : [u"Modéliser : simuler le fonctionnement de tout ou partie d’un système à l’aide d’un modèle fourni",
-                                  {"B3.1" : [u"Les paramètres influents sont identifiés",20, True],
-                                   "B3.2" : [u"Les limites de simulation sont correctement définies",20, True]}],
-                          "B4" : [u"Valider un modèle : interpréter les résultats obtenus, préciser les limites de validité du modèle utilisé, modifier les paramètres du modèle pour répondre au cahier des charges ou aux résultats expérimentaux, valider un modèle optimisé fourni",
-                                  {"B4.1" : [u"Les résultats sont correctement interprétés",15],
-                                   "B4.2" : [u"Ces limites sont explicitées",15],
-                                   "B4.3" : [u"Les paramètres modifiés sont pertinents",15],
-                                   "B4.4" : [u"Le modèle modifié répond aux attentes ",15]}],
-                          
-                          "C1" : [u"Justifier le choix d’un protocole expérimental : identifier les grandeurs physiques à mesurer, décrire une chaîne d’acquisition, identifier le comportement des composants, justifier le choix des essais réalisés",
-                                  {"C1.1" : [u"Les grandeurs spécifiques (d'entrée, sortie, matière d'œuvre…) sont correctement identifiées",8, True],
-                                   "C1.2" : [u"Les éléments de la chaîne sont correctement identifiés ",8, True],
-                                   "C1.3" : [u"Les choix et réglages des capteurs et appareils de mesure sont correctement explicités",7, True],
-                                   "C1.4" : [u"Un protocole expérimental adapté de recueil de résultats est conçu ou complété, validé et mis en œuvre",10, True],
-                                   "C1.5" : [u"Le comportement est précisément décrit",5]}],
-                          "C2" : [u"Mettre en oeuvre un protocole expérimental : conduire les essais en respectant les consignes de sécurité à partir d’un protocole fourni, traiter les données mesurées en vue d’analyser les écarts",
-                                  {"C2.1" : [u"Les capteurs et appareils de mesure sont correctement mis en œuvre",8, True],
-                                   "C2.2" : [u"Le système étudié est correctement mis en œuvre",8, True],
-                                   "C2.3" : [u"Les règles de sécurité sont connues et respectées",8, True],
-                                   "C2.4" : [u"Les résultats sont présentés clairement",9, True],
-                                   "C2.5" : [u"Les protocole d'essai est respecté",10, True],
-                                   "C2.6" : [u"Les méthodes et outils de traitement sont cohérents avec le problème posé",9, True],
-                                   "C2.7" : [u"Les résultats sont correctement analysés",10],}],
-                          
-                          "D1" : [u"Rechercher et traiter des informations : rechercher des informations, analyser, choisir et classer des informations",
-                                  {"D1.1" : [u"Les outils de recherche documentaire sont bien choisis",10],
-                                   "D1.2" : [u"Les techniques de recherche documentaire sont maîtrisées",5],
-                                   "D1.3" : [u"Les informations conservées sont opportunes",5],
-                                   "D1.4" : [u"Le classement des données permet de les retrouver rapidement",10]}],
-                          "D2" : [u"Mettre en oeuvre une communication : choisir un support de communication et un média adapté, argumenter, produire un support de communication, adapter sa stratégie de communication au contexte",
-                                  {"D2.1" : [u"Les outils de communication sont maîtrisés",20],
-                                   "D2.2" : [u"Le support utilisé est adapté",10],
-                                   "D2.3" : [u"La production finale permet la compréhension du problème et de sa résolution ",20],
-                                   "D2.4" : [u"La production respecte le cahier des charges (écrit/oral, texte/vidéo, durée, public visé, …)",20]}],
-                          }
 
+dicCompetences_SSI =  {"A" : [u"Analyser",
+                             {"A1" : [u"Analyser le besoin",
+                                      {"A1.1" : u"définir le besoin",
+                                       "A1.2" : u"définir les fonctions de service",
+                                       "A1.3" : u"identifier les contraintes",
+                                       "A1.4" : u"traduire un besoin fonctionnel en problématique technique"}],
+                              "A2" : [u"Analyser le système",
+                                      {"A2.1" : u"identifier et ordonner les fonctions techniques qui réalisent les fonctions de services et respectent les contraintes",
+                                       "A2.2" : u"identifier les éléments transformés et les flux",
+                                       "A2.3" : u"décrire les liaisons entre les blocs fonctionnels",
+                                       "A2.4" : u"identifier l’organisation structurelle",
+                                       "A2.5" : u"identifier les matériaux des constituants et leurs propriétés en relation avec les fonctions et les contraintes"}],
+                              "A3" : [u"Caractériser des écarts",
+                                      {"A3.1" : u"comparer les résultats expérimentaux avec les résultats simulés et interpréter les écarts",
+                                       "A3.2" : u"comparer les résultats expérimentaux avec les critères du cahier des charges et interpréter les écarts",
+                                       "A3.3" : u"comparer les résultats simulés avec les critères du cahier des charges et interpréter les écarts"}]},
+                             ],
+                      
+                      "B" : [u"Modéliser",
+                             {"B1" : [u"Identifier et caractériser les grandeurs agissant sur un système",
+                                      {"B1.1" : u"définir, justifier la frontière de tout ou partie d’un système et répertorier les interactions",
+                                       "B1.2" : u"choisir les grandeurs et les paramètres influents en vue de les modéliser"}],
+                              "B2" : [u"Proposer ou justifier un modèle",
+                                      {"B2.1" : u"associer un modèle à un système ou à son comportement",
+                                       "B2.2" : u"préciser ou justifier les limites de validité du modèle envisagé"}],
+                              "B3" : [u"Résoudre et simuler",
+                                      {"B3.1" : u"choisir et mettre en oeuvre une méthode de résolution",
+                                       "B3.2" : u"simuler le fonctionnement de tout ou partie d’un système à l’aide d’un modèle fourni"}],
+                              "B4" : [u"Valider un modèle",
+                                      {"B4.1" : u"interpréter les résultats obtenus",
+                                       "B4.2" : u"préciser les limites de validité du modèle utilisé",
+                                       "B4.3" : u"modifier les paramètres du modèle pour répondre au cahier des charges ou aux résultats expérimentaux",
+                                       "B4.4" : u"valider un modèle optimisé fourni"}]},
+                             ],
+                      
+                      "C" : [u"Expérimenter",
+                             {"C1" : [u"Justifier le choix d’un protocole expérimental",
+                                      {"C1.1" : u"identifier les grandeurs physiques à mesurer",
+                                       "C1.2" : u"décrire une chaîne d’acquisition",
+                                       "C1.3" : u"identifier le comportement des composants",
+                                       "C1.4" : u"justifier le choix des essais réalisés"}],
+                              "C2" : [u"Mettre en oeuvre un protocole expérimental",
+                                      {"C2.1" : u"conduire les essais en respectant les consignes de sécurité à partir d’un protocole fourni",
+                                       "C2.2" : u"traiter les données mesurées en vue d’analyser les écarts"}]}
+                             ],
+                      
+                      "D" : [u"Communiquer",
+                             {"D1" : [u"Rechercher et traiter des informations",
+                                      {"D1.1" : u"rechercher des informations",
+                                       "D1.2" : u"analyser, choisir et classer des informations"}],
+                              "D2" : [u"Mettre en oeuvre une communication",
+                                      {"D2.1" : u"choisir un support de communication et un média adapté, argumenter",
+                                       "D2.2" : u"produire un support de communication",
+                                       "D2.3" : u"adapter sa stratégie de communication au contexte"}]}
+                             ]
+                      }
+
+
+dicCompetences_prj_SSI =  {"B" : [dicCompetences_SSI["B"][0],
+                                 {"B3" : [dicCompetences_SSI["B"][1]["B3"][0],
+                                          {"B3.2" : dicCompetences_SSI["B"][1]["B3"][1]["B3.2"]}],
+                                  "B4" : dicCompetences_SSI["B"][1]["B4"]}],
+                           
+                           "C" : dicCompetences_SSI["C"],
+                           
+                           "D" : dicCompetences_SSI["D"]}
+                           
+#################################################################################################################################
+#
+#        Les indicateurs de compétences
+#                (True = revue ; False = soutenance)
+#
+#################################################################################################################################
+dicIndicateurs_prj_SSI = {"B3" : [[u"Les paramètres influents sont identifiés", True],
+                                  [u"Les limites de simulation sont correctement définies", True]
+                                  ],
+                          "B4" : [[u"Les résultats sont correctement interprétés", False],
+                                  [u"Ces limites sont explicitées", False],
+                                  [u"Les paramètres modifiés sont pertinents", False],
+                                  [u"Le modèle modifié répond aux attentes ", False]
+                                  ],
+                          "C1" : [[u"Les grandeurs spécifiques (d'entrée, sortie, matière d'œuvre…) sont correctement identifiées", True],
+                                  [u"Les éléments de la chaîne sont correctement identifiés ", True],
+                                  [u"Les choix et réglages des capteurs et appareils de mesure sont correctement explicités", True],
+                                  [u"Un protocole expérimental adapté de recueil de résultats est conçu ou complété, validé et mis en œuvre", True],
+                                  [u"Le comportement est précisément décrit", False]],
+                          "C2" : [[u"Les capteurs et appareils de mesure sont correctement mis en œuvre", True],
+                                  [u"Le système étudié est correctement mis en œuvre", True],
+                                  [u"Les règles de sécurité sont connues et respectées", True],
+                                  [u"Les résultats sont présentés clairement", True],
+                                  [u"Les protocole d'essai est respecté", True],
+                                  [u"Les méthodes et outils de traitement sont cohérents avec le problème posé", True],
+                                  [u"Les résultats sont correctement analysés", False]],
+                          "D1" : [[u"Les outils de recherche documentaire sont bien choisis", False],
+                                  [u"Les techniques de recherche documentaire sont maîtrisées", False],
+                                  [u"Les informations conservées sont opportunes", False],
+                                  [u"Le classement des données permet de les retrouver rapidement", False]
+                                  ],
+                          "D2" : [[u"Les outils de communication sont maîtrisés", False],
+                                  [u"Le support utilisé est adapté", False],
+                                  [u"La production finale permet la compréhension du problème et de sa résolution ", False],
+                                  [u"La production respecte le cahier des charges (écrit/oral, texte/vidéo, durée, public visé, …)", False]
+                                  ]
+                              }
+     
+#################################################################################################################################
+#
+#        Les poids des indicateurs de compétences
+#
+#################################################################################################################################
+dicPoidsIndicateurs_prj_SSI = {"B" : [40, 
+                                      {"B3" : [20,20],
+                                       "B4" : [15,15,15,15]}],
+                               "C" : [40,
+                                      {"C1" : [8,8,7,10,5],
+                                       "C2" : [8,8,8,9,10,9,10]}],
+                               "D" : [20, 
+                                      {"D1" : [10,5,5,10],
+                                       "D2" : [20,10,20,20],
+                                        }]
+                               }
