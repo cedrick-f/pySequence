@@ -33,7 +33,7 @@
 #
 ####################################################################################
 
-CentresInteretsAC = [u"Participation à une étude architecturale",
+CentresInterets_AC = [u"Participation à une étude architecturale",
                        u"Vérification de la résistance",
                        u"Protection",
                        u"Le confort",
@@ -43,21 +43,9 @@ CentresInteretsAC = [u"Participation à une étude architecturale",
                        u"Valorisation de la fin de vie de l'ouvrage"
                        ]
 
-dicCompetencesAC = {"O7" : [u"Imaginer une solution, répondre à un besoin",
-                          {"CO7.ac1" : [u"PArticiper à une étude architecturale, dans une démarche de développement durable",5],
-                           "CO7.ac2" : [u"Proposer/Choisir des solutions techniques répondant aux contraintes et attentes d'une construction",7],
-                           "CO7.ac3" : [u"Concevoir une organisation de réalisation",4],}],
-                  "O8" : [u"Valider des solutions techniques",
-                          {"CO8.ac1" : [u"Simuler un comportement structurel, thermique et acoustique de tout ou partie d'une construction",4],
-                           "CO8.ac2" : [u"Analyser les résultats issus de simulations ou d'essais de laboratoire",4],
-                           "CO8.ac3" : [u"Analyser/Valider les choix structurels et de confort",4],}],
-                  "O9" : [u"Gérer la vie d'un système",
-                          {"CO9.ac1" : [u"Améliorer les performances d'une construction du point de vue énergétique, domotique et informationnel",5],
-                           "CO9.ac2" : [u"Identifier et décrire les causes de désordre dans une construction",3],
-                           "CO9.ac3" : [u"Valoriser la fin de vie du produit : déconstruction, gestion des déchets, valorisation des produits",3]}]}
 
 
-dicSavoirsAC = {"1" : [u"Projet technologique",
+dicSavoirs_AC = {"1" : [u"Projet technologique",
                          {"1.1" : [u"La démarche de projet",
                                    [u"Environnement économique et professionnel",
                                     u"Planification d'un projet de construction : découpage en phase, diagramme de Gantt, notion de chemin critique",
@@ -111,52 +99,93 @@ dicSavoirsAC = {"1" : [u"Projet technologique",
                                     }]}
 
 
-dicIndicateursAC = {"CO7.ac1" : [u"Le besoin relatif au projet est identifié",
-                                    u"Les fonctions principales du projet sont identifiées",
-                                    u"Les critères du CDC du projet sont décodés",
-                                    u"La démarche d'analyse du problème est mise en oeuvre",
-                                    u"Les principaux points de vigilance (économiques, développement durable, intégration en site) relatifs au projet sont identifiés"
-                                    ],
-                     "CO7.ac2" : [u"Des pratiques de travail collaboratives sont mise en oeuvre",
-                                    u"Les moyens conventionnels de représentation des solutions sont correctement utilisés (croquis, schémas, ...)",
-                                    u"Les contraintes de normes, propriétés industrielle et brevet sont identifiées",
-                                    u"Les solutions techniques proposées sont pertinentes des points de vue développement durable et économique",
-                                    u"Les caractéristiques comportementales de la solution retenue répondent au CDC",
-                                    u"Les choix sont explicités dans une démarche d'analyse globale de réponse au CDC",
-                                    u"Une recherche systématique de produit innovant est effectuée"
-                                    ],
-                     "CO7.ac3" : [u"Le phasage des opérations de réalisation est réaliste, le chemin critique est identifié",
-                                    u"Les procédés de mise en oeuvre sont choisis et justifiés",
-                                    u"La logistique de réalisation répond aux contraintes techniques et de site du chantier",
-                                    u"Les impacts environnementaux sont identifiés, des solutions de limitation sont proposées"
-                                    ],
-                     "CO8.ac1" : [u"Les variables du modèle sont identifiées",
-                                    u"Leurs influences respectives sont identifiées",
-                                    u"Les scénarios de simulation sont appliqués",
-                                    u"Les conditions de l'essai sont identifiées et justifiées"
-                                    ],
-                     "CO8.ac2" : [u"Les observations et mesures sont méthodiquement menées",
-                                    u"Les incertitudes sont estimées",
-                                    u"L'interprétation des résultats est cohérente",
-                                    u"Les résultats de la simulation et les mesures sont corrélés (validation des modèles)"
-                                    ],
-                     "CO8.ac3" : [u"Une démarche d'analyse de la structure est mise en oeuvre",
-                                    u"Les écarts entre les performances attendues et celles consécutives aux choix effectués sont établis",
-                                    u"Les contraintes de normes, proporiétés industrielles et brevets sont identifiées",
-                                    u"Les impacts environnementaux sont identifiés, des solutions de limitation sont proposées"
-                                    ],
-                     "CO9.ac1" : [u"Un bilan des performances de la construction existante est établi",
-                                    u"Les besoins de l'usager sont traduits en solutions technologiques",
-                                    u"Le contexte normatif est précisé",
-                                    u"Une réalisation permet de constater les améliorations attendues",
-                                    u"L'adaptabilité de la construction rénovée est prise en compte"
-                                    ],
-                     "CO9.ac2" : [u"Une investigation est réalisée",
-                                    u"Les désordres et leurs causes sont identifiés",
-                                    u"Des solutions de remédiation sont envisagées"
-                                    ],
-                     "CO9.ac3" : [u"Une analyse de cycle de vie de tout ou partie d'une construction est menée",
-                                    u"Les contraintes normatives (au sens du développement durable) sont répertoriées",
-                                    u"Une procédure de valorisation des produits est proposée"
-                                  ]}
+dicCompetences_AC =  {"O7" : [u"Imaginer une solution, répondre à un besoin",
+                              {"CO7.ac1" : u"PArticiper à une étude architecturale, dans une démarche de développement durable",
+                               "CO7.ac2" : u"Proposer/Choisir des solutions techniques répondant aux contraintes et attentes d'une construction",
+                               "CO7.ac3" : u"Concevoir une organisation de réalisation"}],
+                      "O8" : [u"Valider des solutions techniques",
+                              {"CO8.ac1" : u"Simuler un comportement structurel, thermique et acoustique de tout ou partie d'une construction",
+                               "CO8.ac2" : u"Analyser les résultats issus de simulations ou d'essais de laboratoire",
+                               "CO8.ac3" : u"Analyser/Valider les choix structurels et de confort"}],
+                      "O9" : [u"Gérer la vie d'un système",
+                              {"CO9.ac1" : u"Améliorer les performances d'une construction du point de vue énergétique, domotique et informationnel",
+                               "CO9.ac2" : u"Identifier et décrire les causes de désordre dans une construction",
+                               "CO9.ac3" : u"Valoriser la fin de vie du produit : déconstruction, gestion des déchets, valorisation des produits"}]}
+
+
+#################################################################################################################################
+#
+#        Les indicateurs de compétences
+#                (True = revue ; False = soutenance)
+#
+#################################################################################################################################
+dicIndicateurs_prj_AC = {"CO7.ac1" : [[u"Le besoin relatif au projet est identifié", True],
+                                       [u"Les fonctions principales du projet sont identifiées", True],
+                                       [u"Les critères du CDC du projet sont décodés", True],
+                                       [u"La démarche d'analyse du problème est mise en oeuvre", True],
+                                       [u"Les principaux points de vigilance (économiques, développement durable, intégration en site) relatifs au projet sont identifiés", True]
+                                        ],
+                         "CO7.ac2" : [[u"Des pratiques de travail collaboratives sont mise en oeuvre", True],
+                                       [u"Les moyens conventionnels de représentation des solutions sont correctement utilisés (croquis, schémas, ...)", True],
+                                       [u"Les contraintes de normes, propriétés industrielle et brevet sont identifiées", True],
+                                       [u"Les solutions techniques proposées sont pertinentes des points de vue développement durable et économique", True],
+                                       [u"Les caractéristiques comportementales de la solution retenue répondent au CDC", True],
+                                       [u"Les choix sont explicités dans une démarche d'analyse globale de réponse au CDC", True],
+                                       [u"Une recherche systématique de produit innovant est effectuée", True]
+                                        ],
+                         "CO7.ac3" : [[u"Le phasage des opérations de réalisation est réaliste, le chemin critique est identifié", True],
+                                       [u"Les procédés de mise en oeuvre sont choisis et justifiés", True],
+                                       [u"La logistique de réalisation répond aux contraintes techniques et de site du chantier", True],
+                                       [u"Les impacts environnementaux sont identifiés, des solutions de limitation sont proposées", True]
+                                        ],
+                         "CO8.ac1" : [[u"Les variables du modèle sont identifiées", True],
+                                       [u"Leurs influences respectives sont identifiées", True],
+                                       [u"Les scénarios de simulation sont appliqués", True],
+                                       [u"Les conditions de l'essai sont identifiées et justifiées", True]
+                                        ],
+                         "CO8.ac2" : [[u"Les observations et mesures sont méthodiquement menées", True],
+                                       [u"Les incertitudes sont estimées", True],
+                                       [u"L'interprétation des résultats est cohérente", True],
+                                       [u"Les résultats de la simulation et les mesures sont corrélés (validation des modèles)", True]
+                                        ],
+                         "CO8.ac3" : [[u"Une démarche d'analyse de la structure est mise en oeuvre", True],
+                                       [u"Les écarts entre les performances attendues et celles consécutives aux choix effectués sont établis", True],
+                                       [u"Les contraintes de normes, proporiétés industrielles et brevets sont identifiées", True],
+                                       [u"Les impacts environnementaux sont identifiés, des solutions de limitation sont proposées", True]
+                                        ],
+                         "CO9.ac1" : [[u"Un bilan des performances de la construction existante est établi", True],
+                                       [u"Les besoins de l'usager sont traduits en solutions technologiques", True],
+                                       [u"Le contexte normatif est précisé", True],
+                                       [u"Une réalisation permet de constater les améliorations attendues", True],
+                                       [u"L'adaptabilité de la construction rénovée est prise en compte", True]
+                                        ],
+                         "CO9.ac2" : [[u"Une investigation est réalisée", True],
+                                       [u"Les désordres et leurs causes sont identifiés", True],
+                                       [u"Des solutions de remédiation sont envisagées", True]
+                                        ],
+                         "CO9.ac3" : [[u"Une analyse de cycle de vie de tout ou partie d'une construction est menée", True],
+                                      [u"Les contraintes normatives (au sens du développement durable) sont répertoriées", True],
+                                      [u"Une procédure de valorisation des produits est proposée", True]
+                                      ]}
+
+
+
+#################################################################################################################################
+#
+#        Les poids des indicateurs de compétences
+#
+#################################################################################################################################
+dicPoidsIndicateurs_prj_AC   = {"O7" : [20, 
+                                        {"CO7.ac1" : [5,10,5,5,10],
+                                         "CO7.ac2" : [5,5,5,5,10,5,4],
+                                         "CO7.ac3" : [7,7,7,5]}],
+                                "O8" : [40,
+                                        {"CO8.ac1" : [10,10,10,5],
+                                         "CO8.ac2" : [10,5,10,10],
+                                         "CO8.ac3" : [10,10,5,5]}],
+                                "O9" : [30,
+                                        {"CO9.ac1" : [10,10,10,15,10],
+                                         "CO9.ac2" : [5,10,5],
+                                         "CO9.ac3" : [10,5,10]}]
+                                }
 
