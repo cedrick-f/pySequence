@@ -1555,7 +1555,7 @@ class Projet(BaseDoc, Objet_sequence):
         
     ######################################################################################  
     def setBranche(self, branche):
-        print "setBranche projet"
+#        print "setBranche projet"
         
         
         self.intitule = branche.get("Intitule", u"")
@@ -4446,8 +4446,9 @@ class Eleve(Personne, Objet_sequence):
     def GetDuree(self):
         d = 0
         for t in self.parent.taches:
-            if self.id in t.eleves:
-                d += t.GetDuree()
+            if not t.phase in ["R1", "R2", "S"]:
+                if self.id in t.eleves:
+                    d += t.GetDuree()
         return d
         
     ######################################################################################  
@@ -4918,11 +4919,11 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         wx.CallAfter(self.ouvrir, evt.GetFile())
         
         
-    ###############################################################################################
-    def AppelOuvrir(self, nomFichier):
-        evt = AppelEvent(myEVT_APPEL_OUVRIR, self.GetId())
-        evt.SetFile(nomFichier)
-        self.GetEventHandler().ProcessEvent(evt)
+#    ###############################################################################################
+#    def AppelOuvrir(self, nomFichier):
+#        evt = AppelEvent(myEVT_APPEL_OUVRIR, self.GetId())
+#        evt.SetFile(nomFichier)
+#        self.GetEventHandler().ProcessEvent(evt)
         
         
         
@@ -5484,34 +5485,34 @@ class FenetreSequence(FenetreDocument):
         
     ###############################################################################################
     def ouvrir(self, nomFichier, redessiner = True):
-        
+        self.Freeze()
         fichier = open(nomFichier,'r')
         self.definirNomFichierCourant(nomFichier)
-#        try:
-        root = ET.parse(fichier).getroot()
-        
-        # La séquence
-        sequence = root.find("Sequence")
-        if sequence == None:
-            self.sequence.setBranche(root)
+        try:
+            root = ET.parse(fichier).getroot()
             
-        else:
-            # La classe
-            classe = root.find("Classe")
-            self.classe.setBranche(classe)
-            
-            self.sequence.setBranche(sequence)  
+            # La séquence
+            sequence = root.find("Sequence")
+            if sequence == None:
+                self.sequence.setBranche(root)
                 
-#        except Exception as inst:
-#            dlg = wx.MessageDialog(self, u"La séquence pédagogique\n%s\n n'a pas pu être ouverte !" %nomFichier,
-#                               u"Erreur d'ouverture",
-#                               wx.OK | wx.ICON_WARNING
-#                               )
-#            dlg.ShowModal()
-#            dlg.Destroy()
-#            fichier.close()
-##            wx.EndBusyCursor()
-#            return
+            else:
+                # La classe
+                classe = root.find("Classe")
+                self.classe.setBranche(classe)
+                
+                self.sequence.setBranche(sequence)  
+                
+        except Exception as inst:
+            dlg = wx.MessageDialog(self, u"La séquence pédagogique\n%s\n n'a pas pu être ouverte !" %nomFichier,
+                               u"Erreur d'ouverture",
+                               wx.OK | wx.ICON_WARNING
+                               )
+            dlg.ShowModal()
+            dlg.Destroy()
+            fichier.close()
+#            wx.EndBusyCursor()
+            return
 
         self.arbre.DeleteAllItems()
         root = self.arbre.AddRoot("")
@@ -5530,7 +5531,8 @@ class FenetreSequence(FenetreDocument):
         self.arbre.CalculatePositions()
         
         fichier.close()
-
+        self.Thaw()
+        
         if redessiner:
             wx.CallAfter(self.ficheSeq.Redessiner)
         
@@ -5627,34 +5629,34 @@ class FenetreProjet(FenetreDocument):
         
     ###############################################################################################
     def ouvrir(self, nomFichier, redessiner = True):
-        tps1 = time.clock()
-      
+#        tps1 = time.clock()
+        self.Freeze()
         fichier = open(nomFichier,'r')
         self.definirNomFichierCourant(nomFichier)
-#        try:
-        root = ET.parse(fichier).getroot()
-        
-        # Le projet
-        projet = root.find("Projet")
-        if projet == None:
-            self.projet.setBranche(root)
+        try:
+            root = ET.parse(fichier).getroot()
             
-        else:
-            # La classe
-            classe = root.find("Classe")
-            self.classe.setBranche(classe)
-            self.projet.setBranche(projet)  
+            # Le projet
+            projet = root.find("Projet")
+            if projet == None:
+                self.projet.setBranche(root)
                 
-#        except Exception as inst:
-#            dlg = wx.MessageDialog(self, u"Le projet\n%s\n n'a pas pu être ouvert !" %nomFichier,
-#                               u"Erreur d'ouverture",
-#                               wx.OK | wx.ICON_WARNING
-#                               )
-#            dlg.ShowModal()
-#            dlg.Destroy()
-#            fichier.close()
-##            wx.EndBusyCursor()
-#            return
+            else:
+                # La classe
+                classe = root.find("Classe")
+                self.classe.setBranche(classe)
+                self.projet.setBranche(projet)  
+                
+        except Exception as inst:
+            dlg = wx.MessageDialog(self, u"Le projet\n%s\n n'a pas pu être ouvert !" %nomFichier,
+                               u"Erreur d'ouverture",
+                               wx.OK | wx.ICON_WARNING
+                               )
+            dlg.ShowModal()
+            dlg.Destroy()
+            fichier.close()
+#            wx.EndBusyCursor()
+            return
 
         self.arbre.DeleteAllItems()
         root = self.arbre.AddRoot("")
@@ -5677,13 +5679,15 @@ class FenetreProjet(FenetreDocument):
         self.arbre.CalculatePositions()
         
         fichier.close()
-
+        
+        self.Thaw()
+        
         if redessiner:
             wx.CallAfter(self.fichePrj.Redessiner)
         
-    
-        tps2 = time.clock() 
-        print tps2 - tps1
+#    
+#        tps2 = time.clock() 
+#        print tps2 - tps1
         
         
     #############################################################################
@@ -5969,7 +5973,6 @@ class FicheProjet(BaseFiche):
                 indicateurs = constantes.dicIndicateurs[type_ens][kComp]
           
                 self.popup.SetTitre(u"Compétence "+kComp)
-                
                 self.popup.SetTexte(textwrap.fill(competence, 50), self.tip_comp)
                 
                 if type_ens == "SSI":
@@ -7705,7 +7708,7 @@ class PanelPropriete_Seance(PanelPropriete):
                 self.systemeCtrl[i].Renommer(s.n)
             self.bsizer.Layout()
             self.Layout()
-            self.Thaw()
+        self.Thaw()
 
     #############################################################################
     def MiseAJourTypeEnseignement(self):

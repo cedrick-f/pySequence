@@ -100,7 +100,7 @@ dicSavoirs_AC = {"1" : [u"Projet technologique",
 
 
 dicCompetences_AC =  {"O7" : [u"Imaginer une solution, répondre à un besoin",
-                              {"CO7.ac1" : u"PArticiper à une étude architecturale, dans une démarche de développement durable",
+                              {"CO7.ac1" : u"Participer à une étude architecturale, dans une démarche de développement durable",
                                "CO7.ac2" : u"Proposer/Choisir des solutions techniques répondant aux contraintes et attentes d'une construction",
                                "CO7.ac3" : u"Concevoir une organisation de réalisation"}],
                       "O8" : [u"Valider des solutions techniques",
