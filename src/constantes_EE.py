@@ -41,19 +41,19 @@ CentresInterets_EE = [u"Typologie des sytèmes énergétiques",
                        ]
 
 dicCompetences_EE = {"O7" : [u"Imaginer une solution, répondre à un besoin",
-                          {"CO7.ee1" : [u"Participer à une démarche de conception dans le but de proposer plusieurs solutions possibles à un problème technique identifié en lien avec un enjeu énergétique",7],
-                           "CO7.ee2" : [u"Justifier une solution retenue en intégrant les conséquences des choix sur le triptyque Matériau - Energie - Information",6],
-                           "CO7.ee3" : [u"Définir la structure, la constitution d'un système en fonction des caractéristiques technico-économiques et environnementales attendues",4],
-                           "CO7.ee4" : [u"Définir les modifications de la structure, les choix de constituants et du type de système de gestion d'une chaîne d'énergie afin de répondre à une évolution d'un cahier des charges",4],}],
+                          {"CO7.ee1" : u"Participer à une démarche de conception dans le but de proposer plusieurs solutions possibles à un problème technique identifié en lien avec un enjeu énergétique",
+                           "CO7.ee2" : u"Justifier une solution retenue en intégrant les conséquences des choix sur le triptyque Matériau - Energie - Information",
+                           "CO7.ee3" : u"Définir la structure, la constitution d'un système en fonction des caractéristiques technico-économiques et environnementales attendues",
+                           "CO7.ee4" : u"Définir les modifications de la structure, les choix de constituants et du type de système de gestion d'une chaîne d'énergie afin de répondre à une évolution d'un cahier des charges"}],
                   "O8" : [u"Valider des solutions techniques",
-                          {"CO8.ee1" : [u"Renseigner un logiciel de simulation du comportement énergétique avec les caractéristiques du système et les paramètres externes pour un point de fonctionnement donné",3],
-                           "CO8.ee2" : [u"Interpréter les résultats d'une simulation afin de valider une solution ou l'optimiser",4],
-                           "CO8.ee3" : [u"Comparer et interpréter le résultat d'une simulation d'un comportement d'un système avec un comportement réel",3],
-                           "CO8.ee4" : [u"Mettre en oeuvre un protocole d'essais et de mesures sur le prototype d'une chaîne d'énergie, interpréter les résultats",5],}],
+                          {"CO8.ee1" : u"Renseigner un logiciel de simulation du comportement énergétique avec les caractéristiques du système et les paramètres externes pour un point de fonctionnement donné",
+                           "CO8.ee2" : u"Interpréter les résultats d'une simulation afin de valider une solution ou l'optimiser",
+                           "CO8.ee3" : u"Comparer et interpréter le résultat d'une simulation d'un comportement d'un système avec un comportement réel",
+                           "CO8.ee4" : u"Mettre en oeuvre un protocole d'essais et de mesures sur le prototype d'une chaîne d'énergie, interpréter les résultats"}],
                   "O9" : [u"Gérer la vie d'un système",
-                          {"CO9.ee1" : [u"Expérimenter des procédés de stockage, de production, de transport, de transformation, d'énergie pour aider à la conception d'une chaîne d'énergie",3],
-                           "CO9.ee2" : [u"Réaliser et valider un prototype obtenu en réponse à tout ou partie du cahier des charges initial",4],
-                           "CO9.ee3" : [u"Intégrer un prototype dans un système à modifier pour valider son comportement et ses performances",4]}]}
+                          {"CO9.ee1" : u"Expérimenter des procédés de stockage, de production, de transport, de transformation, d'énergie pour aider à la conception d'une chaîne d'énergie",
+                           "CO9.ee2" : u"Réaliser et valider un prototype obtenu en réponse à tout ou partie du cahier des charges initial",
+                           "CO9.ee3" : u"Intégrer un prototype dans un système à modifier pour valider son comportement et ses performances"}]}
 
 
 dicSavoirs_EE = {"1" : [u"Projet technologique",
