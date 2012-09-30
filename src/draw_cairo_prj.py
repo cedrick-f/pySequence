@@ -141,6 +141,7 @@ BCoulCompS = (0.7, 0.7, 0.7, 0.2)      # couleur "Soutenance"
 posZTaches = [posZDeroul[0] + wPhases + wDuree + ecartX*3/6, None]
 tailleZTaches = [None, None]
 hTacheMini = ecartY/2
+yTaches = []
 # paramètres pour la fonction qui calcule la hauteur des tâches 
 # en fonction de leur durée
 a = b = None 
@@ -348,7 +349,7 @@ def DefinirZones(prj, ctx):
     """ Calcule les positions et dimensions des différentes zones de tracé
         en fonction du nombre d'éléments (élèves, tâches, compétences)
     """
-    global ecartTacheY, intituleTaches, fontIntTaches, xEleves, yEleves, a, b
+    global ecartTacheY, intituleTaches, fontIntTaches, xEleves, yEleves, a, b, yTaches
     
     #
     # Zone du tableau des compétences - X
@@ -386,6 +387,7 @@ def DefinirZones(prj, ctx):
     
     
     # Zone des tâches
+    yTaches = []
     posZTaches[1] = posZDeroul[1] + ecartY/2
     tailleZTaches[0] = posZDeroul[0] + tailleZDeroul[0] - posZTaches[0] - ecartX/2
     tailleZTaches[1] = tailleZDeroul[1] - ecartY/2 - 0.04    # écart pour la durée totale
@@ -632,13 +634,11 @@ def Draw(ctx, prj, mouchard = False):
                        (posZElevesH[0], y, w, h), ha = ha, b = 0.1,
                        fontsizeMinMax = (-1, 0.016))
     
-    #
-    # Barres
-    #
     if len(l) > 0:
         
-        
+        #
         # Barres d'évaluabilité
+        #
         for i, e in enumerate(prj.eleves):
             r, s = e.GetEvaluabilite()
             y = posZElevesH[1] + i*hEleves
@@ -661,8 +661,9 @@ def Draw(ctx, prj, mouchard = False):
         
         prj.pt_caract_eleve = getPts(rec)
         
-        
+        #
         # Lignes horizontales
+        #
         for i, e in enumerate(prj.eleves):
             e.rect = [rec[i]]
             Ic = constantes.COUL_ELEVES[i][0]
@@ -672,8 +673,10 @@ def Draw(ctx, prj, mouchard = False):
             ctx.move_to(posZElevesH[0]+tailleZElevesH[0], yEleves[i])
             ctx.line_to(posZComp[0]+tailleZComp[0], yEleves[i])
             ctx.stroke()
-            
+        
+        #
         # Lignes verticales
+        #
         for i, e in enumerate(prj.eleves):
             Ic = constantes.COUL_ELEVES[i][0]
             
@@ -681,11 +684,12 @@ def Draw(ctx, prj, mouchard = False):
             ctx.set_line_width(0.003)
             ctx.move_to(xEleves[i], yEleves[i])
             ctx.line_to(xEleves[i], posZTaches[1] + tailleZTaches[1] + (i % 2)*(ecartY/2) + ecartY/2)
-            ctx.stroke()
-            
+            ctx.stroke()    
             DrawCroisementsElevesCompetences(ctx, e, yEleves[i])
-            
+        
+        #
         # Ombres des lignes verticales
+        #
         e = 0.003
         ctx.set_line_width(0.003)
         for i in range(len(prj.eleves)) :
@@ -696,10 +700,6 @@ def Draw(ctx, prj, mouchard = False):
             ctx.move_to(xEleves[i]-e, yEleves[i]+e)
             ctx.line_to(xEleves[i]-e, y)
         ctx.stroke()
-        
-        
-            
-    
     
     
     #
@@ -720,9 +720,14 @@ def Draw(ctx, prj, mouchard = False):
 
     phase = None
     for t in prj.taches:
+        if t.phase == "R1":
+            y1 = y
+        elif t.phase == "R2":
+            y2 = y
+            
         if phase != t.phase:
             y += ecartTacheY
-#        print "tache", t, t.phase
+
         if t.phase != '':  
             yb = DrawTacheRacine(ctx, t, y)
             if t.phase in ["Ana", "Con", "DCo", "Rea", "Val"] :
@@ -745,19 +750,43 @@ def Draw(ctx, prj, mouchard = False):
                    (posZDeroul[0] + ecartX/6, yh[0], 
                     wPhases, yh[1]-yh[0]), ha = 'c', orient = 'v', b = 0) 
 
+    
+    #
+    # Durées élève entre revues
+    #
+    y0 = posZTaches[1]
+    y3 = y1+2*ecartTacheY + 0.015
+    md1 = md2 = 0
+    for i, e in enumerate(prj.eleves):
+        md1 = max(e.GetDuree("R1"), md1)
+        md2 = max(e.GetDuree("R2"), md2)
+        
+        
+    for i, e in enumerate(prj.eleves):
+        d1 = e.GetDuree("R1")
+        d2 = e.GetDuree("R2")
+        Ic = constantes.COUL_ELEVES[i][0]
+        ctx.set_source_rgb(Ic[0],Ic[1],Ic[2])
+        ctx.set_line_width(0.005)
+        if md1 > 0:
+            ctx.move_to(xEleves[i], y0)
+            ctx.line_to(xEleves[i], y0+(y1-y0)*d1/md1)
+            ctx.stroke()
+        if md2 > 0:
+            ctx.move_to(xEleves[i], y3)
+            ctx.line_to(xEleves[i], y3+(y2-y3)*d2/md2)
+            ctx.stroke()
+    
+    #
+    # Croisements élèves/tâches
+    #
+    for t, y in yTaches: 
+        DrawCroisementsElevesTaches(ctx, t, y)
         
         
     #
     # Durées du projet (durées élèves)
     #
-#    ctx.set_source_rgb(0.5,0.8,0.8)
-#    ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-#                                       cairo.FONT_WEIGHT_BOLD)
-#    y = posZTaches[1] + tailleZTaches[1] + ecartY/4
-#    
-#    show_text_rect(ctx, getHoraireTxt(prj.GetDuree()), 
-#                   (posZTaches[0] - wDuree*3/2 - ecartX/2, y, 
-#                    wDuree*2, ecartY/2), ha = 'c', b = 0)    
     
     for i, e in enumerate(prj.eleves):
 #        x = posZElevesV[0]+i*tailleZElevesV[0]/len(prj.eleves)-wEleves/2
@@ -976,7 +1005,7 @@ def Draw_CI(ctx, CI):
     
 ######################################################################################  
 def DrawTacheRacine(ctx, tache, y):
-    
+    global yTaches
     
     #
     # Flèche verticale indiquant la durée de la tâche
@@ -1059,7 +1088,7 @@ def DrawTacheRacine(ctx, tache, y):
     #
     # Tracé des croisements "Tâches" et "Eleves"
     #
-    DrawCroisementsElevesTaches(ctx, tache, x + tailleZTaches[0], y + h/2)
+    yTaches.append([tache, y+h/2])
     DrawCroisementsCompetencesTaches(ctx, tache, y + h/2)
     
     y += h
@@ -1090,54 +1119,19 @@ def DrawLigne(ctx, x, y, gras = False):
         
 ######################################################################################  
 def DrawCroisementsCompetencesTaches(ctx, tache, y):
-#    print "DrawCroisementsCompetencesTaches", tache
-#        if self.typeSeance in ["AP", "ED", "P"]:
-#            and not (self.EstSousSeance() and self.parent.typeSeance == "S"):
-    
     DrawBoutonCompetence(ctx, tache, tache.GetDicIndicateurs(), y)
     
-#    r = wColComp/3
-#    ctx.set_line_width (0.001)
-#    for s in tache.competences:
-#        x = xComp[s]
-#        ctx.arc(x, y, r, 0, 2*pi)
-#        if len(constantes.dicCompetences_prj_simple[tache.parent.classe.typeEnseignement][s]) > 2:
-#            ctx.set_source_rgba (ICoulCompS[0],ICoulCompS[1],ICoulCompS[2],1.0)
-#        else:
-#            ctx.set_source_rgba (ICoulCompR[0],ICoulCompR[1],ICoulCompR[2],1.0)
-#        ctx.fill_preserve ()
-#        ctx.set_source_rgba (0,0,0,1)
-#        ctx.stroke ()
-#        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-#                              cairo.FONT_WEIGHT_BOLD)
-#        if s in tache.parent.rectComp.keys() and tache.parent.rectComp[s] != None:
-#            tache.parent.rectComp[s].append((x-r, y-r, 2*r, 2*r))
-#        else:
-#            tache.parent.rectComp[s] = [(x-r, y-r, 2*r, 2*r)]
-#        
-#        indic = tache.indicateurs[s]
-#        dangle = 2*pi/len(indic)
-#        for a, i in enumerate(indic):
-##            ctx.move_to (x, y)
-##            ctx.rel_line_to (r*cos(dangle*a)+pi/2, r*sin(dangle*a)+pi/2)
-#
-#            if i:
-#                ctx.set_source_rgba (0,0,0,1)
-#            else:
-#                ctx.set_source_rgba (1,1,1,1)
-#            ctx.arc(x+r*cos(-dangle*a-pi/2)/2, y+r*sin(-dangle*a-pi/2)/2, r/4, 0, 2*pi)
-#            ctx.fill()
-#            ctx.stroke()
-        
         
 #####################################################################################  
-def DrawCroisementsElevesTaches(ctx, tache, x, y):
+def DrawCroisementsElevesTaches(ctx, tache, y):
 
+    x = posZTaches[0] + tailleZTaches[0]
     #
     # Les lignes horizontales
     #
     if not tache.phase in ["R1", "R2", "S"]:
         DrawLigne(ctx, x, y)
+    
         
     #
     # Croisements Tâche/Eleves
@@ -1158,37 +1152,14 @@ def DrawCroisementsElevesTaches(ctx, tache, x, y):
 
 ######################################################################################  
 def DrawCroisementsElevesCompetences(ctx, eleve, y):
-#        if self.typeSeance in ["AP", "ED", "P"]:
-#            and not (self.EstSousSeance() and self.parent.typeSeance == "S"):
-    
+    #
+    # Boutons
+    #
     indic = eleve.GetDicIndicateurs()
 #    print eleve, indic
     DrawBoutonCompetence(ctx, eleve, indic, y)
     
-#    r = wColComp/3
-#    ns = eleve.GetCompetences()
-#    ctx.set_line_width(0.001)
-#    for s in ns:
-#        x = xComp[s]
-#        ctx.arc(x, y, r, 0, 2*pi)
-#        if estCompetenceRevue(eleve.parent.classe.typeEnseignement, s):
-##        if len(constantes.dicCompetences_prj_simple[eleve.parent.classe.typeEnseignement][s]) > 2:
-#            ctx.set_source_rgba (ICoulCompS[0],ICoulCompS[1],ICoulCompS[2],1.0)
-#        else:
-#            ctx.set_source_rgba (ICoulCompR[0],ICoulCompR[1],ICoulCompR[2],1.0)
-#        ctx.fill_preserve ()
-#        ctx.set_source_rgba (0,0,0,1)
-#        ctx.stroke ()
-#        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-#                              cairo.FONT_WEIGHT_BOLD)
-##        show_text_rect(ctx, str(n), (x-r, y-r, 2*r, 2*r))
-##        tache.rect.append((x-r, y-r, 2*r, 2*r)) 
-#        if s in eleve.parent.rectComp.keys():
-#            eleve.parent.rectComp[s].append((x-r, y-r, 2*r, 2*r))
-#        else:
-#            eleve.parent.rectComp[s] = [(x-r, y-r, 2*r, 2*r)]
-#        
-#        eleve.pts_caract.append((x,y))
+
     
 ######################################################################################  
 def DrawBoutonCompetence(ctx, objet, dicIndic, y):
