@@ -1,5 +1,5 @@
 <Projet_Classe>
-  <Projet Intitule="Intitulé du projet" Position="5" Problematique="Réaliser un capteur de couple capable de mesurer des couples de 0 à 3 Nm, adaptable sur n&apos;importe quel type d&apos;arbre (jusqu&apos;à 13 mm de diamètre). Mesure de couple statique. Affichage digital.">
+  <Projet Intitule="Intitulé du projet" Position="5" Problematique="Réaliser un capteur de couple capable de mesurer des couples de 0 à 3 Nm, adaptable sur n&apos;importe quel type d&apos;arbre (jusqu&apos;à 13 mm de diamètre). Mesure de couple statique.##13##    Affichage digital.">
     <Equipe>
       <Prof Discipline="Tec" Id="0" Nom="faury" Prenom="cédrick" Referent="True" />
     </Equipe>
@@ -27,6 +27,7 @@
       </Tache5>
       <Tache6 Duree="0.5" Intitule="Revue de projet n°1" IntituleDansDeroul="True" Phase="R1">
         <Eleves />
+        <Indicateurs />
       </Tache6>
       <Tache7 Duree="8" Intitule="Recherche des formes de la pièce déformable par simulation SW" IntituleDansDeroul="True" Phase="DCo">
         <Eleves Eleve0="0" />

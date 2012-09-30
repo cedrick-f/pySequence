@@ -736,6 +736,16 @@ def Draw(ctx, prj, mouchard = False):
             y = yb
             
         phase = t.phase
+        
+    #
+    # Les lignes horizontales en face des taches
+    # et les croisements Tâche/Competences
+    #
+    x = posZTaches[0] + tailleZTaches[0]
+    for t, y in yTaches: 
+        if not t.phase in ["R1", "R2", "S"]:
+            DrawLigne(ctx, x, y)
+        DrawCroisementsCompetencesTaches(ctx, t, y)
     
     # Nom des phases
     for phase, yh in yh_phase.items():
@@ -1089,7 +1099,9 @@ def DrawTacheRacine(ctx, tache, y):
     # Tracé des croisements "Tâches" et "Eleves"
     #
     yTaches.append([tache, y+h/2])
-    DrawCroisementsCompetencesTaches(ctx, tache, y + h/2)
+#    DrawCroisementsCompetencesTaches(ctx, tache, y + h/2)
+    
+    
     
     y += h
     return y
@@ -1125,12 +1137,12 @@ def DrawCroisementsCompetencesTaches(ctx, tache, y):
 #####################################################################################  
 def DrawCroisementsElevesTaches(ctx, tache, y):
 
-    x = posZTaches[0] + tailleZTaches[0]
-    #
-    # Les lignes horizontales
-    #
-    if not tache.phase in ["R1", "R2", "S"]:
-        DrawLigne(ctx, x, y)
+#    x = posZTaches[0] + tailleZTaches[0]
+#    #
+#    # Les lignes horizontales
+#    #
+#    if not tache.phase in ["R1", "R2", "S"]:
+#        DrawLigne(ctx, x, y)
     
         
     #

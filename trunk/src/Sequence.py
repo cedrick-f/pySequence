@@ -193,7 +193,7 @@ def toDefautEncoding(path):
 #        except:
 #            return self.path    
             
-            
+    
 
     
 ######################################################################################  
@@ -204,6 +204,17 @@ def toFileEncoding(path):
     except:
         return path
     
+######################################################################################  
+def rallonge(txt):
+    return u" "+txt+" "
+
+######################################################################################  
+def remplaceLF2Code(txt):
+    return txt.replace("\n", "##13##")#.replace("\n", "##13##")#&#13")
+    
+######################################################################################  
+def remplaceCode2LF(txt):
+    return txt.replace("##13##", "\n")#&#13")
     
 ####################################################################################
 #
@@ -701,7 +712,7 @@ class Classe():
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
         self.arbre = arbre
-        self.codeBranche = wx.StaticText(self.arbre, -1, self.typeEnseignement)
+        self.codeBranche = wx.StaticText(self.arbre, -1, rallonge(self.typeEnseignement))
         self.branche = arbre.AppendItem(branche, Titres[5]+" :", wnd = self.codeBranche, data = self)#, image = self.arbre.images["Seq"])
 
 
@@ -1523,7 +1534,7 @@ class Projet(BaseDoc, Objet_sequence):
         
         projet.set("Intitule", self.intitule)
         
-        projet.set("Problematique", self.problematique)
+        projet.set("Problematique", remplaceLF2Code(self.problematique))
 #
         if self.commentaires != u"":
             projet.set("Commentaires", self.commentaires)
@@ -1560,7 +1571,7 @@ class Projet(BaseDoc, Objet_sequence):
         
         self.intitule = branche.get("Intitule", u"")
 
-        self.problematique = branche.get("Problematique", u"")
+        self.problematique = remplaceCode2LF(branche.get("Problematique", u""))
         
         self.commentaires = branche.get("Commentaires", u"")
         
@@ -2253,59 +2264,7 @@ class Projet(BaseDoc, Objet_sequence):
                         indicateurs[c] = [x or y for x,y in zip(i, indicateurs[c])]
                     else:
                         indicateurs[c] = i   
-        
-            #
-            #
-            #
             
-
-
-
-
-#        competences = []
-#        indicateurs = {}
-##        tachesPrecR = []
-##        tachesPrecS = []
-#        for t in self.taches:
-#            if t.phase in ["R1", "R2", "S"]:
-#                lstR = []
-#                lstS = []
-#                for c in competences:
-#                    if estCompetenceRevue(self.classe.typeEnseignement, c):
-#                        lstR.append(c)
-#                    else:
-#                        lstS.append(c)
-#                if t.phase == "S":
-#                    t.competences = lstS
-#                else:
-#                    t.competences = lstR
-#                
-#                t.initIndicateurs()
-#                for c in t.competences:
-#                    t.indicateurs[c] = indicateurs[c]
-#                
-#                
-##                competences = []
-##                tachesPrec = []
-#        
-#            else:
-##                tachesPrec.append(t)
-#                competences.extend(t.competences)
-#                competences = list(set(competences))
-#                if self.classe.typeEnseignement == "SSI":
-#                    for c in t.competences:
-#                        if c in indicateurs.keys():
-#                            indicateurs[c] = max(indicateurs[c], t.indicateurs[c])
-#                        else:
-#                            indicateurs[c] = t.indicateurs[c]
-#                else:
-#                    for c in t.competences:
-#                        if c in indicateurs.keys():
-#                            indicateurs[c] = [x or y for x,y in zip(indicateurs[c], t.indicateurs[c])]
-#                        else:
-#                            indicateurs[c] = t.indicateurs[c]
-#                     
-                
                 
                 
 ####################################################################################
@@ -3552,7 +3511,7 @@ class Tache(Objet_sequence):
             brancheElv.set("Eleve"+str(i), str(e))
         
         
-        if not self.phase in ["R1", "R2", "S"]:
+        if not self.phase in ["R2", "S"]:
             # Structure des indicateurs :
             # <Indicateurs Indic0="CO6.1_1" Indic1="CO6.2_4" ..... />
             #   (compétence_indicateur)
@@ -3600,7 +3559,7 @@ class Tache(Objet_sequence):
         for i, e in enumerate(brancheElv.keys()):
             self.eleves.append(eval(brancheElv.get("Eleve"+str(i))))
             
-        if not self.phase in ["R1", "R2", "S"]:
+        if not self.phase in ["R2", "S"]:
             self.indicateurs = []
             #
             # pour compatibilité acsendante
@@ -3628,8 +3587,9 @@ class Tache(Objet_sequence):
                 
             else:
                 brancheInd = branche.find("Indicateurs")
-                for i, e in enumerate(brancheInd.keys()):
-                    self.indicateurs.append(brancheInd.get(e))
+                if brancheInd != None:
+                    for i, e in enumerate(brancheInd.keys()):
+                        self.indicateurs.append(brancheInd.get(e))
                 
 #            print self.indicateurs
 #            self.competences = []
@@ -4585,8 +4545,8 @@ class Eleve(Personne, Objet_sequence):
         
         
         er, es = self.GetEvaluabilite()
-        labr = " "+str(int(er*100))+"% "
-        labs = " "+str(int(es*100))+"% "
+        labr = rallonge(str(int(er*100))+"%")
+        labs = rallonge(str(int(es*100))+"%")
         self.evaluR.SetLabel(labr)
         self.evaluS.SetLabel(labs)
         t = u"L'élève ne mobilise pas suffisamment de compétences pour être évalué lors "
@@ -4609,17 +4569,11 @@ class Eleve(Personne, Objet_sequence):
     
     ######################################################################################  
     def SetCode(self):
-#        if hasattr(self, 'codeBranche'):
-#            self.codeBranche.SetLabel(self.nom)
 
         t = self.GetNomPrenom()
-                
 
         if hasattr(self, 'arbre'):
             self.arbre.SetItemText(self.branche, t)
-            
-            
-            
             
         # Tip
         if hasattr(self, 'tip'):
@@ -4629,9 +4583,9 @@ class Eleve(Personne, Objet_sequence):
             labr = str(int(er*100))+"% "
             labs = str(int(es*100))+"%"
             lab = draw_cairo.getHoraireTxt(duree)
-            self.tip.SetTexte(lab, self.tip_duree)
-            self.tip.SetTexte(labr, self.tip_evalR)
-            self.tip.SetTexte(labs, self.tip_evalS)
+            self.tip.SetTexte(rallonge(lab), self.tip_duree)
+            self.tip.SetTexte(rallonge(labr), self.tip_evalR)
+            self.tip.SetTexte(rallonge(labs), self.tip_evalS)
             self.tip.SetImage(self.avatar, self.tip_avatar)
             
             tol = 5
@@ -5635,38 +5589,38 @@ class FenetreProjet(FenetreDocument):
         self.Freeze()
         fichier = open(nomFichier,'r')
         self.definirNomFichierCourant(nomFichier)
-        try:
-            root = ET.parse(fichier).getroot()
+#        try:
+        root = ET.parse(fichier).getroot()
+        
+        # Le projet
+        projet = root.find("Projet")
+        if projet == None:
+            self.projet.setBranche(root)
             
-            # Le projet
-            projet = root.find("Projet")
-            if projet == None:
-                self.projet.setBranche(root)
+        else:
+            # La classe
+            classe = root.find("Classe")
+            self.classe.setBranche(classe)
+            self.projet.setBranche(projet)  
                 
-            else:
-                # La classe
-                classe = root.find("Classe")
-                self.classe.setBranche(classe)
-                self.projet.setBranche(projet)  
-                
-        except Exception as inst:
-            dlg = wx.MessageDialog(self, u"Le projet\n%s\n n'a pas pu être ouvert !" %nomFichier,
-                               u"Erreur d'ouverture",
-                               wx.OK | wx.ICON_WARNING
-                               )
-            dlg.ShowModal()
-            dlg.Destroy()
-            fichier.close()
-#            wx.EndBusyCursor()
-            return
+#        except Exception as inst:
+#            dlg = wx.MessageDialog(self, u"Le projet\n%s\n n'a pas pu être ouvert !" %nomFichier,
+#                               u"Erreur d'ouverture",
+#                               wx.OK | wx.ICON_WARNING
+#                               )
+#            dlg.ShowModal()
+#            dlg.Destroy()
+#            fichier.close()
+##            wx.EndBusyCursor()
+#            return
 
         self.arbre.DeleteAllItems()
         root = self.arbre.AddRoot("")
-
+        self.projet.SetCompetencesRevuesSoutenance()
         self.classe.ConstruireArbre(self.arbre, root)
         self.projet.ConstruireArbre(self.arbre, root)
         self.projet.OrdonnerTaches()
-        self.projet.SetCompetencesRevuesSoutenance()
+        
         self.projet.PubDescription()
         self.projet.SetLiens()
         self.projet.MiseAJourDureeEleves()
@@ -8383,7 +8337,8 @@ class PanelPropriete_Tache(PanelProprieteBook, PanelPropriete):
             
             root = self.arbre.GetRootItem()
             for s in self.tache.indicateurs:
-                self.arbre.CheckItem2(self.arbre.items[s])
+                if s in self.arbre.items.keys():
+                    self.arbre.CheckItem2(self.arbre.items[s])
                 
                 
 #                print "   ", s
@@ -9610,7 +9565,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
     def __init__(self, parent, type_ens, pptache, revue = False):
         self.revue = revue
         ArbreCompetences.__init__(self, parent, type_ens, pptache,
-                                  agwStyle = CT.TR_HIDE_ROOT|CT.TR_HAS_VARIABLE_ROW_HEIGHT|CT.TR_ROW_LINES)#|CT.TR_ELLIPSIZE_LONG_ITEMS)#|CT.TR_TOOLTIP_ON_LONG_ITEMS)#
+                                  agwStyle = CT.TR_HIDE_ROOT|CT.TR_HAS_VARIABLE_ROW_HEIGHT|CT.TR_ROW_LINES|CT.TR_ALIGN_WINDOWS)#|CT.TR_ELLIPSIZE_LONG_ITEMS)#|CT.TR_TOOLTIP_ON_LONG_ITEMS)#
         self.Bind(wx.EVT_SIZE, self.OnSize2)
         self.Bind(CT.EVT_TREE_ITEM_GETTOOLTIP, self.OnToolTip)
         
@@ -9640,12 +9595,11 @@ class ArbreCompetencesPrj(ArbreCompetences):
         clefs = dic.keys()
         clefs.sort()
         for codeGrp in clefs:
-            b = self.AppendItem(branche, codeGrp+" "+dic[codeGrp][0])
-            self.SetItemBold(b, True)
-            
             self.poids_ctrl[codeGrp] = wx.TextCtrl(self, -1, 
                                                    str(constantes.dicPoidsIndicateurs[type_ens][codeGrp][0])+"%", 
                                                    size = (32,20), name = codeGrp)
+            b = self.AppendItem(branche, codeGrp+" "+dic[codeGrp][0])
+            self.SetItemBold(b, True)
 #            self.poids_ctrl[codeGrp].Bind(wx.EVT_TEXT, self.OnTextCtrl)
             self.SetItemWindow(b, self.poids_ctrl[codeGrp], 1)
             
