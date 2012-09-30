@@ -14,7 +14,7 @@ Copyright (C) 2011-2012
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "3.0"
+__version__ = "3.1"
 
 
 ####################################################################################
@@ -1497,7 +1497,7 @@ class Projet(BaseDoc, Objet_sequence):
     def GetBulleSVG(self, i):
         if i >= 0:
             c = self.GetCompetencesUtil()
-            return c[i] + " : " + constantes.dicCompetences_prj_simple[self.classe.typeEnseignement][c[i]][0]
+            return c[i] + " : " + constantes.dicCompetences_prj_simple[self.classe.typeEnseignement][c[i]]
         else:
             e = self.eleves[-1-i]
             t = e.GetNomPrenom()+"\n"
@@ -2212,9 +2212,9 @@ class Projet(BaseDoc, Objet_sequence):
 #        print "SetCompetencesRevuesSoutenance"
         
         tousIndicateurs = constantes.dicIndicateurs[self.classe.typeEnseignement]
-        
+        tR1 = None
         indicateurs = {}
-        for t in self.taches:
+        for t in self.taches:   # toutes les tâches, dans l'ordre
             if t.phase in ["R1", "R2", "S"]:
                 if t.phase != "R1":
                     t.indicateurs = []
@@ -2224,11 +2224,11 @@ class Projet(BaseDoc, Objet_sequence):
                     for i, ok in enumerate(l):
                         if ok:
                             codeIndic = c+"_"+str(i+1)
-                            if tousIndicateurs[c][i][1]:
+                            if tousIndicateurs[c][i][1]: # Indicateur "revue"
                                 if t.phase in ["R1", "R2"]:
-                                    if t.phase == "R2" and not codeIndic in tR1.indicateurs:
+                                    if t.phase == "R2" and (tR1 != None and not codeIndic in tR1.indicateurs):
                                         t.indicateurs.append(codeIndic)
-                                    elif t.phase == "R1":
+                                    if t.phase == "R1":
                                         t.indicateursMaxi.append(codeIndic)
                             else:
                                 if t.phase == "S":
@@ -2246,11 +2246,11 @@ class Projet(BaseDoc, Objet_sequence):
                     tR1 = t
                             
                         
-            else:
+            else:   # On stock les indicateurs dans un dictionnaire CodeCompétence : ListeTrueFalse
                 indicTache = t.GetDicIndicateurs()
                 for c, i in indicTache.items():
                     if c in indicateurs.keys():
-                        indicateurs[c] = indicateurs[c] and i
+                        indicateurs[c] = [x or y for x,y in zip(i, indicateurs[c])]
                     else:
                         indicateurs[c] = i   
         
@@ -4443,9 +4443,11 @@ class Eleve(Personne, Objet_sequence):
         
             
     ######################################################################################  
-    def GetDuree(self):
+    def GetDuree(self, partie = None):
         d = 0
         for t in self.parent.taches:
+            if t.phase == partie:
+                break
             if not t.phase in ["R1", "R2", "S"]:
                 if self.id in t.eleves:
                     d += t.GetDuree()
