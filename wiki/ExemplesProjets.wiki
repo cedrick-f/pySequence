@@ -1,5 +1,8 @@
-Projets ITEC
+=Quelques exemples de projets présentés avec _*pySequence*_=
+_Merci aux auteurs !!_
 
+==Projets ITEC==
+[Eco-passerelle http://pysequence.googlecode.com/svn/trunk/images_aide/ITEC _ éco-passerelle.prj]
 
-
-Projets EE
+==Projets EE==
+[Abris de bus http://pysequence.googlecode.com/svn/trunk/images_aide/ITEC _ abris de bus.prj]
