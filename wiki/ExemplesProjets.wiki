@@ -2,7 +2,7 @@
 _Merci aux auteurs !!_
 
 ==Projets ITEC==
-["Eco-passerelle" http://pysequence.googlecode.com/svn/trunk/images_aide/ITEC_eco-passerelle.prj]
+[http://pysequence.googlecode.com/svn/trunk/images_aide/ITEC_eco-passerelle.prj "Eco-passerelle"]
 
 ==Projets EE==
-["Abris de bus" http://pysequence.googlecode.com/svn/trunk/images_aide/EE_abrisdebus.prj]
+[http://pysequence.googlecode.com/svn/trunk/images_aide/EE_abrisdebus.prj "Abris de bus"]
