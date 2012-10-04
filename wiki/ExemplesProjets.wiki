@@ -1,6 +1,8 @@
 =Quelques exemples de projets présentés avec _*pySequence*_=
 _Merci aux auteurs !!_
 
+Pour télécharger les fichiers faire un clic-droit puis "Enregistrer la cible du lien sous ..."
+
 ==Projets ITEC==
 [http://pysequence.googlecode.com/svn/trunk/images_aide/ITEC_eco-passerelle.prj "Eco-passerelle"]
 
