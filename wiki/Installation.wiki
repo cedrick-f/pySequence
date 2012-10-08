@@ -7,7 +7,7 @@
 
 Télécharger la dernière version de _*pySequence*_ depuis la [http://code.google.com/p/pysequence/ page d'accueil] de ce site.
 
-ou des version antérieures sur la [http://code.google.com/p/pysequence/downloads/list page de téléchargement] (mais je ne vois pas l'intérêt)
+...ou des versions antérieures sur la [http://code.google.com/p/pysequence/downloads/list page de téléchargements] (mais je ne vois pas l'intérêt)
 
 _*pySequence*_ existe en 2 versions :
  * une [Installation#Version_%22portable%22 version "portable"]
@@ -25,6 +25,8 @@ Dézipper l'archive sur le disque dur de l'ordinateur (à l'emplacement {{{C:}}}
 === Lancement de l'application ===
 Double-cliquer sur le fichier http://pysequence.googlecode.com/svn/trunk/images_aide/Fichier_exe.png.
 
+En cas d'erreur, consulter la [F.A.Q.]
+
 _Remarque : si _*pySequence*_ est installé sur le disque dur d'un ordinateur, il est possible, depuis _*pySequence*_, d'inscrire des informations dans sa _base de registre_ afin que l'ordinateur reconnaisse les fichiers _Séquence pédagogique_ (.seq) ou _Projet_ (.prj) [Outils/inscrire dans la base de registre]._
 
 
@@ -41,6 +43,8 @@ Exécuter pySequence_1.x.exe (en tant qu'administrateur de l'ordinateur) et suiv
 Trouver un des raccourcis vers l'application _*pySequence*_ (menu Démarrer, Bureau, ...)
 ou bien
 Double-cliquer sur un fichier .seq depuis l'Explorateur de Windows.
+
+En cas d'erreur, consulter la [F.A.Q.]
 
 [Installation#T%C3%A9l%C3%A9chargement Téléchargement]
 ----
