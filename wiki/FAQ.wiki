@@ -1,10 +1,10 @@
 =Foire Aux Questions (F.A.Q.)=
 
 ==pySequence ne se lance pas ! Que faire ?==
-Tout d'abord, allez consulter le fichier pySequence.exe.log dans le dossier /bin.
-Si ce dernier existe, et indique en dernière ligne :
+Tout d'abord, allez consulter le fichier {{{pySequence.exe.log}}} dans le dossier /bin.
+*Si* ce dernier existe, et indique en dernière ligne :
 {{{ImportError: DLL load failed: Le module spécifié est introuvable}}}
-Alors installer [http://www.microsoft.com/downloads/fr-fr/confirmation.aspx?FamilyID=9B2DA534-3E03-4391-8A4D-074B9F2BC1BF&displaylang=fr Package redistribuable Microsoft Visual C++ 2008]
 
-Sinon,
-Contactez cedrick<<point>>faury<arobase>ac-clermont<point>fr
+*Alors* installez [http://www.microsoft.com/downloads/fr-fr/confirmation.aspx?FamilyID=9B2DA534-3E03-4391-8A4D-074B9F2BC1BF&displaylang=fr Package redistribuable Microsoft Visual C++ 2008]
+
+*Sinon* contactez cedrick(point)faury<arobase>ac-clermont<point>fr
