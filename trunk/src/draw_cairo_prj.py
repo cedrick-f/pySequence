@@ -521,16 +521,23 @@ def Draw(ctx, prj, mouchard = False):
     
     lstTexte = []
     g = None
+    c = []
     for i, p in enumerate(prj.equipe):
         lstTexte.append(p.GetNomPrenom())
         if p.referent:
             g = i
-    lstCodes = ["*"] * len(lstTexte)
+        c.append(constantes.COUL_DISCIPLINES[p.discipline])
+    lstCodes = [u" \u25CF"] * len(lstTexte)
 
+   
     if len(lstTexte) > 0:
-        r = liste_code_texte(ctx, lstCodes, lstTexte, posEqu[0], posEqu[1], tailleEqu[0], tailleEqu[1]+0.0001, 0.008, gras = g)
+        r = liste_code_texte(ctx, lstCodes, lstTexte, 
+                             posEqu[0], posEqu[1], tailleEqu[0], tailleEqu[1]+0.0001, 0.008, 
+                             gras = g, lstCoul = c)
 
-    prj.rect.append(rectEqu)
+        
+    for i, p in enumerate(prj.equipe):
+        p.rect = [r[i]]
 #        prj.pts_caract.append(getPts(r))
         
 
@@ -719,6 +726,7 @@ def Draw(ctx, prj, mouchard = False):
                 'Val' : [[], []]}
 
     phase = None
+    y1 = y2 = 0   # juste pour éviter une erreur en cas d'echec d'ouverture.
     for t in prj.taches:
         if t.phase == "R1":
             y1 = y
@@ -1192,10 +1200,11 @@ def DrawBoutonCompetence(ctx, objet, dicIndic, y):
 #        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
 #                              cairo.FONT_WEIGHT_BOLD)
         
+        rect = (x, y-r, wColComp, 2*r, objet)
         if s in objet.parent.rectComp.keys() and objet.parent.rectComp[s] != None:
-            objet.parent.rectComp[s].append((x-r, y-r, 2*r, 2*r, objet))
+            objet.parent.rectComp[s].append(rect)
         else:
-            objet.parent.rectComp[s] = [(x-r, y-r, 2*r, 2*r, objet)]
+            objet.parent.rectComp[s] = [rect]
         
         objet.pts_caract.append((x,y))
         

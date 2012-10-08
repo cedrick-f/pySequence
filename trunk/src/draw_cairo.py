@@ -748,6 +748,7 @@ def show_lignes(ctx, lignes, x, y, w, h, ha, va):
         yt = y + (fascent+fdescent)*l - fdescent + fheight + dy
 
         ctx.move_to(xt, yt)
+#        print t
         ctx.show_text(t)
         
         posmax = max(posmax, xt+width)
@@ -1110,7 +1111,7 @@ def fleche_ronde(ctx, x, y, r, a0, a1, e, f, coul):
     
     
     
-def liste_code_texte(ctx, lstCodes, lstTexte, x, y, w, h, e, gras = None):
+def liste_code_texte(ctx, lstCodes, lstTexte, x, y, w, h, e, gras = None, lstCoul = None):
     lstRect = []
     no = len(lstCodes)
     
@@ -1135,6 +1136,11 @@ def liste_code_texte(ctx, lstCodes, lstTexte, x, y, w, h, e, gras = None):
                 else:
                     ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                           cairo.FONT_WEIGHT_NORMAL)
+                if lstCoul != None:
+                    ctx.set_source_rgb (lstCoul[i][0], lstCoul[i][1], lstCoul[i][2])
+                else:
+                    ctx.set_source_rgb (0, 0, 0)
+                    
                 show_text_rect(ctx, lstTexte[i], (x+wt+2*e, y+i*hl, 
                                w-wt-3*e, hl), b = 0.4, ha = 'g', fontsizeMinMax = (-1, 0.012))
     

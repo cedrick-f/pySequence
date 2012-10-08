@@ -5,25 +5,25 @@
 #############################################################################
 #############################################################################
 ##                                                                         ##
-##                               constantes                                ##
+##                               Constantes                                ##
 ##                                                                         ##
 #############################################################################
 #############################################################################
 
-## Copyright (C) 2011 Cédrick FAURY
+## Copyright (C) 2012 Cédrick FAURY
 
-#    This program is free software; you can redistribute it and/or modify
+#    pySequence is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation; either version 3 of the License, or
 #    (at your option) any later version.
     
-#    This program is distributed in the hope that it will be useful,
+#    pySequence is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
 #    You should have received a copy of the GNU General Public License
-#    along with this program; if not, write to the Free Software
+#    along with pySequence; if not, write to the Free Software
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
@@ -44,7 +44,7 @@ from constantes_SSI import *
 # Les icones des branches de l'abre et un curseur perso
 import images
 
-import ConfigParser
+#import ConfigParser
 
 
 #
@@ -862,8 +862,8 @@ DELTA_DUREE2 = 15
 
 
 
-DISCIPLINES = ['Tec', 'Phy', 'Mat', 'LV1', 'Phi', 'Spo']
-NOM_DISCIPLINES = {'Tec' : u"Technologie", 
+DISCIPLINES = ['Tec', 'Phy', 'Mat', 'LV1', 'Phi', 'Spo', 'Aut']
+NOM_DISCIPLINES = {'Tec' : u"STI", 
                    'Phy' : u"Physique/Chimie", 
                    'Mat' : u"Mathématiques", 
                    'Phi' : u"Philosophie", 
@@ -871,13 +871,13 @@ NOM_DISCIPLINES = {'Tec' : u"Technologie",
                    'Spo' : u"Education physique",
                    'Aut' : u"Autre discipline"}
 
-COUL_DISCIPLINES = {'Tec' : u"Technologie", 
-                    'Phy' : u"Physique/Chimie", 
-                    'Mat' : u"Mathématiques", 
-                    'Phi' : u"Philosophie", 
-                    'LV1' : u"Langue vivante",
-                    'Spo' : u"Education physique",
-                    'Aut' : u"Autre discipline"}
+COUL_DISCIPLINES = {'Tec' : (0, 0, 0), 
+                    'Phy' : (0.7, 0.2, 0), 
+                    'Mat' : (0, 0.7, 0.2), 
+                    'Phi' : (0.2, 0, 0.7), 
+                    'LV1' : (0.45, 0.45, 0),
+                    'Spo' : (0, 0.45, 0.45),
+                    'Aut' : (0.45, 0, 0.45)}
 
 
 def getLstDisciplines():

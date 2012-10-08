@@ -14,8 +14,9 @@ Copyright (C) 2011-2012
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "3.1"
+__version__ = "3.2"
 
+from threading import Thread
 
 ####################################################################################
 #
@@ -302,7 +303,6 @@ class Lien():
                 
     ######################################################################################  
     def EvalLien(self, path, pathseq):
-#        print "EvalLien"
         if path == "" or path.split() == []:
             self.path = ""
             self.type = ""
@@ -311,11 +311,6 @@ class Lien():
         path = toFileEncoding(path)
         pathseq = toFileEncoding(pathseq)
         abspath = self.GetAbsPath(pathseq, path)
-
-#        print path
-#        print pathseq
-#        print abspath
-#        print os.path.relpath(path)
         
         relpath = testRel(abspath, pathseq)
         if os.path.exists(relpath):
@@ -329,7 +324,6 @@ class Lien():
             self.type = 'u'
             self.path = path
         
-#        print "-->", self.type
               
     ######################################################################################  
     def GetAbsPath(self, pathseq, path = None):
@@ -415,8 +409,7 @@ class ElementDeSequence():
     def SetLien(self, lien = None):
         if hasattr(self, 'tip_titrelien'):
             self.tip.SetLien(self.lien, self.tip_titrelien, self.tip_ctrllien)
-            
-#        print "&"
+
         if hasattr(self, 'panelPropriete'): 
             self.panelPropriete.MiseAJourLien()
         
@@ -1566,9 +1559,7 @@ class Projet(BaseDoc, Objet_sequence):
         
     ######################################################################################  
     def setBranche(self, branche):
-#        print "setBranche projet"
-        
-        
+       
         self.intitule = branche.get("Intitule", u"")
 
         self.problematique = remplaceCode2LF(branche.get("Problematique", u""))
@@ -1639,7 +1630,6 @@ class Projet(BaseDoc, Objet_sequence):
         
     ######################################################################################  
     def SetPosition(self, pos):
-#        print "SetPosition", pos
         if pos == 5 and self.position != 5:
             lst = self.getTachesRevue()
             for t in lst:
@@ -1795,10 +1785,6 @@ class Projet(BaseDoc, Objet_sequence):
         self.arbre.Ordonner(self.brancheTac)
         self.panelPropriete.sendEvent()
         self.arbre.SelectItem(tache.branche)
-        
-#        self.SetCodes()
-##        print "   ", self.taches
-#        self.arbre.Ordonner(self.brancheTac)
             
         
     ######################################################################################  
@@ -1808,41 +1794,6 @@ class Projet(BaseDoc, Objet_sequence):
         self.arbre.Delete(item)
         self.SetOrdresTaches()
         self.panelPropriete.sendEvent()
-    
-#    ######################################################################################  
-#    def SupprimerTaches(self):
-#        print "SupprimerTaches", self.taches
-#        for t in self.taches:
-##            t.panelPropriete.Destroy()
-#            self.arbre.Delete(t.branche)
-#            
-#        self.arbre.lstTaches=[]
-#            
-#        self.taches = []
-#
-#        self.SetOrdresTaches()
-#        self.app.Update()
-    
-#    ######################################################################################  
-#    def PlacerTache(self, tache):
-#        print "PlacerTaches", tache
-#        print "   ", self.taches," >>> ",
-#        self.taches.reverse()
-#        for i, tt in enumerate(self.taches):
-#            if tt.phase == tache.phase:
-#                s = self.taches.index(tache)
-#                t = i
-#                if t > s:
-#                    self.taches.insert(t, self.taches.pop(s))
-#                else:
-#                    self.taches.insert(t+1, self.taches.pop(s))
-#                break
-#        self.taches.reverse()
-#        self.SetOrdresTaches()
-#        self.SetCodes()
-#        print "   ", self.taches
-#        self.arbre.Ordonner(self.brancheTac)
-        
         
         
     ######################################################################################  
@@ -1918,7 +1869,6 @@ class Projet(BaseDoc, Objet_sequence):
                 i = self.taches.index(q)
                 self.taches.insert(i+1, r)
         
-#        print "   ", self.taches
         self.SetOrdresTaches()
         self.SetCodes()
         self.arbre.Ordonner(self.brancheTac)
@@ -2118,18 +2068,7 @@ class Projet(BaseDoc, Objet_sequence):
         lst = list(set(lst))
         lst.sort()
         return lst
-    
-    
-#        for c in constantes.getAllCodes(constantes.dicCompetences_prj[self.classe.typeEnseignement]):
-#            print c
-#            for t in self.taches:
-#                if c in t.competences and not c in lst:
-#                    lst.append(c)
-#        lst.sort()
-#        return lst
-    
-    
-    
+
     
     ######################################################################################  
     def GetNbrPhases(self):
@@ -2159,7 +2098,7 @@ class Projet(BaseDoc, Objet_sequence):
     ######################################################################################  
     def HitTest(self, x, y):
         branche = None
-        autresZones = self.taches + self.eleves + [self.support]
+        autresZones = self.taches + self.eleves+ self.equipe + [self.support]
         continuer = True
         i = 0
         while continuer:
@@ -2194,20 +2133,13 @@ class Projet(BaseDoc, Objet_sequence):
                 if dansRectangle(x, y, (rectPos,))[0]:
                     return i
                     
-                                    
-                                    
+                 
     #############################################################################
     def MiseAJourTypeEnseignement(self):
-#        print "MiseAJourTypeEnseignement"
         self.app.SetTitre()
         for t in self.taches:
             if t.phase in ["R1", "R2", "S"]:
                 t.MiseAJourTypeEnseignement(self.classe.typeEnseignement)
-            
-#        self.CI.MiseAJourTypeEnseignement()
-#        for o in self.obj.values():
-#            o.MiseAJourTypeEnseignement()
-#        self.prerequis.MiseAJourTypeEnseignement()
         
         
     #############################################################################
@@ -2220,8 +2152,6 @@ class Projet(BaseDoc, Objet_sequence):
             les compétences et indicateurs 
             mobilisés par les tâches précédentes
         """
-#        print "SetCompetencesRevuesSoutenance"
-        
         tousIndicateurs = constantes.dicIndicateurs[self.classe.typeEnseignement]
         tR1 = None
         indicateurs = {}
@@ -2248,7 +2178,6 @@ class Projet(BaseDoc, Objet_sequence):
 #                    indicateurs = {}
                 
                 if t.phase == "R1":
-#                    print "indicateursMaxi", t.indicateursMaxi
                     for i in t.indicateurs:
                         if not i in t.indicateursMaxi:
                             t.indicateurs.remove(i)
@@ -2330,7 +2259,6 @@ class CentreInteret(Objet_sequence):
         return
             
         code = list(branche)[0].tag
-#        print code
         if code == "_":
             num = []
             self.SetNum(num)
@@ -3309,13 +3237,7 @@ class Seance(ElementDeSequence, Objet_sequence):
                     dd = seance.GetNbrSystemes(complet)
                     for k, v in dd.items():
                         up(d, k, v)
-#                    for s in seance.systemes:
-#                        print "            ", s, s.n
-#                        if s.n <>"":
-#                            if d.has_key(s.n):
-#                                d[s.n] += s.v[0]*self.nombre.v[0]
-#                            else:
-#                                d[s.n] = s.v[0]*self.nombre.v[0]
+
             else:
                 for s in self.systemes:
                     if s.n <>"":
@@ -3590,32 +3512,6 @@ class Tache(Objet_sequence):
                 if brancheInd != None:
                     for i, e in enumerate(brancheInd.keys()):
                         self.indicateurs.append(brancheInd.get(e))
-                
-#            print self.indicateurs
-#            self.competences = []
-#            for i, e in enumerate(brancheCmp.keys()):
-#                self.competences.append(brancheCmp.get("Comp"+str(i)))
-##            print "   ", self.competences
-#            
-#            brancheInd = branche.find("Indicateurs")
-#            
-##            if self.GetTypeEnseignement() == "SSI":
-##                brancheInd = branche.find("PoidsIndicateurs")
-##            else:
-##                brancheInd = branche.find("Indicateurs")
-#            self.initIndicateurs()
-#            
-#            if brancheInd != None:
-#                for i, c in enumerate(self.competences):#brancheInd.keys()):
-#                    if self.GetTypeEnseignement() == "SSI":
-#                        self.indicateurs[c] = brancheInd.get("Poids"+str(i))
-#                    else:
-#                        indic = brancheInd.get("Indic"+str(i))
-#                        if indic != None:
-#                            self.indicateurs[c] = toList(indic)
-#                        else:
-#                            self.indicateurs[c] = [True]*len(constantes.dicIndicateurs[self.GetTypeEnseignement()][c])
-#            print "   ", self.phase, self.indicateurs
             
         self.intituleDansDeroul = eval(branche.get("IntituleDansDeroul", "True"))
         
@@ -4218,10 +4114,18 @@ class Personne(Objet_sequence):
         # Création du Tip (PopupInfo)
         #
         self.tip = PopupInfo(self.parent.app, u"")
-        self.tip_nom = self.tip.CreerTexte((1,0), flag = wx.ALIGN_CENTER|wx.TOP)
+        self.tip_nom = self.tip.CreerTexte((1,0), flag = wx.ALIGN_LEFT|wx.TOP)
+#        self.tip_nom.SetFont(wx.Font(10, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD))
+        
         self.tip_avatar = self.tip.CreerImage((2,0))
-        self.tip.SetTitre(self.titre.capitalize())
-        self.tip_nom.SetFont(wx.Font(10, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD))
+        
+        if self.code == 'Prf':
+            self.tip.SetTitre(u"Professeur")
+            self.tip_disc = self.tip.CreerTexte((3,0), flag = wx.ALIGN_LEFT|wx.TOP)
+            self.tip_disc.SetFont(wx.Font(10, wx.SWISS, wx.FONTSTYLE_ITALIC, wx.FONTWEIGHT_NORMAL))
+        else:
+            self.tip.SetTitre(self.titre.capitalize())
+        
         
         if panelParent:
             self.panelPropriete = PanelPropriete_Personne(panelParent, self)
@@ -4239,7 +4143,6 @@ class Personne(Objet_sequence):
         """ Renvoie la branche XML de la compétence pour enregistrement
         """
         root = ET.Element(toDefautEncoding(supprime_accent(self.titre).capitalize()))
-#        print supprime_accent(self.titre).capitalize()
         
         root.set("Id", str(self.id))
         root.set("Nom", self.nom)
@@ -4316,10 +4219,14 @@ class Personne(Objet_sequence):
 #            self.codeBranche.SetLabel(self.nom)
 
         t = self.GetNomPrenom()
-
         if hasattr(self, 'arbre'):
             self.arbre.SetItemText(self.branche, t)
-            
+         
+        self.SetTip()
+        
+        
+    ######################################################################################  
+    def SetTip(self):   
         # Tip
         if hasattr(self, 'tip'):
             self.tip.SetTexte(self.GetNomPrenom(), self.tip_nom)
@@ -4328,6 +4235,7 @@ class Personne(Objet_sequence):
     ######################################################################################  
     def SetImage(self):
         self.tip.SetImage(self.avatar, self.tip_avatar)
+        self.SetTip()
         
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
@@ -4346,8 +4254,9 @@ class Personne(Objet_sequence):
         image = self.arbre.images[self.code]
 #        else:
 #            image = self.image.ConvertToImage().Scale(20, 20).ConvertToBitmap()
-        self.branche = arbre.AppendItem(branche, self.titre.capitalize() + str(self.id), data = self, wnd = self.codeBranche,
+        self.branche = arbre.AppendItem(branche, "", data = self, wnd = self.codeBranche,
                                         image = image)
+        self.SetCode()
 
 
 ######################################################################################  
@@ -4419,7 +4328,6 @@ class Eleve(Personne, Objet_sequence):
             % revue
             % soutenance
         """ 
-#        print "GetEvaluabilite"
         
         r = s = 0
         
@@ -4471,33 +4379,6 @@ class Eleve(Personne, Objet_sequence):
         return indicateurs
         
         
-        
-#        
-#        competences = []
-#        indicateurs = []
-#        for t in self.parent.taches:
-#            if self.id in t.eleves:
-#                competencesUtil = t.GetCompetencesUtil()
-#                competences.extend(competencesUtil)
-#                indicateurs.extend(t.indicateurs)
-##                if False:#self.GetTypeEnseignement() == "SSI":
-##                    for c in t.competences:
-##                        if c in indicateurs.keys():
-##                            indicateurs[c] = max(indicateurs[c], t.indicateurs[c])
-##                        else:
-##                            indicateurs[c] = t.indicateurs[c]
-##                else:
-##                    print competencesUtil, t.indicateurs
-##                    for c in t.competences:
-##                        if c in indicateurs.keys():
-##                            indicateurs[c] = [x or y for x,y in zip(indicateurs[c], t.indicateurs[c])]
-##                        else:
-##                            indicateurs[c] = t.indicateurs[c]
-#        
-#        competences = list(set(competences))
-#        indicateurs = list(set(indicateurs))
-#        return competences, indicateurs
-        
     ######################################################################################  
     def GetTaches(self):
         lst = []
@@ -4512,15 +4393,6 @@ class Eleve(Personne, Objet_sequence):
         if itemArbre == self.branche:
             self.parent.app.AfficherMenuContextuel([[u"Supprimer", functools.partial(self.parent.SupprimerEleve, item = itemArbre)]]
                                                     )
-            
-#    ######################################################################################  
-#    def HitTest(self, x, y):
-#        if hasattr(self, 'rect'):
-#            if dansRectangle(x, y, self.rect)[0]:
-#                return self.branche
-#            for r in self.rect:
-#                if dansRectangle(x, y, r):
-#                    return self.branche
     
     
     ######################################################################################  
@@ -4622,7 +4494,7 @@ class Prof(Personne):
     ######################################################################################  
     def SetDiscipline(self, discipline):
         self.discipline = discipline
-        
+        self.SetTip()
         
     ######################################################################################  
     def AfficherMenuContextuel(self, itemArbre):
@@ -4633,10 +4505,31 @@ class Prof(Personne):
     def MiseAJourCodeBranche(self):
         self.arbre.SetItemBold(self.branche, self.referent)
     
+    ######################################################################################  
+    def SetTip(self):   
         
+        # Tip
+        if hasattr(self, 'tip'):
+#            print "SetTip", self.GetNomPrenom(), self.referent
+            if self.referent:
+                self.tip.SetTexte(u"<b>"+self.GetNomPrenom()+"</b>", self.tip_nom)
+            else:
+                self.tip.SetTexte(self.GetNomPrenom(), self.tip_nom)
+#            if self.referent:
+#                font = wx.Font(10, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False)
+#            else:
+#                font = wx.Font(10, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
+#            self.tip_nom.SetFont(font)
+#            self.tip_nom.Refresh()
+
+            self.tip.SetImage(self.avatar, self.tip_avatar)
         
+            self.tip.SetTexte(constantes.NOM_DISCIPLINES[self.discipline], self.tip_disc)
+            r, v, b = constantes.COUL_DISCIPLINES[self.discipline]
+            self.tip_disc.SetForegroundColour(wx.Colour(r*255, v*255, b*255))
         
-              
+            self.tip.Layout()
+            self.tip.Fit()
         
 ####################################################################################
 #
@@ -5216,8 +5109,8 @@ class FenetreDocument(aui.AuiMDIChildFrame):
     #############################################################################
     def exporterFiche(self, event = None):
         mesFormats = "pdf (.pdf)|*.pdf|" \
-                     "svg (.svg)|*.svg|" \
-                     "swf (.swf)|*.swf"
+                     "svg (.svg)|*.svg|"
+#                     "swf (.swf)|*.swf"
         dlg = wx.FileDialog(
             self, message=u"Enregistrer la fiche sous ...", defaultDir=toDefautEncoding(self.DossierSauvegarde) , 
             defaultFile = os.path.splitext(self.fichierCourant)[0]+".pdf", 
@@ -5410,7 +5303,7 @@ class FenetreSequence(FenetreDocument):
     def OnDocModified(self, event):
         if event.GetDocument() == self.sequence:
             self.sequence.VerifPb()
-            self.ficheSeq.Redessiner()
+            wx.CallAfter(self.ficheSeq.Redessiner)
             self.MarquerFichierCourantModifie()
               
         
@@ -5544,6 +5437,8 @@ class FenetreProjet(FenetreDocument):
         #
         self.fichePrj = FicheProjet(self.nb, self.projet)
         
+#        self.thread = ThreadRedess(self.fichePrj)
+        
         self.nb.AddPage(self.fichePrj, u"Fiche Projet")
         
         self.miseEnPlace()
@@ -5554,9 +5449,33 @@ class FenetreProjet(FenetreDocument):
         if event.GetDocument() == self.projet:
             self.projet.VerifPb()
             self.projet.SetCompetencesRevuesSoutenance()
-            self.fichePrj.Redessiner()
+            
+            
+            
+            tps = time.time()
+#            try:
+#                self.thread.join()
+#                while self.fichePrj.enCours:
+#                    pass
+#                print "join"
+#            except:
+#                pass
+#            self.thread.start()
+            
+            
+#            
+#            b = Thread(None, self.fichePrj.Redessiner, None)
+#            b.start()
+
+
+
+            wx.CallAfter(self.fichePrj.Redessiner)
+
+#            event.Skip()
+
             self.MarquerFichierCourantModifie()
-              
+            
+            print time.time() - tps
         
     ###############################################################################################
     def enregistrer(self, nomFichier):
@@ -5589,30 +5508,30 @@ class FenetreProjet(FenetreDocument):
         self.Freeze()
         fichier = open(nomFichier,'r')
         self.definirNomFichierCourant(nomFichier)
-#        try:
-        root = ET.parse(fichier).getroot()
-        
-        # Le projet
-        projet = root.find("Projet")
-        if projet == None:
-            self.projet.setBranche(root)
+        try:
+            root = ET.parse(fichier).getroot()
             
-        else:
-            # La classe
-            classe = root.find("Classe")
-            self.classe.setBranche(classe)
-            self.projet.setBranche(projet)  
+            # Le projet
+            projet = root.find("Projet")
+            if projet == None:
+                self.projet.setBranche(root)
                 
-#        except Exception as inst:
-#            dlg = wx.MessageDialog(self, u"Le projet\n%s\n n'a pas pu être ouvert !" %nomFichier,
-#                               u"Erreur d'ouverture",
-#                               wx.OK | wx.ICON_WARNING
-#                               )
-#            dlg.ShowModal()
-#            dlg.Destroy()
-#            fichier.close()
-##            wx.EndBusyCursor()
-#            return
+            else:
+                # La classe
+                classe = root.find("Classe")
+                self.classe.setBranche(classe)
+                self.projet.setBranche(projet)  
+                
+        except Exception as inst:
+            dlg = wx.MessageDialog(self, u"Le projet\n%s\n n'a pas pu être ouvert !" %nomFichier,
+                               u"Erreur d'ouverture",
+                               wx.OK | wx.ICON_WARNING
+                               )
+            dlg.ShowModal()
+            dlg.Destroy()
+            fichier.close()
+#            wx.EndBusyCursor()
+            return
 
         self.arbre.DeleteAllItems()
         root = self.arbre.AddRoot("")
@@ -5658,8 +5577,16 @@ class FenetreProjet(FenetreDocument):
         self.projet.AppliquerOptions() 
     
     
-
-            
+class ThreadRedess(Thread):
+    def __init__(self, fiche):
+        Thread.__init__(self)
+        self.fiche = fiche
+        
+    def run(self):
+        self.fiche.enCours = True
+        self.fiche.Redessiner()
+        Thread.__init__(self)
+        self.fiche.enCours = False
 
         
 ####################################################################################
@@ -5674,6 +5601,8 @@ class BaseFiche(wx.ScrolledWindow):
         
         self.EnableScrolling(False, True)
         self.SetScrollbars(20, 20, 50, 50);
+        
+        self.enCours = False
         
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_SIZE, self.OnResize)
@@ -5735,7 +5664,13 @@ class BaseFiche(wx.ScrolledWindow):
 #        ctx.set_font_face(face)
         dc.BeginDrawing()
         self.normalize(ctx)
+        
+        
         self.Draw(ctx)
+        
+#        b = Thread(None, self.Draw, None, (ctx,))
+#        b.start()
+        
         dc.EndDrawing()
         self.ctx = ctx
         self.Refresh()
@@ -5903,9 +5838,7 @@ class FicheProjet(BaseFiche):
         
         kCompObj = self.projet.HitTestCompetence(xx, yy)
         if kCompObj != None:
-#            print "OnMove"
             kComp, obj = kCompObj
-#            print kComp, type(obj)
             if hasattr(self, 'popup'):
                 for tip in self.tip_indic:
                     tip.Destroy()
@@ -5916,13 +5849,6 @@ class FicheProjet(BaseFiche):
                 if type_ens == "SSI":
                     competencePlus = constantes.dicCompetences[type_ens][kComp[0]][1][kComp][1].values()
                 indicTache = obj.GetDicIndicateurs()[kComp]
-#                if isinstance(obj, Tache):
-#                    indicTache = obj.indicateurs[kComp]
-#                else:
-#                    if type_ens == "SSI":
-#                        indicTache = competence[1]
-#                    else:
-#                        indicTache = [True]*7
                 
                 self.MiseAJourTypeEnseignement(type_ens)
                 
@@ -5934,7 +5860,7 @@ class FicheProjet(BaseFiche):
                 if type_ens == "SSI":
                     t = ''
                     for cp in competencePlus:
-                        t += textwrap.fill(cp, 50)+"\n"
+                        t += textwrap.fill(u"\u25CF " + cp, 50)+"\n"
                     self.popup.SetTexte(t, self.tip_compp)
                 
                 self.popup.DeplacerItem(self.lab_legend1, (4+len(indicateurs), 0))
@@ -5955,12 +5881,6 @@ class FicheProjet(BaseFiche):
 
                     self.popup.SetTexte(textwrap.fill(indic, 50), self.tip_indic[i])
                     
-                    
-#                if len(competence) > 2 :
-#                    t = u"Soutenance"
-#                else:
-#                    t = u"Revue"
-#                self.popup.SetTexte(t, self.tip_eval)
                 self.popup.Position((x,y), (0,0))
                 self.call = wx.CallLater(500, self.popup.Show, True)
                 self.tip = self.popup
@@ -6060,7 +5980,7 @@ class PanelPropriete(scrolled.ScrolledPanel):
             evt.SetDocument(doc)
         else:
             evt.SetDocument(self.GetDocument())
-        
+
         self.GetEventHandler().ProcessEvent(evt)
         
 
@@ -8007,7 +7927,7 @@ class PanelPropriete_Tache(PanelProprieteBook, PanelPropriete):
         #
         # Elèves impliqués
         #
-        if tache.phase != "S":
+        if not tache.phase in ["R1", "R2", "S"]:
             self.box = wx.StaticBox(pageGen, -1, u"Elèves impliqués", size = (200,200))
             self.box.SetMinSize((150,200))
             self.bsizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
@@ -8584,7 +8504,7 @@ class PanelPropriete_Personne(PanelPropriete):
         #
         if hasattr(self.personne, 'discipline'):
             titre = wx.StaticText(self, -1, u"Discipline :")
-            cbPhas = wx.combo.BitmapComboBox(self, -1, u"",
+            cbPhas = wx.combo.BitmapComboBox(self, -1, constantes.NOM_DISCIPLINES[self.personne.discipline],
                                  choices = constantes.getLstDisciplines(),
                                  style = wx.CB_DROPDOWN
                                  | wx.TE_PROCESS_ENTER
@@ -8701,13 +8621,7 @@ class PanelPropriete_Personne(PanelPropriete):
         if sendEvt:
             self.sendEvent()
 
-
-
-
-        
-        
-        
-        
+   
         
         
 
@@ -9469,9 +9383,7 @@ class ArbreCompetences(HTL.HyperTreeList):
     
     ####################################################################################
     def OnSize2(self, evt):
-#        print "OnSize2"
         w = self.GetClientSize()[0]-17-self.GetColumnWidth(1)
-#        print w
         if w != self.GetColumnWidth(0):
             self.SetColumnWidth(0, w)
             if self.IsShown():
@@ -9494,15 +9406,13 @@ class ArbreCompetences(HTL.HyperTreeList):
                 W = w - 35
                 
             text = self.GetItemText(item, 0).replace("\n", "")
-#            print text, item.GetTextX()
             text = wordwrap(text, W, wx.ClientDC(self))
-#            print text
+
             self.SetItemText(item, text, 0)
         
     ####################################################################################
     def Construire(self, branche, dic = None, type_ens = None, ct_type = 0):
         if dic == None:
-#            print "Construire"
             dic = constantes.dicCompetences[type_ens]
         clefs = dic.keys()
         clefs.sort()
@@ -9517,16 +9427,31 @@ class ArbreCompetences(HTL.HyperTreeList):
                 self.SetItemBold(b, True)
         
     ####################################################################################
-    def OnItemCheck(self, event):
-        item = event.GetItem()
+    def OnItemCheck(self, event, item = None):
+        if event != None:
+            item = event.GetItem()
+        
         code = self.GetItemPyData(item)#.split()[0]
-        if item.GetValue():
-            self.pptache.AjouterCompetence(code)
-        else:
-            self.pptache.EnleverCompetence(code)
-        self.pptache.SetCompetences()
-        event.Skip()
+        if code != None:
+            self.AjouterEnleverCompetences([item])
 
+        else:
+            self.AjouterEnleverCompetences(item.GetChildren())
+        
+        event.Skip()
+        wx.CallAfter(self.pptache.SetCompetences)
+        
+        
+
+    ####################################################################################
+    def AjouterEnleverCompetences(self,lstitem):
+        for item in lstitem:
+            code = self.GetItemPyData(item)#.split()[0]
+            if item.GetValue():
+                self.pptache.AjouterCompetence(code)
+            else:
+                self.pptache.EnleverCompetence(code)
+    
     ####################################################################################
     def traverse(self, parent=None):
         if parent is None:
@@ -9565,7 +9490,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
     def __init__(self, parent, type_ens, pptache, revue = False):
         self.revue = revue
         ArbreCompetences.__init__(self, parent, type_ens, pptache,
-                                  agwStyle = CT.TR_HIDE_ROOT|CT.TR_HAS_VARIABLE_ROW_HEIGHT|CT.TR_ROW_LINES|CT.TR_ALIGN_WINDOWS)#|CT.TR_ELLIPSIZE_LONG_ITEMS)#|CT.TR_TOOLTIP_ON_LONG_ITEMS)#
+                                  agwStyle = CT.TR_HIDE_ROOT|CT.TR_HAS_VARIABLE_ROW_HEIGHT|CT.TR_ROW_LINES|CT.TR_ALIGN_WINDOWS|CT.TR_AUTO_CHECK_CHILD|CT.TR_AUTO_CHECK_PARENT|CT.TR_AUTO_TOGGLE_CHILD)#|CT.TR_ELLIPSIZE_LONG_ITEMS)#|CT.TR_TOOLTIP_ON_LONG_ITEMS)#
         self.Bind(wx.EVT_SIZE, self.OnSize2)
         self.Bind(CT.EVT_TREE_ITEM_GETTOOLTIP, self.OnToolTip)
         
@@ -9580,7 +9505,6 @@ class ArbreCompetencesPrj(ArbreCompetences):
 
     ####################################################################################
     def Construire(self, branche, dic = None, type_ens = None):
-#        print "Construire arbre prj", self.revue
         if dic == None: # Construction de la racine
             dic = constantes.dicCompetences_prj[type_ens]
 #            if True:#type_ens == "SSI":
@@ -9607,14 +9531,16 @@ class ArbreCompetencesPrj(ArbreCompetences):
             codes.sort()
             for code in codes:
                 intitule = dic[codeGrp][1][code]
-                if type(intitule) == list:
-                    intitule = intitule[0]
-                c = self.AppendItem(b, code+" "+intitule)
-#                print constantes.dicIndicateurs[type_ens][codeGrp]
+                if type(intitule) == list: # C'est le cas des compétences SSI
+                    t = intitule[0] + " :"
+                    for s in intitule[1].values():
+                        t += u" \u25CF " + s
+                    intitule = t
+                
+                c = self.AppendItem(b, code+" "+intitule, ct_type=1)
                 
                 for j, Indic in enumerate(constantes.dicIndicateurs[type_ens][code]):
                     codeIndic = code+'_'+str(j+1)
-#                    print self.pptache.tache.indicateursMaxi
                     if self.pptache.tache.phase != "R1" or codeIndic in self.pptache.tache.indicateursMaxi:
                         self.poids_ctrl[codeIndic] = wx.TextCtrl(self, -1, 
                                                                  str(constantes.dicPoidsIndicateurs[type_ens][codeGrp][1][code][j])+"%", 
@@ -9647,16 +9573,6 @@ class ArbreCompetencesPrj(ArbreCompetences):
 #        self.parent.GetDocument().MiseAJourPoidsCompetences(k)
         self.pptache.sendEvent()
 
-
-#    def OnSize2(self, evt):
-#        w = self.GetClientSize()[0] - 17
-#        print "OnSize2", w
-#        if w != self.GetColumnWidth(0):
-#            self.SetColumnWidth(0, w)
-#            if self.parent.IsShown():
-#                self.wrap(w)
-#        evt.Skip()
-
         
     #############################################################################
     def OnToolTip(self, event):
@@ -9667,7 +9583,6 @@ class ArbreCompetencesPrj(ArbreCompetences):
             
     #############################################################################
     def MiseAJour(self, code = None, value = None):
-#        print "MiseAJour arbre", code, value
         if code == None:
             for k, v in constantes.dicCompetences_prj_simple[self.type_ens].items():
                 if k in self.poids_ctrl.keys():
@@ -9793,16 +9708,18 @@ def dansRectangle(x, y, rect):
 
 
 
-def get_key(dict, value):
+def get_key(dic, value):
+    """ Renvoie la clef du dictionnaire <dic> correspondant à la valeur <value>
+    """
     i = 0
     continuer = True
     while continuer:
-        if i > len(dict.keys()):
+        if i > len(dic.keys()):
             continuer = False
         else:
-            if dict.values()[i] == value:
+            if dic.values()[i] == value:
                 continuer = False
-                key = dict.keys()[i]
+                key = dic.keys()[i]
             i += 1
     return key
 
@@ -10156,7 +10073,7 @@ class PopupInfo(wx.PopupWindow):
         if texte == "":
             ctrlTxt.Show(False)
         else:
-            ctrlTxt.SetLabel(texte)
+            ctrlTxt.SetLabelMarkup(texte)
             ctrlTxt.Show(True)
             self.Layout()
             self.Fit()
