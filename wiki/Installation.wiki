@@ -25,7 +25,7 @@ Dézipper l'archive sur le disque dur de l'ordinateur (à l'emplacement {{{C:}}}
 === Lancement de l'application ===
 Double-cliquer sur le fichier http://pysequence.googlecode.com/svn/trunk/images_aide/Fichier_exe.png.
 
-En cas d'erreur, consulter la [F.A.Q.]
+En cas d'erreur, consulter la [FAQ]
 
 _Remarque : si _*pySequence*_ est installé sur le disque dur d'un ordinateur, il est possible, depuis _*pySequence*_, d'inscrire des informations dans sa _base de registre_ afin que l'ordinateur reconnaisse les fichiers _Séquence pédagogique_ (.seq) ou _Projet_ (.prj) [Outils/inscrire dans la base de registre]._
 
@@ -44,7 +44,7 @@ Trouver un des raccourcis vers l'application _*pySequence*_ (menu Démarrer, Bur
 ou bien
 Double-cliquer sur un fichier .seq depuis l'Explorateur de Windows.
 
-En cas d'erreur, consulter la [F.A.Q.]
+En cas d'erreur, consulter la [FAQ]
 
 [Installation#T%C3%A9l%C3%A9chargement Téléchargement]
 ----
