@@ -355,7 +355,7 @@ dicIndicateurs_prj_SSI = {"B3" : [[u"Les paramètres influents sont identifiés"
                                   [u"Le système étudié est correctement mis en œuvre", True],
                                   [u"Les règles de sécurité sont connues et respectées", True],
                                   [u"Les résultats sont présentés clairement", True],
-                                  [u"Les protocole d'essai est respecté", True],
+                                  [u"Le protocole d'essai est respecté", True],
                                   [u"Les méthodes et outils de traitement sont cohérents avec le problème posé", True],
                                   [u"Les résultats sont correctement analysés", False]],
                           "D1" : [[u"Les outils de recherche documentaire sont bien choisis", False],
