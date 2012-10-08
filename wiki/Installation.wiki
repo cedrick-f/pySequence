@@ -44,7 +44,7 @@ Trouver un des raccourcis vers l'application _*pySequence*_ (menu Démarrer, Bur
 ou bien
 Double-cliquer sur un fichier .seq depuis l'Explorateur de Windows.
 
-En cas d'erreur, consulter la [FAQ]
+En cas d'erreur, consulter la [FAQ F.A.Q.]
 
 [Installation#T%C3%A9l%C3%A9chargement Téléchargement]
 ----
