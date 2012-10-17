@@ -211,9 +211,9 @@ imagesTaches =  {'Ana' : images.Icone_CdCF,
                  'Rea' : images.Icone_fabrication, 
                  'Val' : images.Icone_validation,
                  'Rev' : images.Icone_evaluation,
-                 'R1'  : images.Icone_evaluation,
-                 'R2'  : images.Icone_evaluation,
-                 'S'  : images.Icone_evaluation}
+                 'R1'  : images.Icone_revue,
+                 'R2'  : images.Icone_revue,
+                 'S'  : images.Icone_revue}
                 
 
 imagesCI = [images.CI_1, images.CI_2, images.CI_3, images.CI_4,
@@ -263,17 +263,17 @@ Demarches = {"I" : u"Investigation",
              "P" : u"Projet"}
 
 DemarchesCourt = {"I" : u"Investigation",
-             "R" : u"Rés. de problème",
-             "P" : u"Projet"}
+                  "R" : u"Rés. de problème",
+                  "P" : u"Projet"}
 
 listeDemarches = ["I", "R", "P"]
 listEnseigmenent = ['ET', 'ITEC', 'AC', 'EE', 'SIN', 'SSI']
-Enseigmenent = {'ET'   : u"Enseignement Technologique Transversal",
-                'ITEC' : u"Innovation Technologique et éco-conception",
-                'AC'   : u"Architecture et Construction",
-                'EE'   : u"Energies et Environnement",
-                'SIN'  : u"Systèmes d'Information et Numérique",
-                'SSI'  : u"Sciences de l'ingénieur"}
+Enseigmenent = {'ET'   : u"STI2D : Enseignement Technologique Transversal",
+                'ITEC' : u"STI2D : Innovation Technologique et éco-conception",
+                'AC'   : u"STI2D : Architecture et Construction",
+                'EE'   : u"STI2D : Energies et Environnement",
+                'SIN'  : u"STI2D : Systèmes d'Information et Numérique",
+                'SSI'  : u"Bac S - Sciences de l'ingénieur"}
 
 
 ####################################################################################

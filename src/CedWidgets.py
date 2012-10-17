@@ -2150,4 +2150,3 @@ def SetSuperToolTip(Cible, Texte, headerText = None, headerBmp = None, bodyImage
 #    tip.SetUseFade(self.useFade.GetValue())
 #    tip.SetEndDelay(self.endTimer.GetValue())
     
-    

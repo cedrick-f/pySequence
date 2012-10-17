@@ -36,7 +36,7 @@ Created on 26 oct. 2011
 import textwrap
 from math import sqrt, pi, cos, sin
 import cairo
-
+import time
 
 #
 # Données pour le tracé
@@ -328,10 +328,10 @@ def calc_h_texte(ctx, texte, w, taille, va = 'c', ha = 'c', b = 0.1, orient = 'h
 #    
 #    ctx.stroke()
    
-    
+
     
 def show_text_rect(ctx, texte, rect, va = 'c', ha = 'c', b = 0.4, orient = 'h', 
-                   fontsizeMinMax = (-1, -1), wrap = True):
+                   fontsizeMinMax = (-1, -1), wrap = True, couper = True):
     """ Affiche un texte en adaptant la taille de police et sa position
         pour qu'il rentre dans le rectangle
         x, y, w, h : position et dimensions du rectangle
@@ -358,7 +358,8 @@ def show_text_rect(ctx, texte, rect, va = 'c', ha = 'c', b = 0.4, orient = 'h',
     if orient == 'v':
         ctx.rotate(-pi/2)
         r = (-y-h, x, h, w)
-        show_text_rect(ctx, texte, r, va, ha, b, fontsizeMinMax = fontsizeMinMax, wrap = wrap)
+        show_text_rect(ctx, texte, r, va, ha, b, fontsizeMinMax = fontsizeMinMax, 
+                       wrap = wrap, couper = couper)
         ctx.rotate(pi/2)
         return
     
@@ -384,62 +385,89 @@ def show_text_rect(ctx, texte, rect, va = 'c', ha = 'c', b = 0.4, orient = 'h',
     # Estimation de l'encombrement du texte (pour une taille de police de 1)
     # 
     ctx.set_font_size(1.0)
-    fascent, fdescent, fheight, fxadvance, fyadvance = ctx.font_extents()
-    xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(texte)
-    volumeTexte = 1.0*width*(fascent-fdescent)
-#    print "volumeTexte", volumeTexte, width
-    ratioRect = 1.0*h/w
-    W = sqrt(volumeTexte/ratioRect)
-    H = ratioRect*W
+    fascent, fdescent = ctx.font_extents()[:2]
+    hl = fascent+fdescent
+    width = ctx.text_extents(texte)[2]
+
+    ratioRect = 1.0*w/h
+    W = sqrt(1.0*width*hl*ratioRect)
+#    H = W/ratioRect
     
     #
     # Découpage du texte
     #
+    i = 0
+#    tps = time.time()
     if wrap:
         continuer = True
-        wrap = 0
-        for l in texte.split("\n"):
-            wrap = max(wrap, len(l))
+        
+        wrap1 = 0
+        st = texte.split("\n")
+        for l in st:
+            wrap1 = max(wrap1, len(l))
+            
+#        print len(texte), texte
+        wrap = min(wrap1, int(len(texte)*W/width)*2)
+#        print "   wrap initial :", wrap, "(brut :",int(len(texte)*W/width),")"
+        
+        ancienWrap = wrap
+        ancienFontSize = 0
+        ancienLt = []
+        ancienMaxw = 0
         i = 0
         while continuer:
             lt = []
+            
+            # On découpe le texte
             i += 1
             for l in texte.split("\n"):
-                lt.extend(textwrap.wrap(l, wrap))
-            maxw = 0
+                lt.extend(textwrap.wrap(l, wrap, break_long_words = couper))
+                
+            # On mémorise la longueur de la plus longue ligne 
+            #    (en caractères et en unité Cairo)
+            maxw = maxl = 0
             for t in lt:
-                xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(t)
-                maxw = max(maxw, width)
-            _w, _h = maxw, (fascent+fdescent) * len(lt)
-            if _w/_h <= w/h:
+                maxw = max(maxw, ctx.text_extents(t)[2])
+                maxl = max(maxl, len(t))
+            
+            # On calcule la taille de police nécessaire pour que ça rentre
+            fontSize = min(w/maxw, h/(hl*len(lt)))  
+            
+            # On calcul le rapport des rapports h/w
+            rapport = maxw / (hl*len(lt)) / ratioRect
+            if rapport <= 1:  # on a passé le cap ...
                 continuer = False
+                if fontSize <= ancienFontSize:
+                    wrap = ancienWrap
+                    lt = ancienLt
+                    maxw = ancienMaxw
+                    fontSize = ancienFontSize
+
             else:
-                wrap += -1
-                if wrap == 0:
+                ancienWrap = wrap
+                wrap = min(wrap-1, maxl-1)
+                if wrap <= 1:# or (maxw == ancienMaxw and wrap < maxl) :
                     continuer = False
-        wrap += 1
-        lt = []
-        for l in texte.split("\n"):
-            lt.extend(textwrap.wrap(l, wrap))
+                    
+                ancienFontSize = fontSize
+                ancienLt = lt
+                ancienMaxw = maxw
+            
         nLignes = len(lt)
         
     else:
         nLignes = 1
         lt = [texte]
-    
+        maxw = ctx.text_extents(texte)[2]
+        fontSize = min(w/maxw, h/(hl*nLignes))
         
-    #
-    # Calcul de la taille de police nécessaire pour que ça rentre
-    #
-    maxw = 0
-#    et = "." * int(b*5)
-    for t in lt:
-        xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(t)
-        maxw = max(maxw, width)
-    hTotale = (fascent+fdescent)*(nLignes)#+int(b*5))
-#    print "hTotale", hTotale
-    fontSize = min(w/maxw, h/(hTotale))
-#    print "fontSize 1", fontSize
+    hTotale = hl*nLignes
+    
+#    print " wrap", time.time() - tps, i
+#    print "   iterations :", i
+#    print "   wrap final :", wrap
+#    print "lt final :", lt
+#    
     
     #
     # "réduction" du réctangle
@@ -447,8 +475,6 @@ def show_text_rect(ctx, texte, rect, va = 'c', ha = 'c', b = 0.4, orient = 'h',
     ctx.set_font_size(fontSize)
     ecart = min(w*b/2, h*b/2)
     ecart = min(ecart, ctx.font_extents()[2])
-#    ecart = min(w*b/2, h*b/2)
-#    ecartX, ecartY = w*b/2, h*b/2
     x, y = x+ecart, y+ecart
     w, h = w-2*ecart, h-2*ecart
     fontSize = min(w/maxw, h/(hTotale))
@@ -712,11 +738,12 @@ def show_lignes(ctx, lignes, x, y, w, h, ha, va):
     """ Affiche une série de lignes de texte
         Renvoie la position la plus extrème à droite (pour éventuellement écrire une suite au texte)
     """
-    fascent, fdescent, fheight, fxadvance, fyadvance = ctx.font_extents()
+    fascent, fdescent, fheight = ctx.font_extents()[:3]
+    hl = fascent+fdescent
     # pour centrer verticalement
     
     if va == 'c':
-        dy = (h-(fascent+fdescent)*len(lignes))/2
+        dy = (h-hl*len(lignes))/2
     else:
         dy = 0
         
@@ -745,7 +772,7 @@ def show_lignes(ctx, lignes, x, y, w, h, ha, va):
         elif ha == 'd':
             xt = x+xbearing+w-width
         
-        yt = y + (fascent+fdescent)*l - fdescent + fheight + dy
+        yt = y + hl*l - fdescent + fheight + dy
 
         ctx.move_to(xt, yt)
 #        print t
@@ -1118,7 +1145,7 @@ def liste_code_texte(ctx, lstCodes, lstTexte, x, y, w, h, e, gras = None, lstCou
     if no > 0:
         hl = h/no
         wt = 0
-        fs = None
+#        fs = None
         for i, t in enumerate(lstCodes):
             if t.strip() != "":
                 ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
@@ -1183,13 +1210,13 @@ def drange(start, stop, step):
 
 
 
-def testRapport(ctx):
-    f = open("testRapport.txt", 'w')
-    for i in drange(0.008, 0.1, 0.0001):
-        ctx.set_font_size(i)
-        fascent, fdescent, fheight, fxadvance, fyadvance = ctx.font_extents()
-        f.write(str(i)+ " " + str(fascent+fdescent)+"\n")
-    f.close()
+#def testRapport(ctx):
+#    f = open("testRapport.txt", 'w')
+#    for i in drange(0.008, 0.1, 0.0001):
+#        ctx.set_font_size(i)
+#        fascent, fdescent, fheight, fxadvance, fyadvance = ctx.font_extents()
+#        f.write(str(i)+ " " + str(fascent+fdescent)+"\n")
+#    f.close()
         
         
         
