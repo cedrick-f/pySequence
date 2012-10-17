@@ -67,5 +67,6 @@ print FichiersImages
 for idFichierImage in FichiersImages.keys():
     wx.tools.img2py.img2py(FichiersImages[idFichierImage], fichIcone,
            imgName = str(idFichierImage),
-           append = True, icon = True)
+           append = True, icon = True,
+           functionCompatible = True)
 

@@ -32,6 +32,8 @@ Created on 26 oct. 2011
 @author: Cedrick
 '''
 
+#import time
+
 from draw_cairo import *
 #import textwrap
 from math import log
@@ -39,8 +41,8 @@ from math import log
 #
 #import ConfigParser
 
-from constantes import Effectifs, NomsEffectifs, listeDemarches, Demarches, getSavoir, getCompetence, \
-                        DemarchesCourt, estCompetenceRevue
+#from constantes import Effectifs, NomsEffectifs, listeDemarches, Demarches, getSavoir, getCompetence, \
+#                        DemarchesCourt, estCompetenceRevue
 import constantes
 
 ## Pour dessiner la cible ...
@@ -434,11 +436,13 @@ def Draw(ctx, prj, mouchard = False):
         dans un contexte cairo <ctx>
     """
     
+#    print ctx.text_extents("AAA BBB")
+#    print ctx.text_extents("AAA\nBBB")
     
 #        print "Draw séquence"
 #    InitCurseur()
     
-    
+#    tps = time.time()
     #
     # Options générales
     #
@@ -450,6 +454,7 @@ def Draw(ctx, prj, mouchard = False):
     
     DefinirZones(prj, ctx)
 
+#    print "     1 ", time.time() - tps
     prj.pt_caract = []
     prj.rect = []
     prj.rectComp = {}
@@ -471,7 +476,7 @@ def Draw(ctx, prj, mouchard = False):
     ctx.stroke ()
     tailleTypeEns = width
     
-   
+#    print "     2 ", time.time() - tps
     #
     # Position dans l'année
     #
@@ -481,7 +486,7 @@ def Draw(ctx, prj, mouchard = False):
     prj.rectPos = DrawPeriodes(ctx, prj.position, tailleTypeEns = tailleTypeEns)
     prj.rect.append(posPos+taillePos)
     
-    
+#    print "     3 ", time.time() - tps
     #
     # Image
     #
@@ -511,8 +516,7 @@ def Draw(ctx, prj, mouchard = False):
         prj.support.rect.append(posImg + tailleImg)
         prj.support.pts_caract.append(posImg)
     
-    
-
+#    print "     4 ", time.time() - tps
     #
     #  Equipe
     #
@@ -539,7 +543,8 @@ def Draw(ctx, prj, mouchard = False):
     for i, p in enumerate(prj.equipe):
         p.rect = [r[i]]
 #        prj.pts_caract.append(getPts(r))
-        
+    
+#    print "     5 ", time.time() - tps
 
     #
     #  Problématique
@@ -554,6 +559,7 @@ def Draw(ctx, prj, mouchard = False):
                    fontsizeMinMax = (-1, 0.016))
     prj.rect.append(rectPro)
     
+#    print "     6 ", time.time() - tps
     #
     #  Support
     #
@@ -571,10 +577,12 @@ def Draw(ctx, prj, mouchard = False):
     
     
         
-        
+#    print "intro", time.time() - tps
     #
     #  Tableau des compétenecs
     #    
+#    tps = time.time()
+        
     competences = prj.GetCompetencesUtil()
     
     if competences != []:
@@ -614,12 +622,13 @@ def Draw(ctx, prj, mouchard = False):
         
         prj.pt_caract_comp = getPts(p)
 
-
+#    print "compétences", time.time() - tps
 
 
     #
     #  Tableau des élèves
-    #    
+    #   
+#    tps = time.time()
     ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                           cairo.FONT_WEIGHT_NORMAL)
     ctx.set_source_rgb(0, 0, 0)
@@ -708,10 +717,12 @@ def Draw(ctx, prj, mouchard = False):
             ctx.line_to(xEleves[i]-e, y)
         ctx.stroke()
     
+#    print "élèves", time.time() - tps
     
     #
     #  Tâches
     #
+#    tps = time.time()
     curve_rect_titre(ctx, u"Tâches à réaliser",  
                      (posZDeroul[0], posZDeroul[1], 
                       tailleZDeroul[0], tailleZDeroul[1]), 
@@ -744,7 +755,7 @@ def Draw(ctx, prj, mouchard = False):
             y = yb
             
         phase = t.phase
-        
+#    print "    ", time.time() - tps
     #
     # Les lignes horizontales en face des taches
     # et les croisements Tâche/Competences
@@ -765,13 +776,17 @@ def Draw(ctx, prj, mouchard = False):
             ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
                                                cairo.FONT_WEIGHT_NORMAL)
             show_text_rect(ctx, constantes.NOM_PHASE_TACHE[phase], 
-                   (posZDeroul[0] + ecartX/6, yh[0], 
-                    wPhases, yh[1]-yh[0]), ha = 'c', orient = 'v', b = 0) 
+                           (posZDeroul[0] + ecartX/6, yh[0], 
+                            wPhases, yh[1]-yh[0]), 
+                           ha = 'c', orient = 'v', b = 0,
+                           couper = False) 
 
+#    print "taches", time.time() - tps
     
     #
     # Durées élève entre revues
     #
+#    tps = time.time()
     y0 = posZTaches[1]
     y3 = y1+2*ecartTacheY + 0.015
     md1 = md2 = 0
@@ -795,17 +810,23 @@ def Draw(ctx, prj, mouchard = False):
             ctx.line_to(xEleves[i], y3+(y2-y3)*d2/md2)
             ctx.stroke()
     
+#    print "durées", time.time() - tps
+    
+    
+    
     #
     # Croisements élèves/tâches
     #
+#    tps = time.time()
     for t, y in yTaches: 
         DrawCroisementsElevesTaches(ctx, t, y)
         
-        
+#    print "CroisementsElevesTaches", time.time() - tps
+    
     #
     # Durées du projet (durées élèves)
     #
-    
+#    tps = time.time()
     for i, e in enumerate(prj.eleves):
 #        x = posZElevesV[0]+i*tailleZElevesV[0]/len(prj.eleves)-wEleves/2
         x = xEleves[i]-wEleves*3/4
@@ -818,7 +839,7 @@ def Draw(ctx, prj, mouchard = False):
         show_text_rect(ctx, getHoraireTxt(d), 
                        (x, y, wEleves*3/2, ecartY/2), ha = 'c', b = 0)
     
-    
+#    print "dureeProjet", time.time() - tps
     #
     # Informations
     #

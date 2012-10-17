@@ -14,16 +14,19 @@ Copyright (C) 2011-2012
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "3.2"
+__version__ = "3.5"
 
-from threading import Thread
+#from threading import Thread
+
+#import psyco
+#psyco.full()
 
 ####################################################################################
 #
 #   Import des modules nécessaires
 #
 ####################################################################################
-import time
+#import time
 
 # Outils "système"
 import sys, os
@@ -53,7 +56,7 @@ import wx.lib.platebtn as platebtn
 #import  wx.lib.buttons  as  buttons
 from wx.lib.agw import ultimatelistctrl as ULC
 import wx.lib.colourdb
-import  wx.lib.fancytext as fancytext
+#import  wx.lib.fancytext as fancytext
 
 import images
 
@@ -89,7 +92,7 @@ import functools
 import xml.etree.ElementTree as ET
 
 # des widgets wx évolués "faits maison"
-from CedWidgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_ENTIER_POS, chronometrer
+from CedWidgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_ENTIER_POS#, chronometrer
 #from CustomCheckBox import CustomCheckBox
 # Les constantes et les fonctions de dessin
 
@@ -162,21 +165,21 @@ class SeqEvent(wx.PyCommandEvent):
 myEVT_APPEL_OUVRIR = wx.NewEventType()
 EVT_APPEL_OUVRIR = wx.PyEventBinder(myEVT_APPEL_OUVRIR, 1)
 
-#----------------------------------------------------------------------
-class AppelEvent(wx.PyCommandEvent):
-    def __init__(self, evtType, id):
-        wx.PyCommandEvent.__init__(self, evtType, id)
-        self.file = None
-        
-        
-    ######################################################################################  
-    def SetFile(self, file):
-        self.file = file
-        
-    ######################################################################################  
-    def GetFile(self):
-        return self.file
-    
+##----------------------------------------------------------------------
+#class AppelEvent(wx.PyCommandEvent):
+#    def __init__(self, evtType, id):
+#        wx.PyCommandEvent.__init__(self, evtType, id)
+#        self.file = None
+#        
+#        
+#    ######################################################################################  
+#    def SetFile(self, file):
+#        self.file = file
+#        
+#    ######################################################################################  
+#    def GetFile(self):
+#        return self.file
+#    
     
 def testRel(lien, path):
     try:
@@ -233,7 +236,7 @@ class Lien():
     ######################################################################################  
     def DialogCreer(self, pathseq):
         dlg = URLDialog(None, self, pathseq)
-        res = dlg.ShowModal()
+        dlg.ShowModal()
         dlg.Destroy() 
             
 
@@ -464,7 +467,7 @@ class LienSequence():
     def setBranche(self, branche):
         self.path = branche.get("dir", "")
         if hasattr(self, 'panelPropriete'):
-            ok = self.panelPropriete.MiseAJour()
+            self.panelPropriete.MiseAJour()
 
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
@@ -542,7 +545,7 @@ class Objet_sequence():
         
         for i, (p, f) in enumerate(self.cadre):
             if type(f) != str:
-                a = self.EncapsuleSVG(doc, p)
+                self.EncapsuleSVG(doc, p)
                 titre = self.GetBulleSVG(f)
                 self.SetSVGTitre(p, titre)
                 p.setAttribute("id",  self.GetCode(f)+str(f))
@@ -1420,9 +1423,9 @@ class Projet(BaseDoc, Objet_sequence):
         return self.intitule
 
     
-    ######################################################################################  
-    def SetPath(self, fichierCourant):
-        pathseq = os.path.split(fichierCourant)[0]
+#    ######################################################################################  
+#    def SetPath(self, fichierCourant):
+#        pathseq = os.path.split(fichierCourant)[0]
 #        for t in self.taches:
 #            t.SetPathSeq(pathseq)    
 #        for sy in self.systemes:
@@ -1603,7 +1606,7 @@ class Projet(BaseDoc, Objet_sequence):
         
         self.taches = []
         adapterVersion = True
-        for i,e in enumerate(list(brancheTac)):
+        for e in list(brancheTac):
             phase = e.get("Phase")
             if phase in ["R1", "R2", "S"]:
                 if phase == "S":
@@ -1820,7 +1823,6 @@ class Projet(BaseDoc, Objet_sequence):
         #
         # On fait des paquets par catégorie
         #
-        o = 1
         Ana = []
         Con = []
         Rea = []
@@ -1919,8 +1921,9 @@ class Projet(BaseDoc, Objet_sequence):
     ######################################################################################  
     def AjouterEleve(self, event = None):
         if len(self.eleves) < 6:
-            e = Eleve(self, self.panelParent, len(self.eleves))
+            e = Eleve(self, self.panelParent, self.GetNewIdEleve())
             self.eleves.append(e)
+            self.OrdonnerEleves()
             e.ConstruireArbre(self.arbre, self.brancheElv)
             self.arbre.Expand(self.brancheElv)
             self.panelPropriete.sendEvent()
@@ -1931,18 +1934,45 @@ class Projet(BaseDoc, Objet_sequence):
     
     ######################################################################################  
     def SupprimerEleve(self, event = None, item = None):
+#        print "SupprimerEleve",
         e = self.arbre.GetItemPyData(item)
+#        print e,
         i = self.eleves.index(e)
+#        print "(", i,")"
         self.eleves.remove(e)
-                
+        self.OrdonnerEleves()
+        
         self.arbre.Delete(item)
         self.SupprimerEleveDansPanelTache(i)
         
+        # On fait ça car supprimer un élève a un impact sur les noms des éleves "sans nom"
         for i, e in enumerate(self.eleves):
-            e.id = i
-        
+            e.SetCode()
+            
         self.panelPropriete.sendEvent()
     
+    ######################################################################################  
+    def OrdonnerEleves(self):
+        for i,e in enumerate(self.eleves):
+            e.id = i
+            
+        
+        
+    ######################################################################################  
+    def GetNewIdEleve(self):
+        """ Renvoie le 1er numéro d'identification élève disponible
+        """
+        print "GetNewIdEleve", 
+        for i in range(6):
+            ok = False
+            for e in self.eleves:
+                ok = ok or i != e.id
+            if ok:
+                break
+        print i
+        return i
+    
+
     
     ######################################################################################  
     def AjouterProf(self, event = None):
@@ -1957,7 +1987,7 @@ class Projet(BaseDoc, Objet_sequence):
     ######################################################################################  
     def SupprimerProf(self, event = None, item = None):
         e = self.arbre.GetItemPyData(item)
-        i = self.equipe.index(e)
+#        i = self.equipe.index(e)
         self.equipe.remove(e)
         self.arbre.Delete(item)
         self.panelPropriete.sendEvent()
@@ -3699,14 +3729,14 @@ class Tache(Objet_sequence):
         self.panelPropriete.MiseAJourTypeEnseignement(type_ens)
         
     ######################################################################################  
-    def SupprimerSysteme(self, id):
+    def SupprimerSysteme(self, i):
         if self.typeSeance in ["AP", "ED", "P"]:
-            del self.systemes[id]
+            del self.systemes[i]
             if hasattr(self, 'panelPropriete'):
                 self.panelPropriete.ConstruireListeSystemes()
         elif self.typeSeance in ["R", "S"] : # Séances en Rotation ou  Parallèle
             for s in self.sousSeances:
-                s.SupprimerSysteme(id)
+                s.SupprimerSysteme(i)
 
         
     ######################################################################################  
@@ -4328,13 +4358,13 @@ class Eleve(Personne, Objet_sequence):
             % revue
             % soutenance
         """ 
-        
+#        print "GetEvaluabilite", self
         r = s = 0
         
         dicPoids = constantes.dicPoidsIndicateurs[self.GetTypeEnseignement()]
         dicIndicateurs = self.GetDicIndicateurs()
         tousIndicateurs = constantes.dicIndicateurs[self.GetTypeEnseignement()]
-        
+#        print "   ", dicIndicateurs
         for grp, poids in dicPoids.items():
             poidsGrp, dicIndicGrp = poids
             for comp, poidsIndic in dicIndicGrp.items():
@@ -4348,6 +4378,8 @@ class Eleve(Personne, Objet_sequence):
         
         if self.GetTypeEnseignement() == "SSI":
             r, s = r*2, s*2
+            
+#        print r,s
         return r, s
     
 
@@ -4368,12 +4400,15 @@ class Eleve(Personne, Objet_sequence):
                 valeur = liste [True False ...] des indicateurs à mobiliser
         """
         indicateurs = {}
+#        print " GetDicIndicateurs", self.id
         for t in self.parent.taches:
+#            print "  ", t.eleves
             if self.id in t.eleves:     # L'élève est concerné par cette tâche
                 indicTache = t.GetDicIndicateurs()
                 for c, i in indicTache.items():
+#                    print "    ",c,  i
                     if c in indicateurs.keys():
-                        indicateurs[c] = indicateurs[c] and i
+                        indicateurs[c] = [x or y for x, y in zip(indicateurs[c], i)]
                     else:
                         indicateurs[c] = i
         return indicateurs
@@ -5109,7 +5144,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
     #############################################################################
     def exporterFiche(self, event = None):
         mesFormats = "pdf (.pdf)|*.pdf|" \
-                     "svg (.svg)|*.svg|"
+                     "svg (.svg)|*.svg"
 #                     "swf (.swf)|*.swf"
         dlg = wx.FileDialog(
             self, message=u"Enregistrer la fiche sous ...", defaultDir=toDefautEncoding(self.DossierSauvegarde) , 
@@ -5352,7 +5387,7 @@ class FenetreSequence(FenetreDocument):
                 
                 self.sequence.setBranche(sequence)  
                 
-        except Exception as inst:
+        except:
             dlg = wx.MessageDialog(self, u"La séquence pédagogique\n%s\n n'a pas pu être ouverte !" %nomFichier,
                                u"Erreur d'ouverture",
                                wx.OK | wx.ICON_WARNING
@@ -5452,7 +5487,7 @@ class FenetreProjet(FenetreDocument):
             
             
             
-            tps = time.time()
+            
 #            try:
 #                self.thread.join()
 #                while self.fichePrj.enCours:
@@ -5475,7 +5510,6 @@ class FenetreProjet(FenetreDocument):
 
             self.MarquerFichierCourantModifie()
             
-            print time.time() - tps
         
     ###############################################################################################
     def enregistrer(self, nomFichier):
@@ -5522,7 +5556,7 @@ class FenetreProjet(FenetreDocument):
                 self.classe.setBranche(classe)
                 self.projet.setBranche(projet)  
                 
-        except Exception as inst:
+        except:
             dlg = wx.MessageDialog(self, u"Le projet\n%s\n n'a pas pu être ouvert !" %nomFichier,
                                u"Erreur d'ouverture",
                                wx.OK | wx.ICON_WARNING
@@ -5568,7 +5602,7 @@ class FenetreProjet(FenetreDocument):
     #############################################################################
     def definirNomFichierCourant(self, nomFichier = ''):
         self.fichierCourant = nomFichier
-        self.projet.SetPath(nomFichier)
+#        self.projet.SetPath(nomFichier)
         self.SetTitre()
 
     
@@ -5577,16 +5611,16 @@ class FenetreProjet(FenetreDocument):
         self.projet.AppliquerOptions() 
     
     
-class ThreadRedess(Thread):
-    def __init__(self, fiche):
-        Thread.__init__(self)
-        self.fiche = fiche
-        
-    def run(self):
-        self.fiche.enCours = True
-        self.fiche.Redessiner()
-        Thread.__init__(self)
-        self.fiche.enCours = False
+#class ThreadRedess(Thread):
+#    def __init__(self, fiche):
+#        Thread.__init__(self)
+#        self.fiche = fiche
+#        
+#    def run(self):
+#        self.fiche.enCours = True
+#        self.fiche.Redessiner()
+#        Thread.__init__(self)
+#        self.fiche.enCours = False
 
         
 ####################################################################################
@@ -5653,7 +5687,9 @@ class BaseFiche(wx.ScrolledWindow):
 
     #############################################################################            
     def Redessiner(self, event = None):  
-        
+        wx.BeginBusyCursor()
+#        tps = time.time()
+            
         cdc = wx.ClientDC(self)
         self.PrepareDC(cdc) 
         dc = wx.BufferedDC(cdc, self.buffer, wx.BUFFER_VIRTUAL_AREA)
@@ -5674,7 +5710,9 @@ class BaseFiche(wx.ScrolledWindow):
         dc.EndDrawing()
         self.ctx = ctx
         self.Refresh()
-        
+
+#        print time.time() - tps
+        wx.EndBusyCursor()
     
     #############################################################################            
     def normalize(self, cr):
@@ -5997,9 +6035,9 @@ class PanelProprieteBook(wx.Notebook, PanelPropriete):
 
 
     def OnPageChanged(self, event):
-        old = event.GetOldSelection()
-        new = event.GetSelection()
-        sel = self.GetSelection()
+#        old = event.GetOldSelection()
+#        new = event.GetSelection()
+#        sel = self.GetSelection()
         
         event.Skip()
 
@@ -6732,7 +6770,7 @@ class PanelEffectifsClasse(wx.Panel):
     
     def MiseAJourNbrEleve(self):
         self.boxEffRed.SetLabelText(strEffectifComplet(self.classe, 'G', -1))
-        t = u"groupes de "
+#        t = u"groupes de "
 #        self.BoxEP.SetLabelText(t+strEffectif(self.classe, 'E', -1))
 #        self.BoxAP.SetLabelText(t+strEffectif(self.classe, 'P', -1))
 
@@ -6888,8 +6926,8 @@ class Panel_Cible(wx.Panel):
         self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
         self.backGround = self.GetBackgroundColour()
         
-        rayons = [90,90,60,40,20,30,60,40,20,30,60,40,20,30,0]
-        angles = [-100,100,0,0,0,60,120,120,120,180,-120,-120,-120,-60,0]
+#        rayons = [90,90,60,40,20,30,60,40,20,30,60,40,20,30,0]
+#        angles = [-100,100,0,0,0,60,120,120,120,180,-120,-120,-120,-60,0]
         centre = [96, 88]
         
         rayons = {"F" : 60, 
@@ -6978,7 +7016,7 @@ class Panel_Cible(wx.Panel):
             rect = self.GetUpdateRegion().GetBox()
             dc.SetClippingRect(rect)
         dc.SetBackgroundMode(wx.TRANSPARENT)
-        color = wx.SystemSettings.GetColour(wx.SYS_COLOUR_BACKGROUND)
+#        color = wx.SystemSettings.GetColour(wx.SYS_COLOUR_BACKGROUND)
         dc.SetBackground(wx.Brush(self.backGround))
         dc.Clear()
         bmp = constantes.images.Cible.GetBitmap()
@@ -8255,7 +8293,7 @@ class PanelPropriete_Tache(PanelProprieteBook, PanelPropriete):
         if hasattr(self, 'arbre'):
             self.arbre.UnselectAll()
             
-            root = self.arbre.GetRootItem()
+#            root = self.arbre.GetRootItem()
             for s in self.tache.indicateurs:
                 if s in self.arbre.items.keys():
                     self.arbre.CheckItem2(self.arbre.items[s])
@@ -9955,7 +9993,6 @@ def img2str(img):
 # 
 #############################################################################################################
 import cStringIO
-import wx.richtext as rt
 
 class PopupInfo(wx.PopupWindow):
     def __init__(self, parent, titre = ""):
@@ -10162,11 +10199,11 @@ class A_propos(wx.Dialog):
         self.app = parent
         
         sizer = wx.BoxSizer(wx.VERTICAL)
-        titre = wx.StaticText(self, -1, __appname__)
+        titre = wx.StaticText(self, -1, " "+__appname__)
         titre.SetFont(wx.Font(14, wx.DEFAULT, wx.NORMAL, wx.BOLD, False))
         titre.SetForegroundColour(wx.NamedColour("BROWN"))
         sizer.Add(titre, border = 10)
-        sizer.Add(wx.StaticText(self, -1, "Version : "+__version__), 
+        sizer.Add(wx.StaticText(self, -1, "Version : "+__version__+ " "), 
                   flag=wx.ALIGN_RIGHT)
 #        sizer.Add(wx.StaticBitmap(self, -1, Images.Logo.GetBitmap()),
 #                  flag=wx.ALIGN_CENTER)
@@ -10232,14 +10269,13 @@ class A_propos(wx.Dialog):
         # Description
         #-------------
         descrip = wx.Panel(nb, -1)
-        wx.TextCtrl(descrip, -1, wordwrap(u"pySequence est un logiciel d'aide à l'élaboration de séquences pédagogiques,\n"
+        t = wx.StaticText(descrip, -1,u"",
+                          size = (400, -1))#,
+#                        style = wx.TE_READONLY|wx.TE_MULTILINE|wx.BORDER_NONE) 
+        t.SetLabelMarkup( wordwrap(u"<b>pySequence</b> est un logiciel d'aide à l'élaboration de séquences pédagogiques,\n"
                                           u"sous forme de fiches exportables au format PDF.\n"
                                           u"Il est élaboré en relation avec le programme et le document d'accompagnement\n"
-                                          u"des enseignements technologiques transversaux de la filière STI2D.",
-                                            500, wx.ClientDC(self)),
-                        size = (400, -1),
-                        style = wx.TE_READONLY|wx.TE_MULTILINE|wx.BORDER_NONE) 
-        
+                                          u"des enseignements technologiques transversaux de la filière STI2D.",500, wx.ClientDC(self)))
         nb.AddPage(descrip, u"Description")
         nb.AddPage(auteurs, u"Auteurs")
         nb.AddPage(licence, u"Licence")
