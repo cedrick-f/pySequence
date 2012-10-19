@@ -688,16 +688,16 @@ def toTxt(lst):
 
 # Pour obtenir l'intitulé d'un savoir à partir de son code 
 #        fonction recursive
-def getSavoir(seq, code, dic = None, c = None):
+def getSavoir(typeEns, code, dic = None, c = None):
     if dic == None:
-        dic = dicSavoirs[seq.classe.typeEnseignement]
+        dic = dicSavoirs[typeEns]
     if c == None:
         c = len(code.split("."))
     if dic.has_key(code):
         return dic[code][0]
     else:
         cd = code[:-2*(c-1)]
-        return getSavoir(seq, code, dic[cd][1], c-1)
+        return getSavoir(typeEns, code, dic[cd][1], c-1)
     
     
 # Pour obtenir l'intitulé d'une compétence à partir de son code 

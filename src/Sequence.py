@@ -1,5 +1,31 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
+##This file is part of pySequence
+#############################################################################
+#############################################################################
+##                                                                         ##
+##                                  sequence                               ##
+##                                                                         ##
+#############################################################################
+#############################################################################
+
+## Copyright (C) 2012 Cédrick FAURY
+
+#    pySequence is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 3 of the License, or
+#    (at your option) any later version.
+    
+#    pySequence is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with pySequence; if not, write to the Free Software
+#    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
 """
 Sequence.py
 Aide à la réalisation de fiches  de séquence pédagogiques
@@ -14,7 +40,7 @@ Copyright (C) 2011-2012
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "3.5"
+__version__ = "3.7"
 
 #from threading import Thread
 
@@ -113,7 +139,7 @@ import register
 
 import textwrap
 
-import serveur
+
 
 # Pour l'export en swf
 #import tempfile
@@ -159,27 +185,28 @@ class SeqEvent(wx.PyCommandEvent):
     
 ####################################################################################
 #
-#   Evenement perso pour détecter une modification de la séquence
+#   Evenement perso pour signaler qu'il faut ouvrir un fichier .prj ou .seq
+#   suite à un appel extérieur (explorateur Windows)
 #
 ####################################################################################
 myEVT_APPEL_OUVRIR = wx.NewEventType()
 EVT_APPEL_OUVRIR = wx.PyEventBinder(myEVT_APPEL_OUVRIR, 1)
 
-##----------------------------------------------------------------------
-#class AppelEvent(wx.PyCommandEvent):
-#    def __init__(self, evtType, id):
-#        wx.PyCommandEvent.__init__(self, evtType, id)
-#        self.file = None
-#        
-#        
-#    ######################################################################################  
-#    def SetFile(self, file):
-#        self.file = file
-#        
-#    ######################################################################################  
-#    def GetFile(self):
-#        return self.file
-#    
+#----------------------------------------------------------------------
+class AppelEvent(wx.PyCommandEvent):
+    def __init__(self, evtType, id):
+        wx.PyCommandEvent.__init__(self, evtType, id)
+        self.file = None
+        
+        
+    ######################################################################################  
+    def SetFile(self, file):
+        self.file = file
+        
+    ######################################################################################  
+    def GetFile(self):
+        return self.file
+    
     
 def testRel(lien, path):
     try:
@@ -817,7 +844,7 @@ class Sequence(BaseDoc):
             self.panelSystemes = PanelPropriete_Racine(panelParent, constantes.TxtRacineSysteme)
         
         
-        self.prerequis = Savoirs(self, panelParent)
+        self.prerequis = Savoirs(self, panelParent, prerequis = True)
         self.prerequisSeance = []
         
         self.CI = CentreInteret(self, panelParent)
@@ -1199,7 +1226,9 @@ class Sequence(BaseDoc):
         #
         # Les prérequis
         #
-        self.branchePre = arbre.AppendItem(self.branche, Titres[1], data = self.prerequis, image = self.arbre.images["Sav"])
+        self.branchePre = arbre.AppendItem(self.branche, Titres[1], 
+                                           data = self.prerequis, 
+                                           image = self.arbre.images["Sav"])
         for ps in self.prerequisSeance:
             ps.ConstruireArbre(arbre, self.branchePre)
         #
@@ -2475,13 +2504,13 @@ class Competences(Objet_sequence):
 #
 ####################################################################################
 class Savoirs(Objet_sequence):
-    def __init__(self, parent, panelParent, num = None):
+    def __init__(self, parent, panelParent, num = None, prerequis = False):
         Objet_sequence.__init__(self)
-        self.parent = parent
+        self.parent = parent # la séquence
         self.num = num
         self.savoirs = []
         if panelParent:
-            self.panelPropriete = PanelPropriete_Savoirs(panelParent, self)
+            self.panelPropriete = PanelPropriete_Savoirs(panelParent, self, prerequis)
         
     ######################################################################################  
     def __repr__(self):
@@ -4803,11 +4832,11 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         wx.CallAfter(self.ouvrir, evt.GetFile())
         
         
-#    ###############################################################################################
-#    def AppelOuvrir(self, nomFichier):
-#        evt = AppelEvent(myEVT_APPEL_OUVRIR, self.GetId())
-#        evt.SetFile(nomFichier)
-#        self.GetEventHandler().ProcessEvent(evt)
+    ###############################################################################################
+    def AppelOuvrir(self, nomFichier):
+        evt = AppelEvent(myEVT_APPEL_OUVRIR, self.GetId())
+        evt.SetFile(nomFichier)
+        self.GetEventHandler().ProcessEvent(evt)
         
         
         
@@ -7360,10 +7389,10 @@ class PanelPropriete_Competences(PanelPropriete):
 #
 ####################################################################################
 class PanelPropriete_Savoirs(PanelPropriete):
-    def __init__(self, parent, savoirs):
+    def __init__(self, parent, savoirs, prerequis):
         
         self.savoirs = savoirs
-
+        self.prerequis = prerequis
         PanelPropriete.__init__(self, parent)
         
         self.construire()
@@ -7378,7 +7407,7 @@ class PanelPropriete_Savoirs(PanelPropriete):
         self.DestroyChildren()
 #        if hasattr(self, 'arbre'):
 #            self.sizer.Remove(self.arbre)
-        self.arbre = ArbreSavoirs(self, self.savoirs)
+        self.arbre = ArbreSavoirs(self, self.savoirs, self.prerequis)
         self.sizer.Add(self.arbre, (0,0), flag = wx.EXPAND)
         if not self.sizer.IsColGrowable(0):
             self.sizer.AddGrowableCol(0)
@@ -9287,15 +9316,28 @@ class ArbreProjet(ArbreDoc):
 
 
 class ArbreSavoirs(CT.CustomTreeCtrl):
-    def __init__(self, parent, savoirs):
+    def __init__(self, parent, savoirs, prerequis):
 
-        CT.CustomTreeCtrl.__init__(self, parent, -1, style = wx.TR_DEFAULT_STYLE|wx.TR_MULTIPLE|wx.TR_HIDE_ROOT)
+        CT.CustomTreeCtrl.__init__(self, parent, -1, 
+                                   agwStyle = wx.TR_DEFAULT_STYLE|wx.TR_MULTIPLE|wx.TR_HIDE_ROOT)
         
         self.parent = parent
         self.savoirs = savoirs
         
-        self.root = self.AddRoot(u"Savoirs")
-        self.Construire(self.root, constantes.dicSavoirs[savoirs.GetTypeEnseignement()])
+        typeEns = savoirs.GetTypeEnseignement()
+        
+        root = self.AddRoot(u"")
+        
+        self.root = self.AppendItem(root, u"Savoirs "+typeEns)
+        self.SetItemBold(self.root, True)
+        self.Construire(self.root, constantes.dicSavoirs[typeEns])
+        
+        if prerequis and typeEns!="ET":
+            self.rootET = self.AppendItem(root, u"Savoirs ETT")
+            self.SetItemBold(self.rootET, True)
+            self.SetItemItalic(self.rootET, True)
+            self.Construire(self.rootET, constantes.dicSavoirs['ET'], et = True)
+        
         
         self.ExpandAll()
         
@@ -9324,18 +9366,22 @@ class ArbreSavoirs(CT.CustomTreeCtrl):
 #        self.Bind(CT.EVT_TREE_SEL_CHANGED, self.OnSelChanged)
         self.Bind(CT.EVT_TREE_ITEM_CHECKED, self.OnItemCheck)
         
-    def Construire(self, branche, dic):
+    def Construire(self, branche, dic, et = False):
         clefs = dic.keys()
         clefs.sort()
         for k in clefs:
             b = self.AppendItem(branche, k+" "+dic[k][0], ct_type=1)
+            if et:
+                self.SetItemItalic(b, True)
             if type(dic[k][1]) == dict:
-                self.Construire(b, dic[k][1])
+                self.Construire(b, dic[k][1], et)
 
         
     def OnItemCheck(self, event):
         item = event.GetItem()
         code = self.GetItemText(item).split()[0]
+        if self.IsItalic(item):
+            code = '_'+code
         if item.GetValue():
             self.parent.savoirs.savoirs.append(code)
         else:
@@ -9777,24 +9823,19 @@ def get_key(dic, value):
 class SeqApp(wx.App):
     def OnInit(self):
         fichier = ""
-        if len(sys.argv)>1: #un paramétre a été passé
+        if len(sys.argv)>1: # un paramètre a été passé
             parametre = sys.argv[1]
-#            for param in sys.argv:
-#                parametre = param.upper()
-#                # on verifie que le fichier passé en paramétre existe
+
+#           # on verifie que le fichier passé en paramètre existe
             if os.path.isfile(parametre):
                 fichier = unicode(parametre, FILE_ENCODING)
-        
-#        self.serveur = Server(fichier)
-#        loop()
-#        self.a = threading.Thread(None, loop)
-#        self.a.start()
 
         
         frame = FenetrePrincipale(None, fichier)
         frame.Show()
         
-        server.app = frame
+        if server != None:
+            server.app = frame
         
         self.SetTopWindow(frame)
         return True
@@ -10290,13 +10331,18 @@ class A_propos(wx.Dialog):
 
 
         
-import socket
+
 
 if __name__ == '__main__':
-
+    import serveur
+    import socket
     HOST, PORT = socket.gethostname(), 61955
-
+    
+    print "HOST :", HOST
+    
     server = None
+    # On teste si pySequence est déja ouvert ...
+    #  = demande de connection au client (HOST,PORT) accéptée
     try:
         if len(sys.argv) > 1:
             arg = sys.argv[1]
@@ -10304,8 +10350,15 @@ if __name__ == '__main__':
             arg = ''
         serveur.client(HOST, PORT, arg)
         sys.exit()
-    except socket.error:
-        server = serveur.start_server(HOST, PORT)
+        
+    except socket.error: #socket.error: [Errno 10061] Aucune connexion n'a pu être établie car l'ordinateur cible l'a expressément refusée
+        # On démarre une nouvelle instance de pySequence
+        # = La demande de connection au client (HOST,PORT) a été refusée
+        try :
+            server = serveur.start_server(HOST, PORT)
+        except: # socket.error: [Errno 10013] Une tentative d’accès à un socket de manière interdite par ses autorisations d’accès a été tentée 
+            # L'accés a été refusé ... problème de pare-feu ??
+            pass 
         app = SeqApp(False)
         app.MainLoop()
     

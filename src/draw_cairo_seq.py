@@ -668,8 +668,17 @@ def Draw(ctx, seq, mouchard = False):
     # Codes prerequis
     #
     lstTexte = []
+    lstCodes = []
+    lstCoul = []
     for c in seq.prerequis.savoirs:
-        lstTexte.append(getSavoir(seq, c))
+        if c[0] == '_': # Savoir d'ETT
+            lstTexte.append(getSavoir('ET', c[1:]))
+            lstCodes.append("ETT "+c[1:])
+            lstCoul.append((0.3,0.3,0.3))
+        else:
+            lstTexte.append(getSavoir(seq.classe.typeEnseignement, c))
+            lstCodes.append(c)
+            lstCoul.append((0,0,0))
         
     lstTexteS = []   
     for c in seq.prerequisSeance:
@@ -681,7 +690,9 @@ def Draw(ctx, seq, mouchard = False):
         e = 0.008
         hC = hl*len(lstTexte)/(len(lstTexte) + len(lstTexteS))
         hS = hl*len(lstTexteS)/(len(lstTexte) + len(lstTexteS))
-        r = liste_code_texte(ctx, seq.prerequis.savoirs, lstTexte, x0, y0, rect_width, hC, e)
+        r = liste_code_texte(ctx, lstCodes, lstTexte, 
+                             x0, y0, rect_width, hC, e,
+                             lstCoul = lstCoul)
         ctx.set_source_rgba (0.0, 0.0, 0.5, 1.0)
         seq.prerequis.pts_caract = getPts(r)
         lstRect = liste_code_texte(ctx, ["Seq."]*len(lstTexteS), lstTexteS, x0, y0+hC, rect_width, hS, 0.01)
@@ -711,7 +722,7 @@ def Draw(ctx, seq, mouchard = False):
         lstTexteC.append(getCompetence(seq, c))
     lstTexteS = []   
     for c in seq.obj["S"].savoirs:
-        lstTexteS.append(getSavoir(seq, c))
+        lstTexteS.append(getSavoir(seq.classe.typeEnseignement, c))
     h = rect_height+0.0001
     hC = hS = h/2
     if len(lstTexteS) > 0 or len(lstTexteC) > 0:
