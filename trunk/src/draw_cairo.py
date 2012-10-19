@@ -10,20 +10,20 @@
 #############################################################################
 #############################################################################
 
-## Copyright (C) 2011 Cédrick FAURY
+## Copyright (C) 2012 Cédrick FAURY
 
-#    This program is free software; you can redistribute it and/or modify
+#    pySequence is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation; either version 3 of the License, or
 #    (at your option) any later version.
     
-#    This program is distributed in the hope that it will be useful,
+#    pySequence is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
 #    You should have received a copy of the GNU General Public License
-#    along with this program; if not, write to the Free Software
+#    along with pySequence; if not, write to the Free Software
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 '''
@@ -1150,6 +1150,12 @@ def liste_code_texte(ctx, lstCodes, lstTexte, x, y, w, h, e, gras = None, lstCou
             if t.strip() != "":
                 ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                       cairo.FONT_WEIGHT_BOLD)
+                
+                if lstCoul != None:
+                    ctx.set_source_rgb (lstCoul[i][0], lstCoul[i][1], lstCoul[i][2])
+                else:
+                    ctx.set_source_rgb (0, 0, 0)
+                    
                 show_text_rect(ctx, t, (x+e, y+i*hl, 
                                w/6-e, hl), b = 0.2, ha = 'g', fontsizeMinMax = (-1, 0.012), wrap = False)
                 width = ctx.text_extents(t)[2]
