@@ -40,7 +40,7 @@ Copyright (C) 2011-2012
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "3.7"
+__version__ = "3.8"
 
 #from threading import Thread
 
@@ -7684,10 +7684,12 @@ class PanelPropriete_Seance(PanelPropriete):
     #############################################################################            
     def EvtTextIntitule(self, event):
         self.seance.SetIntitule(self.textctrl.GetValue())
+        event.Skip()
         if not self.eventAttente:
             wx.CallLater(DELAY, self.sendEvent)
             self.eventAttente = True
-        
+            
+    
     #############################################################################            
     def EvtText(self, event):
         if event.GetId() == self.vcDuree.GetId():
@@ -8168,7 +8170,8 @@ class PanelPropriete_Tache(PanelProprieteBook, PanelPropriete):
 
     ######################################################################################  
     def AjouterCompetence(self, code):
-        self.tache.indicateurs.append(code)
+        if not code in self.tache.indicateurs:
+            self.tache.indicateurs.append(code)
 #        print "AjouterCompetence", code
 #        if True:#self.tache.GetTypeEnseignement() != "SSI":
 #            if not True in self.tache.indicateurs[code]:
@@ -8180,7 +8183,11 @@ class PanelPropriete_Tache(PanelProprieteBook, PanelPropriete):
         
     ######################################################################################  
     def EnleverCompetence(self, code):
+        
         self.tache.indicateurs.remove(code)
+        # on recommence : pour corriger un bug
+        if code in self.tache.indicateurs:
+            self.tache.indicateurs.remove(code)
 #        if code in self.tache.indicateurs.keys():
 #            del self.tache.indicateurs[code]
         
@@ -9502,10 +9509,10 @@ class ArbreCompetences(HTL.HyperTreeList):
         clefs.sort()
         for k in clefs:
             if type(dic[k]) == list and type(dic[k][1]) == dict:#len(dic[k])>1
-                b = self.AppendItem(branche, k+" "+dic[k][0], ct_type=ct_type)
+                b = self.AppendItem(branche, k+" "+dic[k][0], ct_type=ct_type, data = k)
                 self.Construire(b, dic[k][1], ct_type = 1)
             else:
-                b = self.AppendItem(branche, k+" "+dic[k], ct_type = 1)
+                b = self.AppendItem(branche, k+" "+dic[k], ct_type = 1, data = k)
             
             if ct_type == 0:
                 self.SetItemBold(b, True)
@@ -9516,10 +9523,11 @@ class ArbreCompetences(HTL.HyperTreeList):
             item = event.GetItem()
         
         code = self.GetItemPyData(item)#.split()[0]
-        if code != None:
+
+        if code != None: # un seul indicateur séléctionné
             self.AjouterEnleverCompetences([item])
 
-        else:
+        else:       # une compérence séléctionnée
             self.AjouterEnleverCompetences(item.GetChildren())
         
         event.Skip()
@@ -9531,6 +9539,7 @@ class ArbreCompetences(HTL.HyperTreeList):
     def AjouterEnleverCompetences(self,lstitem):
         for item in lstitem:
             code = self.GetItemPyData(item)#.split()[0]
+            print code, item.GetValue()
             if item.GetValue():
                 self.pptache.AjouterCompetence(code)
             else:
