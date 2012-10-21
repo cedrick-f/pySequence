@@ -12,7 +12,7 @@ Pour télécharger les fichiers faire un clic-droit puis "Enregistrer la cible d
 ==Projets EE==
  * fichier .prj : [http://pysequence.googlecode.com/svn/trunk/images_aide/EE_abrisdebus.prj "Abris de bus"]
 
- * fiche en svg : [http://pysequence.googlecode.com/svn/trunk/images_aide/EE_abrisdebus.svg "Abris de bus"]
+ * fiche en svg : http://pysequence.googlecode.com/svn/trunk/images_aide/EE_abrisdebus.svg
 
 ==Projets SIN==
  * fichier .prj : [http://pysequence.googlecode.com/svn/trunk/images_aide/Projet_site_isole.prj "Site isolé"]
