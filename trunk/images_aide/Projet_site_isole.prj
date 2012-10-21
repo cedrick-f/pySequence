@@ -1,0 +1,168 @@
+<?xml version='1.0' encoding='cp1252'?>
+<Projet_Classe>
+  <Projet Intitule="instrumentation  du système d&apos;alimentation d&apos;un site isolé" Position="5" Problematique="Comment instrumenter un système d&apos;alimentation en énergie d&apos;un site isolé et communiquer à distance les informations  afin d&apos;améliorer les performances des futures installations.">
+    <Equipe />
+    <Support Lien="" Nom="Système d&apos;alimentation en énergie pour site isolé" TypeLien="" />
+    <Taches>
+      <Tache1 Description="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;richtext version=&quot;1.0.0.0&quot; xmlns=&quot;http://www.wxwidgets.org&quot;&gt;
+  &lt;paragraphlayout textcolor=&quot;#000000&quot; fontpointsize=&quot;8&quot; fontfamily=&quot;70&quot; fontstyle=&quot;90&quot; fontweight=&quot;90&quot; fontunderlined=&quot;0&quot; fontface=&quot;MS Shell Dlg 2&quot; alignment=&quot;1&quot; parspacingafter=&quot;10&quot; parspacingbefore=&quot;0&quot; linespacing=&quot;10&quot; margin-left=&quot;5,4098&quot; margin-right=&quot;5,4098&quot; margin-top=&quot;5,4098&quot; margin-bottom=&quot;5,4098&quot;&gt;
+    &lt;paragraph&gt;
+      &lt;text&gt;L&apos;&amp;#233;laboration des diagrammes sera r&amp;#233;alis&amp;#233;e en groupe avec l&apos;aide du professeur.&lt;/text&gt;
+    &lt;/paragraph&gt;
+  &lt;/paragraphlayout&gt;
+&lt;/richtext&gt;
+" Duree="3" Intitule="Prendre connaissance de la problématique et des spécificités du projet puis élaborer &apos;un diagramme des cas d&apos;utilisation et d&apos;un diagramme des exigences." IntituleDansDeroul="True" Phase="Ana">
+        <Eleves Eleve0="0" Eleve1="1" Eleve2="2" Eleve3="3" />
+        <Indicateurs />
+      </Tache1>
+      <Tache2 Description="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt; &lt;richtext version=&quot;1.0.0.0&quot; xmlns=&quot;http://www.wxwidgets.org&quot;&gt;   &lt;paragraphlayout textcolor=&quot;#000000&quot; fontpointsize=&quot;8&quot; fontfamily=&quot;70&quot; fontstyle=&quot;90&quot; fontweight=&quot;90&quot; fontunderlined=&quot;0&quot; fontface=&quot;MS Shell Dlg 2&quot; alignment=&quot;1&quot; parspacingafter=&quot;10&quot; parspacingbefore=&quot;0&quot; linespacing=&quot;10&quot; margin-left=&quot;5,4098&quot; margin-right=&quot;5,4098&quot; margin-top=&quot;5,4098&quot; margin-bottom=&quot;5,4098&quot;&gt;     &lt;paragraph&gt;       &lt;text&gt;Prendre connaissance du dossier technique de l&apos;&amp;#233;olienne et de son r&amp;#233;gulateur.Noter toutes les caract&amp;#233;ristiques pertinentes (type de mat&amp;#233;riaux, caract&amp;#233;ristiques m&amp;#233;caniques et &amp;#233;lectriques,...) Justifier les choix technologiques. D&amp;#233;crire les flux d&apos;&amp;#233;nergie.Pr&amp;#233;ciser la forme de l&amp;#233;nergie. Pr&amp;#233;ciser les caract&amp;#233;ristiques des transformations ou modulations d&apos;&amp;#233;nergie. Quantifier l&apos;efficacit&amp;#233; &amp;#233;nerg&amp;#233;tique.&lt;/text&gt;     &lt;/paragraph&gt;   &lt;/paragraphlayout&gt; &lt;/richtext&gt; " Duree="6.0" Intitule="Analyser l&apos;installation existante (partie éolienne) et justifier les choix technologiques." IntituleDansDeroul="True" Phase="Con">
+        <Eleves Eleve0="0" Eleve1="1" />
+        <Indicateurs Indic0="CO6.1_3" Indic1="CO6.1_2" Indic10="CO6.2_1" Indic11="CO1.1_5" Indic12="CO1.1_4" Indic13="CO2.1_2" Indic14="CO2.1_1" Indic2="CO6.1_1" Indic3="CO2.1_4" Indic4="CO2.1_3" Indic5="CO1.1_3" Indic6="CO1.1_2" Indic7="CO1.1_1" Indic8="CO6.2_3" Indic9="CO6.2_2" />
+      </Tache2>
+      <Tache3 Description="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt; &lt;richtext version=&quot;1.0.0.0&quot; xmlns=&quot;http://www.wxwidgets.org&quot;&gt;   &lt;paragraphlayout textcolor=&quot;#000000&quot; fontpointsize=&quot;8&quot; fontfamily=&quot;70&quot; fontstyle=&quot;90&quot; fontweight=&quot;90&quot; fontunderlined=&quot;0&quot; fontface=&quot;MS Shell Dlg 2&quot; alignment=&quot;1&quot; parspacingafter=&quot;10&quot; parspacingbefore=&quot;0&quot; linespacing=&quot;10&quot; margin-left=&quot;5,4098&quot; margin-right=&quot;5,4098&quot; margin-top=&quot;5,4098&quot; margin-bottom=&quot;5,4098&quot;&gt;     &lt;paragraph&gt;       &lt;text&gt;Prendre connaissance du dossier technique du panneau solaire et de son r&amp;#233;gulateur.Noter toutes les caract&amp;#233;ristiques pertinentes  (type de mat&amp;#233;riaux, caract&amp;#233;ristiques m&amp;#233;caniques et &amp;#233;lectriques,...) Justifier les choix technologiques.D&amp;#233;crire les flux d&apos;&amp;#233;nergie.Pr&amp;#233;ciser la forme de l&amp;#233;nergie. Pr&amp;#233;ciser les caract&amp;#233;ristiques des transformations ou modulations d&apos;&amp;#233;nergie. Quantifier l&apos;efficacit&amp;#233; &amp;#233;nerg&amp;#233;tique.&lt;/text&gt;     &lt;/paragraph&gt;   &lt;/paragraphlayout&gt; &lt;/richtext&gt; " Duree="6.0" Intitule="Analyser l&apos;installation existante (partie solaire) et justifier les choix technologiques." IntituleDansDeroul="True" Phase="Con">
+        <Eleves Eleve0="2" Eleve1="3" />
+        <Indicateurs Indic0="CO1.1_5" Indic1="CO1.1_4" Indic10="CO1.1_1" Indic11="CO1.1_1" Indic12="CO6.2_1" Indic13="CO6.1_3" Indic14="CO6.2_3" Indic15="CO6.2_2" Indic2="CO2.1_4" Indic3="CO2.1_3" Indic4="CO2.1_2" Indic5="CO2.1_1" Indic6="CO6.1_2" Indic7="CO6.1_1" Indic8="CO1.1_3" Indic9="CO1.1_2" />
+      </Tache3>
+      <Tache4 Description="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt; &lt;richtext version=&quot;1.0.0.0&quot; xmlns=&quot;http://www.wxwidgets.org&quot;&gt;   &lt;paragraphlayout textcolor=&quot;#000000&quot; fontpointsize=&quot;8&quot; fontfamily=&quot;70&quot; fontstyle=&quot;90&quot; fontweight=&quot;90&quot; fontunderlined=&quot;0&quot; fontface=&quot;MS Shell Dlg 2&quot; alignment=&quot;1&quot; parspacingafter=&quot;10&quot; parspacingbefore=&quot;0&quot; linespacing=&quot;10&quot; margin-left=&quot;5,4098&quot; margin-right=&quot;5,4098&quot; margin-top=&quot;5,4098&quot; margin-bottom=&quot;5,4098&quot;&gt;     &lt;paragraph&gt;       &lt;text&gt;Prendre connaissance du dossier technique des &amp;#233;l&amp;#233;ments de stockage de l&apos;&amp;#233;nergie.Noter toutes les caract&amp;#233;ristiques pertinentes  (technologie utilis&amp;#233;e, caract&amp;#233;ristiques m&amp;#233;caniques et &amp;#233;lectriques,...) Justifier les choix technologiques.D&amp;#233;crire les flux d&apos;&amp;#233;nergie.Pr&amp;#233;ciser la forme de l&amp;#233;nergie.  Sp&amp;#233;cifier l&apos;efficacit&amp;#233; &amp;#233;nerg&amp;#233;tique.&lt;/text&gt;     &lt;/paragraph&gt;   &lt;/paragraphlayout&gt; &lt;/richtext&gt; " Duree="3.0" Intitule="Analyser l&apos;installation existante (Partie stockage) et justifier les choix technologiques." IntituleDansDeroul="True" Phase="Con">
+        <Eleves Eleve0="2" />
+        <Indicateurs Indic0="CO1.1_3" Indic1="CO1.1_2" Indic10="CO6.2_1" Indic11="CO6.1_3" Indic12="CO6.2_3" Indic13="CO6.2_2" Indic2="CO2.1_4" Indic3="CO2.1_2" Indic4="CO6.1_2" Indic5="CO6.1_1" Indic6="CO1.1_5" Indic7="CO1.1_4" Indic8="CO1.1_1" Indic9="CO1.1_1" />
+      </Tache4>
+      <Tache5 Description="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt; &lt;richtext version=&quot;1.0.0.0&quot; xmlns=&quot;http://www.wxwidgets.org&quot;&gt;   &lt;paragraphlayout textcolor=&quot;#000000&quot; fontpointsize=&quot;8&quot; fontfamily=&quot;70&quot; fontstyle=&quot;90&quot; fontweight=&quot;90&quot; fontunderlined=&quot;0&quot; fontface=&quot;MS Shell Dlg 2&quot; alignment=&quot;1&quot; parspacingafter=&quot;10&quot; parspacingbefore=&quot;0&quot; linespacing=&quot;10&quot; margin-left=&quot;5,4098&quot; margin-right=&quot;5,4098&quot; margin-top=&quot;5,4098&quot; margin-bottom=&quot;5,4098&quot;&gt;     &lt;paragraph&gt;       &lt;text&gt;Effectuer les mesures  sur l&apos;&amp;#233;olienne et le r&amp;#233;gulateur associ&amp;#233; afin de les compare raux caract&amp;#233;ristiques de la notice technique.&lt;/text&gt;     &lt;/paragraph&gt;   &lt;/paragraphlayout&gt; &lt;/richtext&gt; " Duree="6" Intitule="Vérifier les performances du système existant (partie éolienne)" IntituleDansDeroul="True" Phase="Con">
+        <Eleves Eleve0="1" Eleve1="2" />
+        <Indicateurs Indic0="CO7.sin1_2" Indic1="CO7.sin1_1" Indic2="CO7.sin1_4" Indic3="CO7.sin1_3" />
+      </Tache5>
+      <Tache6 Description="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt; &lt;richtext version=&quot;1.0.0.0&quot; xmlns=&quot;http://www.wxwidgets.org&quot;&gt;   &lt;paragraphlayout textcolor=&quot;#000000&quot; fontpointsize=&quot;8&quot; fontfamily=&quot;70&quot; fontstyle=&quot;90&quot; fontweight=&quot;90&quot; fontunderlined=&quot;0&quot; fontface=&quot;MS Shell Dlg 2&quot; alignment=&quot;1&quot; parspacingafter=&quot;10&quot; parspacingbefore=&quot;0&quot; linespacing=&quot;10&quot; margin-left=&quot;5,4098&quot; margin-right=&quot;5,4098&quot; margin-top=&quot;5,4098&quot; margin-bottom=&quot;5,4098&quot;&gt;     &lt;paragraph&gt;       &lt;text&gt;Effectuer les mesures  sur l&apos;&amp;#233;olienne et le r&amp;#233;gulateur associ&amp;#233; afin de les comparer aux caract&amp;#233;ristiques de la notice technique.&lt;/text&gt;     &lt;/paragraph&gt;   &lt;/paragraphlayout&gt; &lt;/richtext&gt; " Duree="6" Intitule="Vérifier les performances du système existant (partie solaire)" IntituleDansDeroul="True" Phase="Con">
+        <Eleves Eleve0="0" Eleve1="3" />
+        <Indicateurs Indic0="CO7.sin1_2" Indic1="CO7.sin1_1" Indic2="CO7.sin1_4" Indic3="CO7.sin1_3" />
+      </Tache6>
+      <Tache7 Description="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt; &lt;richtext version=&quot;1.0.0.0&quot; xmlns=&quot;http://www.wxwidgets.org&quot;&gt;   &lt;paragraphlayout textcolor=&quot;#000000&quot; fontpointsize=&quot;8&quot; fontfamily=&quot;70&quot; fontstyle=&quot;90&quot; fontweight=&quot;90&quot; fontunderlined=&quot;0&quot; fontface=&quot;MS Shell Dlg 2&quot; alignment=&quot;1&quot; parspacingafter=&quot;10&quot; parspacingbefore=&quot;0&quot; linespacing=&quot;10&quot; margin-left=&quot;5,4098&quot; margin-right=&quot;5,4098&quot; margin-top=&quot;5,4098&quot; margin-bottom=&quot;5,4098&quot;&gt;     &lt;paragraph&gt;       &lt;text&gt;R&amp;#233;aliser un bilan de l&apos;existant.&lt;/text&gt;     &lt;/paragraph&gt;   &lt;/paragraphlayout&gt; &lt;/richtext&gt; " Duree="0.5" Intitule="Bilan existant" IntituleDansDeroul="True" Phase="Rev">
+        <Eleves Eleve0="0" Eleve1="1" Eleve2="2" Eleve3="3" />
+        <Indicateurs />
+      </Tache7>
+      <Tache8 Description="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt; &lt;richtext version=&quot;1.0.0.0&quot; xmlns=&quot;http://www.wxwidgets.org&quot;&gt;   &lt;paragraphlayout textcolor=&quot;#000000&quot; fontpointsize=&quot;8&quot; fontfamily=&quot;70&quot; fontstyle=&quot;90&quot; fontweight=&quot;90&quot; fontunderlined=&quot;0&quot; fontface=&quot;MS Shell Dlg 2&quot; alignment=&quot;1&quot; parspacingafter=&quot;10&quot; parspacingbefore=&quot;0&quot; linespacing=&quot;10&quot; margin-left=&quot;5,4098&quot; margin-right=&quot;5,4098&quot; margin-top=&quot;5,4098&quot; margin-bottom=&quot;5,4098&quot;&gt;     &lt;paragraph&gt;       &lt;text&gt;Etablir une carte mentale faisant appara&amp;#238;tre les diff&amp;#233;rentesinformations &amp;#224; acquerir ainsi que les diff&amp;#233;rentes solutions possibles.Argumenter la solution choisie.&lt;/text&gt;     &lt;/paragraph&gt;   &lt;/paragraphlayout&gt; &lt;/richtext&gt; " Duree="3" Intitule="Définir les informations nécessaires à acquérir concernant la production et la distribution de l&apos;énergie solaire.Rechercher des solutions permettant de satisfaire cette acquisition. Choisir une solution." IntituleDansDeroul="True" Phase="Con">
+        <Eleves Eleve0="0" />
+        <Indicateurs Indic0="CO8.sin1_2" Indic1="CO8.sin1_3" />
+      </Tache8>
+      <Tache9 Description="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt; &lt;richtext version=&quot;1.0.0.0&quot; xmlns=&quot;http://www.wxwidgets.org&quot;&gt;   &lt;paragraphlayout textcolor=&quot;#000000&quot; fontpointsize=&quot;8&quot; fontfamily=&quot;70&quot; fontstyle=&quot;90&quot; fontweight=&quot;90&quot; fontunderlined=&quot;0&quot; fontface=&quot;MS Shell Dlg 2&quot; alignment=&quot;1&quot; parspacingafter=&quot;10&quot; parspacingbefore=&quot;0&quot; linespacing=&quot;10&quot; margin-left=&quot;5,4098&quot; margin-right=&quot;5,4098&quot; margin-top=&quot;5,4098&quot; margin-bottom=&quot;5,4098&quot;&gt;     &lt;paragraph&gt;       &lt;text&gt;Etablir une carte mentale faisant appara&amp;#238;tre les diff&amp;#233;rentes informations &amp;#224; acquerir ainsi que les diff&amp;#233;rentes solutions possibles.Argumenter la solution choisie.&lt;/text&gt;     &lt;/paragraph&gt;   &lt;/paragraphlayout&gt; &lt;/richtext&gt; " Duree="3" Intitule="Définir les informations nécessaires à acquérir concernant la production et la distribution de l&apos;énergie éolienne.Rechercher des solutions permettant de satisfaire cette acquisition.Choisir une solution." IntituleDansDeroul="True" Phase="Con">
+        <Eleves Eleve0="1" />
+        <Indicateurs Indic0="CO8.sin1_2" Indic1="CO8.sin1_3" />
+      </Tache9>
+      <Tache10 Description="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt; &lt;richtext version=&quot;1.0.0.0&quot; xmlns=&quot;http://www.wxwidgets.org&quot;&gt;   &lt;paragraphlayout textcolor=&quot;#000000&quot; fontpointsize=&quot;8&quot; fontfamily=&quot;70&quot; fontstyle=&quot;90&quot; fontweight=&quot;90&quot; fontunderlined=&quot;0&quot; fontface=&quot;MS Shell Dlg 2&quot; alignment=&quot;1&quot; parspacingafter=&quot;10&quot; parspacingbefore=&quot;0&quot; linespacing=&quot;10&quot; margin-left=&quot;5,4098&quot; margin-right=&quot;5,4098&quot; margin-top=&quot;5,4098&quot; margin-bottom=&quot;5,4098&quot;&gt;     &lt;paragraph&gt;       &lt;text&gt;Etablir une carte mentale faisant appara&amp;#238;tre les diff&amp;#233;rentesinformations &amp;#224; acquerir ainsi que les diff&amp;#233;rentes solutions possibles.Choisir une solution.Argumenter la solution choisie.&lt;/text&gt;     &lt;/paragraph&gt;   &lt;/paragraphlayout&gt; &lt;/richtext&gt; " Duree="3" Intitule="Définir les informations nécessaires à acquérir concernant le stockage et l&apos;utilisation de l&apos;énergie.Rechercher des solutions permettant de satisfaire cette acquisition.Choisir une solution." IntituleDansDeroul="True" Phase="Con">
+        <Eleves Eleve0="2" />
+        <Indicateurs Indic0="CO8.sin1_2" Indic1="CO8.sin1_3" />
+      </Tache10>
+      <Tache11 Description="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt; &lt;richtext version=&quot;1.0.0.0&quot; xmlns=&quot;http://www.wxwidgets.org&quot;&gt;   &lt;paragraphlayout textcolor=&quot;#000000&quot; fontpointsize=&quot;8&quot; fontfamily=&quot;70&quot; fontstyle=&quot;90&quot; fontweight=&quot;90&quot; fontunderlined=&quot;0&quot; fontface=&quot;MS Shell Dlg 2&quot; alignment=&quot;1&quot; parspacingafter=&quot;10&quot; parspacingbefore=&quot;0&quot; linespacing=&quot;10&quot; margin-left=&quot;5,4098&quot; margin-right=&quot;5,4098&quot; margin-top=&quot;5,4098&quot; margin-bottom=&quot;5,4098&quot;&gt;     &lt;paragraph&gt;       &lt;text&gt;La solution programm&amp;#233;e sera privil&amp;#233;gi&amp;#233;e. La transmission longue distance est r&amp;#233;alis&amp;#233;e via internet.&lt;/text&gt;     &lt;/paragraph&gt;   &lt;/paragraphlayout&gt; &lt;/richtext&gt; " Duree="3.0" Intitule="Rechercher et choisir les solutions technologiques permettant le traitement, la communication et la restitution des informations." IntituleDansDeroul="True" Phase="Con">
+        <Eleves Eleve0="3" />
+        <Indicateurs Indic0="CO8.sin1_3" Indic1="CO8.sin1_2" Indic2="CO8.sin1_1" />
+      </Tache11>
+      <Tache12 Duree="0.5" Intitule="Revue de projet n°1" IntituleDansDeroul="True" Phase="R1">
+        <Eleves />
+        <Indicateurs />
+      </Tache12>
+      <Tache13 Description="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt; &lt;richtext version=&quot;1.0.0.0&quot; xmlns=&quot;http://www.wxwidgets.org&quot;&gt;   &lt;paragraphlayout textcolor=&quot;#000000&quot; fontpointsize=&quot;8&quot; fontfamily=&quot;70&quot; fontstyle=&quot;90&quot; fontweight=&quot;90&quot; fontunderlined=&quot;0&quot; fontface=&quot;MS Shell Dlg 2&quot; alignment=&quot;1&quot; parspacingafter=&quot;10&quot; parspacingbefore=&quot;0&quot; linespacing=&quot;10&quot; margin-left=&quot;5,4098&quot; margin-right=&quot;5,4098&quot; margin-top=&quot;5,4098&quot; margin-bottom=&quot;5,4098&quot;&gt;     &lt;paragraph&gt;       &lt;text&gt;Le choix se fera sur les capteurs ainsi que sur les &amp;#233;l&amp;#233;ments de protection (boitier, protection electrique,...)&lt;/text&gt;     &lt;/paragraph&gt;   &lt;/paragraphlayout&gt; &lt;/richtext&gt; " Duree="3" Intitule="Rechercher et choisir les composants adaptés (partie production)" IntituleDansDeroul="True" Phase="DCo">
+        <Eleves Eleve0="0" Eleve1="3" />
+        <Indicateurs Indic0="CO1.1_2" Indic1="CO1.1_1" Indic2="CO9.sin4_3" />
+      </Tache13>
+      <Tache14 Description="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt; &lt;richtext version=&quot;1.0.0.0&quot; xmlns=&quot;http://www.wxwidgets.org&quot;&gt;   &lt;paragraphlayout textcolor=&quot;#000000&quot; fontpointsize=&quot;8&quot; fontfamily=&quot;70&quot; fontstyle=&quot;90&quot; fontweight=&quot;90&quot; fontunderlined=&quot;0&quot; fontface=&quot;MS Shell Dlg 2&quot; alignment=&quot;1&quot; parspacingafter=&quot;10&quot; parspacingbefore=&quot;0&quot; linespacing=&quot;10&quot; margin-left=&quot;5,4098&quot; margin-right=&quot;5,4098&quot; margin-top=&quot;5,4098&quot; margin-bottom=&quot;5,4098&quot;&gt;     &lt;paragraph&gt;       &lt;text&gt;Le choix se fera sur les capteurs ainsi que sur les &amp;#233;l&amp;#233;ments de protection (boitier, protection electrique,...)&lt;/text&gt;     &lt;/paragraph&gt;   &lt;/paragraphlayout&gt; &lt;/richtext&gt; " Duree="3" Intitule="Rechercher et choisir les composants adaptés (partie distribution et stockage)" IntituleDansDeroul="True" Phase="DCo">
+        <Eleves Eleve0="1" Eleve1="2" />
+        <Indicateurs Indic0="CO1.1_2" Indic1="CO1.1_1" Indic2="CO9.sin4_3" />
+      </Tache14>
+      <Tache15 Duree="3" Intitule="Rechercher et choisir les composants ( matériel et logiciel)  pour la communication à distance des informations" IntituleDansDeroul="True" Phase="DCo">
+        <Eleves Eleve0="1" Eleve1="2" />
+        <Indicateurs Indic0="CO1.1_2" Indic1="CO1.1_1" Indic2="CO9.sin4_3" />
+      </Tache15>
+      <Tache16 Duree="3" Intitule="Rechercher et définir les composants   permettant de restituer les informations (matériel et logiciel)" IntituleDansDeroul="True" Phase="DCo">
+        <Eleves Eleve0="0" Eleve1="3" />
+        <Indicateurs Indic0="CO1.1_2" Indic1="CO1.1_1" Indic2="CO9.sin4_3" />
+      </Tache16>
+      <Tache17 Duree="0.5" Intitule="Bilan des solutions" IntituleDansDeroul="True" Phase="Rev">
+        <Eleves Eleve0="0" Eleve1="1" Eleve2="2" Eleve3="3" />
+        <Indicateurs />
+      </Tache17>
+      <Tache18 Duree="6" Intitule="Etablir les schémas électriques de l&apos;ensemble de l&apos;installation." IntituleDansDeroul="True" Phase="DCo">
+        <Eleves Eleve0="0" Eleve1="1" />
+        <Indicateurs Indic0="CO6.1_3" Indic1="CO6.1_2" Indic2="CO6.1_1" />
+      </Tache18>
+      <Tache19 Duree="6" Intitule="Etablir les diagramme de définition de blocs et le diagramme de bloc interne." IntituleDansDeroul="True" Phase="DCo">
+        <Eleves Eleve0="2" Eleve1="3" />
+        <Indicateurs Indic0="CO6.1_3" Indic1="CO6.1_2" Indic2="CO6.1_1" />
+      </Tache19>
+      <Tache20 Duree="9" Intitule="Etablir le diagramme d&apos;état du sous ensemble centrale d&apos;acquisition" IntituleDansDeroul="True" Phase="DCo">
+        <Eleves Eleve0="0" Eleve1="1" />
+        <Indicateurs Indic0="CO6.1_3" Indic1="CO6.1_2" Indic2="CO6.1_1" />
+      </Tache20>
+      <Tache21 Description="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt; &lt;richtext version=&quot;1.0.0.0&quot; xmlns=&quot;http://www.wxwidgets.org&quot;&gt;   &lt;paragraphlayout textcolor=&quot;#000000&quot; fontpointsize=&quot;8&quot; fontfamily=&quot;70&quot; fontstyle=&quot;90&quot; fontweight=&quot;90&quot; fontunderlined=&quot;0&quot; fontface=&quot;MS Shell Dlg 2&quot; alignment=&quot;1&quot; parspacingafter=&quot;10&quot; parspacingbefore=&quot;0&quot; linespacing=&quot;10&quot; margin-left=&quot;5,4098&quot; margin-right=&quot;5,4098&quot; margin-top=&quot;5,4098&quot; margin-bottom=&quot;5,4098&quot;&gt;     &lt;paragraph&gt;       &lt;text&gt;On mod&amp;#233;lisera le productuer d&apos;&amp;#233;nergie ainsi que la cha&amp;#238;ne d&apos;acquisition des informations. On utilisera le logiciel Matlab.&lt;/text&gt;     &lt;/paragraph&gt;   &lt;/paragraphlayout&gt; &lt;/richtext&gt; " Duree="6" Intitule="Modéliser le comportement de la partie production éolienne (Chaîne d&apos;énergie et chaîne d&apos;information)" IntituleDansDeroul="True" Phase="DCo">
+        <Eleves Eleve0="0" Eleve1="3" />
+        <Indicateurs Indic0="CO8.sin2_4" Indic1="CO8.sin2_3" Indic2="CO8.sin2_2" Indic3="CO8.sin2_1" Indic4="CO8.es_2" Indic5="CO8.es_1" Indic6="CO9.sin4_3" />
+      </Tache21>
+      <Tache22 Description="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt; &lt;richtext version=&quot;1.0.0.0&quot; xmlns=&quot;http://www.wxwidgets.org&quot;&gt;   &lt;paragraphlayout textcolor=&quot;#000000&quot; fontpointsize=&quot;8&quot; fontfamily=&quot;70&quot; fontstyle=&quot;90&quot; fontweight=&quot;90&quot; fontunderlined=&quot;0&quot; fontface=&quot;MS Shell Dlg 2&quot; alignment=&quot;1&quot; parspacingafter=&quot;10&quot; parspacingbefore=&quot;0&quot; linespacing=&quot;10&quot; margin-left=&quot;5,4098&quot; margin-right=&quot;5,4098&quot; margin-top=&quot;5,4098&quot; margin-bottom=&quot;5,4098&quot;&gt;     &lt;paragraph&gt;       &lt;text&gt;On mod&amp;#233;lisera le productuer d&apos;&amp;#233;nergie ainsi que la cha&amp;#238;ne d&apos;acquisition des informations.&lt;/text&gt;     &lt;/paragraph&gt;   &lt;/paragraphlayout&gt; &lt;/richtext&gt; " Duree="9" Intitule="Modéliser le comportement de la partie production solaire (Chaîne d&apos;énergie et chaîne d&apos;information)" IntituleDansDeroul="True" Phase="DCo">
+        <Eleves Eleve0="2" Eleve1="3" />
+        <Indicateurs Indic0="CO8.es_2" Indic1="CO8.es_1" Indic2="CO8.sin2_4" Indic3="CO8.sin2_3" Indic4="CO8.sin2_2" Indic5="CO8.sin2_1" />
+      </Tache22>
+      <Tache23 Duree="3" Intitule="Modéliser le comportement de la partie stockage (Chaîne d&apos;énergie et chaîne d&apos;information) en vue de valider le choix du capteur." IntituleDansDeroul="True" Phase="DCo">
+        <Eleves Eleve0="1" Eleve1="2" />
+        <Indicateurs Indic0="CO8.es_2" Indic1="CO8.es_1" Indic2="CO8.sin2_4" Indic3="CO8.sin2_3" Indic4="CO8.sin2_2" Indic5="CO8.sin2_1" />
+      </Tache23>
+      <Tache24 Duree="6" Intitule="Déterminer les impacts environnementaux dans le cadre d&apos;une ACV su le prototype" IntituleDansDeroul="True" Phase="DCo">
+        <Eleves Eleve0="0" Eleve1="1" Eleve2="2" Eleve3="3" />
+        <Indicateurs Indic0="CO1.2_3" Indic1="CO1.2_2" Indic2="CO1.2_1" />
+      </Tache24>
+      <Tache25 Duree="3" Intitule="Assembler et câbler le capteur d&apos;irradiance" IntituleDansDeroul="True" Phase="Rea">
+        <Eleves Eleve0="0" />
+        <Indicateurs Indic0="CO9.sin2_3" Indic1="CO9.sin2_2" Indic2="CO9.sin2_1" />
+      </Tache25>
+      <Tache26 Duree="6" Intitule="Assembleret câbler le capteur de vent" IntituleDansDeroul="True" Phase="Rea">
+        <Eleves Eleve0="1" />
+        <Indicateurs Indic0="CO9.sin2_3" Indic1="CO9.sin2_2" Indic2="CO9.sin2_1" />
+      </Tache26>
+      <Tache27 Duree="3" Intitule="Assembler et câbler le sous-sytème d&apos;acquisition des paramètres électriques côté production." IntituleDansDeroul="True" Phase="Rea">
+        <Eleves Eleve0="2" />
+        <Indicateurs Indic0="CO9.sin2_3" Indic1="CO9.sin2_2" Indic2="CO9.sin2_1" />
+      </Tache27>
+      <Tache28 Duree="3" Intitule="Assembler et câbler le sous-système d&apos;acquisition des paramètres électriques côté utilisation." IntituleDansDeroul="True" Phase="Rea">
+        <Eleves Eleve0="3" />
+        <Indicateurs Indic0="CO9.sin2_3" Indic1="CO9.sin2_2" Indic2="CO9.sin2_1" />
+      </Tache28>
+      <Tache29 Duree="3" Intitule="Réaliser les programmes et sous-programmes de l&apos;ensemble." IntituleDansDeroul="True" Phase="Rea">
+        <Eleves Eleve0="0" Eleve1="1" Eleve2="2" Eleve3="3" />
+        <Indicateurs Indic0="CO9.sin2_2" Indic1="CO9.sin2_3" Indic2="CO9.sin2_5" Indic3="CO9.sin2_4" Indic4="CO8.sin3_3" Indic5="CO8.sin3_2" Indic6="CO8.sin3_1" />
+      </Tache29>
+      <Tache30 Duree="6" Intitule="Réaliser et programmer une interface graphique" IntituleDansDeroul="True" Phase="Rea">
+        <Eleves Eleve0="0" Eleve1="1" Eleve2="2" Eleve3="3" />
+        <Indicateurs Indic0="CO9.sin2_5" Indic1="CO9.sin2_4" Indic2="CO9.sin2_3" Indic3="CO9.sin2_2" Indic4="CO9.sin2_1" />
+      </Tache30>
+      <Tache31 Duree="0.5" Intitule="Revue de projet n°2" IntituleDansDeroul="True" Phase="R2">
+        <Eleves />
+      </Tache31>
+      <Tache32 Duree="6" Intitule="Intégrer et tester les programmes." IntituleDansDeroul="True" Phase="Val">
+        <Eleves Eleve0="0" Eleve1="1" Eleve2="2" Eleve3="3" />
+        <Indicateurs Indic0="CO9.sin2_5" Indic1="CO9.sin2_4" Indic2="CO9.sin2_3" Indic3="CO9.sin2_2" Indic4="CO9.sin2_1" />
+      </Tache32>
+      <Tache33 Duree="1" Intitule="Comparer les écarts entre prototype et cahier des charges." IntituleDansDeroul="True" Phase="Val">
+        <Eleves Eleve0="0" Eleve1="1" Eleve2="2" Eleve3="3" />
+        <Indicateurs Indic0="CO9.sin1_3" Indic1="CO9.sin1_2" Indic2="CO9.sin1_1" />
+      </Tache33>
+      <Tache34 Duree="1.0" Intitule="" IntituleDansDeroul="True" Phase="">
+        <Eleves />
+        <Indicateurs />
+      </Tache34>
+      <Tache35 Duree="1.0" Intitule="" IntituleDansDeroul="True" Phase="">
+        <Eleves />
+        <Indicateurs />
+      </Tache35>
+      <Tache36 Duree="0.5" Intitule="Soutenance finale" IntituleDansDeroul="True" Phase="S">
+        <Eleves />
+      </Tache36>
+    </Taches>
+    <Eleves>
+      <Élève Id="0" Nom="" Prenom="" />
+      <Élève Id="1" Nom="" Prenom="" />
+      <Élève Id="2" Nom="" Prenom="" />
+      <Élève Id="3" Nom="" Prenom="élève 4" />
+    </Eleves>
+  </Projet>
+  <Classe Type="SIN">
+    <Effectifs eC="21" nE="5" nG="2" nP="10" />
+  </Classe>
+</Projet_Classe>

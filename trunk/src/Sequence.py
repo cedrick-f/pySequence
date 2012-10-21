@@ -52,7 +52,7 @@ __version__ = "3.8"
 #   Import des modules nécessaires
 #
 ####################################################################################
-#import time
+import time
 
 # Outils "système"
 import sys, os
@@ -5567,7 +5567,7 @@ class FenetreProjet(FenetreDocument):
         
     ###############################################################################################
     def ouvrir(self, nomFichier, redessiner = True):
-#        tps1 = time.clock()
+        tps1 = time.clock()
         self.Freeze()
         fichier = open(nomFichier,'r')
         self.definirNomFichierCourant(nomFichier)
@@ -5624,8 +5624,8 @@ class FenetreProjet(FenetreDocument):
             wx.CallAfter(self.fichePrj.Redessiner)
         
 #    
-#        tps2 = time.clock() 
-#        print tps2 - tps1
+        tps2 = time.clock() 
+        print tps2 - tps1
         
         
     #############################################################################
@@ -9635,14 +9635,23 @@ class ArbreCompetencesPrj(ArbreCompetences):
                 for j, Indic in enumerate(constantes.dicIndicateurs[type_ens][code]):
                     codeIndic = code+'_'+str(j+1)
                     if self.pptache.tache.phase != "R1" or codeIndic in self.pptache.tache.indicateursMaxi:
-                        self.poids_ctrl[codeIndic] = wx.TextCtrl(self, -1, 
-                                                                 str(constantes.dicPoidsIndicateurs[type_ens][codeGrp][1][code][j])+"%", 
-                                                                 size = (32,18), name = codeIndic)
+#                        self.poids_ctrl[codeIndic] = wx.TextCtrl(self, -1, 
+#                                                                 str(constantes.dicPoidsIndicateurs[type_ens][codeGrp][1][code][j])+"%", 
+#                                                                 size = (32,18), name = codeIndic)
+#                        self.poids_ctrl[codeIndic] = wx.StaticText(self, -1, 
+#                                                                 str(constantes.dicPoidsIndicateurs[type_ens][codeGrp][1][code][j])+"%", 
+#                                                                 size = (32,18), name = codeIndic)
+#                        self.AppendItem(c, str(constantes.dicPoidsIndicateurs[type_ens][codeGrp][1][code][j])+"%", 1)
 #                        self.poids_ctrl[codeIndic].Bind(wx.EVT_TEXT, self.OnTextCtrl)
                         
                         i = self.AppendItem(c, Indic[0], ct_type=1, data = codeIndic)
+                        self.SetItemText(i, str(constantes.dicPoidsIndicateurs[type_ens][codeGrp][1][code][j])+"%", 1)
                         self.SetItemFont(i, wx.Font(10, wx.DEFAULT, wx.FONTSTYLE_ITALIC, wx.NORMAL, False))
-                        self.SetItemWindow(i, self.poids_ctrl[codeIndic], 1)
+                        if Indic[1]:
+                            self.SetItemTextColour(i, "DEEPPINK2")
+                        else:
+                            self.SetItemTextColour(i, "BLUEVIOLET")
+#                        self.SetItemWindow(i, self.poids_ctrl[codeIndic], 1)
                         self.items[codeIndic] = i
             
 
