@@ -9612,13 +9612,14 @@ class ArbreCompetencesPrj(ArbreCompetences):
         clefs = dic.keys()
         clefs.sort()
         for codeGrp in clefs:
-            self.poids_ctrl[codeGrp] = wx.TextCtrl(self, -1, 
-                                                   str(constantes.dicPoidsIndicateurs[type_ens][codeGrp][0])+"%", 
-                                                   size = (32,20), name = codeGrp)
+#            self.poids_ctrl[codeGrp] = wx.TextCtrl(self, -1, 
+#                                                   str(constantes.dicPoidsIndicateurs[type_ens][codeGrp][0])+"%", 
+#                                                   size = (32,20), name = codeGrp)
             b = self.AppendItem(branche, codeGrp+" "+dic[codeGrp][0])
+            self.SetItemText(b, str(constantes.dicPoidsIndicateurs[type_ens][codeGrp][0])+"%", 1)
             self.SetItemBold(b, True)
 #            self.poids_ctrl[codeGrp].Bind(wx.EVT_TEXT, self.OnTextCtrl)
-            self.SetItemWindow(b, self.poids_ctrl[codeGrp], 1)
+#            self.SetItemWindow(b, self.poids_ctrl[codeGrp], 1)
             
             codes = dic[codeGrp][1].keys()
             codes.sort()
