@@ -1,4 +1,5 @@
-<meta charset="ISO-8859-1">
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" >
+
 =Projet Eco-Passerelle=
 
 <a href="http://pysequence.googlecode.com/svn/wiki/ITEC_eco-passerelle.svg" rel="nofollow"><img src="http://pysequence.googlecode.com/svn/wiki/ITEC_eco-passerelle.svg" charset="ISO-8859-1">
