@@ -8,3 +8,6 @@ Pour télécharger les fichiers faire un clic-droit puis "Enregistrer la cible d
 
 ==Projets EE==
 [http://pysequence.googlecode.com/svn/trunk/images_aide/EE_abrisdebus.prj "Abris de bus"]
+
+==Projets SIN==
+[http://pysequence.googlecode.com/svn/trunk/images_aide/Projet_site_isole.prj "Site isolé"]
