@@ -2,6 +2,9 @@
 
 http://pysequence.googlecode.com/svn/trunk/images_aide/ITEC_eco-passerelle.svg
 
+http://pysequence.googlecode.com/svn/trunk/images_aide/Svg_example3.svg
+
+
 aaa
 
 http://upload.wikimedia.org/wikipedia/commons/e/e8/Svg_example3.svg
