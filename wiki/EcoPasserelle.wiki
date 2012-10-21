@@ -2,4 +2,4 @@
 
 <a href="http://pysequence.googlecode.com/svn/wiki/ITEC_eco-passerelle.svg" rel="nofollow"><img src="http://pysequence.googlecode.com/svn/wiki/ITEC_eco-passerelle.svg" >
 
-http://pysequence.googlecode.com/svn/wiki/ITEC_eco-passerelle.svg
+http://pysequence.googlecode.com/svn/wiki/ITEC_eco-passerelle.svg&nonsense=something_that_ends_with.svg
