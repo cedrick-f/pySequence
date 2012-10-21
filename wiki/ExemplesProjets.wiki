@@ -5,12 +5,15 @@ Pour télécharger les fichiers faire un clic-droit puis "Enregistrer la cible d
 
 ==Projets ITEC==
 * fichier .prj : [http://pysequence.googlecode.com/svn/trunk/images_aide/ITEC_eco-passerelle.prj "Eco-passerelle"]
+
 * fiche en svg : [http://pysequence.googlecode.com/svn/trunk/images_aide/ITEC_eco-passerelle.svg "Eco-passerelle"]
 
 ==Projets EE==
 * fichier .prj : [http://pysequence.googlecode.com/svn/trunk/images_aide/EE_abrisdebus.prj "Abris de bus"]
+
 * fiche en svg : [http://pysequence.googlecode.com/svn/trunk/images_aide/EE_abrisdebus.svg "Abris de bus"]
 
 ==Projets SIN==
 * fichier .prj : [http://pysequence.googlecode.com/svn/trunk/images_aide/Projet_site_isole.prj "Site isolé"]
+
 * fiche en svg : [http://pysequence.googlecode.com/svn/trunk/images_aide/Projet_site_isole.svg "Site isolé"]
