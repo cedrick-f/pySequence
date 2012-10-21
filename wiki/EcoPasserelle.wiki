@@ -9,4 +9,4 @@ http://upload.wikimedia.org/wikipedia/commons/e/e8/Svg_example3.svg
 data="http://upload.wikimedia.org/wikipedia/commons/e/e8/Svg_example3.svg" width="300" height="200">
 
 <object type="image/svg+xml" 
-data="http://pysequence.googlecode.com/svn/trunk/images_aide/ITEC_eco-passerelle.svg" width="300" height="200">
+data="http://pysequence.googlecode.com/svn/trunk/images_aide/ITEC_eco-passerelle.svg">
