@@ -3,3 +3,6 @@
 <embed src="http://pysequence.googlecode.com/svn/trunk/images_aide/ITEC_eco-passerelle.svg" alt="ITEC_eco-passerelle.svg" type="image/svg+xml" /> 
 
 <img src="http://pysequence.googlecode.com/svn/trunk/images_aide/ITEC_eco-passerelle.svg" alt="ITEC_eco-passerelle.svg" height="700" width="500"> 
+
+<object type="image/svg+xml" 
+data="http://pysequence.googlecode.com/svn/trunk/images_aide/ITEC_eco-passerelle.svg" width="300" height="200">
