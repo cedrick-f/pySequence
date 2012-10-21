@@ -3,3 +3,6 @@
 [Installation]
 
 [Fonctionnalites Fonctionnalités]
+
+
+[FAQ F.A.Q.]
