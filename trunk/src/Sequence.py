@@ -1860,6 +1860,7 @@ class Projet(BaseDoc, Objet_sequence):
         R1 = []
         R2 = []
         S = []
+        X = []
         Rien = []
         for t in self.taches:
             if t.phase == 'Ana':
@@ -1878,6 +1879,8 @@ class Projet(BaseDoc, Objet_sequence):
                 R2.append(t)
             elif t.phase == 'S':
                 S.append(t)
+            elif t.phase == 'XXX':
+                X.append(t)
             elif t.phase == '':
                 Rien.append(t)
         
@@ -1888,7 +1891,7 @@ class Projet(BaseDoc, Objet_sequence):
         #
         # On assemble les paquets
         #
-        self.taches = Ana + Con + R1 + DCo + Rea + R2 + Val + Rien + S
+        self.taches = Ana + Con + R1 + DCo + Rea  + Val + R2+ X + Rien + S
            
         #
         # On ajoute les revues intermédiaires
@@ -5314,7 +5317,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
  
  
 def Dialog_ErreurAccesFichier(nomFichier):
-    dlg = wx.MessageDialog(None, u"Impossible d'accéder au fichier\n%s\nen écriture !" %nomFichier,
+    dlg = wx.MessageDialog(None, u"Impossible d'accéder au fichier\n%s\nen écriture !" %toDefautEncoding(nomFichier),
                                'Erreur !',
                                wx.OK | wx.ICON_ERROR
                                )
@@ -5717,7 +5720,7 @@ class BaseFiche(wx.ScrolledWindow):
     #############################################################################            
     def Redessiner(self, event = None):  
         wx.BeginBusyCursor()
-#        tps = time.time()
+        tps = time.time()
             
         cdc = wx.ClientDC(self)
         self.PrepareDC(cdc) 
@@ -5740,7 +5743,7 @@ class BaseFiche(wx.ScrolledWindow):
         self.ctx = ctx
         self.Refresh()
 
-#        print time.time() - tps
+        print "   ", time.time() - tps
         wx.EndBusyCursor()
     
     #############################################################################            

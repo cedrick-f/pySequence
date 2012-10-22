@@ -210,6 +210,7 @@ imagesTaches =  {'Ana' : images.Icone_CdCF,
                  'DCo' : images.Icone_conception,
                  'Rea' : images.Icone_fabrication, 
                  'Val' : images.Icone_validation,
+                 'XXX' : images.Icone_validation,
                  'Rev' : images.Icone_evaluation,
                  'R1'  : images.Icone_revue,
                  'R2'  : images.Icone_revue,
@@ -819,22 +820,25 @@ MESSAGE_FERMER = {'seq' : u"La séquence a été modifiée.\nVoulez vous enregis
 #NOM_JALONS = {'S' : u"Soutenance finale"}
 
 
-PHASE_TACHE = ['Ana', 'Con', 'DCo', 'Rea', 'Val', 'Rev']
-NOM_PHASE_TACHE = {'Ana' : u"Spécification - Planification", 
+PHASE_TACHE = ['Ana', 'Con', 'DCo', 'Rea', 'Val', 'XXX', 'Rev']
+NOM_PHASE_TACHE = {'Ana' : u"Analyse des besoins", #u"Spécification - Planification", 
                    'Con' : u"Conception préliminaire",
                    'DCo' : u"Conception détaillée",
-                   'Rea' : u"Prototypage", 
-                   'Val' : u"Qualification - Intégration - Validation",
+                   'Rea' : u"Réalisation", #u"Prototypage", 
+                   'Val' : u"Validation", #u"Qualification - Intégration - Validation",
+                   'XXX' : u"Préparation de la soutenance",
+        
                    'R1'  : u"Revue de projet n°1",
                    'R2'  : u"Revue de projet n°2",
                    'Rev' : u"Revue intermédiaire",
                    'S'   : u"Soutenance finale"}
 
-CODE_PHASE_TACHE = {'Ana' : u"SP", 
+CODE_PHASE_TACHE = {'Ana' : u"Ab", 
                     'Con' : u"Cp",
                     'DCo' : u"Cd",
-                    'Rea' : u"Pr", 
-                    'Val' : u"QIV",
+                    'Rea' : u"R", 
+                    'Val' : u"V",
+                    'XXX' : u"P",
                     'R1'  : u"R1",
                     'R2'  : u"R2",
                     'Rev' : u"Ri",

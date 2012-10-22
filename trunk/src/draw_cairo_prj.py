@@ -154,6 +154,7 @@ BCoulTache = {'Ana' : (0.3,0.5,0.5),
               'DCo' : (0.55,0.3,0.45),
               'Rea' : (0.5,0.5,0.3), 
               'Val' : (0.3,0.3,0.7),
+              'XXX' : (0.3,0.3,0.7),
               'Rev' : (0.6,0.3,0.3),
               'R1'  : (0.8,0.3,0.2),
               'R2'  : (0.8,0.3,0.2),
@@ -164,6 +165,7 @@ ICoulTache = {'Ana' : (0.6, 0.8, 0.8),
               'DCo' : (0.9, 0.6, 0.7),
               'Rea' : (0.8, 0.8, 0.6), 
               'Val' : (0.6, 0.6, 1.0),
+              'XXX' : (0.6, 0.6, 1.0),
               'Rev' : (0.9,0.6,0.6),
               'R1'  : (1,0.6,0.5),
               'R2'  : (1,0.6,0.5),
@@ -734,7 +736,8 @@ def Draw(ctx, prj, mouchard = False):
                 'Con' : [[], []], 
                 'DCo' : [[], []],
                 'Rea' : [[], []], 
-                'Val' : [[], []]}
+                'Val' : [[], []],
+                'XXX' : [[], []]}
 
     phase = None
     y1 = y2 = 0   # juste pour éviter une erreur en cas d'echec d'ouverture.
@@ -749,7 +752,7 @@ def Draw(ctx, prj, mouchard = False):
 
         if t.phase != '':  
             yb = DrawTacheRacine(ctx, t, y)
-            if t.phase in ["Ana", "Con", "DCo", "Rea", "Val"] :
+            if t.phase in ["Ana", "Con", "DCo", "Rea", "Val", 'XXX'] :
                 yh_phase[t.phase][0].append(y)
                 yh_phase[t.phase][1].append(yb)
             y = yb
