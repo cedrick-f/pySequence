@@ -172,6 +172,8 @@ COUL_OK  = "GREEN3"
 COUL_NON = "TOMATO1"
 COUL_BIEN = "GOLD"
 COUL_BOF = "ORANGE"
+COUL_REVUE = "DEEPPINK2"#"FIREBRICK"
+COUL_SOUT = "BLUEVIOLET"#"MEDIUMBLUE"
 
 ####################################################################################
 #
@@ -210,11 +212,11 @@ imagesTaches =  {'Ana' : images.Icone_CdCF,
                  'DCo' : images.Icone_conception,
                  'Rea' : images.Icone_fabrication, 
                  'Val' : images.Icone_validation,
-                 'XXX' : images.Icone_validation,
+                 'XXX' : images.Icone_preparation,
                  'Rev' : images.Icone_evaluation,
                  'R1'  : images.Icone_revue,
                  'R2'  : images.Icone_revue,
-                 'S'  : images.Icone_revue}
+                 'S'  : images.Icone_soutenance}
                 
 
 imagesCI = [images.CI_1, images.CI_2, images.CI_3, images.CI_4,
@@ -820,36 +822,56 @@ MESSAGE_FERMER = {'seq' : u"La séquence a été modifiée.\nVoulez vous enregis
 #NOM_JALONS = {'S' : u"Soutenance finale"}
 
 
-PHASE_TACHE = ['Ana', 'Con', 'DCo', 'Rea', 'Val', 'XXX', 'Rev']
-NOM_PHASE_TACHE = {'Ana' : u"Analyse des besoins", #u"Spécification - Planification", 
-                   'Con' : u"Conception préliminaire",
-                   'DCo' : u"Conception détaillée",
-                   'Rea' : u"Réalisation", #u"Prototypage", 
-                   'Val' : u"Validation", #u"Qualification - Intégration - Validation",
-                   'XXX' : u"Préparation de la soutenance",
-        
-                   'R1'  : u"Revue de projet n°1",
-                   'R2'  : u"Revue de projet n°2",
-                   'Rev' : u"Revue intermédiaire",
-                   'S'   : u"Soutenance finale"}
+PHASE_TACHE = {'STI': ['Ana', 'Con', 'DCo', 'Rea', 'Val', 'XXX', 'Rev'],
+               'SSI': ['Ana', 'Rea', 'XXX', 'Rev']}
 
-CODE_PHASE_TACHE = {'Ana' : u"Ab", 
-                    'Con' : u"Cp",
-                    'DCo' : u"Cd",
-                    'Rea' : u"R", 
-                    'Val' : u"V",
-                    'XXX' : u"P",
-                    'R1'  : u"R1",
-                    'R2'  : u"R2",
-                    'Rev' : u"Ri",
-                    'S'   : u"S"}
+NOM_PHASE_TACHE = {'STI': {'Ana' : u"Analyse des besoins", #u"Spécification - Planification", 
+                           'Con' : u"Conception préliminaire",
+                           'DCo' : u"Conception détaillée",
+                           'Rea' : u"Réalisation", #u"Prototypage", 
+                           'Val' : u"Validation", #u"Qualification - Intégration - Validation",
+                           'XXX' : u"Préparation de la soutenance"
+                           },
+                   'SSI': {'Ana' : u"Préparation", #u"Spécification - Planification", 
+                           'Rea' : u"Réalisation", #u"Prototypage", 
+                           'XXX' : u"Clôture"
+                           }
+                   }
 
 
-def getLstPhase():
+NOM_PHASE_TACHE_E = {'R1'  : u"Revue de projet n°1",
+                     'R2'  : u"Revue de projet n°2",
+                     'Rev' : u"Revue intermédiaire",
+                     'S'   : u"Soutenance finale"}
+
+CODE_PHASE_TACHE_E  =  {'R1'  : u"R1",
+                        'R2'  : u"R2",
+                        'Rev' : u"Ri",
+                        'S'   : u"S"}
+                    
+CODE_PHASE_TACHE = {'STI': {'Ana' : u"Ab", 
+                            'Con' : u"Cp",
+                            'DCo' : u"Cd",
+                            'Rea' : u"R", 
+                            'Val' : u"V",
+                            'XXX' : u"P"
+                            },
+                    'SSI': {'Ana' : u"P", 
+                            'Rea' : u"R", 
+                            'XXX' : u"C"
+                            }
+                    }
+         
+for t in ['STI', 'SSI']:     
+    NOM_PHASE_TACHE[t].update(NOM_PHASE_TACHE_E)
+    CODE_PHASE_TACHE[t].update(CODE_PHASE_TACHE_E)
+
+
+def getLstPhase(typeEns):
     lst = []
-    for k in PHASE_TACHE:
+    for k in PHASE_TACHE[typeEns]:
         if not k in ["R1", "R2", "S"]:
-            lst.append(NOM_PHASE_TACHE[k])
+            lst.append(NOM_PHASE_TACHE[typeEns][k])
     return lst
 
 

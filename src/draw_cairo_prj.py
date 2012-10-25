@@ -346,7 +346,9 @@ def coul2str(rgba):
     
 
 def calcH(t):
-    return a*log(t*2)+b
+    if t != 0:
+        return a*log(t*2)+b
+    return 0
 
 ######################################################################################  
 def DefinirZones(prj, ctx):
@@ -778,7 +780,7 @@ def Draw(ctx, prj, mouchard = False):
             ctx.set_source_rgb(BCoulTache[phase][0],BCoulTache[phase][1],BCoulTache[phase][2])
             ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
                                                cairo.FONT_WEIGHT_NORMAL)
-            show_text_rect(ctx, constantes.NOM_PHASE_TACHE[phase], 
+            show_text_rect(ctx, constantes.NOM_PHASE_TACHE[prj.GetTypeEnseignement(True)][phase], 
                            (posZDeroul[0] + ecartX/6, yh[0], 
                             wPhases, yh[1]-yh[0]), 
                            ha = 'c', orient = 'v', b = 0,

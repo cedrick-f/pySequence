@@ -38,6 +38,8 @@ from math import sqrt, pi, cos, sin
 import cairo
 import time
 
+
+
 #
 # Données pour le tracé
 #
@@ -363,16 +365,17 @@ def show_text_rect(ctx, texte, rect, va = 'c', ha = 'c', b = 0.4, orient = 'h',
         ctx.rotate(pi/2)
         return
     
+
     
-#    #
-#    # "réduction" du réctangle
-#    #
-##    ecart = min(w*b/2, h*b/2)
-#    ecartX, ecartY = w*b/2, h*b/2
-#    x, y = x+ecartX, y+ecartY
-#    w, h = w-2*ecartX, h-2*ecartY
- 
-#    if min_font:
+    #    #
+    #    # "réduction" du réctangle
+    #    #
+    ##    ecart = min(w*b/2, h*b/2)
+    #    ecartX, ecartY = w*b/2, h*b/2
+    #    x, y = x+ecartX, y+ecartY
+    #    w, h = w-2*ecartX, h-2*ecartY
+     
+    #    if min_font:
     ctx.set_font_size(fontsizeMinMax[0])
     fascent, fdescent, fheight, fxadvance, fyadvance = ctx.font_extents()
     hf = fascent + fdescent
@@ -387,87 +390,114 @@ def show_text_rect(ctx, texte, rect, va = 'c', ha = 'c', b = 0.4, orient = 'h',
     ctx.set_font_size(1.0)
     fascent, fdescent = ctx.font_extents()[:2]
     hl = fascent+fdescent
-    width = ctx.text_extents(texte)[2]
-
-    ratioRect = 1.0*w/h
-    W = sqrt(1.0*width*hl*ratioRect)
-#    H = W/ratioRect
     
-    #
-    # Découpage du texte
-    #
-    i = 0
-#    tps = time.time()
-    if wrap:
-        continuer = True
-        
-        wrap1 = 0
-        st = texte.split("\n")
-        for l in st:
-            wrap1 = max(wrap1, len(l))
+    # On vérifie dans le cache qu'on n'a pas déja fait le boulot
+    calculer = False
+    if texte in CACHE.keys():
+        www, hhh, ttt, fff, mmm = CACHE[texte]
+        if www == w and hhh == h:
+            lt, fontSize, maxw = ttt, fff, mmm
+        else:
             
-#        print len(texte), texte
-        wrap = min(wrap1, int(len(texte)*W/width)*2)
-#        print "   wrap initial :", wrap, "(brut :",int(len(texte)*W/width),")"
-        
-        ancienWrap = wrap
-        ancienFontSize = 0
-        ancienLt = []
-        ancienMaxw = 0
-        i = 0
-        while continuer:
-            lt = []
-            
-            # On découpe le texte
-            i += 1
-            for l in texte.split("\n"):
-                lt.extend(textwrap.wrap(l, wrap, break_long_words = couper))
-                
-            # On mémorise la longueur de la plus longue ligne 
-            #    (en caractères et en unité Cairo)
-            maxw = maxl = 0
-            for t in lt:
-                maxw = max(maxw, ctx.text_extents(t)[2])
-                maxl = max(maxl, len(t))
-            
-            # On calcule la taille de police nécessaire pour que ça rentre
-            fontSize = min(w/maxw, h/(hl*len(lt)))  
-            
-            # On calcul le rapport des rapports h/w
-            rapport = maxw / (hl*len(lt)) / ratioRect
-            if rapport <= 1:  # on a passé le cap ...
-                continuer = False
-                if fontSize <= ancienFontSize:
-                    wrap = ancienWrap
-                    lt = ancienLt
-                    maxw = ancienMaxw
-                    fontSize = ancienFontSize
-
-            else:
-                ancienWrap = wrap
-                wrap = min(wrap-1, maxl-1)
-                if wrap <= 1:# or (maxw == ancienMaxw and wrap < maxl) :
-                    continuer = False
-                    
-                ancienFontSize = fontSize
-                ancienLt = lt
-                ancienMaxw = maxw
-            
-        nLignes = len(lt)
-        
+            calculer = True
     else:
-        nLignes = 1
-        lt = [texte]
-        maxw = ctx.text_extents(texte)[2]
-        fontSize = min(w/maxw, h/(hl*nLignes))
+#        print " pas cache",texte
+        calculer = True
+    
+    if calculer:
+        lt, fontSize, maxw = wrapp(ctx, texte, w, h, wrap, couper)
+        CACHE[texte] = (w, h, lt, fontSize, maxw)
+    nLignes = len(lt)
+    
+    
+#    width = ctx.text_extents(texte)[2]
+#
+#    ratioRect = 1.0*w/h
+#    W = sqrt(1.0*width*hl*ratioRect)
+##    H = W/ratioRect
+#    
+#    #
+#    # Découpage du texte
+#    #
+#    i = 0
+##    tps = time.time()
+#    if wrap:
+#        continuer = True
+#        
+#        wrap1 = 0
+#        st = texte.split("\n")
+#        for l in st:
+#            wrap1 = max(wrap1, len(l))
+#            
+##        print len(texte), texte
+#        wrap = min(wrap1, int(len(texte)*W/width)*2)
+##        print "   wrap initial :", wrap, "(brut :",int(len(texte)*W/width),")"
+#        
+#        ancienWrap = wrap
+#        ancienFontSize = 0
+#        ancienLt = []
+#        ancienMaxw = 0
+#        i = 0
+#        while continuer:
+#            lt = []
+#            
+#            # On découpe le texte
+#            i += 1
+#            for l in texte.split("\n"):
+#                lt.extend(textwrap.wrap(l, wrap, break_long_words = couper))
+#                
+#            # On mémorise la longueur de la plus longue ligne 
+#            #    (en caractères et en unité Cairo)
+#            maxw = maxl = 0
+#            for t in lt:
+#                maxw = max(maxw, ctx.text_extents(t)[2])
+#                maxl = max(maxl, len(t))
+#            
+#            # On calcule la taille de police nécessaire pour que ça rentre
+#            fontSize = min(w/maxw, h/(hl*len(lt)))  
+#            
+#            # On calcul le rapport des rapports h/w
+#            rapport = maxw / (hl*len(lt)) / ratioRect
+#            if rapport <= 1:  # on a passé le cap ...
+#                continuer = False
+#                if fontSize <= ancienFontSize:
+#                    wrap = ancienWrap
+#                    lt = ancienLt
+#                    maxw = ancienMaxw
+#                    fontSize = ancienFontSize
+#
+#            else:
+#                ancienWrap = wrap
+#                wrap = min(wrap-1, maxl-1)
+#                if wrap <= 1:# or (maxw == ancienMaxw and wrap < maxl) :
+#                    continuer = False
+#                    
+#                ancienFontSize = fontSize
+#                ancienLt = lt
+#                ancienMaxw = maxw
+#            
+#        nLignes = len(lt)
+#        
+#    else:
+#        nLignes = 1
+#        lt = [texte]
+#        maxw = ctx.text_extents(texte)[2]
+#        fontSize = min(w/maxw, h/(hl*nLignes))
         
+#        CACHE[texte] = (w,h,lt)    
+    
+    
+    
+    
+    
+    
     hTotale = hl*nLignes
     
 #    print " wrap", time.time() - tps, i
 #    print "   iterations :", i
 #    print "   wrap final :", wrap
-#    print "lt final :", lt
-#    
+#    print "lt final :", lt   
+    
     
     #
     # "réduction" du réctangle
@@ -1212,7 +1242,168 @@ def drange(start, stop, step):
         yield r
         r += step    
     
+##########################################################################################
+#
+#  Un système de "cache" pour les textes wrappés
+#
+##########################################################################################
+class maxdict(dict):
+    """
+    from Matplotlib.cbook :
+    A dictionary with a maximum size; this doesn't override all the
+    relevant methods to contrain size, just setitem, so use with
+    caution
+    """
+    def __init__(self, maxsize):
+        dict.__init__(self)
+        self.maxsize = maxsize
+        self._killkeys = []
+    def __setitem__(self, k, v):
+        if k not in self:
+            if len(self)>=self.maxsize:
+                del self[self._killkeys[0]]
+                del self._killkeys[0]
+            self._killkeys.append(k)
+        dict.__setitem__(self, k, v)
+
+CACHE = maxdict(500)
+
+
+#import collections
+#import functools
+
+#class memoized(object):
+#   '''Decorator. Caches a function's return value each time it is called.
+#   If called later with the same arguments, the cached value is returned
+#   (not reevaluated).
+#   '''
+#   def __init__(self, func):
+#      self.func = func
+#      self.cache = {}
+#   def __call__(self, *args):
+#      if not isinstance(args, collections.Hashable):
+#         # uncacheable. a list, for instance.
+#         # better to not cache than blow up.
+#         return self.func(*args)
+#      if args in self.cache:
+#         return self.cache[args]
+#      else:
+#         value = self.func(*args)
+#         self.cache[args] = value
+#         return value
+#   def __repr__(self):
+#      '''Return the function's docstring.'''
+#      return self.func.__doc__
+#   def __get__(self, obj, objtype):
+#      '''Support instance methods.'''
+#      return functools.partial(self.__call__, obj)
+#
+#class memoize(dict):
+#    def __init__(self, func):
+#        self.func = func
+#
+#    def __call__(self, *args):
+#        return self[args]
+#
+#    def __missing__(self, key):
+#        result = self[key] = self.func(*key)
+#        return result
+##########################################################################################
+#
+#  Un système de "cache" pour les textes wrappés
+#
+##########################################################################################
+#@memoize
+def wrapp(ctx, texte, w, h, wrap = True, couper = True):
+    """ Renvoie la liste des lignes et la taille de police et la longueur de la plus longue ligne
+        pour que <texte> rentre dnas le rectangle (w,h)
+        Options :
+            wrap = False : le texte reste sur une ligne
+            couper = False : les mots ne sont jamais coupés
+            
+    """
+    #
+    # Estimation de l'encombrement du texte (pour une taille de police de 1)
+    # 
+    ctx.set_font_size(1.0)
+    fascent, fdescent = ctx.font_extents()[:2]
+    hl = fascent+fdescent
     
+    #
+    # Découpage du texte
+    #
+    i = 0
+#    tps = time.time()
+    if wrap:
+        width = ctx.text_extents(texte)[2]
+        ratioRect = 1.0*w/h
+        W = sqrt(1.0*width*hl*ratioRect)
+        
+        continuer = True
+        
+        wrap1 = 0
+        st = texte.split("\n")
+        for l in st:
+            wrap1 = max(wrap1, len(l))
+            
+#        print len(texte), texte
+        wrap = min(wrap1, int(len(texte)*W/width)*2)
+#        print "   wrap initial :", wrap, "(brut :",int(len(texte)*W/width),")"
+        
+        ancienWrap = wrap
+        ancienFontSize = 0
+        ancienLt = []
+        ancienMaxw = 0
+        i = 0
+        while continuer:
+            lt = []
+            
+            # On découpe le texte
+            i += 1
+            for l in texte.split("\n"):
+                lt.extend(textwrap.wrap(l, wrap, break_long_words = couper))
+                
+            # On mémorise la longueur de la plus longue ligne 
+            #    (en caractères et en unité Cairo)
+            maxw = maxl = 0
+            for t in lt:
+                maxw = max(maxw, ctx.text_extents(t)[2])
+                maxl = max(maxl, len(t))
+            
+            # On calcule la taille de police nécessaire pour que ça rentre
+            fontSize = min(w/maxw, h/(hl*len(lt)))  
+            
+            # On calcul le rapport des rapports h/w
+            rapport = maxw / (hl*len(lt)) / ratioRect
+            if rapport <= 1:  # on a passé le cap ...
+                continuer = False
+                if fontSize <= ancienFontSize:
+                    wrap = ancienWrap
+                    lt = ancienLt
+                    maxw = ancienMaxw
+                    fontSize = ancienFontSize
+
+            else:
+                ancienWrap = wrap
+                wrap = min(wrap-1, maxl-1)
+                if wrap <= 1:# or (maxw == ancienMaxw and wrap < maxl) :
+                    continuer = False
+                    
+                ancienFontSize = fontSize
+                ancienLt = lt
+                ancienMaxw = maxw
+            
+        nLignes = len(lt)
+        
+    else:
+        nLignes = 1
+        lt = [texte]
+        maxw = ctx.text_extents(texte)[2]
+        fontSize = min(w/maxw, h/(hl*nLignes))
+        
+    return lt, fontSize, maxw
+
+
 
 
 
