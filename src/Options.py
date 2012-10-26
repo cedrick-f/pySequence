@@ -35,7 +35,7 @@ import io
 import wx.combo
 #from constantes import *
 import constantes
-from CedWidgets import *
+
 
 ##############################################################################
 #      Options     #
