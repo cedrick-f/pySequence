@@ -40,7 +40,7 @@ Copyright (C) 2011-2012
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "3.9"
+__version__ = "3.10"
 
 #from threading import Thread
 
@@ -118,7 +118,7 @@ import functools
 import xml.etree.ElementTree as ET
 
 # des widgets wx évolués "faits maison"
-from CedWidgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_ENTIER_POS#, chronometrer
+from widgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_ENTIER_POS#, chronometrer
 #from CustomCheckBox import CustomCheckBox
 # Les constantes et les fonctions de dessin
 
@@ -3426,6 +3426,13 @@ class Tache(Objet_sequence):
         if panelParent:
             self.panelPropriete = PanelPropriete_Tache(panelParent, self)
             
+        if hasattr(self, 'panelPropriete'):
+            self.panelPropriete.ConstruireListeEleves()
+            self.panelPropriete.MiseAJourDuree()
+            self.panelPropriete.MiseAJour()
+            
+        
+            
         
     
     ######################################################################################  
@@ -3538,6 +3545,7 @@ class Tache(Objet_sequence):
         
     ######################################################################################  
     def setBranche(self, branche):
+#        print "setBranche tache"
         self.ordre = eval(branche.tag[5:])
         
         self.intitule  = branche.get("Intitule", "")
@@ -3600,10 +3608,10 @@ class Tache(Objet_sequence):
             
         self.intituleDansDeroul = eval(branche.get("IntituleDansDeroul", "True"))
         
-        if hasattr(self, 'panelPropriete'):
-            self.panelPropriete.ConstruireListeEleves()
-            self.panelPropriete.MiseAJourDuree()
-            self.panelPropriete.MiseAJour()
+#        if hasattr(self, 'panelPropriete'):
+#            self.panelPropriete.ConstruireListeEleves()
+#            self.panelPropriete.MiseAJourDuree()
+#            self.panelPropriete.MiseAJour()
 #            self.panelPropriete.MiseAJourPoidsCompetences()
 
 
@@ -4683,8 +4691,15 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
 #        except:
 #            print "Erreur à l'ouverture de configFiche.cfg" 
             
+        self.pleinEcran = False
         
-            
+        tabmgr = self.GetClientWindow().GetAuiManager()
+        
+        print dir(tabmgr.GetManagedWindow())
+        print self.GetClientWindow().GetChildren()
+        
+        tabmgr.GetManagedWindow().Bind(aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.OnDocChanged)
+        
         #############################################################################################
         # Instanciation et chargement des options
         #############################################################################################
@@ -4719,6 +4734,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         self.Bind(wx.EVT_MENU, self.OnOptions, id=31)
         self.Bind(wx.EVT_MENU, self.OnRegister, id=32)
         
+        self.Bind(wx.EVT_KEY_DOWN, self.OnKey)
         
         self.Bind(EVT_APPEL_OUVRIR, self.OnAppelOuvrir)
         
@@ -4732,6 +4748,151 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
 #        child.Show()
         
         
+        #############################################################################################
+        # Création de la barre d'outils
+        #############################################################################################
+        self.tb = self.CreateToolBar( wx.TB_HORIZONTAL | wx.NO_BORDER | wx.TB_FLAT )
+        self.ConstruireTb()
+        
+        
+    ###############################################################################################
+    def OnDocChanged(self, evt):
+        print "OnDocChanged"
+        doc = self.GetClientWindow().GetAuiManager().GetManagedWindow().GetCurrentPage()
+        print doc
+        estProj = isinstance(doc, FenetreProjet)
+        estSequ = isinstance(doc, FenetreSequence)
+        print estProj, estSequ
+        if estProj or estSequ:
+            self.tool_pe.Enable(estProj)
+            print dir(self.tool_pp)
+            self.tool_pp.Show(estProj)
+            self.tool_pt.Enable(estProj)
+        
+        
+        
+    ###############################################################################################
+    def ConstruireTb(self):
+        """ Construction de la ToolBar
+        """
+        tsize = (24,24)
+        new_bmp =  wx.ArtProvider.GetBitmap(wx.ART_NEW, wx.ART_TOOLBAR, tsize)
+        open_bmp = wx.ArtProvider.GetBitmap(wx.ART_FILE_OPEN, wx.ART_TOOLBAR, tsize)
+        save_bmp =  wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE, wx.ART_TOOLBAR, tsize)
+        saveas_bmp = wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE_AS, wx.ART_TOOLBAR, tsize)
+        
+        self.tb.SetToolBitmapSize(tsize)
+        
+        self.tb.AddLabelTool(10, u"Nouveau", new_bmp, 
+                             shortHelp=u"Création d'une nouvelle séquence ou d'un nouveau projet", 
+                             longHelp=u"Création d'une nouvelle séquence ou d'un nouveau projet")
+        
+
+        self.tb.AddLabelTool(11, u"Ouvrir", open_bmp, 
+                             shortHelp=u"Ouverture d'un fichier séquence ou projet", 
+                             longHelp=u"Ouverture d'un fichier séquence ou projet")
+        
+        self.tb.AddLabelTool(12, u"Enregistrer", save_bmp, 
+                             shortHelp=u"Enregistrement du document courant sous son nom actuel", 
+                             longHelp=u"Enregistrement du document courant sous son nom actuel")
+        
+
+        self.tb.AddLabelTool(13, u"Enregistrer sous...", saveas_bmp, 
+                             shortHelp=u"Enregistrement du document courant sous un nom différent", 
+                             longHelp=u"Enregistrement du document courant sous un nom différent")
+        
+        self.Bind(wx.EVT_TOOL, self.commandeNouveau, id=10)
+        self.Bind(wx.EVT_TOOL, self.commandeOuvrir, id=11)
+        self.Bind(wx.EVT_TOOL, self.commandeEnregistrer, id=12)
+        self.Bind(wx.EVT_TOOL, self.commandeEnregistrerSous, id=13)
+        
+        
+        self.tb.AddSeparator()
+        #################################################################################################################
+        #
+        # Outils "Projet"
+        #
+        #################################################################################################################
+        self.tool_pe = self.tb.AddLabelTool(50, u"Ajouter un élève", images.Icone_ajout_eleve.GetBitmap(), 
+                             shortHelp=u"Ajout d'un élève au projet", 
+                             longHelp=u"Ajout d'un élève au projet")
+
+        self.Bind(wx.EVT_TOOL, self.GetActiveChild().projet.AjouterEleve, id=50)
+        
+        self.tool_pp = self.tb.AddLabelTool(51, u"Ajouter un professeur", images.Icone_ajout_prof.GetBitmap(), 
+                             shortHelp=u"Ajout d'un professeur à l'équipe pédagogique", 
+                             longHelp=u"Ajout d'un professeur à l'équipe pédagogique")
+
+        self.Bind(wx.EVT_TOOL, self.GetActiveChild().projet.AjouterProf, id=51)
+        
+        self.tool_pt = self.tb.AddLabelTool(52, u"Ajouter une tâche", images.Icone_ajout_tache.GetBitmap(), 
+                             shortHelp=u"Ajout d'une tâche au projet", 
+                             longHelp=u"Ajout d'une tâche au projet")
+
+        self.Bind(wx.EVT_TOOL, self.GetActiveChild().projet.AjouterTache, id=52)
+        
+        self.tb.AddSeparator()
+        #################################################################################################################
+        #
+        # Outils de Visualisation
+        #
+        #################################################################################################################
+        saveas_bmp = images.Icone_fullscreen.GetBitmap()
+        self.tb.AddLabelTool(100, u"Plein écran", saveas_bmp, 
+                             shortHelp=u"Affichage de la fiche en plein écran (Echap pour quitter le mode plein écran)", 
+                             longHelp=u"Affichage de la fiche en plein écran (Echap pour quitter le mode plein écran)")
+
+        self.Bind(wx.EVT_TOOL, self.commandePleinEcran, id=100)
+        
+        
+#        self.Bind(wx.EVT_TOOL, self.OnClose, id=wx.ID_EXIT)
+#        
+#        self.Bind(wx.EVT_TOOL, self.OnAide, id=21)
+#        self.Bind(wx.EVT_TOOL, self.OnAbout, id=22)
+#        
+#        self.Bind(wx.EVT_TOOL, self.OnOptions, id=31)
+#        self.Bind(wx.EVT_TOOL, self.OnRegister, id=32)
+        
+        self.tb.AddSeparator()
+        
+        self.tb.Realize()
+        
+        
+    ###############################################################################################
+    def commandePleinEcran(self, event):
+        self.pleinEcran = not self.pleinEcran
+        
+
+        if self.pleinEcran:
+            win = self.GetActiveChild().nb.GetCurrentPage()
+            self.fsframe = wx.Frame(None, -1)
+            win.Reparent(self.fsframe)
+            win.Bind(wx.EVT_KEY_DOWN, self.OnKey)
+            self.fsframe.ShowFullScreen(True, style=wx.FULLSCREEN_ALL)
+        else:
+            win = self.fsframe.GetChildren()[0]
+            win.Reparent(self.GetActiveChild().nb)
+            self.fsframe.Destroy()
+            win.SendSizeEventToParent()
+
+
+        
+        
+        
+    ###############################################################################################
+    def OnKey(self, evt):
+        keycode = evt.GetKeyCode()
+        if keycode == wx.WXK_ESCAPE and self.pleinEcran:
+            self.commandePleinEcran(evt)
+        evt.Skip()
+        
+        
+#    ###############################################################################################
+#    def OnToolClick(self, event):
+#        self.log.WriteText("tool %s clicked\n" % event.GetId())
+#        #tb = self.GetToolBar()
+#        tb = event.GetEventObject()
+#        tb.EnableTool(10, not tb.GetToolEnabled(10))
         
     ###############################################################################################
     def CreateMenuBar(self):
@@ -4763,9 +4924,10 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         mb.Append(tool_menu, "&Outils")
         mb.Append(help_menu, "&Aide")
         
-        
         self.SetMenuBar(mb)
         
+        
+    #############################################################################
     def MiseAJourMenu(self):
         if register.IsRegistered():
             self.menuReg.SetText(u"Désinscrire de la base de registre")
@@ -5443,7 +5605,6 @@ class FenetreSequence(FenetreDocument):
                 # La classe
                 classe = root.find("Classe")
                 self.classe.setBranche(classe)
-                
                 self.sequence.setBranche(sequence)  
                 
         except:
@@ -6703,7 +6864,7 @@ class PanelEffectifsClasse(wx.Panel):
         self.vEffClas = Variable(u"Nombre d'élèves",  
                             lstVal = classe.effectifs['C'], 
                             typ = VAR_ENTIER_POS, bornes = [4,40])
-        self.cEffClas = VariableCtrl(self, self.vEffClas, coef = 1, labelMPL = False, signeEgal = False,
+        self.cEffClas = VariableCtrl(self, self.vEffClas, coef = 1, signeEgal = False,
                                 help = u"Nombre d'élèves dans la classe entière", sizeh = 30, color = coulClasse)
         self.Bind(EVT_VAR_CTRL, self.EvtVariableEff, self.cEffClas)
         sizerClasse_h.Add(self.cEffClas, 0, wx.TOP|wx.BOTTOM|wx.LEFT, 5)
@@ -6712,7 +6873,7 @@ class PanelEffectifsClasse(wx.Panel):
         self.vNbERed = Variable(u"Nbr de groupes\nà effectif réduit",  
                                 lstVal = classe.nbrGroupes['G'], 
                                 typ = VAR_ENTIER_POS, bornes = [1,3])
-        self.cNbERed = VariableCtrl(self, self.vNbERed, coef = 1, labelMPL = False, signeEgal = False,
+        self.cNbERed = VariableCtrl(self, self.vNbERed, coef = 1, signeEgal = False,
                                     help = u"Nombre de groupes à effectif réduit dans la classe", sizeh = 20, color = self.coulEffRed)
         self.Bind(EVT_VAR_CTRL, self.EvtVariableEff, self.cNbERed)
         sizerClasse_h.Add(self.cNbERed, 0, wx.TOP|wx.LEFT, 5)
@@ -6736,7 +6897,7 @@ class PanelEffectifsClasse(wx.Panel):
         self.vNbEtPr = Variable(u"Nbr de groupes\n\"Etudes et Projets\"",  
                             lstVal = classe.nbrGroupes['E'], 
                             typ = VAR_ENTIER_POS, bornes = [1,5])
-        self.cNbEtPr = VariableCtrl(self, self.vNbEtPr, coef = 1, labelMPL = False, signeEgal = False,
+        self.cNbEtPr = VariableCtrl(self, self.vNbEtPr, coef = 1, signeEgal = False,
                                 help = u"Nombre de groupes d'étude/projet par groupe à effectif réduit", sizeh = 20, color = self.coulEP)
         self.Bind(EVT_VAR_CTRL, self.EvtVariableEff, self.cNbEtPr)
         self.sizerEffRed_g.Add(self.cNbEtPr, 0, wx.TOP|wx.BOTTOM|wx.LEFT, 3)
@@ -6751,7 +6912,7 @@ class PanelEffectifsClasse(wx.Panel):
         self.vNbActP = Variable(u"Nbr de groupes\n\"Activités pratiques\"",  
                             lstVal = classe.nbrGroupes['P'], 
                             typ = VAR_ENTIER_POS, bornes = [2,10])
-        self.cNbActP = VariableCtrl(self, self.vNbActP, coef = 1, labelMPL = False, signeEgal = False,
+        self.cNbActP = VariableCtrl(self, self.vNbActP, coef = 1, signeEgal = False,
                                 help = u"Nombre de groupes d'activité pratique par groupe à effectif réduit", sizeh = 20, color = self.coulAP)
         self.Bind(EVT_VAR_CTRL, self.EvtVariableEff, self.cNbActP)
         self.sizerEffRed_d.Add(self.cNbActP, 0, wx.TOP|wx.BOTTOM|wx.LEFT, 3)
@@ -7526,7 +7687,7 @@ class PanelPropriete_Seance(PanelPropriete):
         #
         # Durée de la séance
         #
-        vcDuree = VariableCtrl(self, seance.duree, coef = 0.5, labelMPL = False, signeEgal = True, slider = False,
+        vcDuree = VariableCtrl(self, seance.duree, coef = 0.5, signeEgal = True, slider = False,
                                help = u"Durée de la séance en heures")
 #        textctrl = wx.TextCtrl(self, -1, u"1")
         self.Bind(EVT_VAR_CTRL, self.EvtText, vcDuree)
@@ -7580,7 +7741,7 @@ class PanelPropriete_Seance(PanelPropriete):
         #
         # Nombre de séances en parallèle
         #
-        vcNombre = VariableCtrl(self, seance.nombre, labelMPL = False, signeEgal = True, slider = False, 
+        vcNombre = VariableCtrl(self, seance.nombre, signeEgal = True, slider = False, 
                                 help = u"Nombre de groupes réalisant simultanément la même séance")
         self.Bind(EVT_VAR_CTRL, self.EvtText, vcNombre)
         self.vcNombre = vcNombre
@@ -7659,7 +7820,7 @@ class PanelPropriete_Seance(PanelPropriete):
                 
             self.systemeCtrl = []
             for s in self.seance.systemes:
-                v = VariableCtrl(self, s, labelMPL = False, signeEgal = False, 
+                v = VariableCtrl(self, s, signeEgal = False, 
                                  slider = False, fct = None, help = "", sizeh = 30)
                 self.Bind(EVT_VAR_CTRL, self.EvtVarSysteme, v)
                 self.bsizer.Add(v, flag = wx.ALIGN_RIGHT)#|wx.EXPAND) 
@@ -8026,7 +8187,7 @@ class PanelPropriete_Tache(PanelProprieteBook, PanelPropriete):
         # Durée de la tache
         #
         if not tache.phase in ["R1", "R2", "S", "Rev"]:
-            vcDuree = VariableCtrl(pageGen, tache.duree, coef = 0.5, labelMPL = False, signeEgal = True, slider = False,
+            vcDuree = VariableCtrl(pageGen, tache.duree, coef = 0.5, signeEgal = True, slider = False,
                                    help = u"Volume horaire de la tâche en heures")
             pageGen.Bind(EVT_VAR_CTRL, self.EvtText, vcDuree)
             self.vcDuree = vcDuree
@@ -8272,7 +8433,7 @@ class PanelPropriete_Tache(PanelProprieteBook, PanelPropriete):
     def MiseAJourListeEleves(self):
         """ Met à jour la liste des élèves
         """
-        if self.tache.phase != "S":
+        if not self.tache.phase in ["S", "R1", "R2"]:
             self.pageGen.Freeze()
             for i, e in enumerate(self.GetDocument().eleves):
                 self.elevesCtrl[i].SetLabel(e.GetNomPrenom())
@@ -8338,15 +8499,20 @@ class PanelPropriete_Tache(PanelProprieteBook, PanelPropriete):
         
     #############################################################################            
     def EvtComboBox(self, event):
-        self.tache.SetPhase(get_key(constantes.NOM_PHASE_TACHE[self.tache.GetTypeEnseignement(True)], 
-                                    self.cbPhas.GetStringSelection()))
-        
-        self.pageGen.Layout()
-        self.sendEvent()
+        newPhase = get_key(constantes.NOM_PHASE_TACHE[self.tache.GetTypeEnseignement(True)], 
+                                        self.cbPhas.GetStringSelection())
+        if self.tache.phase != newPhase:
+            self.tache.SetPhase(newPhase)
+            self.arbre.MiseAJourPhase(newPhase)
+            self.pageGen.Layout()
+            self.sendEvent()
         
     
     #############################################################################            
     def MiseAJourDuree(self):
+        """ Mise à jour du champ de texte de la durée
+            (conformément à la valeur de la variable associée)
+        """
         if hasattr(self, 'vcDuree'):
             self.vcDuree.mofifierValeursSsEvt()
         
@@ -8366,7 +8532,7 @@ class PanelPropriete_Tache(PanelProprieteBook, PanelPropriete):
             
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
-#        print "MiseAJour", self.tache.phase, self.tache.competences
+#        print "MiseAJour", self.tache.phase, self.tache.intitule
         if hasattr(self, 'arbre'):
             self.arbre.UnselectAll()
             
@@ -8429,7 +8595,7 @@ class PanelPropriete_Systeme(PanelPropriete):
         #
         # Nombre de systèmes disponibles en parallèle
         #
-        vcNombre = VariableCtrl(self, systeme.nbrDispo, labelMPL = False, signeEgal = True, slider = False, 
+        vcNombre = VariableCtrl(self, systeme.nbrDispo, signeEgal = True, slider = False, 
                                 help = u"Nombre de d'exemplaires de ce système disponibles simultanément.")
         self.Bind(EVT_VAR_CTRL, self.EvtVar, vcNombre)
         self.vcNombre = vcNombre
@@ -9519,13 +9685,14 @@ class ArbreCompetences(HTL.HyperTreeList):
         self.ExpandAll()
 #        self.Layout()
         
-        
+    
+    
     #############################################################################
     def MiseAJourPhase(self, phase):
-        if self.pptache.tache.phase != phase:
-            self.DeleteChildren(self.root)
-            self.Construire(self.root)
-            self.ExpandAll()
+        
+        self.DeleteChildren(self.root)
+        self.Construire(self.root)
+        self.ExpandAll()
         
     
     ####################################################################################
@@ -9654,6 +9821,9 @@ class ArbreCompetencesPrj(ArbreCompetences):
 
     ####################################################################################
     def Construire(self, branche, dic = None, type_ens = None):
+        print "Construire", self.pptache.tache.phase
+        if type_ens == None:
+            type_ens = self.type_ens
         if dic == None: # Construction de la racine
             dic = constantes.dicCompetences_prj[type_ens]
         font = wx.Font(10, wx.DEFAULT, wx.FONTSTYLE_ITALIC, wx.NORMAL, False)
