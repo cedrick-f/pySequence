@@ -1056,8 +1056,17 @@ def DrawTacheRacine(ctx, tache, y):
     #
     h = calcH(tache.GetDuree())
     if not tache.phase in ["R1", "R2", "S", "Rev"]:
-        fleche_verticale(ctx, posZTaches[0] - wDuree/2 - ecartX/4, y, 
-                         h, wDuree, (0.9,0.8,0.8,0.5))
+#        fleche_verticale(ctx, posZTaches[0] - wDuree/2 - ecartX/4, y, 
+#                         h, wDuree, (0.9,0.8,0.8,0.5))
+        
+        ctx.set_source_rgba (0.9,0.8,0.8,0.5)
+        ctx.rectangle(posZTaches[0] - wDuree - ecartX/4, y, 
+                      wDuree, h)
+        ctx.fill_preserve ()    
+        ctx.set_source_rgba(0.4,  0.4,  0.4,  1)
+        ctx.set_line_width(0.0006)
+        ctx.stroke ()
+        
         ctx.set_source_rgb(0.5,0.8,0.8)
         ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                   cairo.FONT_WEIGHT_BOLD)

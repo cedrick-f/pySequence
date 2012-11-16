@@ -40,7 +40,7 @@ Copyright (C) 2011-2012
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "3.10"
+__version__ = "3.11"
 
 #from threading import Thread
 
