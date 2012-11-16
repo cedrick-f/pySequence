@@ -56,7 +56,7 @@ import sys, os
 import _winreg
 
 FILE_ENCODING = sys.getfilesystemencoding()
-
+print sys.argv
 PATH = os.path.dirname(os.path.abspath(sys.argv[0]))
 #PATH = os.path.split(PATH)[0]
 os.chdir(PATH)
@@ -832,9 +832,9 @@ NOM_PHASE_TACHE = {'STI': {'Ana' : u"Analyse des besoins", #u"Spécification - P
                            'Val' : u"Validation", #u"Qualification - Intégration - Validation",
                            'XXX' : u"Préparation de la soutenance"
                            },
-                   'SSI': {'Ana' : u"Préparation", #u"Spécification - Planification", 
-                           'Rea' : u"Réalisation", #u"Prototypage", 
-                           'XXX' : u"Clôture"
+                   'SSI': {'Ana' : u"Appropriation", #u"Spécification - Planification", 
+                           'Rea' : u"Réalisation d'expérimentations", #u"Prototypage", 
+                           'XXX' : u"Synthèse et communication"
                            }
                    }
 
