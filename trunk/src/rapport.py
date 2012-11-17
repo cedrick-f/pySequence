@@ -41,18 +41,18 @@ from wx.lib.embeddedimage import PyEmbeddedImage
 
 
 
-StyleText = {}
-Couleur = {}
-def charger_styleText():
-    Couleur["rouge"] = wx.RED
-    Couleur["vert"]  = wx.ColourDatabase().Find("FOREST GREEN")
-    Couleur["bleu"]  = wx.BLUE
-    StyleText["Titre1"] = StyleDeTexte(wx.Font(9, wx.DEFAULT, wx.NORMAL, wx.BOLD, True),wx.BLUE)
-    StyleText["Titre2"] = StyleDeTexte(wx.Font(8, wx.DEFAULT, wx.NORMAL, wx.NORMAL, False),wx.BLACK)
-    StyleText["Messag"] = StyleDeTexte(wx.Font(9, wx.DEFAULT, wx.NORMAL, wx.BOLD, False),wx.RED) 
-    StyleText["Normal"] = StyleDeTexte(wx.Font(8, wx.DEFAULT, wx.NORMAL, wx.NORMAL, False),wx.BLACK)
-    StyleText["Message"] = StyleDeTexte(wx.Font(8, wx.DEFAULT, wx.ITALIC, wx.NORMAL, False),wx.BLACK)
-    StyleText["Gras"] = StyleDeTexte(wx.Font(8, wx.DEFAULT, wx.NORMAL, wx.BOLD, False),wx.BLACK)
+#StyleText = {}
+#Couleur = {}
+#def charger_styleText():
+#    Couleur["rouge"] = wx.RED
+#    Couleur["vert"]  = wx.ColourDatabase().Find("FOREST GREEN")
+#    Couleur["bleu"]  = wx.BLUE
+#    StyleText["Titre1"] = StyleDeTexte(wx.Font(9, wx.DEFAULT, wx.NORMAL, wx.BOLD, True),wx.BLUE)
+#    StyleText["Titre2"] = StyleDeTexte(wx.Font(8, wx.DEFAULT, wx.NORMAL, wx.NORMAL, False),wx.BLACK)
+#    StyleText["Messag"] = StyleDeTexte(wx.Font(9, wx.DEFAULT, wx.NORMAL, wx.BOLD, False),wx.RED) 
+#    StyleText["Normal"] = StyleDeTexte(wx.Font(8, wx.DEFAULT, wx.NORMAL, wx.NORMAL, False),wx.BLACK)
+#    StyleText["Message"] = StyleDeTexte(wx.Font(8, wx.DEFAULT, wx.ITALIC, wx.NORMAL, False),wx.BLACK)
+#    StyleText["Gras"] = StyleDeTexte(wx.Font(8, wx.DEFAULT, wx.NORMAL, wx.BOLD, False),wx.BLACK)
 
 
 Styles = {"Titre"     :     rt.RichTextAttr(),
@@ -64,28 +64,29 @@ Styles = {"Titre"     :     rt.RichTextAttr(),
           "Tableau"   :     rt.RichTextAttr()}
 
 Styles["Titre"].SetParagraphStyleName("Titre")
-Styles["Titre"].SetFontSize(20)
+Styles["Titre"].SetFontSize(18)
 Styles["Titre"].SetTextColour((0,0,0))
 Styles["Titre"].SetParagraphSpacingBefore(40)
 Styles["Titre"].SetAlignment(wx.TEXT_ALIGNMENT_CENTRE)
 
 Styles["Titre 1"].SetParagraphStyleName("Titre 1")
 Styles["Titre 1"].SetFontSize(14)
-Styles["Titre 1"].SetTextColour((0,0,255))
-Styles["Titre 2"].SetParagraphSpacingBefore(20)
+Styles["Titre 1"].SetTextColour((0,0,180))
+Styles["Titre 2"].SetParagraphSpacingBefore(10)
 Styles["Titre 1"].SetParagraphSpacingAfter(10)
 Styles["Titre 1"].SetBulletStyle(wx.TEXT_ATTR_BULLET_STYLE_RIGHT_PARENTHESIS)
 Styles["Titre 1"].SetFontUnderlined(True)
 
 Styles["Titre 2"].SetParagraphStyleName("Titre 2")
 Styles["Titre 2"].SetFontSize(12)
-Styles["Titre 2"].SetTextColour((0,0,160))
+Styles["Titre 2"].SetTextColour((0,0,120))
 Styles["Titre 2"].SetParagraphSpacingAfter(0)
-Styles["Titre 2"].SetParagraphSpacingBefore(20)
+Styles["Titre 2"].SetParagraphSpacingBefore(10)
 Styles["Titre 2"].SetFontUnderlined(True)
 
 Styles["Message"].SetParagraphStyleName("Message")
 Styles["Message"].SetFontSize(12)
+Styles["Message"].SetLeftIndent(80)
 #Styles["Message"].SetFontStyle(wx.BOLD)
 Styles["Message"].SetParagraphSpacingAfter(10)
 Styles["Message"].SetParagraphSpacingBefore(10)
@@ -131,7 +132,7 @@ class FrameRapport(wx.Frame):
         
         self.SetMinSize((700, -1))
         
-        charger_styleText()
+#        charger_styleText()
 
         self.parent = parent
         
@@ -197,7 +198,7 @@ class FrameRapport(wx.Frame):
     def OnFileSaveAs(self, evt):
         wildcard, types = rt.RichTextBuffer.GetExtWildcard(save=True)
 
-        dlg = wx.FileDialog(self, "Enregistrer le rapport",
+        dlg = wx.FileDialog(self, u"Enregistrer le rapport",
                             wildcard=wildcard,
                             style=wx.SAVE)
         if dlg.ShowModal() == wx.ID_OK:
@@ -236,7 +237,7 @@ class FrameRapport(wx.Frame):
         self.rtc.ApplyAlignmentToSelection(wx.TEXT_ALIGNMENT_CENTRE)
         
     def OnIndentMore(self, evt):
-        attr = wx.TextAttr()
+        attr = rt.RichTextAttr()
         attr.SetFlags(wx.TEXT_ATTR_LEFT_INDENT)
         ip = self.rtc.GetInsertionPoint()
         if self.rtc.GetStyle(ip, attr):
@@ -249,7 +250,7 @@ class FrameRapport(wx.Frame):
             self.rtc.SetStyle(r, attr)
        
     def OnIndentLess(self, evt):
-        attr = wx.TextAttr()
+        attr = rt.RichTextAttr()
         attr.SetFlags(wx.TEXT_ATTR_LEFT_INDENT)
         ip = self.rtc.GetInsertionPoint()
         if self.rtc.GetStyle(ip, attr):
@@ -263,7 +264,7 @@ class FrameRapport(wx.Frame):
             self.rtc.SetStyle(r, attr)
 
     def OnParagraphSpacingMore(self, evt):
-        attr = wx.TextAttr()
+        attr = rt.RichTextAttr()
         attr.SetFlags(wx.TEXT_ATTR_PARA_SPACING_AFTER)
         ip = self.rtc.GetInsertionPoint()
         if self.rtc.GetStyle(ip, attr):
@@ -276,7 +277,7 @@ class FrameRapport(wx.Frame):
             self.rtc.SetStyle(r, attr)
   
     def OnParagraphSpacingLess(self, evt):
-        attr = wx.TextAttr()
+        attr = rt.RichTextAttr()
         attr.SetFlags(wx.TEXT_ATTR_PARA_SPACING_AFTER)
         ip = self.rtc.GetInsertionPoint()
         if self.rtc.GetStyle(ip, attr):
@@ -290,7 +291,7 @@ class FrameRapport(wx.Frame):
                 self.rtc.SetStyle(r, attr)
 
     def OnLineSpacingSingle(self, evt): 
-        attr = wx.TextAttr()
+        attr = rt.RichTextAttr()
         attr.SetFlags(wx.TEXT_ATTR_LINE_SPACING)
         ip = self.rtc.GetInsertionPoint()
         if self.rtc.GetStyle(ip, attr):
@@ -303,7 +304,7 @@ class FrameRapport(wx.Frame):
             self.rtc.SetStyle(r, attr)
       
     def OnLineSpacingHalf(self, evt):
-        attr = wx.TextAttr()
+        attr = rt.RichTextAttr()
         attr.SetFlags(wx.TEXT_ATTR_LINE_SPACING)
         ip = self.rtc.GetInsertionPoint()
         if self.rtc.GetStyle(ip, attr):
@@ -316,7 +317,7 @@ class FrameRapport(wx.Frame):
             self.rtc.SetStyle(r, attr)
 
     def OnLineSpacingDouble(self, evt):
-        attr = wx.TextAttr()
+        attr = rt.RichTextAttr()
         attr.SetFlags(wx.TEXT_ATTR_LINE_SPACING)
         ip = self.rtc.GetInsertionPoint()
         if self.rtc.GetStyle(ip, attr):
@@ -335,7 +336,7 @@ class FrameRapport(wx.Frame):
         r = self.rtc.GetSelectionRange()
         fontData = wx.FontData()
         fontData.EnableEffects(False)
-        attr = wx.TextAttr()
+        attr = rt.RichTextAttr()
         attr.SetFlags(wx.TEXT_ATTR_FONT)
         if self.rtc.GetStyle(self.rtc.GetInsertionPoint(), attr):
             fontData.SetInitialFont(attr.GetFont())
@@ -352,7 +353,7 @@ class FrameRapport(wx.Frame):
 
     def OnColour(self, evt):
         colourData = wx.ColourData()
-        attr = wx.TextAttr()
+        attr = rt.RichTextAttr()
         attr.SetFlags(wx.TEXT_ATTR_TEXT_COLOUR)
         if self.rtc.GetStyle(self.rtc.GetInsertionPoint(), attr):
             colourData.SetColour(attr.GetTextColour())
@@ -625,61 +626,9 @@ class RapportRTF(rt.RichTextCtrl):
         analyse.SetTracerChaine(sens, None)
         return img
     
-    def GetImagesDemontageRlt(self, analyse, zoneMtg):
-        if analyse.obstacleEnsble[0] == []:
-            tagE = "AnimEnsb0"
-            offsetX = DISTANCE_DEMONTAGE_RLT_COURT
-        elif analyse.obstacleEnsble[1] == []:
-            tagE = "AnimEnsb1"
-            offsetX = 0
-        else:
-            return []
-
-        analyse.animerMontageDemontage(zoneMtg, tagE ,False, instant = True)
-        
-        lstImages = []
-        for palier in ["G","D"]:
-            for sensR in [0,1]:
-                lstObs = analyse.obstacleRoults[palier][sensR]
-                if lstObs <> []:
-                    analyse.montrerCollision(zoneMtg, lstObs, palier, True, True)
-                    lstImages.append(self.GetImageMontage(zoneMtg, analyse, 6))
-                    analyse.montrerCollision(zoneMtg, lstObs, palier, False, True)
-                else:
-                    tag = "AnimRlt"+palier+str(sensR)
-                    analyse.animerMontageDemontage(zoneMtg, tag ,False, instant = True)
-                    lstImages.append(self.GetImageMontage(zoneMtg, analyse, 6, 
-                                                          offsetX = offsetX*sensR,
-                                                          agrandi = DISTANCE_DEMONTAGE_RLT_COURT))
-                    analyse.animerMontageDemontage(zoneMtg, tag ,True, instant = True)
-        
-        analyse.animerMontageDemontage(zoneMtg, tagE ,True, instant = True)
-        return lstImages
+    
 
 
-    def GetImagesDemontageEns(self, analyse, zoneMtg):
-        lstImagesEns = []
-        for sens in [0,1]:
-            lstObs = analyse.obstacleEnsble[sens]
-            if lstObs <> []: 
-                analyse.tracerSurBrillanceMobiles(zoneMtg, sens , True)
-                analyse.montrerCollision(zoneMtg, lstObs, None, True, True)
-                lstImagesEns.append(self.GetImageMontage(zoneMtg, analyse, 3))
-                analyse.tracerSurBrillanceMobiles(zoneMtg, sens , False)
-                analyse.montrerCollision(zoneMtg, lstObs, None, False, True)
-                continue
-            else:
-                tag = "AnimEnsb"+str(sens)
-                analyse.animerMontageDemontage(zoneMtg, tag ,False, instant = True)
-                
-                lstImagesEns.append(self.GetImageMontage(zoneMtg, None, 6, 
-                                                      offsetX = DISTANCE_DEMONTAGE_ENSEMBLE*sens,
-                                                      agrandi = DISTANCE_DEMONTAGE_ENSEMBLE))
-                
-                analyse.animerMontageDemontage(zoneMtg, tag ,True, instant = True)
-                
-        zoneMtg.Redessiner()
-        return lstImagesEns
     
     ######################################################################################################
     def AddTitre(self, fichierCourant):
@@ -696,11 +645,12 @@ class RapportRTF(rt.RichTextCtrl):
         
         self.AddParagraphStyled(u"Tache : " + tache.code, "Titre 1", bgCoul = bgCoul)
 #        self.AppendText("\n")
-        self.AddParagraphStyled(u"Intitulé : " + tache.intitule, "Message")
+        self.AddParagraphStyled(u"Intitulé : ", "Message", souligne = True)
+        self.AddParagraphStyled(tache.intitule, "Message")
         self.AppendText("\n")
         
         if tache.description != None and hasattr(tache, 'panelPropriete'):
-            self.AppendText("Description")
+            self.AddParagraphStyled(u"Description : ", "Message", souligne = True)
             tache.panelPropriete.rtc.rtc.SelectAll()
             tache.panelPropriete.rtc.rtc.Copy()
             self.Paste()
@@ -713,36 +663,7 @@ class RapportRTF(rt.RichTextCtrl):
         
         
         
-    ######################################################################################################
-    # CdCF
-    ######################################################################################################
-    def AddCdCFCharges(self, CdCF, SchemaPanel):
-        self.AddParagraphStyled(u"Efforts sur l'arbre :", "Titre 2")
-        bmp = SchemaPanel.BitmapSchemaAvecFleches(CdCF.bagueTournante)
-        self.AddImage(bmp.ConvertToImage())
-        
-    def AddCdCFEtanchStat(self, CdCF):
-        self.AddParagraphStyled(u"Indice de Pression : "+ str(CdCF.pression.get()), "MessSens")
-        
-    def AddCdCFEtanchDyn(self, CdCF):
-        self.AddParagraphStyled(u"Indice de Vitesse : "+ str(CdCF.vitesse.get()), "MessSens")
     
-    def AddCdCFEtanchLub(self, CdCF):
-        self.AddParagraphStyled(u"Lubrifiant : "+ CdCF.lubrifiant.getCh(),"MessSens")
-        
-    def AddCdCFCoutMax(self, CdCF):
-        self.AddParagraphStyled(u"Co�t Maximum admissible : "+str(CdCF.coutMax),"MessSens")
-        self.AppendText("\n")
-        
-    def AddTitreCdCF(self):
-        self.AddParagraphStyled(u"Cahier des Charges Fonctionnel (CdCF) :", "Titre 1")
-        
-    def AddCdCFEtanch(self, CdCF):
-        self.AddParagraphStyled(u"Lubrification - Etanch�it� :", "Titre 2")
-        self.AddCdCFEtanchStat(CdCF)
-        self.AddCdCFEtanchDyn(CdCF)
-        self.AddCdCFEtanchLub(CdCF)
-        self.AppendText("\n")
         
     ######################################################################################################
     # Analyse   
@@ -937,7 +858,7 @@ class RapportRTF(rt.RichTextCtrl):
         def SsRc(s):
             return s.replace("\n", " ")
 
-        # D�finition des tabs
+        # Définition des tabs
         coef = 5
         tabs = [max(coef*grid.GetRowLabelSize(), 30)]
         for c in range(grid.GetNumberCols()):
@@ -977,7 +898,7 @@ class RapportRTF(rt.RichTextCtrl):
         
         self.EndTextColour()
         
-    def AddParagraphStyled(self, texte, style, couleur = None, bgCoul = "WHITE"):
+    def AddParagraphStyled(self, texte, style, couleur = None, bgCoul = "WHITE", souligne = False):
         
 #        if style == "MessSens":
 #            print  Styles[style].GetTextColour(), texte.encode('cp437','replace')
@@ -994,12 +915,16 @@ class RapportRTF(rt.RichTextCtrl):
         if not isinstance(bgCoul, wx.Colour):
             bgCoul = wx.NamedColour(bgCoul)
                 
-                
+        if souligne:
+            self.BeginUnderline()
+#        Styles[style].SetFlags(wx.TEXT_ATTR_BACKGROUND_COLOUR)
         Styles[style].SetBackgroundColour(bgCoul)
         parag = self.AddParagraph(texte)
         self.SetStyle(parag, Styles[style])
         
         self.EndTextColour()
+        self.EndUnderline()
+        
 #        if couleur is not None:
 #            Styles[style].SetTextColour(cs)
         
