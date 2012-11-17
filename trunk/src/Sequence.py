@@ -1247,11 +1247,11 @@ class Sequence(BaseDoc):
             obj.ConstruireArbre(arbre, self.brancheObj)
             
         
-        self.brancheSce = arbre.AppendItem(self.branche, Titres[3], data = self.panelSeances)
+        self.brancheSce = arbre.AppendItem(self.branche, Titres[3], image = self.arbre.images["Sea"], data = self.panelSeances)
         for sce in self.seance:
             sce.ConstruireArbre(arbre, self.brancheSce) 
             
-        self.brancheSys = arbre.AppendItem(self.branche, Titres[4], data = self.panelSystemes)
+        self.brancheSys = arbre.AppendItem(self.branche, Titres[4], image = self.arbre.images["Sys"], data = self.panelSystemes)
         for sy in self.systemes:
             sy.ConstruireArbre(arbre, self.brancheSys)    
         
@@ -4660,27 +4660,19 @@ class PanelConteneur(wx.Panel):
         self.panel.Show()
         self.bsizer.Layout()
         self.Refresh()
-    
+
+
 ####################################################################################
 #
-#   Classes définissant la fenétre de l'application
+#   Classes définissant la fenêtre principale de l'application
 #
 ####################################################################################
 class FenetrePrincipale(aui.AuiMDIParentFrame):
     def __init__(self, parent, fichier):
-        aui.AuiMDIParentFrame.__init__(self, parent, -1, __appname__,style=wx.DEFAULT_FRAME_STYLE)
+        aui.AuiMDIParentFrame.__init__(self, parent, -1, __appname__, style=wx.DEFAULT_FRAME_STYLE)
         
         wx.lib.colourdb.updateColourDB()
         
-        #
-        # Taille et position de la fenétre
-        #
-        self.SetMinSize((800,570)) # Taille mini d'écran : 800x600
-        self.SetSize((1024,738)) # Taille pour écran 1024x768
-        # On centre la fenétre dans l'écran ...
-        self.CentreOnScreen(wx.BOTH)
-        
-        self.SetIcon(images.getlogoIcon())
         #
         # le fichier de configuration de la fiche
         #
@@ -4690,15 +4682,22 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
 #            draw_cairo_seq.ouvrirConfigFiche(self.nomFichierConfig)
 #        except:
 #            print "Erreur à l'ouverture de configFiche.cfg" 
-            
+
+        #
+        # Taille et position de la fenétre
+        #
+        self.SetMinSize((800,570)) # Taille mini d'écran : 800x600
+        self.SetSize((1024,738)) # Taille pour écran 1024x768
+        # On centre la fenétre dans l'écran ...
+        self.CentreOnScreen(wx.BOTH)
+        
+        self.SetIcon(images.getlogoIcon())
+        
+        self.tabmgr = self.GetClientWindow().GetAuiManager()
+        self.tabmgr.GetManagedWindow().Bind(aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.OnDocChanged)
+        
+        
         self.pleinEcran = False
-        
-        tabmgr = self.GetClientWindow().GetAuiManager()
-        
-        print dir(tabmgr.GetManagedWindow())
-        print self.GetClientWindow().GetChildren()
-        
-        tabmgr.GetManagedWindow().Bind(aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.OnDocChanged)
         
         #############################################################################################
         # Instanciation et chargement des options
@@ -4734,47 +4733,48 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         self.Bind(wx.EVT_MENU, self.OnOptions, id=31)
         self.Bind(wx.EVT_MENU, self.OnRegister, id=32)
         
-        self.Bind(wx.EVT_KEY_DOWN, self.OnKey)
-        
         self.Bind(EVT_APPEL_OUVRIR, self.OnAppelOuvrir)
+        
+        
+        
+        # Interception des frappes clavier
+        self.Bind(wx.EVT_KEY_DOWN, self.OnKey)
         
         # Interception de la demande de fermeture
         self.Bind(wx.EVT_CLOSE, self.OnClose)
         
         
-#        child = FenetreSequence(self)
-        if fichier != "":
-            self.ouvrir(fichier)
-#        child.Show()
-        
-        
         #############################################################################################
         # Création de la barre d'outils
         #############################################################################################
-        self.tb = self.CreateToolBar( wx.TB_HORIZONTAL | wx.NO_BORDER | wx.TB_FLAT )
         self.ConstruireTb()
         
+#        #################################################################################################################
+#        #
+#        # Mise en place
+#        #
+#        #################################################################################################################
+#        sizer = wx.BoxSizer(wx.VERTICAL)
+#        sizer.Add(sizerTb, 0, wx.EXPAND)
+#        sizer.Add(self.fenDoc, 0, wx.EXPAND)
+#        self.SetSizer(sizer)
         
-    ###############################################################################################
-    def OnDocChanged(self, evt):
-        print "OnDocChanged"
-        doc = self.GetClientWindow().GetAuiManager().GetManagedWindow().GetCurrentPage()
-        print doc
-        estProj = isinstance(doc, FenetreProjet)
-        estSequ = isinstance(doc, FenetreSequence)
-        print estProj, estSequ
-        if estProj or estSequ:
-            self.tool_pe.Enable(estProj)
-            print dir(self.tool_pp)
-            self.tool_pp.Show(estProj)
-            self.tool_pt.Enable(estProj)
-        
-        
-        
+        if fichier != "":
+            self.ouvrir(fichier)
+    
+            
     ###############################################################################################
     def ConstruireTb(self):
         """ Construction de la ToolBar
         """
+        print "ConstruireTb"
+
+        #############################################################################################
+        # Création de la barre d'outils
+        #############################################################################################
+        self.tb = self.CreateToolBar(wx.TB_HORIZONTAL | wx.NO_BORDER | wx.TB_FLAT)
+        
+        
         tsize = (24,24)
         new_bmp =  wx.ArtProvider.GetBitmap(wx.ART_NEW, wx.ART_TOOLBAR, tsize)
         open_bmp = wx.ArtProvider.GetBitmap(wx.ART_FILE_OPEN, wx.ART_TOOLBAR, tsize)
@@ -4808,6 +4808,8 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
         
         self.tb.AddSeparator()
+        
+
         #################################################################################################################
         #
         # Outils "Projet"
@@ -4817,20 +4819,44 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                              shortHelp=u"Ajout d'un élève au projet", 
                              longHelp=u"Ajout d'un élève au projet")
 
-        self.Bind(wx.EVT_TOOL, self.GetActiveChild().projet.AjouterEleve, id=50)
+        
         
         self.tool_pp = self.tb.AddLabelTool(51, u"Ajouter un professeur", images.Icone_ajout_prof.GetBitmap(), 
                              shortHelp=u"Ajout d'un professeur à l'équipe pédagogique", 
                              longHelp=u"Ajout d'un professeur à l'équipe pédagogique")
 
-        self.Bind(wx.EVT_TOOL, self.GetActiveChild().projet.AjouterProf, id=51)
+        
         
         self.tool_pt = self.tb.AddLabelTool(52, u"Ajouter une tâche", images.Icone_ajout_tache.GetBitmap(), 
                              shortHelp=u"Ajout d'une tâche au projet", 
                              longHelp=u"Ajout d'une tâche au projet")
-
-        self.Bind(wx.EVT_TOOL, self.GetActiveChild().projet.AjouterTache, id=52)
         
+
+        
+        
+        
+        #################################################################################################################
+        #
+        # Outils "Séquence"
+        #
+        #################################################################################################################
+        self.tool_ss = self.tb.AddLabelTool(60, u"Ajouter une séance", images.Icone_ajout_seance.GetBitmap(), 
+                             shortHelp=u"Ajout d'une séance dans la séquence", 
+                             longHelp=u"Ajout d'une séance dans la séquence")
+
+        
+        
+        self.tool_sy = self.tb.AddLabelTool(61, u"Ajouter un système", images.Icone_ajout_systeme.GetBitmap(), 
+                             shortHelp=u"Ajout d'un système", 
+                             longHelp=u"Ajout d'un système")
+#
+#        
+#        
+#        self.tool_pt = self.tb_p.AddLabelTool(62, u"Ajouter ", images.Icone_ajout_tache.GetBitmap(), 
+#                             shortHelp=u"Ajout d'une tâche au projet", 
+#                             longHelp=u"Ajout d'une tâche au projet")
+        
+
         self.tb.AddSeparator()
         #################################################################################################################
         #
@@ -4855,9 +4881,51 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
         self.tb.AddSeparator()
         
+        
+        
+        #################################################################################################################
+        #
+        # Mise en place
+        #
+        #################################################################################################################
         self.tb.Realize()
         
         
+        self.tb.RemoveTool(60)
+        self.tb.RemoveTool(61)
+        self.tb.RemoveTool(50)
+        self.tb.RemoveTool(51)
+        self.tb.RemoveTool(52)
+
+
+    ###############################################################################################
+    def ajouterOutilsProjet(self):
+        self.tb.RemoveTool(50)
+        self.tb.RemoveTool(51)
+        self.tb.RemoveTool(52)
+        self.tb.RemoveTool(60)
+        self.tb.RemoveTool(61)
+
+        self.tb.InsertToolItem(5,self.tool_pe)
+        self.tb.InsertToolItem(6, self.tool_pp)
+        self.tb.InsertToolItem(7, self.tool_pt)
+        self.tb.Realize()
+    
+    ###############################################################################################
+    def ajouterOutilsSequence(self):
+        self.tb.RemoveTool(50)
+        self.tb.RemoveTool(51)
+        self.tb.RemoveTool(52)
+        self.tb.RemoveTool(60)
+        self.tb.RemoveTool(61)
+        
+        self.tb.InsertToolItem(5, self.tool_ss)
+        self.tb.InsertToolItem(6, self.tool_sy)
+
+        self.tb.Realize()
+        
+        
+    
     ###############################################################################################
     def commandePleinEcran(self, event):
         self.pleinEcran = not self.pleinEcran
@@ -4874,26 +4942,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             win.Reparent(self.GetActiveChild().nb)
             self.fsframe.Destroy()
             win.SendSizeEventToParent()
-
-
-        
-        
-        
-    ###############################################################################################
-    def OnKey(self, evt):
-        keycode = evt.GetKeyCode()
-        if keycode == wx.WXK_ESCAPE and self.pleinEcran:
-            self.commandePleinEcran(evt)
-        evt.Skip()
-        
-        
-#    ###############################################################################################
-#    def OnToolClick(self, event):
-#        self.log.WriteText("tool %s clicked\n" % event.GetId())
-#        #tb = self.GetToolBar()
-#        tb = event.GetEventObject()
-#        tb.EnableTool(10, not tb.GetToolEnabled(10))
-        
+            
     ###############################################################################################
     def CreateMenuBar(self):
         # create menu
@@ -4925,8 +4974,8 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         mb.Append(help_menu, "&Aide")
         
         self.SetMenuBar(mb)
-        
-        
+    
+    
     #############################################################################
     def MiseAJourMenu(self):
         if register.IsRegistered():
@@ -4999,38 +5048,6 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     def OnAide(self, event):
         webbrowser.open('http://code.google.com/p/pysequence/wiki/Aide')
         
-    #############################################################################
-    def OnOptions(self, event, page = 0):
-        options = self.options.copie()
-        dlg = Options.FenOptions(self, options)
-        dlg.CenterOnScreen()
-        dlg.nb.SetSelection(page)
-
-        # this does not return until the dialog is closed.
-        val = dlg.ShowModal()
-    
-        if val == wx.ID_OK:
-            self.DefinirOptions(options)
-            self.AppliquerOptions()
-            
-        else:
-            pass
-
-        dlg.Destroy()
-        
-    
-    ###############################################################################################
-    def OnAppelOuvrir(self, evt):
-        wx.CallAfter(self.ouvrir, evt.GetFile())
-        
-        
-    ###############################################################################################
-    def AppelOuvrir(self, nomFichier):
-        evt = AppelEvent(myEVT_APPEL_OUVRIR, self.GetId())
-        evt.SetFile(nomFichier)
-        self.GetEventHandler().ProcessEvent(evt)
-        
-        
         
     ###############################################################################################
     def commandeNouveau(self, event = None, ext = None):
@@ -5048,7 +5065,9 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             else:
                 child = None
             dlg.Destroy()
-
+        
+        self.OnDocChanged(None)
+        
         if child != None:
             wx.CallAfter(child.Show)
         return child
@@ -5098,7 +5117,91 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             dlg.Destroy()
         
         self.ouvrir(nomFichier)
-      
+        
+    ###############################################################################################
+    def OnAppelOuvrir(self, evt):
+        wx.CallAfter(self.ouvrir, evt.GetFile())
+        
+        
+    ###############################################################################################
+    def AppelOuvrir(self, nomFichier):
+        evt = AppelEvent(myEVT_APPEL_OUVRIR, self.GetId())
+        evt.SetFile(nomFichier)
+        self.GetEventHandler().ProcessEvent(evt)
+        
+    #############################################################################
+    def commandeEnregistrer(self, event = None):
+        self.GetActiveChild().commandeEnregistrer(event)
+        
+    #############################################################################
+    def commandeEnregistrerSous(self, event = None):
+        self.GetActiveChild().commandeEnregistrerSous(event)
+    
+    #############################################################################
+    def exporterFiche(self, event = None):
+        self.GetActiveChild().exporterFiche(event)
+              
+            
+    #############################################################################
+    def OnOptions(self, event, page = 0):
+        options = self.options.copie()
+        dlg = Options.FenOptions(self, options)
+        dlg.CenterOnScreen()
+        dlg.nb.SetSelection(page)
+
+        # this does not return until the dialog is closed.
+        val = dlg.ShowModal()
+    
+        if val == wx.ID_OK:
+            self.DefinirOptions(options)
+            self.AppliquerOptions()
+            
+        else:
+            pass
+
+        dlg.Destroy()
+            
+            
+            
+
+        
+        
+    ###############################################################################################
+    def OnDocChanged(self, evt):
+        doc = self.GetClientWindow().GetAuiManager().GetManagedWindow().GetCurrentPage()
+        if hasattr(doc, 'typ'):
+            
+            if doc.typ == "prj":
+                self.ajouterOutilsProjet()
+                self.Bind(wx.EVT_TOOL, doc.projet.AjouterEleve, id=50)
+                self.Bind(wx.EVT_TOOL, doc.projet.AjouterProf, id=51)
+                self.Bind(wx.EVT_TOOL, doc.projet.AjouterTache, id=52)
+            elif doc.typ == "seq":
+                self.ajouterOutilsSequence()
+                self.Bind(wx.EVT_TOOL, doc.sequence.AjouterSeance, id=60)
+                self.Bind(wx.EVT_TOOL, doc.sequence.AjouterSysteme, id=61)
+    #                self.Bind(wx.EVT_TOOL, self.GetActiveChild().projet.AjouterEleve, id=50)
+    #                self.Bind(wx.EVT_TOOL, self.GetActiveChild().projet.AjouterProf, id=51)
+    #                self.Bind(wx.EVT_TOOL, self.GetActiveChild().projet.AjouterTache, id=52)
+        
+    ###############################################################################################
+    def OnKey(self, evt):
+        keycode = evt.GetKeyCode()
+        if keycode == wx.WXK_ESCAPE and self.pleinEcran:
+            self.commandePleinEcran(evt)
+        evt.Skip()
+        
+        
+#    ###############################################################################################
+#    def OnToolClick(self, event):
+#        self.log.WriteText("tool %s clicked\n" % event.GetId())
+#        #tb = self.GetToolBar()
+#        tb = event.GetEventObject()
+#        tb.EnableTool(10, not tb.GetToolEnabled(10))
+ 
+        
+    
+    
                 
     #############################################################################
     def GetChild(self, nomFichier):
@@ -5128,17 +5231,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         return lst
     
     
-    #############################################################################
-    def commandeEnregistrer(self, event = None):
-        self.GetActiveChild().commandeEnregistrer(event)
-        
-    #############################################################################
-    def commandeEnregistrerSous(self, event = None):
-        self.GetActiveChild().commandeEnregistrerSous(event)
     
-    #############################################################################
-    def exporterFiche(self, event = None):
-        self.GetActiveChild().exporterFiche(event)
     
     #############################################################################
     def OnClose(self, evt):
@@ -5181,6 +5274,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
 ########################################################################################
 class FenetreDocument(aui.AuiMDIChildFrame):
     def __init__(self, parent):
+        
         aui.AuiMDIChildFrame.__init__(self, parent, -1, "")#, style = wx.DEFAULT_FRAME_STYLE | wx.SYSTEM_MENU)
 #        self.SetExtraStyle(wx.FRAME_EX_CONTEXTHELP)
 #        
@@ -5211,6 +5305,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         
     
     def miseEnPlace(self):
+        
         #############################################################################################
         # Mise en place de la zone graphique
         #############################################################################################
@@ -5225,7 +5320,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
 #                         Layer(2).BestSize(self.zoneGraph.GetMaxSize()).
 #                         MaxSize(self.zoneGraph.GetMaxSize())
                         )
-
+        
         #############################################################################################
         # Mise en place de l'arbre
         #############################################################################################
@@ -5522,9 +5617,8 @@ def Dialog_ErreurAccesFichier(nomFichier):
 ########################################################################################
 class FenetreSequence(FenetreDocument):
     def __init__(self, parent):
-        FenetreDocument.__init__(self, parent)
-        
         self.typ = 'seq'
+        FenetreDocument.__init__(self, parent)
         
         #
         # La classe
@@ -5661,9 +5755,8 @@ class FenetreSequence(FenetreDocument):
 ########################################################################################
 class FenetreProjet(FenetreDocument):
     def __init__(self, parent):
-        FenetreDocument.__init__(self, parent)
-        
         self.typ = 'prj'
+        FenetreDocument.__init__(self, parent)
         
         #
         # La classe
@@ -9821,7 +9914,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
 
     ####################################################################################
     def Construire(self, branche, dic = None, type_ens = None):
-        print "Construire", self.pptache.tache.phase
+#        print "Construire", self.pptache.tache.phase
         if type_ens == None:
             type_ens = self.type_ens
         if dic == None: # Construction de la racine

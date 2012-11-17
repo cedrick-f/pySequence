@@ -187,6 +187,7 @@ dicimages =   {"Seq" : images.Icone_sequence,
                "Obj" : images.Icone_objectif,
                "Ci"  : images.Icone_centreinteret,
                "Sys" : images.Icone_systeme,
+               "Sea" : images.Icone_seance,
 
                        }
 imagesSeance = {"R" : images.Icone_rotation,
