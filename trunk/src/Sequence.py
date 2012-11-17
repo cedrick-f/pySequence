@@ -140,6 +140,7 @@ import register
 import textwrap
 
 
+from rapport import FrameRapport
 
 # Pour l'export en swf
 #import tempfile
@@ -4725,6 +4726,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         self.Bind(wx.EVT_MENU, self.commandeEnregistrer, id=12)
         self.Bind(wx.EVT_MENU, self.commandeEnregistrerSous, id=13)
         self.Bind(wx.EVT_MENU, self.exporterFiche, id=15)
+        self.Bind(wx.EVT_MENU, self.exporterTaches, id=16)
         self.Bind(wx.EVT_MENU, self.OnClose, id=wx.ID_EXIT)
         
         self.Bind(wx.EVT_MENU, self.OnAide, id=21)
@@ -4954,7 +4956,8 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         file_menu.Append(12, u"Enregistrer")
         file_menu.Append(13, u"Enregistrer sous ...")
         file_menu.AppendSeparator()
-        file_menu.Append(15, u"Exporter (PDF ou SVG)")
+        file_menu.Append(15, u"Exporter la fiche (PDF ou SVG)")
+        file_menu.Append(16, u"Exporter tâches (PDF)")
         file_menu.AppendSeparator()
         file_menu.Append(wx.ID_EXIT, u"Quitter")
 
@@ -5141,7 +5144,10 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     def exporterFiche(self, event = None):
         self.GetActiveChild().exporterFiche(event)
               
-            
+    #############################################################################
+    def exporterTaches(self, event = None):
+        self.GetActiveChild().exporterTaches(event)
+        
     #############################################################################
     def OnOptions(self, event, page = 0):
         options = self.options.copie()
@@ -5522,6 +5528,16 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         else:
             dlg.Destroy()
         return
+    
+    
+    #############################################################################
+    def exporterTaches(self, event = None):
+        if hasattr(self, 'projet'):
+            win = FrameRapport(self, self.fichierCourant, self.projet)
+            win.Show()
+#            win.Destroy()
+
+    
     
     #############################################################################
     def quitter(self, event = None):
