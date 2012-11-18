@@ -34,6 +34,7 @@ import cStringIO
 import richtext
 from draw_cairo import getHoraireTxt
 from draw_cairo_prj import ICoulTache
+from draw_cairo_seq import ICoulSeance
 
 from wx import ImageFromStream, BitmapFromImage, EmptyIcon
 
@@ -70,7 +71,7 @@ Styles["Titre"].SetParagraphSpacingBefore(40)
 Styles["Titre"].SetAlignment(wx.TEXT_ALIGNMENT_CENTRE)
 
 Styles["Titre 1"].SetParagraphStyleName("Titre 1")
-Styles["Titre 1"].SetFontSize(14)
+Styles["Titre 1"].SetFontSize(12)
 Styles["Titre 1"].SetTextColour((0,0,180))
 Styles["Titre 2"].SetParagraphSpacingBefore(10)
 Styles["Titre 1"].SetParagraphSpacingAfter(10)
@@ -78,14 +79,14 @@ Styles["Titre 1"].SetBulletStyle(wx.TEXT_ATTR_BULLET_STYLE_RIGHT_PARENTHESIS)
 Styles["Titre 1"].SetFontUnderlined(True)
 
 Styles["Titre 2"].SetParagraphStyleName("Titre 2")
-Styles["Titre 2"].SetFontSize(12)
+Styles["Titre 2"].SetFontSize(11)
 Styles["Titre 2"].SetTextColour((0,0,120))
 Styles["Titre 2"].SetParagraphSpacingAfter(0)
 Styles["Titre 2"].SetParagraphSpacingBefore(10)
 Styles["Titre 2"].SetFontUnderlined(True)
 
 Styles["Message"].SetParagraphStyleName("Message")
-Styles["Message"].SetFontSize(12)
+Styles["Message"].SetFontSize(11)
 Styles["Message"].SetLeftIndent(80)
 #Styles["Message"].SetFontStyle(wx.BOLD)
 Styles["Message"].SetParagraphSpacingAfter(10)
@@ -124,8 +125,9 @@ class StyleDeTexte:
         win.SetFont(self.font)
         win.SetForegroundColour(self.color)
 
+#########################################################################################
 class FrameRapport(wx.Frame):
-    def __init__(self, parent, fichierCourant, projet):
+    def __init__(self, parent, fichierCourant, doc, typ):
         wx.Frame.__init__(self, parent, -1, u"Tâches élèves détaillées",
                             size=(700, 500))#,
 #                            style = wx.DEFAULT_FRAME_STYLE)
@@ -143,7 +145,7 @@ class FrameRapport(wx.Frame):
         self.CreateStatusBar()
 #        self.SetStatusText(u"Rapport d'analyse")
         
-        self.rtp = RTPrinting(self)
+        
         
         #
         # Instanciation du rapport en RTF
@@ -151,15 +153,21 @@ class FrameRapport(wx.Frame):
         self.rtc = RapportRTF(self)#rt.RichTextCtrl(self, style=wx.VSCROLL|wx.HSCROLL|wx.NO_BORDER)
         wx.CallAfter(self.rtc.SetFocus)
         
+        self.rtp = RTPrinting(self)
         
         #
         # On rempli le rapport
         #
-        self.rtc.AddTitre(fichierCourant)
-        
-        for t in projet.taches:
-            self.rtc.AddTache(t)
-            
+        if typ == 'prj':
+            self.rtc.AddTitreProjet(fichierCourant)
+    
+            for t in doc.taches:
+                self.rtc.AddTache(t)
+        else:
+            self.rtc.AddTitreSeance(fichierCourant)
+    
+            for s in doc.seance:
+                self.rtc.AddSeance(s)
         
     
         self.Bind(wx.EVT_CLOSE, self.quitter )
@@ -631,9 +639,49 @@ class RapportRTF(rt.RichTextCtrl):
 
     
     ######################################################################################################
-    def AddTitre(self, fichierCourant):
-        self.AddParagraphStyled(u"Tâches élève détaillées", "Titre")
-        self.AddParagraphStyled(os.path.basename(os.path.splitext(fichierCourant)[0]), "Sous titre")
+    def AddTitreProjet(self, fichierCourant):
+        self.BeginParagraphSpacing(0, 20)
+
+        self.BeginAlignment(wx.TEXT_ALIGNMENT_CENTRE)
+        self.BeginBold()
+
+        self.BeginFontSize(14)
+        self.WriteText(u"Détail des tâches")
+        self.EndFontSize()
+        self.Newline()
+
+        self.BeginItalic()
+        self.WriteText(os.path.basename(os.path.splitext(fichierCourant)[0]))
+        self.EndItalic()
+
+        self.EndBold()
+
+        self.Newline()
+        self.EndAlignment()
+    
+    ######################################################################################################
+    def AddTitreSeance(self, fichierCourant):
+        self.BeginParagraphSpacing(0, 20)
+
+        self.BeginAlignment(wx.TEXT_ALIGNMENT_CENTRE)
+        self.BeginBold()
+
+        self.BeginFontSize(14)
+        self.WriteText(u"Détail des séances")
+        self.EndFontSize()
+        self.Newline()
+
+        self.BeginItalic()
+        self.WriteText(os.path.basename(os.path.splitext(fichierCourant)[0]))
+        self.EndItalic()
+
+        self.EndBold()
+
+        self.Newline()
+        self.EndAlignment()
+        
+#        self.AddTextStyled(u"Tâches élève détaillées", "Titre")
+#        self.AddTextStyled(os.path.basename(os.path.splitext(fichierCourant)[0]), "Sous titre")
 #        self.AddParagraphStyled(wx.GetApp().auteur, "Sous titre")
         
         
@@ -643,25 +691,95 @@ class RapportRTF(rt.RichTextCtrl):
         r,v,b = ICoulTache[tache.phase]
         bgCoul = wx.Colour(r*255,v*255,b*255)
         
-        self.AddParagraphStyled(u"Tache : " + tache.code, "Titre 1", bgCoul = bgCoul)
-#        self.AppendText("\n")
-        self.AddParagraphStyled(u"Intitulé : ", "Message", souligne = True)
-        self.AddParagraphStyled(tache.intitule, "Message")
-        self.AppendText("\n")
+#        self.Newline()
+        
+#        if not isinstance(fgCoul, wx.Colour):
+#            fgCoul = wx.NamedColour(fgCoul)
+#        self.BeginTextColour(fgCoul)
+            
+        if not isinstance(bgCoul, wx.Colour):
+            bgCoul = wx.NamedColour(bgCoul)
+        Styles["Titre 1"].SetBackgroundColour(bgCoul)  
+        self.BeginStyle(Styles["Titre 1"])
+        self.WriteText(u"Tache : " + tache.code+"\t\t\t"+getHoraireTxt(tache.GetDuree()))
+        self.EndStyle()
+        
+        self.EndLeftIndent()
+        self.Newline()
+        
+        self.BeginUnderline()
+        self.WriteText(u"Intitulé :")
+        self.EndUnderline()
+        self.WriteText(u" " + tache.intitule)
+        self.BeginLeftIndent(60)
+        self.Newline()
         
         if tache.description != None and hasattr(tache, 'panelPropriete'):
-            self.AddParagraphStyled(u"Description : ", "Message", souligne = True)
+            self.BeginUnderline()
+            self.WriteText(u"Description :")
+            self.EndUnderline()
+            self.Newline()
+            
             tache.panelPropriete.rtc.rtc.SelectAll()
             tache.panelPropriete.rtc.rtc.Copy()
             self.Paste()
+        
+        self.BeginUnderline()
+        self.WriteText(u"Volume horaire :")
+        self.EndUnderline()
+        self.WriteText(u" " + getHoraireTxt(tache.GetDuree()))
+        self.Newline()
+        
+    
+    ######################################################################################################
+    def AddSeance(self, seance, indent = 1):
+        
+        r,v,b = ICoulSeance[seance.typeSeance]
+        bgCoul = wx.Colour(r*255,v*255,b*255)
+        
+#        self.Newline()
+        
+#        if not isinstance(fgCoul, wx.Colour):
+#            fgCoul = wx.NamedColour(fgCoul)
+#        self.BeginTextColour(fgCoul)
             
-        self.AddParagraphStyled(u"Volume horaire : " + getHoraireTxt(tache.GetDuree()), "Message")
-        self.AppendText("\n")
+        if not isinstance(bgCoul, wx.Colour):
+            bgCoul = wx.NamedColour(bgCoul)
+        Styles["Titre 1"].SetBackgroundColour(bgCoul)  
+        self.BeginStyle(Styles["Titre 1"])
+        self.WriteText(u"Tache : " + seance.code+"\t\t\t"+getHoraireTxt(seance.GetDuree()))
+        self.EndStyle()
         
-        self.Refresh()
-
+#        self.EndLeftIndent()
+        self.BeginLeftIndent(60*(indent-1))
+        self.Newline()
         
+        self.BeginUnderline()
+        self.WriteText(u"Intitulé :")
+        self.EndUnderline()
+        self.WriteText(u" " + seance.intitule)
+        self.BeginLeftIndent(60*indent)
+        self.Newline()
         
+        if seance.description != None and hasattr(seance, 'panelPropriete'):
+            self.BeginUnderline()
+            self.WriteText(u"Description :")
+            self.EndUnderline()
+            self.Newline()
+            
+            seance.panelPropriete.rtc.rtc.SelectAll()
+            seance.panelPropriete.rtc.rtc.Copy()
+            self.Paste()
+        
+        if seance.typeSeance in ["R", "S"]:
+            for sseance in seance.sousSeances:
+                self.AddSeance(sseance, indent + 1)
+            
+#        self.BeginUnderline()
+#        self.WriteText(u"Volume horaire :")
+#        self.EndUnderline()
+#        self.WriteText(u" " + getHoraireTxt(seance.GetDuree()))
+#        self.Newline()
         
     
         
@@ -924,6 +1042,33 @@ class RapportRTF(rt.RichTextCtrl):
         
         self.EndTextColour()
         self.EndUnderline()
+        self.EndParagraphStyle()
+        
+    def AddTextStyled(self, texte, style, 
+                      fgCoul = "BLACK", bgCoul = "WHITE", souligne = False):
+        
+#        if style == "MessSens":
+#            print  Styles[style].GetTextColour(), texte.encode('cp437','replace')
+        
+        if not isinstance(fgCoul, wx.Colour):
+            fgCoul = wx.NamedColour(fgCoul)
+        self.BeginTextColour(fgCoul)
+            
+        if not isinstance(bgCoul, wx.Colour):
+            bgCoul = wx.NamedColour(bgCoul)
+        Styles[style].SetBackgroundColour(bgCoul)     
+                
+        if souligne:
+            self.BeginUnderline()
+        
+        self.BeginStyle(Styles[style])
+        
+        self.AppendText(texte)
+        
+        self.EndStyle()
+        self.EndUnderline()
+        self.EndTextColour()
+        
         
 #        if couleur is not None:
 #            Styles[style].SetTextColour(cs)
@@ -933,13 +1078,22 @@ class RTPrinting(rt.RichTextPrinting):
     def __init__(self, parent):
         rt.RichTextPrinting.__init__(self, "", parent)
         
-        self.SetTitle(u"Rapport")
+        self.SetTitle(u"Tâches")
 
         printData = wx.PrintData()
         printData.SetPaperId(wx.PAPER_A4)
         printData.SetPrintMode(wx.PRINT_MODE_PRINTER)
         printData.SetQuality(wx.PRINT_QUALITY_HIGH)
         self.SetPrintData(printData)
+        
+        pageSetupData = self.GetPageSetupData()
+        pageSetupData.SetMarginBottomRight(wx.Point(10,10))
+        pageSetupData.SetMarginTopLeft(wx.Point(10,10))
+
+
+
+
+        
         
 #----------------------------------------------------------------------
 _rt_save = PyEmbeddedImage(

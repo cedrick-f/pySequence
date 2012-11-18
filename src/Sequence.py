@@ -4726,7 +4726,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         self.Bind(wx.EVT_MENU, self.commandeEnregistrer, id=12)
         self.Bind(wx.EVT_MENU, self.commandeEnregistrerSous, id=13)
         self.Bind(wx.EVT_MENU, self.exporterFiche, id=15)
-        self.Bind(wx.EVT_MENU, self.exporterTaches, id=16)
+        self.Bind(wx.EVT_MENU, self.exporterDetails, id=16)
         self.Bind(wx.EVT_MENU, self.OnClose, id=wx.ID_EXIT)
         
         self.Bind(wx.EVT_MENU, self.OnAide, id=21)
@@ -4957,7 +4957,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         file_menu.Append(13, u"Enregistrer sous ...")
         file_menu.AppendSeparator()
         file_menu.Append(15, u"Exporter la fiche (PDF ou SVG)")
-        file_menu.Append(16, u"Exporter tâches (PDF)")
+        file_menu.Append(16, u"Exporter les détails")
         file_menu.AppendSeparator()
         file_menu.Append(wx.ID_EXIT, u"Quitter")
 
@@ -5145,8 +5145,8 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         self.GetActiveChild().exporterFiche(event)
               
     #############################################################################
-    def exporterTaches(self, event = None):
-        self.GetActiveChild().exporterTaches(event)
+    def exporterDetails(self, event = None):
+        self.GetActiveChild().exporterDetails(event)
         
     #############################################################################
     def OnOptions(self, event, page = 0):
@@ -5531,9 +5531,12 @@ class FenetreDocument(aui.AuiMDIChildFrame):
     
     
     #############################################################################
-    def exporterTaches(self, event = None):
+    def exporterDetails(self, event = None):
         if hasattr(self, 'projet'):
-            win = FrameRapport(self, self.fichierCourant, self.projet)
+            win = FrameRapport(self, self.fichierCourant, self.projet, 'prj')
+            win.Show()
+        elif hasattr(self, 'sequence'):
+            win = FrameRapport(self, self.fichierCourant, self.sequence, 'seq')
             win.Show()
 #            win.Destroy()
 
