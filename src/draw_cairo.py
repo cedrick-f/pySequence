@@ -699,7 +699,7 @@ def show_text_rect_fix(ctx, texte, x, y, w, h, fontSize, Nlignes, va = 'c', ha =
     #
     # Découpage du texte
     #
-    continuer = True
+    continuer = len(texte) > 0
     wrap = 0
     for l in texte.split("\n"):
         wrap = max(wrap, len(l))
