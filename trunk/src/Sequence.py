@@ -5958,7 +5958,23 @@ class FenetreProjet(FenetreDocument):
             for e in self.projet.eleves:
                 tableur = grilles.getTableau(self.projet)
                 grilles.modifierGrille(self.projet, tableur, e)
-                tableur.save(os.path.join(path, "Grille_"+e.GetNomPrenom()+"_"+self.projet.intitule))
+                nomFichier = "Grille_"+e.GetNomPrenom()+"_"+self.projet.intitule
+                if os.path.isfile(path):
+                    pass
+                
+                
+                try:
+                    tableur.save(os.path.join(path, nomFichier))
+                except:
+                    dlg = wx.MessageDialog(self, u"Erreur !",
+                                       u"Impossible d'enregistrer le fichier. Vérifier :\n" \
+                                       u" - qu'aucun fichier portant le même nom n'est déja ouvert\n" \
+                                       u" - que le dossier choisi n'est pas protégé en écriture",
+                                       wx.OK | wx.ICON_ERROR
+                                       #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
+                                       )
+                    dlg.ShowModal()
+                    dlg.Destroy()
 #            tableur.close()
         else:
             dlg.Destroy()
