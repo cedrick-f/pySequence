@@ -33,7 +33,7 @@ import wx
 #from xlutils.copy import copy
 
 GRILLE ={'SSI' : "Grille_evaluation_SSI_projet.xls",
-         'IETC' : "Grille_evaluation_SSI_projet.xls"
+         'STI2D' : "Grille_evaluation_STI2D_projet.xls"
          }
 
 Cellules_NON_SSI = {  "B3" : [(5,4),
@@ -72,13 +72,56 @@ Cellules_INFO_SSI = {"Tit" : (12,1),
                      "Nom" : (7,2),
                      "Pre" : (8,2)}
 
-
+Cellules_NON_ETT = {"CO1.1" : [(5,3),
+                               (6,3),
+                               (7,3),
+                               (8,3),
+                               (9,3)
+                                   ],
+                         "CO1.2" : [(10,3),
+                                    (11,3),
+                                    (12,3)
+                                   ],
+                         "CO2.1" : [(14,3),
+                                    (15,3),
+                                    (16,3),
+                                    (17,3)
+                                   ],
+                         "CO2.2" : [(18,3),
+                                    (19,3),
+                                    (20,3),
+                                    (21,3),
+                                    (22,3)
+                                   ],
+                         "CO6.1" : [(24,3),
+                                    (25,3),
+                                    (26,3)
+                                   ],
+                         "CO6.2" : [(27,3),
+                                    (28,3),
+                                    (29,3)
+                                    ],
+                         "CO6.3" : [(30,3),
+                                    (31,3),
+                                    (32,3),
+                                    (33,3),
+                                    (34,3)
+                                   ],
+                         "CO8.es" : [(36,3),
+                                     (37,3),
+                                     (38,3),
+                                     (39,3),
+                                     (40,3)
+                                    ]
+                     }
+                                    
 import win32com.client,win32com.client.dynamic
 from pywintypes import UnicodeType, TimeType
+from constantes import PATH
 import os
  
 def getTableau(doc):
-    tableau = PyExcel(os.path.join("D:\Developpement\Sequence\src", GRILLE['SSI']))
+    tableau = PyExcel(os.path.join(PATH, GRILLE['SSI']))
     return tableau
 
 
