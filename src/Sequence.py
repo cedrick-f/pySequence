@@ -4960,7 +4960,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         file_menu.AppendSeparator()
         file_menu.Append(15, u"Exporter la fiche (PDF ou SVG)")
         file_menu.Append(16, u"Exporter les détails")
-        file_menu.Append(17, u"Générger les grilles d'évaluation")
+        file_menu.Append(17, u"Générer les grilles d'évaluation")
         
         file_menu.AppendSeparator()
         file_menu.Append(wx.ID_EXIT, u"Quitter")
