@@ -5944,22 +5944,22 @@ class FenetreProjet(FenetreDocument):
     def genererGrilles(self, event = None):
         
         mesFormats = "Tableur Excel (.xls)|*.xls"
-        dlg = wx.FileDialog(None, 
-                            message = u"Enregistrer les grilles sous", 
+        dlg = wx.DirDialog(None, 
+                            message = u"Emplacement des grilles", 
     #                        defaultDir=toDefautEncoding(self.DossierSauvegarde) , 
     #                        defaultFile="", 
-                            wildcard=mesFormats, 
-                            style=wx.SAVE|wx.OVERWRITE_PROMPT|wx.CHANGE_DIR
+#                            wildcard=mesFormats, 
+                            style=wx.DD_DEFAULT_STYLE|wx.CHANGE_DIR
                             )
-        dlg.SetFilterIndex(0)
+#        dlg.SetFilterIndex(0)
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
             dlg.Destroy()
-            tableur = grilles.getTableau(self.projet)
-            tableur.save(path)
-            grilles.modifierGrille(self.projet, tableur)
-            tableur.save()
-            tableur.close()
+            for e in self.projet.eleves:
+                tableur = grilles.getTableau(self.projet)
+                grilles.modifierGrille(self.projet, tableur, e)
+                tableur.save(os.path.join(path, "Grille_"+e.GetNomPrenom()+"_"+self.projet.intitule))
+#            tableur.close()
         else:
             dlg.Destroy()
             

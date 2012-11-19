@@ -32,8 +32,10 @@ import wx
 #import xlwt
 #from xlutils.copy import copy
 
+COCHE = u"X"
+
 GRILLE ={'SSI' : "Grille_evaluation_SSI_projet.xls",
-         'STI2D' : "Grille_evaluation_STI2D_projet.xls"
+         'STI' : "Grille_evaluation_STI2D_projet.xls"
          }
 
 Cellules_NON_SSI = {  "B3" : [(5,4),
@@ -70,6 +72,7 @@ Cellules_NON_SSI = {  "B3" : [(5,4),
 
 Cellules_INFO_SSI = {"Tit" : (12,1),
                      "Nom" : (7,2),
+                     "Pro" : (43,1),
                      "Pre" : (8,2)}
 
 ############
@@ -235,46 +238,53 @@ import win32com.client,win32com.client.dynamic
 from pywintypes import UnicodeType, TimeType
 from constantes import PATH
 import os
- 
 def getTableau(doc):
-    tableau = PyExcel(os.path.join(PATH, GRILLE['SSI']))
+    typ = doc.GetTypeEnseignement(simple = True)
+    tableau = PyExcel(os.path.join(PATH, GRILLE[typ]))
     return tableau
 
 
-def modifierGrille(doc, tableur):
+def modifierGrille(doc, tableur, eleve):
     print "modifierGrille"
+    
     tableur.show()
-    shts=tableur.getSheets()
-    texte=u"x"
-    print shts
-
-    for i, e in enumerate(doc.eleves):
-        tableur.copySheet(u'Notation', After=u'Identification')
-        
+    
+    shts = tableur.getSheets()
+   
+#    for i, e in enumerate(doc.eleves):
+#        tableur.copySheet(u'Identification', Before=u'Identification')
+#        tableur.copySheet(u'Notation', Before=u'Identification')
         
     # On efface la feuille "Notation"
 #    tableur.delSheet(2)   
-    noms = prenoms = ''
-    for i, e in enumerate(doc.eleves):
-        noms += e.nom + " ; "
-        prenoms += e.prenom + " ; "
-        tableur.renameSheet(i+2, u'Notation ' + e.GetNomPrenom())
-        for comp, ii in e.GetDicIndicateurs().items():
-            for j, indic in enumerate(ii):
-                if not indic:
-                    l, c = Cellules_NON_SSI[comp][j]
-                    tableur.setCell(i+2, l, c, texte)
-        
+
+
+#    noms = prenoms = ''
+#    for i, e in enumerate(doc.eleves):
+#        noms += e.GetNomPrenom()
+#        prenoms += e.prenom + " ; "
+#    tableur.renameSheet(i*2+2, u'Notation ' + e.GetNomPrenom())
+    print eleve, eleve.GetDicIndicateurs()
+    for comp, ii in eleve.GetDicIndicateurs().items():
+        for j, indic in enumerate(ii):
+            if not indic:
+                l, c = Cellules_NON_SSI[comp][j]
+                tableur.setCell(2, l, c, COCHE)
+    
     l,c = Cellules_INFO_SSI["Tit"]
     tableur.setCell(1, l, c, doc.intitule + "\n" + doc.problematique)
     
     l,c = Cellules_INFO_SSI["Nom"]
-    tableur.setCell(1, l, c, noms)
+    tableur.setCell(1, l, c, eleve.nom)
     
     l,c = Cellules_INFO_SSI["Pre"]
-    tableur.setCell(1, l, c, prenoms)
+    tableur.setCell(1, l, c, eleve.prenom)
     
-
+#    l,c = Cellules_INFO_SSI["Pro"]
+#    for p in doc.equipe:
+#        tableur.xlBook.Worksheets(1).Cells(l, c).Value2 = p.GetNomPrenom()
+#        tableur.setCell(1, l, c, p.prenom)
+        l += 1
 
 
 class PyExcel:
@@ -395,7 +405,7 @@ class PyExcel:
         else:
             newSht=sht.Copy(None, sht)
         
-        return newSht
+       
  
     def setBorder(self,sheet,row1,col1,row2,col2,weight):
         sht = self.xlBook.Worksheets(sheet)
