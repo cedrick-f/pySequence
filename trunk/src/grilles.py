@@ -356,6 +356,10 @@ dicIndicateurs_prj_SIN = {"CO7.sin1" : [(5,3),
                                        (50,3)
                                        ]}
                   
+Cellules_INFO_STI2 = {"NomProjet" : (3,2),
+                     "NomEleve" : (4,2),
+                     "PrenomEleve" : (5,2)
+                     }
                                     
 import win32com.client,win32com.client.dynamic
 from pywintypes import UnicodeType, TimeType
