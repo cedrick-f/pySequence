@@ -1844,18 +1844,16 @@ class Projet(BaseDoc, Objet_sequence):
             tt.ordre = i+1
             tt.SetCode()
         
-        
-        
     ######################################################################################  
-    def OrdonnerTaches(self):
+    def OrdonnerListeTaches(self, lstTaches):
         #
         # On enregistre les positions des revues intermédiaires (après qui ?)
         #
         Rev = []
-        for i, t in enumerate(self.taches):
+        for i, t in enumerate(lstTaches):
             if t.phase == 'Rev':
                 if i > 0:
-                    Rev.append((t, self.taches[i-1]))
+                    Rev.append((t, lstTaches[i-1]))
                 else:
                     Rev.append((t, None))
              
@@ -1872,7 +1870,7 @@ class Projet(BaseDoc, Objet_sequence):
         S = []
         X = []
         Rien = []
-        for t in self.taches:
+        for t in lstTaches:
             if t.phase == 'Ana':
                 Ana.append(t)
             elif t.phase == 'Con':
@@ -1901,17 +1899,23 @@ class Projet(BaseDoc, Objet_sequence):
         #
         # On assemble les paquets
         #
-        self.taches = Ana + Con + R1 + DCo + Rea  + Val + R2+ X + Rien + S
+        lst = Ana + Con + R1 + DCo + Rea  + Val + R2+ X + Rien + S
            
         #
         # On ajoute les revues intermédiaires
         #
         for r, q in Rev:
             if q == None:
-                self.taches.insert(0, r)
+                lst.insert(0, r)
             else:
-                i = self.taches.index(q)
-                self.taches.insert(i+1, r)
+                i = lst.index(q)
+                lst.insert(i+1, r)
+                
+        return lst
+        
+    ######################################################################################  
+    def OrdonnerTaches(self):
+        self.taches = self.OrdonnerListeTaches(self.taches)
         
         self.SetOrdresTaches()
         self.SetCodes()
@@ -4484,12 +4488,15 @@ class Eleve(Personne, Objet_sequence):
         
         
     ######################################################################################  
-    def GetTaches(self):
+    def GetTaches(self, revues = False):
         lst = []
         for t in self.parent.taches:
             if self.id in t.eleves:
                 lst.append(t)
+            if revues and t.phase in ["R1", "R2", "Rev"]:
+                lst.append(t)
         lst = list(set(lst))
+            
         return lst
         
     ######################################################################################  
@@ -4771,7 +4778,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     def ConstruireTb(self):
         """ Construction de la ToolBar
         """
-        print "ConstruireTb"
+#        print "ConstruireTb"
 
         #############################################################################################
         # Création de la barre d'outils
@@ -4936,14 +4943,14 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
 
         if self.pleinEcran:
-            win = self.GetActiveChild().nb.GetCurrentPage()
+            win = self.GetNotebook().GetCurrentPage().nb.GetCurrentPage()
             self.fsframe = wx.Frame(None, -1)
             win.Reparent(self.fsframe)
             win.Bind(wx.EVT_KEY_DOWN, self.OnKey)
             self.fsframe.ShowFullScreen(True, style=wx.FULLSCREEN_ALL)
         else:
             win = self.fsframe.GetChildren()[0]
-            win.Reparent(self.GetActiveChild().nb)
+            win.Reparent(self.GetNotebook().GetCurrentPage().nb)
             self.fsframe.Destroy()
             win.SendSizeEventToParent()
             
@@ -5138,23 +5145,23 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
     #############################################################################
     def commandeEnregistrer(self, event = None):
-        self.GetActiveChild().commandeEnregistrer(event)
+        self.GetNotebook().GetCurrentPage().commandeEnregistrer(event)
         
     #############################################################################
     def commandeEnregistrerSous(self, event = None):
-        self.GetActiveChild().commandeEnregistrerSous(event)
+        self.GetNotebook().GetCurrentPage().commandeEnregistrerSous(event)
     
     #############################################################################
     def exporterFiche(self, event = None):
-        self.GetActiveChild().exporterFiche(event)
+        self.GetNotebook().GetCurrentPage().exporterFiche(event)
               
     #############################################################################
     def exporterDetails(self, event = None):
-        self.GetActiveChild().exporterDetails(event)
+        self.GetNotebook().GetCurrentPage().exporterDetails(event)
         
     #############################################################################
     def genererGrilles(self, event = None):
-        self.GetActiveChild().genererGrilles(event)
+        self.GetNotebook().GetCurrentPage().genererGrilles(event)
     
     
     #############################################################################
@@ -5231,7 +5238,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     
     #############################################################################
     def GetSequenceActive(self):
-        return self.GetActiveChild().sequence
+        return self.GetNotebook().GetCurrentPage().sequence
     
     
     #############################################################################
@@ -5942,7 +5949,6 @@ class FenetreProjet(FenetreDocument):
         
     #############################################################################
     def genererGrilles(self, event = None):
-        
         mesFormats = "Tableur Excel (.xls)|*.xls"
         dlg = wx.DirDialog(None, 
                             message = u"Emplacement des grilles", 
