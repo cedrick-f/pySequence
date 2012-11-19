@@ -185,7 +185,9 @@ dicIndicateurs_prj_EE = {"CO7.ee1" : [[u"Le besoin relatif au projet est identif
                                     [u"Des caractéristiques pertinentes et leurs conséquences constructives sont identifiées",True]
                                     ],
                      "CO9.ee2" : [[u"Un type de prototype est choisi en regard de la partie de CDC à respecter",True],
-                                    [u"La réalisation du prototype est conforme à une procédure valide",True]
+                                    [u"La réalisation du prototype est conforme à une procédure valide",True],
+                                    [u"Les caractéristiques à valider sont identifiées",True],
+                                    [u"La valeur des caractéristiques mesurées permet de valider le prototype par rapport au cahier des charges",True]
                                     ],
                      "CO9.ee3" : [[u"Le prototype s'insère dans le système",True],
                                     [u"Une procédure d'essai pertinente est définie",True],
