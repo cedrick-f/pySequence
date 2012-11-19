@@ -139,6 +139,7 @@ import register
 
 import textwrap
 
+import grilles
 
 from rapport import FrameRapport
 
@@ -4727,6 +4728,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         self.Bind(wx.EVT_MENU, self.commandeEnregistrerSous, id=13)
         self.Bind(wx.EVT_MENU, self.exporterFiche, id=15)
         self.Bind(wx.EVT_MENU, self.exporterDetails, id=16)
+        self.Bind(wx.EVT_MENU, self.genererGrilles, id=17)
         self.Bind(wx.EVT_MENU, self.OnClose, id=wx.ID_EXIT)
         
         self.Bind(wx.EVT_MENU, self.OnAide, id=21)
@@ -4958,6 +4960,8 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         file_menu.AppendSeparator()
         file_menu.Append(15, u"Exporter la fiche (PDF ou SVG)")
         file_menu.Append(16, u"Exporter les détails")
+        file_menu.Append(17, u"Générger les grilles d'évaluation")
+        
         file_menu.AppendSeparator()
         file_menu.Append(wx.ID_EXIT, u"Quitter")
 
@@ -5148,6 +5152,11 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     def exporterDetails(self, event = None):
         self.GetActiveChild().exporterDetails(event)
         
+    #############################################################################
+    def genererGrilles(self, event = None):
+        self.GetActiveChild().genererGrilles(event)
+    
+    
     #############################################################################
     def OnOptions(self, event, page = 0):
         options = self.options.copie()
@@ -5931,6 +5940,31 @@ class FenetreProjet(FenetreDocument):
         print tps2 - tps1
         
         
+    #############################################################################
+    def genererGrilles(self, event = None):
+        
+        mesFormats = "Tableur Excel (.xls)|*.xls"
+        dlg = wx.FileDialog(None, 
+                            message = u"Enregistrer les grilles sous", 
+    #                        defaultDir=toDefautEncoding(self.DossierSauvegarde) , 
+    #                        defaultFile="", 
+                            wildcard=mesFormats, 
+                            style=wx.SAVE|wx.OVERWRITE_PROMPT|wx.CHANGE_DIR
+                            )
+        dlg.SetFilterIndex(0)
+        if dlg.ShowModal() == wx.ID_OK:
+            path = dlg.GetPath()
+            dlg.Destroy()
+            tableur = grilles.getTableau(self.projet)
+            tableur.save(path)
+            grilles.modifierGrille(self.projet, tableur)
+            tableur.save()
+            tableur.close()
+        else:
+            dlg.Destroy()
+            
+            
+            
     #############################################################################
     def definirNomFichierCourant(self, nomFichier = ''):
         self.fichierCourant = nomFichier

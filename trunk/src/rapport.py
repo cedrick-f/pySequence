@@ -635,9 +635,6 @@ class RapportRTF(rt.RichTextCtrl):
         return img
     
     
-
-
-    
     ######################################################################################################
     def AddTitreProjet(self, fichierCourant):
         self.BeginParagraphSpacing(0, 20)
@@ -719,15 +716,16 @@ class RapportRTF(rt.RichTextCtrl):
             self.WriteText(u"Description :")
             self.EndUnderline()
             self.Newline()
-            
+           
             tache.panelPropriete.rtc.rtc.SelectAll()
             tache.panelPropriete.rtc.rtc.Copy()
             self.Paste()
+            
         
-        self.BeginUnderline()
-        self.WriteText(u"Volume horaire :")
-        self.EndUnderline()
-        self.WriteText(u" " + getHoraireTxt(tache.GetDuree()))
+#        self.BeginUnderline()
+#        self.WriteText(u"Volume horaire :")
+#        self.EndUnderline()
+#        self.WriteText(u" " + getHoraireTxt(tache.GetDuree()))
         self.Newline()
         
     
@@ -770,6 +768,7 @@ class RapportRTF(rt.RichTextCtrl):
             seance.panelPropriete.rtc.rtc.SelectAll()
             seance.panelPropriete.rtc.rtc.Copy()
             self.Paste()
+            self.BeginLeftIndent(60*indent)
         
         if seance.typeSeance in ["R", "S"]:
             for sseance in seance.sousSeances:
@@ -779,7 +778,7 @@ class RapportRTF(rt.RichTextCtrl):
 #        self.WriteText(u"Volume horaire :")
 #        self.EndUnderline()
 #        self.WriteText(u" " + getHoraireTxt(seance.GetDuree()))
-#        self.Newline()
+        self.Newline()
         
     
         
