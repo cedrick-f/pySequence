@@ -73,7 +73,7 @@ Cellules_INFO_SSI = {"Tit" : (12,1),
                      "Pre" : (8,2)}
 
 ############
-#  Identification des compétences non évaluées en ETT
+#  Identification des indicateurs non évalués en ETT
 ############
 
 Cellules_NON_ETT = {"CO1.1" : [(5,3),
@@ -120,7 +120,7 @@ Cellules_NON_ETT = {"CO1.1" : [(5,3),
                      }
 
 ############
-#  Identification des compétences non évaluées en AC
+#  Identification des indicateurs non évalués en AC
 ############
        
 Cellules_NON_AC = {"CO7.ac1" : [(5,3),
@@ -172,7 +172,64 @@ Cellules_NON_AC = {"CO7.ac1" : [(5,3),
                                       (45,3)
                                       ]}
 
-
+############
+#  Identification des indicateurs non évalués en ITEC
+############
+                                 
+Cellule_NON_ITEC = {"CO7.itec1" : [(5,3),
+                                   (6,3),
+                                   (7,3),
+                                   (8,3),
+                                   (9,3)
+                                          ],
+                           "CO7.itec2" : [(10,3),
+                                          (11,3),
+                                          (12,3),
+                                          (13,3),
+                                          (14,3),
+                                          (15,3)
+                                          ],
+                           "CO7.itec3" : [(16,3),
+                                          (17,3),
+                                          (18,3)
+                                          ],
+                           "CO7.itec4" : [(19,3),
+                                          (20,3)
+                                          ],
+                           "CO8.itec1" : [(22,3),
+                                          (23,3),
+                                          (24,3)
+                                          ],
+                           "CO8.itec2" : [(25,3),
+                                          (26,3),
+                                          (27,3),
+                                          (28,3)
+                                         ],
+                           "CO8.itec3" : [(29,3),
+                                          (30,3),
+                                          (31,3),
+                                          (32,3),
+                                          (33,3)
+                                         ],
+                           "CO8.itec4" : [(34,3),
+                                          (35,3),
+                                          (36,3)
+                                          ],
+                           "CO9.itec1" : [(38,3),
+                                          (39,3),
+                                          (40,3)
+                                         ],
+                           "CO9.itec2" : [(41,3),
+                                          (42,3),
+                                          (43,3),
+                                          (44,3)
+                                         ],
+                           "CO9.itec3" : [(45,3),
+                                          (46,3),
+                                          (47,3),
+                                          (48,3)
+                                         ]}
+                                 
                                     
 import win32com.client,win32com.client.dynamic
 from pywintypes import UnicodeType, TimeType
