@@ -72,6 +72,10 @@ Cellules_INFO_SSI = {"Tit" : (12,1),
                      "Nom" : (7,2),
                      "Pre" : (8,2)}
 
+############
+#  Identification des compétences non évaluées en ETT
+############
+
 Cellules_NON_ETT = {"CO1.1" : [(5,3),
                                (6,3),
                                (7,3),
@@ -114,6 +118,61 @@ Cellules_NON_ETT = {"CO1.1" : [(5,3),
                                      (40,3)
                                     ]
                      }
+
+############
+#  Identification des compétences non évaluées en AC
+############
+       
+Cellules_NON_AC = {"CO7.ac1" : [(5,3),
+                                (6,3),
+                                (7,3),
+                                (8,3),
+                                (9,3)
+                                        ],
+                         "CO7.ac2" : [(10,3),
+                                      (11,3),
+                                      (12,3),
+                                      (13,3),
+                                      (14,3),
+                                      (15,3),
+                                      (16,3)
+                                        ],
+                         "CO7.ac3" : [(17,3),
+                                      (18,3),
+                                      (19,3),
+                                      (20,3)
+                                        ],
+                         "CO8.ac1" : [(22,3),
+                                      (23,3),
+                                      (24,3),
+                                      (25,3)
+                                        ],
+                         "CO8.ac2" : [(26,3),
+                                      (27,3),
+                                      (28,3),
+                                      (29,3)
+                                        ],
+                         "CO8.ac3" : [(30,3),
+                                      (31,3),
+                                      (32,3),
+                                      (33,3)
+                                        ],
+                         "CO9.ac1" : [(35,3),
+                                      (36,3),
+                                      (37,3),
+                                      (38,3),
+                                      (39,3)
+                                        ],
+                         "CO9.ac2" : [(40,3),
+                                      (41,3),
+                                      (42,3)
+                                        ],
+                         "CO9.ac3" : [(43,3),
+                                      (44,3),
+                                      (45,3)
+                                      ]}
+
+
                                     
 import win32com.client,win32com.client.dynamic
 from pywintypes import UnicodeType, TimeType
