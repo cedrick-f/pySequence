@@ -159,12 +159,16 @@ class FrameRapport(wx.Frame):
         # On rempli le rapport
         #
         if typ == 'prj':
-            self.rtc.AddTitreProjet(fichierCourant)
-    
-            for t in doc.taches:
-                self.rtc.AddTache(t)
+            for e in doc.eleves:
+                self.rtc.AddTitreProjet(e)
+                for t in e.GetTaches():
+                    self.rtc.AddTache(t)
+            self.rtc.AddPieds(fichierCourant)
+            
+            
+            
         else:
-            self.rtc.AddTitreSeance(fichierCourant)
+            self.rtc.AddTitreSeance(doc, fichierCourant)
     
             for s in doc.seance:
                 self.rtc.AddSeance(s)
@@ -634,22 +638,32 @@ class RapportRTF(rt.RichTextCtrl):
         analyse.SetTracerChaine(sens, None)
         return img
     
-    
     ######################################################################################################
-    def AddTitreProjet(self, fichierCourant):
+    def AddPieds(self, fichierCourant):
+        
+        self.BeginFontSize(8)
+        self.BeginItalic()
+        self.WriteText(os.path.basename(os.path.splitext(fichierCourant)[0]))
+        self.EndItalic()
+        self.EndFontSize()
+       
+        self.Newline()
+        self.EndAlignment()
+        
+    ######################################################################################################
+    def AddTitreProjet(self, eleve):
         self.BeginParagraphSpacing(0, 20)
-
         self.BeginAlignment(wx.TEXT_ALIGNMENT_CENTRE)
         self.BeginBold()
-
         self.BeginFontSize(14)
         self.WriteText(u"Détail des tâches")
         self.EndFontSize()
         self.Newline()
 
-        self.BeginItalic()
-        self.WriteText(os.path.basename(os.path.splitext(fichierCourant)[0]))
-        self.EndItalic()
+        self.BeginFontSize(14)
+        self.WriteText(eleve.GetNomPrenom())
+        self.EndFontSize()
+        self.Newline()
 
         self.EndBold()
 
@@ -657,7 +671,7 @@ class RapportRTF(rt.RichTextCtrl):
         self.EndAlignment()
     
     ######################################################################################################
-    def AddTitreSeance(self, fichierCourant):
+    def AddTitreSeance(self, doc, fichierCourant):
         self.BeginParagraphSpacing(0, 20)
 
         self.BeginAlignment(wx.TEXT_ALIGNMENT_CENTRE)
