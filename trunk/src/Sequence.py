@@ -6988,7 +6988,7 @@ class Editeur(wx.Frame):
         txtctrl = evt.GetEventObject()
         self.liste.SetStringItem(self.index, 1, txtctrl.GetValue())
         self.classe.ci_ET[self.index] = txtctrl.GetValue()
-        self.classe.sequence.CI.panelPropriete.construire()
+        self.classe.doc.CI.panelPropriete.construire()
         self.Destroy() 
         evt.Skip()
         return
