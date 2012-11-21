@@ -168,7 +168,7 @@ import win32com.client,win32com.client.dynamic
 #from pywintypes import UnicodeType, TimeType
 from constantes import PATH
 import os
-
+from widgets import messageErreur
 
 def getTableau(doc):
     typ = doc.GetTypeEnseignement(simple = True)
@@ -177,48 +177,23 @@ def getTableau(doc):
         try:
             tableau = PyExcel(fichier)
         except:
-            dlg = wx.MessageDialog(self,   u"Ouverture d'Excel impossible !",
-                                       u"L'application Excel ne semble pas installée !",
-                                       wx.OK | wx.ICON_ERROR
-                                       #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
-                                       )
-            dlg.ShowModal()
-            dlg.Destroy()
+            messageErreur(self, u"Ouverture d'Excel impossible !",
+                          u"L'application Excel ne semble pas installée !")
     else:
-        dlg = wx.MessageDialog(self,   u"Fichier non trouvé !",
-                                       u"Le fichier original de la grille,\n" + fichier + u"\n" \
-                                       u"n'a pas été trouvé ! \n",
-                                       wx.OK | wx.ICON_ERROR
-                                       #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
-                                       )
-        dlg.ShowModal()
-        dlg.Destroy()
+        messageErreur(self, u"Fichier non trouvé !",
+                      u"Le fichier original de la grille,\n    " + fichier + u"\n" \
+                      u"n'a pas été trouvé ! \n")
+
     return tableau
 
 
 def modifierGrille(doc, tableur, eleve):
-    print "modifierGrille"
+#    print "modifierGrille"
     
-    tableur.show()
+#    tableur.show()
     
     shts = tableur.getSheets()
    
-#    for i, e in enumerate(doc.eleves):
-#        tableur.copySheet(u'Identification', Before=u'Identification')
-#        tableur.copySheet(u'Notation', Before=u'Identification')
-        
-    # On efface la feuille "Notation"
-#    tableur.delSheet(2)   
-
-
-#    noms = prenoms = ''
-#    for i, e in enumerate(doc.eleves):
-#        noms += e.GetNomPrenom()
-#        prenoms += e.prenom + " ; "
-#    tableur.renameSheet(i*2+2, u'Notation ' + e.GetNomPrenom())
-
-    
-    
     # On supprime les feuilles des autres spécialités
     if doc.GetTypeEnseignement() != 'SSI':
         for s in ['AC', 'ITEC', 'EE', 'SIN']:
@@ -362,7 +337,9 @@ class PyExcel:
  
     def delSheet(self,sheet):
         sht = self.xlBook.Worksheets(sheet)
+        self.xlApp.DisplayAlerts = False
         sht.Delete()
+        self.xlApp.DisplayAlerts = True
  
     def renameSheet(self,sheet,newName):
         sht = self.xlBook.Worksheets(sheet)
