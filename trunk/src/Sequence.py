@@ -277,25 +277,15 @@ class Lien():
             try:
                 os.startfile(path)
             except:
-                dlg = wx.MessageDialog(None, u"Impossible d'ouvrir le fichier\n%s!\n" %toDefautEncoding(path) ,
-                               u"Ouverture impossible",
-                               wx.OK | wx.ICON_WARNING
-                               #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
-                               )
-                dlg.ShowModal()
-                dlg.Destroy()
+                messageErreur(None, u"Ouverture impossible",
+                              u"Impossible d'ouvrir le fichier\n%s!\n" %toDefautEncoding(path))
                 
         elif self.type == 'd':
             try:
                 subprocess.Popen(["explorer", path])
             except:
-                dlg = wx.MessageDialog(None, u"Impossible d'accéder au dossier\n%s!\n" %toDefautEncoding(path) ,
-                               u"Ouverture impossible",
-                               wx.OK | wx.ICON_WARNING
-                               #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
-                               )
-                dlg.ShowModal()
-                dlg.Destroy()
+                messageErreur(None, u"Ouverture impossible",
+                              u"Impossible d'accéder au dossier\n%s!\n" %toDefautEncoding(path))
             
         elif self.type == 'u':
             try:
@@ -303,13 +293,8 @@ class Lien():
     #            urllib.urlopen(lien_safe)
                 webbrowser.open(self.path)
             except:
-                dlg = wx.MessageDialog(None, u"Impossible d'ouvrir l'url\n%s!\n" %toDefautEncoding(self.path) ,
-                               u"Ouverture impossible",
-                               wx.OK | wx.ICON_WARNING
-                               #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
-                               )
-                dlg.ShowModal()
-                dlg.Destroy()
+                messageErreur(None, u"Ouverture impossible",
+                              u"Impossible d'ouvrir l'url\n%s!\n" %toDefautEncoding(self.path))
         
         elif self.type == 's':
             if os.path.isfile(path):
@@ -1432,7 +1417,7 @@ class Sequence(BaseDoc):
         
 ####################################################################################################
 class Projet(BaseDoc, Objet_sequence):
-    def __init__(self, app, classe = None, panelParent = None, intitule = u"Intitulé du projet"):
+    def __init__(self, app, classe = None, panelParent = None, intitule = u""):
         BaseDoc.__init__(self, app, classe, panelParent, intitule)
         Objet_sequence.__init__(self)
         self.position = 5
@@ -5055,14 +5040,9 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         else:
             ok = register.Register(PATH)
         if not ok:
-            dlg = wx.MessageDialog(self, u"Accès à la base de registre refusé !\n" \
-                                         u"Redémarrer pySequence en tant qu'administrateur.",
-                               u"Accès refusé",
-                               wx.OK | wx.ICON_WARNING
-                               #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
-                               )
-            dlg.ShowModal()
-            dlg.Destroy()
+            messageErreur(self, u"Accès refusé",
+                          u"Accès à la base de registre refusé !\n" \
+                          u"Redémarrer pySequence en tant qu'administrateur.")
         else:
             self.MiseAJourMenu()
          
@@ -5569,6 +5549,9 @@ class FenetreDocument(aui.AuiMDIChildFrame):
             win.Show()
 #            win.Destroy()
 
+    #############################################################################
+    def genererGrilles(self, event = None):
+        return
     
     
     #############################################################################
@@ -5649,12 +5632,9 @@ class FenetreDocument(aui.AuiMDIChildFrame):
  
  
 def Dialog_ErreurAccesFichier(nomFichier):
-    dlg = wx.MessageDialog(None, u"Impossible d'accéder au fichier\n%s\nen écriture !" %toDefautEncoding(nomFichier),
-                               'Erreur !',
-                               wx.OK | wx.ICON_ERROR
-                               )
-    dlg.ShowModal()
-    dlg.Destroy()
+    messageErreur(None, u'Erreur !',
+                  u"Impossible d'accéder au fichier\n%s\nen écriture !" %toDefautEncoding(nomFichier))
+
 
 ########################################################################################
 #
@@ -5750,12 +5730,8 @@ class FenetreSequence(FenetreDocument):
                 self.sequence.setBranche(sequence)  
                 
         except:
-            dlg = wx.MessageDialog(self, u"La séquence pédagogique\n%s\n n'a pas pu être ouverte !" %nomFichier,
-                               u"Erreur d'ouverture",
-                               wx.OK | wx.ICON_WARNING
-                               )
-            dlg.ShowModal()
-            dlg.Destroy()
+            messageErreur(self,u"Erreur d'ouverture",
+                          u"La séquence pédagogique\n    %s\n n'a pas pu être ouverte !" %nomFichier)
             fichier.close()
             self.Close()
 #            wx.EndBusyCursor()
@@ -5927,11 +5903,6 @@ class FenetreProjet(FenetreDocument):
                           u"Le projet\n    %s\nn'a pas pu être ouvert !" \
                           u"\n\nIl s'agit peut-être d'un fichier d'une ancienne version de pySequence." %nomFichier,
                                )
-#            dlg = wx.MessageDialog(,
-#                               wx.OK | wx.ICON_WARNING
-#                               )
-#            dlg.ShowModal()
-#            dlg.Destroy()
             fichier.close()
             self.Close()
 #            wx.EndBusyCursor()
@@ -5968,7 +5939,7 @@ class FenetreProjet(FenetreDocument):
         
     #############################################################################
     def genererGrilles(self, event = None):
-        mesFormats = "Tableur Excel (.xls)|*.xls"
+#        mesFormats = "Tableur Excel (.xls)|*.xls"
         dlg = wx.DirDialog(None, 
                             message = u"Emplacement des grilles", 
     #                        defaultDir=toDefautEncoding(self.DossierSauvegarde) , 
@@ -5980,27 +5951,47 @@ class FenetreProjet(FenetreDocument):
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
             dlg.Destroy()
+            
+            dlg = wx.ProgressDialog(u"Génération des grilles",
+                                    u"",
+                                    maximum = len(self.projet.eleves),
+                                    parent=self,
+                                    style = 0
+                                    | wx.PD_APP_MODAL
+                                    | wx.PD_CAN_ABORT
+                                    #| wx.PD_CAN_SKIP
+                                    #| wx.PD_ELAPSED_TIME
+#                                    | wx.PD_ESTIMATED_TIME
+#                                    | wx.PD_REMAINING_TIME
+                                    #| wx.PD_AUTO_HIDE
+                                    )
+
+            
+            count = 0
             for e in self.projet.eleves:
+                nomFichier = "Grille_"+e.GetNomPrenom()+"_"+self.projet.intitule[:20]
+                dlg.Update(count, nomFichier)
+                dlg.Refresh()
+                count += 1
                 tableur = grilles.getTableau(self.projet)
                 grilles.modifierGrille(self.projet, tableur, e)
-                nomFichier = "Grille_"+e.GetNomPrenom()+"_"+self.projet.intitule
+                
                 if os.path.isfile(path):
                     pass
-                
                 
                 try:
                     tableur.save(os.path.join(path, nomFichier))
                 except:
-                    dlg = wx.MessageDialog(self, u"Erreur !",
-                                       u"Impossible d'enregistrer le fichier. Vérifier :\n" \
-                                       u" - qu'aucun fichier portant le même nom n'est déja ouvert\n" \
-                                       u" - que le dossier choisi n'est pas protégé en écriture",
-                                       wx.OK | wx.ICON_ERROR
-                                       #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
-                                       )
-                    dlg.ShowModal()
-                    dlg.Destroy()
-#            tableur.close()
+                    messageErreur(self, u"Erreur !",
+                                  u"Impossible d'enregistrer le fichier. Vérifier :\n" \
+                                  u" - qu'aucun fichier portant le même nom n'est déja ouvert\n" \
+                                  u" - que le dossier choisi n'est pas protégé en écriture")
+                tableur.close()
+                
+            dlg.Update(count, u"Toutes les grilles ont été créées avec succès dans le dossier :\n\n"+path)
+            dlg.Destroy() 
+                
+                
         else:
             dlg.Destroy()
             
@@ -6671,7 +6662,11 @@ class PanelPropriete_Projet(PanelPropriete):
     #############################################################################            
     def EvtText(self, event):
         if event.GetEventObject() == self.textctrl:
-            self.projet.SetText(event.GetString())
+            nt = event.GetString()
+            if nt == u"":
+                nt = self.projet.support.nom
+            self.projet.SetText(nt)
+            self.textctrl.ChangeValue(nt)
         else:
             self.projet.SetProblematique(event.GetString())
         if not self.eventAttente:
@@ -9250,7 +9245,14 @@ class PanelPropriete_Support(PanelPropriete):
         
     #############################################################################            
     def EvtText(self, event):
-        self.support.SetNom(event.GetString())
+        nt = event.GetString()
+        if nt == u"":
+            nt = self.support.parent.intitule
+            self.textctrl.ChangeValue(nt)
+        elif self.support.parent.intitule == self.support.nom:
+            self.support.parent.SetText(nt)
+            self.support.parent.panelPropriete.textctrl.ChangeValue(nt)
+        self.support.SetNom(nt)
 #        self.support.parent.MiseAJourNomsSystemes()
         if not self.eventAttente:
             wx.CallLater(DELAY, self.sendEvent)
@@ -10735,13 +10737,8 @@ class A_propos(wx.Dialog):
         except:
             lictext = u"Le fichier de licence (gpl.txt) est introuvable !\n" \
                       u"Veuillez réinstaller pySequence !"
-            dlg = wx.MessageDialog(self, lictext,
-                               'Licence introuvable',
-                               wx.OK | wx.ICON_ERROR
-                               #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
-                               )
-            dlg.ShowModal()
-            dlg.Destroy()
+            messageErreur(self, u'Licence introuvable',
+                          lictext)
             
             
         wx.TextCtrl(licence, -1, lictext, size = (400, -1), 
