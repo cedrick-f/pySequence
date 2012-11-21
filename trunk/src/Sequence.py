@@ -118,7 +118,7 @@ import functools
 import xml.etree.ElementTree as ET
 
 # des widgets wx évolués "faits maison"
-from widgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_ENTIER_POS#, chronometrer
+from widgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_ENTIER_POS, messageErreur#, chronometrer
 #from CustomCheckBox import CustomCheckBox
 # Les constantes et les fonctions de dessin
 
@@ -1437,6 +1437,9 @@ class Projet(BaseDoc, Objet_sequence):
         Objet_sequence.__init__(self)
         self.position = 5
         
+        # Par défaut, la revue 1 est après la Conception détaillée
+        self.R1avantConception = False
+        
         if panelParent:
             self.panelPropriete = PanelPropriete_Projet(panelParent, self)
             self.panelEleves = PanelPropriete_Racine(panelParent, constantes.TxtRacineEleve)
@@ -1454,6 +1457,7 @@ class Projet(BaseDoc, Objet_sequence):
         self.problematique = u""
         
         self.SetPosition(5)
+        
         
         
         
@@ -1576,6 +1580,8 @@ class Projet(BaseDoc, Objet_sequence):
 
         projet.set("Position", str(self.position))
         
+        projet.set("R1avC", str(self.R1avantConception))
+        
         equipe = ET.SubElement(projet, "Equipe")
         for p in self.equipe:
             equipe.append(p.getBranche())
@@ -1607,6 +1613,8 @@ class Projet(BaseDoc, Objet_sequence):
         self.problematique = remplaceCode2LF(branche.get("Problematique", u""))
         
         self.commentaires = branche.get("Commentaires", u"")
+        
+        self.R1avantConception = eval(branche.get("R1avC", "False"))
         
         self.position = eval(branche.get("Position", "0"))
 
@@ -1899,7 +1907,10 @@ class Projet(BaseDoc, Objet_sequence):
         #
         # On assemble les paquets
         #
-        lst = Ana + Con + R1 + DCo + Rea  + Val + R2+ X + Rien + S
+        if self.R1avantConception:
+            lst = Ana + R1 + Con + DCo + Rea  + Val + R2+ X + Rien + S
+        else:
+            lst = Ana + Con + R1 + DCo + Rea  + Val + R2+ X + Rien + S
            
         #
         # On ajoute les revues intermédiaires
@@ -2254,9 +2265,11 @@ class Projet(BaseDoc, Objet_sequence):
 #                    indicateurs = {}
                 
                 if t.phase == "R1":
+                    ti = []
                     for i in t.indicateurs:
-                        if not i in t.indicateursMaxi:
-                            t.indicateurs.remove(i)
+                        if i in t.indicateursMaxi:
+                            ti.append(i)
+                    t.indicateurs = ti
                     t.panelPropriete.arbre.MiseAJourTypeEnseignement(t.GetTypeEnseignement())
                     t.panelPropriete.MiseAJour()
                     tR1 = t
@@ -3378,7 +3391,7 @@ class Tache(Objet_sequence):
         
         # Les données sauvegardées
         self.ordre = 100
-        self.duree = Variable(u"Volume horaire", lstVal = duree, nomNorm = "", typ = VAR_REEL_POS, 
+        self.duree = Variable(u"Volume horaire (h)", lstVal = duree, nomNorm = "", typ = VAR_REEL_POS, 
                               bornes = [0.5,40], modeLog = False,
                               expression = None, multiple = False)
         self.intitule  = intitule
@@ -5744,6 +5757,7 @@ class FenetreSequence(FenetreDocument):
             dlg.ShowModal()
             dlg.Destroy()
             fichier.close()
+            self.Close()
 #            wx.EndBusyCursor()
             return
 
@@ -5904,20 +5918,25 @@ class FenetreProjet(FenetreDocument):
                 self.classe.setBranche(classe)
                 self.projet.setBranche(projet)  
                 
+            self.arbre.DeleteAllItems()
+            root = self.arbre.AddRoot("")
+            self.projet.SetCompetencesRevuesSoutenance()
+            
         except:
-            dlg = wx.MessageDialog(self, u"Le projet\n%s\n n'a pas pu être ouvert !" %nomFichier,
-                               u"Erreur d'ouverture",
-                               wx.OK | wx.ICON_WARNING
+            messageErreur(self, u"Erreur d'ouverture",
+                          u"Le projet\n    %s\nn'a pas pu être ouvert !" \
+                          u"\n\nIl s'agit peut-être d'un fichier d'une ancienne version de pySequence." %nomFichier,
                                )
-            dlg.ShowModal()
-            dlg.Destroy()
+#            dlg = wx.MessageDialog(,
+#                               wx.OK | wx.ICON_WARNING
+#                               )
+#            dlg.ShowModal()
+#            dlg.Destroy()
             fichier.close()
+            self.Close()
 #            wx.EndBusyCursor()
             return
 
-        self.arbre.DeleteAllItems()
-        root = self.arbre.AddRoot("")
-        self.projet.SetCompetencesRevuesSoutenance()
         self.classe.ConstruireArbre(self.arbre, root)
         self.projet.ConstruireArbre(self.arbre, root)
         self.projet.OrdonnerTaches()
@@ -8318,7 +8337,7 @@ class PanelPropriete_Tache(PanelProprieteBook, PanelPropriete):
         #
         if tache.phase in ["R1", "R2", "S", "Rev"]:
             titre = wx.StaticText(pageGen, -1, u"Phase : "+constantes.NOM_PHASE_TACHE_E[tache.phase])
-            pageGen.sizer.Add(titre, (0,0), (1,2), flag = wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_LEFT|wx.ALL, border = 5)
+            pageGen.sizer.Add(titre, (0,0), (1,1), flag = wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_LEFT|wx.ALL, border = 5)
         else:
             titre = wx.StaticText(pageGen, -1, u"Phase :")
             cbPhas = wx.combo.BitmapComboBox(pageGen, -1, u"Selectionner la phase",
@@ -8335,6 +8354,14 @@ class PanelPropriete_Tache(PanelProprieteBook, PanelPropriete):
             pageGen.sizer.Add(titre, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 5)
             pageGen.sizer.Add(cbPhas, (0,1), flag = wx.EXPAND)
         
+        #
+        # Position de la revue 1
+        #
+        if tache.phase == "R1":
+            self.cbR1 = wx.CheckBox(pageGen, -1, u"Placer avant la conception détaillée")
+            self.cbR1.SetValue(self.tache.GetDocument().R1avantConception)
+            pageGen.sizer.Add(self.cbR1, (0,1), flag = wx.EXPAND)
+            self.Bind(wx.EVT_CHECKBOX, self.EvtCheckBoxR1, self.cbR1)
         
         #
         # Intitulé de la tache
@@ -8356,7 +8383,7 @@ class PanelPropriete_Tache(PanelProprieteBook, PanelPropriete):
         #
         if not tache.phase in ["R1", "R2", "S", "Rev"]:
             vcDuree = VariableCtrl(pageGen, tache.duree, coef = 0.5, signeEgal = True, slider = False,
-                                   help = u"Volume horaire de la tâche en heures")
+                                   help = u"Volume horaire de la tâche en heures", sizeh = 60)
             pageGen.Bind(EVT_VAR_CTRL, self.EvtText, vcDuree)
             self.vcDuree = vcDuree
             pageGen.sizer.Add(vcDuree, (2,0), (1, 2))
@@ -8629,11 +8656,16 @@ class PanelPropriete_Tache(PanelProprieteBook, PanelPropriete):
     def EvtVarSysteme(self, event):
         self.sendEvent()
         
-    #############################################################################            
-    def EvtCheckBox(self, event):
-        self.tache.intituleDansDeroul = event.IsChecked()
-        self.sendEvent()
+#    #############################################################################            
+#    def EvtCheckBox(self, event):
+#        self.tache.intituleDansDeroul = event.IsChecked()
+#        self.sendEvent()
         
+    #############################################################################            
+    def EvtCheckBoxR1(self, event):
+        self.tache.GetDocument().R1avantConception = event.IsChecked()
+        self.tache.SetPhase("R1")
+        self.sendEvent()
         
     #############################################################################            
     def EvtCheckEleve(self, event):
@@ -8735,6 +8767,8 @@ class PanelPropriete_Tache(PanelProprieteBook, PanelPropriete):
     def MiseAJourTypeEnseignement(self, type_ens):
         if hasattr(self, 'arbre'):
             self.arbre.MiseAJourTypeEnseignement(type_ens)
+        if hasattr(self, 'cbR1'):
+            self.cbR1.Show(type_ens != "SSI")
         
         
 ####################################################################################

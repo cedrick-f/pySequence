@@ -165,14 +165,34 @@ Cellules_NON  =  {'ITEC'   : [[Feuille_ETT, Cellules_NON_ETT], ['ITEC', Cellules
 #              } 
          
 import win32com.client,win32com.client.dynamic
-from pywintypes import UnicodeType, TimeType
+#from pywintypes import UnicodeType, TimeType
 from constantes import PATH
 import os
 
 
 def getTableau(doc):
     typ = doc.GetTypeEnseignement(simple = True)
-    tableau = PyExcel(os.path.join(PATH, GRILLE[typ]))
+    fichier = os.path.join(PATH, GRILLE[typ])
+    if os.path.isfile(fichier):
+        try:
+            tableau = PyExcel(fichier)
+        except:
+            dlg = wx.MessageDialog(self,   u"Ouverture d'Excel impossible !",
+                                       u"L'application Excel ne semble pas installée !",
+                                       wx.OK | wx.ICON_ERROR
+                                       #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
+                                       )
+            dlg.ShowModal()
+            dlg.Destroy()
+    else:
+        dlg = wx.MessageDialog(self,   u"Fichier non trouvé !",
+                                       u"Le fichier original de la grille,\n" + fichier + u"\n" \
+                                       u"n'a pas été trouvé ! \n",
+                                       wx.OK | wx.ICON_ERROR
+                                       #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
+                                       )
+        dlg.ShowModal()
+        dlg.Destroy()
     return tableau
 
 

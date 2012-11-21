@@ -713,7 +713,12 @@ class VariableCtrl(wx.Panel):
         self.spin.Enable(etat)
         
 
-
+#############################################################################################################
+def messageErreur(parent, titre, message):
+    dlg = wx.MessageDialog(parent, message, titre,
+                           wx.OK | wx.ICON_WARNING)
+    dlg.ShowModal()
+    dlg.Destroy()
 
 
 #############################################################################################################
