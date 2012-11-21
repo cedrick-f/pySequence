@@ -21,6 +21,8 @@ data_files = [("Microsoft.VC90.CRT", glob(r'msvcr90.dll')),
               ("Microsoft.VC90.CRT", glob(r'Microsoft.VC90.CRT.manifest')),
 #              ("exemples", glob(r'../exemples/*.*')),
               "gpl.txt", "D:\\Developpement\\Sequence\\src\\logo.ico",
+              "Grille_evaluation_STI2D_projet.xls",
+              "Grille_evaluation_SSI_projet.xls"
               ]
 
 
