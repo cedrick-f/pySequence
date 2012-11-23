@@ -272,12 +272,12 @@ DemarchesCourt = {"I" : u"Investigation",
 
 listeDemarches = ["I", "R", "P"]
 listEnseigmenent = ['ET', 'ITEC', 'AC', 'EE', 'SIN', 'SSI']
-Enseigmenent = {'ET'   : u"STI2D : Enseignement Technologique Transversal",
-                'ITEC' : u"STI2D : Innovation Technologique et éco-conception",
-                'AC'   : u"STI2D : Architecture et Construction",
-                'EE'   : u"STI2D : Energies et Environnement",
-                'SIN'  : u"STI2D : Systèmes d'Information et Numérique",
-                'SSI'  : u"Bac S - Sciences de l'ingénieur"}
+Enseigmenent = {'ET'   : [u"STI2D-ETT", u"STI2D : Enseignement Technologique Transversal"],
+                'ITEC' : [u"STI2D-ITEC", u"STI2D : Innovation Technologique et éco-conception"],
+                'AC'   : [u"STI2D-AC", u"STI2D : Architecture et Construction"],
+                'EE'   : [u"STI2D-EE", u"STI2D : Energies et Environnement"],
+                'SIN'  : [u"STI2D-SIN", u"STI2D : Systèmes d'Information et Numérique"],
+                'SSI'  : [u"S-SI", u"Bac S - Sciences de l'ingénieur"]}
 
 
 ####################################################################################
@@ -890,7 +890,7 @@ DELTA_DUREE2 = 15
 
 
 DISCIPLINES = ['Tec', 'Phy', 'Mat', 'LV1', 'Phi', 'Spo', 'Aut']
-NOM_DISCIPLINES = {'Tec' : u"STI", 
+NOM_DISCIPLINES = {'Tec' : u"Sciences Industrielles de l'Ingénieur", 
                    'Phy' : u"Physique/Chimie", 
                    'Mat' : u"Mathématiques", 
                    'Phi' : u"Philosophie", 

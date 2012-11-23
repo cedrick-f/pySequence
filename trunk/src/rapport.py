@@ -40,7 +40,7 @@ from wx import ImageFromStream, BitmapFromImage, EmptyIcon
 
 from wx.lib.embeddedimage import PyEmbeddedImage 
 
-from constantes import NOM_PHASE_TACHE
+from constantes import NOM_PHASE_TACHE, TypesSeanceCourt
 
 #StyleText = {}
 #Couleur = {}
@@ -88,7 +88,7 @@ Styles["Titre 2"].SetParagraphSpacingBefore(10)
 Styles["Titre 2"].SetFontUnderlined(True)
 
 Styles["Message"].SetParagraphStyleName("Message")
-Styles["Message"].SetFontSize(11)
+Styles["Message"].SetFontSize(10)
 Styles["Message"].SetLeftIndent(80)
 #Styles["Message"].SetFontStyle(wx.BOLD)
 Styles["Message"].SetParagraphSpacingAfter(10)
@@ -127,6 +127,29 @@ class StyleDeTexte:
         win.SetFont(self.font)
         win.SetForegroundColour(self.color)
 
+
+##########################################################################################
+#class PanelRapport(wx.Panel):
+#    def __init__(self, parent, fichierCourant, doc, typ):
+#        wx.Panel.__init__(self, parent, -1)#,
+##                            style = wx.DEFAULT_FRAME_STYLE)
+#        
+#        #
+#        # Instanciation du rapport RichTextCtrl
+#        #
+#        self.rtc = RapportRTF(self, rt.RE_READONLY)#rt.RichTextCtrl(self, style=wx.VSCROLL|wx.HSCROLL|wx.NO_BORDER)
+#        
+#        #
+#        # On rempli le rapport
+#        #
+#        self.rtc.Remplir(fichierCourant, doc, typ)
+#        
+#        sizer = wx.BoxSizer(wx.VERTICAL)
+#        sizer.Add(self.rtc, flag = wx.EXPAND)
+#        self.SetSizer(sizer)
+        
+        
+
 #########################################################################################
 class FrameRapport(wx.Frame):
     def __init__(self, parent, fichierCourant, doc, typ):
@@ -135,8 +158,6 @@ class FrameRapport(wx.Frame):
 #                            style = wx.DEFAULT_FRAME_STYLE)
         
         self.SetMinSize((700, -1))
-        
-#        charger_styleText()
 
         self.parent = parent
         
@@ -146,8 +167,6 @@ class FrameRapport(wx.Frame):
         self.MakeToolBar()
         self.CreateStatusBar()
 #        self.SetStatusText(u"Rapport d'analyse")
-        
-        
         
         #
         # Instanciation du rapport en RTF
@@ -160,32 +179,9 @@ class FrameRapport(wx.Frame):
         #
         # On rempli le rapport
         #
-        phase = ''
-        if typ == 'prj':
-            for e in doc.eleves:
-                self.rtc.AddTitreProjet(e)
-                for t in doc.OrdonnerListeTaches(e.GetTaches(revues = True)):
-                    if t.phase != phase:
-                        phase = t.phase
-                        self.rtc.AddPhase(t, doc.GetTypeEnseignement(simple = True))
-                    if not t.phase in ["R1", "R2", "Rev"]:
-                        self.rtc.AddTache(t)
-#                self.rtc.WriteText(chr(13))
-            self.rtc.AddPieds(fichierCourant)
-            
-            
-            
-        else:
-            self.rtc.AddTitreSeance(doc, fichierCourant)
+        self.rtc.Remplir(fichierCourant, doc, typ)
     
-            for s in doc.seance:
-                self.rtc.AddSeance(s)
-        
-    
-        self.Bind(wx.EVT_CLOSE, self.quitter )
 
-    def quitter(self, event):
-        self.Destroy()
         
     def AddRTCHandlers(self):
         # make sure we haven't already added them.
@@ -611,44 +607,81 @@ class FrameRapport(wx.Frame):
         
     
 class RapportRTF(rt.RichTextCtrl): 
-    def __init__(self, parent):
-        rt.RichTextCtrl.__init__(self, parent)
+    def __init__(self, parent, style = 0):
+        rt.RichTextCtrl.__init__(self, parent, style = rt.RE_MULTILINE | style)
+        self.style = style
         self.parent = parent   
          
-    def GetImageMontage(self, zoneMtg, analyse = None, reduc = 2, offsetX = 0, agrandi = 0):
-        bmp = wx.EmptyBitmap(zoneMtg.maxWidth + agrandi, zoneMtg.maxHeight)
-        memdc = wx.MemoryDC(bmp)
-        memdc.SetBackground(wx.WHITE_BRUSH)
-        memdc.Clear()
-        zoneMtg.DessineTout(memdc, analyse, offsetX = offsetX)
-        memdc.SelectObject(wx.NullBitmap)
-        img = bmp.ConvertToImage()
-        img = img.Scale(bmp.GetWidth()/reduc,bmp.GetHeight()/reduc, wx.IMAGE_QUALITY_HIGH)
-        return img
+    def Remplir(self, fichierCourant, doc, typ):
+        isEditable = self.IsEditable()
+        self.SetEditable(True)
+        
+        self.MoveEnd()
+        self.Clear()
+            
+        #
+        # On rempli le rapport
+        #
+        phase = ''
+        if typ == 'prj':
+            for e in doc.eleves:
+                self.AddTitreProjet(e)
+                for t in doc.OrdonnerListeTaches(e.GetTaches(revues = True)):
+                    if t.phase != phase:
+                        phase = t.phase
+                        self.AddPhase(t, doc.GetTypeEnseignement(simple = True))
+                    if not t.phase in ["R1", "R2", "Rev"]:
+                        self.AddTache(t)
+
+            self.AddPieds(fichierCourant)
+            
+        else:
+            self.AddTitreSeance(doc)
     
-    def GetImageChaine(self, sens, analyse, zoneMtg):
-        analyse.SetTracerChaine(sens, True)
-        img = self.GetImageMontage(zoneMtg, analyse, 3)
-        analyse.SetTracerChaine(sens, None)
-        return img
+            for s in doc.seance:
+                self.AddSeance(s)
+            
+            self.AddPieds(fichierCourant)
+        
+        self.SetEditable(isEditable)
+        self.ScrollIntoView(0, wx.WXK_HOME)
     
-    def GetImageArret(self, sens, analyse, zoneMtg):
-        analyse.animerManqueArret(zoneMtg, sens, 1)
-        img = self.GetImageMontage(zoneMtg, analyse, 3)
-        analyse.animerManqueArret(zoneMtg, sens, -1)
-        return img
     
-    def GetImageChaineSurbrill(self, sens, analyse, zoneMtg):
-        analyse.tracerSurbrillanceArrets(zoneMtg, sens, True, montrer = False)
-        analyse.SetTracerChaine(sens, True)
-        img = self.GetImageMontage(zoneMtg, analyse, 3)
-        analyse.tracerSurbrillanceArrets(zoneMtg, sens, False, montrer = False)
-        analyse.SetTracerChaine(sens, None)
-        return img
+    
+#    def GetImageMontage(self, zoneMtg, analyse = None, reduc = 2, offsetX = 0, agrandi = 0):
+#        bmp = wx.EmptyBitmap(zoneMtg.maxWidth + agrandi, zoneMtg.maxHeight)
+#        memdc = wx.MemoryDC(bmp)
+#        memdc.SetBackground(wx.WHITE_BRUSH)
+#        memdc.Clear()
+#        zoneMtg.DessineTout(memdc, analyse, offsetX = offsetX)
+#        memdc.SelectObject(wx.NullBitmap)
+#        img = bmp.ConvertToImage()
+#        img = img.Scale(bmp.GetWidth()/reduc,bmp.GetHeight()/reduc, wx.IMAGE_QUALITY_HIGH)
+#        return img
+#    
+#    def GetImageChaine(self, sens, analyse, zoneMtg):
+#        analyse.SetTracerChaine(sens, True)
+#        img = self.GetImageMontage(zoneMtg, analyse, 3)
+#        analyse.SetTracerChaine(sens, None)
+#        return img
+#    
+#    def GetImageArret(self, sens, analyse, zoneMtg):
+#        analyse.animerManqueArret(zoneMtg, sens, 1)
+#        img = self.GetImageMontage(zoneMtg, analyse, 3)
+#        analyse.animerManqueArret(zoneMtg, sens, -1)
+#        return img
+#    
+#    def GetImageChaineSurbrill(self, sens, analyse, zoneMtg):
+#        analyse.tracerSurbrillanceArrets(zoneMtg, sens, True, montrer = False)
+#        analyse.SetTracerChaine(sens, True)
+#        img = self.GetImageMontage(zoneMtg, analyse, 3)
+#        analyse.tracerSurbrillanceArrets(zoneMtg, sens, False, montrer = False)
+#        analyse.SetTracerChaine(sens, None)
+#        return img
     
     ######################################################################################################
     def AddPieds(self, fichierCourant):
-        
+        self.Newline()
         self.BeginFontSize(8)
         self.BeginItalic()
         self.WriteText(os.path.basename(os.path.splitext(fichierCourant)[0]))
@@ -667,60 +700,41 @@ class RapportRTF(rt.RichTextCtrl):
             Styles["Titre"].SetPageBreak(pageBreak=True)
 #        
         parag = self.AddParagraph(u"Détail des tâches\n")
-#        self.SetStyle(parag, Styles["Titre"])
-#        self.EndAllStyles()
         self.MoveEnd()
         self.Newline()
-#        self.EndAllStyles()
-#        self.AppendText("\n")
-        
-#        self.BeginFontSize(14)
-#        self.BeginParagraphStyle(Styles["Titre"])
-#        self.WriteText(u"Détail des tâches")
-#        self.EndParagraphStyle()
-#        self.EndFontSize()
-        
-        
-#        self.BeginParagraphSpacing(0, 20)
-#        self.BeginAlignment(wx.TEXT_ALIGNMENT_CENTRE)
         
         self.BeginBold()
         self.BeginFontSize(14)
         self.WriteText(eleve.GetNomPrenom())
-        
-#        self.Newline()
         self.EndFontSize()
         self.EndBold()
         self.BeginAlignment(wx.TEXT_ALIGNMENT_CENTRE)
-#        self.EndAlignment()
+        
         self.Newline()
         self.SetStyle(parag, Styles["Titre"])
-        
+        self.EndAlignment()
+    
     
     ######################################################################################################
-    def AddTitreSeance(self, doc, fichierCourant):
-        self.BeginParagraphSpacing(0, 20)
-
-        self.BeginAlignment(wx.TEXT_ALIGNMENT_CENTRE)
-        self.BeginBold()
-
-        self.BeginFontSize(14)
-        self.WriteText(u"Détail des séances")
-        self.EndFontSize()
-        self.Newline()
-
-        self.BeginItalic()
-        self.WriteText(os.path.basename(os.path.splitext(fichierCourant)[0]))
-        self.EndItalic()
-
-        self.EndBold()
-
-        self.Newline()
-        self.EndAlignment()
+    def AddTitreSeance(self, doc):
         
-#        self.AddTextStyled(u"Tâches élève détaillées", "Titre")
-#        self.AddTextStyled(os.path.basename(os.path.splitext(fichierCourant)[0]), "Sous titre")
-#        self.AddParagraphStyled(wx.GetApp().auteur, "Sous titre")
+        parag = self.AddParagraph(u"Détail des séances\n")
+        self.MoveEnd()
+        self.Newline()
+        
+        self.BeginBold()
+        self.BeginFontSize(14)
+        self.BeginItalic()
+        self.WriteText(doc.intitule)
+        self.EndItalic()
+        self.EndFontSize()
+        self.EndBold()
+        self.BeginAlignment(wx.TEXT_ALIGNMENT_CENTRE)
+        
+        self.Newline()
+        self.SetStyle(parag, Styles["Titre"])
+        self.EndAlignment()
+
         
     ######################################################################################################
     def AddPhase(self, tache, typ):
@@ -730,23 +744,18 @@ class RapportRTF(rt.RichTextCtrl):
         
         r,v,b = BCoulTache[tache.phase]
         fgCoul = wx.Colour(r*255,v*255,b*255)
-        
-#        self.Newline()
-        
-#        if not isinstance(fgCoul, wx.Colour):
-#            fgCoul = wx.NamedColour(fgCoul)
-#        self.BeginTextColour(fgCoul)
-            
-        if not isinstance(bgCoul, wx.Colour):
-            bgCoul = wx.NamedColour(bgCoul)
+
         Styles["Titre 1"].SetBackgroundColour(bgCoul)
         Styles["Titre 1"].SetTextColour(fgCoul)  
         self.BeginStyle(Styles["Titre 1"])
         phase = NOM_PHASE_TACHE[typ][tache.phase]
         self.WriteText(phase)
         self.EndStyle()
-        self.EndAlignment()
+#        self.EndAlignment()
+        
         self.Newline()
+#        self.EndLeftIndent()
+#        self.EndStyle()
          
     ######################################################################################################
     def AddTache(self, tache):
@@ -756,15 +765,6 @@ class RapportRTF(rt.RichTextCtrl):
         
         r,v,b = BCoulTache[tache.phase]
         fgCoul = wx.Colour(r*255,v*255,b*255)
-        
-#        self.Newline()
-        
-#        if not isinstance(fgCoul, wx.Colour):
-#            fgCoul = wx.NamedColour(fgCoul)
-#        self.BeginTextColour(fgCoul)
-            
-        if not isinstance(bgCoul, wx.Colour):
-            bgCoul = wx.NamedColour(bgCoul)
             
         Styles["Titre 2"].SetBackgroundColour(bgCoul)  
         self.BeginStyle(Styles["Titre 2"])
@@ -774,6 +774,7 @@ class RapportRTF(rt.RichTextCtrl):
         self.EndAlignment()
         self.Newline()
         
+        self.BeginStyle(Styles["Message"])
         self.BeginUnderline()
         self.WriteText(u"Intitulé :")
         self.EndUnderline()
@@ -797,6 +798,8 @@ class RapportRTF(rt.RichTextCtrl):
 #        self.EndUnderline()
 #        self.WriteText(u" " + getHoraireTxt(tache.GetDuree()))
         self.Newline()
+        self.EndLeftIndent()
+        self.EndStyle()
         
     
     ######################################################################################################
@@ -813,277 +816,280 @@ class RapportRTF(rt.RichTextCtrl):
             
         if not isinstance(bgCoul, wx.Colour):
             bgCoul = wx.NamedColour(bgCoul)
-        Styles["Titre 1"].SetBackgroundColour(bgCoul)  
-        self.BeginStyle(Styles["Titre 1"])
-        self.WriteText(u"Tache : " + seance.code+"\t\t\t"+getHoraireTxt(seance.GetDuree()))
-        self.EndStyle()
+        Styles["Titre 1"].SetBackgroundColour(bgCoul)
         
-#        self.EndLeftIndent()
+        self.BeginStyle(Styles["Titre 1"])
+        self.WriteText(TypesSeanceCourt[seance.typeSeance] + u" : " + seance.code+"\t\t\t"+getHoraireTxt(seance.GetDuree()))
+        self.EndStyle()
         self.BeginLeftIndent(60*(indent-1))
         self.Newline()
+        self.EndLeftIndent()
         
+        self.BeginStyle(Styles["Message"])
         self.BeginUnderline()
         self.WriteText(u"Intitulé :")
         self.EndUnderline()
         self.WriteText(u" " + seance.intitule)
+#        self.EndStyle()
         self.BeginLeftIndent(60*indent)
         self.Newline()
+        self.EndLeftIndent()
         
         if seance.description != None and hasattr(seance, 'panelPropriete'):
             self.BeginUnderline()
             self.WriteText(u"Description :")
             self.EndUnderline()
             self.Newline()
-            
+            self.BeginLeftIndent(60*indent)
             seance.panelPropriete.rtc.rtc.SelectAll()
             seance.panelPropriete.rtc.rtc.Copy()
             self.Paste()
-            self.BeginLeftIndent(60*indent)
+            
+            self.Newline()
+            self.EndLeftIndent()
+        
+        self.EndStyle()
         
         if seance.typeSeance in ["R", "S"]:
             for sseance in seance.sousSeances:
                 self.AddSeance(sseance, indent + 1)
-            
-#        self.BeginUnderline()
-#        self.WriteText(u"Volume horaire :")
-#        self.EndUnderline()
-#        self.WriteText(u" " + getHoraireTxt(seance.GetDuree()))
-        self.Newline()
+            self.Newline()
+        
         
     
         
-    ######################################################################################################
-    # Analyse   
-    ######################################################################################################
-    def AddTitreAnImmob(self):
-        self.AddParagraphStyled(u"Structure du Montage :", "Titre 1")
-        
-    def AddAnImmob(self, analyse, zoneMtg):
-        self.AddParagraphStyled(u"Mise en position axiale :", "Titre 2")
-        
-        # Message principal
-        self.AddParagraphStyled(analyse.messageImmobilisation.mess, "Message", analyse.messageImmobilisation.coul)
-        self.AppendText("\n")
-        
-        # Message par sens
-        for s in [1,0]: # diff�rents sens ...
-            self.BeginStyle(Styles["MessSens"])
-            self.BeginTextColour(Couleur[analyse.resultatImmobilisation[s][0].coul])
-            mess = self.AppendText(analyse.resultatImmobilisation[s][0].mess)
-            if s == 1: self.WriteText("\t")
-        self.AppendText("\n")
-        
-        # Image par sens
-        for s in [1,0]: # diff�rents sens ...
-            if analyse.resultatImmobilisation[s][0].clef == 'ArretArbreSens':
-                img = self.GetImageArret(s, analyse, zoneMtg)
-            elif analyse.resultatImmobilisation[s][0].clef == 'ImmobCorrect':
-                img = self.GetImageChaine(s, analyse, zoneMtg)
-            self.WriteImage(img)
-            self.WriteText("\t")
-        self.AppendText("\n")
-            
-    def AddAnStruc(self, analyse, zoneMtg):
-        titre = self.AddParagraph(u"Sch�ma de Structure :")
-        self.SetStyle(titre, Styles["Titre 2"])
-        img = analyse.schemaStructure.bitmap().ConvertToImage()
-        self.AddImage(img)
-        self.AppendText("\n")
-        
-    ######################################################################################################
-    def AddTitreAnCharg(self):
-        self.AddParagraphStyled(u"R�sistance aux charges :", "Titre 1")
-    
-    def AddAnResistMtg(self, analyse, zoneMtg):
-        self.AddParagraphStyled(u"R�sistance axiale du montage :", "Titre 2")
-              
-        # Message principal
-        self.AddParagraphStyled(analyse.messageResistanceAxiale.mess, "Message", analyse.messageResistanceAxiale.coul)
-        self.AppendText("\n")
-        
-        # Message par sens
-        for s in [1,0]: # diff�rents sens ...
-            self.BeginStyle(Styles["MessSens"])
-            self.BeginTextColour(Couleur[analyse.resultatEffortAxialMtg[s][0].coul])
-            mess = self.AppendText(analyse.resultatEffortAxialMtg[s][0].mess)
-            if s == 1: self.WriteText("\t")
-        self.AppendText("\n")
-
-        # Image par sens
-        for s in [1,0]: # diff�rents sens ...
-            if analyse.resultatEffortAxialMtg[s][0].clef == 'ElemResistPas':
-                img = self.GetImageChaineSurbrill(s, analyse, zoneMtg)
-            elif analyse.resultatEffortAxialMtg[s][0].clef == 'ChargeAxOk':
-                img = self.GetImageChaine(s, analyse, zoneMtg)
-            elif analyse.resultatEffortAxialMtg[s][0].clef == 'ArretArbreSens':
-                img = self.GetImageArret(s, analyse, zoneMtg)
-            self.WriteImage(img)
-            if s == 1: self.WriteText("\t")
-        self.AppendText("\n")
-    
-    
-    def AddAnResistRlt(self, analyse, zoneMtg, panelResist):
-        self.AddParagraphStyled(u"R�sistance des roulements :", "Titre 2")
-        
-        # Message principal
-        self.AddParagraphStyled(analyse.messageResistanceAxiale.mess, "Message", analyse.messageResistanceAxiale.coul)
-        self.AppendText("\n")
-        
-        # Sch�ma de structure
-        img = analyse.imageSchemaCharges.ConvertToImage()
-        self.AddImage(img)
-        
-        # Tableau
-        self.AddGrid(panelResist.tableResist)
-        
-        self.AppendText("\n")
-        
-        
-    ######################################################################################################
-    def AddTitreAnMontab(self, analyse):
-        self.AddParagraphStyled(u"Montabilit� :", "Titre 1")
-        
-        self.AddParagraphStyled(analyse.resultatMontabilite.mess, "Message", analyse.resultatMontabilite.coul)
-        
-    def AddAnMontabEns(self, analyse, zoneMtg):
-        if analyse.cdcf.bagueTournante == "I": ens = u"""arbre"""
-        else: ens = u"""al�sage"""
-        self.AddParagraphStyled(u"Montabilit� de l'ensemble "+ens+" :", "Titre 2")
-        self.AppendText("")
-        
-        # Images pour "Montabilit�"
-        imagMontabiliteEns = self.GetImagesDemontageEns(analyse, zoneMtg)
-        for img in imagMontabiliteEns:
-            self.WriteImage(img)
-            self.WriteText("\t")
-        
-    def AddAnMontabRlt(self, analyse, zoneMtg):
-        self.AddParagraphStyled(u"Montabilit� des Roulements :", "Titre 2")
-        self.AppendText("")
-        
-        # Images pour "Montabilit�"
-        imagMontabiliteRlt = self.GetImagesDemontageRlt(analyse, zoneMtg)
-        for img in imagMontabiliteRlt:
-            self.WriteImage(img)
-            self.WriteText("\t")
-            
-            
-    ######################################################################################################
-    def AddAnEtanch(self, analyse, panelEtanch, CdCF):
-        self.AddParagraphStyled(u"Etanch�it� :", "Titre 1")
-        
-        #
-        # Etanch�it� statique
-        #
-        self.AddParagraphStyled(u"Etanch�it� Statique :", "Titre 2")
-        
-        # CdCF
-        self.AddCdCFEtanchStat(CdCF)
-        
-        # Resultat principal
-        message = analyse.resultatEtancheite["SB"]
-        self.AddParagraphStyled(message.mess, "Message", message.coul)
-        
-        # D�tails 
-        if "SB+" in analyse.resultatEtancheite.keys():
-            for mess in analyse.resultatEtancheite["SB+"]:
-                self.AddParagraphStyled(mess.mess, "MessSens", mess.coul)
-
-        self.AppendText("\n")
-        self.AddGrid(panelEtanch.tableStat)
-        
-        #
-        # Etanch�it� Dynamique
-        #
-        if "DB" in analyse.resultatEtancheite:
-            self.AddParagraphStyled(u"Etanch�it� Dynamique :", "Titre 2")
-            
-            # CdCF
-            self.AddCdCFEtanchDyn(CdCF)
-            
-            mess = analyse.resultatEtancheite["DB"]
-            self.AddParagraphStyled(mess.mess, "Message", mess.coul)
-            
-            if "DB+" in analyse.resultatEtancheite.keys():
-                for mess in analyse.resultatEtancheite["DB+"]:
-                    self.AddParagraphStyled(mess.mess, "MessSens", mess.coul)
-
-            self.AppendText("\n")
-            self.AddGrid(panelEtanch.tableDyn)
-        
-        #
-        # Compatibilit� lubrifiant
-        #
-        self.AddParagraphStyled(u"Compatibilit� lubrifiant :", "Titre 2")
-        
-        # CdCF
-        self.AddCdCFEtanchLub(CdCF)
-        
-        mess = analyse.resultatEtancheite["C"]
-        self.AddParagraphStyled(mess.mess, "Message", mess.coul)
-        
-        self.AppendText("\n")
-                    
-                    
-                    
-    ######################################################################################################
-    def AddAnCout(self, analyse, panelDevis, CdCF):
-        self.AddParagraphStyled(u"Devis (co�t indicatif) :", "Titre 1")
-        
-        # CdCF
-        self.AddCdCFCoutMax(CdCF)
-        
-        # Devis
-        self.AppendText("\n")
-        self.AddGrid(panelDevis.devis)
-
-
-    def AddGrid(self, grid):
-        
-        debut = self.GetInsertionPoint()
-    
-        def SsRc(s):
-            return s.replace("\n", " ")
-
-        # Définition des tabs
-        coef = 5
-        tabs = [max(coef*grid.GetRowLabelSize(), 30)]
-        for c in range(grid.GetNumberCols()):
-            tabs.append(tabs[-1:][0]+coef*grid.GetColSize(c))
-        Styles["Tableau"].SetTabs(tabs)
-        
-        # Affichage du contenu
-        for l in range(1+grid.GetNumberRows()):
-            ll = l-1
-            for c in range(1+grid.GetNumberCols()):
-                # Titres colonnes
-                cc = c-1
-                if l == 0 and c > 0:
-                     self.BeginTextColour(wx.BLACK)
-                     self.AppendText(SsRc(grid.GetColLabelValue(cc)))
-                     
-                # Titres lignes
-                elif c == 0 and l > 0:
-                    self.BeginTextColour(wx.BLACK)
-                    self.AppendText(SsRc(grid.GetRowLabelValue(ll)))
-                
-                elif c == 0 and l == 0:
-                    pass
-                
-                # Valeurs
-                else:
-                    self.BeginTextColour(grid.GetCellTextColour(ll,cc))
-                    self.AppendText(SsRc(grid.GetCellValue(ll,cc)))
-                
-                self.AppendText("\t")
-            self.AppendText("\n")
-            
-        fin = self.GetInsertionPoint()
-        tout = self.GetRange(debut, fin)
-        
-        self.SetStyle((debut, fin), Styles["Tableau"])
-        
-        self.EndTextColour()
+#    ######################################################################################################
+#    # Analyse   
+#    ######################################################################################################
+#    def AddTitreAnImmob(self):
+#        self.AddParagraphStyled(u"Structure du Montage :", "Titre 1")
+#        
+#    def AddAnImmob(self, analyse, zoneMtg):
+#        self.AddParagraphStyled(u"Mise en position axiale :", "Titre 2")
+#        
+#        # Message principal
+#        self.AddParagraphStyled(analyse.messageImmobilisation.mess, "Message", analyse.messageImmobilisation.coul)
+#        self.AppendText("\n")
+#        
+#        # Message par sens
+#        for s in [1,0]: # diff�rents sens ...
+#            self.BeginStyle(Styles["MessSens"])
+#            self.BeginTextColour(Couleur[analyse.resultatImmobilisation[s][0].coul])
+#            mess = self.AppendText(analyse.resultatImmobilisation[s][0].mess)
+#            if s == 1: self.WriteText("\t")
+#        self.AppendText("\n")
+#        
+#        # Image par sens
+#        for s in [1,0]: # diff�rents sens ...
+#            if analyse.resultatImmobilisation[s][0].clef == 'ArretArbreSens':
+#                img = self.GetImageArret(s, analyse, zoneMtg)
+#            elif analyse.resultatImmobilisation[s][0].clef == 'ImmobCorrect':
+#                img = self.GetImageChaine(s, analyse, zoneMtg)
+#            self.WriteImage(img)
+#            self.WriteText("\t")
+#        self.AppendText("\n")
+#            
+#    def AddAnStruc(self, analyse, zoneMtg):
+#        titre = self.AddParagraph(u"Sch�ma de Structure :")
+#        self.SetStyle(titre, Styles["Titre 2"])
+#        img = analyse.schemaStructure.bitmap().ConvertToImage()
+#        self.AddImage(img)
+#        self.AppendText("\n")
+#        
+#    ######################################################################################################
+#    def AddTitreAnCharg(self):
+#        self.AddParagraphStyled(u"R�sistance aux charges :", "Titre 1")
+#    
+#    def AddAnResistMtg(self, analyse, zoneMtg):
+#        self.AddParagraphStyled(u"R�sistance axiale du montage :", "Titre 2")
+#              
+#        # Message principal
+#        self.AddParagraphStyled(analyse.messageResistanceAxiale.mess, "Message", analyse.messageResistanceAxiale.coul)
+#        self.AppendText("\n")
+#        
+#        # Message par sens
+#        for s in [1,0]: # diff�rents sens ...
+#            self.BeginStyle(Styles["MessSens"])
+#            self.BeginTextColour(Couleur[analyse.resultatEffortAxialMtg[s][0].coul])
+#            mess = self.AppendText(analyse.resultatEffortAxialMtg[s][0].mess)
+#            if s == 1: self.WriteText("\t")
+#        self.AppendText("\n")
+#
+#        # Image par sens
+#        for s in [1,0]: # diff�rents sens ...
+#            if analyse.resultatEffortAxialMtg[s][0].clef == 'ElemResistPas':
+#                img = self.GetImageChaineSurbrill(s, analyse, zoneMtg)
+#            elif analyse.resultatEffortAxialMtg[s][0].clef == 'ChargeAxOk':
+#                img = self.GetImageChaine(s, analyse, zoneMtg)
+#            elif analyse.resultatEffortAxialMtg[s][0].clef == 'ArretArbreSens':
+#                img = self.GetImageArret(s, analyse, zoneMtg)
+#            self.WriteImage(img)
+#            if s == 1: self.WriteText("\t")
+#        self.AppendText("\n")
+#    
+#    
+#    def AddAnResistRlt(self, analyse, zoneMtg, panelResist):
+#        self.AddParagraphStyled(u"R�sistance des roulements :", "Titre 2")
+#        
+#        # Message principal
+#        self.AddParagraphStyled(analyse.messageResistanceAxiale.mess, "Message", analyse.messageResistanceAxiale.coul)
+#        self.AppendText("\n")
+#        
+#        # Sch�ma de structure
+#        img = analyse.imageSchemaCharges.ConvertToImage()
+#        self.AddImage(img)
+#        
+#        # Tableau
+#        self.AddGrid(panelResist.tableResist)
+#        
+#        self.AppendText("\n")
+#        
+#        
+#    ######################################################################################################
+#    def AddTitreAnMontab(self, analyse):
+#        self.AddParagraphStyled(u"Montabilit� :", "Titre 1")
+#        
+#        self.AddParagraphStyled(analyse.resultatMontabilite.mess, "Message", analyse.resultatMontabilite.coul)
+#        
+#    def AddAnMontabEns(self, analyse, zoneMtg):
+#        if analyse.cdcf.bagueTournante == "I": ens = u"""arbre"""
+#        else: ens = u"""al�sage"""
+#        self.AddParagraphStyled(u"Montabilit� de l'ensemble "+ens+" :", "Titre 2")
+#        self.AppendText("")
+#        
+#        # Images pour "Montabilit�"
+#        imagMontabiliteEns = self.GetImagesDemontageEns(analyse, zoneMtg)
+#        for img in imagMontabiliteEns:
+#            self.WriteImage(img)
+#            self.WriteText("\t")
+#        
+#    def AddAnMontabRlt(self, analyse, zoneMtg):
+#        self.AddParagraphStyled(u"Montabilit� des Roulements :", "Titre 2")
+#        self.AppendText("")
+#        
+#        # Images pour "Montabilit�"
+#        imagMontabiliteRlt = self.GetImagesDemontageRlt(analyse, zoneMtg)
+#        for img in imagMontabiliteRlt:
+#            self.WriteImage(img)
+#            self.WriteText("\t")
+#            
+#            
+#    ######################################################################################################
+#    def AddAnEtanch(self, analyse, panelEtanch, CdCF):
+#        self.AddParagraphStyled(u"Etanch�it� :", "Titre 1")
+#        
+#        #
+#        # Etanch�it� statique
+#        #
+#        self.AddParagraphStyled(u"Etanch�it� Statique :", "Titre 2")
+#        
+#        # CdCF
+#        self.AddCdCFEtanchStat(CdCF)
+#        
+#        # Resultat principal
+#        message = analyse.resultatEtancheite["SB"]
+#        self.AddParagraphStyled(message.mess, "Message", message.coul)
+#        
+#        # D�tails 
+#        if "SB+" in analyse.resultatEtancheite.keys():
+#            for mess in analyse.resultatEtancheite["SB+"]:
+#                self.AddParagraphStyled(mess.mess, "MessSens", mess.coul)
+#
+#        self.AppendText("\n")
+#        self.AddGrid(panelEtanch.tableStat)
+#        
+#        #
+#        # Etanch�it� Dynamique
+#        #
+#        if "DB" in analyse.resultatEtancheite:
+#            self.AddParagraphStyled(u"Etanch�it� Dynamique :", "Titre 2")
+#            
+#            # CdCF
+#            self.AddCdCFEtanchDyn(CdCF)
+#            
+#            mess = analyse.resultatEtancheite["DB"]
+#            self.AddParagraphStyled(mess.mess, "Message", mess.coul)
+#            
+#            if "DB+" in analyse.resultatEtancheite.keys():
+#                for mess in analyse.resultatEtancheite["DB+"]:
+#                    self.AddParagraphStyled(mess.mess, "MessSens", mess.coul)
+#
+#            self.AppendText("\n")
+#            self.AddGrid(panelEtanch.tableDyn)
+#        
+#        #
+#        # Compatibilit� lubrifiant
+#        #
+#        self.AddParagraphStyled(u"Compatibilit� lubrifiant :", "Titre 2")
+#        
+#        # CdCF
+#        self.AddCdCFEtanchLub(CdCF)
+#        
+#        mess = analyse.resultatEtancheite["C"]
+#        self.AddParagraphStyled(mess.mess, "Message", mess.coul)
+#        
+#        self.AppendText("\n")
+#                    
+#                    
+#                    
+#    ######################################################################################################
+#    def AddAnCout(self, analyse, panelDevis, CdCF):
+#        self.AddParagraphStyled(u"Devis (co�t indicatif) :", "Titre 1")
+#        
+#        # CdCF
+#        self.AddCdCFCoutMax(CdCF)
+#        
+#        # Devis
+#        self.AppendText("\n")
+#        self.AddGrid(panelDevis.devis)
+#
+#
+#    def AddGrid(self, grid):
+#        
+#        debut = self.GetInsertionPoint()
+#    
+#        def SsRc(s):
+#            return s.replace("\n", " ")
+#
+#        # Définition des tabs
+#        coef = 5
+#        tabs = [max(coef*grid.GetRowLabelSize(), 30)]
+#        for c in range(grid.GetNumberCols()):
+#            tabs.append(tabs[-1:][0]+coef*grid.GetColSize(c))
+#        Styles["Tableau"].SetTabs(tabs)
+#        
+#        # Affichage du contenu
+#        for l in range(1+grid.GetNumberRows()):
+#            ll = l-1
+#            for c in range(1+grid.GetNumberCols()):
+#                # Titres colonnes
+#                cc = c-1
+#                if l == 0 and c > 0:
+#                     self.BeginTextColour(wx.BLACK)
+#                     self.AppendText(SsRc(grid.GetColLabelValue(cc)))
+#                     
+#                # Titres lignes
+#                elif c == 0 and l > 0:
+#                    self.BeginTextColour(wx.BLACK)
+#                    self.AppendText(SsRc(grid.GetRowLabelValue(ll)))
+#                
+#                elif c == 0 and l == 0:
+#                    pass
+#                
+#                # Valeurs
+#                else:
+#                    self.BeginTextColour(grid.GetCellTextColour(ll,cc))
+#                    self.AppendText(SsRc(grid.GetCellValue(ll,cc)))
+#                
+#                self.AppendText("\t")
+#            self.AppendText("\n")
+#            
+#        fin = self.GetInsertionPoint()
+#        tout = self.GetRange(debut, fin)
+#        
+#        self.SetStyle((debut, fin), Styles["Tableau"])
+#        
+#        self.EndTextColour()
         
     def AddParagraphStyled(self, texte, style, couleur = None, bgCoul = "WHITE", souligne = False):
         

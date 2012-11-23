@@ -52,9 +52,9 @@ class Options:
 #        self.optGenerales = {}
 #        self.optImpression = {}
 #        self.optCalcul = {}
-        
-        if options == None:
-            self.defaut()
+#        
+#        if options == None:
+#            self.defaut()
           
 #        self.listeOptions = [u"Général", u"Affichage", u"Couleurs", u"Impression"] 
          
@@ -216,12 +216,10 @@ class Options:
     ############################################################################
     def defaut(self):
         print "Options defaut"
-        import constantes_ETT
-#        constantes.DefOptionsDefaut()
-#        print self
+#        print self.optClasse["Effectifs"]["C"], constantes.Effectifs["C"]
         self.definir()
-#        print self
-      
+        print self.optClasse["Effectifs"]["C"], constantes.Effectifs["C"]
+        
         
     ############################################################################
     def definir(self):
@@ -230,10 +228,20 @@ class Options:
                                        "G" : constantes.NbrGroupes["G"],
                                        "E" : constantes.NbrGroupes["E"],
                                        "P" : constantes.NbrGroupes["P"]}
-        self.optClasse["CentresInteretET"] = constantes.CentresInterets_ET
-        self.optClasse["PositionsCI_ET"] = constantes.PositionCibleCI_ET
+        self.optClasse["CentresInteretET"] = [ci for ci in constantes.CentresInterets_ET]
+        self.optClasse["PositionsCI_ET"] = [po for po in constantes.PositionCibleCI_ET]
         
 
+    ############################################################################
+    def valider(self, classe):
+        self.optClasse["Effectifs"] = {"C" : classe.effectifs["C"],
+                                       "G" : classe.nbrGroupes["G"],
+                                       "E" : classe.nbrGroupes["E"],
+                                       "P" : classe.nbrGroupes["P"]}
+        self.optClasse["CentresInteretET"] = classe.ci_ET
+        self.optClasse["PositionsCI_ET"] = classe.posCI_ET
+        
+        
     ###########################################################################
     def extraireRepertoire(self,chemin):
         for i in range(len(chemin)):
