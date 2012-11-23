@@ -216,10 +216,7 @@ class Options:
     ############################################################################
     def defaut(self):
         print "Options defaut"
-#        print self.optClasse["Effectifs"]["C"], constantes.Effectifs["C"]
         self.definir()
-        print self.optClasse["Effectifs"]["C"], constantes.Effectifs["C"]
-        
         
     ############################################################################
     def definir(self):
