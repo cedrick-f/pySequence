@@ -7,7 +7,7 @@ Created on 24 oct. 2011
 """
 
 #import du module permettant la liaison avec excel
-import xlrd
+#import xlrd
 import win32com.client
 import wx
 #import excel
@@ -23,7 +23,7 @@ def ouvrirFichierExcel(nomFichier = None):
     if xl == None:
         lancerExcel()
     
-    print xl.ActiveWorkbook
+#    print xl.ActiveWorkbook
     if xl.ActiveWorkbook == None:
         mesFormats = u"Classeur Excel (.xls)|*.xls|" \
                            u"Tous les fichiers|*.*'"
@@ -61,16 +61,22 @@ def getSelectionExcel():
 #    return xl.ActiveCell()
 #    return xl.ActiveWorkbook.ActiveSheet.ActiveCell()
 
-def getColonne(sel = None, c = None):
+def getColonne(sel = None, c = None, close = True):
     """ Renvoie les colonnes (ou seulement la colonne <c>
         depuis une selection dans une feuille Excel
     """
     if sel == None:
         sel = getSelectionExcel()
-    if c == None:
-        return zip(*sel)
+    if sel != None:
+        if c == None:
+            lst = zip(*sel) 
+        else:
+            lst = zip(*sel)[c]
     else:
-        return zip(*sel)[c]
+        lst = None
+    if close:
+        xl.ActiveWorkbook.Close(SaveChanges=0)
+         
         
 
 ## ouverture du fichier Excel 

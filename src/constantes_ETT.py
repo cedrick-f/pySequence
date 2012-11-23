@@ -49,6 +49,7 @@ CentresInterets_ET = [u"Développement durable et compétitivité des produits",
                    u"Optimisation des paramètres par simulation globale"
                    ]
 
+print "PositionCibleCI_ET"
 PositionCibleCI_ET = ['   _   ',
                      '   _   ',
                      'M  _F  ',

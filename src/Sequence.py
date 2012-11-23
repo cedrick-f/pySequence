@@ -141,7 +141,7 @@ import textwrap
 
 import grilles
 
-from rapport import FrameRapport
+from rapport import FrameRapport, RapportRTF
 
 # Pour l'export en swf
 #import tempfile
@@ -645,25 +645,42 @@ class Classe():
         else:
             self.typeEnseignement = 'ET'
         
-        if not pourProjet:
-            self.ci_ET = constantes.CentresInterets_ET
-            self.posCI_ET = constantes.PositionCibleCI_ET
-            
-        self.effectifs = constantes.Effectifs
-        self.nbrGroupes = constantes.NbrGroupes
-        calculerEffectifs(self)
+        self.options = app.options
+        self.Initialise(pourProjet)
         
         if panelParent:
             self.panelPropriete = PanelPropriete_Classe(panelParent, self, pourProjet)
             
         self.panelParent = panelParent
-        self.app = app
+#        self.app = app
         
     ######################################################################################  
     def __repr__(self):
         return self.posCI_ET[0] + " " + self.ci_ET[0]
     
-    
+    ######################################################################################  
+    def Initialise(self, pourProjet):
+#        print "Initialise", pourProjet
+        if not pourProjet:
+            self.ci_ET = self.options.optClasse["CentresInteretET"]
+            self.posCI_ET = self.options.optClasse["PositionsCI_ET"]
+            
+        self.effectifs =  {"C" : constantes.Effectifs["C"],
+                           "G" : constantes.NbrGroupes["G"],
+                           "E" : constantes.NbrGroupes["E"],
+                           "P" : constantes.NbrGroupes["P"]}
+        
+        
+#        self.effectifs = constantes.Effectifs
+        self.effectifs['C'] = self.options.optClasse["Effectifs"]['C']
+
+        self.nbrGroupes = {"P" : self.options.optClasse["Effectifs"]["P"],
+                           "E" : self.options.optClasse["Effectifs"]["E"],
+                           "G" : self.options.optClasse["Effectifs"]["G"]
+                           }
+
+        calculerEffectifs(self)
+        
     ######################################################################################  
     def SetDocument(self, doc):   
         self.doc = doc 
@@ -693,17 +710,25 @@ class Classe():
         self.typeEnseignement = branche.get("Type", "ET")
         
         brancheCI = branche.find("CentreInteret")
-        if brancheCI != None:
-            listCI = list(brancheCI)
-            listCI.sort()
+        if brancheCI != None: # Uniquement pour rétrocompatibilité : normalement cet élément existe !
+            continuer = True
+            i = 1
             ci_ET = []
             posCI_ET = []
-            for i,c in list(listCI):
-                ci_ET.append(brancheCI.get("CI"+str(i+1), ""))
-                posCI_ET.append(brancheCI.get("pos"+str(i+1), "O"))    
-            if len(ci_ET) > 0:
+            while continuer:
+                c = brancheCI.get("CI"+str(i))
+                p = brancheCI.get("pos"+str(i))
+                if c == None or p == None:
+                    continuer = False
+                else:
+                    ci_ET.append(c)
+                    posCI_ET.append(p) 
+                    i += 1
+                
+            if i > 1:
                 self.ci_ET = ci_ET
                 self.posCI_ET = posCI_ET
+            
                 
         # Ancien format : <Effectifs C="9" D="3" E="2" G="9" P="3" />
         # Nouveau format : <Effectifs eC="9" nE="2" nG="9" nP="3" />
@@ -3042,7 +3067,6 @@ class Seance(ElementDeSequence, Objet_sequence):
         if hasattr(self, 'arbre'):
             self.SetCode()
             
-            
         if self.typeSeance in ["R","S"] and len(self.sousSeances) == 0: # Rotation ou Serie
             self.AjouterSeance()
         
@@ -4716,12 +4740,15 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             except:
                 print "Fichier d'options corrompus ou inexistant !! Initialisation ..."
                 options.defaut()
+        else:
+            options.defaut()
+        self.options = options
 #        else:
 #            options.defaut()
 #        print options
         
         # On applique les options ...
-        self.DefinirOptions(options)
+#        self.DefinirOptions(options)
         
         #############################################################################################
         # Création du menu
@@ -4997,40 +5024,40 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             
             
             
-    #############################################################################
-    def DefinirOptions(self, options):
-        
-        self.options = options.copie()
-        #
-        # Options de Classe
-        #
-        
-#        te = self.options.optClasse["TypeEnseignement"]
-        lstCI = self.options.optClasse["CentresInteretET"]
-        if False:
-            pass
-#        if self.fichierCourantModifie and (te != TYPE_ENSEIGNEMENT \
-#           or (te == 'ET' and getTextCI(CentresInterets[TYPE_ENSEIGNEMENT]) != lstCI)):
-#            dlg = wx.MessageDialog(self, u"Type de classe incompatible !\n\n" \
-#                                         u"Fermer la séquence en cours d'élaboration\n" \
-#                                         u"avant de modifier des options de la classe.",
-#                               'Type de classe incompatible',
-#                               wx.OK | wx.ICON_INFORMATION
-#                               #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
-#                               )
-#            dlg.ShowModal()
-#            dlg.Destroy()
-        else:
-#            TYPE_ENSEIGNEMENT = te
-
-            constantes.Effectifs["C"] = self.options.optClasse["Effectifs"]["C"]
-            constantes.NbrGroupes["G"] = self.options.optClasse["Effectifs"]["G"]
-            constantes.NbrGroupes["E"] = self.options.optClasse["Effectifs"]["E"]
-            constantes.NbrGroupes["P"] = self.options.optClasse["Effectifs"]["P"]
-                          
-            constantes.CentresInteretsET = lstCI
-                
-            constantes.PositionCibleCIET = self.options.optClasse["PositionsCI_ET"]
+#    #############################################################################
+#    def DefinirOptions(self, options):
+#        return
+#        self.options = options.copie()
+#        #
+#        # Options de Classe
+#        #
+#        
+##        te = self.options.optClasse["TypeEnseignement"]
+#        lstCI = self.options.optClasse["CentresInteretET"]
+#        if False:
+#            pass
+##        if self.fichierCourantModifie and (te != TYPE_ENSEIGNEMENT \
+##           or (te == 'ET' and getTextCI(CentresInterets[TYPE_ENSEIGNEMENT]) != lstCI)):
+##            dlg = wx.MessageDialog(self, u"Type de classe incompatible !\n\n" \
+##                                         u"Fermer la séquence en cours d'élaboration\n" \
+##                                         u"avant de modifier des options de la classe.",
+##                               'Type de classe incompatible',
+##                               wx.OK | wx.ICON_INFORMATION
+##                               #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
+##                               )
+##            dlg.ShowModal()
+##            dlg.Destroy()
+#        else:
+##            TYPE_ENSEIGNEMENT = te
+#
+#            constantes.Effectifs["C"] = self.options.optClasse["Effectifs"]["C"]
+#            constantes.NbrGroupes["G"] = self.options.optClasse["Effectifs"]["G"]
+#            constantes.NbrGroupes["E"] = self.options.optClasse["Effectifs"]["E"]
+#            constantes.NbrGroupes["P"] = self.options.optClasse["Effectifs"]["P"]
+#                          
+#            constantes.CentresInteretsET = lstCI
+#                
+#            constantes.PositionCibleCIET = self.options.optClasse["PositionsCI_ET"]
                 
                 
     #############################################################################
@@ -5257,13 +5284,13 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
 #        except:
 #            print "   Erreur enregistrement options...",
             
-        try:
-            self.options.definir()
-            self.options.enregistrer()
-        except IOError:
-            print "   Permission d'enregistrer les options refusée...",
-        except:
-            print "   Erreur enregistrement options...",
+#        try:
+#            self.options.definir()
+#            self.options.enregistrer()
+#        except IOError:
+#            print "   Permission d'enregistrer les options refusée...",
+#        except:
+#            print "   Erreur enregistrement options...",
         
         # Close all ChildFrames first else Python crashes
         toutferme = True
@@ -5320,6 +5347,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         
     
     def miseEnPlace(self):
+        
         
         #############################################################################################
         # Mise en place de la zone graphique
@@ -5383,9 +5411,8 @@ class FenetreDocument(aui.AuiMDIChildFrame):
                          )
         
 
-        
         self.mgr.Update()
-        
+
         self.Bind(EVT_DOC_MODIFIED, self.OnDocModified)
         self.Bind(wx.EVT_CLOSE, self.quitter)
         
@@ -5394,9 +5421,9 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         sizer = wx.BoxSizer()
         sizer.Add(self.pnl, 1, wx.EXPAND)
         self.SetSizer(sizer)
-   
+        
         wx.CallAfter(self.Layout)
-        self.Layout()
+#        self.Layout()
 
          
 
@@ -5651,7 +5678,7 @@ class FenetreSequence(FenetreDocument):
         #
         # La classe
         #
-        self.classe = Classe(self, self.panelProp)
+        self.classe = Classe(parent, self.panelProp)
         
         #
         # La séquence
@@ -5667,14 +5694,29 @@ class FenetreSequence(FenetreDocument):
         self.arbre.SelectItem(self.classe.branche)
         self.arbre.ExpandAll()
         
+        
         #
         # Zone graphique de la fiche de séquence
         #
         self.ficheSeq = FicheSequence(self.nb, self.sequence)
-        
         self.nb.AddPage(self.ficheSeq, u"Fiche Séquence")
         
+        #
+        # Détails
+        #
+        self.pageDetails = RapportRTF(self.nb, rt.RE_READONLY)
+        self.nb.AddPage(self.pageDetails, u"Détails des séances")
+        
+        self.nb.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
+        
         self.miseEnPlace()
+        
+    ###############################################################################################
+    def OnPageChanged(self, event):
+        new = event.GetSelection()
+        event.Skip()
+        if new == 1: # On vient de cliquer sur la page "détails"
+            self.pageDetails.Remplir(self.fichierCourant, self.sequence, self.typ)
      
             
     ###############################################################################################
@@ -5715,6 +5757,7 @@ class FenetreSequence(FenetreDocument):
         self.Freeze()
         fichier = open(nomFichier,'r')
         self.definirNomFichierCourant(nomFichier)
+        
         try:
             root = ET.parse(fichier).getroot()
             
@@ -5786,7 +5829,7 @@ class FenetreProjet(FenetreDocument):
         #
         # La classe
         #
-        self.classe = Classe(self, self.panelProp, pourProjet = True)
+        self.classe = Classe(parent, self.panelProp, pourProjet = True)
         
         #
         # Le projet
@@ -5808,43 +5851,36 @@ class FenetreProjet(FenetreDocument):
         #
         # Zone graphique de la fiche de projet
         #
-        self.fichePrj = FicheProjet(self.nb, self.projet)
-        
+        self.fichePrj = FicheProjet(self.nb, self.projet)       
 #        self.thread = ThreadRedess(self.fichePrj)
-        
         self.nb.AddPage(self.fichePrj, u"Fiche Projet")
+        
+        #
+        # Détails
+        #
+        self.pageDetails = RapportRTF(self.nb, rt.RE_READONLY)
+        self.nb.AddPage(self.pageDetails, u"Tâches élèves détaillées")
+        
+        self.nb.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
+        
         
         self.miseEnPlace()
         
-            
+    ###############################################################################################
+    def OnPageChanged(self, event):
+        new = event.GetSelection()
+        event.Skip()
+        if new == 1: # On vient de cliquer sur la page "détails"
+            self.pageDetails.Remplir(self.fichierCourant, self.projet, self.typ)
+
+        
     ###############################################################################################
     def OnDocModified(self, event):
         if event.GetDocument() == self.projet:
             self.projet.VerifPb()
             self.projet.SetCompetencesRevuesSoutenance()
             
-            
-            
-            
-#            try:
-#                self.thread.join()
-#                while self.fichePrj.enCours:
-#                    pass
-#                print "join"
-#            except:
-#                pass
-#            self.thread.start()
-            
-            
-#            
-#            b = Thread(None, self.fichePrj.Redessiner, None)
-#            b.start()
-
-
-
             wx.CallAfter(self.fichePrj.Redessiner)
-
-#            event.Skip()
 
             self.MarquerFichierCourantModifie()
             
@@ -5951,33 +5987,32 @@ class FenetreProjet(FenetreDocument):
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
             dlg.Destroy()
-            
-            dlg = wx.ProgressDialog(u"Génération des grilles",
-                                    u"",
-                                    maximum = len(self.projet.eleves),
-                                    parent=self,
-                                    style = 0
-                                    | wx.PD_APP_MODAL
-                                    | wx.PD_CAN_ABORT
-                                    #| wx.PD_CAN_SKIP
-                                    #| wx.PD_ELAPSED_TIME
-#                                    | wx.PD_ESTIMATED_TIME
-#                                    | wx.PD_REMAINING_TIME
-                                    #| wx.PD_AUTO_HIDE
-                                    )
+            dlgb = wx.ProgressDialog   (u"Génération des grilles",
+                                        u"",
+                                        maximum = len(self.projet.eleves),
+                                        parent=self,
+                                        style = 0
+                                        | wx.PD_APP_MODAL
+                                        | wx.PD_CAN_ABORT
+                                        #| wx.PD_CAN_SKIP
+                                        #| wx.PD_ELAPSED_TIME
+    #                                    | wx.PD_ESTIMATED_TIME
+    #                                    | wx.PD_REMAINING_TIME
+                                        #| wx.PD_AUTO_HIDE
+                                        )
 
             
             count = 0
             for e in self.projet.eleves:
                 nomFichier = "Grille_"+e.GetNomPrenom()+"_"+self.projet.intitule[:20]
-                dlg.Update(count, nomFichier)
-                dlg.Refresh()
+                dlgb.Update(count, nomFichier)
+                dlgb.Refresh()
                 count += 1
                 tableur = grilles.getTableau(self.projet)
                 grilles.modifierGrille(self.projet, tableur, e)
                 
-                if os.path.isfile(path):
-                    pass
+#                if os.path.isfile(path):
+#                    pass
                 
                 try:
                     tableur.save(os.path.join(path, nomFichier))
@@ -5988,8 +6023,8 @@ class FenetreProjet(FenetreDocument):
                                   u" - que le dossier choisi n'est pas protégé en écriture")
                 tableur.close()
                 
-            dlg.Update(count, u"Toutes les grilles ont été créées avec succès dans le dossier :\n\n"+path)
-            dlg.Destroy() 
+            dlgb.Update(count, u"Toutes les grilles ont été créées avec succès dans le dossier :\n\n"+path)
+            dlgb.Destroy() 
                 
                 
         else:
@@ -6045,6 +6080,7 @@ class BaseFiche(wx.ScrolledWindow):
         self.Bind(wx.EVT_LEAVE_WINDOW, self.OnLeave)
         self.Bind(wx.EVT_MOTION, self.OnMove)
 
+        self.InitBuffer()
 
     ######################################################################################################
     def OnLeave(self, evt = None):
@@ -6060,6 +6096,7 @@ class BaseFiche(wx.ScrolledWindow):
         
     #############################################################################            
     def OnResize(self, evt):
+        
         w, h = self.GetClientSize()
         self.SetVirtualSize((w,w*29/21)) # Mise au format A4
 
@@ -6701,23 +6738,47 @@ class PanelPropriete_Classe(PanelPropriete):
         self.classe = classe
         self.pasVerrouille = True
         
-
+        #
+        # La barre d'outils
+        #
+        tb = wx.ToolBar(self, style = wx.TB_FLAT|wx.TB_NODIVIDER)
+        self.sizer.Add(tb, (0,1), (1,1), flag = wx.ALL|wx.ALIGN_RIGHT, border = 1)
+        tb.AddSimpleTool(30, images.Icone_valid_pref.GetBitmap(),
+                         u"Choisir ces paramètres de classe pour les futurs documents")
+        self.Bind(wx.EVT_TOOL, self.OnValidPref, id=30)
+        tb.AddSimpleTool(31, images.Icone_defaut_pref.GetBitmap(), 
+                         u"Rétablir les paramètres de classe par défaut")
+        self.Bind(wx.EVT_TOOL, self.OnDefautPref, id=31)
+        if not pourProjet:
+            tb.AddSimpleTool(32, images.Icone_excel.GetBitmap(), 
+                             u"Sélectionner les CI depuis un fichier Excel",
+                             u"Sélectionner les CI ET depuis un fichier Excel (.xls)")
+            self.Bind(wx.EVT_TOOL, self.SelectCI, id=32)
+        
+        
+        self.tb = tb
+        tb.Realize()
+        
         #
         # Type d'enseignement
         #
+        l = []
+        for i, e in enumerate(constantes.listEnseigmenent):
+            l.append(constantes.Enseigmenent[e][0])
         rb = wx.RadioBox(
                 self, -1, u"Type d'enseignement", wx.DefaultPosition, (130,-1),
-                constantes.listEnseigmenent, 1, wx.RA_SPECIFY_COLS
+                l,
+                1, wx.RA_SPECIFY_COLS
                 )
-        rb.SetToolTip(wx.ToolTip(u"Choisir le type d'enseignement" ))
+        rb.SetToolTip(wx.ToolTip(u"Choisir le type d'enseignement"))
         for i, e in enumerate(constantes.listEnseigmenent):
-            rb.SetItemToolTip(i, constantes.Enseigmenent[e])
+            rb.SetItemToolTip(i, constantes.Enseigmenent[e][1])
         self.Bind(wx.EVT_RADIOBOX, self.EvtRadioBox, rb)
         if pourProjet:
             rb.EnableItem(0, False) 
             rb.SetStringSelection(self.classe.typeEnseignement)
             
-        self.sizer.Add(rb, (0,0), flag = wx.EXPAND|wx.ALL)
+        self.sizer.Add(rb, (0,0), (2,1), flag = wx.EXPAND|wx.ALL)
         self.cb_type = rb
         
         #
@@ -6765,8 +6826,6 @@ class PanelPropriete_Classe(PanelPropriete):
                 list.InsertColumnInfo(i+2, info)
                 list.SetColumnWidth(i+2, 20)
             
-                
-            
             self.list = list
             self.PeuplerListe()
             
@@ -6776,32 +6835,52 @@ class PanelPropriete_Classe(PanelPropriete):
             
     #        txt = wx.TextCtrl(self, -1, getTextCI(self.classe.ci_ET),
     #                          style = wx.TE_MULTILINE)
-            sbs1.Add(list, flag = wx.EXPAND|wx.ALL, border = 5)
+            sbs1.Add(list, 1, flag = wx.EXPAND|wx.ALL, border = 2)
     #        txt.Bind(wx.EVT_TEXT, self.EvtTxtCI)
     #        self.txtCi = txt
             if self.classe.typeEnseignement != 'ET' :
                 self.list.Enable(False)
             
-            btn = wx.Button(self, -1, u"Sélectionner depuis un fichier Excel (.xls)")
-            aide = u"Sélectionner depuis un fichier Excel (.xls)"
-            btn.SetToolTip(wx.ToolTip(aide))
-            btn.SetHelpText(aide)
-            self.btn = btn
-            sbs1.Add(btn, flag = wx.EXPAND|wx.ALL, border = 5)
-            self.Bind(wx.EVT_BUTTON, self.SelectCI, btn)
-            self.sizer.Add(sbs1, (0,2), flag = wx.EXPAND|wx.ALL)    
+#            btn = wx.Button(self, -1, u"Sélectionner depuis un fichier Excel (.xls)")
+#            aide = u"Sélectionner depuis un fichier Excel (.xls)"
+#            btn.SetToolTip(wx.ToolTip(aide))
+#            btn.SetHelpText(aide)
+#            self.btn = btn
+#            sbs1.Add(btn, flag = wx.EXPAND|wx.ALL, border = 5)
+#            self.Bind(wx.EVT_BUTTON, self.SelectCI, btn)
+            self.sizer.Add(sbs1, (0,2), (2,1), flag = wx.EXPAND|wx.ALL)    
             
             self.sizer.AddGrowableCol(2)
-        
+            self.sizer.AddGrowableRow(0)
         
         
         #
         # Effectifs
         #
         self.ec = PanelEffectifsClasse(self, classe)
-        self.sizer.Add(self.ec, (0,1), flag = wx.EXPAND|wx.ALL|wx.ALIGN_RIGHT)
+        self.sizer.Add(self.ec, (1,1), flag = wx.EXPAND|wx.ALL|wx.ALIGN_RIGHT)
         
     
+    #############################################################################            
+    def OnDefautPref(self, evt):
+        self.classe.options.defaut()
+        self.classe.Initialise(isinstance(self.classe.doc, Projet))
+        self.MiseAJour()
+        
+    #############################################################################            
+    def OnValidPref(self, evt):
+        try:
+            self.classe.options.valider(self.classe)
+            self.classe.options.enregistrer()
+        except IOError:
+            messageErreur(self, u"Permission refusée",
+                          u"Permission d'enregistrer les préférences refusée.\n\n" \
+                          u"Le dossier est protégé en écriture")
+        except:
+            messageErreur(self, u"Enregistrement impossible",
+                          u"Imposible d'enregistrer les préférences\n\n")
+        return   
+        
     #############################################################################            
     def GetDocument(self):
         return self.classe.doc
@@ -6843,8 +6922,11 @@ class PanelPropriete_Classe(PanelPropriete):
     ######################################################################################  
     def MiseAJourType(self):
         if hasattr(self, 'list'):
-            self.list.Enable(self.pasVerrouille and self.classe.typeEnseignement == 'ET')
-            self.btn.Enable(self.pasVerrouille and self.classe.typeEnseignement == 'ET')
+            enable = self.pasVerrouille and (self.classe.typeEnseignement == 'ET')
+            self.list.Enable(enable)
+            self.tb.EnableTool(31, enable)
+            self.tb.EnableTool(32, enable)
+#            self.btn.Enable(self.pasVerrouille and self.classe.typeEnseignement == 'ET')
             
     ######################################################################################  
     def MiseAJour(self):
@@ -6938,23 +7020,24 @@ class PanelPropriete_Classe(PanelPropriete):
     ######################################################################################  
     def SelectCI(self, event = None):
         if recup_excel.ouvrirFichierExcel():
-            dlg = wx.MessageDialog(self.Parent, u"Sélectionner une liste de CI\n" \
-                                             u"dans le classeur Excel qui vient de s'ouvrir,\n" \
-                                             u'puis appuyer sur "Oui".\n\n' \
-                                             u"Format attendu de la selection :\n" \
-                                             u"Liste des CI sur une colonne.",
-                                             u'Sélection de CI',
-                                             wx.ICON_INFORMATION | wx.YES_NO | wx.CANCEL
-                                             )
+            dlg = wx.MessageDialog(self.Parent,  u"Sélectionner une liste de CI\n" \
+                                                 u"dans le classeur Excel qui vient de s'ouvrir,\n" \
+                                                 u'puis appuyer sur "Oui".\n\n' \
+                                                 u"Format attendu de la selection :\n" \
+                                                 u"Liste des CI sur une colonne.",
+                                                 u'Sélection de CI',
+                                                 wx.ICON_INFORMATION | wx.YES_NO | wx.CANCEL
+                                                 )
             res = dlg.ShowModal()
             dlg.Destroy() 
             if res == wx.ID_YES:
                 ls = recup_excel.getColonne(c = 0)
 #                ci = getTextCI(ls)
 #                self.txtCi.ChangeValue(ci)
-                self.classe.ci_ET = ls
-                self.MiseAJour()
-                self.sendEvent()
+                if ls != None:
+                    self.classe.ci_ET = ls
+                    self.MiseAJour()
+                    self.sendEvent()
             elif res == wx.ID_NO:
                 print "Rien" 
         
@@ -6962,8 +7045,11 @@ class PanelPropriete_Classe(PanelPropriete):
     def Verrouiller(self, etat):
         self.cb_type.Enable(etat)
         if hasattr(self, 'list'):
-            self.list.Enable(etat and (self.classe.typeEnseignement == 'ET'))
-            self.btn.Enable(etat and (self.classe.typeEnseignement == 'ET'))
+            enable = etat and (self.classe.typeEnseignement == 'ET')
+            self.list.Enable(enable)
+#            self.btn.Enable(etat and (self.classe.typeEnseignement == 'ET'))
+            self.tb.EnableTool(31, enable)
+            self.tb.EnableTool(32, enable)
         self.pasVerrouille = etat
 #        for c in self.GetChildren():
 #            self.Enable(etat)
@@ -7240,7 +7326,8 @@ class PanelPropriete_CI(PanelPropriete):
             
             self.grid1 = wx.FlexGridSizer( 0, 2, 0, 0 )
             
-            for i, ci in enumerate(constantes.CentresInterets[self.CI.GetTypeEnseignement()]):
+#            for i, ci in enumerate(constantes.CentresInterets[self.CI.GetTypeEnseignement()]):
+            for i, ci in enumerate(self.CI.parent.classe.ci_ET):
                 r = wx.CheckBox(self, 200+i, "")
                 t = wx.StaticText(self, -1, "CI"+str(i+1)+" : "+ci)
                 self.group_ctrls.append((r, t))
@@ -7352,8 +7439,9 @@ class Panel_Cible(wx.Panel):
                   "_" : -100}
         
 
-        for i, ci in enumerate(constantes.CentresInterets[self.CI.GetTypeEnseignement()]):
-            mei, fsc = constantes.PositionCibleCIET[i].split("_")
+        for i, ci in enumerate(self.CI.parent.classe.ci_ET):
+            mei, fsc = self.CI.parent.classe.posCI_ET[i].split("_")
+#            constantes.PositionCibleCIET[i].split("_")
             mei = mei.replace(" ", "")
             fsc = fsc.replace(" ", "")
             
@@ -7612,7 +7700,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
 #            self.texte.SetToolTipString(u"Le lien vers le fichier Séquence est rompu !")
 #            return False
         
-        classe = Classe(self.lien.parent.app)
+        classe = Classe(self.lien.parent.app.parent)
         self.sequence = Sequence(self.lien.parent.app, classe)
         classe.SetDocument(self.sequence)
         
@@ -10647,13 +10735,15 @@ class DialogChoixDoc(wx.Dialog):
         sizer = wx.BoxSizer(wx.VERTICAL)
         button = wx.Button(self, -1, u"Nouvelle Séquence")
         button.SetToolTipString(u"Créer une nouvelle séquence pédagogique")
+        button.SetBitmap(images.Icone_sequence.Bitmap,wx.LEFT)
         self.Bind(wx.EVT_BUTTON, self.OnSeq, button)
-        sizer.Add(button,0, wx.ALIGN_CENTRE|wx.ALL, 5)
+        sizer.Add(button,0, wx.ALIGN_CENTRE|wx.ALL|wx.EXPAND, 5)
         
         button = wx.Button(self, -1, u"Nouveau Projet")
         button.SetToolTipString(u"Créer un nouveau projet")
+        button.SetBitmap(images.Icone_projet.Bitmap,wx.LEFT)
         self.Bind(wx.EVT_BUTTON, self.OnPrj, button)
-        sizer.Add(button,0,  wx.ALIGN_CENTRE|wx.ALL, 5)
+        sizer.Add(button,0,  wx.ALIGN_CENTRE|wx.ALL|wx.EXPAND, 5)
     
         self.SetSizer(sizer)
         sizer.Fit(self)
