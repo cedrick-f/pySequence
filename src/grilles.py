@@ -35,7 +35,7 @@ import wx
 COCHE = u"X"
 
 GRILLE ={'SSI' : "Grille_evaluation_SSI_projet.xls",
-         'STI' : "Grille_evaluation_STI2D_projet.xlsx"
+         'STI' : "Grille_evaluation_STI2D_projet.xls"
          }
 
 Cellules_NON_SSI = {  "B3" : [(5,4), (6,4)],
@@ -170,17 +170,17 @@ from constantes import PATH
 import os
 from widgets import messageErreur
 
-def getTableau(doc):
+def getTableau(parent, doc):
     typ = doc.GetTypeEnseignement(simple = True)
     fichier = os.path.join(PATH, GRILLE[typ])
     if os.path.isfile(fichier):
         try:
             tableau = PyExcel(fichier)
         except:
-            messageErreur(self, u"Ouverture d'Excel impossible !",
+            messageErreur(parent, u"Ouverture d'Excel impossible !",
                           u"L'application Excel ne semble pas installée !")
     else:
-        messageErreur(self, u"Fichier non trouvé !",
+        messageErreur(parent, u"Fichier non trouvé !",
                       u"Le fichier original de la grille,\n    " + fichier + u"\n" \
                       u"n'a pas été trouvé ! \n")
 
