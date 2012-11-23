@@ -6870,6 +6870,9 @@ class PanelPropriete_Classe(PanelPropriete):
         
     #############################################################################            
     def OnValidPref(self, evt):
+        self.classe.options.valider(self.classe)
+        self.classe.options.enregistrer()
+        return
         try:
             self.classe.options.valider(self.classe)
             self.classe.options.enregistrer()

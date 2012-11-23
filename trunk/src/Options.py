@@ -53,8 +53,8 @@ class Options:
 #        self.optImpression = {}
 #        self.optCalcul = {}
 #        
-#        if options == None:
-#            self.defaut()
+        if options == None:
+            self.defaut()
           
 #        self.listeOptions = [u"Général", u"Affichage", u"Couleurs", u"Impression"] 
          
@@ -76,18 +76,18 @@ class Options:
         print self.optClasse
         return ""
     
-        t = "Options :\n"
-        for o in self.optClasse.items():
-            if type(o[1]) == int or type(o[1]) == float:
-                tt = str(o[1])
-            elif type(o[1]) == bool:
-                tt = str(o[1])
-            else:
-                tt = ""
-                ttt = o[1]
-                print ttt, type(ttt)
-            t += "\t" + o[0] + " = " + tt +"\n"
-        return t
+#        t = "Options :\n"
+#        for o in self.optClasse.items():
+#            if type(o[1]) == int or type(o[1]) == float:
+#                tt = str(o[1])
+#            elif type(o[1]) == bool:
+#                tt = str(o[1])
+#            else:
+#                tt = ""
+#                ttt = o[1]
+#                print ttt, type(ttt)
+#            t += "\t" + o[0] + " = " + tt +"\n"
+#        return t
     
     
     #########################################################################################################
@@ -138,13 +138,14 @@ class Options:
         except:
             with io.open(self.fichierOpt, 'r', encoding='utf_8_sig') as fp:
                 config.readfp(fp)
-#        config.read(self.fichierOpt)
+        config.read(self.fichierOpt)
         print "ouverture :",self.fichierOpt
         for titre in self.typesOptions.keys():
             titreUtf = titre.encode('utf-8')
+#            print titreUtf, self.typesOptions[titre].keys()
             for titreopt in self.typesOptions[titre].keys():
                 opt = self.typesOptions[titre][titreopt] 
-                
+#                print type(opt), opt
                 if type(opt) == int:
                     opt = config.getint(titreUtf, titreopt)
                 elif type(opt) == float:
@@ -235,8 +236,9 @@ class Options:
                                        "G" : classe.nbrGroupes["G"],
                                        "E" : classe.nbrGroupes["E"],
                                        "P" : classe.nbrGroupes["P"]}
-        self.optClasse["CentresInteretET"] = classe.ci_ET
-        self.optClasse["PositionsCI_ET"] = classe.posCI_ET
+        if hasattr(classe, 'ci_ET'):
+            self.optClasse["CentresInteretET"] = classe.ci_ET
+            self.optClasse["PositionsCI_ET"] = classe.posCI_ET
         
         
     ###########################################################################
