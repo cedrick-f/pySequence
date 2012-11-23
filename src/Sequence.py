@@ -40,7 +40,7 @@ Copyright (C) 2011-2012
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "3.11"
+__version__ = "3.12"
 
 #from threading import Thread
 
@@ -278,14 +278,14 @@ class Lien():
                 os.startfile(path)
             except:
                 messageErreur(None, u"Ouverture impossible",
-                              u"Impossible d'ouvrir le fichier\n%s!\n" %toDefautEncoding(path))
+                              u"Impossible d'ouvrir le fichier\n\n%s!\n" %toDefautEncoding(path))
                 
         elif self.type == 'd':
             try:
                 subprocess.Popen(["explorer", path])
             except:
                 messageErreur(None, u"Ouverture impossible",
-                              u"Impossible d'accéder au dossier\n%s!\n" %toDefautEncoding(path))
+                              u"Impossible d'accéder au dossier\n\n%s!\n" %toDefautEncoding(path))
             
         elif self.type == 'u':
             try:
@@ -294,7 +294,7 @@ class Lien():
                 webbrowser.open(self.path)
             except:
                 messageErreur(None, u"Ouverture impossible",
-                              u"Impossible d'ouvrir l'url\n%s!\n" %toDefautEncoding(self.path))
+                              u"Impossible d'ouvrir l'url\n\n%s!\n" %toDefautEncoding(self.path))
         
         elif self.type == 's':
             if os.path.isfile(path):
@@ -5068,7 +5068,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             ok = register.Register(PATH)
         if not ok:
             messageErreur(self, u"Accès refusé",
-                          u"Accès à la base de registre refusé !\n" \
+                          u"Accès à la base de registre refusé !\n\n" \
                           u"Redémarrer pySequence en tant qu'administrateur.")
         else:
             self.MiseAJourMenu()
@@ -5660,7 +5660,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
  
 def Dialog_ErreurAccesFichier(nomFichier):
     messageErreur(None, u'Erreur !',
-                  u"Impossible d'accéder au fichier\n%s\nen écriture !" %toDefautEncoding(nomFichier))
+                  u"Impossible d'accéder en écriture au fichier\n\n%s" %toDefautEncoding(nomFichier))
 
 
 ########################################################################################
@@ -5976,7 +5976,8 @@ class FenetreProjet(FenetreDocument):
     #############################################################################
     def genererGrilles(self, event = None):
 #        mesFormats = "Tableur Excel (.xls)|*.xls"
-        dlg = wx.DirDialog(None, 
+        
+        dlg = wx.DirDialog(self, 
                             message = u"Emplacement des grilles", 
     #                        defaultDir=toDefautEncoding(self.DossierSauvegarde) , 
     #                        defaultFile="", 
@@ -6008,7 +6009,7 @@ class FenetreProjet(FenetreDocument):
                 dlgb.Update(count, nomFichier)
                 dlgb.Refresh()
                 count += 1
-                tableur = grilles.getTableau(self.projet)
+                tableur = grilles.getTableau(self, self.projet)
                 grilles.modifierGrille(self.projet, tableur, e)
                 
 #                if os.path.isfile(path):
@@ -6018,7 +6019,7 @@ class FenetreProjet(FenetreDocument):
                     tableur.save(os.path.join(path, nomFichier))
                 except:
                     messageErreur(self, u"Erreur !",
-                                  u"Impossible d'enregistrer le fichier. Vérifier :\n" \
+                                  u"Impossible d'enregistrer le fichier.\n\nVérifier :\n" \
                                   u" - qu'aucun fichier portant le même nom n'est déja ouvert\n" \
                                   u" - que le dossier choisi n'est pas protégé en écriture")
                 tableur.close()
@@ -10825,7 +10826,7 @@ class A_propos(wx.Dialog):
             lictext = txt.read()
             txt.close()
         except:
-            lictext = u"Le fichier de licence (gpl.txt) est introuvable !\n" \
+            lictext = u"Le fichier de licence (gpl.txt) est introuvable !\n\n" \
                       u"Veuillez réinstaller pySequence !"
             messageErreur(self, u'Licence introuvable',
                           lictext)
