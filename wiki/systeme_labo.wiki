@@ -16,7 +16,7 @@ Cliquer avec le _bouton droit_ de la souris sur *"Systèmes :"* puis choisir *"A
 http://pysequence.googlecode.com/svn/trunk/images_aide/systemes.png
 
 La partie *"Propriétés"* change et permet de saisir :
-|| - le *nom*,<br> - la *quantité* disponible dans le laboratoire<br> - l'*image* du système.||http://pysequence.googlecode.com/svn/trunk/images_aide/images_systeme.png||
+|| - le *nom* du système<br>   (réel, virtuel, instruments de mesure, PC, logiciel, ...),<br> - la *quantité* disponible dans le laboratoire<br> - l'*image* du système.||http://pysequence.googlecode.com/svn/trunk/images_aide/images_systeme.png||
 
 L'_arbre de création_ et la _fiche_ se mettent à jour automatiquement
 ||http://pysequence.googlecode.com/svn/trunk/images_aide/systeme_arbre.png||http://pysequence.googlecode.com/svn/trunk/images_aide/systemes_fiche.png||
