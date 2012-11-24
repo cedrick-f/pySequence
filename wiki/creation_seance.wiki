@@ -18,19 +18,14 @@ http://pysequence.googlecode.com/svn/trunk/images_aide/proprietes_activite_syste
 ||http://pysequence.googlecode.com/svn/trunk/images_aide/ED.png||http://pysequence.googlecode.com/svn/trunk/images_aide/AP.png||http://pysequence.googlecode.com/svn/trunk/images_aide/APR.png||http://pysequence.googlecode.com/svn/trunk/images_aide/C.png||http://pysequence.googlecode.com/svn/trunk/images_aide/SA.png||
 ||http://pysequence.googlecode.com/svn/trunk/images_aide/SS.png||http://pysequence.googlecode.com/svn/trunk/images_aide/E.png||http://pysequence.googlecode.com/svn/trunk/images_aide/rot.png||http://pysequence.googlecode.com/svn/trunk/images_aide/paral.png||
 
- * Intitulé de la séance (en décochant la case _Montrer dans la zone de déroulement de la séquence_, l'intitulé apparaitra dans un tableau en bas de fiche)
- * Durée (en heures)
- * Effectif élève de la séance (varie selon le type d'activité)
- * Démarche pédagogique (Investigation, Résolution de problème ou Projet)
+ * *Intitulé* de la séance (en décochant la case _Montrer dans la zone de déroulement de la séquence_, l'intitulé apparaitra dans un tableau en bas de fiche)
+ * *Durée* (en heures)
+ * *Effectif* élève de la séance (varie selon le type d'activité)
+ * *Démarche* pédagogique (Investigation, Résolution de problème ou Projet)
  * Nombre d'activités identiques simultanées
- * Les systèmes et leur nombre nécessaires à l'activité
- * Description détaillée de la séance (en [texte_riche texte "riche"])
- * Lien externe (Fichier, Dossier ou Lien Internet)
-
-
-
-
-[= Prise en compte des systèmes = systems]
+ * Les *systèmes* et la quantité nécessaire à l'activité (voir Systemes)
+ * *Description* détaillée de la séance (en [texte_riche texte "riche"])
+ * *Lien* externe (Fichier, Dossier ou Lien Internet)
 
 
 [Aide Sommaire de l'aide]
