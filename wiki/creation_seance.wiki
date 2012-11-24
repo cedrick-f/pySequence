@@ -23,7 +23,7 @@ http://pysequence.googlecode.com/svn/trunk/images_aide/proprietes_activite_syste
  * *Effectif* élève de la séance (varie selon le type d'activité)
  * *Démarche* pédagogique (Investigation, Résolution de problème ou Projet)
  * Nombre d'activités identiques simultanées
- * Les *systèmes* et la quantité nécessaire à l'activité (voir Systemes)
+ * Les *systèmes* et la quantité nécessaire à l'activité (voir [systeme_labo Systèmes])
  * *Description* détaillée de la séance (en [texte_riche texte "riche"])
  * *Lien* externe (Fichier, Dossier ou Lien Internet)
 
