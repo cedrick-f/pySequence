@@ -12,6 +12,7 @@ Clquer sur le bouton http://pysequence.googlecode.com/svn/trunk/images_aide/Bout
 _ou bien_
 
 Cliquer avec le _bouton droit_ de la souris sur *"Systèmes :"* puis choisir *"Ajouter un système"*.
+
 http://pysequence.googlecode.com/svn/trunk/images_aide/systemes.png
 
 La partie *"Propriétés"* change et permet de saisir :
