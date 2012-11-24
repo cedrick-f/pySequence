@@ -162,14 +162,14 @@ class Options:
                     for n, v in config.items(titreUtf):
 #                        print titreopt, n
                         if titreopt.lower() in n:
-                            d[eval(n.rsplit("_")[-1])] = config.get(titreUtf, n)
+                            d[eval(n.rsplit("_")[-1])] = unicode(config.get(titreUtf, n))
 #                    print d, "-->",
                     
                     l = []
                     for i in range(len(d)):
                         l.append(d[i][1:-1])
                     opt = l
-#                    print l
+#                    print l, type(l[0])
                     
                 elif type(opt) == dict:
                     d = {}

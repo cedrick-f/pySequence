@@ -34,8 +34,12 @@ import wx
 
 COCHE = u"X"
 
-GRILLE ={'SSI' : "Grille_evaluation_SSI_projet.xls",
-         'STI' : "Grille_evaluation_STI2D_projet.xls"
+GRILLE ={'SSI' : ["Grille_evaluation_SSI_projet.xlsx", "Grille_evaluation_SSI_projet.xls"],
+         'STI' : ["Grille_evaluation_STI2D_soutenance.xlsm", "Grille_evaluation_STI2D_soutenance.xls"],
+         'AC' : ["Grille_evaluation_STI2D_AC_revues.xlsm", "Grille_evaluation_STI2D_AC_revues.xls"],
+         'ITEC' : ["Grille_evaluation_STI2D_ITEC_revues.xlsm", "Grille_evaluation_STI2D_ITEC_revues.xls"],
+         'EE' : ["Grille_evaluation_STI2D_EE_revues.xlsm", "Grille_evaluation_STI2D_EE_revues.xls"],
+         'SIN' : ["Grille_evaluation_STI2D_SIN_revues.xlsm", "Grille_evaluation_STI2D_SIN_revues.xls"],
          }
 
 Cellules_NON_SSI = {  "B3" : [(5,4), (6,4)],
@@ -128,10 +132,10 @@ Cellules_NON_SIN =  {"CO7.sin1" : [(5,4), (6,4), (7,4), (8,4)],
                      "CO9.sin3" : [(42,4), (43,4), (44,4), (45,4)],
                      "CO9.sin4" : [(46,4), (47,4), (48,4), (49,4), (50,4)]}
                   
-Cellules_INFO_STI =  {"Tit" : (3,2),
-                      "Des" : (8,1),
-                      "Nom" : (4,2),
-                      "Pre" : (5,2),
+Cellules_INFO_STI =  {"Tit" : (13,1),
+                      "Des" : (13,1),
+                      "Nom" : (8,2),
+                      "Pre" : (9,2),
 #                      "Pro" : (5,2)
                       }
  
@@ -171,34 +175,66 @@ import os
 from widgets import messageErreur
 
 def getTableau(parent, doc):
-    typ = doc.GetTypeEnseignement(simple = True)
-    fichier = os.path.join(PATH, GRILLE[typ])
-    if os.path.isfile(fichier):
-        try:
-            tableau = PyExcel(fichier)
-        except:
-            messageErreur(parent, u"Ouverture d'Excel impossible !",
-                          u"L'application Excel ne semble pas installée !")
+    typ = doc.GetTypeEnseignement()
+    if typ == 'SSI':
+        fichiers = GRILLE[typ]
     else:
+        fichiersR = GRILLE[typ]
+        fichiersS = GRILLE['STI']
+    
+    fichierPB = []
+    def ouvrir(fichier):
+        fichier = os.path.join(PATH, fichier)
+        tableau = None
+        err = 0
+        if os.path.isfile(fichier):
+            try:
+                tableau = PyExcel(fichier)
+            except:
+                err = 1
+        else:
+            err = 2
+            fichierPB.append(fichier)
+            
+        return err, tableau
+    
+    if typ == 'SSI':
+        err, tableau = ouvrir(fichiers[0])
+        if err != 0:
+            err, tableau = ouvrir(fichiers[1])
+    else:
+        errR, tableauR = ouvrir(fichiersR[0])
+        if errR != 0:
+            errR, tableauR = ouvrir(fichiersR[1])
+        errS, tableauS = ouvrir(fichiersS[0])
+        if errS != 0:
+            errS, tableauS = ouvrir(fichiersS[1])
+        err = errR + errR
+        tableau = [tableauR, tableauS]
+        
+    if err == 0:
+        return tableau
+    elif err == 1:
+        messageErreur(parent, u"Ouverture d'Excel impossible !",
+                      u"L'application Excel ne semble pas installée !")
+    elif err == 2:
         messageErreur(parent, u"Fichier non trouvé !",
-                      u"Le fichier original de la grille,\n    " + fichier + u"\n" \
-                      u"n'a pas été trouvé ! \n")
-
-    return tableau
+                              u"Le fichier original de la grille,\n    " + fichierPB[0] + u"\n" \
+                              u"n'a pas été trouvé ! \n")
 
 
 def modifierGrille(doc, tableur, eleve):
-#    print "modifierGrille"
+    print "modifierGrille"
     
 #    tableur.show()
     
-    shts = tableur.getSheets()
+#    shts = tableur.getSheets()
    
     # On supprime les feuilles des autres spécialités
-    if doc.GetTypeEnseignement() != 'SSI':
-        for s in ['AC', 'ITEC', 'EE', 'SIN']:
-            if s != doc.GetTypeEnseignement():
-                tableur.delSheet(s)
+#    if doc.GetTypeEnseignement() != 'SSI':
+#        for s in ['AC', 'ITEC', 'EE', 'SIN']:
+#            if s != doc.GetTypeEnseignement():
+#                tableur.delSheet(s)
       
     # On coche les cellules "non"          
     dic = Cellules_NON[doc.GetTypeEnseignement()]
@@ -213,8 +249,14 @@ def modifierGrille(doc, tableur, eleve):
                 if not indic:
                     l, c = cell
 #                    print feuille, l, c
-                    tableur.setCell(feuille, l, c, COCHE)
-        
+                    if doc.GetTypeEnseignement() == 'SSI':
+                        tableur.setCell(feuille, l, c, COCHE)
+                    else:
+                        if feuille == Feuille_ETT:
+                            t = tableur[1]
+                        else:
+                            t = tableur[0]
+                        t.setCell(2, l, c, COCHE)
         
         
 #    for comp, ii in eleve.GetDicIndicateurs().items():
@@ -224,19 +266,23 @@ def modifierGrille(doc, tableur, eleve):
 #                tableur.setCell(2, l, c, COCHE)
     if doc.GetTypeEnseignement(simple = True) == "SSI":
         dicInfo = Cellules_INFO_SSI
+        tb = [tableur]
     else:
         dicInfo = Cellules_INFO_STI
-    l,c = dicInfo["Tit"]
-    tableur.setCell(1, l, c, doc.intitule)
+        tb = tableur
     
-    l,c = dicInfo["Des"]
-    tableur.setCell(1, l, c, doc.intitule + "\n" + doc.problematique)
-    
-    l,c = dicInfo["Nom"]
-    tableur.setCell(1, l, c, eleve.nom)
-    
-    l,c = dicInfo["Pre"]
-    tableur.setCell(1, l, c, eleve.prenom)
+    for t in tb:
+        l,c = dicInfo["Tit"]
+        t.setCell(1, l, c, doc.intitule)
+        
+        l,c = dicInfo["Des"]
+        t.setCell(1, l, c, doc.intitule + "\n" + doc.problematique)
+        
+        l,c = dicInfo["Nom"]
+        t.setCell(1, l, c, eleve.GetNom())
+        
+        l,c = dicInfo["Pre"]
+        t.setCell(1, l, c, eleve.GetPrenom())
     
 #    l,c = Cellules_INFO_SSI["Pro"]
 #    tableur.xlBook.Worksheets(1).Cells(l, c).Activate()

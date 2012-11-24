@@ -213,7 +213,6 @@ class AppelEvent(wx.PyCommandEvent):
 def testRel(lien, path):
     try:
         return os.path.relpath(lien,path)
-        
     except:
         return lien
     
@@ -225,9 +224,6 @@ def toDefautEncoding(path):
     return path  
 #        except:
 #            return self.path    
-            
-    
-
     
 ######################################################################################  
 def toFileEncoding(path):
@@ -707,7 +703,9 @@ class Classe():
     
     ######################################################################################  
     def setBranche(self, branche):
+        print "setBranche classe",
         self.typeEnseignement = branche.get("Type", "ET")
+        print self.typeEnseignement
         
         brancheCI = branche.find("CentreInteret")
         if brancheCI != None: # Uniquement pour rétrocompatibilité : normalement cet élément existe !
@@ -4316,13 +4314,20 @@ class Personne(Objet_sequence):
         
         return lst
     
+    ######################################################################################  
+    def GetNom(self):
+        return self.nom.upper()
     
+    ######################################################################################  
+    def GetPrenom(self):
+        return self.prenom.capitalize()
+        
     ######################################################################################  
     def GetNomPrenom(self):
         if self.nom == "" and self.prenom == "":
             return self.titre.capitalize()+' '+str(self.id+1)
         else:
-            return self.prenom.capitalize() + ' ' + self.nom.upper()
+            return self.GetPrenom() + ' ' + self.GetNom()
          
     
     ######################################################################################  
@@ -5977,11 +5982,7 @@ class FenetreProjet(FenetreDocument):
     def genererGrilles(self, event = None):
 #        mesFormats = "Tableur Excel (.xls)|*.xls"
         
-        dlg = wx.DirDialog(self, 
-                            message = u"Emplacement des grilles", 
-    #                        defaultDir=toDefautEncoding(self.DossierSauvegarde) , 
-    #                        defaultFile="", 
-#                            wildcard=mesFormats, 
+        dlg = wx.DirDialog(self, message = u"Emplacement des grilles", 
                             style=wx.DD_DEFAULT_STYLE|wx.CHANGE_DIR
                             )
 #        dlg.SetFilterIndex(0)
@@ -6005,25 +6006,34 @@ class FenetreProjet(FenetreDocument):
             
             count = 0
             for e in self.projet.eleves:
-                nomFichier = "Grille_"+e.GetNomPrenom()+"_"+self.projet.intitule[:20]
-                dlgb.Update(count, nomFichier)
-                dlgb.Refresh()
-                count += 1
-                tableur = grilles.getTableau(self, self.projet)
-                grilles.modifierGrille(self.projet, tableur, e)
+                if self.projet.GetTypeEnseignement() == 'SSI':
+                    nomFichier = "Grille_"+e.GetNomPrenom()+"_"+self.projet.intitule[:20]
+                    dlgb.Update(count, nomFichier)
+                    dlgb.Refresh()
+                    count += 1
+                    tableur = grilles.getTableau(self, self.projet)
+                    grilles.modifierGrille(self.projet, tableur, e)
+                    tf = [[tableur, nomFichier]]
+                else:
+                    nomFichierR = "Grille_revue_"+e.GetNomPrenom()+"_"+self.projet.intitule[:20]
+                    nomFichierS = "Grille_soutenance_"+e.GetNomPrenom()+"_"+self.projet.intitule[:20]
+                    dlgb.Update(count, nomFichierR+u"\n"+nomFichierS)
+                    dlgb.Refresh()
+                    count += 1
+                    tableur = grilles.getTableau(self, self.projet)
+                    grilles.modifierGrille(self.projet, tableur, e)
+                    tf = [[tableur[0], nomFichierR], [tableur[1], nomFichierS]]
                 
-#                if os.path.isfile(path):
-#                    pass
-                
-                try:
-                    tableur.save(os.path.join(path, nomFichier))
-                except:
-                    messageErreur(self, u"Erreur !",
-                                  u"Impossible d'enregistrer le fichier.\n\nVérifier :\n" \
-                                  u" - qu'aucun fichier portant le même nom n'est déja ouvert\n" \
-                                  u" - que le dossier choisi n'est pas protégé en écriture")
-                tableur.close()
-                
+                for t, f in tf:
+                    try:
+                        t.save(os.path.join(path, f))
+                    except:
+                        messageErreur(self, u"Erreur !",
+                                      u"Impossible d'enregistrer le fichier.\n\nVérifier :\n" \
+                                      u" - qu'aucun fichier portant le même nom n'est déja ouvert\n" \
+                                      u" - que le dossier choisi n'est pas protégé en écriture")
+                    t.close()
+            
             dlgb.Update(count, u"Toutes les grilles ont été créées avec succès dans le dossier :\n\n"+path)
             dlgb.Destroy() 
                 
@@ -6738,7 +6748,7 @@ class PanelPropriete_Classe(PanelPropriete):
         PanelPropriete.__init__(self, parent)
         self.classe = classe
         self.pasVerrouille = True
-        
+        print "PanelPropriete_Classe", classe.typeEnseignement
         #
         # La barre d'outils
         #
@@ -6776,8 +6786,8 @@ class PanelPropriete_Classe(PanelPropriete):
             rb.SetItemToolTip(i, constantes.Enseigmenent[e][1])
         self.Bind(wx.EVT_RADIOBOX, self.EvtRadioBox, rb)
         if pourProjet:
-            rb.EnableItem(0, False) 
-            rb.SetStringSelection(self.classe.typeEnseignement)
+            rb.ShowItem(0, False) 
+            rb.SetStringSelection(constantes.Enseigmenent[self.classe.typeEnseignement][0])
             
         self.sizer.Add(rb, (0,0), (2,1), flag = wx.EXPAND|wx.ALL)
         self.cb_type = rb
@@ -6870,9 +6880,6 @@ class PanelPropriete_Classe(PanelPropriete):
         
     #############################################################################            
     def OnValidPref(self, evt):
-        self.classe.options.valider(self.classe)
-        self.classe.options.enregistrer()
-        return
         try:
             self.classe.options.valider(self.classe)
             self.classe.options.enregistrer()
@@ -6935,7 +6942,7 @@ class PanelPropriete_Classe(PanelPropriete):
     ######################################################################################  
     def MiseAJour(self):
         self.MiseAJourType()
-        self.cb_type.SetStringSelection(self.classe.typeEnseignement)
+        self.cb_type.SetStringSelection(constantes.Enseigmenent[self.classe.typeEnseignement][0])
         
         if hasattr(self, 'list'):
             self.PeuplerListe()
@@ -6944,9 +6951,13 @@ class PanelPropriete_Classe(PanelPropriete):
 
     ######################################################################################  
     def PeuplerListe(self):
+#        print "PeuplerListe"
         # Peuplement de la liste
         self.list.DeleteAllItems()
         for i,ci in enumerate(self.classe.ci_ET):
+#            print type(ci)
+#            print ci.encode(DEFAUT_ENCODING)
+#            ci = toDefautEncoding(ci)
 #            item = ULC.UltimateListItem()
 #            item.SetText("CI"+str(i))
             index = self.list.InsertStringItem(sys.maxint, "CI"+str(i+1))
@@ -6961,7 +6972,7 @@ class PanelPropriete_Classe(PanelPropriete):
             for j,p in enumerate(['M', 'E', 'I', 'F', 'S', 'C']):
                 item = self.list.GetItem(i, j+2)
                 
-                cb = wx.CheckBox(self.list, 100+i,"", name = p)
+                cb = wx.CheckBox(self.list, 100+i, u"", name = p)
                 cb.SetValue(p in self.classe.posCI_ET[i])
                 self.Bind(wx.EVT_CHECKBOX, self.EvtCheckBox, cb)
                 item.SetWindow(cb)
