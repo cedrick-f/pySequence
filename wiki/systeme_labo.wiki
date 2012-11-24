@@ -8,10 +8,17 @@ Il existe deux façons pour déclarer les systèmes : un à un dans _*pySequence
 ==dans pySequence==
 
 Clquer sur le bouton http://pysequence.googlecode.com/svn/trunk/images_aide/Bouton_ajout_systeme.png
-_ou bien_
-Cliquer avec le _bouton droit_ de la souris sur *"Systèmes :"* puis choisir *"Ajouter un système"*.
 
-||http://pysequence.googlecode.com/svn/trunk/images_aide/systemes.png||La partie *"Propriétés"* change et permet de saisir :<br>  - le *nom*,<br>  - la *quantité* disponible<br>  - l'*image* du système.<br><br>http://pysequence.googlecode.com/svn/trunk/images_aide/images_systeme.png||
+_ou bien_
+
+Cliquer avec le _bouton droit_ de la souris sur *"Systèmes :"* puis choisir *"Ajouter un système"*.
+http://pysequence.googlecode.com/svn/trunk/images_aide/systemes.png
+
+La partie *"Propriétés"* change et permet de saisir :
+ * le *nom*,
+ * la *quantité* disponible
+ * l'*image* du système.
+http://pysequence.googlecode.com/svn/trunk/images_aide/images_systeme.png
 
 L'_arbre de création_ et la _fiche_ se mettent à jour automatiquement
 ||http://pysequence.googlecode.com/svn/trunk/images_aide/systeme_arbre.png||http://pysequence.googlecode.com/svn/trunk/images_aide/systemes_fiche.png||
