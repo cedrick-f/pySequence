@@ -40,7 +40,7 @@ Copyright (C) 2011-2012
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "3.12"
+__version__ = "3.13"
 
 #from threading import Thread
 
@@ -1803,7 +1803,6 @@ class Projet(BaseDoc, Objet_sequence):
 #        self.arbre.Freeze()
         tache.ConstruireArbre(self.arbre, self.brancheTac)
         
-        
 #        self.arbre.ExpandAll()
 #        self.arbre.CalculatePositions()
 #        self.arbre.Layout()
@@ -2233,8 +2232,8 @@ class Projet(BaseDoc, Objet_sequence):
     def MiseAJourTypeEnseignement(self):
         self.app.SetTitre()
         for t in self.taches:
-            if t.phase in ["R1", "R2", "S"]:
-                t.MiseAJourTypeEnseignement(self.classe.typeEnseignement)
+#            if t.phase in ["R1", "R2", "S"]:
+            t.MiseAJourTypeEnseignement(self.classe.typeEnseignement)
         
         
     #############################################################################
@@ -6008,7 +6007,7 @@ class FenetreProjet(FenetreDocument):
             for e in self.projet.eleves:
                 if self.projet.GetTypeEnseignement() == 'SSI':
                     nomFichier = "Grille_"+e.GetNomPrenom()+"_"+self.projet.intitule[:20]
-                    dlgb.Update(count, nomFichier)
+                    dlgb.Update(count, u"Traitement du fichier\n\n"+nomFichier)
                     dlgb.Refresh()
                     count += 1
                     tableur = grilles.getTableau(self, self.projet)
@@ -6017,11 +6016,17 @@ class FenetreProjet(FenetreDocument):
                 else:
                     nomFichierR = "Grille_revue_"+e.GetNomPrenom()+"_"+self.projet.intitule[:20]
                     nomFichierS = "Grille_soutenance_"+e.GetNomPrenom()+"_"+self.projet.intitule[:20]
-                    dlgb.Update(count, nomFichierR+u"\n"+nomFichierS)
+                    dlgb.Update(count, u"Traitement des fichiers\n\n"+nomFichierR+u"\n"+nomFichierS)
                     dlgb.Refresh()
                     count += 1
                     tableur = grilles.getTableau(self, self.projet)
-                    grilles.modifierGrille(self.projet, tableur, e)
+                    try:
+                        grilles.modifierGrille(self.projet, tableur, e)
+                    except:
+                        messageErreur(self, u"Accès refusé !",
+                                      u"Impossible d'accéder au fichier.\n\nVérifier :\n" \
+                                      u" - qu'aucun fichier portant le même nom n'est déja ouvert\n" \
+                                      u" - qu'Excel n'est pas déja ouvert (gestionnaire des tâches)")
                     tf = [[tableur[0], nomFichierR], [tableur[1], nomFichierS]]
                 
                 for t, f in tf:
@@ -6900,7 +6905,13 @@ class PanelPropriete_Classe(PanelPropriete):
         
     ######################################################################################  
     def EvtRadioBox(self, event):
-        self.classe.typeEnseignement = self.cb_type.GetItemLabel(event.GetInt())
+#        print self.cb_type.GetItemLabel(event.GetInt())
+        for c, e in constantes.Enseigmenent.items():
+#            print "   ", c, e
+            if e[0] == self.cb_type.GetItemLabel(event.GetInt()):
+                self.classe.typeEnseignement = c
+                break
+#        self.classe.typeEnseignement = self.cb_type.GetItemLabel(event.GetInt())
             
         self.MiseAJourType()
         
@@ -9996,7 +10007,6 @@ class ArbreCompetences(HTL.HyperTreeList):
     
     #############################################################################
     def MiseAJourPhase(self, phase):
-        
         self.DeleteChildren(self.root)
         self.Construire(self.root)
         self.ExpandAll()
@@ -10128,7 +10138,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
 
     ####################################################################################
     def Construire(self, branche, dic = None, type_ens = None):
-#        print "Construire", self.pptache.tache.phase
+#        print "Construire", self.pptache.tache.phase, type_ens
         if type_ens == None:
             type_ens = self.type_ens
         if dic == None: # Construction de la racine
@@ -10171,6 +10181,8 @@ class ArbreCompetencesPrj(ArbreCompetences):
 
                         if not Indic[1] or self.pptache.tache.phase != 'XXX':
                             i = self.AppendItem(c, Indic[0], ct_type=1, data = codeIndic)
+                            if codeIndic in self.pptache.tache.indicateurs:
+                                self.CheckItem2(i)
                             self.SetItemText(i, str(constantes.dicPoidsIndicateurs[type_ens][codeGrp][1][code][j])+"%", 1)
                             self.SetItemFont(i, font)
                             if Indic[1]:

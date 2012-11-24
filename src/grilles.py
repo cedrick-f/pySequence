@@ -224,9 +224,10 @@ def getTableau(parent, doc):
 
 
 def modifierGrille(doc, tableur, eleve):
-    print "modifierGrille"
+#    print "modifierGrille"
     
-#    tableur.show()
+#    tableur[0].show()
+#    tableur[1].show()
     
 #    shts = tableur.getSheets()
    
