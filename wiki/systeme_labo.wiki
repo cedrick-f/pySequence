@@ -2,7 +2,7 @@
 
 = Systèmes =
 
-Il existe deux façons pour déclarer les systèmes : un à un dans _*pySequence*_, ou en passant par une liste Excel.
+Il existe deux façons pour déclarer les systèmes : un à un dans _*pySequence*_, ou par lot en passant par une *liste Excel*.
 
 
 ==dans pySequence==
@@ -23,7 +23,7 @@ L'_arbre de création_ et la _fiche_ se mettent à jour automatiquement
 
 ==à partir d'une liste Excel==
 
-Cliquer avec la bouton droit de la souris sur *"Systèmes :"* puis choisir *"Sélectionner depuis un fichier"*.
+Cliquer avec le _bouton droit_ de la souris sur *"Systèmes :"* puis choisir *"Sélectionner depuis un fichier"*.
 
 http://pysequence.googlecode.com/svn/trunk/images_aide/systemes_excel.png
 
