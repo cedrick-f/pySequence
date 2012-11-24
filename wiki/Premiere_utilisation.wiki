@@ -16,9 +16,16 @@ Avant de démarrer la création des fiches de séquence, il est préférable de 
  * *découpage de la classe* en groupes
  * *centres d'intérêt* choisis pour l'ETT
 
-Par défaut, les *centres d'intérêt* sont définis pour l'académie de *Clermont-Ferrand*, mais il est possible de les modifier à partir d'une sélection d'un fichier _Excel_, ou bien manuellement. (voir [ModificationCI Modification des Centres d'Intérêt])
+Remarque : par défaut, les *centres d'intérêt* sont définis pour l'académie de *Clermont-Ferrand*, mais il est possible de les modifier à partir d'une sélection d'un fichier _Excel_, ou bien manuellement. (voir [ModificationCI Modification des Centres d'Intérêt])
 
-http://pysequence.googlecode.com/svn/trunk/images_aide/presentation.png
+== Paramètres de classe préférés ==
+Il est possible de conserver pour les futures fiches de séquence certains paramètres de classe :
+ * l'*effectif* et le *découpage* en groupes
+ * les *centres d'intérêt* choisis pour l'ETT
+
+Une fois les paramètres choisis (voir [ModificationCI Modification des Centres d'Intérêt]), cliquer sur le bouton http://pysequence.googlecode.com/svn/trunk/images_aide/Bouton_valid_pref.png. : les paramètres sont alors sauvegardés dans un fichier nommé _sequence.cfg_. Il seront automatiquement utilisés lors de la création des futures fiches. Toutefois, les fichiers .seq créés avec d'autres paramètres les conserveront.
+
+Pour rétablir les paramètres de classe par défaut, cliquer sur le bouton http://pysequence.googlecode.com/svn/trunk/images_aide/Bouton_defaut_pref.png
 
 == Enregistrement de pySequence ==
 
