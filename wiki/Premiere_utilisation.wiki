@@ -2,7 +2,7 @@
 
 = Première utilisation =
 
-Depuis la version 3, il est possible de créer des *fiches de validation projet* (Cf. [Elaboration d'une fiche de projet]) qui permettront de valider ou non la pertinence d'un projet pour l'évaluation de terminale. Le choix entre la création d'une fiche de séquence ou d'un projet se fait à l'ouverture d'une nouvelle fiche (_Fichier/nouveau_)
+Depuis la version 3, il est possible de créer des *fiches de validation projet* (Cf. [Elaboration_projet Elaboration d'une fiche de projet]) qui permettront de valider ou non la pertinence d'un projet pour l'évaluation de terminale. Le choix entre la création d'une fiche de séquence ou d'un projet se fait à l'ouverture d'une nouvelle fiche (_Fichier/nouveau_)
 
     http://pysequence.googlecode.com/svn/trunk/images_aide/nouveau_fichier.png
 
