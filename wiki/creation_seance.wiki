@@ -3,6 +3,7 @@
 = Création des séances =
 
 Cliquer sur le bouton http://pysequence.googlecode.com/svn/trunk/images_aide/Bouton_ajout_seance.png
+ou bien
 Cliquer avec le bouton droit de la souris sur *"Séances"* puis choisir *"Ajouter une séance"*
 
 http://pysequence.googlecode.com/svn/trunk/images_aide/seances.png
