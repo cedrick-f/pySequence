@@ -3,7 +3,7 @@
 = Utilisation =
 
  # [Installation]
- # [Présentation générale]
+ # [Presentation Présentation générale]
  # [Premiere_utilisation Première utilisation]
  # [Elaboration_sequence Élaboration d'une séquence]
  # [Elaboration_projet Élaboration d'une fiche projet]
