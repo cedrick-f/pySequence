@@ -4,7 +4,8 @@
 
 ===*1 - Configurer la classe*===
 
-[Premiere_utilisation Configurer la classe] (Il est impératif de configurer la classe *avant* de définir les autres paramètres de la séquence)
+[Premiere_utilisation Configurer la classe] 
+Il est impératif de configurer la classe *avant* de définir les autres paramètres de la séquence : ce n'est plus possible dès lors que certain éléments propres au type de classe ont été choisis (CI, Prérequis, ...)
 
 ===*2 - Définir les propriétés de la séquence.*===
 
