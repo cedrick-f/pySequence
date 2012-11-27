@@ -14,17 +14,18 @@ shutil.rmtree("dist", ignore_errors=True)
 
 from glob import glob
 
+icon = glob(r"logo.ico")[0]
+
 # Inculsion des fichiers de données
 #################################################################################################
 # Fichiers MSVC
 data_files = [("Microsoft.VC90.CRT", glob(r'msvcr90.dll')), 
               ("Microsoft.VC90.CRT", glob(r'Microsoft.VC90.CRT.manifest')),
 #              ("exemples", glob(r'../exemples/*.*')),
-              "gpl.txt", "D:\\Developpement\\Sequence\\src\\logo.ico",
-              "Grille_evaluation_STI2D_projet.xls",
-              "Grille_evaluation_SSI_projet.xls"
+              "gpl.txt", icon
               ]
-
+data_files.extend(glob(r"*.xls"))
+data_files.extend(glob(r"*.xlsm"))
 
 options = {    "py2exe" : { "compressed": True,
                            
@@ -58,13 +59,13 @@ options = {    "py2exe" : { "compressed": True,
                             #"includes": ['_scproxy'],
                             #"packages": [ 'scipy.factorial'],
                                    }     }
-
-icon = "D:\\Developpement\\Sequence\\src\\logo.ico"
+#
+#icon = "D:\\Developpement\\Sequence\\src\\logo.ico"
+#icon = glob(r"*.ico")[0]
 setup(
       #com_server=['myserver'],
       options = options,
 #      zipfile = None,
-#      console=["PySyLic.py"],
       data_files = data_files,
       windows=[{"script" :"Sequence.py",
 #      console=[{"script" :"Sequence.py",
