@@ -10,7 +10,7 @@
 #############################################################################
 #############################################################################
 
-## Copyright (C) 2012 Cédrick FAURY
+## Copyright (C) 2012 Cédrick FAURY - Jean-Claude FRICOU
 
 #    pySequence is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -40,7 +40,7 @@ Copyright (C) 2011-2012
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "3.13"
+__version__ = "3.14"
 
 #from threading import Thread
 
@@ -525,9 +525,13 @@ class Objet_sequence():
         self.elem = None
         
     def SetSVGTitre(self, p, titre):
+        titre = titre.decode(DEFAUT_ENCODING)
+        titre = titre.encode('utf-8')
         self.elem.setAttribute("xlink:title", titre)
      
     def SetSVGLien(self, p, lien):
+        lien = lien.decode(FILE_ENCODING)
+        lien = lien.encode('utf-8')
         self.elem.setAttribute("xlink:href", lien)
         self.elem.setAttribute("target", "_top")
         
@@ -570,7 +574,9 @@ class Objet_sequence():
                     p.setAttribute("onmouseover", "evt.target.parentNode.parentNode.parentNode.getElementById('%s').setAttribute('filter', 'url(#f1)');" %pid)
         
                 if hasattr(self, 'GetLien'):
-                    lien = toDefautEncoding(self.GetLienHTML())
+#                    lien = toDefautEncoding(self.GetLienHTML())
+                    lien = self.GetLienHTML()
+    
                     if lien != '':
                         self.SetSVGLien(p, lien)
         
@@ -4973,7 +4979,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
 
         if self.pleinEcran:
             win = self.GetNotebook().GetCurrentPage().nb.GetCurrentPage()
-            self.fsframe = wx.Frame(None, -1)
+            self.fsframe = wx.Frame(self, -1)
             win.Reparent(self.fsframe)
             win.Bind(wx.EVT_KEY_DOWN, self.OnKey)
             self.fsframe.ShowFullScreen(True, style=wx.FULLSCREEN_ALL)
@@ -5169,23 +5175,33 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
     #############################################################################
     def commandeEnregistrer(self, event = None):
-        self.GetNotebook().GetCurrentPage().commandeEnregistrer(event)
+        page = self.GetNotebook().GetCurrentPage()
+        if page != None:
+            page.commandeEnregistrer(event)
         
     #############################################################################
     def commandeEnregistrerSous(self, event = None):
-        self.GetNotebook().GetCurrentPage().commandeEnregistrerSous(event)
+        page = self.GetNotebook().GetCurrentPage()
+        if page != None:
+            page.commandeEnregistrerSous(event)
     
     #############################################################################
     def exporterFiche(self, event = None):
-        self.GetNotebook().GetCurrentPage().exporterFiche(event)
+        page = self.GetNotebook().GetCurrentPage()
+        if page != None:
+            page.exporterFiche(event)
               
     #############################################################################
     def exporterDetails(self, event = None):
-        self.GetNotebook().GetCurrentPage().exporterDetails(event)
+        page = self.GetNotebook().GetCurrentPage()
+        if page != None:
+            page.exporterDetails(event)
         
     #############################################################################
     def genererGrilles(self, event = None):
-        self.GetNotebook().GetCurrentPage().genererGrilles(event)
+        page = self.GetNotebook().GetCurrentPage()
+        if page != None:
+            page.genererGrilles(event)
     
     
     #############################################################################
