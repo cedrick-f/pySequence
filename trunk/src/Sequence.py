@@ -40,7 +40,7 @@ Copyright (C) 2011-2012
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "3.14"
+__version__ = "3.141"
 
 #from threading import Thread
 
@@ -6023,6 +6023,8 @@ class FenetreProjet(FenetreDocument):
             for e in self.projet.eleves:
                 if self.projet.GetTypeEnseignement() == 'SSI':
                     nomFichier = "Grille_"+e.GetNomPrenom()+"_"+self.projet.intitule[:20]
+                    for c in ["\"", "/", "\", ", "?", "<", ">", "|", ":"]:
+                        nomFichier = nomFichier.replace(c, "_")
                     dlgb.Update(count, u"Traitement du fichier\n\n"+nomFichier)
                     dlgb.Refresh()
                     count += 1
@@ -6123,7 +6125,7 @@ class BaseFiche(wx.ScrolledWindow):
 
     ######################################################################################################
     def OnEnter(self, event):
-        self.SetFocus()
+#        self.SetFocus()
         event.Skip()
         
     #############################################################################            
@@ -6484,7 +6486,8 @@ class PanelPropriete(scrolled.ScrolledPanel):
 
     ######################################################################################################
     def OnEnter(self, event):
-        self.SetFocus()
+#        self.SetFocus()
+        event.Skip()
 
        
     #########################################################################################################

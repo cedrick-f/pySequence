@@ -212,19 +212,43 @@ class FrameRapport(wx.Frame):
         self.rtc.SaveFile()
 
     def OnFileSaveAs(self, evt):
-        wildcard, types = rt.RichTextBuffer.GetExtWildcard(save=True)
-
+#        wildcard, types = rt.RichTextBuffer.GetExtWildcard(save=True)
+        wildcard = u"Fichier texte (.txt)|*.txt|" \
+                    u"Page HTML (.html)|*.html|" \
+                    u"Rich Text Format (.rtf)|*.rtf"
         dlg = wx.FileDialog(self, u"Enregistrer le rapport",
                             wildcard=wildcard,
                             style=wx.SAVE)
+        
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
+            print path
+            ext = os.path.splitext(path)[1].lstrip('.')
             if path:
-                fileType = types[dlg.GetFilterIndex()]
-                ext = rt.RichTextBuffer.FindHandlerByType(fileType).GetExtension()
-                if not path.endswith(ext):
-                    path += '.' + ext
-                self.rtc.SaveFile(path, fileType)
+                if ext == 'txt':
+                    wildcard, types = rt.RichTextBuffer.GetExtWildcard(save=True)
+                    fileType = types[dlg.GetFilterIndex()]
+                    ext = rt.RichTextBuffer.FindHandlerByType(fileType).GetExtension()
+                    if not path.endswith(ext):
+                        path += '.' + ext
+                    self.rtc.SaveFile(path, fileType)
+                elif ext == 'html':
+                    handler = rt.RichTextHTMLHandler()
+                    handler.SetFlags(rt.RICHTEXT_HANDLER_SAVE_IMAGES_TO_MEMORY)
+                    handler.SetFontSizeMapping([7,9,11,12,14,22,100])
+                    stream = cStringIO.StringIO()
+                    if handler.SaveStream(self.rtc.GetBuffer(), stream):
+                        print stream.getvalue()
+                        f = open(path, 'w')
+                        f.write(stream.getvalue())
+                        f.close()
+                elif ext == 'rtf':
+                    import PyRTFParser
+                    # Use the custom RTF Handler
+                    handler = PyRTFParser.PyRichTextRTFHandler()
+                    # Save the file with the custom RTF Handler.
+                    # The custom RTF Handler can take either a wxRichTextCtrl or a wxRichTextBuffer argument.
+                    handler.SaveFile(self.rtc.GetBuffer(), path)
         dlg.Destroy()
               
     def OnApplyStyle(self, evt):
@@ -430,6 +454,8 @@ class FrameRapport(wx.Frame):
                 self.OnPrintPreview )
         doBind( fileMenu.Append(-1, "&Imprimer\tCtrl+S", u"Affiche un aperçu de ce qui sera imprimé"),
                 self.OnDoPrint )
+        doBind( fileMenu.Append(-1, "&Aperçu HTML", u"Affiche un aperçu HTML"),
+                self.OnFileViewHTML )
         fileMenu.AppendSeparator()
         doBind( fileMenu.Append(-1, "&Quitter\tCtrl+Q", "Quitter le visualisateur de rapport"),
                 self.OnFileExit )
@@ -604,7 +630,35 @@ class FrameRapport(wx.Frame):
 #        else:
 #            self.printData = wx.PrintData( printer.GetPrintDialogData().GetPrintData() )
 #        printout.Destroy()
+    
         
+    def OnFileViewHTML(self, evt):
+        # Get an instance of the html file handler, use it to save the
+        # document to a StringIO stream, and then display the
+        # resulting html text in a dialog with a HtmlWindow.
+        handler = rt.RichTextHTMLHandler()
+        handler.SetFlags(rt.RICHTEXT_HANDLER_SAVE_IMAGES_TO_MEMORY)
+        handler.SetFontSizeMapping([7,9,11,12,14,22,100])
+
+        import cStringIO
+        stream = cStringIO.StringIO()
+        if not handler.SaveStream(self.rtc.GetBuffer(), stream):
+            return
+        print stream.getvalue()
+        import wx.html
+        dlg = wx.Dialog(self, title="HTML", style=wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER)
+        html = wx.html.HtmlWindow(dlg, size=(500,400), style=wx.BORDER_SUNKEN)
+        html.SetPage(stream.getvalue())
+        btn = wx.Button(dlg, wx.ID_CANCEL)
+        sizer = wx.BoxSizer(wx.VERTICAL)
+        sizer.Add(html, 1, wx.ALL|wx.EXPAND, 5)
+        sizer.Add(btn, 0, wx.ALL|wx.CENTER, 10)
+        dlg.SetSizer(sizer)
+        sizer.Fit(dlg)
+
+        dlg.ShowModal()
+
+        handler.DeleteTemporaryImages()
     
 class RapportRTF(rt.RichTextCtrl): 
     def __init__(self, parent, style = 0):
@@ -804,6 +858,9 @@ class RapportRTF(rt.RichTextCtrl):
     
     ######################################################################################################
     def AddSeance(self, seance, indent = 1):
+        print "Add", seance
+        if seance.typeSeance == '':
+            return
         
         r,v,b = ICoulSeance[seance.typeSeance]
         bgCoul = wx.Colour(r*255,v*255,b*255)
