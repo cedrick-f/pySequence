@@ -213,16 +213,15 @@ class FrameRapport(wx.Frame):
 
     def OnFileSaveAs(self, evt):
 #        wildcard, types = rt.RichTextBuffer.GetExtWildcard(save=True)
-        wildcard = u"Fichier texte (.txt)|*.txt|" \
-                    u"Page HTML (.html)|*.html|" \
-                    u"Rich Text Format (.rtf)|*.rtf"
-        dlg = wx.FileDialog(self, u"Enregistrer le rapport",
+        wildcard =  u"Rich Text Format (.rtf)|*.rtf|" \
+                    u"Format HTML (.html)|*.html|" \
+                    u"Fichier texte (.txt)|*.txt"
+        dlg = wx.FileDialog(self, u"Enregistrer les détails",
                             wildcard=wildcard,
                             style=wx.SAVE)
         
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
-            print path
             ext = os.path.splitext(path)[1].lstrip('.')
             if path:
                 if ext == 'txt':
@@ -238,9 +237,8 @@ class FrameRapport(wx.Frame):
                     handler.SetFontSizeMapping([7,9,11,12,14,22,100])
                     stream = cStringIO.StringIO()
                     if handler.SaveStream(self.rtc.GetBuffer(), stream):
-                        print stream.getvalue()
                         f = open(path, 'w')
-                        f.write(stream.getvalue())
+                        f.write(prefixeHTML+stream.getvalue())#.encode(sys.getdefaultencoding()))
                         f.close()
                 elif ext == 'rtf':
                     import PyRTFParser
@@ -443,21 +441,21 @@ class FrameRapport(wx.Frame):
                 self.Bind(wx.EVT_UPDATE_UI, updateUI, item)
             
         fileMenu = wx.Menu()
-        doBind( fileMenu.Append(-1, "&Enregistrer\tCtrl+S", "Enregistrer le rapport"),
+        doBind( fileMenu.Append(-1, u"&Enregistrer\tCtrl+S", u"Enregistrer le rapport"),
                 self.OnFileSave )
-        doBind( fileMenu.Append(-1, "&Enregistrer sous...\tF12", "Enregistrer le rapport"),
+        doBind( fileMenu.Append(-1, u"&Enregistrer sous...\tF12", u"Enregistrer le rapport"),
                 self.OnFileSaveAs )
         fileMenu.AppendSeparator()
-        doBind( fileMenu.Append(-1, "&Mise en Page...", u"Règle la mise en page de l'impression"),
+        doBind( fileMenu.Append(-1, u"&Mise en Page...\tCtrl+M", u"Règle la mise en page de l'impression"),
                 self.OnPageSetup )
-        doBind( fileMenu.Append(-1, "&Aperçu avant impression...", u"Affiche un aperçu de ce qui sera imprimé"),
+        doBind( fileMenu.Append(-1, u"Aperç&u avant impression...\tCtrl+U", u"Affiche un aperçu de ce qui sera imprimé"),
                 self.OnPrintPreview )
-        doBind( fileMenu.Append(-1, "&Imprimer\tCtrl+S", u"Affiche un aperçu de ce qui sera imprimé"),
+        doBind( fileMenu.Append(-1, u"&Imprimer\tCtrl+P", u"Imprime le document"),
                 self.OnDoPrint )
-        doBind( fileMenu.Append(-1, "&Aperçu HTML", u"Affiche un aperçu HTML"),
-                self.OnFileViewHTML )
+#        doBind( fileMenu.Append(-1, u"&Aperçu HTML", u"Affiche un aperçu HTML"),
+#                self.OnFileViewHTML )
         fileMenu.AppendSeparator()
-        doBind( fileMenu.Append(-1, "&Quitter\tCtrl+Q", "Quitter le visualisateur de rapport"),
+        doBind( fileMenu.Append(-1, u"&Quitter\tCtrl+Q", u"Quitter le visualisateur de rapport"),
                 self.OnFileExit )
     
         
@@ -1223,6 +1221,12 @@ class RTPrinting(rt.RichTextPrinting):
         pageSetupData.SetMarginTopLeft(wx.Point(10,10))
 
 
+prefixeHTML = u"""<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+"""
 
 
         

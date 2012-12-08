@@ -4995,17 +4995,17 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         mb = wx.MenuBar()
 
         file_menu = wx.Menu()
-        file_menu.Append(10, u"Nouveau")
-        file_menu.Append(11, u"Ouvrir")
-        file_menu.Append(12, u"Enregistrer")
-        file_menu.Append(13, u"Enregistrer sous ...")
+        file_menu.Append(10, u"&Nouveau\tCtrl+N")
+        file_menu.Append(11, u"&Ouvrir\tCtrl+O")
+        file_menu.Append(12, u"&Enregistrer\tCtrl+S")
+        file_menu.Append(13, u"&Enregistrer sous ...")
         file_menu.AppendSeparator()
-        file_menu.Append(15, u"Exporter la fiche (PDF ou SVG)")
-        file_menu.Append(16, u"Exporter les détails")
-        file_menu.Append(17, u"Générer les grilles d'évaluation")
+        file_menu.Append(15, u"&Exporter la fiche (PDF ou SVG)\tCtrl+E")
+        file_menu.Append(16, u"&Exporter les détails\tCtrl+D")
+        file_menu.Append(17, u"&Générer les grilles d'évaluation\tCtrl+G")
         
         file_menu.AppendSeparator()
-        file_menu.Append(wx.ID_EXIT, u"Quitter")
+        file_menu.Append(wx.ID_EXIT, u"&Quitter\tCtrl+Q")
 
         tool_menu = wx.Menu()
 #        tool_menu.Append(31, u"Options")
@@ -5014,13 +5014,13 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
 
         help_menu = wx.Menu()
-        help_menu.Append(21, u"Aide en ligne")
+        help_menu.Append(21, u"&Aide en ligne\tF1")
         help_menu.AppendSeparator()
         help_menu.Append(22, u"A propos")
 
-        mb.Append(file_menu, "&Fichier")
-        mb.Append(tool_menu, "&Outils")
-        mb.Append(help_menu, "&Aide")
+        mb.Append(file_menu, u"&Fichier")
+        mb.Append(tool_menu, u"&Outils")
+        mb.Append(help_menu, u"&Aide")
         
         self.SetMenuBar(mb)
     
