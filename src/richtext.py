@@ -108,7 +108,7 @@ class RichTextPanel(wx.Panel):
         
         
     def IndentMore(self):
-        attr = wx.TextAttr()
+        attr = rt.RichTextAttr()
         attr.SetFlags(wx.TEXT_ATTR_LEFT_INDENT)
         ip = self.rtc.GetInsertionPoint()
         if self.rtc.GetStyle(ip, attr):
@@ -122,7 +122,7 @@ class RichTextPanel(wx.Panel):
        
         
     def IndentLess(self):
-        attr = wx.TextAttr()
+        attr = rt.RichTextAttr()
         attr.SetFlags(wx.TEXT_ATTR_LEFT_INDENT)
         ip = self.rtc.GetInsertionPoint()
         if self.rtc.GetStyle(ip, attr):
@@ -136,7 +136,7 @@ class RichTextPanel(wx.Panel):
             self.rtc.SetStyle(r, attr)
             
     def ParagraphSpacingMore(self):
-        attr = wx.TextAttr()
+        attr = rt.RichTextAttr()
         attr.SetFlags(wx.TEXT_ATTR_PARA_SPACING_AFTER)
         ip = self.rtc.GetInsertionPoint()
         if self.rtc.GetStyle(ip, attr):
@@ -150,7 +150,7 @@ class RichTextPanel(wx.Panel):
 
         
     def ParagraphSpacingLess(self):
-        attr = wx.TextAttr()
+        attr = rt.RichTextAttr()
         attr.SetFlags(wx.TEXT_ATTR_PARA_SPACING_AFTER)
         ip = self.rtc.GetInsertionPoint()
         if self.rtc.GetStyle(ip, attr):
@@ -164,7 +164,7 @@ class RichTextPanel(wx.Panel):
                 self.rtc.SetStyle(r, attr)
         
     def LineSpacingSingle(self): 
-        attr = wx.TextAttr()
+        attr = rt.RichTextAttr()
         attr.SetFlags(wx.TEXT_ATTR_LINE_SPACING)
         ip = self.rtc.GetInsertionPoint()
         if self.rtc.GetStyle(ip, attr):
@@ -178,7 +178,7 @@ class RichTextPanel(wx.Panel):
  
                 
     def LineSpacingHalf(self):
-        attr = wx.TextAttr()
+        attr = rt.RichTextAttr()
         attr.SetFlags(wx)
         ip = self.rtc.GetInsertionPoint()
         if self.rtc.GetStyle(ip, attr):
@@ -192,7 +192,7 @@ class RichTextPanel(wx.Panel):
 
         
     def LineSpacingDouble(self):
-        attr = wx.TextAttr()
+        attr = rt.RichTextAttr()
         attr.SetFlags(wx.TEXT_ATTR_LINE_SPACING)
         ip = self.rtc.GetInsertionPoint()
         if self.rtc.GetStyle(ip, attr):
@@ -211,7 +211,7 @@ class RichTextPanel(wx.Panel):
         r = self.rtc.GetSelectionRange()
         fontData = wx.FontData()
         fontData.EnableEffects(False)
-        attr = wx.TextAttr()
+        attr = rt.RichTextAttr()
         attr.SetFlags(wx.TEXT_ATTR_FONT)
         if self.rtc.GetStyle(self.rtc.GetInsertionPoint(), attr):
             fontData.SetInitialFont(attr.GetFont())
@@ -229,7 +229,7 @@ class RichTextPanel(wx.Panel):
 
     def Colour(self):
         colourData = wx.ColourData()
-        attr = wx.TextAttr()
+        attr = rt.RichTextAttr()
         attr.SetFlags(wx.TEXT_ATTR_TEXT_COLOUR)
         if self.rtc.GetStyle(self.rtc.GetInsertionPoint(), attr):
             colourData.SetColour(attr.GetTextColour())
