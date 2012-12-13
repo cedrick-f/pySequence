@@ -707,18 +707,30 @@ def getSavoir(typeEns, code, dic = None, c = None):
 # Pour obtenir l'intitulé d'une compétence à partir de son code 
 #        fonction recursive    
 def getCompetence(seq, code, dic = None, c = None):
+#    print "getCompetence", code, dic, c
     if dic == None:
-        dic = dicCompetences[seq.classe.typeEnseignement]
+        if seq.classe.typeEnseignement == "SSI":
+            dic = dicCompetences[seq.classe.typeEnseignement][code[0]][1]
+        else:
+            dic = dicCompetences[seq.classe.typeEnseignement]
+#        print dic
     if c == None:
         c = len(code.split("."))
     if dic.has_key(code):
-        return dic[code]
+        if seq.classe.typeEnseignement == "SSI" and type(dic[code]) == list:
+            return dic[code][0]
+        else:
+            return dic[code]
     else:
 #        cd = code[1:-2*(c-1)]
         if seq.classe.typeEnseignement == "SSI":
+#            if "." in code:
             cd = code.split(".")[0]
+#            else:
+#                cd = code[0]
         else:
             cd = code.split(".")[0][1:]
+#        print "   ",cd
         return getCompetence(seq, code, dic[cd][1], c-1)
     
     

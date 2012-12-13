@@ -682,8 +682,8 @@ class RapportRTF(rt.RichTextCtrl):
                     if t.phase != phase:
                         phase = t.phase
                         self.AddPhase(t, doc.GetTypeEnseignement(simple = True))
-                    if not t.phase in ["R1", "R2", "Rev"]:
-                        self.AddTache(t)
+#                    if not t.phase in ["R1", "R2", "Rev"]:
+                    self.AddTache(t, revue = t.phase in ["R1", "R2", "Rev"])
 
             self.AddPieds(fichierCourant)
             
@@ -751,7 +751,7 @@ class RapportRTF(rt.RichTextCtrl):
         else:
             Styles["Titre"].SetPageBreak(pageBreak=True)
 #        
-        parag = self.AddParagraph(u"Détail des tâches\n")
+        parag = self.AddParagraph(u"Fiche de lot de travaux\n")
         self.MoveEnd()
         self.Newline()
         
@@ -810,7 +810,7 @@ class RapportRTF(rt.RichTextCtrl):
 #        self.EndStyle()
          
     ######################################################################################################
-    def AddTache(self, tache):
+    def AddTache(self, tache, revue = False):
         
         r,v,b = ICoulTache[tache.phase]
         bgCoul = wx.Colour(r*255,v*255,b*255)
@@ -818,21 +818,22 @@ class RapportRTF(rt.RichTextCtrl):
         r,v,b = BCoulTache[tache.phase]
         fgCoul = wx.Colour(r*255,v*255,b*255)
             
-        Styles["Titre 2"].SetBackgroundColour(bgCoul)  
-        self.BeginStyle(Styles["Titre 2"])
-        self.WriteText(u"Tache : " + tache.code+"\t\t\t"+getHoraireTxt(tache.GetDuree()))
-        self.EndStyle()
-        self.EndLeftIndent()
-        self.EndAlignment()
-        self.Newline()
-        
-        self.BeginStyle(Styles["Message"])
-        self.BeginUnderline()
-        self.WriteText(u"Intitulé :")
-        self.EndUnderline()
-        self.WriteText(u" " + tache.intitule)
-        self.BeginLeftIndent(60)
-        self.Newline()
+        if not revue:
+            Styles["Titre 2"].SetBackgroundColour(bgCoul)  
+            self.BeginStyle(Styles["Titre 2"])
+            self.WriteText(u"Tache : " + tache.code+"\t\t\t"+getHoraireTxt(tache.GetDuree()))
+            self.EndStyle()
+            self.EndLeftIndent()
+            self.EndAlignment()
+            self.Newline()
+            
+            self.BeginStyle(Styles["Message"])
+            self.BeginUnderline()
+            self.WriteText(u"Intitulé :")
+            self.EndUnderline()
+            self.WriteText(u" " + tache.intitule)
+            self.BeginLeftIndent(60)
+            self.Newline()
         
         if tache.description != None and hasattr(tache, 'panelPropriete'):
             self.BeginUnderline()
@@ -843,6 +844,8 @@ class RapportRTF(rt.RichTextCtrl):
             tache.panelPropriete.rtc.rtc.SelectAll()
             tache.panelPropriete.rtc.rtc.Copy()
             self.Paste()
+            
+            
         self.EndLeftIndent()
         
 #        self.BeginUnderline()
