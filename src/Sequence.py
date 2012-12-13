@@ -2658,7 +2658,7 @@ class Seance(ElementDeSequence, Objet_sequence):
         Objet_sequence.__init__(self)
         
         # Les données sauvegardées
-        self.ordre = 1
+        self.ordre = 0
         self.duree = Variable(u"Durée", lstVal = 1.0, nomNorm = "", typ = VAR_REEL_POS, 
                               bornes = [0.25,30], modeLog = False,
                               expression = None, multiple = False)
@@ -5414,8 +5414,8 @@ class FenetreDocument(aui.AuiMDIChildFrame):
                          Bottom().
                          Layer(1).
 #                         Floatable(False).
-                         BestSize((-1, 200)).
-                         MinSize((-1, 200)).
+                         BestSize((600, 200)).
+                         MinSize((600, 200)).
                          MinimizeButton(True).
                          Resizable(True).
 
@@ -6474,7 +6474,7 @@ class PanelPropriete(scrolled.ScrolledPanel):
         
         self.sizer = wx.GridBagSizer()
         self.Hide()
-        
+#        self.SetMinSize((400, 200))
         self.SetSizer(self.sizer)
         self.SetAutoLayout(True)
 #        self.SetScrollRate(20,20)
@@ -7965,9 +7965,9 @@ class PanelPropriete_Seance(PanelPropriete):
         #
         # Type de séance
         #
-        titre = wx.StaticText(self, -1, u"Type :")
+        titre = wx.StaticText(self, -1, u"Type : ")
         cbType = wx.combo.BitmapComboBox(self, -1, u"Choisir un type de séance",
-                             choices = [],
+                             choices = [], size = (-1,25),
                              style = wx.CB_DROPDOWN
                              | wx.TE_PROCESS_ENTER
                              | wx.CB_READONLY
@@ -8012,7 +8012,7 @@ class PanelPropriete_Seance(PanelPropriete):
         #
         # Effectif
         #
-        titre = wx.StaticText(self, -1, u"Effectif :")
+        titre = wx.StaticText(self, -1, u"Effectif : ")
         cbEff = wx.ComboBox(self, -1, u"",
                          choices = [],
                          style = wx.CB_DROPDOWN
@@ -8034,7 +8034,7 @@ class PanelPropriete_Seance(PanelPropriete):
         #
         # Démarche
         #
-        titre = wx.StaticText(self, -1, u"Démarche :")
+        titre = wx.StaticText(self, -1, u"Démarche : ")
         cbDem = wx.ComboBox(self, -1, u"",
                          choices = [],
                          style = wx.CB_DROPDOWN
@@ -8303,15 +8303,18 @@ class PanelPropriete_Seance(PanelPropriete):
         else:
             listType = constantes.listeTypeSeance
         
-        listTypeS = []
-        for t in listType:
-            listTypeS.append((constantes.TypesSeance[t], constantes.imagesSeance[t].GetBitmap()))
+#        listTypeS = []
+#        for t in listType:
+#            listTypeS.append((constantes.TypesSeance[t], constantes.imagesSeance[t].GetBitmap()))
+        
+        listTypeS = [(constantes.TypesSeance[t], constantes.imagesSeance[t].GetBitmap()) for t in listType]
         
         n = self.cbType.GetSelection()   
         self.cbType.Clear()
         for s in listTypeS:
             self.cbType.Append(s[0], s[1])
         self.cbType.SetSelection(n)
+        self.cbType.Layout()
         
         #
         # Durée
@@ -9981,7 +9984,7 @@ class ArbreSavoirs(CT.CustomTreeCtrl):
 
 
 class ArbreCompetences(HTL.HyperTreeList):
-    def __init__(self, parent, type_ens, pptache = None, agwStyle = CT.TR_HIDE_ROOT|CT.TR_HAS_VARIABLE_ROW_HEIGHT):#|HTL.TR_NO_HEADER):
+    def __init__(self, parent, type_ens, pptache = None, agwStyle = CT.TR_HIDE_ROOT|CT.TR_HAS_VARIABLE_ROW_HEIGHT):#|CT.TR_AUTO_CHECK_CHILD):#|HTL.TR_NO_HEADER):
         
         HTL.HyperTreeList.__init__(self, parent, -1, style = wx.WANTS_CHARS, agwStyle = agwStyle)#wx.TR_DEFAULT_STYLE|
         
@@ -10098,7 +10101,7 @@ class ArbreCompetences(HTL.HyperTreeList):
     def AjouterEnleverCompetences(self,lstitem):
         for item in lstitem:
             code = self.GetItemPyData(item)#.split()[0]
-            print code, item.GetValue()
+#            print code, item.GetValue()
             if item.GetValue():
                 self.pptache.AjouterCompetence(code)
             else:

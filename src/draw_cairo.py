@@ -1322,6 +1322,7 @@ def wrapp(ctx, texte, w, h, wrap = True, couper = True):
             couper = False : les mots ne sont jamais coupés
             
     """
+#    print "wrapp", texte, w, h
     #
     # Estimation de l'encombrement du texte (pour une taille de police de 1)
     # 
@@ -1345,9 +1346,9 @@ def wrapp(ctx, texte, w, h, wrap = True, couper = True):
         st = texte.split("\n")
         for l in st:
             wrap1 = max(wrap1, len(l))
-            
+        
 #        print len(texte), texte
-        wrap = min(wrap1, int(len(texte)*W/width)*2)
+        wrap = min(wrap1, max(1,int(len(texte)*W/width)*2))
 #        print "   wrap initial :", wrap, "(brut :",int(len(texte)*W/width),")"
         
         ancienWrap = wrap
