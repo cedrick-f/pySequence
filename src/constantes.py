@@ -196,7 +196,7 @@ imagesSeance = {"R" : images.Icone_rotation,
                 "C" : images.Icone_cours,
                 "ED" : images.Icone_ED,
                 "AP" : images.Icone_AP,
-                
+                "TD" : images.Icone_TD,
                 "P"  : images.Icone_projet,
                 "SA" : images.Icone_synthese_Act,
                 "SS" : images.Icone_synthese_Seq}
@@ -239,6 +239,7 @@ TypesActivite = {"ED" : u"Activité d'étude de dossier",
                 }
 
 TypesSeance = {"C"  : u"Cours",
+               "TD" : u"Travaux Dirigés",
                "SA" : u"Synthèse d'activité",
                "SS" : u"Synthèse de séquence",
                "E"  : u"Evaluation",
@@ -251,13 +252,14 @@ TypesSeanceCourt = {"ED" : u"Etude de dossier",
                     "AP" : u"Activité pratique",
                     "P"  : u"Projet",
                     "C"  : u"Cours",
+                    "TD" : u"TD",
                     "SA" : u"Synt. d'activité",
                     "SS" : u"Synt. de séquence",
                     "E"  : u"Evaluation",
                     "R"  : u"Rotation",
                     "S"  : u"Parallèle"}
 
-listeTypeSeance = ["ED", "AP", "P", "C", "SA", "SS", "E", "R", "S"]
+listeTypeSeance = ["ED", "AP", "P", "C", "TD", "SA", "SS", "E", "R", "S"]
 listeTypeActivite = ["ED", "AP", "P"]
 
 
@@ -690,6 +692,15 @@ def toTxt(lst):
         t += str(i) + ' '
     return t
 
+#############################################################################################################
+def mergeDict(D, d):
+    for K, V in D.items():
+        if K in d.keys():
+            D[K] += d[K]
+    for k, v in d.items():
+        if not k in D.keys():
+            D[k] = v
+            
 # Pour obtenir l'intitulé d'un savoir à partir de son code 
 #        fonction recursive
 def getSavoir(typeEns, code, dic = None, c = None):

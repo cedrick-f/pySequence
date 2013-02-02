@@ -40,7 +40,8 @@ from draw_cairo import *
 
 #import ConfigParser
 
-from constantes import Effectifs, NomsEffectifs, listeDemarches, Demarches, getSavoir, getCompetence, DemarchesCourt
+from constantes import Effectifs, NomsEffectifs, listeDemarches, Demarches, getSavoir, getCompetence, \
+                        DemarchesCourt, mergeDict
 import constantes
 
 ## Pour dessiner la cible ...
@@ -161,6 +162,7 @@ BCoulSeance = {"ED" : (0.3,0.5,0.5),
                "AP" : (0.5,0.3,0.5), 
                "P"  : (0.5,0.5,0.3), 
                "C"  : (0.3,0.3,0.7), 
+               "TD" : (0.3,0.5,0.7),
                "SA" : (0.3,0.7,0.3), 
                "SS" : (0.4,0.5,0.4), 
                "E"  : (0.7,0.3,0.3), 
@@ -169,7 +171,8 @@ BCoulSeance = {"ED" : (0.3,0.5,0.5),
 ICoulSeance = {"ED" : (0.6, 0.8, 0.8), 
                "AP" : (0.8, 0.6, 0.8), 
                "P"  : (0.8, 0.8, 0.6), 
-               "C"  : (0.6, 0.6, 1.0), 
+               "C"  : (0.6, 0.6, 1.0),
+               "TD" : (0.6,0.8,1.0),
                "SA" : (0.6, 1.0, 0.6), 
                "SS" : (0.7, 0.8, 0.7), 
                "E"  : (1.0, 0.6, 0.6), 
@@ -398,6 +401,7 @@ def DefinirZones(seq, ctx):
         xDemarche["P"] = posZDemarche[0] + tailleZDemarche[0]*5/6
     else:
         tailleZDemarche[0] = 0
+        tailleZDemarche[1] = tailleZSysteme[1]
         posZDemarche[0] = posZSysteme[0] - tailleZDemarche[0] - ecartX
                  
     # Zone de déroulement de la séquence
@@ -942,7 +946,7 @@ def Draw_CI(ctx, CI):
         
     if CI.numCI != []:
         e = 0.008
-        r = liste_code_texte(ctx, lstCodes, lstIntit, x0, y0+0.0001, rect_width, rect_height, e)
+        r = liste_code_texte(ctx, lstCodes, lstIntit, x0, y0+0.0001, rect_width, rect_height, e, b = 0.2)
         CI.pts_caract = getPts(r)
         
 
@@ -977,26 +981,27 @@ class Cadre():
         
         
         
-        if not self.filigrane and hasattr(self.seance, 'code'):
+        if hasattr(self.seance, 'code'):# not self.filigrane and
             self.ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                   cairo.FONT_WEIGHT_BOLD)
-            self.ctx.set_source_rgb (0,0,0)
+            self.ctx.set_source_rgba (0,0,0, alpha)
 #            hc = max(hHoraire/4, 0.01)
             hc = max(ecartY/4, 0.01)
             show_text_rect(self.ctx, self.seance.code, (x, y, wEff["P"], hc), ha = 'g', 
                            wrap = False, fontsizeMinMax = (minFont, -1), b = 0.2)
         
-        if not self.filigrane and self.seance.intituleDansDeroul and self.seance.intitule != "":
+        if self.seance.intituleDansDeroul and self.seance.intitule != "":#not self.filigrane and 
             self.ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
                                   cairo.FONT_WEIGHT_NORMAL)
-            self.ctx.set_source_rgb (0,0,0)
+            self.ctx.set_source_rgba (0,0,0, alpha)
             show_text_rect(self.ctx, self.seance.intitule, (x, y + hc, 
-                           self.w, self.h-hc), ha = 'g', fontsizeMinMax = (minFont, 0.015))
+                           self.w, self.h-hc), ha = 'g', b = 0.2, fontsizeMinMax = (minFont, 0.015), 
+                           fontsizePref = self.seance.taille.v[0])
             
-        if not self.filigrane and self.signEgal:
-            dx = wEff["P"]/4
-            dy = hHoraire/16
-            self.ctx.set_source_rgba (0, 0.0, 0.2, 0.6)
+        if  self.signEgal:# not self.filigrane and
+            dx = wEff["P"]/16
+            dy = hHoraire/32
+            self.ctx.set_source_rgba (0, 0.0, 0.2, alpha)
             self.ctx.set_line_width (0.002)
             self.ctx.move_to(x-dx, y+self.h/2 - dy)
             self.ctx.line_to(x+dx, y+self.h/2 - dy)
@@ -1028,14 +1033,25 @@ class Bloc():
         y += ecartSeanceY
         return y
     
-    def DrawCoisement(self):
+    def DrawCoisement(self, estRotation):
         for ligne in self.contenu:
             for cadre in ligne:
-                if cadre.seance.typeSeance in ["AP", "ED", "P"] and not cadre.filigrane and cadre.dy:
+                if cadre.seance.typeSeance in ["AP", "ED", "P"]  and cadre.dy: #and not cadre.filigrane
                     if cadre.seance.GetClasse().typeEnseignement != "SSI":
                         DrawCroisementsDemarche(cadre.ctx, cadre.seance, cadre.y + cadre.dy)
-                    DrawCroisementSystemes(cadre.ctx, cadre.seance, cadre.xd, cadre.y + cadre.dy) 
-               
+                    if not estRotation:
+                        DrawCroisementSystemes(cadre.ctx, cadre.seance, cadre.xd, cadre.y + cadre.dy, cadre.seance.GetNbrSystemes())
+            
+            if estRotation:
+                NS = {}
+                for cadre in ligne:
+                    ns = cadre.seance.GetNbrSystemes(simple = True)
+                    mergeDict(NS, ns)
+                    if cadre.dy:
+                        cadreOk = cadre
+                if cadreOk:
+                    DrawCroisementSystemes(cadreOk.ctx, cadreOk.seance, cadre.xd, cadreOk.y + cadreOk.dy, NS)
+            
     
 ######################################################################################  
 def DrawSeanceRacine(ctx, seance):
@@ -1100,31 +1116,24 @@ def DrawSeanceRacine(ctx, seance):
             bloc.contenu.append([Cadre(ctx, seance)])
     else:
         if seance.typeSeance == "R":
-            for s in seance.sousSeances:
+            for i in range(seance.nbrRotations.v[0]):
+                s = seance.sousSeances[i]
                 bloc.contenu.append(getLigne(s))
+                
+#            for s in seance.sousSeances:
+#                bloc.contenu.append(getLigne(s))
                 
             #
             # Aperçu en filigrane de la rotation
             #
-            if seance.IsEffectifOk() < 2:
+            if seance.IsEffectifOk() <= 3:
                 l = seance.sousSeances
-                eff = seance.GetEffectif()
-                if eff == 16:
-                    codeEff = "C"
-                elif eff == 8:
-                    codeEff = "G"
-                elif eff == 4:
-                    codeEff = "D"
-                elif eff == 2:
-                    codeEff = "E"
-                elif eff == 1:
-                    codeEff = "P"
-                
                 for t in range(len(seance.sousSeances)-1):
+#                for t in range(seance.nbrRotations.v[0]-1):
                     l = permut(l)
-                    for i, s in enumerate(l):
+                    for i, s in enumerate(l[:seance.nbrRotations.v[0]]):
                         bloc.contenu[i].extend(getLigne(s, filigrane = True))
-
+            print bloc.contenu
         elif seance.typeSeance == "S":
             bloc.contenu.append(getLigne(seance))
     #
@@ -1135,7 +1144,7 @@ def DrawSeanceRacine(ctx, seance):
     #
     # Tracé des croisements "Démarche" et "Systèmes"
     #
-    bloc.DrawCoisement() 
+    bloc.DrawCoisement(seance.typeSeance == "R") 
     
 #######################################################################################  
 #def Draw_seance2(ctx, seance, curseur, typParent = "", rotation = False, ):
@@ -1250,7 +1259,7 @@ def DrawSeanceRacine(ctx, seance):
 #        
         
 ######################################################################################  
-def DrawCroisementSystemes(ctx, seance, x, y):
+def DrawCroisementSystemes(ctx, seance, x, y, ns):
 #        if self.typeSeance in ["AP", "ED", "P"]:
 #            and not (self.EstSousSeance() and self.parent.typeSeance == "S"):
     #
@@ -1261,7 +1270,7 @@ def DrawCroisementSystemes(ctx, seance, x, y):
         
         
     r = wColSysteme/3
-    ns = seance.GetNbrSystemes()
+#    ns = seance.GetNbrSystemes(posDansRot = posDansRot)
     for s, n in ns.items():
         if n > 0:
             x = xSystemes[s]
