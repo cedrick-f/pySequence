@@ -333,7 +333,7 @@ def calc_h_texte(ctx, texte, w, taille, va = 'c', ha = 'c', b = 0.1, orient = 'h
 
     
 def show_text_rect(ctx, texte, rect, va = 'c', ha = 'c', b = 0.4, orient = 'h', 
-                   fontsizeMinMax = (-1, -1), wrap = True, couper = True):
+                   fontsizeMinMax = (-1, -1), fontsizePref = -1, wrap = True, couper = True):
     """ Affiche un texte en adaptant la taille de police et sa position
         pour qu'il rentre dans le rectangle
         x, y, w, h : position et dimensions du rectangle
@@ -360,7 +360,7 @@ def show_text_rect(ctx, texte, rect, va = 'c', ha = 'c', b = 0.4, orient = 'h',
     if orient == 'v':
         ctx.rotate(-pi/2)
         r = (-y-h, x, h, w)
-        show_text_rect(ctx, texte, r, va, ha, b, fontsizeMinMax = fontsizeMinMax, 
+        show_text_rect(ctx, texte, r, va, ha, b, fontsizeMinMax = fontsizeMinMax, fontsizePref = fontsizePref,
                        wrap = wrap, couper = couper)
         ctx.rotate(pi/2)
         return
@@ -510,14 +510,18 @@ def show_text_rect(ctx, texte, rect, va = 'c', ha = 'c', b = 0.4, orient = 'h',
     fontSize = min(w/maxw, h/(hTotale))
     
     if fontSize > fontsizeMinMax[1]:
-        show_text_rect_fix(ctx, texte, x, y, w, h, fontsizeMinMax[1], 100, va = va, ha = ha)
+        # Réglage taille selon taille préférée
+        if fontsizePref > 0:
+            fontSize = max(fontsizeMinMax[1] * fontsizePref/100, fontsizeMinMax[0])
+        else:
+            fontSize = fontsizeMinMax[1]
+        show_text_rect_fix(ctx, texte, x, y, w, h, fontSize, 100, va = va, ha = ha)
         return
     
     fontSize = min(fontSize, fontsizeMinMax[1])
 #    print "fontSize", fontSize
     
     if fontSize < fontsizeMinMax[0]:
-#        print "FIX"
         show_text_rect_fix(ctx, texte, x, y, w, h, fontsizeMinMax[0], nLignesMaxi, va, ha)
         return
             
@@ -531,6 +535,12 @@ def show_text_rect(ctx, texte, rect, va = 'c', ha = 'c', b = 0.4, orient = 'h',
         xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(t)
         maxw = max(maxw, width)
     fontSize = min(fontSize, fontSize*w/maxw)
+    
+    # Réglage taille selon taille préférée
+    if fontsizePref > 0:
+        print "taille", fontSize, fontsizePref, "%",
+        fontSize = max(fontSize * fontsizePref/100, fontsizeMinMax[0])
+        print fontSize
 #    print "fontSize 2", fontSize
     
 #    print "fontSize", fontSize
@@ -1168,7 +1178,7 @@ def fleche_ronde(ctx, x, y, r, a0, a1, e, f, coul):
     
     
     
-def liste_code_texte(ctx, lstCodes, lstTexte, x, y, w, h, e, gras = None, lstCoul = None):
+def liste_code_texte(ctx, lstCodes, lstTexte, x, y, w, h, e, b = 0.4, gras = None, lstCoul = None):
     lstRect = []
     no = len(lstCodes)
     
@@ -1205,7 +1215,7 @@ def liste_code_texte(ctx, lstCodes, lstTexte, x, y, w, h, e, gras = None, lstCou
                     ctx.set_source_rgb (0, 0, 0)
                     
                 show_text_rect(ctx, lstTexte[i], (x+wt+2*e, y+i*hl, 
-                               w-wt-3*e, hl), b = 0.4, ha = 'g', fontsizeMinMax = (-1, 0.012))
+                               w-wt-3*e, hl), b = b, ha = 'g', fontsizeMinMax = (-1, 0.012))
     
                 rect = (x, y+i*hl, w, hl)
                 lstRect.append(rect)

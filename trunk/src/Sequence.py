@@ -709,9 +709,9 @@ class Classe():
     
     ######################################################################################  
     def setBranche(self, branche):
-        print "setBranche classe",
+#        print "setBranche classe",
         self.typeEnseignement = branche.get("Type", "ET")
-        print self.typeEnseignement
+#        print self.typeEnseignement
         
         brancheCI = branche.find("CentreInteret")
         if brancheCI != None: # Uniquement pour rétrocompatibilité : normalement cet élément existe !
@@ -2355,20 +2355,22 @@ class CentreInteret(Objet_sequence):
                 else:
                     num = eval(code[2:])-1
                     self.AddNum(num)
-                
+        
+        
+        
         if hasattr(self, 'panelPropriete'):
             self.panelPropriete.MiseAJour()
         return
             
-        code = list(branche)[0].tag
-        if code == "_":
-            num = []
-            self.SetNum(num)
-        else:
-            num = eval(code[2:])-1
-            self.SetNum(num)
-            if hasattr(self, 'panelPropriete'):
-                self.panelPropriete.MiseAJour()
+#        code = list(branche)[0].tag
+#        if code == "_":
+#            num = []
+#            self.SetNum(num)
+#        else:
+#            num = eval(code[2:])-1
+#            self.SetNum(num)
+#            if hasattr(self, 'panelPropriete'):
+#                self.panelPropriete.MiseAJour()
 
     
     
@@ -2423,6 +2425,7 @@ class CentreInteret(Objet_sequence):
     def MaJArbre(self):
         if hasattr(self, 'codeBranche'):
             self.codeBranche.SetLabel(self.GetCode())
+        
         
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
@@ -2669,14 +2672,15 @@ class Seance(ElementDeSequence, Objet_sequence):
         self.systemes = []
         self.code = u""
         self.description = None
-#        self.description = ['<?xml version="1.0" encoding="UTF-8"?>\n<richtext version="1.0.0.0" xmlns="http://www.wxwidgets.org">\n']
-        
-#        for i in range(8):
-#            self.systemes.append(Variable(u"", lstVal = 0, nomNorm = "", typ = VAR_ENTIER_POS, 
-#                                 bornes = [0,8], modeLog = False,
-#                                 expression = None, multiple = False))
+        self.taille = Variable(u"Taille des caractères", lstVal = 100, nomNorm = "", typ = VAR_ENTIER_POS, 
+                              bornes = [10,100], modeLog = False,
+                              expression = None, multiple = False)
         self.nombre = Variable(u"Nombre", lstVal = 1, nomNorm = "", typ = VAR_ENTIER_POS, 
                               bornes = [1,10], modeLog = False,
+                              expression = None, multiple = False)
+        
+        self.nbrRotations = Variable(u"Nombre de rotations", lstVal = 1, nomNorm = "", typ = VAR_ENTIER_POS, 
+                              bornes = [1,None], modeLog = False,
                               expression = None, multiple = False)
         
         # Les autres données
@@ -2733,6 +2737,8 @@ class Seance(ElementDeSequence, Objet_sequence):
         root = ET.Element("Seance"+str(self.ordre))
         root.set("Type", self.typeSeance)
         root.set("Intitule", self.intitule)
+        root.set("Taille", str(self.taille.v[0]))
+        
         if self.description != None:
             root.set("Description", self.description)
         
@@ -2741,6 +2747,8 @@ class Seance(ElementDeSequence, Objet_sequence):
         if self.typeSeance in ["R", "S"]:
             for sce in self.sousSeances:
                 root.append(sce.getBranche())
+            root.set("nbrRotations", str(self.nbrRotations.v[0]))
+            
         elif self.typeSeance in ["AP", "ED", "P"]:
             root.set("Demarche", self.demarche)
             root.set("Duree", str(self.duree.v[0]))
@@ -2766,6 +2774,7 @@ class Seance(ElementDeSequence, Objet_sequence):
         self.ordre = eval(branche.tag[6:])
         
         self.intitule  = branche.get("Intitule", "")
+        self.taille.v[0] = eval(branche.get("Taille", "100"))
         self.typeSeance = branche.get("Type", "C")
         self.description = branche.get("Description", None)
         
@@ -2778,6 +2787,9 @@ class Seance(ElementDeSequence, Objet_sequence):
                 self.sousSeances.append(seance)
                 seance.setBranche(sce)
             self.duree.v[0] = self.GetDuree()
+            if self.typeSeance == "R":
+                self.nbrRotations.v[0] = eval(branche.get("nbrRotations", str(len(self.sousSeances))))
+                self.reglerNbrRotMaxi()
             
         elif self.typeSeance in ["AP", "ED", "P"]:   
             self.effectif = branche.get("Effectif", "C")
@@ -2995,8 +3007,11 @@ class Seance(ElementDeSequence, Objet_sequence):
     def GetDuree(self):
         duree = 0
         if self.typeSeance == "R":
-            for sce in self.sousSeances:
+            for i in range(self.nbrRotations.v[0]):
+                sce = self.sousSeances[i]
                 duree += sce.GetDuree()
+#            for sce in self.sousSeances:
+#                duree += sce.GetDuree()
         elif self.typeSeance == "S":
             duree += self.sousSeances[0].GetDuree()
         else:
@@ -3040,7 +3055,14 @@ class Seance(ElementDeSequence, Objet_sequence):
     ######################################################################################  
     def SetNombre(self, nombre):
         self.nombre.v[0] = nombre
-            
+    
+    ######################################################################################  
+    def SetTaille(self, nombre):
+        self.taille.v[0] = nombre
+        
+    ######################################################################################  
+    def SetNombreRot(self, nombre):
+        self.nbrRotations.v[0] = nombre
         
     ######################################################################################  
     def SetIntitule(self, text):           
@@ -3199,11 +3221,11 @@ class Seance(ElementDeSequence, Objet_sequence):
         
         if self.typeSeance == "R":
             seance.SetDuree(self.sousSeances[0].GetDuree())
+            self.reglerNbrRotMaxi()
         else:
             seance.SetDuree(self.GetDuree())
         
         self.arbre.SelectItem(seance.branche)
-
 
 
     ######################################################################################  
@@ -3215,7 +3237,17 @@ class Seance(ElementDeSequence, Objet_sequence):
                 self.arbre.Delete(item)
                 self.OrdonnerSeances()
                 self.panelPropriete.sendEvent()
+            if self.typeSeance == "R":  # Séances en Rotation
+                self.reglerNbrRotMaxi()
         return
+    
+    
+    ######################################################################################  
+    def reglerNbrRotMaxi(self):
+        self.nbrRotations.bornes[1] = len(self.sousSeances)
+        if self.nbrRotations.v[0] > len(self.sousSeances):
+            self.SetNombreRot(len(self.sousSeances))
+    
     
     ######################################################################################  
     def SupprimerSousSeances(self):
@@ -3319,7 +3351,7 @@ class Seance(ElementDeSequence, Objet_sequence):
 
             
     ######################################################################################  
-    def GetNbrSystemes(self, complet = False):
+    def GetNbrSystemes(self, complet = False, simple = False):
         """ Renvoie un dictionnaire :
                 clef : nom du système
                 valeur : nombre d'exemplaires de ce système utilisés dans la séance
@@ -3347,8 +3379,20 @@ class Seance(ElementDeSequence, Objet_sequence):
         else:
             for s in self.systemes:
                 if s.n <>"":
-                    up(d, s.n, s.v[0]*self.nombre.v[0])
-#                    d[s.n] = s.v[0]*self.nombre.v[0]
+                    if simple:
+                        up(d, s.n, s.v[0])
+                    else:
+                        up(d, s.n, s.v[0]*self.nombre.v[0])
+#            if posDansRot > 0:
+#                rotation = self.parent
+#                l = rotation.sousSeances
+#                for t in range(posDansRot):
+#                    l = draw_cairo.permut(l)
+#                for i, s in enumerate(l[:rotation.nbrRotations.v[0]]):
+#                    dd = s.GetNbrSystemes(complet)
+#                    for k, v in dd.items():
+#                        up(d, k, v)
+    #                    d[s.n] = s.v[0]*self.nombre.v[0]
         
         return d
         
@@ -5805,6 +5849,7 @@ class FenetreSequence(FenetreDocument):
         self.classe.ConstruireArbre(self.arbre, root)
         self.sequence.ConstruireArbre(self.arbre, root)
         
+        self.sequence.CI.SetNum()
         self.sequence.SetCodes()
         self.sequence.PubDescription()
         self.sequence.SetLiens()
@@ -6772,7 +6817,7 @@ class PanelPropriete_Classe(PanelPropriete):
         PanelPropriete.__init__(self, parent)
         self.classe = classe
         self.pasVerrouille = True
-        print "PanelPropriete_Classe", classe.typeEnseignement
+#        print "PanelPropriete_Classe", classe.typeEnseignement
         #
         # La barre d'outils
         #
@@ -6822,6 +6867,7 @@ class PanelPropriete_Classe(PanelPropriete):
         if not pourProjet:
             sb1 = wx.StaticBox(self, -1, u"Centres d'intérêt ET", size = (200,-1))
             sbs1 = wx.StaticBoxSizer(sb1,wx.VERTICAL)
+            self.sb1 = sb1
             list = ULC.UltimateListCtrl(self, -1, 
                                         agwStyle=wx.LC_REPORT
                                              #| wx.BORDER_SUNKEN
@@ -6963,10 +7009,18 @@ class PanelPropriete_Classe(PanelPropriete):
     ######################################################################################  
     def MiseAJourType(self):
         if hasattr(self, 'list'):
-            enable = self.pasVerrouille and (self.classe.typeEnseignement == 'ET')
-            self.list.Enable(enable)
-            self.tb.EnableTool(31, enable)
-            self.tb.EnableTool(32, enable)
+            if self.classe.typeEnseignement == 'SSI':
+                self.list.Show(False)
+                self.tb.Show(False)
+                self.sb1.Show(False)
+            else:
+                self.list.Show(True)
+                self.tb.Show(True)
+                self.sb1.Show(True)
+                enable = self.pasVerrouille and (self.classe.typeEnseignement == 'ET')
+                self.list.Enable(enable)
+                self.tb.EnableTool(31, enable)
+                self.tb.EnableTool(32, enable)
 #            self.btn.Enable(self.pasVerrouille and self.classe.typeEnseignement == 'ET')
             
     ######################################################################################  
@@ -7992,6 +8046,13 @@ class PanelPropriete_Seance(PanelPropriete):
         cb = wx.CheckBox(self, -1, u"Montrer dans la zone de déroulement de la séquence")
         cb.SetValue(self.seance.intituleDansDeroul)
         bsizer.Add(cb, flag = wx.EXPAND)
+        
+        vcTaille = VariableCtrl(self, seance.taille, signeEgal = True, slider = False, sizeh = 40,
+                                help = u"Taille des caractères", unite = u"%")
+        self.Bind(EVT_VAR_CTRL, self.EvtText, vcTaille)
+        bsizer.Add(vcTaille, flag = wx.EXPAND)
+        self.vcTaille = vcTaille
+        
         self.Bind(wx.EVT_CHECKBOX, self.EvtCheckBox, cb)
         self.cbInt = cb
         self.sizer.Add(bsizer, (1,0), (1,2), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 2)
@@ -8002,8 +8063,8 @@ class PanelPropriete_Seance(PanelPropriete):
         #
         # Durée de la séance
         #
-        vcDuree = VariableCtrl(self, seance.duree, coef = 0.5, signeEgal = True, slider = False,
-                               help = u"Durée de la séance en heures")
+        vcDuree = VariableCtrl(self, seance.duree, coef = 0.5, signeEgal = True, slider = False, sizeh = 30,
+                               help = u"Durée de la séance en heures", unite = u"h")
 #        textctrl = wx.TextCtrl(self, -1, u"1")
         self.Bind(EVT_VAR_CTRL, self.EvtText, vcDuree)
         self.vcDuree = vcDuree
@@ -8024,11 +8085,9 @@ class PanelPropriete_Seance(PanelPropriete):
         self.cbEff = cbEff
         self.titreEff = titre
         
-#        nombre = wx.StaticText(self, -1, u"")
-#        self.nombre = nombre
-        
         self.sizer.Add(titre, (3,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 2)
         self.sizer.Add(cbEff, (3,1), flag = wx.EXPAND)
+#        self.sizer.AddGrowableRow(3)
 #        self.sizer.Add(self.nombre, (3,2))
         
         #
@@ -8051,16 +8110,27 @@ class PanelPropriete_Seance(PanelPropriete):
         
         self.sizer.Add(titre, (4,0), flag = wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT|wx.LEFT, border = 2)
         self.sizer.Add(cbDem, (4,1), flag = wx.EXPAND)
+#        self.sizer.AddGrowableRow(4)
 #        self.sizer.Add(self.nombre, (4,2))
         
         #
         # Nombre de séances en parallèle
         #
-        vcNombre = VariableCtrl(self, seance.nombre, signeEgal = True, slider = False, 
+        vcNombre = VariableCtrl(self, seance.nombre, signeEgal = True, slider = False, sizeh = 30,
                                 help = u"Nombre de groupes réalisant simultanément la même séance")
         self.Bind(EVT_VAR_CTRL, self.EvtText, vcNombre)
         self.vcNombre = vcNombre
         self.sizer.Add(vcNombre, (5,0), (1, 2))
+#        self.sizer.AddGrowableRow(5)
+        
+        #
+        # Nombre de rotations
+        #
+        vcNombreRot = VariableCtrl(self, seance.nbrRotations, signeEgal = True, slider = False, sizeh = 30,
+                                help = u"Nombre de rotations")
+        self.Bind(EVT_VAR_CTRL, self.EvtText, vcNombreRot)
+        self.vcNombreRot = vcNombreRot
+        self.sizer.Add(vcNombreRot, (6,0), (1, 2))
         
         
         #
@@ -8071,7 +8141,7 @@ class PanelPropriete_Seance(PanelPropriete):
         self.bsizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
         self.systemeCtrl = []
         self.ConstruireListeSystemes()
-        self.sizer.Add(self.bsizer, (0,4), (6, 1), flag = wx.EXPAND)
+        self.sizer.Add(self.bsizer, (0,4), (7, 1), flag = wx.EXPAND)
         
 #        self.sizer.AddGrowableCol(4, proportion = 1)
 
@@ -8087,7 +8157,7 @@ class PanelPropriete_Seance(PanelPropriete):
         self.btnlien.Hide()
         self.Bind(wx.EVT_BUTTON, self.OnClick, self.btnlien)
         bsizer.Add(self.btnlien)
-        self.sizer.Add(bsizer, (4,5), (2, 1), flag = wx.EXPAND)
+        self.sizer.Add(bsizer, (5,5), (2, 1), flag = wx.EXPAND)
         
         #
         # Description de la séance
@@ -8100,11 +8170,12 @@ class PanelPropriete_Seance(PanelPropriete):
         dbsizer.Add(bd, flag = wx.EXPAND)
         dbsizer.Add(tc, 1, flag = wx.EXPAND)
         self.Bind(wx.EVT_BUTTON, self.EvtClick, bd)
-        self.sizer.Add(dbsizer, (0,5), (4, 1), flag = wx.EXPAND)
+        self.sizer.Add(dbsizer, (0,5), (5, 1), flag = wx.EXPAND)
         self.rtc = tc
         # Pour indiquer qu'une édition est déja en cours ...
         self.edition = False  
         
+        self.sizer.SetEmptyCellSize((0,0))
         
         #
         # Mise en place
@@ -8160,14 +8231,13 @@ class PanelPropriete_Seance(PanelPropriete):
     
     #############################################################################            
     def MiseAJourListeSystemes(self):
-        self.Freeze()
         if self.seance.typeSeance in ["AP", "ED", "P"]:
             self.Freeze()
             for i, s in enumerate(self.seance.systemes):
                 self.systemeCtrl[i].Renommer(s.n)
             self.bsizer.Layout()
             self.Layout()
-        self.Thaw()
+            self.Thaw()
 
     #############################################################################
     def MiseAJourTypeEnseignement(self):
@@ -8212,9 +8282,17 @@ class PanelPropriete_Seance(PanelPropriete):
             self.seance.SetDuree(event.GetVar().v[0])
         elif event.GetId() == self.vcNombre.GetId():
             self.seance.SetNombre(event.GetVar().v[0])
+        elif event.GetId() == self.vcNombreRot.GetId():
+            self.seance.SetNombreRot(event.GetVar().v[0])
+            
+        elif event.GetId() == self.vcTaille.GetId():
+            self.seance.SetTaille(event.GetVar().v[0])
+            
         if not self.eventAttente:
             wx.CallLater(DELAY, self.sendEvent)
             self.eventAttente = True
+            
+   
         
     #############################################################################            
     def EvtComboBox(self, event):
@@ -8246,11 +8324,9 @@ class PanelPropriete_Seance(PanelPropriete):
         if self.cbEff.IsEnabled() and self.cbEff.IsShown():
             self.seance.SetEffectif(self.cbEff.GetStringSelection())
 
+        self.AdapterAuType()
         self.ConstruireListeSystemes()
-#        self.AdapterAu()
         self.Layout()
-        
-#        self.Fit()
         self.sendEvent()
        
         
@@ -8327,23 +8403,29 @@ class PanelPropriete_Seance(PanelPropriete):
             listEff = ["C"]
             self.cbEff.Show(True)
             self.titreEff.Show(True)
+
         elif self.seance.typeSeance in ["R", "S"] or self.seance.typeSeance == "":
             self.cbEff.Show(False)
             self.titreEff.Show(False)
             listEff = []
-        elif self.seance.typeSeance in ["ED", "P"]:
+            
+        elif self.seance.typeSeance in ["ED", "P", "TD"]:
             listEff = ["G", "D", "E", "P"]
             self.cbEff.Show(True)
             self.titreEff.Show(True)
+
         elif self.seance.typeSeance in ["AP"]:
             listEff = ["P", "E"]
             self.cbEff.Show(True)
             self.titreEff.Show(True)
+
         elif self.seance.typeSeance in ["SA"]:
             listEff = ["C", "G"]
             self.cbEff.Show(True)
             self.titreEff.Show(True)
 
+        self.vcNombreRot.Show(self.seance.typeSeance == "R")
+        
         self.cbEff.Clear()
         for s in listEff:
             self.cbEff.Append(strEffectifComplet(self.seance.GetDocument().classe, s, -1))
@@ -8398,8 +8480,10 @@ class PanelPropriete_Seance(PanelPropriete):
 
         if self.seance.typeSeance in ["AP", "ED", "P"]:
             self.vcNombre.mofifierValeursSsEvt()
+        elif self.seance.typeSeance == "R":
+            self.vcNombreRot.mofifierValeursSsEvt()
         
-#        self.AdapterAu()
+        self.vcTaille.mofifierValeursSsEvt()
         
 #        if self.seance.typeSeance in ["AP", "ED", "P"]:
 #            for i in range(self.seance.nSystemes):

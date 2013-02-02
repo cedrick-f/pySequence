@@ -450,7 +450,7 @@ class VarEvent(wx.PyCommandEvent):
 
 class VariableCtrl(wx.Panel):
     def __init__(self, parent, variable, coef = None, signeEgal = True, 
-                 slider = False, fct = None, help = "", sizeh = -1, color = wx.BLACK):
+                 slider = False, fct = None, help = "", sizeh = -1, color = wx.BLACK, unite = u""):
         wx.Panel.__init__(self, parent, -1)#, style = wx.BORDER_SIMPLE)
         
         if coef == None:
@@ -495,7 +495,9 @@ class VariableCtrl(wx.Panel):
         self.Bind(wx.EVT_TEXT, self.OnChar, self.text)
 #        self.Bind(wx.EVT_CHAR, self.OnChar, self.text)
         
+        #
         # Contrôle de la variable
+        #
         self.spin = wx.SpinButton(self, -1, size = (15,25), style = wx.SP_VERTICAL | wx.SP_ARROW_KEYS)
         
         self.spin.SetRange(-100, 100)
@@ -505,11 +507,16 @@ class VariableCtrl(wx.Panel):
         self.Bind(wx.EVT_SPIN_UP, self.OnSpinUp, self.spin)
         self.Bind(wx.EVT_SPIN_DOWN, self.OnSpinDown, self.spin)
         
+        #
+        # Unité
+        #
+        self.unite = wx.StaticText(self, -1, unite)#,
+        
         sizer = wx.BoxSizer( wx.HORIZONTAL)
         sizer.Add(txtnom, 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_RIGHT|wx.LEFT, 3 )
         sizer.Add(self.text, 0, wx.ALIGN_CENTRE|wx.LEFT, 4 )
         sizer.Add(self.spin, 0, wx.ALIGN_CENTRE|wx.LEFT|wx.RIGHT, 4 )
-        
+        sizer.Add(self.unite, 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_LEFT|wx.RIGHT, 3 )
         self.SetSizer(sizer)
     
     #########################################################################################################
@@ -729,3 +736,7 @@ def chronometrer(fct, *args, **kargs):
     return tps2 - tps1, result
 
 
+
+    
+    
+    
