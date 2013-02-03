@@ -261,6 +261,69 @@ dicSavoirs_SSI = {"A1" : [u"Analyser le besoin",
                           "B4.4" : [u"Grandeurs influentes d’un modèle",
                                     [u"Modifier les paramètres d’un modèle"]],
                           }],
+                  
+                  
+                  
+                  "C1" : [u"Justifier le choix d’un protocole expérimental",
+                         {"C1.1" : [u"Capteurs",
+                                   [u"Qualifier les caractéristiques d’entrée - sortie d’un capteur",
+                                    u"Justifier le choix d’un capteur ou d’un appareil de mesure vis-à-vis de la grandeur physique à mesurer",
+                                    u"Justifier les caractéristiques (calibre, position, etc.) d’un appareil de mesure"]],
+                          
+                          "C1.2" : [u"Prévision quantitative de la réponse du système",
+                                    [u"Identifier le comportement des composants du système",
+                                     u"Prévoir l’ordre de grandeur de la mesure"]],
+                          
+                          "C1.3" : [u"Chaîne d’information, structure et fonctionnement",
+                                    [u"Identifier la nature et les caractéristiques des grandeurs en divers points de la chaîne d’information",
+                                     u"Maîtriser les fonctions des appareils de mesures et leurs mises en oeuvre"]],
+                          }],
+                 
+                  "C2" : [u"Mettre en oeuvre un protocole expérimental",
+                         {"C2.1" : [u"Appareils de mesures, règles d’utilisation",
+                                   [u"Mettre en oeuvre un appareil de mesure",
+                                    u"Paramétrer une chaîne d’acquisition"]],
+                                    
+                          "C2.2" : [u"Paramètres de configuration du système",
+                                   [u"Régler les paramètres de fonctionnement d’un système"]],
+                          
+                          "C2.3" : [u"Paramètres de configuration d’un réseau",
+                                    [u"Paramétrer un protocole de communication"]],
+                          
+                          "C2.4" : [u"Routines, procédures, etc. - Systèmes logiques à évènements discrets",
+                                    [u"Générer un programme et l’implanter dans le système cible"]],
+                          
+                          "C2.5" : [u"Modèles de comportement",
+                                    [u"Analyser les résultats expérimentaux",
+                                     u"Traiter les résultats expérimentaux, et extraire la ou les grandeurs désirée(s)"]],
+                          }],
+                 
+                 "D1" : [u"Rechercher et traiter des informations",
+                         {"D1.1" : [u"Dossier technique",
+                                   [u"Rechercher une information dans un dossier technique",
+                                    u"Effectuer la synthèse des informations disponibles dans un dossier technique"]],
+                                    
+                          "D1.2" : [u"Bases de données, sélection, tri, classement de données",
+                                   [u"Optimiser les paramètres et les critères de recherche en vue de répondre au problème posé"]],
+                          
+                          "D1.3" : [u"Internet, outil de travail collaboratif, blogs, forums, moteur de recherche",
+                                    [u"Rechercher des informations",
+                                     u"Vérifier la nature de l’information",
+                                     u"Trier des informations selon des critères",
+                                     u"Utiliser des outils adaptés pour rechercher l’information",
+                                     u"Mettre à jour l’information"]],
+                          }],
+                 
+                 "D2" : [u"Mettre en oeuvre une communication",
+                         {"D2.1" : [u"Croquis, schémas",
+                                   [u"Réaliser un croquis ou un schéma dans un objectif de communication"]],
+                                    
+                          "D2.2" : [u"Production de documents",
+                                   [u"Distinguer les différents types de documents en fonction de leurs usages",
+                                    u"Choisir l’outil bureautique adapté à l’objectif",
+                                    u"Réaliser un document numérique",
+                                    u"Réaliser et scénariser un document multimédia"]],
+                          }],
                  }
 
 
@@ -386,3 +449,82 @@ dicPoidsIndicateurs_prj_SSI = {"B" : [40,
                                        "D2" : [20,10,20,20],
                                         }]
                                }
+
+
+#################################################################################################################################
+#
+#        Les cellules "Savoirs" dans le tableau de bilan
+#
+#################################################################################################################################
+dicCellSavoirs_SSI = {"A1.1" : [10,13],
+                  "A1.2" : [14,15],
+                  "A1.3" : [16,16],
+                 
+                  "A2.1" : [18,21],
+                  "A2.2" : [22,27],
+                  "A2.3" : [28,28],
+                  "A2.4" : [29,30],
+                  "A2.5" : [31,31],
+                  "A2.6" : [32,34],
+                  "A2.7" : [35,36],
+                  "A2.8" : [37,37],
+                  "A2.9" : [38,39],
+                  "A2.10" : [40,41],
+                  "A2.11" : [42,42],
+                  "A2.12" : [43,43],
+                  "A2.13" : [44,44],
+                  "A2.14" : [45,48],
+                  "A2.15" : [49,49],
+                  "A2.16" : [50,51],
+                  "A2.17" : [52,54],
+
+                  "A3.1" : [56,61],
+                        
+                  "B1.1" : [65,66],
+                  "B1.2" : [67,70],
+                  "B1.3" : [71,71],
+                  "B1.4" : [72,73],
+                  "B1.5" : [74,74],
+                  "B1.6" : [75,75],
+                 
+                  "B2.1" : [77,79],
+                  "B2.2" : [80,80],
+                  "B2.3" : [81,82],
+                  "B2.4" : [83,83],
+                  "B2.5" : [84,86],
+                  "B2.6" : [87,87],
+                  "B2.7" : [88,89],
+                  "B2.8" : [90,90],
+                  "B2.9" : [91,91],
+                  "B2.10" : [92,94],
+                  "B2.11" : [95,95],
+                 
+                  "B3.1" : [97,98],
+                  "B3.2" : [99,99],
+                  "B3.3" : [100,100],
+                  "B3.4" : [101,103],
+                  "B3.5" : [104,104],
+                 
+                  "B4.1" : [106,107],
+                  "B4.2" : [108,109],
+                  "B4.3" : [110,111],
+                  "B4.4" : [112,112],
+                  
+                  "C1.1" : [116,118],
+                  "C1.2" : [119,120],
+                  "C1.3" : [121,122],
+                 
+                  "C2.1" : [124,125],
+                  "C2.2" : [126,126],
+                  "C2.3" : [127,127],
+                  "C2.4" : [128,128],
+                  "C2.5" : [129,130],
+                 
+                  "D1.1" : [134,135],
+                  "D1.2" : [136,136],
+                  "D1.3" : [137,141],
+                  
+                  "D2.1" : [143,143],
+                  "D2.2" : [144,147]
+                  
+                 }

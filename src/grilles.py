@@ -330,6 +330,11 @@ class PyExcel:
     def setCell(self, sheet, row, col, value):
         sht = self.xlBook.Worksheets(sheet)
         sht.Cells(row, col).Value = value
+        
+    def setLink(self, sheet, row, col, value):
+        sht = self.xlBook.Worksheets(sheet)
+        hl = sht.Cells(row, col).Hyperlinks
+        hl.Add(sht.Cells(row, col), value)
  
     def getRange(self, sheet, row1, col1, row2, col2):
         sht = self.xlBook.Worksheets(sheet)

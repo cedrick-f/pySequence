@@ -53,6 +53,7 @@ __version__ = "3.141"
 #
 ####################################################################################
 import time
+import glob
 
 # Outils "système"
 import sys, os
@@ -752,7 +753,7 @@ class Classe():
         if hasattr(self, 'panelPropriete'):
             self.panelPropriete.MiseAJour()
         
-        self.doc.MiseAJourTypeEnseignement()
+            self.doc.MiseAJourTypeEnseignement()
         
         
         
@@ -824,7 +825,8 @@ class BaseDoc():
     
     ######################################################################################  
     def GetPath(self):
-        return os.path.split(self.app.fichierCourant)[0]
+        if hasattr(self.app, 'fichierCourant'):
+            return os.path.split(self.app.fichierCourant)[0]
     
     ######################################################################################  
     def GetApercu(self, mult = 3):
@@ -1273,13 +1275,13 @@ class Sequence(BaseDoc):
         
         
         
-#    ######################################################################################  
-#    def reconstruireBrancheSeances(self, b1, b2):
-#        self.arbre.DeleteChildren(self.brancheSce)
-#        for sce in self.seance:
-#            sce.ConstruireArbre(self.arbre, self.brancheSce) 
-#        self.arbre.Expand(b1.branche)
-#        self.arbre.Expand(b2.branche)
+    ######################################################################################  
+    def reconstruireBrancheSeances(self, b1, b2):
+        self.arbre.DeleteChildren(self.brancheSce)
+        for sce in self.seance:
+            sce.ConstruireArbre(self.arbre, self.brancheSce) 
+        self.arbre.Expand(b1.branche)
+        self.arbre.Expand(b2.branche)
 #        
     
         
@@ -2939,18 +2941,18 @@ class Seance(ElementDeSequence, Objet_sequence):
                 ok = 1 # Tout le groupe "effectif réduit" n'est pas occupé
             elif self.GetEffectif() > self.GetClasse().GetEffectifNorm('G'):
                 ok = 2 # Effectif de la séance supperieur à celui du groupe "effectif réduit"    
-            if self.typeSeance == "R":
-                continuer = True
-                eff = self.sousSeances[0].GetEffectif()
-                i = 1
-                while continuer:
-                    if i >= len(self.sousSeances):
-                        continuer = False
-                    else:
-                        if self.sousSeances[i].GetEffectif() != eff:
-                            ok = 3 # séance en rotation d'effectifs différents !!
-                            continuer = False
-                        i += 1
+#            if self.typeSeance == "R":
+#                continuer = True
+#                eff = self.sousSeances[0].GetEffectif()
+#                i = 1
+#                while continuer:
+#                    if i >= len(self.sousSeances):
+#                        continuer = False
+#                    else:
+#                        if self.sousSeances[i].GetEffectif() != eff:
+#                            ok = 3 # séance en rotation d'effectifs différents !!
+#                            continuer = False
+#                        i += 1
             
         elif self.typeSeance in ["AP", "ED"] and not self.EstSousSeance():
             if self.GetEffectif() < self.GetClasse().GetEffectifNorm('G'):
@@ -3013,7 +3015,8 @@ class Seance(ElementDeSequence, Objet_sequence):
 #            for sce in self.sousSeances:
 #                duree += sce.GetDuree()
         elif self.typeSeance == "S":
-            duree += self.sousSeances[0].GetDuree()
+            if len(self.sousSeances) > 0:
+                duree += self.sousSeances[0].GetDuree()
         else:
             duree = self.duree.v[0]
         return duree
@@ -4815,6 +4818,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         self.Bind(wx.EVT_MENU, self.exporterFiche, id=15)
         self.Bind(wx.EVT_MENU, self.exporterDetails, id=16)
         self.Bind(wx.EVT_MENU, self.genererGrilles, id=17)
+        self.Bind(wx.EVT_MENU, self.etablirBilan, id=18)
         self.Bind(wx.EVT_MENU, self.OnClose, id=wx.ID_EXIT)
         
         self.Bind(wx.EVT_MENU, self.OnAide, id=21)
@@ -5047,6 +5051,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         file_menu.Append(15, u"&Exporter la fiche (PDF ou SVG)\tCtrl+E")
         file_menu.Append(16, u"&Exporter les détails\tCtrl+D")
         file_menu.Append(17, u"&Générer les grilles d'évaluation\tCtrl+G")
+        file_menu.Append(18, u"&Etablir un bilan d'objectifs\tCtrl+B")
         
         file_menu.AppendSeparator()
         file_menu.Append(wx.ID_EXIT, u"&Quitter\tCtrl+Q")
@@ -5247,7 +5252,14 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         if page != None:
             page.genererGrilles(event)
     
-    
+    #############################################################################
+    def etablirBilan(self, event = None):
+        win = FenetreBilan(self, self.GetFenetreActive().DossierSauvegarde)
+        win.Show()
+#        win.Destroy()
+        
+        
+        
     #############################################################################
     def OnOptions(self, event, page = 0):
         options = self.options.copie()
@@ -5324,6 +5336,9 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     def GetSequenceActive(self):
         return self.GetNotebook().GetCurrentPage().sequence
     
+    #############################################################################
+    def GetFenetreActive(self):
+        return self.GetNotebook().GetCurrentPage()
     
     #############################################################################
     def GetNomsFichiers(self):
@@ -10892,9 +10907,385 @@ class DialogChoixDoc(wx.Dialog):
         self.SetReturnCode(2)
         self.EndModal(2)
 
+#import pywintypes
+#############################################################################################################
+#
+# Fenetre de bilan d'objectifs
+# 
+#############################################################################################################
+class FenetreBilan(wx.Frame):
+    def __init__(self, parent, dossierCourant = '', typeEnseignement = "SSI"):
+        wx.Frame.__init__(self, parent, -1, u"Bilan d'objectifs")
+        
+        self.sizer = wx.GridBagSizer()
+        panel = wx.Panel(self, -1)
+        sizer = wx.BoxSizer()
+        self.SetIcon(images.getlogoIcon())
+        
+        #############################################################################################
+        # Création de la barre d'outils
+        #############################################################################################
+        self.ConstruireTb()
+        
+        self.lstClasse = []
+        self.lstSeq = []
+            
+        #
+        # Type d'enseignement
+        #
+        self.typeEnseignement = typeEnseignement
+        l = []
+        for i, e in enumerate(constantes.listEnseigmenent):
+            l.append(constantes.Enseigmenent[e][0])
+        rb = wx.RadioBox(
+                panel, -1, u"Type d'enseignement", wx.DefaultPosition, (130,-1),
+                l,
+                1, wx.RA_SPECIFY_COLS
+                )
+        rb.SetToolTip(wx.ToolTip(u"Choisir le type d'enseignement"))
+        for i, e in enumerate(constantes.listEnseigmenent):
+            rb.SetItemToolTip(i, constantes.Enseigmenent[e][1])
+        self.Bind(wx.EVT_RADIOBOX, self.EvtRadioBox, rb)
+            
+        self.sizer.Add(rb, (0,0), (2,1), flag = wx.EXPAND|wx.ALL)
+        self.cb_type = rb
+        self.cb_type.SetStringSelection(constantes.Enseigmenent[self.typeEnseignement][0])
+        
+        #
+        # Dossiers de recherche
+        #
+        
+        sb = wx.StaticBox(panel, -1, u"Dossiers où chercher les fichiers de séquence")
+        sbs = wx.StaticBoxSizer(sb, wx.HORIZONTAL)
+        self.dossiers = [os.path.abspath(dossierCourant)]
+        self.dossiersOk = True
+        self.txtDoss = wx.TextCtrl(panel, -1, os.path.abspath(dossierCourant))
+        self.txtDoss.Bind(wx.EVT_KILL_FOCUS, self.EvtTextDoss)
+        sbs.Add(self.txtDoss, 1, flag = wx.EXPAND|wx.ALL)
+        
+        self.boutonDoss = wx.Button(panel, -1, "+", size = (30, -1))
+        self.boutonDoss.SetToolTipString(u"Ajouter un dossier de recherche")
+        self.Bind(wx.EVT_BUTTON, self.OnDossier, self.boutonDoss)
+        sbs.Add(self.boutonDoss, flag = wx.EXPAND|wx.ALL)
+        
+        self.sizer.Add(sbs, (0,1), (1,1) , flag = wx.EXPAND|wx.ALL)
+        self.sizer.AddGrowableCol(1)
+        
+        #
+        #    Liste des fichiers trouvés
+        #
+        self.listeSeq = wx.ListCtrl(panel, -1, style=wx.LC_REPORT|wx.LC_HRULES|wx.LC_VRULES)
+        self.listeSeq.Bind(wx.EVT_SIZE, self.OnResize)
+        self.sizer.Add(self.listeSeq, (1,1), (1,1) , flag = wx.EXPAND|wx.ALL)
+        self.MiseAJourListe()
+        
+        panel.SetSizer(self.sizer)
+        sizer.Add(panel,1, flag = wx.EXPAND)
+        self.SetSizerAndFit(sizer)
+        
+    ###############################################################################################
+    def ConstruireTb(self):
+        """ Construction de la ToolBar
+        """
+#        print "ConstruireTb"
 
+        #############################################################################################
+        # Création de la barre d'outils
+        #############################################################################################
+        self.tb = self.CreateToolBar(wx.TB_HORIZONTAL | wx.NO_BORDER | wx.TB_FLAT)
+        
+        
+        tsize = (24,24)
+        new_bmp = images.Icone_excel.GetBitmap()
+#        open_bmp = wx.ArtProvider.GetBitmap(wx.ART_FILE_OPEN, wx.ART_TOOLBAR, tsize)
+#        save_bmp =  wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE, wx.ART_TOOLBAR, tsize)
+#        saveas_bmp = wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE_AS, wx.ART_TOOLBAR, tsize)
+        
+        self.tb.SetToolBitmapSize(tsize)
+        
+        self.tb.AddLabelTool(10, u"Exporter", new_bmp, 
+                             shortHelp=u"Exporter le bilan dans un fichier Excel", 
+                             longHelp=u"Exporter le bilan dans un fichier Excel")
+        
 
+#        self.tb.AddLabelTool(11, u"Ouvrir", open_bmp, 
+#                             shortHelp=u"Ouverture d'un fichier séquence ou projet", 
+#                             longHelp=u"Ouverture d'un fichier séquence ou projet")
+#        
+#        self.tb.AddLabelTool(12, u"Enregistrer", save_bmp, 
+#                             shortHelp=u"Enregistrement du document courant sous son nom actuel", 
+#                             longHelp=u"Enregistrement du document courant sous son nom actuel")
+#        
+#
+#        self.tb.AddLabelTool(13, u"Enregistrer sous...", saveas_bmp, 
+#                             shortHelp=u"Enregistrement du document courant sous un nom différent", 
+#                             longHelp=u"Enregistrement du document courant sous un nom différent")
+        
+        self.Bind(wx.EVT_TOOL, self.commandeExporter, id=10)
+#        self.Bind(wx.EVT_TOOL, self.commandeOuvrir, id=11)
+#        self.Bind(wx.EVT_TOOL, self.commandeEnregistrer, id=12)
+#        self.Bind(wx.EVT_TOOL, self.commandeEnregistrerSous, id=13)
+#        
+        
+        
+        #################################################################################################################
+        #
+        # Mise en place
+        #
+        #################################################################################################################
+        self.tb.Realize()
+        
 
+    ######################################################################################  
+    def commandeExporter(self, event = None):
+        mesFormats = "Fichier Excel|*.xlsx"
+        dlg = wx.FileDialog(self, 
+                            message = u"Enregistrement du bilan", 
+                            defaultFile="", wildcard=mesFormats, 
+                            style=wx.SAVE|wx.OVERWRITE_PROMPT|wx.CHANGE_DIR
+                            )
+        dlg.SetFilterIndex(0)
+        if dlg.ShowModal() == wx.ID_OK:
+            path = dlg.GetPath()
+            dlg.Destroy()
+            ok = self.enregistrer(path)
+            if ok:
+                dlg = wx.MessageDialog(self, u"Export du bilan réussi !", u"Export du bilan réussi",
+                           wx.OK | wx.ICON_INFORMATION)
+                dlg.ShowModal()
+                dlg.Destroy()
+            else:
+                dlg = wx.MessageDialog(self, u"L'export du bilan a échoué !", u"Echec de l'export du bilan",
+                           wx.OK | wx.ICON_WARNING)
+                dlg.ShowModal()
+                dlg.Destroy()
+        else:
+            dlg.Destroy()
+
+    ######################################################################################  
+    def enregistrer(self, nomFichier):
+        try:
+            tableau = grilles.PyExcel(os.path.join(PATH, "SI_Programme-Progression.xlsx"))
+        except:
+            print "SI_Programme-Progression.xlsx est déja ouvert !"
+            return False
+
+        def ecrire(feuille, l, c):
+            v = tableau.getCell(feuille, l, c)
+            if v == "A":
+                v = "B"
+            elif v == "B":
+                v = "C"
+            elif v == "C":
+                v = "C"
+            else:
+                v = "A"
+            tableau.setCell(feuille, l, cc+i, v)
+            
+        feuille = u"Progression - Programme"
+        
+        # Première cellule "séquence"
+        lc, cc = (4, 11) # K4
+        
+        # Première cellule "durée"
+        ld, cd = (5, 11) # K5
+        
+        for i, seq in enumerate(self.lstSeq):
+            tableau.setCell(feuille, lc, cc+i, seq.intitule)
+            tableau.setCell(feuille, ld, cc+i, str(seq.GetDuree()))
+            tableau.setLink(feuille, lc, cc+i, self.listFichiers[i])
+            
+            for sav in seq.obj["S"].savoirs:
+                if sav in constantes.dicCellSavoirs[self.typeEnseignement].keys():
+                    lig0, lig1 = constantes.dicCellSavoirs[self.typeEnseignement][sav]
+                    for l in range(lig0, lig1+1):
+                        ecrire(feuille, l, cc+i)
+                else:
+                    continuer = True
+                    s=1
+                    while continuer:
+                        sav1 = sav+'.'+str(s)
+                        if sav1 in constantes.dicCellSavoirs[self.typeEnseignement].keys():
+                            lig0, lig1 = constantes.dicCellSavoirs[self.typeEnseignement][sav1]
+                            for l in range(lig0, lig1+1):
+                                ecrire(feuille, l, cc+i)
+                            s += 1
+                        else:
+                            continuer = False
+        try:                   
+            tableau.save(nomFichier)
+        except :
+            print nomFichier, "est déja ouvert !"
+            return False
+            
+        tableau.close()
+        return True
+        
+    ######################################################################################  
+    def EvtRadioBox(self, event):
+        for c, e in constantes.Enseigmenent.items():
+            if e[0] == self.cb_type.GetItemLabel(event.GetInt()):
+                self.typeEnseignement = c
+                break
+        
+        
+    #############################################################################            
+    def EvtTextDoss(self, event):
+        self.dossiers = self.txtDoss.GetValue().split(";")
+        self.VerifierDossiers()
+        self.MiseAJourListe()
+        
+    ########################################################################################################
+    def OnDossier(self, event):
+        dlg = wx.DirDialog(self, "Choisir un dossier",
+                           style = wx.DD_DEFAULT_STYLE
+                           #| wx.DD_DIR_MUST_EXIST
+                           #| wx.DD_CHANGE_DIR
+                           )
+
+        if dlg.ShowModal() == wx.ID_OK:
+            if len(self.dossiers) == 0:
+                self.txtDoss.ChangeValue(dlg.GetPath())
+            else:
+                self.txtDoss.ChangeValue(self.txtDoss.GetValue()+";"+dlg.GetPath())
+            self.dossiers.append(dlg.GetPath())
+            self.MiseAJourListe()
+            
+        dlg.Destroy()
+        
+        
+    ########################################################################################################
+    def VerifierDossiers(self):
+        col = wx.SystemSettings_GetColour(wx.SYS_COLOUR_WINDOW)
+        self.txtDoss.SetBackgroundColour(col)
+        self.dossiersOk = True
+        for dossier in self.dossiers:
+            if not os.path.isdir(dossier):
+                self.txtDoss.SetBackgroundColour("pink")
+                self.dossiersOk = False
+                break
+    
+    ########################################################################################################
+    def OnResize(self, event=None):
+        height = 30
+        for indx in xrange(self.listeSeq.GetItemCount()):
+            height += self.listeSeq.GetItemRect(indx).height
+        self.listeSeq.SetMinSize((-1, height))
+        
+        
+    ########################################################################################################
+    def MiseAJourListe(self):
+        self.listeSeq.ClearAll()
+        self.listeSeq.InsertColumn(0, u"Fichier séquence")
+        self.listeSeq.InsertColumn(1, u"Dossier")
+        
+        if self.dossiersOk:
+            l = []
+            for dossier in self.dossiers:
+                l.extend(glob.glob(os.path.join(dossier, "*.seq")))
+                
+            self.listFichiers = []
+            self.lstClasse = []
+            self.lstSeq = []
+            for i, f in enumerate(l):
+                classe, sequence = self.OuvrirFichierSeq(f)
+                if classe.typeEnseignement == self.typeEnseignement:
+                    self.lstClasse.append(classe)
+                    self.lstSeq.append(sequence)
+                    self.listFichiers.append(f)
+                    d, f = os.path.split(f)
+                    f = os.path.splitext(f)[0]
+                    pos = self.listeSeq.InsertStringItem(i, f)
+                    self.listeSeq.SetStringItem(pos, 1, d)
+                
+        self.listeSeq.SetColumnWidth(0, wx.LIST_AUTOSIZE)
+        self.listeSeq.SetColumnWidth(1, wx.LIST_AUTOSIZE)
+        self.listeSeq.Layout()
+        self.OnResize()
+        self.Fit()
+        
+    ########################################################################################################
+    def OuvrirFichierSeq(self, nomFichier):
+        fichier = open(nomFichier,'r')
+        
+        classe = Classe(self.Parent)
+        sequence = Sequence(self, classe)
+        classe.SetDocument(sequence)
+        
+#        try:
+        root = ET.parse(fichier).getroot()
+        rsequence = root.find("Sequence")
+        rclasse = root.find("Classe")
+        classe.setBranche(rclasse)
+        sequence.setBranche(rsequence)
+        return classe, sequence
+#        except:
+#            messageErreur(self,u"Erreur d'ouverture",
+#                          u"La séquence pédagogique\n    %s\n n'a pas pu être ouverte !" %nomFichier)
+#            fichier.close()
+#            self.Close()
+#            return None, None
+                
+##########################################################################################################
+#
+#  DirSelectorCombo
+#
+##########################################################################################################
+class DirSelectorCombo(wx.combo.ComboCtrl):
+    def __init__(self, *args, **kw):
+        wx.combo.ComboCtrl.__init__(self, *args, **kw)
+
+        # make a custom bitmap showing "..."
+        bw, bh = 14, 16
+        bmp = wx.EmptyBitmap(bw,bh)
+        dc = wx.MemoryDC(bmp)
+
+        # clear to a specific background colour
+        bgcolor = wx.Colour(255,254,255)
+        dc.SetBackground(wx.Brush(bgcolor))
+        dc.Clear()
+
+        # draw the label onto the bitmap
+        label = "..."
+        font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        font.SetWeight(wx.FONTWEIGHT_BOLD)
+        dc.SetFont(font)
+        tw,th = dc.GetTextExtent(label)
+        dc.DrawText(label, (bw-tw)/2, (bw-tw)/2)
+        del dc
+
+        # now apply a mask using the bgcolor
+        bmp.SetMaskColour(bgcolor)
+
+        # and tell the ComboCtrl to use it
+        self.SetButtonBitmaps(bmp, True)
+        
+
+    # Overridden from ComboCtrl, called when the combo button is clicked
+    def OnButtonClick(self):
+        # In this case we include a "New directory" button. 
+#        dlg = wx.FileDialog(self, "Choisir un fichier modèle", path, name,
+#                            "Rich Text Format (*.rtf)|*.rtf", wx.FD_OPEN)
+        dlg = wx.DirDialog(self, _("Choisir un dossier"),
+                           style = wx.DD_DEFAULT_STYLE
+                           #| wx.DD_DIR_MUST_EXIST
+                           #| wx.DD_CHANGE_DIR
+                           )
+
+        # If the user selects OK, then we process the dialog's data.
+        # This is done by getting the path data from the dialog - BEFORE
+        # we destroy it. 
+        if dlg.ShowModal() == wx.ID_OK:
+            self.SetValue(dlg.GetPath())
+
+        # Only destroy a dialog after you're done with it.
+        dlg.Destroy()
+        
+        self.SetFocus()
+
+    # Overridden from ComboCtrl to avoid assert since there is no ComboPopup
+    def DoSetPopupControl(self, popup):
+        pass
 #############################################################################################################
 #
 # A propos ...
