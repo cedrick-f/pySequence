@@ -1044,9 +1044,11 @@ class Bloc():
             
             if estRotation:
                 NS = {}
+                cadreOk = False
                 for cadre in ligne:
                     ns = cadre.seance.GetNbrSystemes(simple = True)
                     mergeDict(NS, ns)
+                    
                     if cadre.dy:
                         cadreOk = cadre
                 if cadreOk:
@@ -1056,7 +1058,9 @@ class Bloc():
 ######################################################################################  
 def DrawSeanceRacine(ctx, seance):
     global cursY
-    
+    if seance.GetDureeGraph() == 0:
+        return
+        
     #
     # Flèche indiquant la durée
     #
@@ -1133,7 +1137,7 @@ def DrawSeanceRacine(ctx, seance):
                     l = permut(l)
                     for i, s in enumerate(l[:seance.nbrRotations.v[0]]):
                         bloc.contenu[i].extend(getLigne(s, filigrane = True))
-            print bloc.contenu
+            
         elif seance.typeSeance == "S":
             bloc.contenu.append(getLigne(seance))
     #

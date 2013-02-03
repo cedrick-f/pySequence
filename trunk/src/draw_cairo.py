@@ -538,9 +538,7 @@ def show_text_rect(ctx, texte, rect, va = 'c', ha = 'c', b = 0.4, orient = 'h',
     
     # Réglage taille selon taille préférée
     if fontsizePref > 0:
-        print "taille", fontSize, fontsizePref, "%",
         fontSize = max(fontSize * fontsizePref/100, fontsizeMinMax[0])
-        print fontSize
 #    print "fontSize 2", fontSize
     
 #    print "fontSize", fontSize

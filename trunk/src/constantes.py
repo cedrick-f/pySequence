@@ -496,6 +496,12 @@ dicSavoirs = {'ET'     : dicSavoirs_ET,
               'SIN'    : dicSavoirs_SIN,
               'SSI'    : dicSavoirs_SSI}
 
+dicCellSavoirs = {'ET'     : dicCellSavoirs_SSI,
+                  'ITEC'   : dicCellSavoirs_SSI, 
+                  'AC'     : dicCellSavoirs_SSI, 
+                  'EE'     : dicCellSavoirs_SSI, 
+                  'SIN'    : dicCellSavoirs_SSI,
+                  'SSI'    : dicCellSavoirs_SSI}
 
 ####################################################################################
 #
