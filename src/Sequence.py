@@ -682,6 +682,8 @@ class Classe():
                            "G" : self.options.optClasse["Effectifs"]["G"]
                            }
 
+        self.typeEnseignement = self.options.optClasse["TypeEnseignement"]
+        
         calculerEffectifs(self)
         
     ######################################################################################  
@@ -883,6 +885,8 @@ class Sequence(BaseDoc):
         self.systemes = []
         self.seance = [Seance(self, panelParent)]
         
+        self.options = classe.options
+        
         self.draw = draw_cairo_seq
         
         
@@ -897,6 +901,13 @@ class Sequence(BaseDoc):
             t += "   " + s.__repr__() + "\n"
         return t
 
+    ######################################################################################  
+    def Initialise(self):
+        self.AjouterListeSystemes(zip(self.options.optSystemes["Systemes"], 
+                                      self.options.optSystemes["Nombre"]))
+            
+            
+            
     ######################################################################################  
     def SetPath(self, fichierCourant):
         pathseq = os.path.split(fichierCourant)[0]
@@ -1197,6 +1208,8 @@ class Sequence(BaseDoc):
             sy.ConstruireArbre(self.arbre, self.brancheSys)
             self.arbre.Expand(self.brancheSys)
             sy.SetNom(unicode(p[0]))
+            if len(p) > 1:
+                sy.nbrDispo.v[0] = eval(p[1])
             sy.panelPropriete.MiseAJour()
         self.panelPropriete.sendEvent()
         self.AjouterListeSystemesSeance(nouvListe)
@@ -1233,7 +1246,21 @@ class Sequence(BaseDoc):
             elif res == wx.ID_NO:
                 print "Rien" 
         
-    
+    ######################################################################################  
+    def SauvSystemes(self, event = None):
+        self.classe.options.validerSystemes(self)
+        self.classe.options.enregistrer()
+        try:
+            pass
+            
+        except IOError:
+            messageErreur(self.GetApp(), u"Permission refusée",
+                          u"Permission d'enregistrer les préférences refusée.\n\n" \
+                          u"Le dossier est protégé en écriture")
+        except:
+            messageErreur(self.GetApp(), u"Enregistrement impossible",
+                          u"Imposible d'enregistrer les préférences\n\n")
+        return
     
     ######################################################################################  
     def AjouterRotation(self, seance):
@@ -1327,7 +1354,8 @@ class Sequence(BaseDoc):
             
         elif self.arbre.GetItemText(itemArbre) == Titres[4]: # Système
             self.app.AfficherMenuContextuel([[u"Ajouter un système", self.AjouterSysteme], 
-                                             [u"Selectionner depuis un fichier", self.SelectSystemes]])
+                                             [u"Selectionner depuis un fichier", self.SelectSystemes],
+                                             [u"Sauvegarder la liste dans les préférences", self.SauvSystemes]])
          
         elif self.arbre.GetItemText(itemArbre) == Titres[1]: # Prérequis
             self.app.AfficherMenuContextuel([[u"Ajouter une séquence", self.AjouterSequencePre], 
@@ -5790,7 +5818,7 @@ class FenetreSequence(FenetreDocument):
         #
         self.sequence = Sequence(self, self.classe, self.panelProp)
         self.classe.SetDocument(self.sequence)
-        print self.sequence.CI
+      
         #
         # Arbre de structure de la séquence
         #
@@ -5799,6 +5827,10 @@ class FenetreSequence(FenetreDocument):
         self.arbre.SelectItem(self.classe.branche)
         self.arbre.ExpandAll()
         
+        #
+        # Permet d'ajouter automatiquement les systèmes des préférences
+        #
+        self.sequence.Initialise()
         
         #
         # Zone graphique de la fiche de séquence
@@ -6906,7 +6938,7 @@ class PanelPropriete_Classe(PanelPropriete):
         self.Bind(wx.EVT_RADIOBOX, self.EvtRadioBox, rb)
         if pourProjet:
             rb.ShowItem(0, False) 
-            rb.SetStringSelection(constantes.Enseigmenent[self.classe.typeEnseignement][0])
+        rb.SetStringSelection(constantes.Enseigmenent[self.classe.typeEnseignement][0])
             
         self.sizer.Add(rb, (0,0), (2,1), flag = wx.EXPAND|wx.ALL)
         self.cb_type = rb
@@ -11189,6 +11221,7 @@ class FenetreBilan(wx.Frame):
             tableau.setCell(feuilleP, lcp, c, seq.intitule)
             tableau.setCell(feuilleP, ldp, c, str(seq.GetDuree()))
             tableau.setLink(feuilleP, lcp, c, self.listFichiers[i])
+            tableau.setCell(feuilleP, lcp-1, c, i)
             
             for sav in seq.obj["S"].savoirs:
                 if sav in constantes.dicCellSavoirs[self.typeEnseignement].keys():
@@ -11228,7 +11261,7 @@ class FenetreBilan(wx.Frame):
             if seq in listePrem:
                 if len(listePrem) > 3 and i < len(listePrem) - 3:
                     tableau.insertPasteCol(feuilleP, c+1)
-                    tableau.insertPasteCol(feuilleS, c+1)
+                    tableau.insertPasteCol(feuilleS, cs+1)
                     cct += 1
             else:
                 if len(listeTerm) > 3 and i - len(listePrem) < len(listeTerm) - 3:
