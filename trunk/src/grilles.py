@@ -430,9 +430,13 @@ class PyExcel:
         ran.Borders.Weight=weight
  
  
+    def insertPasteCol(self, sheet, col):
+        sht = self.xlBook.Worksheets(sheet)
+        c = sht.Columns(col).EntireColumn
+        c.Copy()
+        c = sht.Columns(col+1).EntireColumn
+        c.Insert()
 
-    
-    
         
         
         
