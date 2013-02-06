@@ -5105,7 +5105,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         file_menu.Append(15, u"&Exporter la fiche (PDF ou SVG)\tCtrl+E")
         file_menu.Append(16, u"&Exporter les détails\tCtrl+D")
         file_menu.Append(17, u"&Générer les grilles d'évaluation\tCtrl+G")
-        file_menu.Append(18, u"&Etablir un bilan d'objectifs\tCtrl+B")
+        file_menu.Append(18, u"&Générer une Synthèse pédagogique (SSI uniquement)\tCtrl+B")
         
         file_menu.AppendSeparator()
         file_menu.Append(wx.ID_EXIT, u"&Quitter\tCtrl+Q")
@@ -11011,7 +11011,7 @@ class DialogChoixDoc(wx.Dialog):
 #############################################################################################################
 class FenetreBilan(wx.Frame):
     def __init__(self, parent, dossierCourant = '', typeEnseignement = "SSI"):
-        wx.Frame.__init__(self, parent, -1, u"Bilan d'objectifs")
+        wx.Frame.__init__(self, parent, -1, u"Synthèse pédagogique")
         
         self.sizer = wx.GridBagSizer()
         panel = wx.Panel(self, -1)
