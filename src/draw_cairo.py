@@ -1191,8 +1191,8 @@ def liste_code_texte(ctx, lstCodes, lstTexte, x, y, w, h, e, b = 0.4, gras = Non
                 
                 if lstCoul != None:
                     ctx.set_source_rgb (lstCoul[i][0], lstCoul[i][1], lstCoul[i][2])
-                else:
-                    ctx.set_source_rgb (0, 0, 0)
+#                else:
+#                    ctx.set_source_rgb (0, 0, 0)
                     
                 show_text_rect(ctx, t, (x+e, y+i*hl, 
                                w/6-e, hl), b = 0.2, ha = 'g', fontsizeMinMax = (-1, 0.012), wrap = False)
@@ -1209,8 +1209,8 @@ def liste_code_texte(ctx, lstCodes, lstTexte, x, y, w, h, e, b = 0.4, gras = Non
                                           cairo.FONT_WEIGHT_NORMAL)
                 if lstCoul != None:
                     ctx.set_source_rgb (lstCoul[i][0], lstCoul[i][1], lstCoul[i][2])
-                else:
-                    ctx.set_source_rgb (0, 0, 0)
+#                else:
+#                    ctx.set_source_rgb (0, 0, 0)
                     
                 show_text_rect(ctx, lstTexte[i], (x+wt+2*e, y+i*hl, 
                                w-wt-3*e, hl), b = b, ha = 'g', fontsizeMinMax = (-1, 0.012))

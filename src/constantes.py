@@ -175,6 +175,16 @@ COUL_BOF = "ORANGE"
 COUL_REVUE = "DEEPPINK2"#"FIREBRICK"
 COUL_SOUT = "BLUEVIOLET"#"MEDIUMBLUE"
 
+COUL_ELEVES = [((0.85,0.85,0.95,0.3), (0,0,0,1)),
+               ((0.7,0.7,0.8,0.2), (0,0,0,1)),
+               ((0.85,0.85,0.95,0.3), (0,0,0,1)),
+               ((0.7,0.7,0.8,0.2), (0,0,0,1)),
+               ((0.85,0.85,0.95,0.3), (0,0,0,1)),
+               ((0.7,0.7,0.8,0.2), (0,0,0,1))]
+
+COUL_COMPETENCES = (0.6, 0.0, 0.0, 1.0)
+
+
 ####################################################################################
 #
 #   Définition des images
@@ -503,6 +513,15 @@ dicCellSavoirs = {'ET'     : dicCellSavoirs_SSI,
                   'SIN'    : dicCellSavoirs_SSI,
                   'SSI'    : dicCellSavoirs_SSI}
 
+fichierProgressionProgramme =    {'ET'     : fichierProgressionProgramme_SSI,
+                                  'ITEC'   : fichierProgressionProgramme_SSI, 
+                                  'AC'     : fichierProgressionProgramme_SSI, 
+                                  'EE'     : fichierProgressionProgramme_SSI, 
+                                  'SIN'    : fichierProgressionProgramme_SSI,
+                                  'SSI'    : fichierProgressionProgramme_SSI}
+
+
+
 ####################################################################################
 #
 #   Définition des compétences pour les projets
@@ -706,10 +725,24 @@ def mergeDict(D, d):
     for k, v in d.items():
         if not k in D.keys():
             D[k] = v
-            
+           
+#############################################################################################################
+def trier(l):
+    """
+    """
+#    print "trier", l
+    if len(l) > 0:
+        if '.' in l[0]:
+            return sorted(l, key=lambda c: eval(c.split('.')[-1]))
+        else:
+            return sorted(l)
+    else:
+        return l
+    
 # Pour obtenir l'intitulé d'un savoir à partir de son code 
 #        fonction recursive
 def getSavoir(typeEns, code, dic = None, c = None):
+#    print "getSavoir", code
     if dic == None:
         dic = dicSavoirs[typeEns]
     if c == None:
@@ -717,7 +750,9 @@ def getSavoir(typeEns, code, dic = None, c = None):
     if dic.has_key(code):
         return dic[code][0]
     else:
-        cd = code[:-2*(c-1)]
+#        cd = code[:-2*(c-1)]
+        cd = ".".join(code.split(".")[:c-1])
+#        print "  ", cd
         return getSavoir(typeEns, code, dic[cd][1], c-1)
     
     
@@ -905,12 +940,7 @@ def getLstPhase(typeEns):
     return lst
 
 
-COUL_ELEVES = [((0.85,0.85,0.95,0.3), (0,0,0,1)),
-               ((0.7,0.7,0.8,0.2), (0,0,0,1)),
-               ((0.85,0.85,0.95,0.3), (0,0,0,1)),
-               ((0.7,0.7,0.8,0.2), (0,0,0,1)),
-               ((0.85,0.85,0.95,0.3), (0,0,0,1)),
-               ((0.7,0.7,0.8,0.2), (0,0,0,1))]
+
 
 DUREE_PRJ = 70
 DELTA_DUREE = 5

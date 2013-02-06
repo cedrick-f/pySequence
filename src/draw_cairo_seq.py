@@ -41,7 +41,7 @@ from draw_cairo import *
 #import ConfigParser
 
 from constantes import Effectifs, NomsEffectifs, listeDemarches, Demarches, getSavoir, getCompetence, \
-                        DemarchesCourt, mergeDict
+                        DemarchesCourt, mergeDict, COUL_COMPETENCES
 import constantes
 
 ## Pour dessiner la cible ...
@@ -732,9 +732,13 @@ def Draw(ctx, seq, mouchard = False):
     if len(lstTexteS) > 0 or len(lstTexteC) > 0:
         hC = h*len(lstTexteC)/(len(lstTexteC) + len(lstTexteS))
         hS = h*len(lstTexteS)/(len(lstTexteC) + len(lstTexteS))
+        
+        
+        ctx.set_source_rgba (COUL_COMPETENCES[0], COUL_COMPETENCES[1], COUL_COMPETENCES[2], COUL_COMPETENCES[3])
         r = liste_code_texte(ctx, seq.obj["C"].competences, lstTexteC, x0, y0, rect_width, hC, 0.008) 
         seq.obj["C"].pts_caract = getPts(r)
-        ctx.set_source_rgba (0.0, 0.0, 0.5, 1.0)
+        
+        ctx.set_source_rgba (0.0, 0.0, 0.0, 1.0)
         r = liste_code_texte(ctx, seq.obj["S"].savoirs, lstTexteS, x0, y0+hC, rect_width, hS, 0.008)
         seq.obj["S"].pts_caract = getPts(r)
     
@@ -1065,14 +1069,20 @@ def DrawSeanceRacine(ctx, seance):
     # Flèche indiquant la durée
     #
     h = hHoraire * seance.GetDureeGraph()
+    e = 0.02
     fleche_verticale(ctx, posZDeroul[0], cursY, 
-                     h, 0.02, (0.9,0.8,0.8,0.5))
+                     h, e, (0.9,0.8,0.8,0.5))
     ctx.set_source_rgb(0.5,0.8,0.8)
     ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                               cairo.FONT_WEIGHT_BOLD)
+    
+    if h-e/2 < e:
+        o = 'h'
+    else:
+        o = 'v'
     show_text_rect(ctx, getHoraireTxt(seance.GetDuree()), 
-                   (posZDeroul[0]-0.01, cursY, 0.02, h), 
-                   orient = 'v', b = 0.2)
+                   (posZDeroul[0]-0.01, cursY, 0.02, h-e/2), 
+                   orient = o, b = 0.2)
         
     #
     # Fonction pour obtenir les lignes de séances du bloc

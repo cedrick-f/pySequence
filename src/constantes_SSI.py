@@ -456,6 +456,7 @@ dicPoidsIndicateurs_prj_SSI = {"B" : [40,
 #        Les cellules "Savoirs" dans le tableau de bilan
 #
 #################################################################################################################################
+fichierProgressionProgramme_SSI = u"SSI_Programme-Progression.xlsx"
 dicCellSavoirs_SSI = {"A1.1" : [10,13],
                   "A1.2" : [14,15],
                   "A1.3" : [16,16],
