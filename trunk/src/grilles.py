@@ -420,15 +420,12 @@ class PyExcel:
             newSht=sht.Copy(None, pos)
         else:
             newSht=sht.Copy(None, sht)
-        
-       
  
     def setBorder(self,sheet,row1,col1,row2,col2,weight):
         sht = self.xlBook.Worksheets(sheet)
         ran=sht.Range(sht.Cells(row1,col1),sht.Cells(row2,col2))
         print ran
         ran.Borders.Weight=weight
- 
  
     def insertPasteCol(self, sheet, col):
         sht = self.xlBook.Worksheets(sheet)

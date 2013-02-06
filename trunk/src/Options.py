@@ -48,7 +48,7 @@ class Options:
         # Avec leurs valeurs par défaut.
         #
         self.optClasse = {}
-#        self.optCouleurs = {}
+        self.optSystemes = {}
 #        self.optGenerales = {}
 #        self.optImpression = {}
 #        self.optCalcul = {}
@@ -59,7 +59,7 @@ class Options:
 #        self.listeOptions = [u"Général", u"Affichage", u"Couleurs", u"Impression"] 
          
         self.typesOptions = {u"Classe" : self.optClasse,
-#                             u"Affichage" : self.optAffichage,
+                             u"Systèmes" : self.optSystemes,
 #                             u"Calcul" : self.optCalcul,
 #                             u"Couleurs" : self.optCouleurs,
 #                             u"Impression" : self.optImpression,
@@ -228,6 +228,10 @@ class Options:
                                        "P" : constantes.NbrGroupes["P"]}
         self.optClasse["CentresInteretET"] = [ci for ci in constantes.CentresInterets_ET]
         self.optClasse["PositionsCI_ET"] = [po for po in constantes.PositionCibleCI_ET]
+        self.optClasse["TypeEnseignement"] = "SSI"
+        
+        self.optSystemes["Systemes"] = []
+        self.optSystemes["Nombre"] = []
         
 
     ############################################################################
@@ -240,6 +244,18 @@ class Options:
             self.optClasse["CentresInteretET"] = classe.ci_ET
             self.optClasse["PositionsCI_ET"] = classe.posCI_ET
         
+        self.optClasse["TypeEnseignement"] = classe.typeEnseignement
+        
+    ############################################################################
+    def validerSystemes(self, sequence):
+        for syst, nbr in sequence.GetNbrSystemes().items():
+            if syst in self.optSystemes["Systemes"]:
+                i = self.optSystemes["Systemes"].index(syst)
+                self.optSystemes["Nombre"][i] = str(max(self.optSystemes["Nombre"][i], nbr))
+            else:
+                self.optSystemes["Systemes"].append(syst)
+                self.optSystemes["Nombre"].append(str(nbr))
+  
         
     ###########################################################################
     def extraireRepertoire(self,chemin):
