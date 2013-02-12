@@ -157,7 +157,7 @@ def getCell_NON(dic):
 
 Cellules_NON  =  {'ITEC'   : [[Feuille_ETT, Cellules_NON_ETT], ['ITEC', Cellules_NON_ITEC]], 
                   'AC'     : [[Feuille_ETT, Cellules_NON_ETT], ['AC', Cellules_NON_AC]], 
-                  'EE'     : [[Feuille_ETT, Cellules_NON_ETT], ['EE', Cellules_NON_ETT]], 
+                  'EE'     : [[Feuille_ETT, Cellules_NON_ETT], ['EE', Cellules_NON_EE]], 
                   'SIN'    : [[Feuille_ETT, Cellules_NON_ETT], ['SIN', Cellules_NON_SIN]],
                   'SSI'    : [['Notation', Cellules_NON_SSI]]}    
 
