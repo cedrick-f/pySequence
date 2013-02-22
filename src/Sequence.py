@@ -349,6 +349,7 @@ class Lien():
             path = path
         else:
 #            pathseq = self.GetEncode(pathseq)
+            print pathseq
             path = os.path.join(pathseq, path)
         return path
     
@@ -830,6 +831,8 @@ class BaseDoc():
     def GetPath(self):
         if hasattr(self.app, 'fichierCourant'):
             return os.path.split(self.app.fichierCourant)[0]
+        else:
+            return ''
     
     ######################################################################################  
     def GetApercu(self, mult = 3):
@@ -11246,6 +11249,7 @@ class FenetreBilan(wx.Frame):
             #
             nbrSystemes = seq.GetNbrSystemes()
             for syst in seq.systemes:
+                # ligne du tableau correspondant au système
                 if not syst.nom in listeSystemes:
                     listeSystemes.append(syst.nom)
                     l = lsp+len(listeSystemes)-1
@@ -11253,7 +11257,9 @@ class FenetreBilan(wx.Frame):
                 else:
                     l = lsp+listeSystemes.index(syst.nom)-1
                 
-                tableau.setCell(feuilleS, l, cs, nbrSystemes[syst.nom])
+                # nombre d'exemplaires du système utilisés dans la séquence
+                if syst.nom in nbrSystemes.keys():
+                    tableau.setCell(feuilleS, l, cs, nbrSystemes[syst.nom])
                 
             #
             # Ajout éventuel de colonnes
@@ -11345,7 +11351,7 @@ class FenetreBilan(wx.Frame):
             self.lstSeq = []
             for i, f in enumerate(l):
                 classe, sequence = self.OuvrirFichierSeq(f)
-                if classe.typeEnseignement == self.typeEnseignement:
+                if classe != None and classe.typeEnseignement == self.typeEnseignement:
                     self.lstClasse.append(classe)
                     self.lstSeq.append(sequence)
                     self.listFichiers.append(f)
@@ -11363,24 +11369,26 @@ class FenetreBilan(wx.Frame):
     ########################################################################################################
     def OuvrirFichierSeq(self, nomFichier):
         fichier = open(nomFichier,'r')
-        
+#        print nomFichier
         classe = Classe(self.Parent)
         sequence = Sequence(self, classe)
         classe.SetDocument(sequence)
         
-#        try:
-        root = ET.parse(fichier).getroot()
-        rsequence = root.find("Sequence")
-        rclasse = root.find("Classe")
-        classe.setBranche(rclasse)
-        sequence.setBranche(rsequence)
-        return classe, sequence
-#        except:
+#        print fichier
+        try:
+            root = ET.parse(fichier).getroot()
+            rsequence = root.find("Sequence")
+            rclasse = root.find("Classe")
+            classe.setBranche(rclasse)
+            sequence.setBranche(rsequence)
+            return classe, sequence
+        except:
+            print u"Le fichier n'a pas pu être ouvert :",nomFichier
 #            messageErreur(self,u"Erreur d'ouverture",
 #                          u"La séquence pédagogique\n    %s\n n'a pas pu être ouverte !" %nomFichier)
 #            fichier.close()
 #            self.Close()
-#            return None, None
+            return None, None
                 
 ##########################################################################################################
 #
