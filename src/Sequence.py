@@ -625,8 +625,8 @@ class Objet_sequence():
             cl = self.classe
             
         if simple:
-            if cl.typeEnseignement != 'SSI':
-                return 'STI'
+            return cl.familleEnseignement
+        
         return cl.typeEnseignement
         
     ######################################################################################  
@@ -643,9 +643,7 @@ class Objet_sequence():
 class Classe():
     def __init__(self, app, panelParent = None, intitule = u"", pourProjet = False):
         self.intitule = intitule
-        
-        
-        
+  
         self.options = app.options
         self.Initialise(pourProjet)
         
@@ -662,17 +660,17 @@ class Classe():
     
     ######################################################################################  
     def Initialise(self, pourProjet):
-        
         self.typeEnseignement = self.options.optClasse["TypeEnseignement"]
         
         if not pourProjet:
             self.ci_ET = self.options.optClasse["CentresInteretET"]
             self.posCI_ET = self.options.optClasse["PositionsCI_ET"]
         else:
-            if not self.typeEnseignement in ['ITEC','AC', 'EE', 'SIN', 'SSI']:
+            if not self.typeEnseignement in constantes.EnseignementsProjet:
                 self.typeEnseignement = 'ITEC'
 
-            
+        self.familleEnseignement = constantes.FamilleEnseignement[self.typeEnseignement]  
+         
         self.effectifs =  {"C" : constantes.Effectifs["C"],
                            "G" : constantes.NbrGroupes["G"],
                            "E" : constantes.NbrGroupes["E"],
@@ -717,6 +715,8 @@ class Classe():
     def setBranche(self, branche):
 #        print "setBranche classe",
         self.typeEnseignement = branche.get("Type", "ET")
+        
+        self.familleEnseignement = constantes.FamilleEnseignement[self.typeEnseignement]
 #        print self.typeEnseignement
         
         brancheCI = branche.find("CentreInteret")
@@ -6126,10 +6126,32 @@ class FenetreProjet(FenetreDocument):
     def genererGrilles(self, event = None):
 #        mesFormats = "Tableur Excel (.xls)|*.xls"
         
+        def getNomFichier(prefixe, eleve, projet):
+            nomFichier = prefixe+"_"+eleve.GetNomPrenom()+"_"+projet.intitule[:20]
+            for c in ["\"", "/", "\", ", "?", "<", ">", "|", ":"]:
+                nomFichier = nomFichier.replace(c, "_")
+            return nomFichier
+
+
+        def getTableurEtModif(projet, eleve):
+            tableur = grilles.getTableau(self, projet)
+            grilles.modifierGrille(projet, tableur, eleve)
+#            try:
+#                grilles.modifierGrille(projet, tableur, eleve)
+#            except:
+#                messageErreur(self, u"Accès refusé !",
+#                              u"Impossible d'accéder au fichier.\n\nVérifier :\n" \
+#                              u" - qu'aucun fichier portant le même nom n'est déja ouvert\n" \
+#                              u" - qu'Excel n'est pas déja ouvert (gestionnaire des tâches)")
+            return tableur
+        
+        
+        
         dlg = wx.DirDialog(self, message = u"Emplacement des grilles", 
                             style=wx.DD_DEFAULT_STYLE|wx.CHANGE_DIR
                             )
 #        dlg.SetFilterIndex(0)
+
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
             dlg.Destroy()
@@ -6151,29 +6173,19 @@ class FenetreProjet(FenetreDocument):
             count = 0
             for e in self.projet.eleves:
                 if self.projet.GetTypeEnseignement() == 'SSI':
-                    nomFichier = "Grille_"+e.GetNomPrenom()+"_"+self.projet.intitule[:20]
-                    for c in ["\"", "/", "\", ", "?", "<", ">", "|", ":"]:
-                        nomFichier = nomFichier.replace(c, "_")
+                    nomFichier = getNomFichier("Grille", e, self.projet)
                     dlgb.Update(count, u"Traitement du fichier\n\n"+nomFichier)
                     dlgb.Refresh()
                     count += 1
-                    tableur = grilles.getTableau(self, self.projet)
-                    grilles.modifierGrille(self.projet, tableur, e)
+                    tableur = getTableurEtModif(self.projet, e)
                     tf = [[tableur, nomFichier]]
                 else:
-                    nomFichierR = "Grille_revue_"+e.GetNomPrenom()+"_"+self.projet.intitule[:20]
-                    nomFichierS = "Grille_soutenance_"+e.GetNomPrenom()+"_"+self.projet.intitule[:20]
+                    nomFichierR = getNomFichier("Grille_revue", e, self.projet)
+                    nomFichierS = getNomFichier("Grille_soutenance", e, self.projet)
                     dlgb.Update(count, u"Traitement des fichiers\n\n"+nomFichierR+u"\n"+nomFichierS)
                     dlgb.Refresh()
                     count += 1
-                    tableur = grilles.getTableau(self, self.projet)
-                    try:
-                        grilles.modifierGrille(self.projet, tableur, e)
-                    except:
-                        messageErreur(self, u"Accès refusé !",
-                                      u"Impossible d'accéder au fichier.\n\nVérifier :\n" \
-                                      u" - qu'aucun fichier portant le même nom n'est déja ouvert\n" \
-                                      u" - qu'Excel n'est pas déja ouvert (gestionnaire des tâches)")
+                    tableur = getTableurEtModif(self.projet, e)
                     tf = [[tableur[0], nomFichierR], [tableur[1], nomFichierS]]
                 
                 for t, f in tf:
@@ -7068,6 +7080,7 @@ class PanelPropriete_Classe(PanelPropriete):
 #            print "   ", c, e
             if e[0] == self.cb_type.GetItemLabel(event.GetInt()):
                 self.classe.typeEnseignement = c
+                self.classe.familleEnseignement = constantes.FamilleEnseignement[self.classe.typeEnseignement]
                 break
 #        self.classe.typeEnseignement = self.cb_type.GetItemLabel(event.GetInt())
             

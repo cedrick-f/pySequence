@@ -32,8 +32,9 @@
 #   Définition des constantes pour la spécialité SIN
 #
 ####################################################################################
+Enseigmenent = [u"STI2D-SIN", u"STI2D : Systèmes d'Information et Numérique"]
 
-CentresInterets_SIN = [u"Configuration et performances du traitement de l'information",
+CentresInterets = [u"Configuration et performances du traitement de l'information",
                        u"Instrumentation/Acquisition et restitution de grandeurs physiques",
                        u"Communication de l'information/Au sein d'un système",
                        u"Gestion de l'information/Structures matérielles et logicielles associées au traitement de l'information",
@@ -43,7 +44,7 @@ CentresInterets_SIN = [u"Configuration et performances du traitement de l'inform
                        ]
 
 
-dicSavoirs_SIN = {"1" : [u"Projet technologique",
+dicSavoirs = {"1" : [u"Projet technologique",
                          {"1.1" : [u"La démarche de projet",
                                    {"1.1.1" : [u"Les projets industriels",
                                                [u"Typologie des entreprises industrielles et des projets techniques associés (projets locaux, transversaux, \"joint venture\")",
@@ -113,7 +114,7 @@ dicSavoirs_SIN = {"1" : [u"Projet technologique",
 
 
 
-dicCompetences_SIN = {"O7" : [u"Imaginer une solution, répondre à un besoin",
+dicCompetences = {"O7" : [u"Imaginer une solution, répondre à un besoin",
                               {"CO7.sin1" : u"Décoder la notice technique d'un système, vérifier la conformité du fonctionnement",
                                "CO7.sin2" : u"Décoder le cahier des charges fonctionnel décrivant le besoin exprimé, identifier la fonction définie par un besoin exprimé, faire des mesures pour caractériser cette fonction et conclure sur sa conformité",
                                "CO7.sin3" : u"Exprimer le principe de fonctionnement d'un système à partir des diagrammes SysML pertinents. Repérer les constituants de la chaîne d'énergie et d'information"}],
@@ -137,7 +138,7 @@ dicCompetences_SIN = {"O7" : [u"Imaginer une solution, répondre à un besoin",
 #                (True = revue ; False = soutenance)
 #
 #################################################################################################################################
-dicIndicateurs_prj_SIN = {"CO7.sin1" : [[u"La traduction de la notice du système permet de décrire une procédure", True],
+dicIndicateurs_prj = {"CO7.sin1" : [[u"La traduction de la notice du système permet de décrire une procédure", True],
                                         [u"Le système est installé et paramétré", True],
 #                                        [u"Les critères du CDC du projet sont décodés", True],
                                         [u"Les mesures sont effectuées et comparées aux caractéristiques de la notice technique", True],
@@ -194,7 +195,7 @@ dicIndicateurs_prj_SIN = {"CO7.sin1" : [[u"La traduction de la notice du systèm
                                        [u"Le prototypage rapide de la solution est organisé", True]
                                        ]}
                   
-dicPoidsIndicateurs_prj_SIN =  {"O7" : [40,
+dicPoidsIndicateurs_prj =  {"O7" : [40,
                                         {"CO7.sin1" : [6,10,10,6],
                                          "CO7.sin2" : [6,6,10,6,6],
                                          "CO7.sin3" : [10,10,8,6]}],
@@ -209,3 +210,101 @@ dicPoidsIndicateurs_prj_SIN =  {"O7" : [40,
                                          "CO9.sin3" : [5,5,5,5],
                                          "CO9.sin4" : [5,5,5,5,10]}]
                                 }
+
+#################################################################################################################################
+#
+#        Les constantes pour les grilles d'évaluation de projet
+#
+#################################################################################################################################
+Fichier_GRILLE = ["Grille_evaluation_STI2D_SIN_revues.xlsm", "Grille_evaluation_STI2D_SIN_revues.xls"]
+
+Cellules_NON =  {"CO7.sin1" : [(5,4), (6,4), (7,4), (8,4)],
+                     "CO7.sin2" : [(9,4), (10,4), (11,4), (12,4), (13,4)],
+                     "CO7.sin3" : [(14,4), (15,4), (16,4), (17,4)],
+                     "CO8.sin1" : [(19,4), (20,4), (21,4)],
+                     "CO8.sin2" : [(22,4), (23,4), (24,4), (25,4)],
+                     "CO8.sin3" : [(26,4), (27,4), (28,4)],
+                     "CO8.sin4" : [(29,4), (30,4), (31,4), (32,4)],
+                     "CO9.sin1" : [(34,4), (35,4), (36,4)],
+                     "CO9.sin2" : [(37,4), (38,4), (39,4), (40,4), (41,4)],
+                     "CO9.sin3" : [(42,4), (43,4), (44,4), (45,4)],
+                     "CO9.sin4" : [(46,4), (47,4), (48,4), (49,4), (50,4)]}
+
+#################################################################################################################################
+#
+#        Les cellules "Savoirs" dans le tableau de bilan
+#
+#################################################################################################################################
+fichierProgressionProgramme = u"SSI_Synthese.xlsx"
+dicCellSavoirs = {"A1.1" : [10,13],
+                  "A1.2" : [14,15],
+                  "A1.3" : [16,16],
+                 
+                  "A2.1" : [18,21],
+                  "A2.2" : [22,27],
+                  "A2.3" : [28,28],
+                  "A2.4" : [29,30],
+                  "A2.5" : [31,31],
+                  "A2.6" : [32,34],
+                  "A2.7" : [35,36],
+                  "A2.8" : [37,37],
+                  "A2.9" : [38,39],
+                  "A2.10" : [40,41],
+                  "A2.11" : [42,42],
+                  "A2.12" : [43,43],
+                  "A2.13" : [44,44],
+                  "A2.14" : [45,48],
+                  "A2.15" : [49,49],
+                  "A2.16" : [50,51],
+                  "A2.17" : [52,54],
+
+                  "A3.1" : [56,61],
+                        
+                  "B1.1" : [65,66],
+                  "B1.2" : [67,70],
+                  "B1.3" : [71,71],
+                  "B1.4" : [72,73],
+                  "B1.5" : [74,74],
+                  "B1.6" : [75,75],
+                 
+                  "B2.1" : [77,79],
+                  "B2.2" : [80,80],
+                  "B2.3" : [81,82],
+                  "B2.4" : [83,83],
+                  "B2.5" : [84,86],
+                  "B2.6" : [87,87],
+                  "B2.7" : [88,89],
+                  "B2.8" : [90,90],
+                  "B2.9" : [91,91],
+                  "B2.10" : [92,94],
+                  "B2.11" : [95,95],
+                 
+                  "B3.1" : [97,98],
+                  "B3.2" : [99,99],
+                  "B3.3" : [100,100],
+                  "B3.4" : [101,103],
+                  "B3.5" : [104,104],
+                 
+                  "B4.1" : [106,107],
+                  "B4.2" : [108,109],
+                  "B4.3" : [110,111],
+                  "B4.4" : [112,112],
+                  
+                  "C1.1" : [116,118],
+                  "C1.2" : [119,120],
+                  "C1.3" : [121,122],
+                 
+                  "C2.1" : [124,125],
+                  "C2.2" : [126,126],
+                  "C2.3" : [127,127],
+                  "C2.4" : [128,128],
+                  "C2.5" : [129,130],
+                 
+                  "D1.1" : [134,135],
+                  "D1.2" : [136,136],
+                  "D1.3" : [137,141],
+                  
+                  "D2.1" : [143,143],
+                  "D2.2" : [144,147]
+                  
+                 }

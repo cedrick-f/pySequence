@@ -32,8 +32,9 @@
 #   Définition des constantes pour la spécialité ITEC
 #
 ####################################################################################
+Enseigmenent = [u"STI2D-ITEC", u"STI2D : Innovation Technologique et éco-conception"]
 
-CentresInterets_ITEC = [u"Besoin et performance d'un système",
+CentresInterets = [u"Besoin et performance d'un système",
                        u"Compétitivité, design et ergonomie des systèmes",
                        u"Eco-conception des mécanismes",
                        u"Structure, matériaux et protections d'un système",
@@ -43,7 +44,7 @@ CentresInterets_ITEC = [u"Besoin et performance d'un système",
 
 
 
-dicSavoirs_ITEC = {"1" : [u"Projet technologique",
+dicSavoirs = {"1" : [u"Projet technologique",
                          {"1.1" : [u"La démarche de projet",
                                    {"1.1.1" : [u"Les projets industriels",
                                                [u"Typologie des entreprises industrielles et des projets techniques associés (projets locaux, transversaux, \"joint venture\")",
@@ -104,7 +105,7 @@ dicSavoirs_ITEC = {"1" : [u"Projet technologique",
 
 
 
-dicCompetences_ITEC = {"O7" : [u"Imaginer une solution, répondre à un besoin",
+dicCompetences = {"O7" : [u"Imaginer une solution, répondre à un besoin",
                               {"CO7.itec1" : u"Identifier et justifier un problème technique à partir de l'analyse globale d'un système (approche Matière - Energie - Information)",
                                "CO7.itec2" : u"Proposer des solutions à un problème technique identifié en participant à des démarches de créativité, choisir et justifier la solution retenue",
                                "CO7.itec3" : u"Définir, à l'aide d'un modeleur numérique, les formes et dimensions d'une pièce d'un mécanisme à partir des contraintes fonctionnelles, de son principe de réalisation et de son matériau",
@@ -126,7 +127,7 @@ dicCompetences_ITEC = {"O7" : [u"Imaginer une solution, répondre à un besoin",
 #                (True = revue ; False = soutenance)
 #
 #################################################################################################################################
-dicIndicateurs_prj_ITEC = {"CO7.itec1" : [[u"Le besoin relatif au projet est identifié et justifié", True],
+dicIndicateurs_prj = {"CO7.itec1" : [[u"Le besoin relatif au projet est identifié et justifié", True],
                                            [u"Les fonctions principales du projet sont identifiées", True],
                                            [u"Les critères du CDC du projet sont décodés", True],
                                            [u"La démarche d'analyse du problème est pertinente", True],
@@ -186,7 +187,7 @@ dicIndicateurs_prj_ITEC = {"CO7.itec1" : [[u"Le besoin relatif au projet est ide
 #        Les poids des indicateurs de compétences
 #
 #################################################################################################################################
-dicPoidsIndicateurs_prj_ITEC =   {"O7" : [40, 
+dicPoidsIndicateurs_prj =   {"O7" : [40, 
                                           {"CO7.itec1" : [5,5,5,7,7],
                                            "CO7.itec2" : [5,5,5,7,7,7],
                                            "CO7.itec3" : [7,7,7],
@@ -201,4 +202,100 @@ dicPoidsIndicateurs_prj_ITEC =   {"O7" : [40,
                                            "CO9.itec2" : [9,9,9,9],
                                            "CO9.itec3" : [9,9,9,10]}]}
 
-# Nombre indicateurs = 42
+#################################################################################################################################
+#
+#        Les constantes pour les grilles d'évaluation de projet
+#
+#################################################################################################################################
+Fichier_GRILLE = ["Grille_evaluation_STI2D_ITEC_revues.xlsm", "Grille_evaluation_STI2D_ITEC_revues.xls"]
+
+Cellules_NON =   {"CO7.itec1" : [(5,4), (6,4), (7,4), (8,4), (9,4)],
+                       "CO7.itec2" : [(10,4), (11,4), (12,4), (13,4), (14,4), (15,4)],
+                       "CO7.itec3" : [(16,4), (17,4), (18,4)],
+                       "CO7.itec4" : [(19,4), (20,4)],
+                       "CO8.itec1" : [(22,4), (23,4), (24,4)],
+                       "CO8.itec2" : [(25,4), (26,4), (27,4), (28,4)],
+                       "CO8.itec3" : [(29,4), (30,4), (31,4), (32,4), (33,4)],
+                       "CO8.itec4" : [(34,4), (35,4), (36,4)],
+                       "CO9.itec1" : [(38,4), (39,4), (40,4)],
+                       "CO9.itec2" : [(41,4), (42,4), (43,4), (44,4)],
+                       "CO9.itec3" : [(45,4), (46,4), (47,4), (48,4)]}
+
+#################################################################################################################################
+#
+#        Les cellules "Savoirs" dans le tableau de bilan
+#
+#################################################################################################################################
+fichierProgressionProgramme = u"SSI_Synthese.xlsx"
+dicCellSavoirs = {"A1.1" : [10,13],
+                  "A1.2" : [14,15],
+                  "A1.3" : [16,16],
+                 
+                  "A2.1" : [18,21],
+                  "A2.2" : [22,27],
+                  "A2.3" : [28,28],
+                  "A2.4" : [29,30],
+                  "A2.5" : [31,31],
+                  "A2.6" : [32,34],
+                  "A2.7" : [35,36],
+                  "A2.8" : [37,37],
+                  "A2.9" : [38,39],
+                  "A2.10" : [40,41],
+                  "A2.11" : [42,42],
+                  "A2.12" : [43,43],
+                  "A2.13" : [44,44],
+                  "A2.14" : [45,48],
+                  "A2.15" : [49,49],
+                  "A2.16" : [50,51],
+                  "A2.17" : [52,54],
+
+                  "A3.1" : [56,61],
+                        
+                  "B1.1" : [65,66],
+                  "B1.2" : [67,70],
+                  "B1.3" : [71,71],
+                  "B1.4" : [72,73],
+                  "B1.5" : [74,74],
+                  "B1.6" : [75,75],
+                 
+                  "B2.1" : [77,79],
+                  "B2.2" : [80,80],
+                  "B2.3" : [81,82],
+                  "B2.4" : [83,83],
+                  "B2.5" : [84,86],
+                  "B2.6" : [87,87],
+                  "B2.7" : [88,89],
+                  "B2.8" : [90,90],
+                  "B2.9" : [91,91],
+                  "B2.10" : [92,94],
+                  "B2.11" : [95,95],
+                 
+                  "B3.1" : [97,98],
+                  "B3.2" : [99,99],
+                  "B3.3" : [100,100],
+                  "B3.4" : [101,103],
+                  "B3.5" : [104,104],
+                 
+                  "B4.1" : [106,107],
+                  "B4.2" : [108,109],
+                  "B4.3" : [110,111],
+                  "B4.4" : [112,112],
+                  
+                  "C1.1" : [116,118],
+                  "C1.2" : [119,120],
+                  "C1.3" : [121,122],
+                 
+                  "C2.1" : [124,125],
+                  "C2.2" : [126,126],
+                  "C2.3" : [127,127],
+                  "C2.4" : [128,128],
+                  "C2.5" : [129,130],
+                 
+                  "D1.1" : [134,135],
+                  "D1.2" : [136,136],
+                  "D1.3" : [137,141],
+                  
+                  "D2.1" : [143,143],
+                  "D2.2" : [144,147]
+                  
+                 }

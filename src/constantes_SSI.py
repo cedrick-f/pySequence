@@ -29,10 +29,12 @@
 
 ####################################################################################
 #
-#   Définition des constantes pour la spécialité SIN
+#   Définition des constantes pour la spécialité SSI
 #
 ####################################################################################
-PointsDeVue_SSI =  [u"Système souhaité",
+Enseigmenent = [u"S-SI", u"Bac S - Sciences de l'ingénieur"]
+
+PointsDeVue =  [u"Système souhaité",
                    u"Système réel",
                    u"Système réel",
                    u"Système simulé",
@@ -40,7 +42,7 @@ PointsDeVue_SSI =  [u"Système souhaité",
                    ]
 
 
-CentresInterets_SSI = [u"Analyser un système fonctionnellement et structurellement",
+CentresInterets = [u"Analyser un système fonctionnellement et structurellement",
                        u"Expérimenter et mesurer sur un système réel pour évaluer ses performances",
                        u"Analyser des constituants d’un système réel d’un point de vue structurel et comportemental",
                        u"Concevoir et utiliser un modèle relatif à un système en vue d’évaluer les performances de la chaîne d’information",
@@ -48,12 +50,7 @@ CentresInterets_SSI = [u"Analyser un système fonctionnellement et structurellem
                        ]
 
 
-
-
-
-
-
-dicSavoirs_SSI = {"A1" : [u"Analyser le besoin",
+dicSavoirs = {"A1" : [u"Analyser le besoin",
                          {"A1.1" : [u"Besoin, finalités, contraintes, cahier des charges",
                                    [u"Décrire le besoin",
                                     u"Présenter la fonction globale",
@@ -328,7 +325,7 @@ dicSavoirs_SSI = {"A1" : [u"Analyser le besoin",
 
 
 
-dicCompetences_SSI =  {"A" : [u"Analyser",
+dicCompetences =  {"A" : [u"Analyser",
                              {"A1" : [u"Analyser le besoin",
                                       {"A1.1" : u"définir le besoin",
                                        "A1.2" : u"définir les fonctions de service",
@@ -386,14 +383,14 @@ dicCompetences_SSI =  {"A" : [u"Analyser",
                       }
 
 
-dicCompetences_prj_SSI =  {"B" : [dicCompetences_SSI["B"][0],
-                                 {"B3" : [dicCompetences_SSI["B"][1]["B3"][0],
-                                          {"B3.2" : dicCompetences_SSI["B"][1]["B3"][1]["B3.2"]}],
-                                  "B4" : dicCompetences_SSI["B"][1]["B4"]}],
+dicCompetences_prj =  {"B" : [dicCompetences["B"][0],
+                                 {"B3" : [dicCompetences["B"][1]["B3"][0],
+                                          {"B3.2" : dicCompetences["B"][1]["B3"][1]["B3.2"]}],
+                                  "B4" : dicCompetences["B"][1]["B4"]}],
                            
-                           "C" : dicCompetences_SSI["C"],
+                           "C" : dicCompetences["C"],
                            
-                           "D" : dicCompetences_SSI["D"]}
+                           "D" : dicCompetences["D"]}
                            
 #################################################################################################################################
 #
@@ -401,7 +398,7 @@ dicCompetences_prj_SSI =  {"B" : [dicCompetences_SSI["B"][0],
 #                (True = revue ; False = soutenance)
 #
 #################################################################################################################################
-dicIndicateurs_prj_SSI = {"B3" : [[u"Les paramètres influents sont identifiés", True],
+dicIndicateurs_prj = {"B3" : [[u"Les paramètres influents sont identifiés", True],
                                   [u"Les limites de simulation sont correctement définies", True]
                                   ],
                           "B4" : [[u"Les résultats sont correctement interprétés", False],
@@ -438,7 +435,7 @@ dicIndicateurs_prj_SSI = {"B3" : [[u"Les paramètres influents sont identifiés"
 #        Les poids des indicateurs de compétences
 #
 #################################################################################################################################
-dicPoidsIndicateurs_prj_SSI = {"B" : [40, 
+dicPoidsIndicateurs_prj = {"B" : [40, 
                                       {"B3" : [20,20],
                                        "B4" : [15,15,15,15]}],
                                "C" : [40,
@@ -450,14 +447,31 @@ dicPoidsIndicateurs_prj_SSI = {"B" : [40,
                                         }]
                                }
 
+#################################################################################################################################
+#
+#        Les constantes pour les grilles d'évaluation de projet
+#
+#################################################################################################################################
+Fichier_GRILLE = ["Grille_evaluation_SSI_projet.xlsx", "Grille_evaluation_SSI_projet.xls"]
+
+Cellules_NON = {  "B3" : [(5,4), (6,4)],
+                      "B4" : [(7,4), (8,4), (9,4), (10,4)],
+                      "C1" : [(12,4), (13,4), (14,4), (15,4),  (16,4)],
+                      "C2" : [(17,4), (18,4), (19,4), (20,4), (21,4), (22,4), (23,4)],
+                      "D1" : [(25,4), (26,4), (27,4), (28,4)],
+                      "D2" : [(29,4), (30,4), (31,4), (32,4)]
+                    }
+
+
+
 
 #################################################################################################################################
 #
 #        Les cellules "Savoirs" dans le tableau de bilan
 #
 #################################################################################################################################
-fichierProgressionProgramme_SSI = u"SSI_Synthese.xlsx"
-dicCellSavoirs_SSI = {"A1.1" : [10,13],
+fichierProgressionProgramme = u"SSI_Synthese.xlsx"
+dicCellSavoirs = {"A1.1" : [10,13],
                   "A1.2" : [14,15],
                   "A1.3" : [16,16],
                  
