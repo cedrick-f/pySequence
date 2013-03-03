@@ -32,7 +32,9 @@
 #   Définition des constantes pour l'enseignement transversal
 #
 ####################################################################################
-CentresInterets_ET = [u"Développement durable et compétitivité des produits",
+Enseigmenent = [u"STI2D-ETT", u"STI2D : Enseignement Technologique Transversal"]
+
+CentresInterets = [u"Développement durable et compétitivité des produits",
                    u"Design, créativité et innovation",
                    u"Caractéristiques des matériaux et structures",
                    u"Solutions constructives des matériaux et des structures",
@@ -49,8 +51,8 @@ CentresInterets_ET = [u"Développement durable et compétitivité des produits",
                    u"Optimisation des paramètres par simulation globale"
                    ]
 
-print "PositionCibleCI_ET"
-PositionCibleCI_ET = ['   _   ',
+
+PositionCibleCI = ['   _   ',
                      '   _   ',
                      'M  _F  ',
                      'M  _ S ',
@@ -71,7 +73,7 @@ PositionCibleCI_ET = ['   _   ',
 
 
 
-dicSavoirs_ET = {"1" : [u"Principes de conception des systèmes de développement durable",
+dicSavoirs = {"1" : [u"Principes de conception des systèmes de développement durable",
                   {"1.1" : [u"Compétitivité et créativité",
                             {"1.1.1" : [u"Paramètres de la compétitivité ",
                                         [u"Importance du service rendu (besoin réel et besoin induit)",
@@ -191,7 +193,7 @@ dicSavoirs_ET = {"1" : [u"Principes de conception des systèmes de développemen
 
 
 
-dicCompetences_ET =  {"O1" : [u"Caractériser des systèmes privilégiant un usage raisonné du point de vue développement durable",
+dicCompetences =  {"O1" : [u"Caractériser des systèmes privilégiant un usage raisonné du point de vue développement durable",
                               {"CO1.1" : u"Justifier les choix des matériaux, des structures d'un système et les énergies mises en oeuvre dans une approche de développement durable",
                                "CO1.2" : u"Justifier le choix d'une solution selon des contraintes d'ergonomie et d'effets sur la santé de l'homme et du vivant"}],
                       "O2" : [u"Identifier les éléments permettant la limitation de l’Impact environnemental d’un système et de ses constituants",
@@ -221,7 +223,7 @@ dicCompetences_ET =  {"O1" : [u"Caractériser des systèmes privilégiant un usa
 #                (True = revue ; False = soutenance)
 #
 #################################################################################################################################
-dicIndicateurs_prj_ET = {"CO1.1" : [[u"La justification des propriétés physico-chimiques, mécaniques ou thermiques des matériaux est claire et concise", False],
+dicIndicateurs_prj = {"CO1.1" : [[u"La justification des propriétés physico-chimiques, mécaniques ou thermiques des matériaux est claire et concise", False],
                                     [u"Les coûts relatifs, la disponibilité et les impacts environnementaux des matériaux sont évoqués", False],
                                     [u"La relation entre la morphologie des structures et les moyens de réalisation est explicitée de manière claire et concise", False],
                                     [u"La morphologie des structures est justifiée par l'usage et le comportement mécanique", False],
@@ -269,7 +271,7 @@ dicIndicateurs_prj_ET = {"CO1.1" : [[u"La justification des propriétés physico
 #        Les poids des indicateurs de compétences
 #
 #################################################################################################################################
-dicPoidsIndicateurs_prj_ET = {"O1" : [20,
+dicPoidsIndicateurs_prj = {"O1" : [20,
                                      {"CO1.1" : [20,10,10,15,20], 
                                       "CO1.2" : [5,15,5]}],
                               "O2" : [15,
@@ -285,11 +287,28 @@ dicPoidsIndicateurs_prj_ET = {"O1" : [20,
 
 #################################################################################################################################
 #
+#        Les constantes pour les grilles d'évaluation de projet
+#
+#################################################################################################################################
+Fichier_GRILLE = ["Grille_evaluation_STI2D_soutenance.xlsm", "Grille_evaluation_STI2D_soutenance.xls"]
+
+Cellules_NON =  {"CO1.1"  : [(5,4), (6,4), (7,4), (8,4), (9,4)],
+                     "CO1.2"  : [(10,4), (11,4), (12,4)],
+                     "CO2.1"  : [(14,4), (15,4), (16,4), (17,4)],
+                     "CO2.2"  : [(18,4), (19,4), (20,4), (21,4), (22,4)],
+                     "CO6.1"  : [(24,4), (25,4), (26,4)],
+                     "CO6.2"  : [(27,4), (28,4), (29,4)],
+                     "CO6.3"  : [(30,4), (31,4), (32,4), (33,4), (34,4)],
+                     "CO8.es" : [(36,4), (37,4), (38,4), (39,4), (40,4)]
+                     }
+
+#################################################################################################################################
+#
 #        Les cellules "Savoirs" dans le tableau de bilan
 #
 #################################################################################################################################
-fichierProgressionProgramme_SSI = u"SSI_Synthese.xlsx"
-dicCellSavoirs_SSI = {"1.1.1" : [8,12],
+fichierProgressionProgramme = u"SSI_Synthese.xlsx"
+dicCellSavoirs = {"1.1.1" : [8,12],
                   "1.1.2" : [13,14],
                   "1.1.3" : [15,17],
                  

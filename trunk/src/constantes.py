@@ -34,12 +34,19 @@ Created on 26 oct. 2011
 '''
 
 # Les constantes par type d'enseignement
-from constantes_ETT import *
-from constantes_SIN import *
-from constantes_AC import *
-from constantes_ITEC import *
-from constantes_EE import *
-from constantes_SSI import *
+#from constantes_ETT import *
+#from constantes_SIN import *
+#from constantes_AC import *
+#from constantes_ITEC import *
+#from constantes_EE import *
+#from constantes_SSI import *
+
+import constantes_ETT
+import constantes_SIN
+import constantes_AC
+import constantes_ITEC
+import constantes_EE
+import constantes_SSI
 
 # Les icones des branches de l'abre et un curseur perso
 import images
@@ -283,13 +290,105 @@ DemarchesCourt = {"I" : u"Investigation",
                   "P" : u"Projet"}
 
 listeDemarches = ["I", "R", "P"]
+
+
 listEnseigmenent = ['ET', 'ITEC', 'AC', 'EE', 'SIN', 'SSI']
-Enseigmenent = {'ET'   : [u"STI2D-ETT", u"STI2D : Enseignement Technologique Transversal"],
-                'ITEC' : [u"STI2D-ITEC", u"STI2D : Innovation Technologique et éco-conception"],
-                'AC'   : [u"STI2D-AC", u"STI2D : Architecture et Construction"],
-                'EE'   : [u"STI2D-EE", u"STI2D : Energies et Environnement"],
-                'SIN'  : [u"STI2D-SIN", u"STI2D : Systèmes d'Information et Numérique"],
-                'SSI'  : [u"S-SI", u"Bac S - Sciences de l'ingénieur"]}
+EnseignementsProjet = ['ITEC','AC', 'EE', 'SIN', 'SSI']
+
+####################################################################################
+#
+#   Les constantes par Enseignement
+#
+####################################################################################
+Modules = {'ET'     : constantes_ETT,
+           'ITEC'   : constantes_ITEC, 
+           'AC'     : constantes_AC, 
+           'EE'     : constantes_EE, 
+           'SIN'    : constantes_SIN,
+           'SSI'    : constantes_SSI}
+
+FamilleEnseignement = {'ET'     : 'STI',
+                       'ITEC'   : 'STI', 
+                       'AC'     : 'STI', 
+                       'EE'     : 'STI', 
+                       'SIN'    : 'STI',
+                       'SSI'    : 'SSI'}
+
+CentresInterets = {}
+dicCompetences = {}
+dicSavoirs = {}
+dicCellSavoirs = {}
+Enseigmenent = {}
+fichierProgressionProgramme = {}
+for t in listEnseigmenent:
+    CentresInterets[t] = Modules[t].CentresInterets
+    dicCompetences[t] = Modules[t].dicCompetences
+    dicSavoirs[t] = Modules[t].dicSavoirs
+    dicCellSavoirs[t] = Modules[t].dicCellSavoirs
+    Enseigmenent[t] = Modules[t].Enseigmenent
+    fichierProgressionProgramme[t] = Modules[t].fichierProgressionProgramme
+
+Fichier_GRILLE = {} 
+Cellules_NON = {}   
+for t in listEnseigmenent:    
+    Fichier_GRILLE[t] = Modules[t].Fichier_GRILLE
+    Cellules_NON[t] = Modules[t].Cellules_NON
+    
+Cellules_INFO_STI =  {"Tit" : (13,1),
+                      "Des" : (13,1),
+                      "Nom" : (8,2),
+                      "Pre" : (9,2),
+#                      "Pro" : (5,2)
+                      }
+
+Cellules_INFO_SSI = {"Tit" : (12,1),
+                     "Des" : (12,1),
+                     "Nom" : (7,2),
+                     "Pro" : (43,1),
+                     "Pre" : (8,2)}
+
+#CentresInterets = {'ET'     : CentresInterets_ET,
+#                   'ITEC'   : CentresInterets_ITEC, 
+#                   'AC'     : CentresInterets_AC, 
+#                   'EE'     : CentresInterets_EE, 
+#                   'SIN'    : CentresInterets_SIN,
+#                   'SSI'    : CentresInterets_SSI}
+
+#dicCompetences = {'ET'     : dicCompetences_ET,
+#                  'ITEC'   : dicCompetences_ITEC, 
+#                  'AC'     : dicCompetences_AC, 
+#                  'EE'     : dicCompetences_EE, 
+#                  'SIN'    : dicCompetences_SIN,
+#                  'SSI'    : dicCompetences_SSI}
+#
+#dicSavoirs = {'ET'     : dicSavoirs_ET,
+#              'ITEC'   : dicSavoirs_ITEC, 
+#              'AC'     : dicSavoirs_AC, 
+#              'EE'     : dicSavoirs_EE, 
+#              'SIN'    : dicSavoirs_SIN,
+#              'SSI'    : dicSavoirs_SSI}
+#
+#dicCellSavoirs = {'ET'     : dicCellSavoirs_SSI,
+#                  'ITEC'   : dicCellSavoirs_SSI, 
+#                  'AC'     : dicCellSavoirs_SSI, 
+#                  'EE'     : dicCellSavoirs_SSI, 
+#                  'SIN'    : dicCellSavoirs_SSI,
+#                  'SSI'    : dicCellSavoirs_SSI}
+
+#fichierProgressionProgramme =    {'ET'     : fichierProgressionProgramme_SSI,
+#                                  'ITEC'   : fichierProgressionProgramme_SSI, 
+#                                  'AC'     : fichierProgressionProgramme_SSI, 
+#                                  'EE'     : fichierProgressionProgramme_SSI, 
+#                                  'SIN'    : fichierProgressionProgramme_SSI,
+#                                  'SSI'    : fichierProgressionProgramme_SSI}
+
+    
+#Enseigmenent = {'ET'   : [u"STI2D-ETT", u"STI2D : Enseignement Technologique Transversal"],
+#                'ITEC' : [u"STI2D-ITEC", u"STI2D : Innovation Technologique et éco-conception"],
+#                'AC'   : [u"STI2D-AC", u"STI2D : Architecture et Construction"],
+#                'EE'   : [u"STI2D-EE", u"STI2D : Energies et Environnement"],
+#                'SIN'  : [u"STI2D-SIN", u"STI2D : Systèmes d'Information et Numérique"],
+#                'SSI'  : [u"S-SI", u"Bac S - Sciences de l'ingénieur"]}
 
 
 ####################################################################################
@@ -430,98 +529,6 @@ def findEffectif(lst, eff):
 
 
 
-#def DefOptionsDefaut():
-#    global  CentresInteretsET, PositionCibleCIET
-#    
-#    #
-#    # Options générales
-#    #
-#    
-#    CentresInteretsET = [u"Développement durable et compétitivité des produits",
-#                       u"Design, créativité et innovation",
-#                       u"Caractéristiques des matériaux et structures",
-#                       u"Solutions constructives des matériaux et des structures",
-#                       u"Dimensionnement des structures et choix des matériaux",
-#                       u"Efficacité énergétique liée au comportement des matériaux et des structures",
-#                       u"Formes et caractéristiques de l'énergie",
-#                       u"Organisation structurelle et solutions constructives des chaînes d'énergie",
-#                       u"Amélioration de l'efficacité énergétique dans les chaînes d'énergie",
-#                       u"Amélioration de la gestion de l'énergie",
-#                       u"Formes et caractéristiques de l'information",
-#                       u"Organisation structurelle et solutions constructives des chaînes d'information",
-#                       u"Commande temporelle des systèmes",
-#                       u"Informations liées au comportement des matériaux et des structures",
-#                       u"Optimisation des paramètres par simulation globale"
-#                       ]
-#
-#    PositionCibleCIET = ['   _   ',
-#                         '   _   ',
-#                         'M  _F  ',
-#                         'M  _ S ',
-#                         'M  _  C',
-#                         'ME _ SC',
-#                         ' E _F  ',
-#                         ' E _ S ',
-#                         ' E _  C',
-#                         ' EI_ SC',
-#                         '  I_F  ',
-#                         '  I_ S ',
-#                         '  I_  C',
-#                         'M I_ SC',
-#                         'MEI_   '
-#                       ]
-#
-##    Effectifs["C"][1] = 32
-##    Effectifs["G"][1] = 16
-##    Effectifs["D"][1] = 8
-##    Effectifs["E"][1] = 4
-##    Effectifs["P"][1] = 2
-#                 
-#    
-#DefOptionsDefaut()
-
-####################################################################################
-#
-#   Les constantes par Enseignement
-#
-####################################################################################
-CentresInterets = {'ET'     : CentresInterets_ET,
-                   'ITEC'   : CentresInterets_ITEC, 
-                   'AC'     : CentresInterets_AC, 
-                   'EE'     : CentresInterets_EE, 
-                   'SIN'    : CentresInterets_SIN,
-                   'SSI'    : CentresInterets_SSI}
-
-dicCompetences = {'ET'     : dicCompetences_ET,
-                  'ITEC'   : dicCompetences_ITEC, 
-                  'AC'     : dicCompetences_AC, 
-                  'EE'     : dicCompetences_EE, 
-                  'SIN'    : dicCompetences_SIN,
-                  'SSI'    : dicCompetences_SSI}
-
-dicSavoirs = {'ET'     : dicSavoirs_ET,
-              'ITEC'   : dicSavoirs_ITEC, 
-              'AC'     : dicSavoirs_AC, 
-              'EE'     : dicSavoirs_EE, 
-              'SIN'    : dicSavoirs_SIN,
-              'SSI'    : dicSavoirs_SSI}
-
-dicCellSavoirs = {'ET'     : dicCellSavoirs_SSI,
-                  'ITEC'   : dicCellSavoirs_SSI, 
-                  'AC'     : dicCellSavoirs_SSI, 
-                  'EE'     : dicCellSavoirs_SSI, 
-                  'SIN'    : dicCellSavoirs_SSI,
-                  'SSI'    : dicCellSavoirs_SSI}
-
-fichierProgressionProgramme =    {'ET'     : fichierProgressionProgramme_SSI,
-                                  'ITEC'   : fichierProgressionProgramme_SSI, 
-                                  'AC'     : fichierProgressionProgramme_SSI, 
-                                  'EE'     : fichierProgressionProgramme_SSI, 
-                                  'SIN'    : fichierProgressionProgramme_SSI,
-                                  'SSI'    : fichierProgressionProgramme_SSI}
-
-
-
 ####################################################################################
 #
 #   Définition des compétences pour les projets
@@ -532,9 +539,9 @@ def getCompetencesProjet(dic):
         = certaines compétences de l'ET
         + les compétences de l'enseignement de spécialité
     """
-    d = {"O1" : dicCompetences_ET["O1"],
-         "O2" : dicCompetences_ET["O2"],
-         "O6" : dicCompetences_ET["O6"]
+    d = {"O1" : Modules['ET'].dicCompetences["O1"],
+         "O2" : Modules['ET'].dicCompetences["O2"],
+         "O6" : Modules['ET'].dicCompetences["O6"]
          }
 
     d.update(dic)
@@ -543,11 +550,11 @@ def getCompetencesProjet(dic):
 #    d["O8s"][1]["CO8.es"] = u"Justifier des éléments d'une simulation relative au comportement de tout ou partie d'un système et les écarts par rapport au réel"
     return d
 
-dicCompetences_prj = {'ITEC'   : getCompetencesProjet(dicCompetences_ITEC), 
-                      'AC'     : getCompetencesProjet(dicCompetences_AC), 
-                      'EE'     : getCompetencesProjet(dicCompetences_EE), 
-                      'SIN'    : getCompetencesProjet(dicCompetences_SIN),
-                      'SSI'    : dicCompetences_prj_SSI}
+dicCompetences_prj = {}    
+for t in ['ITEC', 'AC', 'EE', 'SIN']:    
+    dicCompetences_prj[t] = getCompetencesProjet(Modules[t].dicCompetences)
+
+dicCompetences_prj['SSI'] = Modules['SSI'].dicCompetences_prj
 
 def estCompetenceRevue(typeEns, codeComp):
     return len(dicCompetences_prj_simple[typeEns][codeComp]) <= 2
@@ -573,38 +580,50 @@ for k,v in dicCompetences_prj.items():
 #        (pour les projets)
 # 
 ######################################################################################
-dicIndicateurs = {'ITEC'   : dicIndicateurs_prj_ITEC, 
-                  'AC'     : dicIndicateurs_prj_AC, 
-                  'EE'     : dicIndicateurs_prj_EE, 
-                  'SIN'    : dicIndicateurs_prj_SIN, 
-                  'SSI'    : dicIndicateurs_prj_SSI}
+dicIndicateurs = {}
+dicPoidsIndicateurs = {}
+for t in EnseignementsProjet:    
+    dicIndicateurs[t] = Modules[t].dicIndicateurs_prj
+    dicPoidsIndicateurs[t] = Modules[t].dicPoidsIndicateurs_prj
+
+#dicIndicateurs = {'ITEC'   : dicIndicateurs_prj_ITEC, 
+#                  'AC'     : dicIndicateurs_prj_AC, 
+#                  'EE'     : dicIndicateurs_prj_EE, 
+#                  'SIN'    : dicIndicateurs_prj_SIN, 
+#                  'SSI'    : dicIndicateurs_prj_SSI}
 
 for e, i in dicIndicateurs.items():
     if e != "SSI":
-        i.update(dicIndicateurs_prj_ET)
+        i.update(Modules['ET'].dicIndicateurs_prj)
 
-NRB_COEF_COMP_S = {'ITEC'   : 0, # Nombres de coef pour les compétences "Soutenance"
-                   'AC'     : 0, 
-                   'EE'     : 0, 
-                   'SIN'    : 0,
-                   'SSI'    : 0}     
-
-NRB_COEF_COMP_R = {'ITEC'   : 0, # Nombres de coef pour les compétences "Revue"
-                   'AC'     : 0, 
-                   'EE'     : 0, 
-                   'SIN'    : 0,
-                   'SSI'    : 0}     
+NRB_COEF_COMP_S = {}
+NRB_COEF_COMP_R = {}
+for t in EnseignementsProjet:
+    NRB_COEF_COMP_S[t] = 0
+    NRB_COEF_COMP_R[t] = 0
+    
+#NRB_COEF_COMP_S = {'ITEC'   : 0, # Nombres de coef pour les compétences "Soutenance"
+#                   'AC'     : 0, 
+#                   'EE'     : 0, 
+#                   'SIN'    : 0,
+#                   'SSI'    : 0}     
+#
+#NRB_COEF_COMP_R = {'ITEC'   : 0, # Nombres de coef pour les compétences "Revue"
+#                   'AC'     : 0, 
+#                   'EE'     : 0, 
+#                   'SIN'    : 0,
+#                   'SSI'    : 0}     
            
 
-dicPoidsIndicateurs = {'ITEC'   : dicPoidsIndicateurs_prj_ITEC, 
-                       'AC'     : dicPoidsIndicateurs_prj_AC, 
-                       'EE'     : dicPoidsIndicateurs_prj_EE, 
-                       'SIN'    : dicPoidsIndicateurs_prj_SIN, 
-                       'SSI'    : dicPoidsIndicateurs_prj_SSI}
+#dicPoidsIndicateurs = {'ITEC'   : dicPoidsIndicateurs_prj_ITEC, 
+#                       'AC'     : dicPoidsIndicateurs_prj_AC, 
+#                       'EE'     : dicPoidsIndicateurs_prj_EE, 
+#                       'SIN'    : dicPoidsIndicateurs_prj_SIN, 
+#                       'SSI'    : dicPoidsIndicateurs_prj_SSI}
 
 for e, i in dicPoidsIndicateurs.items():
     if e != "SSI":
-        i.update(dicPoidsIndicateurs_prj_ET)
+        i.update(Modules['ET'].dicPoidsIndicateurs_prj)
         
 #######################################################################################
 ##

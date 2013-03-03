@@ -34,103 +34,97 @@ import wx
 
 COCHE = u"X"
 
-GRILLE ={'SSI' : ["Grille_evaluation_SSI_projet.xlsx", "Grille_evaluation_SSI_projet.xls"],
-         'STI' : ["Grille_evaluation_STI2D_soutenance.xlsm", "Grille_evaluation_STI2D_soutenance.xls"],
-         'AC' : ["Grille_evaluation_STI2D_AC_revues.xlsm", "Grille_evaluation_STI2D_AC_revues.xls"],
-         'ITEC' : ["Grille_evaluation_STI2D_ITEC_revues.xlsm", "Grille_evaluation_STI2D_ITEC_revues.xls"],
-         'EE' : ["Grille_evaluation_STI2D_EE_revues.xlsm", "Grille_evaluation_STI2D_EE_revues.xls"],
-         'SIN' : ["Grille_evaluation_STI2D_SIN_revues.xlsm", "Grille_evaluation_STI2D_SIN_revues.xls"],
-         }
+from constantes import *
 
-Cellules_NON_SSI = {  "B3" : [(5,4), (6,4)],
-                      "B4" : [(7,4), (8,4), (9,4), (10,4)],
-                      "C1" : [(12,4), (13,4), (14,4), (15,4),  (16,4)],
-                      "C2" : [(17,4), (18,4), (19,4), (20,4), (21,4), (22,4), (23,4)],
-                      "D1" : [(25,4), (26,4), (27,4), (28,4)],
-                      "D2" : [(29,4), (30,4), (31,4), (32,4)]
-                    }
-
-Cellules_INFO_SSI = {"Tit" : (12,1),
-                     "Des" : (12,1),
-                     "Nom" : (7,2),
-                     "Pro" : (43,1),
-                     "Pre" : (8,2)}
+#Cellules_NON_SSI = {  "B3" : [(5,4), (6,4)],
+#                      "B4" : [(7,4), (8,4), (9,4), (10,4)],
+#                      "C1" : [(12,4), (13,4), (14,4), (15,4),  (16,4)],
+#                      "C2" : [(17,4), (18,4), (19,4), (20,4), (21,4), (22,4), (23,4)],
+#                      "D1" : [(25,4), (26,4), (27,4), (28,4)],
+#                      "D2" : [(29,4), (30,4), (31,4), (32,4)]
+#                    }
+#
+#Cellules_INFO_SSI = {"Tit" : (12,1),
+#                     "Des" : (12,1),
+#                     "Nom" : (7,2),
+#                     "Pro" : (43,1),
+#                     "Pre" : (8,2)}
 
 ############
 #  Identification des indicateurs non évalués en ETT
 ############
 Feuille_ETT = u"Soutenance"
-Cellules_NON_ETT =  {"CO1.1"  : [(5,4), (6,4), (7,4), (8,4), (9,4)],
-                     "CO1.2"  : [(10,4), (11,4), (12,4)],
-                     "CO2.1"  : [(14,4), (15,4), (16,4), (17,4)],
-                     "CO2.2"  : [(18,4), (19,4), (20,4), (21,4), (22,4)],
-                     "CO6.1"  : [(24,4), (25,4), (26,4)],
-                     "CO6.2"  : [(27,4), (28,4), (29,4)],
-                     "CO6.3"  : [(30,4), (31,4), (32,4), (33,4), (34,4)],
-                     "CO8.es" : [(36,4), (37,4), (38,4), (39,4), (40,4)]
-                     }
+#Cellules_NON_ETT =  {"CO1.1"  : [(5,4), (6,4), (7,4), (8,4), (9,4)],
+#                     "CO1.2"  : [(10,4), (11,4), (12,4)],
+#                     "CO2.1"  : [(14,4), (15,4), (16,4), (17,4)],
+#                     "CO2.2"  : [(18,4), (19,4), (20,4), (21,4), (22,4)],
+#                     "CO6.1"  : [(24,4), (25,4), (26,4)],
+#                     "CO6.2"  : [(27,4), (28,4), (29,4)],
+#                     "CO6.3"  : [(30,4), (31,4), (32,4), (33,4), (34,4)],
+#                     "CO8.es" : [(36,4), (37,4), (38,4), (39,4), (40,4)]
+#                     }
 
 ############
 #  Identification des indicateurs non évalués en AC
 ############
 
-Cellules_NON_AC =   {"CO7.ac1" : [(5,4), (6,4), (7,4), (8,4), (9,4)],
-                     "CO7.ac2" : [(10,4), (11,4), (12,4), (13,4), (14,4), (15,4), (16,4)],
-                     "CO7.ac3" : [(17,4), (18,4), (19,4), (20,4)],
-                     "CO8.ac1" : [(22,4), (23,4), (24,4), (25,4)],
-                     "CO8.ac2" : [(26,4), (27,4), (28,4), (29,4)],
-                     "CO8.ac3" : [(30,4), (31,4), (32,4), (33,4)],
-                     "CO9.ac1" : [(35,4), (36,4), (37,4), (38,4), (39,4)],
-                     "CO9.ac2" : [(40,4), (41,4), (42,4)],
-                     "CO9.ac3" : [(43,4), (44,4), (45,4)]}
+#Cellules_NON_AC =   {"CO7.ac1" : [(5,4), (6,4), (7,4), (8,4), (9,4)],
+#                     "CO7.ac2" : [(10,4), (11,4), (12,4), (13,4), (14,4), (15,4), (16,4)],
+#                     "CO7.ac3" : [(17,4), (18,4), (19,4), (20,4)],
+#                     "CO8.ac1" : [(22,4), (23,4), (24,4), (25,4)],
+#                     "CO8.ac2" : [(26,4), (27,4), (28,4), (29,4)],
+#                     "CO8.ac3" : [(30,4), (31,4), (32,4), (33,4)],
+#                     "CO9.ac1" : [(35,4), (36,4), (37,4), (38,4), (39,4)],
+#                     "CO9.ac2" : [(40,4), (41,4), (42,4)],
+#                     "CO9.ac3" : [(43,4), (44,4), (45,4)]}
 
 ############
 #  Identification des indicateurs non évalués en ITEC
 ############
                                  
-Cellules_NON_ITEC =   {"CO7.itec1" : [(5,4), (6,4), (7,4), (8,4), (9,4)],
-                       "CO7.itec2" : [(10,4), (11,4), (12,4), (13,4), (14,4), (15,4)],
-                       "CO7.itec3" : [(16,4), (17,4), (18,4)],
-                       "CO7.itec4" : [(19,4), (20,4)],
-                       "CO8.itec1" : [(22,4), (23,4), (24,4)],
-                       "CO8.itec2" : [(25,4), (26,4), (27,4), (28,4)],
-                       "CO8.itec3" : [(29,4), (30,4), (31,4), (32,4), (33,4)],
-                       "CO8.itec4" : [(34,4), (35,4), (36,4)],
-                       "CO9.itec1" : [(38,4), (39,4), (40,4)],
-                       "CO9.itec2" : [(41,4), (42,4), (43,4), (44,4)],
-                       "CO9.itec3" : [(45,4), (46,4), (47,4), (48,4)]}
+#Cellules_NON_ITEC =   {"CO7.itec1" : [(5,4), (6,4), (7,4), (8,4), (9,4)],
+#                       "CO7.itec2" : [(10,4), (11,4), (12,4), (13,4), (14,4), (15,4)],
+#                       "CO7.itec3" : [(16,4), (17,4), (18,4)],
+#                       "CO7.itec4" : [(19,4), (20,4)],
+#                       "CO8.itec1" : [(22,4), (23,4), (24,4)],
+#                       "CO8.itec2" : [(25,4), (26,4), (27,4), (28,4)],
+#                       "CO8.itec3" : [(29,4), (30,4), (31,4), (32,4), (33,4)],
+#                       "CO8.itec4" : [(34,4), (35,4), (36,4)],
+#                       "CO9.itec1" : [(38,4), (39,4), (40,4)],
+#                       "CO9.itec2" : [(41,4), (42,4), (43,4), (44,4)],
+#                       "CO9.itec3" : [(45,4), (46,4), (47,4), (48,4)]}
                     
 ############
 #  Identification des indicateurs non évalués en EE
 ############
 
-Cellules_NON_EE  =  {"CO7.ee1" : [(5,4), (6,4), (7,4), (8,4), (9,4), (10,4), (11,4)],
-                     "CO7.ee2" : [(12,4), (13,4), (14,4), (15,4), (16,4), (17,4)],
-                     "CO7.ee3" : [(18,4), (19,4), (20,4), (21,4)],
-                     "CO7.ee4" : [(22,4), (23,4), (24,4), (25,4)],
-                     "CO8.ee1" : [(27,4), (28,4), (29,4)],
-                     "CO8.ee2" : [(30,4), (31,4), (32,4), (33,4)],
-                     "CO8.ee3" : [(34,4), (35,4), (36,4)],
-                     "CO8.ee4" : [(37,4), (38,4), (39,4), (40,4),(41,4)],
-                     "CO9.ee1" : [(43,4), (44,4), (45,4) ],
-                     "CO9.ee2" : [(46,4), (47,4), (48,4), (49,4)],
-                     "CO9.ee3" : [(50,4), (51,4), (52,4), (53,4)]}
+#Cellules_NON_EE  =  {"CO7.ee1" : [(5,4), (6,4), (7,4), (8,4), (9,4), (10,4), (11,4)],
+#                     "CO7.ee2" : [(12,4), (13,4), (14,4), (15,4), (16,4), (17,4)],
+#                     "CO7.ee3" : [(18,4), (19,4), (20,4), (21,4)],
+#                     "CO7.ee4" : [(22,4), (23,4), (24,4), (25,4)],
+#                     "CO8.ee1" : [(27,4), (28,4), (29,4)],
+#                     "CO8.ee2" : [(30,4), (31,4), (32,4), (33,4)],
+#                     "CO8.ee3" : [(34,4), (35,4), (36,4)],
+#                     "CO8.ee4" : [(37,4), (38,4), (39,4), (40,4),(41,4)],
+#                     "CO9.ee1" : [(43,4), (44,4), (45,4) ],
+#                     "CO9.ee2" : [(46,4), (47,4), (48,4), (49,4)],
+#                     "CO9.ee3" : [(50,4), (51,4), (52,4), (53,4)]}
 
 ############
 #  Identification des indicateurs non évalués en SIN
 ############                                 
   
-Cellules_NON_SIN =  {"CO7.sin1" : [(5,4), (6,4), (7,4), (8,4)],
-                     "CO7.sin2" : [(9,4), (10,4), (11,4), (12,4), (13,4)],
-                     "CO7.sin3" : [(14,4), (15,4), (16,4), (17,4)],
-                     "CO8.sin1" : [(19,4), (20,4), (21,4)],
-                     "CO8.sin2" : [(22,4), (23,4), (24,4), (25,4)],
-                     "CO8.sin3" : [(26,4), (27,4), (28,4)],
-                     "CO8.sin4" : [(29,4), (30,4), (31,4), (32,4)],
-                     "CO9.sin1" : [(34,4), (35,4), (36,4)],
-                     "CO9.sin2" : [(37,4), (38,4), (39,4), (40,4), (41,4)],
-                     "CO9.sin3" : [(42,4), (43,4), (44,4), (45,4)],
-                     "CO9.sin4" : [(46,4), (47,4), (48,4), (49,4), (50,4)]}
+#Cellules_NON_SIN =  {"CO7.sin1" : [(5,4), (6,4), (7,4), (8,4)],
+#                     "CO7.sin2" : [(9,4), (10,4), (11,4), (12,4), (13,4)],
+#                     "CO7.sin3" : [(14,4), (15,4), (16,4), (17,4)],
+#                     "CO8.sin1" : [(19,4), (20,4), (21,4)],
+#                     "CO8.sin2" : [(22,4), (23,4), (24,4), (25,4)],
+#                     "CO8.sin3" : [(26,4), (27,4), (28,4)],
+#                     "CO8.sin4" : [(29,4), (30,4), (31,4), (32,4)],
+#                     "CO9.sin1" : [(34,4), (35,4), (36,4)],
+#                     "CO9.sin2" : [(37,4), (38,4), (39,4), (40,4), (41,4)],
+#                     "CO9.sin3" : [(42,4), (43,4), (44,4), (45,4)],
+#                     "CO9.sin4" : [(46,4), (47,4), (48,4), (49,4), (50,4)]}
                   
 Cellules_INFO_STI =  {"Tit" : (13,1),
                       "Des" : (13,1),
@@ -142,24 +136,24 @@ Cellules_INFO_STI =  {"Tit" : (13,1),
 
 ####################################################################################
 def getCell_NON(dic):
-    d = {"CO1.1" : Cellules_NON_ETT["CO1.1"],
-         "CO1.2" : Cellules_NON_ETT["CO1.2"],
-         "CO2.1" : Cellules_NON_ETT["CO2.1"],
-         "CO2.2" : Cellules_NON_ETT["CO2.2"],
-         "CO6.1" : Cellules_NON_ETT["CO6.1"],
-         "CO6.2" : Cellules_NON_ETT["CO6.2"],
-         "CO6.3" : Cellules_NON_ETT["CO6.3"],
-         "CO8.es" : Cellules_NON_ETT["CO8.es"]
+    d = {"CO1.1" : Cellules_NON['ET']["CO1.1"],
+         "CO1.2" : Cellules_NON['ET']["CO1.2"],
+         "CO2.1" : Cellules_NON['ET']["CO2.1"],
+         "CO2.2" : Cellules_NON['ET']["CO2.2"],
+         "CO6.1" : Cellules_NON['ET']["CO6.1"],
+         "CO6.2" : Cellules_NON['ET']["CO6.2"],
+         "CO6.3" : Cellules_NON['ET']["CO6.3"],
+         "CO8.es" : Cellules_NON['ET']["CO8.es"]
          }
     d.update(dic)
     return d
     
 
-Cellules_NON  =  {'ITEC'   : [[Feuille_ETT, Cellules_NON_ETT], ['ITEC', Cellules_NON_ITEC]], 
-                  'AC'     : [[Feuille_ETT, Cellules_NON_ETT], ['AC', Cellules_NON_AC]], 
-                  'EE'     : [[Feuille_ETT, Cellules_NON_ETT], ['EE', Cellules_NON_EE]], 
-                  'SIN'    : [[Feuille_ETT, Cellules_NON_ETT], ['SIN', Cellules_NON_SIN]],
-                  'SSI'    : [['Notation', Cellules_NON_SSI]]}    
+Cellules_NON  =  {'ITEC'   : [[Feuille_ETT, Cellules_NON['ET']], ['ITEC', Cellules_NON['ITEC']]], 
+                  'AC'     : [[Feuille_ETT, Cellules_NON['ET']], ['AC', Cellules_NON['AC']]], 
+                  'EE'     : [[Feuille_ETT, Cellules_NON['ET']], ['EE', Cellules_NON['EE']]], 
+                  'SIN'    : [[Feuille_ETT, Cellules_NON['ET']], ['SIN', Cellules_NON['SIN']]],
+                  'SSI'    : [['Notation', Cellules_NON['SSI']]]}    
 
 #Feuilles  =  {'ITEC'   : u"ITEC", 
 #              'AC'     : u"AC", 
@@ -177,10 +171,10 @@ from widgets import messageErreur
 def getTableau(parent, doc):
     typ = doc.GetTypeEnseignement()
     if typ == 'SSI':
-        fichiers = GRILLE[typ]
+        fichiers = Fichier_GRILLE[typ]
     else:
-        fichiersR = GRILLE[typ]
-        fichiersS = GRILLE['STI']
+        fichiersR = Fichier_GRILLE[typ]
+        fichiersS = Fichier_GRILLE['STI']
     
     fichierPB = []
     def ouvrir(fichier):
@@ -265,6 +259,7 @@ def modifierGrille(doc, tableur, eleve):
 #            if not indic:
 #                l, c = dic[comp][j]
 #                tableur.setCell(2, l, c, COCHE)
+
     if doc.GetTypeEnseignement(simple = True) == "SSI":
         dicInfo = Cellules_INFO_SSI
         tb = [tableur]

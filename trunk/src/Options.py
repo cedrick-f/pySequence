@@ -35,6 +35,7 @@ import io
 import wx.combo
 #from constantes import *
 import constantes
+from constantes_ETT import PositionCibleCI
 
 
 ##############################################################################
@@ -226,8 +227,8 @@ class Options:
                                        "G" : constantes.NbrGroupes["G"],
                                        "E" : constantes.NbrGroupes["E"],
                                        "P" : constantes.NbrGroupes["P"]}
-        self.optClasse["CentresInteretET"] = [ci for ci in constantes.CentresInterets_ET]
-        self.optClasse["PositionsCI_ET"] = [po for po in constantes.PositionCibleCI_ET]
+        self.optClasse["CentresInteretET"] = [ci for ci in constantes.CentresInterets['ET']]
+        self.optClasse["PositionsCI_ET"] = [po for po in PositionCibleCI]
         self.optClasse["TypeEnseignement"] = "SSI"
         
         self.optSystemes["Systemes"] = []
