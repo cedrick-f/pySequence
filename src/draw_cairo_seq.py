@@ -749,6 +749,7 @@ def Draw(ctx, seq, mouchard = False):
     #
     #  CI
     #
+#    Draw_CI(ctx, seq.classe.ci_ET)
     Draw_CI(ctx, seq.CI)
     
     

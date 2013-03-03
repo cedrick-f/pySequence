@@ -40,7 +40,7 @@ Copyright (C) 2011-2013
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "3.15"
+__version__ = "3.16"
 
 #from threading import Thread
 
@@ -644,10 +644,7 @@ class Classe():
     def __init__(self, app, panelParent = None, intitule = u"", pourProjet = False):
         self.intitule = intitule
         
-        if pourProjet:
-            self.typeEnseignement = 'ITEC'
-        else:
-            self.typeEnseignement = 'ET'
+        
         
         self.options = app.options
         self.Initialise(pourProjet)
@@ -660,14 +657,21 @@ class Classe():
         
     ######################################################################################  
     def __repr__(self):
+        return self.typeEnseignement
         return self.posCI_ET[0] + " " + self.ci_ET[0]
     
     ######################################################################################  
     def Initialise(self, pourProjet):
-#        print "Initialise", pourProjet
+        
+        self.typeEnseignement = self.options.optClasse["TypeEnseignement"]
+        
         if not pourProjet:
             self.ci_ET = self.options.optClasse["CentresInteretET"]
             self.posCI_ET = self.options.optClasse["PositionsCI_ET"]
+        else:
+            if not self.typeEnseignement in ['ITEC','AC', 'EE', 'SIN', 'SSI']:
+                self.typeEnseignement = 'ITEC'
+
             
         self.effectifs =  {"C" : constantes.Effectifs["C"],
                            "G" : constantes.NbrGroupes["G"],
@@ -683,8 +687,6 @@ class Classe():
                            "G" : self.options.optClasse["Effectifs"]["G"]
                            }
 
-        self.typeEnseignement = self.options.optClasse["TypeEnseignement"]
-        
         calculerEffectifs(self)
         
     ######################################################################################  
@@ -2448,7 +2450,13 @@ class CentreInteret(Objet_sequence):
         
     ######################################################################################  
     def GetIntit(self, num):
-        return constantes.CentresInterets[self.GetTypeEnseignement()][self.numCI[num]]
+        if self.GetTypeEnseignement() == 'ET':
+            lstCI = self.parent.classe.ci_ET
+        else:
+            lstCI = constantes.CentresInterets[self.GetTypeEnseignement()]
+        if self.numCI[num] < len(lstCI):
+            return lstCI[self.numCI[num]]
+            
     
     
     ######################################################################################  
@@ -6917,7 +6925,7 @@ class PanelPropriete_Classe(PanelPropriete):
         if not pourProjet:
             tb.AddSimpleTool(32, images.Icone_excel.GetBitmap(), 
                              u"Sélectionner les CI depuis un fichier Excel",
-                             u"Sélectionner les CI ET depuis un fichier Excel (.xls)")
+                             u"Sélectionner les CI ETT depuis un fichier Excel (.xls)")
             self.Bind(wx.EVT_TOOL, self.SelectCI, id=32)
         
         
@@ -7178,12 +7186,10 @@ class PanelPropriete_Classe(PanelPropriete):
                 x0, y0 = self.list.GetScreenPosition()
                 x, y, w, h = self.list.GetItemRect(item, ULC.ULC_RECT_BOUNDS)#ULC.ULC_RECT_LABEL)#
                 
-               
                 ed = Editeur(self.classe, self.list, item, self.list.GetItem(item, 1).GetText(),
                              pos = (x0+x+self.list.GetColumnWidth(0), y0+y), 
                              size = (self.list.GetColumnWidth(1), -1))
                 ed.Show()
-                
 
         event.Skip()
         
@@ -7259,6 +7265,7 @@ class Editeur(wx.Frame):
         txtctrl = evt.GetEventObject()
         self.liste.SetStringItem(self.index, 1, txtctrl.GetValue())
         self.classe.ci_ET[self.index] = txtctrl.GetValue()
+#        self.classe.doc.CI.
         self.classe.doc.CI.panelPropriete.construire()
         self.Destroy() 
         evt.Skip()
