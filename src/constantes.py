@@ -328,6 +328,8 @@ for t in listEnseigmenent:
     Enseigmenent[t] = Modules[t].Enseigmenent
     fichierProgressionProgramme[t] = Modules[t].fichierProgressionProgramme
 
+
+
 Fichier_GRILLE = {} 
 Cellules_NON = {}   
 for t in listEnseigmenent:    
@@ -347,57 +349,12 @@ Cellules_INFO_SSI = {"Tit" : (12,1),
                      "Pro" : (43,1),
                      "Pre" : (8,2)}
 
-#CentresInterets = {'ET'     : CentresInterets_ET,
-#                   'ITEC'   : CentresInterets_ITEC, 
-#                   'AC'     : CentresInterets_AC, 
-#                   'EE'     : CentresInterets_EE, 
-#                   'SIN'    : CentresInterets_SIN,
-#                   'SSI'    : CentresInterets_SSI}
-
-#dicCompetences = {'ET'     : dicCompetences_ET,
-#                  'ITEC'   : dicCompetences_ITEC, 
-#                  'AC'     : dicCompetences_AC, 
-#                  'EE'     : dicCompetences_EE, 
-#                  'SIN'    : dicCompetences_SIN,
-#                  'SSI'    : dicCompetences_SSI}
-#
-#dicSavoirs = {'ET'     : dicSavoirs_ET,
-#              'ITEC'   : dicSavoirs_ITEC, 
-#              'AC'     : dicSavoirs_AC, 
-#              'EE'     : dicSavoirs_EE, 
-#              'SIN'    : dicSavoirs_SIN,
-#              'SSI'    : dicSavoirs_SSI}
-#
-#dicCellSavoirs = {'ET'     : dicCellSavoirs_SSI,
-#                  'ITEC'   : dicCellSavoirs_SSI, 
-#                  'AC'     : dicCellSavoirs_SSI, 
-#                  'EE'     : dicCellSavoirs_SSI, 
-#                  'SIN'    : dicCellSavoirs_SSI,
-#                  'SSI'    : dicCellSavoirs_SSI}
-
-#fichierProgressionProgramme =    {'ET'     : fichierProgressionProgramme_SSI,
-#                                  'ITEC'   : fichierProgressionProgramme_SSI, 
-#                                  'AC'     : fichierProgressionProgramme_SSI, 
-#                                  'EE'     : fichierProgressionProgramme_SSI, 
-#                                  'SIN'    : fichierProgressionProgramme_SSI,
-#                                  'SSI'    : fichierProgressionProgramme_SSI}
-
-    
-#Enseigmenent = {'ET'   : [u"STI2D-ETT", u"STI2D : Enseignement Technologique Transversal"],
-#                'ITEC' : [u"STI2D-ITEC", u"STI2D : Innovation Technologique et éco-conception"],
-#                'AC'   : [u"STI2D-AC", u"STI2D : Architecture et Construction"],
-#                'EE'   : [u"STI2D-EE", u"STI2D : Energies et Environnement"],
-#                'SIN'  : [u"STI2D-SIN", u"STI2D : Systèmes d'Information et Numérique"],
-#                'SSI'  : [u"S-SI", u"Bac S - Sciences de l'ingénieur"]}
-
 
 ####################################################################################
 #
 #   Définition des options de la classe
 #
 ####################################################################################
-#CentresInteretsET = None
-#PositionCibleCIET = None
 
 Effectifs = {"C" : 32,
              "G" : None,
@@ -547,7 +504,6 @@ def getCompetencesProjet(dic):
     d.update(dic)
     d.update({"O8s" : [u"Valider des solutions techniques",
                        {"CO8.es" : u"Justifier des éléments d'une simulation relative au comportement de tout ou partie d'un système et les écarts par rapport au réel"}]})
-#    d["O8s"][1]["CO8.es"] = u"Justifier des éléments d'une simulation relative au comportement de tout ou partie d'un système et les écarts par rapport au réel"
     return d
 
 dicCompetences_prj = {}    
@@ -760,19 +716,22 @@ def trier(l):
     
 # Pour obtenir l'intitulé d'un savoir à partir de son code 
 #        fonction recursive
-def getSavoir(typeEns, code, dic = None, c = None):
-#    print "getSavoir", code
+def getSavoir(typeEns, code, dic = None, c = 1):
+#    print "getSavoir", code, dic
     if dic == None:
         dic = dicSavoirs[typeEns]
-    if c == None:
-        c = len(code.split("."))
+#    if c == None:
+#        c = len(code.split("."))
+#        c = 1
     if dic.has_key(code):
         return dic[code][0]
     else:
 #        cd = code[:-2*(c-1)]
-        cd = ".".join(code.split(".")[:c-1])
+#        cd = ".".join(code.split(".")[:c-1])
+        cd = ".".join(code.split(".")[:c])
 #        print "  ", cd
-        return getSavoir(typeEns, code, dic[cd][1], c-1)
+#        return getSavoir(typeEns, code, dic[cd][1], c-1)
+        return getSavoir(typeEns, code, dic[cd][1], c+1)
     
     
 # Pour obtenir l'intitulé d'une compétence à partir de son code 

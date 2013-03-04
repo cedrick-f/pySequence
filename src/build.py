@@ -26,6 +26,7 @@ data_files = [("Microsoft.VC90.CRT", glob(r'msvcr90.dll')),
               ]
 data_files.extend(glob(r"*.xls"))
 data_files.extend(glob(r"*.xlsm"))
+data_files.extend(glob(r"*.xlsx"))
 
 options = {    "py2exe" : { "compressed": True,
                            

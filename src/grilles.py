@@ -134,19 +134,19 @@ Cellules_INFO_STI =  {"Tit" : (13,1),
                       }
  
 
-####################################################################################
-def getCell_NON(dic):
-    d = {"CO1.1" : Cellules_NON['ET']["CO1.1"],
-         "CO1.2" : Cellules_NON['ET']["CO1.2"],
-         "CO2.1" : Cellules_NON['ET']["CO2.1"],
-         "CO2.2" : Cellules_NON['ET']["CO2.2"],
-         "CO6.1" : Cellules_NON['ET']["CO6.1"],
-         "CO6.2" : Cellules_NON['ET']["CO6.2"],
-         "CO6.3" : Cellules_NON['ET']["CO6.3"],
-         "CO8.es" : Cellules_NON['ET']["CO8.es"]
-         }
-    d.update(dic)
-    return d
+#####################################################################################
+#def getCell_NON(dic):
+#    d = {"CO1.1" : Cellules_NON['ET']["CO1.1"],
+#         "CO1.2" : Cellules_NON['ET']["CO1.2"],
+#         "CO2.1" : Cellules_NON['ET']["CO2.1"],
+#         "CO2.2" : Cellules_NON['ET']["CO2.2"],
+#         "CO6.1" : Cellules_NON['ET']["CO6.1"],
+#         "CO6.2" : Cellules_NON['ET']["CO6.2"],
+#         "CO6.3" : Cellules_NON['ET']["CO6.3"],
+#         "CO8.es" : Cellules_NON['ET']["CO8.es"]
+#         }
+#    d.update(dic)
+#    return d
     
 
 Cellules_NON  =  {'ITEC'   : [[Feuille_ETT, Cellules_NON['ET']], ['ITEC', Cellules_NON['ITEC']]], 
@@ -174,7 +174,7 @@ def getTableau(parent, doc):
         fichiers = Fichier_GRILLE[typ]
     else:
         fichiersR = Fichier_GRILLE[typ]
-        fichiersS = Fichier_GRILLE['STI']
+        fichiersS = Fichier_GRILLE['ET']
     
     fichierPB = []
     def ouvrir(fichier):

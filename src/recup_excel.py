@@ -65,17 +65,21 @@ def getColonne(sel = None, c = None, close = True):
     """ Renvoie les colonnes (ou seulement la colonne <c>
         depuis une selection dans une feuille Excel
     """
+
     if sel == None:
         sel = getSelectionExcel()
-    if sel != None:
-        if c == None:
-            lst = zip(*sel) 
-        else:
-            lst = zip(*sel)[c]
-    else:
-        lst = None
+    
     if close:
         xl.ActiveWorkbook.Close(SaveChanges=0)
+        
+    if sel != None:
+        if c == None:
+            return zip(*sel) 
+        else:
+            return zip(*sel)[c]
+
+    
+    
          
         
 
