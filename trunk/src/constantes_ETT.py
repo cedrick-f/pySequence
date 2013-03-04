@@ -10,7 +10,7 @@
 #############################################################################
 #############################################################################
 
-## Copyright (C) 2011 Cédrick FAURY - Jean-Claude FRICOU
+## Copyright (C) 2013 Cédrick FAURY - Jean-Claude FRICOU
 
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -307,7 +307,7 @@ Cellules_NON =  {"CO1.1"  : [(5,4), (6,4), (7,4), (8,4), (9,4)],
 #        Les cellules "Savoirs" dans le tableau de bilan
 #
 #################################################################################################################################
-fichierProgressionProgramme = u"SSI_Synthese.xlsx"
+fichierProgressionProgramme = u"ETT_Synthese.xlsx"
 dicCellSavoirs = {"1.1.1" : [8,12],
                   "1.1.2" : [13,14],
                   "1.1.3" : [15,17],
@@ -329,15 +329,15 @@ dicCellSavoirs = {"1.1.1" : [8,12],
                   "2.3.5" : [47,51],
                   "2.3.6" : [52,54],
                   
-                  "3.1.1" : [56,57],
-                  "3.1.2" : [58,59],
-                  "3.1.3" : [60,61],
-                  "3.1.4" : [62,66],
+                  "3.1.1" : [56,56],
+                  "3.1.2" : [57,58],
+                  "3.1.3" : [59,60],
+                  "3.1.4" : [61,65],
                   
-                  "3.2.1" : [67,71],
-                  "3.2.2" : [72,77],
-                  "3.2.3" : [78,81],
-                  "3.2.4" : [82,88]
+                  "3.2.1" : [66,70],
+                  "3.2.2" : [71,71],
+                  "3.2.3" : [72,75],
+                  "3.2.4" : [76,82]
                                 
                  }
 

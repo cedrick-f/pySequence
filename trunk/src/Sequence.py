@@ -84,6 +84,7 @@ import wx.lib.platebtn as platebtn
 from wx.lib.agw import ultimatelistctrl as ULC
 import wx.lib.colourdb
 #import  wx.lib.fancytext as fancytext
+import  wx.lib.mixins.listctrl  as  listmix
 
 import images
 
@@ -129,6 +130,7 @@ from constantes import calculerEffectifs, revCalculerEffectifs, PATH, findEffect
                         strEffectifComplet, strEffectif, getElementFiltre, COUL_OK, COUL_NON, COUL_BOF, COUL_BIEN, \
                         toList, toTxt, estCompetenceRevue, COUL_COMPETENCES
 import constantes
+import constantes_ETT
 
 # Pour lire les classeurs Excel
 import recup_excel
@@ -2474,8 +2476,8 @@ class CentreInteret(Objet_sequence):
     
     ######################################################################################  
     def GetPosCible(self, num):
-        if constantes.PositionCibleCI_ET != None:
-            return constantes.PositionCibleCI_ET[self.numCI[num]]
+        if constantes_ETT.PositionCibleCI != None:
+            return constantes_ETT.PositionCibleCI[self.numCI[num]]
     
     ######################################################################################  
     def MaJArbre(self):
@@ -5116,7 +5118,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         file_menu.Append(15, u"&Exporter la fiche (PDF ou SVG)\tCtrl+E")
         file_menu.Append(16, u"&Exporter les détails\tCtrl+D")
         file_menu.Append(17, u"&Générer les grilles d'évaluation\tCtrl+G")
-        file_menu.Append(18, u"&Générer une Synthèse pédagogique (SSI uniquement)\tCtrl+B")
+        file_menu.Append(18, u"&Générer une Synthèse pédagogique (SSI et ETT uniquement)\tCtrl+B")
         
         file_menu.AppendSeparator()
         file_menu.Append(wx.ID_EXIT, u"&Quitter\tCtrl+Q")
@@ -5906,27 +5908,27 @@ class FenetreSequence(FenetreDocument):
         fichier = open(nomFichier,'r')
         self.definirNomFichierCourant(nomFichier)
         
-#        try:
-        root = ET.parse(fichier).getroot()
-        
-        # La séquence
-        sequence = root.find("Sequence")
-        if sequence == None:
-            self.sequence.setBranche(root)
+        try:
+            root = ET.parse(fichier).getroot()
             
-        else:
-            # La classe
-            classe = root.find("Classe")
-            self.classe.setBranche(classe)
-            self.sequence.setBranche(sequence)  
+            # La séquence
+            sequence = root.find("Sequence")
+            if sequence == None:
+                self.sequence.setBranche(root)
                 
-#        except:
-#            messageErreur(self,u"Erreur d'ouverture",
-#                          u"La séquence pédagogique\n    %s\n n'a pas pu être ouverte !" %nomFichier)
-#            fichier.close()
-#            self.Close()
-##            wx.EndBusyCursor()
-#            return
+            else:
+                # La classe
+                classe = root.find("Classe")
+                self.classe.setBranche(classe)
+                self.sequence.setBranche(sequence)  
+                
+        except:
+            messageErreur(self,u"Erreur d'ouverture",
+                          u"La séquence pédagogique\n    %s\n n'a pas pu être ouverte !" %nomFichier)
+            fichier.close()
+            self.Close()
+#            wx.EndBusyCursor()
+            return
 
         self.arbre.DeleteAllItems()
         root = self.arbre.AddRoot("")
@@ -7115,12 +7117,7 @@ class PanelPropriete_Classe(PanelPropriete):
     ######################################################################################  
     def MiseAJourType(self):
         if hasattr(self, 'list'):
-            if self.classe.typeEnseignement == 'SSI':
-                self.list.Show(False)
-#                self.tb.Show(False)
-                self.sb1.Show(False)
-                self.tb.EnableTool(32, False)
-            else:
+            if self.classe.familleEnseignement == 'STI':
                 self.list.Show(True)
 #                self.tb.Show(True)
                 self.sb1.Show(True)
@@ -7128,6 +7125,11 @@ class PanelPropriete_Classe(PanelPropriete):
                 self.list.Enable(enable)
                 self.tb.EnableTool(31, enable)
                 self.tb.EnableTool(32, enable)
+            else:
+                self.list.Show(False)
+#                self.tb.Show(False)
+                self.sb1.Show(False)
+                self.tb.EnableTool(32, False)    
 #            self.btn.Enable(self.pasVerrouille and self.classe.typeEnseignement == 'ET')
             
     ######################################################################################  
@@ -7760,7 +7762,7 @@ class Panel_Cible(wx.Panel):
             
         elif len(self.CI.numCI) == 1:
             l = []
-            for i,p in enumerate(constantes.PositionCibleCI_ET):
+            for i,p in enumerate(constantes_ETT.PositionCibleCI):
                 p = p[:3].strip()
                 c = self.CI.GetPosCible(0)[:3].strip()
 
@@ -10077,7 +10079,7 @@ class ArbreSavoirs(CT.CustomTreeCtrl):
     def __init__(self, parent, savoirs, prerequis):
 
         CT.CustomTreeCtrl.__init__(self, parent, -1, 
-                                   agwStyle = wx.TR_DEFAULT_STYLE|wx.TR_MULTIPLE|wx.TR_HIDE_ROOT)
+                                   agwStyle = wx.TR_DEFAULT_STYLE|wx.TR_MULTIPLE|wx.TR_HIDE_ROOT|CT.TR_AUTO_CHECK_CHILD|CT.TR_AUTO_CHECK_PARENT)
         
         self.parent = parent
         self.savoirs = savoirs
@@ -11032,6 +11034,206 @@ class DialogChoixDoc(wx.Dialog):
 # Fenetre de bilan d'objectifs
 # 
 #############################################################################################################
+class TestListCtrl(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin):
+    def __init__(self, parent, ID, pos=wx.DefaultPosition,
+                 size=wx.DefaultSize, style=0):
+        wx.ListCtrl.__init__(self, parent, ID, pos, size, style)
+        listmix.ListCtrlAutoWidthMixin.__init__(self)
+        
+        self.Bind(wx.EVT_LIST_BEGIN_DRAG, self.startDrag)
+        self.Bind(wx.EVT_LEFT_UP, self.endDrag)
+        self.Bind(wx.EVT_MOTION, self.onMove)
+        self.Bind(wx.EVT_LEAVE_WINDOW, self.onLeave)
+
+        self.idx = None
+
+    def startDrag(self, e):
+
+        self.idx = e.GetIndex()
+        self.SetCursor(wx.CursorFromImage(constantes.images.CurseurInsert.GetImage()))
+
+    def onLeave(self, event):
+        if self.idx != None:
+            self.Select(self.idx)
+            self.idx = None
+        self.SetCursor(wx.StockCursor(wx.CURSOR_ARROW))
+        event.Skip()
+        
+    def onMove(self, event):    
+        if self.idx != None:
+            x = event.GetX()
+            y = event.GetY()
+            index, flags = self.HitTest((x, y))
+            if index != wx.NOT_FOUND and flags & wx.LIST_HITTEST_ONITEM:
+                rect = self.GetItemRect(index)
+                if y > rect.y + rect.height/2:
+                    index += 1
+                
+                self.Select(index)
+            
+
+    def endDrag(self, event):    
+        if self.idx != None:
+            x = event.GetX()
+            y = event.GetY()
+            
+            
+            index, flags = self.HitTest((x, y))
+            if index != wx.NOT_FOUND and flags & wx.LIST_HITTEST_ONITEM:
+                rect = self.GetItemRect(index)
+                if y > rect.y + rect.height/2:
+                    index += 1
+                index += 1
+
+                
+                f = self.GetItemText(self.idx, 0)
+                d = self.GetItemText(self.idx, 1)
+                i = self.GetItemData(self.idx)
+
+                pos = self.InsertStringItem(index, f)
+
+                self.SetStringItem(pos, 1, d)
+                self.SetItemData(index, i)
+    #            self.itemDataMap[index] = self.itemDataMap[self.idx]
+                
+                if index > self.idx:
+                    self.DeleteItem(self.idx)
+    #                del self.itemDataMap[self.idx]
+                else:
+                    self.DeleteItem(self.idx+1)
+    #                del self.itemDataMap[self.idx+1]
+            
+            self.idx = None
+            self.SetCursor(wx.StockCursor(wx.CURSOR_ARROW))
+        
+        
+        
+class PanelListe(wx.Panel, listmix.ColumnSorterMixin):
+    def __init__(self, parent, fen):
+        wx.Panel.__init__(self, parent, -1)
+        sizer = wx.BoxSizer(wx.VERTICAL)
+        
+        self.fen = fen
+        
+        self.il = wx.ImageList(16, 16)
+        self.idx1 = self.il.Add(images.Icone_sequence.GetImage().Rescale(16,16).ConvertToBitmap())
+        self.sm_up = self.il.Add(images.SmallUpArrow.GetBitmap())
+        self.sm_dn = self.il.Add(images.SmallDnArrow.GetBitmap())
+        
+        
+        self.listeSeq = TestListCtrl(self, -1, style=wx.LC_REPORT|wx.LC_HRULES|wx.LC_VRULES|wx.LC_SINGLE_SEL)
+        self.currentItem = None
+        self.listeSeq.SetImageList(self.il, wx.IMAGE_LIST_SMALL)
+        sizer.Add(self.listeSeq, 1, wx.EXPAND)
+        
+        self.SetSizer(sizer)
+        self.SetAutoLayout(True)
+        
+        self.listeSeq.Bind(wx.EVT_SIZE, self.OnResize)
+        self.Bind(wx.EVT_LIST_ITEM_SELECTED, self.OnItemSelected, self.listeSeq)
+        self.listeSeq.Bind(wx.EVT_LEFT_DCLICK, self.OnDoubleClick)
+#        self.listeSeq.Bind(wx.EVT_RIGHT_DOWN, self.OnRightDown)
+        
+        # for wxMSW
+        self.listeSeq.Bind(wx.EVT_COMMAND_RIGHT_CLICK, self.OnRightClick)
+
+        # for wxGTK
+        self.listeSeq.Bind(wx.EVT_RIGHT_UP, self.OnRightClick)
+        
+    def GetListCtrl(self):
+        return self.listeSeq
+
+    def GetSortImages(self):
+        return (self.sm_dn, self.sm_up)
+    
+    ########################################################################################################
+    def OnResize(self, event=None):
+        height = 30
+        for indx in xrange(self.listeSeq.GetItemCount()):
+            height += self.listeSeq.GetItemRect(indx).height
+        self.listeSeq.SetMinSize((-1, height))
+        
+    ########################################################################################################
+    def OnItemSelected(self, event):
+        self.currentItem = event.m_itemIndex
+        event.Skip()
+    
+    ########################################################################################################
+    def OnDoubleClick(self, event=None):
+        nomFichier = self.fen.listFichiers[self.currentItem]
+        self.fen.ouvrir(nomFichier)
+        event.Skip()
+        
+    ########################################################################################################
+    def OnRightDown(self, event):
+        x = event.GetX()
+        y = event.GetY()
+        item, flags = self.listeSeq.HitTest((x, y))
+
+        if item != wx.NOT_FOUND and flags & wx.LIST_HITTEST_ONITEM:
+            self.listeSeq.Select(item)
+
+        event.Skip()
+        
+    ########################################################################################################
+    def OnRightClick(self, event):
+        # only do this part the first time so the events are only bound once
+        if not hasattr(self, "popupID4"):
+            self.popupID4 = wx.NewId()
+            self.popupID5 = wx.NewId()
+
+            self.Bind(wx.EVT_MENU, self.OnPopupFour, id=self.popupID4)
+            self.Bind(wx.EVT_MENU, self.OnPopupFive, id=self.popupID5)
+
+        # make a menu
+        menu = wx.Menu()
+        # add some items
+        menu.Append(self.popupID4, u"Supprimer")
+        menu.Append(self.popupID5, u"Ouvrir")
+
+
+        # Popup the menu.  If an item is selected then its handler
+        # will be called before PopupMenu returns.
+        self.PopupMenu(menu)
+        menu.Destroy()
+
+    def OnPopupFour(self, event):
+        item = self.listeSeq.GetItem(self.currentItem)
+        self.listeSeq.DeleteItem(self.currentItem)
+
+    def OnPopupFive(self, event):
+        self.OnDoubleClick(event)
+        
+        
+    def GetSequence(self, num):
+        return self.itemDataMap[self.listeSeq.GetItemData(num)][2]
+    
+    ########################################################################################################
+    def MiseAJourListe(self, listSequences):
+        self.listeSeq.ClearAll()
+        self.listeSeq.InsertColumn(0, u"Fichier séquence")
+        self.listeSeq.InsertColumn(1, u"Dossier")
+    
+        self.itemDataMap = {}
+        for i, seq in enumerate(listSequences):
+            f = seq.nomFichier
+            d, f = os.path.split(f)
+            f = os.path.splitext(f)[0]
+            pos = self.listeSeq.InsertStringItem(i, f)
+            self.listeSeq.SetStringItem(pos, 1, d)
+            self.itemDataMap[i] = (f, d, seq)
+            self.listeSeq.SetItemData(i, i)
+            
+        self.listeSeq.SetColumnWidth(0, wx.LIST_AUTOSIZE)
+        self.listeSeq.SetColumnWidth(1, wx.LIST_AUTOSIZE)
+        self.listeSeq.Layout()
+        self.OnResize()
+        self.Fit()
+        
+        listmix.ColumnSorterMixin.__init__(self, 2)
+        
+        
+        
 class FenetreBilan(wx.Frame):
     def __init__(self, parent, dossierCourant = '', typeEnseignement = "SSI"):
         wx.Frame.__init__(self, parent, -1, u"Synthèse pédagogique")
@@ -11067,7 +11269,7 @@ class FenetreBilan(wx.Frame):
         self.Bind(wx.EVT_RADIOBOX, self.EvtRadioBox, rb)
             
         # Provosoirement uniquement pour SSI
-        for i in range(5):
+        for i in [1,2,3,4]:
             rb.EnableItem(i, False)    
         
         self.sizer.Add(rb, (0,0), (2,1), flag = wx.EXPAND|wx.ALL)
@@ -11083,6 +11285,7 @@ class FenetreBilan(wx.Frame):
         self.dossiers = [os.path.abspath(dossierCourant)]
         self.dossiersOk = True
         self.txtDoss = wx.TextCtrl(panel, -1, os.path.abspath(dossierCourant))
+        self.txtDoss.SetToolTipString(u"Saisir les dossiers de recherche, séparés par \";\"")
         self.txtDoss.Bind(wx.EVT_KILL_FOCUS, self.EvtTextDoss)
         sbs.Add(self.txtDoss, 1, flag = wx.EXPAND|wx.ALL)
         
@@ -11097,13 +11300,14 @@ class FenetreBilan(wx.Frame):
         #
         #    Liste des fichiers trouvés
         #
-        self.listeSeq = wx.ListCtrl(panel, -1, style=wx.LC_REPORT|wx.LC_HRULES|wx.LC_VRULES)
-        self.listeSeq.Bind(wx.EVT_SIZE, self.OnResize)
+        self.listeSeq = PanelListe(panel, self)
+
         self.sizer.Add(self.listeSeq, (1,1), (1,1) , flag = wx.EXPAND|wx.ALL)
         self.MiseAJourListe()
         
         panel.SetSizer(self.sizer)
-        sizer.Add(panel,1, flag = wx.EXPAND)
+        sizer.Add(panel, 1, flag = wx.EXPAND)
+        
         self.SetSizerAndFit(sizer)
         
     ###############################################################################################
@@ -11117,38 +11321,16 @@ class FenetreBilan(wx.Frame):
         #############################################################################################
         self.tb = self.CreateToolBar(wx.TB_HORIZONTAL | wx.NO_BORDER | wx.TB_FLAT)
         
-        
         tsize = (24,24)
         new_bmp = images.Icone_excel.GetBitmap()
-#        open_bmp = wx.ArtProvider.GetBitmap(wx.ART_FILE_OPEN, wx.ART_TOOLBAR, tsize)
-#        save_bmp =  wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE, wx.ART_TOOLBAR, tsize)
-#        saveas_bmp = wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE_AS, wx.ART_TOOLBAR, tsize)
         
         self.tb.SetToolBitmapSize(tsize)
         
         self.tb.AddLabelTool(10, u"Exporter", new_bmp, 
-                             shortHelp=u"Exporter le bilan dans un fichier Excel", 
-                             longHelp=u"Exporter le bilan dans un fichier Excel")
+                             shortHelp=u"Exporter la synthèse dans un fichier Excel", 
+                             longHelp=u"Exporter la synthèse dans un fichier Excel")
         
-
-#        self.tb.AddLabelTool(11, u"Ouvrir", open_bmp, 
-#                             shortHelp=u"Ouverture d'un fichier séquence ou projet", 
-#                             longHelp=u"Ouverture d'un fichier séquence ou projet")
-#        
-#        self.tb.AddLabelTool(12, u"Enregistrer", save_bmp, 
-#                             shortHelp=u"Enregistrement du document courant sous son nom actuel", 
-#                             longHelp=u"Enregistrement du document courant sous son nom actuel")
-#        
-#
-#        self.tb.AddLabelTool(13, u"Enregistrer sous...", saveas_bmp, 
-#                             shortHelp=u"Enregistrement du document courant sous un nom différent", 
-#                             longHelp=u"Enregistrement du document courant sous un nom différent")
-        
-        self.Bind(wx.EVT_TOOL, self.commandeExporter, id=10)
-#        self.Bind(wx.EVT_TOOL, self.commandeOuvrir, id=11)
-#        self.Bind(wx.EVT_TOOL, self.commandeEnregistrer, id=12)
-#        self.Bind(wx.EVT_TOOL, self.commandeEnregistrerSous, id=13)
-#        
+        self.Bind(wx.EVT_TOOL, self.commandeExporter, id=10)    
         
         
         #################################################################################################################
@@ -11163,7 +11345,7 @@ class FenetreBilan(wx.Frame):
     def commandeExporter(self, event = None):
         mesFormats = "Fichier Excel|*.xlsx"
         dlg = wx.FileDialog(self, 
-                            message = u"Enregistrement du bilan", 
+                            message = u"Enregistrement de la synthèse", 
                             defaultFile="", wildcard=mesFormats, 
                             style=wx.SAVE|wx.OVERWRITE_PROMPT|wx.CHANGE_DIR
                             )
@@ -11173,12 +11355,12 @@ class FenetreBilan(wx.Frame):
             dlg.Destroy()
             ok = self.enregistrer(path)
             if ok:
-                dlg = wx.MessageDialog(self, u"Export du bilan réussi !", u"Export du bilan réussi",
+                dlg = wx.MessageDialog(self, u"Export de la synthèse réussi !", u"Export de la synthèse réussi",
                            wx.OK | wx.ICON_INFORMATION)
                 dlg.ShowModal()
                 dlg.Destroy()
             else:
-                dlg = wx.MessageDialog(self, u"L'export du bilan a échoué !", u"Echec de l'export du bilan",
+                dlg = wx.MessageDialog(self, u"L'export de la synthèse a échoué !", u"Echec de l'export de la synthèse",
                            wx.OK | wx.ICON_WARNING)
                 dlg.ShowModal()
                 dlg.Destroy()
@@ -11222,14 +11404,17 @@ class FenetreBilan(wx.Frame):
         
         listePrem = []
         listeTerm = []
-        for i, seq in enumerate(self.lstSeq):
+
+        
+        for i in range(self.listeSeq.listeSeq.GetItemCount()):
+            seq = self.listeSeq.GetSequence(i)
             if seq.position >= 4:
                 listeTerm.append(seq)
             else:
                 listePrem.append(seq)
         
-        listePrem = sorted(listePrem, key=lambda s: s.intitule)
-        listeTerm = sorted(listeTerm, key=lambda s: s.intitule)
+#        listePrem = sorted(listePrem, key=lambda s: s.intitule)
+#        listeTerm = sorted(listeTerm, key=lambda s: s.intitule)
         
         listeSystemes = []
         for i, seq in enumerate(listePrem + listeTerm):
@@ -11241,10 +11426,11 @@ class FenetreBilan(wx.Frame):
                 c = cct + i - len(listePrem)
                 cs = cst + i - len(listePrem)
                 
+            print seq.intitule, str(seq.GetDuree()), seq.nomFichier, i
             tableau.setCell(feuilleP, lcp, c, seq.intitule)
             tableau.setCell(feuilleP, ldp, c, str(seq.GetDuree()))
-            tableau.setLink(feuilleP, lcp, c, self.listFichiers[i])
-            tableau.setCell(feuilleP, lcp-1, c, i)
+            tableau.setLink(feuilleP, lcp, c, seq.nomFichier)
+            tableau.setCell(feuilleP, lcp-1, c, i+1)
             
             for sav in seq.obj["S"].savoirs:
                 if sav in constantes.dicCellSavoirs[self.typeEnseignement].keys():
@@ -11308,6 +11494,7 @@ class FenetreBilan(wx.Frame):
         for c, e in constantes.Enseigmenent.items():
             if e[0] == self.cb_type.GetItemLabel(event.GetInt()):
                 self.typeEnseignement = c
+                self.MiseAJourListe()
                 break
         
         
@@ -11347,44 +11534,29 @@ class FenetreBilan(wx.Frame):
                 self.dossiersOk = False
                 break
     
-    ########################################################################################################
-    def OnResize(self, event=None):
-        height = 30
-        for indx in xrange(self.listeSeq.GetItemCount()):
-            height += self.listeSeq.GetItemRect(indx).height
-        self.listeSeq.SetMinSize((-1, height))
-        
+    
+
+
+
         
     ########################################################################################################
-    def MiseAJourListe(self):
-        self.listeSeq.ClearAll()
-        self.listeSeq.InsertColumn(0, u"Fichier séquence")
-        self.listeSeq.InsertColumn(1, u"Dossier")
-        
+    def MiseAJourListe(self):       
         if self.dossiersOk:
+            wx.BeginBusyCursor()
             l = []
             for dossier in self.dossiers:
                 l.extend(glob.glob(os.path.join(dossier, "*.seq")))
                 
-            self.listFichiers = []
-            self.lstClasse = []
-            self.lstSeq = []
+            listSequences = []
+
             for i, f in enumerate(l):
                 classe, sequence = self.OuvrirFichierSeq(f)
                 if classe != None and classe.typeEnseignement == self.typeEnseignement:
-                    self.lstClasse.append(classe)
-                    self.lstSeq.append(sequence)
-                    self.listFichiers.append(f)
-                    d, f = os.path.split(f)
-                    f = os.path.splitext(f)[0]
-                    pos = self.listeSeq.InsertStringItem(i, f)
-                    self.listeSeq.SetStringItem(pos, 1, d)
-                
-        self.listeSeq.SetColumnWidth(0, wx.LIST_AUTOSIZE)
-        self.listeSeq.SetColumnWidth(1, wx.LIST_AUTOSIZE)
-        self.listeSeq.Layout()
-        self.OnResize()
-        self.Fit()
+                    sequence.nomFichier = f
+                    listSequences.append(sequence)
+            
+            self.listeSeq.MiseAJourListe(listSequences)
+            wx.EndBusyCursor()
         
     ########################################################################################################
     def OuvrirFichierSeq(self, nomFichier):
