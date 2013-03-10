@@ -40,7 +40,7 @@ Copyright (C) 2011-2013
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "3.16"
+__version__ = "3.17"
 
 #from threading import Thread
 
@@ -11160,8 +11160,15 @@ class PanelListe(wx.Panel, listmix.ColumnSorterMixin):
     
     ########################################################################################################
     def OnDoubleClick(self, event=None):
-        nomFichier = self.fen.listFichiers[self.currentItem]
-        self.fen.ouvrir(nomFichier)
+#        item = self.listeSeq.GetItem(self.currentItem)
+#        nomFichier = self.listeSeq.GetItemData(self.currentItem)
+#        print nomFichier
+#        nomFichier =nomFichier[2].nomFichier
+        nomFichier = self.GetSequence(self.currentItem).nomFichier
+#        nomFichier = self.listeSeq[self.currentItem].nomFichier
+#        nomFichier = self.fen.listFichiers[self.currentItem]
+#        print nomFichier
+        self.fen.Parent.ouvrir(nomFichier)
         event.Skip()
         
     ########################################################################################################
@@ -11548,13 +11555,13 @@ class FenetreBilan(wx.Frame):
                 l.extend(glob.glob(os.path.join(dossier, "*.seq")))
                 
             listSequences = []
-
+            self.listFichiers = []
             for i, f in enumerate(l):
                 classe, sequence = self.OuvrirFichierSeq(f)
                 if classe != None and classe.typeEnseignement == self.typeEnseignement:
                     sequence.nomFichier = f
                     listSequences.append(sequence)
-            
+                    self.listFichiers.append(f)
             self.listeSeq.MiseAJourListe(listSequences)
             wx.EndBusyCursor()
         
