@@ -2648,7 +2648,7 @@ class Savoirs(Objet_sequence):
     
     ######################################################################################  
     def GetIntit(self, num):
-        return constantes.getSavoir(self.parent, self.GetCode(num))  
+        return constantes.getSavoir(self.parent.classe.typeEnseignement, self.GetCode(num))  
     
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
@@ -5230,6 +5230,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
         if child != None:
             wx.CallAfter(child.Show)
+        
         return child
         
     ###############################################################################################
@@ -5239,7 +5240,8 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             if not nomFichier in self.GetNomsFichiers():
                 wx.BeginBusyCursor()
                 child = self.commandeNouveau(ext = ext)
-                child.ouvrir(nomFichier)
+                if child != None:
+                    child.ouvrir(nomFichier)
                 wx.CallAfter(wx.EndBusyCursor)
             else:
                 child = self.GetChild(nomFichier)
@@ -5904,6 +5906,9 @@ class FenetreSequence(FenetreDocument):
         
     ###############################################################################################
     def ouvrir(self, nomFichier, redessiner = True):
+        if not os.path.isfile(nomFichier):
+            return
+        
         self.Freeze()
         fichier = open(nomFichier,'r')
         self.definirNomFichierCourant(nomFichier)
@@ -11160,14 +11165,7 @@ class PanelListe(wx.Panel, listmix.ColumnSorterMixin):
     
     ########################################################################################################
     def OnDoubleClick(self, event=None):
-#        item = self.listeSeq.GetItem(self.currentItem)
-#        nomFichier = self.listeSeq.GetItemData(self.currentItem)
-#        print nomFichier
-#        nomFichier =nomFichier[2].nomFichier
         nomFichier = self.GetSequence(self.currentItem).nomFichier
-#        nomFichier = self.listeSeq[self.currentItem].nomFichier
-#        nomFichier = self.fen.listFichiers[self.currentItem]
-#        print nomFichier
         self.fen.Parent.ouvrir(nomFichier)
         event.Skip()
         
@@ -11555,13 +11553,13 @@ class FenetreBilan(wx.Frame):
                 l.extend(glob.glob(os.path.join(dossier, "*.seq")))
                 
             listSequences = []
-            self.listFichiers = []
+         
             for i, f in enumerate(l):
                 classe, sequence = self.OuvrirFichierSeq(f)
                 if classe != None and classe.typeEnseignement == self.typeEnseignement:
                     sequence.nomFichier = f
                     listSequences.append(sequence)
-                    self.listFichiers.append(f)
+                  
             self.listeSeq.MiseAJourListe(listSequences)
             wx.EndBusyCursor()
         

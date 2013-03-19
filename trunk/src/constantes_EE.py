@@ -34,7 +34,7 @@
 ####################################################################################
 Enseigmenent = [u"STI2D-EE", u"STI2D : Energies et Environnement"]
 
-CentresInterets = [u"Typologie des sytèmes énergétiques",
+CentresInterets = [u"Typologie des systèmes énergétiques",
                        u"Production d'énergie",
                        u"Transport, stockage et distribution de l'énergie et réseaux spécifiques",
                        u"Efficacité énergétique passive",
