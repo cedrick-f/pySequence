@@ -1746,12 +1746,16 @@ class Projet(BaseDoc, Objet_sequence):
         
     ######################################################################################  
     def SetPosition(self, pos):
+        # On passe à la position 5
         if pos == 5 and self.position != 5:
-            lst = self.getTachesRevue()
-            for t in lst:
-                self.AjouterTache(tache = t)
-                t.SetCode()
+            self.taches.extend(self.creerTachesRevue())
+            self.OrdonnerTaches()
+#            lst = self.getTachesRevue()
+#            for t in lst:
+#                self.AjouterTache(tache = t)
+#                t.SetCode()
                 
+        # On passe de la position5 à une autre
         elif pos !=5 and self.position == 5:
             lst = []
             for t in self.taches:
@@ -1759,6 +1763,7 @@ class Projet(BaseDoc, Objet_sequence):
                     lst.append(t.branche)
             for a in lst:
                 self.SupprimerTache(item = a)
+        
         self.position = pos
         
         if hasattr(self, 'panelPropriete'):

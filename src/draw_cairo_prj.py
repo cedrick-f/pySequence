@@ -789,31 +789,31 @@ def Draw(ctx, prj, mouchard = False):
 #    print "taches", time.time() - tps
     
     #
-    # Durées élève entre revues
+    # Durées élève entre revues (uniquement en période "terminale"
     #
 #    tps = time.time()
-    y0 = posZTaches[1]
-    y3 = y1+2*ecartTacheY + 0.015
-    md1 = md2 = 0
-    for i, e in enumerate(prj.eleves):
-        md1 = max(e.GetDuree("R1"), md1)
-        md2 = max(e.GetDuree("R2"), md2)
-        
-        
-    for i, e in enumerate(prj.eleves):
-        d1 = e.GetDuree("R1")
-        d2 = e.GetDuree("R2")
-        Ic = constantes.COUL_ELEVES[i][0]
-        ctx.set_source_rgb(Ic[0],Ic[1],Ic[2])
-        ctx.set_line_width(0.005)
-        if md1 > 0:
-            ctx.move_to(xEleves[i], y0)
-            ctx.line_to(xEleves[i], y0+(y1-y0)*d1/md1)
-            ctx.stroke()
-        if md2 > 0:
-            ctx.move_to(xEleves[i], y3)
-            ctx.line_to(xEleves[i], y3+(y2-y3)*d2/md2)
-            ctx.stroke()
+    if prj.position == 5:
+        y0 = posZTaches[1]
+        y3 = y1+2*ecartTacheY + 0.015
+        md1 = md2 = 0
+        for i, e in enumerate(prj.eleves):
+            md1 = max(e.GetDuree("R1"), md1)
+            md2 = max(e.GetDuree("R2"), md2)
+            
+        for i, e in enumerate(prj.eleves):
+            d1 = e.GetDuree("R1")
+            d2 = e.GetDuree("R2")
+            Ic = constantes.COUL_ELEVES[i][0]
+            ctx.set_source_rgb(Ic[0],Ic[1],Ic[2])
+            ctx.set_line_width(0.005)
+            if md1 > 0:
+                ctx.move_to(xEleves[i], y0)
+                ctx.line_to(xEleves[i], y0+(y1-y0)*d1/md1)
+                ctx.stroke()
+            if md2 > 0:
+                ctx.move_to(xEleves[i], y3)
+                ctx.line_to(xEleves[i], y3+(y2-y3)*d2/md2)
+                ctx.stroke()
     
 #    print "durées", time.time() - tps
     
