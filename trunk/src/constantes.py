@@ -88,6 +88,9 @@ print "Dossier d'installation :", INSTALL_PATH
 PORTABLE = not(os.path.abspath(INSTALL_PATH) == os.path.abspath(PATH))
 
 
+TABLE_PATH = os.path.join(os.path.abspath(os.path.join(PATH, os.pardir)), 'tables')
+print "Dossier des tableaux Excel :", TABLE_PATH
+
 if not PORTABLE: # Ce n'est pas une version portable qui tourne
     # On lit la clef de registre indiquant le type d'installation
     try: # Machine 32 bits

@@ -40,7 +40,7 @@ Copyright (C) 2011-2013
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "3.17"
+__version__ = "3.18"
 
 #from threading import Thread
 
@@ -127,8 +127,8 @@ from widgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_ENTI
 
 # Les constantes partagées
 from constantes import calculerEffectifs, revCalculerEffectifs, PATH, findEffectif, \
-                        strEffectifComplet, strEffectif, getElementFiltre, COUL_OK, COUL_NON, COUL_BOF, COUL_BIEN, \
-                        toList, toTxt, estCompetenceRevue, COUL_COMPETENCES
+                        strEffectifComplet, getElementFiltre, COUL_OK, COUL_NON, COUL_BOF, COUL_BIEN, \
+                        toList, COUL_COMPETENCES, TABLE_PATH
 import constantes
 import constantes_ETT
 
@@ -4586,6 +4586,7 @@ class Eleve(Personne, Objet_sequence):
         r = s = 0
         
         dicPoids = constantes.dicPoidsIndicateurs[self.GetTypeEnseignement()]
+#        print dicPoids
         dicIndicateurs = self.GetDicIndicateurs()
         tousIndicateurs = constantes.dicIndicateurs[self.GetTypeEnseignement()]
 #        print "   ", dicIndicateurs
@@ -6140,7 +6141,7 @@ class FenetreProjet(FenetreDocument):
         
         def getNomFichier(prefixe, eleve, projet):
             nomFichier = prefixe+"_"+eleve.GetNomPrenom()+"_"+projet.intitule[:20]
-            for c in ["\"", "/", "\", ", "?", "<", ">", "|", ":"]:
+            for c in ["\"", "/", "\", ", "?", "<", ">", "|", ":", "."]:
                 nomFichier = nomFichier.replace(c, "_")
             return nomFichier
 
@@ -11381,7 +11382,7 @@ class FenetreBilan(wx.Frame):
     def enregistrer(self, nomFichier):
         fichierPP = constantes.fichierProgressionProgramme[self.typeEnseignement]
         try:
-            tableau = grilles.PyExcel(os.path.join(PATH, fichierPP))
+            tableau = grilles.PyExcel(os.path.join(TABLE_PATH, fichierPP))
         except:
             print fichierPP, "est déja ouvert !"
             return False
@@ -11568,6 +11569,8 @@ class FenetreBilan(wx.Frame):
             self.listeSeq.MiseAJourListe(listSequences)
             wx.EndBusyCursor()
         
+        
+        
     ########################################################################################################
     def OuvrirFichierSeq(self, nomFichier):
         fichier = open(nomFichier,'r')
@@ -11591,6 +11594,9 @@ class FenetreBilan(wx.Frame):
 #            fichier.close()
 #            self.Close()
             return None, None
+                
+                
+                
                 
 ##########################################################################################################
 #
@@ -11652,6 +11658,11 @@ class DirSelectorCombo(wx.combo.ComboCtrl):
     # Overridden from ComboCtrl to avoid assert since there is no ComboPopup
     def DoSetPopupControl(self, popup):
         pass
+
+
+
+
+
 #############################################################################################################
 #
 # A propos ...

@@ -42,6 +42,10 @@ from wx.lib.embeddedimage import PyEmbeddedImage
 
 from constantes import NOM_PHASE_TACHE, TypesSeanceCourt
 
+import win32clipboard
+import random
+import time
+
 #StyleText = {}
 #Couleur = {}
 #def charger_styleText():
@@ -842,6 +846,35 @@ class RapportRTF(rt.RichTextCtrl):
             self.Newline()
            
             tache.panelPropriete.rtc.rtc.SelectAll()
+            
+            #
+            # Procédure pour vérifier que le clipboard est disponible
+            # (source http://teachthe.net/?cat=56&paged=2)
+            #
+            cbOpened = False
+            while not cbOpened:
+                try:
+                    win32clipboard.OpenClipboard(0)
+                    cbOpened = True
+                    win32clipboard.CloseClipboard()
+                except Exception, err:
+                    print "error"
+                    # If access is denied, that means that the clipboard is in use.
+                    # Keep trying until it's available.
+                    if err[0] == 5:  #Access Denied
+                        pass
+                        print 'waiting on clipboard...'
+                        # wait on clipboard because something else has it. we're waiting a
+                        # random amount of time before we try again so we don't collide again
+                        time.sleep( random.random()/50 )
+                    elif err[0] == 1418:  #doesn't have board open
+                        pass
+                    elif err[0] == 0:  #open failure
+                        pass
+                    else:
+                        print 'ERROR in Clipboard section of readcomments: %s' % err
+                        pass
+
             tache.panelPropriete.rtc.rtc.Copy()
             self.Paste()
             
