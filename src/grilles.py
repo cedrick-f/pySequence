@@ -177,8 +177,9 @@ def getTableau(parent, doc):
         fichiersS = Fichier_GRILLE['ET']
     
     fichierPB = []
+    
     def ouvrir(fichier):
-        fichier = os.path.join(PATH, fichier)
+        fichier = os.path.join(TABLE_PATH, fichier)
         tableau = None
         err = 0
         if os.path.isfile(fichier):
@@ -252,7 +253,9 @@ def modifierGrille(doc, tableur, eleve):
                         else:
                             t = tableur[0]
                         t.setCell(2, l, c, COCHE)
-        
+                if doc.GetTypeEnseignement(simple = True) == "SSI" and dicIndicateurs['SSI'][comp][j][1]:
+                    l, c = cell
+                    tableur.setColor(feuille, l, c, 5)
         
 #    for comp, ii in eleve.GetDicIndicateurs().items():
 #        for j, indic in enumerate(ii):
@@ -421,6 +424,13 @@ class PyExcel:
         ran=sht.Range(sht.Cells(row1,col1),sht.Cells(row2,col2))
         print ran
         ran.Borders.Weight=weight
+        
+        
+    def setColor(self,sheet,row,col,color):
+        sht = self.xlBook.Worksheets(sheet)
+        print sht.Cells(row, col).Interior.ColorIndex
+        # Feuille vérrouillé : modification impossible !
+        #sht.Cells(row, col).Interior.ColorIndex = color
  
     def insertPasteCol(self, sheet, col):
         sht = self.xlBook.Worksheets(sheet)

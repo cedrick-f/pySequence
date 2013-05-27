@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Sequence.py
-Aide à la réalisation de fiches p�dagogiques de séquence
+Aide à la réalisation de fiches pédagogiques de séquence
 *************
 *   STIDD   *
 *************

@@ -409,15 +409,15 @@ dicIndicateurs_prj = {"B3" : [[u"Les paramètres influents sont identifiés", Tr
                           "C1" : [[u"Les grandeurs spécifiques (d'entrée, sortie, matière d'œuvre…) sont correctement identifiées", True],
                                   [u"Les éléments de la chaîne sont correctement identifiés ", True],
                                   [u"Les choix et réglages des capteurs et appareils de mesure sont correctement explicités", True],
-                                  [u"Le comportement est précisément décrit", True],
-                                  [u"Un protocole expérimental adapté de recueil de résultats est conçu ou complété, validé et mis en œuvre", False]],
+                                  [u"Le comportement est précisément décrit", False],
+                                  [u"Un protocole expérimental adapté de recueil de résultats est conçu ou complété, validé et mis en œuvre", True]],
                           "C2" : [[u"Les capteurs et appareils de mesure sont correctement mis en œuvre", True],
                                   [u"Le système étudié est correctement mis en œuvre", True],
                                   [u"Les règles de sécurité sont connues et respectées", True],
                                   [u"Le protocole d'essai est respecté", True],
                                   [u"Les résultats sont présentés clairement", True],
-                                  [u"Les résultats sont correctement analysés", True],
-                                  [u"Les méthodes et outils de traitement sont cohérents avec le problème posé", False]],
+                                  [u"Les résultats sont correctement analysés", False],
+                                  [u"Les méthodes et outils de traitement sont cohérents avec le problème posé", True]],
                           "D1" : [[u"Les outils de recherche documentaire sont bien choisis", False],
                                   [u"Les techniques de recherche documentaire sont maîtrisées", False],
                                   [u"Les informations conservées sont opportunes", False],
@@ -436,16 +436,16 @@ dicIndicateurs_prj = {"B3" : [[u"Les paramètres influents sont identifiés", Tr
 #
 #################################################################################################################################
 dicPoidsIndicateurs_prj = {"B" : [40, 
-                                      {"B3" : [20,20],
-                                       "B4" : [15,15,15,15]}],
-                               "C" : [40,
-                                      {"C1" : [8,8,7,10,5],
-                                       "C2" : [8,8,8,9,10,9,10]}],
-                               "D" : [20, 
-                                      {"D1" : [10,5,5,10],
-                                       "D2" : [20,10,20,20],
-                                        }]
-                               }
+                                  {"B3" : [20,20],
+                                   "B4" : [15,15,15,15]}],
+                           "C" : [40,
+                                  {"C1" : [8,8,7,5,10],
+                                   "C2" : [8,8,8,10,9,10,9]}],
+                           "D" : [20, 
+                                  {"D1" : [10,5,5,10],
+                                   "D2" : [20,10,20,20],
+                                    }]
+                           }
 
 #################################################################################################################################
 #
