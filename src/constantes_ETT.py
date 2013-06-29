@@ -258,7 +258,7 @@ dicIndicateurs_prj = {"CO1.1" : [[u"La justification des propriétés physico-ch
                                     [u"L'expression est claire et rigoureuse", False],
                                     [u"Le vocabulaire nécessaire est maîtrisé", False]
                                    ],
-                         "CO8.es" : [[u"Les paramètres du modèle sont justifiés", False],
+                         "CO8.0" : [[u"Les paramètres du modèle sont justifiés", False],
                                      [u"Leurs influences respectives sont explicitées", False],
                                      [u"La limite d'utilisation du modèle est justifiée", False],
                                      [u"Les variables mesurées sont pertinentes", False],
@@ -282,7 +282,7 @@ dicPoidsIndicateurs_prj = {"O1" : [20,
                                        "CO6.2" : [8,8,10],
                                        "CO6.3" : [8,10,10,10,10]}],
                               "O8s" : [20,
-                                       {"CO8.es" : [20,15,15,20,30]}]
+                                       {"CO8.0" : [20,15,15,20,30]}]
                               }
 
 #################################################################################################################################
@@ -299,7 +299,7 @@ Cellules_NON =  {"CO1.1"  : [(5,4), (6,4), (7,4), (8,4), (9,4)],
                      "CO6.1"  : [(24,4), (25,4), (26,4)],
                      "CO6.2"  : [(27,4), (28,4), (29,4)],
                      "CO6.3"  : [(30,4), (31,4), (32,4), (33,4), (34,4)],
-                     "CO8.es" : [(36,4), (37,4), (38,4), (39,4), (40,4)]
+                     "CO8.0" : [(36,4), (37,4), (38,4), (39,4), (40,4)]
                      }
 
 #################################################################################################################################
