@@ -506,7 +506,9 @@ def getCompetencesProjet(dic):
 
     d.update(dic)
     d.update({"O8s" : [u"Valider des solutions techniques",
-                       {"CO8.es" : u"Justifier des éléments d'une simulation relative au comportement de tout ou partie d'un système et les écarts par rapport au réel"}]})
+                       {"CO8.0" : u"Justifier des éléments d'une simulation relative au comportement de tout ou partie d'un système et les écarts par rapport au réel"}]})
+#    d["O8"][1].update({"CO8.0" : u"Justifier des éléments d'une simulation relative au comportement de tout ou partie d'un système et les écarts par rapport au réel"})
+
     return d
 
 dicCompetences_prj = {}    
@@ -561,24 +563,6 @@ for t in EnseignementsProjet:
     NRB_COEF_COMP_S[t] = 0
     NRB_COEF_COMP_R[t] = 0
     
-#NRB_COEF_COMP_S = {'ITEC'   : 0, # Nombres de coef pour les compétences "Soutenance"
-#                   'AC'     : 0, 
-#                   'EE'     : 0, 
-#                   'SIN'    : 0,
-#                   'SSI'    : 0}     
-#
-#NRB_COEF_COMP_R = {'ITEC'   : 0, # Nombres de coef pour les compétences "Revue"
-#                   'AC'     : 0, 
-#                   'EE'     : 0, 
-#                   'SIN'    : 0,
-#                   'SSI'    : 0}     
-           
-
-#dicPoidsIndicateurs = {'ITEC'   : dicPoidsIndicateurs_prj_ITEC, 
-#                       'AC'     : dicPoidsIndicateurs_prj_AC, 
-#                       'EE'     : dicPoidsIndicateurs_prj_EE, 
-#                       'SIN'    : dicPoidsIndicateurs_prj_SIN, 
-#                       'SSI'    : dicPoidsIndicateurs_prj_SSI}
 
 for e, i in dicPoidsIndicateurs.items():
     if e != "SSI":

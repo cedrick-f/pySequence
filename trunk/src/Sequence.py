@@ -40,7 +40,7 @@ Copyright (C) 2011-2013
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "3.18"
+__version__ = "3.19"
 
 #from threading import Thread
 
@@ -370,8 +370,7 @@ class Lien():
         self.type = branche.get("TypeLien", "")
         if self.type == "" and self.path != "":
             self.EvalTypeLien(pathseq)
-            
-
+        return True
 
     
 ####################################################################################
@@ -715,6 +714,7 @@ class Classe():
     
     ######################################################################################  
     def setBranche(self, branche):
+        Ok = True
 #        print "setBranche classe",
         self.typeEnseignement = branche.get("Type", "ET")
         
@@ -762,6 +762,7 @@ class Classe():
         
             self.doc.MiseAJourTypeEnseignement()
         
+        return Ok
         
         
     ######################################################################################  
@@ -1673,6 +1674,7 @@ class Projet(BaseDoc, Objet_sequence):
         
     ######################################################################################  
     def setBranche(self, branche):
+        Ok = True
        
         self.intitule = branche.get("Intitule", u"")
 
@@ -1688,18 +1690,18 @@ class Projet(BaseDoc, Objet_sequence):
         self.equipe = []
         for i,e in enumerate(list(brancheEqu)):
             prof = Prof(self, self.panelParent)
-            prof.setBranche(e)
+            Ok = Ok and prof.setBranche(e)
             self.equipe.append(prof)
 
         brancheSup = branche.find("Support")
         if brancheSup != None:
-            self.support.setBranche(brancheSup)
+            Ok = Ok and self.support.setBranche(brancheSup)
         
         brancheEle = branche.find("Eleves")
         self.eleves = []
         for i,e in enumerate(list(brancheEle)):
             eleve = Eleve(self, self.panelParent)
-            eleve.setBranche(e)
+            Ok = Ok and eleve.setBranche(e)
             self.eleves.append(eleve)
         
         #
@@ -1726,7 +1728,7 @@ class Projet(BaseDoc, Objet_sequence):
                     num = 2
                 else:
                     num = eval(phase[1])-1
-                tachesRevue[num].setBranche(e)
+                Ok = Ok and tachesRevue[num].setBranche(e)
                 self.taches.append(tachesRevue[num])
                 adapterVersion = False
             else:
@@ -1742,7 +1744,7 @@ class Projet(BaseDoc, Objet_sequence):
         if hasattr(self, 'panelPropriete'):
             self.panelPropriete.MiseAJour()
 
-        
+        return Ok
         
     ######################################################################################  
     def SetPosition(self, pos):
@@ -3695,9 +3697,9 @@ class Tache(Objet_sequence):
         
     ######################################################################################  
     def setBranche(self, branche):
-#        print "setBranche tache"
+        Ok = True
         self.ordre = eval(branche.tag[5:])
-        
+#        print "setBranche tache", self.ordre
         self.intitule  = branche.get("Intitule", "")
         
         self.phase = branche.get("Phase", "")
@@ -3725,11 +3727,14 @@ class Tache(Objet_sequence):
             #
             brancheCmp = branche.find("Competences")
             if brancheCmp != None: ## ANCIENNE VERSION (<beta6)
+                Ok = False
+#                print "ancien"
                 if self.GetTypeEnseignement() == "SSI":
                     brancheInd = None
                 else:
                     brancheInd = branche.find("Indicateurs")
                 for i, e in enumerate(brancheCmp.keys()):
+                    print i,e
                     if brancheInd != None: #STI2D
                         i = eval(e[4:])
                         indic = brancheInd.get("Indic"+str(i))
@@ -3750,6 +3755,12 @@ class Tache(Objet_sequence):
                     for i, e in enumerate(brancheInd.keys()):
                         codeindic = brancheInd.get(e)
                         code, indic = codeindic.split('_')
+                        
+                        # pour compatibilité version < 3.19
+                        if code == "CO8.es":
+                            code = "CO8.0"
+                            codeindic = code+"_"+indic
+                            
                         indic = eval(indic)-1
                         if self.phase != 'XXX' or not constantes.dicIndicateurs[self.GetTypeEnseignement()][code][indic][1]:
                             self.indicateurs.append(codeindic)
@@ -3758,6 +3769,8 @@ class Tache(Objet_sequence):
             
         self.intituleDansDeroul = eval(branche.get("IntituleDansDeroul", "True"))
         
+        return Ok
+    
 #        if hasattr(self, 'panelPropriete'):
 #            self.panelPropriete.ConstruireListeEleves()
 #            self.panelPropriete.MiseAJourDuree()
@@ -4239,9 +4252,10 @@ class Support(ElementDeSequence, Objet_sequence):
     
     ######################################################################################  
     def setBranche(self, branche):
+        Ok = True
         self.nom  = branche.get("Nom", "")
         self.description = branche.get("Description", None)
-        self.lien.setBranche(branche, self.GetPath())
+        Ok = Ok and self.lien.setBranche(branche, self.GetPath())
 
         data = branche.get("Image", "")
         if data != "":
@@ -4250,7 +4264,8 @@ class Support(ElementDeSequence, Objet_sequence):
         if hasattr(self, 'panelPropriete'):
             self.panelPropriete.SetImage()
             self.panelPropriete.MiseAJour()
-
+        
+        return Ok
     
     ######################################################################################  
     def GetPtCaract(self): 
@@ -4407,6 +4422,7 @@ class Personne(Objet_sequence):
     
     ######################################################################################  
     def setBranche(self, branche):
+        Ok = True
         self.id  = eval(branche.get("Id", "0"))
         self.nom  = branche.get("Nom", "")
         self.prenom  = branche.get("Prenom", "")
@@ -4423,6 +4439,8 @@ class Personne(Objet_sequence):
         if hasattr(self, 'panelPropriete'):
             self.panelPropriete.SetImage()
             self.panelPropriete.MiseAJour()
+        
+        return Ok
 
     ######################################################################################  
     def GetPtCaract(self): 
@@ -4596,10 +4614,11 @@ class Eleve(Personne, Objet_sequence):
                 if comp in dicIndicateurs.keys():
                     for i, indic in enumerate(dicIndicateurs[comp]):
                         if indic:
+                            p = 1.0*poidsIndic[i]/100 * poidsGrp/100
                             if tousIndicateurs[comp][i][1]:     # revue
-                                r += 1.0*poidsIndic[i]/100 * poidsGrp/100
+                                r += p
                             else:
-                                s += 1.0*poidsIndic[i]/100 * poidsGrp/100
+                                s += p
         
         if self.GetTypeEnseignement() == "SSI":
             r, s = r*2, s*2
@@ -6078,6 +6097,8 @@ class FenetreProjet(FenetreDocument):
         self.Freeze()
         fichier = open(nomFichier,'r')
         self.definirNomFichierCourant(nomFichier)
+        
+        Ok = True
         try:
             root = ET.parse(fichier).getroot()
             
@@ -6089,23 +6110,25 @@ class FenetreProjet(FenetreDocument):
             else:
                 # La classe
                 classe = root.find("Classe")
-                self.classe.setBranche(classe)
-                self.projet.setBranche(projet)  
+                Ok = Ok and self.classe.setBranche(classe)
+                Ok = Ok and self.projet.setBranche(projet)  
                 
             self.arbre.DeleteAllItems()
             root = self.arbre.AddRoot("")
             self.projet.SetCompetencesRevuesSoutenance()
             
         except:
+            Ok = False
+        
+        if not Ok:
             messageErreur(self, u"Erreur d'ouverture",
                           u"Le projet\n    %s\nn'a pas pu être ouvert !" \
                           u"\n\nIl s'agit peut-être d'un fichier d'une ancienne version de pySequence." %nomFichier,
                                )
             fichier.close()
             self.Close()
-#            wx.EndBusyCursor()
             return
-
+        
         self.classe.ConstruireArbre(self.arbre, root)
         self.projet.ConstruireArbre(self.arbre, root)
         self.projet.OrdonnerTaches()
@@ -7253,6 +7276,7 @@ class PanelPropriete_Classe(PanelPropriete):
 #                self.txtCi.ChangeValue(ci)
                 if ls != None:
                     self.classe.ci_ET = ls
+                    self.classe.posCI_ET = ['']*len(ls)
                     self.MiseAJour()
                     self.sendEvent()
             elif res == wx.ID_NO:
