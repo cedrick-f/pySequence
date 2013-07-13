@@ -298,6 +298,9 @@ listeDemarches = ["I", "R", "P"]
 listEnseigmenent = ['ET', 'ITEC', 'AC', 'EE', 'SIN', 'SSI']
 EnseignementsProjet = ['ITEC','AC', 'EE', 'SIN', 'SSI']
 
+# Le fichier contenant les CI STI2D ETT par académie
+FICHIER_CI_STI2D_ETT = "CI_STI2D_ETT.xml"
+
 ####################################################################################
 #
 #   Les constantes par Enseignement

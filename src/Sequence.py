@@ -40,7 +40,7 @@ Copyright (C) 2011-2013
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "3.19"
+__version__ = "3.20"
 
 #from threading import Thread
 
@@ -2368,6 +2368,7 @@ class CentreInteret(Objet_sequence):
         self.parent = parent
         self.numCI = []
         self.SetNum(self.numCI)
+        self.max2CI = True
         
         
         if panelParent:
@@ -2483,8 +2484,11 @@ class CentreInteret(Objet_sequence):
     
     ######################################################################################  
     def GetPosCible(self, num):
-        if constantes_ETT.PositionCibleCI != None:
-            return constantes_ETT.PositionCibleCI[self.numCI[num]]
+        if self.GetTypeEnseignement() == 'ET':
+            return self.parent.classe.posCI_ET[self.numCI[num]]
+        
+#        if constantes_ETT.PositionCibleCI != None:
+#            return constantes_ETT.PositionCibleCI[self.numCI[num]]
     
     ######################################################################################  
     def MaJArbre(self):
@@ -6975,6 +6979,11 @@ class PanelPropriete_Classe(PanelPropriete):
                              u"Sélectionner les CI depuis un fichier Excel",
                              u"Sélectionner les CI ETT depuis un fichier Excel (.xls)")
             self.Bind(wx.EVT_TOOL, self.SelectCI, id=32)
+            
+            tb.AddSimpleTool(33, images.Bouton_Aide.GetBitmap(), 
+                             u"Informations à propos de la cible CI",
+                             u"Informations à propos de la cible CI")
+            self.Bind(wx.EVT_TOOL, self.OnAide, id=33)
         
         
         self.tb = tb
@@ -6999,7 +7008,7 @@ class PanelPropriete_Classe(PanelPropriete):
             rb.ShowItem(0, False) 
         rb.SetStringSelection(constantes.Enseigmenent[self.classe.typeEnseignement][0])
             
-        self.sizer.Add(rb, (0,0), (2,1), flag = wx.EXPAND|wx.ALL)
+        self.sizer.Add(rb, (0,0), (2,1), flag = wx.ALL)#wx.EXPAND|
         self.cb_type = rb
         
         #
@@ -7054,34 +7063,23 @@ class PanelPropriete_Classe(PanelPropriete):
             self.list.Bind(wx.EVT_LEFT_UP, self.OnLeftUp)
             self.list.Bind(wx.EVT_LEFT_DOWN, self.OnLeftDown)
             self.leftDown = False
-            
-    #        txt = wx.TextCtrl(self, -1, getTextCI(self.classe.ci_ET),
-    #                          style = wx.TE_MULTILINE)
             sbs1.Add(list, 1, flag = wx.EXPAND|wx.ALL, border = 2)
-    #        txt.Bind(wx.EVT_TEXT, self.EvtTxtCI)
-    #        self.txtCi = txt
+
             if self.classe.typeEnseignement != 'ET' :
                 self.list.Enable(False)
             
-#            btn = wx.Button(self, -1, u"Sélectionner depuis un fichier Excel (.xls)")
-#            aide = u"Sélectionner depuis un fichier Excel (.xls)"
-#            btn.SetToolTip(wx.ToolTip(aide))
-#            btn.SetHelpText(aide)
-#            self.btn = btn
-#            sbs1.Add(btn, flag = wx.EXPAND|wx.ALL, border = 5)
-#            self.Bind(wx.EVT_BUTTON, self.SelectCI, btn)
             self.sizer.Add(sbs1, (0,2), (2,1), flag = wx.EXPAND|wx.ALL)    
             
             self.sizer.AddGrowableCol(2)
-            self.sizer.AddGrowableRow(0)
-        
+            self.sizer.AddGrowableRow(1)
         
         #
         # Effectifs
         #
         self.ec = PanelEffectifsClasse(self, classe)
-        self.sizer.Add(self.ec, (1,1), flag = wx.EXPAND|wx.ALL|wx.ALIGN_RIGHT)
+        self.sizer.Add(self.ec, (1,1), flag = wx.ALL|wx.ALIGN_RIGHT)#wx.EXPAND|
         
+        self.MiseAJourType()
     
     #############################################################################            
     def OnDefautPref(self, evt):
@@ -7159,12 +7157,17 @@ class PanelPropriete_Classe(PanelPropriete):
                 self.list.Enable(enable)
                 self.tb.EnableTool(31, enable)
                 self.tb.EnableTool(32, enable)
+                self.tb.EnableTool(33, enable)
             else:
                 self.list.Show(False)
 #                self.tb.Show(False)
                 self.sb1.Show(False)
-                self.tb.EnableTool(32, False)    
+                self.tb.EnableTool(32, False)   
+                self.tb.EnableTool(33, False)  
 #            self.btn.Enable(self.pasVerrouille and self.classe.typeEnseignement == 'ET')
+    
+        self.sizer.Layout()
+        self.Refresh()
             
     ######################################################################################  
     def MiseAJour(self):
@@ -7182,19 +7185,8 @@ class PanelPropriete_Classe(PanelPropriete):
         # Peuplement de la liste
         self.list.DeleteAllItems()
         for i,ci in enumerate(self.classe.ci_ET):
-#            print type(ci)
-#            print ci.encode(DEFAUT_ENCODING)
-#            ci = toDefautEncoding(ci)
-#            item = ULC.UltimateListItem()
-#            item.SetText("CI"+str(i))
             index = self.list.InsertStringItem(sys.maxint, "CI"+str(i+1))
-#            item = self.list.GetItem(i, 1)
-#            tx = wx.TextCtrl(self.list, 200+i, ci)
-#            item.SetWindow(tx)
-#            self.list.SetItem(item)
             self.list.SetStringItem(index, 1, ci)
-            
-#            w = self.list.GetColumnWidth(1)
            
             for j,p in enumerate(['M', 'E', 'I', 'F', 'S', 'C']):
                 item = self.list.GetItem(i, j+2)
@@ -7222,6 +7214,11 @@ class PanelPropriete_Classe(PanelPropriete):
                 
         event.Skip()
             
+    #############################################################################            
+    def OnAide(self, event):
+        dlg = MessageAideCI(self)
+        dlg.ShowModal()
+        dlg.Destroy()
             
     ######################################################################################  
     def OnLeftUp(self, event):
@@ -7242,20 +7239,6 @@ class PanelPropriete_Classe(PanelPropriete):
 
         event.Skip()
         
-#    ######################################################################################  
-#    def EvtTxtCI(self, event):
-#        self.classe.ci_ET =  event.GetString()
-#        if not self.eventAttente:
-#            wx.CallLater(DELAY, self.sendEvent)
-#            self.eventAttente = True
-        
-#    ######################################################################################  
-#    def EvtVariableEff(self, event):
-#        le, leff = zip(*self.varEff.items())
-#        var = event.GetVar()
-#        i = leff.index(var)
-#        self.classe.effectifs[le[i]][1] = var.v[0]
-#        self.sendEvent()
 
     ######################################################################################  
     def SelectCI(self, event = None):
@@ -7275,9 +7258,10 @@ class PanelPropriete_Classe(PanelPropriete):
 #                ci = getTextCI(ls)
 #                self.txtCi.ChangeValue(ci)
                 if ls != None:
-                    self.classe.ci_ET = ls
-                    self.classe.posCI_ET = ['']*len(ls)
+                    self.classe.ci_ET = list(ls)
+                    self.classe.posCI_ET = ['   _   ']*len(ls)
                     self.MiseAJour()
+                    self.GetDocument().CI.MiseAJourTypeEnseignement()
                     self.sendEvent()
             elif res == wx.ID_NO:
                 print "Rien" 
@@ -7288,12 +7272,9 @@ class PanelPropriete_Classe(PanelPropriete):
         if hasattr(self, 'list'):
             enable = etat and (self.classe.typeEnseignement == 'ET')
             self.list.Enable(enable)
-#            self.btn.Enable(etat and (self.classe.typeEnseignement == 'ET'))
             self.tb.EnableTool(31, enable)
             self.tb.EnableTool(32, enable)
         self.pasVerrouille = etat
-#        for c in self.GetChildren():
-#            self.Enable(etat)
 
 
 
@@ -7564,7 +7545,7 @@ class PanelPropriete_CI(PanelPropriete):
         if self.CI.GetTypeEnseignement() == 'ET': # Rajouter la condition "Clermont" !!!
             
             self.panel_cible = Panel_Cible(self, self.CI)
-            self.sizer.Add(self.panel_cible, (0,0), flag = wx.EXPAND)
+            self.sizer.Add(self.panel_cible, (0,0), (2,1), flag = wx.EXPAND)
             
             self.grid1 = wx.FlexGridSizer( 0, 2, 0, 0 )
             
@@ -7577,7 +7558,24 @@ class PanelPropriete_CI(PanelPropriete):
                 self.grid1.Add( t, 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_LEFT|wx.LEFT|wx.RIGHT, 5 )
             for radio, text in self.group_ctrls:
                 self.Bind(wx.EVT_CHECKBOX, self.OnCheck, radio )
-            self.sizer.Add(self.grid1, (0,1), flag = wx.EXPAND)
+            self.sizer.Add(self.grid1, (0,1), (2,1), flag = wx.EXPAND)
+            
+            aide = wx.BitmapButton(self, -1, images.Bouton_Aide.GetBitmap())
+            aide.SetToolTipString(u"Informations à propos de la cible CI")
+            self.sizer.Add(aide, (0,2), flag = wx.ALL, border = 2)
+            self.Bind(wx.EVT_BUTTON, self.OnAide, aide )
+            
+            b = wx.ToggleButton(self, -1, "")
+            b.SetValue(self.CI.max2CI)
+            b.SetBitmap(images.Bouton_2CI.GetBitmap())
+            b.SetToolTipString(u"Limite à 2 le nombre de CI sélectionnables")
+            self.sizer.Add(b, (1,2), flag = wx.ALL, border = 2)
+#            b.SetSize((30,30)) # adjust default size for the bitmap
+            b.SetInitialSize((32,32))
+            self.b2CI = b
+            self.Bind(wx.EVT_TOGGLEBUTTON, self.OnOption, b)
+            if not self.sizer.IsColGrowable(1):
+                self.sizer.AddGrowableCol(1)
             self.sizer.Layout()
             
         else:
@@ -7601,8 +7599,17 @@ class PanelPropriete_CI(PanelPropriete):
             
             self.sizer.Layout()
         
+    #############################################################################            
+    def OnAide(self, event):
+        dlg = MessageAideCI(self)
+        dlg.ShowModal()
+        dlg.Destroy()
 
-
+    #############################################################################            
+    def OnOption(self, event):
+        self.CI.max2CI = not self.CI.max2CI
+        self.MiseAJour()
+        
     #############################################################################            
     def OnCheck(self, event):
         button_selected = event.GetEventObject().GetId()-200 
@@ -7616,6 +7623,12 @@ class PanelPropriete_CI(PanelPropriete):
         if self.CI.GetTypeEnseignement() == 'ET':
             self.panel_cible.GererBoutons(True)
         
+        if hasattr(self, 'b2CI'):
+            if len(self.CI.numCI) > 2:
+                self.b2CI.Enable(False)
+            else:
+                self.b2CI.Enable(True)
+            
         self.Layout()
         self.sendEvent()
     
@@ -7627,6 +7640,13 @@ class PanelPropriete_CI(PanelPropriete):
             for num in self.CI.numCI:
                 self.group_ctrls[num][0].SetValue(True)
             self.Layout()
+        
+        if hasattr(self, 'b2CI'):
+            if len(self.CI.numCI) > 2:
+                self.b2CI.Enable(False)
+            else:
+                self.b2CI.Enable(True)
+            
         if sendEvt:
             self.sendEvent()
             
@@ -7682,6 +7702,7 @@ class Panel_Cible(wx.Panel):
         
 
         for i, ci in enumerate(self.CI.parent.classe.ci_ET):
+            #print self.CI.parent.classe.posCI_ET[i]
             mei, fsc = self.CI.parent.classe.posCI_ET[i].split("_")
 #            constantes.PositionCibleCIET[i].split("_")
             mei = mei.replace(" ", "")
@@ -7792,12 +7813,13 @@ class Panel_Cible(wx.Panel):
              - CI voisins sur la cible
             <appuyer> : pour initialisation : si vrai = appuie sur les boutons
         """
-        if len(self.CI.numCI) == 0:
-            l = range(16)
+#        print "GererBoutons"
+        if len(self.CI.numCI) == 0 or not self.CI.max2CI:
+            l = range(len(self.CI.parent.classe.ci_ET))
             
         elif len(self.CI.numCI) == 1:
             l = []
-            for i,p in enumerate(constantes_ETT.PositionCibleCI):
+            for i,p in enumerate(self.CI.parent.classe.posCI_ET):
                 p = p[:3].strip()
                 c = self.CI.GetPosCible(0)[:3].strip()
 
@@ -7812,6 +7834,7 @@ class Panel_Cible(wx.Panel):
         else:
             l = self.CI.numCI
             
+#        print l
                 
         for i, b in enumerate(self.bouton):
             if i in l:
@@ -11684,9 +11707,36 @@ class DirSelectorCombo(wx.combo.ComboCtrl):
         pass
 
 
+#############################################################################################################
+#
+# Message d'aide CI
+# 
+#############################################################################################################
+try:
+    from agw import genericmessagedialog as GMD
+except ImportError: # if it's not there locally, try the wxPython lib.
+    import wx.lib.agw.genericmessagedialog as GMD
 
-
-
+class MessageAideCI(GMD.GenericMessageDialog):
+    def __init__(self, parent):
+        GMD.GenericMessageDialog.__init__(self,  parent, 
+                                  u"Informations à propos de la cible CI",
+                                  u"Informations à propos de la cible CI",
+                                   wx.OK | wx.ICON_QUESTION
+                                   #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
+                                   )
+        self.SetExtendedMessage(u"Afin que tous les CI apparaissent sur la cible,\n"\
+                                  u"ils doivent cibler des domaines (MEI)\n"\
+                                  u"et des niveaux (FSC) différents.\n\n"\
+                                  u"Les CI ne pouvant pas être placés sur la cible\n"\
+                                  u"apparaitront en orbite autour de la cible (2 maxi).\n\n"\
+                                  u"Si le nombre de CI sélectionnés est limité à 2,\n"\
+                                  u"le deuxième CI sélectionnable est forcément\n"\
+                                  u"du même domaine (MEI) que le premier\n"\
+                                  u"ou bien un des CI en orbite.")
+#        self.SetHelpBitmap(help)
+        
+        
 #############################################################################################################
 #
 # A propos ...
