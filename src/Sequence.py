@@ -142,7 +142,7 @@ import register
 
 import textwrap
 
-import grilles
+import grilles, genpdf
 
 from rapport import FrameRapport, RapportRTF
 
@@ -4914,6 +4914,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         self.Bind(wx.EVT_MENU, self.exporterFiche, id=15)
         self.Bind(wx.EVT_MENU, self.exporterDetails, id=16)
         self.Bind(wx.EVT_MENU, self.genererGrilles, id=17)
+        self.Bind(wx.EVT_MENU, self.genererFicheValidation, id=19)
         self.Bind(wx.EVT_MENU, self.etablirBilan, id=18)
         self.Bind(wx.EVT_MENU, self.OnClose, id=wx.ID_EXIT)
         
@@ -5147,6 +5148,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         file_menu.Append(15, u"&Exporter la fiche (PDF ou SVG)\tCtrl+E")
         file_menu.Append(16, u"&Exporter les détails\tCtrl+D")
         file_menu.Append(17, u"&Générer les grilles d'évaluation\tCtrl+G")
+        file_menu.Append(19, u"&Générer la fiche de validation\tCtrl+V")
         file_menu.Append(18, u"&Générer une Synthèse pédagogique (SSI et ETT uniquement)\tCtrl+B")
         
         file_menu.AppendSeparator()
@@ -5349,6 +5351,12 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         page = self.GetNotebook().GetCurrentPage()
         if page != None:
             page.genererGrilles(event)
+            
+    #############################################################################
+    def genererFicheValidation(self, event = None):
+        page = self.GetNotebook().GetCurrentPage()
+        if page != None:
+            page.genererFicheValidation(event)
     
     #############################################################################
     def etablirBilan(self, event = None):
@@ -5757,6 +5765,9 @@ class FenetreDocument(aui.AuiMDIChildFrame):
     def genererGrilles(self, event = None):
         return
     
+    #############################################################################
+    def genererFicheValidation(self, event = None):
+        return
     
     #############################################################################
     def quitter(self, event = None):
@@ -6245,6 +6256,54 @@ class FenetreProjet(FenetreDocument):
         else:
             dlg.Destroy()
             
+            
+    #############################################################################
+    def genererFicheValidation(self, event = None):
+#        mesFormats = "Tableur Excel (.xls)|*.xls"
+        
+        def getNomFichier(prefixe, projet):
+            nomFichier = prefixe+"_"+projet.intitule[:20]
+            for c in ["\"", "/", "\", ", "?", "<", ">", "|", ":", "."]:
+                nomFichier = nomFichier.replace(c, "_")
+            return nomFichier+".pdf"
+        
+        
+        
+        dlg = wx.DirDialog(self, message = u"Emplacement de la fiche", 
+                            style=wx.DD_DEFAULT_STYLE|wx.CHANGE_DIR
+                            )
+#        dlg.SetFilterIndex(0)
+
+        if dlg.ShowModal() == wx.ID_OK:
+            path = dlg.GetPath()
+            dlg.Destroy()
+            
+            count = 0
+            
+            if self.projet.GetTypeEnseignement() == 'SSI':
+                pass
+            else:
+                nomFichier = getNomFichier("FicheValidation", self.projet)
+                print nomFichier
+                genpdf.genererFicheValidation(os.path.join(path, nomFichier), self.projet)
+                
+            
+#            for t, f in tf:
+#                try:
+#                    t.save(os.path.join(path, f))
+#                except:
+#                    messageErreur(self, u"Erreur !",
+#                                  u"Impossible d'enregistrer le fichier.\n\nVérifier :\n" \
+#                                  u" - qu'aucun fichier portant le même nom n'est déja ouvert\n" \
+#                                  u" - que le dossier choisi n'est pas protégé en écriture")
+#                t.close()
+#            
+#            dlgb.Update(count, u"Toutes les grilles ont été créées avec succès dans le dossier :\n\n"+path)
+#            dlgb.Destroy() 
+#                
+                
+        else:
+            dlg.Destroy()
             
             
     #############################################################################
