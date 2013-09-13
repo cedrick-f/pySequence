@@ -644,7 +644,9 @@ class Objet_sequence():
 class Classe():
     def __init__(self, app, panelParent = None, intitule = u"", pourProjet = False):
         self.intitule = intitule
-  
+        
+        self.etablissement = u""
+        
         self.options = app.options
         self.Initialise(pourProjet)
         
@@ -699,6 +701,8 @@ class Classe():
         classe = ET.Element("Classe")
         classe.set("Type", self.typeEnseignement)
         
+        classe.set("Etab", self.etablissement)
+        
         eff = ET.SubElement(classe, "Effectifs")
         eff.set('eC', str(self.effectifs['C']))
         eff.set('nG', str(self.nbrGroupes['G']))
@@ -717,6 +721,8 @@ class Classe():
         Ok = True
 #        print "setBranche classe",
         self.typeEnseignement = branche.get("Type", "ET")
+        
+        self.etablissement = branche.get("Etab", u"")
         
         self.familleEnseignement = constantes.FamilleEnseignement[self.typeEnseignement]
 #        print self.typeEnseignement
@@ -1523,9 +1529,22 @@ class Projet(BaseDoc, Objet_sequence):
         
         self.problematique = u""
         
+        # Pour la fiche de validation
+        self.besoinGeneral = u""
+        self.contraintes = u""
+#        self.caracteristiques = u""
+#        self.cout = 0
+#        self.solutions = u""
+#        self.caractGrp = [u""]
+#        self.documents = u""
+        self.production = u""
+#        self.environnement = u""
+        
+        
         self.SetPosition(5)
         
         
+#       
         
         
     ######################################################################################  
@@ -1664,8 +1683,12 @@ class Projet(BaseDoc, Objet_sequence):
             eleves.append(e.getBranche())
             
         #
-        # Les poids des compétences
+        # pour la fiche de validation
         #
+        projet.set("BesoinGene", remplaceLF2Code(self.besoinGeneral))
+        projet.set("Contraintes", remplaceLF2Code(self.contraintes))
+        projet.set("Production", remplaceLF2Code(self.production))
+        
 #        comp = ET.SubElement(projet, "Competences")
 #        for k, lc in constantes.dicCompetences_prj_simple[self.classe.typeEnseignement].items():
 #            comp.set(k, str(lc[1]))
@@ -1703,6 +1726,13 @@ class Projet(BaseDoc, Objet_sequence):
             eleve = Eleve(self, self.panelParent)
             Ok = Ok and eleve.setBranche(e)
             self.eleves.append(eleve)
+        
+        #
+        # pour la fiche de validation
+        #
+        self.besoinGeneral = remplaceCode2LF(branche.get("BesoinGene", u""))
+        self.contraintes = remplaceCode2LF(branche.get("Contraintes", u""))
+        self.production = remplaceCode2LF(branche.get("Production", u""))
         
         #
         # Les poids des compétences
@@ -6285,7 +6315,13 @@ class FenetreProjet(FenetreDocument):
             else:
                 nomFichier = getNomFichier("FicheValidation", self.projet)
                 print nomFichier
-                genpdf.genererFicheValidation(os.path.join(path, nomFichier), self.projet)
+                try:
+                    genpdf.genererFicheValidation(os.path.join(path, nomFichier), self.projet)
+                except IOError:
+                    messageErreur(self, u"Erreur !",
+                                      u"Impossible d'enregistrer le fichier.\n\nVérifier :\n" \
+                                      u" - qu'aucun fichier portant le même nom n'est déja ouvert\n" \
+                                      u" - que le dossier choisi n'est pas protégé en écriture")
                 
             
 #            for t, f in tf:
@@ -6915,41 +6951,134 @@ class PanelPropriete_Sequence(PanelPropriete):
 class PanelPropriete_Projet(PanelPropriete):
     def __init__(self, parent, projet):
         PanelPropriete.__init__(self, parent)
+        
         self.projet = projet
         
-        titre = wx.StaticBox(self, -1, u"Intitulé du projet")
+        nb = wx.Notebook(self, -1,  style= wx.BK_DEFAULT)
+        
+        #
+        # La page "Généralités"
+        #
+        pageGen = PanelPropriete(nb)
+        bg_color = self.Parent.GetBackgroundColour()
+        pageGen.SetBackgroundColour(bg_color)
+        self.pageGen = pageGen
+        
+        nb.AddPage(pageGen, u"Propriétés générales")
+        
+#        pageGen.sizer.Add(nb, (0,1), (2,1), flag = wx.ALL|wx.ALIGN_RIGHT|wx.EXPAND, border = 1)
+            
+        
+        titre = wx.StaticBox(pageGen, -1, u"Intitulé du projet")
         sb = wx.StaticBoxSizer(titre)
-        textctrl = wx.TextCtrl(self, -1, u"", style=wx.TE_MULTILINE)
+        textctrl = wx.TextCtrl(pageGen, -1, u"", style=wx.TE_MULTILINE)
         sb.Add(textctrl, 1, flag = wx.EXPAND)
         self.textctrl = textctrl
-        self.sizer.Add(sb, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.EXPAND, border = 2)
+        pageGen.sizer.Add(sb, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.EXPAND, border = 2)
 #        self.sizer.Add(textctrl, (0,1), flag = wx.EXPAND)
-        self.Bind(wx.EVT_TEXT, self.EvtText, textctrl)
+        pageGen.Bind(wx.EVT_TEXT, self.EvtText, textctrl)
         
-        titre = wx.StaticBox(self, -1, u"Problématique")
+        titre = wx.StaticBox(pageGen, -1, u"Problématique")
         sb = wx.StaticBoxSizer(titre)
-        commctrl = wx.TextCtrl(self, -1, u"", style=wx.TE_MULTILINE)
+        commctrl = wx.TextCtrl(pageGen, -1, u"", style=wx.TE_MULTILINE)
         sb.Add(commctrl, 1, flag = wx.EXPAND)
         self.commctrl = commctrl
-        self.sizer.Add(sb, (0,1), (2,1),  flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.EXPAND, border = 2)
+        pageGen.sizer.Add(sb, (0,1), (2,1),  flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.EXPAND, border = 2)
 #        self.sizer.Add(commctrl, (1,1), flag = wx.EXPAND)
-        self.Bind(wx.EVT_TEXT, self.EvtText, commctrl)
-        self.sizer.AddGrowableCol(1)
+        pageGen.Bind(wx.EVT_TEXT, self.EvtText, commctrl)
+        pageGen.sizer.AddGrowableCol(1)
         
-        titre = wx.StaticBox(self, -1, u"Position")
+        titre = wx.StaticBox(pageGen, -1, u"Position")
         sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
-        self.bmp = wx.StaticBitmap(self, -1, self.getBitmapPeriode(250))
-        position = wx.Slider(self, -1, self.projet.position, 0, 5, (30, 60), (190, -1), 
+        self.bmp = wx.StaticBitmap(pageGen, -1, self.getBitmapPeriode(250))
+        position = wx.Slider(pageGen, -1, self.projet.position, 0, 5, (30, 60), (190, -1), 
             wx.SL_HORIZONTAL | wx.SL_AUTOTICKS |wx.SL_TOP 
             )
         sb.Add(self.bmp)
         sb.Add(position)
         self.position = position
-        self.sizer.Add(sb, (1,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 2)
+        pageGen.sizer.Add(sb, (1,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 2)
         position.Bind(wx.EVT_SCROLL_CHANGED, self.onChanged)
         
-        self.sizer.Layout()
+        pageGen.sizer.Layout()
         wx.CallAfter(self.Layout)
+        
+        
+        #
+        # La page "Enoncé général du besoin"
+        #
+        pageBG = PanelPropriete(nb)
+        bg_color = self.Parent.GetBackgroundColour()
+        pageBG.SetBackgroundColour(bg_color)
+        self.pageBG = pageBG
+        
+        nb.AddPage(pageBG, u"Enoncé général du besoin")
+        
+        self.bgctrl = wx.TextCtrl(pageBG, -1, u"", style=wx.TE_MULTILINE)
+        self.bgctrl.SetToolTipString(u"Indiquer :\n" \
+                                  u"- description du contexte dans lequel l’objet du projet va être intégré ;\n" \
+                                  u"- fonctionnalités de cet objet ;\n" \
+                                  u"- caractéristiques fonctionnelles et techniques.")
+        pageBG.Bind(wx.EVT_TEXT, self.EvtText, self.bgctrl)
+        
+        pageBG.sizer.Add(self.bgctrl, (0,0), flag = wx.EXPAND)
+        pageBG.sizer.AddGrowableCol(0)
+        pageBG.sizer.AddGrowableRow(0)  
+        pageBG.sizer.Layout()
+        
+        
+        #
+        # La page "Contraintes Imposées"
+        #
+        pageCont = PanelPropriete(nb)
+        bg_color = self.Parent.GetBackgroundColour()
+        pageCont.SetBackgroundColour(bg_color)
+        self.pageCont = pageCont
+        
+        nb.AddPage(pageCont, u"Contraintes imposées")
+        
+        self.contctrl = wx.TextCtrl(pageCont, -1, u"", style=wx.TE_MULTILINE)
+        self.contctrl.SetToolTipString(u"Indiquer :\n" \
+                                     u"- coût maximal ;\n" \
+                                     u"- nature d’une ou des solutions techniques ou de familles de matériels,\n" \
+                                     u"  de constituants ou de composants ;\n" \
+                                     u"- environnement.")
+        pageCont.Bind(wx.EVT_TEXT, self.EvtText, self.contctrl)
+        
+        pageCont.sizer.Add(self.contctrl, (0,0), flag = wx.EXPAND)
+        pageCont.sizer.AddGrowableCol(0)
+        pageCont.sizer.AddGrowableRow(0)  
+        pageCont.sizer.Layout()
+        
+        
+        #
+        # La page "Production attendue"
+        #
+        pageProd = PanelPropriete(nb)
+        bg_color = self.Parent.GetBackgroundColour()
+        pageProd.SetBackgroundColour(bg_color)
+        self.pageProd = pageProd
+        
+        nb.AddPage(pageProd, u"Production finale attendue")
+        
+        self.prodctrl = wx.TextCtrl(pageProd, -1, u"", style=wx.TE_MULTILINE)
+        self.prodctrl.SetToolTipString(u"Indiquer :\n" \
+                                     u"- documents de formalisation des solutions proposées ;\n" \
+                                     u"- sous-ensemble fonctionnel d’un prototype, éléments d’une maquette\n" \
+                                     u"  réelle ou virtuelle ;\n" \
+                                     u"- supports de communication.")
+        pageProd.Bind(wx.EVT_TEXT, self.EvtText, self.prodctrl)
+        
+        pageProd.sizer.Add(self.prodctrl, (0,0), flag = wx.EXPAND)
+        pageProd.sizer.AddGrowableCol(0)
+        pageProd.sizer.AddGrowableRow(0)  
+        pageProd.sizer.Layout()
+        
+        
+        self.sizer.Add(nb, (0,0), flag = wx.EXPAND)
+        self.sizer.AddGrowableCol(0)
+        self.sizer.AddGrowableRow(0)
+        self.sizer.Layout()
         
 #        self.Fit()
         
@@ -6988,9 +7117,26 @@ class PanelPropriete_Projet(PanelPropriete):
                 nt = self.projet.support.nom
             self.projet.SetText(nt)
             self.textctrl.ChangeValue(nt)
+            maj = True
+            
+        if event.GetEventObject() == self.bgctrl:
+            self.projet.besoinGeneral = event.GetString()
+            maj = False
+            
+        if event.GetEventObject() == self.contctrl:
+            self.projet.contraintes = event.GetString()
+            maj = False
+            
+        if event.GetEventObject() == self.prodctrl:
+            self.projet.production = event.GetString()
+            maj = False
+            
         else:
             self.projet.SetProblematique(event.GetString())
-        if not self.eventAttente:
+            maj = True
+            
+            
+        if maj and not self.eventAttente:
             wx.CallLater(DELAY, self.sendEvent)
             self.eventAttente = True
         
@@ -6998,6 +7144,11 @@ class PanelPropriete_Projet(PanelPropriete):
     def MiseAJour(self, sendEvt = False):
         self.textctrl.ChangeValue(self.projet.intitule)
         self.commctrl.ChangeValue(self.projet.problematique)
+        
+        self.bgctrl.ChangeValue(self.projet.besoinGeneral)
+        self.contctrl.ChangeValue(self.projet.contraintes)
+        self.prodctrl.ChangeValue(self.projet.production)
+        
         self.bmp.SetBitmap(self.getBitmapPeriode(250))
         self.position.SetValue(self.projet.position)
         self.Layout()
@@ -7019,14 +7170,39 @@ class PanelPropriete_Projet(PanelPropriete):
 class PanelPropriete_Classe(PanelPropriete):
     def __init__(self, parent, classe, pourProjet):
         PanelPropriete.__init__(self, parent)
+        
+        if not pourProjet:
+            #
+            # La page "Généralités"
+            #
+            nb = wx.Notebook(self, -1,  style= wx.BK_DEFAULT)
+            pageGen = PanelPropriete(nb)
+            bg_color = self.Parent.GetBackgroundColour()
+            pageGen.SetBackgroundColour(bg_color)
+            self.pageGen = pageGen
+            
+            nb.AddPage(pageGen, u"Propriétés générales")
+            
+            self.sizer.Add(nb, (0,1), (2,1), flag = wx.ALL|wx.ALIGN_RIGHT|wx.EXPAND, border = 1)
+            
+        else:
+            #
+            # 
+            #
+            pageGen = self
+            self.pageGen = pageGen
+        
+
         self.classe = classe
         self.pasVerrouille = True
 #        print "PanelPropriete_Classe", classe.typeEnseignement
+        
+
         #
         # La barre d'outils
         #
-        tb = wx.ToolBar(self, style = wx.TB_FLAT|wx.TB_NODIVIDER)
-        self.sizer.Add(tb, (0,1), (1,1), flag = wx.ALL|wx.ALIGN_RIGHT, border = 1)
+        tb = wx.ToolBar(self, style = wx.TB_VERTICAL|wx.TB_FLAT|wx.TB_NODIVIDER)
+        self.sizer.Add(tb, (0,0), (2,1), flag = wx.ALL|wx.ALIGN_RIGHT, border = 1)
         tb.AddSimpleTool(30, images.Icone_valid_pref.GetBitmap(),
                          u"Choisir ces paramètres de classe pour les futurs documents")
         self.Bind(wx.EVT_TOOL, self.OnValidPref, id=30)
@@ -7048,6 +7224,8 @@ class PanelPropriete_Classe(PanelPropriete):
         self.tb = tb
         tb.Realize()
         
+        
+        
         #
         # Type d'enseignement
         #
@@ -7055,29 +7233,63 @@ class PanelPropriete_Classe(PanelPropriete):
         for i, e in enumerate(constantes.listEnseigmenent):
             l.append(constantes.Enseigmenent[e][0])
         rb = wx.RadioBox(
-                self, -1, u"Type d'enseignement", wx.DefaultPosition, (130,-1),
+                pageGen, -1, u"Type d'enseignement", wx.DefaultPosition, (130,-1),
                 l,
                 1, wx.RA_SPECIFY_COLS
                 )
         rb.SetToolTip(wx.ToolTip(u"Choisir le type d'enseignement"))
         for i, e in enumerate(constantes.listEnseigmenent):
             rb.SetItemToolTip(i, constantes.Enseigmenent[e][1])
-        self.Bind(wx.EVT_RADIOBOX, self.EvtRadioBox, rb)
+        pageGen.Bind(wx.EVT_RADIOBOX, self.EvtRadioBox, rb)
         if pourProjet:
             rb.ShowItem(0, False) 
         rb.SetStringSelection(constantes.Enseigmenent[self.classe.typeEnseignement][0])
             
-        self.sizer.Add(rb, (0,0), (2,1), flag = wx.ALL)#wx.EXPAND|
+        pageGen.sizer.Add(rb, (0,1), flag = wx.EXPAND|wx.ALL, border = 2)#
         self.cb_type = rb
+        
+        
+        
+        #
+        # Etablissement
+        #
+        titre = wx.StaticBox(pageGen, -1, u"Etablissement")
+        sb = wx.StaticBoxSizer(titre)
+        textctrl = wx.TextCtrl(pageGen, -1, u"", style=wx.TE_MULTILINE)
+        pageGen.Bind(wx.EVT_TEXT, self.EvtText, textctrl)
+#        textctrl.SetMinSize((-1, 150))
+        sb.Add(textctrl, 1, flag = wx.EXPAND)
+        self.textctrl = textctrl
+        pageGen.sizer.Add(sb, (0,2), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.ALL|wx.EXPAND, border = 2)
+        
+        
+        
+        #
+        # Effectifs
+        #
+        self.ec = PanelEffectifsClasse(pageGen, classe)
+        pageGen.sizer.Add(self.ec, (0,3), flag = wx.ALL|wx.EXPAND, border = 2)#|wx.ALIGN_RIGHT
+        
+
+        pageGen.sizer.AddGrowableRow(0)
+        pageGen.sizer.AddGrowableCol(2)
+        pageGen.sizer.Layout()
         
         #
         # Centres d'intérêt
         #
         if not pourProjet:
-            sb1 = wx.StaticBox(self, -1, u"Centres d'intérêt ET", size = (200,-1))
-            sbs1 = wx.StaticBoxSizer(sb1,wx.VERTICAL)
+            pageCI= wx.Panel(nb, -1)
+            sizer = wx.BoxSizer()
+#            bg_color = self.Parent.GetBackgroundColour()
+#            pageCI.SetBackgroundColour(bg_color)
+            self.pageCI = pageCI
+            nb.AddPage(pageCI, u"Centres d'intérêt")
+            
+            sb1 = wx.StaticBox(pageCI, -1, u"Centres d'intérêt ETT", size = (200,-1))
+            sbs1 = wx.StaticBoxSizer(sb1, wx.VERTICAL)
             self.sb1 = sb1
-            list = ULC.UltimateListCtrl(self, -1, 
+            listCI = ULC.UltimateListCtrl(pageCI, -1, 
                                         agwStyle=wx.LC_REPORT
                                              #| wx.BORDER_SUNKEN
                                              | wx.BORDER_NONE
@@ -7094,18 +7306,17 @@ class PanelPropriete_Classe(PanelPropriete):
             info._format = wx.LIST_FORMAT_LEFT
             info._text = u"CI"
              
-            list.InsertColumnInfo(0, info)
+            listCI.InsertColumnInfo(0, info)
     
             info = ULC.UltimateListItem()
             info._format = wx.LIST_FORMAT_LEFT
             info._mask = wx.LIST_MASK_TEXT | wx.LIST_MASK_FORMAT | ULC.ULC_MASK_FONT
             info._text = u"Intitulé"
             
-            list.InsertColumnInfo(1, info)
+            listCI.InsertColumnInfo(1, info)
             
-            list.SetColumnWidth(0, 35)
-            list.SetColumnWidth(1, -3)
-            
+            listCI.SetColumnWidth(0, 35)
+            listCI.SetColumnWidth(1, -3)
             
             for i,p in enumerate(['M', 'E', 'I', 'F', 'S', 'C']):
                 info = ULC.UltimateListItem()
@@ -7113,30 +7324,28 @@ class PanelPropriete_Classe(PanelPropriete):
                 info._format = wx.LIST_FORMAT_CENTER
                 info._text = p
                 
-                list.InsertColumnInfo(i+2, info)
-                list.SetColumnWidth(i+2, 20)
+                listCI.InsertColumnInfo(i+2, info)
+                listCI.SetColumnWidth(i+2, 20)
             
-            self.list = list
+            self.list = listCI
             self.PeuplerListe()
             
             self.list.Bind(wx.EVT_LEFT_UP, self.OnLeftUp)
             self.list.Bind(wx.EVT_LEFT_DOWN, self.OnLeftDown)
             self.leftDown = False
-            sbs1.Add(list, 1, flag = wx.EXPAND|wx.ALL, border = 2)
+            sbs1.Add(listCI, 1, flag = wx.EXPAND)
 
             if self.classe.typeEnseignement != 'ET' :
                 self.list.Enable(False)
+                
+            sizer.Add(sbs1, 1, flag = wx.EXPAND|wx.ALL, border = 2)
             
-            self.sizer.Add(sbs1, (0,2), (2,1), flag = wx.EXPAND|wx.ALL)    
+            self.sizer.AddGrowableRow(0)
+            self.sizer.AddGrowableCol(1)
             
-            self.sizer.AddGrowableCol(2)
-            self.sizer.AddGrowableRow(1)
-        
-        #
-        # Effectifs
-        #
-        self.ec = PanelEffectifsClasse(self, classe)
-        self.sizer.Add(self.ec, (1,1), flag = wx.ALL|wx.ALIGN_RIGHT)#wx.EXPAND|
+            pageCI.SetSizer(sizer)
+            sizer.Layout()
+            self.Layout()
         
         self.MiseAJourType()
     
@@ -7145,6 +7354,7 @@ class PanelPropriete_Classe(PanelPropriete):
         self.classe.options.defaut()
         self.classe.Initialise(isinstance(self.classe.doc, Projet))
         self.MiseAJour()
+        
         
     #############################################################################            
     def OnValidPref(self, evt):
@@ -7160,12 +7370,19 @@ class PanelPropriete_Classe(PanelPropriete):
                           u"Imposible d'enregistrer les préférences\n\n")
         return   
         
+        
     #############################################################################            
     def GetDocument(self):
         return self.classe.doc
     
     
-        
+    #############################################################################            
+    def EvtText(self, event):
+        if event.GetEventObject() == self.textctrl:
+            self.classe.etablissement = event.GetString()
+
+            
+             
     ######################################################################################  
     def EvtRadioBox(self, event):
 #        print self.cb_type.GetItemLabel(event.GetInt())
@@ -7207,6 +7424,9 @@ class PanelPropriete_Classe(PanelPropriete):
         
     ######################################################################################  
     def MiseAJourType(self):
+        """ Modification de la barre d'outil
+            en fonction du type d'enseignement
+        """
         if hasattr(self, 'list'):
             if self.classe.familleEnseignement == 'STI':
                 self.list.Show(True)
@@ -7224,14 +7444,19 @@ class PanelPropriete_Classe(PanelPropriete):
                 self.tb.EnableTool(32, False)   
                 self.tb.EnableTool(33, False)  
 #            self.btn.Enable(self.pasVerrouille and self.classe.typeEnseignement == 'ET')
-    
+        
+            self.pageCI.Layout()
+            
+        self.Layout()
         self.sizer.Layout()
         self.Refresh()
-            
+         
+        
     ######################################################################################  
     def MiseAJour(self):
         self.MiseAJourType()
         self.cb_type.SetStringSelection(constantes.Enseigmenent[self.classe.typeEnseignement][0])
+        self.textctrl.ChangeValue(self.classe.etablissement)
         
         if hasattr(self, 'list'):
             self.PeuplerListe()
@@ -7422,7 +7647,7 @@ class PanelEffectifsClasse(wx.Panel):
         # Nombre de groupes à effectif réduits
         self.vNbERed = Variable(u"Nbr de groupes\nà effectif réduit",  
                                 lstVal = classe.nbrGroupes['G'], 
-                                typ = VAR_ENTIER_POS, bornes = [1,3])
+                                typ = VAR_ENTIER_POS, bornes = [1,4])
         self.cNbERed = VariableCtrl(self, self.vNbERed, coef = 1, signeEgal = False,
                                     help = u"Nombre de groupes à effectif réduit dans la classe", sizeh = 20, color = self.coulEffRed)
         self.Bind(EVT_VAR_CTRL, self.EvtVariableEff, self.cNbERed)
@@ -7446,7 +7671,7 @@ class PanelEffectifsClasse(wx.Panel):
         # Nombre de groupes d'étude/projet
         self.vNbEtPr = Variable(u"Nbr de groupes\n\"Etudes et Projets\"",  
                             lstVal = classe.nbrGroupes['E'], 
-                            typ = VAR_ENTIER_POS, bornes = [1,5])
+                            typ = VAR_ENTIER_POS, bornes = [1,10])
         self.cNbEtPr = VariableCtrl(self, self.vNbEtPr, coef = 1, signeEgal = False,
                                 help = u"Nombre de groupes d'étude/projet par groupe à effectif réduit", sizeh = 20, color = self.coulEP)
         self.Bind(EVT_VAR_CTRL, self.EvtVariableEff, self.cNbEtPr)
@@ -7461,7 +7686,7 @@ class PanelEffectifsClasse(wx.Panel):
         # Nombre de groupes d'activité pratique
         self.vNbActP = Variable(u"Nbr de groupes\n\"Activités pratiques\"",  
                             lstVal = classe.nbrGroupes['P'], 
-                            typ = VAR_ENTIER_POS, bornes = [2,10])
+                            typ = VAR_ENTIER_POS, bornes = [2,20])
         self.cNbActP = VariableCtrl(self, self.vNbActP, coef = 1, signeEgal = False,
                                 help = u"Nombre de groupes d'activité pratique par groupe à effectif réduit", sizeh = 20, color = self.coulAP)
         self.Bind(EVT_VAR_CTRL, self.EvtVariableEff, self.cNbActP)
