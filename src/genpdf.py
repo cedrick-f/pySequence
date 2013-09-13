@@ -26,7 +26,7 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-
+import constantes
 from os.path import join
 #import csv
 
@@ -37,7 +37,15 @@ from reportlab.lib.units import mm
 from reportlab.lib.enums import TA_CENTER,TA_LEFT
 from reportlab.lib import colors
 
+def italic(s):
+    return "<i>"+s+"</i>"
 
+def gras(s):
+    return "<strong>"+s+"</strong>"
+
+#
+#
+#
 def genererFicheValidation(nomFichier, projet):
     # a handy function which helps to blend smoothly between two colors, but
     # unfortunately it has a very long name.
@@ -74,6 +82,10 @@ def genererFicheValidation(nomFichier, projet):
     
     story = [] # Fill this list with flowable objects
     
+    
+    #
+    # Entête
+    #
     story.append(Paragraph(u"Fiche de validation du projet",
                            title_style
                            )
@@ -94,41 +106,31 @@ def genererFicheValidation(nomFichier, projet):
     
     story.append(Spacer(1, 10*mm))
     
+    
+    #
+    # Première zone
+    #
     NP = []
     for p in projet.equipe:
-        NP.append(Paragraph(p.GetNomPrenom(), 
+        if p.referent:
+            np = "<strong>"+p.GetNomPrenom()+"</strong>"
+        else:
+            np = p.GetNomPrenom()
+            
+        if p.discipline != 'tec':
+#            constantes.COUL_DISCIPLINES[p.discipline]
+            np = "<i>"+np+"</i>"
+            
+        NP.append(Paragraph(np, 
                            normal_style))
         
-    data= [[u'Établissement :', u"Année scolaire : "],
+    data= [[u'Établissement :'+projet.classe.etablissement, u"Année scolaire : "],
            [u"Spécialité : "+ projet.GetTypeEnseignement(),u"Nombre d’élèves concernés : "+str(len(projet.eleves))],
            [u'',u"Nombre de groupes d’élèves : "],
            [u"Noms et prénoms des enseignants responsables :",NP]]
     t=Table(data,style=[('VALIGN',      (0,0),(-1,-1),'TOP')])
     
     story.append(t)
-    
-#    story.append(Paragraph(u"Établissement : ", 
-#                           normal_style))
-#    story.append(Spacer(1, 5*mm))
-#    story.append(Paragraph(u"Année scolaire : ", 
-#                           normal_style))
-#    story.append(Spacer(1, 5*mm))
-#    story.append(Paragraph(u"Spécialité : "+ projet.GetTypeEnseignement(), 
-#                           normal_style))
-#    story.append(Spacer(1, 5*mm))
-#    story.append(Paragraph(u"Nombre d’élèves concernés : "+str(len(projet.eleves)), 
-#                           normal_style))
-#    story.append(Spacer(1, 5*mm))
-#    story.append(Paragraph(u"Nombre de groupes d’élèves : ", 
-#                           normal_style))
-#    story.append(Spacer(1, 5*mm))
-#    story.append(Paragraph(u"Noms et prénoms des enseignants responsables :", 
-#                           normal_style))
-#    story.append(Spacer(1, 5*mm))
-#    for p in projet.equipe:
-#        story.append(Paragraph(p.GetNomPrenom(), 
-#                           normal_style))
-#        story.append(Spacer(1, 5*mm))
     
     
 #    story.append(Paragraph(u"La présente fiche est établie en vue de la validation des projets au niveau académique, en début d’année de\n" \
@@ -151,13 +153,19 @@ def genererFicheValidation(nomFichier, projet):
 #                   styleSheet["BodyText"])
 #    P = Paragraph('''<para align=center spaceb=3>The<b>ReportLab Left<font color=red>Logo</font></b>Image</para>''',
 #                  styleSheet["BodyText"])
-    data= [[u'Intitulé du projet :', projet.intitule],
-           [u'Origine de la proposition',''],
-           [u'Énoncé général du besoin',''],
-           [u'Contraintes imposées au projet',''],
+
+    #
+    # Deuxième zone
+    #
+
+    data= [[u'Intitulé du projet',              projet.intitule],
+           [u'Origine de la proposition',       ''],
+           [u'Énoncé général du besoin',        projet.besoinGeneral],
+           [u'Contraintes imposées au projet',  projet.contraintes],
            [u'Intitulé des parties du projet confiées à chaque groupe',''],
            [u'Énoncé du besoin pour la partie du projet confiée à chaque groupe',''],
-           [u'Production finale attendue','']]
+           [u'Production finale attendue',      projet.production]]
+           
     t=Table(data,style=[('GRID',        (0,0),(-1,-1),  1,colors.black)])
     #                    ('BOX',         (0,0),(1,-1),   2,colors.red)])
     #                    ('LINEABOVE',   (1,2),(-2,2),   1,colors.blue),
@@ -207,6 +215,10 @@ def genererFicheValidation(nomFichier, projet):
     
     story.append(t)
     
+    
+    #
+    # Zone des signatures
+    #
     story.append(Spacer(1, 15*mm))
     
     story.append(Paragraph(u"Visa du chef d’établissement",

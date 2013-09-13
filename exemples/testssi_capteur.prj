@@ -1,5 +1,5 @@
 <Projet_Classe>
-  <Projet Intitule="Intitulé du projet." Position="5" Problematique="Réaliser un capteur de couple capable de mesurer des couples de 0 à 3 Nm, adaptable sur n&apos;importe quel type d&apos;arbre (jusqu&apos;à 13 mm de diamètre). Mesure de couple statique.##13##    Affichage digital." R1avC="False">
+  <Projet BesoinGene="aaazzz aaa" Intitule="Intitulé du projet." Position="5" Problematique="Réaliser un capteur de couple capable de mesurer des couples de 0 à 3 Nm, adaptable sur n&apos;importe quel type d&apos;arbre (jusqu&apos;à 13 mm de diamètre). Mesure de couple statique.##13##    Affichage digital." R1avC="False">
     <Equipe>
       <Prof Discipline="Tec" Id="0" Nom="faury" Prenom="cédrick" Referent="True" />
     </Equipe>
@@ -11,19 +11,19 @@
       </Tache1>
       <Tache2 Description="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt; &lt;richtext version=&quot;1.0.0.0&quot; xmlns=&quot;http://www.wxwidgets.org&quot;&gt;   &lt;paragraphlayout textcolor=&quot;#000000&quot; fontpointsize=&quot;8&quot; fontfamily=&quot;70&quot; fontstyle=&quot;90&quot; fontweight=&quot;90&quot; fontunderlined=&quot;0&quot; fontface=&quot;MS Shell Dlg 2&quot; alignment=&quot;1&quot; parspacingafter=&quot;10&quot; parspacingbefore=&quot;0&quot; linespacing=&quot;10&quot; margin-left=&quot;5,4098&quot; margin-right=&quot;5,4098&quot; margin-top=&quot;5,4098&quot; margin-bottom=&quot;5,4098&quot;&gt;     &lt;paragraph&gt;       &lt;text&gt;Recherches &amp;#224; partir d&apos;Internet, de documentations fournies ...&lt;/text&gt;     &lt;/paragraph&gt;   &lt;/paragraphlayout&gt; &lt;/richtext&gt; " Duree="4.0" Intitule="Recherche de documentation sur la mesure par jauges d&apos;extensométrie." IntituleDansDeroul="True" Phase="Ana">
         <Eleves Eleve0="0" Eleve1="2" />
-        <Indicateurs Indic0="D1_3" Indic1="D1_2" Indic2="D1_1" Indic3="D1_4" />
+        <Indicateurs Indic0="D1_4" Indic1="D1_1" Indic2="D1_2" Indic3="D1_3" />
       </Tache2>
       <Tache3 Duree="6" Intitule="Recherce de solutions : partie piece déformable + jauges" IntituleDansDeroul="True" Phase="Ana">
         <Eleves Eleve0="0" Eleve1="2" />
-        <Indicateurs Indic0="B3_2" Indic1="B3_1" />
+        <Indicateurs Indic0="B3_1" Indic1="B3_2" />
       </Tache3>
       <Tache4 Duree="6" Intitule="Recherche de solutions : partie conditionnement du signal" IntituleDansDeroul="True" Phase="Ana">
         <Eleves />
-        <Indicateurs Indic0="B3_2" Indic1="B3_1" />
+        <Indicateurs Indic0="B3_1" Indic1="B3_2" />
       </Tache4>
       <Tache5 Duree="6" Intitule="Recherche de solutions : partie acquisition et traitement des données" IntituleDansDeroul="True" Phase="Ana">
         <Eleves Eleve0="1" />
-        <Indicateurs Indic0="B3_2" Indic1="B3_1" />
+        <Indicateurs Indic0="B3_1" Indic1="B3_2" />
       </Tache5>
       <Tache6 Duree="0.5" Intitule="Revue de projet n°1" IntituleDansDeroul="True" Phase="R1">
         <Eleves />
@@ -31,38 +31,38 @@
       </Tache6>
       <Tache7 Duree="8" Intitule="Recherche des formes de la pièce déformable par simulation SW" IntituleDansDeroul="True" Phase="Rea">
         <Eleves Eleve0="0" Eleve1="2" />
-        <Indicateurs Indic0="B4_4" Indic1="B4_3" Indic2="B4_2" Indic3="B4_1" Indic4="B3_2" Indic5="B3_1" />
+        <Indicateurs Indic0="B3_1" Indic1="B3_2" Indic2="B4_1" Indic3="B4_2" Indic4="B4_3" Indic5="B4_4" />
       </Tache7>
       <Tache8 Duree="8" Intitule="Réalisation d&apos;un modèle de circuit de conditionnement du signal (Simulink)" IntituleDansDeroul="True" Phase="Rea">
         <Eleves />
-        <Indicateurs Indic0="B4_4" Indic1="B4_3" Indic2="B4_2" Indic3="B4_1" Indic4="B3_2" Indic5="B3_1" />
+        <Indicateurs Indic0="B3_1" Indic1="B3_2" Indic2="B4_1" Indic3="B4_2" Indic4="B4_3" Indic5="B4_4" />
       </Tache8>
       <Tache9 Duree="8" Intitule="Choix d&apos;un matériel d&apos;acquisition et réalisation d&apos;une interface (Labview)" IntituleDansDeroul="True" Phase="Rea">
         <Eleves Eleve0="1" />
-        <Indicateurs Indic0="B4_4" Indic1="B4_3" Indic2="B4_2" Indic3="B4_1" />
+        <Indicateurs Indic0="B4_1" Indic1="B4_2" Indic2="B4_3" Indic3="B4_4" />
       </Tache9>
       <Tache10 Duree="12" Intitule="Réalisation d&apos;un prototype (imprimante 3D) et réalisation de mesures" IntituleDansDeroul="True" Phase="Rea">
         <Eleves Eleve0="0" Eleve1="2" />
-        <Indicateurs Indic0="C1_1" Indic1="C1_5" Indic2="C1_3" Indic3="C1_2" Indic4="C1_4" />
+        <Indicateurs Indic0="C1_4" Indic1="C1_2" Indic2="C1_3" Indic3="C1_5" Indic4="C1_1" />
       </Tache10>
       <Tache11 Duree="12" Intitule="Réalisation d&apos;un prototype de circuit de conditionnement" IntituleDansDeroul="True" Phase="Rea">
         <Eleves />
-        <Indicateurs Indic0="C1_1" Indic1="C1_2" Indic2="C1_3" Indic3="C1_4" Indic4="C1_5" />
+        <Indicateurs Indic0="C1_5" Indic1="C1_4" Indic2="C1_3" Indic3="C1_2" Indic4="C1_1" />
       </Tache11>
       <Tache12 Duree="12" Intitule="Réalisation du modèle d&apos;acquisition, de l&apos;instrumentation virtuelle" IntituleDansDeroul="True" Phase="Rea">
         <Eleves Eleve0="1" />
-        <Indicateurs Indic0="C1_1" Indic1="C1_2" Indic2="C1_3" Indic3="C1_4" Indic4="C1_5" />
+        <Indicateurs Indic0="C1_5" Indic1="C1_4" Indic2="C1_3" Indic3="C1_2" Indic4="C1_1" />
       </Tache12>
       <Tache13 Duree="10" Intitule="Assemblage et essais de l&apos;ensemble" IntituleDansDeroul="True" Phase="Rea">
         <Eleves Eleve0="0" Eleve1="1" Eleve2="2" />
-        <Indicateurs Indic0="C1_1" Indic1="C2_4" Indic10="C2_7" Indic2="C2_2" Indic3="C2_1" Indic4="C1_5" Indic5="C1_4" Indic6="C1_3" Indic7="C1_2" Indic8="C2_5" Indic9="C2_6" />
+        <Indicateurs Indic0="C1_1" Indic1="C1_2" Indic10="C2_7" Indic2="C1_3" Indic3="C1_4" Indic4="C1_5" Indic5="C2_1" Indic6="C2_2" Indic7="C2_4" Indic8="C2_5" Indic9="C2_6" />
       </Tache13>
       <Tache14 Duree="0.5" Intitule="Revue de projet n°2" IntituleDansDeroul="True" Phase="R2">
         <Eleves />
       </Tache14>
       <Tache15 Duree="4" Intitule="Préparation de la soutenance" IntituleDansDeroul="True" Phase="XXX">
         <Eleves Eleve0="0" Eleve1="1" Eleve2="2" />
-        <Indicateurs Indic0="D2_1" Indic1="D2_2" Indic2="D2_3" Indic3="D2_4" />
+        <Indicateurs Indic0="D2_4" Indic1="D2_3" Indic2="D2_2" Indic3="D2_1" />
       </Tache15>
       <Tache16 Duree="0.5" Intitule="Soutenance finale" IntituleDansDeroul="True" Phase="S">
         <Eleves />
@@ -74,7 +74,7 @@
       <Eleve Id="2" Nom="pagnol" Prenom="marcel" />
     </Eleves>
   </Projet>
-  <Classe Type="SSI">
+  <Classe Etab="Lycée Blaise Pascal" Type="SSI">
     <Effectifs eC="32" nE="4" nG="2" nP="8" />
   </Classe>
 </Projet_Classe>
