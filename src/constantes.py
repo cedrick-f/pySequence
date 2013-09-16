@@ -50,6 +50,8 @@ import constantes_SSI
 
 # Les icones des branches de l'abre et un curseur perso
 import images
+import datetime
+import time
 
 #import ConfigParser
 
@@ -914,7 +916,17 @@ DUREE_PRJ = 70
 DELTA_DUREE = 5
 DELTA_DUREE2 = 15
 
-
+ETABLISSEMENTS_PDD = [u"La Fayette (Clermont Fd)",
+                      u"Blaise Pascal (Clermont Fd)",
+                      u"Paul Constans (Montluçon)",
+                      u"Albert-Londres (Cusset)",
+                      u"Pierre-Joël Bonté (Riom)",
+                      u"Albert Einstein (Montluçon)",
+                      u"Jean Monnet (Aurillac)",
+                      u"Jean Monnet (Yzeure)",
+                      u"Jean Zay (Thiers)",
+                      u"Godefroy de Bouillon (Clermont Fd)",
+                      u"Charles et Adrien Dupuy (Le Puy en Velay)"]
 
 DISCIPLINES = ['Tec', 'Phy', 'Mat', 'LV1', 'Phi', 'Spo', 'Aut']
 NOM_DISCIPLINES = {'Tec' : u"Sciences Industrielles de l'Ingénieur", 
@@ -940,6 +952,40 @@ def getLstDisciplines():
         lst.append(NOM_DISCIPLINES[k])
     return lst
 
+def getAnneeScolaire():
+    date = time.localtime()
+    
+    if date.tm_mon >= 9:
+        annee = date.tm_year
+    else:
+        annee = date.tm_year-1
+    
+    return str(annee)+"-"+str(annee+1)
+
+#
+#
+#
+#
+#
+
+TIP_PROBLEMATIQUE =   u"Indiquer :\n" \
+                      u"- description du contexte dans lequel l’objet du projet va être intégré ;\n" \
+                      u"- fonctionnalités de cet objet ;\n" \
+                      u"- caractéristiques fonctionnelles et techniques."
+                      
+                      
+TIP_CONTRAINTES =    u"Indiquer :\n" \
+                     u"- coût maximal ;\n" \
+                     u"- nature d’une ou des solutions techniques ou de familles de matériels,\n" \
+                     u"  de constituants ou de composants ;\n" \
+                     u"- environnement."
+                                     
+TIP_PRODUCTION =     u"Indiquer :\n" \
+                     u"- documents de formalisation des solutions proposées ;\n" \
+                     u"- sous-ensemble fonctionnel d’un prototype, éléments d’une maquette\n" \
+                     u"  réelle ou virtuelle ;\n" \
+                     u"- supports de communication."                             
+                                     
 xmlVide = """<?xml version="1.0" encoding="UTF-8"?>
 <richtext version="1.0.0.0" xmlns="http://www.wxwidgets.org">
   <paragraphlayout textcolor="#000000" fontsize="8" fontstyle="90" fontweight="90" fontunderlined="0" fontface="MS Shell Dlg 2" alignment="1" parspacingafter="10" parspacingbefore="0" linespacing="10">
