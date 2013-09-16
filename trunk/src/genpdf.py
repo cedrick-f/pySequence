@@ -28,6 +28,7 @@
 
 import constantes
 from os.path import join
+from textwrap import wrap
 #import csv
 
 from reportlab.platypus import SimpleDocTemplate, Paragraph
@@ -36,6 +37,7 @@ from reportlab.lib.styles import ParagraphStyle,getSampleStyleSheet
 from reportlab.lib.units import mm
 from reportlab.lib.enums import TA_CENTER,TA_LEFT
 from reportlab.lib import colors
+from reportlab.lib.pagesizes import A4
 
 def italic(s):
     return "<i>"+s+"</i>"
@@ -47,10 +49,12 @@ def gras(s):
 #
 #
 def genererFicheValidation(nomFichier, projet):
-    # a handy function which helps to blend smoothly between two colors, but
-    # unfortunately it has a very long name.
-    lerp = colors.linearlyInterpolatedColor
+    """
+    """
     
+    #
+    # Styles
+    #
     title_style = ParagraphStyle(name="TitleStyle",
                                  fontName="Helvetica",
                                  textColor = colors.red,
@@ -60,7 +64,7 @@ def genererFicheValidation(nomFichier, projet):
     
     normal_style = ParagraphStyle(name="NormalStyle",
                                  fontName="Helvetica",
-                                 fontSize=11,
+                                 fontSize=10,
                                  alignment=TA_LEFT,
                                  )
     
@@ -71,14 +75,16 @@ def genererFicheValidation(nomFichier, projet):
                                  alignment=TA_LEFT,
                                  )
     
+    
     # To make a SimpleDocTemplate, just supply a file name for your PDF, and the
     # page margins. You can optionally supply non-flowing elements such as headers
     # and footers. I will introduce that feature in a later demonstration.
     doc = SimpleDocTemplate(nomFichier,
-                            leftMargin=20*mm,
-                            rightMargin=20*mm,
-                            topMargin=20*mm,
-                            bottomMargin=20*mm)
+                            pagesize=A4,
+                            leftMargin=15*mm,
+                            rightMargin=15*mm,
+                            topMargin=15*mm,
+                            bottomMargin=15*mm)
     
     story = [] # Fill this list with flowable objects
     
@@ -92,19 +98,27 @@ def genererFicheValidation(nomFichier, projet):
                  )
     story.append(Spacer(1, 5*mm))
     
-    story.append(Paragraph(u"Bulletin officiel n° 45 du 6 décembre 2012",
-                           entete_style
-                           )
-                 )
-    story.append(Spacer(1, 1*mm))
     
-    story.append(Paragraph(u"Annexe 8 à la note de service n° 2012-037 du 5 mars 2012 - série STI2D - Épreuve de projet en" \
-                           u"enseignement spécifique à la spécialité",
-                           entete_style
-                           )
-                 )
+    if projet.GetTypeEnseignement() == 'SSI':
+        story.append(Paragraph(u"Bulletin officiel n° 45 du 6 décembre 2012",
+                               entete_style
+                               ))
+        story.append(Spacer(1, 1*mm))
+        story.append(Paragraph(u"Annexe 8 à la note de service n° 2012-037 du 5 mars 2012 - série STI2D - Épreuve de projet en " \
+                               u"enseignement spécifique à la spécialité",
+                               entete_style
+                               ))
+    else:
+        story.append(Paragraph(u"Bulletin officiel n° 45 du 6 décembre 2012",
+                               entete_style
+                               ))
+        story.append(Spacer(1, 1*mm))
+        story.append(Paragraph(u"Annexe 8 à la note de service n° 2012-037 du 5 mars 2012 - série STI2D - Épreuve de projet en" \
+                               u"enseignement spécifique à la spécialité",
+                               entete_style
+                               ))
     
-    story.append(Spacer(1, 10*mm))
+    story.append(Spacer(1, 5*mm))
     
     
     #
@@ -117,17 +131,17 @@ def genererFicheValidation(nomFichier, projet):
         else:
             np = p.GetNomPrenom()
             
-        if p.discipline != 'tec':
+        print p, p.discipline
+        if p.discipline != 'Tec':
 #            constantes.COUL_DISCIPLINES[p.discipline]
             np = "<i>"+np+"</i>"
             
-        NP.append(Paragraph(np, 
-                           normal_style))
+        NP.append(Paragraph(np, normal_style))
         
-    data= [[u'Établissement :'+projet.classe.etablissement, u"Année scolaire : "],
-           [u"Spécialité : "+ projet.GetTypeEnseignement(),u"Nombre d’élèves concernés : "+str(len(projet.eleves))],
-           [u'',u"Nombre de groupes d’élèves : "],
-           [u"Noms et prénoms des enseignants responsables :",NP]]
+    data= [[[Paragraph(gras(u'Établissement : '), normal_style), Paragraph(projet.classe.etablissement, normal_style)], [Paragraph(gras(u"Année scolaire : ")+constantes.getAnneeScolaire(), normal_style),
+                                                                                                                         Paragraph(gras(u"Nombre d’élèves concernés : ")+str(len(projet.eleves)), normal_style)]],
+           [Paragraph(gras(u"Spécialité : ")+ projet.GetTypeEnseignement(), normal_style), Paragraph(gras(u"Nombre de groupes d’élèves : "), normal_style)],
+           [Paragraph(gras(u"Noms et prénoms des enseignants responsables :"), normal_style),NP]]
     t=Table(data,style=[('VALIGN',      (0,0),(-1,-1),'TOP')])
     
     story.append(t)
@@ -157,16 +171,28 @@ def genererFicheValidation(nomFichier, projet):
     #
     # Deuxième zone
     #
+    ppb = [Paragraph(gras(u'Problématique - Énoncé général du besoin'),normal_style)]
+    for l in constantes.TIP_PROBLEMATIQUE.split("\n"):
+        ppb.append(Paragraph(l, entete_style))
 
-    data= [[u'Intitulé du projet',              projet.intitule],
-           [u'Origine de la proposition',       ''],
-           [u'Énoncé général du besoin',        projet.besoinGeneral],
-           [u'Contraintes imposées au projet',  projet.contraintes],
-           [u'Intitulé des parties du projet confiées à chaque groupe',''],
-           [u'Énoncé du besoin pour la partie du projet confiée à chaque groupe',''],
-           [u'Production finale attendue',      projet.production]]
+    pco = [Paragraph(gras(u'Contraintes imposées au projet'),normal_style)]
+    for l in constantes.TIP_CONTRAINTES.split("\n"):
+        pco.append(Paragraph(l, entete_style))
+        
+    ppr = [Paragraph(gras(u'Production finale attendue'),normal_style)]
+    for l in constantes.TIP_PRODUCTION.split("\n"):
+        ppr.append(Paragraph(l, entete_style))
+        
+    data= [[Paragraph(gras(u'Intitulé du projet'),normal_style),                Paragraph(projet.intitule, normal_style)],
+           [Paragraph(gras(u'Origine de la proposition'),normal_style),         Paragraph(projet.origine, normal_style)],
+           [ppb,                                                                Paragraph(projet.problematique, normal_style)],
+           [pco,                                                                Paragraph(projet.contraintes, normal_style)],
+           [Paragraph(gras(u'Intitulé des parties du projet confiées à chaque groupe'),normal_style),               Paragraph(projet.intituleParties, normal_style)],
+           [Paragraph(gras(u'Énoncé du besoin pour la partie du projet confiée à chaque groupe'),normal_style),     Paragraph(projet.besoinParties, normal_style)],
+           [ppr,                                                                Paragraph(projet.production,normal_style)]]
            
-    t=Table(data,style=[('GRID',        (0,0),(-1,-1),  1,colors.black)])
+    t=Table(data,style=[('GRID',        (0,0),(-1,-1),  1,colors.black),
+                        ('VALIGN',      (0,0),(-1,-1),'TOP')])
     #                    ('BOX',         (0,0),(1,-1),   2,colors.red)])
     #                    ('LINEABOVE',   (1,2),(-2,2),   1,colors.blue),
     #                    ('LINEBEFORE',  (2,1),(2,-2),   1,colors.pink),
@@ -175,7 +201,7 @@ def genererFicheValidation(nomFichier, projet):
     #                    ('BACKGROUND',  (2, 2), (2, 3), colors.orange),
     #                    ('BOX',         (0,0),(-1,-1),  2,colors.black),
     #                    ('GRID',        (0,0),(-1,-1),  0.5,colors.black),
-    #                    ('VALIGN',      (3,0),(3,0),'BOTTOM'),
+#                        ('VALIGN',      (3,0),(3,0),'BOTTOM'),
     #                    ('BACKGROUND',  (3,0),(3,0),colors.limegreen),
     #                    ('BACKGROUND',  (3,1),(3,1),colors.khaki),
     #                    ('ALIGN',       (3,1),(3,1),'CENTER'),
@@ -220,27 +246,13 @@ def genererFicheValidation(nomFichier, projet):
     # Zone des signatures
     #
     story.append(Spacer(1, 15*mm))
-    
-    story.append(Paragraph(u"Visa du chef d’établissement",
-                           normal_style
-                           ))
-    story.append(Spacer(1, 1*mm))
-    story.append(Paragraph(u"(Nom, prénom, date et signature)",
-                           entete_style
-                           ))
-    story.append(Spacer(1, 40*mm))
-    
-    
-    
-    story.append(Paragraph(u"Visa du ou des IA-IPR",
-                           normal_style
-                           ))
-    story.append(Spacer(1, 1*mm))
-    
-    story.append(Paragraph(u"(Noms, prénoms, qualités, dates et signatures)",
-                           entete_style
-                           ))
-    story.append(Spacer(1, 15*mm))
+    V1 = [Paragraph(u"Visa du chef d’établissement", normal_style),
+          Paragraph(u"(Nom, prénom, date et signature)", entete_style)]
+    V2 = [Paragraph(u"Visa du ou des IA-IPR", normal_style),
+          Paragraph(u"(Noms, prénoms, qualités, dates et signatures)", entete_style)]
+    data= [[V1, V2]]
+    t=Table(data,style=[('VALIGN',      (0,0),(-1,-1),'TOP')])
+    story.append(t)
     
     doc.build(story)
     
