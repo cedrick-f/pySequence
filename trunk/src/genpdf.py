@@ -39,6 +39,38 @@ from reportlab.lib.enums import TA_CENTER,TA_LEFT
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
 
+    
+
+# workaround
+from reportlab.pdfbase import _fontdata_widths_courier
+from reportlab.pdfbase import _fontdata_widths_courierbold
+from reportlab.pdfbase import _fontdata_widths_courieroblique
+from reportlab.pdfbase import _fontdata_widths_courierboldoblique
+from reportlab.pdfbase import _fontdata_widths_helvetica
+from reportlab.pdfbase import _fontdata_widths_helveticabold
+from reportlab.pdfbase import _fontdata_widths_helveticaoblique
+from reportlab.pdfbase import _fontdata_widths_helveticaboldoblique
+from reportlab.pdfbase import _fontdata_widths_timesroman
+from reportlab.pdfbase import _fontdata_widths_timesbold
+from reportlab.pdfbase import _fontdata_widths_timesitalic
+from reportlab.pdfbase import _fontdata_widths_timesbolditalic
+from reportlab.pdfbase import _fontdata_widths_symbol
+from reportlab.pdfbase import _fontdata_widths_zapfdingbats
+ 
+from reportlab.pdfbase import _fontdata_enc_winansi
+from reportlab.pdfbase import _fontdata_enc_macroman
+from reportlab.pdfbase import _fontdata_enc_standard
+from reportlab.pdfbase import _fontdata_enc_symbol
+from reportlab.pdfbase import _fontdata_enc_zapfdingbats
+from reportlab.pdfbase import _fontdata_enc_pdfdoc
+from reportlab.pdfbase import _fontdata_enc_macexpert
+# end of workaround
+
+
+
+#
+#
+#
 def italic(s):
     return "<i>"+s+"</i>"
 
@@ -81,10 +113,10 @@ def genererFicheValidation(nomFichier, projet):
     # and footers. I will introduce that feature in a later demonstration.
     doc = SimpleDocTemplate(nomFichier,
                             pagesize=A4,
-                            leftMargin=15*mm,
-                            rightMargin=15*mm,
-                            topMargin=15*mm,
-                            bottomMargin=15*mm)
+                            leftMargin=10*mm,
+                            rightMargin=10*mm,
+                            topMargin=10*mm,
+                            bottomMargin=10*mm)
     
     story = [] # Fill this list with flowable objects
     
@@ -100,23 +132,24 @@ def genererFicheValidation(nomFichier, projet):
     
     
     if projet.GetTypeEnseignement() == 'SSI':
-        story.append(Paragraph(u"Bulletin officiel n° 45 du 6 décembre 2012",
+        story.append(Paragraph(u"Bulletin officiel n°1 du 3 janvier 2013",
                                entete_style
                                ))
         story.append(Spacer(1, 1*mm))
-        story.append(Paragraph(u"Annexe 8 à la note de service n° 2012-037 du 5 mars 2012 - série STI2D - Épreuve de projet en " \
-                               u"enseignement spécifique à la spécialité",
-                               entete_style
-                               ))
+        story.append(Paragraph(u"Annexe 3 à la note de service n° 2011-152 du 3 octobre 2011",
+                               entete_style))
+        story.append(Spacer(1, 1*mm))
+        story.append(Paragraph(u"Baccalauréat général, série S, sciences de l'ingénieur - Épreuve de projet",
+                               entete_style))
     else:
         story.append(Paragraph(u"Bulletin officiel n° 45 du 6 décembre 2012",
-                               entete_style
-                               ))
+                               entete_style))
         story.append(Spacer(1, 1*mm))
-        story.append(Paragraph(u"Annexe 8 à la note de service n° 2012-037 du 5 mars 2012 - série STI2D - Épreuve de projet en" \
-                               u"enseignement spécifique à la spécialité",
-                               entete_style
-                               ))
+        story.append(Paragraph(u"Annexe 8 à la note de service n° 2012-037 du 5 mars 2012",
+                               entete_style))
+        story.append(Spacer(1, 1*mm))
+        story.append(Paragraph(u"Série STI2D - Épreuve de projet en enseignement spécifique à la spécialité",
+                               entete_style))
     
     story.append(Spacer(1, 5*mm))
     
@@ -131,7 +164,6 @@ def genererFicheValidation(nomFichier, projet):
         else:
             np = p.GetNomPrenom()
             
-        print p, p.discipline
         if p.discipline != 'Tec':
 #            constantes.COUL_DISCIPLINES[p.discipline]
             np = "<i>"+np+"</i>"
@@ -140,7 +172,7 @@ def genererFicheValidation(nomFichier, projet):
         
     data= [[[Paragraph(gras(u'Établissement : '), normal_style), Paragraph(projet.classe.etablissement, normal_style)], [Paragraph(gras(u"Année scolaire : ")+constantes.getAnneeScolaire(), normal_style),
                                                                                                                          Paragraph(gras(u"Nombre d’élèves concernés : ")+str(len(projet.eleves)), normal_style)]],
-           [Paragraph(gras(u"Spécialité : ")+ projet.GetTypeEnseignement(), normal_style), Paragraph(gras(u"Nombre de groupes d’élèves : "), normal_style)],
+           [Paragraph(gras(u"Spécialité : ")+ projet.GetTypeEnseignement(), normal_style), Paragraph(gras(u"Nombre de groupes d’élèves : ")+str(projet.nbrParties), normal_style)],
            [Paragraph(gras(u"Noms et prénoms des enseignants responsables :"), normal_style),NP]]
     t=Table(data,style=[('VALIGN',      (0,0),(-1,-1),'TOP')])
     
@@ -256,12 +288,88 @@ def genererFicheValidation(nomFichier, projet):
     
     doc.build(story)
     
-    print "done"
     
 #genererFicheValidation(u"Intitulé du projet")
     
     
     
+def genererDossierValidation(nomFichier, projet, fenDoc):
+    dosstemp = tempfile.mkdtemp()
+    fichertempV = os.path.join(dosstemp, "pdfvalid.pdf")
+    fichertempF = os.path.join(dosstemp, "pdffiche.pdf")
+#    fichertemp = os.path.join(dosstemp, "pdfdoss.pdf")
+    
+    wx.BeginBusyCursor()
+    genererFicheValidation(fichertempV, projet)
+    fenDoc.exporterFichePDF(fichertempF)
+    
+    merger = PdfFileMerger()
+    input1 = open(fichertempV, "rb")
+    input2 = open(fichertempF, "rb")
+    merger.append(input1)
+    merger.append(input2)
+    
+    output = open(nomFichier, "wb")
+    merger.write(output)
+    output.close()
+    input1.close()
+    input2.close()
+    
+    shutil.rmtree(dosstemp)
+    wx.EndBusyCursor()
+
+    # read PDF files (.pdf) with wxPython
+    # using wx.lib.pdfwin.PDFWindow class ActiveX control
+    # from wxPython's new wx.activex module, this allows one
+    # to use an ActiveX control, as if it would be wx.Window
+    # it embeds the Adobe Acrobat Reader
+    # as far as HB knows this works only with Windows
+    # tested with Python24 and wxPython26 by HB
+import wx
+if wx.Platform == '__WXMSW__':
+    from wx.lib.pdfwin import PDFWindow
+import tempfile
+import os.path
+import shutil
+from PyPDF2 import PdfFileReader, PdfFileMerger
+
+class PdfPanel(wx.Panel):
+    def __init__(self, parent):
+        wx.Panel.__init__(self, parent, id=-1)
+        self.pdf = None
+        sizer = wx.BoxSizer(wx.VERTICAL)
+        self.pdf = PDFWindow(self, style=wx.SUNKEN_BORDER)
+        sizer.Add(self.pdf, proportion=1, flag=wx.EXPAND)
+        self.SetSizer(sizer)
+        self.SetAutoLayout(True)
+        
+    def MiseAJour(self, projet, fenDoc):
+        dosstemp = tempfile.mkdtemp()
+        fichertemp = os.path.join(dosstemp, "pdfdoss.pdf")
+        wx.BeginBusyCursor()
+        genererDossierValidation(fichertemp, projet, fenDoc)
+        self.pdf.LoadFile(fichertemp)
+        shutil.rmtree(dosstemp)
+        wx.EndBusyCursor()
+        
+        
+        
+        
+        
+#    def OnOpenButton(self, event):
+#        # make sure you have PDF files available on your drive
+#        dlg = wx.FileDialog(self, wildcard="*.pdf")
+#        if dlg.ShowModal() == wx.ID_OK:
+#        wx.BeginBusyCursor()
+#        self.pdf.LoadFile(dlg.GetPath())
+#        wx.EndBusyCursor()
+#        dlg.Destroy()
+#    def OnPrevPageButton(self, event):
+#        self.pdf.gotoPreviousPage()
+#    def OnNextPageButton(self, event):
+#        self.pdf.gotoNextPage()
+    
+
 
 
 

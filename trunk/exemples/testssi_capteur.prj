@@ -1,5 +1,5 @@
 <Projet_Classe>
-  <Projet BesoinGene="aaazzz aaa" Intitule="Intitulé du projet." Position="5" Problematique="Réaliser un capteur de couple capable de mesurer des couples de 0 à 3 Nm, adaptable sur n&apos;importe quel type d&apos;arbre (jusqu&apos;à 13 mm de diamètre). Mesure de couple statique.##13##    Affichage digital." R1avC="False">
+  <Projet BesoinParties="A : parce que !" Contraintes="Utiliser des jauges" IntitParties="A : tout" Intitule="Capteur de couple numérique" NbrParties="1" Origine="Interne" Position="5" Problematique="Réaliser un capteur de couple capable de mesurer des couples de 0 à 3 Nm, adaptable sur n&apos;importe quel type d&apos;arbre (jusqu&apos;à 13 mm de diamètre). Mesure de couple statique.##13##- Affichage digital." Production="Prototype de capteur opérationnel" R1avC="False">
     <Equipe>
       <Prof Discipline="Tec" Id="0" Nom="faury" Prenom="cédrick" Referent="True" />
     </Equipe>
@@ -74,7 +74,7 @@
       <Eleve Id="2" Nom="pagnol" Prenom="marcel" />
     </Eleves>
   </Projet>
-  <Classe Etab="Lycée Blaise Pascal" Type="SSI">
+  <Classe Etab="Blaise Pascal (Clermont Fd)" Type="SSI">
     <Effectifs eC="32" nE="4" nG="2" nP="8" />
   </Classe>
 </Projet_Classe>

@@ -976,14 +976,14 @@ TIP_PROBLEMATIQUE =   u"Indiquer :\n" \
                       
 TIP_CONTRAINTES =    u"Indiquer :\n" \
                      u"- coût maximal ;\n" \
-                     u"- nature d’une ou des solutions techniques ou de familles de matériels,\n" \
-                     u"  de constituants ou de composants ;\n" \
+                     u"- nature d’une ou des solutions techniques ou de familles de matériels," \
+                     u" de constituants ou de composants ;\n" \
                      u"- environnement."
                                      
 TIP_PRODUCTION =     u"Indiquer :\n" \
                      u"- documents de formalisation des solutions proposées ;\n" \
-                     u"- sous-ensemble fonctionnel d’un prototype, éléments d’une maquette\n" \
-                     u"  réelle ou virtuelle ;\n" \
+                     u"- sous-ensemble fonctionnel d’un prototype, éléments d’une maquette" \
+                     u" réelle ou virtuelle ;\n" \
                      u"- supports de communication."                             
                                      
 xmlVide = """<?xml version="1.0" encoding="UTF-8"?>

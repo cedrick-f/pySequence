@@ -1509,6 +1509,7 @@ class Projet(BaseDoc, Objet_sequence):
         BaseDoc.__init__(self, app, classe, panelParent, intitule)
         Objet_sequence.__init__(self)
         self.position = 5
+        self.nbrParties = 1
         
         # Par défaut, la revue 1 est après la Conception détaillée
         self.R1avantConception = False
@@ -1529,16 +1530,13 @@ class Projet(BaseDoc, Objet_sequence):
         
         self.problematique = u""
         
-        # Pour la fiche de validation
+        # Spécifiquement pour la fiche de validation
         self.origine = u""
         self.contraintes = u""
         self.besoinParties = u""
         self.intituleParties = u""
-#        self.solutions = u""
-#        self.caractGrp = [u""]
-#        self.documents = u""
+
         self.production = u""
-#        self.environnement = u""
         
         
         self.SetPosition(5)
@@ -1690,6 +1688,7 @@ class Projet(BaseDoc, Objet_sequence):
         projet.set("Production", remplaceLF2Code(self.production))
         projet.set("BesoinParties", remplaceLF2Code(self.besoinParties))
         projet.set("IntitParties", remplaceLF2Code(self.intituleParties))
+        projet.set("NbrParties", str(self.nbrParties))
 #        comp = ET.SubElement(projet, "Competences")
 #        for k, lc in constantes.dicCompetences_prj_simple[self.classe.typeEnseignement].items():
 #            comp.set(k, str(lc[1]))
@@ -1736,8 +1735,8 @@ class Projet(BaseDoc, Objet_sequence):
         self.production = remplaceCode2LF(branche.get("Production", u""))
         self.besoinParties = remplaceCode2LF(branche.get("BesoinParties", u""))
         self.intituleParties = remplaceCode2LF(branche.get("IntitParties", u""))
-    
-        
+        self.nbrParties = eval(branche.get("NbrParties", "1"))
+      
         #
         # Les poids des compétences
         #
@@ -5181,13 +5180,16 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         file_menu.AppendSeparator()
         file_menu.Append(15, u"&Exporter la fiche (PDF ou SVG)\tCtrl+E")
         file_menu.Append(16, u"&Exporter les détails\tCtrl+D")
-        file_menu.Append(17, u"&Générer les grilles d'évaluation\tCtrl+G")
-        file_menu.Append(19, u"&Générer la fiche de validation\tCtrl+V")
+        file_menu.Append(17, u"&Générer les grilles d'évaluation projet\tCtrl+G")
+        file_menu.Append(19, u"&Générer le dossier de validation projet\tCtrl+V")
         file_menu.Append(18, u"&Générer une Synthèse pédagogique (SSI et ETT uniquement)\tCtrl+B")
         
         file_menu.AppendSeparator()
         file_menu.Append(wx.ID_EXIT, u"&Quitter\tCtrl+Q")
 
+        self.file_menu = file_menu
+        
+        
         tool_menu = wx.Menu()
 #        tool_menu.Append(31, u"Options")
         self.menuReg = tool_menu.Append(32, u"a")
@@ -5426,6 +5428,9 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
     ###############################################################################################
     def OnDocChanged(self, evt):
+        """ Opérations de modification du menu et des barre d'outil 
+            en fonction du type de document en cours
+        """
         doc = self.GetClientWindow().GetAuiManager().GetManagedWindow().GetCurrentPage()
         if hasattr(doc, 'typ'):
             
@@ -5441,6 +5446,17 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     #                self.Bind(wx.EVT_TOOL, self.GetActiveChild().projet.AjouterEleve, id=50)
     #                self.Bind(wx.EVT_TOOL, self.GetActiveChild().projet.AjouterProf, id=51)
     #                self.Bind(wx.EVT_TOOL, self.GetActiveChild().projet.AjouterTache, id=52)
+    
+            if doc.typ == "prj":
+                self.file_menu.Enable(18, False)
+                self.file_menu.Enable(17, True)
+                self.file_menu.Enable(19, True)
+            elif doc.typ == "seq":
+                self.file_menu.Enable(18, True)
+                self.file_menu.Enable(17, False)
+                self.file_menu.Enable(19, False)
+                
+           
         
     ###############################################################################################
     def OnKey(self, evt):
@@ -5717,7 +5733,25 @@ class FenetreDocument(aui.AuiMDIChildFrame):
             t += " **"
         self.SetTitle(t)#toDefautEncoding(t))
         
+    #############################################################################
+    def exporterFichePDF(self, nomFichier):
+        try:
+            PDFsurface = cairo.PDFSurface(nomFichier, 595, 842)
+        except IOError:
+            Dialog_ErreurAccesFichier(nomFichier)
+            wx.EndBusyCursor()
+            return
         
+        ctx = cairo.Context (PDFsurface)
+        ctx.scale(820, 820) 
+        if self.typ == 'seq':
+            draw_cairo_seq.Draw(ctx, self.sequence)
+        elif self.typ == 'prj':
+            draw_cairo_prj.Draw(ctx, self.projet, pourDossierValidation = True)
+        
+        PDFsurface.finish()
+        
+    
     #############################################################################
     def exporterFiche(self, event = None):
         mesFormats = "pdf (.pdf)|*.pdf|" \
@@ -5735,21 +5769,8 @@ class FenetreDocument(aui.AuiMDIChildFrame):
             dlg.Destroy()
             wx.BeginBusyCursor()
             if ext == ".pdf":
-                try:
-                    PDFsurface = cairo.PDFSurface(path, 595, 842)
-                except IOError:
-                    Dialog_ErreurAccesFichier(path)
-                    wx.EndBusyCursor()
-                    return
-                
-                ctx = cairo.Context (PDFsurface)
-                ctx.scale(820, 820) 
-                if self.typ == 'seq':
-                    draw_cairo_seq.Draw(ctx, self.sequence)
-                elif self.typ == 'prj':
-                    draw_cairo_prj.Draw(ctx, self.projet)
+                self.exporterFichePDF(path)
                 self.DossierSauvegarde = os.path.split(path)[0]
-                PDFsurface.finish()
                 os.startfile(path)
             elif ext == ".svg":
                 try:
@@ -6091,6 +6112,12 @@ class FenetreProjet(FenetreDocument):
         self.pageDetails = RapportRTF(self.nb, rt.RE_READONLY)
         self.nb.AddPage(self.pageDetails, u"Tâches élèves détaillées")
         
+        #
+        # Dossier de validation
+        #
+        self.pageValid = genpdf.PdfPanel(self.nb)
+        self.nb.AddPage(self.pageValid, u"Dossier de validation")
+        
         self.nb.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
         
         
@@ -6102,6 +6129,8 @@ class FenetreProjet(FenetreDocument):
         event.Skip()
         if new == 1: # On vient de cliquer sur la page "détails"
             self.pageDetails.Remplir(self.fichierCourant, self.projet, self.typ)
+        elif new == 2: # On vient de cliquer sur la page "dossie de validation"
+            self.pageValid.MiseAJour(self.projet, self)
 
         
     ###############################################################################################
@@ -6301,29 +6330,40 @@ class FenetreProjet(FenetreDocument):
                 nomFichier = nomFichier.replace(c, "_")
             return nomFichier+".pdf"
         
-        
-        
-        dlg = wx.DirDialog(self, message = u"Emplacement de la fiche", 
-                            style=wx.DD_DEFAULT_STYLE|wx.CHANGE_DIR
+        mesFormats = u"PDF (.pdf)|*.pdf"
+        nomFichier = getNomFichier("FicheValidation", self.projet)
+        dlg = wx.FileDialog(self, u"Enregistrer le dossier de validation",
+                            defaultFile = nomFichier,
+                            wildcard = mesFormats,
+#                           defaultPath = globdef.DOSSIER_EXEMPLES,
+                            style=wx.SAVE|wx.OVERWRITE_PROMPT|wx.CHANGE_DIR
+                            #| wx.DD_DIR_MUST_EXIST
+                            #| wx.DD_CHANGE_DIR
                             )
+        
+        
+        
+#        dlg = wx.DirDialog(self, message = u"Emplacement de la fiche", 
+#                            style=wx.DD_DEFAULT_STYLE|wx.CHANGE_DIR
+#                            )
 #        dlg.SetFilterIndex(0)
 
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
             dlg.Destroy()
-            
-            count = 0
-            
-            
-            nomFichier = getNomFichier("FicheValidation", self.projet)
-            print nomFichier
+            nomFichier = path
+#            nomFichier = getNomFichier("FicheValidation", self.projet)
+#            nomFichier = os.path.join(path, nomFichier)
+#            print nomFichier
             try:
-                genpdf.genererFicheValidation(os.path.join(path, nomFichier), self.projet)
+                genpdf.genererDossierValidation(nomFichier, self.projet, self)
+                os.startfile(nomFichier)
             except IOError:
                 messageErreur(self, u"Erreur !",
                                   u"Impossible d'enregistrer le fichier.\n\nVérifier :\n" \
                                   u" - qu'aucun fichier portant le même nom n'est déja ouvert\n" \
-                                  u" - que le dossier choisi n'est pas protégé en écriture")
+                                  u" - que le dossier choisi n'est pas protégé en écriture\n\n" \
+                                  + nomFichier)
                 
             
 #            for t, f in tf:
@@ -7057,16 +7097,24 @@ class PanelPropriete_Projet(PanelPropriete):
         
         nb.AddPage(pagePart, u"Découpage du projet")
         
+        self.nbrParties = Variable(u"Nombre de sous parties",  
+                                   lstVal = self.projet.nbrParties, 
+                                   typ = VAR_ENTIER_POS, bornes = [1,5])
+        self.ctrlNbrParties = VariableCtrl(pagePart, self.nbrParties, coef = 1, signeEgal = False,
+                                help = u"Nombre de sous parties", sizeh = 30)
+        self.Bind(EVT_VAR_CTRL, self.EvtVariable, self.ctrlNbrParties)
+        pagePart.sizer.Add(self.ctrlNbrParties, (0,0), flag = wx.EXPAND|wx.ALL, border = 2)
+        
         titreInt = wx.StaticBox(pagePart, -1, u"Intitulés des différentes parties")
         sb = wx.StaticBoxSizer(titreInt)
         
         self.intctrl = wx.TextCtrl(pagePart, -1, u"", style=wx.TE_MULTILINE)
-        self.intctrl.SetToolTipString(u"Intitulés des parties du projet confiées à chaque groupe" \
+        self.intctrl.SetToolTipString(u"Intitulés des parties du projet confiées à chaque groupe.\n" \
                                       u"Les groupes d'élèves sont désignés par des lettres (A, B, C, ...)\n" \
                                       u"et leur effectif est indiqué.")
         pagePart.Bind(wx.EVT_TEXT, self.EvtText, self.intctrl)
         sb.Add(self.intctrl, 1, flag = wx.EXPAND)
-        pagePart.sizer.Add(sb, (0,0), flag = wx.EXPAND)
+        pagePart.sizer.Add(sb, (1,0), flag = wx.EXPAND|wx.ALL, border = 2)
         
         titreInt = wx.StaticBox(pagePart, -1, u"Enoncés du besoin des différentes parties du projet")
         sb = wx.StaticBoxSizer(titreInt)
@@ -7074,10 +7122,10 @@ class PanelPropriete_Projet(PanelPropriete):
         self.enonctrl.SetToolTipString(u"Enoncés du besoin des parties du projet confiées à chaque groupe")
         pagePart.Bind(wx.EVT_TEXT, self.EvtText, self.enonctrl)
         sb.Add(self.enonctrl, 1, flag = wx.EXPAND)
-        pagePart.sizer.Add(sb, (0,1), flag = wx.EXPAND)
+        pagePart.sizer.Add(sb, (0,1), (2,1), flag = wx.EXPAND|wx.ALL, border = 2)
         
         pagePart.sizer.AddGrowableCol(1)
-        pagePart.sizer.AddGrowableRow(0)  
+        pagePart.sizer.AddGrowableRow(1)  
         pagePart.sizer.Layout()
         
         #
@@ -7134,6 +7182,14 @@ class PanelPropriete_Projet(PanelPropriete):
         if bougerSlider != None:
             self.position.SetValue(bougerSlider)
         
+        
+    #############################################################################            
+    def EvtVariable(self, event):
+        var = event.GetVar()
+        if var == self.nbrParties:
+            self.projet.nbrParties = var.v[0]
+        
+        
     #############################################################################            
     def EvtText(self, event):
         if event.GetEventObject() == self.textctrl:
@@ -7181,6 +7237,11 @@ class PanelPropriete_Projet(PanelPropriete):
         self.bgctrl.ChangeValue(self.projet.origine)
         self.contctrl.ChangeValue(self.projet.contraintes)
         self.prodctrl.ChangeValue(self.projet.production)
+        self.intctrl.ChangeValue(self.projet.intituleParties)
+        self.enonctrl.ChangeValue(self.projet.besoinParties)
+        
+        self.nbrParties.v[0] = self.projet.nbrParties
+        self.ctrlNbrParties.mofifierValeursSsEvt()
         
         self.bmp.SetBitmap(self.getBitmapPeriode(250))
         self.position.SetValue(self.projet.position)
