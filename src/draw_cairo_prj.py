@@ -435,7 +435,7 @@ def getPts(lst_rect):
         return lst
     
 ######################################################################################  
-def Draw(ctx, prj, mouchard = False):
+def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
     """ Dessine une fiche de séquence de la séquence <prj>
         dans un contexte cairo <ctx>
     """
@@ -638,9 +638,12 @@ def Draw(ctx, prj, mouchard = False):
     ctx.set_source_rgb(0, 0, 0)
     ctx.set_line_width(0.001)
     l=[]
-    for e in prj.eleves : 
+    for i,e in enumerate(prj.eleves) : 
         e.pts_caract = []
-        l.append(e.GetNomPrenom())
+        if pourDossierValidation:
+            l.append(u"Elève "+str(i+1))
+        else:
+            l.append(e.GetNomPrenom())
     
     
     #
