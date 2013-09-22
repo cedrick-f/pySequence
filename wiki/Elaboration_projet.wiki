@@ -44,7 +44,8 @@ Dans _propriétés_ :
 
 http://pysequence.googlecode.com/svn/trunk/images_aide/propriete_support1.png 
 
-_résultat sur la fiche_ 
+_résultat sur la fiche_
+
 http://pysequence.googlecode.com/svn/trunk/images_aide/res_propriete_support1.png
 ----
 
