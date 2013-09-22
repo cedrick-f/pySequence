@@ -17,8 +17,16 @@ http://pysequence.googlecode.com/svn/trunk/images_aide/propriete_projet.png
 
 Dans _propriétés_ saisir :
  * l'intitulé du projet
- * la position http://pysequence.googlecode.com/svn/trunk/images_aide/intitulé_projet.png
+ * la position 
  * la problématique
+http://pysequence.googlecode.com/svn/trunk/images_aide/intitulé_projet.png
+
+Et depuis les autres onglets, préciser :
+ * l'origine (partenariat, thématique, concours, ...)
+ * les contraintes imposées
+ * le découpage du projets en sous-parties
+ * la production finale attendue
+Ces derniers renseignements figureront sur la fiche de validation.
 
 
 ===*3 - Définir le support d'étude*===
