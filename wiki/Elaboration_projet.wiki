@@ -17,7 +17,7 @@ http://pysequence.googlecode.com/svn/trunk/images_aide/propriete_projet.png
 
 Dans _propriétés_ saisir :
  * l'intitulé du projet
- * la position 
+ * la position dans le cycle (1ère ou terminale)
  * la problématique
 http://pysequence.googlecode.com/svn/trunk/images_aide/intitulé_projet.png
 
@@ -27,6 +27,7 @@ Et depuis les autres onglets, préciser :
  * le découpage du projets en sous-parties
  * la production finale attendue
 Ces derniers renseignements figureront sur la fiche de validation.
+----
 
 
 ===*3 - Définir le support d'étude*===
@@ -43,9 +44,8 @@ Dans _propriétés_ :
 
 http://pysequence.googlecode.com/svn/trunk/images_aide/propriete_support1.png 
 
-----
-
-_résultat sur la fiche_ http://pysequence.googlecode.com/svn/trunk/images_aide/res_propriete_support1.png
+_résultat sur la fiche_ 
+http://pysequence.googlecode.com/svn/trunk/images_aide/res_propriete_support1.png
 ----
 
 
