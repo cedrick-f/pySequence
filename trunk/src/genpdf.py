@@ -327,29 +327,45 @@ def genererDossierValidation(nomFichier, projet, fenDoc):
     # tested with Python24 and wxPython26 by HB
 import wx
 if wx.Platform == '__WXMSW__':
-    from wx.lib.pdfwin import PDFWindow
+    from wx.lib.pdfwin import PDFWindow, get_min_adobe_version
+#    from wx.lib.pdfviewer import pdfViewer
 import tempfile
 import os.path
 import shutil
 from PyPDF2 import PdfFileReader, PdfFileMerger
+
+def getPDFViewer():
+    return get_min_adobe_version()
 
 class PdfPanel(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent, id=-1)
         self.pdf = None
         sizer = wx.BoxSizer(wx.VERTICAL)
-        self.pdf = PDFWindow(self, style=wx.SUNKEN_BORDER)
+        if get_min_adobe_version() != None:
+            self.pdf = PDFWindow(self, style=wx.SUNKEN_BORDER)
+        else:
+            self.pdf = wx.StaticText(self, -1, u"Cette fonctionnalité n'est disponible qu'avec Adobe Acrobat Reader")
+#        else:
+#            self.pdf = pdfViewer( self, -1, wx.DefaultPosition,
+#                                wx.DefaultSize, wx.HSCROLL|wx.VSCROLL|wx.SUNKEN_BORDER)
         sizer.Add(self.pdf, proportion=1, flag=wx.EXPAND)
         self.SetSizer(sizer)
         self.SetAutoLayout(True)
         
     def MiseAJour(self, projet, fenDoc):
-        dosstemp = tempfile.mkdtemp()
-        fichertemp = os.path.join(dosstemp, "pdfdoss.pdf")
+        if get_min_adobe_version() == None:
+            return
+#        if hasattr(self, 'dosstemp') and get_min_adobe_version() == None:
+#            shutil.rmtree(self.dosstemp)
+        self.dosstemp = tempfile.mkdtemp()
+        fichertemp = os.path.join(self.dosstemp, "pdfdoss.pdf")
+
         wx.BeginBusyCursor()
         genererDossierValidation(fichertemp, projet, fenDoc)
         self.pdf.LoadFile(fichertemp)
-        shutil.rmtree(dosstemp)
+        if True:#get_min_adobe_version() != None:
+            shutil.rmtree(self.dosstemp)
         wx.EndBusyCursor()
         
         

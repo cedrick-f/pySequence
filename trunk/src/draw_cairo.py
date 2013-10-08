@@ -254,7 +254,10 @@ def getHoraireTxt(v):
         m = ""
     else:
         m = str(int(m))
-    return h+"h"+m
+    if h == "0":
+        return m+"'"
+    else:
+        return h+"h"+m
 
 
 ######################################################################################

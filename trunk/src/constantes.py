@@ -32,6 +32,7 @@ Created on 26 oct. 2011
 
 @author: Cedrick
 '''
+import wx
 
 # Les constantes par type d'enseignement
 #from constantes_ETT import *
@@ -196,6 +197,8 @@ COUL_ELEVES = [((0.85,0.85,0.95,0.3), (0,0,0,1)),
 
 COUL_COMPETENCES = (0.6, 0.0, 0.0, 1.0)
 
+def GetCouleurWx(C):
+    return wx.Colour(C[0]*255, C[1]*255, C[2]*255)
 
 ####################################################################################
 #
@@ -912,45 +915,69 @@ def getLstPhase(typeEns):
 
 
 
+
+
+
 DUREE_PRJ = 70
-DELTA_DUREE = 5
+DELTA_DUREE = 5 # Tolérance (+-) pour la durée du projet
 DELTA_DUREE2 = 15
 
-ETABLISSEMENTS_PDD = [u"La Fayette (Clermont Fd)",
-                      u"Blaise Pascal (Clermont Fd)",
-                      u"Paul Constans (Montluçon)",
-                      u"Albert-Londres (Cusset)",
-                      u"Pierre-Joël Bonté (Riom)",
-                      u"Albert Einstein (Montluçon)",
-                      u"Jean Monnet (Aurillac)",
-                      u"Jean Monnet (Yzeure)",
-                      u"Jean Zay (Thiers)",
-                      u"Godefroy de Bouillon (Clermont Fd)",
-                      u"Charles et Adrien Dupuy (Le Puy en Velay)"]
+try:
+    with open('etablissements.txt') as f:
+        ETABLISSEMENTS_PDD = f.read().encode(sys.getdefaultencoding()).splitlines()
+except:
+    ETABLISSEMENTS_PDD = [u"La Fayette (Clermont Fd)",
+                          u"Blaise Pascal (Clermont Fd)",
+                          u"Paul Constans (Montluçon)",
+                          u"Albert-Londres (Cusset)",
+                          u"Pierre-Joël Bonté (Riom)",
+                          u"Albert Einstein (Montluçon)",
+                          u"Jean Monnet (Aurillac)",
+                          u"Jean Monnet (Yzeure)",
+                          u"Jean Zay (Thiers)",
+                          u"Godefroy de Bouillon (Clermont Fd)",
+                          u"Charles et Adrien Dupuy (Le Puy en Velay)"]
 
-DISCIPLINES = ['Tec', 'Phy', 'Mat', 'LV1', 'Phi', 'Spo', 'Aut']
+DISCIPLINES = ['Tec', 'Phy', 'Mat', 'Svt', 'LV1', 'Phi', 'Spo', 'Aut']
 NOM_DISCIPLINES = {'Tec' : u"Sciences Industrielles de l'Ingénieur", 
                    'Phy' : u"Physique/Chimie", 
                    'Mat' : u"Mathématiques", 
+                   'Svt' : u"Sciences de la Vie et de la Terre",
                    'Phi' : u"Philosophie", 
                    'LV1' : u"Langue vivante",
                    'Spo' : u"Education physique",
                    'Aut' : u"Autre discipline"}
 
+CODE_DISCIPLINES = {'Tec' : u"", 
+                   'Phy' : u"PC", 
+                   'Mat' : u"M", 
+                   'Svt' : u"SVT",
+                   'Phi' : u"Phi", 
+                   'LV1' : u"LV",
+                   'Spo' : u"EP",
+                   'Aut' : u"Autre discipline"}
+
 COUL_DISCIPLINES = {'Tec' : (0, 0, 0), 
                     'Phy' : (0.7, 0.2, 0), 
                     'Mat' : (0, 0.7, 0.2), 
+                    'Svt' : (0.1, 0.7, 0.1),
                     'Phi' : (0.2, 0, 0.7), 
                     'LV1' : (0.45, 0.45, 0),
                     'Spo' : (0, 0.45, 0.45),
                     'Aut' : (0.45, 0, 0.45)}
 
+AFFICHER_DISC_FICHE = True
+AFFICHER_DISC_ARBRE = True
 
 def getLstDisciplines():
     lst = []
     for k in DISCIPLINES:
-        lst.append(NOM_DISCIPLINES[k])
+        lst.append(NOM_DISCIPLINES[k])#+' ('+CODE_DISCIPLINES[k]+')')
     return lst
+
+
+
+
 
 def getAnneeScolaire():
     date = time.localtime()
