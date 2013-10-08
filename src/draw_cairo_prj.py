@@ -531,7 +531,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
     g = None
     c = []
     for i, p in enumerate(prj.equipe):
-        lstTexte.append(p.GetNomPrenom())
+        lstTexte.append(p.GetNomPrenom(disc = constantes.AFFICHER_DISC_FICHE))
         if p.referent:
             g = i
         c.append(constantes.COUL_DISCIPLINES[p.discipline])

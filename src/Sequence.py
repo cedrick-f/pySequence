@@ -1158,6 +1158,7 @@ class Sequence(BaseDoc):
     def OrdonnerSeances(self):
         for i, sce in enumerate(self.seance):
             sce.ordre = i
+            sce.OrdonnerSeances()
         
         self.SetCodes()
     
@@ -1783,12 +1784,18 @@ class Projet(BaseDoc, Objet_sequence):
     def SetPosition(self, pos):
         # On passe à la position 5
         if pos == 5 and self.position != 5:
-            self.taches.extend(self.creerTachesRevue())
+            for tr in self.creerTachesRevue():
+                self.taches.append(tr)
+                tr.ConstruireArbre(self.arbre, self.brancheTac)
+                tr.SetCode()
+                if hasattr(rt, 'panelPropriete'):
+                    rt.panelPropriete.MiseAJour()
             self.OrdonnerTaches()
-#            lst = self.getTachesRevue()
-#            for t in lst:
-#                self.AjouterTache(tache = t)
-#                t.SetCode()
+            self.arbre.Ordonner(self.brancheTac)
+#            self.panelPropriete.sendEvent()
+#            self.taches.extend(self.creerTachesRevue())
+#            self.OrdonnerTaches()
+
                 
         # On passe de la position5 à une autre
         elif pos !=5 and self.position == 5:
@@ -2634,7 +2641,7 @@ class Competences(Objet_sequence):
 #        self.codeBranche.SetBackgroundColour(wx.Colour(COUL_COMPETENCES[0]*255, COUL_COMPETENCES[1]*255, COUL_COMPETENCES[2]*255))
         self.branche = arbre.AppendItem(branche, u"Compétences", wnd = self.codeBranche, data = self,
                                         image = self.arbre.images["Com"])
-        self.arbre.SetItemTextColour(self.branche, wx.Colour(COUL_COMPETENCES[0]*255, COUL_COMPETENCES[1]*255, COUL_COMPETENCES[2]*255))
+        self.arbre.SetItemTextColour(self.branche, constantes.GetCouleurWx(COUL_COMPETENCES))
         
         
     #############################################################################
@@ -3252,11 +3259,18 @@ class Seance(ElementDeSequence, Objet_sequence):
                 self.panelPropriete.sendEvent()
             self.tip.SetRichTexte()
 
+    ######################################################################################  
+    def SetCodeBranche(self):
+        if hasattr(self, 'codeBranche') and self.typeSeance != "":
+            self.codeBranche.SetLabel(self.code)
+            self.arbre.SetItemText(self.branche, constantes.TypesSeanceCourt[self.typeSeance])
             
+                  
     ######################################################################################  
     def SetCode(self):
         self.code = self.typeSeance
         num = str(self.ordre+1)
+        
         if isinstance(self.parent, Seance):
             num = str(self.parent.ordre+1)+"."+num
             if isinstance(self.parent.parent, Seance):
@@ -3264,12 +3278,8 @@ class Seance(ElementDeSequence, Objet_sequence):
 
         self.code += num
 
-        if hasattr(self, 'codeBranche') and self.typeSeance != "":
-            self.codeBranche.SetLabel(self.code)
-            self.arbre.SetItemText(self.branche, constantes.TypesSeanceCourt[self.typeSeance])
-#        else:
-#            self.codeBranche.SetLabel("??")
-#            self.arbre.SetItemText(self.branche, u"Séance :")
+    
+        self.SetCodeBranche()
         
         if self.typeSeance in ["R", "S"] : # Séances en Rotation ou  Parallèle
             for sce in self.sousSeances:
@@ -3304,8 +3314,12 @@ class Seance(ElementDeSequence, Objet_sequence):
             image = self.arbre.images[self.typeSeance]
         else:
             image = -1
+        
         self.branche = arbre.AppendItem(branche, u"Séance :", wnd = self.codeBranche, 
-                                        data = self, image = image)
+                                            data = self, image = image)
+        if hasattr(self, 'branche'):
+            self.SetCodeBranche()
+            
         if self.typeSeance in ["R", "S"] : # Séances en Rotation ou  Parallèle
             for sce in self.sousSeances:
                 sce.ConstruireArbre(arbre, self.branche)
@@ -3316,6 +3330,7 @@ class Seance(ElementDeSequence, Objet_sequence):
         if self.typeSeance in ["R", "S"] : # Séances en Rotation ou  Parallèle
             for i, sce in enumerate(self.sousSeances):
                 sce.ordre = i
+                sce.OrdonnerSeances()
         
         self.SetCode()
         
@@ -4502,11 +4517,15 @@ class Personne(Objet_sequence):
         return self.prenom.capitalize()
         
     ######################################################################################  
-    def GetNomPrenom(self):
-        if self.nom == "" and self.prenom == "":
-            return self.titre.capitalize()+' '+str(self.id+1)
+    def GetNomPrenom(self, disc = False):
+        if disc and hasattr(self, 'discipline') and constantes.CODE_DISCIPLINES[self.discipline] != u"":
+            d = u' ('+constantes.CODE_DISCIPLINES[self.discipline]+')'
         else:
-            return self.GetPrenom() + ' ' + self.GetNom()
+            d = u""
+        if self.nom == "" and self.prenom == "":
+            return self.titre.capitalize()+' '+str(self.id+1)+d
+        else:
+            return self.GetPrenom() + ' ' + self.GetNom()+d
          
     
     ######################################################################################  
@@ -4546,26 +4565,7 @@ class Personne(Objet_sequence):
         self.tip.SetImage(self.avatar, self.tip_avatar)
         self.SetTip()
         
-    ######################################################################################  
-    def ConstruireArbre(self, arbre, branche):
-        self.arbre = arbre
-        self.codeBranche = wx.Panel(self.arbre, -1)
-        sz = wx.BoxSizer(wx.HORIZONTAL)
-        self.codeDuree = wx.StaticText(self.codeBranche, -1, "")
-        self.evaluR = wx.StaticText(self.codeBranche, -1, "")
-        self.evaluS = wx.StaticText(self.codeBranche, -1, "")
-        sz.Add(self.codeDuree)
-        sz.Add(self.evaluR)
-        sz.Add(self.evaluS)
-        self.codeBranche.SetSizerAndFit(sz)
-        
-#        if self.image == None or self.image == wx.NullBitmap:
-        image = self.arbre.images[self.code]
-#        else:
-#            image = self.image.ConvertToImage().Scale(20, 20).ConvertToBitmap()
-        self.branche = arbre.AppendItem(branche, "", data = self, wnd = self.codeBranche,
-                                        image = image)
-        self.SetCode()
+    
 
 
 ######################################################################################  
@@ -4795,6 +4795,29 @@ class Eleve(Personne, Objet_sequence):
             else:
                 self.tip_evalS.SetBackgroundColour(COUL_NON)
             
+    ######################################################################################  
+    def ConstruireArbre(self, arbre, branche):
+        self.arbre = arbre
+        self.codeBranche = wx.Panel(self.arbre, -1)
+        sz = wx.BoxSizer(wx.HORIZONTAL)
+        self.codeDuree = wx.StaticText(self.codeBranche, -1, "")
+        self.evaluR = wx.StaticText(self.codeBranche, -1, "")
+        self.evaluS = wx.StaticText(self.codeBranche, -1, "")
+        sz.Add(self.codeDuree)
+        sz.Add(self.evaluR)
+        sz.Add(self.evaluS)
+        self.codeBranche.SetSizerAndFit(sz)
+        
+#        if self.image == None or self.image == wx.NullBitmap:
+        image = self.arbre.images[self.code]
+#        else:
+#            image = self.image.ConvertToImage().Scale(20, 20).ConvertToBitmap()
+        self.branche = arbre.AppendItem(branche, "", data = self, wnd = self.codeBranche,
+                                        image = image)
+        self.SetCode()
+        
+        
+        
 ####################################################################################
 #
 #   Classe définissant les propriétés d'un professeur
@@ -4814,6 +4837,7 @@ class Prof(Personne):
     def SetDiscipline(self, discipline):
         self.discipline = discipline
         self.SetTip()
+        self.MiseAJourCodeBranche()
         
     ######################################################################################  
     def AfficherMenuContextuel(self, itemArbre):
@@ -4823,6 +4847,12 @@ class Prof(Personne):
     ######################################################################################  
     def MiseAJourCodeBranche(self):
         self.arbre.SetItemBold(self.branche, self.referent)
+        self.codeDisc.SetLabel(u" "+constantes.CODE_DISCIPLINES[self.discipline]+u" ")
+        self.codeDisc.SetBackgroundColour(constantes.GetCouleurWx(constantes.COUL_DISCIPLINES[self.discipline]))
+        self.codeDisc.SetToolTipString(constantes.NOM_DISCIPLINES[self.discipline])
+        
+        self.codeBranche.Layout()
+        self.codeBranche.Fit()
     
     ######################################################################################  
     def SetTip(self):   
@@ -4844,11 +4874,29 @@ class Prof(Personne):
             self.tip.SetImage(self.avatar, self.tip_avatar)
         
             self.tip.SetTexte(constantes.NOM_DISCIPLINES[self.discipline], self.tip_disc)
-            r, v, b = constantes.COUL_DISCIPLINES[self.discipline]
-            self.tip_disc.SetForegroundColour(wx.Colour(r*255, v*255, b*255))
+            self.tip_disc.SetForegroundColour(constantes.GetCouleurWx(constantes.COUL_DISCIPLINES[self.discipline]))     
         
             self.tip.Layout()
             self.tip.Fit()
+        
+    ######################################################################################  
+    def ConstruireArbre(self, arbre, branche):
+        self.arbre = arbre
+        self.codeBranche = wx.Panel(self.arbre, -1)
+        sz = wx.BoxSizer(wx.HORIZONTAL)
+        self.codeDisc = wx.StaticText(self.codeBranche, -1, "")
+        sz.Add(self.codeDisc)
+        self.codeBranche.SetSizerAndFit(sz)
+        
+#        if self.image == None or self.image == wx.NullBitmap:
+        image = self.arbre.images[self.code]
+#        else:
+#            image = self.image.ConvertToImage().Scale(20, 20).ConvertToBitmap()
+        self.branche = arbre.AppendItem(branche, "", data = self, wnd = self.codeBranche,
+                                        image = image)
+        self.SetCode()
+        
+        
         
 ####################################################################################
 #
@@ -5296,8 +5344,8 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         self.OnDocChanged(None)
         
         if child != None:
-            wx.CallAfter(child.Show)
-        
+            wx.CallAfter(child.Activate)
+
         return child
         
     ###############################################################################################
@@ -5582,7 +5630,6 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         
     
     def miseEnPlace(self):
-        
         
         #############################################################################################
         # Mise en place de la zone graphique
@@ -6122,6 +6169,7 @@ class FenetreProjet(FenetreDocument):
         
         
         self.miseEnPlace()
+   
         
     ###############################################################################################
     def OnPageChanged(self, event):
@@ -6177,26 +6225,26 @@ class FenetreProjet(FenetreDocument):
         self.definirNomFichierCourant(nomFichier)
         
         Ok = True
-#        try:
-        root = ET.parse(fichier).getroot()
-        
-        # Le projet
-        projet = root.find("Projet")
-        if projet == None:
-            self.projet.setBranche(root)
+        try:
+            root = ET.parse(fichier).getroot()
             
-        else:
-            # La classe
-            classe = root.find("Classe")
-            Ok = Ok and self.classe.setBranche(classe)
-            Ok = Ok and self.projet.setBranche(projet)  
+            # Le projet
+            projet = root.find("Projet")
+            if projet == None:
+                self.projet.setBranche(root)
+                
+            else:
+                # La classe
+                classe = root.find("Classe")
+                Ok = Ok and self.classe.setBranche(classe)
+                Ok = Ok and self.projet.setBranche(projet)  
+                
+            self.arbre.DeleteAllItems()
+            root = self.arbre.AddRoot("")
+            self.projet.SetCompetencesRevuesSoutenance()
             
-        self.arbre.DeleteAllItems()
-        root = self.arbre.AddRoot("")
-        self.projet.SetCompetencesRevuesSoutenance()
-            
-#        except:
-#            Ok = False
+        except:
+            Ok = False
         
         if not Ok:
             messageErreur(self, u"Erreur d'ouverture",
@@ -6562,7 +6610,7 @@ class BaseFiche(wx.ScrolledWindow):
         self.ctx = ctx
         self.Refresh()
 
-        print "   ", time.time() - tps
+#        print "   ", time.time() - tps
         wx.EndBusyCursor()
     
     #############################################################################            
@@ -7749,19 +7797,14 @@ class PanelEffectifsClasse(wx.Panel):
         #
         boxClasse = wx.StaticBox(self, -1, u"Découpage de la classe", style = wx.BORDER_RAISED)
 
-        
-        r,v,b = constantes.CouleursGroupes['C']
-        coulClasse = wx.Colour(r*255,v*255,b*255)
+        coulClasse = constantes.GetCouleurWx(constantes.CouleursGroupes['C'])
         boxClasse.SetOwnForegroundColour(coulClasse)
         
-        r,v,b = constantes.CouleursGroupes['G']
-        self.coulEffRed = wx.Colour(r*255,v*255,b*255)
-        
-        r,v,b = constantes.CouleursGroupes['E']
-        self.coulEP = wx.Colour(r*255,v*255,b*255)
-        
-        r,v,b = constantes.CouleursGroupes['P']
-        self.coulAP = wx.Colour(r*255,v*255,b*255)
+        self.coulEffRed = constantes.GetCouleurWx(constantes.CouleursGroupes['G'])
+
+        self.coulEP = constantes.GetCouleurWx(constantes.CouleursGroupes['E'])
+    
+        self.coulAP = constantes.GetCouleurWx(constantes.CouleursGroupes['P'])
         
 #        self.boxClasse = boxClasse
         bsizerClasse = wx.StaticBoxSizer(boxClasse, wx.VERTICAL)
@@ -8649,7 +8692,7 @@ class PanelPropriete_Seance(PanelPropriete):
         #
         # Durée de la séance
         #
-        vcDuree = VariableCtrl(self, seance.duree, coef = 0.5, signeEgal = True, slider = False, sizeh = 30,
+        vcDuree = VariableCtrl(self, seance.duree, coef = 0.25, signeEgal = True, slider = False, sizeh = 30,
                                help = u"Durée de la séance en heures", unite = u"h")
 #        textctrl = wx.TextCtrl(self, -1, u"1")
         self.Bind(EVT_VAR_CTRL, self.EvtText, vcDuree)
@@ -8996,7 +9039,7 @@ class PanelPropriete_Seance(PanelPropriete):
             listEff = []
             
         elif self.seance.typeSeance in ["ED", "P", "TD"]:
-            listEff = ["G", "D", "E", "P"]
+            listEff = ["C", "G", "D", "E", "P"]
             self.cbEff.Show(True)
             self.titreEff.Show(True)
 
@@ -10304,7 +10347,10 @@ class ArbreSequence(ArbreDoc):
                     self.SetCursor(wx.StockCursor(wx.CURSOR_NO_ENTRY))
                 else:
                     if not isinstance(dataTarget, Seance):
-                        self.SetCursor(wx.StockCursor(wx.CURSOR_NO_ENTRY))
+                        if dataTarget == self.sequence.panelSeances:
+                            self.SetCursor(self.CurseurInsert)
+                        else:
+                            self.SetCursor(wx.StockCursor(wx.CURSOR_NO_ENTRY))
                     else:
                         if dataTarget != dataSource:# and dataTarget.parent == dataSource.parent:
                             self.SetCursor(self.CurseurInsert)
@@ -10316,58 +10362,87 @@ class ArbreSequence(ArbreDoc):
         
     ####################################################################################
     def OnEndDrag(self, event):
+        """ Gestion des glisser-déposer
+        """
         self.item = event.GetItem() 
         dataTarget = self.GetItemPyData(self.item)
         dataSource = self.GetItemPyData(self.itemDrag)
-        if not isinstance(dataSource, Seance):
-            pass
+        if dataTarget == self.sequence.panelSeances:
+            dataTarget = self.sequence.seance[0]
+            self.item = self.GetFirstChild(self.item)[0]
+            root = True
         else:
-            if not isinstance(dataTarget, Seance):
-                pass
-            else:
-                if dataTarget != dataSource and dataTarget.parent == dataSource.parent:
-                    if isinstance(dataTarget.parent, Sequence):
+            root = False
+            
+        if isinstance(dataSource, Seance) and isinstance(dataTarget, Seance)  and dataTarget != dataSource:
+            
+            # source et target ont le même parent (même niveau dans l'arbre)
+            if dataTarget.parent == dataSource.parent:
+                
+                if dataTarget.typeSeance in ["R","S"]:# rotation ou parallele
+                    if not dataSource in dataTarget.sousSeances:
+                        if isinstance(dataSource.parent, Sequence):# Niveau 0
+                            lstS = dataSource.parent.seance
+                        else:
+                            lstS = dataSource.parent.sousSeances
+                        lstT = dataTarget.sousSeances
+                        s = lstS.index(dataSource)
+                        lstT.insert(0, lstS.pop(s))
+                        dataSource.parent = dataTarget
+                        self.sequence.OrdonnerSeances()
+                        self.sequence.reconstruireBrancheSeances(dataSource.parent, dataTarget)
+                        self.panelVide.sendEvent(self.sequence) # Solution pour déclencher un "redessiner"
+                    
+                else:
+                    if isinstance(dataTarget.parent, Sequence):# Niveau 0
                         lst = dataTarget.parent.seance
                     else:
                         lst = dataTarget.parent.sousSeances
+
                     s = lst.index(dataSource)
-                    t = lst.index(dataTarget)
+                    if root:
+                        t = -1
+                    else:
+                        t = lst.index(dataTarget)
                     
                     if t > s:
                         lst.insert(t, lst.pop(s))
                     else:
                         lst.insert(t+1, lst.pop(s))
-                    dataTarget.parent.OrdonnerSeances()
+                       
+                    self.sequence.OrdonnerSeances() 
                     self.SortChildren(self.GetItemParent(self.item))
                     self.panelVide.sendEvent(self.sequence) # Solution pour déclencher un "redessiner"
-                
-                elif dataTarget != dataSource and dataTarget.parent != dataSource.parent:
-                    if isinstance(dataTarget.parent, Sequence):
-                        lstT = dataTarget.parent.seance
-                    else:
-                        lstT = dataTarget.parent.sousSeances
-                        if len(lstT) > 0:
-                            dataSource.duree.v[0] = lstT[0].GetDuree()
-                    
-                    if isinstance(dataSource.parent, Sequence):
-                        lstS = dataSource.parent.seance
-                    else:
-                        lstS = dataSource.parent.sousSeances
-                        
-                    s = lstS.index(dataSource)
-                    t = lstT.index(dataTarget)
-                    lstT[t+1:t+1] = [dataSource]
-                    del lstS[s]
-                    p = dataSource.parent
-                    dataSource.parent = dataTarget.parent
-#                    dataTarget.parent = p
-                    p.OrdonnerSeances()
-                    dataTarget.parent.OrdonnerSeances()
-                    
-                    self.sequence.reconstruireBrancheSeances(dataTarget.parent, p)
-                    self.panelVide.sendEvent(self.sequence) # Solution pour déclencher un "redessiner"
+            
+            # source et target ont des parents différents
+            elif dataTarget.parent != dataSource.parent:
+                if isinstance(dataTarget.parent, Sequence):
+                    lstT = dataTarget.parent.seance
                 else:
-                    pass
+                    lstT = dataTarget.parent.sousSeances
+                    if len(lstT) > 0:
+                        dataSource.duree.v[0] = lstT[0].GetDuree()
+                
+                if isinstance(dataSource.parent, Sequence):
+                    lstS = dataSource.parent.seance
+                else:
+                    lstS = dataSource.parent.sousSeances
+
+                s = lstS.index(dataSource)
+                if root:
+                    t = -1
+                else:
+                    t = lstT.index(dataTarget)
+                lstT[t+1:t+1] = [dataSource]
+                del lstS[s]
+                p = dataSource.parent
+                dataSource.parent = dataTarget.parent
+                self.sequence.OrdonnerSeances()
+                self.sequence.reconstruireBrancheSeances(dataTarget.parent, p)
+                self.panelVide.sendEvent(self.sequence) # Solution pour déclencher un "redessiner"
+            else:
+                pass
+            
         self.itemDrag = None
         event.Skip()            
 
