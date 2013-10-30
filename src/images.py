@@ -15,12 +15,6 @@ SmallDnArrow = PyEmbeddedImage(
 
 
 
-
-##############################################################################
-# Supprimer tout ce qui suit avant compilation
-##############################################################################
-
-
 #----------------------------------------------------------------------
 Bouton_2CI = PyEmbeddedImage(
     "iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAYAAACpSkzOAAAABGdBTUEAALGPC/xhBQAAAAlw"
@@ -4831,31 +4825,16 @@ getIcone_ajout_seanceBitmap = Icone_ajout_seance.GetBitmap
 getIcone_ajout_seanceIcon = Icone_ajout_seance.GetIcon
 
 #----------------------------------------------------------------------
-Icone_eleve2__2_ = PyEmbeddedImage(
-    "iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IArs4c6QAAAARnQU1B"
+Bouton_lien = PyEmbeddedImage(
+    "iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAAXNSR0IArs4c6QAAAARnQU1B"
     "AACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5F"
-    "VCB2My41LjEwMPRyoQAAA3hJREFUOE9jYMACRKSlda39/VWEJSXDBMXErCXk5HQVtLWNwoqK"
-    "+LGpJygGNLDbKymJV1xefqaYrGyOjKqqi5SSUoW5lxezuLxCNUEDkBXo2drya+urL66tT/qy"
-    "cWPr/1WrGv53dmV81tRW/iSjpFAnKC5ermtjIygsJTUdr8EFU6dyAhUHRUS6vHnzZuP////3"
-    "o+C/f/f+v3t36f+m5pQPMvJS56RVVAITGhqYVA0NLTAMNrcxDPX0tvphbKLx89ev3RiGoRv+"
-    "6tX6//YORi+FJCRWAMPZBMPAssq4W/fvL/9/6NDE//fuLYMb+ODBCpyGP3y48r+Fpc4/MTk5"
-    "IwwDtfXUTuflBf+/eXMRMMzq4YY4Ohr+//NnL5y/ZXP7/x8/dsH5L1+u+6+ho7oporSMxTct"
-    "DWGuTUAAOzBM4nr7sv8tWVL9/8mT1WBNyIaB+NOnF/4HeRc5CKqrY/+7e1r+kZGXnoXhUkMT"
-    "7fWgCKmsjP7/4f1mvGEJMnjzprb/Gze2/N+ypf1/bLzXDQwDFbW1JTKzgp5//Ljlf2ND4v8b"
-    "NxbhNHTGjKL/t28v+Q/ykb6J7gxgOkWEJdC7hUABU5ANwJyhlVcQ+uLr1x3/580r+19TE/t/"
-    "z57e/++BLv75cxc46TQ0JPyfNasEbFlMnMcTDVMzHWlllXywC4FZSsszMZFFSlm51cLbmwMs"
-    "pqUl7+1nu2H79s7/377t/L9rV/f/5uak//n5wf/r6uL/nzo14z8oXfZPyP0lp64eD3RQJzBX"
-    "eYrKyKgy8AkJFYnLyU3lExZeLiQuUQALB2CiZeDi4zstJyf2PyzM8T8oFZSWRvzPzPT/7+dn"
-    "/Q8Y3gckFRQsgJmhFah3F9CwIFN3d1F4OMppaLjzCAisB9JFQBsrgTa6yylYXDQxyfgvLq7/"
-    "n5NT8D8LCyeY5heQ+mjg4CAFDJ61AqKi82XV1SOAPrUDlgGTwAZKKCjEAw1YJy4nLw/ieycn"
-    "swPDNMnIOOV/PTBZwnBd3V+gl//9Dw1d85+Th+cUUI8mMP0xAn0YAjQj2MzDgx1n/tY0M9d3"
-    "c+tBMRBmcF7e3f+ScurNJJU6wDAJj4raitVAkMFWtnlrSTIQGCGV+fn3cBro7tX9LL6+nolo"
-    "Q8Wl1ZbV1v7CaWBw8PL/wCSjTrSB6lpe55EjBJ2dnX39v4iUdCG6gQBhdGjcn/79qQAAAABJ"
-    "RU5ErkJggg==")
-getIcone_eleve2__2_Data = Icone_eleve2__2_.GetData
-getIcone_eleve2__2_Image = Icone_eleve2__2_.GetImage
-getIcone_eleve2__2_Bitmap = Icone_eleve2__2_.GetBitmap
-getIcone_eleve2__2_Icon = Icone_eleve2__2_.GetIcon
+    "VCB2My41LjExR/NCNwAAAF9JREFUOE/t0NEKwCAIBVA/3T/flnXtorXtLYIOSKnlWHIsoKrX"
+    "s4wCUq/d6TAEatW99uIwPmQXfwTw3gehaHnRckO/X8TVcILDXwF9H77kqJ4ftpo/+CAg9SbD"
+    "j02I3KxzdRwKCiZ8AAAAAElFTkSuQmCC")
+getBouton_lienData = Bouton_lien.GetData
+getBouton_lienImage = Bouton_lien.GetImage
+getBouton_lienBitmap = Bouton_lien.GetBitmap
+getBouton_lienIcon = Bouton_lien.GetIcon
 
 #----------------------------------------------------------------------
 Icone_ajout_systeme = PyEmbeddedImage(
@@ -5103,30 +5082,31 @@ getIcone_fullscreenBitmap = Icone_fullscreen.GetBitmap
 getIcone_fullscreenIcon = Icone_fullscreen.GetIcon
 
 #----------------------------------------------------------------------
-Icone_synthese_Seq = PyEmbeddedImage(
-    "iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAMAAAC6V+0/AAAAB3RJTUUH2wsKDx0n/XoJcwAA"
-    "AAlwSFlzAAAewgAAHsIBbtB1PgAAAARnQU1BAACxjwv8YQUAAAJMUExURf////39/f39/Pz+"
-    "/f79/vv9/P79+/7+/enp5+Xm4+7q7Pj8/P37/f3+/fn9+vv5+vTy7/r9/PPz8uHh3Pf48unm"
-    "4suztOXh2vPx8vj29Pv49+3u6szHyJyjpLmjjfTq3vz9/P79/Pj499zc2/f28vf28evs5bqF"
-    "fpeMfZSXmbKIjr10b7uIfY+dtnSOj+zPt/37/P3+/vv7+d3e2fT07/j38/b28fn28Pf08eGl"
-    "qtVHLKC+Z0uxxsp5mcltU6ikt0qInt20kvv39fb28+Dg3PDw6/n49Pf18fj18OvOz88pN+mo"
-    "MW+4d1Ouztpqfc98YrCsvD+IpsGmhfDm2/38+/f399/f2/Ly7fb18fDn4tM0U+VvKbfFTTiw"
-    "roCfw+JhY82Mc7atu0mMrJicju3Krvv9+vr6+vb29Pn59fj48vf38vXz7tVcb+A2KenHNlGz"
-    "fT24zbaMrt9XTMifirqxuluMsmiTmOe3ivXt5fb18/j38vr48vn18duKmNsULvC0MJ/CXi+u"
-    "rlez2NmAotpSOMuxoLyzunCQtTeOo8Goiee5mff39Pf289kwVOJrMOLQOUK0ije0wXemzuRz"
-    "jdtTLcq9rr64wKWjwjyMsVSVqevTwvn4+O7c4s8iR+eJONXPPjWvmDe4zX+hyeV4luFRNM6R"
-    "d8fLxcK0xqy/zcvi5/v7+vz9/fj5+/Li5PTuxNLZmFy6sGjJ2oi41uSYs9yah+G9r+zu6fj2"
-    "+Pz6/P38/fv9/vv9/fv8/fz6+fT6+Pj6+/P6+fr8/Pz9/v79/RO5J5EAAAABdFJOUwBA5thm"
-    "AAABCklEQVR42mNgIA3s2r1n7779B3Yc5Dl0WPEwRGz1mrXr1m/YuGnzlq3btu/YyQgSY5w9"
-    "Z+68+QsWLlq8ZOmy5StWrgKKMXX3qPT29U+YOGnylKnTps+YOQsoVllVXVNbV9/Q2NTc0trW"
-    "3tHZxZCWnpGpmpWdk5uXX1BYVFxSWlZewRAaFm7qZhoRGRUdExsXn5CYlJySysDo7OLqZuru"
-    "4enl7ePr5x8QGBQcArTIyNjE1MzcwtLK2sbWzt7B0UkRKMiupKyioqqmrqGppa2jq6dvYAh2"
-    "p5CwiKiYuISklLSMrJy8giLYR4wcnFzcPECP8PLxCwgys0P8ycjIxMQMYrCwMrKxkxhwFAAA"
-    "B/xN4SuvWcgAAAAASUVORK5CYII=")
-getIcone_synthese_SeqData = Icone_synthese_Seq.GetData
-getIcone_synthese_SeqImage = Icone_synthese_Seq.GetImage
-getIcone_synthese_SeqBitmap = Icone_synthese_Seq.GetBitmap
-getIcone_synthese_SeqIcon = Icone_synthese_Seq.GetIcon
+Icone_eleve2__2_ = PyEmbeddedImage(
+    "iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IArs4c6QAAAARnQU1B"
+    "AACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5F"
+    "VCB2My41LjEwMPRyoQAAA3hJREFUOE9jYMACRKSlda39/VWEJSXDBMXErCXk5HQVtLWNwoqK"
+    "+LGpJygGNLDbKymJV1xefqaYrGyOjKqqi5SSUoW5lxezuLxCNUEDkBXo2drya+urL66tT/qy"
+    "cWPr/1WrGv53dmV81tRW/iSjpFAnKC5ermtjIygsJTUdr8EFU6dyAhUHRUS6vHnzZuP////3"
+    "o+C/f/f+v3t36f+m5pQPMvJS56RVVAITGhqYVA0NLTAMNrcxDPX0tvphbKLx89ev3RiGoRv+"
+    "6tX6//YORi+FJCRWAMPZBMPAssq4W/fvL/9/6NDE//fuLYMb+ODBCpyGP3y48r+Fpc4/MTk5"
+    "IwwDtfXUTuflBf+/eXMRMMzq4YY4Ohr+//NnL5y/ZXP7/x8/dsH5L1+u+6+ho7oporSMxTct"
+    "DWGuTUAAOzBM4nr7sv8tWVL9/8mT1WBNyIaB+NOnF/4HeRc5CKqrY/+7e1r+kZGXnoXhUkMT"
+    "7fWgCKmsjP7/4f1mvGEJMnjzprb/Gze2/N+ypf1/bLzXDQwDFbW1JTKzgp5//Ljlf2ND4v8b"
+    "NxbhNHTGjKL/t28v+Q/ykb6J7gxgOkWEJdC7hUABU5ANwJyhlVcQ+uLr1x3/580r+19TE/t/"
+    "z57e/++BLv75cxc46TQ0JPyfNasEbFlMnMcTDVMzHWlllXywC4FZSsszMZFFSlm51cLbmwMs"
+    "pqUl7+1nu2H79s7/377t/L9rV/f/5uak//n5wf/r6uL/nzo14z8oXfZPyP0lp64eD3RQJzBX"
+    "eYrKyKgy8AkJFYnLyU3lExZeLiQuUQALB2CiZeDi4zstJyf2PyzM8T8oFZSWRvzPzPT/7+dn"
+    "/Q8Y3gckFRQsgJmhFah3F9CwIFN3d1F4OMppaLjzCAisB9JFQBsrgTa6yylYXDQxyfgvLq7/"
+    "n5NT8D8LCyeY5heQ+mjg4CAFDJ61AqKi82XV1SOAPrUDlgGTwAZKKCjEAw1YJy4nLw/ieycn"
+    "swPDNMnIOOV/PTBZwnBd3V+gl//9Dw1d85+Th+cUUI8mMP0xAn0YAjQj2MzDgx1n/tY0M9d3"
+    "c+tBMRBmcF7e3f+ScurNJJU6wDAJj4raitVAkMFWtnlrSTIQGCGV+fn3cBro7tX9LL6+nolo"
+    "Q8Wl1ZbV1v7CaWBw8PL/wCSjTrSB6lpe55EjBJ2dnX39v4iUdCG6gQBhdGjcn/79qQAAAABJ"
+    "RU5ErkJggg==")
+getIcone_eleve2__2_Data = Icone_eleve2__2_.GetData
+getIcone_eleve2__2_Image = Icone_eleve2__2_.GetImage
+getIcone_eleve2__2_Bitmap = Icone_eleve2__2_.GetBitmap
+getIcone_eleve2__2_Icon = Icone_eleve2__2_.GetIcon
 
 #----------------------------------------------------------------------
 Icone_soutenance = PyEmbeddedImage(
@@ -5153,6 +5133,32 @@ getIcone_soutenanceData = Icone_soutenance.GetData
 getIcone_soutenanceImage = Icone_soutenance.GetImage
 getIcone_soutenanceBitmap = Icone_soutenance.GetBitmap
 getIcone_soutenanceIcon = Icone_soutenance.GetIcon
+
+#----------------------------------------------------------------------
+Icone_synthese_Seq = PyEmbeddedImage(
+    "iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAMAAAC6V+0/AAAAB3RJTUUH2wsKDx0n/XoJcwAA"
+    "AAlwSFlzAAAewgAAHsIBbtB1PgAAAARnQU1BAACxjwv8YQUAAAJMUExURf////39/f39/Pz+"
+    "/f79/vv9/P79+/7+/enp5+Xm4+7q7Pj8/P37/f3+/fn9+vv5+vTy7/r9/PPz8uHh3Pf48unm"
+    "4suztOXh2vPx8vj29Pv49+3u6szHyJyjpLmjjfTq3vz9/P79/Pj499zc2/f28vf28evs5bqF"
+    "fpeMfZSXmbKIjr10b7uIfY+dtnSOj+zPt/37/P3+/vv7+d3e2fT07/j38/b28fn28Pf08eGl"
+    "qtVHLKC+Z0uxxsp5mcltU6ikt0qInt20kvv39fb28+Dg3PDw6/n49Pf18fj18OvOz88pN+mo"
+    "MW+4d1Ouztpqfc98YrCsvD+IpsGmhfDm2/38+/f399/f2/Ly7fb18fDn4tM0U+VvKbfFTTiw"
+    "roCfw+JhY82Mc7atu0mMrJicju3Krvv9+vr6+vb29Pn59fj48vf38vXz7tVcb+A2KenHNlGz"
+    "fT24zbaMrt9XTMifirqxuluMsmiTmOe3ivXt5fb18/j38vr48vn18duKmNsULvC0MJ/CXi+u"
+    "rlez2NmAotpSOMuxoLyzunCQtTeOo8Goiee5mff39Pf289kwVOJrMOLQOUK0ije0wXemzuRz"
+    "jdtTLcq9rr64wKWjwjyMsVSVqevTwvn4+O7c4s8iR+eJONXPPjWvmDe4zX+hyeV4luFRNM6R"
+    "d8fLxcK0xqy/zcvi5/v7+vz9/fj5+/Li5PTuxNLZmFy6sGjJ2oi41uSYs9yah+G9r+zu6fj2"
+    "+Pz6/P38/fv9/vv9/fv8/fz6+fT6+Pj6+/P6+fr8/Pz9/v79/RO5J5EAAAABdFJOUwBA5thm"
+    "AAABCklEQVR42mNgIA3s2r1n7779B3Yc5Dl0WPEwRGz1mrXr1m/YuGnzlq3btu/YyQgSY5w9"
+    "Z+68+QsWLlq8ZOmy5StWrgKKMXX3qPT29U+YOGnylKnTps+YOQsoVllVXVNbV9/Q2NTc0trW"
+    "3tHZxZCWnpGpmpWdk5uXX1BYVFxSWlZewRAaFm7qZhoRGRUdExsXn5CYlJySysDo7OLqZuru"
+    "4enl7ePr5x8QGBQcArTIyNjE1MzcwtLK2sbWzt7B0UkRKMiupKyioqqmrqGppa2jq6dvYAh2"
+    "p5CwiKiYuISklLSMrJy8giLYR4wcnFzcPECP8PLxCwgys0P8ycjIxMQMYrCwMrKxkxhwFAAA"
+    "B/xN4SuvWcgAAAAASUVORK5CYII=")
+getIcone_synthese_SeqData = Icone_synthese_Seq.GetData
+getIcone_synthese_SeqImage = Icone_synthese_Seq.GetImage
+getIcone_synthese_SeqBitmap = Icone_synthese_Seq.GetBitmap
+getIcone_synthese_SeqIcon = Icone_synthese_Seq.GetIcon
 
 #----------------------------------------------------------------------
 Icone_ajout_prof = PyEmbeddedImage(

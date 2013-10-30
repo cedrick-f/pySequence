@@ -486,12 +486,16 @@ class VariableCtrl(wx.Panel):
         # Valeur de la variable
         #
         self.text = wx.TextCtrl(self, -1, self.lstToText(self.variable.v), size = (sizeh, -1))#,
-        if self.variable.nn == "":
-            txtn = u"de la variable "+self.variable.n
-        else:
-            txtn = self.variable.nn
-        self.text.SetToolTipString(u"Saisir la valeur "+txtn)
         
+        if len(help) > 0:
+            self.text.SetToolTipString(help)
+        else:
+            if self.variable.nn == "":
+                txtn = u"de la variable "+self.variable.n
+            else:
+                txtn = self.variable.nn
+            self.text.SetToolTipString(u"Saisir la valeur "+txtn)
+            
         self.Bind(wx.EVT_TEXT, self.OnChar, self.text)
 #        self.Bind(wx.EVT_CHAR, self.OnChar, self.text)
         
@@ -502,7 +506,10 @@ class VariableCtrl(wx.Panel):
         
         self.spin.SetRange(-100, 100)
         self.spin.SetValue(0)
-        self.spin.SetToolTipString(u"Agir ici pour augmenter/diminuer la valeur "+txtn)
+        if len(help) > 0:
+            self.spin.SetToolTipString(help)
+        else:
+            self.spin.SetToolTipString(u"Agir ici pour augmenter/diminuer la valeur "+txtn)
 
         self.Bind(wx.EVT_SPIN_UP, self.OnSpinUp, self.spin)
         self.Bind(wx.EVT_SPIN_DOWN, self.OnSpinDown, self.spin)

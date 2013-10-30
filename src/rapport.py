@@ -664,7 +664,7 @@ class FrameRapport(wx.Frame):
     
 class RapportRTF(rt.RichTextCtrl): 
     def __init__(self, parent, style = 0):
-        rt.RichTextCtrl.__init__(self, parent, style = rt.RE_MULTILINE | style)
+        rt.RichTextCtrl.__init__(self, parent, style = rt.RE_MULTILINE | wx.WANTS_CHARS |style)
         self.style = style
         self.parent = parent   
          

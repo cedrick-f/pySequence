@@ -10,20 +10,20 @@
 #############################################################################
 #############################################################################
 
-## Copyright (C) 2011 Cédrick FAURY
+## Copyright (C) 2011-2013 Cédrick FAURY
 
-#    This program is free software; you can redistribute it and/or modify
+#    pySequence is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation; either version 3 of the License, or
 #    (at your option) any later version.
     
-#    This program is distributed in the hope that it will be useful,
+#    pySequence is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
 #    You should have received a copy of the GNU General Public License
-#    along with this program; if not, write to the Free Software
+#    along with pySequence; if not, write to the Free Software
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import constantes
@@ -76,6 +76,12 @@ def italic(s):
 
 def gras(s):
     return "<strong>"+s+"</strong>"
+
+def splitParagraph(text, style):
+    pp = []
+    for l in text.split("\n"):
+        pp.append(Paragraph(l, style))
+    return pp
 
 #
 #
@@ -215,13 +221,13 @@ def genererFicheValidation(nomFichier, projet):
     for l in constantes.TIP_PRODUCTION.split("\n"):
         ppr.append(Paragraph(l, entete_style))
         
-    data= [[Paragraph(gras(u'Intitulé du projet'),normal_style),                Paragraph(projet.intitule, normal_style)],
-           [Paragraph(gras(u'Origine de la proposition'),normal_style),         Paragraph(projet.origine, normal_style)],
-           [ppb,                                                                Paragraph(projet.problematique, normal_style)],
-           [pco,                                                                Paragraph(projet.contraintes, normal_style)],
-           [Paragraph(gras(u'Intitulé des parties du projet confiées à chaque groupe'),normal_style),               Paragraph(projet.intituleParties, normal_style)],
-           [Paragraph(gras(u'Énoncé du besoin pour la partie du projet confiée à chaque groupe'),normal_style),     Paragraph(projet.besoinParties, normal_style)],
-           [ppr,                                                                Paragraph(projet.production,normal_style)]]
+    data= [[Paragraph(gras(u'Intitulé du projet'),normal_style),                splitParagraph(projet.intitule, normal_style)],
+           [Paragraph(gras(u'Origine de la proposition'),normal_style),         splitParagraph(projet.origine, normal_style)],
+           [ppb,                                                                splitParagraph(projet.problematique, normal_style)],
+           [pco,                                                                splitParagraph(projet.contraintes, normal_style)],
+           [Paragraph(gras(u'Intitulé des parties du projet confiées à chaque groupe'),normal_style),               splitParagraph(projet.intituleParties, normal_style)],
+           [Paragraph(gras(u'Énoncé du besoin pour la partie du projet confiée à chaque groupe'),normal_style),     splitParagraph(projet.besoinParties, normal_style)],
+           [ppr,                                                                splitParagraph(projet.production,normal_style)]]
            
     t=Table(data,style=[('GRID',        (0,0),(-1,-1),  1,colors.black),
                         ('VALIGN',      (0,0),(-1,-1),'TOP')])

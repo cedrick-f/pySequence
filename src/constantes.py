@@ -10,7 +10,7 @@
 #############################################################################
 #############################################################################
 
-## Copyright (C) 2012 Cédrick FAURY - Jean-Claude FRICOU
+## Copyright (C) 2011-2013 Cédrick FAURY - Jean-Claude FRICOU
 
 #    pySequence is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -181,7 +181,7 @@ if not PORTABLE:
 #   Quelques couleurs ...
 #
 ####################################################################################
-COUL_OK  = "GREEN3"
+COUL_OK  = "LIMEGREEN"
 COUL_NON = "TOMATO1"
 COUL_BIEN = "GOLD"
 COUL_BOF = "ORANGE"
@@ -198,7 +198,13 @@ COUL_ELEVES = [((0.85,0.85,0.95,0.3), (0,0,0,1)),
 COUL_COMPETENCES = (0.6, 0.0, 0.0, 1.0)
 
 def GetCouleurWx(C):
-    return wx.Colour(C[0]*255, C[1]*255, C[2]*255)
+    if type(C) == str:
+        return wx.NamedColour(C)
+    else:
+        return wx.Colour(C[0]*255, C[1]*255, C[2]*255)
+
+def GetCouleurHTML(C):
+    return GetCouleurWx(C).GetAsString(wx.C2S_CSS_SYNTAX)
 
 ####################################################################################
 #
@@ -555,11 +561,7 @@ for t in EnseignementsProjet:
     dicIndicateurs[t] = Modules[t].dicIndicateurs_prj
     dicPoidsIndicateurs[t] = Modules[t].dicPoidsIndicateurs_prj
 
-#dicIndicateurs = {'ITEC'   : dicIndicateurs_prj_ITEC, 
-#                  'AC'     : dicIndicateurs_prj_AC, 
-#                  'EE'     : dicIndicateurs_prj_EE, 
-#                  'SIN'    : dicIndicateurs_prj_SIN, 
-#                  'SSI'    : dicIndicateurs_prj_SSI}
+                            
 
 for e, i in dicIndicateurs.items():
     if e != "SSI":
@@ -575,6 +577,31 @@ for t in EnseignementsProjet:
 for e, i in dicPoidsIndicateurs.items():
     if e != "SSI":
         i.update(Modules['ET'].dicPoidsIndicateurs_prj)
+        
+        
+lstGrpIndicateurRevues = {}
+lstGrpIndicateurSoutenance = {}
+for t in EnseignementsProjet:    
+    lstGrpIndicateurRevues[t] = []
+    lstGrpIndicateurSoutenance[t] = []
+    for grp, poids in dicPoidsIndicateurs[t].items():
+        poidsGrp, dicIndicGrp = poids
+        for comp, poidsIndic in dicIndicGrp.items():
+            if comp in dicIndicateurs[t].keys():
+                for i, indic in enumerate(dicIndicateurs[t][comp]):
+                    if dicIndicateurs[t][comp][i][1]:
+                        lstGrpIndicateurRevues[t].append(grp)
+                    else:
+                        lstGrpIndicateurSoutenance[t].append(grp)
+                        
+    lstGrpIndicateurSoutenance[t] = list(set(lstGrpIndicateurSoutenance[t]))
+    lstGrpIndicateurRevues[t] = list(set(lstGrpIndicateurRevues[t]))
+    if "O8s" in lstGrpIndicateurSoutenance[t]:
+        lstGrpIndicateurSoutenance[t].remove("O8s")
+        lstGrpIndicateurSoutenance[t].append("O8")
+
+#print lstGrpIndicateurRevues
+#print lstGrpIndicateurSoutenance
         
 #######################################################################################
 ##
