@@ -15,7 +15,9 @@ shutil.rmtree("build", ignore_errors=True)
 # Inculsion des fichiers de données
 #################################################################################################
 includefiles = [('Microsoft.VC90.CRT', "Microsoft.VC90.CRT"),
-                     'gpl.txt']
+                     'gpl.txt', 
+                     'etablissements.txt',
+                     ('../tables', "../tables")]
 #includefiles.extend(glob(r"*.xlsx"))
 #includefiles.extend(glob(r"*.xls"))
 #includefiles.extend(glob(r"*.xlsm"))

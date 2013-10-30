@@ -40,7 +40,7 @@ Copyright (C) 2011-2013
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "3.20"
+__version__ = "4.3"
 
 #from threading import Thread
 
@@ -146,6 +146,10 @@ import grilles, genpdf
 
 from rapport import FrameRapport, RapportRTF
 
+from xml.dom.minidom import parse, parseString
+import xml.dom
+        
+        
 # Pour l'export en swf
 #import tempfile
 #import svg_export
@@ -247,6 +251,54 @@ def remplaceLF2Code(txt):
 ######################################################################################  
 def remplaceCode2LF(txt):
     return txt.replace("##13##", "\n")#&#13")
+    
+######################################################################################  
+def forceID(xml):
+    for node in xml.childNodes:
+        if hasattr(node, 'hasAttribute'):
+            if node.hasAttribute("id"):
+                node.setIdAttribute('id')
+            if node.hasChildNodes():
+                forceID(node)
+
+def SetWholeText(node, id, text):
+    
+    nom = node.getElementById(id)
+    if nom != None:
+        
+        for txtNode in nom.childNodes:
+            if txtNode.nodeType==xml.dom.Node.TEXT_NODE:
+#                print "SetWholeText", text
+                txtNode.replaceWholeText(text)
+        
+def XML_AjouterCol(node, idLigne, text, coul = None, size = None, bold = False):
+    """<td id="rc1" style="background-color: #ff6347;"><font id="r1" size="2">1</font></td>"""
+    ligne = node.getElementById(idLigne)
+    if ligne != None:
+        td = node.createElement("td")
+        ligne.appendChild(td)
+        
+        if coul != None:
+            td.setAttribute("style", "background-color: "+coul+";")
+        
+        if size != None:
+            tc = node.createElement("font")
+            tc.setAttribute("size", str(size))
+            td.appendChild(tc)
+            td = tc
+        
+        if bold:
+            tc = node.createElement("b")
+            td.appendChild(tc)
+            td = tc
+            
+        txt = node.createTextNode(text)
+        td.appendChild(txt)
+        
+
+    
+    
+    
     
 ####################################################################################
 #
@@ -463,7 +515,7 @@ class LienSequence():
         #
         # Création du Tip (PopupInfo)
         #
-        self.tip = PopupInfo(self.parent.app, u"Séquence requise")
+        self.tip = PopupInfo2(self.parent.app, u"Séquence requise")
         self.tip_titre = self.tip.CreerTexte((1,0))
         self.tip_titrelien, self.tip_ctrllien = self.tip.CreerLien((2,0))
         self.tip_image = self.tip.CreerImage((3,0))
@@ -535,15 +587,17 @@ class Objet_sequence():
     def SetSVGLien(self, p, lien):
         lien = lien.decode(FILE_ENCODING)
         lien = lien.encode('utf-8')
-        self.elem.setAttribute("xlink:href", lien)
-        self.elem.setAttribute("target", "_top")
+        p.setAttribute("xlink:href", lien)
+        p.setAttribute("target", "_top")
+#        self.elem.setAttribute("xlink:href", lien)
+#        self.elem.setAttribute("target", "_top")
         
-    def EncapsuleSVG(self, doc, p):
-        self.elem = doc.createElement("a")
-        parent=p.parentNode
-        parent.insertBefore(self.elem, p)
-        self.elem.appendChild(p)
-        return self.elem
+#    def EncapsuleSVG(self, doc, p):
+#        self.elem = doc.createElement("a")
+#        parent=p.parentNode
+#        parent.insertBefore(self.elem, p)
+#        self.elem.appendChild(p)
+#        return self.elem
 
 
         
@@ -562,9 +616,19 @@ class Objet_sequence():
         
         for i, (p, f) in enumerate(self.cadre):
             if type(f) != str:
-                self.EncapsuleSVG(doc, p)
+#                self.EncapsuleSVG(doc, p)
                 titre = self.GetBulleSVG(f)
-                self.SetSVGTitre(p, titre)
+                
+                t = doc.createElement("title")
+                txt = doc.createTextNode(titre)
+                t.appendChild(txt)
+
+#                txt.innerHTML = titre
+#                print t.toxml()
+                p.appendChild(t)
+                
+                
+#                self.SetSVGTitre(p, titre)
                 p.setAttribute("id",  self.GetCode(f)+str(f))
                 p.setAttribute("pointer-events",  'all')
                 
@@ -615,7 +679,8 @@ class Objet_sequence():
     
     ######################################################################################  
     def GetBulleSVG(self, i):
-        return self.GetCode(i) + " : " + self.GetIntit(i)
+        t = self.GetCode(i) + " :\n" + self.GetIntit(i)
+        return t#.replace("\n", "&#10;")#"&#xD;")#
     
             
     ######################################################################################  
@@ -1533,6 +1598,7 @@ class Projet(BaseDoc, Objet_sequence):
         
         # Spécifiquement pour la fiche de validation
         self.origine = u""
+#        self.panelPropriete.bgctrl.setObjet(self.origine)
         self.contraintes = u""
         self.besoinParties = u""
         self.intituleParties = u""
@@ -2810,7 +2876,7 @@ class Seance(ElementDeSequence, Objet_sequence):
         # Création du Tip (PopupInfo)
         #
         if self.GetApp():
-            self.tip = PopupInfo(self.GetApp(), u"Séance")
+            self.tip = PopupInfo2(self.GetApp(), u"Séance")
             self.tip_type = self.tip.CreerTexte((1,0), flag = wx.ALL)
             self.tip_intitule = self.tip.CreerTexte((2,0))
             self.tip_titrelien, self.tip_ctrllien = self.tip.CreerLien((3,0))
@@ -3606,7 +3672,7 @@ class Tache(Objet_sequence):
         # Création du Tip (PopupInfo)
         #
         if self.GetApp():
-            self.tip = PopupInfo(self.GetApp(), u"Tâche")
+            self.tip = PopupInfo2(self.GetApp(), u"Tâche")
             self.tip.sizer.SetItemSpan(self.tip.titre, (1,2))
             
             if not self.phase in ["R1", "R2", "S", "Rev"]:
@@ -4111,7 +4177,7 @@ class Systeme(ElementDeSequence, Objet_sequence):
         #
         # Création du Tip (PopupInfo)
         #
-        self.tip = PopupInfo(self.parent.app, u"Système ou matériel")
+        self.tip = PopupInfo2(self.parent.app, u"Système ou matériel")
         self.tip_nom = self.tip.CreerTexte((1,0))
         self.tip_nombre, self.tip_ctrllien = self.tip.CreerLien((2,0))
         self.tip_image = self.tip.CreerImage((3,0))
@@ -4270,7 +4336,7 @@ class Support(ElementDeSequence, Objet_sequence):
         #
         # Création du Tip (PopupInfo)
         #
-        self.tip = PopupInfo(self.parent.app, u"Support")
+        self.tip = PopupInfo2(self.parent.app, u"Support")
         self.tip_nom = self.tip.CreerTexte((1,0))
         self.tip_titrelien, self.tip_ctrllien = self.tip.CreerLien((2,0))
         self.tip_image = self.tip.CreerImage((3,0))
@@ -4427,18 +4493,22 @@ class Personne(Objet_sequence):
         #
         # Création du Tip (PopupInfo)
         #
-        self.tip = PopupInfo(self.parent.app, u"")
-        self.tip_nom = self.tip.CreerTexte((1,0), flag = wx.ALIGN_LEFT|wx.TOP)
+        self.ficheHTML = self.GetFicheHTML()
+        self.ficheXML = parseString(self.ficheHTML)
+       
+        forceID(self.ficheXML)
+        self.tip = PopupInfo(self.parent.app, self.ficheHTML)
+#        self.tip_nom = self.tip.CreerTexte((1,0), flag = wx.ALIGN_LEFT|wx.TOP)
 #        self.tip_nom.SetFont(wx.Font(10, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD))
         
-        self.tip_avatar = self.tip.CreerImage((2,0))
-        
-        if self.code == 'Prf':
-            self.tip.SetTitre(u"Professeur")
-            self.tip_disc = self.tip.CreerTexte((3,0), flag = wx.ALIGN_LEFT|wx.TOP)
-            self.tip_disc.SetFont(wx.Font(10, wx.SWISS, wx.FONTSTYLE_ITALIC, wx.FONTWEIGHT_NORMAL))
-        else:
-            self.tip.SetTitre(self.titre.capitalize())
+#        self.tip_avatar = self.tip.CreerImage((2,0))
+#        
+#        if self.code == 'Prf':
+#            self.tip.SetTitre(u"Professeur")
+#            self.tip_disc = self.tip.CreerTexte((3,0), flag = wx.ALIGN_LEFT|wx.TOP)
+#            self.tip_disc.SetFont(wx.Font(10, wx.SWISS, wx.FONTSTYLE_ITALIC, wx.FONTWEIGHT_NORMAL))
+#        else:
+#            self.tip.SetTitre(self.titre.capitalize())
         
         
         if panelParent:
@@ -4545,7 +4615,7 @@ class Personne(Objet_sequence):
     def SetCode(self):
 #        if hasattr(self, 'codeBranche'):
 #            self.codeBranche.SetLabel(self.nom)
-
+        
         t = self.GetNomPrenom()
         if hasattr(self, 'arbre'):
             self.arbre.SetItemText(self.branche, t)
@@ -4554,16 +4624,27 @@ class Personne(Objet_sequence):
         
         
     ######################################################################################  
-    def SetTip(self):   
+    def SetTip(self):
+        self.ficheHTML = self.GetFicheHTML()
+        self.ficheXML = parseString(self.ficheHTML)
+        forceID(self.ficheXML)
+        SetWholeText(self.ficheXML, "nom", self.GetNomPrenom())
+        
+        self.tip.XML_AjouterImg(self.ficheXML, "av", self.avatar) 
+        
+        self.SetTip2()
+        
         # Tip
-        if hasattr(self, 'tip'):
-            self.tip.SetTexte(self.GetNomPrenom(), self.tip_nom)
-            self.tip.SetImage(self.avatar, self.tip_avatar)
+#        if hasattr(self, 'tip'):
+#            self.tip.SetTexte(self.GetNomPrenom(), self.tip_nom)
+#            self.tip.SetImage(self.avatar, self.tip_avatar)
 
     ######################################################################################  
     def SetImage(self):
-        self.tip.SetImage(self.avatar, self.tip_avatar)
         self.SetTip()
+        return
+#        self.tip.SetImage(self.avatar, self.tip_avatar)
+#        self.SetTip()
         
     
 
@@ -4596,29 +4677,63 @@ class Eleve(Personne, Objet_sequence):
         #
         # Création du Tip (PopupInfo) - plus complexe pour pour une personne "standard"
         #
-        dc = self.tip.CreerTexte((3,0), (1,2), txt = u"Durée d'activité :", flag = wx.ALIGN_RIGHT|wx.TOP|wx.BOTTOM|wx.LEFT)
-        ec = self.tip.CreerTexte((4,0), (1,2), txt = u"Evaluabilité :", flag = wx.ALIGN_RIGHT|wx.TOP|wx.LEFT)
-        rc = self.tip.CreerTexte((5,1), (1,1), txt = u"Revue :", flag = wx.ALIGN_RIGHT|wx.RIGHT)
-        sc = self.tip.CreerTexte((6,1), (1,1), txt = u"Soutenance :", flag = wx.ALIGN_RIGHT|wx.RIGHT|wx.BOTTOM)
+#        t = sorted(constantes.dicPoidsIndicateurs[self.GetTypeEnseignement()].keys())
+#        tt = u" Tot "
+#        for i in t:
+#            tt += u"\t"+i.rjust(4)
+#        print "tt = ", tt
+#        dc = self.tip.CreerTexte((3,0), (1,2), txt = u"Durée d'activité :", flag = wx.ALIGN_RIGHT|wx.TOP|wx.BOTTOM|wx.LEFT)
+#        ec = self.tip.CreerTexte((4,0), (1,2), txt = u"Evaluabilité :", flag = wx.ALIGN_RIGHT|wx.TOP|wx.LEFT)
+#        tc = self.tip.CreerTexte((4,2), (1,1), txt = tt, flag = wx.ALIGN_LEFT|wx.LEFT|wx.BOTTOM)
+#        rc = self.tip.CreerTexte((5,1), (1,1), txt = u"Revue :", flag = wx.ALIGN_RIGHT|wx.RIGHT)
+#        sc = self.tip.CreerTexte((6,1), (1,1), txt = u"Soutenance :", flag = wx.ALIGN_RIGHT|wx.RIGHT|wx.BOTTOM)
+#        
+#        self.tip_duree = self.tip.CreerTexte((3,2), flag = wx.ALIGN_LEFT|wx.TOP|wx.BOTTOM|wx.RIGHT|wx.LEFT)
+#        self.tip_evalR = self.tip.CreerTexte((5,2), flag = wx.ALIGN_LEFT|wx.RIGHT|wx.TE_RICH)
+#        self.tip_evalS = self.tip.CreerTexte((6,2), flag = wx.ALIGN_LEFT|wx.RIGHT|wx.BOTTOM|wx.TE_RICH)
+#        
+#        dc.SetFont(wx.Font(10, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.NORMAL, underline = True))
+#        ec.SetFont(wx.Font(10, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.NORMAL, underline = True))
+#        rc.SetFont(wx.Font(9, wx.SWISS, wx.FONTSTYLE_ITALIC, wx.NORMAL))
+#        sc.SetFont(wx.Font(9, wx.SWISS, wx.FONTSTYLE_ITALIC, wx.NORMAL))
+#        self.tip_duree.SetFont(wx.Font(10, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.NORMAL))
+#        self.tip_evalR.SetFont(wx.Font(9, wx.SWISS, wx.FONTSTYLE_ITALIC, wx.NORMAL))
+#        self.tip_evalS.SetFont(wx.Font(9, wx.SWISS, wx.FONTSTYLE_ITALIC, wx.NORMAL))
+#               
+#        self.tip.DeplacerItem(self.tip_avatar, span = (1,3)) 
+#        self.tip.DeplacerItem(self.tip_nom, span = (1,3))      
+#        self.tip.DeplacerItem(None, span = (1,3))                        
         
-        self.tip_duree = self.tip.CreerTexte((3,2), flag = wx.ALIGN_LEFT|wx.TOP|wx.BOTTOM|wx.RIGHT|wx.LEFT)
-        self.tip_evalR = self.tip.CreerTexte((5,2), flag = wx.ALIGN_LEFT|wx.RIGHT)
-        self.tip_evalS = self.tip.CreerTexte((6,2), flag = wx.ALIGN_LEFT|wx.RIGHT|wx.BOTTOM)
         
-        dc.SetFont(wx.Font(10, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.NORMAL, underline = True))
-        ec.SetFont(wx.Font(10, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.NORMAL, underline = True))
-        rc.SetFont(wx.Font(9, wx.SWISS, wx.FONTSTYLE_ITALIC, wx.NORMAL))
-        sc.SetFont(wx.Font(9, wx.SWISS, wx.FONTSTYLE_ITALIC, wx.NORMAL))
-        self.tip_duree.SetFont(wx.Font(10, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.NORMAL))
-        self.tip_evalR.SetFont(wx.Font(9, wx.SWISS, wx.FONTSTYLE_ITALIC, wx.NORMAL))
-        self.tip_evalS.SetFont(wx.Font(9, wx.SWISS, wx.FONTSTYLE_ITALIC, wx.NORMAL))
-               
-        self.tip.DeplacerItem(self.tip_avatar, span = (1,3)) 
-        self.tip.DeplacerItem(self.tip_nom, span = (1,3))      
-        self.tip.DeplacerItem(None, span = (1,3))                        
-        
-        
-        
+    def GetFicheHTML(self):
+        return """<HTML>
+    <p style="text-align: center;"><font size="12"><b>Elève</b></font></p>
+<p id="nom">Nom-Prénom</p>
+<p id="av"></p>
+<table border="0">
+<tbody>
+<tr id = "ld" align="right" valign="middle">
+<td width="110"><span style="text-decoration: underline;">Durée d'activité :</span></td>
+</tr>
+
+<tr  id = "le" align="right" valign="middle">
+<td><span style="text-decoration: underline;">Evaluabilité :</span></td>
+<td></td>
+</tr>
+
+<tr  id = "ler" align="right" valign="middle">
+<td><em>revues :</em></td>
+</tr>
+
+<tr  id = "les" align="right" valign="middle">
+<td><em>soutenance :</em></td>
+</tr>
+
+</tbody>
+</table>
+</HTML>
+"""
+
             
     ######################################################################################  
     def GetDuree(self, partie = None):
@@ -4632,14 +4747,16 @@ class Eleve(Personne, Objet_sequence):
         return d
         
     ######################################################################################  
-    def GetEvaluabilite(self):
+    def GetEvaluabilite(self, complet = False):
         """ Renvoie l'évaluabilité
             % revue
             % soutenance
         """ 
 #        print "GetEvaluabilite", self
         r = s = 0
-        
+        les = {}
+        ler = {}
+            
         dicPoids = constantes.dicPoidsIndicateurs[self.GetTypeEnseignement()]
 #        print dicPoids
         dicIndicateurs = self.GetDicIndicateurs()
@@ -4654,14 +4771,33 @@ class Eleve(Personne, Objet_sequence):
                             p = 1.0*poidsIndic[i]/100 * poidsGrp/100
                             if tousIndicateurs[comp][i][1]:     # revue
                                 r += p
+                                if grp in ler.keys():
+                                    ler[grp] += p
+                                else:
+                                    ler[grp] = p
                             else:
                                 s += p
+                                if grp in les.keys():
+                                    les[grp] += p
+                                else:
+                                    les[grp] = p
         
         if self.GetTypeEnseignement() == "SSI":
             r, s = r*2, s*2
+            for l in ler.keys():
+                ler[l] = ler[l]*2
+            for l in les.keys():
+                les[l] = les[l]*2
             
-#        print r,s
-        return r, s
+        if "O8s" in les.keys():
+            les["O8"] = les["O8s"]
+            del les["O8s"]
+            
+
+        if complet:
+            return r, s, ler, les
+        else:
+            return r, s
     
 
     ######################################################################################  
@@ -4726,7 +4862,7 @@ class Eleve(Personne, Objet_sequence):
             self.codeDuree.SetToolTipString(u"Durée de travail conforme")
         elif abs(duree-70) < tol2:
             self.codeDuree.SetBackgroundColour(COUL_BOF)
-            self.codeDuree.SetToolTipString(u"Durée de travail conforme")
+            self.codeDuree.SetToolTipString(u"Durée de travail acceptable")
         else:
             self.codeDuree.SetBackgroundColour(COUL_NON)
             if duree < 70:
@@ -4766,34 +4902,125 @@ class Eleve(Personne, Objet_sequence):
         if hasattr(self, 'arbre'):
             self.arbre.SetItemText(self.branche, t)
             
+        self.SetTip()
+        
+    ######################################################################################  
+    def SetTip2(self):
         # Tip
         if hasattr(self, 'tip'):
-            self.tip.SetTexte(self.GetNomPrenom(), self.tip_nom)
-            er, es = self.GetEvaluabilite()
+            
+#            self.tip.SetTexte(self.GetNomPrenom(), self.tip_nom)
+#             
             duree = self.GetDuree()
-            labr = str(int(er*100))+"% "
-            labs = str(int(es*100))+"%"
             lab = draw_cairo.getHoraireTxt(duree)
-            self.tip.SetTexte(rallonge(lab), self.tip_duree)
-            self.tip.SetTexte(rallonge(labr), self.tip_evalR)
-            self.tip.SetTexte(rallonge(labs), self.tip_evalS)
-            self.tip.SetImage(self.avatar, self.tip_avatar)
-            
-            tol = 5
-            if abs(duree-70) < tol:
-                self.tip_duree.SetBackgroundColour(COUL_OK)
+            if abs(duree-70) < constantes.DELTA_DUREE:
+                coul = constantes.GetCouleurHTML(COUL_OK)
+            elif abs(duree-70) < constantes.DELTA_DUREE2:
+                coul = constantes.GetCouleurHTML(COUL_BOF)
             else:
-                self.tip_duree.SetBackgroundColour(COUL_NON)
+                coul = constantes.GetCouleurHTML(COUL_NON)
+            XML_AjouterCol(self.ficheXML, "ld", lab, coul, bold = True)
+#            SetWholeText(self.ficheXML, "d", lab)
+#            self.tip.SetTexte(rallonge(lab), self.tip_duree)
             
-            if er >= 0.5:
-                self.tip_evalR.SetBackgroundColour(COUL_OK)
-            else:
-                self.tip_evalR.SetBackgroundColour(COUL_NON)
+            er, es , ler, les = self.GetEvaluabilite(complet = True)
             
-            if es >= 0.5:
-                self.tip_evalS.SetBackgroundColour(COUL_OK)
-            else:
-                self.tip_evalS.SetBackgroundColour(COUL_NON)
+            keys = sorted(constantes.dicPoidsIndicateurs[self.GetTypeEnseignement()].keys())
+            if "O8s" in keys:
+                keys.remove("O8s")
+            
+            
+            labr = [str(round(er*100)).rjust(3)+"%"]
+            for k in keys:
+                if k in constantes.lstGrpIndicateurRevues[self.GetTypeEnseignement()]:
+                    if k in ler.keys():
+                        labr.append(str(round(ler[k]*100)).rjust(3)+"%")
+                    else:
+                        labr.append("  0%")
+                else:
+                    labr.append("")
+                    
+                    
+            labs = [str(round(es*100)).rjust(3)+"%"]
+            for k in keys:
+                if k in constantes.lstGrpIndicateurSoutenance[self.GetTypeEnseignement()]:
+                    if k in les.keys():
+                        labs.append(str(round(les[k]*100)).rjust(3)+"%")
+                    else:
+                        labs.append("0%")
+                else:
+                    labs.append("")
+ 
+            for i, l in enumerate(labr):
+                if i ==0:
+                    size = None
+                    bold = True
+                    if er >= 0.5:
+                        coul = constantes.GetCouleurHTML(COUL_OK)
+                    else:
+                        coul = constantes.GetCouleurHTML(COUL_NON)
+                else:
+                    size = 2
+                    bold = False
+                    if l == "0%":
+                        coul = constantes.GetCouleurHTML(COUL_NON)
+                    else:
+                        coul = None
+                XML_AjouterCol(self.ficheXML, "ler", l, coul, size, bold)
+#                SetWholeText(self.ficheXML, "r"+str(i), l)
+                
+                
+            for i, l in enumerate(labs):
+                if i ==0:
+                    size = None
+                    bold = True
+                    if er >= 0.5:
+                        coul = constantes.GetCouleurHTML(COUL_OK)
+                    else:
+                        coul = constantes.GetCouleurHTML(COUL_NON)
+                else:
+                    size = 2
+                    bold = False
+                    if l == "0%":
+                        coul = constantes.GetCouleurHTML(COUL_NON)
+                    else:
+                        coul = None
+                XML_AjouterCol(self.ficheXML, "les", l, coul, size, bold)
+#                SetWholeText(self.ficheXML, "s"+str(i), l)
+                
+                
+            for t in keys:
+                XML_AjouterCol(self.ficheXML, "le", t, size = 2)
+#                SetWholeText(self.ficheXML, str(i+1), t)
+                
+               
+            
+            self.tip.SetPage(self.ficheXML.toxml())
+            
+#            self.tip.SetTexte(rallonge(labr), self.tip_evalR)
+#            
+#            
+#            
+#            
+#            labs = str(int(es*100))+"%"
+#            self.tip.SetTexte(rallonge(labs), self.tip_evalS)
+#            
+#            self.tip.SetImage(self.avatar, self.tip_avatar)
+#            
+#            if abs(duree-70) < constantes.DELTA_DUREE:
+#                self.tip_duree.SetBackgroundColour(COUL_OK)
+#            else:
+#                self.tip_duree.SetBackgroundColour(COUL_NON)
+#            
+#            if er >= 0.5:
+#                self.tip_evalR.SetBackgroundColour(COUL_OK)
+#            else:
+#                self.tip_evalR.SetBackgroundColour(COUL_NON)
+#            
+#            if es >= 0.5:
+#                self.tip_evalS.SetBackgroundColour(COUL_OK)
+#            else:
+#                self.tip_evalS.SetBackgroundColour(COUL_NON)
             
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
@@ -4832,7 +5059,20 @@ class Prof(Personne):
         
         Personne.__init__(self, parent, panelParent, id)
         
-        
+    def GetFicheHTML(self):
+        return """<HTML>
+        <p style="text-align: center;"><font size="12"><b>Professeur</b></font></p>
+<p id="nom">NomPrénom</p>
+<p id="av"></p>
+<table border="0" width="300">
+<tbody>
+<tr id="spe" align="right" valign="top">
+<td width="110"><span style="text-decoration: underline;">Spécialité :</span></td>
+</tr>
+</tbody>
+</table>
+</HTML>
+"""
     ######################################################################################  
     def SetDiscipline(self, discipline):
         self.discipline = discipline
@@ -4847,37 +5087,49 @@ class Prof(Personne):
     ######################################################################################  
     def MiseAJourCodeBranche(self):
         self.arbre.SetItemBold(self.branche, self.referent)
-        self.codeDisc.SetLabel(u" "+constantes.CODE_DISCIPLINES[self.discipline]+u" ")
-        self.codeDisc.SetBackgroundColour(constantes.GetCouleurWx(constantes.COUL_DISCIPLINES[self.discipline]))
-        self.codeDisc.SetToolTipString(constantes.NOM_DISCIPLINES[self.discipline])
+        if self.discipline <> 'Tec':
+            self.codeDisc.SetLabel(u" "+constantes.CODE_DISCIPLINES[self.discipline]+u" ")
+            self.codeDisc.SetBackgroundColour(constantes.GetCouleurWx(constantes.COUL_DISCIPLINES[self.discipline]))
+            self.codeDisc.SetToolTipString(constantes.NOM_DISCIPLINES[self.discipline])
+        else:
+            self.codeDisc.SetLabel(u"")
+            self.codeDisc.SetBackgroundColour(constantes.GetCouleurWx(constantes.COUL_DISCIPLINES[self.discipline]))
+            self.codeDisc.SetToolTipString(constantes.NOM_DISCIPLINES[self.discipline])
         
         self.codeBranche.Layout()
         self.codeBranche.Fit()
     
     ######################################################################################  
-    def SetTip(self):   
+    def SetTip2(self):
+        if hasattr(self, 'tip'):
+            if self.discipline != 'Tec':
+                coul = constantes.GetCouleurHTML(constantes.COUL_DISCIPLINES[self.discipline])
+            else:
+                coul = None
+            XML_AjouterCol(self.ficheXML, "spe", constantes.NOM_DISCIPLINES[self.discipline], coul = coul)
+            self.tip.SetPage(self.ficheXML.toxml())
         
         # Tip
-        if hasattr(self, 'tip'):
-#            print "SetTip", self.GetNomPrenom(), self.referent
-            if self.referent:
-                self.tip.SetTexte(u"<b>"+self.GetNomPrenom()+"</b>", self.tip_nom)
-            else:
-                self.tip.SetTexte(self.GetNomPrenom(), self.tip_nom)
+#        if hasattr(self, 'tip'):
+##            print "SetTip", self.GetNomPrenom(), self.referent
 #            if self.referent:
-#                font = wx.Font(10, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False)
+#                self.tip.SetTexte(u"<b>"+self.GetNomPrenom()+"</b>", self.tip_nom)
 #            else:
-#                font = wx.Font(10, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
-#            self.tip_nom.SetFont(font)
-#            self.tip_nom.Refresh()
-
-            self.tip.SetImage(self.avatar, self.tip_avatar)
-        
-            self.tip.SetTexte(constantes.NOM_DISCIPLINES[self.discipline], self.tip_disc)
-            self.tip_disc.SetForegroundColour(constantes.GetCouleurWx(constantes.COUL_DISCIPLINES[self.discipline]))     
-        
-            self.tip.Layout()
-            self.tip.Fit()
+#                self.tip.SetTexte(self.GetNomPrenom(), self.tip_nom)
+##            if self.referent:
+##                font = wx.Font(10, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False)
+##            else:
+##                font = wx.Font(10, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
+##            self.tip_nom.SetFont(font)
+##            self.tip_nom.Refresh()
+#
+#            self.tip.SetImage(self.avatar, self.tip_avatar)
+#        
+#            self.tip.SetTexte(constantes.NOM_DISCIPLINES[self.discipline], self.tip_disc)
+#            self.tip_disc.SetForegroundColour(constantes.GetCouleurWx(constantes.COUL_DISCIPLINES[self.discipline]))     
+#        
+#            self.tip.Layout()
+#            self.tip.Fit()
         
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
@@ -5907,7 +6159,6 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         """
         epsilon = 0.001
 
-        from xml.dom.minidom import parse
         doc = parse(path)
         
         f = open(path, 'w')
@@ -6297,7 +6548,8 @@ class FenetreProjet(FenetreDocument):
 
         def getTableurEtModif(projet, eleve):
             tableur = grilles.getTableau(self, projet)
-            grilles.modifierGrille(projet, tableur, eleve)
+            if tableur != None:
+                grilles.modifierGrille(projet, tableur, eleve)
 #            try:
 #                grilles.modifierGrille(projet, tableur, eleve)
 #            except:
@@ -6708,7 +6960,7 @@ class FicheProjet(BaseFiche):
         # Création du Tip (PopupInfo) pour les compétences
         #
         l = 0
-        popup = PopupInfo(self.projet.GetApp(), u"Compétence")
+        popup = PopupInfo2(self.projet.GetApp(), u"Compétence")
         popup.sizer.SetItemSpan(popup.titre, (1,2)) 
         l += 1
         
@@ -6882,19 +7134,19 @@ class PanelPropriete(scrolled.ScrolledPanel):
 #   Classe définissant le panel de propriété de type Book
 #
 ####################################################################################
-class PanelProprieteBook(wx.Notebook, PanelPropriete):
-    def __init__(self, parent, titre = u"", objet = None):
-        wx.Notebook.__init__(self, parent, -1,  style= wx.BK_DEFAULT)#| wx.BORDER_SIMPLE)
-        self.eventAttente = False
-#        self.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
-
-
-    def OnPageChanged(self, event):
-#        old = event.GetOldSelection()
-#        new = event.GetSelection()
-#        sel = self.GetSelection()
-        
-        event.Skip()
+#class PanelProprieteBook(wx.Notebook, PanelPropriete):
+#    def __init__(self, parent, titre = u"", objet = None):
+#        wx.Notebook.__init__(self, parent, -1,  style= wx.BK_DEFAULT)#| wx.BORDER_SIMPLE)
+#        self.eventAttente = False
+##        self.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
+#
+#
+#    def OnPageChanged(self, event):
+##        old = event.GetOldSelection()
+##        new = event.GetSelection()
+##        sel = self.GetSelection()
+#        
+#        event.Skip()
 
 #    #########################################################################################################
 #    def sendEvent(self, doc = None):
@@ -7044,7 +7296,7 @@ class PanelPropriete_Projet(PanelPropriete):
         
         self.projet = projet
         
-        nb = wx.Notebook(self, -1,  style= wx.BK_DEFAULT)
+        nb = wx.Notebook(self, -1,  size = (21,21), style= wx.BK_DEFAULT)
         
         #
         # La page "Généralités"
@@ -7088,12 +7340,15 @@ class PanelPropriete_Projet(PanelPropriete):
         sb.Add(self.bmp)
         sb.Add(position)
         self.position = position
-        pageGen.sizer.Add(sb, (1,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 2)
+        pageGen.sizer.Add(sb, (1,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.EXPAND|wx.LEFT, border = 2)
         position.Bind(wx.EVT_SCROLL_CHANGED, self.onChanged)
         
-        pageGen.sizer.Layout()
-        wx.CallAfter(self.Layout)
-        
+        pageGen.sizer.AddGrowableRow(0)
+#        pageGen.FitInside()
+#        pageGen.sizer.Layout()
+#        wx.CallAfter(pageGen.Layout)
+#        
+#        wx.CallAfter(pageGen.PostSizeEvent)
         
         #
         # La page "Enoncé général du besoin"
@@ -7106,6 +7361,8 @@ class PanelPropriete_Projet(PanelPropriete):
         nb.AddPage(pageBG, u"Origine")
         
         self.bgctrl = wx.TextCtrl(pageBG, -1, u"", style=wx.TE_MULTILINE)
+#        self.bgctrl = richtext.RichTextPanel(pageBG, [u""], toolBar = True)
+        
         self.bgctrl.SetToolTipString(u"Partenariat, thématique, concours…")
         
         pageBG.Bind(wx.EVT_TEXT, self.EvtText, self.bgctrl)
@@ -7199,7 +7456,12 @@ class PanelPropriete_Projet(PanelPropriete):
         self.sizer.Add(nb, (0,0), flag = wx.EXPAND)
         self.sizer.AddGrowableCol(0)
         self.sizer.AddGrowableRow(0)
-        self.sizer.Layout()
+#        self.sizer.Layout()
+        
+        self.Layout()
+        self.FitInside()
+        wx.CallAfter(self.PostSizeEvent)
+        self.Show()
         
 #        self.Fit()
         
@@ -7795,10 +8057,10 @@ class PanelEffectifsClasse(wx.Panel):
         #
         # Box "Classe"
         #
-        boxClasse = wx.StaticBox(self, -1, u"Découpage de la classe", style = wx.BORDER_RAISED)
+        boxClasse = wx.StaticBox(self, -1, u"Découpage de la classe")
 
         coulClasse = constantes.GetCouleurWx(constantes.CouleursGroupes['C'])
-        boxClasse.SetOwnForegroundColour(coulClasse)
+#        boxClasse.SetOwnForegroundColour(coulClasse)
         
         self.coulEffRed = constantes.GetCouleurWx(constantes.CouleursGroupes['G'])
 
@@ -8658,8 +8920,11 @@ class PanelPropriete_Seance(PanelPropriete):
                              )
         self.Bind(wx.EVT_COMBOBOX, self.EvtComboBox, cbType)
         self.cbType = cbType
-        self.sizer.Add(titre, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 2)
-        self.sizer.Add(cbType, (0,1), flag = wx.EXPAND)
+        self.sizer.Add(titre, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.ALL, border = 2)
+        self.sizer.Add(cbType, (0,1), flag = wx.EXPAND|wx.ALL, border = 2)
+        
+        
+        
         
         #
         # Intitulé de la séance
@@ -8667,12 +8932,13 @@ class PanelPropriete_Seance(PanelPropriete):
         box = wx.StaticBox(self, -1, u"Intitulé")
         bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
         textctrl = wx.TextCtrl(self, -1, u"", style=wx.TE_MULTILINE)
-        bsizer.Add(textctrl, flag = wx.EXPAND)
+        bsizer.Add(textctrl, 1, flag = wx.EXPAND|wx.GROW)
         self.textctrl = textctrl
 #        self.Bind(wx.EVT_TEXT, self.EvtTextIntitule, textctrl)
         self.textctrl.Bind(wx.EVT_KILL_FOCUS, self.EvtTextIntitule)
         
-        cb = wx.CheckBox(self, -1, u"Montrer dans la zone de déroulement de la séquence")
+        cb = wx.CheckBox(self, -1, u"Afficher dans la zone de déroulement")
+        cb.SetToolTipString(u"Décocher pour afficher l'intitulé\nen dessous de la zone de déroulement de la séquence")
         cb.SetValue(self.seance.intituleDansDeroul)
         bsizer.Add(cb, flag = wx.EXPAND)
         
@@ -8684,24 +8950,28 @@ class PanelPropriete_Seance(PanelPropriete):
         
         self.Bind(wx.EVT_CHECKBOX, self.EvtCheckBox, cb)
         self.cbInt = cb
-        self.sizer.Add(bsizer, (1,0), (1,2), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 2)
+        self.sizer.Add(bsizer, (2,0), (2,2), flag = wx.ALIGN_RIGHT|wx.ALL|wx.EXPAND, border = 2)
 #        self.sizer.Add(textctrl, (1,1), flag = wx.EXPAND)
         
         
         
+        
+        
         #
+        # Organisation
+        #
+        box2 = wx.StaticBox(self, -1, u"Organisation")
+        bsizer2 = wx.StaticBoxSizer(box2, wx.VERTICAL)
+        
         # Durée de la séance
-        #
         vcDuree = VariableCtrl(self, seance.duree, coef = 0.25, signeEgal = True, slider = False, sizeh = 30,
                                help = u"Durée de la séance en heures", unite = u"h")
 #        textctrl = wx.TextCtrl(self, -1, u"1")
         self.Bind(EVT_VAR_CTRL, self.EvtText, vcDuree)
         self.vcDuree = vcDuree
-        self.sizer.Add(vcDuree, (2,0), (1, 2))
+        bsizer2.Add(vcDuree, flag = wx.EXPAND|wx.ALL, border = 2)
         
-        #
         # Effectif
-        #
         titre = wx.StaticText(self, -1, u"Effectif : ")
         cbEff = wx.ComboBox(self, -1, u"",
                          choices = [],
@@ -8714,10 +8984,30 @@ class PanelPropriete_Seance(PanelPropriete):
         self.cbEff = cbEff
         self.titreEff = titre
         
-        self.sizer.Add(titre, (3,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 2)
-        self.sizer.Add(cbEff, (3,1), flag = wx.EXPAND)
+        bsizer2.Add(titre, flag = wx.ALIGN_CENTER_VERTICAL|wx.ALL, border = 2)
+        bsizer2.Add(cbEff, flag = wx.EXPAND|wx.LEFT, border = 2)
 #        self.sizer.AddGrowableRow(3)
 #        self.sizer.Add(self.nombre, (3,2))
+        
+        # Nombre de séances en parallèle
+        vcNombre = VariableCtrl(self, seance.nombre, signeEgal = True, slider = False, sizeh = 30,
+                                help = u"Nombre de groupes réalisant simultanément la même séance")
+        self.Bind(EVT_VAR_CTRL, self.EvtText, vcNombre)
+        self.vcNombre = vcNombre
+        bsizer2.Add(vcNombre, flag = wx.EXPAND|wx.ALL, border = 2)
+#        self.sizer.AddGrowableRow(5)
+        
+        # Nombre de rotations
+        vcNombreRot = VariableCtrl(self, seance.nbrRotations, signeEgal = True, slider = False, sizeh = 30,
+                                help = u"Nombre de rotations")
+        self.Bind(EVT_VAR_CTRL, self.EvtText, vcNombreRot)
+        self.vcNombreRot = vcNombreRot
+        bsizer2.Add(vcNombreRot, flag = wx.EXPAND|wx.ALL, border = 2)
+        
+        self.sizer.Add(bsizer2, (0,2), (4,1), flag =wx.ALL|wx.EXPAND, border = 2)
+        
+        
+        
         
         #
         # Démarche
@@ -8737,29 +9027,12 @@ class PanelPropriete_Seance(PanelPropriete):
 #        nombre = wx.StaticText(self, -1, u"")
 #        self.nombre = nombre
         
-        self.sizer.Add(titre, (4,0), flag = wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT|wx.LEFT, border = 2)
-        self.sizer.Add(cbDem, (4,1), flag = wx.EXPAND)
+        self.sizer.Add(titre, (1,0), flag = wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT|wx.ALL, border = 2)
+        self.sizer.Add(cbDem, (1,1), flag = wx.EXPAND|wx.ALL, border = 2)
 #        self.sizer.AddGrowableRow(4)
 #        self.sizer.Add(self.nombre, (4,2))
         
-        #
-        # Nombre de séances en parallèle
-        #
-        vcNombre = VariableCtrl(self, seance.nombre, signeEgal = True, slider = False, sizeh = 30,
-                                help = u"Nombre de groupes réalisant simultanément la même séance")
-        self.Bind(EVT_VAR_CTRL, self.EvtText, vcNombre)
-        self.vcNombre = vcNombre
-        self.sizer.Add(vcNombre, (5,0), (1, 2))
-#        self.sizer.AddGrowableRow(5)
         
-        #
-        # Nombre de rotations
-        #
-        vcNombreRot = VariableCtrl(self, seance.nbrRotations, signeEgal = True, slider = False, sizeh = 30,
-                                help = u"Nombre de rotations")
-        self.Bind(EVT_VAR_CTRL, self.EvtText, vcNombreRot)
-        self.vcNombreRot = vcNombreRot
-        self.sizer.Add(vcNombreRot, (6,0), (1, 2))
         
         
         #
@@ -8770,9 +9043,10 @@ class PanelPropriete_Seance(PanelPropriete):
         self.bsizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
         self.systemeCtrl = []
         self.ConstruireListeSystemes()
-        self.sizer.Add(self.bsizer, (0,4), (7, 1), flag = wx.EXPAND)
+        self.sizer.Add(self.bsizer, (0,3), (4, 1), flag = wx.EXPAND|wx.ALL, border = 2)
         
 #        self.sizer.AddGrowableCol(4, proportion = 1)
+
 
 
         #
@@ -8783,23 +9057,27 @@ class PanelPropriete_Seance(PanelPropriete):
         self.selec = URLSelectorCombo(self, self.seance.lien, self.seance.GetPath())
         bsizer.Add(self.selec, flag = wx.EXPAND)
         self.btnlien = wx.Button(self, -1, u"Ouvrir le lien externe")
+        self.btnlien.SetMaxSize((-1,30))
         self.btnlien.Hide()
         self.Bind(wx.EVT_BUTTON, self.OnClick, self.btnlien)
-        bsizer.Add(self.btnlien)
-        self.sizer.Add(bsizer, (5,5), (2, 1), flag = wx.EXPAND)
+        bsizer.Add(self.btnlien, 1,  flag = wx.EXPAND)
+        self.sizer.Add(bsizer, (3,4), (1, 1), flag = wx.EXPAND|wx.ALL, border = 2)
+        
+        
+        
         
         #
         # Description de la séance
         #
         dbox = wx.StaticBox(self, -1, u"Description")
         dbsizer = wx.StaticBoxSizer(dbox, wx.VERTICAL)
-        bd = wx.Button(self, -1, u"Editer")
-        tc = richtext.RichTextPanel(self, self.seance)
-        tc.SetMaxSize((-1, 150))
-        dbsizer.Add(bd, flag = wx.EXPAND)
+#        bd = wx.Button(self, -1, u"Editer")
+        tc = richtext.RichTextPanel(self, self.seance, toolBar = True)
+#        tc.SetMaxSize((-1, 150))
+#        dbsizer.Add(bd, flag = wx.EXPAND)
         dbsizer.Add(tc, 1, flag = wx.EXPAND)
-        self.Bind(wx.EVT_BUTTON, self.EvtClick, bd)
-        self.sizer.Add(dbsizer, (0,5), (5, 1), flag = wx.EXPAND)
+#        self.Bind(wx.EVT_BUTTON, self.EvtClick, bd)
+        self.sizer.Add(dbsizer, (0,4), (3, 1), flag = wx.EXPAND|wx.ALL, border = 2)
         self.rtc = tc
         # Pour indiquer qu'une édition est déja en cours ...
         self.edition = False  
@@ -8809,6 +9087,8 @@ class PanelPropriete_Seance(PanelPropriete):
         #
         # Mise en place
         #
+        self.sizer.AddGrowableCol(4)
+        self.sizer.AddGrowableRow(2)
         self.sizer.Layout()
     
     
@@ -8877,14 +9157,14 @@ class PanelPropriete_Seance(PanelPropriete):
     def GetDocument(self):
         return self.seance.GetDocument()
     
-    #############################################################################            
-    def EvtClick(self, event):
-        if not self.edition:
-            self.win = richtext.RichTextFrame(u"Description de la séance "+ self.seance.code, self.seance)
-            self.edition = True
-            self.win.Show(True)
-        else:
-            self.win.SetFocus()
+#    #############################################################################            
+#    def EvtClick(self, event):
+#        if not self.edition:
+#            self.win = richtext.RichTextFrame(u"Description de la séance "+ self.seance.code, self.seance)
+#            self.edition = True
+#            self.win.Show(True)
+#        else:
+#            self.win.SetFocus()
         
         
     #############################################################################            
@@ -9152,26 +9432,26 @@ class PanelPropriete_Seance(PanelPropriete):
 #   Classe définissant le panel de propriété de la tache
 #
 ####################################################################################
-class PanelPropriete_Tache(PanelProprieteBook, PanelPropriete):
+class PanelPropriete_Tache(PanelPropriete):
     def __init__(self, parent, tache, revue = 0):
         self.tache = tache
         self.revue = revue
+        PanelPropriete.__init__(self, parent)
         
         if not tache.phase in ["R2", "S"]:
             #
             # La page "Généralités"
             #
-            PanelProprieteBook.__init__(self, parent)
-            pageGen = PanelPropriete(self)
+            nb = wx.Notebook(self, -1,  size = (21,21), style= wx.BK_DEFAULT)
+            pageGen = PanelPropriete(nb)
             bg_color = self.Parent.GetBackgroundColour()
             pageGen.SetBackgroundColour(bg_color)
             self.pageGen = pageGen
-            self.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
+            nb.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
         else:
             #
             # Pas de book pour la revue 2 et la soutenance
             #
-            PanelPropriete.__init__(self, parent)
             pageGen = self
             self.pageGen = pageGen
             
@@ -9196,7 +9476,7 @@ class PanelPropriete_Tache(PanelProprieteBook, PanelPropriete):
             pageGen.Bind(wx.EVT_COMBOBOX, self.EvtComboBox, cbPhas)
             self.cbPhas = cbPhas
             pageGen.sizer.Add(titre, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 5)
-            pageGen.sizer.Add(cbPhas, (0,1), flag = wx.EXPAND)
+            pageGen.sizer.Add(cbPhas, (0,1), flag = wx.EXPAND|wx.ALL, border = 2)
         
         #
         # Position de la revue 1
@@ -9204,7 +9484,7 @@ class PanelPropriete_Tache(PanelProprieteBook, PanelPropriete):
         if tache.phase == "R1":
             self.cbR1 = wx.CheckBox(pageGen, -1, u"Placer avant la conception détaillée")
             self.cbR1.SetValue(self.tache.GetDocument().R1avantConception)
-            pageGen.sizer.Add(self.cbR1, (0,1), flag = wx.EXPAND)
+            pageGen.sizer.Add(self.cbR1, (0,1), flag = wx.EXPAND|wx.ALL, border = 2)
             self.Bind(wx.EVT_CHECKBOX, self.EvtCheckBoxR1, self.cbR1)
         
         #
@@ -9214,13 +9494,13 @@ class PanelPropriete_Tache(PanelProprieteBook, PanelPropriete):
             box = wx.StaticBox(pageGen, -1, u"Intitulé")
             bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
             textctrl = wx.TextCtrl(pageGen, -1, u"", style=wx.TE_MULTILINE)
-            bsizer.Add(textctrl, flag = wx.EXPAND)
+            bsizer.Add(textctrl,1, flag = wx.EXPAND)
             self.textctrl = textctrl
             self.boxInt = box
             self.textctrl.Bind(wx.EVT_KILL_FOCUS, self.EvtTextIntitule)
             pageGen.sizer.Add(bsizer, (1,0), (1,2), 
-                           flag = wx.EXPAND|wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 2)
-
+                           flag = wx.EXPAND|wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.RIGHT, border = 2)
+            
         
         #
         # Durée de la tache
@@ -9230,15 +9510,15 @@ class PanelPropriete_Tache(PanelProprieteBook, PanelPropriete):
                                    help = u"Volume horaire de la tâche en heures", sizeh = 60)
             pageGen.Bind(EVT_VAR_CTRL, self.EvtText, vcDuree)
             self.vcDuree = vcDuree
-            pageGen.sizer.Add(vcDuree, (2,0), (1, 2))
+            pageGen.sizer.Add(vcDuree, (2,0), (1, 2), flag = wx.EXPAND|wx.ALL, border = 2)
         
         
         #
         # Elèves impliqués
         #
         if not tache.phase in ["R1", "R2", "S"]:
-            self.box = wx.StaticBox(pageGen, -1, u"Elèves impliqués", size = (200,200))
-            self.box.SetMinSize((150,200))
+            self.box = wx.StaticBox(pageGen, -1, u"Elèves impliqués")
+#            self.box.SetMinSize((150,-1))
             self.bsizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
             self.elevesCtrl = []
             self.ConstruireListeEleves()
@@ -9252,13 +9532,13 @@ class PanelPropriete_Tache(PanelProprieteBook, PanelPropriete):
         #
         dbox = wx.StaticBox(pageGen, -1, u"Description")
         dbsizer = wx.StaticBoxSizer(dbox, wx.VERTICAL)
-        bd = wx.Button(pageGen, -1, u"Editer")
-        tc = richtext.RichTextPanel(pageGen, self.tache)
+#        bd = wx.Button(pageGen, -1, u"Editer")
+        tc = richtext.RichTextPanel(pageGen, self.tache, toolBar = True)
 #        tc.SetMaxSize((-1, 150))
-        tc.SetMinSize((150, 60))
+#        tc.SetMinSize((150, 60))
         dbsizer.Add(tc,1, flag = wx.EXPAND)
-        dbsizer.Add(bd, flag = wx.EXPAND)
-        pageGen.Bind(wx.EVT_BUTTON, self.EvtClick, bd)
+#        dbsizer.Add(bd, flag = wx.EXPAND)
+#        pageGen.Bind(wx.EVT_BUTTON, self.EvtClick, bd)
         if tache.phase in ["R1", "R2", "S", "Rev"]:
             pageGen.sizer.Add(dbsizer, (1,0), (3, 2), flag = wx.EXPAND)
             pageGen.sizer.AddGrowableCol(0)
@@ -9268,20 +9548,20 @@ class PanelPropriete_Tache(PanelProprieteBook, PanelPropriete):
         self.rtc = tc
         # Pour indiquer qu'une édition est déja en cours ...
         self.edition = False  
-        
+        pageGen.sizer.AddGrowableRow(1)
         
         
         if not tache.phase in ["R2", "S"]:
-            self.AddPage(pageGen, u"Propriétés générales")
+            nb.AddPage(pageGen, u"Propriétés générales")
 #        pageGen.sizer.Layout()
         
-        
-        if not tache.phase in ["R2", "S"]:
+#            pageGen.SetMinSize((-1, 100))
+#        if not tache.phase in ["R2", "S"]:
             #
             # La page "Compétences"
             #
     #        pageCom = PanelPropriete(self, style = wx.RETAINED)
-            pageCom = wx.Panel(self, -1)
+            pageCom = wx.Panel(nb, -1)
             
         
     #        pageCom.SetBackgroundColour(wx.SystemSettings_GetColour(wx.SYS_COLOUR_WINDOW))
@@ -9298,15 +9578,20 @@ class PanelPropriete_Tache(PanelProprieteBook, PanelPropriete):
             
         
             pageCom.SetSizer(pageComsizer)
-            self.AddPage(pageCom, u"Compétences à mobiliser") 
+            nb.AddPage(pageCom, u"Compétences à mobiliser") 
             
 #            pageComsizer.Layout() 
             self.pageComsizer = pageComsizer
         
+            self.sizer.Add(nb, (0,0), flag = wx.EXPAND)
+            self.sizer.AddGrowableCol(0)
+            self.sizer.AddGrowableRow(0)
         
         #
         # Mise en place
         #
+        
+        
         self.Layout()
         self.FitInside()
         wx.CallAfter(self.PostSizeEvent)
@@ -9316,7 +9601,7 @@ class PanelPropriete_Tache(PanelProprieteBook, PanelPropriete):
         
     ####################################################################################
     def OnPageChanged(self, event):
-        sel = self.GetSelection()
+#        sel = self.nb.GetSelection()
 #        self.MiseAJourPoids()
         event.Skip()
         
@@ -9463,7 +9748,7 @@ class PanelPropriete_Tache(PanelProprieteBook, PanelPropriete):
             else:
                 self.box.Hide()
     
-            self.box.SetMinSize((200,200))
+#            self.box.SetMinSize((200,200))
             self.pageGen.Layout()
             self.pageGen.Thaw()
         
@@ -9486,14 +9771,14 @@ class PanelPropriete_Tache(PanelProprieteBook, PanelPropriete):
     def GetDocument(self):
         return self.tache.GetDocument()
     
-    #############################################################################            
-    def EvtClick(self, event):
-        if not self.edition:
-            self.win = richtext.RichTextFrame(u"Description de la tâche "+ self.tache.code, self.tache)
-            self.edition = True
-            self.win.Show(True)
-        else:
-            self.win.SetFocus()
+#    #############################################################################            
+#    def EvtClick(self, event):
+#        if not self.edition:
+#            self.win = richtext.RichTextFrame(u"Description de la tâche "+ self.tache.code, self.tache)
+#            self.edition = True
+#            self.win.Show(True)
+#        else:
+#            self.win.SetFocus()
         
         
     #############################################################################            
@@ -9898,8 +10183,10 @@ class PanelPropriete_Personne(PanelPropriete):
             nomFichier = paths[0]
             self.personne.avatar = wx.Image(nomFichier).ConvertToBitmap()
             self.SetImage()
-        
+            self.sendEvent()
+            
         dlg.Destroy()
+        
         
     #############################################################################            
     def SetImage(self):
@@ -10013,12 +10300,12 @@ class PanelPropriete_Support(PanelPropriete):
         #
         dbox = wx.StaticBox(self, -1, u"Description")
         dbsizer = wx.StaticBoxSizer(dbox, wx.VERTICAL)
-        bd = wx.Button(self, -1, u"Editer")
-        tc = richtext.RichTextPanel(self, self.support)
+#        bd = wx.Button(self, -1, u"Editer")
+        tc = richtext.RichTextPanel(self, self.support, toolBar = True)
         tc.SetMaxSize((-1, 150))
-        dbsizer.Add(bd, flag = wx.EXPAND)
+#        dbsizer.Add(bd, flag = wx.EXPAND)
         dbsizer.Add(tc, 1, flag = wx.EXPAND)
-        self.Bind(wx.EVT_BUTTON, self.EvtClick, bd)
+#        self.Bind(wx.EVT_BUTTON, self.EvtClick, bd)
         self.sizer.Add(dbsizer, (0,2), (2, 1), flag = wx.EXPAND|wx.TOP|wx.BOTTOM|wx.LEFT, border = 3)
         self.rtc = tc
         # Pour indiquer qu'une édition est déja en cours ...
@@ -10109,14 +10396,14 @@ class PanelPropriete_Support(PanelPropriete):
             wx.CallLater(DELAY, self.sendEvent)
             self.eventAttente = True
         
-    #############################################################################            
-    def EvtClick(self, event):
-        if not self.edition:
-            self.win = richtext.RichTextFrame(u"Description du support "+ self.support.nom, self.support)
-            self.edition = True
-            self.win.Show(True)
-        else:
-            self.win.SetFocus()
+#    #############################################################################            
+#    def EvtClick(self, event):
+#        if not self.edition:
+#            self.win = richtext.RichTextFrame(u"Description du support "+ self.support.nom, self.support)
+#            self.edition = True
+#            self.win.Show(True)
+#        else:
+#            self.win.SetFocus()
         
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
@@ -11269,22 +11556,22 @@ class URLDialog(wx.Dialog):
 class URLSelectorCombo(wx.Panel):
     def __init__(self, parent, lien, pathseq):
         wx.Panel.__init__(self, parent, -1)
-
+        self.SetMaxSize((-1,22))
         sizer = wx.BoxSizer(wx.HORIZONTAL)
         
-        self.texte = wx.TextCtrl(self, -1, lien.path, size = (300, -1))
-        bt1 =wx.BitmapButton(self, 100, wx.ArtProvider_GetBitmap(wx.ART_FOLDER))
+        self.texte = wx.TextCtrl(self, -1, lien.path, size = (-1, 16))
+        bt1 =wx.BitmapButton(self, 100, wx.ArtProvider_GetBitmap(wx.ART_FOLDER, wx.ART_OTHER, (16, 16)))
         bt1.SetToolTipString(u"Sélectionner un dossier")
-        bt2 =wx.BitmapButton(self, 101, wx.ArtProvider_GetBitmap(wx.ART_NORMAL_FILE))
+        bt2 =wx.BitmapButton(self, 101, wx.ArtProvider_GetBitmap(wx.ART_NORMAL_FILE, wx.ART_OTHER, (16, 16)))
         bt2.SetToolTipString(u"Sélectionner un fichier")
         self.Bind(wx.EVT_BUTTON, self.OnClick, bt1)
         self.Bind(wx.EVT_BUTTON, self.OnClick, bt2)
         self.Bind(wx.EVT_TEXT, self.EvtText, self.texte)
         
-        sizer.Add(self.texte,flag = wx.EXPAND)
+        
         sizer.Add(bt1)
         sizer.Add(bt2)
-        
+        sizer.Add(self.texte,1,flag = wx.EXPAND)
         self.SetSizerAndFit(sizer)
         self.lien = lien
         self.SetPathSeq(pathseq)
@@ -11366,7 +11653,6 @@ import tempfile
 def img2str(img):
     """
     """
-    
     global app
     if not wx.GetApp():
         app = wx.PySimpleApp()
@@ -11379,8 +11665,8 @@ def img2str(img):
     finally:
         if os.path.exists(tfname):
             os.remove(tfname)
-            
     return data
+
 
 #############################################################################################################
 #
@@ -11388,8 +11674,75 @@ def img2str(img):
 # 
 #############################################################################################################
 import cStringIO
+import  wx.html as  html
 
 class PopupInfo(wx.PopupWindow):
+    def __init__(self, parent, page):
+        wx.PopupWindow.__init__(self, parent, wx.BORDER_SIMPLE)
+        self.parent = parent
+      
+        self.html = html.HtmlWindow(self, -1, size = (100,100),style=wx.NO_FULL_REPAINT_ON_RESIZE|html.HW_SCROLLBAR_NEVER)
+        self.SetPage(page)
+        self.SetAutoLayout(False)
+        
+        # Un fichier temporaire pour mettre une image ...
+        self.tfname = tempfile.mktemp()
+        #'<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">'+
+
+        self.Bind(wx.EVT_WINDOW_DESTROY, self.OnDestroy)
+    
+    
+    def XML_AjouterImg(self, node, id, bmp):
+#        print "XML_AjouterImg"
+        try:
+            bmp.SaveFile(self.tfname, wx.BITMAP_TYPE_PNG)
+        except:
+            return
+        
+        img = node.getElementById(id)
+        if img != None:
+            td = node.createElement("img")
+            img.appendChild(td)
+            td.setAttribute("src", self.tfname)
+            
+#            print img.toxml()
+        
+    def OnDestroy(self, evt):
+        if os.path.exists(self.tfname):
+            os.remove(self.tfname)
+            
+    ##########################################################################################
+    def SetPage(self, page):
+#        self.SetSize((10,1000))
+#        self.SetClientSize((100,1000))
+#        self.html.SetSize( (100, 100) )
+#        self.SetClientSize(self.html.GetSize())
+        
+        self.html.SetPage(page)
+        ir = self.html.GetInternalRepresentation()
+
+        self.SetClientSize((ir.GetWidth(), ir.GetHeight()))
+
+        self.html.SetSize( (ir.GetWidth(), ir.GetHeight()) )
+
+        
+#        self.SetClientSize(self.html.GetSize())
+#        self.SetSize(self.html.GetSize())
+        
+        
+    ##########################################################################################
+    def OnLeave(self, event):
+        x, y = event.GetPosition()
+        w, h = self.GetSize()
+        if not ( x > 0 and y > 0 and x < w and y < h):
+            self.Show(False)
+        event.Skip()
+        
+        
+        
+        
+        
+class PopupInfo2(wx.PopupWindow):
     def __init__(self, parent, titre = ""):
         wx.PopupWindow.__init__(self, parent, wx.BORDER_SIMPLE)
         self.parent = parent
