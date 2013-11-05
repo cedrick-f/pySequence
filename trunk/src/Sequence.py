@@ -540,7 +540,8 @@ class LienSequence():
         self.codeBranche = wx.StaticText(self.arbre, -1, u"")
         self.branche = arbre.AppendItem(branche, u"Séquence :", wnd = self.codeBranche, data = self,
                                         image = self.arbre.images["Seq"])
-        
+        if hasattr(self, 'tip'):
+            self.tip.SetBranche(self.branche)
         
     ######################################################################################  
     def AfficherMenuContextuel(self, itemArbre):
@@ -841,7 +842,8 @@ class Classe():
         self.arbre = arbre
         self.codeBranche = wx.StaticText(self.arbre, -1, rallonge(self.typeEnseignement))
         self.branche = arbre.AppendItem(branche, Titres[5]+" :", wnd = self.codeBranche, data = self)#, image = self.arbre.images["Seq"])
-
+        if hasattr(self, 'tip'):
+            self.tip.SetBranche(self.branche)
 
 
     ######################################################################################  
@@ -940,8 +942,11 @@ class BaseDoc():
     ######################################################################################  
     def SelectItem(self, branche, depuisFiche = False):
         self.centrer = not depuisFiche
-        self.arbre.SelectItem(branche)  
-        
+        self.arbre.EnsureVisible(branche)
+        for i in self.arbre._itemWithWindow:
+            self.arbre.HideWindows()
+        self.arbre.SelectItem(branche) 
+
         
 ####################################################################################################          
 class Sequence(BaseDoc):
@@ -1354,6 +1359,9 @@ class Sequence(BaseDoc):
         self.arbre = arbre
         self.branche = arbre.AppendItem(branche, Titres[0], data = self, image = self.arbre.images["Seq"])
         self.arbre.SetItemBold(self.branche)
+        if hasattr(self, 'tip'):
+            self.tip.SetBranche(self.branche)
+        
         #
         # LE centre d'intérêt
         #
@@ -1966,13 +1974,27 @@ class Projet(BaseDoc, Objet_sequence):
             
                    
     ######################################################################################  
-    def AjouterTache(self, event = None, tache = None):
-        if tache == None:
+    def AjouterTache(self, event = None, tacheAct = None):
+#        if tache == None:
+#            tache = Tache(self, self.panelParent)
+        if tacheAct == None:
             tache = Tache(self, self.panelParent)
-        self.taches.append(tache)
+            self.taches.append(tache)
+            tache.ConstruireArbre(self.arbre, self.brancheTac)
+        else:
+            tache = Tache(self, self.panelParent)
+            self.taches.append(tache)
+            tache.ordre = tacheAct.ordre+0.5
+            tache.ConstruireArbre(self.arbre, self.brancheTac)
+            tache.SetPhase(tacheAct.phase)
+            
+            if hasattr(tache, 'panelPropriete'):
+                tache.panelPropriete.MiseAJour()
+            
+            
         
 #        self.arbre.Freeze()
-        tache.ConstruireArbre(self.arbre, self.brancheTac)
+        
         
 #        self.arbre.ExpandAll()
 #        self.arbre.CalculatePositions()
@@ -2239,7 +2261,9 @@ class Projet(BaseDoc, Objet_sequence):
     def ConstruireArbre(self, arbre, branche):
         self.arbre = arbre
         self.branche = arbre.AppendItem(branche, Titres[9], data = self, image = self.arbre.images["Prj"])
-
+        if hasattr(self, 'tip'):
+            self.tip.SetBranche(self.branche)
+            
         #
         # Le support
         #
@@ -2608,7 +2632,8 @@ class CentreInteret(Objet_sequence):
         self.codeBranche = wx.StaticText(self.arbre, -1, u"")
         self.branche = arbre.AppendItem(branche, u"Centre d'intérét :", wnd = self.codeBranche, data = self,
                                         image = self.arbre.images["Ci"])
-        
+        if hasattr(self, 'tip'):
+            self.tip.SetBranche(self.branche)
 
         
 #    #############################################################################
@@ -2708,7 +2733,8 @@ class Competences(Objet_sequence):
         self.branche = arbre.AppendItem(branche, u"Compétences", wnd = self.codeBranche, data = self,
                                         image = self.arbre.images["Com"])
         self.arbre.SetItemTextColour(self.branche, constantes.GetCouleurWx(COUL_COMPETENCES))
-        
+        if hasattr(self, 'tip'):
+            self.tip.SetBranche(self.branche)
         
     #############################################################################
     def MiseAJourTypeEnseignement(self):
@@ -2777,7 +2803,8 @@ class Savoirs(Objet_sequence):
             t = u"Savoirs"
         self.branche = arbre.AppendItem(branche, t, wnd = self.codeBranche, data = self,
                                         image = self.arbre.images["Sav"])
-         
+        if hasattr(self, 'tip'):
+            self.tip.SetBranche(self.branche)
     
 #    #############################################################################
 #    def HitTest(self, x, y):
@@ -3383,6 +3410,9 @@ class Seance(ElementDeSequence, Objet_sequence):
         
         self.branche = arbre.AppendItem(branche, u"Séance :", wnd = self.codeBranche, 
                                             data = self, image = image)
+        if hasattr(self, 'tip'):
+            self.tip.SetBranche(self.branche)
+            
         if hasattr(self, 'branche'):
             self.SetCodeBranche()
             
@@ -3668,11 +3698,16 @@ class Tache(Objet_sequence):
 #        self.initIndicateurs()
         
         
+            
         #
         # Création du Tip (PopupInfo)
         #
         if self.GetApp():
-            self.tip = PopupInfo2(self.GetApp(), u"Tâche")
+            if hasattr(self, "branche"):
+                b = self.branche
+            else:
+                b = None
+            self.tip = PopupInfo2(self.GetApp(), u"Tâche", self.GetDocument(), b)
             self.tip.sizer.SetItemSpan(self.tip.titre, (1,2))
             
             if not self.phase in ["R1", "R2", "S", "Rev"]:
@@ -3925,7 +3960,22 @@ class Tache(Objet_sequence):
     ######################################################################################  
     def GetDuree(self):
         if self.phase != "":
-            return self.duree.v[0]
+            if self.phase in ["R1", "R2", "Rev"]:
+                de = []
+                for e in self.parent.eleves:
+                    de.append(e.GetDuree(self.phase))
+                d = max(de)    
+#                    
+#                    
+#                d = 0.0
+#                for t in self.parent.taches:
+#                    if t.phase == self.phase:
+#                        break
+#                    if not t.phase in ["R1", "R2", "Rev"]:
+#                        d += t.GetDuree()
+                return d
+            else:
+                return self.duree.v[0]
         return 0
                 
     ######################################################################################  
@@ -4051,6 +4101,9 @@ class Tache(Objet_sequence):
             
         self.branche = arbre.AppendItem(branche, u"Tâche :", wnd = self.codeBranche, 
                                         data = self, image = image)
+        if hasattr(self, 'tip'):
+            self.tip.SetBranche(self.branche)
+            
         if self.phase in ["R1", "R2"]:
             arbre.SetItemTextColour(self.branche, "red")
         elif self.phase == "Rev":
@@ -4265,6 +4318,8 @@ class Systeme(ElementDeSequence, Objet_sequence):
 #            image = self.image.ConvertToImage().Scale(20, 20).ConvertToBitmap()
         self.branche = arbre.AppendItem(branche, u"Système ou matériel", data = self,#, wnd = self.codeBranche
                                         image = image)
+        if hasattr(self, 'tip'):
+            self.tip.SetBranche(self.branche)
 #        self.SetNom(self.nom)
         self.SetNombre()
         
@@ -4460,7 +4515,8 @@ class Support(ElementDeSequence, Objet_sequence):
         image = self.arbre.images["Sup"]
         self.branche = arbre.AppendItem(branche, u"Support", data = self,#, wnd = self.codeBranche
                                         image = image)
-
+        if hasattr(self, 'tip'):
+            self.tip.SetBranche(self.branche)
 
         
     ######################################################################################  
@@ -4738,10 +4794,18 @@ class Eleve(Personne, Objet_sequence):
     ######################################################################################  
     def GetDuree(self, partie = None):
         d = 0
-        for t in self.parent.taches:
+        p = 0
+        if partie != None:
+            for i, t in enumerate(self.parent.taches):
+                if t.phase == partie:
+                    break
+                if t.phase in ["R1", "R2", "S"]:
+                    p = i
+        
+        for t in self.parent.taches[p:]:
             if t.phase == partie:
                 break
-            if not t.phase in ["R1", "R2", "S"]:
+            if not t.phase in ["R1", "R2", "S", "Rev"]:
                 if self.id in t.eleves:
                     d += t.GetDuree()
         return d
@@ -5041,6 +5105,9 @@ class Eleve(Personne, Objet_sequence):
 #            image = self.image.ConvertToImage().Scale(20, 20).ConvertToBitmap()
         self.branche = arbre.AppendItem(branche, "", data = self, wnd = self.codeBranche,
                                         image = image)
+        if hasattr(self, 'tip'):
+            self.tip.SetBranche(self.branche)
+        
         self.SetCode()
         
         
@@ -5146,6 +5213,8 @@ class Prof(Personne):
 #            image = self.image.ConvertToImage().Scale(20, 20).ConvertToBitmap()
         self.branche = arbre.AppendItem(branche, "", data = self, wnd = self.codeBranche,
                                         image = image)
+        if hasattr(self, 'tip'):
+            self.tip.SetBranche(self.branche)
         self.SetCode()
         
         
@@ -5738,7 +5807,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                 self.ajouterOutilsProjet()
                 self.Bind(wx.EVT_TOOL, doc.projet.AjouterEleve, id=50)
                 self.Bind(wx.EVT_TOOL, doc.projet.AjouterProf, id=51)
-                self.Bind(wx.EVT_TOOL, doc.projet.AjouterTache, id=52)
+                self.Bind(wx.EVT_TOOL, doc.AjouterTache, id=52)
             elif doc.typ == "seq":
                 self.ajouterOutilsSequence()
                 self.Bind(wx.EVT_TOOL, doc.sequence.AjouterSeance, id=60)
@@ -6421,6 +6490,11 @@ class FenetreProjet(FenetreDocument):
         
         self.miseEnPlace()
    
+    
+    ###############################################################################################
+    def AjouterTache(self, event = None):
+        self.arbre.AjouterTache()
+        
         
     ###############################################################################################
     def OnPageChanged(self, event):
@@ -10798,8 +10872,11 @@ class ArbreProjet(ArbreDoc):
             
     ####################################################################################
     def AjouterTache(self, event = None):
-        tache = self.projet.AjouterTache()
-        self.lstTaches.append(self.AppendItem(self.taches, u"Tâche :", data = tache))
+        obj = self.GetItemPyData(self.GetSelection())
+        if not isinstance(obj, Tache):
+            obj = None
+        self.projet.AjouterTache(tacheAct = obj)
+#        self.lstTaches.append(self.AppendItem(self.taches, u"Tâche :", data = tache))
         
     ####################################################################################
     def SupprimerTache(self, event = None, item = None):
@@ -11691,7 +11768,11 @@ class PopupInfo(wx.PopupWindow):
 
         self.Bind(wx.EVT_WINDOW_DESTROY, self.OnDestroy)
     
-    
+    ##########################################################################################
+    def SetBranche(self, branche):
+        self.branche = branche
+        
+    ##########################################################################################
     def XML_AjouterImg(self, node, id, bmp):
 #        print "XML_AjouterImg"
         try:
@@ -11707,6 +11788,7 @@ class PopupInfo(wx.PopupWindow):
             
 #            print img.toxml()
         
+    ##########################################################################################
     def OnDestroy(self, evt):
         if os.path.exists(self.tfname):
             os.remove(self.tfname)
@@ -11743,9 +11825,11 @@ class PopupInfo(wx.PopupWindow):
         
         
 class PopupInfo2(wx.PopupWindow):
-    def __init__(self, parent, titre = ""):
+    def __init__(self, parent, titre = "", doc = None, branche = None):
         wx.PopupWindow.__init__(self, parent, wx.BORDER_SIMPLE)
         self.parent = parent
+        self.doc = doc
+        self.branche = branche
         
         #
         # Un sizer "tableau", comme ça, on y met ce q'on veut où on veut ...
@@ -11762,9 +11846,18 @@ class PopupInfo2(wx.PopupWindow):
         
         self.SetSizerAndFit(self.sizer)
         self.Bind(wx.EVT_LEAVE_WINDOW, self.OnLeave)
+        self.Bind(wx.EVT_LEFT_UP, self.OnClick)
         
+    ##########################################################################################
+    def SetBranche(self, branche):
+        self.branche = branche
         
-    
+    ##########################################################################################
+    def OnClick(self, event):
+        if self.doc != None and self.branche != None:
+            self.doc.SelectItem(self.branche)
+            self.Show(False)
+            
     ##########################################################################################
     def OnLeave(self, event):
         x, y = event.GetPosition()

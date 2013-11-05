@@ -840,10 +840,12 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
         x = xEleves[i]-wEleves*3/4
         y = posZTaches[1] + tailleZTaches[1] + (i % 2)*(ecartY/2)+ecartY/2
         d = e.GetDuree()
-        if d < constantes.DUREE_PRJ:
-            ctx.set_source_rgb(1,0.1,0.1)
-        else:
+        if abs(d-constantes.DUREE_PRJ) < constantes.DELTA_DUREE:
             ctx.set_source_rgb(0.1,1,0.1)
+        elif abs(d-constantes.DUREE_PRJ) < constantes.DELTA_DUREE2:
+            ctx.set_source_rgb(1,0.6,0.1)
+        else:
+            ctx.set_source_rgb(1,0.1,0.1)
         show_text_rect(ctx, getHoraireTxt(d), 
                        (x, y, wEleves*3/2, ecartY/2), ha = 'c', b = 0)
     
@@ -1057,14 +1059,15 @@ def DrawTacheRacine(ctx, tache, y):
     #
     # Flèche verticale indiquant la durée de la tâche
     #
-    h = calcH(tache.GetDuree())
+    
     if not tache.phase in ["R1", "R2", "S", "Rev"]:
+        h = calcH(tache.GetDuree())
 #        fleche_verticale(ctx, posZTaches[0] - wDuree/2 - ecartX/4, y, 
 #                         h, wDuree, (0.9,0.8,0.8,0.5))
         
         ctx.set_source_rgba (0.9,0.8,0.8,0.5)
-        ctx.rectangle(posZTaches[0] - wDuree - ecartX/4, y, 
-                      wDuree, h)
+        x = posZTaches[0] - wDuree - ecartX/4
+        ctx.rectangle(x, y, wDuree, h)
         ctx.fill_preserve ()    
         ctx.set_source_rgba(0.4,  0.4,  0.4,  1)
         ctx.set_line_width(0.0006)
@@ -1074,9 +1077,29 @@ def DrawTacheRacine(ctx, tache, y):
         ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                   cairo.FONT_WEIGHT_BOLD)
         show_text_rect(ctx, getHoraireTxt(tache.GetDuree()), 
-                       (posZTaches[0] - wDuree - ecartX/4, y, wDuree, h), 
+                       (x, y, wDuree, h), 
                        orient = 'v', b = 0.1)
     
+    elif tache.phase != "S":
+        h = calcH(1)
+        ctx.set_source_rgba (0.9,0.8,0.8,0.5)
+        x = posZTaches[0] - wDuree*4 - ecartX/4
+        ctx.rectangle(x, y, 
+                      wDuree*3, h)
+        ctx.fill_preserve ()    
+        ctx.set_source_rgba(0.4,  0.4,  0.4,  1)
+        ctx.set_line_width(0.0006)
+        ctx.stroke ()
+        
+        ctx.set_source_rgb(0.5,0.8,0.8)
+        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+                                  cairo.FONT_WEIGHT_BOLD)
+        show_text_rect(ctx, getHoraireTxt(tache.GetDuree()), 
+                       (x, y, wDuree*3, h), 
+                       orient = 'h', b = 0.1)
+    
+    else:
+        h = calcH(tache.GetDuree())
     #
     # Rectangles actifs et points caractéristiques : initialisation
     #
