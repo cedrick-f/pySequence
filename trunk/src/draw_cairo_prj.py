@@ -1080,7 +1080,7 @@ def DrawTacheRacine(ctx, tache, y):
                        (x, y, wDuree, h), 
                        orient = 'v', b = 0.1)
     
-    elif tache.phase != "S":
+    elif not tache.phase in ["S", "Rev"]:
         h = calcH(1)
         ctx.set_source_rgba (0.9,0.8,0.8,0.5)
         x = posZTaches[0] - wDuree*4 - ecartX/4
@@ -1098,6 +1098,8 @@ def DrawTacheRacine(ctx, tache, y):
                        (x, y, wDuree*3, h), 
                        orient = 'h', b = 0.1)
     
+    elif tache.phase == "Rev":
+        h = calcH(1)
     else:
         h = calcH(tache.GetDuree())
     #

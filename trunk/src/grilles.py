@@ -209,10 +209,10 @@ def getTableau(parent, doc):
         
     if err == 0:
         return tableau
-    elif err == 1:
+    elif err&1 != 0:
         messageErreur(parent, u"Ouverture d'Excel impossible !",
                       u"L'application Excel ne semble pas installée !")
-    elif err == 2:
+    elif err&2 != 0:
         messageErreur(parent, u"Fichier non trouvé !",
                               u"Le fichier original de la grille,\n    " + fichierPB[0] + u"\n" \
                               u"n'a pas été trouvé ! \n")
