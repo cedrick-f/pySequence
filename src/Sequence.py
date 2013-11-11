@@ -2054,6 +2054,7 @@ class Projet(BaseDoc, Objet_sequence):
         
     ######################################################################################  
     def OrdonnerListeTaches(self, lstTaches):
+#        print "OrdonnerListeTaches"
         #
         # On enregistre les positions des revues intermédiaires (après qui ?)
         #
@@ -2064,7 +2065,8 @@ class Projet(BaseDoc, Objet_sequence):
                     Rev.append((t, lstTaches[i-1]))
                 else:
                     Rev.append((t, None))
-             
+#        print "rev :",Rev
+        
         #
         # On fait des paquets par catégorie
         #
@@ -2116,10 +2118,12 @@ class Projet(BaseDoc, Objet_sequence):
         # On ajoute les revues intermédiaires
         #
         for r, q in Rev:
+#            print r, q
             if q == None:
                 lst.insert(0, r)
             else:
                 i = lst.index(q)
+#                print "  ",i
                 lst.insert(i+1, r)
                 
         return lst
@@ -4899,11 +4903,16 @@ class Eleve(Personne, Objet_sequence):
     def GetTaches(self, revues = False):
         lst = []
         for t in self.parent.taches:
-            if self.id in t.eleves:
+            if revues and t.phase in ["R1", "R2"]:
                 lst.append(t)
-            if revues and t.phase in ["R1", "R2", "Rev"]:
-                lst.append(t)
-        lst = list(set(lst))
+            elif self.id in t.eleves:
+                if revues and t.phase == "Rev":
+                    lst.append(t)
+                elif t.phase != "Rev":
+                    lst.append(t)
+            
+                    
+#        lst = list(set(lst))
             
         return lst
         
