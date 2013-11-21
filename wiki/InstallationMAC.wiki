@@ -13,10 +13,15 @@ Cette procédure ne s'adresse donc qu'à des *utilisateurs confirmés* de MAC, p
  * Installer [http://www.python.org/ python], soit la [http://www.python.org/download/releases/2.6.6/ version 2.6], soit la [http://www.python.org/download/releases/2.7.6/ version 2.7].
  * [http://cairographics.org/download/ pyCairo] : suivre les instructions ...
  * [http://wxpython.org/download.php#unstable wxPython 2.9.x] : choisir la version adaptée à la version de python installée.
- * [https://bitbucket.org/rptlab/reportlab Reportlab] : tous lesfichiers en téléchargement sont disponibles sur [http://www.reportlab.com/ftp/ cette page].
+ * [https://bitbucket.org/rptlab/reportlab Reportlab] : tous les fichiers en téléchargement sont disponibles sur [http://www.reportlab.com/ftp/ cette page].
  * [https://pypi.python.org/pypi/PyPDF2/1.18 pyPDF2]
 
 D'autres modules sont nécessaires ... mais sont spécifiques à Windows : il va donc y avoir quelques pertes de fonctionnalités
+
+== Installation de pySequence ==
+Il faut utiliser directement les [http://code.google.com/p/pysequence/source/checkout sources].
+L'idéal est d'utiliser svn, ce qui garantie d'avoir toujours la dernière version (prérelease) de pySequence.
+
 
 == Lancement de pySequence ==
 Il "suffit" de lancer le fichier pysequence.py...
