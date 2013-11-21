@@ -1,0 +1,11 @@
+#Comment installer pySéquence sur un MAC
+
+En principe, pySéquence est conçu pour être multi-plateforme.
+En pratique, cela demande quelques adaptations ...
+
+Encore jamais tentée, la procédure ci-dessous décrit donc pour l'instant la "théorie".
+
+
+= Introduction =
+
+
