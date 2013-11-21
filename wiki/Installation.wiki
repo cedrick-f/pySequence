@@ -48,4 +48,11 @@ En cas d'erreur, consulter la [FAQ F.A.Q.]
 
 [Installation#T%C3%A9l%C3%A9chargement Téléchargement]
 ----
+
+
+== pySéquence sur MAC ==
+
+Voir la rubrique [InstallationMAC "Comment installer pySéquence sur un MAC"]
+
+
 [Aide Sommaire de l'aide]
