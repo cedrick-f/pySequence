@@ -6,6 +6,5 @@ En pratique, cela demande quelques adaptations ...
 Encore jamais tentée, la procédure ci-dessous décrit donc pour l'instant la "théorie".
 
 
-= Introduction =
-
-
+= Installation de python et des modules nécessaires =
+* Installer [python 2 http://www.python.org/], soit la [version 2.6 http://www.python.org/download/releases/2.6.6/], soit la [version 2.7 http://www.python.org/download/releases/2.7.6/].
