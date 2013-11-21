@@ -7,6 +7,8 @@
 ##                                                                         ##
 ##                               draw_cairo_prj                            ##
 ##                                                                         ##
+##                         Tracé des fiches de projet                      ##
+##                                                                         ##
 #############################################################################
 #############################################################################
 
@@ -27,19 +29,19 @@
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 '''
-Created on 26 oct. 2011
+Created on 26 oct. 2011 
 
-@author: Cedrick
+@author: Cedrick FAURY
 '''
-
+# Pour débuggage
 #import time
 
-from draw_cairo import *
-#import textwrap
+import cairo
+from draw_cairo import LargeurTotale, font_family, curve_rect_titre, show_text_rect_fix, show_text_rect, \
+                        boule, getHoraireTxt, liste_code_texte, rectangle_plein, barreH, tableauV, minFont, tableauH
+
 from math import log
-#import cairo
-#
-#import ConfigParser
+
 
 #from constantes import Effectifs, NomsEffectifs, listeDemarches, Demarches, getSavoir, getCompetence, \
 #                        DemarchesCourt, estCompetenceRevue
@@ -144,11 +146,17 @@ posZTaches = [posZDeroul[0] + wPhases + wDuree + ecartX*3/6, None]
 tailleZTaches = [None, None]
 hTacheMini = ecartY/2
 yTaches = []
+ecartTacheY = None  # Ecartement entre les tâches de phase différente
+
 # paramètres pour la fonction qui calcule la hauteur des tâches 
 # en fonction de leur durée
-a = b = None 
+a = b = None
+def calcH(t):
+    if t != 0:
+        return a*log(t*2)+b
+    return 2*ecartTacheY
 
-ecartTacheY = None  # Ecartement entre les tâches de phase différente
+
 BCoulTache = {'Ana' : (0.3,0.5,0.5), 
               'Con' : (0.5,0.3,0.5), 
               'DCo' : (0.55,0.3,0.45),
@@ -175,180 +183,6 @@ ICoulTache = {'Ana' : (0.6, 0.8, 0.8),
 ecartYElevesTaches = 0.05
 
 
-def str2coord(str):
-    l = str.split(',')
-    return [eval(l[0]), eval(l[1])]
-
-def coord2str(xy):
-    return str(xy[0])+","+str(xy[1])
-
-def str2coul(str):
-    l = str.split(',')
-    return eval(l[0]), eval(l[1]), eval(l[2]), eval(l[3])
-
-def coul2str(rgba):
-    if len(rgba) == 3:
-        a = 1
-    else:
-        a = rgba[3]
-    return str(rgba[0])+","+str(rgba[1])+","+str(rgba[2])+","+str(a)
-
-
-
-#def enregistrerConfigFiche(nomFichier):
-#    config = ConfigParser.ConfigParser()
-#
-#    section = "General"
-#    config.add_section(section)
-#    config.set(section, "margeX", str(margeX))
-#    config.set(section, "margeY", str(margeY))
-#    config.set(section, "ecartX", str(ecartX))
-#    config.set(section, "ecartY", str(ecartY))
-#    
-#    section = "Intitule de la sequence"
-#    config.add_section(section)
-#    config.set(section, "pos", coord2str(posIntitule))
-#    config.set(section, "dim", coord2str(tailleIntitule))
-#    config.set(section, "coulInt", coul2str(IcoulIntitule))
-#    config.set(section, "coulBord", coul2str(BcoulIntitule))
-#    
-#    section = "Centre d'interet"
-#    config.add_section(section)
-#    config.set(section, "pos", coord2str(posSup))
-#    config.set(section, "dim", coord2str(tailleSup))
-#    config.set(section, "coulInt", coul2str(IcoulSup))
-#    config.set(section, "coulBord", coul2str(BcoulSup))
-#    
-#    section = "Objectifs"
-#    config.add_section(section)
-#    config.set(section, "pos", coord2str(posPro))
-#    config.set(section, "dim", coord2str(taillePro))
-#    config.set(section, "coulInt", coul2str(IcoulPro))
-#    config.set(section, "coulBord", coul2str(BcoulPro))
-#
-#    section = "Prerequis"
-#    config.add_section(section)
-#    config.set(section, "pos", coord2str(posEqu))
-#    config.set(section, "dim", coord2str(tailleEqu))
-#    config.set(section, "coulInt", coul2str(IcoulEqu))
-#    config.set(section, "coulBord", coul2str(BcoulEqu))
-#
-#    section = "Zone d'organisation"
-#    config.add_section(section)
-#    config.set(section, "pos", coord2str(posZOrganis))
-#    config.set(section, "dim", coord2str(tailleZOrganis))
-#
-#    section = "Zone de deroulement"
-#    config.add_section(section)
-#    config.set(section, "pos", coord2str(posZDeroul))
-#
-#    section = "Tableau systemes"
-#    config.add_section(section)
-#    config.set(section, "posY", str(posZComp[1]))
-#    config.set(section, "col", str(wColComp))
-#
-#    section = "Tableau demarche"
-#    config.add_section(section)
-#    config.set(section, "posY", str(posZElevesV[1]))
-#    config.set(section, "dimX", str(tailleZElevesV[0]))
-#    
-#    section = "Intitule des seances"
-#    config.add_section(section)
-#    config.set(section, "posX", str(posZIntTaches[0]))
-#    config.set(section, "dimX", str(tailleZIntTaches[0]))
-#    config.set(section, "haut", str(hIntTache))
-#
-#    section = "Seances"
-#    config.add_section(section)
-#    config.set(section, "pos", coord2str(posZTaches))
-#    for k, v in BCoulTache.items():
-#        config.set(section, "Bcoul"+k, coul2str(v))
-#    for k, v in ICoulTache.items():
-#        config.set(section, "Icoul"+k, coul2str(v))
-#        
-#    config.write(open(nomFichier,'w'))
-#    
-#    
-#    
-#    
-#    
-#    
-#def ouvrirConfigFiche(nomFichier):
-##    print "ouvrirConfigFiche"
-#    global posIntitule, tailleIntitule, IcoulIntitule, BcoulIntitule, \
-#           posSup, tailleSup, IcoulSup, BcoulSup, \
-#           posPro, taillePro, IcoulPro, BcoulPro, \
-#           posZOrganis, tailleZOrganis, \
-#           posZDeroul, wColComp, hIntTache, posZTaches, \
-#           margeX, margeY, ecartX, ecartY
-#           
-#           
-#    config = ConfigParser.ConfigParser()
-#    config.read(nomFichier)
-#    
-#    section = "General"
-#    margeX = eval(config.get(section,"margeX"))
-#    margeY = eval(config.get(section,"margeY"))
-#    ecartX = eval(config.get(section,"ecartX"))
-#    ecartY = eval(config.get(section,"ecartY"))
-#    
-#    
-#    section = "Intitule de la sequence"
-#    posIntitule = str2coord(config.get(section,"pos"))
-#    tailleIntitule = str2coord(config.get(section,"dim"))
-#    IcoulIntitule = str2coul(config.get(section,"coulInt"))
-#    BcoulIntitule = str2coul(config.get(section,"coulBord"))
-#    
-#    section = "Centre d'interet"
-#    posSup = str2coord(config.get(section,"pos"))
-#    tailleSup = str2coord(config.get(section,"dim"))
-#    IcoulSup = str2coul(config.get(section,"coulInt"))
-#    BcoulSup = str2coul(config.get(section,"coulBord"))
-#    
-#    section = "Objectifs"
-#    posPro = str2coord(config.get(section,"pos"))
-#    taillePro = str2coord(config.get(section,"dim"))
-#    IcoulPro = str2coul(config.get(section,"coulInt"))
-#    BcoulPro = str2coul(config.get(section,"coulBord"))
-#
-#    section = "Prerequis"
-#    posEqu = str2coord(config.get(section,"pos"))
-#    tailleEqu = str2coord(config.get(section,"dim"))
-#    IcoulEqu = str2coul(config.get(section,"coulInt"))
-#    BcoulEqu = str2coul(config.get(section,"coulBord"))
-#    
-#    section = "Zone d'organisation"
-#    posZOrganis = str2coord(config.get(section,"pos"))
-#    tailleZOrganis = str2coord(config.get(section,"dim"))
-#    
-#    section = "Zone de deroulement"
-#    posZDeroul = str2coord(config.get(section,"pos"))
-#
-#    section = "Tableau systemes"
-#    posZComp[1] = config.getfloat(section,"posY")
-#    wColComp = config.getfloat(section,"col")
-#
-#    section = "Tableau demarche"
-#    posZElevesV[1] = config.getfloat(section,"posY")
-#    tailleZElevesV[0] = config.getfloat(section,"dimX")
-#    
-#    section = "Intitule des seances"
-#    posZIntTaches[0] = config.getfloat(section,"posX")
-#    tailleZIntTaches[0] = config.getfloat(section,"dimX")
-#    hIntTache = config.getfloat(section,"haut")
-#    
-#    section = "Seances"
-#    posZTaches = str2coord(config.get(section,"pos"))
-#    for k in BCoulTache.keys():
-#        BCoulTache[k] = str2coul(config.get(section, "Bcoul"+k))
-#    for k in ICoulTache.keys():
-#        ICoulTache[k] = str2coul(config.get(section, "Icoul"+k))
-    
-
-def calcH(t):
-    if t != 0:
-        return a*log(t*2)+b
-    return 0
 
 ######################################################################################  
 def DefinirZones(prj, ctx):
@@ -399,9 +233,6 @@ def DefinirZones(prj, ctx):
     tailleZTaches[1] = tailleZDeroul[1] - ecartY/2 - 0.04    # écart pour la durée totale
     
     
-#    hHoraire = tailleZTaches[1] / (prj.GetDureeGraph() + 0.25*(prj.GetNbrPhases()-1))
-#    ecartTacheY = hHoraire/4
-#    if ecartTacheY > 0.02:
     ecartTacheY = ecartY/3
     sommeEcarts = (prj.GetNbrPhases()-1)*ecartTacheY
     
@@ -416,16 +247,8 @@ def DefinirZones(prj, ctx):
     b = hTacheMini
     a = (tailleZTaches[1] - sommeEcarts - b*len(prj.taches)) / h
     
-#    if prj.GetDureeGraph() > 0:
-#        hHoraire = (tailleZTaches[1] - sommeEcarts) / prj.GetDureeGraph()
 
 
-#######################################################################################
-#curseur = None 
-#def InitCurseur():
-#    global cursY
-##    curseur = [posZTaches[0], posZTaches[1]]
-#    cursY = posZTaches[1]
     
     
 def getPts(lst_rect):
@@ -970,7 +793,7 @@ def Draw_CI(ctx, CI):
     #
     lstCodes = []
     lstIntit = []
-    for i, c in enumerate(CI.numCI):
+    for i in range(len(CI.numCI)):
         lstCodes.append(CI.GetCode(i))
         lstIntit.append(CI.GetIntit(i))
         
@@ -1060,8 +883,9 @@ def DrawTacheRacine(ctx, tache, y):
     # Flèche verticale indiquant la durée de la tâche
     #
     
+    h = calcH(tache.GetDuree())
+
     if not tache.phase in ["R1", "R2", "S", "Rev"]:
-        h = calcH(tache.GetDuree())
 #        fleche_verticale(ctx, posZTaches[0] - wDuree/2 - ecartX/4, y, 
 #                         h, wDuree, (0.9,0.8,0.8,0.5))
         
@@ -1080,8 +904,8 @@ def DrawTacheRacine(ctx, tache, y):
                        (x, y, wDuree, h), 
                        orient = 'v', b = 0.1)
     
-    elif not tache.phase in ["S", "Rev"]:
-        h = calcH(1)
+    elif tache.phase in ["R1", "R2"]:
+        
         ctx.set_source_rgba (0.9,0.8,0.8,0.5)
         x = posZTaches[0] - wDuree*4 - ecartX/4
         ctx.rectangle(x, y, 
@@ -1094,14 +918,15 @@ def DrawTacheRacine(ctx, tache, y):
         ctx.set_source_rgb(0.5,0.8,0.8)
         ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                   cairo.FONT_WEIGHT_BOLD)
-        show_text_rect(ctx, getHoraireTxt(tache.GetDuree()), 
+        show_text_rect(ctx, getHoraireTxt(tache.GetDelai()), 
                        (x, y, wDuree*3, h), 
                        orient = 'h', b = 0.1)
     
-    elif tache.phase == "Rev":
-        h = calcH(1)
-    else:
-        h = calcH(tache.GetDuree())
+#    elif tache.phase == "Rev":
+#        h = calcH(1)
+#    else:
+#        h = calcH(tache.GetDuree())
+    
     #
     # Rectangles actifs et points caractéristiques : initialisation
     #

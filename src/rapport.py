@@ -6,6 +6,8 @@
 #############################################################################
 ##                                                                         ##
 ##                                  rapport                                ##
+##               génération d'un rapport détaillé                          ##
+##               des tâches à effectuer par les élèves lors d'un projet    ##
 ##                                                                         ##
 #############################################################################
 #############################################################################
@@ -31,33 +33,24 @@ import wx
 import wx.richtext as rt
 import images
 import cStringIO
-import richtext
+
 from draw_cairo import getHoraireTxt
 from draw_cairo_prj import ICoulTache, BCoulTache
-from draw_cairo_seq import ICoulSeance, BCoulSeance
+from draw_cairo_seq import ICoulSeance#, BCoulSeance
 
-from wx import ImageFromStream, BitmapFromImage, EmptyIcon
+#from wx import ImageFromStream, BitmapFromImage, EmptyIcon
 
 from wx.lib.embeddedimage import PyEmbeddedImage 
 
 from constantes import NOM_PHASE_TACHE, TypesSeanceCourt
 
-import win32clipboard
+# Module utilisé pour tester la disponibilité du presse-papier
+# (Windows seulement)
+if sys.platform == "win32":
+    import win32clipboard
+    
 import random
 import time
-
-#StyleText = {}
-#Couleur = {}
-#def charger_styleText():
-#    Couleur["rouge"] = wx.RED
-#    Couleur["vert"]  = wx.ColourDatabase().Find("FOREST GREEN")
-#    Couleur["bleu"]  = wx.BLUE
-#    StyleText["Titre1"] = StyleDeTexte(wx.Font(9, wx.DEFAULT, wx.NORMAL, wx.BOLD, True),wx.BLUE)
-#    StyleText["Titre2"] = StyleDeTexte(wx.Font(8, wx.DEFAULT, wx.NORMAL, wx.NORMAL, False),wx.BLACK)
-#    StyleText["Messag"] = StyleDeTexte(wx.Font(9, wx.DEFAULT, wx.NORMAL, wx.BOLD, False),wx.RED) 
-#    StyleText["Normal"] = StyleDeTexte(wx.Font(8, wx.DEFAULT, wx.NORMAL, wx.NORMAL, False),wx.BLACK)
-#    StyleText["Message"] = StyleDeTexte(wx.Font(8, wx.DEFAULT, wx.ITALIC, wx.NORMAL, False),wx.BLACK)
-#    StyleText["Gras"] = StyleDeTexte(wx.Font(8, wx.DEFAULT, wx.NORMAL, wx.BOLD, False),wx.BLACK)
 
 
 Styles = {"Titre"     :     rt.RichTextAttr(),
@@ -170,7 +163,7 @@ class FrameRapport(wx.Frame):
         self.MakeMenuBar()
         self.MakeToolBar()
         self.CreateStatusBar()
-#        self.SetStatusText(u"Rapport d'analyse")
+
         
         #
         # Instanciation du rapport en RTF
@@ -187,25 +180,25 @@ class FrameRapport(wx.Frame):
     
 
         
-    def AddRTCHandlers(self):
-        # make sure we haven't already added them.
-        if rt.RichTextBuffer.FindHandlerByType(rt.RICHTEXT_TYPE_HTML) is not None:
-            return
-        
-        rt.RichTextBuffer.GetHandlers()[0].SetEncoding("iso-8859-1")
-#        f = rt.RichTextFileHandler()#.SetEncoding("iso-8859-1")
-        # This would normally go in your app's OnInit method.  I'm
-        # not sure why these file handlers are not loaded by
-        # default by the C++ richtext code, I guess it's so you
-        # can change the name or extension if you wanted...
-        HTML = rt.RichTextHTMLHandler()
-        HTML.SetEncoding("latin_1")#"iso-8859-1")
-        rt.RichTextBuffer.AddHandler(HTML)
-        rt.RichTextBuffer.AddHandler(rt.RichTextXMLHandler())
-#        rt.RichTextBuffer.AddHandler(rt.RICHTEXT_TYPE_RTF)
-        # This is needed for the view as HTML option since we tell it
-        # to store the images in the memory file system.
-        wx.FileSystem.AddHandler(wx.MemoryFSHandler())
+#    def AddRTCHandlers(self):
+#        # make sure we haven't already added them.
+#        if rt.RichTextBuffer.FindHandlerByType(rt.RICHTEXT_TYPE_HTML) is not None:
+#            return
+#        
+#        rt.RichTextBuffer.GetHandlers()[0].SetEncoding("iso-8859-1")
+##        f = rt.RichTextFileHandler()#.SetEncoding("iso-8859-1")
+#        # This would normally go in your app's OnInit method.  I'm
+#        # not sure why these file handlers are not loaded by
+#        # default by the C++ richtext code, I guess it's so you
+#        # can change the name or extension if you wanted...
+#        HTML = rt.RichTextHTMLHandler()
+#        HTML.SetEncoding("latin_1")#"iso-8859-1")
+#        rt.RichTextBuffer.AddHandler(HTML)
+#        rt.RichTextBuffer.AddHandler(rt.RichTextXMLHandler())
+##        rt.RichTextBuffer.AddHandler(rt.RICHTEXT_TYPE_RTF)
+#        # This is needed for the view as HTML option since we tell it
+#        # to store the images in the memory file system.
+#        wx.FileSystem.AddHandler(wx.MemoryFSHandler())
 
 
         
@@ -216,10 +209,10 @@ class FrameRapport(wx.Frame):
         self.rtc.SaveFile()
 
     def OnFileSaveAs(self, evt):
-#        wildcard, types = rt.RichTextBuffer.GetExtWildcard(save=True)
         wildcard =  u"Rich Text Format (.rtf)|*.rtf|" \
                     u"Format HTML (.html)|*.html|" \
                     u"Fichier texte (.txt)|*.txt"
+        types = [0, 3, 2]
         dlg = wx.FileDialog(self, u"Enregistrer les détails",
                             wildcard=wildcard,
                             style=wx.SAVE)
@@ -230,11 +223,11 @@ class FrameRapport(wx.Frame):
             if path:
                 if ext == 'txt':
                     wildcard, types = rt.RichTextBuffer.GetExtWildcard(save=True)
-                    fileType = types[dlg.GetFilterIndex()]
+                    fileType = 1
                     ext = rt.RichTextBuffer.FindHandlerByType(fileType).GetExtension()
                     if not path.endswith(ext):
                         path += '.' + ext
-                    self.rtc.SaveFile(path, fileType)
+                    self.rtc.SaveFile(path, 1)
                 elif ext == 'html':
                     handler = rt.RichTextHTMLHandler()
                     handler.SetFlags(rt.RICHTEXT_HANDLER_SAVE_IMAGES_TO_MEMORY)
@@ -664,7 +657,9 @@ class FrameRapport(wx.Frame):
     
 class RapportRTF(rt.RichTextCtrl): 
     def __init__(self, parent, style = 0):
+#        print "RapportRTF"
         rt.RichTextCtrl.__init__(self, parent, style = rt.RE_MULTILINE | wx.WANTS_CHARS |style)
+
         self.style = style
         self.parent = parent   
          
@@ -847,33 +842,36 @@ class RapportRTF(rt.RichTextCtrl):
            
             tache.panelPropriete.rtc.rtc.SelectAll()
             
-            #
-            # Procédure pour vérifier que le clipboard est disponible
-            # (source http://teachthe.net/?cat=56&paged=2)
-            #
-            cbOpened = False
-            while not cbOpened:
-                try:
-                    win32clipboard.OpenClipboard(0)
-                    cbOpened = True
-                    win32clipboard.CloseClipboard()
-                except Exception, err:
-                    print "error"
-                    # If access is denied, that means that the clipboard is in use.
-                    # Keep trying until it's available.
-                    if err[0] == 5:  #Access Denied
-                        pass
-                        print 'waiting on clipboard...'
-                        # wait on clipboard because something else has it. we're waiting a
-                        # random amount of time before we try again so we don't collide again
-                        time.sleep( random.random()/50 )
-                    elif err[0] == 1418:  #doesn't have board open
-                        pass
-                    elif err[0] == 0:  #open failure
-                        pass
-                    else:
-                        print 'ERROR in Clipboard section of readcomments: %s' % err
-                        pass
+            if sys.platform == "win32":
+                #
+                # Procédure pour vérifier que le clipboard est disponible
+                # (source http://teachthe.net/?cat=56&paged=2)
+                #
+                cbOpened = False
+                n = 0
+                while not cbOpened and n < 10:
+                    n += 1
+                    try:
+                        win32clipboard.OpenClipboard(0)
+                        cbOpened = True
+                        win32clipboard.CloseClipboard()
+                    except Exception, err:
+                        print "error", err
+                        # If access is denied, that means that the clipboard is in use.
+                        # Keep trying until it's available.
+                        if err[0] == 5:  #Access Denied
+                            pass
+                            print 'waiting on clipboard...'
+                            # wait on clipboard because something else has it. we're waiting a
+                            # random amount of time before we try again so we don't collide again
+                            time.sleep( random.random()/50 )
+                        elif err[0] == 1418:  #doesn't have board open
+                            pass
+                        elif err[0] == 0:  #open failure
+                            pass
+                        else:
+                            print 'ERROR in Clipboard section of readcomments: %s' % err
+                            pass
 
             tache.panelPropriete.rtc.rtc.Copy()
             self.Paste()
@@ -1191,7 +1189,7 @@ class RapportRTF(rt.RichTextCtrl):
             if isinstance(couleur, wx.Colour):
                 c = couleur
             else:
-                c = Couleur[couleur]
+                c = wx.Colour(0,0,0)#Couleur[couleur]
 #            cs = Styles[style].GetTextColour()
 #            Styles[style].SetTextColour(c)
             self.BeginTextColour(c)

@@ -51,10 +51,9 @@ import constantes_SSI
 
 # Les icones des branches de l'abre et un curseur perso
 import images
-import datetime
-import time
 
-#import ConfigParser
+
+import time
 
 
 #
@@ -403,29 +402,27 @@ CouleursGroupes = {"C" : (0.3,0.3,0.7),
                    "P" : (0.5,0.3,0.5), 
                    }
 
-def getTxtEffectifs():
-    """ Pour les OPTIONS :
-        Met les paramètres d'effectifs à la queue dans un string
-    """
-    return ""
-    t = u""
-    for i, eff in enumerate(listeEffectifs):
-        t += str(Effectifs[eff]) +" "
-    return t
+#def getTxtEffectifs():
+#    """ Pour les OPTIONS :
+#        Met les paramètres d'effectifs à la queue dans un string
+#    """
+#    return ""
+#    t = u""
+#    for i, eff in enumerate(listeEffectifs):
+#        t += str(Effectifs[eff]) +" "
+#    return t
 
 
-def setValEffectifs(txt):
-    """ Pour les OPTIONS :
-        Récupère les paramètes d'effectifs à partir d'un string
-    """
-    return
-    lst = txt.split()
-    for i, eff in enumerate(listeEffectifs):
-        Effectifs[eff] = eval(lst[i])
+#def setValEffectifs(txt):
+#    """ Pour les OPTIONS :
+#        Récupère les paramètes d'effectifs à partir d'un string
+#    """
+#    return
+#    lst = txt.split()
+#    for i, eff in enumerate(listeEffectifs):
+#        Effectifs[eff] = eval(lst[i])
 
-
-
-    
+   
     
 def strEffectif(classe, e, n = 0, eleve = True):
     if e == "C":
@@ -649,7 +646,7 @@ for t in EnseignementsProjet:
 def getCompetencesPrjSimple(k,v):
     global NRB_COEF_COMP_R, NRB_COEF_COMP_S 
     dic = {}
-    for c, d in v.items():
+    for d in v.values():
         if k == "SSI":
             nd = {}
             for cc, v in d[1].items():
@@ -716,7 +713,7 @@ def toTxt(lst):
 
 #############################################################################################################
 def mergeDict(D, d):
-    for K, V in D.items():
+    for K in D.keys():
         if K in d.keys():
             D[K] += d[K]
     for k, v in d.items():
@@ -787,18 +784,11 @@ def getCompetence(seq, code, dic = None, c = None):
     
     
 def getAllCodes(dic):
-    lst = []
-    
-    
-    
-    
     lst = dic.keys()
     for k in dic.keys():
         if len(dic[k]) > 1 and type(dic[k][1]) == dict:
             lst.extend(getAllCodes(dic[k][1]))
     return lst
-
-
 
 
 
@@ -884,8 +874,6 @@ MESSAGE_FERMER = {'seq' : u"La séquence a été modifiée.\nVoulez vous enregis
 #    Données concernant les projets
 #
 #######################################################################################
-#NOM_JALONS = {'S' : u"Soutenance finale"}
-
 
 PHASE_TACHE = {'STI': ['Ana', 'Con', 'DCo', 'Rea', 'Val', 'XXX', 'Rev'],
                'SSI': ['Ana', 'Rea', 'XXX', 'Rev']}
@@ -933,16 +921,14 @@ for t in ['STI', 'SSI']:
 
 
 def getLstPhase(typeEns):
+    """ Renvoie la liste des phases que l'utilisateur peut choisir
+        lorsqu'il édite une tâche.
+    """
     lst = []
     for k in PHASE_TACHE[typeEns]:
         if not k in ["R1", "R2", "S"]:
             lst.append(NOM_PHASE_TACHE[typeEns][k])
     return lst
-
-
-
-
-
 
 
 DUREE_PRJ = 70

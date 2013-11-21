@@ -64,7 +64,7 @@ class RichTextPanel(wx.Panel):
         self.sizer.Add(self.rtc, 1, flag = wx.EXPAND)
         self.SetSizer(self.sizer)
     
-        
+                    
         self.Ouvrir()
         
         self.rtc.Bind(wx.EVT_KILL_FOCUS, self.Sauver)
@@ -81,7 +81,7 @@ class RichTextPanel(wx.Panel):
         out = cStringIO.StringIO()
         handler = rt.RichTextXMLHandler()
         buff = self.rtc.GetBuffer()
-        buff.AddHandler(handler)
+#        buff.AddHandler(handler)
         if hasattr(self.objet, "description"):
             if self.objet.description == None:
                 out.write(xmlVide)
