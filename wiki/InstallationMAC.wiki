@@ -7,4 +7,4 @@ Encore jamais tentée, la procédure ci-dessous décrit donc pour l'instant la "
 
 
 = Installation de python et des modules nécessaires =
-* Installer [python 2 http://www.python.org/], soit la [version 2.6 http://www.python.org/download/releases/2.6.6/], soit la [version 2.7 http://www.python.org/download/releases/2.7.6/].
+* Installer [http://www.python.org/ python], soit la [http://www.python.org/download/releases/2.6.6/ version 2.6], soit la [http://www.python.org/download/releases/2.7.6/ version 2.7].
