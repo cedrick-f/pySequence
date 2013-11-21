@@ -9,3 +9,7 @@ Tout d'abord, allez consulter le fichier {{{pySequence.exe.log}}} dans le dossie
 *Alors* installez [http://www.microsoft.com/downloads/fr-fr/confirmation.aspx?FamilyID=9B2DA534-3E03-4391-8A4D-074B9F2BC1BF&displaylang=fr Package redistribuable Microsoft Visual C++ 2008]
 
 *Sinon* contactez cedrick(point)faury(arobase)ac-clermont(point)fr
+
+==Est-ce que pySequence existe pour MAC ?==
+Pas encore, mais on y travaille.
+Néanmoins, une ébauche de [procédure InstallationMAC] existe pour installer pySequence sur MAC.
