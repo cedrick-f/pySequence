@@ -5,7 +5,8 @@
 #############################################################################
 #############################################################################
 ##                                                                         ##
-##                               draw_cairo_prj                            ##
+##                                  grilles                                ##
+##             génération des grilles d'évaluation des projets             ##
 ##                                                                         ##
 #############################################################################
 #############################################################################
@@ -26,106 +27,18 @@
 #    along with pySequence; if not, write to the Free Software
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import wx
-#import des modules permettant la liaison avec excel
-#import xlrd
-#import xlwt
-#from xlutils.copy import copy
 
+from constantes import Cellules_NON, Fichier_GRILLE, TABLE_PATH, dicIndicateurs
+
+# Caractère utilisé pour cocher les cases :
 COCHE = u"X"
-
-from constantes import *
-
-#Cellules_NON_SSI = {  "B3" : [(5,4), (6,4)],
-#                      "B4" : [(7,4), (8,4), (9,4), (10,4)],
-#                      "C1" : [(12,4), (13,4), (14,4), (15,4),  (16,4)],
-#                      "C2" : [(17,4), (18,4), (19,4), (20,4), (21,4), (22,4), (23,4)],
-#                      "D1" : [(25,4), (26,4), (27,4), (28,4)],
-#                      "D2" : [(29,4), (30,4), (31,4), (32,4)]
-#                    }
-#
-#Cellules_INFO_SSI = {"Tit" : (12,1),
-#                     "Des" : (12,1),
-#                     "Nom" : (7,2),
-#                     "Pro" : (43,1),
-#                     "Pre" : (8,2)}
 
 ############
 #  Identification des indicateurs non évalués en ETT
 ############
 Feuille_ETT = u"Soutenance"
-#Cellules_NON_ETT =  {"CO1.1"  : [(5,4), (6,4), (7,4), (8,4), (9,4)],
-#                     "CO1.2"  : [(10,4), (11,4), (12,4)],
-#                     "CO2.1"  : [(14,4), (15,4), (16,4), (17,4)],
-#                     "CO2.2"  : [(18,4), (19,4), (20,4), (21,4), (22,4)],
-#                     "CO6.1"  : [(24,4), (25,4), (26,4)],
-#                     "CO6.2"  : [(27,4), (28,4), (29,4)],
-#                     "CO6.3"  : [(30,4), (31,4), (32,4), (33,4), (34,4)],
-#                     "CO8.es" : [(36,4), (37,4), (38,4), (39,4), (40,4)]
-#                     }
 
-############
-#  Identification des indicateurs non évalués en AC
-############
 
-#Cellules_NON_AC =   {"CO7.ac1" : [(5,4), (6,4), (7,4), (8,4), (9,4)],
-#                     "CO7.ac2" : [(10,4), (11,4), (12,4), (13,4), (14,4), (15,4), (16,4)],
-#                     "CO7.ac3" : [(17,4), (18,4), (19,4), (20,4)],
-#                     "CO8.ac1" : [(22,4), (23,4), (24,4), (25,4)],
-#                     "CO8.ac2" : [(26,4), (27,4), (28,4), (29,4)],
-#                     "CO8.ac3" : [(30,4), (31,4), (32,4), (33,4)],
-#                     "CO9.ac1" : [(35,4), (36,4), (37,4), (38,4), (39,4)],
-#                     "CO9.ac2" : [(40,4), (41,4), (42,4)],
-#                     "CO9.ac3" : [(43,4), (44,4), (45,4)]}
-
-############
-#  Identification des indicateurs non évalués en ITEC
-############
-                                 
-#Cellules_NON_ITEC =   {"CO7.itec1" : [(5,4), (6,4), (7,4), (8,4), (9,4)],
-#                       "CO7.itec2" : [(10,4), (11,4), (12,4), (13,4), (14,4), (15,4)],
-#                       "CO7.itec3" : [(16,4), (17,4), (18,4)],
-#                       "CO7.itec4" : [(19,4), (20,4)],
-#                       "CO8.itec1" : [(22,4), (23,4), (24,4)],
-#                       "CO8.itec2" : [(25,4), (26,4), (27,4), (28,4)],
-#                       "CO8.itec3" : [(29,4), (30,4), (31,4), (32,4), (33,4)],
-#                       "CO8.itec4" : [(34,4), (35,4), (36,4)],
-#                       "CO9.itec1" : [(38,4), (39,4), (40,4)],
-#                       "CO9.itec2" : [(41,4), (42,4), (43,4), (44,4)],
-#                       "CO9.itec3" : [(45,4), (46,4), (47,4), (48,4)]}
-                    
-############
-#  Identification des indicateurs non évalués en EE
-############
-
-#Cellules_NON_EE  =  {"CO7.ee1" : [(5,4), (6,4), (7,4), (8,4), (9,4), (10,4), (11,4)],
-#                     "CO7.ee2" : [(12,4), (13,4), (14,4), (15,4), (16,4), (17,4)],
-#                     "CO7.ee3" : [(18,4), (19,4), (20,4), (21,4)],
-#                     "CO7.ee4" : [(22,4), (23,4), (24,4), (25,4)],
-#                     "CO8.ee1" : [(27,4), (28,4), (29,4)],
-#                     "CO8.ee2" : [(30,4), (31,4), (32,4), (33,4)],
-#                     "CO8.ee3" : [(34,4), (35,4), (36,4)],
-#                     "CO8.ee4" : [(37,4), (38,4), (39,4), (40,4),(41,4)],
-#                     "CO9.ee1" : [(43,4), (44,4), (45,4) ],
-#                     "CO9.ee2" : [(46,4), (47,4), (48,4), (49,4)],
-#                     "CO9.ee3" : [(50,4), (51,4), (52,4), (53,4)]}
-
-############
-#  Identification des indicateurs non évalués en SIN
-############                                 
-  
-#Cellules_NON_SIN =  {"CO7.sin1" : [(5,4), (6,4), (7,4), (8,4)],
-#                     "CO7.sin2" : [(9,4), (10,4), (11,4), (12,4), (13,4)],
-#                     "CO7.sin3" : [(14,4), (15,4), (16,4), (17,4)],
-#                     "CO8.sin1" : [(19,4), (20,4), (21,4)],
-#                     "CO8.sin2" : [(22,4), (23,4), (24,4), (25,4)],
-#                     "CO8.sin3" : [(26,4), (27,4), (28,4)],
-#                     "CO8.sin4" : [(29,4), (30,4), (31,4), (32,4)],
-#                     "CO9.sin1" : [(34,4), (35,4), (36,4)],
-#                     "CO9.sin2" : [(37,4), (38,4), (39,4), (40,4), (41,4)],
-#                     "CO9.sin3" : [(42,4), (43,4), (44,4), (45,4)],
-#                     "CO9.sin4" : [(46,4), (47,4), (48,4), (49,4), (50,4)]}
-                  
 Cellules_INFO_STI =  {"Tit" : (13,1),
                       "Des" : (13,1),
                       "Nom" : (8,2),
@@ -133,21 +46,7 @@ Cellules_INFO_STI =  {"Tit" : (13,1),
 #                      "Pro" : (5,2)
                       }
  
-
-#####################################################################################
-#def getCell_NON(dic):
-#    d = {"CO1.1" : Cellules_NON['ET']["CO1.1"],
-#         "CO1.2" : Cellules_NON['ET']["CO1.2"],
-#         "CO2.1" : Cellules_NON['ET']["CO2.1"],
-#         "CO2.2" : Cellules_NON['ET']["CO2.2"],
-#         "CO6.1" : Cellules_NON['ET']["CO6.1"],
-#         "CO6.2" : Cellules_NON['ET']["CO6.2"],
-#         "CO6.3" : Cellules_NON['ET']["CO6.3"],
-#         "CO8.es" : Cellules_NON['ET']["CO8.es"]
-#         }
-#    d.update(dic)
-#    return d
-    
+   
 
 Cellules_NON  =  {'ITEC'   : [[Feuille_ETT, Cellules_NON['ET']], ['ITEC', Cellules_NON['ITEC']]], 
                   'AC'     : [[Feuille_ETT, Cellules_NON['ET']], ['AC', Cellules_NON['AC']]], 
@@ -155,16 +54,15 @@ Cellules_NON  =  {'ITEC'   : [[Feuille_ETT, Cellules_NON['ET']], ['ITEC', Cellul
                   'SIN'    : [[Feuille_ETT, Cellules_NON['ET']], ['SIN', Cellules_NON['SIN']]],
                   'SSI'    : [['Notation', Cellules_NON['SSI']]]}    
 
-#Feuilles  =  {'ITEC'   : u"ITEC", 
-#              'AC'     : u"AC", 
-#              'EE'     : u"EE", 
-#              'SIN'    : u"SIN",
-#              'SSI'    : u"SSI"
-#              } 
-         
-import win32com.client,win32com.client.dynamic
-#from pywintypes import UnicodeType, TimeType
-from constantes import PATH
+
+# Module utilisé pour accéder au classeur Excel
+# (Windows seulement)
+import sys
+if sys.platform == "win32":         
+    import win32com.client.dynamic#win32com.client, 
+
+
+
 import os
 from widgets import messageErreur
 
@@ -439,8 +337,472 @@ class PyExcel:
         c = sht.Columns(col+1).EntireColumn
         c.Insert()
 
-        
-        
+# https://mail.python.org/pipermail/python-win32/2008-January/006676.html
+
+class PyOOo(object):
+
+    wdReplaceNone=0
+    wdReplaceOne=1
+    wdReplaceAll=2
+    wdFindContinue=1
+
+    #pour close/save :
+    wdDoNotSaveChanges=0
+    wdSaveChanges=-1
+
+    wdCharacter=1
+    wdCell=12
+    wdLine=5
+
+    wdAlignLeft=0
+    wdAlignCenter=1
+    wdAlignRight=2
+
+
+
+    def __init__(self, fichier=None, visible=True):
+        self.objServiceManager = win32com.client.Dispatch("com.sun.star.ServiceManager")
+
+        #self.propert=self.objServiceManager.Bridge_GetStruct("com.sun.star.beans.PropertyValue")
+
+        self.w = self.objServiceManager.CreateInstance("com.sun.star.frame.Desktop")
+
+        if fichier!=None:
+            time.sleep(1)
+            self.open(fichier, visible)
+
+
+    def u1252(self, chu):
+        try:
+            if type(chu) is unicode:
+                return chu.encode('cp1252','replace')
+            else:
+                return chu
+        except:
+            return repr(chu)
+
+
+    def open(self, fichier, visible=True):
+        """Ouvre un document word
+        """
+        self.doc=self.w.loadComponentFromURL("file:///"+fichier, "_blank", 0, [])
+        #self.visible(visible)
+
+
+    def wnew(self, visible=True):
+        """Nouveau document writer
+        """
+        self.doc=self.w.loadComponentFromURL("private:factory/swriter", "_blank", 0, [])
+        self.visible(True)
+
+
+    def close(self):
+        """ferme le document, en sauvegardant, sans demander
+        """
+        #---
+        print"close"
+        self.w.store()
+        self.w.Terminate(1)
+
+
+    def docclose(self):
+        """ferme le document, en sauvegardant, sans demander
+        """
+        self.doc.Close(True)  #True ?  False ?
+
+
+    def saveas(self,fichier, typ=0):
+        """Appel de 'Enregistrer sous', avec le nom du fichier
+        """#---
+        self.doc.storeAsURL("file:///"+fichier, [])
+
+
+    def savepdf(self):
+
+        def createStruct(nom):
+            objCoreReflection= self.objServiceManager.createInstance("com.sun.star.reflection.CoreReflection")
+            classSize = objCoreReflection.forName(nom)
+            aStruct=[1,2]
+            classSize.createObject(aStruct)
+            return aStruct
+
+        par=createStruct("com.sun.star.beans.PropertyValue")
+        par.append([])
+        par[0].Name = "URL"
+        par[0].Value = "file:///C:/let01.odt"
+
+        par=["FilterName", "writer_pdf_Export"]
+        self.prop = self.objServiceManager.CreateInstance("com.sun.star.beans.PropertyValue")
+        self.prop[0].Name = "URL"
+        self.prop[0].Value = "file:///C:/let01.odt"
+        self.prop[1].Name = "FilterName"
+        self.prop[1].Value = "writer_pdf_Export"
+        self.doc.storeAsURL("file:///C:/let01.pdf", self.prop)
+
+
+    def saveas2(self,fichier, typ=0):
+
+        def createStruct(nom):
+            objCoreReflection= self.objServiceManager.createInstance("com.sun.star.reflection.CoreReflection")
+            classSize = objCoreReflection.forName(nom)
+            aStruct=[]
+            classSize.createObject(aStruct)
+            return aStruct
+
+        #args1= self.objServiceManager.createInstance("com.sun.star.beans.PropertyValue")
+        #args1 = createStruct("com.sun.star.beans.NamedValue")
+        #print args1
+
+        print "Titre :",self.doc.getDocumentInfo()
+
+        args1=["file:///c:/titi.rtf"]
+
+        self.doc.storeAsURL("",0,args1)
+
+
+        """
+        #args1= 
+self.objServiceManager.createInstance("com.sun.star.beans.PropertyValue")
+        #dispatcher = 
+self.objServiceManager.createInstance('com.sun.star.frame.DispatchHelper')
+        args1=createStruct("com.sun.star.beans.PropertyValue")
+        print len(args1)
+        prop.Name='Pages'
+        prop.Value='3-5'
+        args[0]=prop
+
+        args1[0].Name = "URL"
+        args1[0].Value = "file:///c:/titi.rtf"
+        args1[1].Name = "FilterName"
+        args1[1].Value = "Rich Text Format"
+        args1[4].Name = "SelectionOnly"
+        args1[4].Value = true
+        """
+        #sel=self.doc.SaveAs("",0,args1)
+
+    def quit(self):
+        """Ferme OOoW
+        """
+        self.w.Terminate()
+
+
+    def quitSaveChange(self):
+        """Ferme OooW, en sauvant les changements
+        """
+        self.w.store()
+        self.w.Terminate()
+
+
+    def quitCancel(self):
+        """Ferme word, SANS sauver les changements
+        """
+        self.doc.storeAsURL("file:///C:/null__.odt", [])
+        self.w.Terminate()
+        os.remove("C:/null__.odt")
+
+
+    def visible(self, par=True):
+        """Rend Word visible (True), ou invisible (False) ; True par défaut
+        Note : c'est plus rapide en invisible
+        """
+        """
+        if par:
+            self.objServiceManager.Visible(True)
+        else:
+            self.objServiceManager.Visible=False
+        """
+        win = self.doc.CurrentController.Frame.ContainerWindow
+        if par:
+            win.Visible = True
+        else:
+            win.Visible = False
+
+
+    def hide(self):
+        """Cache Word
+        """
+        win = self.doc.CurrentController.Frame.ContainerWindow
+        win.Visible = False
+
+
+    def show(self):
+        """Montre la fenêtre
+        """
+        win = self.doc.CurrentController.Frame.ContainerWindow
+        win.Visible = True
+
+
+    def wprint(self):
+        """Imprime le document
+        """
+        warg=[]
+        self.doc.Print(warg)
+
+
+    def wprint2(self,printer='PDFCreator'):
+        """Imprime le document
+        """
+        warg=['Name','PDFCreator']
+        self.doc.Print(warg)
+
+# prop.Name='Name'
+# prop.Value='PDFCreator'
+# args[2]=prop
+
+
+    def preview(self):
+        """Pré-visualise le document
+        """
+        self.doc.PrintPreview()
+
+
+    def previewclose(self):
+        """Ferme la prévisdualisation du document
+        """
+        self.doc.ClosePrintPreview()
+
+
+    def text(self, txt):
+        """Remplace le texte sélectionné, par le paramètre
+        """
+        newchaine=txt.replace('\n','\r')
+        self.position.Text = newchaine
+
+
+    def TypeText(self, chaine):
+        """ 'Tape' le texte à la position courante
+        """
+        self.position.TypeText(chaine)
+
+
+    def chExist(self, chaine):
+        """Cherche l'existence d'une chaine dans le document.
+        Retourne True ou False, selon le résultat.
+        """
+        och=self.doc.createSearchDescriptor()
+        och.SearchString=chaine
+        och.SearchWords = False  #mots entiers seulement ?
+        position=self.doc.findFirst(och)
+        if position:
+            return True
+        else:
+            return False
+
+
+    def macroRun(self, name):
+        """Lance la macro-word (VBA) 'name'
+        """
+        print "Non supporté _ àcf"
+        print "Non supporté _ àcf"
+        print "Non supporté _ àcf"
+
+
+    def language(self):
+        """Retourne la langue de Writer
+        """
+        print "Non supporté _ àcf"
+        print "Non supporté _ àcf"
+        print "Non supporté _ àcf"
+
+
+    def filterTxt(self):
+        """Interne - Convertit une sélection en texte
+        """
+        ss=self.u1252(self.doc.GetText().String)
+        ss=ss.replace(chr(7)+chr(13),'   ')
+        ss=ss.replace(chr(13),'\r\n')
+        ss=ss.replace(chr(7),' ')
+        ss=ss.replace(chr(9),'')
+        ss=ss.replace(chr(26),'')
+        return ss
+
+
+    def eSelAll(self):
+        """sélectionne, et retourne, tout le document
+        """
+        sel=self.doc.GetText()
+        return self.filterTxt()
+
+
+    def eSelWord(self, nb=1):
+        """étend la sélection aux nb mots à droite, et retourne la sélection
+        """
+        self.w.Selection.WordRightSel(self.wdWord, nb, self.wdExtend)
+        return self.filterTxt()
+
+
+    def eSelLine(self, nb=1):
+        """étend la sélection aux nb lignes en-dessous, et retourne la 
+            sélection
+        """
+        args2= self.doc.createInstance("com.sun.star.beans.PropertyValue")
+        args2[0].Name= "Count"
+        args2[0].Value= 1
+        args2[1].Name= "Select"
+        args2[1].Value= False
+
+        self.doc.GoDown("", 0, args2)
+        return self.filterTxt()
+
+
+    def eSelEndLine(self):
+        """étend la sélection jusqu'à la fin de la ligne, et retourne la 
+            sélection
+        """
+        self.w.Selection.EndKey(self.wdLine, self.wdExtend)
+        return self.filterTxt()
+
+
+    def chRemplAll(self, oldchaine, newchaine=''):
+        """
+        oldchaine = chaine a remplacer / string to replace
+        newchaine = chaine de remplacement / string for replace
+        """
+        orempl=self.doc.createReplaceDescriptor()
+        orempl.SearchString=oldchaine
+        orempl.ReplaceString=newchaine
+        orempl.SearchWords = False  #mots entiers seulement ?
+        orempl.SearchCaseSensitive = True    #sensible à la casse ?
+        nb = self.doc.replaceAll(orempl)
+
+
+    def chRemplLstAll(self, lst=[[]]):
+        """
+        oldchaine = chaine a remplacer / string to replace
+        newchaine = chaine de remplacement / string for replace
+        """
+        nb=0
+        for oldchaine, newchaine in lst:
+            orempl=self.doc.createReplaceDescriptor()
+            orempl.SearchString=oldchaine
+            orempl.ReplaceString=newchaine
+            orempl.SearchWords = False  #mots entiers seulement ?
+            orempl.SearchCaseSensitive = True    #sensible à la casse ?
+            nb += self.doc.replaceAll(orempl)
+
+
+    def chRemplOne(self, oldchaine, newchaine=''):
+        """
+        oldchaine = chaine a remplacer / string to replace
+        newchaine = chaine de remplacement / string for replace
+        """
+        sel = self.w.Selection
+        #sel.ClearFormatting()
+        sel.Find.Text = oldchaine
+        sel.Find.Forward = True
+        newchaine=newchaine.replace('\n','\r')
+        sel.Find.Execute(oldchaine,False,False,False,False,False,True,self.wdFindContinue,False,newchaine,self.wdReplaceOne)
+        self.position=sel
+
+
+    def chRemplClipboard(self, oldchaine):
+        """
+        oldchaine = chaine a remplacer / string to replace
+        """
+        sel = self.w.Selection
+        #sel.ClearFormatting()
+        sel.Find.Text = oldchaine
+        sel.Find.Forward = True
+
+        sel.Find.Execute(oldchaine,False,False,False,False,False,True,self.wdFindContinue,False,'XXX',self.wdReplaceOne)
+        sel.Paste()
+        self.position=sel
+
+
+    def chRemplGraf(self, oldchaine, fichier):
+        """
+        oldchaine = chaine a remplacer / string to replace
+        """
+        sel = self.w.Selection
+        #sel.ClearFormatting()
+        sel.Find.Text = oldchaine
+        sel.Find.Forward = True
+
+        sel.Find.Execute(oldchaine,False,False,False,False,False,True,self.wdFindContinue,False,'',self.wdReplaceOne)
+        sel.InlineShapes.AddPicture(fichier, False, True)
+        self.position=sel
+
+
+    def TableauInsLigApres(self, oldchaine, nblig=1):
+        """
+        oldchaine = chaine a remplacer / string to replace
+        """
+        sel = self.w.Selection
+        #sel.ClearFormatting()
+        sel.Find.Text = oldchaine
+        sel.Find.Forward = True
+
+        sel.Find.Execute(oldchaine,False,False,False,False,False,True,self.wdFindContinue,False,'',self.wdReplaceOne)
+        sel.InsertRowsBelow(nblig)
+
+
+    def TableauDelLig(self, oldchaine):
+        """
+        oldchaine = chaine a remplacer / string to replace
+        """
+        sel = self.w.Selection
+        #sel.ClearFormatting()
+        sel.Find.Text = oldchaine
+        sel.Find.Forward = True
+
+        sel.Find.Execute(oldchaine,False,False,False,False,False,True,self.wdFindContinue,False,'',self.wdReplaceOne)
+        sel.Rows.Delete()
+
+
+    def MoveRight(self, nb=1):
+        self.position.MoveRight(self.wdCharacter, nb)
+
+
+    def MoveLeft(self, nb=1):
+        self.position.MoveLeft(self.wdCharacter, nb)
+
+
+    def TableauMoveRight(self, nb=1):
+        sel = self.w.Selection
+        sel.MoveRight(self.wdCell, nb)
+
+
+    def TableauMoveLeft(self, nb=1):
+        sel = self.w.Selection
+        sel.MoveLeft(self.wdCell, nb)
+
+
+    def TableauMoveLine(self, nb=1):
+        sel = self.w.Selection
+        if nb>0:
+            sel.MoveDown(self.wdLine, nb)
+        else:
+            sel.MoveUp(self.wdLine, -nb)
+
+
+    def TableauCellule(self, lig=1, col=1, txt='', align=0):
+        tbl = self.doc.Tables[0]
+        cellule = tbl.Cell(lig, col)
+        cellule.Range.Text = txt
+        cellule.Range.ParagraphFormat.Alignment = align  #0,1,2, left, center, right
+
+
+    def landscape(self):
+        """Met le document en mode paysage
+        """
+        self.wdOrientLandscape=1
+        self.wdOrientPortrait=0
+        self.w.ActiveDocument.PageSetup.Orientation = self.wdOrientLandscape
+
+
+    def portrait(self):
+        """Met le document en mode portrait
+        """
+        self.wdOrientLandscape=1
+        self.wdOrientPortrait=0
+        self.w.ActiveDocument.PageSetup.Orientation = self.wdOrientPortrait
+
+
+    def changePrinter(self, printerName):
+        """Change l'imprimante active de Word
+        """
+        self.w.ActivePrinter = printerName
+
         
 #def exporterGrille(typeDoc):
 #    rb = xlrd.open_workbook(GRILLE[typeDoc])

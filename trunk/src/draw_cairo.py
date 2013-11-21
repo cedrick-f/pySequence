@@ -53,23 +53,23 @@ font_family = "arial"
 
 
 
-def str2coord(str):
-    l = str.split(',')
-    return [eval(l[0]), eval(l[1])]
-
-def coord2str(xy):
-    return str(xy[0])+","+str(xy[1])
-
-def str2coul(str):
-    l = str.split(',')
-    return eval(l[0]), eval(l[1]), eval(l[2]), eval(l[3])
-
-def coul2str(rgba):
-    if len(rgba) == 3:
-        a = 1
-    else:
-        a = rgba[3]
-    return str(rgba[0])+","+str(rgba[1])+","+str(rgba[2])+","+str(a)
+#def str2coord(str):
+#    l = str.split(',')
+#    return [eval(l[0]), eval(l[1])]
+#
+#def coord2str(xy):
+#    return str(xy[0])+","+str(xy[1])
+#
+#def str2coul(str):
+#    l = str.split(',')
+#    return eval(l[0]), eval(l[1]), eval(l[2]), eval(l[3])
+#
+#def coul2str(rgba):
+#    if len(rgba) == 3:
+#        a = 1
+#    else:
+#        a = rgba[3]
+#    return str(rgba[0])+","+str(rgba[1])+","+str(rgba[2])+","+str(a)
 
 
 
@@ -233,9 +233,6 @@ def getPts(lst_rect):
     for rect in lst_rect:
         lst.append(rect[:2])
     return lst
-    
-    
-    
     
 
 

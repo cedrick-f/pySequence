@@ -27,8 +27,8 @@
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import constantes
-from os.path import join
-from textwrap import wrap
+import os.path
+#from textwrap import wrap
 #import csv
 
 from reportlab.platypus import SimpleDocTemplate, Paragraph

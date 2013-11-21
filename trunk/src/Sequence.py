@@ -40,7 +40,7 @@ Copyright (C) 2011-2013
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "4.3"
+__version__ = "4.4"
 
 #from threading import Thread
 
@@ -67,7 +67,7 @@ if hasattr(sys, 'setdefaultencoding'):
         encoding = loc[1]
         sys.setdefaultencoding(encoding)
 
-DEFAUT_ENCODING = sys.getdefaultencoding()
+DEFAUT_ENCODING = "utf-8"#sys.getdefaultencoding()
 
 import webbrowser
 import subprocess
@@ -130,7 +130,7 @@ from constantes import calculerEffectifs, revCalculerEffectifs, PATH, findEffect
                         strEffectifComplet, getElementFiltre, COUL_OK, COUL_NON, COUL_BOF, COUL_BIEN, \
                         toList, COUL_COMPETENCES, TABLE_PATH
 import constantes
-import constantes_ETT
+#import constantes_ETT
 
 # Pour lire les classeurs Excel
 import recup_excel
@@ -138,7 +138,8 @@ import recup_excel
 import Options
 from wx.lib.embeddedimage import PyEmbeddedImage
 
-import register
+if sys.platform == "win32" :
+    import register
 
 import textwrap
 
@@ -155,6 +156,7 @@ import xml.dom
 #import svg_export
 
 # Pour les descriptions
+#import wx.richtext as rt
 import richtext
 
 from math import sin,cos,pi, log
@@ -209,8 +211,8 @@ class AppelEvent(wx.PyCommandEvent):
         
         
     ######################################################################################  
-    def SetFile(self, file):
-        self.file = file
+    def SetFile(self, fil):
+        self.file = fil
         
     ######################################################################################  
     def GetFile(self):
@@ -261,9 +263,12 @@ def forceID(xml):
             if node.hasChildNodes():
                 forceID(node)
 
-def SetWholeText(node, id, text):
-    
-    nom = node.getElementById(id)
+#####################################################################################
+#####################################################################################
+def SetWholeText(node, Id, text):
+    """ 
+    """
+    nom = node.getElementById(Id)
     if nom != None:
         
         for txtNode in nom.childNodes:
@@ -271,6 +276,7 @@ def SetWholeText(node, id, text):
 #                print "SetWholeText", text
                 txtNode.replaceWholeText(text)
         
+#####################################################################################
 def XML_AjouterCol(node, idLigne, text, coul = None, size = None, bold = False):
     """<td id="rc1" style="background-color: #ff6347;"><font id="r1" size="2">1</font></td>"""
     ligne = node.getElementById(idLigne)
@@ -681,7 +687,7 @@ class Objet_sequence():
     ######################################################################################  
     def GetBulleSVG(self, i):
         t = self.GetCode(i) + " :\n" + self.GetIntit(i)
-        return t#.replace("\n", "&#10;")#"&#xD;")#
+        return t.encode(DEFAUT_ENCODING)#.replace("\n", "&#10;")#"&#xD;")#
     
             
     ######################################################################################  
@@ -1328,8 +1334,8 @@ class Sequence(BaseDoc):
             if res == wx.ID_YES:
                 ls = recup_excel.getSelectionExcel()
                 self.AjouterListeSystemes(ls)
-            elif res == wx.ID_NO:
-                print "Rien" 
+#            elif res == wx.ID_NO:
+#                print "Rien" 
         
     ######################################################################################  
     def SauvSystemes(self, event = None):
@@ -1586,7 +1592,7 @@ class Projet(BaseDoc, Objet_sequence):
         self.nbrParties = 1
         
         # Par défaut, la revue 1 est après la Conception détaillée
-        self.R1avantConception = False
+        self.R1apresConception = False
         
         if panelParent:
             self.panelPropriete = PanelPropriete_Projet(panelParent, self)
@@ -1706,7 +1712,8 @@ class Projet(BaseDoc, Objet_sequence):
     def GetBulleSVG(self, i):
         if i >= 0:
             c = self.GetCompetencesUtil()
-            return c[i] + " : " + constantes.dicCompetences_prj_simple[self.classe.typeEnseignement][c[i]]
+            t = c[i] + " : " + constantes.dicCompetences_prj_simple[self.classe.typeEnseignement][c[i]]
+            return t.encode(DEFAUT_ENCODING)
         else:
             e = self.eleves[-1-i]
             t = e.GetNomPrenom()+"\n"
@@ -1715,7 +1722,7 @@ class Projet(BaseDoc, Objet_sequence):
             r, s = e.GetEvaluabilite()
             t += u"\trevues : "+str(int(r*100))+"%\n"
             t += u"\tsoutenance : "+str(int(s*100))+"%\n"
-            return t
+            return t.encode(DEFAUT_ENCODING)
             
             
             
@@ -1739,7 +1746,7 @@ class Projet(BaseDoc, Objet_sequence):
 
         projet.set("Position", str(self.position))
         
-        projet.set("R1avC", str(self.R1avantConception))
+        projet.set("R1avC", str(self.R1apresConception))
         
         equipe = ET.SubElement(projet, "Equipe")
         for p in self.equipe:
@@ -1780,13 +1787,13 @@ class Projet(BaseDoc, Objet_sequence):
         
         self.commentaires = branche.get("Commentaires", u"")
         
-        self.R1avantConception = eval(branche.get("R1avC", "False"))
+        self.R1apresConception = eval(branche.get("R1avC", "False"))
         
         self.position = eval(branche.get("Position", "0"))
 
         brancheEqu = branche.find("Equipe")
         self.equipe = []
-        for i,e in enumerate(list(brancheEqu)):
+        for e in list(brancheEqu):
             prof = Prof(self, self.panelParent)
             Ok = Ok and prof.setBranche(e)
             self.equipe.append(prof)
@@ -1797,7 +1804,7 @@ class Projet(BaseDoc, Objet_sequence):
         
         brancheEle = branche.find("Eleves")
         self.eleves = []
-        for i,e in enumerate(list(brancheEle)):
+        for e in list(brancheEle):
             eleve = Eleve(self, self.panelParent)
             Ok = Ok and eleve.setBranche(e)
             self.eleves.append(eleve)
@@ -1862,8 +1869,8 @@ class Projet(BaseDoc, Objet_sequence):
                 self.taches.append(tr)
                 tr.ConstruireArbre(self.arbre, self.brancheTac)
                 tr.SetCode()
-                if hasattr(rt, 'panelPropriete'):
-                    rt.panelPropriete.MiseAJour()
+                if hasattr(tr, 'panelPropriete'):
+                    tr.panelPropriete.MiseAJour()
             self.OrdonnerTaches()
             self.arbre.Ordonner(self.brancheTac)
 #            self.panelPropriete.sendEvent()
@@ -1975,45 +1982,51 @@ class Projet(BaseDoc, Objet_sequence):
                    
     ######################################################################################  
     def AjouterTache(self, event = None, tacheAct = None):
-#        if tache == None:
-#            tache = Tache(self, self.panelParent)
-        if tacheAct == None:
+        """ Ajoute une tâche au projet
+            et la place juste après la tâche tacheAct (si précisé)
+        """
+        if tacheAct == None or tacheAct.phase == "S":
             tache = Tache(self, self.panelParent)
             self.taches.append(tache)
             tache.ConstruireArbre(self.arbre, self.brancheTac)
-        else:
-            tache = Tache(self, self.panelParent)
-            self.taches.append(tache)
-            tache.ordre = tacheAct.ordre+0.5
-            tache.ConstruireArbre(self.arbre, self.brancheTac)
-            tache.SetPhase(tacheAct.phase)
             
+        else:
+            # La phase de la nouvelle tâche
+            if not tacheAct.phase in ["R1", "R2", "Rev"]:
+                phase = tacheAct.phase
+            elif tacheAct.phase == "R1":
+                if self.R1apresConception or self.GetTypeEnseignement() == "SSI":
+                    phase = 'Rea'
+                else:
+                    phase = 'DCo'
+            elif tacheAct.phase == "R2":
+                phase = 'XXX'
+            else:
+                phase = ""
+            tache = Tache(self, self.panelParent, phaseTache = phase)
+            self.taches.append(tache)
+            tache.ordre = tacheAct.ordre+0.5 # truc pour le tri ...
+            tache.ConstruireArbre(self.arbre, self.brancheTac)
+            
+            tache.SetPhase()
             if hasattr(tache, 'panelPropriete'):
                 tache.panelPropriete.MiseAJour()
-            
-            
         
-#        self.arbre.Freeze()
+        self.VerrouillerClasse()
         
-        
-#        self.arbre.ExpandAll()
+#        self.brancheTac.Collapse()
 #        self.arbre.CalculatePositions()
-#        self.arbre.Layout()
-#        self.arbre.Update()
-#        self.arbre.SelectItem(self.arbre.GetRootItem())
+#        self.arbre.Expand(self.brancheTac)
         
         
-        self.brancheTac.Collapse()
-#        self.arbre.SelectItem(tache.branche)
-#        self.brancheTac.Expand()
-        self.arbre.CalculatePositions()
-        self.arbre.Expand(self.brancheTac)
+        
+        self.arbre.EnsureVisible(tache.branche)
+        for i in self.arbre._itemWithWindow:
+            self.arbre.HideWindows()
         self.arbre.SelectItem(tache.branche)
-#        self.arbre.AdjustMyScrollbars()
-#        wx.CallAfter(self.arbre.CalculatePositions)
 
         self.panelPropriete.sendEvent()
-#        self.arbre.Thaw()
+
         return tache
     
     
@@ -2036,6 +2049,7 @@ class Projet(BaseDoc, Objet_sequence):
         self.panelPropriete.sendEvent()
         self.arbre.SelectItem(tache.branche)
             
+        self.VerrouillerClasse()
         
     ######################################################################################  
     def SupprimerTache(self, event = None, item = None):
@@ -2044,6 +2058,8 @@ class Projet(BaseDoc, Objet_sequence):
         self.arbre.Delete(item)
         self.SetOrdresTaches()
         self.panelPropriete.sendEvent()
+        
+        self.VerrouillerClasse()
         
         
     ######################################################################################  
@@ -2109,7 +2125,7 @@ class Projet(BaseDoc, Objet_sequence):
         #
         # On assemble les paquets
         #
-        if self.R1avantConception:
+        if self.R1apresConception:
             lst = Ana + Con + DCo + R1 + Rea  + Val + R2+ X + Rien + S
         else:
             lst = Ana + Con + R1 + DCo + Rea  + Val + R2+ X + Rien + S
@@ -2223,14 +2239,14 @@ class Projet(BaseDoc, Objet_sequence):
     def GetNewIdEleve(self):
         """ Renvoie le 1er numéro d'identification élève disponible
         """
-        print "GetNewIdEleve", 
+#        print "GetNewIdEleve", 
         for i in range(6):
             ok = False
             for e in self.eleves:
                 ok = ok or i != e.id
             if ok:
                 break
-        print i
+#        print i
         return i
     
 
@@ -2351,10 +2367,9 @@ class Projet(BaseDoc, Objet_sequence):
     ######################################################################################       
     def GetCompetencesUtil(self):
         """ Renvoie les listes des codes 
-            des compétences utiles
+            des compétences utiles au projet
             (pour tracé fiche)
         """
-        
         lst = []
         for t in self.taches:
             lst.extend(t.GetCompetencesUtil())
@@ -2365,11 +2380,22 @@ class Projet(BaseDoc, Objet_sequence):
     
     ######################################################################################  
     def GetNbrPhases(self):
-        p = []
-        for t in self.taches:
-            if (not t.phase in p or t.phase == "Rev") and t.phase != "":
-                p.append(t.phase)
-        return len(p)
+        """ Renvoie le nombre de phases dans le projet
+            (les revues intermédiaires coupent parfois une phase en deux !)
+            (pour tracé fiche)
+        """
+        n = 0
+        for i, t in enumerate(self.taches):
+            if (i == 0 or t.phase != self.taches[i-1].phase):
+                n += 1
+        return n
+
+#        # Ancienne version (marche pas avec les Rev)
+#        p = []
+#        for t in self.taches:
+#            if ((not t.phase in p) or t.phase == "Rev") and t.phase != "":
+#                p.append(t.phase)
+#        return len(p)
         
     ######################################################################################  
     def GetIntituleTaches(self):
@@ -2437,7 +2463,8 @@ class Projet(BaseDoc, Objet_sequence):
         
     #############################################################################
     def VerrouillerClasse(self):
-        self.classe.Verrouiller(len(self.GetCompetencesUtil()) == 0)
+#        print "VerrouillerClasse", len(self.taches)
+        self.classe.Verrouiller(len(self.GetCompetencesUtil()) == 0 and len(self.taches) == 3)
         
     #############################################################################
     def SetCompetencesRevuesSoutenance(self):
@@ -2536,7 +2563,7 @@ class CentreInteret(Objet_sequence):
     ######################################################################################  
     def setBranche(self, branche):
         self.numCI = []
-        for i, s in enumerate(branche.keys()):
+        for i in range(len(branche.keys())):
             self.numCI.append(eval(branche.get("C"+str(i), "")))
         
         # Pour rétro compatibilité
@@ -2607,8 +2634,8 @@ class CentreInteret(Objet_sequence):
     def GetCode(self, num = None):
         if num == None:
             s = ""
-            for i, n in enumerate(self.numCI):
-                s = s + self.GetCode(i)
+            for i in range(len(self.numCI)):
+                s += self.GetCode(i)
                 if i < len(self.numCI)-1:
                     s += " - "
             return s
@@ -2621,8 +2648,6 @@ class CentreInteret(Objet_sequence):
         if self.GetTypeEnseignement() == 'ET':
             return self.parent.classe.posCI_ET[self.numCI[num]]
         
-#        if constantes_ETT.PositionCibleCI != None:
-#            return constantes_ETT.PositionCibleCI[self.numCI[num]]
     
     ######################################################################################  
     def MaJArbre(self):
@@ -2693,7 +2718,7 @@ class Competences(Objet_sequence):
     ######################################################################################  
     def setBranche(self, branche):
         self.competences = []
-        for i, s in enumerate(branche.keys()):
+        for i in range(len(branche.keys())):
             self.competences.append(branche.get("C"+str(i), ""))
         
         if hasattr(self, 'panelPropriete'):
@@ -2784,7 +2809,7 @@ class Savoirs(Objet_sequence):
     ######################################################################################  
     def setBranche(self, branche):
         self.savoirs = []
-        for i, s in enumerate(branche.keys()):
+        for i in range(len(branche.keys())):
             self.savoirs.append(branche.get("S"+str(i), ""))
         if hasattr(self, 'panelPropriete'):
             self.panelPropriete.MiseAJour()
@@ -3012,7 +3037,7 @@ class Seance(ElementDeSequence, Objet_sequence):
             # Les systèmes nécessaires
             lstSys = []
             lstNSys = []
-            for i, s in enumerate(list(branche)):
+            for s in list(branche):
                 nom = s.get("Nom", "")
                 if nom != "":
                     lstSys.append(nom)
@@ -3178,7 +3203,7 @@ class Seance(ElementDeSequence, Objet_sequence):
         if self.typeSeance in ["AP", "ED"]:
             n = self.GetNbrSystemes()
             seq = self.GetApp().sequence
-            for i, s in enumerate(seq.systemes):
+            for s in seq.systemes:
                 if n.has_key(s.nom) and n[s.nom] > s.nbrDispo.v[0]:
                     ok = 1
         return ok
@@ -3507,14 +3532,14 @@ class Seance(ElementDeSequence, Objet_sequence):
                 s.MiseAJourNomsSystemes()
         
     ######################################################################################  
-    def SupprimerSysteme(self, id):
+    def SupprimerSysteme(self, i):
         if self.typeSeance in ["AP", "ED", "P"]:
-            del self.systemes[id]
+            del self.systemes[i]
             if hasattr(self, 'panelPropriete'):
                 self.panelPropriete.ConstruireListeSystemes()
         elif self.typeSeance in ["R", "S"] : # Séances en Rotation ou  Parallèle
             for s in self.sousSeances:
-                s.SupprimerSysteme(id)
+                s.SupprimerSysteme(i)
 
         
         
@@ -3891,7 +3916,7 @@ class Tache(Objet_sequence):
                 else:
                     brancheInd = branche.find("Indicateurs")
                 for i, e in enumerate(brancheCmp.keys()):
-                    print i,e
+#                    print i,e
                     if brancheInd != None: #STI2D
                         i = eval(e[4:])
                         indic = brancheInd.get("Indic"+str(i))
@@ -3921,8 +3946,8 @@ class Tache(Objet_sequence):
                         indic = eval(indic)-1
                         if self.phase != 'XXX' or not constantes.dicIndicateurs[self.GetTypeEnseignement()][code][indic][1]:
                             self.indicateurs.append(codeindic)
-                        else:
-                            print "Enlève :", self, constantes.dicIndicateurs[self.GetTypeEnseignement()][code][indic]
+#                        else:
+#                            print "Enlève :", self, constantes.dicIndicateurs[self.GetTypeEnseignement()][code][indic]
             
         self.intituleDansDeroul = eval(branche.get("IntituleDansDeroul", "True"))
         
@@ -3958,28 +3983,26 @@ class Tache(Objet_sequence):
 
     ######################################################################################  
     def VerifPb(self):
-        print "Sert à rien"
         return
 
     ######################################################################################  
-    def GetDuree(self):
+    def GetDelai(self):
         if self.phase != "":
             if self.phase in ["R1", "R2", "Rev"]:
                 de = []
                 for e in self.parent.eleves:
                     de.append(e.GetDuree(self.phase))
-                d = max(de)    
-#                    
-#                    
-#                d = 0.0
-#                for t in self.parent.taches:
-#                    if t.phase == self.phase:
-#                        break
-#                    if not t.phase in ["R1", "R2", "Rev"]:
-#                        d += t.GetDuree()
+                if not de:
+                    d = 0
+                else:
+                    d = max(de)
                 return d
-            else:
-                return self.duree.v[0]
+        return 0
+    
+    ######################################################################################  
+    def GetDuree(self):
+        if self.phase != "":
+            return self.duree.v[0]
         return 0
                 
     ######################################################################################  
@@ -4007,8 +4030,9 @@ class Tache(Objet_sequence):
             
             
     ######################################################################################  
-    def SetPhase(self, phase):
-        self.phase = phase
+    def SetPhase(self, phase = None):
+        if phase != None:
+            self.phase = phase
         self.parent.OrdonnerTaches()
         
         if hasattr(self, 'arbre'):
@@ -4155,9 +4179,9 @@ class Tache(Objet_sequence):
         if i in self.eleves:
             self.eleves.remove(i)
 
-        for i, id in enumerate(self.eleves):
-            if id > i:
-                self.eleves[i] = id-1
+        for i, ident in enumerate(self.eleves):
+            if ident > i:
+                self.eleves[i] = ident-1
 
         if hasattr(self, 'panelPropriete'):
             self.panelPropriete.ConstruireListeEleves()
@@ -4543,12 +4567,12 @@ class Support(ElementDeSequence, Objet_sequence):
 #
 ####################################################################################
 class Personne(Objet_sequence):
-    def __init__(self, parent, panelParent, id = 0):
+    def __init__(self, parent, panelParent, Id = 0):
         self.parent = parent
         self.nom = u""
         self.prenom = u""
         self.avatar = None
-        self.id = id # Un identifiant unique = nombre > 0
+        self.id = Id # Un identifiant unique = nombre > 0
 
         #
         # Création du Tip (PopupInfo)
@@ -4728,11 +4752,11 @@ def supprime_accent(ligne):
 #
 ####################################################################################
 class Eleve(Personne, Objet_sequence):
-    def __init__(self, parent, panelParent, id = 0):
+    def __init__(self, parent, panelParent, ident = 0):
         
         self.titre = u"élève"
         self.code = "Elv"
-        Personne.__init__(self, parent, panelParent, id)
+        Personne.__init__(self, parent, panelParent, ident)
         
         #
         # Création du Tip (PopupInfo) - plus complexe pour pour une personne "standard"
@@ -5127,28 +5151,32 @@ class Eleve(Personne, Objet_sequence):
 #
 ####################################################################################
 class Prof(Personne):
-    def __init__(self, parent, panelParent, id = 0):
+    def __init__(self, parent, panelParent, ident = 0):
         self.titre = u"prof"
         self.code = "Prf"
         self.discipline = "Tec"
         self.referent = False
         
-        Personne.__init__(self, parent, panelParent, id)
+        Personne.__init__(self, parent, panelParent, ident)
         
+        
+    ######################################################################################  
     def GetFicheHTML(self):
         return """<HTML>
         <p style="text-align: center;"><font size="12"><b>Professeur</b></font></p>
-<p id="nom">NomPrénom</p>
-<p id="av"></p>
-<table border="0" width="300">
-<tbody>
-<tr id="spe" align="right" valign="top">
-<td width="110"><span style="text-decoration: underline;">Spécialité :</span></td>
-</tr>
-</tbody>
-</table>
-</HTML>
-"""
+        <p id="nom">NomPrénom</p>
+        <p id="av"></p>
+        <table border="0" width="300">
+        <tbody>
+        <tr id="spe" align="right" valign="top">
+        <td width="110"><span style="text-decoration: underline;">Spécialité :</span></td>
+        </tr>
+        </tbody>
+        </table>
+        </HTML>
+        """
+        
+        
     ######################################################################################  
     def SetDiscipline(self, discipline):
         self.discipline = discipline
@@ -5324,16 +5352,24 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         self.Bind(wx.EVT_MENU, self.commandeEnregistrerSous, id=13)
         self.Bind(wx.EVT_MENU, self.exporterFiche, id=15)
         self.Bind(wx.EVT_MENU, self.exporterDetails, id=16)
-        self.Bind(wx.EVT_MENU, self.genererGrilles, id=17)
+        
+        if sys.platform == "win32":
+            self.Bind(wx.EVT_MENU, self.genererGrilles, id=17)
+            
         self.Bind(wx.EVT_MENU, self.genererFicheValidation, id=19)
-        self.Bind(wx.EVT_MENU, self.etablirBilan, id=18)
+        
+        if sys.platform == "win32":
+            self.Bind(wx.EVT_MENU, self.etablirBilan, id=18)
+            
         self.Bind(wx.EVT_MENU, self.OnClose, id=wx.ID_EXIT)
         
         self.Bind(wx.EVT_MENU, self.OnAide, id=21)
         self.Bind(wx.EVT_MENU, self.OnAbout, id=22)
         
         self.Bind(wx.EVT_MENU, self.OnOptions, id=31)
-        self.Bind(wx.EVT_MENU, self.OnRegister, id=32)
+        
+        if sys.platform == "win32" :
+            self.Bind(wx.EVT_MENU, self.OnRegister, id=32)
         
         self.Bind(EVT_APPEL_OUVRIR, self.OnAppelOuvrir)
         
@@ -5558,20 +5594,26 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         file_menu.AppendSeparator()
         file_menu.Append(15, u"&Exporter la fiche (PDF ou SVG)\tCtrl+E")
         file_menu.Append(16, u"&Exporter les détails\tCtrl+D")
-        file_menu.Append(17, u"&Générer les grilles d'évaluation projet\tCtrl+G")
+        
+        if sys.platform == "win32":
+            file_menu.Append(17, u"&Générer les grilles d'évaluation projet\tCtrl+G")
+        
         file_menu.Append(19, u"&Générer le dossier de validation projet\tCtrl+V")
-        file_menu.Append(18, u"&Générer une Synthèse pédagogique (SSI et ETT uniquement)\tCtrl+B")
+        
+        if sys.platform == "win32":
+            file_menu.Append(18, u"&Générer une Synthèse pédagogique (SSI et ETT uniquement)\tCtrl+B")
         
         file_menu.AppendSeparator()
         file_menu.Append(wx.ID_EXIT, u"&Quitter\tCtrl+Q")
 
         self.file_menu = file_menu
         
-        
-        tool_menu = wx.Menu()
-#        tool_menu.Append(31, u"Options")
-        self.menuReg = tool_menu.Append(32, u"a")
-        self.MiseAJourMenu()
+        if sys.platform == "win32" :
+            tool_menu = wx.Menu()
+    #        tool_menu.Append(31, u"Options")
+            
+            self.menuReg = tool_menu.Append(32, u"a")
+            self.MiseAJourMenu()
         
 
         help_menu = wx.Menu()
@@ -5580,7 +5622,8 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         help_menu.Append(22, u"A propos")
 
         mb.Append(file_menu, u"&Fichier")
-        mb.Append(tool_menu, u"&Outils")
+        if sys.platform == "win32" :
+            mb.Append(tool_menu, u"&Outils")
         mb.Append(help_menu, u"&Aide")
         
         self.SetMenuBar(mb)
@@ -6272,7 +6315,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         elif self.typ == 'prj':
             self.projet.EnrichiObjetsSVG(doc)
             
-        doc.writexml(f, '   ')
+        doc.writexml(f, '   ', encoding = "utf-8")
         f.close
 
  
@@ -6615,7 +6658,7 @@ class FenetreProjet(FenetreDocument):
         
 #    
         tps2 = time.clock() 
-        print tps2 - tps1
+        print "Ouverture :", tps2 - tps1
         
         
     #############################################################################
@@ -6829,10 +6872,10 @@ class BaseFiche(wx.ScrolledWindow):
 #        self.SetFocus()
         event.Skip()
         
+        
     #############################################################################            
     def OnResize(self, evt):
-        
-        w, h = self.GetClientSize()
+        w = self.GetClientSize()[0]
         self.SetVirtualSize((w,w*29/21)) # Mise au format A4
 
         self.InitBuffer()
@@ -6866,23 +6909,7 @@ class BaseFiche(wx.ScrolledWindow):
         #
         branche = self.GetDoc().HitTest(xx, yy)
         if branche != None:
-#            print "Selectitem"
-#            self.GetDoc().arbre.EnsureVisible(branche)
-#            self.GetDoc().arbre.CalculatePositions()
-#            self.GetDoc().arbre.ScrollTo(branche)
-#            self.GetDoc().arbre.RefreshSubtree(self.GetDoc().arbre.root) 
-#            
-#            self.GetDoc().arbre.AdjustMyScrollbars()
-#            self.GetDoc().arbre.Collapse(self.GetDoc().arbre.root)
-#            self.GetDoc().arbre.Update()
             self.GetDoc().SelectItem(branche, depuisFiche = True)
-#            self.GetDoc().arbre.SelectItem(branche)
-#            self.GetDoc().arbre.DoSelectItem(branche, extended_select=True)
-#            self.GetDoc().arbre.CalculatePositions()
-#            self.GetDoc().arbre.AdjustMyScrollbars()
-#            self.GetDoc().arbre.ExpandAll()
-#            
-#            self.GetDoc().arbre.Layout()
             
 
         #
@@ -6922,7 +6949,7 @@ class BaseFiche(wx.ScrolledWindow):
     #############################################################################            
     def Redessiner(self, event = None):  
         wx.BeginBusyCursor()
-        tps = time.time()
+        tps1 = time.clock() 
             
         cdc = wx.ClientDC(self)
         self.PrepareDC(cdc) 
@@ -6945,12 +6972,14 @@ class BaseFiche(wx.ScrolledWindow):
         self.ctx = ctx
         self.Refresh()
 
-#        print "   ", time.time() - tps
+        tps2 = time.clock() 
+        print "Tracé :", tps2 - tps1
+        
         wx.EndBusyCursor()
     
     #############################################################################            
     def normalize(self, cr):
-        w,h = self.GetVirtualSize()
+        h = self.GetVirtualSize()[1]
         cr.scale(h, h) 
         
         
@@ -7253,8 +7282,11 @@ class PanelPropriete_Racine(wx.Panel):
     def __init__(self, parent, texte):
         wx.Panel.__init__(self, parent, -1)
         self.Hide()
-
-        self.rtc = rt.RichTextCtrl(self, style=rt.RE_READONLY|wx.NO_BORDER)
+        
+        self.rtc = rt.RichTextCtrl(self, style=rt.RE_READONLY|wx.NO_BORDER)#
+        wx.CallAfter(self.rtc.SetFocus)
+        
+        
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(self.rtc, 1,flag = wx.EXPAND)
         self.SetSizer(sizer)
@@ -7262,7 +7294,7 @@ class PanelPropriete_Racine(wx.Panel):
         out = cStringIO.StringIO()
         handler = rt.RichTextXMLHandler()
         buff = self.rtc.GetBuffer()
-        buff.AddHandler(handler)
+#        buff.AddHandler(handler)
         out.write(texte)
         out.seek(0)
         handler.LoadStream(buff, out)
@@ -7751,7 +7783,7 @@ class PanelPropriete_Classe(PanelPropriete):
                          #| wx.CB_SORT
                          )
 
-        self.Bind(wx.EVT_COMBOBOX, self.EvtComboBox, self.cb)
+        self.Bind(wx.EVT_COMBOBOX, self.EvtComboEtab, self.cb)
         sb.Add(self.cb, flag = wx.EXPAND)
         
         textctrl = wx.TextCtrl(pageGen, -1, u"", style=wx.TE_MULTILINE)
@@ -7882,12 +7914,9 @@ class PanelPropriete_Classe(PanelPropriete):
             self.classe.etablissement = event.GetString()
             self.sendEvent()
             
+            
     ######################################################################################  
-    def EvtComboBox(self, evt):
-        cb = evt.GetEventObject()
-#        data = cb.GetClientData(evt.GetSelection())
-#        s = evt.GetString()
-        
+    def EvtComboEtab(self, evt):       
         if evt.GetSelection() == len(constantes.ETABLISSEMENTS_PDD):
             self.classe.etablissement = self.textctrl.GetStringSelection()
             self.textctrl.Show(True)
@@ -7896,10 +7925,7 @@ class PanelPropriete_Classe(PanelPropriete):
             self.textctrl.Show(False)
         
         self.sendEvent()
-#        self.log.WriteText('EvtComboBox: %s\nClientData: %s\n' % (evt.GetString(), data))
-#
-#        if evt.GetString() == 'one':
-#            self.log.WriteText("You follow directions well!\n\n")        
+     
              
     ######################################################################################  
     def EvtRadioBox(self, event):
@@ -7977,7 +8003,7 @@ class PanelPropriete_Classe(PanelPropriete):
         self.cb_type.SetStringSelection(constantes.Enseigmenent[self.classe.typeEnseignement][0])
         
         self.cb.SetValue(self.classe.etablissement)
-        print self.cb.GetStringSelection ()
+#        print self.cb.GetStringSelection ()
         if self.cb.GetStringSelection () and self.cb.GetStringSelection() == self.classe.etablissement:
             self.textctrl.ChangeValue(u"")
             self.textctrl.Show(False)
@@ -8076,8 +8102,8 @@ class PanelPropriete_Classe(PanelPropriete):
                     self.MiseAJour()
                     self.GetDocument().CI.MiseAJourTypeEnseignement()
                     self.sendEvent()
-            elif res == wx.ID_NO:
-                print "Rien" 
+#            elif res == wx.ID_NO:
+#                print "Rien" 
         
     ######################################################################################  
     def Verrouiller(self, etat):
@@ -8509,7 +8535,7 @@ class Panel_Cible(wx.Panel):
                   "_" : -100}
         
 
-        for i, ci in enumerate(self.CI.parent.classe.ci_ET):
+        for i in range(len(self.CI.parent.classe.ci_ET)):
             #print self.CI.parent.classe.posCI_ET[i]
             mei, fsc = self.CI.parent.classe.posCI_ET[i].split("_")
 #            constantes.PositionCibleCIET[i].split("_")
@@ -9565,8 +9591,9 @@ class PanelPropriete_Tache(PanelPropriete):
         # Position de la revue 1
         #
         if tache.phase == "R1":
-            self.cbR1 = wx.CheckBox(pageGen, -1, u"Placer avant la conception détaillée")
-            self.cbR1.SetValue(self.tache.GetDocument().R1avantConception)
+            self.cbR1 = wx.CheckBox(pageGen, -1, u"Placer après la conception détaillée")
+            self.cbR1.SetValue(self.tache.GetDocument().R1apresConception)
+            self.cbR1.Show(tache.GetTypeEnseignement() != "SSI")
             pageGen.sizer.Add(self.cbR1, (0,1), flag = wx.EXPAND|wx.ALL, border = 2)
             self.Bind(wx.EVT_CHECKBOX, self.EvtCheckBoxR1, self.cbR1)
         
@@ -9868,36 +9895,33 @@ class PanelPropriete_Tache(PanelPropriete):
     def EvtVarSysteme(self, event):
         self.sendEvent()
         
-#    #############################################################################            
-#    def EvtCheckBox(self, event):
-#        self.tache.intituleDansDeroul = event.IsChecked()
-#        self.sendEvent()
         
     #############################################################################            
     def EvtCheckBoxR1(self, event):
-        self.tache.GetDocument().R1avantConception = event.IsChecked()
+        self.tache.GetDocument().R1apresConception = event.IsChecked()
         self.tache.SetPhase("R1")
         self.sendEvent()
+        
         
     #############################################################################            
     def EvtCheckEleve(self, event):
         lst = []
-        for i,s in enumerate(self.GetDocument().eleves):
+        for i in range(len(self.GetDocument().eleves)):
             if self.elevesCtrl[i].IsChecked():
                 lst.append(i)
         self.tache.eleves = lst
         self.GetDocument().MiseAJourDureeEleves()
         self.sendEvent()    
-    
+
+
     #############################################################################            
     def EvtTextIntitule(self, event):
-#        print "EvtTextIntitule"
         self.tache.SetIntitule(self.textctrl.GetValue())
-#        self.sendEvent()
         event.Skip()
         if not self.eventAttente:
             wx.CallLater(DELAY, self.sendEvent)
             self.eventAttente = True
+        
         
     #############################################################################            
     def EvtText(self, event):
@@ -10694,7 +10718,7 @@ class ArbreSequence(ArbreDoc):
     ####################################################################################
     def OnLeftDClick(self, event):
         pt = event.GetPosition()
-        item, flags = self.HitTest(pt)
+        item = self.HitTest(pt)[0]
         if item:
             self.sequence.AfficherLien(item)
         event.Skip()                
@@ -10709,9 +10733,9 @@ class ArbreSequence(ArbreDoc):
     ####################################################################################
     def OnMove(self, event):
         if self.itemDrag != None:
-            (id, flag) = self.HitTest(wx.Point(event.GetX(), event.GetY()))
-            if id != None:
-                dataTarget = self.GetItemPyData(id)
+            item = self.HitTest(wx.Point(event.GetX(), event.GetY()))[0]
+            if item != None:
+                dataTarget = self.GetItemPyData(item)
                 dataSource = self.GetItemPyData(self.itemDrag)
                 if not isinstance(dataSource, Seance):
                     self.SetCursor(wx.StockCursor(wx.CURSOR_NO_ENTRY))
@@ -10906,7 +10930,7 @@ class ArbreProjet(ArbreDoc):
     ####################################################################################
     def OnLeftDClick(self, event):
         pt = event.GetPosition()
-        item, flags = self.HitTest(pt)
+        item = self.HitTest(pt)[0]
         if item:
             self.projet.AfficherLien(item)
         event.Skip()                
@@ -10934,9 +10958,9 @@ class ArbreProjet(ArbreDoc):
     ####################################################################################
     def OnMove(self, event):
         if self.itemDrag != None:
-            (id, flag) = self.HitTest(wx.Point(event.GetX(), event.GetY()))
-            if id != None:
-                dataTarget = self.GetItemPyData(id)
+            item = self.HitTest(wx.Point(event.GetX(), event.GetY()))[0]
+            if item != None:
+                dataTarget = self.GetItemPyData(item)
                 dataSource = self.GetItemPyData(self.itemDrag)
                 if not isinstance(dataSource, Tache):
                     self.SetCursor(wx.StockCursor(wx.CURSOR_NO_ENTRY))
@@ -11557,6 +11581,7 @@ class SeqApp(wx.App):
             if os.path.isfile(parametre):
                 fichier = unicode(parametre, FILE_ENCODING)
 
+        self.AddRTCHandlers()
         
         frame = FenetrePrincipale(None, fichier)
         frame.Show()
@@ -11565,7 +11590,31 @@ class SeqApp(wx.App):
             server.app = frame
         
         self.SetTopWindow(frame)
+        
+        
         return True
+
+    def AddRTCHandlers(self):
+        # make sure we haven't already added them.
+        if rt.RichTextBuffer.FindHandlerByType(rt.RICHTEXT_TYPE_HTML) is not None:
+            print "AddRTCHandlers : déja fait"
+            return
+        
+        # This would normally go in your app's OnInit method.  I'm
+        # not sure why these file handlers are not loaded by
+        # default by the C++ richtext code, I guess it's so you
+        # can change the name or extension if you wanted...
+        rt.RichTextBuffer.AddHandler(rt.RichTextHTMLHandler())
+        rt.RichTextBuffer.AddHandler(rt.RichTextXMLHandler())
+
+        # ...like this
+        rt.RichTextBuffer.AddHandler(rt.RichTextXMLHandler(name="Autre XML",
+                                                           ext="ox",
+                                                           type=99))
+
+        # This is needed for the view as HTML option since we tell it
+        # to store the images in the memory file system.
+        wx.FileSystem.AddHandler(wx.MemoryFSHandler())
 
 
 
@@ -11782,14 +11831,14 @@ class PopupInfo(wx.PopupWindow):
         self.branche = branche
         
     ##########################################################################################
-    def XML_AjouterImg(self, node, id, bmp):
+    def XML_AjouterImg(self, node, item, bmp):
 #        print "XML_AjouterImg"
         try:
             bmp.SaveFile(self.tfname, wx.BITMAP_TYPE_PNG)
         except:
             return
         
-        img = node.getElementById(id)
+        img = node.getElementById(item)
         if img != None:
             td = node.createElement("img")
             img.appendChild(td)
@@ -12206,7 +12255,7 @@ class PanelListe(wx.Panel, listmix.ColumnSorterMixin):
         menu.Destroy()
 
     def OnPopupFour(self, event):
-        item = self.listeSeq.GetItem(self.currentItem)
+#        item = self.listeSeq.GetItem(self.currentItem)
         self.listeSeq.DeleteItem(self.currentItem)
 
     def OnPopupFive(self, event):
@@ -12434,7 +12483,7 @@ class FenetreBilan(wx.Frame):
                 c = cct + i - len(listePrem)
                 cs = cst + i - len(listePrem)
                 
-            print seq.intitule, str(seq.GetDuree()), seq.nomFichier, i
+#            print seq.intitule, str(seq.GetDuree()), seq.nomFichier, i
             tableau.setCell(feuilleP, lcp, c, seq.intitule)
             tableau.setCell(feuilleP, ldp, c, str(seq.GetDuree()))
             tableau.setLink(feuilleP, lcp, c, seq.nomFichier)
@@ -12557,7 +12606,7 @@ class FenetreBilan(wx.Frame):
                 
             listSequences = []
          
-            for i, f in enumerate(l):
+            for f in l:
                 classe, sequence = self.OuvrirFichierSeq(f)
                 if classe != None and classe.typeEnseignement == self.typeEnseignement:
                     sequence.nomFichier = f
@@ -12619,7 +12668,7 @@ class DirSelectorCombo(wx.combo.ComboCtrl):
         font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
         font.SetWeight(wx.FONTWEIGHT_BOLD)
         dc.SetFont(font)
-        tw,th = dc.GetTextExtent(label)
+        tw = dc.GetTextExtent(label)[0]
         dc.DrawText(label, (bw-tw)/2, (bw-tw)/2)
         del dc
 
