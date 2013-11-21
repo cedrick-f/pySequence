@@ -4,7 +4,21 @@ En principe, pySéquence est conçu pour être multi-plateforme.
 En pratique, cela demande quelques adaptations ...
 
 Encore jamais tentée, la procédure ci-dessous décrit donc pour l'instant la "théorie".
+Au fur et à mesure de l'avancement de la procédure, cette page sera réactualisée. Merci donc d'avance aux possesseurs de MAC pour leurs retours d'expérience...
+
+Cette procédure ne s'adresse donc qu'à des *utilisateurs confirmés* de MAC, prêts à passer un peu de *temps* à participer à cette adaptation.
 
 
-= Installation de python et des modules nécessaires =
+== Installation de python et des modules nécessaires ==
 * Installer [http://www.python.org/ python], soit la [http://www.python.org/download/releases/2.6.6/ version 2.6], soit la [http://www.python.org/download/releases/2.7.6/ version 2.7].
+* [http://cairographics.org/download/ pyCairo] : suivre les instructions ...
+* [http://wxpython.org/download.php#unstable wxPython 2.9.x] : choisir la version adaptée à la version de python installée.
+* [https://bitbucket.org/rptlab/reportlab Reportlab] : tous lesfichiers en téléchargement sont disponibles sur [http://www.reportlab.com/ftp/ cette page].
+* [https://pypi.python.org/pypi/PyPDF2/1.18 pyPDF2]
+
+D'autres modules sont nécessaires ... mais sont spécifiques à Windows : il va donc y avoir quelques pertes de fonctionnalités
+
+== Lancement de pySequence ==
+Il "suffit" de lancer le fichier pysequence.py...
+Il va immanquablement se produire plein d'erreurs !
+Merci de me contacter pour qu'on règle ça 
