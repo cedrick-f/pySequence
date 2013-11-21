@@ -20,5 +20,6 @@ D'autres modules sont nécessaires ... mais sont spécifiques à Windows : il va
 
 == Lancement de pySequence ==
 Il "suffit" de lancer le fichier pysequence.py...
+
 Il va immanquablement se produire plein d'erreurs !
-Merci de me contacter pour qu'on règle ça 
+Merci de me contacter pour qu'on règle ça.
