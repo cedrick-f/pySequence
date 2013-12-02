@@ -166,6 +166,7 @@ BCoulTache = {'Ana' : (0.3,0.5,0.5),
               'Rev' : (0.6,0.3,0.3),
               'R1'  : (0.8,0.3,0.2),
               'R2'  : (0.8,0.3,0.2),
+              'R3'  : (0.8,0.3,0.2),
               'S'   : (0.3,0.1,0.8)}
 
 ICoulTache = {'Ana' : (0.6, 0.8, 0.8), 
@@ -177,6 +178,7 @@ ICoulTache = {'Ana' : (0.6, 0.8, 0.8),
               'Rev' : (0.9,0.6,0.6),
               'R1'  : (1,0.6,0.5),
               'R2'  : (1,0.6,0.5),
+              'R3'  : (1,0.6,0.5),
               'S'   : (0.6,0.5,1)}
 
 
@@ -568,12 +570,14 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
                 'XXX' : [[], []]}
 
     phase = None
-    y1 = y2 = 0   # juste pour éviter une erreur en cas d'echec d'ouverture.
+    y1 = y2 = y3 = 0   # juste pour éviter une erreur en cas d'echec d'ouverture.
     for t in prj.taches:
         if t.phase == "R1":
             y1 = y
         elif t.phase == "R2":
             y2 = y
+        elif t.phase == "R3":
+            y3 = y
             
         if phase != t.phase:
             y += ecartTacheY
@@ -593,7 +597,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
     #
     x = posZTaches[0] + tailleZTaches[0]
     for t, y in yTaches: 
-        if not t.phase in ["R1", "R2", "S"]:
+        if not t.phase in ["R1", "R2", "R3", "S"]:
             DrawLigne(ctx, x, y)
         DrawCroisementsCompetencesTaches(ctx, t, y)
     
@@ -615,20 +619,23 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
 #    print "taches", time.time() - tps
     
     #
-    # Durées élève entre revues (uniquement en période "terminale"
+    # Durées élève entre revues (uniquement en période "terminale")
     #
 #    tps = time.time()
     if prj.position == 5:
         y0 = posZTaches[1]
-        y3 = y1+2*ecartTacheY + 0.015
-        md1 = md2 = 0
+        y4 = y1+2*ecartTacheY + 0.015
+        y5 = y2+2*ecartTacheY + 0.015
+        md1 = md2 = md3 = 0
         for i, e in enumerate(prj.eleves):
             md1 = max(e.GetDuree("R1"), md1)
             md2 = max(e.GetDuree("R2"), md2)
+            md3 = max(e.GetDuree("R3"), md3)
             
         for i, e in enumerate(prj.eleves):
             d1 = e.GetDuree("R1")
             d2 = e.GetDuree("R2")
+            d3 = e.GetDuree("R3")
             Ic = constantes.COUL_ELEVES[i][0]
             ctx.set_source_rgb(Ic[0],Ic[1],Ic[2])
             ctx.set_line_width(0.005)
@@ -637,8 +644,12 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
                 ctx.line_to(xEleves[i], y0+(y1-y0)*d1/md1)
                 ctx.stroke()
             if md2 > 0:
-                ctx.move_to(xEleves[i], y3)
-                ctx.line_to(xEleves[i], y3+(y2-y3)*d2/md2)
+                ctx.move_to(xEleves[i], y4)
+                ctx.line_to(xEleves[i], y4+(y2-y4)*d2/md2)
+                ctx.stroke()
+            if md3 > 0:
+                ctx.move_to(xEleves[i], y5)
+                ctx.line_to(xEleves[i], y5+(y3-y5)*d3/md3)
                 ctx.stroke()
     
 #    print "durées", time.time() - tps
@@ -885,7 +896,7 @@ def DrawTacheRacine(ctx, tache, y):
     
     h = calcH(tache.GetDuree())
 
-    if not tache.phase in ["R1", "R2", "S", "Rev"]:
+    if not tache.phase in ["R1", "R2", "R3", "S", "Rev"]:
 #        fleche_verticale(ctx, posZTaches[0] - wDuree/2 - ecartX/4, y, 
 #                         h, wDuree, (0.9,0.8,0.8,0.5))
         
@@ -904,7 +915,7 @@ def DrawTacheRacine(ctx, tache, y):
                        (x, y, wDuree, h), 
                        orient = 'v', b = 0.1)
     
-    elif tache.phase in ["R1", "R2"]:
+    elif tache.phase in ["R1", "R2", "R3"]:
         
         ctx.set_source_rgba (0.9,0.8,0.8,0.5)
         x = posZTaches[0] - wDuree*4 - ecartX/4
@@ -937,7 +948,7 @@ def DrawTacheRacine(ctx, tache, y):
     #
     # Tracé du cadre de la tâche
     #
-    if not tache.phase in ["R1", "R2", "S", "Rev"]:
+    if not tache.phase in ["R1", "R2", "R3", "S", "Rev"]:
         x = posZTaches[0]
         w = tailleZTaches[0]
     else:
@@ -959,7 +970,7 @@ def DrawTacheRacine(ctx, tache, y):
                               cairo.FONT_WEIGHT_BOLD)
         ctx.set_source_rgb (0,0,0)
         
-        if not tache.phase in ["R1", "R2", "S"]:
+        if not tache.phase in ["R1", "R2", "R3", "S"]:
             t = tache.code
             hc = max(hTacheMini/2, 0.01)
         else:
@@ -972,7 +983,7 @@ def DrawTacheRacine(ctx, tache, y):
     #
     # Affichage de l'intitulé de la tâche
     #
-    if tache.intituleDansDeroul and tache.intitule != "" and not tache.phase in ["R1", "R2", "S"]:
+    if tache.intituleDansDeroul and tache.intitule != "" and not tache.phase in ["R1", "R2", "R3", "S"]:
         ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
                               cairo.FONT_WEIGHT_NORMAL)
         ctx.set_source_rgb (0,0,0)
@@ -1045,7 +1056,7 @@ def DrawCroisementsElevesTaches(ctx, tache, y):
     # Croisements Tâche/Eleves
     #
     r = 0.006
-    if tache.phase in ["R1", "R2", "S"]:
+    if tache.phase in ["R1", "R2", "R3", "S"]:
         lstElv = range(len(tache.parent.eleves))
     else:
         lstElv = tache.eleves

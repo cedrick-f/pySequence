@@ -247,6 +247,7 @@ imagesTaches =  {'Ana' : images.Icone_CdCF,
                  'Rev' : images.Icone_evaluation,
                  'R1'  : images.Icone_revue,
                  'R2'  : images.Icone_revue,
+                 'R3'  : images.Icone_revue,
                  'S'  : images.Icone_soutenance}
                 
 
@@ -891,14 +892,39 @@ NOM_PHASE_TACHE = {'STI': {'Ana' : u"Analyse des besoins", #u"Spécification - P
                            }
                    }
 
+NOM_PHASE_TACHE_COURT =   {'STI': {'Ana' : u"Analyse besoins", #u"Spécification - Planification", 
+                                   'Con' : u"Concep préliminaire",
+                                   'DCo' : u"Concep détaillée",
+                                   'Rea' : u"Réalisation", #u"Prototypage", 
+                                   'Val' : u"Validation", #u"Qualification - Intégration - Validation",
+                                   'XXX' : u"Prépa soutenance"
+                                   },
+                           'SSI': {'Ana' : u"Appropriation", #u"Spécification - Planification", 
+                                   'Rea' : u"Expérimentations", #u"Prototypage", 
+                                   'XXX' : u"Synth et com"
+                                   }
+                           }
+
+POSITIONS_REVUES =  {'STI': {2 :    ['Con', 'Val'],
+                             3 :    ['Ana', 'Con', 'Val']},
+                     'SSI': {2 :    ['Ana', 'Rea'],
+                             3 :    ['Ana', 'Rea', 'XXX']}}
 
 NOM_PHASE_TACHE_E = {'R1'  : u"Revue de projet n°1",
                      'R2'  : u"Revue de projet n°2",
+                     'R3'  : u"Revue de projet n°3",
                      'Rev' : u"Revue intermédiaire",
                      'S'   : u"Soutenance finale"}
 
+NOM_PHASE_TACHE_E_COURT =   {'R1'  : u"Revue n°1",
+                             'R2'  : u"Revue n°2",
+                             'R3'  : u"Revue n°3",
+                             'Rev' : u"Revue inter",
+                             'S'   : u"Soutenance"}
+
 CODE_PHASE_TACHE_E  =  {'R1'  : u"R1",
                         'R2'  : u"R2",
+                        'R3'  : u"R3",
                         'Rev' : u"Ri",
                         'S'   : u"S"}
                     
@@ -914,7 +940,13 @@ CODE_PHASE_TACHE = {'STI': {'Ana' : u"Ab",
                             'XXX' : u"C"
                             }
                     }
-         
+
+def getCodeNomCourt(nom, ens):
+    for k,v in NOM_PHASE_TACHE_COURT[ens].items() + NOM_PHASE_TACHE_E_COURT.items():
+        if v == nom:
+            return k
+    return None
+
 for t in ['STI', 'SSI']:     
     NOM_PHASE_TACHE[t].update(NOM_PHASE_TACHE_E)
     CODE_PHASE_TACHE[t].update(CODE_PHASE_TACHE_E)
@@ -926,7 +958,7 @@ def getLstPhase(typeEns):
     """
     lst = []
     for k in PHASE_TACHE[typeEns]:
-        if not k in ["R1", "R2", "S"]:
+        if not k in ["R1", "R2", "R3", "S"]:
             lst.append(NOM_PHASE_TACHE[typeEns][k])
     return lst
 

@@ -176,7 +176,7 @@ dicIndicateurs_prj = {"CO7.ac1" : [[u"Le besoin relatif au projet est identifié
 #        Les poids des indicateurs de compétences
 #
 #################################################################################################################################
-dicPoidsIndicateurs_prj   = {"O7" : [20, 
+dicPoidsIndicateurs_prj   = {"O7" : [30, 
                                         {"CO7.ac1" : [5,10,5,5,10],
                                          "CO7.ac2" : [5,5,5,5,10,5,4],
                                          "CO7.ac3" : [7,7,7,5]}],
