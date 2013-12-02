@@ -681,8 +681,8 @@ class RapportRTF(rt.RichTextCtrl):
                     if t.phase != phase:
                         phase = t.phase
                         self.AddPhase(t, doc.GetTypeEnseignement(simple = True))
-#                    if not t.phase in ["R1", "R2", "Rev"]:
-                    self.AddTache(t, revue = t.phase in ["R1", "R2", "Rev"])
+#                    if not t.phase in ["R1", "R2", "R3", "Rev"]:
+                    self.AddTache(t, revue = t.phase in ["R1", "R2", "R3", "Rev"])
 
             self.AddPieds(fichierCourant)
             

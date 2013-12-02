@@ -40,7 +40,7 @@ Copyright (C) 2011-2013
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "4.4"
+__version__ = "4.5"
 
 #from threading import Thread
 
@@ -1591,8 +1591,12 @@ class Projet(BaseDoc, Objet_sequence):
         self.position = 5
         self.nbrParties = 1
         
+        # Organisation des phases du projet
+        self.nbrRevues = 2
+        self.positionRevues = list(constantes.POSITIONS_REVUES[self.GetTypeEnseignement()][self.nbrRevues])
+        
         # Par défaut, la revue 1 est après la Conception détaillée
-        self.R1apresConception = False
+#        self.R1apresConception = False
         
         if panelParent:
             self.panelPropriete = PanelPropriete_Projet(panelParent, self)
@@ -1678,7 +1682,11 @@ class Projet(BaseDoc, Objet_sequence):
     ######################################################################################  
     def creerTachesRevue(self):
         lst = []
-        for p in ["R1", "R2", "S"]:
+        if self.nbrRevues == 2:
+            lr = ["R1", "R2", "S"]
+        else:
+            lr = ["R1", "R2", "R3", "S"]
+        for p in lr:
             lst.append(Tache(self, self.panelParent, 
                              intitule = constantes.NOM_PHASE_TACHE_E[p], 
                              phaseTache = p, duree = 0.5))
@@ -1688,10 +1696,24 @@ class Projet(BaseDoc, Objet_sequence):
     def getTachesRevue(self):
         lst = []
         for t in self.taches:
-            if t.phase in ["R1", "R2", "S"]:
+            if t.phase in ["R1", "R2", "R3", "S"]:
                 lst.append(t)
         return lst
         
+    ######################################################################################  
+    def getCodeLastRevue(self):
+        if self.nbrRevues == 2:
+            return "R2"
+        else:
+            return "R3"
+        
+    ######################################################################################  
+    def getLastRevue(self):
+        lr = self.getCodeLastRevue()
+        for t in self.taches:
+            if t.phase == lr:
+                return t
+        return None
         
     ######################################################################################  
     def EnrichiObjetsSVG(self, doc):
@@ -1746,7 +1768,10 @@ class Projet(BaseDoc, Objet_sequence):
 
         projet.set("Position", str(self.position))
         
-        projet.set("R1avC", str(self.R1apresConception))
+        # Organisation
+        projet.set("NbrRevues", str(self.nbrRevues))
+        projet.set("PosRevues", '-'.join(self.positionRevues))
+#        projet.set("R1avC", str(self.R1apresConception))
         
         equipe = ET.SubElement(projet, "Equipe")
         for p in self.equipe:
@@ -1787,7 +1812,11 @@ class Projet(BaseDoc, Objet_sequence):
         
         self.commentaires = branche.get("Commentaires", u"")
         
-        self.R1apresConception = eval(branche.get("R1avC", "False"))
+        self.nbrRevues = eval(branche.get("NbrRevues", "2"))
+        self.positionRevues = branche.get("PosRevues", 
+                                          '-'.join(list(constantes.POSITIONS_REVUES[self.GetTypeEnseignement(simple = True)][self.nbrRevues]))).split('-')
+        
+#        self.R1apresConception = eval(branche.get("R1avC", "False"))
         
         self.position = eval(branche.get("Position", "0"))
 
@@ -1838,7 +1867,7 @@ class Projet(BaseDoc, Objet_sequence):
         adapterVersion = True
         for e in list(brancheTac):
             phase = e.get("Phase")
-            if phase in ["R1", "R2", "S"]:
+            if phase in ["R1", "R2", "R3", "S"]:
                 if phase == "S":
                     num = 2
                 else:
@@ -1848,6 +1877,8 @@ class Projet(BaseDoc, Objet_sequence):
                 adapterVersion = False
             else:
                 tache = Tache(self, self.panelParent, branche = e)
+                if tache.code < 0 : # ça s'est mal passé lors du setbranche ...
+                    return False
 #                tache.setBranche(e)
                 self.taches.append(tache)
         
@@ -1882,7 +1913,7 @@ class Projet(BaseDoc, Objet_sequence):
         elif pos !=5 and self.position == 5:
             lst = []
             for t in self.taches:
-                if t.phase in ["R1", "R2", "S"]:
+                if t.phase in ["R1", "R2", "R3", "S"]:
                     lst.append(t.branche)
             for a in lst:
                 self.SupprimerTache(item = a)
@@ -1962,7 +1993,22 @@ class Projet(BaseDoc, Objet_sequence):
             e.SetCode()
             e.MiseAJourCodeBranche()
             
+    ######################################################################################  
+    def MiseAJourNbrRevues(self):
+        if self.nbrRevues == 3: # on ajoute une revue
+            self.positionRevues.append(self.positionRevues[-1])
+            tache = Tache(self, self.panelParent, 
+                          intitule = constantes.NOM_PHASE_TACHE_E["R3"], 
+                          phaseTache = "R3", duree = 0.5)
+            self.taches.append(tache)
+            tache.ConstruireArbre(self.arbre, self.brancheTac)
+            tache.SetPhase()
             
+        elif self.nbrRevues == 2:
+            t = self.getLastRevue()
+            self.SupprimerTache(item = t.branche)
+        return
+           
 #    ######################################################################################  
 #    def AjouterSystemeSeance(self):
 #        for s in self.seance:
@@ -1992,7 +2038,7 @@ class Projet(BaseDoc, Objet_sequence):
             
         else:
             # La phase de la nouvelle tâche
-            if not tacheAct.phase in ["R1", "R2", "Rev"]:
+            if not tacheAct.phase in ["R1", "R2", "R3", "Rev"]:
                 phase = tacheAct.phase
             elif tacheAct.phase == "R1":
                 if self.R1apresConception or self.GetTypeEnseignement() == "SSI":
@@ -2086,49 +2132,62 @@ class Projet(BaseDoc, Objet_sequence):
         #
         # On fait des paquets par catégorie
         #
-        Ana = []
-        Con = []
-        Rea = []
-        DCo = []
-        Val = []
-        R1 = []
-        R2 = []
-        S = []
-        X = []
+        paquet = {'': []}
+        for k in constantes.PHASE_TACHE['STI']+constantes.NOM_PHASE_TACHE_E.keys(): 
+            #['Ana', 'Con', 'DCo', 'Rea', 'Val', 'XXX', 'Rev'] + ['R1', 'R2', 'R3', 'Rev', 'S']
+            paquet[k]=[]
+#        Ana = []
+#        Con = []
+#        Rea = []
+#        DCo = []
+#        Val = []
+#        R1 = []
+#        R2 = []
+#        S = []
+#        X = []
         Rien = []
         for t in lstTaches:
-            if t.phase == 'Ana':
-                Ana.append(t)
-            elif t.phase == 'Con':
-                Con.append(t)
-            elif t.phase == 'DCo':
-                DCo.append(t)
-            elif t.phase == 'Rea':
-                Rea.append(t)
-            elif t.phase == 'Val':
-                Val.append(t)
-            elif t.phase == 'R1':
-                R1.append(t)
-            elif t.phase == 'R2':
-                R2.append(t)
-            elif t.phase == 'S':
-                S.append(t)
-            elif t.phase == 'XXX':
-                X.append(t)
-            elif t.phase == '':
-                Rien.append(t)
+            paquet[t.phase].append(t)
+            
+            
+#            if t.phase == 'Ana':
+#                Ana.append(t)
+#            elif t.phase == 'Con':
+#                Con.append(t)
+#            elif t.phase == 'DCo':
+#                DCo.append(t)
+#            elif t.phase == 'Rea':
+#                Rea.append(t)
+#            elif t.phase == 'Val':
+#                Val.append(t)
+#            elif t.phase == 'R1':
+#                R1.append(t)
+#            elif t.phase == 'R2':
+#                R2.append(t)
+#            elif t.phase == 'S':
+#                S.append(t)
+#            elif t.phase == 'XXX':
+#                X.append(t)
+#            elif t.phase == '':
+#                Rien.append(t)
         
-        # On trie les paquets       
-        for c in [Ana, Con, Rea, DCo, Val, X]:
-            c.sort(key=attrgetter('ordre'))
+        # On trie les tâches de chaque paquet     
+        for c in ['Ana', 'Con', 'Rea', 'DCo', 'Val', 'XXX']:
+            paquet[c].sort(key=attrgetter('ordre'))
+        
+        
         
         #
         # On assemble les paquets
         #
-        if self.R1apresConception:
-            lst = Ana + Con + DCo + R1 + Rea  + Val + R2+ X + Rien + S
-        else:
-            lst = Ana + Con + R1 + DCo + Rea  + Val + R2+ X + Rien + S
+        lst = []
+        for p in self.GetListePhases()+["S"]:
+            lst.extend(paquet[p]) 
+
+#        if self.R1apresConception:
+#            lst = Ana + Con + DCo + R1 + Rea  + Val + R2+ X + Rien + S
+#        else:
+#            lst = Ana + Con + R1 + DCo + Rea  + Val + R2+ X + Rien + S
            
         #
         # On ajoute les revues intermédiaires
@@ -2157,7 +2216,7 @@ class Projet(BaseDoc, Objet_sequence):
     ######################################################################################  
     def SupprimerItem(self, item):
         data = self.arbre.GetItemPyData(item)
-        if isinstance(data, Tache) and data.phase not in ["R1", "R2", "S"]:
+        if isinstance(data, Tache) and data.phase not in ["R1", "R2", "R3", "S"]:
             self.SupprimerTache(item = item)
             
         elif isinstance(data, Eleve):
@@ -2390,6 +2449,36 @@ class Projet(BaseDoc, Objet_sequence):
                 n += 1
         return n
 
+    ######################################################################################  
+    def GetListeNomsPhases(self, avecRevuesInter = False):
+        lst = []
+        for p in self.GetListePhases():
+            if p in constantes.NOM_PHASE_TACHE_COURT[self.GetTypeEnseignement(simple = True)].keys():
+                lst.append(constantes.NOM_PHASE_TACHE_COURT[self.GetTypeEnseignement(simple = True)][p])
+            elif p in constantes.NOM_PHASE_TACHE_E_COURT.keys():
+                lst.append(constantes.NOM_PHASE_TACHE_E_COURT[p])
+        return lst
+        
+    ######################################################################################  
+    def GetListePhases(self, avecRevuesInter = False):
+        """ Renvoie la liste ordonnée des phases dans le projet
+        """
+#        print "GetListePhases"
+#        print self.positionRevues
+#        print self.nbrRevues
+#        print constantes.PHASE_TACHE[self.GetTypeEnseignement(simple = True)][:-1]
+        lst = list(constantes.PHASE_TACHE[self.GetTypeEnseignement(simple = True)][:-1])
+        
+        if self.nbrRevues == 2:
+            lr = [2,1]
+        else:
+            lr = [3,2,1]
+        for r in lr:
+            lst.insert(lst.index(self.positionRevues[r-1])+1, "R"+str(r))
+        
+        
+        return lst
+        
 #        # Ancienne version (marche pas avec les Rev)
 #        p = []
 #        for t in self.taches:
@@ -2457,7 +2546,7 @@ class Projet(BaseDoc, Objet_sequence):
     def MiseAJourTypeEnseignement(self):
         self.app.SetTitre()
         for t in self.taches:
-#            if t.phase in ["R1", "R2", "S"]:
+#            if t.phase in ["R1", "R2", "R3", "S"]:
             t.MiseAJourTypeEnseignement(self.classe.typeEnseignement)
         
         
@@ -2476,28 +2565,28 @@ class Projet(BaseDoc, Objet_sequence):
         tR1 = None
         indicateurs = {}
         for t in self.taches:   # toutes les tâches, dans l'ordre
-            if t.phase in ["R1", "R2", "S"]:
-                if t.phase != "R1":
-                    t.indicateurs = []
-                else:
+            if t.phase in ["R1", "R2", "R3", "S"]:
+                if t.phase == "R1" or (t.phase == "R2" and self.nbrRevues == 3):
                     t.indicateursMaxi = []
+                else:
+                    t.indicateurs = []
+                
                 for c, l in indicateurs.items():
                     for i, ok in enumerate(l):
                         if ok:
                             codeIndic = c+"_"+str(i+1)
                             if tousIndicateurs[c][i][1]: # Indicateur "revue"
-                                if t.phase in ["R1", "R2"]:
-                                    if t.phase == "R2" and (tR1 != None and not codeIndic in tR1.indicateurs):
+                                if t.phase in ["R1", "R2", "R3"]:
+                                    if t.phase == self.getCodeLastRevue() and (tR1 != None and not codeIndic in tR1.indicateurs):
                                         t.indicateurs.append(codeIndic)
-                                    if t.phase == "R1":
+                                    if t.phase == "R1" or (t.phase == "R2" and self.nbrRevues == 3):
                                         t.indicateursMaxi.append(codeIndic)
                             else:
                                 if t.phase == "S":
                                     t.indicateurs.append(codeIndic)
-#                if t.phase == "R2":
-#                    indicateurs = {}
+
                 
-                if t.phase == "R1":
+                if t.phase == "R1" or (t.phase == "R2" and self.nbrRevues == 3):
                     ti = []
                     for i in t.indicateurs:
                         if i in t.indicateursMaxi:
@@ -3739,7 +3828,7 @@ class Tache(Objet_sequence):
             self.tip = PopupInfo2(self.GetApp(), u"Tâche", self.GetDocument(), b)
             self.tip.sizer.SetItemSpan(self.tip.titre, (1,2))
             
-            if not self.phase in ["R1", "R2", "S", "Rev"]:
+            if not self.phase in ["R1", "R2", "R3", "S", "Rev"]:
                 p = self.tip.CreerTexte((1,0), txt = u"Phase :", flag = wx.ALIGN_RIGHT|wx.ALL)
                 p.SetFont(wx.Font(9, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.NORMAL, underline = True))
                 
@@ -3755,7 +3844,9 @@ class Tache(Objet_sequence):
             self.tip_description = self.tip.CreerRichTexte(self, (3,0), (1,2))
         
         if branche != None:
-            self.setBranche(branche)
+            Ok = self.setBranche(branche)
+            if not Ok:
+                self.code = -1 # Pour renvoyer une éventuelle erreur à l'ouverture d'un fichier
             
         if panelParent:
             self.panelPropriete = PanelPropriete_Tache(panelParent, self)
@@ -3847,7 +3938,7 @@ class Tache(Objet_sequence):
             brancheElv.set("Eleve"+str(i), str(e))
         
         
-        if not self.phase in ["R2", "S"]:
+        if not self.phase in [self.parent.getCodeLastRevue(), "S"]:
             # Structure des indicateurs :
             # <Indicateurs Indic0="CO6.1_1" Indic1="CO6.2_4" ..... />
             #   (compétence_indicateur)
@@ -3892,7 +3983,7 @@ class Tache(Objet_sequence):
                 self.phase = 'Rea'
         self.description = branche.get("Description", None)
         
-        if not self.phase in ["R1", "R2", "S", "Rev"]:
+        if not self.phase in ["R1", "R2", "R3", "S", "Rev"]:
             self.duree.v[0] = eval(branche.get("Duree", "1"))
         else:
             self.duree.v[0] = 0.5
@@ -3902,7 +3993,7 @@ class Tache(Objet_sequence):
         for i, e in enumerate(brancheElv.keys()):
             self.eleves.append(eval(brancheElv.get("Eleve"+str(i))))
             
-        if not self.phase in ["R2", "S"]:
+        if not self.phase in [self.parent.getCodeLastRevue(), "S"]:
             self.indicateurs = []
             #
             # pour compatibilité acsendante
@@ -3943,9 +4034,15 @@ class Tache(Objet_sequence):
                             code = "CO8.0"
                             codeindic = code+"_"+indic
                             
+                        # si le type d'enseignement ne colle pas avec les indicateurs (pb lors de l'enregistrement)
+                        if not code in constantes.dicIndicateurs[self.GetTypeEnseignement()]:
+                            return False
+                        
                         indic = eval(indic)-1
                         if self.phase != 'XXX' or not constantes.dicIndicateurs[self.GetTypeEnseignement()][code][indic][1]:
                             self.indicateurs.append(codeindic)
+                    
+                            
 #                        else:
 #                            print "Enlève :", self, constantes.dicIndicateurs[self.GetTypeEnseignement()][code][indic]
             
@@ -3988,7 +4085,7 @@ class Tache(Objet_sequence):
     ######################################################################################  
     def GetDelai(self):
         if self.phase != "":
-            if self.phase in ["R1", "R2", "Rev"]:
+            if self.phase in ["R1", "R2", "R3", "Rev"]:
                 de = []
                 for e in self.parent.eleves:
                     de.append(e.GetDuree(self.phase))
@@ -4074,7 +4171,7 @@ class Tache(Objet_sequence):
         typeEns = self.GetTypeEnseignement(True)
         
         if self.phase != "":
-            if self.phase in ["R1", "R2", "S"]:
+            if self.phase in ["R1", "R2", "R3", "S"]:
                 self.code = self.phase
             else:
                 self.code = constantes.CODE_PHASE_TACHE[typeEns][self.phase]+num
@@ -4084,7 +4181,7 @@ class Tache(Objet_sequence):
         
         
         if hasattr(self, 'codeBranche') and self.phase != "":
-            if self.phase in ["R1", "R2", "S"]:
+            if self.phase in ["R1", "R2", "R3", "S"]:
                 self.codeBranche.SetLabel(u"")
                 t = u""
             else:
@@ -4094,7 +4191,7 @@ class Tache(Objet_sequence):
         
         
         # Tip
-        if self.phase in ["R1", "R2", "S"]:
+        if self.phase in ["R1", "R2", "R3", "S"]:
             self.tip.SetTitre(constantes.NOM_PHASE_TACHE_E[self.phase])
         elif self.phase == "Rev":
             self.tip.SetTitre(constantes.NOM_PHASE_TACHE_E[self.phase])
@@ -4132,7 +4229,7 @@ class Tache(Objet_sequence):
         if hasattr(self, 'tip'):
             self.tip.SetBranche(self.branche)
             
-        if self.phase in ["R1", "R2"]:
+        if self.phase in ["R1", "R2", "R3"]:
             arbre.SetItemTextColour(self.branche, "red")
         elif self.phase == "Rev":
             arbre.SetItemTextColour(self.branche, "ORANGE")
@@ -4205,7 +4302,7 @@ class Tache(Objet_sequence):
     ######################################################################################  
     def AfficherMenuContextuel(self, itemArbre):
         if itemArbre == self.branche:
-            if not self.phase in ["R1", "R2", "S"]:
+            if not self.phase in ["R1", "R2", "R3", "S"]:
                 listItems = [[u"Supprimer", functools.partial(self.parent.SupprimerTache, item = itemArbre)]]
             else:
                 listItems = []
@@ -4610,6 +4707,7 @@ class Personne(Objet_sequence):
     def getBranche(self):
         """ Renvoie la branche XML de la compétence pour enregistrement
         """
+#        print "getBranche", supprime_accent(self.titre)
         root = ET.Element(toDefautEncoding(supprime_accent(self.titre).capitalize()))
         
         root.set("Id", str(self.id))
@@ -4736,11 +4834,11 @@ class Personne(Objet_sequence):
 ######################################################################################  
 def supprime_accent(ligne):
     """ supprime les accents du texte source """
-    accents = { 'a': ['à', 'ã', 'á', 'â'],
-                'e': ['é', 'è', 'ê', 'ë'],
-                'i': ['î', 'ï'],
-                'u': ['ù', 'ü', 'û'],
-                'o': ['ô', 'ö'] }
+    accents = { u'a': [u'à', u'ã', u'á', u'â'],
+                u'e': [u'é', u'è', u'ê', u'ë'],
+                u'i': [u'î', u'ï'],
+                u'u': [u'ù', u'ü', u'û'],
+                u'o': [u'ô', u'ö'] }
     for (char, accented_chars) in accents.iteritems():
         for accented_char in accented_chars:
             ligne = ligne.replace(accented_char, char)
@@ -4827,13 +4925,13 @@ class Eleve(Personne, Objet_sequence):
             for i, t in enumerate(self.parent.taches):
                 if t.phase == partie:
                     break
-                if t.phase in ["R1", "R2", "S"]:
+                if t.phase in ["R1", "R2", "R3", "S"]:
                     p = i
         
         for t in self.parent.taches[p:]:
             if t.phase == partie:
                 break
-            if not t.phase in ["R1", "R2", "S", "Rev"]:
+            if not t.phase in ["R1", "R2", "R3", "S", "Rev"]:
                 if self.id in t.eleves:
                     d += t.GetDuree()
         return d
@@ -4927,7 +5025,7 @@ class Eleve(Personne, Objet_sequence):
     def GetTaches(self, revues = False):
         lst = []
         for t in self.parent.taches:
-            if revues and t.phase in ["R1", "R2"]:
+            if revues and t.phase in ["R1", "R2", "R3"]:
                 lst.append(t)
             elif self.id in t.eleves:
                 if revues and t.phase == "Rev":
@@ -6602,26 +6700,26 @@ class FenetreProjet(FenetreDocument):
         self.definirNomFichierCourant(nomFichier)
         
         Ok = True
-        try:
-            root = ET.parse(fichier).getroot()
+#        try:
+        root = ET.parse(fichier).getroot()
+        
+        # Le projet
+        projet = root.find("Projet")
+        if projet == None:
+            self.projet.setBranche(root)
             
-            # Le projet
-            projet = root.find("Projet")
-            if projet == None:
-                self.projet.setBranche(root)
-                
-            else:
-                # La classe
-                classe = root.find("Classe")
-                Ok = Ok and self.classe.setBranche(classe)
-                Ok = Ok and self.projet.setBranche(projet)  
-                
-            self.arbre.DeleteAllItems()
-            root = self.arbre.AddRoot("")
-            self.projet.SetCompetencesRevuesSoutenance()
+        else:
+            # La classe
+            classe = root.find("Classe")
+            Ok = Ok and self.classe.setBranche(classe)
+            Ok = Ok and self.projet.setBranche(projet)  
             
-        except:
-            Ok = False
+        self.arbre.DeleteAllItems()
+        root = self.arbre.AddRoot("")
+        self.projet.SetCompetencesRevuesSoutenance()
+        
+#        except:
+#            Ok = False
         
         if not Ok:
             messageErreur(self, u"Erreur d'ouverture",
@@ -7458,6 +7556,9 @@ class PanelPropriete_Projet(PanelPropriete):
         pageGen.sizer.Add(sb, (1,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.EXPAND|wx.LEFT, border = 2)
         position.Bind(wx.EVT_SCROLL_CHANGED, self.onChanged)
         
+        self.panelOrga = PanelOrganisation(pageGen, self, self.projet)
+        pageGen.sizer.Add(self.panelOrga, (0,2), (2,1), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.EXPAND|wx.LEFT, border = 2)
+        
         pageGen.sizer.AddGrowableRow(0)
 #        pageGen.FitInside()
 #        pageGen.sizer.Layout()
@@ -7670,6 +7771,8 @@ class PanelPropriete_Projet(PanelPropriete):
         
         self.bmp.SetBitmap(self.getBitmapPeriode(250))
         self.position.SetValue(self.projet.position)
+        
+        self.panelOrga.MiseAJourListe()
         self.Layout()
         if sendEvt:
             self.sendEvent()
@@ -7679,8 +7782,89 @@ class PanelPropriete_Projet(PanelPropriete):
         return self.projet
     
     
-    
-    
+class PanelOrganisation(wx.Panel):    
+    def __init__(self, parent, panel, objet):
+        wx.Panel.__init__(self, parent, -1)
+        self.objet = objet
+        self.parent = panel
+        
+        sizer = wx.BoxSizer()
+        gbsizer = wx.GridBagSizer()
+        titre = wx.StaticBox(self, -1, u"Organisation")
+        sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
+
+        self.nbrRevues = Variable(u"Nombre de revues",  
+                                   lstVal = self.objet.nbrRevues, 
+                                   typ = VAR_ENTIER_POS, bornes = [2,3])
+        self.ctrlNbrRevues = VariableCtrl(self, self.nbrRevues, coef = 1, signeEgal = False,
+                                help = u"Nombre de revues de projet (avec évaluation)", sizeh = 30)
+        self.Bind(EVT_VAR_CTRL, self.EvtVariable, self.ctrlNbrRevues)
+        gbsizer.Add(self.ctrlNbrRevues, (0,0), (1,2), flag = wx.EXPAND)
+        
+        liste = wx.ListBox(self, -1, choices = self.objet.GetListeNomsPhases(), style = wx.LB_SINGLE)
+        gbsizer.Add(liste, (1,0), (2,1), flag = wx.EXPAND)
+        self.liste = liste
+        
+        buttonUp = wx.BitmapButton(self, 11, wx.ArtProvider.GetBitmap(wx.ART_GO_UP), size = (20,20))
+        gbsizer.Add(buttonUp, (1,1), (1,1))
+        self.Bind(wx.EVT_BUTTON, self.OnClick, buttonUp)
+        buttonDown = wx.BitmapButton(self, 12, wx.ArtProvider.GetBitmap(wx.ART_GO_DOWN), size = (20,20))
+        gbsizer.Add(buttonDown, (2,1), (1,1))
+        self.Bind(wx.EVT_BUTTON, self.OnClick, buttonDown)
+        
+        sb.Add(gbsizer, flag = wx.EXPAND)
+        
+        sizer.Add(sb, flag = wx.EXPAND)
+        self.SetSizer(sizer)
+        self.Layout()
+        
+    #############################################################################            
+    def OnClick(self, event):
+        i = event.GetId()
+        revue = self.liste.GetStringSelection()
+        
+        if revue[:5] == "Revue":
+            posRevue = self.liste.GetSelection()
+            numRevue = eval(revue[-1])
+            if i == 11 and posRevue-2 >= 0:
+                nouvPosRevue = posRevue-2
+            elif i == 12 and posRevue < self.liste.GetCount():
+                nouvPosRevue = posRevue+1
+            else:
+                return
+#            print "posRevue", posRevue, "->" , nouvPosRevue
+            itemPrecedent = constantes.getCodeNomCourt(self.liste.GetString(nouvPosRevue), 
+                                                       self.objet.GetTypeEnseignement(simple = True))
+            j=1
+            while itemPrecedent in ["R1", "R2", "R3"]:
+                itemPrecedent = constantes.getCodeNomCourt(self.liste.GetString(nouvPosRevue-j),
+                                                           self.objet.GetTypeEnseignement(simple = True))
+                j += 1
+#            print "itemPrecedent", itemPrecedent
+            self.objet.positionRevues[numRevue-1] = itemPrecedent
+        else:
+            return
+          
+#        print self.objet.positionRevues
+        self.MiseAJourListe()
+        self.liste.SetStringSelection(revue)
+        if hasattr(self.objet, 'OrdonnerTaches'):
+            self.objet.OrdonnerTaches()
+            self.parent.sendEvent()
+        
+    #############################################################################            
+    def MiseAJourListe(self):
+        self.liste.Set(self.objet.GetListeNomsPhases())
+        
+    #############################################################################            
+    def EvtVariable(self, event):
+        var = event.GetVar()
+        if var == self.nbrRevues:
+            self.objet.nbrRevues = var.v[0]
+        self.objet.MiseAJourNbrRevues()
+        self.MiseAJourListe()
+        self.parent.sendEvent()
+        
 ####################################################################################
 #
 #   Classe définissant le panel de propriété de la classe
@@ -9547,7 +9731,7 @@ class PanelPropriete_Tache(PanelPropriete):
         self.revue = revue
         PanelPropriete.__init__(self, parent)
         
-        if not tache.phase in ["R2", "S"]:
+        if not tache.phase in [tache.parent.getCodeLastRevue(), "S"]:
             #
             # La page "Généralités"
             #
@@ -9568,7 +9752,7 @@ class PanelPropriete_Tache(PanelPropriete):
         #
         # Phase
         #
-        if tache.phase in ["R1", "R2", "S", "Rev"]:
+        if tache.phase in ["R1", "R2", "R3", "S", "Rev"]:
             titre = wx.StaticText(pageGen, -1, u"Phase : "+constantes.NOM_PHASE_TACHE_E[tache.phase])
             pageGen.sizer.Add(titre, (0,0), (1,1), flag = wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_LEFT|wx.ALL, border = 5)
         else:
@@ -9587,20 +9771,20 @@ class PanelPropriete_Tache(PanelPropriete):
             pageGen.sizer.Add(titre, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 5)
             pageGen.sizer.Add(cbPhas, (0,1), flag = wx.EXPAND|wx.ALL, border = 2)
         
-        #
-        # Position de la revue 1
-        #
-        if tache.phase == "R1":
-            self.cbR1 = wx.CheckBox(pageGen, -1, u"Placer après la conception détaillée")
-            self.cbR1.SetValue(self.tache.GetDocument().R1apresConception)
-            self.cbR1.Show(tache.GetTypeEnseignement() != "SSI")
-            pageGen.sizer.Add(self.cbR1, (0,1), flag = wx.EXPAND|wx.ALL, border = 2)
-            self.Bind(wx.EVT_CHECKBOX, self.EvtCheckBoxR1, self.cbR1)
+#        #
+#        # Position de la revue 1
+#        #
+#        if tache.phase == "R1":
+#            self.cbR1 = wx.CheckBox(pageGen, -1, u"Placer après la conception détaillée")
+#            self.cbR1.SetValue(self.tache.GetDocument().R1apresConception)
+#            self.cbR1.Show(tache.GetTypeEnseignement() != "SSI")
+#            pageGen.sizer.Add(self.cbR1, (0,1), flag = wx.EXPAND|wx.ALL, border = 2)
+#            self.Bind(wx.EVT_CHECKBOX, self.EvtCheckBoxR1, self.cbR1)
         
         #
         # Intitulé de la tache
         #
-        if not tache.phase in ["R1", "R2", "S", "Rev"]:
+        if not tache.phase in ["R1", "R2", "R3", "S", "Rev"]:
             box = wx.StaticBox(pageGen, -1, u"Intitulé")
             bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
             textctrl = wx.TextCtrl(pageGen, -1, u"", style=wx.TE_MULTILINE)
@@ -9615,7 +9799,7 @@ class PanelPropriete_Tache(PanelPropriete):
         #
         # Durée de la tache
         #
-        if not tache.phase in ["R1", "R2", "S", "Rev"]:
+        if not tache.phase in ["R1", "R2", "R3", "S", "Rev"]:
             vcDuree = VariableCtrl(pageGen, tache.duree, coef = 0.5, signeEgal = True, slider = False,
                                    help = u"Volume horaire de la tâche en heures", sizeh = 60)
             pageGen.Bind(EVT_VAR_CTRL, self.EvtText, vcDuree)
@@ -9626,7 +9810,7 @@ class PanelPropriete_Tache(PanelPropriete):
         #
         # Elèves impliqués
         #
-        if not tache.phase in ["R1", "R2", "S"]:
+        if not tache.phase in ["R1", "R2", "R3", "S"]:
             self.box = wx.StaticBox(pageGen, -1, u"Elèves impliqués")
 #            self.box.SetMinSize((150,-1))
             self.bsizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
@@ -9649,7 +9833,7 @@ class PanelPropriete_Tache(PanelPropriete):
         dbsizer.Add(tc,1, flag = wx.EXPAND)
 #        dbsizer.Add(bd, flag = wx.EXPAND)
 #        pageGen.Bind(wx.EVT_BUTTON, self.EvtClick, bd)
-        if tache.phase in ["R1", "R2", "S", "Rev"]:
+        if tache.phase in ["R1", "R2", "R3", "S", "Rev"]:
             pageGen.sizer.Add(dbsizer, (1,0), (3, 2), flag = wx.EXPAND)
             pageGen.sizer.AddGrowableCol(0)
         else:
@@ -9661,7 +9845,7 @@ class PanelPropriete_Tache(PanelPropriete):
         pageGen.sizer.AddGrowableRow(1)
         
         
-        if not tache.phase in ["R2", "S"]:
+        if not tache.phase in [tache.parent.getCodeLastRevue(), "S"]:
             nb.AddPage(pageGen, u"Propriétés générales")
 #        pageGen.sizer.Layout()
         
@@ -9682,7 +9866,7 @@ class PanelPropriete_Tache(PanelPropriete):
             #
             if tache.phase != "S":
                 self.arbre = ArbreCompetencesPrj(pageCom, tache.GetTypeEnseignement(), self,
-                                                 revue = self.tache.phase in ["R1", "R2", "S", "Rev"])
+                                                 revue = self.tache.phase in ["R1", "R2", "R3", "S", "Rev"])
                 pageComsizer.Add(self.arbre, 1, flag = wx.EXPAND)
         
             
@@ -9867,7 +10051,7 @@ class PanelPropriete_Tache(PanelPropriete):
     def MiseAJourListeEleves(self):
         """ Met à jour la liste des élèves
         """
-        if not self.tache.phase in ["S", "R1", "R2"]:
+        if not self.tache.phase in ["S", "R1", "R2", "R3"]:
             self.pageGen.Freeze()
             for i, e in enumerate(self.GetDocument().eleves):
                 self.elevesCtrl[i].SetLabel(e.GetNomPrenom())

@@ -31,7 +31,7 @@ import os.path
 #from textwrap import wrap
 #import csv
 
-from reportlab.platypus import SimpleDocTemplate, Paragraph
+from reportlab.platypus import SimpleDocTemplate, Paragraph, doctemplate
 from reportlab.platypus import Spacer, Table, TableStyle
 from reportlab.lib.styles import ParagraphStyle,getSampleStyleSheet
 from reportlab.lib.units import mm
@@ -291,9 +291,12 @@ def genererFicheValidation(nomFichier, projet):
     data= [[V1, V2]]
     t=Table(data,style=[('VALIGN',      (0,0),(-1,-1),'TOP')])
     story.append(t)
-    
-    doc.build(story)
-    
+    try:
+        doc.build(story)
+    except doctemplate.LayoutError:
+        print "Paragraphe trop grand"
+        return False
+    return True
     
 #genererFicheValidation(u"Intitulé du projet")
     
@@ -306,7 +309,11 @@ def genererDossierValidation(nomFichier, projet, fenDoc):
 #    fichertemp = os.path.join(dosstemp, "pdfdoss.pdf")
     
     wx.BeginBusyCursor()
-    genererFicheValidation(fichertempV, projet)
+    Ok = genererFicheValidation(fichertempV, projet)
+    if not Ok:
+        shutil.rmtree(dosstemp)
+        wx.EndBusyCursor()
+        return
     fenDoc.exporterFichePDF(fichertempF)
     
     merger = PdfFileMerger()
