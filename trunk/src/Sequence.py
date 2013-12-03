@@ -4081,7 +4081,7 @@ class Tache(Objet_sequence):
                 self.phase = 'Rea'
         self.description = branche.get("Description", None)
         
-        if not self.phase in ["R1", "R2", "R3", "S", "Rev"]:
+        if not self.phase in ["R1", "R2", "R3", "S"]:
             self.duree.v[0] = eval(branche.get("Duree", "1"))
         else:
             self.duree.v[0] = 0.5
@@ -9984,7 +9984,7 @@ class PanelPropriete_Tache(PanelPropriete):
         #
         # Phase
         #
-        if tache.phase in ["R1", "R2", "R3", "S", "Rev"]:
+        if tache.phase in ["R1", "R2", "R3", "S"]:
             titre = wx.StaticText(pageGen, -1, u"Phase : "+constantes.NOM_PHASE_TACHE_E[tache.phase])
             pageGen.sizer.Add(titre, (0,0), (1,1), flag = wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_LEFT|wx.ALL, border = 5)
         else:
@@ -10016,7 +10016,7 @@ class PanelPropriete_Tache(PanelPropriete):
         #
         # Intitulé de la tache
         #
-        if not tache.phase in ["R1", "R2", "R3", "S", "Rev"]:
+        if not tache.phase in ["R1", "R2", "R3", "S"]:
             box = wx.StaticBox(pageGen, -1, u"Intitulé")
             bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
             textctrl = wx.TextCtrl(pageGen, -1, u"", style=wx.TE_MULTILINE)
@@ -10031,7 +10031,7 @@ class PanelPropriete_Tache(PanelPropriete):
         #
         # Durée de la tache
         #
-        if not tache.phase in ["R1", "R2", "R3", "S", "Rev"]:
+        if not tache.phase in ["R1", "R2", "R3", "S"]:
             vcDuree = VariableCtrl(pageGen, tache.duree, coef = 0.5, signeEgal = True, slider = False,
                                    help = u"Volume horaire de la tâche en heures", sizeh = 60)
             pageGen.Bind(EVT_VAR_CTRL, self.EvtText, vcDuree)
@@ -10065,7 +10065,7 @@ class PanelPropriete_Tache(PanelPropriete):
         dbsizer.Add(tc,1, flag = wx.EXPAND)
 #        dbsizer.Add(bd, flag = wx.EXPAND)
 #        pageGen.Bind(wx.EVT_BUTTON, self.EvtClick, bd)
-        if tache.phase in ["R1", "R2", "R3", "S", "Rev"]:
+        if tache.phase in ["R1", "R2", "R3", "S"]:
             pageGen.sizer.Add(dbsizer, (1,0), (3, 2), flag = wx.EXPAND)
             pageGen.sizer.AddGrowableCol(0)
         else:
@@ -10098,7 +10098,7 @@ class PanelPropriete_Tache(PanelPropriete):
             #
             if tache.phase != "S":
                 self.arbre = ArbreCompetencesPrj(pageCom, tache.GetTypeEnseignement(), self,
-                                                 revue = self.tache.phase in ["R1", "R2", "R3", "S", "Rev"])
+                                                 revue = self.tache.phase in ["R1", "R2", "R3", "S"])
                 pageComsizer.Add(self.arbre, 1, flag = wx.EXPAND)
         
             
@@ -10354,6 +10354,8 @@ class PanelPropriete_Tache(PanelPropriete):
         newPhase = get_key(constantes.NOM_PHASE_TACHE[self.tache.GetTypeEnseignement(True)], 
                                         self.cbPhas.GetStringSelection())
         if self.tache.phase != newPhase:
+            if newPhase == "Rev":
+                self.tache.SetDuree(0.5)
             self.tache.SetPhase(newPhase)
             self.arbre.MiseAJourPhase(newPhase)
             self.pageGen.Layout()
