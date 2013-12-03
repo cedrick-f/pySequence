@@ -128,7 +128,7 @@ from widgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_ENTI
 # Les constantes partagées
 from constantes import calculerEffectifs, revCalculerEffectifs, PATH, findEffectif, \
                         strEffectifComplet, getElementFiltre, COUL_OK, COUL_NON, COUL_BOF, COUL_BIEN, \
-                        toList, COUL_COMPETENCES, TABLE_PATH
+                        toList, COUL_COMPETENCES, TABLE_PATH, CHAR_POINT, COUL_SOUT, COUL_REVUE
 import constantes
 #import constantes_ETT
 
@@ -1694,6 +1694,7 @@ class Projet(BaseDoc, Objet_sequence):
     
     ######################################################################################  
     def getTachesRevue(self):
+        return [t for t in self.taches if t.phase in ["R1", "R2", "R3", "S"]]
         lst = []
         for t in self.taches:
             if t.phase in ["R1", "R2", "R3", "S"]:
@@ -1995,6 +1996,9 @@ class Projet(BaseDoc, Objet_sequence):
             
     ######################################################################################  
     def MiseAJourNbrRevues(self):
+        """ Opère les changements lorsque le nombre de revues a changé...
+        """
+        print "MiseAJourNbrRevues", self.nbrRevues
         if self.nbrRevues == 3: # on ajoute une revue
             self.positionRevues.append(self.positionRevues[-1])
             tache = Tache(self, self.panelParent, 
@@ -2004,9 +2008,16 @@ class Projet(BaseDoc, Objet_sequence):
             tache.ConstruireArbre(self.arbre, self.brancheTac)
             tache.SetPhase()
             
+            revue2 = self.getTachesRevue()[1]
+            revue2.panelPropriete = PanelPropriete_Tache(self.panelParent, revue2, revue = True)
+            
+            
         elif self.nbrRevues == 2:
-            t = self.getLastRevue()
+            t = self.getTachesRevue()[2]
+            print "  ", t.phase
             self.SupprimerTache(item = t.branche)
+            revue2 = self.getTachesRevue()[1]
+            revue2.panelPropriete = PanelPropriete_Tache(self.panelParent, revue2, revue = True)
         return
            
 #    ######################################################################################  
@@ -2561,6 +2572,74 @@ class Projet(BaseDoc, Objet_sequence):
             les compétences et indicateurs 
             mobilisés par les tâches précédentes
         """
+        print "SetCompetencesRevuesSoutenance"
+        tousIndicateurs = constantes.dicIndicateurs[self.classe.typeEnseignement]
+        tR1 = None
+        tR2 = None
+        indicateurs = {}
+        
+        for t in self.taches:   # toutes les tâches, dans l'ordre
+            
+            if t.phase in ["R1", "R2", "R3", "S"]:
+                
+                if t.phase == "R1" or (t.phase == "R2" and self.nbrRevues == 3):
+                    t.indicateursMaxi = []
+                else:
+                    t.indicateurs = []
+                
+                for c, l in indicateurs.items():
+                    for i, ok in enumerate(l):
+                        if ok:
+                            codeIndic = c+"_"+str(i+1)
+                            if tousIndicateurs[c][i][1]: # Indicateur "revue"
+                                if t.phase in ["R1", "R2", "R3"]:
+#                                    if t.phase == self.getCodeLastRevue() and (tR1 != None and not codeIndic in tR1.indicateurs):
+#                                        t.indicateurs.append(codeIndic)
+                                    if t.phase == "R1" or (t.phase == "R2" and self.nbrRevues == 3):
+                                        t.indicateursMaxi.append(codeIndic)
+                                    else:
+                                        if t.phase == "R2": # 2 revues
+                                            if tR1 != None and not codeIndic in tR1.indicateurs: # R1 est passée
+                                                t.indicateurs.append(codeIndic)
+                                        else: # t.phase == "R3"
+                                            if tR2 != None and not codeIndic in tR2.indicateurs and not codeIndic in tR1.indicateurs: # R2 est passée
+                                                t.indicateurs.append(codeIndic)
+                                    
+                                    
+                            else:
+                                if t.phase == "S":
+                                    t.indicateurs.append(codeIndic)
+
+                
+                if t.phase == "R1" or (t.phase == "R2" and self.nbrRevues == 3):
+                    ti = []
+                    for i in t.indicateurs:
+                        if i in t.indicateursMaxi:
+                            ti.append(i)
+                    t.indicateurs = ti
+                    t.panelPropriete.arbre.MiseAJourTypeEnseignement(t.GetTypeEnseignement())
+                    t.panelPropriete.MiseAJour()
+                    if t.phase == "R1":
+                        tR1 = t # la revue 1 est passée !
+                    else:
+                        tR2 = t # la revue 2 est passée ! (3 revues)
+                        
+            else:   # On stock les indicateurs dans un dictionnaire CodeCompétence : ListeTrueFalse
+                indicTache = t.GetDicIndicateurs()
+                for c, i in indicTache.items():
+                    if c in indicateurs.keys():
+                        indicateurs[c] = [x or y for x,y in zip(i, indicateurs[c])]
+                    else:
+                        indicateurs[c] = i   
+            
+
+    #############################################################################
+    def SetCompetencesRevuesSoutenance2(self):
+        """ Attribue à la soutenance et à la revue n°2
+            les compétences et indicateurs 
+            mobilisés par les tâches précédentes
+        """
+        print "SetCompetencesRevuesSoutenance"
         tousIndicateurs = constantes.dicIndicateurs[self.classe.typeEnseignement]
         tR1 = None
         indicateurs = {}
@@ -2604,8 +2683,7 @@ class Projet(BaseDoc, Objet_sequence):
                         indicateurs[c] = [x or y for x,y in zip(i, indicateurs[c])]
                     else:
                         indicateurs[c] = i   
-            
-                
+                        
                 
 ####################################################################################
 #
@@ -7250,7 +7328,7 @@ class FicheProjet(BaseFiche):
                 if type_ens == "SSI":
                     t = ''
                     for cp in competencePlus:
-                        t += textwrap.fill(u"\u25CF " + cp, 50)+"\n"
+                        t += textwrap.fill(CHAR_POINT + " " + cp, 50)+"\n"
                     self.popup.SetTexte(t, self.tip_compp)
                 
                 self.popup.DeplacerItem(self.lab_legend1, (4+len(indicateurs), 0))
@@ -11272,7 +11350,8 @@ class ArbreSavoirs(CT.CustomTreeCtrl):
         clefs = constantes.trier(dic.keys())
         for k in clefs:
             if type(dic[k][1]) == list:
-                toolTip = u" \u25CF ".join(dic[k][1])
+                sep = u" " + CHAR_POINT + u" "
+                toolTip = sep.join(dic[k][1])
             else:
                 toolTip = None
             b = self.AppendItem(branche, k+" "+dic[k][0], ct_type=1, data = toolTip)
@@ -11539,34 +11618,31 @@ class ArbreCompetencesPrj(ArbreCompetences):
                 intitule = dic[codeGrp][1][code]
                 
                 if type(intitule) == list: # C'est le cas des compétences SSI
-                    intitule = intitule[0] + " : " + u" \u25CF ".join(intitule[1].values())
+                    sep = u" " + CHAR_POINT + u" "
+                    intitule = intitule[0] + " : " + sep.join(intitule[1].values())
                 
                 c = self.AppendItem(b, code+" "+intitule, ct_type=1)
                 i = None
                 for j, Indic in enumerate(constantes.dicIndicateurs[type_ens][code]):
                     codeIndic = code+'_'+str(j+1)
-                    if self.pptache.tache.phase != "R1" or codeIndic in self.pptache.tache.indicateursMaxi:
-#                        self.poids_ctrl[codeIndic] = wx.TextCtrl(self, -1, 
-#                                                                 str(constantes.dicPoidsIndicateurs[type_ens][codeGrp][1][code][j])+"%", 
-#                                                                 size = (32,18), name = codeIndic)
-#                        self.poids_ctrl[codeIndic] = wx.StaticText(self, -1, 
-#                                                                 str(constantes.dicPoidsIndicateurs[type_ens][codeGrp][1][code][j])+"%", 
-#                                                                 size = (32,18), name = codeIndic)
-#                        self.AppendItem(c, str(constantes.dicPoidsIndicateurs[type_ens][codeGrp][1][code][j])+"%", 1)
-#                        self.poids_ctrl[codeIndic].Bind(wx.EVT_TEXT, self.OnTextCtrl)
-
+                    
+                    if (self.pptache.tache.phase not in ["R1", "R2"]) or (codeIndic in self.pptache.tache.indicateursMaxi):
                         if not Indic[1] or self.pptache.tache.phase != 'XXX':
                             i = self.AppendItem(c, Indic[0], ct_type=1, data = codeIndic)
                             if codeIndic in self.pptache.tache.indicateurs:
                                 self.CheckItem2(i)
                             self.SetItemText(i, str(constantes.dicPoidsIndicateurs[type_ens][codeGrp][1][code][j])+"%", 1)
                             self.SetItemFont(i, font)
+                            
                             if Indic[1]:
-                                self.SetItemTextColour(i, constantes.COUL_REVUE)
+                                self.SetItemTextColour(i, COUL_REVUE)
                             else:
-                                self.SetItemTextColour(i, constantes.COUL_SOUT)
+                                self.SetItemTextColour(i, COUL_SOUT)
     #                        self.SetItemWindow(i, self.poids_ctrl[codeIndic], 1)
                             self.items[codeIndic] = i
+                
+                
+                
                 
                 if i == None:
                     self.SetItemType(c,0)
