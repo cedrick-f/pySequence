@@ -915,12 +915,19 @@ def DrawTacheRacine(ctx, tache, y):
                        (x, y, wDuree, h), 
                        orient = 'v', b = 0.1)
     
-    elif tache.phase in ["R1", "R2", "R3"]:
+    #
+    # Indication du délai pour revue
+    #
+    elif tache.phase in ["R1", "R2", "R3", "Rev"]:
         
         ctx.set_source_rgba (0.9,0.8,0.8,0.5)
-        x = posZTaches[0] - wDuree*4 - ecartX/4
-        ctx.rectangle(x, y, 
-                      wDuree*3, h)
+        if tache.phase == "Rev":
+            x = posZTaches[0] - wDuree - ecartX/4
+            w = wDuree*3
+        else:
+            x = posZTaches[0] - wDuree*4 - ecartX/4
+            w = wDuree*3
+        ctx.rectangle(x, y, w, h)
         ctx.fill_preserve ()    
         ctx.set_source_rgba(0.4,  0.4,  0.4,  1)
         ctx.set_line_width(0.0006)
@@ -930,7 +937,7 @@ def DrawTacheRacine(ctx, tache, y):
         ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                   cairo.FONT_WEIGHT_BOLD)
         show_text_rect(ctx, getHoraireTxt(tache.GetDelai()), 
-                       (x, y, wDuree*3, h), 
+                       (x, y, w, h), 
                        orient = 'h', b = 0.1)
     
 #    elif tache.phase == "Rev":
@@ -948,7 +955,10 @@ def DrawTacheRacine(ctx, tache, y):
     #
     # Tracé du cadre de la tâche
     #
-    if not tache.phase in ["R1", "R2", "R3", "S", "Rev"]:
+    if tache.phase == "Rev":
+        x = posZTaches[0] + wDuree*2
+        w = posZComp[0] + tailleZComp[0] + ecartX/4 - x
+    elif not tache.phase in ["R1", "R2", "R3", "S"]:
         x = posZTaches[0]
         w = tailleZTaches[0]
     else:
