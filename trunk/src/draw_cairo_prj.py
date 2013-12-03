@@ -719,7 +719,7 @@ def DrawPeriodes(ctx, pos = None, tailleTypeEns = 0, origine = False):
     if origine:
         x = 0
         y = 0
-        wt = 0.04*5
+        wt = 0.04*7
         ht = 0.04
     else:
         x = posPos[0]# + ecartX

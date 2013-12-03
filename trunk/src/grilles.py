@@ -46,7 +46,14 @@ Cellules_INFO_STI =  {"Tit" : (13,1),
 #                      "Pro" : (5,2)
                       }
  
-   
+Cellules_INFO_SSI =  {"Tit" : (12,1),
+                      "Des" : (12,1),
+                      "Nom" : (7,2),
+                      "Pre" : (8,2),
+#                      "Pro" : (5,2)
+                      }
+
+COL_REVUE = 10 # Colonne "J" pour désigner la revue
 
 Cellules_NON  =  {'ITEC'   : [[Feuille_ETT, Cellules_NON['ET']], ['ITEC', Cellules_NON['ITEC']]], 
                   'AC'     : [[Feuille_ETT, Cellules_NON['ET']], ['AC', Cellules_NON['AC']]], 
@@ -129,18 +136,27 @@ def modifierGrille(doc, tableur, eleve):
 #        for s in ['AC', 'ITEC', 'EE', 'SIN']:
 #            if s != doc.GetTypeEnseignement():
 #                tableur.delSheet(s)
-      
-    # On coche les cellules "non"          
+    #
+    # On coche les cellules "non"
+    #     
     dic = Cellules_NON[doc.GetTypeEnseignement()]
+    
+    #clef = code compétence
+    #valeur = liste [True False ...] des indicateurs à mobiliser
     dicIndic = eleve.GetDicIndicateurs()
+    
     for feuille, cellules in dic:
         for comp, cells in cellules.items():
             for j, cell in enumerate(cells):
+                
+                # indic = l'indicateur "comp" doit être évalué
                 if comp in dicIndic.keys():
                     indic = dicIndic[comp][j]
                 else:
                     indic = False
-                if not indic:
+                
+                
+                if not indic: # indicateur pas évalué --> on coche !
                     l, c = cell
 #                    print feuille, l, c
                     if doc.GetTypeEnseignement() == 'SSI':
@@ -151,6 +167,9 @@ def modifierGrille(doc, tableur, eleve):
                         else:
                             t = tableur[0]
                         t.setCell(2, l, c, COCHE)
+                
+                
+                
                 if doc.GetTypeEnseignement(simple = True) == "SSI" and dicIndicateurs['SSI'][comp][j][1]:
                     l, c = cell
                     tableur.setColor(feuille, l, c, 5)

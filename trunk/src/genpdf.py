@@ -176,7 +176,7 @@ def genererFicheValidation(nomFichier, projet):
             
         NP.append(Paragraph(np, normal_style))
         
-    data= [[[Paragraph(gras(u'Établissement : '), normal_style), Paragraph(projet.classe.etablissement, normal_style)], [Paragraph(gras(u"Année scolaire : ")+constantes.getAnneeScolaire(), normal_style),
+    data= [[[Paragraph(gras(u'Établissement : '), normal_style), Paragraph(projet.classe.etablissement, normal_style)], [Paragraph(gras(u"Année scolaire : ")+constantes.getAnneeScolaireStr(), normal_style),
                                                                                                                          Paragraph(gras(u"Nombre d’élèves concernés : ")+str(len(projet.eleves)), normal_style)]],
            [Paragraph(gras(u"Spécialité : ")+ projet.GetTypeEnseignement(), normal_style), Paragraph(gras(u"Nombre de groupes d’élèves : ")+str(projet.nbrParties), normal_style)],
            [Paragraph(gras(u"Noms et prénoms des enseignants responsables :"), normal_style),NP]]
