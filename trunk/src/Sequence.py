@@ -1705,6 +1705,10 @@ class Projet(BaseDoc, Objet_sequence):
                 lst.append(t)
         return lst
         
+        
+#    ######################################################################################  
+#    def getTachesRevue(self):    
+    
     ######################################################################################  
     def getCodeLastRevue(self):
         if self.nbrRevues == 2:
@@ -2647,57 +2651,57 @@ class Projet(BaseDoc, Objet_sequence):
                         indicateurs[c] = i   
             
 
-    #############################################################################
-    def SetCompetencesRevuesSoutenance2(self):
-        """ Attribue à la soutenance et à la revue n°2
-            les compétences et indicateurs 
-            mobilisés par les tâches précédentes
-        """
-        print "SetCompetencesRevuesSoutenance"
-        tousIndicateurs = constantes.dicIndicateurs[self.classe.typeEnseignement]
-        tR1 = None
-        indicateurs = {}
-        for t in self.taches:   # toutes les tâches, dans l'ordre
-            if t.phase in ["R1", "R2", "R3", "S"]:
-                if t.phase == "R1" or (t.phase == "R2" and self.nbrRevues == 3):
-                    t.indicateursMaxi = []
-                else:
-                    t.indicateurs = []
-                
-                for c, l in indicateurs.items():
-                    for i, ok in enumerate(l):
-                        if ok:
-                            codeIndic = c+"_"+str(i+1)
-                            if tousIndicateurs[c][i][1]: # Indicateur "revue"
-                                if t.phase in ["R1", "R2", "R3"]:
-                                    if t.phase == self.getCodeLastRevue() and (tR1 != None and not codeIndic in tR1.indicateurs):
-                                        t.indicateurs.append(codeIndic)
-                                    if t.phase == "R1" or (t.phase == "R2" and self.nbrRevues == 3):
-                                        t.indicateursMaxi.append(codeIndic)
-                            else:
-                                if t.phase == "S":
-                                    t.indicateurs.append(codeIndic)
-
-                
-                if t.phase == "R1" or (t.phase == "R2" and self.nbrRevues == 3):
-                    ti = []
-                    for i in t.indicateurs:
-                        if i in t.indicateursMaxi:
-                            ti.append(i)
-                    t.indicateurs = ti
-                    t.panelPropriete.arbre.MiseAJourTypeEnseignement(t.GetTypeEnseignement())
-                    t.panelPropriete.MiseAJour()
-                    tR1 = t
-                            
-                        
-            else:   # On stock les indicateurs dans un dictionnaire CodeCompétence : ListeTrueFalse
-                indicTache = t.GetDicIndicateurs()
-                for c, i in indicTache.items():
-                    if c in indicateurs.keys():
-                        indicateurs[c] = [x or y for x,y in zip(i, indicateurs[c])]
-                    else:
-                        indicateurs[c] = i   
-                        
+#    #############################################################################
+#    def SetCompetencesRevuesSoutenance2(self):
+#        """ Attribue à la soutenance et à la revue n°2
+#            les compétences et indicateurs 
+#            mobilisés par les tâches précédentes
+#        """
+#        print "SetCompetencesRevuesSoutenance"
+#        tousIndicateurs = constantes.dicIndicateurs[self.classe.typeEnseignement]
+#        tR1 = None
+#        indicateurs = {}
+#        for t in self.taches:   # toutes les tâches, dans l'ordre
+#            if t.phase in ["R1", "R2", "R3", "S"]:
+#                if t.phase == "R1" or (t.phase == "R2" and self.nbrRevues == 3):
+#                    t.indicateursMaxi = []
+#                else:
+#                    t.indicateurs = []
+#                
+#                for c, l in indicateurs.items():
+#                    for i, ok in enumerate(l):
+#                        if ok:
+#                            codeIndic = c+"_"+str(i+1)
+#                            if tousIndicateurs[c][i][1]: # Indicateur "revue"
+#                                if t.phase in ["R1", "R2", "R3"]:
+#                                    if t.phase == self.getCodeLastRevue() and (tR1 != None and not codeIndic in tR1.indicateurs):
+#                                        t.indicateurs.append(codeIndic)
+#                                    if t.phase == "R1" or (t.phase == "R2" and self.nbrRevues == 3):
+#                                        t.indicateursMaxi.append(codeIndic)
+#                            else:
+#                                if t.phase == "S":
+#                                    t.indicateurs.append(codeIndic)
+#
+#                
+#                if t.phase == "R1" or (t.phase == "R2" and self.nbrRevues == 3):
+#                    ti = []
+#                    for i in t.indicateurs:
+#                        if i in t.indicateursMaxi:
+#                            ti.append(i)
+#                    t.indicateurs = ti
+#                    t.panelPropriete.arbre.MiseAJourTypeEnseignement(t.GetTypeEnseignement())
+#                    t.panelPropriete.MiseAJour()
+#                    tR1 = t
+#                            
+#                        
+#            else:   # On stock les indicateurs dans un dictionnaire CodeCompétence : ListeTrueFalse
+#                indicTache = t.GetDicIndicateurs()
+#                for c, i in indicTache.items():
+#                    if c in indicateurs.keys():
+#                        indicateurs[c] = [x or y for x,y in zip(i, indicateurs[c])]
+#                    else:
+#                        indicateurs[c] = i   
+#                        
                 
 ####################################################################################
 #
@@ -8080,10 +8084,11 @@ class PanelOrganisation(wx.Panel):
     def EvtVariable(self, event):
         var = event.GetVar()
         if var == self.nbrRevues:
-            self.objet.nbrRevues = var.v[0]
-        self.objet.MiseAJourNbrRevues()
-        self.MiseAJourListe()
-        self.parent.sendEvent()
+            if var.v[0] != self.objet.nbrRevues:
+                self.objet.nbrRevues = var.v[0]
+                self.objet.MiseAJourNbrRevues()
+                self.MiseAJourListe()
+                self.parent.sendEvent()
         
 ####################################################################################
 #

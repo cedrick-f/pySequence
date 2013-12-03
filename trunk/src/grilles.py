@@ -156,7 +156,7 @@ def modifierGrille(doc, tableur, eleve):
                     indic = False
                 
                 
-                if not indic: # indicateur pas évalué --> on coche !
+                if not indic: # indicateur pas évalué --> on coche NON !
                     l, c = cell
 #                    print feuille, l, c
                     if doc.GetTypeEnseignement() == 'SSI':
@@ -167,18 +167,17 @@ def modifierGrille(doc, tableur, eleve):
                         else:
                             t = tableur[0]
                         t.setCell(2, l, c, COCHE)
-                
-                
-                
+                else: # indicateur évalué --> on coche R_ !
+                    if doc.GetTypeEnseignement(simple = True) == "STI" and feuille != Feuille_ETT:
+                        l, c = cell
+                        c = COL_REVUE
+                        for r in eleve.parent.getTachesRevue()[:-1]:
+                            if comp+"_"+str(j+1) in r.indicateurs:
+                                tableur[0].setCell(2, l, c, r.phase[1])
+                    
                 if doc.GetTypeEnseignement(simple = True) == "SSI" and dicIndicateurs['SSI'][comp][j][1]:
                     l, c = cell
                     tableur.setColor(feuille, l, c, 5)
-        
-#    for comp, ii in eleve.GetDicIndicateurs().items():
-#        for j, indic in enumerate(ii):
-#            if not indic:
-#                l, c = dic[comp][j]
-#                tableur.setCell(2, l, c, COCHE)
 
     if doc.GetTypeEnseignement(simple = True) == "SSI":
         dicInfo = Cellules_INFO_SSI
