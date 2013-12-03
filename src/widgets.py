@@ -450,7 +450,7 @@ class VarEvent(wx.PyCommandEvent):
 
 class VariableCtrl(wx.Panel):
     def __init__(self, parent, variable, coef = None, signeEgal = True, 
-                 slider = False, fct = None, help = "", sizeh = -1, color = wx.BLACK, unite = u""):
+                 slider = False, fct = None, help = "", sizeh = -1, color = wx.BLACK, unite = u"", sliderAGauche = False):
         wx.Panel.__init__(self, parent, -1)#, style = wx.BORDER_SIMPLE)
         
         if coef == None:
@@ -520,10 +520,14 @@ class VariableCtrl(wx.Panel):
         self.unite = wx.StaticText(self, -1, unite)#,
         
         sizer = wx.BoxSizer( wx.HORIZONTAL)
-        sizer.Add(txtnom, 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_RIGHT|wx.LEFT, 3 )
-        sizer.Add(self.text, 0, wx.ALIGN_CENTRE|wx.LEFT, 4 )
-        sizer.Add(self.spin, 0, wx.ALIGN_CENTRE|wx.LEFT|wx.RIGHT, 4 )
-        sizer.Add(self.unite, 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_LEFT|wx.RIGHT, 3 )
+        sizer.Add(txtnom, 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_RIGHT|wx.LEFT, 3)
+        if sliderAGauche:
+            sizer.Add(self.spin, 0, wx.ALIGN_CENTRE|wx.LEFT, 4)
+            sizer.Add(self.text, 0, wx.ALIGN_CENTRE|wx.RIGHT, 4)
+        else:
+            sizer.Add(self.text, 0, wx.ALIGN_CENTRE|wx.LEFT, 4)
+            sizer.Add(self.spin, 0, wx.ALIGN_CENTRE|wx.RIGHT, 4)
+        sizer.Add(self.unite, 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_LEFT|wx.RIGHT, 3)
         self.SetSizer(sizer)
     
     #########################################################################################################

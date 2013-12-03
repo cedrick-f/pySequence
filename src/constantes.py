@@ -175,6 +175,58 @@ if not PORTABLE:
     sys.excepthook = _exceptionhook
     sys.stderr=RedirectErr(sys.stderr)
 
+
+####################################################################################
+#
+#   Gestion des erreurs ...
+#
+####################################################################################
+#class Erreur():
+#    def __init__(self, code, message):
+#        self.code = code
+#        self.message = message
+    
+ERR_PRJ_EQUIPE = 1
+ERR_PRJ_SUPPORT = 2
+ERR_PRJ_ELEVES = 4
+ERR_PRJ_TACHES = 8
+ERR_PRJ_T_VERSION = 16
+ERR_PRJ_T_TYPENS = 32
+
+ERREURS = {ERR_PRJ_EQUIPE :     u"Equipe pédagogique",
+           ERR_PRJ_SUPPORT :    u"Support",
+           ERR_PRJ_ELEVES :     u"Eleve",
+           ERR_PRJ_TACHES :     u"Tâche :",
+           ERR_PRJ_T_VERSION :  u"Problème de version",
+           ERR_PRJ_T_TYPENS :   u"Type d'enseignement incompatible"
+           }
+
+def getOkErr(Ok):
+    if Ok:
+        return u"Ok"
+    else:
+        return u"Erreur"
+
+####################################################################################
+#
+#   Quelques fonctions ...
+#
+####################################################################################
+   
+def getAnneeScolaire():
+    """ Renvoie la première année de l'année scolaire en cours
+    """
+    date = time.localtime()
+    if date.tm_mon >= 9:
+        annee = date.tm_year
+    else:
+        annee = date.tm_year-1
+    return annee
+
+def getAnneeScolaireStr():
+    annee = getAnneeScolaire()
+    return str(annee)+"-"+str(annee+1)
+    
 ####################################################################################
 #
 #   Quelques caractères spéciaux ...
@@ -1032,15 +1084,7 @@ def getLstDisciplines():
 
 
 
-def getAnneeScolaire():
-    date = time.localtime()
-    
-    if date.tm_mon >= 9:
-        annee = date.tm_year
-    else:
-        annee = date.tm_year-1
-    
-    return str(annee)+"-"+str(annee+1)
+
 
 #
 #

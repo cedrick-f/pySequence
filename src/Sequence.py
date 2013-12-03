@@ -40,7 +40,7 @@ Copyright (C) 2011-2013
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "4.5"
+__version__ = "4.6beta1"
 
 #from threading import Thread
 
@@ -1595,6 +1595,10 @@ class Projet(BaseDoc, Objet_sequence):
         self.nbrRevues = 2
         self.positionRevues = list(constantes.POSITIONS_REVUES[self.GetTypeEnseignement()][self.nbrRevues])
         
+        # Année Scolaire
+        self.annee = constantes.getAnneeScolaire()
+        
+        
         # Par défaut, la revue 1 est après la Conception détaillée
 #        self.R1apresConception = False
         
@@ -1768,6 +1772,7 @@ class Projet(BaseDoc, Objet_sequence):
             projet.set("Commentaires", self.commentaires)
 
         projet.set("Position", str(self.position))
+        projet.set("Annee", str(self.annee))
         
         # Organisation
         projet.set("NbrRevues", str(self.nbrRevues))
@@ -1806,7 +1811,8 @@ class Projet(BaseDoc, Objet_sequence):
     ######################################################################################  
     def setBranche(self, branche):
         Ok = True
-       
+        err = 0
+        
         self.intitule = branche.get("Intitule", u"")
 
         self.problematique = remplaceCode2LF(branche.get("Problematique", u""))
@@ -1820,23 +1826,27 @@ class Projet(BaseDoc, Objet_sequence):
 #        self.R1apresConception = eval(branche.get("R1avC", "False"))
         
         self.position = eval(branche.get("Position", "0"))
+        self.annee = eval(branche.get("Annee", str(constantes.getAnneeScolaire())))
 
         brancheEqu = branche.find("Equipe")
         self.equipe = []
         for e in list(brancheEqu):
             prof = Prof(self, self.panelParent)
             Ok = Ok and prof.setBranche(e)
+            if not Ok: err = err | constantes.ERR_PRJ_EQUIPE
             self.equipe.append(prof)
 
         brancheSup = branche.find("Support")
         if brancheSup != None:
             Ok = Ok and self.support.setBranche(brancheSup)
+            if not Ok: err = err | constantes.ERR_PRJ_SUPPORT
         
         brancheEle = branche.find("Eleves")
         self.eleves = []
         for e in list(brancheEle):
             eleve = Eleve(self, self.panelParent)
             Ok = Ok and eleve.setBranche(e)
+            if not Ok: err = err | constantes.ERR_PRJ_ELEVES
             self.eleves.append(eleve)
         
         #
@@ -1873,13 +1883,15 @@ class Projet(BaseDoc, Objet_sequence):
                     num = 2
                 else:
                     num = eval(phase[1])-1
-                Ok = Ok and tachesRevue[num].setBranche(e)
+                o,er =  tachesRevue[num].setBranche(e)
+                Ok = Ok and o
+                if not Ok: err = err | constantes.ERR_PRJ_TACHES | er
                 self.taches.append(tachesRevue[num])
                 adapterVersion = False
             else:
                 tache = Tache(self, self.panelParent, branche = e)
                 if tache.code < 0 : # ça s'est mal passé lors du setbranche ...
-                    return False
+                    return False, err | constantes.ERR_PRJ_TACHES | -tache.code
 #                tache.setBranche(e)
                 self.taches.append(tache)
         
@@ -1891,7 +1903,7 @@ class Projet(BaseDoc, Objet_sequence):
         if hasattr(self, 'panelPropriete'):
             self.panelPropriete.MiseAJour()
 
-        return Ok
+        return Ok, err
         
     ######################################################################################  
     def SetPosition(self, pos):
@@ -2560,6 +2572,8 @@ class Projet(BaseDoc, Objet_sequence):
 #            if t.phase in ["R1", "R2", "R3", "S"]:
             t.MiseAJourTypeEnseignement(self.classe.typeEnseignement)
         
+        if hasattr(self, 'panelPropriete'):
+            self.panelPropriete.panelOrga.MiseAJourListe()
         
     #############################################################################
     def VerrouillerClasse(self):
@@ -3922,9 +3936,9 @@ class Tache(Objet_sequence):
             self.tip_description = self.tip.CreerRichTexte(self, (3,0), (1,2))
         
         if branche != None:
-            Ok = self.setBranche(branche)
+            Ok, err = self.setBranche(branche)
             if not Ok:
-                self.code = -1 # Pour renvoyer une éventuelle erreur à l'ouverture d'un fichier
+                self.code = -err # Pour renvoyer une éventuelle erreur à l'ouverture d'un fichier
             
         if panelParent:
             self.panelPropriete = PanelPropriete_Tache(panelParent, self)
@@ -4049,6 +4063,8 @@ class Tache(Objet_sequence):
     ######################################################################################  
     def setBranche(self, branche):
         Ok = True
+        err = 0
+        
         self.ordre = eval(branche.tag[5:])
 #        print "setBranche tache", self.ordre
         self.intitule  = branche.get("Intitule", "")
@@ -4079,6 +4095,7 @@ class Tache(Objet_sequence):
             brancheCmp = branche.find("Competences")
             if brancheCmp != None: ## ANCIENNE VERSION (<beta6)
                 Ok = False
+                err = err | constantes.ERR_PRJ_T_VERSION
 #                print "ancien"
                 if self.GetTypeEnseignement() == "SSI":
                     brancheInd = None
@@ -4114,7 +4131,8 @@ class Tache(Objet_sequence):
                             
                         # si le type d'enseignement ne colle pas avec les indicateurs (pb lors de l'enregistrement)
                         if not code in constantes.dicIndicateurs[self.GetTypeEnseignement()]:
-                            return False
+                            
+                            return False, err | constantes.ERR_PRJ_T_TYPENS
                         
                         indic = eval(indic)-1
                         if self.phase != 'XXX' or not constantes.dicIndicateurs[self.GetTypeEnseignement()][code][indic][1]:
@@ -4126,7 +4144,7 @@ class Tache(Objet_sequence):
             
         self.intituleDansDeroul = eval(branche.get("IntituleDansDeroul", "True"))
         
-        return Ok
+        return Ok, err
     
 #        if hasattr(self, 'panelPropriete'):
 #            self.panelPropriete.ConstruireListeEleves()
@@ -5470,6 +5488,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     def __init__(self, parent, fichier):
         aui.AuiMDIParentFrame.__init__(self, parent, -1, __appname__, style=wx.DEFAULT_FRAME_STYLE)
         
+        self.Freeze()
         wx.lib.colourdb.updateColourDB()
         
         #
@@ -5576,6 +5595,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         if fichier != "":
             self.ouvrir(fichier)
     
+        self.Thaw()
             
     ###############################################################################################
     def ConstruireTb(self):
@@ -5891,22 +5911,25 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             dlg.Destroy()
         
         self.OnDocChanged(None)
-        
         if child != None:
             wx.CallAfter(child.Activate)
-
         return child
         
     ###############################################################################################
     def ouvrir(self, nomFichier):
         if nomFichier != '':
             ext = os.path.splitext(nomFichier)[1].lstrip('.')
+            
+            # Fichier pas déja ouvert
             if not nomFichier in self.GetNomsFichiers():
                 wx.BeginBusyCursor()
                 child = self.commandeNouveau(ext = ext)
                 if child != None:
                     child.ouvrir(nomFichier)
-                wx.CallAfter(wx.EndBusyCursor)
+                wx.EndBusyCursor()
+#                wx.CallAfter(wx.EndBusyCursor)
+                
+            # Fichier déja ouvert
             else:
                 child = self.GetChild(nomFichier)
                 texte = constantes.MESSAGE_DEJA[ext]
@@ -5917,7 +5940,9 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                                           u"Confirmation", wx.YES_NO | wx.ICON_WARNING)
                 retCode = dialog.ShowModal()
                 if retCode == wx.ID_YES:
+                    wx.BeginBusyCursor()
                     child.ouvrir(nomFichier)
+                    wx.EndBusyCursor()
         
         
         
@@ -5927,7 +5952,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
   
         if nomFichier == None:
             dlg = wx.FileDialog(
-                                self, message=u"Ouvrir une séquence",# ou un projet",
+                                self, message=u"Ouvrir une séquence ou un projet",
 #                                defaultDir = self.DossierSauvegarde, 
                                 defaultFile = "",
                                 wildcard = mesFormats,
@@ -6025,7 +6050,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
     ###############################################################################################
     def OnDocChanged(self, evt):
-        """ Opérations de modification du menu et des barre d'outil 
+        """ Opérations de modification du menu et des barres d'outil 
             en fonction du type de document en cours
         """
         doc = self.GetClientWindow().GetAuiManager().GetManagedWindow().GetCurrentPage()
@@ -6151,7 +6176,8 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         
         aui.AuiMDIChildFrame.__init__(self, parent, -1, "")#, style = wx.DEFAULT_FRAME_STYLE | wx.SYSTEM_MENU)
 #        self.SetExtraStyle(wx.FRAME_EX_CONTEXTHELP)
-#        
+        
+        
         self.parent = parent
         
         # Use a panel under the AUI panes in order to work around a
@@ -6177,7 +6203,10 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         #
         self.nb = wx.Notebook(self.pnl, -1)
         
-    
+        
+        
+        
+        
     def miseEnPlace(self):
         
         #############################################################################################
@@ -6672,6 +6701,8 @@ class FenetreProjet(FenetreDocument):
         self.typ = 'prj'
         FenetreDocument.__init__(self, parent)
         
+        self.Freeze()
+        
         #
         # La classe
         #
@@ -6717,6 +6748,8 @@ class FenetreProjet(FenetreDocument):
         
         
         self.miseEnPlace()
+        
+        self.Thaw()
    
     
     ###############################################################################################
@@ -6772,53 +6805,129 @@ class FenetreProjet(FenetreDocument):
         
     ###############################################################################################
     def ouvrir(self, nomFichier, redessiner = True):
+        print "Ouverture projet"
         tps1 = time.clock()
+        
+        # Pour le suivi de l'ouverture
+        nomCourt = os.path.splitext(os.path.split(nomFichier)[1])[0]
+        count = 0
+        message = nomCourt+"\n"
+        dlg =    wx.ProgressDialog(u"Ouverture d'un projet",
+                                   message,
+                                   maximum = 11,
+                                   parent=self.parent,
+                                   style = 0
+                                    | wx.PD_APP_MODAL
+                                    #| wx.PD_CAN_ABORT
+                                    #| wx.PD_CAN_SKIP
+                                    #| wx.PD_ELAPSED_TIME
+                                    | wx.PD_ESTIMATED_TIME
+                                    | wx.PD_REMAINING_TIME
+                                    #| wx.PD_AUTO_HIDE
+                                    )
+
         self.Freeze()
+        self.fiche.Hide()
+        
         fichier = open(nomFichier,'r')
         self.definirNomFichierCourant(nomFichier)
         
         Ok = True
-#        try:
-        root = ET.parse(fichier).getroot()
-        
-        # Le projet
-        projet = root.find("Projet")
-        if projet == None:
-            self.projet.setBranche(root)
+        err = 0
+        try:
+            root = ET.parse(fichier).getroot()
             
-        else:
-            # La classe
-            classe = root.find("Classe")
-            Ok = Ok and self.classe.setBranche(classe)
-            Ok = Ok and self.projet.setBranche(projet)  
+            # Le projet
+            projet = root.find("Projet")
+            if projet == None:
+                self.projet.setBranche(root)
+                
+            else:
+                # La classe
+                message += u"Construction de la structure de la classe..."
+                dlg.Update(count, message)
+                count += 1
+                classe = root.find("Classe")
+                Ok = Ok and self.classe.setBranche(classe)
+                message += constantes.getOkErr(Ok) + u"\n"
+                
+                # Le projet
+                
+                message += u"Construction de la structure du projet..."
+                dlg.Update(count, message)
+                count += 1
+                o,err = self.projet.setBranche(projet)
+                Ok = Ok and o
+                message += constantes.getOkErr(Ok) + u"\n"
+                
+            self.arbre.DeleteAllItems()
+            root = self.arbre.AddRoot("")
             
-        self.arbre.DeleteAllItems()
-        root = self.arbre.AddRoot("")
-        self.projet.SetCompetencesRevuesSoutenance()
-        
-#        except:
-#            Ok = False
+            message += u"Traitement des revues\n"
+            dlg.Update(count, message)
+            count += 1
+            self.projet.SetCompetencesRevuesSoutenance()
+
+        except:
+            Ok = False
         
         if not Ok:
-            messageErreur(self, u"Erreur d'ouverture",
-                          u"Le projet\n    %s\nn'a pas pu être ouvert !" \
-                          u"\n\nIl s'agit peut-être d'un fichier d'une ancienne version de pySequence." %nomFichier,
-                               )
+            m = u"Le projet\n    %s\nn'a pas pu être ouvert !" \
+                u"\n\nIl s'agit peut-être d'un fichier d'une ancienne version de pySequence.\n" %nomCourt
+            
+            if err != 0:
+                m += u"\n   L'erreur concerne :"
+                for c,e in constantes.ERREURS.items():
+                    if err & c:
+                        m += u"\n   "+e
+              
+            messageErreur(self, u"Erreur d'ouverture", m)
             fichier.close()
             self.Close()
+            dlg.Destroy()
             return
         
+        message += u"Construction de l'arborescence de la classe\n"
+        dlg.Update(count, message)
+        count += 1
         self.classe.ConstruireArbre(self.arbre, root)
+        
+        message += u"Construction de l'arborescence du projet\n"
+        dlg.Update(count, message)
+        count += 1
         self.projet.ConstruireArbre(self.arbre, root)
+        
+        message += u"Ordonnancement des tâches\n"
+        dlg.Update(count, message)
+        count += 1
         self.projet.OrdonnerTaches()
         
+        message += u"Traitement des descriptions\n"
+        dlg.Update(count, message)
+        count += 1
         self.projet.PubDescription()
+        
+        message += u"Construction des liens\n"
+        dlg.Update(count, message)
+        count += 1
         self.projet.SetLiens()
+        
+        message += u"Ajout des durées/évaluabilités dans l'arbre\n"
+        dlg.Update(count, message)
+        count += 1
         self.projet.MiseAJourDureeEleves()
+        
+        message += u"Ajout des disciplines dans l'arbre\n"
+        dlg.Update(count, message)
+        count += 1
         self.projet.MiseAJourNomProfs()
 #        print "1", self.projet.taches[0].indicateurs
         self.projet.VerrouillerClasse()
 
+        message += u"Tracé de la fiche..."
+        dlg.Update(count, message)
+        count += 1
+        print "  ",count
 #        self.arbre.SelectItem(self.classe.branche)
 
         self.arbre.Layout()
@@ -6826,13 +6935,15 @@ class FenetreProjet(FenetreDocument):
         self.arbre.CalculatePositions()
         
         fichier.close()
+        dlg.Destroy()
         
         self.Thaw()
         
-        if redessiner:
-            wx.CallAfter(self.fiche.Redessiner)
-        
-#    
+        wx.CallAfter(self.fiche.Show)
+        wx.CallAfter(self.fiche.Redessiner)
+#        if redessiner:
+#            
+
         tps2 = time.clock() 
         print "Ouverture :", tps2 - tps1
         
@@ -7407,6 +7518,7 @@ class PanelPropriete(scrolled.ScrolledPanel):
        
     #########################################################################################################
     def sendEvent(self, doc = None):
+#        print "sendEvent"
         self.eventAttente = False
         evt = SeqEvent(myEVT_DOC_MODIFIED, self.GetId())
         if doc != None:
@@ -7601,7 +7713,9 @@ class PanelPropriete_Projet(PanelPropriete):
         
 #        pageGen.sizer.Add(nb, (0,1), (2,1), flag = wx.ALL|wx.ALIGN_RIGHT|wx.EXPAND, border = 1)
             
-        
+        #
+        # Intitulé du projet
+        #
         titre = wx.StaticBox(pageGen, -1, u"Intitulé du projet")
         sb = wx.StaticBoxSizer(titre)
         textctrl = wx.TextCtrl(pageGen, -1, u"", style=wx.TE_MULTILINE)
@@ -7611,6 +7725,9 @@ class PanelPropriete_Projet(PanelPropriete):
 #        self.sizer.Add(textctrl, (0,1), flag = wx.EXPAND)
         pageGen.Bind(wx.EVT_TEXT, self.EvtText, textctrl)
         
+        #
+        # Problématique
+        #
         titre = wx.StaticBox(pageGen, -1, u"Problématique - Énoncé général du besoin")
         sb = wx.StaticBoxSizer(titre)
         commctrl = wx.TextCtrl(pageGen, -1, u"", style=wx.TE_MULTILINE)
@@ -7622,20 +7739,37 @@ class PanelPropriete_Projet(PanelPropriete):
         pageGen.Bind(wx.EVT_TEXT, self.EvtText, commctrl)
         pageGen.sizer.AddGrowableCol(1)
         
-        titre = wx.StaticBox(pageGen, -1, u"Position")
+        
+        #
+        # Année scolaire et Position dans l'année
+        #
+        titre = wx.StaticBox(pageGen, -1, u"Année et Position")
         sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
+        
+        self.annee = Variable(u"", lstVal = self.projet.annee, 
+                                   typ = VAR_ENTIER_POS, bornes = [2012,2100])
+        self.ctrlAnnee = VariableCtrl(pageGen, self.annee, coef = 1, signeEgal = False,
+                                      help = u"Année scolaire", sizeh = 40, 
+                                      unite = str(self.projet.annee+1),
+                                      sliderAGauche = True)
+        self.Bind(EVT_VAR_CTRL, self.EvtVariable, self.ctrlAnnee)
+        sb.Add(self.ctrlAnnee)
+        
         self.bmp = wx.StaticBitmap(pageGen, -1, self.getBitmapPeriode(250))
         position = wx.Slider(pageGen, -1, self.projet.position, 0, 5, (30, 60), (190, -1), 
-            wx.SL_HORIZONTAL | wx.SL_AUTOTICKS |wx.SL_TOP 
-            )
+            wx.SL_HORIZONTAL | wx.SL_TOP)#wx.SL_AUTOTICKS |
         sb.Add(self.bmp)
         sb.Add(position)
         self.position = position
         pageGen.sizer.Add(sb, (1,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.EXPAND|wx.LEFT, border = 2)
         position.Bind(wx.EVT_SCROLL_CHANGED, self.onChanged)
         
+        #
+        # Organisation (nombre et positions des revues)
+        #
         self.panelOrga = PanelOrganisation(pageGen, self, self.projet)
         pageGen.sizer.Add(self.panelOrga, (0,2), (2,1), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.EXPAND|wx.LEFT, border = 2)
+        
         
         pageGen.sizer.AddGrowableRow(0)
 #        pageGen.FitInside()
@@ -7762,7 +7896,7 @@ class PanelPropriete_Projet(PanelPropriete):
     
     #############################################################################            
     def getBitmapPeriode(self, larg):
-        w, h = 0.04*5, 0.04
+        w, h = 0.04*7, 0.04
         imagesurface = cairo.ImageSurface(cairo.FORMAT_ARGB32,  larg, int(h/w*larg))#cairo.FORMAT_ARGB32,cairo.FORMAT_RGB24
         ctx = cairo.Context(imagesurface)
         ctx.scale(larg/w, larg/w) 
@@ -7792,8 +7926,12 @@ class PanelPropriete_Projet(PanelPropriete):
         var = event.GetVar()
         if var == self.nbrParties:
             self.projet.nbrParties = var.v[0]
+        elif var == self.annee:
+            self.projet.annee = var.v[0]
+            self.ctrlAnnee.unite.SetLabel(str(self.projet.annee+1)) 
         
-        
+            
+              
     #############################################################################            
     def EvtText(self, event):
         if event.GetEventObject() == self.textctrl:
@@ -7852,7 +7990,9 @@ class PanelPropriete_Projet(PanelPropriete):
         
         self.panelOrga.MiseAJourListe()
         self.Layout()
+        
         if sendEvt:
+            
             self.sendEvent()
 
     #############################################################################            
@@ -7890,6 +8030,7 @@ class PanelOrganisation(wx.Panel):
         gbsizer.Add(buttonDown, (2,1), (1,1))
         self.Bind(wx.EVT_BUTTON, self.OnClick, buttonDown)
         
+        gbsizer.AddGrowableRow(1)
         sb.Add(gbsizer, flag = wx.EXPAND)
         
         sizer.Add(sb, flag = wx.EXPAND)
@@ -7933,6 +8074,7 @@ class PanelOrganisation(wx.Panel):
     #############################################################################            
     def MiseAJourListe(self):
         self.liste.Set(self.objet.GetListeNomsPhases())
+        self.Layout()
         
     #############################################################################            
     def EvtVariable(self, event):
@@ -8053,6 +8195,11 @@ class PanelPropriete_Classe(PanelPropriete):
 #        textctrl.SetMinSize((-1, 150))
         sb.Add(textctrl, 1, flag = wx.EXPAND)
         self.textctrl = textctrl
+        
+        self.info = wx.StaticText(pageGen, -1, u"""Inscrire le nom de l'établissement dans le champ ci-dessus...
+        ou bien modifier le fichier "etablissements.txt" pour le faire apparaitre dans la liste.""")
+        self.info.SetFont(wx.Font(8, wx.SWISS, wx.FONTSTYLE_ITALIC, wx.NORMAL))
+        sb.Add(self.info, 0, flag = wx.EXPAND|wx.ALL, border = 5)
         
         pageGen.sizer.Add(sb, (0,2), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.ALL|wx.EXPAND, border = 2)
         
@@ -8182,9 +8329,11 @@ class PanelPropriete_Classe(PanelPropriete):
         if evt.GetSelection() == len(constantes.ETABLISSEMENTS_PDD):
             self.classe.etablissement = self.textctrl.GetStringSelection()
             self.textctrl.Show(True)
+            self.info.Show(True)
         else:
             self.classe.etablissement = evt.GetString()
             self.textctrl.Show(False)
+            self.info.Show(False)
         
         self.sendEvent()
      
