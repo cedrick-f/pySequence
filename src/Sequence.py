@@ -409,7 +409,7 @@ class Lien():
             path = path
         else:
 #            pathseq = self.GetEncode(pathseq)
-            print pathseq
+#            print pathseq
             path = os.path.join(pathseq, path)
         return path
     
@@ -714,7 +714,7 @@ class Objet_sequence():
         
         
 class Classe():
-    def __init__(self, app, panelParent = None, intitule = u"", pourProjet = False):
+    def __init__(self, app, panelParent = None, intitule = u"", pourProjet = False, ouverture = False):
         self.intitule = intitule
         
         self.etablissement = u""
@@ -723,23 +723,42 @@ class Classe():
         self.Initialise(pourProjet)
         
         if panelParent:
-            self.panelPropriete = PanelPropriete_Classe(panelParent, self, pourProjet)
+            self.panelPropriete = PanelPropriete_Classe(panelParent, self, pourProjet, ouverture = ouverture)
             
         self.panelParent = panelParent
-#        self.app = app
+
         
     ######################################################################################  
     def __repr__(self):
         return self.typeEnseignement
-        return self.posCI_ET[0] + " " + self.ci_ET[0]
     
+    
+    ######################################################################################  
+    def MiseAJourTypeEnseignement(self):
+        if hasattr(self, 'codeBranche'):
+            self.codeBranche.SetLabel(constantes.Enseigmenent[self.typeEnseignement][0])
+        if self.typeEnseignement == "SSI":
+            self.ci_SSI = self.options.optClasse["CentresInteretSSI"]
+            self.ci_ET = self.posCI_ET = None
+        else:
+            self.ci_ET = self.options.optClasse["CentresInteretET"]
+            self.posCI_ET = self.options.optClasse["PositionsCI_ET"]
+            self.ci_SSI = None
+        
+        
+    ######################################################################################  
+    def SetCI(self, num, ci):
+        if self.typeEnseignement == "SSI":
+            self.ci_SSI[num] = ci
+        else:
+            self.ci_ET[num] = ci
+            
     ######################################################################################  
     def Initialise(self, pourProjet):
         self.typeEnseignement = self.options.optClasse["TypeEnseignement"]
         
         if not pourProjet:
-            self.ci_ET = self.options.optClasse["CentresInteretET"]
-            self.posCI_ET = self.options.optClasse["PositionsCI_ET"]
+            self.MiseAJourTypeEnseignement()
         else:
             if not self.typeEnseignement in constantes.EnseignementsProjet:
                 self.typeEnseignement = 'ITEC'
@@ -786,6 +805,10 @@ class Classe():
             for i,c in enumerate(self.ci_ET):
                 ci.set("CI"+str(i+1), c)
                 ci.set("pos"+str(i+1), self.posCI_ET[i])
+        elif self.typeEnseignement == 'SSI':
+            ci = ET.SubElement(classe, "CentreInteret")
+            for i,c in enumerate(self.ci_SSI):
+                ci.set("CI"+str(i+1), c)
         return classe
     
     ######################################################################################  
@@ -803,22 +826,36 @@ class Classe():
         if brancheCI != None: # Uniquement pour rétrocompatibilité : normalement cet élément existe !
             continuer = True
             i = 1
-            ci_ET = []
-            posCI_ET = []
-            while continuer:
-                c = brancheCI.get("CI"+str(i))
-                p = brancheCI.get("pos"+str(i))
-                if c == None or p == None:
-                    continuer = False
-                else:
-                    ci_ET.append(c)
-                    posCI_ET.append(p) 
-                    i += 1
-                
-            if i > 1:
-                self.ci_ET = ci_ET
-                self.posCI_ET = posCI_ET
+            if self.typeEnseignement == 'ET':
+                ci_ET = []
+                posCI_ET = []
+                while continuer:
+                    c = brancheCI.get("CI"+str(i))
+                    p = brancheCI.get("pos"+str(i))
+                    if c == None or p == None:
+                        continuer = False
+                    else:
+                        ci_ET.append(c)
+                        posCI_ET.append(p) 
+                        i += 1
+                    
+                if i > 1:
+                    self.ci_ET = ci_ET
+                    self.posCI_ET = posCI_ET
             
+            elif self.typeEnseignement == 'SSI':
+                ci_SSI = []
+                while continuer:
+                    c = brancheCI.get("CI"+str(i))
+                    if c == None or p == None:
+                        continuer = False
+                    else:
+                        ci_SSI.append(c)
+                        i += 1
+                    
+                if i > 1:
+                    self.ci_SSI = ci_SSI
+
                 
         # Ancien format : <Effectifs C="9" D="3" E="2" G="9" P="3" />
         # Nouveau format : <Effectifs eC="9" nE="2" nG="9" nP="3" />
@@ -836,9 +873,9 @@ class Classe():
             calculerEffectifs(self)
         
         if hasattr(self, 'panelPropriete'):
-            self.panelPropriete.MiseAJour()
-        
             self.doc.MiseAJourTypeEnseignement()
+            self.panelPropriete.MiseAJour()
+            
         
         return Ok
         
@@ -846,7 +883,7 @@ class Classe():
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
         self.arbre = arbre
-        self.codeBranche = wx.StaticText(self.arbre, -1, rallonge(self.typeEnseignement))
+        self.codeBranche = wx.StaticText(self.arbre, -1, rallonge(constantes.Enseigmenent[self.typeEnseignement][0]))
         self.branche = arbre.AppendItem(branche, Titres[5]+" :", wnd = self.codeBranche, data = self)#, image = self.arbre.images["Seq"])
         if hasattr(self, 'tip'):
             self.tip.SetBranche(self.branche)
@@ -1562,6 +1599,7 @@ class Sequence(BaseDoc):
     #############################################################################
     def MiseAJourTypeEnseignement(self):
         self.app.SetTitre()
+        self.classe.MiseAJourTypeEnseignement()
         self.CI.MiseAJourTypeEnseignement()
         for o in self.obj.values():
             o.MiseAJourTypeEnseignement()
@@ -2993,9 +3031,26 @@ class Savoirs(Objet_sequence):
     
     ######################################################################################  
     def setBranche(self, branche):
+        print "setBranche Savoirs"
         self.savoirs = []
         for i in range(len(branche.keys())):
-            self.savoirs.append(branche.get("S"+str(i), ""))
+            code = branche.get("S"+str(i), "")
+            print code,
+            if code != "":
+                if not code[0] in ["B", "S", "M", "P"]: # version < 4.6
+                    if code[0] == "_":
+                        code = "B"+code[1:]
+                    else:
+                        if self.GetTypeEnseignement() == "SSI":
+                            code = "B"+code
+                        elif self.GetTypeEnseignement() != "ET":
+                            code = "S"+code
+                        else:
+                            code = "B"+code
+                    print "->", code
+                else:
+                    print
+                self.savoirs.append(code)
         if hasattr(self, 'panelPropriete'):
             self.panelPropriete.MiseAJour()
         
@@ -3029,7 +3084,8 @@ class Savoirs(Objet_sequence):
     #############################################################################
     def MiseAJourTypeEnseignement(self):
         if hasattr(self, 'panelPropriete'):
-            self.panelPropriete.construire()
+            self.panelPropriete.MiseAJourTypeEnseignement()
+#            self.panelPropriete.construire()
     
 #    ######################################################################################  
 #    def SetNum(self, num):
@@ -5898,16 +5954,16 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
         
     ###############################################################################################
-    def commandeNouveau(self, event = None, ext = None):
+    def commandeNouveau(self, event = None, ext = None, ouverture = False):
         if ext == 'seq':
-            child = FenetreSequence(self)
+            child = FenetreSequence(self, ouverture)
         elif ext == 'prj':
             child = FenetreProjet(self)
         else:
             dlg = DialogChoixDoc(self)
             val = dlg.ShowModal()
             if val == 1:
-                child = FenetreSequence(self)  
+                child = FenetreSequence(self, ouverture)  
             elif val == 2:
                 child = FenetreProjet(self)
             else:
@@ -5927,7 +5983,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             # Fichier pas déja ouvert
             if not nomFichier in self.GetNomsFichiers():
                 wx.BeginBusyCursor()
-                child = self.commandeNouveau(ext = ext)
+                child = self.commandeNouveau(ext = ext, ouverture = True)
                 if child != None:
                     child.ouvrir(nomFichier)
                 wx.EndBusyCursor()
@@ -6286,8 +6342,8 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         sizer.Add(self.pnl, 1, wx.EXPAND)
         self.SetSizer(sizer)
         
-        wx.CallAfter(self.Layout)
-#        self.Layout()
+#        wx.CallAfter(self.Layout)
+        self.Layout()
 
          
 
@@ -6354,6 +6410,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
     #############################################################################
     def SetTitre(self, modif = False):
         t = self.classe.typeEnseignement
+        t = constantes.Enseigmenent[t][0]
         if self.fichierCourant == '':
             t += u" - "+constantes.TITRE_DEFAUT[self.typ]
         else:
@@ -6542,14 +6599,14 @@ def Dialog_ErreurAccesFichier(nomFichier):
 #
 ########################################################################################
 class FenetreSequence(FenetreDocument):
-    def __init__(self, parent):
+    def __init__(self, parent, ouverture = False):
         self.typ = 'seq'
         FenetreDocument.__init__(self, parent)
         
         #
         # La classe
         #
-        self.classe = Classe(parent, self.panelProp)
+        self.classe = Classe(parent, self.panelProp, ouverture = ouverture)
         
         #
         # La séquence
@@ -6629,12 +6686,14 @@ class FenetreSequence(FenetreDocument):
         
     ###############################################################################################
     def ouvrir(self, nomFichier, redessiner = True):
+#        print "ouvrir sequence"
         if not os.path.isfile(nomFichier):
             return
         
         self.Freeze()
         fichier = open(nomFichier,'r')
         self.definirNomFichierCourant(nomFichier)
+        nomCourt = os.path.splitext(os.path.split(nomFichier)[1])[0]
         
         try:
             root = ET.parse(fichier).getroot()
@@ -6643,26 +6702,25 @@ class FenetreSequence(FenetreDocument):
             sequence = root.find("Sequence")
             if sequence == None:
                 self.sequence.setBranche(root)
-                
             else:
                 # La classe
                 classe = root.find("Classe")
                 self.classe.setBranche(classe)
                 self.sequence.setBranche(sequence)  
-                
+      
         except:
             messageErreur(self,u"Erreur d'ouverture",
-                          u"La séquence pédagogique\n    %s\n n'a pas pu être ouverte !" %nomFichier)
+                          u"La séquence pédagogique\n    %s\n n'a pas pu être ouverte !" %nomCourt)
             fichier.close()
             self.Close()
-#            wx.EndBusyCursor()
             return
+
+
 
         self.arbre.DeleteAllItems()
         root = self.arbre.AddRoot("")
         self.classe.ConstruireArbre(self.arbre, root)
         self.sequence.ConstruireArbre(self.arbre, root)
-        
         self.sequence.CI.SetNum()
         self.sequence.SetCodes()
         self.sequence.PubDescription()
@@ -6931,7 +6989,7 @@ class FenetreProjet(FenetreDocument):
         message += u"Tracé de la fiche..."
         dlg.Update(count, message)
         count += 1
-        print "  ",count
+#        print "  ",count
 #        self.arbre.SelectItem(self.classe.branche)
 
         self.arbre.Layout()
@@ -7593,7 +7651,8 @@ class PanelPropriete_Racine(wx.Panel):
         self.rtc.Refresh()
         
         sizer.Layout()
-        wx.CallAfter(self.Layout)
+#        wx.CallAfter(self.Layout)
+        self.Layout()
 
 
      
@@ -7640,7 +7699,8 @@ class PanelPropriete_Sequence(PanelPropriete):
         position.Bind(wx.EVT_SCROLL_CHANGED, self.onChanged)
         
         self.sizer.Layout()
-        wx.CallAfter(self.Layout)
+#        wx.CallAfter(self.Layout)
+        self.Layout()
         
 #        self.Fit()
         
@@ -8024,15 +8084,19 @@ class PanelOrganisation(wx.Panel):
         gbsizer.Add(self.ctrlNbrRevues, (0,0), (1,2), flag = wx.EXPAND)
         
         liste = wx.ListBox(self, -1, choices = self.objet.GetListeNomsPhases(), style = wx.LB_SINGLE)
+        liste.SetToolTipString(u"Séléctionner la revue à déplacer")
         gbsizer.Add(liste, (1,0), (2,1), flag = wx.EXPAND)
         self.liste = liste
         
         buttonUp = wx.BitmapButton(self, 11, wx.ArtProvider.GetBitmap(wx.ART_GO_UP), size = (20,20))
         gbsizer.Add(buttonUp, (1,1), (1,1))
         self.Bind(wx.EVT_BUTTON, self.OnClick, buttonUp)
+        buttonUp.SetToolTipString(u"Monter la revue")
+        
         buttonDown = wx.BitmapButton(self, 12, wx.ArtProvider.GetBitmap(wx.ART_GO_DOWN), size = (20,20))
         gbsizer.Add(buttonDown, (2,1), (1,1))
         self.Bind(wx.EVT_BUTTON, self.OnClick, buttonDown)
+        buttonDown.SetToolTipString(u"Descendre la revue")
         
         gbsizer.AddGrowableRow(1)
         sb.Add(gbsizer, flag = wx.EXPAND)
@@ -8096,13 +8160,15 @@ class PanelOrganisation(wx.Panel):
 #
 ####################################################################################
 class PanelPropriete_Classe(PanelPropriete):
-    def __init__(self, parent, classe, pourProjet):
+    def __init__(self, parent, classe, pourProjet, ouverture = False):
+#        print "__init__ PanelPropriete_Classe"
         PanelPropriete.__init__(self, parent)
         
         if not pourProjet:
             #
             # La page "Généralités"
             #
+
             nb = wx.Notebook(self, -1,  style= wx.BK_DEFAULT)
             pageGen = PanelPropriete(nb)
             bg_color = self.Parent.GetBackgroundColour()
@@ -8112,10 +8178,11 @@ class PanelPropriete_Classe(PanelPropriete):
             nb.AddPage(pageGen, u"Propriétés générales")
             
             self.sizer.Add(nb, (0,1), (2,1), flag = wx.ALL|wx.ALIGN_RIGHT|wx.EXPAND, border = 1)
+            self.nb = nb
             
         else:
             #
-            # 
+            # Pas de NoteBook
             #
             pageGen = self
             self.pageGen = pageGen
@@ -8137,15 +8204,18 @@ class PanelPropriete_Classe(PanelPropriete):
         tb.AddSimpleTool(31, images.Icone_defaut_pref.GetBitmap(), 
                          u"Rétablir les paramètres de classe par défaut")
         self.Bind(wx.EVT_TOOL, self.OnDefautPref, id=31)
+        
         if not pourProjet:
+            # CI depuis Excel
             tb.AddSimpleTool(32, images.Icone_excel.GetBitmap(), 
                              u"Sélectionner les CI depuis un fichier Excel",
                              u"Sélectionner les CI ETT depuis un fichier Excel (.xls)")
             self.Bind(wx.EVT_TOOL, self.SelectCI, id=32)
             
+            # Info cible CI ETT
             tb.AddSimpleTool(33, images.Bouton_Aide.GetBitmap(), 
-                             u"Informations à propos de la cible CI",
-                             u"Informations à propos de la cible CI")
+                             u"Informations à propos de la cible CI ETT",
+                             u"Informations à propos de la cible CI ETT")
             self.Bind(wx.EVT_TOOL, self.OnAide, id=33)
         
         
@@ -8227,73 +8297,25 @@ class PanelPropriete_Classe(PanelPropriete):
         if not pourProjet:
             pageCI= wx.Panel(nb, -1)
             sizer = wx.BoxSizer()
-#            bg_color = self.Parent.GetBackgroundColour()
-#            pageCI.SetBackgroundColour(bg_color)
+            pageCI.SetSizer(sizer)
+            
             self.pageCI = pageCI
-            nb.AddPage(pageCI, u"Centres d'intérêt")
+            self.nb.AddPage(pageCI, u"")
             
-            sb1 = wx.StaticBox(pageCI, -1, u"Centres d'intérêt ETT", size = (200,-1))
-            sbs1 = wx.StaticBoxSizer(sb1, wx.VERTICAL)
-            self.sb1 = sb1
-            listCI = ULC.UltimateListCtrl(pageCI, -1, 
-                                        agwStyle=wx.LC_REPORT
-                                             #| wx.BORDER_SUNKEN
-                                             | wx.BORDER_NONE
-                                             #| wx.ULC_EDIT_LABELS
-                                             #| wx.LC_SORT_ASCENDING
-                                             #| wx.LC_NO_HEADER
-                                             | wx.LC_VRULES
-                                             | wx.LC_HRULES
-                                             #| wx.LC_SINGLE_SEL
-                                             | ULC.ULC_HAS_VARIABLE_ROW_HEIGHT)
+            wx.CallAfter(self.InitListe)
+            wx.CallAfter(self.MiseAJourToolbar)
+#            if not ouverture:
+#                self.InitListe()
+#                self.MiseAJourToolbar()
             
-            info = ULC.UltimateListItem()
-            info._mask = wx.LIST_MASK_TEXT | wx.LIST_MASK_FORMAT
-            info._format = wx.LIST_FORMAT_LEFT
-            info._text = u"CI"
-             
-            listCI.InsertColumnInfo(0, info)
-    
-            info = ULC.UltimateListItem()
-            info._format = wx.LIST_FORMAT_LEFT
-            info._mask = wx.LIST_MASK_TEXT | wx.LIST_MASK_FORMAT | ULC.ULC_MASK_FONT
-            info._text = u"Intitulé"
-            
-            listCI.InsertColumnInfo(1, info)
-            
-            listCI.SetColumnWidth(0, 35)
-            listCI.SetColumnWidth(1, -3)
-            
-            for i,p in enumerate(['M', 'E', 'I', 'F', 'S', 'C']):
-                info = ULC.UltimateListItem()
-                info._mask = wx.LIST_MASK_TEXT
-                info._format = wx.LIST_FORMAT_CENTER
-                info._text = p
-                
-                listCI.InsertColumnInfo(i+2, info)
-                listCI.SetColumnWidth(i+2, 20)
-            
-            self.list = listCI
-            self.PeuplerListe()
-            
-            self.list.Bind(wx.EVT_LEFT_UP, self.OnLeftUp)
-            self.list.Bind(wx.EVT_LEFT_DOWN, self.OnLeftDown)
             self.leftDown = False
-            sbs1.Add(listCI, 1, flag = wx.EXPAND)
-
-            if self.classe.typeEnseignement != 'ET' :
-                self.list.Enable(False)
-                
-            sizer.Add(sbs1, 1, flag = wx.EXPAND|wx.ALL, border = 2)
             
             self.sizer.AddGrowableRow(0)
             self.sizer.AddGrowableCol(1)
-            
-            pageCI.SetSizer(sizer)
-            sizer.Layout()
-            self.Layout()
         
-        self.MiseAJourType()
+            
+    
+    
     
     #############################################################################            
     def OnDefautPref(self, evt):
@@ -8333,15 +8355,17 @@ class PanelPropriete_Classe(PanelPropriete):
     def EvtComboEtab(self, evt):       
         if evt.GetSelection() == len(constantes.ETABLISSEMENTS_PDD):
             self.classe.etablissement = self.textctrl.GetStringSelection()
-            self.textctrl.Show(True)
-            self.info.Show(True)
+            self.AfficherAutre(True)
         else:
             self.classe.etablissement = evt.GetString()
-            self.textctrl.Show(False)
-            self.info.Show(False)
+            self.AfficherAutre(False)
         
         self.sendEvent()
      
+    ######################################################################################  
+    def AfficherAutre(self, montrer):
+        self.textctrl.Show(montrer)
+        self.info.Show(montrer)
              
     ######################################################################################  
     def EvtRadioBox(self, event):
@@ -8354,10 +8378,13 @@ class PanelPropriete_Classe(PanelPropriete):
                 break
 #        self.classe.typeEnseignement = self.cb_type.GetItemLabel(event.GetInt())
             
-        self.MiseAJourType()
         
-        self.classe.codeBranche.SetLabel(self.classe.typeEnseignement)
+        
+        self.classe.MiseAJourTypeEnseignement()
         self.classe.doc.MiseAJourTypeEnseignement()
+        self.MiseAJourType()
+        if hasattr(self, 'list'):
+            self.list.Peupler()
         self.sendEvent()
         
         
@@ -8382,36 +8409,58 @@ class PanelPropriete_Classe(PanelPropriete):
         self.sendEvent()
         
     
+    ######################################################################################  
+    def InitListe(self):
+        if hasattr(self, 'list'):
+            self.pageCI.GetSizer().Detach(self.list)
+            self.list.Destroy()
+            
+        self.list = ListeCI(self.pageCI, self.classe)
+            
+        if self.classe.typeEnseignement == "SSI":
+            self.nb.SetPageText(1, u"Centres d'intérêt")
+        else:
+            self.nb.SetPageText(1, u"Centres d'intérêt ETT")
+            
+        self.list.Bind(wx.EVT_LEFT_UP, self.OnLeftUp)
+        self.list.Bind(wx.EVT_LEFT_DOWN, self.OnLeftDown)
+        
+        self.pageCI.GetSizer().Add(self.list, 1, flag = wx.EXPAND|wx.ALL, border = 2)
+    
     
     ######################################################################################  
     def MiseAJourType(self):
-        """ Modification de la barre d'outil
+        """ Modification de la barre d'outil et de la liste des CI
             en fonction du type d'enseignement
         """
+#        print "MiseAJourType"
         if hasattr(self, 'list'):
-            if self.classe.familleEnseignement == 'STI':
-                self.list.Show(True)
-#                self.tb.Show(True)
-                self.sb1.Show(True)
-                enable = self.pasVerrouille and (self.classe.typeEnseignement == 'ET')
-                self.list.Enable(enable)
-                self.tb.EnableTool(31, enable)
-                self.tb.EnableTool(32, enable)
-                self.tb.EnableTool(33, enable)
-            else:
-                self.list.Show(False)
-#                self.tb.Show(False)
-                self.sb1.Show(False)
-                self.tb.EnableTool(32, False)   
-                self.tb.EnableTool(33, False)  
-#            self.btn.Enable(self.pasVerrouille and self.classe.typeEnseignement == 'ET')
-        
-            self.pageCI.Layout()
+            self.InitListe()
+            self.MiseAJourToolbar()
             
         self.Layout()
         self.sizer.Layout()
         self.Refresh()
          
+        
+    ######################################################################################  
+    def MiseAJourToolbar(self):
+#        print "MiseAJourToolbar", self.pasVerrouille, self.classe.familleEnseignement
+        if self.classe.familleEnseignement == 'STI':
+            self.list.Show(True)
+            enable = self.pasVerrouille and (self.classe.typeEnseignement == 'ET')
+            self.list.Enable(enable)
+            self.tb.EnableTool(31, enable) # Paramètres dar défaut
+            self.tb.EnableTool(32, enable) # CI depuis Excel
+            self.tb.EnableTool(33, enable) # Info cible CI ETT
+        else:
+            self.list.Show(True)
+            enable = self.pasVerrouille
+            self.list.Enable(enable)
+            self.tb.EnableTool(32, enable)  # CI depuis Excel
+            self.tb.EnableTool(33, False)  # Info cible CI ETT
+    
+        self.pageCI.Layout()
         
     ######################################################################################  
     def MiseAJour(self):
@@ -8422,37 +8471,19 @@ class PanelPropriete_Classe(PanelPropriete):
 #        print self.cb.GetStringSelection ()
         if self.cb.GetStringSelection () and self.cb.GetStringSelection() == self.classe.etablissement:
             self.textctrl.ChangeValue(u"")
-            self.textctrl.Show(False)
+            self.AfficherAutre(False)
             
         else:
             self.textctrl.ChangeValue(self.classe.etablissement)
-            self.textctrl.Show(True)
+            self.AfficherAutre(True)
             self.cb.SetSelection(len(constantes.ETABLISSEMENTS_PDD))
         
         if hasattr(self, 'list'):
-            self.PeuplerListe()
+            self.list.Peupler()
                 
         self.ec.MiseAJour()
 
-    ######################################################################################  
-    def PeuplerListe(self):
-#        print "PeuplerListe"
-        # Peuplement de la liste
-        self.list.DeleteAllItems()
-        for i,ci in enumerate(self.classe.ci_ET):
-            index = self.list.InsertStringItem(sys.maxint, "CI"+str(i+1))
-            self.list.SetStringItem(index, 1, ci)
-           
-            for j,p in enumerate(['M', 'E', 'I', 'F', 'S', 'C']):
-                item = self.list.GetItem(i, j+2)
-                
-                cb = wx.CheckBox(self.list, 100+i, u"", name = p)
-                cb.SetValue(p in self.classe.posCI_ET[i])
-                self.Bind(wx.EVT_CHECKBOX, self.EvtCheckBox, cb)
-                item.SetWindow(cb)
-#                item.Enable(False)
-                self.list.SetItem(item)
-        self.list.Update()
+    
         
     ######################################################################################  
     def OnLeftDown(self, event):
@@ -8524,17 +8555,93 @@ class PanelPropriete_Classe(PanelPropriete):
     ######################################################################################  
     def Verrouiller(self, etat):
         self.cb_type.Enable(etat)
-        if hasattr(self, 'list'):
-            enable = etat and (self.classe.typeEnseignement == 'ET')
-            self.list.Enable(enable)
-            self.tb.EnableTool(31, enable)
-            self.tb.EnableTool(32, enable)
         self.pasVerrouille = etat
+        if hasattr(self, 'list'):
+            self.MiseAJourToolbar()
+#            enable = etat and (self.classe.typeEnseignement == 'ET')
+#            self.list.Enable(enable)
+#            self.tb.EnableTool(31, enable)
+#            self.tb.EnableTool(32, enable)
+        
 
 
 
+class ListeCI(ULC.UltimateListCtrl):
+    def __init__(self, parent, classe):
+        
+        self.typeEnseignement = classe.typeEnseignement
+        self.classe = classe
+        self.parent = parent
+        
+        style = wx.LC_REPORT| wx.BORDER_NONE| wx.LC_VRULES| wx.LC_HRULES| ULC.ULC_HAS_VARIABLE_ROW_HEIGHT
+        if self.typeEnseignement == "SSI":
+            style = style |wx.LC_NO_HEADER
+            
+        ULC.UltimateListCtrl.__init__(self,parent, -1, 
+                                        agwStyle=style)
+                
+        info = ULC.UltimateListItem()
+        info._mask = wx.LIST_MASK_TEXT | wx.LIST_MASK_FORMAT
+        info._format = wx.LIST_FORMAT_LEFT
+        info._text = u"CI"
+         
+        self.InsertColumnInfo(0, info)
 
-
+        info = ULC.UltimateListItem()
+        info._format = wx.LIST_FORMAT_LEFT
+        info._mask = wx.LIST_MASK_TEXT | wx.LIST_MASK_FORMAT | ULC.ULC_MASK_FONT
+        info._text = u"Intitulé"
+        
+        self.InsertColumnInfo(1, info)
+        
+        self.SetColumnWidth(0, 35)
+        self.SetColumnWidth(1, -3)
+        
+        if self.typeEnseignement != "SSI":
+            for i,p in enumerate(['M', 'E', 'I', 'F', 'S', 'C']):
+                info = ULC.UltimateListItem()
+                info._mask = wx.LIST_MASK_TEXT
+                info._format = wx.LIST_FORMAT_CENTER
+                info._text = p
+                
+                self.InsertColumnInfo(i+2, info)
+                self.SetColumnWidth(i+2, 20)
+        
+        self.Peupler()
+                
+    ######################################################################################  
+    def Peupler(self):
+#        print "PeuplerListe"
+        # Peuplement de la liste
+        self.DeleteAllItems()
+        if self.typeEnseignement != "SSI":
+            l = self.classe.ci_ET
+        else:
+            l = self.classe.ci_SSI
+            
+        for i,ci in enumerate(l):
+            index = self.InsertStringItem(sys.maxint, "CI"+str(i+1))
+            self.SetStringItem(index, 1, ci)
+           
+            if self.typeEnseignement != "SSI":
+                for j,p in enumerate(['M', 'E', 'I', 'F', 'S', 'C']):
+                    item = self.GetItem(i, j+2)
+                    cb = wx.CheckBox(self, 100+i, u"", name = p)
+                    cb.SetValue(p in self.classe.posCI_ET[i])
+                    self.Bind(wx.EVT_CHECKBOX, self.EvtCheckBox, cb)
+                    item.SetWindow(cb)
+                    self.SetItem(item)
+        self.Update()
+        
+    ######################################################################################  
+    def EvtCheckBox(self, event):
+        self.parent.EvtCheckBox(event)
+    
+####################################################################################
+#
+#   Editeur pour les listes de CI
+#
+####################################################################################   
 class Editeur(wx.Frame):  
     def __init__(self, classe, liste, index, texte, pos, size):
         wx.Frame.__init__(self, None, -1, pos = pos, 
@@ -8550,7 +8657,8 @@ class Editeur(wx.Frame):
     def OnKillFocus(self, evt):
         txtctrl = evt.GetEventObject()
         self.liste.SetStringItem(self.index, 1, txtctrl.GetValue())
-        self.classe.ci_ET[self.index] = txtctrl.GetValue()
+        
+        self.classe.SetCI(self.index, txtctrl.GetValue())
 #        self.classe.doc.CI.
         self.classe.doc.CI.panelPropriete.construire()
         self.Destroy() 
@@ -8873,11 +8981,11 @@ class PanelPropriete_CI(PanelPropriete):
         if self.CI.GetTypeEnseignement() == 'ET':
             self.panel_cible.GererBoutons(True)
         
-        if hasattr(self, 'b2CI'):
-            if len(self.CI.numCI) > 2:
-                self.b2CI.Enable(False)
-            else:
-                self.b2CI.Enable(True)
+            if hasattr(self, 'b2CI'):
+                if len(self.CI.numCI) > 2:
+                    self.b2CI.Enable(False)
+                else:
+                    self.b2CI.Enable(True)
             
         self.Layout()
         self.sendEvent()
@@ -9381,7 +9489,37 @@ class PanelPropriete_Savoirs(PanelPropriete):
         self.prerequis = prerequis
         PanelPropriete.__init__(self, parent)
         
-        self.construire()
+        nb = wx.Notebook(self, -1,  style= wx.BK_DEFAULT)
+        bg_color = self.Parent.GetBackgroundColour()
+        
+        # Savoirs SSI ou ETT
+        pageSavoir = PanelPropriete(nb)
+        pageSavoir.SetBackgroundColour(bg_color)
+        self.pageSavoir = pageSavoir
+        nb.AddPage(pageSavoir, u"")
+        
+        # Savoirs Spécialité STI2D
+        
+        
+        if prerequis:
+            # Savoirs Maths
+            pageSavoirM = PanelPropriete(nb)
+            pageSavoirM.SetBackgroundColour(bg_color)
+            self.pageSavoirM = pageSavoirM
+            nb.AddPage(pageSavoirM, u"Mathématiques")
+            
+            # Savoirs Physique
+            pageSavoirP = PanelPropriete(nb)
+            pageSavoirP.SetBackgroundColour(bg_color)
+            self.pageSavoirP = pageSavoirP
+            nb.AddPage(pageSavoirP, u"Sciences Physiques")
+            
+        self.sizer.Add(nb, (0,1), (2,1), flag = wx.ALL|wx.ALIGN_RIGHT|wx.EXPAND, border = 1)
+        self.nb = nb
+        self.sizer.AddGrowableRow(0)
+        self.sizer.AddGrowableCol(1)
+            
+        self.MiseAJourTypeEnseignement()
 
         
     #############################################################################            
@@ -9390,15 +9528,49 @@ class PanelPropriete_Savoirs(PanelPropriete):
         
     ######################################################################################  
     def construire(self):
-        self.DestroyChildren()
-#        if hasattr(self, 'arbre'):
-#            self.sizer.Remove(self.arbre)
-        self.arbre = ArbreSavoirs(self, self.savoirs, self.prerequis)
-        self.sizer.Add(self.arbre, (0,0), flag = wx.EXPAND)
-        if not self.sizer.IsColGrowable(0):
-            self.sizer.AddGrowableCol(0)
-        if not self.sizer.IsRowGrowable(0):
-            self.sizer.AddGrowableRow(0)
+#        print "Construire Savoirs"
+
+        # Savoirs SSI ou ETT
+        self.pageSavoir.DestroyChildren()
+        self.arbre = ArbreSavoirs(self.pageSavoir, "B", self.savoirs, self.prerequis)
+        self.pageSavoir.sizer.Add(self.arbre, (0,0), flag = wx.EXPAND)
+        if not self.pageSavoir.sizer.IsColGrowable(0):
+            self.pageSavoir.sizer.AddGrowableCol(0)
+        if not self.pageSavoir.sizer.IsRowGrowable(0):
+            self.pageSavoir.sizer.AddGrowableRow(0)
+        self.pageSavoir.Layout()
+            
+        if self.savoirs.GetTypeEnseignement() not in ["SSI", "ET"]:
+            # Savoirs spécialité STI2D
+            self.pageSavoirSpe.DestroyChildren()
+            self.arbreSpe = ArbreSavoirs(self.pageSavoirSpe, "S", self.savoirs, self.prerequis)
+            self.pageSavoirSpe.sizer.Add(self.arbreSpe, (0,0), flag = wx.EXPAND)
+            if not self.pageSavoirSpe.sizer.IsColGrowable(0):
+                self.pageSavoirSpe.sizer.AddGrowableCol(0)
+            if not self.pageSavoirSpe.sizer.IsRowGrowable(0):
+                self.pageSavoirSpe.sizer.AddGrowableRow(0)
+            self.pageSavoirSpe.Layout()
+            
+        if self.prerequis:
+            # Savoirs Math
+            self.pageSavoirM.DestroyChildren()
+            self.arbreM = ArbreSavoirs(self.pageSavoirM, "M", self.savoirs, self.prerequis)
+            self.pageSavoirM.sizer.Add(self.arbreM, (0,0), flag = wx.EXPAND)
+            if not self.pageSavoirM.sizer.IsColGrowable(0):
+                self.pageSavoirM.sizer.AddGrowableCol(0)
+            if not self.pageSavoirM.sizer.IsRowGrowable(0):
+                self.pageSavoirM.sizer.AddGrowableRow(0)
+            self.pageSavoirM.Layout()
+            
+            # Savoirs Physique
+            self.pageSavoirP.DestroyChildren()
+            self.arbreP = ArbreSavoirs(self.pageSavoirP, "P", self.savoirs, self.prerequis)
+            self.pageSavoirP.sizer.Add(self.arbreP, (0,0), flag = wx.EXPAND)
+            if not self.pageSavoirP.sizer.IsColGrowable(0):
+                self.pageSavoirP.sizer.AddGrowableCol(0)
+            if not self.pageSavoirP.sizer.IsRowGrowable(0):
+                self.pageSavoirP.sizer.AddGrowableRow(0)
+            self.pageSavoirP.Layout()
         self.Layout()
         
     
@@ -9410,15 +9582,54 @@ class PanelPropriete_Savoirs(PanelPropriete):
         
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
+        """ Coche tous les savoirs a True de self.savoirs.savoirs 
+            dans les différents arbres
+        """
+        print "MiseAJour Savoirs"
         self.arbre.UnselectAll()
         for s in self.savoirs.savoirs:
-            i = self.arbre.get_item_by_label(s, self.arbre.GetRootItem())
-
-            if i.IsOk():
-                self.arbre.CheckItem2(i)
+            typ, cod = s[0], s[1:]
+            print typ, cod
+            if typ == "S": # Savoir spécialité STI2D
+                i = self.arbreSpe.get_item_by_label(s[1:], self.arbreSpe.GetRootItem())
+                if i.IsOk():
+                    self.arbreSpe.CheckItem2(i)
+            elif typ == "M": # Savoir Math
+                i = self.arbreM.get_item_by_label(s[1:], self.arbreM.GetRootItem())
+                if i.IsOk():
+                    self.arbreM.CheckItem2(i)
+            elif typ == "P": # Savoir Physique
+                i = self.arbreP.get_item_by_label(s[1:], self.arbreP.GetRootItem())
+                if i.IsOk():
+                    self.arbreP.CheckItem2(i)
+            else:
+                i = self.arbre.get_item_by_label(s[1:], self.arbre.GetRootItem())
+                if i.IsOk():
+                    self.arbre.CheckItem2(i)
         
         if sendEvt:
             self.sendEvent()
+            
+    #############################################################################            
+    def MiseAJourTypeEnseignement(self):
+#        print "MiseAJourTypeEnseignement Savoirs"
+        if self.savoirs.GetTypeEnseignement() == "SSI":
+            self.nb.SetPageText(0, u"Capacités SSI")
+        else:
+            self.nb.SetPageText(0, u"Savoirs ETT")
+        
+        if self.savoirs.GetTypeEnseignement() not in ["SSI", "ET"]:
+            if not hasattr(self, 'pageSavoirSpe') or not isinstance(self.pageSavoirSpe, PanelPropriete):
+                bg_color = self.Parent.GetBackgroundColour()
+                pageSavoirSpe = PanelPropriete(self.nb)
+                pageSavoirSpe.SetBackgroundColour(bg_color)
+                self.pageSavoirSpe = pageSavoirSpe
+                self.nb.InsertPage(1, pageSavoirSpe, u"Savoirs " + self.savoirs.GetTypeEnseignement())
+        else:
+            if hasattr(self, 'pageSavoirSpe') and isinstance(self.pageSavoirSpe, PanelPropriete):
+                self.nb.DeletePage(1)
+        
+        self.construire()
             
             
             
@@ -11444,7 +11655,7 @@ class ArbreProjet(ArbreDoc):
 
 
 class ArbreSavoirs(CT.CustomTreeCtrl):
-    def __init__(self, parent, savoirs, prerequis):
+    def __init__(self, parent, typ, savoirs, prerequis):
 
         CT.CustomTreeCtrl.__init__(self, parent, -1, 
                                    agwStyle = wx.TR_DEFAULT_STYLE|wx.TR_MULTIPLE|wx.TR_HIDE_ROOT|CT.TR_AUTO_CHECK_CHILD|CT.TR_AUTO_CHECK_PARENT)
@@ -11454,21 +11665,32 @@ class ArbreSavoirs(CT.CustomTreeCtrl):
         
         typeEns = savoirs.GetTypeEnseignement()
         
-        root = self.AddRoot(u"")
+        self.root = self.AddRoot(u"")
         
-        if typeEns == "SSI":
-            t = u"Capacités "
-        else:
-            t = u"Savoirs "
-        self.root = self.AppendItem(root, t+typeEns)
+#        if typeEns == "SSI":
+#            t = u"Capacités "
+#        else:
+#            t = u"Savoirs "
+#        self.root = self.AppendItem(root, t+typeEns)
         self.SetItemBold(self.root, True)
-        self.Construire(self.root, constantes.dicSavoirs[typeEns])
-        
-        if prerequis and typeEns!="ET" and typeEns!="SSI":
-            self.rootET = self.AppendItem(root, u"Savoirs ETT")
-            self.SetItemBold(self.rootET, True)
-            self.SetItemItalic(self.rootET, True)
-            self.Construire(self.rootET, constantes.dicSavoirs['ET'], et = True)
+        if typ == "B":
+            if not typeEns in ["SSI", "ET"]:
+                self.Construire(self.root, constantes.dicSavoirs["ET"])
+            else:
+                self.Construire(self.root, constantes.dicSavoirs[typeEns])
+        elif typ == "S":
+            self.Construire(self.root, constantes.dicSavoirs[typeEns])
+        elif typ == "M":
+            self.Construire(self.root, constantes.dicSavoirs["M"+savoirs.GetTypeEnseignement(simple = True)])
+        elif typ == "P":
+            self.Construire(self.root, constantes.dicSavoirs["P"+savoirs.GetTypeEnseignement(simple = True)])
+            
+        self.typ = typ
+#        if prerequis and typeEns!="ET" and typeEns!="SSI":
+#            self.rootET = self.AppendItem(root, u"Savoirs ETT")
+#            self.SetItemBold(self.rootET, True)
+#            self.SetItemItalic(self.rootET, True)
+#            self.Construire(self.rootET, constantes.dicSavoirs['ET'], et = True)
         
         
         self.ExpandAll()
@@ -11499,6 +11721,7 @@ class ArbreSavoirs(CT.CustomTreeCtrl):
         self.Bind(CT.EVT_TREE_ITEM_CHECKED, self.OnItemCheck)
     
         
+    ####################################################################################
     def Construire(self, branche, dic, et = False, grosseBranche = True):
         """ Construction d'une branche de "savoirs"
             <et> = prérequis ETT pour spécialité STI2D
@@ -11506,8 +11729,8 @@ class ArbreSavoirs(CT.CustomTreeCtrl):
         clefs = constantes.trier(dic.keys())
         for k in clefs:
             if type(dic[k][1]) == list:
-                sep = u" " + CHAR_POINT + u" "
-                toolTip = sep.join(dic[k][1])
+                sep = u"\n " + CHAR_POINT + u" "
+                toolTip = CHAR_POINT + u" " + sep.join(dic[k][1])
             else:
                 toolTip = None
             b = self.AppendItem(branche, k+" "+dic[k][0], ct_type=1, data = toolTip)
@@ -11516,30 +11739,71 @@ class ArbreSavoirs(CT.CustomTreeCtrl):
                 self.SetItemItalic(b, True)
             if grosseBranche:
                 self.SetItemBold(b, True)
+#                self.SetItem3State(b, True)
             
             if type(dic[k][1]) == dict:
                 self.Construire(b, dic[k][1], et, grosseBranche = False)
 
         
+    ####################################################################################
     def OnItemCheck(self, event):
+#        print "OnItemCheck"
         item = event.GetItem()
         code = self.GetItemText(item).split()[0]
-        if self.IsItalic(item):
-            code = '_'+code
-        if item.GetValue():
-            self.parent.savoirs.savoirs.append(code)
-        else:
-            self.parent.savoirs.savoirs.remove(code)
-        self.parent.SetSavoirs()
+
+#        if self.IsItalic(item):
+#            code = '_'+code
+        
+
+        newSavoirs = []
+        for s in self.savoirs.savoirs:
+            if s[0] != self.typ:
+                newSavoirs.append(s)
+                
+        newSavoirs.extend(self.getListItemChecked(self.root)[0])    
+        
+        self.savoirs.savoirs = newSavoirs
+
+#        if item.GetValue():
+#            self.savoirs.savoirs.append(code)
+#        else:
+#            if code in self.savoirs.savoirs:
+#                self.savoirs.savoirs.remove(code)
+#            else:
+#                codeparent = code[:-2]
+#                    if codeparent in self.savoirs.savoirs:
+                        
+                        
+        self.parent.Parent.Parent.SetSavoirs()
         event.Skip()
         
         
+    ####################################################################################
+    def getListItemChecked(self, root):
+        liste = []
+        complet = True
+        for i in root.GetChildren():
+            cliste, ccomplet = self.getListItemChecked(i)
+            if ccomplet:
+                if i.IsChecked():
+                    liste.append(self.getCode(i))
+                else:
+                    complet = False
+            else:
+                liste.extend(cliste)
+                complet = False
+             
+        return liste, complet
+    
+    
+    ####################################################################################
     def OnGetToolTip(self, event):
         toolTip = event.GetItem().GetData()
         if toolTip != None:
             event.SetToolTip(wx.ToolTip(toolTip))
 
         
+    ####################################################################################
     def traverse(self, parent=None):
         if parent is None:
             parent = self.GetRootItem()
@@ -11555,7 +11819,13 @@ class ArbreSavoirs(CT.CustomTreeCtrl):
             GetChild = self.GetNextChild
             yield child
             
-
+            
+    ####################################################################################
+    def getCode(self, item):
+        return self.typ+self.GetItemText(item).split()[0]
+    
+    
+    ####################################################################################
     def get_item_by_label(self, search_text, root_item):
         item, cookie = self.GetFirstChild(root_item)
     
@@ -11572,6 +11842,12 @@ class ArbreSavoirs(CT.CustomTreeCtrl):
         return wx.TreeItemId()
 
 
+
+
+####################################################################################
+####################################################################################
+####################################################################################
+    
 class ArbreCompetences(HTL.HyperTreeList):
     def __init__(self, parent, type_ens, pptache = None, agwStyle = CT.TR_HIDE_ROOT|CT.TR_HAS_VARIABLE_ROW_HEIGHT):#|CT.TR_AUTO_CHECK_CHILD):#|HTL.TR_NO_HEADER):
         

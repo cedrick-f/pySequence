@@ -506,14 +506,36 @@ def Draw(ctx, seq, mouchard = False):
     lstCodes = []
     lstCoul = []
     for c in seq.prerequis.savoirs:
-        if c[0] == '_': # Savoir d'ETT
-            lstTexte.append(getSavoir('ET', c[1:]))
-            lstCodes.append("ETT "+c[1:])
-            lstCoul.append((0.3,0.3,0.3))
-        else:
-            lstTexte.append(getSavoir(seq.classe.typeEnseignement, c))
-            lstCodes.append(c)
+        typ, cod = c[0], c[1:]
+        if typ == "S": # Savoir spécialité STI2D
+            lstTexte.append(getSavoir(seq.classe.typeEnseignement, cod))
+            lstCodes.append(cod)
             lstCoul.append((0,0,0))
+        elif typ == "M": # Savoir Math
+            lstTexte.append(getSavoir("M"+seq.classe.familleEnseignement, cod))
+            lstCodes.append("Math "+cod)
+            lstCoul.append(constantes.COUL_DISCIPLINES['Mat'])
+        elif typ == "P": # Savoir Physique
+            lstTexte.append(getSavoir("P"+seq.classe.familleEnseignement, cod))
+            lstCodes.append("Phys "+cod)
+            lstCoul.append(constantes.COUL_DISCIPLINES['Phy'])
+        else:
+            if seq.classe.typeEnseignement == 'SSI':
+                lstTexte.append(getSavoir(seq.classe.typeEnseignement, cod))
+                lstCodes.append(cod)
+            else:
+                lstTexte.append(getSavoir('ET', cod))
+                lstCodes.append("ETT "+cod)
+            lstCoul.append((0.3,0.3,0.3))
+                
+#        if c[0] == '_': # Savoir d'ETT
+#            lstTexte.append(getSavoir('ET', c[1:]))
+#            lstCodes.append("ETT "+c[1:])
+#            lstCoul.append((0.3,0.3,0.3))
+#        else:
+#            lstTexte.append(getSavoir(seq.classe.typeEnseignement, c))
+#            lstCodes.append(c)
+#            lstCoul.append((0,0,0))
         
     lstTexteS = []   
     for c in seq.prerequisSeance:
@@ -557,7 +579,19 @@ def Draw(ctx, seq, mouchard = False):
         lstTexteC.append(getCompetence(seq, c))
     lstTexteS = []   
     for c in seq.obj["S"].savoirs:
-        lstTexteS.append(getSavoir(seq.classe.typeEnseignement, c))
+        typ, cod = c[0], c[1:]
+        if typ == "S": # Savoir spécialité STI2D
+            lstTexteS.append(getSavoir(seq.classe.typeEnseignement, cod))
+        elif typ == "M": # Savoir Math
+            lstTexteS.append(getSavoir("M"+seq.classe.familleEnseignement, cod))
+        elif typ == "P": # Savoir Physique
+            lstTexteS.append(getSavoir("P"+seq.classe.familleEnseignement, cod))
+        else:
+            if seq.classe.typeEnseignement == 'SSI':
+                lstTexteS.append(getSavoir(seq.classe.typeEnseignement, cod))
+            else:
+                lstTexteS.append(getSavoir('ET', cod))
+
     h = rect_height+0.0001
     hC = hS = h/2
     if len(lstTexteS) > 0 or len(lstTexteC) > 0:
@@ -570,7 +604,8 @@ def Draw(ctx, seq, mouchard = False):
         seq.obj["C"].pts_caract = getPts(r)
         
         ctx.set_source_rgba (0.0, 0.0, 0.0, 1.0)
-        r = liste_code_texte(ctx, seq.obj["S"].savoirs, lstTexteS, x0, y0+hC, rect_width, hS, 0.008)
+        r = liste_code_texte(ctx, [s[1:] for s in seq.obj["S"].savoirs], 
+                             lstTexteS, x0, y0+hC, rect_width, hS, 0.008)
         seq.obj["S"].pts_caract = getPts(r)
     
     seq.obj["C"].rect = [(x0, y0, rect_width, hC)]

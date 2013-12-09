@@ -48,6 +48,8 @@ import constantes_AC
 import constantes_ITEC
 import constantes_EE
 import constantes_SSI
+import constantes_MATH
+import constantes_PHY
 
 # Les icones des branches de l'abre et un curseur perso
 import images
@@ -405,7 +407,10 @@ for t in listEnseigmenent:
     Enseigmenent[t] = Modules[t].Enseigmenent
     fichierProgressionProgramme[t] = Modules[t].fichierProgressionProgramme
 
-
+dicSavoirs["MSSI"] = constantes_MATH.dicSavoirs_SSI
+dicSavoirs["MSTI"] = constantes_MATH.dicSavoirs_STI
+dicSavoirs["PSSI"] = constantes_PHY.dicSavoirs_SSI
+dicSavoirs["PSTI"] = constantes_PHY.dicSavoirs_STI
 
 Fichier_GRILLE = {} 
 Cellules_NON = {}   
@@ -797,9 +802,10 @@ def trier(l):
 # Pour obtenir l'intitulé d'un savoir à partir de son code 
 #        fonction recursive
 def getSavoir(typeEns, code, dic = None, c = 1):
-#    print "getSavoir", code, dic
+#    print "getSavoir", code, dic,
     if dic == None:
         dic = dicSavoirs[typeEns]
+#    print dic
 #    if c == None:
 #        c = len(code.split("."))
 #        c = 1
