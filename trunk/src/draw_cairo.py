@@ -823,7 +823,7 @@ def show_lignes(ctx, lignes, x, y, w, h, ha, va):
     return posmax
     
 
-def curve_rect_titre(ctx, titre, rect, coul_bord, coul_int, taille_font = 0.01, rayon = 0.025, epaiss = 0.003):
+def curve_rect_titre(ctx, titre, rect, coul_bord, coul_int, taille_font = 0.01, rayon = 0.02, epaiss = 0.002):
     ctx.set_line_width(epaiss)
     x0, y0, rect_width, rect_height = rect
     
