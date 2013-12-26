@@ -31,7 +31,7 @@ import ConfigParser
 import os.path
 import recup_excel
 import io
-
+import ast
 import wx.combo
 #from constantes import *
 import constantes, constantes_SSI
@@ -140,13 +140,15 @@ class Options:
             with io.open(self.fichierOpt, 'r', encoding='utf_8_sig') as fp:
                 config.readfp(fp)
         config.read(self.fichierOpt)
-        print "ouverture :",self.fichierOpt
+        print "Ouverture Options:",self.fichierOpt
+        
         for titre in self.typesOptions.keys():
             titreUtf = titre.encode('utf-8')
 #            print titreUtf, self.typesOptions[titre].keys()
+            
             for titreopt in self.typesOptions[titre].keys():
                 opt = self.typesOptions[titre][titreopt] 
-#                print type(opt), opt
+#                print titreopt, type(opt), opt
                 if type(opt) == int:
                     opt = config.getint(titreUtf, titreopt)
                 elif type(opt) == float:
@@ -160,15 +162,24 @@ class Options:
                     opt = wx.Colour(v[0], v[1], v[2], v[3])
                 elif type(opt) == list:
                     d = {}
+                    num = None
                     for n, v in config.items(titreUtf):
-#                        print titreopt, n
+#                        print titreopt, n, v
                         if titreopt.lower() in n:
-                            d[eval(n.rsplit("_")[-1])] = unicode(config.get(titreUtf, n))
+                            try:
+                                num = ast.literal_eval(n.rsplit("_")[-1])
+                                d[num] = unicode(config.get(titreUtf, n))
+                            except ValueError:
+                                num = None
+                            
 #                    print d, "-->",
-                    
-                    l = []
-                    for i in range(len(d)):
-                        l.append(d[i][1:-1])
+                    if num != None:
+                        l = [d[i][1:-1] for i in range(len(d))]
+#                        l = []
+#                        for i in range(len(d)):
+#                            l.append(d[i][1:-1])
+                    else:
+                        l= []
                     opt = l
 #                    print l, type(l[0])
                     
@@ -232,6 +243,9 @@ class Options:
         self.optClasse["PositionsCI_ET"] = [po for po in PositionCibleCI]
         self.optClasse["TypeEnseignement"] = "SSI"
         
+#        self.optClasse["NombreRevues"] = 2
+#        self.optClasse["PositionRevue"] = constantes.POSITIONS_REVUES[self.optClasse["TypeEnseignement"]][self.optClasse["NombreRevues"]]
+        
         self.optSystemes["Systemes"] = []
         self.optSystemes["Nombre"] = []
         
@@ -245,8 +259,14 @@ class Options:
         if hasattr(classe, 'ci_ET'):
             self.optClasse["CentresInteretET"] = classe.ci_ET
             self.optClasse["PositionsCI_ET"] = classe.posCI_ET
+        if hasattr(classe, 'ci_SSI'):    
+            self.optClasse["CentresInteretSSI"] = classe.ci_SSI
         
         self.optClasse["TypeEnseignement"] = classe.typeEnseignement
+        
+#        self.optClasse["NombreRevues"] = classe.nbrRevues
+#        self.optClasse["PositionRevue"] = constantes.POSITIONS_REVUES[self.optClasse["TypeEnseignement"]][self.optClasse["NombreRevues"]]
+        
         
     ############################################################################
     def validerSystemes(self, sequence):

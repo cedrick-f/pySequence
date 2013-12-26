@@ -61,7 +61,7 @@ cible = Executable(
 
 
 setup(  name = "pySequence",
-        version = "4.6",
+        version = "4.7",
         author = "Cedrick FAURY & Jean-Claude FRICOU",
         description = u"Aide à la réalisation de fiches de séquence pédagogiques et à la validation de projets",
         options = {"build_exe": build_exe_options},

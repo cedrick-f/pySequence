@@ -40,7 +40,7 @@ Copyright (C) 2011-2013
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "4.6beta1"
+__version__ = "4.7beta1"
 
 #from threading import Thread
 
@@ -737,13 +737,18 @@ class Classe():
     def MiseAJourTypeEnseignement(self):
         if hasattr(self, 'codeBranche'):
             self.codeBranche.SetLabel(constantes.Enseigmenent[self.typeEnseignement][0])
-        if self.typeEnseignement == "SSI":
-            self.ci_SSI = self.options.optClasse["CentresInteretSSI"]
-            self.ci_ET = self.posCI_ET = None
-        else:
-            self.ci_ET = self.options.optClasse["CentresInteretET"]
-            self.posCI_ET = self.options.optClasse["PositionsCI_ET"]
-            self.ci_SSI = None
+        
+        self.ci_SSI = self.options.optClasse["CentresInteretSSI"]
+        self.ci_ET = self.options.optClasse["CentresInteretET"]
+        self.posCI_ET = self.options.optClasse["PositionsCI_ET"]
+        
+#        if self.typeEnseignement == "SSI":
+#            self.ci_SSI = self.options.optClasse["CentresInteretSSI"]
+#            self.ci_ET = self.posCI_ET = None
+#        else:
+#            self.ci_ET = self.options.optClasse["CentresInteretET"]
+#            self.posCI_ET = self.options.optClasse["PositionsCI_ET"]
+#            self.ci_SSI = None
         
         
     ######################################################################################  
@@ -873,7 +878,7 @@ class Classe():
             calculerEffectifs(self)
         
         if hasattr(self, 'panelPropriete'):
-            self.doc.MiseAJourTypeEnseignement()
+#            self.doc.MiseAJourTypeEnseignement()
             self.panelPropriete.MiseAJour()
             
         
@@ -1631,8 +1636,8 @@ class Projet(BaseDoc, Objet_sequence):
         
         # Organisation des phases du projet
         self.nbrRevues = 2
-        self.positionRevues = list(constantes.POSITIONS_REVUES[self.GetTypeEnseignement()][self.nbrRevues])
-        
+        self.positionRevues = list(constantes.POSITIONS_REVUES[self.GetTypeEnseignement(simple = True)][self.nbrRevues])
+        print self.positionRevues
         # Année Scolaire
         self.annee = constantes.getAnneeScolaire()
         
@@ -1852,6 +1857,7 @@ class Projet(BaseDoc, Objet_sequence):
         
     ######################################################################################  
     def setBranche(self, branche):
+#        print "setBranche projet"
         Ok = True
         err = 0
         
@@ -1864,8 +1870,11 @@ class Projet(BaseDoc, Objet_sequence):
         self.nbrRevues = eval(branche.get("NbrRevues", "2"))
         self.positionRevues = branche.get("PosRevues", 
                                           '-'.join(list(constantes.POSITIONS_REVUES[self.GetTypeEnseignement(simple = True)][self.nbrRevues]))).split('-')
-        
+#        print self.nbrRevues
+#        print self.positionRevues
 #        self.R1apresConception = eval(branche.get("R1avC", "False"))
+        
+        self.MiseAJourTypeEnseignement()
         
         self.position = eval(branche.get("Position", "0"))
         self.annee = eval(branche.get("Annee", str(constantes.getAnneeScolaire())))
@@ -3031,11 +3040,11 @@ class Savoirs(Objet_sequence):
     
     ######################################################################################  
     def setBranche(self, branche):
-        print "setBranche Savoirs"
+#        print "setBranche Savoirs"
         self.savoirs = []
         for i in range(len(branche.keys())):
             code = branche.get("S"+str(i), "")
-            print code,
+#            print code,
             if code != "":
                 if not code[0] in ["B", "S", "M", "P"]: # version < 4.6
                     if code[0] == "_":
@@ -3047,9 +3056,9 @@ class Savoirs(Objet_sequence):
                             code = "S"+code
                         else:
                             code = "B"+code
-                    print "->", code
-                else:
-                    print
+#                    print "->", code
+#                else:
+#                    print
                 self.savoirs.append(code)
         if hasattr(self, 'panelPropriete'):
             self.panelPropriete.MiseAJour()
@@ -4547,7 +4556,7 @@ class Systeme(ElementDeSequence, Objet_sequence):
         self.nom  = branche.get("Nom", "")
         self.lien.setBranche(branche, self.GetPath())
 
-        self.nbrDispo.v[0] = eval(branche.get("Nbr", 1))
+        self.nbrDispo.v[0] = eval(branche.get("Nbr", "1"))
         data = branche.get("Image", "")
         if data != "":
             self.image = PyEmbeddedImage(data).GetBitmap()
@@ -5582,6 +5591,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         #############################################################################################
         options = Options.Options()
         if options.fichierExiste():
+#            options.ouvrir(DEFAUT_ENCODING)
             try :
                 options.ouvrir(DEFAUT_ENCODING)
             except:
@@ -6706,8 +6716,10 @@ class FenetreSequence(FenetreDocument):
                 # La classe
                 classe = root.find("Classe")
                 self.classe.setBranche(classe)
+                self.sequence.MiseAJourTypeEnseignement()
                 self.sequence.setBranche(sequence)  
-      
+            
+          
         except:
             messageErreur(self,u"Erreur d'ouverture",
                           u"La séquence pédagogique\n    %s\n n'a pas pu être ouverte !" %nomCourt)
@@ -6726,6 +6738,9 @@ class FenetreSequence(FenetreDocument):
         self.sequence.PubDescription()
         self.sequence.SetLiens()
         self.sequence.VerifPb()
+        
+        
+
         self.sequence.VerrouillerClasse()
         self.arbre.SelectItem(self.classe.branche)
 
@@ -6914,7 +6929,6 @@ class FenetreProjet(FenetreDocument):
                 message += constantes.getOkErr(Ok) + u"\n"
                 
                 # Le projet
-                
                 message += u"Construction de la structure du projet..."
                 dlg.Update(count, message)
                 count += 1
@@ -8304,6 +8318,7 @@ class PanelPropriete_Classe(PanelPropriete):
             
             wx.CallAfter(self.InitListe)
             wx.CallAfter(self.MiseAJourToolbar)
+            
 #            if not ouverture:
 #                self.InitListe()
 #                self.MiseAJourToolbar()
@@ -8619,6 +8634,7 @@ class ListeCI(ULC.UltimateListCtrl):
         else:
             l = self.classe.ci_SSI
             
+#        print "   ", l
         for i,ci in enumerate(l):
             index = self.InsertStringItem(sys.maxint, "CI"+str(i+1))
             self.SetStringItem(index, 1, ci)
@@ -8994,16 +9010,17 @@ class PanelPropriete_CI(PanelPropriete):
     def MiseAJour(self, sendEvt = False):
         if self.CI.GetTypeEnseignement() == 'ET':
             self.panel_cible.GererBoutons(True)
+            if hasattr(self, 'b2CI'):
+                if len(self.CI.numCI) > 2:
+                    self.b2CI.Enable(False)
+                else:
+                    self.b2CI.Enable(True)
         else:
             for num in self.CI.numCI:
                 self.group_ctrls[num][0].SetValue(True)
             self.Layout()
         
-        if hasattr(self, 'b2CI'):
-            if len(self.CI.numCI) > 2:
-                self.b2CI.Enable(False)
-            else:
-                self.b2CI.Enable(True)
+        
             
         if sendEvt:
             self.sendEvent()
@@ -9585,11 +9602,11 @@ class PanelPropriete_Savoirs(PanelPropriete):
         """ Coche tous les savoirs a True de self.savoirs.savoirs 
             dans les différents arbres
         """
-        print "MiseAJour Savoirs"
+#        print "MiseAJour Savoirs"
         self.arbre.UnselectAll()
         for s in self.savoirs.savoirs:
             typ, cod = s[0], s[1:]
-            print typ, cod
+#            print typ, cod
             if typ == "S": # Savoir spécialité STI2D
                 i = self.arbreSpe.get_item_by_label(s[1:], self.arbreSpe.GetRootItem())
                 if i.IsOk():
