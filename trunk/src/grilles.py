@@ -121,21 +121,15 @@ def getTableau(parent, doc):
         messageErreur(parent, u"Fichier non trouvé !",
                               u"Le fichier original de la grille,\n    " + fichierPB[0] + u"\n" \
                               u"n'a pas été trouvé ! \n")
+    else:
+        print "Erreur", err
 
 
 def modifierGrille(doc, tableur, eleve):
-#    print "modifierGrille"
+    print "modifierGrille"
     
-#    tableur[0].show()
-#    tableur[1].show()
-    
-#    shts = tableur.getSheets()
    
-    # On supprime les feuilles des autres spécialités
-#    if doc.GetTypeEnseignement() != 'SSI':
-#        for s in ['AC', 'ITEC', 'EE', 'SIN']:
-#            if s != doc.GetTypeEnseignement():
-#                tableur.delSheet(s)
+    
     #
     # On coche les cellules "non"
     #     
@@ -144,6 +138,7 @@ def modifierGrille(doc, tableur, eleve):
     #clef = code compétence
     #valeur = liste [True False ...] des indicateurs à mobiliser
     dicIndic = eleve.GetDicIndicateurs()
+#    print eleve.nom, dicIndic
     
     for feuille, cellules in dic:
         for comp, cells in cellules.items():
@@ -167,18 +162,68 @@ def modifierGrille(doc, tableur, eleve):
                         else:
                             t = tableur[0]
                         t.setCell(2, l, c, COCHE)
-                else: # indicateur évalué --> on coche R_ !
-                    if doc.GetTypeEnseignement(simple = True) == "STI" and feuille != Feuille_ETT:
+                
+#                else: # indicateur évalué --> on rempli la colonne "Revues" (J) !
+#                    if doc.GetTypeEnseignement(simple = True) == "STI" and feuille != Feuille_ETT:
+#                        l, c = cell
+#                        c = COL_REVUE
+#                        for r in eleve.parent.getTachesRevue()[:-1]:
+#                            if comp+"_"+str(j+1) in r.indicateurs:
+#                                tableur[0].setCell(2, l, c, r.phase[1])
+#                    
+#                    elif doc.GetTypeEnseignement(simple = True) == "SSI":
+#                        l, c = cell
+#                        c = COL_REVUE
+#                        for r in eleve.parent.getTachesRevue()[:-1]:
+#                            if comp+"_"+str(j+1) in r.indicateurs:
+#                                tableur.setCell(2, l, c, r.phase[1])
+
+    #
+    # On rempli les cellules "Revue" (colonne J)
+    #     
+    dic = Cellules_NON[doc.GetTypeEnseignement()]
+    
+    if eleve.projet.nbrRevues == 2:
+        lstRevues = ["R1", "R2"]
+    else:
+        lstRevues = ["R1", "R2", "R3"]
+    #clef = code compétence
+    #valeur = liste [True False ...] des indicateurs à mobiliser
+    dicIndic = [eleve.GetDicIndicateurs(limite = r) for r in lstRevues]
+
+#    print eleve.nom
+    
+    for feuille, cellules in dic:
+        for comp, cells in cellules.items():
+            for j, cell in enumerate(cells):
+                for i, r in enumerate(lstRevues):
+                    # indic = l'indicateur "comp" doit être évalué
+#                    print dicIndic[i]
+                    if comp in dicIndic[i].keys():
+                        indic = dicIndic[i][comp][j]
+                    else:
+                        indic = False
+                    rev = eleve.projet.getTachesRevue()[i]
+#                    print rev
+                    if indic: # indicateur évalué --> on rempli la colonne "Revues" (J) !
                         l, c = cell
                         c = COL_REVUE
-                        for r in eleve.parent.getTachesRevue()[:-1]:
-                            if comp+"_"+str(j+1) in r.indicateurs:
-                                tableur[0].setCell(2, l, c, r.phase[1])
+                        if doc.GetTypeEnseignement(simple = True) == "STI" and feuille != Feuille_ETT:
+                            if comp+"_"+str(j+1) in rev.indicateursEleve[eleve.id]:
+                                tableur[0].setCell(2, l, c, str(i+1))
+                                break
+                        elif doc.GetTypeEnseignement(simple = True) == "SSI":
+                            if comp+"_"+str(j+1) in rev.indicateursEleve[eleve.id]:
+                                tableur.setCell(2, l, c,  str(i+1))
+                                break
                     
-                if doc.GetTypeEnseignement(simple = True) == "SSI" and dicIndicateurs['SSI'][comp][j][1]:
-                    l, c = cell
-                    tableur.setColor(feuille, l, c, 5)
+#                if doc.GetTypeEnseignement(simple = True) == "SSI" and dicIndicateurs['SSI'][comp][j][1]:
+#                    l, c = cell
+#                    tableur.setColor(feuille, l, c, 5)
 
+    #
+    # On rajoute quelques informations
+    #
     if doc.GetTypeEnseignement(simple = True) == "SSI":
         dicInfo = Cellules_INFO_SSI
         tb = [tableur]

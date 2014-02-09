@@ -38,7 +38,7 @@ Created on 26 oct. 2011
 
 import cairo
 from draw_cairo import LargeurTotale, font_family, curve_rect_titre, show_text_rect_fix, show_text_rect, \
-                        boule, getHoraireTxt, liste_code_texte, rectangle_plein, barreH, tableauV, minFont, tableauH
+                        boule, getHoraireTxt, liste_code_texte, rectangle_plein, barreH, tableauV, minFont, maxFont, tableauH
 
 from math import log
 
@@ -244,10 +244,12 @@ def DefinirZones(prj, ctx):
     a = 1
     h = ecartTacheY
     for t in prj.taches:
-        h += calcH(t.GetDuree())
+        if not t.phase in ["R1", "R2", "R3"]:
+            h += calcH(t.GetDuree())
     
+    hr = prj.nbrRevues*len(prj.eleves)*hTacheMini
     b = hTacheMini
-    a = (tailleZTaches[1] - sommeEcarts - b*len(prj.taches)) / h
+    a = (tailleZTaches[1] - sommeEcarts - b*len(prj.taches) - hr) / h
     
 
 
@@ -264,9 +266,6 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
     """ Dessine une fiche de séquence de la séquence <prj>
         dans un contexte cairo <ctx>
     """
-    
-#    print ctx.text_extents("AAA BBB")
-#    print ctx.text_extents("AAA\nBBB")
     
 #        print "Draw séquence"
 #    InitCurseur()
@@ -559,7 +558,8 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
                      (posZDeroul[0], posZDeroul[1], 
                       tailleZDeroul[0], tailleZDeroul[1]), 
                      BcoulZDeroul, IcoulZDeroul, fontZDeroul)
-    y = posZTaches[1]
+    
+    y = posZTaches[1] - ecartTacheY
     
     # Les positions en Y haut et bas des phases
     yh_phase = {'Ana' : [[], []], 
@@ -589,6 +589,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
                 yh_phase[t.phase][1].append(yb)
             y = yb
             
+        
         phase = t.phase
 #    print "    ", time.time() - tps
     #
@@ -597,9 +598,17 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
     #
     x = posZTaches[0] + tailleZTaches[0]
     for t, y in yTaches: 
-        if not t.phase in ["R1", "R2", "R3", "S"]:
+        if not t.phase in ["R1", "R2", "R3", "S", "Rev"]:
             DrawLigne(ctx, x, y)
-        DrawCroisementsCompetencesTaches(ctx, t, y)
+        if t.phase in ["R1", "R2", "R3", "S"]:
+            dy = hTacheMini
+            y = y - ((len(prj.eleves)-1)*dy)/2
+#            print "phase = ", t.phase
+            for eleve in prj.eleves:
+                DrawCroisementsCompetencesRevue(ctx, t, eleve, y)
+                y += dy
+        else:
+            DrawCroisementsCompetencesTaches(ctx, t, y)
     
     # Nom des phases
     for phase, yh in yh_phase.items():
@@ -624,8 +633,10 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
 #    tps = time.time()
     if prj.position == 5:
         y0 = posZTaches[1]
-        y4 = y1+2*ecartTacheY + 0.015
-        y5 = y2+2*ecartTacheY + 0.015
+        y4 = y1+len(prj.eleves) * hTacheMini + 2*ecartTacheY
+#        y4 = y1+2*ecartTacheY + 0.015
+#        y5 = y2+2*ecartTacheY + 0.015
+        y5 = y2+len(prj.eleves) * hTacheMini + 2*ecartTacheY
         md1 = md2 = md3 = 0
         for i, e in enumerate(prj.eleves):
             md1 = max(e.GetDuree("R1"), md1)
@@ -890,12 +901,14 @@ def Draw_CI(ctx, CI):
 def DrawTacheRacine(ctx, tache, y):
     global yTaches
     
+    if tache.phase in ["R1", "R2", "R3", "S"]:
+        h = max(len(tache.projet.eleves) * hTacheMini, hTacheMini)
+    else:
+        h = calcH(tache.GetDuree())
+    
     #
     # Flèche verticale indiquant la durée de la tâche
     #
-    
-    h = calcH(tache.GetDuree())
-
     if not tache.phase in ["R1", "R2", "R3", "S", "Rev"]:
 #        fleche_verticale(ctx, posZTaches[0] - wDuree/2 - ecartX/4, y, 
 #                         h, wDuree, (0.9,0.8,0.8,0.5))
@@ -919,7 +932,7 @@ def DrawTacheRacine(ctx, tache, y):
     # Indication du délai pour revue
     #
     elif tache.phase in ["R1", "R2", "R3", "Rev"]:
-        
+        print "delai", tache
         ctx.set_source_rgba (0.9,0.8,0.8,0.5)
         if tache.phase == "Rev":
             x = posZTaches[0] - wDuree - ecartX/4
@@ -938,7 +951,7 @@ def DrawTacheRacine(ctx, tache, y):
                                   cairo.FONT_WEIGHT_BOLD)
         show_text_rect(ctx, getHoraireTxt(tache.GetDelai()), 
                        (x, y, w, h), 
-                       orient = 'h', b = 0.1)
+                       orient = 'h', fontsizeMinMax = (minFont, 0.015), b = 0.1)
     
 #    elif tache.phase == "Rev":
 #        h = calcH(1)
@@ -987,7 +1000,7 @@ def DrawTacheRacine(ctx, tache, y):
             t = tache.intitule
             hc = h
         show_text_rect(ctx, t, (x, y, tailleZTaches[0], hc), ha = 'g', 
-                       wrap = False, fontsizeMinMax = (minFont, -1), b = 0.2)
+                       wrap = False, fontsizeMinMax = (minFont, 0.02), b = 0.2)
     
     
     #
@@ -1027,9 +1040,9 @@ def DrawTacheRacine(ctx, tache, y):
         
 ######################################################################################  
 def DrawLigne(ctx, x, y, gras = False):
-    dashes = [ 0.010,   # ink
+    dashes = [ 0.002,   # ink
                0.002,   # skip
-               0.005,   # ink
+               0.002,   # ink
                0.002,   # skip
                ]
     ctx.set_source_rgba (0, 0.0, 0.2, 0.6)
@@ -1050,33 +1063,49 @@ def DrawLigne(ctx, x, y, gras = False):
 def DrawCroisementsCompetencesTaches(ctx, tache, y):
     DrawBoutonCompetence(ctx, tache, tache.GetDicIndicateurs(), y)
     
-        
+
+######################################################################################  
+def DrawCroisementsCompetencesRevue(ctx, revue, eleve, y):
+#    print "DrawCroisementsCompetencesRevue", eleve, revue.phase
+#    print "   ", revue.GetDicIndicateursEleve(eleve)
+    DrawBoutonCompetence(ctx, revue, revue.GetDicIndicateursEleve(eleve), y)
+    
 #####################################################################################  
 def DrawCroisementsElevesTaches(ctx, tache, y):
-
-#    x = posZTaches[0] + tailleZTaches[0]
-#    #
-#    # Les lignes horizontales
-#    #
-#    if not tache.phase in ["R1", "R2", "S"]:
-#        DrawLigne(ctx, x, y)
-    
-        
+    """ Dessine les "boules"
+    """ 
     #
     # Croisements Tâche/Eleves
     #
-    r = 0.006
+   
     if tache.phase in ["R1", "R2", "R3", "S"]:
-        lstElv = range(len(tache.parent.eleves))
+        lstElv = range(len(tache.projet.eleves))
     else:
         lstElv = tache.eleves
+    
+    if tache.phase in ["R1", "R2", "R3", "S"]:
+        dy = hTacheMini
+        y = y - ((len(tache.projet.eleves)-1)*dy)/2
+        r = 0.005
+    else:
+        dy = 0
+        r = 0.006
+        
     for i in lstElv:
+        if tache.phase in ["R1", "R2", "R3", "S"]:
+            color1 = BCoulTache[tache.phase]
+            color0 = (1, 1, 1, 1)
+        else:
+            color0 = constantes.COUL_ELEVES[i][0]
+            color1 = constantes.COUL_ELEVES[i][1]
+
         _x = xEleves[i]
         boule(ctx, _x, y, r, 
-              constantes.COUL_ELEVES[i][0], constantes.COUL_ELEVES[i][1],
+              color0 = color0, color1 = color1,
               transparent = False)
-        tache.parent.eleves[i].rect.append((_x -r , y - r, 2*r, 2*r))
-        tache.parent.eleves[i].pts_caract.append((_x,y))
+        tache.projet.eleves[i].rect.append((_x -r , y - r, 2*r, 2*r))
+        tache.projet.eleves[i].pts_caract.append((_x,y))
+        y += dy
         
 
 ######################################################################################  
@@ -1085,7 +1114,6 @@ def DrawCroisementsElevesCompetences(ctx, eleve, y):
     # Boutons
     #
     indic = eleve.GetDicIndicateurs()
-#    print eleve, indic
     DrawBoutonCompetence(ctx, eleve, indic, y)
     
 
@@ -1110,10 +1138,10 @@ def DrawBoutonCompetence(ctx, objet, dicIndic, y):
 #                              cairo.FONT_WEIGHT_BOLD)
         
         rect = (x, y-r, wColComp, 2*r, objet)
-        if s in objet.parent.rectComp.keys() and objet.parent.rectComp[s] != None:
-            objet.parent.rectComp[s].append(rect)
+        if s in objet.projet.rectComp.keys() and objet.projet.rectComp[s] != None:
+            objet.projet.rectComp[s].append(rect)
         else:
-            objet.parent.rectComp[s] = [rect]
+            objet.projet.rectComp[s] = [rect]
         
         objet.pts_caract.append((x,y))
         
@@ -1126,7 +1154,7 @@ def DrawBoutonCompetence(ctx, objet, dicIndic, y):
     #            ctx.rel_line_to (r*cos(dangle*a)+pi/2, r*sin(dangle*a)+pi/2)
     
                 if i:
-                    if constantes.dicIndicateurs[objet.parent.classe.typeEnseignement][s][a][1]:
+                    if constantes.dicIndicateurs[objet.projet.classe.typeEnseignement][s][a][1]:
                         ctx.set_source_rgba (ICoulCompR[0],ICoulCompR[1],ICoulCompR[2],1.0)
                     else:
                         ctx.set_source_rgba (ICoulCompS[0],ICoulCompS[1],ICoulCompS[2],1.0)
