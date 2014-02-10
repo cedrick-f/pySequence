@@ -932,7 +932,6 @@ def DrawTacheRacine(ctx, tache, y):
     # Indication du délai pour revue
     #
     elif tache.phase in ["R1", "R2", "R3", "Rev"]:
-        print "delai", tache
         ctx.set_source_rgba (0.9,0.8,0.8,0.5)
         if tache.phase == "Rev":
             x = posZTaches[0] - wDuree - ecartX/4

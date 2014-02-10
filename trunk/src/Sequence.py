@@ -2652,7 +2652,7 @@ class Projet(BaseDoc, Objet_sequence):
             les compétences et indicateurs 
             mobilisés par les tâches précédentes
         """
-        print "SetCompetencesRevuesSoutenance", len(self.eleves)
+#        print "SetCompetencesRevuesSoutenance", len(self.eleves)
         tousIndicateurs = constantes.dicIndicateurs[self.classe.typeEnseignement]
         tR1 = None
         tR2 = None
@@ -2667,47 +2667,39 @@ class Projet(BaseDoc, Objet_sequence):
             if t.phase in ["R1", "R2", "R3", "S", "Rev"]:
                 
                 for neleve in range(len(self.eleves)+1):
-                    if (neleve == 0) or True:#(self.eleves[neleve-1] in t.eleves):
-                
-                        if t.phase in ["R1", "Rev"] or (t.phase == "R2" and self.nbrRevues == 3):
 
-                            t.indicateursMaxiEleve[neleve] = []
-                        else:
-                            t.indicateursEleve[neleve] = []
-#                        if t.phase == "S":
-#                            t.indicateursEleve[neleve] = []
-#                        else:
-#                            t.indicateursEleve[neleve] = list(t.indicateursEleve[0])
-#                        print " >", t.phase, indicateurs[neleve]
-                        for c, l in indicateurs[neleve].items():
-                            for i, ok in enumerate(l):
-                                if ok:
-                                    codeIndic = c+"_"+str(i+1)
-                                    if tousIndicateurs[c][i][1]: # Indicateur "revue"
-                                        if t.phase in ["R1", "R2", "R3", "Rev"]:
+                    if t.phase in ["R1", "Rev"] or (t.phase == "R2" and self.nbrRevues == 3):
+                        t.indicateursMaxiEleve[neleve] = []
+                    else:
+                        t.indicateursEleve[neleve] = []
 
-                                            if t.phase in ["R1", "Rev"] or (t.phase == "R2" and self.nbrRevues == 3):
-                                                t.indicateursMaxiEleve[neleve].append(codeIndic)
-                                      
-                                            else:
-                                                if t.phase == "R2": # 2 revues
-                                                    if tR1 != None and not codeIndic in tR1.indicateursEleve[neleve]: # R1 est passée
-                                                        t.indicateursEleve[neleve].append(codeIndic)
-                                                       
-                                                                
-                                                else: # t.phase == "R3"
-                                                    if tR2 != None and not codeIndic in tR2.indicateursEleve[neleve] and not codeIndic in tR1.indicateursEleve[neleve]: # R2 est passée
-                                                        t.indicateursEleve[neleve].append(codeIndic)
-                                            
-                                            
-                                    else:
-                                        if t.phase == "S":
-                                            t.indicateursEleve[neleve].append(codeIndic)
+                    for c, l in indicateurs[neleve].items():
+                        for i, ok in enumerate(l):
+                            if ok:
+                                codeIndic = c+"_"+str(i+1)
+                                if tousIndicateurs[c][i][1]: # Indicateur "revue"
+                                    if t.phase in ["R1", "R2", "R3", "Rev"]:
+
+                                        if t.phase in ["R1", "Rev"] or (t.phase == "R2" and self.nbrRevues == 3):
+                                            t.indicateursMaxiEleve[neleve].append(codeIndic)
+                                  
+                                        else:
+                                            if t.phase == "R2": # 2 revues
+                                                if tR1 != None and not codeIndic in tR1.indicateursEleve[neleve]: # R1 est passée
+                                                    t.indicateursEleve[neleve].append(codeIndic)
+                                                   
+                                                            
+                                            else: # t.phase == "R3"
+                                                if tR2 != None and not codeIndic in tR2.indicateursEleve[neleve] and not codeIndic in tR1.indicateursEleve[neleve]: # R2 est passée
+                                                    t.indicateursEleve[neleve].append(codeIndic)
+                                        
+                                        
+                                else:
+                                    if t.phase == "S":
+                                        t.indicateursEleve[neleve].append(codeIndic)
     
                     if neleve == 0:
-                         if t.phase in ["R1", "Rev"] or (t.phase == "R2" and self.nbrRevues == 3):
-#                        if t.phase in ["R1", "Rev", self.getCodeLastRevue()]:
-                            print t.phase
+                        if t.phase in ["R1", "Rev"] or (t.phase == "R2" and self.nbrRevues == 3):
                             ti = []
                             for i in t.indicateursEleve[neleve]:
                                 if i in t.indicateursMaxiEleve[neleve]:
@@ -4142,7 +4134,22 @@ class Tache(Objet_sequence):
     def GetApp(self):
         return self.projet.GetApp()
 
-
+    ######################################################################################  
+    def ActualiserDicIndicateurs(self):
+        """ Complète le dict des compétences/indicateurs globaux (tous les élèves confondus)
+        """
+#        print "ActualiserDicIndicateurs", self
+#        print self.indicateursEleve[0]
+        for i, eleve in enumerate(self.projet.eleves):
+            indicateurs = self.indicateursEleve[i+1]#self.GetDicIndicateursEleve(eleve)
+            for c in indicateurs:
+                if not c in self.indicateursEleve[0]:
+                    self.indicateursEleve[0].append(c)
+#                self.indicateursEleve[0] = [x or y for x, y in zip(self.indicateursEleve[0], lc)]
+#        print self.indicateursEleve[0]
+            
+            
+        
     ######################################################################################  
     def GetDicIndicateurs(self):
         """ Renvoie l'ensemble des indicateurs de compétences à mobiliser pour cette tâche
@@ -4242,6 +4249,8 @@ class Tache(Objet_sequence):
                     
             if self.phase in lstR:
                 for e, indicateurs in self.indicateursEleve.items()[1:]:
+                    if e > len(self.projet.eleves):
+                        break
                     brancheE = ET.Element("Eleve"+str(e))
                     brancheCmp.append(brancheE)
                     for i, c in enumerate(indicateurs):
@@ -4307,6 +4316,7 @@ class Tache(Objet_sequence):
             # pour compatibilité acsendante
             #
             brancheCmp = branche.find("Competences")
+            
             if brancheCmp != None: ## ANCIENNE VERSION (<beta6)
                 Ok = False
                 err = err | constantes.ERR_PRJ_T_VERSION
@@ -4349,12 +4359,13 @@ class Tache(Objet_sequence):
                     #
                     if self.phase in lstR:
                         for i, e in enumerate(self.projet.eleves):
-#                            self.indicateursEleve[i+1] = list(self.indicateursEleve[0])
+                            
                             self.indicateursEleve[i+1] = []
+                            
                             brancheE = brancheInd.find("Eleve"+str(i+1))
                             if brancheE != None:
-                                for i, e in enumerate(brancheE.keys()):
-                                    codeindic = brancheInd.get(e)
+                                for c in brancheE.keys():
+                                    codeindic = brancheE.get(c)
                                     code, indic = codeindic.split('_')
                                     
                                     # pour compatibilité version < 3.19
@@ -4375,31 +4386,32 @@ class Tache(Objet_sequence):
                                     if not codeindic in self.indicateursEleve[i+1]:
                                         self.indicateursEleve[i+1].append(codeindic)
                             
-                            
-#                            else: # Version < 4.7beta1
-#                                indicprov = []
-#                                for i, e in enumerate(brancheInd.keys()):
-#                                    codeindic = brancheInd.get(e)
-#                                    code, indic = codeindic.split('_')
-#                                    
-#                                    # pour compatibilité version < 3.19
-#                                    if code == "CO8.es":
-#                                        code = "CO8.0"
-#                                        codeindic = code+"_"+indic
-#                                        
-#                                    # Si c'est la dernière phase et que c'est une compétence "Revue" ... on passe
-#                                    indic = eval(indic)-1
-#                                    if self.phase == 'XXX' and constantes.dicIndicateurs[self.GetTypeEnseignement()][code][indic][1]:
-#                                        continue
-#                                        
-#                                    # si le type d'enseignement ne colle pas avec les indicateurs (pb lors de l'enregistrement)
-#                                    if not code in constantes.dicIndicateurs[self.GetTypeEnseignement()]:
-#                                        return False, err | constantes.ERR_PRJ_T_TYPENS
-#
-#                                    indicprov.append(codeindic)
-#                                
-#                                for i, e in enumerate(self.projet.eleves):
-#                                    self.indicateursEleve[i+1] = list(indicprov)
+                            else: # Pour ouverture version <4.8beta1
+#                                print self.phase, "< 4.8beta1"
+                                indicprov = []
+                                for c in brancheInd.keys():
+                                    codeindic = brancheInd.get(c)
+                                    code, indic = codeindic.split('_')
+                                    
+                                    # pour compatibilité version < 3.19
+                                    if code == "CO8.es":
+                                        code = "CO8.0"
+                                        codeindic = code+"_"+indic
+                                        
+                                    # Si c'est la dernière phase et que c'est une compétence "Revue" ... on passe
+                                    indic = eval(indic)-1
+                                    if self.phase == 'XXX' and constantes.dicIndicateurs[self.GetTypeEnseignement()][code][indic][1]:
+                                        continue
+                                        
+                                    # si le type d'enseignement ne colle pas avec les indicateurs (pb lors de l'enregistrement)
+                                    if not code in constantes.dicIndicateurs[self.GetTypeEnseignement()]:
+                                        return False, err | constantes.ERR_PRJ_T_TYPENS
+
+                                    indicprov.append(codeindic)
+                                    dic = e.GetDicIndicateursRevue(self.phase)
+                                    if code in dic.keys():
+                                        if dic[code][indic]:
+                                            self.indicateursEleve[i+1].append(codeindic)
                                 
                     #
                     # Indicateurs tâche
@@ -4427,7 +4439,7 @@ class Tache(Objet_sequence):
                     
                 
                             
-
+        self.ActualiserDicIndicateurs()
             
         self.intituleDansDeroul = eval(branche.get("IntituleDansDeroul", "True"))
 #        print self.indicateursEleve
@@ -5335,7 +5347,7 @@ class Eleve(Personne, Objet_sequence):
             
             
     ######################################################################################  
-    def OuvrirGrilles(self):
+    def OuvrirGrilles(self, event):
         self.OuvrirGrille(0)
         if self.GetTypeEnseignement(simple = True) == "STI2D":
             self.OuvrirGrille(1)
@@ -5357,7 +5369,7 @@ class Eleve(Personne, Objet_sequence):
             return tableur
     
     ######################################################################################  
-    def GenererGrille(self, event, path = None, messageFin = True):
+    def GenererGrille(self, event = None, path = None, messageFin = True):
         
         if path == None:
             path = os.path.dirname(self.projet.GetApp().fichierCourant)
@@ -5375,7 +5387,8 @@ class Eleve(Personne, Objet_sequence):
         
         for i, (t, f) in enumerate(tf):
             try:
-                t.save(os.path.join(path, f))
+                cheminComplet = os.path.join(path, f)+".xls"
+                t.save(cheminComplet)
                 if messageFin:
                     dlg = wx.MessageDialog(self.projet.GetApp(), u"Génération de la grille réussie !", u"Génération de la grille réussie",
                                    wx.OK | wx.ICON_INFORMATION)
@@ -5388,7 +5401,7 @@ class Eleve(Personne, Objet_sequence):
                               u" - qu'aucun fichier portant le même nom n'est déja ouvert\n" \
                               u" - que le dossier choisi n'est pas protégé en écriture")
             t.close()
-            self.grille[i] = f
+            self.grille[i] = cheminComplet
     
         
     ######################################################################################  
@@ -5530,11 +5543,11 @@ class Eleve(Personne, Objet_sequence):
             if self.projet.GetTypeEnseignement(simple = True) == "SSI":
                 listItems.append([u"Générer grille", functools.partial(self.GenererGrille)])
                 if self.grille[0] != u"":
-                    listItems.append([u"Ouvrir grille", functools.partial(self.OuvrirGrille)])
+                    listItems.append([u"Ouvrir grille", functools.partial(self.OuvrirGrilles)])
             else:
                 listItems.append([u"Générer grilles", functools.partial(self.GenererGrille)])
                 if self.grille[0] != u"":
-                    listItems.append([u"Ouvrir grilles", functools.partial(self.OuvrirGrille)])
+                    listItems.append([u"Ouvrir grilles", functools.partial(self.OuvrirGrilles)])
     
             self.GetApp().AfficherMenuContextuel(listItems)
             
@@ -7243,41 +7256,41 @@ class FenetreProjet(FenetreDocument):
         
         Ok = True
         err = 0
-#        try:
-        root = ET.parse(fichier).getroot()
-        
-        # Le projet
-        projet = root.find("Projet")
-        if projet == None:
-            self.projet.setBranche(root)
-            
-        else:
-            # La classe
-            message += u"Construction de la structure de la classe..."
-            dlg.Update(count, message)
-            count += 1
-            classe = root.find("Classe")
-            Ok = Ok and self.classe.setBranche(classe)
-            message += constantes.getOkErr(Ok) + u"\n"
+        try:
+            root = ET.parse(fichier).getroot()
             
             # Le projet
-            message += u"Construction de la structure du projet..."
+            projet = root.find("Projet")
+            if projet == None:
+                self.projet.setBranche(root)
+                
+            else:
+                # La classe
+                message += u"Construction de la structure de la classe..."
+                dlg.Update(count, message)
+                count += 1
+                classe = root.find("Classe")
+                Ok = Ok and self.classe.setBranche(classe)
+                message += constantes.getOkErr(Ok) + u"\n"
+                
+                # Le projet
+                message += u"Construction de la structure du projet..."
+                dlg.Update(count, message)
+                count += 1
+                o,err = self.projet.setBranche(projet)
+                Ok = Ok and o
+                message += constantes.getOkErr(Ok) + u"\n"
+                
+            self.arbre.DeleteAllItems()
+            root = self.arbre.AddRoot("")
+            
+            message += u"Traitement des revues\n"
             dlg.Update(count, message)
             count += 1
-            o,err = self.projet.setBranche(projet)
-            Ok = Ok and o
-            message += constantes.getOkErr(Ok) + u"\n"
-            
-        self.arbre.DeleteAllItems()
-        root = self.arbre.AddRoot("")
-        
-        message += u"Traitement des revues\n"
-        dlg.Update(count, message)
-        count += 1
-        self.projet.SetCompetencesRevuesSoutenance()
+            self.projet.SetCompetencesRevuesSoutenance()
 
-#        except:
-#            Ok = False
+        except:
+            Ok = False
         
         if not Ok:
             m = u"Le projet\n    %s\nn'a pas pu être ouvert !" \
@@ -7358,30 +7371,9 @@ class FenetreProjet(FenetreDocument):
         
     #############################################################################
     def genererGrilles(self, event = None):
-#        mesFormats = "Tableur Excel (.xls)|*.xls"
-        
-        def getNomFichier(prefixe, eleve, projet):
-            nomFichier = prefixe+"_"+eleve.GetNomPrenom()+"_"+projet.intitule[:20]
-            for c in ["\"", "/", "\", ", "?", "<", ">", "|", ":", "."]:
-                nomFichier = nomFichier.replace(c, "_")
-            return nomFichier
-
-
-        def getTableurEtModif(projet, eleve):
-            tableur = grilles.getTableau(self, projet)
-            if tableur != None:
-                grilles.modifierGrille(projet, tableur, eleve)
-#            try:
-#                grilles.modifierGrille(projet, tableur, eleve)
-#            except:
-#                messageErreur(self, u"Accès refusé !",
-#                              u"Impossible d'accéder au fichier.\n\nVérifier :\n" \
-#                              u" - qu'aucun fichier portant le même nom n'est déja ouvert\n" \
-#                              u" - qu'Excel n'est pas déja ouvert (gestionnaire des tâches)")
-            return tableur
-        
-        
-        
+        """ Génération de toutes les grilles d'évaluation
+             - demande d'un dossier -
+        """
         dlg = wx.DirDialog(self, message = u"Emplacement des grilles", 
                             style=wx.DD_DEFAULT_STYLE|wx.CHANGE_DIR
                             )
@@ -7407,31 +7399,12 @@ class FenetreProjet(FenetreDocument):
             
             count = 0
             for e in self.projet.eleves:
-                if self.projet.GetTypeEnseignement() == 'SSI':
-                    nomFichier = getNomFichier("Grille", e, self.projet)
-                    dlgb.Update(count, u"Traitement du fichier\n\n"+nomFichier)
-                    dlgb.Refresh()
-                    count += 1
-                    tableur = getTableurEtModif(self.projet, e)
-                    tf = [[tableur, nomFichier]]
-                else:
-                    nomFichierR = getNomFichier("Grille_revue", e, self.projet)
-                    nomFichierS = getNomFichier("Grille_soutenance", e, self.projet)
-                    dlgb.Update(count, u"Traitement des fichiers\n\n"+nomFichierR+u"\n"+nomFichierS)
-                    dlgb.Refresh()
-                    count += 1
-                    tableur = getTableurEtModif(self.projet, e)
-                    tf = [[tableur[0], nomFichierR], [tableur[1], nomFichierS]]
-                
-                for t, f in tf:
-                    try:
-                        t.save(os.path.join(path, f))
-                    except:
-                        messageErreur(self, u"Erreur !",
-                                      u"Impossible d'enregistrer le fichier.\n\nVérifier :\n" \
-                                      u" - qu'aucun fichier portant le même nom n'est déja ouvert\n" \
-                                      u" - que le dossier choisi n'est pas protégé en écriture")
-                    t.close()
+                e.GenererGrille(path = path, messageFin = False)
+                dlgb.Update(count, u"Traitement de la grille de \n\n"+e.GetNomPrenom())
+                dlgb.Refresh()
+                count += 1
+                dlgb.Refresh()
+           
             
             dlgb.Update(count, u"Toutes les grilles ont été créées avec succès dans le dossier :\n\n"+path)
             dlgb.Destroy() 
@@ -12669,6 +12642,7 @@ class ChoixCompetenceEleve(wx.Panel):
         """ Active/désactive les cases à cocher
             selon que les élèves ont à mobiliser cette compétence/indicateur
         """
+#        print "MiseAJour", self.tache
         for i, e in enumerate(self.projet.eleves): 
             dicIndic = e.GetDicIndicateursRevue(self.tache.phase)
             comp = self.indic.split("_")[0]
@@ -12678,18 +12652,20 @@ class ChoixCompetenceEleve(wx.Panel):
                     self.cb[i].Enable(dicIndic[comp][indic-1])
             else:
                 self.cb[i].Enable(False)
-                  
+#            print "   ", i, self.cb[i].IsThisEnabled ()
+#            self.cb[i].Update()
         
     #############################################################################
     def Actualiser(self):
         """ Coche/décoche les cases à cocher
             
         """
-#        print "Actualiser", self.tache.indicateursEleve
+#        print "Actualiser", self.tache
 #        self.CocherTout(self.indic in self.tache.indicateurs)
         
         for i, e in enumerate(self.projet.eleves):
-            if self.cb[i].IsEnabled():
+            if self.cb[i].IsThisEnabled ():
+#                print "  ", self.tache.indicateursEleve[i+1]
                 if i+1 in self.tache.indicateursEleve.keys():
                     indicateurs = self.tache.indicateursEleve[i+1]
                     self.cb[i].SetValue(self.indic in indicateurs)
