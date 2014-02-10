@@ -4168,7 +4168,7 @@ class Tache(Objet_sequence):
     
     ######################################################################################  
     def GetDicIndicateursEleve(self, eleve):
-        """ Renvoie l'ensemble des indicateurs de compétences à mobiliser pour cette tâche
+        """ Renvoie l'ensemble des indicateurs de compétences à mobiliser pour cette tâche (revue)
             Dict :  clef = code compétence
                   valeur = liste [True False ...] des indicateurs à mobiliser
         """
@@ -5400,7 +5400,10 @@ class Eleve(Personne, Objet_sequence):
                               u"Impossible d'enregistrer le fichier.\n\nVérifier :\n" \
                               u" - qu'aucun fichier portant le même nom n'est déja ouvert\n" \
                               u" - que le dossier choisi n'est pas protégé en écriture")
-            t.close()
+            try:
+                t.close()
+            except:
+                pass
             self.grille[i] = cheminComplet
     
         
@@ -5478,14 +5481,15 @@ class Eleve(Personne, Objet_sequence):
 #        print " GetDicIndicateurs", self.id
         for t in self.projet.taches: # Toutes les tâches du projet
 #            print "  ", t.eleves
-            if self.id in t.eleves:     # L'élève est concerné par cette tâche
-                indicTache = t.GetDicIndicateurs() # Les indicateurs des compétences à mobiliser pour cette tâche
-                for c, i in indicTache.items():
-#                    print "    ",c,  i
-                    if c in indicateurs.keys():
-                        indicateurs[c] = [x or y for x, y in zip(indicateurs[c], i)]
-                    else:
-                        indicateurs[c] = i
+            if not t.phase in ["R1", "R2", "R3", "S", "Rev"]:
+                if self.id in t.eleves:     # L'élève est concerné par cette tâche
+                    indicTache = t.GetDicIndicateurs() # Les indicateurs des compétences à mobiliser pour cette tâche
+                    for c, i in indicTache.items():
+    #                    print "    ",c,  i
+                        if c in indicateurs.keys():
+                            indicateurs[c] = [x or y for x, y in zip(indicateurs[c], i)]
+                        else:
+                            indicateurs[c] = i
                 
         return indicateurs
         

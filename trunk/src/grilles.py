@@ -126,8 +126,6 @@ def getTableau(parent, doc):
 
 
 def modifierGrille(doc, tableur, eleve):
-    print "modifierGrille"
-    
    
     
     #
@@ -138,7 +136,7 @@ def modifierGrille(doc, tableur, eleve):
     #clef = code compétence
     #valeur = liste [True False ...] des indicateurs à mobiliser
     dicIndic = eleve.GetDicIndicateurs()
-#    print eleve.nom, dicIndic
+
     
     for feuille, cellules in dic:
         for comp, cells in cellules.items():
@@ -187,33 +185,35 @@ def modifierGrille(doc, tableur, eleve):
         lstRevues = ["R1", "R2"]
     else:
         lstRevues = ["R1", "R2", "R3"]
-    #clef = code compétence
-    #valeur = liste [True False ...] des indicateurs à mobiliser
-    dicIndic = [eleve.GetDicIndicateurs(limite = r) for r in lstRevues]
+    
 
-#    print eleve.nom
     
     for feuille, cellules in dic:
         for comp, cells in cellules.items():
             for j, cell in enumerate(cells):
                 for i, r in enumerate(lstRevues):
                     # indic = l'indicateur "comp" doit être évalué
-#                    print dicIndic[i]
-                    if comp in dicIndic[i].keys():
-                        indic = dicIndic[i][comp][j]
+#
+                    rev = eleve.projet.getTachesRevue()[i]
+                    
+                    #clef = code compétence
+                    #valeur = liste [True False ...] des indicateurs à mobiliser
+                    dicIndic = rev.GetDicIndicateursEleve(eleve)
+                    
+                    if comp in dicIndic.keys():
+                        indic = dicIndic[comp][j]
                     else:
                         indic = False
-                    rev = eleve.projet.getTachesRevue()[i]
-#                    print rev
+                  
                     if indic: # indicateur évalué --> on rempli la colonne "Revues" (J) !
                         l, c = cell
                         c = COL_REVUE
                         if doc.GetTypeEnseignement(simple = True) == "STI" and feuille != Feuille_ETT:
-                            if comp+"_"+str(j+1) in rev.indicateursEleve[eleve.id]:
+                            if comp+"_"+str(j+1) in rev.indicateursEleve[eleve.id+1]:
                                 tableur[0].setCell(2, l, c, str(i+1))
                                 break
                         elif doc.GetTypeEnseignement(simple = True) == "SSI":
-                            if comp+"_"+str(j+1) in rev.indicateursEleve[eleve.id]:
+                            if comp+"_"+str(j+1) in rev.indicateursEleve[eleve.id+1]:
                                 tableur.setCell(2, l, c,  str(i+1))
                                 break
                     
