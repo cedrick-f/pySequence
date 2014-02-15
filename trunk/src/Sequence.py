@@ -118,6 +118,8 @@ import functools
     
 # Pour enregistrer en xml
 import xml.etree.ElementTree as ET
+Element = type(ET.Element(None))
+
 
 # des widgets wx évolués "faits maison"
 from widgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_ENTIER_POS, messageErreur#, chronometrer
@@ -242,17 +244,29 @@ def toFileEncoding(path):
     except:
         return path
     
+    
 ######################################################################################  
 def rallonge(txt):
     return u" "+txt+" "
+
+
+######################################################################################  
+def pourCent(v, ajuster = False):
+    if ajuster:
+        return str(int(round(v*100))).rjust(3)+"%"
+    else:
+        return str(int(round(v*100)))+"%"
+
 
 ######################################################################################  
 def remplaceLF2Code(txt):
     return txt.replace("\n", "##13##")#.replace("\n", "##13##")#&#13")
     
+    
 ######################################################################################  
 def remplaceCode2LF(txt):
     return txt.replace("##13##", "\n")#&#13")
+    
     
 ######################################################################################  
 def forceID(xml):
@@ -277,19 +291,21 @@ def SetWholeText(node, Id, text):
                 txtNode.replaceWholeText(text)
         
 #####################################################################################
-def XML_AjouterCol(node, idLigne, text, coul = None, size = None, bold = False):
+def XML_AjouterCol(node, idLigne, text, bcoul = None, fcoul = "black", size = None, bold = False):
     """<td id="rc1" style="background-color: #ff6347;"><font id="r1" size="2">1</font></td>"""
     ligne = node.getElementById(idLigne)
     if ligne != None:
         td = node.createElement("td")
+        
         ligne.appendChild(td)
         
-        if coul != None:
-            td.setAttribute("style", "background-color: "+coul+";")
+        if bcoul != None:
+            td.setAttribute("style", "background-color: "+bcoul+";")
         
         if size != None:
             tc = node.createElement("font")
             tc.setAttribute("size", str(size))
+#            tc.setAttribute("color", fcoul)
             td.appendChild(tc)
             td = tc
         
@@ -2150,7 +2166,44 @@ class Projet(BaseDoc, Objet_sequence):
 
         return tache
     
-    
+    ######################################################################################  
+    def CopierTache(self, event = None, item = None):
+        tache = self.arbre.GetItemPyData(item)
+        if isinstance(tache, Tache):
+            self.GetApp().parent.SetData(tache.getBranche())
+            print "Tache", tache, u"copiée"
+
+    ######################################################################################  
+    def CollerTache(self, event = None, item = None):
+        tache_avant = self.arbre.GetItemPyData(item)
+        if not isinstance(tache_avant, Tache):
+            return
+        
+        elementCopie = self.GetApp().parent.elementCopie
+        if elementCopie == None or tache_avant.phase != elementCopie.get("Phase", ""): # la phase est la même
+            return
+        
+        tache = Tache(self, self.panelParent, phaseTache = "Rev")
+        tache.setBranche(elementCopie)
+        
+        tache.ordre = tache_avant.ordre+1
+        for t in self.taches[tache_avant.ordre:]:
+            t.ordre += 1
+        self.taches.append(tache)
+        self.taches.sort(key=attrgetter('ordre'))
+        
+        tache.ConstruireArbre(self.arbre, self.brancheTac)
+        tache.SetCode()
+        if hasattr(tache, 'panelPropriete'):
+            tache.panelPropriete.MiseAJour()
+        
+        self.arbre.Ordonner(self.brancheTac)
+        self.panelPropriete.sendEvent()
+        self.arbre.SelectItem(tache.branche)
+            
+        self.VerrouillerClasse()
+        print "Tache", tache, u"collée"
+        
     ######################################################################################  
     def InsererRevue(self, event = None, item = None):
         tache_avant = self.arbre.GetItemPyData(item)
@@ -4130,6 +4183,7 @@ class Tache(Objet_sequence):
 #            t += "  " + s.__repr__()
         return self.code
     
+    
     ######################################################################################  
     def GetApp(self):
         return self.projet.GetApp()
@@ -4168,7 +4222,7 @@ class Tache(Objet_sequence):
     
     ######################################################################################  
     def GetDicIndicateursEleve(self, eleve):
-        """ Renvoie l'ensemble des indicateurs de compétences à mobiliser pour cette tâche (revue)
+        """ Renvoie l'ensemble des indicateurs de compétences à mobiliser pour cette REVUE
             Dict :  clef = code compétence
                   valeur = liste [True False ...] des indicateurs à mobiliser
         """
@@ -4186,6 +4240,26 @@ class Tache(Objet_sequence):
 #        print "     ", indicateurs
         return indicateurs
     
+    ######################################################################################  
+    def DiffereSuivantEleve(self):
+        """ Renvoie True si cette REVUE est différente selon l'élève
+            Renvoie False si tous les élèves abordent les mêmes compétences/indicateurs
+        """
+#        print "DiffereSuivantEleve", self, self.phase
+        if len(self.projet.eleves) == 0:
+            return False
+        indicateurs = self.GetDicIndicateursEleve(self.projet.eleves[0])
+#        print "  ", indicateurs
+        for eleve in self.projet.eleves[1:]:
+            ie = self.GetDicIndicateursEleve(eleve)
+#            print "     ", ie
+            if set(indicateurs.keys()) != set(ie.keys()):
+                return True
+            for k, v in ie.items():
+                if set(v) != set(indicateurs[k]):
+                    return True
+            
+        return False
     
     ######################################################################################  
     def GetCompetencesUtil(self):
@@ -4703,6 +4777,16 @@ class Tache(Objet_sequence):
             else:
                 listItems = []
             listItems.append([u"Insérer une revue après", functools.partial(self.projet.InsererRevue, item = itemArbre)])
+            listItems.append([u"Copier", functools.partial(self.projet.CopierTache, item = itemArbre)])
+            
+ 
+            elementCopie = self.GetApp().parent.elementCopie
+            if elementCopie != None: # Le presse papier n'est pas vide
+                if isinstance(elementCopie, Element): # Le presse contient un Element
+                    if elementCopie.tag[:5] == 'Tache': # Le presse contient une tache
+                        if self.phase == elementCopie.get("Phase", ""): # la phase est la même
+                            listItems.append([u"Coller après", functools.partial(self.projet.CollerTache, item = itemArbre)])
+                    
             self.GetApp().AfficherMenuContextuel(listItems)
 #            item2 = menu.Append(wx.ID_ANY, u"Créer une rotation")
 #            self.Bind(wx.EVT_MENU, functools.partial(self.AjouterRotation, item = item), item2)
@@ -5064,6 +5148,7 @@ class Personne(Objet_sequence):
         # Création du Tip (PopupInfo)
         #
         self.ficheHTML = self.GetFicheHTML()
+
         self.ficheXML = parseString(self.ficheHTML)
        
         forceID(self.ficheXML)
@@ -5288,6 +5373,8 @@ class Eleve(Personne, Objet_sequence):
         
         
     def GetFicheHTML(self):
+        cr = constantes.GetCouleurHTML(COUL_REVUE)
+        cs = constantes.GetCouleurHTML(COUL_SOUT)
         return """<HTML>
     <p style="text-align: center;"><font size="12"><b>Elève</b></font></p>
 <p id="nom">Nom-Prénom</p>
@@ -5303,18 +5390,18 @@ class Eleve(Personne, Objet_sequence):
 <td></td>
 </tr>
 
-<tr  id = "ler" align="right" valign="middle">
-<td><em>revues :</em></td>
+<tr  id = "ler" align="right" valign="middle" >
+<td><font color = "%s"><em>revues :</em></font></td>
 </tr>
 
-<tr  id = "les" align="right" valign="middle">
-<td><em>soutenance :</em></td>
+<tr  id = "les" align="right" valign="middle" >
+<td><font color = "%s"><em>soutenance :</em></font></td>
 </tr>
 
 </tbody>
 </table>
 </HTML>
-"""
+""" % (cr,cs)
 
             
     ######################################################################################  
@@ -5581,8 +5668,8 @@ class Eleve(Personne, Objet_sequence):
         
         
         er, es = self.GetEvaluabilite()
-        labr = rallonge(str(int(er*100))+"%")
-        labs = rallonge(str(int(es*100))+"%")
+        labr = rallonge(pourCent(er)) #rallonge(str(int(er*100))+"%")
+        labs = rallonge(pourCent(es))
         self.evaluR.SetLabel(labr)
         self.evaluS.SetLabel(labs)
         t = u"L'élève ne mobilise pas suffisamment de compétences pour être évalué lors "
@@ -5639,24 +5726,24 @@ class Eleve(Personne, Objet_sequence):
                 keys.remove("O8s")
             
             
-            labr = [str(round(er*100)).rjust(3)+"%"]
+            labr = [pourCent(er, True)] #[str(round(er*100)).rjust(3)+"%"]
             for k in keys:
                 if k in constantes.lstGrpIndicateurRevues[self.GetTypeEnseignement()]:
                     if k in ler.keys():
-                        labr.append(str(round(ler[k]*100)).rjust(3)+"%")
+                        labr.append(pourCent(ler[k], True)) #str(round(ler[k]*100)).rjust(3)+"%")
                     else:
-                        labr.append("  0%")
+                        labr.append(pourCent(0, True)) #labr.append("  0%")
                 else:
                     labr.append("")
                     
                     
-            labs = [str(round(es*100)).rjust(3)+"%"]
+            labs = [pourCent(es, True)] #[str(round(es*100)).rjust(3)+"%"]
             for k in keys:
                 if k in constantes.lstGrpIndicateurSoutenance[self.GetTypeEnseignement()]:
                     if k in les.keys():
-                        labs.append(str(round(les[k]*100)).rjust(3)+"%")
+                        labs.append(pourCent(les[k], True)) #str(round(les[k]*100)).rjust(3)+"%")
                     else:
-                        labs.append("0%")
+                        labs.append(pourCent(0, True)) #labs.append("0%")
                 else:
                     labs.append("")
  
@@ -5671,11 +5758,12 @@ class Eleve(Personne, Objet_sequence):
                 else:
                     size = 2
                     bold = False
-                    if l == "0%":
+                    if l == "  0%":
                         coul = constantes.GetCouleurHTML(COUL_NON)
                     else:
                         coul = None
-                XML_AjouterCol(self.ficheXML, "ler", l, coul, size, bold)
+                XML_AjouterCol(self.ficheXML, "ler", l, coul, constantes.GetCouleurHTML(COUL_REVUE), size, bold)
+                
 #                SetWholeText(self.ficheXML, "r"+str(i), l)
                 
                 
@@ -5690,11 +5778,11 @@ class Eleve(Personne, Objet_sequence):
                 else:
                     size = 2
                     bold = False
-                    if l == "0%":
+                    if l == "  0%":
                         coul = constantes.GetCouleurHTML(COUL_NON)
                     else:
                         coul = None
-                XML_AjouterCol(self.ficheXML, "les", l, coul, size, bold)
+                XML_AjouterCol(self.ficheXML, "les", l, coul, constantes.GetCouleurHTML(COUL_SOUT), size, bold)
 #                SetWholeText(self.ficheXML, "s"+str(i), l)
                 
                 
@@ -5702,34 +5790,11 @@ class Eleve(Personne, Objet_sequence):
                 XML_AjouterCol(self.ficheXML, "le", t, size = 2)
 #                SetWholeText(self.ficheXML, str(i+1), t)
                 
-               
+#            print self.ficheXML.toxml()
             
             self.tip.SetPage(self.ficheXML.toxml())
             
-#            self.tip.SetTexte(rallonge(labr), self.tip_evalR)
-#            
-#            
-#            
-#            
-#            labs = str(int(es*100))+"%"
-#            self.tip.SetTexte(rallonge(labs), self.tip_evalS)
-#            
-#            self.tip.SetImage(self.avatar, self.tip_avatar)
-#            
-#            if abs(duree-70) < constantes.DELTA_DUREE:
-#                self.tip_duree.SetBackgroundColour(COUL_OK)
-#            else:
-#                self.tip_duree.SetBackgroundColour(COUL_NON)
-#            
-#            if er >= 0.5:
-#                self.tip_evalR.SetBackgroundColour(COUL_OK)
-#            else:
-#                self.tip_evalR.SetBackgroundColour(COUL_NON)
-#            
-#            if es >= 0.5:
-#                self.tip_evalS.SetBackgroundColour(COUL_OK)
-#            else:
-#                self.tip_evalS.SetBackgroundColour(COUL_NON)
+
             
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
@@ -5822,7 +5887,7 @@ class Prof(Personne):
                 coul = constantes.GetCouleurHTML(constantes.COUL_DISCIPLINES[self.discipline])
             else:
                 coul = None
-            XML_AjouterCol(self.ficheXML, "spe", constantes.NOM_DISCIPLINES[self.discipline], coul = coul)
+            XML_AjouterCol(self.ficheXML, "spe", constantes.NOM_DISCIPLINES[self.discipline], bcoul = coul)
             self.tip.SetPage(self.ficheXML.toxml())
         
         # Tip
@@ -6014,8 +6079,15 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         if fichier != "":
             self.ouvrir(fichier)
     
+        # Element placé dans le "presse papier"
+        self.elementCopie = None
+        
         self.Thaw()
             
+    ###############################################################################################
+    def SetData(self, data):  
+        self.elementCopie = data      
+        
     ###############################################################################################
     def ConstruireTb(self):
         """ Construction de la ToolBar
@@ -6213,7 +6285,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         if sys.platform == "win32":
             file_menu.Append(17, u"&Générer les grilles d'évaluation projet\tCtrl+G")
         
-        file_menu.Append(19, u"&Générer le dossier de validation projet\tCtrl+V")
+        file_menu.Append(19, u"&Générer le dossier de validation projet\tAlt+V")
         
         if sys.platform == "win32":
             file_menu.Append(18, u"&Générer une Synthèse pédagogique (SSI et ETT uniquement)\tCtrl+B")
@@ -11564,6 +11636,7 @@ class ArbreDoc(CT.CustomTreeCtrl):
         self.Bind(wx.EVT_MOTION, self.OnMove)
         self.Bind(wx.EVT_LEFT_DCLICK, self.OnLeftDClick)
         self.Bind(wx.EVT_KEY_DOWN, self.OnKey)
+#        self.Bind(wx.EVT_CHAR, self.OnChar)
         
         self.ExpandAll()
         
@@ -11862,14 +11935,22 @@ class ArbreProjet(ArbreDoc):
 
         self.CurseurInsert = wx.CursorFromImage(constantes.images.CurseurInsert.GetImage())
         
+        
+            
     ###############################################################################################
     def OnKey(self, evt):
         keycode = evt.GetKeyCode()
         if keycode == wx.WXK_DELETE:
             item = self.GetSelection()
             self.projet.SupprimerItem(item)
+        elif evt.ControlDown() and keycode == 67: # Crtl-C
+            item = self.GetSelection()
+            self.projet.CopierTache(item = item)
+        elif evt.ControlDown() and keycode == 86: # Crtl-V
+            item = self.GetSelection()
+            self.projet.CollerTache(item = item)
+        evt.Skip()
             
-        
     ####################################################################################
     def AjouterEleve(self, event = None):
         self.projet.AjouterEleve()
