@@ -20,6 +20,7 @@ shutil.rmtree("build", ignore_errors=True)
 #################################################################################################
 includefiles = [('Microsoft.VC90.CRT', "Microsoft.VC90.CRT"),
                      'gpl.txt', 
+                     'fichier_prj.ico', 'fichier_seq.ico',
                      'etablissements.txt',
                      ('../tables', "../tables")]
 #includefiles.extend(glob(r"*.xlsx"))
