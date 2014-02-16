@@ -149,6 +149,8 @@ import grilles, genpdf
 
 from rapport import FrameRapport, RapportRTF
 
+import urllib
+from bs4 import BeautifulSoup
 from xml.dom.minidom import parse, parseString
 import xml.dom
         
@@ -362,8 +364,6 @@ class Lien():
             
         elif self.type == 'u':
             try:
-#                lien_safe = urllib.quote_plus(self.path)
-    #            urllib.urlopen(lien_safe)
                 webbrowser.open(self.path)
             except:
                 messageErreur(None, u"Ouverture impossible",
@@ -5476,12 +5476,6 @@ class Eleve(Personne, Objet_sequence):
             try:
                 cheminComplet = os.path.join(path, f)+".xls"
                 t.save(cheminComplet)
-                if messageFin:
-                    dlg = wx.MessageDialog(self.projet.GetApp(), u"Génération de la grille réussie !", u"Génération de la grille réussie",
-                                   wx.OK | wx.ICON_INFORMATION)
-                    dlg.ShowModal()
-                    dlg.Destroy()
-            
             except:
                 messageErreur(self.projet.GetApp(), u"Erreur !",
                               u"Impossible d'enregistrer le fichier.\n\nVérifier :\n" \
@@ -5492,7 +5486,22 @@ class Eleve(Personne, Objet_sequence):
             except:
                 pass
             self.grille[i] = cheminComplet
-    
+        
+        if messageFin:
+            if len(tf)>1:
+                t = u"Génération des grilles réussie !"
+                t += u"\n\n"
+                t += tf[0][1]+".xls\n"
+                t += tf[1][1]+".xls"
+            else:
+                t = u"Génération de la grille réussie !"
+                t += u"\n\n"+".xls"
+                t += tf[0][1]
+            
+            dlg = wx.MessageDialog(self.projet.GetApp(), t, u"Génération réussie",
+                           wx.OK | wx.ICON_INFORMATION)
+            dlg.ShowModal()
+            dlg.Destroy()
         
     ######################################################################################  
     def GetEvaluabilite(self, complet = False):
@@ -6082,8 +6091,66 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         # Element placé dans le "presse papier"
         self.elementCopie = None
         
+        # Récupération de la dernière version
+        wx.CallAfter(self.GetNewVersion)
+        
         self.Thaw()
-            
+        
+        
+    ###############################################################################################
+    def GetNewVersion(self):  
+        url = 'https://code.google.com/p/pysequence/downloads/list'
+        try:
+            self.downloadPage = BeautifulSoup(urllib.urlopen(url))
+        except IOError:
+            print "Pas d'accès Internet"
+            return   
+#        print self.downloadPage.find_all('td')#, attrs={'class':"vt id col_0"}).text
+        ligne = self.downloadPage.find('td', attrs={'class':"vt id col_0"})
+#        fichier = ligne.text.strip()
+        v = ligne.text.split('_')[1].split('.zip')[0]
+        vb = v.split("beta")
+        vba = __version__.split("beta")
+        
+        vn = vb[0]
+        va = vba[0]
+        if len(vn) >1:
+            bn = vn[1]
+        else:
+            bn = 100
+        if len(va) >1:
+            ba = va[1]
+        else:
+            ba = 0
+        if vn > va or (vn == va and bn > ba): # Nouvelle version disponible
+            dialog = wx.MessageDialog(self, u"Une nouvelle version de pySéquence est disponible\n\n" \
+                                            u"\t%s\n\n" \
+                                            u"Voulez-vous visiter la page de téléchargement ?" % v, 
+                                          u"Nouvelle version", wx.YES_NO | wx.ICON_INFORMATION)
+            retCode = dialog.ShowModal()
+            if retCode == wx.ID_YES:
+                try:
+                    webbrowser.open(url,new=2)
+                except:
+                    messageErreur(None, u"Ouverture impossible",
+                                  u"Impossible d'ouvrir l'url\n\n%s!\n" %toDefautEncoding(self.path))
+              
+                
+                
+#                dlg = wx.DirDialog(self, message = u"Emplacement du téléchargement", 
+#                                style=wx.DD_DEFAULT_STYLE|wx.CHANGE_DIR
+#                                )
+#        
+#                if dlg.ShowModal() == wx.ID_OK:
+#                    path = dlg.GetPath()
+#                    url = 'https://code.google.com/p/pysequence/downloads/'+ligne.a['href']
+#                    filename, headers = urllib.urlretrieve(url, os.path.join(path, fichier))
+#                    print filename
+#                    dlg.Destroy()
+#                else:
+#                    dlg.Destroy()
+                
+       
     ###############################################################################################
     def SetData(self, data):  
         self.elementCopie = data      
@@ -6381,7 +6448,12 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
     #############################################################################
     def OnAide(self, event):
-        webbrowser.open('http://code.google.com/p/pysequence/wiki/Aide')
+        try:
+            webbrowser.open('http://code.google.com/p/pysequence/wiki/Aide',new=2)
+        except:
+            messageErreur(None, u"Ouverture impossible",
+                          u"Impossible d'ouvrir l'url\n\n%s!\n" %toDefautEncoding(self.path))
+
         
         
     ###############################################################################################

@@ -31,7 +31,7 @@ import os.path
 #from textwrap import wrap
 #import csv
 
-from reportlab.platypus import SimpleDocTemplate, Paragraph, doctemplate
+from reportlab.platypus import SimpleDocTemplate, Paragraph, doctemplate, KeepTogether
 from reportlab.platypus import Spacer, Table, TableStyle
 from reportlab.lib.styles import ParagraphStyle,getSampleStyleSheet
 from reportlab.lib.units import mm
@@ -80,6 +80,7 @@ def gras(s):
 def splitParagraph(text, style):
     pp = []
     for l in text.split("\n"):
+#        pp.append(KeepTogether(Paragraph(l, style)))
         pp.append(Paragraph(l, style))
     return pp
 
@@ -231,51 +232,7 @@ def genererFicheValidation(nomFichier, projet):
            
     t=Table(data,style=[('GRID',        (0,0),(-1,-1),  1,colors.black),
                         ('VALIGN',      (0,0),(-1,-1),'TOP')])
-    #                    ('BOX',         (0,0),(1,-1),   2,colors.red)])
-    #                    ('LINEABOVE',   (1,2),(-2,2),   1,colors.blue),
-    #                    ('LINEBEFORE',  (2,1),(2,-2),   1,colors.pink),
-    #                    ('BACKGROUND',  (0, 0), (0, 1), colors.pink),
-    #                    ('BACKGROUND',  (1, 1), (1, 2), colors.lavender),
-    #                    ('BACKGROUND',  (2, 2), (2, 3), colors.orange),
-    #                    ('BOX',         (0,0),(-1,-1),  2,colors.black),
-    #                    ('GRID',        (0,0),(-1,-1),  0.5,colors.black),
-#                        ('VALIGN',      (3,0),(3,0),'BOTTOM'),
-    #                    ('BACKGROUND',  (3,0),(3,0),colors.limegreen),
-    #                    ('BACKGROUND',  (3,1),(3,1),colors.khaki),
-    #                    ('ALIGN',       (3,1),(3,1),'CENTER'),
-    #                    ('BACKGROUND',  (3,2),(3,2),colors.beige),
-    #                    ('ALIGN',       (3,2),(3,2),'LEFT'),
-    #                    ])
-    
-    
-    #datafile = csv.reader(open("02_02_kiwipycon_wifi_details.csv"))
-    #table_data = list(datafile)
-    #
-    ## Prepare the TableStyle.
-    #myTableStyle = TableStyle([('LINEABOVE', (0,0), (-1,0), 2, colors.green),
-    #                           ('LINEBELOW', (0,0), (-1,0), 2, colors.green),
-    #                           ('LINEBELOW', (0,1), (-1,-1), 0.25, colors.black),
-    #                           ('LINEBELOW', (0,-1), (-1,-1), 2, colors.green),
-    #                           ('ALIGN', (1,1), (-1,-1), 'RIGHT')]
-    #                          )
-    #
-    ## add some conditional formatting to the table style
-    #for i, data in enumerate(table_data):
-    #    if not i:
-    #        continue # skip header row
-    #    for col in range(1,3):
-    #        mb = int(data[col]) # megabytes uploaded or downloaded
-    #        # color each cell from white at 0MB to a maximum of full red at 1000MB
-    #        myTableStyle.add('BACKGROUND', (col, i), (col, i),
-    #                         lerp(colors.white, colors.red, 0, 1000, min(mb, 1000)))
-    #
-    ## The table flowables. A couple of points to note:
-    ## - repeatRows=1 means that 1 row (the header) will repeat at the top of each
-    ## page that the table flows on to.
-    ## - colWidths needs to be defined manually if you want the table to span the
-    ## entire width of the frame.
-    #myTable = Table(table_data, repeatRows=1,
-    #                colWidths=[170/3.*mm]*3, style=myTableStyle)
+
     
     story.append(t)
     
@@ -293,8 +250,11 @@ def genererFicheValidation(nomFichier, projet):
     story.append(t)
     try:
         doc.build(story)
-    except doctemplate.LayoutError:
+    except doctemplate.LayoutError, err:
         print "Paragraphe trop grand"
+#        print err.message
+#        print type(err)
+#        print dir(err)
         return False
     return True
     
@@ -313,7 +273,7 @@ def genererDossierValidation(nomFichier, projet, fenDoc):
     if not Ok:
         shutil.rmtree(dosstemp)
         wx.EndBusyCursor()
-        return
+        return False
     fenDoc.exporterFichePDF(fichertempF)
     
     merger = PdfFileMerger()
@@ -330,6 +290,7 @@ def genererDossierValidation(nomFichier, projet, fenDoc):
     
     shutil.rmtree(dosstemp)
     wx.EndBusyCursor()
+    return True
 
     # read PDF files (.pdf) with wxPython
     # using wx.lib.pdfwin.PDFWindow class ActiveX control
@@ -364,6 +325,7 @@ class PdfPanel(wx.Panel):
 #                                wx.DefaultSize, wx.HSCROLL|wx.VSCROLL|wx.SUNKEN_BORDER)
         sizer.Add(self.pdf, proportion=1, flag=wx.EXPAND)
         self.SetSizer(sizer)
+        self.sizer = sizer
         self.SetAutoLayout(True)
         
     def MiseAJour(self, projet, fenDoc):
@@ -375,12 +337,16 @@ class PdfPanel(wx.Panel):
         fichertemp = os.path.join(self.dosstemp, "pdfdoss.pdf")
 
         wx.BeginBusyCursor()
-        genererDossierValidation(fichertemp, projet, fenDoc)
-        self.pdf.LoadFile(fichertemp)
+        Ok = genererDossierValidation(fichertemp, projet, fenDoc)
+        if Ok:
+            self.pdf.LoadFile(fichertemp)
         if True:#get_min_adobe_version() != None:
             shutil.rmtree(self.dosstemp)
         wx.EndBusyCursor()
-        
+        if not Ok:
+            self.pdf = wx.StaticText(self, -1, u"Un des textes descriptifs du projet est trop grand !")
+            self.sizer.Add(self.pdf, proportion=1, flag=wx.EXPAND)
+            
         
         
         
