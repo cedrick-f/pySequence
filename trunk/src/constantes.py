@@ -927,12 +927,12 @@ TOUS_FICHIER = u"Tous les fichiers|*.*'"
 
 MESSAGE_ENR = {'seq' : u"Enregistrer la séquence sous ...",
                'prj' : u"Enregistrer le projet sous ..."}
-MESSAGE_DEJA = {'seq' : u"La séquence est déja ouverte.\nVoulez vous ignorer les changements et rouvrir la séquence ?",
-                'prj' : u"Le projet est déja ouvert.\nVoulez vous ignorer les changements et rouvrir le projet ?"}
+MESSAGE_DEJA = {'seq' : u"La séquence est déja ouverte.\n\n%s\n\nVoulez vous ignorer les changements et rouvrir la séquence ?",
+                'prj' : u"Le projet est déja ouvert.\n\n%s\n\nVoulez vous ignorer les changements et rouvrir le projet ?"}
 TITRE_DEFAUT = {'seq' : u"Nouvelle séquence",
                 'prj' : u"Nouveau projet"}
-MESSAGE_FERMER = {'seq' : u"La séquence a été modifiée.\nVoulez vous enregistrer les changements ?",
-                  'prj' : u"Le projet a été modifié.\nVoulez vous enregistrer les changements ?"}
+MESSAGE_FERMER = {'seq' : u"La séquence a été modifiée.\n\n%s\n\nVoulez vous enregistrer les changements ?",
+                  'prj' : u"Le projet a été modifié.\n\n%s\n\nVoulez vous enregistrer les changements ?"}
 
 
 
@@ -942,6 +942,7 @@ MESSAGE_FERMER = {'seq' : u"La séquence a été modifiée.\nVoulez vous enregis
 #
 #######################################################################################
 
+# Codes des phases des tâches de projet (doivent être dans l'ordre alphabétique ! sauf 'Rev')
 PHASE_TACHE = {'STI': ['Ana', 'Con', 'DCo', 'Rea', 'Val', 'XXX', 'Rev'],
                'SSI': ['Ana', 'Rea', 'XXX', 'Rev']}
 
