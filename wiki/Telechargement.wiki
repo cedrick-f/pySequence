@@ -2,4 +2,4 @@
 
 = [https://drive.google.com/folderview?id=0B2jxnxsuUscPX0tFLVN0cF91TGc&usp=sharing Nouvel espace de téléchargement] =
 
-[Ancienne versions https://code.google.com/p/pysequence/downloads/list]
+[https://code.google.com/p/pysequence/downloads/list Anciennes versions]
