@@ -10,7 +10,7 @@
 #############################################################################
 #############################################################################
 
-## Copyright (C) 2013 Cédrick FAURY - Jean-Claude FRICOU
+## Copyright (C) 2014 Cédrick FAURY - Jean-Claude FRICOU
 
 #    pySequence is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -34,7 +34,7 @@ et à la validation de projets
 *   STIDD   *
 *    SSI    *
 *************
-Copyright (C) 2011-2013
+Copyright (C) 2011-2014
 @author: Cedrick FAURY
 
 """

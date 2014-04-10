@@ -214,7 +214,10 @@ def modifierGrille(doc, tableur, eleve):
                                 break
                         elif doc.GetTypeEnseignement(simple = True) == "SSI":
                             if comp+"_"+str(j+1) in rev.indicateursEleve[eleve.id+1]:
-                                tableur.setCell(2, l, c,  str(i+1))
+                                try:
+                                    tableur.setCell(2, l, c,  str(i+1))
+                                except:
+                                    pass # Pas de colonne "J" !
                                 break
                     
 #                if doc.GetTypeEnseignement(simple = True) == "SSI" and dicIndicateurs['SSI'][comp][j][1]:

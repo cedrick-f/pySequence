@@ -1150,10 +1150,15 @@ def DrawCroisementsElevesCompetences(ctx, eleve, y):
     
 ######################################################################################  
 def DrawBoutonCompetence(ctx, objet, dicIndic, y, h = None):
+    """ 
+    """
 #    print "DrawBoutonCompetence", objet, dicIndic
-    if h == None:
+    if h == None: # Toujours sauf pour les revues
         r = wColComp/3
         h = 2*r
+    
+    # Un petit décalage pour distinguer R et S en N&B    
+    dh = h/10
     ctx.set_line_width (0.0006)
     for s in dicIndic.keys():
         x = xComp[s]-wColComp/2
@@ -1181,23 +1186,23 @@ def DrawBoutonCompetence(ctx, objet, dicIndic, y, h = None):
 #            dangle = 2*pi/len(indic)
         dx = wColComp/len(indic)
         for a, i in enumerate(indic):
-#            ctx.move_to (x, y)
-#            ctx.rel_line_to (r*cos(dangle*a)+pi/2, r*sin(dangle*a)+pi/2)
-
-            if i:
+            if i: # Rose ou bleu
                 if constantes.dicIndicateurs[objet.projet.classe.typeEnseignement][s][a][1]:
-                    ctx.set_source_rgba (ICoulCompR[0],ICoulCompR[1],ICoulCompR[2],1.0)
+                    c = ICoulCompR
+                    d = -1
                 else:
-                    ctx.set_source_rgba (ICoulCompS[0],ICoulCompS[1],ICoulCompS[2],1.0)
-            else:
-                ctx.set_source_rgba (1,1,1,1)
+                    c = ICoulCompS
+                    d = 1
+                ctx.set_source_rgba (c[0], c[1], c[2], 1.0)
+            else: # Rien
+                ctx.set_source_rgba (1, 1, 1, 0)
             
-            ctx.rectangle(x+a*dx, y-h/2, dx, h)
+            ctx.rectangle(x+a*dx, y-h/2+d*dh, dx, h-dh)
 #                ctx.arc(x+r*cos(-dangle*a-pi/2)/2, y+r*sin(-dangle*a-pi/2)/2, r/4, 0, 2*pi)
             ctx.fill_preserve ()
-            ctx.set_source_rgba (0,0,0,1)
-            ctx.stroke ()
+            ctx.set_source_rgba (0, 0 , 0, 1)
             ctx.stroke()
+#            ctx.stroke()
 
        
 #######################################################################################  
