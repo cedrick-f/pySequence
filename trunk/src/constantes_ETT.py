@@ -341,3 +341,78 @@ dicCellSavoirs = {"1.1.1" : [8,12],
                                 
                  }
 
+################################################################
+#
+#
+#             Changement de grille 2014
+#
+################################################################
+#
+#             Les indicateurs
+#
+#####################################
+#dicIndicateurs_prj = {"CO1.1" : [[u"Le choix des matériaux et/ou des matériels est justifié, des critères d'éco conception sont pris en compte", False],
+#                                    [u"La structure matérielle et/ou informationnelle est correctement justifiée", False]                                 
+#                                   ],
+#                         "CO1.2" : [[u"La justification des paramètres de confort et/ou la réponse apportée par le système aux contraintes de préservation de la santé et du respect de la sécurité sont explicitées", False]
+#                                   ],
+#                         "CO2.1" : [[u"Les flux et la forme de l'énergie et/ou de l'information sont décrits de façon qualitative", False],
+#                                    [u"Les caractéristiques d'entrées sorties des transformations ou modulations sont correctement précisées", False],
+#                                    [u"L'analyse globale d'une chaine (énergie, action, information) est correctement réalisée", False]
+#                                   ],
+#                         "CO2.2" : [[u"La relation entre une fonction, des solutions et leur impact environnemental ou sociétal est précisée ", False],
+#                                    [u"Le compromis technico économique et/ou la prise en compte des normes et réglementations est expliqué ", False]
+#                                   ],
+#                         "CO6.1" : [[u"La description du principe ou de la solution est synthétique et correcte", False]
+#                                   ],
+#                         "CO6.2" : [[u"La description du fonctionnement ou de l'exploitation du système est synthétique et correcte", False]
+#                                   ],
+#                         "CO6.3" : [[u"Le choix de la démarche retenue est argumentée", False],
+#                                    [u"Les résultats sont présentés et commentés de manière claire et concise", False]
+#                                   ],
+#                         "CO8.0" : [[u"Les solutions techniques envisagées sont correctement analysées au regard des résultats d'expérimentations et/ou de tests et/ou de simulations", False],
+#                                     [u"L'origine des écarts entre les résultats obtenus et les exigences du cahier des charges est correctement identifiée", False]
+#                                    ]
+#                     }
+#
+#################################################
+#################################################################################################################################
+#
+#        Les poids des indicateurs de compétences
+#
+#################################################################################################################################
+#dicPoidsIndicateurs_prj = {"O1" : [20,
+#                                     {"CO1.1" : [35,35], 
+#                                      "CO1.2" : [30]}],
+#                              "O2" : [15,
+#                                      {"CO2.1" : [20,20,20],
+#                                       "CO2.2" : [20,20]}],
+#                              "O6" : [45,
+#                                      {"CO6.1" : [25],
+#                                       "CO6.2" : [25],
+#                                       "CO6.3" : [25,25]}],
+#                              "O8s" : [20,
+#                                       {"CO8.0" : [60,40]}]
+#                              }
+#
+#
+#################################################################################################################################
+#
+#        Les constantes pour les grilles d'évaluation de projet 
+#
+#            PLUS NECESSAIRE LA COLONNE NON N'EXISTE PLUS
+#
+#################################################################################################################################
+#Fichier_GRILLE = ["Grille_soutenance_STI2D_2014.xlsm", "Grille_soutenance_STI2D_2014.xlsx"]
+#
+#Cellules_NON =  {"CO1.1"  : [(5,4), (6,4), (7,4), (8,4), (9,4)],
+#                     "CO1.2"  : [(10,4), (11,4), (12,4)],
+#                     "CO2.1"  : [(14,4), (15,4), (16,4), (17,4)],
+#                     "CO2.2"  : [(18,4), (19,4), (20,4), (21,4), (22,4)],
+#                     "CO6.1"  : [(24,4), (25,4), (26,4)],
+#                     "CO6.2"  : [(27,4), (28,4), (29,4)],
+#                     "CO6.3"  : [(30,4), (31,4), (32,4), (33,4), (34,4)],
+#                     "CO8.0" : [(36,4), (37,4), (38,4), (39,4), (40,4)]
+#                     }
+#
+##############################################################################
