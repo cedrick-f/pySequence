@@ -923,6 +923,7 @@ def getElementFiltre(filtre):
 FORMAT_FICHIER = {'seqprj' : u"Séquence ou Projet (.seq ou .prj)|*.seq;*.prj|",
                   'seq' : u"Séquence (.seq)|*.seq|",
                   'prj' : u"Projet (.prj)|*.prj|"}
+
 TOUS_FICHIER = u"Tous les fichiers|*.*'"
 
 MESSAGE_ENR = {'seq' : u"Enregistrer la séquence sous ...",

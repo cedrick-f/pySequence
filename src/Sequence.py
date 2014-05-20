@@ -40,7 +40,7 @@ Copyright (C) 2011-2014
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "4.8beta1"
+__version__ = "4.8beta4"
 
 #from threading import Thread
 
@@ -2258,42 +2258,12 @@ class Projet(BaseDoc, Objet_sequence):
         #
         paquet = {'': []}
         for k in constantes.PHASE_TACHE['STI']+constantes.NOM_PHASE_TACHE_E.keys(): 
-            #['Ana', 'Con', 'DCo', 'Rea', 'Val', 'XXX', 'Rev'] + ['R1', 'R2', 'R3', 'Rev', 'S']
             paquet[k]=[]
-#        Ana = []
-#        Con = []
-#        Rea = []
-#        DCo = []
-#        Val = []
-#        R1 = []
-#        R2 = []
-#        S = []
-#        X = []
+
         Rien = []
         for t in lstTaches:
             paquet[t.phase].append(t)
             
-            
-#            if t.phase == 'Ana':
-#                Ana.append(t)
-#            elif t.phase == 'Con':
-#                Con.append(t)
-#            elif t.phase == 'DCo':
-#                DCo.append(t)
-#            elif t.phase == 'Rea':
-#                Rea.append(t)
-#            elif t.phase == 'Val':
-#                Val.append(t)
-#            elif t.phase == 'R1':
-#                R1.append(t)
-#            elif t.phase == 'R2':
-#                R2.append(t)
-#            elif t.phase == 'S':
-#                S.append(t)
-#            elif t.phase == 'XXX':
-#                X.append(t)
-#            elif t.phase == '':
-#                Rien.append(t)
         
         # On trie les tâches de chaque paquet     
         for c in ['Ana', 'Con', 'Rea', 'DCo', 'Val', 'XXX']:
@@ -2308,11 +2278,7 @@ class Projet(BaseDoc, Objet_sequence):
         for p in self.GetListePhases()+["S"]:
             lst.extend(paquet[p]) 
 
-#        if self.R1apresConception:
-#            lst = Ana + Con + DCo + R1 + Rea  + Val + R2+ X + Rien + S
-#        else:
-#            lst = Ana + Con + R1 + DCo + Rea  + Val + R2+ X + Rien + S
-           
+         
         #
         # On ajoute les revues intermédiaires
         #
@@ -2584,12 +2550,14 @@ class Projet(BaseDoc, Objet_sequence):
         """
 #        print "GetListePhases"
         lst = list(constantes.PHASE_TACHE[self.GetTypeEnseignement(simple = True)][:-1])
-        
+#        print "  ", lst
+#        print "  ", self.nbrRevues
         if self.nbrRevues == 2:
             lr = [2,1]
         else:
             lr = [3,2,1]
         for r in lr:
+#            print "     ", self.positionRevues[r-1]
             lst.insert(lst.index(self.positionRevues[r-1])+1, "R"+str(r))
         
         
@@ -2659,13 +2627,16 @@ class Projet(BaseDoc, Objet_sequence):
                     
                  
     #############################################################################
-    def MiseAJourTypeEnseignement(self):
+    def MiseAJourTypeEnseignement(self, changeFamille = False):
         self.app.SetTitre()
         for t in self.taches:
 #            if t.phase in ["R1", "R2", "R3", "S"]:
             t.MiseAJourTypeEnseignement(self.classe.typeEnseignement)
         
         if hasattr(self, 'panelPropriete'):
+            if changeFamille:
+                self.nbrRevues = 2
+                self.positionRevues = list(constantes.POSITIONS_REVUES[self.GetTypeEnseignement(simple = True)][self.nbrRevues])
             self.panelPropriete.panelOrga.MiseAJourListe()
         
     #############################################################################
@@ -6015,30 +5986,45 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
     ###############################################################################################
     def GetNewVersion(self):  
-        url = 'https://code.google.com/p/pysequence/downloads/list'
+        # url = 'https://code.google.com/p/pysequence/downloads/list'
+        
+        url = 'https://drive.google.com/folderview?id=0B2jxnxsuUscPX0tFLVN0cF91TGc#list'
         try:
             self.downloadPage = BeautifulSoup(urllib.urlopen(url))
         except IOError:
             print "Pas d'accès Internet"
             return   
 
-        ligne = self.downloadPage.find('td', attrs={'class':"vt id col_0"})
+#        ligne = self.downloadPage.find('div', attrs={'class':"flip-entry-title"})
+        ligne = self.downloadPage.findAll('div', attrs={'class':"flip-entry-title"})
 #        fichier = ligne.text.strip()
-        v = ligne.text.split('_')[1].split('.zip')[0]
-        vb = v.split("beta")
-        vba = __version__.split("beta")
         
-        vn = vb[0]
+        # Version actuelle
+        vba = __version__.split("beta")
         va = vba[0]
-        if len(vn) >1:
-            bn = vn[1]
-        else:
-            bn = 100
         if len(va) >1:
-            ba = va[1]
+            ba = vba[1]
         else:
             ba = 0
-        if vn > va or (vn == va and bn > ba): # Nouvelle version disponible
+                    
+        # version en ligne plus récente
+        versionPlusRecente = False    
+                    
+        for l in ligne:
+            if len(l.text.split('_')) > 1:
+                v = l.text.split('_')[1].split('.zip')[0]
+                vb = v.split("beta")
+                vn = vb[0]
+                if len(vn) >1:
+                    bn = vb[1]
+                else:
+                    bn = 100
+                
+                if vn > va or (vn == va and bn > ba): # Nouvelle version disponible
+                     versionPlusRecente = True
+                     break
+                     
+        if versionPlusRecente:
             dialog = wx.MessageDialog(self, u"Une nouvelle version de pySéquence est disponible\n\n" \
                                             u"\t%s\n\n" \
                                             u"Voulez-vous visiter la page de téléchargement ?" % v, 
@@ -6050,8 +6036,8 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                 except:
                     messageErreur(None, u"Ouverture impossible",
                                   u"Impossible d'ouvrir l'url\n\n%s\n" %toDefautEncoding(self.path))
-              
-                
+
+                    
                 
 #                dlg = wx.DirDialog(self, message = u"Emplacement du téléchargement", 
 #                                style=wx.DD_DEFAULT_STYLE|wx.CHANGE_DIR
@@ -8436,7 +8422,6 @@ class PanelPropriete_Projet(PanelPropriete):
         self.Layout()
         
         if sendEvt:
-            
             self.sendEvent()
 
     #############################################################################            
@@ -8518,6 +8503,8 @@ class PanelOrganisation(wx.Panel):
         
     #############################################################################            
     def MiseAJourListe(self):
+#        print "MiseAJourListe"
+#        print self.objet.GetListeNomsPhases()
         self.liste.Set(self.objet.GetListeNomsPhases())
         self.Layout()
         
@@ -8746,18 +8733,18 @@ class PanelPropriete_Classe(PanelPropriete):
              
     ######################################################################################  
     def EvtRadioBox(self, event):
+        """ Sélection d'un type d'enseignement
+        """
 #        print self.cb_type.GetItemLabel(event.GetInt())
+        fam = self.classe.familleEnseignement
         for c, e in constantes.Enseigmenent.items():
             if e[0] == self.cb_type.GetItemLabel(event.GetInt()):
                 self.classe.typeEnseignement = c
                 self.classe.familleEnseignement = constantes.FamilleEnseignement[self.classe.typeEnseignement]
                 break
-#        self.classe.typeEnseignement = self.cb_type.GetItemLabel(event.GetInt())
-            
-        
-        
+
         self.classe.MiseAJourTypeEnseignement()
-        self.classe.doc.MiseAJourTypeEnseignement()
+        self.classe.doc.MiseAJourTypeEnseignement(fam != self.classe.familleEnseignement)
         self.MiseAJourType()
         if hasattr(self, 'list'):
             self.list.Peupler()
@@ -11358,7 +11345,7 @@ class PanelPropriete_Personne(PanelPropriete):
             self.personne.SetNom(event.GetString())
         else:
             self.personne.SetPrenom(event.GetString())
-        self.personne.parent.MiseAJourNomsEleves()
+        self.personne.projet.MiseAJourNomsEleves()
         if not self.eventAttente:
             wx.CallLater(DELAY, self.sendEvent)
             self.eventAttente = True
@@ -11372,7 +11359,7 @@ class PanelPropriete_Personne(PanelPropriete):
         
     #############################################################################            
     def EvtCheckBox(self, event):
-        self.personne.parent.SetReferent(self.personne, event.IsChecked())
+        self.personne.projet.SetReferent(self.personne, event.IsChecked())
         self.sendEvent()
         
     #############################################################################            
@@ -12873,6 +12860,8 @@ def get_key(dic, value):
 
 class SeqApp(wx.App):
     def OnInit(self):
+        wx.Log.SetLogLevel(0) # ?? Pour éviter le plantage de wxpython 3.0 avec Win XP pro ???
+        
         fichier = ""
         if len(sys.argv)>1: # un paramètre a été passé
             parametre = sys.argv[1]
@@ -12897,7 +12886,7 @@ class SeqApp(wx.App):
     def AddRTCHandlers(self):
         # make sure we haven't already added them.
         if rt.RichTextBuffer.FindHandlerByType(rt.RICHTEXT_TYPE_HTML) is not None:
-            print "AddRTCHandlers : déja fait"
+            print u"AddRTCHandlers : déja fait"
             return
         
         # This would normally go in your app's OnInit method.  I'm

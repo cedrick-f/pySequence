@@ -170,17 +170,17 @@ BCoulTache = {'Ana' : (0.3,0.5,0.5),
               'R3'  : (0.8,0.3,0.2),
               'S'   : (0.3,0.1,0.8)}
 
-ICoulTache = {'Ana' : (0.6, 0.8, 0.8), 
-              'Con' : (0.8, 0.6, 0.8),
-              'DCo' : (0.9, 0.6, 0.7),
-              'Rea' : (0.8, 0.8, 0.6), 
-              'Val' : (0.6, 0.6, 1.0),
-              'XXX' : (0.6, 0.6, 1.0),
-              'Rev' : (0.9,0.6,0.6),
-              'R1'  : (1,0.6,0.5),
-              'R2'  : (1,0.6,0.5),
-              'R3'  : (1,0.6,0.5),
-              'S'   : (0.6,0.5,1)}
+ICoulTache = {'Ana' : (0.6, 0.8, 0.8,1), 
+              'Con' : (0.8, 0.6, 0.8,1),
+              'DCo' : (0.9, 0.6, 0.7,1),
+              'Rea' : (0.8, 0.8, 0.6,1), 
+              'Val' : (0.6, 0.6, 1.0,1),
+              'XXX' : (0.6, 0.6, 1.0,1),
+              'Rev' : (0.9,0.6,0.6,0.8),
+              'R1'  : (1,0.6,0.5,0.8),
+              'R2'  : (1,0.6,0.5,0.8),
+              'R3'  : (1,0.6,0.5,0.8),
+              'S'   : (0.6,0.5,1,0.8)}
 
 
 ecartYElevesTaches = 0.05
@@ -1008,7 +1008,7 @@ def DrawTacheRacine(ctx, tache, y):
         
     ctx.set_line_width(0.002)
     rectangle_plein(ctx, x, y, w, h, 
-                    BCoulTache[tache.phase], ICoulTache[tache.phase], 1)
+                    BCoulTache[tache.phase], ICoulTache[tache.phase], ICoulTache[tache.phase][3])
     
     
     #
@@ -1150,7 +1150,8 @@ def DrawCroisementsElevesCompetences(ctx, eleve, y):
     
 ######################################################################################  
 def DrawBoutonCompetence(ctx, objet, dicIndic, y, h = None):
-    """ 
+    """ Dessine les petits rectangles des indicateurs (en couleurs R et S)
+         ... avec un petit décalage vertical pour que ce soit lisible en version N&B
     """
 #    print "DrawBoutonCompetence", objet, dicIndic
     if h == None: # Toujours sauf pour les revues
@@ -1159,7 +1160,8 @@ def DrawBoutonCompetence(ctx, objet, dicIndic, y, h = None):
     
     # Un petit décalage pour distinguer R et S en N&B    
     dh = h/10
-    ctx.set_line_width (0.0006)
+    ctx.set_line_width (0.0004)
+    
     for s in dicIndic.keys():
         x = xComp[s]-wColComp/2
 #        ctx.arc(x, y, r, 0, 2*pi)
@@ -1194,15 +1196,22 @@ def DrawBoutonCompetence(ctx, objet, dicIndic, y, h = None):
                     c = ICoulCompS
                     d = 1
                 ctx.set_source_rgba (c[0], c[1], c[2], 1.0)
-            else: # Rien
+            else: # Rien => Transparent
+                d = 0
                 ctx.set_source_rgba (1, 1, 1, 0)
+            if d != 0:
+                ctx.rectangle(x+a*dx, y-h/2+d*dh, dx, h-dh)
+                ctx.fill_preserve ()
+            else:
+                ctx.move_to(x+a*dx, y-h/2+dh)
+                ctx.rel_line_to(0, h-4*dh)
+                ctx.move_to(x+a*dx+dx, y-h/2+dh)
+                ctx.rel_line_to(0, h-4*dh)
+
             
-            ctx.rectangle(x+a*dx, y-h/2+d*dh, dx, h-dh)
-#                ctx.arc(x+r*cos(-dangle*a-pi/2)/2, y+r*sin(-dangle*a-pi/2)/2, r/4, 0, 2*pi)
-            ctx.fill_preserve ()
             ctx.set_source_rgba (0, 0 , 0, 1)
             ctx.stroke()
-#            ctx.stroke()
+
 
        
 #######################################################################################  
