@@ -302,11 +302,14 @@ def genererDossierValidation(nomFichier, projet, fenDoc):
 import wx
 if wx.Platform == '__WXMSW__':
     from wx.lib.pdfwin import PDFWindow, get_min_adobe_version
+    print "Version Adobe :", get_min_adobe_version()
+elif wx.Platform == '__WXMAC__':
+    print "MAC !!"
+    
 #    from wx.lib.pdfviewer import pdfViewer
 import tempfile
-import os.path
 import shutil
-from PyPDF2 import PdfFileReader, PdfFileMerger
+from PyPDF2 import PdfFileMerger
 
 def getPDFViewer():
     return get_min_adobe_version()
@@ -330,6 +333,7 @@ class PdfPanel(wx.Panel):
         
     def MiseAJour(self, projet, fenDoc):
         if get_min_adobe_version() == None:
+            print "Problème version Adobe"
             return
 #        if hasattr(self, 'dosstemp') and get_min_adobe_version() == None:
 #            shutil.rmtree(self.dosstemp)

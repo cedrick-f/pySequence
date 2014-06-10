@@ -135,8 +135,6 @@ print "Dossier pour les données :", APP_DATA_PATH
 #  Gestion des erreurs
 #
 ####################################################################################    
-ERROR_FILE = os.path.join(APP_DATA_PATH, 'pySequence.exe' + '.log')
-print "Fichier erreur :",ERROR_FILE
 
 import traceback
 
@@ -174,6 +172,8 @@ class RedirectErr:
             self.file_error.flush()
 
 if not PORTABLE:
+    ERROR_FILE = os.path.join(APP_DATA_PATH, 'pySequence.exe' + '.log')
+    print "Fichier erreur :",ERROR_FILE
     sys.excepthook = _exceptionhook
     sys.stderr=RedirectErr(sys.stderr)
 
@@ -1458,3 +1458,38 @@ TxtRacineTache = """<?xml version="1.0" encoding="UTF-8"?>
 </richtext>
 
 """
+
+
+#import array
+#from ctypes import *
+#
+#def get_file_info(filename, info):
+#    """
+#    Extract information from a file.
+#    """
+#    # Get size needed for buffer (0 if no info)
+#    size = windll.version.GetFileVersionInfoSizeA(filename, None)
+#    # If no info in file -> empty string
+#    if not size:
+#        return ''
+#    # Create buffer
+#    res = create_string_buffer(size)
+#    # Load file informations into buffer res
+#    windll.version.GetFileVersionInfoA(filename, None, size, res)
+#    r = c_uint()
+#    l = c_uint()
+#    # Look for codepages
+#    windll.version.VerQueryValueA(res, '\\VarFileInfo\\Translation',
+#                                  byref(r), byref(l))
+#    # If no codepage -> empty string
+#    if not l.value:
+#        return ''
+#    # Take the first codepage (what else ?)
+#    codepages = array.array('H', string_at(r.value, l.value))
+#    codepage = tuple(codepages[:2].tolist())
+#    # Extract information
+#    windll.version.VerQueryValueA(res, ('\\StringFileInfo\\%04x%04x\\'
+#+ info) % codepage, byref(r), byref(l))
+#    return string_at(r.value, l.value)
+#
+#print get_file_info(r'C:/Program Files (x86)/Adobe/Reader 10.0/Reader/AcroRd32.exe', 'FileVersion')

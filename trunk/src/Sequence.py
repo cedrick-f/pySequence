@@ -40,7 +40,8 @@ Copyright (C) 2011-2014
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "4.8beta4"
+__version__ = "4.8beta8"
+print __version__
 
 #from threading import Thread
 
@@ -869,7 +870,7 @@ class Classe():
                 ci_SSI = []
                 while continuer:
                     c = brancheCI.get("CI"+str(i))
-                    if c == None or p == None:
+                    if c == None:
                         continuer = False
                     else:
                         ci_SSI.append(c)
@@ -6287,10 +6288,11 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     
     #############################################################################
     def MiseAJourMenu(self):
-        if register.IsRegistered():
-            self.menuReg.SetText(u"Désinscrire de la base de registre")
-        else:
-            self.menuReg.SetText(u"Inscrire dans la base de registre")
+        if hasattr(self, 'menuReg'):
+            if register.IsRegistered():
+                self.menuReg.SetText(u"Désinscrire de la base de registre")
+            else:
+                self.menuReg.SetText(u"Inscrire dans la base de registre")
             
             
             
@@ -7306,41 +7308,41 @@ class FenetreProjet(FenetreDocument):
         
         Ok = True
         err = 0
-        try:
-            root = ET.parse(fichier).getroot()
+#        try:
+        root = ET.parse(fichier).getroot()
+        
+        # Le projet
+        projet = root.find("Projet")
+        if projet == None:
+            self.projet.setBranche(root)
             
-            # Le projet
-            projet = root.find("Projet")
-            if projet == None:
-                self.projet.setBranche(root)
-                
-            else:
-                # La classe
-                message += u"Construction de la structure de la classe..."
-                dlg.Update(count, message)
-                count += 1
-                classe = root.find("Classe")
-                Ok = Ok and self.classe.setBranche(classe)
-                message += constantes.getOkErr(Ok) + u"\n"
-                
-                # Le projet
-                message += u"Construction de la structure du projet..."
-                dlg.Update(count, message)
-                count += 1
-                o,err = self.projet.setBranche(projet)
-                Ok = Ok and o
-                message += constantes.getOkErr(Ok) + u"\n"
-                
-            self.arbre.DeleteAllItems()
-            root = self.arbre.AddRoot("")
-            
-            message += u"Traitement des revues\n"
+        else:
+            # La classe
+            message += u"Construction de la structure de la classe..."
             dlg.Update(count, message)
             count += 1
-            self.projet.SetCompetencesRevuesSoutenance()
+            classe = root.find("Classe")
+            Ok = Ok and self.classe.setBranche(classe)
+            message += constantes.getOkErr(Ok) + u"\n"
+            
+            # Le projet
+            message += u"Construction de la structure du projet..."
+            dlg.Update(count, message)
+            count += 1
+            o,err = self.projet.setBranche(projet)
+            Ok = Ok and o
+            message += constantes.getOkErr(Ok) + u"\n"
+            
+        self.arbre.DeleteAllItems()
+        root = self.arbre.AddRoot("")
+        
+        message += u"Traitement des revues\n"
+        dlg.Update(count, message)
+        count += 1
+        self.projet.SetCompetencesRevuesSoutenance()
 
-        except:
-            Ok = False
+#        except:
+#            Ok = False
         
         if not Ok:
             m = u"Le projet\n    %s\nn'a pas pu être ouvert !" \
@@ -12040,7 +12042,7 @@ class ArbreProjet(ArbreDoc):
             else:
                 if dataTarget != dataSource \
                     and (dataTarget.phase == dataSource.phase or dataSource.phase =="Rev"):
-                    lst = dataTarget.parent.taches
+                    lst = dataTarget.projet.taches
 
                     s = lst.index(dataSource)
                     t = lst.index(dataTarget)
@@ -12049,7 +12051,7 @@ class ArbreProjet(ArbreDoc):
                         lst.insert(t, lst.pop(s))
                     else:
                         lst.insert(t+1, lst.pop(s))
-                    dataTarget.parent.SetOrdresTaches()
+                    dataTarget.projet.SetOrdresTaches()
                     self.SortChildren(self.GetItemParent(self.item))
                     self.panelVide.sendEvent(self.projet) # Solution pour déclencher un "redessiner"
     

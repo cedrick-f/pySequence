@@ -790,7 +790,7 @@ class RapportRTF(rt.RichTextCtrl):
     ######################################################################################################
     def AddPhase(self, tache, typ):
         
-        r,v,b = ICoulTache[tache.phase]
+        r,v,b,a = ICoulTache[tache.phase]
         bgCoul = wx.Colour(r*255,v*255,b*255)
         
         r,v,b = BCoulTache[tache.phase]
@@ -811,7 +811,7 @@ class RapportRTF(rt.RichTextCtrl):
     ######################################################################################################
     def AddTache(self, tache, revue = False):
         
-        r,v,b = ICoulTache[tache.phase]
+        r,v,b, a = ICoulTache[tache.phase]
         bgCoul = wx.Colour(r*255,v*255,b*255)
         
         r,v,b = BCoulTache[tache.phase]
