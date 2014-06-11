@@ -40,7 +40,7 @@ Copyright (C) 2011-2014
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "4.8beta8"
+__version__ = "4.8beta9"
 print __version__
 
 #from threading import Thread
@@ -1619,7 +1619,7 @@ class Sequence(BaseDoc):
                                     
                                     
     #############################################################################
-    def MiseAJourTypeEnseignement(self):
+    def MiseAJourTypeEnseignement(self, changeFamille = False):
         self.app.SetTitre()
         self.classe.MiseAJourTypeEnseignement()
         self.CI.MiseAJourTypeEnseignement()
@@ -14107,10 +14107,10 @@ class A_propos(wx.Dialog):
         t = wx.StaticText(descrip, -1,u"",
                           size = (400, -1))#,
 #                        style = wx.TE_READONLY|wx.TE_MULTILINE|wx.BORDER_NONE) 
-        t.SetLabelMarkup( wordwrap(u"<b>pySequence</b> est un logiciel d'aide à l'élaboration de séquences pédagogiques,\n"
-                                          u"sous forme de fiches exportables au format PDF.\n"
+        t.SetLabelMarkup( wordwrap(u"<b>pySequence</b> est un logiciel d'aide à l'élaboration de séquences pédagogiques et à la validation de projet,\n"
+                                          u"sous forme de fiches exportables au format PDF ou SVG.\n"
                                           u"Il est élaboré en relation avec le programme et le document d'accompagnement\n"
-                                          u"des enseignements technologiques transversaux de la filière STI2D.",500, wx.ClientDC(self)))
+                                          u"des enseignements des filières STI2D et SSI.",500, wx.ClientDC(self)))
         nb.AddPage(descrip, u"Description")
         nb.AddPage(auteurs, u"Auteurs")
         nb.AddPage(licence, u"Licence")
