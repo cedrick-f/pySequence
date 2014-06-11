@@ -302,7 +302,6 @@ def genererDossierValidation(nomFichier, projet, fenDoc):
 import wx
 if wx.Platform == '__WXMSW__':
     from wx.lib.pdfwin import PDFWindow, get_min_adobe_version
-    print "Version Adobe :", get_min_adobe_version()
 elif wx.Platform == '__WXMAC__':
     print "MAC !!"
     
@@ -319,7 +318,12 @@ class PdfPanel(wx.Panel):
         wx.Panel.__init__(self, parent, id=-1)
         self.pdf = None
         sizer = wx.BoxSizer(wx.VERTICAL)
-        if get_min_adobe_version() != None:
+        if constantes.ADOBE_VERSION[:3] == (11, 0, 7):
+            self.pdf = wx.StaticText(self, -1, u"Cette fonctionnalité n'est pas compatible Adobe Acrobat Reader version 11.0.07 !!\n\n"\
+                                               u"Pour visualiser le dossier de validation :\n"\
+                                               u" - Utiliser la version 11.0.06 (http://www.adobe.com/support/downloads/product.jsp?product=10&platform=Windows)\n" \
+                                               u" - Générer le fichier .pdf : menu Fichier/Générer le dossier de validation projet")
+        elif get_min_adobe_version() != None:
             self.pdf = PDFWindow(self, style=wx.SUNKEN_BORDER)
         else:
             self.pdf = wx.StaticText(self, -1, u"Cette fonctionnalité n'est disponible qu'avec Adobe Acrobat Reader")
@@ -332,7 +336,8 @@ class PdfPanel(wx.Panel):
         self.SetAutoLayout(True)
         
     def MiseAJour(self, projet, fenDoc):
-        if get_min_adobe_version() == None:
+        if isinstance(self.pdf, wx.StaticText):
+#        if get_min_adobe_version() == None:
             print "Problème version Adobe"
             return
 #        if hasattr(self, 'dosstemp') and get_min_adobe_version() == None:
