@@ -42,7 +42,7 @@ from draw_cairo_seq import ICoulSeance#, BCoulSeance
 
 from wx.lib.embeddedimage import PyEmbeddedImage 
 
-from constantes import NOM_PHASE_TACHE, TypesSeanceCourt
+from constantes import NOM_PHASE_TACHE#, TypesSeanceCourt
 
 # Module utilisé pour tester la disponibilité du presse-papier
 # (Windows seulement)
@@ -908,7 +908,7 @@ class RapportRTF(rt.RichTextCtrl):
         Styles["Titre 1"].SetBackgroundColour(bgCoul)
         
         self.BeginStyle(Styles["Titre 1"])
-        self.WriteText(TypesSeanceCourt[seance.typeSeance] + u" : " + seance.code+"\t\t\t"+getHoraireTxt(seance.GetDuree()))
+        self.WriteText(seance.GetReferentiel().seances[seance.typeSeance][0] + u" : " + seance.code+"\t\t\t"+getHoraireTxt(seance.GetDuree()))
         self.EndStyle()
         self.BeginLeftIndent(60*(indent-1))
         self.Newline()

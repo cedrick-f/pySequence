@@ -34,9 +34,9 @@ import io
 import ast
 import wx.combo
 #from constantes import *
-import constantes, constantes_SSI
-from constantes_ETT import PositionCibleCI
-
+import constantes#, constantes_SSI
+#from constantes_ETT import PositionCibleCI
+from Referentiel import REFERENTIELS
 
 ##############################################################################
 #      Options     #
@@ -238,9 +238,9 @@ class Options:
                                        "G" : constantes.NbrGroupes["G"],
                                        "E" : constantes.NbrGroupes["E"],
                                        "P" : constantes.NbrGroupes["P"]}
-        self.optClasse["CentresInteretSSI"] = [ci for ci in constantes_SSI.CentresInterets]
-        self.optClasse["CentresInteretET"] = [ci for ci in constantes.CentresInterets['ET']]
-        self.optClasse["PositionsCI_ET"] = [po for po in PositionCibleCI]
+#        self.optClasse["CentresInteretSSI"] = [ci for ci in constantes_SSI.CentresInterets]
+        self.optClasse["CentresInteret"] = [ci for ci in REFERENTIELS["SSI"].CentresInterets]
+        self.optClasse["PositionsCI"] = []
         self.optClasse["TypeEnseignement"] = "SSI"
         
 #        self.optClasse["NombreRevues"] = 2
@@ -256,11 +256,14 @@ class Options:
                                        "G" : classe.nbrGroupes["G"],
                                        "E" : classe.nbrGroupes["E"],
                                        "P" : classe.nbrGroupes["P"]}
-        if hasattr(classe, 'ci_ET'):
-            self.optClasse["CentresInteretET"] = classe.ci_ET
-            self.optClasse["PositionsCI_ET"] = classe.posCI_ET
-        if hasattr(classe, 'ci_SSI'):    
-            self.optClasse["CentresInteretSSI"] = classe.ci_SSI
+        
+        self.optClasse["CentresInteret"] = classe.CI
+        self.optClasse["PositionsCI"] = classe.posCI
+#        if hasattr(classe, 'ci_ET'):
+#            self.optClasse["CentresInteretET"] = classe.ci_ET
+#            self.optClasse["PositionsCI_ET"] = classe.posCI_ET
+#        if hasattr(classe, 'ci_SSI'):    
+#            self.optClasse["CentresInteretSSI"] = classe.ci_SSI
         
         self.optClasse["TypeEnseignement"] = classe.typeEnseignement
         
@@ -393,7 +396,7 @@ class pnlClasse(wx.Panel):
         
         
         cb = wx.ComboBox(self, -1,"", size = (40, -1), 
-                         choices = constantes.listEnseigmenent,
+                         choices = REFERENTIELS.keys(),
                          style = wx.CB_DROPDOWN|wx.CB_READONLY )
         cb.SetStringSelection(self.opt["TypeEnseignement"])
         cb.SetToolTip(wx.ToolTip(u"Choisir le type d'enseignement" ))

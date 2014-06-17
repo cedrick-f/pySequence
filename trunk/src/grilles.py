@@ -28,7 +28,8 @@
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
-from constantes import Cellules_NON, Fichier_GRILLE, TABLE_PATH, dicIndicateurs
+# Cellules_NON, Fichier_GRILLE, , dicIndicateurs
+from constantes import TABLE_PATH
 
 # Caractère utilisé pour cocher les cases :
 COCHE = u"X"
@@ -36,30 +37,30 @@ COCHE = u"X"
 ############
 #  Identification des indicateurs non évalués en ETT
 ############
-Feuille_ETT = u"Soutenance"
+#Feuille_ETT = u"Soutenance"
+#
+#
+#Cellules_INFO_STI =  {"Tit" : (13,1),
+#                      "Des" : (13,1),
+#                      "Nom" : (8,2),
+#                      "Pre" : (9,2),
+##                      "Pro" : (5,2)
+#                      }
+# 
+#Cellules_INFO_SSI =  {"Tit" : (12,1),
+#                      "Des" : (12,1),
+#                      "Nom" : (7,2),
+#                      "Pre" : (8,2),
+##                      "Pro" : (5,2)
+#                      }
+#
+#COL_REVUE = 10 # Colonne "J" pour désigner la revue
 
-
-Cellules_INFO_STI =  {"Tit" : (13,1),
-                      "Des" : (13,1),
-                      "Nom" : (8,2),
-                      "Pre" : (9,2),
-#                      "Pro" : (5,2)
-                      }
- 
-Cellules_INFO_SSI =  {"Tit" : (12,1),
-                      "Des" : (12,1),
-                      "Nom" : (7,2),
-                      "Pre" : (8,2),
-#                      "Pro" : (5,2)
-                      }
-
-COL_REVUE = 10 # Colonne "J" pour désigner la revue
-
-Cellules_NON  =  {'ITEC'   : [[Feuille_ETT, Cellules_NON['ET']], ['ITEC', Cellules_NON['ITEC']]], 
-                  'AC'     : [[Feuille_ETT, Cellules_NON['ET']], ['AC', Cellules_NON['AC']]], 
-                  'EE'     : [[Feuille_ETT, Cellules_NON['ET']], ['EE', Cellules_NON['EE']]], 
-                  'SIN'    : [[Feuille_ETT, Cellules_NON['ET']], ['SIN', Cellules_NON['SIN']]],
-                  'SSI'    : [['Notation', Cellules_NON['SSI']]]}    
+#Cellules_NON  =  {'ITEC'   : [[Feuille_ETT, Cellules_NON['ET']], ['ITEC', Cellules_NON['ITEC']]], 
+#                  'AC'     : [[Feuille_ETT, Cellules_NON['ET']], ['AC', Cellules_NON['AC']]], 
+#                  'EE'     : [[Feuille_ETT, Cellules_NON['ET']], ['EE', Cellules_NON['EE']]], 
+#                  'SIN'    : [[Feuille_ETT, Cellules_NON['ET']], ['SIN', Cellules_NON['SIN']]],
+#                  'SSI'    : [['Notation', Cellules_NON['SSI']]]}    
 
 
 # Module utilisé pour accéder au classeur Excel
@@ -75,11 +76,15 @@ from widgets import messageErreur
 
 def getTableau(parent, doc):
     typ = doc.GetTypeEnseignement()
-    if typ == 'SSI':
-        fichiers = Fichier_GRILLE[typ]
-    else:
-        fichiersR = Fichier_GRILLE[typ]
-        fichiersS = Fichier_GRILLE['ET']
+    ref = doc.GetReferentiel()
+    
+    fichiers = ref.grilles_prj
+    
+#    if typ == 'SSI':
+#        fichiers = Fichier_GRILLE[typ]
+#    else:
+#        fichiersR = Fichier_GRILLE[typ]
+#        fichiersS = Fichier_GRILLE['ET']
     
     fichierPB = []
     
@@ -98,22 +103,28 @@ def getTableau(parent, doc):
             
         return err, tableau
     
-    if typ == 'SSI':
-        err, tableau = ouvrir(fichiers[0])
-        if err != 0:
-            err, tableau = ouvrir(fichiers[1])
-    else:
-        errR, tableauR = ouvrir(fichiersR[0])
-        if errR != 0:
-            errR, tableauR = ouvrir(fichiersR[1])
-        errS, tableauS = ouvrir(fichiersS[0])
-        if errS != 0:
-            errS, tableauS = ouvrir(fichiersS[1])
-        err = errR + errR
-        tableau = [tableauR, tableauS]
+    tableaux = {}
+    ff = r""
+    for k, f in fichiers.items():
+        if f != ff:
+            err, tableaux[k] = ouvrir(f)
+    
+#    if typ == 'SSI':
+#        err, tableau = ouvrir(fichiers[0])
+#        if err != 0:
+#            err, tableau = ouvrir(fichiers[1])
+#    else:
+#        errR, tableauR = ouvrir(fichiersR[0])
+#        if errR != 0:
+#            errR, tableauR = ouvrir(fichiersR[1])
+#        errS, tableauS = ouvrir(fichiersS[0])
+#        if errS != 0:
+#            errS, tableauS = ouvrir(fichiersS[1])
+#        err = errR + errR
+#        tableau = [tableauR, tableauS]
         
     if err == 0:
-        return tableau
+        return tableaux
     elif err&1 != 0:
         messageErreur(parent, u"Ouverture d'Excel impossible !",
                       u"L'application Excel ne semble pas installée !")
@@ -125,41 +136,41 @@ def getTableau(parent, doc):
         print "Erreur", err
 
 
-def modifierGrille(doc, tableur, eleve):
+def modifierGrille(doc, tableaux, eleve):
    
     
     #
     # On coche les cellules "non"
     #     
-    dic = Cellules_NON[doc.GetTypeEnseignement()]
+#    dic = Cellules_NON[doc.GetTypeEnseignement()]
     
     #clef = code compétence
     #valeur = liste [True False ...] des indicateurs à mobiliser
-    dicIndic = eleve.GetDicIndicateurs()
-
-    
-    for feuille, cellules in dic:
-        for comp, cells in cellules.items():
-            for j, cell in enumerate(cells):
-                
-                # indic = l'indicateur "comp" doit être évalué
-                if comp in dicIndic.keys():
-                    indic = dicIndic[comp][j]
-                else:
-                    indic = False
-                
-                
-                if not indic: # indicateur pas évalué --> on coche NON !
-                    l, c = cell
-#                    print feuille, l, c
-                    if doc.GetTypeEnseignement() == 'SSI':
-                        tableur.setCell(feuille, l, c, COCHE)
-                    else:
-                        if feuille == Feuille_ETT:
-                            t = tableur[1]
-                        else:
-                            t = tableur[0]
-                        t.setCell(2, l, c, COCHE)
+#    dicIndic = eleve.GetDicIndicateurs()
+#
+#    
+#    for feuille, cellules in dic:
+#        for comp, cells in cellules.items():
+#            for j, cell in enumerate(cells):
+#                
+#                # indic = l'indicateur "comp" doit être évalué
+#                if comp in dicIndic.keys():
+#                    indic = dicIndic[comp][j]
+#                else:
+#                    indic = False
+#                
+#                
+#                if not indic: # indicateur pas évalué --> on coche NON !
+#                    l, c = cell
+##                    print feuille, l, c
+#                    if doc.GetTypeEnseignement() == 'SSI':
+#                        tableur.setCell(feuille, l, c, COCHE)
+#                    else:
+#                        if feuille == Feuille_ETT:
+#                            t = tableur[1]
+#                        else:
+#                            t = tableur[0]
+#                        t.setCell(2, l, c, COCHE)
                 
 #                else: # indicateur évalué --> on rempli la colonne "Revues" (J) !
 #                    if doc.GetTypeEnseignement(simple = True) == "STI" and feuille != Feuille_ETT:
@@ -179,73 +190,81 @@ def modifierGrille(doc, tableur, eleve):
     #
     # On rempli les cellules "Revue" (colonne J)
     #     
-    dic = Cellules_NON[doc.GetTypeEnseignement()]
-    
-    if eleve.projet.nbrRevues == 2:
-        lstRevues = ["R1", "R2"]
-    else:
-        lstRevues = ["R1", "R2", "R3"]
-    
-
-    
-    for feuille, cellules in dic:
-        for comp, cells in cellules.items():
-            for j, cell in enumerate(cells):
-                for i, r in enumerate(lstRevues):
-                    # indic = l'indicateur "comp" doit être évalué
+#    dic = Cellules_NON[doc.GetTypeEnseignement()]
+#    
+#    if eleve.projet.nbrRevues == 2:
+#        lstRevues = ["R1", "R2"]
+#    else:
+#        lstRevues = ["R1", "R2", "R3"]
+#    
 #
-                    rev = eleve.projet.getTachesRevue()[i]
-                    
-                    #clef = code compétence
-                    #valeur = liste [True False ...] des indicateurs à mobiliser
-                    dicIndic = rev.GetDicIndicateursEleve(eleve)
-                    
-                    if comp in dicIndic.keys():
-                        indic = dicIndic[comp][j]
-                    else:
-                        indic = False
-                  
-                    if indic: # indicateur évalué --> on rempli la colonne "Revues" (J) !
-                        l, c = cell
-                        c = COL_REVUE
-                        if doc.GetTypeEnseignement(simple = True) == "STI" and feuille != Feuille_ETT:
-                            if comp+"_"+str(j+1) in rev.indicateursEleve[eleve.id+1]:
-                                tableur[0].setCell(2, l, c, str(i+1))
-                                break
-                        elif doc.GetTypeEnseignement(simple = True) == "SSI":
-                            if comp+"_"+str(j+1) in rev.indicateursEleve[eleve.id+1]:
-                                try:
-                                    tableur.setCell(2, l, c,  str(i+1))
-                                except:
-                                    pass # Pas de colonne "J" !
-                                break
-                    
-#                if doc.GetTypeEnseignement(simple = True) == "SSI" and dicIndicateurs['SSI'][comp][j][1]:
-#                    l, c = cell
-#                    tableur.setColor(feuille, l, c, 5)
+#    
+#    for feuille, cellules in dic:
+#        for comp, cells in cellules.items():
+#            for j, cell in enumerate(cells):
+#                for i, r in enumerate(lstRevues):
+#                    # indic = l'indicateur "comp" doit être évalué
+##
+#                    rev = eleve.projet.getTachesRevue()[i]
+#                    
+#                    #clef = code compétence
+#                    #valeur = liste [True False ...] des indicateurs à mobiliser
+#                    dicIndic = rev.GetDicIndicateursEleve(eleve)
+#                    
+#                    if comp in dicIndic.keys():
+#                        indic = dicIndic[comp][j]
+#                    else:
+#                        indic = False
+#                  
+#                    if indic: # indicateur évalué --> on rempli la colonne "Revues" (J) !
+#                        l, c = cell
+#                        c = COL_REVUE
+#                        if doc.GetTypeEnseignement(simple = True) == "STI" and feuille != Feuille_ETT:
+#                            if comp+"_"+str(j+1) in rev.indicateursEleve[eleve.id+1]:
+#                                tableur[0].setCell(2, l, c, str(i+1))
+#                                break
+#                        elif doc.GetTypeEnseignement(simple = True) == "SSI":
+#                            if comp+"_"+str(j+1) in rev.indicateursEleve[eleve.id+1]:
+#                                try:
+#                                    tableur.setCell(2, l, c,  str(i+1))
+#                                except:
+#                                    pass # Pas de colonne "J" !
+#                                break
+#                    
+##                if doc.GetTypeEnseignement(simple = True) == "SSI" and dicIndicateurs['SSI'][comp][j][1]:
+##                    l, c = cell
+##                    tableur.setColor(feuille, l, c, 5)
 
     #
     # On rajoute quelques informations
     #
-    if doc.GetTypeEnseignement(simple = True) == "SSI":
-        dicInfo = Cellules_INFO_SSI
-        tb = [tableur]
-    else:
-        dicInfo = Cellules_INFO_STI
-        tb = tableur
+    dicInfo = doc.GetReferentiel().cellulesInfo_prj
+#    tb = tabl
+#    if doc.GetTypeEnseignement(simple = True) == "SSI":
+#        dicInfo = Cellules_INFO_SSI
+#        tb = [tableur]
+#    else:
+#        dicInfo = Cellules_INFO_STI
+#        tb = tableur
+#    
+    schem = {"Tit" : doc.intitule,
+             "Des" : doc.intitule + "\n" + doc.problematique,
+             "Nom" : eleve.GetNom(),
+             "Pre" : eleve.GetPrenom(),
+             "Etab": doc.classe.etablissement
+             }
+    print schem
+    print dicInfo
+    print tableaux
     
-    for t in tb:
-        l,c = dicInfo["Tit"]
-        t.setCell(1, l, c, doc.intitule)
+    for t in tableaux.values():
+        for k, v in schem.items():
+            print k
+            if k in dicInfo.keys():
+                l,c = dicInfo[k][1]
+                t.setCell(1, l, c, v)
         
-        l,c = dicInfo["Des"]
-        t.setCell(1, l, c, doc.intitule + "\n" + doc.problematique)
         
-        l,c = dicInfo["Nom"]
-        t.setCell(1, l, c, eleve.GetNom())
-        
-        l,c = dicInfo["Pre"]
-        t.setCell(1, l, c, eleve.GetPrenom())
     
 #    l,c = Cellules_INFO_SSI["Pro"]
 #    tableur.xlBook.Worksheets(1).Cells(l, c).Activate()
