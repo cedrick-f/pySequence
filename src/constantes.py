@@ -42,14 +42,14 @@ import wx
 #from constantes_EE import *
 #from constantes_SSI import *
 
-import constantes_ETT
-import constantes_SIN
-import constantes_AC
-import constantes_ITEC
-import constantes_EE
-import constantes_SSI
-import constantes_MATH
-import constantes_PHY
+#import constantes_ETT
+#import constantes_SIN
+#import constantes_AC
+#import constantes_ITEC
+#import constantes_EE
+#import constantes_SSI
+#import constantes_MATH
+#import constantes_PHY
 
 # Les icones des branches de l'abre et un curseur perso
 import images
@@ -326,50 +326,52 @@ imagesCI = [images.CI_1, images.CI_2, images.CI_3, images.CI_4,
 #   Les constantes valables pour tous les enseignements
 #
 ####################################################################################
-TypesActivite = {"ED" : u"Activité d'étude de dossier",
-                 "AP" : u"Activité pratique",
-                 "P"  : u"Activité de projet",
-                }
+TYPE_ENSEIGNEMENT_DEFAUT = "SSI"
 
-TypesSeance = {"C"  : u"Cours",
-               "TD" : u"Travaux Dirigés",
-               "SA" : u"Synthèse d'activité",
-               "SS" : u"Synthèse de séquence",
-               "E"  : u"Evaluation",
-               }
-TypesSeance.update(TypesActivite)
-TypesSeance.update({"R" : u"Rotation d'activités",
-                    "S" : u"Activités en parallèle"})
-
-TypesSeanceCourt = {"ED" : u"Etude de dossier",
-                    "AP" : u"Activité pratique",
-                    "P"  : u"Projet",
-                    "C"  : u"Cours",
-                    "TD" : u"TD",
-                    "SA" : u"Synt. d'activité",
-                    "SS" : u"Synt. de séquence",
-                    "E"  : u"Evaluation",
-                    "R"  : u"Rotation",
-                    "S"  : u"Parallèle"}
-
-listeTypeSeance = ["ED", "AP", "P", "C", "TD", "SA", "SS", "E", "R", "S"]
-listeTypeActivite = ["ED", "AP", "P"]
-
-
-
-Demarches = {"I" : u"Investigation",
-             "R" : u"Résolution de problème",
-             "P" : u"Projet"}
-
-DemarchesCourt = {"I" : u"Investigation",
-                  "R" : u"Rés. de problème",
-                  "P" : u"Projet"}
-
-listeDemarches = ["I", "R", "P"]
+#TypesActivite = {"ED" : u"Activité d'étude de dossier",
+#                 "AP" : u"Activité pratique",
+#                 "P"  : u"Activité de projet",
+#                }
+#
+#TypesSeance = {"C"  : u"Cours",
+#               "TD" : u"Travaux Dirigés",
+#               "SA" : u"Synthèse d'activité",
+#               "SS" : u"Synthèse de séquence",
+#               "E"  : u"Evaluation",
+#               }
+#TypesSeance.update(TypesActivite)
+#TypesSeance.update({"R" : u"Rotation d'activités",
+#                    "S" : u"Activités en parallèle"})
+#
+#TypesSeanceCourt = {"ED" : u"Etude de dossier",
+#                    "AP" : u"Activité pratique",
+#                    "P"  : u"Projet",
+#                    "C"  : u"Cours",
+#                    "TD" : u"TD",
+#                    "SA" : u"Synt. d'activité",
+#                    "SS" : u"Synt. de séquence",
+#                    "E"  : u"Evaluation",
+#                    "R"  : u"Rotation",
+#                    "S"  : u"Parallèle"}
+#
+#listeTypeSeance = ["ED", "AP", "P", "C", "TD", "SA", "SS", "E", "R", "S"]
+#listeTypeActivite = ["ED", "AP", "P"]
 
 
-listEnseigmenent = ['ET', 'ITEC', 'AC', 'EE', 'SIN', 'SSI']
-EnseignementsProjet = ['ITEC','AC', 'EE', 'SIN', 'SSI']
+
+#Demarches = {"I" : u"Investigation",
+#             "R" : u"Résolution de problème",
+#             "P" : u"Projet"}
+#
+#DemarchesCourt = {"I" : u"Investigation",
+#                  "R" : u"Rés. de problème",
+#                  "P" : u"Projet"}
+#
+#listeDemarches = ["I", "R", "P"]
+
+
+#listEnseigmenent = ['ET', 'ITEC', 'AC', 'EE', 'SIN', 'SSI']
+#EnseignementsProjet = ['ITEC','AC', 'EE', 'SIN', 'SSI']
 
 # Le fichier contenant les CI STI2D ETT par académie
 FICHIER_CI_STI2D_ETT = "CI_STI2D_ETT.xml"
@@ -379,57 +381,57 @@ FICHIER_CI_STI2D_ETT = "CI_STI2D_ETT.xml"
 #   Les constantes par Enseignement
 #
 ####################################################################################
-Modules = {'ET'     : constantes_ETT,
-           'ITEC'   : constantes_ITEC, 
-           'AC'     : constantes_AC, 
-           'EE'     : constantes_EE, 
-           'SIN'    : constantes_SIN,
-           'SSI'    : constantes_SSI}
+#Modules = {'ET'     : constantes_ETT,
+#           'ITEC'   : constantes_ITEC, 
+#           'AC'     : constantes_AC, 
+#           'EE'     : constantes_EE, 
+#           'SIN'    : constantes_SIN,
+#           'SSI'    : constantes_SSI}
 
-FamilleEnseignement = {'ET'     : 'STI',
-                       'ITEC'   : 'STI', 
-                       'AC'     : 'STI', 
-                       'EE'     : 'STI', 
-                       'SIN'    : 'STI',
-                       'SSI'    : 'SSI'}
+#FamilleEnseignement = {'ET'     : 'STI',
+#                       'ITEC'   : 'STI', 
+#                       'AC'     : 'STI', 
+#                       'EE'     : 'STI', 
+#                       'SIN'    : 'STI',
+#                       'SSI'    : 'SSI'}
 
-CentresInterets = {}
-dicCompetences = {}
-dicSavoirs = {}
-dicCellSavoirs = {}
-Enseigmenent = {}
-fichierProgressionProgramme = {}
-for t in listEnseigmenent:
-    CentresInterets[t] = Modules[t].CentresInterets
-    dicCompetences[t] = Modules[t].dicCompetences
-    dicSavoirs[t] = Modules[t].dicSavoirs
-    dicCellSavoirs[t] = Modules[t].dicCellSavoirs
-    Enseigmenent[t] = Modules[t].Enseigmenent
-    fichierProgressionProgramme[t] = Modules[t].fichierProgressionProgramme
-
-dicSavoirs["MSSI"] = constantes_MATH.dicSavoirs_SSI
-dicSavoirs["MSTI"] = constantes_MATH.dicSavoirs_STI
-dicSavoirs["PSSI"] = constantes_PHY.dicSavoirs_SSI
-dicSavoirs["PSTI"] = constantes_PHY.dicSavoirs_STI
-
-Fichier_GRILLE = {} 
-Cellules_NON = {}   
-for t in listEnseigmenent:    
-    Fichier_GRILLE[t] = Modules[t].Fichier_GRILLE
-    Cellules_NON[t] = Modules[t].Cellules_NON
+#CentresInterets = {}
+#dicCompetences = {}
+#dicSavoirs = {}
+#dicCellSavoirs = {}
+#Enseigmenent = {}
+#fichierProgressionProgramme = {}
+#for t in listEnseigmenent:
+#    CentresInterets[t] = Modules[t].CentresInterets
+#    dicCompetences[t] = Modules[t].dicCompetences
+#    dicSavoirs[t] = Modules[t].dicSavoirs
+#    dicCellSavoirs[t] = Modules[t].dicCellSavoirs
+#    Enseigmenent[t] = Modules[t].Enseigmenent
+#    fichierProgressionProgramme[t] = Modules[t].fichierProgressionProgramme
+#
+#dicSavoirs["MSSI"] = constantes_MATH.dicSavoirs_SSI
+#dicSavoirs["MSTI"] = constantes_MATH.dicSavoirs_STI
+#dicSavoirs["PSSI"] = constantes_PHY.dicSavoirs_SSI
+#dicSavoirs["PSTI"] = constantes_PHY.dicSavoirs_STI
+#
+#Fichier_GRILLE = {} 
+#Cellules_NON = {}   
+#for t in listEnseigmenent:    
+#    Fichier_GRILLE[t] = Modules[t].Fichier_GRILLE
+#    Cellules_NON[t] = Modules[t].Cellules_NON
     
-Cellules_INFO_STI =  {"Tit" : (13,1),
-                      "Des" : (13,1),
-                      "Nom" : (8,2),
-                      "Pre" : (9,2),
-#                      "Pro" : (5,2)
-                      }
-
-Cellules_INFO_SSI = {"Tit" : (12,1),
-                     "Des" : (12,1),
-                     "Nom" : (7,2),
-                     "Pro" : (43,1),
-                     "Pre" : (8,2)}
+#Cellules_INFO_STI =  {"Tit" : (13,1),
+#                      "Des" : (13,1),
+#                      "Nom" : (8,2),
+#                      "Pre" : (9,2),
+##                      "Pro" : (5,2)
+#                      }
+#
+#Cellules_INFO_SSI = {"Tit" : (12,1),
+#                     "Des" : (12,1),
+#                     "Nom" : (7,2),
+#                     "Pro" : (43,1),
+#                     "Pre" : (8,2)}
 
 
 ####################################################################################
@@ -445,16 +447,16 @@ Effectifs = {"C" : 32,
              "P" : None,
              }
 
-NomsEffectifs= {"C" : [u"Classe entière",       u"Classe entière"],
-                 "G" : [u"Effectif réduit",      u"Effectif réduit"],
-                 "D" : [u"Demi-groupe",          u"Demi-groupe"],
-                 "E" : [u"Etude et Projet",      u"Etude ou Projet"],
-                 "P" : [u"Activité Pratique",    u"Act. Pra."],
-                 }
-
-
-# Tout ce qui concerne les effectifs
-listeEffectifs = ["C", "G", "D" ,"E" ,"P"]
+#NomsEffectifs= {"C" : [u"Classe entière",       u"Classe entière"],
+#                 "G" : [u"Effectif réduit",      u"Effectif réduit"],
+#                 "D" : [u"Demi-groupe",          u"Demi-groupe"],
+#                 "E" : [u"Etude et Projet",      u"Etude ou Projet"],
+#                 "P" : [u"Activité Pratique",    u"Act. Pra."],
+#                 }
+#
+#
+## Tout ce qui concerne les effectifs
+#listeEffectifs = ["C", "G", "D" ,"E" ,"P"]
 
 NbrGroupes = {"G" : 2, # Par classe
               "E" : 4, # Par grp Eff réduit
@@ -516,7 +518,7 @@ def strEffectif(classe, e, n = 0, eleve = True):
             return eff_str
 
 def strEffectifComplet(classe, e, n = 0):
-    tit_eff = NomsEffectifs[e][0]
+    tit_eff = classe.GetReferentiel().effectifs[e][0]
     return tit_eff+" ("+strEffectif(classe, e, n)+")"
 
 
@@ -571,46 +573,46 @@ def findEffectif(lst, eff):
 #   Définition des compétences pour les projets
 #
 ####################################################################################
-def getCompetencesProjet(dic):
-    """ Renvoie un dict des compétences à évaluer en projet :
-        = certaines compétences de l'ET
-        + les compétences de l'enseignement de spécialité
-    """
-    d = {"O1" : Modules['ET'].dicCompetences["O1"],
-         "O2" : Modules['ET'].dicCompetences["O2"],
-         "O6" : Modules['ET'].dicCompetences["O6"]
-         }
+#def getCompetencesProjet(dic):
+#    """ Renvoie un dict des compétences à évaluer en projet :
+#        = certaines compétences de l'ET
+#        + les compétences de l'enseignement de spécialité
+#    """
+#    d = {"O1" : Modules['ET'].dicCompetences["O1"],
+#         "O2" : Modules['ET'].dicCompetences["O2"],
+#         "O6" : Modules['ET'].dicCompetences["O6"]
+#         }
+#
+#    d.update(dic)
+#    d.update({"O8s" : [u"Valider des solutions techniques",
+#                       {"CO8.0" : u"Justifier des éléments d'une simulation relative au comportement de tout ou partie d'un système et les écarts par rapport au réel"}]})
+##    d["O8"][1].update({"CO8.0" : u"Justifier des éléments d'une simulation relative au comportement de tout ou partie d'un système et les écarts par rapport au réel"})
+#
+#    return d
+#
+#dicCompetences_prj = {}    
+#for t in ['ITEC', 'AC', 'EE', 'SIN']:    
+#    dicCompetences_prj[t] = getCompetencesProjet(Modules[t].dicCompetences)
+#
+#dicCompetences_prj['SSI'] = Modules['SSI'].dicCompetences_prj
 
-    d.update(dic)
-    d.update({"O8s" : [u"Valider des solutions techniques",
-                       {"CO8.0" : u"Justifier des éléments d'une simulation relative au comportement de tout ou partie d'un système et les écarts par rapport au réel"}]})
-#    d["O8"][1].update({"CO8.0" : u"Justifier des éléments d'une simulation relative au comportement de tout ou partie d'un système et les écarts par rapport au réel"})
+#def estCompetenceRevue(typeEns, codeComp):
+#    return len(dicCompetences_prj_simple[typeEns][codeComp]) <= 2
 
-    return d
-
-dicCompetences_prj = {}    
-for t in ['ITEC', 'AC', 'EE', 'SIN']:    
-    dicCompetences_prj[t] = getCompetencesProjet(Modules[t].dicCompetences)
-
-dicCompetences_prj['SSI'] = Modules['SSI'].dicCompetences_prj
-
-def estCompetenceRevue(typeEns, codeComp):
-    return len(dicCompetences_prj_simple[typeEns][codeComp]) <= 2
-
-def getCompetencesPrjRevues(v):
-    dic = {}
-    for c, d in v.items():
-        ddic = {}
-        for kk, vv in d[1].items():
-            if len(vv) > 2:
-                ddic[kk] = d[1][kk]
-        if ddic != {}:
-            dic.update({c : [d[0], ddic]})
-    return dic
-
-dicCompetences_prj_revues = {}
-for k,v in dicCompetences_prj.items():
-    dicCompetences_prj_revues[k] = getCompetencesPrjRevues(v)
+#def getCompetencesPrjRevues(v):
+#    dic = {}
+#    for c, d in v.items():
+#        ddic = {}
+#        for kk, vv in d[1].items():
+#            if len(vv) > 2:
+#                ddic[kk] = d[1][kk]
+#        if ddic != {}:
+#            dic.update({c : [d[0], ddic]})
+#    return dic
+#
+#dicCompetences_prj_revues = {}
+#for k,v in dicCompetences_prj.items():
+#    dicCompetences_prj_revues[k] = getCompetencesPrjRevues(v)
 
 ######################################################################################
 #
@@ -618,50 +620,50 @@ for k,v in dicCompetences_prj.items():
 #        (pour les projets)
 # 
 ######################################################################################
-dicIndicateurs = {}
-dicPoidsIndicateurs = {}
-for t in EnseignementsProjet:    
-    dicIndicateurs[t] = Modules[t].dicIndicateurs_prj
-    dicPoidsIndicateurs[t] = Modules[t].dicPoidsIndicateurs_prj
-
-                            
-
-for e, i in dicIndicateurs.items():
-    if e != "SSI":
-        i.update(Modules['ET'].dicIndicateurs_prj)
-
-NRB_COEF_COMP_S = {}
-NRB_COEF_COMP_R = {}
-for t in EnseignementsProjet:
-    NRB_COEF_COMP_S[t] = 0
-    NRB_COEF_COMP_R[t] = 0
-    
-
-for e, i in dicPoidsIndicateurs.items():
-    if e != "SSI":
-        i.update(Modules['ET'].dicPoidsIndicateurs_prj)
-        
-        
-lstGrpIndicateurRevues = {}
-lstGrpIndicateurSoutenance = {}
-for t in EnseignementsProjet:    
-    lstGrpIndicateurRevues[t] = []
-    lstGrpIndicateurSoutenance[t] = []
-    for grp, poids in dicPoidsIndicateurs[t].items():
-        poidsGrp, dicIndicGrp = poids
-        for comp, poidsIndic in dicIndicGrp.items():
-            if comp in dicIndicateurs[t].keys():
-                for i, indic in enumerate(dicIndicateurs[t][comp]):
-                    if dicIndicateurs[t][comp][i][1]:
-                        lstGrpIndicateurRevues[t].append(grp)
-                    else:
-                        lstGrpIndicateurSoutenance[t].append(grp)
-                        
-    lstGrpIndicateurSoutenance[t] = list(set(lstGrpIndicateurSoutenance[t]))
-    lstGrpIndicateurRevues[t] = list(set(lstGrpIndicateurRevues[t]))
-    if "O8s" in lstGrpIndicateurSoutenance[t]:
-        lstGrpIndicateurSoutenance[t].remove("O8s")
-        lstGrpIndicateurSoutenance[t].append("O8")
+#dicIndicateurs = {}
+#dicPoidsIndicateurs = {}
+#for t in EnseignementsProjet:    
+#    dicIndicateurs[t] = Modules[t].dicIndicateurs_prj
+#    dicPoidsIndicateurs[t] = Modules[t].dicPoidsIndicateurs_prj
+#
+#                            
+#
+#for e, i in dicIndicateurs.items():
+#    if e != "SSI":
+#        i.update(Modules['ET'].dicIndicateurs_prj)
+#
+#NRB_COEF_COMP_S = {}
+#NRB_COEF_COMP_R = {}
+#for t in EnseignementsProjet:
+#    NRB_COEF_COMP_S[t] = 0
+#    NRB_COEF_COMP_R[t] = 0
+#    
+#
+#for e, i in dicPoidsIndicateurs.items():
+#    if e != "SSI":
+#        i.update(Modules['ET'].dicPoidsIndicateurs_prj)
+#        
+#        
+#lstGrpIndicateurRevues = {}
+#lstGrpIndicateurSoutenance = {}
+#for t in EnseignementsProjet:    
+#    lstGrpIndicateurRevues[t] = []
+#    lstGrpIndicateurSoutenance[t] = []
+#    for grp, poids in dicPoidsIndicateurs[t].items():
+#        poidsGrp, dicIndicGrp = poids
+#        for comp, poidsIndic in dicIndicGrp.items():
+#            if comp in dicIndicateurs[t].keys():
+#                for i, indic in enumerate(dicIndicateurs[t][comp]):
+#                    if dicIndicateurs[t][comp][i][1]:
+#                        lstGrpIndicateurRevues[t].append(grp)
+#                    else:
+#                        lstGrpIndicateurSoutenance[t].append(grp)
+#                        
+#    lstGrpIndicateurSoutenance[t] = list(set(lstGrpIndicateurSoutenance[t]))
+#    lstGrpIndicateurRevues[t] = list(set(lstGrpIndicateurRevues[t]))
+#    if "O8s" in lstGrpIndicateurSoutenance[t]:
+#        lstGrpIndicateurSoutenance[t].remove("O8s")
+#        lstGrpIndicateurSoutenance[t].append("O8")
 
 #print lstGrpIndicateurRevues
 #print lstGrpIndicateurSoutenance
@@ -709,37 +711,37 @@ for t in EnseignementsProjet:
 #        valeur = [intitulé, poids, "revue"]
 # 
 ######################################################################################
-def getCompetencesPrjSimple(k,v):
-    global NRB_COEF_COMP_R, NRB_COEF_COMP_S 
-    dic = {}
-    for d in v.values():
-        if k == "SSI":
-            nd = {}
-            for cc, v in d[1].items():
-                nd[cc] = v[0]
-            dic.update(nd)
-        else: 
-            dic.update(d[1])
+#def getCompetencesPrjSimple(k,v):
+#    global NRB_COEF_COMP_R, NRB_COEF_COMP_S 
+#    dic = {}
+#    for d in v.values():
 #        if k == "SSI":
-#            for l in d[1].values():
-#                if len(l) > 2:
-#                    NRB_COEF_COMP_S[k] += l[1]
-#                else:
-#                    NRB_COEF_COMP_R[k] += l[1]
-#        else:
-#            for C, l in d[1].items():
-#                if C in dicIndicateurs[k].keys():
-#                    if len(l) > 2:
-#                        NRB_COEF_COMP_S[k] += len(dicIndicateurs[k][C])
-#                    else:
-#                        NRB_COEF_COMP_R[k] += len(dicIndicateurs[k][C])
-            
-    return dic
-
-
-dicCompetences_prj_simple = {}
-for k,v in dicCompetences_prj.items():
-    dicCompetences_prj_simple[k] = getCompetencesPrjSimple(k,v)
+#            nd = {}
+#            for cc, v in d[1].items():
+#                nd[cc] = v[0]
+#            dic.update(nd)
+#        else: 
+#            dic.update(d[1])
+##        if k == "SSI":
+##            for l in d[1].values():
+##                if len(l) > 2:
+##                    NRB_COEF_COMP_S[k] += l[1]
+##                else:
+##                    NRB_COEF_COMP_R[k] += l[1]
+##        else:
+##            for C, l in d[1].items():
+##                if C in dicIndicateurs[k].keys():
+##                    if len(l) > 2:
+##                        NRB_COEF_COMP_S[k] += len(dicIndicateurs[k][C])
+##                    else:
+##                        NRB_COEF_COMP_R[k] += len(dicIndicateurs[k][C])
+#            
+#    return dic
+#
+#
+#dicCompetences_prj_simple = {}
+#for k,v in dicCompetences_prj.items():
+#    dicCompetences_prj_simple[k] = getCompetencesPrjSimple(k,v)
 
 
 
@@ -801,62 +803,62 @@ def trier(l):
     
 # Pour obtenir l'intitulé d'un savoir à partir de son code 
 #        fonction recursive
-def getSavoir(typeEns, code, dic = None, c = 1):
-#    print "getSavoir", code, dic,
-    if dic == None:
-        dic = dicSavoirs[typeEns]
-#    print dic
-#    if c == None:
-#        c = len(code.split("."))
-#        c = 1
-    if dic.has_key(code):
-        return dic[code][0]
-    else:
-#        cd = code[:-2*(c-1)]
-#        cd = ".".join(code.split(".")[:c-1])
-        cd = ".".join(code.split(".")[:c])
-#        print "  ", cd
-#        return getSavoir(typeEns, code, dic[cd][1], c-1)
-        return getSavoir(typeEns, code, dic[cd][1], c+1)
-    
-    
+#def getSavoir(typeEns, code, dic = None, c = 1):
+##    print "getSavoir", code, dic,
+#    if dic == None:
+#        dic = dicSavoirs[typeEns]
+##    print dic
+##    if c == None:
+##        c = len(code.split("."))
+##        c = 1
+#    if dic.has_key(code):
+#        return dic[code][0]
+#    else:
+##        cd = code[:-2*(c-1)]
+##        cd = ".".join(code.split(".")[:c-1])
+#        cd = ".".join(code.split(".")[:c])
+##        print "  ", cd
+##        return getSavoir(typeEns, code, dic[cd][1], c-1)
+#        return getSavoir(typeEns, code, dic[cd][1], c+1)
+#    
+#    
 # Pour obtenir l'intitulé d'une compétence à partir de son code 
 #        fonction recursive    
-def getCompetence(seq, code, dic = None, c = None):
-#    print "getCompetence", code, dic, c
-
-    if dic == None:
-        if seq.classe.typeEnseignement == "SSI":
-            dic = dicCompetences[seq.classe.typeEnseignement][code[0]][1]
-        else:
-            dic = dicCompetences[seq.classe.typeEnseignement]
-#        print dic
-    if c == None:
-        c = len(code.split("."))
-    if dic.has_key(code):
-        if seq.classe.typeEnseignement == "SSI" and type(dic[code]) == list:
-            return dic[code][0]
-        else:
-            return dic[code]
-    else:
-#        cd = code[1:-2*(c-1)]
-        if seq.classe.typeEnseignement == "SSI":
-#            if "." in code:
-            cd = code.split(".")[0]
-#            else:
-#                cd = code[0]
-        else:
-            cd = code.split(".")[0][1:]
-#        print "   ",cd
-        return getCompetence(seq, code, dic[cd][1], c-1)
+#def getCompetence(seq, code, dic = None, c = None):
+##    print "getCompetence", code, dic, c
+#
+#    if dic == None:
+#        if seq.classe.typeEnseignement == "SSI":
+#            dic = dicCompetences[seq.classe.typeEnseignement][code[0]][1]
+#        else:
+#            dic = dicCompetences[seq.classe.typeEnseignement]
+##        print dic
+#    if c == None:
+#        c = len(code.split("."))
+#    if dic.has_key(code):
+#        if seq.classe.typeEnseignement == "SSI" and type(dic[code]) == list:
+#            return dic[code][0]
+#        else:
+#            return dic[code]
+#    else:
+##        cd = code[1:-2*(c-1)]
+#        if seq.classe.typeEnseignement == "SSI":
+##            if "." in code:
+#            cd = code.split(".")[0]
+##            else:
+##                cd = code[0]
+#        else:
+#            cd = code.split(".")[0][1:]
+##        print "   ",cd
+#        return getCompetence(seq, code, dic[cd][1], c-1)
+#    
     
-    
-def getAllCodes(dic):
-    lst = dic.keys()
-    for k in dic.keys():
-        if len(dic[k]) > 1 and type(dic[k][1]) == dict:
-            lst.extend(getAllCodes(dic[k][1]))
-    return lst
+#def getAllCodes(dic):
+#    lst = dic.keys()
+#    for k in dic.keys():
+#        if len(dic[k]) > 1 and type(dic[k][1]) == dict:
+#            lst.extend(getAllCodes(dic[k][1]))
+#    return lst
 
 
 

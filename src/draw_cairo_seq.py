@@ -40,9 +40,15 @@ from draw_cairo import *
 
 #import ConfigParser
 
-from constantes import Effectifs, NomsEffectifs, listeDemarches, Demarches, getSavoir, getCompetence, \
-                        DemarchesCourt, mergeDict, COUL_COMPETENCES
+from constantes import Effectifs,COUL_COMPETENCES, mergeDict
+                        #getSavoir, getCompetence, \ NomsEffectifs, listeDemarches, Demarches, \
+                        #DemarchesCourt, 
 import constantes
+
+# Les constantes partagées
+from Referentiel import REFERENTIELS
+import Referentiel
+
 
 ## Pour dessiner la cible ...
 import os
@@ -482,7 +488,7 @@ def Draw(ctx, seq, mouchard = False):
         ctx.rectangle(x, y, w, h)
         ctx.stroke()
         ctx.set_source_rgb(0.6, 0.8, 0.6)
-        show_text_rect(ctx, NomsEffectifs[e][1], (x, y, w, h))
+        show_text_rect(ctx, seq.GetReferentiel().effectifs[e][1], (x, y, w, h))
         ctx.stroke()
         DrawLigneEff(ctx, x+w, y+h)
         
@@ -508,24 +514,25 @@ def Draw(ctx, seq, mouchard = False):
     for c in seq.prerequis.savoirs:
         typ, cod = c[0], c[1:]
         if typ == "S": # Savoir spécialité STI2D
-            lstTexte.append(getSavoir(seq.classe.typeEnseignement, cod))
+            lstTexte.append(REFERENTIELS[seq.classe.typeEnseignement].getSavoir(cod))
             lstCodes.append(cod)
             lstCoul.append((0,0,0))
         elif typ == "M": # Savoir Math
-            lstTexte.append(getSavoir("M"+seq.classe.familleEnseignement, cod))
+            lstTexte.append(REFERENTIELS[seq.classe.familleEnseignement].getSavoir(cod, gene = "M"))
             lstCodes.append("Math "+cod)
             lstCoul.append(constantes.COUL_DISCIPLINES['Mat'])
         elif typ == "P": # Savoir Physique
-            lstTexte.append(getSavoir("P"+seq.classe.familleEnseignement, cod))
+            lstTexte.append(REFERENTIELS[seq.classe.familleEnseignement].getSavoir(cod, gene = "P"))
             lstCodes.append("Phys "+cod)
             lstCoul.append(constantes.COUL_DISCIPLINES['Phy'])
         else:
-            if seq.classe.typeEnseignement == 'SSI':
-                lstTexte.append(getSavoir(seq.classe.typeEnseignement, cod))
+            if not REFERENTIELS[seq.classe.typeEnseignement].tr_com:
+#            if seq.classe.typeEnseignement == 'SSI':
+                lstTexte.append(REFERENTIELS[seq.classe.typeEnseignement].getSavoir(cod))
                 lstCodes.append(cod)
             else:
-                lstTexte.append(getSavoir('ET', cod))
-                lstCodes.append("ETT "+cod)
+                lstTexte.append(REFERENTIELS[REFERENTIELS[seq.classe.typeEnseignement].tr_com[0]].getSavoir(cod))
+                lstCodes.append(REFERENTIELS[seq.classe.typeEnseignement].tr_com[0]+" "+cod)
             lstCoul.append((0.3,0.3,0.3))
                 
 #        if c[0] == '_': # Savoir d'ETT
@@ -576,21 +583,21 @@ def Draw(ctx, seq, mouchard = False):
     #
     lstTexteC = []
     for c in seq.obj["C"].competences:
-        lstTexteC.append(getCompetence(seq, c))
+        lstTexteC.append(REFERENTIELS[seq.classe.typeEnseignement].getCompetence(c))
     lstTexteS = []   
     for c in seq.obj["S"].savoirs:
         typ, cod = c[0], c[1:]
         if typ == "S": # Savoir spécialité STI2D
-            lstTexteS.append(getSavoir(seq.classe.typeEnseignement, cod))
+            lstTexteS.append(REFERENTIELS[seq.classe.typeEnseignement].getSavoir(cod))
         elif typ == "M": # Savoir Math
-            lstTexteS.append(getSavoir("M"+seq.classe.familleEnseignement, cod))
+            lstTexteS.append(REFERENTIELS[seq.classe.familleEnseignement].getSavoir(cod, gene = "M"))
         elif typ == "P": # Savoir Physique
-            lstTexteS.append(getSavoir("P"+seq.classe.familleEnseignement, cod))
+            lstTexteS.append(REFERENTIELS[seq.classe.familleEnseignement].getSavoir(cod, gene = "P"))
         else:
             if seq.classe.typeEnseignement == 'SSI':
-                lstTexteS.append(getSavoir(seq.classe.typeEnseignement, cod))
+                lstTexteS.append(REFERENTIELS[seq.classe.typeEnseignement].getSavoir(cod))
             else:
-                lstTexteS.append(getSavoir('ET', cod))
+                lstTexteS.append(REFERENTIELS[seq.classe.typeEnseignement].getSavoir(cod))
 
     h = rect_height+0.0001
     hC = hS = h/2
@@ -673,8 +680,8 @@ def Draw(ctx, seq, mouchard = False):
         ctx.set_source_rgb(0, 0, 0)
         ctx.set_line_width(0.001)
         l=[]
-        for d in listeDemarches : 
-            l.append(DemarchesCourt[d])
+        for d in seq.GetReferentiel().listeDemarches : 
+            l.append(seq.GetReferentiel().demarches[d][0])
         tableauV(ctx, l, posZDemarche[0], posZDemarche[1], 
                 tailleZDemarche[0], posZSeances[1] - posZSysteme[1], 
                 0, nlignes = 0, va = 'c', ha = 'g', orient = 'v', coul = (0.8,0.75,0.9))

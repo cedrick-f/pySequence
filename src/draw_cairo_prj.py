@@ -47,6 +47,11 @@ from math import log
 #                        DemarchesCourt, estCompetenceRevue
 import constantes
 
+# Les constantes partagées
+from Referentiel import REFERENTIELS
+import Referentiel
+
+
 ## Pour dessiner la cible ...
 import os
 import tempfile
@@ -1189,7 +1194,7 @@ def DrawBoutonCompetence(ctx, objet, dicIndic, y, h = None):
         dx = wColComp/len(indic)
         for a, i in enumerate(indic):
             if i: # Rose ou bleu
-                if constantes.dicIndicateurs[objet.projet.classe.typeEnseignement][s][a][1]:
+                if REFERENTIELS[objet.projet.classe.typeEnseignement].dicIndicateurs_prj[s][a][1]:
                     c = ICoulCompR
                     d = -1
                 else:
