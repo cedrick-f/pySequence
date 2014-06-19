@@ -34,29 +34,10 @@ Created on 26 oct. 2011
 '''
 import wx
 
-# Les constantes par type d'enseignement
-#from constantes_ETT import *
-#from constantes_SIN import *
-#from constantes_AC import *
-#from constantes_ITEC import *
-#from constantes_EE import *
-#from constantes_SSI import *
-
-#import constantes_ETT
-#import constantes_SIN
-#import constantes_AC
-#import constantes_ITEC
-#import constantes_EE
-#import constantes_SSI
-#import constantes_MATH
-#import constantes_PHY
-
 # Les icones des branches de l'abre et un curseur perso
 import images
 
-
 import time
-
 
 #
 # Les deuxlignes suivantes permettent de lancer le script sequence.py depuis n'importe
@@ -229,6 +210,25 @@ def getAnneeScolaireStr():
     annee = getAnneeScolaire()
     return str(annee)+"-"+str(annee+1)
     
+#    
+# Fonction pour indenter les XML générés par ElementTree
+#
+def indent(elem, level=0):
+    i = "\n" + level*"  "
+    if len(elem):
+        if not elem.text or not elem.text.strip():
+            elem.text = i + "  "
+        for e in elem:
+            indent(e, level+1)
+            if not e.tail or not e.tail.strip():
+                e.tail = i + "  "
+        if not e.tail or not e.tail.strip():
+            e.tail = i
+    else:
+        if level and (not elem.tail or not elem.tail.strip()):
+            elem.tail = i
+            
+            
 ####################################################################################
 #
 #   Quelques caractères spéciaux ...
@@ -947,91 +947,91 @@ MESSAGE_FERMER = {'seq' : u"La séquence a été modifiée.\n\n%s\n\nVoulez vous
 #######################################################################################
 
 # Codes des phases des tâches de projet (doivent être dans l'ordre alphabétique ! sauf 'Rev')
-PHASE_TACHE = {'STI': ['Ana', 'Con', 'DCo', 'Rea', 'Val', 'XXX', 'Rev'],
-               'SSI': ['Ana', 'Rea', 'XXX', 'Rev']}
+#PHASE_TACHE = {'STI': ['Ana', 'Con', 'DCo', 'Rea', 'Val', 'XXX', 'Rev'],
+#               'SSI': ['Ana', 'Rea', 'XXX', 'Rev']}
+#
+#NOM_PHASE_TACHE = {'STI': {'Ana' : u"Analyse des besoins", #u"Spécification - Planification", 
+#                           'Con' : u"Conception préliminaire",
+#                           'DCo' : u"Conception détaillée",
+#                           'Rea' : u"Réalisation", #u"Prototypage", 
+#                           'Val' : u"Validation", #u"Qualification - Intégration - Validation",
+#                           'XXX' : u"Préparation de la soutenance"
+#                           },
+#                   'SSI': {'Ana' : u"Appropriation", #u"Spécification - Planification", 
+#                           'Rea' : u"Réalisation d'expérimentations", #u"Prototypage", 
+#                           'XXX' : u"Synthèse et communication"
+#                           }
+#                   }
+#
+#NOM_PHASE_TACHE_COURT =   {'STI': {'Ana' : u"Analyse besoins", #u"Spécification - Planification", 
+#                                   'Con' : u"Concep préliminaire",
+#                                   'DCo' : u"Concep détaillée",
+#                                   'Rea' : u"Réalisation", #u"Prototypage", 
+#                                   'Val' : u"Validation", #u"Qualification - Intégration - Validation",
+#                                   'XXX' : u"Prépa soutenance"
+#                                   },
+#                           'SSI': {'Ana' : u"Appropriation", #u"Spécification - Planification", 
+#                                   'Rea' : u"Expérimentations", #u"Prototypage", 
+#                                   'XXX' : u"Synth et com"
+#                                   }
+#                           }
+#
+#POSITIONS_REVUES =  {'STI': {2 :    ['Con', 'Val'],
+#                             3 :    ['Ana', 'Con', 'Val']},
+#                     'SSI': {2 :    ['Ana', 'Rea'],
+#                             3 :    ['Ana', 'Rea', 'XXX']}}
+#
+#NOM_PHASE_TACHE_E = {'R1'  : u"Revue de projet n°1",
+#                     'R2'  : u"Revue de projet n°2",
+#                     'R3'  : u"Revue de projet n°3",
+#                     'Rev' : u"Revue intermédiaire",
+#                     'S'   : u"Soutenance finale"}
+#
+#NOM_PHASE_TACHE_E_COURT =   {'R1'  : u"Revue n°1",
+#                             'R2'  : u"Revue n°2",
+#                             'R3'  : u"Revue n°3",
+#                             'Rev' : u"Revue inter",
+#                             'S'   : u"Soutenance"}
+#
+#CODE_PHASE_TACHE_E  =  {'R1'  : u"R1",
+#                        'R2'  : u"R2",
+#                        'R3'  : u"R3",
+#                        'Rev' : u"Ri",
+#                        'S'   : u"S"}
+#                    
+#CODE_PHASE_TACHE = {'STI': {'Ana' : u"Ab", 
+#                            'Con' : u"Cp",
+#                            'DCo' : u"Cd",
+#                            'Rea' : u"R", 
+#                            'Val' : u"V",
+#                            'XXX' : u"P"
+#                            },
+#                    'SSI': {'Ana' : u"P", 
+#                            'Rea' : u"R", 
+#                            'XXX' : u"C"
+#                            }
+#                    }
 
-NOM_PHASE_TACHE = {'STI': {'Ana' : u"Analyse des besoins", #u"Spécification - Planification", 
-                           'Con' : u"Conception préliminaire",
-                           'DCo' : u"Conception détaillée",
-                           'Rea' : u"Réalisation", #u"Prototypage", 
-                           'Val' : u"Validation", #u"Qualification - Intégration - Validation",
-                           'XXX' : u"Préparation de la soutenance"
-                           },
-                   'SSI': {'Ana' : u"Appropriation", #u"Spécification - Planification", 
-                           'Rea' : u"Réalisation d'expérimentations", #u"Prototypage", 
-                           'XXX' : u"Synthèse et communication"
-                           }
-                   }
-
-NOM_PHASE_TACHE_COURT =   {'STI': {'Ana' : u"Analyse besoins", #u"Spécification - Planification", 
-                                   'Con' : u"Concep préliminaire",
-                                   'DCo' : u"Concep détaillée",
-                                   'Rea' : u"Réalisation", #u"Prototypage", 
-                                   'Val' : u"Validation", #u"Qualification - Intégration - Validation",
-                                   'XXX' : u"Prépa soutenance"
-                                   },
-                           'SSI': {'Ana' : u"Appropriation", #u"Spécification - Planification", 
-                                   'Rea' : u"Expérimentations", #u"Prototypage", 
-                                   'XXX' : u"Synth et com"
-                                   }
-                           }
-
-POSITIONS_REVUES =  {'STI': {2 :    ['Con', 'Val'],
-                             3 :    ['Ana', 'Con', 'Val']},
-                     'SSI': {2 :    ['Ana', 'Rea'],
-                             3 :    ['Ana', 'Rea', 'XXX']}}
-
-NOM_PHASE_TACHE_E = {'R1'  : u"Revue de projet n°1",
-                     'R2'  : u"Revue de projet n°2",
-                     'R3'  : u"Revue de projet n°3",
-                     'Rev' : u"Revue intermédiaire",
-                     'S'   : u"Soutenance finale"}
-
-NOM_PHASE_TACHE_E_COURT =   {'R1'  : u"Revue n°1",
-                             'R2'  : u"Revue n°2",
-                             'R3'  : u"Revue n°3",
-                             'Rev' : u"Revue inter",
-                             'S'   : u"Soutenance"}
-
-CODE_PHASE_TACHE_E  =  {'R1'  : u"R1",
-                        'R2'  : u"R2",
-                        'R3'  : u"R3",
-                        'Rev' : u"Ri",
-                        'S'   : u"S"}
-                    
-CODE_PHASE_TACHE = {'STI': {'Ana' : u"Ab", 
-                            'Con' : u"Cp",
-                            'DCo' : u"Cd",
-                            'Rea' : u"R", 
-                            'Val' : u"V",
-                            'XXX' : u"P"
-                            },
-                    'SSI': {'Ana' : u"P", 
-                            'Rea' : u"R", 
-                            'XXX' : u"C"
-                            }
-                    }
-
-def getCodeNomCourt(nom, ens):
-    for k,v in NOM_PHASE_TACHE_COURT[ens].items() + NOM_PHASE_TACHE_E_COURT.items():
-        if v == nom:
-            return k
-    return None
-
-for t in ['STI', 'SSI']:     
-    NOM_PHASE_TACHE[t].update(NOM_PHASE_TACHE_E)
-    CODE_PHASE_TACHE[t].update(CODE_PHASE_TACHE_E)
+#def getCodeNomCourt(nom, ens):
+#    for k,v in NOM_PHASE_TACHE_COURT[ens].items() + NOM_PHASE_TACHE_E_COURT.items():
+#        if v == nom:
+#            return k
+#    return None
+#
+#for t in ['STI', 'SSI']:     
+#    NOM_PHASE_TACHE[t].update(NOM_PHASE_TACHE_E)
+#    CODE_PHASE_TACHE[t].update(CODE_PHASE_TACHE_E)
 
 
-def getLstPhase(typeEns):
-    """ Renvoie la liste des phases que l'utilisateur peut choisir
-        lorsqu'il édite une tâche.
-    """
-    lst = []
-    for k in PHASE_TACHE[typeEns]:
-        if not k in ["R1", "R2", "R3", "S"]:
-            lst.append(NOM_PHASE_TACHE[typeEns][k])
-    return lst
+#def getLstPhase(typeEns):
+#    """ Renvoie la liste des phases que l'utilisateur peut choisir
+#        lorsqu'il édite une tâche.
+#    """
+#    lst = []
+#    for k in PHASE_TACHE[typeEns]:
+#        if not k in ["R1", "R2", "R3", "S"]:
+#            lst.append(NOM_PHASE_TACHE[typeEns][k])
+#    return lst
 
 
 DUREE_PRJ = 70

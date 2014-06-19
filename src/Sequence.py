@@ -135,7 +135,7 @@ from constantes import calculerEffectifs, revCalculerEffectifs, PATH, findEffect
 import constantes
 
 # Les constantes partagées
-from Referentiel import REFERENTIELS
+from Referentiel import REFERENTIELS, ARBRE_REF
 import Referentiel
 #import constantes_ETT
 
@@ -709,9 +709,10 @@ class Objet_sequence():
         t = self.GetCode(i) + " :\n" + self.GetIntit(i)
         return t.encode(DEFAUT_ENCODING)#.replace("\n", "&#10;")#"&#xD;")#
     
-            
-    ######################################################################################  
-    def GetTypeEnseignement(self, simple = False):
+           
+           
+    ######################################################################################     
+    def GetClasse(self):
         if hasattr(self, 'projet'):
             cl = self.projet.classe
         elif hasattr(self, 'sequence'):
@@ -721,6 +722,12 @@ class Objet_sequence():
         else:
             cl = self.classe
             
+        return cl
+            
+    ######################################################################################  
+    def GetTypeEnseignement(self, simple = False):
+        cl = self.GetClasse()
+            
         if simple:
             return cl.familleEnseignement
         
@@ -729,7 +736,7 @@ class Objet_sequence():
         
     ######################################################################################  
     def GetReferentiel(self):
-        return REFERENTIELS[self.GetTypeEnseignement()]
+        return self.GetClasse().referentiel
     
     
     ######################################################################################  
@@ -787,6 +794,7 @@ class Classe():
     ######################################################################################  
     def Initialise(self, pourProjet):
         self.typeEnseignement = self.options.optClasse["TypeEnseignement"]
+        self.referentiel = REFERENTIELS[self.typeEnseignement]
         
         if not pourProjet:
             self.MiseAJourTypeEnseignement()
@@ -823,6 +831,8 @@ class Classe():
         classe = ET.Element("Classe")
         classe.set("Type", self.typeEnseignement)
         
+        classe.append(self.referentiel.getBranche())
+        
         classe.set("Etab", self.etablissement)
         
         eff = ET.SubElement(classe, "Effectifs")
@@ -831,11 +841,11 @@ class Classe():
         eff.set('nE', str(self.nbrGroupes['E']))
         eff.set('nP', str(self.nbrGroupes['P']))
                       
-        if not self.GetReferentiel().CI_BO: 
+        if not self.referentiel.CI_BO and hasattr(self, 'CI'): 
             ci = ET.SubElement(classe, "CentreInteret")
-            for i,c in enumerate(self.ci):
+            for i,c in enumerate(self.CI):
                 ci.set("CI"+str(i+1), c)
-                if self.GetReferentiel().CI_cible:
+                if self.referentiel.CI_cible:
                     ci.set("pos"+str(i+1), self.posCI[i])
                 
                 
@@ -859,11 +869,17 @@ class Classe():
 #        print "setBranche classe",
         self.typeEnseignement = branche.get("Type", "ET")
         
+        brancheRef = branche.find("Referentiel")        # A partir de la version 5 !
+        if brancheRef != None:      
+            self.referentiel.setBranche(brancheRef)
+        else:
+            self.referentiel = REFERENTIELS[self.typeEnseignement]
+        
         self.etablissement = branche.get("Etab", u"")
         
-        self.familleEnseignement = self.GetReferentiel().Famille
+        self.familleEnseignement = self.referentiel.Famille
         
-        if not self.GetReferentiel().CI_BO:
+        if not self.referentiel.CI_BO:
             brancheCI = branche.find("CentreInteret")
             if brancheCI != None: # Uniquement pour rétrocompatibilité : normalement cet élément existe !
                 continuer = True
@@ -883,7 +899,7 @@ class Classe():
                         
                     if i > 1:
                         self.CI = CI
-                        if self.GetReferentiel().CI_cible:
+                        if self.referentiel.CI_cible:
                             self.posCI = posCI
                 
                 
@@ -970,7 +986,7 @@ class Classe():
         
     ######################################################################################  
     def GetReferentiel(self):
-        return REFERENTIELS[self.typeEnseignement]
+        return self.referentiel
         
     ######################################################################################  
     def Verrouiller(self, etat):
@@ -1706,7 +1722,7 @@ class Projet(BaseDoc, Objet_sequence):
         
         # Organisation des phases du projet
         self.nbrRevues = 2
-        self.positionRevues = list(constantes.POSITIONS_REVUES[self.GetTypeEnseignement(simple = True)][self.nbrRevues])
+        self.positionRevues = list(self.GetReferentiel().posRevues[self.nbrRevues])
 
         # Année Scolaire
         self.annee = constantes.getAnneeScolaire()
@@ -1805,7 +1821,7 @@ class Projet(BaseDoc, Objet_sequence):
             lr = ["R1", "R2", "R3", "S"]
         for p in lr:
             lst.append(Tache(self, self.panelParent, 
-                             intitule = constantes.NOM_PHASE_TACHE_E[p], 
+                             intitule = self.GetReferentiel().phases_prj[p][1], 
                              phaseTache = p, duree = 0.5))
         return lst
     
@@ -1939,7 +1955,7 @@ class Projet(BaseDoc, Objet_sequence):
         
         self.nbrRevues = eval(branche.get("NbrRevues", "2"))
         self.positionRevues = branche.get("PosRevues", 
-                                          '-'.join(list(constantes.POSITIONS_REVUES[self.GetTypeEnseignement(simple = True)][self.nbrRevues]))).split('-')
+                                          '-'.join(list(self.GetReferentiel().posRevues[self.nbrRevues]))).split('-')
 
         
         self.MiseAJourTypeEnseignement()
@@ -2133,7 +2149,7 @@ class Projet(BaseDoc, Objet_sequence):
         if self.nbrRevues == 3: # on ajoute une revue
             self.positionRevues.append(self.positionRevues[-1])
             tache = Tache(self, self.panelParent, 
-                          intitule = constantes.NOM_PHASE_TACHE_E["R3"], 
+                          intitule = self.GetReferentiel().phases_prj["R3"], 
                           phaseTache = "R3", duree = 0.5)
             self.taches.append(tache)
             tache.ConstruireArbre(self.arbre, self.brancheTac)
@@ -2298,6 +2314,7 @@ class Projet(BaseDoc, Objet_sequence):
         #
         # On enregistre les positions des revues intermédiaires (après qui ?)
         #
+        ref = self.GetReferentiel()
         Rev = []
         for i, t in enumerate(lstTaches):
             if t.phase == 'Rev':
@@ -2306,12 +2323,11 @@ class Projet(BaseDoc, Objet_sequence):
                 else:
                     Rev.append((t, None))
 
-        
         #
         # On fait des paquets par catégorie
         #
         paquet = {'': []}
-        for k in constantes.PHASE_TACHE['STI']+constantes.NOM_PHASE_TACHE_E.keys(): 
+        for k in ref.listPhases_prj:#['STI']+constantes.NOM_PHASE_TACHE_E.keys(): 
             paquet[k]=[]
 
         Rien = []
@@ -2319,12 +2335,10 @@ class Projet(BaseDoc, Objet_sequence):
             paquet[t.phase].append(t)
             
         
-        # On trie les tâches de chaque paquet     
-        for c in ['Ana', 'Con', 'Rea', 'DCo', 'Val', 'XXX']:
+        # On trie les tâches de chaque paquet  
+        for c in [k for k in ref.listPhases_prj if not k in ref.listPhasesEval_prj]:#['Ana', 'Con', 'Rea', 'DCo', 'Val', 'XXX']:
             paquet[c].sort(key=attrgetter('ordre'))
-        
-        
-        
+
         #
         # On assemble les paquets
         #
@@ -2332,7 +2346,6 @@ class Projet(BaseDoc, Objet_sequence):
         for p in self.GetListePhases()+["S"]:
             lst.extend(paquet[p]) 
 
-         
         #
         # On ajoute les revues intermédiaires
         #
@@ -2342,7 +2355,7 @@ class Projet(BaseDoc, Objet_sequence):
             else:
                 i = lst.index(q)
                 lst.insert(i+1, r)
-                
+    
         return lst
         
     ######################################################################################  
@@ -2590,12 +2603,21 @@ class Projet(BaseDoc, Objet_sequence):
 
     ######################################################################################  
     def GetListeNomsPhases(self, avecRevuesInter = False):
+#        print "GetListeNomsPhases"
         lst = []
+        ref = self.GetReferentiel()
         for p in self.GetListePhases():
-            if p in constantes.NOM_PHASE_TACHE_COURT[self.GetTypeEnseignement(simple = True)].keys():
-                lst.append(constantes.NOM_PHASE_TACHE_COURT[self.GetTypeEnseignement(simple = True)][p])
-            elif p in constantes.NOM_PHASE_TACHE_E_COURT.keys():
-                lst.append(constantes.NOM_PHASE_TACHE_E_COURT[p])
+            if p in ref.listPhases_prj:#[:-1]:
+                lst.append(ref.phases_prj[p][0])
+            elif p in ref.listPhasesEval_prj:
+                lst.append(ref.phases_prj[p][0])
+                
+#        for p in self.GetListePhases():
+#            if p in constantes.NOM_PHASE_TACHE_COURT[self.GetTypeEnseignement(simple = True)].keys():
+#                lst.append(constantes.NOM_PHASE_TACHE_COURT[self.GetTypeEnseignement(simple = True)][p])
+#            elif p in constantes.NOM_PHASE_TACHE_E_COURT.keys():
+#                lst.append(constantes.NOM_PHASE_TACHE_E_COURT[p])
+
         return lst
         
     ######################################################################################  
@@ -2603,7 +2625,9 @@ class Projet(BaseDoc, Objet_sequence):
         """ Renvoie la liste ordonnée des phases dans le projet
         """
 #        print "GetListePhases"
-        lst = list(constantes.PHASE_TACHE[self.GetTypeEnseignement(simple = True)][:-1])
+#        lst = list(constantes.PHASE_TACHE[self.GetTypeEnseignement(simple = True)][:-1])
+        lst = [k for k in self.GetReferentiel().listPhases_prj if not k in self.GetReferentiel().listPhasesEval_prj]
+#        lst = list(self.GetReferentiel().listPhases_prj)
 #        print "  ", lst
 #        print "  ", self.nbrRevues
         if self.nbrRevues == 2:
@@ -2685,12 +2709,12 @@ class Projet(BaseDoc, Objet_sequence):
         self.app.SetTitre()
         for t in self.taches:
 #            if t.phase in ["R1", "R2", "R3", "S"]:
-            t.MiseAJourTypeEnseignement(self.classe.typeEnseignement)
+            t.MiseAJourTypeEnseignement(self.classe.referentiel)
         
         if hasattr(self, 'panelPropriete'):
             if changeFamille:
                 self.nbrRevues = 2
-                self.positionRevues = list(constantes.POSITIONS_REVUES[self.GetTypeEnseignement(simple = True)][self.nbrRevues])
+                self.positionRevues = list(self.GetReferentiel().posRevues[self.nbrRevues])
             self.panelPropriete.panelOrga.MiseAJourListe()
         
     #############################################################################
@@ -2771,7 +2795,7 @@ class Projet(BaseDoc, Objet_sequence):
                                 if i in t.indicateursMaxiEleve[neleve]:
                                     ti.append(i)
                             t.indicateursEleve[neleve] = ti
-                            t.panelPropriete.arbre.MiseAJourTypeEnseignement(t.GetTypeEnseignement())
+                            t.panelPropriete.arbre.MiseAJourTypeEnseignement(t.GetReferentiel())
                             t.panelPropriete.MiseAJour()
                             if t.phase == "R1":
                                 tR1 = t # la revue 1 est passée !
@@ -3725,9 +3749,9 @@ class Seance(ElementDeSequence, Objet_sequence):
     
     ######################################################################################  
     def SetDemarche(self, text):   
-        for c, d, dl in self.GetReferentiel().demarches:
+        for c, n in self.GetReferentiel().demarches.items():
 #        for k, v in constantes.Demarches.items():
-            if dl == text:
+            if n[1] == text:
                 codeDem = c
                 break
         self.demarche = codeDem
@@ -4650,7 +4674,7 @@ class Tache(Objet_sequence):
             if self.phase in ["R1", "R2", "R3", "S"]:
                 self.code = self.phase
             else:
-                self.code = constantes.CODE_PHASE_TACHE[typeEns][self.phase]+num
+                self.code = self.GetReferentiel().phases_prj[self.phase][2]+num     #constantes.CODE_PHASE_TACHE[typeEns][self.phase]+num
         else:
             self.code = num
 
@@ -4663,18 +4687,18 @@ class Tache(Objet_sequence):
             else:
                 self.codeBranche.SetLabel(self.code)
                 t = u" :"
-            self.arbre.SetItemText(self.branche, constantes.NOM_PHASE_TACHE[typeEns][self.phase]+t)
+            self.arbre.SetItemText(self.branche, self.GetReferentiel().phases_prj[self.phase][1]+t)
         
         
         # Tip
         if self.phase in ["R1", "R2", "R3", "S"]:
-            self.tip.SetTitre(constantes.NOM_PHASE_TACHE_E[self.phase])
+            self.tip.SetTitre(self.GetReferentiel().phases_prj[self.phase][1])
         elif self.phase == "Rev":
-            self.tip.SetTitre(constantes.NOM_PHASE_TACHE_E[self.phase])
+            self.tip.SetTitre(self.GetReferentiel().phases_prj[self.phase][1])
         else:
             self.tip.SetTitre(u"Tâche "+ self.code)
             if self.phase != "":
-                t = constantes.NOM_PHASE_TACHE[typeEns][self.phase]
+                t = self.GetReferentiel().phases_prj[self.phase][1]
             else:
                 t = u""
             self.tip.SetTexte(t, self.tip_phase)
@@ -4727,8 +4751,8 @@ class Tache(Objet_sequence):
                                  
     
     #############################################################################
-    def MiseAJourTypeEnseignement(self, type_ens):
-        self.panelPropriete.MiseAJourTypeEnseignement(type_ens)
+    def MiseAJourTypeEnseignement(self, ref):
+        self.panelPropriete.MiseAJourTypeEnseignement(ref)
         
     ######################################################################################  
     def SupprimerSysteme(self, i):
@@ -5203,7 +5227,7 @@ class Personne(Objet_sequence):
             root.set("Discipline", str(self.discipline))
             
         if hasattr(self, 'grille'):
-            for k, g in self.grille:
+            for k, g in self.grille.items():
                 root.set("Grille"+k, g.path)
 #            root.set("Grille0", self.grille[0].path)
 #            root.set("Grille1", self.grille[1].path)
@@ -5729,7 +5753,7 @@ class Eleve(Personne, Objet_sequence):
             
             labr = [pourCent(er, True)] #[str(round(er*100)).rjust(3)+"%"]
             for k in keys:
-                if k in self.GetReferentiel().lstGrpIndicateurRevues:
+                if k in self.GetReferentiel()._lstGrpIndicateurRevues:
                     if k in ler.keys():
                         labr.append(pourCent(ler[k], True)) #str(round(ler[k]*100)).rjust(3)+"%")
                     else:
@@ -5740,7 +5764,7 @@ class Eleve(Personne, Objet_sequence):
                     
             labs = [pourCent(es, True)] #[str(round(es*100)).rjust(3)+"%"]
             for k in keys:
-                if k in self.GetReferentiel().lstGrpIndicateurSoutenance:
+                if k in self.GetReferentiel()._lstGrpIndicateurSoutenance:
                     if k in les.keys():
                         labs.append(pourCent(les[k], True)) #str(round(les[k]*100)).rjust(3)+"%")
                     else:
@@ -7160,7 +7184,7 @@ class FenetreSequence(FenetreDocument):
         root = ET.Element("Sequence_Classe")
         root.append(sequence)
         root.append(classe)
-        indent(root)
+        constantes.indent(root)
         
         ET.ElementTree(root).write(fichier, encoding = DEFAUT_ENCODING)
         
@@ -7346,7 +7370,7 @@ class FenetreProjet(FenetreDocument):
         root = ET.Element("Projet_Classe")
         root.append(projet)
         root.append(classe)
-        indent(root)
+        constantes.indent(root)
         
         ET.ElementTree(root).write(fichier, encoding = DEFAUT_ENCODING)
         
@@ -7938,19 +7962,20 @@ class FicheProjet(BaseFiche):
                 self.tip_indic = []
                 x, y = self.ClientToScreen((x, y))
                 type_ens = self.projet.classe.typeEnseignement
-                competence = REFERENTIELS[type_ens].dicCompetences_prj_simple[kComp]
-                if REFERENTIELS[type_ens].prof_Comp > 1:
+                ref = self.projet.GetReferentiel()
+                competence = ref._dicCompetences_prj_simple[kComp]
+                if ref.prof_Comp > 1:
                     competencePlus = competence[1:]
                 indicTache = obj.GetDicIndicateurs()[kComp]
                 
                 self.MiseAJourTypeEnseignement(type_ens)
                 
-                indicateurs = REFERENTIELS[type_ens].dicIndicateurs_prj[kComp]
+                indicateurs = ref.dicIndicateurs_prj[kComp]
           
                 self.popup.SetTitre(u"Compétence "+kComp)
                 self.popup.SetTexte(textwrap.fill(competence[0], 50), self.tip_comp)
                 
-                if REFERENTIELS[type_ens].prof_Comp > 1:
+                if ref.prof_Comp > 1:
                     t = ''
                     for cp in competencePlus:
                         t += textwrap.fill(CHAR_POINT + " " + cp, 50)+"\n"
@@ -8559,6 +8584,7 @@ class PanelOrganisation(wx.Panel):
     def OnClick(self, event):
         i = event.GetId()
         revue = self.liste.GetStringSelection()
+        ref = self.GetReferentiel()
         
         if revue[:5] == "Revue":
             posRevue = self.liste.GetSelection()
@@ -8569,12 +8595,14 @@ class PanelOrganisation(wx.Panel):
                 nouvPosRevue = posRevue+1
             else:
                 return
-            itemPrecedent = constantes.getCodeNomCourt(self.liste.GetString(nouvPosRevue), 
-                                                       self.objet.GetTypeEnseignement(simple = True))
+            itemPrecedent = ref.getClefDic(self.liste.GetString('phases_prj', nouvPosRevue, 0))
+#            itemPrecedent = constantes.getCodeNomCourt(self.liste.'(nouvPosRevue), 
+#                                                       self.objet.GetTypeEnseignement(simple = True))
             j=1
             while itemPrecedent in ["R1", "R2", "R3"]:
-                itemPrecedent = constantes.getCodeNomCourt(self.liste.GetString(nouvPosRevue-j),
-                                                           self.objet.GetTypeEnseignement(simple = True))
+                itemPrecedent = ref.getClefDic(self.liste.GetString('phases_prj', nouvPosRevue-j, 0))
+#                itemPrecedent = constantes.getCodeNomCourt(self.liste.GetString(nouvPosRevue-j),
+#                                                           self.objet.GetTypeEnseignement(simple = True))
                 j += 1
             self.objet.positionRevues[numRevue-1] = itemPrecedent
         else:
@@ -8675,25 +8703,28 @@ class PanelPropriete_Classe(PanelPropriete):
         #
         # Type d'enseignement
         #
-        l = []
-        for i, e in enumerate(REFERENTIELS.keys()):
-            l.append(REFERENTIELS[e].Enseignement[0])
-        rb = wx.RadioBox(
-                pageGen, -1, u"Type d'enseignement", wx.DefaultPosition, (130,-1),
-                l,
-                1, wx.RA_SPECIFY_COLS
-                )
-        rb.SetToolTip(wx.ToolTip(u"Choisir le type d'enseignement"))
-        for i, e in enumerate(REFERENTIELS.keys()):
-            rb.SetItemToolTip(i, REFERENTIELS[e].Enseignement[1])
-        pageGen.Bind(wx.EVT_RADIOBOX, self.EvtRadioBox, rb)
-        if pourProjet:
-            rb.ShowItem(0, False) 
-         
-        rb.SetStringSelection(REFERENTIELS[constantes.TYPE_ENSEIGNEMENT_DEFAUT].Enseignement[0])
+        self.pourProjet = pourProjet
+        titre = wx.StaticBox(pageGen, -1, u"Type d'enseignement")
+        sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
+        te = ArbreTypeEnseignement(pageGen, self)
+        sb.Add(te, 1, flag = wx.EXPAND)
+#        l = []
+#        for i, e in enumerate(REFERENTIELS.keys()):
+#            l.append(REFERENTIELS[e].Enseignement[0])
+#        rb = wx.RadioBox(
+#                pageGen, -1, u"Type d'enseignement", wx.DefaultPosition, (130,-1),
+#                l,
+#                1, wx.RA_SPECIFY_COLS
+#                )
+#        rb.SetToolTip(wx.ToolTip(u"Choisir le type d'enseignement"))
+#        for i, e in enumerate(REFERENTIELS.keys()):
+#            rb.SetItemToolTip(i, REFERENTIELS[e].Enseignement[1])
+        pageGen.Bind(wx.EVT_RADIOBUTTON, self.EvtRadioBox, te)
+#         
+        te.SetStringSelection(REFERENTIELS[constantes.TYPE_ENSEIGNEMENT_DEFAUT].Enseignement[0])
             
-        pageGen.sizer.Add(rb, (0,1), flag = wx.EXPAND|wx.ALL, border = 2)#
-        self.cb_type = rb
+        pageGen.sizer.Add(sb, (0,1), flag = wx.EXPAND|wx.ALL, border = 2)#
+        self.cb_type = te
         
         
         
@@ -8821,10 +8852,12 @@ class PanelPropriete_Classe(PanelPropriete):
     def EvtRadioBox(self, event):
         """ Sélection d'un type d'enseignement
         """
-#        print self.cb_type.GetItemLabel(event.GetInt())
+        radio_selected = event.GetEventObject()
+
         fam = self.classe.familleEnseignement
         
-        self.classe.typeEnseignement, self.classe.familleEnseignement = Referentiel.getEnseignementLabel(self.cb_type.GetItemLabel(event.GetInt()))
+        self.classe.typeEnseignement, self.classe.familleEnseignement = Referentiel.getEnseignementLabel(radio_selected.GetLabel())
+        self.classe.referentiel = REFERENTIELS[self.classe.typeEnseignement]
         
 #        for c, e in [r.Enseignement[1:] for r in REFERENTIELS]constantes.Enseignement.items():
 #            if e[0] == :
@@ -8924,7 +8957,9 @@ class PanelPropriete_Classe(PanelPropriete):
     ######################################################################################  
     def MiseAJour(self):
         self.MiseAJourType()
-        self.cb_type.SetStringSelection(REFERENTIELS[self.classe.typeEnseignement].Enseignement[0])
+        
+        self.cb_type.SetStringSelection(self.classe.referentiel.Enseignement[0])
+#        self.cb_type.SetStringSelection(REFERENTIELS[self.classe.typeEnseignement].Enseignement[0])
         
         self.cb.SetValue(self.classe.etablissement)
         if self.cb.GetStringSelection () and self.cb.GetStringSelection() == self.classe.etablissement:
@@ -9020,8 +9055,54 @@ class PanelPropriete_Classe(PanelPropriete):
 #            self.tb.EnableTool(31, enable)
 #            self.tb.EnableTool(32, enable)
         
+    
+####################################################################################
+#
+#   Classe définissant l'arbre de sélection du type d'enseignement
+#
+####################################################################################*
+class ArbreTypeEnseignement(CT.CustomTreeCtrl):
+    def __init__(self, parent, panelParent, 
+                 pos = wx.DefaultPosition,
+                 size = wx.DefaultSize,
+                 style = wx.WANTS_CHARS, #wx.SUNKEN_BORDER|
+                 agwStyle = CT.TR_HAS_VARIABLE_ROW_HEIGHT| \
+                 CT.TR_NO_LINES|CT.TR_HIDE_ROOT|CT.TR_TOOLTIP_ON_LONG_ITEMS#|CT.TR_HAS_BUTTONS
+                 ):
 
-
+        CT.CustomTreeCtrl.__init__(self, parent, -1, pos, size, style, agwStyle)
+        self.Unbind(wx.EVT_KEY_DOWN)
+        self.panelParent = panelParent
+#        self.SetBackgroundColour(wx.WHITE)
+        self.SetToolTip(wx.ToolTip(u"Choisir le type d'enseignement"))
+        self.root = self.AddRoot("")
+        self.Construire(self.root)
+        self.ExpandAll()
+        
+    ######################################################################################  
+    def Construire(self, racine):
+        for t, st in ARBRE_REF.items():
+            branche = self.AppendItem(racine, u"")#, ct_type=2)#, image = self.arbre.images["Seq"])
+            rb = wx.RadioButton(self, -1, REFERENTIELS[t].Enseignement[0])
+            self.Bind(wx.EVT_RADIOBUTTON, self.panelParent.EvtRadioBox, rb)
+            self.SetItemWindow(branche, rb)
+            rb.SetToolTipString(REFERENTIELS[t].Enseignement[1])
+            rb.Enable(REFERENTIELS[t].projet or not self.panelParent.pourProjet) 
+            for sst in st:
+                sbranche = self.AppendItem(branche, u"")#, ct_type=2)
+                rb = wx.RadioButton(self, -1, REFERENTIELS[sst].Enseignement[0])
+                self.Bind(wx.EVT_RADIOBUTTON, self.panelParent.EvtRadioBox, rb)
+                self.SetItemWindow(sbranche, rb)
+                rb.SetToolTipString(REFERENTIELS[sst].Enseignement[1])
+                rb.Enable(REFERENTIELS[sst].projet or not self.panelParent.pourProjet)
+    
+    ######################################################################################              
+    def SetStringSelection(self, label):
+        for rb in self.GetChildren():
+            if isinstance(rb, wx.RadioButton) and label == rb.GetLabel():
+                rb.SetValue(True)
+          
+                
 
 class ListeCI(ULC.UltimateListCtrl):
     def __init__(self, parent, classe):
@@ -9857,7 +9938,7 @@ class PanelPropriete_Competences(PanelPropriete):
         self.DestroyChildren()
 #        if hasattr(self, 'arbre'):
 #            self.sizer.Remove(self.arbre)
-        self.arbre = ArbreCompetences(self, self.competence.GetTypeEnseignement())
+        self.arbre = ArbreCompetences(self, self.competence.GetReferentiel())
         self.sizer.Add(self.arbre, (0,0), flag = wx.EXPAND)
         if not self.sizer.IsColGrowable(0):
             self.sizer.AddGrowableCol(0)
@@ -10512,7 +10593,10 @@ class PanelPropriete_Seance(PanelPropriete):
             self.vcDuree.Activer(False)
         
         # Effectif
-        listEff = ref.effectifsSeance[self.seance.typeSeance]
+        if self.seance.typeSeance == "":
+            listEff = []
+        else:
+            listEff = ref.effectifsSeance[self.seance.typeSeance]
         self.cbEff.Show(len(listEff) > 0)
         self.titreEff.Show(len(listEff) > 0)
             
@@ -10641,19 +10725,21 @@ class PanelPropriete_Tache(PanelPropriete):
         #
         # Phase
         #
+        ref = self.tache.GetReferentiel()
+        lstPhases = [p[1] for k, p in ref.phases_prj.items() if not k in ref.listPhasesEval_prj]
         if tache.phase in ["R1", "R2", "R3", "S"]:
-            titre = wx.StaticText(pageGen, -1, u"Phase : "+constantes.NOM_PHASE_TACHE_E[tache.phase])
+            titre = wx.StaticText(pageGen, -1, u"Phase : "+ref.phases_prj[tache.phase][1])
             pageGen.sizer.Add(titre, (0,0), (1,1), flag = wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_LEFT|wx.ALL, border = 5)
         else:
             titre = wx.StaticText(pageGen, -1, u"Phase :")
             cbPhas = wx.combo.BitmapComboBox(pageGen, -1, u"Selectionner la phase",
-                                 choices = constantes.getLstPhase(tache.GetTypeEnseignement(True)),
+                                 choices = lstPhases,
                                  style = wx.CB_DROPDOWN
                                  | wx.TE_PROCESS_ENTER
                                  | wx.CB_READONLY
                                  #| wx.CB_SORT
                                  )
-            for i, k in enumerate(constantes.PHASE_TACHE[tache.GetTypeEnseignement(True)]):
+            for i, k in enumerate([k for k in ref.phases_prj.keys() if not k in ref.listPhasesEval_prj]):#ref.listPhases_prj):
                 cbPhas.SetItemBitmap(i, constantes.imagesTaches[k].GetBitmap())
             pageGen.Bind(wx.EVT_COMBOBOX, self.EvtComboBox, cbPhas)
             self.cbPhas = cbPhas
@@ -10754,7 +10840,7 @@ class PanelPropriete_Tache(PanelPropriete):
             # Compétences employées
             #
             if tache.phase != "S":
-                self.arbre = ArbreCompetencesPrj(pageCom, tache.GetTypeEnseignement(), self,
+                self.arbre = ArbreCompetencesPrj(pageCom, tache.GetReferentiel(), self,
                                                  revue = self.tache.phase in ["R1", "R2", "R3", "S", "Rev"], 
                                                  eleves = self.tache.phase in ["R1", "R2", "R3", "S"])
                 pageComsizer.Add(self.arbre, 1, flag = wx.EXPAND)
@@ -11030,8 +11116,10 @@ class PanelPropriete_Tache(PanelPropriete):
         
     #############################################################################            
     def EvtComboBox(self, event):
-        newPhase = get_key(constantes.NOM_PHASE_TACHE[self.tache.GetTypeEnseignement(True)], 
-                                        self.cbPhas.GetStringSelection())
+        ref = self.tache.GetReferentiel()
+        newPhase = ref.getClefDic('phases_prj', self.cbPhas.GetStringSelection(), 1)
+#        newPhase = get_key(self.GetReferentiel().NOM_PHASE_TACHE[self.tache.GetTypeEnseignement(True)], 
+#                                        self.cbPhas.GetStringSelection())
         if self.tache.phase != newPhase:
             if newPhase == "Rev":
                 self.tache.SetDuree(0.5)
@@ -11065,7 +11153,7 @@ class PanelPropriete_Tache(PanelPropriete):
             self.textctrl.SetValue(self.tache.intitule)
         
         if hasattr(self, 'cbPhas') and self.tache.phase != '':
-            self.cbPhas.SetStringSelection(constantes.NOM_PHASE_TACHE[self.tache.GetTypeEnseignement(True)][self.tache.phase])
+            self.cbPhas.SetStringSelection(self.tache.GetReferentiel().phases_prj[self.tache.phase][1])
             
         if sendEvt:
             self.sendEvent()
@@ -11077,11 +11165,11 @@ class PanelPropriete_Tache(PanelPropriete):
 #                self.arbre.MiseAJour(code)
         
     #############################################################################
-    def MiseAJourTypeEnseignement(self, type_ens):
+    def MiseAJourTypeEnseignement(self, ref):
         if hasattr(self, 'arbre'):
-            self.arbre.MiseAJourTypeEnseignement(type_ens)
+            self.arbre.MiseAJourTypeEnseignement(ref)
         if hasattr(self, 'cbR1'):
-            self.cbR1.Show(type_ens != "SSI")
+            self.cbR1.Show(ref.Code != "SSI")
         
         
 ####################################################################################
@@ -12396,7 +12484,7 @@ class ArbreSavoirs(CT.CustomTreeCtrl):
 ####################################################################################
     
 class ArbreCompetences(HTL.HyperTreeList):
-    def __init__(self, parent, type_ens, pptache = None, agwStyle = CT.TR_HIDE_ROOT|CT.TR_HAS_VARIABLE_ROW_HEIGHT):#|CT.TR_AUTO_CHECK_CHILD):#|HTL.TR_NO_HEADER):
+    def __init__(self, parent, ref, pptache = None, agwStyle = CT.TR_HIDE_ROOT|CT.TR_HAS_VARIABLE_ROW_HEIGHT):#|CT.TR_AUTO_CHECK_CHILD):#|HTL.TR_NO_HEADER):
         
         HTL.HyperTreeList.__init__(self, parent, -1, style = wx.WANTS_CHARS, agwStyle = agwStyle)#wx.TR_DEFAULT_STYLE|
         
@@ -12405,7 +12493,7 @@ class ArbreCompetences(HTL.HyperTreeList):
             self.pptache = parent
         else:
             self.pptache = pptache
-        self.type_ens = type_ens
+        self.ref = ref
         
         self.items = {}
         
@@ -12416,7 +12504,7 @@ class ArbreCompetences(HTL.HyperTreeList):
         self.AddColumn(u"Eleves")
         self.SetColumnWidth(2, 0)
         self.root = self.AddRoot(u"Compétences")
-        self.MiseAJourTypeEnseignement(type_ens)
+        self.MiseAJourTypeEnseignement(ref)
         
         self.ExpandAll()
         
@@ -12431,11 +12519,11 @@ class ArbreCompetences(HTL.HyperTreeList):
         self.Bind(wx.EVT_SIZE, self.OnSize2)
         
     #############################################################################
-    def MiseAJourTypeEnseignement(self, type_ens):
+    def MiseAJourTypeEnseignement(self, ref):
 #        print "MiseAJourTypeEnseignement"
-        self.type_ens = type_ens
+        self.ref = ref
         self.DeleteChildren(self.root)
-        self.Construire(self.root, type_ens = type_ens)
+        self.Construire(self.root, ref = ref)
         self.ExpandAll()
 #        self.Layout()
         
@@ -12478,9 +12566,9 @@ class ArbreCompetences(HTL.HyperTreeList):
             self.SetItemText(item, text, 0)
         
     ####################################################################################
-    def Construire(self, branche, dic = None, type_ens = None, ct_type = 0):
+    def Construire(self, branche, dic = None, ref = None, ct_type = 0):
         if dic == None:
-            dic = REFERENTIELS[type_ens].dicCompetences
+            dic = ref.dicCompetences
         clefs = dic.keys()
         clefs.sort()
         for k in clefs:
@@ -12571,11 +12659,11 @@ class ArbreCompetences(HTL.HyperTreeList):
 
 
 class ArbreCompetencesPrj(ArbreCompetences):
-    def __init__(self, parent, type_ens, pptache, revue = False, eleves = False):
+    def __init__(self, parent, ref, pptache, revue = False, eleves = False):
         self.revue = revue
         self.eleves = eleves
           
-        ArbreCompetences.__init__(self, parent, type_ens, pptache,
+        ArbreCompetences.__init__(self, parent, ref, pptache,
                                   agwStyle = CT.TR_HIDE_ROOT|CT.TR_HAS_VARIABLE_ROW_HEIGHT|CT.TR_ROW_LINES|CT.TR_ALIGN_WINDOWS|CT.TR_AUTO_CHECK_CHILD|CT.TR_AUTO_CHECK_PARENT|CT.TR_AUTO_TOGGLE_CHILD)#|CT.TR_ELLIPSIZE_LONG_ITEMS)#|CT.TR_TOOLTIP_ON_LONG_ITEMS)#
         self.Bind(wx.EVT_SIZE, self.OnSize2)
         self.Bind(CT.EVT_TREE_ITEM_GETTOOLTIP, self.OnToolTip)
@@ -12594,12 +12682,12 @@ class ArbreCompetencesPrj(ArbreCompetences):
     
 
     ####################################################################################
-    def Construire(self, branche, dic = None, type_ens = None):
+    def Construire(self, branche, dic = None, ref = None):
 #        print "Construire", self.pptache.tache.phase, type_ens
-        if type_ens == None:
-            type_ens = self.type_ens
+        if ref == None:
+            ref = self.ref
         if dic == None: # Construction de la racine
-            dic = REFERENTIELS[type_ens].dicCompetences_prj
+            dic = ref.dicCompetences_prj
         font = wx.Font(10, wx.DEFAULT, wx.FONTSTYLE_ITALIC, wx.NORMAL, False)
 #        self.poids_ctrl = {}
         clefs = dic.keys()
@@ -12610,7 +12698,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
 #                                                   str(constantes.dicPoidsIndicateurs[type_ens][codeGrp][0])+"%", 
 #                                                   size = (32,20), name = codeGrp)
             b = self.AppendItem(branche, codeGrp+" "+dic[codeGrp][0])
-            self.SetItemText(b, str(REFERENTIELS[type_ens].dicPoidsIndicateurs_prj[codeGrp][0])+"%", 1)
+            self.SetItemText(b, str(ref.dicPoidsIndicateurs_prj[codeGrp][0])+"%", 1)
             self.SetItemBold(b, True)
 #            self.poids_ctrl[codeGrp].Bind(wx.EVT_TEXT, self.OnTextCtrl)
 #            self.SetItemWindow(b, self.poids_ctrl[codeGrp], 1)
@@ -12630,7 +12718,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
                 i = None
                 tous = True
                 tousEleve = [True]*len(self.pptache.tache.projet.eleves)
-                for j, Indic in enumerate(REFERENTIELS[type_ens].dicIndicateurs_prj[code]):
+                for j, Indic in enumerate(ref.dicIndicateurs_prj[code]):
                     codeIndic = code+'_'+str(j+1)
                     
                     if (not self.pptache.tache.phase in ["R1", "Rev", self.pptache.tache.projet.getCodeLastRevue()]) or (codeIndic in self.pptache.tache.indicateursMaxiEleve[0]):
@@ -12641,7 +12729,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
                             else:
                                 tous = False
                             
-                            self.SetItemText(i, str(REFERENTIELS[type_ens].dicPoidsIndicateurs_prj[codeGrp][1][code][j])+"%", 1)
+                            self.SetItemText(i, str(ref.dicPoidsIndicateurs_prj[codeGrp][1][code][j])+"%", 1)
                             self.SetItemFont(i, font)
                             
                             if Indic[1]:
@@ -12914,23 +13002,7 @@ class ChoixCompetenceEleve(wx.Panel):
     def EstCocheEleve(self, eleve):
         return self.cb[eleve-1].GetValue() 
             
-#    
-# Fonction pour indenter les XML générés par ElementTree
-#
-def indent(elem, level=0):
-    i = "\n" + level*"  "
-    if len(elem):
-        if not elem.text or not elem.text.strip():
-            elem.text = i + "  "
-        for e in elem:
-            indent(e, level+1)
-            if not e.tail or not e.tail.strip():
-                e.tail = i + "  "
-        if not e.tail or not e.tail.strip():
-            e.tail = i
-    else:
-        if level and (not elem.tail or not elem.tail.strip()):
-            elem.tail = i
+
 
 ##
 ## Fonction pour vérifier si deux listes sont égales ou pas

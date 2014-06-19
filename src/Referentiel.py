@@ -39,7 +39,9 @@ from xlrd import open_workbook
 import constantes
 import os
 
-
+# Pour enregistrer en xml
+import xml.etree.ElementTree as ET
+Element = type(ET.Element(None))
 
 
 
@@ -49,50 +51,301 @@ import os
 #
 #################################################################################################################################
 class Referentiel():
+    
     def __init__(self, nomFichier = r""):
         # Enseignement       Famille,    Nom    , Nom complet
-        self.Enseignement = [u""    ,   u""]
         
-        self.CentresInterets = []
-
-        self.dicSavoirs = {}
-
-        self.dicCompetences = {}
-        
-        self.dicCompetences_prj = {}
-        
-        self.dicIndicateurs_prj = {}
-
-        self.dicPoidsIndicateurs_prj = {}
-
-        #
-        # grilles d'évaluation de projet
-        #
-        # Nom Fichier          .xlsx    , .xls
-        self.Fichier_GRILLE = [r""      , r""]
-
-        self.Cellules_NON = {}
-
-        #
-        # tableau de synthèse
-        #
-        # Nom Fichier
-        self.fichierProgressionProgramme = r""
-        self.dicCellSavoirs = {}
+        self.initParam()
 
         if nomFichier != r"":
             self.importer(nomFichier)
 
+    ######################################################################################  
+    def __repr__(self):
+        print "*********************"
+        print self.Code
+        print "CI  :", self.CentresInterets
+#        print "Sav :", self.dicSavoirs
+        print "Com :", self.dicCompetences
+#        print "CoP :", self.dicCompetences_prj
+        print "CoS :", self._dicCompetences_prj_simple
+        print "Ind :", self.dicIndicateurs_prj
+        print "Poi :", self.dicPoidsIndicateurs_prj
+#        print "Mat :", self.dicSavoirs_Math
+#        print "Phy :", self.dicSavoirs_Phys
+        print "Dem :", self.demarches
+        print "Act :", self.activites
+        print "Sea :", self.seances
+        print "DeS :", self.demarcheSeance
+        print self.phases_prj
+        print self.listPhasesEval_prj
+        print "listPhases_prj =", self.listPhases_prj
+        print
+        return ""
+    
+    ######################################################################################  
+    def initParam(self):
+        #
+        # Généralités
+        #
+        self.Famille = u""
+        self.Code = u""
+        self.Enseignement = [u""    ,   u""]
+        self.options = {}               # options de l'enseignement : {Code : nomFichier}
+        self.tr_com = None              # tronc commun de l'enseignement : Code
+        
+        #
+        # Centre d'intérêt
+        #
+        self.CentresInterets = []       #
+        self.CI_BO = True               # les ci sont donnés par le B.O. (pas modifiables)
+        self.CI_cible = False           # les ci se placent sur une cible MEI FSC
+        self.positions_CI = []          # positions sur la cible MEI FSC
+        
+        
+        #
+        # Savoirs ou capacités
+        #
+        self.nomSavoirs = u"Savoirs"    # nom donnés aux savoirs : "Savoirs", "Capacités", ...
+        self.dicSavoirs = {}
+
+        #
+        # Compétences
+        #
+        self.prof_Comp = 0              # compteur de profondeur de l'arborescence des compétences
+        self.dicCompetences = {}
+        self.projet = False             # si l'enseignement fait l'objet d'une épreuve de projet
+        self.dicCompetences_prj = {}
+        self.dicIndicateurs_prj = {}
+        self.dicPoidsIndicateurs_prj = {}
+
+        #
+        # Pratique pédagogiques
+        #
+        self.demarches = {}
+        self.listeDemarches = []
+        self.seances = {}
+        self.activites = {}
+        self.listeTypeSeance = []
+        self.listeTypeActivite = []
+        self.demarcheSeance = {}
+        
+        #
+        # Effectifs
+        #
+        self.effectifs = {}
+        self.listeEffectifs = []
+        self.effectifsSeance = {} #{"" : []}
+        
+        self.dicSavoirs_Math = {}
+        self.dicSavoirs_Phys = {}
+        
+        #
+        # grilles d'évaluation de projet
+        #
+        self.grilles_prj = {}
+        self.nomParties_prj = {}
+        self.cellulesInfo_prj = {}
+
+        #
+        # phases de projet
+        #
+        self.phases_prj = {}
+        self.listPhasesEval_prj = []
+        self.listPhases_prj = []
+        self.posRevues = {2 : [], 3 : []}
+        
+        #
+        # tableau de synthèse
+        #
+        # Nom Fichier
+#        self.fichierProgressionProgramme = r""
+#        self.dicCellSavoirs = {}
+    
+    
+    
+    
+    ######################################################################################  
+    def getBranche(self):
+        """ Construction et renvoi d'une branche XML
+            (enregistrement de fichier)
+        """
+        ref = ET.Element("Referentiel")
+
+        def sauv(branche, val, nom = None):
+            if type(val) == str or type(val) == unicode:
+                branche.set("S_"+nom, val)
+            elif type(val) == int:
+                branche.set("I_"+nom, str(val))
+            elif type(val) == long:
+                branche.set("L_"+nom, str(val))
+            elif type(val) == float:
+                branche.set("F_"+nom, str(val))
+            elif type(val) == bool:
+                branche.set("B_"+nom, str(val))
+            elif type(val) == list:
+                sub = ET.SubElement(branche, "l_"+nom)
+                for i, sv in enumerate(val):
+                    sauv(sub, sv, nom+format(i, "02d"))
+            elif type(val) == dict:
+                sub = ET.SubElement(branche, "d_"+nom)
+                for k, sv in val.items():
+                    if type(k) != str and type(k) != unicode:
+                        k = "_"+format(k, "02d")
+                    sauv(sub, sv, k)
+        
+        for attr in dir(self):
+            if attr[0] != "_":
+                val = getattr(self, attr)
+                sauv(ref, val, attr)
+            
+        return ref
+        
+    
+        
+        
+    ######################################################################################
+    def setBranche(self, branche):
+        """ Lecture de la branche XML
+            (ouverture de fichier)
+        """
+        self.initParam()
+        
+        def lect(branche, nom = ""):
+            if nom[:2] == "S_":
+                return unicode(branche.get(nom))
+            elif nom[:2] == "I_":
+                return int(eval(branche.get(nom)))
+            elif nom[:2] == "L_":
+                return long(eval(branche.get(nom)))
+            elif nom[:2] == "F_":
+                return float(eval(branche.get(nom)))
+            elif nom[:2] == "B_":
+                return branche.get(nom)[0] == "T"
+            elif nom[:2] == "l_":
+                sbranche = branche.find(nom)
+                dic = {}
+                for k, sb in sbranche.items():
+                    dic[k[2:]] = lect(sbranche, k)
+                for sb in list(sbranche):
+                    k = sb.tag
+                    dic[k[2:]] = lect(sbranche, k)
+#                print dic.values()
+                liste = [dic[v] for v in sorted(dic)]
+#                print " >", liste
+                return liste
+#                liste = [lect(sbranche, k) for k, sb in sbranche.items()]
+#                return liste + [lect(sb, k) for k, sb in list(sbranche)]
+            elif nom[:2] == "d_":
+                sbranche = branche.find(nom)
+                d = {}
+                for k, sb in sbranche.items():
+                    d[k[2:]] = lect(sbranche, k)
+                for sb in list(sbranche):
+                    k = sb.tag
+                    print k
+                    _k = k[2:]
+                    if _k[0] == "_":
+                        _k = eval(_k[1:])
+                    d[_k] = lect(sbranche, k)
+                return d
+
+
+        for attr in dir(self):
+            if attr[0] != "_":
+                val = getattr(self, attr)
+                if type(val) == str or type(val) == unicode:
+                    _attr = "S_"+attr
+                elif type(val) == int:
+                    _attr = "I_"+attr
+                elif type(val) == long:
+                    _attr = "L_"+attr
+                elif type(val) == float:
+                    _attr = "F_"+attr
+                elif type(val) == bool:
+                    _attr = "B_"+attr
+                elif type(val) == list:
+                    _attr = "l_"+attr
+                elif type(val) == dict:
+                    _attr = "d_"+attr
+                else:
+                    _attr = None
+                if _attr:
+                    print attr
+                    setattr(self, attr, lect(branche, _attr))
+        
+        return
+        
+    
+    
+    ######################################################################################  
+    def __eq__(self, ref):
+        """ Comparaison de deux référentiels
+        """
+        if not isinstance(ref, Referentiel):
+            return False
+        
+        def egal(val1, val2):
+            if isinstance(val1, (str, unicode)) and isinstance(val2, (str, unicode)):
+                if val1 != val2:
+                    print "Erreur", val1, val2
+                return val1 == val2
+            elif isinstance(val1, (int, long, float)) and isinstance(val2, (int, long, float)):
+                if val1 != val2:
+                    print "Erreur", val1, val2
+                return val1 == val2
+            elif type(val1) == bool and type(val2) == bool:
+                if val1 != val2:
+                    print "Erreur", val1, val2
+                return val1 == val2
+            
+            elif type(val1) == list:
+                if len(val1) != len(val2):
+                    print "Erreur", val1, val2
+                    return False
+                e = True
+                for sval1, sval2 in zip(val1, val2):
+                    e = e and egal(sval1, sval2)
+                return e
+            
+            elif type(val1) == dict and type(val2) == dict:
+                if not egal(sorted(val1), sorted(val2)):
+                    print "Erreur", val1, val2
+                    return False
+                e = True
+                for k, v in val1.items():
+                    e = e and egal(v, val2[k])
+                return e
+            
+            else:
+                print "Erreur", val1, val2
+                return False
+        
+        for attr in dir(self):
+            if attr[0] != "_":
+                val1 = getattr(self, attr)
+                if isinstance(val1, (str, unicode, int, long, float, bool, list, dict)) :
+                    val2 = getattr(ref, attr)
+                    if not egal(val1, val2):
+                        print "Différence"
+                        print "  ", attr
+                        print "  ", val1
+                        print "  ", val2
+                        break
+                    
+                    
+    ######################################################################################  
     def importer(self, nomFichier):
         """
         """
-        self.cpt = 0 # compteur de profondeur
+        self.initParam()
         
+        ###########################################################
         def remplir(sh, col, rng, mode = 1, condition = None):
             """ Mode = 1 : on finit par une liste
                 Mode = 2 : on finit par un dict
             """
-            self.cpt = max(self.cpt, col)
+            self.prof_Comp = max(self.prof_Comp, col)
 #            print "***", col, rng
             lig = [l  for l in rng if sh.cell(l,col).value != u""]
             
@@ -104,7 +357,7 @@ class Referentiel():
                     if condition == None or sh.cell(l,4).value == condition:
                         d = {}
                         for l in lig:
-                            d[sh.cell(l,col).value] = sh.cell(l,col+1).value
+                            d[str(sh.cell(l,col).value)] = sh.cell(l,col+1).value
                         return d
                     else:
                         return None
@@ -116,7 +369,7 @@ class Referentiel():
                 for i, p in enumerate(lig):
                     sdic = remplir(sh, col+1, range(p+1, llig[i+1]), mode = mode, condition = condition)
                     if sdic != None:
-                        dic[sh.cell(p,col).value] = [sh.cell(p,col+1).value, sdic]
+                        dic[str(sh.cell(p,col).value)] = [sh.cell(p,col+1).value, sdic]
                 return dic
             
             
@@ -125,10 +378,9 @@ class Referentiel():
             return [[l, sh.cell(l,col).value]    for l in rng    if sh.cell(l,col).value != u""]
         
         
-                
-        
-        
-        
+        #
+        # Ouverture fichier EXCEL
+        #
         wb = open_workbook(nomFichier)
         sh = wb.sheets()
         
@@ -144,16 +396,14 @@ class Referentiel():
         #
         # options
         #
-        self.options = {}
         sh_g = wb.sheet_by_name(u"Généralités")
         lig = [l  for l in range(10, 17) if sh_g.cell(l,0).value != u""]
         for l in lig:
-            self.options[sh_g.cell(l,0).value] = sh_g.cell(l,1).value
+            self.options[str(sh_g.cell(l,0).value)] = sh_g.cell(l,1).value
         
         #
         # tronc commun
         #
-        self.tr_com = None
         sh_g = wb.sheet_by_name(u"Généralités")
         if sh_g.cell(21,0).value != u"":
             self.tr_com = [sh_g.cell(21,0).value, sh_g.cell(21,1).value]
@@ -164,8 +414,6 @@ class Referentiel():
         sh_ci = wb.sheet_by_name(u"CI")
         self.CI_BO = sh_ci.cell(0,1).value[0].upper() == "O"
         self.CI_cible = sh_ci.cell(1,1).value[0].upper() == "O"
-        self.CentresInterets = []
-        self.positions_CI = []
         continuer = True
         l = 4
         while continuer:
@@ -183,7 +431,6 @@ class Referentiel():
                             if c == 4:
                                 t += '_'
                         self.positions_CI.append(t)
-                        print t
                     l += 1
                 else:
                     continuer = False
@@ -201,10 +448,8 @@ class Referentiel():
         # Compétences
         #
         sh_va = wb.sheet_by_name(u"Compétences")
-        self.cpt = 0 # compteur de profondeur 
+        self.prof_Comp = 0 # compteur de profondeur 
         self.dicCompetences = remplir(sh_va, 0, range(1, sh_va.nrows), mode = 2)
-        self.prof_Comp = self.cpt
-        print self.prof_Comp
        
         #
         # dicIndicateurs_prj
@@ -214,24 +459,21 @@ class Referentiel():
         llig = lig + [sh_va.nrows]
         dic = {}
         for i, p in enumerate(lig):
-            dic[sh_va.cell(p,1).value] = [[sh_va.cell(l,2).value, sh_va.cell(l,3).value == "R"] for l in range(p, llig[i+1]) if sh_va.cell(l,2).value != u""]
+            dic[str(sh_va.cell(p,1).value)] = [[sh_va.cell(l,2).value, sh_va.cell(l,3).value == "R"] for l in range(p, llig[i+1]) if sh_va.cell(l,2).value != u""]
         self.dicIndicateurs_prj =  dic
-        
-        
         
         #
         # dicPoidsIndicateurs_prj
         #
         sh_va = wb.sheet_by_name(u"Indicateurs_PRJ")     
         lig = [l  for l in range(1, sh_va.nrows) if sh_va.cell(l,0).value != u""]
-#        l_i = listItemCol(sh_va, 0, range(1, sh_va.nrows))
         llig = lig + [sh_va.nrows]
         for i, p in enumerate(lig):
             lig2 = [l for l in range(p, llig[i+1]) if sh_va.cell(l,1).value != u""]
-            self.dicPoidsIndicateurs_prj[sh_va.cell(p,0).value] = [sh_va.cell(p,4).value, {}]
+            self.dicPoidsIndicateurs_prj[str(sh_va.cell(p,0).value)] = [sh_va.cell(p,4).value, {}]
             llig2 = lig2 + [llig[i+1]]
             for ii, l in enumerate(lig2):
-                self.dicPoidsIndicateurs_prj[sh_va.cell(p,0).value][1][sh_va.cell(l,1).value] = [sh_va.cell(pp,4).value for pp in range(l, llig2[ii+1])]
+                self.dicPoidsIndicateurs_prj[str(sh_va.cell(p,0).value)][1][sh_va.cell(l,1).value] = [sh_va.cell(pp,4).value for pp in range(l, llig2[ii+1])]
         
         #
         # Compétences pour projet
@@ -248,59 +490,47 @@ class Referentiel():
         sh_g = wb.sheet_by_name(u"Généralités")
         self.projet = sh_g.cell(23,1).value[0].upper() == "O"
         
-        
         #
-        # démarches et séances
+        # Pratique pédagogiques
         #
         sh_g = wb.sheet_by_name(u"Activité-Démarche")
-        self.demarches = {}
-        self.listeDemarches = []
         for l in range(2, 5):
             if sh_g.cell(l,0).value != u"":
-                self.demarches[sh_g.cell(l,0).value] = [sh_g.cell(l,1).value, sh_g.cell(l,2).value]
+                self.demarches[str(sh_g.cell(l,0).value)] = [sh_g.cell(l,1).value, sh_g.cell(l,2).value]
                 self.listeDemarches.append(sh_g.cell(l,0).value)
-                
-        self.activites = {}
-        self.listeTypeActivite = []
+
         for l in range(8, 11):
             if sh_g.cell(l,0).value != u"":
-                self.activites[sh_g.cell(l,0).value] = [sh_g.cell(l,1).value, sh_g.cell(l,2).value]
+                self.activites[str(sh_g.cell(l,0).value)] = [sh_g.cell(l,1).value, sh_g.cell(l,2).value]
                 self.listeTypeActivite.append(sh_g.cell(l,0).value)
                 
-        self.seances = {}
         self.seances.update(self.activites)
         self.listeTypeSeance = self.listeTypeActivite[:]
         for l in range(14, 21):
             if sh_g.cell(l,0).value != u"":
-                self.seances[sh_g.cell(l,0).value] = [sh_g.cell(l,1).value, sh_g.cell(l,2).value]
+                self.seances[str(sh_g.cell(l,0).value)] = [sh_g.cell(l,1).value, sh_g.cell(l,2).value]
                 self.listeTypeSeance.append(sh_g.cell(l,0).value)
         
-        self.demarcheSeance = {}
         for l, s in enumerate(self.listeTypeActivite):
             l = l + 3
-            self.demarcheSeance[s] = [sh_g.cell(2,c).value for c in range(5,8) if sh_g.cell(l,c).value != u""]
+            self.demarcheSeance[str(s)] = [sh_g.cell(2,c).value for c in range(5,8) if sh_g.cell(l,c).value != u""]
         
         #
         # effectifs
         #
         sh_g = wb.sheet_by_name(u"Activité-Effectif")
-        self.effectifs = {}
-        self.listeEffectifs = []
         for l in range(2, 7):
             if sh_g.cell(l,0).value != u"":
-                self.effectifs[sh_g.cell(l,0).value] = [sh_g.cell(l,1).value, sh_g.cell(l,2).value]
+                self.effectifs[str(sh_g.cell(l,0).value)] = [sh_g.cell(l,1).value, sh_g.cell(l,2).value]
                 self.listeEffectifs.append(sh_g.cell(l,0).value)
                 
-        
-        self.effectifsSeance = {"" : []}
         for l, s in enumerate(self.listeTypeSeance):
             l = l + 3
-            self.effectifsSeance[s] = [sh_g.cell(2,c).value for c in range(5,10) if sh_g.cell(l,c).value != u""]
-        
+            self.effectifsSeance[str(s)] = [sh_g.cell(2,c).value for c in range(5,10) if sh_g.cell(l,c).value != u""]
+
         #
         # Savoirs Math
         #
-        self.dicSavoirs_Math = None
         if u"Math" in wb.sheet_names():
             sh_va = wb.sheet_by_name(u"Math")     
             self.dicSavoirs_Math = remplir(sh_va, 0, range(1, sh_va.nrows))
@@ -308,7 +538,6 @@ class Referentiel():
         #
         # Savoirs Math
         #
-        self.dicSavoirs_Phys = None
         if u"Phys" in wb.sheet_names():
             sh_va = wb.sheet_by_name(u"Phys")     
             self.dicSavoirs_Phys = remplir(sh_va, 0, range(1, sh_va.nrows))
@@ -316,20 +545,37 @@ class Referentiel():
         #
         # Grilles d'évaluation projet
         #
-        sh_g = wb.sheet_by_name(u"Grille_PRJ")
-        self.grilles_prj = {}
-        self.nomParties_prj = {}
-        for l in range(2,4):
-            if sh_g.cell(l,0).value != u"":
-                self.grilles_prj[sh_g.cell(l,0).value] = sh_g.cell(l,2).value
-                self.nomParties_prj[sh_g.cell(l,0).value] = sh_g.cell(l,1).value
-                
-        self.cellulesInfo_prj = {}
-        for l in range(7,sh_g.nrows):
-            if sh_g.cell(l,0).value != u"":
-                self.cellulesInfo_prj[sh_g.cell(l,0).value] = [sh_g.cell(l,1).value, (sh_g.cell(l,2).value, sh_g.cell(l,3).value)]
+        if self.projet:
+            sh_g = wb.sheet_by_name(u"Grille_PRJ")
+            for l in range(2,4):
+                if sh_g.cell(l,0).value != u"":
+                    self.grilles_prj[str(sh_g.cell(l,0).value)] = sh_g.cell(l,2).value
+                    self.nomParties_prj[str(sh_g.cell(l,0).value)] = sh_g.cell(l,1).value
+                    
+            
+            for l in range(7,sh_g.nrows):
+                if sh_g.cell(l,0).value != u"":
+                    self.cellulesInfo_prj[str(sh_g.cell(l,0).value)] = [sh_g.cell(l,1).value, [sh_g.cell(l,2).value, sh_g.cell(l,3).value]]
+        
+        #
+        # Phases du projet
+        #
+        if self.projet:
+            shp = wb.sheet_by_name(u"Phase_PRJ")
+            for l in range(2, shp.nrows):
+                if shp.cell(l,0).value != u"":
+                    if shp.cell(l,1).value != u"":
+                        self.phases_prj[str(shp.cell(l,0).value)] = [shp.cell(l,1).value, shp.cell(l,2).value, shp.cell(l,3).value]
+                        if shp.cell(l,4).value != "":
+                            self.listPhasesEval_prj.append(shp.cell(l,0).value)
+                        self.listPhases_prj.append(shp.cell(l,0).value)
+                        if shp.cell(l,5).value != "":
+                            self.posRevues[2].append(shp.cell(l,0).value)
+                        if shp.cell(l,6).value != "":
+                            self.posRevues[3].append(shp.cell(l,0).value)
         
         
+    #########################################################################
     def completer(self):
         """ Complète les données selon que le référentiel ait un tronc commun ou des options
         """
@@ -352,41 +598,36 @@ class Referentiel():
                 self.dicIndicateurs_prj.update(REFERENTIELS[t].dicIndicateurs_prj)
         
         if self.projet:
-            self.lstGrpIndicateurRevues = []
-            self.lstGrpIndicateurSoutenance = []
+            self._lstGrpIndicateurRevues = []
+            self._lstGrpIndicateurSoutenance = []
             for grp, poids in self.dicPoidsIndicateurs_prj.items():
                 poidsGrp, dicIndicGrp = poids
                 for comp, poidsIndic in dicIndicGrp.items():
                     if comp in self.dicIndicateurs_prj.keys():
                         for i, indic in enumerate(self.dicIndicateurs_prj[comp]):
                             if self.dicIndicateurs_prj[comp][i][1]:
-                                self.lstGrpIndicateurRevues.append(grp)
+                                self._lstGrpIndicateurRevues.append(grp)
                             else:
-                                self.lstGrpIndicateurSoutenance.append(grp)
+                                self._lstGrpIndicateurSoutenance.append(grp)
                                 
-            self.lstGrpIndicateurSoutenance = list(set(self.lstGrpIndicateurSoutenance))
-            self.lstGrpIndicateurRevues = list(set(self.lstGrpIndicateurRevues))
-            if "O8s" in self.lstGrpIndicateurSoutenance:
-                self.lstGrpIndicateurSoutenance.remove("O8s")
-                self.lstGrpIndicateurSoutenance.append("O8")
+            self._lstGrpIndicateurSoutenance = list(set(self._lstGrpIndicateurSoutenance))
+            self._lstGrpIndicateurRevues = list(set(self._lstGrpIndicateurRevues))
+            if "O8s" in self._lstGrpIndicateurSoutenance:
+                self._lstGrpIndicateurSoutenance.remove("O8s")
+                self._lstGrpIndicateurSoutenance.append("O8")
         
             if self.tr_com:
                 self.grilles_prj.update(REFERENTIELS[self.tr_com[0]].grilles_prj)
                 
                 
-        self.dicCompetences_prj_simple = aplatir(self.dicCompetences_prj)
+        self._dicCompetences_prj_simple = aplatir(self.dicCompetences_prj)
         
-        
-        
-#        self.dicIndicateurs_prj_simple = {}
-#        for c, d in self.dicIndicateurs_prj.items():
-#            self.dicIndicateurs_prj_simple[c] =(d[1])
+
         
     
-    
-    
+
+    #########################################################################
     def getSavoir(self, code, dic = None, c = 1, gene = None):
-        print "getSavoir", code, dic
         if dic == None:
             if gene == "M":
                 dic = self.dicSavoirs_Math
@@ -394,24 +635,20 @@ class Referentiel():
                 dic = self.dicSavoirs_Phys
             else:
                 dic = self.dicSavoirs
-    #    print dic
-    #    if c == None:
-    #        c = len(code.split("."))
-    #        c = 1
         if dic.has_key(code):
             return dic[code][0]
         else:
-    #        cd = code[:-2*(c-1)]
-    #        cd = ".".join(code.split(".")[:c-1])
             cd = ".".join(code.split(".")[:c])
-    #        print "  ", cd
-    #        return getSavoir(typeEns, code, dic[cd][1], c-1)
             return self.getSavoir(code, dic[cd][1], c+1)
-        
-        
-    # Pour obtenir l'intitulé d'une compétence à partir de son code 
-    #        fonction recursive    
+
+
+
+
+    #########################################################################    
     def getCompetence(self, code, dic = None, c = None):
+        """ Pour obtenir l'intitulé d'une compétence à partir de son code 
+                    fonction recursive
+        """
 #        print "getCompetence", code, dic, c
         if dic == None:
             dic = self.dicCompetences
@@ -430,7 +667,19 @@ class Referentiel():
                         return co
             return
                     
-
+    #########################################################################    
+    def getClefDic(self, dicattr, nom, num = None):
+        dic = getattr(self, dicattr)
+        for k,v in dic.items():
+            if num != None:
+                v = v[num]
+            if v == nom:
+                return k
+        return None
+    
+    
+    
+    
 #########################################################################################
 def getEnseignementLabel(label):
     """ Renvoie le code et la famille d'enseignement
@@ -444,35 +693,59 @@ def getEnseignementLabel(label):
 #########################################################################################
 DOSSIER_REF = "referentiels"
 REFERENTIELS = {}
+ARBRE_REF = {}
 def chargerReferentiels():
-    global REFERENTIELS
+    global REFERENTIELS, ARBRE_REF
     liste = os.listdir(os.path.join(constantes.PATH, r"..", DOSSIER_REF))
     
     for fich_ref in liste:
-        ref = Referentiel(os.path.join(constantes.PATH, r"..", DOSSIER_REF, fich_ref))
-        REFERENTIELS[ref.Code] = ref
+        if os.path.splitext(fich_ref)[1] == ".xls":
+            ref = Referentiel(os.path.join(constantes.PATH, r"..", DOSSIER_REF, fich_ref))
+            REFERENTIELS[ref.Code] = ref
         
+    for r in REFERENTIELS.values():
+        r.completer()
+        print r
 
+    for k, r in REFERENTIELS.items():
+        if not r.tr_com:
+            ARBRE_REF[k] = []
+
+    for k, r in REFERENTIELS.items():
+        if r.tr_com:
+            ARBRE_REF[r.tr_com[0]].append(k)
+    
 chargerReferentiels()
 
-for r in REFERENTIELS.values():
-    r.completer()
-    print "*********************"
-    print r.Code
-    print "CI  :", r.CentresInterets
-    print "Sav :", r.dicSavoirs
-    print "Com :", r.dicCompetences
-    print "CoP :", r.dicCompetences_prj
-    print "CoS :", r.dicCompetences_prj_simple
-    print "Ind :", r.dicIndicateurs_prj
-    print "Poi :", r.dicPoidsIndicateurs_prj
-    print "Mat :", r.dicSavoirs_Math
-    print "Phy :", r.dicSavoirs_Phys
-    print "Dem :", r.demarches
-    print "Act :", r.activites
-    print "Sea :", r.seances
-    print "DeS :", r.demarcheSeance
-    
-    print
 
 
+
+
+
+
+#
+###########################################################################################
+#def enregistrer(code, nomFichier):
+#
+#    fichier = file(nomFichier, 'w')
+#    root = REFERENTIELS["SSI"].getBranche()
+#    constantes.indent(root)
+#    
+#    ET.ElementTree(root).write(fichier)
+#    
+#    fichier.close()
+#    
+#enregistrer("SSI", "testSauvRef.xml")
+#
+#def ouvrir(nomFichier):
+#    fichier = open(nomFichier,'r')
+#    root = ET.parse(fichier).getroot()
+#    ref = Referentiel()
+#    ref.setBranche(root)
+#    ref.completer()
+#    fichier.close()
+#    print ref
+#    
+#    print REFERENTIELS["SSI"] == ref
+#    
+#ouvrir("testSauvRef.xml")

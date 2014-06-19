@@ -22,7 +22,8 @@ includefiles = [('Microsoft.VC90.CRT', "Microsoft.VC90.CRT"),
                      'gpl.txt', 
                      'fichier_prj.ico', 'fichier_seq.ico',
                      'etablissements.txt',
-                     ('../tables', "../tables")]
+                     ('../tables', "../tables"),
+                     ('../referentiels', "../referentiels")]
 #includefiles.extend(glob(r"*.xlsx"))
 #includefiles.extend(glob(r"*.xls"))
 #includefiles.extend(glob(r"*.xlsm"))
@@ -62,7 +63,7 @@ cible = Executable(
 
 
 setup(  name = "pySequence",
-        version = "4.8.0.4",
+        version = "5.0.0.1",
         author = "Cedrick FAURY & Jean-Claude FRICOU",
         description = u"pySéquence",
         options = {"build_exe": build_exe_options},

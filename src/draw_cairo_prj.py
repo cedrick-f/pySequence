@@ -647,11 +647,17 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
             else:
                 orient = "v"
             
-            show_text_rect(ctx, constantes.NOM_PHASE_TACHE[prj.GetTypeEnseignement(True)][phase], 
+            show_text_rect(ctx, prj.GetReferentiel().phases_prj[phase][1], 
                            (posZDeroul[0] + ecartX/6, yh[0], 
                             wPhases, yh[1]-yh[0]), 
                            ha = 'c', orient = orient, b = 0,
                            couper = False) 
+            
+#            show_text_rect(ctx, constantes.NOM_PHASE_TACHE[prj.GetTypeEnseignement(True)][phase], 
+#                           (posZDeroul[0] + ecartX/6, yh[0], 
+#                            wPhases, yh[1]-yh[0]), 
+#                           ha = 'c', orient = orient, b = 0,
+#                           couper = False) 
 
 #    print "taches", time.time() - tps
     
