@@ -44,6 +44,10 @@ import xml.etree.ElementTree as ET
 Element = type(ET.Element(None))
 
 
+#########################################################################################
+DOSSIER_REF = "referentiels"
+REFERENTIELS = {}
+ARBRE_REF = {}    
 
 #################################################################################################################################
 #
@@ -64,19 +68,20 @@ class Referentiel():
     def __repr__(self):
         print "*********************"
         print self.Code
+        print "CI_BO :", self.CI_BO
         print "CI  :", self.CentresInterets
 #        print "Sav :", self.dicSavoirs
         print "Com :", self.dicCompetences
-#        print "CoP :", self.dicCompetences_prj
+        print "CoP :", self.dicCompetences_prj
         print "CoS :", self._dicCompetences_prj_simple
         print "Ind :", self.dicIndicateurs_prj
         print "Poi :", self.dicPoidsIndicateurs_prj
 #        print "Mat :", self.dicSavoirs_Math
 #        print "Phy :", self.dicSavoirs_Phys
-        print "Dem :", self.demarches
-        print "Act :", self.activites
-        print "Sea :", self.seances
-        print "DeS :", self.demarcheSeance
+#        print "Dem :", self.demarches
+#        print "Act :", self.activites
+#        print "Sea :", self.seances
+#        print "DeS :", self.demarcheSeance
         print self.phases_prj
         print self.listPhasesEval_prj
         print "listPhases_prj =", self.listPhases_prj
@@ -173,6 +178,8 @@ class Referentiel():
         ref = ET.Element("Referentiel")
 
         def sauv(branche, val, nom = None):
+#            if u"é" in nom:
+#                print nom
             if type(val) == str or type(val) == unicode:
                 branche.set("S_"+nom, val)
             elif type(val) == int:
@@ -243,7 +250,6 @@ class Referentiel():
                     d[k[2:]] = lect(sbranche, k)
                 for sb in list(sbranche):
                     k = sb.tag
-                    print k
                     _k = k[2:]
                     if _k[0] == "_":
                         _k = eval(_k[1:])
@@ -271,7 +277,6 @@ class Referentiel():
                 else:
                     _attr = None
                 if _attr:
-                    print attr
                     setattr(self, attr, lect(branche, _attr))
         
         return
@@ -331,8 +336,9 @@ class Referentiel():
                         print "  ", attr
                         print "  ", val1
                         print "  ", val2
-                        break
-                    
+#                        break
+                        return False
+        return True
                     
     ######################################################################################  
     def importer(self, nomFichier):
@@ -495,7 +501,7 @@ class Referentiel():
         #
         sh_g = wb.sheet_by_name(u"Activité-Démarche")
         for l in range(2, 5):
-            if sh_g.cell(l,0).value != u"":
+            if sh_g.cell(l,1).value != u"":
                 self.demarches[str(sh_g.cell(l,0).value)] = [sh_g.cell(l,1).value, sh_g.cell(l,2).value]
                 self.listeDemarches.append(sh_g.cell(l,0).value)
 
@@ -585,9 +591,15 @@ class Referentiel():
             ddic = {}
             for k0, v0 in dic.items():
                 for k1, v1 in v0[1].items():
-                    ddic[k1] = [v1[0]]
-                    if type(v1[1]) == dict:
-                        ddic[k1].extend(v1[1].values())
+                    if type(v1) == list:
+                        ddic[k1] = [v1[0]]
+                        if type(v1[1]) == dict:
+                            for i in sorted(v1[1].keys()):
+                                ddic[k1].append(v1[1][i])
+#                            ddic[k1].extend(v1[1].values())
+                    else:
+                        ddic[k1] = [v1]
+                    
             return ddic
         
         if self.tr_com:
@@ -678,7 +690,7 @@ class Referentiel():
         return None
     
     
-    
+
     
 #########################################################################################
 def getEnseignementLabel(label):
@@ -690,23 +702,75 @@ def getEnseignementLabel(label):
             return r.Code, r.Famille
 
 
-#########################################################################################
-DOSSIER_REF = "referentiels"
-REFERENTIELS = {}
-ARBRE_REF = {}
+
+
+##########################################################################################
+def enregistrer(code, nomFichier):
+
+    fichier = file(nomFichier, 'w')
+    root = REFERENTIELS[code].getBranche()
+    constantes.indent(root)
+    print nomFichier
+    print ET.tostring(root)
+    ET.ElementTree(root).write(fichier)
+    
+    fichier.close()
+    
+#enregistrer("SSI", "testSauvRef.xml")
+
+
+##########################################################################################
+def ouvrir(nomFichier):
+    fichier = open(nomFichier,'r')
+    root = ET.parse(fichier).getroot()
+    ref = Referentiel()
+    ref.setBranche(root)
+    ref.completer()
+    fichier.close()
+    return ref
+    
+#    print REFERENTIELS["SSI"] == ref
+    
+#ouvrir("testSauvRef.xml")
+
+
+##########################################################################################
 def chargerReferentiels():
     global REFERENTIELS, ARBRE_REF
+    
+    #
+    # Chargement des fichiers .xls
+    #
     liste = os.listdir(os.path.join(constantes.PATH, r"..", DOSSIER_REF))
     
     for fich_ref in liste:
         if os.path.splitext(fich_ref)[1] == ".xls":
             ref = Referentiel(os.path.join(constantes.PATH, r"..", DOSSIER_REF, fich_ref))
             REFERENTIELS[ref.Code] = ref
-        
+    print REFERENTIELS["SIN"].dicPoidsIndicateurs_prj
+    
     for r in REFERENTIELS.values():
         r.completer()
-        print r
-
+#        print r
+    print REFERENTIELS["SIN"].dicPoidsIndicateurs_prj
+    print
+    
+    #
+    # Vérification intégrité
+    #
+    dicOk = {}
+    for k, r in REFERENTIELS.items():
+#        print "Verification", k
+        f = os.path.join(constantes.PATH, r"..", DOSSIER_REF, "Ref_"+r.Enseignement[0]+".xml")
+        dicOk[k] = False
+        if os.path.exists(f):
+            ref = ouvrir(f)
+            print r
+#            print ref
+            if ref == r:
+                dicOk[k] = True
+    print dicOk
+    
     for k, r in REFERENTIELS.items():
         if not r.tr_com:
             ARBRE_REF[k] = []
@@ -715,37 +779,16 @@ def chargerReferentiels():
         if r.tr_com:
             ARBRE_REF[r.tr_com[0]].append(k)
     
+
 chargerReferentiels()
 
 
 
 
+##########################################################################################
+def sauvegarderOriginaux():
+    for r in REFERENTIELS.values():
+        f = os.path.join(constantes.PATH, r"..", DOSSIER_REF, "Ref_"+r.Enseignement[0]+".xml")
+        enregistrer(r.Code, f)
 
-
-
-#
-###########################################################################################
-#def enregistrer(code, nomFichier):
-#
-#    fichier = file(nomFichier, 'w')
-#    root = REFERENTIELS["SSI"].getBranche()
-#    constantes.indent(root)
-#    
-#    ET.ElementTree(root).write(fichier)
-#    
-#    fichier.close()
-#    
-#enregistrer("SSI", "testSauvRef.xml")
-#
-#def ouvrir(nomFichier):
-#    fichier = open(nomFichier,'r')
-#    root = ET.parse(fichier).getroot()
-#    ref = Referentiel()
-#    ref.setBranche(root)
-#    ref.completer()
-#    fichier.close()
-#    print ref
-#    
-#    print REFERENTIELS["SSI"] == ref
-#    
-#ouvrir("testSauvRef.xml")
+#sauvegarderOriginaux()

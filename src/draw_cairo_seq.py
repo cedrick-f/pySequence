@@ -229,7 +229,8 @@ def DefinirZones(seq, ctx):
     
     
     # Zone du tableau des démarches
-    if seq.classe.typeEnseignement != "SSI":
+    if len(seq.classe.GetReferentiel().listeDemarches) > 0:
+#    if seq.classe.typeEnseignement != "SSI":
         tailleZDemarche[0] = 0.07
         posZDemarche[0] = posZSysteme[0] - tailleZDemarche[0] - ecartX
         tailleZDemarche[1] = tailleZSysteme[1]
@@ -514,25 +515,25 @@ def Draw(ctx, seq, mouchard = False):
     for c in seq.prerequis.savoirs:
         typ, cod = c[0], c[1:]
         if typ == "S": # Savoir spécialité STI2D
-            lstTexte.append(REFERENTIELS[seq.classe.typeEnseignement].getSavoir(cod))
+            lstTexte.append(seq.GetReferentiel().getSavoir(cod))
             lstCodes.append(cod)
             lstCoul.append((0,0,0))
         elif typ == "M": # Savoir Math
-            lstTexte.append(REFERENTIELS[seq.classe.familleEnseignement].getSavoir(cod, gene = "M"))
+            lstTexte.append(seq.GetReferentiel().getSavoir(cod, gene = "M"))
             lstCodes.append("Math "+cod)
             lstCoul.append(constantes.COUL_DISCIPLINES['Mat'])
         elif typ == "P": # Savoir Physique
-            lstTexte.append(REFERENTIELS[seq.classe.familleEnseignement].getSavoir(cod, gene = "P"))
+            lstTexte.append(seq.GetReferentiel().getSavoir(cod, gene = "P"))
             lstCodes.append("Phys "+cod)
             lstCoul.append(constantes.COUL_DISCIPLINES['Phy'])
         else:
-            if not REFERENTIELS[seq.classe.typeEnseignement].tr_com:
+            if not seq.GetReferentiel().tr_com:
 #            if seq.classe.typeEnseignement == 'SSI':
-                lstTexte.append(REFERENTIELS[seq.classe.typeEnseignement].getSavoir(cod))
+                lstTexte.append(seq.GetReferentiel().getSavoir(cod))
                 lstCodes.append(cod)
             else:
-                lstTexte.append(REFERENTIELS[REFERENTIELS[seq.classe.typeEnseignement].tr_com[0]].getSavoir(cod))
-                lstCodes.append(REFERENTIELS[seq.classe.typeEnseignement].tr_com[0]+" "+cod)
+                lstTexte.append(REFERENTIELS[seq.GetReferentiel().tr_com[0]].getSavoir(cod))
+                lstCodes.append(seq.GetReferentiel().tr_com[0]+" "+cod)
             lstCoul.append((0.3,0.3,0.3))
                 
 #        if c[0] == '_': # Savoir d'ETT
@@ -583,21 +584,21 @@ def Draw(ctx, seq, mouchard = False):
     #
     lstTexteC = []
     for c in seq.obj["C"].competences:
-        lstTexteC.append(REFERENTIELS[seq.classe.typeEnseignement].getCompetence(c))
+        lstTexteC.append(seq.GetReferentiel().getCompetence(c))
     lstTexteS = []   
     for c in seq.obj["S"].savoirs:
         typ, cod = c[0], c[1:]
         if typ == "S": # Savoir spécialité STI2D
-            lstTexteS.append(REFERENTIELS[seq.classe.typeEnseignement].getSavoir(cod))
+            lstTexteS.append(seq.GetReferentiel().getSavoir(cod))
         elif typ == "M": # Savoir Math
-            lstTexteS.append(REFERENTIELS[seq.classe.familleEnseignement].getSavoir(cod, gene = "M"))
+            lstTexteS.append(seq.GetReferentiel().getSavoir(cod, gene = "M"))
         elif typ == "P": # Savoir Physique
-            lstTexteS.append(REFERENTIELS[seq.classe.familleEnseignement].getSavoir(cod, gene = "P"))
+            lstTexteS.append(seq.GetReferentiel().getSavoir(cod, gene = "P"))
         else:
-            if seq.classe.typeEnseignement == 'SSI':
-                lstTexteS.append(REFERENTIELS[seq.classe.typeEnseignement].getSavoir(cod))
+            if not seq.GetReferentiel().tr_com:
+                lstTexteS.append(seq.GetReferentiel().getSavoir(cod))
             else:
-                lstTexteS.append(REFERENTIELS[seq.classe.typeEnseignement].getSavoir(cod))
+                lstTexteS.append(seq.GetReferentiel().getSavoir(cod))
 
     h = rect_height+0.0001
     hC = hS = h/2
@@ -673,8 +674,8 @@ def Draw(ctx, seq, mouchard = False):
 
     #
     #  Tableau des démarches
-    #    
-    if seq.classe.typeEnseignement != "SSI":
+    #
+    if len(seq.GetReferentiel().listeDemarches) > 0:  
         ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                               cairo.FONT_WEIGHT_NORMAL)
         ctx.set_source_rgb(0, 0, 0)
@@ -915,7 +916,8 @@ class Bloc():
         for ligne in self.contenu:
             for cadre in ligne:
                 if cadre.seance.typeSeance in ["AP", "ED", "P"]  and cadre.dy: #and not cadre.filigrane
-                    if cadre.seance.GetClasse().typeEnseignement != "SSI":
+                    if len(cadre.seance.GetReferentiel().listeDemarches) > 0:
+#                    if cadre.seance.GetClasse().typeEnseignement != "SSI":
                         DrawCroisementsDemarche(cadre.ctx, cadre.seance, cadre.y + cadre.dy)
                     if not estRotation:
                         DrawCroisementSystemes(cadre.ctx, cadre.seance, cadre.xd, cadre.y + cadre.dy, cadre.seance.GetNbrSystemes())

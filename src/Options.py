@@ -257,8 +257,8 @@ class Options:
                                        "E" : classe.nbrGroupes["E"],
                                        "P" : classe.nbrGroupes["P"]}
         
-        self.optClasse["CentresInteret"] = classe.CI
-        self.optClasse["PositionsCI"] = classe.posCI
+#        self.optClasse["CentresInteret"] = classe.CI
+#        self.optClasse["PositionsCI"] = classe.posCI
 #        if hasattr(classe, 'ci_ET'):
 #            self.optClasse["CentresInteretET"] = classe.ci_ET
 #            self.optClasse["PositionsCI_ET"] = classe.posCI_ET
