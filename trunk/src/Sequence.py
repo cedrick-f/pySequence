@@ -767,7 +767,7 @@ class Classe():
         
     ######################################################################################  
     def __repr__(self):
-        return self.typeEnseignement
+        return "Classe :", self.typeEnseignement
     
     
     ######################################################################################  
@@ -775,8 +775,8 @@ class Classe():
         if hasattr(self, 'codeBranche'):
             self.codeBranche.SetLabel(self.GetReferentiel().Enseignement[0])
         
-        self.CI = self.options.optClasse["CentresInteret"]
-        self.posCI = self.options.optClasse["PositionsCI"]
+#        self.CI = self.options.optClasse["CentresInteret"]
+#        self.posCI = self.options.optClasse["PositionsCI"]
         
 #        self.ci_SSI = self.options.optClasse["CentresInteretSSI"]
 #        self.ci_ET = self.options.optClasse["CentresInteretET"]
@@ -800,7 +800,7 @@ class Classe():
             self.MiseAJourTypeEnseignement()
         else:
             if not self.typeEnseignement in [ref.Code for ref in REFERENTIELS.values() if ref.projet]:
-                self.typeEnseignement = 'SSI'
+                self.typeEnseignement = constantes.TYPE_ENSEIGNEMENT_DEFAUT
 
         self.familleEnseignement = self.GetReferentiel().Famille  
          
@@ -841,12 +841,12 @@ class Classe():
         eff.set('nE', str(self.nbrGroupes['E']))
         eff.set('nP', str(self.nbrGroupes['P']))
                       
-        if not self.referentiel.CI_BO and hasattr(self, 'CI'): 
-            ci = ET.SubElement(classe, "CentreInteret")
-            for i,c in enumerate(self.CI):
-                ci.set("CI"+str(i+1), c)
-                if self.referentiel.CI_cible:
-                    ci.set("pos"+str(i+1), self.posCI[i])
+#        if not self.referentiel.CI_BO and hasattr(self, 'CI'): 
+#            ci = ET.SubElement(classe, "CentreInteret")
+#            for i,c in enumerate(self.CI):
+#                ci.set("CI"+str(i+1), c)
+#                if self.referentiel.CI_cible:
+#                    ci.set("pos"+str(i+1), self.posCI[i])
                 
                 
 #        if self.typeEnseignement == 'ET':
@@ -872,14 +872,10 @@ class Classe():
         brancheRef = branche.find("Referentiel")        # A partir de la version 5 !
         if brancheRef != None:      
             self.referentiel.setBranche(brancheRef)
+            self.version5 = True
         else:
+            self.version5 = False
             self.referentiel = REFERENTIELS[self.typeEnseignement]
-        
-        self.etablissement = branche.get("Etab", u"")
-        
-        self.familleEnseignement = self.referentiel.Famille
-        
-        if not self.referentiel.CI_BO:
             brancheCI = branche.find("CentreInteret")
             if brancheCI != None: # Uniquement pour rétrocompatibilité : normalement cet élément existe !
                 continuer = True
@@ -901,7 +897,11 @@ class Classe():
                         self.CI = CI
                         if self.referentiel.CI_cible:
                             self.posCI = posCI
-                
+        
+        self.etablissement = branche.get("Etab", u"")
+        
+        self.familleEnseignement = self.referentiel.Famille
+             
                 
 #                continuer = True
 #                i = 1
@@ -2149,7 +2149,7 @@ class Projet(BaseDoc, Objet_sequence):
         if self.nbrRevues == 3: # on ajoute une revue
             self.positionRevues.append(self.positionRevues[-1])
             tache = Tache(self, self.panelParent, 
-                          intitule = self.GetReferentiel().phases_prj["R3"], 
+                          intitule = self.GetReferentiel().phases_prj["R3"][1], 
                           phaseTache = "R3", duree = 0.5)
             self.taches.append(tache)
             tache.ConstruireArbre(self.arbre, self.brancheTac)
@@ -2197,15 +2197,30 @@ class Projet(BaseDoc, Objet_sequence):
             # La phase de la nouvelle tâche
             if not tacheAct.phase in ["R1", "R2", "R3", "Rev"]:
                 phase = tacheAct.phase
-            elif tacheAct.phase == "R1":
-                if self.R1apresConception or self.GetTypeEnseignement() == "SSI":
-                    phase = 'Rea'
+            elif tacheAct.phase == "Rev":
+                i = self.taches.index(tacheAct)
+                if i > 0 and self.taches[i-1].phase not in ["R1", "R2", "R3", "Rev", "S"]:
+                    phase = self.taches[i-1].phase 
+                elif i+1<len(self.taches) and self.taches[i+1].phase not in ["R1", "R2", "R3", "Rev", "S"]:
+                    phase = self.taches[i+1].phase 
                 else:
-                    phase = 'DCo'
-            elif tacheAct.phase == "R2":
-                phase = 'XXX'
+                    phase = ""
             else:
-                phase = ""
+                l = self.GetListePhases()
+                i = l.index(tacheAct.phase)
+                if i+1<len(l):
+                    phase = l[i+1]
+                else:
+                    phase = ""
+#            elif tacheAct.phase == "R1":
+#                if self.GetTypeEnseignement() == "SSI":
+#                    phase = 'Rea'
+#                else:
+#                    phase = 'DCo'
+#            elif tacheAct.phase == "R2":
+#                phase = 'XXX'
+#            else:
+#                phase = ""
             tache = Tache(self, self.panelParent, phaseTache = phase)
             self.taches.append(tache)
             tache.ordre = tacheAct.ordre+0.5 # truc pour le tri ...
@@ -4397,11 +4412,15 @@ class Tache(Objet_sequence):
         self.intitule  = branche.get("Intitule", "")
         
         self.phase = branche.get("Phase", "")
-        if self.GetTypeEnseignement() == "SSI":
-            if self.phase == 'Con':
-                self.phase = 'Ana'
-            elif self.phase in ['DCo', 'Val']:
-                self.phase = 'Rea'
+        
+        # Suite commentée ... à voir si pb
+#        if self.GetTypeEnseignement() == "SSI":
+#            if self.phase == 'Con':
+#                self.phase = 'Ana'
+#            elif self.phase in ['DCo', 'Val']:
+#                self.phase = 'Rea'
+                
+                
         self.description = branche.get("Description", None)
         
         if not self.phase in ["R1", "R2", "R3", "S"]:
@@ -4416,133 +4435,136 @@ class Tache(Objet_sequence):
         
         self.indicateursEleve = { 0 : [], 1 : [], 2 : [], 3 : [],4 : [], 5 : [],6 : []}
         
-        if not self.phase in [self.projet.getCodeLastRevue(), "S"]:
-            self.indicateursMaxiEleve = { 0 : [], 1 : [], 2 : [], 3 : [],4 : [], 5 : [],6 : []}
-            #
-            # pour compatibilité acsendante
-            #
-            brancheCmp = branche.find("Competences")
-            
-            if brancheCmp != None: ## ANCIENNE VERSION (<beta6)
-                Ok = False
-                err = err | constantes.ERR_PRJ_T_VERSION
-                if self.GetTypeEnseignement() == "SSI":
-                    brancheInd = None
+        if not self.GetClasse().version5 and self.GetClasse().familleEnseignement == "STI":
+            pass # Nouveaux indicateurs STI2D !!
+        else:
+            if not self.phase in [self.projet.getCodeLastRevue(), "S"]:
+                self.indicateursMaxiEleve = { 0 : [], 1 : [], 2 : [], 3 : [],4 : [], 5 : [],6 : []}
+                #
+                # pour compatibilité acsendante
+                #
+                brancheCmp = branche.find("Competences")
+                
+                if brancheCmp != None: ## ANCIENNE VERSION (<beta6)
+                    Ok = False
+                    err = err | constantes.ERR_PRJ_T_VERSION
+                    if self.GetTypeEnseignement() == "SSI":
+                        brancheInd = None
+                    else:
+                        brancheInd = branche.find("Indicateurs")
+                    
+                    for i, e in enumerate(brancheCmp.keys()):
+                        if brancheInd != None: #STI2D
+                            i = eval(e[4:])
+                            indic = brancheInd.get("Indic"+str(i))
+                            if indic != None:
+                                lst = toList(indic)
+                            else:
+                                lst = [True]*len(self.GetReferentiel().dicIndicateurs_prj[e])
+                            for n,j in enumerate(lst):
+                                if j:
+                                    self.indicateursEleve[0].append(brancheCmp.get(e)+"_"+str(n+1))
+                        else:
+                            indic = brancheCmp.get("Comp"+str(i))
+                            self.indicateursEleve[0].append(indic.replace(".", "_"))
+                    
+                
+                
                 else:
                     brancheInd = branche.find("Indicateurs")
-                
-                for i, e in enumerate(brancheCmp.keys()):
-                    if brancheInd != None: #STI2D
-                        i = eval(e[4:])
-                        indic = brancheInd.get("Indic"+str(i))
-                        if indic != None:
-                            lst = toList(indic)
+                    if brancheInd != None:
+                            
+                        if self.projet.nbrRevues == 2:
+                            lstR = ["R1"]
                         else:
-                            lst = [True]*len(self.GetReferentiel().dicIndicateurs_prj[e])
-                        for n,j in enumerate(lst):
-                            if j:
-                                self.indicateursEleve[0].append(brancheCmp.get(e)+"_"+str(n+1))
-                    else:
-                        indic = brancheCmp.get("Comp"+str(i))
-                        self.indicateursEleve[0].append(indic.replace(".", "_"))
-                
-            
-            
-            else:
-                brancheInd = branche.find("Indicateurs")
-                if brancheInd != None:
+                            lstR = ["R1", "R2"]
                         
-                    if self.projet.nbrRevues == 2:
-                        lstR = ["R1"]
-                    else:
-                        lstR = ["R1", "R2"]
-                    
-                    
-                    # 
-                    # Indicateurs revue par élève (première(s) revues)
-                    #
-                    if self.phase in lstR:
-                        for i, e in enumerate(self.projet.eleves):
-                            
-                            self.indicateursEleve[i+1] = []
-                            
-                            brancheE = brancheInd.find("Eleve"+str(i+1))
-                            if brancheE != None:
-                                for c in brancheE.keys():
-                                    codeindic = brancheE.get(c)
-                                    code, indic = codeindic.split('_')
-                                    
-                                    # pour compatibilité version < 3.19
-                                    if code == "CO8.es":
-                                        code = "CO8.0"
-                                        codeindic = code+"_"+indic
+                        
+                        # 
+                        # Indicateurs revue par élève (première(s) revues)
+                        #
+                        if self.phase in lstR:
+                            for i, e in enumerate(self.projet.eleves):
+                                
+                                self.indicateursEleve[i+1] = []
+                                
+                                brancheE = brancheInd.find("Eleve"+str(i+1))
+                                if brancheE != None:
+                                    for c in brancheE.keys():
+                                        codeindic = brancheE.get(c)
+                                        code, indic = codeindic.split('_')
                                         
-                                    # Si c'est la dernière phase et que c'est une compétence "Revue" ... on passe
-                                    indic = eval(indic)-1
-                                    if self.phase == 'XXX' and self.GetReferentiel().dicIndicateurs_prj[code][indic][1]:
-                                        continue
-                                    
-                                    # si le type d'enseignement ne colle pas avec les indicateurs (pb lors de l'enregistrement)
-                                    if not code in self.GetReferentiel().dicIndicateurs_prj:
+                                        # pour compatibilité version < 3.19
+                                        if code == "CO8.es":
+                                            code = "CO8.0"
+                                            codeindic = code+"_"+indic
+                                            
+                                        # Si c'est la dernière phase et que c'est une compétence "Revue" ... on passe
+                                        indic = eval(indic)-1
+                                        if self.phase == 'XXX' and self.GetReferentiel().dicIndicateurs_prj[code][indic][1]:
+                                            continue
                                         
-                                        return False, err | constantes.ERR_PRJ_T_TYPENS
-                                    
-                                    if not codeindic in self.indicateursEleve[i+1]:
-                                        self.indicateursEleve[i+1].append(codeindic)
-                            
-                            else: # Pour ouverture version <4.8beta1
-                                indicprov = []
-                                for c in brancheInd.keys():
-                                    codeindic = brancheInd.get(c)
-                                    code, indic = codeindic.split('_')
-                                    
-                                    # pour compatibilité version < 3.19
-                                    if code == "CO8.es":
-                                        code = "CO8.0"
-                                        codeindic = code+"_"+indic
+                                        # si le type d'enseignement ne colle pas avec les indicateurs (pb lors de l'enregistrement)
+                                        if not code in self.GetReferentiel().dicIndicateurs_prj:
+                                            
+                                            return False, err | constantes.ERR_PRJ_T_TYPENS
                                         
-                                    # Si c'est la dernière phase et que c'est une compétence "Revue" ... on passe
-                                    indic = eval(indic)-1
-                                    if self.phase == 'XXX' and self.GetReferentiel().dicIndicateurs_prj[code][indic][1]:
-                                        continue
-                                        
-                                    # si le type d'enseignement ne colle pas avec les indicateurs (pb lors de l'enregistrement)
-                                    if not code in self.GetReferentiel().dicIndicateurs_prj:
-                                        return False, err | constantes.ERR_PRJ_T_TYPENS
-
-                                    indicprov.append(codeindic)
-                                    dic = e.GetDicIndicateursRevue(self.phase)
-                                    if code in dic.keys():
-                                        if dic[code][indic]:
+                                        if not codeindic in self.indicateursEleve[i+1]:
                                             self.indicateursEleve[i+1].append(codeindic)
                                 
-                    #
-                    # Indicateurs tâche
-                    #
-                    else:
-                        for i, e in enumerate(brancheInd.keys()):
-                            codeindic = brancheInd.get(e)
-                            code, indic = codeindic.split('_')
-                            
-                            # pour compatibilité version < 3.19
-                            if code == "CO8.es":
-                                code = "CO8.0"
-                                codeindic = code+"_"+indic
+                                else: # Pour ouverture version <4.8beta1
+                                    indicprov = []
+                                    for c in brancheInd.keys():
+                                        codeindic = brancheInd.get(c)
+                                        code, indic = codeindic.split('_')
+                                        
+                                        # pour compatibilité version < 3.19
+                                        if code == "CO8.es":
+                                            code = "CO8.0"
+                                            codeindic = code+"_"+indic
+                                            
+                                        # Si c'est la dernière phase et que c'est une compétence "Revue" ... on passe
+                                        indic = eval(indic)-1
+                                        if self.phase == 'XXX' and self.GetReferentiel().dicIndicateurs_prj[code][indic][1]:
+                                            continue
+                                            
+                                        # si le type d'enseignement ne colle pas avec les indicateurs (pb lors de l'enregistrement)
+                                        if not code in self.GetReferentiel().dicIndicateurs_prj:
+                                            return False, err | constantes.ERR_PRJ_T_TYPENS
+    
+                                        indicprov.append(codeindic)
+                                        dic = e.GetDicIndicateursRevue(self.phase)
+                                        if code in dic.keys():
+                                            if dic[code][indic]:
+                                                self.indicateursEleve[i+1].append(codeindic)
+                                    
+                        #
+                        # Indicateurs tâche
+                        #
+                        else:
+                            for i, e in enumerate(brancheInd.keys()):
+                                codeindic = brancheInd.get(e)
+                                code, indic = codeindic.split('_')
                                 
-                            # Si c'est la dernière phase et que c'est une compétence "Revue" ... on passe
-                            indic = eval(indic)-1
-     
-                            if self.phase == 'XXX' and self.GetReferentiel().dicIndicateurs_prj[code][indic][1]:
-                                continue
+                                # pour compatibilité version < 3.19
+                                if code == "CO8.es":
+                                    code = "CO8.0"
+                                    codeindic = code+"_"+indic
+                                    
+                                # Si c'est la dernière phase et que c'est une compétence "Revue" ... on passe
+                                indic = eval(indic)-1
+         
+                                if self.phase == 'XXX' and self.GetReferentiel().dicIndicateurs_prj[code][indic][1]:
+                                    continue
+                                    
+                                # si le type d'enseignement ne colle pas avec les indicateurs (pb lors de l'enregistrement)
+                                if not code in self.GetReferentiel().dicIndicateurs_prj:
+                                    return False, err | constantes.ERR_PRJ_T_TYPENS
                                 
-                            # si le type d'enseignement ne colle pas avec les indicateurs (pb lors de l'enregistrement)
-                            if not code in self.GetReferentiel().dicIndicateurs_prj:
-                                return False, err | constantes.ERR_PRJ_T_TYPENS
-                            
-                            self.indicateursEleve[0].append(codeindic)
+                                self.indicateursEleve[0].append(codeindic)
+                        
                     
-                
-                            
+                                
         self.ActualiserDicIndicateurs()
             
         self.intituleDansDeroul = eval(branche.get("IntituleDansDeroul", "True"))
@@ -5550,7 +5572,8 @@ class Eleve(Personne, Objet_sequence):
                                 else:
                                     les[grp] = p
         
-        if self.GetTypeEnseignement() == "SSI":
+        if len(self.GetReferentiel().grilles_prj) == 1:
+#        if self.GetTypeEnseignement() == "SSI":
             r, s = r*2, s*2
             for l in ler.keys():
                 ler[l] = ler[l]*2
@@ -7405,6 +7428,7 @@ class FenetreProjet(FenetreDocument):
                                     )
 
         self.Freeze()
+        
         self.fiche.Hide()
         
         fichier = open(nomFichier,'r')
@@ -7428,6 +7452,11 @@ class FenetreProjet(FenetreDocument):
             classe = root.find("Classe")
             Ok = Ok and self.classe.setBranche(classe)
             message += constantes.getOkErr(Ok) + u"\n"
+            
+            if not self.classe.version5 and self.classe.familleEnseignement == "STI":
+                messageErreur(None, u"Ancien programme", 
+                              u"Projet enregistré avec les indicateurs de compétence antérieurs à la session 2014\n\n"\
+                              u"Les indicateurs de compétence ne seront pas chargés.")
             
             # Le projet
             message += u"Construction de la structure du projet..."
@@ -7515,6 +7544,7 @@ class FenetreProjet(FenetreDocument):
         dlg.Destroy()
         
         self.Thaw()
+   
         
         wx.CallAfter(self.fiche.Show)
         wx.CallAfter(self.fiche.Redessiner)
@@ -8009,10 +8039,11 @@ class FicheProjet(BaseFiche):
     #############################################################################
     def MiseAJourTypeEnseignement(self, type_ens):
         texte = u"Indicateur"
-        if type_ens != "SSI":
+        ref = self.projet.GetReferentiel()
+        if ref.prof_Comp <= 1:
             texte += u"s"
         self.popup.SetTexte(texte, self.lab_indic)
-        self.tip_compp.Show(type_ens == "SSI")
+        self.tip_compp.Show(ref.prof_Comp > 1)
 #        self.tip_poids.Show(type_ens == "SSI")
             
         
@@ -8562,16 +8593,19 @@ class PanelOrganisation(wx.Panel):
         liste.SetToolTipString(u"Séléctionner la revue à déplacer")
         gbsizer.Add(liste, (1,0), (2,1), flag = wx.EXPAND)
         self.liste = liste
+        self.Bind(wx.EVT_LISTBOX, self.EvtListBox, self.liste)
         
         buttonUp = wx.BitmapButton(self, 11, wx.ArtProvider.GetBitmap(wx.ART_GO_UP), size = (20,20))
         gbsizer.Add(buttonUp, (1,1), (1,1))
         self.Bind(wx.EVT_BUTTON, self.OnClick, buttonUp)
         buttonUp.SetToolTipString(u"Monter la revue")
+        self.buttonUp = buttonUp
         
         buttonDown = wx.BitmapButton(self, 12, wx.ArtProvider.GetBitmap(wx.ART_GO_DOWN), size = (20,20))
         gbsizer.Add(buttonDown, (2,1), (1,1))
         self.Bind(wx.EVT_BUTTON, self.OnClick, buttonDown)
         buttonDown.SetToolTipString(u"Descendre la revue")
+        self.buttonDown = buttonDown
         
         gbsizer.AddGrowableRow(1)
         sb.Add(gbsizer, flag = wx.EXPAND)
@@ -8581,26 +8615,38 @@ class PanelOrganisation(wx.Panel):
         self.Layout()
         
     #############################################################################            
+    def EvtListBox(self, event):
+        ref = self.objet.GetReferentiel()
+        if ref.getClefDic('phases_prj', self.liste.GetString(event.GetSelection()), 0) in ["R1", "R2", "R3"]:
+            self.buttonUp.Enable(True)
+            self.buttonDown.Enable(True)
+        else:
+            self.buttonUp.Enable(False)
+            self.buttonDown.Enable(False)
+            
+            
+        
+    #############################################################################            
     def OnClick(self, event):
         i = event.GetId()
         revue = self.liste.GetStringSelection()
-        ref = self.GetReferentiel()
+        ref = self.objet.GetReferentiel()
         
         if revue[:5] == "Revue":
             posRevue = self.liste.GetSelection()
             numRevue = eval(revue[-1])
             if i == 11 and posRevue-2 >= 0:
                 nouvPosRevue = posRevue-2
-            elif i == 12 and posRevue < self.liste.GetCount():
+            elif i == 12 and posRevue < self.liste.GetCount() - 1:
                 nouvPosRevue = posRevue+1
             else:
                 return
-            itemPrecedent = ref.getClefDic(self.liste.GetString('phases_prj', nouvPosRevue, 0))
+            itemPrecedent = ref.getClefDic('phases_prj', self.liste.GetString(nouvPosRevue), 0)
 #            itemPrecedent = constantes.getCodeNomCourt(self.liste.'(nouvPosRevue), 
 #                                                       self.objet.GetTypeEnseignement(simple = True))
             j=1
             while itemPrecedent in ["R1", "R2", "R3"]:
-                itemPrecedent = ref.getClefDic(self.liste.GetString('phases_prj', nouvPosRevue-j, 0))
+                itemPrecedent = ref.getClefDic('phases_prj', self.liste.GetString(nouvPosRevue-j), 0)
 #                itemPrecedent = constantes.getCodeNomCourt(self.liste.GetString(nouvPosRevue-j),
 #                                                           self.objet.GetTypeEnseignement(simple = True))
                 j += 1
@@ -8640,12 +8686,12 @@ class PanelPropriete_Classe(PanelPropriete):
     def __init__(self, parent, classe, pourProjet, ouverture = False):
 #        print "__init__ PanelPropriete_Classe"
         PanelPropriete.__init__(self, parent)
+#        self.BeginRepositioningChildren()
         
-        if not pourProjet:
+        if not pourProjet:  # Séquence
             #
             # La page "Généralités"
             #
-
             nb = wx.Notebook(self, -1,  style= wx.BK_DEFAULT)
             pageGen = PanelPropriete(nb)
             bg_color = self.Parent.GetBackgroundColour()
@@ -8657,22 +8703,20 @@ class PanelPropriete_Classe(PanelPropriete):
             self.sizer.Add(nb, (0,1), (2,1), flag = wx.ALL|wx.ALIGN_RIGHT|wx.EXPAND, border = 1)
             self.nb = nb
             
-        else:
+        else:               # Projet
             #
             # Pas de NoteBook
             #
             pageGen = self
             self.pageGen = pageGen
         
-
         self.classe = classe
         self.pasVerrouille = True
         
-
         #
         # La barre d'outils
         #
-        tb = wx.ToolBar(self, style = wx.TB_VERTICAL|wx.TB_FLAT|wx.TB_NODIVIDER)
+        self.tb = tb = wx.ToolBar(self, style = wx.TB_VERTICAL|wx.TB_FLAT|wx.TB_NODIVIDER)
         self.sizer.Add(tb, (0,0), (2,1), flag = wx.ALL|wx.ALIGN_RIGHT, border = 1)
         tb.AddSimpleTool(30, images.Icone_valid_pref.GetBitmap(),
                          u"Choisir ces paramètres de classe pour les futurs documents")
@@ -8680,25 +8724,8 @@ class PanelPropriete_Classe(PanelPropriete):
         tb.AddSimpleTool(31, images.Icone_defaut_pref.GetBitmap(), 
                          u"Rétablir les paramètres de classe par défaut")
         self.Bind(wx.EVT_TOOL, self.OnDefautPref, id=31)
-        
-        if not pourProjet:
-            # CI depuis Excel
-            tb.AddSimpleTool(32, images.Icone_excel.GetBitmap(), 
-                             u"Sélectionner les CI depuis un fichier Excel",
-                             u"Sélectionner les CI ETT depuis un fichier Excel (.xls)")
-            self.Bind(wx.EVT_TOOL, self.SelectCI, id=32)
-            
-            # Info cible CI ETT
-            tb.AddSimpleTool(33, images.Bouton_Aide.GetBitmap(), 
-                             u"Informations à propos de la cible CI ETT",
-                             u"Informations à propos de la cible CI ETT")
-            self.Bind(wx.EVT_TOOL, self.OnAide, id=33)
-        
-        
-        self.tb = tb
+
         tb.Realize()
-        
-        
         
         #
         # Type d'enseignement
@@ -8707,6 +8734,7 @@ class PanelPropriete_Classe(PanelPropriete):
         titre = wx.StaticBox(pageGen, -1, u"Type d'enseignement")
         sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
         te = ArbreTypeEnseignement(pageGen, self)
+
         sb.Add(te, 1, flag = wx.EXPAND)
 #        l = []
 #        for i, e in enumerate(REFERENTIELS.keys()):
@@ -8720,20 +8748,18 @@ class PanelPropriete_Classe(PanelPropriete):
 #        for i, e in enumerate(REFERENTIELS.keys()):
 #            rb.SetItemToolTip(i, REFERENTIELS[e].Enseignement[1])
         pageGen.Bind(wx.EVT_RADIOBUTTON, self.EvtRadioBox, te)
-#         
+ 
         te.SetStringSelection(REFERENTIELS[constantes.TYPE_ENSEIGNEMENT_DEFAUT].Enseignement[0])
-            
+
         pageGen.sizer.Add(sb, (0,1), flag = wx.EXPAND|wx.ALL, border = 2)#
         self.cb_type = te
-        
-        
-        
+
         #
         # Etablissement
         #
         titre = wx.StaticBox(pageGen, -1, u"Etablissement")
         sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
-        
+
         self.cb = wx.ComboBox(pageGen, -1, "sélectionner un établissement ...", (-1,-1), 
                          (-1, -1), constantes.ETABLISSEMENTS_PDD + [u"autre ..."],
                          wx.CB_DROPDOWN
@@ -8744,7 +8770,7 @@ class PanelPropriete_Classe(PanelPropriete):
 
         self.Bind(wx.EVT_COMBOBOX, self.EvtComboEtab, self.cb)
         sb.Add(self.cb, flag = wx.EXPAND)
-        
+
         textctrl = wx.TextCtrl(pageGen, -1, u"", style=wx.TE_MULTILINE)
         pageGen.Bind(wx.EVT_TEXT, self.EvtText, textctrl)
 #        textctrl.SetMinSize((-1, 150))
@@ -8755,22 +8781,19 @@ class PanelPropriete_Classe(PanelPropriete):
         ou bien modifier le fichier "etablissements.txt" pour le faire apparaitre dans la liste.""")
         self.info.SetFont(wx.Font(8, wx.SWISS, wx.FONTSTYLE_ITALIC, wx.NORMAL))
         sb.Add(self.info, 0, flag = wx.EXPAND|wx.ALL, border = 5)
-        
+
         pageGen.sizer.Add(sb, (0,2), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.ALL|wx.EXPAND, border = 2)
-        
-        
         
         #
         # Effectifs
         #
         self.ec = PanelEffectifsClasse(pageGen, classe)
         pageGen.sizer.Add(self.ec, (0,3), flag = wx.ALL|wx.EXPAND, border = 2)#|wx.ALIGN_RIGHT
-        
 
         pageGen.sizer.AddGrowableRow(0)
         pageGen.sizer.AddGrowableCol(2)
-        pageGen.sizer.Layout()
-        
+#        pageGen.sizer.Layout()
+
         #
         # Centres d'intérêt
         #
@@ -8778,12 +8801,12 @@ class PanelPropriete_Classe(PanelPropriete):
             pageCI= wx.Panel(nb, -1)
             sizer = wx.BoxSizer()
             pageCI.SetSizer(sizer)
-            
+
             self.pageCI = pageCI
             self.nb.AddPage(pageCI, u"")
-            
-            wx.CallAfter(self.InitListe)
-            wx.CallAfter(self.MiseAJourToolbar)
+
+#            wx.CallAfter(self.InitListe)
+#            wx.CallAfter(self.MiseAJourToolbar)
             
 #            if not ouverture:
 #                self.InitListe()
@@ -8794,8 +8817,19 @@ class PanelPropriete_Classe(PanelPropriete):
             self.sizer.AddGrowableRow(0)
             self.sizer.AddGrowableCol(1)
         
-            
+#        self.EndRepositioningChildren()
     
+        pageGen.Bind(wx.EVT_SIZE, self.OnResize)
+#        wx.CallAfter(self.OnResize)
+        
+        
+    ######################################################################################              
+    def OnResize(self, evt = None):
+        print "Resize ArbreTypeEnseignement", self.cb_type.GetVirtualSize()
+        self.cb_type.SetMinSize(self.cb_type.GetVirtualSize())
+        self.pageGen.sizer.Layout()
+        if evt:
+            evt.Skip()
     
     
     #############################################################################            
@@ -8868,8 +8902,8 @@ class PanelPropriete_Classe(PanelPropriete):
         self.classe.MiseAJourTypeEnseignement()
         self.classe.doc.MiseAJourTypeEnseignement(fam != self.classe.familleEnseignement)
         self.MiseAJourType()
-        if hasattr(self, 'list'):
-            self.list.Peupler()
+#        if hasattr(self, 'list'):
+#            self.list.Peupler()
         self.sendEvent()
         
         
@@ -8894,30 +8928,30 @@ class PanelPropriete_Classe(PanelPropriete):
         self.sendEvent()
         
     
-    ######################################################################################  
-    def InitListe(self):
-        if hasattr(self, 'list'):
-            self.pageCI.GetSizer().Detach(self.list)
-            self.list.Destroy()
-            
-        ref = REFERENTIELS[self.classe.typeEnseignement]
-        if ref.CI_BO and (ref.tr_com == None or REFERENTIELS[ref.tr_com[0]].CI_BO):
-            self.pageCI.Show(False)
-        else:
-            self.list = ListeCI(self.pageCI, self.classe)
-            if not ref.CI_BO:
-                self.nb.SetPageText(1, u"Centres d'intérêt ")
-            else:
-                self.nb.SetPageText(1, u"Centres d'intérêt " + ref.tr_com[0])
-    #        if self.classe.typeEnseignement == "SSI":
-    #            self.nb.SetPageText(1, u"Centres d'intérêt")
-    #        else:
-    #            self.nb.SetPageText(1, u"Centres d'intérêt ETT" + REFERENTIELS[self.classe.typeEnseignement].self.tr_com[0])
-                
-            self.list.Bind(wx.EVT_LEFT_UP, self.OnLeftUp)
-            self.list.Bind(wx.EVT_LEFT_DOWN, self.OnLeftDown)
-            
-            self.pageCI.GetSizer().Add(self.list, 1, flag = wx.EXPAND|wx.ALL, border = 2)
+#    ######################################################################################  
+#    def InitListe(self):
+#        if hasattr(self, 'list'):
+#            self.pageCI.GetSizer().Detach(self.list)
+#            self.list.Destroy()
+#            
+#        ref = REFERENTIELS[self.classe.typeEnseignement]
+#        if ref.CI_BO and (ref.tr_com == None or REFERENTIELS[ref.tr_com[0]].CI_BO):
+#            self.pageCI.Show(False)
+#        else:
+#            self.list = ListeCI(self.pageCI, self.classe)
+#            if not ref.CI_BO:
+#                self.nb.SetPageText(1, u"Centres d'intérêt ")
+#            else:
+#                self.nb.SetPageText(1, u"Centres d'intérêt " + ref.tr_com[0])
+#    #        if self.classe.typeEnseignement == "SSI":
+#    #            self.nb.SetPageText(1, u"Centres d'intérêt")
+#    #        else:
+#    #            self.nb.SetPageText(1, u"Centres d'intérêt ETT" + REFERENTIELS[self.classe.typeEnseignement].self.tr_com[0])
+#                
+#            self.list.Bind(wx.EVT_LEFT_UP, self.OnLeftUp)
+#            self.list.Bind(wx.EVT_LEFT_DOWN, self.OnLeftDown)
+#            
+#            self.pageCI.GetSizer().Add(self.list, 1, flag = wx.EXPAND|wx.ALL, border = 2)
     
     
     ######################################################################################  
@@ -8926,9 +8960,9 @@ class PanelPropriete_Classe(PanelPropriete):
             en fonction du type d'enseignement
         """
 #        print "MiseAJourType"
-        if hasattr(self, 'list'):
-            self.InitListe()
-            self.MiseAJourToolbar()
+#        if hasattr(self, 'list'):
+#            self.InitListe()
+#            self.MiseAJourToolbar()
             
         self.Layout()
         self.sizer.Layout()
@@ -9019,37 +9053,37 @@ class PanelPropriete_Classe(PanelPropriete):
         event.Skip()
         
 
-    ######################################################################################  
-    def SelectCI(self, event = None):
-        if recup_excel.ouvrirFichierExcel():
-            dlg = wx.MessageDialog(self.Parent,  u"Sélectionner une liste de CI\n" \
-                                                 u"dans le classeur Excel qui vient de s'ouvrir,\n" \
-                                                 u'puis appuyer sur "Oui".\n\n' \
-                                                 u"Format attendu de la selection :\n" \
-                                                 u"Liste des CI sur une colonne.",
-                                                 u'Sélection de CI',
-                                                 wx.ICON_INFORMATION | wx.YES_NO | wx.CANCEL
-                                                 )
-            res = dlg.ShowModal()
-            dlg.Destroy() 
-            if res == wx.ID_YES:
-                ls = recup_excel.getColonne(c = 0)
-#                ci = getTextCI(ls)
-#                self.txtCi.ChangeValue(ci)
-                if ls != None:
-                    self.classe.CI = list(ls)
-                    self.classe.posCI = ['   _   ']*len(ls)
-                    self.MiseAJour()
-                    self.GetDocument().CI.MiseAJourTypeEnseignement()
-                    self.sendEvent()
+#    ######################################################################################  
+#    def SelectCI(self, event = None):
+#        if recup_excel.ouvrirFichierExcel():
+#            dlg = wx.MessageDialog(self.Parent,  u"Sélectionner une liste de CI\n" \
+#                                                 u"dans le classeur Excel qui vient de s'ouvrir,\n" \
+#                                                 u'puis appuyer sur "Oui".\n\n' \
+#                                                 u"Format attendu de la selection :\n" \
+#                                                 u"Liste des CI sur une colonne.",
+#                                                 u'Sélection de CI',
+#                                                 wx.ICON_INFORMATION | wx.YES_NO | wx.CANCEL
+#                                                 )
+#            res = dlg.ShowModal()
+#            dlg.Destroy() 
+#            if res == wx.ID_YES:
+#                ls = recup_excel.getColonne(c = 0)
+##                ci = getTextCI(ls)
+##                self.txtCi.ChangeValue(ci)
+#                if ls != None:
+#                    self.classe.CI = list(ls)
+#                    self.classe.posCI = ['   _   ']*len(ls)
+#                    self.MiseAJour()
+#                    self.GetDocument().CI.MiseAJourTypeEnseignement()
+#                    self.sendEvent()
 
         
     ######################################################################################  
     def Verrouiller(self, etat):
         self.cb_type.Enable(etat)
         self.pasVerrouille = etat
-        if hasattr(self, 'list'):
-            self.MiseAJourToolbar()
+#        if hasattr(self, 'list'):
+#            self.MiseAJourToolbar()
 #            enable = etat and (self.classe.typeEnseignement == 'ET')
 #            self.list.Enable(enable)
 #            self.tb.EnableTool(31, enable)
@@ -9070,6 +9104,8 @@ class ArbreTypeEnseignement(CT.CustomTreeCtrl):
                  CT.TR_NO_LINES|CT.TR_HIDE_ROOT|CT.TR_TOOLTIP_ON_LONG_ITEMS#|CT.TR_HAS_BUTTONS
                  ):
 
+#        wx.Panel.__init__(self, parent, -1, pos, size)
+        
         CT.CustomTreeCtrl.__init__(self, parent, -1, pos, size, style, agwStyle)
         self.Unbind(wx.EVT_KEY_DOWN)
         self.panelParent = panelParent
@@ -9078,6 +9114,19 @@ class ArbreTypeEnseignement(CT.CustomTreeCtrl):
         self.root = self.AddRoot("")
         self.Construire(self.root)
         self.ExpandAll()
+        
+#        sizer = wx.BoxSizer()
+#        sizer.Add(self.ctc, flag = wx.EXPAND)
+#        self.SetSizer(sizer)
+#        self.Bind(wx.EVT_SIZE, self.OnResize)
+#        
+#    ######################################################################################              
+#    def OnResize(self, evt):
+#        print "Resize ArbreTypeEnseignement", self.GetVirtualSize()
+#        self.SetMinSize(self.GetVirtualSize())
+#        self.Update()
+#        evt.Skip()
+#        
         
     ######################################################################################  
     def Construire(self, racine):
@@ -9448,7 +9497,7 @@ class PanelPropriete_CI(PanelPropriete):
             self.grid1 = wx.FlexGridSizer( 0, 2, 0, 0 )
             
 #            for i, ci in enumerate(constantes.CentresInterets[self.CI.GetTypeEnseignement()]):
-            for i, ci in enumerate(self.CI.parent.classe.CI):
+            for i, ci in enumerate(self.CI.parent.classe.referentiel.CentresInterets):
                 r = wx.CheckBox(self, 200+i, "")
                 t = wx.StaticText(self, -1, "CI"+str(i+1)+" : "+ci)
                 self.group_ctrls.append((r, t))
@@ -9480,7 +9529,7 @@ class PanelPropriete_CI(PanelPropriete):
             
             self.grid1 = wx.FlexGridSizer( 0, 2, 0, 0 )
             
-            for i, ci in enumerate(REFERENTIELS[self.CI.GetTypeEnseignement()].CentresInterets):
+            for i, ci in enumerate(self.CI.parent.classe.referentiel.CentresInterets):
     #            if i == 0 : s = wx.RB_GROUP
     #            else: s = 0
                 r = wx.CheckBox(self, 200+i, "CI"+str(i+1), style = wx.RB_GROUP )
@@ -9600,8 +9649,8 @@ class Panel_Cible(wx.Panel):
                   "_" : -100}
         
 
-        for i in range(len(self.CI.parent.classe.CI)):
-            mei, fsc = self.CI.parent.classe.posCI[i].split("_")
+        for i in range(len(self.CI.parent.classe.referentiel.CentresInterets)):
+            mei, fsc = self.CI.parent.classe.referentiel.positions_CI[i].split("_")
             mei = mei.replace(" ", "")
             fsc = fsc.replace(" ", "")
             
@@ -10078,7 +10127,8 @@ class PanelPropriete_Savoirs(PanelPropriete):
             self.pageSavoir.sizer.AddGrowableRow(0)
         self.pageSavoir.Layout()
             
-        if REFERENTIELS[self.savoirs.GetTypeEnseignement()].tr_com:
+        if self.GetDocument().GetReferentiel().tr_com:
+#        if REFERENTIELS[self.savoirs.GetTypeEnseignement()].tr_com:
             # Il y a un tronc comun (Spécialité STI2D par exemple)
             self.pageSavoirSpe.DestroyChildren()
             self.arbreSpe = ArbreSavoirs(self.pageSavoirSpe, "S", self.savoirs, self.prerequis)
@@ -10746,15 +10796,7 @@ class PanelPropriete_Tache(PanelPropriete):
             pageGen.sizer.Add(titre, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 5)
             pageGen.sizer.Add(cbPhas, (0,1), flag = wx.EXPAND|wx.ALL, border = 2)
         
-#        #
-#        # Position de la revue 1
-#        #
-#        if tache.phase == "R1":
-#            self.cbR1 = wx.CheckBox(pageGen, -1, u"Placer après la conception détaillée")
-#            self.cbR1.SetValue(self.tache.GetDocument().R1apresConception)
-#            self.cbR1.Show(tache.GetTypeEnseignement() != "SSI")
-#            pageGen.sizer.Add(self.cbR1, (0,1), flag = wx.EXPAND|wx.ALL, border = 2)
-#            self.Bind(wx.EVT_CHECKBOX, self.EvtCheckBoxR1, self.cbR1)
+
         
         #
         # Intitulé de la tache
@@ -11077,11 +11119,7 @@ class PanelPropriete_Tache(PanelPropriete):
         self.sendEvent()
         
         
-    #############################################################################            
-    def EvtCheckBoxR1(self, event):
-        self.tache.GetDocument().R1apresConception = event.IsChecked()
-        self.tache.SetPhase("R1")
-        self.sendEvent()
+    
         
         
     #############################################################################            
@@ -12282,7 +12320,7 @@ class ArbreSavoirs(CT.CustomTreeCtrl):
         self.parent = parent
         self.savoirs = savoirs
         
-        typeEns = savoirs.GetTypeEnseignement()
+        ref = savoirs.GetReferentiel()
         
         self.root = self.AddRoot(u"")
         
@@ -12293,16 +12331,22 @@ class ArbreSavoirs(CT.CustomTreeCtrl):
 #        self.root = self.AppendItem(root, t+typeEns)
         self.SetItemBold(self.root, True)
         if typ == "B":
-            if REFERENTIELS[typeEns].tr_com:
-                dic = REFERENTIELS[REFERENTIELS[typeEns].tr_com[0]].dicSavoirs
+            if ref.tr_com:
+                dic = REFERENTIELS[ref.tr_com[0]].dicSavoirs
             else:
-                dic = REFERENTIELS[typeEns].dicSavoirs
+                dic = ref.dicSavoirs
         elif typ == "S":
-            dic = REFERENTIELS[typeEns].dicSavoirs
+            dic = ref.dicSavoirs
         elif typ == "M":
-            dic = REFERENTIELS[typeEns].dicSavoirs_Math
+            if ref.tr_com:
+                dic = REFERENTIELS[ref.tr_com[0]].dicSavoirs_Math
+            else:
+                dic = ref.dicSavoirs_Math
         elif typ == "P":
-            dic = REFERENTIELS[typeEns].dicSavoirs_Phys
+            if ref.tr_com:
+                dic = REFERENTIELS[ref.tr_com[0]].dicSavoirs_Phys
+            else:
+                dic = ref.dicSavoirs_Phys
         self.Construire(self.root, dic)
             
             
