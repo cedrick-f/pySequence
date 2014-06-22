@@ -353,7 +353,8 @@ def Draw(ctx, seq, mouchard = False):
     # Cible
     #
     seq.CI.rect = []
-    if seq.classe.typeEnseignement == "ET":
+#    if seq.classe.typeEnseignement == "ET":
+    if seq.classe.referentiel.CI_cible:
         tfname = tempfile.mktemp()
         bmp = constantes.images.Cible.GetBitmap()
         try:
@@ -426,6 +427,8 @@ def Draw(ctx, seq, mouchard = False):
         elif seq.classe.typeEnseignement == "EE":
             bmp = constantes.images.ImageEE.GetBitmap()
         elif seq.classe.typeEnseignement == "SSI":
+            bmp = constantes.images.SSI_ASR.GetBitmap()
+        else:
             bmp = constantes.images.SSI_ASR.GetBitmap()
         
         tfname = tempfile.mktemp()

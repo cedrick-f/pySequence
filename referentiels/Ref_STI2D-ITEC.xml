@@ -1,4 +1,4 @@
-<Referentiel B_CI_BO="True" B_CI_cible="False" B_projet="True" I_prof_Comp="1" S_Code="ITEC" S_Famille="STI" S_nomSavoirs="Savoirs">
+<Referentiel B_CI_BO="True" B_CI_cible="False" B_projet="True" I_duree_prj="70" I_prof_Comp="1" S_Code="ITEC" S_Famille="STI" S_nomSavoirs="Savoirs">
   <l_CentresInterets S_CentresInterets00="Besoin et performance d'un syst&#232;me" S_CentresInterets01="Comp&#233;titivit&#233;, design et ergonomie des syst&#232;mes" S_CentresInterets02="Eco-conception des m&#233;canismes" S_CentresInterets03="Structure, mat&#233;riaux et protections d'un syst&#232;me" S_CentresInterets04="Transmission de mouvement et de puissance d'un syst&#232;me" S_CentresInterets05="Proc&#233;d&#233;s de r&#233;alisation" />
   <l_Enseignement S_Enseignement00="STI2D-ITEC" S_Enseignement01="STI2D : Innovation Technologique et &#233;co-conception" />
   <d_activites>
