@@ -120,6 +120,7 @@ class Referentiel():
         self.prof_Comp = 0              # compteur de profondeur de l'arborescence des compétences
         self.dicCompetences = {}
         self.projet = False             # si l'enseignement fait l'objet d'une épreuve de projet
+        self.duree_prj = 0
         self.dicCompetences_prj = {}
         self.dicIndicateurs_prj = {}
         self.dicPoidsIndicateurs_prj = {}
@@ -495,7 +496,10 @@ class Referentiel():
         #
         sh_g = wb.sheet_by_name(u"Généralités")
         self.projet = sh_g.cell(23,1).value[0].upper() == "O"
-        
+        if self.projet:
+            self.duree_prj = int(sh_g.cell(24,1).value)
+            
+            
         #
         # Pratique pédagogiques
         #
@@ -690,7 +694,19 @@ class Referentiel():
         return None
     
     
-
+    #########################################################################    
+    def findEffectif(self, lst, eff):
+        continuer = True
+        i = 0
+        while continuer:
+            if i > len(lst):
+                continuer = False
+            else:
+                if lst[i][:2] == self.effectifs[eff][0][:2]:
+                    continuer = False
+                else:
+                    i += 1 
+        return i
     
 #########################################################################################
 def getEnseignementLabel(label):
@@ -792,3 +808,5 @@ def sauvegarderOriginaux():
         enregistrer(r.Code, f)
 
 #sauvegarderOriginaux()
+
+

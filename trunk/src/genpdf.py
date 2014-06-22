@@ -148,7 +148,7 @@ def genererFicheValidation(nomFichier, projet):
         story.append(Spacer(1, 1*mm))
         story.append(Paragraph(u"Baccalauréat général, série S, sciences de l'ingénieur - Épreuve de projet",
                                entete_style))
-    else:
+    elif projet.GetReferentiel().Famille == 'STI':
         story.append(Paragraph(u"Bulletin officiel n° 45 du 6 décembre 2012",
                                entete_style))
         story.append(Spacer(1, 1*mm))
@@ -179,7 +179,7 @@ def genererFicheValidation(nomFichier, projet):
         
     data= [[[Paragraph(gras(u'Établissement : '), normal_style), Paragraph(projet.classe.etablissement, normal_style)], [Paragraph(gras(u"Année scolaire : ")+constantes.getAnneeScolaireStr(), normal_style),
                                                                                                                          Paragraph(gras(u"Nombre d’élèves concernés : ")+str(len(projet.eleves)), normal_style)]],
-           [Paragraph(gras(u"Spécialité : ")+ projet.GetTypeEnseignement(), normal_style), Paragraph(gras(u"Nombre de groupes d’élèves : ")+str(projet.nbrParties), normal_style)],
+           [Paragraph(gras(u"Spécialité : ")+ projet.GetReferentiel().Enseignement[0], normal_style), Paragraph(gras(u"Nombre de groupes d’élèves : ")+str(projet.nbrParties), normal_style)],
            [Paragraph(gras(u"Noms et prénoms des enseignants responsables :"), normal_style),NP]]
     t=Table(data,style=[('VALIGN',      (0,0),(-1,-1),'TOP')])
     

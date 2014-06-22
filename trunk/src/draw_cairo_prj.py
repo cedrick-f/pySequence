@@ -719,9 +719,10 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
         x = xEleves[i]-wEleves*3/4
         y = posZTaches[1] + tailleZTaches[1] + (i % 2)*(ecartY/2)+ecartY/2
         d = e.GetDuree()
-        if abs(d-constantes.DUREE_PRJ) < constantes.DELTA_DUREE:
+        taux = abs((d-prj.GetReferentiel().duree_prj)/prj.GetReferentiel().duree_prj)*100
+        if taux < constantes.DELTA_DUREE:
             ctx.set_source_rgb(0.1,1,0.1)
-        elif abs(d-constantes.DUREE_PRJ) < constantes.DELTA_DUREE2:
+        elif taux < constantes.DELTA_DUREE2:
             ctx.set_source_rgb(1,0.6,0.1)
         else:
             ctx.set_source_rgb(1,0.1,0.1)
