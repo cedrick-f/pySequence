@@ -4,12 +4,12 @@
 == Choix du type de document à créer ==
 Il est possible de créer :
  * des *fiches de validation projet* (Cf. [Elaboration_projet Elaboration d'une fiche de projet]). 
- * des fiches de *séquence* (Cf. [Elaboration_sequence Elaboration d'une fiche de séquence]
+ * des fiches de *séquence* (Cf. [Elaboration_sequence Elaboration d'une fiche de séquence])
 
 *Pour choisir le type de document :*
- * _Fichier/nouveau_ 
+ * menu : _Fichier/nouveau_ 
 ou 
- * bouton http://pysequence.googlecode.com/svn/trunk/images_aide/Bouton_nouveau.png)
+ * bouton : http://pysequence.googlecode.com/svn/trunk/images_aide/Bouton_nouveau.png)
 
 http://pysequence.googlecode.com/svn/trunk/images_aide/nouveau_fichier.PNG
 
