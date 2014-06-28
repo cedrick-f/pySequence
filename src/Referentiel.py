@@ -70,21 +70,21 @@ class Referentiel():
         print self.Code
         print "CI_BO :", self.CI_BO
         print "CI  :", self.CentresInterets
-#        print "Sav :", self.dicSavoirs
-        print "Com :", self.dicCompetences
-        print "CoP :", self.dicCompetences_prj
-        print "CoS :", self._dicCompetences_prj_simple
-        print "Ind :", self.dicIndicateurs_prj
-        print "Poi :", self.dicPoidsIndicateurs_prj
+        print "Sav :", self.dicSavoirs
+#        print "Com :", self.dicCompetences
+#        print "CoP :", self.dicCompetences_prj
+#        print "CoS :", self._dicCompetences_prj_simple
+#        print "Ind :", self.dicIndicateurs_prj
+#        print "Poi :", self.dicPoidsIndicateurs_prj
 #        print "Mat :", self.dicSavoirs_Math
 #        print "Phy :", self.dicSavoirs_Phys
 #        print "Dem :", self.demarches
 #        print "Act :", self.activites
 #        print "Sea :", self.seances
 #        print "DeS :", self.demarcheSeance
-        print self.phases_prj
-        print self.listPhasesEval_prj
-        print "listPhases_prj =", self.listPhases_prj
+#        print self.phases_prj
+#        print self.listPhasesEval_prj
+#        print "listPhases_prj =", self.listPhases_prj
         print
         return ""
     
@@ -169,7 +169,16 @@ class Referentiel():
 #        self.dicCellSavoirs = {}
     
     
-    
+    ######################################################################################  
+    def getParams(self):
+        l = []
+        for attr in dir(self):
+            if attr[0] != "_":
+                val = getattr(self, attr)
+                if isinstance(val, (str, unicode, int, long, float, bool, list, dict)):
+                    l.append(attr)
+        return l
+        
     
     ######################################################################################  
     def getBranche(self):
@@ -352,28 +361,41 @@ class Referentiel():
             """ Mode = 1 : on finit par une liste
                 Mode = 2 : on finit par un dict
             """
+            if rng == []:
+                return None
             self.prof_Comp = max(self.prof_Comp, col)
-#            print "***", col, rng
+#            if mode == 1: print "***", col, rng
             lig = [l  for l in rng if sh.cell(l,col).value != u""]
-            
+#            if mode == 1: print lig
             if lig == rng:
-#                print "FIN"
+#                if mode == 1: print "FIN"
                 if mode == 1:
-                    return [sh.cell(l,col).value for l in lig]
-                else:
-                    if condition == None or sh.cell(l,4).value == condition:
+                    if col+1 >= sh.ncols or sh.cell(lig[0],col+1).value == u"":
+                        return [sh.cell(l,col).value for l in lig]
+                    else:
                         d = {}
                         for l in lig:
+                            if condition == None or sh.cell(l,4).value == condition:
+                                d[str(sh.cell(l,col).value)] = [sh.cell(l,col+1).value, []]
+                        return d
+                        
+                else:
+#                    if condition == None or sh.cell(l,4).value == condition:
+                    d = {}
+                    for l in lig:
+                        if condition == None or sh.cell(l,4).value == condition:
                             d[str(sh.cell(l,col).value)] = sh.cell(l,col+1).value
+                    if condition == None or len(d) > 0:
                         return d
                     else:
                         return None
             else:
 #                if len(lig) > 0:
-#                print "-> ",lig
+                
                 llig = lig + [rng[-1]+1]
                 dic = {}
                 for i, p in enumerate(lig):
+#                    if mode == 1: print "-> ",lig
                     sdic = remplir(sh, col+1, range(p+1, llig[i+1]), mode = mode, condition = condition)
                     if sdic != None:
                         dic[str(sh.cell(p,col).value)] = [sh.cell(p,col+1).value, sdic]
@@ -763,12 +785,12 @@ def chargerReferentiels():
         if os.path.splitext(fich_ref)[1] == ".xls":
             ref = Referentiel(os.path.join(constantes.PATH, r"..", DOSSIER_REF, fich_ref))
             REFERENTIELS[ref.Code] = ref
-    print REFERENTIELS["SIN"].dicPoidsIndicateurs_prj
+    
     
     for r in REFERENTIELS.values():
         r.completer()
-#        print r
-    print REFERENTIELS["SIN"].dicPoidsIndicateurs_prj
+        print r
+    
     print
     
     #

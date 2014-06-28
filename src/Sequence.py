@@ -48,16 +48,66 @@ print __version__
 #import psyco
 #psyco.full()
 
+
+
+####################################################################################
+#
+#   Gestion des erreurs
+#
+####################################################################################
+import traceback
+import time
+import sys
+from widgets import messageErreur
+
+def MyExceptionHook(etype, value, trace):
+    """
+    Handler for all unhandled exceptions.
+ 
+    :param `etype`: the exception type (`SyntaxError`, `ZeroDivisionError`, etc...);
+    :type `etype`: `Exception`
+    :param string `value`: the exception error message;
+    :param string `trace`: the traceback header, if any (otherwise, it prints the
+     standard Python header: ``Traceback (most recent call last)``.
+    """
+    tmp = traceback.format_exception(etype, value, trace)
+    mes = u"pySéquence a renconté une erreur et doit fermer !\n\n"\
+         u"Merci de copier le message ci-dessous\n" \
+         u"et de l'envoyer à l'équipe de développement :\n"\
+         u"http://code.google.com/p/pysequence/\n\n"
+    exception = mes + "".join(tmp)
+    
+    try:
+        frame = wx.GetApp().GetTopWindow()
+        dlg = messageErreur(None, "Erreur !", exception, wx.ICON_ERROR)
+    except:
+        print exception
+        time.sleep(6)
+    sys.exit()
+
+    
+########################################################################
+try:
+    from agw import genericmessagedialog as GMD
+except ImportError: # if it's not there locally, try the wxPython lib.
+    import wx.lib.agw.genericmessagedialog as GMD
+
+ 
+
+
+#sys.excepthook = MyExceptionHook
+
+
+
 ####################################################################################
 #
 #   Import des modules nécessaires
 #
 ####################################################################################
-import time
-import glob
 
 # Outils "système"
-import sys, os
+import os
+import glob
 
 if hasattr(sys, 'setdefaultencoding'):
     sys.setdefaultencoding('utf8')
@@ -123,7 +173,7 @@ Element = type(ET.Element(None))
 
 
 # des widgets wx évolués "faits maison"
-from widgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_ENTIER_POS, messageErreur#, chronometrer
+from widgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_ENTIER_POS#, chronometrer
 #from CustomCheckBox import CustomCheckBox
 # Les constantes et les fonctions de dessin
 
@@ -5486,6 +5536,66 @@ class Eleve(Personne, Objet_sequence):
             return tableaux
     
     ######################################################################################  
+    def GenererGrille2(self, event = None, path = None, messageFin = True):
+        
+        if path == None:
+            path = os.path.dirname(self.projet.GetApp().fichierCourant)
+        
+        nomFichiers = {} 
+        for k, g in self.projet.GetReferentiel().nomParties_prj.items():
+            nomFichiers[k] = os.path.join(path, self.getNomFichierDefaut("Grille"+g))
+        
+        grilles.copierClasseurs(self.projet, nomFichiers)
+        
+        grilles.modifierGrille2(self.projet, nomFichiers, self)
+        
+        tableaux = self.getTableurEtModif()
+        
+
+#        if self.projet.GetTypeEnseignement() == 'SSI':
+#            nomFichier = self.getNomFichierDefaut("Grille")
+#            
+#            tableur = self.getTableurEtModif()
+#            tf = [[tableur, nomFichier]]
+#        else:
+#            nomFichierR = self.getNomFichierDefaut("Grille_revue")
+#            nomFichierS = self.getNomFichierDefaut("Grille_soutenance")
+#            tableur = self.getTableurEtModif()
+#            tf = [[tableur[0], nomFichierR], [tableur[1], nomFichierS]]
+        
+#        for k, t in tableaux.items():
+#            try:
+#                cheminComplet = os.path.join(path, nomFichiers[k])+".xls"
+#                t.save(cheminComplet)
+#            except:
+#                messageErreur(self.projet.GetApp(), u"Erreur !",
+#                              u"Impossible d'enregistrer le fichier.\n\nVérifier :\n" \
+#                              u" - qu'aucun fichier portant le même nom n'est déja ouvert\n" \
+#                              u" - que le dossier choisi n'est pas protégé en écriture")
+#            try:
+#                t.close()
+#            except:
+#                pass
+#            self.grille[k] = Lien(typ = 'f')
+#            self.grille[k].path = cheminComplet
+        
+        if messageFin:
+            if len(tableaux)>1:
+                t = u"Génération des grilles réussie !"
+            else:
+                t = u"Génération de la grille réussie !"
+            t += u"\n\n"
+            t += u"\n".join(nomFichiers.values())
+            
+            
+            dlg = wx.MessageDialog(self.projet.GetApp(), t, u"Génération réussie",
+                           wx.OK | wx.ICON_INFORMATION)
+            dlg.ShowModal()
+            dlg.Destroy()
+        
+        self.panelPropriete.MiseAJour()
+        
+    ######################################################################################  
     def GenererGrille(self, event = None, path = None, messageFin = True):
         
         if path == None:
@@ -6000,7 +6110,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
         self.Freeze()
         wx.lib.colourdb.updateColourDB()
-        
+
         #
         # le fichier de configuration de la fiche
         #
@@ -8905,7 +9015,7 @@ class PanelPropriete_Classe(PanelPropriete):
 
         self.classe.MiseAJourTypeEnseignement()
         self.classe.doc.MiseAJourTypeEnseignement(fam != self.classe.familleEnseignement)
-        self.MiseAJourType()
+#        self.MiseAJourType()
 #        if hasattr(self, 'list'):
 #            self.list.Peupler()
         self.sendEvent()
@@ -10212,7 +10322,7 @@ class PanelPropriete_Savoirs(PanelPropriete):
         
         if ref.tr_com:
             ref_tc = REFERENTIELS[ref.tr_com[0]]
-            self.nb.SetPageText(0, ref_tc.nomSavoirs + ref_tc.Code)
+            self.nb.SetPageText(0, ref_tc.nomSavoirs + " " + ref_tc.Code)
             if not hasattr(self, 'pageSavoirSpe') or not isinstance(self.pageSavoirSpe, PanelPropriete):
                 bg_color = self.Parent.GetBackgroundColour()
                 pageSavoirSpe = PanelPropriete(self.nb)
@@ -10220,7 +10330,7 @@ class PanelPropriete_Savoirs(PanelPropriete):
                 self.pageSavoirSpe = pageSavoirSpe
                 self.nb.InsertPage(1, pageSavoirSpe, ref.nomSavoirs + ref.Code)
         else:
-            self.nb.SetPageText(0, ref.nomSavoirs + ref.Code)
+            self.nb.SetPageText(0, ref.nomSavoirs + " " + ref.Code)
             if hasattr(self, 'pageSavoirSpe') and isinstance(self.pageSavoirSpe, PanelPropriete):
                 self.nb.DeletePage(1)
             
@@ -12333,9 +12443,11 @@ class ArbreSavoirs(CT.CustomTreeCtrl):
 #            t = u"Savoirs "
 #        self.root = self.AppendItem(root, t+typeEns)
         self.SetItemBold(self.root, True)
+        et = False
         if typ == "B":
             if ref.tr_com:
                 dic = REFERENTIELS[ref.tr_com[0]].dicSavoirs
+                et = True
             else:
                 dic = ref.dicSavoirs
         elif typ == "S":
@@ -12350,7 +12462,7 @@ class ArbreSavoirs(CT.CustomTreeCtrl):
                 dic = REFERENTIELS[ref.tr_com[0]].dicSavoirs_Phys
             else:
                 dic = ref.dicSavoirs_Phys
-        self.Construire(self.root, dic)
+        self.Construire(self.root, dic, et = et)
             
             
 #        if typ == "B":
@@ -12370,7 +12482,7 @@ class ArbreSavoirs(CT.CustomTreeCtrl):
 #            self.rootET = self.AppendItem(root, u"Savoirs ETT")
 #            self.SetItemBold(self.rootET, True)
 #            self.SetItemItalic(self.rootET, True)
-#            self.Construire(self.rootET, constantes.dicSavoirs['ET'], et = True)
+#            self.Construire(self.rootET, constantes.dicSavoirs['ET'], )
         
         
         self.ExpandAll()
@@ -12415,6 +12527,7 @@ class ArbreSavoirs(CT.CustomTreeCtrl):
                 toolTip = CHAR_POINT + u" " + sep.join(dic[k][1])
             else:
                 toolTip = None
+#            print k+" "+dic[k][0]
             b = self.AppendItem(branche, k+" "+dic[k][0], ct_type=1, data = toolTip)
             
             if et:
@@ -14253,10 +14366,7 @@ class DirSelectorCombo(wx.combo.ComboCtrl):
 # Message d'aide CI
 # 
 #############################################################################################################
-try:
-    from agw import genericmessagedialog as GMD
-except ImportError: # if it's not there locally, try the wxPython lib.
-    import wx.lib.agw.genericmessagedialog as GMD
+
 
 class MessageAideCI(GMD.GenericMessageDialog):
     def __init__(self, parent):

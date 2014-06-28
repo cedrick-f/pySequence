@@ -732,9 +732,9 @@ class VariableCtrl(wx.Panel):
         
 
 #############################################################################################################
-def messageErreur(parent, titre, message):
+def messageErreur(parent, titre, message, icon = wx.ICON_WARNING):
     dlg = wx.MessageDialog(parent, message, titre,
-                           wx.OK | wx.ICON_WARNING)
+                           wx.OK | icon)
     dlg.ShowModal()
     dlg.Destroy()
 
