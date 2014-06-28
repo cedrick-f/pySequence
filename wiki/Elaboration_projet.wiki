@@ -19,6 +19,10 @@ Dans _propriétés_ saisir :
  * l'intitulé du projet
  * l'année scolaire et la position dans le cycle (1^ère ou Terminale)
  * la problématique
+ 
+http://pysequence.googlecode.com/svn/trunk/images_aide/intitulé_projet.png
+
+Et depuis les autres onglets, préciser :
  * l'origine : partenariat, thématique, concours, ...
  * les contraintes imposées : 
   * coût maximal, 
@@ -31,14 +35,6 @@ Dans _propriétés_ saisir :
   * documents de formalisation des solutions proposées
   * sous-ensemble fonctionnel d’un prototype, éléments d’une maquette réelle ou virtuelle
   * supports de communication.
-
-http://pysequence.googlecode.com/svn/trunk/images_aide/intitulé_projet.png
-
-Et depuis les autres onglets, préciser :
- * l'origine (partenariat, thématique, concours, ...)
- * les contraintes imposées
- * le découpage du projets en sous-parties
- * la production finale attendue
 Ces derniers renseignements figureront sur la fiche de validation.
 ----
 
