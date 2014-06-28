@@ -2,7 +2,41 @@
 
 
 = Tâche =
+*Permet de définir :*
+ * La [Taches#Phases_du_projet phases du projet]
+ * L'intitulé de la tâche
+ * Le volume horaire de la tâche
+ * Une description détaillée de la tâche
+ * Les élèves concernés par la tâche
+ * Les compétences à mobiliser pour cette tâche
 
+*Fonctions disponibles :*
+ * Sauvegarde des paramètres de classe
 
+----
+== Phases du projet ==
 
+_[Fonctionnalites#Fonctionnalit%C3A9s Haut de page]_
+
+----
+== Description détaillée ==
+
+_[Fonctionnalites#Fonctionnalit%C3A9s Haut de page]_
+
+----
+== Élèves concernés ==
+
+_[Fonctionnalites#Fonctionnalit%C3A9s Haut de page]_
+
+----
+== Volume haoraire ==
+
+_[Fonctionnalites#Fonctionnalit%C3A9s Haut de page]_
+
+----
+== Compétences à mobiliser ==
+
+_[Fonctionnalites#Fonctionnalit%C3A9s Haut de page]_
+
+----
 _[Fonctionnalites#Fonctionnalit%C3A9s Haut de page]_
