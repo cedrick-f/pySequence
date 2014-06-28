@@ -17,7 +17,7 @@ http://pysequence.googlecode.com/svn/trunk/images_aide/propriete_projet.png
 
 Dans _propriétés_ saisir :
  * l'intitulé du projet
- * l'année scolaire et la position dans le cycle (1^ère ou Terminale)
+ * l'année scolaire et la position dans le cycle (1^ère^ ou Terminale)
  * la problématique
  * le nombre de revues et leurs positions dans le déroulement du projet
  
