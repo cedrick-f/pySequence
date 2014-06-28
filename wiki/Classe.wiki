@@ -17,7 +17,6 @@ Les _compétences_, _savoirs_ et _centres d'intérêts_ ... sont dépendants du 
  * Baccalauréat Scientifique option Sciences de l'Ingénieur (S-SI)
  * Technologie collège (très prochainement disponible)
 Selon le programme, certains éléments ne sont pas inscrits au B.O. (les Centres d'Intérêt en notamment) : pour utiliser des éléments personnalisés, il faut [Modifier_programme modifier un programme d'enseignement].
-Il est possible de spécifier les *effectifs* de la classe et également d'adapter la liste des centres d'intérêt à ceux choisis pour l'académie.
 
 _[Classe#Classe Retour au Sommaire]_
 
