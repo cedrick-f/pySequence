@@ -24,6 +24,13 @@ Dans _propriétés_ saisir :
   * coût maximal, 
   * nature d’une ou des solutions techniques ou de familles de matériels, de constituants ou de composants
   * environnement.
+ * le découpage du projet :
+  * intitulés des différents parties
+  * énoncé du besoin pour chaque partie
+ * la production finale attendue
+  * documents de formalisation des solutions proposées
+  * sous-ensemble fonctionnel d’un prototype, éléments d’une maquette réelle ou virtuelle
+  * supports de communication.
 
 http://pysequence.googlecode.com/svn/trunk/images_aide/intitulé_projet.png
 
