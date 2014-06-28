@@ -18,7 +18,7 @@
 == Une structure en arborescence ==
 _*pySequence*_ fourni une aide pour créer des séquences pédagogiques.
 La séquence a une structure en _arborescence_ :
-   * *Classe* (spécialité, effectifs, ...)
+   * *[Classe Classe]* (spécialité, effectifs, ...)
    * *Centre d'intérêt* abordé
    * *Prérequis* (savoirs ou autre séquence)
    * *Objectifs* (compétences ou savoirs attendus)
