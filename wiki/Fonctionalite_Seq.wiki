@@ -1,7 +1,7 @@
 #summary Fonctionnalités de pySequence
 = Séquence pédagogique =
 
-= Principales fonctionnalités =
+== Principales fonctionnalités ==
 
  * [Fonctionnalites#Une%20structure%20en%20arborescence Une structure en arborescence]
 
@@ -36,7 +36,7 @@ Chaque élément de séquence possède des propriétés :
  * [creation_seance Séances] : intitulé, type, démarche, effectif, durée, ...
  * [systeme_labo Systèmes] : nom, quantité, ...
 
-[Fonctionnalites#Fonctionnalit%C3A9s Sommaire des Fonctionnalités ]
+_[Fonctionnalites#Fonctionnalit%C3A9s Haut de page]_
 ----
 == Une fiche pédagogique graphique ==
 Au fur et à mesure de sa création, la séquence apparait sous forme graphique (*fiche*) dans la _fenêtre centrale_.
