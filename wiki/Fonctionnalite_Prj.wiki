@@ -31,7 +31,7 @@ Chaque élément du projet possède des propriétés :
  * Tâches : phase, élèves impliqués, compétences mobilisées, ...
  * ...
 
-[Fonctionnalites#Fonctionnalit%C3A9s Sommaire des Fonctionnalités ]
+_[Fonctionnalites#Fonctionnalit%C3A9s Haut de page]_
 ----
 == Une fiche synthétique graphique ==
 Au fur et à mesure de sa création, le projet apparait sous forme graphique (*fiche*) dans la _fenêtre centrale_.
@@ -39,14 +39,13 @@ Cela permet de visualiser graphiquement son organisation : un aperçu synthétiq
 
 Cette fiche est très simplement exportable aux formats pdf ou svg.
 
-[Fonctionnalites#Fonctionnalit%C3A9s Sommaire des Fonctionnalités ]
+_[Fonctionnalites#Fonctionnalit%C3A9s Haut de page]_
 ----
 == Un seul fichier ==
 Le projet est [ouverture_enregistrement sauvegardé dans un fichier] (extension .prj), qui contient l'intégralité des informations saisie dans _*pySequence*_, y compris l'intégralité du programme de l'enseignement choisi.
 
 
-
-[Fonctionnalites#Fonctionnalit%C3A9s Sommaire des Fonctionnalités ]
+_[Fonctionnalites#Fonctionnalit%C3A9s Haut de page]_
 ----
 == Adaptable à tous les programmes ==
 De nombreux programmes sont inclus à _*pySequence*_ : STI2D, S-SI, Technologie collège (prochainement).
@@ -55,7 +54,7 @@ Le choix du programme d'enseignement se fait par l'item [Classe classe].
 
 Mais potentiellement, _*pySequence*_ est capable d'intégrer n'importe quel programme (contacter l'équipe de développement)
 
-[Fonctionnalites#Fonctionnalit%C3A9s Sommaire des Fonctionnalités ]
+_[Fonctionnalites#Fonctionnalit%C3A9s Haut de page]_
 ----
 
-[Aide Sommaire de l'aide]
+_[Aide Sommaire de l'aide]_
