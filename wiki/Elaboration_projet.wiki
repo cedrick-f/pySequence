@@ -62,12 +62,12 @@ http://pysequence.googlecode.com/svn/trunk/images_aide/res_propriete_support1.pn
 ==*4 - Définir l'équipe pédagogique*==
 <table>
 <tr>
-<td style="width: 50%;">depuis l'arbre</td>
-<td style="width: 50%;">depuis le menu</td>
+<td style="width: 200;">depuis l'arbre</td>
+<td style="width: 200;">depuis le menu</td>
 <tr/>
 
 <tr>
-<td>clic-droit sur *"Equipe pédagogique"*,<br/>puis cliquer sur *"Ajouter un professeur"*<br/>http://pysequence.googlecode.com/svn/trunk/images_aide/equip_peda.png</td>
+<td> * clic-droit sur *"Equipe pédagogique"*,<br/> * puis cliquer sur *"Ajouter un professeur"*<br/>http://pysequence.googlecode.com/svn/trunk/images_aide/equip_peda.png</td>
 <td>http://pysequence.googlecode.com/svn/trunk/images_aide/menu_prj_ajout_prof.png</td>
 <tr/>
 <table/>
