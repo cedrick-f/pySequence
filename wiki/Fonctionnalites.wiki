@@ -2,7 +2,7 @@
 
 = Fonctionnalités =
 
- * [Séquences pédagogiques]
+ * [Fonctionalite_Seq Séquences pédagogiques]
 
  * [Fonctionnalites#Une%20fiche%20p%C3A9dagogique%20graphique Une fiche pédagogique graphique]
 
