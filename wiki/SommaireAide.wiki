@@ -9,5 +9,6 @@
   * [Premiere_utilisation Première utilisation]
   * [Elaboration_sequence Élaboration d'une séquence]
   * [Elaboration_projet Élaboration d'un projet]
+  * [Modifier_programme Modifier un programme d'enseignement]
  * [FAQ F.A.Q.]
  * [Telechargement Téléchargement]
