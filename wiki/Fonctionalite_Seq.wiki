@@ -4,7 +4,7 @@ _*pySequence*_ permet de réaliser des fiches de description de séquence pédag
 
 De plus, depuis _*pySequence*_, la fiche permet l'accès directe au fichiers, dossiers, autres séquences et lien Internet en rapport avec la séquence.
 
-
+[Presentation  Présentation générale] de la fenêtre de _*pySequence*_ en mode "Séquence"
 
 == Principales fonctionnalités ==
 
