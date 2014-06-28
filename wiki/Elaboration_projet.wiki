@@ -11,11 +11,11 @@ _Cette fiche permettra de décrire un projet mais surtout de vérifier que chaqu
 
 ==*2 -  Définir les propriétés du projet *==
 
-Dans l'arborescence, cliquer sur *"Projet"*.
+_*depuis l'arbre :*_ cliquer sur *"Projet"*.
 
 http://pysequence.googlecode.com/svn/trunk/images_aide/propriete_projet.png
 
-Dans _propriétés_ saisir :
+_*dans propriété*_ saisir :
  * l'intitulé du projet
  * l'année scolaire et la position dans le cycle (1^ère^ ou Terminale)
  * la problématique
@@ -23,7 +23,7 @@ Dans _propriétés_ saisir :
  
 http://pysequence.googlecode.com/svn/trunk/images_aide/intitulé_projet.png
 
-Et depuis les autres onglets, préciser :
+_*depuis les autres onglets*_, préciser :
  * l'origine : partenariat, thématique, concours, ...
  * les contraintes imposées : 
   * coût maximal, 
@@ -42,11 +42,11 @@ Ces derniers renseignements figureront sur la fiche de validation.
 
 ==*3 - Définir le support d'étude*==
 
-Dans l'arborescence, cliquer sur *"support"*.
+_*depuis l'arbre :*_, cliquer sur *"support"*.
 
 http://pysequence.googlecode.com/svn/trunk/images_aide/support.png
 
-Dans _propriétés_ :
+_*dans _propriétés :*_
  * préciser le nom du support
  * créer un lien vers un dossier ou un fichier donnant des précisions sur le support
  * changer l'image du support
@@ -75,7 +75,11 @@ http://pysequence.googlecode.com/svn/trunk/images_aide/equip_peda.png</td>
 <table/>
 
 
-Dans _propriétés_, saisir le nom et le prénom du professeur.
+_*dans _propriétés*_, saisir les paramètres propres au [Professeur professeur].
+ * identité
+ * discipline
+ * avatar
+et préciser s'il s'agit du professeur référent pour le projet.
 
 http://pysequence.googlecode.com/svn/trunk/images_aide/propriete_equip_peda.png
 
@@ -88,12 +92,24 @@ _résultat sur la fiche_ http://pysequence.googlecode.com/svn/trunk/images_aide/
 ----
 
 ==*5 - Définir le groupe d'élèves*==
+<table width="100%">
+<tr>
+<td width="50%">_*depuis l'arbre :*_</td>
+<td width="50%">_*depuis le menu :*_</td>
+<tr/>
+<tr>
+<td>
+ * clic-droit sur *"Elèves"*,
+ * puis cliquer sur *"Ajouter un élève"*
+http://pysequence.googlecode.com/svn/trunk/images_aide/eleves.png</td>
+<td>http://pysequence.googlecode.com/svn/trunk/images_aide/menu_prj_ajout_eleve.png</td>
+<tr/>
+<table/>
 
-Dans l'arborescence, cliquer avec le bouton droit de la souris sur *"Elèves"*, puis cliquer sur *"Ajouter un élève"*.
-
-http://pysequence.googlecode.com/svn/trunk/images_aide/eleves.png
-
-Dans _propriétés_, saisir le nom et le prénom de l'élève.
+_*dans _propriétés*_, saisir les paramètres propres à l'élève :
+ * le nom et le prénom de l'élève,
+ * avatar
+Il est également possible de désigner le fichier "Grille d'évaluation", mais cette opération est normalement réalisée automatiquement lors de la génération de la grille.
 
 http://pysequence.googlecode.com/svn/trunk/images_aide/propriete_eleves.png
 
