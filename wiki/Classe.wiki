@@ -33,3 +33,5 @@ Il est possible de de saisir :
  * le nombre de groupes à effectif réduit
  * le nombre de groupes de projets
  * le nombre de groupes d'activités pratiques
+
+[Fonctionnalites#Fonctionnalit%C3A9s Sommaire]
