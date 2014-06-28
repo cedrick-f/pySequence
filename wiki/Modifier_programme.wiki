@@ -7,4 +7,4 @@ Voici la méthode pour adapter un programme d'enseignement aux choix académique
 
  * Fermer _*pySequence*_
  * Ouvrir le fichier Excel correspondant au programme à modifier
-Emplacement : 'pySequence\referentiels'
+Emplacement : `pySequence\referentiels`
