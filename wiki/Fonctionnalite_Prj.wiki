@@ -49,7 +49,7 @@ Le projet est [ouverture_enregistrement sauvegardé dans un fichier] (extension 
 ----
 == Adaptable à tous les programmes ==
 De nombreux programmes sont inclus à _*pySequence*_ : STI2D, S-SI, Technologie collège (prochainement).
-Le choix du programme d'enseignement se fait par l'item [Classe Classe]
+Le choix du programme d'enseignement se fait par l'item [Classe classe]
 Mais potentiellement, _*pySequence*_ est capable d'intégrer n'importe quel programme (contacter l'équipe de développement)
 
 [Fonctionnalites#Fonctionnalit%C3A9s Sommaire des Fonctionnalités ]
