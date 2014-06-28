@@ -1,10 +1,11 @@
 #summary Fonctionnalités de pySequence : projets
+= Projet =
 
 _*pySequence*_ permet de décrire précisément les objectifs, le déroulement et les acteurs d'un projet.
 
 Si le projet fait l'objet d'une évaluation à un examen, _*pySequence*_ propose de générer un document pour la validation, des grilles d'évaluation, des documents de tâches (fiches de lot) à destination des élèves...
 
-= Fonctionnalités =
+== Principales fonctionnalités ==
 
  * [Fonctionnalite_Prj#Une_structure_en_arborescence Une structure en arborescence]
 
