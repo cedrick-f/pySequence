@@ -13,7 +13,7 @@ Si le projet fait l'objet d'une évaluation à un examen, _*pySequence*_ propose
 
  * [Fonctionnalites_Prj#Adaptable_%C3%A0_touts_les_programmes Adaptable à toutes les spécialités de STI2D]
 
-
+https://code.google.com/p/pysequence/wiki/Fonctionnalite_Prj#Un_seul_fichier_au_centre_des_documents_p%C3%A9dagogiques
 
 
 ----
@@ -40,7 +40,7 @@ Cette fiche est très simplement exportable aux formats pdf ou svg.
 
 [Fonctionnalites#Fonctionnalit%C3A9s Sommaire des Fonctionnalités ]
 ----
-== Un seul fichier au centre des documents pédagogiques ==
+== Un seul fichier ==
 Le projet est [ouverture_enregistrement sauvegardé dans un fichier] (extension .prj), qui contient l'intégralité des informations saisie dans _*pySequence*_, y compris l'intégralité du programme de l'enseignement choisi.
 
 
