@@ -3,7 +3,7 @@
 = Classe =
 Permet de définir :
  * Le [Classe#Programme_d%27enseignement programme d'enseignement]
- * L'établissement
+ * L'[Classe#%C3%89tablissement établissement]
  * L'effectif et la répartition en groupes des élèves
 
 Fonctions disponibles
@@ -23,3 +23,13 @@ Il est possible de spécifier les *effectifs* de la classe et également d'adapt
 _*pySequence*_ contient par défaut les noms de tous les lycées (proposant STI2D et S-SI) de l'académie de Clermont Ferrand.
 
 Cependant, un simple fichier texte (etablissements.txt) permet d'utiliser n'importe quelle liste d'établissement.
+
+---
+== Découpage de la classe ==
+Le découpage de la classe n'est pertinent qu'en mode "séquence".
+
+Il est possible de de saisir :
+ * L'effectif de la classe entière
+ * le nombre de groupes à effectif réduit
+ * le nombre de groupes de projets
+ * le nombre de groupes d'activités pratiques
