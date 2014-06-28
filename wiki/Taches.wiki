@@ -10,8 +10,6 @@
  * Les [Taches#%C3%89l%C3%A8ves_concern%C3%A9s élèves concernés] par la tâche
  * Les [Taches#Comp%C3%A9tences_%C3%A0_mobiliser compétences à mobiliser] pour cette tâche
 
-*Fonctions disponibles :*
- * Sauvegarde des paramètres de classe
 
 ----
 == Phases du projet ==
