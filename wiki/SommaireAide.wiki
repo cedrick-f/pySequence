@@ -5,6 +5,7 @@
   * [Fonctionalite_Seq Séquence]
   * [Fonctionnalite_Prj Projet]
  * [Tutoriels]
+  * [Installation]
   * [Elaboration_sequence Élaboration d'une séquence]
   * [Elaboration_projet Élaboration d'un projet]
  * [FAQ F.A.Q.]
