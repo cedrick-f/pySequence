@@ -17,8 +17,14 @@ http://pysequence.googlecode.com/svn/trunk/images_aide/propriete_projet.png
 
 Dans _propriétés_ saisir :
  * l'intitulé du projet
- * la position dans le cycle (1ère ou terminale)
+ * l'année scolaire et la position dans le cycle (1^ère ou Terminale)
  * la problématique
+ * l'origine : partenariat, thématique, concours, ...
+ * les contraintes imposées : 
+  * coût maximal, 
+  * nature d’une ou des solutions techniques ou de familles de matériels, de constituants ou de composants
+  * environnement.
+
 http://pysequence.googlecode.com/svn/trunk/images_aide/intitulé_projet.png
 
 Et depuis les autres onglets, préciser :
