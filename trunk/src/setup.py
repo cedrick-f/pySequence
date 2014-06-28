@@ -30,7 +30,8 @@ includefiles = [('Microsoft.VC90.CRT', "Microsoft.VC90.CRT"),
 
 
 # Dependencies are automatically detected, but it might need fine tuning.
-build_exe_options = {"packages": ["os"], 
+build_exe_options = {'build_exe': 'build/bin',
+                     "packages": ["os"], 
                      "excludes": ["tkinter",
                                   '_gtkagg', '_tkagg', 'bsddb', 'curses', 'pywin.debugger',
                                   'pywin.debugger.dbgcon', 'pywin.dialogs', 'tcl',
@@ -49,6 +50,7 @@ build_exe_options = {"packages": ["os"],
 base = None
 #if sys.platform == "win32":
 #    base = "Win32GUI"
+
 
 cible = Executable(
     script = "sequence.py",

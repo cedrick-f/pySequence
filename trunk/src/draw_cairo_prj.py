@@ -313,13 +313,14 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
     #
     # Type d'enseignement
     #
+    t = prj.classe.referentiel.Enseignement[0]
     ctx.set_font_size(0.04)
     ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                        cairo.FONT_WEIGHT_BOLD)
-    xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(prj.classe.typeEnseignement)
+    xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(t)
 #    fascent, fdescent, fheight, fxadvance, fyadvance = ctx.font_extents()
     ctx.move_to (posPro[0] , posSup[1] - ybearing - 0.01)
-    ctx.text_path (prj.classe.typeEnseignement)
+    ctx.text_path (t)
     ctx.set_source_rgb (0.6, 0.6, 0.9)
     ctx.fill_preserve ()
     ctx.set_source_rgb (0, 0, 0)

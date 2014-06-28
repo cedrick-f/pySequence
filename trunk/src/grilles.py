@@ -27,41 +27,11 @@
 #    along with pySequence; if not, write to the Free Software
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-
-# Cellules_NON, Fichier_GRILLE, , dicIndicateurs
+# Dossier contenant les grilles
 from constantes import TABLE_PATH
 
 # Caractère utilisé pour cocher les cases :
 COCHE = u"X"
-
-############
-#  Identification des indicateurs non évalués en ETT
-############
-#Feuille_ETT = u"Soutenance"
-#
-#
-#Cellules_INFO_STI =  {"Tit" : (13,1),
-#                      "Des" : (13,1),
-#                      "Nom" : (8,2),
-#                      "Pre" : (9,2),
-##                      "Pro" : (5,2)
-#                      }
-# 
-#Cellules_INFO_SSI =  {"Tit" : (12,1),
-#                      "Des" : (12,1),
-#                      "Nom" : (7,2),
-#                      "Pre" : (8,2),
-##                      "Pro" : (5,2)
-#                      }
-#
-#COL_REVUE = 10 # Colonne "J" pour désigner la revue
-
-#Cellules_NON  =  {'ITEC'   : [[Feuille_ETT, Cellules_NON['ET']], ['ITEC', Cellules_NON['ITEC']]], 
-#                  'AC'     : [[Feuille_ETT, Cellules_NON['ET']], ['AC', Cellules_NON['AC']]], 
-#                  'EE'     : [[Feuille_ETT, Cellules_NON['ET']], ['EE', Cellules_NON['EE']]], 
-#                  'SIN'    : [[Feuille_ETT, Cellules_NON['ET']], ['SIN', Cellules_NON['SIN']]],
-#                  'SSI'    : [['Notation', Cellules_NON['SSI']]]}    
-
 
 # Module utilisé pour accéder au classeur Excel
 # (Windows seulement)
@@ -69,6 +39,9 @@ import sys
 if sys.platform == "win32":         
     import win32com.client.dynamic#win32com.client, 
 
+# Autre module (essai en cours)
+import xlwt
+from xlwt import Workbook
 
 
 import os
@@ -140,10 +113,10 @@ def modifierGrille(doc, tableaux, eleve):
    
     
     #
-    # On coche les cellules "non"
+    # On coche les cellules "non" (obsolète depuis session 2014 en STI2D et 2015 en SSI)
     #     
-#    dic = Cellules_NON[doc.GetTypeEnseignement()]
     
+#    dic = Cellules_NON[doc.GetTypeEnseignement()]
     #clef = code compétence
     #valeur = liste [True False ...] des indicateurs à mobiliser
 #    dicIndic = eleve.GetDicIndicateurs()
@@ -276,6 +249,61 @@ def modifierGrille(doc, tableaux, eleve):
 #        tableur.setCell(1, l, c, p.prenom)
 #        l += 1
 
+
+import shutil
+def copierClasseurs(doc, nomFichiers):
+    typ = doc.GetTypeEnseignement()
+    ref = doc.GetReferentiel()
+    
+    fichiers = ref.grilles_prj
+    
+    fichierPB = []
+    
+    for k, f in fichiers.items():
+        shutil.copyfile(os.path.join(TABLE_PATH, f), nomFichiers[k])
+
+    err = 0
+    if err == 0:
+        return
+    elif err&1 != 0:
+        messageErreur(None, u"Ouverture d'Excel impossible !",
+                      u"L'application Excel ne semble pas installée !")
+    elif err&2 != 0:
+        messageErreur(None, u"Fichier non trouvé !",
+                              u"Le fichier original de la grille,\n    " + fichierPB[0] + u"\n" \
+                              u"n'a pas été trouvé ! \n")
+    else:
+        print "Erreur", err
+
+
+
+from xlrd import open_workbook
+def modifierGrille2(doc, nomFichiers, eleve):
+    """
+    """
+    #
+    # On renseigne quelques informations
+    #
+    dicInfo = doc.GetReferentiel().cellulesInfo_prj
+
+    schem = {"Tit" : doc.intitule,
+             "Des" : doc.intitule + "\n" + doc.problematique,
+             "Nom" : eleve.GetNom(),
+             "Pre" : eleve.GetPrenom(),
+             "Etab": doc.classe.etablissement
+             }
+    
+    for c, nf in nomFichiers.items():
+        wb = open_workbook(nf)
+        sh = wb.sheet_by_index(0)
+        for k, v in schem.items():
+            if k in dicInfo.keys():
+                l,c = dicInfo[k][1]
+                sh.write(l-1, c-1, v)
+                
+    wb.save()
+        
+    
 
 class PyExcel:
     def __init__(self,filename=None):
