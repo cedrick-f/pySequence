@@ -9,11 +9,9 @@ Si le projet fait l'objet d'une évaluation à un examen, _*pySequence*_ propose
 
  * [Fonctionnalite_Prj#Une_fiche_synth%C3%A9tique_graphique Une fiche synthétique graphique]
 
- * [Fonctionnalites_Prj#Un%20seul%20fichier%20au%20centre%20des%20documents%20p%C3A9dagogiques Un seul fichier au centre des documents pédagogiques]
+ * [Fonctionnalite_Prj#Un_seul_fichier Un seul fichier au centre des documents pédagogiques]
 
  * [Fonctionnalites_Prj#Adaptable_%C3%A0_touts_les_programmes Adaptable à toutes les spécialités de STI2D]
-
-https://code.google.com/p/pysequence/wiki/Fonctionnalite_Prj#Un_seul_fichier_au_centre_des_documents_p%C3%A9dagogiques
 
 
 ----
