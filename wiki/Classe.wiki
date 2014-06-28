@@ -1,8 +1,17 @@
-# Description de la classe
+# Description de l'item "classe"
 
 = Classe =
+Permet de définir :
+ * Le programme d'enseignement
+ * L'établissement
+ * L'effectif et la répartition en groupes des élèves
 
-== Adaptable à tous les programmes ==
+Fonctions disponibles
+ * Sauvegarde des paramètres de classe
+
+---
+
+== Programme d'enseignement ==
 Les _compétences_, _savoirs_ et _centres d'intérêts_ ... sont dépendants du type d'*enseignement* dispensé à la classe :
  * Enseignement Technologique Transversal (ETT) ou de spécialité (SIN, AC, ITEC ou EE) de STI2D
  * Baccalauréat Scientifique option Sciences de l'Ingénieur (S-SI)
