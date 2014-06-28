@@ -60,10 +60,10 @@ http://pysequence.googlecode.com/svn/trunk/images_aide/res_propriete_support1.pn
 ----
 
 ==*4 - Définir l'équipe pédagogique*==
-<table style="width: 730px;">
+<table width="100%">
 <tr>
-<td style="width: 200;">_*depuis l'arbre :*_</td>
-<td style="width: 200;">_*depuis le menu :*_</td>
+<td width="50%">_*depuis l'arbre :*_</td>
+<td width="50%">_*depuis le menu :*_</td>
 <tr/>
 <tr>
 <td>
