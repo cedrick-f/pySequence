@@ -5,7 +5,7 @@ Si le projet fait l'objet d'une évaluation à un examen, _*pySequence*_ propose
 
 = Fonctionnalités =
 
- * [Fonctionnalites_Prj#Une%20structure%20en%20arborescence Une structure en arborescence]
+ * [Fonctionnalite_Prj#Une_structure_en_arborescence Une structure en arborescence]
 
  * [Fonctionnalites_Prj#Une%20fiche%20p%C3A9dagogique%20graphique Une fiche pédagogique graphique]
 
