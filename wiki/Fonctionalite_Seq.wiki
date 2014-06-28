@@ -1,4 +1,4 @@
-#summary Fonctionnalités de pySequence
+#summary Séquence pédagogique
 = Séquence pédagogique =
 
 == Principales fonctionnalités ==
