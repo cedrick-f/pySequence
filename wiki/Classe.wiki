@@ -2,7 +2,7 @@
 
 = Classe =
 Permet de définir :
- * Le programme d'enseignement
+ * Le [Classe#Programme_d%27enseignement programme d'enseignement]
  * L'établissement
  * L'effectif et la répartition en groupes des élèves
 
@@ -17,3 +17,9 @@ Les _compétences_, _savoirs_ et _centres d'intérêts_ ... sont dépendants du 
  * Baccalauréat Scientifique option Sciences de l'Ingénieur (S-SI)
  * Technologie collège (très prochainement disponible)
 Il est possible de spécifier les *effectifs* de la classe et également d'adapter la liste des centres d'intérêt à ceux choisis pour l'académie.
+
+---
+== Établissement ==
+_*pySequence*_ contient par défaut les noms de tous les lycées (proposant STI2D et S-SI) de l'académie de Clermont Ferrand.
+
+Cependant, un simple fichier texte (etablissements.txt) permet d'utiliser n'importe quelle liste d'établissement.
