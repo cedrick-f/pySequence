@@ -17,13 +17,13 @@ Les _compétences_, _savoirs_ et _centres d'intérêts_ ... sont dépendants du 
  * Baccalauréat Scientifique option Sciences de l'Ingénieur (S-SI)
  * Technologie collège (très prochainement disponible)
 Il est possible de spécifier les *effectifs* de la classe et également d'adapter la liste des centres d'intérêt à ceux choisis pour l'académie.
-
+_[Classe#Classe Retour au Sommaire]_
 ---
 == Établissement ==
 _*pySequence*_ contient par défaut les noms de tous les lycées (proposant STI2D et S-SI) de l'académie de Clermont Ferrand.
 
 Cependant, un simple fichier texte (etablissements.txt) permet d'utiliser n'importe quelle liste d'établissement.
-
+_[Classe#Classe Retour au Sommaire]_
 ---
 == Découpage de la classe ==
 Le découpage de la classe n'est pertinent qu'en mode "séquence".
@@ -34,4 +34,4 @@ Il est possible de de saisir :
  * le nombre de groupes de projets
  * le nombre de groupes d'activités pratiques
 
-[Fonctionnalites#Fonctionnalit%C3A9s Sommaire]
+_[Classe#Classe Retour au Sommaire]_
