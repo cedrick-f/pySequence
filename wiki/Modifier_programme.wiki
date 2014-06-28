@@ -1,0 +1,10 @@
+#Modification d'un programme d'enseignement
+
+*Fonctionnalité disponible à partir de la version 5 - prochainement !*
+
+Selon les enseignement, certains éléments du programme ne sont pas spécifiés au B.O. (comme les Centres d'Intérêt par exemple).
+Voici la méthode pour adapter un programme d'enseignement aux choix académiques.
+
+ * Fermer _*pySequence*_
+ * Ouvrir le fichier Excel correspondant au programme à modifier
+Emplacement : 'pySequence\referentiels'
