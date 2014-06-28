@@ -10,15 +10,15 @@ Il est possible de créer :
 *Pour choisir le type de document :*
  * menu : _Fichier/nouveau_ 
 ou 
- * bouton : http://pysequence.googlecode.com/svn/trunk/images_aide/Bouton_nouveau.png)
+ * bouton : http://pysequence.googlecode.com/svn/trunk/images_aide/Bouton_nouveau.png
 
 http://pysequence.googlecode.com/svn/trunk/images_aide/nouveau_fichier.PNG
 
-Ce qui suit est valable dans les deux cas
+Ce qui suit est valable dans les deux cas...
 
 == Configuration de la classe ==
 
-Avant de démarrer la création des fiches de séquence, il est préférable de *configurer* correctement la *classe* :
+Avant de démarrer la création d'un document, il est préférable de *configurer* correctement la *[Classe classe]* :
  * *type d'enseignement* (STI2D ETT ou spécialité, SSI)
    http://pysequence.googlecode.com/svn/trunk/images_aide/type_d_enseignement.png
  * nom de l'*établissement* (lycée, collège, ...)
