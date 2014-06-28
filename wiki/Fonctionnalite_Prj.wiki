@@ -1,4 +1,7 @@
-#summary Fonctionnalités de pySequence
+#summary Fonctionnalités de pySequence : projets
+
+_*pySequence*_ permet de décrire précisément les objectifs, le déroulement et les acteurs d'un projet.
+Si le projet fait l'objet d'une évaluation à un examen, _*pySequence*_ propose de générer un document pour la validation, des grilles d'évaluation, des documents de tâches (fiches de lot) à destination des élèves...
 
 = Fonctionnalités =
 
@@ -30,25 +33,26 @@ Chaque élément du projet possède des propriétés :
 [Fonctionnalites#Fonctionnalit%C3A9s Sommaire des Fonctionnalités ]
 ----
 == Une fiche pédagogique graphique ==
-Au fur et à mesure de sa création, la séquence apparait sous forme graphique (*fiche*) dans la _fenêtre centrale_.
-Cela permet de visualiser graphiquement son déroulement, ce qui offre notamment une aide pour élaborer des [creation_seance séances] un peu complexes, comme des séries d'activités en rotation ou en parallèle (compatibilité des durées, des effectifs élève, ...)
+Au fur et à mesure de sa création, le projet apparait sous forme graphique (*fiche*) dans la _fenêtre centrale_.
+Cela permet de visualiser graphiquement son organisation : un aperçu synthétique, très utile pour évaluer la validité du projet (durée des tâches confiées au élèves, évaluabilité, ...)
 
-Cette fiche est très simplement exportable au format pdf.
+Cette fiche est très simplement exportable aux formats pdf ou svg.
 
 [Fonctionnalites#Fonctionnalit%C3A9s Sommaire des Fonctionnalités ]
 ----
 == Un seul fichier au centre des documents pédagogiques ==
-La séquence est [ouverture_enregistrement sauvegardée dans un fichier] (extension .seq).
+Le projet est [ouverture_enregistrement sauvegardé dans un fichier] (extension .prj), qui contient l'intégralité des informations saisie dans _*pySequence*_, y compris l'intégralité du programme de l'enseignement choisi.
 
-Grâce à des [lier_fichiers liens], depuis _*pySequence*_, il est possible d'accéder à l'ensemble des documents qui la constitue : ressources pédagogique, activités, liens vers des sites Internet ...
+
 
 [Fonctionnalites#Fonctionnalit%C3A9s Sommaire des Fonctionnalités ]
 ----
-== Adaptable à toutes les spécialités de STI2D ==
-Les _compétences_, _savoirs_ et _centres d'intérêts_ sont dépendants du type d'*enseignement technologique* dispensé à la classe :
- * Enseignement Technologique Transversal (ETT)
- * Enseignements de spécialité (SIN, AC, ITEC ou EE)
-Il est possible de spécifier les *effectifs* de la classe et également d'adapter la liste des CI pour l'ETT à ceux choisis pour l'académie.
+== Adaptable à tous les programmes ==
+Les _compétences_, _savoirs_ et _centres d'intérêts_ ... sont dépendants du type d'*enseignement* dispensé à la classe :
+ * Enseignement Technologique Transversal (ETT) ou de spécialité (SIN, AC, ITEC ou EE) de STI2D
+ * Baccalauréat Scientifique option Sciences de l'Ingénieur (S-SI)
+ * Technologie collège (très prochainement disponible)
+Il est possible de spécifier les *effectifs* de la classe et également d'adapter la liste des centres d'intérêt à ceux choisis pour l'académie.
 
 [Fonctionnalites#Fonctionnalit%C3A9s Sommaire des Fonctionnalités ]
 ----
