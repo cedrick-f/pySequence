@@ -3,7 +3,7 @@
  * [Installation]
  * [Fonctionnalites Fonctionnalités]
   * [Fonctionalite_Seq Séquence]
-  * [Fonctionalite_Prj Projet]
+  * [Fonctionnalite_Prj Projet]
  * [Tutoriels]
  * [FAQ F.A.Q.]
  * [Telechargement Téléchargement]
