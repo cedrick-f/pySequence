@@ -36,7 +36,7 @@ Chaque élément de séquence possède des propriétés :
  * [creation_seance Séances] : intitulé, type, démarche, effectif, durée, ...
  * [systeme_labo Systèmes] : nom, quantité, ...
 
-_[Fonctionnalites#Fonctionnalit%C3A9s Haut de page]_
+_[Fonctionnalites_Seq Haut de page]_
 ----
 == Une fiche pédagogique graphique ==
 Au fur et à mesure de sa création, la séquence apparait sous forme graphique (*fiche*) dans la _fenêtre centrale_.
@@ -44,14 +44,14 @@ Cela permet de visualiser graphiquement son déroulement, ce qui offre notamment
 
 Cette fiche est très simplement exportable au format pdf.
 
-[Fonctionnalites#Fonctionnalit%C3A9s Sommaire des Fonctionnalités ]
+_[Fonctionnalites_Seq Haut de page]_
 ----
 == Un seul fichier au centre des documents pédagogiques ==
 La séquence est [ouverture_enregistrement sauvegardée dans un fichier] (extension .seq).
 
 Grâce à des [lier_fichiers liens], depuis _*pySequence*_, il est possible d'accéder à l'ensemble des documents qui la constitue : ressources pédagogique, activités, liens vers des sites Internet ...
 
-[Fonctionnalites#Fonctionnalit%C3A9s Sommaire des Fonctionnalités ]
+_[Fonctionnalites_Seq Haut de page]_
 ----
 == Adaptable à toutes les spécialités de STI2D ==
 Les _compétences_, _savoirs_ et _centres d'intérêts_ sont dépendants du type d'*enseignement technologique* dispensé à la classe :
@@ -59,7 +59,7 @@ Les _compétences_, _savoirs_ et _centres d'intérêts_ sont dépendants du type
  * Enseignements de spécialité (SIN, AC, ITEC ou EE)
 Il est possible de spécifier les *effectifs* de la classe et également d'adapter la liste des CI pour l'ETT à ceux choisis pour l'académie.
 
-[Fonctionnalites#Fonctionnalit%C3A9s Sommaire des Fonctionnalités ]
+_[Fonctionnalites_Seq Haut de page]_
 ----
 
-[Aide Sommaire de l'aide]
+_[Aide Sommaire de l'aide]_
