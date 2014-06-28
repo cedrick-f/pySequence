@@ -2,8 +2,8 @@
 
  * [Installation]
  * [Fonctionnalites Fonctionnalités]
-  * [Fonctionnalites_Seq Séquence]
-  * [Fonctionnalites_Prj Projet]
+  * [Fonctionalites_Seq Séquence]
+  * [Fonctionalites_Prj Projet]
  * [Tutoriels]
  * [FAQ F.A.Q.]
  * [Telechargement Téléchargement]
