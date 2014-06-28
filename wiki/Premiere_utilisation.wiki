@@ -1,6 +1,7 @@
 #summary Premiers pas avec pySequence
 
 = Première utilisation =
+<wiki:toc max_depth="1" />
 == Choix du type de document à créer ==
 Il est possible de créer :
  * des *fiches de validation projet* (Cf. [Elaboration_projet Elaboration d'une fiche de projet]). 
