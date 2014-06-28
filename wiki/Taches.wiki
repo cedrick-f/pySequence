@@ -5,7 +5,7 @@
 *Permet de définir :*
  * La [Taches#Phases_du_projet phases du projet]
  * L'intitulé de la tâche
- * Le volume horaire de la tâche
+ * Le [Taches#Description_d%C3%A9taill%C3%A9e volume horaire] de la tâche
  * Une description détaillée de la tâche
  * Les élèves concernés par la tâche
  * Les compétences à mobiliser pour cette tâche
