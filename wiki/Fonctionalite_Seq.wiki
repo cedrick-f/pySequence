@@ -1,5 +1,10 @@
 #summary Séquence pédagogique
 = Séquence pédagogique =
+_*pySequence*_ permet de réaliser des fiches de description de séquence pédagogique : sur une seule page synthétique, sont représentés le déroulement des diverses activité, les objectifs, les prérequis, ...
+
+De plus, depuis _*pySequence*_, la fiche permet l'accès directe au fichiers, dossiers, autres séquences et lien Internet en rapport avec la séquence.
+
+
 
 == Principales fonctionnalités ==
 
