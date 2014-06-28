@@ -62,10 +62,9 @@ http://pysequence.googlecode.com/svn/trunk/images_aide/res_propriete_support1.pn
 ==*4 - Définir l'équipe pédagogique*==
 <table style="width: 730px;">
 <tr>
-<td style="width: 200;">depuis l'arbre</td>
-<td style="width: 200;">depuis le menu</td>
+<td style="width: 200;">_*depuis l'arbre :*_</td>
+<td style="width: 200;">_*depuis le menu :*_</td>
 <tr/>
-
 <tr>
 <td>
  * clic-droit sur *"Equipe pédagogique"*,
