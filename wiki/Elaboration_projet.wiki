@@ -5,12 +5,11 @@ _Cette fiche permettra de décrire un projet mais surtout de vérifier que chaqu
 = Élaboration d'une fiche de validation de projet =
 <wiki:toc max_depth="2" />
 
-===*1 - Configurer la classe*===
+==*1 - Configurer la classe*==
 
 [Premiere_utilisation Configurer la classe] (Il est impératif de configurer la classe *avant* de définir les autres paramètres de la séquence)
 
-
-===*2 -  Définir les propriétés du projet *===
+==*2 -  Définir les propriétés du projet *==
 
 Dans l'arborescence, cliquer sur *"Projet"*.
 
@@ -41,7 +40,7 @@ Ces derniers renseignements figureront sur la fiche de validation.
 ----
 
 
-===*3 - Définir le support d'étude*===
+==*3 - Définir le support d'étude*==
 
 Dans l'arborescence, cliquer sur *"support"*.
 
@@ -60,8 +59,7 @@ _résultat sur la fiche_
 http://pysequence.googlecode.com/svn/trunk/images_aide/res_propriete_support1.png
 ----
 
-
-===*4 - Définir l'équipe pédagogique*===
+==*4 - Définir l'équipe pédagogique*==
 
 Dans l'arborescence, cliquer avec le bouton droit de la souris sur *"Equipe pédagogique"*, puis cliquer sur *"Ajouter un professeur"*.
 
@@ -79,7 +77,7 @@ http://pysequence.googlecode.com/svn/trunk/images_aide/rajout_equip_peda.png
 _résultat sur la fiche_ http://pysequence.googlecode.com/svn/trunk/images_aide/res_propriete_equip_peda.png
 ----
 
-===*5 - Définir le groupe d'élèves*===
+==*5 - Définir le groupe d'élèves*==
 
 Dans l'arborescence, cliquer avec le bouton droit de la souris sur *"Elèves"*, puis cliquer sur *"Ajouter un élève"*.
 
@@ -95,7 +93,7 @@ Recommencer autant de fois que nécessaire.
 _résultat sur la fiche_ http://pysequence.googlecode.com/svn/trunk/images_aide/res_propriete_eleves.png
 ----
 
-===*6 - Définir les tâches*===
+==*6 - Définir les tâches*==
 
 Les premiers éléments du projet étant définis, il reste à décrire les différentes taches, à les attribuer à un ou des élèves et y associer des compétences.
 
