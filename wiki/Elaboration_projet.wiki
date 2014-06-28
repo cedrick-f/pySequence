@@ -60,10 +60,18 @@ http://pysequence.googlecode.com/svn/trunk/images_aide/res_propriete_support1.pn
 ----
 
 ==*4 - Définir l'équipe pédagogique*==
-||depuis l'arbre|| depuis le menu||
-||cliquer avec le bouton droit de la souris sur *"Equipe pédagogique"*,
- puis cliquer sur *"Ajouter un professeur"*.
-http://pysequence.googlecode.com/svn/trunk/images_aide/equip_peda.png ||http://pysequence.googlecode.com/svn/trunk/images_aide/menu_prj_ajout_prof.png||
+<tr>
+<td>depuis l'arbre</td>
+<td>depuis le menu</td>
+<tr/>
+
+<tr>
+<td>clic-droit sur *"Equipe pédagogique"*, puis cliquer sur *"Ajouter un professeur"*.</td>
+<td>http://pysequence.googlecode.com/svn/trunk/images_aide/menu_prj_ajout_prof.png</td>
+<tr/>
+
+
+||clic-droit sur *"Equipe pédagogique"*, puis cliquer sur *"Ajouter un professeur"*.http://pysequence.googlecode.com/svn/trunk/images_aide/equip_peda.png ||http://pysequence.googlecode.com/svn/trunk/images_aide/menu_prj_ajout_prof.png||
 
 Dans _propriétés_, saisir le nom et le prénom du professeur.
 
