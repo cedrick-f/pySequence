@@ -1,0 +1,10 @@
+# Description de la classe
+
+= Classe =
+
+== Adaptable à tous les programmes ==
+Les _compétences_, _savoirs_ et _centres d'intérêts_ ... sont dépendants du type d'*enseignement* dispensé à la classe :
+ * Enseignement Technologique Transversal (ETT) ou de spécialité (SIN, AC, ITEC ou EE) de STI2D
+ * Baccalauréat Scientifique option Sciences de l'Ingénieur (S-SI)
+ * Technologie collège (très prochainement disponible)
+Il est possible de spécifier les *effectifs* de la classe et également d'adapter la liste des centres d'intérêt à ceux choisis pour l'académie.
