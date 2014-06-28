@@ -1,6 +1,7 @@
 #summary Fonctionnalités de pySequence
+= Séquence pédagogique =
 
-= Fonctionnalités  : séquences pédagogiques =
+= Principales fonctionnalités =
 
  * [Fonctionnalites#Une%20structure%20en%20arborescence Une structure en arborescence]
 
