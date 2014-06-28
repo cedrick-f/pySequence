@@ -1,6 +1,7 @@
 #summary Fonctionnalités de pySequence
 
 = Fonctionnalités =
+ * [Presentation Vue d'ensemble]
 
  * [Fonctionalite_Seq Séquences pédagogiques]
 
