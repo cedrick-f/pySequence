@@ -6,7 +6,7 @@
  * L'identité de l'élève (Nom, Prénom)
  * Son avatar (photo, image, ...)
 
-Permet de définir ou d'accéder à sa(ses) grille(s) d'évaluation.
+Permet de définir ou d'accéder à sa(ses) [grille(s) d'évaluation].
 
 ----
 == Identité ==
@@ -22,3 +22,6 @@ _[Fonctionnalites#Fonctionnalit%C3A9s Haut de page]_
 == Grilles d'évaluation ==
 
 _[Fonctionnalites#Fonctionnalit%C3A9s Haut de page]_
+
+_[Fonctionnalite_Prj Rubrique Projet]_
+  
