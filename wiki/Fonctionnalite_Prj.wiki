@@ -7,11 +7,12 @@ Si le projet fait l'objet d'une évaluation à un examen, _*pySequence*_ propose
 
  * [Fonctionnalite_Prj#Une_structure_en_arborescence Une structure en arborescence]
 
- * [Fonctionnalite_Prj#Une_fiche_p%C3%A9dagogique_graphique Une fiche de projet graphique]
+ * [Fonctionnalite_Prj#Une_fiche_synth%C3%A9tique_graphique Une fiche synthétique graphique]
 
  * [Fonctionnalites_Prj#Un%20seul%20fichier%20au%20centre%20des%20documents%20p%C3A9dagogiques Un seul fichier au centre des documents pédagogiques]
 
  * [Fonctionnalites_Prj#Adaptable_%C3%A0_touts_les_programmes Adaptable à toutes les spécialités de STI2D]
+
 
 
 
