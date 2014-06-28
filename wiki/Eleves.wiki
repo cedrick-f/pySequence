@@ -3,7 +3,7 @@
 
 = Elève =
 *Permet de définir :*
- * L'[Eleves#Identité identité] de l'élève (Nom, Prénom)
+ * L'[Eleves#Identit%C3%A9 identité] de l'élève (Nom, Prénom)
  * Son [Eleves#Avatar avatar] (photo, image, ...)
 
 Permet de définir ou d'accéder à sa(ses) [Eleves#Grilles_d%27%C3%A9valuation grille(s) d'évaluation].
