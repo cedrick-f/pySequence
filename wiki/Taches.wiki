@@ -7,8 +7,8 @@
  * L'intitulé de la tâche
  * Le [Taches#Volume_horaire volume horaire] de la tâche
  * Une [Taches#Description_d%C3%A9taill%C3%A9e description détaillée] de la tâche
- * Les élèves concernés par la tâche
- * Les compétences à mobiliser pour cette tâche
+ * Les [Taches#%C3%89l%C3%A8ves_concern%C3%A9s élèves concernés] par la tâche
+ * Les [compétences à mobiliser] pour cette tâche
 
 *Fonctions disponibles :*
  * Sauvegarde des paramètres de classe
