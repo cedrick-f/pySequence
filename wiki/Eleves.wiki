@@ -3,10 +3,10 @@
 
 = Elève =
 *Permet de définir :*
- * L'identité de l'élève (Nom, Prénom)
- * Son avatar (photo, image, ...)
+ * L'[Eleves#Identité identité] de l'élève (Nom, Prénom)
+ * Son [Eleves#Avatar avatar] (photo, image, ...)
 
-Permet de définir ou d'accéder à sa(ses) [grille(s) d'évaluation].
+Permet de définir ou d'accéder à sa(ses) [Eleves#Grilles_d%27%C3%A9valuation grille(s) d'évaluation].
 
 ----
 == Identité ==
@@ -23,5 +23,6 @@ _[Fonctionnalites#Fonctionnalit%C3A9s Haut de page]_
 
 _[Fonctionnalites#Fonctionnalit%C3A9s Haut de page]_
 
+----
 _[Fonctionnalite_Prj Rubrique Projet]_
   
