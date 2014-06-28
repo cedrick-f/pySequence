@@ -7,12 +7,11 @@ Si le projet fait l'objet d'une évaluation à un examen, _*pySequence*_ propose
 
  * [Fonctionnalite_Prj#Une_structure_en_arborescence Une structure en arborescence]
 
- * [Fonctionnalites_Prj#Une%20fiche%20p%C3A9dagogique%20graphique Une fiche pédagogique graphique]
+ * [Fonctionnalite_Prj#Une_fiche_p%C3%A9dagogique_graphique Une fiche de projet graphique]
 
  * [Fonctionnalites_Prj#Un%20seul%20fichier%20au%20centre%20des%20documents%20p%C3A9dagogiques Un seul fichier au centre des documents pédagogiques]
 
  * [Fonctionnalites_Prj#Adaptable_%C3%A0_touts_les_programmes Adaptable à toutes les spécialités de STI2D]
-
 
 
 
@@ -32,7 +31,7 @@ Chaque élément du projet possède des propriétés :
 
 [Fonctionnalites#Fonctionnalit%C3A9s Sommaire des Fonctionnalités ]
 ----
-== Une fiche pédagogique graphique ==
+== Une fiche synthétique graphique ==
 Au fur et à mesure de sa création, le projet apparait sous forme graphique (*fiche*) dans la _fenêtre centrale_.
 Cela permet de visualiser graphiquement son organisation : un aperçu synthétique, très utile pour évaluer la validité du projet (durée des tâches confiées au élèves, évaluabilité, ...)
 
