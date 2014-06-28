@@ -17,7 +17,7 @@ http://pysequence.googlecode.com/svn/trunk/images_aide/nouveau_fichier.PNG
 Ce qui suit est valable dans les deux cas...
 
 _[Premiere_utilisation Haut de page]_
-
+----
 == Configuration de la classe ==
 
 Avant de démarrer la création d'un document, il est préférable de *configurer* correctement la *[Classe classe]* :
@@ -31,11 +31,7 @@ Remarque : par défaut, les *centres d'intérêt* sont définis pour l'académie
 
 
 _[Premiere_utilisation Haut de page]_
-
-
-
-
-
+----
 == Paramètres de classe préférés ==
 Il est possible de conserver pour les futures fiches de séquence certains paramètres de classe :
  * l'*effectif* et le *découpage* en groupes
@@ -46,14 +42,17 @@ Une fois les paramètres choisis (voir [ModificationCI Modification des Centres 
 
 Pour rétablir les paramètres de classe par défaut, cliquer sur le bouton http://pysequence.googlecode.com/svn/trunk/images_aide/Bouton_defaut_pref.png
 
-== Enregistrement de pySequence ==
 
+_[Premiere_utilisation Haut de page]_
+----
+== Inscription de pySequence ==
 En cas d'utilisation de la version *portable* de _*pySequence*_, et afin que votre PC reconnaisse le type de fichier *.seq* ou *.prj*, il est nécessaire d'enregistrer le logiciel dans la _base de registre_ de Windows.
 
- * Lancer _*pySequence*_ (il faut pour cela avoir les *droits d'Administrateur*, et sous Windows *Vista* ou *Seven*, exécuter _*pySequence*_ *"en tant qu'administrateur"*)
+ * Lancer _*pySequence*_ (il faut pour cela avoir les *droits d'Administrateur*, et sous Windows *Vista* ou ultérieur, exécuter _*pySequence*_ *"en tant qu'administrateur"*)
  * Depuis le menu, faire _Outils/Inscrire dans la base de registre_.
 
 http://pysequence.googlecode.com/svn/trunk/images_aide/registre.png
 
+----
 _[Aide Sommaire de l'aide]_
    _[Tutoriels Tutoriels de pySequence]_
