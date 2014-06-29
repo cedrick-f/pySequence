@@ -23,7 +23,7 @@ Si le projet fait l'objet d'une évaluation à un examen, _*pySequence*_ propose
 _*pySequence*_ fourni une aide pour décrire des projets.
 Le projet a une structure en _arborescence_ :
    * *[Classe Classe]* (spécialité, effectifs, ...)
-   * *Équipe pédagogique* encadrant le projet
+   * *[Professeurs Équipe pédagogique]* encadrant le projet
    * *[Eleves Élèves]* impliqués dans le projet
    * *[Taches Tâches]* à réaliser
 
