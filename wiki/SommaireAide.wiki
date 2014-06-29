@@ -5,6 +5,8 @@
   * [Presentation Vue d'ensemble]
   * [Fonctionalite_Seq Séquence]
   * [Fonctionnalite_Prj Projet]
+   * [Classe Classe]
+   * [Professeur Professeur]
  * [Tutoriels]
   * [Installation]
   * [Premiere_utilisation Première utilisation]
