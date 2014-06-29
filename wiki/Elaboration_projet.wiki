@@ -76,17 +76,16 @@ http://pysequence.googlecode.com/svn/trunk/images_aide/equip_peda.png</td>
 <table/>
 
 
-_*dans _Propriétés_*_, saisir les paramètres propres au [Professeur professeur].
+_*dans _Propriétés_*_, saisir les paramètres propres au [Equipe_pedagogique professeur].
  * identité
  * discipline
  * avatar
-et préciser s'il s'agit du professeur référent pour le projet.
+et préciser s'il s'agit du professeur *référent* pour le projet.
 
-http://pysequence.googlecode.com/svn/trunk/images_aide/propriete_equip_peda.png
+ http://pysequence.googlecode.com/svn/trunk/images_aide/propriete_equip_peda.png
 
-Recommencer autant de fois que nécessaire.
+_Recommencer autant de fois que nécessaire..._
 
-http://pysequence.googlecode.com/svn/trunk/images_aide/rajout_equip_peda.png
 
 ----
 _résultat sur la fiche_ http://pysequence.googlecode.com/svn/trunk/images_aide/res_propriete_equip_peda.png
@@ -112,16 +111,17 @@ _*dans _Propriétés_*_, saisir les paramètres propres à l'élève :
  * avatar
 Il est également possible de désigner le fichier "Grille d'évaluation", mais cette opération est normalement réalisée automatiquement lors de la génération de la grille.
 
-http://pysequence.googlecode.com/svn/trunk/images_aide/propriete_eleves.png
+ http://pysequence.googlecode.com/svn/trunk/images_aide/propriete_eleves.png
 
 Recommencer autant de fois que nécessaire.
 
 ----
-_résultat sur la fiche_ http://pysequence.googlecode.com/svn/trunk/images_aide/res_propriete_eleves.png
+_résultat sur la fiche_
+ http://pysequence.googlecode.com/svn/trunk/images_aide/res_propriete_eleves.png
 ----
 
 ==*6 - Définir les tâches*==
 
-Les premiers éléments du projet étant définis, il reste à décrire les différentes taches, à les attribuer à un ou des élèves et y associer des compétences.
+Les premiers éléments du [Fonctionnalite_Prj projet] étant définis, il reste à décrire les différentes [Taches tâches], à les attribuer à un ou des [Eleves élèves] et y associer des compétences.
 
 [definition_taches Définir les tâches du projet]
