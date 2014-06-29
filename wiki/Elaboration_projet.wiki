@@ -13,7 +13,7 @@ _Cette fiche permettra de décrire un projet mais surtout de vérifier que chaqu
 
 _*depuis l'arbre :*_ cliquer sur *"Projet"*.
 
-http://pysequence.googlecode.com/svn/trunk/images_aide/propriete_projet.png
+ http://pysequence.googlecode.com/svn/trunk/images_aide/propriete_projet.png
 
 _*dans _Propriété_*_ saisir :
  * l'*intitulé* du projet
