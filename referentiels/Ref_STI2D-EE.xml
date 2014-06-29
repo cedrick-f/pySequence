@@ -7,20 +7,33 @@
     <l_AP S_AP00="Activit&#233; pratique" S_AP01="Activit&#233; pratique" />
   </d_activites>
   <d_cellulesInfo_prj>
-    <l_Tit S_Tit00="Identification">
-      <l_Tit01 F_Tit0100="13.0" F_Tit0101="1.0" />
+    <l_Tit>
+      <l_Tit00 S_Tit0000="R" S_Tit0001="Identification">
+        <l_Tit0002 I_Tit000200="13" I_Tit000201="1" />
+      </l_Tit00>
     </l_Tit>
-    <l_Nom S_Nom00="Identification">
-      <l_Nom01 F_Nom0100="8.0" F_Nom0101="2.0" />
+    <l_Nom>
+      <l_Nom00 S_Nom0000="R" S_Nom0001="Identification">
+        <l_Nom0002 I_Nom000200="8" I_Nom000201="2" />
+      </l_Nom00>
+      <l_Nom01 S_Nom0100="S" S_Nom0101="Feuil1">
+        <l_Nom0102 I_Nom010200="24" I_Nom010201="11" />
+      </l_Nom01>
     </l_Nom>
-    <l_Des S_Des00="Identification">
-      <l_Des01 F_Des0100="13.0" F_Des0101="1.0" />
+    <l_Des>
+      <l_Des00 S_Des0000="R" S_Des0001="Identification">
+        <l_Des0002 I_Des000200="13" I_Des000201="1" />
+      </l_Des00>
     </l_Des>
-    <l_Pre S_Pre00="Identification">
-      <l_Pre01 F_Pre0100="9.0" F_Pre0101="2.0" />
+    <l_Pre>
+      <l_Pre00 S_Pre0000="R" S_Pre0001="Identification">
+        <l_Pre0002 I_Pre000200="9" I_Pre000201="2" />
+      </l_Pre00>
     </l_Pre>
-    <l_Etab S_Etab00="Identification">
-      <l_Etab01 F_Etab0100="6.0" F_Etab0101="2.0" />
+    <l_Etab>
+      <l_Etab00 S_Etab0000="R" S_Etab0001="Identification">
+        <l_Etab0002 I_Etab000200="6" I_Etab000201="2" />
+      </l_Etab00>
     </l_Etab>
   </d_cellulesInfo_prj>
   <d_demarcheSeance>
@@ -45,27 +58,15 @@
     </l_O8>
   </d_dicCompetences>
   <d_dicCompetences_prj>
+    <l_O7 S_O700="Imaginer une solution, r&#233;pondre &#224; un besoin">
+      <d_O701 S_CO7.ee1="Participer &#224; une d&#233;marche de conception dans le but de proposer plusieurs solutions possibles &#224; un probl&#232;me technique identifi&#233; en lien avec un enjeu &#233;nerg&#233;tique" S_CO7.ee2="Justifier une solution retenue en int&#233;grant les cons&#233;quences des choix sur le triptyque Mat&#233;riau - Energie - Information" S_CO7.ee3="D&#233;finir la structure, la constitution d'un syst&#232;me en fonction des caract&#233;ristiques technico-&#233;conomiques et environnementales attendues" S_CO7.ee4="D&#233;finir les modifications de la structure, les choix de constituants et du type de syst&#232;me de gestion d'une cha&#238;ne d'&#233;nergie afin de r&#233;pondre &#224; une &#233;volution d'un cahier des charges" />
+    </l_O7>
     <l_O9 S_O900="G&#233;rer la vie du produit">
       <d_O901 S_CO9.ee1="Exp&#233;rimenter des proc&#233;d&#233;s de stockage, de production, de transport, de transformation, d'&#233;nergie pour aider &#224; la conception d'une cha&#238;ne d'&#233;nergie" S_CO9.ee2="R&#233;aliser et valider un prototype obtenu en r&#233;ponse &#224; tout ou partie du cahier des charges initial" S_CO9.ee3="Int&#233;grer un prototype dans un syst&#232;me &#224; modifier pour valider son comportement et ses performances" />
     </l_O9>
     <l_O8 S_O800="Valider des solutions techniques">
       <d_O801 S_CO8.ee1="Renseigner un logiciel de simulation du comportement &#233;nerg&#233;tique avec les caract&#233;ristiques du syst&#232;me et les param&#232;tres externes pour un point de fonctionnement donn&#233;" S_CO8.ee2="Interpr&#233;ter les r&#233;sultats d'une simulation afin de valider une solution ou l'optimiser" S_CO8.ee3="Comparer et interpr&#233;ter le r&#233;sultat d'une simulation d'un comportement d'un syst&#232;me avec un comportement r&#233;el" S_CO8.ee4="Mettre en oeuvre un protocole d'essais et de mesures sur le prototype d'une cha&#238;ne d'&#233;nergie, interpr&#233;ter les r&#233;sultats" />
     </l_O8>
-    <l_O7 S_O700="Imaginer une solution, r&#233;pondre &#224; un besoin">
-      <d_O701 S_CO7.ee1="Participer &#224; une d&#233;marche de conception dans le but de proposer plusieurs solutions possibles &#224; un probl&#232;me technique identifi&#233; en lien avec un enjeu &#233;nerg&#233;tique" S_CO7.ee2="Justifier une solution retenue en int&#233;grant les cons&#233;quences des choix sur le triptyque Mat&#233;riau - Energie - Information" S_CO7.ee3="D&#233;finir la structure, la constitution d'un syst&#232;me en fonction des caract&#233;ristiques technico-&#233;conomiques et environnementales attendues" S_CO7.ee4="D&#233;finir les modifications de la structure, les choix de constituants et du type de syst&#232;me de gestion d'une cha&#238;ne d'&#233;nergie afin de r&#233;pondre &#224; une &#233;volution d'un cahier des charges" />
-    </l_O7>
-    <l_O6 S_O600="Communiquer une id&#233;e, un principe ou une solution technique, un projet, y compris en langue &#233;trang&#232;re">
-      <d_O601 S_CO6.1="D&#233;crire une id&#233;e, un principe, une solution, un projet en utilisant des outils de repr&#233;sentation adapt&#233;s" S_CO6.2="D&#233;crire le fonctionnement et/ou l'exploitation d'un syst&#232;me en utilisant l'outil de description le plus pertinent" S_CO6.3="Pr&#233;senter et argumenter des d&#233;marches, des r&#233;sultats, y compris dans une langue &#233;trang&#232;re" />
-    </l_O6>
-    <l_O2 S_O200="Identifier les &#233;l&#233;ments permettant la limitation de l&#8217;Impact environnemental d&#8217;un syst&#232;me et de ses constituants">
-      <d_O201 S_CO2.1="Identifier les flux et la forme de l'&#233;nergie, caract&#233;riser ses transformations et/ou modulations et estimer l'efficacit&#233; &#233;nerg&#233;tique globale d'un syst&#232;me" S_CO2.2="Justifier les solutions constructives d'un syst&#232;me au regard des impacts environnementaux et &#233;conomiques engendr&#233;s tout au long de son cycle de vie" />
-    </l_O2>
-    <l_O1 S_O100="Caract&#233;riser des syst&#232;mes privil&#233;giant un usage raisonn&#233; du point de vue d&#233;veloppement durable">
-      <d_O101 S_CO1.1="Justifier les choix des mat&#233;riaux, des structures d'un syst&#232;me et les &#233;nergies mises en oeuvre dans une approche de d&#233;veloppement durable" S_CO1.2="Justifier le choix d'une solution selon des contraintes d'ergonomie et d'effets sur la sant&#233; de l'homme et du vivant" />
-    </l_O1>
-    <l_O8s S_O8s00="Valider des solutions techniques">
-      <d_O8s01 S_CO8.0="Justifier des &#233;l&#233;ments d'une simulation relative au comportement de tout ou partie d'un syst&#232;me et les &#233;carts par rapport au r&#233;el" />
-    </l_O8s>
   </d_dicCompetences_prj>
   <d_dicIndicateurs_prj>
     <l_CO9.ee1>
@@ -86,21 +87,6 @@
       <l_CO9.ee303 B_CO9.ee30301="True" S_CO9.ee30300="L'interpr&#233;tation des r&#233;sultats est coh&#233;rente" />
       <l_CO9.ee304 B_CO9.ee30401="False" S_CO9.ee30400="                                 " />
     </l_CO9.ee3>
-    <l_CO8.0>
-      <l_CO8.000 B_CO8.00001="False" S_CO8.00000="Les solutions techniques envisag&#233;es sont correctement analys&#233;es au regard des r&#233;sultats d'exp&#233;rimentations et/ou de tests et/ou de simulations" />
-      <l_CO8.001 B_CO8.00101="False" S_CO8.00100="L'origine des &#233;carts entre les r&#233;sultats obtenus et les exigences du cahier des charges est correctement identifi&#233;e" />
-    </l_CO8.0>
-    <l_CO1.1>
-      <l_CO1.100 B_CO1.10001="False" S_CO1.10000="Le choix des mat&#233;riaux et/ou des mat&#233;riels est justifi&#233;, des crit&#232;res d'&#233;co conception sont pris en compte" />
-      <l_CO1.101 B_CO1.10101="False" S_CO1.10100="La  structure mat&#233;rielle et/ou informationnelle est correctement justifi&#233;e " />
-    </l_CO1.1>
-    <l_CO1.2>
-      <l_CO1.200 B_CO1.20001="False" S_CO1.20000="La justification des param&#232;tres de confort et/ou la r&#233;ponse apport&#233;e par le syst&#232;me aux contraintes de pr&#233;servation de la sant&#233; et du respect de la s&#233;curit&#233; sont explicit&#233;es" />
-    </l_CO1.2>
-    <l_CO2.2>
-      <l_CO2.200 B_CO2.20001="False" S_CO2.20000="La relation entre une fonction, des solutions et leur impact environnemental ou soci&#233;tal est pr&#233;cis&#233;e " />
-      <l_CO2.201 B_CO2.20101="False" S_CO2.20100="Le compromis technico &#233;conomique et/ou la prise en compte des normes et r&#233;glementations est expliqu&#233; " />
-    </l_CO2.2>
     <l_CO7.ee2>
       <l_CO7.ee200 B_CO7.ee20001="True" S_CO7.ee20000="Les solutions techniques propos&#233;es sont pertinentes" />
       <l_CO7.ee201 B_CO7.ee20101="True" S_CO7.ee20100="Les caract&#233;ristiques comportementales de la solution retenue r&#233;pondent au CDC" />
@@ -115,9 +101,6 @@
       <l_CO7.ee302 B_CO7.ee30201="True" S_CO7.ee30200="La proc&#233;dure de modification est rationnelle" />
       <l_CO7.ee303 B_CO7.ee30301="True" S_CO7.ee30300="Le choix des constituants et l'organisation de la cha&#238;ne d'&#233;nergie est pertinente" />
     </l_CO7.ee3>
-    <l_CO6.1>
-      <l_CO6.100 B_CO6.10001="False" S_CO6.10000="La description du principe ou de la solution est synth&#233;tique et correcte" />
-    </l_CO6.1>
     <l_CO7.ee1>
       <l_CO7.ee100 B_CO7.ee10001="True" S_CO7.ee10000="Le besoin relatif au projet est identifi&#233; et justifi&#233;" />
       <l_CO7.ee101 B_CO7.ee10101="True" S_CO7.ee10100="Les fonctions principales du projet sont identifi&#233;es" />
@@ -127,9 +110,6 @@
       <l_CO7.ee105 B_CO7.ee10501="True" S_CO7.ee10500="Les principaux points de vigilance relatifs au projet sont identifi&#233;s" />
       <l_CO7.ee106 B_CO7.ee10601="True" S_CO7.ee10600="Les grandes &#233;tapes d'une d&#233;marche de cr&#233;ativit&#233; sont franchies de mani&#232;re coh&#233;rente" />
     </l_CO7.ee1>
-    <l_CO6.2>
-      <l_CO6.200 B_CO6.20001="False" S_CO6.20000="La description du fonctionnement ou de l'exploitation du syst&#232;me est synth&#233;tique et correcte" />
-    </l_CO6.2>
     <l_CO7.ee4>
       <l_CO7.ee400 B_CO7.ee40001="True" S_CO7.ee40000="Le type de syst&#232;me de gestion de l'&#233;nergie choisi est adapt&#233; &#224; la demande" />
       <l_CO7.ee401 B_CO7.ee40101="True" S_CO7.ee40100="Les modifications respectent les contraintes du CDC" />
@@ -159,17 +139,16 @@
       <l_CO8.ee403 B_CO8.ee40301="True" S_CO8.ee40300="Les incertitudes sont estim&#233;es" />
       <l_CO8.ee404 B_CO8.ee40401="True" S_CO8.ee40400="L'interpr&#233;tation des r&#233;sultats est coh&#233;rente et pertinente" />
     </l_CO8.ee4>
-    <l_CO2.1>
-      <l_CO2.100 B_CO2.10001="False" S_CO2.10000="Les flux et la forme de l'&#233;nergie et/ou de l'information sont d&#233;crits de fa&#231;on qualitative" />
-      <l_CO2.101 B_CO2.10101="False" S_CO2.10100="Les caract&#233;ristiques d'entr&#233;es sorties des transformations ou modulations sont correctement pr&#233;cis&#233;es" />
-      <l_CO2.102 B_CO2.10201="False" S_CO2.10200="L'analyse globale d'une chaine (&#233;nergie, action, information) est correctement r&#233;alis&#233;e" />
-    </l_CO2.1>
-    <l_CO6.3>
-      <l_CO6.300 B_CO6.30001="False" S_CO6.30000="Le choix de la d&#233;marche retenue est argument&#233;e" />
-      <l_CO6.301 B_CO6.30101="False" S_CO6.30100="Les r&#233;sultats sont pr&#233;sent&#233;s et comment&#233;s de mani&#232;re claire et concise" />
-    </l_CO6.3>
   </d_dicIndicateurs_prj>
   <d_dicPoidsIndicateurs_prj>
+    <l_O7 F_O700="40.0">
+      <d_O701>
+        <l_CO7.ee2 F_CO7.ee200="5.0" F_CO7.ee201="5.0" F_CO7.ee202="5.0" F_CO7.ee203="5.0" F_CO7.ee204="5.0" F_CO7.ee205="5.0" />
+        <l_CO7.ee3 F_CO7.ee300="5.0" F_CO7.ee301="5.0" F_CO7.ee302="5.0" F_CO7.ee303="5.0" />
+        <l_CO7.ee1 F_CO7.ee100="4.0" F_CO7.ee101="4.0" F_CO7.ee102="5.0" F_CO7.ee103="4.0" F_CO7.ee104="5.0" F_CO7.ee105="4.0" F_CO7.ee106="4.0" />
+        <l_CO7.ee4 F_CO7.ee400="5.0" F_CO7.ee401="5.0" F_CO7.ee402="5.0" F_CO7.ee403="5.0" />
+      </d_O701>
+    </l_O7>
     <l_O9 F_O900="20.0">
       <d_O901>
         <l_CO9.ee1 F_CO9.ee100="9.0" F_CO9.ee101="9.0" F_CO9.ee102="9.0" />
@@ -185,38 +164,6 @@
         <l_CO8.ee4 F_CO8.ee400="7.0" F_CO8.ee401="7.0" F_CO8.ee402="7.0" F_CO8.ee403="6.0" F_CO8.ee404="7.0" />
       </d_O801>
     </l_O8>
-    <l_O7 F_O700="40.0">
-      <d_O701>
-        <l_CO7.ee2 F_CO7.ee200="5.0" F_CO7.ee201="5.0" F_CO7.ee202="5.0" F_CO7.ee203="5.0" F_CO7.ee204="5.0" F_CO7.ee205="5.0" />
-        <l_CO7.ee3 F_CO7.ee300="5.0" F_CO7.ee301="5.0" F_CO7.ee302="5.0" F_CO7.ee303="5.0" />
-        <l_CO7.ee1 F_CO7.ee100="4.0" F_CO7.ee101="4.0" F_CO7.ee102="5.0" F_CO7.ee103="4.0" F_CO7.ee104="5.0" F_CO7.ee105="4.0" F_CO7.ee106="4.0" />
-        <l_CO7.ee4 F_CO7.ee400="5.0" F_CO7.ee401="5.0" F_CO7.ee402="5.0" F_CO7.ee403="5.0" />
-      </d_O701>
-    </l_O7>
-    <l_O6 F_O600="45.0">
-      <d_O601>
-        <l_CO6.3 F_CO6.300="25.0" F_CO6.301="25.0" />
-        <l_CO6.2 F_CO6.200="25.0" />
-        <l_CO6.1 F_CO6.100="25.0" />
-      </d_O601>
-    </l_O6>
-    <l_O2 F_O200="15.0">
-      <d_O201>
-        <l_CO2.2 F_CO2.200="20.0" F_CO2.201="20.0" />
-        <l_CO2.1 F_CO2.100="20.0" F_CO2.101="20.0" F_CO2.102="20.0" />
-      </d_O201>
-    </l_O2>
-    <l_O1 F_O100="20.0">
-      <d_O101>
-        <l_CO1.1 F_CO1.100="35.0" F_CO1.101="35.0" />
-        <l_CO1.2 F_CO1.200="30.0" />
-      </d_O101>
-    </l_O1>
-    <l_O8s F_O8s00="20.0">
-      <d_O8s01>
-        <l_CO8.0 F_CO8.000="60.0" F_CO8.001="40.0" />
-      </d_O8s01>
-    </l_O8s>
   </d_dicPoidsIndicateurs_prj>
   <d_dicSavoirs>
     <l_1 S_100="Projet technologique">
@@ -313,14 +260,14 @@
     <l_SA S_SA00="C" S_SA01="G" />
     <l_TD S_TD00="C" S_TD01="G" S_TD02="D" S_TD03="E" S_TD04="P" />
   </d_effectifsSeance>
-  <d_grilles_prj S_R="Grille_evaluation_STI2D_EE_revues.xls" />
+  <d_grilles_prj S_R="Grille_evaluation_STI2D_EE_revues.xls" S_S="Grille soutenance projet STI2D.xlsx" />
   <l_listPhasesEval_prj S_listPhasesEval_prj00="Rev" S_listPhasesEval_prj01="R1" S_listPhasesEval_prj02="R2" S_listPhasesEval_prj03="R3" S_listPhasesEval_prj04="S" />
   <l_listPhases_prj S_listPhases_prj00="Ana" S_listPhases_prj01="Con" S_listPhases_prj02="DCo" S_listPhases_prj03="Rea" S_listPhases_prj04="Val" S_listPhases_prj05="XXX" S_listPhases_prj06="Rev" S_listPhases_prj07="R1" S_listPhases_prj08="R2" S_listPhases_prj09="R3" S_listPhases_prj10="S" />
   <l_listeDemarches S_listeDemarches00="I" S_listeDemarches01="R" S_listeDemarches02="P" />
   <l_listeEffectifs S_listeEffectifs00="C" S_listeEffectifs01="G" S_listeEffectifs02="D" S_listeEffectifs03="E" S_listeEffectifs04="P" />
   <l_listeTypeActivite S_listeTypeActivite00="ED" S_listeTypeActivite01="AP" S_listeTypeActivite02="P" />
   <l_listeTypeSeance S_listeTypeSeance00="ED" S_listeTypeSeance01="AP" S_listeTypeSeance02="P" S_listeTypeSeance03="C" S_listeTypeSeance04="TD" S_listeTypeSeance05="SA" S_listeTypeSeance06="SS" S_listeTypeSeance07="E" S_listeTypeSeance08="R" S_listeTypeSeance09="S" />
-  <d_nomParties_prj S_R="Revues" />
+  <d_nomParties_prj S_R="Revues" S_S="Soutenance" />
   <d_options />
   <d_phases_prj>
     <l_DCo S_DCo00="Concep d&#233;taill&#233;e" S_DCo01="Conception d&#233;taill&#233;e" S_DCo02="Cd" />

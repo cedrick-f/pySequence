@@ -920,7 +920,8 @@ class Classe():
         self.typeEnseignement = branche.get("Type", constantes.TYPE_ENSEIGNEMENT_DEFAUT)
         
         brancheRef = branche.find("Referentiel")        # A partir de la version 5 !
-        if brancheRef != None:      
+        if brancheRef != None:   
+            self.referentiel = Referentiel.Referentiel()
             self.referentiel.setBranche(brancheRef)
             self.version5 = True
         else:
@@ -1005,7 +1006,6 @@ class Classe():
 #            self.doc.MiseAJourTypeEnseignement()
             self.panelPropriete.MiseAJour()
             
-        
         return Ok
         
         
@@ -2773,9 +2773,11 @@ class Projet(BaseDoc, Objet_sequence):
     def MiseAJourTypeEnseignement(self, changeFamille = False):
         self.app.SetTitre()
         for t in self.taches:
-#            if t.phase in ["R1", "R2", "R3", "S"]:
             t.MiseAJourTypeEnseignement(self.classe.referentiel)
         
+        for e in self.eleves:
+            e.MiseAJourTypeEnseignement()
+            
         if hasattr(self, 'panelPropriete'):
             if changeFamille:
                 self.nbrRevues = 2
@@ -5276,9 +5278,16 @@ class Personne(Objet_sequence):
     def GetApp(self):
         return self.projet.GetApp()
         
+        
+    ######################################################################################  
+    def GetDocument(self):
+        return self.projet
+    
+    
     ######################################################################################  
     def __repr__(self):
         return self.GetNomPrenom()
+
 
     ######################################################################################  
     def getBranche(self):
@@ -5310,6 +5319,7 @@ class Personne(Objet_sequence):
     
     ######################################################################################  
     def setBranche(self, branche):
+#        print "setBranche personne"
         Ok = True
         self.id  = eval(branche.get("Id", "0"))
         self.nom  = branche.get("Nom", "")
@@ -5318,21 +5328,24 @@ class Personne(Objet_sequence):
         if data != "":
             self.avatar = PyEmbeddedImage(data).GetBitmap()
             
-        if hasattr(self, 'referent'):
+        if hasattr(self, 'referent'):   # prof
             self.referent = eval(branche.get("Referent", "False"))
             
-        if hasattr(self, 'discipline'):
+        if hasattr(self, 'discipline'): # prof
             self.discipline = branche.get("Discipline", 'Tec')
             
-        if hasattr(self, 'grille'):
+        if hasattr(self, 'grille'):     # élève
+#            print self.grille
             for k in self.GetReferentiel().nomParties_prj.keys():
                 self.grille[k] = Lien(typ = "f")
                 self.grille[k].path = branche.get("Grille"+k, u"")
+#                print self.grille
 #            self.grille[0].path = branche.get("Grille0", u"")
 #            self.grille[1].path = branche.get("Grille1", u"")
             
         if hasattr(self, 'panelPropriete'):
             self.panelPropriete.SetImage()
+            self.panelPropriete.MiseAJourTypeEnseignement()
             self.panelPropriete.MiseAJour(marquerModifier = False)
         
         return Ok
@@ -5445,7 +5458,10 @@ class Eleve(Personne, Objet_sequence):
         
         self.titre = u"élève"
         self.code = "Elv"
+        
         self.grille = {} #[Lien(typ = 'f'), Lien(typ = 'f')]
+        for k in projet.GetReferentiel().nomParties_prj.keys():
+            self.grille[k] = Lien(typ = 'f')
         
         Personne.__init__(self, projet, panelParent, ident)
  
@@ -5535,65 +5551,65 @@ class Eleve(Personne, Objet_sequence):
             grilles.modifierGrille(self.projet, tableaux, self)
             return tableaux
     
-    ######################################################################################  
-    def GenererGrille2(self, event = None, path = None, messageFin = True):
-        
-        if path == None:
-            path = os.path.dirname(self.projet.GetApp().fichierCourant)
-        
-        nomFichiers = {} 
-        for k, g in self.projet.GetReferentiel().nomParties_prj.items():
-            nomFichiers[k] = os.path.join(path, self.getNomFichierDefaut("Grille"+g))
-        
-        grilles.copierClasseurs(self.projet, nomFichiers)
-        
-        grilles.modifierGrille2(self.projet, nomFichiers, self)
-        
-        tableaux = self.getTableurEtModif()
-        
-
-#        if self.projet.GetTypeEnseignement() == 'SSI':
-#            nomFichier = self.getNomFichierDefaut("Grille")
+#    ######################################################################################  
+#    def GenererGrille2(self, event = None, path = None, messageFin = True):
+#        
+#        if path == None:
+#            path = os.path.dirname(self.projet.GetApp().fichierCourant)
+#        
+#        nomFichiers = {} 
+#        for k, g in self.projet.GetReferentiel().nomParties_prj.items():
+#            nomFichiers[k] = os.path.join(path, self.getNomFichierDefaut("Grille"+g))
+#        
+#        grilles.copierClasseurs(self.projet, nomFichiers)
+#        
+#        grilles.modifierGrille2(self.projet, nomFichiers, self)
+#        
+#        tableaux = self.getTableurEtModif()
+#        
+#
+##        if self.projet.GetTypeEnseignement() == 'SSI':
+##            nomFichier = self.getNomFichierDefaut("Grille")
+##            
+##            tableur = self.getTableurEtModif()
+##            tf = [[tableur, nomFichier]]
+##        else:
+##            nomFichierR = self.getNomFichierDefaut("Grille_revue")
+##            nomFichierS = self.getNomFichierDefaut("Grille_soutenance")
+##            tableur = self.getTableurEtModif()
+##            tf = [[tableur[0], nomFichierR], [tableur[1], nomFichierS]]
+#        
+##        for k, t in tableaux.items():
+##            try:
+##                cheminComplet = os.path.join(path, nomFichiers[k])+".xls"
+##                t.save(cheminComplet)
+##            except:
+##                messageErreur(self.projet.GetApp(), u"Erreur !",
+##                              u"Impossible d'enregistrer le fichier.\n\nVérifier :\n" \
+##                              u" - qu'aucun fichier portant le même nom n'est déja ouvert\n" \
+##                              u" - que le dossier choisi n'est pas protégé en écriture")
+##            try:
+##                t.close()
+##            except:
+##                pass
+##            self.grille[k] = Lien(typ = 'f')
+##            self.grille[k].path = cheminComplet
+#        
+#        if messageFin:
+#            if len(tableaux)>1:
+#                t = u"Génération des grilles réussie !"
+#            else:
+#                t = u"Génération de la grille réussie !"
+#            t += u"\n\n"
+#            t += u"\n".join(nomFichiers.values())
 #            
-#            tableur = self.getTableurEtModif()
-#            tf = [[tableur, nomFichier]]
-#        else:
-#            nomFichierR = self.getNomFichierDefaut("Grille_revue")
-#            nomFichierS = self.getNomFichierDefaut("Grille_soutenance")
-#            tableur = self.getTableurEtModif()
-#            tf = [[tableur[0], nomFichierR], [tableur[1], nomFichierS]]
-        
-#        for k, t in tableaux.items():
-#            try:
-#                cheminComplet = os.path.join(path, nomFichiers[k])+".xls"
-#                t.save(cheminComplet)
-#            except:
-#                messageErreur(self.projet.GetApp(), u"Erreur !",
-#                              u"Impossible d'enregistrer le fichier.\n\nVérifier :\n" \
-#                              u" - qu'aucun fichier portant le même nom n'est déja ouvert\n" \
-#                              u" - que le dossier choisi n'est pas protégé en écriture")
-#            try:
-#                t.close()
-#            except:
-#                pass
-#            self.grille[k] = Lien(typ = 'f')
-#            self.grille[k].path = cheminComplet
-        
-        if messageFin:
-            if len(tableaux)>1:
-                t = u"Génération des grilles réussie !"
-            else:
-                t = u"Génération de la grille réussie !"
-            t += u"\n\n"
-            t += u"\n".join(nomFichiers.values())
-            
-            
-            dlg = wx.MessageDialog(self.projet.GetApp(), t, u"Génération réussie",
-                           wx.OK | wx.ICON_INFORMATION)
-            dlg.ShowModal()
-            dlg.Destroy()
-        
-        self.panelPropriete.MiseAJour()
+#            
+#            dlg = wx.MessageDialog(self.projet.GetApp(), t, u"Génération réussie",
+#                           wx.OK | wx.ICON_INFORMATION)
+#            dlg.ShowModal()
+#            dlg.Destroy()
+#        
+#        self.panelPropriete.MiseAJour()
         
     ######################################################################################  
     def GenererGrille(self, event = None, path = None, messageFin = True):
@@ -5778,6 +5794,14 @@ class Eleve(Personne, Objet_sequence):
         return lst
         
     ######################################################################################  
+    def GrillesGenerees(self):
+        b = True
+        for g in self.grille.values():
+            b = b and g.path != u""
+        return b
+    
+    
+    ######################################################################################  
     def AfficherMenuContextuel(self, itemArbre):
         if itemArbre == self.branche:
             listItems = [[u"Supprimer", functools.partial(self.projet.SupprimerEleve, item = itemArbre)]]
@@ -5787,7 +5811,9 @@ class Eleve(Personne, Objet_sequence):
                 if len(self.GetReferentiel().nomParties_prj) > 1:
                     tg += u"s"
                     to += u"s"
-                listItems.append([to, functools.partial(self.OuvrirGrilles)])
+                
+                if self.GrillesGenerees():
+                    listItems.append([to, functools.partial(self.OuvrirGrilles)])
             listItems.append([tg, functools.partial(self.GenererGrille)])    
             
 #            if self.projet.GetTypeEnseignement(simple = True) == "SSI":
@@ -5802,7 +5828,15 @@ class Eleve(Personne, Objet_sequence):
             self.GetApp().AfficherMenuContextuel(listItems)
             
 
-            
+    ######################################################################################  
+    def MiseAJourTypeEnseignement(self):
+#        print "MiseAJourTypeEnseignement", self
+        self.grille = {} #[Lien(typ = 'f'), Lien(typ = 'f')]
+#        print self.GetReferentiel().nomParties_prj
+        for k in self.GetReferentiel().nomParties_prj.keys():
+            self.grille[k] = Lien(typ = 'f')
+        if hasattr(self, 'panelPropriete'):
+            self.panelPropriete.MiseAJourTypeEnseignement()
     
     
     ######################################################################################  
@@ -7549,47 +7583,46 @@ class FenetreProjet(FenetreDocument):
         err = 0
         
         
-        try:
-
-            root = ET.parse(fichier).getroot()
+#        try:
+        root = ET.parse(fichier).getroot()
+        
+        # Le projet
+        projet = root.find("Projet")
+        if projet == None:
+            self.projet.setBranche(root)
             
-            # Le projet
-            projet = root.find("Projet")
-            if projet == None:
-                self.projet.setBranche(root)
-                
-            else:
-                # La classe
-                message += u"Construction de la structure de la classe..."
-                dlg.Update(count, message)
-                count += 1
-                classe = root.find("Classe")
-                Ok = Ok and self.classe.setBranche(classe)
-                message += constantes.getOkErr(Ok) + u"\n"
-                
-                if not self.classe.version5 and self.classe.familleEnseignement == "STI":
-                    messageErreur(None, u"Ancien programme", 
-                                  u"Projet enregistré avec les indicateurs de compétence antérieurs à la session 2014\n\n"\
-                                  u"Les indicateurs de compétence ne seront pas chargés.")
-                
-                # Le projet
-                message += u"Construction de la structure du projet..."
-                dlg.Update(count, message)
-                count += 1
-                o,err = self.projet.setBranche(projet)
-                Ok = Ok and o
-                message += constantes.getOkErr(Ok) + u"\n"
-                
-            self.arbre.DeleteAllItems()
-            root = self.arbre.AddRoot("")
-            
-            message += u"Traitement des revues\n"
+        else:
+            # La classe
+            message += u"Construction de la structure de la classe..."
             dlg.Update(count, message)
             count += 1
-            self.projet.SetCompetencesRevuesSoutenance()
+            classe = root.find("Classe")
+            Ok = Ok and self.classe.setBranche(classe)
+            message += constantes.getOkErr(Ok) + u"\n"
+            
+            if not self.classe.version5 and self.classe.familleEnseignement == "STI":
+                messageErreur(None, u"Ancien programme", 
+                              u"Projet enregistré avec les indicateurs de compétence antérieurs à la session 2014\n\n"\
+                              u"Les indicateurs de compétence ne seront pas chargés.")
+            
+            # Le projet
+            message += u"Construction de la structure du projet..."
+            dlg.Update(count, message)
+            count += 1
+            o,err = self.projet.setBranche(projet)
+            Ok = Ok and o
+            message += constantes.getOkErr(Ok) + u"\n"
+            
+        self.arbre.DeleteAllItems()
+        root = self.arbre.AddRoot("")
+        
+        message += u"Traitement des revues\n"
+        dlg.Update(count, message)
+        count += 1
+        self.projet.SetCompetencesRevuesSoutenance()
 
-        except:
-            Ok = False
+#        except:
+#            Ok = False
         
         if not Ok:
             m = u"Le projet\n    %s\nn'a pas pu être ouvert !" \
@@ -8939,7 +8972,7 @@ class PanelPropriete_Classe(PanelPropriete):
         
     ######################################################################################              
     def OnResize(self, evt = None):
-        print "Resize ArbreTypeEnseignement", self.cb_type.GetVirtualSize()
+#        print "Resize ArbreTypeEnseignement", self.cb_type.GetVirtualSize()
         self.cb_type.SetMinSize(self.cb_type.GetVirtualSize())
         self.pageGen.sizer.Layout()
         if evt:
@@ -11498,7 +11531,7 @@ class PanelPropriete_Systeme(PanelPropriete):
 ####################################################################################
 class PanelPropriete_Personne(PanelPropriete):
     def __init__(self, parent, personne):
-        
+#        print "PanelPropriete_Personne", personne
         self.personne = personne
         self.parent = parent
         
@@ -11575,37 +11608,10 @@ class PanelPropriete_Personne(PanelPropriete):
         # Grilles d'évaluation
         #
         if hasattr(self.personne, 'grille'):
-            box = wx.StaticBox(self, -1, u"Grilles d'évaluation")
-            bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
-            
-            lstGrilles = self.personne.grille
-            titres = self.personne.GetReferentiel().nomParties_prj
-            
-#            if self.personne.projet.GetTypeEnseignement(simple = True) == "SSI":
-#                lstGrilles = [self.personne.grille[0]]
-#                titres = [u""]
-#            else:
-#                lstGrilles = self.personne.grille
-#                titres = [u"Revues :", u"Soutenance :"]
-            
-            self.SelectGrille = {}
-            self.btnlien = {}
-            for k, grille in lstGrilles:
-#            for grille, t in zip(lstGrilles, titres):
-                sz = wx.BoxSizer(wx.HORIZONTAL)
-                titre = wx.StaticText(self, -1, titres[k])
-                self.SelectGrille[k] = URLSelectorCombo(self, grille, self.personne.projet.GetPath(), 
-                                                          dossier = False, ext = "Classeur Excel (*.xls)|*.xls")
-                self.btnlien[k] = wx.Button(self, -1, u"Ouvrir")
-                self.Bind(wx.EVT_BUTTON, self.OnClick, self.btnlien[k])
-                sz.Add(titre, flag = wx.EXPAND|wx.ALIGN_CENTER_VERTICAL|wx.ALL, border = 3)
-                sz.Add(self.SelectGrille[k],1, flag = wx.EXPAND|wx.ALIGN_CENTER_VERTICAL|wx.ALL, border = 3)
-                sz.Add(self.btnlien[k], flag = wx.EXPAND|wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.ALL, border = 3)
-                bsizer.Add(sz, flag = wx.EXPAND)
-            self.sizer.Add(bsizer, (1,0), (1,2), flag = wx.EXPAND|wx.TOP|wx.BOTTOM|wx.LEFT, border = 2)
-        
-            
-
+            self.boxGrille = wx.StaticBox(self, -1, u"Grilles d'évaluation")
+            self.bsizer = wx.StaticBoxSizer(self.boxGrille, wx.VERTICAL)
+            self.sizer.Add(self.bsizer, (1,0), (1,2), flag = wx.EXPAND|wx.TOP|wx.BOTTOM|wx.LEFT, border = 2)
+            self.ConstruireSelectGrille()
             
             
         #
@@ -11632,8 +11638,32 @@ class PanelPropriete_Personne(PanelPropriete):
         self.Layout()
         
         
-    
-        
+    #############################################################################            
+    def ConstruireSelectGrille(self):
+#        titres = self.personne.GetReferentiel().nomParties_prj
+        if len(self.personne.grille) > 0:
+#            lstGrilles = self.personne.grille
+#            titres = self.personne.GetReferentiel().nomParties_prj
+            
+    #            if self.personne.projet.GetTypeEnseignement(simple = True) == "SSI":
+    #                lstGrilles = [self.personne.grille[0]]
+    #                titres = [u""]
+    #            else:
+    #                lstGrilles = self.personne.grille
+    #                titres = [u"Revues :", u"Soutenance :"]
+            
+            self.SelectGrille = {}
+            for k, t in self.personne.grille.items():
+                self.SelectGrille[k] = PanelSelectionGrille(self, self.personne, k)
+                self.bsizer.Add(self.SelectGrille[k], flag = wx.EXPAND)
+            
+            self.boxGrille.Show(True)
+            
+        else:
+            self.boxGrille.Show(False)
+            
+            
+            
     #############################################################################            
     def GetDocument(self):
         return self.personne.projet
@@ -11641,37 +11671,37 @@ class PanelPropriete_Personne(PanelPropriete):
     
     #############################################################################            
     def OnClick(self, event):
-        for k, g in self.personne.grille.items():
-            if event.GetId() == self.btnlien[k].GetId():
-                g.Afficher(self.GetDocument().GetPath())
-#        if event.GetId() == self.btnlien[0].GetId():
-#            self.personne.grille[0].Afficher(self.GetDocument().GetPath())
-#        elif event.GetId() == self.btnlien[1].GetId():
-#            self.personne.grille[1].Afficher(self.GetDocument().GetPath())
+#        for k, g in self.personne.grille.items():
+#            if event.GetId() == self.btnlien[k].GetId():
+#                g.Afficher(self.GetDocument().GetPath())
+##        if event.GetId() == self.btnlien[0].GetId():
+##            self.personne.grille[0].Afficher(self.GetDocument().GetPath())
+##        elif event.GetId() == self.btnlien[1].GetId():
+##            self.personne.grille[1].Afficher(self.GetDocument().GetPath())
+#            
+#        else:
+        mesFormats = u"Fichier Image|*.bmp;*.png;*.jpg;*.jpeg;*.gif;*.pcx;*.pnm;*.tif;*.tiff;*.tga;*.iff;*.xpm;*.ico;*.ico;*.cur;*.ani|" \
+                       u"Tous les fichiers|*.*'"
+        
+        dlg = wx.FileDialog(
+                            self, message=u"Ouvrir une image",
+#                            defaultDir = self.DossierSauvegarde, 
+                            defaultFile = "",
+                            wildcard = mesFormats,
+                            style=wx.OPEN | wx.MULTIPLE | wx.CHANGE_DIR
+                            )
             
-        else:
-            mesFormats = u"Fichier Image|*.bmp;*.png;*.jpg;*.jpeg;*.gif;*.pcx;*.pnm;*.tif;*.tiff;*.tga;*.iff;*.xpm;*.ico;*.ico;*.cur;*.ani|" \
-                           u"Tous les fichiers|*.*'"
+        # Show the dialog and retrieve the user response. If it is the OK response, 
+        # process the data.
+        if dlg.ShowModal() == wx.ID_OK:
+            # This returns a Python list of files that were selected.
+            paths = dlg.GetPaths()
+            nomFichier = paths[0]
+            self.personne.avatar = wx.Image(nomFichier).ConvertToBitmap()
+            self.SetImage()
+            self.sendEvent()
             
-            dlg = wx.FileDialog(
-                                self, message=u"Ouvrir une image",
-    #                            defaultDir = self.DossierSauvegarde, 
-                                defaultFile = "",
-                                wildcard = mesFormats,
-                                style=wx.OPEN | wx.MULTIPLE | wx.CHANGE_DIR
-                                )
-                
-            # Show the dialog and retrieve the user response. If it is the OK response, 
-            # process the data.
-            if dlg.ShowModal() == wx.ID_OK:
-                # This returns a Python list of files that were selected.
-                paths = dlg.GetPaths()
-                nomFichier = paths[0]
-                self.personne.avatar = wx.Image(nomFichier).ConvertToBitmap()
-                self.SetImage()
-                self.sendEvent()
-                
-            dlg.Destroy()
+        dlg.Destroy()
         
         
     #############################################################################            
@@ -11712,6 +11742,41 @@ class PanelPropriete_Personne(PanelPropriete):
         self.sendEvent()
         
     #############################################################################            
+    def MiseAJourTypeEnseignement(self):
+        if hasattr(self.personne, 'grille'):
+#            print "MiseAJourTypeEnseignement eleve", self.personne
+            if hasattr(self, 'SelectGrille'):
+                
+#                for c in self.bsizer.GetChildren():
+#                    print c
+#                    if c.GetWindow():
+#                        print "  ",c.GetWindow()
+#                        self.bsizer.Detach(c.GetWindow())
+#                        c.GetWindow().Destroy()
+                for k, sg in self.SelectGrille.items():
+                    self.bsizer.Detach(sg)
+                    sg.Destroy()
+#                    sh.Detach(self.SelectGrille[k])
+#                    sh.Detach(self.titreGrille[k])
+#                    sh.Detach(self.btnlien[k])
+#                    self.SelectGrille[k].Destroy()
+#                    self.titreGrille[k].Destroy()
+#                    self.btnlien[k].Destroy()
+#                
+#                sh.Destroy()
+#                for sg in self.SelectGrille.values():
+#                    self.bsizer.Detach(sg)
+#                    sg.Destroy()
+#                for tg in self.titreGrille.values():
+#                    self.bsizer.Detach(tg)
+#                    tg.Destroy()
+#                for bl in self.btnlien.values():
+#                    self.bsizer.Detach(bl)
+#                    bl.Destroy()
+#                self.boxGrille.Destroy()
+            self.ConstruireSelectGrille()
+        
+    #############################################################################            
     def MiseAJour(self, sendEvt = False, marquerModifier = True):
         self.textctrln.ChangeValue(self.personne.nom)
         self.textctrlp.ChangeValue(self.personne.prenom)
@@ -11728,8 +11793,6 @@ class PanelPropriete_Personne(PanelPropriete):
 
     ######################################################################################  
     def OnPathModified(self, lien = "", marquerModifier = True):
-        for k, btn in self.btnlien.items():
-            btn.Show(self.personne.grille[k].path != "")
         if marquerModifier:
             self.personne.projet.GetApp().MarquerFichierCourantModifie()
         self.Layout()
@@ -11737,7 +11800,46 @@ class PanelPropriete_Personne(PanelPropriete):
    
         
         
+        
+class PanelSelectionGrille(wx.Panel):
+    def __init__(self, parent, eleve, codeGrille):
+        wx.Panel.__init__(self, parent, -1)
+        sizer = wx.BoxSizer(wx.HORIZONTAL)
 
+        self.eleve = eleve
+        self.codeGrille = codeGrille
+        titre = wx.StaticText(self, -1, eleve.GetReferentiel().nomParties_prj[codeGrille])
+        self.SelectGrille = URLSelectorCombo(self, eleve.grille[codeGrille], 
+                                             eleve.projet.GetPath(), 
+                                             dossier = False, ext = "Classeur Excel (*.xls)|*.xls")
+        self.btnlien = wx.Button(self, -1, u"Ouvrir")
+        self.btnlien.Show(self.eleve.grille[self.codeGrille].path != "")
+        self.Bind(wx.EVT_BUTTON, self.OnClick, self.btnlien)
+        sizer.Add(titre, flag = wx.EXPAND|wx.ALIGN_CENTER_VERTICAL|wx.ALL, border = 3)
+        sizer.Add(self.SelectGrille,1, flag = wx.EXPAND|wx.ALIGN_CENTER_VERTICAL|wx.ALL, border = 3)
+        sizer.Add(self.btnlien, flag = wx.EXPAND|wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.ALL, border = 3)
+        
+        self.Layout()
+        self.SetSizerAndFit(sizer)
+
+
+    #############################################################################            
+    def OnClick(self, event):
+        self.eleve.grille[self.codeGrille].Afficher(self.eleve.GetDocument().GetPath())
+                
+                
+    #############################################################################            
+    def SetPath(self, path, marquerModifier):  
+        self.SelectGrille.SetPath(path, marquerModifier = marquerModifier)          
+                
+                
+    ######################################################################################  
+    def OnPathModified(self, lien = "", marquerModifier = True):
+        self.btnlien.Show(self.eleve.grille[self.codeGrille].path != "")
+        self.Parent.OnPathModified(lien, marquerModifier)
+                
+                
+                
 ####################################################################################
 #
 #   Classe définissant le panel de propriété d'un support de projet
