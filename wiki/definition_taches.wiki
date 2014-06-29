@@ -1,10 +1,10 @@
-#Définition des différentes tâches du projet.
+#summary Comment définir les différentes tâches du projet
 
-= Introduction =
+= Définition des tâches du projet =
 
-Une fois le support, l'équipe pédagogique et le groupe d'élève définie, il est nécessaire de décomposer le projet en différentes tâches qui seront associées aux compétences à évaluer.
+Une fois le [Support_prj support], l'[Professeurs équipe pédagogique] et le [Eleves groupe d'élèves] définis, il est nécessaire de décomposer le projet en différentes *tâches* qui seront associées aux compétences à évaluer.
 
-http://pysequence.googlecode.com/svn/trunk/images_aide/res_propriete_eleves.png
+ http://pysequence.googlecode.com/svn/trunk/images_aide/res_propriete_eleves.png
 
 
 = Tâches =
