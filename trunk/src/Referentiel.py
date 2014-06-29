@@ -73,7 +73,7 @@ class Referentiel():
 #        print "Sav :", self.dicSavoirs
         print "cellulesInfo_prj = ", self.cellulesInfo_prj
 #        print "dicSavoirs_Math", self.dicSavoirs_Math
-#        print "dicCompetences_prj", self.dicCompetences_prj
+        print "dicCompetences_prj", self.dicCompetences_prj
 #        print "_dicCompetences_prj_simple", self._dicCompetences_prj_simple
 #        for p in self.getParams():
 #            v = getattr(self, p)
@@ -499,38 +499,38 @@ class Referentiel():
         #
         # dicIndicateurs_prj
         #     
-        if self.projet:
-            sh_va = wb.sheet_by_name(u"Indicateurs_PRJ")     
-            lig = [l  for l in range(1, sh_va.nrows) if sh_va.cell(l,1).value != u""]
-            llig = lig + [sh_va.nrows]
-            dic = {}
-            for i, p in enumerate(lig):
-                dic[str(sh_va.cell(p,1).value)] = [[sh_va.cell(l,2).value, sh_va.cell(l,3).value == "R"] for l in range(p, llig[i+1]) if sh_va.cell(l,2).value != u""]
-            self.dicIndicateurs_prj =  dic
+#        if self.projet:
+        sh_va = wb.sheet_by_name(u"Indicateurs_PRJ")     
+        lig = [l  for l in range(1, sh_va.nrows) if sh_va.cell(l,1).value != u""]
+        llig = lig + [sh_va.nrows]
+        dic = {}
+        for i, p in enumerate(lig):
+            dic[str(sh_va.cell(p,1).value)] = [[sh_va.cell(l,2).value, sh_va.cell(l,3).value == "R"] for l in range(p, llig[i+1]) if sh_va.cell(l,2).value != u""]
+        self.dicIndicateurs_prj =  dic
         
         #
         # dicPoidsIndicateurs_prj
         #
-        if self.projet:
-            sh_va = wb.sheet_by_name(u"Indicateurs_PRJ")     
-            lig = [l  for l in range(1, sh_va.nrows) if sh_va.cell(l,0).value != u""]
-            llig = lig + [sh_va.nrows]
-            for i, p in enumerate(lig):
-                lig2 = [l for l in range(p, llig[i+1]) if sh_va.cell(l,1).value != u""]
-                self.dicPoidsIndicateurs_prj[str(sh_va.cell(p,0).value)] = [sh_va.cell(p,4).value, {}]
-                llig2 = lig2 + [llig[i+1]]
-                for ii, l in enumerate(lig2):
-                    self.dicPoidsIndicateurs_prj[str(sh_va.cell(p,0).value)][1][sh_va.cell(l,1).value] = [sh_va.cell(pp,4).value for pp in range(l, llig2[ii+1])]
+#        if self.projet:
+        sh_va = wb.sheet_by_name(u"Indicateurs_PRJ")     
+        lig = [l  for l in range(1, sh_va.nrows) if sh_va.cell(l,0).value != u""]
+        llig = lig + [sh_va.nrows]
+        for i, p in enumerate(lig):
+            lig2 = [l for l in range(p, llig[i+1]) if sh_va.cell(l,1).value != u""]
+            self.dicPoidsIndicateurs_prj[str(sh_va.cell(p,0).value)] = [sh_va.cell(p,4).value, {}]
+            llig2 = lig2 + [llig[i+1]]
+            for ii, l in enumerate(lig2):
+                self.dicPoidsIndicateurs_prj[str(sh_va.cell(p,0).value)][1][sh_va.cell(l,1).value] = [sh_va.cell(pp,4).value for pp in range(l, llig2[ii+1])]
         
         #
         # Compétences pour projet
         #
-        if self.projet:
-            sh_va = wb.sheet_by_name(u"Compétences")     
-            self.dicCompetences_prj = remplir(sh_va, 0, range(1, sh_va.nrows), mode = 2, condition = "P")
-            for c in self.dicCompetences_prj.keys():
-                if not c in self.dicPoidsIndicateurs_prj.keys():
-                    del self.dicCompetences_prj[c]
+#        if self.projet:
+        sh_va = wb.sheet_by_name(u"Compétences")     
+        self.dicCompetences_prj = remplir(sh_va, 0, range(1, sh_va.nrows), mode = 2, condition = "P")
+        for c in self.dicCompetences_prj.keys():
+            if not c in self.dicPoidsIndicateurs_prj.keys():
+                del self.dicCompetences_prj[c]
         
         
             

@@ -40,9 +40,78 @@
       <d_O101 S_CO1.1="Justifier les choix des mat&#233;riaux, des structures d'un syst&#232;me et les &#233;nergies mises en oeuvre dans une approche de d&#233;veloppement durable" S_CO1.2="Justifier le choix d'une solution selon des contraintes d'ergonomie et d'effets sur la sant&#233; de l'homme et du vivant" />
     </l_O1>
   </d_dicCompetences>
-  <d_dicCompetences_prj />
-  <d_dicIndicateurs_prj />
-  <d_dicPoidsIndicateurs_prj />
+  <d_dicCompetences_prj>
+    <l_O6 S_O600="Communiquer une id&#233;e, un principe ou une solution technique, un projet, y compris en langue &#233;trang&#232;re">
+      <d_O601 S_CO6.1="D&#233;crire une id&#233;e, un principe, une solution, un projet en utilisant des outils de repr&#233;sentation adapt&#233;s" S_CO6.2="D&#233;crire le fonctionnement et/ou l'exploitation d'un syst&#232;me en utilisant l'outil de description le plus pertinent" S_CO6.3="Pr&#233;senter et argumenter des d&#233;marches, des r&#233;sultats, y compris dans une langue &#233;trang&#232;re" />
+    </l_O6>
+    <l_O2 S_O200="Identifier les &#233;l&#233;ments permettant la limitation de l&#8217;Impact environnemental d&#8217;un syst&#232;me et de ses constituants">
+      <d_O201 S_CO2.1="Identifier les flux et la forme de l'&#233;nergie, caract&#233;riser ses transformations et/ou modulations et estimer l'efficacit&#233; &#233;nerg&#233;tique globale d'un syst&#232;me" S_CO2.2="Justifier les solutions constructives d'un syst&#232;me au regard des impacts environnementaux et &#233;conomiques engendr&#233;s tout au long de son cycle de vie" />
+    </l_O2>
+    <l_O1 S_O100="Caract&#233;riser des syst&#232;mes privil&#233;giant un usage raisonn&#233; du point de vue d&#233;veloppement durable">
+      <d_O101 S_CO1.1="Justifier les choix des mat&#233;riaux, des structures d'un syst&#232;me et les &#233;nergies mises en oeuvre dans une approche de d&#233;veloppement durable" S_CO1.2="Justifier le choix d'une solution selon des contraintes d'ergonomie et d'effets sur la sant&#233; de l'homme et du vivant" />
+    </l_O1>
+    <l_O8s S_O8s00="Valider des solutions techniques">
+      <d_O8s01 S_CO8.0="Justifier des &#233;l&#233;ments d'une simulation relative au comportement de tout ou partie d'un syst&#232;me et les &#233;carts par rapport au r&#233;el" />
+    </l_O8s>
+  </d_dicCompetences_prj>
+  <d_dicIndicateurs_prj>
+    <l_CO1.1>
+      <l_CO1.100 B_CO1.10001="False" S_CO1.10000="Le choix des mat&#233;riaux et/ou des mat&#233;riels est justifi&#233;, des crit&#232;res d'&#233;co conception sont pris en compte" />
+      <l_CO1.101 B_CO1.10101="False" S_CO1.10100="La  structure mat&#233;rielle et/ou informationnelle est correctement justifi&#233;e " />
+    </l_CO1.1>
+    <l_CO1.2>
+      <l_CO1.200 B_CO1.20001="False" S_CO1.20000="La justification des param&#232;tres de confort et/ou la r&#233;ponse apport&#233;e par le syst&#232;me aux contraintes de pr&#233;servation de la sant&#233; et du respect de la s&#233;curit&#233; sont explicit&#233;es" />
+    </l_CO1.2>
+    <l_CO8.0>
+      <l_CO8.000 B_CO8.00001="False" S_CO8.00000="Les solutions techniques envisag&#233;es sont correctement analys&#233;es au regard des r&#233;sultats d'exp&#233;rimentations et/ou de tests et/ou de simulations" />
+      <l_CO8.001 B_CO8.00101="False" S_CO8.00100="L'origine des &#233;carts entre les r&#233;sultats obtenus et les exigences du cahier des charges est correctement identifi&#233;e" />
+    </l_CO8.0>
+    <l_CO6.3>
+      <l_CO6.300 B_CO6.30001="False" S_CO6.30000="Le choix de la d&#233;marche retenue est argument&#233;e" />
+      <l_CO6.301 B_CO6.30101="False" S_CO6.30100="Les r&#233;sultats sont pr&#233;sent&#233;s et comment&#233;s de mani&#232;re claire et concise" />
+    </l_CO6.3>
+    <l_CO6.2>
+      <l_CO6.200 B_CO6.20001="False" S_CO6.20000="La description du fonctionnement ou de l'exploitation du syst&#232;me est synth&#233;tique et correcte" />
+    </l_CO6.2>
+    <l_CO6.1>
+      <l_CO6.100 B_CO6.10001="False" S_CO6.10000="La description du principe ou de la solution est synth&#233;tique et correcte" />
+    </l_CO6.1>
+    <l_CO2.2>
+      <l_CO2.200 B_CO2.20001="False" S_CO2.20000="La relation entre une fonction, des solutions et leur impact environnemental ou soci&#233;tal est pr&#233;cis&#233;e " />
+      <l_CO2.201 B_CO2.20101="False" S_CO2.20100="Le compromis technico &#233;conomique et/ou la prise en compte des normes et r&#233;glementations est expliqu&#233; " />
+    </l_CO2.2>
+    <l_CO2.1>
+      <l_CO2.100 B_CO2.10001="False" S_CO2.10000="Les flux et la forme de l'&#233;nergie et/ou de l'information sont d&#233;crits de fa&#231;on qualitative" />
+      <l_CO2.101 B_CO2.10101="False" S_CO2.10100="Les caract&#233;ristiques d'entr&#233;es sorties des transformations ou modulations sont correctement pr&#233;cis&#233;es" />
+      <l_CO2.102 B_CO2.10201="False" S_CO2.10200="L'analyse globale d'une chaine (&#233;nergie, action, information) est correctement r&#233;alis&#233;e" />
+    </l_CO2.1>
+  </d_dicIndicateurs_prj>
+  <d_dicPoidsIndicateurs_prj>
+    <l_O6 F_O600="45.0">
+      <d_O601>
+        <l_CO6.3 F_CO6.300="25.0" F_CO6.301="25.0" />
+        <l_CO6.2 F_CO6.200="25.0" />
+        <l_CO6.1 F_CO6.100="25.0" />
+      </d_O601>
+    </l_O6>
+    <l_O2 F_O200="15.0">
+      <d_O201>
+        <l_CO2.2 F_CO2.200="20.0" F_CO2.201="20.0" />
+        <l_CO2.1 F_CO2.100="20.0" F_CO2.101="20.0" F_CO2.102="20.0" />
+      </d_O201>
+    </l_O2>
+    <l_O1 F_O100="20.0">
+      <d_O101>
+        <l_CO1.1 F_CO1.100="35.0" F_CO1.101="35.0" />
+        <l_CO1.2 F_CO1.200="30.0" />
+      </d_O101>
+    </l_O1>
+    <l_O8s F_O8s00="20.0">
+      <d_O8s01>
+        <l_CO8.0 F_CO8.000="60.0" F_CO8.001="40.0" />
+      </d_O8s01>
+    </l_O8s>
+  </d_dicPoidsIndicateurs_prj>
   <d_dicSavoirs>
     <l_1 S_100="Principes de conception des syst&#232;mes de d&#233;veloppement durable">
       <d_101>

@@ -490,7 +490,7 @@ class Lien():
     
     ######################################################################################  
     def getBranche(self, branche):
-        branche.set("Lien", self.path)
+        branche.set("Lien", toDefautEncoding(self.path))
         branche.set("TypeLien", self.type)
         
         
@@ -1971,7 +1971,7 @@ class Projet(BaseDoc, Objet_sequence):
         taches = ET.SubElement(projet, "Taches")
         for t in self.taches:
             taches.append(t.getBranche())
-        
+#        
         eleves = ET.SubElement(projet, "Eleves")
         for e in self.eleves:
             eleves.append(e.getBranche())
@@ -2809,8 +2809,10 @@ class Projet(BaseDoc, Objet_sequence):
             les compétences et indicateurs 
             mobilisés par les tâches précédentes
         """
-#        print "SetCompetencesRevuesSoutenance", len(self.eleves)
-        tousIndicateurs = REFERENTIELS[self.classe.typeEnseignement].dicIndicateurs_prj
+        print "SetCompetencesRevuesSoutenance", len(self.eleves)
+        tousIndicateurs = self.GetReferentiel().dicIndicateurs_prj
+        print tousIndicateurs
+#        REFERENTIELS[self.classe.typeEnseignement].dicIndicateurs_prj
         tR1 = None
         tR2 = None
         indicateurs = []
@@ -5964,7 +5966,7 @@ class Eleve(Personne, Objet_sequence):
                 if i ==0:
                     size = None
                     bold = True
-                    if er >= 0.5:
+                    if es >= 0.5:
                         coul = constantes.GetCouleurHTML(COUL_OK)
                     else:
                         coul = constantes.GetCouleurHTML(COUL_NON)
@@ -7539,6 +7541,8 @@ class FenetreProjet(FenetreDocument):
         root.append(projet)
         root.append(classe)
         constantes.indent(root)
+        
+#        print ET.tostring(projet)#, encoding="utf8",  method="xml")
         
         ET.ElementTree(root).write(fichier, encoding = DEFAUT_ENCODING)
         
