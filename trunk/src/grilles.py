@@ -110,7 +110,7 @@ def getTableau(parent, doc):
 
 
 def modifierGrille(doc, tableaux, eleve):
-   
+    print "modifierGrille", eleve
     
     #
     # On coche les cellules "non" (obsolète depuis session 2014 en STI2D et 2015 en SSI)
@@ -212,6 +212,8 @@ def modifierGrille(doc, tableaux, eleve):
     # On rajoute quelques informations
     #
     dicInfo = doc.GetReferentiel().cellulesInfo_prj
+#    import Referentiel
+#    dicInfo = Referentiel.REFERENTIELS[doc.GetTypeEnseignement()].cellulesInfo_prj
 #    tb = tabl
 #    if doc.GetTypeEnseignement(simple = True) == "SSI":
 #        dicInfo = Cellules_INFO_SSI
@@ -226,16 +228,24 @@ def modifierGrille(doc, tableaux, eleve):
              "Pre" : eleve.GetPrenom(),
              "Etab": doc.classe.etablissement
              }
-    print schem
-    print dicInfo
-    print tableaux
+#    print schem
+#    print dicInfo
+#    print tableaux
     
-    for t in tableaux.values():
+    for ct, t in tableaux.items():
+#        print " ", ct
         for k, v in schem.items():
-            print k
+#            print "  ", k
             if k in dicInfo.keys():
-                l,c = dicInfo[k][1]
-                t.setCell(1, l, c, v)
+                for d in dicInfo[k]:
+#                    print "   ", d
+                    if d[0] == ct: # Classeur
+                        f = d[1]   # Feuille
+                        nf = t.getSheetNum(f)
+                        l,c = d[2] # ligne , colonne
+#                        print "Feuille", f, nf
+#                        print "Ligne, Colonne", l, c
+                        t.setCell(nf, l, c, v)
         
         
     
@@ -419,6 +429,9 @@ class PyExcel:
         lstSheets=[sheet.Name for sheet in self.xlBook.Worksheets]
         return lstSheets
  
+    def getSheetNum(self, nom):
+        return self.getSheets().index(nom)+1
+    
     def copySheet(self,sheet,Before='',After=''):
         sht = self.xlBook.Worksheets(sheet)
         if Before :

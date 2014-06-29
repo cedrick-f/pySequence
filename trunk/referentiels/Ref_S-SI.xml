@@ -7,20 +7,30 @@
     <l_AP S_AP00="Activit&#233; pratique" S_AP01="Activit&#233; pratique" />
   </d_activites>
   <d_cellulesInfo_prj>
-    <l_Tit S_Tit00="Identification">
-      <l_Tit01 F_Tit0100="12.0" F_Tit0101="1.0" />
+    <l_Tit>
+      <l_Tit00 S_Tit0000="S" S_Tit0001="Identification">
+        <l_Tit0002 I_Tit000200="12" I_Tit000201="1" />
+      </l_Tit00>
     </l_Tit>
-    <l_Nom S_Nom00="Identification">
-      <l_Nom01 F_Nom0100="7.0" F_Nom0101="2.0" />
+    <l_Nom>
+      <l_Nom00 S_Nom0000="S" S_Nom0001="Identification">
+        <l_Nom0002 I_Nom000200="7" I_Nom000201="2" />
+      </l_Nom00>
     </l_Nom>
-    <l_Des S_Des00="Identification">
-      <l_Des01 F_Des0100="12.0" F_Des0101="1.0" />
+    <l_Des>
+      <l_Des00 S_Des0000="S" S_Des0001="Identification">
+        <l_Des0002 I_Des000200="12" I_Des000201="1" />
+      </l_Des00>
     </l_Des>
-    <l_Pre S_Pre00="Identification">
-      <l_Pre01 F_Pre0100="8.0" F_Pre0101="2.0" />
+    <l_Pre>
+      <l_Pre00 S_Pre0000="S" S_Pre0001="Identification">
+        <l_Pre0002 I_Pre000200="8" I_Pre000201="2" />
+      </l_Pre00>
     </l_Pre>
-    <l_Etab S_Etab00="Identification">
-      <l_Etab01 F_Etab0100="5.0" F_Etab0101="2.0" />
+    <l_Etab>
+      <l_Etab00 S_Etab0000="S" S_Etab0001="Identification">
+        <l_Etab0002 I_Etab000200="5" I_Etab000201="2" />
+      </l_Etab00>
     </l_Etab>
   </d_cellulesInfo_prj>
   <d_demarcheSeance>
@@ -97,7 +107,7 @@
           <d_B401 S_B4.1="interpr&#233;ter les r&#233;sultats obtenus" S_B4.2="pr&#233;ciser les limites de validit&#233; du mod&#232;le utilis&#233;" S_B4.3="modifier les param&#232;tres du mod&#232;le pour r&#233;pondre au cahier des charges ou aux r&#233;sultats exp&#233;rimentaux" S_B4.4="valider un mod&#232;le optimis&#233; fourni" />
         </l_B4>
         <l_B3 S_B300="R&#233;soudre et simuler">
-          <d_B301 S_B3.1="choisir et mettre en oeuvre une m&#233;thode de r&#233;solution" S_B3.2="simuler le fonctionnement de tout ou partie d&#8217;un syst&#232;me &#224; l&#8217;aide d&#8217;un mod&#232;le fourni" />
+          <d_B301 S_B3.2="simuler le fonctionnement de tout ou partie d&#8217;un syst&#232;me &#224; l&#8217;aide d&#8217;un mod&#232;le fourni" />
         </l_B3>
       </d_B01>
     </l_B>
@@ -591,7 +601,17 @@
           </d_T.401>
         </l_T.4>
         <l_T.1 S_T.100="Mesure et incertitude">
-          <l_T.101 S_T.10100="T.1.1" S_T.10101="T.1.2" S_T.10102="T.1.3" />
+          <d_T.101>
+            <l_T.1.1 S_T.1.100="Erreurs et notions associ&#233;es">
+              <l_T.1.101 />
+            </l_T.1.1>
+            <l_T.1.2 S_T.1.200="Incertitudes et notions associ&#233;es">
+              <l_T.1.201 />
+            </l_T.1.2>
+            <l_T.1.3 S_T.1.300="Expression et acceptabilit&#233; du r&#233;sultat">
+              <l_T.1.301 />
+            </l_T.1.3>
+          </d_T.101>
         </l_T.1>
         <l_T.3 S_T.300="Comprendre : lois et mod&#232;les">
           <d_T.301>

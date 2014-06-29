@@ -68,9 +68,17 @@ class Referentiel():
     def __repr__(self):
         print "*********************"
         print self.Code
-        print "CI_BO :", self.CI_BO
-        print "CI  :", self.CentresInterets
-        print "Sav :", self.dicSavoirs
+#        print "CI_BO :", self.CI_BO
+#        print "CI  :", self.CentresInterets
+#        print "Sav :", self.dicSavoirs
+        print "cellulesInfo_prj = ", self.cellulesInfo_prj
+#        print "dicSavoirs_Math", self.dicSavoirs_Math
+#        print "dicCompetences_prj", self.dicCompetences_prj
+#        print "_dicCompetences_prj_simple", self._dicCompetences_prj_simple
+#        for p in self.getParams():
+#            v = getattr(self, p)
+#            if type(v) == dict:
+#                print p, v
 #        print "Com :", self.dicCompetences
 #        print "CoP :", self.dicCompetences_prj
 #        print "CoS :", self._dicCompetences_prj_simple
@@ -189,7 +197,6 @@ class Referentiel():
 
         def sauv(branche, val, nom = None):
 #            if u"é" in nom:
-#                print nom
             if type(val) == str or type(val) == unicode:
                 branche.set("S_"+nom, val)
             elif type(val) == int:
@@ -289,6 +296,7 @@ class Referentiel():
                 if _attr:
                     setattr(self, attr, lect(branche, _attr))
         
+        self.completer()
         return
         
     
@@ -357,18 +365,18 @@ class Referentiel():
         self.initParam()
         
         ###########################################################
-        def remplir(sh, col, rng, mode = 1, condition = None):
+        def remplir(sh, col, rng, mode = 1, condition = None, debug = False):
             """ Mode = 1 : on finit par une liste
                 Mode = 2 : on finit par un dict
             """
-            if rng == []:
+            if debug: print "***", col, rng
+            if rng == [] and mode == 2:
                 return None
             self.prof_Comp = max(self.prof_Comp, col)
-#            if mode == 1: print "***", col, rng
             lig = [l  for l in rng if sh.cell(l,col).value != u""]
-#            if mode == 1: print lig
+            if debug: print lig
             if lig == rng:
-#                if mode == 1: print "FIN"
+                if debug: print "FIN"
                 if mode == 1:
                     if col+1 >= sh.ncols or sh.cell(lig[0],col+1).value == u"":
                         return [sh.cell(l,col).value for l in lig]
@@ -395,8 +403,8 @@ class Referentiel():
                 llig = lig + [rng[-1]+1]
                 dic = {}
                 for i, p in enumerate(lig):
-#                    if mode == 1: print "-> ",lig
-                    sdic = remplir(sh, col+1, range(p+1, llig[i+1]), mode = mode, condition = condition)
+                    if debug: print "-> ",lig
+                    sdic = remplir(sh, col+1, range(p+1, llig[i+1]), mode = mode, condition = condition, debug = debug)
                     if sdic != None:
                         dic[str(sh.cell(p,col).value)] = [sh.cell(p,col+1).value, sdic]
                 return dic
@@ -436,7 +444,15 @@ class Referentiel():
         sh_g = wb.sheet_by_name(u"Généralités")
         if sh_g.cell(21,0).value != u"":
             self.tr_com = [sh_g.cell(21,0).value, sh_g.cell(21,1).value]
-            
+           
+        #
+        # projet
+        #
+        sh_g = wb.sheet_by_name(u"Généralités")
+        self.projet = sh_g.cell(23,1).value[0].upper() == "O"
+        if self.projet:
+            self.duree_prj = int(sh_g.cell(24,1).value)
+             
         #
         # CI
         #
@@ -483,43 +499,40 @@ class Referentiel():
         #
         # dicIndicateurs_prj
         #     
-        sh_va = wb.sheet_by_name(u"Indicateurs_PRJ")     
-        lig = [l  for l in range(1, sh_va.nrows) if sh_va.cell(l,1).value != u""]
-        llig = lig + [sh_va.nrows]
-        dic = {}
-        for i, p in enumerate(lig):
-            dic[str(sh_va.cell(p,1).value)] = [[sh_va.cell(l,2).value, sh_va.cell(l,3).value == "R"] for l in range(p, llig[i+1]) if sh_va.cell(l,2).value != u""]
-        self.dicIndicateurs_prj =  dic
+        if self.projet:
+            sh_va = wb.sheet_by_name(u"Indicateurs_PRJ")     
+            lig = [l  for l in range(1, sh_va.nrows) if sh_va.cell(l,1).value != u""]
+            llig = lig + [sh_va.nrows]
+            dic = {}
+            for i, p in enumerate(lig):
+                dic[str(sh_va.cell(p,1).value)] = [[sh_va.cell(l,2).value, sh_va.cell(l,3).value == "R"] for l in range(p, llig[i+1]) if sh_va.cell(l,2).value != u""]
+            self.dicIndicateurs_prj =  dic
         
         #
         # dicPoidsIndicateurs_prj
         #
-        sh_va = wb.sheet_by_name(u"Indicateurs_PRJ")     
-        lig = [l  for l in range(1, sh_va.nrows) if sh_va.cell(l,0).value != u""]
-        llig = lig + [sh_va.nrows]
-        for i, p in enumerate(lig):
-            lig2 = [l for l in range(p, llig[i+1]) if sh_va.cell(l,1).value != u""]
-            self.dicPoidsIndicateurs_prj[str(sh_va.cell(p,0).value)] = [sh_va.cell(p,4).value, {}]
-            llig2 = lig2 + [llig[i+1]]
-            for ii, l in enumerate(lig2):
-                self.dicPoidsIndicateurs_prj[str(sh_va.cell(p,0).value)][1][sh_va.cell(l,1).value] = [sh_va.cell(pp,4).value for pp in range(l, llig2[ii+1])]
+        if self.projet:
+            sh_va = wb.sheet_by_name(u"Indicateurs_PRJ")     
+            lig = [l  for l in range(1, sh_va.nrows) if sh_va.cell(l,0).value != u""]
+            llig = lig + [sh_va.nrows]
+            for i, p in enumerate(lig):
+                lig2 = [l for l in range(p, llig[i+1]) if sh_va.cell(l,1).value != u""]
+                self.dicPoidsIndicateurs_prj[str(sh_va.cell(p,0).value)] = [sh_va.cell(p,4).value, {}]
+                llig2 = lig2 + [llig[i+1]]
+                for ii, l in enumerate(lig2):
+                    self.dicPoidsIndicateurs_prj[str(sh_va.cell(p,0).value)][1][sh_va.cell(l,1).value] = [sh_va.cell(pp,4).value for pp in range(l, llig2[ii+1])]
         
         #
         # Compétences pour projet
         #
-        sh_va = wb.sheet_by_name(u"Compétences")     
-        self.dicCompetences_prj = remplir(sh_va, 0, range(1, sh_va.nrows), mode = 2, condition = "P")
-        for c in self.dicCompetences_prj.keys():
-            if not c in self.dicPoidsIndicateurs_prj.keys():
-                del self.dicCompetences_prj[c]
-        
-        #
-        # projet
-        #
-        sh_g = wb.sheet_by_name(u"Généralités")
-        self.projet = sh_g.cell(23,1).value[0].upper() == "O"
         if self.projet:
-            self.duree_prj = int(sh_g.cell(24,1).value)
+            sh_va = wb.sheet_by_name(u"Compétences")     
+            self.dicCompetences_prj = remplir(sh_va, 0, range(1, sh_va.nrows), mode = 2, condition = "P")
+            for c in self.dicCompetences_prj.keys():
+                if not c in self.dicPoidsIndicateurs_prj.keys():
+                    del self.dicCompetences_prj[c]
+        
+        
             
             
         #
@@ -568,7 +581,7 @@ class Referentiel():
             self.dicSavoirs_Math = remplir(sh_va, 0, range(1, sh_va.nrows))
         
         #
-        # Savoirs Math
+        # Savoirs Physique
         #
         if u"Phys" in wb.sheet_names():
             sh_va = wb.sheet_by_name(u"Phys")     
@@ -586,8 +599,14 @@ class Referentiel():
                     
             
             for l in range(7,sh_g.nrows):
-                if sh_g.cell(l,0).value != u"":
-                    self.cellulesInfo_prj[str(sh_g.cell(l,0).value)] = [sh_g.cell(l,1).value, [sh_g.cell(l,2).value, sh_g.cell(l,3).value]]
+                k = str(sh_g.cell(l,0).value)
+                if k != u"":
+                    #    Classeur                Feuille                Ligne                        Colonne
+                    i = [sh_g.cell(l,1).value, sh_g.cell(l,2).value, [int(sh_g.cell(l,3).value), int(sh_g.cell(l,4).value)]]
+                    if k in self.cellulesInfo_prj.keys():
+                        self.cellulesInfo_prj[k].append(i)
+                    else:
+                        self.cellulesInfo_prj[k] = [i]
         
         #
         # Phases du projet
@@ -625,8 +644,8 @@ class Referentiel():
 #                            ddic[k1].extend(v1[1].values())
                     else:
                         ddic[k1] = [v1]
-                    
             return ddic
+        
         
         if self.tr_com:
             t = self.tr_com[0]
@@ -749,7 +768,7 @@ def enregistrer(code, nomFichier):
     root = REFERENTIELS[code].getBranche()
     constantes.indent(root)
     print nomFichier
-    print ET.tostring(root)
+#    print ET.tostring(root)
     ET.ElementTree(root).write(fichier)
     
     fichier.close()
@@ -760,6 +779,7 @@ def enregistrer(code, nomFichier):
 ##########################################################################################
 def ouvrir(nomFichier):
     fichier = open(nomFichier,'r')
+    print nomFichier
     root = ET.parse(fichier).getroot()
     ref = Referentiel()
     ref.setBranche(root)
@@ -781,8 +801,11 @@ def chargerReferentiels():
     #
     liste = os.listdir(os.path.join(constantes.PATH, r"..", DOSSIER_REF))
     
-    for fich_ref in liste:
+    for fich_ref in liste:#["Ref_STI2D-ETT.xls"]:#["Ref_6CLG.xls"]:#
+        
         if os.path.splitext(fich_ref)[1] == ".xls":
+#            print
+#            print fich_ref
             ref = Referentiel(os.path.join(constantes.PATH, r"..", DOSSIER_REF, fich_ref))
             REFERENTIELS[ref.Code] = ref
     

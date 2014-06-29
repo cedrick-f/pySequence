@@ -1,0 +1,201 @@
+<Referentiel B_CI_BO="False" B_CI_cible="False" B_projet="False" I_duree_prj="0" I_prof_Comp="1" S_Code="CLG6" S_Famille="CLG" S_nomSavoirs="Savoirs">
+  <l_CentresInterets S_CentresInterets00="Un objet technique, &#224; quel besoin r&#233;pond-t-il ?" S_CentresInterets01="Un objet technique, de quoi est-il constitu&#233; ?" S_CentresInterets02="Un objet technique, comment fonctionne t&#8217;il ? " S_CentresInterets03="Les objets techniques, quelles sont les diff&#233;rentes solutions pour r&#233;pondre &#224; des besoins identiques ? " S_CentresInterets04="Un objet technique, comment le r&#233;aliser ?" S_CentresInterets05="Cet objet technique, me convient-il ? " />
+  <l_Enseignement S_Enseignement00="6e Tech Clg" S_Enseignement01="6e Technologie coll&#232;ge" />
+  <d_activites>
+    <l_ED S_ED00="Etude de dossier" S_ED01="Activit&#233; d'&#233;tude de dossier" />
+    <l_P S_P00="Projet" S_P01="Activit&#233; de projet" />
+    <l_AP S_AP00="Activit&#233; pratique" S_AP01="Activit&#233; pratique" />
+  </d_activites>
+  <d_cellulesInfo_prj />
+  <d_demarcheSeance>
+    <l_ED S_ED00="I" S_ED01="R" />
+    <l_P S_P00="I" S_P01="R" S_P02="P" />
+    <l_AP S_AP00="I" S_AP01="R" />
+  </d_demarcheSeance>
+  <d_demarches>
+    <l_I S_I00="Investigation" S_I01="Investigation" />
+    <l_P S_P00="Projet" S_P01="Projet" />
+    <l_R S_R00="R&#233;s. Probl&#232;me" S_R01="R&#233;solution de probl&#232;me" />
+  </d_demarches>
+  <d_dicCompetences>
+    <l_1FOT S_1FOT00="Fonctionnement de l&apos;objet technique">
+      <d_1FOT01 S_FOT1="Distinguer en le justifiant objet et objet technique." S_FOT10="Identifier des solutions techniques qui assurent une fonction technique." S_FOT11="Identifier, &#224; partir d&#8217;une repr&#233;sentation, les &#233;l&#233;ments qui assurent une fonction technique." S_FOT12="D&#233;crire graphiquement &#224; l&#8217;aide de croquis &#224; main lev&#233;e ou de sch&#233;mas le fonctionnement observ&#233; des &#233;l&#233;ments constituant une fonction technique." S_FOT13="Distinguer, dans une notice, les informations qui rel&#232;vent de la mise en service d&#8217;un produit, de son utilisation, de son entretien, ainsi que les r&#232;gles de s&#233;curit&#233; &#224; observer." S_FOT14="Extraire d&#8217;une fiche produit les caract&#233;ristiques techniques." S_FOT2="Mettre en relation besoin et objet technique." S_FOT3="Distinguer fonction d&#8217;usage et fonction d&#8217;estime." S_FOT4="&#201;noncer la fonction d&#8217;usage d&#8217;un objet technique." S_FOT5="&#201;noncer les crit&#232;res li&#233;s aux fonctions d&#8217;estime pour un objet technique. " S_FOT6="Identifier les composantes de la valeur d&#8217;un objet technique : prix, fiabilit&#233;, disponibilit&#233;, d&#233;lai." S_FOT7="D&#233;crire le principe g&#233;n&#233;ral de fonctionnement d&#8217;un objet technique." S_FOT8="Identifier les principaux &#233;l&#233;ments qui constituent l&#8217;objet technique." S_FOT9="Dresser la liste des fonctions techniques qui participent &#224; la fonction d&#8217;usage." />
+    </l_1FOT>
+    <l_2MAT S_2MAT00="Mati&#232;re">
+      <d_2MAT01 S_MAT1="Indiquer &#224; quelle famille appartient un mat&#233;riau." S_MAT2="Mettre en &#233;vidence &#224; l&#8217;aide d&#8217;un protocole exp&#233;rimental quelques propri&#233;t&#233;s de mat&#233;riaux." S_MAT3="Classer les mat&#233;riaux par rapport &#224; l&#8217;une de leurs caract&#233;ristiques." S_MAT4="Identifier les relations formes - mat&#233;riaux - proc&#233;d&#233;s de r&#233;alisation." S_MAT5="Mettre en relation le choix d&#8217;un mat&#233;riau pour un usage donn&#233;, son co&#251;t et sa capacit&#233; de valorisation." S_MAT6="Identifier l&#8217;impact de l&#8217;emploi de certains mat&#233;riaux sur l&#8217;environnement dans les diff&#233;rentes &#233;tapes de la vie de l&#8217;objet." />
+    </l_2MAT>
+    <l_6ROT S_6ROT00="Repr&#233;sentation de l'objet technique">
+      <d_6ROT01 S_ROT1="Extraire d&#8217;un dessin, d&#8217;un plan, d&#8217;un sch&#233;ma, d&#8217;un &#233;clat&#233; ou d&#8217;une nomenclature les informations utiles pour la fabrication ou l&#8217;assemblage" S_ROT2="Associer un proc&#233;d&#233; de fabrication &#224; une forme" S_ROT3="R&#233;aliser en suivant un protocole donn&#233;" S_ROT4="Utiliser rationnellement mat&#233;riels et outillages dans le respect des r&#232;gles de s&#233;curit&#233;" S_ROT5="R&#233;aliser un assemblage ou tout ou partie d&#8217;un objet technique en suivant une proc&#233;dure formalis&#233;e" S_ROT6="Effectuer un geste technique en respectant les consignes" S_ROT7="Tester le fonctionnement" S_ROT8="Mesurer et contr&#244;ler &#224; l&#8217;aide d&#8217;instruments de mesure, d&#8217;un gabarit" S_ROT9="Confronter le r&#233;sultat &#224; celui attendu" />
+    </l_6ROT>
+    <l_5CGI S_5CGI00="???">
+      <d_5CGI01 S_CGI1="Identifier les principaux composants mat&#233;riels et logiciels d&#8217;un environnement informatique." S_CGI2="Entrer des informations : clavier, lecture magn&#233;tique, scanneur, appareil photo." S_CGI3="Restituer des informations : affichage (&#233;crans&#8230;), impression (encre, 3D, braille...), son, pilotage de machines&#8230;" S_CGI4="Recenser des donn&#233;es, les classer, les identifier, les stocker, les retrouver dans une arborescence." S_CGI5="Distinguer le r&#244;le des diff&#233;rents types de m&#233;moire." S_CGI6="Ouvrir et consulter des documents existants (textes, sch&#233;mas, animations, repr&#233;sentations volumiques&#8230;), extraire les informations utiles." S_CGI7="Composer, pr&#233;senter un document num&#233;rique (message, texte mis en page, tableaux, sch&#233;ma, composition graphique) et le communiquer &#224; un destinataire par des moyens &#233;lectroniques." S_CGI8="Pr&#233;senter dans un document num&#233;rique les &#233;tapes d&#8217;une d&#233;marche ou d&#8217;un raisonnement." S_CGI9="Retrouver une ou plusieurs informations &#224; partir d&#8217;adresses URL donn&#233;es." />
+    </l_5CGI>
+    <l_3EN S_3EN00="Energie">
+      <d_3EN01 S_EN1="Indiquer la nature des &#233;nergies utilis&#233;es pour le fonctionnement de l&#8217;objet technique." S_EN2="Identifier les &#233;l&#233;ments de stockage, de distribution, et de transformation de l&#8217;&#233;nergie." S_EN3="Repr&#233;senter la circulation de l&#8217;&#233;nergie dans un objet technique par un croquis." S_EN4="Indiquer le caract&#232;re plus ou moins polluant de la source d&#8217;&#233;nergie utilis&#233;e pour le fonctionnement de l&#8217;objet technique." />
+    </l_3EN>
+    <l_4EOT S_4EOT00="Evolution de l&apos;objet technique">
+      <d_4EOT01 S_EOT1="Citer des objets r&#233;pondant &#224; une m&#234;me fonction d&#8217;usage." S_EOT2="Identifier quelques &#233;volutions techniques et esth&#233;tiques." S_EOT3="Situer dans le temps ces &#233;volutions." />
+    </l_4EOT>
+  </d_dicCompetences>
+  <d_dicCompetences_prj />
+  <d_dicIndicateurs_prj />
+  <d_dicPoidsIndicateurs_prj />
+  <d_dicSavoirs>
+    <l_1 S_100="L&apos;analyse et la conception de l&apos;objet technique">
+      <d_101>
+        <l_1.4 S_1.400="Valeur">
+          <l_1.401 />
+        </l_1.4>
+        <l_1.5 S_1.500="Principe g&#233;n&#233;ral de fonctionnement">
+          <l_1.501 />
+        </l_1.5>
+        <l_1.6 S_1.600="Fonction technique, solution technique">
+          <l_1.601 />
+        </l_1.6>
+        <l_1.7 S_1.700="Mode de repr&#233;sentation : croquis, vues 2D, perspective, mod&#232;le num&#233;rique 3D">
+          <l_1.701 />
+        </l_1.7>
+        <l_1.1 S_1.100="Objet technique">
+          <l_1.101 />
+        </l_1.1>
+        <l_1.2 S_1.200="Besoin">
+          <l_1.201 />
+        </l_1.2>
+        <l_1.3 S_1.300="Fonction">
+          <l_1.301 />
+        </l_1.3>
+        <l_1.8 S_1.800="Informations et caract&#233;ristiques techniques">
+          <l_1.801 />
+        </l_1.8>
+      </d_101>
+    </l_1>
+    <l_3 S_300="Les &#233;nergies mises en &#339;uvre">
+      <d_301>
+        <l_3.2 S_3.200="&#201;l&#233;ments de stockage de distribution et de transformation de l&#8217;&#233;nergie">
+          <l_3.201 />
+        </l_3.2>
+        <l_3.3 S_3.300="Impact sur l&#8217;environnement : d&#233;gradation de l&#8217;air, de l&#8217;eau et du sol.">
+          <l_3.301 />
+        </l_3.3>
+        <l_3.1 S_3.100="Nature de l&#8217;&#233;nergie de fonctionnement">
+          <l_3.101 />
+        </l_3.1>
+      </d_301>
+    </l_3>
+    <l_2 S_200="Les mat&#233;riaux utilis&#233;s">
+      <d_201>
+        <l_2.3 S_2.300="Contraintes environnementales">
+          <l_2.301 />
+        </l_2.3>
+        <l_2.2 S_2.200="Caract&#233;ristiques physiques des mat&#233;riaux ; Relations entre formes, mat&#233;riaux et proc&#233;d&#233;s de r&#233;alisation ; Caract&#233;ristiques &#233;conomiques des mat&#233;riaux.">
+          <l_2.201 />
+        </l_2.2>
+        <l_2.1 S_2.100="Mat&#233;riaux usuels : m&#233;talliques, organiques, c&#233;ramiques">
+          <l_2.101 />
+        </l_2.1>
+      </d_201>
+    </l_2>
+    <l_5 S_500="La communication et la gestion de l&apos;information">
+      <d_501>
+        <l_5.1 S_5.100="Serveurs. Postes de travail. Terminaux mobiles. P&#233;riph&#233;riques. Logiciels.">
+          <l_5.101 />
+        </l_5.1>
+        <l_5.2 S_5.200="Acquisition et restitution des donn&#233;es">
+          <l_5.201 />
+        </l_5.2>
+        <l_5.3 S_5.300="Stockage des donn&#233;es, arborescence.">
+          <l_5.301 />
+        </l_5.3>
+        <l_5.4 S_5.400="M&#233;moire. Unit&#233; de stockage">
+          <l_5.401 />
+        </l_5.4>
+        <l_5.5 S_5.500="Consultation de documents num&#233;riques">
+          <l_5.501 />
+        </l_5.5>
+        <l_5.6 S_5.600="Cr&#233;ation et transmission de documents num&#233;riques">
+          <l_5.601 />
+        </l_5.6>
+        <l_5.7 S_5.700="Recherche d&#8217;informations sur la &#8220; toile &#8221;.">
+          <l_5.701 />
+        </l_5.7>
+      </d_501>
+    </l_5>
+    <l_4 S_400="L'&#233;volution de l'objet technique">
+      <d_401>
+        <l_4.1 S_4.100="Familles d&#8217;objets">
+          <l_4.101 />
+        </l_4.1>
+        <l_4.2 S_4.200="Avanc&#233;es technologiques">
+          <l_4.201 />
+        </l_4.2>
+      </d_401>
+    </l_4>
+    <l_6 S_600="Les processus de r&#233;alisation d'un objet technique">
+      <d_601>
+        <l_6.5 S_6.500="Mesure dimensionnelle (diam&#232;tre, distance), unit&#233; ">
+          <l_6.501 />
+        </l_6.5>
+        <l_6.4 S_6.400="Proc&#233;d&#233;s d&#8217;assemblage : soudage, rivetage, collage, embo&#238;tement, vissage.">
+          <l_6.401 />
+        </l_6.4>
+        <l_6.3 S_6.300="Mise en position et maintien d&#8217;une pi&#232;ce">
+          <l_6.301 />
+        </l_6.3>
+        <l_6.2 S_6.200="Formes permises par les proc&#233;d&#233;s de fabrication (usinage, d&#233;coupage, formage)">
+          <l_6.201 />
+        </l_6.2>
+        <l_6.1 S_6.100="Modes de repr&#233;sentation (images, projections, cotes, symboles)">
+          <l_6.101 />
+        </l_6.1>
+      </d_601>
+    </l_6>
+  </d_dicSavoirs>
+  <d_dicSavoirs_Math />
+  <d_dicSavoirs_Phys />
+  <d_effectifs>
+    <l_P S_P00="Act. Pra." S_P01="Activit&#233; Pratique" />
+    <l_C S_C00="Classe enti&#232;re" S_C01="Classe enti&#232;re" />
+    <l_E S_E00="Etude ou Projet" S_E01="Etude et Projet" />
+    <l_D S_D00="Demi-groupe" S_D01="Demi-groupe" />
+    <l_G S_G00="Effectif r&#233;duit" S_G01="Effectif r&#233;duit" />
+  </d_effectifs>
+  <d_effectifsSeance>
+    <l_C S_C00="C" />
+    <l_E S_E00="C" />
+    <l_AP S_AP00="E" S_AP01="P" />
+    <l_SS S_SS00="C" />
+    <l_ED S_ED00="C" S_ED01="G" S_ED02="D" S_ED03="E" S_ED04="P" />
+    <l_P S_P00="C" S_P01="G" S_P02="D" S_P03="E" S_P04="P" />
+    <l_S />
+    <l_R />
+    <l_SA S_SA00="C" S_SA01="G" />
+    <l_TD S_TD00="C" S_TD01="G" S_TD02="D" S_TD03="E" S_TD04="P" />
+  </d_effectifsSeance>
+  <d_grilles_prj />
+  <l_listPhasesEval_prj />
+  <l_listPhases_prj />
+  <l_listeDemarches S_listeDemarches00="I" S_listeDemarches01="R" S_listeDemarches02="P" />
+  <l_listeEffectifs S_listeEffectifs00="C" S_listeEffectifs01="G" S_listeEffectifs02="D" S_listeEffectifs03="E" S_listeEffectifs04="P" />
+  <l_listeTypeActivite S_listeTypeActivite00="ED" S_listeTypeActivite01="AP" S_listeTypeActivite02="P" />
+  <l_listeTypeSeance S_listeTypeSeance00="ED" S_listeTypeSeance01="AP" S_listeTypeSeance02="P" S_listeTypeSeance03="C" S_listeTypeSeance04="TD" S_listeTypeSeance05="SA" S_listeTypeSeance06="SS" S_listeTypeSeance07="E" S_listeTypeSeance08="R" S_listeTypeSeance09="S" />
+  <d_nomParties_prj />
+  <d_options />
+  <d_phases_prj />
+  <d_posRevues>
+    <l__02 />
+    <l__03 />
+  </d_posRevues>
+  <l_positions_CI />
+  <d_seances>
+    <l_C S_C00="Cours" S_C01="Cours" />
+    <l_E S_E00="Evaluation" S_E01="Evaluation" />
+    <l_P S_P00="Projet" S_P01="Activit&#233; de projet" />
+    <l_SS S_SS00="Synt. s&#233;quence" S_SS01="Synth&#232;se de s&#233;quence" />
+    <l_ED S_ED00="Etude de dossier" S_ED01="Activit&#233; d'&#233;tude de dossier" />
+    <l_AP S_AP00="Activit&#233; pratique" S_AP01="Activit&#233; pratique" />
+    <l_S S_S00="Parall&#232;le" S_S01="Activit&#233;s en parall&#232;le" />
+    <l_R S_R00="Rotation" S_R01="Rotation d'activit&#233;s" />
+    <l_TD S_TD00="TD" S_TD01="Travaux Dirig&#233;s" />
+    <l_SA S_SA00="Synt. activit&#233;" S_SA01="Synth&#232;se d'activit&#233;" />
+  </d_seances>
+</Referentiel>
