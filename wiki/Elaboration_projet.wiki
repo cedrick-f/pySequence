@@ -9,6 +9,9 @@ _Cette fiche permettra de décrire un projet mais surtout de vérifier que chaqu
 
 [Premiere_utilisation Configurer la classe] (Il est impératif de configurer la classe *avant* de définir les autres paramètres de la séquence)
 
+
+
+----
 ==*2 -  Définir les propriétés du projet *==
 
 _*depuis l'arbre :*_ cliquer sur *"Projet"*.
@@ -38,9 +41,11 @@ _*depuis les autres onglets*_, préciser :
   * supports de communication.
 
 _Ces derniers renseignements figureront sur le [Dossier_validation dossier de validation]._
+
+
+
+
 ----
-
-
 ==*3 - Définir le support d'étude*==
 
 _*depuis l'arbre :*_, cliquer sur *"support"*.
@@ -57,9 +62,12 @@ http://pysequence.googlecode.com/svn/trunk/images_aide/propriete_support1.png
 
 _résultat sur la fiche_
 
-http://pysequence.googlecode.com/svn/trunk/images_aide/res_propriete_support1.png
-----
+ http://pysequence.googlecode.com/svn/trunk/images_aide/res_propriete_support1.png
 
+
+
+
+----
 ==*4 - Définir l'équipe pédagogique*==
 <table width="100%">
 <tr>
@@ -76,7 +84,7 @@ http://pysequence.googlecode.com/svn/trunk/images_aide/equip_peda.png</td>
 <table/>
 
 
-_*dans _Propriétés_*_, saisir les paramètres propres au [Equipe_pedagogique professeur].
+_*dans _Propriétés_*_, saisir les paramètres propres au [Professeurs professeur].
  * identité
  * discipline
  * avatar
@@ -86,11 +94,11 @@ et préciser s'il s'agit du professeur *référent* pour le projet.
 
 _Recommencer autant de fois que nécessaire..._
 
-
-----
 _résultat sur la fiche_ http://pysequence.googlecode.com/svn/trunk/images_aide/res_propriete_equip_peda.png
-----
 
+
+
+----
 ==*5 - Définir le groupe d'élèves*==
 <table width="100%">
 <tr>
@@ -109,7 +117,7 @@ http://pysequence.googlecode.com/svn/trunk/images_aide/eleves.png</td>
 _*dans _Propriétés_*_, saisir les paramètres propres à l'élève :
  * le nom et le prénom de l'élève,
  * avatar
-Il est également possible de désigner le fichier "Grille d'évaluation", mais cette opération est normalement réalisée automatiquement lors de la génération de la grille.
+Il est également possible de désigner le fichier "Grille d'évaluation", mais cette opération est normalement réalisée automatiquement lors de la génération de la [grille d'évaluation].
 
  http://pysequence.googlecode.com/svn/trunk/images_aide/propriete_eleves.png
 
