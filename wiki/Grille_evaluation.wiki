@@ -16,7 +16,7 @@ _*pySequence*_ permet de générer automatiquement ces grilles, pré-remplies av
   # puis Générer la(les) grille(s)
  * de tous les candidats :
   # _*depuis le menu*_ : Fichier/Générer les grilles d'évaluation projet
-  # puis Générer la(les) grille(s)
+
 
 === Pour ouvrir les grilles d'évaluation depuis _*pySequence*_ :===
  * _*depuis l'arbre*_ :
