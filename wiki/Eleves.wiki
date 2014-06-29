@@ -1,7 +1,8 @@
-#summary Description de l'item "Tâche"
+#summary Description de l'item "Élève"
 
+La branche "Élèves" contient la liste des élèves impliqués dans le projet.
 
-= Elève =
+= Élève =
 *Permet de définir :*
  * L'[Eleves#Identit%C3%A9 identité] de l'élève (Nom, Prénom)
  * Son [Eleves#Avatar avatar] (photo, image, ...)
