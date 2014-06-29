@@ -6,8 +6,8 @@ _Cette fiche permettra de décrire un projet mais surtout de vérifier que chaqu
 <wiki:toc max_depth="2" />
 
 ==*1 - Configurer la classe*==
-
-[Premiere_utilisation Configurer la classe] (Il est impératif de configurer la classe *avant* de définir les autres paramètres de la séquence)
+Il est impératif de configurer la classe *avant* de définir les autres paramètres de la séquence.
+ _voir_ : [Premiere_utilisation Configurer la classe]
 
 
 
@@ -132,4 +132,4 @@ _résultat sur la fiche_
 
 Les premiers éléments du [Fonctionnalite_Prj projet] étant définis, il reste à décrire les différentes [Taches tâches], à les attribuer à un ou des [Eleves élèves] et y associer des compétences.
 
-[definition_taches Définir les tâches du projet]
+ _voir_ : [definition_taches Définir les tâches du projet]
