@@ -15,7 +15,7 @@ _*depuis l'arbre :*_ cliquer sur *"Projet"*.
 
 http://pysequence.googlecode.com/svn/trunk/images_aide/propriete_projet.png
 
-_*dans propriété*_ saisir :
+_*dans _Propriété_*_ saisir :
  * l'intitulé du projet
  * l'année scolaire et la position dans le cycle (1^ère^ ou Terminale)
  * la problématique
@@ -36,7 +36,8 @@ _*depuis les autres onglets*_, préciser :
   * documents de formalisation des solutions proposées
   * sous-ensemble fonctionnel d’un prototype, éléments d’une maquette réelle ou virtuelle
   * supports de communication.
-Ces derniers renseignements figureront sur la fiche de validation.
+
+_Ces derniers renseignements figureront sur la fiche de validation._
 ----
 
 
@@ -46,7 +47,7 @@ _*depuis l'arbre :*_, cliquer sur *"support"*.
 
 http://pysequence.googlecode.com/svn/trunk/images_aide/support.png
 
-_*dans _propriétés :*_
+_*dans _Propriétés_ :*_
  * préciser le nom du support
  * créer un lien vers un dossier ou un fichier donnant des précisions sur le support
  * changer l'image du support
@@ -75,7 +76,7 @@ http://pysequence.googlecode.com/svn/trunk/images_aide/equip_peda.png</td>
 <table/>
 
 
-_*dans _propriétés*_, saisir les paramètres propres au [Professeur professeur].
+_*dans _Propriétés_*_, saisir les paramètres propres au [Professeur professeur].
  * identité
  * discipline
  * avatar
@@ -106,7 +107,7 @@ http://pysequence.googlecode.com/svn/trunk/images_aide/eleves.png</td>
 <tr/>
 <table/>
 
-_*dans _propriétés*_, saisir les paramètres propres à l'élève :
+_*dans _Propriétés_*_, saisir les paramètres propres à l'élève :
  * le nom et le prénom de l'élève,
  * avatar
 Il est également possible de désigner le fichier "Grille d'évaluation", mais cette opération est normalement réalisée automatiquement lors de la génération de la grille.
