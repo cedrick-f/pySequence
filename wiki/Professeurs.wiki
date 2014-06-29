@@ -1,0 +1,30 @@
+#summary Description de l'item "Élève"
+
+La branche "Équipe pédagogique" contient la liste des professeurs encadrant le projet.
+
+= Professeur =
+*Permet de définir :*
+ * L'[Professeurs#Identit%C3%A9 identité] de l'élève (Nom, Prénom)
+ * Sa [Professeurs#Discipline discipline] (photo, image, ...)
+ * Son [Professeurs#Avatar avatar] (photo, image, ...)
+
+La case à cocher "Référent" permet de désigner le professeur référent du projet (un seul par projet).
+
+----
+== Identité ==
+
+_[Fonctionnalites#Fonctionnalit%C3A9s Haut de page]_
+
+----
+== Avatar ==
+
+_[Fonctionnalites#Fonctionnalit%C3A9s Haut de page]_
+
+----
+== Discipline ==
+
+_[Fonctionnalites#Fonctionnalit%C3A9s Haut de page]_
+
+----
+_[Fonctionnalite_Prj Rubrique Projet]_
+  
