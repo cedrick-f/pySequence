@@ -1,0 +1,31 @@
+#summary Les grilles d'évaluation des projet
+
+= Grilles d’évaluation des projets=
+
+Certains diplômes prévoient un épreuve de projet, laquelle est parfois évaluée par compétence.
+Dans ce  cas, le B.O. prévoit des documents d'aide à l'évaluation appelés *Grilles d'évaluation*.
+Pour chaque candidat, une ou deux grille(s), généralement sous la forme de classeurs Excel, sont mise(s) à disposition de l'équipe pédagogique (évaluation lors des revues de projet) et des examinateurs (évaluation lors d'une soutenance finale).
+
+_*pySequence*_ permet de générer automatiquement ces grilles, pré-remplies avec les informations saisies dans _*pySequence*_.
+
+ *Le logiciel Microsoft Excel doit être installé sur le poste !*
+
+Pour générer la(les) grille(s) :
+ * d'un seul candidat :
+  # depuis l'arbre : clic-droit sur l'élève
+  # puis Générer la(les) grille(s)
+ * de tous les candidats :
+  # depuis le menu : Fichier/Générer les grilles d'évaluation projet
+  # puis Générer la(les) grille(s)
+
+Pour ouvrir les grilles d'évaluation depuis _*pySequence*_ :
+ * depuis l'arbre :
+  # clic-droit sur l'élève
+  # puis Ouvrir la(les) grille(s)
+
+ * depuis les Propriétés de l'élève :
+  # clic sur le bouton "Ouvrir" de chaque grille.
+
+----
+_[Fonctionnalite_Prj Rubrique Projet]_
+
