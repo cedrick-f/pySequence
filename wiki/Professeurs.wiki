@@ -1,4 +1,4 @@
-#summary Description de l'item "Élève"
+#summary Description de l'item "Professeur"
 
 La branche "Équipe pédagogique" contient la liste des professeurs encadrant le projet.
 
