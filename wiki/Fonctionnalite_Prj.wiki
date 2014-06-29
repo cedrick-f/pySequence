@@ -3,7 +3,7 @@
 
 _*pySequence*_ permet de décrire précisément les objectifs, le déroulement et les acteurs d'un projet.
 
-Si le projet fait l'objet d'une évaluation à un examen, _*pySequence*_ propose de générer un document pour la validation, des grilles d'évaluation, des documents de tâches (fiches de lot) à destination des élèves...
+Si le projet fait l'objet d'une évaluation à un examen, _*pySequence*_ propose de générer un [Dossier_validation document pour la validation], des [Grille_evaluation grilles d'évaluation], des documents de tâches (fiches de lot) à destination des élèves...
 
 == Principales fonctionnalités ==
 
