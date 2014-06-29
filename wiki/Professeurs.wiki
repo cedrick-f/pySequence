@@ -5,7 +5,7 @@ La branche "Équipe pédagogique" contient la liste des professeurs encadrant le
 = Professeur =
 *Permet de définir :*
  * L'[Professeurs#Identit%C3%A9 identité] de l'élève (Nom, Prénom)
- * Sa [Professeurs#Discipline discipline] (photo, image, ...)
+ * Sa [Professeurs#Discipline discipline] (SII, Math, PC, ...)
  * Son [Professeurs#Avatar avatar] (photo, image, ...)
 
 La case à cocher "Référent" permet de désigner le professeur référent du projet (un seul par projet).
