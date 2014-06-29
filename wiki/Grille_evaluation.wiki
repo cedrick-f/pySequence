@@ -10,20 +10,20 @@ _*pySequence*_ permet de générer automatiquement ces grilles, pré-remplies av
 
  Le logiciel *Microsoft Excel* doit être installé sur le poste !
 
-Pour générer la(les) grille(s) :
+=== Pour générer la(les) grille(s) :===
  * d'un seul candidat :
-  # depuis l'arbre : clic-droit sur l'élève
+  # _*depuis l'arbre*_ : clic-droit sur l'élève
   # puis Générer la(les) grille(s)
  * de tous les candidats :
-  # depuis le menu : Fichier/Générer les grilles d'évaluation projet
+  # _*depuis le menu*_ : Fichier/Générer les grilles d'évaluation projet
   # puis Générer la(les) grille(s)
 
-Pour ouvrir les grilles d'évaluation depuis _*pySequence*_ :
- * depuis l'arbre :
+=== Pour ouvrir les grilles d'évaluation depuis _*pySequence*_ :===
+ * _*depuis l'arbre*_ :
   # clic-droit sur l'élève
   # puis Ouvrir la(les) grille(s)
 
- * depuis les Propriétés de l'élève :
+ * _*depuis les _Propriétés_ de l'élève*_ :
   # clic sur le bouton "Ouvrir" de chaque grille.
 
 ----
