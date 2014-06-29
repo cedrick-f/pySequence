@@ -8,7 +8,7 @@ Pour chaque candidat, une ou deux grille(s), généralement sous la forme de cla
 
 _*pySequence*_ permet de générer automatiquement ces grilles, pré-remplies avec les informations saisies dans _*pySequence*_.
 
- *Le logiciel Microsoft Excel doit être installé sur le poste !*
+ Le logiciel *Microsoft Excel* doit être installé sur le poste !
 
 Pour générer la(les) grille(s) :
  * d'un seul candidat :
@@ -28,4 +28,3 @@ Pour ouvrir les grilles d'évaluation depuis _*pySequence*_ :
 
 ----
 _[Fonctionnalite_Prj Rubrique Projet]_
-
