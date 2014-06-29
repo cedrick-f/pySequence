@@ -1202,7 +1202,7 @@ def DrawBoutonCompetence(ctx, objet, dicIndic, y, h = None):
         dx = wColComp/len(indic)
         for a, i in enumerate(indic):
             if i: # Rose ou bleu
-                if REFERENTIELS[objet.projet.classe.typeEnseignement].dicIndicateurs_prj[s][a][1]:
+                if objet.projet.classe.GetReferentiel().dicIndicateurs_prj[s][a][1]:
                     c = ICoulCompR
                     d = -1
                 else:
