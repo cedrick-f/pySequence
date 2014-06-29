@@ -6,7 +6,7 @@
   * [Fonctionalite_Seq Séquence]
   * [Fonctionnalite_Prj Projet]
    * [Classe Classe]
-   * [Professeur Professeur]
+   * [Professeurs Équipe pédagogique]
  * [Tutoriels]
   * [Installation]
   * [Premiere_utilisation Première utilisation]
