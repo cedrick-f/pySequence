@@ -16,10 +16,10 @@ _*depuis l'arbre :*_ cliquer sur *"Projet"*.
 http://pysequence.googlecode.com/svn/trunk/images_aide/propriete_projet.png
 
 _*dans _Propriété_*_ saisir :
- * l'intitulé du projet
- * l'année scolaire et la position dans le cycle (1^ère^ ou Terminale)
- * la problématique
- * le nombre de revues et leurs positions dans le déroulement du projet
+ * l'*intitulé* du projet
+ * l'*année scolaire* et la *position dans le cycle* (1^ère^ ou Terminale)
+ * la *problématique*
+ * le *nombre de revues* et leurs *positions* dans le déroulement du projet
  
 http://pysequence.googlecode.com/svn/trunk/images_aide/intitulé_projet.png
 
@@ -37,7 +37,7 @@ _*depuis les autres onglets*_, préciser :
   * sous-ensemble fonctionnel d’un prototype, éléments d’une maquette réelle ou virtuelle
   * supports de communication.
 
-_Ces derniers renseignements figureront sur la fiche de validation._
+_Ces derniers renseignements figureront sur le [Dossier_validation dossier de validation]._
 ----
 
 
