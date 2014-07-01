@@ -23,4 +23,4 @@ Pour télécharger les fichiers faire un clic-droit puis "Enregistrer la cible d
 
 http://upload.wikimedia.org/wikipedia/commons/e/e8/Svg_example3.svg
 
-https://pysequence.googlecode.com/svn/trunk/images_aide/ITEC_eco-passerelle.svg
+https://pysequence.googlecode.com/svn/trunk/images_aide/Svg_example3.svg
