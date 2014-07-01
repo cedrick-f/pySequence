@@ -6,6 +6,8 @@ Pour télécharger les fichiers faire un clic-droit puis "Enregistrer la cible d
 ==Projets ITEC==
  * fichier .prj : [http://pysequence.googlecode.com/svn/trunk/images_aide/ITEC_eco-passerelle.prj "Eco-passerelle"]
 
+<a href="http://pysequence.googlecode.com/svn/trunk/images_aide/ITEC_eco-passerelle.prj">Eco-passerelle</a>
+
  * fiche en svg : [EcoPasserelle]
 
 
