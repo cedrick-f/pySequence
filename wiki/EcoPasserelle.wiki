@@ -1,5 +1,9 @@
 =Projet Eco-Passerelle=
 
+<object type="image/svg+xml" 
+data="https://pysequence.googlecode.com/svn/wiki/ITEC_eco-passerelle.svg" width="300" height="200">
+
+
 <a href="https://pysequence.googlecode.com/svn/wiki/ITEC_eco-passerelle.svg" rel="nofollow"><img src="https://pysequence.googlecode.com/svn/wiki/ITEC_eco-passerelle.svg" >
 
 https://pysequence.googlecode.com/svn/wiki/ITEC_eco-passerelle.svg
