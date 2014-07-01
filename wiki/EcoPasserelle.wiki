@@ -1,6 +1,6 @@
 =Projet Eco-Passerelle=
 
-<a href="http://pysequence.googlecode.com/svn/wiki/ITEC_eco-passerelle.svg" rel="nofollow"><img src="http://pysequence.googlecode.com/svn/wiki/ITEC_eco-passerelle.svg" >
+<a href="https://pysequence.googlecode.com/svn/wiki/ITEC_eco-passerelle.svg" rel="nofollow"><img src="https://pysequence.googlecode.com/svn/wiki/ITEC_eco-passerelle.svg" >
 
 https://pysequence.googlecode.com/svn/wiki/ITEC_eco-passerelle.svg
 
