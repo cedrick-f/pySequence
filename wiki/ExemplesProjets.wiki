@@ -25,4 +25,4 @@ Pour télécharger les fichiers faire un clic-droit puis "Enregistrer la cible d
 
 http://fauryc.free.fr/IMG/svg/itec_eco-passerelle.svg
 
-<wiki:svg url="http://fauryc.free.fr/IMG/svg/itec_eco-passerelle.svg" height="200" border="0" /> 
+<wiki:video url="http://fauryc.free.fr/IMG/svg/itec_eco-passerelle.svg" height="200" border="0" /> 
