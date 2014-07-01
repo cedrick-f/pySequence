@@ -21,10 +21,4 @@ Pour télécharger les fichiers faire un clic-droit puis "Enregistrer la cible d
  * fiche en svg : [http://pysequence.googlecode.com/svn/trunk/images_aide/Projet_site_isole.svg "Site isolé"]
 
 
-http://upload.wikimedia.org/wikipedia/commons/e/e8/Svg_example3.svg
-
-https://pysequence.googlecode.com/svn/trunk/images_aide/Svg_example3.svg
-
-http://pysequence.googlecode.com/svn/wiki/images/ITEC_eco-passerelle.svg
-
 http://fauryc.free.fr/IMG/svg/itec_eco-passerelle.svg
