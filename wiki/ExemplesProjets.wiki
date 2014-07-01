@@ -27,5 +27,4 @@ https://pysequence.googlecode.com/svn/trunk/images_aide/Svg_example3.svg
 
 http://pysequence.googlecode.com/svn/wiki/images/ITEC_eco-passerelle.svg
 
-https://code.google.com/p/pysequence/source/browse/wiki/images/ITEC_eco-passerelle.svg
-
+http://fauryc.free.fr/IMG/svg/itec_eco-passerelle.svg
