@@ -121,7 +121,23 @@ def UnRegister():
         return True
     except:
         return False
-    
+
+def UnRegister2():
+
+    _winreg.DeleteKey(_winreg.HKEY_CLASSES_ROOT, EXT_FICHIER_SEQ)
+    _winreg.DeleteKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE_SEQ+"\\shell\\open\\command")
+    _winreg.DeleteKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE_SEQ+"\\shell\\open")
+    _winreg.DeleteKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE_SEQ+"\\shell")
+    _winreg.DeleteKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE_SEQ+"\\DefaultIcon")
+    _winreg.DeleteKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE_SEQ)
+
+    _winreg.DeleteKey(_winreg.HKEY_CLASSES_ROOT, EXT_FICHIER_PRJ)
+    _winreg.DeleteKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE_PRJ+"\\shell\\open\\command")
+    _winreg.DeleteKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE_PRJ+"\\shell\\open")
+    _winreg.DeleteKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE_PRJ+"\\shell")
+    _winreg.DeleteKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE_PRJ+"\\DefaultIcon")
+    _winreg.DeleteKey(_winreg.HKEY_CLASSES_ROOT, KEY_TYPE_PRJ)
+
     
 def IsRegistered():
     try:
@@ -154,6 +170,8 @@ def getIcone(nomFichier):
 
 #getIcone(u'D:\\DropBox\\strategie_peda\\Formation_vague2\\Répartition pôle-référent-version4.pdf')
 
+#UnRegister2()
+#print IsRegistered()
 
 
 

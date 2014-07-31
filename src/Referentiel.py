@@ -103,7 +103,7 @@ class Referentiel():
         #
         self.Famille = u""
         self.Code = u""
-        self.Enseignement = [u""    ,   u""]
+        self.Enseignement = [u""    ,   u"",    u""]
         self.options = {}               # options de l'enseignement : {Code : nomFichier}
         self.tr_com = None              # tronc commun de l'enseignement : Code
         
@@ -429,6 +429,7 @@ class Referentiel():
         self.Code = sh_g.cell(2,1).value
         self.Enseignement[0] = sh_g.cell(6,0).value
         self.Enseignement[1] = sh_g.cell(6,1).value
+        self.Enseignement[2] = sh_g.cell(6,2).value
 
         #
         # options
@@ -760,17 +761,13 @@ def getEnseignementLabel(label):
 
 
 
-
 ##########################################################################################
 def enregistrer(code, nomFichier):
 
     fichier = file(nomFichier, 'w')
     root = REFERENTIELS[code].getBranche()
     constantes.indent(root)
-    print nomFichier
-#    print ET.tostring(root)
     ET.ElementTree(root).write(fichier)
-    
     fichier.close()
     
 #enregistrer("SSI", "testSauvRef.xml")
@@ -779,7 +776,6 @@ def enregistrer(code, nomFichier):
 ##########################################################################################
 def ouvrir(nomFichier):
     fichier = open(nomFichier,'r')
-    print nomFichier
     root = ET.parse(fichier).getroot()
     ref = Referentiel()
     ref.setBranche(root)
@@ -832,15 +828,42 @@ def chargerReferentiels():
                 dicOk[k] = True
     print dicOk
     
+    #
+    # Construction de la structure en arbre
+    #
     for k, r in REFERENTIELS.items():
         if not r.tr_com:
             ARBRE_REF[k] = []
-
+    d = []
     for k, r in REFERENTIELS.items():
         if r.tr_com:
             ARBRE_REF[r.tr_com[0]].append(k)
+            d.append(r.tr_com[0])
     
-
+    for k, r in REFERENTIELS.items():
+        if "_"+r.Famille in ARBRE_REF.keys():
+            ARBRE_REF["_"+r.Famille].append(k)
+        else:
+            ARBRE_REF["_"+r.Famille] = [k]
+    
+    for k, r in ARBRE_REF.items():
+        if k[0] == "_":
+            if len(r) == 1:
+                del ARBRE_REF[k]
+                
+    for k, r in ARBRE_REF.items():
+        if k[0] == "_":
+            for kk in ARBRE_REF.keys():
+                if kk in r:
+                    if ARBRE_REF[kk] == []:
+                        del ARBRE_REF[kk]
+                    else:
+                        del ARBRE_REF[k]
+                        break
+            
+#    print ARBRE_REF
+    
+    
 chargerReferentiels()
 
 
