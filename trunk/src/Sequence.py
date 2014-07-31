@@ -2007,6 +2007,8 @@ class Projet(BaseDoc, Objet_sequence):
         self.positionRevues = branche.get("PosRevues", 
                                           '-'.join(list(self.GetReferentiel().posRevues[self.nbrRevues]))).split('-')
 
+        if self.nbrRevues == 3:
+            self.MiseAJourNbrRevues()
         
         self.MiseAJourTypeEnseignement()
         
@@ -2065,7 +2067,7 @@ class Projet(BaseDoc, Objet_sequence):
             phase = e.get("Phase")
             if phase in ["R1", "R2", "R3", "S"]:
                 if phase == "S":
-                    num = 2
+                    num = len(tachesRevue)-1
                 else:
                     num = eval(phase[1])-1
                 o,er =  tachesRevue[num].setBranche(e)
@@ -2805,21 +2807,17 @@ class Projet(BaseDoc, Objet_sequence):
         
     #############################################################################
     def SetCompetencesRevuesSoutenance(self):
-        """ Attribue à la soutenance et à la revue n°2
+        """ Attribue à la soutenance et à la revue n°2 (ou n°3 si 3 revues)
             les compétences et indicateurs 
             mobilisés par les tâches précédentes
         """
-        print "SetCompetencesRevuesSoutenance", len(self.eleves)
+#        print "SetCompetencesRevuesSoutenance", len(self.eleves)
         tousIndicateurs = self.GetReferentiel().dicIndicateurs_prj
-        print tousIndicateurs
+#        print tousIndicateurs
 #        REFERENTIELS[self.classe.typeEnseignement].dicIndicateurs_prj
         tR1 = None
         tR2 = None
-        indicateurs = []
-        for e in range(len(self.eleves)+1):
-            indicateurs.append({})
-        
-#            indicateurs = [{}]*(len(self.eleves)+1) # 0 : tous les élèves
+        indicateurs = [{} for e in range(len(self.eleves)+1)]   # 0 : tous les élèves
         
         for t in self.taches:   # toutes les tâches, dans l'ordre
             
@@ -2858,12 +2856,14 @@ class Projet(BaseDoc, Objet_sequence):
                                         t.indicateursEleve[neleve].append(codeIndic)
     
                     if neleve == 0:
+
                         if t.phase in ["R1", "Rev"] or (t.phase == "R2" and self.nbrRevues == 3):
                             ti = []
                             for i in t.indicateursEleve[neleve]:
                                 if i in t.indicateursMaxiEleve[neleve]:
                                     ti.append(i)
                             t.indicateursEleve[neleve] = ti
+                            print "phase",t.phase
                             t.panelPropriete.arbre.MiseAJourTypeEnseignement(t.GetReferentiel())
                             t.panelPropriete.MiseAJour()
                             if t.phase == "R1":
@@ -4201,7 +4201,7 @@ class Tache(Objet_sequence):
                 panelParent = le parent wx pour contenir "panelPropriete"
                 phaseTache = phase de la tache parmi 'Ana', 'Con', 'Rea', 'Val'
         """
-       
+#        print "__init__ tâche"
         Objet_sequence.__init__(self)
         
         # Les données sauvegardées
@@ -4221,9 +4221,10 @@ class Tache(Objet_sequence):
 #        self.indicateursMaxi = [] # Code à revoir : ça ne sert que pour R1 !
         
 #        if phaseTache in ["R1", "R2", "R3", "S"]:
-        self.indicateursEleve = { 0 : [], 1 : [], 2 : [], 3 : [],4 : [], 5 : [],6 : []} # clef = n°eleve ;  valeur = liste d'indicateurs
-        if phaseTache in ["R1", "R2", "R3", "S", "Rev"]:
-            self.indicateursMaxiEleve = { 0 : [], 1 : [], 2 : [], 3 : [],4 : [], 5 : [],6 : []}
+
+#        self.indicateursEleve = { 0 : [], 1 : [], 2 : [], 3 : [],4 : [], 5 : [],6 : []} # clef = n°eleve ;  valeur = liste d'indicateurs
+#        if phaseTache in ["R1", "R2", "R3", "S", "Rev"]:
+#            self.indicateursMaxiEleve = { 0 : [], 1 : [], 2 : [], 3 : [],4 : [], 5 : [],6 : []}
             
         
         self.code = u""
@@ -4265,13 +4266,21 @@ class Tache(Objet_sequence):
             
             self.tip_description = self.tip.CreerRichTexte(self, (3,0), (1,2))
         
+        
+        
         if branche != None:
             Ok, err = self.setBranche(branche)
             if not Ok:
                 self.code = -err # Pour renvoyer une éventuelle erreur à l'ouverture d'un fichier
+        else:
+            self.indicateursEleve = { 0 : [], 1 : [], 2 : [], 3 : [],4 : [], 5 : [],6 : []} # clef = n°eleve ;  valeur = liste d'indicateurs
+            if phaseTache in ["R1", "R2", "R3", "S", "Rev"]:
+                self.indicateursMaxiEleve = { 0 : [], 1 : [], 2 : [], 3 : [],4 : [], 5 : [],6 : []}
             
         if panelParent:
             self.panelPropriete = PanelPropriete_Tache(panelParent, self)
+        else:
+            print "pas panelParent", self
             
         if hasattr(self, 'panelPropriete'):
             self.panelPropriete.ConstruireListeEleves()
@@ -4460,6 +4469,7 @@ class Tache(Objet_sequence):
         
     ######################################################################################  
     def setBranche(self, branche):
+#        print "setBranche tâche",
         Ok = True
         err = 0
         
@@ -4467,15 +4477,15 @@ class Tache(Objet_sequence):
         self.intitule  = branche.get("Intitule", "")
         
         self.phase = branche.get("Phase", "")
-        
+#        print self.phase
+
         # Suite commentée ... à voir si pb
 #        if self.GetTypeEnseignement() == "SSI":
 #            if self.phase == 'Con':
 #                self.phase = 'Ana'
 #            elif self.phase in ['DCo', 'Val']:
 #                self.phase = 'Rea'
-                
-                
+
         self.description = branche.get("Description", None)
         
         if not self.phase in ["R1", "R2", "R3", "S"]:
@@ -4490,7 +4500,11 @@ class Tache(Objet_sequence):
         
         self.indicateursEleve = { 0 : [], 1 : [], 2 : [], 3 : [],4 : [], 5 : [],6 : []}
         
-        if not self.GetClasse().version5 and self.GetClasse().familleEnseignement == "STI":
+        if False:#not self.GetClasse().version5 and self.GetClasse().familleEnseignement == "STI":
+            if not self.phase in [self.projet.getCodeLastRevue(), "S"]:
+                self.indicateursMaxiEleve = { 0 : [], 1 : [], 2 : [], 3 : [],4 : [], 5 : [],6 : []}
+                
+                
             pass # Nouveaux indicateurs STI2D !!
         else:
             if not self.phase in [self.projet.getCodeLastRevue(), "S"]:
@@ -4559,13 +4573,18 @@ class Tache(Objet_sequence):
                                         if self.phase == 'XXX' and self.GetReferentiel().dicIndicateurs_prj[code][indic][1]:
                                             continue
                                         
-                                        # si le type d'enseignement ne colle pas avec les indicateurs (pb lors de l'enregistrement)
-                                        if not code in self.GetReferentiel().dicIndicateurs_prj:
+                                        try:
+                                            print "***",self.GetReferentiel().dicIndicateurs_prj[code][indic]
                                             
-                                            return False, err | constantes.ERR_PRJ_T_TYPENS
-                                        
-                                        if not codeindic in self.indicateursEleve[i+1]:
-                                            self.indicateursEleve[i+1].append(codeindic)
+                                            # si le type d'enseignement ne colle pas avec les indicateurs (pb lors de l'enregistrement)
+                                            if not code in self.GetReferentiel().dicIndicateurs_prj:
+                                                
+                                                return False, err | constantes.ERR_PRJ_T_TYPENS
+                                            
+                                            if not codeindic in self.indicateursEleve[i+1]:
+                                                self.indicateursEleve[i+1].append(codeindic)
+                                        except:
+                                            pass
                                 
                                 else: # Pour ouverture version <4.8beta1
                                     indicprov = []
@@ -4582,6 +4601,8 @@ class Tache(Objet_sequence):
                                         indic = eval(indic)-1
                                         if self.phase == 'XXX' and self.GetReferentiel().dicIndicateurs_prj[code][indic][1]:
                                             continue
+                                        
+                                        print "******",self.GetReferentiel().dicIndicateurs_prj[code][indic]
                                             
                                         # si le type d'enseignement ne colle pas avec les indicateurs (pb lors de l'enregistrement)
                                         if not code in self.GetReferentiel().dicIndicateurs_prj:
@@ -4612,11 +4633,15 @@ class Tache(Objet_sequence):
                                 if self.phase == 'XXX' and self.GetReferentiel().dicIndicateurs_prj[code][indic][1]:
                                     continue
                                     
-                                # si le type d'enseignement ne colle pas avec les indicateurs (pb lors de l'enregistrement)
-                                if not code in self.GetReferentiel().dicIndicateurs_prj:
-                                    return False, err | constantes.ERR_PRJ_T_TYPENS
-                                
-                                self.indicateursEleve[0].append(codeindic)
+                                try:
+                                    print "******",self.GetReferentiel().dicIndicateurs_prj[code][indic]
+                                    # si le type d'enseignement ne colle pas avec les indicateurs (pb lors de l'enregistrement)
+                                    if not code in self.GetReferentiel().dicIndicateurs_prj:
+                                        return False, err | constantes.ERR_PRJ_T_TYPENS
+                                    
+                                    self.indicateursEleve[0].append(codeindic)
+                                except:
+                                    pass
                         
                     
                                 
@@ -7607,7 +7632,7 @@ class FenetreProjet(FenetreDocument):
             if not self.classe.version5 and self.classe.familleEnseignement == "STI":
                 messageErreur(None, u"Ancien programme", 
                               u"Projet enregistré avec les indicateurs de compétence antérieurs à la session 2014\n\n"\
-                              u"Les indicateurs de compétence ne seront pas chargés.")
+                              u"Les indicateurs de compétence ne seront probablement pas tous chargés.")
             
             # Le projet
             message += u"Construction de la structure du projet..."
@@ -9246,23 +9271,26 @@ class PanelPropriete_Classe(PanelPropriete):
 #   Classe définissant l'arbre de sélection du type d'enseignement
 #
 ####################################################################################*
-class ArbreTypeEnseignement(CT.CustomTreeCtrl):
+class ArbreTypeEnseignement(HTL.HyperTreeList):
     def __init__(self, parent, panelParent, 
                  pos = wx.DefaultPosition,
                  size = wx.DefaultSize,
-                 style = wx.WANTS_CHARS, #wx.SUNKEN_BORDER|
-                 agwStyle = CT.TR_HAS_VARIABLE_ROW_HEIGHT| \
-                 CT.TR_NO_LINES|CT.TR_HIDE_ROOT|CT.TR_TOOLTIP_ON_LONG_ITEMS#|CT.TR_HAS_BUTTONS
-                 ):
+                 style = wx.WANTS_CHARS|wx.NO_BORDER):
 
 #        wx.Panel.__init__(self, parent, -1, pos, size)
         
-        CT.CustomTreeCtrl.__init__(self, parent, -1, pos, size, style, agwStyle)
+        HTL.HyperTreeList.__init__(self, parent, -1, pos, size, style, 
+                                   agwStyle = CT.TR_HIDE_ROOT|HTL.TR_NO_HEADER|\
+                                  CT.TR_ALIGN_WINDOWS|CT.TR_AUTO_CHECK_CHILD|\
+                                  CT.TR_AUTO_CHECK_PARENT|CT.TR_AUTO_TOGGLE_CHILD)
         self.Unbind(wx.EVT_KEY_DOWN)
         self.panelParent = panelParent
 #        self.SetBackgroundColour(wx.WHITE)
         self.SetToolTip(wx.ToolTip(u"Choisir le type d'enseignement"))
-        self.root = self.AddRoot("")
+        
+        self.AddColumn(u"")
+        self.SetMainColumn(0)
+        self.root = self.AddRoot("r")
         self.Construire(self.root)
         self.ExpandAll()
         
@@ -9281,13 +9309,18 @@ class ArbreTypeEnseignement(CT.CustomTreeCtrl):
         
     ######################################################################################  
     def Construire(self, racine):
+        """ Construction de l'arbre
+        """
         for t, st in ARBRE_REF.items():
-            branche = self.AppendItem(racine, u"")#, ct_type=2)#, image = self.arbre.images["Seq"])
-            rb = wx.RadioButton(self, -1, REFERENTIELS[t].Enseignement[0])
-            self.Bind(wx.EVT_RADIOBUTTON, self.panelParent.EvtRadioBox, rb)
-            self.SetItemWindow(branche, rb)
-            rb.SetToolTipString(REFERENTIELS[t].Enseignement[1])
-            rb.Enable(REFERENTIELS[t].projet or not self.panelParent.pourProjet) 
+            if t[0] == "_":
+                branche = self.AppendItem(racine, REFERENTIELS[st[0]].Enseignement[2])
+            else:
+                branche = self.AppendItem(racine, u"")#, ct_type=2)#, image = self.arbre.images["Seq"])
+                rb = wx.RadioButton(self, -1, REFERENTIELS[t].Enseignement[0])
+                self.Bind(wx.EVT_RADIOBUTTON, self.panelParent.EvtRadioBox, rb)
+                self.SetItemWindow(branche, rb)
+                rb.SetToolTipString(REFERENTIELS[t].Enseignement[1])
+                rb.Enable(REFERENTIELS[t].projet or not self.panelParent.pourProjet) 
             for sst in st:
                 sbranche = self.AppendItem(branche, u"")#, ct_type=2)
                 rb = wx.RadioButton(self, -1, REFERENTIELS[sst].Enseignement[0])
@@ -9539,7 +9572,7 @@ class PanelEffectifsClasse(wx.Panel):
             self.classe.nbrGroupes['P'] = var.v[0]
         calculerEffectifs(self.classe)
             
-        self.Parent.sendEvent()
+        self.Parent.sendEvent(self.classe)
 #        self.AjouterGroupesVides()
         self.MiseAJourNbrEleve()
         
@@ -11017,7 +11050,7 @@ class PanelPropriete_Tache(PanelPropriete):
         self.edition = False  
         pageGen.sizer.AddGrowableRow(1)
         
-        
+#        print ">>>", tache.phase, tache.projet.getCodeLastRevue()
         if not tache.phase in [tache.projet.getCodeLastRevue(), "S"]:
             nb.AddPage(pageGen, u"Propriétés générales")
 #        pageGen.sizer.Layout()
@@ -12930,7 +12963,9 @@ class ArbreCompetencesPrj(ArbreCompetences):
         self.eleves = eleves
           
         ArbreCompetences.__init__(self, parent, ref, pptache,
-                                  agwStyle = CT.TR_HIDE_ROOT|CT.TR_HAS_VARIABLE_ROW_HEIGHT|CT.TR_ROW_LINES|CT.TR_ALIGN_WINDOWS|CT.TR_AUTO_CHECK_CHILD|CT.TR_AUTO_CHECK_PARENT|CT.TR_AUTO_TOGGLE_CHILD)#|CT.TR_ELLIPSIZE_LONG_ITEMS)#|CT.TR_TOOLTIP_ON_LONG_ITEMS)#
+                                  agwStyle = CT.TR_HIDE_ROOT|CT.TR_HAS_VARIABLE_ROW_HEIGHT|\
+                                  CT.TR_ROW_LINES|CT.TR_ALIGN_WINDOWS|CT.TR_AUTO_CHECK_CHILD|\
+                                  CT.TR_AUTO_CHECK_PARENT|CT.TR_AUTO_TOGGLE_CHILD)#|CT.TR_ELLIPSIZE_LONG_ITEMS)#|CT.TR_TOOLTIP_ON_LONG_ITEMS)#
         self.Bind(wx.EVT_SIZE, self.OnSize2)
         self.Bind(CT.EVT_TREE_ITEM_GETTOOLTIP, self.OnToolTip)
         
@@ -12986,7 +13021,9 @@ class ArbreCompetencesPrj(ArbreCompetences):
                 tousEleve = [True]*len(self.pptache.tache.projet.eleves)
                 for j, Indic in enumerate(ref.dicIndicateurs_prj[code]):
                     codeIndic = code+'_'+str(j+1)
-                    
+#                    print self.pptache.tache.phase
+#                    print self.pptache.tache.projet.getCodeLastRevue()
+#                    print codeIndic
                     if (not self.pptache.tache.phase in ["R1", "Rev", self.pptache.tache.projet.getCodeLastRevue()]) or (codeIndic in self.pptache.tache.indicateursMaxiEleve[0]):
                         if not Indic[1] or self.pptache.tache.phase != 'XXX':
                             i = self.AppendItem(c, Indic[0], ct_type=1, data = codeIndic)
