@@ -125,6 +125,7 @@ class Referentiel():
         #
         # Compétences
         #
+        self.nomCompetences = u"Compétences"    # nom donnés aux compétences : "Compétences", ...
         self.prof_Comp = 0              # compteur de profondeur de l'arborescence des compétences
         self.dicCompetences = {}
         self.projet = False             # si l'enseignement fait l'objet d'une épreuve de projet
@@ -494,6 +495,7 @@ class Referentiel():
         # Compétences
         #
         sh_va = wb.sheet_by_name(u"Compétences")
+        self.nomCompetences =   sh_va.cell(0,0).value 
         self.prof_Comp = 0 # compteur de profondeur 
         self.dicCompetences = remplir(sh_va, 0, range(1, sh_va.nrows), mode = 2)
        

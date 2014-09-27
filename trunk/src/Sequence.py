@@ -3241,7 +3241,8 @@ class Competences(Objet_sequence):
         self.arbre = arbre
         self.codeBranche = wx.StaticText(self.arbre, -1, u"")
 #        self.codeBranche.SetBackgroundColour(wx.Colour(COUL_COMPETENCES[0]*255, COUL_COMPETENCES[1]*255, COUL_COMPETENCES[2]*255))
-        self.branche = arbre.AppendItem(branche, u"Compétences", wnd = self.codeBranche, data = self,
+        t = self.GetReferentiel().nomCompetences
+        self.branche = arbre.AppendItem(branche, t, wnd = self.codeBranche, data = self,
                                         image = self.arbre.images["Com"])
         self.arbre.SetItemTextColour(self.branche, constantes.GetCouleurWx(COUL_COMPETENCES))
         if hasattr(self, 'tip'):
@@ -3249,6 +3250,7 @@ class Competences(Objet_sequence):
         
     #############################################################################
     def MiseAJourTypeEnseignement(self):
+        self.arbre.SetItemText(self.branche, self.GetReferentiel().nomCompetences)
         if hasattr(self, 'panelPropriete'):
             self.panelPropriete.construire()
         
@@ -3326,6 +3328,7 @@ class Savoirs(Objet_sequence):
     
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
+        
         self.arbre = arbre
         self.codeBranche = wx.StaticText(self.arbre, -1, u"")
         t = self.GetReferentiel().nomSavoirs
@@ -3342,6 +3345,8 @@ class Savoirs(Objet_sequence):
         
     #############################################################################
     def MiseAJourTypeEnseignement(self):
+        if hasattr(self, 'arbre'):
+            self.arbre.SetItemText(self.branche, self.GetReferentiel().nomSavoirs)
         if hasattr(self, 'panelPropriete'):
             self.panelPropriete.MiseAJourTypeEnseignement()
 #            self.panelPropriete.construire()
@@ -12795,14 +12800,14 @@ class ArbreCompetences(HTL.HyperTreeList):
         self.ref = ref
         
         self.items = {}
-        
-        self.AddColumn(u"Compétences")
+      
+        self.AddColumn(ref.nomCompetences)
         self.SetMainColumn(0) # the one with the tree in it...
         self.AddColumn(u"")
         self.SetColumnWidth(1, 0)
         self.AddColumn(u"Eleves")
         self.SetColumnWidth(2, 0)
-        self.root = self.AddRoot(u"Compétences")
+        self.root = self.AddRoot(ref.nomCompetences)
         self.MiseAJourTypeEnseignement(ref)
         
         self.ExpandAll()
