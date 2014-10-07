@@ -79,10 +79,10 @@ class Referentiel():
 #            v = getattr(self, p)
 #            if type(v) == dict:
 #                print p, v
-#        print "Com :", self.dicCompetences
+        print "Com :", self.dicCompetences
 #        print "CoP :", self.dicCompetences_prj
-#        print "CoS :", self._dicCompetences_prj_simple
-#        print "Ind :", self.dicIndicateurs_prj
+        print "CoS :", self._dicCompetences_prj_simple
+        print "Ind :", self.dicIndicateurs_prj
 #        print "Poi :", self.dicPoidsIndicateurs_prj
 #        print "Mat :", self.dicSavoirs_Math
 #        print "Phy :", self.dicSavoirs_Phys
@@ -525,6 +525,7 @@ class Referentiel():
             for ii, l in enumerate(lig2):
                 self.dicPoidsIndicateurs_prj[str(sh_va.cell(p,0).value)][1][sh_va.cell(l,1).value] = [sh_va.cell(pp,4).value for pp in range(l, llig2[ii+1])]
         
+        
         #
         # Compétences pour projet
         #
@@ -534,6 +535,9 @@ class Referentiel():
         for c in self.dicCompetences_prj.keys():
             if not c in self.dicPoidsIndicateurs_prj.keys():
                 del self.dicCompetences_prj[c]
+        
+
+        
         
         
             
@@ -650,6 +654,20 @@ class Referentiel():
             return ddic
         
         
+        # On regroupe les compétences qui ont les mêmes indicateurs dans la grille (cas de STI2D EE !!)
+        for comp in self.dicIndicateurs_prj.keys():
+            if u"\n" in comp:
+                comps = comp.split(u"\n")
+                print "Regroupement", comps
+                for t, dic in self.dicCompetences_prj.values():
+                    lst = [dic[c] for c in comps if c in dic.keys()]
+                    if len(lst) > 0:
+                        dic[comp] = "\n".join(lst)
+                        for c in comps :
+                            del dic[c]
+                
+                
+        
         if self.tr_com:
             t = self.tr_com[0]
             if t in REFERENTIELS.keys():
@@ -682,7 +700,7 @@ class Referentiel():
                 
         self._dicCompetences_prj_simple = aplatir(self.dicCompetences_prj)
         
-
+        
         
     
 

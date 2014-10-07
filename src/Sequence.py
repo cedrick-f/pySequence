@@ -2329,6 +2329,7 @@ class Projet(BaseDoc, Objet_sequence):
         tache.SetCode()
         if hasattr(tache, 'panelPropriete'):
             tache.panelPropriete.MiseAJour()
+            tache.panelPropriete.MiseAJourEleves()
         
         self.arbre.Ordonner(self.brancheTac)
         self.panelPropriete.sendEvent()
@@ -4579,7 +4580,7 @@ class Tache(Objet_sequence):
                                             continue
                                         
                                         try:
-                                            print "***",self.GetReferentiel().dicIndicateurs_prj[code][indic]
+#                                            print "***",self.GetReferentiel().dicIndicateurs_prj[code][indic]
                                             
                                             # si le type d'enseignement ne colle pas avec les indicateurs (pb lors de l'enregistrement)
                                             if not code in self.GetReferentiel().dicIndicateurs_prj:
@@ -4607,7 +4608,7 @@ class Tache(Objet_sequence):
                                         if self.phase == 'XXX' and self.GetReferentiel().dicIndicateurs_prj[code][indic][1]:
                                             continue
                                         
-                                        print "******",self.GetReferentiel().dicIndicateurs_prj[code][indic]
+#                                        print "******",self.GetReferentiel().dicIndicateurs_prj[code][indic]
                                             
                                         # si le type d'enseignement ne colle pas avec les indicateurs (pb lors de l'enregistrement)
                                         if not code in self.GetReferentiel().dicIndicateurs_prj:
@@ -4639,7 +4640,7 @@ class Tache(Objet_sequence):
                                     continue
                                     
                                 try:
-                                    print "******",self.GetReferentiel().dicIndicateurs_prj[code][indic]
+#                                    print "******",self.GetReferentiel().dicIndicateurs_prj[code][indic]
                                     # si le type d'enseignement ne colle pas avec les indicateurs (pb lors de l'enregistrement)
                                     if not code in self.GetReferentiel().dicIndicateurs_prj:
                                         return False, err | constantes.ERR_PRJ_T_TYPENS
@@ -9079,7 +9080,7 @@ class PanelPropriete_Classe(PanelPropriete):
 #                self.classe.typeEnseignement = c
 #                self.classe.familleEnseignement = constantes.FamilleEnseignement[self.classe.typeEnseignement]
 #                break
-
+        
         self.classe.MiseAJourTypeEnseignement()
         self.classe.doc.MiseAJourTypeEnseignement(fam != self.classe.familleEnseignement)
 #        self.MiseAJourType()
@@ -9316,6 +9317,7 @@ class ArbreTypeEnseignement(HTL.HyperTreeList):
     def Construire(self, racine):
         """ Construction de l'arbre
         """
+        self.branche = []
         for t, st in ARBRE_REF.items():
             if t[0] == "_":
                 branche = self.AppendItem(racine, REFERENTIELS[st[0]].Enseignement[2])
@@ -9325,7 +9327,8 @@ class ArbreTypeEnseignement(HTL.HyperTreeList):
                 self.Bind(wx.EVT_RADIOBUTTON, self.panelParent.EvtRadioBox, rb)
                 self.SetItemWindow(branche, rb)
                 rb.SetToolTipString(REFERENTIELS[t].Enseignement[1])
-                rb.Enable(REFERENTIELS[t].projet or not self.panelParent.pourProjet) 
+                rb.Enable(REFERENTIELS[t].projet or not self.panelParent.pourProjet)
+                self.branche.append(branche)
             for sst in st:
                 sbranche = self.AppendItem(branche, u"")#, ct_type=2)
                 rb = wx.RadioButton(self, -1, REFERENTIELS[sst].Enseignement[0])
@@ -9333,12 +9336,13 @@ class ArbreTypeEnseignement(HTL.HyperTreeList):
                 self.SetItemWindow(sbranche, rb)
                 rb.SetToolTipString(REFERENTIELS[sst].Enseignement[1])
                 rb.Enable(REFERENTIELS[sst].projet or not self.panelParent.pourProjet)
+                self.branche.append(sbranche)
     
     ######################################################################################              
     def SetStringSelection(self, label):
-        for rb in self.GetChildren():
-            if isinstance(rb, wx.RadioButton) and label == rb.GetLabel():
-                rb.SetValue(True)
+        for rb in self.branche:
+            if isinstance(rb.GetWindow(), wx.RadioButton) and label == rb.GetWindow().GetLabel():
+                rb.GetWindow().SetValue(True)
           
                 
 
@@ -11292,7 +11296,16 @@ class PanelPropriete_Tache(PanelPropriete):
             self.pageGen.Layout()
             self.pageGen.Thaw()
 
-    
+    #############################################################################            
+    def MiseAJourEleves(self):
+        """ Met à jour le cochage des élèves concernés par la tâche
+        """
+        if not self.tache.phase in ["S", "R1", "R2", "R3"]:
+            for i, e in enumerate(self.GetDocument().eleves):
+                self.elevesCtrl[i].SetValue(i in self.tache.eleves)
+
+                
+                
         
     ############################################################################            
     def GetDocument(self):
@@ -13018,7 +13031,9 @@ class ArbreCompetencesPrj(ArbreCompetences):
                     sep = u" " + CHAR_POINT + u" "
                     intitule = intitule[0] + " : " + sep.join(intitule[1].values())
                 
-                c = self.AppendItem(b, code+" "+intitule, ct_type=1)
+                
+                cc = [cd+ " " + it for cd, it in zip(code.split(u"\n"), intitule.split(u"\n"))]
+                c = self.AppendItem(b, u"\n".join(cc), ct_type=1)
                 self.items[code] = c
                         
                 i = None

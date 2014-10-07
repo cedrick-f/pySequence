@@ -684,6 +684,7 @@ DELTA_DUREE2 = 15
 try:
     with open('etablissements.txt') as f:
         ETABLISSEMENTS_PDD = f.read().encode(sys.getdefaultencoding()).splitlines()
+        print u"Import établissements réussie !"
 except:
     ETABLISSEMENTS_PDD = [u"La Fayette (Clermont Fd)",
                           u"Blaise Pascal (Clermont Fd)",
@@ -1126,7 +1127,11 @@ if  wx.PlatformInfo[1] == 'wxMSW':
         ls = info['FileVersionLS']
         return HIWORD (ms), LOWORD (ms), HIWORD (ls), LOWORD (ls)
     
-    ADOBE_VERSION = get_version_number(dllpath)         
+    try:
+        ADOBE_VERSION = get_version_number(dllpath)
+    except:
+        ADOBE_VERSION = None
+        
     print "Version Adobe", ADOBE_VERSION
 
 
