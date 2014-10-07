@@ -318,10 +318,12 @@ class PdfPanel(wx.Panel):
         wx.Panel.__init__(self, parent, id=-1)
         self.pdf = None
         sizer = wx.BoxSizer(wx.VERTICAL)
-        if constantes.ADOBE_VERSION[:3] == (11, 0, 7):
+        if constantes.ADOBE_VERSION[:3] == (11, 0, 7) or constantes.ADOBE_VERSION[:3] == (11, 0, 8):
             self.pdf = wx.StaticText(self, -1, u"Cette fonctionnalité n'est pas compatible Adobe Acrobat Reader version 11.0.07 !!\n\n"\
                                                u"Pour visualiser le dossier de validation :\n"\
+                                               u" - Passer à la version 10.0.09 - si disponible (http://get.adobe.com/fr/reader)\n" \
                                                u" - Utiliser la version 11.0.06 (http://www.adobe.com/support/downloads/product.jsp?product=10&platform=Windows)\n" \
+                                               u" - Utiliser la version 10 (http://get.adobe.com/fr/reader/otherversions)\n" \
                                                u" - Générer le fichier .pdf : menu Fichier/Générer le dossier de validation projet")
         elif get_min_adobe_version() != None:
             self.pdf = PDFWindow(self, style=wx.SUNKEN_BORDER)
