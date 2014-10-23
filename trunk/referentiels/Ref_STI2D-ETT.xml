@@ -1,6 +1,6 @@
-<Referentiel B_CI_BO="False" B_CI_cible="True" B_projet="False" I_duree_prj="0" I_prof_Comp="3" S_Code="ET" S_Famille="STI" S_nomSavoirs="Savoirs">
+<Referentiel B_CI_BO="False" B_CI_cible="True" B_projet="False" I_duree_prj="0" S_Code="ET" S_Famille="STI" S_nomCompetences="Comp&#233;tences" S_nomSavoirs="Savoirs">
   <l_CentresInterets S_CentresInterets00="D&#233;veloppement durable et comp&#233;titivit&#233; des produits" S_CentresInterets01="Design, cr&#233;ativit&#233; et innovation" S_CentresInterets02="Caract&#233;ristiques des mat&#233;riaux et structures" S_CentresInterets03="Solutions constructives des mat&#233;riaux et des structures" S_CentresInterets04="Dimensionnement des structures et choix des mat&#233;riaux" S_CentresInterets05="Efficacit&#233; &#233;nerg&#233;tique li&#233;e au comportement des mat&#233;riaux et des structures" S_CentresInterets06="Formes et caract&#233;ristiques de l'&#233;nergie" S_CentresInterets07="Organisation structurelle et solutions constructives des cha&#238;nes d'&#233;nergie" S_CentresInterets08="Am&#233;lioration de l'efficacit&#233; &#233;nerg&#233;tique dans les cha&#238;nes d'&#233;nergie" S_CentresInterets09="Am&#233;lioration de la gestion de l'&#233;nergie" S_CentresInterets10="Formes et caract&#233;ristiques de l'information" S_CentresInterets11="Organisation structurelle et solutions constructives des cha&#238;nes d'information" S_CentresInterets12="Commande temporelle des syst&#232;mes" S_CentresInterets13="Informations li&#233;es au comportement des mat&#233;riaux et des structures" S_CentresInterets14="Optimisation des param&#232;tres par simulation globale" />
-  <l_Enseignement S_Enseignement00="STI2D-ETT" S_Enseignement01="STI2D : Enseignement Technologique Transversal" />
+  <l_Enseignement S_Enseignement00="STI2D-ETT" S_Enseignement01="STI2D : Enseignement Technologique Transversal" S_Enseignement02="STI2D" />
   <d_activites>
     <l_ED S_ED00="Etude de dossier" S_ED01="Activit&#233; d'&#233;tude de dossier" />
     <l_P S_P00="Projet" S_P01="Activit&#233; de projet" />
@@ -19,99 +19,178 @@
   </d_demarches>
   <d_dicCompetences>
     <l_O8s S_O8s00="Valider des solutions techniques">
-      <d_O8s01 S_CO8.0="Justifier des &#233;l&#233;ments d'une simulation relative au comportement de tout ou partie d'un syst&#232;me et les &#233;carts par rapport au r&#233;el" />
+      <d_O8s01>
+        <l_CO8.0 S_CO8.000="Justifier des &#233;l&#233;ments d'une simulation relative au comportement de tout ou partie d'un syst&#232;me et les &#233;carts par rapport au r&#233;el">
+          <l_CO8.001>
+            <l_CO8.00100 I_CO8.0010002="0" S_CO8.0010000="Les solutions techniques envisag&#233;es sont correctement analys&#233;es au regard des r&#233;sultats d'exp&#233;rimentations et/ou de tests et/ou de simulations">
+              <l_CO8.0010001 F_CO8.001000102="60.0" I_CO8.001000100="0" I_CO8.001000101="0" />
+            </l_CO8.00100>
+            <l_CO8.00101 I_CO8.0010102="0" S_CO8.0010100="L'origine des &#233;carts entre les r&#233;sultats obtenus et les exigences du cahier des charges est correctement identifi&#233;e">
+              <l_CO8.0010101 F_CO8.001010102="40.0" I_CO8.001010100="0" I_CO8.001010101="0" />
+            </l_CO8.00101>
+          </l_CO8.001>
+        </l_CO8.0>
+      </d_O8s01>
+      <l_O8s02 I_O8s0200="0" I_O8s0201="0" I_O8s0202="20" />
     </l_O8s>
     <l_O6 S_O600="Communiquer une id&#233;e, un principe ou une solution technique, un projet, y compris en langue &#233;trang&#232;re">
-      <d_O601 S_CO6.1="D&#233;crire une id&#233;e, un principe, une solution, un projet en utilisant des outils de repr&#233;sentation adapt&#233;s" S_CO6.2="D&#233;crire le fonctionnement et/ou l'exploitation d'un syst&#232;me en utilisant l'outil de description le plus pertinent" S_CO6.3="Pr&#233;senter et argumenter des d&#233;marches, des r&#233;sultats, y compris dans une langue &#233;trang&#232;re" />
+      <d_O601>
+        <l_CO6.3 S_CO6.300="Pr&#233;senter et argumenter des d&#233;marches, des r&#233;sultats, y compris dans une langue &#233;trang&#232;re">
+          <l_CO6.301>
+            <l_CO6.30100 I_CO6.3010002="0" S_CO6.3010000="Le choix de la d&#233;marche retenue est argument&#233;e">
+              <l_CO6.3010001 F_CO6.301000102="25.0" I_CO6.301000100="0" I_CO6.301000101="0" />
+            </l_CO6.30100>
+            <l_CO6.30101 I_CO6.3010102="0" S_CO6.3010100="Les r&#233;sultats sont pr&#233;sent&#233;s et comment&#233;s de mani&#232;re claire et concise">
+              <l_CO6.3010101 F_CO6.301010102="25.0" I_CO6.301010100="0" I_CO6.301010101="0" />
+            </l_CO6.30101>
+          </l_CO6.301>
+        </l_CO6.3>
+        <l_CO6.2 S_CO6.200="D&#233;crire le fonctionnement et/ou l'exploitation d'un syst&#232;me en utilisant l'outil de description le plus pertinent">
+          <l_CO6.201>
+            <l_CO6.20100 I_CO6.2010002="0" S_CO6.2010000="La description du fonctionnement ou de l'exploitation du syst&#232;me est synth&#233;tique et correcte">
+              <l_CO6.2010001 F_CO6.201000102="25.0" I_CO6.201000100="0" I_CO6.201000101="0" />
+            </l_CO6.20100>
+          </l_CO6.201>
+        </l_CO6.2>
+        <l_CO6.1 S_CO6.100="D&#233;crire une id&#233;e, un principe, une solution, un projet en utilisant des outils de repr&#233;sentation adapt&#233;s">
+          <l_CO6.101>
+            <l_CO6.10100 I_CO6.1010002="0" S_CO6.1010000="La description du principe ou de la solution est synth&#233;tique et correcte">
+              <l_CO6.1010001 F_CO6.101000102="25.0" I_CO6.101000100="0" I_CO6.101000101="0" />
+            </l_CO6.10100>
+          </l_CO6.101>
+        </l_CO6.1>
+      </d_O601>
+      <l_O602 I_O60200="0" I_O60201="0" I_O60202="45" />
     </l_O6>
     <l_O5 S_O500="Utiliser un mod&#232;le de comportement pour pr&#233;dire un fonctionnement ou valider une performance">
-      <d_O501 S_CO5.1="Expliquer des &#233;l&#233;ments d'une mod&#233;lisation propos&#233;e relative au comportement de tout ou partie d'un syst&#232;me" S_CO5.2="Identifier des variables internes et externes utiles &#224; une mod&#233;lisation, simuler et valider le comportement du mod&#232;le" S_CO5.3="Evaluer un &#233;cart entre le comportement du r&#233;el et le comportement du mod&#232;le en fonction des param&#232;tres propos&#233;s" />
+      <d_O501>
+        <l_CO5.1 S_CO5.100="Expliquer des &#233;l&#233;ments d'une mod&#233;lisation propos&#233;e relative au comportement de tout ou partie d'un syst&#232;me">
+          <l_CO5.101>
+            <l_CO5.10100 I_CO5.1010002="0" S_CO5.1010000="">
+              <l_CO5.1010001 I_CO5.101000100="0" I_CO5.101000101="0" I_CO5.101000102="0" />
+            </l_CO5.10100>
+          </l_CO5.101>
+        </l_CO5.1>
+        <l_CO5.2 S_CO5.200="Identifier des variables internes et externes utiles &#224; une mod&#233;lisation, simuler et valider le comportement du mod&#232;le">
+          <l_CO5.201>
+            <l_CO5.20100 I_CO5.2010002="0" S_CO5.2010000="">
+              <l_CO5.2010001 I_CO5.201000100="0" I_CO5.201000101="0" I_CO5.201000102="0" />
+            </l_CO5.20100>
+          </l_CO5.201>
+        </l_CO5.2>
+        <l_CO5.3 S_CO5.300="Evaluer un &#233;cart entre le comportement du r&#233;el et le comportement du mod&#232;le en fonction des param&#232;tres propos&#233;s">
+          <l_CO5.301>
+            <l_CO5.30100 I_CO5.3010002="0" S_CO5.3010000="">
+              <l_CO5.3010001 I_CO5.301000100="0" I_CO5.301000101="0" I_CO5.301000102="0" />
+            </l_CO5.30100>
+          </l_CO5.301>
+        </l_CO5.3>
+      </d_O501>
+      <l_O502 I_O50200="0" I_O50201="0" I_O50202="0" />
     </l_O5>
     <l_O4 S_O400="D&#233;coder l&#8217;organisation fonctionnelle, structurelle et logicielle d&#8217;un syst&#232;me">
-      <d_O401 S_CO4.1="Identifier et caract&#233;riser les fonctions et les constituants d'un syst&#232;me ainsi que ses entr&#233;es/sorties" S_CO4.2="Identifier et caract&#233;riser l'agencement  mat&#233;riel et/ou logiciel d'un syst&#232;me" S_CO4.3="Identifier et caract&#233;riser le fonctionnement temporel d'un syst&#232;me" S_CO4.4="Identifier et caract&#233;riser des solutions techniques relatives aux mat&#233;riaux, &#224; la structure, &#224; l'&#233;nergie et aux informations (acquisition, traitement, transmission) d'un syst&#232;me" />
+      <d_O401>
+        <l_CO4.1 S_CO4.100="Identifier et caract&#233;riser les fonctions et les constituants d'un syst&#232;me ainsi que ses entr&#233;es/sorties">
+          <l_CO4.101>
+            <l_CO4.10100 I_CO4.1010002="0" S_CO4.1010000="">
+              <l_CO4.1010001 I_CO4.101000100="0" I_CO4.101000101="0" I_CO4.101000102="0" />
+            </l_CO4.10100>
+          </l_CO4.101>
+        </l_CO4.1>
+        <l_CO4.3 S_CO4.300="Identifier et caract&#233;riser le fonctionnement temporel d'un syst&#232;me">
+          <l_CO4.301>
+            <l_CO4.30100 I_CO4.3010002="0" S_CO4.3010000="">
+              <l_CO4.3010001 I_CO4.301000100="0" I_CO4.301000101="0" I_CO4.301000102="0" />
+            </l_CO4.30100>
+          </l_CO4.301>
+        </l_CO4.3>
+        <l_CO4.2 S_CO4.200="Identifier et caract&#233;riser l'agencement  mat&#233;riel et/ou logiciel d'un syst&#232;me">
+          <l_CO4.201>
+            <l_CO4.20100 I_CO4.2010002="0" S_CO4.2010000="">
+              <l_CO4.2010001 I_CO4.201000100="0" I_CO4.201000101="0" I_CO4.201000102="0" />
+            </l_CO4.20100>
+          </l_CO4.201>
+        </l_CO4.2>
+        <l_CO4.4 S_CO4.400="Identifier et caract&#233;riser des solutions techniques relatives aux mat&#233;riaux, &#224; la structure, &#224; l'&#233;nergie et aux informations (acquisition, traitement, transmission) d'un syst&#232;me">
+          <l_CO4.401>
+            <l_CO4.40100 I_CO4.4010002="0" S_CO4.4010000="">
+              <l_CO4.4010001 I_CO4.401000100="0" I_CO4.401000101="0" I_CO4.401000102="0" />
+            </l_CO4.40100>
+          </l_CO4.401>
+        </l_CO4.4>
+      </d_O401>
+      <l_O402 I_O40200="0" I_O40201="0" I_O40202="0" />
     </l_O4>
     <l_O3 S_O300="Identifier les &#233;l&#233;ments influents du d&#233;veloppement d&#8217;un syst&#232;me">
-      <d_O301 S_CO3.1="D&#233;coder le cahier des charges fonctionnel d'un syst&#232;me" S_CO3.2="Evaluer la comp&#233;titivit&#233; d'un syst&#232;me d'un point de vue technique et &#233;conomique" />
+      <d_O301>
+        <l_CO3.2 S_CO3.200="Evaluer la comp&#233;titivit&#233; d'un syst&#232;me d'un point de vue technique et &#233;conomique">
+          <l_CO3.201>
+            <l_CO3.20100 I_CO3.2010002="0" S_CO3.2010000="">
+              <l_CO3.2010001 I_CO3.201000100="0" I_CO3.201000101="0" I_CO3.201000102="0" />
+            </l_CO3.20100>
+          </l_CO3.201>
+        </l_CO3.2>
+        <l_CO3.1 S_CO3.100="D&#233;coder le cahier des charges fonctionnel d'un syst&#232;me">
+          <l_CO3.101>
+            <l_CO3.10100 I_CO3.1010002="0" S_CO3.1010000="">
+              <l_CO3.1010001 I_CO3.101000100="0" I_CO3.101000101="0" I_CO3.101000102="0" />
+            </l_CO3.10100>
+          </l_CO3.101>
+        </l_CO3.1>
+      </d_O301>
+      <l_O302 I_O30200="0" I_O30201="0" I_O30202="0" />
     </l_O3>
     <l_O2 S_O200="Identifier les &#233;l&#233;ments permettant la limitation de l&#8217;Impact environnemental d&#8217;un syst&#232;me et de ses constituants">
-      <d_O201 S_CO2.1="Identifier les flux et la forme de l'&#233;nergie, caract&#233;riser ses transformations et/ou modulations et estimer l'efficacit&#233; &#233;nerg&#233;tique globale d'un syst&#232;me" S_CO2.2="Justifier les solutions constructives d'un syst&#232;me au regard des impacts environnementaux et &#233;conomiques engendr&#233;s tout au long de son cycle de vie" />
+      <d_O201>
+        <l_CO2.2 S_CO2.200="Justifier les solutions constructives d'un syst&#232;me au regard des impacts environnementaux et &#233;conomiques engendr&#233;s tout au long de son cycle de vie">
+          <l_CO2.201>
+            <l_CO2.20100 I_CO2.2010002="0" S_CO2.2010000="La relation entre une fonction, des solutions et leur impact environnemental ou soci&#233;tal est pr&#233;cis&#233;e ">
+              <l_CO2.2010001 F_CO2.201000102="20.0" I_CO2.201000100="0" I_CO2.201000101="0" />
+            </l_CO2.20100>
+            <l_CO2.20101 I_CO2.2010102="0" S_CO2.2010100="Le compromis technico &#233;conomique et/ou la prise en compte des normes et r&#233;glementations est expliqu&#233; ">
+              <l_CO2.2010101 F_CO2.201010102="20.0" I_CO2.201010100="0" I_CO2.201010101="0" />
+            </l_CO2.20101>
+          </l_CO2.201>
+        </l_CO2.2>
+        <l_CO2.1 S_CO2.100="Identifier les flux et la forme de l'&#233;nergie, caract&#233;riser ses transformations et/ou modulations et estimer l'efficacit&#233; &#233;nerg&#233;tique globale d'un syst&#232;me">
+          <l_CO2.101>
+            <l_CO2.10100 I_CO2.1010002="0" S_CO2.1010000="Les flux et la forme de l'&#233;nergie et/ou de l'information sont d&#233;crits de fa&#231;on qualitative">
+              <l_CO2.1010001 F_CO2.101000102="20.0" I_CO2.101000100="0" I_CO2.101000101="0" />
+            </l_CO2.10100>
+            <l_CO2.10101 I_CO2.1010102="0" S_CO2.1010100="Les caract&#233;ristiques d'entr&#233;es sorties des transformations ou modulations sont correctement pr&#233;cis&#233;es">
+              <l_CO2.1010101 F_CO2.101010102="20.0" I_CO2.101010100="0" I_CO2.101010101="0" />
+            </l_CO2.10101>
+            <l_CO2.10102 I_CO2.1010202="0" S_CO2.1010200="L'analyse globale d'une chaine (&#233;nergie, action, information) est correctement r&#233;alis&#233;e">
+              <l_CO2.1010201 F_CO2.101020102="20.0" I_CO2.101020100="0" I_CO2.101020101="0" />
+            </l_CO2.10102>
+          </l_CO2.101>
+        </l_CO2.1>
+      </d_O201>
+      <l_O202 I_O20200="0" I_O20201="0" I_O20202="15" />
     </l_O2>
     <l_O1 S_O100="Caract&#233;riser des syst&#232;mes privil&#233;giant un usage raisonn&#233; du point de vue d&#233;veloppement durable">
-      <d_O101 S_CO1.1="Justifier les choix des mat&#233;riaux, des structures d'un syst&#232;me et les &#233;nergies mises en oeuvre dans une approche de d&#233;veloppement durable" S_CO1.2="Justifier le choix d'une solution selon des contraintes d'ergonomie et d'effets sur la sant&#233; de l'homme et du vivant" />
+      <d_O101>
+        <l_CO1.1 S_CO1.100="Justifier les choix des mat&#233;riaux, des structures d'un syst&#232;me et les &#233;nergies mises en oeuvre dans une approche de d&#233;veloppement durable">
+          <l_CO1.101>
+            <l_CO1.10100 I_CO1.1010002="0" S_CO1.1010000="Le choix des mat&#233;riaux et/ou des mat&#233;riels est justifi&#233;, des crit&#232;res d'&#233;co conception sont pris en compte">
+              <l_CO1.1010001 F_CO1.101000102="35.0" I_CO1.101000100="0" I_CO1.101000101="0" />
+            </l_CO1.10100>
+            <l_CO1.10101 I_CO1.1010102="0" S_CO1.1010100="La  structure mat&#233;rielle et/ou informationnelle est correctement justifi&#233;e ">
+              <l_CO1.1010101 F_CO1.101010102="35.0" I_CO1.101010100="0" I_CO1.101010101="0" />
+            </l_CO1.10101>
+          </l_CO1.101>
+        </l_CO1.1>
+        <l_CO1.2 S_CO1.200="Justifier le choix d'une solution selon des contraintes d'ergonomie et d'effets sur la sant&#233; de l'homme et du vivant">
+          <l_CO1.201>
+            <l_CO1.20100 I_CO1.2010002="0" S_CO1.2010000="La justification des param&#232;tres de confort et/ou la r&#233;ponse apport&#233;e par le syst&#232;me aux contraintes de pr&#233;servation de la sant&#233; et du respect de la s&#233;curit&#233; sont explicit&#233;es">
+              <l_CO1.2010001 F_CO1.201000102="30.0" I_CO1.201000100="0" I_CO1.201000101="0" />
+            </l_CO1.20100>
+          </l_CO1.201>
+        </l_CO1.2>
+      </d_O101>
+      <l_O102 I_O10200="0" I_O10201="0" I_O10202="20" />
     </l_O1>
   </d_dicCompetences>
-  <d_dicCompetences_prj>
-    <l_O6 S_O600="Communiquer une id&#233;e, un principe ou une solution technique, un projet, y compris en langue &#233;trang&#232;re">
-      <d_O601 S_CO6.1="D&#233;crire une id&#233;e, un principe, une solution, un projet en utilisant des outils de repr&#233;sentation adapt&#233;s" S_CO6.2="D&#233;crire le fonctionnement et/ou l'exploitation d'un syst&#232;me en utilisant l'outil de description le plus pertinent" S_CO6.3="Pr&#233;senter et argumenter des d&#233;marches, des r&#233;sultats, y compris dans une langue &#233;trang&#232;re" />
-    </l_O6>
-    <l_O2 S_O200="Identifier les &#233;l&#233;ments permettant la limitation de l&#8217;Impact environnemental d&#8217;un syst&#232;me et de ses constituants">
-      <d_O201 S_CO2.1="Identifier les flux et la forme de l'&#233;nergie, caract&#233;riser ses transformations et/ou modulations et estimer l'efficacit&#233; &#233;nerg&#233;tique globale d'un syst&#232;me" S_CO2.2="Justifier les solutions constructives d'un syst&#232;me au regard des impacts environnementaux et &#233;conomiques engendr&#233;s tout au long de son cycle de vie" />
-    </l_O2>
-    <l_O1 S_O100="Caract&#233;riser des syst&#232;mes privil&#233;giant un usage raisonn&#233; du point de vue d&#233;veloppement durable">
-      <d_O101 S_CO1.1="Justifier les choix des mat&#233;riaux, des structures d'un syst&#232;me et les &#233;nergies mises en oeuvre dans une approche de d&#233;veloppement durable" S_CO1.2="Justifier le choix d'une solution selon des contraintes d'ergonomie et d'effets sur la sant&#233; de l'homme et du vivant" />
-    </l_O1>
-    <l_O8s S_O8s00="Valider des solutions techniques">
-      <d_O8s01 S_CO8.0="Justifier des &#233;l&#233;ments d'une simulation relative au comportement de tout ou partie d'un syst&#232;me et les &#233;carts par rapport au r&#233;el" />
-    </l_O8s>
-  </d_dicCompetences_prj>
-  <d_dicIndicateurs_prj>
-    <l_CO1.1>
-      <l_CO1.100 B_CO1.10001="False" S_CO1.10000="Le choix des mat&#233;riaux et/ou des mat&#233;riels est justifi&#233;, des crit&#232;res d'&#233;co conception sont pris en compte" />
-      <l_CO1.101 B_CO1.10101="False" S_CO1.10100="La  structure mat&#233;rielle et/ou informationnelle est correctement justifi&#233;e " />
-    </l_CO1.1>
-    <l_CO1.2>
-      <l_CO1.200 B_CO1.20001="False" S_CO1.20000="La justification des param&#232;tres de confort et/ou la r&#233;ponse apport&#233;e par le syst&#232;me aux contraintes de pr&#233;servation de la sant&#233; et du respect de la s&#233;curit&#233; sont explicit&#233;es" />
-    </l_CO1.2>
-    <l_CO8.0>
-      <l_CO8.000 B_CO8.00001="False" S_CO8.00000="Les solutions techniques envisag&#233;es sont correctement analys&#233;es au regard des r&#233;sultats d'exp&#233;rimentations et/ou de tests et/ou de simulations" />
-      <l_CO8.001 B_CO8.00101="False" S_CO8.00100="L'origine des &#233;carts entre les r&#233;sultats obtenus et les exigences du cahier des charges est correctement identifi&#233;e" />
-    </l_CO8.0>
-    <l_CO6.3>
-      <l_CO6.300 B_CO6.30001="False" S_CO6.30000="Le choix de la d&#233;marche retenue est argument&#233;e" />
-      <l_CO6.301 B_CO6.30101="False" S_CO6.30100="Les r&#233;sultats sont pr&#233;sent&#233;s et comment&#233;s de mani&#232;re claire et concise" />
-    </l_CO6.3>
-    <l_CO6.2>
-      <l_CO6.200 B_CO6.20001="False" S_CO6.20000="La description du fonctionnement ou de l'exploitation du syst&#232;me est synth&#233;tique et correcte" />
-    </l_CO6.2>
-    <l_CO6.1>
-      <l_CO6.100 B_CO6.10001="False" S_CO6.10000="La description du principe ou de la solution est synth&#233;tique et correcte" />
-    </l_CO6.1>
-    <l_CO2.2>
-      <l_CO2.200 B_CO2.20001="False" S_CO2.20000="La relation entre une fonction, des solutions et leur impact environnemental ou soci&#233;tal est pr&#233;cis&#233;e " />
-      <l_CO2.201 B_CO2.20101="False" S_CO2.20100="Le compromis technico &#233;conomique et/ou la prise en compte des normes et r&#233;glementations est expliqu&#233; " />
-    </l_CO2.2>
-    <l_CO2.1>
-      <l_CO2.100 B_CO2.10001="False" S_CO2.10000="Les flux et la forme de l'&#233;nergie et/ou de l'information sont d&#233;crits de fa&#231;on qualitative" />
-      <l_CO2.101 B_CO2.10101="False" S_CO2.10100="Les caract&#233;ristiques d'entr&#233;es sorties des transformations ou modulations sont correctement pr&#233;cis&#233;es" />
-      <l_CO2.102 B_CO2.10201="False" S_CO2.10200="L'analyse globale d'une chaine (&#233;nergie, action, information) est correctement r&#233;alis&#233;e" />
-    </l_CO2.1>
-  </d_dicIndicateurs_prj>
-  <d_dicPoidsIndicateurs_prj>
-    <l_O6 F_O600="45.0">
-      <d_O601>
-        <l_CO6.3 F_CO6.300="25.0" F_CO6.301="25.0" />
-        <l_CO6.2 F_CO6.200="25.0" />
-        <l_CO6.1 F_CO6.100="25.0" />
-      </d_O601>
-    </l_O6>
-    <l_O2 F_O200="15.0">
-      <d_O201>
-        <l_CO2.2 F_CO2.200="20.0" F_CO2.201="20.0" />
-        <l_CO2.1 F_CO2.100="20.0" F_CO2.101="20.0" F_CO2.102="20.0" />
-      </d_O201>
-    </l_O2>
-    <l_O1 F_O100="20.0">
-      <d_O101>
-        <l_CO1.1 F_CO1.100="35.0" F_CO1.101="35.0" />
-        <l_CO1.2 F_CO1.200="30.0" />
-      </d_O101>
-    </l_O1>
-    <l_O8s F_O8s00="20.0">
-      <d_O8s01>
-        <l_CO8.0 F_CO8.000="60.0" F_CO8.001="40.0" />
-      </d_O8s01>
-    </l_O8s>
-  </d_dicPoidsIndicateurs_prj>
   <d_dicSavoirs>
     <l_1 S_100="Principes de conception des syst&#232;mes de d&#233;veloppement durable">
       <d_101>
