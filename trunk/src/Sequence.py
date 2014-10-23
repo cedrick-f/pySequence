@@ -314,6 +314,12 @@ def pourCent(v, ajuster = False):
     else:
         return str(int(round(v*100)))+"%"
 
+######################################################################################  
+def pourCent2(v, ajuster = False):
+    if ajuster:
+        return str(int(v*100)).rjust(3)+"%"
+    else:
+        return str(int(v*100))+"%"
 
 ######################################################################################  
 def remplaceLF2Code(txt):
@@ -916,17 +922,23 @@ class Classe():
     ######################################################################################  
     def setBranche(self, branche):
         Ok = True
-#        print "setBranche classe",
+#        print "setBranche classe"
         self.typeEnseignement = branche.get("Type", constantes.TYPE_ENSEIGNEMENT_DEFAUT)
         
         brancheRef = branche.find("Referentiel")        # A partir de la version 5 !
         if brancheRef != None:   
             self.referentiel = Referentiel.Referentiel()
-            self.referentiel.setBranche(brancheRef)
             self.version5 = True
+            try:
+                self.referentiel.setBranche(brancheRef)
+#                print self.referentiel
+            except:
+                print "Erreur ouverture référentiel intégré !"
+                self.referentiel = REFERENTIELS[self.typeEnseignement]
         else:
             self.version5 = False
             self.referentiel = REFERENTIELS[self.typeEnseignement]
+            
             brancheCI = branche.find("CentreInteret")
             if brancheCI != None: # Uniquement pour rétrocompatibilité : normalement cet élément existe !
                 continuer = True
@@ -1922,7 +1934,7 @@ class Projet(BaseDoc, Objet_sequence):
     def GetBulleSVG(self, i):
         if i >= 0:
             c = self.GetCompetencesUtil()
-            t = c[i] + " : " + REFERENTIELS[self.classe.typeEnseignement].dicCompetences_prj_simple[c[i]]
+            t = c[i] + " : " + REFERENTIELS[self.classe.typeEnseignement]._dicCompetences_prj_simple[c[i]]
             return t.encode(DEFAUT_ENCODING)
         else:
             e = self.eleves[-1-i]
@@ -1930,7 +1942,7 @@ class Projet(BaseDoc, Objet_sequence):
             t += u"Durée d'activité : "+draw_cairo.getHoraireTxt(e.GetDuree())+"\n"
             t += u"Evaluabilité :\n"
             r, s = e.GetEvaluabilite()
-            t += u"\trevues : "+str(int(r*100))+"%\n"
+            t += u"\tconduite : "+str(int(r*100))+"%\n"
             t += u"\tsoutenance : "+str(int(s*100))+"%\n"
             return t.encode(DEFAUT_ENCODING)
             
@@ -1986,7 +1998,7 @@ class Projet(BaseDoc, Objet_sequence):
         projet.set("IntitParties", remplaceLF2Code(self.intituleParties))
         projet.set("NbrParties", str(self.nbrParties))
 #        comp = ET.SubElement(projet, "Competences")
-#        for k, lc in constantes.dicCompetences_prj_simple[self.classe.typeEnseignement].items():
+#        for k, lc in constantes._dicCompetences_prj_simple[self.classe.typeEnseignement].items():
 #            comp.set(k, str(lc[1]))
         
         return projet
@@ -2051,7 +2063,7 @@ class Projet(BaseDoc, Objet_sequence):
         #
 #        brancheCmp = branche.find("Competences")
 #        if brancheCmp != None:
-#            for k, lc in constantes.dicCompetences_prj_simple[self.classe.typeEnseignement].items():
+#            for k, lc in constantes._dicCompetences_prj_simple[self.classe.typeEnseignement].items():
 #                lc[1] = eval(brancheCmp.get(k))
         
         
@@ -2479,7 +2491,7 @@ class Projet(BaseDoc, Objet_sequence):
                   
     ######################################################################################  
     def AjouterEleve(self, event = None):
-        if len(self.eleves) < 6:
+        if len(self.eleves) < 5:
             e = Eleve(self, self.panelParent, self.GetNewIdEleve())
             self.eleves.append(e)
             self.OrdonnerEleves()
@@ -2514,7 +2526,6 @@ class Projet(BaseDoc, Objet_sequence):
             e.id = i
             
         
-        
     ######################################################################################  
     def GetNewIdEleve(self):
         """ Renvoie le 1er numéro d'identification élève disponible
@@ -2529,16 +2540,16 @@ class Projet(BaseDoc, Objet_sequence):
         return i
     
 
-    
     ######################################################################################  
     def AjouterProf(self, event = None):
-        e = Prof(self, self.panelParent, len(self.equipe))
-        self.equipe.append(e)
-        e.ConstruireArbre(self.arbre, self.branchePrf)
-        self.arbre.Expand(self.branchePrf)
-        self.panelPropriete.sendEvent()
-        self.arbre.SelectItem(e.branche)
-        return
+        if len(self.equipe) < 5:
+            e = Prof(self, self.panelParent, len(self.equipe))
+            self.equipe.append(e)
+            e.ConstruireArbre(self.arbre, self.branchePrf)
+            self.arbre.Expand(self.branchePrf)
+            self.panelPropriete.sendEvent()
+            self.arbre.SelectItem(e.branche)
+
     
     ######################################################################################  
     def SupprimerProf(self, event = None, item = None):
@@ -2731,7 +2742,12 @@ class Projet(BaseDoc, Objet_sequence):
         return codTaches, intTaches
         
         
-
+    ######################################################################################  
+    def getNomFichierDefaut(self, prefixe):
+        nomFichier = prefixe+"_"+self.intitule[:20]
+        for c in ["\"", "/", "\", ", "?", "<", ">", "|", ":", "."]:
+            nomFichier = nomFichier.replace(c, "_")
+        return nomFichier
         
     ######################################################################################  
     def HitTest(self, x, y):
@@ -2806,6 +2822,36 @@ class Projet(BaseDoc, Objet_sequence):
                 for i, e in enumerate(self.eleves):
                     pass
         
+    
+    ######################################################################################  
+    def TesterExistanceGrilles(self, nomFichiers):
+#        print "TesterExistanceGrilles", nomFichiers
+        existe = []
+        for fe in nomFichiers.values():
+            for k, f in fe.items():
+                if os.path.isfile(f):
+                    existe.append(f)
+        
+        if len(existe) > 0:
+            if len(existe) == 1:
+                m = u"La grille d'évaluation existe déja !\n\n" \
+                    u"\t%s\n\n" \
+                    u"Voulez-vous la remplacer ?" %existe[0]
+            else:
+                m = u"Les grilles d'évaluation existent déja !\n\n" \
+                    u"\t%s\n\n" \
+                    u"Voulez-vous les remplacer ?" %u"\n".join(existe)
+                                            
+            dialog = wx.MessageDialog(self.GetApp(), m, 
+                                      u"Fichier existant", wx.YES_NO | wx.ICON_WARNING)
+            retCode = dialog.ShowModal()
+            if retCode == wx.ID_YES:
+                return True
+            else:
+                return False
+        return True
+    
+    
     #############################################################################
     def SetCompetencesRevuesSoutenance(self):
         """ Attribue à la soutenance et à la revue n°2 (ou n°3 si 3 revues)
@@ -2813,7 +2859,7 @@ class Projet(BaseDoc, Objet_sequence):
             mobilisés par les tâches précédentes
         """
 #        print "SetCompetencesRevuesSoutenance", len(self.eleves)
-        tousIndicateurs = self.GetReferentiel().dicIndicateurs_prj
+#        tousIndicateurs = self.GetReferentiel()._dicIndicateurs_prj
 #        print tousIndicateurs
 #        REFERENTIELS[self.classe.typeEnseignement].dicIndicateurs_prj
         tR1 = None
@@ -2835,7 +2881,7 @@ class Projet(BaseDoc, Objet_sequence):
                         for i, ok in enumerate(l):
                             if ok:
                                 codeIndic = c+"_"+str(i+1)
-                                if tousIndicateurs[c][i][1]: # Indicateur "revue"
+                                if self.GetReferentiel().getTypeIndicateur(codeIndic) == "C": # tousIndicateurs[c][i][1]: # Indicateur "revue"
                                     if t.phase in ["R1", "R2", "R3", "Rev"]:
 
                                         if t.phase in ["R1", "Rev"] or (t.phase == "R2" and self.nbrRevues == 3):
@@ -2864,7 +2910,6 @@ class Projet(BaseDoc, Objet_sequence):
                                 if i in t.indicateursMaxiEleve[neleve]:
                                     ti.append(i)
                             t.indicateursEleve[neleve] = ti
-                            print "phase",t.phase
                             t.panelPropriete.arbre.MiseAJourTypeEnseignement(t.GetReferentiel())
                             t.panelPropriete.MiseAJour()
                             if t.phase == "R1":
@@ -2882,6 +2927,7 @@ class Projet(BaseDoc, Objet_sequence):
                             else:
                                 indicateurs[neleve][c] = i 
 
+            t.ActualiserDicIndicateurs()
 
 #    #############################################################################
 #    def SetCompetencesRevuesSoutenance2(self):
@@ -4332,13 +4378,31 @@ class Tache(Objet_sequence):
             Dict :  clef = code compétence
                   valeur = liste [True False ...] des indicateurs à mobiliser
         """
+#        print "GetDicIndicateurs", self, ":", self.indicateursEleve
+        tousIndicateurs = self.GetReferentiel()._dicIndicateurs_prj_simple
         indicateurs = {}
+        
         for i in self.indicateursEleve[0]:
-            competence, indicateur = i.split('_')
-            indicateur = eval(indicateur)-1
-            if not competence in indicateurs.keys():
-                indicateurs[competence] = [False]*len(self.GetReferentiel().dicIndicateurs_prj[competence])
-            indicateurs[competence][indicateur] = True
+#            print "   ", i
+            cci = i.split('_')
+            if len(cci) == 2:
+                competence, indicateur = cci
+                indicateur = int(eval(indicateur)-1)
+                nbrIndic = len(tousIndicateurs[competence])
+                if not competence in indicateurs.keys():
+                    indicateurs[competence] = [False]*nbrIndic
+                indicateurs[competence][indicateur] = True
+#            else:
+#                competence, sscomp, indicateur = cci
+#                indicateur = int(eval(indicateur)-1)
+#                nbrIndic = 0
+#                for sc in tousIndicateurs[competence].values():
+#                    nbrIndic += len(sc)
+#                if not competence in indicateurs.keys():
+#                    indicateurs[competence] = [False]*nbrIndic
+#                
+#                indicateurs[competence][indicateur] = True
+                    
         return indicateurs
     
     
@@ -4355,7 +4419,7 @@ class Tache(Objet_sequence):
             competence, indicateur = i.split('_')
             indicateur = eval(indicateur)-1
             if not competence in indicateurs.keys():
-                indicateurs[competence] = [False]*len(self.GetReferentiel().dicIndicateurs_prj[competence])
+                indicateurs[competence] = [False]*len(self.GetReferentiel()._dicIndicateurs_prj_simple[competence])
             
             indicateurs[competence][indicateur] = True
         return indicateurs
@@ -4395,7 +4459,7 @@ class Tache(Objet_sequence):
         #     Pour la STI2D : valeur = liste d'index
         typeEns = self.GetTypeEnseignement()
         if False:#typeEns == "SSI":
-            indicateurs = REFERENTIELS[typeEns].dicCompetences_prj_simple
+            indicateurs = REFERENTIELS[typeEns]._dicCompetences_prj_simple
             self.indicateursEleve[0] = dict(zip(indicateurs.keys(), [x[1] for x in indicateurs.values()]))
         else:
             indicateurs = REFERENTIELS[typeEns].dicIndicateurs
@@ -4475,7 +4539,7 @@ class Tache(Objet_sequence):
         
     ######################################################################################  
     def setBranche(self, branche):
-#        print "setBranche tâche",
+#        print "setBranche tâche", 
         Ok = True
         err = 0
         
@@ -4535,7 +4599,7 @@ class Tache(Objet_sequence):
                             if indic != None:
                                 lst = toList(indic)
                             else:
-                                lst = [True]*len(self.GetReferentiel().dicIndicateurs_prj[e])
+                                lst = [True]*len(self.GetReferentiel()._dicIndicateurs_prj[e])
                             for n,j in enumerate(lst):
                                 if j:
                                     self.indicateursEleve[0].append(brancheCmp.get(e)+"_"+str(n+1))
@@ -4547,6 +4611,7 @@ class Tache(Objet_sequence):
                 
                 else:
                     brancheInd = branche.find("Indicateurs")
+#                    print "  branche Indicateurs"
                     if brancheInd != None:
                             
                         if self.projet.nbrRevues == 2:
@@ -4574,17 +4639,17 @@ class Tache(Objet_sequence):
                                             code = "CO8.0"
                                             codeindic = code+"_"+indic
                                             
-                                        # Si c'est la dernière phase et que c'est une compétence "Revue" ... on passe
+                                        # Si c'est la dernière phase et que c'est une compétence "Conduite" ... on passe
                                         indic = eval(indic)-1
-                                        if self.phase == 'XXX' and self.GetReferentiel().dicIndicateurs_prj[code][indic][1]:
+                                        if self.phase == 'XXX' and self.GetReferentiel().getTypeIndicateur(codeindic) == 'C':
                                             continue
                                         
                                         try:
 #                                            print "***",self.GetReferentiel().dicIndicateurs_prj[code][indic]
                                             
                                             # si le type d'enseignement ne colle pas avec les indicateurs (pb lors de l'enregistrement)
-                                            if not code in self.GetReferentiel().dicIndicateurs_prj:
-                                                
+                                            if not code in self.GetReferentiel()._dicIndicateurs_prj:
+                                                print "Erreur 1"
                                                 return False, err | constantes.ERR_PRJ_T_TYPENS
                                             
                                             if not codeindic in self.indicateursEleve[i+1]:
@@ -4603,15 +4668,16 @@ class Tache(Objet_sequence):
                                             code = "CO8.0"
                                             codeindic = code+"_"+indic
                                             
-                                        # Si c'est la dernière phase et que c'est une compétence "Revue" ... on passe
+                                        # Si c'est la dernière phase et que c'est une compétence "Conduite" ... on passe
                                         indic = eval(indic)-1
-                                        if self.phase == 'XXX' and self.GetReferentiel().dicIndicateurs_prj[code][indic][1]:
+                                        if self.phase == 'XXX' and self.GetReferentiel().getTypeIndicateur(codeindic) == 'C':
                                             continue
                                         
 #                                        print "******",self.GetReferentiel().dicIndicateurs_prj[code][indic]
                                             
                                         # si le type d'enseignement ne colle pas avec les indicateurs (pb lors de l'enregistrement)
-                                        if not code in self.GetReferentiel().dicIndicateurs_prj:
+                                        if not code in self.GetReferentiel()._dicIndicateurs_prj:
+                                            print "Erreur 2"
                                             return False, err | constantes.ERR_PRJ_T_TYPENS
     
                                         indicprov.append(codeindic)
@@ -4627,30 +4693,31 @@ class Tache(Objet_sequence):
                             for i, e in enumerate(brancheInd.keys()):
                                 codeindic = brancheInd.get(e)
                                 code, indic = codeindic.split('_')
-                                
+#                                print "     ", code, indic
                                 # pour compatibilité version < 3.19
                                 if code == "CO8.es":
                                     code = "CO8.0"
                                     codeindic = code+"_"+indic
                                     
-                                # Si c'est la dernière phase et que c'est une compétence "Revue" ... on passe
+                                # Si c'est la dernière phase et que c'est une compétence "Conduite" ... on passe
                                 indic = eval(indic)-1
-         
-                                if self.phase == 'XXX' and self.GetReferentiel().dicIndicateurs_prj[code][indic][1]:
+                                if self.phase == 'XXX' and self.GetReferentiel().getTypeIndicateur(codeindic) == 'C':
                                     continue
+                                
                                     
-                                try:
+#                                try:
 #                                    print "******",self.GetReferentiel().dicIndicateurs_prj[code][indic]
-                                    # si le type d'enseignement ne colle pas avec les indicateurs (pb lors de l'enregistrement)
-                                    if not code in self.GetReferentiel().dicIndicateurs_prj:
-                                        return False, err | constantes.ERR_PRJ_T_TYPENS
-                                    
+                                # si le type d'enseignement ne colle pas avec les indicateurs (pb lors de l'enregistrement)
+                                if not code in self.GetReferentiel()._dicIndicateurs_prj_simple.keys():
+                                    err =  err | constantes.ERR_PRJ_T_TYPENS
+                                else:
                                     self.indicateursEleve[0].append(codeindic)
-                                except:
-                                    pass
+#                                except:
+#                                    pass
                         
                     
-                                
+#        print self.indicateursEleve
+        
         self.ActualiserDicIndicateurs()
             
         self.intituleDansDeroul = eval(branche.get("IntituleDansDeroul", "True"))
@@ -5519,7 +5586,7 @@ class Eleve(Personne, Objet_sequence):
 </tr>
 
 <tr  id = "ler" align="right" valign="middle" >
-<td><font color = "%s"><em>revues :</em></font></td>
+<td><font color = "%s"><em>conduite :</em></font></td>
 </tr>
 
 <tr  id = "les" align="right" valign="middle" >
@@ -5577,12 +5644,21 @@ class Eleve(Personne, Objet_sequence):
         return nomFichier
 
 
-    ######################################################################################  
-    def getTableurEtModif(self):
-        tableaux = grilles.getTableau(self.projet.GetApp(), self.projet)
-        if tableaux != None:
-            grilles.modifierGrille(self.projet, tableaux, self)
-            return tableaux
+#    ######################################################################################  
+#    def getTableurEtModif(self):
+#        try :
+#            tableaux = grilles.getTableau(self.projet.GetApp(), self.projet)
+#        except:
+#            pass
+#        if tableaux != None:
+#            if "beta" in __version__:
+#                grilles.modifierGrille(self.projet, tableaux, self)
+#            else:
+#                try:
+#                    grilles.modifierGrille(self.projet, tableaux, self)
+#                except:
+#                    pass 
+#            return tableaux
     
 #    ######################################################################################  
 #    def GenererGrille2(self, event = None, path = None, messageFin = True):
@@ -5645,43 +5721,120 @@ class Eleve(Personne, Objet_sequence):
 #        self.panelPropriete.MiseAJour()
         
     ######################################################################################  
-    def GenererGrille(self, event = None, path = None, messageFin = True):
-        
+    def GetNomGrilles(self, path = None):
+        """ Renvoie les noms des fichiers grilles à générer
+        """
+        ref = self.projet.GetReferentiel()
+        #
+        # Création des noms des fichiers grilles
+        #
+        # Par défaut = chemin du fichier .prj
         if path == None:
             path = os.path.dirname(self.projet.GetApp().fichierCourant)
-        
+            
         nomFichiers = {} 
-        for k, g in self.projet.GetReferentiel().nomParties_prj.items():
-            nomFichiers[k] = self.getNomFichierDefaut("Grille"+g)
-        tableaux = self.getTableurEtModif()
+        for k, g in ref.nomParties_prj.items():
+            prefixe = "Grille_"+g
+            if grilles.EXT_EXCEL != None:
+#                extention = os.path.splitext(ref.grilles_prj[k][0])[1]
+                extention = grilles.EXT_EXCEL
+                if ref.grilles_prj[k][1] == 'C': # fichier "Collectif"
+                    nomFichiers[k] = os.path.join(path, self.projet.getNomFichierDefaut(prefixe)) + extention
+                else:
+                    nomFichiers[k] = os.path.join(path, self.getNomFichierDefaut(prefixe)) + extention
+        return nomFichiers
+
+
+    ######################################################################################  
+    def GenererGrille(self, event = None, path = None, nomFichiers = None, messageFin = True):
+#        print "GenererGrille", self
+#        print "  ", nomFichiers
+        if nomFichiers == None:
+            nomFichiers = self.GetNomGrilles(path)
+            if not self.projet.TesterExistanceGrilles(nomFichiers):
+                return
+            
+        ref = self.projet.GetReferentiel()
         
-#        if self.projet.GetTypeEnseignement() == 'SSI':
-#            nomFichier = self.getNomFichierDefaut("Grille")
-#            
-#            tableur = self.getTableurEtModif()
-#            tf = [[tableur, nomFichier]]
-#        else:
-#            nomFichierR = self.getNomFichierDefaut("Grille_revue")
-#            nomFichierS = self.getNomFichierDefaut("Grille_soutenance")
-#            tableur = self.getTableurEtModif()
-#            tf = [[tableur[0], nomFichierR], [tableur[1], nomFichierS]]
+        #
+        # Ouverture (et pré-sauvegarde) des fichiers grilles "source" (tableaux Excel)
+        #
+#        existe = []
+#        for k, f in nomFichiers.items():
+#            if os.path.isfile(f):
+#                existe.append(f)
+#        if len(existe) > 0:
+#            if len(existe) == 1:
+#                m = u"La grille d'évaluation existe déja !\n\n" \
+#                    u"\t%s\n\n" \
+#                    u"Voulez-vous la remplacer ?" %existe[0]
+#            else:
+#                m = u"Les grilles d'évaluation existent déja !\n\n" \
+#                    u"\t%s\n\n" \
+#                    u"Voulez-vous les remplacer ?" %u"\n".join(existe)
+#                                            
+#            dialog = wx.MessageDialog(self.projet.GetApp(), m, 
+#                                      u"Fichier existant", wx.YES_NO | wx.ICON_WARNING)
+#            retCode = dialog.ShowModal()
+#            if retCode != wx.ID_YES:
+#                return
         
-        for k, t in tableaux.items():
+        
+        tableaux = {}
+        for k, f in nomFichiers.items():
+            if os.path.isfile(f):
+                tableaux[k] = grilles.getTableau(self.projet.GetApp(), f)
+            else:
+                tableaux[k] = grilles.getTableau(self.projet.GetApp(),
+                                                 ref.grilles_prj[k][0])
+                if tableaux[k] != None: # and tableaux[k].filename !=f:
+                    tableaux[k].save(f)
+#                    try:
+#                        tableaux[k].save(f)
+#                    except:
+#                        messageErreur(self.projet.GetApp(), u"Erreur !",
+#                                      u"Impossible d'enregistrer le fichier\n\n%s\nVérifier :\n" \
+#                                      u" - qu'aucun fichier portant le même nom n'est déja ouvert\n" \
+#                                      u" - que le dossier choisi n'est pas protégé en écriture"%f)
+
+        if tableaux == None:
+            return
+        
+        #
+        # Remplissage des grilles
+        #
+        if "beta" in __version__:
+            grilles.modifierGrille(self.projet, tableaux, self)
+        else:
             try:
-                cheminComplet = os.path.join(path, nomFichiers[k])+".xls"
-                t.save(cheminComplet)
+                grilles.modifierGrille(self.projet, tableaux, self)
             except:
                 messageErreur(self.projet.GetApp(), u"Erreur !",
-                              u"Impossible d'enregistrer le fichier.\n\nVérifier :\n" \
+                              u"Impossible de modifier les grilles !") 
+
+
+        #
+        # Enregistrement final des grilles
+        #
+        for k, t in tableaux.items():
+            try:
+                t.save()
+            except:
+                messageErreur(self.projet.GetApp(), u"Erreur !",
+                              u"Impossible d'enregistrer le fichier\n\n%s\nVérifier :\n" \
                               u" - qu'aucun fichier portant le même nom n'est déja ouvert\n" \
-                              u" - que le dossier choisi n'est pas protégé en écriture")
+                              u" - que le dossier choisi n'est pas protégé en écriture" %f)
             try:
                 t.close()
             except:
                 pass
             self.grille[k] = Lien(typ = 'f')
-            self.grille[k].path = cheminComplet
+            self.grille[k].path = nomFichiers[k]
         
+        
+        #
+        # Message de fin
+        #
         if messageFin:
             if len(tableaux)>1:
                 t = u"Génération des grilles réussie !"
@@ -5690,7 +5843,6 @@ class Eleve(Personne, Objet_sequence):
             t += u"\n\n"
             t += u"\n".join(nomFichiers.values())
             
-            
             dlg = wx.MessageDialog(self.projet.GetApp(), t, u"Génération réussie",
                            wx.OK | wx.ICON_INFORMATION)
             dlg.ShowModal()
@@ -5698,57 +5850,113 @@ class Eleve(Personne, Objet_sequence):
         
         self.panelPropriete.MiseAJour()
         
+        
     ######################################################################################  
     def GetEvaluabilite(self, complet = False):
         """ Renvoie l'évaluabilité
-            % revue
+            % conduite
             % soutenance
         """ 
 #        print "GetEvaluabilite", self
-        r = s = 0
-        les = {}
-        ler = {}
             
-        dicPoids = self.GetReferentiel().dicPoidsIndicateurs_prj
+#        dicPoids = self.GetReferentiel().dicPoidsIndicateurs_prj
         dicIndicateurs = self.GetDicIndicateurs()
-        tousIndicateurs = self.GetReferentiel().dicIndicateurs_prj
-        for grp, poids in dicPoids.items():
-            poidsGrp, dicIndicGrp = poids
-            for comp, poidsIndic in dicIndicGrp.items():
-                if comp in dicIndicateurs.keys():
-                    for i, indic in enumerate(dicIndicateurs[comp]):
-                        if indic:
-                            p = 1.0*poidsIndic[i]/100 * poidsGrp/100
-                            if tousIndicateurs[comp][i][1]:     # revue
-                                r += p
-                                if grp in ler.keys():
-                                    ler[grp] += p
-                                else:
-                                    ler[grp] = p
-                            else:
-                                s += p
-                                if grp in les.keys():
-                                    les[grp] += p
-                                else:
-                                    les[grp] = p
+#        print "dicIndicateurs", dicIndicateurs
+        tousIndicateurs = self.GetReferentiel()._dicIndicateurs_prj
+        lstGrpIndicateur = {'R' : self.GetReferentiel()._lstGrpIndicateurRevues,
+                            'S' : self.GetReferentiel()._lstGrpIndicateurSoutenance}
+#        print lstGrpIndicateur
+            
+        r, s = 0, 0
+        ler, les = {}, {}
         
-        if len(self.GetReferentiel().grilles_prj) == 1:
-#        if self.GetTypeEnseignement() == "SSI":
-            r, s = r*2, s*2
-            for l in ler.keys():
-                ler[l] = ler[l]*2
-            for l in les.keys():
-                les[l] = les[l]*2
+        rs = [0, 0]
+        lers = [{}, {}]
+            
+        def getPoids(listIndic, comp, poidsGrp):
+            """ 
+            """
+            for k, ph in enumerate(["R", "S"]):
+                if grp in lstGrpIndicateur[ph]:
+                    for i, indic in enumerate(listIndic):
+                        if comp in dicIndicateurs.keys():
+                            if dicIndicateurs[comp][i]:
+                                poids = indic[1]
+                                p = 1.0*poids[k+1]/100
+                                rs[k] += p * poidsGrp[k+1]/100
+                                if grp in lers[k].keys():
+                                    lers[k][grp] += p
+                                else:
+                                    lers[k][grp] = p
+                        else:
+                            if not grp in lers[k].keys():
+                                lers[k][grp] = 0
+                            
+            return rs[0], rs[1], lers[0], lers[1]
+        
+        
+        for grp, grpComp in tousIndicateurs.items():
+            titre, dicComp, poidsGrp = grpComp
+#            print "    ", grp
+            for comp, lstIndic in dicComp.items():
+                if type(lstIndic[1]) == list:           # 2 niveaux
+                    getPoids(lstIndic[1], comp, poidsGrp)    
+                else:                                   # 3 niveaux
+                    for scomp, lstIndic2 in lstIndic.items():
+                        getPoids(lstIndic2[1], scomp, poidsGrp)
+                                
+                                                               
+        r, s = rs
+        ler, les = lers
+         
+         
+        # On corrige s'il n'y a qu'une seule grille (cas SSI jusqu'à 2014)
+#        if len(self.GetReferentiel().grilles_prj) == 1: 
+##        if self.GetTypeEnseignement() == "SSI":
+#            r, s = r*2, s*2
+#            for l in ler.keys():
+#                ler[l] = ler[l]*2
+#            for l in les.keys():
+#                les[l] = les[l]*2
             
         if "O8s" in les.keys():
             les["O8"] = les["O8s"]
             del les["O8s"]
             
-
-        if complet:
-            return r, s, ler, les
-        else:
-            return r, s
+#        print r, s, ler, les
+        
+        #
+        # Seuils d'évaluabilité
+        #
+        # liste des classeurs avec des grilles comprenant des colonne "non"
+#        classeurs = [i[0] for i in self.GetReferentiel().cellulesInfo_prj["NON"] if i[0] != '']
+        seuil = {}
+        for t in ["R", "S"]:
+#            if t in classeurs:
+            if self.GetReferentiel()._aColNon[t]:
+                seuil[t] = 0.5  # s'il y a une colonne "non", le seuil d'évaluabilité est de 50% par groupe de compétence
+            else:
+                seuil[t] = 1.0     # s'il n'y a pas de colonne "non", le seuil d'évaluabilité est de 100% par groupe de compétence
+        
+        ev = {}
+        ev_tot = {}
+        for txt, le, ph in zip([r, s], [ler, les], ["R", "S"]):
+            txt = round(txt, 6)
+            ev[ph] = {}
+            ev_tot[ph] = [txt, True]
+            for grp, tx in le.items():
+                tx = round(tx, 6)
+                ev[ph][grp] = [tx, tx >= seuil[ph]]
+                ev_tot[ph][1] = ev_tot[ph][1] and ev[ph][grp][1]
+        
+#        print ev, ev_tot, seuil
+        return ev, ev_tot, seuil
+        
+        
+#        if complet:
+#            return r, s, ler, les
+#        else:
+#            return r, s
     
 
     ######################################################################################  
@@ -5759,6 +5967,7 @@ class Eleve(Personne, Objet_sequence):
                 lst.extend(t.competences)
         lst = list(set(lst))
         return lst
+    
     
     ######################################################################################  
     def GetDicIndicateurs(self, limite = None):
@@ -5874,6 +6083,16 @@ class Eleve(Personne, Objet_sequence):
     
     ######################################################################################  
     def MiseAJourCodeBranche(self):
+        """ Met à jour les tags de durée de projet
+            et d'évaluabilité
+        """
+#        print "MiseAJourCodeBranche", self
+        
+        
+        
+        #
+        # Durée
+        #
         duree = int(self.GetDuree())
         lab = " ("+str(duree)+"h) "
         self.codeDuree.SetLabel(lab)
@@ -5892,26 +6111,93 @@ class Eleve(Personne, Objet_sequence):
             else:
                 self.codeDuree.SetToolTipString(u"Durée de travail trop importante")
         
-        
-        er, es = self.GetEvaluabilite()
-        labr = rallonge(pourCent(er)) #rallonge(str(int(er*100))+"%")
-        labs = rallonge(pourCent(es))
+        #
+        # Evaluabilité
+        #
+#        er, es , ler, les = self.GetEvaluabilite(complet = True)
+        ev, ev_tot, seuil = self.GetEvaluabilite()
+
+        labr = rallonge(pourCent2(ev_tot['R'][0]))
+        labs = rallonge(pourCent2(ev_tot['S'][0]))
         self.evaluR.SetLabel(labr)
         self.evaluS.SetLabel(labs)
-        t = u"L'élève ne mobilise pas suffisamment de compétences pour être évalué lors "
-        if er >= 0.5:
-            self.evaluR.SetBackgroundColour(COUL_OK)
-            self.evaluR.SetToolTipString(u"Evaluabilité des revues")
-        else:
-            self.evaluR.SetBackgroundColour(COUL_NON)
-            self.evaluR.SetToolTipString(t+u"des revues")
         
-        if es >= 0.5:
-            self.evaluS.SetBackgroundColour(COUL_OK)
-            self.evaluS.SetToolTipString(u"Evaluabilité de la soutenance")
-        else:
-            self.evaluS.SetBackgroundColour(COUL_NON)
-            self.evaluS.SetToolTipString(t+u"de la soutenance")
+        keys = sorted(self.GetReferentiel()._dicIndicateurs_prj_simple.keys())
+        if "O8s" in keys:
+            keys.remove("O8s")
+        
+#        labr = {}
+#        for k in keys:
+#            if k in self.GetReferentiel()._lstGrpIndicateurRevues:
+#                if k in ev_tot['R'].keys():
+#                    labr[k] = ev_tot['R'][k][0]
+#                else:
+#                    labr[k] = 0
+        
+#        pas50r = [k for k in labr.keys() if labr[k] < 0.5]
+#        pas50s = [] # Pas de case "NON" pour la grille de soutenance
+        
+        t1 = u"L'élève ne mobilise pas suffisamment de compétences pour être évalué"
+        t21 = u"Le "
+        t22 = u"Les "
+        t3 = u"taux d'indicateurs évalués pour "
+        t4 = u" est inférieur à "
+        t51 = u"la compétence "
+        t52 = u"les compétences "
+        
+        for ph, nomph, st in zip(['R', 'S'], [u"conduite", u"soutenance"], [self.evaluR, self.evaluS]):
+            t = u"Evaluabilité de la "+nomph+u" du projet "
+            tt = u""
+            if ev_tot[ph][1]:
+                tt += u"\n" + t1
+        
+            le = [k for k in ev[ph].keys() if ev[ph][k] == False] # liste des groupes de compétences pas évaluable
+            if len(le) == 1:
+                tt += u"\n" + t21 + t3 + t51 + le[0] + t4 + pourCent2(seuil[ph])
+            else:
+                tt += u"\n" + t22 + t3 + t52 + " ".join(le) + t4 + pourCent2(seuil[ph])
+        
+            if ev_tot[ph][1]:
+                coul = COUL_OK
+                t += u"POSSIBLE."
+            else:
+                coul = COUL_NON
+                t += u"IMPOSSIBLE :"
+                t += tt
+            
+            st.SetBackgroundColour(coul)
+            st.SetToolTipString(t)
+            
+#        for ph, e, le, st, limT in zip([u"conduite", u"soutenance"],
+#                                             [ev_tot['R'][0], ev_tot['S'][0]], 
+#                                             [pas50r, pas50s],
+#                                             [self.evaluR, self.evaluS], 
+#                                             [0.5, 1.0]):
+#            
+#            t = u"Evaluabilité de la "+ph+u" du projet "
+#            tt = u""
+#            Ok = True
+#            if e < limT:
+#                Ok = Ok and False
+#                tt += u"\n" + t1
+#                
+#            if len(le) == 1:
+#                tt += u"\n" + t21 + t3 + t51 + le[0] + t4
+#                Ok = Ok and False
+#            elif len(le) > 1:
+#                tt += u"\n" + t22 + t3 + t52 + " ".join(le) + t4
+#                Ok = Ok and False
+#            
+#            if Ok:
+#                coul = COUL_OK
+#                t += u"POSSIBLE."
+#            else:
+#                coul = COUL_NON
+#                t += u"IMPOSSIBLE :"
+#                t += tt
+#            
+#            st.SetBackgroundColour(coul)
+#            st.SetToolTipString(t)
 
         self.codeBranche.Layout()
         self.codeBranche.Fit()
@@ -5932,60 +6218,77 @@ class Eleve(Personne, Objet_sequence):
         if hasattr(self, 'tip'):
             
 #            self.tip.SetTexte(self.GetNomPrenom(), self.tip_nom)
-#             
+            coulOK = constantes.GetCouleurHTML(COUL_OK)
+            coulNON = constantes.GetCouleurHTML(COUL_NON)
+            
+            #
+            # Durée
+            #
             duree = self.GetDuree()
             lab = draw_cairo.getHoraireTxt(duree)
             if abs(duree-70) < constantes.DELTA_DUREE:
-                coul = constantes.GetCouleurHTML(COUL_OK)
+                coul = coulOK
             elif abs(duree-70) < constantes.DELTA_DUREE2:
                 coul = constantes.GetCouleurHTML(COUL_BOF)
             else:
-                coul = constantes.GetCouleurHTML(COUL_NON)
+                coul = coulNON
             XML_AjouterCol(self.ficheXML, "ld", lab, coul, bold = True)
 #            SetWholeText(self.ficheXML, "d", lab)
 #            self.tip.SetTexte(rallonge(lab), self.tip_duree)
             
-            er, es , ler, les = self.GetEvaluabilite(complet = True)
+            #
+            # Evaluabilité
+            #
+            ev, ev_tot, seuil = self.GetEvaluabilite()
             
-            keys = sorted(self.GetReferentiel().dicPoidsIndicateurs_prj.keys())
+            keys = sorted(self.GetReferentiel()._dicIndicateurs_prj.keys())
             if "O8s" in keys:
                 keys.remove("O8s")
             
             
-            labr = [pourCent(er, True)] #[str(round(er*100)).rjust(3)+"%"]
+            labr = [[pourCent2(ev_tot['R'][0], True), True]]
+#            totalOk = True
             for k in keys:
                 if k in self.GetReferentiel()._lstGrpIndicateurRevues:
-                    if k in ler.keys():
-                        labr.append(pourCent(ler[k], True)) #str(round(ler[k]*100)).rjust(3)+"%")
+                    if k in ev['R'].keys():
+                        
+#                        totalOk = totalOk and (ler[k] >= 0.5)
+                        labr.append([pourCent2(ev['R'][k][0], True), ev['R'][k][1]]) 
                     else:
-                        labr.append(pourCent(0, True)) #labr.append("  0%")
+#                        totalOk = False
+                        labr.append([pourCent2(0, True), False]) 
                 else:
-                    labr.append("")
+                    labr.append(["", True])
+            labr[0][1] = ev_tot['R'][1]#totalOk and (er >= 0.5)
                     
-                    
-            labs = [pourCent(es, True)] #[str(round(es*100)).rjust(3)+"%"]
+            labs = [[pourCent2(ev_tot['S'][0], True), True]]
+#            totalOk = True
             for k in keys:
                 if k in self.GetReferentiel()._lstGrpIndicateurSoutenance:
-                    if k in les.keys():
-                        labs.append(pourCent(les[k], True)) #str(round(les[k]*100)).rjust(3)+"%")
+                    if k in ev['S'].keys():
+#                        totalOk = totalOk and (ev['S'][k] >= 1)
+                        labs.append([pourCent2(ev['S'][k][0], True), ev['S'][k][1]]) 
                     else:
-                        labs.append(pourCent(0, True)) #labs.append("0%")
+#                        totalOk = False
+                        labs.append([pourCent2(0, True), False]) 
                 else:
-                    labs.append("")
+                    labs.append(["", True])
+            labs[0][1] = ev_tot['S'][1]#totalOk and (es >= 1)
  
-            for i, l in enumerate(labr):
-                if i ==0:
+            for i, lo in enumerate(labr):
+                l, o = lo
+                if i == 0:
                     size = None
                     bold = True
-                    if er >= 0.5:
-                        coul = constantes.GetCouleurHTML(COUL_OK)
+                    if o:
+                        coul = coulOK
                     else:
-                        coul = constantes.GetCouleurHTML(COUL_NON)
+                        coul = coulNON
                 else:
                     size = 2
                     bold = False
-                    if l == "  0%":
-                        coul = constantes.GetCouleurHTML(COUL_NON)
+                    if not o:
+                        coul = coulNON
                     else:
                         coul = None
                 XML_AjouterCol(self.ficheXML, "ler", l, coul, constantes.GetCouleurHTML(COUL_REVUE), size, bold)
@@ -5993,19 +6296,20 @@ class Eleve(Personne, Objet_sequence):
 #                SetWholeText(self.ficheXML, "r"+str(i), l)
                 
                 
-            for i, l in enumerate(labs):
+            for i, lo in enumerate(labs):
+                l, o = lo
                 if i ==0:
                     size = None
                     bold = True
-                    if es >= 0.5:
-                        coul = constantes.GetCouleurHTML(COUL_OK)
+                    if o:
+                        coul = coulOK
                     else:
-                        coul = constantes.GetCouleurHTML(COUL_NON)
+                        coul = coulNON
                 else:
                     size = 2
                     bold = False
-                    if l == "  0%":
-                        coul = constantes.GetCouleurHTML(COUL_NON)
+                    if not o:
+                        coul = coulNON
                     else:
                         coul = None
                 XML_AjouterCol(self.ficheXML, "les", l, coul, constantes.GetCouleurHTML(COUL_SOUT), size, bold)
@@ -7591,7 +7895,7 @@ class FenetreProjet(FenetreDocument):
         
         # Pour le suivi de l'ouverture
         nomCourt = os.path.splitext(os.path.split(nomFichier)[1])[0]
-        count = 0
+        
         message = nomCourt+"\n"
         dlg =    wx.ProgressDialog(u"Ouverture d'un projet",
                                    message,
@@ -7614,66 +7918,77 @@ class FenetreProjet(FenetreDocument):
         fichier = open(nomFichier,'r')
         self.definirNomFichierCourant(nomFichier)
         
-        Ok = True
-        err = 0
         
         
-#        try:
-        root = ET.parse(fichier).getroot()
         
-        # Le projet
-        projet = root.find("Projet")
-        if projet == None:
-            self.projet.setBranche(root)
-            
-        else:
-            # La classe
-            message += u"Construction de la structure de la classe..."
-            dlg.Update(count, message)
-            count += 1
-            classe = root.find("Classe")
-            Ok = Ok and self.classe.setBranche(classe)
-            message += constantes.getOkErr(Ok) + u"\n"
-            
-            if not self.classe.version5 and self.classe.familleEnseignement == "STI":
-                messageErreur(None, u"Ancien programme", 
-                              u"Projet enregistré avec les indicateurs de compétence antérieurs à la session 2014\n\n"\
-                              u"Les indicateurs de compétence ne seront probablement pas tous chargés.")
+        def ouvre(fichier, message):
+            root = ET.parse(fichier).getroot()
+            count = 0
+            Ok = True
+            err = 0
             
             # Le projet
-            message += u"Construction de la structure du projet..."
+            projet = root.find("Projet")
+            if projet == None:
+                self.projet.setBranche(root)
+                
+            else:
+                # La classe
+                message += u"Construction de la structure de la classe..."
+                dlg.Update(count, message)
+                count += 1
+                classe = root.find("Classe")
+                Ok = Ok and self.classe.setBranche(classe)
+                message += constantes.getOkErr(Ok) + u"\n"
+                
+                if not self.classe.version5 and self.classe.familleEnseignement == "STI":
+                    messageErreur(None, u"Ancien programme", 
+                                  u"Projet enregistré avec les indicateurs de compétence antérieurs à la session 2014\n\n"\
+                                  u"Les indicateurs de compétence ne seront probablement pas tous chargés.")
+                
+                # Le projet
+                message += u"Construction de la structure du projet..."
+                dlg.Update(count, message)
+                count += 1
+                o,err = self.projet.setBranche(projet)
+                Ok = Ok and o
+                message += constantes.getOkErr(Ok) + u"\n"
+                
+            self.arbre.DeleteAllItems()
+            root = self.arbre.AddRoot("")
+            
+            message += u"Traitement des revues\n"
             dlg.Update(count, message)
             count += 1
-            o,err = self.projet.setBranche(projet)
-            Ok = Ok and o
-            message += constantes.getOkErr(Ok) + u"\n"
-            
-        self.arbre.DeleteAllItems()
-        root = self.arbre.AddRoot("")
+            if err == 0:
+                self.projet.SetCompetencesRevuesSoutenance()
+            return root, message, count, Ok, err
         
-        message += u"Traitement des revues\n"
-        dlg.Update(count, message)
-        count += 1
-        self.projet.SetCompetencesRevuesSoutenance()
-
-#        except:
-#            Ok = False
         
-        if not Ok:
-            m = u"Le projet\n    %s\nn'a pas pu être ouvert !" \
-                u"\n\nIl s'agit peut-être d'un fichier d'une ancienne version de pySequence.\n" %nomCourt
-            
-            if err != 0:
-                m += u"\n   L'erreur concerne :"
-                for c,e in constantes.ERREURS.items():
-                    if err & c:
-                        m += u"\n   "+e
-              
-            messageErreur(self, u"Erreur d'ouverture", m)
-            fichier.close()
-            self.Close()
-            dlg.Destroy()
-            return
+        if "beta" in __version__:
+            print "beta"
+            root, message, count, Ok, err = ouvre(fichier, message)
+        else:
+            try:
+                root, message, count, Ok, err = ouvre(fichier, message)
+            except:
+                Ok = False
+        
+#        if not Ok:
+#            m = u"Le projet\n    %s\nn'a pas pu être ouvert !" \
+#                u"\n\nIl s'agit peut-être d'un fichier d'une ancienne version de pySequence.\n" %nomCourt
+#            
+#            if err != 0:
+#                m += u"\n   L'erreur concerne :"
+#                for c,e in constantes.ERREURS.items():
+#                    if err & c:
+#                        m += u"\n   "+e
+#              
+#            messageErreur(self, u"Erreur d'ouverture", m)
+#            fichier.close()
+#            self.Close()
+#            dlg.Destroy()
+#            return
         
         message += u"Construction de l'arborescence de la classe\n"
         dlg.Update(count, message)
@@ -7735,8 +8050,11 @@ class FenetreProjet(FenetreDocument):
 
         tps2 = time.clock() 
         print "Ouverture :", tps2 - tps1
-        
-        
+
+
+    
+
+
     #############################################################################
     def genererGrilles(self, event = None):
         """ Génération de toutes les grilles d'évaluation
@@ -7766,8 +8084,17 @@ class FenetreProjet(FenetreDocument):
 
             
             count = 0
+            
+            nomFichiers = {}
             for e in self.projet.eleves:
-                e.GenererGrille(path = path, messageFin = False)
+                nomFichiers[e.id] = e.GetNomGrilles(path = path)
+            
+            if not self.projet.TesterExistanceGrilles(nomFichiers):
+                dlgb.Destroy()
+                return
+            
+            for e in self.projet.eleves:
+                e.GenererGrille(nomFichiers = nomFichiers[e.id], messageFin = False)
                 dlgb.Update(count, u"Traitement de la grille de \n\n"+e.GetNomPrenom())
                 dlgb.Refresh()
                 count += 1
@@ -8128,7 +8455,7 @@ class FicheProjet(BaseFiche):
         self.tip_indic = []
         l += 1
         
-        self.lab_legend1 = popup.CreerTexte((l,0), txt = u"Revues", flag = wx.ALIGN_RIGHT|wx.RIGHT)
+        self.lab_legend1 = popup.CreerTexte((l,0), txt = u"Conduite", flag = wx.ALIGN_RIGHT|wx.RIGHT)
         self.lab_legend1.SetFont(wx.Font(8, wx.SWISS, wx.FONTSTYLE_ITALIC, wx.NORMAL))
         self.lab_legend1.SetForegroundColour(constantes.COUL_REVUE)
         
@@ -8175,41 +8502,86 @@ class FicheProjet(BaseFiche):
                 x, y = self.ClientToScreen((x, y))
                 type_ens = self.projet.classe.typeEnseignement
                 ref = self.projet.GetReferentiel()
-                competence = ref._dicCompetences_prj_simple[kComp]
-                if ref.prof_Comp > 1:
-                    competencePlus = competence[1:]
-                indicTache = obj.GetDicIndicateurs()[kComp]
+                competence = ref.getCompetence(kComp)
+                print "competence", competence
+                indicTache = obj.GetDicIndicateurs()
                 
-                self.MiseAJourTypeEnseignement(type_ens)
-                
-                indicateurs = ref.dicIndicateurs_prj[kComp]
-          
-                self.popup.SetTitre(u"Compétence "+kComp)
-                self.popup.SetTexte(textwrap.fill(competence[0], 50), self.tip_comp)
-                
-                if ref.prof_Comp > 1:
-                    t = ''
-                    for cp in competencePlus:
-                        t += textwrap.fill(CHAR_POINT + " " + cp, 50)+"\n"
-                    self.popup.SetTexte(t, self.tip_compp)
-                
-                self.popup.DeplacerItem(self.lab_legend1, (4+len(indicateurs), 0))
-                self.popup.DeplacerItem(self.lab_legend2, (4+len(indicateurs), 1))
+                ###################################################################
+                def afficherIndic(listIndic, codeComp, ligne):
+                    print "   afficherIndic", codeComp, ligne, len(listIndic)
                     
-                for i, indic in enumerate(indicateurs):
-                    indic, revue = indic
-                    if indicTache[i]:
-                        if revue:
-                            coul = constantes.COUL_REVUE
+                    for i, indic in enumerate(listIndic):
+                        intit = indic[0]
+                        poids = indic[1]
+                        if codeComp in indicTache and indicTache[codeComp][i]:
+                            if poids[1] != 0:
+                                coul = constantes.COUL_REVUE
+                            else:
+                                coul = constantes.COUL_SOUT
                         else:
-                            coul = constantes.COUL_SOUT
-                    else:
-                        coul = "GREY"
-                    self.tip_indic.append(self.popup.CreerTexte((3+i,1), flag = wx.ALIGN_LEFT|wx.LEFT))
-                    self.tip_indic[i].SetFont(wx.Font(9, wx.SWISS, wx.FONTSTYLE_ITALIC, wx.NORMAL))
-                    self.tip_indic[i].SetForegroundColour(coul)
-
-                    self.popup.SetTexte(textwrap.fill(indic, 50), self.tip_indic[i])
+                            coul = "GREY"
+                        self.tip_indic.append(self.popup.CreerTexte((3+i+ligne[0],1), flag = wx.ALIGN_LEFT|wx.LEFT))
+                        self.tip_indic[-1].SetFont(wx.Font(9, wx.SWISS, wx.FONTSTYLE_ITALIC, wx.NORMAL))
+                        self.tip_indic[-1].SetForegroundColour(coul)
+    
+                        self.popup.SetTexte(textwrap.fill(intit, 50), self.tip_indic[-1])
+                        ligne[0] += 1
+                        
+                intituleComp = competence[0]
+                self.popup.SetTitre(u"Compétence "+kComp)
+                self.popup.SetTexte(textwrap.fill(intituleComp, 50), self.tip_comp)
+                
+                if type(competence[1]) == list:
+                    indicateurs = competence[1]
+                    
+                    self.popup.DeplacerItem(self.lab_legend1, (4+len(indicateurs), 0))
+                    self.popup.DeplacerItem(self.lab_legend2, (4+len(indicateurs), 1))
+                
+                    afficherIndic(indicateurs, kComp, [0])
+                    
+                else:
+                    l = 0
+                    for v in competence[1].values():
+                        l += len(v[1])
+                    self.popup.DeplacerItem(self.lab_legend1, (4+l, 0))
+                    self.popup.DeplacerItem(self.lab_legend2, (4+l, 1))
+                    ligne = [0]
+                    for k, v in competence[1].items():
+                        afficherIndic(v[1], k, ligne)
+                
+##                competence = ref._dicIndicateurs_prj_simple[kComp][0]
+#                competence = ref.getIntituleCompetence(kComp, sousComp = True)
+##                if ref.prof_Comp > 1:
+##                    competencePlus = competence[1:]
+#                
+#                
+#                self.MiseAJourTypeEnseignement(type_ens)
+#                
+##                indicateurs = ref._dicIndicateurs_prj_simple[kComp]
+#                indicateurs = ref.getIndicateur(kComp)
+#          
+#                self.popup.SetTitre(u"Compétence "+kComp)
+#                self.popup.SetTexte(textwrap.fill(competence, 50), self.tip_comp)
+#                
+##                if ref.prof_Comp > 1:
+##                    t = ''
+##                    for cp in competencePlus:
+##                        t += textwrap.fill(CHAR_POINT + " " + cp, 50)+"\n"
+##                    self.popup.SetTexte(t, self.tip_compp)
+#                
+#                self.popup.DeplacerItem(self.lab_legend1, (4+len(indicateurs), 0))
+#                self.popup.DeplacerItem(self.lab_legend2, (4+len(indicateurs), 1))
+#                    
+#                
+#                
+#                    
+#                if type(indicateurs) == list:
+#                    afficherIndic(indicateurs, kComp, 0)
+#                else:
+#                    for k, v in indicateurs.items():
+#                        afficherIndic(v[1], k, ligne)
+                    
+                    
                     
                 self.popup.Position((x,y), (0,0))
                 self.call = wx.CallLater(500, self.popup.Show, True)
@@ -8221,11 +8593,11 @@ class FicheProjet(BaseFiche):
     #############################################################################
     def MiseAJourTypeEnseignement(self, type_ens):
         texte = u"Indicateur"
-        ref = self.projet.GetReferentiel()
-        if ref.prof_Comp <= 1:
-            texte += u"s"
+#        ref = self.projet.GetReferentiel()
+#        if ref.prof_Comp <= 1:
+#            texte += u"s"
         self.popup.SetTexte(texte, self.lab_indic)
-        self.tip_compp.Show(ref.prof_Comp > 1)
+#        self.tip_compp.Show(ref.prof_Comp > 1)
 #        self.tip_poids.Show(type_ens == "SSI")
             
         
@@ -8716,7 +9088,8 @@ class PanelPropriete_Projet(PanelPropriete):
             maj = False
             
         else:
-            self.projet.SetProblematique(event.GetString())
+            nt = event.GetString()[:constantes.LONG_MAX_PROBLEMATIQUE]
+            self.projet.SetProblematique(nt)
             maj = True
             
             
@@ -10974,7 +11347,8 @@ class PanelPropriete_Tache(PanelPropriete):
         #
         ref = self.tache.GetReferentiel()
 #        lstPhases = [p[1] for k, p in ref.phases_prj.items() if not k in ref.listPhasesEval_prj]
-        lstPhases = [ref.phases_prj[k][1] for k in ref.listPhases_prj if not k in ref.listPhasesEval_prj] 
+        lstPhases = [ref.phases_prj[k][1] for k in ref.listPhases_prj if not k in ref.listPhasesEval_prj]
+        
         if tache.phase in ["R1", "R2", "R3", "S"]:
             titre = wx.StaticText(pageGen, -1, u"Phase : "+ref.phases_prj[tache.phase][1])
             pageGen.sizer.Add(titre, (0,0), (1,1), flag = wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_LEFT|wx.ALL, border = 5)
@@ -10987,7 +11361,8 @@ class PanelPropriete_Tache(PanelPropriete):
                                  | wx.CB_READONLY
                                  #| wx.CB_SORT
                                  )
-            for i, k in enumerate([k for k in ref.phases_prj.keys() if not k in ref.listPhasesEval_prj]):#ref.listPhases_prj):
+
+            for i, k in enumerate(sorted([k for k in ref.phases_prj.keys() if not k in ref.listPhasesEval_prj])):#ref.listPhases_prj):
                 cbPhas.SetItemBitmap(i, constantes.imagesTaches[k].GetBitmap())
             pageGen.Bind(wx.EVT_COMBOBOX, self.EvtComboBox, cbPhas)
             self.cbPhas = cbPhas
@@ -11163,7 +11538,7 @@ class PanelPropriete_Tache(PanelPropriete):
             if competence in self.tache.indicateursEleve[0].keys():
                 self.arbre.MiseAJour(competence, self.tache.indicateursEleve[0][competence])
             else:
-                self.arbre.MiseAJour(competence, REFERENTIELS[self.tache.GetTypeEnseignement()].dicCompetences_prj_simple[competence][1])
+                self.arbre.MiseAJour(competence, REFERENTIELS[self.tache.GetTypeEnseignement()]._dicCompetences_prj_simple[competence][1])
             
             
         self.Thaw()
@@ -11205,7 +11580,7 @@ class PanelPropriete_Tache(PanelPropriete):
 
     ######################################################################################  
     def AjouterCompetence(self, code, propag = True):
-#        print "AjouterCompetence", code
+#        print "AjouterCompetence", self, code
         if not code in self.tache.indicateursEleve[0]:
             self.tache.indicateursEleve[0].append(code)
         
@@ -11215,6 +11590,7 @@ class PanelPropriete_Tache(PanelPropriete):
         
     ######################################################################################  
     def EnleverCompetence(self, code, propag = True):
+#        print "EnleverCompetence", self, code
         if code in self.tache.indicateursEleve[0]:
             self.tache.indicateursEleve[0].remove(code)
         # on recommence : pour corriger un bug
@@ -11227,6 +11603,7 @@ class PanelPropriete_Tache(PanelPropriete):
 
     ######################################################################################  
     def AjouterCompetenceEleve(self, code, eleve):
+#        print "AjouterCompetenceEleve", self, code
         if hasattr(self.tache, 'indicateursEleve'):
             dicIndic = self.tache.projet.eleves[eleve-1].GetDicIndicateursRevue(self.tache.phase)
             comp = code.split("_")[0]
@@ -11239,15 +11616,19 @@ class PanelPropriete_Tache(PanelPropriete):
                 
             if ok and not code in self.tache.indicateursEleve[eleve]:
                 self.tache.indicateursEleve[eleve].append(code)
+#                self.tache.ActualiserDicIndicateurs()
+            
         
     ######################################################################################  
     def EnleverCompetenceEleve(self, code, eleve):
+#        print "EnleverCompetenceEleve", self, code
         if hasattr(self.tache, 'indicateursEleve'):
             if code in self.tache.indicateursEleve[eleve]:
                 self.tache.indicateursEleve[eleve].remove(code)
             # on recommence : pour corriger un bug
             if code in self.tache.indicateursEleve[eleve]:
                 self.tache.indicateursEleve[eleve].remove(code)
+#            self.tache.ActualiserDicIndicateurs()
     
     ############################################################################            
     def SetCompetences(self):
@@ -11672,14 +12053,14 @@ class PanelPropriete_Personne(PanelPropriete):
         #
         # Avatar
         #
-        box = wx.StaticBox(self, -1, u"Avatar")
+        box = wx.StaticBox(self, -1, u"Portrait")
         bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
         image = wx.StaticBitmap(self, -1, wx.NullBitmap)
         self.image = image
         self.SetImage()
         bsizer.Add(image, flag = wx.EXPAND)
         
-        bt = wx.Button(self, -1, u"Changer l'avatar")
+        bt = wx.Button(self, -1, u"Changer le portrait")
         bt.SetToolTipString(u"Cliquer ici pour sélectionner un fichier image")
         bsizer.Add(bt, flag = wx.EXPAND|wx.ALIGN_BOTTOM)
         self.Bind(wx.EVT_BUTTON, self.OnClick, bt)
@@ -12818,8 +13199,10 @@ class ArbreCompetences(HTL.HyperTreeList):
         self.SetMainColumn(0) # the one with the tree in it...
         self.AddColumn(u"")
         self.SetColumnWidth(1, 0)
+        self.AddColumn(u"")
+        self.SetColumnWidth(1, 0)
         self.AddColumn(u"Eleves")
-        self.SetColumnWidth(2, 0)
+        self.SetColumnWidth(3, 0)
         self.root = self.AddRoot(ref.nomCompetences)
         self.MiseAJourTypeEnseignement(ref)
         
@@ -12893,7 +13276,7 @@ class ArbreCompetences(HTL.HyperTreeList):
                 b = self.AppendItem(branche, k+" "+dic[k][0], ct_type=ct_type, data = k)
                 self.Construire(b, dic[k][1], ct_type = 1)
             else:
-                b = self.AppendItem(branche, k+" "+dic[k], ct_type = 1, data = k)
+                b = self.AppendItem(branche, k+" "+dic[k][0], ct_type = 1, data = k)
             
             if ct_type == 0:
                 self.SetItemBold(b, True)
@@ -12913,7 +13296,7 @@ class ArbreCompetences(HTL.HyperTreeList):
     ####################################################################################
     def AjouterEnleverCompetencesItem(self, item, propag = True):
         code = self.GetItemPyData(item)#.split()[0]
-
+#        print "AjouterEnleverCompetencesItem", code
         if code != None: # un seul indicateur séléctionné
             self.AjouterEnleverCompetences([item], propag)
 
@@ -12924,6 +13307,7 @@ class ArbreCompetences(HTL.HyperTreeList):
     def AjouterEnleverCompetences(self, lstitem, propag = True):
         for item in lstitem:
             code = self.GetItemPyData(item)#.split()[0]
+            print "  ", code, item.GetValue()
             if item.GetValue():
                 self.pptache.AjouterCompetence(code, propag)
             else:
@@ -12932,9 +13316,10 @@ class ArbreCompetences(HTL.HyperTreeList):
                 
     ####################################################################################
     def AjouterEnleverCompetencesEleve(self, lstitem, eleve):
+#        print "AjouterEnleverCompetencesEleve", self, lstitem, eleve
         for item in lstitem:
             code = self.GetItemPyData(item)
-            if self.GetItemWindow(item, 2).EstCocheEleve(eleve):
+            if self.GetItemWindow(item, 3).EstCocheEleve(eleve):
                 self.pptache.AjouterCompetenceEleve(code, eleve)
             else:
                 self.pptache.EnleverCompetenceEleve(code, eleve)
@@ -12976,6 +13361,10 @@ class ArbreCompetences(HTL.HyperTreeList):
 
 
 class ArbreCompetencesPrj(ArbreCompetences):
+    """ Arbre des compétences abordées en projet lors d'une tâche <pptache>
+        <revue> : vrai si la tâche est une revue
+        <eleves> : vrai s'il faut afficher une colonne supplémentaire pour distinguer les compétences pour chaque éleve
+    """
     def __init__(self, parent, ref, pptache, revue = False, eleves = False):
         self.revue = revue
         self.eleves = eleves
@@ -12988,10 +13377,12 @@ class ArbreCompetencesPrj(ArbreCompetences):
         self.Bind(CT.EVT_TREE_ITEM_GETTOOLTIP, self.OnToolTip)
         
         self.SetColumnText(0,u"Compétences et indicateurs")
-        self.SetColumnText(1, u"Poids")
+        self.SetColumnText(1, u"Poids C")
+        self.SetColumnText(2, u"Poids S")
         self.SetColumnWidth(1, 60)
+        self.SetColumnWidth(2, 60)
         if eleves:
-            self.SetColumnWidth(2, 0)
+            self.SetColumnWidth(3, 0)
             
           
         
@@ -13006,84 +13397,176 @@ class ArbreCompetencesPrj(ArbreCompetences):
         if ref == None:
             ref = self.ref
         if dic == None: # Construction de la racine
-            dic = ref.dicCompetences_prj
+            dic = ref._dicCompetences_prj
+        
         font = wx.Font(10, wx.DEFAULT, wx.FONTSTYLE_ITALIC, wx.NORMAL, False)
-#        self.poids_ctrl = {}
-        clefs = dic.keys()
-        clefs.sort()
-        size = False
-        for codeGrp in clefs:
-#            self.poids_ctrl[codeGrp] = wx.TextCtrl(self, -1, 
-#                                                   str(constantes.dicPoidsIndicateurs[type_ens][codeGrp][0])+"%", 
-#                                                   size = (32,20), name = codeGrp)
-            b = self.AppendItem(branche, codeGrp+" "+dic[codeGrp][0])
-            self.SetItemText(b, str(ref.dicPoidsIndicateurs_prj[codeGrp][0])+"%", 1)
-            self.SetItemBold(b, True)
-#            self.poids_ctrl[codeGrp].Bind(wx.EVT_TEXT, self.OnTextCtrl)
-#            self.SetItemWindow(b, self.poids_ctrl[codeGrp], 1)
-            
-            codes = dic[codeGrp][1].keys()
-            codes.sort()
-            for code in codes:
-                intitule = dic[codeGrp][1][code]
-                
-                if type(intitule) == list: # C'est le cas des compétences SSI
-                    sep = u" " + CHAR_POINT + u" "
-                    intitule = intitule[0] + " : " + sep.join(intitule[1].values())
-                
-                
-                cc = [cd+ " " + it for cd, it in zip(code.split(u"\n"), intitule.split(u"\n"))]
-                c = self.AppendItem(b, u"\n".join(cc), ct_type=1)
-                self.items[code] = c
+        
+        size = None
+        tousEleve = [True]*len(self.pptache.tache.projet.eleves)
+        
+        def const(d, br, debug = False):
+            ks = d.keys()
+            ks.sort()
+            for k in ks:
+                if debug: print "****", k
+                v = d[k]
+                if len(v) > 1 and type(v[1]) == dict:
+                    if debug: print "   ", v[0]
+                    if len(v) == 2:
+                        b = self.AppendItem(br, k+" "+v[0])
+                    else:
+                        if debug: print "   prem's", v[2]
+                        b = self.AppendItem(br, k+" "+v[0])
+                        for i, p in enumerate(v[2][1:]):
+                            if p != 0:
+                                self.SetItemText(b, pourCent2(p/100), i+1)
+                        self.SetItemBold(b, True)
+                    self.items[k] = b
+                    const(v[1], b, debug = debug)
                         
-                i = None
-                tous = True
-                tousEleve = [True]*len(self.pptache.tache.projet.eleves)
-                for j, Indic in enumerate(ref.dicIndicateurs_prj[code]):
-                    codeIndic = code+'_'+str(j+1)
-#                    print self.pptache.tache.phase
-#                    print self.pptache.tache.projet.getCodeLastRevue()
-#                    print codeIndic
-                    if (not self.pptache.tache.phase in ["R1", "Rev", self.pptache.tache.projet.getCodeLastRevue()]) or (codeIndic in self.pptache.tache.indicateursMaxiEleve[0]):
-                        if not Indic[1] or self.pptache.tache.phase != 'XXX':
-                            i = self.AppendItem(c, Indic[0], ct_type=1, data = codeIndic)
+                else:   # Indicateur
+                    
+                    cc = [cd+ " " + it for cd, it in zip(k.split(u"\n"), v[0].split(u"\n"))]
+#                    c = self.AppendItem(b, u"\n".join(cc), ct_type=1)
+              
+                    comp = self.AppendItem(br, u"\n ".join(cc))
+                    
+#                    comp = self.AppendItem(br, k+" "+v[0])
+                    
+                    self.items[k] = comp
+                    b = None #
+                    tous = True
+                    for i, indic in enumerate(v[1]):
+                        codeIndic = k+'_'+str(i+1)
+                        if debug:
+                            print not self.pptache.tache.phase in ["R1", "Rev", self.pptache.tache.projet.getCodeLastRevue()]
+#                            print codeIndic in self.pptache.tache.indicateursMaxiEleve[0]
+                            print ref.getTypeIndicateur(codeIndic)
+                            print self.pptache.tache.phase != 'XXX'
+                        
+                        if ((not self.pptache.tache.phase in ["R1", "Rev", self.pptache.tache.projet.getCodeLastRevue()]) \
+                            or (codeIndic in self.pptache.tache.indicateursMaxiEleve[0])) \
+                            and (ref.getTypeIndicateur(codeIndic) == "S" or self.pptache.tache.phase != 'XXX'):
+                            
+                            b = self.AppendItem(comp, indic[0], ct_type=1, data = codeIndic)
                             if codeIndic in self.pptache.tache.indicateursEleve[0]:
-                                self.CheckItem2(i)
+                                self.CheckItem2(b)
                             else:
                                 tous = False
+                            if debug: print "   indic", indic
+                            for j, p in enumerate(indic[1][1:]):
+                                if p != 0:
+                                    self.SetItemText(b, pourCent2(p/100), j+1)
+                                    if j == 0:
+                                        self.SetItemTextColour(b, COUL_REVUE)
+                                    else:
+                                        self.SetItemTextColour(b, COUL_SOUT)
+                            self.SetItemFont(b, font)        
                             
-                            self.SetItemText(i, str(ref.dicPoidsIndicateurs_prj[codeGrp][1][code][j])+"%", 1)
-                            self.SetItemFont(i, font)
+                            self.items[codeIndic] = b
                             
-                            if Indic[1]:
-                                self.SetItemTextColour(i, COUL_REVUE)
-                            else:
-                                self.SetItemTextColour(i, COUL_SOUT)
-
-                            self.items[codeIndic] = i
-                     
                             if self.eleves:
-                                self.SetItemWindow(i, ChoixCompetenceEleve(self, codeIndic, self.pptache.tache.projet, self.pptache.tache), 2)
+                                self.SetItemWindow(b, ChoixCompetenceEleve(self, codeIndic, 
+                                                                           self.pptache.tache.projet, 
+                                                                           self.pptache.tache), 3)
                                 for e in range(len(self.pptache.tache.projet.eleves)):
-                                    tousEleve[e] = tousEleve[e] and self.GetItemWindow(i, 2).EstCocheEleve(e+1)
-                                if not size:
-                                    size = self.GetItemWindow(i, 2).GetSize()[0]
+                                    tousEleve[e] = tousEleve[e] and self.GetItemWindow(b, 3).EstCocheEleve(e+1)
+                                size = self.GetItemWindow(b, 3).GetSize()[0]
+
+                    
+                    if b == None: # Désactivation si branche vide d'indicateurs
+                        self.SetItemType(br,0)
+                    else:
+                        self.CheckItem2(br, tous)
+#                        if self.eleves:
+#                            self.SetItemWindow(c, ChoixCompetenceEleve(self, code, self.pptache.tache.projet, self.pptache.tache), 2)
+#                            for e in range(len(self.pptache.tache.projet.eleves)):
+#                                self.GetItemWindow(c, 2).CocherEleve(e+1, tousEleve[e])
+            return
+            
+        const(dic, branche, debug = False)
+            
                 
-                if i == None: # Désactivation si branche vide d'indicateurs
-                    self.SetItemType(c,0)
-                else:
-                    self.CheckItem2(c, tous)
-                    if self.eleves:
-                        self.SetItemWindow(c, ChoixCompetenceEleve(self, code, self.pptache.tache.projet, self.pptache.tache), 2)
-                        for e in range(len(self.pptache.tache.projet.eleves)):
-                            self.GetItemWindow(c, 2).CocherEleve(e+1, tousEleve[e])
         if self.eleves:
-            self.SetColumnWidth(2, size+2)
+            self.SetColumnWidth(3, 60)
         self.Refresh()
+            
+        return
+    
+    
+#        size = False
+#        
+#        
+#        for codeGrp in clefs:
+##            self.poids_ctrl[codeGrp] = wx.TextCtrl(self, -1, 
+##                                                   str(constantes.dicPoidsIndicateurs[type_ens][codeGrp][0])+"%", 
+##                                                   size = (32,20), name = codeGrp)
+#            b = self.AppendItem(branche, codeGrp+" "+dic[codeGrp][0])
+#            self.SetItemText(b, str(ref._dicCompetences_prj[codeGrp][2][1])+"%", 1)
+#            self.SetItemText(b, str(ref._dicCompetences_prj[codeGrp][2][2])+"%", 2)
+#            self.SetItemBold(b, True)
+##            self.poids_ctrl[codeGrp].Bind(wx.EVT_TEXT, self.OnTextCtrl)
+##            self.SetItemWindow(b, self.poids_ctrl[codeGrp], 1)
+#            
+#            codes = dic[codeGrp][1].keys()
+#            codes.sort()
+#            for code in codes:
+#                intitule = dic[codeGrp][1][code]
+#                
+#                if type(intitule) == list: # C'est le cas des compétences SSI
+#                    sep = u" " + CHAR_POINT + u" "
+#                    intitule = intitule[0] + " : " + sep.join(intitule[1].values())
+#                
+#                
+#                cc = [cd+ " " + it for cd, it in zip(code.split(u"\n"), intitule.split(u"\n"))]
+#                c = self.AppendItem(b, u"\n".join(cc), ct_type=1)
+#                self.items[code] = c
+#                        
+#                i = None
+#                tous = True
+#                tousEleve = [True]*len(self.pptache.tache.projet.eleves)
+#                for j, Indic in enumerate(ref._dicIndicateurs_prj[code]):
+#                    codeIndic = code+'_'+str(j+1)
+#                    if (not self.pptache.tache.phase in ["R1", "Rev", self.pptache.tache.projet.getCodeLastRevue()]) or (codeIndic in self.pptache.tache.indicateursMaxiEleve[0]):
+#                        if not Indic[1] or self.pptache.tache.phase != 'XXX':
+#                            i = self.AppendItem(c, Indic[0], ct_type=1, data = codeIndic)
+#                            if codeIndic in self.pptache.tache.indicateursEleve[0]:
+#                                self.CheckItem2(i)
+#                            else:
+#                                tous = False
+#                            
+#                            self.SetItemText(i, str(ref._dicCompetences_prj[codeGrp][1][code][j])+"%", 1)
+#                            self.SetItemFont(i, font)
+#                            
+#                            if Indic[1]:
+#                                self.SetItemTextColour(i, COUL_REVUE)
+#                            else:
+#                                self.SetItemTextColour(i, COUL_SOUT)
+#
+#                            self.items[codeIndic] = i
+#                     
+#                            if self.eleves:
+#                                self.SetItemWindow(i, ChoixCompetenceEleve(self, codeIndic, self.pptache.tache.projet, self.pptache.tache), 2)
+#                                for e in range(len(self.pptache.tache.projet.eleves)):
+#                                    tousEleve[e] = tousEleve[e] and self.GetItemWindow(i, 2).EstCocheEleve(e+1)
+#                                if not size:
+#                                    size = self.GetItemWindow(i, 2).GetSize()[0]
+#                
+#                if i == None: # Désactivation si branche vide d'indicateurs
+#                    self.SetItemType(c,0)
+#                else:
+#                    self.CheckItem2(c, tous)
+#                    if self.eleves:
+#                        self.SetItemWindow(c, ChoixCompetenceEleve(self, code, self.pptache.tache.projet, self.pptache.tache), 2)
+#                        for e in range(len(self.pptache.tache.projet.eleves)):
+#                            self.GetItemWindow(c, 2).CocherEleve(e+1, tousEleve[e])
+#        if self.eleves:
+#            self.SetColumnWidth(3, size+2)
+#        self.Refresh()
 
     #############################################################################
     def MiseAJourCaseEleve(self, codeIndic, etat, eleve, propag = True):
-        casesEleves = self.GetItemWindow(self.items[codeIndic], 2)
+        casesEleves = self.GetItemWindow(self.items[codeIndic], 3)
         if casesEleves.EstCocheEleve(eleve) != etat:
             return
         
@@ -13098,17 +13581,19 @@ class ArbreCompetencesPrj(ArbreCompetences):
             if propag:
                 tout = True
                 for i in itemComp.GetChildren():
-                    tout = tout and self.GetItemWindow(i, 2).EstCocheEleve(eleve)
+                    tout = tout and self.GetItemWindow(i, 3).EstCocheEleve(eleve)
     #            self.GetItemWindow(itemComp, 2).CocherEleve(eleve, tout)
-                cases = self.GetItemWindow(self.items[comp], 2)
-                cases.CocherEleve(eleve, tout, withEvent = True)
+                print "MiseAJourCaseEleve", comp, eleve
+                cases = self.GetItemWindow(self.items[comp], 3)
+                if cases != None:
+                    cases.CocherEleve(eleve, tout, withEvent = True)
             
 #            self.MiseAJourCaseEleve(comp, tout, eleve, forcer = True)
             
             self.AjouterEnleverCompetencesEleve([item], eleve)
             
             self.CheckItem2(item, estToutCoche)
-            self.AjouterEnleverCompetencesItem(item, propag = False)
+#            self.AjouterEnleverCompetencesItem(item, propag = False)
             
         else: #Compétence complete
             if propag:
@@ -13116,7 +13601,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
                 for i in itemComp.GetChildren():
     #                self.GetItemWindow(i, 2).CocherEleve(eleve, etat)
     #                self.MiseAJourCaseEleve(self.GetItemPyData(i), etat, eleve, forcer = True)
-                    cases = self.GetItemWindow(i, 2)
+                    cases = self.GetItemWindow(i, 3)
                     cases.CocherEleve(eleve, etat, withEvent = True)
 #            self.CheckItem2(itemComp, estToutCoche)
 #            self.AjouterEnleverCompetencesEleve(itemComp.GetChildren(), eleve)
@@ -13138,7 +13623,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
 #    def MiseAJour(self, code = None, value = None):
 #        return
 #        if code == None:
-#            for k, v in constantes.dicCompetences_prj_simple[self.type_ens].items():
+#            for k, v in constantes._dicCompetences_prj_simple[self.type_ens].items():
 #                if k in self.poids_ctrl.keys():
 #                    self.poids_ctrl[k].ChangeValue(str(v[1]))
 #        else:
@@ -13226,7 +13711,6 @@ class ArbreCompetencesPrj(ArbreCompetences):
         
 class ChoixCompetenceEleve(wx.Panel):
     def __init__(self, parent, indic, projet, tache):
-#        print "init ChoixCompetenceEleve", indic
         wx.Panel.__init__(self, parent, -1)
         sizer = wx.BoxSizer(wx.HORIZONTAL)
         self.indic = indic

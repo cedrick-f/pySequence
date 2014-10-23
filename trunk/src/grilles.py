@@ -47,17 +47,73 @@ from xlwt import Workbook
 import os
 from widgets import messageErreur
 
-def getTableau(parent, doc):
+def getTableau(parent, nomFichier):
+    """ Ouvre et renvoie le classeur
+        contenant la grille d'évaluation
+    """
+    fichierPB = []
+    def ouvrir(fichier):
+        fichier = os.path.join(TABLE_PATH, fichier)
+        tableau = None
+        err = 0
+        if os.path.isfile(fichier):
+            try:
+                tableau = PyExcel(fichier)
+            except:
+                err = 1
+        else:
+            err = 2
+            fichierPB.append(fichier)
+        return err, tableau
+
+    err, tableau = ouvrir(nomFichier)
+                                      
+    #
+    # Gestion des éventuelles erreurs
+    #
+    if err == 0:
+        return tableau
+    
+    elif err&1 != 0:
+        messageErreur(parent, u"Lancement d'Excel impossible !",
+                      u"L'application Excel ne semble pas installée !")
+        
+    elif err&2 != 0:
+        messageErreur(parent, u"Fichier non trouvé !",
+                              u"Le fichier original de la grille,\n    " + fichierPB[0] + u"\n" \
+                              u"n'a pas été trouvé ! \n")
+        
+    else:
+        print "Erreur", err
+
+
+
+
+def getExentionExcel():
+    xlApp = win32com.client.dynamic.Dispatch('Excel.Application')
+    if xlApp.Version < 12:
+        ext = ".xls"
+    else:
+        ext = ".xlsx"
+    del xlApp
+    return ext
+
+try:
+    EXT_EXCEL = getExentionExcel()
+except:
+    EXT_EXCEL = None # ya pas Excel !
+print "Extension Excel :", EXT_EXCEL
+
+
+def getTableaux(parent, doc):
+    """ Ouvre et renvoie les classeurs 
+        contenant les grilles d'évaluation : revues + soutenance
+    """
     typ = doc.GetTypeEnseignement()
     ref = doc.GetReferentiel()
     
     fichiers = ref.grilles_prj
     
-#    if typ == 'SSI':
-#        fichiers = Fichier_GRILLE[typ]
-#    else:
-#        fichiersR = Fichier_GRILLE[typ]
-#        fichiersS = Fichier_GRILLE['ET']
     
     fichierPB = []
     
@@ -65,6 +121,7 @@ def getTableau(parent, doc):
         fichier = os.path.join(TABLE_PATH, fichier)
         tableau = None
         err = 0
+        
         if os.path.isfile(fichier):
             try:
                 tableau = PyExcel(fichier)
@@ -79,8 +136,11 @@ def getTableau(parent, doc):
     tableaux = {}
     ff = r""
     for k, f in fichiers.items():
-        if f != ff:
-            err, tableaux[k] = ouvrir(f)
+        nomFichier = f[0]
+        if nomFichier != ff:
+            if EXT_EXCEL != os.path.splitext(nomFichier)[1]:
+                nomFichier = os.path.splitext(nomFichier)[0] + EXT_EXCEL
+            err, tableaux[k] = [ouvrir(nomFichier), f[1]]
     
 #    if typ == 'SSI':
 #        err, tableau = ouvrir(fichiers[0])
@@ -99,7 +159,7 @@ def getTableau(parent, doc):
     if err == 0:
         return tableaux
     elif err&1 != 0:
-        messageErreur(parent, u"Ouverture d'Excel impossible !",
+        messageErreur(parent, u"Lancement d'Excel impossible !",
                       u"L'application Excel ne semble pas installée !")
     elif err&2 != 0:
         messageErreur(parent, u"Fichier non trouvé !",
@@ -110,55 +170,58 @@ def getTableau(parent, doc):
 
 
 def modifierGrille(doc, tableaux, eleve):
-    print "modifierGrille", eleve
+#    print "modifierGrille", eleve
+    
+    dicInfo = doc.GetReferentiel().cellulesInfo_prj
     
     #
-    # On coche les cellules "non" (obsolète depuis session 2014 en STI2D et 2015 en SSI)
+    # On coche les cellules "non" (uniquement grilles "Revues" STI2D)
     #     
-    
-#    dic = Cellules_NON[doc.GetTypeEnseignement()]
-    #clef = code compétence
-    #valeur = liste [True False ...] des indicateurs à mobiliser
-#    dicIndic = eleve.GetDicIndicateurs()
-#
-#    
-#    for feuille, cellules in dic:
-#        for comp, cells in cellules.items():
-#            for j, cell in enumerate(cells):
-#                
-#                # indic = l'indicateur "comp" doit être évalué
-#                if comp in dicIndic.keys():
-#                    indic = dicIndic[comp][j]
+    classNON = dicInfo["NON"][0][0]
+#    print "classNON", classNON
+    feuilNON = dicInfo["NON"][0][1]
+#    print "feuilNON", feuilNON
+    if feuilNON != '':
+        #clef = code compétence
+        #valeur = liste [True False ...] des indicateurs à mobiliser
+        dicIndic = eleve.GetDicIndicateurs()
+        dicNon = doc.GetReferentiel()._dicIndicateurs_prj_simple
+        colNON = dicInfo["NON"][0][2][1]
+        
+        # On rajoute la feuille du cadidat si elle n'existe pas encore
+        if doc.GetReferentiel().grilles_prj[classNON][1] == 'C': # fichier "Collectif"
+            feuille = feuilNON+str(eleve.id+1)
+#            if not feuille in tableaux['R'].getSheets():
+#                sh = [int(s[-1]) for s in tableaux['R'].getSheets() if s[-1] in range(1,6)]
+#                b = max([n for n in sh if n < eleve.id+1]+[0])
+#                if b > 0:
+#                    a = feuilNON+" "+b
 #                else:
-#                    indic = False
-#                
-#                
-#                if not indic: # indicateur pas évalué --> on coche NON !
-#                    l, c = cell
-##                    print feuille, l, c
-#                    if doc.GetTypeEnseignement() == 'SSI':
-#                        tableur.setCell(feuille, l, c, COCHE)
-#                    else:
-#                        if feuille == Feuille_ETT:
-#                            t = tableur[1]
-#                        else:
-#                            t = tableur[0]
-#                        t.setCell(2, l, c, COCHE)
+#                    a = ''
+#                tableaux['R'].addSheetName(feuille, After = a)
+#                print "Feuille ajoutée:", feuille, a
+
+        else:
+            feuille = feuilNON
+        
+        for i, indic in dicNon.items():
+#            print "**", i, indic
+            lignes = [ind[2] for ind in indic if ind[2] != 0]
+#            print "    lignes", lignes
+#            print "    colNON", colNON
+            for j, ligne in enumerate(lignes):
                 
-#                else: # indicateur évalué --> on rempli la colonne "Revues" (J) !
-#                    if doc.GetTypeEnseignement(simple = True) == "STI" and feuille != Feuille_ETT:
-#                        l, c = cell
-#                        c = COL_REVUE
-#                        for r in eleve.parent.getTachesRevue()[:-1]:
-#                            if comp+"_"+str(j+1) in r.indicateurs:
-#                                tableur[0].setCell(2, l, c, r.phase[1])
-#                    
-#                    elif doc.GetTypeEnseignement(simple = True) == "SSI":
-#                        l, c = cell
-#                        c = COL_REVUE
-#                        for r in eleve.parent.getTachesRevue()[:-1]:
-#                            if comp+"_"+str(j+1) in r.indicateurs:
-#                                tableur.setCell(2, l, c, r.phase[1])
+                # indic = l'indicateur "i" doit être évalué
+                if i in dicIndic.keys():
+                    indic = dicIndic[i][j]
+                else:
+                    indic = False
+                if classNON in tableaux.keys():
+                    nf = tableaux[classNON].getSheetNum(feuille)
+                    if not indic: # indicateur pas évalué --> on coche NON !
+                        tableaux[classNON].setCell(nf, ligne, colNON, COCHE)
+                    else:
+                        tableaux[classNON].setCell(nf, ligne, colNON, '')
 
     #
     # On rempli les cellules "Revue" (colonne J)
@@ -211,43 +274,52 @@ def modifierGrille(doc, tableaux, eleve):
     #
     # On rajoute quelques informations
     #
-    dicInfo = doc.GetReferentiel().cellulesInfo_prj
-#    import Referentiel
-#    dicInfo = Referentiel.REFERENTIELS[doc.GetTypeEnseignement()].cellulesInfo_prj
-#    tb = tabl
-#    if doc.GetTypeEnseignement(simple = True) == "SSI":
-#        dicInfo = Cellules_INFO_SSI
-#        tb = [tableur]
-#    else:
-#        dicInfo = Cellules_INFO_STI
-#        tb = tableur
-#    
     schem = {"Tit" : doc.intitule,
              "Des" : doc.intitule + "\n" + doc.problematique,
              "Nom" : eleve.GetNom(),
              "Pre" : eleve.GetPrenom(),
-             "Etab": doc.classe.etablissement
+             "Etab": doc.classe.etablissement,
+             "N-P" : eleve.GetNomPrenom()
              }
+    
 #    print schem
 #    print dicInfo
 #    print tableaux
     
     for ct, t in tableaux.items():
-#        print " ", ct
+#        print " ", ct, t
         for k, v in schem.items():
 #            print "  ", k
             if k in dicInfo.keys():
                 for d in dicInfo[k]:
-#                    print "   ", d
                     if d[0] == ct: # Classeur
                         f = d[1]   # Feuille
                         nf = t.getSheetNum(f)
-                        l,c = d[2] # ligne , colonne
-#                        print "Feuille", f, nf
-#                        print "Ligne, Colonne", l, c
-                        t.setCell(nf, l, c, v)
-        
-        
+                        l,c, p = d[2] # ligne , colonne
+                        pre = d[3]
+                        if p > 0: # Période - pour classeurs collectifs
+                            l += eleve.id * p
+                        t.setCell(nf, l, c, pre+v)
+    
+    #
+    # On rajoute les noms des professeurs
+    #
+    cl, f, lcp , pre = dicInfo["Prof"][0] 
+    l, c, p = lcp
+    if doc.GetReferentiel().grilles_prj[cl][1] == 'C': # fichier "Collectif"
+        f = f+str(eleve.id+1)
+    nf = tableaux[cl].getSheetNum(f)
+    profs = [pr.GetNomPrenom() for pr in doc.equipe]
+    for i in range(5):
+        l += i*p
+
+        try:
+            if i < len(profs):
+                tableaux[cl].setCell(nf, l, c, profs[i])
+            else:
+                tableaux[cl].setCell(nf, l, c, '')
+        except:
+            pass
     
 #    l,c = Cellules_INFO_SSI["Pro"]
 #    tableur.xlBook.Worksheets(1).Cells(l, c).Activate()
@@ -270,7 +342,7 @@ def copierClasseurs(doc, nomFichiers):
     fichierPB = []
     
     for k, f in fichiers.items():
-        shutil.copyfile(os.path.join(TABLE_PATH, f), nomFichiers[k])
+        shutil.copyfile(os.path.join(TABLE_PATH, f[0]), nomFichiers[k])
 
     err = 0
     if err == 0:
@@ -300,7 +372,8 @@ def modifierGrille2(doc, nomFichiers, eleve):
              "Des" : doc.intitule + "\n" + doc.problematique,
              "Nom" : eleve.GetNom(),
              "Pre" : eleve.GetPrenom(),
-             "Etab": doc.classe.etablissement
+             "Etab": doc.classe.etablissement,
+             "N-P" : eleve.GetNomPrenom()
              }
     
     for c, nf in nomFichiers.items():
@@ -328,7 +401,7 @@ class PyExcel:
     def save(self, newfilename=None):
         if newfilename:
                 self.filename = newfilename
-                self.xlBook.SaveAs(newfilename)
+                self.xlBook.SaveAs(newfilename, ConflictResolution = 1)
         else:
                 self.xlBook.Save()
  
@@ -391,13 +464,16 @@ class PyExcel:
     def addSheet(self,Before='',After=''):
         if Before :
             pos=self.xlBook.Worksheets(Before)
-            self.xlBook.Worksheets.Add(Before=pos)
+            print self.xlBook.Worksheets.Add(Before=pos)
         elif After:
             pos=self.xlBook.Worksheets(After)
-            self.xlBook.Worksheets.Add(After=pos)
+            print self.xlBook.Worksheets.Add(After=pos)
         else:
-            self.xlBook.Worksheets.Add()
- 
+            print self.xlBook.Worksheets.Add()
+            
+    def addSheetName(self, name, Before='', After=''):
+        self.renameSheet(self.addSheet(Before = Before, After = After), name)
+        
     def getActiveSheet(self):
         sheet=self.xlBook.ActiveSheet.Name
         return sheet
@@ -446,7 +522,6 @@ class PyExcel:
     def setBorder(self,sheet,row1,col1,row2,col2,weight):
         sht = self.xlBook.Worksheets(sheet)
         ran=sht.Range(sht.Cells(row1,col1),sht.Cells(row2,col2))
-        print ran
         ran.Borders.Weight=weight
         
         
@@ -941,7 +1016,9 @@ self.objServiceManager.createInstance('com.sun.star.frame.DispatchHelper')
 #exporterGrille('SSI')
     
     
-    
+#xlApp = win32com.client.dynamic.Dispatch('Excel.Application')
+#print dir(xlApp)
+#print xlApp.Version
     
     
     

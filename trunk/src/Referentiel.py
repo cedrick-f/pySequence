@@ -67,23 +67,24 @@ class Referentiel():
     ######################################################################################  
     def __repr__(self):
         print "*********************"
-        print self.Code
+        print self.Code, self.projet
 #        print "CI_BO :", self.CI_BO
 #        print "CI  :", self.CentresInterets
 #        print "Sav :", self.dicSavoirs
-        print "cellulesInfo_prj = ", self.cellulesInfo_prj
+#        print "cellulesInfo_prj = ", self.cellulesInfo_prj
 #        print "dicSavoirs_Math", self.dicSavoirs_Math
-        print "dicCompetences_prj", self.dicCompetences_prj
+#        print "dicCompetences_prj", self._dicCompetences_prj
 #        print "_dicCompetences_prj_simple", self._dicCompetences_prj_simple
 #        for p in self.getParams():
 #            v = getattr(self, p)
 #            if type(v) == dict:
 #                print p, v
-        print "Com :", self.dicCompetences
+#        print "Com :", self.dicCompetences
 #        print "CoP :", self.dicCompetences_prj
-        print "CoS :", self._dicCompetences_prj_simple
-        print "Ind :", self.dicIndicateurs_prj
+#        print "CoS :", self._dicCompetences_prj_simple
+#        print "Ind :", self._dicIndicateurs_prj
 #        print "Poi :", self.dicPoidsIndicateurs_prj
+#        print "Lig :", self.dicLignesIndicateurs_prj
 #        print "Mat :", self.dicSavoirs_Math
 #        print "Phy :", self.dicSavoirs_Phys
 #        print "Dem :", self.demarches
@@ -93,7 +94,9 @@ class Referentiel():
 #        print self.phases_prj
 #        print self.listPhasesEval_prj
 #        print "listPhases_prj =", self.listPhases_prj
-        print
+#        print
+#        print "colonneNON", self.colonneNON
+#        print "feuilleNON", self.feuilleNON
         return ""
     
     ######################################################################################  
@@ -126,13 +129,14 @@ class Referentiel():
         # Compétences
         #
         self.nomCompetences = u"Compétences"    # nom donnés aux compétences : "Compétences", ...
-        self.prof_Comp = 0              # compteur de profondeur de l'arborescence des compétences
+#        self.prof_Comp = 0              # compteur de profondeur de l'arborescence des compétences
         self.dicCompetences = {}
         self.projet = False             # si l'enseignement fait l'objet d'une épreuve de projet
         self.duree_prj = 0
-        self.dicCompetences_prj = {}
-        self.dicIndicateurs_prj = {}
-        self.dicPoidsIndicateurs_prj = {}
+#        self.dicCompetences_prj = {}
+#        self.dicIndicateurs_prj = {}
+#        self.dicPoidsIndicateurs_prj = {}
+#        self.dicLignesIndicateurs_prj = {}
 
         #
         # Pratique pédagogiques
@@ -197,9 +201,9 @@ class Referentiel():
         ref = ET.Element("Referentiel")
 
         def sauv(branche, val, nom = None):
-#            if u"é" in nom:
+            nom = nom.replace("\n", "--")
             if type(val) == str or type(val) == unicode:
-                branche.set("S_"+nom, val)
+                branche.set("S_"+nom, val.replace("\n", "--"))
             elif type(val) == int:
                 branche.set("I_"+nom, str(val))
             elif type(val) == long:
@@ -238,7 +242,7 @@ class Referentiel():
         
         def lect(branche, nom = ""):
             if nom[:2] == "S_":
-                return unicode(branche.get(nom))
+                return unicode(branche.get(nom)).replace(u"--", u"\n")
             elif nom[:2] == "I_":
                 return int(eval(branche.get(nom)))
             elif nom[:2] == "L_":
@@ -251,10 +255,16 @@ class Referentiel():
                 sbranche = branche.find(nom)
                 dic = {}
                 for k, sb in sbranche.items():
-                    dic[k[2:]] = lect(sbranche, k)
+                    _k = k[2:]
+                    if isinstance(_k, (str, unicode)) and "--" in _k:
+                        _k = _k.replace("--", "\n")
+                    dic[_k] = lect(sbranche, k)
                 for sb in list(sbranche):
                     k = sb.tag
-                    dic[k[2:]] = lect(sbranche, k)
+                    _k = k[2:]
+                    if isinstance(_k, (str, unicode)) and "--" in _k:
+                        _k = _k.replace("--", "\n")
+                    dic[_k] = lect(sbranche, k)
 #                print dic.values()
                 liste = [dic[v] for v in sorted(dic)]
 #                print " >", liste
@@ -264,14 +274,21 @@ class Referentiel():
             elif nom[:2] == "d_":
                 sbranche = branche.find(nom)
                 d = {}
-                for k, sb in sbranche.items():
-                    d[k[2:]] = lect(sbranche, k)
-                for sb in list(sbranche):
-                    k = sb.tag
-                    _k = k[2:]
-                    if _k[0] == "_":
-                        _k = eval(_k[1:])
-                    d[_k] = lect(sbranche, k)
+                if sbranche != None:
+                    for k, sb in sbranche.items():
+                        _k = k[2:]
+                        if isinstance(_k, (str, unicode)) and "--" in _k:
+                            _k = _k.replace("--", "\n")
+                        d[_k] = lect(sbranche, k)
+                    for sb in list(sbranche):
+                        k = sb.tag
+                        
+                        _k = k[2:]
+                        if _k[0] == "_":
+                            _k = eval(_k[1:])
+                        if isinstance(_k, (str, unicode)) and "--" in _k:
+                            _k = _k.replace("--", "\n")
+                        d[_k] = lect(sbranche, k)
                 return d
 
 
@@ -295,8 +312,8 @@ class Referentiel():
                 else:
                     _attr = None
                 if _attr:
-                    setattr(self, attr, lect(branche, _attr))
-        
+                    setattr(self, attr, lect(branche, _attr.replace("\n", "--")))
+        self.postTraiter()
         self.completer()
         return
         
@@ -311,21 +328,21 @@ class Referentiel():
         
         def egal(val1, val2):
             if isinstance(val1, (str, unicode)) and isinstance(val2, (str, unicode)):
-                if val1 != val2:
-                    print "Erreur", val1, val2
-                return val1 == val2
+                if val1 != val2:#.replace("\n", "--"):
+                    print "Erreur s : xml =", val1, "      xls =", val2#.replace("\n", "--")
+                return val1 == val2#.replace("\n", "--")
             elif isinstance(val1, (int, long, float)) and isinstance(val2, (int, long, float)):
                 if val1 != val2:
-                    print "Erreur", val1, val2
+                    print "Erreur : xml =", val1, "      xls =", val2
                 return val1 == val2
             elif type(val1) == bool and type(val2) == bool:
                 if val1 != val2:
-                    print "Erreur", val1, val2
+                    print "Erreur : xml =", val1, "      xls =", val2
                 return val1 == val2
             
             elif type(val1) == list:
                 if len(val1) != len(val2):
-                    print "Erreur", val1, val2
+                    print "Erreur : xml =", val1, "      xls =", val2
                     return False
                 e = True
                 for sval1, sval2 in zip(val1, val2):
@@ -334,15 +351,17 @@ class Referentiel():
             
             elif type(val1) == dict and type(val2) == dict:
                 if not egal(sorted(val1), sorted(val2)):
-                    print "Erreur", val1, val2
+                    print "Erreur : xml =", val1, "      xls =", val2
                     return False
                 e = True
                 for k, v in val1.items():
+#                    if isinstance(k, (str, unicode)):
+#                        k = k.replace("--", "\n")
                     e = e and egal(v, val2[k])
                 return e
             
             else:
-                print "Erreur", val1, val2
+                print "Erreur : xml =", val1, "      xls =", val2
                 return False
         
         for attr in dir(self):
@@ -373,7 +392,7 @@ class Referentiel():
             if debug: print "***", col, rng
             if rng == [] and mode == 2:
                 return None
-            self.prof_Comp = max(self.prof_Comp, col)
+#            self.prof_Comp = max(self.prof_Comp, col)
             lig = [l  for l in rng if sh.cell(l,col).value != u""]
             if debug: print lig
             if lig == rng:
@@ -409,12 +428,67 @@ class Referentiel():
                     if sdic != None:
                         dic[str(sh.cell(p,col).value)] = [sh.cell(p,col+1).value, sdic]
                 return dic
+          
+        ###########################################################
+        def int0(txt):
+            try:
+                return int(txt)
+            except:
+                return 0
             
-            
+        ###########################################################
+        def getArbre(sh, rng, col, prems = False, debug = False):
+            """ Construit le structure en arbre de "compétences"
+            """
+            dic = {}
+            lstLig = [l  for l in rng if sh.cell(l,col).value != u""]
+            if debug: print "  **",lstLig
+            for i, l in enumerate(lstLig):
+                code = str(sh.cell(l,col).value)
+                intitule = unicode(sh.cell(l,col+1).value)
+                if debug: print "-> ",l, code, intitule
+                
+                if i < len(lstLig)-1:
+                    ssRng = range(l+1, lstLig[i+1])
+                else:
+                    ssRng = range(l+1, rng[-1]+1)
+                
+                if debug: print "   ", ssRng
+                if len(ssRng) > 0 and col < 2 and [li  for li in ssRng if sh.cell(li,col+1).value != u""] != []:
+                    dic[code] = [intitule, getArbre(sh, ssRng, col+1, debug = debug)]
+                    if prems:
+                        poids = [int0(sh.cell(l,7).value),  # poids Ecrit
+                                 int0(sh.cell(l,8).value),  # poids Conduite projet
+                                 int0(sh.cell(l,9).value)]  # poids Soutenance projet
+                        dic[code].append(poids)
+                else:
+                    dic[code] = [intitule, []]
+                    for ll in [l] + ssRng:
+                        indic = unicode(sh.cell(ll,5).value)
+                        poids = [int0(sh.cell(ll,7).value),  # poids Ecrit
+                                 int0(sh.cell(ll,8).value),  # poids Conduite projet
+                                 int0(sh.cell(ll,9).value)]  # poids Soutenance projet
+                        ligne = int0(sh.cell(ll,10).value)   # ligne dans la grille
+                        if ligne != 0:
+                            if poids[1] != 0:
+                                self._aColNon['R'] = True
+                            elif poids[2] != 0:
+                                self._aColNon['S'] = True
+                        dic[code][1].append([indic, poids, ligne])
+            if debug: print 
+            return dic
+
+                
         ###########################################################
         def listItemCol(sh, col, rng):
             return [[l, sh.cell(l,col).value]    for l in rng    if sh.cell(l,col).value != u""]
         
+        ###########################################################
+        def aplatir2(dic, niv=1):
+            ddic = {}
+            for k0, v0 in dic.items():
+                ddic.update(v0[1])
+            return ddic
         
         #
         # Ouverture fichier EXCEL
@@ -428,9 +502,9 @@ class Referentiel():
         sh_g = wb.sheet_by_name(u"Généralités")
         self.Famille = sh_g.cell(2,0).value
         self.Code = sh_g.cell(2,1).value
-        self.Enseignement[0] = sh_g.cell(6,0).value
-        self.Enseignement[1] = sh_g.cell(6,1).value
-        self.Enseignement[2] = sh_g.cell(6,2).value
+        self.Enseignement[0] = sh_g.cell(6,0).value #Abréviation    
+        self.Enseignement[1] = sh_g.cell(6,1).value #Nom complet    
+        self.Enseignement[2] = sh_g.cell(6,2).value #Famille
 
         #
         # options
@@ -496,50 +570,80 @@ class Referentiel():
         #
         sh_va = wb.sheet_by_name(u"Compétences")
         self.nomCompetences =   sh_va.cell(0,0).value 
-        self.prof_Comp = 0 # compteur de profondeur 
-        self.dicCompetences = remplir(sh_va, 0, range(1, sh_va.nrows), mode = 2)
-       
-        #
-        # dicIndicateurs_prj
-        #     
-#        if self.projet:
-        sh_va = wb.sheet_by_name(u"Indicateurs_PRJ")     
-        lig = [l  for l in range(1, sh_va.nrows) if sh_va.cell(l,1).value != u""]
-        llig = lig + [sh_va.nrows]
-        dic = {}
-        for i, p in enumerate(lig):
-            dic[str(sh_va.cell(p,1).value)] = [[sh_va.cell(l,2).value, sh_va.cell(l,3).value == "R"] for l in range(p, llig[i+1]) if sh_va.cell(l,2).value != u""]
-        self.dicIndicateurs_prj =  dic
+#        self.prof_Comp = 0 # compteur de profondeur 
+#        self.dicCompetences = remplir(sh_va, 0, range(1, sh_va.nrows), mode = 2)
+#        print ">>>", self.Code
         
-        #
-        # dicPoidsIndicateurs_prj
-        #
-#        if self.projet:
-        sh_va = wb.sheet_by_name(u"Indicateurs_PRJ")     
-        lig = [l  for l in range(1, sh_va.nrows) if sh_va.cell(l,0).value != u""]
-        llig = lig + [sh_va.nrows]
-        for i, p in enumerate(lig):
-            lig2 = [l for l in range(p, llig[i+1]) if sh_va.cell(l,1).value != u""]
-            self.dicPoidsIndicateurs_prj[str(sh_va.cell(p,0).value)] = [sh_va.cell(p,4).value, {}]
-            llig2 = lig2 + [llig[i+1]]
-            for ii, l in enumerate(lig2):
-                self.dicPoidsIndicateurs_prj[str(sh_va.cell(p,0).value)][1][sh_va.cell(l,1).value] = [sh_va.cell(pp,4).value for pp in range(l, llig2[ii+1])]
+        # Pour enregistrer s'il y a des colonnes "non" dans les grilles 'R' ou 'S'
+        self._aColNon = {'R' : False,  'S' : False}
+        self.dicCompetences = getArbre(sh_va, range(1, sh_va.nrows), 0, prems = True, debug = False)
+#        print "_aColNon", self.Code, ":", self._aColNon
         
         
-        #
-        # Compétences pour projet
-        #
-#        if self.projet:
-        sh_va = wb.sheet_by_name(u"Compétences")     
-        self.dicCompetences_prj = remplir(sh_va, 0, range(1, sh_va.nrows), mode = 2, condition = "P")
-        for c in self.dicCompetences_prj.keys():
-            if not c in self.dicPoidsIndicateurs_prj.keys():
-                del self.dicCompetences_prj[c]
+#        #
+#        # dicIndicateurs_prj
+#        #     
+##        if self.projet:
+#        sh_va = wb.sheet_by_name(u"Indicateurs_PRJ")     
+#        lig = [l  for l in range(1, sh_va.nrows) if sh_va.cell(l,1).value != u""]
+#        llig = lig + [sh_va.nrows]
+#        dic = {}
+#        for i, p in enumerate(lig):
+#            dic[str(sh_va.cell(p,1).value)] = [[sh_va.cell(l,2).value, sh_va.cell(l,4).value == "R"] for l in range(p, llig[i+1]) if sh_va.cell(l,2).value != u""]
+#        self.dicIndicateurs_prj =  dic
+#        print "dicIndicateurs_prj 1 =", dic
+#        self.dicIndicateurs_prj = remplir(sh_va, 0, range(1, sh_va.nrows), mode = 2)
+#        print "dicIndicateurs_prj 2 =", self.dicIndicateurs_prj
+#        
+#        #
+#        # dicPoidsIndicateurs_prj & dicLignesIndicateurs_prj
+#        #
+##        if self.projet:
+#        sh_va = wb.sheet_by_name(u"Indicateurs_PRJ")     
+#        lig = [l  for l in range(1, sh_va.nrows) if sh_va.cell(l,0).value != u""]
+#        llig = lig + [sh_va.nrows]
+#        for i, p in enumerate(lig):
+#            lig2 = [l for l in range(p, llig[i+1]) if sh_va.cell(l,1).value != u""]
+#            comp = str(sh_va.cell(p,0).value)
+#            poids = sh_va.cell(p,5).value
+#            self.dicPoidsIndicateurs_prj[comp] = [poids, {}]
+##            if sh_va.ncols > 5:
+##                self.dicLignesIndicateurs_prj[comp] = [sh_va.cell(p,5).value, {}]
+#            
+#            llig2 = lig2 + [llig[i+1]]
+#            
+#            total = 0
+#            for ii, l in enumerate(lig2):
+#                indic = str(sh_va.cell(l,1).value)
+#                spoids = [sh_va.cell(pp,5).value for pp in range(l, llig2[ii+1])]
+#                total += sum(spoids)
+#                self.dicPoidsIndicateurs_prj[comp][1][indic] = spoids
+#                if sh_va.ncols > 6:
+#                    self.dicLignesIndicateurs_prj[indic] = [int(sh_va.cell(pp,6).value) for pp in range(l, llig2[ii+1])]
+#        
+#            for indic, poids in self.dicPoidsIndicateurs_prj[comp][1].items():
+#                spoids = [round(100*p/total, 1) for p in poids]
+#                self.dicPoidsIndicateurs_prj[comp][1][indic] = spoids
+                
         
+        
+#        sh_g = wb.sheet_by_name(u"Grille_PRJ")
+#        self.feuilleNON = sh_g.cell(14,2).value
+#        if self.feuilleNON != '':
+#            self.colonneNON = int(sh_g.cell(15,2).value)
+        
+#        self.dicLignesIndicateurs_prj = aplatir2(self.dicLignesIndicateurs_prj)
 
         
-        
-        
+#        #
+#        # Compétences pour projet
+#        #
+##        if self.projet:
+#        sh_va = wb.sheet_by_name(u"Compétences")     
+#        self.dicCompetences_prj = remplir(sh_va, 0, range(1, sh_va.nrows), mode = 2, condition = "P")
+#        for c in self.dicCompetences_prj.keys():
+#            if not c in self.dicPoidsIndicateurs_prj.keys():
+#                del self.dicCompetences_prj[c]
             
             
         #
@@ -601,15 +705,18 @@ class Referentiel():
             sh_g = wb.sheet_by_name(u"Grille_PRJ")
             for l in range(2,4):
                 if sh_g.cell(l,0).value != u"":
-                    self.grilles_prj[str(sh_g.cell(l,0).value)] = sh_g.cell(l,2).value
+                    self.grilles_prj[str(sh_g.cell(l,0).value)] = [sh_g.cell(l,2).value, sh_g.cell(l,3).value]
                     self.nomParties_prj[str(sh_g.cell(l,0).value)] = sh_g.cell(l,1).value
                     
-            
-            for l in range(7,sh_g.nrows):
+            for l in range(7, sh_g.nrows):
                 k = str(sh_g.cell(l,0).value)
-                if k != u"":
-                    #    Classeur                Feuille                Ligne                        Colonne
-                    i = [sh_g.cell(l,1).value, sh_g.cell(l,2).value, [int(sh_g.cell(l,3).value), int(sh_g.cell(l,4).value)]]
+                if k != u"":                                                                  
+                    i = [sh_g.cell(l,1).value, # Classeur
+                         sh_g.cell(l,2).value, # Feuille
+                         [int0(sh_g.cell(l,3).value), # Ligne
+                          int0(sh_g.cell(l,4).value), # Colonne
+                          int0(sh_g.cell(l,5).value)], #Période
+                         sh_g.cell(l,6).value]  # Préfixe
                     if k in self.cellulesInfo_prj.keys():
                         self.cellulesInfo_prj[k].append(i)
                     else:
@@ -632,10 +739,192 @@ class Referentiel():
                         if shp.cell(l,6).value != "":
                             self.posRevues[3].append(shp.cell(l,0).value)
         
+    ###########################################################
+    def getDernierNiveauArbre(self, dic):
+        sdic = {}
+        for k0, v0 in dic.items():
+            if len(v0) > 1 and  type(v0[1]) == dict:
+                sdic.update(self.getDernierNiveauArbre(v0[1]))
+            else:
+                sdic[k0] = v0
+        return sdic
+        
+    ###########################################################
+    def getPremierEtDernierNiveauArbre(self, dic):
+        sdic = {}
+        for k0, v0 in dic.items():
+            if len(v0) > 1 and  type(v0[1]) == dict:
+                if len(v0) == 3: # premier niveau
+                    sdic[k0] = [v0[0], self.getDernierNiveauArbre(v0[1]), v0[2]]
+                else:
+                    sdic.update(self.getDernierNiveauArbre(v0[1]))
+            else:
+                sdic[k0] = v0
+        return sdic
+    
+    
+    #########################################################################
+    def postTraiter(self):
+        """ Complète les données selon que le référentiel ait un tronc commun ou des options
+            
+            --> le "_" évite que les attributs ne soient sauvegardés dans les XML
+            
+        """
+        ###########################################################
+        def getArbreProjet(dic, debug = False):
+            sdic = {}
+            for k0, v0 in dic.items():
+                if debug: print k0
+                if len(v0) > 1 and type(v0[1]) == dict:
+                    if debug: print "   ", v0[0]
+                    if len(v0) == 2:
+                        sdic[k0] = [v0[0], getArbreProjet(v0[1], debug = debug)]
+                    else:
+                        if debug: print "   prem's", v0[2]
+                        if v0[2][1] != 0 or v0[2][2] != 0: # Conduite ou Soutenance
+                            sdic[k0] = [v0[0], getArbreProjet(v0[1], debug = debug), v0[2]]
+                else:
+                    lst = []
+                    for l in v0[1]:
+                        if debug: print l[1]
+                        if l[1][1] != 0 or l[1][2] != 0: # Conduite ou Soutenance
+                            lst.append([l[0], l[1], l[2]])
+                    if lst != []:
+                        sdic[k0] = [v0[0], lst]
+            return sdic
+        
+        
+        
+        
+        
+        
+        ###########################################################
+        def getDernierNiveauArbre2(dic):
+            sdic = {}
+            for k0, v0 in dic.items():
+                if type(v0) == dict:
+                    sdic.update(self.getDernierNiveauArbre(v0))
+                else:
+                    sdic[k0] = v0
+            return sdic
+        
+        
+        
+        ###########################################################
+        def getDeuxiemeNiveauArbre(dic):
+            sdic = {}
+            for k0, v0 in dic.items():
+                for k1, v1 in v0[1].items():
+                    if len(v1) > 1 and  type(v1[1]) == dict: # pas fini = 3ème niveau
+                        self._niveau = 3
+                        sdic[k1] = {}
+                        for k2, v2 in v1[1].items():
+                            sdic[k1][k2] = v2[1]
+                    else:   # Niveau "indicateur"
+                        self._niveau = 2
+                        sdic[k1] = v1[1]
+            return sdic
+        
+        
+        ###########################################################
+        def chercherIndicIdem(dic, debug = False):
+            ii = None
+            for k0, v0 in dic.items():
+                if debug: print k0
+                if len(v0) > 1 and type(v0[1]) == dict:
+                    if debug: print "   ", v0[0]
+                    ii = chercherIndicIdem(v0[1], debug = debug)
+                    if debug: print "   ii", ii
+                    if ii != None : return ii
+                else:
+                    lst = []
+                    for l in v0[1]:
+                        if debug: print l[0]
+                        if "idem" in l[0]:
+                            if debug: print "    idem"
+                            codeindic = str(l[0].split(" ")[1])
+                            return l, codeindic, k0
+                    
+            if ii != None:
+                return ii
+        
+        ###########################################################
+        def chercherDicIndic(dic, code, debug = False):
+            if code in dic.keys():
+                return dic
+            else:
+                for k0, v0 in dic.items():
+                    if debug: print k0
+                    if len(v0) > 1 and type(v0[1]) == dict:
+                        if debug: print "   ", v0[0]
+                        sdic = chercherDicIndic(v0[1], code, debug = debug)
+                        if sdic != None : return sdic
+            return
+            
+        ###########################################################
+        def normaliserPoids(dic, debug = False):
+            for k0, v0 in dic.items():
+                poids_tot = v0[2][1:]
+                tot = [0,0]
+                for v1 in v0[1].values():
+                    if debug: print " ", v1
+                    for indic in v1[1]:
+                        tot = [tot[0] + indic[1][1], tot[1] + indic[1][2]]
+                if debug: print "  tot", tot
+                coef = [1.0*tot[0]/100, 1.0*tot[1]/100]
+                if debug: print "  coef", coef
+                for v1 in v0[1].values():
+                    for indic in v1[1]:
+                        if coef[0] != 0:
+                            indic[1][1] = round(indic[1][1] / coef[0], 6)
+                        if coef[1] != 0:
+                            indic[1][2] = round(indic[1][2] / coef[1], 6)
+                    
+            
+        
+#        print "dicCompetences", self.dicCompetences
+        self._dicCompetences_prj = getArbreProjet(self.dicCompetences, debug = False)
+        
+        # On regroupe les compétences qui ont les mêmes indicateurs dans la grille (cas de STI2D EE !!)
+        lst_codeindic = chercherIndicIdem(self._dicCompetences_prj, debug = False)
+#        print "lst_codeindic", lst_codeindic
+        if type(lst_codeindic) == tuple:
+            dic = chercherDicIndic(self._dicCompetences_prj, lst_codeindic[2])
+#            print "   >>", dic
+            new_code = lst_codeindic[1]+"\n"+lst_codeindic[2]
+            dic[new_code] = [dic[lst_codeindic[1]][0]+"\n"+dic[lst_codeindic[2]][0], dic[lst_codeindic[1]][1]]
+            del dic[lst_codeindic[2]]
+            del dic[lst_codeindic[1]]
+#        print "_dicCompetences_prj", self._dicCompetences_prj
+#        print self.getCompetence('A')
+#        print self.getCompetence('A1')
+#        print self.getCompetence('B2')
+#        print self.getCompetence('A1.4')
+        
+        self._dicIndicateurs_prj = self.getPremierEtDernierNiveauArbre(self._dicCompetences_prj)
+#        print "_dicIndicateurs_prj", self._dicIndicateurs_prj
+        normaliserPoids(self._dicIndicateurs_prj, debug = False)
+#        print "                   ", self._dicIndicateurs_prj
+        
+        self._niveau = 0
+        self._dicIndicateurs_prj_famille = getDeuxiemeNiveauArbre(self._dicCompetences_prj)
+#        print "_dicIndicateurs_prj_famille", self._dicIndicateurs_prj_famille
+#        print "_niveau", self._niveau
+#        print 
+        
+        self._dicIndicateurs_prj_simple = getDernierNiveauArbre2(self._dicIndicateurs_prj_famille)
+#        print "_dicIndicateurs_prj_simple", self._dicIndicateurs_prj_simple
+        
+#        lst.extend()
+        
         
     #########################################################################
     def completer(self):
         """ Complète les données selon que le référentiel ait un tronc commun ou des options
+            Exécuté lorsque tous les référentiels sont chargés !
+            
+            --> le "_" évite que les attributs ne soient sauvegardés dans les XML
+            
         """
         
         ###########################################################
@@ -654,39 +943,51 @@ class Referentiel():
             return ddic
         
         
-        # On regroupe les compétences qui ont les mêmes indicateurs dans la grille (cas de STI2D EE !!)
-        for comp in self.dicIndicateurs_prj.keys():
-            if u"\n" in comp:
-                comps = comp.split(u"\n")
-                print "Regroupement", comps
-                for t, dic in self.dicCompetences_prj.values():
-                    lst = [dic[c] for c in comps if c in dic.keys()]
-                    if len(lst) > 0:
-                        dic[comp] = "\n".join(lst)
-                        for c in comps :
-                            del dic[c]
-                
+        ###########################################################
+        def getDernierNiveauArbre2(dic):
+            sdic = {}
+            for k0, v0 in dic.items():
+                if type(v0) == dict:
+                    sdic.update(getDernierNiveauArbre(v0))
+                else:
+                    sdic[k0] = v0
+            return sdic
+
+        ###########################################################
+        def getDernierNiveauArbre(dic):
+            sdic = {}
+            for k0, v0 in dic.items():
+                if len(v0) > 1 and  type(v0[1]) == dict:
+                    sdic.update(getDernierNiveauArbre(v0[1]))
+                else:
+                    sdic[k0] = v0
+            return sdic
                 
         
         if self.tr_com:
             t = self.tr_com[0]
             if t in REFERENTIELS.keys():
-                self.dicPoidsIndicateurs_prj.update(REFERENTIELS[t].dicPoidsIndicateurs_prj)
-                self.dicCompetences_prj.update(REFERENTIELS[t].dicCompetences_prj)
-                self.dicIndicateurs_prj.update(REFERENTIELS[t].dicIndicateurs_prj)
+#                print "Add"
+#                print self._dicCompetences_prj
+#                print REFERENTIELS[t]._dicCompetences_prj
+                self._dicCompetences_prj.update(REFERENTIELS[t]._dicCompetences_prj)
+                self._dicIndicateurs_prj.update(REFERENTIELS[t]._dicIndicateurs_prj)
+                self._dicIndicateurs_prj_simple.update(REFERENTIELS[t]._dicIndicateurs_prj_simple)
+#                print ">>", self._dicCompetences_prj
         
         if self.projet:
             self._lstGrpIndicateurRevues = []
             self._lstGrpIndicateurSoutenance = []
-            for grp, poids in self.dicPoidsIndicateurs_prj.items():
-                poidsGrp, dicIndicGrp = poids
-                for comp, poidsIndic in dicIndicGrp.items():
-                    if comp in self.dicIndicateurs_prj.keys():
-                        for i, indic in enumerate(self.dicIndicateurs_prj[comp]):
-                            if self.dicIndicateurs_prj[comp][i][1]:
-                                self._lstGrpIndicateurRevues.append(grp)
-                            else:
-                                self._lstGrpIndicateurSoutenance.append(grp)
+#            print "_dicIndicateurs_prj", self._dicIndicateurs_prj
+            for comp, dic in self._dicIndicateurs_prj.items():
+                for indics in getDernierNiveauArbre2(dic[1]).values():
+                    for indic in indics[1]:
+#                        print "   ", indic
+                        poids = indic[1]
+                        if poids[1] != 0:
+                            self._lstGrpIndicateurRevues.append(comp)
+                        if poids[2] != 0:
+                            self._lstGrpIndicateurSoutenance.append(comp)
                                 
             self._lstGrpIndicateurSoutenance = list(set(self._lstGrpIndicateurSoutenance))
             self._lstGrpIndicateurRevues = list(set(self._lstGrpIndicateurRevues))
@@ -694,15 +995,96 @@ class Referentiel():
                 self._lstGrpIndicateurSoutenance.remove("O8s")
                 self._lstGrpIndicateurSoutenance.append("O8")
         
+#            print "_lstGrpIndicateurRevues", self._lstGrpIndicateurRevues
+#            print "_lstGrpIndicateurSoutenance", self._lstGrpIndicateurSoutenance
+        
             if self.tr_com:
                 self.grilles_prj.update(REFERENTIELS[self.tr_com[0]].grilles_prj)
                 
                 
-        self._dicCompetences_prj_simple = aplatir(self.dicCompetences_prj)
+#        self._dicCompetences_prj_simple = aplatir(self._dicCompetences_prj)
         
         
+    #########################################################################
+    def getIndicateur(self, codeIndic):
+        if '_' in codeIndic:
+            code, i = codeIndic.split('_')
+            i = int(i)
+            if code in self._dicIndicateurs_prj_simple.keys():
+                indics = self._dicIndicateurs_prj_simple[code]
+                if len(indics) >= i:
+                    indic = indics[i-1]
+                    return indic
+        else:
+            comp = self.getCompetence(codeIndic)
+            if type(comp[1]) == dict:
+                return self.getPremierEtDernierNiveauArbre(comp[1])
+            else: 
+                return comp[1]
+          
+    #########################################################################
+    def getIntituleIndicateur(self, comp):
+        sep = "\n\t"+constantes.CHAR_POINT
+        indicateurs = self.getIndicateur(comp)
+        if type(indicateurs) == list:
+            return  "\t"+constantes.CHAR_POINT + sep.join([i[0] for i in indicateurs])
+        else:
+            t = u""
+            for k, v in indicateurs.items():
+                t += k + u" : " + v[0]
+            
+    #########################################################################
+    def getIntituleCompetence(self, comp, sousComp = False):
+        sep = "\n\t"+constantes.CHAR_POINT
+        competence = self.getCompetence(comp)
+        if sousComp and type(competence[1]) == dict:
+            return sep.join([competence[0]] + [v for v in competence[1]])
+        else:
+            competence
+            
+    #########################################################################
+    def getCompetence(self, comp):
+        if comp in self._dicCompetences_prj.keys():
+            return self._dicCompetences_prj[comp]
+        else:
+            for k0, v0 in self._dicCompetences_prj.items():
+                if type(v0[1]) == dict:
+                    if comp in v0[1].keys():
+                        return v0[1][comp]
+                    else:
+                        for k1, v1 in v0[1].items():
+                            if type(v1[1]) == dict and comp in v1[1].keys():
+                                return v1[1][comp]
+                
+                    
+        
+                
+                
+    #########################################################################
+    def getTypeIndicateur(self, codeIndic):
+#        print "getTypeIndicateur", codeIndic
+        if type(codeIndic) == str:
+            indic = self.getIndicateur(codeIndic)
+        else:
+            indic = codeIndic
+        if indic != None:
+            if len(indic)>1:
+                if len(indic[1])>2:
+                    if indic[1][0] != 0:
+                        return "E"
+                    elif indic[1][1] != 0:
+                        return "C"
+                    elif indic[1][2] != 0:
+                        return "S"
         
     
+    #########################################################################
+    def calculerLargeurCompetences(self, tailleReference):
+        t = 1
+        for k, v in self._dicIndicateurs_prj_simple.items():
+            t = float(max(t, len(v)))
+        r = t/5 # 5 = nombre max d'indicateurs à loger dans tailleReference
+        return r*tailleReference
 
     #########################################################################
     def getSavoir(self, code, dic = None, c = 1, gene = None):
@@ -722,28 +1104,28 @@ class Referentiel():
 
 
 
-    #########################################################################    
-    def getCompetence(self, code, dic = None, c = None):
-        """ Pour obtenir l'intitulé d'une compétence à partir de son code 
-                    fonction recursive
-        """
-#        print "getCompetence", code, dic, c
-        if dic == None:
-            dic = self.dicCompetences
-            
-        if dic.has_key(code):
-            if type(dic[code]) == list:
-                return dic[code][0]
-            else:
-                return dic[code]
-            
-        else:
-            for c, v in dic.items():
-                if type(v) == list:
-                    co = self.getCompetence(code, v[1])
-                    if co != None:
-                        return co
-            return
+#    #########################################################################    
+#    def getCompetence(self, code, dic = None, c = None):
+#        """ Pour obtenir l'intitulé d'une compétence à partir de son code 
+#                    fonction recursive
+#        """
+##        print "getCompetence", code, dic, c
+#        if dic == None:
+#            dic = self.dicCompetences
+#            
+#        if dic.has_key(code):
+#            if type(dic[code]) == list:
+#                return dic[code][0]
+#            else:
+#                return dic[code]
+#            
+#        else:
+#            for c, v in dic.items():
+#                if type(v) == list:
+#                    co = self.getCompetence(code, v[1])
+#                    if co != None:
+#                        return co
+#            return
                     
     #########################################################################    
     def getClefDic(self, dicattr, nom, num = None):
@@ -799,13 +1181,16 @@ def ouvrir(nomFichier):
     root = ET.parse(fichier).getroot()
     ref = Referentiel()
     ref.setBranche(root)
-    ref.completer()
     fichier.close()
     return ref
     
 #    print REFERENTIELS["SSI"] == ref
     
 #ouvrir("testSauvRef.xml")
+
+
+##########################################################################################
+SAUVEGARDE = False
 
 
 ##########################################################################################
@@ -817,36 +1202,34 @@ def chargerReferentiels():
     #
     liste = os.listdir(os.path.join(constantes.PATH, r"..", DOSSIER_REF))
     
-    for fich_ref in liste:#["Ref_STI2D-ETT.xls"]:#["Ref_6CLG.xls"]:#
+    for fich_ref in liste:#["Ref_SSI.xls", "Ref_STI2D-EE.xls", "Ref_STI2D-ETT.xls"]:#["Ref_6CLG.xls"]:#
         
         if os.path.splitext(fich_ref)[1] == ".xls":
 #            print
 #            print fich_ref
             ref = Referentiel(os.path.join(constantes.PATH, r"..", DOSSIER_REF, fich_ref))
+            ref.postTraiter()
             REFERENTIELS[ref.Code] = ref
-    
+            
     
     for r in REFERENTIELS.values():
         r.completer()
-        print r
+#        print r
     
-    print
     
     #
-    # Vérification intégrité
+    # Vérification intégrité en comparant avec les fichiers .xml
     #
-    dicOk = {}
-    for k, r in REFERENTIELS.items():
-#        print "Verification", k
-        f = os.path.join(constantes.PATH, r"..", DOSSIER_REF, "Ref_"+r.Enseignement[0]+".xml")
-        dicOk[k] = False
-        if os.path.exists(f):
-            ref = ouvrir(f)
-            print r
-#            print ref
-            if ref == r:
-                dicOk[k] = True
-    print dicOk
+    if not SAUVEGARDE:
+        dicOk = {}
+        for k, r in REFERENTIELS.items():
+            f = os.path.join(constantes.PATH, r"..", DOSSIER_REF, "Ref_"+r.Enseignement[0]+".xml")
+            dicOk[k] = False
+            if os.path.exists(f):
+                ref = ouvrir(f)
+                if ref == r:
+                    dicOk[k] = True
+        print u"Intégrité référentiels :", dicOk
     
     #
     # Construction de la structure en arbre
@@ -886,15 +1269,22 @@ def chargerReferentiels():
     
 chargerReferentiels()
 
-
-
-
-##########################################################################################
 def sauvegarderOriginaux():
+    global SAUVEGARDE
+    SAUVEGARDE = True
     for r in REFERENTIELS.values():
         f = os.path.join(constantes.PATH, r"..", DOSSIER_REF, "Ref_"+r.Enseignement[0]+".xml")
         enregistrer(r.Code, f)
-
+        
+#
+# Ligne à décommenter pour faire une sauvegarde XML des référentiels "originaux"
+#   Commenter en parallèle la partie "Vérification" de chargerReferentiels()
+#
 #sauvegarderOriginaux()
+
+
+
+
+
 
 

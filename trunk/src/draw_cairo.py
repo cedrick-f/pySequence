@@ -1084,12 +1084,17 @@ def boule(ctx, x, y, r,
     ctx.arc (x, y, r, 0, 2*pi)
     ctx.fill ()
       
-def barreH(ctx, x, y, w, r, e, coul0, coul1, coul):
+def barreH(ctx, x, y, w, r, a, e, coul0, coul1, coul):
     """ Dessine une barre horizontale de poucentage/progression
+        x, y : position
+        w : longueur maxi (100%)
+        r : taux
+        e = épaisseur
+        a : acceptable (a==True : coul0  - a==False = coul1)
     """
     src = ctx.get_source()
     
-    if r > 0.5:
+    if a:
         coulEtat = coul1
     else:
         coulEtat = coul0
