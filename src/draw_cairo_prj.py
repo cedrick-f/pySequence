@@ -138,7 +138,8 @@ yEleves = []
 # Zone du tableau des compétences
 posZComp = [None, None]
 tailleZComp = [None, None]
-wColComp = 0.018
+wColCompBase = 0.018
+wColComp = wColCompBase
 xComp = {}
 ICoulCompS = (0.7, 0.6, 1, 0.2)      # couleur "Soutenance"
 ICoulCompR = (1, 0.6, 0.7, 0.2)      # couleur "Revue"
@@ -197,12 +198,15 @@ def DefinirZones(prj, ctx):
     """ Calcule les positions et dimensions des différentes zones de tracé
         en fonction du nombre d'éléments (élèves, tâches, compétences)
     """
-    global ecartTacheY, intituleTaches, fontIntTaches, xEleves, yEleves, a, b, yTaches
+    global ecartTacheY, intituleTaches, fontIntTaches, xEleves, yEleves, a, b, yTaches, wColComp
     
     #
     # Zone du tableau des compétences - X
     #
-    competences = prj.GetCompetencesUtil()
+
+#    wColComp = prj.GetReferentiel().calculerLargeurCompetences(wColCompBase)
+    competences = regrouperLst(prj, prj.GetCompetencesUtil())
+#    print competences
     tailleZComp[0] = wColComp * len(competences)
     posZComp[0] = posZOrganis[0] + tailleZOrganis[0] - tailleZComp[0]
     for i, s in enumerate(competences):
@@ -435,7 +439,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
     #    
 #    tps = time.time()
         
-    competences = prj.GetCompetencesUtil()
+    competences = regrouperLst(prj, prj.GetCompetencesUtil())
     
     if competences != []:
         
@@ -511,18 +515,18 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
         # Barres d'évaluabilité
         #
         for i, e in enumerate(prj.eleves):
-            r, s = e.GetEvaluabilite()
+            ev = e.GetEvaluabilite()[1]
             y = posZElevesH[1] + i*hEleves
 #            wr = tailleZElevesH[0]*r
 #            ws = tailleZElevesH[0]*s
             hb = hEleves/3
 #            y = posZElevesH[1] + (2*i*hb)+hb/2
             
-            barreH(ctx, posZElevesH[0], y+hb, tailleZElevesH[0], r, hb, 
+            barreH(ctx, posZElevesH[0], y+hb, tailleZElevesH[0], ev['R'][0], ev['R'][1], hb, 
                    (1, 0, 0, 0.7), (0, 1, 0, 0.7), 
                    (ICoulCompR[0], ICoulCompR[1], ICoulCompR[2], 1))
             
-            barreH(ctx, posZElevesH[0], y+2*hb, tailleZElevesH[0], s, hb, 
+            barreH(ctx, posZElevesH[0], y+2*hb, tailleZElevesH[0], ev['S'][0], ev['S'][1], hb, 
                    (1, 0, 0, 0.7), (0, 1, 0, 0.7), 
                    (ICoulCompS[0], ICoulCompS[1], ICoulCompS[2], 1))
 
@@ -1095,19 +1099,70 @@ def DrawLigne(ctx, x, y, gras = False):
     ctx.stroke()
     ctx.set_dash([], 0)       
     
-    
+######################################################################################  
+def regrouperDic(obj, dicIndicateurs):
+#    print "regrouperDic", dicIndicateurs
+#    print "   _dicCompetences_prj", obj.GetReferentiel()._dicCompetences_prj
+    if obj.GetReferentiel()._niveau == 3:
+        dic = {}
+        typ = {}
+        tousIndicateurs = obj.GetReferentiel()._dicCompetences_prj
+        for k0, v0 in tousIndicateurs.items():
+            for k1, v1 in v0[1].items():
+                dic[k1] = []
+                typ[k1] = []
+                lk2 = v1[1].keys()
+                lk2.sort()
+                for k2 in lk2:
+                    if k2 in dicIndicateurs.keys():
+                        dic[k1].extend(dicIndicateurs[k2])
+#                        print "   **", v1[1][k2]
+                        typ[k1].extend([p[1] for p in v1[1][k2][1]])
+                    else:
+                        dic[k1].extend([False])
+                        typ[k1].extend([''])
+                if dic[k1] == [] or not (True in dic[k1]):
+                    del dic[k1]
+                    del typ[k1]
+#        print "  >>", dic, typ
+        return dic, typ
+    else:
+        typ = {}
+        for k in dicIndicateurs.keys():
+            typ[k] = [p[1] for p in obj.GetReferentiel().getIndicateur(k)]
+#        print "  >>", dicIndicateurs, typ
+        return dicIndicateurs, typ
      
-        
+######################################################################################  
+def regrouperLst(obj, lstCompetences):
+#    print "regrouperLst", lstCompetences
+#    print "   _dicCompetences_prj", obj.GetReferentiel()._dicCompetences_prj
+    if obj.GetReferentiel()._niveau == 3:
+        dic = []
+        tousIndicateurs = obj.GetReferentiel()._dicCompetences_prj
+        for k0, v0 in tousIndicateurs.items():
+            for k1, v1 in v0[1].items():
+                lk2 = v1[1].keys()
+                lk2.sort()
+                for k2 in lk2:
+                    if k2 in lstCompetences:
+                        dic.append(k1)
+        dic = list(set(dic))
+#        print "  >>", dic
+        return dic
+    else:
+        return lstCompetences
+    
 ######################################################################################  
 def DrawCroisementsCompetencesTaches(ctx, tache, y):
-    DrawBoutonCompetence(ctx, tache, tache.GetDicIndicateurs(), y)
+    DrawBoutonCompetence(ctx, tache, regrouperDic(tache, tache.GetDicIndicateurs()), y)
     
 
 ######################################################################################  
 def DrawCroisementsCompetencesRevue(ctx, revue, eleve, y):
 #    print "DrawCroisementsCompetencesRevue", eleve, revue.phase
 #    print "   ", revue.GetDicIndicateursEleve(eleve)
-    DrawBoutonCompetence(ctx, revue, revue.GetDicIndicateursEleve(eleve), y, h = 0.008)
+    DrawBoutonCompetence(ctx, revue, regrouperDic(revue, revue.GetDicIndicateursEleve(eleve)), y, h = 0.008)
     
 #####################################################################################  
 def DrawCroisementsElevesTaches(ctx, tache, y):
@@ -1156,8 +1211,7 @@ def DrawCroisementsElevesCompetences(ctx, eleve, y):
     #
     # Boutons
     #
-    indic = eleve.GetDicIndicateurs()
-    DrawBoutonCompetence(ctx, eleve, indic, y)
+    DrawBoutonCompetence(ctx, eleve, regrouperDic(eleve, eleve.GetDicIndicateurs()), y)
     
 
     
@@ -1174,8 +1228,9 @@ def DrawBoutonCompetence(ctx, objet, dicIndic, y, h = None):
     # Un petit décalage pour distinguer R et S en N&B    
     dh = h/10
     ctx.set_line_width (0.0004)
-    
+    dicIndic, dictype = dicIndic
     for s in dicIndic.keys():
+        
         x = xComp[s]-wColComp/2
 #        ctx.arc(x, y, r, 0, 2*pi)
 #        if True:#estCompetenceRevue(objet.parent.classe.typeEnseignement, s):
@@ -1202,7 +1257,7 @@ def DrawBoutonCompetence(ctx, objet, dicIndic, y, h = None):
         dx = wColComp/len(indic)
         for a, i in enumerate(indic):
             if i: # Rose ou bleu
-                if objet.projet.classe.GetReferentiel().dicIndicateurs_prj[s][a][1]:
+                if dictype[s][a][1] != 0:#objet.projet.classe.GetReferentiel().getTypeIndicateur(s+'_'+str(a+1)) == "C": # Conduite     #dicIndicateurs_prj[s][a][1]:
                     c = ICoulCompR
                     d = -1
                 else:
