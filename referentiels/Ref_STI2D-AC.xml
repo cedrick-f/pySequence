@@ -1,40 +1,52 @@
-<Referentiel B_CI_BO="True" B_CI_cible="False" B_projet="True" I_duree_prj="70" I_prof_Comp="1" S_Code="AC" S_Famille="STI" S_nomSavoirs="Savoirs">
+<Referentiel B_CI_BO="True" B_CI_cible="False" B_projet="True" I_duree_prj="70" S_Code="AC" S_Famille="STI" S_nomCompetences="Comp&#233;tences" S_nomSavoirs="Savoirs">
   <l_CentresInterets S_CentresInterets00="Participation &#224; une &#233;tude architecturale" S_CentresInterets01="V&#233;rification de la r&#233;sistance" S_CentresInterets02="Protection" S_CentresInterets03="Le confort" S_CentresInterets04="Organisation de r&#233;alisation" S_CentresInterets05="Vie en oeuvre" S_CentresInterets06="Reconditionnement de l&apos;ouvrage" S_CentresInterets07="Valorisation de la fin de vie de l&apos;ouvrage" />
-  <l_Enseignement S_Enseignement00="STI2D-AC" S_Enseignement01="STI2D : Architecture et Construction" />
+  <l_Enseignement S_Enseignement00="STI2D-AC" S_Enseignement01="STI2D : Architecture et Construction" S_Enseignement02="STI2D" />
   <d_activites>
     <l_ED S_ED00="Etude de dossier" S_ED01="Activit&#233; d'&#233;tude de dossier" />
     <l_P S_P00="Projet" S_P01="Activit&#233; de projet" />
     <l_AP S_AP00="Activit&#233; pratique" S_AP01="Activit&#233; pratique" />
   </d_activites>
   <d_cellulesInfo_prj>
-    <l_Tit>
-      <l_Tit00 S_Tit0000="R" S_Tit0001="Identification">
-        <l_Tit0002 I_Tit000200="13" I_Tit000201="1" />
-      </l_Tit00>
-    </l_Tit>
-    <l_Nom>
-      <l_Nom00 S_Nom0000="R" S_Nom0001="Identification">
-        <l_Nom0002 I_Nom000200="8" I_Nom000201="2" />
-      </l_Nom00>
-      <l_Nom01 S_Nom0100="S" S_Nom0101="Feuil1">
-        <l_Nom0102 I_Nom010200="24" I_Nom010201="11" />
-      </l_Nom01>
-    </l_Nom>
-    <l_Des>
-      <l_Des00 S_Des0000="R" S_Des0001="Identification">
-        <l_Des0002 I_Des000200="13" I_Des000201="1" />
-      </l_Des00>
-    </l_Des>
     <l_Pre>
-      <l_Pre00 S_Pre0000="R" S_Pre0001="Identification">
-        <l_Pre0002 I_Pre000200="9" I_Pre000201="2" />
+      <l_Pre00 S_Pre0000="R" S_Pre0001="Identification projet" S_Pre0003="">
+        <l_Pre0002 I_Pre000200="12" I_Pre000201="2" I_Pre000202="3" />
       </l_Pre00>
     </l_Pre>
+    <l_Nom>
+      <l_Nom00 S_Nom0000="R" S_Nom0001="Identification projet" S_Nom0003="">
+        <l_Nom0002 I_Nom000200="11" I_Nom000201="2" I_Nom000202="3" />
+      </l_Nom00>
+    </l_Nom>
+    <l_NON>
+      <l_NON00 S_NON0000="R" S_NON0001="Notation Candidat " S_NON0003="">
+        <l_NON0002 I_NON000200="6" I_NON000201="4" I_NON000202="0" />
+      </l_NON00>
+    </l_NON>
+    <l_N-P>
+      <l_N-P00 S_N-P0000="S" S_N-P0001="Feuil1" S_N-P0003="Nom du candidat :--">
+        <l_N-P0002 I_N-P000200="24" I_N-P000201="11" I_N-P000202="0" />
+      </l_N-P00>
+    </l_N-P>
+    <l_Tit>
+      <l_Tit00 S_Tit0000="R" S_Tit0001="Identification projet" S_Tit0003="">
+        <l_Tit0002 I_Tit000200="26" I_Tit000201="1" I_Tit000202="0" />
+      </l_Tit00>
+    </l_Tit>
+    <l_Des>
+      <l_Des00 S_Des0000="R" S_Des0001="Identification projet" S_Des0003="">
+        <l_Des0002 I_Des000200="26" I_Des000201="1" I_Des000202="0" />
+      </l_Des00>
+    </l_Des>
     <l_Etab>
-      <l_Etab00 S_Etab0000="R" S_Etab0001="Identification">
-        <l_Etab0002 I_Etab000200="6" I_Etab000201="2" />
+      <l_Etab00 S_Etab0000="R" S_Etab0001="Identification projet" S_Etab0003="">
+        <l_Etab0002 I_Etab000200="6" I_Etab000201="2" I_Etab000202="0" />
       </l_Etab00>
     </l_Etab>
+    <l_Prof>
+      <l_Prof00 S_Prof0000="R" S_Prof0001="Notation Candidat " S_Prof0003="">
+        <l_Prof0002 I_Prof000200="51" I_Prof000201="1" I_Prof000202="1" />
+      </l_Prof00>
+    </l_Prof>
   </d_cellulesInfo_prj>
   <d_demarcheSeance>
     <l_ED S_ED00="I" S_ED01="R" />
@@ -48,174 +60,150 @@
   </d_demarches>
   <d_dicCompetences>
     <l_O7 S_O700="Imaginer une solution, r&#233;pondre &#224; un besoin">
-      <d_O701 S_CO7.ac1="Participer &#224; une &#233;tude architecturale, dans une d&#233;marche de d&#233;veloppement durable" S_CO7.ac2="Proposer/Choisir des solutions techniques r&#233;pondant aux contraintes et attentes d'une construction" S_CO7.ac3="Concevoir une organisation de r&#233;alisation" />
+      <d_O701>
+        <l_CO7.ac1 S_CO7.ac100="Participer &#224; une &#233;tude architecturale, dans une d&#233;marche de d&#233;veloppement durable">
+          <l_CO7.ac101>
+            <l_CO7.ac10100 I_CO7.ac1010002="6" S_CO7.ac1010000="Le besoin relatif au projet et les fonctions principales sont identifi&#233;s et justifi&#233;s">
+              <l_CO7.ac1010001 F_CO7.ac101000101="9.090909" I_CO7.ac101000100="0" I_CO7.ac101000102="0" />
+            </l_CO7.ac10100>
+            <l_CO7.ac10101 I_CO7.ac1010102="7" S_CO7.ac1010100="Les crit&#232;res du cahier des charges sont d&#233;cod&#233;s et les principaux points de vigilance relatifs au projet sont identifi&#233;s">
+              <l_CO7.ac1010101 F_CO7.ac101010101="9.090909" I_CO7.ac101010100="0" I_CO7.ac101010102="0" />
+            </l_CO7.ac10101>
+            <l_CO7.ac10102 I_CO7.ac1010202="8" S_CO7.ac1010200="La d&#233;marche d'analyse du probl&#232;me est pertinente">
+              <l_CO7.ac1010201 F_CO7.ac101020101="9.090909" I_CO7.ac101020100="0" I_CO7.ac101020102="0" />
+            </l_CO7.ac10102>
+          </l_CO7.ac101>
+        </l_CO7.ac1>
+        <l_CO7.ac2 S_CO7.ac200="Proposer/Choisir des solutions techniques r&#233;pondant aux contraintes et attentes d'une construction">
+          <l_CO7.ac201>
+            <l_CO7.ac20100 I_CO7.ac2010002="9" S_CO7.ac2010000="Les moyens conventionnels de repr&#233;sentation des solutions sont correctement utilis&#233;s (croquis, sch&#233;mas, &#8230;)">
+              <l_CO7.ac2010001 F_CO7.ac201000101="9.090909" I_CO7.ac201000100="0" I_CO7.ac201000102="0" />
+            </l_CO7.ac20100>
+            <l_CO7.ac20101 I_CO7.ac2010102="10" S_CO7.ac2010100="Les contraintes de normes, propri&#233;t&#233; industrielle, brevets sont identifi&#233;es">
+              <l_CO7.ac2010101 F_CO7.ac201010101="9.090909" I_CO7.ac201010100="0" I_CO7.ac201010102="0" />
+            </l_CO7.ac20101>
+            <l_CO7.ac20102 I_CO7.ac2010202="11" S_CO7.ac2010200="Les solutions techniques propos&#233;es et les produits innovants choisis sont pertinents des points de vue DD, &#233;conomique et comportemental">
+              <l_CO7.ac2010201 F_CO7.ac201020101="9.090909" I_CO7.ac201020100="0" I_CO7.ac201020102="0" />
+            </l_CO7.ac20102>
+            <l_CO7.ac20103 I_CO7.ac2010302="12" S_CO7.ac2010300="Les choix sont explicit&#233;s dans une d&#233;marche d'analyse globale de r&#233;ponse au cahier des charges">
+              <l_CO7.ac2010301 F_CO7.ac201030101="9.090909" I_CO7.ac201030100="0" I_CO7.ac201030102="0" />
+            </l_CO7.ac20103>
+          </l_CO7.ac201>
+        </l_CO7.ac2>
+        <l_CO7.ac3 S_CO7.ac300="Concevoir une organisation de r&#233;alisation">
+          <l_CO7.ac301>
+            <l_CO7.ac30100 I_CO7.ac3010002="13" S_CO7.ac3010000="Le phasage des op&#233;rations de r&#233;alisation est r&#233;aliste, le chemin critique est identifi&#233;">
+              <l_CO7.ac3010001 F_CO7.ac301000101="9.090909" I_CO7.ac301000100="0" I_CO7.ac301000102="0" />
+            </l_CO7.ac30100>
+            <l_CO7.ac30101 I_CO7.ac3010102="14" S_CO7.ac3010100="Les proc&#233;d&#233;s de mise en &#339;uvre sont choisis et justifi&#233;s">
+              <l_CO7.ac3010101 F_CO7.ac301010101="9.090909" I_CO7.ac301010100="0" I_CO7.ac301010102="0" />
+            </l_CO7.ac30101>
+            <l_CO7.ac30102 I_CO7.ac3010202="15" S_CO7.ac3010200="La logistique de r&#233;alisation r&#233;pond aux contraintes techniques et de site du chantier">
+              <l_CO7.ac3010201 F_CO7.ac301020101="9.090909" I_CO7.ac301020100="0" I_CO7.ac301020102="0" />
+            </l_CO7.ac30102>
+            <l_CO7.ac30103 I_CO7.ac3010302="16" S_CO7.ac3010300="Les impacts environnementaux sont identifi&#233;s, des solutions de limitation sont propos&#233;es">
+              <l_CO7.ac3010301 F_CO7.ac301030101="9.090909" I_CO7.ac301030100="0" I_CO7.ac301030102="0" />
+            </l_CO7.ac30103>
+          </l_CO7.ac301>
+        </l_CO7.ac3>
+      </d_O701>
+      <l_O702 I_O70200="0" I_O70201="40" I_O70202="0" />
     </l_O7>
     <l_O9 S_O900="G&#233;rer la vie d'un syst&#232;me">
-      <d_O901 S_CO9.ac1="Am&#233;liorer les performances d'une construction du point de vue &#233;nerg&#233;tique, domotique et informationnel" S_CO9.ac2="Identifier et d&#233;crire les causes de d&#233;sordre dans une construction" S_CO9.ac3="Valoriser la fin de vie du produit : d&#233;construction, gestion des d&#233;chets, valorisation des produits" />
+      <d_O901>
+        <l_CO9.ac2 S_CO9.ac200="Identifier et d&#233;crire les causes de d&#233;sordre dans une construction">
+          <l_CO9.ac201>
+            <l_CO9.ac20100 I_CO9.ac2010002="35" S_CO9.ac2010000="Une d&#233;marche pertinente d'investigation est r&#233;alis&#233;e pour identifier les d&#233;sordres et leurs causes">
+              <l_CO9.ac2010001 F_CO9.ac201000101="12.5" I_CO9.ac201000100="0" I_CO9.ac201000102="0" />
+            </l_CO9.ac20100>
+            <l_CO9.ac20101 I_CO9.ac2010102="36" S_CO9.ac2010100="Des solutions de rem&#233;diations sont envisag&#233;es">
+              <l_CO9.ac2010101 F_CO9.ac201010101="12.5" I_CO9.ac201010100="0" I_CO9.ac201010102="0" />
+            </l_CO9.ac20101>
+          </l_CO9.ac201>
+        </l_CO9.ac2>
+        <l_CO9.ac3 S_CO9.ac300="Valoriser la fin de vie du produit : d&#233;construction, gestion des d&#233;chets, valorisation des produits">
+          <l_CO9.ac301>
+            <l_CO9.ac30100 I_CO9.ac3010002="37" S_CO9.ac3010000="Une analyse de cycle de vie de tout ou partie d'une construction est men&#233;e">
+              <l_CO9.ac3010001 F_CO9.ac301000101="12.5" I_CO9.ac301000100="0" I_CO9.ac301000102="0" />
+            </l_CO9.ac30100>
+            <l_CO9.ac30101 I_CO9.ac3010102="38" S_CO9.ac3010100="Une proc&#233;dure de valorisation des produits au sens DD est propos&#233;e">
+              <l_CO9.ac3010101 F_CO9.ac301010101="12.5" I_CO9.ac301010100="0" I_CO9.ac301010102="0" />
+            </l_CO9.ac30101>
+          </l_CO9.ac301>
+        </l_CO9.ac3>
+        <l_CO9.ac1 S_CO9.ac100="Am&#233;liorer les performances d'une construction du point de vue &#233;nerg&#233;tique, domotique et informationnel">
+          <l_CO9.ac101>
+            <l_CO9.ac10100 I_CO9.ac1010002="31" S_CO9.ac1010000="Un bilan des performances de la construction existante est &#233;tabli">
+              <l_CO9.ac1010001 F_CO9.ac101000101="12.5" I_CO9.ac101000100="0" I_CO9.ac101000102="0" />
+            </l_CO9.ac10100>
+            <l_CO9.ac10101 I_CO9.ac1010102="32" S_CO9.ac1010100="Les besoins de l&apos;usager sont traduits en solutions technologiques">
+              <l_CO9.ac1010101 F_CO9.ac101010101="12.5" I_CO9.ac101010100="0" I_CO9.ac101010102="0" />
+            </l_CO9.ac10101>
+            <l_CO9.ac10102 I_CO9.ac1010202="33" S_CO9.ac1010200="Une r&#233;alisation permet de constater les am&#233;liorations attendues">
+              <l_CO9.ac1010201 F_CO9.ac101020101="12.5" I_CO9.ac101020100="0" I_CO9.ac101020102="0" />
+            </l_CO9.ac10102>
+            <l_CO9.ac10103 I_CO9.ac1010302="34" S_CO9.ac1010300="L'adaptabilit&#233; de la construction r&#233;nov&#233;e est prise en compte">
+              <l_CO9.ac1010301 F_CO9.ac101030101="12.5" I_CO9.ac101030100="0" I_CO9.ac101030102="0" />
+            </l_CO9.ac10103>
+          </l_CO9.ac101>
+        </l_CO9.ac1>
+      </d_O901>
+      <l_O902 I_O90200="0" I_O90201="20" I_O90202="0" />
     </l_O9>
     <l_O8 S_O800="Valider des solutions techniques">
-      <d_O801 S_CO8.ac1="Simuler un comportement structurel, thermique et acoustique de tout ou partie d&apos;une construction" S_CO8.ac2="Analyser les r&#233;sultats issus de simulations ou d'essais de laboratoire" S_CO8.ac3="Analyser/Valider les choix structurels et de confort" />
+      <d_O801>
+        <l_CO8.ac3 S_CO8.ac300="Analyser/Valider les choix structurels et de confort">
+          <l_CO8.ac301>
+            <l_CO8.ac30100 I_CO8.ac3010002="26" S_CO8.ac3010000="Une d&#233;marche d'analyse de la structure est mise en &#339;uvre">
+              <l_CO8.ac3010001 F_CO8.ac301000101="8.333333" I_CO8.ac301000100="0" I_CO8.ac301000102="0" />
+            </l_CO8.ac30100>
+            <l_CO8.ac30101 I_CO8.ac3010102="27" S_CO8.ac3010100="Les &#233;carts entre les performances attendues et celles cons&#233;cutives aux choix faits sont &#233;tablis">
+              <l_CO8.ac3010101 F_CO8.ac301010101="8.333333" I_CO8.ac301010100="0" I_CO8.ac301010102="0" />
+            </l_CO8.ac30101>
+            <l_CO8.ac30102 I_CO8.ac3010202="28" S_CO8.ac3010200="Les contraintes de normes, propri&#233;t&#233; industrielle, brevets sont identifi&#233;es">
+              <l_CO8.ac3010201 F_CO8.ac301020101="8.333333" I_CO8.ac301020100="0" I_CO8.ac301020102="0" />
+            </l_CO8.ac30102>
+            <l_CO8.ac30103 I_CO8.ac3010302="29" S_CO8.ac3010300="Les impacts environnementaux sont identifi&#233;s, des solutions de limitation sont propos&#233;es">
+              <l_CO8.ac3010301 F_CO8.ac301030101="8.333333" I_CO8.ac301030100="0" I_CO8.ac301030102="0" />
+            </l_CO8.ac30103>
+          </l_CO8.ac301>
+        </l_CO8.ac3>
+        <l_CO8.ac2 S_CO8.ac200="Analyser les r&#233;sultats issus de simulations ou d'essais de laboratoire">
+          <l_CO8.ac201>
+            <l_CO8.ac20100 I_CO8.ac2010002="21" S_CO8.ac2010000="Les conditions de l'essai sont identifi&#233;es et justifi&#233;es">
+              <l_CO8.ac2010001 F_CO8.ac201000101="8.333333" I_CO8.ac201000100="0" I_CO8.ac201000102="0" />
+            </l_CO8.ac20100>
+            <l_CO8.ac20101 I_CO8.ac2010102="22" S_CO8.ac2010100="Les observations et mesures sont rigoureuses">
+              <l_CO8.ac2010101 F_CO8.ac201010101="8.333333" I_CO8.ac201010100="0" I_CO8.ac201010102="0" />
+            </l_CO8.ac20101>
+            <l_CO8.ac20102 I_CO8.ac2010202="23" S_CO8.ac2010200="Les incertitudes sont estim&#233;es">
+              <l_CO8.ac2010201 F_CO8.ac201020101="8.333333" I_CO8.ac201020100="0" I_CO8.ac201020102="0" />
+            </l_CO8.ac20102>
+            <l_CO8.ac20103 I_CO8.ac2010302="24" S_CO8.ac2010300="L'interpr&#233;tation des r&#233;sultats est pertinent">
+              <l_CO8.ac2010301 F_CO8.ac201030101="8.333333" I_CO8.ac201030100="0" I_CO8.ac201030102="0" />
+            </l_CO8.ac20103>
+            <l_CO8.ac20104 I_CO8.ac2010402="25" S_CO8.ac2010400="Les r&#233;sultats de la simulation et les mesures sont corr&#233;l&#233;s (validation des mod&#232;les)">
+              <l_CO8.ac2010401 F_CO8.ac201040101="8.333333" I_CO8.ac201040100="0" I_CO8.ac201040102="0" />
+            </l_CO8.ac20104>
+          </l_CO8.ac201>
+        </l_CO8.ac2>
+        <l_CO8.ac1 S_CO8.ac100="Simuler un comportement structurel, thermique et acoustique de tout ou partie d&apos;une construction">
+          <l_CO8.ac101>
+            <l_CO8.ac10100 I_CO8.ac1010002="18" S_CO8.ac1010000="Les variables et les param&#232;tres des mod&#232;les sont identifi&#233;s">
+              <l_CO8.ac1010001 F_CO8.ac101000101="8.333333" I_CO8.ac101000100="0" I_CO8.ac101000102="0" />
+            </l_CO8.ac10100>
+            <l_CO8.ac10101 I_CO8.ac1010102="19" S_CO8.ac1010100="Leurs influences respectives sont identifi&#233;es">
+              <l_CO8.ac1010101 F_CO8.ac101010101="8.333333" I_CO8.ac101010100="0" I_CO8.ac101010102="0" />
+            </l_CO8.ac10101>
+            <l_CO8.ac10102 I_CO8.ac1010202="20" S_CO8.ac1010200="Les sc&#233;narios de simulation sont identifi&#233;s">
+              <l_CO8.ac1010201 F_CO8.ac101020101="8.333333" I_CO8.ac101020100="0" I_CO8.ac101020102="0" />
+            </l_CO8.ac10102>
+          </l_CO8.ac101>
+        </l_CO8.ac1>
+      </d_O801>
+      <l_O802 I_O80200="0" I_O80201="40" I_O80202="0" />
     </l_O8>
   </d_dicCompetences>
-  <d_dicCompetences_prj>
-    <l_O9 S_O900="G&#233;rer la vie d'un syst&#232;me">
-      <d_O901 S_CO9.ac1="Am&#233;liorer les performances d'une construction du point de vue &#233;nerg&#233;tique, domotique et informationnel" S_CO9.ac2="Identifier et d&#233;crire les causes de d&#233;sordre dans une construction" S_CO9.ac3="Valoriser la fin de vie du produit : d&#233;construction, gestion des d&#233;chets, valorisation des produits" />
-    </l_O9>
-    <l_O8 S_O800="Valider des solutions techniques">
-      <d_O801 S_CO8.ac1="Simuler un comportement structurel, thermique et acoustique de tout ou partie d&apos;une construction" S_CO8.ac2="Analyser les r&#233;sultats issus de simulations ou d'essais de laboratoire" S_CO8.ac3="Analyser/Valider les choix structurels et de confort" />
-    </l_O8>
-    <l_O7 S_O700="Imaginer une solution, r&#233;pondre &#224; un besoin">
-      <d_O701 S_CO7.ac1="Participer &#224; une &#233;tude architecturale, dans une d&#233;marche de d&#233;veloppement durable" S_CO7.ac2="Proposer/Choisir des solutions techniques r&#233;pondant aux contraintes et attentes d'une construction" S_CO7.ac3="Concevoir une organisation de r&#233;alisation" />
-    </l_O7>
-    <l_O6 S_O600="Communiquer une id&#233;e, un principe ou une solution technique, un projet, y compris en langue &#233;trang&#232;re">
-      <d_O601 S_CO6.1="D&#233;crire une id&#233;e, un principe, une solution, un projet en utilisant des outils de repr&#233;sentation adapt&#233;s" S_CO6.2="D&#233;crire le fonctionnement et/ou l'exploitation d'un syst&#232;me en utilisant l'outil de description le plus pertinent" S_CO6.3="Pr&#233;senter et argumenter des d&#233;marches, des r&#233;sultats, y compris dans une langue &#233;trang&#232;re" />
-    </l_O6>
-    <l_O2 S_O200="Identifier les &#233;l&#233;ments permettant la limitation de l&#8217;Impact environnemental d&#8217;un syst&#232;me et de ses constituants">
-      <d_O201 S_CO2.1="Identifier les flux et la forme de l'&#233;nergie, caract&#233;riser ses transformations et/ou modulations et estimer l'efficacit&#233; &#233;nerg&#233;tique globale d'un syst&#232;me" S_CO2.2="Justifier les solutions constructives d'un syst&#232;me au regard des impacts environnementaux et &#233;conomiques engendr&#233;s tout au long de son cycle de vie" />
-    </l_O2>
-    <l_O1 S_O100="Caract&#233;riser des syst&#232;mes privil&#233;giant un usage raisonn&#233; du point de vue d&#233;veloppement durable">
-      <d_O101 S_CO1.1="Justifier les choix des mat&#233;riaux, des structures d'un syst&#232;me et les &#233;nergies mises en oeuvre dans une approche de d&#233;veloppement durable" S_CO1.2="Justifier le choix d'une solution selon des contraintes d'ergonomie et d'effets sur la sant&#233; de l'homme et du vivant" />
-    </l_O1>
-    <l_O8s S_O8s00="Valider des solutions techniques">
-      <d_O8s01 S_CO8.0="Justifier des &#233;l&#233;ments d'une simulation relative au comportement de tout ou partie d'un syst&#232;me et les &#233;carts par rapport au r&#233;el" />
-    </l_O8s>
-  </d_dicCompetences_prj>
-  <d_dicIndicateurs_prj>
-    <l_CO9.ac2>
-      <l_CO9.ac200 B_CO9.ac20001="True" S_CO9.ac20000="Une investigation est r&#233;alis&#233;e" />
-      <l_CO9.ac201 B_CO9.ac20101="True" S_CO9.ac20100="Les d&#233;sordres et leurs causes sont identifi&#233;s" />
-      <l_CO9.ac202 B_CO9.ac20201="True" S_CO9.ac20200="Des solutions de rem&#233;diation sont envisag&#233;es" />
-    </l_CO9.ac2>
-    <l_CO9.ac3>
-      <l_CO9.ac300 B_CO9.ac30001="True" S_CO9.ac30000="Une analyse de cycle de vie de tout ou partie d'une construction est men&#233;e" />
-      <l_CO9.ac301 B_CO9.ac30101="True" S_CO9.ac30100="Les contraintes normatives (au sens du d&#233;veloppement durable) sont r&#233;pertori&#233;es" />
-      <l_CO9.ac302 B_CO9.ac30201="True" S_CO9.ac30200="Une proc&#233;dure de valorisation des produits est propos&#233;e" />
-    </l_CO9.ac3>
-    <l_CO1.2>
-      <l_CO1.200 B_CO1.20001="False" S_CO1.20000="La justification des param&#232;tres de confort et/ou la r&#233;ponse apport&#233;e par le syst&#232;me aux contraintes de pr&#233;servation de la sant&#233; et du respect de la s&#233;curit&#233; sont explicit&#233;es" />
-    </l_CO1.2>
-    <l_CO9.ac1>
-      <l_CO9.ac100 B_CO9.ac10001="True" S_CO9.ac10000="Un bilan des performances de la construction existante est &#233;tabli" />
-      <l_CO9.ac101 B_CO9.ac10101="True" S_CO9.ac10100="Les besoins de l&apos;usager sont traduits en solutions technologiques" />
-      <l_CO9.ac102 B_CO9.ac10201="True" S_CO9.ac10200="Le contexte normatif est pr&#233;cis&#233;" />
-      <l_CO9.ac103 B_CO9.ac10301="True" S_CO9.ac10300="Une r&#233;alisation permet de constater les am&#233;liorations attendues" />
-      <l_CO9.ac104 B_CO9.ac10401="True" S_CO9.ac10400="L'adaptabilit&#233; de la construction r&#233;nov&#233;e est prise en compte" />
-    </l_CO9.ac1>
-    <l_CO8.ac3>
-      <l_CO8.ac300 B_CO8.ac30001="True" S_CO8.ac30000="Une d&#233;marche d'analyse de la structure est mise en oeuvre" />
-      <l_CO8.ac301 B_CO8.ac30101="True" S_CO8.ac30100="Les &#233;carts entre les performances attendues et celles cons&#233;cutives aux choix effectu&#233;s sont &#233;tablis" />
-      <l_CO8.ac302 B_CO8.ac30201="True" S_CO8.ac30200="Les contraintes de normes, propori&#233;t&#233;s industrielles et brevets sont identifi&#233;es" />
-      <l_CO8.ac303 B_CO8.ac30301="True" S_CO8.ac30300="Les impacts environnementaux sont identifi&#233;s, des solutions de limitation sont propos&#233;es" />
-    </l_CO8.ac3>
-    <l_CO8.ac2>
-      <l_CO8.ac200 B_CO8.ac20001="True" S_CO8.ac20000="Les observations et mesures sont m&#233;thodiquement men&#233;es" />
-      <l_CO8.ac201 B_CO8.ac20101="True" S_CO8.ac20100="Les incertitudes sont estim&#233;es" />
-      <l_CO8.ac202 B_CO8.ac20201="True" S_CO8.ac20200="L'interpr&#233;tation des r&#233;sultats est coh&#233;rente" />
-      <l_CO8.ac203 B_CO8.ac20301="True" S_CO8.ac20300="Les r&#233;sultats de la simulation et les mesures sont corr&#233;l&#233;s (validation des mod&#232;les)" />
-    </l_CO8.ac2>
-    <l_CO8.ac1>
-      <l_CO8.ac100 B_CO8.ac10001="True" S_CO8.ac10000="Les variables du mod&#232;le sont identifi&#233;es" />
-      <l_CO8.ac101 B_CO8.ac10101="True" S_CO8.ac10100="Leurs influences respectives sont identifi&#233;es" />
-      <l_CO8.ac102 B_CO8.ac10201="True" S_CO8.ac10200="Les sc&#233;narios de simulation sont appliqu&#233;s" />
-      <l_CO8.ac103 B_CO8.ac10301="True" S_CO8.ac10300="Les conditions de l'essai sont identifi&#233;es et justifi&#233;es" />
-    </l_CO8.ac1>
-    <l_CO1.1>
-      <l_CO1.100 B_CO1.10001="False" S_CO1.10000="Le choix des mat&#233;riaux et/ou des mat&#233;riels est justifi&#233;, des crit&#232;res d'&#233;co conception sont pris en compte" />
-      <l_CO1.101 B_CO1.10101="False" S_CO1.10100="La  structure mat&#233;rielle et/ou informationnelle est correctement justifi&#233;e " />
-    </l_CO1.1>
-    <l_CO6.3>
-      <l_CO6.300 B_CO6.30001="False" S_CO6.30000="Le choix de la d&#233;marche retenue est argument&#233;e" />
-      <l_CO6.301 B_CO6.30101="False" S_CO6.30100="Les r&#233;sultats sont pr&#233;sent&#233;s et comment&#233;s de mani&#232;re claire et concise" />
-    </l_CO6.3>
-    <l_CO6.2>
-      <l_CO6.200 B_CO6.20001="False" S_CO6.20000="La description du fonctionnement ou de l'exploitation du syst&#232;me est synth&#233;tique et correcte" />
-    </l_CO6.2>
-    <l_CO6.1>
-      <l_CO6.100 B_CO6.10001="False" S_CO6.10000="La description du principe ou de la solution est synth&#233;tique et correcte" />
-    </l_CO6.1>
-    <l_CO7.ac1>
-      <l_CO7.ac100 B_CO7.ac10001="True" S_CO7.ac10000="Le besoin relatif au projet est identifi&#233;" />
-      <l_CO7.ac101 B_CO7.ac10101="True" S_CO7.ac10100="Les fonctions principales du projet sont identifi&#233;es" />
-      <l_CO7.ac102 B_CO7.ac10201="True" S_CO7.ac10200="Les crit&#232;res du CDC du projet sont d&#233;cod&#233;s" />
-      <l_CO7.ac103 B_CO7.ac10301="True" S_CO7.ac10300="La d&#233;marche d'analyse du probl&#232;me est mise en oeuvre" />
-      <l_CO7.ac104 B_CO7.ac10401="True" S_CO7.ac10400="Les principaux points de vigilance (&#233;conomiques, d&#233;veloppement durable, int&#233;gration en site) relatifs au projet sont identifi&#233;s" />
-    </l_CO7.ac1>
-    <l_CO7.ac2>
-      <l_CO7.ac200 B_CO7.ac20001="True" S_CO7.ac20000="Des pratiques de travail collaboratives sont mise en oeuvre" />
-      <l_CO7.ac201 B_CO7.ac20101="True" S_CO7.ac20100="Les moyens conventionnels de repr&#233;sentation des solutions sont correctement utilis&#233;s (croquis, sch&#233;mas, ...)" />
-      <l_CO7.ac202 B_CO7.ac20201="True" S_CO7.ac20200="Les contraintes de normes, propri&#233;t&#233;s industrielle et brevet sont identifi&#233;es" />
-      <l_CO7.ac203 B_CO7.ac20301="True" S_CO7.ac20300="Les solutions techniques propos&#233;es sont pertinentes des points de vue d&#233;veloppement durable et &#233;conomique" />
-      <l_CO7.ac204 B_CO7.ac20401="True" S_CO7.ac20400="Les caract&#233;ristiques comportementales de la solution retenue r&#233;pondent au CDC" />
-      <l_CO7.ac205 B_CO7.ac20501="True" S_CO7.ac20500="Les choix sont explicit&#233;s dans une d&#233;marche d'analyse globale de r&#233;ponse au CDC" />
-      <l_CO7.ac206 B_CO7.ac20601="True" S_CO7.ac20600="Une recherche syst&#233;matique de produit innovant est effectu&#233;e" />
-    </l_CO7.ac2>
-    <l_CO7.ac3>
-      <l_CO7.ac300 B_CO7.ac30001="True" S_CO7.ac30000="Le phasage des op&#233;rations de r&#233;alisation est r&#233;aliste, le chemin critique est identifi&#233;" />
-      <l_CO7.ac301 B_CO7.ac30101="True" S_CO7.ac30100="Les proc&#233;d&#233;s de mise en oeuvre sont choisis et justifi&#233;s" />
-      <l_CO7.ac302 B_CO7.ac30201="True" S_CO7.ac30200="La logistique de r&#233;alisation r&#233;pond aux contraintes techniques et de site du chantier" />
-      <l_CO7.ac303 B_CO7.ac30301="True" S_CO7.ac30300="Les impacts environnementaux sont identifi&#233;s, des solutions de limitation sont propos&#233;es" />
-    </l_CO7.ac3>
-    <l_CO2.2>
-      <l_CO2.200 B_CO2.20001="False" S_CO2.20000="La relation entre une fonction, des solutions et leur impact environnemental ou soci&#233;tal est pr&#233;cis&#233;e " />
-      <l_CO2.201 B_CO2.20101="False" S_CO2.20100="Le compromis technico &#233;conomique et/ou la prise en compte des normes et r&#233;glementations est expliqu&#233; " />
-    </l_CO2.2>
-    <l_CO2.1>
-      <l_CO2.100 B_CO2.10001="False" S_CO2.10000="Les flux et la forme de l'&#233;nergie et/ou de l'information sont d&#233;crits de fa&#231;on qualitative" />
-      <l_CO2.101 B_CO2.10101="False" S_CO2.10100="Les caract&#233;ristiques d'entr&#233;es sorties des transformations ou modulations sont correctement pr&#233;cis&#233;es" />
-      <l_CO2.102 B_CO2.10201="False" S_CO2.10200="L'analyse globale d'une chaine (&#233;nergie, action, information) est correctement r&#233;alis&#233;e" />
-    </l_CO2.1>
-    <l_CO8.0>
-      <l_CO8.000 B_CO8.00001="False" S_CO8.00000="Les solutions techniques envisag&#233;es sont correctement analys&#233;es au regard des r&#233;sultats d'exp&#233;rimentations et/ou de tests et/ou de simulations" />
-      <l_CO8.001 B_CO8.00101="False" S_CO8.00100="L'origine des &#233;carts entre les r&#233;sultats obtenus et les exigences du cahier des charges est correctement identifi&#233;e" />
-    </l_CO8.0>
-  </d_dicIndicateurs_prj>
-  <d_dicPoidsIndicateurs_prj>
-    <l_O9 F_O900="30.0">
-      <d_O901>
-        <l_CO9.ac2 F_CO9.ac200="5.0" F_CO9.ac201="10.0" F_CO9.ac202="5.0" />
-        <l_CO9.ac3 F_CO9.ac300="10.0" F_CO9.ac301="5.0" F_CO9.ac302="10.0" />
-        <l_CO9.ac1 F_CO9.ac100="10.0" F_CO9.ac101="10.0" F_CO9.ac102="10.0" F_CO9.ac103="15.0" F_CO9.ac104="10.0" />
-      </d_O901>
-    </l_O9>
-    <l_O8 F_O800="40.0">
-      <d_O801>
-        <l_CO8.ac3 F_CO8.ac300="10.0" F_CO8.ac301="10.0" F_CO8.ac302="5.0" F_CO8.ac303="5.0" />
-        <l_CO8.ac2 F_CO8.ac200="10.0" F_CO8.ac201="5.0" F_CO8.ac202="10.0" F_CO8.ac203="10.0" />
-        <l_CO8.ac1 F_CO8.ac100="10.0" F_CO8.ac101="10.0" F_CO8.ac102="10.0" F_CO8.ac103="5.0" />
-      </d_O801>
-    </l_O8>
-    <l_O7 F_O700="30.0">
-      <d_O701>
-        <l_CO7.ac1 F_CO7.ac100="5.0" F_CO7.ac101="10.0" F_CO7.ac102="5.0" F_CO7.ac103="5.0" F_CO7.ac104="10.0" />
-        <l_CO7.ac2 F_CO7.ac200="5.0" F_CO7.ac201="5.0" F_CO7.ac202="5.0" F_CO7.ac203="5.0" F_CO7.ac204="10.0" F_CO7.ac205="5.0" F_CO7.ac206="4.0" />
-        <l_CO7.ac3 F_CO7.ac300="7.0" F_CO7.ac301="7.0" F_CO7.ac302="7.0" F_CO7.ac303="5.0" />
-      </d_O701>
-    </l_O7>
-    <l_O6 F_O600="45.0">
-      <d_O601>
-        <l_CO6.3 F_CO6.300="25.0" F_CO6.301="25.0" />
-        <l_CO6.2 F_CO6.200="25.0" />
-        <l_CO6.1 F_CO6.100="25.0" />
-      </d_O601>
-    </l_O6>
-    <l_O2 F_O200="15.0">
-      <d_O201>
-        <l_CO2.2 F_CO2.200="20.0" F_CO2.201="20.0" />
-        <l_CO2.1 F_CO2.100="20.0" F_CO2.101="20.0" F_CO2.102="20.0" />
-      </d_O201>
-    </l_O2>
-    <l_O1 F_O100="20.0">
-      <d_O101>
-        <l_CO1.1 F_CO1.100="35.0" F_CO1.101="35.0" />
-        <l_CO1.2 F_CO1.200="30.0" />
-      </d_O101>
-    </l_O1>
-    <l_O8s F_O8s00="20.0">
-      <d_O8s01>
-        <l_CO8.0 F_CO8.000="60.0" F_CO8.001="40.0" />
-      </d_O8s01>
-    </l_O8s>
-  </d_dicPoidsIndicateurs_prj>
   <d_dicSavoirs>
     <l_1 S_100="Projet technologique">
       <d_101>
@@ -275,14 +263,17 @@
     <l_SA S_SA00="C" S_SA01="G" />
     <l_TD S_TD00="C" S_TD01="G" S_TD02="D" S_TD03="E" S_TD04="P" />
   </d_effectifsSeance>
-  <d_grilles_prj S_R="Grille_evaluation_STI2D_AC_revues.xls" S_S="Grille soutenance projet STI2D.xlsx" />
+  <d_grilles_prj>
+    <l_S S_S00="Grille_presentation_projet_STI2D_V2015.xlsx" S_S01="I" />
+    <l_R S_R00="Grille AC V2015.xlsx" S_R01="C" />
+  </d_grilles_prj>
   <l_listPhasesEval_prj S_listPhasesEval_prj00="Rev" S_listPhasesEval_prj01="R1" S_listPhasesEval_prj02="R2" S_listPhasesEval_prj03="R3" S_listPhasesEval_prj04="S" />
   <l_listPhases_prj S_listPhases_prj00="Ana" S_listPhases_prj01="Con" S_listPhases_prj02="DCo" S_listPhases_prj03="Rea" S_listPhases_prj04="Val" S_listPhases_prj05="XXX" S_listPhases_prj06="Rev" S_listPhases_prj07="R1" S_listPhases_prj08="R2" S_listPhases_prj09="R3" S_listPhases_prj10="S" />
   <l_listeDemarches S_listeDemarches00="I" S_listeDemarches01="R" S_listeDemarches02="P" />
   <l_listeEffectifs S_listeEffectifs00="C" S_listeEffectifs01="G" S_listeEffectifs02="D" S_listeEffectifs03="E" S_listeEffectifs04="P" />
   <l_listeTypeActivite S_listeTypeActivite00="ED" S_listeTypeActivite01="AP" S_listeTypeActivite02="P" />
   <l_listeTypeSeance S_listeTypeSeance00="ED" S_listeTypeSeance01="AP" S_listeTypeSeance02="P" S_listeTypeSeance03="C" S_listeTypeSeance04="TD" S_listeTypeSeance05="SA" S_listeTypeSeance06="SS" S_listeTypeSeance07="E" S_listeTypeSeance08="R" S_listeTypeSeance09="S" />
-  <d_nomParties_prj S_R="Revues" S_S="Soutenance" />
+  <d_nomParties_prj S_R="Conduite" S_S="Soutenance" />
   <d_options />
   <d_phases_prj>
     <l_DCo S_DCo00="Concep d&#233;taill&#233;e" S_DCo01="Conception d&#233;taill&#233;e" S_DCo02="Cd" />

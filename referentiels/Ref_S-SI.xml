@@ -1,37 +1,61 @@
-<Referentiel B_CI_BO="False" B_CI_cible="False" B_projet="True" I_duree_prj="70" I_prof_Comp="3" S_Code="SSI" S_Famille="SSI" S_nomSavoirs="Capacit&#233;s">
+<Referentiel B_CI_BO="False" B_CI_cible="False" B_projet="True" I_duree_prj="70" S_Code="SSI" S_Famille="SSI" S_nomCompetences="Comp&#233;tences" S_nomSavoirs="Connaissances &amp; Capacit&#233;s">
   <l_CentresInterets S_CentresInterets00="Analyser un syst&#232;me fonctionnellement et structurellement" S_CentresInterets01="Exp&#233;rimenter et mesurer sur un syst&#232;me r&#233;el pour &#233;valuer ses performances" S_CentresInterets02="Analyser des constituants d&#8217;un syst&#232;me r&#233;el d&#8217;un point de vue structurel et comportemental" S_CentresInterets03="Concevoir et utiliser un mod&#232;le relatif &#224; un syst&#232;me en vue d&#8217;&#233;valuer les performances de la cha&#238;ne d&#8217;information" S_CentresInterets04="Concevoir et utiliser un mod&#232;le relatif &#224; un syst&#232;me en vue d&#8217;&#233;valuer les performances de la cha&#238;ne d&#8217;&#233;nergie&quot;" />
-  <l_Enseignement S_Enseignement00="S-SI" S_Enseignement01="Bac S - Sciences de l'ing&#233;nieur" />
+  <l_Enseignement S_Enseignement00="S-SI" S_Enseignement01="Bac S - Sciences de l'ing&#233;nieur" S_Enseignement02="S-SI" />
   <d_activites>
     <l_ED S_ED00="Etude de dossier" S_ED01="Activit&#233; d'&#233;tude de dossier" />
     <l_P S_P00="Projet" S_P01="Activit&#233; de projet" />
     <l_AP S_AP00="Activit&#233; pratique" S_AP01="Activit&#233; pratique" />
   </d_activites>
   <d_cellulesInfo_prj>
-    <l_Tit>
-      <l_Tit00 S_Tit0000="S" S_Tit0001="Identification">
-        <l_Tit0002 I_Tit000200="12" I_Tit000201="1" />
-      </l_Tit00>
-    </l_Tit>
-    <l_Nom>
-      <l_Nom00 S_Nom0000="S" S_Nom0001="Identification">
-        <l_Nom0002 I_Nom000200="7" I_Nom000201="2" />
-      </l_Nom00>
-    </l_Nom>
-    <l_Des>
-      <l_Des00 S_Des0000="S" S_Des0001="Identification">
-        <l_Des0002 I_Des000200="12" I_Des000201="1" />
-      </l_Des00>
-    </l_Des>
     <l_Pre>
-      <l_Pre00 S_Pre0000="S" S_Pre0001="Identification">
-        <l_Pre0002 I_Pre000200="8" I_Pre000201="2" />
+      <l_Pre00 S_Pre0000="S" S_Pre0001="Identification" S_Pre0003="">
+        <l_Pre0002 I_Pre000200="8" I_Pre000201="2" I_Pre000202="0" />
       </l_Pre00>
     </l_Pre>
+    <l_Nom>
+      <l_Nom00 S_Nom0000="S" S_Nom0001="Identification" S_Nom0003="">
+        <l_Nom0002 I_Nom000200="7" I_Nom000201="2" I_Nom000202="0" />
+      </l_Nom00>
+    </l_Nom>
+    <l_NON>
+      <l_NON00 S_NON0000="S" S_NON0001="Conduite de projet" S_NON0003="">
+        <l_NON0002 I_NON000200="5" I_NON000201="8" I_NON000202="0" />
+      </l_NON00>
+    </l_NON>
+    <l_N-P>
+      <l_N-P00 S_N-P0000="S" S_N-P0001="Conduite de projet" S_N-P0003="">
+        <l_N-P0002 I_N-P000200="32" I_N-P000201="2" I_N-P000202="0" />
+      </l_N-P00>
+      <l_N-P01 S_N-P0100="S" S_N-P0101="Pr&#233;sentation du projet" S_N-P0103="">
+        <l_N-P0102 I_N-P010200="24" I_N-P010201="2" I_N-P010202="0" />
+      </l_N-P01>
+    </l_N-P>
+    <l_Tit>
+      <l_Tit00 S_Tit0000="S" S_Tit0001="Identification" S_Tit0003="">
+        <l_Tit0002 I_Tit000200="14" I_Tit000201="1" I_Tit000202="0" />
+      </l_Tit00>
+    </l_Tit>
+    <l_Des>
+      <l_Des00 S_Des0000="S" S_Des0001="Identification" S_Des0003="Titre du projet : ">
+        <l_Des0002 I_Des000200="12" I_Des000201="1" I_Des000202="0" />
+      </l_Des00>
+    </l_Des>
     <l_Etab>
-      <l_Etab00 S_Etab0000="S" S_Etab0001="Identification">
-        <l_Etab0002 I_Etab000200="5" I_Etab000201="2" />
+      <l_Etab00 S_Etab0000="S" S_Etab0001="Identification" S_Etab0003="">
+        <l_Etab0002 I_Etab000200="5" I_Etab000201="2" I_Etab000202="0" />
       </l_Etab00>
+      <l_Etab01 S_Etab0100="S" S_Etab0101="Pr&#233;sentation du projet" S_Etab0103="">
+        <l_Etab0102 I_Etab010200="24" I_Etab010201="4" I_Etab010202="0" />
+      </l_Etab01>
+      <l_Etab02 S_Etab0200="S" S_Etab0201="Conduite de projet" S_Etab0203="">
+        <l_Etab0202 I_Etab020200="32" I_Etab020201="3" I_Etab020202="0" />
+      </l_Etab02>
     </l_Etab>
+    <l_Prof>
+      <l_Prof00 S_Prof0000="S" S_Prof0001="Conduite de projet" S_Prof0003="">
+        <l_Prof0002 I_Prof000200="36" I_Prof000201="2" I_Prof000202="1" />
+      </l_Prof00>
+    </l_Prof>
   </d_cellulesInfo_prj>
   <d_demarcheSeance>
     <l_ED S_ED00="I" S_ED01="R" />
@@ -43,145 +67,332 @@
     <l_A S_A00="Analyser">
       <d_A01>
         <l_A1 S_A100="Analyser le besoin">
-          <d_A101 S_A1.1="d&#233;finir le besoin" S_A1.2="d&#233;finir les fonctions de service" S_A1.3="identifier les contraintes" S_A1.4="traduire un besoin fonctionnel en probl&#233;matique technique" />
+          <d_A101>
+            <l_A1.4 S_A1.400="traduire un besoin fonctionnel en probl&#233;matique technique">
+              <l_A1.401>
+                <l_A1.40100 I_A1.4010002="0" S_A1.4010000="Le probl&#232;me technique est bien d&#233;crit">
+                  <l_A1.4010001 F_A1.401000102="20.0" I_A1.401000100="0" I_A1.401000101="0" />
+                </l_A1.40100>
+              </l_A1.401>
+            </l_A1.4>
+            <l_A1.1 S_A1.100="d&#233;finir le besoin">
+              <l_A1.101>
+                <l_A1.10100 I_A1.1010002="0" S_A1.1010000="Le besoin et la fonction globale sont bien d&#233;finis">
+                  <l_A1.1010001 F_A1.101000102="20.0" I_A1.101000100="0" I_A1.101000101="0" />
+                </l_A1.10100>
+              </l_A1.101>
+            </l_A1.1>
+            <l_A1.2 S_A1.200="d&#233;finir les fonctions de service">
+              <l_A1.201>
+                <l_A1.20100 I_A1.2010002="0" S_A1.2010000="">
+                  <l_A1.2010001 I_A1.201000100="0" I_A1.201000101="0" I_A1.201000102="0" />
+                </l_A1.20100>
+              </l_A1.201>
+            </l_A1.2>
+            <l_A1.3 S_A1.300="identifier les contraintes">
+              <l_A1.301>
+                <l_A1.30100 I_A1.3010002="0" S_A1.3010000="">
+                  <l_A1.3010001 I_A1.301000100="0" I_A1.301000101="0" I_A1.301000102="0" />
+                </l_A1.30100>
+              </l_A1.301>
+            </l_A1.3>
+          </d_A101>
         </l_A1>
         <l_A3 S_A300="Caract&#233;riser des &#233;carts">
-          <d_A301 S_A3.1="comparer les r&#233;sultats exp&#233;rimentaux avec les r&#233;sultats simul&#233;s et interpr&#233;ter les &#233;carts" S_A3.2="comparer les r&#233;sultats exp&#233;rimentaux avec les crit&#232;res du cahier des charges et interpr&#233;ter les &#233;carts" S_A3.3="comparer les r&#233;sultats simul&#233;s avec les crit&#232;res du cahier des charges et interpr&#233;ter les &#233;carts" />
+          <d_A301>
+            <l_A3.2 S_A3.200="comparer les r&#233;sultats exp&#233;rimentaux avec les crit&#232;res du cahier des charges et interpr&#233;ter les &#233;carts">
+              <l_A3.201>
+                <l_A3.20100 I_A3.2010002="0" S_A3.2010000="Les &#233;carts constat&#233;s sont expliqu&#233;s">
+                  <l_A3.2010001 F_A3.201000102="20.0" I_A3.201000100="0" I_A3.201000101="0" />
+                </l_A3.20100>
+              </l_A3.201>
+            </l_A3.2>
+            <l_A3.3 S_A3.300="comparer les r&#233;sultats simul&#233;s avec les crit&#232;res du cahier des charges et interpr&#233;ter les &#233;carts">
+              <l_A3.301>
+                <l_A3.30100 I_A3.3010002="0" S_A3.3010000="Les &#233;carts constat&#233;s sont expliqu&#233;s">
+                  <l_A3.3010001 F_A3.301000102="20.0" I_A3.301000100="0" I_A3.301000101="0" />
+                </l_A3.30100>
+              </l_A3.301>
+            </l_A3.3>
+            <l_A3.1 S_A3.100="comparer les r&#233;sultats exp&#233;rimentaux avec les r&#233;sultats simul&#233;s et interpr&#233;ter les &#233;carts">
+              <l_A3.101>
+                <l_A3.10100 I_A3.1010002="0" S_A3.1010000="Les &#233;carts constat&#233;s sont expliqu&#233;s">
+                  <l_A3.1010001 F_A3.101000102="20.0" I_A3.101000100="0" I_A3.101000101="0" />
+                </l_A3.10100>
+              </l_A3.101>
+            </l_A3.1>
+          </d_A301>
         </l_A3>
         <l_A2 S_A200="Analyser le syst&#232;me">
-          <d_A201 S_A2.1="identifier et ordonner les fonctions techniques qui r&#233;alisent les fonctions de services et respectent les contraintes" S_A2.2="identifier les &#233;l&#233;ments transform&#233;s et les flux" S_A2.3="d&#233;crire les liaisons entre les blocs fonctionnels" S_A2.4="identifier l&#8217;organisation structurelle" S_A2.5="identifier les mat&#233;riaux des constituants et leurs propri&#233;t&#233;s en relation avec les fonctions et les contraintes" />
+          <d_A201>
+            <l_A2.3 S_A2.300="d&#233;crire les liaisons entre les blocs fonctionnels">
+              <l_A2.301>
+                <l_A2.30100 I_A2.3010002="0" S_A2.3010000="">
+                  <l_A2.3010001 I_A2.301000100="0" I_A2.301000101="0" I_A2.301000102="0" />
+                </l_A2.30100>
+              </l_A2.301>
+            </l_A2.3>
+            <l_A2.2 S_A2.200="identifier les &#233;l&#233;ments transform&#233;s et les flux">
+              <l_A2.201>
+                <l_A2.20100 I_A2.2010002="0" S_A2.2010000="">
+                  <l_A2.2010001 I_A2.201000100="0" I_A2.201000101="0" I_A2.201000102="0" />
+                </l_A2.20100>
+              </l_A2.201>
+            </l_A2.2>
+            <l_A2.1 S_A2.100="identifier et ordonner les fonctions techniques qui r&#233;alisent les fonctions de services et respectent les contraintes">
+              <l_A2.101>
+                <l_A2.10100 I_A2.1010002="0" S_A2.1010000="">
+                  <l_A2.1010001 I_A2.101000100="0" I_A2.101000101="0" I_A2.101000102="0" />
+                </l_A2.10100>
+              </l_A2.101>
+            </l_A2.1>
+            <l_A2.5 S_A2.500="identifier les mat&#233;riaux des constituants et leurs propri&#233;t&#233;s en relation avec les fonctions et les contraintes">
+              <l_A2.501>
+                <l_A2.50100 I_A2.5010002="0" S_A2.5010000="">
+                  <l_A2.5010001 I_A2.501000100="0" I_A2.501000101="0" I_A2.501000102="0" />
+                </l_A2.50100>
+              </l_A2.501>
+            </l_A2.5>
+            <l_A2.4 S_A2.400="identifier l&#8217;organisation structurelle">
+              <l_A2.401>
+                <l_A2.40100 I_A2.4010002="0" S_A2.4010000="">
+                  <l_A2.4010001 I_A2.401000100="0" I_A2.401000101="0" I_A2.401000102="0" />
+                </l_A2.40100>
+              </l_A2.401>
+            </l_A2.4>
+          </d_A201>
         </l_A2>
       </d_A01>
+      <l_A02 I_A0200="0" I_A0201="0" I_A0202="30" />
     </l_A>
     <l_C S_C00="Exp&#233;rimenter">
       <d_C01>
         <l_C2 S_C200="Mettre en oeuvre un protocole exp&#233;rimental">
-          <d_C201 S_C2.1="conduire les essais en respectant les consignes de s&#233;curit&#233; &#224; partir d&#8217;un protocole fourni" S_C2.2="traiter les donn&#233;es mesur&#233;es en vue d&#8217;analyser les &#233;carts" />
+          <d_C201>
+            <l_C2.1 S_C2.100="conduire les essais en respectant les consignes de s&#233;curit&#233; &#224; partir d&#8217;un protocole fourni">
+              <l_C2.101>
+                <l_C2.10100 I_C2.1010002="17" S_C2.1010000="Le syst&#232;me est correctement mis en &#339;uvre">
+                  <l_C2.1010001 F_C2.101000101="12.5" F_C2.101000102="0.0" I_C2.101000100="0" />
+                </l_C2.10100>
+                <l_C2.10101 I_C2.1010102="18" S_C2.1010100="Les capteurs et les appareils de mesure sont correctement mis en &#339;uvre">
+                  <l_C2.1010101 F_C2.101010101="12.5" F_C2.101010102="0.0" I_C2.101010100="0" />
+                </l_C2.10101>
+                <l_C2.10102 I_C2.1010202="19" S_C2.1010200="Le protocole d'essai est respect&#233; ">
+                  <l_C2.1010201 F_C2.101020101="12.5" F_C2.101020102="0.0" I_C2.101020100="0" />
+                </l_C2.10102>
+                <l_C2.10103 I_C2.1010302="20" S_C2.1010300="Les r&#232;gles de s&#233;curit&#233; sont connues et respect&#233;es">
+                  <l_C2.1010301 F_C2.101030101="12.5" F_C2.101030102="0.0" I_C2.101030100="0" />
+                </l_C2.10103>
+              </l_C2.101>
+            </l_C2.1>
+            <l_C2.2 S_C2.200="traiter les donn&#233;es mesur&#233;es en vue d&#8217;analyser les &#233;carts">
+              <l_C2.201>
+                <l_C2.20100 I_C2.2010002="21" S_C2.2010000="Les m&#233;thodes et outils de traitement sont coh&#233;rents avec le probl&#232;me pos&#233;">
+                  <l_C2.2010001 F_C2.201000101="12.5" F_C2.201000102="0.0" I_C2.201000100="0" />
+                </l_C2.20100>
+                <l_C2.20101 I_C2.2010102="0" S_C2.2010100="Les r&#233;sultats exp&#233;rimentaux sont trait&#233;s et pr&#233;sent&#233;s clairement">
+                  <l_C2.2010101 F_C2.201010101="0.0" F_C2.201010102="35.0" I_C2.201010100="0" />
+                </l_C2.20101>
+              </l_C2.201>
+            </l_C2.2>
+          </d_C201>
         </l_C2>
         <l_C1 S_C100="Justifier le choix d&#8217;un protocole exp&#233;rimental">
-          <d_C101 S_C1.1="identifier les grandeurs physiques &#224; mesurer" S_C1.2="d&#233;crire une cha&#238;ne d&#8217;acquisition" S_C1.3="identifier le comportement des composants" S_C1.4="justifier le choix des essais r&#233;alis&#233;s" />
+          <d_C101>
+            <l_C1.4 S_C1.400="justifier le choix des essais r&#233;alis&#233;s">
+              <l_C1.401>
+                <l_C1.40100 I_C1.4010002="0" S_C1.4010000="Un protocole exp&#233;rimental adapt&#233; est d&#233;crit">
+                  <l_C1.4010001 F_C1.401000101="0.0" F_C1.401000102="35.0" I_C1.401000100="0" />
+                </l_C1.40100>
+              </l_C1.401>
+            </l_C1.4>
+            <l_C1.2 S_C1.200="d&#233;crire une cha&#238;ne d&#8217;acquisition">
+              <l_C1.201>
+                <l_C1.20100 I_C1.2010002="15" S_C1.2010000="Les &#233;l&#233;ments de la cha&#238;ne d'acquisition sont correctement identifi&#233;s">
+                  <l_C1.2010001 F_C1.201000101="12.5" F_C1.201000102="0.0" I_C1.201000100="0" />
+                </l_C1.20100>
+                <l_C1.20101 I_C1.2010102="16" S_C1.2010100="Les choix et r&#233;glages des capteurs et appareils de mesure sont correctement explicit&#233;s">
+                  <l_C1.2010101 F_C1.201010101="12.5" F_C1.201010102="0.0" I_C1.201010100="0" />
+                </l_C1.20101>
+              </l_C1.201>
+            </l_C1.2>
+            <l_C1.3 S_C1.300="identifier le comportement des composants">
+              <l_C1.301>
+                <l_C1.30100 I_C1.3010002="0" S_C1.3010000="Le comportement est pr&#233;cis&#233;ment d&#233;crit">
+                  <l_C1.3010001 F_C1.301000101="0.0" F_C1.301000102="30.0" I_C1.301000100="0" />
+                </l_C1.30100>
+              </l_C1.301>
+            </l_C1.3>
+            <l_C1.1 S_C1.100="identifier les grandeurs physiques &#224; mesurer">
+              <l_C1.101>
+                <l_C1.10100 I_C1.1010002="14" S_C1.1010000="Les grandeurs &#224; mesurer sont bien identifi&#233;es, leur nature et caract&#233;ristiques bien d&#233;finies">
+                  <l_C1.1010001 F_C1.101000101="12.5" F_C1.101000102="0.0" I_C1.101000100="0" />
+                </l_C1.10100>
+              </l_C1.101>
+            </l_C1.1>
+          </d_C101>
         </l_C1>
       </d_C01>
+      <l_C02 I_C0200="0" I_C0201="50" I_C0202="30" />
     </l_C>
     <l_B S_B00="Mod&#233;liser">
       <d_B01>
         <l_B4 S_B400="Valider un mod&#232;le">
-          <d_B401 S_B4.1="interpr&#233;ter les r&#233;sultats obtenus" S_B4.2="pr&#233;ciser les limites de validit&#233; du mod&#232;le utilis&#233;" S_B4.3="modifier les param&#232;tres du mod&#232;le pour r&#233;pondre au cahier des charges ou aux r&#233;sultats exp&#233;rimentaux" S_B4.4="valider un mod&#232;le optimis&#233; fourni" />
+          <d_B401>
+            <l_B4.4 S_B4.400="valider un mod&#232;le optimis&#233; fourni">
+              <l_B4.401>
+                <l_B4.40100 I_B4.4010002="11" S_B4.4010000="Les r&#233;sultats obtenus, en amplitude et variation, sont conformes aux attendus du cahier des charges">
+                  <l_B4.4010001 F_B4.401000101="12.5" I_B4.401000100="0" I_B4.401000102="0" />
+                </l_B4.40100>
+                <l_B4.40101 I_B4.4010102="12" S_B4.4010100="Les r&#233;sultats obtenus, en amplitude et variation, sont conformes aux r&#233;sultats exp&#233;rimentaux">
+                  <l_B4.4010101 F_B4.401010101="12.5" I_B4.401010100="0" I_B4.401010102="0" />
+                </l_B4.40101>
+              </l_B4.401>
+            </l_B4.4>
+            <l_B4.1 S_B4.100="interpr&#233;ter les r&#233;sultats obtenus">
+              <l_B4.101>
+                <l_B4.10100 I_B4.1010002="7" S_B4.1010000="Les r&#233;sultats obtenus sont bien interpr&#233;t&#233;s, en amplitude et variation, de fa&#231;on conforme aux lois et principes d'&#233;volution des grandeurs physiques">
+                  <l_B4.1010001 F_B4.101000101="12.5" I_B4.101000100="0" I_B4.101000102="0" />
+                </l_B4.10100>
+              </l_B4.101>
+            </l_B4.1>
+            <l_B4.2 S_B4.200="pr&#233;ciser les limites de validit&#233; du mod&#232;le utilis&#233;">
+              <l_B4.201>
+                <l_B4.20100 I_B4.2010002="8" S_B4.2010000="Les principales limites sont explicit&#233;es">
+                  <l_B4.2010001 F_B4.201000101="12.5" I_B4.201000100="0" I_B4.201000102="0" />
+                </l_B4.20100>
+              </l_B4.201>
+            </l_B4.2>
+            <l_B4.3 S_B4.300="modifier les param&#232;tres du mod&#232;le pour r&#233;pondre au cahier des charges ou aux r&#233;sultats exp&#233;rimentaux">
+              <l_B4.301>
+                <l_B4.30100 I_B4.3010002="9" S_B4.3010000="Les param&#232;tres modifi&#233;s sont pertinents et font &#233;voluer  les r&#233;sultats simul&#233;s vers ceux attendus au cahier des charges">
+                  <l_B4.3010001 F_B4.301000101="12.5" I_B4.301000100="0" I_B4.301000102="0" />
+                </l_B4.30100>
+                <l_B4.30101 I_B4.3010102="10" S_B4.3010100="Les param&#232;tres modifi&#233;s sont pertinents et font &#233;voluer les r&#233;sultats simul&#233;s vers les r&#233;sultats exp&#233;rimentaux">
+                  <l_B4.3010101 F_B4.301010101="12.5" I_B4.301010100="0" I_B4.301010102="0" />
+                </l_B4.30101>
+              </l_B4.301>
+            </l_B4.3>
+          </d_B401>
         </l_B4>
         <l_B1 S_B100="Identifier et caract&#233;riser les grandeurs agissant sur un syst&#232;me">
-          <d_B101 S_B1.1="d&#233;finir, justifier la fronti&#232;re de tout ou partie d&#8217;un syst&#232;me et r&#233;pertorier les interactions" S_B1.2="choisir les grandeurs et les param&#232;tres influents en vue de les mod&#233;liser" />
+          <d_B101>
+            <l_B1.1 S_B1.100="d&#233;finir, justifier la fronti&#232;re de tout ou partie d&#8217;un syst&#232;me et r&#233;pertorier les interactions">
+              <l_B1.101>
+                <l_B1.10100 I_B1.1010002="0" S_B1.1010000="">
+                  <l_B1.1010001 I_B1.101000100="0" I_B1.101000101="0" I_B1.101000102="0" />
+                </l_B1.10100>
+              </l_B1.101>
+            </l_B1.1>
+            <l_B1.2 S_B1.200="choisir les grandeurs et les param&#232;tres influents en vue de les mod&#233;liser">
+              <l_B1.201>
+                <l_B1.20100 I_B1.2010002="0" S_B1.2010000="">
+                  <l_B1.2010001 I_B1.201000100="0" I_B1.201000101="0" I_B1.201000102="0" />
+                </l_B1.20100>
+              </l_B1.201>
+            </l_B1.2>
+          </d_B101>
         </l_B1>
         <l_B2 S_B200="Proposer ou justifier un mod&#232;le">
-          <d_B201 S_B2.1="associer un mod&#232;le &#224; un syst&#232;me ou &#224; son comportement" S_B2.2="pr&#233;ciser ou justifier les limites de validit&#233; du mod&#232;le envisag&#233;" />
+          <d_B201>
+            <l_B2.2 S_B2.200="pr&#233;ciser ou justifier les limites de validit&#233; du mod&#232;le envisag&#233;">
+              <l_B2.201>
+                <l_B2.20100 I_B2.2010002="0" S_B2.2010000="">
+                  <l_B2.2010001 I_B2.201000100="0" I_B2.201000101="0" I_B2.201000102="0" />
+                </l_B2.20100>
+              </l_B2.201>
+            </l_B2.2>
+            <l_B2.1 S_B2.100="associer un mod&#232;le &#224; un syst&#232;me ou &#224; son comportement">
+              <l_B2.101>
+                <l_B2.10100 I_B2.1010002="0" S_B2.1010000="">
+                  <l_B2.1010001 I_B2.101000100="0" I_B2.101000101="0" I_B2.101000102="0" />
+                </l_B2.10100>
+              </l_B2.101>
+            </l_B2.1>
+          </d_B201>
         </l_B2>
         <l_B3 S_B300="R&#233;soudre et simuler">
-          <d_B301 S_B3.1="choisir et mettre en oeuvre une m&#233;thode de r&#233;solution" S_B3.2="simuler le fonctionnement de tout ou partie d&#8217;un syst&#232;me &#224; l&#8217;aide d&#8217;un mod&#232;le fourni" />
+          <d_B301>
+            <l_B3.2 S_B3.200="simuler le fonctionnement de tout ou partie d&#8217;un syst&#232;me &#224; l&#8217;aide d&#8217;un mod&#232;le fourni">
+              <l_B3.201>
+                <l_B3.20100 I_B3.2010002="5" S_B3.2010000="Les param&#232;tres de simulation sont adapt&#233;s aux grandeurs simul&#233;es">
+                  <l_B3.2010001 F_B3.201000101="12.5" I_B3.201000100="0" I_B3.201000102="0" />
+                </l_B3.20100>
+                <l_B3.20101 I_B3.2010102="6" S_B3.2010100="Les plages de simulation retenues sont correctement d&#233;finies">
+                  <l_B3.2010101 F_B3.201010101="12.5" I_B3.201010100="0" I_B3.201010102="0" />
+                </l_B3.20101>
+              </l_B3.201>
+            </l_B3.2>
+            <l_B3.1 S_B3.100="choisir et mettre en oeuvre une m&#233;thode de r&#233;solution">
+              <l_B3.101>
+                <l_B3.10100 I_B3.1010002="0" S_B3.1010000="">
+                  <l_B3.1010001 I_B3.101000100="0" I_B3.101000101="0" I_B3.101000102="0" />
+                </l_B3.10100>
+              </l_B3.101>
+            </l_B3.1>
+          </d_B301>
         </l_B3>
       </d_B01>
+      <l_B02 I_B0200="0" I_B0201="40" I_B0202="0" />
     </l_B>
     <l_D S_D00="Communiquer">
       <d_D01>
         <l_D2 S_D200="Mettre en oeuvre une communication">
-          <d_D201 S_D2.1="choisir un support de communication et un m&#233;dia adapt&#233;, argumenter" S_D2.2="produire un support de communication" S_D2.3="adapter sa strat&#233;gie de communication au contexte" />
+          <d_D201>
+            <l_D2.1 S_D2.100="choisir un support de communication et un m&#233;dia adapt&#233;, argumenter">
+              <l_D2.101>
+                <l_D2.10100 I_D2.1010002="0" S_D2.1010000="Le support est bien choisi et adapt&#233; &#224; l'objectif de pr&#233;sentation">
+                  <l_D2.1010001 F_D2.101000101="0.0" F_D2.101000102="20.0" I_D2.101000100="0" />
+                </l_D2.10100>
+              </l_D2.101>
+            </l_D2.1>
+            <l_D2.2 S_D2.200="produire un support de communication">
+              <l_D2.201>
+                <l_D2.20100 I_D2.2010002="0" S_D2.2010000="Un document multim&#233;dia est bien r&#233;alis&#233; et sc&#233;naris&#233;">
+                  <l_D2.2010001 F_D2.201000101="0.0" F_D2.201000102="30.0" I_D2.201000100="0" />
+                </l_D2.20100>
+              </l_D2.201>
+            </l_D2.2>
+            <l_D2.3 S_D2.300="adapter sa strat&#233;gie de communication au contexte">
+              <l_D2.301>
+                <l_D2.30100 I_D2.3010002="0" S_D2.3010000="La production respecte le cahier des charges (&#233;crit/oral, texte/vid&#233;o, dur&#233;e, public vis&#233;, &#8230;)">
+                  <l_D2.3010001 F_D2.301000101="0.0" F_D2.301000102="30.0" I_D2.301000100="0" />
+                </l_D2.30100>
+              </l_D2.301>
+            </l_D2.3>
+          </d_D201>
         </l_D2>
         <l_D1 S_D100="Rechercher et traiter des informations">
-          <d_D101 S_D1.1="rechercher des informations" S_D1.2="analyser, choisir et classer des informations" />
+          <d_D101>
+            <l_D1.2 S_D1.200="analyser, choisir et classer des informations">
+              <l_D1.201>
+                <l_D1.20100 I_D1.2010002="25" S_D1.2010000="Les informations sont trait&#233;es selon des crit&#232;res pertinents">
+                  <l_D1.2010001 F_D1.201000101="25.0" F_D1.201000102="0.0" I_D1.201000100="0" />
+                </l_D1.20100>
+                <l_D1.20101 I_D1.2010102="26" S_D1.2010100="Les informations sont v&#233;rifi&#233;es et mises &#224; jour">
+                  <l_D1.2010101 F_D1.201010101="25.0" F_D1.201010102="0.0" I_D1.201010100="0" />
+                </l_D1.20101>
+                <l_D1.20102 I_D1.2010202="0" S_D1.2010200="Les informations pr&#233;sent&#233;es sont bien choisies">
+                  <l_D1.2010201 F_D1.201020101="0.0" F_D1.201020102="20.0" I_D1.201020100="0" />
+                </l_D1.20102>
+              </l_D1.201>
+            </l_D1.2>
+            <l_D1.1 S_D1.100="rechercher des informations">
+              <l_D1.101>
+                <l_D1.10100 I_D1.1010002="23" S_D1.1010000="Les outils de recherche documentaire sont bien choisis et ma&#238;tris&#233;s. ">
+                  <l_D1.1010001 F_D1.101000101="25.0" F_D1.101000102="0.0" I_D1.101000100="0" />
+                </l_D1.10100>
+                <l_D1.10101 I_D1.1010102="24" S_D1.1010100="Une synth&#232;se des informations collect&#233;es est correctement r&#233;alis&#233;e">
+                  <l_D1.1010101 F_D1.101010101="25.0" F_D1.101010102="0.0" I_D1.101010100="0" />
+                </l_D1.10101>
+              </l_D1.101>
+            </l_D1.1>
+          </d_D101>
         </l_D1>
       </d_D01>
+      <l_D02 I_D0200="0" I_D0201="10" I_D0202="40" />
     </l_D>
   </d_dicCompetences>
-  <d_dicCompetences_prj>
-    <l_C S_C00="Exp&#233;rimenter">
-      <d_C01>
-        <l_C2 S_C200="Mettre en oeuvre un protocole exp&#233;rimental">
-          <d_C201 S_C2.1="conduire les essais en respectant les consignes de s&#233;curit&#233; &#224; partir d&#8217;un protocole fourni" S_C2.2="traiter les donn&#233;es mesur&#233;es en vue d&#8217;analyser les &#233;carts" />
-        </l_C2>
-        <l_C1 S_C100="Justifier le choix d&#8217;un protocole exp&#233;rimental">
-          <d_C101 S_C1.1="identifier les grandeurs physiques &#224; mesurer" S_C1.2="d&#233;crire une cha&#238;ne d&#8217;acquisition" S_C1.3="identifier le comportement des composants" S_C1.4="justifier le choix des essais r&#233;alis&#233;s" />
-        </l_C1>
-      </d_C01>
-    </l_C>
-    <l_B S_B00="Mod&#233;liser">
-      <d_B01>
-        <l_B4 S_B400="Valider un mod&#232;le">
-          <d_B401 S_B4.1="interpr&#233;ter les r&#233;sultats obtenus" S_B4.2="pr&#233;ciser les limites de validit&#233; du mod&#232;le utilis&#233;" S_B4.3="modifier les param&#232;tres du mod&#232;le pour r&#233;pondre au cahier des charges ou aux r&#233;sultats exp&#233;rimentaux" S_B4.4="valider un mod&#232;le optimis&#233; fourni" />
-        </l_B4>
-        <l_B3 S_B300="R&#233;soudre et simuler">
-          <d_B301 S_B3.2="simuler le fonctionnement de tout ou partie d&#8217;un syst&#232;me &#224; l&#8217;aide d&#8217;un mod&#232;le fourni" />
-        </l_B3>
-      </d_B01>
-    </l_B>
-    <l_D S_D00="Communiquer">
-      <d_D01>
-        <l_D2 S_D200="Mettre en oeuvre une communication">
-          <d_D201 S_D2.1="choisir un support de communication et un m&#233;dia adapt&#233;, argumenter" S_D2.2="produire un support de communication" S_D2.3="adapter sa strat&#233;gie de communication au contexte" />
-        </l_D2>
-        <l_D1 S_D100="Rechercher et traiter des informations">
-          <d_D101 S_D1.1="rechercher des informations" S_D1.2="analyser, choisir et classer des informations" />
-        </l_D1>
-      </d_D01>
-    </l_D>
-  </d_dicCompetences_prj>
-  <d_dicIndicateurs_prj>
-    <l_B4>
-      <l_B400 B_B40001="False" S_B40000="Les r&#233;sultats sont correctement interpr&#233;t&#233;s" />
-      <l_B401 B_B40101="False" S_B40100="Ces limites sont explicit&#233;es" />
-      <l_B402 B_B40201="False" S_B40200="Les param&#232;tres modifi&#233;s sont pertinents" />
-      <l_B403 B_B40301="False" S_B40300="Le mod&#232;le modifi&#233; r&#233;pond aux attentes " />
-    </l_B4>
-    <l_B3>
-      <l_B300 B_B30001="True" S_B30000="Les param&#232;tres influents sont identifi&#233;s" />
-      <l_B301 B_B30101="True" S_B30100="Les limites de simulation sont correctement d&#233;finies" />
-    </l_B3>
-    <l_C2>
-      <l_C200 B_C20001="True" S_C20000="Les capteurs et appareils de mesure sont correctement mis en &#339;uvre" />
-      <l_C201 B_C20101="True" S_C20100="Le syst&#232;me &#233;tudi&#233; est correctement mis en &#339;uvre" />
-      <l_C202 B_C20201="True" S_C20200="Les r&#232;gles de s&#233;curit&#233; sont connues et respect&#233;es" />
-      <l_C203 B_C20301="True" S_C20300="Le protocole d'essai est respect&#233;" />
-      <l_C204 B_C20401="True" S_C20400="Les r&#233;sultats sont pr&#233;sent&#233;s clairement" />
-      <l_C205 B_C20501="False" S_C20500="Les r&#233;sultats sont correctement analys&#233;s" />
-      <l_C206 B_C20601="True" S_C20600="Les m&#233;thodes et outils de traitement sont coh&#233;rents avec le probl&#232;me pos&#233;" />
-    </l_C2>
-    <l_C1>
-      <l_C100 B_C10001="True" S_C10000="Les grandeurs sp&#233;cifiques (d'entr&#233;e, sortie, mati&#232;re d'&#339;uvre&#8230;) sont correctement identifi&#233;es" />
-      <l_C101 B_C10101="True" S_C10100="Les &#233;l&#233;ments de la cha&#238;ne sont correctement identifi&#233;s " />
-      <l_C102 B_C10201="True" S_C10200="Les choix et r&#233;glages des capteurs et appareils de mesure sont correctement explicit&#233;s" />
-      <l_C103 B_C10301="False" S_C10300="Le comportement est pr&#233;cis&#233;ment d&#233;crit" />
-      <l_C104 B_C10401="True" S_C10400="Un protocole exp&#233;rimental adapt&#233; de recueil de r&#233;sultats est con&#231;u ou compl&#233;t&#233;, valid&#233; et mis en &#339;uvre" />
-    </l_C1>
-    <l_D2>
-      <l_D200 B_D20001="False" S_D20000="Les outils de communication sont ma&#238;tris&#233;s" />
-      <l_D201 B_D20101="False" S_D20100="Le support utilis&#233; est adapt&#233;" />
-      <l_D202 B_D20201="False" S_D20200="La production finale permet la compr&#233;hension du probl&#232;me et de sa r&#233;solution" />
-      <l_D203 B_D20301="False" S_D20300="La production respecte le cahier des charges (&#233;crit/oral, texte/vid&#233;o, dur&#233;e, public vis&#233;, &#8230;)" />
-    </l_D2>
-    <l_D1>
-      <l_D100 B_D10001="False" S_D10000="Les outils de recherche documentaire sont bien choisis" />
-      <l_D101 B_D10101="False" S_D10100="Les techniques de recherche documentaire sont ma&#238;tris&#233;es" />
-      <l_D102 B_D10201="False" S_D10200="Les informations conserv&#233;es sont opportunes" />
-      <l_D103 B_D10301="False" S_D10300="Le classement des donn&#233;es permet de les retrouver rapidement" />
-    </l_D1>
-  </d_dicIndicateurs_prj>
-  <d_dicPoidsIndicateurs_prj>
-    <l_C F_C00="40.0">
-      <d_C01>
-        <l_C2 F_C200="8.0" F_C201="8.0" F_C202="8.0" F_C203="10.0" F_C204="9.0" F_C205="10.0" F_C206="9.0" />
-        <l_C1 F_C100="8.0" F_C101="8.0" F_C102="7.0" F_C103="5.0" F_C104="10.0" />
-      </d_C01>
-    </l_C>
-    <l_B F_B00="40.0">
-      <d_B01>
-        <l_B4 F_B400="15.0" F_B401="15.0" F_B402="15.0" F_B403="15.0" />
-        <l_B3 F_B300="20.0" F_B301="20.0" />
-      </d_B01>
-    </l_B>
-    <l_D F_D00="20.0">
-      <d_D01>
-        <l_D2 F_D200="20.0" F_D201="10.0" F_D202="20.0" F_D203="20.0" />
-        <l_D1 F_D100="10.0" F_D101="5.0" F_D102="5.0" F_D103="10.0" />
-      </d_D01>
-    </l_D>
-  </d_dicPoidsIndicateurs_prj>
   <d_dicSavoirs>
     <l_B4 S_B400="Valider un mod&#232;le">
       <d_B401>
@@ -694,7 +905,9 @@
     <l_SA S_SA00="C" S_SA01="G" />
     <l_TD S_TD00="C" S_TD01="G" S_TD02="D" S_TD03="E" S_TD04="P" />
   </d_effectifsSeance>
-  <d_grilles_prj S_S="Grille_evaluation_SSI_projet.xls" />
+  <d_grilles_prj>
+    <l_S S_S00="Grille-projet-S-SI_V2015_CF.xlsx" S_S01="I" />
+  </d_grilles_prj>
   <l_listPhasesEval_prj S_listPhasesEval_prj00="Rev" S_listPhasesEval_prj01="R1" S_listPhasesEval_prj02="R2" S_listPhasesEval_prj03="R3" S_listPhasesEval_prj04="S" />
   <l_listPhases_prj S_listPhases_prj00="Ana" S_listPhases_prj01="Rea" S_listPhases_prj02="XXX" S_listPhases_prj03="Rev" S_listPhases_prj04="R1" S_listPhases_prj05="R2" S_listPhases_prj06="R3" S_listPhases_prj07="S" />
   <l_listeDemarches />

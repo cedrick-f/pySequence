@@ -1,0 +1,535 @@
+<Referentiel B_CI_BO="False" B_CI_cible="False" B_projet="False" I_duree_prj="0" S_Code="CLG5" S_Famille="CLG" S_nomCompetences="Comp&#233;tences" S_nomSavoirs="Connaissances">
+  <l_CentresInterets S_CentresInterets00="Comment sont construits les b&#226;timents et ouvrages autour du coll&#232;ge ?" S_CentresInterets01="Quelles sont les particularit&#233;s des ouvrages de notre environnement ?" S_CentresInterets02="Pourquoi un ouvrage ne s&apos;effondre t-il pas ?" S_CentresInterets03="Coment franchir un obstacle par une voie de passage ou de circulation ? Comment reproduire la structure d&apos;un ouvrage ?" S_CentresInterets04="Comment une unit&#233; d'habitation est-elle structur&#233;e ?" S_CentresInterets05="Comment agencer un espace ?" />
+  <l_Enseignement S_Enseignement00="Techno 5e" S_Enseignement01="5e Technologie coll&#232;ge" S_Enseignement02="Techno Coll&#232;ge" />
+  <d_activites>
+    <l_ED S_ED00="Etude de dossier" S_ED01="Activit&#233; d'&#233;tude de dossier" />
+    <l_P S_P00="Projet" S_P01="Activit&#233; de projet" />
+    <l_AP S_AP00="Activit&#233; pratique" S_AP01="Activit&#233; pratique" />
+  </d_activites>
+  <d_cellulesInfo_prj />
+  <d_demarcheSeance>
+    <l_ED S_ED00="I" S_ED01="R" />
+    <l_P S_P00="I" S_P01="R" S_P02="P" />
+    <l_AP S_AP00="I" S_AP01="R" />
+  </d_demarcheSeance>
+  <d_demarches>
+    <l_I S_I00="Investigation" S_I01="Investigation" />
+    <l_P S_P00="Projet" S_P01="Projet" />
+    <l_R S_R00="R&#233;s. Probl&#232;me" S_R01="R&#233;solution de probl&#232;me" />
+  </d_demarches>
+  <d_dicCompetences>
+    <l_1FOT S_1FOT00="Fonctionnement de l&apos;objet technique">
+      <d_1FOT01>
+        <l_FOT11 S_FOT1100="R&#233;aliser la maquette num&#233;rique d&#8217;un volume &#233;l&#233;mentaire.">
+          <l_FOT1101>
+            <l_FOT110100 I_FOT11010002="0" S_FOT11010000="">
+              <l_FOT11010001 I_FOT1101000100="0" I_FOT1101000101="0" I_FOT1101000102="0" />
+            </l_FOT110100>
+          </l_FOT1101>
+        </l_FOT11>
+        <l_FOT12 S_FOT1200="Modifier une repr&#233;sentation num&#233;rique d&#8217;un volume simple avec un logiciel de conception assist&#233;e par ordinateur.">
+          <l_FOT1201>
+            <l_FOT120100 I_FOT12010002="0" S_FOT12010000="">
+              <l_FOT12010001 I_FOT1201000100="0" I_FOT1201000101="0" I_FOT1201000102="0" />
+            </l_FOT120100>
+          </l_FOT1201>
+        </l_FOT12>
+        <l_FOT9 S_FOT900="Traduire sous forme de croquis l&#8217;organisation structurelle d&#8217;un objet technique.">
+          <l_FOT901>
+            <l_FOT90100 I_FOT9010002="0" S_FOT9010000="">
+              <l_FOT9010001 I_FOT901000100="0" I_FOT901000101="0" I_FOT901000102="0" />
+            </l_FOT90100>
+          </l_FOT901>
+        </l_FOT9>
+        <l_FOT8 S_FOT800="Identifier, de mani&#232;re qualitative, l&#8217;influence d&#8217;un contexte social et &#233;conomique sur la conception et la commercialisation d&#8217;un objet technique simple.">
+          <l_FOT801>
+            <l_FOT80100 I_FOT8010002="0" S_FOT8010000="">
+              <l_FOT8010001 I_FOT801000100="0" I_FOT801000101="0" I_FOT801000102="0" />
+            </l_FOT80100>
+          </l_FOT801>
+        </l_FOT8>
+        <l_FOT13 S_FOT1300="Associer une repr&#233;sentation 3D &#224; une repr&#233;sentation 2D.">
+          <l_FOT1301>
+            <l_FOT130100 I_FOT13010002="0" S_FOT13010000="">
+              <l_FOT13010001 I_FOT1301000100="0" I_FOT1301000101="0" I_FOT1301000102="0" />
+            </l_FOT130100>
+          </l_FOT1301>
+        </l_FOT13>
+        <l_FOT14 S_FOT1400="Extraire d&#8217;une fiche produit les caract&#233;ristiques techniques.">
+          <l_FOT1401>
+            <l_FOT140100 I_FOT14010002="0" S_FOT14010000="">
+              <l_FOT14010001 I_FOT1401000100="0" I_FOT1401000101="0" I_FOT1401000102="0" />
+            </l_FOT140100>
+          </l_FOT1401>
+        </l_FOT14>
+        <l_FOT5 S_FOT500="R&#233;aliser cette modification &#224; l&#8217;aide d&#8217;un logiciel.">
+          <l_FOT501>
+            <l_FOT50100 I_FOT5010002="0" S_FOT5010000="">
+              <l_FOT5010001 I_FOT501000100="0" I_FOT501000101="0" I_FOT501000102="0" />
+            </l_FOT50100>
+          </l_FOT501>
+        </l_FOT5>
+        <l_FOT4 S_FOT400="Modifier tout ou partie d&#8217;une structure ou d&#8217;un assemblage pour satisfaire une fonction de service donn&#233;e.">
+          <l_FOT401>
+            <l_FOT40100 I_FOT4010002="0" S_FOT4010000="">
+              <l_FOT4010001 I_FOT401000100="0" I_FOT401000101="0" I_FOT401000102="0" />
+            </l_FOT40100>
+          </l_FOT401>
+        </l_FOT4>
+        <l_FOT7 S_FOT700="Relier les choix esth&#233;tiques au style artistique en vigueur au moment de la cr&#233;ation.">
+          <l_FOT701>
+            <l_FOT70100 I_FOT7010002="0" S_FOT7010000="">
+              <l_FOT7010001 I_FOT701000100="0" I_FOT701000101="0" I_FOT701000102="0" />
+            </l_FOT70100>
+          </l_FOT701>
+        </l_FOT7>
+        <l_FOT6 S_FOT600="Mettre en relation les contraintes &#224; respecter et les solutions techniques retenues.">
+          <l_FOT601>
+            <l_FOT60100 I_FOT6010002="0" S_FOT6010000="">
+              <l_FOT6010001 I_FOT601000100="0" I_FOT601000101="0" I_FOT601000102="0" />
+            </l_FOT60100>
+          </l_FOT601>
+        </l_FOT6>
+        <l_FOT1 S_FOT100="Identifier des fonctions assur&#233;es par un objet technique">
+          <l_FOT101>
+            <l_FOT10100 I_FOT1010002="0" S_FOT1010000="">
+              <l_FOT1010001 I_FOT101000100="0" I_FOT101000101="0" I_FOT101000102="0" />
+            </l_FOT10100>
+          </l_FOT101>
+        </l_FOT1>
+        <l_FOT10 S_FOT1000="Traduire sous forme de sch&#233;ma les fonctions assur&#233;es par un objet technique.">
+          <l_FOT1001>
+            <l_FOT100100 I_FOT10010002="0" S_FOT10010000="">
+              <l_FOT10010001 I_FOT1001000100="0" I_FOT1001000101="0" I_FOT1001000102="0" />
+            </l_FOT100100>
+          </l_FOT1001>
+        </l_FOT10>
+        <l_FOT3 S_FOT300="Comparer, sur diff&#233;rents objets techniques, les solutions techniques retenues pour r&#233;pondre &#224; une m&#234;me fonction de service.">
+          <l_FOT301>
+            <l_FOT30100 I_FOT3010002="0" S_FOT3010000="">
+              <l_FOT3010001 I_FOT301000100="0" I_FOT301000101="0" I_FOT301000102="0" />
+            </l_FOT30100>
+          </l_FOT301>
+        </l_FOT3>
+        <l_FOT2 S_FOT200="Identifier la solution technique retenue pour r&#233;aliser une fonction de service.">
+          <l_FOT201>
+            <l_FOT20100 I_FOT2010002="0" S_FOT2010000="">
+              <l_FOT2010001 I_FOT201000100="0" I_FOT201000101="0" I_FOT201000102="0" />
+            </l_FOT20100>
+          </l_FOT201>
+        </l_FOT2>
+      </d_1FOT01>
+      <l_1FOT02 I_1FOT0200="0" I_1FOT0201="0" I_1FOT0202="0" />
+    </l_1FOT>
+    <l_2MAT S_2MAT00="Mati&#232;re">
+      <d_2MAT01>
+        <l_MAT6 S_MAT600="Identifier l&#8217;impact d&#8217;une transformation et d&#8217;un recyclage en terme de d&#233;veloppement durable.">
+          <l_MAT601>
+            <l_MAT60100 I_MAT6010002="0" S_MAT6010000="">
+              <l_MAT6010001 I_MAT601000100="0" I_MAT601000101="0" I_MAT601000102="0" />
+            </l_MAT60100>
+          </l_MAT601>
+        </l_MAT6>
+        <l_MAT4 S_MAT400="Identifier l&#8217;origine des mati&#232;res premi&#232;res et leur disponibilit&#233;.">
+          <l_MAT401>
+            <l_MAT40100 I_MAT4010002="0" S_MAT4010000="">
+              <l_MAT4010001 I_MAT401000100="0" I_MAT401000101="0" I_MAT401000102="0" />
+            </l_MAT40100>
+          </l_MAT401>
+        </l_MAT4>
+        <l_MAT5 S_MAT500="Associer le mat&#233;riau de l&#8217;objet technique &#224; la (ou aux) mati&#232;re(s) premi&#232;re(s).">
+          <l_MAT501>
+            <l_MAT50100 I_MAT5010002="0" S_MAT5010000="">
+              <l_MAT5010001 I_MAT501000100="0" I_MAT501000101="0" I_MAT501000102="0" />
+            </l_MAT50100>
+          </l_MAT501>
+        </l_MAT5>
+        <l_MAT2 S_MAT200="Classer de mani&#232;re qualitative plusieurs mat&#233;riaux selon une propri&#233;t&#233; simple &#224; respecter.">
+          <l_MAT201>
+            <l_MAT20100 I_MAT2010002="0" S_MAT2010000="">
+              <l_MAT2010001 I_MAT201000100="0" I_MAT201000101="0" I_MAT201000102="0" />
+            </l_MAT20100>
+          </l_MAT201>
+        </l_MAT2>
+        <l_MAT3 S_MAT300="Mettre en relation, dans une structure, une ou des propri&#233;t&#233;s avec les formes, les mat&#233;riaux et les efforts mis en jeu.">
+          <l_MAT301>
+            <l_MAT30100 I_MAT3010002="0" S_MAT3010000="">
+              <l_MAT3010001 I_MAT301000100="0" I_MAT301000101="0" I_MAT301000102="0" />
+            </l_MAT30100>
+          </l_MAT301>
+        </l_MAT3>
+        <l_MAT1 S_MAT100="Mettre en place et interpr&#233;ter un essai pour d&#233;finir, de fa&#231;on qualitative, une propri&#233;t&#233; donn&#233;e.">
+          <l_MAT101>
+            <l_MAT10100 I_MAT1010002="0" S_MAT1010000="">
+              <l_MAT1010001 I_MAT101000100="0" I_MAT101000101="0" I_MAT101000102="0" />
+            </l_MAT10100>
+          </l_MAT101>
+        </l_MAT1>
+      </d_2MAT01>
+      <l_2MAT02 I_2MAT0200="0" I_2MAT0201="0" I_2MAT0202="0" />
+    </l_2MAT>
+    <l_6ROT S_6ROT00="Processus de r&#233;alisation">
+      <d_6ROT01>
+        <l_ROT9 S_ROT900="Justifier des ant&#233;riorit&#233;s des op&#233;rations de fabrication ou d&#8217;assemblage.">
+          <l_ROT901>
+            <l_ROT90100 I_ROT9010002="0" S_ROT9010000="">
+              <l_ROT9010001 I_ROT901000100="0" I_ROT901000101="0" I_ROT901000102="0" />
+            </l_ROT90100>
+          </l_ROT901>
+        </l_ROT9>
+        <l_ROT8 S_ROT800="Situer son action sur un planning de r&#233;alisation d&#8217;un objet technique.">
+          <l_ROT801>
+            <l_ROT80100 I_ROT8010002="0" S_ROT8010000="">
+              <l_ROT8010001 I_ROT801000100="0" I_ROT801000101="0" I_ROT801000102="0" />
+            </l_ROT80100>
+          </l_ROT801>
+        </l_ROT8>
+        <l_ROT1 S_ROT100="Associer les formes, l&#8217;aspect et la structure d&#8217;un composant &#224; un proc&#233;d&#233; de r&#233;alisation.">
+          <l_ROT101>
+            <l_ROT10100 I_ROT1010002="0" S_ROT1010000="">
+              <l_ROT1010001 I_ROT101000100="0" I_ROT101000101="0" I_ROT101000102="0" />
+            </l_ROT10100>
+          </l_ROT101>
+        </l_ROT1>
+        <l_ROT3 S_ROT300="Proposer un contr&#244;le pour la r&#233;alisation future (pi&#232;ces, assemblage, produit fini).">
+          <l_ROT301>
+            <l_ROT30100 I_ROT3010002="0" S_ROT3010000="">
+              <l_ROT3010001 I_ROT301000100="0" I_ROT301000101="0" I_ROT301000102="0" />
+            </l_ROT30100>
+          </l_ROT301>
+        </l_ROT3>
+        <l_ROT2 S_ROT200="&#201;noncer les contraintes de s&#233;curit&#233; li&#233;es &#224; la mise en oeuvre d&#8217;un proc&#233;d&#233; de r&#233;alisation.">
+          <l_ROT201>
+            <l_ROT20100 I_ROT2010002="0" S_ROT2010000="">
+              <l_ROT2010001 I_ROT201000100="0" I_ROT201000101="0" I_ROT201000102="0" />
+            </l_ROT20100>
+          </l_ROT201>
+        </l_ROT2>
+        <l_ROT5 S_ROT500="Participer &#224; la r&#233;alisation de la maquette d&#8217;un objet technique.">
+          <l_ROT501>
+            <l_ROT50100 I_ROT5010002="0" S_ROT5010000="">
+              <l_ROT5010001 I_ROT501000100="0" I_ROT501000101="0" I_ROT501000102="0" />
+            </l_ROT50100>
+          </l_ROT501>
+        </l_ROT5>
+        <l_ROT4 S_ROT400="Distinguer l&#8217;usage d&#8217;une maquette et d&#8217;un prototype dans le d&#233;veloppement d&#8217;un objet technique.">
+          <l_ROT401>
+            <l_ROT40100 I_ROT4010002="0" S_ROT4010000="">
+              <l_ROT4010001 I_ROT401000100="0" I_ROT401000101="0" I_ROT401000102="0" />
+            </l_ROT40100>
+          </l_ROT401>
+        </l_ROT4>
+        <l_ROT7 S_ROT700="Relever des dimensions sur l&#8217;objet technique r&#233;el et les adapter &#224; la r&#233;alisation d&#8217;une maquette ou d&#8217;un plan.">
+          <l_ROT701>
+            <l_ROT70100 I_ROT7010002="0" S_ROT7010000="">
+              <l_ROT7010001 I_ROT701000100="0" I_ROT701000101="0" I_ROT701000102="0" />
+            </l_ROT70100>
+          </l_ROT701>
+        </l_ROT7>
+        <l_ROT6 S_ROT600="Transf&#233;rer les donn&#233;es d&#8217;un plan sur une maquette ou dans la r&#233;alit&#233;.">
+          <l_ROT601>
+            <l_ROT60100 I_ROT6010002="0" S_ROT6010000="">
+              <l_ROT6010001 I_ROT601000100="0" I_ROT601000101="0" I_ROT601000102="0" />
+            </l_ROT60100>
+          </l_ROT601>
+        </l_ROT6>
+      </d_6ROT01>
+      <l_6ROT02 I_6ROT0200="0" I_6ROT0201="0" I_6ROT0202="0" />
+    </l_6ROT>
+    <l_5CGI S_5CGI00="Communication et r&#233;seau informatique">
+      <d_5CGI01>
+        <l_CGI5 S_CGI500="Rechercher, recenser, s&#233;lectionner et organiser des informations pour les utiliser.">
+          <l_CGI501>
+            <l_CGI50100 I_CGI5010002="0" S_CGI5010000="">
+              <l_CGI5010001 I_CGI501000100="0" I_CGI501000101="0" I_CGI501000102="0" />
+            </l_CGI50100>
+          </l_CGI501>
+        </l_CGI5>
+        <l_CGI4 S_CGI400="Organiser des informations pour les utiliser. Produire, composer et diffuser des documents.">
+          <l_CGI401>
+            <l_CGI40100 I_CGI4010002="0" S_CGI4010000="">
+              <l_CGI4010001 I_CGI401000100="0" I_CGI401000101="0" I_CGI401000102="0" />
+            </l_CGI40100>
+          </l_CGI401>
+        </l_CGI4>
+        <l_CGI7 S_CGI700="Identifier les droits d&#8217;utilisation et de partage des ressources et des outils num&#233;riques, ainsi que les risques encourus en cas de non respect des r&#232;gles et proc&#233;dures d&#8217;utilisation.">
+          <l_CGI701>
+            <l_CGI70100 I_CGI7010002="0" S_CGI7010000="">
+              <l_CGI7010001 I_CGI701000100="0" I_CGI701000101="0" I_CGI701000102="0" />
+            </l_CGI70100>
+          </l_CGI701>
+        </l_CGI7>
+        <l_CGI6 S_CGI600="Identifier les sources (auteur, date, titre, lien vers la ressource).">
+          <l_CGI601>
+            <l_CGI60100 I_CGI6010002="0" S_CGI6010000="">
+              <l_CGI6010001 I_CGI601000100="0" I_CGI601000101="0" I_CGI601000102="0" />
+            </l_CGI60100>
+          </l_CGI601>
+        </l_CGI6>
+        <l_CGI1 S_CGI100="Distinguer les fonctions et &#233;noncer les caract&#233;ristiques essentielles des composants mat&#233;riels et logiciels d&#8217;un environnement informatique.">
+          <l_CGI101>
+            <l_CGI10100 I_CGI1010002="0" S_CGI1010000="">
+              <l_CGI1010001 I_CGI101000100="0" I_CGI101000101="0" I_CGI101000102="0" />
+            </l_CGI10100>
+          </l_CGI101>
+        </l_CGI1>
+        <l_CGI3 S_CGI300="Entrer dans un ENT, identifier les services pour un travail collectif et utiliser les principales fonctionnalit&#233;s des outils propres &#224; un ENT.">
+          <l_CGI301>
+            <l_CGI30100 I_CGI3010002="0" S_CGI3010000="">
+              <l_CGI3010001 I_CGI301000100="0" I_CGI301000101="0" I_CGI301000102="0" />
+            </l_CGI30100>
+          </l_CGI301>
+        </l_CGI3>
+        <l_CGI2 S_CGI200="Identifier les principes de base de l&#8217;organisation et du fonctionnement d&#8217;un r&#233;seau.">
+          <l_CGI201>
+            <l_CGI20100 I_CGI2010002="0" S_CGI2010000="">
+              <l_CGI2010001 I_CGI201000100="0" I_CGI201000101="0" I_CGI201000102="0" />
+            </l_CGI20100>
+          </l_CGI201>
+        </l_CGI2>
+      </d_5CGI01>
+      <l_5CGI02 I_5CGI0200="0" I_5CGI0201="0" I_5CGI0202="0" />
+    </l_5CGI>
+    <l_3EN S_3EN00="Energie">
+      <d_3EN01>
+        <l_EN1 S_EN100="Rep&#233;rer, sur un objet technique, les &#233;nergies d&#8217;entr&#233;e et de sortie.">
+          <l_EN101>
+            <l_EN10100 I_EN1010002="0" S_EN1010000="">
+              <l_EN1010001 I_EN101000100="0" I_EN101000101="0" I_EN101000102="0" />
+            </l_EN10100>
+          </l_EN101>
+        </l_EN1>
+        <l_EN2 S_EN200="Rep&#233;rer les transformations &#233;nerg&#233;tiques.">
+          <l_EN201>
+            <l_EN20100 I_EN2010002="0" S_EN2010000="">
+              <l_EN2010001 I_EN201000100="0" I_EN201000101="0" I_EN201000102="0" />
+            </l_EN20100>
+          </l_EN201>
+        </l_EN2>
+        <l_EN3 S_EN300="Identifier, sur un objet technique, les diff&#233;rents &#233;l&#233;ments de la cha&#238;ne d&#8217;&#233;nergie et les rep&#233;rer sur un sch&#233;ma structurel.">
+          <l_EN301>
+            <l_EN30100 I_EN3010002="0" S_EN3010000="">
+              <l_EN3010001 I_EN301000100="0" I_EN301000101="0" I_EN301000102="0" />
+            </l_EN30100>
+          </l_EN301>
+        </l_EN3>
+        <l_EN4 S_EN400="Identifier des solutions qui permettent de r&#233;duire les pertes &#233;nerg&#233;tiques.">
+          <l_EN401>
+            <l_EN40100 I_EN4010002="0" S_EN4010000="">
+              <l_EN4010001 I_EN401000100="0" I_EN401000101="0" I_EN401000102="0" />
+            </l_EN40100>
+          </l_EN401>
+        </l_EN4>
+        <l_EN5 S_EN500="Caract&#233;riser l&#8217;impact environnemental de ces &#233;conomies.">
+          <l_EN501>
+            <l_EN50100 I_EN5010002="0" S_EN5010000="">
+              <l_EN5010001 I_EN501000100="0" I_EN501000101="0" I_EN501000102="0" />
+            </l_EN50100>
+          </l_EN501>
+        </l_EN5>
+      </d_3EN01>
+      <l_3EN02 I_3EN0200="0" I_3EN0201="0" I_3EN0202="0" />
+    </l_3EN>
+    <l_4EOT S_4EOT00="Evolution de l&apos;objet technique">
+      <d_4EOT01>
+        <l_EOT1 S_EOT100="Identifier l&#8217;&#233;volution des besoins.">
+          <l_EOT101>
+            <l_EOT10100 I_EOT1010002="0" S_EOT1010000="">
+              <l_EOT1010001 I_EOT101000100="0" I_EOT101000101="0" I_EOT101000102="0" />
+            </l_EOT10100>
+          </l_EOT101>
+        </l_EOT1>
+        <l_EOT2 S_EOT200="Rep&#233;rer sur une famille d&#8217;objets techniques, l&#8217;&#233;volution des principes techniques ou des choix artistiques.">
+          <l_EOT201>
+            <l_EOT20100 I_EOT2010002="0" S_EOT2010000="">
+              <l_EOT2010001 I_EOT201000100="0" I_EOT201000101="0" I_EOT201000102="0" />
+            </l_EOT20100>
+          </l_EOT201>
+        </l_EOT2>
+        <l_EOT3 S_EOT300="Associer les grands inventeurs, ing&#233;nieurs et artistes et leurs r&#233;alisations.">
+          <l_EOT301>
+            <l_EOT30100 I_EOT3010002="0" S_EOT3010000="">
+              <l_EOT3010001 I_EOT301000100="0" I_EOT301000101="0" I_EOT301000102="0" />
+            </l_EOT30100>
+          </l_EOT301>
+        </l_EOT3>
+        <l_EOT4 S_EOT400="Diff&#233;rencier outil et machine.">
+          <l_EOT401>
+            <l_EOT40100 I_EOT4010002="0" S_EOT4010000="">
+              <l_EOT4010001 I_EOT401000100="0" I_EOT401000101="0" I_EOT401000102="0" />
+            </l_EOT40100>
+          </l_EOT401>
+        </l_EOT4>
+        <l_EOT5 S_EOT500="Mettre en relation une t&#226;che avec diff&#233;rents outils et machines utilis&#233;es au cours des &#226;ges.">
+          <l_EOT501>
+            <l_EOT50100 I_EOT5010002="0" S_EOT5010000="">
+              <l_EOT5010001 I_EOT501000100="0" I_EOT501000101="0" I_EOT501000102="0" />
+            </l_EOT50100>
+          </l_EOT501>
+        </l_EOT5>
+      </d_4EOT01>
+      <l_4EOT02 I_4EOT0200="0" I_4EOT0201="0" I_4EOT0202="0" />
+    </l_4EOT>
+  </d_dicCompetences>
+  <d_dicSavoirs>
+    <l_1 S_100="L&apos;analyse et la conception de l&apos;objet technique">
+      <d_101>
+        <l_1.4 S_1.400="Contexte social et &#233;conomique">
+          <l_1.401 />
+        </l_1.4>
+        <l_1.5 S_1.500="Croquis, sch&#233;ma, codes de repr&#233;sentation">
+          <l_1.501 />
+        </l_1.5>
+        <l_1.6 S_1.600="Mod&#233;lisation du r&#233;el et repr&#233;sentation en conception assist&#233;e par ordinateur">
+          <l_1.601 />
+        </l_1.6>
+        <l_1.7 S_1.700="Mode de repr&#233;sentation : croquis, vues 2D, perspective, mod&#232;le num&#233;rique 3D">
+          <l_1.701 />
+        </l_1.7>
+        <l_1.1 S_1.100="Fonction">
+          <l_1.101 />
+        </l_1.1>
+        <l_1.2 S_1.200="Solutions techniques">
+          <l_1.201 />
+        </l_1.2>
+        <l_1.3 S_1.300="Contraintes">
+          <l_1.301 />
+        </l_1.3>
+        <l_1.8 S_1.800="Informations et caract&#233;ristiques techniques">
+          <l_1.801 />
+        </l_1.8>
+      </d_101>
+    </l_1>
+    <l_3 S_300="Les &#233;nergies mises en &#339;uvre">
+      <d_301>
+        <l_3.2 S_3.200="Economie d'&#233;nergie, pertes">
+          <l_3.201 />
+        </l_3.2>
+        <l_3.3 S_3.300="Impact sur l&#8217;environnement : d&#233;gradation de l&#8217;air, de l&#8217;eau et du sol.">
+          <l_3.301 />
+        </l_3.3>
+        <l_3.1 S_3.100="Cha&#238;ne d'&#233;nergie : alimentation, distribution, stockage, transformation, transport de l'&#233;nergie">
+          <l_3.101 />
+        </l_3.1>
+      </d_301>
+    </l_3>
+    <l_2 S_200="Les mat&#233;riaux utilis&#233;s">
+      <d_201>
+        <l_2.3 S_2.300="Origine des mati&#232;res premi&#232;res et disponibilit&#233; des mat&#233;riaux">
+          <l_2.301 />
+        </l_2.3>
+        <l_2.2 S_2.200="Propri&#233;t&#233;s m&#233;caniques et esth&#233;tiques d'une structure : r&#233;sistance, d&#233;formation, esth&#233;tique">
+          <l_2.201 />
+        </l_2.2>
+        <l_2.1 S_2.100="Propri&#233;t&#233;s des mat&#233;riaux : propri&#233;t&#233;s intrins&#232;ques">
+          <l_2.101 />
+        </l_2.1>
+      </d_201>
+    </l_2>
+    <l_5 S_500="La communication et la gestion de l&apos;information">
+      <d_501>
+        <l_5.1 S_5.100="Environnement informatique : serveurs, postes de travail, terminaux mobiles, p&#233;riph&#233;riques, logiciels">
+          <l_5.101 />
+        </l_5.1>
+        <l_5.2 S_5.200="Organisation fonctionnelle des r&#233;seaux">
+          <l_5.201 />
+        </l_5.2>
+        <l_5.3 S_5.300="Outils de base (forum, t&#233;l&#233;chargement, vote en ligne, publication, messagerie interne, r&#233;pertoires &#8230;) d'un ENT">
+          <l_5.301 />
+        </l_5.3>
+        <l_5.4 S_5.400="Outils logiciels (traitement de textes, tableur-grapheur, de pr&#233;sentation, de cr&#233;ation et de visualisation 3D)">
+          <l_5.401 />
+        </l_5.4>
+        <l_5.5 S_5.500="Moteur de recherche, mot cl&#233;, op&#233;rateur de recherche">
+          <l_5.501 />
+        </l_5.5>
+        <l_5.6 S_5.600="Propri&#233;t&#233; intellectuelle. Copyright et copyleft">
+          <l_5.601 />
+        </l_5.6>
+        <l_5.7 S_5.700="Recherche d&#8217;informations sur la &#8220; toile &#8221;.">
+          <l_5.701 />
+        </l_5.7>
+      </d_501>
+    </l_5>
+    <l_4 S_400="L'&#233;volution de l'objet technique">
+      <d_401>
+        <l_4.1 S_4.100="Evolution d'objets techniques dans un contexte historique et socio &#233;conomique">
+          <l_4.101 />
+        </l_4.1>
+        <l_4.3 S_4.300="Evolution des outils et des machines">
+          <l_4.301 />
+        </l_4.3>
+        <l_4.2 S_4.200="Evolution des styles en fonction des principes techniques et des tendances artistiques">
+          <l_4.201 />
+        </l_4.2>
+      </d_401>
+    </l_4>
+    <l_6 S_600="Les processus de r&#233;alisation d'un objet technique">
+      <d_601>
+        <l_6.5 S_6.500="Ant&#233;riorit&#233;s et ordonnancement">
+          <l_6.501 />
+        </l_6.5>
+        <l_6.4 S_6.400="Processus op&#233;ratoire de r&#233;alisation d'un objet technique">
+          <l_6.401 />
+        </l_6.4>
+        <l_6.3 S_6.300="Echelles">
+          <l_6.301 />
+        </l_6.3>
+        <l_6.2 S_6.200="Prototype, maquette">
+          <l_6.201 />
+        </l_6.2>
+        <l_6.1 S_6.100="Contraintes li&#233;es aux proc&#233;d&#233;s de fabrication, de contr&#244;le et de validation">
+          <l_6.101 />
+        </l_6.1>
+      </d_601>
+    </l_6>
+  </d_dicSavoirs>
+  <d_dicSavoirs_Math />
+  <d_dicSavoirs_Phys />
+  <d_effectifs>
+    <l_P S_P00="Act. Pra." S_P01="Activit&#233; Pratique" />
+    <l_C S_C00="Classe enti&#232;re" S_C01="Classe enti&#232;re" />
+    <l_E S_E00="Etude ou Projet" S_E01="Etude et Projet" />
+    <l_D S_D00="Demi-groupe" S_D01="Demi-groupe" />
+    <l_G S_G00="Effectif r&#233;duit" S_G01="Effectif r&#233;duit" />
+  </d_effectifs>
+  <d_effectifsSeance>
+    <l_C S_C00="C" />
+    <l_E S_E00="C" />
+    <l_AP S_AP00="E" S_AP01="P" />
+    <l_SS S_SS00="C" />
+    <l_ED S_ED00="C" S_ED01="G" S_ED02="D" S_ED03="E" S_ED04="P" />
+    <l_P S_P00="C" S_P01="G" S_P02="D" S_P03="E" S_P04="P" />
+    <l_S />
+    <l_R />
+    <l_SA S_SA00="C" S_SA01="G" />
+    <l_TD S_TD00="C" S_TD01="G" S_TD02="D" S_TD03="E" S_TD04="P" />
+  </d_effectifsSeance>
+  <d_grilles_prj />
+  <l_listPhasesEval_prj />
+  <l_listPhases_prj />
+  <l_listeDemarches S_listeDemarches00="I" S_listeDemarches01="R" S_listeDemarches02="P" />
+  <l_listeEffectifs S_listeEffectifs00="C" S_listeEffectifs01="G" S_listeEffectifs02="D" S_listeEffectifs03="E" S_listeEffectifs04="P" />
+  <l_listeTypeActivite S_listeTypeActivite00="ED" S_listeTypeActivite01="AP" S_listeTypeActivite02="P" />
+  <l_listeTypeSeance S_listeTypeSeance00="ED" S_listeTypeSeance01="AP" S_listeTypeSeance02="P" S_listeTypeSeance03="C" S_listeTypeSeance04="TD" S_listeTypeSeance05="SA" S_listeTypeSeance06="SS" S_listeTypeSeance07="E" S_listeTypeSeance08="R" S_listeTypeSeance09="S" />
+  <d_nomParties_prj />
+  <d_options />
+  <d_phases_prj />
+  <d_posRevues>
+    <l__02 />
+    <l__03 />
+  </d_posRevues>
+  <l_positions_CI />
+  <d_seances>
+    <l_C S_C00="Cours" S_C01="Cours" />
+    <l_E S_E00="Evaluation" S_E01="Evaluation" />
+    <l_P S_P00="Projet" S_P01="Activit&#233; de projet" />
+    <l_SS S_SS00="Synt. s&#233;quence" S_SS01="Synth&#232;se de s&#233;quence" />
+    <l_ED S_ED00="Etude de dossier" S_ED01="Activit&#233; d'&#233;tude de dossier" />
+    <l_AP S_AP00="Activit&#233; pratique" S_AP01="Activit&#233; pratique" />
+    <l_S S_S00="Parall&#232;le" S_S01="Activit&#233;s en parall&#232;le" />
+    <l_R S_R00="Rotation" S_R01="Rotation d'activit&#233;s" />
+    <l_TD S_TD00="TD" S_TD01="Travaux Dirig&#233;s" />
+    <l_SA S_SA00="Synt. activit&#233;" S_SA01="Synth&#232;se d'activit&#233;" />
+  </d_seances>
+</Referentiel>
