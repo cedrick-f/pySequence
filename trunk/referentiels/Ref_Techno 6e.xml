@@ -1,6 +1,7 @@
 <Referentiel B_CI_BO="False" B_CI_cible="False" B_projet="False" I_duree_prj="0" S_Code="CLG6" S_Famille="CLG" S_nomCompetences="Capacit&#233;s" S_nomSavoirs="Connaissances">
   <l_CentresInterets S_CentresInterets00="Un objet technique, &#224; quel besoin r&#233;pond-t-il ?" S_CentresInterets01="Un objet technique, de quoi est-il constitu&#233; ?" S_CentresInterets02="Un objet technique, comment fonctionne t&#8217;il ? " S_CentresInterets03="Les objets techniques, quelles sont les diff&#233;rentes solutions pour r&#233;pondre &#224; des besoins identiques ? " S_CentresInterets04="Un objet technique, comment le r&#233;aliser ?" S_CentresInterets05="Cet objet technique, me convient-il ? " />
   <l_Enseignement S_Enseignement00="Techno 6e" S_Enseignement01="6e Technologie coll&#232;ge" S_Enseignement02="Techno Coll&#232;ge" />
+  <d_aColNon B_R="True" B_S="False" />
   <d_activites>
     <l_ED S_ED00="Etude de dossier" S_ED01="Activit&#233; d'&#233;tude de dossier" />
     <l_P S_P00="Projet" S_P01="Activit&#233; de projet" />

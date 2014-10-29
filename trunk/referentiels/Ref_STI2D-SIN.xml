@@ -1,6 +1,7 @@
 <Referentiel B_CI_BO="True" B_CI_cible="False" B_projet="True" I_duree_prj="70" S_Code="SIN" S_Famille="STI" S_nomCompetences="Comp&#233;tences" S_nomSavoirs="Savoirs">
   <l_CentresInterets S_CentresInterets00="Configuration et performances du traitement de l&apos;information" S_CentresInterets01="Instrumentation/Acquisition et restitution de grandeurs physiques" S_CentresInterets02="Communication de l'information/Au sein d'un syst&#232;me" S_CentresInterets03="Gestion de l'information/Structures mat&#233;rielles et logicielles associ&#233;es au traitement de l'information" S_CentresInterets04="Communication entre syst&#232;mes" S_CentresInterets05="Traitement analogique de l&apos;information" S_CentresInterets06="Cycle de vie d&apos;un produit" />
   <l_Enseignement S_Enseignement00="STI2D-SIN" S_Enseignement01="STI2D : Syst&#232;mes d'Information et Num&#233;rique" S_Enseignement02="STI2D" />
+  <d_aColNon B_R="True" B_S="False" />
   <d_activites>
     <l_ED S_ED00="Etude de dossier" S_ED01="Activit&#233; d'&#233;tude de dossier" />
     <l_P S_P00="Projet" S_P01="Activit&#233; de projet" />

@@ -750,9 +750,9 @@ LONG_MAX_PROBLEMATIQUE = 500
 TIP_PROBLEMATIQUE =   u"Indiquer :\n" \
                       u"- description du contexte dans lequel l’objet du projet va être intégré ;\n" \
                       u"- fonctionnalités de cet objet ;\n" \
-                      u"- caractéristiques fonctionnelles et techniques.\n" \
-                      u"(%s caractères maxi)" %str(LONG_MAX_PROBLEMATIQUE)
+                      u"- caractéristiques fonctionnelles et techniques."
                       
+TIP_PB_LIMITE = u"\n(%s caractères maxi)" %str(LONG_MAX_PROBLEMATIQUE)
                       
 TIP_CONTRAINTES =    u"Indiquer :\n" \
                      u"- coût maximal ;\n" \
