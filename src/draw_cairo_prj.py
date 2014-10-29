@@ -206,7 +206,6 @@ def DefinirZones(prj, ctx):
 
 #    wColComp = prj.GetReferentiel().calculerLargeurCompetences(wColCompBase)
     competences = regrouperLst(prj, prj.GetCompetencesUtil())
-#    print competences
     tailleZComp[0] = wColComp * len(competences)
     posZComp[0] = posZOrganis[0] + tailleZOrganis[0] - tailleZComp[0]
     for i, s in enumerate(competences):
@@ -1113,30 +1112,36 @@ def regrouperDic(obj, dicIndicateurs):
                 typ[k1] = []
                 lk2 = v1[1].keys()
                 lk2.sort()
+#                print "  ", lk2
                 for k2 in lk2:
                     if k2 in dicIndicateurs.keys():
                         dic[k1].extend(dicIndicateurs[k2])
 #                        print "   **", v1[1][k2]
                         typ[k1].extend([p[1] for p in v1[1][k2][1]])
                     else:
-                        dic[k1].extend([False])
-                        typ[k1].extend([''])
+                        l = len(v1[1][k2][1])
+                        dic[k1].extend([False]*l)
+                        typ[k1].extend(['']*l)
+                
                 if dic[k1] == [] or not (True in dic[k1]):
                     del dic[k1]
                     del typ[k1]
-#        print "  >>", dic, typ
+                    
+#        print "  >>", dic
+#        print "    ", typ
         return dic, typ
     else:
         typ = {}
         for k in dicIndicateurs.keys():
             typ[k] = [p[1] for p in obj.GetReferentiel().getIndicateur(k)]
-#        print "  >>", dicIndicateurs, typ
+#        print "  >>>", dicIndicateurs, typ
         return dicIndicateurs, typ
      
 ######################################################################################  
 def regrouperLst(obj, lstCompetences):
 #    print "regrouperLst", lstCompetences
 #    print "   _dicCompetences_prj", obj.GetReferentiel()._dicCompetences_prj
+    lstCompetences.sort()
     if obj.GetReferentiel()._niveau == 3:
         dic = []
         tousIndicateurs = obj.GetReferentiel()._dicCompetences_prj
@@ -1148,6 +1153,7 @@ def regrouperLst(obj, lstCompetences):
                     if k2 in lstCompetences:
                         dic.append(k1)
         dic = list(set(dic))
+        dic.sort()
 #        print "  >>", dic
         return dic
     else:

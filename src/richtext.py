@@ -70,7 +70,8 @@ class RichTextPanel(wx.Panel):
         self.rtc.Bind(wx.EVT_KILL_FOCUS, self.Sauver)
         self.rtc.Bind(wx.EVT_TEXT_URL, self.OnURLClick)
         
-        
+    def SetToolTipString(self, txt):
+        self.rtc.SetToolTipString(txt)
         
     def setObjet(self, objet):
         self.objet = objet

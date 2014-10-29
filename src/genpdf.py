@@ -139,23 +139,24 @@ def genererFicheValidation(nomFichier, projet):
     
     
     if projet.GetTypeEnseignement() == 'SSI':
-        story.append(Paragraph(u"Bulletin officiel n°1 du 3 janvier 2013",
+        story.append(Paragraph(u"Bulletin officiel n°39 du 23 octobre 2014",
                                entete_style
                                ))
         story.append(Spacer(1, 1*mm))
-        story.append(Paragraph(u"Annexe 3 à la note de service n° 2011-152 du 3 octobre 2011",
+        story.append(Paragraph(u"Annexe 4 à la note de service n° 2014-131 du 9-10-2014",
                                entete_style))
         story.append(Spacer(1, 1*mm))
-        story.append(Paragraph(u"Baccalauréat général, série S, sciences de l'ingénieur - Épreuve de projet",
+        story.append(Paragraph(u"Baccalauréat général, série S, sciences de l'ingénieur - Épreuve orale, projet interdisciplinaire",
                                entete_style))
+        
     elif projet.GetReferentiel().Famille == 'STI':
-        story.append(Paragraph(u"Bulletin officiel n° 45 du 6 décembre 2012",
+        story.append(Paragraph(u"Bulletin officiel n°39 du 23 octobre 2014",
                                entete_style))
         story.append(Spacer(1, 1*mm))
-        story.append(Paragraph(u"Annexe 8 à la note de service n° 2012-037 du 5 mars 2012",
+        story.append(Paragraph(u"Annexe 9 à la note de service n° 2014-132 du 13-10-2014",
                                entete_style))
         story.append(Spacer(1, 1*mm))
-        story.append(Paragraph(u"Série STI2D - Épreuve de projet en enseignement spécifique à la spécialité",
+        story.append(Paragraph(u"Baccalauréat technologique, série STI2D - Épreuve de projet en enseignement spécifique à la spécialité",
                                entete_style))
     
     story.append(Spacer(1, 5*mm))

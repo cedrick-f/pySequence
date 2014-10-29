@@ -133,6 +133,7 @@ class Referentiel():
         self.dicCompetences = {}
         self.projet = False             # si l'enseignement fait l'objet d'une épreuve de projet
         self.duree_prj = 0
+        self.aColNon = {'R' : True,  'S' : False}
 #        self.dicCompetences_prj = {}
 #        self.dicIndicateurs_prj = {}
 #        self.dicPoidsIndicateurs_prj = {}
@@ -239,7 +240,7 @@ class Referentiel():
             (ouverture de fichier)
         """
         self.initParam()
-        
+
         def lect(branche, nom = ""):
             if nom[:2] == "S_":
                 return unicode(branche.get(nom)).replace(u"--", u"\n")
@@ -313,8 +314,15 @@ class Referentiel():
                     _attr = None
                 if _attr:
                     setattr(self, attr, lect(branche, _attr.replace("\n", "--")))
+        
+        # Pour corriger une erreur de jeunesse de la 5.0beta1
+        if len(self.aColNon) == 0:
+            self.aColNon = {'R' : True,  'S' : False}
+
         self.postTraiter()
+
         self.completer()
+
         return
         
     
@@ -471,9 +479,9 @@ class Referentiel():
                         ligne = int0(sh.cell(ll,10).value)   # ligne dans la grille
                         if ligne != 0:
                             if poids[1] != 0:
-                                self._aColNon['R'] = True
+                                self.aColNon['R'] = True
                             elif poids[2] != 0:
-                                self._aColNon['S'] = True
+                                self.aColNon['S'] = True
                         dic[code][1].append([indic, poids, ligne])
             if debug: print 
             return dic
@@ -575,10 +583,10 @@ class Referentiel():
 #        print ">>>", self.Code
         
         # Pour enregistrer s'il y a des colonnes "non" dans les grilles 'R' ou 'S'
-        self._aColNon = {'R' : False,  'S' : False}
+#        self.aColNon = {'R' : False,  'S' : False}
         self.dicCompetences = getArbre(sh_va, range(1, sh_va.nrows), 0, prems = True, debug = False)
 #        print "_aColNon", self.Code, ":", self._aColNon
-        
+
         
 #        #
 #        # dicIndicateurs_prj

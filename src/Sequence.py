@@ -40,7 +40,7 @@ Copyright (C) 2011-2014
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "5.0beta1"
+__version__ = "5.0beta3"
 print __version__
 
 #from threading import Thread
@@ -5933,7 +5933,8 @@ class Eleve(Personne, Objet_sequence):
         seuil = {}
         for t in ["R", "S"]:
 #            if t in classeurs:
-            if self.GetReferentiel()._aColNon[t]:
+#            print "aColNon", self.GetReferentiel().aColNon
+            if self.GetReferentiel().aColNon[t]:
                 seuil[t] = 0.5  # s'il y a une colonne "non", le seuil d'évaluabilité est de 50% par groupe de compétence
             else:
                 seuil[t] = 1.0     # s'il n'y a pas de colonne "non", le seuil d'évaluabilité est de 100% par groupe de compétence
@@ -7966,7 +7967,7 @@ class FenetreProjet(FenetreDocument):
         
         
         if "beta" in __version__:
-            print "beta"
+#            print "beta"
             root, message, count, Ok, err = ouvre(fichier, message)
         else:
             try:
@@ -8445,15 +8446,18 @@ class FicheProjet(BaseFiche):
         self.tip_comp.SetFont(wx.Font(11, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.NORMAL))
         l += 1
         
-        self.tip_compp = popup.CreerTexte((l,0), (1,2), flag = wx.ALL)
-        self.tip_compp.SetForegroundColour("CHARTREUSE3")
-        self.tip_compp.SetFont(wx.Font(10, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.NORMAL))
+        self.tip_arbre = popup.CreerArbre((l,0), (1,2), projet.GetReferentiel(), flag = wx.ALL)
         l += 1
-            
-        self.lab_indic = popup.CreerTexte((l,0), txt = u"Indicateur :", flag = wx.ALIGN_RIGHT|wx.RIGHT)
-        self.lab_indic.SetFont(wx.Font(9, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.NORMAL, underline = True))
-        self.tip_indic = []
-        l += 1
+        
+#        self.tip_compp = popup.CreerTexte((l,0), (1,2), flag = wx.ALL)
+#        self.tip_compp.SetForegroundColour("CHARTREUSE3")
+#        self.tip_compp.SetFont(wx.Font(10, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.NORMAL))
+#        l += 1
+#            
+#        self.lab_indic = popup.CreerTexte((l,0), txt = u"Indicateur :", flag = wx.ALIGN_RIGHT|wx.RIGHT)
+#        self.lab_indic.SetFont(wx.Font(9, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.NORMAL, underline = True))
+#        self.tip_indic = []
+#        l += 1
         
         self.lab_legend1 = popup.CreerTexte((l,0), txt = u"Conduite", flag = wx.ALIGN_RIGHT|wx.RIGHT)
         self.lab_legend1.SetFont(wx.Font(8, wx.SWISS, wx.FONTSTYLE_ITALIC, wx.NORMAL))
@@ -8496,58 +8500,78 @@ class FicheProjet(BaseFiche):
         if kCompObj != None:
             kComp, obj = kCompObj
             if hasattr(self, 'popup'):
-                for tip in self.tip_indic:
-                    tip.Destroy()
-                self.tip_indic = []
+#                for tip in self.tip_indic:
+#                    tip.Destroy()
+#                self.tip_indic = []
                 x, y = self.ClientToScreen((x, y))
-                type_ens = self.projet.classe.typeEnseignement
+#                type_ens = self.projet.classe.typeEnseignement
                 ref = self.projet.GetReferentiel()
                 competence = ref.getCompetence(kComp)
-                print "competence", competence
-                indicTache = obj.GetDicIndicateurs()
+#                print "competence", competence
+#                indicTache = obj.GetDicIndicateurs()
                 
-                ###################################################################
-                def afficherIndic(listIndic, codeComp, ligne):
-                    print "   afficherIndic", codeComp, ligne, len(listIndic)
-                    
-                    for i, indic in enumerate(listIndic):
-                        intit = indic[0]
-                        poids = indic[1]
-                        if codeComp in indicTache and indicTache[codeComp][i]:
-                            if poids[1] != 0:
-                                coul = constantes.COUL_REVUE
-                            else:
-                                coul = constantes.COUL_SOUT
-                        else:
-                            coul = "GREY"
-                        self.tip_indic.append(self.popup.CreerTexte((3+i+ligne[0],1), flag = wx.ALIGN_LEFT|wx.LEFT))
-                        self.tip_indic[-1].SetFont(wx.Font(9, wx.SWISS, wx.FONTSTYLE_ITALIC, wx.NORMAL))
-                        self.tip_indic[-1].SetForegroundColour(coul)
-    
-                        self.popup.SetTexte(textwrap.fill(intit, 50), self.tip_indic[-1])
-                        ligne[0] += 1
+#                ###################################################################
+#                def afficherIndic(listIndic, codeComp, ligne):
+#                    print "   afficherIndic", codeComp, ligne, len(listIndic)
+#                    
+#                    for i, indic in enumerate(listIndic):
+#                        intit = indic[0]
+#                        poids = indic[1]
+#                        if codeComp in indicTache and indicTache[codeComp][i]:
+#                            if poids[1] != 0:
+#                                coul = constantes.COUL_REVUE
+#                            else:
+#                                coul = constantes.COUL_SOUT
+#                        else:
+#                            coul = "GREY"
+#                        self.tip_indic.append(self.popup.CreerTexte((3+i+ligne[0],1), flag = wx.ALIGN_LEFT|wx.LEFT))
+#                        self.tip_indic[-1].SetFont(wx.Font(9, wx.SWISS, wx.FONTSTYLE_ITALIC, wx.NORMAL))
+#                        self.tip_indic[-1].SetForegroundColour(coul)
+#    
+#                        self.popup.SetTexte(textwrap.fill(intit, 50), self.tip_indic[-1])
+#                        ligne[0] += 1
                         
                 intituleComp = competence[0]
-                self.popup.SetTitre(u"Compétence "+kComp)
-                self.popup.SetTexte(textwrap.fill(intituleComp, 50), self.tip_comp)
                 
-                if type(competence[1]) == list:
-                    indicateurs = competence[1]
-                    
-                    self.popup.DeplacerItem(self.lab_legend1, (4+len(indicateurs), 0))
-                    self.popup.DeplacerItem(self.lab_legend2, (4+len(indicateurs), 1))
-                
-                    afficherIndic(indicateurs, kComp, [0])
-                    
+                k = kComp.split(u"\n")
+                if len(k) > 1:
+                    titre = u"Compétences\n"+u"\n".join(k)
                 else:
-                    l = 0
-                    for v in competence[1].values():
-                        l += len(v[1])
-                    self.popup.DeplacerItem(self.lab_legend1, (4+l, 0))
-                    self.popup.DeplacerItem(self.lab_legend2, (4+l, 1))
-                    ligne = [0]
-                    for k, v in competence[1].items():
-                        afficherIndic(v[1], k, ligne)
+                    titre = u"Compétence\n"+k[0]
+                self.popup.SetTitre(titre)
+                
+                
+#                cc = [cd+ " " + it for cd, it in zip(k.split(u"\n"), v[0].split(u"\n"))] 
+#                comp = self.AppendItem(br, textwrap.fill(u"\n ".join(cc), 50))
+#                    
+                intituleComp = "\n".join([textwrap.fill(ind, 50) for ind in intituleComp.split(u"\n")]) 
+             
+                self.popup.SetTexte(intituleComp, self.tip_comp)
+                
+                self.tip_arbre.DeleteChildren(self.tip_arbre.root)
+                self.tip_arbre.Construire(dic = competence[1])
+                
+                self.popup.Fit()
+#                self.tip_arbre.AdapterSize()
+                
+#                if type(competence[1]) == list:
+#                    indicateurs = competence[1]
+#                    
+#                    self.popup.DeplacerItem(self.lab_legend1, (4+len(indicateurs), 0))
+#                    self.popup.DeplacerItem(self.lab_legend2, (4+len(indicateurs), 1))
+#                
+#                    afficherIndic(indicateurs, kComp, [0])
+#                    
+#                else:
+#                    l = 0
+#                    for v in competence[1].values():
+#                        l += len(v[1])
+#                    print "   ", l
+#                    self.popup.DeplacerItem(self.lab_legend1, (4+l, 0))
+#                    self.popup.DeplacerItem(self.lab_legend2, (4+l, 1))
+#                    ligne = [0]
+#                    for k, v in competence[1].items():
+#                        afficherIndic(v[1], k, ligne)
                 
 ##                competence = ref._dicIndicateurs_prj_simple[kComp][0]
 #                competence = ref.getIntituleCompetence(kComp, sousComp = True)
@@ -8596,7 +8620,7 @@ class FicheProjet(BaseFiche):
 #        ref = self.projet.GetReferentiel()
 #        if ref.prof_Comp <= 1:
 #            texte += u"s"
-        self.popup.SetTexte(texte, self.lab_indic)
+#        self.popup.SetTexte(texte, self.lab_indic)
 #        self.tip_compp.Show(ref.prof_Comp > 1)
 #        self.tip_poids.Show(type_ens == "SSI")
             
@@ -8856,7 +8880,7 @@ class PanelPropriete_Projet(PanelPropriete):
         titre = wx.StaticBox(pageGen, -1, u"Problématique - Énoncé général du besoin")
         sb = wx.StaticBoxSizer(titre)
         commctrl = wx.TextCtrl(pageGen, -1, u"", style=wx.TE_MULTILINE)
-        commctrl.SetToolTipString(constantes.TIP_PROBLEMATIQUE)
+        commctrl.SetToolTipString(constantes.TIP_PROBLEMATIQUE + constantes.TIP_PB_LIMITE)
         sb.Add(commctrl, 1, flag = wx.EXPAND)
         self.commctrl = commctrl
         pageGen.sizer.Add(sb, (0,1), (2,1),  flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.EXPAND, border = 2)
@@ -10742,10 +10766,10 @@ class PanelPropriete_Savoirs(PanelPropriete):
         """ Coche tous les savoirs a True de self.savoirs.savoirs 
             dans les différents arbres
         """
-        print "MiseAJour Savoirs"
+#        print "MiseAJour Savoirs"
         self.arbre.UnselectAll()
         for s in self.savoirs.savoirs:
-            print "  ",s
+#            print "  ",s
             typ, cod = s[0], s[1:]
             if typ == "S": # Savoir spécialité STI2D
                 i = self.arbreSpe.get_item_by_label(s[1:], self.arbreSpe.GetRootItem())
@@ -11375,9 +11399,13 @@ class PanelPropriete_Tache(PanelPropriete):
         # Intitulé de la tache
         #
         if not tache.phase in ["R1", "R2", "R3", "S"]:
-            box = wx.StaticBox(pageGen, -1, u"Intitulé")
+            box = wx.StaticBox(pageGen, -1, u"Intitulé de la tâche")
             bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
             textctrl = wx.TextCtrl(pageGen, -1, u"", style=wx.TE_MULTILINE)
+            textctrl.SetToolTipString(u"Donner l'intitulé de la tâche\n"\
+                                      u" = un simple résumé !\n" \
+                                      u"les détails doivent figurer dans la zone\n" \
+                                      u"\"Description détaillée de la tâche\"")
             bsizer.Add(textctrl,1, flag = wx.EXPAND)
             self.textctrl = textctrl
             self.boxInt = box
@@ -11414,10 +11442,18 @@ class PanelPropriete_Tache(PanelPropriete):
         #
         # Description de la tâche
         #
-        dbox = wx.StaticBox(pageGen, -1, u"Description")
+        dbox = wx.StaticBox(pageGen, -1, u"Description détaillée de la tâche")
         dbsizer = wx.StaticBoxSizer(dbox, wx.VERTICAL)
 #        bd = wx.Button(pageGen, -1, u"Editer")
         tc = richtext.RichTextPanel(pageGen, self.tache, toolBar = True)
+        tc.SetToolTipString(u"Donner une description détaillée de la tâche :\n" \
+                            u" - les conditions nécessaires\n" \
+                            u" - ce qui est fourni\n" \
+                            u" - les résultats attendus\n" \
+                            u" - les différentes étapes\n" \
+                            u" - la répartition du travail entre les élèves\n"\
+                            u" - ..."
+                            )
 #        tc.SetMaxSize((-1, 150))
 #        tc.SetMinSize((150, 60))
         dbsizer.Add(tc,1, flag = wx.EXPAND)
@@ -13307,7 +13343,7 @@ class ArbreCompetences(HTL.HyperTreeList):
     def AjouterEnleverCompetences(self, lstitem, propag = True):
         for item in lstitem:
             code = self.GetItemPyData(item)#.split()[0]
-            print "  ", code, item.GetValue()
+#            print "  ", code, item.GetValue()
             if item.GetValue():
                 self.pptache.AjouterCompetence(code, propag)
             else:
@@ -13365,14 +13401,15 @@ class ArbreCompetencesPrj(ArbreCompetences):
         <revue> : vrai si la tâche est une revue
         <eleves> : vrai s'il faut afficher une colonne supplémentaire pour distinguer les compétences pour chaque éleve
     """
-    def __init__(self, parent, ref, pptache, revue = False, eleves = False):
+    def __init__(self, parent, ref, pptache, revue = False, eleves = False, 
+                 agwStyle = CT.TR_HIDE_ROOT|CT.TR_HAS_VARIABLE_ROW_HEIGHT|\
+                            CT.TR_ROW_LINES|CT.TR_ALIGN_WINDOWS|CT.TR_AUTO_CHECK_CHILD|\
+                            CT.TR_AUTO_CHECK_PARENT|CT.TR_AUTO_TOGGLE_CHILD):
         self.revue = revue
         self.eleves = eleves
           
         ArbreCompetences.__init__(self, parent, ref, pptache,
-                                  agwStyle = CT.TR_HIDE_ROOT|CT.TR_HAS_VARIABLE_ROW_HEIGHT|\
-                                  CT.TR_ROW_LINES|CT.TR_ALIGN_WINDOWS|CT.TR_AUTO_CHECK_CHILD|\
-                                  CT.TR_AUTO_CHECK_PARENT|CT.TR_AUTO_TOGGLE_CHILD)#|CT.TR_ELLIPSIZE_LONG_ITEMS)#|CT.TR_TOOLTIP_ON_LONG_ITEMS)#
+                                  agwStyle = agwStyle)#|CT.TR_ELLIPSIZE_LONG_ITEMS)#|CT.TR_TOOLTIP_ON_LONG_ITEMS)#
         self.Bind(wx.EVT_SIZE, self.OnSize2)
         self.Bind(CT.EVT_TREE_ITEM_GETTOOLTIP, self.OnToolTip)
         
@@ -13392,17 +13429,22 @@ class ArbreCompetencesPrj(ArbreCompetences):
     
 
     ####################################################################################
-    def Construire(self, branche, dic = None, ref = None):
-#        print "Construire", self.pptache.tache.phase, type_ens
+    def Construire(self, branche = None, dic = None, ref = None):
+#        print "Construire", dic
         if ref == None:
             ref = self.ref
         if dic == None: # Construction de la racine
             dic = ref._dicCompetences_prj
+        if branche == None:
+            branche  = self.root
         
+        tache = self.pptache.tache
+            
         font = wx.Font(10, wx.DEFAULT, wx.FONTSTYLE_ITALIC, wx.NORMAL, False)
         
         size = None
-        tousEleve = [True]*len(self.pptache.tache.projet.eleves)
+        if self.eleves:
+            tousEleve = [True]*len(tache.projet.eleves)
         
         def const(d, br, debug = False):
             ks = d.keys()
@@ -13439,20 +13481,32 @@ class ArbreCompetencesPrj(ArbreCompetences):
                     for i, indic in enumerate(v[1]):
                         codeIndic = k+'_'+str(i+1)
                         if debug:
-                            print not self.pptache.tache.phase in ["R1", "Rev", self.pptache.tache.projet.getCodeLastRevue()]
-#                            print codeIndic in self.pptache.tache.indicateursMaxiEleve[0]
+#                            print not tache.phase in ["R1", "Rev", tache.projet.getCodeLastRevue()]
+#                            print codeIndic in tache.indicateursMaxiEleve[0]
                             print ref.getTypeIndicateur(codeIndic)
-                            print self.pptache.tache.phase != 'XXX'
+#                            print tache.phase != 'XXX'
                         
-                        if ((not self.pptache.tache.phase in ["R1", "Rev", self.pptache.tache.projet.getCodeLastRevue()]) \
-                            or (codeIndic in self.pptache.tache.indicateursMaxiEleve[0])) \
-                            and (ref.getTypeIndicateur(codeIndic) == "S" or self.pptache.tache.phase != 'XXX'):
+                        if tache == None:
+                            b = self.AppendItem(comp, indic[0], data = codeIndic)
+                            for j, p in enumerate(indic[1][1:]):
+                                if p != 0:
+                                    if j == 0:
+                                        self.SetItemTextColour(b, COUL_REVUE)
+                                    else:
+                                        self.SetItemTextColour(b, COUL_SOUT)
+                            self.SetItemFont(b, font)
+                            
+                            
+                        if tache != None and ((not tache.phase in ["R1", "Rev", tache.projet.getCodeLastRevue()]) \
+                            or (codeIndic in tache.indicateursMaxiEleve[0])) \
+                            and (ref.getTypeIndicateur(codeIndic) == "S" or tache.phase != 'XXX'):
                             
                             b = self.AppendItem(comp, indic[0], ct_type=1, data = codeIndic)
-                            if codeIndic in self.pptache.tache.indicateursEleve[0]:
+                            if codeIndic in tache.indicateursEleve[0]:
                                 self.CheckItem2(b)
                             else:
                                 tous = False
+                                
                             if debug: print "   indic", indic
                             for j, p in enumerate(indic[1][1:]):
                                 if p != 0:
@@ -13467,9 +13521,9 @@ class ArbreCompetencesPrj(ArbreCompetences):
                             
                             if self.eleves:
                                 self.SetItemWindow(b, ChoixCompetenceEleve(self, codeIndic, 
-                                                                           self.pptache.tache.projet, 
-                                                                           self.pptache.tache), 3)
-                                for e in range(len(self.pptache.tache.projet.eleves)):
+                                                                           tache.projet, 
+                                                                           tache), 3)
+                                for e in range(len(tache.projet.eleves)):
                                     tousEleve[e] = tousEleve[e] and self.GetItemWindow(b, 3).EstCocheEleve(e+1)
                                 size = self.GetItemWindow(b, 3).GetSize()[0]
 
@@ -13486,9 +13540,11 @@ class ArbreCompetencesPrj(ArbreCompetences):
             
         const(dic, branche, debug = False)
             
-                
         if self.eleves:
             self.SetColumnWidth(3, 60)
+        if tache == None: # Cas des arbres dans popup
+            self.SetColumnWidth(1, 0)
+            self.SetColumnWidth(2, 0)
         self.Refresh()
             
         return
@@ -13583,7 +13639,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
                 for i in itemComp.GetChildren():
                     tout = tout and self.GetItemWindow(i, 3).EstCocheEleve(eleve)
     #            self.GetItemWindow(itemComp, 2).CocherEleve(eleve, tout)
-                print "MiseAJourCaseEleve", comp, eleve
+#                print "MiseAJourCaseEleve", comp, eleve
                 cases = self.GetItemWindow(self.items[comp], 3)
                 if cases != None:
                     cases.CocherEleve(eleve, tout, withEvent = True)
@@ -13636,7 +13692,135 @@ class ArbreCompetencesPrj(ArbreCompetences):
 #        self.Construire(self.root, type_ens = type_ens)
 #        self.ExpandAll()
             
+class ArbreCompetencesPopup(CT.CustomTreeCtrl):
+    """ Arbre des compétences abordées en projet lors d'une tâche <pptache>
+        <revue> : vrai si la tâche est une revue
+        <eleves> : vrai s'il faut afficher une colonne supplémentaire pour distinguer les compétences pour chaque éleve
+    """
+    def __init__(self, parent):
+          
+        CT.CustomTreeCtrl.__init__(self, parent, -1,
+                                   agwStyle = CT.TR_HAS_VARIABLE_ROW_HEIGHT|CT.TR_HIDE_ROOT|CT.TR_NO_LINES)
+#        self.SetQuickBestSize(False)
+        self.root = self.AddRoot(u"")
+
+    ####################################################################################
+    def Construire(self, dic):
+#        print "Construire", dic
+        
+        branche  = self.root
+        
+        debug = False
             
+        font = wx.Font(10, wx.DEFAULT, wx.FONTSTYLE_ITALIC, wx.NORMAL, False)
+        
+        def const(d, br, debug = False):
+            ks = d.keys()
+            ks.sort()
+            for k in ks:
+                if debug: print "****", k
+                v = d[k]
+                if len(v) > 1 and type(v[1]) == dict:
+                    if debug: print "   ", v[0]
+                    if len(v) == 2:
+                        b = self.AppendItem(br, textwrap.fill(k+" "+v[0], 50))
+                    else:
+                        if debug: print "   prem's", v[2]
+                        b = self.AppendItem(br, textwrap.fill(k+" "+v[0], 50))
+                        self.SetItemBold(b, True)
+
+                    const(v[1], b, debug = debug)
+                        
+                else:   # Indicateur
+                    cc = [cd+ " " + it for cd, it in zip(k.split(u"\n"), v[0].split(u"\n"))] 
+                    comp = self.AppendItem(br, textwrap.fill(u"\n ".join(cc), 50))
+                    ajouteIndic(comp, v[1])
+                    
+            return
+        
+        def ajouteIndic(branche, listIndic):
+            for i, indic in enumerate(listIndic):
+                b = self.AppendItem(branche, textwrap.fill(indic[0], 50))
+                for j, p in enumerate(indic[1][1:]):
+                    if p != 0:
+                        if j == 0:
+                            self.SetItemTextColour(b, COUL_REVUE)
+                        else:
+                            self.SetItemTextColour(b, COUL_SOUT)
+                self.SetItemFont(b, font)
+        
+        if type(dic) == dict:  
+            const(dic, branche, debug = debug)
+        else:
+            ajouteIndic(branche, dic)
+#        self.Update()
+        self.Layout()
+        self.Parent.Layout()
+        self.Refresh()
+        
+#        self.SetVirtualSize(self.GetWindowBorderSize()+self.GetBestSize())
+        self.AdapterSize()
+    
+
+#        self.SetMaxSize(self.GetWindowBorderSize()+self.GetVirtualSize())
+ 
+            
+        return
+    
+    
+    def AdapterSize(self):
+        self.ExpandAll()
+#        self.CalculateSize(self.root, wx.ScreenDC())
+#        self.PaintItem(self.root, wx.ScreenDC(), 1, 0)
+#        print "Size =", self.GetBestSize(), self.GetClientSize(), 
+#        print self.GetEffectiveMinSize(), self.GetBoundingRect(self.root), 
+#        print self.GetMinClientSize(), self.GetMaxSize(), self.GetMinSize(), 
+#        print self.GetVirtualSize(), self.GetBestVirtualSize(),
+#        print self.GetWindowBorderSize()+self.GetVirtualSize(), self.GetMaxWidth(respect_expansion_state=False),
+#        print self.DoGetVirtualSize()
+        ms = self.GetMaxSize2(self.root)
+#        print "   **", ms
+#        print self.RecurseOnChildren(self.root, 1000, False)
+        self.SetMinSize((ms[0]+5, ms[1]+16))
+
+
+    def GetMaxSize2(self, item, level = 2, maxwidth=0, lastheight = 0):
+        dc = wx.ScreenDC()
+#        dc.SetFont(self.GetItemFont())
+        
+        child, cookie = self.GetFirstChild(item)
+#        print " level",level
+#        print " ",child, cookie
+        while child != None and child.IsOk():
+            dc.SetFont(self.GetItemFont(child))
+#            print "  txt =",self.GetItemText(child)
+            W, H, lH = dc.GetMultiLineTextExtent(self.GetItemText(child))
+#            print "  W,H, lH =",W,H, lH, self.GetIndent()
+            width = W + self.GetIndent()*level + 10
+            maxwidth = max(maxwidth, width)
+            lastheight += H + 6
+            
+            maxwidth, lastheight = self.GetMaxSize2(child, level+1, 
+                                                    maxwidth, lastheight)
+            
+            child, cookie = self.GetNextChild(item, cookie)
+
+        return maxwidth, lastheight
+    
+#    def max_width(self):
+#        dc = wx.ScreenDC()
+#        dc.SetFont(self.GetFont())
+#        widths = []
+#        print dir(self)
+#        for item, depth in self.__walk_items():
+#            if item != self.root:
+#                width = dc.GetTextExtent(self.GetItemText(item))[0] + self.GetIndent()*depth
+#                widths.append(width)
+#        return max(widths) + self.GetIndent()
+         
+#    def OnPaint(self,event):
+#        self.AdapterSize()
+        
 #class ArbreIndicateursPrj(wx.CheckListBox):
 #    def __init__(self, parent):
 #        
@@ -14304,6 +14488,14 @@ class PopupInfo2(wx.PopupWindow):
         self.Layout()
         self.Fit()
         return ctrlTxt
+    
+    ##########################################################################################
+    def CreerArbre(self, position = (1,0), span = (1,1), ref = None, dic = {}, flag = wx.ALIGN_CENTER):
+        arbre = ArbreCompetencesPopup(self)
+        self.sizer.Add(arbre, position, span, flag = flag|wx.ALL|wx.EXPAND, border = 5)
+        self.Layout()
+        self.Fit()
+        return arbre
     
     ##########################################################################################
     def SetTexte(self, texte, ctrlTxt):
