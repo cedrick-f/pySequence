@@ -81,7 +81,7 @@ class Referentiel():
 #                print p, v
 #        print "Com :", self.dicCompetences
 #        print "CoP :", self.dicCompetences_prj
-#        print "CoS :", self._dicCompetences_prj_simple
+        print "_dicIndicateurs_prj_simple :", self._dicIndicateurs_prj_simple.keys()
 #        print "Ind :", self._dicIndicateurs_prj
 #        print "Poi :", self.dicPoidsIndicateurs_prj
 #        print "Lig :", self.dicLignesIndicateurs_prj
@@ -108,7 +108,7 @@ class Referentiel():
         self.Code = u""
         self.Enseignement = [u""    ,   u"",    u""]
         self.options = {}               # options de l'enseignement : {Code : nomFichier}
-        self.tr_com = None              # tronc commun de l'enseignement : Code
+        self.tr_com = []                # tronc commun de l'enseignement : [Code, nomFichier]
         
         #
         # Centre d'intérêt
@@ -239,6 +239,7 @@ class Referentiel():
         """ Lecture de la branche XML
             (ouverture de fichier)
         """
+#        print "setBranche référentiel"
         self.initParam()
 
         def lect(branche, nom = ""):
@@ -251,9 +252,11 @@ class Referentiel():
             elif nom[:2] == "F_":
                 return float(eval(branche.get(nom)))
             elif nom[:2] == "B_":
+#                if branche.get(nom) == None: return False # Pour corriger un bug (version <=5.0beta3)
                 return branche.get(nom)[0] == "T"
             elif nom[:2] == "l_":
                 sbranche = branche.find(nom)
+                if sbranche == None: return []
                 dic = {}
                 for k, sb in sbranche.items():
                     _k = k[2:]
@@ -319,8 +322,11 @@ class Referentiel():
         if len(self.aColNon) == 0:
             self.aColNon = {'R' : True,  'S' : False}
 
+#        # Pour corriger une erreur de jeunesse de la 5.0beta3
+#        if self.Code in ['SIN', 'ITEC', 'AC', 'EE']:
+#            self.tr_com == True
+            
         self.postTraiter()
-
         self.completer()
 
         return
@@ -971,8 +977,7 @@ class Referentiel():
                     sdic[k0] = v0
             return sdic
                 
-        
-        if self.tr_com:
+        if self.tr_com != []:
             t = self.tr_com[0]
             if t in REFERENTIELS.keys():
 #                print "Add"
@@ -1006,7 +1011,7 @@ class Referentiel():
 #            print "_lstGrpIndicateurRevues", self._lstGrpIndicateurRevues
 #            print "_lstGrpIndicateurSoutenance", self._lstGrpIndicateurSoutenance
         
-            if self.tr_com:
+            if self.tr_com != []:
                 self.grilles_prj.update(REFERENTIELS[self.tr_com[0]].grilles_prj)
                 
                 
@@ -1222,7 +1227,8 @@ def chargerReferentiels():
     
     for r in REFERENTIELS.values():
         r.completer()
-#        print r
+#        if r.Code == "ITEC":
+#            print r
     
     
     #
@@ -1243,11 +1249,11 @@ def chargerReferentiels():
     # Construction de la structure en arbre
     #
     for k, r in REFERENTIELS.items():
-        if not r.tr_com:
+        if r.tr_com == []:
             ARBRE_REF[k] = []
     d = []
     for k, r in REFERENTIELS.items():
-        if r.tr_com:
+        if r.tr_com != []:
             ARBRE_REF[r.tr_com[0]].append(k)
             d.append(r.tr_com[0])
     
