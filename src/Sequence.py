@@ -40,7 +40,7 @@ Copyright (C) 2011-2014
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "5.0beta3"
+__version__ = "5.0beta4"
 print __version__
 
 #from threading import Thread
@@ -935,6 +935,7 @@ class Classe():
             except:
                 print "Erreur ouverture référentiel intégré !"
                 self.referentiel = REFERENTIELS[self.typeEnseignement]
+#            print self.referentiel
         else:
             self.version5 = False
             self.referentiel = REFERENTIELS[self.typeEnseignement]
@@ -960,6 +961,8 @@ class Classe():
                         self.CI = CI
                         if self.referentiel.CI_cible:
                             self.posCI = posCI
+        
+        print "version 5", self.version5
         
         self.etablissement = branche.get("Etab", u"")
         
@@ -2006,6 +2009,7 @@ class Projet(BaseDoc, Objet_sequence):
     ######################################################################################  
     def setBranche(self, branche):
 #        print "setBranche projet"
+#        print self.GetReferentiel()
         Ok = True
         err = 0
         
@@ -4570,7 +4574,7 @@ class Tache(Objet_sequence):
         
         self.indicateursEleve = { 0 : [], 1 : [], 2 : [], 3 : [],4 : [], 5 : [],6 : []}
         
-        if False:#not self.GetClasse().version5 and self.GetClasse().familleEnseignement == "STI":
+        if not self.GetClasse().version5:
             if not self.phase in [self.projet.getCodeLastRevue(), "S"]:
                 self.indicateursMaxiEleve = { 0 : [], 1 : [], 2 : [], 3 : [],4 : [], 5 : [],6 : []}
                 
@@ -4613,13 +4617,11 @@ class Tache(Objet_sequence):
                     brancheInd = branche.find("Indicateurs")
 #                    print "  branche Indicateurs"
                     if brancheInd != None:
-                            
                         if self.projet.nbrRevues == 2:
                             lstR = ["R1"]
                         else:
                             lstR = ["R1", "R2"]
-                        
-                        
+
                         # 
                         # Indicateurs revue par élève (première(s) revues)
                         #
@@ -4646,10 +4648,9 @@ class Tache(Objet_sequence):
                                         
                                         try:
 #                                            print "***",self.GetReferentiel().dicIndicateurs_prj[code][indic]
-                                            
                                             # si le type d'enseignement ne colle pas avec les indicateurs (pb lors de l'enregistrement)
-                                            if not code in self.GetReferentiel()._dicIndicateurs_prj:
-                                                print "Erreur 1"
+                                            if not code in self.GetReferentiel()._dicIndicateurs_prj_simple:
+                                                print "Erreur 1", code, "<>", self.GetReferentiel()._dicIndicateurs_prj_simple
                                                 return False, err | constantes.ERR_PRJ_T_TYPENS
                                             
                                             if not codeindic in self.indicateursEleve[i+1]:
@@ -4709,6 +4710,7 @@ class Tache(Objet_sequence):
 #                                    print "******",self.GetReferentiel().dicIndicateurs_prj[code][indic]
                                 # si le type d'enseignement ne colle pas avec les indicateurs (pb lors de l'enregistrement)
                                 if not code in self.GetReferentiel()._dicIndicateurs_prj_simple.keys():
+                                    print "Erreur 3", code, "<>", self.GetReferentiel()._dicIndicateurs_prj_simple.keys()
                                     err =  err | constantes.ERR_PRJ_T_TYPENS
                                 else:
                                     self.indicateursEleve[0].append(codeindic)
@@ -7942,10 +7944,10 @@ class FenetreProjet(FenetreDocument):
                 Ok = Ok and self.classe.setBranche(classe)
                 message += constantes.getOkErr(Ok) + u"\n"
                 
-                if not self.classe.version5 and self.classe.familleEnseignement == "STI":
+                if not self.classe.version5:
                     messageErreur(None, u"Ancien programme", 
                                   u"Projet enregistré avec les indicateurs de compétence antérieurs à la session 2014\n\n"\
-                                  u"Les indicateurs de compétence ne seront probablement pas tous chargés.")
+                                  u"Les indicateurs de compétence ne seront pas chargés.")
                 
                 # Le projet
                 message += u"Construction de la structure du projet..."
@@ -7962,7 +7964,11 @@ class FenetreProjet(FenetreDocument):
             dlg.Update(count, message)
             count += 1
             if err == 0:
-                self.projet.SetCompetencesRevuesSoutenance()
+                try:
+                    self.projet.SetCompetencesRevuesSoutenance()
+                except:
+                    print "Erreur 4"
+                        
             return root, message, count, Ok, err
         
         
@@ -13413,7 +13419,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
         self.Bind(wx.EVT_SIZE, self.OnSize2)
         self.Bind(CT.EVT_TREE_ITEM_GETTOOLTIP, self.OnToolTip)
         
-        self.SetColumnText(0,u"Compétences et indicateurs")
+        self.SetColumnText(0, ref.nomCompetences + u" et indicateurs de performance")
         self.SetColumnText(1, u"Poids C")
         self.SetColumnText(2, u"Poids S")
         self.SetColumnWidth(1, 60)
