@@ -40,7 +40,7 @@ Copyright (C) 2011-2014
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "5.0beta4"
+__version__ = "5.0beta7"
 print __version__
 
 #from threading import Thread
@@ -3264,7 +3264,7 @@ class Competences(Objet_sequence):
     
     ######################################################################################  
     def GetIntit(self, num):
-        return REFERENTIELS[self.parent.typeEnseignement].getCompetence(self.competences[num])
+        return REFERENTIELS[self.parent.typeEnseignement].getCompetence(self.competences[num])[0]
     
     
          
@@ -3359,7 +3359,7 @@ class Savoirs(Objet_sequence):
                     if code[0] == "_":
                         code = "B"+code[1:]
                     else:
-                        if self.GetReferentiel().tr_com == None:
+                        if self.GetReferentiel().tr_com == []:
                             code = "B"+code
                         else:
                             code = "S"+code
@@ -5869,8 +5869,8 @@ class Eleve(Personne, Objet_sequence):
                             'S' : self.GetReferentiel()._lstGrpIndicateurSoutenance}
 #        print lstGrpIndicateur
             
-        r, s = 0, 0
-        ler, les = {}, {}
+#        r, s = 0, 0
+#        ler, les = {}, {}
         
         rs = [0, 0]
         lers = [{}, {}]
@@ -5881,6 +5881,7 @@ class Eleve(Personne, Objet_sequence):
             for k, ph in enumerate(["R", "S"]):
                 if grp in lstGrpIndicateur[ph]:
                     for i, indic in enumerate(listIndic):
+#                        print "comp", grp, comp, i, indic[1]
                         if comp in dicIndicateurs.keys():
                             if dicIndicateurs[comp][i]:
                                 poids = indic[1]
@@ -5899,8 +5900,9 @@ class Eleve(Personne, Objet_sequence):
         
         for grp, grpComp in tousIndicateurs.items():
             titre, dicComp, poidsGrp = grpComp
-#            print "    ", grp
+#            print "    ", grp, poidsGrp
             for comp, lstIndic in dicComp.items():
+#                print "      ", comp
                 if type(lstIndic[1]) == list:           # 2 niveaux
                     getPoids(lstIndic[1], comp, poidsGrp)    
                 else:                                   # 3 niveaux
@@ -5910,7 +5912,7 @@ class Eleve(Personne, Objet_sequence):
                                                                
         r, s = rs
         ler, les = lers
-         
+#        print "les", les, s
          
         # On corrige s'il n'y a qu'une seule grille (cas SSI jusqu'à 2014)
 #        if len(self.GetReferentiel().grilles_prj) == 1: 
@@ -5921,9 +5923,9 @@ class Eleve(Personne, Objet_sequence):
 #            for l in les.keys():
 #                les[l] = les[l]*2
             
-        if "O8s" in les.keys():
-            les["O8"] = les["O8s"]
-            del les["O8s"]
+#        if "O8s" in les.keys():
+#            les["O8"] = les["O8s"]
+#            del les["O8s"]
             
 #        print r, s, ler, les
         
@@ -6245,8 +6247,8 @@ class Eleve(Personne, Objet_sequence):
             ev, ev_tot, seuil = self.GetEvaluabilite()
             
             keys = sorted(self.GetReferentiel()._dicIndicateurs_prj.keys())
-            if "O8s" in keys:
-                keys.remove("O8s")
+#            if "O8s" in keys:
+#                keys.remove("O8s")
             
             
             labr = [[pourCent2(ev_tot['R'][0], True), True]]
@@ -7714,27 +7716,27 @@ class FenetreSequence(FenetreDocument):
         self.definirNomFichierCourant(nomFichier)
         nomCourt = os.path.splitext(os.path.split(nomFichier)[1])[0]
         
-        try:
-            root = ET.parse(fichier).getroot()
-            
-            # La séquence
-            sequence = root.find("Sequence")
-            if sequence == None:
-                self.sequence.setBranche(root)
-            else:
-                # La classe
-                classe = root.find("Classe")
-                self.classe.setBranche(classe)
-                self.sequence.MiseAJourTypeEnseignement()
-                self.sequence.setBranche(sequence)  
+#        try:
+        root = ET.parse(fichier).getroot()
+        
+        # La séquence
+        sequence = root.find("Sequence")
+        if sequence == None:
+            self.sequence.setBranche(root)
+        else:
+            # La classe
+            classe = root.find("Classe")
+            self.classe.setBranche(classe)
+            self.sequence.MiseAJourTypeEnseignement()
+            self.sequence.setBranche(sequence)  
                 
           
-        except:
-            messageErreur(self,u"Erreur d'ouverture",
-                          u"La séquence pédagogique\n    %s\n n'a pas pu être ouverte !" %nomCourt)
-            fichier.close()
-            self.Close()
-            return
+#        except:
+#            messageErreur(self,u"Erreur d'ouverture",
+#                          u"La séquence pédagogique\n    %s\n n'a pas pu être ouverte !" %nomCourt)
+#            fichier.close()
+#            self.Close()
+#            return
 
 
 
@@ -8834,6 +8836,8 @@ class PanelPropriete_Sequence(PanelPropriete):
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
         self.textctrl.ChangeValue(self.sequence.intitule)
+        self.position.SetValue(self.sequence.position)
+        self.bmp.SetBitmap(self.getBitmapPeriode(250))
         self.Layout()
         if sendEvt:
             self.sendEvent()
@@ -10726,7 +10730,7 @@ class PanelPropriete_Savoirs(PanelPropriete):
             self.pageSavoir.sizer.AddGrowableRow(0)
         self.pageSavoir.Layout()
             
-        if self.GetDocument().GetReferentiel().tr_com:
+        if self.GetDocument().GetReferentiel().tr_com != []:
 #        if REFERENTIELS[self.savoirs.GetTypeEnseignement()].tr_com:
             # Il y a un tronc comun (Spécialité STI2D par exemple)
             self.pageSavoirSpe.DestroyChildren()
@@ -10802,7 +10806,7 @@ class PanelPropriete_Savoirs(PanelPropriete):
 #        print "MiseAJourTypeEnseignement Savoirs"
         ref = REFERENTIELS[self.savoirs.GetTypeEnseignement()]
         
-        if ref.tr_com:
+        if ref.tr_com != []:
             ref_tc = REFERENTIELS[ref.tr_com[0]]
             self.nb.SetPageText(0, ref_tc.nomSavoirs + " " + ref_tc.Code)
             if not hasattr(self, 'pageSavoirSpe') or not isinstance(self.pageSavoirSpe, PanelPropriete):
@@ -12289,7 +12293,7 @@ class PanelSelectionGrille(wx.Panel):
         titre = wx.StaticText(self, -1, eleve.GetReferentiel().nomParties_prj[codeGrille])
         self.SelectGrille = URLSelectorCombo(self, eleve.grille[codeGrille], 
                                              eleve.projet.GetPath(), 
-                                             dossier = False, ext = "Classeur Excel (*.xls)|*.xls")
+                                             dossier = False, ext = "Classeur Excel (*.xls*)|*.xls*")
         self.btnlien = wx.Button(self, -1, u"Ouvrir")
         self.btnlien.Show(self.eleve.grille[self.codeGrille].path != "")
         self.Bind(wx.EVT_BUTTON, self.OnClick, self.btnlien)
@@ -13025,7 +13029,7 @@ class ArbreSavoirs(CT.CustomTreeCtrl):
         self.SetItemBold(self.root, True)
         et = False
         if typ == "B":
-            if ref.tr_com:
+            if ref.tr_com != []:
                 dic = REFERENTIELS[ref.tr_com[0]].dicSavoirs
                 et = True
             else:
@@ -13033,12 +13037,12 @@ class ArbreSavoirs(CT.CustomTreeCtrl):
         elif typ == "S":
             dic = ref.dicSavoirs
         elif typ == "M":
-            if ref.tr_com:
+            if ref.tr_com != []:
                 dic = REFERENTIELS[ref.tr_com[0]].dicSavoirs_Math
             else:
                 dic = ref.dicSavoirs_Math
         elif typ == "P":
-            if ref.tr_com:
+            if ref.tr_com != []:
                 dic = REFERENTIELS[ref.tr_com[0]].dicSavoirs_Phys
             else:
                 dic = ref.dicSavoirs_Phys

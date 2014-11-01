@@ -73,16 +73,16 @@ class Referentiel():
 #        print "Sav :", self.dicSavoirs
 #        print "cellulesInfo_prj = ", self.cellulesInfo_prj
 #        print "dicSavoirs_Math", self.dicSavoirs_Math
-#        print "dicCompetences_prj", self._dicCompetences_prj
+        print "_dicCompetences_prj", self._dicCompetences_prj
 #        print "_dicCompetences_prj_simple", self._dicCompetences_prj_simple
 #        for p in self.getParams():
 #            v = getattr(self, p)
 #            if type(v) == dict:
 #                print p, v
-#        print "Com :", self.dicCompetences
+        print "dicCompetences :", self.dicCompetences
 #        print "CoP :", self.dicCompetences_prj
         print "_dicIndicateurs_prj_simple :", self._dicIndicateurs_prj_simple.keys()
-#        print "Ind :", self._dicIndicateurs_prj
+        print "_dicIndicateurs_prj :", self._dicIndicateurs_prj
 #        print "Poi :", self.dicPoidsIndicateurs_prj
 #        print "Lig :", self.dicLignesIndicateurs_prj
 #        print "Mat :", self.dicSavoirs_Math
@@ -916,6 +916,7 @@ class Referentiel():
 #        print self.getCompetence('A1.4')
         
         self._dicIndicateurs_prj = self.getPremierEtDernierNiveauArbre(self._dicCompetences_prj)
+        
 #        print "_dicIndicateurs_prj", self._dicIndicateurs_prj
         normaliserPoids(self._dicIndicateurs_prj, debug = False)
 #        print "                   ", self._dicIndicateurs_prj
@@ -985,6 +986,9 @@ class Referentiel():
 #                print REFERENTIELS[t]._dicCompetences_prj
                 self._dicCompetences_prj.update(REFERENTIELS[t]._dicCompetences_prj)
                 self._dicIndicateurs_prj.update(REFERENTIELS[t]._dicIndicateurs_prj)
+#                if 'O8s' in self._dicIndicateurs_prj.keys():
+#                    self._dicIndicateurs_prj['O8'][1].update(self._dicIndicateurs_prj['O8s'][1])
+#                    del self._dicIndicateurs_prj['O8s']
                 self._dicIndicateurs_prj_simple.update(REFERENTIELS[t]._dicIndicateurs_prj_simple)
 #                print ">>", self._dicCompetences_prj
         
@@ -1004,9 +1008,9 @@ class Referentiel():
                                 
             self._lstGrpIndicateurSoutenance = list(set(self._lstGrpIndicateurSoutenance))
             self._lstGrpIndicateurRevues = list(set(self._lstGrpIndicateurRevues))
-            if "O8s" in self._lstGrpIndicateurSoutenance:
-                self._lstGrpIndicateurSoutenance.remove("O8s")
-                self._lstGrpIndicateurSoutenance.append("O8")
+#            if "O8s" in self._lstGrpIndicateurSoutenance:
+#                self._lstGrpIndicateurSoutenance.remove("O8s")
+#                self._lstGrpIndicateurSoutenance.append("O8")
         
 #            print "_lstGrpIndicateurRevues", self._lstGrpIndicateurRevues
 #            print "_lstGrpIndicateurSoutenance", self._lstGrpIndicateurSoutenance
@@ -1029,12 +1033,13 @@ class Referentiel():
                     indic = indics[i-1]
                     return indic
         else:
-            comp = self.getCompetence(codeIndic)
+            comp = self.getCompetence_prj(codeIndic)
             if type(comp[1]) == dict:
                 return self.getPremierEtDernierNiveauArbre(comp[1])
             else: 
                 return comp[1]
-          
+
+
     #########################################################################
     def getIntituleIndicateur(self, comp):
         sep = "\n\t"+constantes.CHAR_POINT
@@ -1045,18 +1050,40 @@ class Referentiel():
             t = u""
             for k, v in indicateurs.items():
                 t += k + u" : " + v[0]
-            
+
+
     #########################################################################
     def getIntituleCompetence(self, comp, sousComp = False):
         sep = "\n\t"+constantes.CHAR_POINT
-        competence = self.getCompetence(comp)
+        competence = self.getCompetence_prj(comp)
         if sousComp and type(competence[1]) == dict:
             return sep.join([competence[0]] + [v for v in competence[1]])
         else:
             competence
-            
+
+
     #########################################################################
     def getCompetence(self, comp):
+#        print "getCompetence", comp
+#        print "   ", self.dicCompetences
+        if comp in self.dicCompetences.keys():
+#            print "   1>>"
+            return self.dicCompetences[comp]
+        else:
+            for k0, v0 in self.dicCompetences.items():
+#                print "  ", k0, type(v0[1])
+                if type(v0[1]) == dict:
+                    if comp in v0[1].keys():
+#                        print "   2>>"
+                        return v0[1][comp]
+                    else:
+                        for k1, v1 in v0[1].items():
+                            if type(v1[1]) == dict and comp in v1[1].keys():
+#                                print "   3>>"
+                                return v1[1][comp]
+
+    #########################################################################
+    def getCompetence_prj(self, comp):
         if comp in self._dicCompetences_prj.keys():
             return self._dicCompetences_prj[comp]
         else:
@@ -1068,11 +1095,7 @@ class Referentiel():
                         for k1, v1 in v0[1].items():
                             if type(v1[1]) == dict and comp in v1[1].keys():
                                 return v1[1][comp]
-                
-                    
-        
-                
-                
+                            
     #########################################################################
     def getTypeIndicateur(self, codeIndic):
 #        print "getTypeIndicateur", codeIndic
@@ -1228,7 +1251,7 @@ def chargerReferentiels():
     for r in REFERENTIELS.values():
         r.completer()
 #        if r.Code == "ITEC":
-#            print r
+#        print r
     
     
     #
