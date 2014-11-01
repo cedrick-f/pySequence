@@ -588,10 +588,14 @@ def Draw(ctx, seq, mouchard = False):
     #
     lstTexteC = []
     for c in seq.obj["C"].competences:
-        lstTexteC.append(seq.GetReferentiel().getCompetence(c))
+#        print "   ", c
+        lstTexteC.append(seq.GetReferentiel().getCompetence(c)[0])
+#    print "lstTexteC", lstTexteC
+    
     lstTexteS = []   
     for c in seq.obj["S"].savoirs:
         typ, cod = c[0], c[1:]
+#        print typ, cod
         if typ == "S": # Savoir spécialité STI2D
             lstTexteS.append(seq.GetReferentiel().getSavoir(cod))
         elif typ == "M": # Savoir Math
