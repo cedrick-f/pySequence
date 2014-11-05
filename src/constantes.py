@@ -53,7 +53,7 @@ PATH = os.path.dirname(os.path.abspath(sys.argv[0]))
 #PATH = os.path.split(PATH)[0]
 os.chdir(PATH)
 sys.path.append(PATH)
-print "Dossier de l'application :",PATH
+print u"Dossier de l'application :",PATH
 
 
 # 
@@ -74,7 +74,7 @@ PORTABLE = not(os.path.abspath(INSTALL_PATH) == os.path.abspath(PATH))
 
 
 TABLE_PATH = os.path.join(os.path.abspath(os.path.join(PATH, os.pardir)), 'tables')
-print "Dossier des tableaux Excel :", TABLE_PATH
+print u"Dossier des tableaux Excel :", TABLE_PATH
 
 if not PORTABLE: # Ce n'est pas une version portable qui tourne
     # On lit la clef de registre indiquant le type d'installation
@@ -91,7 +91,6 @@ if not PORTABLE:
         (value,keytype) = _winreg.QueryValueEx(regkey, 'DataFolder' ) 
         APP_DATA_PATH = value
     except:
-        import wx
         dlg = wx.MessageDialog(None, u"L'installation de pySequence est incorrecte !\nVeuillez désinstaller pySequence puis le réinstaller." ,
                                u"Installation incorrecte",
                                wx.OK | wx.ICON_WARNING
@@ -108,7 +107,7 @@ else: # C'est une version portable qui tourne
     APP_DATA_PATH = PATH
     print "Version portable !!"
         
-print "Dossier pour les données :", APP_DATA_PATH
+print u"Dossier pour les données :", APP_DATA_PATH
     
     
 ####################################################################################
@@ -328,110 +327,8 @@ imagesCI = [images.CI_1, images.CI_2, images.CI_3, images.CI_4,
 ####################################################################################
 TYPE_ENSEIGNEMENT_DEFAUT = "SSI"
 
-#TypesActivite = {"ED" : u"Activité d'étude de dossier",
-#                 "AP" : u"Activité pratique",
-#                 "P"  : u"Activité de projet",
-#                }
-#
-#TypesSeance = {"C"  : u"Cours",
-#               "TD" : u"Travaux Dirigés",
-#               "SA" : u"Synthèse d'activité",
-#               "SS" : u"Synthèse de séquence",
-#               "E"  : u"Evaluation",
-#               }
-#TypesSeance.update(TypesActivite)
-#TypesSeance.update({"R" : u"Rotation d'activités",
-#                    "S" : u"Activités en parallèle"})
-#
-#TypesSeanceCourt = {"ED" : u"Etude de dossier",
-#                    "AP" : u"Activité pratique",
-#                    "P"  : u"Projet",
-#                    "C"  : u"Cours",
-#                    "TD" : u"TD",
-#                    "SA" : u"Synt. d'activité",
-#                    "SS" : u"Synt. de séquence",
-#                    "E"  : u"Evaluation",
-#                    "R"  : u"Rotation",
-#                    "S"  : u"Parallèle"}
-#
-#listeTypeSeance = ["ED", "AP", "P", "C", "TD", "SA", "SS", "E", "R", "S"]
-#listeTypeActivite = ["ED", "AP", "P"]
-
-
-
-#Demarches = {"I" : u"Investigation",
-#             "R" : u"Résolution de problème",
-#             "P" : u"Projet"}
-#
-#DemarchesCourt = {"I" : u"Investigation",
-#                  "R" : u"Rés. de problème",
-#                  "P" : u"Projet"}
-#
-#listeDemarches = ["I", "R", "P"]
-
-
-#listEnseigmenent = ['ET', 'ITEC', 'AC', 'EE', 'SIN', 'SSI']
-#EnseignementsProjet = ['ITEC','AC', 'EE', 'SIN', 'SSI']
-
 # Le fichier contenant les CI STI2D ETT par académie
 FICHIER_CI_STI2D_ETT = "CI_STI2D_ETT.xml"
-
-####################################################################################
-#
-#   Les constantes par Enseignement
-#
-####################################################################################
-#Modules = {'ET'     : constantes_ETT,
-#           'ITEC'   : constantes_ITEC, 
-#           'AC'     : constantes_AC, 
-#           'EE'     : constantes_EE, 
-#           'SIN'    : constantes_SIN,
-#           'SSI'    : constantes_SSI}
-
-#FamilleEnseignement = {'ET'     : 'STI',
-#                       'ITEC'   : 'STI', 
-#                       'AC'     : 'STI', 
-#                       'EE'     : 'STI', 
-#                       'SIN'    : 'STI',
-#                       'SSI'    : 'SSI'}
-
-#CentresInterets = {}
-#dicCompetences = {}
-#dicSavoirs = {}
-#dicCellSavoirs = {}
-#Enseigmenent = {}
-#fichierProgressionProgramme = {}
-#for t in listEnseigmenent:
-#    CentresInterets[t] = Modules[t].CentresInterets
-#    dicCompetences[t] = Modules[t].dicCompetences
-#    dicSavoirs[t] = Modules[t].dicSavoirs
-#    dicCellSavoirs[t] = Modules[t].dicCellSavoirs
-#    Enseigmenent[t] = Modules[t].Enseigmenent
-#    fichierProgressionProgramme[t] = Modules[t].fichierProgressionProgramme
-#
-#dicSavoirs["MSSI"] = constantes_MATH.dicSavoirs_SSI
-#dicSavoirs["MSTI"] = constantes_MATH.dicSavoirs_STI
-#dicSavoirs["PSSI"] = constantes_PHY.dicSavoirs_SSI
-#dicSavoirs["PSTI"] = constantes_PHY.dicSavoirs_STI
-#
-#Fichier_GRILLE = {} 
-#Cellules_NON = {}   
-#for t in listEnseigmenent:    
-#    Fichier_GRILLE[t] = Modules[t].Fichier_GRILLE
-#    Cellules_NON[t] = Modules[t].Cellules_NON
-    
-#Cellules_INFO_STI =  {"Tit" : (13,1),
-#                      "Des" : (13,1),
-#                      "Nom" : (8,2),
-#                      "Pre" : (9,2),
-##                      "Pro" : (5,2)
-#                      }
-#
-#Cellules_INFO_SSI = {"Tit" : (12,1),
-#                     "Des" : (12,1),
-#                     "Nom" : (7,2),
-#                     "Pro" : (43,1),
-#                     "Pre" : (8,2)}
 
 
 ####################################################################################
@@ -447,16 +344,7 @@ Effectifs = {"C" : 32,
              "P" : None,
              }
 
-#NomsEffectifs= {"C" : [u"Classe entière",       u"Classe entière"],
-#                 "G" : [u"Effectif réduit",      u"Effectif réduit"],
-#                 "D" : [u"Demi-groupe",          u"Demi-groupe"],
-#                 "E" : [u"Etude et Projet",      u"Etude ou Projet"],
-#                 "P" : [u"Activité Pratique",    u"Act. Pra."],
-#                 }
-#
-#
-## Tout ce qui concerne les effectifs
-#listeEffectifs = ["C", "G", "D" ,"E" ,"P"]
+
 
 NbrGroupes = {"G" : 2, # Par classe
               "E" : 4, # Par grp Eff réduit
@@ -469,26 +357,6 @@ CouleursGroupes = {"C" : (0.3,0.3,0.7),
                    "E" : (0.3,0.5,0.5), 
                    "P" : (0.5,0.3,0.5), 
                    }
-
-#def getTxtEffectifs():
-#    """ Pour les OPTIONS :
-#        Met les paramètres d'effectifs à la queue dans un string
-#    """
-#    return ""
-#    t = u""
-#    for i, eff in enumerate(listeEffectifs):
-#        t += str(Effectifs[eff]) +" "
-#    return t
-
-
-#def setValEffectifs(txt):
-#    """ Pour les OPTIONS :
-#        Récupère les paramètes d'effectifs à partir d'un string
-#    """
-#    return
-#    lst = txt.split()
-#    for i, eff in enumerate(listeEffectifs):
-#        Effectifs[eff] = eval(lst[i])
 
    
     
