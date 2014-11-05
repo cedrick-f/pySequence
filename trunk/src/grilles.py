@@ -223,53 +223,6 @@ def modifierGrille(doc, tableaux, eleve):
                     else:
                         tableaux[classNON].setCell(nf, ligne, colNON, '')
 
-    #
-    # On rempli les cellules "Revue" (colonne J)
-    #     
-#    dic = Cellules_NON[doc.GetTypeEnseignement()]
-#    
-#    if eleve.projet.nbrRevues == 2:
-#        lstRevues = ["R1", "R2"]
-#    else:
-#        lstRevues = ["R1", "R2", "R3"]
-#    
-#
-#    
-#    for feuille, cellules in dic:
-#        for comp, cells in cellules.items():
-#            for j, cell in enumerate(cells):
-#                for i, r in enumerate(lstRevues):
-#                    # indic = l'indicateur "comp" doit être évalué
-##
-#                    rev = eleve.projet.getTachesRevue()[i]
-#                    
-#                    #clef = code compétence
-#                    #valeur = liste [True False ...] des indicateurs à mobiliser
-#                    dicIndic = rev.GetDicIndicateursEleve(eleve)
-#                    
-#                    if comp in dicIndic.keys():
-#                        indic = dicIndic[comp][j]
-#                    else:
-#                        indic = False
-#                  
-#                    if indic: # indicateur évalué --> on rempli la colonne "Revues" (J) !
-#                        l, c = cell
-#                        c = COL_REVUE
-#                        if doc.GetTypeEnseignement(simple = True) == "STI" and feuille != Feuille_ETT:
-#                            if comp+"_"+str(j+1) in rev.indicateursEleve[eleve.id+1]:
-#                                tableur[0].setCell(2, l, c, str(i+1))
-#                                break
-#                        elif doc.GetTypeEnseignement(simple = True) == "SSI":
-#                            if comp+"_"+str(j+1) in rev.indicateursEleve[eleve.id+1]:
-#                                try:
-#                                    tableur.setCell(2, l, c,  str(i+1))
-#                                except:
-#                                    pass # Pas de colonne "J" !
-#                                break
-#                    
-##                if doc.GetTypeEnseignement(simple = True) == "SSI" and dicIndicateurs['SSI'][comp][j][1]:
-##                    l, c = cell
-##                    tableur.setColor(feuille, l, c, 5)
 
     #
     # On rajoute quelques informations
@@ -321,15 +274,7 @@ def modifierGrille(doc, tableaux, eleve):
         except:
             pass
     
-#    l,c = Cellules_INFO_SSI["Pro"]
-#    tableur.xlBook.Worksheets(1).Cells(l, c).Activate()
-#    tableur.xlBook.Worksheets(1).Cells(l, c).Value2 = p.GetNomPrenom()
-#    .Value2 = doc.equipe[0].GetNomPrenom()
-        
-#    for p in doc.equipe:
-##        tableur.xlBook.Worksheets(1).Cells(l, c).Value2 = p.GetNomPrenom()
-#        tableur.setCell(1, l, c, p.prenom)
-#        l += 1
+
 
 
 import shutil

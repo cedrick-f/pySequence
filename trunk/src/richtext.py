@@ -4,8 +4,7 @@
 Sequence.py
 Aide à la réalisation de fiches pédagogiques de séquence
 *************
-*   STIDD   *
-*************
+
 Copyright (C) 2011  
 @author: Cedrick FAURY
 
@@ -58,7 +57,8 @@ class RichTextPanel(wx.Panel):
         
         if toolBar:
             self.tbar = self.MakeToolBar()
-            self.sizer.Add(self.tbar, flag = wx.EXPAND)
+            if self.tbar != None:
+                self.sizer.Add(self.tbar, flag = wx.EXPAND)
             
         self.rtc = rt.RichTextCtrl(self, size = size, style=wx.VSCROLL|wx.HSCROLL|wx.NO_BORDER|wx.WANTS_CHARS);
         self.sizer.Add(self.rtc, 1, flag = wx.EXPAND)
@@ -389,8 +389,11 @@ class RichTextPanel(wx.Panel):
         tbar.AddSeparator()
         doBind( tbar.AddTool(-1, images.Bouton_lien.GetBitmap(),
                             shortHelpString=u"Insérer un lien"), self.OnURL)
-        
-        tbar.Realize()
+        try:
+            tbar.Realize()
+        except wx._core.PyAssertionError:
+            print "Trop de documents ouverts"
+            return None
         
         return tbar
             

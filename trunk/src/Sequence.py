@@ -40,7 +40,7 @@ Copyright (C) 2011-2014
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "5.0beta7"
+__version__ = "5.0beta9"
 print __version__
 
 #from threading import Thread
@@ -118,7 +118,13 @@ if hasattr(sys, 'setdefaultencoding'):
         encoding = loc[1]
         sys.setdefaultencoding(encoding)
 
-DEFAUT_ENCODING = "utf-8"#sys.getdefaultencoding()
+
+FILE_ENCODING = sys.getfilesystemencoding() #'cp1252'#
+DEFAUT_ENCODING = "utf-8"
+SYSTEM_ENCODING = sys.stdout.encoding#sys.getdefaultencoding()
+print "FILE_ENCODING", FILE_ENCODING
+print "SYSTEM_ENCODING", SYSTEM_ENCODING
+
 
 import webbrowser
 import subprocess
@@ -189,14 +195,17 @@ from Referentiel import REFERENTIELS, ARBRE_REF
 import Referentiel
 #import constantes_ETT
 
-# Pour lire les classeurs Excel
-import recup_excel
+
 
 import Options
 from wx.lib.embeddedimage import PyEmbeddedImage
 
 if sys.platform == "win32" :
+    # Pour l'enregistement dans la base de donnée Windows
     import register
+    # Pour lire les classeurs Excel
+    import recup_excel
+print "OS :", sys.platform
 
 import textwrap
 
@@ -221,11 +230,7 @@ import richtext
 from math import sin,cos,pi, log
 from operator import attrgetter
 
-FILE_ENCODING = sys.getfilesystemencoding() #'cp1252'#
-#DEFAUT_ENCODING = sys.getdefaultencoding()
 
-print "FILE_ENCODING", FILE_ENCODING
-print "DEFAUT_ENCODING", DEFAUT_ENCODING
 
 ####################################################################################
 #
@@ -283,12 +288,19 @@ def testRel(lien, path):
         return os.path.relpath(lien,path)
     except:
         return lien
-    
 ######################################################################################  
 def toDefautEncoding(path): 
 #        try:
     path = path.decode(FILE_ENCODING)
     path = path.encode(DEFAUT_ENCODING)
+    return path  
+#        except:
+#            return self.path        
+######################################################################################  
+def toSystemEncoding(path): 
+#        try:
+    path = path.decode(FILE_ENCODING)
+    path = path.encode(SYSTEM_ENCODING)
     return path  
 #        except:
 #            return self.path    
@@ -5356,7 +5368,7 @@ class Personne(Objet_sequence):
         #
         self.ficheHTML = self.GetFicheHTML()
 
-        self.ficheXML = parseString(self.ficheHTML)
+        self.ficheXML = parseString(self.ficheHTML.encode('utf-8'))
        
         forceID(self.ficheXML)
         self.tip = PopupInfo(self.projet.app, self.ficheHTML)
@@ -5412,7 +5424,7 @@ class Personne(Objet_sequence):
             
         if hasattr(self, 'grille'):
             for k, g in self.grille.items():
-                root.set("Grille"+k, g.path)
+                root.set("Grille"+k, toDefautEncoding(g.path))
 #            root.set("Grille0", self.grille[0].path)
 #            root.set("Grille1", self.grille[1].path)
            
@@ -5440,7 +5452,7 @@ class Personne(Objet_sequence):
 #            print self.grille
             for k in self.GetReferentiel().nomParties_prj.keys():
                 self.grille[k] = Lien(typ = "f")
-                self.grille[k].path = branche.get("Grille"+k, u"")
+                self.grille[k].path = toFileEncoding(branche.get("Grille"+k, u""))
 #                print self.grille
 #            self.grille[0].path = branche.get("Grille0", u"")
 #            self.grille[1].path = branche.get("Grille1", u"")
@@ -5555,24 +5567,7 @@ def supprime_accent(ligne):
 #   Classe définissant les propriétés d'un élève
 #
 ####################################################################################
-class Eleve(Personne, Objet_sequence):
-    def __init__(self, projet, panelParent, ident = 0):
-        
-        self.titre = u"élève"
-        self.code = "Elv"
-        
-        self.grille = {} #[Lien(typ = 'f'), Lien(typ = 'f')]
-        for k in projet.GetReferentiel().nomParties_prj.keys():
-            self.grille[k] = Lien(typ = 'f')
-        
-        Personne.__init__(self, projet, panelParent, ident)
- 
-        
-        
-    def GetFicheHTML(self):
-        cr = constantes.GetCouleurHTML(COUL_REVUE)
-        cs = constantes.GetCouleurHTML(COUL_SOUT)
-        return """<HTML>
+BASE_FICHE_HTML = u"""<?xml version="1.0" encoding="utf-8"?><HTML>
     <p style="text-align: center;"><font size="12"><b>Elève</b></font></p>
 <p id="nom">Nom-Prénom</p>
 <p id="av"></p>
@@ -5598,7 +5593,26 @@ class Eleve(Personne, Objet_sequence):
 </tbody>
 </table>
 </HTML>
-""" % (cr,cs)
+"""
+
+class Eleve(Personne, Objet_sequence):
+    def __init__(self, projet, panelParent, ident = 0):
+        
+        self.titre = u"élève"
+        self.code = "Elv"
+        
+        self.grille = {} #[Lien(typ = 'f'), Lien(typ = 'f')]
+        for k in projet.GetReferentiel().nomParties_prj.keys():
+            self.grille[k] = Lien(typ = 'f')
+        
+        Personne.__init__(self, projet, panelParent, ident)
+ 
+        
+        
+    def GetFicheHTML(self):
+        cr = constantes.GetCouleurHTML(COUL_REVUE)
+        cs = constantes.GetCouleurHTML(COUL_SOUT)
+        return BASE_FICHE_HTML %(cr,cs)
 
             
     ######################################################################################  
@@ -7883,9 +7897,18 @@ class FenetreProjet(FenetreDocument):
         constantes.indent(root)
         
 #        print ET.tostring(projet)#, encoding="utf8",  method="xml")
-        
-        ET.ElementTree(root).write(fichier, encoding = DEFAUT_ENCODING)
-        
+        try:
+            ET.ElementTree(root).write(fichier, encoding = DEFAUT_ENCODING)
+        except IOError:
+            messageErreur(None, u"Accès refusé", 
+                                  u"L'accès au fichier %s a été refusé !\n\n"\
+                                  u"Essayer de faire \"Enregistrer sous...\"" %nomFichier)
+        except UnicodeDecodeError:
+            messageErreur(None, u"Erreur d'encodage", 
+                                  u"Un caractère spécial empêche l'enregistrement du fichier !\n\n"\
+                                  u"Essayer de le localiser et de le supprimer.\n"\
+                                  u"Merci de reporter cette erreur au développeur.")
+            
         fichier.close()
         self.definirNomFichierCourant(nomFichier)
         self.MarquerFichierCourantModifie(False)
@@ -7895,7 +7918,7 @@ class FenetreProjet(FenetreDocument):
         
     ###############################################################################################
     def ouvrir(self, nomFichier, redessiner = True):
-        print "Ouverture projet"
+        print "Ouverture projet", nomFichier
         tps1 = time.clock()
         
         # Pour le suivi de l'ouverture
@@ -8162,7 +8185,7 @@ class FenetreProjet(FenetreDocument):
                                   u" - qu'aucun fichier portant le même nom n'est déja ouvert\n" \
                                   u" - que le dossier choisi n'est pas protégé en écriture\n\n" \
                                   + nomFichier)
-                
+                wx.EndBusyCursor()
             
 #            for t, f in tf:
 #                try:
@@ -14187,7 +14210,7 @@ class URLSelectorCombo(wx.Panel):
         self.SetMaxSize((-1,22))
         sizer = wx.BoxSizer(wx.HORIZONTAL)
         
-        self.texte = wx.TextCtrl(self, -1, lien.path, size = (-1, 16))
+        self.texte = wx.TextCtrl(self, -1, toSystemEncoding(lien.path), size = (-1, 16))
         if dossier:
             bt1 =wx.BitmapButton(self, 100, wx.ArtProvider_GetBitmap(wx.ART_FOLDER, wx.ART_OTHER, (16, 16)))
             bt1.SetToolTipString(u"Sélectionner un dossier")
@@ -14255,7 +14278,8 @@ class URLSelectorCombo(wx.Panel):
         
         self.lien.EvalLien(lien, self.pathseq)
         
-        self.texte.ChangeValue(toDefautEncoding(self.lien.path)) # On le met en DEFAUT_ENCODING
+        self.texte.ChangeValue(toSystemEncoding(self.lien.path)) # On le met en DEFAUT_ENCODING
+#        self.texte.ChangeValue(self.lien.path) 
 #            self.texte.SetBackgroundColour(("white"))
 #        else:
 #            self.texte.SetBackgroundColour(("pink"))
@@ -15338,31 +15362,35 @@ class A_propos(wx.Dialog):
 
 
 if __name__ == '__main__':
-    import serveur
-    import socket
-    HOST, PORT = socket.gethostname(), 61955
-    
-    print "HOST :", HOST
-    
-    server = None
-    # On teste si pySequence est déja ouvert ...
-    #  = demande de connection au client (HOST,PORT) accéptée
-    try:
-        if len(sys.argv) > 1:
-            arg = sys.argv[1]
-        else:
-            arg = ''
-        serveur.client(HOST, PORT, arg)
-        sys.exit()
+    if sys.platform == "win32":
+        import serveur
+        import socket
+        HOST, PORT = socket.gethostname(), 61955
         
-    except socket.error: #socket.error: [Errno 10061] Aucune connexion n'a pu être établie car l'ordinateur cible l'a expressément refusée
-        # On démarre une nouvelle instance de pySequence
-        # = La demande de connection au client (HOST,PORT) a été refusée
-        try :
-            server = serveur.start_server(HOST, PORT)
-        except: # socket.error: [Errno 10013] Une tentative d’accès à un socket de manière interdite par ses autorisations d’accès a été tentée 
-            # L'accés a été refusé ... problème de pare-feu ??
-            pass 
+        print "HOST :", HOST
+        
+        server = None
+        # On teste si pySequence est déja ouvert ...
+        #  = demande de connection au client (HOST,PORT) accéptée
+        try:
+            if len(sys.argv) > 1:
+                arg = sys.argv[1]
+            else:
+                arg = ''
+            serveur.client(HOST, PORT, arg)
+            sys.exit()
+            
+        except socket.error: #socket.error: [Errno 10061] Aucune connexion n'a pu être établie car l'ordinateur cible l'a expressément refusée
+            # On démarre une nouvelle instance de pySequence
+            # = La demande de connection au client (HOST,PORT) a été refusée
+            try :
+                server = serveur.start_server(HOST, PORT)
+            except: # socket.error: [Errno 10013] Une tentative d’accès à un socket de manière interdite par ses autorisations d’accès a été tentée 
+                # L'accés a été refusé ... problème de pare-feu ??
+                pass 
+            app = SeqApp(False)
+            app.MainLoop()
+    else:
         app = SeqApp(False)
         app.MainLoop()
     
