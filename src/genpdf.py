@@ -67,6 +67,7 @@ from reportlab.pdfbase import _fontdata_enc_macexpert
 # end of workaround
 
 
+import time
 
 #
 #
@@ -199,7 +200,7 @@ def genererFicheValidation(nomFichier, projet):
     # A Spacer flowable is fairly obvious. It is used to ensure that an empty space
     # of a given size is left in the frame. This spacer leaves a 25mm gap before
     # this next paragraph.
-    story.append(Spacer(1, 15*mm))
+    story.append(Spacer(1, 5*mm))
     
     styleSheet = getSampleStyleSheet()
     
@@ -241,7 +242,7 @@ def genererFicheValidation(nomFichier, projet):
     #
     # Zone des signatures
     #
-    story.append(Spacer(1, 15*mm))
+    story.append(Spacer(1, 5*mm))
     V1 = [Paragraph(u"Visa du chef d’établissement", normal_style),
           Paragraph(u"(Nom, prénom, date et signature)", entete_style)]
     V2 = [Paragraph(u"Visa du ou des IA-IPR", normal_style),
@@ -319,17 +320,22 @@ class PdfPanel(wx.Panel):
         wx.Panel.__init__(self, parent, id=-1)
         self.pdf = None
         sizer = wx.BoxSizer(wx.VERTICAL)
-        if constantes.ADOBE_VERSION[:3] == (11, 0, 7) or constantes.ADOBE_VERSION[:3] == (11, 0, 8):
-            self.pdf = wx.StaticText(self, -1, u"Cette fonctionnalité n'est pas compatible Adobe Acrobat Reader version 11.0.07 !!\n\n"\
-                                               u"Pour visualiser le dossier de validation :\n"\
-                                               u" - Passer à la version 10.0.09 - si disponible (http://get.adobe.com/fr/reader)\n" \
-                                               u" - Utiliser la version 11.0.06 (http://www.adobe.com/support/downloads/product.jsp?product=10&platform=Windows)\n" \
-                                               u" - Utiliser la version 10 (http://get.adobe.com/fr/reader/otherversions)\n" \
-                                               u" - Générer le fichier .pdf : menu Fichier/Générer le dossier de validation projet")
-        elif get_min_adobe_version() != None:
-            self.pdf = PDFWindow(self, style=wx.SUNKEN_BORDER)
+        if constantes.ADOBE_VERSION == None:
+            self.pdf = wx.StaticText(self, -1, u"Cette fonctionnalité n'est disponible qu'avec Adobe Acrobat Reader\n"\
+                                                   u"Pour obtenir le dossier de validation, passer par le menu Fichier/Générer le dossier de validation.")
         else:
-            self.pdf = wx.StaticText(self, -1, u"Cette fonctionnalité n'est disponible qu'avec Adobe Acrobat Reader")
+            if constantes.ADOBE_VERSION[:3] == (11, 0, 7) or constantes.ADOBE_VERSION[:3] == (11, 0, 8):
+                self.pdf = wx.StaticText(self, -1, u"Cette fonctionnalité n'est pas compatible Adobe Acrobat Reader version 11.0.07 !!\n\n"\
+                                                   u"Pour visualiser le dossier de validation :\n"\
+                                                   u" - Passer à la version 10.0.09 - si disponible (http://get.adobe.com/fr/reader)\n" \
+                                                   u" - Utiliser la version 11.0.06 (http://www.adobe.com/support/downloads/product.jsp?product=10&platform=Windows)\n" \
+                                                   u" - Utiliser la version 10 (http://get.adobe.com/fr/reader/otherversions)\n" \
+                                                   u" - Générer le fichier .pdf : menu Fichier/Générer le dossier de validation projet")
+            elif get_min_adobe_version() != None:
+                self.pdf = PDFWindow(self, style=wx.SUNKEN_BORDER)
+            else:
+                self.pdf = wx.StaticText(self, -1, u"Cette fonctionnalité n'est disponible qu'avec Adobe Acrobat Reader\n"\
+                                                   u"Pour obtenir le dossier de validation, passer par le menu Fichier/Générer le dossier de validation.")
 #        else:
 #            self.pdf = pdfViewer( self, -1, wx.DefaultPosition,
 #                                wx.DefaultSize, wx.HSCROLL|wx.VSCROLL|wx.SUNKEN_BORDER)
@@ -353,7 +359,15 @@ class PdfPanel(wx.Panel):
         if Ok:
             self.pdf.LoadFile(fichertemp)
         if True:#get_min_adobe_version() != None:
-            shutil.rmtree(self.dosstemp)
+            try:
+                shutil.rmtree(self.dosstemp)
+            except:
+                time.sleep(.5)
+                try:
+                    shutil.rmtree(self.dosstemp)
+                except:
+                    pass
+                
         wx.EndBusyCursor()
         if not Ok:
             self.pdf = wx.StaticText(self, -1, u"Un des textes descriptifs du projet est trop grand !")

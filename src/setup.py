@@ -1,10 +1,10 @@
 #!/usr/bin/python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 
 ##################################################################################################
 #
-#    Script pour générer un pack avec executable :
-#    c:\python26\python setup.py build
+#    Script pour gÃ©nÃ©rer un pack avec executable :
+#    c:\python27\python setup.py build
 #
 ##################################################################################################
 
@@ -16,7 +16,7 @@ from cx_Freeze import setup, Executable
 import shutil
 shutil.rmtree("build", ignore_errors=True)
 
-# Inculsion des fichiers de données
+# Inculsion des fichiers de donnï¿½es
 #################################################################################################
 includefiles = [('Microsoft.VC90.CRT', "Microsoft.VC90.CRT"),
                      'gpl.txt', 
@@ -65,9 +65,9 @@ cible = Executable(
 
 
 setup(  name = "pySequence",
-        version = "5.0.0.1",
-        author = "Cedrick FAURY & Jean-Claude FRICOU",
-        description = u"pySéquence",
+        version = "5.0.0.9",
+        author = "CÃ©drick FAURY & Jean-Claude FRICOU",
+        description = u"pySÃ©quence",
         options = {"build_exe": build_exe_options},
 #        include-msvcr = True,
         executables = [cible])
