@@ -1,0 +1,680 @@
+<Referentiel B_CI_BO="False" B_CI_cible="True" B_projet="False" I_duree_prj="0" S_Code="ET" S_Famille="STI" S_nomCompetences="Comp&#233;tences" S_nomSavoirs="Savoirs">
+  <l_CentresInterets S_CentresInterets00="D&#233;veloppement durable et comp&#233;titivit&#233; des produits" S_CentresInterets01="Design, cr&#233;ativit&#233; et innovation" S_CentresInterets02="Caract&#233;ristiques des mat&#233;riaux et structures" S_CentresInterets03="Solutions constructives des mat&#233;riaux et des structures" S_CentresInterets04="Dimensionnement des structures et choix des mat&#233;riaux" S_CentresInterets05="Efficacit&#233; &#233;nerg&#233;tique li&#233;e au comportement des mat&#233;riaux et des structures" S_CentresInterets06="Formes et caract&#233;ristiques de l'&#233;nergie" S_CentresInterets07="Organisation structurelle et solutions constructives des cha&#238;nes d'&#233;nergie" S_CentresInterets08="Am&#233;lioration de l'efficacit&#233; &#233;nerg&#233;tique dans les cha&#238;nes d'&#233;nergie" S_CentresInterets09="Am&#233;lioration de la gestion de l'&#233;nergie" S_CentresInterets10="Formes et caract&#233;ristiques de l'information" S_CentresInterets11="Organisation structurelle et solutions constructives des cha&#238;nes d'information" S_CentresInterets12="Commande temporelle des syst&#232;mes" S_CentresInterets13="Informations li&#233;es au comportement des mat&#233;riaux et des structures" S_CentresInterets14="Optimisation des param&#232;tres par simulation globale" />
+  <l_Enseignement S_Enseignement00="STI2D-ETT" S_Enseignement01="STI2D : Enseignement Technologique Transversal" S_Enseignement02="STI2D" />
+  <d_aColNon B_R="True" B_S="False" />
+  <d_activites>
+    <l_ED S_ED00="Etude de dossier" S_ED01="Activit&#233; d'&#233;tude de dossier" />
+    <l_P S_P00="Projet" S_P01="Activit&#233; de projet" />
+    <l_AP S_AP00="Activit&#233; pratique" S_AP01="Activit&#233; pratique" />
+  </d_activites>
+  <d_cellulesInfo_prj />
+  <d_demarcheSeance>
+    <l_ED S_ED00="I" S_ED01="R" />
+    <l_P S_P00="I" S_P01="R" S_P02="P" />
+    <l_AP S_AP00="I" S_AP01="R" />
+  </d_demarcheSeance>
+  <d_demarches>
+    <l_I S_I00="Investigation" S_I01="Investigation" />
+    <l_P S_P00="Projet" S_P01="Projet" />
+    <l_R S_R00="R&#233;s. Probl&#232;me" S_R01="R&#233;solution de probl&#232;me" />
+  </d_demarches>
+  <d_dicCompetences>
+    <l_O8s S_O8s00="Valider des solutions techniques">
+      <d_O8s01>
+        <l_CO8.0 S_CO8.000="Justifier des &#233;l&#233;ments d'une simulation relative au comportement de tout ou partie d'un syst&#232;me et les &#233;carts par rapport au r&#233;el">
+          <l_CO8.001>
+            <l_CO8.00100 I_CO8.0010002="0" S_CO8.0010000="Les solutions techniques envisag&#233;es sont correctement analys&#233;es au regard des r&#233;sultats d'exp&#233;rimentations et/ou de tests et/ou de simulations">
+              <l_CO8.0010001 F_CO8.001000102="60.0" I_CO8.001000100="0" I_CO8.001000101="0" />
+            </l_CO8.00100>
+            <l_CO8.00101 I_CO8.0010102="0" S_CO8.0010100="L'origine des &#233;carts entre les r&#233;sultats obtenus et les exigences du cahier des charges est correctement identifi&#233;e">
+              <l_CO8.0010101 F_CO8.001010102="40.0" I_CO8.001010100="0" I_CO8.001010101="0" />
+            </l_CO8.00101>
+          </l_CO8.001>
+        </l_CO8.0>
+      </d_O8s01>
+      <l_O8s02 I_O8s0200="0" I_O8s0201="0" I_O8s0202="20" />
+    </l_O8s>
+    <l_O6 S_O600="Communiquer une id&#233;e, un principe ou une solution technique, un projet, y compris en langue &#233;trang&#232;re">
+      <d_O601>
+        <l_CO6.3 S_CO6.300="Pr&#233;senter et argumenter des d&#233;marches, des r&#233;sultats, y compris dans une langue &#233;trang&#232;re">
+          <l_CO6.301>
+            <l_CO6.30100 I_CO6.3010002="0" S_CO6.3010000="Le choix de la d&#233;marche retenue est argument&#233;e">
+              <l_CO6.3010001 F_CO6.301000102="25.0" I_CO6.301000100="0" I_CO6.301000101="0" />
+            </l_CO6.30100>
+            <l_CO6.30101 I_CO6.3010102="0" S_CO6.3010100="Les r&#233;sultats sont pr&#233;sent&#233;s et comment&#233;s de mani&#232;re claire et concise">
+              <l_CO6.3010101 F_CO6.301010102="25.0" I_CO6.301010100="0" I_CO6.301010101="0" />
+            </l_CO6.30101>
+          </l_CO6.301>
+        </l_CO6.3>
+        <l_CO6.2 S_CO6.200="D&#233;crire le fonctionnement et/ou l'exploitation d'un syst&#232;me en utilisant l'outil de description le plus pertinent">
+          <l_CO6.201>
+            <l_CO6.20100 I_CO6.2010002="0" S_CO6.2010000="La description du fonctionnement ou de l'exploitation du syst&#232;me est synth&#233;tique et correcte">
+              <l_CO6.2010001 F_CO6.201000102="25.0" I_CO6.201000100="0" I_CO6.201000101="0" />
+            </l_CO6.20100>
+          </l_CO6.201>
+        </l_CO6.2>
+        <l_CO6.1 S_CO6.100="D&#233;crire une id&#233;e, un principe, une solution, un projet en utilisant des outils de repr&#233;sentation adapt&#233;s">
+          <l_CO6.101>
+            <l_CO6.10100 I_CO6.1010002="0" S_CO6.1010000="La description du principe ou de la solution est synth&#233;tique et correcte">
+              <l_CO6.1010001 F_CO6.101000102="25.0" I_CO6.101000100="0" I_CO6.101000101="0" />
+            </l_CO6.10100>
+          </l_CO6.101>
+        </l_CO6.1>
+      </d_O601>
+      <l_O602 I_O60200="0" I_O60201="0" I_O60202="45" />
+    </l_O6>
+    <l_O5 S_O500="Utiliser un mod&#232;le de comportement pour pr&#233;dire un fonctionnement ou valider une performance">
+      <d_O501>
+        <l_CO5.1 S_CO5.100="Expliquer des &#233;l&#233;ments d'une mod&#233;lisation propos&#233;e relative au comportement de tout ou partie d'un syst&#232;me">
+          <l_CO5.101>
+            <l_CO5.10100 I_CO5.1010002="0" S_CO5.1010000="">
+              <l_CO5.1010001 I_CO5.101000100="0" I_CO5.101000101="0" I_CO5.101000102="0" />
+            </l_CO5.10100>
+          </l_CO5.101>
+        </l_CO5.1>
+        <l_CO5.2 S_CO5.200="Identifier des variables internes et externes utiles &#224; une mod&#233;lisation, simuler et valider le comportement du mod&#232;le">
+          <l_CO5.201>
+            <l_CO5.20100 I_CO5.2010002="0" S_CO5.2010000="">
+              <l_CO5.2010001 I_CO5.201000100="0" I_CO5.201000101="0" I_CO5.201000102="0" />
+            </l_CO5.20100>
+          </l_CO5.201>
+        </l_CO5.2>
+        <l_CO5.3 S_CO5.300="Evaluer un &#233;cart entre le comportement du r&#233;el et le comportement du mod&#232;le en fonction des param&#232;tres propos&#233;s">
+          <l_CO5.301>
+            <l_CO5.30100 I_CO5.3010002="0" S_CO5.3010000="">
+              <l_CO5.3010001 I_CO5.301000100="0" I_CO5.301000101="0" I_CO5.301000102="0" />
+            </l_CO5.30100>
+          </l_CO5.301>
+        </l_CO5.3>
+      </d_O501>
+      <l_O502 I_O50200="0" I_O50201="0" I_O50202="0" />
+    </l_O5>
+    <l_O4 S_O400="D&#233;coder l&#8217;organisation fonctionnelle, structurelle et logicielle d&#8217;un syst&#232;me">
+      <d_O401>
+        <l_CO4.1 S_CO4.100="Identifier et caract&#233;riser les fonctions et les constituants d'un syst&#232;me ainsi que ses entr&#233;es/sorties">
+          <l_CO4.101>
+            <l_CO4.10100 I_CO4.1010002="0" S_CO4.1010000="">
+              <l_CO4.1010001 I_CO4.101000100="0" I_CO4.101000101="0" I_CO4.101000102="0" />
+            </l_CO4.10100>
+          </l_CO4.101>
+        </l_CO4.1>
+        <l_CO4.3 S_CO4.300="Identifier et caract&#233;riser le fonctionnement temporel d'un syst&#232;me">
+          <l_CO4.301>
+            <l_CO4.30100 I_CO4.3010002="0" S_CO4.3010000="">
+              <l_CO4.3010001 I_CO4.301000100="0" I_CO4.301000101="0" I_CO4.301000102="0" />
+            </l_CO4.30100>
+          </l_CO4.301>
+        </l_CO4.3>
+        <l_CO4.2 S_CO4.200="Identifier et caract&#233;riser l'agencement  mat&#233;riel et/ou logiciel d'un syst&#232;me">
+          <l_CO4.201>
+            <l_CO4.20100 I_CO4.2010002="0" S_CO4.2010000="">
+              <l_CO4.2010001 I_CO4.201000100="0" I_CO4.201000101="0" I_CO4.201000102="0" />
+            </l_CO4.20100>
+          </l_CO4.201>
+        </l_CO4.2>
+        <l_CO4.4 S_CO4.400="Identifier et caract&#233;riser des solutions techniques relatives aux mat&#233;riaux, &#224; la structure, &#224; l'&#233;nergie et aux informations (acquisition, traitement, transmission) d'un syst&#232;me">
+          <l_CO4.401>
+            <l_CO4.40100 I_CO4.4010002="0" S_CO4.4010000="">
+              <l_CO4.4010001 I_CO4.401000100="0" I_CO4.401000101="0" I_CO4.401000102="0" />
+            </l_CO4.40100>
+          </l_CO4.401>
+        </l_CO4.4>
+      </d_O401>
+      <l_O402 I_O40200="0" I_O40201="0" I_O40202="0" />
+    </l_O4>
+    <l_O3 S_O300="Identifier les &#233;l&#233;ments influents du d&#233;veloppement d&#8217;un syst&#232;me">
+      <d_O301>
+        <l_CO3.2 S_CO3.200="Evaluer la comp&#233;titivit&#233; d'un syst&#232;me d'un point de vue technique et &#233;conomique">
+          <l_CO3.201>
+            <l_CO3.20100 I_CO3.2010002="0" S_CO3.2010000="">
+              <l_CO3.2010001 I_CO3.201000100="0" I_CO3.201000101="0" I_CO3.201000102="0" />
+            </l_CO3.20100>
+          </l_CO3.201>
+        </l_CO3.2>
+        <l_CO3.1 S_CO3.100="D&#233;coder le cahier des charges fonctionnel d'un syst&#232;me">
+          <l_CO3.101>
+            <l_CO3.10100 I_CO3.1010002="0" S_CO3.1010000="">
+              <l_CO3.1010001 I_CO3.101000100="0" I_CO3.101000101="0" I_CO3.101000102="0" />
+            </l_CO3.10100>
+          </l_CO3.101>
+        </l_CO3.1>
+      </d_O301>
+      <l_O302 I_O30200="0" I_O30201="0" I_O30202="0" />
+    </l_O3>
+    <l_O2 S_O200="Identifier les &#233;l&#233;ments permettant la limitation de l&#8217;Impact environnemental d&#8217;un syst&#232;me et de ses constituants">
+      <d_O201>
+        <l_CO2.2 S_CO2.200="Justifier les solutions constructives d'un syst&#232;me au regard des impacts environnementaux et &#233;conomiques engendr&#233;s tout au long de son cycle de vie">
+          <l_CO2.201>
+            <l_CO2.20100 I_CO2.2010002="0" S_CO2.2010000="La relation entre une fonction, des solutions et leur impact environnemental ou soci&#233;tal est pr&#233;cis&#233;e ">
+              <l_CO2.2010001 F_CO2.201000102="20.0" I_CO2.201000100="0" I_CO2.201000101="0" />
+            </l_CO2.20100>
+            <l_CO2.20101 I_CO2.2010102="0" S_CO2.2010100="Le compromis technico &#233;conomique et/ou la prise en compte des normes et r&#233;glementations est expliqu&#233; ">
+              <l_CO2.2010101 F_CO2.201010102="20.0" I_CO2.201010100="0" I_CO2.201010101="0" />
+            </l_CO2.20101>
+          </l_CO2.201>
+        </l_CO2.2>
+        <l_CO2.1 S_CO2.100="Identifier les flux et la forme de l'&#233;nergie, caract&#233;riser ses transformations et/ou modulations et estimer l'efficacit&#233; &#233;nerg&#233;tique globale d'un syst&#232;me">
+          <l_CO2.101>
+            <l_CO2.10100 I_CO2.1010002="0" S_CO2.1010000="Les flux et la forme de l'&#233;nergie et/ou de l'information sont d&#233;crits de fa&#231;on qualitative">
+              <l_CO2.1010001 F_CO2.101000102="20.0" I_CO2.101000100="0" I_CO2.101000101="0" />
+            </l_CO2.10100>
+            <l_CO2.10101 I_CO2.1010102="0" S_CO2.1010100="Les caract&#233;ristiques d'entr&#233;es sorties des transformations ou modulations sont correctement pr&#233;cis&#233;es">
+              <l_CO2.1010101 F_CO2.101010102="20.0" I_CO2.101010100="0" I_CO2.101010101="0" />
+            </l_CO2.10101>
+            <l_CO2.10102 I_CO2.1010202="0" S_CO2.1010200="L'analyse globale d'une chaine (&#233;nergie, action, information) est correctement r&#233;alis&#233;e">
+              <l_CO2.1010201 F_CO2.101020102="20.0" I_CO2.101020100="0" I_CO2.101020101="0" />
+            </l_CO2.10102>
+          </l_CO2.101>
+        </l_CO2.1>
+      </d_O201>
+      <l_O202 I_O20200="0" I_O20201="0" I_O20202="15" />
+    </l_O2>
+    <l_O1 S_O100="Caract&#233;riser des syst&#232;mes privil&#233;giant un usage raisonn&#233; du point de vue d&#233;veloppement durable">
+      <d_O101>
+        <l_CO1.1 S_CO1.100="Justifier les choix des mat&#233;riaux, des structures d'un syst&#232;me et les &#233;nergies mises en oeuvre dans une approche de d&#233;veloppement durable">
+          <l_CO1.101>
+            <l_CO1.10100 I_CO1.1010002="0" S_CO1.1010000="Le choix des mat&#233;riaux et/ou des mat&#233;riels est justifi&#233;, des crit&#232;res d'&#233;co conception sont pris en compte">
+              <l_CO1.1010001 F_CO1.101000102="35.0" I_CO1.101000100="0" I_CO1.101000101="0" />
+            </l_CO1.10100>
+            <l_CO1.10101 I_CO1.1010102="0" S_CO1.1010100="La  structure mat&#233;rielle et/ou informationnelle est correctement justifi&#233;e ">
+              <l_CO1.1010101 F_CO1.101010102="35.0" I_CO1.101010100="0" I_CO1.101010101="0" />
+            </l_CO1.10101>
+          </l_CO1.101>
+        </l_CO1.1>
+        <l_CO1.2 S_CO1.200="Justifier le choix d'une solution selon des contraintes d'ergonomie et d'effets sur la sant&#233; de l'homme et du vivant">
+          <l_CO1.201>
+            <l_CO1.20100 I_CO1.2010002="0" S_CO1.2010000="La justification des param&#232;tres de confort et/ou la r&#233;ponse apport&#233;e par le syst&#232;me aux contraintes de pr&#233;servation de la sant&#233; et du respect de la s&#233;curit&#233; sont explicit&#233;es">
+              <l_CO1.2010001 F_CO1.201000102="30.0" I_CO1.201000100="0" I_CO1.201000101="0" />
+            </l_CO1.20100>
+          </l_CO1.201>
+        </l_CO1.2>
+      </d_O101>
+      <l_O102 I_O10200="0" I_O10201="0" I_O10202="20" />
+    </l_O1>
+  </d_dicCompetences>
+  <d_dicSavoirs>
+    <l_1 S_100="Principes de conception des syst&#232;mes de d&#233;veloppement durable">
+      <d_101>
+        <l_1.1 S_1.100="Comp&#233;titivit&#233; et cr&#233;ativit&#233;">
+          <d_1.101>
+            <l_1.1.1 S_1.1.100="Param&#232;tres de la comp&#233;titivit&#233; ">
+              <l_1.1.101 S_1.1.10100="Importance du service rendu (besoin r&#233;el et besoin induit)" S_1.1.10101="Innovation (de produit, de proc&#233;d&#233;, de marketing)" S_1.1.10102="Recherche de solutions techniques (brevets) et cr&#233;ativit&#233;, strat&#233;gie de propri&#233;t&#233; industrielle (protection du nom, du design et de l&#8217;aspect technique), enjeux de la normalisation" S_1.1.10103="Design produit et architecture" S_1.1.10104="Ergonomie&#160;: notion de confort, d&#8217;efficacit&#233;, de  s&#233;curit&#233; dans les relations homme &#8211; produit, homme &#8211; syst&#232;me" />
+            </l_1.1.1>
+            <l_1.1.3 S_1.1.300="Compromis complexit&#233; &#8211; efficacit&#233; &#8211; co&#251;t">
+              <l_1.1.301 S_1.1.30100="Relation Fonction/Co&#251;t/Besoin" S_1.1.30101="Relation Fonction/Co&#251;t/R&#233;alisation" S_1.1.30102="Relation Fonction/Impact environnemental" />
+            </l_1.1.3>
+            <l_1.1.2 S_1.1.200="Cycle de vie d'un produit et choix techniques, &#233;conomiques et environnementaux">
+              <l_1.1.201 S_1.1.20100="Les &#233;tapes du cycle de vie d&#8217;un syst&#232;me" S_1.1.20101="Prise en compte globale du cycle de vie" />
+            </l_1.1.2>
+          </d_1.101>
+        </l_1.1>
+        <l_1.2 S_1.200="&#201;co conception">
+          <d_1.201>
+            <l_1.2.2 S_1.2.200="Mise &#224; disposition des ressources">
+              <l_1.2.201 S_1.2.20100="Co&#251;ts relatifs, disponibilit&#233;, impacts environnementaux des mat&#233;riaux" S_1.2.20101="Enjeux &#233;nerg&#233;tiques mondiaux&#160;: extraction et transport, production centralis&#233;e, production locale" />
+            </l_1.2.2>
+            <l_1.2.3 S_1.2.300="Utilisation raisonn&#233;e des ressources">
+              <l_1.2.301 S_1.2.30100="Propri&#233;t&#233;s physico-chimiques, m&#233;caniques et thermiques des mat&#233;riaux" S_1.2.30101="Impacts environnementaux associ&#233;s au cycle de vie du produit" S_1.2.30102="Efficacit&#233; &#233;nerg&#233;tique d&#8217;un syst&#232;me" S_1.2.30103="Apport de la cha&#238;ne d&#8217;information associ&#233;e &#224; la commande pour am&#233;liorer l&#8217;efficacit&#233; globale d&#8217;un syst&#232;me" />
+            </l_1.2.3>
+            <l_1.2.1 S_1.2.100="&#201;tapes de la d&#233;marche de conception">
+              <l_1.2.101 S_1.2.10100="Expression du besoin" S_1.2.10101="Sp&#233;cifications fonctionnelles d&#8217;un syst&#232;me (cahier des charges fonctionnel)" />
+            </l_1.2.1>
+          </d_1.201>
+        </l_1.2>
+      </d_101>
+    </l_1>
+    <l_3 S_300="Solutions technologiques">
+      <d_301>
+        <l_3.2 S_3.200="Constituants d&#8217;un syst&#232;me">
+          <d_3.201>
+            <l_3.2.4 S_3.2.400="Transmission de l&#8217;information, r&#233;seaux et internet">
+              <l_3.2.401 S_3.2.40100="Transmission de l&#8217;information (modulations d&#8217;amplitude, modulations de fr&#233;quence, modulations de phase)" S_3.2.40101="Caract&#233;ristiques d&#8217;un canal de transmission, multiplexage" S_3.2.40102="Organisations mat&#233;rielle et logicielle d&#8217;un dispositif communicant&#160;: constituants et interfa&#231;ages" S_3.2.40103="Mod&#232;les en couche des r&#233;seaux, protocoles et encapsulation des donn&#233;es" S_3.2.40104="Adresse physique (MAC) du protocole Ethernet et adresse logique (IP) du protocole IP. Lien adresse MAC/IP&#160;: protocole ARP" S_3.2.40105="Architecture client/serveur&#160;: protocoles FTP et HTTP" S_3.2.40106="Gestion d'un n&#339;ud de r&#233;seau par le param&#233;trage d'un routeur : adresses IP, NAT/PAT, DNS, pare-feu" />
+            </l_3.2.4>
+            <l_3.2.1 S_3.2.100="Transformateurs et Modulateurs d&#8217;&#233;nergie associ&#233;s">
+              <l_3.2.101 S_3.2.10100="Adaptateurs d&#8217;&#233;nergie&#160;: r&#233;ducteurs m&#233;caniques, transformateurs &#233;lectriques parfaits et &#233;changeurs thermiques" S_3.2.10101="Actionneurs et modulateurs&#160;: moteurs &#233;lectriques et modulateurs, v&#233;rins pneumatiques et interfaces, vannes pilot&#233;es dans l&#8217;habitat pour des applications hydrauliques et thermiques" S_3.2.10102="Accouplements permanents ou non, freins" S_3.2.10103="Convertisseurs d'&#233;nergie : ventilateurs, pompes, compresseurs, moteur thermique" S_3.2.10104="&#201;clairage" />
+            </l_3.2.1>
+            <l_3.2.2 S_3.2.200="Stockage d&#8217;&#233;nergie">
+              <l_3.2.201 S_3.2.20100="Constituants permettant le stockage sous forme&#160;:\n- m&#233;canique, hydraulique ou pneumatique : sous forme potentielle et/ou cin&#233;tique\n- chimique : piles et accumulateurs, combustibles, carburants, comburants\n- &#233;lectrostatique&#160;: condensateur et super condensateur\n- &#233;lectromagn&#233;tique\n- thermique : chaleur latente et chaleur sensible" />
+            </l_3.2.2>
+            <l_3.2.3 S_3.2.300="Acquisition et codage de l&#8217;information">
+              <l_3.2.301 S_3.2.30100="Capteurs&#160;: approche qualitative des capteurs, grandeur mesur&#233;e et grandeurs d&#8217;influence (parasitage, sensibilit&#233;, lin&#233;arit&#233;)" S_3.2.30101="Conditionnement et adaptation du capteur &#224; la cha&#238;ne d&#8217;information, &#233;chantillonnage, blocage" S_3.2.30102="Filtrage de l&#8217;information : types de filtres (approche par gabarit)" S_3.2.30103="Restitution de l&#8217;information : approche qualitative des d&#233;modulations (transducteurs Voix, Donn&#233;es, Images&#160;; commande des  pr&#233;-actionneurs)" />
+            </l_3.2.3>
+          </d_3.201>
+        </l_3.2>
+        <l_3.1 S_3.100="Structures mat&#233;rielles et/ou logicielles">
+          <d_3.101>
+            <l_3.1.3 S_3.1.300="Typologie des solutions constructives de l&#8217;&#233;nergie">
+              <l_3.1.301 S_3.1.30100="Syst&#232;me &#233;nerg&#233;tique mono&#160;source" S_3.1.30101="Syst&#232;me &#233;nerg&#233;tique multi&#160;source et&#160; hybride" />
+            </l_3.1.3>
+            <l_3.1.2 S_3.1.200="Typologie des solutions constructives des liaisons entre solides">
+              <l_3.1.201 S_3.1.20100="Caract&#233;risation des liaisons sur les syst&#232;mes" S_3.1.20101="Relation avec les mouvements / d&#233;formations et les efforts" />
+            </l_3.1.2>
+            <l_3.1.1 S_3.1.100="Choix des mat&#233;riaux">
+              <l_3.1.101 S_3.1.10100="Principes de choix, indices de performances, m&#233;thodes structur&#233;es d&#8217;optimisation d&#8217;un choix, conception multi&#160;contraintes et multi&#160;objectifs" />
+            </l_3.1.1>
+            <l_3.1.4 S_3.1.400="Traitement de l&#8217;information">
+              <l_3.1.401 S_3.1.40100="Codage (binaire, hexad&#233;cimal, ASCII) et transcodage de l&#8217;information, compression, correction" S_3.1.40101="Programmation objet&#160;: structures &#233;l&#233;mentaires de classe, concept d'instanciation" S_3.1.40102="Traitement programm&#233;&#160;: structure &#224; base de microcontr&#244;leurs et structures sp&#233;cialis&#233;es (composants analogiques et/ou num&#233;riques programmables)" S_3.1.40103="Syst&#232;mes &#233;v&#233;nementiels&#160;: logique combinatoire, logique s&#233;quentielle" S_3.1.40104="Traitement analogique de l&#8217;information&#160;: op&#233;rations &#233;l&#233;mentaires (addition, soustraction, multiplication, saturation)" />
+            </l_3.1.4>
+          </d_3.101>
+        </l_3.1>
+      </d_301>
+    </l_3>
+    <l_2 S_200="Outils et m&#233;thodes d&#8217;analyse et de description des syst&#232;mes">
+      <d_201>
+        <l_2.3 S_2.300="Approche comportementale">
+          <d_2.301>
+            <l_2.3.1 S_2.3.100="Mod&#232;les de comportement">
+              <l_2.3.101 S_2.3.10100="Principes g&#233;n&#233;raux d&#8217;utilisation" S_2.3.10101="Identification et limites des mod&#232;les de comportements,  param&#233;trage associ&#233; aux progiciels de simulation" S_2.3.10102="Identification des variables du mod&#232;le, simulation et comparaison des r&#233;sultats obtenus au syst&#232;me r&#233;el ou &#224; son cahier des charges&quot;]]," />
+            </l_2.3.1>
+            <l_2.3.2 S_2.3.200="Comportement des mat&#233;riaux">
+              <l_2.3.201 S_2.3.20100="Mat&#233;riaux composites, nano mat&#233;riaux. Classification et typologie des mat&#233;riaux" S_2.3.20101="Comportements caract&#233;ristiques des mat&#233;riaux selon les points de vue" S_2.3.20102="M&#233;caniques (efforts, frottements, &#233;lasticit&#233;, duret&#233;, ductilit&#233;)" S_2.3.20103="Thermiques (&#233;chauffement par conduction, convection et rayonnement, fusion, &#233;coulement)" S_2.3.20104="&#278;lectrique (r&#233;sistivit&#233;, perm&#233;abilit&#233;, permittivit&#233;)&quot;]]," />
+            </l_2.3.2>
+            <l_2.3.3 S_2.3.300="Comportement m&#233;caniques des syst&#232;mes">
+              <l_2.3.301 S_2.3.30100="&#201;quilibre des solides&#160;: mod&#233;lisation des liaisons, actions m&#233;caniques, principe fondamental de la statique, r&#233;solution d&#8217;un probl&#232;me de statique plane" S_2.3.30101="R&#233;sistance des mat&#233;riaux&#160;: hypoth&#232;ses et mod&#232;le poutre, types de sollicitations simples, notion de contrainte et de d&#233;formation, loi de Hooke et module d&#8217;Young, limite &#233;lastique, &#233;tude d&#8217;une sollicitation simple&quot;]]," />
+            </l_2.3.3>
+            <l_2.3.4 S_2.3.400="Structures porteuses">
+              <l_2.3.401 S_2.3.40100="Aspects vibratoires" S_2.3.40101="Transfert de charges" />
+            </l_2.3.4>
+            <l_2.3.5 S_2.3.500="Comportement &#233;nerg&#233;tique des syst&#232;mes">
+              <l_2.3.501 S_2.3.50100="Analyse des pertes de charges fluidiques, caract&#233;ristiques des composants" S_2.3.50101="Les param&#232;tres de gestion de l&#8217;&#233;nergie li&#233;s au stockage et aux transformations" S_2.3.50102="Conservation d&#8217;&#233;nergie, pertes et rendements, principe de r&#233;versibilit&#233;" S_2.3.50103="Natures et caract&#233;ristiques des sources et des charges" S_2.3.50104="Caract&#233;risation des &#233;changes d&#8217;&#233;nergie entre source et charge&#160;: disponibilit&#233;, puissance, reconfiguration, qualit&#233;, adaptabilit&#233; au profil de charge, r&#233;gularit&#233;" />
+            </l_2.3.5>
+            <l_2.3.6 S_2.3.600="Comportements informationnels des syst&#232;mes">
+              <l_2.3.601 S_2.3.60100="Caract&#233;risation de l&#8217;information&#160;: expression, visualisation, interpr&#233;tation, caract&#233;risations temporelle et fr&#233;quentielle" S_2.3.60101="Mod&#232;les de description en statique&#160;et en dynamique" S_2.3.60102="Mod&#232;les algorithmiques&#160;: structures algorithmiques &#233;l&#233;mentaires (boucles, conditions, transitions conditionnelles). Variables" />
+            </l_2.3.6>
+          </d_2.301>
+        </l_2.3>
+        <l_2.2 S_2.200="Outils de repr&#233;sentation">
+          <d_2.201>
+            <l_2.2.1 S_2.2.100="Repr&#233;sentation du r&#233;el">
+              <l_2.2.101 S_2.2.10100="Croquis (design produit, architecture)" S_2.2.10101="Repr&#233;sentation volumique num&#233;rique des syst&#232;mes" S_2.2.10102="Exploitation des repr&#233;sentations num&#233;riques" />
+            </l_2.2.1>
+            <l_2.2.2 S_2.2.200="Repr&#233;sentation du symboliques">
+              <l_2.2.201 S_2.2.20100="Repr&#233;sentation symbolique associ&#233;e &#224; la mod&#233;lisation des syst&#232;mes : diagrammes adapt&#233;s SysML, graphe de flux d&#8217;&#233;nergie, sch&#233;ma cin&#233;matique, sch&#233;ma &#233;lectrique, sch&#233;ma fluidique." S_2.2.20101="Sch&#233;ma architectural (m&#233;canique, &#233;nerg&#233;tique, informationnel)" S_2.2.20102="Repr&#233;sentations des r&#233;partitions et de l&#8217;&#233;volution des grandeurs &#233;nerg&#233;tiques (diagramme, vid&#233;o, image)" S_2.2.20103="Repr&#233;sentations associ&#233;es au codage de l&#8217;information&#160;: variables, encapsulation des donn&#233;es" />
+            </l_2.2.2>
+          </d_2.201>
+        </l_2.2>
+        <l_2.1 S_2.100="Approche fonctionnelle des syst&#232;mes">
+          <d_2.101>
+            <l_2.1.2 S_2.1.200="Organisation fonctionnelle d&#8217;une cha&#238;ne d&#8217;information">
+              <l_2.1.201 S_2.1.20100="Caract&#233;risation des fonctions relatives &#224; l'information&#160;: acquisition et restitution, codage et traitement, transmission" />
+            </l_2.1.2>
+            <l_2.1.1 S_2.1.100="Organisation fonctionnelle d&#8217;une cha&#238;ne d'&#233;nergie">
+              <l_2.1.101 S_2.1.10100="Caract&#233;risation des fonctions relatives &#224; l&#8217;&#233;nergie&#160;: production, transport, distribution, stockage, transformation, modulation.]]," />
+            </l_2.1.1>
+          </d_2.101>
+        </l_2.1>
+      </d_201>
+    </l_2>
+  </d_dicSavoirs>
+  <d_dicSavoirs_Math>
+    <l_1 S_100="Premi&#232;re">
+      <d_101>
+        <l_1.1 S_1.100="Analyse">
+          <d_1.101>
+            <l_1.1.1 S_1.1.100="Second degr&#233;">
+              <l_1.1.101 S_1.1.10100="&#201;quation du second degr&#233;, discriminant" S_1.1.10101="Signe du trin&#244;me" />
+            </l_1.1.1>
+            <l_1.1.3 S_1.1.300="&#201;tude de fonctions">
+              <l_1.1.301 S_1.1.30100="Fonction de r&#233;f&#233;rence : abs" S_1.1.30101="Repr&#233;entation graphique des fonctions                        " />
+            </l_1.1.3>
+            <l_1.1.2 S_1.1.200="Fonctions circulaires">
+              <l_1.1.201 S_1.1.20100="Elements de trigonom&#233;trie : cercle trigonom&#233;trique, radian, mesure d'un angle orient&#233;, mesure principale" S_1.1.20101="Fonctions de r&#233;f&#233;rence : sin et cos" />
+            </l_1.1.2>
+            <l_1.1.5 S_1.1.500="Suites">
+              <l_1.1.501 S_1.1.50100="Modes de g&#233;n&#233;ration d&#8217;une suite num&#233;rique" S_1.1.50101="Suites g&#233;om&#233;triques" S_1.1.50102="Approche de la notion de limite d&#8217;une suite &#224; partir d&#8217;exemples" />
+            </l_1.1.5>
+            <l_1.1.4 S_1.1.400="D&#233;rivation">
+              <l_1.1.401 S_1.1.40100="Nombre d&#233;riv&#233; d&#8217;une fonction en un point" S_1.1.40101="Tangente &#224; la courbe repr&#233;sentative d&#8217;une fonction d&#233;rivable en un point" S_1.1.40102="Fonction d&#233;riv&#233;e" S_1.1.40103="D&#233;riv&#233;e des fonctions usuelles" S_1.1.40104="D&#233;riv&#233;e d&#8217;une somme, d&#8217;un produit et d&#8217;un quotient" S_1.1.40105="Lien entre signe de la d&#233;riv&#233;e et sens de variation" S_1.1.40106="Extremum d&#8217;une fonction" />
+            </l_1.1.4>
+          </d_1.101>
+        </l_1.1>
+        <l_1.2 S_1.200="G&#233;om&#233;trie">
+          <d_1.201>
+            <l_1.2.2 S_1.2.200="Nombres complexes">
+              <l_1.2.201 S_1.2.20100="Forme alg&#233;brique : somme, produit, quotient, conjugu&#233;" S_1.2.20101="Repr&#233;sentation g&#233;om&#233;trique" S_1.2.20102="Affixe d&apos;un point, d&apos;un vecteur" S_1.2.20103="Forme trigonom&#233;trique : module et argument" S_1.2.20104="Interpr&#233;tation g&#233;om&#233;trique" />
+            </l_1.2.2>
+            <l_1.2.1 S_1.2.100="Produit scalaire dans le plan">
+              <l_1.2.101 S_1.2.10100="Projection orthogonale d&apos;un vecteur sur un axe" S_1.2.10101="D&#233;finition et propri&#233;t&#233;s du produit scalaire de deux vecteurs dans le plan" S_1.2.10102="Applications du produit scalaire" />
+            </l_1.2.1>
+          </d_1.201>
+        </l_1.2>
+        <l_1.3 S_1.300="Statistiques et probabilit&#233;s">
+          <d_1.301>
+            <l_1.3.3 S_1.3.300="&#201;chantillonnage">
+              <l_1.3.301 S_1.3.30100="Utilisation de la loi binomiale pour une prise de d&#233;cision &#224; partir d&#8217;une fr&#233;quence" />
+            </l_1.3.3>
+            <l_1.3.2 S_1.3.200="Probabilit&#233;s">
+              <l_1.3.201 S_1.3.20100="Sch&#233;ma de Bernoulli" S_1.3.20101="Variable al&#233;atoire associ&#233;e au nombre de succ&#232;s dans un sch&#233;ma de Bernouilli" S_1.3.20102="Loi binomiale" S_1.3.20103="Esp&#233;rance, variance et &#233;cart-type de la loi binomiale" />
+            </l_1.3.2>
+            <l_1.3.1 S_1.3.100="Statistique descriptive, analyse de donn&#233;es">
+              <l_1.3.101 S_1.3.10100="Caract&#233;ristiques de dispersion : variance, &#233;cart-type" />
+            </l_1.3.1>
+          </d_1.301>
+        </l_1.3>
+      </d_101>
+    </l_1>
+    <l_A S_A00="Algorithmique">
+      <l_A01 S_A0100="Instructions &#233;l&#233;mentaires" S_A0101="Boucle et it&#233;rateur, instruction conditionnelle" />
+    </l_A>
+    <l_T S_T00="Terminale">
+      <d_T01>
+        <l_T.1 S_T.100="Analyse">
+          <d_T.101>
+            <l_T.1.4 S_T.1.400="Fonctions logarithmes">
+              <l_T.1.401 S_T.1.40100="Fonction logarithme n&#233;p&#233;rien" S_T.1.40101="Relation fonctionnelle" S_T.1.40102="Nombre e" S_T.1.40103="Fonction logarithme en base dix ou en base deux" />
+            </l_T.1.4>
+            <l_T.1.5 S_T.1.500="Fonctions exponentielles">
+              <l_T.1.501 S_T.1.50100="Fonction exp(x)" S_T.1.50101="Relation fonctionnelles" S_T.1.50102="Notation e" S_T.1.50103="Exemples de fonctions exponentielles de base a" S_T.1.50104="Comparaison des comportements &#224; l'infini de la fonction exponentielle et de la fonction logarithme n&#233;p&#233;rien avec les fonctions puissances" />
+            </l_T.1.5>
+            <l_T.1.6 S_T.1.600="Int&#233;gration">
+              <l_T.1.601 S_T.1.60100="D&#233;finition de l'int&#233;grale d'une fonction continue et positive sur[a,b comme aire sous la courbe" S_T.1.60101="Notation" S_T.1.60102="Primitive d&#8217;une fonction continue sur un intervalle" S_T.1.60103="Int&#233;grale d&#8217;une fonction continue de signe quelconque" S_T.1.60104="Propri&#233;t&#233;s de l'int&#233;grale : lin&#233;arit&#233;, positivit&#233;, relation de Chasles" S_T.1.60105="Calculs d&apos;aires" S_T.1.60106="Valeur moyenne d&apos;une fonction sur un intervalle" />
+            </l_T.1.6>
+            <l_T.1.7 S_T.1.700="Equations diff&#233;rentielles">
+              <l_T.1.701 S_T.1.70100="Equation lin&#233;aire du premier degr&#233;" S_T.1.70101="Existence et unicit&#233; de la fonction satisfaisant une condition initiale donn&#233;e" S_T.1.70102="Equation y'' + w&#178;y = 0" S_T.1.70103="Existence et unicit&#233; de la fonction satisfaisant une condition initiale donn&#233;e" />
+            </l_T.1.7>
+            <l_T.1.1 S_T.1.100="Suites ">
+              <l_T.1.101 S_T.1.10100="Limite d&#8217;une suite d&#233;finie par son terme g&#233;n&#233;ral" S_T.1.10101="Notation lim" S_T.1.10102="Suites g&#233;om&#233;triques" />
+            </l_T.1.1>
+            <l_T.1.2 S_T.1.200="Limites de fonctions">
+              <l_T.1.201 S_T.1.20100="Asymptote parall&#232;le &#224; l'un des axes de coordonn&#233;es" S_T.1.20101="Limite finie d'une fonction &#224; l'infini" S_T.1.20102="Limite infinie d&#8217;une fonction en un point" S_T.1.20103="Limite infinie d'une fonction &#224; l'infini" S_T.1.20104="Limites et op&#233;rations" />
+            </l_T.1.2>
+            <l_T.1.3 S_T.1.300="D&#233;riv&#233;es et primitives">
+              <l_T.1.301 S_T.1.30100="Calcul de d&#233;riv&#233;es : compl&#233;ment" S_T.1.30101="Primitive d&apos;une fonction sur un intervalle" />
+            </l_T.1.3>
+          </d_T.101>
+        </l_T.1>
+        <l_T.3 S_T.300="Probabilit&#233;s et statistique">
+          <d_T.301>
+            <l_T.3.2 S_T.3.200="Prise de d&#233;cision et estimation">
+              <l_T.3.201 S_T.3.20100="Intervalle de fluctuation d'une fr&#233;quence" S_T.3.20101="Intervalle de confiance d&apos;une proportion" />
+            </l_T.3.2>
+            <l_T.3.1 S_T.3.100="Exemples de lois &#224; densit&#233;">
+              <l_T.3.101 S_T.3.10100="Loi uniforme sur [a,b]" S_T.3.10101="Esp&#233;rance et variance d&#8217;une variable al&#233;atoire suivant une loi uniforme" S_T.3.10102="Loi exponentielle" S_T.3.10103="Esp&#233;rance d&#8217;une variable al&#233;atoire suivant une loi exponentielle" S_T.3.10104="Loi normale d'esp&#233;rance et d'&#233;cart-type donn&#233;s" S_T.3.10105="Approximation d&apos;une loi binomiale par une loi normale" />
+            </l_T.3.1>
+          </d_T.301>
+        </l_T.3>
+        <l_T.2 S_T.200="G&#233;om&#233;trie et nombres complexes">
+          <d_T.201>
+            <l_T.2.2 S_T.2.200="Nombres complexes">
+              <l_T.2.201 S_T.2.20100="Forme exponentielle" />
+            </l_T.2.2>
+            <l_T.2.1 S_T.2.100="Produit scalaire dans le plan">
+              <l_T.2.101 S_T.2.10100="Forme d&apos;addition et de duplication des sinus et cosinus" />
+            </l_T.2.1>
+          </d_T.201>
+        </l_T.2>
+      </d_T01>
+    </l_T>
+  </d_dicSavoirs_Math>
+  <d_dicSavoirs_Phys>
+    <l_1 S_100="Premi&#232;re">
+      <d_101>
+        <l_1.4 S_1.400="Mat&#233;riaux polym&#232;res">
+          <d_1.401>
+            <l_1.4.1 S_1.4.100="Mat&#233;riaux naturels et artificiels">
+              <l_1.4.101 S_1.4.10100="Squelettes carbon&#233;s et groupes caract&#233;ristiques" />
+            </l_1.4.1>
+            <l_1.4.2 S_1.4.200="Liaisons covalentes simples et doubles">
+              <l_1.4.201 S_1.4.20100="Formule de Lewis" S_1.4.20101="Interactions intermol&#233;culaires structure des polym&#232;res et propri&#233;t&#233;s m&#233;caniques et thermiques" />
+            </l_1.4.2>
+            <l_1.4.3 S_1.4.300="R&#233;actions de polym&#233;risation">
+              <l_1.4.301 S_1.4.30100="Du monom&#232;re au polym&#232;re" />
+            </l_1.4.3>
+            <l_1.4.4 S_1.4.400="Masse molaire mol&#233;culaire, degr&#233; de polym&#233;risation">
+              <l_1.4.401 />
+            </l_1.4.4>
+            <l_1.4.5 S_1.4.500="Polym&#232;res utilis&#233;s dans les v&#234;tements et rev&#234;tements">
+              <l_1.4.501 S_1.4.50100="Production, utilisation, recyclage" />
+            </l_1.4.5>
+          </d_1.401>
+        </l_1.4>
+        <l_1.5 S_1.500="Analyse des risques">
+          <l_1.501 S_1.50100="R&#232;glement CLP europ&#233;en" S_1.50101="Produits inflammables" S_1.50102="point &#233;clair" S_1.50103="Toxicit&#233; des compos&#233;s" S_1.50104="VME, VLE" S_1.50105="dose l&#233;tale" />
+        </l_1.5>
+        <l_1.6 S_1.600="Propri&#233;t&#233;s des mat&#233;riaux">
+          <l_1.601 S_1.60100="Transferts thermiques : conduction, convection, rayonnement" S_1.60101="Flux thermique" S_1.60102="Conductivit&#233; thermique des mat&#233;riaux" S_1.60103="R&#233;sistance thermique" />
+        </l_1.6>
+        <l_1.7 S_1.700="Mise en mouvement">
+          <d_1.701>
+            <l_1.7.4 S_1.7.400="Energie m&#233;canique">
+              <l_1.7.401 />
+            </l_1.7.4>
+            <l_1.7.3 S_1.7.300="Energie potentielle">
+              <l_1.7.301 S_1.7.30100="de pesanteur" S_1.7.30101="&#233;lastique" />
+            </l_1.7.3>
+            <l_1.7.2 S_1.7.200="Energie cin&#233;tique">
+              <l_1.7.201 S_1.7.20100="Solide en mouvement de translation" S_1.7.20101="Solide en mouvement de rotation" S_1.7.20102="Moment d'inertie par rapport &#224; un axe" />
+            </l_1.7.2>
+            <l_1.7.1 S_1.7.100="R&#233;f&#233;rentiels, trajectoires, vitesse, vitesse angulaire, acc&#233;l&#233;ration">
+              <l_1.7.101 />
+            </l_1.7.1>
+          </d_1.701>
+        </l_1.7>
+        <l_1.1 S_1.100="Gestion de l&#8217;&#233;nergie dans l&#8217;habitat">
+          <d_1.101>
+            <l_1.1.1 S_1.1.100="Energie ; Puissance">
+              <l_1.1.101 S_1.1.10100="Conservation de l'&#233;nergie" />
+            </l_1.1.1>
+            <l_1.1.3 S_1.1.300="Transferts thermiques">
+              <l_1.1.301 S_1.1.30100="Conduction, rayonnement, convection" S_1.1.30101="Flux thermique, r&#233;sistance thermique" S_1.1.30102="Caract&#233;ristiques thermiques des mat&#233;riaux" />
+            </l_1.1.3>
+            <l_1.1.2 S_1.1.200="Energie interne">
+              <l_1.1.201 S_1.1.20100="Temp&#233;rature" S_1.1.20101="Capacit&#233; thermique massique                        " />
+            </l_1.1.2>
+            <l_1.1.5 S_1.1.500="Energie chimique">
+              <l_1.1.501 S_1.1.50100="Transformation chimique d'un syst&#232;me et effets thermiques associ&#233;s" S_1.1.50101="Combustion, combustibles, comburants" S_1.1.50102="Avancement et bilan de mati&#232;re" S_1.1.50103="Pouvoir calorifique d&apos;un combustible" S_1.1.50104="Protection contre les risques des combustions" />
+            </l_1.1.5>
+            <l_1.1.4 S_1.1.400="Energie et puissance &#233;lectrique">
+              <l_1.1.401 S_1.1.40100="Tension ; Intensit&#233;" S_1.1.40101="Propri&#233;t&#233;s &#233;lectriques des mat&#233;riaux" S_1.1.40102="Dip&#244;les passifs et dip&#244;les actifs" S_1.1.40103="Effet joule" S_1.1.40104="Energie stock&#233;es dans un condensateur, dans une bobine" S_1.1.40105="Transport et distribution de l'&#233;nergie &#233;lectrique" S_1.1.40106="Protection contre les risques du courant &#233;l&#233;ctrique" />
+            </l_1.1.4>
+            <l_1.1.6 S_1.1.600="Cha&#238;nes &#233;nerg&#233;tiques">
+              <l_1.1.601 S_1.1.60100="Rendement" />
+            </l_1.1.6>
+          </d_1.101>
+        </l_1.1>
+        <l_1.2 S_1.200="L'&#233;clairage">
+          <d_1.201>
+            <l_1.2.2 S_1.2.200="Flux lumineux, longueur d&apos;onde, couleur et spectre">
+              <l_1.2.201 />
+            </l_1.2.2>
+            <l_1.2.1 S_1.2.100="Sources lumineuses">
+              <l_1.2.101 />
+            </l_1.2.1>
+          </d_1.201>
+        </l_1.2>
+        <l_1.3 S_1.300="Confort acoustique">
+          <d_1.301>
+            <l_1.3.2 S_1.3.200="Puissance et intensit&#233; sonore">
+              <l_1.3.201 S_1.3.20100="Niveau" S_1.3.20101="Transmission" S_1.3.20102="Absorbtion" S_1.3.20103="R&#233;flexion" />
+            </l_1.3.2>
+            <l_1.3.1 S_1.3.100="Ondes sonores et ultrasonores">
+              <l_1.3.101 S_1.3.10100="Propagation" />
+            </l_1.3.1>
+          </d_1.301>
+        </l_1.3>
+        <l_1.8 S_1.800="Quelques outils du diagnostique m&#233;dical">
+          <d_1.801>
+            <l_1.8.1 S_1.8.100="Ondes m&#233;caniques">
+              <l_1.8.101 S_1.8.10100="Ondes progressives" />
+            </l_1.8.1>
+            <l_1.8.2 S_1.8.200="Onde ultra sonore">
+              <l_1.8.201 S_1.8.20100="Transducteur ultrasonore" S_1.8.20101="Reflexion" S_1.8.20102="Transmission" />
+            </l_1.8.2>
+            <l_1.8.3 S_1.8.300="Ondes &#233;lectromagn&#233;tiques">
+              <l_1.8.301 S_1.8.30100="Rayonnement gamma" S_1.8.30101="Rayonnement X" S_1.8.30102="Rayonnements UV, visible, IR" S_1.8.30103="Absorbtion et transmission]" />
+            </l_1.8.3>
+          </d_1.801>
+        </l_1.8>
+        <l_1.9 S_1.900="Pr&#233;vention et soin">
+          <d_1.901>
+            <l_1.9.1 S_1.9.100="Le rayonnement laser">
+              <l_1.9.101 S_1.9.10100="Protection contre les risques du rayonnement laser" />
+            </l_1.9.1>
+            <l_1.9.3 S_1.9.300="R&#233;actions d'oxydo-r&#233;duction et transfert d'&#233;lectrons">
+              <l_1.9.301 />
+            </l_1.9.3>
+            <l_1.9.2 S_1.9.200="Antiseptiques et desinfectants">
+              <l_1.9.201 />
+            </l_1.9.2>
+            <l_1.9.5 S_1.9.500="Ondes sonores">
+              <l_1.9.501 S_1.9.50100="Propagation" S_1.9.50101="Puissance et intensit&#233; sonore : niveau" S_1.9.50102="Transmission, absobtion, reflexion]" />
+            </l_1.9.5>
+            <l_1.9.4 S_1.9.400="Concentration massique et molaire">
+              <l_1.9.401 />
+            </l_1.9.4>
+          </d_1.901>
+        </l_1.9>
+      </d_101>
+    </l_1>
+    <l_T S_T00="Terminale">
+      <d_T01>
+        <l_T.5 S_T.500="Entretien et r&#233;novation dans l'habitat">
+          <d_T.501>
+            <l_T.5.1 S_T.5.100="R&#233;actions acide-base et transferts de protons">
+              <l_T.5.101 S_T.5.10100="Solutions acides, basiques" S_T.5.10101="pH" />
+            </l_T.5.1>
+            <l_T.5.2 S_T.5.200="Solubilisation">
+              <l_T.5.201 S_T.5.20100="Solvants de nettoyage" />
+            </l_T.5.2>
+          </d_T.501>
+        </l_T.5>
+        <l_T.4 S_T.400="La communication dans l&apos;habitat">
+          <d_T.401>
+            <l_T.4.1 S_T.4.100="Ondes &#233;lectromagn&#233;tiques">
+              <l_T.4.101 S_T.4.10100="Spectre des ondes utilis&#233;es en communication" S_T.4.10101="Champ &#233;lectrique, champ magn&#233;tique" />
+            </l_T.4.1>
+            <l_T.4.2 S_T.4.200="Mesure des grandeurs physiques dans l&apos;habitat">
+              <l_T.4.201 />
+            </l_T.4.2>
+          </d_T.401>
+        </l_T.4>
+        <l_T.7 S_T.700="Long&#233;vit&#233; et s&#233;curit&#233;">
+          <d_T.701>
+            <l_T.7.2 S_T.7.200="Pr&#233;vention et soin">
+              <l_T.7.201 S_T.7.20100="Radioactivit&#233;" S_T.7.20101="Isotopes" S_T.7.20102="Activit&#233;. D&#233;croissance radioactive et demi-vie" S_T.7.20103="Protection contre les risques de la radioactivit&#233;" />
+            </l_T.7.2>
+            <l_T.7.1 S_T.7.100="Des mat&#233;riaux r&#233;sistants">
+              <l_T.7.101 S_T.7.10100="Contraintes m&#233;caniques et thermiques" S_T.7.10101="Corrosion" />
+            </l_T.7.1>
+          </d_T.701>
+        </l_T.7>
+        <l_T.6 S_T.600="Mise en mouvement">
+          <d_T.601>
+            <l_T.6.3 S_T.6.300="Cha&#238;nes &#233;nerg&#233;tiques">
+              <l_T.6.301 S_T.6.30100="&#201;nergie et puissance" S_T.6.30101="Puissance absorb&#233;e ; puissance utile ; r&#233;versibilit&#233; ; rendement" S_T.6.30102="Convertisseurs &#233;lectrom&#233;caniques d'&#233;nergie ; r&#233;versibilit&#233;" S_T.6.30103="Rendement de conversion]" />
+            </l_T.6.3>
+            <l_T.6.2 S_T.6.200="Transformations chimiques">
+              <l_T.6.201 S_T.6.20100="Transformation chimique et transfert d'&#233;nergie sous forme thermique" S_T.6.20101="Combustion" S_T.6.20102="Transformation chimique et transfert d'&#233;nergie sous forme &#233;lectrique" S_T.6.20103="Piles, accumulateurs, piles &#224; combustible]" />
+            </l_T.6.2>
+            <l_T.6.1 S_T.6.100="Actions m&#233;caniques">
+              <l_T.6.101 S_T.6.10100="Forces, moment de force, couples et moment d&apos;un couple" S_T.6.10101="Transfert d'&#233;nergie par travail m&#233;canique (force constante ; couple constant). Puissance moyenne" S_T.6.10102="Conservation et non-conservation de l'&#233;nergie m&#233;canique" S_T.6.10103="Frottements de contact entre solides ; action d&apos;un fluide sur un solide en mouvement relatif]" />
+            </l_T.6.1>
+          </d_T.601>
+        </l_T.6>
+        <l_T.1 S_T.100="Mesure et incertitude">
+          <d_T.101>
+            <l_T.1.1 S_T.1.100="Erreurs et notions associ&#233;es">
+              <l_T.1.101 />
+            </l_T.1.1>
+            <l_T.1.2 S_T.1.200="Incertitudes et notions associ&#233;es">
+              <l_T.1.201 />
+            </l_T.1.2>
+            <l_T.1.3 S_T.1.300="Expression et acceptabilit&#233; du r&#233;sultat">
+              <l_T.1.301 />
+            </l_T.1.3>
+          </d_T.101>
+        </l_T.1>
+        <l_T.3 S_T.300="Les fluides dans l&apos;habitat">
+          <d_T.301>
+            <l_T.3.2 S_T.3.200="&#201;tats de la mati&#232;re">
+              <l_T.3.201 S_T.3.20100="Transfert thermiques et changements d'&#233;tat" S_T.3.20101="Transformations physiques et effets thermiques associ&#233;s" />
+            </l_T.3.2>
+            <l_T.3.1 S_T.3.100="Les fluides parfaits et incompressible en &#233;quilibre">
+              <l_T.3.101 S_T.3.10100="Pressions absolue, relative et diff&#233;rentielle" S_T.3.10101="&#201;quilibre d'un fluide soumis &#224; la pesanteur" S_T.3.10102="&#201;coulement stationnaire" S_T.3.10103="D&#233;bit volumique et massique" />
+            </l_T.3.1>
+          </d_T.301>
+        </l_T.3>
+        <l_T.2 S_T.200="Gestion de l'&#233;nergie dans l'habitat">
+          <d_T.201>
+            <l_T.2.2 S_T.2.200="Mod&#232;le corpusculaire de la lumi&#232;re, le photon">
+              <l_T.2.201 S_T.2.20100="&#201;nergie d'un photon" />
+            </l_T.2.2>
+            <l_T.2.1 S_T.2.100="&#201;nergie solaire">
+              <l_T.2.101 S_T.2.10100="Conversions photovolta&#239;que et thermique" />
+            </l_T.2.1>
+          </d_T.201>
+        </l_T.2>
+        <l_T.9 S_T.900="Quelques outils du diagnostic m&#233;dical">
+          <d_T.901>
+            <l_T.9.1 S_T.9.100="Ondes &#233;lectromagn&#233;tiques">
+              <l_T.9.101 S_T.9.10100="Rayonnements gamma, X, UV, visible, IR" S_T.9.10101="R&#233;flexion, absorption et transmission des ondes &#233;lectromagn&#233;tiques" />
+            </l_T.9.1>
+            <l_T.9.2 S_T.9.200="Champ magn&#233;tique">
+              <l_T.9.201 S_T.9.20100="Sources de champ magn&#233;tique (Terre, aimant, courant)" S_T.9.20101="Sources de champ magn&#233;tique intenses : &#233;lectro-aimant supraconducteur" />
+            </l_T.9.2>
+          </d_T.901>
+        </l_T.9>
+        <l_T.8 S_T.800="L'assistance au d&#233;placement">
+          <d_T.801>
+            <l_T.8.1 S_T.8.100="Mesure des grandeurs physiques dans un dispositif de transport">
+              <l_T.8.101 />
+            </l_T.8.1>
+          </d_T.801>
+        </l_T.8>
+        <l_T.10 S_T.1000="Pr&#233;vention et soin">
+          <d_T.1001>
+            <l_T.10.1 S_T.10.100="Radioactivit&#233;">
+              <l_T.10.101 S_T.10.10100="Isotopes" S_T.10.10101="Activit&#233;. D&#233;croissance radioactive et demi-vie" S_T.10.10102="Protection contre les risques de la radioactivit&#233;" />
+            </l_T.10.1>
+          </d_T.1001>
+        </l_T.10>
+      </d_T01>
+    </l_T>
+  </d_dicSavoirs_Phys>
+  <d_effectifs>
+    <l_P S_P00="Act. Pra." S_P01="Activit&#233; Pratique" />
+    <l_C S_C00="Classe enti&#232;re" S_C01="Classe enti&#232;re" />
+    <l_E S_E00="Etude ou Projet" S_E01="Etude et Projet" />
+    <l_D S_D00="Demi-groupe" S_D01="Demi-groupe" />
+    <l_G S_G00="Effectif r&#233;duit" S_G01="Effectif r&#233;duit" />
+  </d_effectifs>
+  <d_effectifsSeance>
+    <l_C S_C00="C" />
+    <l_E S_E00="C" />
+    <l_AP S_AP00="E" S_AP01="P" />
+    <l_SS S_SS00="C" />
+    <l_ED S_ED00="C" S_ED01="G" S_ED02="D" S_ED03="E" S_ED04="P" />
+    <l_P S_P00="C" S_P01="G" S_P02="D" S_P03="E" S_P04="P" />
+    <l_S />
+    <l_R />
+    <l_SA S_SA00="C" S_SA01="G" />
+    <l_TD S_TD00="C" S_TD01="G" S_TD02="D" S_TD03="E" S_TD04="P" />
+  </d_effectifsSeance>
+  <d_grilles_prj />
+  <l_listPhasesEval_prj />
+  <l_listPhases_prj />
+  <l_listeDemarches S_listeDemarches00="I" S_listeDemarches01="R" S_listeDemarches02="P" />
+  <l_listeEffectifs S_listeEffectifs00="C" S_listeEffectifs01="G" S_listeEffectifs02="D" S_listeEffectifs03="E" S_listeEffectifs04="P" />
+  <l_listeTypeActivite S_listeTypeActivite00="ED" S_listeTypeActivite01="AP" S_listeTypeActivite02="P" />
+  <l_listeTypeSeance S_listeTypeSeance00="ED" S_listeTypeSeance01="AP" S_listeTypeSeance02="P" S_listeTypeSeance03="C" S_listeTypeSeance04="TD" S_listeTypeSeance05="SA" S_listeTypeSeance06="SS" S_listeTypeSeance07="E" S_listeTypeSeance08="R" S_listeTypeSeance09="S" />
+  <d_nomParties_prj />
+  <d_options S_AC="Ref_STI2D-AC.xls" S_EE="Ref_STI2D-EE.xls" S_ITEC="Ref_STI2D-ITEC.xls" S_SIN="Ref_STI2D-SIN.xls" />
+  <d_phases_prj />
+  <d_posRevues>
+    <l__02 />
+    <l__03 />
+  </d_posRevues>
+  <l_positions_CI S_positions_CI00="   _   " S_positions_CI01="   _   " S_positions_CI02="M  _F  " S_positions_CI03="M  _ S " S_positions_CI04="M  _  C" S_positions_CI05="ME _ SC" S_positions_CI06=" E _F  " S_positions_CI07=" E _ S " S_positions_CI08=" E _  C" S_positions_CI09=" EI_ SC" S_positions_CI10="  I_F  " S_positions_CI11="  I_ S " S_positions_CI12="  I_  C" S_positions_CI13="M I_ SC" S_positions_CI14="MEI_   " />
+  <d_seances>
+    <l_C S_C00="Cours" S_C01="Cours" />
+    <l_E S_E00="Evaluation" S_E01="Evaluation" />
+    <l_P S_P00="Projet" S_P01="Activit&#233; de projet" />
+    <l_SS S_SS00="Synt. s&#233;quence" S_SS01="Synth&#232;se de s&#233;quence" />
+    <l_ED S_ED00="Etude de dossier" S_ED01="Activit&#233; d'&#233;tude de dossier" />
+    <l_AP S_AP00="Activit&#233; pratique" S_AP01="Activit&#233; pratique" />
+    <l_S S_S00="Parall&#232;le" S_S01="Activit&#233;s en parall&#232;le" />
+    <l_R S_R00="Rotation" S_R01="Rotation d'activit&#233;s" />
+    <l_TD S_TD00="TD" S_TD01="Travaux Dirig&#233;s" />
+    <l_SA S_SA00="Synt. activit&#233;" S_SA01="Synth&#232;se d'activit&#233;" />
+  </d_seances>
+</Referentiel>

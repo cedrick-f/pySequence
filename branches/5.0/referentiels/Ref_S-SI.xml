@@ -1,0 +1,949 @@
+<Referentiel B_CI_BO="False" B_CI_cible="False" B_projet="True" I_duree_prj="70" S_Code="SSI" S_Famille="SSI" S_nomCompetences="Comp&#233;tences" S_nomSavoirs="Connaissances &amp; Capacit&#233;s">
+  <l_CentresInterets S_CentresInterets00="Analyser un syst&#232;me fonctionnellement et structurellement" S_CentresInterets01="Exp&#233;rimenter et mesurer sur un syst&#232;me r&#233;el pour &#233;valuer ses performances" S_CentresInterets02="Analyser des constituants d&#8217;un syst&#232;me r&#233;el d&#8217;un point de vue structurel et comportemental" S_CentresInterets03="Concevoir et utiliser un mod&#232;le relatif &#224; un syst&#232;me en vue d&#8217;&#233;valuer les performances de la cha&#238;ne d&#8217;information" S_CentresInterets04="Concevoir et utiliser un mod&#232;le relatif &#224; un syst&#232;me en vue d&#8217;&#233;valuer les performances de la cha&#238;ne d&#8217;&#233;nergie&quot;" />
+  <l_Enseignement S_Enseignement00="S-SI" S_Enseignement01="Bac S - Sciences de l'ing&#233;nieur" S_Enseignement02="S-SI" />
+  <d_aColNon B_R="True" B_S="False" />
+  <d_activites>
+    <l_ED S_ED00="Etude de dossier" S_ED01="Activit&#233; d'&#233;tude de dossier" />
+    <l_P S_P00="Projet" S_P01="Activit&#233; de projet" />
+    <l_AP S_AP00="Activit&#233; pratique" S_AP01="Activit&#233; pratique" />
+  </d_activites>
+  <d_cellulesInfo_prj>
+    <l_Pre>
+      <l_Pre00 S_Pre0000="R" S_Pre0001="Identification" S_Pre0003="">
+        <l_Pre0002 I_Pre000200="10" I_Pre000201="2" I_Pre000202="0" />
+      </l_Pre00>
+      <l_Pre01 S_Pre0100="S" S_Pre0101="Identification" S_Pre0103="">
+        <l_Pre0102 I_Pre010200="10" I_Pre010201="2" I_Pre010202="0" />
+      </l_Pre01>
+    </l_Pre>
+    <l_Nom>
+      <l_Nom00 S_Nom0000="R" S_Nom0001="Identification" S_Nom0003="">
+        <l_Nom0002 I_Nom000200="9" I_Nom000201="2" I_Nom000202="0" />
+      </l_Nom00>
+      <l_Nom01 S_Nom0100="S" S_Nom0101="Identification" S_Nom0103="">
+        <l_Nom0102 I_Nom010200="9" I_Nom010201="2" I_Nom010202="0" />
+      </l_Nom01>
+    </l_Nom>
+    <l_NON>
+      <l_NON00 S_NON0000="R" S_NON0001="Conduite de projet" S_NON0003="">
+        <l_NON0002 I_NON000200="5" I_NON000201="8" I_NON000202="0" />
+      </l_NON00>
+    </l_NON>
+    <l_Tit>
+      <l_Tit00 S_Tit0000="R" S_Tit0001="Identification" S_Tit0003="">
+        <l_Tit0002 I_Tit000200="12" I_Tit000201="2" I_Tit000202="0" />
+      </l_Tit00>
+      <l_Tit01 S_Tit0100="S" S_Tit0101="Identification" S_Tit0103="">
+        <l_Tit0102 I_Tit010200="12" I_Tit010201="2" I_Tit010202="0" />
+      </l_Tit01>
+    </l_Tit>
+    <l_Des>
+      <l_Des00 S_Des0000="R" S_Des0001="Identification" S_Des0003="">
+        <l_Des0002 I_Des000200="14" I_Des000201="1" I_Des000202="0" />
+      </l_Des00>
+      <l_Des01 S_Des0100="S" S_Des0101="Identification" S_Des0103="">
+        <l_Des0102 I_Des010200="14" I_Des010201="1" I_Des010202="0" />
+      </l_Des01>
+    </l_Des>
+    <l_Etab>
+      <l_Etab00 S_Etab0000="R" S_Etab0001="Identification" S_Etab0003="">
+        <l_Etab0002 I_Etab000200="7" I_Etab000201="2" I_Etab000202="0" />
+      </l_Etab00>
+      <l_Etab01 S_Etab0100="S" S_Etab0101="Identification" S_Etab0103="">
+        <l_Etab0102 I_Etab010200="7" I_Etab010201="2" I_Etab010202="0" />
+      </l_Etab01>
+    </l_Etab>
+    <l_Prof>
+      <l_Prof00 S_Prof0000="R" S_Prof0001="Identification" S_Prof0003="">
+        <l_Prof0002 I_Prof000200="18" I_Prof000201="2" I_Prof000202="1" />
+      </l_Prof00>
+    </l_Prof>
+  </d_cellulesInfo_prj>
+  <d_demarcheSeance>
+    <l_ED S_ED00="I" S_ED01="R" />
+    <l_P S_P00="I" S_P01="R" S_P02="P" />
+    <l_AP S_AP00="I" S_AP01="R" />
+  </d_demarcheSeance>
+  <d_demarches />
+  <d_dicCompetences>
+    <l_A S_A00="Analyser">
+      <d_A01>
+        <l_A1 S_A100="Analyser le besoin">
+          <d_A101>
+            <l_A1.4 S_A1.400="traduire un besoin fonctionnel en probl&#233;matique technique">
+              <l_A1.401>
+                <l_A1.40100 I_A1.4010002="0" S_A1.4010000="Le probl&#232;me technique est bien d&#233;crit">
+                  <l_A1.4010001 F_A1.401000102="20.0" I_A1.401000100="0" I_A1.401000101="0" />
+                </l_A1.40100>
+              </l_A1.401>
+            </l_A1.4>
+            <l_A1.1 S_A1.100="d&#233;finir le besoin">
+              <l_A1.101>
+                <l_A1.10100 I_A1.1010002="0" S_A1.1010000="Le besoin et la fonction globale sont bien d&#233;finis">
+                  <l_A1.1010001 F_A1.101000102="20.0" I_A1.101000100="0" I_A1.101000101="0" />
+                </l_A1.10100>
+              </l_A1.101>
+            </l_A1.1>
+            <l_A1.2 S_A1.200="d&#233;finir les fonctions de service">
+              <l_A1.201>
+                <l_A1.20100 I_A1.2010002="0" S_A1.2010000="">
+                  <l_A1.2010001 I_A1.201000100="0" I_A1.201000101="0" I_A1.201000102="0" />
+                </l_A1.20100>
+              </l_A1.201>
+            </l_A1.2>
+            <l_A1.3 S_A1.300="identifier les contraintes">
+              <l_A1.301>
+                <l_A1.30100 I_A1.3010002="0" S_A1.3010000="">
+                  <l_A1.3010001 I_A1.301000100="0" I_A1.301000101="0" I_A1.301000102="0" />
+                </l_A1.30100>
+              </l_A1.301>
+            </l_A1.3>
+          </d_A101>
+        </l_A1>
+        <l_A3 S_A300="Caract&#233;riser des &#233;carts">
+          <d_A301>
+            <l_A3.2 S_A3.200="comparer les r&#233;sultats exp&#233;rimentaux avec les crit&#232;res du cahier des charges et interpr&#233;ter les &#233;carts">
+              <l_A3.201>
+                <l_A3.20100 I_A3.2010002="0" S_A3.2010000="Les &#233;carts constat&#233;s sont expliqu&#233;s">
+                  <l_A3.2010001 F_A3.201000102="20.0" I_A3.201000100="0" I_A3.201000101="0" />
+                </l_A3.20100>
+              </l_A3.201>
+            </l_A3.2>
+            <l_A3.3 S_A3.300="comparer les r&#233;sultats simul&#233;s avec les crit&#232;res du cahier des charges et interpr&#233;ter les &#233;carts">
+              <l_A3.301>
+                <l_A3.30100 I_A3.3010002="0" S_A3.3010000="Les &#233;carts constat&#233;s sont expliqu&#233;s">
+                  <l_A3.3010001 F_A3.301000102="20.0" I_A3.301000100="0" I_A3.301000101="0" />
+                </l_A3.30100>
+              </l_A3.301>
+            </l_A3.3>
+            <l_A3.1 S_A3.100="comparer les r&#233;sultats exp&#233;rimentaux avec les r&#233;sultats simul&#233;s et interpr&#233;ter les &#233;carts">
+              <l_A3.101>
+                <l_A3.10100 I_A3.1010002="0" S_A3.1010000="Les &#233;carts constat&#233;s sont expliqu&#233;s">
+                  <l_A3.1010001 F_A3.101000102="20.0" I_A3.101000100="0" I_A3.101000101="0" />
+                </l_A3.10100>
+              </l_A3.101>
+            </l_A3.1>
+          </d_A301>
+        </l_A3>
+        <l_A2 S_A200="Analyser le syst&#232;me">
+          <d_A201>
+            <l_A2.3 S_A2.300="d&#233;crire les liaisons entre les blocs fonctionnels">
+              <l_A2.301>
+                <l_A2.30100 I_A2.3010002="0" S_A2.3010000="">
+                  <l_A2.3010001 I_A2.301000100="0" I_A2.301000101="0" I_A2.301000102="0" />
+                </l_A2.30100>
+              </l_A2.301>
+            </l_A2.3>
+            <l_A2.2 S_A2.200="identifier les &#233;l&#233;ments transform&#233;s et les flux">
+              <l_A2.201>
+                <l_A2.20100 I_A2.2010002="0" S_A2.2010000="">
+                  <l_A2.2010001 I_A2.201000100="0" I_A2.201000101="0" I_A2.201000102="0" />
+                </l_A2.20100>
+              </l_A2.201>
+            </l_A2.2>
+            <l_A2.1 S_A2.100="identifier et ordonner les fonctions techniques qui r&#233;alisent les fonctions de services et respectent les contraintes">
+              <l_A2.101>
+                <l_A2.10100 I_A2.1010002="0" S_A2.1010000="">
+                  <l_A2.1010001 I_A2.101000100="0" I_A2.101000101="0" I_A2.101000102="0" />
+                </l_A2.10100>
+              </l_A2.101>
+            </l_A2.1>
+            <l_A2.5 S_A2.500="identifier les mat&#233;riaux des constituants et leurs propri&#233;t&#233;s en relation avec les fonctions et les contraintes">
+              <l_A2.501>
+                <l_A2.50100 I_A2.5010002="0" S_A2.5010000="">
+                  <l_A2.5010001 I_A2.501000100="0" I_A2.501000101="0" I_A2.501000102="0" />
+                </l_A2.50100>
+              </l_A2.501>
+            </l_A2.5>
+            <l_A2.4 S_A2.400="identifier l&#8217;organisation structurelle">
+              <l_A2.401>
+                <l_A2.40100 I_A2.4010002="0" S_A2.4010000="">
+                  <l_A2.4010001 I_A2.401000100="0" I_A2.401000101="0" I_A2.401000102="0" />
+                </l_A2.40100>
+              </l_A2.401>
+            </l_A2.4>
+          </d_A201>
+        </l_A2>
+      </d_A01>
+      <l_A02 I_A0200="0" I_A0201="0" I_A0202="30" />
+    </l_A>
+    <l_C S_C00="Exp&#233;rimenter">
+      <d_C01>
+        <l_C2 S_C200="Mettre en oeuvre un protocole exp&#233;rimental">
+          <d_C201>
+            <l_C2.1 S_C2.100="conduire les essais en respectant les consignes de s&#233;curit&#233; &#224; partir d&#8217;un protocole fourni">
+              <l_C2.101>
+                <l_C2.10100 I_C2.1010002="17" S_C2.1010000="Le syst&#232;me est correctement mis en &#339;uvre">
+                  <l_C2.1010001 F_C2.101000101="12.5" F_C2.101000102="0.0" I_C2.101000100="0" />
+                </l_C2.10100>
+                <l_C2.10101 I_C2.1010102="18" S_C2.1010100="Les capteurs et les appareils de mesure sont correctement mis en &#339;uvre">
+                  <l_C2.1010101 F_C2.101010101="12.5" F_C2.101010102="0.0" I_C2.101010100="0" />
+                </l_C2.10101>
+                <l_C2.10102 I_C2.1010202="19" S_C2.1010200="Le protocole d'essai est respect&#233; ">
+                  <l_C2.1010201 F_C2.101020101="12.5" F_C2.101020102="0.0" I_C2.101020100="0" />
+                </l_C2.10102>
+                <l_C2.10103 I_C2.1010302="20" S_C2.1010300="Les r&#232;gles de s&#233;curit&#233; sont connues et respect&#233;es">
+                  <l_C2.1010301 F_C2.101030101="12.5" F_C2.101030102="0.0" I_C2.101030100="0" />
+                </l_C2.10103>
+              </l_C2.101>
+            </l_C2.1>
+            <l_C2.2 S_C2.200="traiter les donn&#233;es mesur&#233;es en vue d&#8217;analyser les &#233;carts">
+              <l_C2.201>
+                <l_C2.20100 I_C2.2010002="21" S_C2.2010000="Les m&#233;thodes et outils de traitement sont coh&#233;rents avec le probl&#232;me pos&#233;">
+                  <l_C2.2010001 F_C2.201000101="12.5" F_C2.201000102="0.0" I_C2.201000100="0" />
+                </l_C2.20100>
+                <l_C2.20101 I_C2.2010102="0" S_C2.2010100="Les r&#233;sultats exp&#233;rimentaux sont trait&#233;s et pr&#233;sent&#233;s clairement">
+                  <l_C2.2010101 F_C2.201010101="0.0" F_C2.201010102="35.0" I_C2.201010100="0" />
+                </l_C2.20101>
+              </l_C2.201>
+            </l_C2.2>
+          </d_C201>
+        </l_C2>
+        <l_C1 S_C100="Justifier le choix d&#8217;un protocole exp&#233;rimental">
+          <d_C101>
+            <l_C1.4 S_C1.400="justifier le choix des essais r&#233;alis&#233;s">
+              <l_C1.401>
+                <l_C1.40100 I_C1.4010002="0" S_C1.4010000="Un protocole exp&#233;rimental adapt&#233; est d&#233;crit">
+                  <l_C1.4010001 F_C1.401000101="0.0" F_C1.401000102="35.0" I_C1.401000100="0" />
+                </l_C1.40100>
+              </l_C1.401>
+            </l_C1.4>
+            <l_C1.2 S_C1.200="d&#233;crire une cha&#238;ne d&#8217;acquisition">
+              <l_C1.201>
+                <l_C1.20100 I_C1.2010002="15" S_C1.2010000="Les &#233;l&#233;ments de la cha&#238;ne d'acquisition sont correctement identifi&#233;s">
+                  <l_C1.2010001 F_C1.201000101="12.5" F_C1.201000102="0.0" I_C1.201000100="0" />
+                </l_C1.20100>
+                <l_C1.20101 I_C1.2010102="16" S_C1.2010100="Les choix et r&#233;glages des capteurs et appareils de mesure sont correctement explicit&#233;s">
+                  <l_C1.2010101 F_C1.201010101="12.5" F_C1.201010102="0.0" I_C1.201010100="0" />
+                </l_C1.20101>
+              </l_C1.201>
+            </l_C1.2>
+            <l_C1.3 S_C1.300="identifier le comportement des composants">
+              <l_C1.301>
+                <l_C1.30100 I_C1.3010002="0" S_C1.3010000="Le comportement est pr&#233;cis&#233;ment d&#233;crit">
+                  <l_C1.3010001 F_C1.301000101="0.0" F_C1.301000102="30.0" I_C1.301000100="0" />
+                </l_C1.30100>
+              </l_C1.301>
+            </l_C1.3>
+            <l_C1.1 S_C1.100="identifier les grandeurs physiques &#224; mesurer">
+              <l_C1.101>
+                <l_C1.10100 I_C1.1010002="14" S_C1.1010000="Les grandeurs &#224; mesurer sont bien identifi&#233;es, leur nature et caract&#233;ristiques bien d&#233;finies">
+                  <l_C1.1010001 F_C1.101000101="12.5" F_C1.101000102="0.0" I_C1.101000100="0" />
+                </l_C1.10100>
+              </l_C1.101>
+            </l_C1.1>
+          </d_C101>
+        </l_C1>
+      </d_C01>
+      <l_C02 I_C0200="0" I_C0201="50" I_C0202="30" />
+    </l_C>
+    <l_B S_B00="Mod&#233;liser">
+      <d_B01>
+        <l_B4 S_B400="Valider un mod&#232;le">
+          <d_B401>
+            <l_B4.4 S_B4.400="valider un mod&#232;le optimis&#233; fourni">
+              <l_B4.401>
+                <l_B4.40100 I_B4.4010002="11" S_B4.4010000="Les r&#233;sultats obtenus, en amplitude et variation, sont conformes aux attendus du cahier des charges">
+                  <l_B4.4010001 F_B4.401000101="12.5" I_B4.401000100="0" I_B4.401000102="0" />
+                </l_B4.40100>
+                <l_B4.40101 I_B4.4010102="12" S_B4.4010100="Les r&#233;sultats obtenus, en amplitude et variation, sont conformes aux r&#233;sultats exp&#233;rimentaux">
+                  <l_B4.4010101 F_B4.401010101="12.5" I_B4.401010100="0" I_B4.401010102="0" />
+                </l_B4.40101>
+              </l_B4.401>
+            </l_B4.4>
+            <l_B4.1 S_B4.100="interpr&#233;ter les r&#233;sultats obtenus">
+              <l_B4.101>
+                <l_B4.10100 I_B4.1010002="7" S_B4.1010000="Les r&#233;sultats obtenus sont bien interpr&#233;t&#233;s, en amplitude et variation, de fa&#231;on conforme aux lois et principes d'&#233;volution des grandeurs physiques">
+                  <l_B4.1010001 F_B4.101000101="12.5" I_B4.101000100="0" I_B4.101000102="0" />
+                </l_B4.10100>
+              </l_B4.101>
+            </l_B4.1>
+            <l_B4.2 S_B4.200="pr&#233;ciser les limites de validit&#233; du mod&#232;le utilis&#233;">
+              <l_B4.201>
+                <l_B4.20100 I_B4.2010002="8" S_B4.2010000="Les principales limites sont explicit&#233;es">
+                  <l_B4.2010001 F_B4.201000101="12.5" I_B4.201000100="0" I_B4.201000102="0" />
+                </l_B4.20100>
+              </l_B4.201>
+            </l_B4.2>
+            <l_B4.3 S_B4.300="modifier les param&#232;tres du mod&#232;le pour r&#233;pondre au cahier des charges ou aux r&#233;sultats exp&#233;rimentaux">
+              <l_B4.301>
+                <l_B4.30100 I_B4.3010002="9" S_B4.3010000="Les param&#232;tres modifi&#233;s sont pertinents et font &#233;voluer  les r&#233;sultats simul&#233;s vers ceux attendus au cahier des charges">
+                  <l_B4.3010001 F_B4.301000101="12.5" I_B4.301000100="0" I_B4.301000102="0" />
+                </l_B4.30100>
+                <l_B4.30101 I_B4.3010102="10" S_B4.3010100="Les param&#232;tres modifi&#233;s sont pertinents et font &#233;voluer les r&#233;sultats simul&#233;s vers les r&#233;sultats exp&#233;rimentaux">
+                  <l_B4.3010101 F_B4.301010101="12.5" I_B4.301010100="0" I_B4.301010102="0" />
+                </l_B4.30101>
+              </l_B4.301>
+            </l_B4.3>
+          </d_B401>
+        </l_B4>
+        <l_B1 S_B100="Identifier et caract&#233;riser les grandeurs agissant sur un syst&#232;me">
+          <d_B101>
+            <l_B1.1 S_B1.100="d&#233;finir, justifier la fronti&#232;re de tout ou partie d&#8217;un syst&#232;me et r&#233;pertorier les interactions">
+              <l_B1.101>
+                <l_B1.10100 I_B1.1010002="0" S_B1.1010000="">
+                  <l_B1.1010001 I_B1.101000100="0" I_B1.101000101="0" I_B1.101000102="0" />
+                </l_B1.10100>
+              </l_B1.101>
+            </l_B1.1>
+            <l_B1.2 S_B1.200="choisir les grandeurs et les param&#232;tres influents en vue de les mod&#233;liser">
+              <l_B1.201>
+                <l_B1.20100 I_B1.2010002="0" S_B1.2010000="">
+                  <l_B1.2010001 I_B1.201000100="0" I_B1.201000101="0" I_B1.201000102="0" />
+                </l_B1.20100>
+              </l_B1.201>
+            </l_B1.2>
+          </d_B101>
+        </l_B1>
+        <l_B2 S_B200="Proposer ou justifier un mod&#232;le">
+          <d_B201>
+            <l_B2.2 S_B2.200="pr&#233;ciser ou justifier les limites de validit&#233; du mod&#232;le envisag&#233;">
+              <l_B2.201>
+                <l_B2.20100 I_B2.2010002="0" S_B2.2010000="">
+                  <l_B2.2010001 I_B2.201000100="0" I_B2.201000101="0" I_B2.201000102="0" />
+                </l_B2.20100>
+              </l_B2.201>
+            </l_B2.2>
+            <l_B2.1 S_B2.100="associer un mod&#232;le &#224; un syst&#232;me ou &#224; son comportement">
+              <l_B2.101>
+                <l_B2.10100 I_B2.1010002="0" S_B2.1010000="">
+                  <l_B2.1010001 I_B2.101000100="0" I_B2.101000101="0" I_B2.101000102="0" />
+                </l_B2.10100>
+              </l_B2.101>
+            </l_B2.1>
+          </d_B201>
+        </l_B2>
+        <l_B3 S_B300="R&#233;soudre et simuler">
+          <d_B301>
+            <l_B3.2 S_B3.200="simuler le fonctionnement de tout ou partie d&#8217;un syst&#232;me &#224; l&#8217;aide d&#8217;un mod&#232;le fourni">
+              <l_B3.201>
+                <l_B3.20100 I_B3.2010002="5" S_B3.2010000="Les param&#232;tres de simulation sont adapt&#233;s aux grandeurs simul&#233;es">
+                  <l_B3.2010001 F_B3.201000101="12.5" I_B3.201000100="0" I_B3.201000102="0" />
+                </l_B3.20100>
+                <l_B3.20101 I_B3.2010102="6" S_B3.2010100="Les plages de simulation retenues sont correctement d&#233;finies">
+                  <l_B3.2010101 F_B3.201010101="12.5" I_B3.201010100="0" I_B3.201010102="0" />
+                </l_B3.20101>
+              </l_B3.201>
+            </l_B3.2>
+            <l_B3.1 S_B3.100="choisir et mettre en oeuvre une m&#233;thode de r&#233;solution">
+              <l_B3.101>
+                <l_B3.10100 I_B3.1010002="0" S_B3.1010000="">
+                  <l_B3.1010001 I_B3.101000100="0" I_B3.101000101="0" I_B3.101000102="0" />
+                </l_B3.10100>
+              </l_B3.101>
+            </l_B3.1>
+          </d_B301>
+        </l_B3>
+      </d_B01>
+      <l_B02 I_B0200="0" I_B0201="40" I_B0202="0" />
+    </l_B>
+    <l_D S_D00="Communiquer">
+      <d_D01>
+        <l_D2 S_D200="Mettre en oeuvre une communication">
+          <d_D201>
+            <l_D2.1 S_D2.100="choisir un support de communication et un m&#233;dia adapt&#233;, argumenter">
+              <l_D2.101>
+                <l_D2.10100 I_D2.1010002="0" S_D2.1010000="Le support est bien choisi et adapt&#233; &#224; l'objectif de pr&#233;sentation">
+                  <l_D2.1010001 F_D2.101000101="0.0" F_D2.101000102="20.0" I_D2.101000100="0" />
+                </l_D2.10100>
+              </l_D2.101>
+            </l_D2.1>
+            <l_D2.2 S_D2.200="produire un support de communication">
+              <l_D2.201>
+                <l_D2.20100 I_D2.2010002="0" S_D2.2010000="Un document multim&#233;dia est bien r&#233;alis&#233; et sc&#233;naris&#233;">
+                  <l_D2.2010001 F_D2.201000101="0.0" F_D2.201000102="30.0" I_D2.201000100="0" />
+                </l_D2.20100>
+              </l_D2.201>
+            </l_D2.2>
+            <l_D2.3 S_D2.300="adapter sa strat&#233;gie de communication au contexte">
+              <l_D2.301>
+                <l_D2.30100 I_D2.3010002="0" S_D2.3010000="La production respecte le cahier des charges (&#233;crit/oral, texte/vid&#233;o, dur&#233;e, public vis&#233;, &#8230;)">
+                  <l_D2.3010001 F_D2.301000101="0.0" F_D2.301000102="30.0" I_D2.301000100="0" />
+                </l_D2.30100>
+              </l_D2.301>
+            </l_D2.3>
+          </d_D201>
+        </l_D2>
+        <l_D1 S_D100="Rechercher et traiter des informations">
+          <d_D101>
+            <l_D1.2 S_D1.200="analyser, choisir et classer des informations">
+              <l_D1.201>
+                <l_D1.20100 I_D1.2010002="25" S_D1.2010000="Les informations sont trait&#233;es selon des crit&#232;res pertinents">
+                  <l_D1.2010001 F_D1.201000101="25.0" F_D1.201000102="0.0" I_D1.201000100="0" />
+                </l_D1.20100>
+                <l_D1.20101 I_D1.2010102="26" S_D1.2010100="Les informations sont v&#233;rifi&#233;es et mises &#224; jour">
+                  <l_D1.2010101 F_D1.201010101="25.0" F_D1.201010102="0.0" I_D1.201010100="0" />
+                </l_D1.20101>
+                <l_D1.20102 I_D1.2010202="0" S_D1.2010200="Les informations pr&#233;sent&#233;es sont bien choisies">
+                  <l_D1.2010201 F_D1.201020101="0.0" F_D1.201020102="20.0" I_D1.201020100="0" />
+                </l_D1.20102>
+              </l_D1.201>
+            </l_D1.2>
+            <l_D1.1 S_D1.100="rechercher des informations">
+              <l_D1.101>
+                <l_D1.10100 I_D1.1010002="23" S_D1.1010000="Les outils de recherche documentaire sont bien choisis et ma&#238;tris&#233;s. ">
+                  <l_D1.1010001 F_D1.101000101="25.0" F_D1.101000102="0.0" I_D1.101000100="0" />
+                </l_D1.10100>
+                <l_D1.10101 I_D1.1010102="24" S_D1.1010100="Une synth&#232;se des informations collect&#233;es est correctement r&#233;alis&#233;e">
+                  <l_D1.1010101 F_D1.101010101="25.0" F_D1.101010102="0.0" I_D1.101010100="0" />
+                </l_D1.10101>
+              </l_D1.101>
+            </l_D1.1>
+          </d_D101>
+        </l_D1>
+      </d_D01>
+      <l_D02 I_D0200="0" I_D0201="10" I_D0202="40" />
+    </l_D>
+  </d_dicCompetences>
+  <d_dicSavoirs>
+    <l_B4 S_B400="Valider un mod&#232;le">
+      <d_B401>
+        <l_B4.4 S_B4.400="Grandeurs influentes d&#8217;un mod&#232;le">
+          <l_B4.401 S_B4.40100=" Modifier les param&#232;tres d&#8217;un mod&#232;le" />
+        </l_B4.4>
+        <l_B4.1 S_B4.100="Mod&#232;le de connaissance">
+          <l_B4.101 S_B4.10100="V&#233;rifier la compatibilit&#233; des r&#233;sultats obtenus (amplitudes et variations) avec les lois et principes physiques d&#8217;&#233;volution des grandeurs" S_B4.10101="Comparer les r&#233;sultats obtenus (amplitudes et variations) avec les donn&#233;es du cahier des charges fonctionnel" />
+        </l_B4.1>
+        <l_B4.2 S_B4.200="Mat&#233;riaux">
+          <l_B4.201 S_B4.20100="Adapter les param&#232;tres de simulation, dur&#233;e, incr&#233;ment temporel, choix des grandeurs affich&#233;es, &#233;chelles, &#224; l&#8217;amplitude et la dynamique de grandeurs simul&#233;esIdentifier l&#8217;influence des propri&#233;t&#233;s des mat&#233;riaux sur les performances du syst&#232;me" S_B4.20101="Proposer des mat&#233;riaux de substitution pour am&#233;liorer les performances du syst&#232;me" />
+        </l_B4.2>
+        <l_B4.3 S_B4.300="Structures">
+          <l_B4.301 S_B4.30100=" Valider l&#8217;influence de la structure sur les performances du syst&#232;me" S_B4.30101=" Proposer des modifications structurelles pour am&#233;liorer les performances du syst&#232;me" />
+        </l_B4.3>
+      </d_B401>
+    </l_B4>
+    <l_A1 S_A100="Analyser le besoin">
+      <d_A101>
+        <l_A1.1 S_A1.100="Besoin, finalit&#233;s, contraintes, cahier des charges">
+          <l_A1.101 S_A1.10100="D&#233;crire le besoin" S_A1.10101="Pr&#233;senter la fonction globale" S_A1.10102="Identifier les contraintes (fonctionnelles, soci&#233;tales, environnementales, etc.)" S_A1.10103="Ordonner les contraintes (crit&#232;re, niveau, flexibilit&#233;)" />
+        </l_A1.1>
+        <l_A1.2 S_A1.200="Analyse fonctionnelle externe - Expression fonctionnelle du besoin">
+          <l_A1.201 S_A1.20100="Pr&#233;senter &#224; l&#8217;aide d&#8217;un diagramme des interacteurs une r&#233;ponse technique &#224; un besoin" />
+        </l_A1.2>
+        <l_A1.3 S_A1.300="Fonctions d&#8217;usage, de service, d&#8217;estime">
+          <l_A1.301 S_A1.30100="Identifier et caract&#233;riser les fonctions de service" />
+        </l_A1.3>
+      </d_A101>
+    </l_A1>
+    <l_A3 S_A300="Caract&#233;riser des &#233;carts">
+      <d_A301>
+        <l_A3.1 S_A3.100="Analyse des &#233;carts">
+          <l_A3.101 S_A3.10100="Traiter des donn&#233;es de mesures (valeur moyenne, m&#233;diane, caract&#233;ristique, etc.)" S_A3.10101="Identifier des valeurs erron&#233;es" S_A3.10102="Quantifier des &#233;carts entre des valeurs attendues et des valeurs mesur&#233;es" S_A3.10103="Quantifier des &#233;carts entre des valeurs attendues et des valeurs obtenues par simulation" S_A3.10104="Quantifier des &#233;carts entre des valeurs mesur&#233;es et des valeurs obtenues par simulation" S_A3.10105="Rechercher et proposer des causes aux &#233;carts constat&#233;s" />
+        </l_A3.1>
+      </d_A301>
+    </l_A3>
+    <l_A2 S_A200="Analyser le syst&#232;me">
+      <d_A201>
+        <l_A2.3 S_A2.300="Impact environnemental">
+          <l_A2.301 S_A2.30100=" &#201;valuer l&#8217;impact environnemental (mat&#233;riaux, &#233;nergie, nuisances)" />
+        </l_A2.3>
+        <l_A2.2 S_A2.200="Architectures fonctionnelle et organique d&#8217;un syst&#232;me">
+          <l_A2.201 S_A2.20100="Identifier les fonctions techniques" S_A2.20101="D&#233;terminer les constituants d&#233;di&#233;s aux fonctions d&#8217;un syst&#232;me et en justifier le choix" S_A2.20102="Identifier les niveaux fonctionnels et organiques d&#8217;un syst&#232;me" S_A2.20103="Pr&#233;senter les architectures fonctionnelle et organique d&#8217;un syst&#232;me &#224; l&#8217;aide d&#8217;un diagramme FAST" S_A2.20104="Proposer des &#233;volutions sous forme fonctionnelle" S_A2.20105="Relier le co&#251;t d&#8217;une solution technique au besoin exprim&#233;" />
+        </l_A2.2>
+        <l_A2.1 S_A2.100="Syst&#232;me - Fronti&#232;re d&#8217;&#233;tude - Environnement">
+          <l_A2.101 S_A2.10100="D&#233;finir le syst&#232;me et sa fronti&#232;re d&#8217;&#233;tude" S_A2.10101="Analyser l&#8217;environnement d&#8217;un syst&#232;me, ses contraintes" S_A2.10102="D&#233;crire le fonctionnement d&#8217;un syst&#232;me" S_A2.10103="Identifier des &#233;volutions possibles d&#8217;un syst&#232;me" />
+        </l_A2.1>
+        <l_A2.14 S_A2.1400="R&#233;seaux de communication - Support de communication - Notion de protocole, param&#232;tres de configuration - Notion de trame, liaisons s&#233;rie et parall&#232;le">
+          <l_A2.1401 S_A2.140100=" Analyser les formats et les flux d&#8217;information" S_A2.140101=" Identifier les architectures fonctionnelle et mat&#233;rielle" S_A2.140102=" Identifier les supports de communication" S_A2.140103=" Identifier et analyser le message transmis, notion de protocole, param&#232;tres de configuration" />
+        </l_A2.14>
+        <l_A2.7 S_A2.700="Syst&#232;mes logiques &#233;v&#232;nementiels - Langage de description : graphe d&#8217;&#233;tats, logigramme, GRAFCET, algorigramme">
+          <l_A2.701 S_A2.70100=" D&#233;crire et analyser le comportement d&#8217;un syst&#232;me" />
+        </l_A2.7>
+        <l_A2.6 S_A2.600="Cha&#238;ne d&#8217;&#233;nergie">
+          <l_A2.601 S_A2.60100=" Identifier et d&#233;crire la cha&#238;ne d&#8217;&#233;nergie du syst&#232;me" S_A2.60101=" Analyser les apports d&#8217;&#233;nergie, les transferts, le stockage, les pertes &#233;nerg&#233;tiques" S_A2.60102=" R&#233;aliser le bilan &#233;nerg&#233;tique d&#8217;un syst&#232;me" />
+        </l_A2.6>
+        <l_A2.5 S_A2.500="Cha&#238;ne d&#8217;information">
+          <l_A2.501 S_A2.50100=" Identifier et d&#233;crire la cha&#238;ne d&#8217;information du syst&#232;me" />
+        </l_A2.5>
+        <l_A2.4 S_A2.400="Mati&#232;re d&#8217;oeuvre, valeur ajout&#233;e, flux">
+          <l_A2.401 S_A2.40100=" Identifier la mati&#232;re d&#8217;oeuvre et la valeur ajout&#233;e" S_A2.40101=" Repr&#233;senter les flux (mati&#232;re, &#233;nergie, information) &#224; l&#8217;aide d&#8217;un actigramme A-0 de la m&#233;thode SADT" />
+        </l_A2.4>
+        <l_A2.10 S_A2.1000="Composants r&#233;alisant les fonctions de la cha&#238;ne d&#8217;information">
+          <l_A2.1001 S_A2.100100=" Identifier les composants r&#233;alisant les fonctions Acqu&#233;rir, Traiter, Communiquer" S_A2.100101=" Justifier la solution choisie" />
+        </l_A2.10>
+        <l_A2.9 S_A2.900="Composants r&#233;alisant les fonctions de la cha&#238;ne d&#8217;&#233;nergie">
+          <l_A2.901 S_A2.90100=" Identifier les composants r&#233;alisant les fonctions Alimenter, Distribuer, Convertir, Transmettre" S_A2.90101=" Justifier la solution choisie" />
+        </l_A2.9>
+        <l_A2.8 S_A2.800="Syst&#232;mes asservis">
+          <l_A2.801 S_A2.80100=" Diff&#233;rencier un syst&#232;me asservi d&#8217;un syst&#232;me non asservi" />
+        </l_A2.8>
+        <l_A2.15 S_A2.1500="Architecture d&#8217;un r&#233;seau (topologie, mode de communication, type de transmission, m&#233;thode d&#8217;acc&#232;s au support, techniques de commutation)">
+          <l_A2.1501 S_A2.150100=" Identifier les architectures fonctionnelle et mat&#233;rielle d&#8217;un r&#233;seau" />
+        </l_A2.15>
+        <l_A2.16 S_A2.1600="Mat&#233;riaux">
+          <l_A2.1601 S_A2.160100=" Identifier la famille d&#8217;un mat&#233;riau" S_A2.160101=" Mettre en relation les propri&#233;t&#233;s du mat&#233;riau avec les performances du syst&#232;me" />
+        </l_A2.16>
+        <l_A2.17 S_A2.1700="Comportement du solide d&#233;formable">
+          <l_A2.1701 S_A2.170100=" Analyser les sollicitations dans les composants" S_A2.170101=" Analyser les d&#233;formations des composants" S_A2.170102=" Analyser les contraintes m&#233;caniques dans un composant" />
+        </l_A2.17>
+        <l_A2.13 S_A2.1300="Mod&#232;le OSI">
+          <l_A2.1301 S_A2.130100=" D&#233;crire l&#8217;organisation des principaux protocoles" />
+        </l_A2.13>
+        <l_A2.11 S_A2.1100="R&#233;versibilit&#233; d&#8217;une source, d&#8217;un actionneur, d&#8217;une cha&#238;ne de transmission">
+          <l_A2.1101 S_A2.110100=" Analyser la r&#233;versibilit&#233; d&#8217;un composant dans une cha&#238;ne d&#8217;&#233;nergie" />
+        </l_A2.11>
+        <l_A2.12 S_A2.1200="Syst&#232;me de num&#233;ration, codage">
+          <l_A2.1201 S_A2.120100=" Analyser et interpr&#233;ter une information num&#233;rique" />
+        </l_A2.12>
+      </d_A201>
+    </l_A2>
+    <l_B1 S_B100="Identifier et caract&#233;riser les grandeurs agissant sur un syst&#232;me">
+      <d_B101>
+        <l_B1.5 S_B1.500="Flux d&#8217;information">
+          <l_B1.501 S_B1.50100=" Identifier la nature de l&#8217;information et la nature du signal" />
+        </l_B1.5>
+        <l_B1.4 S_B1.400="&#201;nergie et puissances - Notion de pertes">
+          <l_B1.401 S_B1.40100=" Associer les grandeurs physiques aux &#233;changes d&#8217;&#233;nergie et &#224; la transmission de puissance" S_B1.40101=" Identifier les pertes d&#8217;&#233;nergie" />
+        </l_B1.4>
+        <l_B1.6 S_B1.600="Flux de mati&#232;re">
+          <l_B1.601 S_B1.60100=" Qualifier la nature des mati&#232;res, quantifier les volumes et les masses" />
+        </l_B1.6>
+        <l_B1.1 S_B1.100="Fronti&#232;re de l&#8217;&#233;tude">
+          <l_B1.101 S_B1.10100="Isoler un syst&#232;me et justifier l&#8217;isolement" S_B1.10101="Identifier les grandeurs traversant la fronti&#232;re d&#8217;&#233;tude" />
+        </l_B1.1>
+        <l_B1.3 S_B1.300="Mat&#233;riaux">
+          <l_B1.301 S_B1.30100=" Identifier les propri&#233;t&#233;s des mat&#233;riaux des composants qui influent sur le syst&#232;me" />
+        </l_B1.3>
+        <l_B1.2 S_B1.200="Caract&#233;ristiques des grandeurs physiques (m&#233;caniques, &#233;lectriques, thermiques, acoustiques, lumineuses, etc.)">
+          <l_B1.201 S_B1.20100="Qualifier les grandeurs d&#8217;entr&#233;e et de sortie d&#8217;un syst&#232;me isol&#233;" S_B1.20101="Identifier la nature (grandeur effort, grandeur flux)" S_B1.20102="D&#233;crire les lois d&#8217;&#233;volution des grandeurs" S_B1.20103="Utiliser les lois et relations entre les grandeurs" />
+        </l_B1.2>
+      </d_B101>
+    </l_B1>
+    <l_B2 S_B200="Proposer ou justifier un mod&#232;le">
+      <d_B201>
+        <l_B2.2 S_B2.200="Cha&#238;ne d&#8217;information">
+          <l_B2.201 S_B2.20100="Associer un mod&#232;le aux composants d&#8217;une cha&#238;ne d&#8217;information" />
+        </l_B2.2>
+        <l_B2.3 S_B2.300="Ordre d&#8217;un syst&#232;me">
+          <l_B2.301 S_B2.30100=" Identifier les param&#232;tres &#224; partir d&#8217;une r&#233;ponse indicielle" S_B2.30101=" Associer un mod&#232;le de comportement (1er et 2nd ordre) &#224; une r&#233;ponse indicielle" />
+        </l_B2.3>
+        <l_B2.1 S_B2.100="Cha&#238;ne d&#8217;&#233;nergie">
+          <l_B2.101 S_B2.10100="Associer un mod&#232;le &#224; une source d&#8217;&#233;nergie" S_B2.10101="Associer un mod&#232;le aux composants d&#8217;une cha&#238;ne d&#8217;&#233;nergie" S_B2.10102="D&#233;terminer les points de fonctionnement du r&#233;gime permanent d&#8217;un actionneur au sein d&#8217;un proc&#233;d&#233;" />
+        </l_B2.1>
+        <l_B2.6 S_B2.600="Graphe de liaisons">
+          <l_B2.601 S_B2.60100=" Construire un graphe de liaisons (avec ou sans les efforts)" />
+        </l_B2.6>
+        <l_B2.7 S_B2.700="Mod&#232;le du solide">
+          <l_B2.701 S_B2.70100=" Choisir le mod&#232;le de solide, d&#233;formable ou ind&#233;formable selon le point de vue" S_B2.70101=" Mod&#233;liser et repr&#233;senter g&#233;om&#233;triquement le r&#233;el" />
+        </l_B2.7>
+        <l_B2.4 S_B2.400="Syst&#232;mes logiques &#224; &#233;v&#232;nements discrets - Langage de description : graphe d&#8217;&#233;tats, logigramme, GRAFCET, algorigramme">
+          <l_B2.401 S_B2.40100=" Traduire le comportement d&#8217;un syst&#232;me" />
+        </l_B2.4>
+        <l_B2.5 S_B2.500="Liaisons">
+          <l_B2.501 S_B2.50100=" Construire un mod&#232;le et le repr&#233;senter &#224; l&#8217;aide de sch&#233;mas" S_B2.50101=" Pr&#233;ciser les param&#232;tres g&#233;om&#233;triques" S_B2.50102=" &#201;tablir la r&#233;ciprocit&#233; mouvement relatif/actions m&#233;caniques associ&#233;es" />
+        </l_B2.5>
+        <l_B2.8 S_B2.800="Action m&#233;canique">
+          <l_B2.801 S_B2.80100=" Mod&#233;liser les actions m&#233;caniques de contact ou &#224; distance" />
+        </l_B2.8>
+        <l_B2.9 S_B2.900="Mod&#232;le de mat&#233;riau">
+          <l_B2.901 S_B2.90100=" Choisir ou justifier un mod&#232;le comportemental de mat&#233;riau" />
+        </l_B2.9>
+        <l_B2.11 S_B2.1100="Mod&#233;lisation plane">
+          <l_B2.1101 S_B2.110100=" Justifier la pertinence de la mod&#233;lisation plane" />
+        </l_B2.11>
+        <l_B2.10 S_B2.1000="Comportement du solide d&#233;formable">
+          <l_B2.1001 S_B2.100100=" Caract&#233;riser les sollicitations dans les composants" S_B2.100101=" Caract&#233;riser les d&#233;formations des composants" S_B2.100102=" Caract&#233;riser les contraintes m&#233;caniques dans un composant" />
+        </l_B2.10>
+      </d_B201>
+    </l_B2>
+    <l_B3 S_B300="R&#233;soudre et simuler">
+      <d_B301>
+        <l_B3.5 S_B3.500="Mod&#233;lisation plane">
+          <l_B3.501 S_B3.50100=" D&#233;terminer le champ des vecteurs vitesses des points d&#8217;un solide" />
+        </l_B3.5>
+        <l_B3.4 S_B3.400="Comportement du solide d&#233;formable">
+          <l_B3.401 S_B3.40100=" D&#233;terminer les parties les plus sollicit&#233;es dans un composant" S_B3.40101=" D&#233;terminer les valeurs extr&#234;mes des d&#233;formations" S_B3.40102=" D&#233;terminer des concentrations de contraintes dans un composant" />
+        </l_B3.4>
+        <l_B3.3 S_B3.300="Ordre d&#8217;un syst&#232;me">
+          <l_B3.301 S_B3.30100=" Interpr&#233;ter les r&#233;sultats d&#8217;une simulation fr&#233;quentielle des syst&#232;mes du 1er et du 2nd ordre&quot;" />
+        </l_B3.3>
+        <l_B3.2 S_B3.200="Param&#232;tres d&#8217;une simulation">
+          <l_B3.201 S_B3.20100="Adapter les param&#232;tres de simulation, dur&#233;e, incr&#233;ment temporel, choix des grandeurs affich&#233;es, &#233;chelles, &#224; l&#8217;amplitude et la dynamique de grandeurs simul&#233;es" />
+        </l_B3.2>
+        <l_B3.1 S_B3.100="Principe fondamental de la dynamique (PFD) - Principes fondamentaux d&#8217;&#233;tude des circuits">
+          <l_B3.101 S_B3.10100="&#201;tablir de fa&#231;on analytique les expressions d&#8217;efforts (force, couple, pression, tension, etc.) et de flux (vitesse, fr&#233;quence de rotation, d&#233;bit, intensit&#233; du courant, etc.)" S_B3.10101="Traduire de fa&#231;on analytique le comportement d&#8217;un syst&#232;me" />
+        </l_B3.1>
+      </d_B301>
+    </l_B3>
+    <l_C2 S_C200="Mettre en oeuvre un protocole exp&#233;rimental">
+      <d_C201>
+        <l_C2.1 S_C2.100="Appareils de mesures, r&#232;gles d&#8217;utilisation">
+          <l_C2.101 S_C2.10100="Mettre en oeuvre un appareil de mesure" S_C2.10101="Param&#233;trer une cha&#238;ne d&#8217;acquisition" />
+        </l_C2.1>
+        <l_C2.3 S_C2.300="Param&#232;tres de configuration d&#8217;un r&#233;seau">
+          <l_C2.301 S_C2.30100=" Param&#233;trer un protocole de communication" />
+        </l_C2.3>
+        <l_C2.2 S_C2.200="Param&#232;tres de configuration du syst&#232;me">
+          <l_C2.201 S_C2.20100="R&#233;gler les param&#232;tres de fonctionnement d&#8217;un syst&#232;me" />
+        </l_C2.2>
+        <l_C2.5 S_C2.500="Mod&#232;les de comportement">
+          <l_C2.501 S_C2.50100=" Analyser les r&#233;sultats exp&#233;rimentaux" S_C2.50101=" Traiter les r&#233;sultats exp&#233;rimentaux, et extraire la ou les grandeurs d&#233;sir&#233;e(s)" />
+        </l_C2.5>
+        <l_C2.4 S_C2.400="Routines, proc&#233;dures, etc. - Syst&#232;mes logiques &#224; &#233;v&#232;nements discrets">
+          <l_C2.401 S_C2.40100=" G&#233;n&#233;rer un programme et l&#8217;implanter dans le syst&#232;me cible" />
+        </l_C2.4>
+      </d_C201>
+    </l_C2>
+    <l_C1 S_C100="Justifier le choix d&#8217;un protocole exp&#233;rimental">
+      <d_C101>
+        <l_C1.2 S_C1.200="Pr&#233;vision quantitative de la r&#233;ponse du syst&#232;me">
+          <l_C1.201 S_C1.20100=" Identifier le comportement des composants du syst&#232;me" S_C1.20101=" Pr&#233;voir l&#8217;ordre de grandeur de la mesure" />
+        </l_C1.2>
+        <l_C1.3 S_C1.300="Cha&#238;ne d&#8217;information, structure et fonctionnement">
+          <l_C1.301 S_C1.30100=" Identifier la nature et les caract&#233;ristiques des grandeurs en divers points de la cha&#238;ne d&#8217;information" S_C1.30101=" Ma&#238;triser les fonctions des appareils de mesures et leurs mises en &#339;uvre" />
+        </l_C1.3>
+        <l_C1.1 S_C1.100="Capteurs">
+          <l_C1.101 S_C1.10100="Qualifier les caract&#233;ristiques d&#8217;entr&#233;e - sortie d&#8217;un capteur" S_C1.10101="Justifier le choix d&#8217;un capteur ou d&#8217;un appareil de mesure vis-&#224;-vis de la grandeur physique &#224; mesurer" S_C1.10102="Justifier les caract&#233;ristiques (calibre, position, etc.) d&#8217;un appareil de mesure" />
+        </l_C1.1>
+      </d_C101>
+    </l_C1>
+    <l_D2 S_D200="Mettre en oeuvre une communication">
+      <d_D201>
+        <l_D2.1 S_D2.100="Croquis, sch&#233;mas">
+          <l_D2.101 S_D2.10100="R&#233;aliser un croquis ou un sch&#233;ma dans un objectif de communication" />
+        </l_D2.1>
+        <l_D2.2 S_D2.200="Production de documents">
+          <l_D2.201 S_D2.20100="Distinguer les diff&#233;rents types de documents en fonction de leurs usages" S_D2.20101="Choisir l&#8217;outil bureautique adapt&#233; &#224; l&#8217;objectif" S_D2.20102="R&#233;aliser un document num&#233;rique" S_D2.20103="R&#233;aliser et sc&#233;nariser un document multim&#233;dia" S_D2.20104="                          " />
+        </l_D2.2>
+      </d_D201>
+    </l_D2>
+    <l_D1 S_D100="Rechercher et traiter des informations">
+      <d_D101>
+        <l_D1.3 S_D1.300="Internet, outil de travail collaboratif, blogs, forums, moteur de recherche">
+          <l_D1.301 S_D1.30100=" Rechercher des informations" S_D1.30101=" V&#233;rifier la nature de l&#8217;information" S_D1.30102=" Trier des informations selon des crit&#232;res" S_D1.30103=" Utiliser des outils adapt&#233;s pour rechercher l&#8217;information" S_D1.30104=" Mettre &#224; jour l&#8217;information" />
+        </l_D1.3>
+        <l_D1.2 S_D1.200="Bases de donn&#233;es, s&#233;lection, tri, classement de donn&#233;es">
+          <l_D1.201 S_D1.20100="Optimiser les param&#232;tres et les crit&#232;res de recherche en vue de r&#233;pondre au probl&#232;me pos&#233;" />
+        </l_D1.2>
+        <l_D1.1 S_D1.100="Dossier technique">
+          <l_D1.101 S_D1.10100="Rechercher une information dans un dossier technique" S_D1.10101="Effectuer la synth&#232;se des informations disponibles dans un dossier technique" />
+        </l_D1.1>
+      </d_D101>
+    </l_D1>
+  </d_dicSavoirs>
+  <d_dicSavoirs_Math>
+    <l_1 S_100="Premi&#232;re">
+      <d_101>
+        <l_1.1 S_1.100="Analyse">
+          <d_1.101>
+            <l_1.1.1 S_1.1.100="Second degr&#233;">
+              <l_1.1.101 S_1.1.10100="Forme canonique d&#8217;une fonction polyn&#244;me de degr&#233; deux" S_1.1.10101="&#201;quation du second degr&#233;, discriminant" S_1.1.10102="Signe du trin&#244;me" />
+            </l_1.1.1>
+            <l_1.1.3 S_1.1.300="D&#233;rivation">
+              <l_1.1.301 S_1.1.30100="Nombre d&#233;riv&#233; d&#8217;une fonction en un point" S_1.1.30101="Tangente &#224; la courbe repr&#233;sentative d&#8217;une fonction d&#233;rivable en un point" S_1.1.30102="Fonction d&#233;riv&#233;e" S_1.1.30103="D&#233;riv&#233;e des fonctions usuelles" S_1.1.30104="D&#233;riv&#233;e d&#8217;une somme, d&#8217;un produit et d&#8217;un quotient" S_1.1.30105="Lien entre signe de la d&#233;riv&#233;e et sens de variation" S_1.1.30106="Extremum d&#8217;une fonction" />
+            </l_1.1.3>
+            <l_1.1.2 S_1.1.200="&#201;tude de fonctions">
+              <l_1.1.201 S_1.1.20100="Fonctions de r&#233;f&#233;rence" S_1.1.20101="Sens de variation des fonctions                " />
+            </l_1.1.2>
+            <l_1.1.5 S_1.1.500="&#201;tude de fonctions">
+              <l_1.1.501 S_1.1.50100="Fonctions de r&#233;f&#233;rence" S_1.1.50101="Sens de variation des fonctions " />
+            </l_1.1.5>
+            <l_1.1.4 S_1.1.400="Suites">
+              <l_1.1.401 S_1.1.40100="Modes de g&#233;n&#233;ration d&#8217;une suite num&#233;rique" S_1.1.40101="Suites arithm&#233;tiques et suites g&#233;om&#233;triques" S_1.1.40102="Sens de variation d&#8217;une suite num&#233;rique" S_1.1.40103="Approche de la notion de limite d&#8217;une suite &#224; partir d&#8217;exemples" />
+            </l_1.1.4>
+          </d_1.101>
+        </l_1.1>
+        <l_1.2 S_1.200="G&#233;om&#233;trie">
+          <d_1.201>
+            <l_1.2.2 S_1.2.200="Trigonom&#233;trie">
+              <l_1.2.201 S_1.2.20100="Cercle trigonom&#233;trique" S_1.2.20101="Radian" S_1.2.20102="Mesure d&#8217;un angle orient&#233;, mesure principale" />
+            </l_1.2.2>
+            <l_1.2.3 S_1.2.300="Produit scalaire dans le plan">
+              <l_1.2.301 S_1.2.30100="D&#233;finition, propri&#233;t&#233;s" S_1.2.30101="Vecteur normal &#224; une droite" S_1.2.30102="Applications du produit scalaire : calculs d&#8217;angles et de longueurs ; formules d&#8217;addition et de duplication des cosinus et sinus" />
+            </l_1.2.3>
+            <l_1.2.1 S_1.2.100="G&#233;om&#233;trie plane">
+              <l_1.2.101 S_1.2.10100="Condition de colin&#233;arit&#233; de deux vecteurs" S_1.2.10101="Vecteur directeur d&#8217;une droite" S_1.2.10102="&#201;quation cart&#233;sienne d&#8217;une droite" S_1.2.10103="Expression d&#8217;un vecteur du plan en fonction de deux vecteurs non colin&#233;aires" />
+            </l_1.2.1>
+          </d_1.201>
+        </l_1.2>
+        <l_1.3 S_1.300="Statistiques et probabilit&#233;s">
+          <d_1.301>
+            <l_1.3.3 S_1.3.300="&#201;chantillonnage">
+              <l_1.3.301 S_1.3.30100="Utilisation de la loi binomiale pour une prise de d&#233;cision &#224; partir d&#8217;une fr&#233;quence" />
+            </l_1.3.3>
+            <l_1.3.2 S_1.3.200="Probabilit&#233;s">
+              <l_1.3.201 S_1.3.20100="Variable al&#233;atoire discr&#232;te et loi de probabilit&#233;" S_1.3.20101="Esp&#233;rance, variance et &#233;cart-type" S_1.3.20102="Mod&#232;le de la r&#233;p&#233;tition d&#8217;exp&#233;riences identiques et ind&#233;pendantes &#224; deux ou trois issues" S_1.3.20103="&#201;preuve de Bernoulli, loi de Bernoulli" S_1.3.20104="Sch&#233;ma de Bernoulli, loi binomiale (loi du nombre de succ&#232;s)" S_1.3.20105="Coefficients binomiaux, triangle de Pascal" S_1.3.20106="Esp&#233;rance, variance et &#233;cart-type de la loi binomiale" />
+            </l_1.3.2>
+            <l_1.3.1 S_1.3.100="Statistique descriptive, analyse de donn&#233;es">
+              <l_1.3.101 S_1.3.10100="Caract&#233;ristiques de dispersion : variance, &#233;cart-type" S_1.3.10101="Diagramme en bo&#238;te" />
+            </l_1.3.1>
+          </d_1.301>
+        </l_1.3>
+      </d_101>
+    </l_1>
+    <l_A S_A00="Algorithmique">
+      <l_A01 S_A0100="Instructions &#233;l&#233;mentaires" S_A0101="Boucle et it&#233;rateur, instruction conditionnelle&quot;" />
+    </l_A>
+    <l_T S_T00="Terminale">
+      <d_T01>
+        <l_T.1 S_T.100="Analyse">
+          <d_T.101>
+            <l_T.1.4 S_T.1.400="Calculs de d&#233;riv&#233;es : compl&#233;ments">
+              <d_T.1.401 />
+            </l_T.1.4>
+            <l_T.1.5 S_T.1.500="Fonctions sinus et cosinus">
+              <d_T.1.501 />
+            </l_T.1.5>
+            <l_T.1.6 S_T.1.600="Fonction exponentielle">
+              <d_T.1.601 />
+            </l_T.1.6>
+            <l_T.1.7 S_T.1.700="Fonction logarithme n&#233;p&#233;rien">
+              <d_T.1.701 />
+            </l_T.1.7>
+            <l_T.1.1 S_T.1.100="Suites ">
+              <l_T.1.101 S_T.1.10100="Raisonnement par r&#233;currence" S_T.1.10101="Limite finie ou infinie d&#8217;une suite" S_T.1.10102="Limites et comparaison" S_T.1.10103="Op&#233;rations sur les limites" S_T.1.10104="Comportement &#224; l&#8217;infini de la suite q^n" S_T.1.10105="Suite major&#233;e, minor&#233;e, born&#233;e" />
+            </l_T.1.1>
+            <l_T.1.2 S_T.1.200="Limites de fonctions">
+              <l_T.1.201 S_T.1.20100="Limite finie ou infinie d'une fonction &#224; l'infini" S_T.1.20101="Limite infinie d&#8217;une fonction en un point" S_T.1.20102="Limites d'une somme, d'un produit, d'un quotient ou d'une compos&#233;e de deux fonctions" S_T.1.20103="Limites et comparaisons" S_T.1.20104="Asymptote parall&#232;le &#224; l'un des axes de coordonn&#233;es" />
+            </l_T.1.2>
+            <l_T.1.3 S_T.1.300="Continuit&#233; sur un intervalle, th&#233;or&#232;me des valeurs interm&#233;diaires">
+              <d_T.1.301 />
+            </l_T.1.3>
+            <l_T.1.8 S_T.1.800="Int&#233;gration">
+              <l_T.1.801 S_T.1.80100="D&#233;finition de l'int&#233;grale d'une fonction continue et positive sur[a,b comme aire sous la courbe" S_T.1.80101="Notation" S_T.1.80102="Primitive d&#8217;une fonction continue sur un intervalle" S_T.1.80103="Th&#233;or&#232;me : toute fonction continue sur un intervalle admet des primitives" S_T.1.80104="Int&#233;grale d&#8217;une fonction continue de signe quelconque" S_T.1.80105="Lin&#233;arit&#233;, positivit&#233;, relation de Chasles" S_T.1.80106="Valeur moyenne" />
+            </l_T.1.8>
+          </d_T.101>
+        </l_T.1>
+        <l_T.3 S_T.300="Probabilit&#233;s et statistique">
+          <d_T.301>
+            <l_T.3.4 S_T.3.400="Estimation">
+              <l_T.3.401 S_T.3.40100="Intervalle de confiance" S_T.3.40101="Niveau de confiance&quot;" />
+            </l_T.3.4>
+            <l_T.3.2 S_T.3.200="Notion de loi &#224; densit&#233;">
+              <l_T.3.201 S_T.3.20100="Loi &#224; densit&#233; sur un intervalle" S_T.3.20101="Loi uniforme sur [a,b" S_T.3.20102="Esp&#233;rance d&#8217;une variable al&#233;atoire suivant une loi uniforme" S_T.3.20103="Lois exponentielles" S_T.3.20104="Esp&#233;rance d&#8217;une variable al&#233;atoire suivant une loi exponentielle" S_T.3.20105="Loi normale centr&#233;e r&#233;duite" S_T.3.20106="Th&#233;or&#232;me de Moivre Laplace&quot;" />
+            </l_T.3.2>
+            <l_T.3.3 S_T.3.300="Intervalle de fluctuation">
+              <l_T.3.301 S_T.3.30100="                                    " />
+            </l_T.3.3>
+            <l_T.3.1 S_T.3.100="Conditionnement, ind&#233;pendance ">
+              <l_T.3.101 S_T.3.10100="Conditionnement par un &#233;v&#233;nement de probabilit&#233; non nulle" S_T.3.10101="Ind&#233;pendance de deux &#233;v&#233;nements&quot;" />
+            </l_T.3.1>
+          </d_T.301>
+        </l_T.3>
+        <l_T.2 S_T.200="G&#233;om&#233;trie">
+          <d_T.201>
+            <l_T.2.3 S_T.2.300="G&#233;om&#233;trie vectorielle">
+              <l_T.2.301 S_T.2.30100="Caract&#233;risation d'un plan" S_T.2.30101="Vecteurs coplanaires" S_T.2.30102="D&#233;composition d'un vecteur" S_T.2.30103="Rep&#233;rage" S_T.2.30104="Repr&#233;sentation param&#233;trique d'une droite&quot;" />
+            </l_T.2.3>
+            <l_T.2.2 S_T.2.200="Droites et plans">
+              <l_T.2.201 S_T.2.20100="Positions relatives de droites et de plans : intersection et parall&#233;lisme" S_T.2.20101="Orthogonalit&#233; : de deux droites ; d&#8217;une droite et d&#8217;un plan&quot;" />
+            </l_T.2.2>
+            <l_T.2.1 S_T.2.100="Nombres complexes">
+              <l_T.2.101 S_T.2.10100="Forme alg&#233;brique, conjugu&#233;" S_T.2.10101="Somme, produit, quotient" S_T.2.10102="&#201;quation du second degr&#233; &#224; coefficients r&#233;els" S_T.2.10103="Repr&#233;sentation g&#233;om&#233;trique" S_T.2.10104="Affixe d&apos;un point, d&apos;un vecteur" S_T.2.10105="Forme trigonom&#233;trique" />
+            </l_T.2.1>
+            <l_T.2.4 S_T.2.400="Produit scalaire">
+              <l_T.2.401 S_T.2.40100="Produit scalaire de deux vecteurs dans l&#8217;espace" S_T.2.40101="Vecteur normal &#224; un plan" S_T.2.40102="&#201;quation cart&#233;sienne d&#8217;un plan&quot;" />
+            </l_T.2.4>
+          </d_T.201>
+        </l_T.2>
+      </d_T01>
+    </l_T>
+  </d_dicSavoirs_Math>
+  <d_dicSavoirs_Phys>
+    <l_1 S_100="Premi&#232;re">
+      <d_101>
+        <l_1.1 S_1.100="Observer : couleurs et images">
+          <d_1.101>
+            <l_1.1.1 S_1.1.100="L&#8217;&#339;il; mod&#232;le de l&#8217;&#339;il r&#233;duit">
+              <l_1.1.101 S_1.1.10100="Lentilles minces convergentes: images r&#233;elle et virtuelle" S_1.1.10101="Distance focale, vergence" S_1.1.10102="Relation de conjugaison ; grandissement" S_1.1.10103="Accommodation" S_1.1.10104="Fonctionnements compar&#233;s de l&#8217;&#339;il et d&#8217;un appareil photographique" />
+            </l_1.1.1>
+            <l_1.1.3 S_1.1.300="Sources de lumi&#232;re color&#233;e">
+              <l_1.1.301 S_1.1.30100="Diff&#233;rentes sources de lumi&#232;re: &#233;toiles, lampes vari&#233;es, laser, DEL, etc" S_1.1.30101="Domaines des ondes &#233;lectromagn&#233;tiques" S_1.1.30102="Couleur des corps chauff&#233;s. Loi de Wien" S_1.1.30103="Interaction lumi&#232;re-mati&#232;re: &#233;mission et absorption" S_1.1.30104="Quantification des niveaux d&#8217;&#233;nergie de la mati&#232;re" S_1.1.30105="Mod&#232;le corpusculaire de la lumi&#232;re: le photon. &#201;nergie d&#8217;un photon" S_1.1.30106="Relation dans les &#233;changes d&#8217;&#233;nergie" S_1.1.30107="Spectre solaire" />
+            </l_1.1.3>
+            <l_1.1.2 S_1.1.200="Couleur des objets">
+              <l_1.1.201 S_1.1.20100="Synth&#232;se additive, synth&#232;se soustractive" S_1.1.20101="Absorption, diffusion, transmission" S_1.1.20102="Vision des couleurs et trichromie. Daltonisme" S_1.1.20103="Principe de la restitution des couleurs par un &#233;cran plat (ordinateur, t&#233;l&#233;phone portable, etc.)               " />
+            </l_1.1.2>
+            <l_1.1.4 S_1.1.400="Mati&#232;res color&#233;es">
+              <l_1.1.401 S_1.1.40100="Synth&#232;se soustractive" S_1.1.40101="Colorants, pigments ; extraction et synth&#232;se" S_1.1.40102="R&#233;action chimique: r&#233;actif limitant, st&#339;chiom&#233;trie, notion d&#8217;avancement" S_1.1.40103="Dosage de solutions color&#233;es par &#233;talonnage. Loi de Beer-Lambert" S_1.1.40104="Mol&#233;cules organiques color&#233;es: structures mol&#233;culaires, mol&#233;cules &#224; liaisons conjugu&#233;es" S_1.1.40105="Indicateurs color&#233;s" S_1.1.40106="Liaison covalente" S_1.1.40107="Formules de Lewis; g&#233;om&#233;trie des mol&#233;cules" S_1.1.40108="R&#244;le des doublets non liants" S_1.1.40109="Isom&#233;rie Z/E" />
+            </l_1.1.4>
+          </d_1.101>
+        </l_1.1>
+        <l_1.2 S_1.200="Comprendre : lois et mod&#232;les">
+          <d_1.201>
+            <l_1.2.2 S_1.2.200="Champs et forces">
+              <l_1.2.201 S_1.2.20100="Exemples de champs scalaires et vectoriels: pression, temp&#233;rature, vitesse dans un fluide" S_1.2.20101="Champ magn&#233;tique: sources de champ magn&#233;tique (Terre, aimant, courant)" S_1.2.20102="Champ &#233;lectrostatique" S_1.2.20103="Champ de pesanteur local" S_1.2.20104="Loi de la gravitation ; champ de gravitation" S_1.2.20105="Lien entre le champ de gravitation et le champ de pesanteur" />
+            </l_1.2.2>
+            <l_1.2.3 S_1.2.300="Formes et principe de conservation de l&#8217;&#233;nergie">
+              <l_1.2.301 S_1.2.30100="&#201;nergie d&#8217;un point mat&#233;riel en mouvement dans le champ de pesanteur uniforme: &#233;nergie cin&#233;tique, &#233;nergie potentielle de pesanteur, conservation ou non conservation de l&#8217;&#233;nergie m&#233;canique" S_1.2.30101="Frottements ; transferts thermiques ; dissipation d&#8217;&#233;nergie" S_1.2.30102="Formes d&#8217;&#233;nergie" S_1.2.30103="Principe de conservation de l&#8217;&#233;nergie" />
+            </l_1.2.3>
+            <l_1.2.1 S_1.2.100="Coh&#233;sion et transformations de la mati&#232;re">
+              <l_1.2.101 S_1.2.10100="La mati&#232;re &#224; diff&#233;rentes &#233;chelles: du noyau &#224; la galaxie" S_1.2.10101="Particules &#233;l&#233;mentaires: &#233;lectrons, neutrons, protons. Charge &#233;l&#233;mentaire e" S_1.2.10102="Interactions fondamentales: interactions forte et faible, &#233;lectromagn&#233;tique, gravitationnelle" S_1.2.10103="Coh&#233;sion du noyau, stabilit&#233;" S_1.2.10104="Radioactivit&#233; naturelle et artificielle. Activit&#233;" S_1.2.10105="R&#233;actions de fission et de fusion" S_1.2.10106="Lois deconservation dans les r&#233;actions nucl&#233;aires" S_1.2.10107="D&#233;faut de masse, &#233;nergie lib&#233;r&#233;e" S_1.2.10108="R&#233;actions nucl&#233;aires et aspects &#233;nerg&#233;tiques associ&#233;s" S_1.2.10109="Ordre de grandeur des &#233;nergies mises en jeu" S_1.2.10110="Solide ionique. Interaction de Van der Waals, liaison hydrog&#232;ne" S_1.2.10111="Electron&#233;gativit&#233;" S_1.2.10112="Effet du caract&#232;re polaire d'un solvant lors d'une dissolution" S_1.2.10113="Variation de temp&#233;rature et transformation physique d'un syst&#232;me par transfert thermique" S_1.2.10114="Nomenclature des alcanes et des alcools ; formule semi-d&#233;velopp&#233;e" S_1.2.10115="Lien entre les temp&#233;ratures de changement d'&#233;tat et la structure mol&#233;culaire dans le cas de l'eau, des alcools et des alcanes" S_1.2.10116="Miscibilit&#233; des alcools avec l'eau" S_1.2.10117="R&#233;actions chimiques et aspects &#233;nerg&#233;tiques associ&#233;s" />
+            </l_1.2.1>
+          </d_1.201>
+        </l_1.2>
+        <l_1.3 S_1.300="Agir : d&#233;fis du XXI&#232;me si&#232;cle">
+          <d_1.301>
+            <l_1.3.3 S_1.3.300="Synth&#233;tiser des mol&#233;cules et fabriquer de nouveaux mat&#233;riaux">
+              <l_1.3.301 S_1.3.30100="Nanochimie" S_1.3.30101="Synth&#232;se ou h&#233;misynth&#232;se de mol&#233;cules complexes, biologiquement actives" S_1.3.30102="Alcools, ald&#233;hydes, c&#233;tones: nomenclature, oxydations" S_1.3.30103="Acides carboxyliques: nomenclature, caract&#232;re acide,solubilit&#233; et pH" S_1.3.30104="Obtention d&#8217;un acide carboxylique ou d&#8217;une c&#233;tone; rendement d&#8217;une synth&#232;se" S_1.3.30105="Synth&#232;ses et propri&#233;t&#233;s de mat&#233;riaux amorphes (verres), de mat&#233;riaux organis&#233;s (solides cristallins, c&#233;ramiques) et de mati&#232;res plastiques" />
+            </l_1.3.3>
+            <l_1.3.2 S_1.3.200="Stockage et conversion de l&#8217;&#233;nergie chimique">
+              <l_1.3.201 S_1.3.20100="&#201;nergie lib&#233;r&#233;e lors de la combustion d&#8217;un hydrocarbure ou d&#8217;un alcool" S_1.3.20101="Piles salines, piles alcalines, piles &#224; combustible. Accumulateurs" S_1.3.20102="Polarit&#233; des &#233;lectrodes, r&#233;actions aux &#233;lectrodes" S_1.3.20103="Oxydant, r&#233;ducteur, couple oxydant/r&#233;ducteur, r&#233;action d&#8217;oxydo-r&#233;duction" S_1.3.20104="Mod&#232;le par transfert d&#8217;&#233;lectrons" />
+            </l_1.3.2>
+            <l_1.3.1 S_1.3.100="Convertir l&#8217;&#233;nergie et &#233;conomiser les ressources">
+              <l_1.3.101 S_1.3.10100="Ressources &#233;nerg&#233;tiques renouvelables ou non ; dur&#233;es caract&#233;ristiques associ&#233;es" S_1.3.10101="Transport et stockage de l&#8217;&#233;nergie ; &#233;nergie &#233;lectrique" S_1.3.10102="Production de l&#8217;&#233;nergie &#233;lectrique ; puissance" S_1.3.10103="Conversion d&#8217;&#233;nergie dans un g&#233;n&#233;rateur, un r&#233;cepteur" S_1.3.10104="Loi d&#8217;Ohm. Effet Joule" S_1.3.10105="Notion de rendement de conversion" />
+            </l_1.3.1>
+            <l_1.3.4 S_1.3.400="Cr&#233;er et innover">
+              <l_1.3.401 S_1.3.40100="Culture scientifique et technique" S_1.3.40101="Relation science-soci&#233;t&#233;" S_1.3.40102="M&#233;tiers de l&#8217;activit&#233; scientifique (partenariat avec une institution de recherche, une entreprise, etc.)" />
+            </l_1.3.4>
+          </d_1.301>
+        </l_1.3>
+      </d_101>
+    </l_1>
+    <l_T S_T00="Terminale">
+      <d_T01>
+        <l_T.4 S_T.400="Agir : d&#233;fis du XXI&#232;me si&#232;cle">
+          <d_T.401>
+            <l_T.4.5 S_T.4.500="Transmettre et stocker de l&#8217;information">
+              <l_T.4.501 S_T.4.50100="Cha&#238;ne de transmission d&#8217;informations" S_T.4.50101="Images num&#233;riques" S_T.4.50102="Signal analogique et signal num&#233;rique" S_T.4.50103="Propri&#233;t&#233;s physiques de transmission" S_T.4.50104="Stockage optique" />
+            </l_T.4.5>
+            <l_T.4.4 S_T.4.400="Synth&#233;tiser des mol&#233;cules, fabriquer de nouveaux mat&#233;riaux">
+              <l_T.4.401 S_T.4.40100="Strat&#233;gie de la synth&#232;se organique" S_T.4.40101="S&#233;lectivit&#233; en chimie organique" />
+            </l_T.4.4>
+            <l_T.4.6 S_T.4.600="Cr&#233;er et innover">
+              <l_T.4.601 S_T.4.60100="Culture scientifique et technique ; relation science-soci&#233;t&#233;" S_T.4.60101="M&#233;tiers de l&#8217;activit&#233; scientifique (partenariat avec une institution de recherche, une entreprise, etc.)" />
+            </l_T.4.6>
+            <l_T.4.1 S_T.4.100="Enjeux &#233;nerg&#233;tiques">
+              <l_T.4.101 S_T.4.10100="Nouvelles cha&#238;nes &#233;nerg&#233;tiques" S_T.4.10101="&#201;conomies d&#8217;&#233;nergie" />
+            </l_T.4.1>
+            <l_T.4.3 S_T.4.300="Contr&#244;le de qualit&#233; par dosage">
+              <l_T.4.301 S_T.4.30100="Dosage par &#233;talonnage" S_T.4.30101="Dosage par titrage direct" />
+            </l_T.4.3>
+            <l_T.4.2 S_T.4.200="Apport de la chimie au respect de l&#8217;environnement">
+              <l_T.4.201 S_T.4.20100="Chimie durable" S_T.4.20101="Valorisation du dioxyde de carbone" />
+            </l_T.4.2>
+          </d_T.401>
+        </l_T.4>
+        <l_T.1 S_T.100="Mesure et incertitude">
+          <d_T.101>
+            <l_T.1.1 S_T.1.100="Erreurs et notions associ&#233;es">
+              <l_T.1.101 />
+            </l_T.1.1>
+            <l_T.1.2 S_T.1.200="Incertitudes et notions associ&#233;es">
+              <l_T.1.201 />
+            </l_T.1.2>
+            <l_T.1.3 S_T.1.300="Expression et acceptabilit&#233; du r&#233;sultat">
+              <l_T.1.301 />
+            </l_T.1.3>
+          </d_T.101>
+        </l_T.1>
+        <l_T.3 S_T.300="Comprendre : lois et mod&#232;les">
+          <d_T.301>
+            <l_T.3.10 S_T.3.1000="Transfert quantites d'&#233;nergie">
+              <l_T.3.1001 S_T.3.100100="Emission et absorbtion quantiques" S_T.3.100101="&#201;mission stimul&#233;e et amplification d&#8217;une onde lumineuse" S_T.3.100102="Oscillateur optique : principe du laser" S_T.3.100103="Transition d'&#233;nergie : electronique, vibratoire" />
+            </l_T.3.10>
+            <l_T.3.11 S_T.3.1100="Dualit&#233; onde-particule">
+              <l_T.3.1101 S_T.3.110100="Photon et onde lumineuse" S_T.3.110101="Particule mat&#233;rielle et onde de mati&#232;re ; relation de de Broglie" S_T.3.110102="Interf&#233;rences photon par photon, particule de mati&#232;re par particule de mati&#232;re" />
+            </l_T.3.11>
+            <l_T.3.6 S_T.3.600="Transformation en chimie organique">
+              <l_T.3.601 S_T.3.60100="Aspect macroscopique" S_T.3.60101="Aspect microscopique" />
+            </l_T.3.6>
+            <l_T.3.7 S_T.3.700="R&#233;action chimique par &#233;change de proton">
+              <l_T.3.701 S_T.3.70100="Le pH: d&#233;finition, mesure" S_T.3.70101="Th&#233;orie de Br&#246;nsted" S_T.3.70102="R&#233;actions quasi-totales en faveur des produits" S_T.3.70103="R&#233;action entre un acide fort et une base forte" S_T.3.70104="Contr&#244;le du pH: solution tampon ; r&#244;le en milieu biologique" />
+            </l_T.3.7>
+            <l_T.3.4 S_T.3.400="Temps et &#233;volution chimique: cin&#233;tique et catalyse">
+              <l_T.3.401 S_T.3.40100="R&#233;actions lentes, rapides ; dur&#233;e d'une r&#233;action chimique" S_T.3.40101="Facteurs cin&#233;tiques. &#201;volution d'une quantit&#233; de mati&#232;re au cours du temps" S_T.3.40102="Temps de demi-r&#233;action" S_T.3.40103="Catalyse homog&#232;ne, h&#233;t&#233;rog&#232;ne et enzymatique" />
+            </l_T.3.4>
+            <l_T.3.5 S_T.3.500="Repr&#233;sentation spatiale des mol&#233;cules">
+              <l_T.3.501 S_T.3.50100="Chiralit&#233;: d&#233;finition, approche historique" S_T.3.50101="Repr&#233;sentation de Cram" S_T.3.50102="Carbone asym&#233;trique" S_T.3.50103="Chiralit&#233; des acides &#945;-amin&#233;s" S_T.3.50104="&#201;nantiom&#233;rie, m&#233;lange rac&#233;mique, diast&#233;r&#233;oisom&#233;rie" S_T.3.50105="Conformation: rotation autour d&#8217;une liaison simple ; conformation la plus stable" S_T.3.50106="Formule topologique des mol&#233;cules organiques" S_T.3.50107="Propri&#233;t&#233;s biologiques et st&#233;r&#233;oisom&#233;rie" />
+            </l_T.3.5>
+            <l_T.3.2 S_T.3.200="Mesure du temps et oscillateur, amortissement">
+              <l_T.3.201 S_T.3.20100="Travail d&#8217;une force" S_T.3.20101="Force conservative; &#233;nergie potentielle" S_T.3.20102="Forces non conservatives : exemple des frottements" S_T.3.20103="&#201;nergie m&#233;canique" S_T.3.20104="&#201;tude &#233;nerg&#233;tique des oscillations libres d&#8217;un syst&#232;me m&#233;canique" S_T.3.20105="Dissipation d&#8217;&#233;nergie" S_T.3.20106="D&#233;finition du temps atomique" />
+            </l_T.3.2>
+            <l_T.3.3 S_T.3.300="Temps et relativit&#233; restreinte">
+              <l_T.3.301 S_T.3.30100="Invariance de la vitesse de la lumi&#232;re et caract&#232;re relatif du temps" S_T.3.30101="Postulat d&#8217;Einstein. Tests exp&#233;rimentaux de l&#8217;invariance de la vitesse de la lumi&#232;re" S_T.3.30102="Notion d&#8217;&#233;v&#233;nement. Temps propre" S_T.3.30103="Dilatation des dur&#233;es" S_T.3.30104="Preuves exp&#233;rimentales" />
+            </l_T.3.3>
+            <l_T.3.1 S_T.3.100="Temps, cin&#233;matique et dynamique newtoniennes">
+              <l_T.3.101 S_T.3.10100="Description du mouvement d&#8217;un point au cours du temps: vecteurs position, vitesse et acc&#233;l&#233;ration" S_T.3.10101="R&#233;f&#233;rentiel galil&#233;en" S_T.3.10102="Lois de Newton : principe d&#8217;inertie et principe des actions r&#233;ciproques" S_T.3.10103="Conservation de la quantit&#233; de mouvement d&#8217;un syst&#232;me isol&#233;" S_T.3.10104="Mouvement d&#8217;un satellite" S_T.3.10105="R&#233;volution de la Terre autour du Soleil" S_T.3.10106="Lois de Kepler" />
+            </l_T.3.1>
+            <l_T.3.8 S_T.3.800="Du macroscopique au microscopique">
+              <l_T.3.801 S_T.3.80100="Constante d&#8217;Avogadro" />
+            </l_T.3.8>
+            <l_T.3.9 S_T.3.900="Transferts d'&#233;nergie entre syst&#232;mes macroscopiques">
+              <l_T.3.901 S_T.3.90100="Notions de syst&#232;me et d&#8217;&#233;nergie interne ; interpr&#233;tation microscopique" S_T.3.90101="Capacit&#233; thermique" S_T.3.90102="Transferts thermiques : conduction, convection, rayonnement" S_T.3.90103="Flux thermique ; R&#233;sistance thermique" S_T.3.90104="Notion d'irr&#233;versibilit&#233;" S_T.3.90105="Bilan d'&#233;nergie" />
+            </l_T.3.9>
+          </d_T.301>
+        </l_T.3>
+        <l_T.2 S_T.200="Observer : ondes et mati&#232;re">
+          <d_T.201>
+            <l_T.2.3 S_T.2.300="D&#233;tecteurs d'ondes et de particules">
+              <l_T.2.301 S_T.2.30100="Ondes m&#233;caniques et electromagn&#233;tiques" S_T.2.30101="Photons, particules &#233;l&#233;mentaires ou non" />
+            </l_T.2.3>
+            <l_T.2.2 S_T.2.200="Les ondes dans la mati&#232;re">
+              <l_T.2.201 S_T.2.20100="Houle, ondes sismiques, ondes sonores" S_T.2.20101="Magnitude d'un s&#233;isme sur l'echelle de Richter" S_T.2.20102="Niveau d'intensit&#233; sonore" />
+            </l_T.2.2>
+            <l_T.2.1 S_T.2.100="Rayonnements dans l&apos;univers">
+              <l_T.2.101 S_T.2.10100="Absorbtion de rayonnements par l'atmosph&#232;re terrestre" />
+            </l_T.2.1>
+            <l_T.2.6 S_T.2.600="Analyse spectrale">
+              <l_T.2.601 S_T.2.60100="Spectres UV-visible" S_T.2.60101="Spectres IR" S_T.2.60102="Spectres RMN du proton" />
+            </l_T.2.6>
+            <l_T.2.5 S_T.2.500="Propri&#233;t&#233;s des ondes">
+              <l_T.2.501 S_T.2.50100="Diffraction" S_T.2.50101="Influence relative de la taille de l&#8217;ouverture ou de l&#8217;obstacle et de la longueur d&#8217;onde sur le ph&#233;nom&#232;ne de diffraction" S_T.2.50102="Cas des ondes lumineuses monochromatiques, cas de la lumi&#232;re blanche" S_T.2.50103="Interf&#233;rences" S_T.2.50104="Cas des ondes lumineuses monochromatiques, cas de la lumi&#232;re blanche. Couleurs interf&#233;rentielles" S_T.2.50105="Effet Doppler" />
+            </l_T.2.5>
+            <l_T.2.4 S_T.2.400="Caract&#233;ristiques des ondes">
+              <l_T.2.401 S_T.2.40100="Ondes progressives, grandeurs physiques associ&#233;es" S_T.2.40101="Retard" S_T.2.40102="Ondes progressives p&#233;riodiques, ondes sinuso&#239;dales" S_T.2.40103="Ondes sonores et ultrasonores" S_T.2.40104="Analyse spectrale. Hauteur et timbre" />
+            </l_T.2.4>
+          </d_T.201>
+        </l_T.2>
+      </d_T01>
+    </l_T>
+  </d_dicSavoirs_Phys>
+  <d_effectifs>
+    <l_P S_P00="Act. Pra." S_P01="Activit&#233; Pratique" />
+    <l_C S_C00="Classe enti&#232;re" S_C01="Classe enti&#232;re" />
+    <l_E S_E00="Etude ou Projet" S_E01="Etude et Projet" />
+    <l_D S_D00="Demi-groupe" S_D01="Demi-groupe" />
+    <l_G S_G00="Effectif r&#233;duit" S_G01="Effectif r&#233;duit" />
+  </d_effectifs>
+  <d_effectifsSeance>
+    <l_C S_C00="C" />
+    <l_E S_E00="C" />
+    <l_AP S_AP00="E" S_AP01="P" />
+    <l_SS S_SS00="C" />
+    <l_ED S_ED00="C" S_ED01="G" S_ED02="D" S_ED03="E" S_ED04="P" />
+    <l_P S_P00="C" S_P01="G" S_P02="D" S_P03="E" S_P04="P" />
+    <l_S />
+    <l_R />
+    <l_SA S_SA00="C" S_SA01="G" />
+    <l_TD S_TD00="C" S_TD01="G" S_TD02="D" S_TD03="E" S_TD04="P" />
+  </d_effectifsSeance>
+  <d_grilles_prj>
+    <l_S S_S00="Grille-pr&#233;sentation du projet-S-SI.xlsx" S_S01="" />
+    <l_R S_R00="Grille-conduite de projet-S-SI.xlsx" S_R01="I" />
+  </d_grilles_prj>
+  <l_listPhasesEval_prj S_listPhasesEval_prj00="Rev" S_listPhasesEval_prj01="R1" S_listPhasesEval_prj02="R2" S_listPhasesEval_prj03="R3" S_listPhasesEval_prj04="S" />
+  <l_listPhases_prj S_listPhases_prj00="Ana" S_listPhases_prj01="Rea" S_listPhases_prj02="XXX" S_listPhases_prj03="Rev" S_listPhases_prj04="R1" S_listPhases_prj05="R2" S_listPhases_prj06="R3" S_listPhases_prj07="S" />
+  <l_listeDemarches />
+  <l_listeEffectifs S_listeEffectifs00="C" S_listeEffectifs01="G" S_listeEffectifs02="D" S_listeEffectifs03="E" S_listeEffectifs04="P" />
+  <l_listeTypeActivite S_listeTypeActivite00="ED" S_listeTypeActivite01="AP" S_listeTypeActivite02="P" />
+  <l_listeTypeSeance S_listeTypeSeance00="ED" S_listeTypeSeance01="AP" S_listeTypeSeance02="P" S_listeTypeSeance03="C" S_listeTypeSeance04="TD" S_listeTypeSeance05="SA" S_listeTypeSeance06="SS" S_listeTypeSeance07="E" S_listeTypeSeance08="R" S_listeTypeSeance09="S" />
+  <d_nomParties_prj S_R="Conduite" S_S="Pr&#233;sentation" />
+  <d_options />
+  <d_phases_prj>
+    <l_Ana S_Ana00="Appropriation" S_Ana01="Appropriation" S_Ana02="Ab" />
+    <l_R2 S_R200="Revue n&#176;2" S_R201="Revue de projet n&#176;2" S_R202="R2" />
+    <l_R3 S_R300="Revue n&#176;3" S_R301="Revue de projet n&#176;3" S_R302="R3" />
+    <l_XXX S_XXX00="Synth et com" S_XXX01="Synth&#232;se et communication" S_XXX02="P" />
+    <l_Rev S_Rev00="Revue inter" S_Rev01="Revue interm&#233;diaire" S_Rev02="Ri" />
+    <l_S S_S00="Soutenance" S_S01="Soutenance finale" S_S02="S" />
+    <l_Rea S_Rea00="Exp&#233;rimentations" S_Rea01="R&#233;alisation d'exp&#233;rimentations" S_Rea02="R" />
+    <l_R1 S_R100="Revue n&#176;1" S_R101="Revue de projet n&#176;1" S_R102="R1" />
+  </d_phases_prj>
+  <d_posRevues>
+    <l__02 S__0200="Ana" S__0201="Rea" />
+    <l__03 S__0300="Ana" S__0301="Rea" S__0302="XXX" />
+  </d_posRevues>
+  <l_positions_CI />
+  <d_seances>
+    <l_C S_C00="Cours" S_C01="Cours" />
+    <l_E S_E00="Evaluation" S_E01="Evaluation" />
+    <l_P S_P00="Projet" S_P01="Activit&#233; de projet" />
+    <l_SS S_SS00="Synt. s&#233;quence" S_SS01="Synth&#232;se de s&#233;quence" />
+    <l_ED S_ED00="Etude de dossier" S_ED01="Activit&#233; d'&#233;tude de dossier" />
+    <l_AP S_AP00="Activit&#233; pratique" S_AP01="Activit&#233; pratique" />
+    <l_S S_S00="Parall&#232;le" S_S01="Activit&#233;s en parall&#232;le" />
+    <l_R S_R00="Rotation" S_R01="Rotation d'activit&#233;s" />
+    <l_TD S_TD00="TD" S_TD01="Travaux Dirig&#233;s" />
+    <l_SA S_SA00="Synt. activit&#233;" S_SA01="Synth&#232;se d'activit&#233;" />
+  </d_seances>
+</Referentiel>
