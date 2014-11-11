@@ -45,7 +45,7 @@ import time
 # relatifs ne soit perturbée
 #
 import sys, os
-import _winreg
+
 
 FILE_ENCODING = sys.getfilesystemencoding()
 print sys.argv
@@ -63,6 +63,7 @@ print u"Dossier de l'application :",PATH
 
 # On récupère le répertoire d'installation de pySyLiC
 try:
+    import _winreg
     regkey = _winreg.OpenKey( _winreg.HKEY_CLASSES_ROOT, 'pySequence.sequence\\DefaultIcon',0, _winreg.KEY_READ)
     (value,keytype) = _winreg.QueryValueEx(regkey , '') 
     INSTALL_PATH = os.path.dirname(value.encode(FILE_ENCODING))
