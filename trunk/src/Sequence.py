@@ -40,7 +40,7 @@ Copyright (C) 2011-2014
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "5.0beta9"
+__version__ = "5.1beta1"
 print __version__
 
 #from threading import Thread
@@ -117,11 +117,13 @@ if hasattr(sys, 'setdefaultencoding'):
     if loc[1]:
         encoding = loc[1]
         sys.setdefaultencoding(encoding)
-
+else:
+    reload(sys)  # Reload does the trick!
+    sys.setdefaultencoding('utf-8')
 
 FILE_ENCODING = sys.getfilesystemencoding() #'cp1252'#
 DEFAUT_ENCODING = "utf-8"
-SYSTEM_ENCODING = sys.stdout.encoding#sys.getdefaultencoding()
+SYSTEM_ENCODING = sys.getdefaultencoding()#sys.stdout.encoding#
 print "FILE_ENCODING", FILE_ENCODING
 print "SYSTEM_ENCODING", SYSTEM_ENCODING
 
@@ -213,7 +215,7 @@ import grilles, genpdf
 
 from rapport import FrameRapport, RapportRTF
 
-import urllib
+import urllib2
 from bs4 import BeautifulSoup
 from xml.dom.minidom import parse, parseString
 import xml.dom
@@ -2268,9 +2270,10 @@ class Projet(BaseDoc, Objet_sequence):
         """ Ajoute une tâche au projet
             et la place juste après la tâche tacheAct (si précisé)
         """
-        if tacheAct == None or tacheAct.phase == "S":
+        if tacheAct == None or tacheAct.phase == "S" or tacheAct.phase == "":
             tache = Tache(self, self.panelParent)
             self.taches.append(tache)
+            tache.ordre = len(self.taches)
             tache.ConstruireArbre(self.arbre, self.brancheTac)
             
         else:
@@ -2406,7 +2409,8 @@ class Projet(BaseDoc, Objet_sequence):
         
     ######################################################################################  
     def OrdonnerListeTaches(self, lstTaches):
-#        print "OrdonnerListeTaches"
+#        print "OrdonnerListeTaches", lstTaches
+        
         #
         # On enregistre les positions des revues intermédiaires (après qui ?)
         #
@@ -2430,6 +2434,7 @@ class Projet(BaseDoc, Objet_sequence):
         for t in lstTaches:
             paquet[t.phase].append(t)
             
+#        print paquet
         
         # On trie les tâches de chaque paquet  
         for c in [k for k in ref.listPhases_prj if not k in ref.listPhasesEval_prj]:#['Ana', 'Con', 'Rea', 'DCo', 'Val', 'XXX']:
@@ -2452,6 +2457,12 @@ class Projet(BaseDoc, Objet_sequence):
                 i = lst.index(q)
                 lst.insert(i+1, r)
     
+        #
+        # On ajoute les tâches sans phase
+        #
+        if '' in paquet.keys():
+            lst.extend(paquet[''])
+            
         return lst
         
     ######################################################################################  
@@ -4366,7 +4377,7 @@ class Tache(Objet_sequence):
 #        t += " " +str(self.effectif)
 #        for s in self.sousSeances:
 #            t += "  " + s.__repr__()
-        return self.code
+        return self.code +"("+str(self.ordre)+")"
     
     
     ######################################################################################  
@@ -4817,6 +4828,7 @@ class Tache(Objet_sequence):
             
     ######################################################################################  
     def SetPhase(self, phase = None):
+#        print "SetPhase", self.phase, ">>", phase
         if phase != None:
             self.phase = phase
         self.projet.OrdonnerTaches()
@@ -5368,7 +5380,7 @@ class Personne(Objet_sequence):
         #
         self.ficheHTML = self.GetFicheHTML()
 
-        self.ficheXML = parseString(self.ficheHTML.encode('utf-8'))
+        self.ficheXML = parseString(self.ficheHTML.encode('utf-8', errors="ignore"))
        
         forceID(self.ficheXML)
         self.tip = PopupInfo(self.projet.app, self.ficheHTML)
@@ -5526,7 +5538,7 @@ class Personne(Objet_sequence):
     ######################################################################################  
     def SetTip(self):
         self.ficheHTML = self.GetFicheHTML()
-        self.ficheXML = parseString(self.ficheHTML)
+        self.ficheXML = parseString(self.ficheHTML.encode('utf-8', errors="ignore"))
         forceID(self.ficheXML)
         SetWholeText(self.ficheXML, "nom", self.GetNomPrenom())
         
@@ -6616,16 +6628,16 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     ###############################################################################################
     def GetNewVersion(self):  
         # url = 'https://code.google.com/p/pysequence/downloads/list'
-        
+        print "Recherche nouvelle version ...",
         url = 'https://drive.google.com/folderview?id=0B2jxnxsuUscPX0tFLVN0cF91TGc#list'
         try:
-            self.downloadPage = BeautifulSoup(urllib.urlopen(url))
+            self.downloadPage = BeautifulSoup(urllib2.urlopen(url, timeout = 5))
         except IOError:
-            print "Pas d'accès Internet"
+            print "pas d'accès Internet"
             return   
 
 #        ligne = self.downloadPage.find('div', attrs={'class':"flip-entry-title"})
-        ligne = self.downloadPage.findAll('div', attrs={'class':"flip-entry-title"})
+        ligne = self.downloadPage.find_all('div', attrs={'class':"flip-entry-title"})
 #        fichier = ligne.text.strip()
         
         # Version actuelle
@@ -6650,9 +6662,10 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                     bn = 100
                 
                 if vn > va or (vn == va and bn > ba): # Nouvelle version disponible
-                     versionPlusRecente = True
-                     break
-                     
+                    versionPlusRecente = True
+                    break
+        print v
+        
         if versionPlusRecente:
             dialog = wx.MessageDialog(self, u"Une nouvelle version de pySéquence est disponible\n\n" \
                                             u"\t%s\n\n" \
@@ -8537,8 +8550,8 @@ class FicheProjet(BaseFiche):
                 x, y = self.ClientToScreen((x, y))
 #                type_ens = self.projet.classe.typeEnseignement
                 ref = self.projet.GetReferentiel()
-                competence = ref.getCompetence(kComp)
-#                print "competence", competence
+                competence = ref.getCompetence_prj(kComp)
+#                print "competence", kComp, competence
 #                indicTache = obj.GetDicIndicateurs()
                 
 #                ###################################################################
@@ -11811,8 +11824,12 @@ class PanelPropriete_Tache(PanelPropriete):
         
     #############################################################################            
     def EvtComboBox(self, event):
+        """ Changement de phase
+        """
+#        print "EvtComboBox phase", self.tache, self.tache.phase
         ref = self.tache.GetReferentiel()
         newPhase = ref.getClefDic('phases_prj', self.cbPhas.GetStringSelection(), 1)
+#        print "   ", newPhase
 #        newPhase = get_key(self.GetReferentiel().NOM_PHASE_TACHE[self.tache.GetTypeEnseignement(True)], 
 #                                        self.cbPhas.GetStringSelection())
         if self.tache.phase != newPhase:
@@ -12726,7 +12743,7 @@ class ArbreSequence(ArbreDoc):
     def OnCompareItems(self, item1, item2):
         i1 = self.GetItemPyData(item1)
         i2 = self.GetItemPyData(item2)
-        return i1.ordre - i2.ordre
+        return int(i1.ordre - i2.ordre)
 
     ####################################################################################
     def OnMove(self, event):
@@ -12946,7 +12963,7 @@ class ArbreProjet(ArbreDoc):
     def OnCompareItems(self, item1, item2):
         i1 = self.GetItemPyData(item1)
         i2 = self.GetItemPyData(item2)
-        return i1.ordre - i2.ordre
+        return int(i1.ordre - i2.ordre)
 #        if i1.phase == i2.phase:
 #            
 #        else:
@@ -13494,7 +13511,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
                         b = self.AppendItem(br, k+" "+v[0])
                         for i, p in enumerate(v[2][1:]):
                             if p != 0:
-                                self.SetItemText(b, pourCent2(p/100), i+1)
+                                self.SetItemText(b, pourCent2(1.0*p/100), i+1)
                         self.SetItemBold(b, True)
                     self.items[k] = b
                     const(v[1], b, debug = debug)
@@ -13543,7 +13560,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
                             if debug: print "   indic", indic
                             for j, p in enumerate(indic[1][1:]):
                                 if p != 0:
-                                    self.SetItemText(b, pourCent2(p/100), j+1)
+                                    self.SetItemText(b, pourCent2(1.0*p/100), j+1)
                                     if j == 0:
                                         self.SetItemTextColour(b, COUL_REVUE)
                                     else:
@@ -15356,8 +15373,40 @@ class A_propos(wx.Dialog):
         
         self.SetSizerAndFit(sizer)
 
-
-
+##############################################################################################################
+##
+## Connexion à la page Google Drive
+## 
+##############################################################################################################
+#import threading
+#class Connexion(threading.Thread): 
+#    def __init__(self, nom = ''): 
+#        threading.Thread.__init__(self) 
+#        self.nom = nom 
+#        self._stopevent = threading.Event( ) 
+#    
+#    def run(self): 
+#        i = 0 
+#        while not self._stopevent.isSet(): 
+#            print self.nom, i 
+#            i += 1 
+#            self._stopevent.wait(2.0) 
+#        print "le thread "+self.nom +" s'est termine proprement" 
+#    
+#    def stop(self): 
+#        self._stopevent.set( ) 
+  
+#a = Affiche('Thread A') 
+#b = Affiche('Thread B') 
+#c = Affiche2('Thread C') 
+#  
+#a.start() 
+#b.start() 
+#c.start() 
+#time.sleep(6.5) 
+#a._Thread__stop() 
+#b.stop() 
+#c.stop()
         
 
 
