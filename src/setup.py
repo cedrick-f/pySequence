@@ -12,6 +12,9 @@ import sys, os
 from glob import glob
 from cx_Freeze import setup, Executable
 
+reload(sys)  # Reload does the trick!
+sys.setdefaultencoding('utf-8')
+    
 ## Remove the build folder, a bit slower but ensures that build contains the latest
 import shutil
 shutil.rmtree("build", ignore_errors=True)
@@ -65,7 +68,7 @@ cible = Executable(
 
 
 setup(  name = "pySequence",
-        version = "5.0.0.9",
+        version = "5.1.0.1",
         author = "Cédrick FAURY & Jean-Claude FRICOU",
         description = u"pySéquence",
         options = {"build_exe": build_exe_options},
