@@ -1,0 +1,10 @@
+#intégration d'un nouveau programme d'enseignement
+
+===Comment intégrer un nouveau programme d'enseignement à pySéquence ?===
+
+
+Selon la nature du programme à intégrer, créer une copie d'un des fichiers "référentiel" existant :
+ * Ref_SSI.xls : s'il n'y a pas de tronc commun ni d'option à cet enseigmentmet
+ * Ref_STI2D-ETT.xls et Ref_STI2D-AC.xls : dans le cas contraire
+
+[]
