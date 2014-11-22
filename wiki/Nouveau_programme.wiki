@@ -30,4 +30,4 @@ Dans le cas contraire, ou bien si pySéquence ne se lance plus et renvoie une er
 
 ==Publication==
 Si vous avez réalisé un référentiel (qui fonctionne), et afin de rester dans l'esprit "logiciel libre" de pySéquence, merci de partager votre travail afin d'en faire profiter tout les utilisateurs de pySéquence.
-Pour cela, il suffit d'envoyer le fichier Ref_xxx.xls au auteurs, qui le publieront sur l'espace de [Telechargement téléchargement].
+Pour cela, il suffit d'envoyer le fichier Ref_xxx.xls au auteurs, qui le publieront sur l'espace de [https://drive.google.com/folderview?id=0B2jxnxsuUscPX0tFLVN0cF91TGc&usp=sharing#list téléchargement].
