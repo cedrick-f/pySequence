@@ -1,6 +1,8 @@
 =Foire Aux Questions (F.A.Q.)=
 
-==pySequence ne se lance pas ! Que faire ?==
+----
+
+==pySéquence ne se lance pas ! Que faire ?==
 Tout d'abord, allez consulter le fichier {{{sequence.exe.log}}} dans le dossier /bin.
 
 *Si* ce dernier existe, et indique en dernière ligne :
@@ -12,7 +14,7 @@ Tout d'abord, allez consulter le fichier {{{sequence.exe.log}}} dans le dossier 
 
 ----
 
-==Est-ce que pySequence existe pour MAC ?==
+==Est-ce que pySéquence existe pour MAC ?==
 Pas encore, mais on y travaille.
 
 Néanmoins, une ébauche de [InstallationMAC procédure] existe pour installer pySéquence sur MAC.
