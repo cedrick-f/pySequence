@@ -1,6 +1,4 @@
-#intégration d'un nouveau programme d'enseignement
-
-==Comment intégrer un nouveau programme d'enseignement à pySéquence ?==
+=Comment intégrer un nouveau programme d'enseignement à pySéquence ?=
 
 
 Selon la nature du programme à intégrer, créer une copie d'un des fichiers "référentiel" existant :
