@@ -8,7 +8,7 @@ Tout d'abord, allez consulter le fichier {{{sequence.exe.log}}} dans le dossier 
 
 *Alors* installez [http://www.microsoft.com/downloads/fr-fr/confirmation.aspx?FamilyID=9B2DA534-3E03-4391-8A4D-074B9F2BC1BF&displaylang=fr Package redistribuable Microsoft Visual C++ 2008]
 
-*Sinon* contactez cedrick(point)faury(arobase)ac-clermont(point)fr
+*Sinon* [Contact contactez les auteurs]
 
 ==Est-ce que pySequence existe pour MAC ?==
 Pas encore, mais on y travaille.
