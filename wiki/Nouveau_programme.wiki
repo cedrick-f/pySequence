@@ -1,10 +1,23 @@
 #intégration d'un nouveau programme d'enseignement
 
-===Comment intégrer un nouveau programme d'enseignement à pySéquence ?===
+==Comment intégrer un nouveau programme d'enseignement à pySéquence ?==
 
 
 Selon la nature du programme à intégrer, créer une copie d'un des fichiers "référentiel" existant :
  * Ref_SSI.xls : s'il n'y a pas de tronc commun ni d'option à cet enseigmentmet
  * Ref_STI2D-ETT.xls et Ref_STI2D-AC.xls : dans le cas contraire
 
-[]
+Modifier le contenu du classeur en adéquation avec le programme à intégrer.
+
+ * Attention à bien respecter les consignes et informations figurant dans les zones de commentaire.
+ * Ne pas modifier les cellules protégées
+ * Ne pas utiliser de caractères spéciaux, ni de retour à la ligne
+
+===Cas particulier des programmes avec Tronc-commun et Options===
+Le programme du tronc commun et ceux des options doivent figurer dans des fichiers différents, reliés entre eux de la manière suirante :
+
+http://pysequence.googlecode.com/svn/trunk/images_aide/Ref_TC-Options.png
+
+Afin que la relation de Tronc-commun / Options apparaisse dans pySéquence, il faut leur donner le même nom de famille :
+
+http://pysequence.googlecode.com/svn/trunk/images_aide/Ref_Famille.png
