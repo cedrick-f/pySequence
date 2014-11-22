@@ -1,7 +1,7 @@
 =Foire Aux Questions (F.A.Q.)=
 
 ==pySequence ne se lance pas ! Que faire ?==
-Tout d'abord, allez consulter le fichier {{{pySequence.exe.log}}} dans le dossier /bin.
+Tout d'abord, allez consulter le fichier {{{sequence.exe.log}}} dans le dossier /bin.
 
 *Si* ce dernier existe, et indique en dernière ligne :
 {{{ImportError: DLL load failed: Le module spécifié est introuvable}}}
