@@ -13,3 +13,8 @@ Tout d'abord, allez consulter le fichier {{{sequence.exe.log}}} dans le dossier 
 ==Est-ce que pySequence existe pour MAC ?==
 Pas encore, mais on y travaille.
 Néanmoins, une ébauche de [InstallationMAC procédure] existe pour installer pySequence sur MAC.
+
+==Est-ce que pySequence peut fonctionner avec d'autres programmes ?==
+Oui !
+Potentiellement, n'importe quel programme peut être intégré à pySéquence.
+Il suffit de suivre [Nouveau_programme cette procédure].
