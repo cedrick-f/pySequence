@@ -1,9 +1,9 @@
-#Comment installer pySéquence sur un MAC ou sur Linux
+=Comment installer pySéquence sur un MAC ou sur Linux=
 
 En principe, pySéquence est conçu pour être multi-plateforme.
 En pratique, cela demande quelques adaptations ...
 
-Encore jamais tentée, la procédure ci-dessous décrit donc pour l'instant la "théorie".
+Encore jamais tentée jusqu'au bout, la procédure ci-dessous décrit donc pour l'instant la "théorie".
 Au fur et à mesure de l'avancement de la procédure, cette page sera réactualisée. Merci donc d'avance aux possesseurs de MAC et Linux pour leurs retours d'expérience...
 
 Cette procédure ne s'adresse donc qu'à des *utilisateurs confirmés* de MAC, prêts à passer un peu de *temps* à participer à cette adaptation.
@@ -19,7 +19,7 @@ Cette procédure ne s'adresse donc qu'à des *utilisateurs confirmés* de MAC, p
  * [https://pypi.python.org/pypi/xlwt xlwt]
  * [http://www.crummy.com/software/BeautifulSoup/ beautifulsoup]
 
-D'autres modules sont nécessaires ... mais sont spécifiques à Windows : il va donc y avoir quelques pertes de fonctionnalités.
+D'autres modules sont nécessaires ... mais sont spécifiques à Windows (utilisation de la base de registre, appels à Microsoft Excel, ...): il va donc y avoir quelques pertes de fonctionnalités.
 
 == Installation de pySequence ==
 Il faut utiliser directement les [https://pysequence.googlecode.com/svn/branches sources].
@@ -30,4 +30,4 @@ L'idéal est d'utiliser svn, ce qui garantie d'avoir toujours la dernière versi
 Il "suffit" de lancer le fichier src/sequence.py...
 
 Il va immanquablement se produire plein d'erreurs !
-Merci de me contacter pour qu'on règle ça.
+Merci de [Contact contacter les auteurs] pour qu'on règle ça.
