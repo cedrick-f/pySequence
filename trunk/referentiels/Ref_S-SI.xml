@@ -64,7 +64,11 @@
     <l_P S_P00="I" S_P01="R" S_P02="P" />
     <l_AP S_AP00="I" S_AP01="R" />
   </d_demarcheSeance>
-  <d_demarches />
+  <d_demarches>
+    <l_I S_I00="Investigation" S_I01="Investigation" />
+    <l_P S_P00="Projet" S_P01="Projet" />
+    <l_R S_R00="R&#233;s. Probl&#232;me" S_R01="R&#233;solution de probl&#232;me" />
+  </d_demarches>
   <d_dicCompetences>
     <l_A S_A00="Analyser">
       <d_A01>
@@ -729,7 +733,7 @@
               <l_T.2.201 S_T.2.20100="Positions relatives de droites et de plans : intersection et parall&#233;lisme" S_T.2.20101="Orthogonalit&#233; : de deux droites ; d&#8217;une droite et d&#8217;un plan&quot;" />
             </l_T.2.2>
             <l_T.2.1 S_T.2.100="Nombres complexes">
-              <l_T.2.101 S_T.2.10100="Forme alg&#233;brique, conjugu&#233;" S_T.2.10101="Somme, produit, quotient" S_T.2.10102="&#201;quation du second degr&#233; &#224; coefficients r&#233;els" S_T.2.10103="Repr&#233;sentation g&#233;om&#233;trique" S_T.2.10104="Affixe d&apos;un point, d&apos;un vecteur" S_T.2.10105="Forme trigonom&#233;trique" />
+              <l_T.2.101 S_T.2.10100="Forme alg&#233;brique, conjugu&#233;" S_T.2.10101="Somme, produit, quotient" S_T.2.10102="&#201;quation du second degr&#233; &#224; coefficients r&#233;els" S_T.2.10103="Repr&#233;sentation g&#233;om&#233;trique" S_T.2.10104="Affixe d'un point, d'un vecteur" S_T.2.10105="Forme trigonom&#233;trique" />
             </l_T.2.1>
             <l_T.2.4 S_T.2.400="Produit scalaire">
               <l_T.2.401 S_T.2.40100="Produit scalaire de deux vecteurs dans l&#8217;espace" S_T.2.40101="Vecteur normal &#224; un plan" S_T.2.40102="&#201;quation cart&#233;sienne d&#8217;un plan&quot;" />
@@ -871,7 +875,7 @@
             <l_T.2.2 S_T.2.200="Les ondes dans la mati&#232;re">
               <l_T.2.201 S_T.2.20100="Houle, ondes sismiques, ondes sonores" S_T.2.20101="Magnitude d'un s&#233;isme sur l'echelle de Richter" S_T.2.20102="Niveau d'intensit&#233; sonore" />
             </l_T.2.2>
-            <l_T.2.1 S_T.2.100="Rayonnements dans l&apos;univers">
+            <l_T.2.1 S_T.2.100="Rayonnements dans l'univers">
               <l_T.2.101 S_T.2.10100="Absorbtion de rayonnements par l'atmosph&#232;re terrestre" />
             </l_T.2.1>
             <l_T.2.6 S_T.2.600="Analyse spectrale">
@@ -908,25 +912,25 @@
     <l_TD S_TD00="C" S_TD01="G" S_TD02="D" S_TD03="E" S_TD04="P" />
   </d_effectifsSeance>
   <d_grilles_prj>
-    <l_S S_S00="Grille-pr&#233;sentation du projet-S-SI.xlsx" S_S01="" />
+    <l_S S_S00="Grille-pr&#233;sentation du projet-S-SI.xlsx" S_S01="I" />
     <l_R S_R00="Grille-conduite de projet-S-SI.xlsx" S_R01="I" />
   </d_grilles_prj>
   <l_listPhasesEval_prj S_listPhasesEval_prj00="Rev" S_listPhasesEval_prj01="R1" S_listPhasesEval_prj02="R2" S_listPhasesEval_prj03="R3" S_listPhasesEval_prj04="S" />
   <l_listPhases_prj S_listPhases_prj00="Ana" S_listPhases_prj01="Rea" S_listPhases_prj02="XXX" S_listPhases_prj03="Rev" S_listPhases_prj04="R1" S_listPhases_prj05="R2" S_listPhases_prj06="R3" S_listPhases_prj07="S" />
-  <l_listeDemarches />
+  <l_listeDemarches S_listeDemarches00="I" S_listeDemarches01="R" S_listeDemarches02="P" />
   <l_listeEffectifs S_listeEffectifs00="C" S_listeEffectifs01="G" S_listeEffectifs02="D" S_listeEffectifs03="E" S_listeEffectifs04="P" />
   <l_listeTypeActivite S_listeTypeActivite00="ED" S_listeTypeActivite01="AP" S_listeTypeActivite02="P" />
   <l_listeTypeSeance S_listeTypeSeance00="ED" S_listeTypeSeance01="AP" S_listeTypeSeance02="P" S_listeTypeSeance03="C" S_listeTypeSeance04="TD" S_listeTypeSeance05="SA" S_listeTypeSeance06="SS" S_listeTypeSeance07="E" S_listeTypeSeance08="R" S_listeTypeSeance09="S" />
   <d_nomParties_prj S_R="Conduite" S_S="Pr&#233;sentation" />
   <d_options />
   <d_phases_prj>
-    <l_Ana S_Ana00="Appropriation" S_Ana01="Appropriation" S_Ana02="Ab" />
+    <l_Ana S_Ana00="Appropriation" S_Ana01="Appropriation" S_Ana02="Ap" />
     <l_R2 S_R200="Revue n&#176;2" S_R201="Revue de projet n&#176;2" S_R202="R2" />
     <l_R3 S_R300="Revue n&#176;3" S_R301="Revue de projet n&#176;3" S_R302="R3" />
-    <l_XXX S_XXX00="Synth et com" S_XXX01="Synth&#232;se et communication" S_XXX02="P" />
+    <l_XXX S_XXX00="Synth et com" S_XXX01="Synth&#232;se et communication" S_XXX02="SC" />
     <l_Rev S_Rev00="Revue inter" S_Rev01="Revue interm&#233;diaire" S_Rev02="Ri" />
     <l_S S_S00="Soutenance" S_S01="Soutenance finale" S_S02="S" />
-    <l_Rea S_Rea00="Exp&#233;rimentations" S_Rea01="R&#233;alisation d'exp&#233;rimentations" S_Rea02="R" />
+    <l_Rea S_Rea00="Exp&#233;rimentations" S_Rea01="R&#233;alisation d'exp&#233;rimentations" S_Rea02="Re" />
     <l_R1 S_R100="Revue n&#176;1" S_R101="Revue de projet n&#176;1" S_R102="R1" />
   </d_phases_prj>
   <d_posRevues>
@@ -946,4 +950,5 @@
     <l_TD S_TD00="TD" S_TD01="Travaux Dirig&#233;s" />
     <l_SA S_SA00="Synt. activit&#233;" S_SA01="Synth&#232;se d'activit&#233;" />
   </d_seances>
+  <l_tr_com />
 </Referentiel>

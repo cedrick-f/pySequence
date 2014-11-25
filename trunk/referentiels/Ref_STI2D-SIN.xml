@@ -1,5 +1,5 @@
 <Referentiel B_CI_BO="True" B_CI_cible="False" B_projet="True" I_duree_prj="70" S_Code="SIN" S_Famille="STI" S_nomCompetences="Comp&#233;tences" S_nomSavoirs="Savoirs">
-  <l_CentresInterets S_CentresInterets00="Configuration et performances du traitement de l&apos;information" S_CentresInterets01="Instrumentation/Acquisition et restitution de grandeurs physiques" S_CentresInterets02="Communication de l'information/Au sein d'un syst&#232;me" S_CentresInterets03="Gestion de l'information/Structures mat&#233;rielles et logicielles associ&#233;es au traitement de l'information" S_CentresInterets04="Communication entre syst&#232;mes" S_CentresInterets05="Traitement analogique de l&apos;information" S_CentresInterets06="Cycle de vie d&apos;un produit" />
+  <l_CentresInterets S_CentresInterets00="Configuration et performances du traitement de l'information" S_CentresInterets01="Instrumentation/Acquisition et restitution de grandeurs physiques" S_CentresInterets02="Communication de l'information/Au sein d'un syst&#232;me" S_CentresInterets03="Gestion de l'information/Structures mat&#233;rielles et logicielles associ&#233;es au traitement de l'information" S_CentresInterets04="Communication entre syst&#232;mes" S_CentresInterets05="Traitement analogique de l'information" S_CentresInterets06="Cycle de vie d'un produit" />
   <l_Enseignement S_Enseignement00="STI2D-SIN" S_Enseignement01="STI2D : Syst&#232;mes d'Information et Num&#233;rique" S_Enseignement02="STI2D" />
   <d_aColNon B_R="True" B_S="False" />
   <d_activites>
@@ -252,10 +252,10 @@
     <l_3 S_300="R&#233;alisation et qualification d'un prototype">
       <d_301>
         <l_3.2 S_3.200="Gestion de la vie d'un syst&#232;me">
-          <l_3.201 S_3.20100="Validation d&apos;un prototype" S_3.20101="Proc&#233;dures d'intervention" S_3.20102="Mise &#224; jour d'un syst&#232;me d'information" S_3.20103="R&#233;daction d'un compte-rendu sur l'activit&#233; de maintenance" S_3.20104="Performances d'un projet finalis&#233;" S_3.20105="Etude prospective technique et &#233;conomique" S_3.20106="Proposition d&apos;une solution et organisation du nouveau projet" />
+          <l_3.201 S_3.20100="Validation d'un prototype" S_3.20101="Proc&#233;dures d'intervention" S_3.20102="Mise &#224; jour d'un syst&#232;me d'information" S_3.20103="R&#233;daction d'un compte-rendu sur l'activit&#233; de maintenance" S_3.20104="Performances d'un projet finalis&#233;" S_3.20105="Etude prospective technique et &#233;conomique" S_3.20106="Proposition d'une solution et organisation du nouveau projet" />
         </l_3.2>
         <l_3.1 S_3.100="R&#233;alisation d'un prototype">
-          <l_3.101 S_3.10100="Impl&#233;mentation d'un programme dans un composant programmable" S_3.10101="Interfa&#231;age de composants" S_3.10102="Interconnexion des fonctions distribu&#233;es" S_3.10103="Programmation de l&apos;interface de communication" S_3.10104="Conditionnement des grandeurs acquises (convertir, amplifier, traiter)" S_3.10105="Adaptation d'une cha&#238;ne d'acquisition aux caract&#233;ristiques des grandeurs &#224; acqu&#233;rir" S_3.10106="Recette du prototype au regard des sp&#233;cifications attendues du cahier des charges" />
+          <l_3.101 S_3.10100="Impl&#233;mentation d'un programme dans un composant programmable" S_3.10101="Interfa&#231;age de composants" S_3.10102="Interconnexion des fonctions distribu&#233;es" S_3.10103="Programmation de l'interface de communication" S_3.10104="Conditionnement des grandeurs acquises (convertir, amplifier, traiter)" S_3.10105="Adaptation d'une cha&#238;ne d'acquisition aux caract&#233;ristiques des grandeurs &#224; acqu&#233;rir" S_3.10106="Recette du prototype au regard des sp&#233;cifications attendues du cahier des charges" />
         </l_3.1>
       </d_301>
     </l_3>
@@ -268,7 +268,7 @@
           <l_2.201 S_2.20100="Mod&#232;les en couche des r&#233;seaux, protocole Ethernet et adresse logique (IP) du protocole IP. Lien adresse MAC/IP : Protocole ARP" S_2.20101="Architecture client/serveur" />
         </l_2.2>
         <l_2.1 S_2.100="Conception fonctionnelle d'un syst&#232;me local">
-          <l_2.101 S_2.10100="Acquisition, conditionnement et filtrage d&apos;une information (sous forme analogique)" S_2.10101="Conversion d&apos;une information (CAN et CNA)" S_2.10102="Traitement d'une information num&#233;rique" S_2.10103="Traitement d&apos;une information analogique" S_2.10104="Traitement programm&#233; et composants programmables" S_2.10105="Modulation, d&#233;modulation d'un signal porteur d'une information : amplitude, fr&#233;quence, phase" S_2.10106="Multiplexage d&apos;une information et codage d&apos;une transmission en bande de base" S_2.10107="Transmission d&apos;une information (liaison filaire et non filaire)" S_2.10108="Restitution d'une information : voix, donn&#233;es, images" />
+          <l_2.101 S_2.10100="Acquisition, conditionnement et filtrage d'une information (sous forme analogique)" S_2.10101="Conversion d'une information (CAN et CNA)" S_2.10102="Traitement d'une information num&#233;rique" S_2.10103="Traitement d'une information analogique" S_2.10104="Traitement programm&#233; et composants programmables" S_2.10105="Modulation, d&#233;modulation d'un signal porteur d'une information : amplitude, fr&#233;quence, phase" S_2.10106="Multiplexage d'une information et codage d'une transmission en bande de base" S_2.10107="Transmission d'une information (liaison filaire et non filaire)" S_2.10108="Restitution d'une information : voix, donn&#233;es, images" />
         </l_2.1>
       </d_201>
     </l_2>

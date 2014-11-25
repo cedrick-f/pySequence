@@ -19,7 +19,7 @@
     <l_R S_R00="R&#233;s. Probl&#232;me" S_R01="R&#233;solution de probl&#232;me" />
   </d_demarches>
   <d_dicCompetences>
-    <l_1FOT S_1FOT00="Fonctionnement de l&apos;objet technique">
+    <l_1FOT S_1FOT00="Fonctionnement de l'objet technique">
       <d_1FOT01>
         <l_FOT11 S_FOT1100="Identifier, &#224; partir d&#8217;une repr&#233;sentation, les &#233;l&#233;ments qui assurent une fonction technique.">
           <l_FOT1101>
@@ -338,7 +338,7 @@
       </d_3EN01>
       <l_3EN02 I_3EN0200="0" I_3EN0201="0" I_3EN0202="0" />
     </l_3EN>
-    <l_4EOT S_4EOT00="Evolution de l&apos;objet technique">
+    <l_4EOT S_4EOT00="Evolution de l'objet technique">
       <d_4EOT01>
         <l_EOT1 S_EOT100="Citer des objets r&#233;pondant &#224; une m&#234;me fonction d&#8217;usage.">
           <l_EOT101>
@@ -366,7 +366,7 @@
     </l_4EOT>
   </d_dicCompetences>
   <d_dicSavoirs>
-    <l_1 S_100="L&apos;analyse du fonctionnement d&apos;un objet technique">
+    <l_1 S_100="L'analyse du fonctionnement d'un objet technique">
       <d_101>
         <l_1.4 S_1.400="Valeur">
           <l_1.401 />
@@ -420,7 +420,7 @@
         </l_2.1>
       </d_201>
     </l_2>
-    <l_5 S_500="La communication et la gestion de l&apos;information">
+    <l_5 S_500="La communication et la gestion de l'information">
       <d_501>
         <l_5.1 S_5.100="Serveurs. Postes de travail. Terminaux mobiles. P&#233;riph&#233;riques. Logiciels.">
           <l_5.101 />
@@ -523,4 +523,5 @@
     <l_TD S_TD00="TD" S_TD01="Travaux Dirig&#233;s" />
     <l_SA S_SA00="Synt. activit&#233;" S_SA01="Synth&#232;se d'activit&#233;" />
   </d_seances>
+  <l_tr_com />
 </Referentiel>

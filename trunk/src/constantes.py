@@ -117,46 +117,46 @@ print u"Dossier pour les données :", APP_DATA_PATH
 #
 ####################################################################################    
 
-import traceback
-
-def _exceptionhook(typ, value, traceb):
-    """ On catch une exception """
-    frame=traceb.tb_frame
-    print >>sys.stderr,"\n"
-    traceback.print_tb(traceb)
-    print >>sys.stderr,"\nType : ",typ,"\n"
-    print >>sys.stderr,"ValueError : ",value
-    sys.exit()
-
-class RedirectErr:
-    #
-    # Redirige la sortie des erreurs pour envoyer l'erreur par mail
-    #
-    def __init__(self,stderr):
-        self.stderr=stderr
-        self.content=""
-        self.error_occured=False
-        self.file_error=None
-
-    def write(self,text):
-        #
-        # A la premiere erreur, on enregistrer la fonction de sortie
-        #
-        if not self.error_occured:
-            #
-            # Première erreur
-            # on ouvre le fichier qui contient les erreurs
-            self.file_error=open(ERROR_FILE,'w')
-            self.error_occured=True
-        if self.file_error is not None:
-            self.file_error.write(text)
-            self.file_error.flush()
-
-if not PORTABLE:
-    ERROR_FILE = os.path.join(APP_DATA_PATH, 'pySequence.exe' + '.log')
-    print "Fichier erreur :",ERROR_FILE
-    sys.excepthook = _exceptionhook
-    sys.stderr=RedirectErr(sys.stderr)
+#import traceback
+#
+#def _exceptionhook(typ, value, traceb):
+#    """ On catch une exception """
+#    frame=traceb.tb_frame
+#    print >>sys.stderr,"\n"
+#    traceback.print_tb(traceb)
+#    print >>sys.stderr,"\nType : ",typ,"\n"
+#    print >>sys.stderr,"ValueError : ",value
+#    sys.exit()
+#
+#class RedirectErr:
+#    #
+#    # Redirige la sortie des erreurs pour envoyer l'erreur par mail
+#    #
+#    def __init__(self,stderr):
+#        self.stderr=stderr
+#        self.content=""
+#        self.error_occured=False
+#        self.file_error=None
+#
+#    def write(self,text):
+#        #
+#        # A la premiere erreur, on enregistrer la fonction de sortie
+#        #
+#        if not self.error_occured:
+#            #
+#            # Première erreur
+#            # on ouvre le fichier qui contient les erreurs
+#            self.file_error=open(ERROR_FILE,'w')
+#            self.error_occured=True
+#        if self.file_error is not None:
+#            self.file_error.write(text)
+#            self.file_error.flush()
+#
+#if not PORTABLE:
+#    ERROR_FILE = os.path.join(APP_DATA_PATH, 'pySequence.exe' + '.log')
+#    print "Fichier erreur :",ERROR_FILE
+#    sys.excepthook = _exceptionhook
+#    sys.stderr=RedirectErr(sys.stderr)
 
 
 ####################################################################################
@@ -235,7 +235,7 @@ def indent(elem, level=0):
 #
 ####################################################################################
 CHAR_POINT = u"\u25CF" 
-
+CHAR_FLECHE = u">>" # u"\u2192" 
 
 ####################################################################################
 #
@@ -248,6 +248,7 @@ COUL_BIEN = "GOLD"
 COUL_BOF = "ORANGE"
 COUL_REVUE = "DEEPPINK2"#"FIREBRICK"
 COUL_SOUT = "BLUEVIOLET"#"MEDIUMBLUE"
+COUL_ABS = "GREY"#"MEDIUMBLUE"
 
 COUL_ELEVES = [((0.85,0.85,0.95,0.3), (0,0,0,1)),
                ((0.7,0.7,0.8,0.2), (0,0,0,1)),
