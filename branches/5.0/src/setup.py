@@ -51,8 +51,8 @@ build_exe_options = {'build_exe': 'build/bin',
 # GUI applications require a different base on Windows (the default is for a
 # console application).
 base = None
-#if sys.platform == "win32":
-#    base = "Win32GUI"
+if sys.platform == "win32":
+    base = "Win32GUI"
 
 
 cible = Executable(
@@ -68,7 +68,7 @@ cible = Executable(
 
 
 setup(  name = "pySequence",
-        version = "5.1.0.1",
+        version = "5.2.1.0",
         author = "Cédrick FAURY & Jean-Claude FRICOU",
         description = u"pySéquence",
         options = {"build_exe": build_exe_options},
