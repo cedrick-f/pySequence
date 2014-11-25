@@ -244,7 +244,7 @@ def permut(liste):
     return l
     
     
-def getHoraireTxt(v): 
+def getHoraireTxt(v, prefixe = u""): 
     h, m = divmod(v*60, 60)
     h = str(int(h))
     if m == 0:
@@ -252,9 +252,9 @@ def getHoraireTxt(v):
     else:
         m = str(int(m))
     if h == "0":
-        return m+"'"
+        return prefixe+m+"'"
     else:
-        return h+"h"+m
+        return prefixe+h+"h"+m
 
 
 ######################################################################################

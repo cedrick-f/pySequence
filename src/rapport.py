@@ -654,7 +654,11 @@ class FrameRapport(wx.Frame):
         dlg.ShowModal()
 
         handler.DeleteTemporaryImages()
-    
+
+
+
+
+
 class RapportRTF(rt.RichTextCtrl): 
     def __init__(self, parent, style = 0):
 #        print "RapportRTF"
@@ -840,7 +844,11 @@ class RapportRTF(rt.RichTextCtrl):
             self.WriteText(u"Description :")
             self.EndUnderline()
             self.Newline()
-           
+            
+#            self.AddDescription(tache.description)
+            
+            
+            
             tache.panelPropriete.rtc.rtc.SelectAll()
             
             if sys.platform == "win32":
@@ -888,6 +896,20 @@ class RapportRTF(rt.RichTextCtrl):
         self.EndLeftIndent()
         self.EndStyle()
         
+        
+        
+    def AddDescription(self, description):
+        handler = rt.RichTextXMLHandler()
+        handler.SetFlags(rt.RICHTEXT_HANDLER_INCLUDE_STYLESHEET)
+    
+        rt_buffer = self.GetBuffer()
+        #rt_buffer.AddHandler(handler)
+        output = cStringIO.StringIO(description);    
+    
+        handler.LoadStream(rt_buffer,  output)  
+    
+        self.Refresh()
+    
     
     ######################################################################################################
     def AddSeance(self, seance, indent = 1):
