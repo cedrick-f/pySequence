@@ -79,18 +79,18 @@ class Referentiel():
 #            v = getattr(self, p)
 #            if type(v) == dict:
 #                print p, v
-        print "dicCompetences :", self.dicCompetences
+#        print "dicCompetences :", self.dicCompetences
 #        print "CoP :", self.dicCompetences_prj
-        print "_dicIndicateurs_prj_simple :", self._dicIndicateurs_prj_simple.keys()
-        print "_dicIndicateurs_prj :", self._dicIndicateurs_prj
+#        print "_dicIndicateurs_prj_simple :", self._dicIndicateurs_prj_simple.keys()
+#        print "_dicIndicateurs_prj :", self._dicIndicateurs_prj
 #        print "Poi :", self.dicPoidsIndicateurs_prj
 #        print "Lig :", self.dicLignesIndicateurs_prj
 #        print "Mat :", self.dicSavoirs_Math
 #        print "Phy :", self.dicSavoirs_Phys
-#        print "Dem :", self.demarches
+        print "Dem :", self.demarches
 #        print "Act :", self.activites
 #        print "Sea :", self.seances
-#        print "DeS :", self.demarcheSeance
+        print "DeS :", self.demarcheSeance
 #        print self.phases_prj
 #        print self.listPhasesEval_prj
 #        print "listPhases_prj =", self.listPhases_prj
@@ -1255,7 +1255,7 @@ def chargerReferentiels():
     
     
     #
-    # Vérification intégrité en comparant avec les fichiers .xml
+    # Vérification intégrité en comparant avec le fichier .xml (s'il existe)
     #
     if not SAUVEGARDE:
         dicOk = {}
@@ -1266,6 +1266,10 @@ def chargerReferentiels():
                 ref = ouvrir(f)
                 if ref == r:
                     dicOk[k] = True
+            else:
+                enregistrer(r.Code, f)
+                dicOk[k] = None
+                
         print u"Intégrité référentiels :", dicOk
     
     #

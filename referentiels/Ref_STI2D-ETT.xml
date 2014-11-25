@@ -331,10 +331,10 @@
         <l_1.2 S_1.200="G&#233;om&#233;trie">
           <d_1.201>
             <l_1.2.2 S_1.2.200="Nombres complexes">
-              <l_1.2.201 S_1.2.20100="Forme alg&#233;brique : somme, produit, quotient, conjugu&#233;" S_1.2.20101="Repr&#233;sentation g&#233;om&#233;trique" S_1.2.20102="Affixe d&apos;un point, d&apos;un vecteur" S_1.2.20103="Forme trigonom&#233;trique : module et argument" S_1.2.20104="Interpr&#233;tation g&#233;om&#233;trique" />
+              <l_1.2.201 S_1.2.20100="Forme alg&#233;brique : somme, produit, quotient, conjugu&#233;" S_1.2.20101="Repr&#233;sentation g&#233;om&#233;trique" S_1.2.20102="Affixe d'un point, d'un vecteur" S_1.2.20103="Forme trigonom&#233;trique : module et argument" S_1.2.20104="Interpr&#233;tation g&#233;om&#233;trique" />
             </l_1.2.2>
             <l_1.2.1 S_1.2.100="Produit scalaire dans le plan">
-              <l_1.2.101 S_1.2.10100="Projection orthogonale d&apos;un vecteur sur un axe" S_1.2.10101="D&#233;finition et propri&#233;t&#233;s du produit scalaire de deux vecteurs dans le plan" S_1.2.10102="Applications du produit scalaire" />
+              <l_1.2.101 S_1.2.10100="Projection orthogonale d'un vecteur sur un axe" S_1.2.10101="D&#233;finition et propri&#233;t&#233;s du produit scalaire de deux vecteurs dans le plan" S_1.2.10102="Applications du produit scalaire" />
             </l_1.2.1>
           </d_1.201>
         </l_1.2>
@@ -367,7 +367,7 @@
               <l_T.1.501 S_T.1.50100="Fonction exp(x)" S_T.1.50101="Relation fonctionnelles" S_T.1.50102="Notation e" S_T.1.50103="Exemples de fonctions exponentielles de base a" S_T.1.50104="Comparaison des comportements &#224; l'infini de la fonction exponentielle et de la fonction logarithme n&#233;p&#233;rien avec les fonctions puissances" />
             </l_T.1.5>
             <l_T.1.6 S_T.1.600="Int&#233;gration">
-              <l_T.1.601 S_T.1.60100="D&#233;finition de l'int&#233;grale d'une fonction continue et positive sur[a,b comme aire sous la courbe" S_T.1.60101="Notation" S_T.1.60102="Primitive d&#8217;une fonction continue sur un intervalle" S_T.1.60103="Int&#233;grale d&#8217;une fonction continue de signe quelconque" S_T.1.60104="Propri&#233;t&#233;s de l'int&#233;grale : lin&#233;arit&#233;, positivit&#233;, relation de Chasles" S_T.1.60105="Calculs d&apos;aires" S_T.1.60106="Valeur moyenne d&apos;une fonction sur un intervalle" />
+              <l_T.1.601 S_T.1.60100="D&#233;finition de l'int&#233;grale d'une fonction continue et positive sur[a,b comme aire sous la courbe" S_T.1.60101="Notation" S_T.1.60102="Primitive d&#8217;une fonction continue sur un intervalle" S_T.1.60103="Int&#233;grale d&#8217;une fonction continue de signe quelconque" S_T.1.60104="Propri&#233;t&#233;s de l'int&#233;grale : lin&#233;arit&#233;, positivit&#233;, relation de Chasles" S_T.1.60105="Calculs d'aires" S_T.1.60106="Valeur moyenne d'une fonction sur un intervalle" />
             </l_T.1.6>
             <l_T.1.7 S_T.1.700="Equations diff&#233;rentielles">
               <l_T.1.701 S_T.1.70100="Equation lin&#233;aire du premier degr&#233;" S_T.1.70101="Existence et unicit&#233; de la fonction satisfaisant une condition initiale donn&#233;e" S_T.1.70102="Equation y'' + w&#178;y = 0" S_T.1.70103="Existence et unicit&#233; de la fonction satisfaisant une condition initiale donn&#233;e" />
@@ -379,17 +379,17 @@
               <l_T.1.201 S_T.1.20100="Asymptote parall&#232;le &#224; l'un des axes de coordonn&#233;es" S_T.1.20101="Limite finie d'une fonction &#224; l'infini" S_T.1.20102="Limite infinie d&#8217;une fonction en un point" S_T.1.20103="Limite infinie d'une fonction &#224; l'infini" S_T.1.20104="Limites et op&#233;rations" />
             </l_T.1.2>
             <l_T.1.3 S_T.1.300="D&#233;riv&#233;es et primitives">
-              <l_T.1.301 S_T.1.30100="Calcul de d&#233;riv&#233;es : compl&#233;ment" S_T.1.30101="Primitive d&apos;une fonction sur un intervalle" />
+              <l_T.1.301 S_T.1.30100="Calcul de d&#233;riv&#233;es : compl&#233;ment" S_T.1.30101="Primitive d'une fonction sur un intervalle" />
             </l_T.1.3>
           </d_T.101>
         </l_T.1>
         <l_T.3 S_T.300="Probabilit&#233;s et statistique">
           <d_T.301>
             <l_T.3.2 S_T.3.200="Prise de d&#233;cision et estimation">
-              <l_T.3.201 S_T.3.20100="Intervalle de fluctuation d'une fr&#233;quence" S_T.3.20101="Intervalle de confiance d&apos;une proportion" />
+              <l_T.3.201 S_T.3.20100="Intervalle de fluctuation d'une fr&#233;quence" S_T.3.20101="Intervalle de confiance d'une proportion" />
             </l_T.3.2>
             <l_T.3.1 S_T.3.100="Exemples de lois &#224; densit&#233;">
-              <l_T.3.101 S_T.3.10100="Loi uniforme sur [a,b]" S_T.3.10101="Esp&#233;rance et variance d&#8217;une variable al&#233;atoire suivant une loi uniforme" S_T.3.10102="Loi exponentielle" S_T.3.10103="Esp&#233;rance d&#8217;une variable al&#233;atoire suivant une loi exponentielle" S_T.3.10104="Loi normale d'esp&#233;rance et d'&#233;cart-type donn&#233;s" S_T.3.10105="Approximation d&apos;une loi binomiale par une loi normale" />
+              <l_T.3.101 S_T.3.10100="Loi uniforme sur [a,b]" S_T.3.10101="Esp&#233;rance et variance d&#8217;une variable al&#233;atoire suivant une loi uniforme" S_T.3.10102="Loi exponentielle" S_T.3.10103="Esp&#233;rance d&#8217;une variable al&#233;atoire suivant une loi exponentielle" S_T.3.10104="Loi normale d'esp&#233;rance et d'&#233;cart-type donn&#233;s" S_T.3.10105="Approximation d'une loi binomiale par une loi normale" />
             </l_T.3.1>
           </d_T.301>
         </l_T.3>
@@ -399,7 +399,7 @@
               <l_T.2.201 S_T.2.20100="Forme exponentielle" />
             </l_T.2.2>
             <l_T.2.1 S_T.2.100="Produit scalaire dans le plan">
-              <l_T.2.101 S_T.2.10100="Forme d&apos;addition et de duplication des sinus et cosinus" />
+              <l_T.2.101 S_T.2.10100="Forme d'addition et de duplication des sinus et cosinus" />
             </l_T.2.1>
           </d_T.201>
         </l_T.2>
@@ -462,7 +462,7 @@
               <l_1.1.201 S_1.1.20100="Temp&#233;rature" S_1.1.20101="Capacit&#233; thermique massique                        " />
             </l_1.1.2>
             <l_1.1.5 S_1.1.500="Energie chimique">
-              <l_1.1.501 S_1.1.50100="Transformation chimique d'un syst&#232;me et effets thermiques associ&#233;s" S_1.1.50101="Combustion, combustibles, comburants" S_1.1.50102="Avancement et bilan de mati&#232;re" S_1.1.50103="Pouvoir calorifique d&apos;un combustible" S_1.1.50104="Protection contre les risques des combustions" />
+              <l_1.1.501 S_1.1.50100="Transformation chimique d'un syst&#232;me et effets thermiques associ&#233;s" S_1.1.50101="Combustion, combustibles, comburants" S_1.1.50102="Avancement et bilan de mati&#232;re" S_1.1.50103="Pouvoir calorifique d'un combustible" S_1.1.50104="Protection contre les risques des combustions" />
             </l_1.1.5>
             <l_1.1.4 S_1.1.400="Energie et puissance &#233;lectrique">
               <l_1.1.401 S_1.1.40100="Tension ; Intensit&#233;" S_1.1.40101="Propri&#233;t&#233;s &#233;lectriques des mat&#233;riaux" S_1.1.40102="Dip&#244;les passifs et dip&#244;les actifs" S_1.1.40103="Effet joule" S_1.1.40104="Energie stock&#233;es dans un condensateur, dans une bobine" S_1.1.40105="Transport et distribution de l'&#233;nergie &#233;lectrique" S_1.1.40106="Protection contre les risques du courant &#233;l&#233;ctrique" />
@@ -474,7 +474,7 @@
         </l_1.1>
         <l_1.2 S_1.200="L'&#233;clairage">
           <d_1.201>
-            <l_1.2.2 S_1.2.200="Flux lumineux, longueur d&apos;onde, couleur et spectre">
+            <l_1.2.2 S_1.2.200="Flux lumineux, longueur d'onde, couleur et spectre">
               <l_1.2.201 />
             </l_1.2.2>
             <l_1.2.1 S_1.2.100="Sources lumineuses">
@@ -538,12 +538,12 @@
             </l_T.5.2>
           </d_T.501>
         </l_T.5>
-        <l_T.4 S_T.400="La communication dans l&apos;habitat">
+        <l_T.4 S_T.400="La communication dans l'habitat">
           <d_T.401>
             <l_T.4.1 S_T.4.100="Ondes &#233;lectromagn&#233;tiques">
               <l_T.4.101 S_T.4.10100="Spectre des ondes utilis&#233;es en communication" S_T.4.10101="Champ &#233;lectrique, champ magn&#233;tique" />
             </l_T.4.1>
-            <l_T.4.2 S_T.4.200="Mesure des grandeurs physiques dans l&apos;habitat">
+            <l_T.4.2 S_T.4.200="Mesure des grandeurs physiques dans l'habitat">
               <l_T.4.201 />
             </l_T.4.2>
           </d_T.401>
@@ -567,7 +567,7 @@
               <l_T.6.201 S_T.6.20100="Transformation chimique et transfert d'&#233;nergie sous forme thermique" S_T.6.20101="Combustion" S_T.6.20102="Transformation chimique et transfert d'&#233;nergie sous forme &#233;lectrique" S_T.6.20103="Piles, accumulateurs, piles &#224; combustible]" />
             </l_T.6.2>
             <l_T.6.1 S_T.6.100="Actions m&#233;caniques">
-              <l_T.6.101 S_T.6.10100="Forces, moment de force, couples et moment d&apos;un couple" S_T.6.10101="Transfert d'&#233;nergie par travail m&#233;canique (force constante ; couple constant). Puissance moyenne" S_T.6.10102="Conservation et non-conservation de l'&#233;nergie m&#233;canique" S_T.6.10103="Frottements de contact entre solides ; action d&apos;un fluide sur un solide en mouvement relatif]" />
+              <l_T.6.101 S_T.6.10100="Forces, moment de force, couples et moment d'un couple" S_T.6.10101="Transfert d'&#233;nergie par travail m&#233;canique (force constante ; couple constant). Puissance moyenne" S_T.6.10102="Conservation et non-conservation de l'&#233;nergie m&#233;canique" S_T.6.10103="Frottements de contact entre solides ; action d'un fluide sur un solide en mouvement relatif]" />
             </l_T.6.1>
           </d_T.601>
         </l_T.6>
@@ -584,7 +584,7 @@
             </l_T.1.3>
           </d_T.101>
         </l_T.1>
-        <l_T.3 S_T.300="Les fluides dans l&apos;habitat">
+        <l_T.3 S_T.300="Les fluides dans l'habitat">
           <d_T.301>
             <l_T.3.2 S_T.3.200="&#201;tats de la mati&#232;re">
               <l_T.3.201 S_T.3.20100="Transfert thermiques et changements d'&#233;tat" S_T.3.20101="Transformations physiques et effets thermiques associ&#233;s" />
@@ -677,4 +677,5 @@
     <l_TD S_TD00="TD" S_TD01="Travaux Dirig&#233;s" />
     <l_SA S_SA00="Synt. activit&#233;" S_SA01="Synth&#232;se d'activit&#233;" />
   </d_seances>
+  <l_tr_com />
 </Referentiel>

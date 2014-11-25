@@ -276,7 +276,7 @@ def genererDossierValidation(nomFichier, projet, fenDoc):
         shutil.rmtree(dosstemp)
         wx.EndBusyCursor()
         return False
-    fenDoc.exporterFichePDF(fichertempF)
+    fenDoc.exporterFichePDF(fichertempF, pourDossierValidation = True)
     
     merger = PdfFileMerger()
     input1 = open(fichertempV, "rb")

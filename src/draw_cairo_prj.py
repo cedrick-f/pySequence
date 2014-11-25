@@ -439,6 +439,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
 #    tps = time.time()
         
     competences = regrouperLst(prj, prj.GetCompetencesUtil())
+    prj.pt_caract_comp = []
     
     if competences != []:
         
@@ -508,6 +509,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
                        (posZElevesH[0], y, w, h), ha = ha, b = 0.1,
                        fontsizeMinMax = (-1, 0.016))
     
+    prj.pt_caract_eleve = []
     if len(l) > 0:
         
         #
@@ -677,14 +679,14 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
         y5 = y2+len(prj.eleves) * hRevue + 2*ecartTacheY
         md1 = md2 = md3 = 0
         for i, e in enumerate(prj.eleves):
-            md1 = max(e.GetDuree("R1"), md1)
-            md2 = max(e.GetDuree("R2"), md2)
-            md3 = max(e.GetDuree("R3"), md3)
+            md1 = max(e.GetDuree(phase = "R1"), md1)
+            md2 = max(e.GetDuree(phase = "R2"), md2)
+            md3 = max(e.GetDuree(phase = "R3"), md3)
             
         for i, e in enumerate(prj.eleves):
-            d1 = e.GetDuree("R1")
-            d2 = e.GetDuree("R2")
-            d3 = e.GetDuree("R3")
+            d1 = e.GetDuree(phase = "R1")
+            d2 = e.GetDuree(phase = "R2")
+            d3 = e.GetDuree(phase = "R3")
             Ic = constantes.COUL_ELEVES[i][0]
             ctx.set_source_rgb(Ic[0],Ic[1],Ic[2])
             ctx.set_line_width(0.005)
@@ -994,7 +996,7 @@ def DrawTacheRacine(ctx, tache, y):
         ctx.set_source_rgb(0.5,0.8,0.8)
         ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                   cairo.FONT_WEIGHT_BOLD)
-        show_text_rect(ctx, getHoraireTxt(tache.GetDelai()), 
+        show_text_rect(ctx, getHoraireTxt(tache.GetDelai(), constantes.CHAR_FLECHE), 
                        (x, y, w, h), 
                        orient = 'h', fontsizeMinMax = (minFont, 0.015), b = 0.1)
     

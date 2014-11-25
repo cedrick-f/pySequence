@@ -1,5 +1,5 @@
 <Referentiel B_CI_BO="True" B_CI_cible="False" B_projet="True" I_duree_prj="70" S_Code="AC" S_Famille="STI" S_nomCompetences="Comp&#233;tences" S_nomSavoirs="Savoirs">
-  <l_CentresInterets S_CentresInterets00="Participation &#224; une &#233;tude architecturale" S_CentresInterets01="V&#233;rification de la r&#233;sistance" S_CentresInterets02="Protection" S_CentresInterets03="Le confort" S_CentresInterets04="Organisation de r&#233;alisation" S_CentresInterets05="Vie en oeuvre" S_CentresInterets06="Reconditionnement de l&apos;ouvrage" S_CentresInterets07="Valorisation de la fin de vie de l&apos;ouvrage" />
+  <l_CentresInterets S_CentresInterets00="Participation &#224; une &#233;tude architecturale" S_CentresInterets01="V&#233;rification de la r&#233;sistance" S_CentresInterets02="Protection" S_CentresInterets03="Le confort" S_CentresInterets04="Organisation de r&#233;alisation" S_CentresInterets05="Vie en oeuvre" S_CentresInterets06="Reconditionnement de l'ouvrage" S_CentresInterets07="Valorisation de la fin de vie de l'ouvrage" />
   <l_Enseignement S_Enseignement00="STI2D-AC" S_Enseignement01="STI2D : Architecture et Construction" S_Enseignement02="STI2D" />
   <d_aColNon B_R="True" B_S="False" />
   <d_activites>
@@ -137,7 +137,7 @@
             <l_CO9.ac10100 I_CO9.ac1010002="31" S_CO9.ac1010000="Un bilan des performances de la construction existante est &#233;tabli">
               <l_CO9.ac1010001 F_CO9.ac101000101="12.5" I_CO9.ac101000100="0" I_CO9.ac101000102="0" />
             </l_CO9.ac10100>
-            <l_CO9.ac10101 I_CO9.ac1010102="32" S_CO9.ac1010100="Les besoins de l&apos;usager sont traduits en solutions technologiques">
+            <l_CO9.ac10101 I_CO9.ac1010102="32" S_CO9.ac1010100="Les besoins de l'usager sont traduits en solutions technologiques">
               <l_CO9.ac1010101 F_CO9.ac101010101="12.5" I_CO9.ac101010100="0" I_CO9.ac101010102="0" />
             </l_CO9.ac10101>
             <l_CO9.ac10102 I_CO9.ac1010202="33" S_CO9.ac1010200="Une r&#233;alisation permet de constater les am&#233;liorations attendues">
@@ -188,7 +188,7 @@
             </l_CO8.ac20104>
           </l_CO8.ac201>
         </l_CO8.ac2>
-        <l_CO8.ac1 S_CO8.ac100="Simuler un comportement structurel, thermique et acoustique de tout ou partie d&apos;une construction">
+        <l_CO8.ac1 S_CO8.ac100="Simuler un comportement structurel, thermique et acoustique de tout ou partie d'une construction">
           <l_CO8.ac101>
             <l_CO8.ac10100 I_CO8.ac1010002="18" S_CO8.ac1010000="Les variables et les param&#232;tres des mod&#232;les sont identifi&#233;s">
               <l_CO8.ac1010001 F_CO8.ac101000101="8.333333" I_CO8.ac101000100="0" I_CO8.ac101000102="0" />
@@ -221,7 +221,7 @@
     </l_1>
     <l_3 S_300="Vie de la construction">
       <d_301>
-        <l_3.2 S_3.200="Gestion de la vie d&apos;une construction">
+        <l_3.2 S_3.200="Gestion de la vie d'une construction">
           <l_3.201 S_3.20100="Cycle vie de l'ouvrage : - mat&#233;riaux de la construction (extraction, transformation, mise en oeuvre) - &#233;nergie grise - proc&#233;d&#233;s et mat&#233;riels de d&#233;construction - l&#233;gislation en vigueur - tra&#231;abilit&#233;" S_3.20101="- Planification de la d&#233;construction d'un ouvrage - typologie des d&#233;chets, valorisation, traitements" S_3.20102="Inventorier la nature des pathologies : - histoire des mat&#233;riaux de la construction, leur &#233;volution dans le temps - nature et &#233;volutions des sols" S_3.20103="- Techniques de relev&#233; des constructions (imagerie, topographie, m&#233;tr&#233;, pr&#233;l&#232;vement d'&#233;chantillon)" />
         </l_3.2>
         <l_3.1 S_3.100="Am&#233;liorer les performances de la construction">
@@ -229,7 +229,7 @@
         </l_3.1>
       </d_301>
     </l_3>
-    <l_2 S_200="Conception d&apos;un ouvrage">
+    <l_2 S_200="Conception d'un ouvrage">
       <d_201>
         <l_2.3 S_2.300="Mod&#233;lisations, essais et simulations">
           <l_2.301 S_2.30100=" Etude des structures : - mod&#233;lisation, degr&#233; d'hyperstaticit&#233;, typologie des charges, descente de charges, force portante du sol, sollicitations et d&#233;formations des structures - comportement &#233;lastique, &#233;lastoplastique - rupture fragile, ductilit&#233; - coefficients de s&#233;curit&#233; - moment quadratique, principe de superposition, r&#233;partition des d&#233;formations dans une section de poutre soumise &#224; de la flexion simple" S_2.30101=" Confort hygromthermique : - caract&#233;ristiques et comportements thermiques des mat&#233;riaux et parois" S_2.30102=" Confort acoustique : - transmission du bruit au travers d'une paroi - les pi&#232;ges &#224; sons - loi de masse - ph&#233;nom&#232;ne de r&#233;sonnance - temps de r&#233;verb&#233;ration" S_2.30103=" Confort visuel : - &#233;clairement, luminance, facteur de lumi&#232;re du jour - strat&#233;gie de l'&#233;clairement naturel" S_2.30104=" Confort respiratoire : - conditions d'hygi&#232;ne, pollution - renouvellement d'air, VMC" />
