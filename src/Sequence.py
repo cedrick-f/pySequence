@@ -40,7 +40,7 @@ Copyright (C) 2011-2014
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "5.2"
+__version__ = "5.3"
 print __version__
 
 #from threading import Thread
@@ -5695,7 +5695,7 @@ class Eleve(Personne, Objet_sequence):
     ######################################################################################  
     def getNomFichierDefaut(self, prefixe):
         nomFichier = prefixe+"_"+self.GetNomPrenom()+"_"+self.projet.intitule[:20]
-        for c in ["\"", "/", "\", ", "?", "<", ">", "|", ":", "."]:
+        for c in [u"\t", u"\n", "\"", "/", "\\", "?", "<", ">", "|", ":", "."]:
             nomFichier = nomFichier.replace(c, "_")
         return nomFichier
 
@@ -5815,27 +5815,6 @@ class Eleve(Personne, Objet_sequence):
         #
         # Ouverture (et pré-sauvegarde) des fichiers grilles "source" (tableaux Excel)
         #
-#        existe = []
-#        for k, f in nomFichiers.items():
-#            if os.path.isfile(f):
-#                existe.append(f)
-#        if len(existe) > 0:
-#            if len(existe) == 1:
-#                m = u"La grille d'évaluation existe déja !\n\n" \
-#                    u"\t%s\n\n" \
-#                    u"Voulez-vous la remplacer ?" %existe[0]
-#            else:
-#                m = u"Les grilles d'évaluation existent déja !\n\n" \
-#                    u"\t%s\n\n" \
-#                    u"Voulez-vous les remplacer ?" %u"\n".join(existe)
-#                                            
-#            dialog = wx.MessageDialog(self.projet.GetApp(), m, 
-#                                      u"Fichier existant", wx.YES_NO | wx.ICON_WARNING)
-#            retCode = dialog.ShowModal()
-#            if retCode != wx.ID_YES:
-#                return
-        
-        
         tableaux = {}
         for k, f in nomFichiers.items():
             if os.path.isfile(f):
@@ -5844,6 +5823,7 @@ class Eleve(Personne, Objet_sequence):
                 tableaux[k] = grilles.getTableau(self.projet.GetApp(),
                                                  ref.grilles_prj[k][0])
                 if tableaux[k] != None: # and tableaux[k].filename !=f:
+                    print f
                     tableaux[k].save(f)
 #                    try:
 #                        tableaux[k].save(f)
@@ -7892,6 +7872,13 @@ class FenetreProjet(FenetreDocument):
         self.pageValid = genpdf.PdfPanel(self.nb)
         self.nb.AddPage(self.pageValid, u"Dossier de validation")
         
+        #
+        # Bulletins Officiels
+        #
+        self.pageBO = Panel_BO(self.nb)
+        self.nb.AddPage(self.pageBO, u"Bulletins Officiels")
+        
+        
         self.nb.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
         
         
@@ -7911,8 +7898,12 @@ class FenetreProjet(FenetreDocument):
         event.Skip()
         if new == 1: # On vient de cliquer sur la page "détails"
             self.pageDetails.Remplir(self.fichierCourant, self.projet, self.typ)
-        elif new == 2: # On vient de cliquer sur la page "dossie de validation"
+        
+        elif new == 2: # On vient de cliquer sur la page "dossier de validation"
             self.pageValid.MiseAJour(self.projet, self)
+            
+        elif new == 3: # On vient de cliquer sur la page "Bulletins Officiels"
+            self.pageBO.Construire(REFERENTIELS[self.projet.classe.typeEnseignement])
 
         
     ###############################################################################################
@@ -9342,7 +9333,7 @@ class PanelPropriete_Classe(PanelPropriete):
  
         te.SetStringSelection(REFERENTIELS[constantes.TYPE_ENSEIGNEMENT_DEFAUT].Enseignement[0])
 
-        pageGen.sizer.Add(sb, (0,1), flag = wx.EXPAND|wx.ALL, border = 2)#
+        pageGen.sizer.Add(sb, (0,1), (2,1), flag = wx.EXPAND|wx.ALL, border = 2)#
         self.cb_type = te
 
         #
@@ -9373,13 +9364,24 @@ class PanelPropriete_Classe(PanelPropriete):
         self.info.SetFont(wx.Font(8, wx.SWISS, wx.FONTSTYLE_ITALIC, wx.NORMAL))
         sb.Add(self.info, 0, flag = wx.EXPAND|wx.ALL, border = 5)
 
-        pageGen.sizer.Add(sb, (0,2), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.ALL|wx.EXPAND, border = 2)
+        pageGen.sizer.Add(sb, (0,2), (1,1), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.ALL|wx.EXPAND, border = 2)
+        
+        #
+        # Accès au BO
+        #
+#        bo = wx.Button(pageGen, -1, u"Accéder au BO en ligne")
+        self.bo = hl.HyperLinkCtrl(pageGen, wx.ID_ANY, u"Accéder au BO en ligne",
+                                   URL=REFERENTIELS[classe.typeEnseignement].BO_URL)
+        pageGen.sizer.Add(self.bo, (1,2), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.ALL|wx.EXPAND, border = 2)
+        self.Bind(wx.EVT_BUTTON, self.OnClickBO, self.bo)
+        
+        self.bo.Show(REFERENTIELS[self.classe.typeEnseignement].BO_URL != u"")
         
         #
         # Effectifs
         #
         self.ec = PanelEffectifsClasse(pageGen, classe)
-        pageGen.sizer.Add(self.ec, (0,3), flag = wx.ALL|wx.EXPAND, border = 2)#|wx.ALIGN_RIGHT
+        pageGen.sizer.Add(self.ec, (0,3), (2,1), flag = wx.ALL|wx.EXPAND, border = 2)#|wx.ALIGN_RIGHT
 
         pageGen.sizer.AddGrowableRow(0)
         pageGen.sizer.AddGrowableCol(2)
@@ -9495,9 +9497,22 @@ class PanelPropriete_Classe(PanelPropriete):
 #        self.MiseAJourType()
 #        if hasattr(self, 'list'):
 #            self.list.Peupler()
+
+
+        URL = REFERENTIELS[self.classe.typeEnseignement].BO_URL
+        self.bo.SetURL(URL)
+        self.bo.Show(URL!= u"")
+        self.bo.ToolTip.SetTip(URL)
+        self.Refresh()
+        
         self.sendEvent()
         
-        
+    ######################################################################################  
+    def OnClickBO(self, event):
+        pass
+    
+    
+    
     ######################################################################################  
     def EvtCheckBox(self, event):
         cb = event.GetEventObject()
@@ -9601,7 +9616,7 @@ class PanelPropriete_Classe(PanelPropriete):
                 
         self.ec.MiseAJour()
 
-    
+        
         
 #    ######################################################################################  
 #    def OnLeftDown(self, event):
@@ -14807,8 +14822,61 @@ class PanelListe(wx.Panel, listmix.ColumnSorterMixin):
         
         listmix.ColumnSorterMixin.__init__(self, 2)
         
+##########################################################################################################
+#
+#  Panel pour l'affichage des BO
+#
+##########################################################################################################
+class Panel_BO(wx.Panel):
+    def __init__(self, parent):
+        wx.Panel.__init__(self, parent, -1)
+        self.sizer = wx.BoxSizer(wx.VERTICAL)
+        
+        self.nb = wx.Notebook(self, -1)
+        self.sizer.Add(self.nb, proportion=1, flag = wx.EXPAND)
+        
+        self.nb.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
+        
+        self.SetSizer(self.sizer)
+        
+    ######################################################################################################
+    def OnPageChanged(self, event):
+        pass
+    
+    ######################################################################################################
+    def Construire(self, ref):
+        if ref.BO_dossier == u"":
+            return
+        
+        wx.BeginBusyCursor()
+        
+        lst_pdf = []
+        path = os.path.join(constantes.BO_PATH, ref.BO_dossier)
+      
+        for root, dirs, files in os.walk(path):
+            for f in files:
+                if os.path.splitext(f)[1] == r".pdf":
+                    lst_pdf.append(os.path.join(root, f))
+            
+      
+#        print self.nb.GetPageCount()
+        for index in reversed(range(self.nb.GetPageCount())):
+            try:
+                self.nb.DeletePage(index)
+            except:
+                print "raté :", index
+#        self.dataNoteBook.SendSizeEvent()
         
         
+        for f in lst_pdf:
+            page = genpdf.PdfPanel(self.nb)
+            page.chargerFichierPDF(f)
+            self.nb.AddPage(page, os.path.split(os.path.splitext(f)[0])[1])
+
+        wx.EndBusyCursor()
+
+
+
 class FenetreBilan(wx.Frame):
     def __init__(self, parent, dossierCourant = '', 
                  typeEnseignement = constantes.TYPE_ENSEIGNEMENT_DEFAUT):

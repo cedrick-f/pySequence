@@ -42,7 +42,7 @@ print "Dossier de l'application :",PATH
 
 DST = os.path.join(PATH, r"pySequence")
 
-list_dir = [r"referentiels", r"tables"]
+list_dir = [r"referentiels", r"tables", r"BO"]
 for dir in list_dir:
     shutil.rmtree(os.path.join(DST, dir), ignore_errors=True)
     shutil.copytree(os.path.join(PATH, dir), os.path.join(DST, dir))
