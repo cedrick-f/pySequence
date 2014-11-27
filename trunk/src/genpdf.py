@@ -375,6 +375,13 @@ class PdfPanel(wx.Panel):
             
         
         
+    def chargerFichierPDF(self, nomFichier):
+        if isinstance(self.pdf, wx.StaticText):
+#        if get_min_adobe_version() == None:
+            print "Problème version Adobe"
+            return
+        
+        self.pdf.LoadFile(nomFichier)
         
         
 #    def OnOpenButton(self, event):

@@ -26,6 +26,7 @@ includefiles = [('Microsoft.VC90.CRT', "Microsoft.VC90.CRT"),
                      'fichier_prj.ico', 'fichier_seq.ico',
                      'etablissements.txt',
                      ('../tables', "../tables"),
+                     ('../BO', "../BO"),
                      ('../referentiels', "../referentiels")]
 #includefiles.extend(glob(r"*.xlsx"))
 #includefiles.extend(glob(r"*.xls"))
@@ -68,7 +69,7 @@ cible = Executable(
 
 
 setup(  name = "pySequence",
-        version = "5.2.1.0",
+        version = "5.3.1.0",
         author = "Cédrick FAURY & Jean-Claude FRICOU",
         description = u"pySéquence",
         options = {"build_exe": build_exe_options},
