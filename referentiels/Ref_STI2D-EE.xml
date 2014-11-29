@@ -1,4 +1,4 @@
-<Referentiel B_CI_BO="True" B_CI_cible="False" B_projet="True" I_duree_prj="70" S_Code="EE" S_Famille="STI" S_nomCompetences="Comp&#233;tences" S_nomSavoirs="Savoirs">
+<Referentiel B_CI_BO="True" B_CI_cible="False" B_projet="True" I_duree_prj="70" S_BO_URL="http://www.education.gouv.fr/pid25535/bulletin_officiel.html?cid_bo=82984" S_BO_dossier="STI2D" S_Code="EE" S_Famille="STI" S_nomCompetences="Comp&#233;tences" S_nomSavoirs="Savoirs">
   <l_CentresInterets S_CentresInterets00="Typologie des syst&#232;mes &#233;nerg&#233;tiques" S_CentresInterets01="Production d'&#233;nergie" S_CentresInterets02="Transport, stockage et distribution de l'&#233;nergie et r&#233;seaux sp&#233;cifiques" S_CentresInterets03="Efficacit&#233; &#233;nerg&#233;tique passive" S_CentresInterets04="Efficacit&#233; &#233;nerg&#233;tique active" />
   <l_Enseignement S_Enseignement00="STI2D-EE" S_Enseignement01="STI2D : Energies et Environnement" S_Enseignement02="STI2D" />
   <d_aColNon B_R="True" B_S="False" />
