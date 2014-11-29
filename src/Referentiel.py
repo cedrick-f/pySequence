@@ -68,6 +68,7 @@ class Referentiel():
     def __repr__(self):
         print "*********************"
         print self.Code, self.projet
+        print "positions_CI", self.positions_CI
 #        print "CI_BO :", self.CI_BO
 #        print "CI  :", self.CentresInterets
 #        print "Sav :", self.dicSavoirs

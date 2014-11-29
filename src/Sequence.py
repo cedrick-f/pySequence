@@ -48,7 +48,12 @@ print __version__
 #import psyco
 #psyco.full()
 
-
+####################################################################################
+#
+#   TODO
+#
+####################################################################################
+# MEI
 
 ####################################################################################
 #
@@ -935,7 +940,7 @@ class Classe():
     
     ######################################################################################  
     def setBranche(self, branche, reparer = False):
-        Ok = True
+        err = []
 #        print "setBranche classe"
         self.typeEnseignement = branche.get("Type", constantes.TYPE_ENSEIGNEMENT_DEFAUT)
         
@@ -952,7 +957,11 @@ class Classe():
                     self.referentiel = REFERENTIELS[self.typeEnseignement]
             else:
                 print "Réparation = pas référentiel intégré !"
-                self.referentiel = REFERENTIELS[self.typeEnseignement]
+                if self.typeEnseignement in REFERENTIELS:
+                    self.referentiel = REFERENTIELS[self.typeEnseignement]
+                else:
+                    err.append(constantes.Erreur(constantes.ERR_PRJ_C_TYPENS, self.typeEnseignement))
+        
     #            print self.referentiel
         else:
             self.version5 = False
@@ -978,46 +987,13 @@ class Classe():
                     if i > 1:
                         self.CI = CI
                         if self.referentiel.CI_cible:
-                            self.posCI = posCI
+                            self.referentiel.positions_CI = posCI
         
         print "version 5", self.version5
         
         self.etablissement = branche.get("Etab", u"")
         
         self.familleEnseignement = self.referentiel.Famille
-             
-                
-#                continuer = True
-#                i = 1
-#                if self.typeEnseignement == 'ET':
-#                    ci_ET = []
-#                    posCI_ET = []
-#                    while continuer:
-#                        c = brancheCI.get("CI"+str(i))
-#                        p = brancheCI.get("pos"+str(i))
-#                        if c == None or p == None:
-#                            continuer = False
-#                        else:
-#                            ci_ET.append(c)
-#                            posCI_ET.append(p) 
-#                            i += 1
-#                        
-#                    if i > 1:
-#                        self.ci_ET = ci_ET
-#                        self.posCI_ET = posCI_ET
-#                
-#                elif self.typeEnseignement == 'SSI':
-#                    ci_SSI = []
-#                    while continuer:
-#                        c = brancheCI.get("CI"+str(i))
-#                        if c == None:
-#                            continuer = False
-#                        else:
-#                            ci_SSI.append(c)
-#                            i += 1
-#                        
-#                    if i > 1:
-#                        self.ci_SSI = ci_SSI
 
                 
         # Ancien format : <Effectifs C="9" D="3" E="2" G="9" P="3" />
@@ -1039,7 +1015,7 @@ class Classe():
 #            self.doc.MiseAJourTypeEnseignement()
             self.panelPropriete.MiseAJour()
             
-        return Ok
+        return err
         
         
     ######################################################################################  
@@ -2029,8 +2005,8 @@ class Projet(BaseDoc, Objet_sequence):
     def setBranche(self, branche):
 #        print "setBranche projet"
 #        print self.GetReferentiel()
-        Ok = True
-        err = 0
+
+        err = []
         
         self.intitule = branche.get("Intitule", u"")
 
@@ -2054,21 +2030,25 @@ class Projet(BaseDoc, Objet_sequence):
         self.equipe = []
         for e in list(brancheEqu):
             prof = Prof(self, self.panelParent)
-            Ok = Ok and prof.setBranche(e)
-            if not Ok: err = err | constantes.ERR_PRJ_EQUIPE
+            Ok = prof.setBranche(e)
+            if not Ok : 
+                err.append(constantes.Erreur(constantes.ERR_PRJ_EQUIPE))
             self.equipe.append(prof)
 
         brancheSup = branche.find("Support")
         if brancheSup != None:
-            Ok = Ok and self.support.setBranche(brancheSup)
-            if not Ok: err = err | constantes.ERR_PRJ_SUPPORT
+            Ok = self.support.setBranche(brancheSup)
+            if not Ok : 
+                err.append(constantes.Erreur(constantes.ERR_PRJ_SUPPORT))
         
         brancheEle = branche.find("Eleves")
         self.eleves = []
         for e in list(brancheEle):
             eleve = Eleve(self, self.panelParent)
-            Ok = Ok and eleve.setBranche(e)
-            if not Ok: err = err | constantes.ERR_PRJ_ELEVES
+            Ok = eleve.setBranche(e)
+            if not Ok : 
+                err.append(constantes.Erreur(constantes.ERR_PRJ_ELEVES))
+            
             self.eleves.append(eleve)
         
         #
@@ -2082,7 +2062,7 @@ class Projet(BaseDoc, Objet_sequence):
         self.nbrParties = eval(branche.get("NbrParties", "1"))
       
         #
-        # Les poids des compétences
+        # Les poids des compétences (Fixés depuis BO 2014)
         #
 #        brancheCmp = branche.find("Competences")
 #        if brancheCmp != None:
@@ -2105,15 +2085,20 @@ class Projet(BaseDoc, Objet_sequence):
                     num = len(tachesRevue)-1
                 else:
                     num = eval(phase[1])-1
-                o,er =  tachesRevue[num].setBranche(e)
-                Ok = Ok and o
-                if not Ok: err = err | constantes.ERR_PRJ_TACHES | er
+                
+                e = tachesRevue[num].setBranche(e)
+                err.extend(e)
+                if len(e) > 0:
+                    err.append(constantes.Erreur(constantes.ERR_PRJ_TACHES, phase))
+            
                 self.taches.append(tachesRevue[num])
                 adapterVersion = False
             else:
                 tache = Tache(self, self.panelParent, branche = e)
                 if tache.code < 0 : # ça s'est mal passé lors du setbranche ...
-                    return False, err | constantes.ERR_PRJ_TACHES | -tache.code
+                    err.append(constantes.Erreur(constantes.ERR_PRJ_TACHES, tache.code))
+                    return err
+                    
 #                tache.setBranche(e)
                 self.taches.append(tache)
         self.CorrigerIndicateursEleve()
@@ -2125,7 +2110,7 @@ class Projet(BaseDoc, Objet_sequence):
         if hasattr(self, 'panelPropriete'):
             self.panelPropriete.MiseAJour()
 
-        return Ok, err
+        return err
         
     ######################################################################################  
     def SetPosition(self, pos):
@@ -3181,7 +3166,7 @@ class CentreInteret(Objet_sequence):
     ######################################################################################  
     def GetIntit(self, num):
         if self.GetReferentiel().CI_cible:
-            lstCI = self.parent.classe.CI
+            lstCI = self.parent.classe.referentiel.CentresInterets
         else:
             lstCI = self.GetReferentiel().CentresInterets
         if self.numCI[num] < len(lstCI):
@@ -3205,7 +3190,7 @@ class CentreInteret(Objet_sequence):
     ######################################################################################  
     def GetPosCible(self, num):
         if self.GetReferentiel().CI_cible:
-            return self.parent.classe.posCI[self.numCI[num]]
+            return self.parent.classe.referentiel.positions_CI[self.numCI[num]]
         
     
     ######################################################################################  
@@ -4313,9 +4298,9 @@ class Tache(Objet_sequence):
         
         
         if branche != None:
-            Ok, err = self.setBranche(branche)
-            if not Ok:
-                self.code = -err # Pour renvoyer une éventuelle erreur à l'ouverture d'un fichier
+            err = self.setBranche(branche)
+#            if not Ok:
+#                self.code = -err # Pour renvoyer une éventuelle erreur à l'ouverture d'un fichier
         else:
             self.indicateursEleve = { 0 : [], 1 : [], 2 : [], 3 : [],4 : [], 5 : [],6 : []} # clef = n°eleve ;  valeur = liste d'indicateurs
             if phaseTache in ["R1", "R2", "R3", "S", "Rev"]:
@@ -4571,8 +4556,8 @@ class Tache(Objet_sequence):
     ######################################################################################  
     def setBranche(self, branche):
 #        print "setBranche tâche", 
-        Ok = True
-        err = 0
+   
+        err = []
         
         self.ordre = eval(branche.tag[5:])
         self.intitule  = branche.get("Intitule", "")
@@ -4616,8 +4601,8 @@ class Tache(Objet_sequence):
                 brancheCmp = branche.find("Competences")
                 
                 if brancheCmp != None: ## ANCIENNE VERSION (<beta6)
-                    Ok = False
-                    err = err | constantes.ERR_PRJ_T_VERSION
+                    err.append(constantes.Erreur(constantes.ERR_PRJ_T_VERSION))
+                    
                     if self.GetTypeEnseignement() == "SSI":
                         brancheInd = None
                     else:
@@ -4678,7 +4663,8 @@ class Tache(Objet_sequence):
                                             # si le type d'enseignement ne colle pas avec les indicateurs (pb lors de l'enregistrement)
                                             if not code in self.GetReferentiel()._dicIndicateurs_prj_simple:
                                                 print "Erreur 1", code, "<>", self.GetReferentiel()._dicIndicateurs_prj_simple
-                                                return False, err | constantes.ERR_PRJ_T_TYPENS
+                                                err.append(constantes.Erreur(constantes.ERR_PRJ_T_TYPENS))
+                                                return err
                                             
                                             if not codeindic in self.indicateursEleve[i+1]:
                                                 self.indicateursEleve[i+1].append(codeindic)
@@ -4706,7 +4692,8 @@ class Tache(Objet_sequence):
                                         # si le type d'enseignement ne colle pas avec les indicateurs (pb lors de l'enregistrement)
                                         if not code in self.GetReferentiel()._dicIndicateurs_prj:
                                             print "Erreur 2"
-                                            return False, err | constantes.ERR_PRJ_T_TYPENS
+                                            err.append(constantes.Erreur(constantes.ERR_PRJ_T_TYPENS))
+                                            return err
     
                                         indicprov.append(codeindic)
                                         dic = e.GetDicIndicateursRevue(self.phase)
@@ -4738,7 +4725,7 @@ class Tache(Objet_sequence):
                                 # si le type d'enseignement ne colle pas avec les indicateurs (pb lors de l'enregistrement)
                                 if not code in self.GetReferentiel()._dicIndicateurs_prj_simple.keys():
                                     print "Erreur 3", code, "<>", self.GetReferentiel()._dicIndicateurs_prj_simple.keys()
-                                    err =  err | constantes.ERR_PRJ_T_TYPENS
+                                    err.append(constantes.Erreur(constantes.ERR_PRJ_T_TYPENS))
                                 else:
                                     self.indicateursEleve[0].append(codeindic)
 #                                except:
@@ -4751,7 +4738,7 @@ class Tache(Objet_sequence):
             
         self.intituleDansDeroul = eval(branche.get("IntituleDansDeroul", "True"))
 
-        return Ok, err
+        return err
     
 #        if hasattr(self, 'panelPropriete'):
 #            self.panelPropriete.ConstruireListeEleves()
@@ -5272,7 +5259,11 @@ class Support(ElementDeSequence, Objet_sequence):
 
         data = branche.get("Image", "")
         if data != "":
-            self.image = PyEmbeddedImage(data).GetBitmap()
+            try :
+                self.image = PyEmbeddedImage(data).GetBitmap()
+            except:
+                self.image = None
+                Ok = False
             
         if hasattr(self, 'panelPropriete'):
             self.panelPropriete.SetImage()
@@ -5463,7 +5454,11 @@ class Personne(Objet_sequence):
         self.prenom  = branche.get("Prenom", "")
         data = branche.get("Avatar", "")
         if data != "":
-            self.avatar = PyEmbeddedImage(data).GetBitmap()
+            try:
+                self.avatar = PyEmbeddedImage(data).GetBitmap()
+            except:
+                Ok = False
+                self.avatar = None
             
         if hasattr(self, 'referent'):   # prof
             self.referent = eval(branche.get("Referent", "False"))
@@ -6923,7 +6918,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     #        tool_menu.Append(31, u"Options")
             self.menuReg = tool_menu.Append(32, u"a")
             self.MiseAJourMenu()
-        self.menuRep = tool_menu.Append(33, u"Réparer un fichier")
+        self.menuRep = tool_menu.Append(33, u"Ouvrir et réparer un fichier")
 
         help_menu = wx.Menu()
         help_menu.Append(21, u"&Aide en ligne\tF1")
@@ -6984,7 +6979,21 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     
     #############################################################################
     def OnReparer(self, event):
-        self.commandeOuvrir(reparer = True)    
+        dlg = wx.MessageDialog(self, u"Ouvrir et réparer un fichier de projet\n\n" \
+                               u"L'opération qui va suivre permet d'ouvrir un fichier de projet (.prj)\n" \
+                               u"en restaurant les valeurs par défaut du programme d'enseignement.\n" \
+                               u"Si le projet utilise un programme d'enseignement personnalisé,\n" \
+                               u"les spécificités de ce dernier seront perdues.\n\n"\
+                               u"Voulez-vous continuer ?",
+                                 u"Ouvrir et réparer",
+                                 wx.ICON_INFORMATION | wx.YES_NO | wx.CANCEL
+                                 )
+        res = dlg.ShowModal()
+        dlg.Destroy() 
+        if res == wx.ID_YES:
+            self.commandeOuvrir(reparer = True)
+
+         
                 
     #############################################################################
     def OnRegister(self, event): 
@@ -7016,20 +7025,31 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
     ###############################################################################################
     def commandeNouveau(self, event = None, ext = None, ouverture = False):
+        if ext == None:
+            dlg = DialogChoixDoc(self)
+            val = dlg.ShowModal()
+            dlg.Destroy()
+            if val == 1:
+                ext = 'seq' 
+            elif val == 2:
+                ext = 'prj'
+            else:
+                return
+                
         if ext == 'seq':
             child = FenetreSequence(self, ouverture)
         elif ext == 'prj':
             child = FenetreProjet(self)
-        else:
-            dlg = DialogChoixDoc(self)
-            val = dlg.ShowModal()
-            if val == 1:
-                child = FenetreSequence(self, ouverture)  
-            elif val == 2:
-                child = FenetreProjet(self)
-            else:
-                child = None
-            dlg.Destroy()
+#        else:
+#            dlg = DialogChoixDoc(self)
+#            val = dlg.ShowModal()
+#            if val == 1:
+#                child = FenetreSequence(self, ouverture)  
+#            elif val == 2:
+#                child = FenetreProjet(self)
+#            else:
+#                child = None
+#            dlg.Destroy()
         
         self.OnDocChanged(None)
         if child != None:
@@ -7038,17 +7058,18 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
     ###############################################################################################
     def ouvrir(self, nomFichier, reparer = False):
+        self.Freeze()
+        wx.BeginBusyCursor()
+        
         if nomFichier != '':
             ext = os.path.splitext(nomFichier)[1].lstrip('.')
             
             # Fichier pas déja ouvert
             if not nomFichier in self.GetNomsFichiers():
-                wx.BeginBusyCursor()
+                
                 child = self.commandeNouveau(ext = ext, ouverture = True)
                 if child != None:
                     child.ouvrir(nomFichier, reparer = reparer)
-                wx.EndBusyCursor()
-#                wx.CallAfter(wx.EndBusyCursor)
                 
             # Fichier déja ouvert
             else:
@@ -7061,11 +7082,10 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                                           u"Confirmation", wx.YES_NO | wx.ICON_WARNING)
                 retCode = dialog.ShowModal()
                 if retCode == wx.ID_YES:
-                    wx.BeginBusyCursor()
                     child.ouvrir(nomFichier, reparer = reparer)
-                    wx.EndBusyCursor()
-        
-        
+                    
+        wx.EndBusyCursor()
+        self.Thaw()
         
     ###############################################################################################
     def commandeOuvrir(self, event = None, nomFichier = None, reparer = False):
@@ -7489,7 +7509,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
             wx.EndBusyCursor()
             return
         
-        ctx = cairo.Context (PDFsurface)
+        ctx = cairo.Context(PDFsurface)
         ctx.scale(820, 820) 
         if self.typ == 'seq':
             draw_cairo_seq.Draw(ctx, self.sequence)
@@ -7751,7 +7771,6 @@ class FenetreSequence(FenetreDocument):
         if not os.path.isfile(nomFichier):
             return
         
-        self.Freeze()
         fichier = open(nomFichier,'r')
         self.definirNomFichierCourant(nomFichier)
         nomCourt = os.path.splitext(os.path.split(nomFichier)[1])[0]
@@ -7800,7 +7819,6 @@ class FenetreSequence(FenetreDocument):
         self.arbre.CalculatePositions()
         
         fichier.close()
-        self.Thaw()
         
         if redessiner:
             wx.CallAfter(self.fiche.Redessiner)
@@ -7957,6 +7975,9 @@ class FenetreProjet(FenetreDocument):
     def ouvrir(self, nomFichier, redessiner = True, reparer = False):
         print "Ouverture projet", nomFichier
         tps1 = time.clock()
+        Ok = True
+        Annuler = False
+        nbr_etapes = 11
         
         # Pour le suivi de l'ouverture
         nomCourt = os.path.splitext(os.path.split(nomFichier)[1])[0]
@@ -7964,7 +7985,7 @@ class FenetreProjet(FenetreDocument):
         message = nomCourt+"\n"
         dlg =    wx.ProgressDialog(u"Ouverture d'un projet",
                                    message,
-                                   maximum = 11,
+                                   maximum = nbr_etapes,
                                    parent=self.parent,
                                    style = 0
                                     | wx.PD_APP_MODAL
@@ -7976,22 +7997,19 @@ class FenetreProjet(FenetreDocument):
                                     #| wx.PD_AUTO_HIDE
                                     )
 
-        self.Freeze()
         
         self.fiche.Hide()
         
         fichier = open(nomFichier,'r')
         self.definirNomFichierCourant(nomFichier)
-        
-        
-        
+    
         
         def ouvre(fichier, message):
             root = ET.parse(fichier).getroot()
             count = 0
             Ok = True
-            err = 0
-            
+            Annuler = False
+                   
             # Le projet
             projet = root.find("Projet")
             if projet == None:
@@ -7999,12 +8017,15 @@ class FenetreProjet(FenetreDocument):
                 
             else:
                 # La classe
-                message += u"Construction de la structure de la classe..."
+                message += u"Construction de la structure de la classe...\t"
                 dlg.Update(count, message)
                 count += 1
                 classe = root.find("Classe")
-                Ok = Ok and self.classe.setBranche(classe, reparer = reparer)
-                message += constantes.getOkErr(Ok) + u"\n"
+                err = self.classe.setBranche(classe, reparer = reparer)
+                if len(err) > 0 :
+                    Ok = False
+                    message += (u"\n  "+CHAR_POINT).join([e.getMessage() for e in err]) 
+                message += u"\n"
                 
                 if not self.classe.version5:
                     messageErreur(None, u"Ancien programme", 
@@ -8012,91 +8033,94 @@ class FenetreProjet(FenetreDocument):
                                   u"Les indicateurs de compétence ne seront pas chargés.")
                 
                 # Le projet
-                message += u"Construction de la structure du projet..."
+                message += u"Construction de la structure du projet...\t"
                 dlg.Update(count, message)
                 count += 1
-                o,err = self.projet.setBranche(projet)
-                Ok = Ok and o
-                message += constantes.getOkErr(Ok) + u"\n"
+                err = self.projet.setBranche(projet)
+                if len(err) > 0 :
+                    Ok = False
+                    message += (u"\n  "+CHAR_POINT).join([e.getMessage() for e in err])
+                message += u"\n"
                 
             self.arbre.DeleteAllItems()
             root = self.arbre.AddRoot("")
             
-            message += u"Traitement des revues\n"
+            message += u"Traitement des revues...\t"
             dlg.Update(count, message)
             count += 1
-            if err == 0:
-                try:
-                    self.projet.SetCompetencesRevuesSoutenance()
-                except:
-                    print "Erreur 4"
-                        
-            return root, message, count, Ok, err
-        
-        
-        if "beta" in __version__:
-#            print "beta"
-            root, message, count, Ok, err = ouvre(fichier, message)
-        else:
             try:
-                root, message, count, Ok, err = ouvre(fichier, message)
+                self.projet.SetCompetencesRevuesSoutenance()
+                message += u"Ok\n"
             except:
                 Ok = False
+                Annuler = True
+                message += u"Erreur !\n"
+                print "Erreur 4"
+                        
+            return root, message, count, Ok, Annuler
         
-#        if not Ok:
-#            m = u"Le projet\n    %s\nn'a pas pu être ouvert !" \
-#                u"\n\nIl s'agit peut-être d'un fichier d'une ancienne version de pySequence.\n" %nomCourt
-#            
-#            if err != 0:
-#                m += u"\n   L'erreur concerne :"
-#                for c,e in constantes.ERREURS.items():
-#                    if err & c:
-#                        m += u"\n   "+e
-#              
-#            messageErreur(self, u"Erreur d'ouverture", m)
-#            fichier.close()
-#            self.Close()
-#            dlg.Destroy()
-#            return
         
-        message += u"Construction de l'arborescence de la classe\n"
-        dlg.Update(count, message)
-        count += 1
-        self.classe.ConstruireArbre(self.arbre, root)
+        if True:#"beta" in __version__:
+#            print "beta"
+            root, message, count, Ok, Annuler = ouvre(fichier, message)
+            err = []
+        else:
+            try:
+                err = []
+                root, message, count, Ok, Annuler = ouvre(fichier, message)
+            except:
+                count = 0
+                err = [constantes.Erreur(constantes.ERR_INCONNUE)]
+                message += err.getMessage() + u"\n"
         
-        message += u"Construction de l'arborescence du projet\n"
-        dlg.Update(count, message)
-        count += 1
-        self.projet.ConstruireArbre(self.arbre, root)
+        #
+        # Erreur fatale d'ouverture
+        #
+        if Annuler:
+            message += u"\n\nLe projet n'a pas pu être ouvert !\n\n"
+            if len(err) > 0:
+                message += u"\n   L'erreur concerne :"
+                message += (u"\n"+CHAR_POINT).join([e.getMessage() for e in err])
+            fichier.close()
+            self.Close()
+            count = nbr_etapes
+            dlg.Update(count, message)
+            dlg.Destroy()
+#            wx.CallAfter(self.fiche.Show)
+#            wx.CallAfter(self.fiche.Redessiner)
+            return
         
-        message += u"Ordonnancement des tâches\n"
-        dlg.Update(count, message)
-        count += 1
-        self.projet.OrdonnerTaches()
+        liste_actions = [[self.classe.ConstruireArbre, [self.arbre, root], {},
+                         u"Construction de l'arborescence de la classe...\t"],
+                         [self.projet.ConstruireArbre, [self.arbre, root], {},
+                          u"Construction de l'arborescence du projet...\t"],
+                         [self.projet.OrdonnerTaches, [], {},
+                          u"Ordonnancement des tâches...\t"],
+                         [self.projet.PubDescription, [], {},
+                          u"Traitement des descriptions...\t"],
+                         [self.projet.SetLiens, [], {},
+                          u"Construction des liens...\t"],
+                         [self.projet.MiseAJourDureeEleves, [], {},
+                          u"Ajout des durées/évaluabilités dans l'arbre...\t"],
+                         [self.projet.MiseAJourNomProfs, [], {},
+                          u"Ajout des disciplines dans l'arbre...\t"],
+                         ]
         
-        message += u"Traitement des descriptions\n"
-        dlg.Update(count, message)
-        count += 1
-        self.projet.PubDescription()
-        
-        message += u"Construction des liens\n"
-        dlg.Update(count, message)
-        count += 1
-        self.projet.SetLiens()
-        
-        message += u"Ajout des durées/évaluabilités dans l'arbre\n"
-        dlg.Update(count, message)
-        count += 1
-        self.projet.MiseAJourDureeEleves()
-        
-        message += u"Ajout des disciplines dans l'arbre\n"
-        dlg.Update(count, message)
-        count += 1
-        self.projet.MiseAJourNomProfs()
+        for fct, arg, karg, msg in liste_actions:
+            message += msg
+            dlg.Update(count, message)
+            count += 1
+            try :
+                fct(*arg, **karg)
+                message += u"Ok\n"
+            except:
+                Ok = False
+                message += constantes.Erreur(constantes.ERR_INCONNUE).getMessage() + u"\n"
+            
 
         self.projet.VerrouillerClasse()
 
-        message += u"Tracé de la fiche..."
+        message += u"Tracé de la fiche...\t"
         dlg.Update(count, message)
         count += 1
 
@@ -8107,20 +8131,31 @@ class FenetreProjet(FenetreDocument):
         self.arbre.CalculatePositions()
         
         fichier.close()
-        dlg.Destroy()
-        
-        self.Thaw()
-   
         
         wx.CallAfter(self.fiche.Show)
         wx.CallAfter(self.fiche.Redessiner)
 #        if redessiner:
+#
+#        self.fiche.Show()
+#        time.sleep(1)
+#        self.fiche.Redessiner()
+#        message += u"Ok\n"
 #            
-
+#        try :
+#            self.fiche.Show()
+##            self.fiche.Redessiner()
+#            message += u"Ok\n"
+#        except:
+#            Ok = False
+#            message += constantes.Erreur(constantes.ERR_INCONNUE).getMessage() + u"\n"
+#            
+#        dlg.Update(count, message)
+        
         tps2 = time.clock() 
         print "Ouverture :", tps2 - tps1
 
-
+        if Ok:
+            dlg.Destroy()
     
 
 
@@ -8534,7 +8569,7 @@ class FicheProjet(BaseFiche):
         self.lab_legend2.SetForegroundColour(constantes.COUL_SOUT)
         
         self.popup = popup
-        self.MiseAJourTypeEnseignement(self.projet.classe.typeEnseignement)
+#        self.MiseAJourTypeEnseignement(self.projet.classe.typeEnseignement)
         
     ######################################################################################################
     def GetDoc(self):
@@ -8611,9 +8646,9 @@ class FicheProjet(BaseFiche):
 
 
     #############################################################################
-    def MiseAJourTypeEnseignement(self, type_ens):
-        print u"Sert à rien"
-        texte = u"Indicateur"
+#    def MiseAJourTypeEnseignement(self, type_ens):
+#        print u"Sert à rien", a
+#        texte = u"Indicateur"
 #        ref = self.projet.GetReferentiel()
 #        if ref.prof_Comp <= 1:
 #            texte += u"s"
@@ -9051,13 +9086,18 @@ class PanelPropriete_Projet(PanelPropriete):
         draw_cairo_prj.DrawPeriodes(ctx, self.projet.position, origine = True)
 
         bmp = wx.lib.wxcairo.BitmapFromImageSurface(imagesurface)
+        
+        # On fait une copie sinon ça s'efface ...
+        img = bmp.ConvertToImage()
+        bmp = img.ConvertToBitmap()
+
         return bmp
          
     
     #############################################################################            
     def onChanged(self, evt):
         self.projet.SetPosition(evt.EventObject.GetValue())
-        self.SetBitmapPosition()
+#        self.SetBitmapPosition()
         
         
         
@@ -9067,7 +9107,7 @@ class PanelPropriete_Projet(PanelPropriete):
         self.bmp.SetBitmap(self.getBitmapPeriode(250))
         if bougerSlider != None:
             self.position.SetValue(bougerSlider)
-        
+
         
     #############################################################################            
     def EvtVariable(self, event):
@@ -9077,7 +9117,7 @@ class PanelPropriete_Projet(PanelPropriete):
         elif var == self.annee:
             self.projet.annee = var.v[0]
             self.ctrlAnnee.unite.SetLabel(str(self.projet.annee+1)) 
-        
+        self.Refresh()
             
               
     #############################################################################            
@@ -9111,7 +9151,7 @@ class PanelPropriete_Projet(PanelPropriete):
             maj = False
             
         else:
-            nt = event.GetString()[:constantes.LONG_MAX_PROBLEMATIQUE]
+            nt = event.GetString()
             self.projet.SetProblematique(nt)
             maj = True
             
@@ -9122,6 +9162,7 @@ class PanelPropriete_Projet(PanelPropriete):
         
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
+#        print "mise à jour panel table"
         self.textctrl.ChangeValue(self.projet.intitule)
         self.commctrl.ChangeValue(self.projet.problematique)
         
@@ -9270,7 +9311,7 @@ class PanelPropriete_Classe(PanelPropriete):
         PanelPropriete.__init__(self, parent)
 #        self.BeginRepositioningChildren()
         
-        if not pourProjet:  # Séquence
+        if False:#not pourProjet:  # Séquence
             #
             # La page "Généralités"
             #
@@ -9390,7 +9431,7 @@ class PanelPropriete_Classe(PanelPropriete):
         #
         # Centres d'intérêt
         #
-        if not pourProjet:
+        if False:#not pourProjet:
             pageCI= wx.Panel(nb, -1)
             sizer = wx.BoxSizer()
             pageCI.SetSizer(sizer)
@@ -9513,25 +9554,25 @@ class PanelPropriete_Classe(PanelPropriete):
     
     
     
-    ######################################################################################  
-    def EvtCheckBox(self, event):
-        cb = event.GetEventObject()
-        numCI = cb.GetId()-100
-        posCI = cb.GetName()
-        
-        i = 'MEI_FSC'.index(posCI)
-
-        s = self.classe.posCI_ET[numCI] 
-        if not event.IsChecked():
-            t = " "
-        else:
-            t = posCI
-        s = s[:i]+t+s[i+1:]    
-
-        self.classe.posCI_ET[numCI] = s
-
-        self.classe.doc.CI.panelPropriete.construire()
-        self.sendEvent()
+#    ######################################################################################  
+#    def EvtCheckBox(self, event):
+#        cb = event.GetEventObject()
+#        numCI = cb.GetId()-100
+#        posCI = cb.GetName()
+#        
+#        i = 'MEI_FSC'.index(posCI)
+#
+#        s = self.classe.posCI_ET[numCI] 
+#        if not event.IsChecked():
+#            t = " "
+#        else:
+#            t = posCI
+#        s = s[:i]+t+s[i+1:]    
+#
+#        self.classe.posCI_ET[numCI] = s
+#
+#        self.classe.doc.CI.panelPropriete.construire()
+#        self.sendEvent()
         
     
 #    ######################################################################################  
@@ -9770,78 +9811,78 @@ class ArbreTypeEnseignement(HTL.HyperTreeList):
           
                 
 
-class ListeCI(ULC.UltimateListCtrl):
-    def __init__(self, parent, classe):
-        
-        self.typeEnseignement = classe.typeEnseignement
-        self.classe = classe
-        self.parent = parent
-        
-        style = wx.LC_REPORT| wx.BORDER_NONE| wx.LC_VRULES| wx.LC_HRULES| ULC.ULC_HAS_VARIABLE_ROW_HEIGHT
-        if not REFERENTIELS[self.typeEnseignement].CI_cible:
-            style = style |wx.LC_NO_HEADER
-            
-        ULC.UltimateListCtrl.__init__(self,parent, -1, 
-                                        agwStyle=style)
-                
-        info = ULC.UltimateListItem()
-        info._mask = wx.LIST_MASK_TEXT | wx.LIST_MASK_FORMAT
-        info._format = wx.LIST_FORMAT_LEFT
-        info._text = u"CI"
-         
-        self.InsertColumnInfo(0, info)
-
-        info = ULC.UltimateListItem()
-        info._format = wx.LIST_FORMAT_LEFT
-        info._mask = wx.LIST_MASK_TEXT | wx.LIST_MASK_FORMAT | ULC.ULC_MASK_FONT
-        info._text = u"Intitulé"
-        
-        self.InsertColumnInfo(1, info)
-        
-        self.SetColumnWidth(0, 35)
-        self.SetColumnWidth(1, -3)
-        
-        if REFERENTIELS[self.typeEnseignement].CI_cible:
-            for i,p in enumerate(['M', 'E', 'I', 'F', 'S', 'C']):
-                info = ULC.UltimateListItem()
-                info._mask = wx.LIST_MASK_TEXT
-                info._format = wx.LIST_FORMAT_CENTER
-                info._text = p
-                
-                self.InsertColumnInfo(i+2, info)
-                self.SetColumnWidth(i+2, 20)
-        
-        self.Peupler()
-                
-    ######################################################################################  
-    def Peupler(self):
-#        print "PeuplerListe"
-        # Peuplement de la liste
-        self.DeleteAllItems()
-        l = self.classe.CI
-        
-#        if self.typeEnseignement != "SSI":
-#            l = self.classe.ci_ET
-#        else:
-#            l = self.classe.ci_SSI
-            
-        for i,ci in enumerate(l):
-            index = self.InsertStringItem(sys.maxint, "CI"+str(i+1))
-            self.SetStringItem(index, 1, ci)
-           
-            if REFERENTIELS[self.typeEnseignement].CI_cible:
-                for j,p in enumerate(['M', 'E', 'I', 'F', 'S', 'C']):
-                    item = self.GetItem(i, j+2)
-                    cb = wx.CheckBox(self, 100+i, u"", name = p)
-                    cb.SetValue(p in self.classe.posCI[i])
-                    self.Bind(wx.EVT_CHECKBOX, self.EvtCheckBox, cb)
-                    item.SetWindow(cb)
-                    self.SetItem(item)
-        self.Update()
-        
-    ######################################################################################  
-    def EvtCheckBox(self, event):
-        self.parent.EvtCheckBox(event)
+#class ListeCI(ULC.UltimateListCtrl):
+#    def __init__(self, parent, classe):
+#        
+#        self.typeEnseignement = classe.typeEnseignement
+#        self.classe = classe
+#        self.parent = parent
+#        
+#        style = wx.LC_REPORT| wx.BORDER_NONE| wx.LC_VRULES| wx.LC_HRULES| ULC.ULC_HAS_VARIABLE_ROW_HEIGHT
+#        if not REFERENTIELS[self.typeEnseignement].CI_cible:
+#            style = style |wx.LC_NO_HEADER
+#            
+#        ULC.UltimateListCtrl.__init__(self,parent, -1, 
+#                                        agwStyle=style)
+#                
+#        info = ULC.UltimateListItem()
+#        info._mask = wx.LIST_MASK_TEXT | wx.LIST_MASK_FORMAT
+#        info._format = wx.LIST_FORMAT_LEFT
+#        info._text = u"CI"
+#         
+#        self.InsertColumnInfo(0, info)
+#
+#        info = ULC.UltimateListItem()
+#        info._format = wx.LIST_FORMAT_LEFT
+#        info._mask = wx.LIST_MASK_TEXT | wx.LIST_MASK_FORMAT | ULC.ULC_MASK_FONT
+#        info._text = u"Intitulé"
+#        
+#        self.InsertColumnInfo(1, info)
+#        
+#        self.SetColumnWidth(0, 35)
+#        self.SetColumnWidth(1, -3)
+#        
+#        if REFERENTIELS[self.typeEnseignement].CI_cible:
+#            for i,p in enumerate(['M', 'E', 'I', 'F', 'S', 'C']):
+#                info = ULC.UltimateListItem()
+#                info._mask = wx.LIST_MASK_TEXT
+#                info._format = wx.LIST_FORMAT_CENTER
+#                info._text = p
+#                
+#                self.InsertColumnInfo(i+2, info)
+#                self.SetColumnWidth(i+2, 20)
+#        
+#        self.Peupler()
+#                
+#    ######################################################################################  
+#    def Peupler(self):
+##        print "PeuplerListe"
+#        # Peuplement de la liste
+#        self.DeleteAllItems()
+#        l = self.classe.CI
+#        
+##        if self.typeEnseignement != "SSI":
+##            l = self.classe.ci_ET
+##        else:
+##            l = self.classe.ci_SSI
+#            
+#        for i,ci in enumerate(l):
+#            index = self.InsertStringItem(sys.maxint, "CI"+str(i+1))
+#            self.SetStringItem(index, 1, ci)
+#           
+#            if REFERENTIELS[self.typeEnseignement].CI_cible:
+#                for j,p in enumerate(['M', 'E', 'I', 'F', 'S', 'C']):
+#                    item = self.GetItem(i, j+2)
+#                    cb = wx.CheckBox(self, 100+i, u"", name = p)
+#                    cb.SetValue(p in self.classe.posCI[i])
+#                    self.Bind(wx.EVT_CHECKBOX, self.EvtCheckBox, cb)
+#                    item.SetWindow(cb)
+#                    self.SetItem(item)
+#        self.Update()
+#        
+#    ######################################################################################  
+#    def EvtCheckBox(self, event):
+#        self.parent.EvtCheckBox(event)
     
 ####################################################################################
 #
@@ -15318,6 +15359,11 @@ class MessageAideCI(GMD.GenericMessageDialog):
                                   u"du même domaine (MEI) que le premier\n"\
                                   u"ou bien un des CI en orbite.")
 #        self.SetHelpBitmap(help)
+        
+        
+
+        
+    
         
         
 #############################################################################################################

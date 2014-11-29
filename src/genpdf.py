@@ -26,7 +26,8 @@
 #    along with pySequence; if not, write to the Free Software
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import constantes
+from  constantes import ellipsizer, getAnneeScolaireStr, TIP_PROBLEMATIQUE, TIP_CONTRAINTES, TIP_PRODUCTION, \
+                        LONG_MAX_PROBLEMATIQUE, ADOBE_VERSION
 import os.path
 #from textwrap import wrap
 #import csv
@@ -179,7 +180,7 @@ def genererFicheValidation(nomFichier, projet):
             
         NP.append(Paragraph(np, normal_style))
         
-    data= [[[Paragraph(gras(u'Établissement : '), normal_style), Paragraph(projet.classe.etablissement, normal_style)], [Paragraph(gras(u"Année scolaire : ")+constantes.getAnneeScolaireStr(), normal_style),
+    data= [[[Paragraph(gras(u'Établissement : '), normal_style), Paragraph(projet.classe.etablissement, normal_style)], [Paragraph(gras(u"Année scolaire : ")+getAnneeScolaireStr(), normal_style),
                                                                                                                          Paragraph(gras(u"Nombre d’élèves concernés : ")+str(len(projet.eleves)), normal_style)]],
            [Paragraph(gras(u"Spécialité : ")+ projet.GetReferentiel().Enseignement[0], normal_style), Paragraph(gras(u"Nombre de groupes d’élèves : ")+str(projet.nbrParties), normal_style)],
            [Paragraph(gras(u"Noms et prénoms des enseignants responsables :"), normal_style),NP]]
@@ -213,20 +214,20 @@ def genererFicheValidation(nomFichier, projet):
     # Deuxième zone
     #
     ppb = [Paragraph(gras(u'Problématique - Énoncé général du besoin'),normal_style)]
-    for l in constantes.TIP_PROBLEMATIQUE.split("\n"):
+    for l in TIP_PROBLEMATIQUE.split("\n"):
         ppb.append(Paragraph(l, entete_style))
 
     pco = [Paragraph(gras(u'Contraintes imposées au projet'),normal_style)]
-    for l in constantes.TIP_CONTRAINTES.split("\n"):
+    for l in TIP_CONTRAINTES.split("\n"):
         pco.append(Paragraph(l, entete_style))
         
     ppr = [Paragraph(gras(u'Production finale attendue'),normal_style)]
-    for l in constantes.TIP_PRODUCTION.split("\n"):
+    for l in TIP_PRODUCTION.split("\n"):
         ppr.append(Paragraph(l, entete_style))
         
     data= [[Paragraph(gras(u'Intitulé du projet'),normal_style),                splitParagraph(projet.intitule, normal_style)],
            [Paragraph(gras(u'Origine de la proposition'),normal_style),         splitParagraph(projet.origine, normal_style)],
-           [ppb,                                                                splitParagraph(projet.problematique, normal_style)],
+           [ppb,                                                                splitParagraph(ellipsizer(projet.problematique, LONG_MAX_PROBLEMATIQUE), normal_style)],
            [pco,                                                                splitParagraph(projet.contraintes, normal_style)],
            [Paragraph(gras(u'Intitulé des parties du projet confiées à chaque groupe'),normal_style),               splitParagraph(projet.intituleParties, normal_style)],
            [Paragraph(gras(u'Énoncé du besoin pour la partie du projet confiée à chaque groupe'),normal_style),     splitParagraph(projet.besoinParties, normal_style)],
@@ -320,11 +321,11 @@ class PdfPanel(wx.Panel):
         wx.Panel.__init__(self, parent, id=-1)
         self.pdf = None
         sizer = wx.BoxSizer(wx.VERTICAL)
-        if constantes.ADOBE_VERSION == None:
+        if ADOBE_VERSION == None:
             self.pdf = wx.StaticText(self, -1, u"Cette fonctionnalité n'est disponible qu'avec Adobe Acrobat Reader\n"\
                                                    u"Pour obtenir le dossier de validation, passer par le menu Fichier/Générer le dossier de validation.")
         else:
-            if constantes.ADOBE_VERSION[:3] == (11, 0, 7) or constantes.ADOBE_VERSION[:3] == (11, 0, 8):
+            if ADOBE_VERSION[:3] == (11, 0, 7) or ADOBE_VERSION[:3] == (11, 0, 8):
                 self.pdf = wx.StaticText(self, -1, u"Cette fonctionnalité n'est pas compatible Adobe Acrobat Reader version 11.0.07 !!\n\n"\
                                                    u"Pour visualiser le dossier de validation :\n"\
                                                    u" - Passer à la version 10.0.09 - si disponible (http://get.adobe.com/fr/reader)\n" \
