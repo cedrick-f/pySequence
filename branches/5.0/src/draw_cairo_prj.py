@@ -409,7 +409,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
     prj.pt_caract.append(curve_rect_titre(ctx, u"Problématique",  rectPro, BcoulPro, IcoulPro, fontPro))
     ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                        cairo.FONT_WEIGHT_NORMAL)
-    show_text_rect(ctx, prj.problematique, 
+    show_text_rect(ctx, constantes.ellipsizer(prj.problematique, constantes.LONG_MAX_PROBLEMATIQUE), 
                    rectPro, ha = 'g', b = 0.2,
                    fontsizeMinMax = (-1, 0.016))
     prj.rect.append(rectPro)

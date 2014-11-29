@@ -68,6 +68,7 @@ class Referentiel():
     def __repr__(self):
         print "*********************"
         print self.Code, self.projet
+        print "positions_CI", self.positions_CI
 #        print "CI_BO :", self.CI_BO
 #        print "CI  :", self.CentresInterets
 #        print "Sav :", self.dicSavoirs
@@ -174,6 +175,14 @@ class Referentiel():
         self.listPhasesEval_prj = []
         self.listPhases_prj = []
         self.posRevues = {2 : [], 3 : []}
+        
+        
+        #
+        # Bulletins Officiels
+        #
+        self.BO_dossier = u""
+        self.BO_URL = u""
+        
         
         #
         # tableau de synthèse
@@ -520,6 +529,7 @@ class Referentiel():
         self.Enseignement[1] = sh_g.cell(6,1).value #Nom complet    
         self.Enseignement[2] = sh_g.cell(6,2).value #Famille
 
+
         #
         # options
         #
@@ -542,7 +552,15 @@ class Referentiel():
         self.projet = sh_g.cell(23,1).value[0].upper() == "O"
         if self.projet:
             self.duree_prj = int(sh_g.cell(24,1).value)
-             
+            
+        #
+        # Bulletins Officiels
+        #
+        if sh_g.nrows > 27:
+            self.BO_dossier = sh_g.cell(28,0).value
+            self.BO_URL = sh_g.cell(28,1).value
+        
+        
         #
         # CI
         #
@@ -592,73 +610,7 @@ class Referentiel():
 #        self.aColNon = {'R' : False,  'S' : False}
         self.dicCompetences = getArbre(sh_va, range(1, sh_va.nrows), 0, prems = True, debug = False)
 #        print "_aColNon", self.Code, ":", self._aColNon
-
-        
-#        #
-#        # dicIndicateurs_prj
-#        #     
-##        if self.projet:
-#        sh_va = wb.sheet_by_name(u"Indicateurs_PRJ")     
-#        lig = [l  for l in range(1, sh_va.nrows) if sh_va.cell(l,1).value != u""]
-#        llig = lig + [sh_va.nrows]
-#        dic = {}
-#        for i, p in enumerate(lig):
-#            dic[str(sh_va.cell(p,1).value)] = [[sh_va.cell(l,2).value, sh_va.cell(l,4).value == "R"] for l in range(p, llig[i+1]) if sh_va.cell(l,2).value != u""]
-#        self.dicIndicateurs_prj =  dic
-#        print "dicIndicateurs_prj 1 =", dic
-#        self.dicIndicateurs_prj = remplir(sh_va, 0, range(1, sh_va.nrows), mode = 2)
-#        print "dicIndicateurs_prj 2 =", self.dicIndicateurs_prj
-#        
-#        #
-#        # dicPoidsIndicateurs_prj & dicLignesIndicateurs_prj
-#        #
-##        if self.projet:
-#        sh_va = wb.sheet_by_name(u"Indicateurs_PRJ")     
-#        lig = [l  for l in range(1, sh_va.nrows) if sh_va.cell(l,0).value != u""]
-#        llig = lig + [sh_va.nrows]
-#        for i, p in enumerate(lig):
-#            lig2 = [l for l in range(p, llig[i+1]) if sh_va.cell(l,1).value != u""]
-#            comp = str(sh_va.cell(p,0).value)
-#            poids = sh_va.cell(p,5).value
-#            self.dicPoidsIndicateurs_prj[comp] = [poids, {}]
-##            if sh_va.ncols > 5:
-##                self.dicLignesIndicateurs_prj[comp] = [sh_va.cell(p,5).value, {}]
-#            
-#            llig2 = lig2 + [llig[i+1]]
-#            
-#            total = 0
-#            for ii, l in enumerate(lig2):
-#                indic = str(sh_va.cell(l,1).value)
-#                spoids = [sh_va.cell(pp,5).value for pp in range(l, llig2[ii+1])]
-#                total += sum(spoids)
-#                self.dicPoidsIndicateurs_prj[comp][1][indic] = spoids
-#                if sh_va.ncols > 6:
-#                    self.dicLignesIndicateurs_prj[indic] = [int(sh_va.cell(pp,6).value) for pp in range(l, llig2[ii+1])]
-#        
-#            for indic, poids in self.dicPoidsIndicateurs_prj[comp][1].items():
-#                spoids = [round(100*p/total, 1) for p in poids]
-#                self.dicPoidsIndicateurs_prj[comp][1][indic] = spoids
-                
-        
-        
-#        sh_g = wb.sheet_by_name(u"Grille_PRJ")
-#        self.feuilleNON = sh_g.cell(14,2).value
-#        if self.feuilleNON != '':
-#            self.colonneNON = int(sh_g.cell(15,2).value)
-        
-#        self.dicLignesIndicateurs_prj = aplatir2(self.dicLignesIndicateurs_prj)
-
-        
-#        #
-#        # Compétences pour projet
-#        #
-##        if self.projet:
-#        sh_va = wb.sheet_by_name(u"Compétences")     
-#        self.dicCompetences_prj = remplir(sh_va, 0, range(1, sh_va.nrows), mode = 2, condition = "P")
-#        for c in self.dicCompetences_prj.keys():
-#            if not c in self.dicPoidsIndicateurs_prj.keys():
-#                del self.dicCompetences_prj[c]
-            
+         
             
         #
         # Pratique pédagogiques
@@ -752,6 +704,11 @@ class Referentiel():
                             self.posRevues[2].append(shp.cell(l,0).value)
                         if shp.cell(l,6).value != "":
                             self.posRevues[3].append(shp.cell(l,0).value)
+                            
+                            
+                            
+        
+        
         
     ###########################################################
     def getDernierNiveauArbre(self, dic):
