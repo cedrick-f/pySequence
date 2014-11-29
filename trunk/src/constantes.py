@@ -177,21 +177,41 @@ ERR_PRJ_ELEVES = 4
 ERR_PRJ_TACHES = 8
 ERR_PRJ_T_VERSION = 16
 ERR_PRJ_T_TYPENS = 32
+ERR_PRJ_C_TYPENS = 64 # Code du référentiel non trouvé
+
+ERR_INCONNUE = 65536
 
 ERREURS = {ERR_PRJ_EQUIPE :     u"Equipe pédagogique",
            ERR_PRJ_SUPPORT :    u"Support",
            ERR_PRJ_ELEVES :     u"Eleve",
            ERR_PRJ_TACHES :     u"Tâche :",
            ERR_PRJ_T_VERSION :  u"Problème de version",
-           ERR_PRJ_T_TYPENS :   u"Type d'enseignement incompatible"
+           ERR_PRJ_T_TYPENS :   u"Type d'enseignement incompatible",
+           ERR_PRJ_C_TYPENS :   u"Référentiel %s non trouvé !",
+           ERR_INCONNUE     :   u"?? Erreur inconnue !"
            }
 
-def getOkErr(Ok):
-    if Ok:
-        return u"Ok"
-    else:
-        return u"Erreur"
 
+#############################################################################################################
+class Erreur():
+    def __init__(self, num = 0, info = None):
+        self.num = num
+        self.info = info
+    
+    def getOkErr(self):
+        if self.num == 0:
+            return u"Ok"
+        else:
+            return u"Erreur"
+
+
+    def getMessage(self):
+        if self.info != None:
+            return ERREURS[self.num] %self.info
+        else:
+            return ERREURS[self.num]
+        
+    
 ####################################################################################
 #
 #   Quelques fonctions ...
@@ -231,6 +251,13 @@ def indent(elem, level=0):
             elem.tail = i
             
             
+def ellipsizer(txt, lg):
+    t = txt[:lg]
+    if len(t) < len(txt):
+        t += u"..."
+    return t
+
+
 ####################################################################################
 #
 #   Quelques caractères spéciaux ...
