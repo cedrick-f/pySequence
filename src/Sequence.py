@@ -40,7 +40,7 @@ Copyright (C) 2011-2014
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "5.3"
+__version__ = "5.4"
 print __version__
 
 #from threading import Thread
@@ -1495,14 +1495,15 @@ class Sequence(BaseDoc):
     ######################################################################################  
     def SelectSystemes(self, event = None):
         if recup_excel.ouvrirFichierExcel():
-            dlg = wx.MessageDialog(self.app, u"Sélectionner une liste de systèmes\n" \
-                                             u"dans le classeur Excel qui vient de s'ouvrir,\n" \
-                                             u"puis appuyer sur Ok.\n\n" \
+            dlg = wx.MessageDialog(self.app, u"Sélection de systèmes depuis Excel\n\n" \
+                                             u"Excel doit à présent être lancé.\n" \
+                                             u"\t- selectionner les cellules contenant les informations,\n" \
+                                             u"\t- puis appuyer sur Ok.\n\n" \
                                              u"Format attendu de la selection :\n" \
-                                             u"|    colonne 1\t|    colonne 2 \t|    colonne 3  \t|\n" \
-                                             u"|                  \t|    (optionnelle)  \t|    (optionnelle)   \t|\n" \
-                                             u"|  systèmes  \t|  nombre dispo\t| fichiers image\t|\n" \
-                                             u"|  ...               \t|  ...                \t|  ...               \t|\n",
+                                             u"|    colonne 1    |    colonne 2      |    colonne 3    |\n" \
+                                             u"|                         | (optionnelle)    | (optionnelle) |\n" \
+                                             u"|    systèmes     |   nombre dispo | fichiers image|\n" \
+                                             u"|   ...                   |   ...                      |   ...                    |\n",
                                              u'Sélection de systèmes',
                                              wx.ICON_INFORMATION | wx.YES_NO | wx.CANCEL
                                              )
@@ -1510,7 +1511,8 @@ class Sequence(BaseDoc):
             dlg.Destroy() 
             if res == wx.ID_YES:
                 ls = recup_excel.getSelectionExcel()
-                self.AjouterListeSystemes(ls)
+                if ls != None:
+                    self.AjouterListeSystemes(ls)
 
         
     ######################################################################################  
@@ -1756,6 +1758,7 @@ class Sequence(BaseDoc):
         self.prerequis.MiseAJourTypeEnseignement()
         for s in self.seance:
             s.MiseAJourTypeEnseignement()
+        self.panelPropriete.MiseAJour()
         
         
     #############################################################################
@@ -6494,14 +6497,17 @@ class PanelConteneur(wx.Panel):
     
     
     def AfficherPanel(self, panel):
+#        print "afficher", panel
         if self.panel != None:
             self.bsizer.Detach(self.panel)
             self.panel.Hide()
+        
         self.panel = panel
         self.bsizer.Add(self.panel, 1, flag = wx.EXPAND|wx.GROW)
         self.panel.Show()
         self.bsizer.Layout()
-        self.Refresh()
+#        self.panel.Refresh()
+#        self.Refresh()
 
 
 ####################################################################################
@@ -7040,16 +7046,6 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             child = FenetreSequence(self, ouverture)
         elif ext == 'prj':
             child = FenetreProjet(self)
-#        else:
-#            dlg = DialogChoixDoc(self)
-#            val = dlg.ShowModal()
-#            if val == 1:
-#                child = FenetreSequence(self, ouverture)  
-#            elif val == 2:
-#                child = FenetreProjet(self)
-#            else:
-#                child = None
-#            dlg.Destroy()
         
         self.OnDocChanged(None)
         if child != None:
@@ -7202,6 +7198,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                 self.Bind(wx.EVT_TOOL, doc.projet.AjouterEleve, id=50)
                 self.Bind(wx.EVT_TOOL, doc.projet.AjouterProf, id=51)
                 self.Bind(wx.EVT_TOOL, doc.AjouterTache, id=52)
+                
             elif doc.typ == "seq":
                 self.ajouterOutilsSequence()
                 self.Bind(wx.EVT_TOOL, doc.sequence.AjouterSeance, id=60)
@@ -7414,19 +7411,17 @@ class FenetreDocument(aui.AuiMDIChildFrame):
 
         self.mgr.Update()
 
-        self.Bind(EVT_DOC_MODIFIED, self.OnDocModified)
-        self.Bind(wx.EVT_CLOSE, self.quitter)
-        
         self.definirNomFichierCourant('')
     
         sizer = wx.BoxSizer()
         sizer.Add(self.pnl, 1, wx.EXPAND)
         self.SetSizer(sizer)
         
-#        wx.CallAfter(self.Layout)
-        self.Layout()
-
-         
+        wx.CallAfter(self.Layout)
+        
+        self.Bind(EVT_DOC_MODIFIED, self.OnDocModified)
+        self.Bind(wx.EVT_CLOSE, self.quitter)
+        
 
     #############################################################################
     def fermer(self):
@@ -7720,6 +7715,12 @@ class FenetreSequence(FenetreDocument):
         self.pageDetails = RapportRTF(self.nb, rt.RE_READONLY)
         self.nb.AddPage(self.pageDetails, u"Détails des séances")
         
+        #
+        # Bulletins Officiels
+        #
+        self.pageBO = Panel_BO(self.nb)
+        self.nb.AddPage(self.pageBO, u"Bulletins Officiels")
+        
         self.nb.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
         
         self.miseEnPlace()
@@ -7730,7 +7731,9 @@ class FenetreSequence(FenetreDocument):
         event.Skip()
         if new == 1: # On vient de cliquer sur la page "détails"
             self.pageDetails.Remplir(self.fichierCourant, self.sequence, self.typ)
-     
+        
+        elif new == 2: # On vient de cliquer sur la page "Bulletins Officiels"
+            self.pageBO.Construire(REFERENTIELS[self.sequence.classe.typeEnseignement])
             
     ###############################################################################################
     def OnDocModified(self, event):
@@ -7845,6 +7848,7 @@ class FenetreSequence(FenetreDocument):
 class FenetreProjet(FenetreDocument):
     def __init__(self, parent):
         self.typ = 'prj'
+        
         FenetreDocument.__init__(self, parent)
         
         self.Freeze()
@@ -7896,14 +7900,11 @@ class FenetreProjet(FenetreDocument):
         self.pageBO = Panel_BO(self.nb)
         self.nb.AddPage(self.pageBO, u"Bulletins Officiels")
         
-        
-        self.nb.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
-        
-        
         self.miseEnPlace()
         
-        self.Thaw()
-   
+        wx.CallAfter(self.Thaw)
+        self.nb.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
+        
     
     ###############################################################################################
     def AjouterTache(self, event = None):
@@ -8753,7 +8754,6 @@ class PanelPropriete_Racine(wx.Panel):
         self.rtc = rt.RichTextCtrl(self, style=rt.RE_READONLY|wx.NO_BORDER)#
         wx.CallAfter(self.rtc.SetFocus)
         
-        
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(self.rtc, 1,flag = wx.EXPAND)
         self.SetSizer(sizer)
@@ -8806,7 +8806,7 @@ class PanelPropriete_Sequence(PanelPropriete):
         titre = wx.StaticBox(self, -1, u"Position")
         sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
         self.bmp = wx.StaticBitmap(self, -1, self.getBitmapPeriode(250))
-        position = wx.Slider(self, -1, self.sequence.position, 0, 7, (30, 60), (250, -1), 
+        position = wx.Slider(self, -1, self.sequence.position, 0, self.sequence.GetReferentiel().getNbrPeriodes()-1, (30, 60), (250, -1), 
             wx.SL_HORIZONTAL | wx.SL_AUTOTICKS |wx.SL_TOP 
             )
         sb.Add(self.bmp)
@@ -8828,9 +8828,17 @@ class PanelPropriete_Sequence(PanelPropriete):
         imagesurface = cairo.ImageSurface(cairo.FORMAT_ARGB32,  larg, int(h/w*larg))#cairo.FORMAT_ARGB32,cairo.FORMAT_RGB24
         ctx = cairo.Context(imagesurface)
         ctx.scale(larg/w, larg/w) 
-        draw_cairo_seq.DrawPeriodes(ctx, self.sequence.position, origine = True)
+        draw_cairo_seq.DrawPeriodes(ctx, self.sequence.position,
+                                    self.sequence.GetReferentiel().getNiveau(),
+                                    self.sequence.GetReferentiel().getNbrPeriodes(),
+                                    origine = True)
 
         bmp = wx.lib.wxcairo.BitmapFromImageSurface(imagesurface)
+        
+        # On fait une copie sinon ça s'efface ...
+        img = bmp.ConvertToImage()
+        bmp = img.ConvertToBitmap()
+        
         return bmp
          
     
@@ -8859,7 +8867,11 @@ class PanelPropriete_Sequence(PanelPropriete):
         
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
+#        print "Miseàjour"
         self.textctrl.ChangeValue(self.sequence.intitule)
+        
+        self.position.SetMax(self.sequence.GetReferentiel().getNbrPeriodes()-1)
+        self.sequence.position = min(self.sequence.position, self.sequence.GetReferentiel().getNbrPeriodes()-1)
         self.position.SetValue(self.sequence.position)
         self.bmp.SetBitmap(self.getBitmapPeriode(250))
         self.Layout()
@@ -9083,7 +9095,8 @@ class PanelPropriete_Projet(PanelPropriete):
         imagesurface = cairo.ImageSurface(cairo.FORMAT_ARGB32,  larg, int(h/w*larg))#cairo.FORMAT_ARGB32,cairo.FORMAT_RGB24
         ctx = cairo.Context(imagesurface)
         ctx.scale(larg/w, larg/w) 
-        draw_cairo_prj.DrawPeriodes(ctx, self.projet.position, origine = True)
+        draw_cairo_prj.DrawPeriodes(ctx, self.projet.position, 
+                                    self.projet.GetReferentiel().getNiveau() ,origine = True)
 
         bmp = wx.lib.wxcairo.BitmapFromImageSurface(imagesurface)
         
@@ -9311,27 +9324,27 @@ class PanelPropriete_Classe(PanelPropriete):
         PanelPropriete.__init__(self, parent)
 #        self.BeginRepositioningChildren()
         
-        if False:#not pourProjet:  # Séquence
-            #
-            # La page "Généralités"
-            #
-            nb = wx.Notebook(self, -1,  style= wx.BK_DEFAULT)
-            pageGen = PanelPropriete(nb)
-            bg_color = self.Parent.GetBackgroundColour()
-            pageGen.SetBackgroundColour(bg_color)
-            self.pageGen = pageGen
-            
-            nb.AddPage(pageGen, u"Propriétés générales")
-            
-            self.sizer.Add(nb, (0,1), (2,1), flag = wx.ALL|wx.ALIGN_RIGHT|wx.EXPAND, border = 1)
-            self.nb = nb
-            
-        else:               # Projet
-            #
-            # Pas de NoteBook
-            #
-            pageGen = self
-            self.pageGen = pageGen
+#        if False:#not pourProjet:  # Séquence
+#            #
+#            # La page "Généralités"
+#            #
+#            nb = wx.Notebook(self, -1,  style= wx.BK_DEFAULT)
+#            pageGen = PanelPropriete(nb)
+#            bg_color = self.Parent.GetBackgroundColour()
+#            pageGen.SetBackgroundColour(bg_color)
+#            self.pageGen = pageGen
+#            
+#            nb.AddPage(pageGen, u"Propriétés générales")
+#            
+#            self.sizer.Add(nb, (0,1), (2,1), flag = wx.ALL|wx.ALIGN_RIGHT|wx.EXPAND, border = 1)
+#            self.nb = nb
+#            
+#        else:               # Projet
+#            #
+#            # Pas de NoteBook
+#            #
+#        pageGen = self
+#        self.pageGen = pageGen
         
         self.classe = classe
         self.pasVerrouille = True
@@ -9354,9 +9367,9 @@ class PanelPropriete_Classe(PanelPropriete):
         # Type d'enseignement
         #
         self.pourProjet = pourProjet
-        titre = wx.StaticBox(pageGen, -1, u"Type d'enseignement")
+        titre = wx.StaticBox(self, -1, u"Type d'enseignement")
         sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
-        te = ArbreTypeEnseignement(pageGen, self)
+        te = ArbreTypeEnseignement(self, self)
 
         sb.Add(te, 1, flag = wx.EXPAND)
 #        l = []
@@ -9370,20 +9383,20 @@ class PanelPropriete_Classe(PanelPropriete):
 #        rb.SetToolTip(wx.ToolTip(u"Choisir le type d'enseignement"))
 #        for i, e in enumerate(REFERENTIELS.keys()):
 #            rb.SetItemToolTip(i, REFERENTIELS[e].Enseignement[1])
-        pageGen.Bind(wx.EVT_RADIOBUTTON, self.EvtRadioBox, te)
+        self.Bind(wx.EVT_RADIOBUTTON, self.EvtRadioBox, te)
  
         te.SetStringSelection(REFERENTIELS[constantes.TYPE_ENSEIGNEMENT_DEFAUT].Enseignement[0])
 
-        pageGen.sizer.Add(sb, (0,1), (2,1), flag = wx.EXPAND|wx.ALL, border = 2)#
+        self.sizer.Add(sb, (0,1), (2,1), flag = wx.EXPAND|wx.ALL, border = 2)#
         self.cb_type = te
 
         #
         # Etablissement
         #
-        titre = wx.StaticBox(pageGen, -1, u"Etablissement")
+        titre = wx.StaticBox(self, -1, u"Etablissement")
         sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
 
-        self.cb = wx.ComboBox(pageGen, -1, "sélectionner un établissement ...", (-1,-1), 
+        self.cb = wx.ComboBox(self, -1, "sélectionner un établissement ...", (-1,-1), 
                          (-1, -1), constantes.ETABLISSEMENTS_PDD + [u"autre ..."],
                          wx.CB_DROPDOWN
                          |wx.CB_READONLY
@@ -9394,74 +9407,76 @@ class PanelPropriete_Classe(PanelPropriete):
         self.Bind(wx.EVT_COMBOBOX, self.EvtComboEtab, self.cb)
         sb.Add(self.cb, flag = wx.EXPAND)
 
-        textctrl = wx.TextCtrl(pageGen, -1, u"", style=wx.TE_MULTILINE)
-        pageGen.Bind(wx.EVT_TEXT, self.EvtText, textctrl)
+        textctrl = wx.TextCtrl(self, -1, u"", style=wx.TE_MULTILINE)
+        self.Bind(wx.EVT_TEXT, self.EvtText, textctrl)
 #        textctrl.SetMinSize((-1, 150))
         sb.Add(textctrl, 1, flag = wx.EXPAND)
         self.textctrl = textctrl
         
-        self.info = wx.StaticText(pageGen, -1, u"""Inscrire le nom de l'établissement dans le champ ci-dessus...
-        ou bien modifier le fichier "etablissements.txt" pour le faire apparaitre dans la liste.""")
+        self.info = wx.StaticText(self, -1, u"""Inscrire le nom de l'établissement dans le champ ci-dessus...
+        ou bien modifier le fichier "etablissements.txt"\n        pour le faire apparaitre dans la liste.""")
         self.info.SetFont(wx.Font(8, wx.SWISS, wx.FONTSTYLE_ITALIC, wx.NORMAL))
         sb.Add(self.info, 0, flag = wx.EXPAND|wx.ALL, border = 5)
 
-        pageGen.sizer.Add(sb, (0,2), (1,1), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.ALL|wx.EXPAND, border = 2)
+        self.sizer.Add(sb, (0,2), (1,1), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.ALL|wx.EXPAND, border = 2)
         
         #
         # Accès au BO
         #
 #        bo = wx.Button(pageGen, -1, u"Accéder au BO en ligne")
-        self.bo = hl.HyperLinkCtrl(pageGen, wx.ID_ANY, u"Accéder au BO en ligne",
+        self.bo = hl.HyperLinkCtrl(self, wx.ID_ANY, u"Accéder au BO en ligne",
                                    URL=REFERENTIELS[classe.typeEnseignement].BO_URL)
-        pageGen.sizer.Add(self.bo, (1,2), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.ALL|wx.EXPAND, border = 2)
-        self.Bind(wx.EVT_BUTTON, self.OnClickBO, self.bo)
+        self.sizer.Add(self.bo, (1,2), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.ALL|wx.EXPAND, border = 2)
+#        self.Bind(wx.EVT_BUTTON, self.OnClickBO, self.bo)
         
         self.bo.Show(REFERENTIELS[self.classe.typeEnseignement].BO_URL != u"")
         
         #
         # Effectifs
         #
-        self.ec = PanelEffectifsClasse(pageGen, classe)
-        pageGen.sizer.Add(self.ec, (0,3), (2,1), flag = wx.ALL|wx.EXPAND, border = 2)#|wx.ALIGN_RIGHT
+        self.ec = PanelEffectifsClasse(self, classe)
+        self.sizer.Add(self.ec, (0,3), (2,1), flag = wx.ALL|wx.EXPAND, border = 2)#|wx.ALIGN_RIGHT
 
-        pageGen.sizer.AddGrowableRow(0)
-        pageGen.sizer.AddGrowableCol(2)
+        self.sizer.AddGrowableRow(0)
+        self.sizer.AddGrowableCol(2)
 #        pageGen.sizer.Layout()
 
-        #
-        # Centres d'intérêt
-        #
-        if False:#not pourProjet:
-            pageCI= wx.Panel(nb, -1)
-            sizer = wx.BoxSizer()
-            pageCI.SetSizer(sizer)
-
-            self.pageCI = pageCI
-            self.nb.AddPage(pageCI, u"")
-
-#            wx.CallAfter(self.InitListe)
-#            wx.CallAfter(self.MiseAJourToolbar)
-            
-#            if not ouverture:
-#                self.InitListe()
-#                self.MiseAJourToolbar()
-            
-            self.leftDown = False
-            
-            self.sizer.AddGrowableRow(0)
-            self.sizer.AddGrowableCol(1)
+#        #
+#        # Centres d'intérêt
+#        #
+#        if False:#not pourProjet:
+#            pageCI= wx.Panel(nb, -1)
+#            sizer = wx.BoxSizer()
+#            pageCI.SetSizer(sizer)
+#
+#            self.pageCI = pageCI
+#            self.nb.AddPage(pageCI, u"")
+#
+##            wx.CallAfter(self.InitListe)
+##            wx.CallAfter(self.MiseAJourToolbar)
+#            
+##            if not ouverture:
+##                self.InitListe()
+##                self.MiseAJourToolbar()
+#            
+#            self.leftDown = False
+#            
+#            self.sizer.AddGrowableRow(0)
+#            self.sizer.AddGrowableCol(1)
         
 #        self.EndRepositioningChildren()
     
-        pageGen.Bind(wx.EVT_SIZE, self.OnResize)
-#        wx.CallAfter(self.OnResize)
+        self.Bind(wx.EVT_SIZE, self.OnResize)
+#        wx.CallAfter(self.cb_type.CollapseAll)
+#        wx.CallAfter(self.Thaw)
         
         
     ######################################################################################              
     def OnResize(self, evt = None):
-#        print "Resize ArbreTypeEnseignement", self.cb_type.GetVirtualSize()
-        self.cb_type.SetMinSize(self.cb_type.GetVirtualSize())
-        self.pageGen.sizer.Layout()
+#        print "Resize ArbreTypeEnseignement", self.GetClientSize()
+        self.cb_type.SetMinSize((-1, self.GetClientSize()[1]-30))
+        self.cb_type.Layout()
+        self.sizer.Layout()
         if evt:
             evt.Skip()
     
@@ -9515,6 +9530,7 @@ class PanelPropriete_Classe(PanelPropriete):
     def AfficherAutre(self, montrer):
         self.textctrl.Show(montrer)
         self.info.Show(montrer)
+        self.sizer.Layout()
              
     ######################################################################################  
     def EvtRadioBox(self, event):
@@ -9539,18 +9555,18 @@ class PanelPropriete_Classe(PanelPropriete):
 #        if hasattr(self, 'list'):
 #            self.list.Peupler()
 
-
-        URL = REFERENTIELS[self.classe.typeEnseignement].BO_URL
-        self.bo.SetURL(URL)
-        self.bo.Show(URL!= u"")
-        self.bo.ToolTip.SetTip(URL)
+        self.SetLienBO()
+        
         self.Refresh()
         
         self.sendEvent()
         
     ######################################################################################  
-    def OnClickBO(self, event):
-        pass
+    def SetLienBO(self):
+        URL = REFERENTIELS[self.classe.typeEnseignement].BO_URL
+        self.bo.SetURL(URL)
+        self.bo.Show(URL!= u"")
+        self.bo.ToolTip.SetTip(URL)
     
     
     
@@ -9651,6 +9667,8 @@ class PanelPropriete_Classe(PanelPropriete):
             self.textctrl.ChangeValue(self.classe.etablissement)
             self.AfficherAutre(True)
             self.cb.SetSelection(len(constantes.ETABLISSEMENTS_PDD))
+        
+        self.SetLienBO()
         
 #        if hasattr(self, 'list'):
 #            self.list.Peupler()
@@ -9753,7 +9771,8 @@ class ArbreTypeEnseignement(HTL.HyperTreeList):
         HTL.HyperTreeList.__init__(self, parent, -1, pos, size, style, 
                                    agwStyle = CT.TR_HIDE_ROOT|HTL.TR_NO_HEADER|\
                                   CT.TR_ALIGN_WINDOWS|CT.TR_AUTO_CHECK_CHILD|\
-                                  CT.TR_AUTO_CHECK_PARENT|CT.TR_AUTO_TOGGLE_CHILD)
+                                  CT.TR_AUTO_CHECK_PARENT|CT.TR_AUTO_TOGGLE_CHILD|\
+                                  CT.TR_HAS_VARIABLE_ROW_HEIGHT)
         self.Unbind(wx.EVT_KEY_DOWN)
         self.panelParent = panelParent
 #        self.SetBackgroundColour(wx.WHITE)
@@ -9764,6 +9783,8 @@ class ArbreTypeEnseignement(HTL.HyperTreeList):
         self.root = self.AddRoot("r")
         self.Construire(self.root)
         self.ExpandAll()
+        
+#        wx.CallAfter(self.ExpandAll)
         
 #        sizer = wx.BoxSizer()
 #        sizer.Add(self.ctc, flag = wx.EXPAND)
@@ -9782,7 +9803,9 @@ class ArbreTypeEnseignement(HTL.HyperTreeList):
     def Construire(self, racine):
         """ Construction de l'arbre
         """
+#        print "Construire ArbreTypeEnseignement"
         self.branche = []
+        self.ExpandAll()
         for t, st in ARBRE_REF.items():
             if t[0] == "_":
                 branche = self.AppendItem(racine, REFERENTIELS[st[0]].Enseignement[2])
@@ -9802,6 +9825,7 @@ class ArbreTypeEnseignement(HTL.HyperTreeList):
                 rb.SetToolTipString(REFERENTIELS[sst].Enseignement[1])
                 rb.Enable(REFERENTIELS[sst].projet or not self.panelParent.pourProjet)
                 self.branche.append(sbranche)
+#        self.Layout()
     
     ######################################################################################              
     def SetStringSelection(self, label):
@@ -12637,6 +12661,7 @@ class ArbreDoc(CT.CustomTreeCtrl):
 
     ####################################################################################
     def OnSelChanged(self, event):
+        
         self.item = event.GetItem()
         data = self.GetItemPyData(self.item)
         if data == None:
@@ -12647,13 +12672,14 @@ class ArbreDoc(CT.CustomTreeCtrl):
             else:
                 panelPropriete = data.panelPropriete
 
+        self.panelProp.AfficherPanel(panelPropriete)
+#        panelPropriete.Refresh()
+        self.parent.Refresh()
+        
         if hasattr(self.classe.doc.GetApp(), 'fiche') and self.classe.doc.centrer:
             self.classe.doc.GetApp().fiche.CentrerSur(data)
         self.classe.doc.centrer = True
         
-        self.panelProp.AfficherPanel(panelPropriete)
-        
-#        wx.CallAfter(panelPropriete.Refresh)
         event.Skip()
         
     ####################################################################################
@@ -13190,7 +13216,7 @@ class ArbreSavoirs(CT.CustomTreeCtrl):
     def OnItemCheck(self, event):
 #        print "OnItemCheck"
         item = event.GetItem()
-        code = self.GetItemText(item).split()[0]
+#        code = self.GetItemText(item).split()[0]
 
 #        if self.IsItalic(item):
 #            code = '_'+code

@@ -346,7 +346,10 @@ def Draw(ctx, seq, mouchard = False):
     posPos[0] = posPre[0] + taillePre[0] + ecartX + tailleTypeEns
     taillePos[0] =  0.72414 - posPos[0] - margeX
     ctx.set_line_width (0.0015)
-    seq.rectPos = DrawPeriodes(ctx, seq.position, tailleTypeEns = tailleTypeEns)
+    seq.rectPos = DrawPeriodes(ctx, seq.position, 
+                               seq.classe.referentiel.getNiveau(),
+                               seq.classe.referentiel.getNbrPeriodes(),
+                               tailleTypeEns = tailleTypeEns)
     seq.rect.append(posPos+taillePos)
     
     
@@ -749,7 +752,7 @@ def DrawLigneEff(ctx, x, y):
     ctx.set_dash([], 0)
 
 ######################################################################################  
-def DrawPeriodes(ctx, pos = None, tailleTypeEns = 0, origine = False):
+def DrawPeriodes(ctx, pos = None, niv = 'lyc', nbr = 10, tailleTypeEns = 0, origine = False):
     ctx.set_line_width (0.001)
     if origine:
         x = 0
@@ -774,36 +777,60 @@ def DrawPeriodes(ctx, pos = None, tailleTypeEns = 0, origine = False):
     ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                        cairo.FONT_WEIGHT_NORMAL)
     
-    pm = show_text_rect_fix(ctx, u"1", x, y, wt/2, ht*2/3, fontPos, 1)#, outPosMax = True)
- 
-    ctx.stroke ()
-    show_text_rect_fix(ctx, u"ère", pm+0.002, y, wt/2, ht/3, fontPos*0.9, 1, ha = 'g')
-    ctx.stroke ()
-    
-    pm = show_text_rect_fix(ctx, u"T", x+wt/2, y, wt/2, ht*2/3, fontPos, 1)#, outPosMax = True)
-
-    ctx.stroke ()
-    show_text_rect_fix(ctx, u"ale", pm+0.002, y, wt/2, ht/3, fontPos*0.9, 1, ha = 'g')
-    ctx.stroke ()
-    
-    dx = 0.005
-    x += dx
-    h = ht/2-2*dx
-    w = (wt - 10 * dx)/8
-    rect = []
-    for p in range(8):
-        ctx.rectangle (x, y+ht/2+dx, w, h)
-        rect.append((x, y+ht/2+dx, w, h))
-        if pos == p:
-            ctx.set_source_rgba (AcoulPos[0], AcoulPos[1], AcoulPos[2], AcoulPos[3])
-        else:
-            ctx.set_source_rgba (IcoulPos[0], IcoulPos[1], IcoulPos[2], IcoulPos[3])
-        ctx.fill_preserve ()
-        ctx.set_source_rgba (BcoulPos[0], BcoulPos[1], BcoulPos[2], BcoulPos[3])
+    if niv == 'lyc':
+        pm = show_text_rect_fix(ctx, u"1", x, y, wt/2, ht*2/3, fontPos, 1)#, outPosMax = True)
+     
         ctx.stroke ()
-        if p == 3:
-            x += dx
-        x+= dx + w
+        show_text_rect_fix(ctx, u"ère", pm+0.002, y, wt/2, ht/3, fontPos*0.9, 1, ha = 'g')
+        ctx.stroke ()
+        
+        pm = show_text_rect_fix(ctx, u"T", x+wt/2, y, wt/2, ht*2/3, fontPos, 1)#, outPosMax = True)
+    
+        ctx.stroke ()
+        show_text_rect_fix(ctx, u"ale", pm+0.002, y, wt/2, ht/3, fontPos*0.9, 1, ha = 'g')
+        ctx.stroke ()
+        
+        dx = wt/4 / (nbr+2) # Ecart entre les cases
+        x += dx
+        h = ht/2-2*dx
+        w = 3*wt/4 / nbr
+        rect = []
+        for p in range(10):
+            ctx.rectangle(x, y+ht/2+dx, w, h)
+            rect.append((x, y+ht/2+dx, w, h))
+            if pos == p:
+                ctx.set_source_rgba (AcoulPos[0], AcoulPos[1], AcoulPos[2], AcoulPos[3])
+            else:
+                ctx.set_source_rgba (IcoulPos[0], IcoulPos[1], IcoulPos[2], IcoulPos[3])
+            ctx.fill_preserve ()
+            ctx.set_source_rgba (BcoulPos[0], BcoulPos[1], BcoulPos[2], BcoulPos[3])
+            ctx.stroke ()
+            if p == nbr/2-1:
+                x += dx
+            x+= dx + w
+    
+    else:
+        dx = wt/4 / (nbr+1) # Ecart entre les cases
+        x += dx
+        h = ht/2-2*dx
+        w = 3*wt/4 / nbr
+        rect = []
+        for p in range(5):
+            pm = show_text_rect_fix(ctx, str(p+1), x, y, w, ht*2/3, fontPos, 1)#, outPosMax = True)
+            ctx.stroke ()
+        
+            ctx.rectangle (x, y+ht/2+dx, w, h)
+            rect.append((x, y+ht/2+dx, w, h))
+            if pos == p:
+                ctx.set_source_rgba (AcoulPos[0], AcoulPos[1], AcoulPos[2], AcoulPos[3])
+            else:
+                ctx.set_source_rgba (IcoulPos[0], IcoulPos[1], IcoulPos[2], IcoulPos[3])
+            ctx.fill_preserve ()
+            ctx.set_source_rgba (BcoulPos[0], BcoulPos[1], BcoulPos[2], BcoulPos[3])
+            ctx.stroke ()
+            
+            x+= dx + w
+            
     return rect
     
     

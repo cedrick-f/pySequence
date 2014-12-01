@@ -645,7 +645,9 @@ def getLstDisciplines():
 #
 #
 #
-LONG_MAX_PROBLEMATIQUE = 500
+LONG_MAX_PROBLEMATIQUE = 600 # Nombre maxi de caractères affichés sur la fiche
+LONG_MAX_FICHE_VALID = 2000  # Nombre maxi de caractères affichés dans le tableau de la fiche de validation
+LIMITE_GRAND_PETIT_CARACT = 500 # Limite en nombre de caractères pour l'utilisation d'une plus petite police
 TIP_PROBLEMATIQUE =   u"Indiquer :\n" \
                       u"- description du contexte dans lequel l’objet du projet va être intégré ;\n" \
                       u"- fonctionnalités de cet objet ;\n" \
