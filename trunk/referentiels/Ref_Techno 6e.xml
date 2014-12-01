@@ -1,4 +1,4 @@
-<Referentiel B_CI_BO="False" B_CI_cible="False" B_projet="False" I_duree_prj="0" S_BO_URL="" S_BO_dossier="" S_Code="CLG6" S_Famille="CLG" S_nomCompetences="Capacit&#233;s" S_nomSavoirs="Connaissances">
+<Referentiel B_CI_BO="False" B_CI_cible="False" B_projet="False" I_duree_prj="0" S_BO_URL="http://cache.media.eduscol.education.fr/file/special_6/53/1/Programme_technologie_33531.pdf" S_BO_dossier="Coll&#232;ge" S_Code="CLG6" S_Famille="CLG" S_nomCompetences="Capacit&#233;s" S_nomSavoirs="Connaissances">
   <l_CentresInterets S_CentresInterets00="Un objet technique, &#224; quel besoin r&#233;pond-t-il ?" S_CentresInterets01="Un objet technique, de quoi est-il constitu&#233; ?" S_CentresInterets02="Un objet technique, comment fonctionne t&#8217;il ? " S_CentresInterets03="Les objets techniques, quelles sont les diff&#233;rentes solutions pour r&#233;pondre &#224; des besoins identiques ? " S_CentresInterets04="Un objet technique, comment le r&#233;aliser ?" S_CentresInterets05="Cet objet technique, me convient-il ? " />
   <l_Enseignement S_Enseignement00="Techno 6e" S_Enseignement01="6e Technologie coll&#232;ge" S_Enseignement02="Techno Coll&#232;ge" />
   <d_aColNon B_R="True" B_S="False" />
@@ -237,7 +237,7 @@
       </d_6ROT01>
       <l_6ROT02 I_6ROT0200="0" I_6ROT0201="0" I_6ROT0202="0" />
     </l_6ROT>
-    <l_5CGI S_5CGI00="???">
+    <l_5CGI S_5CGI00="Information">
       <d_5CGI01>
         <l_CGI9 S_CGI900="Retrouver une ou plusieurs informations &#224; partir d&#8217;adresses URL donn&#233;es.">
           <l_CGI901>

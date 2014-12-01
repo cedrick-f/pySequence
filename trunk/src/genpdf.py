@@ -27,7 +27,7 @@
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 from  constantes import ellipsizer, getAnneeScolaireStr, TIP_PROBLEMATIQUE, TIP_CONTRAINTES, TIP_PRODUCTION, \
-                        LONG_MAX_PROBLEMATIQUE, ADOBE_VERSION
+                        LONG_MAX_PROBLEMATIQUE, ADOBE_VERSION, LONG_MAX_FICHE_VALID, LIMITE_GRAND_PETIT_CARACT
 import os.path
 #from textwrap import wrap
 #import csv
@@ -106,8 +106,11 @@ def genererFicheValidation(nomFichier, projet):
     normal_style = ParagraphStyle(name="NormalStyle",
                                  fontName="Helvetica",
                                  fontSize=10,
+                                 leading = 12,
                                  alignment=TA_LEFT,
                                  )
+    
+
     
     entete_style = ParagraphStyle(name="EnteteStyle",
                                  fontName="Helvetica",
@@ -131,37 +134,28 @@ def genererFicheValidation(nomFichier, projet):
     
     
     #
-    # Entête
+    # En-tête
     #
     story.append(Paragraph(u"Fiche de validation du projet",
                            title_style
-                           )
-                 )
+                           ))
     story.append(Spacer(1, 5*mm))
-    
     
     if projet.GetTypeEnseignement() == 'SSI':
-        story.append(Paragraph(u"Bulletin officiel n°39 du 23 octobre 2014",
-                               entete_style
-                               ))
-        story.append(Spacer(1, 1*mm))
-        story.append(Paragraph(u"Annexe 4 à la note de service n° 2014-131 du 9-10-2014",
-                               entete_style))
-        story.append(Spacer(1, 1*mm))
-        story.append(Paragraph(u"Baccalauréat général, série S, sciences de l'ingénieur - Épreuve orale, projet interdisciplinaire",
-                               entete_style))
+        en_tete = [u"Bulletin officiel n°39 du 23 octobre 2014",
+                   u"Annexe 4 à la note de service n° 2014-131 du 9-10-2014",
+                   u"Baccalauréat général, série S, sciences de l'ingénieur - Épreuve orale, projet interdisciplinaire"]
         
     elif projet.GetReferentiel().Famille == 'STI':
-        story.append(Paragraph(u"Bulletin officiel n°39 du 23 octobre 2014",
-                               entete_style))
+        en_tete = [u"Bulletin officiel n°39 du 23 octobre 2014",
+                   u"Annexe 9 à la note de service n° 2014-132 du 13-10-2014",
+                   u"Baccalauréat technologique, série STI2D - Épreuve de projet en enseignement spécifique à la spécialité"]
+        
+    for l in en_tete:
+        story.append(Paragraph(l, entete_style))
         story.append(Spacer(1, 1*mm))
-        story.append(Paragraph(u"Annexe 9 à la note de service n° 2014-132 du 13-10-2014",
-                               entete_style))
-        story.append(Spacer(1, 1*mm))
-        story.append(Paragraph(u"Baccalauréat technologique, série STI2D - Épreuve de projet en enseignement spécifique à la spécialité",
-                               entete_style))
     
-    story.append(Spacer(1, 5*mm))
+    story.append(Spacer(1, 4*mm))
     
     
     #
@@ -169,74 +163,82 @@ def genererFicheValidation(nomFichier, projet):
     #
     NP = []
     for p in projet.equipe:
+        np = p.GetNomPrenom()
         if p.referent:
-            np = "<strong>"+p.GetNomPrenom()+"</strong>"
-        else:
-            np = p.GetNomPrenom()
-            
+            np = gras(np)  
         if p.discipline != 'Tec':
-#            constantes.COUL_DISCIPLINES[p.discipline]
-            np = "<i>"+np+"</i>"
-            
+            np = italic(np)
         NP.append(Paragraph(np, normal_style))
         
     data= [[[Paragraph(gras(u'Établissement : '), normal_style), Paragraph(projet.classe.etablissement, normal_style)], [Paragraph(gras(u"Année scolaire : ")+getAnneeScolaireStr(), normal_style),
                                                                                                                          Paragraph(gras(u"Nombre d’élèves concernés : ")+str(len(projet.eleves)), normal_style)]],
            [Paragraph(gras(u"Spécialité : ")+ projet.GetReferentiel().Enseignement[0], normal_style), Paragraph(gras(u"Nombre de groupes d’élèves : ")+str(projet.nbrParties), normal_style)],
-           [Paragraph(gras(u"Noms et prénoms des enseignants responsables :"), normal_style),NP]]
-    t=Table(data,style=[('VALIGN',      (0,0),(-1,-1),'TOP')])
+           [Paragraph(gras(u"Noms et prénoms des enseignants responsables :"), normal_style), NP]]
+    t = Table(data, style = [('VALIGN',      (0,0),(-1,-1),'TOP')])
     
     story.append(t)
     
-    
-#    story.append(Paragraph(u"La présente fiche est établie en vue de la validation des projets au niveau académique, en début d’année de\n" \
-#                           u"classe terminale. Elle est complétée par un document précisant la répartition prévisionnelle des tâches\n" \
-#                           u"collectives, individuelles et sous-traitées, par groupe d’élèves. Les groupes sont désignés par des lettres (A, B, C,\n" \
-#                           u"etc.) et leur effectif est indiqué.\n" \
-#                           u"Le projet présenté est celui sur lequel est évalué le candidat dans le cadre de l’épreuve de projet en\n" \
-#                           u"enseignement spécifique à la spécialité. Il est prévu pour être conduit en 70 heures environ.",
-#                           normal_style
-#                           )
-#                 )
-    # A Spacer flowable is fairly obvious. It is used to ensure that an empty space
-    # of a given size is left in the frame. This spacer leaves a 25mm gap before
-    # this next paragraph.
     story.append(Spacer(1, 5*mm))
     
     styleSheet = getSampleStyleSheet()
-    
-#    P0 = Paragraph('''<b>A pa<font color=red>r</font>a<i>graph</i></b><super><font color=yellow>1</font></super>''',
-#                   styleSheet["BodyText"])
-#    P = Paragraph('''<para align=center spaceb=3>The<b>ReportLab Left<font color=red>Logo</font></b>Image</para>''',
-#                  styleSheet["BodyText"])
+
 
     #
-    # Deuxième zone
+    # Deuxième zone (tableau)
     #
+    
+    # Colonne de gauche
+    ppi = Paragraph(gras(u'Intitulé du projet'),normal_style)
+    
+    ppo = Paragraph(gras(u'Origine de la proposition'),normal_style)
+    
     ppb = [Paragraph(gras(u'Problématique - Énoncé général du besoin'),normal_style)]
-    for l in TIP_PROBLEMATIQUE.split("\n"):
-        ppb.append(Paragraph(l, entete_style))
+    ppb.append(splitParagraph(TIP_PROBLEMATIQUE, entete_style))
 
     pco = [Paragraph(gras(u'Contraintes imposées au projet'),normal_style)]
-    for l in TIP_CONTRAINTES.split("\n"):
-        pco.append(Paragraph(l, entete_style))
-        
-    ppr = [Paragraph(gras(u'Production finale attendue'),normal_style)]
-    for l in TIP_PRODUCTION.split("\n"):
-        ppr.append(Paragraph(l, entete_style))
-        
-    data= [[Paragraph(gras(u'Intitulé du projet'),normal_style),                splitParagraph(projet.intitule, normal_style)],
-           [Paragraph(gras(u'Origine de la proposition'),normal_style),         splitParagraph(projet.origine, normal_style)],
-           [ppb,                                                                splitParagraph(ellipsizer(projet.problematique, LONG_MAX_PROBLEMATIQUE), normal_style)],
-           [pco,                                                                splitParagraph(projet.contraintes, normal_style)],
-           [Paragraph(gras(u'Intitulé des parties du projet confiées à chaque groupe'),normal_style),               splitParagraph(projet.intituleParties, normal_style)],
-           [Paragraph(gras(u'Énoncé du besoin pour la partie du projet confiée à chaque groupe'),normal_style),     splitParagraph(projet.besoinParties, normal_style)],
-           [ppr,                                                                splitParagraph(projet.production,normal_style)]]
-           
-    t=Table(data,style=[('GRID',        (0,0),(-1,-1),  1,colors.black),
-                        ('VALIGN',      (0,0),(-1,-1),'TOP')])
+    pco.append(splitParagraph(TIP_CONTRAINTES, entete_style))
 
+    ppig = Paragraph(gras(u'Intitulé des parties du projet confiées à chaque groupe'),normal_style)
     
+    ppbg = Paragraph(gras(u'Énoncé du besoin pour la partie du projet confiée à chaque groupe'),normal_style)
+    
+    ppr = [Paragraph(gras(u'Production finale attendue'),normal_style)]
+    ppr.append(splitParagraph(TIP_PRODUCTION, entete_style))
+    
+    
+    # Colonne de droite
+    contenu = [projet.intitule,
+               projet.origine,
+               projet.problematique,
+               projet.contraintes,
+               projet.intituleParties,
+               projet.besoinParties,
+               projet.production]
+    p = []
+    tot = 0
+    for c in contenu:
+        t = ellipsizer(c, LONG_MAX_FICHE_VALID)
+        tot += len(t)
+        normal_style.fontSize = max(8, 11 - int(len(t)/250))
+        normal_style.leading = normal_style.fontSize * 1.2
+        p.append(splitParagraph(t, normal_style))
+        normal_style.fontSize = 10
+        normal_style.leading = 12
+    
+    larg = max(50, min(150, 190*tot/800))*mm
+    
+    data= [[ppi, p[0]],
+           [ppo, p[1]],
+           [ppb, p[2]],
+           [pco, p[3]],
+           [ppig, p[4]],
+           [ppbg, p[5]],
+           [ppr, p[6]]]
+           
+    t=Table(data, style=[('GRID',        (0,0),(-1,-1),  1,colors.black),
+                         ('VALIGN',      (0,0),(-1,-1), 'TOP')],
+            colWidths = [None, larg])
+
     story.append(t)
     
     
@@ -251,6 +253,7 @@ def genererFicheValidation(nomFichier, projet):
     data= [[V1, V2]]
     t=Table(data,style=[('VALIGN',      (0,0),(-1,-1),'TOP')])
     story.append(t)
+    
     try:
         doc.build(story)
     except doctemplate.LayoutError, err:

@@ -708,7 +708,21 @@ class Referentiel():
                             
                             
         
-        
+    ###########################################################
+    def getNiveau(self):
+        if self.Famille == 'CLG':
+            return 'clg'
+        elif self.Famille in ['STI', 'SSI']:
+            return 'lyc'
+        return 'lyc'
+
+    ###########################################################
+    def getNbrPeriodes(self):
+        if self.Famille == 'CLG':
+            return 5
+        elif self.Famille in ['STI', 'SSI']:
+            return 10
+        return 10
         
     ###########################################################
     def getDernierNiveauArbre(self, dic):
@@ -1232,9 +1246,13 @@ def chargerReferentiels():
     #
     # Construction de la structure en arbre
     #
+    
+    #  Types d'enseignement qui n'ont pas de tronc commun (parents)
     for k, r in REFERENTIELS.items():
         if r.tr_com == []:
             ARBRE_REF[k] = []
+    
+    #  Types d'enseignement qui ont un tronc commun (enfants)
     d = []
     for k, r in REFERENTIELS.items():
         if r.tr_com != []:
@@ -1261,7 +1279,8 @@ def chargerReferentiels():
                     else:
                         del ARBRE_REF[k]
                         break
-            
+        r.sort()
+        r.reverse()
 #    print ARBRE_REF
     
     
