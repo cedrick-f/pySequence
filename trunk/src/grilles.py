@@ -332,16 +332,19 @@ def modifierGrille2(doc, nomFichiers, eleve):
     wb.save()
         
     
+xlTypePDF = 0
+xlQualityStandard = 0
+xlLandscape = 1
 
 class PyExcel:
     def __init__(self,filename=None):
         self.xlApp = win32com.client.dynamic.Dispatch('Excel.Application')
         if filename:
-                self.filename = filename
-                self.xlBook = self.xlApp.Workbooks.Open(filename)
+            self.filename = filename
+            self.xlBook = self.xlApp.Workbooks.Open(filename)
         else:
-                self.xlBook = self.xlApp.Workbooks.Add()
-                self.filename=''
+            self.xlBook = self.xlApp.Workbooks.Add()
+            self.filename=''
  
     def save(self, newfilename=None):
         if newfilename:
@@ -350,6 +353,18 @@ class PyExcel:
         else:
                 self.xlBook.Save()
  
+    def save_pdf(self, nomFichier, orientation = xlLandscape):
+        ws = self.xlBook.ActiveSheet
+#        ws.PageSetup.Orientation = orientation
+        ws.ExportAsFixedFormat(Type = xlTypePDF, 
+                               Filename=nomFichier, 
+                               Quality=xlQualityStandard,
+                               IncludeDocProperties=True,
+                               IgnorePrintAreas=False,
+                               OpenAfterPublish=False)
+        
+        
+        
     def close(self):
         self.xlBook.Close(SaveChanges=0)
         del self.xlApp

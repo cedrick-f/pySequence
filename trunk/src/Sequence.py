@@ -40,7 +40,7 @@ Copyright (C) 2011-2014
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "5.5"
+__version__ = "5.6"
 print __version__
 
 #from threading import Thread
@@ -79,7 +79,7 @@ def MyExceptionHook(etype, value, trace):
     mes = u"pySéquence a rencontré une erreur et doit fermer !\n\n"\
          u"Merci de copier le message ci-dessous\n" \
          u"et de l'envoyer à l'équipe de développement :\n"\
-         u"cedrick.faury arobase ac-clermont.fr\n\n"
+         u"cedrick point faury arobase ac-clermont point fr\n\n"
     exception = mes + "".join(tmp)
     
     try:
@@ -349,6 +349,13 @@ def remplaceLF2Code(txt):
 def remplaceCode2LF(txt):
     return txt.replace("##13##", "\n")#&#13")
     
+######################################################################################  
+def getNomFichier(prefixe, intitule, extension = r""):
+    nomFichier = prefixe+"_"+intitule
+    for c in [u"\t", u"\n", "\"", "/", "\\", "?", "<", ">", "|", ":", "."]:
+        nomFichier = nomFichier.replace(c, r"_")
+    return nomFichier+extension
+        
     
 ######################################################################################  
 def forceID(xml):
@@ -1311,6 +1318,8 @@ class Sequence(BaseDoc):
             seance = Seance(self, self.panelParent)
             seance.setBranche(sce)
             self.seance.append(seance)
+        self.OrdonnerSeances()
+        
         
         if hasattr(self, 'panelPropriete'):
             self.panelPropriete.MiseAJour()
@@ -1409,8 +1418,20 @@ class Sequence(BaseDoc):
     
     ######################################################################################  
     def OrdonnerSeances(self):
+#        print "OrdonnerSeances"
+        listeTypeSeance = self.GetReferentiel().listeTypeSeance
+        dicType = {k:0 for k in listeTypeSeance}
+        dicType[''] = 0
+        RS = 0
         for i, sce in enumerate(self.seance):
             sce.ordre = i
+            if sce.typeSeance in ['R', 'S']:
+#                print sce
+                sce.ordreType = RS
+                RS += 1
+            else:
+                sce.ordreType = dicType[sce.typeSeance]
+                dicType[sce.typeSeance] += 1
             sce.OrdonnerSeances()
         
         self.SetCodes()
@@ -2743,10 +2764,11 @@ class Projet(BaseDoc, Objet_sequence):
         
     ######################################################################################  
     def getNomFichierDefaut(self, prefixe):
-        nomFichier = prefixe+"_"+self.intitule[:20]
-        for c in ["\"", "/", "\", ", "?", "<", ">", "|", ":", "."]:
-            nomFichier = nomFichier.replace(c, "_")
-        return nomFichier
+        return getNomFichier(prefixe, self.intitule[:20])
+#        nomFichier = prefixe+"_"+self.intitule[:20]
+#        for c in ["\"", "/", "\", ", "?", "<", ">", "|", ":", "."]:
+#            nomFichier = nomFichier.replace(c, "_")
+#        return nomFichier
         
     ######################################################################################  
     def HitTest(self, x, y):
@@ -3472,6 +3494,7 @@ class Seance(ElementDeSequence, Objet_sequence):
         
         # Les données sauvegardées
         self.ordre = 0
+        self.ordreType = 0
         self.duree = Variable(u"Durée", lstVal = 1.0, nomNorm = "", typ = VAR_REEL_POS, 
                               bornes = [0.25,30], modeLog = False,
                               expression = None, multiple = False)
@@ -3977,12 +4000,12 @@ class Seance(ElementDeSequence, Objet_sequence):
     ######################################################################################  
     def SetCode(self):
         self.code = self.typeSeance
-        num = str(self.ordre+1)
+        num = str(self.ordreType+1)
         
         if isinstance(self.parent, Seance):
-            num = str(self.parent.ordre+1)+"."+num
+            num = str(self.parent.ordreType+1)+"."+num
             if isinstance(self.parent.parent, Seance):
-                num = str(self.parent.parent.ordre+1)+"."+num
+                num = str(self.parent.parent.ordreType+1)+"."+num
 
         self.code += num
 
@@ -4038,13 +4061,23 @@ class Seance(ElementDeSequence, Objet_sequence):
         
     ######################################################################################  
     def OrdonnerSeances(self):
+        listeTypeSeance = self.GetReferentiel().listeTypeSeance
+        dicType = {k:0 for k in listeTypeSeance}
+        dicType[''] = 0
+        RS = 0
         if self.typeSeance in ["R", "S"] : # Séances en Rotation ou  Parallèle
             for i, sce in enumerate(self.sousSeances):
                 sce.ordre = i
+                if sce.typeSeance in ['R', 'S']:
+                    sce.ordreType = RS
+                    RS += 1
+                else:
+                    sce.ordreType = dicType[sce.typeSeance]
+                    dicType[sce.typeSeance] += 1
                 sce.OrdonnerSeances()
         
         self.SetCode()
-        
+    
             
     ######################################################################################  
     def AjouterSeance(self, event = None):
@@ -5709,10 +5742,11 @@ class Eleve(Personne, Objet_sequence):
         
     ######################################################################################  
     def getNomFichierDefaut(self, prefixe):
-        nomFichier = prefixe+"_"+self.GetNomPrenom()+"_"+self.projet.intitule[:20]
-        for c in [u"\t", u"\n", "\"", "/", "\\", "?", "<", ">", "|", ":", "."]:
-            nomFichier = nomFichier.replace(c, "_")
-        return nomFichier
+        return getNomFichier(prefixe, self.GetNomPrenom()+"_"+self.projet.intitule[:20])
+#
+#        for c in [u"\t", u"\n", "\"", "/", "\\", "?", "<", ">", "|", ":", "."]:
+#            nomFichier = nomFichier.replace(c, "_")
+#        return nomFichier
 
 
 #    ######################################################################################  
@@ -6597,6 +6631,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
         if sys.platform == "win32":
             self.Bind(wx.EVT_MENU, self.genererGrilles, id=17)
+            self.Bind(wx.EVT_MENU, self.genererGrillesPdf, id=20)
             
         self.Bind(wx.EVT_MENU, self.genererFicheValidation, id=19)
         
@@ -6924,6 +6959,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
         if sys.platform == "win32":
             file_menu.Append(17, u"&Générer les grilles d'évaluation projet\tCtrl+G")
+            file_menu.Append(20, u"&Générer les grilles d'évaluation projet en PDF\tCtrl+P")
         
         file_menu.Append(19, u"&Générer le dossier de validation projet\tAlt+V")
         
@@ -7164,6 +7200,13 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         if page != None:
             page.genererGrilles(event)
             
+            
+    #############################################################################
+    def genererGrillesPdf(self, event = None):
+        page = self.GetNotebook().GetCurrentPage()
+        if page != None:
+            page.genererGrillesPdf(event)
+            
     #############################################################################
     def genererFicheValidation(self, event = None):
         page = self.GetNotebook().GetCurrentPage()
@@ -7229,10 +7272,12 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                 self.file_menu.Enable(18, True)
                 self.file_menu.Enable(17, True)
                 self.file_menu.Enable(19, True)
+                self.file_menu.Enable(20, True)
             elif doc.typ == "seq":
                 self.file_menu.Enable(18, True)
                 self.file_menu.Enable(17, False)
                 self.file_menu.Enable(19, False)
+                self.file_menu.Enable(20, False)
                 
            
         
@@ -8235,17 +8280,98 @@ class FenetreProjet(FenetreDocument):
             
             
     #############################################################################
+    def genererGrillesPdf(self, event = None):
+        """ Génération de toutes les grilles d'évaluation an format pdf
+             - demande d'un nom de fichier -
+        """
+        mesFormats = u"PDF (.pdf)|*.pdf"
+        nomFichier = getNomFichier("Grilles", self.projet.intitule[:20], r".pdf")
+        dlg = wx.FileDialog(self, u"Enregistrer les grilles d'évaluation",
+                            defaultFile = nomFichier,
+                            wildcard = mesFormats,
+#                           defaultPath = globdef.DOSSIER_EXEMPLES,
+                            style=wx.SAVE|wx.OVERWRITE_PROMPT|wx.CHANGE_DIR
+                            #| wx.DD_DIR_MUST_EXIST
+                            #| wx.DD_CHANGE_DIR
+                            )
+
+        if dlg.ShowModal() == wx.ID_OK:
+            nomFichier = dlg.GetPath()
+            dlg.Destroy()
+            dlgb = wx.ProgressDialog   (u"Génération des grilles",
+                                        u"",
+                                        maximum = len(self.projet.eleves),
+                                        parent=self,
+                                        style = 0
+                                        | wx.PD_APP_MODAL
+                                        | wx.PD_CAN_ABORT
+                                        #| wx.PD_CAN_SKIP
+                                        #| wx.PD_ELAPSED_TIME
+    #                                    | wx.PD_ESTIMATED_TIME
+    #                                    | wx.PD_REMAINING_TIME
+                                        #| wx.PD_AUTO_HIDE
+                                        )
+
+            
+            count = 0
+            
+            nomFichiers = {}
+            for e in self.projet.eleves:
+                if len(e.grille) == 0:
+                    nomFichiers[e.id] = e.GetNomGrilles(path = os.path.split(nomFichier)[0])
+                else:
+                    for g in e.grille.values():
+                        if not os.path.exists(g.path):
+                            nomFichiers[e.id] = e.GetNomGrilles(path = os.path.split(nomFichier)[0])
+                
+            print "nomFichiers", nomFichiers
+            
+            if not self.projet.TesterExistanceGrilles(nomFichiers):
+                dlgb.Destroy()
+                return
+            
+            lst_grilles = []
+            for e in self.projet.eleves:
+                dlgb.Update(count, u"Traitement de la grille de \n\n"+e.GetNomPrenom())
+                dlgb.Refresh()
+                    
+                if e.id in nomFichiers.keys():
+                    e.GenererGrille(nomFichiers = nomFichiers[e.id], messageFin = False)
+                    
+                lst_grilles.extend([grilles.PyExcel(g.path) for g in e.grille.values() ])
+                
+                count += 1
+                dlgb.Refresh()
+           
+#            dicInfo = self.projet.GetReferentiel().cellulesInfo_prj
+#            feuilNON = dicInfo["NON"][0][1]
+            for g in lst_grilles:
+                g.setActiveSheet(g.getSheets()[-1])
+                
+            genpdf.genererGrillePDF(nomFichier, lst_grilles)
+        
+            
+            dlgb.Update(count, u"Les grilles ont été créées avec succès dans le fichier :\n\n"+nomFichier)
+            dlgb.Destroy() 
+                
+                
+        else:
+            dlg.Destroy()
+            
+            
+            
+    #############################################################################
     def genererFicheValidation(self, event = None):
 #        mesFormats = "Tableur Excel (.xls)|*.xls"
         
-        def getNomFichier(prefixe, projet):
-            nomFichier = prefixe+"_"+projet.intitule[:20]
-            for c in ["\"", "/", "\", ", "?", "<", ">", "|", ":", "."]:
-                nomFichier = nomFichier.replace(c, "_")
-            return nomFichier+".pdf"
+#        def getNomFichier(prefixe, projet):
+#            nomFichier = prefixe+"_"+projet.intitule[:20]
+#            for c in ["\"", "/", "\", ", "?", "<", ">", "|", ":", "."]:
+#                nomFichier = nomFichier.replace(c, "_")
+#            return nomFichier+".pdf"
         
         mesFormats = u"PDF (.pdf)|*.pdf"
-        nomFichier = getNomFichier("FicheValidation", self.projet)
+        nomFichier = getNomFichier("FicheValidation", self.projet.intitule[:20], r".pdf")
         dlg = wx.FileDialog(self, u"Enregistrer le dossier de validation",
                             defaultFile = nomFichier,
                             wildcard = mesFormats,
@@ -14991,7 +15117,8 @@ class Panel_BO(wx.Panel):
 #
 #################################################################################################################
 import xlwt
-from xlwt import Workbook
+from xlwt import Workbook, Font, XFStyle, Borders, Alignment, Formula, Pattern
+
 
 class FenetreBilan(wx.Frame):
     def __init__(self, parent, dossierCourant = constantes.PATH, 
@@ -15172,6 +15299,419 @@ class FenetreBilan(wx.Frame):
         wb = Workbook()
         
         #
+        # Styles
+        #    
+        
+        fnt = Font()
+        fnt.name = 'Arial'
+        fnt.colour_index = 37
+        fnt.outline = True
+        fnt.struck_out = False
+        fnt.bold = True
+        fnt.height = 36*20
+
+        borders = Borders()
+        borders.left = 1
+        borders.right = 1
+        borders.top = 1
+        borders.bottom = 1
+        
+        al = Alignment()
+        al.horz = Alignment.HORZ_CENTER
+        al.vert = Alignment.VERT_CENTER
+
+        pattern = Pattern()
+        pattern.pattern = Pattern.SOLID_PATTERN
+        pattern.pattern_fore_colour = 42
+        
+        styleT = XFStyle()
+        styleT.font = fnt
+        styleT.borders = borders
+        styleT.alignment = al
+        styleT.pattern = pattern
+        
+        ######################################################
+        
+        fnt = Font()
+        fnt.name = 'Arial'
+        fnt.colour_index = 0
+        fnt.outline = True
+        fnt.struck_out = False
+        fnt.bold = True
+        fnt.height = 16*20
+
+        borders = Borders()
+        borders.left = 1
+        borders.right = 1
+        borders.top = 1
+        borders.bottom = 1
+        
+        al = Alignment()
+        al.horz = Alignment.HORZ_LEFT
+        al.vert = Alignment.VERT_CENTER
+
+        pattern = Pattern()
+        pattern.pattern = Pattern.SOLID_PATTERN
+        pattern.pattern_fore_colour = 1
+
+        styleE = XFStyle()
+        styleE.font = fnt
+        styleE.borders = borders
+        styleE.alignment = al
+        styleE.pattern = pattern
+        
+        ######################################################
+        
+        
+        fnt = Font()
+        fnt.name = 'Arial'
+        fnt.colour_index = 0
+        fnt.outline = True
+        fnt.struck_out = False
+        fnt.bold = True
+        fnt.height = 14*20
+
+        borders = Borders()
+        borders.left = 1
+        borders.right = 0
+        borders.top = 1
+        borders.bottom = 1
+        
+        al = Alignment()
+        al.horz = Alignment.HORZ_LEFT
+        al.vert = Alignment.VERT_CENTER
+        al.wrap = False
+        
+        pattern = Pattern()
+        pattern.pattern = Pattern.SOLID_PATTERN
+        pattern.pattern_fore_colour = 43
+
+        style0 = XFStyle()
+        style0.font = fnt
+        style0.borders = borders
+        style0.alignment = al
+        style0.pattern = pattern
+        
+        ######################################################
+        fnt = Font()
+        fnt.name = 'Arial'
+        fnt.colour_index = 0
+        fnt.outline = True
+        fnt.struck_out = False
+        fnt.bold = True
+        fnt.height = 14*20
+
+        borders = Borders()
+        borders.left = 0
+        borders.right = 1
+        borders.top = 1
+        borders.bottom = 1
+        
+        al = Alignment()
+        al.horz = Alignment.HORZ_LEFT
+        al.vert = Alignment.VERT_CENTER
+        al.wrap = True
+        
+        pattern = Pattern()
+        pattern.pattern = Pattern.SOLID_PATTERN
+        pattern.pattern_fore_colour = 43
+        
+        style01 = XFStyle()
+        style01.font = fnt
+        style01.borders = borders
+        style01.alignment = al
+        style01.pattern = pattern
+    
+        ######################################################
+        fnt = Font()
+        fnt.name = 'Arial'
+        fnt.colour_index = 0
+        fnt.outline = True
+        fnt.struck_out = False
+        fnt.bold = True
+        fnt.height = 12*20
+
+        borders = Borders()
+        borders.left = 1
+        borders.right = 0
+        borders.top = 1
+        borders.bottom = 1
+        
+        al = Alignment()
+        al.horz = Alignment.HORZ_LEFT
+        al.vert = Alignment.VERT_CENTER
+        al.wrap = False
+        
+        pattern = Pattern()
+        pattern.pattern = Pattern.SOLID_PATTERN
+        pattern.pattern_fore_colour = 41
+
+        style1 = XFStyle()
+        style1.font = fnt
+        style1.borders = borders
+        style1.alignment = al
+        style1.pattern = pattern
+        
+        ######################################################
+        fnt = Font()
+        fnt.name = 'Arial'
+        fnt.colour_index = 0
+        fnt.outline = True
+        fnt.struck_out = False
+        fnt.bold = False
+        fnt.height = 12*20
+
+        borders = Borders()
+        borders.left = 0
+        borders.right = 1
+        borders.top = 1
+        borders.bottom = 1
+        
+        al = Alignment()
+        al.horz = Alignment.HORZ_LEFT
+        al.vert = Alignment.VERT_CENTER
+        
+        pattern = Pattern()
+        pattern.pattern = Pattern.SOLID_PATTERN
+        pattern.pattern_fore_colour = 41
+        al.wrap = True
+
+        style11 = XFStyle()
+        style11.font = fnt
+        style11.borders = borders
+        style11.alignment = al
+        style11.pattern = pattern
+        
+        ######################################################
+        fnt = Font()
+        fnt.name = 'Arial'
+        fnt.colour_index = 0
+        fnt.outline = True
+        fnt.struck_out = False
+        fnt.bold = True
+        fnt.height = 10*20
+
+        borders = Borders()
+        borders.left = 1
+        borders.right = 0
+        borders.top = 1
+        borders.bottom = 1
+        
+        al = Alignment()
+        al.horz = Alignment.HORZ_LEFT
+        al.vert = Alignment.VERT_CENTER
+        al.wrap = False
+        
+        pattern = Pattern()
+        pattern.pattern = Pattern.SOLID_PATTERN
+        pattern.pattern_fore_colour = 1
+
+        style2 = XFStyle()
+        style2.font = fnt
+        style2.borders = borders
+        style2.alignment = al
+        style2.pattern = pattern
+        
+        ######################################################
+        fnt = Font()
+        fnt.name = 'Arial'
+        fnt.colour_index = 0
+        fnt.outline = True
+        fnt.struck_out = False
+        fnt.bold = False
+        fnt.height = 10*20
+        
+
+        borders = Borders()
+        borders.left = 0
+        borders.right = 1
+        borders.top = 1
+        borders.bottom = 1
+        
+        al = Alignment()
+        al.horz = Alignment.HORZ_LEFT
+        al.vert = Alignment.VERT_CENTER
+        al.wrap = True
+        
+        pattern = Pattern()
+        pattern.pattern = Pattern.SOLID_PATTERN
+        pattern.pattern_fore_colour = 1
+
+        style21 = XFStyle()
+        style21.font = fnt
+        style21.borders = borders
+        style21.alignment = al
+        style21.pattern = pattern
+        
+        # Croix #####################################################
+        fnt = Font()
+        fnt.name = 'Arial'
+        fnt.colour_index = 0
+        fnt.outline = True
+        fnt.struck_out = False
+        fnt.bold = True
+        fnt.height = 12*20
+
+        borders = Borders()
+        borders.left = 1
+        borders.right = 1
+        borders.top = 1
+        borders.bottom = 1
+        
+        al = Alignment()
+        al.horz = Alignment.HORZ_CENTER
+        al.vert = Alignment.VERT_CENTER
+        
+        pattern = Pattern()
+        pattern.pattern = Pattern.SOLID_PATTERN
+        pattern.pattern_fore_colour = 47
+
+        styleX = XFStyle()
+        styleX.font = fnt
+        styleX.borders = borders
+        styleX.alignment = al
+        styleX.pattern = pattern
+        
+        # rien #####################################################
+        fnt = Font()
+        fnt.name = 'Arial'
+        fnt.colour_index = 0
+        fnt.outline = True
+        fnt.struck_out = False
+        fnt.bold = True
+        fnt.height = 12*20
+
+        borders = Borders()
+        borders.left = 1
+        borders.right = 1
+        borders.top = 1
+        borders.bottom = 1
+        
+        al = Alignment()
+        al.horz = Alignment.HORZ_CENTER
+        al.vert = Alignment.VERT_CENTER
+        
+        pattern = Pattern()
+        pattern.pattern = Pattern.SOLID_PATTERN
+        pattern.pattern_fore_colour = 1
+
+        stylenX = XFStyle()
+        stylenX.font = fnt
+        stylenX.borders = borders
+        stylenX.alignment = al
+        stylenX.pattern = pattern
+        
+        # Durée de séquence #####################################################
+        fnt = Font()
+        fnt.name = 'Arial'
+        fnt.colour_index = 0
+        fnt.outline = True
+        fnt.struck_out = False
+        fnt.bold = True
+        fnt.italic = True
+        fnt.height = 9*20
+
+        borders = Borders()
+        borders.left = 1
+        borders.right = 1
+        borders.top = 1
+        borders.bottom = 1
+        
+        al = Alignment()
+        al.horz = Alignment.HORZ_CENTER
+        al.vert = Alignment.VERT_CENTER
+        al.wrap = False
+        
+        pattern = Pattern()
+        pattern.pattern = Pattern.SOLID_PATTERN
+        pattern.pattern_fore_colour = 29
+
+        styleD = XFStyle()
+        styleD.num_format_str='hh:mm'
+        styleD.font = fnt
+        styleD.borders = borders
+        styleD.alignment = al
+        styleD.pattern = pattern
+        
+        # Numéro de séquence #####################################################
+        fnt = Font()
+        fnt.name = 'Arial'
+        fnt.colour_index = 0
+        fnt.outline = True
+        fnt.struck_out = False
+        fnt.bold = True
+        fnt.italic = False
+        fnt.height = 20*20
+
+        borders = Borders()
+        borders.left = 1
+        borders.right = 1
+        borders.top = 1
+        borders.bottom = 1
+        
+        al = Alignment()
+        al.horz = Alignment.HORZ_CENTER
+        al.vert = Alignment.VERT_CENTER
+        al.wrap = False
+        
+        pattern = Pattern()
+        pattern.pattern = Pattern.SOLID_PATTERN
+        pattern.pattern_fore_colour = 29
+
+        styleN = XFStyle()
+        styleN.font = fnt
+        styleN.borders = borders
+        styleN.alignment = al
+        styleN.pattern = pattern
+        
+        # Intitulé de séquence #####################################################
+        fnt = Font()
+        fnt.name = 'Arial'
+        fnt.colour_index = 0
+        fnt.outline = True
+        fnt.struck_out = False
+        fnt.bold = True
+        fnt.italic = False
+        fnt.height = 9*20
+
+        borders = Borders()
+        borders.left = 1
+        borders.right = 1
+        borders.top = 1
+        borders.bottom = 1
+        
+        al = Alignment()
+        al.horz = Alignment.HORZ_CENTER
+        al.vert = Alignment.VERT_CENTER
+        al.rotation = Alignment.ORIENTATION_STACKED
+        al.wrap = True
+        
+        pattern = Pattern()
+        pattern.pattern = Pattern.SOLID_PATTERN
+        pattern.pattern_fore_colour = 29
+
+        styleS = XFStyle()
+        styleS.num_format_str='hh:mm'
+        styleS.font = fnt
+        styleS.borders = borders
+        styleS.alignment = al
+        styleS.pattern = pattern
+        
+        ######################################################
+        
+        f = Font()
+        f.height = 20*6
+        f.name = 'Verdana'
+        f.bold = False
+        f.underline = Font.UNDERLINE_SINGLE
+        f.colour_index = 4
+        
+        h_style = XFStyle()
+        h_style.font = f
+        
+        
+        
+        #
         # On trie les séquences par année
         #
         listePrem = []
@@ -15191,81 +15731,115 @@ class FenetreBilan(wx.Frame):
             l = 6
             c = 0
             for c0, v0 in sorted(dic):
-                ws0.write(l, c, c0)
-                ws0.write(l, c+1, v0[0])
+                ws0.write(l, c, c0, style0)                                     # Code
+                ws0.write_merge(l, l, c+1, c+3, v0[0], style01)                   # Intitulé
                 dicLigne[c0] = [l]
                 l += 1
                 if type(v0[1]) == dict:
                     for c1, v1 in sorted(v0[1].items()):
-                        ws0.write(l, c+1, c1)
+                        ws0.write(l, c+1, c1, style1)                           # Code
                         dicLigne[c1] = [l]
+                        ws0.write_merge(l, l, c+2, c+3, v1[0], style11)           # Intitulé
                         if type(v1[1]) == dict:
-                            ws0.write(l, c+2, v1[0])
-                            l += 1
                             for c2, v2 in sorted(v1[1].items()):
-                                ws0.write(l, c+2, c2)
-                                dicLigne[c2] = [l]
-                                ws0.write(l, c+3, v2[0])
                                 l += 1
-                        else:
-                            ws0.write(l, c+2, v1[0])
-                            l += 1
-            return dicLigne
-                    
+                                ws0.write(l, c+2, c2, style2)                   # Code
+                                dicLigne[c2] = [l]
+                                ws0.write_merge(l, l, c+3, c+3, v2[0], style21)   # Intitulé
+#                                l += 1
+                        l += 1
+            return dicLigne, l
+
                     
         #
         # Feuille Savoirs
         #        
         ws0 = wb.add_sheet(self.referentiel.nomSavoirs)
         
-        ws0.write(1, 1, self.referentiel.Enseignement[0])
-        ws0.write(5, 0, self.referentiel.nomSavoirs)
-        dicLigne = traiter(self.referentiel.dicSavoirs.items())
+        ws0.write_merge(1, 3, 1, 3, self.referentiel.Enseignement[0], styleT)
+        ws0.write_merge(5, 5, 0, 3, self.referentiel.nomSavoirs, styleE)
+        dicLigne, last = traiter(self.referentiel.dicSavoirs.items())
       
         #
         # On met les croix
         #
         c = 5
-        l = 6
+        l = 5
+        n = "HYPERLINK"
         for i, seq in enumerate(listePrem + listeTerm):
-            ws0.write(l-4, c, i+1)
-            ws0.write(l-3, c, seq.intitule)
-            ws0.write(l-2, c, str(seq.GetDuree()))
-            ws0.write(l-1, c, seq.nomFichier)
-            for sav in seq.obj["C"].competences:
-                if sav[1:] in dicLigne.keys():
-                    if sav[0] == 'B':
-                        for li in dicLigne[sav[1:]]:
-                            ws0.write(li, c, "X")
+            ws0.write(l-4, c, i+1, styleN)                          # Numéro de séquence
+            ws0.write(l-3, c, seq.intitule, styleS)                 # Intitulé
+            ws0.write(l-2, c, str(seq.GetDuree()), styleD)          # Durée
+            ws0.write(l-1, c, Formula(n + '("%s";"%s")' %(seq.nomFichier,seq.nomFichier)), h_style)           # Fichier
+            
+            for sav in seq.obj["S"].savoirs:
+                if sav[1:] in dicLigne.keys() and sav[0] == 'B':
+                    for li in dicLigne[sav[1:]]:
+                        ws0.write(li, c, "X", styleX)       # X
+            
+            for li in range(l+1, last):
+                try:
+                    ws0.write(li, c, "", stylenX)
+                except:
+                    pass
             c += 1
             
-            
+        #
+        # Largeur des colonnes
+        #
+        ws0.col(0).width = 100*20
+        ws0.col(1).width = 100*20
+        ws0.col(2).width = 100*20
+        ws0.col(3).width = 1000*20
+        ws0.col(4).width = 50*20
+        for cc in range(5, c):
+            ws0.col(cc).width = 80*20
+        
         #
         # Feuille Compétences
         #        
         ws0 = wb.add_sheet(self.referentiel.nomCompetences)
         
-        ws0.write(1, 1, self.referentiel.Enseignement[0])
-        ws0.write(5, 0, self.referentiel.nomCompetences)
-        dicLigne = traiter(self.referentiel.dicCompetences.items())
+        ws0.write_merge(1, 3, 1, 3, self.referentiel.Enseignement[0], styleT)
+        ws0.write_merge(5, 5, 0, 3, self.referentiel.nomCompetences, styleE)
+        dicLigne, last = traiter(self.referentiel.dicCompetences.items())
       
         #
         # On met les croix
         #
         c = 5
-        l = 6
+        l = 5
         for i, seq in enumerate(listePrem + listeTerm):
-            ws0.write(l-4, c, i+1)
-            ws0.write(l-3, c, seq.intitule)
-            ws0.write(l-2, c, str(seq.GetDuree()))
-            ws0.write(l-1, c, seq.nomFichier)
-            for sav in seq.obj["S"].savoirs:
-                if sav[1:] in dicLigne.keys():
-                    if sav[0] == 'B':
-                        for li in dicLigne[sav[1:]]:
-                            ws0.write(li, c, "X")
+            ws0.write(l-4, c, i+1, styleN)                          # Numéro de séquence
+            ws0.write(l-3, c, seq.intitule, styleS)                 # Intitulé
+            ws0.write(l-2, c, str(seq.GetDuree()), styleD)          # Durée
+            ws0.write(l-1, c, Formula(n + '("%s";"%s")' %(seq.nomFichier,seq.nomFichier)), h_style)           # Fichier
+            
+            for sav in seq.obj["C"].competences:
+                if sav in dicLigne.keys():
+                    for li in dicLigne[sav]:
+                        ws0.write(li, c, "X", styleX)
+            for li in range(l+1, last):
+                try:
+                    ws0.write(li, c, "", stylenX)
+                except:
+                    pass
             c += 1
-
+            
+        #
+        # Largeur des colonnes
+        #
+        ws0.col(0).width = 100*20
+        ws0.col(1).width = 100*20
+        ws0.col(2).width = 100*20
+        ws0.col(3).width = 1000*20
+        ws0.col(4).width = 50*20
+        for cc in range(5, c):
+            ws0.col(cc).width = 80*20
+        
+        #
+        # Sauvegarde
+        #
         wb.save(nomFichier)
         
         return True
