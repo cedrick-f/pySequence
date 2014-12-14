@@ -904,7 +904,7 @@ class Cadre():
             show_text_rect(self.ctx, self.seance.code, (x, y, wEff["P"], hc), ha = 'g', 
                            wrap = False, fontsizeMinMax = (minFont, -1), b = 0.2)
         
-        if self.seance.intituleDansDeroul and self.seance.intitule != "":#not self.filigrane and 
+        if self.seance.intituleDansDeroul and self.seance.intitule != "" and self.h-hc > 0:#not self.filigrane and 
             self.ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
                                   cairo.FONT_WEIGHT_NORMAL)
             self.ctx.set_source_rgba (0,0,0, alpha)
@@ -987,14 +987,16 @@ def DrawSeanceRacine(ctx, seance):
     ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                               cairo.FONT_WEIGHT_BOLD)
     
-    if h-e/2 < e:
+    he = min(e/2, h/3)
+    
+    if h-he < e:
         o = 'h'
     else:
         o = 'v'
     show_text_rect(ctx, getHoraireTxt(seance.GetDuree()), 
-                   (posZDeroul[0]-0.01, cursY, 0.02, h-e/2), 
+                   (posZDeroul[0]-0.01, cursY, e, h-he), 
                    orient = o, b = 0.2)
-        
+
     #
     # Fonction pour obtenir les lignes de séances du bloc
     #

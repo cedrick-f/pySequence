@@ -67,7 +67,7 @@ from reportlab.pdfbase import _fontdata_enc_pdfdoc
 from reportlab.pdfbase import _fontdata_enc_macexpert
 # end of workaround
 
-
+from widgets import messageErreur
 import time
 
 #
@@ -298,6 +298,47 @@ def genererDossierValidation(nomFichier, projet, fenDoc):
     wx.EndBusyCursor()
     return True
 
+
+
+def genererGrillePDF(nomFichier, grilles):
+    
+    wx.BeginBusyCursor()
+    dosstemp = tempfile.mkdtemp()
+    merger = PdfFileMerger()
+    
+    Ok = True
+    for i, grille in enumerate(grilles):
+        nomGrille = r"grille"+str(i)+r".pdf"
+        fichertempV = os.path.join(dosstemp, nomGrille)
+        
+        try:
+            grille.save_pdf(fichertempV)
+            grille.close()
+        except:
+            Ok = False
+            print "Erreur save_pdf 1"
+        try:
+            f = open(fichertempV, "rb")
+            merger.append(f)
+            f.close()
+        except:
+            Ok = False
+            print "Erreur save_pdf 2"  
+        
+        
+    if not Ok:
+        shutil.rmtree(dosstemp)
+        wx.EndBusyCursor()
+        messageErreur(self, u"Erreur !",
+                            u"Impossible de générer le fichier PDF des grilles")
+        return False
+    
+    output = open(nomFichier, "wb")
+    merger.write(output)
+
+    shutil.rmtree(dosstemp)
+    wx.EndBusyCursor()
+    return True
     # read PDF files (.pdf) with wxPython
     # using wx.lib.pdfwin.PDFWindow class ActiveX control
     # from wxPython's new wx.activex module, this allows one
