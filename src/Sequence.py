@@ -40,7 +40,7 @@ Copyright (C) 2011-2014
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "5.3"
+__version__ = "5.7"
 print __version__
 
 #from threading import Thread
@@ -79,7 +79,7 @@ def MyExceptionHook(etype, value, trace):
     mes = u"pySéquence a rencontré une erreur et doit fermer !\n\n"\
          u"Merci de copier le message ci-dessous\n" \
          u"et de l'envoyer à l'équipe de développement :\n"\
-         u"cedrick.faury arobase ac-clermont.fr\n\n"
+         u"cedrick point faury arobase ac-clermont point fr\n\n"
     exception = mes + "".join(tmp)
     
     try:
@@ -145,7 +145,7 @@ import  wx.lib.scrolledpanel as scrolled
 import wx.combo
 import wx.lib.platebtn as platebtn
 #import  wx.lib.buttons  as  buttons
-from wx.lib.agw import ultimatelistctrl as ULC
+
 import wx.lib.colourdb
 #import  wx.lib.fancytext as fancytext
 import  wx.lib.mixins.listctrl  as  listmix
@@ -349,6 +349,13 @@ def remplaceLF2Code(txt):
 def remplaceCode2LF(txt):
     return txt.replace("##13##", "\n")#&#13")
     
+######################################################################################  
+def getNomFichier(prefixe, intitule, extension = r""):
+    nomFichier = prefixe+"_"+intitule
+    for c in [u"\t", u"\n", "\"", "/", "\\", "?", "<", ">", "|", ":", "."]:
+        nomFichier = nomFichier.replace(c, r"_")
+    return nomFichier+extension
+        
     
 ######################################################################################  
 def forceID(xml):
@@ -1311,6 +1318,8 @@ class Sequence(BaseDoc):
             seance = Seance(self, self.panelParent)
             seance.setBranche(sce)
             self.seance.append(seance)
+        self.OrdonnerSeances()
+        
         
         if hasattr(self, 'panelPropriete'):
             self.panelPropriete.MiseAJour()
@@ -1409,8 +1418,20 @@ class Sequence(BaseDoc):
     
     ######################################################################################  
     def OrdonnerSeances(self):
+#        print "OrdonnerSeances"
+        listeTypeSeance = self.GetReferentiel().listeTypeSeance
+        dicType = {k:0 for k in listeTypeSeance}
+        dicType[''] = 0
+        RS = 0
         for i, sce in enumerate(self.seance):
             sce.ordre = i
+            if sce.typeSeance in ['R', 'S']:
+#                print sce
+                sce.ordreType = RS
+                RS += 1
+            else:
+                sce.ordreType = dicType[sce.typeSeance]
+                dicType[sce.typeSeance] += 1
             sce.OrdonnerSeances()
         
         self.SetCodes()
@@ -1468,19 +1489,22 @@ class Sequence(BaseDoc):
     
     ######################################################################################  
     def AjouterListeSystemes(self, propr = []):
+#        print "AjouterListeSystemes séquence"
         nouvListe = []
         for p in propr:
-            sy = Systeme(self, self.panelParent)
+            nom = unicode(p[0])
+            sy = Systeme(self, self.panelParent, nom = nom)
             self.systemes.append(sy)
-            nouvListe.append(sy.nom)
+            nouvListe.append(nom)
             sy.ConstruireArbre(self.arbre, self.brancheSys)
-            self.arbre.Expand(self.brancheSys)
-            sy.SetNom(unicode(p[0]))
+            sy.SetCode()
             if len(p) > 1:
                 sy.nbrDispo.v[0] = eval(p[1])
             sy.panelPropriete.MiseAJour()
-        self.panelPropriete.sendEvent()
+        
+        self.arbre.Expand(self.brancheSys)
         self.AjouterListeSystemesSeance(nouvListe)
+        self.panelPropriete.sendEvent()
         return
     
     ######################################################################################  
@@ -1495,14 +1519,15 @@ class Sequence(BaseDoc):
     ######################################################################################  
     def SelectSystemes(self, event = None):
         if recup_excel.ouvrirFichierExcel():
-            dlg = wx.MessageDialog(self.app, u"Sélectionner une liste de systèmes\n" \
-                                             u"dans le classeur Excel qui vient de s'ouvrir,\n" \
-                                             u"puis appuyer sur Ok.\n\n" \
+            dlg = wx.MessageDialog(self.app, u"Sélection de systèmes depuis Excel\n\n" \
+                                             u"Excel doit à présent être lancé.\n" \
+                                             u"\t- selectionner les cellules contenant les informations,\n" \
+                                             u"\t- puis appuyer sur Ok.\n\n" \
                                              u"Format attendu de la selection :\n" \
-                                             u"|    colonne 1\t|    colonne 2 \t|    colonne 3  \t|\n" \
-                                             u"|                  \t|    (optionnelle)  \t|    (optionnelle)   \t|\n" \
-                                             u"|  systèmes  \t|  nombre dispo\t| fichiers image\t|\n" \
-                                             u"|  ...               \t|  ...                \t|  ...               \t|\n",
+                                             u"|    colonne 1    |    colonne 2      |    colonne 3    |\n" \
+                                             u"|                         | (optionnelle)    | (optionnelle) |\n" \
+                                             u"|    systèmes     |   nombre dispo | fichiers image|\n" \
+                                             u"|   ...                   |   ...                      |   ...                    |\n",
                                              u'Sélection de systèmes',
                                              wx.ICON_INFORMATION | wx.YES_NO | wx.CANCEL
                                              )
@@ -1510,7 +1535,8 @@ class Sequence(BaseDoc):
             dlg.Destroy() 
             if res == wx.ID_YES:
                 ls = recup_excel.getSelectionExcel()
-                self.AjouterListeSystemes(ls)
+                if ls != None:
+                    self.AjouterListeSystemes(ls)
 
         
     ######################################################################################  
@@ -1756,6 +1782,7 @@ class Sequence(BaseDoc):
         self.prerequis.MiseAJourTypeEnseignement()
         for s in self.seance:
             s.MiseAJourTypeEnseignement()
+        self.panelPropriete.MiseAJour()
         
         
     #############################################################################
@@ -2135,7 +2162,7 @@ class Projet(BaseDoc, Objet_sequence):
             for t in self.taches:
                 if t.phase in ["R1", "R2", "R3", "S"]:
                     lst.append(t.branche)
-            for a in lst:
+            for a in reversed(lst):
                 self.SupprimerTache(item = a)
         
         self.position = pos
@@ -2701,6 +2728,7 @@ class Projet(BaseDoc, Objet_sequence):
 #        lst = list(constantes.PHASE_TACHE[self.GetTypeEnseignement(simple = True)][:-1])
         lst = [k for k in self.GetReferentiel().listPhases_prj if not k in self.GetReferentiel().listPhasesEval_prj]
 #        lst = list(self.GetReferentiel().listPhases_prj)
+#        print "  ", self.classe.GetReferentiel()
 #        print "  ", lst
 #        print "  ", self.nbrRevues
         if self.nbrRevues == 2:
@@ -2708,10 +2736,8 @@ class Projet(BaseDoc, Objet_sequence):
         else:
             lr = [3,2,1]
         for r in lr:
-#            print "     ", self.positionRevues[r-1]
+#            print "     ", lr,  self.positionRevues[r-1]
             lst.insert(lst.index(self.positionRevues[r-1])+1, "R"+str(r))
-        
-        
         return lst
         
 #        # Ancienne version (marche pas avec les Rev)
@@ -2738,10 +2764,11 @@ class Projet(BaseDoc, Objet_sequence):
         
     ######################################################################################  
     def getNomFichierDefaut(self, prefixe):
-        nomFichier = prefixe+"_"+self.intitule[:20]
-        for c in ["\"", "/", "\", ", "?", "<", ">", "|", ":", "."]:
-            nomFichier = nomFichier.replace(c, "_")
-        return nomFichier
+        return getNomFichier(prefixe, self.intitule[:20])
+#        nomFichier = prefixe+"_"+self.intitule[:20]
+#        for c in ["\"", "/", "\", ", "?", "<", ">", "|", ":", "."]:
+#            nomFichier = nomFichier.replace(c, "_")
+#        return nomFichier
         
     ######################################################################################  
     def HitTest(self, x, y):
@@ -2868,7 +2895,7 @@ class Projet(BaseDoc, Objet_sequence):
 
     
     #############################################################################
-    def SetCompetencesRevuesSoutenance(self):
+    def SetCompetencesRevuesSoutenance(self, miseAJourPanel = True):
         """ Attribue à la soutenance et à la revue n°2 (ou n°3 si 3 revues)
             les compétences et indicateurs 
             mobilisés par les tâches précédentes
@@ -2925,8 +2952,9 @@ class Projet(BaseDoc, Objet_sequence):
                                 if i in t.indicateursMaxiEleve[neleve]:
                                     ti.append(i)
                             t.indicateursEleve[neleve] = ti
-                            t.panelPropriete.arbre.MiseAJourTypeEnseignement(t.GetReferentiel())
-                            t.panelPropriete.MiseAJour()
+                            if miseAJourPanel:
+                                t.panelPropriete.arbre.MiseAJourTypeEnseignement(t.GetReferentiel())
+                                t.panelPropriete.MiseAJour()
                             if t.phase == "R1":
                                 tR1 = t # la revue 1 est passée !
                             elif t.phase == "R2":
@@ -3466,6 +3494,7 @@ class Seance(ElementDeSequence, Objet_sequence):
         
         # Les données sauvegardées
         self.ordre = 0
+        self.ordreType = 0
         self.duree = Variable(u"Durée", lstVal = 1.0, nomNorm = "", typ = VAR_REEL_POS, 
                               bornes = [0.25,30], modeLog = False,
                               expression = None, multiple = False)
@@ -3609,6 +3638,17 @@ class Seance(ElementDeSequence, Objet_sequence):
                 if nom != "":
                     lstSys.append(nom)
                     lstNSys.append(eval(s.get("Nombre", "")))
+                    
+#            print "lstSys", lstSys
+            # Correction d'un bug versions <5.5
+            # "manque des systèmes dans les séances lors de l'enregistrement"
+            for s in self.GetDocument().systemes:
+#                print "nom syst :", s.nom
+                if not s.nom in lstSys:
+                    lstSys.append(s.nom)
+                    lstNSys.append(0)
+                    
+                
             self.AjouterListeSystemes(lstSys, lstNSys)
             
             # Durée
@@ -3960,12 +4000,12 @@ class Seance(ElementDeSequence, Objet_sequence):
     ######################################################################################  
     def SetCode(self):
         self.code = self.typeSeance
-        num = str(self.ordre+1)
+        num = str(self.ordreType+1)
         
         if isinstance(self.parent, Seance):
-            num = str(self.parent.ordre+1)+"."+num
+            num = str(self.parent.ordreType+1)+"."+num
             if isinstance(self.parent.parent, Seance):
-                num = str(self.parent.parent.ordre+1)+"."+num
+                num = str(self.parent.parent.ordreType+1)+"."+num
 
         self.code += num
 
@@ -4021,13 +4061,23 @@ class Seance(ElementDeSequence, Objet_sequence):
         
     ######################################################################################  
     def OrdonnerSeances(self):
+        listeTypeSeance = self.GetReferentiel().listeTypeSeance
+        dicType = {k:0 for k in listeTypeSeance}
+        dicType[''] = 0
+        RS = 0
         if self.typeSeance in ["R", "S"] : # Séances en Rotation ou  Parallèle
             for i, sce in enumerate(self.sousSeances):
                 sce.ordre = i
+                if sce.typeSeance in ['R', 'S']:
+                    sce.ordreType = RS
+                    RS += 1
+                else:
+                    sce.ordreType = dicType[sce.typeSeance]
+                    dicType[sce.typeSeance] += 1
                 sce.OrdonnerSeances()
         
         self.SetCode()
-        
+    
             
     ######################################################################################  
     def AjouterSeance(self, event = None):
@@ -4116,10 +4166,11 @@ class Seance(ElementDeSequence, Objet_sequence):
     def AjouterSysteme(self, nom = "", nombre = 0, construire = True):
         if self.typeSeance in ["AP", "ED", "P"]:
             self.systemes.append(Variable(nom, lstVal = nombre, nomNorm = "", typ = VAR_ENTIER_POS, 
-                                          bornes = [0,8], modeLog = False,
+                                          bornes = [0,9], modeLog = False,
                                           expression = None, multiple = False))
             if construire and hasattr(self, 'panelPropriete'):
                 self.panelPropriete.ConstruireListeSystemes()
+                
         elif self.typeSeance in ["R", "S"] : # Séances en Rotation ou  Parallèle
             for s in self.sousSeances:
                 s.AjouterSysteme(nom, nombre)
@@ -4127,10 +4178,12 @@ class Seance(ElementDeSequence, Objet_sequence):
     
     ######################################################################################  
     def AjouterListeSystemes(self, lstSys, lstNSys = None):
+#        print "  AjouterListeSystemes", self
         if self.typeSeance in ["AP", "ED", "P"]:
             if lstNSys == None:
                 lstNSys = [0]*len(lstSys)
             for i, s in enumerate(lstSys):
+#                print "    ", s
                 self.AjouterSysteme(s, lstNSys[i], construire = False)
             if hasattr(self, 'panelPropriete'):
                 self.panelPropriete.ConstruireListeSystemes()
@@ -4903,7 +4956,8 @@ class Tache(Objet_sequence):
                     t = self.GetReferentiel().phases_prj[self.phase][1]
             else:
                 t = u""
-            self.tip.SetTexte(t, self.tip_phase)
+            if hasattr(self, "tip_phase"):
+                self.tip.SetTexte(t, self.tip_phase)
 
 
         if not self.phase in ["R1", "R2", "R3", "S"]:
@@ -5689,10 +5743,11 @@ class Eleve(Personne, Objet_sequence):
         
     ######################################################################################  
     def getNomFichierDefaut(self, prefixe):
-        nomFichier = prefixe+"_"+self.GetNomPrenom()+"_"+self.projet.intitule[:20]
-        for c in [u"\t", u"\n", "\"", "/", "\\", "?", "<", ">", "|", ":", "."]:
-            nomFichier = nomFichier.replace(c, "_")
-        return nomFichier
+        return getNomFichier(prefixe, self.GetNomPrenom()+"_"+self.projet.intitule[:20])
+#
+#        for c in [u"\t", u"\n", "\"", "/", "\\", "?", "<", ">", "|", ":", "."]:
+#            nomFichier = nomFichier.replace(c, "_")
+#        return nomFichier
 
 
 #    ######################################################################################  
@@ -6494,14 +6549,17 @@ class PanelConteneur(wx.Panel):
     
     
     def AfficherPanel(self, panel):
+#        print "afficher", panel
         if self.panel != None:
             self.bsizer.Detach(self.panel)
             self.panel.Hide()
+        
         self.panel = panel
         self.bsizer.Add(self.panel, 1, flag = wx.EXPAND|wx.GROW)
         self.panel.Show()
         self.bsizer.Layout()
-        self.Refresh()
+#        self.panel.Refresh()
+#        self.Refresh()
 
 
 ####################################################################################
@@ -6574,6 +6632,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
         if sys.platform == "win32":
             self.Bind(wx.EVT_MENU, self.genererGrilles, id=17)
+            self.Bind(wx.EVT_MENU, self.genererGrillesPdf, id=20)
             
         self.Bind(wx.EVT_MENU, self.genererFicheValidation, id=19)
         
@@ -6624,8 +6683,11 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         # Element placé dans le "presse papier"
         self.elementCopie = None
         
+        
+        
         # Récupération de la dernière version
         wx.CallAfter(self.GetNewVersion)
+        
         
         self.Thaw()
         
@@ -6901,11 +6963,12 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
         if sys.platform == "win32":
             file_menu.Append(17, u"&Générer les grilles d'évaluation projet\tCtrl+G")
+            file_menu.Append(20, u"&Générer les grilles d'évaluation projet en PDF\tCtrl+P")
         
         file_menu.Append(19, u"&Générer le dossier de validation projet\tAlt+V")
         
         if sys.platform == "win32":
-            file_menu.Append(18, u"&Générer une Synthèse pédagogique (SSI et ETT uniquement)\tCtrl+B")
+            file_menu.Append(18, u"&Générer une Synthèse pédagogique\tCtrl+B")
         
         file_menu.AppendSeparator()
         file_menu.Append(wx.ID_EXIT, u"&Quitter\tCtrl+Q")
@@ -7040,16 +7103,6 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             child = FenetreSequence(self, ouverture)
         elif ext == 'prj':
             child = FenetreProjet(self)
-#        else:
-#            dlg = DialogChoixDoc(self)
-#            val = dlg.ShowModal()
-#            if val == 1:
-#                child = FenetreSequence(self, ouverture)  
-#            elif val == 2:
-#                child = FenetreProjet(self)
-#            else:
-#                child = None
-#            dlg.Destroy()
         
         self.OnDocChanged(None)
         if child != None:
@@ -7151,6 +7204,13 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         if page != None:
             page.genererGrilles(event)
             
+            
+    #############################################################################
+    def genererGrillesPdf(self, event = None):
+        page = self.GetNotebook().GetCurrentPage()
+        if page != None:
+            page.genererGrillesPdf(event)
+            
     #############################################################################
     def genererFicheValidation(self, event = None):
         page = self.GetNotebook().GetCurrentPage()
@@ -7159,7 +7219,16 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     
     #############################################################################
     def etablirBilan(self, event = None):
-        win = FenetreBilan(self, self.GetFenetreActive().DossierSauvegarde)
+        for w in self.GetChildren():
+            if isinstance(w, FenetreBilan):
+                w.SetFocus()
+                return
+#        if self.GetFenetreActive() != None:
+        if self.GetFenetreActive():
+            dossier = self.GetFenetreActive().DossierSauvegarde
+        else:
+            dossier = constantes.INSTALL_PATH
+        win = FenetreBilan(self, dossier)
         win.Show()
 #        win.Destroy()
         
@@ -7202,6 +7271,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                 self.Bind(wx.EVT_TOOL, doc.projet.AjouterEleve, id=50)
                 self.Bind(wx.EVT_TOOL, doc.projet.AjouterProf, id=51)
                 self.Bind(wx.EVT_TOOL, doc.AjouterTache, id=52)
+                
             elif doc.typ == "seq":
                 self.ajouterOutilsSequence()
                 self.Bind(wx.EVT_TOOL, doc.sequence.AjouterSeance, id=60)
@@ -7211,13 +7281,15 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     #                self.Bind(wx.EVT_TOOL, self.GetActiveChild().projet.AjouterTache, id=52)
     
             if doc.typ == "prj":
-                self.file_menu.Enable(18, False)
+                self.file_menu.Enable(18, True)
                 self.file_menu.Enable(17, True)
                 self.file_menu.Enable(19, True)
+                self.file_menu.Enable(20, True)
             elif doc.typ == "seq":
                 self.file_menu.Enable(18, True)
                 self.file_menu.Enable(17, False)
                 self.file_menu.Enable(19, False)
+                self.file_menu.Enable(20, False)
                 
            
         
@@ -7414,19 +7486,17 @@ class FenetreDocument(aui.AuiMDIChildFrame):
 
         self.mgr.Update()
 
-        self.Bind(EVT_DOC_MODIFIED, self.OnDocModified)
-        self.Bind(wx.EVT_CLOSE, self.quitter)
-        
         self.definirNomFichierCourant('')
     
         sizer = wx.BoxSizer()
         sizer.Add(self.pnl, 1, wx.EXPAND)
         self.SetSizer(sizer)
         
-#        wx.CallAfter(self.Layout)
-        self.Layout()
-
-         
+        wx.CallAfter(self.Layout)
+        
+        self.Bind(EVT_DOC_MODIFIED, self.OnDocModified)
+        self.Bind(wx.EVT_CLOSE, self.quitter)
+        
 
     #############################################################################
     def fermer(self):
@@ -7720,6 +7790,12 @@ class FenetreSequence(FenetreDocument):
         self.pageDetails = RapportRTF(self.nb, rt.RE_READONLY)
         self.nb.AddPage(self.pageDetails, u"Détails des séances")
         
+        #
+        # Bulletins Officiels
+        #
+        self.pageBO = Panel_BO(self.nb)
+        self.nb.AddPage(self.pageBO, u"Bulletins Officiels")
+        
         self.nb.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
         
         self.miseEnPlace()
@@ -7730,7 +7806,9 @@ class FenetreSequence(FenetreDocument):
         event.Skip()
         if new == 1: # On vient de cliquer sur la page "détails"
             self.pageDetails.Remplir(self.fichierCourant, self.sequence, self.typ)
-     
+        
+        elif new == 2: # On vient de cliquer sur la page "Bulletins Officiels"
+            self.pageBO.Construire(REFERENTIELS[self.sequence.classe.typeEnseignement])
             
     ###############################################################################################
     def OnDocModified(self, event):
@@ -7845,6 +7923,7 @@ class FenetreSequence(FenetreDocument):
 class FenetreProjet(FenetreDocument):
     def __init__(self, parent):
         self.typ = 'prj'
+        
         FenetreDocument.__init__(self, parent)
         
         self.Freeze()
@@ -7896,14 +7975,11 @@ class FenetreProjet(FenetreDocument):
         self.pageBO = Panel_BO(self.nb)
         self.nb.AddPage(self.pageBO, u"Bulletins Officiels")
         
-        
-        self.nb.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
-        
-        
         self.miseEnPlace()
         
-        self.Thaw()
-   
+        wx.CallAfter(self.Thaw)
+        self.nb.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
+        
     
     ###############################################################################################
     def AjouterTache(self, event = None):
@@ -7926,9 +8002,10 @@ class FenetreProjet(FenetreDocument):
         
     ###############################################################################################
     def OnDocModified(self, event):
+#        print "OnDocModified"
         if event.GetDocument() == self.projet:
             self.projet.VerifPb()
-            self.projet.SetCompetencesRevuesSoutenance()
+            self.projet.SetCompetencesRevuesSoutenance(miseAJourPanel = False)
             
             wx.CallAfter(self.fiche.Redessiner)
 
@@ -8036,6 +8113,7 @@ class FenetreProjet(FenetreDocument):
                 message += u"Construction de la structure du projet...\t"
                 dlg.Update(count, message)
                 count += 1
+#                print "ref :", 
                 err = self.projet.setBranche(projet)
                 if len(err) > 0 :
                     Ok = False
@@ -8214,17 +8292,98 @@ class FenetreProjet(FenetreDocument):
             
             
     #############################################################################
+    def genererGrillesPdf(self, event = None):
+        """ Génération de toutes les grilles d'évaluation an format pdf
+             - demande d'un nom de fichier -
+        """
+        mesFormats = u"PDF (.pdf)|*.pdf"
+        nomFichier = getNomFichier("Grilles", self.projet.intitule[:20], r".pdf")
+        dlg = wx.FileDialog(self, u"Enregistrer les grilles d'évaluation",
+                            defaultFile = nomFichier,
+                            wildcard = mesFormats,
+#                           defaultPath = globdef.DOSSIER_EXEMPLES,
+                            style=wx.SAVE|wx.OVERWRITE_PROMPT|wx.CHANGE_DIR
+                            #| wx.DD_DIR_MUST_EXIST
+                            #| wx.DD_CHANGE_DIR
+                            )
+
+        if dlg.ShowModal() == wx.ID_OK:
+            nomFichier = dlg.GetPath()
+            dlg.Destroy()
+            dlgb = wx.ProgressDialog   (u"Génération des grilles",
+                                        u"",
+                                        maximum = len(self.projet.eleves),
+                                        parent=self,
+                                        style = 0
+                                        | wx.PD_APP_MODAL
+                                        | wx.PD_CAN_ABORT
+                                        #| wx.PD_CAN_SKIP
+                                        #| wx.PD_ELAPSED_TIME
+    #                                    | wx.PD_ESTIMATED_TIME
+    #                                    | wx.PD_REMAINING_TIME
+                                        #| wx.PD_AUTO_HIDE
+                                        )
+
+            
+            count = 0
+            
+            nomFichiers = {}
+            for e in self.projet.eleves:
+                if len(e.grille) == 0:
+                    nomFichiers[e.id] = e.GetNomGrilles(path = os.path.split(nomFichier)[0])
+                else:
+                    for g in e.grille.values():
+                        if not os.path.exists(g.path):
+                            nomFichiers[e.id] = e.GetNomGrilles(path = os.path.split(nomFichier)[0])
+                
+            print "nomFichiers", nomFichiers
+            
+            if not self.projet.TesterExistanceGrilles(nomFichiers):
+                dlgb.Destroy()
+                return
+            
+            lst_grilles = []
+            for e in self.projet.eleves:
+                dlgb.Update(count, u"Traitement de la grille de \n\n"+e.GetNomPrenom())
+                dlgb.Refresh()
+                    
+                if e.id in nomFichiers.keys():
+                    e.GenererGrille(nomFichiers = nomFichiers[e.id], messageFin = False)
+                    
+                lst_grilles.extend([grilles.PyExcel(g.path) for g in e.grille.values() ])
+                
+                count += 1
+                dlgb.Refresh()
+           
+#            dicInfo = self.projet.GetReferentiel().cellulesInfo_prj
+#            feuilNON = dicInfo["NON"][0][1]
+            for g in lst_grilles:
+                g.setActiveSheet(g.getSheets()[-1])
+                
+            genpdf.genererGrillePDF(nomFichier, lst_grilles)
+        
+            
+            dlgb.Update(count, u"Les grilles ont été créées avec succès dans le fichier :\n\n"+nomFichier)
+            dlgb.Destroy() 
+                
+                
+        else:
+            dlg.Destroy()
+            
+            
+            
+    #############################################################################
     def genererFicheValidation(self, event = None):
 #        mesFormats = "Tableur Excel (.xls)|*.xls"
         
-        def getNomFichier(prefixe, projet):
-            nomFichier = prefixe+"_"+projet.intitule[:20]
-            for c in ["\"", "/", "\", ", "?", "<", ">", "|", ":", "."]:
-                nomFichier = nomFichier.replace(c, "_")
-            return nomFichier+".pdf"
+#        def getNomFichier(prefixe, projet):
+#            nomFichier = prefixe+"_"+projet.intitule[:20]
+#            for c in ["\"", "/", "\", ", "?", "<", ">", "|", ":", "."]:
+#                nomFichier = nomFichier.replace(c, "_")
+#            return nomFichier+".pdf"
         
         mesFormats = u"PDF (.pdf)|*.pdf"
-        nomFichier = getNomFichier("FicheValidation", self.projet)
+        nomFichier = getNomFichier("FicheValidation", self.projet.intitule[:20], r".pdf")
         dlg = wx.FileDialog(self, u"Enregistrer le dossier de validation",
                             defaultFile = nomFichier,
                             wildcard = mesFormats,
@@ -8753,7 +8912,6 @@ class PanelPropriete_Racine(wx.Panel):
         self.rtc = rt.RichTextCtrl(self, style=rt.RE_READONLY|wx.NO_BORDER)#
         wx.CallAfter(self.rtc.SetFocus)
         
-        
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(self.rtc, 1,flag = wx.EXPAND)
         self.SetSizer(sizer)
@@ -8806,7 +8964,7 @@ class PanelPropriete_Sequence(PanelPropriete):
         titre = wx.StaticBox(self, -1, u"Position")
         sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
         self.bmp = wx.StaticBitmap(self, -1, self.getBitmapPeriode(250))
-        position = wx.Slider(self, -1, self.sequence.position, 0, 7, (30, 60), (250, -1), 
+        position = wx.Slider(self, -1, self.sequence.position, 0, self.sequence.GetReferentiel().getNbrPeriodes()-1, (30, 60), (250, -1), 
             wx.SL_HORIZONTAL | wx.SL_AUTOTICKS |wx.SL_TOP 
             )
         sb.Add(self.bmp)
@@ -8828,9 +8986,17 @@ class PanelPropriete_Sequence(PanelPropriete):
         imagesurface = cairo.ImageSurface(cairo.FORMAT_ARGB32,  larg, int(h/w*larg))#cairo.FORMAT_ARGB32,cairo.FORMAT_RGB24
         ctx = cairo.Context(imagesurface)
         ctx.scale(larg/w, larg/w) 
-        draw_cairo_seq.DrawPeriodes(ctx, self.sequence.position, origine = True)
+        draw_cairo_seq.DrawPeriodes(ctx, self.sequence.position,
+                                    self.sequence.GetReferentiel().getNiveau(),
+                                    self.sequence.GetReferentiel().getNbrPeriodes(),
+                                    origine = True)
 
         bmp = wx.lib.wxcairo.BitmapFromImageSurface(imagesurface)
+        
+        # On fait une copie sinon ça s'efface ...
+        img = bmp.ConvertToImage()
+        bmp = img.ConvertToBitmap()
+        
         return bmp
          
     
@@ -8859,7 +9025,11 @@ class PanelPropriete_Sequence(PanelPropriete):
         
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
+#        print "Miseàjour"
         self.textctrl.ChangeValue(self.sequence.intitule)
+        
+        self.position.SetMax(self.sequence.GetReferentiel().getNbrPeriodes()-1)
+        self.sequence.position = min(self.sequence.position, self.sequence.GetReferentiel().getNbrPeriodes()-1)
         self.position.SetValue(self.sequence.position)
         self.bmp.SetBitmap(self.getBitmapPeriode(250))
         self.Layout()
@@ -9083,7 +9253,8 @@ class PanelPropriete_Projet(PanelPropriete):
         imagesurface = cairo.ImageSurface(cairo.FORMAT_ARGB32,  larg, int(h/w*larg))#cairo.FORMAT_ARGB32,cairo.FORMAT_RGB24
         ctx = cairo.Context(imagesurface)
         ctx.scale(larg/w, larg/w) 
-        draw_cairo_prj.DrawPeriodes(ctx, self.projet.position, origine = True)
+        draw_cairo_prj.DrawPeriodes(ctx, self.projet.position, 
+                                    self.projet.GetReferentiel().getNiveau() ,origine = True)
 
         bmp = wx.lib.wxcairo.BitmapFromImageSurface(imagesurface)
         
@@ -9311,27 +9482,27 @@ class PanelPropriete_Classe(PanelPropriete):
         PanelPropriete.__init__(self, parent)
 #        self.BeginRepositioningChildren()
         
-        if False:#not pourProjet:  # Séquence
-            #
-            # La page "Généralités"
-            #
-            nb = wx.Notebook(self, -1,  style= wx.BK_DEFAULT)
-            pageGen = PanelPropriete(nb)
-            bg_color = self.Parent.GetBackgroundColour()
-            pageGen.SetBackgroundColour(bg_color)
-            self.pageGen = pageGen
-            
-            nb.AddPage(pageGen, u"Propriétés générales")
-            
-            self.sizer.Add(nb, (0,1), (2,1), flag = wx.ALL|wx.ALIGN_RIGHT|wx.EXPAND, border = 1)
-            self.nb = nb
-            
-        else:               # Projet
-            #
-            # Pas de NoteBook
-            #
-            pageGen = self
-            self.pageGen = pageGen
+#        if False:#not pourProjet:  # Séquence
+#            #
+#            # La page "Généralités"
+#            #
+#            nb = wx.Notebook(self, -1,  style= wx.BK_DEFAULT)
+#            pageGen = PanelPropriete(nb)
+#            bg_color = self.Parent.GetBackgroundColour()
+#            pageGen.SetBackgroundColour(bg_color)
+#            self.pageGen = pageGen
+#            
+#            nb.AddPage(pageGen, u"Propriétés générales")
+#            
+#            self.sizer.Add(nb, (0,1), (2,1), flag = wx.ALL|wx.ALIGN_RIGHT|wx.EXPAND, border = 1)
+#            self.nb = nb
+#            
+#        else:               # Projet
+#            #
+#            # Pas de NoteBook
+#            #
+#        pageGen = self
+#        self.pageGen = pageGen
         
         self.classe = classe
         self.pasVerrouille = True
@@ -9354,9 +9525,9 @@ class PanelPropriete_Classe(PanelPropriete):
         # Type d'enseignement
         #
         self.pourProjet = pourProjet
-        titre = wx.StaticBox(pageGen, -1, u"Type d'enseignement")
+        titre = wx.StaticBox(self, -1, u"Type d'enseignement")
         sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
-        te = ArbreTypeEnseignement(pageGen, self)
+        te = ArbreTypeEnseignement(self, self)
 
         sb.Add(te, 1, flag = wx.EXPAND)
 #        l = []
@@ -9370,20 +9541,20 @@ class PanelPropriete_Classe(PanelPropriete):
 #        rb.SetToolTip(wx.ToolTip(u"Choisir le type d'enseignement"))
 #        for i, e in enumerate(REFERENTIELS.keys()):
 #            rb.SetItemToolTip(i, REFERENTIELS[e].Enseignement[1])
-        pageGen.Bind(wx.EVT_RADIOBUTTON, self.EvtRadioBox, te)
+        self.Bind(wx.EVT_RADIOBUTTON, self.EvtRadioBox, te)
  
         te.SetStringSelection(REFERENTIELS[constantes.TYPE_ENSEIGNEMENT_DEFAUT].Enseignement[0])
 
-        pageGen.sizer.Add(sb, (0,1), (2,1), flag = wx.EXPAND|wx.ALL, border = 2)#
+        self.sizer.Add(sb, (0,1), (2,1), flag = wx.EXPAND|wx.ALL, border = 2)#
         self.cb_type = te
 
         #
         # Etablissement
         #
-        titre = wx.StaticBox(pageGen, -1, u"Etablissement")
+        titre = wx.StaticBox(self, -1, u"Etablissement")
         sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
 
-        self.cb = wx.ComboBox(pageGen, -1, "sélectionner un établissement ...", (-1,-1), 
+        self.cb = wx.ComboBox(self, -1, "sélectionner un établissement ...", (-1,-1), 
                          (-1, -1), constantes.ETABLISSEMENTS_PDD + [u"autre ..."],
                          wx.CB_DROPDOWN
                          |wx.CB_READONLY
@@ -9394,74 +9565,76 @@ class PanelPropriete_Classe(PanelPropriete):
         self.Bind(wx.EVT_COMBOBOX, self.EvtComboEtab, self.cb)
         sb.Add(self.cb, flag = wx.EXPAND)
 
-        textctrl = wx.TextCtrl(pageGen, -1, u"", style=wx.TE_MULTILINE)
-        pageGen.Bind(wx.EVT_TEXT, self.EvtText, textctrl)
+        textctrl = wx.TextCtrl(self, -1, u"", style=wx.TE_MULTILINE)
+        self.Bind(wx.EVT_TEXT, self.EvtText, textctrl)
 #        textctrl.SetMinSize((-1, 150))
         sb.Add(textctrl, 1, flag = wx.EXPAND)
         self.textctrl = textctrl
         
-        self.info = wx.StaticText(pageGen, -1, u"""Inscrire le nom de l'établissement dans le champ ci-dessus...
-        ou bien modifier le fichier "etablissements.txt" pour le faire apparaitre dans la liste.""")
+        self.info = wx.StaticText(self, -1, u"""Inscrire le nom de l'établissement dans le champ ci-dessus...
+        ou bien modifier le fichier "etablissements.txt"\n        pour le faire apparaitre dans la liste.""")
         self.info.SetFont(wx.Font(8, wx.SWISS, wx.FONTSTYLE_ITALIC, wx.NORMAL))
         sb.Add(self.info, 0, flag = wx.EXPAND|wx.ALL, border = 5)
 
-        pageGen.sizer.Add(sb, (0,2), (1,1), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.ALL|wx.EXPAND, border = 2)
+        self.sizer.Add(sb, (0,2), (1,1), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.ALL|wx.EXPAND, border = 2)
         
         #
         # Accès au BO
         #
 #        bo = wx.Button(pageGen, -1, u"Accéder au BO en ligne")
-        self.bo = hl.HyperLinkCtrl(pageGen, wx.ID_ANY, u"Accéder au BO en ligne",
+        self.bo = hl.HyperLinkCtrl(self, wx.ID_ANY, u"Accéder au BO en ligne",
                                    URL=REFERENTIELS[classe.typeEnseignement].BO_URL)
-        pageGen.sizer.Add(self.bo, (1,2), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.ALL|wx.EXPAND, border = 2)
-        self.Bind(wx.EVT_BUTTON, self.OnClickBO, self.bo)
+        self.sizer.Add(self.bo, (1,2), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.ALL|wx.EXPAND, border = 2)
+#        self.Bind(wx.EVT_BUTTON, self.OnClickBO, self.bo)
         
         self.bo.Show(REFERENTIELS[self.classe.typeEnseignement].BO_URL != u"")
         
         #
         # Effectifs
         #
-        self.ec = PanelEffectifsClasse(pageGen, classe)
-        pageGen.sizer.Add(self.ec, (0,3), (2,1), flag = wx.ALL|wx.EXPAND, border = 2)#|wx.ALIGN_RIGHT
+        self.ec = PanelEffectifsClasse(self, classe)
+        self.sizer.Add(self.ec, (0,3), (2,1), flag = wx.ALL|wx.EXPAND, border = 2)#|wx.ALIGN_RIGHT
 
-        pageGen.sizer.AddGrowableRow(0)
-        pageGen.sizer.AddGrowableCol(2)
+        self.sizer.AddGrowableRow(0)
+        self.sizer.AddGrowableCol(2)
 #        pageGen.sizer.Layout()
 
-        #
-        # Centres d'intérêt
-        #
-        if False:#not pourProjet:
-            pageCI= wx.Panel(nb, -1)
-            sizer = wx.BoxSizer()
-            pageCI.SetSizer(sizer)
-
-            self.pageCI = pageCI
-            self.nb.AddPage(pageCI, u"")
-
-#            wx.CallAfter(self.InitListe)
-#            wx.CallAfter(self.MiseAJourToolbar)
-            
-#            if not ouverture:
-#                self.InitListe()
-#                self.MiseAJourToolbar()
-            
-            self.leftDown = False
-            
-            self.sizer.AddGrowableRow(0)
-            self.sizer.AddGrowableCol(1)
+#        #
+#        # Centres d'intérêt
+#        #
+#        if False:#not pourProjet:
+#            pageCI= wx.Panel(nb, -1)
+#            sizer = wx.BoxSizer()
+#            pageCI.SetSizer(sizer)
+#
+#            self.pageCI = pageCI
+#            self.nb.AddPage(pageCI, u"")
+#
+##            wx.CallAfter(self.InitListe)
+##            wx.CallAfter(self.MiseAJourToolbar)
+#            
+##            if not ouverture:
+##                self.InitListe()
+##                self.MiseAJourToolbar()
+#            
+#            self.leftDown = False
+#            
+#            self.sizer.AddGrowableRow(0)
+#            self.sizer.AddGrowableCol(1)
         
 #        self.EndRepositioningChildren()
     
-        pageGen.Bind(wx.EVT_SIZE, self.OnResize)
-#        wx.CallAfter(self.OnResize)
+        self.Bind(wx.EVT_SIZE, self.OnResize)
+#        wx.CallAfter(self.cb_type.CollapseAll)
+#        wx.CallAfter(self.Thaw)
         
         
     ######################################################################################              
     def OnResize(self, evt = None):
-#        print "Resize ArbreTypeEnseignement", self.cb_type.GetVirtualSize()
-        self.cb_type.SetMinSize(self.cb_type.GetVirtualSize())
-        self.pageGen.sizer.Layout()
+#        print "Resize ArbreTypeEnseignement", self.GetClientSize()
+        self.cb_type.SetMinSize((-1, self.GetClientSize()[1]-30))
+        self.cb_type.Layout()
+        self.sizer.Layout()
         if evt:
             evt.Skip()
     
@@ -9515,6 +9688,7 @@ class PanelPropriete_Classe(PanelPropriete):
     def AfficherAutre(self, montrer):
         self.textctrl.Show(montrer)
         self.info.Show(montrer)
+        self.sizer.Layout()
              
     ######################################################################################  
     def EvtRadioBox(self, event):
@@ -9539,18 +9713,18 @@ class PanelPropriete_Classe(PanelPropriete):
 #        if hasattr(self, 'list'):
 #            self.list.Peupler()
 
-
-        URL = REFERENTIELS[self.classe.typeEnseignement].BO_URL
-        self.bo.SetURL(URL)
-        self.bo.Show(URL!= u"")
-        self.bo.ToolTip.SetTip(URL)
+        self.SetLienBO()
+        
         self.Refresh()
         
         self.sendEvent()
         
     ######################################################################################  
-    def OnClickBO(self, event):
-        pass
+    def SetLienBO(self):
+        URL = REFERENTIELS[self.classe.typeEnseignement].BO_URL
+        self.bo.SetURL(URL)
+        self.bo.Show(URL!= u"")
+        self.bo.ToolTip.SetTip(URL)
     
     
     
@@ -9651,6 +9825,8 @@ class PanelPropriete_Classe(PanelPropriete):
             self.textctrl.ChangeValue(self.classe.etablissement)
             self.AfficherAutre(True)
             self.cb.SetSelection(len(constantes.ETABLISSEMENTS_PDD))
+        
+        self.SetLienBO()
         
 #        if hasattr(self, 'list'):
 #            self.list.Peupler()
@@ -9753,7 +9929,8 @@ class ArbreTypeEnseignement(HTL.HyperTreeList):
         HTL.HyperTreeList.__init__(self, parent, -1, pos, size, style, 
                                    agwStyle = CT.TR_HIDE_ROOT|HTL.TR_NO_HEADER|\
                                   CT.TR_ALIGN_WINDOWS|CT.TR_AUTO_CHECK_CHILD|\
-                                  CT.TR_AUTO_CHECK_PARENT|CT.TR_AUTO_TOGGLE_CHILD)
+                                  CT.TR_AUTO_CHECK_PARENT|CT.TR_AUTO_TOGGLE_CHILD|\
+                                  CT.TR_HAS_VARIABLE_ROW_HEIGHT)
         self.Unbind(wx.EVT_KEY_DOWN)
         self.panelParent = panelParent
 #        self.SetBackgroundColour(wx.WHITE)
@@ -9764,6 +9941,8 @@ class ArbreTypeEnseignement(HTL.HyperTreeList):
         self.root = self.AddRoot("r")
         self.Construire(self.root)
         self.ExpandAll()
+        
+#        wx.CallAfter(self.ExpandAll)
         
 #        sizer = wx.BoxSizer()
 #        sizer.Add(self.ctc, flag = wx.EXPAND)
@@ -9782,7 +9961,9 @@ class ArbreTypeEnseignement(HTL.HyperTreeList):
     def Construire(self, racine):
         """ Construction de l'arbre
         """
+#        print "Construire ArbreTypeEnseignement"
         self.branche = []
+        self.ExpandAll()
         for t, st in ARBRE_REF.items():
             if t[0] == "_":
                 branche = self.AppendItem(racine, REFERENTIELS[st[0]].Enseignement[2])
@@ -9802,6 +9983,7 @@ class ArbreTypeEnseignement(HTL.HyperTreeList):
                 rb.SetToolTipString(REFERENTIELS[sst].Enseignement[1])
                 rb.Enable(REFERENTIELS[sst].projet or not self.panelParent.pourProjet)
                 self.branche.append(sbranche)
+#        self.Layout()
     
     ######################################################################################              
     def SetStringSelection(self, label):
@@ -11737,7 +11919,7 @@ class PanelPropriete_Tache(PanelPropriete):
     ############################################################################            
     def SetCompetences(self):
         self.GetDocument().MiseAJourDureeEleves()
-        self.sendEvent()
+        wx.CallAfter(self.sendEvent)
         self.tache.projet.VerrouillerClasse()
         
     ############################################################################            
@@ -12637,6 +12819,7 @@ class ArbreDoc(CT.CustomTreeCtrl):
 
     ####################################################################################
     def OnSelChanged(self, event):
+        
         self.item = event.GetItem()
         data = self.GetItemPyData(self.item)
         if data == None:
@@ -12647,13 +12830,14 @@ class ArbreDoc(CT.CustomTreeCtrl):
             else:
                 panelPropriete = data.panelPropriete
 
+        self.panelProp.AfficherPanel(panelPropriete)
+#        panelPropriete.Refresh()
+        self.parent.Refresh()
+        
         if hasattr(self.classe.doc.GetApp(), 'fiche') and self.classe.doc.centrer:
             self.classe.doc.GetApp().fiche.CentrerSur(data)
         self.classe.doc.centrer = True
         
-        self.panelProp.AfficherPanel(panelPropriete)
-        
-#        wx.CallAfter(panelPropriete.Refresh)
         event.Skip()
         
     ####################################################################################
@@ -13190,7 +13374,7 @@ class ArbreSavoirs(CT.CustomTreeCtrl):
     def OnItemCheck(self, event):
 #        print "OnItemCheck"
         item = event.GetItem()
-        code = self.GetItemText(item).split()[0]
+#        code = self.GetItemText(item).split()[0]
 
 #        if self.IsItalic(item):
 #            code = '_'+code
@@ -13331,12 +13515,18 @@ class ArbreCompetences(HTL.HyperTreeList):
     def MiseAJourTypeEnseignement(self, ref):
 #        print "MiseAJourTypeEnseignement"
         self.ref = ref
+        
+        for i in self.items.values():
+            for wnd in i._wnd:
+                if wnd:
+                    wnd.Hide()
+                    wnd.Destroy()
+                    
         self.DeleteChildren(self.root)
         self.Construire(self.root, ref = ref)
         self.ExpandAll()
 #        self.Layout()
         
-    
     
     #############################################################################
     def MiseAJourPhase(self, phase):
@@ -13596,6 +13786,8 @@ class ArbreCompetencesPrj(ArbreCompetences):
                                 self.SetItemWindow(b, ChoixCompetenceEleve(self, codeIndic, 
                                                                            tache.projet, 
                                                                            tache), 3)
+                            
+                                
                                 for e in range(len(tache.projet.eleves)):
                                     tousEleve[e] = tousEleve[e] and self.GetItemWindow(b, 3).EstCocheEleve(e+1)
                                 size = self.GetItemWindow(b, 3).GetSize()[0]
@@ -13695,18 +13887,20 @@ class ArbreCompetencesPrj(ArbreCompetences):
 
     #############################################################################
     def MiseAJourCaseEleve(self, codeIndic, etat, eleve, propag = True):
+#        print "MiseAJourCaseEleve", codeIndic, etat, eleve, propag
         casesEleves = self.GetItemWindow(self.items[codeIndic], 3)
         if casesEleves.EstCocheEleve(eleve) != etat:
             return
         
         estToutCoche = casesEleves.EstToutCoche()
-
+#        print "  estToutCoche =", estToutCoche
+        
         comp = codeIndic.split("_")[0]
         
         if comp != codeIndic: # Indicateur seul
             item = self.items[codeIndic]
             itemComp = self.items[comp]
-            
+#            print "  itemComp =", itemComp
             if propag:
                 tout = True
                 for i in itemComp.GetChildren():
@@ -13721,7 +13915,8 @@ class ArbreCompetencesPrj(ArbreCompetences):
             
             self.AjouterEnleverCompetencesEleve([item], eleve)
             
-            self.CheckItem2(item, estToutCoche)
+            self.CheckItem2(item, estToutCoche, torefresh=True)
+#            self.Refresh()
 #            self.AjouterEnleverCompetencesItem(item, propag = False)
             
         else: #Compétence complete
@@ -13736,9 +13931,11 @@ class ArbreCompetencesPrj(ArbreCompetences):
 #            self.AjouterEnleverCompetencesEleve(itemComp.GetChildren(), eleve)
 #            self.AjouterEnleverCompetencesItem(itemComp, propag = False)
         
-        self.Refresh()
         if propag:
-            wx.CallAfter(self.pptache.SetCompetences)
+            self.pptache.SetCompetences()
+#        wx.CallAfter(self.Refresh)
+#        if propag:
+#            wx.CallAfter(self.pptache.SetCompetences)
         
         
     #############################################################################
@@ -14737,11 +14934,21 @@ class TestListCtrl(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin):
             self.idx = None
             self.SetCursor(wx.StockCursor(wx.CURSOR_ARROW))
         
-        
+    def GetHeight2(self):
+        height = int(2*16)
+        for indx in xrange(self.GetItemCount()):
+            height += self.GetItemRect(indx).height
+        return height
+    
+    def GetWidth2(self):
+        return self.GetViewRect()[2]
+    
+    
+    
         
 class PanelListe(wx.Panel, listmix.ColumnSorterMixin):
     def __init__(self, parent, fen):
-        wx.Panel.__init__(self, parent, -1)
+        wx.Panel.__init__(self, parent, -1, style = wx.BORDER_RAISED)
         sizer = wx.BoxSizer(wx.VERTICAL)
         
         self.fen = fen
@@ -14760,7 +14967,7 @@ class PanelListe(wx.Panel, listmix.ColumnSorterMixin):
         self.SetSizer(sizer)
         self.SetAutoLayout(True)
         
-        self.listeSeq.Bind(wx.EVT_SIZE, self.OnResize)
+#        self.listeSeq.Bind(wx.EVT_SIZE, self.OnResize)
         self.Bind(wx.EVT_LIST_ITEM_SELECTED, self.OnItemSelected, self.listeSeq)
         self.listeSeq.Bind(wx.EVT_LEFT_DCLICK, self.OnDoubleClick)
 #        self.listeSeq.Bind(wx.EVT_RIGHT_DOWN, self.OnRightDown)
@@ -14855,11 +15062,11 @@ class PanelListe(wx.Panel, listmix.ColumnSorterMixin):
             self.itemDataMap[i] = (f, d, seq)
             self.listeSeq.SetItemData(i, i)
             
-        self.listeSeq.SetColumnWidth(0, wx.LIST_AUTOSIZE)
-        self.listeSeq.SetColumnWidth(1, wx.LIST_AUTOSIZE)
+#        self.listeSeq.SetColumnWidth(0, wx.LIST_AUTOSIZE)
+#        self.listeSeq.SetColumnWidth(1, wx.LIST_AUTOSIZE)
         self.listeSeq.Layout()
-        self.OnResize()
-        self.Fit()
+#        self.OnResize()
+#        self.Fit()
         
         listmix.ColumnSorterMixin.__init__(self, 2)
         
@@ -14916,12 +15123,21 @@ class Panel_BO(wx.Panel):
 
         wx.EndBusyCursor()
 
+#################################################################################################################
+#
+# Synthèse pédagogique (sur pluieures séquences)
+#
+#################################################################################################################
+import xlwt
+from xlwt import Workbook, Font, XFStyle, Borders, Alignment, Formula, Pattern
 
 
 class FenetreBilan(wx.Frame):
-    def __init__(self, parent, dossierCourant = '', 
-                 typeEnseignement = constantes.TYPE_ENSEIGNEMENT_DEFAUT):
+    def __init__(self, parent, dossierCourant = constantes.PATH, 
+                 referentiel = REFERENTIELS[constantes.TYPE_ENSEIGNEMENT_DEFAUT]):
         wx.Frame.__init__(self, parent, -1, u"Synthèse pédagogique")
+        
+        self.pourProjet = False
         
         self.sizer = wx.GridBagSizer()
         panel = wx.Panel(self, -1)
@@ -14939,45 +15155,58 @@ class FenetreBilan(wx.Frame):
         #
         # Type d'enseignement
         #
-        self.typeEnseignement = typeEnseignement
-        l = []
-        for i, e in enumerate(REFERENTIELS.keys()):
-            l.append(REFERENTIELS[e].Enseignement[0])
-        rb = wx.RadioBox(
-                panel, -1, u"Type d'enseignement", wx.DefaultPosition, (130,-1),
-                l,
-                1, wx.RA_SPECIFY_COLS
-                )
-        rb.SetToolTip(wx.ToolTip(u"Choisir le type d'enseignement"))
-        for i, e in enumerate(REFERENTIELS.keys()):
-            rb.SetItemToolTip(i, REFERENTIELS[e].Enseignement[1])
-        self.Bind(wx.EVT_RADIOBOX, self.EvtRadioBox, rb)
-            
-        # Provosoirement uniquement pour SSI
-        for i in [1,2,3,4]:
-            rb.EnableItem(i, False)    
+        titre = wx.StaticBox(self, -1, u"Type d'enseignement")
+        sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
+        te = ArbreTypeEnseignement(panel, self)
+        self.Bind(wx.EVT_RADIOBUTTON, self.EvtRadioBox, te)
         
-        self.sizer.Add(rb, (0,0), (2,1), flag = wx.EXPAND|wx.ALL)
-        self.cb_type = rb
-        self.cb_type.SetStringSelection(REFERENTIELS[self.typeEnseignement].Enseignement[0])
+        self.referentiel = referentiel
+#        l = []
+#        for i, e in enumerate(REFERENTIELS.keys()):
+#            l.append(REFERENTIELS[e].Enseignement[0])
+#        rb = wx.RadioBox(
+#                panel, -1, u"Type d'enseignement", wx.DefaultPosition, (130,-1),
+#                l,
+#                1, wx.RA_SPECIFY_COLS
+#                )
+#        rb.SetToolTip(wx.ToolTip(u"Choisir le type d'enseignement"))
+#        for i, e in enumerate(REFERENTIELS.keys()):
+#            rb.SetItemToolTip(i, REFERENTIELS[e].Enseignement[1])
+#        self.Bind(wx.EVT_RADIOBOX, self.EvtRadioBox, rb)
+#            
+#        # Provosoirement uniquement pour SSI
+#        for i in [1,2,3,4]:
+#            rb.EnableItem(i, False)    
         
+        self.sizer.Add(te, (0,0), (2,1), flag = wx.EXPAND|wx.ALL)
+        self.cb_type = te
+        te.SetStringSelection(referentiel.Enseignement[0])
+
         #
         # Dossiers de recherche
         #
-        
         sb = wx.StaticBox(panel, -1, u"Dossiers où chercher les fichiers de séquence")
-        sbs = wx.StaticBoxSizer(sb, wx.HORIZONTAL)
+        sbs = wx.StaticBoxSizer(sb, wx.VERTICAL)
+        hs = wx.BoxSizer(wx.HORIZONTAL)
         self.dossiers = [os.path.abspath(dossierCourant)]
         self.dossiersOk = True
         self.txtDoss = wx.TextCtrl(panel, -1, os.path.abspath(dossierCourant))
         self.txtDoss.SetToolTipString(u"Saisir les dossiers de recherche, séparés par \";\"")
-        self.txtDoss.Bind(wx.EVT_KILL_FOCUS, self.EvtTextDoss)
-        sbs.Add(self.txtDoss, 1, flag = wx.EXPAND|wx.ALL)
+#        self.txtDoss.Bind(wx.EVT_KILL_FOCUS, self.EvtTextDoss)
+        self.Bind(wx.EVT_TEXT, self.EvtTextDoss, self.txtDoss)
+        hs.Add(self.txtDoss, 1, flag = wx.EXPAND|wx.ALL)
         
         self.boutonDoss = wx.Button(panel, -1, "+", size = (30, -1))
         self.boutonDoss.SetToolTipString(u"Ajouter un dossier de recherche")
         self.Bind(wx.EVT_BUTTON, self.OnDossier, self.boutonDoss)
-        sbs.Add(self.boutonDoss, flag = wx.EXPAND|wx.ALL)
+        hs.Add(self.boutonDoss, flag = wx.EXPAND|wx.ALL)
+        
+        sbs.Add(hs, flag = wx.EXPAND|wx.ALL)
+        self.cbr = wx.CheckBox(panel, -1, u"Inclure les sous-dossiers")
+        self.Bind(wx.EVT_CHECKBOX, self.EvtCheckBox, self.cbr)
+        self.recurs = True
+        self.cbr.SetValue(self.recurs)
+        sbs.Add(self.cbr, flag = wx.EXPAND|wx.ALL)
         
         self.sizer.Add(sbs, (0,1), (1,1) , flag = wx.EXPAND|wx.ALL)
         self.sizer.AddGrowableCol(1)
@@ -14994,6 +15223,24 @@ class FenetreBilan(wx.Frame):
         sizer.Add(panel, 1, flag = wx.EXPAND)
         
         self.SetSizerAndFit(sizer)
+        
+        self.Bind(wx.EVT_SIZE, self.OnResize)
+#        wx.CallAfter(self.cb_type.CollapseAll)
+#        wx.CallAfter(self.Thaw)
+        
+    ######################################################################################              
+    def EvtCheckBox(self, event):
+        self.recurs = event.IsChecked()
+        self.MiseAJourListe()
+        
+    ######################################################################################              
+    def OnResize(self, evt = None):
+#        print "Resize ArbreTypeEnseignement", self.GetClientSize()
+        self.cb_type.SetMinSize((-1, self.GetClientSize()[1]-30))
+        self.cb_type.Layout()
+        self.sizer.Layout()
+        if evt:
+            evt.Skip()
         
     ###############################################################################################
     def ConstruireTb(self):
@@ -15014,8 +15261,12 @@ class FenetreBilan(wx.Frame):
         self.tb.AddLabelTool(10, u"Exporter", new_bmp, 
                              shortHelp=u"Exporter la synthèse dans un fichier Excel", 
                              longHelp=u"Exporter la synthèse dans un fichier Excel")
-        
         self.Bind(wx.EVT_TOOL, self.commandeExporter, id=10)    
+        
+        self.tb.AddLabelTool(30, u"Actualiser", images.Bouton_Actualiser.GetBitmap(), 
+                             shortHelp=u"Actualiser la liste des séquences", 
+                             longHelp=u"Actualiser la liste des séquences")
+        self.Bind(wx.EVT_TOOL, self.MiseAJourListe, id=30)    
         
         
         #################################################################################################################
@@ -15025,10 +15276,11 @@ class FenetreBilan(wx.Frame):
         #################################################################################################################
         self.tb.Realize()
         
-
+    
+    
     ######################################################################################  
     def commandeExporter(self, event = None):
-        mesFormats = "Fichier Excel|*.xlsx"
+        mesFormats = r"Fichier Excel|*.xls"
         dlg = wx.FileDialog(self, 
                             message = u"Enregistrement de la synthèse", 
                             defaultFile="", wildcard=mesFormats, 
@@ -15038,7 +15290,8 @@ class FenetreBilan(wx.Frame):
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
             dlg.Destroy()
-            ok = self.enregistrer(path)
+#            ok = self.enregistrer(path)
+            ok = self.genererBilan(path)
             if ok:
                 dlg = wx.MessageDialog(self, u"Export de la synthèse réussi !", u"Export de la synthèse réussi",
                            wx.OK | wx.ICON_INFORMATION)
@@ -15052,130 +15305,690 @@ class FenetreBilan(wx.Frame):
         else:
             dlg.Destroy()
 
-    ######################################################################################  
-    def enregistrer(self, nomFichier):
-        fichierPP = constantes.fichierProgressionProgramme[self.typeEnseignement]
-        try:
-            tableau = grilles.PyExcel(os.path.join(TABLE_PATH, fichierPP))
-        except:
-            print fichierPP, "est déja ouvert !"
-            return False
 
-#        def ecrire(feuille, l, c):
-#            v = tableau.getCell(feuille, l, c)
-#            if v == "A":
-#                v = "B"
-#            elif v == "B":
-#                v = "C"
-#            elif v == "C":
-#                v = "C"
-#            else:
-#                v = "A"
-#            tableau.setCell(feuille, l, cc+i, v)
-            
-        feuilleP = u"Progression - Programme"
-        feuilleS = u"Progression - Systèmes"
+    ######################################################################################  
+    def genererBilan(self, nomFichier):
+        wb = Workbook()
         
-        # Première cellule "séquence"
-        lcp, ccp = (4, 11) # K4
-        lct, cct = (4, 15) # O4
+        #
+        # Styles
+        #    
         
-        # Première cellule "durée"
-        ldp, cdp = (5, 11) # K5
+        fnt = Font()
+        fnt.name = 'Arial'
+        fnt.colour_index = 37
+        fnt.outline = True
+        fnt.struck_out = False
+        fnt.bold = True
+        fnt.height = 36*20
+
+        borders = Borders()
+        borders.left = 1
+        borders.right = 1
+        borders.top = 1
+        borders.bottom = 1
         
-        # Première cellule "systèmes"
-        lsp, csp = (8, 4) # D8
-        lst, cst = (8, 8) # H8
+        al = Alignment()
+        al.horz = Alignment.HORZ_CENTER
+        al.vert = Alignment.VERT_CENTER
+
+        pattern = Pattern()
+        pattern.pattern = Pattern.SOLID_PATTERN
+        pattern.pattern_fore_colour = 42
         
+        styleT = XFStyle()
+        styleT.font = fnt
+        styleT.borders = borders
+        styleT.alignment = al
+        styleT.pattern = pattern
+        
+        ######################################################
+        
+        fnt = Font()
+        fnt.name = 'Arial'
+        fnt.colour_index = 0
+        fnt.outline = True
+        fnt.struck_out = False
+        fnt.bold = True
+        fnt.height = 16*20
+
+        borders = Borders()
+        borders.left = 1
+        borders.right = 1
+        borders.top = 1
+        borders.bottom = 1
+        
+        al = Alignment()
+        al.horz = Alignment.HORZ_LEFT
+        al.vert = Alignment.VERT_CENTER
+
+        pattern = Pattern()
+        pattern.pattern = Pattern.SOLID_PATTERN
+        pattern.pattern_fore_colour = 1
+
+        styleE = XFStyle()
+        styleE.font = fnt
+        styleE.borders = borders
+        styleE.alignment = al
+        styleE.pattern = pattern
+        
+        ######################################################
+        
+        
+        fnt = Font()
+        fnt.name = 'Arial'
+        fnt.colour_index = 0
+        fnt.outline = True
+        fnt.struck_out = False
+        fnt.bold = True
+        fnt.height = 14*20
+
+        borders = Borders()
+        borders.left = 1
+        borders.right = 0
+        borders.top = 1
+        borders.bottom = 1
+        
+        al = Alignment()
+        al.horz = Alignment.HORZ_LEFT
+        al.vert = Alignment.VERT_CENTER
+        al.wrap = False
+        
+        pattern = Pattern()
+        pattern.pattern = Pattern.SOLID_PATTERN
+        pattern.pattern_fore_colour = 43
+
+        style0 = XFStyle()
+        style0.font = fnt
+        style0.borders = borders
+        style0.alignment = al
+        style0.pattern = pattern
+        
+        ######################################################
+        fnt = Font()
+        fnt.name = 'Arial'
+        fnt.colour_index = 0
+        fnt.outline = True
+        fnt.struck_out = False
+        fnt.bold = True
+        fnt.height = 14*20
+
+        borders = Borders()
+        borders.left = 0
+        borders.right = 1
+        borders.top = 1
+        borders.bottom = 1
+        
+        al = Alignment()
+        al.horz = Alignment.HORZ_LEFT
+        al.vert = Alignment.VERT_CENTER
+        al.wrap = True
+        
+        pattern = Pattern()
+        pattern.pattern = Pattern.SOLID_PATTERN
+        pattern.pattern_fore_colour = 43
+        
+        style01 = XFStyle()
+        style01.font = fnt
+        style01.borders = borders
+        style01.alignment = al
+        style01.pattern = pattern
+    
+        ######################################################
+        fnt = Font()
+        fnt.name = 'Arial'
+        fnt.colour_index = 0
+        fnt.outline = True
+        fnt.struck_out = False
+        fnt.bold = True
+        fnt.height = 12*20
+
+        borders = Borders()
+        borders.left = 1
+        borders.right = 0
+        borders.top = 1
+        borders.bottom = 1
+        
+        al = Alignment()
+        al.horz = Alignment.HORZ_LEFT
+        al.vert = Alignment.VERT_CENTER
+        al.wrap = False
+        
+        pattern = Pattern()
+        pattern.pattern = Pattern.SOLID_PATTERN
+        pattern.pattern_fore_colour = 41
+
+        style1 = XFStyle()
+        style1.font = fnt
+        style1.borders = borders
+        style1.alignment = al
+        style1.pattern = pattern
+        
+        ######################################################
+        fnt = Font()
+        fnt.name = 'Arial'
+        fnt.colour_index = 0
+        fnt.outline = True
+        fnt.struck_out = False
+        fnt.bold = False
+        fnt.height = 12*20
+
+        borders = Borders()
+        borders.left = 0
+        borders.right = 1
+        borders.top = 1
+        borders.bottom = 1
+        
+        al = Alignment()
+        al.horz = Alignment.HORZ_LEFT
+        al.vert = Alignment.VERT_CENTER
+        
+        pattern = Pattern()
+        pattern.pattern = Pattern.SOLID_PATTERN
+        pattern.pattern_fore_colour = 41
+        al.wrap = True
+
+        style11 = XFStyle()
+        style11.font = fnt
+        style11.borders = borders
+        style11.alignment = al
+        style11.pattern = pattern
+        
+        ######################################################
+        fnt = Font()
+        fnt.name = 'Arial'
+        fnt.colour_index = 0
+        fnt.outline = True
+        fnt.struck_out = False
+        fnt.bold = True
+        fnt.height = 10*20
+
+        borders = Borders()
+        borders.left = 1
+        borders.right = 0
+        borders.top = 1
+        borders.bottom = 1
+        
+        al = Alignment()
+        al.horz = Alignment.HORZ_LEFT
+        al.vert = Alignment.VERT_CENTER
+        al.wrap = False
+        
+        pattern = Pattern()
+        pattern.pattern = Pattern.SOLID_PATTERN
+        pattern.pattern_fore_colour = 1
+
+        style2 = XFStyle()
+        style2.font = fnt
+        style2.borders = borders
+        style2.alignment = al
+        style2.pattern = pattern
+        
+        ######################################################
+        fnt = Font()
+        fnt.name = 'Arial'
+        fnt.colour_index = 0
+        fnt.outline = True
+        fnt.struck_out = False
+        fnt.bold = False
+        fnt.height = 10*20
+        
+
+        borders = Borders()
+        borders.left = 0
+        borders.right = 1
+        borders.top = 1
+        borders.bottom = 1
+        
+        al = Alignment()
+        al.horz = Alignment.HORZ_LEFT
+        al.vert = Alignment.VERT_CENTER
+        al.wrap = True
+        
+        pattern = Pattern()
+        pattern.pattern = Pattern.SOLID_PATTERN
+        pattern.pattern_fore_colour = 1
+
+        style21 = XFStyle()
+        style21.font = fnt
+        style21.borders = borders
+        style21.alignment = al
+        style21.pattern = pattern
+        
+        # Croix #####################################################
+        fnt = Font()
+        fnt.name = 'Arial'
+        fnt.colour_index = 0
+        fnt.outline = True
+        fnt.struck_out = False
+        fnt.bold = True
+        fnt.height = 12*20
+
+        borders = Borders()
+        borders.left = 1
+        borders.right = 1
+        borders.top = 1
+        borders.bottom = 1
+        
+        al = Alignment()
+        al.horz = Alignment.HORZ_CENTER
+        al.vert = Alignment.VERT_CENTER
+        
+        pattern = Pattern()
+        pattern.pattern = Pattern.SOLID_PATTERN
+        pattern.pattern_fore_colour = 47
+
+        styleX = XFStyle()
+        styleX.font = fnt
+        styleX.borders = borders
+        styleX.alignment = al
+        styleX.pattern = pattern
+        
+        # rien #####################################################
+        fnt = Font()
+        fnt.name = 'Arial'
+        fnt.colour_index = 0
+        fnt.outline = True
+        fnt.struck_out = False
+        fnt.bold = True
+        fnt.height = 12*20
+
+        borders = Borders()
+        borders.left = 1
+        borders.right = 1
+        borders.top = 1
+        borders.bottom = 1
+        
+        al = Alignment()
+        al.horz = Alignment.HORZ_CENTER
+        al.vert = Alignment.VERT_CENTER
+        
+        pattern = Pattern()
+        pattern.pattern = Pattern.SOLID_PATTERN
+        pattern.pattern_fore_colour = 1
+
+        stylenX = XFStyle()
+        stylenX.font = fnt
+        stylenX.borders = borders
+        stylenX.alignment = al
+        stylenX.pattern = pattern
+        
+        # Durée de séquence #####################################################
+        fnt = Font()
+        fnt.name = 'Arial'
+        fnt.colour_index = 0
+        fnt.outline = True
+        fnt.struck_out = False
+        fnt.bold = True
+        fnt.italic = True
+        fnt.height = 9*20
+
+        borders = Borders()
+        borders.left = 1
+        borders.right = 1
+        borders.top = 1
+        borders.bottom = 1
+        
+        al = Alignment()
+        al.horz = Alignment.HORZ_CENTER
+        al.vert = Alignment.VERT_CENTER
+        al.wrap = False
+        
+        pattern = Pattern()
+        pattern.pattern = Pattern.SOLID_PATTERN
+        pattern.pattern_fore_colour = 29
+
+        styleD = XFStyle()
+        styleD.num_format_str='hh:mm'
+        styleD.font = fnt
+        styleD.borders = borders
+        styleD.alignment = al
+        styleD.pattern = pattern
+        
+        # Numéro de séquence #####################################################
+        fnt = Font()
+        fnt.name = 'Arial'
+        fnt.colour_index = 0
+        fnt.outline = True
+        fnt.struck_out = False
+        fnt.bold = True
+        fnt.italic = False
+        fnt.height = 20*20
+
+        borders = Borders()
+        borders.left = 1
+        borders.right = 1
+        borders.top = 1
+        borders.bottom = 1
+        
+        al = Alignment()
+        al.horz = Alignment.HORZ_CENTER
+        al.vert = Alignment.VERT_CENTER
+        al.wrap = False
+        
+        pattern = Pattern()
+        pattern.pattern = Pattern.SOLID_PATTERN
+        pattern.pattern_fore_colour = 29
+
+        styleN = XFStyle()
+        styleN.font = fnt
+        styleN.borders = borders
+        styleN.alignment = al
+        styleN.pattern = pattern
+        
+        # Intitulé de séquence #####################################################
+        fnt = Font()
+        fnt.name = 'Arial'
+        fnt.colour_index = 0
+        fnt.outline = True
+        fnt.struck_out = False
+        fnt.bold = True
+        fnt.italic = False
+        fnt.height = 9*20
+
+        borders = Borders()
+        borders.left = 1
+        borders.right = 1
+        borders.top = 1
+        borders.bottom = 1
+        
+        al = Alignment()
+        al.horz = Alignment.HORZ_CENTER
+        al.vert = Alignment.VERT_CENTER
+        al.rotation = Alignment.ORIENTATION_90_CC
+        
+        al.wrap = True
+        
+        pattern = Pattern()
+        pattern.pattern = Pattern.SOLID_PATTERN
+        pattern.pattern_fore_colour = 29
+
+        styleS = XFStyle()
+        styleS.num_format_str='hh:mm'
+        styleS.font = fnt
+        styleS.borders = borders
+        styleS.alignment = al
+        styleS.pattern = pattern
+        
+        ######################################################
+        
+        f = Font()
+        f.height = 20*6
+        f.name = 'Verdana'
+        f.bold = False
+        f.underline = Font.UNDERLINE_SINGLE
+        f.colour_index = 4
+        
+        h_style = XFStyle()
+        h_style.font = f
+        
+        
+        
+        #
+        # On trie les séquences par année
+        #
         listePrem = []
         listeTerm = []
-
-        
         for i in range(self.listeSeq.listeSeq.GetItemCount()):
             seq = self.listeSeq.GetSequence(i)
-            if seq.position >= 4:
+            if seq.position >= 6:
                 listeTerm.append(seq)
             else:
                 listePrem.append(seq)
-        
-#        listePrem = sorted(listePrem, key=lambda s: s.intitule)
-#        listeTerm = sorted(listeTerm, key=lambda s: s.intitule)
-        
-        listeSystemes = []
-        for i, seq in enumerate(listePrem + listeTerm):
-            
-            if seq in listePrem:
-                c = ccp + i
-                cs = csp + i
-            else:
-                c = cct + i - len(listePrem)
-                cs = cst + i - len(listePrem)
                 
-            tableau.setCell(feuilleP, lcp, c, seq.intitule)
-            tableau.setCell(feuilleP, ldp, c, str(seq.GetDuree()))
-            tableau.setLink(feuilleP, lcp, c, seq.nomFichier)
-            tableau.setCell(feuilleP, lcp-1, c, i+1)
+        #
+        # Fonction de traitement des dictionnaires
+        #
+        def traiter(dic):
+            dicLigne = {}
+            l = 6
+            c = 0
+            for c0, v0 in sorted(dic):
+                ws0.write(l, c, c0, style0)                                     # Code
+                ws0.write_merge(l, l, c+1, c+3, v0[0], style01)                   # Intitulé
+                dicLigne[c0] = [l]
+                l += 1
+                if type(v0[1]) == dict:
+                    for c1, v1 in sorted(v0[1].items()):
+                        ws0.write(l, c+1, c1, style1)                           # Code
+                        dicLigne[c1] = [l]
+                        ws0.write_merge(l, l, c+2, c+3, v1[0], style11)           # Intitulé
+                        if type(v1[1]) == dict:
+                            for c2, v2 in sorted(v1[1].items()):
+                                l += 1
+                                ws0.write(l, c+2, c2, style2)                   # Code
+                                dicLigne[c2] = [l]
+                                ws0.write_merge(l, l, c+3, c+3, v2[0], style21)   # Intitulé
+#                                l += 1
+                        l += 1
+            return dicLigne, l
+
+                    
+        #
+        # Feuille Savoirs
+        #        
+        ws0 = wb.add_sheet(self.referentiel.nomSavoirs)
+        
+        ws0.write_merge(1, 3, 1, 3, self.referentiel.Enseignement[0], styleT)
+        ws0.write_merge(5, 5, 0, 3, self.referentiel.nomSavoirs, styleE)
+        dicLigne, last = traiter(self.referentiel.dicSavoirs.items())
+      
+        #
+        # On met les croix
+        #
+        c = 5
+        l = 5
+        n = "HYPERLINK"
+        for i, seq in enumerate(listePrem + listeTerm):
+            ws0.write(l-4, c, i+1, styleN)                          # Numéro de séquence
+            ws0.write(l-3, c, seq.intitule, styleS)                 # Intitulé
+            ws0.write(l-2, c, str(seq.GetDuree()), styleD)          # Durée
+            ws0.write(l-1, c, Formula(n + '("%s";"%s")' %(seq.nomFichier,seq.nomFichier)), h_style)           # Fichier
             
             for sav in seq.obj["S"].savoirs:
-                if sav in REFERENTIELS[self.typeEnseignement].dicCellSavoirs.keys():
-                    lig0, lig1 = REFERENTIELS[self.typeEnseignement].dicCellSavoirs[sav]
-                    for l in range(lig0, lig1+1):
-                        tableau.setCell(feuilleP, l, c, "X")
-                else:
-                    continuer = True
-                    s=1
-                    while continuer:
-                        sav1 = sav+'.'+str(s)
-                        if sav1 in constantes.dicCellSavoirs[self.typeEnseignement].keys():
-                            lig0, lig1 = REFERENTIELS[self.typeEnseignement].dicCellSavoirs[sav1]
-                            for l in range(lig0, lig1+1):
-                                tableau.setCell(feuilleP, l, c, "X")
-                            s += 1
-                        else:
-                            continuer = False
+                if sav[1:] in dicLigne.keys() and sav[0] == 'B':
+                    for li in dicLigne[sav[1:]]:
+                        ws0.write(li, c, "X", styleX)       # X
             
-            #
-            # Tableau "Systèmes"
-            #
-            nbrSystemes = seq.GetNbrSystemes()
-            for syst in seq.systemes:
-                # ligne du tableau correspondant au système
-                if not syst.nom in listeSystemes:
-                    listeSystemes.append(syst.nom)
-                    l = lsp+len(listeSystemes)-1
-                    tableau.setCell(feuilleS, l, 1, syst.nom)
-                else:
-                    l = lsp+listeSystemes.index(syst.nom)-1
-                
-                # nombre d'exemplaires du système utilisés dans la séquence
-                if syst.nom in nbrSystemes.keys():
-                    tableau.setCell(feuilleS, l, cs, nbrSystemes[syst.nom])
-                
-            #
-            # Ajout éventuel de colonnes
-            #
-            if seq in listePrem:
-                if len(listePrem) > 3 and i < len(listePrem) - 3:
-                    tableau.insertPasteCol(feuilleP, c+1)
-                    tableau.insertPasteCol(feuilleS, cs+1)
-                    cct += 1
-            else:
-                if len(listeTerm) > 3 and i - len(listePrem) < len(listeTerm) - 3:
-                    tableau.insertPasteCol(feuilleP, c+1)
-                    tableau.insertPasteCol(feuilleS, c+1)
-                
-        try:                   
-            tableau.save(nomFichier)
-        except :
-            print nomFichier, "est déja ouvert !"
-            return False
+            for li in range(l+1, last):
+                try:
+                    ws0.write(li, c, "", stylenX)
+                except:
+                    pass
+            c += 1
             
-        tableau.close()
+        #
+        # Largeur des colonnes
+        #
+        ws0.col(0).width = 100*20
+        ws0.col(1).width = 100*20
+        ws0.col(2).width = 100*20
+        ws0.col(3).width = 1000*20
+        ws0.col(4).width = 50*20
+        for cc in range(5, c):
+            ws0.col(cc).width = 80*20
+        
+        #
+        # Feuille Compétences
+        #        
+        ws0 = wb.add_sheet(self.referentiel.nomCompetences)
+        
+        ws0.write_merge(1, 3, 1, 3, self.referentiel.Enseignement[0], styleT)
+        ws0.write_merge(5, 5, 0, 3, self.referentiel.nomCompetences, styleE)
+        dicLigne, last = traiter(self.referentiel.dicCompetences.items())
+      
+        #
+        # On met les croix
+        #
+        c = 5
+        l = 5
+        for i, seq in enumerate(listePrem + listeTerm):
+            ws0.write(l-4, c, i+1, styleN)                          # Numéro de séquence
+            ws0.write(l-3, c, seq.intitule, styleS)                 # Intitulé
+            ws0.write(l-2, c, str(seq.GetDuree()), styleD)          # Durée
+            ws0.write(l-1, c, Formula(n + '("%s";"%s")' %(seq.nomFichier,seq.nomFichier)), h_style)           # Fichier
+            
+            for sav in seq.obj["C"].competences:
+                if sav in dicLigne.keys():
+                    for li in dicLigne[sav]:
+                        ws0.write(li, c, "X", styleX)
+            for li in range(l+1, last):
+                try:
+                    ws0.write(li, c, "", stylenX)
+                except:
+                    pass
+            c += 1
+            
+        #
+        # Largeur des colonnes
+        #
+        ws0.col(0).width = 100*20
+        ws0.col(1).width = 100*20
+        ws0.col(2).width = 100*20
+        ws0.col(3).width = 1000*20
+        ws0.col(4).width = 50*20
+        for cc in range(5, c):
+            ws0.col(cc).width = 80*20
+        
+        #
+        # Sauvegarde
+        #
+        wb.save(nomFichier)
+        
         return True
+        
+#    ######################################################################################  
+#    def enregistrer(self, nomFichier):
+#        fichierPP = constantes.fichierProgressionProgramme[self.typeEnseignement]
+#        try:
+#            tableau = grilles.PyExcel(os.path.join(TABLE_PATH, fichierPP))
+#        except:
+#            print fichierPP, "est déja ouvert !"
+#            return False
+#
+##        def ecrire(feuille, l, c):
+##            v = tableau.getCell(feuille, l, c)
+##            if v == "A":
+##                v = "B"
+##            elif v == "B":
+##                v = "C"
+##            elif v == "C":
+##                v = "C"
+##            else:
+##                v = "A"
+##            tableau.setCell(feuille, l, cc+i, v)
+#            
+#        feuilleP = u"Progression - Programme"
+#        feuilleS = u"Progression - Systèmes"
+#        
+#        # Première cellule "séquence"
+#        lcp, ccp = (4, 11) # K4
+#        lct, cct = (4, 15) # O4
+#        
+#        # Première cellule "durée"
+#        ldp, cdp = (5, 11) # K5
+#        
+#        # Première cellule "systèmes"
+#        lsp, csp = (8, 4) # D8
+#        lst, cst = (8, 8) # H8
+#        
+#        listePrem = []
+#        listeTerm = []
+#
+#        
+#        for i in range(self.listeSeq.listeSeq.GetItemCount()):
+#            seq = self.listeSeq.GetSequence(i)
+#            if seq.position >= 4:
+#                listeTerm.append(seq)
+#            else:
+#                listePrem.append(seq)
+#        
+##        listePrem = sorted(listePrem, key=lambda s: s.intitule)
+##        listeTerm = sorted(listeTerm, key=lambda s: s.intitule)
+#        
+#        listeSystemes = []
+#        for i, seq in enumerate(listePrem + listeTerm):
+#            
+#            if seq in listePrem:
+#                c = ccp + i
+#                cs = csp + i
+#            else:
+#                c = cct + i - len(listePrem)
+#                cs = cst + i - len(listePrem)
+#                
+#            tableau.setCell(feuilleP, lcp, c, seq.intitule)
+#            tableau.setCell(feuilleP, ldp, c, str(seq.GetDuree()))
+#            tableau.setLink(feuilleP, lcp, c, seq.nomFichier)
+#            tableau.setCell(feuilleP, lcp-1, c, i+1)
+#            
+#            dicCel = constantes.dicCellSavoirs[self.typeEnseignement]
+#            for sav in seq.obj["S"].savoirs:
+#                if sav in dicCel.keys():
+#                    lig0, lig1 = dicCel[sav]
+#                    for l in range(lig0, lig1+1):
+#                        tableau.setCell(feuilleP, l, c, "X")
+#                else:
+#                    continuer = True
+#                    s=1
+#                    while continuer:
+#                        sav1 = sav+'.'+str(s)
+#                        if sav1 in dicCel.keys():
+#                            lig0, lig1 = dicCel[sav1]
+#                            for l in range(lig0, lig1+1):
+#                                tableau.setCell(feuilleP, l, c, "X")
+#                            s += 1
+#                        else:
+#                            continuer = False
+#            
+#            #
+#            # Tableau "Systèmes"
+#            #
+#            nbrSystemes = seq.GetNbrSystemes()
+#            for syst in seq.systemes:
+#                # ligne du tableau correspondant au système
+#                if not syst.nom in listeSystemes:
+#                    listeSystemes.append(syst.nom)
+#                    l = lsp+len(listeSystemes)-1
+#                    tableau.setCell(feuilleS, l, 1, syst.nom)
+#                else:
+#                    l = lsp+listeSystemes.index(syst.nom)-1
+#                
+#                # nombre d'exemplaires du système utilisés dans la séquence
+#                if syst.nom in nbrSystemes.keys():
+#                    tableau.setCell(feuilleS, l, cs, nbrSystemes[syst.nom])
+#                
+#            #
+#            # Ajout éventuel de colonnes
+#            #
+#            if seq in listePrem:
+#                if len(listePrem) > 3 and i < len(listePrem) - 3:
+#                    tableau.insertPasteCol(feuilleP, c+1)
+#                    tableau.insertPasteCol(feuilleS, cs+1)
+#                    cct += 1
+#            else:
+#                if len(listeTerm) > 3 and i - len(listePrem) < len(listeTerm) - 3:
+#                    tableau.insertPasteCol(feuilleP, c+1)
+#                    tableau.insertPasteCol(feuilleS, c+1)
+#                
+#        try:                   
+#            tableau.save(nomFichier)
+#        except :
+#            print nomFichier, "est déja ouvert !"
+#            return False
+#            
+#        tableau.close()
+#        return True
         
     ######################################################################################  
     def EvtRadioBox(self, event):
-        self.typeEnseignement = Referentiel.getEnseignementLabel(self.cb_type.GetItemLabel(event.GetInt()))[0]
+        print "EvtRadioBox"
+        radio_selected = event.GetEventObject()
+        typeEnseignement = Referentiel.getEnseignementLabel(radio_selected.GetLabel())[0]
+        self.referentiel = REFERENTIELS[typeEnseignement]
+        
+#        self.referentiel = REFERENTIELS[Referentiel.getEnseignementLabel(self.cb_type.GetItemLabel(event.GetInt()))[0]]
+        
+#        self.typeEnseignement = Referentiel.getEnseignementLabel(self.cb_type.GetItemLabel(event.GetInt()))[0]
         self.MiseAJourListe()
 #        for c, e in constantes.Enseignement.items():
 #            if e[0] == self.cb_type.GetItemLabel(event.GetInt()):
@@ -15219,28 +16032,37 @@ class FenetreBilan(wx.Frame):
                 self.txtDoss.SetBackgroundColour("pink")
                 self.dossiersOk = False
                 break
-    
+        self.txtDoss.Refresh()
     
 
-
+    
 
         
     ########################################################################################################
-    def MiseAJourListe(self):       
+    def MiseAJourListe(self, event = None):       
         if self.dossiersOk:
             wx.BeginBusyCursor()
             l = []
-            for dossier in self.dossiers:
-                l.extend(glob.glob(os.path.join(dossier, "*.seq")))
+            if self.recurs:
+                for dossier in self.dossiers:
+                    for root, dirs, files in os.walk(dossier):
+#                        print files
+                        l.extend([os.path.join(root, f) for f in files if os.path.splitext(f)[1] == '.seq'])
+            else:
+                for dossier in self.dossiers:
+                    l.extend(glob.glob(os.path.join(dossier, "*.seq")))
                 
+#            print "l =", l
             listSequences = []
          
             for f in l:
                 classe, sequence = self.OuvrirFichierSeq(f)
-                if classe != None and classe.typeEnseignement == self.typeEnseignement:
+#                print classe.typeEnseignement ,  self.referentiel.Code
+                if classe != None and classe.typeEnseignement == self.referentiel.Code:
                     sequence.nomFichier = f
                     listSequences.append(sequence)
                   
+#            print "listSequences", listSequences
             self.listeSeq.MiseAJourListe(listSequences)
             wx.EndBusyCursor()
         

@@ -220,6 +220,17 @@ class FrameRapport(wx.Frame):
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
             ext = os.path.splitext(path)[1].lstrip('.')
+            
+            if os.path.exists(path):
+                dlg = wx.MessageDialog(self, u"Le fichier existe déja !\n\n"\
+                                       u"Voulez-vous l'écraser ?", 
+                                       u"Fichier existant",
+                                       wx.ICON_WARNING | wx.YES_NO | wx.CANCEL)
+                res = dlg.ShowModal()
+                dlg.Destroy() 
+                if res != wx.ID_YES:
+                    return
+                    
             if path:
                 if ext == 'txt':
                     wildcard, types = rt.RichTextBuffer.GetExtWildcard(save=True)
