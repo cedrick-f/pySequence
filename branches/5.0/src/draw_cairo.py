@@ -1136,10 +1136,11 @@ def barreH(ctx, x, y, w, r, a, e, coul0, coul1, coul):
         
 def fleche_verticale(ctx, x, y, h, e, coul):
     ctx.set_source_rgba (coul[0], coul[1], coul[2], coul[3])
+    he = min(e/2, h/3)
     ctx.move_to(x-e/2, y)
-    ctx.line_to(x-e/2, y+h-e/2)
+    ctx.line_to(x-e/2, y+h-he)
     ctx.line_to(x, y+h)
-    ctx.line_to(x+e/2, y+h-e/2)
+    ctx.line_to(x+e/2, y+h-he)
     ctx.line_to(x+e/2, y)
     ctx.close_path ()
     ctx.fill_preserve ()    
