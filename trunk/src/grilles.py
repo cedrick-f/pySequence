@@ -113,8 +113,7 @@ def getTableaux(parent, doc):
     ref = doc.GetReferentiel()
     
     fichiers = ref.grilles_prj
-    
-    
+
     fichierPB = []
     
     def ouvrir(fichier):
