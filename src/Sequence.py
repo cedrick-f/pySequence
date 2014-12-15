@@ -40,7 +40,7 @@ Copyright (C) 2011-2014
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "5.6"
+__version__ = "5.7"
 print __version__
 
 #from threading import Thread
@@ -145,7 +145,7 @@ import  wx.lib.scrolledpanel as scrolled
 import wx.combo
 import wx.lib.platebtn as platebtn
 #import  wx.lib.buttons  as  buttons
-from wx.lib.agw import ultimatelistctrl as ULC
+
 import wx.lib.colourdb
 #import  wx.lib.fancytext as fancytext
 import  wx.lib.mixins.listctrl  as  listmix
@@ -4956,7 +4956,8 @@ class Tache(Objet_sequence):
                     t = self.GetReferentiel().phases_prj[self.phase][1]
             else:
                 t = u""
-            self.tip.SetTexte(t, self.tip_phase)
+            if hasattr(self, "tip_phase"):
+                self.tip.SetTexte(t, self.tip_phase)
 
 
         if not self.phase in ["R1", "R2", "R3", "S"]:
@@ -6682,8 +6683,11 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         # Element placé dans le "presse papier"
         self.elementCopie = None
         
+        
+        
         # Récupération de la dernière version
         wx.CallAfter(self.GetNewVersion)
+        
         
         self.Thaw()
         
@@ -7215,8 +7219,16 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     
     #############################################################################
     def etablirBilan(self, event = None):
+        for w in self.GetChildren():
+            if isinstance(w, FenetreBilan):
+                w.SetFocus()
+                return
 #        if self.GetFenetreActive() != None:
-        win = FenetreBilan(self, self.GetFenetreActive().DossierSauvegarde)
+        if self.GetFenetreActive():
+            dossier = self.GetFenetreActive().DossierSauvegarde
+        else:
+            dossier = constantes.INSTALL_PATH
+        win = FenetreBilan(self, dossier)
         win.Show()
 #        win.Destroy()
         
@@ -15683,7 +15695,8 @@ class FenetreBilan(wx.Frame):
         al = Alignment()
         al.horz = Alignment.HORZ_CENTER
         al.vert = Alignment.VERT_CENTER
-        al.rotation = Alignment.ORIENTATION_STACKED
+        al.rotation = Alignment.ORIENTATION_90_CC
+        
         al.wrap = True
         
         pattern = Pattern()
