@@ -303,32 +303,32 @@ def copierClasseurs(doc, nomFichiers):
 
 
 
-from xlrd import open_workbook
-def modifierGrille2(doc, nomFichiers, eleve):
-    """
-    """
-    #
-    # On renseigne quelques informations
-    #
-    dicInfo = doc.GetReferentiel().cellulesInfo_prj
-
-    schem = {"Tit" : doc.intitule,
-             "Des" : doc.intitule + "\n" + doc.problematique,
-             "Nom" : eleve.GetNom(),
-             "Pre" : eleve.GetPrenom(),
-             "Etab": doc.classe.etablissement,
-             "N-P" : eleve.GetNomPrenom()
-             }
-    
-    for c, nf in nomFichiers.items():
-        wb = open_workbook(nf)
-        sh = wb.sheet_by_index(0)
-        for k, v in schem.items():
-            if k in dicInfo.keys():
-                l,c = dicInfo[k][1]
-                sh.write(l-1, c-1, v)
-                
-    wb.save()
+#from xlrd import open_workbook
+#def modifierGrille2(doc, nomFichiers, eleve):
+#    """
+#    """
+#    #
+#    # On renseigne quelques informations
+#    #
+#    dicInfo = doc.GetReferentiel().cellulesInfo_prj
+#
+#    schem = {"Tit" : doc.intitule,
+#             "Des" : doc.intitule + "\n" + doc.problematique,
+#             "Nom" : eleve.GetNom(),
+#             "Pre" : eleve.GetPrenom(),
+#             "Etab": doc.classe.etablissement,
+#             "N-P" : eleve.GetNomPrenom()
+#             }
+#    
+#    for c, nf in nomFichiers.items():
+#        wb = open_workbook(nf)
+#        sh = wb.sheet_by_index(0)
+#        for k, v in schem.items():
+#            if k in dicInfo.keys():
+#                l,c = dicInfo[k][1]
+#                sh.write(l-1, c-1, v)
+#                
+#    wb.save()
         
     
 xlTypePDF = 0
