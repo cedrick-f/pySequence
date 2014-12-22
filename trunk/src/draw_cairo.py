@@ -38,7 +38,7 @@ from math import sqrt, pi, cos, sin
 import cairo
 import time
 
-
+from widgets import getHoraireTxt
 
 #
 # Données pour le tracé
@@ -244,17 +244,7 @@ def permut(liste):
     return l
     
     
-def getHoraireTxt(v, prefixe = u""): 
-    h, m = divmod(v*60, 60)
-    h = str(int(h))
-    if m == 0:
-        m = ""
-    else:
-        m = str(int(m))
-    if h == "0":
-        return prefixe+m+"'"
-    else:
-        return prefixe+h+"h"+m
+
 
 
 ######################################################################################

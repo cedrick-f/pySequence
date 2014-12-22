@@ -186,7 +186,7 @@ Element = type(ET.Element(None))
 
 
 # des widgets wx évolués "faits maison"
-from widgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_ENTIER_POS#, chronometrer
+from widgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_ENTIER_POS, getHoraireTxt#, chronometrer
 #from CustomCheckBox import CustomCheckBox
 # Les constantes et les fonctions de dessin
 
@@ -15443,8 +15443,7 @@ class FenetreBilan(wx.Frame):
         self.styleE = styleE
         
         ######################################################
-        
-        
+
         fnt = Font()
         fnt.name = 'Arial'
         fnt.colour_index = 0
@@ -15505,6 +15504,37 @@ class FenetreBilan(wx.Frame):
         style01.alignment = al
         style01.pattern = pattern
         self.style01 = style01
+        
+        ######################################################
+        fnt = Font()
+        fnt.name = 'Arial'
+        fnt.colour_index = 0
+        fnt.outline = True
+        fnt.struck_out = False
+        fnt.bold = True
+        fnt.height = 14*20
+
+        borders = Borders()
+        borders.left = 1
+        borders.right = 1
+        borders.top = 1
+        borders.bottom = 1
+        
+        al = Alignment()
+        al.horz = Alignment.HORZ_LEFT
+        al.vert = Alignment.VERT_CENTER
+        al.wrap = True
+        
+        pattern = Pattern()
+        pattern.pattern = Pattern.SOLID_PATTERN
+        pattern.pattern_fore_colour = 43
+        
+        style02 = XFStyle()
+        style02.font = fnt
+        style02.borders = borders
+        style02.alignment = al
+        style02.pattern = pattern
+        self.style02 = style02
     
         ######################################################
         fnt = Font()
@@ -15574,6 +15604,37 @@ class FenetreBilan(wx.Frame):
         fnt.colour_index = 0
         fnt.outline = True
         fnt.struck_out = False
+        fnt.bold = False
+        fnt.height = 12*20
+
+        borders = Borders()
+        borders.left = 1
+        borders.right = 1
+        borders.top = 1
+        borders.bottom = 1
+        
+        al = Alignment()
+        al.horz = Alignment.HORZ_LEFT
+        al.vert = Alignment.VERT_CENTER
+        
+        pattern = Pattern()
+        pattern.pattern = Pattern.SOLID_PATTERN
+        pattern.pattern_fore_colour = 41
+        al.wrap = True
+
+        style12 = XFStyle()
+        style12.font = fnt
+        style12.borders = borders
+        style12.alignment = al
+        style12.pattern = pattern
+        self.style12 = style12
+        
+        ######################################################
+        fnt = Font()
+        fnt.name = 'Arial'
+        fnt.colour_index = 0
+        fnt.outline = True
+        fnt.struck_out = False
         fnt.bold = True
         fnt.height = 10*20
 
@@ -15630,6 +15691,38 @@ class FenetreBilan(wx.Frame):
         style21.alignment = al
         style21.pattern = pattern
         self.style21 = style21
+        
+        ######################################################
+        fnt = Font()
+        fnt.name = 'Arial'
+        fnt.colour_index = 0
+        fnt.outline = True
+        fnt.struck_out = False
+        fnt.bold = False
+        fnt.height = 10*20
+        
+
+        borders = Borders()
+        borders.left = 1
+        borders.right = 1
+        borders.top = 1
+        borders.bottom = 1
+        
+        al = Alignment()
+        al.horz = Alignment.HORZ_LEFT
+        al.vert = Alignment.VERT_CENTER
+        al.wrap = True
+        
+        pattern = Pattern()
+        pattern.pattern = Pattern.SOLID_PATTERN
+        pattern.pattern_fore_colour = 1
+
+        style22 = XFStyle()
+        style22.font = fnt
+        style22.borders = borders
+        style22.alignment = al
+        style22.pattern = pattern
+        self.style22 = style22
         
         # Croix #####################################################
         fnt = Font()
@@ -15992,18 +16085,20 @@ class FenetreBilan(wx.Frame):
         for c0, v0 in sorted(dic):
             ws0.write(l, c, c0, self.style0)                                     # Code
             ws0.write_merge(l, l, c+1, c+3, v0[0], self.style01)                   # Intitulé
-            dicLigne[c0] = [l]
+            dicLigne[c0] = [l, [], 0]
             l += 1
             if type(v0[1]) == dict:
                 for c1, v1 in sorted(v0[1].items()):
                     ws0.write(l, c+1, c1, self.style1)                           # Code
-                    dicLigne[c1] = [l]
+                    dicLigne[c1] = [l, [], 1]
+                    dicLigne[c0][1].append(c1)
                     ws0.write_merge(l, l, c+2, c+3, v1[0], self.style11)           # Intitulé
                     if type(v1[1]) == dict:
                         for c2, v2 in sorted(v1[1].items()):
                             l += 1
                             ws0.write(l, c+2, c2, self.style2)                   # Code
-                            dicLigne[c2] = [l]
+                            dicLigne[c2] = [l, [], 2]
+                            dicLigne[c1][1].append(c2)
                             ws0.write_merge(l, l, c+3, c+3, v2[0], self.style21)   # Intitulé
 #                                l += 1
                     l += 1
@@ -16020,11 +16115,21 @@ class FenetreBilan(wx.Frame):
         ws0.col(c0+0).width = 100*20
         ws0.col(c0+1).width = 100*20
         ws0.col(c0+2).width = 100*20
-        ws0.col(c0+3).width = 1000*20
-        ws0.col(c0+4).width = 30*20
+        ws0.col(c0+3).width = 900*20
+        ws0.col(c0+4).width = 15*20
 #        for cc in range(c0+5, c0+c):
 #            ws0.col(cc).width = 80*20
-                
+    
+    ######################################################################################  
+    def getStyleComp(self, niv):
+        if niv == 0:
+            return self.style02
+        elif niv == 1:
+            return self.style12
+        elif niv == 2:
+            return self.style22
+        
+                               
     ######################################################################################  
     def genererBilanComplexe(self, wb):
         
@@ -16053,27 +16158,30 @@ class FenetreBilan(wx.Frame):
                 c += 1
             return  ws0, dicLigne, last 
         
+        col_deb = 6
+        
         nom = self.referentiel.nomCompetences + u" - CI"
         ws0 = wb.add_sheet(nom)
-        ws0.write_merge(1, 3, 1, 5, self.referentiel.Enseignement[0], self.styleT)
-        ws0.write_merge(5, 5, 0, 5, nom, self.styleE)
-        dicLigne, lastComp = self.traiterDic(self.referentiel.dicCompetences.items(), ws0, c = 2)
+        ws0.write_merge(1, 3, 1, col_deb-2, self.referentiel.Enseignement[0], self.styleT)
+        ws0.write_merge(5, 5, 0, col_deb-2, nom, self.styleE)
+        dicLigne, lastComp = self.traiterDic(self.referentiel.dicCompetences.items(), ws0, c = 1)
         
         #
         # Séquences en colonne
         #  
-        c = 6
+        c = col_deb
         l = lastComp+1
         
-        ws0.write_merge(l, l, 0, 5, u"Séquences", self.styleE)
+        ws0.write_merge(l, l, 0, col_deb-2, u"Séquences", self.styleE)
         
         l += 1
         ws0.write(l, c-6, u"Année", self.styleS)             # Année
         ws0.write(l, c-5, u"Période", self.styleS)           # Période
         ws0.write(l, c-4, u"Numéro", self.styleS)            # Numéro de séquence
         ws0.write(l, c-3, u"Fichier", self.styleS)           # Fichier
-        ws0.write(l, c-2, u"Durée", self.styleS)             # Fichier
-        ws0.write(l, c-1, u"Intitulé", self.styleS)          # Intitulé
+        ws0.write(l, c-2, u"Intitulé", self.styleS)          # Intitulé
+        
+        ws0.write(l, c, u"Durée", self.styleS)               # Durée
         
         l += 2
         pt = 0
@@ -16081,26 +16189,30 @@ class FenetreBilan(wx.Frame):
         for p, lst in enumerate(self.seqTriees):
             for i, seq in enumerate(lst):
                 ws0.write(l, c-4, (i*(p+1))+1, self.styleN)                  # Numéro de séquence
-                ws0.write(l, c-1, seq.intitule, self.styleS)                 # Intitulé
-                ws0.write(l, c-2, str(seq.GetDuree()), self.styleD)          # Durée
+                ws0.write(l, c-2, seq.intitule, self.styleS)                 # Intitulé
+                ws0.write(l, c, getHoraireTxt(seq.GetDuree()), self.styleD)            # Durée
                 ws0.write(l, c-3, Formula(n + '("%s";"%s")' %(seq.nomFichier, os.path.split(seq.nomFichier)[1])), self.h_style)           # Fichier
                 l += 1
             if len(lst) > 0:
                 ws0.write_merge(l-i-1, l-1, c-5, c-5, seq.position+1, self.stylePer)  # Période
             if pt == 0 and seq.position == 4:
                 pt = l
-            ws0.row(c).height = 15*20
+            ws0.row(c).height = 10*20
             l += 1
         lastSeq = l-1
         if pt != 0:
             ws0.write_merge(lastComp+4, pt-1, c-6, c-6, u"1ère", self.styleN)  # Période
             if pt < lastSeq:
                 ws0.write_merge(pt+1, lastSeq, c-6, c-6, u"Tale", self.styleN)  # Période
+                
+                
         #
         # CI en ligne
         #        
-        c = 7
+        c = col_deb+2
         l = 4
+        ws0.write_merge(l-3, l-3, c, c+len(self.referentiel.CentresInterets)-1, u"Centres d'intérêt", self.styleT)
+        
         for i, ci in enumerate(self.referentiel.CentresInterets):
             if len(self.referentiel.positions_CI) > i:
                 pos = self.referentiel.positions_CI[i]
@@ -16122,17 +16234,21 @@ class FenetreBilan(wx.Frame):
                 for poids in seq.CI.poids:
                     lstSomPoidsSeq[-1] += poids
 #        print  lstSomPoidsSeq
+
         #
         # On met les durées au croisement seq/CI
         #
-        c = 7
+        c = col_deb+2
         l = lastComp+4
         j = 0
+        sumCI = [0]*len(self.referentiel.CentresInterets)
         for p, lst in enumerate(self.seqTriees):
             for i, seq in enumerate(lst):
                 # Poids horaires
                 for ci, poids in zip(seq.CI.numCI, seq.CI.poids):
-                    ws0.write(l, c+ci, poids*seq.GetDuree()/lstSomPoidsSeq[j], self.styleX)
+                    p = poids*seq.GetDuree()/lstSomPoidsSeq[j]
+                    sumCI[ci] += p
+                    ws0.write(l, c+ci, getHoraireTxt(p), self.styleX)
                 # Case vides
                 for co in range(c, lastCI):
                     try:
@@ -16143,36 +16259,52 @@ class FenetreBilan(wx.Frame):
                 j += 1
             l += 1
         
+
         #
         # On met les croix Compétences/CI
         #
-        c = 7
+        c = col_deb+2
         l = 6
         for p, lst in enumerate(self.seqTriees):
             for i, seq in enumerate(lst):         
                 for sav in seq.obj["C"].competences:
                     if sav in dicLigne.keys():
-                        for li in dicLigne[sav]:
-                            for ci in seq.CI.numCI:
-                                try:
-                                    ws0.write(li, c+ci, "X", self.styleX)
-                                except:
-                                    pass
-                for co in range(c, lastCI):
-                    for li in range(l, lastComp):
-                        try:
-                            ws0.write(li, co, "", self.stylenX)
-                        except:
-                            pass
-
-        ws0.col(0).width = 70*20
-        ws0.col(1).width = 50*20
-        self.reglerLargeursGauche(ws0, c, c0 = 2)
+                        li = dicLigne[sav][0]
+#                        for li in dicLigne[sav]:
+                        for ci in seq.CI.numCI:
+                            try:
+                                ws0.write(li, c+ci, "X", self.styleX)
+                            except:
+                                pass
+                                
+        for co in range(c, lastCI):
+#            for li in range(l, lastComp):
+            for li, ch, niv  in dicLigne.values():
+                try:
+                    ws0.write(li, co, "", self.getStyleComp(niv))
+                except:
+                    pass
+                
+        #
+        # On met les formules de somme
+        #
+        l = lastComp+2
+        c = col_deb+2
+        for ci in range(c, lastCI):
+            cc = constantes.lettreCol(ci)
+#            ws0.write(l, ci, Formula("SUM("+cc+str(l+3)+":"+cc+str(lastSeq+1)+")"), self.styleN)
+            ws0.write(l, ci, getHoraireTxt(sumCI[ci-c]), self.styleN)
+        
+        ws0.col(0).width = 80*20
+        ws0.col(1).width = 70*20
+        self.reglerLargeursGauche(ws0, c, c0 = 1)
+        ws0.col(col_deb).width = 80*20
+        ws0.col(col_deb+1).width = 15*20
         
         
         return
         
-        
+    
     ######################################################################################  
     def genererBilan(self, nomFichier):
         wb = Workbook()
@@ -16198,19 +16330,29 @@ class FenetreBilan(wx.Frame):
             #
             c = 5
             l = 6
+            pt = 0
             n = "HYPERLINK"
             for p, lst in enumerate(self.seqTriees):
                 for i, seq in enumerate(lst):
                     ws0.write(l-4, c, (i*(p+1))+1, self.styleN)                  # Numéro de séquence
                     ws0.write(l-3, c, seq.intitule, self.styleS)                 # Intitulé
-                    ws0.write(l-2, c, str(seq.GetDuree()), self.styleD)          # Durée
+                    ws0.write(l-2, c, getHoraireTxt(seq.GetDuree()), self.styleD)          # Durée
                     ws0.write(l-1, c, Formula(n + '("%s";"%s")' %(seq.nomFichier, os.path.split(seq.nomFichier)[1])), self.h_style)           # Fichier
-                    ws0.col(c).width = 60*20
+                    ws0.col(c).width = 100*20
                     c += 1
                 if len(lst) > 0:
-                    ws0.write_merge(l-5, l-5, c-i-1, c-1, seq.position+1, self.styleN)
-                ws0.col(c).width = 10*20
+                    ws0.write_merge(l-5, l-5, c-i-1, c-1, seq.position+1, self.styleN) # Période
+                if pt == 0 and seq.position == 4:
+                    pt = c
+                ws0.col(c).width = 15*20
                 c += 1
+            
+            if pt != 0:
+                ws0.write_merge(l-6, l-6, 5, pt-1, u"1ère", self.styleN)  # Année
+                if pt < c:
+                    ws0.write_merge(l-6, l-6, pt+1, c, u"Tale", self.styleN)  # Année
+                
+                
             return  ws0, dicLigne, last 
         
         
@@ -16225,15 +16367,18 @@ class FenetreBilan(wx.Frame):
             for i, seq in enumerate(lst):         
                 for sav in seq.obj["C"].competences:
                     if sav in dicLigne.keys():
-                        for li in dicLigne[sav]:
-                            ws0.write(li, c, "X", self.styleX)
-                for li in range(l+1, last):
+                        li = dicLigne[sav][0]
+#                        for li in dicLigne[sav]:
+                        ws0.write(li, c, "X", self.styleX)
+#                for li in range(l+1, last):
+                for li, ch, niv in dicLigne.values():
                     try:
-                        ws0.write(li, c, "", self.stylenX)
+                        ws0.write(li, c, "", self.getStyleComp(niv))
                     except:
                         pass
                 c += 1
             c += 1
+                
         self.reglerLargeursGauche(ws0, c)
         
         
@@ -16250,12 +16395,14 @@ class FenetreBilan(wx.Frame):
                 for i, seq in enumerate(lst):
                     for sav in seq.obj["S"].savoirs:
                         if sav[1:] in dicLigne.keys() and sav[0] == 'B':
-                            for li in dicLigne[sav[1:]]:
-                                ws0.write(li, c, "X", self.styleX)       # X
+                            li = dicLigne[sav[1:]][0]
+#                            for li in dicLigne[sav[1:]]:
+                            ws0.write(li, c, "X", self.styleX)       # X
                     
-                    for li in range(l+1, last):
+#                    for li in range(l+1, last):
+                    for li, ch, niv in dicLigne.values():
                         try:
-                            ws0.write(li, c, "", self.stylenX)
+                            ws0.write(li, c, "", self.getStyleComp(niv))
                         except:
                             pass
                     c += 1
@@ -16276,12 +16423,14 @@ class FenetreBilan(wx.Frame):
             for i, seq in enumerate(lst):
                 for sav in seq.obj["S"].savoirs:
                     if sav[1:] in dicLigne.keys() and sav[0] == 'S':
-                        for li in dicLigne[sav[1:]]:
-                            ws0.write(li, c, "X", self.styleX)       # X
+                        li = dicLigne[sav[1:]][0]
+#                        for li in dicLigne[sav[1:]]:
+                        ws0.write(li, c, "X", self.styleX)       # X
                 
-                for li in range(l+1, last):
+#                for li in range(l+1, last):
+                for li, ch, niv in dicLigne.values():
                     try:
-                        ws0.write(li, c, "", self.stylenX)
+                        ws0.write(li, c, "", self.getStyleComp(niv))
                     except:
                         pass
                 c += 1
