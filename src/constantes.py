@@ -257,6 +257,8 @@ def ellipsizer(txt, lg):
         t += u"..."
     return t
 
+def lettreCol(num):
+    return chr(65+num)
 
 ####################################################################################
 #

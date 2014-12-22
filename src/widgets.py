@@ -747,7 +747,17 @@ def chronometrer(fct, *args, **kargs):
     return tps2 - tps1, result
 
 
-
+def getHoraireTxt(v, prefixe = u""): 
+    h, m = divmod(v*60, 60)
+    h = str(int(h))
+    if m == 0:
+        m = ""
+    else:
+        m = "%02d" %m
+    if h == "0":
+        return prefixe+m+"'"
+    else:
+        return prefixe+h+"h"+m
     
     
     
