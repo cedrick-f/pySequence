@@ -1,13 +1,12 @@
 #Modification d'un programme d'enseignement
 
-*Fonctionnalité disponible à partir de la version 5 - prochainement !*
-
 Selon les enseignement, certains éléments du programme ne sont pas spécifiés au B.O. (comme les Centres d'Intérêt par exemple).
 Voici la méthode pour adapter un programme d'enseignement aux choix académiques.
 
  * Fermer _*pySequence*_
  * Ouvrir le fichier Excel correspondant au programme à modifier
 Emplacement : `pySequence\referentiels`
+ * _ou bien_ copier un des fichiers existants pour créer un nouveau fichier programme.
  * Sélectionner la feuille contenant l'élément à modifier (par exemple 'CI') et opérer les modifications.
 ATTENTION : pas de retour à la ligne dans les intitulés !
  * Enregistrer les modifications
@@ -16,4 +15,6 @@ ATTENTION : pas de retour à la ligne dans les intitulés !
 En cas d'erreur, contacter l'équipe de développement.
 
 Il est en théorie possible de créer un nouveau programme d'enseignement au complet. Il suffit de faire une copie d'un des fichiers `.xls` du dossier `referentiels` et d'y saisir les éléments du programme à ajouter.
-L'opération est toutefois délicate et il est probabled que cela engendre des erreurs dans _*pySequence*_. Merci de contacter l'équipe de développement en cas de problème.
+L'opération est toutefois délicate et il est probable que cela engendre des erreurs dans _*pySequence*_. 
+
+Merci de contacter l'équipe de développement en cas de problème.
