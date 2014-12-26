@@ -503,6 +503,12 @@
   <l_listeTypeSeance S_listeTypeSeance00="ED" S_listeTypeSeance01="AP" S_listeTypeSeance02="P" S_listeTypeSeance03="C" S_listeTypeSeance04="TD" S_listeTypeSeance05="SA" S_listeTypeSeance06="SS" S_listeTypeSeance07="E" S_listeTypeSeance08="R" S_listeTypeSeance09="S" />
   <d_nomParties_prj />
   <d_options />
+  <l_periode_prj />
+  <l_periodes>
+    <l_periodes00 I_periodes0001="2" S_periodes0000="T1" />
+    <l_periodes01 I_periodes0101="2" S_periodes0100="T2" />
+    <l_periodes02 I_periodes0201="2" S_periodes0200="T3" />
+  </l_periodes>
   <d_phases_prj />
   <d_posRevues>
     <l__02 />

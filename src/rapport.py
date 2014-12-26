@@ -890,7 +890,7 @@ class RapportRTF(rt.RichTextCtrl):
                         elif err[0] == 0:  #open failure
                             pass
                         else:
-                            print 'ERROR in Clipboard section of readcomments: %s' % err
+                            print 'ERROR in Clipboard section of readcomments: %s' %err
                             pass
 
             tache.panelPropriete.rtc.rtc.Copy()

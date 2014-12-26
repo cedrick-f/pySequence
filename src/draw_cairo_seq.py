@@ -347,8 +347,7 @@ def Draw(ctx, seq, mouchard = False):
     taillePos[0] =  0.72414 - posPos[0] - margeX
     ctx.set_line_width (0.0015)
     seq.rectPos = DrawPeriodes(ctx, seq.position, 
-                               seq.classe.referentiel.getNiveau(),
-                               seq.classe.referentiel.getNbrPeriodes(),
+                               seq.classe.referentiel.periodes,
                                tailleTypeEns = tailleTypeEns)
     seq.rect.append(posPos+taillePos)
     
@@ -752,7 +751,7 @@ def DrawLigneEff(ctx, x, y):
     ctx.set_dash([], 0)
 
 ######################################################################################  
-def DrawPeriodes(ctx, pos = None, niv = 'lyc', nbr = 10, tailleTypeEns = 0, origine = False):
+def DrawPeriodes(ctx, pos = None, periodes = [[u"Année", 5]], tailleTypeEns = 0, origine = False):
     ctx.set_line_width (0.001)
     if origine:
         x = 0
@@ -777,59 +776,103 @@ def DrawPeriodes(ctx, pos = None, niv = 'lyc', nbr = 10, tailleTypeEns = 0, orig
     ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                        cairo.FONT_WEIGHT_NORMAL)
     
-    if niv == 'lyc':
-        pm = show_text_rect_fix(ctx, u"1", x, y, wt/2, ht*2/3, fontPos, 1)#, outPosMax = True)
-     
-        ctx.stroke ()
-        show_text_rect_fix(ctx, u"ère", pm+0.002, y, wt/2, ht/3, fontPos*0.9, 1, ha = 'g')
-        ctx.stroke ()
-        
-        pm = show_text_rect_fix(ctx, u"T", x+wt/2, y, wt/2, ht*2/3, fontPos, 1)#, outPosMax = True)
+    dx = 0.02 * wt
+    h = ht/2-2*dx
     
-        ctx.stroke ()
-        show_text_rect_fix(ctx, u"ale", pm+0.002, y, wt/2, ht/3, fontPos*0.9, 1, ha = 'g')
-        ctx.stroke ()
+    rect = []
+#    print "Périodes", periodes
+    wi = wt/len(periodes) - dx*(len(periodes)-1)
+    
+    pa = 0
+    for i, (an, np) in enumerate(periodes):
+        annee = an.split("_")
+#        print "   ", annee
+        ctx.set_font_size(fontPos)
+        w0, h0 = ctx.text_extents(annee[0])[2:4]
+        xi = x + wi/2 + (dx+wi)*i
+#        print "   ", w0, h0, xi
+        if len(annee) > 1:
+            ctx.set_font_size(fontPos*0.9)
+            w1, h1 = ctx.text_extents(annee[1])[2:4]
+#            print "   ", w1, h1
+            pm = show_text_rect_fix(ctx, annee[0], xi-(w0+w1)/2, y, w0, ht*2/3, fontPos, 1)
+            ctx.stroke ()
+            show_text_rect_fix(ctx, annee[1], xi-(w0+w1)/2 + w0 + 0.01, y, w1, ht/3, fontPos*0.9, 1, ha = 'g')
+            ctx.stroke ()
+        else:
+            pm = show_text_rect_fix(ctx, annee[0], xi-w0/2, y, w0, ht*2/3, fontPos, 1)
+            ctx.stroke ()
         
-        dx = wt/4 / (nbr+2) # Ecart entre les cases
-        x += dx
-        h = ht/2-2*dx
-        w = 3*wt/4 / nbr
-        rect = []
-        for p in range(10):
-            ctx.rectangle(x, y+ht/2+dx, w, h)
-            rect.append((x, y+ht/2+dx, w, h))
-            if pos == p:
+        w = (wi-dx)/np-dx
+        xi = x + (dx+wi)*i + dx
+        for p in range(np):
+            pa += 1
+            ctx.rectangle (xi, y+ht/2+dx, w, h)
+            rect.append((xi, y+ht/2+dx, w, h))
+            if pos == pa - 1:
                 ctx.set_source_rgba (AcoulPos[0], AcoulPos[1], AcoulPos[2], AcoulPos[3])
             else:
                 ctx.set_source_rgba (IcoulPos[0], IcoulPos[1], IcoulPos[2], IcoulPos[3])
             ctx.fill_preserve ()
             ctx.set_source_rgba (BcoulPos[0], BcoulPos[1], BcoulPos[2], BcoulPos[3])
             ctx.stroke ()
-            if p == nbr/2-1:
-                x += dx
-            x+= dx + w
-    
-    else:
-        dx = wt/4 / (nbr+1) # Ecart entre les cases
-        x += dx
-        h = ht/2-2*dx
-        w = 3*wt/4 / nbr
-        rect = []
-        for p in range(5):
-            pm = show_text_rect_fix(ctx, str(p+1), x, y, w, ht*2/3, fontPos, 1)#, outPosMax = True)
-            ctx.stroke ()
-        
-            ctx.rectangle (x, y+ht/2+dx, w, h)
-            rect.append((x, y+ht/2+dx, w, h))
-            if pos == p:
-                ctx.set_source_rgba (AcoulPos[0], AcoulPos[1], AcoulPos[2], AcoulPos[3])
-            else:
-                ctx.set_source_rgba (IcoulPos[0], IcoulPos[1], IcoulPos[2], IcoulPos[3])
-            ctx.fill_preserve ()
-            ctx.set_source_rgba (BcoulPos[0], BcoulPos[1], BcoulPos[2], BcoulPos[3])
-            ctx.stroke ()
+#            if p == 3:
+#                x += dx
+            xi += dx + w
             
-            x+= dx + w
+#    if niv == 'lyc':
+#        pm = show_text_rect_fix(ctx, u"1", x, y, wt/2, ht*2/3, fontPos, 1)#, outPosMax = True)
+#     
+#        ctx.stroke ()
+#        show_text_rect_fix(ctx, u"ère", pm+0.002, y, wt/2, ht/3, fontPos*0.9, 1, ha = 'g')
+#        ctx.stroke ()
+#        
+#        pm = show_text_rect_fix(ctx, u"T", x+wt/2, y, wt/2, ht*2/3, fontPos, 1)#, outPosMax = True)
+#    
+#        ctx.stroke ()
+#        show_text_rect_fix(ctx, u"ale", pm+0.002, y, wt/2, ht/3, fontPos*0.9, 1, ha = 'g')
+#        ctx.stroke ()
+#        
+#        dx = wt/4 / (nbr+2) # Ecart entre les cases
+#        x += dx
+#        h = ht/2-2*dx
+#        w = 3*wt/4 / nbr
+#        rect = []
+#        for p in range(10):
+#            ctx.rectangle(x, y+ht/2+dx, w, h)
+#            rect.append((x, y+ht/2+dx, w, h))
+#            if pos == p:
+#                ctx.set_source_rgba (AcoulPos[0], AcoulPos[1], AcoulPos[2], AcoulPos[3])
+#            else:
+#                ctx.set_source_rgba (IcoulPos[0], IcoulPos[1], IcoulPos[2], IcoulPos[3])
+#            ctx.fill_preserve ()
+#            ctx.set_source_rgba (BcoulPos[0], BcoulPos[1], BcoulPos[2], BcoulPos[3])
+#            ctx.stroke ()
+#            if p == nbr/2-1:
+#                x += dx
+#            x+= dx + w
+#    
+#    else:
+#        dx = wt/4 / (nbr+1) # Ecart entre les cases
+#        x += dx
+#        h = ht/2-2*dx
+#        w = 3*wt/4 / nbr
+#        rect = []
+#        for p in range(5):
+#            pm = show_text_rect_fix(ctx, str(p+1), x, y, w, ht*2/3, fontPos, 1)#, outPosMax = True)
+#            ctx.stroke ()
+#        
+#            ctx.rectangle (x, y+ht/2+dx, w, h)
+#            rect.append((x, y+ht/2+dx, w, h))
+#            if pos == p:
+#                ctx.set_source_rgba (AcoulPos[0], AcoulPos[1], AcoulPos[2], AcoulPos[3])
+#            else:
+#                ctx.set_source_rgba (IcoulPos[0], IcoulPos[1], IcoulPos[2], IcoulPos[3])
+#            ctx.fill_preserve ()
+#            ctx.set_source_rgba (BcoulPos[0], BcoulPos[1], BcoulPos[2], BcoulPos[3])
+#            ctx.stroke ()
+#            
+#            x+= dx + w
             
     return rect
     

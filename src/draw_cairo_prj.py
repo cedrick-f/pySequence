@@ -67,7 +67,7 @@ margeY = 0.04
 
 # Ecarts
 ecartX = 0.02
-ecartY = 0.03
+ecartY = 0.02
 
 
 
@@ -81,7 +81,7 @@ fontSup = 0.014
 
 # Equipe pédagogique
 tailleEqu = (0.29, 0.18 - tailleSup[1] - ecartY/2)
-posEqu = (margeX, posSup[1] + tailleSup[1] + ecartY/2)
+posEqu = (margeX, posSup[1] + tailleSup[1] + ecartY)
 IcoulEqu = (0.8, 0.8, 0.9, 0.85)
 BcoulEqu = (0.2, 0.25, 0.3, 1)
 fontEqu = 0.014
@@ -338,7 +338,8 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
     posPos[0] = posEqu[0] + tailleEqu[0] + ecartX + tailleTypeEns
     taillePos[0] =  0.72414 - posPos[0] - margeX
     ctx.set_line_width (0.0015)
-    prj.rectPos = DrawPeriodes(ctx, prj.position, prj.classe.referentiel.getNiveau(), tailleTypeEns = tailleTypeEns)
+    prj.rectPos = DrawPeriodes(ctx, prj.position, prj.classe.referentiel.periodes,
+                               prj.classe.referentiel.periode_prj,  tailleTypeEns = tailleTypeEns)
     prj.rect.append(posPos+taillePos)
     
 #    print "     3 ", time.time() - tps
@@ -671,7 +672,8 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
     # Durées élève entre revues (uniquement en période "terminale")
     #
 #    tps = time.time()
-    if prj.position == 5:
+    posEpreuve = prj.GetReferentiel().periode_prj[0] - 1
+    if prj.position == posEpreuve:
         y0 = posZTaches[1]
         y4 = y1+len(prj.eleves) * hRevue + 2*ecartTacheY
 #        y4 = y1+2*ecartTacheY + 0.015
@@ -766,7 +768,7 @@ def DrawLigneEff(ctx, x, y):
     ctx.set_dash([], 0)
 
 ######################################################################################  
-def DrawPeriodes(ctx, pos = None, ens = 'lyc', tailleTypeEns = 0, origine = False):
+def DrawPeriodes(ctx, pos = None, periodes = [[u"Année", 5]], periode_prj = [], tailleTypeEns = 0, origine = False):
     ctx.set_line_width (0.001)
     if origine:
         x = 0
@@ -791,77 +793,146 @@ def DrawPeriodes(ctx, pos = None, ens = 'lyc', tailleTypeEns = 0, origine = Fals
     ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                        cairo.FONT_WEIGHT_NORMAL)
     
-    if ens == 'lyc':
-        pm = show_text_rect_fix(ctx, u"1", x, y, wt/2, ht*2/3, fontPos, 1)#, outPosMax = True)
-     
-        ctx.stroke ()
-        show_text_rect_fix(ctx, u"ère", pm+0.002, y, wt/2, ht/3, fontPos*0.9, 1, ha = 'g')
-        ctx.stroke ()
-        
-        pm = show_text_rect_fix(ctx, u"T", x+wt/2, y, wt/2, ht*2/3, fontPos, 1)#, outPosMax = True)
+    dx = 0.02 * wt
+    h = ht/2-2*dx
     
-        ctx.stroke ()
-        show_text_rect_fix(ctx, u"ale", pm+0.002, y, wt/2, ht/3, fontPos*0.9, 1, ha = 'g')
-        ctx.stroke ()
+    rect = []
+#    print "Périodes", periodes
+#    print "periode_prj", periode_prj
+    wi = wt/len(periodes) - dx*(len(periodes)-1)
+    
+    pa = 0
+    xa = []
+    for i, (an, np) in enumerate(periodes):
         
-        dx = 0.005
-        x += dx
-        h = ht/2-2*dx
-        w = (wt - 10 * dx)/8
-        rect = []
-        for p in range(5):
-            ctx.rectangle (x, y+ht/2+dx, w, h)
-            rect.append((x, y+ht/2+dx, w, h))
-            if pos == p:
-                ctx.set_source_rgba (AcoulPos[0], AcoulPos[1], AcoulPos[2], AcoulPos[3])
-            else:
-                ctx.set_source_rgba (IcoulPos[0], IcoulPos[1], IcoulPos[2], IcoulPos[3])
-            ctx.fill_preserve ()
-            ctx.set_source_rgba (BcoulPos[0], BcoulPos[1], BcoulPos[2], BcoulPos[3])
+        annee = an.split("_")
+        ctx.set_font_size(fontPos)
+        w0, h0 = ctx.text_extents(annee[0])[2:4]
+        xi = x + wi/2 + (dx+wi)*i
+        if len(annee) > 1:
+            ctx.set_font_size(fontPos*0.9)
+            w1, h1 = ctx.text_extents(annee[1])[2:4]
+            pm = show_text_rect_fix(ctx, annee[0], xi-(w0+w1)/2, y, w0, ht*2/3, fontPos, 1)
             ctx.stroke ()
-            if p == 3:
-                x += dx
-            x+= dx + w
-            
-        p = 5
-        ctx.rectangle (x, y+ht/2+dx, w*3+dx*2, h)
-        rect.append((x, y+ht/2+dx, w*3+dx*2, h))
-        if pos == p:
+            show_text_rect_fix(ctx, annee[1], xi-(w0+w1)/2 + w0 +0.01, y, w1, ht/3, fontPos*0.9, 1, ha = 'c')
+            ctx.stroke ()
+        else:
+            pm = show_text_rect_fix(ctx, annee[0], xi-w0/2, y, w0, ht*2/3, fontPos, 1)
+            ctx.stroke ()
+        
+        w = (wi-dx)/np-dx
+        xi = x + (dx+wi)*i + dx
+        for p in range(np):
+            pa += 1
+#            print pa , range(periode_prj[0], periode_prj[1]+1)
+            if len(periode_prj) != 2 or not pa in range(periode_prj[0], periode_prj[1]+1):
+                ctx.rectangle (xi, y+ht/2+dx, w, h)
+                rect.append((xi, y+ht/2+dx, w, h))
+                if pos == pa-1:
+                    ctx.set_source_rgba (AcoulPos[0], AcoulPos[1], AcoulPos[2], AcoulPos[3])
+                else:
+                    ctx.set_source_rgba (IcoulPos[0], IcoulPos[1], IcoulPos[2], IcoulPos[3])
+                ctx.fill_preserve ()
+                ctx.set_source_rgba (BcoulPos[0], BcoulPos[1], BcoulPos[2], BcoulPos[3])
+                ctx.stroke ()
+            else:
+                xa.append(xi)
+#            if p == 3:
+#                x += dx
+            xi += dx + w
+        
+    
+    if len(periode_prj) == 2:
+#        print "projet"
+        
+        xi = xa[0]
+        
+#        xi = x + (dx+wi)*(periode_prj[0]-1) + dx*len(periodes)
+        wi = (dx+w)*(periode_prj[1]-periode_prj[0]+1) - dx
+        ctx.rectangle (xi, y+ht/2+dx, wi, h)
+        rect.append((xi, y+ht/2+dx, wi, h))
+        if pos == periode_prj[0]-1:
             ctx.set_source_rgba (AcoulPos[0], AcoulPos[1], AcoulPos[2], AcoulPos[3])
         else:
             ctx.set_source_rgba (IcoulPos[0], IcoulPos[1], IcoulPos[2], IcoulPos[3])
         ctx.fill_preserve ()
         ctx.set_source_rgba (BcoulPos[0], BcoulPos[1], BcoulPos[2], BcoulPos[3])
         ctx.stroke ()
+            
+#    print "fin"
     
     
-    else:
-        show_text_rect_fix(ctx, u"T1", x, y, wt/3, ht*2/3, fontPos, 1)#, outPosMax = True)
-        ctx.stroke ()
-        show_text_rect_fix(ctx, u"T2", x+wt/3, y, wt/3, ht*2/3, fontPos, 1)#, outPosMax = True)
-        ctx.stroke ()
-        show_text_rect_fix(ctx, u"T3", x+2*wt/3, y, wt/3, ht*2/3, fontPos, 1)#, outPosMax = True)
-        ctx.stroke ()
-        
-        
-        dx = wt/20 #0.005
-        x += dx
-        h = ht/2-2*dx
-        w = (wt - 10 * dx)/8
-        rect = []
-        for p in range(6):
-            ctx.rectangle (x, y+ht/2+dx, w, h)
-            rect.append((x, y+ht/2+dx, w, h))
-            if pos == p:
-                ctx.set_source_rgba (AcoulPos[0], AcoulPos[1], AcoulPos[2], AcoulPos[3])
-            else:
-                ctx.set_source_rgba (IcoulPos[0], IcoulPos[1], IcoulPos[2], IcoulPos[3])
-            ctx.fill_preserve ()
-            ctx.set_source_rgba (BcoulPos[0], BcoulPos[1], BcoulPos[2], BcoulPos[3])
-            ctx.stroke ()
-            if p == 3:
-                x += dx
-            x+= dx + w
+#    if ens == 'lyc':
+#        pm = show_text_rect_fix(ctx, u"1", x, y, wt/2, ht*2/3, fontPos, 1)#, outPosMax = True)
+#     
+#        ctx.stroke ()
+#        show_text_rect_fix(ctx, u"ère", pm+0.002, y, wt/2, ht/3, fontPos*0.9, 1, ha = 'g')
+#        ctx.stroke ()
+#        
+#        pm = show_text_rect_fix(ctx, u"T", x+wt/2, y, wt/2, ht*2/3, fontPos, 1)#, outPosMax = True)
+#    
+#        ctx.stroke ()
+#        show_text_rect_fix(ctx, u"ale", pm+0.002, y, wt/2, ht/3, fontPos*0.9, 1, ha = 'g')
+#        ctx.stroke ()
+#        
+#        dx = 0.005
+#        x += dx
+#        h = ht/2-2*dx
+#        w = (wt - 10 * dx)/8
+#        rect = []
+#        for p in range(5):
+#            ctx.rectangle (x, y+ht/2+dx, w, h)
+#            rect.append((x, y+ht/2+dx, w, h))
+#            if pos == p:
+#                ctx.set_source_rgba (AcoulPos[0], AcoulPos[1], AcoulPos[2], AcoulPos[3])
+#            else:
+#                ctx.set_source_rgba (IcoulPos[0], IcoulPos[1], IcoulPos[2], IcoulPos[3])
+#            ctx.fill_preserve ()
+#            ctx.set_source_rgba (BcoulPos[0], BcoulPos[1], BcoulPos[2], BcoulPos[3])
+#            ctx.stroke ()
+#            if p == 3:
+#                x += dx
+#            x+= dx + w
+#            
+#        p = 5
+#        ctx.rectangle (x, y+ht/2+dx, w*3+dx*2, h)
+#        rect.append((x, y+ht/2+dx, w*3+dx*2, h))
+#        if pos == p:
+#            ctx.set_source_rgba (AcoulPos[0], AcoulPos[1], AcoulPos[2], AcoulPos[3])
+#        else:
+#            ctx.set_source_rgba (IcoulPos[0], IcoulPos[1], IcoulPos[2], IcoulPos[3])
+#        ctx.fill_preserve ()
+#        ctx.set_source_rgba (BcoulPos[0], BcoulPos[1], BcoulPos[2], BcoulPos[3])
+#        ctx.stroke ()
+#    
+#    
+#    else:
+#        show_text_rect_fix(ctx, u"T1", x, y, wt/3, ht*2/3, fontPos, 1)#, outPosMax = True)
+#        ctx.stroke ()
+#        show_text_rect_fix(ctx, u"T2", x+wt/3, y, wt/3, ht*2/3, fontPos, 1)#, outPosMax = True)
+#        ctx.stroke ()
+#        show_text_rect_fix(ctx, u"T3", x+2*wt/3, y, wt/3, ht*2/3, fontPos, 1)#, outPosMax = True)
+#        ctx.stroke ()
+#        
+#        
+#        dx = wt/20 #0.005
+#        x += dx
+#        h = ht/2-2*dx
+#        w = (wt - 10 * dx)/8
+#        rect = []
+#        for p in range(6):
+#            ctx.rectangle (x, y+ht/2+dx, w, h)
+#            rect.append((x, y+ht/2+dx, w, h))
+#            if pos == p:
+#                ctx.set_source_rgba (AcoulPos[0], AcoulPos[1], AcoulPos[2], AcoulPos[3])
+#            else:
+#                ctx.set_source_rgba (IcoulPos[0], IcoulPos[1], IcoulPos[2], IcoulPos[3])
+#            ctx.fill_preserve ()
+#            ctx.set_source_rgba (BcoulPos[0], BcoulPos[1], BcoulPos[2], BcoulPos[3])
+#            ctx.stroke ()
+#            if p == 3:
+#                x += dx
+#            x+= dx + w
         
     return rect
     
@@ -871,10 +942,10 @@ def Draw_CI(ctx, CI):
     # Rectangle arrondi
     x0, y0 = posSup
     rect_width, rect_height  = tailleSup
-    if len(CI.numCI) <= 1:
-        t = u"Centre d'intérêt"
-    else:
-        t = u"Centres d'intérêt"
+#    if len(CI.numCI) <= 1:
+#        t = u"Centre d'intérêt"
+#    else:
+    t = u"Centre%s d'intérêt" %"s"*len(CI.numCI) > 1
     CI.pt_caract = (curve_rect_titre(ctx, t,  (x0, y0, rect_width, rect_height), BcoulSup, IcoulSup, fontSup), 
                     'CI')
     
