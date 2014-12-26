@@ -326,6 +326,11 @@
   <l_listeTypeSeance S_listeTypeSeance00="ED" S_listeTypeSeance01="AP" S_listeTypeSeance02="P" S_listeTypeSeance03="C" S_listeTypeSeance04="TD" S_listeTypeSeance05="SA" S_listeTypeSeance06="SS" S_listeTypeSeance07="E" S_listeTypeSeance08="R" S_listeTypeSeance09="S" />
   <d_nomParties_prj S_R="Conduite" S_S="Soutenance" />
   <d_options />
+  <l_periode_prj I_periode_prj00="7" I_periode_prj01="10" />
+  <l_periodes>
+    <l_periodes00 I_periodes0001="5" S_periodes0000="1_&#232;re" />
+    <l_periodes01 I_periodes0101="5" S_periodes0100="T_ale" />
+  </l_periodes>
   <d_phases_prj>
     <l_DCo S_DCo00="Concep d&#233;taill&#233;e" S_DCo01="Conception d&#233;taill&#233;e" S_DCo02="Cd" />
     <l_Ana S_Ana00="Analyse besoins" S_Ana01="Analyse des besoins" S_Ana02="Ab" />

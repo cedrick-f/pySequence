@@ -111,6 +111,8 @@ class Referentiel():
         self.options = {}               # options de l'enseignement : {Code : nomFichier}
         self.tr_com = []                # tronc commun de l'enseignement : [Code, nomFichier]
         
+        self.periodes = []              # découpage de l'enseignement en années/périodes
+        
         #
         # Centre d'intérêt
         #
@@ -134,6 +136,7 @@ class Referentiel():
         self.dicCompetences = {}
         self.projet = False             # si l'enseignement fait l'objet d'une épreuve de projet
         self.duree_prj = 0
+        self.periode_prj = []
         self.aColNon = {'R' : True,  'S' : False}
 #        self.dicCompetences_prj = {}
 #        self.dicIndicateurs_prj = {}
@@ -334,6 +337,11 @@ class Referentiel():
 #        # Pour corriger une erreur de jeunesse de la 5.0beta3
 #        if self.Code in ['SIN', 'ITEC', 'AC', 'EE']:
 #            self.tr_com == True
+        
+        # Pour rajouter les periodes aux fichiers < 5.7
+        if self.periodes == []:
+            self.periodes = self.defPeriode()
+#            print ">>>", self.periode_prj
             
         self.postTraiter()
         self.completer()
@@ -529,7 +537,10 @@ class Referentiel():
         self.Enseignement[1] = sh_g.cell(6,1).value #Nom complet    
         self.Enseignement[2] = sh_g.cell(6,2).value #Famille
 
-
+        lig = [l  for l in range(10, 17) if sh_g.cell(l,3).value != u""]
+        for l in lig:
+            self.periodes.append([sh_g.cell(l,2).value, int(sh_g.cell(l,3).value)])
+            
         #
         # options
         #
@@ -552,13 +563,14 @@ class Referentiel():
         self.projet = sh_g.cell(23,1).value[0].upper() == "O"
         if self.projet:
             self.duree_prj = int(sh_g.cell(24,1).value)
-            
+            self.periode_prj = [int(i) for i in sh_g.cell(25,1).value.split()]
+#            print ">>", self.periode_prj
         #
         # Bulletins Officiels
         #
-        if sh_g.nrows > 27:
-            self.BO_dossier = sh_g.cell(28,0).value
-            self.BO_URL = sh_g.cell(28,1).value
+        if sh_g.nrows > 28:
+            self.BO_dossier = sh_g.cell(29,0).value
+            self.BO_URL = sh_g.cell(29,1).value
         
         
         #
@@ -709,20 +721,27 @@ class Referentiel():
                             
         
     ###########################################################
-    def getNiveau(self):
+    def defPeriode(self):
+        """ Définit les periodes
+             (dans le cas ou elles ne sont pas définies dans le référentiel intégré
+              versions < 5.7)
+        """
+        print "defPeriode"
+        self.periode_prj = []
         if self.Famille == 'CLG':
-            return 'clg'
+            return [[u"Année", 6]]
         elif self.Famille in ['STI', 'SSI']:
-            return 'lyc'
-        return 'lyc'
+            self.periode_prj = [7, 10]
+            return [[u"1_ère", 5], [u"T_ale", 5]]
+        return [[u"Année", 6]]
 
-    ###########################################################
-    def getNbrPeriodes(self):
-        if self.Famille == 'CLG':
-            return 5
-        elif self.Famille in ['STI', 'SSI']:
-            return 10
-        return 10
+#    ###########################################################
+#    def getNbrPeriodes(self):
+#        if self.Famille == 'CLG':
+#            return 5
+#        elif self.Famille in ['STI', 'SSI']:
+#            return 10
+#        return 10
         
     ###########################################################
     def getDernierNiveauArbre(self, dic):
@@ -1023,6 +1042,14 @@ class Referentiel():
                 t += k + u" : " + v[0]
 
 
+    #########################################################################
+    def getNbrPeriodes(self):
+        n = 0
+        for p in self.periodes:
+            n += p[1]
+        return n
+    
+    
     #########################################################################
     def getIntituleCompetence(self, comp, sousComp = False):
         sep = "\n\t"+constantes.CHAR_POINT

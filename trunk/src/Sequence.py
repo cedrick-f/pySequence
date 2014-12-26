@@ -914,6 +914,8 @@ class Classe():
         classe = ET.Element("Classe")
         classe.set("Type", self.typeEnseignement)
         
+        
+        
         classe.append(self.referentiel.getBranche())
         
         classe.set("Etab", self.etablissement)
@@ -951,6 +953,8 @@ class Classe():
         err = []
 #        print "setBranche classe"
         self.typeEnseignement = branche.get("Type", constantes.TYPE_ENSEIGNEMENT_DEFAUT)
+        
+        
         
         brancheRef = branche.find("Referentiel")        # A partir de la version 5 !
         if brancheRef != None:   
@@ -1808,6 +1812,9 @@ class Projet(BaseDoc, Objet_sequence):
     def __init__(self, app, classe = None, panelParent = None, intitule = u""):
         BaseDoc.__init__(self, app, classe, panelParent, intitule)
         Objet_sequence.__init__(self)
+        
+        self.version = "" # version de pySéquence avec laquelle le fichier a été sauvegardé
+        
         self.position = 5
         self.nbrParties = 1
         
@@ -1913,7 +1920,7 @@ class Projet(BaseDoc, Objet_sequence):
         for p in lr:
             lst.append(Tache(self, self.panelParent, 
                              intitule = self.GetReferentiel().phases_prj[p][1], 
-                             phaseTache = p, duree = 0.5))
+                             phaseTache = p, duree = 1))
         return lst
     
     ######################################################################################  
@@ -1989,6 +1996,8 @@ class Projet(BaseDoc, Objet_sequence):
         # Création de la racine
         projet = ET.Element("Projet")
         
+        projet.set("Version", __version__) # à partir de la version 5.7
+        
         projet.set("Intitule", self.intitule)
         
         projet.set("Problematique", remplaceLF2Code(self.problematique))
@@ -2041,6 +2050,8 @@ class Projet(BaseDoc, Objet_sequence):
         err = []
         
         self.intitule = branche.get("Intitule", u"")
+        
+        self.version = branche.get("Version", "")       # A partir de la version 5.7 !
 
         self.problematique = remplaceCode2LF(branche.get("Problematique", u""))
         
@@ -2056,6 +2067,12 @@ class Projet(BaseDoc, Objet_sequence):
         self.MiseAJourTypeEnseignement()
         
         self.position = eval(branche.get("Position", "0"))
+        if self.version == "": # Enregistré avec une version de pySequence > 5.7
+            if self.position == 5:
+                print "Correction position"
+                self.position = self.GetReferentiel().periode_prj[0] - 1
+            
+            
         self.annee = eval(branche.get("Annee", str(constantes.getAnneeScolaire())))
 
         brancheEqu = branche.find("Equipe")
@@ -2145,9 +2162,24 @@ class Projet(BaseDoc, Objet_sequence):
         return err
         
     ######################################################################################  
+    def GetLastPosition(self):
+        n = 0
+        for p in self.GetReferentiel().periodes:
+            n+=p[1]
+        n = n - (self.GetReferentiel().periode_prj[1] - self.GetReferentiel().periode_prj[0])
+        return n-1
+    
+    
+    
+    ######################################################################################  
     def SetPosition(self, pos):
-        # On passe à la position 5
-        if pos == 5 and self.position != 5:
+        print "SetPosition", pos
+        print "  position actuelle :", self.position
+        posEpreuve = self.GetReferentiel().periode_prj[0] - 1
+        print "  posEpreuve", posEpreuve
+        
+        # On passe à la position "épreuve"
+        if pos == posEpreuve and self.position != posEpreuve:
             for tr in self.creerTachesRevue():
                 self.taches.append(tr)
                 tr.ConstruireArbre(self.arbre, self.brancheTac)
@@ -2156,13 +2188,14 @@ class Projet(BaseDoc, Objet_sequence):
                     tr.panelPropriete.MiseAJour()
             self.OrdonnerTaches()
             self.arbre.Ordonner(self.brancheTac)
-#            self.panelPropriete.sendEvent()
+            if hasattr(self, 'panelPropriete'):
+                self.panelPropriete.sendEvent()
 #            self.taches.extend(self.creerTachesRevue())
 #            self.OrdonnerTaches()
 
                 
-        # On passe de la position5 à une autre
-        elif pos !=5 and self.position == 5:
+        # On passe de la position "épreuve" à une autre
+        elif pos !=posEpreuve and self.position == posEpreuve:
             lst = []
             for t in self.taches:
                 if t.phase in ["R1", "R2", "R3", "S"]:
@@ -2170,15 +2203,23 @@ class Projet(BaseDoc, Objet_sequence):
             for a in reversed(lst):
                 self.SupprimerTache(item = a)
         
+        # Sinon on se contente de redessiner
+        else:
+            if hasattr(self, 'panelPropriete'):
+                self.panelPropriete.sendEvent()
+            
+            
         self.position = pos
         
         if hasattr(self, 'panelPropriete'):
             self.panelPropriete.MiseAJour()
-        
+
+
     ######################################################################################  
     def SetProblematique(self, pb):
         self.problematique = pb
-        
+
+
     ######################################################################################  
     def SetReferent(self, personne, referent):
         for p in self.equipe:
@@ -8592,8 +8633,8 @@ class BaseFiche(wx.ScrolledWindow):
                 self.projet.SetPosition(position)
             else:
                 self.sequence.SetPosition(position)
-            if hasattr(self.GetDoc(), 'panelPropriete'):
-                self.GetDoc().panelPropriete.SetBitmapPosition(bougerSlider = position)
+                if hasattr(self.GetDoc(), 'panelPropriete'):
+                    self.GetDoc().panelPropriete.SetBitmapPosition(bougerSlider = position)
             
         return branche
     
@@ -9024,8 +9065,7 @@ class PanelPropriete_Sequence(PanelPropriete):
         ctx = cairo.Context(imagesurface)
         ctx.scale(larg/w, larg/w) 
         draw_cairo_seq.DrawPeriodes(ctx, self.sequence.position,
-                                    self.sequence.GetReferentiel().getNiveau(),
-                                    self.sequence.GetReferentiel().getNbrPeriodes(),
+                                    self.sequence.GetReferentiel().periodes,
                                     origine = True)
 
         bmp = wx.lib.wxcairo.BitmapFromImageSurface(imagesurface)
@@ -9291,7 +9331,9 @@ class PanelPropriete_Projet(PanelPropriete):
         ctx = cairo.Context(imagesurface)
         ctx.scale(larg/w, larg/w) 
         draw_cairo_prj.DrawPeriodes(ctx, self.projet.position, 
-                                    self.projet.GetReferentiel().getNiveau() ,origine = True)
+                                    self.projet.GetReferentiel().periodes ,
+                                    self.projet.GetReferentiel().periode_prj, 
+                                    origine = True)
 
         bmp = wx.lib.wxcairo.BitmapFromImageSurface(imagesurface)
         
@@ -9367,6 +9409,12 @@ class PanelPropriete_Projet(PanelPropriete):
         if maj and not self.eventAttente:
             wx.CallLater(DELAY, self.sendEvent)
             self.eventAttente = True
+            
+            
+    #############################################################################            
+    def MiseAJourTypeEnseignement(self, sendEvt = False):
+        self.position.SetRange(0, self.projet.GetLastPosition())
+        
         
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
@@ -9384,6 +9432,7 @@ class PanelPropriete_Projet(PanelPropriete):
         self.ctrlNbrParties.mofifierValeursSsEvt()
         
         self.bmp.SetBitmap(self.getBitmapPeriode(250))
+        self.MiseAJourTypeEnseignement()
         self.position.SetValue(self.projet.position)
         
         self.panelOrga.MiseAJourListe()

@@ -707,7 +707,10 @@ def show_text_rect_fix(ctx, texte, x, y, w, h, fontSize, Nlignes, va = 'c', ha =
         # On fait une découpe à "wrap" ...
         lt = []
         for l in texte.split("\n"):
-            lt.extend(textwrap.wrap(l, wrap))
+            if wrap > 0:
+                lt.extend(textwrap.wrap(l, wrap))
+            else:
+                lt.extend(l)
         
         # On teste si ça rentre ...
         maxw = 0
