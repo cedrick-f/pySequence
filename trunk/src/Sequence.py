@@ -1815,7 +1815,7 @@ class Projet(BaseDoc, Objet_sequence):
         
         self.version = "" # version de pySéquence avec laquelle le fichier a été sauvegardé
         
-        self.position = 5
+        self.position = 6
         self.nbrParties = 1
         
         # Organisation des phases du projet
@@ -1855,7 +1855,7 @@ class Projet(BaseDoc, Objet_sequence):
         self.production = u""
         
         
-        self.SetPosition(5)
+        self.SetPosition(self.position)
         
         
 #       
@@ -2173,10 +2173,10 @@ class Projet(BaseDoc, Objet_sequence):
     
     ######################################################################################  
     def SetPosition(self, pos):
-        print "SetPosition", pos
-        print "  position actuelle :", self.position
+#        print "SetPosition", pos
+#        print "  position actuelle :", self.position
         posEpreuve = self.GetReferentiel().periode_prj[0] - 1
-        print "  posEpreuve", posEpreuve
+#        print "  posEpreuve", posEpreuve
         
         # On passe à la position "épreuve"
         if pos == posEpreuve and self.position != posEpreuve:

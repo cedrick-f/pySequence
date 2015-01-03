@@ -726,7 +726,7 @@ class Referentiel():
              (dans le cas ou elles ne sont pas définies dans le référentiel intégré
               versions < 5.7)
         """
-        print "defPeriode"
+#        print "defPeriode"
         self.periode_prj = []
         if self.Famille == 'CLG':
             return [[u"Année", 6]]

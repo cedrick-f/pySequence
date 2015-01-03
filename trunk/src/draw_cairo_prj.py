@@ -316,27 +316,39 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
     #
     # Type d'enseignement
     #
+    tailleTypeEns = taillePro[0]/2
     t = prj.classe.referentiel.Enseignement[0]
-    ctx.set_font_size(0.04)
     ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                        cairo.FONT_WEIGHT_BOLD)
-    xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(t)
-#    fascent, fdescent, fheight, fxadvance, fyadvance = ctx.font_extents()
-    ctx.move_to (posPro[0] , posSup[1] - ybearing - 0.01)
-    ctx.text_path (t)
     ctx.set_source_rgb (0.6, 0.6, 0.9)
-    ctx.fill_preserve ()
-    ctx.set_source_rgb (0, 0, 0)
-    ctx.set_line_width (0.0015)
-    ctx.stroke ()
-    tailleTypeEns = width
+    show_text_rect(ctx, t, (posPro[0] , posPos[1], tailleTypeEns, taillePos[1]), 
+                   va = 'c', ha = 'g', b = 0, orient = 'h', 
+                   fontsizeMinMax = (-1, -1), fontsizePref = -1, wrap = True, couper = False,
+                   bordure = (0, 0, 0))
+    
+    
+#    ctx.set_font_size(0.04)
+#    ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+#                                       cairo.FONT_WEIGHT_BOLD)
+#    xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(t)
+##    fascent, fdescent, fheight, fxadvance, fyadvance = ctx.font_extents()
+#    ctx.move_to (posPro[0] , posSup[1] - ybearing - 0.01)
+#    ctx.text_path (t)
+    
+#    ctx.fill_preserve ()
+#    ctx.set_source_rgb (0, 0, 0)
+#    ctx.set_line_width (0.0015)
+#    ctx.stroke ()
+    
     
 #    print "     2 ", time.time() - tps
     #
     # Position dans l'année
     #
+#    posPos[0] = posEqu[0] + tailleEqu[0] + ecartX + tailleTypeEns
     posPos[0] = posEqu[0] + tailleEqu[0] + ecartX + tailleTypeEns
-    taillePos[0] =  0.72414 - posPos[0] - margeX
+#    taillePos[0] =  0.72414 - posPos[0] - margeX
+    taillePos[0] = taillePro[0]/2
     ctx.set_line_width (0.0015)
     prj.rectPos = DrawPeriodes(ctx, prj.position, prj.classe.referentiel.periodes,
                                prj.classe.referentiel.periode_prj,  tailleTypeEns = tailleTypeEns)
@@ -799,8 +811,8 @@ def DrawPeriodes(ctx, pos = None, periodes = [[u"Année", 5]], periode_prj = [],
     rect = []
 #    print "Périodes", periodes
 #    print "periode_prj", periode_prj
-    wi = wt/len(periodes) - dx*(len(periodes)-1)
-    
+#    wi = wt/len(periodes) - dx*(len(periodes)-1)
+    wi = (wt+dx)/len(periodes) - dx
     pa = 0
     xa = []
     for i, (an, np) in enumerate(periodes):
