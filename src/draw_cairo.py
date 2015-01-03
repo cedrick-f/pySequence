@@ -323,7 +323,8 @@ def calc_h_texte(ctx, texte, w, taille, va = 'c', ha = 'c', b = 0.1, orient = 'h
 
     
 def show_text_rect(ctx, texte, rect, va = 'c', ha = 'c', b = 0.4, orient = 'h', 
-                   fontsizeMinMax = (-1, -1), fontsizePref = -1, wrap = True, couper = True):
+                   fontsizeMinMax = (-1, -1), fontsizePref = -1, wrap = True, couper = True,
+                   bordure = None):
     """ Affiche un texte en adaptant la taille de police et sa position
         pour qu'il rentre dans le rectangle
         x, y, w, h : position et dimensions du rectangle
@@ -351,7 +352,7 @@ def show_text_rect(ctx, texte, rect, va = 'c', ha = 'c', b = 0.4, orient = 'h',
         ctx.rotate(-pi/2)
         r = (-y-h, x, h, w)
         show_text_rect(ctx, texte, r, va, ha, b, fontsizeMinMax = fontsizeMinMax, fontsizePref = fontsizePref,
-                       wrap = wrap, couper = couper)
+                       wrap = wrap, couper = couper, bordure = bordure)
         ctx.rotate(pi/2)
         return
     
@@ -505,14 +506,14 @@ def show_text_rect(ctx, texte, rect, va = 'c', ha = 'c', b = 0.4, orient = 'h',
             fontSize = max(fontsizeMinMax[1] * fontsizePref/100, fontsizeMinMax[0])
         else:
             fontSize = fontsizeMinMax[1]
-        show_text_rect_fix(ctx, texte, x, y, w, h, fontSize, 100, va = va, ha = ha)
+        show_text_rect_fix(ctx, texte, x, y, w, h, fontSize, 100, va = va, ha = ha, bordure = bordure)
         return
     
     fontSize = min(fontSize, fontsizeMinMax[1])
 #    print "fontSize", fontSize
     
     if fontSize < fontsizeMinMax[0]:
-        show_text_rect_fix(ctx, texte, x, y, w, h, fontsizeMinMax[0], nLignesMaxi, va, ha)
+        show_text_rect_fix(ctx, texte, x, y, w, h, fontsizeMinMax[0], nLignesMaxi, va, ha, bordure = bordure)
         return
             
 #    print lt, nLignes    
@@ -534,7 +535,7 @@ def show_text_rect(ctx, texte, rect, va = 'c', ha = 'c', b = 0.4, orient = 'h',
 #    print "fontSize", fontSize
     ctx.set_font_size(fontSize)
     
-    show_lignes(ctx, lt, x, y, w, h, ha, va)
+    show_lignes(ctx, lt, x, y, w, h, ha, va, bordure = bordure)
     
     return fontSize
 
@@ -678,7 +679,7 @@ def show_text_rect(ctx, texte, rect, va = 'c', ha = 'c', b = 0.4, orient = 'h',
 #    return size
 
 
-def show_text_rect_fix(ctx, texte, x, y, w, h, fontSize, Nlignes, va = 'c', ha = 'c'):#, outPosMax = False):
+def show_text_rect_fix(ctx, texte, x, y, w, h, fontSize, Nlignes, va = 'c', ha = 'c', bordure = None):#, outPosMax = False):
     """ Affiche un texte en tronquant sa longueur
         pour qu'il rentre dans le rectangle
         x, y, w, h : position et dimensions du rectangle
@@ -765,7 +766,7 @@ def show_text_rect_fix(ctx, texte, x, y, w, h, fontSize, Nlignes, va = 'c', ha =
 
 
 
-def show_lignes(ctx, lignes, x, y, w, h, ha, va):
+def show_lignes(ctx, lignes, x, y, w, h, ha, va, bordure = None):
     """ Affiche une série de lignes de texte
         Renvoie la position la plus extrème à droite (pour éventuellement écrire une suite au texte)
     """
@@ -806,8 +807,16 @@ def show_lignes(ctx, lignes, x, y, w, h, ha, va):
         yt = y + hl*l - fdescent + fheight + dy
 
         ctx.move_to(xt, yt)
-#        print t
-        ctx.show_text(t)
+        
+        if bordure == None:
+    #        print t
+            ctx.show_text(t)
+        else:
+            ctx.text_path(t)
+            ctx.fill_preserve()
+            ctx.set_source_rgb (bordure[0], bordure[1], bordure[2])
+            ctx.set_line_width (fheight/30)
+           
         
         posmax = max(posmax, xt+width)
     

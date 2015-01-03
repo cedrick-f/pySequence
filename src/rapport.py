@@ -38,6 +38,8 @@ from draw_cairo import getHoraireTxt
 from draw_cairo_prj import ICoulTache, BCoulTache
 from draw_cairo_seq import ICoulSeance#, BCoulSeance
 
+from xml.dom.minidom import parse, parseString
+
 #from wx import ImageFromStream, BitmapFromImage, EmptyIcon
 
 from wx.lib.embeddedimage import PyEmbeddedImage 
@@ -72,7 +74,8 @@ Styles["Titre 1"].SetParagraphStyleName("Titre 1")
 Styles["Titre 1"].SetFontSize(12)
 Styles["Titre 1"].SetFontWeight(wx.FONTWEIGHT_BOLD)
 Styles["Titre 1"].SetTextColour((0,0,180))
-Styles["Titre 2"].SetParagraphSpacingBefore(10)
+Styles["Titre 1"].SetParagraphSpacingBefore(10)
+Styles["Titre 1"].SetAlignment(wx.TEXT_ALIGNMENT_LEFT)
 Styles["Titre 1"].SetParagraphSpacingAfter(10)
 Styles["Titre 1"].SetBulletStyle(wx.TEXT_ATTR_BULLET_STYLE_RIGHT_PARENTHESIS)
 #Styles["Titre 1"].SetFontUnderlined(True)
@@ -82,6 +85,7 @@ Styles["Titre 2"].SetFontSize(11)
 Styles["Titre 2"].SetTextColour((0,0,120))
 Styles["Titre 2"].SetParagraphSpacingAfter(0)
 Styles["Titre 2"].SetParagraphSpacingBefore(10)
+Styles["Titre 2"].SetAlignment(wx.TEXT_ALIGNMENT_LEFT)
 Styles["Titre 2"].SetFontUnderlined(True)
 
 Styles["Message"].SetParagraphStyleName("Message")
@@ -90,6 +94,7 @@ Styles["Message"].SetLeftIndent(80)
 #Styles["Message"].SetFontStyle(wx.BOLD)
 Styles["Message"].SetParagraphSpacingAfter(10)
 Styles["Message"].SetParagraphSpacingBefore(10)
+Styles["Message"].SetAlignment(wx.TEXT_ALIGNMENT_LEFT)
 
 Styles["MessSens"].SetParagraphStyleName("MessSens")
 Styles["MessSens"].SetFontSize(10)
@@ -97,6 +102,7 @@ Styles["MessSens"].SetTextColour((0,0,0))
 #Styles["Message"].SetFontStyle(wx.BOLD)
 Styles["MessSens"].SetParagraphSpacingAfter(10)
 Styles["MessSens"].SetParagraphSpacingBefore(10)
+Styles["MessSens"].SetAlignment(wx.TEXT_ALIGNMENT_LEFT)
 Styles["MessSens"].SetTabs((800, 2000))
 
 Styles["Tableau"].SetParagraphStyleName("Tableau")
@@ -838,93 +844,139 @@ class RapportRTF(rt.RichTextCtrl):
             self.BeginStyle(Styles["Titre 2"])
             self.WriteText(u"Tache : " + tache.code+"\t\t\t"+getHoraireTxt(tache.GetDuree()))
             self.EndStyle()
-            self.EndLeftIndent()
-            self.EndAlignment()
             self.Newline()
+            self.EndAlignment()
             
             self.BeginStyle(Styles["Message"])
+#            self.BeginLeftIndent(60)
             self.BeginUnderline()
             self.WriteText(u"Intitulé :")
             self.EndUnderline()
             self.WriteText(u" " + tache.intitule)
-            self.BeginLeftIndent(60)
-            self.Newline()
+            self.EndStyle()
+#            self.Newline()
         
         if tache.description != None and hasattr(tache, 'panelPropriete'):
-            self.BeginUnderline()
-            self.WriteText(u"Description :")
-            self.EndUnderline()
+#            self.BeginUnderline()
+#            self.WriteText(u"Description :")
+#            self.BeginLeftIndent(60)
+#            self.EndUnderline()
+            self.AddDescription(tache.panelPropriete.rtc.rtc)
+            self.EndStyle()
+#            self.BeginLeftIndent(60)
             self.Newline()
             
-#            self.AddDescription(tache.description)
+#            tache.panelPropriete.rtc.rtc.SelectAll()
+#            
+#            if sys.platform == "win32":
+#                #
+#                # Procédure pour vérifier que le clipboard est disponible
+#                # (source http://teachthe.net/?cat=56&paged=2)
+#                #
+#                cbOpened = False
+#                n = 0
+#                while not cbOpened and n < 10:
+#                    n += 1
+#                    try:
+#                        win32clipboard.OpenClipboard(0)
+#                        cbOpened = True
+#                        win32clipboard.CloseClipboard()
+#                    except Exception, err:
+##                        print "error", err
+#                        # If access is denied, that means that the clipboard is in use.
+#                        # Keep trying until it's available.
+#                        if err[0] == 5:  #Access Denied
+#                            pass
+#                            print 'waiting on clipboard...'
+#                            # wait on clipboard because something else has it. we're waiting a
+#                            # random amount of time before we try again so we don't collide again
+#                            time.sleep( random.random()/50 )
+#                        elif err[0] == 1418:  #doesn't have board open
+#                            pass
+#                        elif err[0] == 0:  #open failure
+#                            pass
+#                        else:
+#                            print 'ERROR in Clipboard section of readcomments: %s' %err
+#                            pass
+#
+#            tache.panelPropriete.rtc.rtc.Copy()
+#            self.Paste()
             
-            
-            
-            tache.panelPropriete.rtc.rtc.SelectAll()
-            
-            if sys.platform == "win32":
-                #
-                # Procédure pour vérifier que le clipboard est disponible
-                # (source http://teachthe.net/?cat=56&paged=2)
-                #
-                cbOpened = False
-                n = 0
-                while not cbOpened and n < 10:
-                    n += 1
-                    try:
-                        win32clipboard.OpenClipboard(0)
-                        cbOpened = True
-                        win32clipboard.CloseClipboard()
-                    except Exception, err:
-                        print "error", err
-                        # If access is denied, that means that the clipboard is in use.
-                        # Keep trying until it's available.
-                        if err[0] == 5:  #Access Denied
-                            pass
-                            print 'waiting on clipboard...'
-                            # wait on clipboard because something else has it. we're waiting a
-                            # random amount of time before we try again so we don't collide again
-                            time.sleep( random.random()/50 )
-                        elif err[0] == 1418:  #doesn't have board open
-                            pass
-                        elif err[0] == 0:  #open failure
-                            pass
-                        else:
-                            print 'ERROR in Clipboard section of readcomments: %s' %err
-                            pass
-
-            tache.panelPropriete.rtc.rtc.Copy()
-            self.Paste()
-            
-            
+        self.Newline()
         self.EndLeftIndent()
-        
+        self.EndAlignment()
 #        self.BeginUnderline()
 #        self.WriteText(u"Volume horaire :")
 #        self.EndUnderline()
 #        self.WriteText(u" " + getHoraireTxt(tache.GetDuree()))
-        self.Newline()
-        self.EndLeftIndent()
+        
         self.EndStyle()
         
         
         
-    def AddDescription(self, description):
-        handler = rt.RichTextXMLHandler()
-        handler.SetFlags(rt.RICHTEXT_HANDLER_INCLUDE_STYLESHEET)
+    def AddDescription(self, rtc):
+        """ Ajoute une description contenue dans un RichTextCtrl
+        """
+#        print "AddDescription"
+        bufS = cStringIO.StringIO()
+        handlerS = rt.RichTextXMLHandler()
+        handlerS.SetFlags(rt.RICHTEXT_HANDLER_INCLUDE_STYLESHEET)
+        handlerS.SaveStream(rtc.GetBuffer(), bufS)
+#        print "   ", bufS.getvalue()
+        domS = parseString(bufS.getvalue())
+        
+        
+        bufT  = cStringIO.StringIO()
+        handlerT = rt.RichTextXMLHandler()
+        handlerT.SetFlags(rt.RICHTEXT_HANDLER_INCLUDE_STYLESHEET)
+        handlerT.SaveStream(self.GetBuffer(), bufT)
+#        print "   ", bufT.getvalue()
+        domT = parseString(bufT.getvalue())
+        
+        parS = domS.getElementsByTagName("paragraphlayout")[0]
+        parT = domT.getElementsByTagName("paragraphlayout")[0]
+        
+        for c in parS.childNodes:
+#            print ">>>>   ", c.toxml()
+            parT.appendChild(domT.importNode(c, True))
+#        print "    T : ", parT.toxml()
+        
+#        print "resultat :"
+#        print domT.toxml()
+        
+        bufT  = cStringIO.StringIO()
+        bufT.write(domT.toxml())
+        bufT.seek(0)
+#        print " >>", bufT.getvalue()
+        
+#        rt_buffer = self.GetBuffer()
+#        rt_buffer.AddHandler(handlerT)
+
+#        handlerT.LoadStream(self.GetBuffer(),  bufT)  
     
-        rt_buffer = self.GetBuffer()
-        #rt_buffer.AddHandler(handler)
-        output = cStringIO.StringIO(description);    
-    
-        handler.LoadStream(rt_buffer,  output)  
-    
-        self.Refresh()
+        # add the handler (where you create the control)
+        self.GetBuffer().AddHandler(rt.RichTextXMLHandler())
+        
+
+        buffer = self.GetBuffer()
+        # you have to specify the type of data to load and the control
+        # must already have an instance of the handler to parse it
+        buffer.LoadStream(bufT, rt.RICHTEXT_TYPE_XML)
+        
+        self.MoveEnd()
+#        
+#        self.EndStyle()
+#        self.EndLeftIndent()
+#        self.EndAlignment()
+#        self.Newline()
+        
+        
+#        self.Refresh()
     
     
     ######################################################################################################
     def AddSeance(self, seance, indent = 1):
-        print "Add", seance
+#        print "Add", seance
         if seance.typeSeance == '':
             return
         
