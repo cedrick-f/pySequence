@@ -11129,7 +11129,8 @@ class PanelPropriete_Savoirs(PanelPropriete):
     #############################################################################            
     def MiseAJourTypeEnseignement(self):
 #        print "MiseAJourTypeEnseignement Savoirs"
-        ref = REFERENTIELS[self.savoirs.GetTypeEnseignement()]
+#        ref = REFERENTIELS[self.savoirs.GetTypeEnseignement()]
+        ref = self.GetDocument().GetReferentiel()
         
         if ref.tr_com != []:
             ref_tc = REFERENTIELS[ref.tr_com[0]]

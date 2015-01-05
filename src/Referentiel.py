@@ -1122,13 +1122,21 @@ class Referentiel():
 
     #########################################################################
     def getSavoir(self, code, dic = None, c = 1, gene = None):
+#        print "getSavoir", code, 
         if dic == None:
             if gene == "M":
-                dic = self.dicSavoirs_Math
+                if self.tr_com != []:
+                    dic = REFERENTIELS[self.tr_com[0]].dicSavoirs_Math
+                else:
+                    dic = self.dicSavoirs_Math
             elif gene == "P":
-                dic = self.dicSavoirs_Phys
+                if self.tr_com != []:
+                    dic = REFERENTIELS[self.tr_com[0]].dicSavoirs_Phys
+                else:
+                    dic = self.dicSavoirs_Phys
             else:
                 dic = self.dicSavoirs
+#        print dic
         if dic.has_key(code):
             return dic[code][0]
         else:
