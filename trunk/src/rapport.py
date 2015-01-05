@@ -206,14 +206,22 @@ class FrameRapport(wx.Frame):
 #        # to store the images in the memory file system.
 #        wx.FileSystem.AddHandler(wx.MemoryFSHandler())
 
+        self.Bind(wx.EVT_ENTER_WINDOW, self.OnEnter)
 
+
+    ######################################################################################################
+    def OnEnter(self, event):
+        self.SetFocus()
+        event.Skip()
         
+    ######################################################################################################
     def OnFileSave(self, evt):
         if not self.rtc.GetFilename():
             self.OnFileSaveAs(evt)
             return
         self.rtc.SaveFile()
 
+    ######################################################################################################
     def OnFileSaveAs(self, evt):
         wildcard =  u"Rich Text Format (.rtf)|*.rtf|" \
                     u"Format HTML (.html)|*.html|" \
@@ -684,6 +692,16 @@ class RapportRTF(rt.RichTextCtrl):
         self.style = style
         self.parent = parent   
          
+        self.Bind(wx.EVT_ENTER_WINDOW, self.OnEnter)
+
+
+    ######################################################################################################
+    def OnEnter(self, event):
+        self.SetFocus()
+        event.Skip()
+        
+        
+    ######################################################################################################
     def Remplir(self, fichierCourant, doc, typ):
         isEditable = self.IsEditable()
         self.SetEditable(True)
@@ -702,7 +720,6 @@ class RapportRTF(rt.RichTextCtrl):
                     if t.phase != phase:
                         phase = t.phase
                         self.AddPhase(t, doc.GetTypeEnseignement(simple = True))
-#                    if not t.phase in ["R1", "R2", "R3", "Rev"]:
                     self.AddTache(t, revue = t.phase in ["R1", "R2", "R3", "Rev"])
 
             self.AddPieds(fichierCourant)
@@ -717,39 +734,7 @@ class RapportRTF(rt.RichTextCtrl):
         
         self.SetEditable(isEditable)
         self.ScrollIntoView(0, wx.WXK_HOME)
-    
-    
-    
-#    def GetImageMontage(self, zoneMtg, analyse = None, reduc = 2, offsetX = 0, agrandi = 0):
-#        bmp = wx.EmptyBitmap(zoneMtg.maxWidth + agrandi, zoneMtg.maxHeight)
-#        memdc = wx.MemoryDC(bmp)
-#        memdc.SetBackground(wx.WHITE_BRUSH)
-#        memdc.Clear()
-#        zoneMtg.DessineTout(memdc, analyse, offsetX = offsetX)
-#        memdc.SelectObject(wx.NullBitmap)
-#        img = bmp.ConvertToImage()
-#        img = img.Scale(bmp.GetWidth()/reduc,bmp.GetHeight()/reduc, wx.IMAGE_QUALITY_HIGH)
-#        return img
-#    
-#    def GetImageChaine(self, sens, analyse, zoneMtg):
-#        analyse.SetTracerChaine(sens, True)
-#        img = self.GetImageMontage(zoneMtg, analyse, 3)
-#        analyse.SetTracerChaine(sens, None)
-#        return img
-#    
-#    def GetImageArret(self, sens, analyse, zoneMtg):
-#        analyse.animerManqueArret(zoneMtg, sens, 1)
-#        img = self.GetImageMontage(zoneMtg, analyse, 3)
-#        analyse.animerManqueArret(zoneMtg, sens, -1)
-#        return img
-#    
-#    def GetImageChaineSurbrill(self, sens, analyse, zoneMtg):
-#        analyse.tracerSurbrillanceArrets(zoneMtg, sens, True, montrer = False)
-#        analyse.SetTracerChaine(sens, True)
-#        img = self.GetImageMontage(zoneMtg, analyse, 3)
-#        analyse.tracerSurbrillanceArrets(zoneMtg, sens, False, montrer = False)
-#        analyse.SetTracerChaine(sens, None)
-#        return img
+        
     
     ######################################################################################################
     def AddPieds(self, fichierCourant):
@@ -762,6 +747,7 @@ class RapportRTF(rt.RichTextCtrl):
        
         self.Newline()
         self.EndAlignment()
+        
         
     ######################################################################################################
     def AddTitreProjet(self, eleve):
@@ -865,6 +851,7 @@ class RapportRTF(rt.RichTextCtrl):
             self.EndStyle()
 #            self.BeginLeftIndent(60)
             self.Newline()
+            self.EndStyle()
             
 #            tache.panelPropriete.rtc.rtc.SelectAll()
 #            
@@ -903,7 +890,7 @@ class RapportRTF(rt.RichTextCtrl):
 #            self.Paste()
             
         self.Newline()
-        self.EndLeftIndent()
+#        self.EndLeftIndent()
         self.EndAlignment()
 #        self.BeginUnderline()
 #        self.WriteText(u"Volume horaire :")
@@ -996,7 +983,7 @@ class RapportRTF(rt.RichTextCtrl):
         self.BeginStyle(Styles["Titre 1"])
         self.WriteText(seance.GetReferentiel().seances[seance.typeSeance][0] + u" : " + seance.code+"\t\t\t"+getHoraireTxt(seance.GetDuree()))
         self.EndStyle()
-        self.BeginLeftIndent(60*(indent-1))
+#        self.BeginLeftIndent(60*(indent-1))
         self.Newline()
         self.EndLeftIndent()
         
@@ -1006,16 +993,16 @@ class RapportRTF(rt.RichTextCtrl):
         self.EndUnderline()
         self.WriteText(u" " + seance.intitule)
 #        self.EndStyle()
-        self.BeginLeftIndent(60*indent)
+#        self.BeginLeftIndent(60*indent)
         self.Newline()
         self.EndLeftIndent()
         
         if seance.description != None and hasattr(seance, 'panelPropriete'):
-            self.BeginUnderline()
-            self.WriteText(u"Description :")
-            self.EndUnderline()
-            self.Newline()
-            self.BeginLeftIndent(60*indent)
+#            self.BeginUnderline()
+#            self.WriteText(u"Description :")
+#            self.EndUnderline()
+#            self.Newline()
+#            self.BeginLeftIndent(60*indent)
             seance.panelPropriete.rtc.rtc.SelectAll()
             seance.panelPropriete.rtc.rtc.Copy()
             self.Paste()

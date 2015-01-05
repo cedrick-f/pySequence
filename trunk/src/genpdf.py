@@ -401,6 +401,16 @@ class PdfPanel(wx.Panel):
         self.SetSizer(sizer)
         self.sizer = sizer
         self.SetAutoLayout(True)
+    
+        self.pdf.Bind(wx.EVT_ENTER_WINDOW, self.OnEnter)
+
+
+    ######################################################################################################
+    def OnEnter(self, event):
+        print "OnEnter PDF"
+        self.pdf.SetFocus()
+        event.Skip()
+        
         
     def MiseAJour(self, projet, fenDoc):
         if isinstance(self.pdf, wx.StaticText):

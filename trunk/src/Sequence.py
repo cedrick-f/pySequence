@@ -1372,6 +1372,7 @@ class Sequence(BaseDoc):
         
     ######################################################################################  
     def VerifPb(self):
+#        print "VerifPb"
         for s in self.seance:
             s.VerifPb()
         
@@ -3186,8 +3187,10 @@ class CentreInteret(Objet_sequence):
         self.numCI = []
         self.poids = []
         for i in range(len(branche.keys())):
-            self.numCI.append(eval(branche.get("C"+str(i), "")))
-            self.poids.append(eval(branche.get("P"+str(i), "1")))
+            n = branche.get("C"+str(i), "")
+            if n != "":
+                self.numCI.append(eval(n))
+                self.poids.append(eval(branche.get("P"+str(i), "1")))
         
         # Pour rétro compatibilité
         if self.numCI == []:
@@ -3834,11 +3837,15 @@ class Seance(ElementDeSequence, Objet_sequence):
             2 : effectif de la séance supperieur à celui du groupe "effectif réduit"
             3 : séances en rotation d'effectifs différents !!
         """
+#        print "IsEffectifOk", self, 
         ok = 0 # pas de problème
         if self.typeSeance in ["R", "S"] and len(self.sousSeances) > 0:
-            if self.GetEffectif() < self.GetClasse().GetEffectifNorm('G'):
+#            print self.GetEffectif() ,  self.GetClasse().GetEffectifNorm('G'),
+            eff = round(self.GetEffectif(), 4)
+            effN = round(self.GetClasse().GetEffectifNorm('G'), 4)
+            if eff < effN:
                 ok = 1 # Tout le groupe "effectif réduit" n'est pas occupé
-            elif self.GetEffectif() > self.GetClasse().GetEffectifNorm('G'):
+            elif eff > effN:
                 ok = 2 # Effectif de la séance supperieur à celui du groupe "effectif réduit"    
 #            if self.typeSeance == "R":
 #                continuer = True
@@ -3856,7 +3863,8 @@ class Seance(ElementDeSequence, Objet_sequence):
         elif self.typeSeance in ["AP", "ED"] and not self.EstSousSeance():
             if self.GetEffectif() < self.GetClasse().GetEffectifNorm('G'):
                 ok = 1 # Tout le groupe "effectif réduit" n'est pas occupé
-
+        
+#        print "   ", ok
         return ok
             
     ######################################################################################  
@@ -7871,10 +7879,13 @@ class FenetreSequence(FenetreDocument):
             
     ###############################################################################################
     def OnDocModified(self, event):
+#        print "OnDocModified"
         if event.GetDocument() == self.sequence:
             self.sequence.VerifPb()
             wx.CallAfter(self.fiche.Redessiner)
             self.MarquerFichierCourantModifie()
+        elif event.GetDocument() == self.classe:
+            self.sequence.VerifPb()
               
         
     ###############################################################################################
@@ -8574,7 +8585,8 @@ class BaseFiche(wx.ScrolledWindow):
 
     ######################################################################################################
     def OnEnter(self, event):
-#        self.SetFocus()
+#        print "OnEnter Fiche"
+        self.SetFocus()
         event.Skip()
         
         
@@ -8929,7 +8941,8 @@ class PanelPropriete(scrolled.ScrolledPanel):
 
     ######################################################################################################
     def OnEnter(self, event):
-#        self.SetFocus()
+#        print "OnEnter PanelPropriete"
+        self.SetFocus()
         event.Skip()
 
        
@@ -8944,41 +8957,10 @@ class PanelPropriete(scrolled.ScrolledPanel):
 
         self.GetEventHandler().ProcessEvent(evt)
         
-
-####################################################################################
-#
-#   Classe définissant le panel de propriété de type Book
-#
-####################################################################################
-#class PanelProprieteBook(wx.Notebook, PanelPropriete):
-#    def __init__(self, parent, titre = u"", objet = None):
-#        wx.Notebook.__init__(self, parent, -1,  style= wx.BK_DEFAULT)#| wx.BORDER_SIMPLE)
-#        self.eventAttente = False
-##        self.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
-#
-#
-#    def OnPageChanged(self, event):
-##        old = event.GetOldSelection()
-##        new = event.GetSelection()
-##        sel = self.GetSelection()
-#        
-#        event.Skip()
-
-#    #########################################################################################################
-#    def sendEvent(self, doc = None):
-#        evt = SeqEvent(myEVT_DOC_MODIFIED, self.GetId())
-#        if doc != None:
-#            evt.SetDocument(doc)
-#        else:
-#            evt.SetDocument(self.GetDocument())
-#        
-#        self.GetEventHandler().ProcessEvent(evt)
-#        self.eventAttente = False
-        
         
 ####################################################################################
 #
-#   Classe définissant le panel "racine" 
+#   Classe définissant le panel "racine" (ne contenant que des infos HTML)
 #
 ####################################################################################
 import wx.richtext as rt
@@ -12912,6 +12894,12 @@ class ArbreDoc(CT.CustomTreeCtrl):
         
         self.ExpandAll()
         
+        self.Bind(wx.EVT_ENTER_WINDOW, self.OnEnter)
+        
+    ######################################################################################################
+    def OnEnter(self, event):
+        self.SetFocus()
+        event.Skip()
         
 #    ####################################################################################
 #    def SelectItem(self, item, select=True):
@@ -13444,7 +13432,15 @@ class ArbreSavoirs(CT.CustomTreeCtrl):
         #
 #        self.Bind(CT.EVT_TREE_SEL_CHANGED, self.OnSelChanged)
         self.Bind(CT.EVT_TREE_ITEM_CHECKED, self.OnItemCheck)
-    
+        
+        self.Bind(wx.EVT_ENTER_WINDOW, self.OnEnter)
+
+
+    ######################################################################################################
+    def OnEnter(self, event):
+#        print "OnEnter PanelPropriete"
+        self.SetFocus()
+        event.Skip()
         
     ####################################################################################
     def Construire(self, branche, dic, et = False, grosseBranche = True):
@@ -13613,6 +13609,14 @@ class ArbreCompetences(HTL.HyperTreeList):
 #        self.Bind(CT.EVT_TREE_SEL_CHANGED, self.OnSelChanged)
         self.Bind(CT.EVT_TREE_ITEM_CHECKED, self.OnItemCheck)
         self.Bind(wx.EVT_SIZE, self.OnSize2)
+        self.Bind(wx.EVT_ENTER_WINDOW, self.OnEnter)
+
+
+    ######################################################################################################
+    def OnEnter(self, event):
+#        print "OnEnter PanelPropriete"
+        self.SetFocus()
+        event.Skip()
         
     #############################################################################
     def MiseAJourTypeEnseignement(self, ref):
@@ -15189,6 +15193,15 @@ class Panel_BO(wx.Panel):
         self.nb.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
         
         self.SetSizer(self.sizer)
+        
+        self.Bind(wx.EVT_ENTER_WINDOW, self.OnEnter)
+
+
+    ######################################################################################################
+    def OnEnter(self, event):
+        self.SetFocus()
+        event.Skip()
+        
         
     ######################################################################################################
     def OnPageChanged(self, event):
