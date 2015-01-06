@@ -21,7 +21,7 @@ Plus d'informations : [Fonctionalite_Seq Séquences pédagogiques]
 
 
 
-_Remarque : par défaut, les *centres d'intérêts* sont ceux choisis dans l'académie de Clermont-Ferrand, il est toutefois possible d'en utiliser d'autres..._
+
 
 [captures_ecran Quelques captures d'écran de fiches de séquence]
 
