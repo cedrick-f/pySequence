@@ -14,7 +14,7 @@
    * Assistance à l'organisation des activités élève en rotation ou en série,
    * Centres d'intérêts, Savoirs et Compétences ... : tout est intégré, et pour toutes les spécialités,
    * Possibilité d'associer des liens (fichiers, dossiers ou web) aux systèmes et aux séances.
-   * Génération de grilles de Synthèse pédagogique au format Excel (uniquement SSI et STI2D ETT pour le moment) http://pysequence.googlecode.com/svn/trunk/images_aide/nouveau.gif
+   * Génération de grilles de Synthèse pédagogique au format Excel http://pysequence.googlecode.com/svn/trunk/images_aide/nouveau.gif
 
 
 Plus d'informations : [Fonctionalite_Seq Séquences pédagogiques]
