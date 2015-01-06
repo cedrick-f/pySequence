@@ -27,7 +27,7 @@ Avant de démarrer la création d'un document, il est préférable de *configure
  * *découpage de la classe* en groupes
  * *centres d'intérêt* choisis pour l'ETT (impossible à partir de la version 5 : voir [Classe classe])
 
-Remarque : par défaut, les *centres d'intérêt* sont définis pour l'académie de *Clermont-Ferrand*, mais il est possible de les modifier à partir d'une sélection d'un fichier _Excel_, ou bien manuellement. (voir [ModificationCI Modification des Centres d'Intérêt])
+Remarque : par défaut, les *centres d'intérêt* sont définis pour l'académie de *Clermont-Ferrand*, mais il est possible de les modifier à partir d'une sélection d'un fichier _Excel_, ou bien manuellement. (voir [Modifier_programme Modifier un programme d'enseignement])
 
 
 _[Premiere_utilisation Haut de page]_
