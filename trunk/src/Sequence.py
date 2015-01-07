@@ -34,7 +34,7 @@ et à la validation de projets
 *   STIDD   *
 *    SSI    *
 *************
-Copyright (C) 2011-2014
+Copyright (C) 2011-2015
 @author: Cedrick FAURY
 
 """
@@ -76,10 +76,10 @@ def MyExceptionHook(etype, value, trace):
      standard Python header: ``Traceback (most recent call last)``.
     """
     tmp = traceback.format_exception(etype, value, trace)
-    mes = u"pySéquence a rencontré une erreur et doit fermer !\n\n"\
+    mes = u"pySéquence %s a rencontré une erreur et doit fermer !\n\n"\
          u"Merci de copier le message ci-dessous\n" \
          u"et de l'envoyer à l'équipe de développement :\n"\
-         u"cedrick point faury arobase ac-clermont point fr\n\n"
+         u"cedrick point faury arobase ac-clermont point fr\n\n" %__version__
     exception = mes + "".join(tmp)
     
     try:
@@ -96,8 +96,6 @@ try:
     from agw import genericmessagedialog as GMD
 except ImportError: # if it's not there locally, try the wxPython lib.
     import wx.lib.agw.genericmessagedialog as GMD
-
- 
 
 
 sys.excepthook = MyExceptionHook
@@ -11960,6 +11958,9 @@ class PanelPropriete_Tache(PanelPropriete):
             for i,e in enumerate(self.tache.projet.eleves):
                 self.AjouterCompetenceEleve(code, i+1)
         
+        self.tache.projet.SetCompetencesRevuesSoutenance()
+        
+        
     ######################################################################################  
     def EnleverCompetence(self, code, propag = True):
 #        print "EnleverCompetence", self, code
@@ -11972,7 +11973,10 @@ class PanelPropriete_Tache(PanelPropriete):
         if propag:
             for i,e in enumerate(self.tache.projet.eleves):
                 self.EnleverCompetenceEleve(code, i+1)
-
+    
+        self.tache.projet.SetCompetencesRevuesSoutenance()
+    
+    
     ######################################################################################  
     def AjouterCompetenceEleve(self, code, eleve):
 #        print "AjouterCompetenceEleve", self, code
