@@ -359,21 +359,21 @@ class Referentiel():
         
         def egal(val1, val2):
             if isinstance(val1, (str, unicode)) and isinstance(val2, (str, unicode)):
-                if val1 != val2:#.replace("\n", "--"):
-                    print "Erreur s : xml =", val1, "      xls =", val2#.replace("\n", "--")
+#                if val1 != val2:#.replace("\n", "--"):
+#                    print "Erreur s : xml =", val1, "      xls =", val2#.replace("\n", "--")
                 return val1 == val2#.replace("\n", "--")
             elif isinstance(val1, (int, long, float)) and isinstance(val2, (int, long, float)):
-                if val1 != val2:
-                    print "Erreur : xml =", val1, "      xls =", val2
+#                if val1 != val2:
+#                    print "Erreur : xml =", val1, "      xls =", val2
                 return val1 == val2
             elif type(val1) == bool and type(val2) == bool:
-                if val1 != val2:
-                    print "Erreur : xml =", val1, "      xls =", val2
+#                if val1 != val2:
+#                    print "Erreur : xml =", val1, "      xls =", val2
                 return val1 == val2
             
             elif type(val1) == list:
                 if len(val1) != len(val2):
-                    print "Erreur : xml =", val1, "      xls =", val2
+#                    print "Erreur : xml =", val1, "      xls =", val2
                     return False
                 e = True
                 for sval1, sval2 in zip(val1, val2):
@@ -382,7 +382,7 @@ class Referentiel():
             
             elif type(val1) == dict and type(val2) == dict:
                 if not egal(sorted(val1), sorted(val2)):
-                    print "Erreur : xml =", val1, "      xls =", val2
+#                    print "Erreur : xml =", val1, "      xls =", val2
                     return False
                 e = True
                 for k, v in val1.items():
@@ -392,7 +392,7 @@ class Referentiel():
                 return e
             
             else:
-                print "Erreur : xml =", val1, "      xls =", val2
+#                print "Erreur : xml =", val1, "      xls =", val2
                 return False
         
         for attr in dir(self):
@@ -401,10 +401,10 @@ class Referentiel():
                 if isinstance(val1, (str, unicode, int, long, float, bool, list, dict)) :
                     val2 = getattr(ref, attr)
                     if not egal(val1, val2):
-                        print "Différence"
-                        print "  ", attr
-                        print "  ", val1
-                        print "  ", val2
+#                        print "Différence"
+#                        print "  ", attr
+#                        print "  ", val1
+#                        print "  ", val2
 #                        break
                         return False
         return True
@@ -537,9 +537,10 @@ class Referentiel():
         self.Enseignement[1] = sh_g.cell(6,1).value #Nom complet    
         self.Enseignement[2] = sh_g.cell(6,2).value #Famille
 
-        lig = [l  for l in range(10, 17) if sh_g.cell(l,3).value != u""]
-        for l in lig:
-            self.periodes.append([sh_g.cell(l,2).value, int(sh_g.cell(l,3).value)])
+        if sh_g.ncols > 3:
+            lig = [l  for l in range(10, 17) if sh_g.cell(l,3).value != u""]
+            for l in lig:
+                self.periodes.append([sh_g.cell(l,2).value, int(sh_g.cell(l,3).value)])
             
         #
         # options

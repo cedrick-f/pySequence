@@ -12,7 +12,7 @@ import sys, os
 from glob import glob
 from cx_Freeze import setup, Executable
 
-reload(sys)  # Reload does the trick!
+reload(sys)
 sys.setdefaultencoding('utf-8')
     
 ## Remove the build folder, a bit slower but ensures that build contains the latest
