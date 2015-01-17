@@ -40,7 +40,7 @@ Copyright (C) 2011-2015
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "5.7"
+__version__ = "5.8"
 print __version__
 
 #from threading import Thread
@@ -3289,7 +3289,7 @@ class CentreInteret(Objet_sequence):
     def ConstruireArbre(self, arbre, branche):
         self.arbre = arbre
         self.codeBranche = wx.StaticText(self.arbre, -1, u"")
-        self.branche = arbre.AppendItem(branche, u"Centre d'intérét :", wnd = self.codeBranche, data = self,
+        self.branche = arbre.AppendItem(branche, self.GetReferentiel().nomCI+u" :", wnd = self.codeBranche, data = self,
                                         image = self.arbre.images["Ci"])
         if hasattr(self, 'tip'):
             self.tip.SetBranche(self.branche)
@@ -3306,6 +3306,7 @@ class CentreInteret(Objet_sequence):
         
     #############################################################################
     def MiseAJourTypeEnseignement(self):
+        self.arbre.SetItemText(self.branche, self.GetReferentiel().nomCI+u" :")
         if hasattr(self, 'panelPropriete'):
             self.panelPropriete.construire()
             
@@ -3448,11 +3449,21 @@ class Savoirs(Objet_sequence):
               - P = physique
         """
 #        print "setBranche Savoirs"
-        self.savoirs = []
+        
+        # Détection d'un ancienne version (pas infaillible !)
+        ancien = False
         for i in range(len(branche.keys())):
             code = branche.get("S"+str(i), "")
             if code != "":
                 if not code[0] in ["B", "S", "M", "P"]: # version < 4.6
+                    ancien = True
+                    break
+        
+        self.savoirs = []
+        for i in range(len(branche.keys())):
+            code = branche.get("S"+str(i), "")
+            if code != "":
+                if ancien: # version < 4.6
                     if code[0] == "_":
                         code = "B"+code[1:]
                     else:
@@ -7882,9 +7893,11 @@ class FenetreSequence(FenetreDocument):
             self.sequence.VerifPb()
             wx.CallAfter(self.fiche.Redessiner)
             self.MarquerFichierCourantModifie()
+            
         elif event.GetDocument() == self.classe:
             self.sequence.VerifPb()
-              
+            wx.CallAfter(self.fiche.Redessiner)
+            self.MarquerFichierCourantModifie()
         
     ###############################################################################################
     def enregistrer(self, nomFichier):
@@ -8208,7 +8221,7 @@ class FenetreProjet(FenetreDocument):
             return root, message, count, Ok, Annuler
         
         
-        if True:#"beta" in __version__:
+        if "beta" in __version__:
 #            print "beta"
             root, message, count, Ok, Annuler = ouvre(fichier, message)
             err = []
@@ -10401,6 +10414,7 @@ class PanelPropriete_CI(PanelPropriete):
         #
         # Cas où les CI sont sur une cible MEI
         #
+        abrevCI = self.CI.parent.classe.referentiel.abrevCI
         if self.CI.GetReferentiel().CI_cible:
             self.panel_cible = Panel_Cible(self, self.CI)
             self.sizer.Add(self.panel_cible, (0,0), (2,1), flag = wx.EXPAND)
@@ -10408,12 +10422,13 @@ class PanelPropriete_CI(PanelPropriete):
             self.grid1 = wx.FlexGridSizer( 0, 3, 0, 0 )
             self.grid1.AddGrowableCol(1)
             
+            
 #            for i, ci in enumerate(constantes.CentresInterets[self.CI.GetTypeEnseignement()]):
             for i, ci in enumerate(self.CI.parent.classe.referentiel.CentresInterets):
                 r = wx.CheckBox(self, 200+i, "")
-                t = wx.StaticText(self, -1, "CI"+str(i+1)+" : "+ci)
+                t = wx.StaticText(self, -1, abrevCI+str(i+1)+" : "+ci)
                 p = wx.TextCtrl(self, -1, u"1")
-                p.SetToolTipString(u"Poids horaire relatif du centre d'intéret")
+                p.SetToolTipString(u"Poids horaire relatif du "+abrevCI)
                 p.Show(False)
                 p.SetMinSize((30, -1))
                 self.group_ctrls.append((r, t, p))
@@ -10426,14 +10441,14 @@ class PanelPropriete_CI(PanelPropriete):
             self.sizer.Add(self.grid1, (0,1), (2,1), flag = wx.EXPAND)
             
             aide = wx.BitmapButton(self, -1, images.Bouton_Aide.GetBitmap())
-            aide.SetToolTipString(u"Informations à propos de la cible CI")
+            aide.SetToolTipString(u"Informations à propos de la cible "+abrevCI)
             self.sizer.Add(aide, (0,2), flag = wx.ALL, border = 2)
             self.Bind(wx.EVT_BUTTON, self.OnAide, aide )
             
             b = wx.ToggleButton(self, -1, "")
             b.SetValue(self.CI.max2CI)
             b.SetBitmap(images.Bouton_2CI.GetBitmap())
-            b.SetToolTipString(u"Limite à 2 le nombre de CI sélectionnables")
+            b.SetToolTipString(u"Limite à 2 le nombre de "+abrevCI+" sélectionnables")
             self.sizer.Add(b, (1,2), flag = wx.ALL, border = 2)
 #            b.SetSize((30,30)) # adjust default size for the bitmap
             b.SetInitialSize((32,32))
@@ -10453,7 +10468,7 @@ class PanelPropriete_CI(PanelPropriete):
             for i, ci in enumerate(self.CI.parent.classe.referentiel.CentresInterets):
     #            if i == 0 : s = wx.RB_GROUP
     #            else: s = 0
-                r = wx.CheckBox(self, 200+i, "CI"+str(i+1), style = wx.RB_GROUP )
+                r = wx.CheckBox(self, 200+i, abrevCI+str(i+1), style = wx.RB_GROUP )
                 t = wx.StaticText(self, -1, ci)
                 self.grid1.Add( r, 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_LEFT|wx.LEFT|wx.RIGHT|wx.TOP, 2 )
                 self.grid1.Add( t, 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_LEFT|wx.LEFT|wx.RIGHT, 5 )
@@ -11464,8 +11479,10 @@ class PanelPropriete_Seance(PanelPropriete):
     def EvtText(self, event):
         if event.GetId() == self.vcDuree.GetId():
             self.seance.SetDuree(event.GetVar().v[0])
+        
         elif event.GetId() == self.vcNombre.GetId():
             self.seance.SetNombre(event.GetVar().v[0])
+        
         elif event.GetId() == self.vcNombreRot.GetId():
             self.seance.SetNombreRot(event.GetVar().v[0])
             
@@ -16278,13 +16295,13 @@ class FenetreBilan(wx.Frame):
         #        
         c = col_deb+2
         l = 4
-        ws0.write_merge(l-3, l-3, c, c+len(self.referentiel.CentresInterets)-1, u"Centres d'intérêt", self.styleT)
+        ws0.write_merge(l-3, l-3, c, c+len(self.referentiel.CentresInterets)-1, self.referentiel.nomCI, self.styleT)
         
         for i, ci in enumerate(self.referentiel.CentresInterets):
             if len(self.referentiel.positions_CI) > i:
                 pos = self.referentiel.positions_CI[i]
                 ws0.write(l-2, c, pos, self.stylePosCI)                 # position cible
-            ws0.write(l-1, c, u"CI"+str(i+1), self.styleNumCI)          # numéro CI
+            ws0.write(l-1, c, self.referentiel.abrevCI+str(i+1), self.styleNumCI)          # numéro CI
             ws0.write(l, c, ci, self.styleCI)                           # ci
             ws0.col(c).width = 120*20
             c += 1
@@ -16868,7 +16885,7 @@ class FenetreBilan(wx.Frame):
                 
                 
 class DialogChoixCI(wx.Dialog):
-    def __init__(self, parent, listeCI, style=wx.DEFAULT_DIALOG_STYLE):
+    def __init__(self, parent, listeCI, referentiel, style=wx.DEFAULT_DIALOG_STYLE):
 
         # Instead of calling wx.Dialog.__init__ we precreate the dialog
         # so we can set an extra style that must be set before
@@ -16876,7 +16893,7 @@ class DialogChoixCI(wx.Dialog):
         # method.
         pre = wx.PreDialog()
         pre.SetExtraStyle(wx.DIALOG_EX_CONTEXTHELP)
-        pre.Create(parent, -1, u"Centres d'intérêt différents")
+        pre.Create(parent, -1, referentiel.nomCI + u" différents")
 
         # This next step is the most important, it turns this Python
         # object into the real wrapper of the dialog (instead of pre)
@@ -16899,10 +16916,10 @@ class DialogChoixCI(wx.Dialog):
         for i, (l, s) in enumerate(listeCI):
             lstsz = wx.BoxSizer(wx.VERTICAL)
             if i == 0:
-                radio = wx.RadioButton(self, -1, u"Centres d'intérêt #"+str(i+1), style = wx.RB_GROUP )
+                radio = wx.RadioButton(self, -1, referentiel.nomCI + u" #"+str(i+1), style = wx.RB_GROUP )
             else:
-                radio = wx.RadioButton(self, -1, u"Centres d'intérêt #"+str(i+1))
-            radio.SetHelpText(u"Liste de CI #"+str(i))
+                radio = wx.RadioButton(self, -1, referentiel.nomCI +u" #"+str(i+1))
+            radio.SetHelpText(u"Liste de "+referentiel.abrevCI+" #"+str(i))
             self.Bind(wx.EVT_RADIOBUTTON, self.OnSelect, radio )
             self.radio.append(radio)
             lstsz.Add(radio, 0, wx.ALIGN_CENTRE|wx.ALL|wx.EXPAND, 5)
@@ -16911,7 +16928,7 @@ class DialogChoixCI(wx.Dialog):
             lstsz.Add(label, 0, wx.ALIGN_CENTRE|wx.ALL|wx.EXPAND, 5)                      
                                   
             text = wx.TextCtrl(self, -1, u"\n".join(s), size=(maxs,-1), style = wx.TE_READONLY|wx.TE_MULTILINE)
-            text.SetHelpText(u"Liste de CI #"+str(i))
+            text.SetHelpText(u"Liste de "+referentiel.abrevCI+" #"+str(i))
             lstsz.Add(text, 1, wx.ALIGN_CENTRE|wx.ALL|wx.EXPAND, 5)
             box.Add(lstsz, 0, wx.ALIGN_CENTRE|wx.ALL|wx.EXPAND, 5 )
             

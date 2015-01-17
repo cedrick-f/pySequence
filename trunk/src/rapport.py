@@ -717,7 +717,7 @@ class RapportRTF(rt.RichTextCtrl):
             for e in doc.eleves:
                 self.AddTitreProjet(e)
                 for t in doc.OrdonnerListeTaches(e.GetTaches(revues = True)):
-                    if t.phase != phase:
+                    if t.phase != phase and t.phase != '':
                         phase = t.phase
                         self.AddPhase(t, doc.GetTypeEnseignement(simple = True))
                     self.AddTache(t, revue = t.phase in ["R1", "R2", "R3", "Rev"])
@@ -796,11 +796,16 @@ class RapportRTF(rt.RichTextCtrl):
         
     ######################################################################################################
     def AddPhase(self, tache, typ):
-        
-        r,v,b,a = ICoulTache[tache.phase]
+        if tache.phase != '':
+            r,v,b,a = ICoulTache[tache.phase]
+        else:
+            r,v,b, a = 1,1,1,1
         bgCoul = wx.Colour(r*255,v*255,b*255)
         
-        r,v,b = BCoulTache[tache.phase]
+        if tache.phase != '':
+            r,v,b = BCoulTache[tache.phase]
+        else:
+            r,v,b, a = 0,0,0,1
         fgCoul = wx.Colour(r*255,v*255,b*255)
 
         Styles["Titre 1"].SetBackgroundColour(bgCoul)
@@ -818,11 +823,16 @@ class RapportRTF(rt.RichTextCtrl):
          
     ######################################################################################################
     def AddTache(self, tache, revue = False):
-        
-        r,v,b, a = ICoulTache[tache.phase]
+        if tache.phase != '':
+            r,v,b, a = ICoulTache[tache.phase]
+        else:
+            r,v,b, a = 1,1,1,1
         bgCoul = wx.Colour(r*255,v*255,b*255)
         
-        r,v,b = BCoulTache[tache.phase]
+        if tache.phase != '':
+            r,v,b = BCoulTache[tache.phase]
+        else:
+            r,v,b, a = 0,0,0,1
         fgCoul = wx.Colour(r*255,v*255,b*255)
             
         if not revue:
@@ -847,11 +857,14 @@ class RapportRTF(rt.RichTextCtrl):
 #            self.WriteText(u"Description :")
 #            self.BeginLeftIndent(60)
 #            self.EndUnderline()
+            self.Newline()
             self.AddDescription(tache.panelPropriete.rtc.rtc)
             self.EndStyle()
-#            self.BeginLeftIndent(60)
-            self.Newline()
-            self.EndStyle()
+
+##            self.BeginLeftIndent(60)
+#            self.Newline()
+#            self.EndStyle()
+#            self.MoveEnd()
             
 #            tache.panelPropriete.rtc.rtc.SelectAll()
 #            
@@ -905,52 +918,82 @@ class RapportRTF(rt.RichTextCtrl):
         """ Ajoute une description contenue dans un RichTextCtrl
         """
 #        print "AddDescription"
-        bufS = cStringIO.StringIO()
-        handlerS = rt.RichTextXMLHandler()
-        handlerS.SetFlags(rt.RICHTEXT_HANDLER_INCLUDE_STYLESHEET)
-        handlerS.SaveStream(rtc.GetBuffer(), bufS)
-#        print "   ", bufS.getvalue()
-        domS = parseString(bufS.getvalue())
+#        par = rtc.GetFocusObject()
+#        par = rtc.GetSelectionAnchorObject()
+        par = rtc.GetBuffer()
+        pos = self.GetInsertionPoint()
         
-        
-        bufT  = cStringIO.StringIO()
-        handlerT = rt.RichTextXMLHandler()
-        handlerT.SetFlags(rt.RICHTEXT_HANDLER_INCLUDE_STYLESHEET)
-        handlerT.SaveStream(self.GetBuffer(), bufT)
-#        print "   ", bufT.getvalue()
-        domT = parseString(bufT.getvalue())
-        
-        parS = domS.getElementsByTagName("paragraphlayout")[0]
-        parT = domT.getElementsByTagName("paragraphlayout")[0]
-        
-        for c in parS.childNodes:
-#            print ">>>>   ", c.toxml()
-            parT.appendChild(domT.importNode(c, True))
-#        print "    T : ", parT.toxml()
-        
-#        print "resultat :"
-#        print domT.toxml()
-        
-        bufT  = cStringIO.StringIO()
-        bufT.write(domT.toxml())
-        bufT.seek(0)
-#        print " >>", bufT.getvalue()
-        
-#        rt_buffer = self.GetBuffer()
-#        rt_buffer.AddHandler(handlerT)
-
-#        handlerT.LoadStream(self.GetBuffer(),  bufT)  
-    
-        # add the handler (where you create the control)
-        self.GetBuffer().AddHandler(rt.RichTextXMLHandler())
-        
-
-        buffer = self.GetBuffer()
-        # you have to specify the type of data to load and the control
-        # must already have an instance of the handler to parse it
-        buffer.LoadStream(bufT, rt.RICHTEXT_TYPE_XML)
+        self.GetBuffer().InsertParagraphsWithUndo(pos, par, self)
         
         self.MoveEnd()
+#        self.Newline()
+#        return
+#        pos = self.GetLastPosition()
+#        
+#        self.
+        
+#        
+#        
+#        
+#        
+#        
+#        
+#        bufS = cStringIO.StringIO()
+#        handlerS = rt.RichTextXMLHandler()
+#        handlerS.SetFlags(rt.RICHTEXT_HANDLER_INCLUDE_STYLESHEET)
+#        handlerS.SaveStream(rtc.GetBuffer(), bufS)
+##        print "   ", bufS.getvalue()
+#        domS = parseString(bufS.getvalue())
+#        
+#        
+#        bufT  = cStringIO.StringIO()
+#        handlerT = rt.RichTextXMLHandler()
+#        handlerT.SetFlags(rt.RICHTEXT_HANDLER_INCLUDE_STYLESHEET)
+#        handlerT.SaveStream(self.GetBuffer(), bufT)
+##        print "   ", bufT.getvalue()
+#        domT = parseString(bufT.getvalue())
+#        
+#        parS = domS.getElementsByTagName("paragraphlayout")[0]
+#        parT = domT.getElementsByTagName("paragraphlayout")[0]
+#        
+#        for c in parS.childNodes:
+##            print ">>>>   ", c.toxml()
+#            parT.appendChild(domT.importNode(c, True))
+##        print "    T : ", parT.toxml()
+#        
+#        print "resultat :"
+##        print domT.toxml()
+        
+#        bufT  = cStringIO.StringIO()
+#        bufT.write(domT.toxml())
+#        bufT.seek(0)
+#        
+#        try:
+#            for line in bufT:
+#                print line,
+#        finally:
+#            pass
+#        
+#        bufT.seek(0)
+##        print " >>", bufT.getvalue()
+#        
+##        rt_buffer = self.GetBuffer()
+##        rt_buffer.AddHandler(handlerT)
+#
+##        handlerT.LoadStream(self.GetBuffer(),  bufT)  
+#    
+#        # add the handler (where you create the control)
+#        self.GetBuffer().AddHandler(rt.RichTextXMLHandler())
+#        
+#        # you have to specify the type of data to load and the control
+#        # must already have an instance of the handler to parse it
+#        self.GetBuffer().LoadStream(bufT, rt.RICHTEXT_TYPE_XML)
+#        bufT.close()
+#        
+##        self.MoveToParagraphEnd()
+#        self.MoveEnd()
+#        self.Newline()
+#        self.MoveEnd()
 #        
 #        self.EndStyle()
 #        self.EndLeftIndent()

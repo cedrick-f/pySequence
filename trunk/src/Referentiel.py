@@ -116,6 +116,8 @@ class Referentiel():
         #
         # Centre d'intérêt
         #
+        self.nomCI = u"Centres d'intérêt"
+        self.abrevCI = u"CI"
         self.CentresInterets = []       #
         self.CI_BO = True               # les ci sont donnés par le B.O. (pas modifiables)
         self.CI_cible = False           # les ci se placent sur une cible MEI FSC
@@ -580,6 +582,8 @@ class Referentiel():
         sh_ci = wb.sheet_by_name(u"CI")
         self.CI_BO = sh_ci.cell(0,1).value[0].upper() == "O"
         self.CI_cible = sh_ci.cell(1,1).value[0].upper() == "O"
+        self.nomCI = sh_ci.cell(2,0).value
+        self.abrevCI = sh_ci.cell(2,1).value
         continuer = True
         l = 4
         while continuer:
