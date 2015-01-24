@@ -232,6 +232,14 @@ def getAnneeScolaireStr():
     annee = getAnneeScolaire()
     return str(annee)+"-"+str(annee+1)
     
+def getSingulierPluriel(txt, pluriel = False):
+    if pluriel:
+        return txt.replace("(", "").replace(")", "")
+    else:
+        return txt.replace("(s)", "").replace("(x)", "")
+
+    
+    
 #    
 # Fonction pour indenter les XML générés par ElementTree
 #

@@ -190,7 +190,7 @@ from widgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_ENTI
 
 
 # Les constantes partagées
-from constantes import calculerEffectifs, revCalculerEffectifs, PATH, \
+from constantes import calculerEffectifs, revCalculerEffectifs, PATH, getSingulierPluriel,\
                         strEffectifComplet, getElementFiltre, COUL_OK, COUL_NON, COUL_BOF, COUL_BIEN, \
                         toList, COUL_COMPETENCES, TABLE_PATH, CHAR_POINT, COUL_SOUT, COUL_REVUE, COUL_ABS
 import constantes
@@ -1232,6 +1232,12 @@ class Sequence(BaseDoc):
             duree += s.GetDureeGraph()
         return duree
             
+    ######################################################################################  
+    def GetDureeGraphMini(self):
+        duree = 10000
+        for s in self.seance:
+            duree = min(duree, s.GetDureeGraphMini())
+        return duree
     
     ######################################################################################  
     def getBranche(self):
@@ -1428,16 +1434,17 @@ class Sequence(BaseDoc):
         dicType = {k:0 for k in listeTypeSeance}
         dicType[''] = 0
         RS = 0
-        for i, sce in enumerate(self.seance):
-            sce.ordre = i
-            if sce.typeSeance in ['R', 'S']:
-#                print sce
-                sce.ordreType = RS
-                RS += 1
-            else:
-                sce.ordreType = dicType[sce.typeSeance]
-                dicType[sce.typeSeance] += 1
-            sce.OrdonnerSeances()
+        if hasattr(self, 'seance'): # c'est une sous séance
+            for i, sce in enumerate(self.seance):
+                sce.ordre = i
+                if sce.typeSeance in ['R', 'S']:
+    #                print sce
+                    sce.ordreType = RS
+                    RS += 1
+                else:
+                    sce.ordreType = dicType[sce.typeSeance]
+                    dicType[sce.typeSeance] += 1
+                sce.OrdonnerSeances()
         
         self.SetCodes()
     
@@ -3271,7 +3278,7 @@ class CentreInteret(Objet_sequence):
             return s
         
         else :
-            return "CI"+str(self.numCI[num]+1)
+            return self.GetReferentiel().abrevCI+str(self.numCI[num]+1)
     
     ######################################################################################  
     def GetPosCible(self, num):
@@ -3289,7 +3296,8 @@ class CentreInteret(Objet_sequence):
     def ConstruireArbre(self, arbre, branche):
         self.arbre = arbre
         self.codeBranche = wx.StaticText(self.arbre, -1, u"")
-        self.branche = arbre.AppendItem(branche, self.GetReferentiel().nomCI+u" :", wnd = self.codeBranche, data = self,
+        self.branche = arbre.AppendItem(branche, getSingulierPluriel(self.GetReferentiel().nomCI, True)+u" :", 
+                                        wnd = self.codeBranche, data = self,
                                         image = self.arbre.images["Ci"])
         if hasattr(self, 'tip'):
             self.tip.SetBranche(self.branche)
@@ -3306,7 +3314,7 @@ class CentreInteret(Objet_sequence):
         
     #############################################################################
     def MiseAJourTypeEnseignement(self):
-        self.arbre.SetItemText(self.branche, self.GetReferentiel().nomCI+u" :")
+        self.arbre.SetItemText(self.branche, getSingulierPluriel(self.GetReferentiel().nomCI, True)+u" :")
         if hasattr(self, 'panelPropriete'):
             self.panelPropriete.construire()
             
@@ -3940,11 +3948,25 @@ class Seance(ElementDeSequence, Objet_sequence):
     ######################################################################################  
     def GetDureeGraph(self):
         return self.GetDuree()
-        d = self.GetDuree(graph = True)
-        if d != 0:
-            return 0.001*log(d*2)+0.001
-        return d
+#        d = self.GetDuree(graph = True)
+#        if d != 0:
+#            return 0.001*log(d*2)+0.001
+#        return d
            
+    ######################################################################################  
+    def GetDureeGraphMini(self):
+        duree = 10000
+        if self.typeSeance == "R":
+            for i in range(self.nbrRotations.v[0]):
+                sce = self.sousSeances[i]
+                duree = min(duree, sce.GetDuree())
+        elif self.typeSeance == "S":
+            if len(self.sousSeances) > 0:
+                duree = min(duree, self.sousSeances[0].GetDuree())
+        else:
+            duree = min(duree, self.duree.v[0])
+
+        return duree
                 
     ######################################################################################  
     def SetDuree(self, duree, recurs = True):
@@ -8232,7 +8254,8 @@ class FenetreProjet(FenetreDocument):
             except:
                 count = 0
                 err = [constantes.Erreur(constantes.ERR_INCONNUE)]
-                message += err.getMessage() + u"\n"
+                message += err[0].getMessage() + u"\n"
+                Annuler = True
         
         #
         # Erreur fatale d'ouverture
@@ -11513,7 +11536,9 @@ class PanelPropriete_Seance(PanelPropriete):
         
         deja = self.seance.typeSeance in ["AP", "ED", "P"]
         
+        
         self.seance.SetType(get_key(self.GetReferentiel().seances, self.cbType.GetStringSelection(), 1))
+        self.seance.parent.OrdonnerSeances()
         
         if self.seance.typeSeance in ["AP", "ED", "P"]:
             if not deja:
@@ -15297,7 +15322,7 @@ class FenetreBilan(wx.Frame):
         sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
         te = ArbreTypeEnseignement(panel, self)
         self.Bind(wx.EVT_RADIOBUTTON, self.EvtRadioBox, te)
-        
+        sb.Add(te, flag = wx.EXPAND)
         self.referentiel = referentiel
 #        l = []
 #        for i, e in enumerate(REFERENTIELS.keys()):
@@ -15316,7 +15341,7 @@ class FenetreBilan(wx.Frame):
 #        for i in [1,2,3,4]:
 #            rb.EnableItem(i, False)    
         
-        self.sizer.Add(te, (0,0), (2,1), flag = wx.EXPAND|wx.ALL)
+        self.sizer.Add(sb, (0,0), (2,1), flag = wx.EXPAND|wx.ALL)
         self.cb_type = te
         te.SetStringSelection(referentiel.Enseignement[0])
 
@@ -16295,7 +16320,7 @@ class FenetreBilan(wx.Frame):
         #        
         c = col_deb+2
         l = 4
-        ws0.write_merge(l-3, l-3, c, c+len(self.referentiel.CentresInterets)-1, self.referentiel.nomCI, self.styleT)
+        ws0.write_merge(l-3, l-3, c, c+len(self.referentiel.CentresInterets)-1, getSingulierPluriel(self.referentiel.nomCI, True), self.styleT)
         
         for i, ci in enumerate(self.referentiel.CentresInterets):
             if len(self.referentiel.positions_CI) > i:
@@ -16893,7 +16918,7 @@ class DialogChoixCI(wx.Dialog):
         # method.
         pre = wx.PreDialog()
         pre.SetExtraStyle(wx.DIALOG_EX_CONTEXTHELP)
-        pre.Create(parent, -1, referentiel.nomCI + u" différents")
+        pre.Create(parent, -1, getSingulierPluriel(referentiel.nomCI, True) + u" différents")
 
         # This next step is the most important, it turns this Python
         # object into the real wrapper of the dialog (instead of pre)
@@ -16916,9 +16941,9 @@ class DialogChoixCI(wx.Dialog):
         for i, (l, s) in enumerate(listeCI):
             lstsz = wx.BoxSizer(wx.VERTICAL)
             if i == 0:
-                radio = wx.RadioButton(self, -1, referentiel.nomCI + u" #"+str(i+1), style = wx.RB_GROUP )
+                radio = wx.RadioButton(self, -1, getSingulierPluriel(referentiel.nomCI, True) + u" #"+str(i+1), style = wx.RB_GROUP )
             else:
-                radio = wx.RadioButton(self, -1, referentiel.nomCI +u" #"+str(i+1))
+                radio = wx.RadioButton(self, -1, getSingulierPluriel(referentiel.nomCI, True) +u" #"+str(i+1))
             radio.SetHelpText(u"Liste de "+referentiel.abrevCI+" #"+str(i))
             self.Bind(wx.EVT_RADIOBUTTON, self.OnSelect, radio )
             self.radio.append(radio)
