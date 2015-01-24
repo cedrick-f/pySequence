@@ -824,12 +824,12 @@ def DrawPeriodes(ctx, pos = None, periodes = [[u"Année", 5]], periode_prj = [],
         if len(annee) > 1:
             ctx.set_font_size(fontPos*0.9)
             w1, h1 = ctx.text_extents(annee[1])[2:4]
-            pm = show_text_rect_fix(ctx, annee[0], xi-(w0+w1)/2, y, w0, ht*2/3, fontPos, 1)
+            show_text_rect_fix(ctx, annee[0], xi-(w0+w1)/2, y, w0, ht*2/3, fontPos, 1)
             ctx.stroke ()
             show_text_rect_fix(ctx, annee[1], xi-(w0+w1)/2 + w0 +0.01, y, w1, ht/3, fontPos*0.9, 1, ha = 'c')
             ctx.stroke ()
         else:
-            pm = show_text_rect_fix(ctx, annee[0], xi-w0/2, y, w0, ht*2/3, fontPos, 1)
+            show_text_rect_fix(ctx, annee[0], xi-w0/2, y, w0, ht*2/3, fontPos, 1)
             ctx.stroke ()
         
         w = (wi-dx)/np-dx

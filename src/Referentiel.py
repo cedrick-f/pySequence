@@ -345,6 +345,11 @@ class Referentiel():
             self.periodes = self.defPeriode()
 #            print ">>>", self.periode_prj
             
+        # Pour ajouter les nomss des CI < 5.8
+        if self.nomCI == "None":
+            self.nomCI = u"Centres d'intérêt"
+            self.abrevCI = u"CI"
+        
         self.postTraiter()
         self.completer()
 

@@ -337,7 +337,7 @@ def show_text_rect(ctx, texte, rect, va = 'c', ha = 'c', b = 0.4, orient = 'h',
 #    print "show_text_rect", texte, rect
 
     if texte == "":
-        return
+        return 0, 0
     
     x, y, w, h = rect
     
@@ -351,11 +351,10 @@ def show_text_rect(ctx, texte, rect, va = 'c', ha = 'c', b = 0.4, orient = 'h',
     if orient == 'v':
         ctx.rotate(-pi/2)
         r = (-y-h, x, h, w)
-        show_text_rect(ctx, texte, r, va, ha, b, fontsizeMinMax = fontsizeMinMax, fontsizePref = fontsizePref,
+        fontSize, maxw = show_text_rect(ctx, texte, r, va, ha, b, fontsizeMinMax = fontsizeMinMax, fontsizePref = fontsizePref,
                        wrap = wrap, couper = couper, bordure = bordure)
         ctx.rotate(pi/2)
-        return
-    
+        return fontSize, maxw
 
     
     #    #
@@ -477,18 +476,7 @@ def show_text_rect(ctx, texte, rect, va = 'c', ha = 'c', b = 0.4, orient = 'h',
         
 #        CACHE[texte] = (w,h,lt)    
     
-    
-    
-    
-    
-    
     hTotale = hl*nLignes
-    
-#    print " wrap", time.time() - tps, i
-#    print "   iterations :", i
-#    print "   wrap final :", wrap
-#    print "lt final :", lt   
-    
     
     #
     # "réduction" du réctangle
@@ -506,15 +494,15 @@ def show_text_rect(ctx, texte, rect, va = 'c', ha = 'c', b = 0.4, orient = 'h',
             fontSize = max(fontsizeMinMax[1] * fontsizePref/100, fontsizeMinMax[0])
         else:
             fontSize = fontsizeMinMax[1]
-        show_text_rect_fix(ctx, texte, x, y, w, h, fontSize, 100, va = va, ha = ha, bordure = bordure)
-        return
+        wc = show_text_rect_fix(ctx, texte, x, y, w, h, fontSize, 100, va = va, ha = ha, bordure = bordure)
+        return fontSize, wc
     
     fontSize = min(fontSize, fontsizeMinMax[1])
 #    print "fontSize", fontSize
     
     if fontSize < fontsizeMinMax[0]:
-        show_text_rect_fix(ctx, texte, x, y, w, h, fontsizeMinMax[0], nLignesMaxi, va, ha, bordure = bordure)
-        return
+        wc = show_text_rect_fix(ctx, texte, x, y, w, h, fontsizeMinMax[0], nLignesMaxi, va, ha, bordure = bordure)
+        return fontSize, wc
             
 #    print lt, nLignes    
     ctx.set_font_size(fontSize)
@@ -535,9 +523,9 @@ def show_text_rect(ctx, texte, rect, va = 'c', ha = 'c', b = 0.4, orient = 'h',
 #    print "fontSize", fontSize
     ctx.set_font_size(fontSize)
     
-    show_lignes(ctx, lt, x, y, w, h, ha, va, bordure = bordure)
+    wc = show_lignes(ctx, lt, x, y, w, h, ha, va, bordure = bordure)
     
-    return fontSize
+    return fontSize, wc
 
 
 #def show_text_rect2(ctx, texte, rect, va = 'c', ha = 'c', b = 0.4, orient = 'h', 
@@ -752,7 +740,7 @@ def show_text_rect_fix(ctx, texte, x, y, w, h, fontSize, Nlignes, va = 'c', ha =
         
     lt = lt[:Nlignes]
     
-    show_lignes(ctx, lt, x, y, w, h, ha, va)
+#    show_lignes(ctx, lt, x, y, w, h, ha, va)
     
 #    
 #    if outPosMax: 
@@ -814,11 +802,10 @@ def show_lignes(ctx, lignes, x, y, w, h, ha, va, bordure = None):
         else:
             ctx.text_path(t)
             ctx.fill_preserve()
-            ctx.set_source_rgb (bordure[0], bordure[1], bordure[2])
-            ctx.set_line_width (fheight/30)
+            ctx.set_source_rgb(bordure[0], bordure[1], bordure[2])
+            ctx.set_line_width(fheight/30)
            
-        
-        posmax = max(posmax, xt+width)
+        posmax = max(posmax, xt + width)
     
     ctx.stroke()
 
