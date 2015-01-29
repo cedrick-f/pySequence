@@ -40,7 +40,7 @@ Copyright (C) 2011-2015
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "5.8"
+__version__ = "5.9beta1"
 print __version__
 
 #from threading import Thread
@@ -959,6 +959,7 @@ class Classe():
             self.referentiel = Referentiel.Referentiel()
             self.version5 = True
             if not reparer:
+#                self.referentiel.setBranche(brancheRef)
                 try:
                     self.referentiel.setBranche(brancheRef)
 #                    print self.referentiel.CentresInterets
@@ -1788,7 +1789,7 @@ class Sequence(BaseDoc):
                                     
                                     
     #############################################################################
-    def MiseAJourTypeEnseignement(self, changeFamille = False):
+    def MiseAJourTypeEnseignement(self, ancienRef = False, ancienneFam = False):
         self.app.SetTitre()
         self.classe.MiseAJourTypeEnseignement()
         self.CI.MiseAJourTypeEnseignement()
@@ -2075,8 +2076,8 @@ class Projet(BaseDoc, Objet_sequence):
         self.position = eval(branche.get("Position", "0"))
         if self.version == "": # Enregistré avec une version de pySequence > 5.7
             if self.position == 5:
-                print "Correction position"
-                self.position = self.GetReferentiel().periode_prj[0] - 1
+#                print "Correction position"
+                self.position = self.GetReferentiel().getPeriodeEval()
             
             
         self.annee = eval(branche.get("Annee", str(constantes.getAnneeScolaire())))
@@ -2156,7 +2157,7 @@ class Projet(BaseDoc, Objet_sequence):
                     
 #                tache.setBranche(e)
                 self.taches.append(tache)
-        self.CorrigerIndicateursEleve()
+#        self.CorrigerIndicateursEleve()
         
         # Pour récupérer les prj créés avec la version beta1
         if adapterVersion:
@@ -2181,7 +2182,7 @@ class Projet(BaseDoc, Objet_sequence):
     def SetPosition(self, pos):
 #        print "SetPosition", pos
 #        print "  position actuelle :", self.position
-        posEpreuve = self.GetReferentiel().periode_prj[0] - 1
+        posEpreuve = self.GetReferentiel().getPeriodeEval()
 #        print "  posEpreuve", posEpreuve
         
         # On passe à la position "épreuve"
@@ -2196,8 +2197,6 @@ class Projet(BaseDoc, Objet_sequence):
             self.arbre.Ordonner(self.brancheTac)
             if hasattr(self, 'panelPropriete'):
                 self.panelPropriete.sendEvent()
-#            self.taches.extend(self.creerTachesRevue())
-#            self.OrdonnerTaches()
 
                 
         # On passe de la position "épreuve" à une autre
@@ -2207,7 +2206,8 @@ class Projet(BaseDoc, Objet_sequence):
                 if t.phase in ["R1", "R2", "R3", "S"]:
                     lst.append(t.branche)
             for a in reversed(lst):
-                self.SupprimerTache(item = a)
+                self.SupprimerTache(item = a, verrouiller = False)
+        
         
         # Sinon on se contente de redessiner
         else:
@@ -2430,14 +2430,14 @@ class Projet(BaseDoc, Objet_sequence):
         self.VerrouillerClasse()
         
     ######################################################################################  
-    def SupprimerTache(self, event = None, item = None):
+    def SupprimerTache(self, event = None, item = None, verrouiller = True):
         tache = self.arbre.GetItemPyData(item)
         self.taches.remove(tache)
         self.arbre.Delete(item)
         self.SetOrdresTaches()
         self.panelPropriete.sendEvent()
-        
-        self.VerrouillerClasse()
+        if verrouiller:
+            self.VerrouillerClasse()
         
         
     ######################################################################################  
@@ -2852,17 +2852,19 @@ class Projet(BaseDoc, Objet_sequence):
                 ok, i = dansRectangle(x, y, rect)
                 if ok:
                     return k, obj[i]
-    
+
+
     ######################################################################################  
     def HitTestPosition(self, x, y):
         if hasattr(self, 'rectPos'):
             for i, rectPos in enumerate(self.rectPos):
                 if dansRectangle(x, y, (rectPos,))[0]:
                     return i
-                    
-                 
+
+
     #############################################################################
-    def MiseAJourTypeEnseignement(self, changeFamille = False):
+    def MiseAJourTypeEnseignement(self, ancienRef = None, ancienneFam = None):#, changeFamille = False):
+#        print "MiseAJourTypeEnseignement"
         self.app.SetTitre()
         for t in self.taches:
             t.MiseAJourTypeEnseignement(self.classe.referentiel)
@@ -2870,30 +2872,43 @@ class Projet(BaseDoc, Objet_sequence):
         for e in self.eleves:
             e.MiseAJourTypeEnseignement()
             
+    
+        if ancienRef != None:
+#            print "   anciennePos", self.position
+            anciennePos = self.position
+            if ancienRef.estPeriodeEval(anciennePos):
+                self.position = self.GetReferentiel().getPeriodeEval()
+#                print "   new pos eval =", self.position
+            else:
+                posRel = 1.0*anciennePos/ancienRef.getNbrPeriodes()
+                self.position = round(self.GetReferentiel().getNbrPeriodes()*posRel)-1
+#                print "   new pos =", self.position
+            
         if hasattr(self, 'panelPropriete'):
-            if changeFamille:
+            if ancienneFam != self.classe.familleEnseignement:
                 self.nbrRevues = 2
                 self.positionRevues = list(self.GetReferentiel().posRevues[self.nbrRevues])
             self.panelPropriete.panelOrga.MiseAJourListe()
+            self.panelPropriete.MiseAJourTypeEnseignement()
         
     #############################################################################
     def VerrouillerClasse(self):
 #        print "VerrouillerClasse", len(self.taches)
         self.classe.Verrouiller(len(self.GetCompetencesUtil()) == 0 and len(self.taches) == 3)
         
-    #############################################################################
-    def CorrigerIndicateursEleve(self):
-        """
-        """
-        return
-        if self.nbrRevues == 2:
-            lstR = ["R1"]
-        else:
-            lstR = ["R1", "R2"]
-        for t in self.taches:
-            if t.phase in lstR:
-                for i, e in enumerate(self.eleves):
-                    pass
+#    #############################################################################
+#    def CorrigerIndicateursEleve(self):
+#        """
+#        """
+#        return
+#        if self.nbrRevues == 2:
+#            lstR = ["R1"]
+#        else:
+#            lstR = ["R1", "R2"]
+#        for t in self.taches:
+#            if t.phase in lstR:
+#                for i, e in enumerate(self.eleves):
+#                    pass
         
     
     ######################################################################################  
@@ -7012,7 +7027,8 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         self.tb.InsertToolItem(6, self.tool_pp)
         self.tb.InsertToolItem(7, self.tool_pt)
         self.tb.Realize()
-    
+
+
     ###############################################################################################
     def ajouterOutilsSequence(self):
         self.tb.RemoveTool(50)
@@ -7027,24 +7043,27 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         self.tb.Realize()
         
         
-    
     ###############################################################################################
     def commandePleinEcran(self, event):
+        if self.GetNotebook().GetCurrentPage() == None:
+            return
+        
         self.pleinEcran = not self.pleinEcran
         
-
         if self.pleinEcran:
             win = self.GetNotebook().GetCurrentPage().nb.GetCurrentPage()
             self.fsframe = wx.Frame(self, -1)
             win.Reparent(self.fsframe)
             win.Bind(wx.EVT_KEY_DOWN, self.OnKey)
             self.fsframe.ShowFullScreen(True, style=wx.FULLSCREEN_ALL)
+            
         else:
             win = self.fsframe.GetChildren()[0]
             win.Reparent(self.GetNotebook().GetCurrentPage().nb)
             self.fsframe.Destroy()
             win.SendSizeEventToParent()
-            
+
+
     ###############################################################################################
     def CreateMenuBar(self):
         # create menu
@@ -7908,6 +7927,9 @@ class FenetreSequence(FenetreDocument):
         elif new == 2: # On vient de cliquer sur la page "Bulletins Officiels"
             self.pageBO.Construire(REFERENTIELS[self.sequence.classe.typeEnseignement])
             
+        elif new == 0: # On vient de cliquer sur la fiche
+            self.self.fiche.Redessiner()
+            
     ###############################################################################################
     def OnDocModified(self, event):
 #        print "OnDocModified"
@@ -8104,7 +8126,10 @@ class FenetreProjet(FenetreDocument):
         elif new == 3: # On vient de cliquer sur la page "Bulletins Officiels"
             self.pageBO.Construire(REFERENTIELS[self.projet.classe.typeEnseignement])
 
-        
+        elif new == 0: # On vient de cliquer sur la fiche
+            self.fiche.Redessiner()
+            
+            
     ###############################################################################################
     def OnDocModified(self, event):
 #        print "OnDocModified"
@@ -9192,7 +9217,7 @@ class PanelPropriete_Projet(PanelPropriete):
         titre = wx.StaticBox(pageGen, -1, u"Année et Position")
         sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
         
-        self.annee = Variable(u"", lstVal = self.projet.annee, 
+        self.annee = Variable(u"Année scolaire", lstVal = self.projet.annee, 
                                    typ = VAR_ENTIER_POS, bornes = [2012,2100])
         self.ctrlAnnee = VariableCtrl(pageGen, self.annee, coef = 1, signeEgal = False,
                                       help = u"Année scolaire", sizeh = 40, 
@@ -9342,6 +9367,10 @@ class PanelPropriete_Projet(PanelPropriete):
     
     #############################################################################            
     def getBitmapPeriode(self, larg):
+#        print "getBitmapPeriode"
+#        print "  ", self.projet.position
+#        print "  ", self.projet.GetReferentiel().periodes
+#        print "  ", self.projet.GetReferentiel().periode_prj
         w, h = 0.04*7, 0.04
         imagesurface = cairo.ImageSurface(cairo.FORMAT_ARGB32,  larg, int(h/w*larg))#cairo.FORMAT_ARGB32,cairo.FORMAT_RGB24
         ctx = cairo.Context(imagesurface)
@@ -9429,7 +9458,10 @@ class PanelPropriete_Projet(PanelPropriete):
             
     #############################################################################            
     def MiseAJourTypeEnseignement(self, sendEvt = False):
+        self.bmp.SetBitmap(self.getBitmapPeriode(250))
         self.position.SetRange(0, self.projet.GetLastPosition())
+        self.position.SetValue(self.projet.position)
+        
         
         
     #############################################################################            
@@ -9447,9 +9479,9 @@ class PanelPropriete_Projet(PanelPropriete):
         self.nbrParties.v[0] = self.projet.nbrParties
         self.ctrlNbrParties.mofifierValeursSsEvt()
         
-        self.bmp.SetBitmap(self.getBitmapPeriode(250))
+        
         self.MiseAJourTypeEnseignement()
-        self.position.SetValue(self.projet.position)
+     
         
         self.panelOrga.MiseAJourListe()
         self.Layout()
@@ -9801,8 +9833,9 @@ class PanelPropriete_Classe(PanelPropriete):
             CodeFam = Referentiel.getEnseignementLabel(radio_selected.GetLabel())
         
 
-        fam = self.classe.familleEnseignement
-        
+#        fam = self.classe.familleEnseignement
+        ancienRef = self.classe.referentiel
+        ancienneFam = self.classe.familleEnseignement
         self.classe.typeEnseignement, self.classe.familleEnseignement = CodeFam
         self.classe.referentiel = REFERENTIELS[self.classe.typeEnseignement]
         
@@ -9813,7 +9846,8 @@ class PanelPropriete_Classe(PanelPropriete):
 #                break
         
         self.classe.MiseAJourTypeEnseignement()
-        self.classe.doc.MiseAJourTypeEnseignement(fam != self.classe.familleEnseignement)
+        self.classe.doc.MiseAJourTypeEnseignement(ancienRef, ancienneFam)
+#        self.classe.doc.MiseAJourTypeEnseignement(fam != self.classe.familleEnseignement)
 #        self.MiseAJourType()
 #        if hasattr(self, 'list'):
 #            self.list.Peupler()
@@ -11039,33 +11073,50 @@ class PanelPropriete_Savoirs(PanelPropriete):
         self.prerequis = prerequis
         PanelPropriete.__init__(self, parent)
         
-        nb = wx.Notebook(self, -1,  style= wx.BK_DEFAULT)
-        bg_color = self.Parent.GetBackgroundColour()
+        self.nb = wx.Notebook(self, -1,  style= wx.BK_DEFAULT)
         
-        # Savoirs SSI ou ETT
-        pageSavoir = PanelPropriete(nb)
-        pageSavoir.SetBackgroundColour(bg_color)
-        self.pageSavoir = pageSavoir
-        nb.AddPage(pageSavoir, u"")
-        
-        # Savoirs Spécialité STI2D
+        # Liste des numéros de pages attribués à
+        # 0 : savoirs spécifiques de l'enseignement
+        # 1 : savoirs d'un éventuel tronc commun
+        # 2 : Math
+        # 3 : Phys
+        self.lstPages = [0,1,2,3]
         
         
-        if prerequis:
-            # Savoirs Maths
-            pageSavoirM = PanelPropriete(nb)
-            pageSavoirM.SetBackgroundColour(bg_color)
-            self.pageSavoirM = pageSavoirM
-            nb.AddPage(pageSavoirM, u"Mathématiques")
+        self.pageSavoir     = self.CreerPage()
+        self.pageSavoirSpe  = self.CreerPage()
+        self.pageSavoirM    = self.CreerPage()
+        self.pageSavoirP    = self.CreerPage()
+        
+#        # Savoirs
+#        pageSavoir = PanelPropriete(nb)
+#        pageSavoir.SetBackgroundColour(bg_color)
+#        self.pageSavoir = pageSavoir
+#        nb.AddPage(pageSavoir, u"")
+#        
+#        
+#        # Savoirs autres
+#        ref = self.GetDocument().GetReferentiel()
+#        if (prerequis and ref.preSavoirs_Math) or (not prerequis and ref.objSavoirs_Math):
+#            # Savoirs Maths
+#            pageSavoirM = PanelPropriete(nb)
+#            pageSavoirM.SetBackgroundColour(bg_color)
+#            self.pageSavoirM = pageSavoirM
+#            nb.AddPage(pageSavoirM, self.GetDocument().GetReferentiel().nomSavoirs_Math)
+#            self.lstPages[2] = nb.GetPageCount()-1
+#            print "page Math" , self.lstPages[2]
+#            
+#        if (prerequis and ref.preSavoirs_Phys) or (not prerequis and ref.objSavoirs_Phys):
+#            # Savoirs Physique
+#            pageSavoirP = PanelPropriete(nb)
+#            pageSavoirP.SetBackgroundColour(bg_color)
+#            self.pageSavoirP = pageSavoirP
+#            nb.AddPage(pageSavoirP, self.GetDocument().GetReferentiel().nomSavoirs_Phys)
+#            self.lstPages[3] = nb.GetPageCount()-1
+#            print "page Phys" , self.lstPages[3]
             
-            # Savoirs Physique
-            pageSavoirP = PanelPropriete(nb)
-            pageSavoirP.SetBackgroundColour(bg_color)
-            self.pageSavoirP = pageSavoirP
-            nb.AddPage(pageSavoirP, u"Sciences Physiques")
-            
-        self.sizer.Add(nb, (0,1), (2,1), flag = wx.ALL|wx.ALIGN_RIGHT|wx.EXPAND, border = 1)
-        self.nb = nb
+        self.sizer.Add(self.nb, (0,1), (2,1), flag = wx.ALL|wx.ALIGN_RIGHT|wx.EXPAND, border = 1)
+        
         self.sizer.AddGrowableRow(0)
         self.sizer.AddGrowableCol(1)
             
@@ -11075,6 +11126,16 @@ class PanelPropriete_Savoirs(PanelPropriete):
     #############################################################################            
     def GetDocument(self):
         return self.savoirs.parent
+        
+        
+    ######################################################################################  
+    def CreerPage(self):
+        bg_color = self.Parent.GetBackgroundColour()
+        page = PanelPropriete(self.nb)
+        page.SetBackgroundColour(bg_color)
+        self.nb.AddPage(page, u"")
+        return page
+        
         
     ######################################################################################  
     def construire(self):
@@ -11091,8 +11152,8 @@ class PanelPropriete_Savoirs(PanelPropriete):
             self.pageSavoir.sizer.AddGrowableRow(0)
         self.pageSavoir.Layout()
             
-        if self.GetDocument().GetReferentiel().tr_com != []:
-#        if REFERENTIELS[self.savoirs.GetTypeEnseignement()].tr_com:
+        ref = self.GetDocument().GetReferentiel()
+        if ref.tr_com != []:
             # Il y a un tronc comun (Spécialité STI2D par exemple)
             self.pageSavoirSpe.DestroyChildren()
             self.arbreSpe = ArbreSavoirs(self.pageSavoirSpe, "S", self.savoirs, self.prerequis)
@@ -11103,7 +11164,7 @@ class PanelPropriete_Savoirs(PanelPropriete):
                 self.pageSavoirSpe.sizer.AddGrowableRow(0)
             self.pageSavoirSpe.Layout()
             
-        if self.prerequis:
+        if (self.prerequis and ref.preSavoirs_Math) or (not self.prerequis and ref.objSavoirs_Math):
             # Savoirs Math
             self.pageSavoirM.DestroyChildren()
             self.arbreM = ArbreSavoirs(self.pageSavoirM, "M", self.savoirs, self.prerequis)
@@ -11114,6 +11175,7 @@ class PanelPropriete_Savoirs(PanelPropriete):
                 self.pageSavoirM.sizer.AddGrowableRow(0)
             self.pageSavoirM.Layout()
             
+        if (self.prerequis and ref.preSavoirs_Phys) or (not self.prerequis and ref.objSavoirs_Phys):
             # Savoirs Physique
             self.pageSavoirP.DestroyChildren()
             self.arbreP = ArbreSavoirs(self.pageSavoirP, "P", self.savoirs, self.prerequis)
@@ -11124,7 +11186,8 @@ class PanelPropriete_Savoirs(PanelPropriete):
                 self.pageSavoirP.sizer.AddGrowableRow(0)
             self.pageSavoirP.Layout()
         self.Layout()
-        
+#        print " page Math" , self.lstPages[2]
+#        print " page Phys" , self.lstPages[3]
     
 
     ######################################################################################  
@@ -11165,6 +11228,72 @@ class PanelPropriete_Savoirs(PanelPropriete):
     #############################################################################            
     def MiseAJourTypeEnseignement(self):
 #        print "MiseAJourTypeEnseignement Savoirs"
+        ref = self.GetDocument().GetReferentiel()
+        
+        # Il y a un tronc commun : 0 = TC - 1 = Spé
+        if ref.tr_com != []:
+            ref_tc = REFERENTIELS[ref.tr_com[0]]
+            self.nb.SetPageText(0, ref_tc.nomSavoirs + " " + ref_tc.Code)
+            if self.lstPages[1] == None:
+                self.lstPages[1] = 1
+                self.nb.InsertPage(self.lstPages[1], self.pageSavoirSpe, ref.nomSavoirs + " " + ref.Code)
+                for i in range(2,4):
+                    if self.lstPages[i] != None:
+                        self.lstPages[i] += 1
+            else:
+                self.nb.SetPageText(self.lstPages[1], self.pageSavoirSpe, ref.nomSavoirs + " " + ref.Code)
+        
+        # Il n'y a pas de tronc commun : 0 = TC - 1 = rien
+        else:
+            self.nb.SetPageText(0, ref.nomSavoirs + " " + ref.Code)
+            if self.lstPages[1] != None:
+                self.nb.RemovePage(self.lstPages[1])
+                self.lstPages[1] = None
+                for i in range(2,4):
+                    if self.lstPages[i] != None:
+                        self.lstPages[i] -= 1
+        
+        # Il y a des maths
+        if (self.prerequis and ref.preSavoirs_Math) or (not self.prerequis and ref.objSavoirs_Math):
+            if self.lstPages[2] == None:
+                if self.lstPages[1] != None:
+                    self.lstPages[2] = self.lstPages[1] +1
+                else:
+                    self.lstPages[2] = self.lstPages[0] +1
+                self.nb.InsertPage(self.lstPages[2], self.pageSavoirM, ref.nomSavoirs_Math)
+                if self.lstPages[3] != None:
+                    self.lstPages[3] += 1
+            else:
+                self.nb.SetPageText(self.lstPages[2], ref.nomSavoirs_Math)
+        else:
+            if self.lstPages[2] != None:
+                self.nb.RemovePage(self.lstPages[2])
+                self.lstPages[2]= None
+                if self.lstPages[3] != None:
+                    self.lstPages[3] -= 1
+                    
+        # Il y a de la physique
+        if (self.prerequis and ref.preSavoirs_Phys) or (not self.prerequis and ref.objSavoirs_Phys):
+            if self.lstPages[3] == None:
+                if self.lstPages[2] != None:
+                    self.lstPages[3] = self.lstPages[2] +1
+                elif self.lstPages[1] != None:
+                    self.lstPages[3] = self.lstPages[1] +1
+                else:
+                    self.lstPages[3] = self.lstPages[0] +1
+                self.nb.InsertPage(self.lstPages[3], self.pageSavoirP, ref.nomSavoirs_Phys)
+            else:
+                self.nb.SetPageText(self.lstPages[3], ref.nomSavoirs_Phys)
+        else:
+            if self.lstPages[3] != None:
+                self.nb.RemovePage(self.lstPages[3])
+                self.lstPages[3]= None
+        
+        self.construire()
+            
+#############################################################################            
+    def MiseAJourTypeEnseignement2(self):
+#        print "MiseAJourTypeEnseignement Savoirs"
 #        ref = REFERENTIELS[self.savoirs.GetTypeEnseignement()]
         ref = self.GetDocument().GetReferentiel()
         
@@ -11176,13 +11305,50 @@ class PanelPropriete_Savoirs(PanelPropriete):
                 pageSavoirSpe = PanelPropriete(self.nb)
                 pageSavoirSpe.SetBackgroundColour(bg_color)
                 self.pageSavoirSpe = pageSavoirSpe
-                self.nb.InsertPage(1, pageSavoirSpe, ref.nomSavoirs + ref.Code)
+                self.nb.InsertPage(self.lstPages[1], pageSavoirSpe, ref.nomSavoirs + ref.Code)
+                for i in range(2,4):
+                    self.lstPages[i] += 1
+                    
         else:
             self.nb.SetPageText(0, ref.nomSavoirs + " " + ref.Code)
             if hasattr(self, 'pageSavoirSpe') and isinstance(self.pageSavoirSpe, PanelPropriete):
-                self.nb.DeletePage(1)
+                self.nb.DeletePage(self.lstPages[1])
+                for i in range(2,4):
+                    self.lstPages[i] -= 1
+        
+        if (self.prerequis and ref.preSavoirs_Math) or (not self.prerequis and ref.objSavoirs_Math):
+            if not hasattr(self, 'pageSavoirM') or not isinstance(self.pageSavoirM, PanelPropriete):
+                bg_color = self.Parent.GetBackgroundColour()
+                pageSavoirM = PanelPropriete(self.nb)
+                pageSavoirM.SetBackgroundColour(bg_color)
+                self.pageSavoirM = pageSavoirM
+#                self.lstPages[2] = self.lstPages[1]+1
+                self.nb.InsertPage(self.lstPages[2], pageSavoirM, ref.nomSavoirs_Math)
+                self.lstPages[3] += 1
+            else:
+                self.nb.SetPageText(self.lstPages[2], ref.nomSavoirs_Math)
+        else:
+            if hasattr(self, 'pageSavoirM') and isinstance(self.pageSavoirM, PanelPropriete):
+                self.nb.DeletePage(self.lstPages[2])
+                self.lstPages[3] -= 1
+                    
+                    
+        if (self.prerequis and ref.preSavoirs_Phys) or (not self.prerequis and ref.objSavoirs_Phys):
+            if not hasattr(self, 'pageSavoirP') or not isinstance(self.pageSavoirP, PanelPropriete):
+                bg_color = self.Parent.GetBackgroundColour()
+                pageSavoirP = PanelPropriete(self.nb)
+                pageSavoirP.SetBackgroundColour(bg_color)
+                self.pageSavoirP = pageSavoirP
+#                self.lstPages[3] = self.lstPages[2]+1
+                print self.lstPages[3]
+                self.nb.InsertPage(self.lstPages[3], pageSavoirP, ref.nomSavoirs_Phys)
+            else:
+                self.nb.SetPageText(self.lstPages[3], ref.nomSavoirs_Phys)
+        else:
+            if hasattr(self, 'pageSavoirP') and isinstance(self.pageSavoirP, PanelPropriete):
+                self.nb.DeletePage(self.lstPages[3])
             
-            
+
 #        if self.savoirs.GetTypeEnseignement() == "SSI":
 #            self.nb.SetPageText(0, u"Capacités SSI")
 #        else:
@@ -11199,9 +11365,7 @@ class PanelPropriete_Savoirs(PanelPropriete):
 #            if hasattr(self, 'pageSavoirSpe') and isinstance(self.pageSavoirSpe, PanelPropriete):
 #                self.nb.DeletePage(1)
         
-        self.construire()
-            
-            
+        self.construire()  
             
 ####################################################################################
 #

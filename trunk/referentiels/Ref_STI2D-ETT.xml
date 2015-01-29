@@ -1,4 +1,4 @@
-<Referentiel B_CI_BO="False" B_CI_cible="True" B_projet="False" I_duree_prj="0" S_BO_URL="http://www.education.gouv.fr/pid25535/bulletin_officiel.html?cid_bo=82984" S_BO_dossier="STI2D" S_Code="ET" S_Famille="STI" S_abrevCI="CI" S_nomCI="Centre(s) d'Int&#233;r&#234;t" S_nomCompetences="Comp&#233;tences" S_nomSavoirs="Savoirs">
+<Referentiel B_CI_BO="False" B_CI_cible="True" B_objSavoirs_Math="False" B_objSavoirs_Phys="False" B_preSavoirs_Math="True" B_preSavoirs_Phys="True" B_projet="False" I_duree_prj="0" S_BO_URL="http://www.education.gouv.fr/pid25535/bulletin_officiel.html?cid_bo=82984" S_BO_dossier="STI2D" S_Code="ET" S_Famille="STI" S_FichierLogo="" S_abrevCI="CI" S_nomCI="Centre(s) d'Int&#233;r&#234;t" S_nomCompetences="Comp&#233;tences" S_nomSavoirs="Savoirs" S_nomSavoirs_Math="Math&#233;matiques" S_nomSavoirs_Phys="Physique - Chimie">
   <l_CentresInterets S_CentresInterets00="D&#233;veloppement durable et comp&#233;titivit&#233; des produits" S_CentresInterets01="Design, cr&#233;ativit&#233; et innovation" S_CentresInterets02="Caract&#233;ristiques des mat&#233;riaux et structures" S_CentresInterets03="Solutions constructives des mat&#233;riaux et des structures" S_CentresInterets04="Dimensionnement des structures et choix des mat&#233;riaux" S_CentresInterets05="Efficacit&#233; &#233;nerg&#233;tique li&#233;e au comportement des mat&#233;riaux et des structures" S_CentresInterets06="Formes et caract&#233;ristiques de l'&#233;nergie" S_CentresInterets07="Organisation structurelle et solutions constructives des cha&#238;nes d'&#233;nergie" S_CentresInterets08="Am&#233;lioration de l'efficacit&#233; &#233;nerg&#233;tique dans les cha&#238;nes d'&#233;nergie" S_CentresInterets09="Am&#233;lioration de la gestion de l'&#233;nergie" S_CentresInterets10="Formes et caract&#233;ristiques de l'information" S_CentresInterets11="Organisation structurelle et solutions constructives des cha&#238;nes d'information" S_CentresInterets12="Commande temporelle des syst&#232;mes" S_CentresInterets13="Informations li&#233;es au comportement des mat&#233;riaux et des structures" S_CentresInterets14="Optimisation des param&#232;tres par simulation globale" />
   <l_Enseignement S_Enseignement00="STI2D-ETT" S_Enseignement01="STI2D : Enseignement Technologique Transversal" S_Enseignement02="STI2D" />
   <d_aColNon B_R="True" B_S="False" />
@@ -421,7 +421,7 @@
               <l_1.4.301 S_1.4.30100="Du monom&#232;re au polym&#232;re" />
             </l_1.4.3>
             <l_1.4.4 S_1.4.400="Masse molaire mol&#233;culaire, degr&#233; de polym&#233;risation">
-              <l_1.4.401 />
+              <d_1.4.401 />
             </l_1.4.4>
             <l_1.4.5 S_1.4.500="Polym&#232;res utilis&#233;s dans les v&#234;tements et rev&#234;tements">
               <l_1.4.501 S_1.4.50100="Production, utilisation, recyclage" />
@@ -437,7 +437,7 @@
         <l_1.7 S_1.700="Mise en mouvement">
           <d_1.701>
             <l_1.7.4 S_1.7.400="Energie m&#233;canique">
-              <l_1.7.401 />
+              <d_1.7.401 />
             </l_1.7.4>
             <l_1.7.3 S_1.7.300="Energie potentielle">
               <l_1.7.301 S_1.7.30100="de pesanteur" S_1.7.30101="&#233;lastique" />
@@ -446,7 +446,7 @@
               <l_1.7.201 S_1.7.20100="Solide en mouvement de translation" S_1.7.20101="Solide en mouvement de rotation" S_1.7.20102="Moment d'inertie par rapport &#224; un axe" />
             </l_1.7.2>
             <l_1.7.1 S_1.7.100="R&#233;f&#233;rentiels, trajectoires, vitesse, vitesse angulaire, acc&#233;l&#233;ration">
-              <l_1.7.101 />
+              <d_1.7.101 />
             </l_1.7.1>
           </d_1.701>
         </l_1.7>
@@ -511,16 +511,16 @@
               <l_1.9.101 S_1.9.10100="Protection contre les risques du rayonnement laser" />
             </l_1.9.1>
             <l_1.9.3 S_1.9.300="R&#233;actions d'oxydo-r&#233;duction et transfert d'&#233;lectrons">
-              <l_1.9.301 />
+              <d_1.9.301 />
             </l_1.9.3>
             <l_1.9.2 S_1.9.200="Antiseptiques et desinfectants">
-              <l_1.9.201 />
+              <d_1.9.201 />
             </l_1.9.2>
             <l_1.9.5 S_1.9.500="Ondes sonores">
               <l_1.9.501 S_1.9.50100="Propagation" S_1.9.50101="Puissance et intensit&#233; sonore : niveau" S_1.9.50102="Transmission, absobtion, reflexion]" />
             </l_1.9.5>
             <l_1.9.4 S_1.9.400="Concentration massique et molaire">
-              <l_1.9.401 />
+              <d_1.9.401 />
             </l_1.9.4>
           </d_1.901>
         </l_1.9>
@@ -544,7 +544,7 @@
               <l_T.4.101 S_T.4.10100="Spectre des ondes utilis&#233;es en communication" S_T.4.10101="Champ &#233;lectrique, champ magn&#233;tique" />
             </l_T.4.1>
             <l_T.4.2 S_T.4.200="Mesure des grandeurs physiques dans l'habitat">
-              <l_T.4.201 />
+              <d_T.4.201 />
             </l_T.4.2>
           </d_T.401>
         </l_T.4>
@@ -574,13 +574,13 @@
         <l_T.1 S_T.100="Mesure et incertitude">
           <d_T.101>
             <l_T.1.1 S_T.1.100="Erreurs et notions associ&#233;es">
-              <l_T.1.101 />
+              <d_T.1.101 />
             </l_T.1.1>
             <l_T.1.2 S_T.1.200="Incertitudes et notions associ&#233;es">
-              <l_T.1.201 />
+              <d_T.1.201 />
             </l_T.1.2>
             <l_T.1.3 S_T.1.300="Expression et acceptabilit&#233; du r&#233;sultat">
-              <l_T.1.301 />
+              <d_T.1.301 />
             </l_T.1.3>
           </d_T.101>
         </l_T.1>
@@ -617,7 +617,7 @@
         <l_T.8 S_T.800="L'assistance au d&#233;placement">
           <d_T.801>
             <l_T.8.1 S_T.8.100="Mesure des grandeurs physiques dans un dispositif de transport">
-              <l_T.8.101 />
+              <d_T.8.101 />
             </l_T.8.1>
           </d_T.801>
         </l_T.8>

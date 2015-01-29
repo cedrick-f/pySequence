@@ -1,4 +1,4 @@
-<Referentiel B_CI_BO="False" B_CI_cible="False" B_projet="True" I_duree_prj="70" S_BO_URL="http://www.education.gouv.fr/pid25535/bulletin_officiel.html?cid_bo=82979" S_BO_dossier="SSI" S_Code="SSI" S_Famille="SSI" S_abrevCI="CI" S_nomCI="Centre(s) d'Int&#233;r&#234;t" S_nomCompetences="Comp&#233;tences" S_nomSavoirs="Connaissances &amp; Capacit&#233;s">
+<Referentiel B_CI_BO="False" B_CI_cible="False" B_objSavoirs_Math="False" B_objSavoirs_Phys="False" B_preSavoirs_Math="True" B_preSavoirs_Phys="True" B_projet="True" I_duree_prj="70" S_BO_URL="http://www.education.gouv.fr/pid25535/bulletin_officiel.html?cid_bo=82979" S_BO_dossier="SSI" S_Code="SSI" S_Famille="SSI" S_FichierLogo="" S_abrevCI="CI" S_nomCI="Centre(s) d'Int&#233;r&#234;t" S_nomCompetences="Comp&#233;tences" S_nomSavoirs="Connaissances &amp; Capacit&#233;s" S_nomSavoirs_Math="Math&#233;matiques" S_nomSavoirs_Phys="Physique - Chimie">
   <l_CentresInterets S_CentresInterets00="Analyser un syst&#232;me fonctionnellement et structurellement" S_CentresInterets01="Exp&#233;rimenter et mesurer sur un syst&#232;me r&#233;el pour &#233;valuer ses performances" S_CentresInterets02="Analyser des constituants d&#8217;un syst&#232;me r&#233;el d&#8217;un point de vue structurel et comportemental" S_CentresInterets03="Concevoir et utiliser un mod&#232;le relatif &#224; un syst&#232;me en vue d&#8217;&#233;valuer les performances de la cha&#238;ne d&#8217;information" S_CentresInterets04="Concevoir et utiliser un mod&#232;le relatif &#224; un syst&#232;me en vue d&#8217;&#233;valuer les performances de la cha&#238;ne d&#8217;&#233;nergie&quot;" />
   <l_Enseignement S_Enseignement00="S-SI" S_Enseignement01="Bac S - Sciences de l'ing&#233;nieur" S_Enseignement02="S-SI" />
   <d_aColNon B_R="True" B_S="False" />
@@ -676,7 +676,7 @@
       </d_101>
     </l_1>
     <l_A S_A00="Algorithmique">
-      <l_A01 S_A0100="Instructions &#233;l&#233;mentaires" S_A0101="Boucle et it&#233;rateur, instruction conditionnelle&quot;" />
+      <l_A01 S_A0100="Instructions &#233;l&#233;mentaires" S_A0101="Boucle et it&#233;rateur, instruction conditionnelle" />
     </l_A>
     <l_T S_T00="Terminale">
       <d_T01>
@@ -711,16 +711,16 @@
         <l_T.3 S_T.300="Probabilit&#233;s et statistique">
           <d_T.301>
             <l_T.3.4 S_T.3.400="Estimation">
-              <l_T.3.401 S_T.3.40100="Intervalle de confiance" S_T.3.40101="Niveau de confiance&quot;" />
+              <l_T.3.401 S_T.3.40100="Intervalle de confiance" S_T.3.40101="Niveau de confiance" />
             </l_T.3.4>
             <l_T.3.2 S_T.3.200="Notion de loi &#224; densit&#233;">
-              <l_T.3.201 S_T.3.20100="Loi &#224; densit&#233; sur un intervalle" S_T.3.20101="Loi uniforme sur [a,b" S_T.3.20102="Esp&#233;rance d&#8217;une variable al&#233;atoire suivant une loi uniforme" S_T.3.20103="Lois exponentielles" S_T.3.20104="Esp&#233;rance d&#8217;une variable al&#233;atoire suivant une loi exponentielle" S_T.3.20105="Loi normale centr&#233;e r&#233;duite" S_T.3.20106="Th&#233;or&#232;me de Moivre Laplace&quot;" />
+              <l_T.3.201 S_T.3.20100="Loi &#224; densit&#233; sur un intervalle" S_T.3.20101="Loi uniforme sur [a,b" S_T.3.20102="Esp&#233;rance d&#8217;une variable al&#233;atoire suivant une loi uniforme" S_T.3.20103="Lois exponentielles" S_T.3.20104="Esp&#233;rance d&#8217;une variable al&#233;atoire suivant une loi exponentielle" S_T.3.20105="Loi normale centr&#233;e r&#233;duite" S_T.3.20106="Th&#233;or&#232;me de Moivre Laplace" />
             </l_T.3.2>
             <l_T.3.3 S_T.3.300="Intervalle de fluctuation">
               <l_T.3.301 S_T.3.30100="                                    " />
             </l_T.3.3>
             <l_T.3.1 S_T.3.100="Conditionnement, ind&#233;pendance ">
-              <l_T.3.101 S_T.3.10100="Conditionnement par un &#233;v&#233;nement de probabilit&#233; non nulle" S_T.3.10101="Ind&#233;pendance de deux &#233;v&#233;nements&quot;" />
+              <l_T.3.101 S_T.3.10100="Conditionnement par un &#233;v&#233;nement de probabilit&#233; non nulle" S_T.3.10101="Ind&#233;pendance de deux &#233;v&#233;nements" />
             </l_T.3.1>
           </d_T.301>
         </l_T.3>
@@ -736,7 +736,7 @@
               <l_T.2.101 S_T.2.10100="Forme alg&#233;brique, conjugu&#233;" S_T.2.10101="Somme, produit, quotient" S_T.2.10102="&#201;quation du second degr&#233; &#224; coefficients r&#233;els" S_T.2.10103="Repr&#233;sentation g&#233;om&#233;trique" S_T.2.10104="Affixe d'un point, d'un vecteur" S_T.2.10105="Forme trigonom&#233;trique" />
             </l_T.2.1>
             <l_T.2.4 S_T.2.400="Produit scalaire">
-              <l_T.2.401 S_T.2.40100="Produit scalaire de deux vecteurs dans l&#8217;espace" S_T.2.40101="Vecteur normal &#224; un plan" S_T.2.40102="&#201;quation cart&#233;sienne d&#8217;un plan&quot;" />
+              <l_T.2.401 S_T.2.40100="Produit scalaire de deux vecteurs dans l&#8217;espace" S_T.2.40101="Vecteur normal &#224; un plan" S_T.2.40102="&#201;quation cart&#233;sienne d&#8217;un plan" />
             </l_T.2.4>
           </d_T.201>
         </l_T.2>
