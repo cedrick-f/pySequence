@@ -38,6 +38,8 @@ from xlrd import open_workbook
 
 import constantes
 import os
+ 
+import wx   # Juste pour la fonction GetBitmap()
 
 # Pour enregistrer en xml
 import xml.etree.ElementTree as ET
@@ -60,7 +62,8 @@ class Referentiel():
         # Enseignement       Famille,    Nom    , Nom complet
         
         self.initParam()
-
+        self._bmp = None
+        
         if nomFichier != r"":
             self.importer(nomFichier)
 
@@ -112,6 +115,9 @@ class Referentiel():
         self.tr_com = []                # tronc commun de l'enseignement : [Code, nomFichier]
         
         self.periodes = []              # découpage de l'enseignement en années/périodes
+        self.FichierLogo = r""          # Fichier désignant l'image du Logo de l'enseignement
+        
+        
         
         #
         # Centre d'intérêt
@@ -163,8 +169,15 @@ class Referentiel():
         self.listeEffectifs = []
         self.effectifsSeance = {} #{"" : []}
         
+        self.nomSavoirs_Math = u"Mathématiques"
         self.dicSavoirs_Math = {}
+        self.objSavoirs_Math = False
+        self.preSavoirs_Math = True
+            
+        self.nomSavoirs_Phys = u"Sciences Physiques"
         self.dicSavoirs_Phys = {}
+        self.objSavoirs_Phys = False
+        self.preSavoirs_Phys = True
         
         #
         # grilles d'évaluation de projet
@@ -256,6 +269,8 @@ class Referentiel():
 #        print "setBranche référentiel"
         self.initParam()
 
+        nomerr = []
+        
         def lect(branche, nom = ""):
             if nom[:2] == "S_":
                 return unicode(branche.get(nom)).replace(u"--", u"\n")
@@ -266,7 +281,9 @@ class Referentiel():
             elif nom[:2] == "F_":
                 return float(eval(branche.get(nom)))
             elif nom[:2] == "B_":
-#                if branche.get(nom) == None: return False # Pour corriger un bug (version <=5.0beta3)
+                if branche.get(nom) == None: # Pour corriger un bug (version <=5.0beta3)
+                    nomerr.append(nom)
+                    return False 
                 return branche.get(nom)[0] == "T"
             elif nom[:2] == "l_":
                 sbranche = branche.find(nom)
@@ -345,10 +362,20 @@ class Referentiel():
             self.periodes = self.defPeriode()
 #            print ">>>", self.periode_prj
             
-        # Pour ajouter les nomss des CI < 5.8
+        # Pour ajouter les noms des CI < 5.8
         if self.nomCI == "None":
             self.nomCI = u"Centres d'intérêt"
             self.abrevCI = u"CI"
+        
+        # Pour ajouter savoirs prérequis/objectifs < 5.9
+        if "B_objSavoirs_Math" in nomerr:
+            self.nomSavoirs_Math = u"Mathématiques"
+            self.nomSavoirs_Phys = u"Sciences Physiques"
+            self.objSavoirs_Math = False
+            self.preSavoirs_Math = True
+            self.objSavoirs_Phys = False
+            self.preSavoirs_Phys = True
+        
         
         self.postTraiter()
         self.completer()
@@ -549,6 +576,9 @@ class Referentiel():
             for l in lig:
                 self.periodes.append([sh_g.cell(l,2).value, int(sh_g.cell(l,3).value)])
             
+        self.FichierLogo = sh_g.cell(6,3).value
+        
+        
         #
         # options
         #
@@ -676,15 +706,21 @@ class Referentiel():
         # Savoirs Math
         #
         if u"Math" in wb.sheet_names():
-            sh_va = wb.sheet_by_name(u"Math")     
+            sh_va = wb.sheet_by_name(u"Math")   
+            self.nomSavoirs_Math = sh_va.cell(0,0).value
             self.dicSavoirs_Math = remplir(sh_va, 0, range(1, sh_va.nrows))
+            self.objSavoirs_Math = 'O' in sh_va.cell(0,5).value
+            self.preSavoirs_Math = 'P' in sh_va.cell(0,5).value
         
         #
         # Savoirs Physique
         #
         if u"Phys" in wb.sheet_names():
-            sh_va = wb.sheet_by_name(u"Phys")     
+            sh_va = wb.sheet_by_name(u"Phys")
+            self.nomSavoirs_Phys = sh_va.cell(0,0).value
             self.dicSavoirs_Phys = remplir(sh_va, 0, range(1, sh_va.nrows))
+            self.objSavoirs_Phys = 'O' in sh_va.cell(0,5).value
+            self.preSavoirs_Phys = 'P' in sh_va.cell(0,5).value
         
         #
         # Grilles d'évaluation projet
@@ -1060,6 +1096,27 @@ class Referentiel():
         return n
     
     
+    #############################################################################
+    def getPeriodeEval(self):
+        return self.periode_prj[0]-1
+
+
+    #############################################################################
+    def getAnnee(self, position):
+        n = 0
+        for a, p in enumerate(self.periodes):
+            if position+n in  range(p[1]):
+                return a
+            n += p[1]
+        return
+
+
+    #############################################################################
+    def estPeriodeEval(self, position):
+        pp = self.periode_prj
+        return position+1 in range(pp[0], pp[1]+1)
+    
+    
     #########################################################################
     def getIntituleCompetence(self, comp, sousComp = False):
         sep = "\n\t"+constantes.CHAR_POINT
@@ -1130,6 +1187,7 @@ class Referentiel():
         r = t/5 # 5 = nombre max d'indicateurs à loger dans tailleReference
         return r*tailleReference
 
+
     #########################################################################
     def getSavoir(self, code, dic = None, c = 1, gene = None):
 #        print "getSavoir", code, 
@@ -1154,8 +1212,32 @@ class Referentiel():
             return self.getSavoir(code, dic[cd][1], c+1)
 
 
+    #########################################################################
+    def getLogo(self):
+        if self._bmp == None:
+            if self.CI_cible:
+                self._bmp = constantes.images.Cible.GetBitmap()
+            elif self.Code == "AC":
+                self._bmp = constantes.images.ImageAC.GetBitmap()
+            elif self.Code == "SIN":
+                self._bmp = constantes.images.ImageSIN.GetBitmap()
+            elif self.Code == "ITEC":
+                self._bmp = constantes.images.ImageITEC.GetBitmap()
+            elif self.Code == "EE":
+                self._bmp = constantes.images.ImageEE.GetBitmap()
+            elif self.Code == "SSI":
+                self._bmp = constantes.images.SSI_ASR.GetBitmap()
+            elif self.FichierLogo != r"":
+                self._bmp = wx.Bitmap(os.path.join(constantes.PATH, r"..", DOSSIER_REF, self.FichierLogo))
+#                try:
+#                    self._bmp = wx.Bitmap(os.path.join(constantes.PATH, r"..", DOSSIER_REF, self.FichierLogo))
+#                except:
+#                    self._bmp = self._bmp = constantes.images.SSI_ASR.GetBitmap()
+            else:
+                self._bmp = constantes.images.SSI_ASR.GetBitmap()
+        return self._bmp
 
-
+    
 #    #########################################################################    
 #    def getCompetence(self, code, dic = None, c = None):
 #        """ Pour obtenir l'intitulé d'une compétence à partir de son code 

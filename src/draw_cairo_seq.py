@@ -368,24 +368,10 @@ def Draw(ctx, seq, mouchard = False):
                    va = 'c', ha = 'g', b = 0, orient = 'h', 
                    fontsizeMinMax = (-1, -1), fontsizePref = -1, wrap = True, couper = False,
                    bordure = (0, 0, 0))
-    
-    
-#    t = seq.classe.referentiel.Enseignement[0]
-#    ctx.set_font_size(0.04)
-#    ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-#                                       cairo.FONT_WEIGHT_BOLD)
-#    xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(t)
-##    fascent, fdescent, fheight, fxadvance, fyadvance = ctx.font_extents()
-#    ctx.move_to (posObj[0] , posCI[1] - ybearing - 0.01)
-#    ctx.text_path (t)
-#    ctx.set_source_rgb (0.6, 0.6, 0.9)
-#    ctx.fill_preserve ()
-#    ctx.set_source_rgb (0, 0, 0)
-#    ctx.set_line_width (0.0015)
-#    ctx.stroke ()
-#    tailleTypeEns = width
-    
-   
+
+
+
+
     #
     # Position dans l'année
     #
@@ -396,31 +382,35 @@ def Draw(ctx, seq, mouchard = False):
                                seq.classe.referentiel.periodes,
                                tailleTypeEns = tailleTypeEns)
     seq.rect.append(posPos+taillePos)
-    
-    
+
+
+
+
     #
-    # Cible
+    # Cible ou Logo
     #
     seq.CI.rect = []
-#    if seq.classe.typeEnseignement == "ET":
-    if seq.classe.referentiel.CI_cible:
-        tfname = tempfile.mktemp()
-        bmp = constantes.images.Cible.GetBitmap()
-        try:
-            bmp.SaveFile(tfname, wx.BITMAP_TYPE_PNG)
-            image = cairo.ImageSurface.create_from_png(tfname)
-        finally:
-            if os.path.exists(tfname):
-                os.remove(tfname)  
-        w = image.get_width()
-        h = image.get_height()
-        ctx.save()
-        ctx.translate(posCib[0], posCib[1])
-        ctx.scale(tailleCib[0]/w, tailleCib[0]/w)
-        ctx.set_source_surface(image, 0, 0)
-        ctx.paint ()
-        ctx.restore()
     
+    # Affichage du Logo
+    tfname = tempfile.mktemp()
+    bmp = seq.classe.referentiel.getLogo()
+    try:
+        bmp.SaveFile(tfname, wx.BITMAP_TYPE_PNG)
+        image = cairo.ImageSurface.create_from_png(tfname)
+    finally:
+        if os.path.exists(tfname):
+            os.remove(tfname)  
+    w = image.get_width()
+    h = image.get_height()
+    ctx.save()
+    ctx.translate(posCib[0], posCib[1])
+    ctx.scale(tailleCib[0]/w, tailleCib[0]/w)
+    ctx.set_source_surface(image, 0, 0)
+    ctx.paint ()
+    ctx.restore()
+        
+    # Affichage des CI sur la cible
+    if seq.classe.referentiel.CI_cible:
         seq.CI.rect.append((posCib+tailleCib))
         
         rayons = {"F" : tailleCib[0] * 0.28, 
@@ -463,41 +453,10 @@ def Draw(ctx, seq, mouchard = False):
             pos = (centreCib[0] + ray * sin(ang*pi/180) ,
                    centreCib[1] - ray * cos(ang*pi/180))
             boule(ctx, pos[0], pos[1], 0.005, (0.95, 1, 0.9, 1), (0.1, 0.3, 0.05, 1))
-    
-    else:
-        ctx.save()
-        
-        if seq.classe.typeEnseignement == "AC":
-            bmp = constantes.images.ImageAC.GetBitmap()
-        elif seq.classe.typeEnseignement == "SIN":
-            bmp = constantes.images.ImageSIN.GetBitmap()
-        elif seq.classe.typeEnseignement == "ITEC":
-            bmp = constantes.images.ImageITEC.GetBitmap()
-        elif seq.classe.typeEnseignement == "EE":
-            bmp = constantes.images.ImageEE.GetBitmap()
-        elif seq.classe.typeEnseignement == "SSI":
-            bmp = constantes.images.SSI_ASR.GetBitmap()
-        else:
-            bmp = constantes.images.SSI_ASR.GetBitmap()
-        
-        tfname = tempfile.mktemp()
-        try:
-            bmp.SaveFile(tfname, wx.BITMAP_TYPE_PNG)
-            image = cairo.ImageSurface.create_from_png(tfname)
-        finally:
-            if os.path.exists(tfname):
-                os.remove(tfname)  
-                
-        w = image.get_width()*1.1
-        h = image.get_height()*1.1
-        
-        ctx.translate(posCib[0], posCib[1])
-        ctx.scale(tailleCib[0]/w, tailleCib[0]/w)
-        ctx.set_source_surface(image, 0, 0)
-        ctx.paint ()
-        ctx.restore()
-        
-            
+
+
+
+
     #
     # Durée de la séquence
     #
@@ -507,8 +466,10 @@ def Draw(ctx, seq, mouchard = False):
     show_text_rect(ctx, getHoraireTxt(seq.GetDuree()), 
                    (posZDeroul[0]-0.01, posZDemarche[1] + tailleZDemarche[1] , #- 0.015
                    0.1, 0.015), ha = 'g', b = 0)
-    
-    
+
+
+
+
     #
     # Commentaires
     #
@@ -526,8 +487,10 @@ def Draw(ctx, seq, mouchard = False):
             yt = _y + (fascent+fdescent)*i  + fheight #- fdescent
             ctx.move_to(_x, yt)
             ctx.show_text(t)
-                
-                
+
+
+
+
     # 
     # Effectifs
     #
@@ -544,8 +507,9 @@ def Draw(ctx, seq, mouchard = False):
         show_text_rect(ctx, seq.GetReferentiel().effectifs[e][1], (x, y, w, h), b=0.2)
         ctx.stroke()
         DrawLigneEff(ctx, x+w, y+h)
-        
-    
+
+
+
 
     #
     #  Prerequis
@@ -1001,7 +965,7 @@ class Cadre():
             self.ctx.set_source_rgba (0,0,0, alpha)
 #            hc = max(hHoraire/4, 0.01)
             hc = max(ecartY/4, 0.01)
-            f, wc = show_text_rect(self.ctx, self.seance.code, (x, y, wEff["P"], hc), ha = 'g', 
+            f, wc, r = show_text_rect(self.ctx, self.seance.code, (x, y, wEff["P"], hc), ha = 'g', 
                                    wrap = False, fontsizeMinMax = (minFont, -1), b = 0.2)
             wc += ecartX/2
         

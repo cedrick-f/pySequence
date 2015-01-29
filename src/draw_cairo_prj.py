@@ -781,6 +781,8 @@ def DrawLigneEff(ctx, x, y):
 
 ######################################################################################  
 def DrawPeriodes(ctx, pos = None, periodes = [[u"Année", 5]], periode_prj = [], tailleTypeEns = 0, origine = False):
+#    print "DrawPeriodes", pos
+#    print "   ", periodes
     ctx.set_line_width (0.001)
     if origine:
         x = 0
