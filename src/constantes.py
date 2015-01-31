@@ -499,12 +499,15 @@ def mergeDict(D, d):
 def trier(l):
     """
     """
-#    print "trier", l
+    #print "trier", l
     if len(l) > 0:
         if '.' in l[0]:
             return sorted(l, key=lambda c: eval(c.split('.')[-1]))
         else:
-            return sorted(l)
+            try:
+                return sorted(l, key=lambda c: eval(c))
+            except:
+                return sorted(l)
     else:
         return l
    

@@ -3441,7 +3441,7 @@ class Savoirs(Objet_sequence):
     def __init__(self, parent, panelParent, num = None, prerequis = False):
         Objet_sequence.__init__(self)
         self.parent = parent # la séquence
-        self.num = num
+#        self.num = num
         self.savoirs = []
         if panelParent:
             self.panelPropriete = PanelPropriete_Savoirs(panelParent, self, prerequis)
@@ -3503,6 +3503,12 @@ class Savoirs(Objet_sequence):
     ######################################################################################  
     def GetCode(self, num):
         return self.savoirs[num]
+    
+    
+    ######################################################################################  
+    def GetTypCode(self, num):
+        return self.savoirs[num][0], self.savoirs[num][1:]
+    
     
     ######################################################################################  
     def GetIntit(self, num):
@@ -7928,7 +7934,7 @@ class FenetreSequence(FenetreDocument):
             self.pageBO.Construire(REFERENTIELS[self.sequence.classe.typeEnseignement])
             
         elif new == 0: # On vient de cliquer sur la fiche
-            self.self.fiche.Redessiner()
+            self.fiche.Redessiner()
             
     ###############################################################################################
     def OnDocModified(self, event):
@@ -16404,7 +16410,11 @@ class FenetreBilan(wx.Frame):
         
                                
     ######################################################################################  
-    def genererBilanComplexe(self, wb):
+    def genererBilanComplexe(self, wb, comp_sav = 'C'):
+        """ Génère une feuille affichant un croisement
+                CI/Compétence (comp_sav = 'C')
+                CI/Savoirs (comp_sav = 'S')
+        """
         
         def traiterSeq(nom, dic):
             ws0 = wb.add_sheet(nom)
@@ -16420,7 +16430,7 @@ class FenetreBilan(wx.Frame):
             n = "HYPERLINK"
             for p, lst in enumerate(self.seqTriees):
                 for i, seq in enumerate(lst):
-                    ws0.write(l-4, c, (i*(p+1))+1, self.styleN)                          # Numéro de séquence
+                    ws0.write(l-4, c, (i*(p+1))+1, self.styleN)                  # Numéro de séquence
                     ws0.write(l-3, c, seq.intitule, self.styleS)                 # Intitulé
                     ws0.write(l-2, c, str(seq.GetDuree()), self.styleD)          # Durée
                     ws0.write(l-1, c, Formula(n + '("%s";"%s")' %(seq.nomFichier, os.path.split(seq.nomFichier)[1])), self.h_style)           # Fichier
@@ -16433,11 +16443,19 @@ class FenetreBilan(wx.Frame):
         
         col_deb = 6
         
-        nom = self.referentiel.nomCompetences + u" - CI"
+        
+        
+        if comp_sav == 'C':
+            nom = self.referentiel.nomCompetences + u" - CI"
+        else:
+            nom = self.referentiel.nomSavoirs + u" - CI"
         ws0 = wb.add_sheet(nom)
         ws0.write_merge(1, 3, 1, col_deb-2, self.referentiel.Enseignement[0], self.styleT)
         ws0.write_merge(5, 5, 0, col_deb-2, nom, self.styleE)
-        dicLigne, lastComp = self.traiterDic(self.referentiel.dicCompetences.items(), ws0, c = 1)
+        if comp_sav == 'C':
+            dicLigne, lastComp = self.traiterDic(self.referentiel.dicCompetences.items(), ws0, c = 1)
+        else:
+            dicLigne, lastComp = self.traiterDic(self.referentiel.dicSavoirs.items(), ws0, c = 1)
         
         #
         # Séquences en colonne
@@ -16484,7 +16502,8 @@ class FenetreBilan(wx.Frame):
         #        
         c = col_deb+2
         l = 4
-        ws0.write_merge(l-3, l-3, c, c+len(self.referentiel.CentresInterets)-1, getSingulierPluriel(self.referentiel.nomCI, True), self.styleT)
+        ws0.write_merge(l-3, l-3, c, c+len(self.referentiel.CentresInterets)-1, 
+                        getSingulierPluriel(self.referentiel.nomCI, True), self.styleT)
         
         for i, ci in enumerate(self.referentiel.CentresInterets):
             if len(self.referentiel.positions_CI) > i:
@@ -16532,18 +16551,28 @@ class FenetreBilan(wx.Frame):
                 j += 1
             l += 1
         
-
+        
+        def CodeDansListe(code, dic):
+            if comp_sav == 'C':
+                return code in dic.keys(), dic[code][0]
+            else:
+                return code[1:] in dic.keys() and (code[0] == 'S' or code[0] == 'B'), dic[code[1:]][0]
+        
+        
         #
-        # On met les croix Compétences/CI
+        # On met les croix Compétences/CI ou Savoirs/CO
         #
         c = col_deb+2
         l = 6
         for p, lst in enumerate(self.seqTriees):
-            for i, seq in enumerate(lst):         
-                for sav in seq.obj["C"].competences:
-                    if sav in dicLigne.keys():
-                        li = dicLigne[sav][0]
-#                        for li in dicLigne[sav]:
+            for i, seq in enumerate(lst):
+                if comp_sav == 'C':
+                    lstc = seq.obj["C"].competences
+                else:
+                    lstc = seq.obj["S"].savoirs
+                for cod in lstc:
+                    x, li = CodeDansListe(cod, dicLigne)
+                    if x:
                         for ci in seq.CI.numCI:
                             try:
                                 ws0.write(li, c+ci, "X", self.styleX)
@@ -16580,6 +16609,7 @@ class FenetreBilan(wx.Frame):
     
     ######################################################################################  
     def genererBilan(self, nomFichier):
+#        print "genererBilan"
         wb = Workbook()
         self.definirStyles(wb)
         
@@ -16659,7 +16689,7 @@ class FenetreBilan(wx.Frame):
         #
         # Feuille Savoirs
         #
-        if self.referentiel.tr_com != []:
+        if self.referentiel.tr_com != []: # C'est un enseignement de spécialité avec un tronc commun
             ws0, dicLigne, last = traiterSeq(self.referentiel.nomSavoirs + " " + REFERENTIELS[self.referentiel.tr_com[0]].Enseignement[0], 
                                               REFERENTIELS[self.referentiel.tr_com[0]].dicSavoirs)
             c = 5
@@ -16669,7 +16699,6 @@ class FenetreBilan(wx.Frame):
                     for sav in seq.obj["S"].savoirs:
                         if sav[1:] in dicLigne.keys() and sav[0] == 'B':
                             li = dicLigne[sav[1:]][0]
-#                            for li in dicLigne[sav[1:]]:
                             ws0.write(li, c, "X", self.styleX)       # X
                     
 #                    for li in range(l+1, last):
@@ -16692,10 +16721,12 @@ class FenetreBilan(wx.Frame):
                                          self.referentiel.dicSavoirs)
         c = 5
         l = 6
+#        print dicLigne.keys()
         for p, lst in enumerate(self.seqTriees):
             for i, seq in enumerate(lst):
                 for sav in seq.obj["S"].savoirs:
-                    if sav[1:] in dicLigne.keys() and sav[0] == 'S':
+#                    print sav
+                    if sav[1:] in dicLigne.keys() and (sav[0] == 'S' or sav[0] == 'B'):
                         li = dicLigne[sav[1:]][0]
 #                        for li in dicLigne[sav[1:]]:
                         ws0.write(li, c, "X", self.styleX)       # X
@@ -16710,7 +16741,8 @@ class FenetreBilan(wx.Frame):
             c += 1
         self.reglerLargeursGauche(ws0, c)
             
-        self.genererBilanComplexe(wb)
+        self.genererBilanComplexe(wb, 'C')
+        self.genererBilanComplexe(wb, 'S')
         
 #        ws0 = wb.add_sheet(self.referentiel.nomSavoirs)
 #        
@@ -16798,7 +16830,13 @@ class FenetreBilan(wx.Frame):
         #
         # Sauvegarde
         #
-        wb.save(nomFichier)
+        try:
+            wb.save(nomFichier)
+        except IOError:
+            messageErreur(self, u'Accès refusé',
+                          u"Le fichier n'a pas pu être enregistré !\n\n" \
+                          u"Il est peut-être déja ouvert ...")
+            return False
         
         return True
         
@@ -17028,7 +17066,7 @@ class FenetreBilan(wx.Frame):
 #            print "listSequences AVANT", listSequences
             listeCI = self.getCIcommuns(listSequences)
             if len(listeCI) > 1:
-                dlgc = DialogChoixCI(self, listeCI)
+                dlgc = DialogChoixCI(self, listeCI, self.referentiel)
                 val = dlgc.ShowModal()
                 choix = dlgc.choix
                 listSequences = listeCI[choix][0]
