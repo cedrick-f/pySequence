@@ -194,6 +194,12 @@ class Referentiel():
         self.listPhases_prj = []
         self.posRevues = {2 : [], 3 : []}
         
+        #
+        # Généralités sur le projet
+        #
+        self.ficheValid_prj = r""
+        self.attributs_prj = {}
+        
         
         #
         # Bulletins Officiels
@@ -376,7 +382,11 @@ class Referentiel():
             self.objSavoirs_Phys = False
             self.preSavoirs_Phys = True
         
-        
+        # Pour mettre à jour les généralités sur le projet
+        if self.attributs_prj == {}:
+            self.attributs_prj = REFERENTIELS[self.Code].attributs_prj
+            
+            
         self.postTraiter()
         self.completer()
 
@@ -603,6 +613,8 @@ class Referentiel():
             self.duree_prj = int(sh_g.cell(24,1).value)
             self.periode_prj = [int(i) for i in sh_g.cell(25,1).value.split()]
 #            print ">>", self.periode_prj
+
+
         #
         # Bulletins Officiels
         #
@@ -762,8 +774,17 @@ class Referentiel():
                             self.posRevues[2].append(shp.cell(l,0).value)
                         if shp.cell(l,6).value != "":
                             self.posRevues[3].append(shp.cell(l,0).value)
-                            
-                            
+        
+        
+        #
+        # Généralités sur le projet
+        #         
+        if self.projet:
+            shp = wb.sheet_by_name(u"Généralités_PRJ")
+            if shp.nrows > 16:
+                self.ficheValid_prj = shp.cell(16,0).value
+            for l in range(2, 13):
+                self.attributs_prj[str(shp.cell(l,0).value)] = [shp.cell(l,1).value, shp.cell(l,2).value, shp.cell(l,3).value]
                             
         
     ###########################################################
@@ -1236,6 +1257,13 @@ class Referentiel():
             else:
                 self._bmp = constantes.images.SSI_ASR.GetBitmap()
         return self._bmp
+
+    #########################################################################
+    def getTypeEtab(self):
+        if self.Famille in ["STI", "SSI", "STS"]:
+            return 'L'  # Lycée
+        else:
+            return 'C'  # Collège
 
     
 #    #########################################################################    

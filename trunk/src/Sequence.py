@@ -195,6 +195,8 @@ from constantes import calculerEffectifs, revCalculerEffectifs, PATH, getSinguli
                         toList, COUL_COMPETENCES, TABLE_PATH, CHAR_POINT, COUL_SOUT, COUL_REVUE, COUL_ABS
 import constantes
 
+
+
 # Les constantes partagées
 from Referentiel import REFERENTIELS, ARBRE_REF
 import Referentiel
@@ -835,6 +837,8 @@ class Classe():
     def __init__(self, app, panelParent = None, intitule = u"", pourProjet = False, ouverture = False):
         self.intitule = intitule
         
+        self.academie = u""
+        self.ville = u""
         self.etablissement = u""
         
         self.options = app.options
@@ -917,6 +921,8 @@ class Classe():
         classe.append(self.referentiel.getBranche())
         
         classe.set("Etab", self.etablissement)
+        classe.set("Ville", self.ville)
+        classe.set("Acad", self.academie)
         
         eff = ET.SubElement(classe, "Effectifs")
         eff.set('eC', str(self.effectifs['C']))
@@ -1003,6 +1009,8 @@ class Classe():
 #        print "version 5", self.version5
         
         self.etablissement = branche.get("Etab", u"")
+        self.ville = branche.get("Ville", u"")
+        self.academie = branche.get("Acad", u"")
         
         self.familleEnseignement = self.referentiel.Famille
 
@@ -1852,14 +1860,23 @@ class Projet(BaseDoc, Objet_sequence):
         
         self.problematique = u""
         
+        #
         # Spécifiquement pour la fiche de validation
+        #
         self.origine = u""
-#        self.panelPropriete.bgctrl.setObjet(self.origine)
         self.contraintes = u""
         self.besoinParties = u""
         self.intituleParties = u""
 
         self.production = u""
+        
+        self.synoptique = u""
+        self.typologie = []
+        
+        # Prtie "Partenariat ('PAR')
+        self.partenariat = u""
+        self.montant = u""
+        self.src_finance = u""
         
         
         self.SetPosition(self.position)
@@ -2043,6 +2060,17 @@ class Projet(BaseDoc, Objet_sequence):
         projet.set("BesoinParties", remplaceLF2Code(self.besoinParties))
         projet.set("IntitParties", remplaceLF2Code(self.intituleParties))
         projet.set("NbrParties", str(self.nbrParties))
+
+        projet.set("Synoptique", remplaceLF2Code(self.synoptique))
+        
+        typologie = ET.SubElement(projet, "Typologie")
+        for i, t in enumerate(self.typologie):
+            typologie.set("T_"+str(i), str(t))
+        
+        projet.set("Partenaires", remplaceLF2Code(self.partenariat))
+        projet.set("Montant", remplaceLF2Code(self.montant))
+        projet.set("SrcFinance", remplaceLF2Code(self.src_finance))
+        
 #        comp = ET.SubElement(projet, "Competences")
 #        for k, lc in constantes._dicCompetences_prj_simple[self.classe.typeEnseignement].items():
 #            comp.set(k, str(lc[1]))
@@ -2053,7 +2081,7 @@ class Projet(BaseDoc, Objet_sequence):
     def setBranche(self, branche):
 #        print "setBranche projet"
 #        print self.GetReferentiel()
-
+        
         err = []
         
         self.intitule = branche.get("Intitule", u"")
@@ -2116,6 +2144,27 @@ class Projet(BaseDoc, Objet_sequence):
         self.besoinParties = remplaceCode2LF(branche.get("BesoinParties", u""))
         self.intituleParties = remplaceCode2LF(branche.get("IntitParties", u""))
         self.nbrParties = eval(branche.get("NbrParties", "1"))
+      
+        self.synoptique = remplaceCode2LF(branche.get("Synoptique", u""))
+        
+        self.typologie = []
+        typologie = branche.find("Typologie")
+        if typologie != None:
+            i = 0
+            continuer = True
+            while continuer:
+                t = typologie.get("T_"+str(i), u"")
+                if t == u"":
+                    continuer = False
+                else:
+                    self.typologie.append(eval(t))
+                    i += 1
+            
+        self.partenariat = remplaceCode2LF(branche.get("Partenaires", u""))
+        self.montant = remplaceCode2LF(branche.get("Montant", u""))
+        self.src_finance = remplaceCode2LF(branche.get("SrcFinance", u""))
+        
+        
       
         #
         # Les poids des compétences (Fixés depuis BO 2014)
@@ -2864,7 +2913,7 @@ class Projet(BaseDoc, Objet_sequence):
 
     #############################################################################
     def MiseAJourTypeEnseignement(self, ancienRef = None, ancienneFam = None):#, changeFamille = False):
-#        print "MiseAJourTypeEnseignement"
+        print "MiseAJourTypeEnseignement projet"
         self.app.SetTitre()
         for t in self.taches:
             t.MiseAJourTypeEnseignement(self.classe.referentiel)
@@ -6881,7 +6930,9 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
 #                else:
 #                    dlg.Destroy()
                 
-       
+    
+        
+
     ###############################################################################################
     def SetData(self, data):  
         self.elementCopie = data      
@@ -7211,6 +7262,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
     ###############################################################################################
     def commandeNouveau(self, event = None, ext = None, ouverture = False):
+        print "commandeNouveau"
         if ext == None:
             dlg = DialogChoixDoc(self)
             val = dlg.ShowModal()
@@ -7288,6 +7340,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
     ###############################################################################################
     def OnAppelOuvrir(self, evt):
+#        print "OnAppelOuvrir"
         wx.CallAfter(self.ouvrir, evt.GetFile())
         
         
@@ -7615,7 +7668,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         sizer.Add(self.pnl, 1, wx.EXPAND)
         self.SetSizer(sizer)
         
-        wx.CallAfter(self.Layout)
+        self.Layout()
         
         self.Bind(EVT_DOC_MODIFIED, self.OnDocModified)
         self.Bind(wx.EVT_CLOSE, self.quitter)
@@ -7938,7 +7991,7 @@ class FenetreSequence(FenetreDocument):
             
     ###############################################################################################
     def OnDocModified(self, event):
-#        print "OnDocModified"
+        print "OnDocModified"
         if event.GetDocument() == self.sequence:
             self.sequence.VerifPb()
             wx.CallAfter(self.fiche.Redessiner)
@@ -8056,7 +8109,7 @@ class FenetreSequence(FenetreDocument):
 class FenetreProjet(FenetreDocument):
     def __init__(self, parent):
         self.typ = 'prj'
-        
+        print "FenetreProjet"
         FenetreDocument.__init__(self, parent)
         
         self.Freeze()
@@ -8349,6 +8402,7 @@ class FenetreProjet(FenetreDocument):
         
         wx.CallAfter(self.fiche.Show)
         wx.CallAfter(self.fiche.Redessiner)
+
 #        if redessiner:
 #
 #        self.fiche.Show()
@@ -8668,7 +8722,7 @@ class BaseFiche(wx.ScrolledWindow):
     #############################################################################            
     def OnScroll(self, evt):
         self.Refresh()
-#        wx.CallAfter(self.Refresh)
+
 
 
     #############################################################################            
@@ -8998,7 +9052,7 @@ class PanelPropriete(scrolled.ScrolledPanel):
         self.SetSizer(self.sizer)
         self.SetAutoLayout(True)
 #        self.SetScrollRate(20,20)
-        self.SetupScrolling()
+#        self.SetupScrolling() # Cause des problèmes 
 #        self.EnableScrolling(True, True)
         self.eventAttente = False
         self.Bind(wx.EVT_ENTER_WINDOW, self.OnEnter)
@@ -9176,44 +9230,83 @@ class PanelPropriete_Projet(PanelPropriete):
         
         self.projet = projet
         
-        nb = wx.Notebook(self, -1,  size = (21,21), style= wx.BK_DEFAULT)
+        self.nb = wx.Notebook(self, -1,  size = (21,21), style= wx.BK_DEFAULT)
+        
+        self.construire()
+        
+        self.sizer.Add(self.nb, (0,0), flag = wx.EXPAND)
+        self.sizer.AddGrowableCol(0)
+        self.sizer.AddGrowableRow(0)
+#        self.sizer.Layout()
+        
+        self.Layout()
+        self.FitInside()
+        wx.CallAfter(self.PostSizeEvent)
+        
+        self.MiseAJourTypeEnseignement()
+        
+        self.Show()
+        
+#        self.Fit()
+        
+    #############################################################################            
+    def GetPageNum(self, win):
+        for np in range(self.nb.GetPageCount()):
+            if self.nb.GetPage(np) == win:
+                return np
+        
+    #############################################################################            
+    def creerPageSimple(self, fct):
+        bg_color = self.Parent.GetBackgroundColour()
+        page = PanelPropriete(self.nb)
+        page.SetBackgroundColour(bg_color)
+        self.nb.AddPage(page, u"")
+        ctrl = wx.TextCtrl(page, -1, u"", style=wx.TE_MULTILINE)
+        page.Bind(wx.EVT_TEXT, fct, ctrl)
+        page.sizer.Add(ctrl, (0,0), flag = wx.EXPAND)
+        page.sizer.AddGrowableCol(0)
+        page.sizer.AddGrowableRow(0)  
+        page.sizer.Layout()
+        return page, ctrl, self.nb.GetPageCount()-1
+    
+    
+    #############################################################################            
+    def construire(self):
+        ref = self.projet.GetReferentiel()
+        self.pages = {}
+        
         
         #
         # La page "Généralités"
         #
-        pageGen = PanelPropriete(nb)
+        pageGen = PanelPropriete(self.nb)
         bg_color = self.Parent.GetBackgroundColour()
         pageGen.SetBackgroundColour(bg_color)
         self.pageGen = pageGen
+        self.nb.AddPage(pageGen, u"Propriétés générales")
         
-        nb.AddPage(pageGen, u"Propriétés générales")
-        
-#        pageGen.sizer.Add(nb, (0,1), (2,1), flag = wx.ALL|wx.ALIGN_RIGHT|wx.EXPAND, border = 1)
             
         #
-        # Intitulé du projet
+        # Intitulé du projet (TIT)
         #
-        titre = wx.StaticBox(pageGen, -1, u"Intitulé du projet")
-        sb = wx.StaticBoxSizer(titre)
+        self.titre = wx.StaticBox(pageGen, -1, u"")
+        sb = wx.StaticBoxSizer(self.titre)
         textctrl = wx.TextCtrl(pageGen, -1, u"", style=wx.TE_MULTILINE)
         sb.Add(textctrl, 1, flag = wx.EXPAND)
         self.textctrl = textctrl
         pageGen.sizer.Add(sb, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.EXPAND, border = 2)
-#        self.sizer.Add(textctrl, (0,1), flag = wx.EXPAND)
         pageGen.Bind(wx.EVT_TEXT, self.EvtText, textctrl)
         
+        
         #
-        # Problématique
+        # Problématique (PB)
         #
-        titre = wx.StaticBox(pageGen, -1, u"Problématique - Énoncé général du besoin")
-        sb = wx.StaticBoxSizer(titre)
-        commctrl = wx.TextCtrl(pageGen, -1, u"", style=wx.TE_MULTILINE)
-        commctrl.SetToolTipString(constantes.TIP_PROBLEMATIQUE + constantes.TIP_PB_LIMITE)
-        sb.Add(commctrl, 1, flag = wx.EXPAND)
-        self.commctrl = commctrl
+        self.tit_pb = wx.StaticBox(pageGen, -1, u"")
+        sb = wx.StaticBoxSizer(self.tit_pb)
+        self.commctrl = wx.TextCtrl(pageGen, -1, u"", style=wx.TE_MULTILINE)
+        sb.Add(self.commctrl, 1, flag = wx.EXPAND)
         pageGen.sizer.Add(sb, (0,1), (2,1),  flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.EXPAND, border = 2)
-#        self.sizer.Add(commctrl, (1,1), flag = wx.EXPAND)
-        pageGen.Bind(wx.EVT_TEXT, self.EvtText, commctrl)
+        pageGen.Bind(wx.EVT_TEXT, self.EvtText, self.commctrl)
         pageGen.sizer.AddGrowableCol(1)
         
         
@@ -9246,130 +9339,57 @@ class PanelPropriete_Projet(PanelPropriete):
         #
         self.panelOrga = PanelOrganisation(pageGen, self, self.projet)
         pageGen.sizer.Add(self.panelOrga, (0,2), (2,1), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.EXPAND|wx.LEFT, border = 2)
-        
-        
         pageGen.sizer.AddGrowableRow(0)
-#        pageGen.FitInside()
-#        pageGen.sizer.Layout()
-#        wx.CallAfter(pageGen.Layout)
-#        
-#        wx.CallAfter(pageGen.PostSizeEvent)
-        
-        #
-        # La page "Enoncé général du besoin"
-        #
-        pageBG = PanelPropriete(nb)
-        bg_color = self.Parent.GetBackgroundColour()
-        pageBG.SetBackgroundColour(bg_color)
-        self.pageBG = pageBG
-        
-        nb.AddPage(pageBG, u"Origine")
-        
-        self.bgctrl = wx.TextCtrl(pageBG, -1, u"", style=wx.TE_MULTILINE)
-#        self.bgctrl = richtext.RichTextPanel(pageBG, [u""], toolBar = True)
-        
-        self.bgctrl.SetToolTipString(u"Partenariat, thématique, concours…")
-        
-        pageBG.Bind(wx.EVT_TEXT, self.EvtText, self.bgctrl)
-        
-        pageBG.sizer.Add(self.bgctrl, (0,0), flag = wx.EXPAND)
-        pageBG.sizer.AddGrowableCol(0)
-        pageBG.sizer.AddGrowableRow(0)  
-        pageBG.sizer.Layout()
+
         
         
         #
-        # La page "Contraintes Imposées"
+        # La page "Enoncé général du besoin" ('ORI')
         #
-        pageCont = PanelPropriete(nb)
-        bg_color = self.Parent.GetBackgroundColour()
-        pageCont.SetBackgroundColour(bg_color)
-        self.pageCont = pageCont
+#        self.pages['ORI'] = self.creerPageSimple(self.EvtText)
+#        self.pageBG = PanelPropriete(self.nb)
+#        self.pageBG.SetBackgroundColour(bg_color)
+#        self.nb.AddPage(self.pageBG, u"")
+#        self.bgctrl = wx.TextCtrl(self.pageBG, -1, u"", style=wx.TE_MULTILINE)
+#        self.pageBG.Bind(wx.EVT_TEXT, self.EvtText, self.bgctrl)
+#        self.pageBG.sizer.Add(self.bgctrl, (0,0), flag = wx.EXPAND)
+#        self.pageBG.sizer.AddGrowableCol(0)
+#        self.pageBG.sizer.AddGrowableRow(0)  
+#        self.pageBG.sizer.Layout()
         
-        nb.AddPage(pageCont, u"Contraintes imposées")
-        
-        self.contctrl = wx.TextCtrl(pageCont, -1, u"", style=wx.TE_MULTILINE)
-        self.contctrl.SetToolTipString(constantes.TIP_CONTRAINTES)
-        pageCont.Bind(wx.EVT_TEXT, self.EvtText, self.contctrl)
-        
-        pageCont.sizer.Add(self.contctrl, (0,0), flag = wx.EXPAND)
-        pageCont.sizer.AddGrowableCol(0)
-        pageCont.sizer.AddGrowableRow(0)  
-        pageCont.sizer.Layout()
         
         #
-        # La page "sous parties"
+        # La page "Contraintes Imposées" (CCF)
         #
-        pagePart = PanelPropriete(nb)
-        bg_color = self.Parent.GetBackgroundColour()
-        pagePart.SetBackgroundColour(bg_color)
-        self.pagePart = pagePart
+#        self.pages['CCF'] = self.creerPageSimple(self.EvtText)
+#        self.pageCont = PanelPropriete(self.nb)
+#        self.pageCont.SetBackgroundColour(bg_color)
+#        self.nb.AddPage(self.pageCont, u"")  
+#        self.contctrl = wx.TextCtrl(self.pageCont, -1, u"", style=wx.TE_MULTILINE)
+#        self.pageCont.Bind(wx.EVT_TEXT, self.EvtText, self.contctrl)
+#        self.pageCont.sizer.Add(self.contctrl, (0,0), flag = wx.EXPAND)
+#        self.pageCont.sizer.AddGrowableCol(0)
+#        self.pageCont.sizer.AddGrowableRow(0)  
+#        self.pageCont.sizer.Layout()
         
-        nb.AddPage(pagePart, u"Découpage du projet")
         
-        self.nbrParties = Variable(u"Nombre de sous parties",  
-                                   lstVal = self.projet.nbrParties, 
-                                   typ = VAR_ENTIER_POS, bornes = [1,5])
-        self.ctrlNbrParties = VariableCtrl(pagePart, self.nbrParties, coef = 1, signeEgal = False,
-                                help = u"Nombre de sous parties", sizeh = 30)
-        self.Bind(EVT_VAR_CTRL, self.EvtVariable, self.ctrlNbrParties)
-        pagePart.sizer.Add(self.ctrlNbrParties, (0,0), flag = wx.EXPAND|wx.ALL, border = 2)
         
-        titreInt = wx.StaticBox(pagePart, -1, u"Intitulés des différentes parties")
-        sb = wx.StaticBoxSizer(titreInt)
         
-        self.intctrl = wx.TextCtrl(pagePart, -1, u"", style=wx.TE_MULTILINE)
-        self.intctrl.SetToolTipString(u"Intitulés des parties du projet confiées à chaque groupe.\n" \
-                                      u"Les groupes d'élèves sont désignés par des lettres (A, B, C, ...)\n" \
-                                      u"et leur effectif est indiqué.")
-        pagePart.Bind(wx.EVT_TEXT, self.EvtText, self.intctrl)
-        sb.Add(self.intctrl, 1, flag = wx.EXPAND)
-        pagePart.sizer.Add(sb, (1,0), flag = wx.EXPAND|wx.ALL, border = 2)
-        
-        titreInt = wx.StaticBox(pagePart, -1, u"Enoncés du besoin des différentes parties du projet")
-        sb = wx.StaticBoxSizer(titreInt)
-        self.enonctrl = wx.TextCtrl(pagePart, -1, u"", style=wx.TE_MULTILINE)
-        self.enonctrl.SetToolTipString(u"Enoncés du besoin des parties du projet confiées à chaque groupe")
-        pagePart.Bind(wx.EVT_TEXT, self.EvtText, self.enonctrl)
-        sb.Add(self.enonctrl, 1, flag = wx.EXPAND)
-        pagePart.sizer.Add(sb, (0,1), (2,1), flag = wx.EXPAND|wx.ALL, border = 2)
-        
-        pagePart.sizer.AddGrowableCol(1)
-        pagePart.sizer.AddGrowableRow(1)  
-        pagePart.sizer.Layout()
         
         #
-        # La page "Production attendue"
+        # La page "Production attendue" ('OBJ')
         #
-        pageProd = PanelPropriete(nb)
-        bg_color = self.Parent.GetBackgroundColour()
-        pageProd.SetBackgroundColour(bg_color)
-        self.pageProd = pageProd
-        
-        nb.AddPage(pageProd, u"Production finale attendue")
-        
-        self.prodctrl = wx.TextCtrl(pageProd, -1, u"", style=wx.TE_MULTILINE)
-        self.prodctrl.SetToolTipString(constantes.TIP_PRODUCTION)
-        pageProd.Bind(wx.EVT_TEXT, self.EvtText, self.prodctrl)
-        
-        pageProd.sizer.Add(self.prodctrl, (0,0), flag = wx.EXPAND)
-        pageProd.sizer.AddGrowableCol(0)
-        pageProd.sizer.AddGrowableRow(0)  
-        pageProd.sizer.Layout()
-        
-        
-        self.sizer.Add(nb, (0,0), flag = wx.EXPAND)
-        self.sizer.AddGrowableCol(0)
-        self.sizer.AddGrowableRow(0)
-#        self.sizer.Layout()
-        
-        self.Layout()
-        self.FitInside()
-        wx.CallAfter(self.PostSizeEvent)
-        self.Show()
-        
-#        self.Fit()
-        
+#        self.pages['OBJ'] = self.creerPageSimple(self.EvtText)
+#        self.pageProd = PanelPropriete(self.nb)
+#        self.pageProd.SetBackgroundColour(bg_color)
+#        self.nb.AddPage(self.pageProd, u"")
+#        self.prodctrl = wx.TextCtrl(self.pageProd, -1, u"", style=wx.TE_MULTILINE)
+#        self.pageProd.Bind(wx.EVT_TEXT, self.EvtText, self.prodctrl)
+#        self.pageProd.sizer.Add(self.prodctrl, (0,0), flag = wx.EXPAND)
+#        self.pageProd.sizer.AddGrowableCol(0)
+#        self.pageProd.sizer.AddGrowableRow(0)  
+#        self.pageProd.sizer.Layout()
+    
     
     #############################################################################            
     def getBitmapPeriode(self, larg):
@@ -9431,64 +9451,249 @@ class PanelPropriete_Projet(PanelPropriete):
             self.textctrl.ChangeValue(nt)
             maj = True
             
-        elif event.GetEventObject() == self.bgctrl:
+        elif 'ORI' in self.pages.keys() and event.GetEventObject() == self.pages['ORI'][1]:
             self.projet.origine = event.GetString()
             maj = False
             
-        elif event.GetEventObject() == self.contctrl:
+        elif 'CCF' in self.pages.keys() and event.GetEventObject() == self.pages['CCF'][1]:
             self.projet.contraintes = event.GetString()
             maj = False
             
-        elif event.GetEventObject() == self.prodctrl:
+        elif 'OBJ' in self.pages.keys() and event.GetEventObject() == self.pages['OBJ'][1]:
             self.projet.production = event.GetString()
             maj = False
+            
+        elif 'SYN' in self.pages.keys() and event.GetEventObject() == self.pages['SYN'][1]:
+            self.projet.synoptique = event.GetString()
+            maj = False
         
-        elif event.GetEventObject() == self.intctrl:
+        elif hasattr(self, 'intctrl') and event.GetEventObject() == self.intctrl:
             self.projet.intituleParties = event.GetString()
             maj = False
         
-        elif event.GetEventObject() == self.enonctrl:
+        elif hasattr(self, 'enonctrl') and event.GetEventObject() == self.enonctrl:
             self.projet.besoinParties = event.GetString()
             maj = False
             
-        else:
-            nt = event.GetString()
-            self.projet.SetProblematique(nt)
+        elif event.GetEventObject() == self.commctrl:
+            self.projet.SetProblematique(event.GetString())
             maj = True
+            
+        elif 'PAR' in self.parctrl.keys() and event.GetEventObject() == self.parctrl['PAR']:
+            self.projet.partenariat = event.GetString()
+            maj = False
+            
+        elif 'PRX' in self.parctrl.keys() and event.GetEventObject() == self.parctrl['PRX']:
+            self.projet.montant = event.GetString()
+            maj = False
+            
+        elif 'SRC' in self.parctrl.keys() and event.GetEventObject() == self.parctrl['SRC']:
+            self.projet.src_finance = event.GetString()
+            maj = False
+        
+#        else:
+#            maj = False
             
             
         if maj and not self.eventAttente:
             wx.CallLater(DELAY, self.sendEvent)
             self.eventAttente = True
-            
+
+  
+    #############################################################################            
+    def EvtCheckListBox(self, event):
+        index = event.GetSelection()
+#        label = self.lb.GetString(index)
+        if self.lb.IsChecked(index):
+            if not index in self.projet.typologie:
+                self.projet.typologie.append(index)
+        else:
+            if index in self.projet.typologie:
+                self.projet.typologie.remove(index)
+#        self.lb.SetSelection(index)    # so that (un)checking also selects (moves the highlight)
+        print "typologie", self.projet.typologie
+        
             
     #############################################################################            
     def MiseAJourTypeEnseignement(self, sendEvt = False):
+        
+        ref = self.projet.GetReferentiel()
+        print "MiseAJourTypeEnseignement", ref.Code
+        #
+        # Page "Généralités"
+        #
+        self.titre.SetLabel(ref.attributs_prj['TIT'][0])
+        
+        self.tit_pb.SetLabel(ref.attributs_prj['PB'][0])
+        self.commctrl.SetToolTipString(ref.attributs_prj['PB'][1] + constantes.TIP_PB_LIMITE)
+        
+        #
+        # Pages simples
+        #
+        for k in ['ORI', 'CCF', 'OBJ', 'SYN']:
+            if ref.attributs_prj[k][0] != u"":
+                if not k in self.pages.keys():
+                    self.pages[k] = self.creerPageSimple(self.EvtText)
+                self.nb.SetPageText(self.GetPageNum(self.pages[k][0]), ref.attributs_prj[k][0])
+                self.pages[k][1].SetToolTipString(ref.attributs_prj[k][1])
+            else:
+                if k in self.pages.keys():
+                    self.nb.DeletePage(self.GetPageNum(self.pages[k][0]))
+                    del self.pages[k]
+                
+                    
+        #
+        # Pages spéciales
+        #       
+        
+        # La page "sous parties" ('DEC')
+        
+        if ref.attributs_prj['DEC'][0] != "":
+            if not 'DEC' in self.pages.keys():
+                self.pages['DEC'] = PanelPropriete(self.nb)
+                bg_color = self.Parent.GetBackgroundColour()
+                self.pages['DEC'].SetBackgroundColour(bg_color)
+                
+                self.nb.AddPage(self.pages['DEC'], ref.attributs_prj['DEC'][0])
+                
+                self.nbrParties = Variable(u"Nombre de sous parties",  
+                                           lstVal = self.projet.nbrParties, 
+                                           typ = VAR_ENTIER_POS, bornes = [1,5])
+                self.ctrlNbrParties = VariableCtrl(self.pages['DEC'], self.nbrParties, coef = 1, signeEgal = False,
+                                        help = u"Nombre de sous parties", sizeh = 30)
+                self.Bind(EVT_VAR_CTRL, self.EvtVariable, self.ctrlNbrParties)
+                self.pages['DEC'].sizer.Add(self.ctrlNbrParties, (0,0), flag = wx.EXPAND|wx.ALL, border = 2)
+                
+                titreInt = wx.StaticBox(self.pages['DEC'], -1, u"Intitulés des différentes parties")
+                sb = wx.StaticBoxSizer(titreInt)
+                
+                self.intctrl = wx.TextCtrl(self.pages['DEC'], -1, u"", style=wx.TE_MULTILINE)
+                self.intctrl.SetToolTipString(u"Intitulés des parties du projet confiées à chaque groupe.\n" \
+                                              u"Les groupes d'élèves sont désignés par des lettres (A, B, C, ...)\n" \
+                                              u"et leur effectif est indiqué.")
+                self.pages['DEC'].Bind(wx.EVT_TEXT, self.EvtText, self.intctrl)
+                sb.Add(self.intctrl, 1, flag = wx.EXPAND)
+                self.pages['DEC'].sizer.Add(sb, (1,0), flag = wx.EXPAND|wx.ALL, border = 2)
+                
+                titreInt = wx.StaticBox(self.pages['DEC'], -1, u"Enoncés du besoin des différentes parties du projet")
+                sb = wx.StaticBoxSizer(titreInt)
+                self.enonctrl = wx.TextCtrl(self.pages['DEC'], -1, u"", style=wx.TE_MULTILINE)
+                self.enonctrl.SetToolTipString(u"Enoncés du besoin des parties du projet confiées à chaque groupe")
+                self.pages['DEC'].Bind(wx.EVT_TEXT, self.EvtText, self.enonctrl)
+                sb.Add(self.enonctrl, 1, flag = wx.EXPAND)
+                self.pages['DEC'].sizer.Add(sb, (0,1), (2,1), flag = wx.EXPAND|wx.ALL, border = 2)
+                
+                self.pages['DEC'].sizer.AddGrowableCol(1)
+                self.pages['DEC'].sizer.AddGrowableRow(1)  
+                self.pages['DEC'].sizer.Layout()
+                
+        else:
+            if 'DEC' in self.pages.keys():
+                self.nb.DeletePage(self.GetPageNum(self.pages['DEC']))
+                del self.pages['DEC']
+        
+        
+        # La page "typologie" ('TYP')
+        
+        if ref.attributs_prj['TYP'][0] != "":
+            if not 'TYP' in self.pages.keys():
+                self.pages['TYP'] = PanelPropriete(self.nb)
+                bg_color = self.Parent.GetBackgroundColour()
+                self.pages['TYP'].SetBackgroundColour(bg_color)
+                
+                self.nb.AddPage(self.pages['TYP'], ref.attributs_prj['TYP'][0])
+                
+                liste = ref.attributs_prj['TYP'][2].split(u"\n")
+                self.lb = wx.CheckListBox(self.pages['TYP'], -1, (80, 50), wx.DefaultSize, liste)
+                self.Bind(wx.EVT_CHECKLISTBOX, self.EvtCheckListBox, self.lb)
+                
+                self.pages['TYP'].sizer.Add(self.lb, (0,0), flag = wx.EXPAND|wx.ALL, border = 2)
+                
+                self.pages['TYP'].sizer.AddGrowableCol(0)
+                self.pages['TYP'].sizer.AddGrowableRow(0)  
+                self.pages['TYP'].sizer.Layout()
+                
+        else:
+            if 'TYP' in self.pages.keys():
+                self.nb.DeletePage(self.GetPageNum(self.pages['TYP']))
+                del self.pages['TYP']
+        
+        # La page "Partenariat" ('PAR')
+        self.parctrl = {}
+        if ref.attributs_prj['PAR'][0] != "":
+            if not 'PAR' in self.pages.keys():
+                self.pages['PAR'] = PanelPropriete(self.nb)
+                bg_color = self.Parent.GetBackgroundColour()
+                self.pages['PAR'].SetBackgroundColour(bg_color)
+                
+                self.nb.AddPage(self.pages['PAR'], ref.attributs_prj['PAR'][0])
+                
+                for i, k in enumerate(['PAR', 'PRX', 'SRC']):
+                    titreInt = wx.StaticBox(self.pages['PAR'], -1, ref.attributs_prj[k][0])
+                    sb = wx.StaticBoxSizer(titreInt)
+                
+                    self.parctrl[k] = wx.TextCtrl(self.pages['PAR'], -1, u"", style=wx.TE_MULTILINE)
+                    self.parctrl[k].SetToolTipString(ref.attributs_prj[k][1])
+                    self.pages['PAR'].Bind(wx.EVT_TEXT, self.EvtText, self.parctrl[k])
+                    sb.Add(self.parctrl[k], 1, flag = wx.EXPAND)
+                    self.pages['PAR'].sizer.Add(sb, (0,i), flag = wx.EXPAND|wx.ALL, border = 2)
+                
+                self.pages['PAR'].sizer.AddGrowableCol(0)
+                self.pages['PAR'].sizer.AddGrowableRow(0)  
+                self.pages['PAR'].sizer.Layout()
+                
+        else:
+            if 'PAR' in self.pages.keys():
+                self.nb.DeletePage(self.GetPageNum(self.pages['PAR']))
+                del self.pages['PAR']
+                self.parctrl = {}
+        
+    #############################################################################            
+    def MiseAJourPosition(self, sendEvt = False):
         self.bmp.SetBitmap(self.getBitmapPeriode(250))
         self.position.SetRange(0, self.projet.GetLastPosition())
         self.position.SetValue(self.projet.position)
-        
-        
-        
+    
+
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
 #        print "mise à jour panel table"
+        ref = self.projet.GetReferentiel()
+        
+        # La page "Généralités"
         self.textctrl.ChangeValue(self.projet.intitule)
         self.commctrl.ChangeValue(self.projet.problematique)
         
-        self.bgctrl.ChangeValue(self.projet.origine)
-        self.contctrl.ChangeValue(self.projet.contraintes)
-        self.prodctrl.ChangeValue(self.projet.production)
-        self.intctrl.ChangeValue(self.projet.intituleParties)
-        self.enonctrl.ChangeValue(self.projet.besoinParties)
+        # Les pages simples
+        if 'ORI' in self.pages.keys():
+            self.pages['ORI'][1].ChangeValue(self.projet.origine)
+        if 'CCF' in self.pages.keys():
+            self.pages['CCF'][1].ChangeValue(self.projet.contraintes)
+        if 'OBJ' in self.pages.keys():
+            self.pages['OBJ'][1].ChangeValue(self.projet.production)
+        if 'SYN' in self.pages.keys():
+            self.pages['SYN'][1].ChangeValue(self.projet.synoptique)
         
-        self.nbrParties.v[0] = self.projet.nbrParties
-        self.ctrlNbrParties.mofifierValeursSsEvt()
+        # La page "typologie" ('TYP')
+        if ref.attributs_prj['TYP'][0] != "":
+            for t in self.projet.typologie:
+                self.lb.Check(t)
+                
+        # La page "sous parties" ('DEC')
+        if ref.attributs_prj['DEC'][0] != "":
+            self.intctrl.ChangeValue(self.projet.intituleParties)
+            self.enonctrl.ChangeValue(self.projet.besoinParties)
+            self.nbrParties.v[0] = self.projet.nbrParties
+            self.ctrlNbrParties.mofifierValeursSsEvt()
         
-        
-        self.MiseAJourTypeEnseignement()
+        # La page "Partenariat" ('PAR')
+        if ref.attributs_prj['PAR'][0] != "":
+            self.parctrl['PAR'].ChangeValue(self.projet.partenariat)
+            self.parctrl['PRX'].ChangeValue(self.projet.montant)
+            self.parctrl['SRC'].ChangeValue(self.projet.src_finance)
+                    
+        self.MiseAJourPosition()
      
-        
         self.panelOrga.MiseAJourListe()
         self.Layout()
         
@@ -9693,28 +9898,63 @@ class PanelPropriete_Classe(PanelPropriete):
         #
         titre = wx.StaticBox(self, -1, u"Etablissement")
         sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
-
-        self.cb = wx.ComboBox(self, -1, "sélectionner un établissement ...", (-1,-1), 
-                         (-1, -1), constantes.ETABLISSEMENTS_PDD + [u"autre ..."],
+        
+        t = wx.StaticText(self, -1, u"Académie :")
+        sb.Add(t, flag = wx.EXPAND)
+        
+        lstAcad = [a[0] for a in constantes.ETABLISSEMENTS.values()]
+        self.cba = wx.ComboBox(self, -1, "sélectionner une académie ...", (-1,-1), 
+                         (-1, -1), lstAcad,
                          wx.CB_DROPDOWN
                          |wx.CB_READONLY
                          #| wx.TE_PROCESS_ENTER
                          #| wx.CB_SORT
                          )
 
-        self.Bind(wx.EVT_COMBOBOX, self.EvtComboEtab, self.cb)
-        sb.Add(self.cb, flag = wx.EXPAND)
-
-        textctrl = wx.TextCtrl(self, -1, u"", style=wx.TE_MULTILINE)
-        self.Bind(wx.EVT_TEXT, self.EvtText, textctrl)
-#        textctrl.SetMinSize((-1, 150))
-        sb.Add(textctrl, 1, flag = wx.EXPAND)
-        self.textctrl = textctrl
+        self.Bind(wx.EVT_COMBOBOX, self.EvtComboAcad, self.cba)
+        self.Bind(wx.EVT_TEXT, self.EvtComboAcad, self.cba)
+        sb.Add(self.cba, flag = wx.EXPAND)
         
-        self.info = wx.StaticText(self, -1, u"""Inscrire le nom de l'établissement dans le champ ci-dessus...
-        ou bien modifier le fichier "etablissements.txt"\n        pour le faire apparaitre dans la liste.""")
-        self.info.SetFont(wx.Font(8, wx.SWISS, wx.FONTSTYLE_ITALIC, wx.NORMAL))
-        sb.Add(self.info, 0, flag = wx.EXPAND|wx.ALL, border = 5)
+        t = wx.StaticText(self, -1, u"Ville :")
+        sb.Add(t, flag = wx.EXPAND)
+     
+        self.cbv = wx.ComboBox(self, -1, "sélectionner une ville ...", (-1,-1), 
+                         (-1, -1), [],
+                         wx.CB_DROPDOWN
+                         |wx.CB_READONLY
+                         #| wx.TE_PROCESS_ENTER
+                         #| wx.CB_SORT
+                         )
+
+        self.Bind(wx.EVT_COMBOBOX, self.EvtComboVille, self.cbv)
+        self.Bind(wx.EVT_TEXT, self.EvtComboVille, self.cbv)
+        sb.Add(self.cbv, flag = wx.EXPAND)
+        
+        
+        t = wx.StaticText(self, -1, u"Etablissement :")
+        sb.Add(t, flag = wx.EXPAND)
+        
+        self.cbe = wx.ComboBox(self, -1, "sélectionner un établissement ...", (-1,-1), 
+                         (-1, -1), [u"autre ..."],
+                         wx.CB_DROPDOWN
+                         |wx.CB_READONLY
+                         #| wx.TE_PROCESS_ENTER
+                         #| wx.CB_SORT
+                         )
+
+        self.Bind(wx.EVT_COMBOBOX, self.EvtComboEtab, self.cbe)
+        sb.Add(self.cbe, flag = wx.EXPAND)
+
+#        textctrl = wx.TextCtrl(self, -1, u"", style=wx.TE_MULTILINE)
+#        self.Bind(wx.EVT_TEXT, self.EvtText, textctrl)
+##        textctrl.SetMinSize((-1, 150))
+#        sb.Add(textctrl, 1, flag = wx.EXPAND)
+#        self.textctrl = textctrl
+        
+#        self.info = wx.StaticText(self, -1, u"""Inscrire le nom de l'établissement dans le champ ci-dessus...
+#        ou bien modifier le fichier "etablissements.txt"\n        pour le faire apparaitre dans la liste.""")
+#        self.info.SetFont(wx.Font(8, wx.SWISS, wx.FONTSTYLE_ITALIC, wx.NORMAL))
+#        sb.Add(self.info, 0, flag = wx.EXPAND|wx.ALL, border = 5)
 
         self.sizer.Add(sb, (0,2), (1,1), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.ALL|wx.EXPAND, border = 2)
         
@@ -9814,21 +10054,63 @@ class PanelPropriete_Classe(PanelPropriete):
             
             
     ######################################################################################  
+    def EvtComboAcad(self, evt = None):
+#        print "EvtComboAcad"
+        if evt != None:
+            self.classe.academie = evt.GetString()
+
+        lst = []
+        for val in constantes.ETABLISSEMENTS.values():
+            if self.classe.academie == val[0]:
+                if self.classe.GetReferentiel().getTypeEtab() == 'L':
+                    lst = val[2]
+                else:
+                    lst = val[1]
+                break
+        lst = sorted(list(set([v for e, v in lst])))
+#        print "Villes", lst
+
+        self.cbv.Set(lst)
+        self.cbv.Refresh()
+            
+    
+    ######################################################################################  
+    def EvtComboVille(self, evt = None):
+#        print "EvtComboVille"
+        if evt != None:
+            self.classe.ville = evt.GetString()
+
+        lst = []
+        for val in constantes.ETABLISSEMENTS.values():
+            if self.classe.ville == val[0]:
+                if self.classe.GetReferentiel().getTypeEtab() == 'L':
+                    lst = val[2]
+                else:
+                    lst = val[1]
+                break
+        lst = sorted([e for e, v in lst if v == self.cbv.GetStringSelection()])
+#        print "Etab", lst
+        
+        self.cbe.Set(lst)
+        self.cbe.Refresh()
+            
+        
+    ######################################################################################  
     def EvtComboEtab(self, evt):       
-        if evt.GetSelection() == len(constantes.ETABLISSEMENTS_PDD):
-            self.classe.etablissement = self.textctrl.GetStringSelection()
-            self.AfficherAutre(True)
-        else:
-            self.classe.etablissement = evt.GetString()
-            self.AfficherAutre(False)
+#        if evt.GetSelection() == len(constantes.ETABLISSEMENTS_PDD):
+#            self.classe.etablissement = self.textctrl.GetStringSelection()
+#            self.AfficherAutre(True)
+#        else:
+        self.classe.etablissement = evt.GetString()
+#        self.AfficherAutre(False)
         
         self.sendEvent()
      
-    ######################################################################################  
-    def AfficherAutre(self, montrer):
-        self.textctrl.Show(montrer)
-        self.info.Show(montrer)
-        self.sizer.Layout()
+#    ######################################################################################  
+#    def AfficherAutre(self, montrer):
+#        self.textctrl.Show(montrer)
+#        self.info.Show(montrer)
+#        self.sizer.Layout()
              
     ######################################################################################  
     def EvtRadioBox(self, event = None, CodeFam = None):
@@ -9956,20 +10238,27 @@ class PanelPropriete_Classe(PanelPropriete):
         
     ######################################################################################  
     def MiseAJour(self):
+#        print "MiseAJour classe", self.classe.academie
 #        self.MiseAJourType()
         
         self.cb_type.SetStringSelection(self.classe.referentiel.Enseignement[0])
 #        self.cb_type.SetStringSelection(REFERENTIELS[self.classe.typeEnseignement].Enseignement[0])
         
-        self.cb.SetValue(self.classe.etablissement)
-        if self.cb.GetStringSelection () and self.cb.GetStringSelection() == self.classe.etablissement:
-            self.textctrl.ChangeValue(u"")
-            self.AfficherAutre(False)
+        
+        self.cba.SetValue(self.classe.academie)
+        self.EvtComboAcad()
+        self.cbv.SetValue(self.classe.ville)
+        self.EvtComboVille()
+        self.cbe.SetValue(self.classe.etablissement)
+        
+#        if self.cbe.GetStringSelection () and self.cbe.GetStringSelection() == self.classe.etablissement:
+#            self.textctrl.ChangeValue(u"")
+#            self.AfficherAutre(False)
             
-        else:
-            self.textctrl.ChangeValue(self.classe.etablissement)
-            self.AfficherAutre(True)
-            self.cb.SetSelection(len(constantes.ETABLISSEMENTS_PDD))
+#        else:
+#            self.textctrl.ChangeValue(self.classe.etablissement)
+#            self.AfficherAutre(True)
+#            self.cbe.SetSelection(len(constantes.ETABLISSEMENTS))
         
         self.SetLienBO()
         

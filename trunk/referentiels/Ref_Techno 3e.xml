@@ -1,4 +1,4 @@
-<Referentiel B_CI_BO="False" B_CI_cible="False" B_objSavoirs_Math="False" B_objSavoirs_Phys="False" B_preSavoirs_Math="True" B_preSavoirs_Phys="True" B_projet="False" I_duree_prj="0" S_BO_URL="http://cache.media.eduscol.education.fr/file/special_6/53/1/Programme_technologie_33531.pdf" S_BO_dossier="Coll&#232;ge" S_Code="CLG3" S_Famille="CLG" S_FichierLogo="" S_abrevCI="CI" S_nomCI="Centre(s) d'Int&#233;r&#234;t" S_nomCompetences="Capacit&#233;s" S_nomSavoirs="Savoirs" S_nomSavoirs_Math="Math&#233;matiques" S_nomSavoirs_Phys="Sciences Physiques">
+<Referentiel B_CI_BO="False" B_CI_cible="False" B_objSavoirs_Math="False" B_objSavoirs_Phys="False" B_preSavoirs_Math="True" B_preSavoirs_Phys="True" B_projet="False" I_duree_prj="0" S_BO_URL="http://cache.media.eduscol.education.fr/file/special_6/53/1/Programme_technologie_33531.pdf" S_BO_dossier="Coll&#232;ge" S_Code="CLG3" S_Famille="CLG" S_FichierLogo="" S_abrevCI="CI" S_ficheValid_prj="" S_nomCI="Centre(s) d'Int&#233;r&#234;t" S_nomCompetences="Capacit&#233;s" S_nomSavoirs="Savoirs" S_nomSavoirs_Math="Math&#233;matiques" S_nomSavoirs_Phys="Sciences Physiques">
   <l_CentresInterets S_CentresInterets00="Appropriation du cahier des charges" S_CentresInterets01="Recherche de solutions techniques" S_CentresInterets02="Revue de projet et choix de solutions" S_CentresInterets03="R&#233;alisation et validation du prototype" S_CentresInterets04="Pr&#233;sentation finale d'un projet" />
   <l_Enseignement S_Enseignement00="Techno 3e" S_Enseignement01="3e Technologie coll&#232;ge" S_Enseignement02="Techno Coll&#232;ge" />
   <d_aColNon B_R="True" B_S="False" />
@@ -7,6 +7,7 @@
     <l_P S_P00="Projet" S_P01="Activit&#233; de projet" />
     <l_AP S_AP00="Activit&#233; pratique" S_AP01="Activit&#233; pratique" />
   </d_activites>
+  <d_attributs_prj />
   <d_cellulesInfo_prj />
   <d_demarcheSeance>
     <l_ED S_ED00="I" S_ED01="R" />
