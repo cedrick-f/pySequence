@@ -1,4 +1,4 @@
-<Referentiel B_CI_BO="False" B_CI_cible="False" B_objSavoirs_Math="False" B_objSavoirs_Phys="True" B_preSavoirs_Math="True" B_preSavoirs_Phys="True" B_projet="True" I_duree_prj="70" S_BO_URL="http://www.education.gouv.fr/pid25535/bulletin_officiel.html?cid_bo=82979" S_BO_dossier="STS" S_Code="STS" S_Famille="STS" S_FichierLogo="Logo_STS_EL.jpg" S_abrevCI="Th " S_nomCI="Th&#232;mes" S_nomCompetences="Activit&#233;s professionnelles" S_nomSavoirs="S6 - G&#233;nie &#201;lectrique" S_nomSavoirs_Math="S3 - Math&#233;matiques" S_nomSavoirs_Phys="S5 - Sciences Appliqu&#233;es">
+<Referentiel B_CI_BO="False" B_CI_cible="False" B_objSavoirs_Math="False" B_objSavoirs_Phys="True" B_preSavoirs_Math="True" B_preSavoirs_Phys="True" B_projet="True" I_duree_prj="70" S_BO_URL="http://www.education.gouv.fr/pid25535/bulletin_officiel.html?cid_bo=82979" S_BO_dossier="STS" S_Code="STS_EE" S_Famille="STS" S_FichierLogo="Logo_STS_EL.jpg" S_abrevCI="Th " S_ficheValid_prj="STS-EE _ Dossier projet.html" S_nomCI="Th&#232;mes" S_nomCompetences="Activit&#233;s professionnelles" S_nomSavoirs="S6 - G&#233;nie &#201;lectrique" S_nomSavoirs_Math="S3 - Math&#233;matiques" S_nomSavoirs_Phys="S5 - Sciences Appliqu&#233;es">
   <l_CentresInterets S_CentresInterets00="Mise en service d&#8217;un syst&#232;me d&#8217;un ouvrage ou d&#8217;un &#233;quipement" S_CentresInterets01="La distribution de l&#8217;&#233;nergie &#233;lectrique" S_CentresInterets02="Comportement des charges m&#233;caniques" S_CentresInterets03="Les diff&#233;rents proc&#233;d&#233;s de transformation de l&#8217;&#233;nergie" S_CentresInterets04="La r&#233;versibilit&#233; &#233;nerg&#233;tique" S_CentresInterets05="Dimensionnement &#233;nerg&#233;tique dans les syst&#232;mes autonomes et embarqu&#233;s" S_CentresInterets06="La qualit&#233; de l&#8217;&#233;nergie &#233;lectrique" S_CentresInterets07="La gestion des co&#251;ts" S_CentresInterets08="Asservissement et r&#233;gulation" S_CentresInterets09="Les &#233;quipements communicants" />
   <l_Enseignement S_Enseignement00="STS-EE" S_Enseignement01="BTS - Electrotechnique" S_Enseignement02="STS" />
   <d_aColNon B_R="True" B_S="False" />
@@ -7,6 +7,19 @@
     <l_P S_P00="Projet" S_P01="Activit&#233; de projet" />
     <l_AP S_AP00="Activit&#233; pratique" S_AP01="Activit&#233; pratique" />
   </d_activites>
+  <d_attributs_prj>
+    <l_SRC S_SRC00="Source de financement" S_SRC01="" S_SRC02="" />
+    <l_PAR S_PAR00="Partenaires du projet" S_PAR01="" S_PAR02="" />
+    <l_DEC S_DEC00="" S_DEC01="" S_DEC02="" />
+    <l_OBJ S_OBJ00="Objectif" S_OBJ01="Identification de la valeur ajout&#233;e.--Enjeux." S_OBJ02="" />
+    <l_TIT S_TIT00="Titre du projet" S_TIT01="Titre du projet" S_TIT02="" />
+    <l_SYN S_SYN00="Synoptique" S_SYN01="&#8226; Identification des proc&#233;d&#233;s et de leurs agencements.--&#8226; Description du ou des processus." S_SYN02="" />
+    <l_PB S_PB00="Pr&#233;sentation du projet" S_PB01="Indiquer :-- - description du contexte dans lequel l&#8217;objet du projet va &#234;tre int&#233;gr&#233; ;-- - fonctionnalit&#233;s de cet objet ;-- - caract&#233;ristiques fonctionnelles et techniques." S_PB02="" />
+    <l_ORI S_ORI00="" S_ORI01="" S_ORI02="" />
+    <l_CCF S_CCF00="Cahier des charges" S_CCF01="" S_CCF02="" />
+    <l_TYP S_TYP00="Typologie" S_TYP01="" S_TYP02="Construction ou r&#233;novation d'un syst&#232;me inclus dans une cha&#238;ne de fabrication.--Construction ou r&#233;novation d'une machine de production.--Conception ou modification d'une installation &#233;lectrique d'une infrastructure.--Conception ou modification d'une installation &#233;lectrique d'un b&#226;timent tertiaire ou industriel.--Conception ou am&#233;lioration d'un produit de consommation.--&#201;laboration ou am&#233;lioration de services." />
+    <l_PRX S_PRX00="Montant estim&#233; du projet" S_PRX01="" S_PRX02="" />
+  </d_attributs_prj>
   <d_cellulesInfo_prj>
     <l_Pre>
       <l_Pre00 S_Pre0000="R" S_Pre0001="Identification" S_Pre0003="">
@@ -2571,7 +2584,7 @@
     <l_R S_R00="Grille-conduite de projet-S-SI.xlsx" S_R01="I" />
   </d_grilles_prj>
   <l_listPhasesEval_prj S_listPhasesEval_prj00="Rev" S_listPhasesEval_prj01="R1" S_listPhasesEval_prj02="R2" S_listPhasesEval_prj03="R3" S_listPhasesEval_prj04="S" />
-  <l_listPhases_prj S_listPhases_prj00="Ana" S_listPhases_prj01="Rea" S_listPhases_prj02="XXX" S_listPhases_prj03="Rev" S_listPhases_prj04="R1" S_listPhases_prj05="R2" S_listPhases_prj06="R3" S_listPhases_prj07="S" />
+  <l_listPhases_prj S_listPhases_prj00="Ana" S_listPhases_prj01="Rea" S_listPhases_prj02="Val" S_listPhases_prj03="XXX" S_listPhases_prj04="Rev" S_listPhases_prj05="R1" S_listPhases_prj06="R2" S_listPhases_prj07="R3" S_listPhases_prj08="S" />
   <l_listeDemarches S_listeDemarches00="I" S_listeDemarches01="R" S_listeDemarches02="P" />
   <l_listeEffectifs S_listeEffectifs00="C" S_listeEffectifs01="G" S_listeEffectifs02="D" S_listeEffectifs03="E" S_listeEffectifs04="P" />
   <l_listeTypeActivite S_listeTypeActivite00="ED" S_listeTypeActivite01="AP" S_listeTypeActivite02="P" />
@@ -2584,18 +2597,19 @@
     <l_periodes01 I_periodes0101="5" S_periodes0100="2_&#232;me ann&#233;e" />
   </l_periodes>
   <d_phases_prj>
-    <l_Ana S_Ana00="Appropriation" S_Ana01="Appropriation" S_Ana02="Ap" />
+    <l_Ana S_Ana00="Organisation" S_Ana01="Organisation du projet" S_Ana02="O" />
+    <l_Val S_Val00="Mise en &#339;uvre" S_Val01="Mise en oeuvre du projet" S_Val02="M" />
     <l_R2 S_R200="Revue n&#176;2" S_R201="Revue de projet n&#176;2" S_R202="R2" />
     <l_R3 S_R300="Revue n&#176;3" S_R301="Revue de projet n&#176;3" S_R302="R3" />
-    <l_XXX S_XXX00="Synth et com" S_XXX01="Synth&#232;se et communication" S_XXX02="SC" />
+    <l_XXX S_XXX00="Pr&#233;sentation" S_XXX01="Pr&#233;sentation du projet" S_XXX02="P" />
     <l_Rev S_Rev00="Revue inter" S_Rev01="Revue interm&#233;diaire" S_Rev02="Ri" />
-    <l_S S_S00="Soutenance" S_S01="Soutenance finale" S_S02="S" />
-    <l_Rea S_Rea00="Exp&#233;rimentations" S_Rea01="R&#233;alisation d'exp&#233;rimentations" S_Rea02="Re" />
+    <l_S S_S00="Pr&#233;sentation" S_S01="Pr&#233;sentation du projet" S_S02="S" />
+    <l_Rea S_Rea00="Conception" S_Rea01="Conception du projet" S_Rea02="C" />
     <l_R1 S_R100="Revue n&#176;1" S_R101="Revue de projet n&#176;1" S_R102="R1" />
   </d_phases_prj>
   <d_posRevues>
-    <l__02 S__0200="Ana" S__0201="Rea" />
-    <l__03 S__0300="Ana" S__0301="Rea" S__0302="XXX" />
+    <l__02 S__0200="Ana" S__0201="Rea" S__0202="Val" />
+    <l__03 S__0300="Ana" S__0301="Rea" S__0302="Val" />
   </d_posRevues>
   <l_positions_CI />
   <d_seances>

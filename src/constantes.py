@@ -593,22 +593,29 @@ MESSAGE_FERMER = {'seq' : u"La séquence a été modifiée.\n\n%s\n\nVoulez vous
 DELTA_DUREE = 5 # Tolérance (+-) pour la durée du projet (en %)
 DELTA_DUREE2 = 15
 
-try:
-    with open('etablissements.txt') as f:
-        ETABLISSEMENTS_PDD = f.read().encode(sys.getdefaultencoding()).splitlines()
-        print u"Import établissements réussie !"
-except:
-    ETABLISSEMENTS_PDD = [u"La Fayette (Clermont Fd)",
-                          u"Blaise Pascal (Clermont Fd)",
-                          u"Paul Constans (Montluçon)",
-                          u"Albert-Londres (Cusset)",
-                          u"Pierre-Joël Bonté (Riom)",
-                          u"Albert Einstein (Montluçon)",
-                          u"Jean Monnet (Aurillac)",
-                          u"Jean Monnet (Yzeure)",
-                          u"Jean Zay (Thiers)",
-                          u"Godefroy de Bouillon (Clermont Fd)",
-                          u"Charles et Adrien Dupuy (Le Puy en Velay)"]
+#try:
+#    with open('etablissements.txt') as f:
+#        ETABLISSEMENTS_PDD = f.read().encode(sys.getdefaultencoding()).splitlines()
+#        print u"Import établissements réussie !"
+#except:
+#    ETABLISSEMENTS_PDD = [u"La Fayette (Clermont Fd)",
+#                          u"Blaise Pascal (Clermont Fd)",
+#                          u"Paul Constans (Montluçon)",
+#                          u"Albert-Londres (Cusset)",
+#                          u"Pierre-Joël Bonté (Riom)",
+#                          u"Albert Einstein (Montluçon)",
+#                          u"Jean Monnet (Aurillac)",
+#                          u"Jean Monnet (Yzeure)",
+#                          u"Jean Zay (Thiers)",
+#                          u"Godefroy de Bouillon (Clermont Fd)",
+#                          u"Charles et Adrien Dupuy (Le Puy en Velay)"]
+
+# La liste complète des établissements scolaires en France !!
+import getEtab
+ETABLISSEMENTS = getEtab.ouvrir()
+#print "ETABLISSEMENTS", ETABLISSEMENTS
+
+
 
 DISCIPLINES = ['Tec', 'Phy', 'Mat', 'Svt', 'LV1', 'Phi', 'Spo', 'Aut']
 NOM_DISCIPLINES = {'Tec' : u"Sciences Industrielles de l'Ingénieur", 
@@ -661,24 +668,24 @@ def getLstDisciplines():
 LONG_MAX_PROBLEMATIQUE = 600 # Nombre maxi de caractères affichés sur la fiche
 LONG_MAX_FICHE_VALID = 2000  # Nombre maxi de caractères affichés dans le tableau de la fiche de validation
 LIMITE_GRAND_PETIT_CARACT = 500 # Limite en nombre de caractères pour l'utilisation d'une plus petite police
-TIP_PROBLEMATIQUE =   u"Indiquer :\n" \
-                      u"- description du contexte dans lequel l’objet du projet va être intégré ;\n" \
-                      u"- fonctionnalités de cet objet ;\n" \
-                      u"- caractéristiques fonctionnelles et techniques."
+#TIP_PROBLEMATIQUE =   u"Indiquer :\n" \
+#                      u"- description du contexte dans lequel l’objet du projet va être intégré ;\n" \
+#                      u"- fonctionnalités de cet objet ;\n" \
+#                      u"- caractéristiques fonctionnelles et techniques."
                       
 TIP_PB_LIMITE = u"\n(%s caractères maxi)" %str(LONG_MAX_PROBLEMATIQUE)
                       
-TIP_CONTRAINTES =    u"Indiquer :\n" \
-                     u"- coût maximal ;\n" \
-                     u"- nature d’une ou des solutions techniques ou de familles de matériels," \
-                     u" de constituants ou de composants ;\n" \
-                     u"- environnement."
-                                     
-TIP_PRODUCTION =     u"Indiquer :\n" \
-                     u"- documents de formalisation des solutions proposées ;\n" \
-                     u"- sous-ensemble fonctionnel d’un prototype, éléments d’une maquette" \
-                     u" réelle ou virtuelle ;\n" \
-                     u"- supports de communication."                             
+#TIP_CONTRAINTES =    u"Indiquer :\n" \
+#                     u"- coût maximal ;\n" \
+#                     u"- nature d’une ou des solutions techniques ou de familles de matériels," \
+#                     u" de constituants ou de composants ;\n" \
+#                     u"- environnement."
+#                                     
+#TIP_PRODUCTION =     u"Indiquer :\n" \
+#                     u"- documents de formalisation des solutions proposées ;\n" \
+#                     u"- sous-ensemble fonctionnel d’un prototype, éléments d’une maquette" \
+#                     u" réelle ou virtuelle ;\n" \
+#                     u"- supports de communication."                             
                                      
 xmlVide = """<?xml version="1.0" encoding="UTF-8"?>
 <richtext version="1.0.0.0" xmlns="http://www.wxwidgets.org">

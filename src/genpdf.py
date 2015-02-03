@@ -26,7 +26,7 @@
 #    along with pySequence; if not, write to the Free Software
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-from  constantes import ellipsizer, getAnneeScolaireStr, TIP_PROBLEMATIQUE, TIP_CONTRAINTES, TIP_PRODUCTION, \
+from  constantes import ellipsizer, getAnneeScolaireStr, \
                         LONG_MAX_PROBLEMATIQUE, ADOBE_VERSION, LONG_MAX_FICHE_VALID, LIMITE_GRAND_PETIT_CARACT
 import os.path
 #from textwrap import wrap
@@ -79,12 +79,102 @@ def italic(s):
 def gras(s):
     return "<strong>"+s+"</strong>"
 
+def parag(s):
+    return "<p>"+s+"</p>"
+
+def liste(l, classe = "b"):
+    s = ""
+    for e in l:
+        s += "<li>"+e+"</li>"
+    return "<ul class=\""+classe+"\">"+s+"</ul>"
+
+def case(etat = False):
+    return "<span style=\"font-family:wingdings\">&#253;</span>"
+
+def checkbox(etat = False):
+    if etat:
+        c = "<img src=\"{{MEDIA_URL}}/CheckBox_checked.png\" height=\"16\" width=\"16\" >&nbsp;"
+    else:
+        c = "<img src=\"{{MEDIA_URL}}/CheckBox_unchecked.png\" height=\"16\" width=\"16\" >&nbsp;"
+    return c
+
+
+    
 def splitParagraph(text, style):
     pp = []
     for l in text.split("\n"):
 #        pp.append(KeepTogether(Paragraph(l, style)))
         pp.append(Paragraph(l, style))
     return pp
+
+
+
+#######################################################################################################################
+#
+#    
+#
+#######################################################################################################################
+import logging
+class PisaNullHandler(logging.Handler):
+    def emit(self, record):
+        pass
+logging.getLogger("xhtml2pdf").addHandler(PisaNullHandler())
+
+from xhtml2pdf import pisa
+def genererFicheValidationHTML(nomFichierPDF, nomFichierHTML, projet):
+    print "genererFicheValidationHTML"
+    with open(nomFichierHTML,'r') as f:
+        sourceHtml = f.read()
+
+
+    # Equipe pédagogique
+    le = []
+    for p in projet.equipe:
+        np = p.GetNomPrenom()
+        if p.referent:
+            np = gras(np)  
+        if p.discipline != 'Tec':
+            np = italic(np)
+        le.append(np)
+    NP = liste(le) 
+    
+    # Typologie
+    typo = projet.GetReferentiel().attributs_prj['TYP'][2].split(u"\n")
+    
+    TY = "<br>".join([checkbox(i in projet.typologie) + t for i, t in enumerate(typo)])
+#    TY = liste(, classe = "b")
+    
+    
+    champs = {'ACA' : projet.classe.academie,
+              'SES' : str(projet.annee),
+              'TIT' : projet.intitule,
+              'ETA' : projet.classe.etablissement,
+              'PAR' : projet.partenariat,
+              'NBE' : str(len(projet.eleves)),
+              'PRX' : projet.montant,
+              'SRC' : projet.src_finance,
+              'TYP' : TY,
+              'PRE' : projet.presentation,
+              'EQU' : NP,}
+    
+    for code, val in champs.items():
+        sourceHtml = sourceHtml.replace(u"[["+code+u"]]", val)
+    
+    sourceHtml = sourceHtml.replace("{{MEDIA_URL}}", os.path.join(constantes.PATH, r"..", DOSSIER_REF))
+    
+    resultFile = open(nomFichierPDF, "w+b")
+
+    # convert HTML to PDF
+    pisaStatus = pisa.CreatePDF(
+                                sourceHtml,                # the HTML to convert
+                                dest=resultFile)           # file handle to recieve result
+
+    # close output file
+    resultFile.close()                 # close output file
+
+    print pisaStatus.err
+    # return True on success and False on errors
+    return pisaStatus.err == 0
 
 #
 #
@@ -132,7 +222,7 @@ def genererFicheValidation(nomFichier, projet):
     
     story = [] # Fill this list with flowable objects
     
-    
+    ref = projet.GetReferentiel()
     #
     # En-tête
     #
@@ -146,7 +236,7 @@ def genererFicheValidation(nomFichier, projet):
                    u"Annexe 4 à la note de service n° 2014-131 du 9-10-2014",
                    u"Baccalauréat général, série S, sciences de l'ingénieur - Épreuve orale, projet interdisciplinaire"]
         
-    elif projet.GetReferentiel().Famille == 'STI':
+    elif ref.Famille == 'STI':
         en_tete = [u"Bulletin officiel n°39 du 23 octobre 2014",
                    u"Annexe 9 à la note de service n° 2014-132 du 13-10-2014",
                    u"Baccalauréat technologique, série STI2D - Épreuve de projet en enseignement spécifique à la spécialité"]
@@ -172,7 +262,7 @@ def genererFicheValidation(nomFichier, projet):
         
     data= [[[Paragraph(gras(u'Établissement : '), normal_style), Paragraph(projet.classe.etablissement, normal_style)], [Paragraph(gras(u"Année scolaire : ")+getAnneeScolaireStr(), normal_style),
                                                                                                                          Paragraph(gras(u"Nombre d’élèves concernés : ")+str(len(projet.eleves)), normal_style)]],
-           [Paragraph(gras(u"Spécialité : ")+ projet.GetReferentiel().Enseignement[0], normal_style), Paragraph(gras(u"Nombre de groupes d’élèves : ")+str(projet.nbrParties), normal_style)],
+           [Paragraph(gras(u"Spécialité : ")+ ref.Enseignement[0], normal_style), Paragraph(gras(u"Nombre de groupes d’élèves : ")+str(projet.nbrParties), normal_style)],
            [Paragraph(gras(u"Noms et prénoms des enseignants responsables :"), normal_style), NP]]
     t = Table(data, style = [('VALIGN',      (0,0),(-1,-1),'TOP')])
     
@@ -186,24 +276,24 @@ def genererFicheValidation(nomFichier, projet):
     #
     # Deuxième zone (tableau)
     #
-    
+#    print ref.attributs_prj
     # Colonne de gauche
     ppi = Paragraph(gras(u'Intitulé du projet'),normal_style)
     
     ppo = Paragraph(gras(u'Origine de la proposition'),normal_style)
     
     ppb = [Paragraph(gras(u'Problématique - Énoncé général du besoin'),normal_style)]
-    ppb.append(splitParagraph(TIP_PROBLEMATIQUE, entete_style))
+    ppb.append(splitParagraph(ref.attributs_prj['PB'][1], entete_style))
 
     pco = [Paragraph(gras(u'Contraintes imposées au projet'),normal_style)]
-    pco.append(splitParagraph(TIP_CONTRAINTES, entete_style))
+    pco.append(splitParagraph(ref.attributs_prj['CCF'][1], entete_style))
 
     ppig = Paragraph(gras(u'Intitulé des parties du projet confiées à chaque groupe'),normal_style)
     
     ppbg = Paragraph(gras(u'Énoncé du besoin pour la partie du projet confiée à chaque groupe'),normal_style)
     
     ppr = [Paragraph(gras(u'Production finale attendue'),normal_style)]
-    ppr.append(splitParagraph(TIP_PRODUCTION, entete_style))
+    ppr.append(splitParagraph(ref.attributs_prj['OBJ'][1], entete_style))
     
     
     # Colonne de droite
@@ -266,8 +356,8 @@ def genererFicheValidation(nomFichier, projet):
     
 #genererFicheValidation(u"Intitulé du projet")
     
-    
-    
+from Referentiel import DOSSIER_REF
+import constantes
 def genererDossierValidation(nomFichier, projet, fenDoc):
     dosstemp = tempfile.mkdtemp()
     fichertempV = os.path.join(dosstemp, "pdfvalid.pdf")
@@ -275,7 +365,14 @@ def genererDossierValidation(nomFichier, projet, fenDoc):
 #    fichertemp = os.path.join(dosstemp, "pdfdoss.pdf")
     
     wx.BeginBusyCursor()
-    Ok = genererFicheValidation(fichertempV, projet)
+    
+    nomFichierHTML = os.path.join(constantes.PATH, r"..", DOSSIER_REF, projet.GetReferentiel().ficheValid_prj)
+    
+    if os.path.isfile(nomFichierHTML):
+        Ok = genererFicheValidationHTML(fichertempV, nomFichierHTML, projet)
+    else:
+        Ok = genererFicheValidation(fichertempV, projet)
+    
     if not Ok:
         shutil.rmtree(dosstemp)
         wx.EndBusyCursor()

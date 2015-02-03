@@ -1,4 +1,4 @@
-<Referentiel B_CI_BO="True" B_CI_cible="False" B_objSavoirs_Math="False" B_objSavoirs_Phys="False" B_preSavoirs_Math="True" B_preSavoirs_Phys="True" B_projet="True" I_duree_prj="70" S_BO_URL="http://www.education.gouv.fr/pid25535/bulletin_officiel.html?cid_bo=82984" S_BO_dossier="STI2D" S_Code="SIN" S_Famille="STI" S_FichierLogo="" S_abrevCI="CI" S_nomCI="Centre(s) d'Int&#233;r&#234;t" S_nomCompetences="Comp&#233;tences" S_nomSavoirs="Savoirs" S_nomSavoirs_Math="Math&#233;matiques" S_nomSavoirs_Phys="Sciences Physiques">
+<Referentiel B_CI_BO="True" B_CI_cible="False" B_objSavoirs_Math="False" B_objSavoirs_Phys="False" B_preSavoirs_Math="True" B_preSavoirs_Phys="True" B_projet="True" I_duree_prj="70" S_BO_URL="http://www.education.gouv.fr/pid25535/bulletin_officiel.html?cid_bo=82984" S_BO_dossier="STI2D" S_Code="SIN" S_Famille="STI" S_FichierLogo="" S_abrevCI="CI" S_ficheValid_prj="" S_nomCI="Centre(s) d'Int&#233;r&#234;t" S_nomCompetences="Comp&#233;tences" S_nomSavoirs="Savoirs" S_nomSavoirs_Math="Math&#233;matiques" S_nomSavoirs_Phys="Sciences Physiques">
   <l_CentresInterets S_CentresInterets00="Configuration et performances du traitement de l'information" S_CentresInterets01="Instrumentation/Acquisition et restitution de grandeurs physiques" S_CentresInterets02="Communication de l'information/Au sein d'un syst&#232;me" S_CentresInterets03="Gestion de l'information/Structures mat&#233;rielles et logicielles associ&#233;es au traitement de l'information" S_CentresInterets04="Communication entre syst&#232;mes" S_CentresInterets05="Traitement analogique de l'information" S_CentresInterets06="Cycle de vie d'un produit" />
   <l_Enseignement S_Enseignement00="STI2D-SIN" S_Enseignement01="STI2D : Syst&#232;mes d'Information et Num&#233;rique" S_Enseignement02="STI2D" />
   <d_aColNon B_R="True" B_S="False" />
@@ -7,6 +7,19 @@
     <l_P S_P00="Projet" S_P01="Activit&#233; de projet" />
     <l_AP S_AP00="Activit&#233; pratique" S_AP01="Activit&#233; pratique" />
   </d_activites>
+  <d_attributs_prj>
+    <l_SRC S_SRC00="" S_SRC01="" S_SRC02="" />
+    <l_PAR S_PAR00="" S_PAR01="" S_PAR02="" />
+    <l_DEC S_DEC00="D&#233;coupage du projet" S_DEC01="" S_DEC02="" />
+    <l_OBJ S_OBJ00="Production finale attendue" S_OBJ01=" " S_OBJ02="" />
+    <l_TIT S_TIT00="Intitul&#233; du projet" S_TIT01="Intitul&#233; du projet" S_TIT02="" />
+    <l_SYN S_SYN00="" S_SYN01="" S_SYN02="" />
+    <l_PB S_PB00="Probl&#233;matique - &#201;nonc&#233; g&#233;n&#233;ral du besoin" S_PB01="Indiquer :-- - description du contexte dans lequel l&#8217;objet du projet va &#234;tre int&#233;gr&#233; ;-- - fonctionnalit&#233;s de cet objet ;-- - caract&#233;ristiques fonctionnelles et techniques." S_PB02="" />
+    <l_ORI S_ORI00="Origine" S_ORI01="Partenariat, th&#233;matique, concours&#8230;" S_ORI02="" />
+    <l_CCF S_CCF00="Contraintes impos&#233;es" S_CCF01="Indiquer :-- - co&#251;t maximal ;-- - nature d&#8217;une ou des solutions techniques ou de familles de mat&#233;riels, de constituants ou de composants ;-- - environnement." S_CCF02="" />
+    <l_TYP S_TYP00="" S_TYP01="" S_TYP02="" />
+    <l_PRX S_PRX00="" S_PRX01="" S_PRX02="" />
+  </d_attributs_prj>
   <d_cellulesInfo_prj>
     <l_Pre>
       <l_Pre00 S_Pre0000="R" S_Pre0001="Identification projet" S_Pre0003="">

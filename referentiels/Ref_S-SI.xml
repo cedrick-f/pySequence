@@ -1,4 +1,4 @@
-<Referentiel B_CI_BO="False" B_CI_cible="False" B_objSavoirs_Math="False" B_objSavoirs_Phys="False" B_preSavoirs_Math="True" B_preSavoirs_Phys="True" B_projet="True" I_duree_prj="70" S_BO_URL="http://www.education.gouv.fr/pid25535/bulletin_officiel.html?cid_bo=82979" S_BO_dossier="SSI" S_Code="SSI" S_Famille="SSI" S_FichierLogo="" S_abrevCI="CI" S_nomCI="Centre(s) d'Int&#233;r&#234;t" S_nomCompetences="Comp&#233;tences" S_nomSavoirs="Connaissances &amp; Capacit&#233;s" S_nomSavoirs_Math="Math&#233;matiques" S_nomSavoirs_Phys="Physique - Chimie">
+<Referentiel B_CI_BO="False" B_CI_cible="False" B_objSavoirs_Math="False" B_objSavoirs_Phys="False" B_preSavoirs_Math="True" B_preSavoirs_Phys="True" B_projet="True" I_duree_prj="70" S_BO_URL="http://www.education.gouv.fr/pid25535/bulletin_officiel.html?cid_bo=82979" S_BO_dossier="SSI" S_Code="SSI" S_Famille="SSI" S_FichierLogo="" S_abrevCI="CI" S_ficheValid_prj="" S_nomCI="Centre(s) d'Int&#233;r&#234;t" S_nomCompetences="Comp&#233;tences" S_nomSavoirs="Connaissances &amp; Capacit&#233;s" S_nomSavoirs_Math="Math&#233;matiques" S_nomSavoirs_Phys="Physique - Chimie">
   <l_CentresInterets S_CentresInterets00="Analyser un syst&#232;me fonctionnellement et structurellement" S_CentresInterets01="Exp&#233;rimenter et mesurer sur un syst&#232;me r&#233;el pour &#233;valuer ses performances" S_CentresInterets02="Analyser des constituants d&#8217;un syst&#232;me r&#233;el d&#8217;un point de vue structurel et comportemental" S_CentresInterets03="Concevoir et utiliser un mod&#232;le relatif &#224; un syst&#232;me en vue d&#8217;&#233;valuer les performances de la cha&#238;ne d&#8217;information" S_CentresInterets04="Concevoir et utiliser un mod&#232;le relatif &#224; un syst&#232;me en vue d&#8217;&#233;valuer les performances de la cha&#238;ne d&#8217;&#233;nergie&quot;" />
   <l_Enseignement S_Enseignement00="S-SI" S_Enseignement01="Bac S - Sciences de l'ing&#233;nieur" S_Enseignement02="S-SI" />
   <d_aColNon B_R="True" B_S="False" />
@@ -7,6 +7,19 @@
     <l_P S_P00="Projet" S_P01="Activit&#233; de projet" />
     <l_AP S_AP00="Activit&#233; pratique" S_AP01="Activit&#233; pratique" />
   </d_activites>
+  <d_attributs_prj>
+    <l_SRC S_SRC00="" S_SRC01="" S_SRC02="" />
+    <l_PAR S_PAR00="" S_PAR01="" S_PAR02="" />
+    <l_DEC S_DEC00="D&#233;coupage du projet" S_DEC01="" S_DEC02="" />
+    <l_OBJ S_OBJ00="Production finale attendue" S_OBJ01="Indiquer :-- - documents de formalisation des solutions propos&#233;es ;-- - sous-ensemble fonctionnel d&#8217;un prototype, &#233;l&#233;ments d&#8217;une maquette r&#233;elle ou virtuelle ;-- - supports de communication." S_OBJ02="" />
+    <l_TIT S_TIT00="Intitul&#233; du projet" S_TIT01="Intitul&#233; du projet" S_TIT02="" />
+    <l_SYN S_SYN00="" S_SYN01="" S_SYN02="" />
+    <l_PB S_PB00="Probl&#233;matique - &#201;nonc&#233; g&#233;n&#233;ral du besoin" S_PB01="Indiquer :-- - description du contexte dans lequel l&#8217;objet du projet va &#234;tre int&#233;gr&#233; ;-- - fonctionnalit&#233;s de cet objet ;-- - caract&#233;ristiques fonctionnelles et techniques." S_PB02="" />
+    <l_ORI S_ORI00="Origine" S_ORI01="Partenariat, th&#233;matique, concours&#8230;" S_ORI02="" />
+    <l_CCF S_CCF00="Contraintes impos&#233;es" S_CCF01="Indiquer :-- - co&#251;t maximal ;-- - nature d&#8217;une ou des solutions techniques ou de familles de mat&#233;riels, de constituants ou de composants ;-- - environnement." S_CCF02="" />
+    <l_TYP S_TYP00="" S_TYP01="" S_TYP02="" />
+    <l_PRX S_PRX00="" S_PRX01="" S_PRX02="" />
+  </d_attributs_prj>
   <d_cellulesInfo_prj>
     <l_Pre>
       <l_Pre00 S_Pre0000="R" S_Pre0001="Identification" S_Pre0003="">
