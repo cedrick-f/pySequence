@@ -2,15 +2,33 @@
 <html>
 <head>
 <style>
+@page {
+        size: A4 portrait;
+        margin-right: 20pt;
+        margin-left: 20pt;
+        margin-top: 40pt;
+            
+        @frame footer_frame {
+            -pdf-frame-content: footer_content;
+            bottom : 10pt;
+            left: 10pt; width: 550pt; height: 20pt;
+            }
+        }
+        
+html, body , tbody , div {margin: 0; padding: 0; width: 100%; height: 100%;}
+
+.break { page-break-before: always; }
+ 
 ul.b {
     list-style-type: circle;
     list-style-position: inside;
     list-style-image:url('CheckBox_checked.png');
+    padding-top: 0px;
 }
 
 ul.a {
     list-style-position: inside;
-    list-style-image:url('{{MEDIA_URL}}/CheckBox_checked.png');
+    padding-top: 0px;
 }
 
 ol.c {
@@ -19,64 +37,140 @@ ol.c {
 
 ol.d {
     list-style-type: lower-alpha;
-}
+    }
+    
+table {
+    width: 100%;
+    height: 100%;
+    padding: 5px;
+    padding-bottom: 2px;
+    border: 1px solid black;
+    overflow: hidden;
+    }
+    
+td {
+    vertical-align: middle;
+      text-align: left;
+      vertical-align: center;
+      cellspacing: 0;
+      }
+
+p.m { 
+    margin-left: 10px;
+    margin-top: 1px;
+    margin-bottom: 1px;
+    margin-right: 1px;
+    }
+
+p.t { 
+    margin-left: 1px;
+    margin-top: 1px;
+    margin-bottom: 1px;
+    margin-right: 1px;
+    }
+
 </style>
-<meta content="text/html; charset=utf-8" http-equiv="content-type"><title>Dossier projet</title>
 </head>
 
-<body>
-<table valign="center" style="text-align: left; width: 100%;" border="1" cellpadding="5" cellspacing="0">
-<tbody>
+
+<div id="footer_content">Page <pdf:pagenumber> sur <pdf:pagecount>
+</div>
+
+
+<table>
 
 <tr>
-	<td style="width: 60%;">Académie :<br>[[ACA]]</td>
+	<td style="width: 60%;"><p class="t">Académie :</p>
+                          <p class="m"><strong>[[ACA]]</strong></p></td>
 	<td colspan="2" rowspan="2" style="background-color: silver; text-align: center;"><font size="7"><span style="font-weight: bold;">BTS ÉLECTROTECHNIQUE</span></font></td>
-	<td valign="top" style="width: 60%;" rowspan="2">Établissement :<br>[[ETA]]</td>
+	<td valign="top" style="width: 60%;" rowspan="2"><p class="t">Établissement :</p>
+                                                   <p class="m"><strong>[[ETA]]</strong></p></td>
 </tr>
 
 <tr>
-	<td >Session : [[SES]]</td>
+	<td >Session : <strong>[[SES]]</strong></td>
 </tr>
 
 <tr>
 	<td colspan="2" rowspan="1" style="text-align: center; background-color: silver; font-weight: bold;"><font size="5">Épreuve E5<br>Projet technique industriel</font></td>
-	<td colspan="2" rowspan="1" style="width: 50%; text-align: center; background-color: silver; font-weight: bold;">DOSSIER PROJET</td>
+	<td colspan="2" rowspan="1" style="width: 50%; text-align: center; background-color: silver; font-weight: bold;"><font size="5">DOSSIER PROJET</font></td>
 </tr>
 
 <tr>
-	<td valign="top" colspan="2" rowspan="1" ><p>Équipe pédagogique : <font size="2" color="silver">Souligner le nom du chef de projet</font></p><p>[[EQU]]</p></td>
-	<td valign="top" colspan="2" rowspan="1" ><p>Titre :</p><p>[[TIT]]</p></td>
+	<td valign="top" colspan="2" rowspan="1" ><p class="t">Équipe pédagogique : <font size="2" color="silver">Souligner le nom du chef de projet</font></p>
+                                            <p class="m">[[EQU]]</p></td>
+	<td valign="top" colspan="2" rowspan="1" ><p class="t">Titre :</p>
+                                            <p class="m"><strong>[[TIT]]</strong></p></td>
 </tr>
 
 <tr>
-	<td valign="top" colspan="2" rowspan="1" ><p>Partenaires du projet :</p><p>[[PAR]]</p></td>
-	<td valign="top" colspan="2" rowspan="1" >Nombre d'étudiants : [[NBE]]</td>
+	<td valign="top" colspan="2" rowspan="2" ><p class="t">Partenaires du projet :</p>
+                                            <p class="m">[[PAR]]</p></td>
+	<td valign="top" colspan="2" rowspan="1" >Nombre d'étudiants : <strong>[[NBE]]</strong></td>
 </tr>
 
 <tr>
-	<td colspan="2" rowspan="1"><p>Montant estimé du projet :</p><p>[[PRX]]</p></td>
-	<td colspan="2" rowspan="1"><p>Source de financement :</p><p>[[SRC]]</p></td>
-
-<tr>
-	<td colspan="4" rowspan="1" ><p>Typologie du projet :</p><p>[[TYP]]</p></td>
+  <td valign="top" colspan="2" rowspan="2"><p class="t">Source de financement :</p>
+                                           <p class="m"><strong>[[SRC]]</strong></p></td>
 </tr>
 
 <tr>
-	<td colspan="4" rowspan="1" ><p>Présentation du projet :</p><p>[[PRE]]</p></td>
+	<td colspan="2" rowspan="1">Montant estimé du projet : <strong>[[PRX]]</strong></td>
+</tr>
+
+<tr>
+	<td colspan="4" rowspan="1" ><p class="t">Typologie du projet :</p>
+                               <p class="m">[[TYP]]</p></td>
+</tr>
+
+<tr>
+	<td colspan="4" rowspan="1" style="height: 320pt;"><p class="t">Présentation du projet :</p>
+                                                     <p class="m">[[PRE]]</p></td>
 </tr>
 
 <tr>
 	<td valign="top" colspan="1" style="height: 80px; border-right: 0px" >Le projet est :</td>
 	<td colspan="1" style="border-left: 0px; border-right: 0px"><img src="{{MEDIA_URL}}/CheckBox_unchecked.png" height="16" width="16" >&nbsp;Accepté</td>
 	<td colspan="1" style="border-left: 0px; border-right: 0px"><img src="{{MEDIA_URL}}/CheckBox_unchecked.png" height="16" width="16" >&nbsp;Accepté sous réserves</td>
-	<td colspan="1" style="border-left: 0px"><img src="{{MEDIA_URL}}/CheckBox_unchecked.png" height="16" width="16" >&nbsp;Refusé</td>
+	<td colspan="1" style="border-left: 0px"><img src="{{MEDIA_URL}}/CheckBox_unchecked.png" height="16" width="16">&nbsp;Refusé</td>
 </tr>
 
 <tr>
-	<td colspan="4" rowspan="1" style="height: 120px;">Recommandations (en cas de réserves ou de refus ) :</td>
+	<td colspan="4" rowspan="1" style="padding-bottom: 40pt;">Recommandations (en cas de réserves ou de refus ) :</td>
 </tr>
 
 <tr>
-	<td colspan="4" style="height: 120px;">Date :&nbsp;Les IA_IPR :</td>
+	<td colspan="1" style="padding-bottom: 40pt; border-right: 0px;">Date :</td>
+	<td colspan="3" style="padding-bottom: 40pt; border-left: 0px;">Les IA_IPR :</td>
 </tr>
-</tbody></table><br></body></html>
+
+</table>
+
+<br>
+
+<table class = "break" >
+
+  <tr style="font-weight: bold;" align="center">
+    <td colspan="2" style="background-color: silver;"><big>DÉFINITION DE LA DEMANDE</big></td></tr>
+  <tr>
+    <td rowspan="3" style="height: 800px; width: 0px;">
+    <td ><p class="t">Objectif du projet :</p>
+         <p class="m">[[OBJ]]</p></td>
+  </tr>
+  
+  <tr>
+    <td ><p class="t">Synoptique du projet :</p>
+         <p class="m">[[SYN]]</p></td>
+  </tr>
+  
+  <tr>
+    <td ><p class="t">Cahier des charges :</p>
+         <p class="m">[[CCF]]</p></td>
+  </tr>
+
+
+</table>
+
+
+
+</html>

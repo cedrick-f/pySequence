@@ -40,7 +40,7 @@ Copyright (C) 2011-2015
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "5.9beta1"
+__version__ = "5.9beta3"
 print __version__
 
 #from threading import Thread
@@ -1044,7 +1044,8 @@ class Classe():
         self.branche = arbre.AppendItem(branche, Titres[5]+" :", wnd = self.codeBranche, data = self)#, image = self.arbre.images["Seq"])
         if hasattr(self, 'tip'):
             self.tip.SetBranche(self.branche)
-
+    
+    
 
     ######################################################################################  
     def GetEffectifNorm(self, eff):

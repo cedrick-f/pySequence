@@ -22,54 +22,84 @@
   </d_attributs_prj>
   <d_cellulesInfo_prj>
     <l_Pre>
-      <l_Pre00 S_Pre0000="R" S_Pre0001="Identification" S_Pre0003="">
-        <l_Pre0002 I_Pre000200="10" I_Pre000201="2" I_Pre000202="0" />
+      <l_Pre00 S_Pre0000="S" S_Pre0001="Pr&#233;sentation" S_Pre0003="">
+        <l_Pre0002 I_Pre000200="3" I_Pre000201="9" I_Pre000202="0" />
       </l_Pre00>
-      <l_Pre01 S_Pre0100="S" S_Pre0101="Identification" S_Pre0103="">
-        <l_Pre0102 I_Pre010200="10" I_Pre010201="2" I_Pre010202="0" />
+      <l_Pre01 S_Pre0100="R" S_Pre0101="Revue 1" S_Pre0103="">
+        <l_Pre0102 I_Pre010200="3" I_Pre010201="9" I_Pre010202="0" />
       </l_Pre01>
+      <l_Pre02 S_Pre0200="R" S_Pre0201="Revue 2" S_Pre0203="">
+        <l_Pre0202 I_Pre020200="3" I_Pre020201="9" I_Pre020202="0" />
+      </l_Pre02>
+      <l_Pre03 S_Pre0300="R" S_Pre0301="Revue 3" S_Pre0303="">
+        <l_Pre0302 I_Pre030200="3" I_Pre030201="9" I_Pre030202="0" />
+      </l_Pre03>
     </l_Pre>
     <l_Nom>
-      <l_Nom00 S_Nom0000="R" S_Nom0001="Identification" S_Nom0003="">
-        <l_Nom0002 I_Nom000200="9" I_Nom000201="2" I_Nom000202="0" />
+      <l_Nom00 S_Nom0000="S" S_Nom0001="Pr&#233;sentation" S_Nom0003="">
+        <l_Nom0002 I_Nom000200="2" I_Nom000201="9" I_Nom000202="0" />
       </l_Nom00>
-      <l_Nom01 S_Nom0100="S" S_Nom0101="Identification" S_Nom0103="">
-        <l_Nom0102 I_Nom010200="9" I_Nom010201="2" I_Nom010202="0" />
+      <l_Nom01 S_Nom0100="R" S_Nom0101="Revue 1" S_Nom0103="">
+        <l_Nom0102 I_Nom010200="2" I_Nom010201="9" I_Nom010202="0" />
       </l_Nom01>
+      <l_Nom02 S_Nom0200="R" S_Nom0201="Revue 2" S_Nom0203="">
+        <l_Nom0202 I_Nom020200="2" I_Nom020201="9" I_Nom020202="0" />
+      </l_Nom02>
+      <l_Nom03 S_Nom0300="R" S_Nom0301="Revue 3" S_Nom0303="">
+        <l_Nom0302 I_Nom030200="2" I_Nom030201="9" I_Nom030202="0" />
+      </l_Nom03>
     </l_Nom>
     <l_NON>
-      <l_NON00 S_NON0000="R" S_NON0001="Conduite de projet" S_NON0003="">
-        <l_NON0002 I_NON000200="5" I_NON000201="8" I_NON000202="0" />
+      <l_NON00 S_NON0000="" S_NON0001="" S_NON0003="">
+        <l_NON0002 I_NON000200="0" I_NON000201="0" I_NON000202="0" />
       </l_NON00>
     </l_NON>
     <l_Tit>
-      <l_Tit00 S_Tit0000="R" S_Tit0001="Identification" S_Tit0003="">
-        <l_Tit0002 I_Tit000200="12" I_Tit000201="2" I_Tit000202="0" />
+      <l_Tit00 S_Tit0000="S" S_Tit0001="Pr&#233;sentation" S_Tit0003="">
+        <l_Tit0002 I_Tit000200="4" I_Tit000201="5" I_Tit000202="0" />
       </l_Tit00>
-      <l_Tit01 S_Tit0100="S" S_Tit0101="Identification" S_Tit0103="">
-        <l_Tit0102 I_Tit010200="12" I_Tit010201="2" I_Tit010202="0" />
+      <l_Tit01 S_Tit0100="R" S_Tit0101="Revue 1" S_Tit0103="">
+        <l_Tit0102 I_Tit010200="4" I_Tit010201="5" I_Tit010202="0" />
       </l_Tit01>
+      <l_Tit02 S_Tit0200="R" S_Tit0201="Revue 2" S_Tit0203="">
+        <l_Tit0202 I_Tit020200="4" I_Tit020201="5" I_Tit020202="0" />
+      </l_Tit02>
+      <l_Tit03 S_Tit0300="R" S_Tit0301="Revue 3" S_Tit0303="">
+        <l_Tit0302 I_Tit030200="4" I_Tit030201="5" I_Tit030202="0" />
+      </l_Tit03>
     </l_Tit>
     <l_Des>
-      <l_Des00 S_Des0000="R" S_Des0001="Identification" S_Des0003="">
-        <l_Des0002 I_Des000200="14" I_Des000201="1" I_Des000202="0" />
+      <l_Des00 S_Des0000="" S_Des0001="" S_Des0003="">
+        <l_Des0002 I_Des000200="0" I_Des000201="0" I_Des000202="0" />
       </l_Des00>
-      <l_Des01 S_Des0100="S" S_Des0101="Identification" S_Des0103="">
-        <l_Des0102 I_Des010200="14" I_Des010201="1" I_Des010202="0" />
+      <l_Des01 S_Des0100="" S_Des0101="" S_Des0103="">
+        <l_Des0102 I_Des010200="0" I_Des010201="0" I_Des010202="0" />
       </l_Des01>
     </l_Des>
     <l_Etab>
-      <l_Etab00 S_Etab0000="R" S_Etab0001="Identification" S_Etab0003="">
-        <l_Etab0002 I_Etab000200="7" I_Etab000201="2" I_Etab000202="0" />
+      <l_Etab00 S_Etab0000="S" S_Etab0001="Pr&#233;sentation" S_Etab0003="">
+        <l_Etab0002 I_Etab000200="4" I_Etab000201="2" I_Etab000202="0" />
       </l_Etab00>
-      <l_Etab01 S_Etab0100="S" S_Etab0101="Identification" S_Etab0103="">
-        <l_Etab0102 I_Etab010200="7" I_Etab010201="2" I_Etab010202="0" />
+      <l_Etab01 S_Etab0100="R" S_Etab0101="Revue 1" S_Etab0103="">
+        <l_Etab0102 I_Etab010200="4" I_Etab010201="2" I_Etab010202="0" />
       </l_Etab01>
+      <l_Etab02 S_Etab0200="R" S_Etab0201="Revue 2" S_Etab0203="">
+        <l_Etab0202 I_Etab020200="4" I_Etab020201="2" I_Etab020202="0" />
+      </l_Etab02>
+      <l_Etab03 S_Etab0300="R" S_Etab0301="Revue 3" S_Etab0303="">
+        <l_Etab0302 I_Etab030200="4" I_Etab030201="2" I_Etab030202="0" />
+      </l_Etab03>
     </l_Etab>
     <l_Prof>
-      <l_Prof00 S_Prof0000="R" S_Prof0001="Identification" S_Prof0003="">
-        <l_Prof0002 I_Prof000200="18" I_Prof000201="2" I_Prof000202="1" />
+      <l_Prof00 S_Prof0000="R" S_Prof0001="Revue 1" S_Prof0003="">
+        <l_Prof0002 I_Prof000200="7" I_Prof000201="8" I_Prof000202="1" />
       </l_Prof00>
+      <l_Prof01 S_Prof0100="R" S_Prof0101="Revue 2" S_Prof0103="">
+        <l_Prof0102 I_Prof010200="7" I_Prof010201="8" I_Prof010202="1" />
+      </l_Prof01>
+      <l_Prof02 S_Prof0200="R" S_Prof0201="Revue 3" S_Prof0203="">
+        <l_Prof0202 I_Prof020200="7" I_Prof020201="8" I_Prof020202="1" />
+      </l_Prof02>
     </l_Prof>
   </d_cellulesInfo_prj>
   <d_demarcheSeance>
@@ -2580,8 +2610,8 @@
     <l_TD S_TD00="C" S_TD01="G" S_TD02="D" S_TD03="E" S_TD04="P" />
   </d_effectifsSeance>
   <d_grilles_prj>
-    <l_S S_S00="Grille-pr&#233;sentation du projet-S-SI.xlsx" S_S01="I" />
-    <l_R S_R00="Grille-conduite de projet-S-SI.xlsx" S_R01="I" />
+    <l_S S_S00="STS-EE _ Pr&#233;sentation.xlsx" S_S01="I" />
+    <l_R S_R00="STS-EE _ Revues.xlsx" S_R01="I" />
   </d_grilles_prj>
   <l_listPhasesEval_prj S_listPhasesEval_prj00="Rev" S_listPhasesEval_prj01="R1" S_listPhasesEval_prj02="R2" S_listPhasesEval_prj03="R3" S_listPhasesEval_prj04="S" />
   <l_listPhases_prj S_listPhases_prj00="Ana" S_listPhases_prj01="Rea" S_listPhases_prj02="Val" S_listPhases_prj03="XXX" S_listPhases_prj04="Rev" S_listPhases_prj05="R1" S_listPhases_prj06="R2" S_listPhases_prj07="R3" S_listPhases_prj08="S" />
@@ -2589,7 +2619,7 @@
   <l_listeEffectifs S_listeEffectifs00="C" S_listeEffectifs01="G" S_listeEffectifs02="D" S_listeEffectifs03="E" S_listeEffectifs04="P" />
   <l_listeTypeActivite S_listeTypeActivite00="ED" S_listeTypeActivite01="AP" S_listeTypeActivite02="P" />
   <l_listeTypeSeance S_listeTypeSeance00="ED" S_listeTypeSeance01="AP" S_listeTypeSeance02="P" S_listeTypeSeance03="C" S_listeTypeSeance04="TD" S_listeTypeSeance05="SA" S_listeTypeSeance06="SS" S_listeTypeSeance07="E" S_listeTypeSeance08="R" S_listeTypeSeance09="S" />
-  <d_nomParties_prj S_R="Conduite" S_S="Pr&#233;sentation" />
+  <d_nomParties_prj S_R="Revues" S_S="Pr&#233;sentation" />
   <d_options />
   <l_periode_prj I_periode_prj00="8" I_periode_prj01="10" />
   <l_periodes>
