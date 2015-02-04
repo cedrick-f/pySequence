@@ -93,11 +93,13 @@ def case(etat = False):
 
 def checkbox(etat = False):
     if etat:
-        c = "<img src=\"{{MEDIA_URL}}/CheckBox_checked.png\" height=\"16\" width=\"16\" >&nbsp;"
+        c = "CheckBox_checked.png"
     else:
-        c = "<img src=\"{{MEDIA_URL}}/CheckBox_unchecked.png\" height=\"16\" width=\"16\" >&nbsp;"
-    return c
+        c = "CheckBox_unchecked.png"
+    return "<img src=\"{{MEDIA_URL}}/" + c + "\" height=\"12\" width=\"12\">&nbsp;&nbsp;"
 
+def remplaceCR(txt):
+    return txt.replace(u"\n", "<br>")
 
     
 def splitParagraph(text, style):
@@ -144,18 +146,22 @@ def genererFicheValidationHTML(nomFichierPDF, nomFichierHTML, projet):
     TY = "<br>".join([checkbox(i in projet.typologie) + t for i, t in enumerate(typo)])
 #    TY = liste(, classe = "b")
     
+    etab = projet.classe.etablissement+"<br>("+italic(projet.classe.ville)+u")"
     
     champs = {'ACA' : projet.classe.academie,
               'SES' : str(projet.annee),
-              'TIT' : projet.intitule,
-              'ETA' : projet.classe.etablissement,
-              'PAR' : projet.partenariat,
+              'TIT' : remplaceCR(projet.intitule),
+              'ETA' : etab,
+              'PAR' : remplaceCR(projet.partenariat),
               'NBE' : str(len(projet.eleves)),
               'PRX' : projet.montant,
-              'SRC' : projet.src_finance,
+              'SRC' : remplaceCR(projet.src_finance),
               'TYP' : TY,
-              'PRE' : projet.presentation,
-              'EQU' : NP,}
+              'PRE' : remplaceCR(projet.problematique),
+              'EQU' : NP,
+              'OBJ' : remplaceCR(projet.production),
+              'SYN' : remplaceCR(projet.synoptique),
+              'CCF' : remplaceCR(projet.contraintes)}
     
     for code, val in champs.items():
         sourceHtml = sourceHtml.replace(u"[["+code+u"]]", val)
@@ -167,7 +173,7 @@ def genererFicheValidationHTML(nomFichierPDF, nomFichierHTML, projet):
     # convert HTML to PDF
     pisaStatus = pisa.CreatePDF(
                                 sourceHtml,                # the HTML to convert
-                                dest=resultFile)           # file handle to recieve result
+                                dest=resultFile,show_error_as_pdf = True)           # file handle to recieve result
 
     # close output file
     resultFile.close()                 # close output file
