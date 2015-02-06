@@ -32,7 +32,7 @@ import os.path
 #from textwrap import wrap
 #import csv
 
-from reportlab.platypus import SimpleDocTemplate, Paragraph, doctemplate, KeepTogether
+from reportlab.platypus import SimpleDocTemplate, Paragraph, doctemplate#, KeepTogether
 from reportlab.platypus import Spacer, Table, TableStyle
 from reportlab.lib.styles import ParagraphStyle,getSampleStyleSheet
 from reportlab.lib.units import mm
@@ -122,6 +122,19 @@ class PisaNullHandler(logging.Handler):
         pass
 logging.getLogger("xhtml2pdf").addHandler(PisaNullHandler())
 
+
+# Pour cx_freeze !!
+#from html5lib import trie
+##print serializer
+#from xhtml2pdf import w3c
+#from xhtml2pdf.w3c import cssDOMElementInterface
+#from xhtml2pdf.w3c import css
+#print w3c.cssDOMElementInterface
+#print css
+#print cssDOMElementInterface
+
+
+#
 from xhtml2pdf import pisa
 def genererFicheValidationHTML(nomFichierPDF, nomFichierHTML, projet):
     print "genererFicheValidationHTML"

@@ -114,12 +114,12 @@ import glob
 
 if hasattr(sys, 'setdefaultencoding'):
     sys.setdefaultencoding('utf8')
-    import locale
-    loc = locale.getdefaultlocale()
-    print loc
-    if loc[1]:
-        encoding = loc[1]
-        sys.setdefaultencoding(encoding)
+#    import locale
+#    loc = locale.getdefaultlocale()
+#    print loc
+#    if loc[1]:
+#        encoding = loc[1]
+#        sys.setdefaultencoding(encoding)
 else:
     reload(sys)  # Reload does the trick!
     sys.setdefaultencoding('utf-8')
