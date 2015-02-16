@@ -1234,7 +1234,7 @@ def regrouperDic(obj, dicIndicateurs):
                     if k2 in dicIndicateurs.keys():
                         dic[k1].extend(dicIndicateurs[k2])
 #                        print "   **", v1[1][k2]
-                        typ[k1].extend([p[1] for p in v1[1][k2][1]])
+                        typ[k1].extend([p.poids for p in v1[1][k2][1]])
                     else:
                         l = len(v1[1][k2][1])
                         dic[k1].extend([False]*l)
@@ -1250,7 +1250,7 @@ def regrouperDic(obj, dicIndicateurs):
     else:
         typ = {}
         for k in dicIndicateurs.keys():
-            typ[k] = [p[1] for p in obj.GetReferentiel().getIndicateur(k)]
+            typ[k] = [p.poids for p in obj.GetReferentiel().getIndicateur(k)]
 #        print "  >>>", dicIndicateurs, typ
         return dicIndicateurs, typ
      

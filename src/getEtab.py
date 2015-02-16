@@ -49,6 +49,21 @@ def GetEtablissements():
             lst = [[e.a.string, u""] for e in page.find_all('div', attrs={'class':"annuaire-etablissement-label"})]
             return lst
         
+    def getNbrEtab(page):
+        try:
+            return page.find_all('div', attrs={'class':"annuaire-nb-results"})[0].contents[-2]
+        except IndexError:
+            return "0"
+        
+    def getTousEtabVilleAcad(page):
+        liste_etab = {}
+        for acad, num in liste_acad:
+            liste_etab[num] = [acad, [], []]
+        urlCol = urlEtab + "?college=2&lycee_name=&localisation=4&ville_name=&nbPage=20000"
+        urlLyc = urlEtab + "?lycee=3&lycee_name=&localisation=4&ville_name=&nbPage=20000"
+        
+        return liste_etab
+    
     # url = 'https://code.google.com/p/pysequence/downloads/list'
     print "GetEtablissements",
     urlEtab = 'http://www.education.gouv.fr/pid24302/annuaire-resultat-recherche.html'
@@ -66,56 +81,63 @@ def GetEtablissements():
     
     liste_etab = {}
     for acad, num in liste_acad:
-        print "  ",acad
+        print "  ",acad, num
         liste_etab[num] = [acad, [], []]
         
         
         # Collèges
 #            urlCol = urlEtab + '?'+ 'acad_select[]=' + str(num) + '&critere_gene_2=1&valid_aff=Chercher'
-        urlCol = urlEtab + '?college=2&lycee_name=&ville_name=&localisation=3&nbPage=1000&acad_select[]='+num
-        page = BeautifulSoup(urllib2.urlopen(urlCol, timeout = 5))
-#        item_nb = page.find_all('div', attrs={'class':"annuaire-nb-results"})
-        
-#        if len(item_nb) > 0:
-#            item_sur = item_nb[0].find_all('b')
-#            if len(item_sur) > 0:
-#                nb = eval(item_sur[-1].string)
-#            else:
-#                nb = eval(item_nb[0].string.split("sur")[1])
-#            print "    nb =", nb,
+#        urlCol = urlEtab + '?college=2&lycee_name=&ville_name=&localisation=3&nbPage=1000&acad_select[]='+num
+#        urlCol = urlEtab + "?college=2&lycee_name=&localisation=2&dept_select[]=01"
+#        page = BeautifulSoup(urllib2.urlopen(urlCol, timeout = 5))
+        urlCol = urlEtab + '?college=2&localisation=3&nbPage=1000&acad_select[]='+num
+        print "  ", urlCol
+        continuer = True
+        n = 0
+        while continuer:
+            page = BeautifulSoup(urllib2.urlopen(urlCol, timeout = 5))
+#            print page.find_all('a', attrs={'class':"annuaire-modif-recherche"})[0]['href']
+            if "select[]="+str(num) in page.find_all('a', attrs={'class':"annuaire-modif-recherche"})[0]['href'] \
+                or n>10:
+                continuer = False
+            n += 1
+            print "   .",
         liste_etab[num][1].extend(getEtabVille(page))
-#            print "   pages", range(nb//100),
-#            for i in range(nb//100):
-#                urlCol = urlEtab + '?college=2&lycee_name=&ville_name=&localisation=3&nbPage=100&acad_select[]='+num+'&page='+str(i+1)
-#                page = BeautifulSoup(urllib2.urlopen(urlCol, timeout = 5))
-#                liste_etab[num][1].extend(getEtabVille(page))
-        print "   ", len(liste_etab[num][1])
-
+        print "   ", len(liste_etab[num][1]),"/",
+        print getNbrEtab(page)
         
+#        tt = tt.replace('<b>', '')
+#        tt = tt.replace('</b>', '')
+#        print tt.split()[-1]
+
+#        <div class="annuaire-nb-results">
+#Résultats <b>1 à 43</b> sur <b>43</b>
+#</div>
         
         # Lycées
 #            urlLyc = urlEtab + '?'+ 'acad_select[]=' + str(num) + '&critere_gene_3=1&valid_aff=Chercher'
-        urlLyc = urlEtab + '?lycee=3&lycee_name=&ville_name=&localisation=3&nbPage=1000&acad_select[]='+num
-#        print urlLyc
-        page = BeautifulSoup(urllib2.urlopen(urlLyc, timeout = 5))
-#        item_nb = page.find_all('div', attrs={'class':"annuaire-nb-results"})
-#        if len(item_nb) > 0:
-#            item_sur = item_nb[0].find_all('b')
-#            if len(item_sur) > 0:
-#                nb = eval(item_sur[-1].string)
-#            else:
-#                nb = eval(item_nb[0].string.split("sur")[1])
-#            print "    nb =", nb,
+#        urlLyc = urlEtab + '?lycee=3&lycee_name=&ville_name=&localisation=3&nbPage=1000&acad_select[]='+num
+#        urlLyc = urlEtab + "?lycee=3&lycee_name=&localisation=2&dept_select[]=01"
+#        page = BeautifulSoup(urllib2.urlopen(urlLyc, timeout = 5))
+        urlLyc = urlEtab + '?lycee=3&localisation=3&nbPage=1000&acad_select[]='+num
+        print "  ", urlLyc
+        continuer = True
+        n = 0
+        while continuer:
+            page = BeautifulSoup(urllib2.urlopen(urlLyc, timeout = 5))
+#            print page.find_all('a', attrs={'class':"annuaire-modif-recherche"})[0]['href']
+            if "select[]="+str(num) in page.find_all('a', attrs={'class':"annuaire-modif-recherche"})[0]['href'] \
+                or n>10:
+                continuer = False
+            n += 1
+            print "   .",
         liste_etab[num][2].extend(getEtabVille(page))
-#            print "   pages", range(nb//100),
-#            for i in range(nb//100):
-#                urlLyc = urlEtab + '?lycee=3&lycee_name=&ville_name=&localisation=3&nbPage=100&acad_select[]='+num+'&page='+str(i+1)
-#                page = BeautifulSoup(urllib2.urlopen(urlLyc, timeout = 5))
-#                liste_etab[num][2].extend(getEtabVille(page))
-        print "   ", len(liste_etab[num][2])
+        print "   ", len(liste_etab[num][2]),"/",
+        print getNbrEtab(page)
+        print 
 
         
-    print liste_etab
+#    print liste_etab
     return liste_etab
         
 ######################################################################################  
@@ -127,7 +149,7 @@ def getBranche(item):
 
     def sauv(branche, val, nom = None):
         nom = nom.replace("\n", "--")
-        print nom, type(val)
+#        print nom, type(val)
         if type(val) == str or type(val) == unicode:
             branche.set("S_"+nom, val.replace("\n", "--"))
         elif type(val) == int:

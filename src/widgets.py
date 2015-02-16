@@ -86,7 +86,17 @@ class Variable:
         
     def __repr__(self):
         return self.n+" = "+str(self.v)+"("+str(self.t)+")"
-    
+
+    #########################################################################################################
+    def redefBornes(self, bornes):
+        self.bornes = bornes
+        for n in range(len(self.v)):
+            if self.v[n] > self.bornes[1]:
+                self.v[n]  = self.bornes[1]
+            elif self.v[n] < self.bornes[0]:
+                self.v[n]  = self.bornes[0]
+
+
     def Augmenter(self, coef = 1):
         if self.t == VAR_ENTIER or self.t == VAR_ENTIER_POS or not self.modeLog:
             for n in range(len(self.v)):
@@ -110,7 +120,11 @@ class Variable:
                 if self.EstValide(v):
                     self.v[n] = v
                 
-
+    #########################################################################################################
+    def setValeur(self, val, num = 0):
+        if self.EstValide(val):
+            self.v[num] = val
+        
     def ChangerSigne(self):
         for n in range(len(self.v)):
             self.v[n] = -self.v[n]
@@ -594,8 +608,15 @@ class VariableCtrl(wx.Panel):
 #        self.fct(self.etatInit) # Etat d'activation initial
 #        self.etatInit = None
         
-        
-        
+    #########################################################################################################
+    def redefBornes(self, bornes):
+        self.variable.redefBornes(bornes)
+        self.mofifierValeursSsEvt()
+
+    #########################################################################################################
+    def setValeur(self, val):
+        self.variable.setValeur(val)
+        self.mofifierValeursSsEvt()
         
     #########################################################################################################
     def OnSpinUp( self, event ):
