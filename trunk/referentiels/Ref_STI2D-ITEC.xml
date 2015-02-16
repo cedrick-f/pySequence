@@ -1,346 +1,347 @@
-<Referentiel B_CI_BO="True" B_CI_cible="False" B_objSavoirs_Math="False" B_objSavoirs_Phys="False" B_preSavoirs_Math="True" B_preSavoirs_Phys="True" B_projet="True" I_duree_prj="70" S_BO_URL="http://www.education.gouv.fr/pid25535/bulletin_officiel.html?cid_bo=82984" S_BO_dossier="STI2D" S_Code="ITEC" S_Famille="STI" S_FichierLogo="" S_abrevCI="CI" S_ficheValid_prj="" S_nomCI="Centre(s) d'Int&#233;r&#234;t" S_nomCompetences="Comp&#233;tences" S_nomSavoirs="Savoirs" S_nomSavoirs_Math="Math&#233;matiques" S_nomSavoirs_Phys="Sciences Physiques">
-  <l_CentresInterets S_CentresInterets00="Besoin et performance d'un syst&#232;me" S_CentresInterets01="Comp&#233;titivit&#233;, design et ergonomie des syst&#232;mes" S_CentresInterets02="Eco-conception des m&#233;canismes" S_CentresInterets03="Structure, mat&#233;riaux et protections d'un syst&#232;me" S_CentresInterets04="Transmission de mouvement et de puissance d'un syst&#232;me" S_CentresInterets05="Proc&#233;d&#233;s de r&#233;alisation" />
-  <l_Enseignement S_Enseignement00="STI2D-ITEC" S_Enseignement01="STI2D : Innovation Technologique et &#233;co-conception" S_Enseignement02="STI2D" />
+<Referentiel B_CI_BO="True" B_CI_cible="False" B_objSavoirs_Math="False" B_objSavoirs_Phys="False" B_preSavoirs_Math="True" B_preSavoirs_Phys="True" B_projet="True" I_duree_prj="70" S_BO_URL="http://www.education.gouv.fr/pid25535/bulletin_officiel.html?cid_bo=82984" S_BO_dossier="STI2D" S_Code="ITEC" S_Famille="STI" S_FichierLogo="" S_abrevCI="CI" S_ficheValid_prj="" S_nomCI="Centre(s) d'Int&#233;r&#234;t" S_nomCompetences="Comp&#233;tences" S_nomFonctions="Fonctions" S_nomIndicateurs="Indicateurs" S_nomSavoirs="Savoirs" S_nomSavoirs_Math="Math&#233;matiques" S_nomSavoirs_Phys="Sciences Physiques" S_nomTaches="T&#226;ches" S_surnomSavoirs="">
+  <l_CentresInterets S_00="Besoin et performance d'un syst&#232;me" S_01="Comp&#233;titivit&#233;, design et ergonomie des syst&#232;mes" S_02="Eco-conception des m&#233;canismes" S_03="Structure, mat&#233;riaux et protections d'un syst&#232;me" S_04="Transmission de mouvement et de puissance d'un syst&#232;me" S_05="Proc&#233;d&#233;s de r&#233;alisation" />
+  <l_Enseignement S_00="STI2D-ITEC" S_01="STI2D : Innovation Technologique et &#233;co-conception" S_02="STI2D" />
   <d_aColNon B_R="True" B_S="False" />
   <d_activites>
-    <l_ED S_ED00="Etude de dossier" S_ED01="Activit&#233; d'&#233;tude de dossier" />
-    <l_P S_P00="Projet" S_P01="Activit&#233; de projet" />
-    <l_AP S_AP00="Activit&#233; pratique" S_AP01="Activit&#233; pratique" />
+    <l_ED S_00="Etude de dossier" S_01="Activit&#233; d'&#233;tude de dossier" />
+    <l_P S_00="Projet" S_01="Activit&#233; de projet" />
+    <l_AP S_00="Activit&#233; pratique" S_01="Activit&#233; pratique" />
   </d_activites>
   <d_attributs_prj>
-    <l_SRC S_SRC00="" S_SRC01="" S_SRC02="" />
-    <l_PAR S_PAR00="" S_PAR01="" S_PAR02="" />
-    <l_DEC S_DEC00="D&#233;coupage du projet" S_DEC01="" S_DEC02="" />
-    <l_OBJ S_OBJ00="Production finale attendue" S_OBJ01=" " S_OBJ02="" />
-    <l_TIT S_TIT00="Intitul&#233; du projet" S_TIT01="Intitul&#233; du projet" S_TIT02="" />
-    <l_SYN S_SYN00="" S_SYN01="" S_SYN02="" />
-    <l_PB S_PB00="Probl&#233;matique - &#201;nonc&#233; g&#233;n&#233;ral du besoin" S_PB01="Indiquer :-- - description du contexte dans lequel l&#8217;objet du projet va &#234;tre int&#233;gr&#233; ;-- - fonctionnalit&#233;s de cet objet ;-- - caract&#233;ristiques fonctionnelles et techniques." S_PB02="" />
-    <l_ORI S_ORI00="Origine" S_ORI01="Partenariat, th&#233;matique, concours&#8230;" S_ORI02="" />
-    <l_CCF S_CCF00="Contraintes impos&#233;es" S_CCF01="Indiquer :-- - co&#251;t maximal ;-- - nature d&#8217;une ou des solutions techniques ou de familles de mat&#233;riels, de constituants ou de composants ;-- - environnement." S_CCF02="" />
-    <l_TYP S_TYP00="" S_TYP01="" S_TYP02="" />
-    <l_PRX S_PRX00="" S_PRX01="" S_PRX02="" />
+    <l_SRC S_00="" S_01="" S_02="" />
+    <l_PAR S_00="" S_01="" S_02="" />
+    <l_DEC S_00="D&#233;coupage du projet" S_01="" S_02="" />
+    <l_OBJ S_00="Production finale attendue" S_01=" " S_02="" />
+    <l_TIT S_00="Intitul&#233; du projet" S_01="Intitul&#233; du projet" S_02="" />
+    <l_SYN S_00="" S_01="" S_02="" />
+    <l_PB S_00="Probl&#233;matique - &#201;nonc&#233; g&#233;n&#233;ral du besoin" S_01="Indiquer :-- - description du contexte dans lequel l&#8217;objet du projet va &#234;tre int&#233;gr&#233; ;-- - fonctionnalit&#233;s de cet objet ;-- - caract&#233;ristiques fonctionnelles et techniques." S_02="" />
+    <l_ORI S_00="Origine" S_01="Partenariat, th&#233;matique, concours&#8230;" S_02="" />
+    <l_CCF S_00="Contraintes impos&#233;es" S_01="Indiquer :-- - co&#251;t maximal ;-- - nature d&#8217;une ou des solutions techniques ou de familles de mat&#233;riels, de constituants ou de composants ;-- - environnement." S_02="" />
+    <l_TYP S_00="" S_01="" S_02="" />
+    <l_PRX S_00="" S_01="" S_02="" />
   </d_attributs_prj>
   <d_cellulesInfo_prj>
     <l_Pre>
-      <l_Pre00 S_Pre0000="R" S_Pre0001="Identification projet" S_Pre0003="">
-        <l_Pre0002 I_Pre000200="12" I_Pre000201="2" I_Pre000202="3" />
-      </l_Pre00>
+      <l_00 S_00="R" S_01="Identification projet" S_03="">
+        <l_02 I_00="12" I_01="2" I_02="3" />
+      </l_00>
     </l_Pre>
     <l_Nom>
-      <l_Nom00 S_Nom0000="R" S_Nom0001="Identification projet" S_Nom0003="">
-        <l_Nom0002 I_Nom000200="11" I_Nom000201="2" I_Nom000202="3" />
-      </l_Nom00>
+      <l_00 S_00="R" S_01="Identification projet" S_03="">
+        <l_02 I_00="11" I_01="2" I_02="3" />
+      </l_00>
     </l_Nom>
     <l_NON>
-      <l_NON00 S_NON0000="R" S_NON0001="Notation Candidat " S_NON0003="">
-        <l_NON0002 I_NON000200="6" I_NON000201="4" I_NON000202="0" />
-      </l_NON00>
+      <l_00 S_00="R" S_01="Notation Candidat " S_03="">
+        <l_02 I_00="6" I_01="4" I_02="0" />
+      </l_00>
     </l_NON>
     <l_N-P>
-      <l_N-P00 S_N-P0000="S" S_N-P0001="Feuil1" S_N-P0003="Nom du candidat :--">
-        <l_N-P0002 I_N-P000200="24" I_N-P000201="11" I_N-P000202="0" />
-      </l_N-P00>
+      <l_00 S_00="S" S_01="Feuil1" S_03="Nom du candidat :--">
+        <l_02 I_00="24" I_01="11" I_02="0" />
+      </l_00>
     </l_N-P>
     <l_Tit>
-      <l_Tit00 S_Tit0000="R" S_Tit0001="Identification projet" S_Tit0003="">
-        <l_Tit0002 I_Tit000200="26" I_Tit000201="1" I_Tit000202="0" />
-      </l_Tit00>
+      <l_00 S_00="R" S_01="Identification projet" S_03="">
+        <l_02 I_00="26" I_01="1" I_02="0" />
+      </l_00>
     </l_Tit>
     <l_Des>
-      <l_Des00 S_Des0000="R" S_Des0001="Identification projet" S_Des0003="">
-        <l_Des0002 I_Des000200="26" I_Des000201="1" I_Des000202="0" />
-      </l_Des00>
+      <l_00 S_00="R" S_01="Identification projet" S_03="">
+        <l_02 I_00="26" I_01="1" I_02="0" />
+      </l_00>
     </l_Des>
     <l_Etab>
-      <l_Etab00 S_Etab0000="R" S_Etab0001="Identification projet" S_Etab0003="">
-        <l_Etab0002 I_Etab000200="6" I_Etab000201="2" I_Etab000202="0" />
-      </l_Etab00>
+      <l_00 S_00="R" S_01="Identification projet" S_03="">
+        <l_02 I_00="6" I_01="2" I_02="0" />
+      </l_00>
     </l_Etab>
     <l_Prof>
-      <l_Prof00 S_Prof0000="R" S_Prof0001="Notation Candidat " S_Prof0003="">
-        <l_Prof0002 I_Prof000200="53" I_Prof000201="1" I_Prof000202="1" />
-      </l_Prof00>
+      <l_00 S_00="R" S_01="Notation Candidat " S_03="">
+        <l_02 I_00="53" I_01="1" I_02="1" />
+      </l_00>
     </l_Prof>
   </d_cellulesInfo_prj>
   <d_demarcheSeance>
-    <l_ED S_ED00="I" S_ED01="R" />
-    <l_P S_P00="I" S_P01="R" S_P02="P" />
-    <l_AP S_AP00="I" S_AP01="R" />
+    <l_ED S_00="I" S_01="R" />
+    <l_P S_00="I" S_01="R" S_02="P" />
+    <l_AP S_00="I" S_01="R" />
   </d_demarcheSeance>
   <d_demarches>
-    <l_I S_I00="Investigation" S_I01="Investigation" />
-    <l_P S_P00="Projet" S_P01="Projet" />
-    <l_R S_R00="R&#233;s. Probl&#232;me" S_R01="R&#233;solution de probl&#232;me" />
+    <l_I S_00="Investigation" S_01="Investigation" />
+    <l_P S_00="Projet" S_01="Projet" />
+    <l_R S_00="R&#233;s. Probl&#232;me" S_01="R&#233;solution de probl&#232;me" />
   </d_demarches>
   <d_dicCompetences>
-    <l_O7 S_O700="Imaginer une solution, r&#233;pondre &#224; un besoin">
-      <d_O701>
-        <l_CO7.itec4 S_CO7.itec400="D&#233;finir, &#224; l'aide d'un modeleur num&#233;rique, les modifications d'un m&#233;canisme &#224; partir des contraintes fonctionnelles">
-          <l_CO7.itec401>
-            <l_CO7.itec40100 I_CO7.itec4010002="16" S_CO7.itec4010000="Les modifications respectent les contraintes fonctionnelles">
-              <l_CO7.itec4010001 F_CO7.itec401000101="8.333333" I_CO7.itec401000100="0" I_CO7.itec401000102="0" />
-            </l_CO7.itec40100>
-            <l_CO7.itec40101 I_CO7.itec4010102="0" S_CO7.itec4010100="La proc&#233;dure de modification est rationnelle">
-              <l_CO7.itec4010101 F_CO7.itec401010101="8.333333" I_CO7.itec401010100="0" I_CO7.itec401010102="0" />
-            </l_CO7.itec40101>
-          </l_CO7.itec401>
+    <l_O7 S_00="Imaginer une solution, r&#233;pondre &#224; un besoin">
+      <d_01>
+        <l_CO7.itec4 S_00="D&#233;finir, &#224; l'aide d'un modeleur num&#233;rique, les modifications d'un m&#233;canisme &#224; partir des contraintes fonctionnelles">
+          <l_01>
+            <Indicateur_00 I_ligne="16" S_intitule="Les modifications respectent les contraintes fonctionnelles">
+              <l_poids F_01="8.333333" I_00="0" I_02="0" />
+            </Indicateur_00>
+            <Indicateur_01 I_ligne="0" S_intitule="La proc&#233;dure de modification est rationnelle">
+              <l_poids F_01="8.333333" I_00="0" I_02="0" />
+            </Indicateur_01>
+          </l_01>
         </l_CO7.itec4>
-        <l_CO7.itec3 S_CO7.itec300="D&#233;finir, &#224; l'aide d'un modeleur num&#233;rique, les formes et dimensions d'une pi&#232;ce d'un m&#233;canisme &#224; partir des contraintes fonctionnelles, de son principe de r&#233;alisation et de son mat&#233;riau">
-          <l_CO7.itec301>
-            <l_CO7.itec30100 I_CO7.itec3010002="13" S_CO7.itec3010000="La d&#233;marche de cr&#233;ation est rationnelle">
-              <l_CO7.itec3010001 F_CO7.itec301000101="8.333333" I_CO7.itec301000100="0" I_CO7.itec301000102="0" />
-            </l_CO7.itec30100>
-            <l_CO7.itec30101 I_CO7.itec3010102="14" S_CO7.itec3010100="Les contraintes fonctionnelles sont traduites de mani&#232;re compl&#232;te">
-              <l_CO7.itec3010101 F_CO7.itec301010101="8.333333" I_CO7.itec301010100="0" I_CO7.itec301010102="0" />
-            </l_CO7.itec30101>
-            <l_CO7.itec30102 I_CO7.itec3010202="15" S_CO7.itec3010200="Les formes et dimensions sont compatibles avec le principe de r&#233;alisation, le mat&#233;riau choisi et les contraintes subies">
-              <l_CO7.itec3010201 F_CO7.itec301020101="8.333333" I_CO7.itec301020100="0" I_CO7.itec301020102="0" />
-            </l_CO7.itec30102>
-          </l_CO7.itec301>
+        <l_CO7.itec3 S_00="D&#233;finir, &#224; l'aide d'un modeleur num&#233;rique, les formes et dimensions d'une pi&#232;ce d'un m&#233;canisme &#224; partir des contraintes fonctionnelles, de son principe de r&#233;alisation et de son mat&#233;riau">
+          <l_01>
+            <Indicateur_00 I_ligne="13" S_intitule="La d&#233;marche de cr&#233;ation est rationnelle">
+              <l_poids F_01="8.333333" I_00="0" I_02="0" />
+            </Indicateur_00>
+            <Indicateur_01 I_ligne="14" S_intitule="Les contraintes fonctionnelles sont traduites de mani&#232;re compl&#232;te">
+              <l_poids F_01="8.333333" I_00="0" I_02="0" />
+            </Indicateur_01>
+            <Indicateur_02 I_ligne="15" S_intitule="Les formes et dimensions sont compatibles avec le principe de r&#233;alisation, le mat&#233;riau choisi et les contraintes subies">
+              <l_poids F_01="8.333333" I_00="0" I_02="0" />
+            </Indicateur_02>
+          </l_01>
         </l_CO7.itec3>
-        <l_CO7.itec2 S_CO7.itec200="Proposer des solutions &#224; un probl&#232;me technique identifi&#233; en participant &#224; des d&#233;marches de cr&#233;ativit&#233;, choisir et justifier la solution retenue">
-          <l_CO7.itec201>
-            <l_CO7.itec20100 I_CO7.itec2010002="9" S_CO7.itec2010000="Les grandes &#233;tapes d'une d&#233;marche de cr&#233;ativit&#233; sont franchies de mani&#232;re coh&#233;rente">
-              <l_CO7.itec2010001 F_CO7.itec201000101="8.333333" I_CO7.itec201000100="0" I_CO7.itec201000102="0" />
-            </l_CO7.itec20100>
-            <l_CO7.itec20101 I_CO7.itec2010102="10" S_CO7.itec2010100="Les moyens conventionnels de repr&#233;sentation des solutions sont correctement utilis&#233;s (croquis, sch&#233;mas, &#8230;)">
-              <l_CO7.itec2010101 F_CO7.itec201010101="8.333333" I_CO7.itec201010100="0" I_CO7.itec201010102="0" />
-            </l_CO7.itec20101>
-            <l_CO7.itec20102 I_CO7.itec2010202="11" S_CO7.itec2010200="Les contraintes de normes, propri&#233;t&#233; industrielle, brevets sont identifi&#233;es">
-              <l_CO7.itec2010201 F_CO7.itec201020101="8.333333" I_CO7.itec201020100="0" I_CO7.itec201020102="0" />
-            </l_CO7.itec20102>
-            <l_CO7.itec20103 I_CO7.itec2010302="12" S_CO7.itec2010300="Les choix sont explicit&#233;s et la solution justifi&#233;e en regard des param&#232;tres choisis">
-              <l_CO7.itec2010301 F_CO7.itec201030101="8.333333" I_CO7.itec201030100="0" I_CO7.itec201030102="0" />
-            </l_CO7.itec20103>
-          </l_CO7.itec201>
+        <l_CO7.itec2 S_00="Proposer des solutions &#224; un probl&#232;me technique identifi&#233; en participant &#224; des d&#233;marches de cr&#233;ativit&#233;, choisir et justifier la solution retenue">
+          <l_01>
+            <Indicateur_00 I_ligne="9" S_intitule="Les grandes &#233;tapes d'une d&#233;marche de cr&#233;ativit&#233; sont franchies de mani&#232;re coh&#233;rente">
+              <l_poids F_01="8.333333" I_00="0" I_02="0" />
+            </Indicateur_00>
+            <Indicateur_01 I_ligne="10" S_intitule="Les moyens conventionnels de repr&#233;sentation des solutions sont correctement utilis&#233;s (croquis, sch&#233;mas, &#8230;)">
+              <l_poids F_01="8.333333" I_00="0" I_02="0" />
+            </Indicateur_01>
+            <Indicateur_02 I_ligne="11" S_intitule="Les contraintes de normes, propri&#233;t&#233; industrielle, brevets sont identifi&#233;es">
+              <l_poids F_01="8.333333" I_00="0" I_02="0" />
+            </Indicateur_02>
+            <Indicateur_03 I_ligne="12" S_intitule="Les choix sont explicit&#233;s et la solution justifi&#233;e en regard des param&#232;tres choisis">
+              <l_poids F_01="8.333333" I_00="0" I_02="0" />
+            </Indicateur_03>
+          </l_01>
         </l_CO7.itec2>
-        <l_CO7.itec1 S_CO7.itec100="Identifier et justifier un probl&#232;me technique &#224; partir de l'analyse globale d'un syst&#232;me (approche Mati&#232;re - Energie - Information)">
-          <l_CO7.itec101>
-            <l_CO7.itec10100 I_CO7.itec1010002="6" S_CO7.itec1010000="Le besoin relatif au projet et les fonctions sont identifi&#233;s et justifi&#233;s">
-              <l_CO7.itec1010001 F_CO7.itec101000101="8.333333" I_CO7.itec101000100="0" I_CO7.itec101000102="0" />
-            </l_CO7.itec10100>
-            <l_CO7.itec10101 I_CO7.itec1010102="7" S_CO7.itec1010100="Les crit&#232;res du cahier des charges sont d&#233;cod&#233;s et les principaux points de vigilance relatifs au projet sont identifi&#233;s">
-              <l_CO7.itec1010101 F_CO7.itec101010101="8.333333" I_CO7.itec101010100="0" I_CO7.itec101010102="0" />
-            </l_CO7.itec10101>
-            <l_CO7.itec10102 I_CO7.itec1010202="8" S_CO7.itec1010200="La d&#233;marche d'analyse du probl&#232;me est pertinente">
-              <l_CO7.itec1010201 F_CO7.itec101020101="8.333333" I_CO7.itec101020100="0" I_CO7.itec101020102="0" />
-            </l_CO7.itec10102>
-          </l_CO7.itec101>
+        <l_CO7.itec1 S_00="Identifier et justifier un probl&#232;me technique &#224; partir de l'analyse globale d'un syst&#232;me (approche Mati&#232;re - Energie - Information)">
+          <l_01>
+            <Indicateur_00 I_ligne="6" S_intitule="Le besoin relatif au projet et les fonctions sont identifi&#233;s et justifi&#233;s">
+              <l_poids F_01="8.333333" I_00="0" I_02="0" />
+            </Indicateur_00>
+            <Indicateur_01 I_ligne="7" S_intitule="Les crit&#232;res du cahier des charges sont d&#233;cod&#233;s et les principaux points de vigilance relatifs au projet sont identifi&#233;s">
+              <l_poids F_01="8.333333" I_00="0" I_02="0" />
+            </Indicateur_01>
+            <Indicateur_02 I_ligne="8" S_intitule="La d&#233;marche d'analyse du probl&#232;me est pertinente">
+              <l_poids F_01="8.333333" I_00="0" I_02="0" />
+            </Indicateur_02>
+          </l_01>
         </l_CO7.itec1>
-      </d_O701>
-      <l_O702 I_O70200="0" I_O70201="40" I_O70202="0" />
+      </d_01>
+      <l_02 I_00="0" I_01="40" I_02="0" />
     </l_O7>
-    <l_O9 S_O900="G&#233;rer la vie du produit">
-      <d_O901>
-        <l_CO9.itec1 S_CO9.itec100="Exp&#233;rimenter des proc&#233;d&#233;s pour caract&#233;riser les param&#232;tres de transformation de la mati&#232;re et leurs cons&#233;quences sur la d&#233;finition et l'obtention de pi&#232;ces">
-          <l_CO9.itec101>
-            <l_CO9.itec10100 I_CO9.itec1010002="31" S_CO9.itec1010000="Les param&#232;tres significatifs &#224; observer sont identifi&#233;s">
-              <l_CO9.itec1010001 F_CO9.itec101000101="11.111111" I_CO9.itec101000100="0" I_CO9.itec101000102="0" />
-            </l_CO9.itec10100>
-            <l_CO9.itec10101 I_CO9.itec1010102="32" S_CO9.itec1010100="Des cons&#233;quences pertinentes sont identifi&#233;es">
-              <l_CO9.itec1010101 F_CO9.itec101010101="11.111111" I_CO9.itec101010100="0" I_CO9.itec101010102="0" />
-            </l_CO9.itec10101>
-          </l_CO9.itec101>
+    <l_O9 S_00="G&#233;rer la vie du produit">
+      <d_01>
+        <l_CO9.itec1 S_00="Exp&#233;rimenter des proc&#233;d&#233;s pour caract&#233;riser les param&#232;tres de transformation de la mati&#232;re et leurs cons&#233;quences sur la d&#233;finition et l'obtention de pi&#232;ces">
+          <l_01>
+            <Indicateur_00 I_ligne="31" S_intitule="Les param&#232;tres significatifs &#224; observer sont identifi&#233;s">
+              <l_poids F_01="11.111111" I_00="0" I_02="0" />
+            </Indicateur_00>
+            <Indicateur_01 I_ligne="32" S_intitule="Des cons&#233;quences pertinentes sont identifi&#233;es">
+              <l_poids F_01="11.111111" I_00="0" I_02="0" />
+            </Indicateur_01>
+          </l_01>
         </l_CO9.itec1>
-        <l_CO9.itec3 S_CO9.itec300="Int&#233;grer les pi&#232;ces prototypes dans le syst&#232;me &#224; modifier pour valider son comportement et ses performances">
-          <l_CO9.itec301>
-            <l_CO9.itec30100 I_CO9.itec3010002="36" S_CO9.itec3010000="Les pi&#232;ces prototypes s'ins&#232;rent dans le m&#233;canisme">
-              <l_CO9.itec3010001 F_CO9.itec301000101="11.111111" I_CO9.itec301000100="0" I_CO9.itec301000102="0" />
-            </l_CO9.itec30100>
-            <l_CO9.itec30101 I_CO9.itec3010102="37" S_CO9.itec3010100="Une proc&#233;dure d'essai pertinente est d&#233;finie">
-              <l_CO9.itec3010101 F_CO9.itec301010101="11.111111" I_CO9.itec301010100="0" I_CO9.itec301010102="0" />
-            </l_CO9.itec30101>
-            <l_CO9.itec30102 I_CO9.itec3010202="38" S_CO9.itec3010200="L'essai est m&#233;thodiquement r&#233;alis&#233; et le comportement du m&#233;canisme relev&#233;">
-              <l_CO9.itec3010201 F_CO9.itec301020101="11.111111" I_CO9.itec301020100="0" I_CO9.itec301020102="0" />
-            </l_CO9.itec30102>
-            <l_CO9.itec30103 I_CO9.itec3010302="39" S_CO9.itec3010300="L'interpr&#233;tation des r&#233;sultats est coh&#233;rente">
-              <l_CO9.itec3010301 F_CO9.itec301030101="11.111111" I_CO9.itec301030100="0" I_CO9.itec301030102="0" />
-            </l_CO9.itec30103>
-          </l_CO9.itec301>
+        <l_CO9.itec3 S_00="Int&#233;grer les pi&#232;ces prototypes dans le syst&#232;me &#224; modifier pour valider son comportement et ses performances">
+          <l_01>
+            <Indicateur_00 I_ligne="36" S_intitule="Les pi&#232;ces prototypes s'ins&#232;rent dans le m&#233;canisme">
+              <l_poids F_01="11.111111" I_00="0" I_02="0" />
+            </Indicateur_00>
+            <Indicateur_01 I_ligne="37" S_intitule="Une proc&#233;dure d'essai pertinente est d&#233;finie">
+              <l_poids F_01="11.111111" I_00="0" I_02="0" />
+            </Indicateur_01>
+            <Indicateur_02 I_ligne="38" S_intitule="L'essai est m&#233;thodiquement r&#233;alis&#233; et le comportement du m&#233;canisme relev&#233;">
+              <l_poids F_01="11.111111" I_00="0" I_02="0" />
+            </Indicateur_02>
+            <Indicateur_03 I_ligne="39" S_intitule="L'interpr&#233;tation des r&#233;sultats est coh&#233;rente">
+              <l_poids F_01="11.111111" I_00="0" I_02="0" />
+            </Indicateur_03>
+          </l_01>
         </l_CO9.itec3>
-        <l_CO9.itec2 S_CO9.itec200="R&#233;aliser et valider un prototype obtenu par rapport &#224; tout ou partie du cahier des charges initial">
-          <l_CO9.itec201>
-            <l_CO9.itec20100 I_CO9.itec2010002="33" S_CO9.itec2010000="Le moyen de prototypage retenu d'une pi&#232;ce est adapt&#233; &#224; la partie du CDC &#224; respecter ">
-              <l_CO9.itec2010001 F_CO9.itec201000101="11.111111" I_CO9.itec201000100="0" I_CO9.itec201000102="0" />
-            </l_CO9.itec20100>
-            <l_CO9.itec20101 I_CO9.itec2010102="34" S_CO9.itec2010100="Les caract&#233;ristiques &#224; valider sont identifi&#233;es">
-              <l_CO9.itec2010101 F_CO9.itec201010101="11.111111" I_CO9.itec201010100="0" I_CO9.itec201010102="0" />
-            </l_CO9.itec20101>
-            <l_CO9.itec20102 I_CO9.itec2010202="35" S_CO9.itec2010200="La corr&#233;lation des caract&#233;ristiques permet de valider le prototype par rapport au cahier des charges">
-              <l_CO9.itec2010201 F_CO9.itec201020101="11.111111" I_CO9.itec201020100="0" I_CO9.itec201020102="0" />
-            </l_CO9.itec20102>
-          </l_CO9.itec201>
+        <l_CO9.itec2 S_00="R&#233;aliser et valider un prototype obtenu par rapport &#224; tout ou partie du cahier des charges initial">
+          <l_01>
+            <Indicateur_00 I_ligne="33" S_intitule="Le moyen de prototypage retenu d'une pi&#232;ce est adapt&#233; &#224; la partie du CDC &#224; respecter ">
+              <l_poids F_01="11.111111" I_00="0" I_02="0" />
+            </Indicateur_00>
+            <Indicateur_01 I_ligne="34" S_intitule="Les caract&#233;ristiques &#224; valider sont identifi&#233;es">
+              <l_poids F_01="11.111111" I_00="0" I_02="0" />
+            </Indicateur_01>
+            <Indicateur_02 I_ligne="35" S_intitule="La corr&#233;lation des caract&#233;ristiques permet de valider le prototype par rapport au cahier des charges">
+              <l_poids F_01="11.111111" I_00="0" I_02="0" />
+            </Indicateur_02>
+          </l_01>
         </l_CO9.itec2>
-      </d_O901>
-      <l_O902 I_O90200="0" I_O90201="20" I_O90202="0" />
+      </d_01>
+      <l_02 I_00="0" I_01="20" I_02="0" />
     </l_O9>
-    <l_O8 S_O800="Valider des solutions techniques">
-      <d_O801>
-        <l_CO8.itec1 S_CO8.itec100="Param&#233;trer un logiciel de simulation m&#233;canique pour obtenir les caract&#233;ristiques d'une loi d'entr&#233;e/sortie d'un m&#233;canisme simple">
-          <l_CO8.itec101>
-            <l_CO8.itec10100 I_CO8.itec1010002="18" S_CO8.itec1010000="Les variables et les param&#232;tres du mod&#232;le sont identifi&#233;s">
-              <l_CO8.itec1010001 F_CO8.itec101000101="8.333333" I_CO8.itec101000100="0" I_CO8.itec101000102="0" />
-            </l_CO8.itec10100>
-            <l_CO8.itec10101 I_CO8.itec1010102="19" S_CO8.itec1010100="Leurs influences respectives sont identifi&#233;es">
-              <l_CO8.itec1010101 F_CO8.itec101010101="8.333333" I_CO8.itec101010100="0" I_CO8.itec101010102="0" />
-            </l_CO8.itec10101>
-          </l_CO8.itec101>
+    <l_O8 S_00="Valider des solutions techniques">
+      <d_01>
+        <l_CO8.itec1 S_00="Param&#233;trer un logiciel de simulation m&#233;canique pour obtenir les caract&#233;ristiques d'une loi d'entr&#233;e/sortie d'un m&#233;canisme simple">
+          <l_01>
+            <Indicateur_00 I_ligne="18" S_intitule="Les variables et les param&#232;tres du mod&#232;le sont identifi&#233;s">
+              <l_poids F_01="8.333333" I_00="0" I_02="0" />
+            </Indicateur_00>
+            <Indicateur_01 I_ligne="19" S_intitule="Leurs influences respectives sont identifi&#233;es">
+              <l_poids F_01="8.333333" I_00="0" I_02="0" />
+            </Indicateur_01>
+          </l_01>
         </l_CO8.itec1>
-        <l_CO8.itec2 S_CO8.itec200="Interpr&#233;ter les r&#233;sultats d'une simulation m&#233;canique pour valider une solution ou modifier une pi&#232;ce ou un m&#233;canisme">
-          <l_CO8.itec201>
-            <l_CO8.itec20100 I_CO8.itec2010002="20" S_CO8.itec2010000="Les sc&#233;narios de simulation sont identifi&#233;s">
-              <l_CO8.itec2010001 F_CO8.itec201000101="8.333333" I_CO8.itec201000100="0" I_CO8.itec201000102="0" />
-            </l_CO8.itec20100>
-            <l_CO8.itec20101 I_CO8.itec2010102="21" S_CO8.itec2010100="Les param&#232;tres influents sont identifi&#233;s">
-              <l_CO8.itec2010101 F_CO8.itec201010101="8.333333" I_CO8.itec201010100="0" I_CO8.itec201010102="0" />
-            </l_CO8.itec20101>
-            <l_CO8.itec20102 I_CO8.itec2010202="22" S_CO8.itec2010200="L'interpr&#233;tation des r&#233;sultats de la simulation est pertinente">
-              <l_CO8.itec2010201 F_CO8.itec201020101="8.333333" I_CO8.itec201020100="0" I_CO8.itec201020102="0" />
-            </l_CO8.itec20102>
-            <l_CO8.itec20103 I_CO8.itec2010302="23" S_CO8.itec2010300="Les modifications propos&#233;es sont coh&#233;rentes">
-              <l_CO8.itec2010301 F_CO8.itec201030101="8.333333" I_CO8.itec201030100="0" I_CO8.itec201030102="0" />
-            </l_CO8.itec20103>
-          </l_CO8.itec201>
+        <l_CO8.itec2 S_00="Interpr&#233;ter les r&#233;sultats d'une simulation m&#233;canique pour valider une solution ou modifier une pi&#232;ce ou un m&#233;canisme">
+          <l_01>
+            <Indicateur_00 I_ligne="20" S_intitule="Les sc&#233;narios de simulation sont identifi&#233;s">
+              <l_poids F_01="8.333333" I_00="0" I_02="0" />
+            </Indicateur_00>
+            <Indicateur_01 I_ligne="21" S_intitule="Les param&#232;tres influents sont identifi&#233;s">
+              <l_poids F_01="8.333333" I_00="0" I_02="0" />
+            </Indicateur_01>
+            <Indicateur_02 I_ligne="22" S_intitule="L'interpr&#233;tation des r&#233;sultats de la simulation est pertinente">
+              <l_poids F_01="8.333333" I_00="0" I_02="0" />
+            </Indicateur_02>
+            <Indicateur_03 I_ligne="23" S_intitule="Les modifications propos&#233;es sont coh&#233;rentes">
+              <l_poids F_01="8.333333" I_00="0" I_02="0" />
+            </Indicateur_03>
+          </l_01>
         </l_CO8.itec2>
-        <l_CO8.itec3 S_CO8.itec300="Mettre en oeuvre un protocole d'essais et de mesures, interpr&#233;ter les r&#233;sultats">
-          <l_CO8.itec301>
-            <l_CO8.itec30100 I_CO8.itec3010002="24" S_CO8.itec3010000="le protocole d'essai est justifi&#233; et adapt&#233; &#224; l'objectif">
-              <l_CO8.itec3010001 F_CO8.itec301000101="8.333333" I_CO8.itec301000100="0" I_CO8.itec301000102="0" />
-            </l_CO8.itec30100>
-            <l_CO8.itec30101 I_CO8.itec3010102="25" S_CO8.itec3010100="Les observations et mesures sont m&#233;thodiquement men&#233;s et les incertitudes de mesures estim&#233;es">
-              <l_CO8.itec3010101 F_CO8.itec301010101="8.333333" I_CO8.itec301010100="0" I_CO8.itec301010102="0" />
-            </l_CO8.itec30101>
-            <l_CO8.itec30102 I_CO8.itec3010202="26" S_CO8.itec3010200="L'interpr&#233;tation des r&#233;sultats est coh&#233;rente et pertinente">
-              <l_CO8.itec3010201 F_CO8.itec301020101="8.333333" I_CO8.itec301020100="0" I_CO8.itec301020102="0" />
-            </l_CO8.itec30102>
-          </l_CO8.itec301>
+        <l_CO8.itec3 S_00="Mettre en oeuvre un protocole d'essais et de mesures, interpr&#233;ter les r&#233;sultats">
+          <l_01>
+            <Indicateur_00 I_ligne="24" S_intitule="le protocole d'essai est justifi&#233; et adapt&#233; &#224; l'objectif">
+              <l_poids F_01="8.333333" I_00="0" I_02="0" />
+            </Indicateur_00>
+            <Indicateur_01 I_ligne="25" S_intitule="Les observations et mesures sont m&#233;thodiquement men&#233;s et les incertitudes de mesures estim&#233;es">
+              <l_poids F_01="8.333333" I_00="0" I_02="0" />
+            </Indicateur_01>
+            <Indicateur_02 I_ligne="26" S_intitule="L'interpr&#233;tation des r&#233;sultats est coh&#233;rente et pertinente">
+              <l_poids F_01="8.333333" I_00="0" I_02="0" />
+            </Indicateur_02>
+          </l_01>
         </l_CO8.itec3>
-        <l_CO8.itec4 S_CO8.itec400="Comparer et interpr&#233;ter le r&#233;sultat d'une simulation d'un comportement m&#233;canique avec un comportement r&#233;el">
-          <l_CO8.itec401>
-            <l_CO8.itec40100 I_CO8.itec4010002="27" S_CO8.itec4010000="Les r&#233;sultats de la simulation et les mesures sont corr&#233;l&#233;s">
-              <l_CO8.itec4010001 F_CO8.itec401000101="8.333333" I_CO8.itec401000100="0" I_CO8.itec401000102="0" />
-            </l_CO8.itec40100>
-            <l_CO8.itec40101 I_CO8.itec4010102="28" S_CO8.itec4010100="L'analyse des &#233;carts est m&#233;thodique">
-              <l_CO8.itec4010101 F_CO8.itec401010101="8.333333" I_CO8.itec401010100="0" I_CO8.itec401010102="0" />
-            </l_CO8.itec40101>
-            <l_CO8.itec40102 I_CO8.itec4010202="29" S_CO8.itec4010200="L'interpr&#233;tation des r&#233;sultats est coh&#233;rente">
-              <l_CO8.itec4010201 F_CO8.itec401020101="8.333333" I_CO8.itec401020100="0" I_CO8.itec401020102="0" />
-            </l_CO8.itec40102>
-          </l_CO8.itec401>
+        <l_CO8.itec4 S_00="Comparer et interpr&#233;ter le r&#233;sultat d'une simulation d'un comportement m&#233;canique avec un comportement r&#233;el">
+          <l_01>
+            <Indicateur_00 I_ligne="27" S_intitule="Les r&#233;sultats de la simulation et les mesures sont corr&#233;l&#233;s">
+              <l_poids F_01="8.333333" I_00="0" I_02="0" />
+            </Indicateur_00>
+            <Indicateur_01 I_ligne="28" S_intitule="L'analyse des &#233;carts est m&#233;thodique">
+              <l_poids F_01="8.333333" I_00="0" I_02="0" />
+            </Indicateur_01>
+            <Indicateur_02 I_ligne="29" S_intitule="L'interpr&#233;tation des r&#233;sultats est coh&#233;rente">
+              <l_poids F_01="8.333333" I_00="0" I_02="0" />
+            </Indicateur_02>
+          </l_01>
         </l_CO8.itec4>
-      </d_O801>
-      <l_O802 I_O80200="0" I_O80201="40" I_O80202="0" />
+      </d_01>
+      <l_02 I_00="0" I_01="40" I_02="0" />
     </l_O8>
   </d_dicCompetences>
+  <d_dicFonctions />
   <d_dicSavoirs>
-    <l_1 S_100="Projet technologique">
-      <d_101>
-        <l_1.1 S_1.100="La d&#233;marche de projet">
-          <d_1.101>
-            <l_1.1.1 S_1.1.100="Les projets industriels">
-              <l_1.1.101 S_1.1.10100="Typologie des entreprises industrielles et des projets techniques associ&#233;s (projets locaux, transversaux, \&quot;joint venture\&quot;)" S_1.1.10101="Phases d'un projet industriel (marketing, pr&#233; conception, pr&#233; industrialisation et conception d&#233;taill&#233;, industrialisation, maintenance et fin de vie)" S_1.1.10102="Principes d'organisation et planification d'un projet (d&#233;veloppement s&#233;quentiel, chemin critique, d&#233;coupage du projet en fonctions &#233;l&#233;mentaires ou en phases) Gestion, suivi et finalisation d'un projet (co&#251;t, budget, bilan d'exp&#233;rience)" />
+    <l_1 S_00="Projet technologique">
+      <d_01>
+        <l_1.1 S_00="La d&#233;marche de projet">
+          <d_01>
+            <l_1.1.1 S_00="Les projets industriels">
+              <l_01 S_00="Typologie des entreprises industrielles et des projets techniques associ&#233;s (projets locaux, transversaux, \&quot;joint venture\&quot;)" S_01="Phases d'un projet industriel (marketing, pr&#233; conception, pr&#233; industrialisation et conception d&#233;taill&#233;, industrialisation, maintenance et fin de vie)" S_02="Principes d'organisation et planification d'un projet (d&#233;veloppement s&#233;quentiel, chemin critique, d&#233;coupage du projet en fonctions &#233;l&#233;mentaires ou en phases) Gestion, suivi et finalisation d'un projet (co&#251;t, budget, bilan d'exp&#233;rience)" />
             </l_1.1.1>
-            <l_1.1.2 S_1.1.200="Les projets p&#233;dagogiques et technologiques">
-              <l_1.1.201 S_1.1.20100="Etapes et planification d'un projet technologique (revues de projets, travail collaboratif en &#233;quipe projet : ENT, base de donn&#233;es, formats d'&#233;change, carte mentale, flux op&#233;rationnels)" S_1.1.20101="Animation d'une revue de projet ou management d'une &#233;quipe projet" S_1.1.20102="Evaluation de la prise de risque dans un projet par le choix des solutions technologiques (innovations technologiques, notion de co&#251;t global, veille technologique)" />
+            <l_1.1.2 S_00="Les projets p&#233;dagogiques et technologiques">
+              <l_01 S_00="Etapes et planification d'un projet technologique (revues de projets, travail collaboratif en &#233;quipe projet : ENT, base de donn&#233;es, formats d'&#233;change, carte mentale, flux op&#233;rationnels)" S_01="Animation d'une revue de projet ou management d'une &#233;quipe projet" S_02="Evaluation de la prise de risque dans un projet par le choix des solutions technologiques (innovations technologiques, notion de co&#251;t global, veille technologique)" />
             </l_1.1.2>
-          </d_1.101>
+          </d_01>
         </l_1.1>
-        <l_1.2 S_1.200="Cr&#233;ativit&#233; et innovation technologique">
-          <l_1.201 S_1.20100="M&#233;thodes de cr&#233;ativit&#233; rationnelles et non rationnelles (lois d'&#233;volutions et principes d'innovation, contradictions, relations entre solutions techniques et principes scientifiques/technologiques associ&#233;es, m&#233;thodes de brainstorming)" S_1.20101="Contraintes de r&#232;glementation, normes, propri&#233;t&#233; industrielle et brevets" S_1.20102="Dimension Desing d'un produit, impact d'une approche Design sur les fonctions, la structure et les solutions techniques" S_1.20103="Int&#233;gration des fonctions et optimisation du fonctionnement : approche pluritechnologique et transferts de technologie," />
+        <l_1.2 S_00="Cr&#233;ativit&#233; et innovation technologique">
+          <l_01 S_00="M&#233;thodes de cr&#233;ativit&#233; rationnelles et non rationnelles (lois d'&#233;volutions et principes d'innovation, contradictions, relations entre solutions techniques et principes scientifiques/technologiques associ&#233;es, m&#233;thodes de brainstorming)" S_01="Contraintes de r&#232;glementation, normes, propri&#233;t&#233; industrielle et brevets" S_02="Dimension Desing d'un produit, impact d'une approche Design sur les fonctions, la structure et les solutions techniques" S_03="Int&#233;gration des fonctions et optimisation du fonctionnement : approche pluritechnologique et transferts de technologie," />
         </l_1.2>
-        <l_1.3 S_1.300="Description et repr&#233;sentation">
-          <l_1.301 S_1.30100="Analyse fonctionnelle (selon les normes en vigueur : cahier des charges fonctionnel, indices de flexibilit&#233;)" S_1.30101="Repr&#233;sentation d'une id&#233;e, d'une solution : croquis, sch&#233;mas de principe &#224; main lev&#233;e" S_1.30102="Sch&#233;mas cin&#233;matique (minimal ou non) et structurel" />
+        <l_1.3 S_00="Description et repr&#233;sentation">
+          <l_01 S_00="Analyse fonctionnelle (selon les normes en vigueur : cahier des charges fonctionnel, indices de flexibilit&#233;)" S_01="Repr&#233;sentation d'une id&#233;e, d'une solution : croquis, sch&#233;mas de principe &#224; main lev&#233;e" S_02="Sch&#233;mas cin&#233;matique (minimal ou non) et structurel" />
         </l_1.3>
-      </d_101>
+      </d_01>
     </l_1>
-    <l_3 S_300="Prototypage de pi&#232;ces">
-      <d_301>
-        <l_3.2 S_3.200="Essais, mesures et validation">
-          <l_3.201 S_3.20100="Conformit&#233; dimensionnelle et g&#233;om&#233;trique des pi&#232;ces en relation avec les contraintes fonctionnelles de la maquette num&#233;rique" S_3.20101="Essais m&#233;caniques sur les mat&#233;riaux (traction, compression, flexion simple, duret&#233;)" S_3.20102="Int&#233;gration d'une ou plusieurs pi&#232;ces dans un syst&#232;me (graphe de montage, assemblages, r&#233;glages, essais)" S_3.20103="Mesure et validation de performances : essais de caract&#233;risation sur une pi&#232;ce ou sur tout ou partie d'un syst&#232;me (efforts, d&#233;formation, mat&#233;riau, dimensions, comportements statique, cin&#233;matique, &#233;nerg&#233;tique)" S_3.20104="                  " />
+    <l_3 S_00="Prototypage de pi&#232;ces">
+      <d_01>
+        <l_3.2 S_00="Essais, mesures et validation">
+          <l_01 S_00="Conformit&#233; dimensionnelle et g&#233;om&#233;trique des pi&#232;ces en relation avec les contraintes fonctionnelles de la maquette num&#233;rique" S_01="Essais m&#233;caniques sur les mat&#233;riaux (traction, compression, flexion simple, duret&#233;)" S_02="Int&#233;gration d'une ou plusieurs pi&#232;ces dans un syst&#232;me (graphe de montage, assemblages, r&#233;glages, essais)" S_03="Mesure et validation de performances : essais de caract&#233;risation sur une pi&#232;ce ou sur tout ou partie d'un syst&#232;me (efforts, d&#233;formation, mat&#233;riau, dimensions, comportements statique, cin&#233;matique, &#233;nerg&#233;tique)" S_04="                  " />
         </l_3.2>
-        <l_3.1 S_3.100="Proc&#233;d&#233;s de transformation de la mati&#232;re">
-          <l_3.101 S_3.10100="Principes de transformation de la mati&#232;re (ajout, enl&#232;vement, transformation et d&#233;formation de la mati&#232;re)\nParam&#232;tres li&#233;s aux proc&#233;d&#233;s\nLimitations, contraintes li&#233;es :\n- aux mat&#233;riaux\n- aux possibilit&#233;s des proc&#233;d&#233;s\n- aux co&#251;ts\n- &#224; l'environnement" S_3.10101="Exp&#233;rimentation de proc&#233;d&#233;s, protocole de mise en &#339;uvre, r&#233;alisation de pi&#232;ces prototypes" S_3.10102="Prototypage rapide : simulation et pr&#233;paration des fichiers, post traitement de la pi&#232;ce pour une exploitation en impression 3D" S_3.10103="Coulage de pi&#232;ces prototyp&#233;es en r&#233;sine et/ou en alliage m&#233;tallique (coul&#233;e sous vide)," />
+        <l_3.1 S_00="Proc&#233;d&#233;s de transformation de la mati&#232;re">
+          <l_01 S_00="Principes de transformation de la mati&#232;re (ajout, enl&#232;vement, transformation et d&#233;formation de la mati&#232;re)\nParam&#232;tres li&#233;s aux proc&#233;d&#233;s\nLimitations, contraintes li&#233;es :\n- aux mat&#233;riaux\n- aux possibilit&#233;s des proc&#233;d&#233;s\n- aux co&#251;ts\n- &#224; l'environnement" S_01="Exp&#233;rimentation de proc&#233;d&#233;s, protocole de mise en &#339;uvre, r&#233;alisation de pi&#232;ces prototypes" S_02="Prototypage rapide : simulation et pr&#233;paration des fichiers, post traitement de la pi&#232;ce pour une exploitation en impression 3D" S_03="Coulage de pi&#232;ces prototyp&#233;es en r&#233;sine et/ou en alliage m&#233;tallique (coul&#233;e sous vide)," />
         </l_3.1>
-      </d_301>
+      </d_01>
     </l_3>
-    <l_2 S_200="Conception m&#233;canique des syst&#232;mes">
-      <d_201>
-        <l_2.2 S_2.200="Comportement d'un m&#233;canisme et/ou d'une pi&#232;ce">
-          <l_2.201 S_2.20100="Simulations m&#233;caniques : mod&#233;lisation et simulation (mod&#232;le simplifi&#233; et mod&#232;le num&#233;rique, validation des hypoth&#232;ses)" S_2.20101="R&#233;sistance des mat&#233;riaux : hypoth&#232;ses et mod&#232;le poutre, types de sollicitations simples, notion de contraintes et de d&#233;formation, loi de Hooke et module d'Young, limite &#233;lastique, &#233;tude d'une sollicitation simple" S_2.20102="Equilibre des solides : mod&#233;lisation des liaisons, actions m&#233;caniques, principe fondamental de la statique, r&#233;solution d'un probl&#232;me de statique plane" S_2.20103="Mouvements des m&#233;canismes : mod&#233;lisation des liaisons, trajectoires, vitesses, acc&#233;l&#233;rations, mouvements plans, r&#233;solution graphique d'un probl&#232;me de cin&#233;matique plane" S_2.20104="Impacts environnementaux des solutions constructives : unit&#233; fonctionnelle, unit&#233;s associ&#233;es" S_2.20105="Interpr&#233;tation des r&#233;sultats d'une simulation : courbe, tableau, graphe, unit&#233;s associ&#233;es" S_2.20106="Sc&#233;nario de simulation pour comparer et valider une solution, modifier une pi&#232;ce ou un m&#233;canisme" />
+    <l_2 S_00="Conception m&#233;canique des syst&#232;mes">
+      <d_01>
+        <l_2.2 S_00="Comportement d'un m&#233;canisme et/ou d'une pi&#232;ce">
+          <l_01 S_00="Simulations m&#233;caniques : mod&#233;lisation et simulation (mod&#232;le simplifi&#233; et mod&#232;le num&#233;rique, validation des hypoth&#232;ses)" S_01="R&#233;sistance des mat&#233;riaux : hypoth&#232;ses et mod&#232;le poutre, types de sollicitations simples, notion de contraintes et de d&#233;formation, loi de Hooke et module d'Young, limite &#233;lastique, &#233;tude d'une sollicitation simple" S_02="Equilibre des solides : mod&#233;lisation des liaisons, actions m&#233;caniques, principe fondamental de la statique, r&#233;solution d'un probl&#232;me de statique plane" S_03="Mouvements des m&#233;canismes : mod&#233;lisation des liaisons, trajectoires, vitesses, acc&#233;l&#233;rations, mouvements plans, r&#233;solution graphique d'un probl&#232;me de cin&#233;matique plane" S_04="Impacts environnementaux des solutions constructives : unit&#233; fonctionnelle, unit&#233;s associ&#233;es" S_05="Interpr&#233;tation des r&#233;sultats d'une simulation : courbe, tableau, graphe, unit&#233;s associ&#233;es" S_06="Sc&#233;nario de simulation pour comparer et valider une solution, modifier une pi&#232;ce ou un m&#233;canisme" />
         </l_2.2>
-        <l_2.1 S_2.100="Conception des m&#233;canismes">
-          <l_2.101 S_2.10100="Modification d'un m&#233;canisme : d&#233;finition volumique et num&#233;rique (CAO 3D) des modifications d'un m&#233;canisme &#224; partir de contraintes fonctionnelles" S_2.10101="D&#233;finition volumique et num&#233;rique (CAO 3D) des formes et dimensions d'une pi&#232;ce, prise en compte des contraintes fonctionnelles" S_2.10102="Influence du principe de r&#233;alisation et du mat&#233;riau choisis sur les formes et dimensions d'une pi&#232;ce simple" S_2.10103="Choix d'une solution : crit&#232;res de choix associ&#233;s &#224; une conception ou &#224; l'int&#233;gration d'une solution dans un syst&#232;me global - co&#251;t, fiabilit&#233;, environnement, ergonomie et design - Matrice de comparaison de plusieurs crit&#232;res" S_2.10104="Formalisation et justification d'une solution de conception : illustrations 3D (vues photos r&#233;alistes, &#233;clat&#233;s, mises en plan, diagramme causse effet, carte mentale, pr&#233;sentation PAO)," />
+        <l_2.1 S_00="Conception des m&#233;canismes">
+          <l_01 S_00="Modification d'un m&#233;canisme : d&#233;finition volumique et num&#233;rique (CAO 3D) des modifications d'un m&#233;canisme &#224; partir de contraintes fonctionnelles" S_01="D&#233;finition volumique et num&#233;rique (CAO 3D) des formes et dimensions d'une pi&#232;ce, prise en compte des contraintes fonctionnelles" S_02="Influence du principe de r&#233;alisation et du mat&#233;riau choisis sur les formes et dimensions d'une pi&#232;ce simple" S_03="Choix d'une solution : crit&#232;res de choix associ&#233;s &#224; une conception ou &#224; l'int&#233;gration d'une solution dans un syst&#232;me global - co&#251;t, fiabilit&#233;, environnement, ergonomie et design - Matrice de comparaison de plusieurs crit&#232;res" S_04="Formalisation et justification d'une solution de conception : illustrations 3D (vues photos r&#233;alistes, &#233;clat&#233;s, mises en plan, diagramme causse effet, carte mentale, pr&#233;sentation PAO)," />
         </l_2.1>
-      </d_201>
+      </d_01>
     </l_2>
   </d_dicSavoirs>
   <d_dicSavoirs_Math />
   <d_dicSavoirs_Phys />
   <d_effectifs>
-    <l_P S_P00="Act. Pra." S_P01="Activit&#233; Pratique" />
-    <l_C S_C00="Classe enti&#232;re" S_C01="Classe enti&#232;re" />
-    <l_E S_E00="Etude ou Projet" S_E01="Etude et Projet" />
-    <l_D S_D00="Demi-groupe" S_D01="Demi-groupe" />
-    <l_G S_G00="Effectif r&#233;duit" S_G01="Effectif r&#233;duit" />
+    <l_P S_00="Act. Pra." S_01="Activit&#233; Pratique" />
+    <l_C S_00="Classe enti&#232;re" S_01="Classe enti&#232;re" />
+    <l_E S_00="Etude ou Projet" S_01="Etude et Projet" />
+    <l_D S_00="Demi-groupe" S_01="Demi-groupe" />
+    <l_G S_00="Effectif r&#233;duit" S_01="Effectif r&#233;duit" />
   </d_effectifs>
   <d_effectifsSeance>
-    <l_C S_C00="C" />
-    <l_E S_E00="C" />
-    <l_AP S_AP00="E" S_AP01="P" />
-    <l_SS S_SS00="C" />
-    <l_ED S_ED00="C" S_ED01="G" S_ED02="D" S_ED03="E" S_ED04="P" />
-    <l_P S_P00="C" S_P01="G" S_P02="D" S_P03="E" S_P04="P" />
+    <l_C S_00="C" />
+    <l_E S_00="C" />
+    <l_AP S_00="E" S_01="P" />
+    <l_SS S_00="C" />
+    <l_ED S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" />
+    <l_P S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" />
     <l_S />
     <l_R />
-    <l_SA S_SA00="C" S_SA01="G" />
-    <l_TD S_TD00="C" S_TD01="G" S_TD02="D" S_TD03="E" S_TD04="P" />
+    <l_SA S_00="C" S_01="G" />
+    <l_TD S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" />
   </d_effectifsSeance>
   <d_grilles_prj>
-    <l_S S_S00="Grille_presentation_projet_STI2D_V2015.xlsx" S_S01="I" />
-    <l_R S_R00="Grille ITEC V2015.xlsx" S_R01="C" />
+    <l_S S_00="Grille_presentation_projet_STI2D_V2015.xlsx" S_01="I" />
+    <l_R S_00="Grille ITEC V2015.xlsx" S_01="C" />
   </d_grilles_prj>
-  <l_listPhasesEval_prj S_listPhasesEval_prj00="Rev" S_listPhasesEval_prj01="R1" S_listPhasesEval_prj02="R2" S_listPhasesEval_prj03="R3" S_listPhasesEval_prj04="S" />
-  <l_listPhases_prj S_listPhases_prj00="Ana" S_listPhases_prj01="Con" S_listPhases_prj02="DCo" S_listPhases_prj03="Rea" S_listPhases_prj04="Val" S_listPhases_prj05="XXX" S_listPhases_prj06="Rev" S_listPhases_prj07="R1" S_listPhases_prj08="R2" S_listPhases_prj09="R3" S_listPhases_prj10="S" />
-  <l_listeDemarches S_listeDemarches00="I" S_listeDemarches01="R" S_listeDemarches02="P" />
-  <l_listeEffectifs S_listeEffectifs00="C" S_listeEffectifs01="G" S_listeEffectifs02="D" S_listeEffectifs03="E" S_listeEffectifs04="P" />
-  <l_listeTypeActivite S_listeTypeActivite00="ED" S_listeTypeActivite01="AP" S_listeTypeActivite02="P" />
-  <l_listeTypeSeance S_listeTypeSeance00="ED" S_listeTypeSeance01="AP" S_listeTypeSeance02="P" S_listeTypeSeance03="C" S_listeTypeSeance04="TD" S_listeTypeSeance05="SA" S_listeTypeSeance06="SS" S_listeTypeSeance07="E" S_listeTypeSeance08="R" S_listeTypeSeance09="S" />
+  <l_listPhasesEval_prj S_00="Rev" S_01="R1" S_02="R2" S_03="R3" S_04="S" />
+  <l_listPhases_prj S_00="Ana" S_01="Con" S_02="DCo" S_03="Rea" S_04="Val" S_05="XXX" S_06="Rev" S_07="R1" S_08="R2" S_09="R3" S_10="S" />
+  <l_listeDemarches S_00="I" S_01="R" S_02="P" />
+  <l_listeEffectifs S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" />
+  <l_listeTypeActivite S_00="ED" S_01="AP" S_02="P" />
+  <l_listeTypeSeance S_00="ED" S_01="AP" S_02="P" S_03="C" S_04="TD" S_05="SA" S_06="SS" S_07="E" S_08="R" S_09="S" />
   <d_nomParties_prj S_R="Conduite" S_S="Soutenance" />
   <d_options />
-  <l_periode_prj I_periode_prj00="7" I_periode_prj01="10" />
+  <l_periode_prj I_00="7" I_01="10" />
   <l_periodes>
-    <l_periodes00 I_periodes0001="5" S_periodes0000="1_&#232;re" />
-    <l_periodes01 I_periodes0101="5" S_periodes0100="T_ale" />
+    <l_00 I_01="5" S_00="1_&#232;re" />
+    <l_01 I_01="5" S_00="T_ale" />
   </l_periodes>
   <d_phases_prj>
-    <l_DCo S_DCo00="Concep d&#233;taill&#233;e" S_DCo01="Conception d&#233;taill&#233;e" S_DCo02="Cd" />
-    <l_Ana S_Ana00="Analyse besoins" S_Ana01="Analyse des besoins" S_Ana02="Ab" />
-    <l_Val S_Val00="Validation" S_Val01="Validation" S_Val02="V" />
-    <l_R2 S_R200="Revue n&#176;2" S_R201="Revue de projet n&#176;2" S_R202="R2" />
-    <l_R3 S_R300="Revue n&#176;3" S_R301="Revue de projet n&#176;3" S_R302="R3" />
-    <l_XXX S_XXX00="Pr&#233;pa soutenance" S_XXX01="Pr&#233;paration de la soutenance" S_XXX02="P" />
-    <l_Rev S_Rev00="Revue inter" S_Rev01="Revue interm&#233;diaire" S_Rev02="Ri" />
-    <l_R1 S_R100="Revue n&#176;1" S_R101="Revue de projet n&#176;1" S_R102="R1" />
-    <l_S S_S00="Soutenance" S_S01="Soutenance finale" S_S02="S" />
-    <l_Rea S_Rea00="R&#233;alisation" S_Rea01="R&#233;alisation" S_Rea02="R" />
-    <l_Con S_Con00="Concep pr&#233;liminaire" S_Con01="Conception pr&#233;liminaire" S_Con02="Cp" />
+    <l_DCo S_00="Concep d&#233;taill&#233;e" S_01="Conception d&#233;taill&#233;e" S_02="Cd" />
+    <l_Ana S_00="Analyse besoins" S_01="Analyse des besoins" S_02="Ab" />
+    <l_Val S_00="Validation" S_01="Validation" S_02="V" />
+    <l_R2 S_00="Revue n&#176;2" S_01="Revue de projet n&#176;2" S_02="R2" />
+    <l_R3 S_00="Revue n&#176;3" S_01="Revue de projet n&#176;3" S_02="R3" />
+    <l_XXX S_00="Pr&#233;pa soutenance" S_01="Pr&#233;paration de la soutenance" S_02="P" />
+    <l_Rev S_00="Revue inter" S_01="Revue interm&#233;diaire" S_02="Ri" />
+    <l_R1 S_00="Revue n&#176;1" S_01="Revue de projet n&#176;1" S_02="R1" />
+    <l_S S_00="Soutenance" S_01="Soutenance finale" S_02="S" />
+    <l_Rea S_00="R&#233;alisation" S_01="R&#233;alisation" S_02="R" />
+    <l_Con S_00="Concep pr&#233;liminaire" S_01="Conception pr&#233;liminaire" S_02="Cp" />
   </d_phases_prj>
   <d_posRevues>
-    <l__02 S__0200="Con" S__0201="Val" />
-    <l__03 S__0300="Ana" S__0301="Con" S__0302="Val" />
+    <l__02 S_00="Con" S_01="Val" />
+    <l__03 S_00="Ana" S_01="Con" S_02="Val" />
   </d_posRevues>
   <l_positions_CI />
   <d_seances>
-    <l_C S_C00="Cours" S_C01="Cours" />
-    <l_E S_E00="Evaluation" S_E01="Evaluation" />
-    <l_P S_P00="Projet" S_P01="Activit&#233; de projet" />
-    <l_SS S_SS00="Synt. s&#233;quence" S_SS01="Synth&#232;se de s&#233;quence" />
-    <l_ED S_ED00="Etude de dossier" S_ED01="Activit&#233; d'&#233;tude de dossier" />
-    <l_AP S_AP00="Activit&#233; pratique" S_AP01="Activit&#233; pratique" />
-    <l_S S_S00="Parall&#232;le" S_S01="Activit&#233;s en parall&#232;le" />
-    <l_R S_R00="Rotation" S_R01="Rotation d'activit&#233;s" />
-    <l_TD S_TD00="TD" S_TD01="Travaux Dirig&#233;s" />
-    <l_SA S_SA00="Synt. activit&#233;" S_SA01="Synth&#232;se d'activit&#233;" />
+    <l_C S_00="Cours" S_01="Cours" />
+    <l_E S_00="Evaluation" S_01="Evaluation" />
+    <l_P S_00="Projet" S_01="Activit&#233; de projet" />
+    <l_SS S_00="Synt. s&#233;quence" S_01="Synth&#232;se de s&#233;quence" />
+    <l_ED S_00="Etude de dossier" S_01="Activit&#233; d'&#233;tude de dossier" />
+    <l_AP S_00="Activit&#233; pratique" S_01="Activit&#233; pratique" />
+    <l_S S_00="Parall&#232;le" S_01="Activit&#233;s en parall&#232;le" />
+    <l_R S_00="Rotation" S_01="Rotation d'activit&#233;s" />
+    <l_TD S_00="TD" S_01="Travaux Dirig&#233;s" />
+    <l_SA S_00="Synt. activit&#233;" S_01="Synth&#232;se d'activit&#233;" />
   </d_seances>
-  <l_tr_com S_tr_com00="ET" S_tr_com01="Ref_STI2D-ETT.xls" />
+  <l_tr_com S_00="ET" S_01="Ref_STI2D-ETT.xls" />
 </Referentiel>

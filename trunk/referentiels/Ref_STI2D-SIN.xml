@@ -1,358 +1,359 @@
-<Referentiel B_CI_BO="True" B_CI_cible="False" B_objSavoirs_Math="False" B_objSavoirs_Phys="False" B_preSavoirs_Math="True" B_preSavoirs_Phys="True" B_projet="True" I_duree_prj="70" S_BO_URL="http://www.education.gouv.fr/pid25535/bulletin_officiel.html?cid_bo=82984" S_BO_dossier="STI2D" S_Code="SIN" S_Famille="STI" S_FichierLogo="" S_abrevCI="CI" S_ficheValid_prj="" S_nomCI="Centre(s) d'Int&#233;r&#234;t" S_nomCompetences="Comp&#233;tences" S_nomSavoirs="Savoirs" S_nomSavoirs_Math="Math&#233;matiques" S_nomSavoirs_Phys="Sciences Physiques">
-  <l_CentresInterets S_CentresInterets00="Configuration et performances du traitement de l'information" S_CentresInterets01="Instrumentation/Acquisition et restitution de grandeurs physiques" S_CentresInterets02="Communication de l'information/Au sein d'un syst&#232;me" S_CentresInterets03="Gestion de l'information/Structures mat&#233;rielles et logicielles associ&#233;es au traitement de l'information" S_CentresInterets04="Communication entre syst&#232;mes" S_CentresInterets05="Traitement analogique de l'information" S_CentresInterets06="Cycle de vie d'un produit" />
-  <l_Enseignement S_Enseignement00="STI2D-SIN" S_Enseignement01="STI2D : Syst&#232;mes d'Information et Num&#233;rique" S_Enseignement02="STI2D" />
+<Referentiel B_CI_BO="True" B_CI_cible="False" B_objSavoirs_Math="False" B_objSavoirs_Phys="False" B_preSavoirs_Math="True" B_preSavoirs_Phys="True" B_projet="True" I_duree_prj="70" S_BO_URL="http://www.education.gouv.fr/pid25535/bulletin_officiel.html?cid_bo=82984" S_BO_dossier="STI2D" S_Code="SIN" S_Famille="STI" S_FichierLogo="" S_abrevCI="CI" S_ficheValid_prj="" S_nomCI="Centre(s) d'Int&#233;r&#234;t" S_nomCompetences="Comp&#233;tences" S_nomFonctions="Fonctions" S_nomIndicateurs="Indicateurs" S_nomSavoirs="Savoirs" S_nomSavoirs_Math="Math&#233;matiques" S_nomSavoirs_Phys="Sciences Physiques" S_nomTaches="T&#226;ches" S_surnomSavoirs="">
+  <l_CentresInterets S_00="Configuration et performances du traitement de l'information" S_01="Instrumentation/Acquisition et restitution de grandeurs physiques" S_02="Communication de l'information/Au sein d'un syst&#232;me" S_03="Gestion de l'information/Structures mat&#233;rielles et logicielles associ&#233;es au traitement de l'information" S_04="Communication entre syst&#232;mes" S_05="Traitement analogique de l'information" S_06="Cycle de vie d'un produit" />
+  <l_Enseignement S_00="STI2D-SIN" S_01="STI2D : Syst&#232;mes d'Information et Num&#233;rique" S_02="STI2D" />
   <d_aColNon B_R="True" B_S="False" />
   <d_activites>
-    <l_ED S_ED00="Etude de dossier" S_ED01="Activit&#233; d'&#233;tude de dossier" />
-    <l_P S_P00="Projet" S_P01="Activit&#233; de projet" />
-    <l_AP S_AP00="Activit&#233; pratique" S_AP01="Activit&#233; pratique" />
+    <l_ED S_00="Etude de dossier" S_01="Activit&#233; d'&#233;tude de dossier" />
+    <l_P S_00="Projet" S_01="Activit&#233; de projet" />
+    <l_AP S_00="Activit&#233; pratique" S_01="Activit&#233; pratique" />
   </d_activites>
   <d_attributs_prj>
-    <l_SRC S_SRC00="" S_SRC01="" S_SRC02="" />
-    <l_PAR S_PAR00="" S_PAR01="" S_PAR02="" />
-    <l_DEC S_DEC00="D&#233;coupage du projet" S_DEC01="" S_DEC02="" />
-    <l_OBJ S_OBJ00="Production finale attendue" S_OBJ01=" " S_OBJ02="" />
-    <l_TIT S_TIT00="Intitul&#233; du projet" S_TIT01="Intitul&#233; du projet" S_TIT02="" />
-    <l_SYN S_SYN00="" S_SYN01="" S_SYN02="" />
-    <l_PB S_PB00="Probl&#233;matique - &#201;nonc&#233; g&#233;n&#233;ral du besoin" S_PB01="Indiquer :-- - description du contexte dans lequel l&#8217;objet du projet va &#234;tre int&#233;gr&#233; ;-- - fonctionnalit&#233;s de cet objet ;-- - caract&#233;ristiques fonctionnelles et techniques." S_PB02="" />
-    <l_ORI S_ORI00="Origine" S_ORI01="Partenariat, th&#233;matique, concours&#8230;" S_ORI02="" />
-    <l_CCF S_CCF00="Contraintes impos&#233;es" S_CCF01="Indiquer :-- - co&#251;t maximal ;-- - nature d&#8217;une ou des solutions techniques ou de familles de mat&#233;riels, de constituants ou de composants ;-- - environnement." S_CCF02="" />
-    <l_TYP S_TYP00="" S_TYP01="" S_TYP02="" />
-    <l_PRX S_PRX00="" S_PRX01="" S_PRX02="" />
+    <l_SRC S_00="" S_01="" S_02="" />
+    <l_PAR S_00="" S_01="" S_02="" />
+    <l_DEC S_00="D&#233;coupage du projet" S_01="" S_02="" />
+    <l_OBJ S_00="Production finale attendue" S_01=" " S_02="" />
+    <l_TIT S_00="Intitul&#233; du projet" S_01="Intitul&#233; du projet" S_02="" />
+    <l_SYN S_00="" S_01="" S_02="" />
+    <l_PB S_00="Probl&#233;matique - &#201;nonc&#233; g&#233;n&#233;ral du besoin" S_01="Indiquer :-- - description du contexte dans lequel l&#8217;objet du projet va &#234;tre int&#233;gr&#233; ;-- - fonctionnalit&#233;s de cet objet ;-- - caract&#233;ristiques fonctionnelles et techniques." S_02="" />
+    <l_ORI S_00="Origine" S_01="Partenariat, th&#233;matique, concours&#8230;" S_02="" />
+    <l_CCF S_00="Contraintes impos&#233;es" S_01="Indiquer :-- - co&#251;t maximal ;-- - nature d&#8217;une ou des solutions techniques ou de familles de mat&#233;riels, de constituants ou de composants ;-- - environnement." S_02="" />
+    <l_TYP S_00="" S_01="" S_02="" />
+    <l_PRX S_00="" S_01="" S_02="" />
   </d_attributs_prj>
   <d_cellulesInfo_prj>
     <l_Pre>
-      <l_Pre00 S_Pre0000="R" S_Pre0001="Identification projet" S_Pre0003="">
-        <l_Pre0002 I_Pre000200="12" I_Pre000201="2" I_Pre000202="3" />
-      </l_Pre00>
+      <l_00 S_00="R" S_01="Identification projet" S_03="">
+        <l_02 I_00="12" I_01="2" I_02="3" />
+      </l_00>
     </l_Pre>
     <l_Nom>
-      <l_Nom00 S_Nom0000="R" S_Nom0001="Identification projet" S_Nom0003="">
-        <l_Nom0002 I_Nom000200="11" I_Nom000201="2" I_Nom000202="3" />
-      </l_Nom00>
+      <l_00 S_00="R" S_01="Identification projet" S_03="">
+        <l_02 I_00="11" I_01="2" I_02="3" />
+      </l_00>
     </l_Nom>
     <l_NON>
-      <l_NON00 S_NON0000="R" S_NON0001="Notation Candidat " S_NON0003="">
-        <l_NON0002 I_NON000200="6" I_NON000201="4" I_NON000202="0" />
-      </l_NON00>
+      <l_00 S_00="R" S_01="Notation Candidat " S_03="">
+        <l_02 I_00="6" I_01="4" I_02="0" />
+      </l_00>
     </l_NON>
     <l_N-P>
-      <l_N-P00 S_N-P0000="S" S_N-P0001="Feuil1" S_N-P0003="Nom du candidat :--">
-        <l_N-P0002 I_N-P000200="24" I_N-P000201="11" I_N-P000202="0" />
-      </l_N-P00>
+      <l_00 S_00="S" S_01="Feuil1" S_03="Nom du candidat :--">
+        <l_02 I_00="24" I_01="11" I_02="0" />
+      </l_00>
     </l_N-P>
     <l_Tit>
-      <l_Tit00 S_Tit0000="R" S_Tit0001="Identification projet" S_Tit0003="">
-        <l_Tit0002 I_Tit000200="26" I_Tit000201="1" I_Tit000202="0" />
-      </l_Tit00>
+      <l_00 S_00="R" S_01="Identification projet" S_03="">
+        <l_02 I_00="26" I_01="1" I_02="0" />
+      </l_00>
     </l_Tit>
     <l_Des>
-      <l_Des00 S_Des0000="R" S_Des0001="Identification projet" S_Des0003="">
-        <l_Des0002 I_Des000200="26" I_Des000201="1" I_Des000202="0" />
-      </l_Des00>
+      <l_00 S_00="R" S_01="Identification projet" S_03="">
+        <l_02 I_00="26" I_01="1" I_02="0" />
+      </l_00>
     </l_Des>
     <l_Etab>
-      <l_Etab00 S_Etab0000="R" S_Etab0001="Identification projet" S_Etab0003="">
-        <l_Etab0002 I_Etab000200="6" I_Etab000201="2" I_Etab000202="0" />
-      </l_Etab00>
+      <l_00 S_00="R" S_01="Identification projet" S_03="">
+        <l_02 I_00="6" I_01="2" I_02="0" />
+      </l_00>
     </l_Etab>
     <l_Prof>
-      <l_Prof00 S_Prof0000="R" S_Prof0001="Notation Candidat " S_Prof0003="">
-        <l_Prof0002 I_Prof000200="56" I_Prof000201="1" I_Prof000202="1" />
-      </l_Prof00>
+      <l_00 S_00="R" S_01="Notation Candidat " S_03="">
+        <l_02 I_00="56" I_01="1" I_02="1" />
+      </l_00>
     </l_Prof>
   </d_cellulesInfo_prj>
   <d_demarcheSeance>
-    <l_ED S_ED00="I" S_ED01="R" />
-    <l_P S_P00="I" S_P01="R" S_P02="P" />
-    <l_AP S_AP00="I" S_AP01="R" />
+    <l_ED S_00="I" S_01="R" />
+    <l_P S_00="I" S_01="R" S_02="P" />
+    <l_AP S_00="I" S_01="R" />
   </d_demarcheSeance>
   <d_demarches>
-    <l_I S_I00="Investigation" S_I01="Investigation" />
-    <l_P S_P00="Projet" S_P01="Projet" />
-    <l_R S_R00="R&#233;s. Probl&#232;me" S_R01="R&#233;solution de probl&#232;me" />
+    <l_I S_00="Investigation" S_01="Investigation" />
+    <l_P S_00="Projet" S_01="Projet" />
+    <l_R S_00="R&#233;s. Probl&#232;me" S_01="R&#233;solution de probl&#232;me" />
   </d_demarches>
   <d_dicCompetences>
-    <l_O7 S_O700="Imaginer une solution, r&#233;pondre &#224; un besoin">
-      <d_O701>
-        <l_CO7.sin3 S_CO7.sin300="Exprimer le principe de fonctionnement d'un syst&#232;me &#224; partir des diagrammes SysML pertinents. Rep&#233;rer les constituants de la cha&#238;ne d'&#233;nergie et d'information">
-          <l_CO7.sin301>
-            <l_CO7.sin30100 I_CO7.sin3010002="13" S_CO7.sin3010000="Le syst&#232;me est mod&#233;lis&#233; &#224; l'aide de diagrammes conformes ">
-              <l_CO7.sin3010001 F_CO7.sin301000101="10.0" I_CO7.sin301000100="0" I_CO7.sin301000102="0" />
-            </l_CO7.sin30100>
-            <l_CO7.sin30101 I_CO7.sin3010102="14" S_CO7.sin3010100="Les diagrammes comportementaux permettant d'exprimer le principe de fonctionnement sont correctement utilis&#233;s ">
-              <l_CO7.sin3010101 F_CO7.sin301010101="10.0" I_CO7.sin301010100="0" I_CO7.sin301010102="0" />
-            </l_CO7.sin30101>
-            <l_CO7.sin30102 I_CO7.sin3010202="15" S_CO7.sin3010200="Les constituants sont identifi&#233;s">
-              <l_CO7.sin3010201 F_CO7.sin301020101="10.0" I_CO7.sin301020100="0" I_CO7.sin301020102="0" />
-            </l_CO7.sin30102>
-          </l_CO7.sin301>
+    <l_O7 S_00="Imaginer une solution, r&#233;pondre &#224; un besoin">
+      <d_01>
+        <l_CO7.sin3 S_00="Exprimer le principe de fonctionnement d'un syst&#232;me &#224; partir des diagrammes SysML pertinents. Rep&#233;rer les constituants de la cha&#238;ne d'&#233;nergie et d'information">
+          <l_01>
+            <Indicateur_00 I_ligne="13" S_intitule="Le syst&#232;me est mod&#233;lis&#233; &#224; l'aide de diagrammes conformes ">
+              <l_poids F_01="10.0" I_00="0" I_02="0" />
+            </Indicateur_00>
+            <Indicateur_01 I_ligne="14" S_intitule="Les diagrammes comportementaux permettant d'exprimer le principe de fonctionnement sont correctement utilis&#233;s ">
+              <l_poids F_01="10.0" I_00="0" I_02="0" />
+            </Indicateur_01>
+            <Indicateur_02 I_ligne="15" S_intitule="Les constituants sont identifi&#233;s">
+              <l_poids F_01="10.0" I_00="0" I_02="0" />
+            </Indicateur_02>
+          </l_01>
         </l_CO7.sin3>
-        <l_CO7.sin2 S_CO7.sin200="D&#233;coder le cahier des charges fonctionnel d&#233;crivant le besoin exprim&#233;, identifier la fonction d&#233;finie par un besoin exprim&#233;, faire des mesures pour caract&#233;riser cette fonction et conclure sur sa conformit&#233;">
-          <l_CO7.sin201>
-            <l_CO7.sin20100 I_CO7.sin2010002="10" S_CO7.sin2010000="Les diagrammes Sysml utilis&#233;s sont bien interpr&#233;t&#233;s">
-              <l_CO7.sin2010001 F_CO7.sin201000101="10.0" I_CO7.sin201000100="0" I_CO7.sin201000102="0" />
-            </l_CO7.sin20100>
-            <l_CO7.sin20101 I_CO7.sin2010102="11" S_CO7.sin2010100="Une proc&#233;dure pertinente est propos&#233;e et mise en &#339;uvre">
-              <l_CO7.sin2010101 F_CO7.sin201010101="10.0" I_CO7.sin201010100="0" I_CO7.sin201010102="0" />
-            </l_CO7.sin20101>
-            <l_CO7.sin20102 I_CO7.sin2010202="12" S_CO7.sin2010200="Un rapport de conformit&#233; est r&#233;dig&#233;">
-              <l_CO7.sin2010201 F_CO7.sin201020101="10.0" I_CO7.sin201020100="0" I_CO7.sin201020102="0" />
-            </l_CO7.sin20102>
-          </l_CO7.sin201>
+        <l_CO7.sin2 S_00="D&#233;coder le cahier des charges fonctionnel d&#233;crivant le besoin exprim&#233;, identifier la fonction d&#233;finie par un besoin exprim&#233;, faire des mesures pour caract&#233;riser cette fonction et conclure sur sa conformit&#233;">
+          <l_01>
+            <Indicateur_00 I_ligne="10" S_intitule="Les diagrammes Sysml utilis&#233;s sont bien interpr&#233;t&#233;s">
+              <l_poids F_01="10.0" I_00="0" I_02="0" />
+            </Indicateur_00>
+            <Indicateur_01 I_ligne="11" S_intitule="Une proc&#233;dure pertinente est propos&#233;e et mise en &#339;uvre">
+              <l_poids F_01="10.0" I_00="0" I_02="0" />
+            </Indicateur_01>
+            <Indicateur_02 I_ligne="12" S_intitule="Un rapport de conformit&#233; est r&#233;dig&#233;">
+              <l_poids F_01="10.0" I_00="0" I_02="0" />
+            </Indicateur_02>
+          </l_01>
         </l_CO7.sin2>
-        <l_CO7.sin1 S_CO7.sin100="D&#233;coder la notice technique d'un syst&#232;me, v&#233;rifier la conformit&#233; du fonctionnement">
-          <l_CO7.sin101>
-            <l_CO7.sin10100 I_CO7.sin1010002="6" S_CO7.sin1010000="L'interpr&#233;tation de la notice du syst&#232;me permet de d&#233;crire une proc&#233;dure">
-              <l_CO7.sin1010001 F_CO7.sin101000101="10.0" I_CO7.sin101000100="0" I_CO7.sin101000102="0" />
-            </l_CO7.sin10100>
-            <l_CO7.sin10101 I_CO7.sin1010102="7" S_CO7.sin1010100="Le syst&#232;me est install&#233; et param&#233;tr&#233;">
-              <l_CO7.sin1010101 F_CO7.sin101010101="10.0" I_CO7.sin101010100="0" I_CO7.sin101010102="0" />
-            </l_CO7.sin10101>
-            <l_CO7.sin10102 I_CO7.sin1010202="8" S_CO7.sin1010200="Les mesures sont effectu&#233;es et compar&#233;es aux caract&#233;ristiques de la notice technique">
-              <l_CO7.sin1010201 F_CO7.sin101020101="10.0" I_CO7.sin101020100="0" I_CO7.sin101020102="0" />
-            </l_CO7.sin10102>
-            <l_CO7.sin10103 I_CO7.sin1010302="9" S_CO7.sin1010300="Un rapport de mise en &#339;uvre et d'essais est r&#233;dig&#233;">
-              <l_CO7.sin1010301 F_CO7.sin101030101="10.0" I_CO7.sin101030100="0" I_CO7.sin101030102="0" />
-            </l_CO7.sin10103>
-          </l_CO7.sin101>
+        <l_CO7.sin1 S_00="D&#233;coder la notice technique d'un syst&#232;me, v&#233;rifier la conformit&#233; du fonctionnement">
+          <l_01>
+            <Indicateur_00 I_ligne="6" S_intitule="L'interpr&#233;tation de la notice du syst&#232;me permet de d&#233;crire une proc&#233;dure">
+              <l_poids F_01="10.0" I_00="0" I_02="0" />
+            </Indicateur_00>
+            <Indicateur_01 I_ligne="7" S_intitule="Le syst&#232;me est install&#233; et param&#233;tr&#233;">
+              <l_poids F_01="10.0" I_00="0" I_02="0" />
+            </Indicateur_01>
+            <Indicateur_02 I_ligne="8" S_intitule="Les mesures sont effectu&#233;es et compar&#233;es aux caract&#233;ristiques de la notice technique">
+              <l_poids F_01="10.0" I_00="0" I_02="0" />
+            </Indicateur_02>
+            <Indicateur_03 I_ligne="9" S_intitule="Un rapport de mise en &#339;uvre et d'essais est r&#233;dig&#233;">
+              <l_poids F_01="10.0" I_00="0" I_02="0" />
+            </Indicateur_03>
+          </l_01>
         </l_CO7.sin1>
-      </d_O701>
-      <l_O702 I_O70200="0" I_O70201="40" I_O70202="0" />
+      </d_01>
+      <l_02 I_00="0" I_01="40" I_02="0" />
     </l_O7>
-    <l_O9 S_O900="G&#233;rer la vie d'un syst&#232;me">
-      <d_O901>
-        <l_CO9.sin4 S_CO9.sin400="Rechercher et choisir de nouveaux constituants d'un syst&#232;me (ou d'un projet finalis&#233;) au regard d'&#233;volutions technologiques, socio&#233;conomiques sp&#233;cifi&#233;es dans un cahier des charges. Organiser le projet permettant de maquettiser la solution choisie">
-          <l_CO9.sin401>
-            <l_CO9.sin40100 I_CO9.sin4010002="41" S_CO9.sin4010000="Les diagrammes comportementaux sont correctement mis &#224; jour">
-              <l_CO9.sin4010001 F_CO9.sin401000101="7.142857" I_CO9.sin401000100="0" I_CO9.sin401000102="0" />
-            </l_CO9.sin40100>
-            <l_CO9.sin40101 I_CO9.sin4010102="42" S_CO9.sin4010100="Des constituants sont choisis et justifi&#233;s">
-              <l_CO9.sin4010101 F_CO9.sin401010101="7.142857" I_CO9.sin401010100="0" I_CO9.sin401010102="0" />
-            </l_CO9.sin40101>
-            <l_CO9.sin40102 I_CO9.sin4010202="43" S_CO9.sin4010200="Le prototypage rapide de la solution est organis&#233;e">
-              <l_CO9.sin4010201 F_CO9.sin401020101="7.142857" I_CO9.sin401020100="0" I_CO9.sin401020102="0" />
-            </l_CO9.sin40102>
-          </l_CO9.sin401>
+    <l_O9 S_00="G&#233;rer la vie d'un syst&#232;me">
+      <d_01>
+        <l_CO9.sin4 S_00="Rechercher et choisir de nouveaux constituants d'un syst&#232;me (ou d'un projet finalis&#233;) au regard d'&#233;volutions technologiques, socio&#233;conomiques sp&#233;cifi&#233;es dans un cahier des charges. Organiser le projet permettant de maquettiser la solution choisie">
+          <l_01>
+            <Indicateur_00 I_ligne="41" S_intitule="Les diagrammes comportementaux sont correctement mis &#224; jour">
+              <l_poids F_01="7.142857" I_00="0" I_02="0" />
+            </Indicateur_00>
+            <Indicateur_01 I_ligne="42" S_intitule="Des constituants sont choisis et justifi&#233;s">
+              <l_poids F_01="7.142857" I_00="0" I_02="0" />
+            </Indicateur_01>
+            <Indicateur_02 I_ligne="43" S_intitule="Le prototypage rapide de la solution est organis&#233;e">
+              <l_poids F_01="7.142857" I_00="0" I_02="0" />
+            </Indicateur_02>
+          </l_01>
         </l_CO9.sin4>
-        <l_CO9.sin1 S_CO9.sin100="Utiliser les outils adapt&#233;s pour planifier un projet (diagramme de Gantt, chemin critique, donn&#233;es &#233;conomiques, r&#233;unions de projet)">
-          <l_CO9.sin101>
-            <l_CO9.sin10100 I_CO9.sin1010002="30" S_CO9.sin1010000="Le cahier des charges fonctionnel est analys&#233; et reformul&#233;">
-              <l_CO9.sin1010001 F_CO9.sin101000101="7.142857" I_CO9.sin101000100="0" I_CO9.sin101000102="0" />
-            </l_CO9.sin10100>
-            <l_CO9.sin10101 I_CO9.sin1010102="31" S_CO9.sin1010100="Les donn&#233;es &#233;conomiques sont identifi&#233;es">
-              <l_CO9.sin1010101 F_CO9.sin101010101="7.142857" I_CO9.sin101010100="0" I_CO9.sin101010102="0" />
-            </l_CO9.sin10101>
-            <l_CO9.sin10102 I_CO9.sin1010202="32" S_CO9.sin1010200="Les chemins critiques sont mis en &#233;vidence et les dates de r&#233;unions de projet sont fix&#233;es">
-              <l_CO9.sin1010201 F_CO9.sin101020101="7.142857" I_CO9.sin101020100="0" I_CO9.sin101020102="0" />
-            </l_CO9.sin10102>
-          </l_CO9.sin101>
+        <l_CO9.sin1 S_00="Utiliser les outils adapt&#233;s pour planifier un projet (diagramme de Gantt, chemin critique, donn&#233;es &#233;conomiques, r&#233;unions de projet)">
+          <l_01>
+            <Indicateur_00 I_ligne="30" S_intitule="Le cahier des charges fonctionnel est analys&#233; et reformul&#233;">
+              <l_poids F_01="7.142857" I_00="0" I_02="0" />
+            </Indicateur_00>
+            <Indicateur_01 I_ligne="31" S_intitule="Les donn&#233;es &#233;conomiques sont identifi&#233;es">
+              <l_poids F_01="7.142857" I_00="0" I_02="0" />
+            </Indicateur_01>
+            <Indicateur_02 I_ligne="32" S_intitule="Les chemins critiques sont mis en &#233;vidence et les dates de r&#233;unions de projet sont fix&#233;es">
+              <l_poids F_01="7.142857" I_00="0" I_02="0" />
+            </Indicateur_02>
+          </l_01>
         </l_CO9.sin1>
-        <l_CO9.sin3 S_CO9.sin300="Rechercher des &#233;volutions de constituants dans le cadre d'une d&#233;marche de veille technologique, analyser la structure d'un syst&#232;me pour intervenir sur les constituants dans le cadre d'une op&#233;ration de maintenance">
-          <l_CO9.sin301>
-            <l_CO9.sin30100 I_CO9.sin3010002="38" S_CO9.sin3010000="Les proc&#233;dures adapt&#233;es d'intervention sur les constituants sont propos&#233;es">
-              <l_CO9.sin3010001 F_CO9.sin301000101="7.142857" I_CO9.sin301000100="0" I_CO9.sin301000102="0" />
-            </l_CO9.sin30100>
-            <l_CO9.sin30101 I_CO9.sin3010102="39" S_CO9.sin3010100="L'intervention de maintenance sur le syst&#232;me est planifi&#233;e et la continuit&#233; de service assur&#233;e">
-              <l_CO9.sin3010101 F_CO9.sin301010101="7.142857" I_CO9.sin301010100="0" I_CO9.sin301010102="0" />
-            </l_CO9.sin30101>
-            <l_CO9.sin30102 I_CO9.sin3010202="40" S_CO9.sin3010200="Le rapport d'intervention est &#233;tabli">
-              <l_CO9.sin3010201 F_CO9.sin301020101="7.142857" I_CO9.sin301020100="0" I_CO9.sin301020102="0" />
-            </l_CO9.sin30102>
-          </l_CO9.sin301>
+        <l_CO9.sin3 S_00="Rechercher des &#233;volutions de constituants dans le cadre d'une d&#233;marche de veille technologique, analyser la structure d'un syst&#232;me pour intervenir sur les constituants dans le cadre d'une op&#233;ration de maintenance">
+          <l_01>
+            <Indicateur_00 I_ligne="38" S_intitule="Les proc&#233;dures adapt&#233;es d'intervention sur les constituants sont propos&#233;es">
+              <l_poids F_01="7.142857" I_00="0" I_02="0" />
+            </Indicateur_00>
+            <Indicateur_01 I_ligne="39" S_intitule="L'intervention de maintenance sur le syst&#232;me est planifi&#233;e et la continuit&#233; de service assur&#233;e">
+              <l_poids F_01="7.142857" I_00="0" I_02="0" />
+            </Indicateur_01>
+            <Indicateur_02 I_ligne="40" S_intitule="Le rapport d'intervention est &#233;tabli">
+              <l_poids F_01="7.142857" I_00="0" I_02="0" />
+            </Indicateur_02>
+          </l_01>
         </l_CO9.sin3>
-        <l_CO9.sin2 S_CO9.sin200="Installer, configurer et instrumenter un syst&#232;me r&#233;el. Mettre en oeuvre la cha&#238;ne d'acquisition puis acqu&#233;rir, traiter, transmettre et restituer l'information">
-          <l_CO9.sin201>
-            <l_CO9.sin20100 I_CO9.sin2010002="33" S_CO9.sin2010000="La notice du syst&#232;me est correctement interpr&#233;t&#233;e">
-              <l_CO9.sin2010001 F_CO9.sin201000101="7.142857" I_CO9.sin201000100="0" I_CO9.sin201000102="0" />
-            </l_CO9.sin20100>
-            <l_CO9.sin20101 I_CO9.sin2010102="34" S_CO9.sin2010100="Le syst&#232;me est install&#233; et param&#233;tr&#233;">
-              <l_CO9.sin2010101 F_CO9.sin201010101="7.142857" I_CO9.sin201010100="0" I_CO9.sin201010102="0" />
-            </l_CO9.sin20101>
-            <l_CO9.sin20102 I_CO9.sin2010202="35" S_CO9.sin2010200="Les grandeurs caract&#233;ristiques sont identifi&#233;es et les appareils de mesure sont adapt&#233;s">
-              <l_CO9.sin2010201 F_CO9.sin201020101="7.142857" I_CO9.sin201020100="0" I_CO9.sin201020102="0" />
-            </l_CO9.sin20102>
-            <l_CO9.sin20103 I_CO9.sin2010302="36" S_CO9.sin2010300="Les grandeurs sont acquises, trait&#233;es et transmises">
-              <l_CO9.sin2010301 F_CO9.sin201030101="7.142857" I_CO9.sin201030100="0" I_CO9.sin201030102="0" />
-            </l_CO9.sin20103>
-            <l_CO9.sin20104 I_CO9.sin2010402="37" S_CO9.sin2010400="Les contraintes temporelles et fr&#233;quentielles sont respect&#233;es, l'information est restitu&#233;e">
-              <l_CO9.sin2010401 F_CO9.sin201040101="7.142857" I_CO9.sin201040100="0" I_CO9.sin201040102="0" />
-            </l_CO9.sin20104>
-          </l_CO9.sin201>
+        <l_CO9.sin2 S_00="Installer, configurer et instrumenter un syst&#232;me r&#233;el. Mettre en oeuvre la cha&#238;ne d'acquisition puis acqu&#233;rir, traiter, transmettre et restituer l'information">
+          <l_01>
+            <Indicateur_00 I_ligne="33" S_intitule="La notice du syst&#232;me est correctement interpr&#233;t&#233;e">
+              <l_poids F_01="7.142857" I_00="0" I_02="0" />
+            </Indicateur_00>
+            <Indicateur_01 I_ligne="34" S_intitule="Le syst&#232;me est install&#233; et param&#233;tr&#233;">
+              <l_poids F_01="7.142857" I_00="0" I_02="0" />
+            </Indicateur_01>
+            <Indicateur_02 I_ligne="35" S_intitule="Les grandeurs caract&#233;ristiques sont identifi&#233;es et les appareils de mesure sont adapt&#233;s">
+              <l_poids F_01="7.142857" I_00="0" I_02="0" />
+            </Indicateur_02>
+            <Indicateur_03 I_ligne="36" S_intitule="Les grandeurs sont acquises, trait&#233;es et transmises">
+              <l_poids F_01="7.142857" I_00="0" I_02="0" />
+            </Indicateur_03>
+            <Indicateur_04 I_ligne="37" S_intitule="Les contraintes temporelles et fr&#233;quentielles sont respect&#233;es, l'information est restitu&#233;e">
+              <l_poids F_01="7.142857" I_00="0" I_02="0" />
+            </Indicateur_04>
+          </l_01>
         </l_CO9.sin2>
-      </d_O901>
-      <l_O902 I_O90200="0" I_O90201="20" I_O90202="0" />
+      </d_01>
+      <l_02 I_00="0" I_01="20" I_02="0" />
     </l_O9>
-    <l_O8 S_O800="Valider des solutions techniques">
-      <d_O801>
-        <l_CO8.sin2 S_CO8.sin200="Etablir pour une fonction pr&#233;c&#233;demment identifi&#233;e, un mod&#232;le de comportement &#224; partir de mesures faites sur le syt&#232;me">
-          <l_CO8.sin201>
-            <l_CO8.sin20100 I_CO8.sin2010002="20" S_CO8.sin2010000="Les mesures n&#233;cessaires sont effectu&#233;es">
-              <l_CO8.sin2010001 F_CO8.sin201000101="8.333333" I_CO8.sin201000100="0" I_CO8.sin201000102="0" />
-            </l_CO8.sin20100>
-            <l_CO8.sin20101 I_CO8.sin2010102="21" S_CO8.sin2010100="Un mod&#232;le de comportement pertinent est &#233;tabli">
-              <l_CO8.sin2010101 F_CO8.sin201010101="8.333333" I_CO8.sin201010100="0" I_CO8.sin201010102="0" />
-            </l_CO8.sin20101>
-            <l_CO8.sin20102 I_CO8.sin2010202="22" S_CO8.sin2010200="Les param&#232;tres du  mod&#232;le sont renseign&#233;s pour limiter les &#233;carts avec les mesures">
-              <l_CO8.sin2010201 F_CO8.sin201020101="8.333333" I_CO8.sin201020100="0" I_CO8.sin201020102="0" />
-            </l_CO8.sin20102>
-          </l_CO8.sin201>
+    <l_O8 S_00="Valider des solutions techniques">
+      <d_01>
+        <l_CO8.sin2 S_00="Etablir pour une fonction pr&#233;c&#233;demment identifi&#233;e, un mod&#232;le de comportement &#224; partir de mesures faites sur le syt&#232;me">
+          <l_01>
+            <Indicateur_00 I_ligne="20" S_intitule="Les mesures n&#233;cessaires sont effectu&#233;es">
+              <l_poids F_01="8.333333" I_00="0" I_02="0" />
+            </Indicateur_00>
+            <Indicateur_01 I_ligne="21" S_intitule="Un mod&#232;le de comportement pertinent est &#233;tabli">
+              <l_poids F_01="8.333333" I_00="0" I_02="0" />
+            </Indicateur_01>
+            <Indicateur_02 I_ligne="22" S_intitule="Les param&#232;tres du  mod&#232;le sont renseign&#233;s pour limiter les &#233;carts avec les mesures">
+              <l_poids F_01="8.333333" I_00="0" I_02="0" />
+            </Indicateur_02>
+          </l_01>
         </l_CO8.sin2>
-        <l_CO8.sin3 S_CO8.sin300="Traduire sous forme graphique l'architecture de la cha&#238;ne d'information identifi&#233;e pour un syst&#232;me et d&#233;finir les param&#232;tres d'utilisation du simulateur">
-          <l_CO8.sin301>
-            <l_CO8.sin30100 I_CO8.sin3010002="23" S_CO8.sin3010000="La cha&#238;ne d'information est mod&#233;lis&#233;e par des diagrammes adapt&#233;s (SysML)">
-              <l_CO8.sin3010001 F_CO8.sin301000101="8.333333" I_CO8.sin301000100="0" I_CO8.sin301000102="0" />
-            </l_CO8.sin30100>
-            <l_CO8.sin30101 I_CO8.sin3010102="24" S_CO8.sin3010100="Le diagramme &#233;tats transitions est programm&#233;">
-              <l_CO8.sin3010101 F_CO8.sin301010101="8.333333" I_CO8.sin301010100="0" I_CO8.sin301010102="0" />
-            </l_CO8.sin30101>
-          </l_CO8.sin301>
+        <l_CO8.sin3 S_00="Traduire sous forme graphique l'architecture de la cha&#238;ne d'information identifi&#233;e pour un syst&#232;me et d&#233;finir les param&#232;tres d'utilisation du simulateur">
+          <l_01>
+            <Indicateur_00 I_ligne="23" S_intitule="La cha&#238;ne d'information est mod&#233;lis&#233;e par des diagrammes adapt&#233;s (SysML)">
+              <l_poids F_01="8.333333" I_00="0" I_02="0" />
+            </Indicateur_00>
+            <Indicateur_01 I_ligne="24" S_intitule="Le diagramme &#233;tats transitions est programm&#233;">
+              <l_poids F_01="8.333333" I_00="0" I_02="0" />
+            </Indicateur_01>
+          </l_01>
         </l_CO8.sin3>
-        <l_CO8.sin1 S_CO8.sin100="Rechercher et choisir une solution logicielle ou mat&#233;rielle au regard de la d&#233;finition d'un syst&#232;me">
-          <l_CO8.sin101>
-            <l_CO8.sin10100 I_CO8.sin1010002="17" S_CO8.sin1010000="La d&#233;finition du syst&#232;me est exprim&#233;e correctement">
-              <l_CO8.sin1010001 F_CO8.sin101000101="8.333333" I_CO8.sin101000100="0" I_CO8.sin101000102="0" />
-            </l_CO8.sin10100>
-            <l_CO8.sin10101 I_CO8.sin1010102="18" S_CO8.sin1010100="Une liste non exhaustive de solutions pertinentes est &#233;tablie ">
-              <l_CO8.sin1010101 F_CO8.sin101010101="8.333333" I_CO8.sin101010100="0" I_CO8.sin101010102="0" />
-            </l_CO8.sin10101>
-            <l_CO8.sin10102 I_CO8.sin1010202="19" S_CO8.sin1010200="Le choix de la solution est argument&#233;">
-              <l_CO8.sin1010201 F_CO8.sin101020101="8.333333" I_CO8.sin101020100="0" I_CO8.sin101020102="0" />
-            </l_CO8.sin10102>
-          </l_CO8.sin101>
+        <l_CO8.sin1 S_00="Rechercher et choisir une solution logicielle ou mat&#233;rielle au regard de la d&#233;finition d'un syst&#232;me">
+          <l_01>
+            <Indicateur_00 I_ligne="17" S_intitule="La d&#233;finition du syst&#232;me est exprim&#233;e correctement">
+              <l_poids F_01="8.333333" I_00="0" I_02="0" />
+            </Indicateur_00>
+            <Indicateur_01 I_ligne="18" S_intitule="Une liste non exhaustive de solutions pertinentes est &#233;tablie ">
+              <l_poids F_01="8.333333" I_00="0" I_02="0" />
+            </Indicateur_01>
+            <Indicateur_02 I_ligne="19" S_intitule="Le choix de la solution est argument&#233;">
+              <l_poids F_01="8.333333" I_00="0" I_02="0" />
+            </Indicateur_02>
+          </l_01>
         </l_CO8.sin1>
-        <l_CO8.sin4 S_CO8.sin400="Identifier les variables simul&#233;es et mesur&#233;es sur un syst&#232;me pour valider le choix d'une solution">
-          <l_CO8.sin401>
-            <l_CO8.sin40100 I_CO8.sin4010002="25" S_CO8.sin4010000="Les variables caract&#233;ristiques du syst&#232;me simul&#233; sont identifi&#233;es">
-              <l_CO8.sin4010001 F_CO8.sin401000101="8.333333" I_CO8.sin401000100="0" I_CO8.sin401000102="0" />
-            </l_CO8.sin40100>
-            <l_CO8.sin40101 I_CO8.sin4010102="26" S_CO8.sin4010100="Les variables caract&#233;ristiques du syst&#232;me r&#233;el sont mesurables">
-              <l_CO8.sin4010101 F_CO8.sin401010101="8.333333" I_CO8.sin401010100="0" I_CO8.sin401010102="0" />
-            </l_CO8.sin40101>
-            <l_CO8.sin40102 I_CO8.sin4010202="27" S_CO8.sin4010200="Les param&#232;tres du syst&#232;me simul&#233; sont affin&#233;s pour r&#233;duire les &#233;carts avec le syst&#232;me r&#233;el">
-              <l_CO8.sin4010201 F_CO8.sin401020101="8.333333" I_CO8.sin401020100="0" I_CO8.sin401020102="0" />
-            </l_CO8.sin40102>
-            <l_CO8.sin40103 I_CO8.sin4010302="28" S_CO8.sin4010300="Les conditions de simulation sont argument&#233;es pour valider le choix d'une solution">
-              <l_CO8.sin4010301 F_CO8.sin401030101="8.333333" I_CO8.sin401030100="0" I_CO8.sin401030102="0" />
-            </l_CO8.sin40103>
-          </l_CO8.sin401>
+        <l_CO8.sin4 S_00="Identifier les variables simul&#233;es et mesur&#233;es sur un syst&#232;me pour valider le choix d'une solution">
+          <l_01>
+            <Indicateur_00 I_ligne="25" S_intitule="Les variables caract&#233;ristiques du syst&#232;me simul&#233; sont identifi&#233;es">
+              <l_poids F_01="8.333333" I_00="0" I_02="0" />
+            </Indicateur_00>
+            <Indicateur_01 I_ligne="26" S_intitule="Les variables caract&#233;ristiques du syst&#232;me r&#233;el sont mesurables">
+              <l_poids F_01="8.333333" I_00="0" I_02="0" />
+            </Indicateur_01>
+            <Indicateur_02 I_ligne="27" S_intitule="Les param&#232;tres du syst&#232;me simul&#233; sont affin&#233;s pour r&#233;duire les &#233;carts avec le syst&#232;me r&#233;el">
+              <l_poids F_01="8.333333" I_00="0" I_02="0" />
+            </Indicateur_02>
+            <Indicateur_03 I_ligne="28" S_intitule="Les conditions de simulation sont argument&#233;es pour valider le choix d'une solution">
+              <l_poids F_01="8.333333" I_00="0" I_02="0" />
+            </Indicateur_03>
+          </l_01>
         </l_CO8.sin4>
-      </d_O801>
-      <l_O802 I_O80200="0" I_O80201="40" I_O80202="0" />
+      </d_01>
+      <l_02 I_00="0" I_01="40" I_02="0" />
     </l_O8>
   </d_dicCompetences>
+  <d_dicFonctions />
   <d_dicSavoirs>
-    <l_1 S_100="Projet technologique">
-      <d_101>
-        <l_1.1 S_1.100="La d&#233;marche de projet">
-          <d_1.101>
-            <l_1.1.1 S_1.1.100="Les projets industriels">
-              <l_1.1.101 S_1.1.10100="Typologie des entreprises industrielles et des projets techniques associ&#233;s (projets locaux, transversaux, \&quot;joint venture\&quot;)" S_1.1.10101="Phases d'un projet industriel (marketing, pr&#233; conception, pr&#233; industrialisation et conception d&#233;taill&#233;, industrialisation, maintenance et fin de vie)" S_1.1.10102="Principes d'organisation et planification d'un projet (d&#233;veloppement s&#233;quentiel, chemin critique, d&#233;coupage du projet en fonctions &#233;l&#233;mentaires ou en phases) Gestion, suivi et finalisation d'un projet (co&#251;t, budget, bilan d'exp&#233;rience)" />
+    <l_1 S_00="Projet technologique">
+      <d_01>
+        <l_1.1 S_00="La d&#233;marche de projet">
+          <d_01>
+            <l_1.1.1 S_00="Les projets industriels">
+              <l_01 S_00="Typologie des entreprises industrielles et des projets techniques associ&#233;s (projets locaux, transversaux, \&quot;joint venture\&quot;)" S_01="Phases d'un projet industriel (marketing, pr&#233; conception, pr&#233; industrialisation et conception d&#233;taill&#233;, industrialisation, maintenance et fin de vie)" S_02="Principes d'organisation et planification d'un projet (d&#233;veloppement s&#233;quentiel, chemin critique, d&#233;coupage du projet en fonctions &#233;l&#233;mentaires ou en phases) Gestion, suivi et finalisation d'un projet (co&#251;t, budget, bilan d'exp&#233;rience)" />
             </l_1.1.1>
-            <l_1.1.2 S_1.1.200="Les projets p&#233;dagogiques et technologiques">
-              <l_1.1.201 S_1.1.20100="Etapes et planification d'un projet technologique (revues de projets, travail collaboratif en &#233;quipe projet : ENT, base de donn&#233;es, formats d'&#233;change, carte mentale, flux op&#233;rationnels)" S_1.1.20101="Animation d'une revue de projet ou management d'une &#233;quipe projet" S_1.1.20102="Evaluation de la prise de risque dans un projet par le choix des solutions technologiques (innovations technologiques, notion de co&#251;t global, veille technologique)" />
+            <l_1.1.2 S_00="Les projets p&#233;dagogiques et technologiques">
+              <l_01 S_00="Etapes et planification d'un projet technologique (revues de projets, travail collaboratif en &#233;quipe projet : ENT, base de donn&#233;es, formats d'&#233;change, carte mentale, flux op&#233;rationnels)" S_01="Animation d'une revue de projet ou management d'une &#233;quipe projet" S_02="Evaluation de la prise de risque dans un projet par le choix des solutions technologiques (innovations technologiques, notion de co&#251;t global, veille technologique)" />
             </l_1.1.2>
-          </d_1.101>
+          </d_01>
         </l_1.1>
-        <l_1.2 S_1.200="Mise en oeuvre d'un syst&#232;me">
-          <l_1.201 S_1.20100="D&#233;codage des notices techniques d'un syst&#232;me et des proc&#233;dures d'installation" S_1.20101="Compte-rendu de la mise en oeuvre d'un syst&#232;me, en utilisant un langage technique pr&#233;cis" S_1.20102="Identification des dysfonctionnements et/ou description des solutions" />
+        <l_1.2 S_00="Mise en oeuvre d'un syst&#232;me">
+          <l_01 S_00="D&#233;codage des notices techniques d'un syst&#232;me et des proc&#233;dures d'installation" S_01="Compte-rendu de la mise en oeuvre d'un syst&#232;me, en utilisant un langage technique pr&#233;cis" S_02="Identification des dysfonctionnements et/ou description des solutions" />
         </l_1.2>
-        <l_1.3 S_1.300="Description et repr&#233;sentation          ">
-          <l_1.301 S_1.30100="D&#233;codage d'un cahier des charges fonctionnel d&#233;crivant un besoin exprim&#233;" S_1.30101="Identification des fonctions d&#233;finies par l'expression du besoin. Caract&#233;risation de leurs performances &#224; partir de mesures, conclusions sur leur conformit&#233; au regard du cahier des charges" S_1.30102="Propositions d'&#233;volutions pour chaque fonction caract&#233;ris&#233;e &#224; partir d'un sch&#233;ma de principe relatif &#224; son fonctionnement, en rep&#233;rant les constituants des cha&#238;nes d'&#233;nergie et d'information" S_1.30103="R&#233;alisation d'une repr&#233;sentation fonctionnelle (sch&#233;mas blocs, norme SysML)" S_1.30104="Repr&#233;sentation du comportement des constituants (dans les domaines temporel et/ou fr&#233;quentiel)" />
+        <l_1.3 S_00="Description et repr&#233;sentation          ">
+          <l_01 S_00="D&#233;codage d'un cahier des charges fonctionnel d&#233;crivant un besoin exprim&#233;" S_01="Identification des fonctions d&#233;finies par l'expression du besoin. Caract&#233;risation de leurs performances &#224; partir de mesures, conclusions sur leur conformit&#233; au regard du cahier des charges" S_02="Propositions d'&#233;volutions pour chaque fonction caract&#233;ris&#233;e &#224; partir d'un sch&#233;ma de principe relatif &#224; son fonctionnement, en rep&#233;rant les constituants des cha&#238;nes d'&#233;nergie et d'information" S_03="R&#233;alisation d'une repr&#233;sentation fonctionnelle (sch&#233;mas blocs, norme SysML)" S_04="Repr&#233;sentation du comportement des constituants (dans les domaines temporel et/ou fr&#233;quentiel)" />
         </l_1.3>
-      </d_101>
+      </d_01>
     </l_1>
-    <l_3 S_300="R&#233;alisation et qualification d'un prototype">
-      <d_301>
-        <l_3.2 S_3.200="Gestion de la vie d'un syst&#232;me">
-          <l_3.201 S_3.20100="Validation d'un prototype" S_3.20101="Proc&#233;dures d'intervention" S_3.20102="Mise &#224; jour d'un syst&#232;me d'information" S_3.20103="R&#233;daction d'un compte-rendu sur l'activit&#233; de maintenance" S_3.20104="Performances d'un projet finalis&#233;" S_3.20105="Etude prospective technique et &#233;conomique" S_3.20106="Proposition d'une solution et organisation du nouveau projet" />
+    <l_3 S_00="R&#233;alisation et qualification d'un prototype">
+      <d_01>
+        <l_3.2 S_00="Gestion de la vie d'un syst&#232;me">
+          <l_01 S_00="Validation d'un prototype" S_01="Proc&#233;dures d'intervention" S_02="Mise &#224; jour d'un syst&#232;me d'information" S_03="R&#233;daction d'un compte-rendu sur l'activit&#233; de maintenance" S_04="Performances d'un projet finalis&#233;" S_05="Etude prospective technique et &#233;conomique" S_06="Proposition d'une solution et organisation du nouveau projet" />
         </l_3.2>
-        <l_3.1 S_3.100="R&#233;alisation d'un prototype">
-          <l_3.101 S_3.10100="Impl&#233;mentation d'un programme dans un composant programmable" S_3.10101="Interfa&#231;age de composants" S_3.10102="Interconnexion des fonctions distribu&#233;es" S_3.10103="Programmation de l'interface de communication" S_3.10104="Conditionnement des grandeurs acquises (convertir, amplifier, traiter)" S_3.10105="Adaptation d'une cha&#238;ne d'acquisition aux caract&#233;ristiques des grandeurs &#224; acqu&#233;rir" S_3.10106="Recette du prototype au regard des sp&#233;cifications attendues du cahier des charges" />
+        <l_3.1 S_00="R&#233;alisation d'un prototype">
+          <l_01 S_00="Impl&#233;mentation d'un programme dans un composant programmable" S_01="Interfa&#231;age de composants" S_02="Interconnexion des fonctions distribu&#233;es" S_03="Programmation de l'interface de communication" S_04="Conditionnement des grandeurs acquises (convertir, amplifier, traiter)" S_05="Adaptation d'une cha&#238;ne d'acquisition aux caract&#233;ristiques des grandeurs &#224; acqu&#233;rir" S_06="Recette du prototype au regard des sp&#233;cifications attendues du cahier des charges" />
         </l_3.1>
-      </d_301>
+      </d_01>
     </l_3>
-    <l_2 S_200="Maquettage des solutions constructives">
-      <d_201>
-        <l_2.3 S_2.300="Mod&#233;lisations et simulations">
-          <l_2.301 S_2.30100=" Mod&#232;le de comportement fr&#233;quentiel relatif &#224; la fonction filtrage (bande-passante, fr&#233;quence de coupure)" S_2.30101="Diagramme &#233;tats-transitions pour un syst&#232;me &#233;v&#233;nementiel" S_2.30102="Mod&#232;le de comportement : utilisation de librairies logicielles et param&#233;trage de caract&#233;ristiques" S_2.30103="Architecture de la cha&#238;ne d'information et param&#233;trage du simulateur" S_2.30104="Simulations et analyses des r&#233;sultats" S_2.30105="Identification des variables simul&#233;es et mesur&#233;es sur le syst&#232;me pour valider le choix d'une solution" />
+    <l_2 S_00="Maquettage des solutions constructives">
+      <d_01>
+        <l_2.3 S_00="Mod&#233;lisations et simulations">
+          <l_01 S_00=" Mod&#232;le de comportement fr&#233;quentiel relatif &#224; la fonction filtrage (bande-passante, fr&#233;quence de coupure)" S_01="Diagramme &#233;tats-transitions pour un syst&#232;me &#233;v&#233;nementiel" S_02="Mod&#232;le de comportement : utilisation de librairies logicielles et param&#233;trage de caract&#233;ristiques" S_03="Architecture de la cha&#238;ne d'information et param&#233;trage du simulateur" S_04="Simulations et analyses des r&#233;sultats" S_05="Identification des variables simul&#233;es et mesur&#233;es sur le syst&#232;me pour valider le choix d'une solution" />
         </l_2.3>
-        <l_2.2 S_2.200="Architecture fonctionnelle d'un syst&#232;me communicant">
-          <l_2.201 S_2.20100="Mod&#232;les en couche des r&#233;seaux, protocole Ethernet et adresse logique (IP) du protocole IP. Lien adresse MAC/IP : Protocole ARP" S_2.20101="Architecture client/serveur" />
+        <l_2.2 S_00="Architecture fonctionnelle d'un syst&#232;me communicant">
+          <l_01 S_00="Mod&#232;les en couche des r&#233;seaux, protocole Ethernet et adresse logique (IP) du protocole IP. Lien adresse MAC/IP : Protocole ARP" S_01="Architecture client/serveur" />
         </l_2.2>
-        <l_2.1 S_2.100="Conception fonctionnelle d'un syst&#232;me local">
-          <l_2.101 S_2.10100="Acquisition, conditionnement et filtrage d'une information (sous forme analogique)" S_2.10101="Conversion d'une information (CAN et CNA)" S_2.10102="Traitement d'une information num&#233;rique" S_2.10103="Traitement d'une information analogique" S_2.10104="Traitement programm&#233; et composants programmables" S_2.10105="Modulation, d&#233;modulation d'un signal porteur d'une information : amplitude, fr&#233;quence, phase" S_2.10106="Multiplexage d'une information et codage d'une transmission en bande de base" S_2.10107="Transmission d'une information (liaison filaire et non filaire)" S_2.10108="Restitution d'une information : voix, donn&#233;es, images" />
+        <l_2.1 S_00="Conception fonctionnelle d'un syst&#232;me local">
+          <l_01 S_00="Acquisition, conditionnement et filtrage d'une information (sous forme analogique)" S_01="Conversion d'une information (CAN et CNA)" S_02="Traitement d'une information num&#233;rique" S_03="Traitement d'une information analogique" S_04="Traitement programm&#233; et composants programmables" S_05="Modulation, d&#233;modulation d'un signal porteur d'une information : amplitude, fr&#233;quence, phase" S_06="Multiplexage d'une information et codage d'une transmission en bande de base" S_07="Transmission d'une information (liaison filaire et non filaire)" S_08="Restitution d'une information : voix, donn&#233;es, images" />
         </l_2.1>
-      </d_201>
+      </d_01>
     </l_2>
   </d_dicSavoirs>
   <d_dicSavoirs_Math />
   <d_dicSavoirs_Phys />
   <d_effectifs>
-    <l_P S_P00="Act. Pra." S_P01="Activit&#233; Pratique" />
-    <l_C S_C00="Classe enti&#232;re" S_C01="Classe enti&#232;re" />
-    <l_E S_E00="Etude ou Projet" S_E01="Etude et Projet" />
-    <l_D S_D00="Demi-groupe" S_D01="Demi-groupe" />
-    <l_G S_G00="Effectif r&#233;duit" S_G01="Effectif r&#233;duit" />
+    <l_P S_00="Act. Pra." S_01="Activit&#233; Pratique" />
+    <l_C S_00="Classe enti&#232;re" S_01="Classe enti&#232;re" />
+    <l_E S_00="Etude ou Projet" S_01="Etude et Projet" />
+    <l_D S_00="Demi-groupe" S_01="Demi-groupe" />
+    <l_G S_00="Effectif r&#233;duit" S_01="Effectif r&#233;duit" />
   </d_effectifs>
   <d_effectifsSeance>
-    <l_C S_C00="C" />
-    <l_E S_E00="C" />
-    <l_AP S_AP00="E" S_AP01="P" />
-    <l_SS S_SS00="C" />
-    <l_ED S_ED00="C" S_ED01="G" S_ED02="D" S_ED03="E" S_ED04="P" />
-    <l_P S_P00="C" S_P01="G" S_P02="D" S_P03="E" S_P04="P" />
+    <l_C S_00="C" />
+    <l_E S_00="C" />
+    <l_AP S_00="E" S_01="P" />
+    <l_SS S_00="C" />
+    <l_ED S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" />
+    <l_P S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" />
     <l_S />
     <l_R />
-    <l_SA S_SA00="C" S_SA01="G" />
-    <l_TD S_TD00="C" S_TD01="G" S_TD02="D" S_TD03="E" S_TD04="P" />
+    <l_SA S_00="C" S_01="G" />
+    <l_TD S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" />
   </d_effectifsSeance>
   <d_grilles_prj>
-    <l_S S_S00="Grille_presentation_projet_STI2D_V2015.xlsx" S_S01="I" />
-    <l_R S_R00="Grille SIN V2015.xlsx" S_R01="C" />
+    <l_S S_00="Grille_presentation_projet_STI2D_V2015.xlsx" S_01="I" />
+    <l_R S_00="Grille SIN V2015.xlsx" S_01="C" />
   </d_grilles_prj>
-  <l_listPhasesEval_prj S_listPhasesEval_prj00="Rev" S_listPhasesEval_prj01="R1" S_listPhasesEval_prj02="R2" S_listPhasesEval_prj03="R3" S_listPhasesEval_prj04="S" />
-  <l_listPhases_prj S_listPhases_prj00="Ana" S_listPhases_prj01="Con" S_listPhases_prj02="DCo" S_listPhases_prj03="Rea" S_listPhases_prj04="Val" S_listPhases_prj05="XXX" S_listPhases_prj06="Rev" S_listPhases_prj07="R1" S_listPhases_prj08="R2" S_listPhases_prj09="R3" S_listPhases_prj10="S" />
-  <l_listeDemarches S_listeDemarches00="I" S_listeDemarches01="R" S_listeDemarches02="P" />
-  <l_listeEffectifs S_listeEffectifs00="C" S_listeEffectifs01="G" S_listeEffectifs02="D" S_listeEffectifs03="E" S_listeEffectifs04="P" />
-  <l_listeTypeActivite S_listeTypeActivite00="ED" S_listeTypeActivite01="AP" S_listeTypeActivite02="P" />
-  <l_listeTypeSeance S_listeTypeSeance00="ED" S_listeTypeSeance01="AP" S_listeTypeSeance02="P" S_listeTypeSeance03="C" S_listeTypeSeance04="TD" S_listeTypeSeance05="SA" S_listeTypeSeance06="SS" S_listeTypeSeance07="E" S_listeTypeSeance08="R" S_listeTypeSeance09="S" />
+  <l_listPhasesEval_prj S_00="Rev" S_01="R1" S_02="R2" S_03="R3" S_04="S" />
+  <l_listPhases_prj S_00="Ana" S_01="Con" S_02="DCo" S_03="Rea" S_04="Val" S_05="XXX" S_06="Rev" S_07="R1" S_08="R2" S_09="R3" S_10="S" />
+  <l_listeDemarches S_00="I" S_01="R" S_02="P" />
+  <l_listeEffectifs S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" />
+  <l_listeTypeActivite S_00="ED" S_01="AP" S_02="P" />
+  <l_listeTypeSeance S_00="ED" S_01="AP" S_02="P" S_03="C" S_04="TD" S_05="SA" S_06="SS" S_07="E" S_08="R" S_09="S" />
   <d_nomParties_prj S_R="Conduite" S_S="Soutenance" />
   <d_options />
-  <l_periode_prj I_periode_prj00="7" I_periode_prj01="10" />
+  <l_periode_prj I_00="7" I_01="10" />
   <l_periodes>
-    <l_periodes00 I_periodes0001="5" S_periodes0000="1_&#232;re" />
-    <l_periodes01 I_periodes0101="5" S_periodes0100="T_ale" />
+    <l_00 I_01="5" S_00="1_&#232;re" />
+    <l_01 I_01="5" S_00="T_ale" />
   </l_periodes>
   <d_phases_prj>
-    <l_DCo S_DCo00="Concep d&#233;taill&#233;e" S_DCo01="Conception d&#233;taill&#233;e" S_DCo02="Cd" />
-    <l_Ana S_Ana00="Analyse besoins" S_Ana01="Analyse des besoins" S_Ana02="Ab" />
-    <l_Val S_Val00="Validation" S_Val01="Validation" S_Val02="V" />
-    <l_R2 S_R200="Revue n&#176;2" S_R201="Revue de projet n&#176;2" S_R202="R2" />
-    <l_R3 S_R300="Revue n&#176;3" S_R301="Revue de projet n&#176;3" S_R302="R3" />
-    <l_XXX S_XXX00="Pr&#233;pa soutenance" S_XXX01="Pr&#233;paration de la soutenance" S_XXX02="P" />
-    <l_Rev S_Rev00="Revue inter" S_Rev01="Revue interm&#233;diaire" S_Rev02="Ri" />
-    <l_R1 S_R100="Revue n&#176;1" S_R101="Revue de projet n&#176;1" S_R102="R1" />
-    <l_S S_S00="Soutenance" S_S01="Soutenance finale" S_S02="S" />
-    <l_Rea S_Rea00="R&#233;alisation" S_Rea01="R&#233;alisation" S_Rea02="R" />
-    <l_Con S_Con00="Concep pr&#233;liminaire" S_Con01="Conception pr&#233;liminaire" S_Con02="Cp" />
+    <l_DCo S_00="Concep d&#233;taill&#233;e" S_01="Conception d&#233;taill&#233;e" S_02="Cd" />
+    <l_Ana S_00="Analyse besoins" S_01="Analyse des besoins" S_02="Ab" />
+    <l_Val S_00="Validation" S_01="Validation" S_02="V" />
+    <l_R2 S_00="Revue n&#176;2" S_01="Revue de projet n&#176;2" S_02="R2" />
+    <l_R3 S_00="Revue n&#176;3" S_01="Revue de projet n&#176;3" S_02="R3" />
+    <l_XXX S_00="Pr&#233;pa soutenance" S_01="Pr&#233;paration de la soutenance" S_02="P" />
+    <l_Rev S_00="Revue inter" S_01="Revue interm&#233;diaire" S_02="Ri" />
+    <l_R1 S_00="Revue n&#176;1" S_01="Revue de projet n&#176;1" S_02="R1" />
+    <l_S S_00="Soutenance" S_01="Soutenance finale" S_02="S" />
+    <l_Rea S_00="R&#233;alisation" S_01="R&#233;alisation" S_02="R" />
+    <l_Con S_00="Concep pr&#233;liminaire" S_01="Conception pr&#233;liminaire" S_02="Cp" />
   </d_phases_prj>
   <d_posRevues>
-    <l__02 S__0200="Con" S__0201="Val" />
-    <l__03 S__0300="Ana" S__0301="Con" S__0302="Val" />
+    <l__02 S_00="Con" S_01="Val" />
+    <l__03 S_00="Ana" S_01="Con" S_02="Val" />
   </d_posRevues>
   <l_positions_CI />
   <d_seances>
-    <l_C S_C00="Cours" S_C01="Cours" />
-    <l_E S_E00="Evaluation" S_E01="Evaluation" />
-    <l_P S_P00="Projet" S_P01="Activit&#233; de projet" />
-    <l_SS S_SS00="Synt. s&#233;quence" S_SS01="Synth&#232;se de s&#233;quence" />
-    <l_ED S_ED00="Etude de dossier" S_ED01="Activit&#233; d'&#233;tude de dossier" />
-    <l_AP S_AP00="Activit&#233; pratique" S_AP01="Activit&#233; pratique" />
-    <l_S S_S00="Parall&#232;le" S_S01="Activit&#233;s en parall&#232;le" />
-    <l_R S_R00="Rotation" S_R01="Rotation d'activit&#233;s" />
-    <l_TD S_TD00="TD" S_TD01="Travaux Dirig&#233;s" />
-    <l_SA S_SA00="Synt. activit&#233;" S_SA01="Synth&#232;se d'activit&#233;" />
+    <l_C S_00="Cours" S_01="Cours" />
+    <l_E S_00="Evaluation" S_01="Evaluation" />
+    <l_P S_00="Projet" S_01="Activit&#233; de projet" />
+    <l_SS S_00="Synt. s&#233;quence" S_01="Synth&#232;se de s&#233;quence" />
+    <l_ED S_00="Etude de dossier" S_01="Activit&#233; d'&#233;tude de dossier" />
+    <l_AP S_00="Activit&#233; pratique" S_01="Activit&#233; pratique" />
+    <l_S S_00="Parall&#232;le" S_01="Activit&#233;s en parall&#232;le" />
+    <l_R S_00="Rotation" S_01="Rotation d'activit&#233;s" />
+    <l_TD S_00="TD" S_01="Travaux Dirig&#233;s" />
+    <l_SA S_00="Synt. activit&#233;" S_01="Synth&#232;se d'activit&#233;" />
   </d_seances>
-  <l_tr_com S_tr_com00="ET" S_tr_com01="Ref_STI2D-ETT.xls" />
+  <l_tr_com S_00="ET" S_01="Ref_STI2D-ETT.xls" />
 </Referentiel>
