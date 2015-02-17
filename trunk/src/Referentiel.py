@@ -431,7 +431,153 @@ class Referentiel(XMLelem):
 #        self.fichierProgressionProgramme = r""
 #        self.dicCellSavoirs = {}
     
-    
+    ######################################################################################
+    def setBrancheV5(self, branche):
+        """ Lecture de la branche XML
+            (ouverture de fichier)
+        """
+#        print "setBranche référentiel"
+        self.initParam()
+
+        nomerr = []
+        
+        def lect(branche, nom = ""):
+            if nom[:2] == "S_":
+                return unicode(branche.get(nom)).replace(u"--", u"\n")
+            elif nom[:2] == "I_":
+                return int(eval(branche.get(nom)))
+            elif nom[:2] == "L_":
+                return long(eval(branche.get(nom)))
+            elif nom[:2] == "F_":
+                return float(eval(branche.get(nom)))
+            elif nom[:2] == "B_":
+                if branche.get(nom) == None: # Pour corriger un bug (version <=5.0beta3)
+                    nomerr.append(nom)
+                    return False 
+                return branche.get(nom)[0] == "T"
+            elif nom[:2] == "l_":
+                sbranche = branche.find(nom)
+                if sbranche == None: return []
+                dic = {}
+                for k, sb in sbranche.items():
+                    _k = k[2:]
+                    if isinstance(_k, (str, unicode)) and "--" in _k:
+                        _k = _k.replace("--", "\n")
+                    dic[_k] = lect(sbranche, k)
+                for sb in list(sbranche):
+                    k = sb.tag
+                    _k = k[2:]
+                    if isinstance(_k, (str, unicode)) and "--" in _k:
+                        _k = _k.replace("--", "\n")
+                    dic[_k] = lect(sbranche, k)
+#                print dic.values()
+                liste = [dic[v] for v in sorted(dic)]
+#                print " >", liste
+                return liste
+#                liste = [lect(sbranche, k) for k, sb in sbranche.items()]
+#                return liste + [lect(sb, k) for k, sb in list(sbranche)]
+            elif nom[:2] == "d_":
+                sbranche = branche.find(nom)
+                d = {}
+                if sbranche != None:
+                    for k, sb in sbranche.items():
+                        _k = k[2:]
+                        if isinstance(_k, (str, unicode)) and "--" in _k:
+                            _k = _k.replace("--", "\n")
+                        d[_k] = lect(sbranche, k)
+                    for sb in list(sbranche):
+                        k = sb.tag
+                        
+                        _k = k[2:]
+                        if _k[0] == "_":
+                            _k = eval(_k[1:])
+                        if isinstance(_k, (str, unicode)) and "--" in _k:
+                            _k = _k.replace("--", "\n")
+                        d[_k] = lect(sbranche, k)
+                return d
+
+
+        for attr in dir(self):
+            if attr[0] != "_":
+                val = getattr(self, attr)
+                if type(val) == str or type(val) == unicode:
+                    _attr = "S_"+attr
+                elif type(val) == int:
+                    _attr = "I_"+attr
+                elif type(val) == long:
+                    _attr = "L_"+attr
+                elif type(val) == float:
+                    _attr = "F_"+attr
+                elif type(val) == bool:
+                    _attr = "B_"+attr
+                elif type(val) == list:
+                    _attr = "l_"+attr
+                elif type(val) == dict:
+                    _attr = "d_"+attr
+                else:
+                    _attr = None
+                if _attr:
+                    setattr(self, attr, lect(branche, _attr.replace("\n", "--")))
+        
+        # Pour corriger une erreur de jeunesse de la 5.0beta1
+        if len(self.aColNon) == 0:
+            self.aColNon = {'R' : True,  'S' : False}
+
+#        # Pour corriger une erreur de jeunesse de la 5.0beta3
+#        if self.Code in ['SIN', 'ITEC', 'AC', 'EE']:
+#            self.tr_com == True
+        
+        # Pour rajouter les periodes aux fichiers < 5.7
+        if self.periodes == []:
+            self.periodes = self.defPeriode()
+#            print ">>>", self.periode_prj
+            
+        # Pour ajouter les noms des CI < 5.8
+        if self.nomCI == "None":
+            self.nomCI = u"Centres d'intérêt"
+            self.abrevCI = u"CI"
+        
+        # Pour ajouter savoirs prérequis/objectifs < 5.9
+        if "B_objSavoirs_Math" in nomerr:
+            self.nomSavoirs_Math = u"Mathématiques"
+            self.nomSavoirs_Phys = u"Sciences Physiques"
+            self.objSavoirs_Math = False
+            self.preSavoirs_Math = True
+            self.objSavoirs_Phys = False
+            self.preSavoirs_Phys = True
+        
+        # Pour mettre à jour les généralités sur le projet
+        if self.attributs_prj == {}:
+            self.attributs_prj = REFERENTIELS[self.Code].attributs_prj
+            
+        ###########################################################
+        def corrigeArbreProjet(dic, debug = False):
+            for k0, v0 in dic.items():
+                if debug: print k0
+                if len(v0) > 1 and type(v0[1]) == dict:
+                    if debug: print "   ", v0[0]
+                    if len(v0) == 2:
+                        corrigeArbreProjet(v0[1], debug = debug)
+                    else:
+                        if debug: print "   prem's", v0[2]
+                        if v0[2][1] != 0 or v0[2][2] != 0: # Conduite ou Soutenance
+                            corrigeArbreProjet(v0[1], debug = debug)
+                else:
+                    lst = []
+                    for l in v0[1]:
+                        if debug: print l
+                        if not isinstance(l, Indicateur):
+                            if debug: print "Correction"
+                            lst.append(Indicateur(l[0], l[1], l[2]))
+                    v0[1] = lst
+            return
+        
+        corrigeArbreProjet(self.dicCompetences, debug = False)
+        print "dicCompetences Corr", self.dicCompetences
+        self.postTraiter()
+        self.completer()
+
+        return
     ######################################################################################  
     def getParams(self):
         l = []
@@ -485,7 +631,7 @@ class Referentiel(XMLelem):
         if self.attributs_prj == {}:
             self.attributs_prj = REFERENTIELS[self.Code].attributs_prj
             
-
+        
         return
         
     
@@ -737,7 +883,7 @@ class Referentiel(XMLelem):
         # Pour enregistrer s'il y a des colonnes "non" dans les grilles 'R' ou 'S'
 #        self.aColNon = {'R' : False,  'S' : False}
         self.dicCompetences = getArbre(sh_va, range(2, sh_va.nrows), 0, prems = True, debug = False)
-#        print "dicCompetences", self.dicCompetences
+        print "dicCompetences", self.dicCompetences
 #        print "_aColNon", self.Code, ":", self._aColNon
          
         #
@@ -1299,6 +1445,10 @@ class Referentiel(XMLelem):
         else:
             competence
 
+    #########################################################################
+    def getNbrRevuesDefaut(self):
+        return min(self.posRevues.keys())
+        
 
     #########################################################################
     def getCompetence(self, comp):

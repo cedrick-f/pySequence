@@ -615,9 +615,15 @@ import getEtab
 ETABLISSEMENTS = getEtab.ouvrir()
 #print "ETABLISSEMENTS", ETABLISSEMENTS
 
+class Discipline():
+    def __init__(self, Id, nom, code, coul):
+        self.id = Id
+        self.nom = nom
+        self.code = code
+        self.coul = coul
+        self.domaine = 'all'
 
-
-DISCIPLINES = ['Tec', 'Phy', 'Mat', 'Svt', 'LV1', 'Phi', 'Spo', 'Aut']
+DISCIPLINES = ['Tec', 'Phy', 'Mat', 'Svt', 'LV1', 'Phi', 'Spo', 'Aut']#, 'GE', 'CM', 'SA']
 NOM_DISCIPLINES = {'Tec' : u"Sciences Industrielles de l'Ingénieur", 
                    'Phy' : u"Physique/Chimie", 
                    'Mat' : u"Mathématiques", 
@@ -625,7 +631,10 @@ NOM_DISCIPLINES = {'Tec' : u"Sciences Industrielles de l'Ingénieur",
                    'Phi' : u"Philosophie", 
                    'LV1' : u"Langue vivante",
                    'Spo' : u"Education physique",
-                   'Aut' : u"Autre discipline"}
+                   'Aut' : u"Autre discipline",
+                   'GE'  : u"Génie Électrique", 
+                   'CM'  : u"Construction Mécanique",
+                   'SA'  : u"Sciences Appliquées"}
 
 CODE_DISCIPLINES = {'Tec' : u"", 
                    'Phy' : u"PC", 
@@ -634,7 +643,10 @@ CODE_DISCIPLINES = {'Tec' : u"",
                    'Phi' : u"Phi", 
                    'LV1' : u"LV",
                    'Spo' : u"EP",
-                   'Aut' : u"Autre discipline"}
+                   'Aut' : u"Autre discipline",
+                   'GE'  : u"GE", 
+                   'CM'  : u"CM",
+                   'SA'  : u"SA"}
 
 COUL_DISCIPLINES = {'Tec' : (0, 0, 0), 
                     'Phy' : (0.7, 0.2, 0), 
@@ -643,7 +655,10 @@ COUL_DISCIPLINES = {'Tec' : (0, 0, 0),
                     'Phi' : (0.2, 0, 0.7), 
                     'LV1' : (0.45, 0.45, 0),
                     'Spo' : (0, 0.45, 0.45),
-                    'Aut' : (0.45, 0, 0.45)}
+                    'Aut' : (0.45, 0, 0.45),
+                    'GE' : (0, 0, 0), 
+                    'CM' : (0, 0, 0),
+                    'SA' : (0.7, 0.2, 0)}
 
 AFFICHER_DISC_FICHE = True
 AFFICHER_DISC_ARBRE = True
