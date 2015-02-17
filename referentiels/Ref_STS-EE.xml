@@ -103,124 +103,12 @@
     </l_Prof>
   </d_cellulesInfo_prj>
   <d_demarcheSeance>
-    <l_ED S_00="I" S_01="R" />
-    <l_P S_00="I" S_01="R" S_02="P" />
-    <l_AP S_00="I" S_01="R" />
+    <l_ED />
+    <l_P />
+    <l_AP />
   </d_demarcheSeance>
-  <d_demarches>
-    <l_I S_00="Investigation" S_01="Investigation" />
-    <l_P S_00="Projet" S_01="Projet" />
-    <l_R S_00="R&#233;s. Probl&#232;me" S_01="R&#233;solution de probl&#232;me" />
-  </d_demarches>
+  <d_demarches />
   <d_dicCompetences>
-    <l_C20 S_00="R&#233;gler les param&#232;tres">
-      <l_01>
-        <Indicateur_00 I_ligne="0" S_intitule="Les param&#232;tres sont r&#233;gl&#233;s dans des conditions qui limitent les risques pour les personnes et le mat&#233;riel">
-          <l_poids F_01="33.333333" I_00="0" I_02="0" />
-        </Indicateur_00>
-        <Indicateur_01 I_ligne="0" S_intitule="La proc&#233;dure d'acc&#232;s aux param&#232;tres est ma&#238;tris&#233;e">
-          <l_poids F_01="33.333333" I_00="0" I_02="0" />
-        </Indicateur_01>
-        <Indicateur_02 I_ligne="0" S_intitule="Les valeurs des param&#232;tres de r&#233;glage sont pr&#233;d&#233;termin&#233;es">
-          <l_poids F_01="33.333333" I_00="0" I_02="0" />
-        </Indicateur_02>
-      </l_01>
-      <l_02 I_00="0" I_01="6" I_02="0" />
-    </l_C20>
-    <l_C21 S_00="R&#233;aliser un ouvrage, un &#233;quipement ou un produit">
-      <l_01>
-        <Indicateur_00 I_ligne="0" S_intitule="La r&#233;alisation est faite dans le respect des r&#232;gles de l'art">
-          <l_poids F_01="25.0" I_00="0" I_02="0" />
-        </Indicateur_00>
-        <Indicateur_01 I_ligne="0" S_intitule="La r&#233;alisation est conforme au dossier de fabrication, ou les modificatnions apport&#233;es sont justifi&#233;es.">
-          <l_poids F_01="25.0" I_00="0" I_02="0" />
-        </Indicateur_01>
-        <Indicateur_02 I_ligne="0" S_intitule="Les normes sont respect&#233;es">
-          <l_poids F_01="25.0" I_00="0" I_02="0" />
-        </Indicateur_02>
-        <Indicateur_03 I_ligne="0" S_intitule="La partie r&#233;alis&#233;e est fonctionnelle">
-          <l_poids F_01="25.0" I_00="0" I_02="0" />
-        </Indicateur_03>
-      </l_01>
-      <l_02 I_00="0" I_01="10" I_02="0" />
-    </l_C21>
-    <l_P S_00="Le technicien participe &#224; la t&#226;che mais n'en a pas la ma&#238;trise. Il doit n&#233;anmoins comprendre son fondement et apporter ses comp&#233;tences &#224; l'&#233;quipe qui en a la charge.">
-      <l_01 />
-      <l_02 I_00="0" I_01="0" I_02="0" />
-    </l_P>
-    <l_C24 S_00="Suivre la r&#233;alisation">
-      <l_01>
-        <Indicateur_00 I_ligne="0" S_intitule="Les t&#226;ches sont r&#233;alis&#233;es dans l'ordre conform&#233;ment au planning">
-          <l_poids F_01="33.333333" I_00="0" I_02="0" />
-        </Indicateur_00>
-        <Indicateur_01 I_ligne="0" S_intitule="Les causes de non respect du planning sont analys&#233;es et le planning est ajust&#233; en cons&#233;quence">
-          <l_poids F_01="33.333333" I_00="0" I_02="0" />
-        </Indicateur_01>
-        <Indicateur_02 I_ligne="0" S_intitule="Les difficult&#233;s technologiques sont analys&#233;es. Des solutions de remplacement ou d'&#233;volution sont envisag&#233;es.">
-          <l_poids F_01="33.333333" I_00="0" I_02="0" />
-        </Indicateur_02>
-      </l_01>
-      <l_02 I_00="0" I_01="6" I_02="0" />
-    </l_C24>
-    <l_C07 S_00="Argumenter sur la solution technique retenue">
-      <l_01>
-        <Indicateur_00 I_ligne="0" S_intitule="Les choix r&#233;alis&#233;s sont clairement d&#233;velopp&#233;s et justif&#233;s">
-          <l_poids F_02="20.0" I_00="0" I_01="0" />
-        </Indicateur_00>
-        <Indicateur_01 I_ligne="0" S_intitule="La mise en service et le fonctionnement du syst&#232;me sont expliqu&#233;s">
-          <l_poids F_02="20.0" I_00="0" I_01="0" />
-        </Indicateur_01>
-        <Indicateur_02 I_ligne="0" S_intitule="Les caract&#233;ristiques finales obtenues sont pr&#233;sent&#233;es et s'appuient sur des essais">
-          <l_poids F_02="20.0" I_00="0" I_01="0" />
-        </Indicateur_02>
-        <Indicateur_03 I_ligne="0" S_intitule="Les diff&#233;rences &#233;ventuelles par rapport au cahier des charges sont expliqu&#233;es">
-          <l_poids F_02="20.0" I_00="0" I_01="0" />
-        </Indicateur_03>
-        <Indicateur_04 I_ligne="0" S_intitule="Les r&#233;ponses aux quetions sont claires et en rapport avec la demande">
-          <l_poids F_02="20.0" I_00="0" I_01="0" />
-        </Indicateur_04>
-      </l_01>
-      <l_02 I_00="0" I_01="0" I_02="30" />
-    </l_C07>
-    <l_C33 S_00="Animer une r&#233;union">
-      <l_01>
-        <Indicateur_00 I_ligne="0" S_intitule="L'avanc&#233; des travaux de chacun est connue de toute l'&#233;quipe">
-          <l_poids F_01="33.333333" I_00="0" I_02="0" />
-        </Indicateur_00>
-        <Indicateur_01 I_ligne="0" S_intitule="Les modifications de conception sont faites en accord avec toute l'&#233;quipe">
-          <l_poids F_01="33.333333" I_00="0" I_02="0" />
-        </Indicateur_01>
-        <Indicateur_02 I_ligne="0" S_intitule="Les mises &#224; jour du planning sont r&#233;alis&#233;es en commun">
-          <l_poids F_01="33.333333" I_00="0" I_02="0" />
-        </Indicateur_02>
-      </l_01>
-      <l_02 I_00="0" I_01="6" I_02="0" />
-    </l_C33>
-    <l_C27 S_00="Estimer les d&#233;lais d'approvisionnement">
-      <l_01>
-        <Indicateur_00 I_ligne="0" S_intitule="Les d&#233;lais de livraison sont d&#233;termin&#233;s">
-          <l_poids F_01="50.0" I_00="0" I_02="0" />
-        </Indicateur_00>
-        <Indicateur_01 I_ligne="0" S_intitule="L'approvisionnement mat&#233;riel est planifi&#233;">
-          <l_poids F_01="50.0" I_00="0" I_02="0" />
-        </Indicateur_01>
-      </l_01>
-      <l_02 I_00="0" I_01="4" I_02="0" />
-    </l_C27>
-    <l_C09 S_00="&#201;laborer les dossiers techniques">
-      <l_01>
-        <Indicateur_00 I_ligne="0" S_intitule="Le dossier est bien organis&#233; et permet une recherche ais&#233;e de l'information">
-          <l_poids F_02="33.333333" I_00="0" I_01="0" />
-        </Indicateur_00>
-        <Indicateur_01 I_ligne="0" S_intitule="Le dossier contient toutes les informations n&#233;cessaires &#224; la compr&#233;hension, &#224; la mise en service et &#224; la maintenance du syst&#232;me">
-          <l_poids F_02="33.333333" I_00="0" I_01="0" />
-        </Indicateur_01>
-        <Indicateur_02 I_ligne="0" S_intitule="Les informations sont compr&#233;hensibles et repr&#233;sent&#233;s dans un langage compatibles avec les utilisateurs">
-          <l_poids F_02="33.333333" I_00="0" I_01="0" />
-        </Indicateur_02>
-      </l_01>
-      <l_02 I_00="0" I_01="0" I_02="12" />
-    </l_C09>
     <l_C19 S_00="Identifier les param&#232;tres de r&#233;glage">
       <l_01>
         <Indicateur_00 I_ligne="0" S_intitule="Les param&#232;tres &#224; r&#233;gler sur les appareils par le technicien sont d&#233;finis">
@@ -249,37 +137,14 @@
       </l_01>
       <l_02 I_00="0" I_01="10" I_02="0" />
     </l_C18>
-    <l_C15 S_00="Estimer les d&#233;lais de r&#233;alisation">
-      <l_01>
-        <Indicateur_00 I_ligne="0" S_intitule="Les diff&#233;rentes t&#226;ches du projet sont list&#233;es">
-          <l_poids F_01="25.0" I_00="0" I_02="0" />
-        </Indicateur_00>
-        <Indicateur_01 I_ligne="0" S_intitule="La dur&#233;e de chaque t&#226;che est estim&#233;e">
-          <l_poids F_01="25.0" I_00="0" I_02="0" />
-        </Indicateur_01>
-        <Indicateur_02 I_ligne="0" S_intitule="Le planning des t&#226;ches est correctement &#233;tabli et montre celles qui sont simultan&#233;ment r&#233;alisables">
-          <l_poids F_01="25.0" I_00="0" I_02="0" />
-        </Indicateur_02>
-        <Indicateur_03 I_ligne="0" S_intitule="Les t&#226;ches sont correctement r&#233;parties et repr&#233;sentent l'organisatinon du travail de chacun">
-          <l_poids F_01="25.0" I_00="0" I_02="0" />
-        </Indicateur_03>
-      </l_01>
-      <l_02 I_00="0" I_01="10" I_02="0" />
-    </l_C15>
-    <l_C32 S_00="Interpr&#233;ter la demande du client">
-      <l_01>
-        <Indicateur_00 I_ligne="0" S_intitule="Le but du projet est nettement identifi&#233;">
-          <l_poids F_01="33.333333" I_00="0" I_02="0" />
-        </Indicateur_00>
-        <Indicateur_01 I_ligne="0" S_intitule="Un synoptique ou un croquis du projet a &#233;t&#233; clairement repr&#233;sent&#233;">
-          <l_poids F_01="33.333333" I_00="0" I_02="0" />
-        </Indicateur_01>
-        <Indicateur_02 I_ligne="0" S_intitule="Les explications donn&#233;es sont claires, les commentaires permettent une compr&#233;hension ais&#233;e de la demande">
-          <l_poids F_01="33.333333" I_00="0" I_02="0" />
-        </Indicateur_02>
-      </l_01>
-      <l_02 I_00="0" I_01="10" I_02="0" />
-    </l_C32>
+    <l_C13 S_00="Appliquer les normes">
+      <l_01 />
+      <l_02 I_00="0" I_01="0" I_02="0" />
+    </l_C13>
+    <l_C12 S_00="Concevoir une proc&#233;dure">
+      <l_01 />
+      <l_02 I_00="0" I_01="0" I_02="0" />
+    </l_C12>
     <l_C11 S_00="Estimer les co&#251;ts pr&#233;visionnels">
       <l_01>
         <Indicateur_00 I_ligne="0" S_intitule="Le mat&#233;riel pricipal n&#233;cessaire &#224; la r&#233;alisation est correctement d&#233;termin&#233;">
@@ -345,6 +210,198 @@
       </l_01>
       <l_02 I_00="0" I_01="0" I_02="18" />
     </l_C16>
+    <l_C15 S_00="Estimer les d&#233;lais de r&#233;alisation">
+      <l_01>
+        <Indicateur_00 I_ligne="0" S_intitule="Les diff&#233;rentes t&#226;ches du projet sont list&#233;es">
+          <l_poids F_01="25.0" I_00="0" I_02="0" />
+        </Indicateur_00>
+        <Indicateur_01 I_ligne="0" S_intitule="La dur&#233;e de chaque t&#226;che est estim&#233;e">
+          <l_poids F_01="25.0" I_00="0" I_02="0" />
+        </Indicateur_01>
+        <Indicateur_02 I_ligne="0" S_intitule="Le planning des t&#226;ches est correctement &#233;tabli et montre celles qui sont simultan&#233;ment r&#233;alisables">
+          <l_poids F_01="25.0" I_00="0" I_02="0" />
+        </Indicateur_02>
+        <Indicateur_03 I_ligne="0" S_intitule="Les t&#226;ches sont correctement r&#233;parties et repr&#233;sentent l'organisatinon du travail de chacun">
+          <l_poids F_01="25.0" I_00="0" I_02="0" />
+        </Indicateur_03>
+      </l_01>
+      <l_02 I_00="0" I_01="10" I_02="0" />
+    </l_C15>
+    <l_C14 S_00="Analyser les causes de disfonctionnement">
+      <l_01>
+        <Indicateur_00 I_ligne="0" S_intitule="Le mauvais fonctionnement d'un ensemble est expliqu&#233; et justifi&#233;">
+          <l_poids F_01="50.0" I_00="0" I_02="0" />
+        </Indicateur_00>
+        <Indicateur_01 I_ligne="0" S_intitule="Les imperfections de fonctionnement sont analys&#233;es">
+          <l_poids F_01="50.0" I_00="0" I_02="0" />
+        </Indicateur_01>
+      </l_01>
+      <l_02 I_00="0" I_01="4" I_02="0" />
+    </l_C14>
+    <l_C31 S_00="Intervenir sur une installation">
+      <l_01 />
+      <l_02 I_00="0" I_01="0" I_02="0" />
+    </l_C31>
+    <l_C30 S_00="Ordonnancer des op&#233;rations de maintenance">
+      <l_01 />
+      <l_02 I_00="0" I_01="0" I_02="0" />
+    </l_C30>
+    <l_C33 S_00="Animer une r&#233;union">
+      <l_01>
+        <Indicateur_00 I_ligne="0" S_intitule="L'avanc&#233; des travaux de chacun est connue de toute l'&#233;quipe">
+          <l_poids F_01="33.333333" I_00="0" I_02="0" />
+        </Indicateur_00>
+        <Indicateur_01 I_ligne="0" S_intitule="Les modifications de conception sont faites en accord avec toute l'&#233;quipe">
+          <l_poids F_01="33.333333" I_00="0" I_02="0" />
+        </Indicateur_01>
+        <Indicateur_02 I_ligne="0" S_intitule="Les mises &#224; jour du planning sont r&#233;alis&#233;es en commun">
+          <l_poids F_01="33.333333" I_00="0" I_02="0" />
+        </Indicateur_02>
+      </l_01>
+      <l_02 I_00="0" I_01="6" I_02="0" />
+    </l_C33>
+    <l_C32 S_00="Interpr&#233;ter la demande du client">
+      <l_01>
+        <Indicateur_00 I_ligne="0" S_intitule="Le but du projet est nettement identifi&#233;">
+          <l_poids F_01="33.333333" I_00="0" I_02="0" />
+        </Indicateur_00>
+        <Indicateur_01 I_ligne="0" S_intitule="Un synoptique ou un croquis du projet a &#233;t&#233; clairement repr&#233;sent&#233;">
+          <l_poids F_01="33.333333" I_00="0" I_02="0" />
+        </Indicateur_01>
+        <Indicateur_02 I_ligne="0" S_intitule="Les explications donn&#233;es sont claires, les commentaires permettent une compr&#233;hension ais&#233;e de la demande">
+          <l_poids F_01="33.333333" I_00="0" I_02="0" />
+        </Indicateur_02>
+      </l_01>
+      <l_02 I_00="0" I_01="10" I_02="0" />
+    </l_C32>
+    <l_C22 S_00="D&#233;terminer les diff&#233;rentes t&#226;ches">
+      <l_01 />
+      <l_02 I_00="0" I_01="0" I_02="0" />
+    </l_C22>
+    <l_C23 S_00="Planifier les t&#226;ches en tenant compte des r&#233;alisations et interventions des autres corps de m&#233;tier concern&#233;s par la performance &#233;nerg&#233;tique">
+      <l_01 />
+      <l_02 I_00="0" I_01="0" I_02="0" />
+    </l_C23>
+    <l_C20 S_00="R&#233;gler les param&#232;tres">
+      <l_01>
+        <Indicateur_00 I_ligne="0" S_intitule="Les param&#232;tres sont r&#233;gl&#233;s dans des conditions qui limitent les risques pour les personnes et le mat&#233;riel">
+          <l_poids F_01="33.333333" I_00="0" I_02="0" />
+        </Indicateur_00>
+        <Indicateur_01 I_ligne="0" S_intitule="La proc&#233;dure d'acc&#232;s aux param&#232;tres est ma&#238;tris&#233;e">
+          <l_poids F_01="33.333333" I_00="0" I_02="0" />
+        </Indicateur_01>
+        <Indicateur_02 I_ligne="0" S_intitule="Les valeurs des param&#232;tres de r&#233;glage sont pr&#233;d&#233;termin&#233;es">
+          <l_poids F_01="33.333333" I_00="0" I_02="0" />
+        </Indicateur_02>
+      </l_01>
+      <l_02 I_00="0" I_01="6" I_02="0" />
+    </l_C20>
+    <l_C21 S_00="R&#233;aliser un ouvrage, un &#233;quipement ou un produit">
+      <l_01>
+        <Indicateur_00 I_ligne="0" S_intitule="La r&#233;alisation est faite dans le respect des r&#232;gles de l'art">
+          <l_poids F_01="25.0" I_00="0" I_02="0" />
+        </Indicateur_00>
+        <Indicateur_01 I_ligne="0" S_intitule="La r&#233;alisation est conforme au dossier de fabrication, ou les modificatnions apport&#233;es sont justifi&#233;es.">
+          <l_poids F_01="25.0" I_00="0" I_02="0" />
+        </Indicateur_01>
+        <Indicateur_02 I_ligne="0" S_intitule="Les normes sont respect&#233;es">
+          <l_poids F_01="25.0" I_00="0" I_02="0" />
+        </Indicateur_02>
+        <Indicateur_03 I_ligne="0" S_intitule="La partie r&#233;alis&#233;e est fonctionnelle">
+          <l_poids F_01="25.0" I_00="0" I_02="0" />
+        </Indicateur_03>
+      </l_01>
+      <l_02 I_00="0" I_01="10" I_02="0" />
+    </l_C21>
+    <l_C26 S_00="Contr&#244;ler la conformit&#233; d'un produit">
+      <l_01 />
+      <l_02 I_00="0" I_01="0" I_02="0" />
+    </l_C26>
+    <l_C27 S_00="Estimer les d&#233;lais d'approvisionnement">
+      <l_01>
+        <Indicateur_00 I_ligne="0" S_intitule="Les d&#233;lais de livraison sont d&#233;termin&#233;s">
+          <l_poids F_01="50.0" I_00="0" I_02="0" />
+        </Indicateur_00>
+        <Indicateur_01 I_ligne="0" S_intitule="L'approvisionnement mat&#233;riel est planifi&#233;">
+          <l_poids F_01="50.0" I_00="0" I_02="0" />
+        </Indicateur_01>
+      </l_01>
+      <l_02 I_00="0" I_01="4" I_02="0" />
+    </l_C27>
+    <l_C24 S_00="Suivre la r&#233;alisation">
+      <l_01>
+        <Indicateur_00 I_ligne="0" S_intitule="Les t&#226;ches sont r&#233;alis&#233;es dans l'ordre conform&#233;ment au planning">
+          <l_poids F_01="33.333333" I_00="0" I_02="0" />
+        </Indicateur_00>
+        <Indicateur_01 I_ligne="0" S_intitule="Les causes de non respect du planning sont analys&#233;es et le planning est ajust&#233; en cons&#233;quence">
+          <l_poids F_01="33.333333" I_00="0" I_02="0" />
+        </Indicateur_01>
+        <Indicateur_02 I_ligne="0" S_intitule="Les difficult&#233;s technologiques sont analys&#233;es. Des solutions de remplacement ou d'&#233;volution sont envisag&#233;es.">
+          <l_poids F_01="33.333333" I_00="0" I_02="0" />
+        </Indicateur_02>
+      </l_01>
+      <l_02 I_00="0" I_01="6" I_02="0" />
+    </l_C24>
+    <l_C25 S_00="Analyser un planning">
+      <l_01 />
+      <l_02 I_00="0" I_01="0" I_02="0" />
+    </l_C25>
+    <l_C28 S_00="Communiquer de fa&#231;on adapt&#233;e &#224; la situation">
+      <l_01 />
+      <l_02 I_00="0" I_01="0" I_02="0" />
+    </l_C28>
+    <l_C29 S_00="Exercer une responsabilit&#233; hi&#233;rarchique">
+      <l_01 />
+      <l_02 I_00="0" I_01="0" I_02="0" />
+    </l_C29>
+    <l_C08 S_00="Concevoir une solution technique">
+      <l_01 />
+      <l_02 I_00="0" I_01="0" I_02="0" />
+    </l_C08>
+    <l_C09 S_00="&#201;laborer les dossiers techniques">
+      <l_01>
+        <Indicateur_00 I_ligne="0" S_intitule="Le dossier est bien organis&#233; et permet une recherche ais&#233;e de l'information">
+          <l_poids F_02="33.333333" I_00="0" I_01="0" />
+        </Indicateur_00>
+        <Indicateur_01 I_ligne="0" S_intitule="Le dossier contient toutes les informations n&#233;cessaires &#224; la compr&#233;hension, &#224; la mise en service et &#224; la maintenance du syst&#232;me">
+          <l_poids F_02="33.333333" I_00="0" I_01="0" />
+        </Indicateur_01>
+        <Indicateur_02 I_ligne="0" S_intitule="Les informations sont compr&#233;hensibles et repr&#233;sent&#233;s dans un langage compatibles avec les utilisateurs">
+          <l_poids F_02="33.333333" I_00="0" I_01="0" />
+        </Indicateur_02>
+      </l_01>
+      <l_02 I_00="0" I_01="0" I_02="12" />
+    </l_C09>
+    <l_C01 S_00="Analyser un dossier">
+      <l_01 />
+      <l_02 I_00="0" I_01="0" I_02="0" />
+    </l_C01>
+    <l_C02 S_00="Choisir une solution technique">
+      <l_01 />
+      <l_02 I_00="0" I_01="0" I_02="0" />
+    </l_C02>
+    <l_C03 S_00="Analyser une solution technique">
+      <l_01 />
+      <l_02 I_00="0" I_01="0" I_02="0" />
+    </l_C03>
+    <l_C04 S_00="R&#233;diger un document de synth&#232;se">
+      <l_01 />
+      <l_02 I_00="0" I_01="0" I_02="0" />
+    </l_C04>
+    <l_C05 S_00="D&#233;terminer les ressources et les contraintes">
+      <l_01>
+        <Indicateur_00 I_ligne="0" S_intitule="Une ou plusieurs solutions technologiques conformes &#224; la demande sont pr&#233;sent&#233;es">
+          <l_poids F_01="33.333333" I_00="0" I_02="0" />
+        </Indicateur_00>
+        <Indicateur_01 I_ligne="0" S_intitule="Des ressources humaines sont envisag&#233;es et d&#233;termin&#233;es (aides ext&#233;rieures sur des sujets non ma&#238;tris&#233;s )">
+          <l_poids F_01="33.333333" I_00="0" I_02="0" />
+        </Indicateur_01>
+        <Indicateur_02 I_ligne="0" S_intitule="Des ressources mat&#233;rielles sont envisag&#233;es et d&#233;termin&#233;es (sous-traitence, mat&#233;riels particuliers)">
+          <l_poids F_01="33.333333" I_00="0" I_02="0" />
+        </Indicateur_02>
+      </l_01>
+      <l_02 I_00="0" I_01="8" I_02="0" />
+    </l_C05>
     <l_C06 S_00="Respecter une proc&#233;dure">
       <l_01>
         <Indicateur_00 I_ligne="0" S_intitule="La proc&#233;dure de r&#233;ception du mat&#233;riel est respect&#233;e">
@@ -359,17 +416,30 @@
       </l_01>
       <l_02 I_00="0" I_01="6" I_02="0" />
     </l_C06>
-    <l_C14 S_00="Analyser les causes de disfonctionnement">
+    <l_C07 S_00="Argumenter sur la solution technique retenue">
       <l_01>
-        <Indicateur_00 I_ligne="0" S_intitule="Le mauvais fonctionnement d'un ensemble est expliqu&#233; et justifi&#233;">
-          <l_poids F_01="50.0" I_00="0" I_02="0" />
+        <Indicateur_00 I_ligne="0" S_intitule="Les choix r&#233;alis&#233;s sont clairement d&#233;velopp&#233;s et justif&#233;s">
+          <l_poids F_02="20.0" I_00="0" I_01="0" />
         </Indicateur_00>
-        <Indicateur_01 I_ligne="0" S_intitule="Les imperfections de fonctionnement sont analys&#233;es">
-          <l_poids F_01="50.0" I_00="0" I_02="0" />
+        <Indicateur_01 I_ligne="0" S_intitule="La mise en service et le fonctionnement du syst&#232;me sont expliqu&#233;s">
+          <l_poids F_02="20.0" I_00="0" I_01="0" />
         </Indicateur_01>
+        <Indicateur_02 I_ligne="0" S_intitule="Les caract&#233;ristiques finales obtenues sont pr&#233;sent&#233;es et s'appuient sur des essais">
+          <l_poids F_02="20.0" I_00="0" I_01="0" />
+        </Indicateur_02>
+        <Indicateur_03 I_ligne="0" S_intitule="Les diff&#233;rences &#233;ventuelles par rapport au cahier des charges sont expliqu&#233;es">
+          <l_poids F_02="20.0" I_00="0" I_01="0" />
+        </Indicateur_03>
+        <Indicateur_04 I_ligne="0" S_intitule="Les r&#233;ponses aux quetions sont claires et en rapport avec la demande">
+          <l_poids F_02="20.0" I_00="0" I_01="0" />
+        </Indicateur_04>
       </l_01>
-      <l_02 I_00="0" I_01="4" I_02="0" />
-    </l_C14>
+      <l_02 I_00="0" I_01="0" I_02="30" />
+    </l_C07>
+    <l_P S_00="Le technicien participe &#224; la t&#226;che mais n'en a pas la ma&#238;trise. Il doit n&#233;anmoins comprendre son fondement et apporter ses comp&#233;tences &#224; l'&#233;quipe qui en a la charge.">
+      <l_01 />
+      <l_02 I_00="0" I_01="0" I_02="0" />
+    </l_P>
   </d_dicCompetences>
   <d_dicFonctions>
     <l_F1 S_00="&#201;tude technique et &#233;conomique">
@@ -1542,7 +1612,7 @@
   </d_grilles_prj>
   <l_listPhasesEval_prj S_00="Rev" S_01="R1" S_02="R2" S_03="R3" S_04="S" />
   <l_listPhases_prj S_00="Ana" S_01="Rea" S_02="Val" S_03="XXX" S_04="Rev" S_05="R1" S_06="R2" S_07="R3" S_08="S" />
-  <l_listeDemarches S_00="I" S_01="R" S_02="P" />
+  <l_listeDemarches />
   <l_listeEffectifs S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" />
   <l_listeTypeActivite S_00="ED" S_01="AP" S_02="P" />
   <l_listeTypeSeance S_00="ED" S_01="AP" S_02="P" S_03="C" S_04="TD" S_05="SA" S_06="SS" S_07="E" S_08="R" S_09="S" />

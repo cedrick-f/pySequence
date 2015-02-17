@@ -42,12 +42,24 @@ import xml.etree.ElementTree as ET
 def GetEtablissements(): 
      
     def getEtabVille(page):
-        try:
-            lst = [[e.a['title'].split(' - ')[1], e.a['title'].split(' - ')[-1]] for e in page.find_all('div', attrs={'class':"annuaire-etablissement-autres-liens"})]
-            return lst
-        except:
-            lst = [[e.a.string, u""] for e in page.find_all('div', attrs={'class':"annuaire-etablissement-label"})]
-            return lst
+        lst = []
+        for v in page.find_all('div', attrs={'class':"annuaire-resultats-entete"}):
+            ville = v.contents[0].split(',')[1].lstrip('\n')
+            print "   ville =", ville
+            pagev = BeautifulSoup(v)
+            for divEtab in pagev.find_all('div', attrs={'class':"annuaire-etablissement-label"}):
+                etab = divEtab.a.string
+                print "     etab =", etab
+                lst.append([etab, ville])
+        return lst
+                
+##        lst = [[e.a.string, []] for e in page.find_all('div', attrs={'class':"annuaire-etablissement-label"})]
+#        try:
+#            lst = [[e.a['title'].split(' - ')[1], e.a['title'].split(' - ')[-1]] for e in page.find_all('div', attrs={'class':"annuaire-etablissement-autres-liens"})]
+#            return lst
+#        except:
+#            lst = [[e.a.string, u""] for e in page.find_all('div', attrs={'class':"annuaire-etablissement-label"})]
+#            return lst
         
     def getNbrEtab(page):
         try:
@@ -55,14 +67,14 @@ def GetEtablissements():
         except IndexError:
             return "0"
         
-    def getTousEtabVilleAcad(page):
-        liste_etab = {}
-        for acad, num in liste_acad:
-            liste_etab[num] = [acad, [], []]
-        urlCol = urlEtab + "?college=2&lycee_name=&localisation=4&ville_name=&nbPage=20000"
-        urlLyc = urlEtab + "?lycee=3&lycee_name=&localisation=4&ville_name=&nbPage=20000"
-        
-        return liste_etab
+#    def getTousEtabVilleAcad(page):
+#        liste_etab = {}
+#        for acad, num in liste_acad:
+#            liste_etab[num] = [acad, [], []]
+#        urlCol = urlEtab + "?college=2&lycee_name=&localisation=4&ville_name=&nbPage=20000"
+#        urlLyc = urlEtab + "?lycee=3&lycee_name=&localisation=4&ville_name=&nbPage=20000"
+#        
+#        return liste_etab
     
     # url = 'https://code.google.com/p/pysequence/downloads/list'
     print "GetEtablissements",
