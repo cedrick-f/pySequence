@@ -1,4 +1,4 @@
-<Referentiel B_CI_BO="True" B_CI_cible="False" B_objSavoirs_Math="False" B_objSavoirs_Phys="False" B_preSavoirs_Math="True" B_preSavoirs_Phys="True" B_projet="True" I_duree_prj="70" S_BO_URL="http://www.education.gouv.fr/pid25535/bulletin_officiel.html?cid_bo=82984" S_BO_dossier="STI2D" S_Code="EE" S_Famille="STI" S_FichierLogo="" S_abrevCI="CI" S_ficheValid_prj="" S_nomCI="Centre(s) d'Int&#233;r&#234;t" S_nomCompetences="Comp&#233;tences" S_nomFonctions="Fonctions" S_nomIndicateurs="Indicateurs" S_nomSavoirs="Savoirs" S_nomSavoirs_Math="Math&#233;matiques" S_nomSavoirs_Phys="Sciences Physiques" S_nomTaches="T&#226;ches" S_surnomSavoirs="">
+<Referentiel B_CI_BO="True" B_CI_cible="False" B_compImposees="False" B_objSavoirs_Math="False" B_objSavoirs_Phys="False" B_preSavoirs_Math="True" B_preSavoirs_Phys="True" B_projet="True" I_duree_prj="70" S_BO_URL="http://www.education.gouv.fr/pid25535/bulletin_officiel.html?cid_bo=82984" S_BO_dossier="STI2D" S_Code="EE" S_Famille="STI" S_FichierLogo="" S_abrevCI="CI" S_ficheValid_prj="" S_nomCI="Centre(s) d'Int&#233;r&#234;t" S_nomCompetences="Comp&#233;tences" S_nomFonctions="Fonctions" S_nomIndicateurs="Indicateurs" S_nomSavoirs="Savoirs" S_nomSavoirs_Math="Math&#233;matiques" S_nomSavoirs_Phys="Sciences Physiques" S_nomTaches="T&#226;ches" S_surnomSavoirs="">
   <l_CentresInterets S_00="Typologie des syst&#232;mes &#233;nerg&#233;tiques" S_01="Production d'&#233;nergie" S_02="Transport, stockage et distribution de l'&#233;nergie et r&#233;seaux sp&#233;cifiques" S_03="Efficacit&#233; &#233;nerg&#233;tique passive" S_04="Efficacit&#233; &#233;nerg&#233;tique active" />
   <l_Enseignement S_00="STI2D-EE" S_01="STI2D : Energies et Environnement" S_02="STI2D" />
   <d_aColNon B_R="True" B_S="False" />
@@ -77,52 +77,52 @@
       <d_01>
         <l_CO7.ee2 S_00="Justifier une solution retenue en int&#233;grant les cons&#233;quences des choix sur le triptyque Mat&#233;riau - Energie - Information">
           <l_01>
-            <Indicateur_00 I_ligne="10" S_intitule="Les caract&#233;ristiques comportementales de la solution retenue r&#233;pondent au cahier des charges">
+            <Indicateur_00 I_ligne="10" I_revue="0" S_intitule="Les caract&#233;ristiques comportementales de la solution retenue r&#233;pondent au cahier des charges">
               <l_poids F_01="9.090909" I_00="0" I_02="0" />
             </Indicateur_00>
-            <Indicateur_01 I_ligne="11" S_intitule="Les choix sont explicit&#233;s et la solution justifi&#233;e en int&#233;grant les cons&#233;quences sur le triptyque MEI">
+            <Indicateur_01 I_ligne="11" I_revue="0" S_intitule="Les choix sont explicit&#233;s et la solution justifi&#233;e en int&#233;grant les cons&#233;quences sur le triptyque MEI">
               <l_poids F_01="9.090909" I_00="0" I_02="0" />
             </Indicateur_01>
           </l_01>
         </l_CO7.ee2>
         <l_CO7.ee3 S_00="D&#233;finir la structure, la constitution d'un syst&#232;me en fonction des caract&#233;ristiques technico-&#233;conomiques et environnementales attendues">
           <l_01>
-            <Indicateur_00 I_ligne="12" S_intitule="Les croquis et sch&#233;mas &#224; main lev&#233;e sont utilis&#233;s &#224; bon escient">
+            <Indicateur_00 I_ligne="12" I_revue="0" S_intitule="Les croquis et sch&#233;mas &#224; main lev&#233;e sont utilis&#233;s &#224; bon escient">
               <l_poids F_01="9.090909" I_00="0" I_02="0" />
             </Indicateur_00>
-            <Indicateur_01 I_ligne="13" S_intitule="Les moyens num&#233;riques de description sont correctement utilis&#233;s">
+            <Indicateur_01 I_ligne="13" I_revue="0" S_intitule="Les moyens num&#233;riques de description sont correctement utilis&#233;s">
               <l_poids F_01="9.090909" I_00="0" I_02="0" />
             </Indicateur_01>
-            <Indicateur_02 I_ligne="14" S_intitule="La solution choisie pour la gestion de l'&#233;nergie est pertinente et adapt&#233;e aux exigences">
+            <Indicateur_02 I_ligne="14" I_revue="0" S_intitule="La solution choisie pour la gestion de l'&#233;nergie est pertinente et adapt&#233;e aux exigences">
               <l_poids F_01="9.090909" I_00="0" I_02="0" />
             </Indicateur_02>
-            <Indicateur_03 I_ligne="15" S_intitule="Les grandes &#233;tapes d'une d&#233;marche de cr&#233;ativit&#233; sont franchies de mani&#232;re coh&#233;rente">
+            <Indicateur_03 I_ligne="15" I_revue="0" S_intitule="Les grandes &#233;tapes d'une d&#233;marche de cr&#233;ativit&#233; sont franchies de mani&#232;re coh&#233;rente">
               <l_poids F_01="9.090909" I_00="0" I_02="0" />
             </Indicateur_03>
-            <Indicateur_04 I_ligne="16" S_intitule="La structure propos&#233;e et le choix des composants respectent les exigences">
+            <Indicateur_04 I_ligne="16" I_revue="0" S_intitule="La structure propos&#233;e et le choix des composants respectent les exigences">
               <l_poids F_01="9.090909" I_00="0" I_02="0" />
             </Indicateur_04>
           </l_01>
         </l_CO7.ee3>
         <l_CO7.ee1 S_00="Participer &#224; une d&#233;marche de conception dans le but de proposer plusieurs solutions possibles &#224; un probl&#232;me technique identifi&#233; en lien avec un enjeu &#233;nerg&#233;tique">
           <l_01>
-            <Indicateur_00 I_ligne="6" S_intitule="Le besoin relatif au projet et les fonctions sont identifi&#233;s et justifi&#233;s">
+            <Indicateur_00 I_ligne="6" I_revue="0" S_intitule="Le besoin relatif au projet et les fonctions sont identifi&#233;s et justifi&#233;s">
               <l_poids F_01="9.090909" I_00="0" I_02="0" />
             </Indicateur_00>
-            <Indicateur_01 I_ligne="7" S_intitule="Les crit&#232;res du cahier des charges sont d&#233;cod&#233;s et les principaux points de vigilance relatifs au projet sont identifi&#233;s">
+            <Indicateur_01 I_ligne="7" I_revue="0" S_intitule="Les crit&#232;res du cahier des charges sont d&#233;cod&#233;s et les principaux points de vigilance relatifs au projet sont identifi&#233;s">
               <l_poids F_01="9.090909" I_00="0" I_02="0" />
             </Indicateur_01>
-            <Indicateur_02 I_ligne="8" S_intitule="Les contraintes de normes, propri&#233;t&#233; industrielle, brevets sont identifi&#233;es">
+            <Indicateur_02 I_ligne="8" I_revue="0" S_intitule="Les contraintes de normes, propri&#233;t&#233; industrielle, brevets sont identifi&#233;es">
               <l_poids F_01="9.090909" I_00="0" I_02="0" />
             </Indicateur_02>
-            <Indicateur_03 I_ligne="9" S_intitule="La d&#233;marche d'analyse du probl&#232;me est pertinente ">
+            <Indicateur_03 I_ligne="9" I_revue="0" S_intitule="La d&#233;marche d'analyse du probl&#232;me est pertinente ">
               <l_poids F_01="9.090909" I_00="0" I_02="0" />
             </Indicateur_03>
           </l_01>
         </l_CO7.ee1>
         <l_CO7.ee4 S_00="D&#233;finir les modifications de la structure, les choix de constituants et du type de syst&#232;me de gestion d'une cha&#238;ne d'&#233;nergie afin de r&#233;pondre &#224; une &#233;volution d'un cahier des charges">
           <l_01>
-            <Indicateur_00 I_ligne="0" S_intitule="idem CO7.ee3">
+            <Indicateur_00 I_ligne="0" I_revue="0" S_intitule="idem CO7.ee3">
               <l_poids I_00="0" I_01="1" I_02="0" />
             </Indicateur_00>
           </l_01>
@@ -134,39 +134,39 @@
       <d_01>
         <l_CO9.ee1 S_00="Exp&#233;rimenter des proc&#233;d&#233;s de stockage, de production, de transport, de transformation, d'&#233;nergie pour aider &#224; la conception d'une cha&#238;ne d'&#233;nergie">
           <l_01>
-            <Indicateur_00 I_ligne="31" S_intitule="Les param&#232;tres significatifs &#224; observer sont identifi&#233;s">
+            <Indicateur_00 I_ligne="31" I_revue="0" S_intitule="Les param&#232;tres significatifs &#224; observer sont identifi&#233;s">
               <l_poids F_01="11.111111" I_00="0" I_02="0" />
             </Indicateur_00>
-            <Indicateur_01 I_ligne="32" S_intitule="Le protocole d'exp&#233;rimentation est adapt&#233; &#224; l'objectif">
+            <Indicateur_01 I_ligne="32" I_revue="0" S_intitule="Le protocole d'exp&#233;rimentation est adapt&#233; &#224; l'objectif">
               <l_poids F_01="11.111111" I_00="0" I_02="0" />
             </Indicateur_01>
-            <Indicateur_02 I_ligne="33" S_intitule="Les caract&#233;ristiques principales et leurs cons&#233;quences constructives sont identifi&#233;es">
+            <Indicateur_02 I_ligne="33" I_revue="0" S_intitule="Les caract&#233;ristiques principales et leurs cons&#233;quences constructives sont identifi&#233;es">
               <l_poids F_01="11.111111" I_00="0" I_02="0" />
             </Indicateur_02>
           </l_01>
         </l_CO9.ee1>
         <l_CO9.ee2 S_00="R&#233;aliser et valider un prototype obtenu en r&#233;ponse &#224; tout ou partie du cahier des charges initial">
           <l_01>
-            <Indicateur_00 I_ligne="34" S_intitule="Le prototype choisi et sa r&#233;alisation, respecte le diagramme des exigences">
+            <Indicateur_00 I_ligne="34" I_revue="0" S_intitule="Le prototype choisi et sa r&#233;alisation, respecte le diagramme des exigences">
               <l_poids F_01="11.111111" I_00="0" I_02="0" />
             </Indicateur_00>
-            <Indicateur_01 I_ligne="35" S_intitule="Les caract&#233;ristiques &#224; valider sont identifi&#233;es et permettent de valider les exigences">
+            <Indicateur_01 I_ligne="35" I_revue="0" S_intitule="Les caract&#233;ristiques &#224; valider sont identifi&#233;es et permettent de valider les exigences">
               <l_poids F_01="11.111111" I_00="0" I_02="0" />
             </Indicateur_01>
           </l_01>
         </l_CO9.ee2>
         <l_CO9.ee3 S_00="Int&#233;grer un prototype dans un syst&#232;me &#224; modifier pour valider son comportement et ses performances">
           <l_01>
-            <Indicateur_00 I_ligne="36" S_intitule="Le prototype s'ins&#232;re dans le syst&#232;me">
+            <Indicateur_00 I_ligne="36" I_revue="0" S_intitule="Le prototype s'ins&#232;re dans le syst&#232;me">
               <l_poids F_01="11.111111" I_00="0" I_02="0" />
             </Indicateur_00>
-            <Indicateur_01 I_ligne="37" S_intitule="Un protocole d'essai pertinent est d&#233;fini">
+            <Indicateur_01 I_ligne="37" I_revue="0" S_intitule="Un protocole d'essai pertinent est d&#233;fini">
               <l_poids F_01="11.111111" I_00="0" I_02="0" />
             </Indicateur_01>
-            <Indicateur_02 I_ligne="38" S_intitule="L'essai respecte le protocole et le comportement du syst&#232;me est relev&#233;">
+            <Indicateur_02 I_ligne="38" I_revue="0" S_intitule="L'essai respecte le protocole et le comportement du syst&#232;me est relev&#233;">
               <l_poids F_01="11.111111" I_00="0" I_02="0" />
             </Indicateur_02>
-            <Indicateur_03 I_ligne="39" S_intitule="Les mesures et leurs interpr&#233;tations montrent des r&#233;sultats coh&#233;rents ">
+            <Indicateur_03 I_ligne="39" I_revue="0" S_intitule="Les mesures et leurs interpr&#233;tations montrent des r&#233;sultats coh&#233;rents ">
               <l_poids F_01="11.111111" I_00="0" I_02="0" />
             </Indicateur_03>
           </l_01>
@@ -178,52 +178,52 @@
       <d_01>
         <l_CO8.ee1 S_00="Renseigner un logiciel de simulation du comportement &#233;nerg&#233;tique avec les caract&#233;ristiques du syst&#232;me et les param&#232;tres externes pour un point de fonctionnement donn&#233;">
           <l_01>
-            <Indicateur_00 I_ligne="18" S_intitule="Les variables et les param&#232;tres du mod&#232;le sont identifi&#233;s">
+            <Indicateur_00 I_ligne="18" I_revue="0" S_intitule="Les variables et les param&#232;tres du mod&#232;le sont identifi&#233;s">
               <l_poids F_01="8.333333" I_00="0" I_02="0" />
             </Indicateur_00>
-            <Indicateur_01 I_ligne="19" S_intitule="Leurs influences respectives sont identifi&#233;es">
+            <Indicateur_01 I_ligne="19" I_revue="0" S_intitule="Leurs influences respectives sont identifi&#233;es">
               <l_poids F_01="8.333333" I_00="0" I_02="0" />
             </Indicateur_01>
           </l_01>
         </l_CO8.ee1>
         <l_CO8.ee3 S_00="Comparer et interpr&#233;ter le r&#233;sultat d'une simulation d'un comportement d'un syst&#232;me avec un comportement r&#233;el">
           <l_01>
-            <Indicateur_00 I_ligne="24" S_intitule="Les r&#233;sultats de la simulation et les mesures sont corr&#233;l&#233;s">
+            <Indicateur_00 I_ligne="24" I_revue="0" S_intitule="Les r&#233;sultats de la simulation et les mesures sont corr&#233;l&#233;s">
               <l_poids F_01="8.333333" I_00="0" I_02="0" />
             </Indicateur_00>
-            <Indicateur_01 I_ligne="25" S_intitule="L'analyse des &#233;carts est m&#233;thodique">
+            <Indicateur_01 I_ligne="25" I_revue="0" S_intitule="L'analyse des &#233;carts est m&#233;thodique">
               <l_poids F_01="8.333333" I_00="0" I_02="0" />
             </Indicateur_01>
-            <Indicateur_02 I_ligne="26" S_intitule="L'interpr&#233;tation des r&#233;sultats est coh&#233;rente et pertinente">
+            <Indicateur_02 I_ligne="26" I_revue="0" S_intitule="L'interpr&#233;tation des r&#233;sultats est coh&#233;rente et pertinente">
               <l_poids F_01="8.333333" I_00="0" I_02="0" />
             </Indicateur_02>
           </l_01>
         </l_CO8.ee3>
         <l_CO8.ee2 S_00="Interpr&#233;ter les r&#233;sultats d'une simulation afin de valider une solution ou l'optimiser">
           <l_01>
-            <Indicateur_00 I_ligne="20" S_intitule="Les sc&#233;narios de simulation sont identifi&#233;s">
+            <Indicateur_00 I_ligne="20" I_revue="0" S_intitule="Les sc&#233;narios de simulation sont identifi&#233;s">
               <l_poids F_01="8.333333" I_00="0" I_02="0" />
             </Indicateur_00>
-            <Indicateur_01 I_ligne="21" S_intitule="Les param&#232;tres influents sont identifi&#233;s">
+            <Indicateur_01 I_ligne="21" I_revue="0" S_intitule="Les param&#232;tres influents sont identifi&#233;s">
               <l_poids F_01="8.333333" I_00="0" I_02="0" />
             </Indicateur_01>
-            <Indicateur_02 I_ligne="22" S_intitule="L'interpr&#233;tation des r&#233;sultats de la simulation est pertinente">
+            <Indicateur_02 I_ligne="22" I_revue="0" S_intitule="L'interpr&#233;tation des r&#233;sultats de la simulation est pertinente">
               <l_poids F_01="8.333333" I_00="0" I_02="0" />
             </Indicateur_02>
-            <Indicateur_03 I_ligne="23" S_intitule="Les modifications propos&#233;es sont coh&#233;rentes">
+            <Indicateur_03 I_ligne="23" I_revue="0" S_intitule="Les modifications propos&#233;es sont coh&#233;rentes">
               <l_poids F_01="8.333333" I_00="0" I_02="0" />
             </Indicateur_03>
           </l_01>
         </l_CO8.ee2>
         <l_CO8.ee4 S_00="Mettre en oeuvre un protocole d'essais et de mesures sur le prototype d'une cha&#238;ne d'&#233;nergie, interpr&#233;ter les r&#233;sultats">
           <l_01>
-            <Indicateur_00 I_ligne="27" S_intitule="le protocole d'essai est justifi&#233; et adapt&#233; &#224; l'objectif">
+            <Indicateur_00 I_ligne="27" I_revue="0" S_intitule="le protocole d'essai est justifi&#233; et adapt&#233; &#224; l'objectif">
               <l_poids F_01="8.333333" I_00="0" I_02="0" />
             </Indicateur_00>
-            <Indicateur_01 I_ligne="28" S_intitule="Les observations et mesures sont m&#233;thodiquement men&#233;s et les incertitudes de mesures estim&#233;es">
+            <Indicateur_01 I_ligne="28" I_revue="0" S_intitule="Les observations et mesures sont m&#233;thodiquement men&#233;s et les incertitudes de mesures estim&#233;es">
               <l_poids F_01="8.333333" I_00="0" I_02="0" />
             </Indicateur_01>
-            <Indicateur_02 I_ligne="29" S_intitule="L'interpr&#233;tation des r&#233;sultats est coh&#233;rente et pertinente">
+            <Indicateur_02 I_ligne="29" I_revue="0" S_intitule="L'interpr&#233;tation des r&#233;sultats est coh&#233;rente et pertinente">
               <l_poids F_01="8.333333" I_00="0" I_02="0" />
             </Indicateur_02>
           </l_01>
