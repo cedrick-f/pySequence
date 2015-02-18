@@ -1,4 +1,4 @@
-<Referentiel B_CI_BO="True" B_CI_cible="False" B_objSavoirs_Math="False" B_objSavoirs_Phys="False" B_preSavoirs_Math="True" B_preSavoirs_Phys="True" B_projet="True" I_duree_prj="70" S_BO_URL="http://www.education.gouv.fr/pid25535/bulletin_officiel.html?cid_bo=82984" S_BO_dossier="STI2D" S_Code="AC" S_Famille="STI" S_FichierLogo="" S_abrevCI="CI" S_ficheValid_prj="" S_nomCI="Centre(s) d'Int&#233;r&#234;t" S_nomCompetences="Comp&#233;tences" S_nomFonctions="Fonctions" S_nomIndicateurs="Indicateurs" S_nomSavoirs="Savoirs" S_nomSavoirs_Math="Math&#233;matiques" S_nomSavoirs_Phys="Sciences Physiques" S_nomTaches="T&#226;ches" S_surnomSavoirs="">
+<Referentiel B_CI_BO="True" B_CI_cible="False" B_compImposees="False" B_objSavoirs_Math="False" B_objSavoirs_Phys="False" B_preSavoirs_Math="True" B_preSavoirs_Phys="True" B_projet="True" I_duree_prj="70" S_BO_URL="http://www.education.gouv.fr/pid25535/bulletin_officiel.html?cid_bo=82984" S_BO_dossier="STI2D" S_Code="AC" S_Famille="STI" S_FichierLogo="" S_abrevCI="CI" S_ficheValid_prj="" S_nomCI="Centre(s) d'Int&#233;r&#234;t" S_nomCompetences="Comp&#233;tences" S_nomFonctions="Fonctions" S_nomIndicateurs="Indicateurs" S_nomSavoirs="Savoirs" S_nomSavoirs_Math="Math&#233;matiques" S_nomSavoirs_Phys="Sciences Physiques" S_nomTaches="T&#226;ches" S_surnomSavoirs="">
   <l_CentresInterets S_00="Participation &#224; une &#233;tude architecturale" S_01="V&#233;rification de la r&#233;sistance" S_02="Protection" S_03="Le confort" S_04="Organisation de r&#233;alisation" S_05="Vie en oeuvre" S_06="Reconditionnement de l'ouvrage" S_07="Valorisation de la fin de vie de l'ouvrage" />
   <l_Enseignement S_00="STI2D-AC" S_01="STI2D : Architecture et Construction" S_02="STI2D" />
   <d_aColNon B_R="True" B_S="False" />
@@ -77,45 +77,45 @@
       <d_01>
         <l_CO7.ac1 S_00="Participer &#224; une &#233;tude architecturale, dans une d&#233;marche de d&#233;veloppement durable">
           <l_01>
-            <Indicateur_00 I_ligne="6" S_intitule="Le besoin relatif au projet et les fonctions principales sont identifi&#233;s et justifi&#233;s">
+            <Indicateur_00 I_ligne="6" I_revue="0" S_intitule="Le besoin relatif au projet et les fonctions principales sont identifi&#233;s et justifi&#233;s">
               <l_poids F_01="9.090909" I_00="0" I_02="0" />
             </Indicateur_00>
-            <Indicateur_01 I_ligne="7" S_intitule="Les crit&#232;res du cahier des charges sont d&#233;cod&#233;s et les principaux points de vigilance relatifs au projet sont identifi&#233;s">
+            <Indicateur_01 I_ligne="7" I_revue="0" S_intitule="Les crit&#232;res du cahier des charges sont d&#233;cod&#233;s et les principaux points de vigilance relatifs au projet sont identifi&#233;s">
               <l_poids F_01="9.090909" I_00="0" I_02="0" />
             </Indicateur_01>
-            <Indicateur_02 I_ligne="8" S_intitule="La d&#233;marche d'analyse du probl&#232;me est pertinente">
+            <Indicateur_02 I_ligne="8" I_revue="0" S_intitule="La d&#233;marche d'analyse du probl&#232;me est pertinente">
               <l_poids F_01="9.090909" I_00="0" I_02="0" />
             </Indicateur_02>
           </l_01>
         </l_CO7.ac1>
         <l_CO7.ac2 S_00="Proposer/Choisir des solutions techniques r&#233;pondant aux contraintes et attentes d'une construction">
           <l_01>
-            <Indicateur_00 I_ligne="9" S_intitule="Les moyens conventionnels de repr&#233;sentation des solutions sont correctement utilis&#233;s (croquis, sch&#233;mas, &#8230;)">
+            <Indicateur_00 I_ligne="9" I_revue="0" S_intitule="Les moyens conventionnels de repr&#233;sentation des solutions sont correctement utilis&#233;s (croquis, sch&#233;mas, &#8230;)">
               <l_poids F_01="9.090909" I_00="0" I_02="0" />
             </Indicateur_00>
-            <Indicateur_01 I_ligne="10" S_intitule="Les contraintes de normes, propri&#233;t&#233; industrielle, brevets sont identifi&#233;es">
+            <Indicateur_01 I_ligne="10" I_revue="0" S_intitule="Les contraintes de normes, propri&#233;t&#233; industrielle, brevets sont identifi&#233;es">
               <l_poids F_01="9.090909" I_00="0" I_02="0" />
             </Indicateur_01>
-            <Indicateur_02 I_ligne="11" S_intitule="Les solutions techniques propos&#233;es et les produits innovants choisis sont pertinents des points de vue DD, &#233;conomique et comportemental">
+            <Indicateur_02 I_ligne="11" I_revue="0" S_intitule="Les solutions techniques propos&#233;es et les produits innovants choisis sont pertinents des points de vue DD, &#233;conomique et comportemental">
               <l_poids F_01="9.090909" I_00="0" I_02="0" />
             </Indicateur_02>
-            <Indicateur_03 I_ligne="12" S_intitule="Les choix sont explicit&#233;s dans une d&#233;marche d'analyse globale de r&#233;ponse au cahier des charges">
+            <Indicateur_03 I_ligne="12" I_revue="0" S_intitule="Les choix sont explicit&#233;s dans une d&#233;marche d'analyse globale de r&#233;ponse au cahier des charges">
               <l_poids F_01="9.090909" I_00="0" I_02="0" />
             </Indicateur_03>
           </l_01>
         </l_CO7.ac2>
         <l_CO7.ac3 S_00="Concevoir une organisation de r&#233;alisation">
           <l_01>
-            <Indicateur_00 I_ligne="13" S_intitule="Le phasage des op&#233;rations de r&#233;alisation est r&#233;aliste, le chemin critique est identifi&#233;">
+            <Indicateur_00 I_ligne="13" I_revue="0" S_intitule="Le phasage des op&#233;rations de r&#233;alisation est r&#233;aliste, le chemin critique est identifi&#233;">
               <l_poids F_01="9.090909" I_00="0" I_02="0" />
             </Indicateur_00>
-            <Indicateur_01 I_ligne="14" S_intitule="Les proc&#233;d&#233;s de mise en &#339;uvre sont choisis et justifi&#233;s">
+            <Indicateur_01 I_ligne="14" I_revue="0" S_intitule="Les proc&#233;d&#233;s de mise en &#339;uvre sont choisis et justifi&#233;s">
               <l_poids F_01="9.090909" I_00="0" I_02="0" />
             </Indicateur_01>
-            <Indicateur_02 I_ligne="15" S_intitule="La logistique de r&#233;alisation r&#233;pond aux contraintes techniques et de site du chantier">
+            <Indicateur_02 I_ligne="15" I_revue="0" S_intitule="La logistique de r&#233;alisation r&#233;pond aux contraintes techniques et de site du chantier">
               <l_poids F_01="9.090909" I_00="0" I_02="0" />
             </Indicateur_02>
-            <Indicateur_03 I_ligne="16" S_intitule="Les impacts environnementaux sont identifi&#233;s, des solutions de limitation sont propos&#233;es">
+            <Indicateur_03 I_ligne="16" I_revue="0" S_intitule="Les impacts environnementaux sont identifi&#233;s, des solutions de limitation sont propos&#233;es">
               <l_poids F_01="9.090909" I_00="0" I_02="0" />
             </Indicateur_03>
           </l_01>
@@ -127,36 +127,36 @@
       <d_01>
         <l_CO9.ac2 S_00="Identifier et d&#233;crire les causes de d&#233;sordre dans une construction">
           <l_01>
-            <Indicateur_00 I_ligne="35" S_intitule="Une d&#233;marche pertinente d'investigation est r&#233;alis&#233;e pour identifier les d&#233;sordres et leurs causes">
+            <Indicateur_00 I_ligne="35" I_revue="0" S_intitule="Une d&#233;marche pertinente d'investigation est r&#233;alis&#233;e pour identifier les d&#233;sordres et leurs causes">
               <l_poids F_01="12.5" I_00="0" I_02="0" />
             </Indicateur_00>
-            <Indicateur_01 I_ligne="36" S_intitule="Des solutions de rem&#233;diations sont envisag&#233;es">
+            <Indicateur_01 I_ligne="36" I_revue="0" S_intitule="Des solutions de rem&#233;diations sont envisag&#233;es">
               <l_poids F_01="12.5" I_00="0" I_02="0" />
             </Indicateur_01>
           </l_01>
         </l_CO9.ac2>
         <l_CO9.ac3 S_00="Valoriser la fin de vie du produit : d&#233;construction, gestion des d&#233;chets, valorisation des produits">
           <l_01>
-            <Indicateur_00 I_ligne="37" S_intitule="Une analyse de cycle de vie de tout ou partie d'une construction est men&#233;e">
+            <Indicateur_00 I_ligne="37" I_revue="0" S_intitule="Une analyse de cycle de vie de tout ou partie d'une construction est men&#233;e">
               <l_poids F_01="12.5" I_00="0" I_02="0" />
             </Indicateur_00>
-            <Indicateur_01 I_ligne="38" S_intitule="Une proc&#233;dure de valorisation des produits au sens DD est propos&#233;e">
+            <Indicateur_01 I_ligne="38" I_revue="0" S_intitule="Une proc&#233;dure de valorisation des produits au sens DD est propos&#233;e">
               <l_poids F_01="12.5" I_00="0" I_02="0" />
             </Indicateur_01>
           </l_01>
         </l_CO9.ac3>
         <l_CO9.ac1 S_00="Am&#233;liorer les performances d'une construction du point de vue &#233;nerg&#233;tique, domotique et informationnel">
           <l_01>
-            <Indicateur_00 I_ligne="31" S_intitule="Un bilan des performances de la construction existante est &#233;tabli">
+            <Indicateur_00 I_ligne="31" I_revue="0" S_intitule="Un bilan des performances de la construction existante est &#233;tabli">
               <l_poids F_01="12.5" I_00="0" I_02="0" />
             </Indicateur_00>
-            <Indicateur_01 I_ligne="32" S_intitule="Les besoins de l'usager sont traduits en solutions technologiques">
+            <Indicateur_01 I_ligne="32" I_revue="0" S_intitule="Les besoins de l'usager sont traduits en solutions technologiques">
               <l_poids F_01="12.5" I_00="0" I_02="0" />
             </Indicateur_01>
-            <Indicateur_02 I_ligne="33" S_intitule="Une r&#233;alisation permet de constater les am&#233;liorations attendues">
+            <Indicateur_02 I_ligne="33" I_revue="0" S_intitule="Une r&#233;alisation permet de constater les am&#233;liorations attendues">
               <l_poids F_01="12.5" I_00="0" I_02="0" />
             </Indicateur_02>
-            <Indicateur_03 I_ligne="34" S_intitule="L'adaptabilit&#233; de la construction r&#233;nov&#233;e est prise en compte">
+            <Indicateur_03 I_ligne="34" I_revue="0" S_intitule="L'adaptabilit&#233; de la construction r&#233;nov&#233;e est prise en compte">
               <l_poids F_01="12.5" I_00="0" I_02="0" />
             </Indicateur_03>
           </l_01>
@@ -168,48 +168,48 @@
       <d_01>
         <l_CO8.ac3 S_00="Analyser/Valider les choix structurels et de confort">
           <l_01>
-            <Indicateur_00 I_ligne="26" S_intitule="Une d&#233;marche d'analyse de la structure est mise en &#339;uvre">
+            <Indicateur_00 I_ligne="26" I_revue="0" S_intitule="Une d&#233;marche d'analyse de la structure est mise en &#339;uvre">
               <l_poids F_01="8.333333" I_00="0" I_02="0" />
             </Indicateur_00>
-            <Indicateur_01 I_ligne="27" S_intitule="Les &#233;carts entre les performances attendues et celles cons&#233;cutives aux choix faits sont &#233;tablis">
+            <Indicateur_01 I_ligne="27" I_revue="0" S_intitule="Les &#233;carts entre les performances attendues et celles cons&#233;cutives aux choix faits sont &#233;tablis">
               <l_poids F_01="8.333333" I_00="0" I_02="0" />
             </Indicateur_01>
-            <Indicateur_02 I_ligne="28" S_intitule="Les contraintes de normes, propri&#233;t&#233; industrielle, brevets sont identifi&#233;es">
+            <Indicateur_02 I_ligne="28" I_revue="0" S_intitule="Les contraintes de normes, propri&#233;t&#233; industrielle, brevets sont identifi&#233;es">
               <l_poids F_01="8.333333" I_00="0" I_02="0" />
             </Indicateur_02>
-            <Indicateur_03 I_ligne="29" S_intitule="Les impacts environnementaux sont identifi&#233;s, des solutions de limitation sont propos&#233;es">
+            <Indicateur_03 I_ligne="29" I_revue="0" S_intitule="Les impacts environnementaux sont identifi&#233;s, des solutions de limitation sont propos&#233;es">
               <l_poids F_01="8.333333" I_00="0" I_02="0" />
             </Indicateur_03>
           </l_01>
         </l_CO8.ac3>
         <l_CO8.ac2 S_00="Analyser les r&#233;sultats issus de simulations ou d'essais de laboratoire">
           <l_01>
-            <Indicateur_00 I_ligne="21" S_intitule="Les conditions de l'essai sont identifi&#233;es et justifi&#233;es">
+            <Indicateur_00 I_ligne="21" I_revue="0" S_intitule="Les conditions de l'essai sont identifi&#233;es et justifi&#233;es">
               <l_poids F_01="8.333333" I_00="0" I_02="0" />
             </Indicateur_00>
-            <Indicateur_01 I_ligne="22" S_intitule="Les observations et mesures sont rigoureuses">
+            <Indicateur_01 I_ligne="22" I_revue="0" S_intitule="Les observations et mesures sont rigoureuses">
               <l_poids F_01="8.333333" I_00="0" I_02="0" />
             </Indicateur_01>
-            <Indicateur_02 I_ligne="23" S_intitule="Les incertitudes sont estim&#233;es">
+            <Indicateur_02 I_ligne="23" I_revue="0" S_intitule="Les incertitudes sont estim&#233;es">
               <l_poids F_01="8.333333" I_00="0" I_02="0" />
             </Indicateur_02>
-            <Indicateur_03 I_ligne="24" S_intitule="L'interpr&#233;tation des r&#233;sultats est pertinent">
+            <Indicateur_03 I_ligne="24" I_revue="0" S_intitule="L'interpr&#233;tation des r&#233;sultats est pertinent">
               <l_poids F_01="8.333333" I_00="0" I_02="0" />
             </Indicateur_03>
-            <Indicateur_04 I_ligne="25" S_intitule="Les r&#233;sultats de la simulation et les mesures sont corr&#233;l&#233;s (validation des mod&#232;les)">
+            <Indicateur_04 I_ligne="25" I_revue="0" S_intitule="Les r&#233;sultats de la simulation et les mesures sont corr&#233;l&#233;s (validation des mod&#232;les)">
               <l_poids F_01="8.333333" I_00="0" I_02="0" />
             </Indicateur_04>
           </l_01>
         </l_CO8.ac2>
         <l_CO8.ac1 S_00="Simuler un comportement structurel, thermique et acoustique de tout ou partie d'une construction">
           <l_01>
-            <Indicateur_00 I_ligne="18" S_intitule="Les variables et les param&#232;tres des mod&#232;les sont identifi&#233;s">
+            <Indicateur_00 I_ligne="18" I_revue="0" S_intitule="Les variables et les param&#232;tres des mod&#232;les sont identifi&#233;s">
               <l_poids F_01="8.333333" I_00="0" I_02="0" />
             </Indicateur_00>
-            <Indicateur_01 I_ligne="19" S_intitule="Leurs influences respectives sont identifi&#233;es">
+            <Indicateur_01 I_ligne="19" I_revue="0" S_intitule="Leurs influences respectives sont identifi&#233;es">
               <l_poids F_01="8.333333" I_00="0" I_02="0" />
             </Indicateur_01>
-            <Indicateur_02 I_ligne="20" S_intitule="Les sc&#233;narios de simulation sont identifi&#233;s">
+            <Indicateur_02 I_ligne="20" I_revue="0" S_intitule="Les sc&#233;narios de simulation sont identifi&#233;s">
               <l_poids F_01="8.333333" I_00="0" I_02="0" />
             </Indicateur_02>
           </l_01>

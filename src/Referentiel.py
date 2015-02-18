@@ -349,6 +349,7 @@ class Referentiel(XMLelem):
         self.nomCompetences = u"Compétences"    # nom donnés aux compétences : "Compétences", ...
         self.nomIndicateurs = u"Indicateurs de performance" 
         self.dicCompetences = {}
+        self.compImposees = False       # Indique que les competences sont imposées par revue
         self.projet = False             # si l'enseignement fait l'objet d'une épreuve de projet
         self.duree_prj = 0
         self.periode_prj = []
@@ -573,7 +574,7 @@ class Referentiel(XMLelem):
             return
         
         corrigeArbreProjet(self.dicCompetences, debug = False)
-        print "dicCompetences Corr", self.dicCompetences
+#        print "dicCompetences Corr", self.dicCompetences
         self.postTraiter()
         self.completer()
 
@@ -752,7 +753,12 @@ class Referentiel(XMLelem):
                                         self.aColNon['R'] = True
                                     elif poids[2] != 0:
                                         self.aColNon['S'] = True
-                                dic[code][1].append(Indicateur(indic, poids, ligne))
+                                revue = 0
+                                if sh.ncols > 11:
+                                    revue = int0(sh.cell(ll,11).value)
+                                    if revue > 0:
+                                        self.compImposees = True
+                                dic[code][1].append(Indicateur(indic, poids, ligne, revue))
                         else:
                             lstComp = [sh.cell(1,co).value for co in range(5, sh.ncols) if sh.cell(ll,co).value != u""]
 #                            print "   lstComp2 =", lstComp
@@ -883,7 +889,7 @@ class Referentiel(XMLelem):
         # Pour enregistrer s'il y a des colonnes "non" dans les grilles 'R' ou 'S'
 #        self.aColNon = {'R' : False,  'S' : False}
         self.dicCompetences = getArbre(sh_va, range(2, sh_va.nrows), 0, prems = True, debug = False)
-        print "dicCompetences", self.dicCompetences
+#        print "dicCompetences", self.dicCompetences
 #        print "_aColNon", self.Code, ":", self._aColNon
          
         #
@@ -1620,11 +1626,12 @@ class Referentiel(XMLelem):
 #
 #################################################################################################################################
 class Indicateur(XMLelem):
-    def __init__(self, intitule = u"", poids = [0,0,0], ligne = 0):
+    def __init__(self, intitule = u"", poids = [0,0,0], ligne = 0, revue = 0):
         self._codeXML = "Indicateur"
         self.poids = poids
         self.ligne = ligne
         self.intitule = intitule
+        self.revue = revue
 
     def estProjet(self):
         return self.poids[1] != 0 or self.poids[2] != 0
@@ -1636,6 +1643,7 @@ class Indicateur(XMLelem):
             return "C"
         elif self.poids[2] != 0:
             return "S"
+
 
 
 #################################################################################################################################

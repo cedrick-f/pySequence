@@ -1,4 +1,4 @@
-<Referentiel B_CI_BO="False" B_CI_cible="False" B_objSavoirs_Math="False" B_objSavoirs_Phys="True" B_preSavoirs_Math="True" B_preSavoirs_Phys="True" B_projet="True" I_duree_prj="12" S_BO_URL="http://www.education.gouv.fr/pid25535/bulletin_officiel.html?cid_bo=82979" S_BO_dossier="STS" S_Code="STS_SN_EC" S_Famille="STS" S_FichierLogo="bts_sn.jpg" S_abrevCI="Th " S_ficheValid_prj="STS-EE _ Dossier projet.html" S_nomCI="Th&#232;mes" S_nomCompetences="Comp&#233;tences" S_nomFonctions="Fonctions" S_nomIndicateurs="Indicateurs" S_nomSavoirs="S6 - G&#233;nie &#201;lectrique" S_nomSavoirs_Math="S3 - Math&#233;matiques" S_nomSavoirs_Phys="S5 - Sciences Appliqu&#233;es" S_nomTaches="T&#226;ches" S_surnomSavoirs="">
+<Referentiel B_CI_BO="False" B_CI_cible="False" B_compImposees="False" B_objSavoirs_Math="False" B_objSavoirs_Phys="True" B_preSavoirs_Math="True" B_preSavoirs_Phys="True" B_projet="True" I_duree_prj="12" S_BO_URL="http://www.education.gouv.fr/pid25535/bulletin_officiel.html?cid_bo=82979" S_BO_dossier="STS" S_Code="STS_SN_EC" S_Famille="STS" S_FichierLogo="bts_sn.jpg" S_abrevCI="Th " S_ficheValid_prj="STS-EE _ Dossier projet.html" S_nomCI="Th&#232;mes" S_nomCompetences="Comp&#233;tences" S_nomFonctions="Fonctions" S_nomIndicateurs="Indicateurs" S_nomSavoirs="S6 - G&#233;nie &#201;lectrique" S_nomSavoirs_Math="S3 - Math&#233;matiques" S_nomSavoirs_Phys="S5 - Sciences Appliqu&#233;es" S_nomTaches="T&#226;ches" S_surnomSavoirs="">
   <l_CentresInterets S_00="Mise en service d&#8217;un syst&#232;me d&#8217;un ouvrage ou d&#8217;un &#233;quipement" S_01="La distribution de l&#8217;&#233;nergie &#233;lectrique" S_02="Comportement des charges m&#233;caniques" S_03="Les diff&#233;rents proc&#233;d&#233;s de transformation de l&#8217;&#233;nergie" S_04="La r&#233;versibilit&#233; &#233;nerg&#233;tique" S_05="Dimensionnement &#233;nerg&#233;tique dans les syst&#232;mes autonomes et embarqu&#233;s" S_06="La qualit&#233; de l&#8217;&#233;nergie &#233;lectrique" S_07="La gestion des co&#251;ts" S_08="Asservissement et r&#233;gulation" S_09="Les &#233;quipements communicants" />
   <l_Enseignement S_00="STS-SN-EC" S_01="BTS - Syst&#232;mes Num&#233;riques" S_02="STS" />
   <d_aColNon B_R="True" B_S="False" />
@@ -87,31 +87,31 @@
       <d_01>
         <l_C7.1 S_00="Diagnostiquer les causes d'un dysfonctionnement">
           <l_01>
-            <Indicateur_00 I_ligne="20" S_intitule="Les causes du dysfonctionnement sont identifi&#233;es">
+            <Indicateur_00 I_ligne="20" I_revue="0" S_intitule="Les causes du dysfonctionnement sont identifi&#233;es">
               <l_poids F_01="20.0" I_00="0" I_02="0" />
             </Indicateur_00>
           </l_01>
         </l_C7.1>
         <l_C7.2 S_00="Proposer des corrections ou des am&#233;liorations">
           <l_01>
-            <Indicateur_00 I_ligne="21" S_intitule="Une strat&#233;gie pour le maintien en condition op&#233;rationnelle est mise en place">
+            <Indicateur_00 I_ligne="21" I_revue="0" S_intitule="Une strat&#233;gie pour le maintien en condition op&#233;rationnelle est mise en place">
               <l_poids F_01="20.0" I_00="0" I_02="0" />
             </Indicateur_00>
-            <Indicateur_01 I_ligne="22" S_intitule="Des correctifs sont propos&#233;s">
+            <Indicateur_01 I_ligne="22" I_revue="0" S_intitule="Des correctifs sont propos&#233;s">
               <l_poids F_01="20.0" I_00="0" I_02="0" />
             </Indicateur_01>
           </l_01>
         </l_C7.2>
         <l_C7.3 S_00="D&#233;panner une installation mat&#233;rielle et/ou logicielle">
           <l_01>
-            <Indicateur_00 I_ligne="23" S_intitule="Les besoins du client sont r&#233;solus">
+            <Indicateur_00 I_ligne="23" I_revue="0" S_intitule="Les besoins du client sont r&#233;solus">
               <l_poids F_01="20.0" I_00="0" I_02="0" />
             </Indicateur_00>
           </l_01>
         </l_C7.3>
         <l_C7.4 S_00="Rechercher et choisir de nouveaux constituants d'un syst&#232;me (ou d'un projet finalis&#233;) au regard d'&#233;volutions technologiques, socio&#233;conomiques sp&#233;cifi&#233;es dans un cahier des charges. Organiser le projet permettant de maquettiser la solution choisie">
           <l_01>
-            <Indicateur_00 I_ligne="24" S_intitule="Des outils de tra&#231;abilit&#233; sont mis en place">
+            <Indicateur_00 I_ligne="24" I_revue="0" S_intitule="Des outils de tra&#231;abilit&#233; sont mis en place">
               <l_poids F_01="20.0" I_00="0" I_02="0" />
             </Indicateur_00>
           </l_01>
@@ -123,23 +123,23 @@
       <d_01>
         <l_C6.1 S_00="Superviser le fonctionnement d'un produit mat&#233;riel/logiciel">
           <l_01>
-            <Indicateur_00 I_ligne="14" S_intitule="Le compte rendu de suivi d'incident est &#233;tabli">
+            <Indicateur_00 I_ligne="14" I_revue="0" S_intitule="Le compte rendu de suivi d'incident est &#233;tabli">
               <l_poids F_01="20.0" I_00="0" I_02="0" />
             </Indicateur_00>
-            <Indicateur_01 I_ligne="15" S_intitule="Des fichiers de journalisation (logs) de supervision (recette et/ou archivage) sont cr&#233;&#233;s">
+            <Indicateur_01 I_ligne="15" I_revue="0" S_intitule="Des fichiers de journalisation (logs) de supervision (recette et/ou archivage) sont cr&#233;&#233;s">
               <l_poids F_01="20.0" I_00="0" I_02="0" />
             </Indicateur_01>
-            <Indicateur_02 I_ligne="16" S_intitule="Des alertes sont &#233;mises en cas de d&#233;faillance ou pour l'aide &#224; la conduite du syst&#232;me">
+            <Indicateur_02 I_ligne="16" I_revue="0" S_intitule="Des alertes sont &#233;mises en cas de d&#233;faillance ou pour l'aide &#224; la conduite du syst&#232;me">
               <l_poids F_01="20.0" I_00="0" I_02="0" />
             </Indicateur_02>
           </l_01>
         </l_C6.1>
         <l_C6.2 S_00="Analyser les comptes rendus d'exploitation">
           <l_01>
-            <Indicateur_00 I_ligne="17" S_intitule="Les r&#233;sultats pertinents de l'analyse sont pr&#233;sent&#233;s">
+            <Indicateur_00 I_ligne="17" I_revue="0" S_intitule="Les r&#233;sultats pertinents de l'analyse sont pr&#233;sent&#233;s">
               <l_poids F_01="20.0" I_00="0" I_02="0" />
             </Indicateur_00>
-            <Indicateur_01 I_ligne="18" S_intitule="Les situations probl&#233;matiques (seuil d'erreur admissible, nombre de tentatives) sont d&#233;termin&#233;es">
+            <Indicateur_01 I_ligne="18" I_revue="0" S_intitule="Les situations probl&#233;matiques (seuil d'erreur admissible, nombre de tentatives) sont d&#233;termin&#233;es">
               <l_poids F_01="20.0" I_00="0" I_02="0" />
             </Indicateur_01>
           </l_01>
@@ -151,33 +151,33 @@
       <d_01>
         <l_C5.2 S_00="Mettre en &#339;uvre une solution mat&#233;rielle/logicielle en situation">
           <l_01>
-            <Indicateur_00 I_ligne="8" S_intitule="Le syst&#232;me ou le service est en production">
+            <Indicateur_00 I_ligne="8" I_revue="0" S_intitule="Le syst&#232;me ou le service est en production">
               <l_poids F_01="14.285714" I_00="0" I_02="0" />
             </Indicateur_00>
-            <Indicateur_01 I_ligne="9" S_intitule="Les documents clients (mise en route, exploitation et maintenance) sont finalis&#233;es">
+            <Indicateur_01 I_ligne="9" I_revue="0" S_intitule="Les documents clients (mise en route, exploitation et maintenance) sont finalis&#233;es">
               <l_poids F_01="14.285714" I_00="0" I_02="0" />
             </Indicateur_01>
           </l_01>
         </l_C5.2>
         <l_C5.3 S_00="Effectuer la recette d'un produit avec le client">
           <l_01>
-            <Indicateur_00 I_ligne="10" S_intitule="Le syst&#232;me ou le service fonctionne">
+            <Indicateur_00 I_ligne="10" I_revue="0" S_intitule="Le syst&#232;me ou le service fonctionne">
               <l_poids F_01="14.285714" I_00="0" I_02="0" />
             </Indicateur_00>
-            <Indicateur_01 I_ligne="11" S_intitule="Le cahier de recette est &#233;labor&#233;">
+            <Indicateur_01 I_ligne="11" I_revue="0" S_intitule="Le cahier de recette est &#233;labor&#233;">
               <l_poids F_01="14.285714" I_00="0" I_02="0" />
             </Indicateur_01>
-            <Indicateur_02 I_ligne="12" S_intitule="Le proc&#232;s-verbal de r&#233;ception est sign&#233; par le client">
+            <Indicateur_02 I_ligne="12" I_revue="0" S_intitule="Le proc&#232;s-verbal de r&#233;ception est sign&#233; par le client">
               <l_poids F_01="14.285714" I_00="0" I_02="0" />
             </Indicateur_02>
           </l_01>
         </l_C5.3>
         <l_C5.1 S_00="Pr&#233;parer la solution et le plan d'action">
           <l_01>
-            <Indicateur_00 I_ligne="6" S_intitule="Le besoin relatif au client est identifi&#233; et justifi&#233;">
+            <Indicateur_00 I_ligne="6" I_revue="0" S_intitule="Le besoin relatif au client est identifi&#233; et justifi&#233;">
               <l_poids F_01="14.285714" I_00="0" I_02="0" />
             </Indicateur_00>
-            <Indicateur_01 I_ligne="7" S_intitule="Le phasage des op&#233;rations de r&#233;alisation est r&#233;aliste, le chemin critique est identifi&#233;">
+            <Indicateur_01 I_ligne="7" I_revue="0" S_intitule="Le phasage des op&#233;rations de r&#233;alisation est r&#233;aliste, le chemin critique est identifi&#233;">
               <l_poids F_01="14.285714" I_00="0" I_02="0" />
             </Indicateur_01>
           </l_01>

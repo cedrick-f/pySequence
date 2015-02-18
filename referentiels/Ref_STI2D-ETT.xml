@@ -1,4 +1,4 @@
-<Referentiel B_CI_BO="False" B_CI_cible="True" B_objSavoirs_Math="False" B_objSavoirs_Phys="False" B_preSavoirs_Math="True" B_preSavoirs_Phys="True" B_projet="False" I_duree_prj="0" S_BO_URL="http://www.education.gouv.fr/pid25535/bulletin_officiel.html?cid_bo=82984" S_BO_dossier="STI2D" S_Code="ET" S_Famille="STI" S_FichierLogo="" S_abrevCI="CI" S_ficheValid_prj="" S_nomCI="Centre(s) d'Int&#233;r&#234;t" S_nomCompetences="Comp&#233;tences" S_nomFonctions="Fonctions" S_nomIndicateurs="Indicateurs de performance" S_nomSavoirs="Savoirs" S_nomSavoirs_Math="Math&#233;matiques" S_nomSavoirs_Phys="Physique - Chimie" S_nomTaches="T&#226;ches" S_surnomSavoirs="">
+<Referentiel B_CI_BO="False" B_CI_cible="True" B_compImposees="False" B_objSavoirs_Math="False" B_objSavoirs_Phys="False" B_preSavoirs_Math="True" B_preSavoirs_Phys="True" B_projet="False" I_duree_prj="0" S_BO_URL="http://www.education.gouv.fr/pid25535/bulletin_officiel.html?cid_bo=82984" S_BO_dossier="STI2D" S_Code="ET" S_Famille="STI" S_FichierLogo="" S_abrevCI="CI" S_ficheValid_prj="" S_nomCI="Centre(s) d'Int&#233;r&#234;t" S_nomCompetences="Comp&#233;tences" S_nomFonctions="Fonctions" S_nomIndicateurs="Indicateurs de performance" S_nomSavoirs="Savoirs" S_nomSavoirs_Math="Math&#233;matiques" S_nomSavoirs_Phys="Physique - Chimie" S_nomTaches="T&#226;ches" S_surnomSavoirs="">
   <l_CentresInterets S_00="D&#233;veloppement durable et comp&#233;titivit&#233; des produits" S_01="Design, cr&#233;ativit&#233; et innovation" S_02="Caract&#233;ristiques des mat&#233;riaux et structures" S_03="Solutions constructives des mat&#233;riaux et des structures" S_04="Dimensionnement des structures et choix des mat&#233;riaux" S_05="Efficacit&#233; &#233;nerg&#233;tique li&#233;e au comportement des mat&#233;riaux et des structures" S_06="Formes et caract&#233;ristiques de l'&#233;nergie" S_07="Organisation structurelle et solutions constructives des cha&#238;nes d'&#233;nergie" S_08="Am&#233;lioration de l'efficacit&#233; &#233;nerg&#233;tique dans les cha&#238;nes d'&#233;nergie" S_09="Am&#233;lioration de la gestion de l'&#233;nergie" S_10="Formes et caract&#233;ristiques de l'information" S_11="Organisation structurelle et solutions constructives des cha&#238;nes d'information" S_12="Commande temporelle des syst&#232;mes" S_13="Informations li&#233;es au comportement des mat&#233;riaux et des structures" S_14="Optimisation des param&#232;tres par simulation globale" />
   <l_Enseignement S_00="STI2D-ETT" S_01="STI2D : Enseignement Technologique Transversal" S_02="STI2D" />
   <d_aColNon B_R="True" B_S="False" />
@@ -24,10 +24,10 @@
       <d_01>
         <l_CO8.0 S_00="Justifier des &#233;l&#233;ments d'une simulation relative au comportement de tout ou partie d'un syst&#232;me et les &#233;carts par rapport au r&#233;el">
           <l_01>
-            <Indicateur_00 I_ligne="0" S_intitule="Les solutions techniques envisag&#233;es sont correctement analys&#233;es au regard des r&#233;sultats d'exp&#233;rimentations et/ou de tests et/ou de simulations">
+            <Indicateur_00 I_ligne="0" I_revue="0" S_intitule="Les solutions techniques envisag&#233;es sont correctement analys&#233;es au regard des r&#233;sultats d'exp&#233;rimentations et/ou de tests et/ou de simulations">
               <l_poids F_02="60.0" I_00="0" I_01="0" />
             </Indicateur_00>
-            <Indicateur_01 I_ligne="0" S_intitule="L'origine des &#233;carts entre les r&#233;sultats obtenus et les exigences du cahier des charges est correctement identifi&#233;e">
+            <Indicateur_01 I_ligne="0" I_revue="0" S_intitule="L'origine des &#233;carts entre les r&#233;sultats obtenus et les exigences du cahier des charges est correctement identifi&#233;e">
               <l_poids F_02="40.0" I_00="0" I_01="0" />
             </Indicateur_01>
           </l_01>
@@ -39,24 +39,24 @@
       <d_01>
         <l_CO6.3 S_00="Pr&#233;senter et argumenter des d&#233;marches, des r&#233;sultats, y compris dans une langue &#233;trang&#232;re">
           <l_01>
-            <Indicateur_00 I_ligne="0" S_intitule="Le choix de la d&#233;marche retenue est argument&#233;e">
+            <Indicateur_00 I_ligne="0" I_revue="0" S_intitule="Le choix de la d&#233;marche retenue est argument&#233;e">
               <l_poids F_02="25.0" I_00="0" I_01="0" />
             </Indicateur_00>
-            <Indicateur_01 I_ligne="0" S_intitule="Les r&#233;sultats sont pr&#233;sent&#233;s et comment&#233;s de mani&#232;re claire et concise">
+            <Indicateur_01 I_ligne="0" I_revue="0" S_intitule="Les r&#233;sultats sont pr&#233;sent&#233;s et comment&#233;s de mani&#232;re claire et concise">
               <l_poids F_02="25.0" I_00="0" I_01="0" />
             </Indicateur_01>
           </l_01>
         </l_CO6.3>
         <l_CO6.2 S_00="D&#233;crire le fonctionnement et/ou l'exploitation d'un syst&#232;me en utilisant l'outil de description le plus pertinent">
           <l_01>
-            <Indicateur_00 I_ligne="0" S_intitule="La description du fonctionnement ou de l'exploitation du syst&#232;me est synth&#233;tique et correcte">
+            <Indicateur_00 I_ligne="0" I_revue="0" S_intitule="La description du fonctionnement ou de l'exploitation du syst&#232;me est synth&#233;tique et correcte">
               <l_poids F_02="25.0" I_00="0" I_01="0" />
             </Indicateur_00>
           </l_01>
         </l_CO6.2>
         <l_CO6.1 S_00="D&#233;crire une id&#233;e, un principe, une solution, un projet en utilisant des outils de repr&#233;sentation adapt&#233;s">
           <l_01>
-            <Indicateur_00 I_ligne="0" S_intitule="La description du principe ou de la solution est synth&#233;tique et correcte">
+            <Indicateur_00 I_ligne="0" I_revue="0" S_intitule="La description du principe ou de la solution est synth&#233;tique et correcte">
               <l_poids F_02="25.0" I_00="0" I_01="0" />
             </Indicateur_00>
           </l_01>
@@ -119,23 +119,23 @@
       <d_01>
         <l_CO2.2 S_00="Justifier les solutions constructives d'un syst&#232;me au regard des impacts environnementaux et &#233;conomiques engendr&#233;s tout au long de son cycle de vie">
           <l_01>
-            <Indicateur_00 I_ligne="0" S_intitule="La relation entre une fonction, des solutions et leur impact environnemental ou soci&#233;tal est pr&#233;cis&#233;e ">
+            <Indicateur_00 I_ligne="0" I_revue="0" S_intitule="La relation entre une fonction, des solutions et leur impact environnemental ou soci&#233;tal est pr&#233;cis&#233;e ">
               <l_poids F_02="20.0" I_00="0" I_01="0" />
             </Indicateur_00>
-            <Indicateur_01 I_ligne="0" S_intitule="Le compromis technico &#233;conomique et/ou la prise en compte des normes et r&#233;glementations est expliqu&#233; ">
+            <Indicateur_01 I_ligne="0" I_revue="0" S_intitule="Le compromis technico &#233;conomique et/ou la prise en compte des normes et r&#233;glementations est expliqu&#233; ">
               <l_poids F_02="20.0" I_00="0" I_01="0" />
             </Indicateur_01>
           </l_01>
         </l_CO2.2>
         <l_CO2.1 S_00="Identifier les flux et la forme de l'&#233;nergie, caract&#233;riser ses transformations et/ou modulations et estimer l'efficacit&#233; &#233;nerg&#233;tique globale d'un syst&#232;me">
           <l_01>
-            <Indicateur_00 I_ligne="0" S_intitule="Les flux et la forme de l'&#233;nergie et/ou de l'information sont d&#233;crits de fa&#231;on qualitative">
+            <Indicateur_00 I_ligne="0" I_revue="0" S_intitule="Les flux et la forme de l'&#233;nergie et/ou de l'information sont d&#233;crits de fa&#231;on qualitative">
               <l_poids F_02="20.0" I_00="0" I_01="0" />
             </Indicateur_00>
-            <Indicateur_01 I_ligne="0" S_intitule="Les caract&#233;ristiques d'entr&#233;es sorties des transformations ou modulations sont correctement pr&#233;cis&#233;es">
+            <Indicateur_01 I_ligne="0" I_revue="0" S_intitule="Les caract&#233;ristiques d'entr&#233;es sorties des transformations ou modulations sont correctement pr&#233;cis&#233;es">
               <l_poids F_02="20.0" I_00="0" I_01="0" />
             </Indicateur_01>
-            <Indicateur_02 I_ligne="0" S_intitule="L'analyse globale d'une chaine (&#233;nergie, action, information) est correctement r&#233;alis&#233;e">
+            <Indicateur_02 I_ligne="0" I_revue="0" S_intitule="L'analyse globale d'une chaine (&#233;nergie, action, information) est correctement r&#233;alis&#233;e">
               <l_poids F_02="20.0" I_00="0" I_01="0" />
             </Indicateur_02>
           </l_01>
@@ -147,17 +147,17 @@
       <d_01>
         <l_CO1.1 S_00="Justifier les choix des mat&#233;riaux, des structures d'un syst&#232;me et les &#233;nergies mises en oeuvre dans une approche de d&#233;veloppement durable">
           <l_01>
-            <Indicateur_00 I_ligne="0" S_intitule="Le choix des mat&#233;riaux et/ou des mat&#233;riels est justifi&#233;, des crit&#232;res d'&#233;co conception sont pris en compte">
+            <Indicateur_00 I_ligne="0" I_revue="0" S_intitule="Le choix des mat&#233;riaux et/ou des mat&#233;riels est justifi&#233;, des crit&#232;res d'&#233;co conception sont pris en compte">
               <l_poids F_02="35.0" I_00="0" I_01="0" />
             </Indicateur_00>
-            <Indicateur_01 I_ligne="0" S_intitule="La  structure mat&#233;rielle et/ou informationnelle est correctement justifi&#233;e ">
+            <Indicateur_01 I_ligne="0" I_revue="0" S_intitule="La  structure mat&#233;rielle et/ou informationnelle est correctement justifi&#233;e ">
               <l_poids F_02="35.0" I_00="0" I_01="0" />
             </Indicateur_01>
           </l_01>
         </l_CO1.1>
         <l_CO1.2 S_00="Justifier le choix d'une solution selon des contraintes d'ergonomie et d'effets sur la sant&#233; de l'homme et du vivant">
           <l_01>
-            <Indicateur_00 I_ligne="0" S_intitule="La justification des param&#232;tres de confort et/ou la r&#233;ponse apport&#233;e par le syst&#232;me aux contraintes de pr&#233;servation de la sant&#233; et du respect de la s&#233;curit&#233; sont explicit&#233;es">
+            <Indicateur_00 I_ligne="0" I_revue="0" S_intitule="La justification des param&#232;tres de confort et/ou la r&#233;ponse apport&#233;e par le syst&#232;me aux contraintes de pr&#233;servation de la sant&#233; et du respect de la s&#233;curit&#233; sont explicit&#233;es">
               <l_poids F_02="30.0" I_00="0" I_01="0" />
             </Indicateur_00>
           </l_01>
