@@ -106,7 +106,7 @@ cible = Executable(
 
 
 setup(  name = "pySequence",
-        version = "5.9.1.1",
+        version = "6.0.0.3",
         author = "Cédrick FAURY & Jean-Claude FRICOU",
         description = u"pySéquence",
         options = {"build_exe": build_exe_options},

@@ -433,6 +433,13 @@ class Referentiel(XMLelem):
 #        self.dicCellSavoirs = {}
     
     ######################################################################################
+    def setBrancheCodeV5(self, branche):
+        try:
+            return branche.get("S_Code")
+        except:
+            return
+        
+    ######################################################################################
     def setBrancheV5(self, branche):
         """ Lecture de la branche XML
             (ouverture de fichier)
@@ -1637,6 +1644,10 @@ class Indicateur(XMLelem):
         return self.poids[1] != 0 or self.poids[2] != 0
     
     def getType(self):
+        """ E : écrit
+            C : conduite
+            S : soutenance
+        """
         if self.poids[0] != 0:
             return "E"
         elif self.poids[1] != 0:
@@ -1644,7 +1655,8 @@ class Indicateur(XMLelem):
         elif self.poids[2] != 0:
             return "S"
 
-
+    def getRevue(self):
+        return 'R'+str(self.revue)
 
 #################################################################################################################################
 #

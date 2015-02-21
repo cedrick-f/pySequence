@@ -237,7 +237,20 @@ import richtext
 from math import sin,cos,pi, log
 from operator import attrgetter
 
-
+####################################################################################
+#
+#   Quelques constantes
+#
+####################################################################################
+_R1 = 'R1'
+_R2 = 'R2'
+_R3 = 'R3'
+_Rev = 'Rev'
+_S = 'S'
+TOUTES_REVUES = [_R1, _R2, _R3, _Rev]
+TOUTES_REVUES_EVAL = [_R1, _R2, _R3]
+TOUTES_REVUES_SOUT = [_R1, _R2, _R3, _Rev, _S]
+TOUTES_REVUES_EVAL_SOUT = [_R1, _R2, _R3, _S]
 
 ####################################################################################
 #
@@ -844,6 +857,8 @@ class Classe():
         self.options = app.options
         self.Initialise(pourProjet)
         
+        self.version5 = True
+        
         if panelParent:
             self.panelPropriete = PanelPropriete_Classe(panelParent, self, pourProjet, ouverture = ouverture)
             
@@ -983,6 +998,12 @@ class Classe():
 #                        self.referentiel = REFERENTIELS[self.typeEnseignement]
             else:
                 print "Réparation = pas référentiel intégré !"
+                code = self.referentiel.setBrancheCodeV5(brancheRef)
+                print "   Code trouvé dans référentiel :", code
+                print "   TypeEnseignement :", self.typeEnseignement
+                if code != self.typeEnseignement:
+                    self.typeEnseignement = code
+                
                 if self.typeEnseignement in REFERENTIELS:
                     self.referentiel = REFERENTIELS[self.typeEnseignement]
                 else:
@@ -1016,6 +1037,11 @@ class Classe():
                             self.referentiel.positions_CI = posCI
         
 #        print "version 5", self.version5
+        
+        # Correction contradiction 
+        if self.typeEnseignement != self.referentiel.Code:
+            print "Correction type enseignement", self.typeEnseignement, ">>", self.referentiel.Code
+            self.typeEnseignement = self.referentiel.Code
         
         self.etablissement = branche.get("Etab", u"")
         self.ville = branche.get("Ville", u"")
@@ -1189,13 +1215,13 @@ class Sequence(BaseDoc):
     ######################################################################################  
     def __repr__(self):
         return self.intitule
-        t = u"Séquence :"+ + "\n"
-        t += "   " + self.CI.__repr__() + "\n"
-        for c in self.obj.values():
-            t += "   " + c.__repr__() + "\n"
-        for s in self.seance:
-            t += "   " + s.__repr__() + "\n"
-        return t
+#        t = u"Séquence :"+ + "\n"
+#        t += "   " + self.CI.__repr__() + "\n"
+#        for c in self.obj.values():
+#            t += "   " + c.__repr__() + "\n"
+#        for s in self.seance:
+#            t += "   " + s.__repr__() + "\n"
+#        return t
 
     ######################################################################################  
     def Initialise(self):
@@ -1844,7 +1870,7 @@ class Projet(BaseDoc, Objet_sequence):
         self.nbrParties = 1
         
         # Organisation des phases du projet
-        self.nbrRevues = 2
+        self.nbrRevues = self.GetReferentiel().getNbrRevuesDefaut()
         self.positionRevues = list(self.GetReferentiel().posRevues[self.nbrRevues])
 
         # Année Scolaire
@@ -1948,9 +1974,9 @@ class Projet(BaseDoc, Objet_sequence):
     def creerTachesRevue(self):
         lst = []
         if self.nbrRevues == 2:
-            lr = ["R1", "R2", "S"]
+            lr = [_R1, _R2, "S"]
         else:
-            lr = ["R1", "R2", "R3", "S"]
+            lr = TOUTES_REVUES_EVAL_SOUT
         for p in lr:
             lst.append(Tache(self, self.panelParent, 
                              intitule = self.GetReferentiel().phases_prj[p][1], 
@@ -1959,10 +1985,10 @@ class Projet(BaseDoc, Objet_sequence):
     
     ######################################################################################  
     def getTachesRevue(self):
-        return [t for t in self.taches if t.phase in ["R1", "R2", "R3", "S"]]
+        return [t for t in self.taches if t.phase in TOUTES_REVUES_EVAL_SOUT]
 #        lst = []
 #        for t in self.taches:
-#            if t.phase in ["R1", "R2", "R3", "S"]:
+#            if t.phase in TOUTES_REVUES_EVAL_SOUT:
 #                lst.append(t)
 #        return lst
         
@@ -1974,9 +2000,9 @@ class Projet(BaseDoc, Objet_sequence):
     def getCodeLastRevue(self):
         return "R"+str(int(self.nbrRevues))
 #        if self.nbrRevues == 2:
-#            return "R2"
+#            return _R2
 #        else:
-#            return "R3"
+#            return _R3
         
     ######################################################################################  
     def getLastRevue(self):
@@ -2196,7 +2222,7 @@ class Projet(BaseDoc, Objet_sequence):
         adapterVersion = True
         for e in list(brancheTac):
             phase = e.get("Phase")
-            if phase in ["R1", "R2", "R3", "S"]:
+            if phase in TOUTES_REVUES_EVAL_SOUT:
                 if phase == "S":
                     num = len(tachesRevue)-1
                 else:
@@ -2263,7 +2289,7 @@ class Projet(BaseDoc, Objet_sequence):
         elif pos !=posEpreuve and self.position == posEpreuve:
             lst = []
             for t in self.taches:
-                if t.phase in ["R1", "R2", "R3", "S"]:
+                if t.phase in TOUTES_REVUES_EVAL_SOUT:
                     lst.append(t.branche)
             for a in reversed(lst):
                 self.SupprimerTache(item = a, verrouiller = False)
@@ -2357,13 +2383,13 @@ class Projet(BaseDoc, Objet_sequence):
         """ Opère les changements lorsque le nombre de revues a changé...
         """
 #        print "MiseAJourNbrRevues", self.nbrRevues
-        lstPhasesTaches = [k.phase for k in self.taches if k.phase in ["R1", "R2", "R3"]]
+        lstPhasesTaches = [k.phase for k in self.taches if k.phase in TOUTES_REVUES_EVAL]
 #        print "   ", lstPhasesTaches
-        if self.nbrRevues == 3 and not "R3" in lstPhasesTaches: # on ajoute une revue
+        if self.nbrRevues == 3 and not _R3 in lstPhasesTaches: # on ajoute une revue
             self.positionRevues.append(self.positionRevues[-1])
             tache = Tache(self, self.panelParent, 
-                          intitule = self.GetReferentiel().phases_prj["R3"][1], 
-                          phaseTache = "R3", duree = 0)
+                          intitule = self.GetReferentiel().phases_prj[_R3][1], 
+                          phaseTache = _R3, duree = 0)
             self.taches.append(tache)
             tache.ConstruireArbre(self.arbre, self.brancheTac)
             tache.SetPhase()
@@ -2372,7 +2398,7 @@ class Projet(BaseDoc, Objet_sequence):
             revue2.panelPropriete = PanelPropriete_Tache(self.panelParent, revue2, revue = True)
             
             
-        elif self.nbrRevues == 2 and "R3" in lstPhasesTaches:
+        elif self.nbrRevues == 2 and _R3 in lstPhasesTaches:
             t = self.getTachesRevue()[2]
             self.SupprimerTache(item = t.branche)
             revue2 = self.getTachesRevue()[1]
@@ -2393,13 +2419,13 @@ class Projet(BaseDoc, Objet_sequence):
             
         else:
             # La phase de la nouvelle tâche
-            if not tacheAct.phase in ["R1", "R2", "R3", "Rev"]:
+            if not tacheAct.phase in TOUTES_REVUES:
                 phase = tacheAct.phase
             elif tacheAct.phase == "Rev":
                 i = self.taches.index(tacheAct)
-                if i > 0 and self.taches[i-1].phase not in ["R1", "R2", "R3", "Rev", "S"]:
+                if i > 0 and self.taches[i-1].phase not in TOUTES_REVUES_SOUT:
                     phase = self.taches[i-1].phase 
-                elif i+1<len(self.taches) and self.taches[i+1].phase not in ["R1", "R2", "R3", "Rev", "S"]:
+                elif i+1<len(self.taches) and self.taches[i+1].phase not in TOUTES_REVUES_SOUT:
                     phase = self.taches[i+1].phase 
                 else:
                     phase = ""
@@ -2520,7 +2546,7 @@ class Projet(BaseDoc, Objet_sequence):
         ref = self.GetReferentiel()
         Rev = []
         for i, t in enumerate(lstTaches):
-            if t.phase == 'Rev':
+            if t.phase == _Rev:
                 if i > 0:
                     Rev.append((t, lstTaches[i-1]))
                 else:
@@ -2586,7 +2612,7 @@ class Projet(BaseDoc, Objet_sequence):
     ######################################################################################  
     def SupprimerItem(self, item):
         data = self.arbre.GetItemPyData(item)
-        if isinstance(data, Tache) and data.phase not in ["R1", "R2", "R3", "S"]:
+        if isinstance(data, Tache) and data.phase not in TOUTES_REVUES_EVAL_SOUT:
             self.SupprimerTache(item = item)
             
         elif isinstance(data, Eleve):
@@ -2823,12 +2849,12 @@ class Projet(BaseDoc, Objet_sequence):
         for p in self.GetListePhases():
             if p in ref.listPhases_prj:#[:-1]:
                 n = ref.phases_prj[p][0]
-                if not p in ['R1', 'R2', 'R3', 'S']:
+                if not p in TOUTES_REVUES_EVAL_SOUT:
                     n = u"     "+n
                 lst.append(n)
             elif p in ref.listPhasesEval_prj:
                 n = ref.phases_prj[p][0]
-                if not p in ['R1', 'R2', 'R3', 'S']:
+                if not p in TOUTES_REVUES_EVAL_SOUT:
                     n = u"     "+n
                 lst.append(n)
                 
@@ -2939,7 +2965,7 @@ class Projet(BaseDoc, Objet_sequence):
         
         
         for t in self.taches:
-            if t.phase in ['R1', 'R2', 'R3'] and self.GetReferentiel().compImposees:
+            if t.phase in TOUTES_REVUES_EVAL and self.GetReferentiel().compImposees:
                 t.panelPropriete.Destroy()
                 t.panelPropriete = PanelPropriete_Tache(t.panelParent, t)
             t.MiseAJourTypeEnseignement(self.classe.referentiel)
@@ -2978,9 +3004,9 @@ class Projet(BaseDoc, Objet_sequence):
 #        """
 #        return
 #        if self.nbrRevues == 2:
-#            lstR = ["R1"]
+#            lstR = [_R1]
 #        else:
-#            lstR = ["R1", "R2"]
+#            lstR = [_R1, _R2]
 #        for t in self.taches:
 #            if t.phase in lstR:
 #                for i, e in enumerate(self.eleves):
@@ -3054,11 +3080,11 @@ class Projet(BaseDoc, Objet_sequence):
         
         for t in self.taches:   # toutes les tâches, dans l'ordre
             
-            if t.phase in ["R1", "R2", "R3", "S", "Rev"]:
+            if t.phase in TOUTES_REVUES_SOUT:
 #                print "  ", t.phase
                 for neleve in range(len(self.eleves)+1):
 
-                    if t.phase in ["R1", "Rev"] or (t.phase == "R2" and self.nbrRevues == 3):
+                    if t.phase in [_R1, "Rev"] or (t.phase == _R2 and self.nbrRevues == 3):
                         t.indicateursMaxiEleve[neleve] = []
                     else:
                         t.indicateursEleve[neleve] = []
@@ -3067,36 +3093,38 @@ class Projet(BaseDoc, Objet_sequence):
                         for i, ok in enumerate(l):
                             if ok:
                                 codeIndic = c+"_"+str(i+1)
+                                
+                                # Phase de Conduite
                                 if self.GetReferentiel().getTypeIndicateur(codeIndic) == "C": # tousIndicateurs[c][i][1]: # Indicateur "revue"
-                                    if t.phase in ["R1", "R2", "R3", "Rev"]:
+                                    if t.phase in TOUTES_REVUES:
                                         
                                         if self.GetReferentiel().compImposees:
-                                            if 'R'+str(self.GetReferentiel().getIndicateur(codeIndic).revue) == t.phase:
+                                            if self.GetReferentiel().getIndicateur(codeIndic).getRevue() == t.phase:
 #                                                print "  compImposees", t.phase, ":", codeIndic
                                                 t.indicateursEleve[neleve].append(codeIndic)
 #                                                print "  >>", t.indicateursEleve
                                                 
-                                        elif t.phase in ["R1", "Rev"] or (t.phase == "R2" and self.nbrRevues == 3):
+                                        elif t.phase in [_R1, _Rev] or (t.phase == _R2 and self.nbrRevues == 3):
                                             t.indicateursMaxiEleve[neleve].append(codeIndic)
                                   
                                         else:
-                                            if t.phase == "R2": # 2 revues
+                                            if t.phase == _R2: # 2 revues
                                                 if tR1 != None and not codeIndic in tR1.indicateursEleve[neleve]: # R1 est passée
                                                     t.indicateursEleve[neleve].append(codeIndic)
                                                    
                                                             
-                                            else: # t.phase == "R3"
+                                            else: # t.phase == _R3
                                                 if tR2 != None and not codeIndic in tR2.indicateursEleve[neleve] and not codeIndic in tR1.indicateursEleve[neleve]: # R2 est passée
                                                     t.indicateursEleve[neleve].append(codeIndic)
                                         
-                                        
+                                # Phase de Soutenance    
                                 else:
-                                    if t.phase == "S":
+                                    if t.phase == _S:
                                         t.indicateursEleve[neleve].append(codeIndic)
     
                     if neleve == 0:
 
-                        if t.phase in ["R1", "Rev"] or (t.phase == "R2" and self.nbrRevues == 3):
+                        if t.phase in [_R1, "Rev"] or (t.phase == _R2 and self.nbrRevues == 3):
                             ti = []
                             for i in t.indicateursEleve[neleve]:
                                 if i in t.indicateursMaxiEleve[neleve]:
@@ -3105,9 +3133,9 @@ class Projet(BaseDoc, Objet_sequence):
                             if miseAJourPanel and hasattr(t.panelPropriete, 'arbre'):
                                 t.panelPropriete.arbre.MiseAJourTypeEnseignement(t.GetReferentiel())
                                 t.panelPropriete.MiseAJour()
-                            if t.phase == "R1":
+                            if t.phase == _R1:
                                 tR1 = t # la revue 1 est passée !
-                            elif t.phase == "R2":
+                            elif t.phase == _R2:
                                 tR2 = t # la revue 2 est passée ! (3 revues)
 #                print "  >>", t.indicateursMaxiEleve
                 
@@ -3138,9 +3166,9 @@ class Projet(BaseDoc, Objet_sequence):
 #        
 #        for t in self.taches:   # toutes les tâches, dans l'ordre
 #            
-#            if t.phase in ["R1", "R2", "R3", "S"]:
+#            if t.phase in TOUTES_REVUES_EVAL_SOUT:
 #                
-#                if t.phase == "R1" or (t.phase == "R2" and self.nbrRevues == 3):
+#                if t.phase == _R1 or (t.phase == _R2 and self.nbrRevues == 3):
 #                    t.indicateursMaxi = []
 #                else:
 #                    t.indicateurs = []
@@ -3150,16 +3178,16 @@ class Projet(BaseDoc, Objet_sequence):
 #                        if ok:
 #                            codeIndic = c+"_"+str(i+1)
 #                            if tousIndicateurs[c][i][1]: # Indicateur "revue"
-#                                if t.phase in ["R1", "R2", "R3"]:
+#                                if t.phase in TOUTES_REVUES_EVAL:
 ##                                    if t.phase == self.getCodeLastRevue() and (tR1 != None and not codeIndic in tR1.indicateurs):
 ##                                        t.indicateurs.append(codeIndic)
-#                                    if t.phase == "R1" or (t.phase == "R2" and self.nbrRevues == 3):
+#                                    if t.phase == _R1 or (t.phase == _R2 and self.nbrRevues == 3):
 #                                        t.indicateursMaxi.append(codeIndic)
 #                                    else:
-#                                        if t.phase == "R2": # 2 revues
+#                                        if t.phase == _R2: # 2 revues
 #                                            if tR1 != None and not codeIndic in tR1.indicateurs: # R1 est passée
 #                                                t.indicateurs.append(codeIndic)
-#                                        else: # t.phase == "R3"
+#                                        else: # t.phase == _R3
 #                                            if tR2 != None and not codeIndic in tR2.indicateurs and not codeIndic in tR1.indicateurs: # R2 est passée
 #                                                t.indicateurs.append(codeIndic)
 #                                    
@@ -3169,7 +3197,7 @@ class Projet(BaseDoc, Objet_sequence):
 #                                    t.indicateurs.append(codeIndic)
 #
 #                
-#                if t.phase == "R1" or (t.phase == "R2" and self.nbrRevues == 3):
+#                if t.phase == _R1 or (t.phase == _R2 and self.nbrRevues == 3):
 #                    ti = []
 #                    for i in t.indicateurs:
 #                        if i in t.indicateursMaxi:
@@ -3177,7 +3205,7 @@ class Projet(BaseDoc, Objet_sequence):
 #                    t.indicateurs = ti
 #                    t.panelPropriete.arbre.MiseAJourTypeEnseignement(t.GetTypeEnseignement())
 #                    t.panelPropriete.MiseAJour()
-#                    if t.phase == "R1":
+#                    if t.phase == _R1:
 #                        tR1 = t # la revue 1 est passée !
 #                    else:
 #                        tR2 = t # la revue 2 est passée ! (3 revues)
@@ -3201,8 +3229,8 @@ class Projet(BaseDoc, Objet_sequence):
 #        tR1 = None
 #        indicateurs = {}
 #        for t in self.taches:   # toutes les tâches, dans l'ordre
-#            if t.phase in ["R1", "R2", "R3", "S"]:
-#                if t.phase == "R1" or (t.phase == "R2" and self.nbrRevues == 3):
+#            if t.phase in TOUTES_REVUES_EVAL_SOUT:
+#                if t.phase == _R1 or (t.phase == _R2 and self.nbrRevues == 3):
 #                    t.indicateursMaxi = []
 #                else:
 #                    t.indicateurs = []
@@ -3212,17 +3240,17 @@ class Projet(BaseDoc, Objet_sequence):
 #                        if ok:
 #                            codeIndic = c+"_"+str(i+1)
 #                            if tousIndicateurs[c][i][1]: # Indicateur "revue"
-#                                if t.phase in ["R1", "R2", "R3"]:
+#                                if t.phase in TOUTES_REVUES_EVAL:
 #                                    if t.phase == self.getCodeLastRevue() and (tR1 != None and not codeIndic in tR1.indicateurs):
 #                                        t.indicateurs.append(codeIndic)
-#                                    if t.phase == "R1" or (t.phase == "R2" and self.nbrRevues == 3):
+#                                    if t.phase == _R1 or (t.phase == _R2 and self.nbrRevues == 3):
 #                                        t.indicateursMaxi.append(codeIndic)
 #                            else:
 #                                if t.phase == "S":
 #                                    t.indicateurs.append(codeIndic)
 #
 #                
-#                if t.phase == "R1" or (t.phase == "R2" and self.nbrRevues == 3):
+#                if t.phase == _R1 or (t.phase == _R2 and self.nbrRevues == 3):
 #                    ti = []
 #                    for i in t.indicateurs:
 #                        if i in t.indicateursMaxi:
@@ -3699,6 +3727,10 @@ class Seance(ElementDeSequence, Objet_sequence):
                               bornes = [1,None], modeLog = False,
                               expression = None, multiple = False)
         
+#        self.nbrGroupes = Variable(u"Nombre de groupes", lstVal = 1, nomNorm = "", typ = VAR_ENTIER_POS, 
+#                              bornes = [1,None], modeLog = False,
+#                              expression = None, multiple = False)
+        
         # Les autres données
         self.typeParent = typeParent
         self.parent = parent
@@ -3764,6 +3796,7 @@ class Seance(ElementDeSequence, Objet_sequence):
             for sce in self.sousSeances:
                 root.append(sce.getBranche())
             root.set("nbrRotations", str(self.nbrRotations.v[0]))
+            root.set("nbrGroupes", str(self.nbrGroupes.v[0]))
             
         elif self.typeSeance in ["AP", "ED", "P"]:
             root.set("Demarche", self.demarche)
@@ -3805,6 +3838,7 @@ class Seance(ElementDeSequence, Objet_sequence):
             self.duree.v[0] = self.GetDuree()
             if self.typeSeance == "R":
                 self.nbrRotations.v[0] = eval(branche.get("nbrRotations", str(len(self.sousSeances))))
+#                self.nbrGroupes.v[0] = eval(branche.get("nbrGroupes", str(len(self.Get???))))
                 self.reglerNbrRotMaxi()
             
         elif self.typeSeance in ["AP", "ED", "P"]:   
@@ -4034,14 +4068,41 @@ class Seance(ElementDeSequence, Objet_sequence):
             self.codeBranche.SetToolTipString(message)
             self.codeBranche.Refresh()
     
+    ######################################################################################  
+    def GetListSousSeancesRot(self, tout = False):
+        l = []
+        i = 0
+        for ss in self.sousSeances:
+            for n in range(ss.nombre.v[0]):
+                l.append(ss)
+#            if not tout :
+#                i += ss.nombre.v[0]
+#                if i >= self.nbrRotations.v[0]:
+#                    break
+        if not tout:
+            l = l[:self.nbrRotations.v[0]]
+        return l
+    
+    
     
     ######################################################################################  
     def GetDuree(self):
+#        print "GetDuree", self.GetListSousSeancesRot()
         duree = 0
         if self.typeSeance == "R":
-            for i in range(self.nbrRotations.v[0]):
-                sce = self.sousSeances[i]
-                duree += sce.GetDuree()
+#            i = 0
+#            for ss in self.sousSeances:
+#                duree += ss.GetDuree()
+#                i += ss.nombre.v[0]
+#                if i >= self.nbrRotations.v[0]:
+#                    break
+                
+                
+            for ss in self.GetListSousSeancesRot():
+#                sce = self.sousSeances[i]
+                duree += ss.GetDuree()
+#                print "   ", duree
+                
 #            for sce in self.sousSeances:
 #                duree += sce.GetDuree()
         elif self.typeSeance == "S":
@@ -4063,9 +4124,18 @@ class Seance(ElementDeSequence, Objet_sequence):
     def GetDureeGraphMini(self):
         duree = 10000
         if self.typeSeance == "R":
-            for i in range(self.nbrRotations.v[0]):
-                sce = self.sousSeances[i]
-                duree = min(duree, sce.GetDuree())
+            for ss in self.GetListSousSeancesRot():
+                duree = min(duree, ss.GetDuree())
+#            i = 0
+#            for ss in self.sousSeances:
+#                duree = min(duree, ss.GetDuree())
+#                i += ss.nombre.v[0]
+#                if i >= self.nbrRotations.v[0]:
+#                    break
+                
+#            for i in range(self.nbrRotations.v[0]):
+#                sce = self.sousSeances[i]
+#                duree = min(duree, sce.GetDuree())
         elif self.typeSeance == "S":
             if len(self.sousSeances) > 0:
                 duree = min(duree, self.sousSeances[0].GetDuree())
@@ -4080,26 +4150,31 @@ class Seance(ElementDeSequence, Objet_sequence):
             après une modification de durée d'un des enfants
         """
         if recurs and self.EstSousSeance() and self.parent.typeSeance in ["R", "S"]: # séance en rotation (parent = séance "Rotation")
-            self.parent.SetDuree(duree)
+            self.parent.SetDuree(duree, recurs = False)
         
-        elif self.typeSeance == "S" : # Serie
+#        return
+#        if self.typeSeance in ["R", "S"]:
+#            self.duree.v[0] = duree
+            
+            
+        elif self.typeSeance == "S" : # Serie (parallèle)
             self.duree.v[0] = duree
-            for s in self.sousSeances:
-                if s.typeSeance in ["R", "S"]:
-                    s.SetDuree(duree, recurs = False)
-                else:
-                    s.duree.v[0] = duree
-                    s.panelPropriete.MiseAJourDuree()
+#            for s in self.sousSeances:
+#                if s.typeSeance in ["R", "S"]:
+#                    s.SetDuree(duree, recurs = False)
+#                else:
+#                    s.duree.v[0] = duree
+#                    s.panelPropriete.MiseAJourDuree()
             self.panelPropriete.MiseAJourDuree()
 
         
-        elif self.typeSeance == "R" : # Serie
-            for s in self.sousSeances:
-                if s.typeSeance in ["R", "S"]:
-                    s.SetDuree(duree, recurs = False)
-                else:
-                    s.duree.v[0] = duree
-                    s.panelPropriete.MiseAJourDuree()
+        elif self.typeSeance == "R" : # Rotation
+#            for s in self.sousSeances:
+#                if s.typeSeance in ["R", "S"]:
+#                    s.SetDuree(duree, recurs = False)
+#                else:
+#                    s.duree.v[0] = duree
+#                    s.panelPropriete.MiseAJourDuree()
             self.duree.v[0] = self.GetDuree()
             self.panelPropriete.MiseAJourDuree()
 
@@ -4107,6 +4182,8 @@ class Seance(ElementDeSequence, Objet_sequence):
     ######################################################################################  
     def SetNombre(self, nombre):
         self.nombre.v[0] = nombre
+        if self.EstSousSeance() and self.parent.typeSeance == "R":
+            self.parent.reglerNbrRotMaxi()
     
     ######################################################################################  
     def SetTaille(self, nombre):
@@ -4115,6 +4192,9 @@ class Seance(ElementDeSequence, Objet_sequence):
     ######################################################################################  
     def SetNombreRot(self, nombre):
         self.nbrRotations.v[0] = nombre
+        self.SetDuree(self.GetDuree())
+        if hasattr(self, 'panelPropriete'):
+            self.panelPropriete.vcNombreRot.mofifierValeursSsEvt()
         
     ######################################################################################  
     def SetIntitule(self, text):           
@@ -4297,6 +4377,7 @@ class Seance(ElementDeSequence, Objet_sequence):
         
         if self.typeSeance == "R":
             seance.SetDuree(self.sousSeances[0].GetDuree())
+            self.SetNombreRot(self.GetNbrSSeancesRotation())
             self.reglerNbrRotMaxi()
         else:
             seance.SetDuree(self.GetDuree())
@@ -4320,9 +4401,19 @@ class Seance(ElementDeSequence, Objet_sequence):
     
     ######################################################################################  
     def reglerNbrRotMaxi(self):
-        self.nbrRotations.bornes[1] = len(self.sousSeances)
-        if self.nbrRotations.v[0] > len(self.sousSeances):
-            self.SetNombreRot(len(self.sousSeances))
+        n = self.GetNbrSSeancesRotation()
+        print "reglerNbrRotMaxi", self, ":", n
+        self.nbrRotations.bornes[1] = n
+        if self.nbrRotations.v[0] > n:
+            self.SetNombreRot(n)
+    
+    
+    ######################################################################################  
+    def GetNbrSSeancesRotation(self):
+        n = 0
+        for s in self.sousSeances:
+            n += s.nombre.v[0]
+        return n
     
     
     ######################################################################################  
@@ -4399,10 +4490,7 @@ class Seance(ElementDeSequence, Objet_sequence):
     ######################################################################################  
     def GetDocument(self):    
         if self.EstSousSeance():
-            if self.parent.EstSousSeance():
-                sequence = self.parent.parent.parent
-            else:
-                sequence = self.parent.parent
+            sequence = self.parent.GetDocument()
         else:
             sequence = self.parent
         return sequence
@@ -4560,7 +4648,7 @@ class Tache(Objet_sequence):
         else:
 #        if branche == None:
             self.indicateursEleve = { 0 : [], 1 : [], 2 : [], 3 : [],4 : [], 5 : [],6 : []} # clef = n°eleve ;  valeur = liste d'indicateurs
-            if phaseTache in ["R1", "R2", "R3", "S", "Rev"]:
+            if phaseTache in TOUTES_REVUES_SOUT:
                 self.indicateursMaxiEleve = { 0 : [], 1 : [], 2 : [], 3 : [],4 : [], 5 : [],6 : []}
             
         if panelParent:
@@ -4585,7 +4673,7 @@ class Tache(Objet_sequence):
             self.tip.sizer.SetItemSpan(self.tip.titre, (1,2))
             
             
-            if self.phase in ["R1", "R2", "R3", "S", "Rev"]:
+            if self.phase in TOUTES_REVUES_SOUT:
                 p = self.tip.CreerTexte((1,0), txt = u"Délai (depuis début du projet) :", flag = wx.ALIGN_RIGHT|wx.ALL)
                 p.SetFont(wx.Font(9, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.NORMAL, underline = True))
         
@@ -4598,7 +4686,7 @@ class Tache(Objet_sequence):
                 self.tip_phase = self.tip.CreerTexte((1,1), flag = wx.ALIGN_LEFT|wx.BOTTOM|wx.TOP|wx.LEFT)
                 self.tip_phase.SetFont(wx.Font(9, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.NORMAL))
             
-            if not self.phase in ["R1", "R2", "R3", "S"]:
+            if not self.phase in TOUTES_REVUES_EVAL_SOUT:
                 i = self.tip.CreerTexte((2,0), txt = u"Intitulé :", flag = wx.ALIGN_RIGHT|wx.ALL)
                 i.SetFont(wx.Font(9, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.NORMAL, underline = True))
 
@@ -4773,9 +4861,9 @@ class Tache(Objet_sequence):
             root.append(brancheCmp)
             
             if self.projet.nbrRevues == 2:
-                lstR = ["R1"]
+                lstR = [_R1]
             else:
-                lstR = ["R1", "R2"]
+                lstR = [_R1, _R2]
                     
             if self.phase in lstR:
                 for e, indicateurs in self.indicateursEleve.items()[1:]:
@@ -4785,7 +4873,7 @@ class Tache(Objet_sequence):
                     brancheCmp.append(brancheE)
                     for i, c in enumerate(indicateurs):
                         brancheE.set("Indic"+str(i), c)        
-            elif not self.phase in ["R1", "R2", "R3"]:
+            elif not self.phase in TOUTES_REVUES_EVAL:
                 for i, c in enumerate(self.indicateursEleve[0]):
                     brancheCmp.set("Indic"+str(i), c)
             
@@ -4832,7 +4920,7 @@ class Tache(Objet_sequence):
 
         self.description = branche.get("Description", None)
         
-        if not self.phase in ["R1", "R2", "R3", "S"]:
+        if not self.phase in TOUTES_REVUES_EVAL_SOUT:
             self.duree.v[0] = eval(branche.get("Duree", "1"))
         else:
             self.duree.v[0] = 0.5
@@ -4888,9 +4976,9 @@ class Tache(Objet_sequence):
 #                    print "  branche Indicateurs"
                     if brancheInd != None:
                         if self.projet.nbrRevues == 2:
-                            lstR = ["R1"]
+                            lstR = [_R1]
                         else:
-                            lstR = ["R1", "R2"]
+                            lstR = [_R1, _R2]
 
                         # 
                         # Indicateurs revue par élève (première(s) revues)
@@ -5033,7 +5121,7 @@ class Tache(Objet_sequence):
     ######################################################################################  
     def GetDelai(self):
         if self.phase != "":
-            if self.phase in ["R1", "R2", "R3"]:
+            if self.phase in TOUTES_REVUES_EVAL:
                 de = []
                 for e in self.projet.eleves:
                     de.append(e.GetDuree(phase = self.phase, total = True))
@@ -5090,8 +5178,8 @@ class Tache(Objet_sequence):
 #            print "   ", i, pr, self.phase
             if self.phase <= pr:
 #                print '    >> R'+str(i+1)
-                return 'R'+str(i+1)
-        return 'S'
+                return i+1
+        return 0
             
             
     ######################################################################################  
@@ -5138,7 +5226,7 @@ class Tache(Objet_sequence):
         num = str(i+1)
         
         if self.phase != "":
-            if self.phase in ["R1", "R2", "R3", "S"]:
+            if self.phase in TOUTES_REVUES_EVAL_SOUT:
                 self.code = self.phase
             else:
                 self.code = self.GetReferentiel().phases_prj[self.phase][2]+num     #constantes.CODE_PHASE_TACHE[typeEns][self.phase]+num
@@ -5150,7 +5238,7 @@ class Tache(Objet_sequence):
         # Branche de l'arbre
         #
         if hasattr(self, 'codeBranche') and self.phase != "":
-            if self.phase in ["R1", "R2", "R3", "S"]:
+            if self.phase in TOUTES_REVUES_EVAL_SOUT:
                 self.codeBranche.SetLabel(u"")
                 t = u""
             else:
@@ -5161,7 +5249,7 @@ class Tache(Objet_sequence):
         #
         # Tip (fenêtre popup)
         #
-        if self.phase in ["R1", "R2", "R3", "S", "Rev"]:
+        if self.phase in TOUTES_REVUES_SOUT:
             self.tip.SetTitre(self.GetReferentiel().phases_prj[self.phase][1])
             self.tip.SetTexte(draw_cairo.getHoraireTxt(self.GetDelai()), self.tip_delai)
 
@@ -5175,7 +5263,7 @@ class Tache(Objet_sequence):
                 self.tip.SetTexte(t, self.tip_phase)
 
 
-        if not self.phase in ["R1", "R2", "R3", "S"]:
+        if not self.phase in TOUTES_REVUES_EVAL_SOUT:
             if self.intitule != "":
                 t = textwrap.fill(self.intitule, 50)
             else:
@@ -5197,7 +5285,7 @@ class Tache(Objet_sequence):
         if hasattr(self, 'tip'):
             self.tip.SetBranche(self.branche)
             
-        if self.phase in ["R1", "R2", "R3"]:
+        if self.phase in TOUTES_REVUES_EVAL:
             arbre.SetItemTextColour(self.branche, "red")
         elif self.phase == "Rev":
             arbre.SetItemTextColour(self.branche, "ORANGE")
@@ -5270,7 +5358,7 @@ class Tache(Objet_sequence):
     ######################################################################################  
     def AfficherMenuContextuel(self, itemArbre):
         if itemArbre == self.branche:
-            if not self.phase in ["R1", "R2", "R3", "S"]:
+            if not self.phase in TOUTES_REVUES_EVAL_SOUT:
                 listItems = [[u"Supprimer", functools.partial(self.projet.SupprimerTache, item = itemArbre)]]
             else:
                 listItems = []
@@ -5910,13 +5998,13 @@ class Eleve(Personne, Objet_sequence):
             for i, t in enumerate(self.projet.taches):
                 if t.phase == phase:
                     break
-                if t.phase in ["R1", "R2", "R3", "S"]:
+                if t.phase in TOUTES_REVUES_EVAL_SOUT:
                     p = i
         
         for t in self.projet.taches[p:]:
             if t.phase == phase:
                 break
-            if not t.phase in ["R1", "R2", "R3", "S", "Rev"]:
+            if not t.phase in TOUTES_REVUES_SOUT:
                 if self.id in t.eleves:
                     d += t.GetDuree()
         return d
@@ -5934,7 +6022,7 @@ class Eleve(Personne, Objet_sequence):
         for t in self.projet.taches[p:]:
             if t == tache:
                 break
-            if not t.phase in ["R1", "R2", "R3", "S", "Rev"]:
+            if not t.phase in TOUTES_REVUES_SOUT:
                 if self.id in t.eleves:
                     d += t.GetDuree()
         return d
@@ -6292,7 +6380,7 @@ class Eleve(Personne, Objet_sequence):
         indicateurs = {}
 #        print " GetDicIndicateurs", self.id
         for t in self.projet.taches: # Toutes les tâches du projet
-            if not t.phase in ["R1", "R2", "R3", "S", "Rev"]:
+            if not t.phase in TOUTES_REVUES_SOUT:
                 if self.id in t.eleves:     # L'élève est concerné par cette tâche
                     indicTache = t.GetDicIndicateurs() # Les indicateurs des compétences à mobiliser pour cette tâche
                     for c, i in indicTache.items():
@@ -6335,7 +6423,7 @@ class Eleve(Personne, Objet_sequence):
     def GetTaches(self, revues = False):
         lst = []
         for t in self.projet.taches:
-            if revues and t.phase in ["R1", "R2", "R3"]:
+            if revues and t.phase in TOUTES_REVUES_EVAL:
                 lst.append(t)
             elif self.id in t.eleves:
                 if revues and t.phase == "Rev":
@@ -9814,7 +9902,7 @@ class PanelOrganisation(wx.Panel):
     #############################################################################            
     def EvtListBox(self, event):
         ref = self.objet.GetReferentiel()
-        if ref.getClefDic('phases_prj', self.liste.GetString(event.GetSelection()), 0) in ["R1", "R2", "R3"]:
+        if ref.getClefDic('phases_prj', self.liste.GetString(event.GetSelection()), 0) in TOUTES_REVUES_EVAL:
             self.buttonUp.Enable(True)
             self.buttonDown.Enable(True)
         else:
@@ -9844,7 +9932,7 @@ class PanelOrganisation(wx.Panel):
 #            itemPrecedent = constantes.getCodeNomCourt(self.liste.'(nouvPosRevue), 
 #                                                       self.objet.GetTypeEnseignement(simple = True))
             j=1
-            while itemPrecedent in ["R1", "R2", "R3"]:
+            while itemPrecedent in TOUTES_REVUES_EVAL:
                 itemPrecedent = ref.getClefDic('phases_prj', self.liste.GetString(nouvPosRevue-j), 0)
 #                itemPrecedent = constantes.getCodeNomCourt(self.liste.GetString(nouvPosRevue-j),
 #                                                           self.objet.GetTypeEnseignement(simple = True))
@@ -11838,13 +11926,21 @@ class PanelPropriete_Seance(PanelPropriete):
         
         # Nombre de rotations
         vcNombreRot = VariableCtrl(self, seance.nbrRotations, signeEgal = True, slider = False, sizeh = 30,
-                                help = u"Nombre de rotations")
+                                help = u"Nombre de rotations successives")
         self.Bind(EVT_VAR_CTRL, self.EvtText, vcNombreRot)
         self.vcNombreRot = vcNombreRot
         bsizer2.Add(vcNombreRot, flag = wx.EXPAND|wx.ALL, border = 2)
         
         self.sizer.Add(bsizer2, (0,2), (4,1), flag =wx.ALL|wx.EXPAND, border = 2)
         
+        # Nombre de groupes
+#        vcNombreGrp = VariableCtrl(self, seance.nbrGroupes, signeEgal = True, slider = False, sizeh = 30,
+#                                help = u"Nombre de groupes occupés simultanément")
+#        self.Bind(EVT_VAR_CTRL, self.EvtText, vcNombreRot)
+#        self.vcNombreGrp = vcNombreGrp
+#        bsizer2.Add(vcNombreGrp, flag = wx.EXPAND|wx.ALL, border = 2)
+#        
+#        self.sizer.Add(bsizer2, (0,2), (4,1), flag =wx.ALL|wx.EXPAND, border = 2)
         
         
         
@@ -12120,7 +12216,7 @@ class PanelPropriete_Seance(PanelPropriete):
         if self.seance.EstSousSeance():
             listType = self.GetReferentiel().listeTypeActivite
             if not self.seance.parent.EstSousSeance():
-                listType = self.GetReferentiel().listeTypeActivite + ["S"]
+                listType = self.GetReferentiel().listeTypeActivite + ["S", "R"]
         else:
             listType = self.seance.GetReferentiel().listeTypeSeance
         
@@ -12257,8 +12353,8 @@ class PanelPropriete_Tache(PanelPropriete):
         self.revue = revue
         PanelPropriete.__init__(self, parent)
 #        print "init pptache", tache
-        if not tache.phase in [tache.projet.getCodeLastRevue(), "S"]  \
-           and not (tache.phase in ['R1', 'R2', 'R3'] and tache.GetReferentiel().compImposees):
+        if not tache.phase in [tache.projet.getCodeLastRevue(), _S]  \
+           and not (tache.phase in TOUTES_REVUES_EVAL and tache.GetReferentiel().compImposees):
             #
             # La page "Généralités"
             #
@@ -12283,7 +12379,7 @@ class PanelPropriete_Tache(PanelPropriete):
 #        lstPhases = [p[1] for k, p in ref.phases_prj.items() if not k in ref.listPhasesEval_prj]
         lstPhases = [ref.phases_prj[k][1] for k in ref.listPhases_prj if not k in ref.listPhasesEval_prj]
         
-        if tache.phase in ["R1", "R2", "R3", "S", "Rev"]:
+        if tache.phase in TOUTES_REVUES_SOUT:
             titre = wx.StaticText(pageGen, -1, u"Phase : "+ref.phases_prj[tache.phase][1])
             pageGen.sizer.Add(titre, (0,0), (1,1), flag = wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_LEFT|wx.ALL, border = 5)
         else:
@@ -12308,7 +12404,7 @@ class PanelPropriete_Tache(PanelPropriete):
         #
         # Intitulé de la tache
         #
-        if not tache.phase in ["R1", "R2", "R3", "S"]:
+        if not tache.phase in TOUTES_REVUES_EVAL_SOUT:
             box = wx.StaticBox(pageGen, -1, u"Intitulé de la tâche")
             bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
             textctrl = wx.TextCtrl(pageGen, -1, u"", style=wx.TE_MULTILINE)
@@ -12327,7 +12423,7 @@ class PanelPropriete_Tache(PanelPropriete):
         #
         # Durée de la tache
         #
-        if not tache.phase in ["R1", "R2", "R3", "S"]:
+        if not tache.phase in TOUTES_REVUES_EVAL_SOUT:
             vcDuree = VariableCtrl(pageGen, tache.duree, coef = 0.5, signeEgal = True, slider = False,
                                    help = u"Volume horaire de la tâche en heures", sizeh = 60)
             pageGen.Bind(EVT_VAR_CTRL, self.EvtText, vcDuree)
@@ -12338,7 +12434,7 @@ class PanelPropriete_Tache(PanelPropriete):
         #
         # Elèves impliqués
         #
-        if not tache.phase in ["R1", "R2", "R3", "S"]:
+        if not tache.phase in TOUTES_REVUES_EVAL_SOUT:
             self.box = wx.StaticBox(pageGen, -1, u"Elèves impliqués")
 #            self.box.SetMinSize((150,-1))
             self.bsizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
@@ -12369,7 +12465,7 @@ class PanelPropriete_Tache(PanelPropriete):
         dbsizer.Add(tc,1, flag = wx.EXPAND)
 #        dbsizer.Add(bd, flag = wx.EXPAND)
 #        pageGen.Bind(wx.EVT_BUTTON, self.EvtClick, bd)
-        if tache.phase in ["R1", "R2", "R3", "S"]:
+        if tache.phase in TOUTES_REVUES_EVAL_SOUT:
             pageGen.sizer.Add(dbsizer, (1,0), (3, 2), flag = wx.EXPAND)
             pageGen.sizer.AddGrowableCol(0)
         else:
@@ -12381,8 +12477,8 @@ class PanelPropriete_Tache(PanelPropriete):
         pageGen.sizer.AddGrowableRow(1)
         
 #        print ">>>", tache.phase, tache.projet.getCodeLastRevue()
-        if not tache.phase in [tache.projet.getCodeLastRevue(), "S"] \
-           and not (tache.phase in ['R1', 'R2', 'R3'] and tache.GetReferentiel().compImposees):
+        if not tache.phase in [tache.projet.getCodeLastRevue(), _S] \
+           and not (tache.phase in TOUTES_REVUES_EVAL and tache.GetReferentiel().compImposees):
             nb.AddPage(pageGen, u"Propriétés générales")
 
             #
@@ -12394,8 +12490,8 @@ class PanelPropriete_Tache(PanelPropriete):
             pageComsizer = wx.BoxSizer(wx.HORIZONTAL)
             
             self.arbre = ArbreCompetencesPrj(pageCom, tache.GetReferentiel(), self,
-                                             revue = self.tache.phase in ["R1", "R2", "R3", "S", "Rev"], 
-                                             eleves = self.tache.phase in ["R1", "R2", "R3", "S"])
+                                             revue = self.tache.phase in TOUTES_REVUES_SOUT, 
+                                             eleves = self.tache.phase in TOUTES_REVUES_EVAL_SOUT)
             pageComsizer.Add(self.arbre, 1, flag = wx.EXPAND)
         
             pageCom.SetSizer(pageComsizer)
@@ -12403,7 +12499,7 @@ class PanelPropriete_Tache(PanelPropriete):
             
             self.pageComsizer = pageComsizer
             
-            if (len(tache.GetReferentiel().dicFonctions) > 0) and (not tache.phase in ["R1", "R2", "R3", "S"]):
+            if (len(tache.GetReferentiel().dicFonctions) > 0) and (not tache.phase in TOUTES_REVUES_EVAL_SOUT):
                 #
                 # La page "Fonctions"
                 #
@@ -12431,7 +12527,7 @@ class PanelPropriete_Tache(PanelPropriete):
         
         self.Layout()
         self.FitInside()
-        wx.CallAfter(self.PostSizeEvent)
+#        wx.CallAfter(self.PostSizeEvent)
         self.Show()
 #        wx.CallAfter(self.Layout)
         
@@ -12627,7 +12723,7 @@ class PanelPropriete_Tache(PanelPropriete):
     def MiseAJourListeEleves(self):
         """ Met à jour la liste des élèves
         """
-        if not self.tache.phase in ["S", "R1", "R2", "R3"]:
+        if not self.tache.phase in TOUTES_REVUES_EVAL_SOUT:
             self.pageGen.Freeze()
             for i, e in enumerate(self.GetDocument().eleves):
                 self.elevesCtrl[i].SetLabel(e.GetNomPrenom())
@@ -12639,7 +12735,7 @@ class PanelPropriete_Tache(PanelPropriete):
     def MiseAJourEleves(self):
         """ Met à jour le cochage des élèves concernés par la tâche
         """
-        if not self.tache.phase in ["S", "R1", "R2", "R3"]:
+        if not self.tache.phase in TOUTES_REVUES_EVAL_SOUT:
             for i in range(len(self.GetDocument().eleves)):
                 self.elevesCtrl[i].SetValue(i in self.tache.eleves)
 
@@ -12710,7 +12806,7 @@ class PanelPropriete_Tache(PanelPropriete):
 #                                        self.cbPhas.GetStringSelection())
         if self.tache.phase != newPhase:
             if newPhase == "Rev":
-                self.tache.SetDuree(0.5)
+                self.tache.SetDuree(0)
             self.tache.SetPhase(newPhase)
             self.arbre.MiseAJourPhase(newPhase)
             self.pageGen.Layout()
@@ -12749,7 +12845,7 @@ class PanelPropriete_Tache(PanelPropriete):
         
     #############################################################################
     def MiseAJourTypeEnseignement(self, ref):
-        if self.tache.phase in ['R1', 'R2', 'R3'] and self.tache.GetReferentiel().compImposees:
+        if self.tache.phase in TOUTES_REVUES_EVAL and self.tache.GetReferentiel().compImposees:
             pass
         else:
             if hasattr(self, 'arbre'):
@@ -14431,7 +14527,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
                     for i, indic in enumerate(v[1]):
                         codeIndic = str(k+'_'+str(i+1))
                         if debug:
-#                            print not tache.phase in ["R1", "Rev", tache.projet.getCodeLastRevue()]
+#                            print not tache.phase in [_R1, "Rev", tache.projet.getCodeLastRevue()]
                             print codeIndic , indic.revue,
                             if hasattr(tache, 'indicateursMaxiEleve'):
                                 print tache.indicateursMaxiEleve[0]
@@ -14448,9 +14544,9 @@ class ArbreCompetencesPrj(ArbreCompetences):
                             self.SetItemFont(b, font)
                             
                             
-                        if tache != None and ((not tache.phase in ["R1","R2", "Rev", tache.projet.getCodeLastRevue()]) \
+                        if tache != None and ((not tache.phase in [_R1,_R2, _Rev, tache.projet.getCodeLastRevue()]) \
                                               or (codeIndic in tache.indicateursMaxiEleve[0])) \
-                                         and (indic.revue == 0 or 'R'+str(indic.revue) >= tache.GetProchaineRevue()) \
+                                         and (indic.revue == 0 or indic.revue >= tache.GetProchaineRevue()) \
                                          and (ref.getTypeIndicateur(codeIndic) == "S" or tache.phase != 'XXX'):
                             
                             b = self.AppendItem(comp, indic.intitule, ct_type=1, data = codeIndic)
@@ -14459,7 +14555,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
                             else:
                                 tous = False
                             
-                            if 'R'+str(indic.revue) == tache.phase:
+                            if indic.getRevue() == tache.phase:
                                 self.CheckItem2(b)
                                 
                             if debug: print "   indic", indic

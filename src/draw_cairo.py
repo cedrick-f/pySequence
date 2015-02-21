@@ -989,15 +989,28 @@ def tableauH(ctx, titres, x, y, wt, wc, h, nCol = 0, va = 'c', ha = 'c', orient 
 
 def tableauH_var(ctx, titres, x, y, wt, wc, hl, taille, nCol = 0, va = 'c', ha = 'c', orient = 'h', 
              coul = (0.9,0.9,0.9), contenu = []):
+    """ Dessine un tableau horizontal :
+        ------------------------------------------------------------------
+        |    titre    |    contenu col1    |    contenu col2    |    ...
+        ------------------------------------------------------------------
+        |    titre    |    contenu col1    |    contenu col2    |    ...
+        ------------------------------------------------------------------
+        |     ...     |      ...           |      ...           |    ...
+        
+        hl : liste des hauteurs de lignes
+        nCol : nombre de colonnes
+    """
 #    hc = h/len(titres)
     _y = y
     _coul = ctx.get_source().get_rgba()
-#    print "tableauH", _coul
+    print "tableauH", _coul
     for i, titre in enumerate(titres):
-#        print "    ",titre
+        ctitre = titre.rstrip("1234567890.")
+        print "    ",ctitre
+        
         ctx.rectangle(x, _y, wt, hl[i])
-        if type(coul) == dict :
-            col = coul[titre.rstrip("1234567890.")]
+        if type(coul) == dict:# and len(ctitre) > 0:
+            col = coul[ctitre]
         else:
             col = coul
         ctx.set_source_rgb (col[0], col[1], col[2])
@@ -1020,7 +1033,9 @@ def tableauH_var(ctx, titres, x, y, wt, wc, hl, taille, nCol = 0, va = 'c', ha =
     _x = x+wt
     ctx.set_font_size(taille)
     fascent, fdescent, fheight, fxadvance, fyadvance = ctx.font_extents()
+    print
     for c in contenu:
+        print "    ", c
         for j, l in enumerate(c):
             #
             # On dessine toutes les lignes de texte
