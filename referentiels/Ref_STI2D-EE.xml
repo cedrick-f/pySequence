@@ -1,4 +1,8 @@
-<Referentiel B_CI_BO="True" B_CI_cible="False" B_compImposees="False" B_objSavoirs_Math="False" B_objSavoirs_Phys="False" B_preSavoirs_Math="True" B_preSavoirs_Phys="True" B_projet="True" I_duree_prj="70" S_BO_URL="http://www.education.gouv.fr/pid25535/bulletin_officiel.html?cid_bo=82984" S_BO_dossier="STI2D" S_Code="EE" S_Famille="STI" S_FichierLogo="" S_abrevCI="CI" S_ficheValid_prj="" S_nomCI="Centre(s) d'Int&#233;r&#234;t" S_nomCompetences="Comp&#233;tences" S_nomFonctions="Fonctions" S_nomIndicateurs="Indicateurs" S_nomSavoirs="Savoirs" S_nomSavoirs_Math="Math&#233;matiques" S_nomSavoirs_Phys="Sciences Physiques" S_nomTaches="T&#226;ches" S_surnomSavoirs="">
+<Referentiel B_CI_BO="True" B_CI_cible="False" B_compImposees="False" B_objSavoirs_Math="False" B_objSavoirs_Phys="False" B_preSavoirs_Math="True" B_preSavoirs_Phys="True" B_projet="True" I_duree_prj="70" S_Code="EE" S_Famille="STI" S_FichierLogo="" S_abrevCI="CI" S_ficheValid_prj="" S_nomCI="Centre(s) d'Int&#233;r&#234;t" S_nomCompetences="Comp&#233;tences" S_nomFonctions="Fonctions" S_nomIndicateurs="Indicateurs" S_nomSavoirs="Savoirs" S_nomSavoirs_Math="Math&#233;matiques" S_nomSavoirs_Phys="Sciences Physiques" S_nomTaches="T&#226;ches" S_surnomSavoirs="">
+  <l_BO_URL>
+    <l_00 S_00="Programme" S_01="http://www.education.gouv.fr/pid25535/bulletin_officiel.html?cid_bo=82984" />
+  </l_BO_URL>
+  <l_BO_dossier S_00="STI2D" />
   <l_CentresInterets S_00="Typologie des syst&#232;mes &#233;nerg&#233;tiques" S_01="Production d'&#233;nergie" S_02="Transport, stockage et distribution de l'&#233;nergie et r&#233;seaux sp&#233;cifiques" S_03="Efficacit&#233; &#233;nerg&#233;tique passive" S_04="Efficacit&#233; &#233;nerg&#233;tique active" />
   <l_Enseignement S_00="STI2D-EE" S_01="STI2D : Energies et Environnement" S_02="STI2D" />
   <d_aColNon B_R="True" B_S="False" />

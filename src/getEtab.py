@@ -41,17 +41,33 @@ import xml.etree.ElementTree as ET
 ###############################################################################################
 def GetEtablissements(): 
      
+#    def getEtabVille(page):
+#        lst = []
+#        for v in page.find_all('div', attrs={'class':"annuaire-resultats-entete"}):
+#            ville = v.contents[0].split(',')[1].lstrip('\n')
+#            print "   ville =", v
+#            pagev = BeautifulSoup(v, 'xml')
+#            for divEtab in pagev.find_all('div', attrs={'class':"annuaire-etablissement-label"}):
+#                etab = divEtab.a.string
+#                print "     etab =", etab
+#                lst.append([etab, ville])
+#        return lst
+    
     def getEtabVille(page):
         lst = []
-        for v in page.find_all('div', attrs={'class':"annuaire-resultats-entete"}):
-            ville = v.contents[0].split(',')[1].lstrip('\n')
-            print "   ville =", ville
-            pagev = BeautifulSoup(v)
-            for divEtab in pagev.find_all('div', attrs={'class':"annuaire-etablissement-label"}):
-                etab = divEtab.a.string
-                print "     etab =", etab
+        for v in page.find_all('div'):
+#            print v.attrs.keys(), v['class']
+#            print type(v)
+            if (u'class' in v.attrs.keys()) and v['class'][0] == "annuaire-resultats-entete":
+                ville = v.contents[0].split(',')[1].lstrip('\n').lstrip()
+                print "   ville =", ville
+            if (u'class' in v.attrs.keys()) and v['class'][0] == "annuaire-etablissement-label":
+                etab = unicode(v.a.string)
+                print "        etab =", etab
                 lst.append([etab, ville])
         return lst
+    
+    
                 
 ##        lst = [[e.a.string, []] for e in page.find_all('div', attrs={'class':"annuaire-etablissement-label"})]
 #        try:
@@ -180,7 +196,7 @@ def getBranche(item):
             sub = ET.SubElement(branche, "d_"+nom)
             for k, sv in val.items():
                 if type(k) != str and type(k) != unicode:
-                    k = "_"+format(k, "02d")
+                    k = "_"+format(k, "03d")
                 sauv(sub, sv, k)
     
     sauv(ref, item, "Etablissement")
@@ -281,6 +297,7 @@ def indent(elem, level=0):
 
 if __name__ == '__main__':
     liste_etab = GetEtablissements()
+    print liste_etab
     fichier = file("Etablissements.xml", 'w')
     root = getBranche(liste_etab)
     indent(root)

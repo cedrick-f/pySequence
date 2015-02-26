@@ -1003,10 +1003,10 @@ def tableauH_var(ctx, titres, x, y, wt, wc, hl, taille, nCol = 0, va = 'c', ha =
 #    hc = h/len(titres)
     _y = y
     _coul = ctx.get_source().get_rgba()
-    print "tableauH", _coul
+#    print "tableauH", _coul
     for i, titre in enumerate(titres):
         ctitre = titre.rstrip("1234567890.")
-        print "    ",ctitre
+#        print "    ",ctitre
         
         ctx.rectangle(x, _y, wt, hl[i])
         if type(coul) == dict:# and len(ctitre) > 0:
@@ -1033,9 +1033,9 @@ def tableauH_var(ctx, titres, x, y, wt, wc, hl, taille, nCol = 0, va = 'c', ha =
     _x = x+wt
     ctx.set_font_size(taille)
     fascent, fdescent, fheight, fxadvance, fyadvance = ctx.font_extents()
-    print
+#    print
     for c in contenu:
-        print "    ", c
+#        print "    ", c
         for j, l in enumerate(c):
             #
             # On dessine toutes les lignes de texte

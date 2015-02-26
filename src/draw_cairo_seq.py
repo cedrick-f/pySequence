@@ -207,7 +207,6 @@ def DefinirZones(seq, ctx):
     if seq.commentaires == u"":
         tailleComm[1] = 0
     else:
-        
         tailleComm[1], intComm = calc_h_texte(ctx, u"Commentaires : " + seq.commentaires, tailleComm[0], fontIntComm)
 
     posComm[1] = 1-tailleComm[1]-margeY
@@ -219,14 +218,14 @@ def DefinirZones(seq, ctx):
     posIntitule[1] = posZOrganis[1]-tailleIntitule[1]
 
     # Zone des intitulés des séances
-    print "Zone des intitulés des séances"
+#    print "Zone des intitulés des séances"
     #                  titres    contenus    hauteurs de ligne
     intituleSeances = [[],      [],         []]
     tailleZIntSeances[1] = 0
     
     intituleSeances[0], lstInt = seq.GetIntituleSeances()
     for intS in lstInt:
-        print "   ", intS
+#        print "   ", intS
         h, t = calc_h_texte(ctx, intS, tailleZIntSeances[0], fontIntSeances)
         intituleSeances[2].append(h)
         intituleSeances[1].append(t)
@@ -279,7 +278,7 @@ def DefinirZones(seq, ctx):
     ecartSeanceY = 0.006    # écart mini entre deux séances
     hmin = 0.016             # hauteur minimum d'une séance
     tmin = seq.GetDureeGraphMini() # durée minimale de séance
-    n = len(seq.seance)
+    n = len(seq.seances)
     d = seq.GetDureeGraph()- n*tmin
     if d == 0:
         a = 0
@@ -295,7 +294,7 @@ def DefinirZones(seq, ctx):
                 a = (tailleZSeances[1] - (n-1)*ecartSeanceY) / seq.GetDureeGraph()
                 b = 0
     
-#    hHoraire = tailleZSeances[1] / (seq.GetDureeGraph() + 0.25*(len(seq.seance)-1))
+#    hHoraire = tailleZSeances[1] / (seq.GetDureeGraph() + 0.25*(len(seq.seances)-1))
 #    print "hHoraire", hHoraire
 #    print "d =", d
 #    print "a, b =", a, b
@@ -304,11 +303,11 @@ def DefinirZones(seq, ctx):
 #    print n
 #    print tmin
 #    print "a,b = ", a,b
-#    hHoraire = tailleZSeances[1] / (seq.GetDureeGraph() + 0.25*(len(seq.seance)-1))
+#    hHoraire = tailleZSeances[1] / (seq.GetDureeGraph() + 0.25*(len(seq.seances)-1))
 #    ecartSeanceY = hHoraire/4
 #    if ecartSeanceY > 0.02:
 #        ecartSeanceY = 0.02
-#        hHoraire = (tailleZSeances[1] - (len(seq.seance)-1)*ecartSeanceY) / seq.GetDureeGraph()
+#        hHoraire = (tailleZSeances[1] - (len(seq.seances)-1)*ecartSeanceY) / seq.GetDureeGraph()
 
 
 ######################################################################################
@@ -359,12 +358,7 @@ def Draw(ctx, seq, mouchard = False):
     seq.pt_caract = curve_rect_titre(ctx, seq.intitule,  
                                      seq.rect[0], 
                                      BcoulIntitule, IcoulIntitule, FontIntitule)
-    
-    
-    
-#    if mouchard:
-#        ctx.rectangle(1,1,1,1)
-#        ctx.stroke()
+
     
     #
     # Type d'enseignement
@@ -394,8 +388,19 @@ def Draw(ctx, seq, mouchard = False):
     seq.rect.append(posPos+taillePos)
 
 
-
-
+    #
+    # Etablissement
+    #
+    if seq.classe.etablissement != u"":
+        t = seq.classe.etablissement + u" (" + seq.classe.ville + u")"
+        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+                                          cairo.FONT_WEIGHT_NORMAL)
+        show_text_rect(ctx, t, (posPos[0] , posPos[1]+taillePos[1], taillePos[0], posObj[1]-posPos[1]-taillePos[1]), 
+                       va = 'c', ha = 'g', b = 0.15, orient = 'h', 
+                       fontsizeMinMax = (-1, -1), fontsizePref = -1, wrap = True, couper = False,
+                       bordure = (0, 0, 0))
+    
+    
     #
     # Cible ou Logo
     #
@@ -665,7 +670,7 @@ def Draw(ctx, seq, mouchard = False):
     #
     #  Séances
     #
-    for s in seq.seance:
+    for s in seq.seances:
 #        Draw_seance(ctx, s, curseur)
         DrawSeanceRacine(ctx, s)
         
@@ -1158,17 +1163,20 @@ def DrawSeanceRacine(ctx, seance):
         if not seance.typeSeance in ["R", "S", ""]:
             bloc = Bloc()
             seance.pts_caract = []
-            if decal == 0 and seance.typeSeance in ["AP", "ED", "P"]:
-                l = []
-                for i in range(int(seance.nombre.v[0])):
-                    l.append(Cadre(ctx, seance, h, signEgal = (i>0), filigrane = filigrane))
-                bloc.contenu.append(l)
-                if not filigrane:
+#            if seance.typeSeance in ["AP", "ED", "P"]:
+            l = []
+            for i in range(int(seance.nombre.v[0])):
+                l.append(Cadre(ctx, seance, h, signEgal = (i>0), filigrane = filigrane))
+            bloc.contenu.append(l)
+            if not filigrane:
+                if decal == 0 :
                     l[-1].dy = l[-1].h/2
-            else:
-                bloc.contenu.append([Cadre(ctx, seance, h, filigrane = filigrane)])
-                if not filigrane:
-                    bloc.contenu[0][-1].dy = decal * bloc.contenu[0][-1].h
+                else:
+                    l[-1].dy = decal * l[-1].h
+#            else:
+#                bloc.contenu.append([Cadre(ctx, seance, h, filigrane = filigrane)])
+#                if not filigrane:
+#                    bloc.contenu[0][-1].dy = decal * bloc.contenu[0][-1].h
 #            # On en profite pour calculer les positions des lignes de croisement
 #            if not filigrane:
 #                bloc.contenu.dy = bloc.contenu.h/2
@@ -1181,33 +1189,34 @@ def DrawSeanceRacine(ctx, seance):
             # Rotation : plusieurs lignes
             if seance.typeSeance == "R":           
                 bloc = Bloc()
-                l = seance.GetListSousSeancesRot()
-                for ss in l[:seance.nbrRotations.v[0]]:
+                l0 = seance.GetListSousSeancesRot()
+                for ss in l0[:seance.nbrRotations.v[0]]:
 #                for i in range(seance.nbrRotations.v[0]):
-#                    ss = seance.sousSeances[i]
-                    hl = h * ss.GetDuree()/seance.GetDuree() * len(l)/  seance.nbrRotations.v[0] 
+#                    ss = seance.seances[i]
+                    hl = h * ss.GetDuree()/seance.GetDuree() * len(l0)/  seance.nbrRotations.v[0] 
                     bloc.contenu.append([getBloc(ss, hl)])
                     
                 #
                 # Aperçu en filigrane de la rotation
                 #
                 if True:#seance.IsEffectifOk() <= 3:
+                    l = seance.GetListSousSeancesRot(True)
                     for t in range(len(seance.GetListSousSeancesRot(True))-1):
                         l = permut(l)
                         for i, ss in enumerate(l[:seance.nbrRotations.v[0]]):
-                            hl = h * ss.GetDuree()/seance.GetDuree() * len(l)/  seance.nbrRotations.v[0] 
+                            hl = h * ss.GetDuree()/seance.GetDuree() * len(l0)/  seance.nbrRotations.v[0] 
                             bloc.contenu[i].extend([getBloc(ss, hl, filigrane = True)])
 #                blocs.extend(bloc)
                 
                 return bloc
                 
             elif seance.typeSeance == "S":
-                n = len(seance.sousSeances)
+                n = len(seance.seances)
                 bloc = Bloc()
                 bloc.contenu.append([])
 #                bloc.contenu.append(getLigne(seance, h))
-                for j, ss in enumerate(seance.sousSeances):
-                    bloc.contenu[0].append(getBloc(ss, h*ss.GetDuree()/seance.GetDuree(), decal = (j+1)/(len(seance.sousSeances)+1)))
+                for j, ss in enumerate(seance.seances):
+                    bloc.contenu[0].append(getBloc(ss, h*ss.GetDuree()/seance.GetDuree(), decal = 1.0*(j+1)/(len(seance.seances)+1)))
                 
                 return bloc
             

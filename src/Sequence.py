@@ -40,7 +40,7 @@ Copyright (C) 2011-2015
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "6beta3"
+__version__ = "6beta4"
 print __version__
 
 #from threading import Thread
@@ -606,7 +606,7 @@ class ElementDeSequence():
             self.panelPropriete.MiseAJourLien()
         
         if hasattr(self, 'sousSeances'):
-            for sce in self.sousSeances:
+            for sce in self.seances:
                 sce.SetLien()
           
             
@@ -704,15 +704,18 @@ class Objet_sequence():
     def __init__(self):
         self.elem = None
         
-    def SetSVGTitre(self, p, titre):
-        titre = titre.decode(DEFAUT_ENCODING)
-        titre = titre.encode('utf-8')
-        self.elem.setAttribute("xlink:title", titre)
+#    def SetSVGTitre(self, p, titre):
+#        print "SetSVGTitre", titre
+#        titre = titre.decode(DEFAUT_ENCODING)
+#        titre = titre.encode('utf-8') 
+#        titre = titre.replace(u"\n", u"<br>")
+#        self.elem.setAttribute("xlink:title", titre)
      
     def SetSVGLien(self, p, lien):
+#        print "SetSVGLien", lien
         lien = lien.decode(FILE_ENCODING)
         lien = lien.encode('utf-8')
-        p.setAttribute("xlink:href", lien)
+        p.setAttribute("xlink:href", lien) #
         p.setAttribute("target", "_top")
 #        self.elem.setAttribute("xlink:href", lien)
 #        self.elem.setAttribute("target", "_top")
@@ -728,6 +731,11 @@ class Objet_sequence():
         
     ######################################################################################  
     def EnrichiSVG(self, doc, seance = False):
+#        print "EnrichiSVG", doc, seance
+        # 
+        # Le titre de la page
+        #
+        
 
         pid = ''
         for p, f in self.cadre:
@@ -743,11 +751,9 @@ class Objet_sequence():
             if type(f) != str:
 #                self.EncapsuleSVG(doc, p)
                 titre = self.GetBulleSVG(f)
-                
                 t = doc.createElement("title")
                 txt = doc.createTextNode(titre)
                 t.appendChild(txt)
-
                 p.appendChild(t)
                 
                 
@@ -762,13 +768,7 @@ class Objet_sequence():
                 else:
                     p.setAttribute("onmouseout",  "evt.target.parentNode.parentNode.parentNode.getElementById('%s').setAttribute('filter', 'none');" %pid)
                     p.setAttribute("onmouseover", "evt.target.parentNode.parentNode.parentNode.getElementById('%s').setAttribute('filter', 'url(#f1)');" %pid)
-        
-                if hasattr(self, 'GetLien'):
-#                    lien = toDefautEncoding(self.GetLienHTML())
-                    lien = self.GetLienHTML()
-    
-                    if lien != '':
-                        self.SetSVGLien(p, lien)
+
         
             if seance:
                 att0 = p.getAttribute("onmouseout")
@@ -783,6 +783,22 @@ class Objet_sequence():
 
                 p.setAttribute("onmouseout", att0)
                 p.setAttribute("onmouseover", att1)
+                
+                
+            if hasattr(self, 'GetLien'):
+                lien = self.GetLienHTML()
+                t = doc.createElement("a")
+                txt = doc.createTextNode(lien)
+                t.appendChild(txt)
+                np = p.cloneNode(True)
+                t.appendChild(np)
+                p.parentNode.insertBefore(t, p)
+                p.parentNode.removeChild(p)
+#                p.appendChild(t)
+                
+                if lien != '':
+                    self.SetSVGLien(t, lien)
+        
         
     ######################################################################################  
     def GetPtCaract(self): 
@@ -800,9 +816,23 @@ class Objet_sequence():
         self.cadre = []
         return lst
     
+    
+    ######################################################################################  
+    def GetDescription(self):
+        if hasattr(self, 'panelPropriete'):
+            pp = self.panelPropriete
+            if hasattr(pp, 'rtc'):
+                return pp.rtc.GetValue()
+            
     ######################################################################################  
     def GetBulleSVG(self, i):
-        t = self.GetCode(i) + " :\n" + self.GetIntit(i)
+        des = ""
+#        if hasattr(self, 'description'):
+#            des = "\n\n" + self.GetDescription()
+            
+        if self.GetDescription() != None:
+            des = "\n\n" + self.GetDescription()
+        t = self.GetCode(i) + " :\n" + self.GetIntit(i) + des
         return t.encode(DEFAUT_ENCODING)#.replace("\n", "&#10;")#"&#xD;")#
     
            
@@ -1205,7 +1235,7 @@ class Sequence(BaseDoc):
         self.obj = {"C" : Competences(self, panelParent),
                     "S" : Savoirs(self, panelParent)}
         self.systemes = []
-        self.seance = [Seance(self, panelParent)]
+        self.seances = [Seance(self, panelParent)]
         
         self.options = classe.options
         
@@ -1219,7 +1249,7 @@ class Sequence(BaseDoc):
 #        t += "   " + self.CI.__repr__() + "\n"
 #        for c in self.obj.values():
 #            t += "   " + c.__repr__() + "\n"
-#        for s in self.seance:
+#        for s in self.seances:
 #            t += "   " + s.__repr__() + "\n"
 #        return t
 
@@ -1233,7 +1263,7 @@ class Sequence(BaseDoc):
     ######################################################################################  
     def SetPath(self, fichierCourant):
         pathseq = os.path.split(fichierCourant)[0]
-        for sce in self.seance:
+        for sce in self.seances:
             sce.SetPathSeq(pathseq)    
         for sy in self.systemes:
             sy.SetPathSeq(pathseq) 
@@ -1241,9 +1271,18 @@ class Sequence(BaseDoc):
     ######################################################################################  
     def GetDuree(self):
         duree = 0
-        for s in self.seance:
+        for s in self.seances:
             duree += s.GetDuree()
         return duree
+    
+    
+    ######################################################################################  
+    def GetProfondeur(self):
+        return max([s.GetProfondeur() for s in self.seances])
+         
+    ######################################################################################  
+    def GetNiveau(self):
+        return 0
                   
     ######################################################################################  
     def GetPtCaract(self): 
@@ -1255,32 +1294,41 @@ class Sequence(BaseDoc):
         lst.extend(self.obj["S"].GetPtCaract())
         lst.extend(self.prerequis.GetPtCaract())
         lst.extend(self.CI.GetPtCaract())
-        for s in self.seance:
+        for s in self.seances:
             lst.extend(s.GetPtCaract())
         return lst    
     
     
     ######################################################################################  
     def EnrichiSVG(self, doc):
+        if hasattr(self, 'app'):
+#            print "   ajout titre"
+            t = doc.createElement("title")
+            txt = doc.createTextNode(os.path.split(self.app.fichierCourant)[1])
+            t.appendChild(txt)
+            svg = doc.getElementsByTagName("svg")[0]
+#            print svg
+            svg.insertBefore(t, svg.childNodes[0])
+            
         self.obj["C"].EnrichiSVG(doc)
         self.obj["S"].EnrichiSVG(doc)
         self.prerequis.EnrichiSVG(doc)
         self.CI.EnrichiSVG(doc)
-        for s in self.seance:
+        for s in self.seances:
             s.EnrichiSVGse(doc)
         
         
     ######################################################################################  
     def GetDureeGraph(self):
         duree = 0
-        for s in self.seance:
+        for s in self.seances:
             duree += s.GetDureeGraph()
         return duree
             
     ######################################################################################  
     def GetDureeGraphMini(self):
         duree = 10000
-        for s in self.seance:
+        for s in self.seances:
             duree = min(duree, s.GetDureeGraphMini())
         return duree
     
@@ -1310,7 +1358,7 @@ class Sequence(BaseDoc):
             objectifs.append(obj.getBranche())
             
         seances = ET.SubElement(sequence, "Seances")
-        for sce in self.seance:
+        for sce in self.seances:
             seances.append(sce.getBranche())
             
         systeme = ET.SubElement(sequence, "Systemes")
@@ -1368,11 +1416,11 @@ class Sequence(BaseDoc):
             self.systemes.append(systeme)    
 
         brancheSce = branche.find("Seances")
-        self.seance = []
+        self.seances = []
         for sce in list(brancheSce):         
             seance = Seance(self, self.panelParent)
             seance.setBranche(sce)
-            self.seance.append(seance)
+            self.seances.append(seance)
         self.OrdonnerSeances()
         
         
@@ -1390,7 +1438,7 @@ class Sequence(BaseDoc):
 #        self.obj["C"].SetCode()
 #        self.obj["S"].SetCode()
         
-        for sce in self.seance:
+        for sce in self.seances:
             sce.SetCode()    
             
         for sy in self.systemes:
@@ -1401,7 +1449,7 @@ class Sequence(BaseDoc):
             
     ######################################################################################  
     def PubDescription(self):
-        for sce in self.seance:
+        for sce in self.seances:
             sce.PubDescription()    
 #            
 #        for sy in self.systemes:
@@ -1412,7 +1460,7 @@ class Sequence(BaseDoc):
             
     ######################################################################################  
     def SetLiens(self):
-        for sce in self.seance:
+        for sce in self.seances:
             sce.SetLien()    
 
         for sy in self.systemes:
@@ -1422,27 +1470,27 @@ class Sequence(BaseDoc):
     ######################################################################################  
     def VerifPb(self):
 #        print "VerifPb"
-        for s in self.seance:
+        for s in self.seances:
             s.VerifPb()
         
     ######################################################################################  
     def MiseAJourNomsSystemes(self):
-        for s in self.seance:
+        for s in self.seances:
             s.MiseAJourNomsSystemes()
     
     ######################################################################################  
     def AjouterSystemeSeance(self):
-        for s in self.seance:
+        for s in self.seances:
             s.AjouterSysteme()
             
     ######################################################################################  
     def AjouterListeSystemesSeance(self, lstSys):
-        for s in self.seance:
+        for s in self.seances:
             s.AjouterListeSystemes(lstSys)
             
     ######################################################################################  
     def SupprimerSystemeSeance(self, i):
-        for s in self.seance:
+        for s in self.seances:
             s.SupprimerSysteme(i) 
             
             
@@ -1450,7 +1498,7 @@ class Sequence(BaseDoc):
     ######################################################################################  
     def AjouterSeance(self, event = None):
         seance = Seance(self, self.panelParent)
-        self.seance.append(seance)
+        self.seances.append(seance)
         self.OrdonnerSeances()
         seance.ConstruireArbre(self.arbre, self.brancheSce)
         self.panelPropriete.sendEvent()
@@ -1462,9 +1510,9 @@ class Sequence(BaseDoc):
     
     ######################################################################################  
     def SupprimerSeance(self, event = None, item = None):
-        if len(self.seance) > 1: # On en laisse toujours une !!
+        if len(self.seances) > 1: # On en laisse toujours une !!
             seance = self.arbre.GetItemPyData(item)
-            self.seance.remove(seance)
+            self.seances.remove(seance)
             self.arbre.Delete(item)
             self.OrdonnerSeances()
             self.panelPropriete.sendEvent()
@@ -1479,8 +1527,8 @@ class Sequence(BaseDoc):
         dicType = {k:0 for k in listeTypeSeance}
         dicType[''] = 0
         RS = 0
-        if hasattr(self, 'seance'): # c'est une sous séance
-            for i, sce in enumerate(self.seance):
+        if hasattr(self, 'seances'): # c'est une sous séance
+            for i, sce in enumerate(self.seances):
                 sce.ordre = i
                 if sce.typeSeance in ['R', 'S']:
     #                print sce
@@ -1615,7 +1663,7 @@ class Sequence(BaseDoc):
     ######################################################################################  
     def AjouterRotation(self, seance):
         seanceR1 = Seance(self.panelParent)
-        seance.sousSeances.append(seanceR1)
+        seance.seances.append(seanceR1)
         return seanceR1
         
         
@@ -1650,7 +1698,7 @@ class Sequence(BaseDoc):
         
         self.brancheSce = arbre.AppendItem(self.branche, Titres[3], image = self.arbre.images["Sea"], data = self.panelSeances)
         self.arbre.SetItemBold(self.brancheSce)
-        for sce in self.seance:
+        for sce in self.seances:
             sce.ConstruireArbre(arbre, self.brancheSce) 
             
         self.brancheSys = arbre.AppendItem(self.branche, Titres[4], image = self.arbre.images["Sys"], data = self.panelSystemes)
@@ -1662,7 +1710,7 @@ class Sequence(BaseDoc):
     ######################################################################################  
     def reconstruireBrancheSeances(self, b1, b2):
         self.arbre.DeleteChildren(self.brancheSce)
-        for sce in self.seance:
+        for sce in self.seances:
             sce.ConstruireArbre(self.arbre, self.brancheSce) 
         self.arbre.Expand(b1.branche)
         self.arbre.Expand(b2.branche)
@@ -1722,7 +1770,7 @@ class Sequence(BaseDoc):
         lst = []
         for s in self.systemes:
             n = 0
-            for se in self.seance:
+            for se in self.seances:
                 ns = se.GetNbrSystemes(complet = True)
                 if s.nom in ns.keys():
                     n += ns[s.nom]
@@ -1734,9 +1782,9 @@ class Sequence(BaseDoc):
     ######################################################################################  
     def GetNbreSeances(self):
         n = 0
-        for s in self.seance:
+        for s in self.seances:
             if s.typeSeance in ["R", "S"]:
-                n += len(s.sousSeances)
+                n += len(s.seances)
             n += 1
         return n
     
@@ -1744,7 +1792,7 @@ class Sequence(BaseDoc):
     ######################################################################################  
     def GetToutesSeances(self):
         l = []
-        for s in self.seance:
+        for s in self.seances:
             l.append(s)
             if s.typeSeance in ["R", "S"]:
                 l.extend(s.GetToutesSeances())
@@ -1805,7 +1853,7 @@ class Sequence(BaseDoc):
         
         else:
             branche = None
-            autresZones = self.seance + self.systemes + self.obj.values()
+            autresZones = self.seances + self.systemes + self.obj.values()
             continuer = True
             i = 0
             while continuer:
@@ -1837,10 +1885,11 @@ class Sequence(BaseDoc):
         self.app.SetTitre()
         self.classe.MiseAJourTypeEnseignement()
         self.CI.MiseAJourTypeEnseignement()
+        self.obj['C'].MiseAJourTypeEnseignement()
         for o in self.obj.values():
             o.MiseAJourTypeEnseignement()
         self.prerequis.MiseAJourTypeEnseignement()
-        for s in self.seance:
+        for s in self.seances:
             s.MiseAJourTypeEnseignement()
         self.panelPropriete.MiseAJour()
         
@@ -2022,7 +2071,7 @@ class Projet(BaseDoc, Objet_sequence):
 #        self.obj["S"].EnrichiSVG(doc)
 #        self.prerequis.EnrichiSVG(doc)
 #        self.CI.EnrichiSVG(doc)
-#        for s in self.seance:
+#        for s in self.seances:
 #            s.EnrichiSVGse(doc)
         return
             
@@ -2032,7 +2081,7 @@ class Projet(BaseDoc, Objet_sequence):
         if i >= 0:
             c = self.GetCompetencesUtil()
             lstIndic = REFERENTIELS[self.classe.typeEnseignement]._dicIndicateurs_prj_simple[c[i]]
-            t = c[i] + " :\n" + u"\n".join([indic[0] for indic in lstIndic])
+            t = c[i] + " :\n" + u"\n".join([indic.intitule for indic in lstIndic])
             return t.encode(DEFAUT_ENCODING)
         else:
             e = self.eleves[-1-i]
@@ -2765,7 +2814,7 @@ class Projet(BaseDoc, Objet_sequence):
     ######################################################################################  
     def reconstruireBrancheSeances(self, b1, b2):
         self.arbre.DeleteChildren(self.brancheSce)
-        for sce in self.seance:
+        for sce in self.seances:
             sce.ConstruireArbre(self.arbre, self.brancheSce) 
         self.arbre.Expand(b1.branche)
         self.arbre.Expand(b2.branche)
@@ -2961,8 +3010,6 @@ class Projet(BaseDoc, Objet_sequence):
     def MiseAJourTypeEnseignement(self, ancienRef = None, ancienneFam = None):#, changeFamille = False):
 #        print "MiseAJourTypeEnseignement projet"
         self.app.SetTitre()
-        
-        
         
         for t in self.taches:
             if t.phase in TOUTES_REVUES_EVAL and self.GetReferentiel().compImposees:
@@ -3462,6 +3509,7 @@ class Competences(Objet_sequence):
         self.competences = []
 #        self.SetNum(numComp)
         if panelParent:
+            self.panelParent = panelParent
             self.panelPropriete = PanelPropriete_Competences(panelParent, self)
         
     ######################################################################################  
@@ -3537,7 +3585,9 @@ class Competences(Objet_sequence):
     def MiseAJourTypeEnseignement(self):
         self.arbre.SetItemText(self.branche, self.GetReferentiel().nomCompetences)
         if hasattr(self, 'panelPropriete'):
-            self.panelPropriete.construire()
+            self.panelPropriete.Destroy()
+            self.panelPropriete = PanelPropriete_Competences(self.panelParent, self)
+#            self.panelPropriete.construire()
         
 #    ######################################################################################  
 #    def AfficherMenuContextuel(self, itemArbre):
@@ -3737,7 +3787,7 @@ class Seance(ElementDeSequence, Objet_sequence):
         self.panelParent = panelParent
         
         self.SetType(typeSeance)
-        self.sousSeances = []
+        self.seances = []
         
         #
         # Création du Tip (PopupInfo)
@@ -3764,7 +3814,7 @@ class Seance(ElementDeSequence, Objet_sequence):
         t = self.code 
 #        t += " " +str(self.GetDuree()) + "h"
 #        t += " " +str(self.effectif)
-#        for s in self.sousSeances:
+#        for s in self.seances:
 #            t += "  " + s.__repr__()
         return t
     
@@ -3777,6 +3827,22 @@ class Seance(ElementDeSequence, Objet_sequence):
     ######################################################################################  
     def EstSousSeance(self):
         return not isinstance(self.parent, Sequence)
+    
+    
+    ######################################################################################  
+    def GetListeTypes(self):
+        """ Renvoie la liste des types de séance compatibles
+        """
+        ref = self.GetReferentiel()
+        if self.EstSousSeance():
+            listType = ref.listeTypeActivite
+            if not self.parent.EstSousSeance():
+                listType = ref.listeTypeActivite +  ["S", "R"]
+        else:
+            listType = ref.listeTypeSeance
+        
+        return listType
+    
     
     ######################################################################################  
     def getBranche(self):
@@ -3793,10 +3859,10 @@ class Seance(ElementDeSequence, Objet_sequence):
         self.lien.getBranche(root)
         
         if self.typeSeance in ["R", "S"]:
-            for sce in self.sousSeances:
+            for sce in self.seances:
                 root.append(sce.getBranche())
             root.set("nbrRotations", str(self.nbrRotations.v[0]))
-            root.set("nbrGroupes", str(self.nbrGroupes.v[0]))
+#            root.set("nbrGroupes", str(self.nbrGroupes.v[0]))
             
         elif self.typeSeance in ["AP", "ED", "P"]:
             root.set("Demarche", self.demarche)
@@ -3830,14 +3896,14 @@ class Seance(ElementDeSequence, Objet_sequence):
         self.lien.setBranche(branche, self.GetPath())
         
         if self.typeSeance in ["R", "S"]:
-            self.sousSeances = []
+            self.seances = []
             for sce in list(branche):
                 seance = Seance(self, self.panelParent)
-                self.sousSeances.append(seance)
+                self.seances.append(seance)
                 seance.setBranche(sce)
             self.duree.v[0] = self.GetDuree()
             if self.typeSeance == "R":
-                self.nbrRotations.v[0] = eval(branche.get("nbrRotations", str(len(self.sousSeances))))
+                self.nbrRotations.v[0] = eval(branche.get("nbrRotations", str(len(self.seances))))
 #                self.nbrGroupes.v[0] = eval(branche.get("nbrGroupes", str(len(self.Get???))))
                 self.reglerNbrRotMaxi()
             
@@ -3893,7 +3959,7 @@ class Seance(ElementDeSequence, Objet_sequence):
                 lst.append((pt, self, i))
                 
         if self.typeSeance in ["R", "S"]:
-            for sce in self.sousSeances:
+            for sce in self.seances:
                 lst.extend(sce.GetPtCaract())
                 
         self.cadre = []
@@ -3911,7 +3977,7 @@ class Seance(ElementDeSequence, Objet_sequence):
     ######################################################################################  
     def EnrichiSVGse(self, doc):
         if self.typeSeance in ["R", "S"]:
-            for se in self.sousSeances:
+            for se in self.seances:
                 se.EnrichiSVG(doc, seance = True)
         else:
             self.EnrichiSVG(doc, seance = True)
@@ -3925,10 +3991,10 @@ class Seance(ElementDeSequence, Objet_sequence):
         """
         eff = 0
         if self.typeSeance in ["R", "S"]:
-            for sce in self.sousSeances:
-                eff += sce.GetEffectif() #self.sousSeances[0].GetEffectif()
+            for sce in self.seances:
+                eff += sce.GetEffectif() #self.seances[0].GetEffectif()
 #        elif self.typeSeance == "S":
-#            for sce in self.sousSeances:
+#            for sce in self.seances:
 #                eff += sce.GetEffectif()
         else:
             eff = self.GetClasse().GetEffectifNorm(self.effectif)
@@ -3954,7 +4020,7 @@ class Seance(ElementDeSequence, Objet_sequence):
         """
         if type(val) == int:
             if self.typeSeanc == "R":
-                for s in self.sousSeances:
+                for s in self.seances:
                     s.SetEffectif(val)
 #            elif self.typeSeance == "S":
 #                self.effectif = self.GetEffectif()
@@ -3982,9 +4048,9 @@ class Seance(ElementDeSequence, Objet_sequence):
     ######################################################################################  
     def VerifPb(self):
         self.SignalerPb(self.IsEffectifOk(), self.IsNSystemesOk())
-        if self.typeSeance in ["R", "S"] and len(self.sousSeances) > 0:
-            for s in self.sousSeances:
-                s.VerifPb()
+#        if self.typeSeance in ["R", "S"] and len(self.seances) > 0:
+#            for s in self.seances:
+#                s.VerifPb()
         
     ######################################################################################  
     def IsEffectifOk(self):
@@ -3996,7 +4062,7 @@ class Seance(ElementDeSequence, Objet_sequence):
         """
 #        print "IsEffectifOk", self, 
         ok = 0 # pas de problème
-        if self.typeSeance in ["R", "S"] and len(self.sousSeances) > 0:
+        if self.typeSeance in ["R", "S"] and len(self.seances) > 0:
 #            print self.GetEffectif() ,  self.GetClasse().GetEffectifNorm('G'),
             eff = round(self.GetEffectif(), 4)
             effN = round(self.GetClasse().GetEffectifNorm('G'), 4)
@@ -4006,13 +4072,13 @@ class Seance(ElementDeSequence, Objet_sequence):
                 ok = 2 # Effectif de la séance supperieur à celui du groupe "effectif réduit"    
 #            if self.typeSeance == "R":
 #                continuer = True
-#                eff = self.sousSeances[0].GetEffectif()
+#                eff = self.seances[0].GetEffectif()
 #                i = 1
 #                while continuer:
-#                    if i >= len(self.sousSeances):
+#                    if i >= len(self.seances):
 #                        continuer = False
 #                    else:
-#                        if self.sousSeances[i].GetEffectif() != eff:
+#                        if self.seances[i].GetEffectif() != eff:
 #                            ok = 3 # séance en rotation d'effectifs différents !!
 #                            continuer = False
 #                        i += 1
@@ -4072,7 +4138,7 @@ class Seance(ElementDeSequence, Objet_sequence):
     def GetListSousSeancesRot(self, tout = False):
         l = []
         i = 0
-        for ss in self.sousSeances:
+        for ss in self.seances:
             for n in range(ss.nombre.v[0]):
                 l.append(ss)
 #            if not tout :
@@ -4083,15 +4149,29 @@ class Seance(ElementDeSequence, Objet_sequence):
             l = l[:self.nbrRotations.v[0]]
         return l
     
+    ######################################################################################  
+    def GetProfondeur(self):
+        if self.typeSeance in ["R", "S"]:
+            return 1+max([s.GetProfondeur() for s in self.seances])
+        else:
+            return 0
     
     
+    ######################################################################################  
+    def GetNiveau(self):
+        if self.EstSousSeance():
+            return 1+self.parent.GetNiveau()
+        else:
+            return 0
+        
+        
     ######################################################################################  
     def GetDuree(self):
 #        print "GetDuree", self.GetListSousSeancesRot()
         duree = 0
         if self.typeSeance == "R":
 #            i = 0
-#            for ss in self.sousSeances:
+#            for ss in self.seances:
 #                duree += ss.GetDuree()
 #                i += ss.nombre.v[0]
 #                if i >= self.nbrRotations.v[0]:
@@ -4099,15 +4179,15 @@ class Seance(ElementDeSequence, Objet_sequence):
                 
                 
             for ss in self.GetListSousSeancesRot():
-#                sce = self.sousSeances[i]
+#                sce = self.seances[i]
                 duree += ss.GetDuree()
 #                print "   ", duree
                 
-#            for sce in self.sousSeances:
+#            for sce in self.seances:
 #                duree += sce.GetDuree()
         elif self.typeSeance == "S":
-            if len(self.sousSeances) > 0:
-                duree += self.sousSeances[0].GetDuree()
+            if len(self.seances) > 0:
+                duree += self.seances[0].GetDuree()
         else:
             duree = self.duree.v[0]
         return duree
@@ -4127,18 +4207,18 @@ class Seance(ElementDeSequence, Objet_sequence):
             for ss in self.GetListSousSeancesRot():
                 duree = min(duree, ss.GetDuree())
 #            i = 0
-#            for ss in self.sousSeances:
+#            for ss in self.seances:
 #                duree = min(duree, ss.GetDuree())
 #                i += ss.nombre.v[0]
 #                if i >= self.nbrRotations.v[0]:
 #                    break
                 
 #            for i in range(self.nbrRotations.v[0]):
-#                sce = self.sousSeances[i]
+#                sce = self.seances[i]
 #                duree = min(duree, sce.GetDuree())
         elif self.typeSeance == "S":
-            if len(self.sousSeances) > 0:
-                duree = min(duree, self.sousSeances[0].GetDuree())
+            if len(self.seances) > 0:
+                duree = min(duree, self.seances[0].GetDuree())
         else:
             duree = min(duree, self.duree.v[0])
 
@@ -4159,7 +4239,7 @@ class Seance(ElementDeSequence, Objet_sequence):
             
         elif self.typeSeance == "S" : # Serie (parallèle)
             self.duree.v[0] = duree
-#            for s in self.sousSeances:
+#            for s in self.seances:
 #                if s.typeSeance in ["R", "S"]:
 #                    s.SetDuree(duree, recurs = False)
 #                else:
@@ -4169,7 +4249,7 @@ class Seance(ElementDeSequence, Objet_sequence):
 
         
         elif self.typeSeance == "R" : # Rotation
-#            for s in self.sousSeances:
+#            for s in self.seances:
 #                if s.typeSeance in ["R", "S"]:
 #                    s.SetDuree(duree, recurs = False)
 #                else:
@@ -4226,7 +4306,7 @@ class Seance(ElementDeSequence, Objet_sequence):
         if hasattr(self, 'arbre'):
             self.SetCode()
             
-        if self.typeSeance in ["R","S"] and len(self.sousSeances) == 0: # Rotation ou Serie
+        if self.typeSeance in ["R","S"] and len(self.seances) == 0: # Rotation ou Serie
             self.AjouterSeance()
         
         if hasattr(self, 'panelPropriete'):
@@ -4246,8 +4326,8 @@ class Seance(ElementDeSequence, Objet_sequence):
     def GetToutesSeances(self):
         l = []
         if self.typeSeance in ["R", "S"] : # Séances en Rotation ou  Parallèle
-            l.extend(self.sousSeances)
-            for s in self.sousSeances:
+            l.extend(self.seances)
+            for s in self.seances:
                 l.extend(s.GetToutesSeances())
         return l
         
@@ -4261,7 +4341,7 @@ class Seance(ElementDeSequence, Objet_sequence):
             self.panelPropriete.rtc.Ouvrir()
         
         if self.typeSeance in ["R", "S"]:
-            for sce in self.sousSeances:
+            for sce in self.seances:
                 sce.PubDescription() 
                 
     ######################################################################################  
@@ -4295,7 +4375,7 @@ class Seance(ElementDeSequence, Objet_sequence):
         self.SetCodeBranche()
         
         if self.typeSeance in ["R", "S"] : # Séances en Rotation ou  Parallèle
-            for sce in self.sousSeances:
+            for sce in self.seances:
                 sce.SetCode()
 
         # Tip
@@ -4338,7 +4418,7 @@ class Seance(ElementDeSequence, Objet_sequence):
             self.SetCodeBranche()
             
         if self.typeSeance in ["R", "S"] : # Séances en Rotation ou  Parallèle
-            for sce in self.sousSeances:
+            for sce in self.seances:
                 sce.ConstruireArbre(arbre, self.branche)
             
         
@@ -4349,7 +4429,7 @@ class Seance(ElementDeSequence, Objet_sequence):
         dicType[''] = 0
         RS = 0
         if self.typeSeance in ["R", "S"] : # Séances en Rotation ou  Parallèle
-            for i, sce in enumerate(self.sousSeances):
+            for i, sce in enumerate(self.seances):
                 sce.ordre = i
                 if sce.typeSeance in ['R', 'S']:
                     sce.ordreType = RS
@@ -4369,14 +4449,14 @@ class Seance(ElementDeSequence, Objet_sequence):
         """
         seance = Seance(self, self.panelParent)
         if self.typeSeance in ["R", "S"] : # Séances en Rotation ou  Parallèle
-            self.sousSeances.append(seance)
+            self.seances.append(seance)
             
         self.OrdonnerSeances()
         seance.ConstruireArbre(self.arbre, self.branche)
         self.arbre.Expand(self.branche)
         
         if self.typeSeance == "R":
-            seance.SetDuree(self.sousSeances[0].GetDuree())
+            seance.SetDuree(self.seances[0].GetDuree())
             self.SetNombreRot(self.GetNbrSSeancesRotation())
             self.reglerNbrRotMaxi()
         else:
@@ -4388,9 +4468,9 @@ class Seance(ElementDeSequence, Objet_sequence):
     ######################################################################################  
     def SupprimerSeance(self, event = None, item = None):
         if self.typeSeance in ["R", "S"] : # Séances en Rotation ou  Parallèle
-            if len(self.sousSeances) > 1: # On en laisse toujours une !!
+            if len(self.seances) > 1: # On en laisse toujours une !!
                 seance = self.arbre.GetItemPyData(item)
-                self.sousSeances.remove(seance)
+                self.seances.remove(seance)
                 self.arbre.Delete(item)
                 self.OrdonnerSeances()
                 self.panelPropriete.sendEvent()
@@ -4402,7 +4482,7 @@ class Seance(ElementDeSequence, Objet_sequence):
     ######################################################################################  
     def reglerNbrRotMaxi(self):
         n = self.GetNbrSSeancesRotation()
-        print "reglerNbrRotMaxi", self, ":", n
+#        print "reglerNbrRotMaxi", self, ":", n
         self.nbrRotations.bornes[1] = n
         if self.nbrRotations.v[0] > n:
             self.SetNombreRot(n)
@@ -4411,7 +4491,7 @@ class Seance(ElementDeSequence, Objet_sequence):
     ######################################################################################  
     def GetNbrSSeancesRotation(self):
         n = 0
-        for s in self.sousSeances:
+        for s in self.seances:
             n += s.nombre.v[0]
         return n
     
@@ -4424,7 +4504,7 @@ class Seance(ElementDeSequence, Objet_sequence):
     #############################################################################
     def MiseAJourTypeEnseignement(self):
         if self.typeSeance in ["R", "S"]:
-            for s in self.sousSeances:
+            for s in self.seances:
                 s.MiseAJourTypeEnseignement()
         else:
             if hasattr(self, 'panelPropriete'):
@@ -4441,7 +4521,7 @@ class Seance(ElementDeSequence, Objet_sequence):
                 self.panelPropriete.MiseAJourListeSystemes()
                                  
         elif self.typeSeance in ["R", "S"] : # Séances en Rotation ou  Parallèle
-            for s in self.sousSeances:
+            for s in self.seances:
                 s.MiseAJourNomsSystemes()
         
     ######################################################################################  
@@ -4451,7 +4531,7 @@ class Seance(ElementDeSequence, Objet_sequence):
             if hasattr(self, 'panelPropriete'):
                 self.panelPropriete.ConstruireListeSystemes()
         elif self.typeSeance in ["R", "S"] : # Séances en Rotation ou  Parallèle
-            for s in self.sousSeances:
+            for s in self.seances:
                 s.SupprimerSysteme(i)
 
         
@@ -4466,7 +4546,7 @@ class Seance(ElementDeSequence, Objet_sequence):
                 self.panelPropriete.ConstruireListeSystemes()
                 
         elif self.typeSeance in ["R", "S"] : # Séances en Rotation ou  Parallèle
-            for s in self.sousSeances:
+            for s in self.seances:
                 s.AjouterSysteme(nom, nombre)
     
     
@@ -4483,7 +4563,7 @@ class Seance(ElementDeSequence, Objet_sequence):
                 self.panelPropriete.ConstruireListeSystemes()
             
         elif self.typeSeance in ["R", "S"] : # Séances en Rotation ou  Parallèle
-            for s in self.sousSeances:
+            for s in self.seances:
                 s.AjouterListeSystemes(lstSys, lstNSys) 
                 
                 
@@ -4536,7 +4616,7 @@ class Seance(ElementDeSequence, Objet_sequence):
         if self.typeSeance in ["S", "R"]:
             if self.typeSeance == "S" or complet:
                 
-                for seance in self.sousSeances:
+                for seance in self.seances:
                     dd = seance.GetNbrSystemes(complet)
                     for k, v in dd.items():
                         up(d, k, v)
@@ -4555,7 +4635,7 @@ class Seance(ElementDeSequence, Objet_sequence):
                         up(d, s.n, s.v[0]*self.nombre.v[0])
 #            if posDansRot > 0:
 #                rotation = self.parent
-#                l = rotation.sousSeances
+#                l = rotation.seances
 #                for t in range(posDansRot):
 #                    l = draw_cairo.permut(l)
 #                for i, s in enumerate(l[:rotation.nbrRotations.v[0]]):
@@ -4575,7 +4655,7 @@ class Seance(ElementDeSequence, Objet_sequence):
         
         else:
             if self.typeSeance in ["R", "S"]:
-                ls = self.sousSeances
+                ls = self.seances
             else:
                 return
             continuer = True
@@ -4709,7 +4789,7 @@ class Tache(Objet_sequence):
 #        t = self.phase + str(self.ordre+1) 
 #        t += " " +str(self.GetDuree()) + "h"
 #        t += " " +str(self.effectif)
-#        for s in self.sousSeances:
+#        for s in self.seances:
 #            t += "  " + s.__repr__()
         return self.code +" ("+str(self.ordre)+")"
     
@@ -5317,7 +5397,7 @@ class Tache(Objet_sequence):
             if hasattr(self, 'panelPropriete'):
                 self.panelPropriete.ConstruireListeSystemes()
         elif self.typeSeance in ["R", "S"] : # Séances en Rotation ou  Parallèle
-            for s in self.sousSeances:
+            for s in self.seances:
                 s.SupprimerSysteme(i)
 
         
@@ -8135,7 +8215,7 @@ class FenetreSequence(FenetreDocument):
             
     ###############################################################################################
     def OnDocModified(self, event):
-        print "OnDocModified"
+#        print "OnDocModified"
         if event.GetDocument() == self.sequence:
             self.sequence.VerifPb()
             wx.CallAfter(self.fiche.Redessiner)
@@ -10051,12 +10131,12 @@ class PanelPropriete_Classe(PanelPropriete):
         #
         titre = wx.StaticBox(self, -1, u"Etablissement")
         sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
-        
+        sh = wx.BoxSizer(wx.HORIZONTAL)
         t = wx.StaticText(self, -1, u"Académie :")
-        sb.Add(t, flag = wx.EXPAND)
+        sh.Add(t, flag = wx.ALIGN_CENTER_VERTICAL|wx.EXPAND)
         
-        lstAcad = [a[0] for a in constantes.ETABLISSEMENTS.values()]
-        self.cba = wx.ComboBox(self, -1, "sélectionner une académie ...", (-1,-1), 
+        lstAcad = sorted([a[0] for a in constantes.ETABLISSEMENTS.values()])
+        self.cba = wx.ComboBox(self, -1, u"sélectionner une académie ...", (-1,-1), 
                          (-1, -1), lstAcad,
                          wx.CB_DROPDOWN
                          |wx.CB_READONLY
@@ -10066,12 +10146,14 @@ class PanelPropriete_Classe(PanelPropriete):
 
         self.Bind(wx.EVT_COMBOBOX, self.EvtComboAcad, self.cba)
         self.Bind(wx.EVT_TEXT, self.EvtComboAcad, self.cba)
-        sb.Add(self.cba, flag = wx.EXPAND)
+        sh.Add(self.cba, flag = wx.ALIGN_CENTER_VERTICAL|wx.EXPAND|wx.LEFT, border = 5)
+        sb.Add(sh, flag = wx.EXPAND)
         
+        sh = wx.BoxSizer(wx.HORIZONTAL)
         t = wx.StaticText(self, -1, u"Ville :")
-        sb.Add(t, flag = wx.EXPAND)
+        sh.Add(t, flag = wx.ALIGN_CENTER_VERTICAL|wx.EXPAND)
      
-        self.cbv = wx.ComboBox(self, -1, "sélectionner une ville ...", (-1,-1), 
+        self.cbv = wx.ComboBox(self, -1, u"sélectionner une ville ...", (-1,-1), 
                          (-1, -1), [],
                          wx.CB_DROPDOWN
                          |wx.CB_READONLY
@@ -10081,13 +10163,13 @@ class PanelPropriete_Classe(PanelPropriete):
 
         self.Bind(wx.EVT_COMBOBOX, self.EvtComboVille, self.cbv)
         self.Bind(wx.EVT_TEXT, self.EvtComboVille, self.cbv)
-        sb.Add(self.cbv, flag = wx.EXPAND)
-        
+        sh.Add(self.cbv, flag = wx.ALIGN_CENTER_VERTICAL|wx.EXPAND|wx.LEFT, border = 5)
+        sb.Add(sh, flag = wx.EXPAND)
         
         t = wx.StaticText(self, -1, u"Etablissement :")
         sb.Add(t, flag = wx.EXPAND)
         
-        self.cbe = wx.ComboBox(self, -1, "sélectionner un établissement ...", (-1,-1), 
+        self.cbe = wx.ComboBox(self, -1, u"sélectionner un établissement ...", (-1,-1), 
                          (-1, -1), [u"autre ..."],
                          wx.CB_DROPDOWN
                          |wx.CB_READONLY
@@ -10114,13 +10196,13 @@ class PanelPropriete_Classe(PanelPropriete):
         #
         # Accès au BO
         #
-#        bo = wx.Button(pageGen, -1, u"Accéder au BO en ligne")
-        self.bo = hl.HyperLinkCtrl(self, wx.ID_ANY, u"Accéder au BO en ligne",
-                                   URL=REFERENTIELS[classe.typeEnseignement].BO_URL)
-        self.sizer.Add(self.bo, (1,2), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.ALL|wx.EXPAND, border = 2)
-#        self.Bind(wx.EVT_BUTTON, self.OnClickBO, self.bo)
+        titre = wx.StaticBox(self, -1, u"Documents Officiels en ligne")
+        self.bo = []
+        sbBO = wx.StaticBoxSizer(titre, wx.VERTICAL)
+        self.sizer.Add(sbBO, (1,2), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.ALL|wx.EXPAND, border = 2)
+        self.sbBO = sbBO
+        self.SetLienBO()
         
-        self.bo.Show(REFERENTIELS[self.classe.typeEnseignement].BO_URL != u"")
         
         #
         # Effectifs
@@ -10305,10 +10387,23 @@ class PanelPropriete_Classe(PanelPropriete):
         
     ######################################################################################  
     def SetLienBO(self):
-        URL = REFERENTIELS[self.classe.typeEnseignement].BO_URL
-        self.bo.SetURL(URL)
-        self.bo.Show(URL!= u"")
-        self.bo.ToolTip.SetTip(URL)
+        for b in self.bo:
+            b.Destroy()
+            
+        self.bo = []
+        for tit, url in REFERENTIELS[self.classe.typeEnseignement].BO_URL:
+            self.bo.append(hl.HyperLinkCtrl(self, wx.ID_ANY, tit, URL = url))
+            self.sbBO.Add(self.bo[-1], flag = wx.EXPAND)
+            self.bo[-1].Show(tit != u"")
+            self.bo[-1].ToolTip.SetTip(url)
+        self.Layout()
+        
+#        print REFERENTIELS[self.classe.typeEnseignement].BO_URL
+#        for i, tit, url in enumerate(REFERENTIELS[self.classe.typeEnseignement].BO_URL):
+#            self.bo[i].SetValue(tit)
+#            self.bo[i].SetURL(url)
+#            self.bo[i].Show(tit!= u"")
+            
     
     
     
@@ -11420,10 +11515,54 @@ class PanelPropriete_Competences(PanelPropriete):
         
         self.competence = competence
         
-        
         PanelPropriete.__init__(self, parent)
         
-        self.construire()
+        self.nb = wx.Notebook(self, -1,  size = (21,21), style= wx.BK_DEFAULT)
+        pageComp = wx.Panel(self.nb, -1)
+        bg_color = self.Parent.GetBackgroundColour()
+        pageComp.SetBackgroundColour(bg_color)
+        self.pageComp = pageComp   
+        pageCompsizer = wx.BoxSizer(wx.HORIZONTAL)
+        
+        
+
+        pageComp.SetSizer(pageCompsizer)
+            
+        ref = self.competence.GetReferentiel()
+        
+#        self.DestroyChildren()
+#        if hasattr(self, 'arbre'):
+#            self.sizer.Remove(self.arbre)
+        self.arbre = ArbreCompetences(self.pageComp, ref, self)
+        pageCompsizer.Add(self.arbre, 1, flag = wx.EXPAND)
+#        self.pageComp.sizer.Add(self.arbre, (0,0), flag = wx.EXPAND)
+#        if not self.pageComp.sizer.IsColGrowable(0):
+#            self.pageComp.sizer.AddGrowableCol(0)
+#        if not self.pageComp.sizer.IsRowGrowable(0):
+#            self.pageComp.sizer.AddGrowableRow(0)
+#        self.pageComp.Layout()
+        
+        self.nb.AddPage(pageComp, ref.nomCompetences) 
+        
+        if (len(ref.dicFonctions) > 0):
+            #
+            # La page "Fonctions"
+            #
+            pageFct = wx.Panel(self.nb, -1)
+            self.pageFct = pageFct
+            pageFctsizer = wx.BoxSizer(wx.HORIZONTAL)
+
+            self.arbreFct = ArbreFonctionsPrj(pageFct, ref, self)
+            pageFctsizer.Add(self.arbreFct, 1, flag = wx.EXPAND)
+
+            pageFct.SetSizer(pageFctsizer)
+            self.nb.AddPage(pageFct, ref.nomFonctions) 
+
+            self.pageFctsizer = pageFctsizer
+        
+        self.sizer.Add(self.nb, (0,0), flag = wx.EXPAND)
+        self.sizer.AddGrowableCol(0)
+        self.sizer.AddGrowableRow(0)
         
         self.Layout()
         
@@ -11431,18 +11570,41 @@ class PanelPropriete_Competences(PanelPropriete):
     def GetDocument(self):
         return self.competence.parent
     
-    ######################################################################################  
-    def construire(self):
-        self.DestroyChildren()
-#        if hasattr(self, 'arbre'):
-#            self.sizer.Remove(self.arbre)
-        self.arbre = ArbreCompetences(self, self.competence.GetReferentiel())
-        self.sizer.Add(self.arbre, (0,0), flag = wx.EXPAND)
-        if not self.sizer.IsColGrowable(0):
-            self.sizer.AddGrowableCol(0)
-        if not self.sizer.IsRowGrowable(0):
-            self.sizer.AddGrowableRow(0)
-        self.Layout()
+#    ######################################################################################  
+#    def construire(self):
+#        ref = self.competence.GetReferentiel()
+#        
+#        self.DestroyChildren()
+##        if hasattr(self, 'arbre'):
+##            self.sizer.Remove(self.arbre)
+#        self.arbre = ArbreCompetences(self.pageComp, ref)
+#        self.pageComp.sizer.Add(self.arbre, (0,0), flag = wx.EXPAND)
+#        if not self.pageComp.sizer.IsColGrowable(0):
+#            self.pageComp.sizer.AddGrowableCol(0)
+#        if not self.pageComp.sizer.IsRowGrowable(0):
+#            self.pageComp.sizer.AddGrowableRow(0)
+#        self.pageComp.Layout()
+#        
+#        self.nb.AddPage(pageComp, ref.nomFonctions) 
+#        
+#        if (len(ref.dicFonctions) > 0):
+#            #
+#            # La page "Fonctions"
+#            #
+#            pageFct = wx.Panel(self.nb, -1)
+#            self.pageFct = pageFct
+#            pageFctsizer = wx.BoxSizer(wx.HORIZONTAL)
+#
+#            self.arbreFct = ArbreFonctionsPrj(pageFct, ref, self)
+#            pageFctsizer.Add(self.arbreFct, 1, flag = wx.EXPAND)
+#
+#            pageFct.SetSizer(pageFctsizer)
+#            self.nb.AddPage(pageFct, ref.nomFonctions) 
+#
+#            self.pageFctsizer = pageFctsizer
+                
+                
+        
 
     ######################################################################################  
     def OnSize(self, event):
@@ -12213,20 +12375,13 @@ class PanelPropriete_Seance(PanelPropriete):
         #
         # Type de parent
         #
-        if self.seance.EstSousSeance():
-            listType = self.GetReferentiel().listeTypeActivite
-            if not self.seance.parent.EstSousSeance():
-                listType = self.GetReferentiel().listeTypeActivite + ["S", "R"]
-        else:
-            listType = self.seance.GetReferentiel().listeTypeSeance
+
+#        ref = REFERENTIELS[self.seance.GetClasse().typeEnseignement]
+        ref = self.GetReferentiel()
+
+        listType = self.seance.GetListeTypes()
+        listTypeS = [(ref.seances[t][1], constantes.imagesSeance[t].GetBitmap()) for t in listType]
         
-        ref = REFERENTIELS[self.seance.GetClasse().typeEnseignement]
-        
-#        listTypeS = []
-#        for t in listType:
-#            listTypeS.append((constantes.TypesSeance[t], constantes.imagesSeance[t].GetBitmap()))
-        
-        listTypeS = [(self.GetReferentiel().seances[t][1], constantes.imagesSeance[t].GetBitmap()) for t in listType]
         
         n = self.cbType.GetSelection()   
         self.cbType.Clear()
@@ -12284,36 +12439,29 @@ class PanelPropriete_Seance(PanelPropriete):
     #############################################################################            
     def MarquerProblemeDuree(self, etat):
         return
-        self.vcDuree.marquerValid(etat)
+#        self.vcDuree.marquerValid(etat)
         
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
         self.AdapterAuType()
-        
-        if self.seance.typeSeance != "":
-            self.cbType.SetSelection(self.cbType.GetStrings().index(self.GetReferentiel().seances[self.seance.typeSeance][1]))
+        ref = self.GetReferentiel()
+        if self.seance.typeSeance != "" and ref.seances[self.seance.typeSeance][1] in self.cbType.GetStrings():
+            self.cbType.SetSelection(self.cbType.GetStrings().index(ref.seances[self.seance.typeSeance][1]))
         self.textctrl.ChangeValue(self.seance.intitule)
         self.vcDuree.mofifierValeursSsEvt()
         
         if self.cbEff.IsShown():#self.cbEff.IsEnabled() and 
-            self.cbEff.SetSelection(self.GetReferentiel().findEffectif(self.cbEff.GetStrings(), self.seance.effectif))
+            self.cbEff.SetSelection(ref.findEffectif(self.cbEff.GetStrings(), self.seance.effectif))
         
         if self.cbDem.IsShown():#self.cbDem.IsEnabled() and :
-            self.cbDem.SetSelection(self.cbDem.GetStrings().index(self.GetReferentiel().demarches[self.seance.demarche][1]))
+            self.cbDem.SetSelection(self.cbDem.GetStrings().index(ref.demarches[self.seance.demarche][1]))
             
-
         if self.seance.typeSeance in ["AP", "ED", "P"]:
             self.vcNombre.mofifierValeursSsEvt()
         elif self.seance.typeSeance == "R":
             self.vcNombreRot.mofifierValeursSsEvt()
         
         self.vcTaille.mofifierValeursSsEvt()
-        
-#        if self.seance.typeSeance in ["AP", "ED", "P"]:
-#            for i in range(self.seance.nSystemes):
-#                s = self.seance.systemes[i]
-#                self.systemeCtrl[i].mofifierValeursSsEvt()
-#            self.vcNombre.mofifierValeursSsEvt()
         
         self.cbInt.SetValue(self.seance.intituleDansDeroul)
         if sendEvt:
@@ -12499,21 +12647,21 @@ class PanelPropriete_Tache(PanelPropriete):
             
             self.pageComsizer = pageComsizer
             
-            if (len(tache.GetReferentiel().dicFonctions) > 0) and (not tache.phase in TOUTES_REVUES_EVAL_SOUT):
-                #
-                # La page "Fonctions"
-                #
-                pageFct = wx.Panel(nb, -1)
-                self.pageFct = pageFct
-                pageFctsizer = wx.BoxSizer(wx.HORIZONTAL)
-
-                self.arbreFct = ArbreFonctionsPrj(pageFct, tache.GetReferentiel(), self)
-                pageFctsizer.Add(self.arbreFct, 1, flag = wx.EXPAND)
-
-                pageFct.SetSizer(pageFctsizer)
-                nb.AddPage(pageFct, tache.GetReferentiel().nomFonctions) 
-
-                self.pageFctsizer = pageFctsizer
+#            if (len(tache.GetReferentiel().dicFonctions) > 0) and (not tache.phase in TOUTES_REVUES_EVAL_SOUT):
+#                #
+#                # La page "Fonctions"
+#                #
+#                pageFct = wx.Panel(nb, -1)
+#                self.pageFct = pageFct
+#                pageFctsizer = wx.BoxSizer(wx.HORIZONTAL)
+#
+#                self.arbreFct = ArbreFonctionsPrj(pageFct, tache.GetReferentiel(), self)
+#                pageFctsizer.Add(self.arbreFct, 1, flag = wx.EXPAND)
+#
+#                pageFct.SetSizer(pageFctsizer)
+#                nb.AddPage(pageFct, tache.GetReferentiel().nomFonctions) 
+#
+#                self.pageFctsizer = pageFctsizer
         
         
             self.sizer.Add(nb, (0,0), flag = wx.EXPAND)
@@ -13596,6 +13744,8 @@ class ArbreDoc(CT.CustomTreeCtrl):
     ####################################################################################
     def OnBeginDrag(self, event):
         self.itemDrag = event.GetItem()
+#        print self.GetItemPyData(self.itemDrag).GetNiveau(), 
+        print self.GetItemPyData(self.itemDrag).GetProfondeur()
         if self.item:
             event.Allow()
 
@@ -13639,7 +13789,9 @@ class ArbreSequence(ArbreDoc):
         
         self.panelProp.AfficherPanel(self.sequence.panelPropriete)
 
-        self.CurseurInsert = wx.CursorFromImage(constantes.images.CurseurInsert.GetImage())
+#        self.CurseurInsert = wx.CursorFromImage(constantes.images.CurseurInsert.GetImage())
+        self.CurseurInsertApres = wx.CursorFromImage(constantes.images.Curseur_InsererApres.GetImage())
+        self.CurseurInsertDans = wx.CursorFromImage(constantes.images.Curseur_InsererDans.GetImage())
         
     ###############################################################################################
     def OnKey(self, evt):
@@ -13711,23 +13863,97 @@ class ArbreSequence(ArbreDoc):
             if item != None:
                 dataTarget = self.GetItemPyData(item)
                 dataSource = self.GetItemPyData(self.itemDrag)
-                if not isinstance(dataSource, Seance):
+                a = self.getActionDnD(dataSource, dataTarget)
+                if a == 0:
                     self.SetCursor(wx.StockCursor(wx.CURSOR_NO_ENTRY))
-                else:
-                    if not isinstance(dataTarget, Seance):
-                        if dataTarget == self.sequence.panelSeances:
-                            self.SetCursor(self.CurseurInsert)
-                        else:
-                            self.SetCursor(wx.StockCursor(wx.CURSOR_NO_ENTRY))
-                    else:
-                        if dataTarget != dataSource:# and dataTarget.parent == dataSource.parent:
-                            self.SetCursor(self.CurseurInsert)
-                        else:
-                            self.SetCursor(wx.StockCursor(wx.CURSOR_ARROW))
+                elif a == 1:
+                    self.SetCursor(self.CurseurInsertDans)
+                elif a == 2 or a == 3 or a == 4:
+                    self.SetCursor(self.CurseurInsertApres)
+
+                    
+#                if not isinstance(dataSource, Seance):
+#                    self.SetCursor(wx.StockCursor(wx.CURSOR_NO_ENTRY))
+#                else:
+#                    # Première place !
+#                    if not isinstance(dataTarget, Seance):
+#                        if dataTarget == self.sequence.panelSeances:
+#                            self.SetCursor(self.CurseurInsertApres)
+#                        else:
+#                            self.SetCursor(wx.StockCursor(wx.CURSOR_NO_ENTRY))
+#                            
+#                    # Autres séances
+#                    else:
+#                        if dataTarget != dataSource:# and dataTarget.parent == dataSource.parent:
+#                            if dataTarget.parent == dataSource.parent or not dataTarget.typeSeance in ["R","S"]:
+#                                self.SetCursor(self.CurseurInsertApres)
+#                            else:
+#                                self.SetCursor(self.CurseurInsertDans)
+#                        else:
+#                            self.SetCursor(wx.StockCursor(wx.CURSOR_ARROW))
                         
         event.Skip()
         
+    ####################################################################################
+    def getActionDnD(self, dataSource, dataTarget):
+        """ Renvoie un code indiquant l'action à réaliser en cas de EnDrag :
+                0 : rien
+                1 : 
+                2 : 
+                3 : 
+        """
+        if isinstance(dataSource, Seance) and dataTarget != dataSource:
+            if dataTarget.GetNiveau() + dataSource.GetProfondeur() > 2:
+                return 0
+            
+            
+            # Insérer "dans"  (racine ou "R" ou "S")
+            if dataTarget == self.sequence.panelSeances \
+               or (isinstance(dataTarget, Seance) and dataTarget.typeSeance in ["R","S"]):
+                if not dataSource in dataTarget.seances:    # parents différents
+                    print dataSource.typeSeance, dataTarget.seances[0].GetListeTypes()
+                    if dataTarget.GetNiveau() + dataSource.GetProfondeur() > 1:
+                        return 0
+                    elif not dataSource.typeSeance in dataTarget.seances[0].GetListeTypes():
+                        return 0
+                    else:
+                        return 1
+                else:
+                    return 2
+            
+            # Insérer "après"
+            else:
+                if dataTarget.parent != dataSource.parent:  # parents différents
+                    print dataSource.typeSeance, dataTarget.GetListeTypes()
+                    if not dataSource.typeSeance in dataTarget.GetListeTypes():
+                        return 0
+                    else:
+                        return 3
+                else:
+                    return 4
+            
+            
+            
+            
+            
+            
+#            if isinstance(dataTarget, Seance):
+#                # source et target ont le même parent (même niveau dans l'arbre)
+#                if dataTarget.parent == dataSource.parent:
+#                    if dataTarget.typeSeance in ["R","S"]:# rotation ou parallele
+#                        if not dataSource in dataTarget.seances:
+#                            return 1
+#                    else:
+#                        return 2
+#                
+#                # source et target ont des parents différents
+#                elif dataTarget.parent != dataSource.parent:
+#                    return 3
+#            elif dataTarget == self.sequence.panelSeances:
+#                return 4
         
+        return 0
+
     ####################################################################################
     def OnEndDrag(self, event):
         """ Gestion des glisser-déposer
@@ -13735,8 +13961,87 @@ class ArbreSequence(ArbreDoc):
         self.item = event.GetItem() 
         dataTarget = self.GetItemPyData(self.item)
         dataSource = self.GetItemPyData(self.itemDrag)
-        if dataTarget == self.sequence.panelSeances:
-            dataTarget = self.sequence.seance[0]
+        
+        a = self.getActionDnD(dataSource, dataTarget)
+        if a == 1:
+            lstS = dataSource.parent.seances
+            lstT = dataTarget.seances
+            s = lstS.index(dataSource)
+            lstT.insert(0, lstS.pop(s))
+            dataSource.parent = dataTarget
+            
+            self.sequence.OrdonnerSeances()
+            self.sequence.reconstruireBrancheSeances(dataSource.parent, dataTarget)
+            self.panelVide.sendEvent(self.sequence) # Solution pour déclencher un "redessiner"
+        elif a == 2:
+            lst = dataSource.parent.seances
+            s = lst.index(dataSource)
+            lst.insert(0, lst.pop(s))
+               
+            self.sequence.OrdonnerSeances() 
+            self.SortChildren(self.GetItemParent(self.item))
+            self.panelVide.sendEvent(self.sequence) # Solution pour déclencher un "redessiner"
+        elif a == 3:
+            lstT = dataTarget.parent.seances
+            lstS = dataSource.parent.seances
+            s = lstS.index(dataSource)
+            t = lstT.index(dataTarget)
+            lstT[t+1:t+1] = [dataSource]
+            del lstS[s]
+            p = dataSource.parent
+            dataSource.parent = dataTarget.parent
+            
+            self.sequence.OrdonnerSeances()
+            self.sequence.reconstruireBrancheSeances(dataTarget.parent, p)
+            self.panelVide.sendEvent(self.sequence) # Solution pour déclencher un "redessiner"
+        elif a == 4:
+            lst = dataTarget.parent.seances
+            s = lst.index(dataSource)
+            t = lst.index(dataTarget)
+            
+            if t > s:
+                lst.insert(t, lst.pop(s))
+            else:
+                lst.insert(t+1, lst.pop(s))
+               
+            self.sequence.OrdonnerSeances() 
+            self.SortChildren(self.GetItemParent(self.item))
+            self.panelVide.sendEvent(self.sequence) # Solution pour déclencher un "redessiner"
+        
+        
+#        if isinstance(dataSource, Seance) and dataTarget != dataSource:
+#            
+#            # Insérer "dans"  (racine ou "R" ou "S")
+#            if dataTarget == self.sequence.panelSeances \
+#               or (isinstance(dataTarget, Seance) and dataTarget.typeSeance in ["R","S"]):
+#                if not dataSource in dataTarget.seances:    # changement de parent
+#                    
+#                else:
+#                    
+#            
+#            # Insérer "après"
+#            else:
+#                print "Insérer après"
+#                if dataTarget.parent != dataSource.parent:
+#                    
+#                else:
+#                    print "  même parent"
+                    
+            
+        self.itemDrag = None
+        event.Skip()
+        
+        
+        
+    ####################################################################################
+    def OnEndDrag2(self, event):
+        """ Gestion des glisser-déposer
+        """
+        self.item = event.GetItem() 
+        dataTarget = self.GetItemPyData(self.item)
+        dataSource = self.GetItemPyData(self.itemDrag)
+        if dataTarget == self.sequence.panelSeances: # racine des séances
+            dataTarget = self.sequence.seances[0]
             self.item = self.GetFirstChild(self.item)[0]
             root = True
         else:
@@ -13747,25 +14052,20 @@ class ArbreSequence(ArbreDoc):
             # source et target ont le même parent (même niveau dans l'arbre)
             if dataTarget.parent == dataSource.parent:
                 
-                if dataTarget.typeSeance in ["R","S"]:# rotation ou parallele
-                    if not dataSource in dataTarget.sousSeances:
-                        if isinstance(dataSource.parent, Sequence):# Niveau 0
-                            lstS = dataSource.parent.seance
-                        else:
-                            lstS = dataSource.parent.sousSeances
-                        lstT = dataTarget.sousSeances
+                if dataTarget.typeSeance in ["R","S"]:          # rotation ou parallele
+                    if not dataSource in dataTarget.seances:    # changement de parent
+                        lstS = dataSource.parent.seances
+                        lstT = dataTarget.seances
                         s = lstS.index(dataSource)
                         lstT.insert(0, lstS.pop(s))
                         dataSource.parent = dataTarget
+                        
                         self.sequence.OrdonnerSeances()
                         self.sequence.reconstruireBrancheSeances(dataSource.parent, dataTarget)
                         self.panelVide.sendEvent(self.sequence) # Solution pour déclencher un "redessiner"
                     
                 else:
-                    if isinstance(dataTarget.parent, Sequence):# Niveau 0
-                        lst = dataTarget.parent.seance
-                    else:
-                        lst = dataTarget.parent.sousSeances
+                    lst = dataTarget.parent.seances
 
                     s = lst.index(dataSource)
                     if root:
@@ -13784,17 +14084,8 @@ class ArbreSequence(ArbreDoc):
             
             # source et target ont des parents différents
             elif dataTarget.parent != dataSource.parent:
-                if isinstance(dataTarget.parent, Sequence):
-                    lstT = dataTarget.parent.seance
-                else:
-                    lstT = dataTarget.parent.sousSeances
-                    if len(lstT) > 0:
-                        dataSource.duree.v[0] = lstT[0].GetDuree()
-                
-                if isinstance(dataSource.parent, Sequence):
-                    lstS = dataSource.parent.seance
-                else:
-                    lstS = dataSource.parent.sousSeances
+                lstT = dataTarget.parent.seances
+                lstS = dataSource.parent.seances
 
                 s = lstS.index(dataSource)
                 if root:
@@ -13805,6 +14096,7 @@ class ArbreSequence(ArbreDoc):
                 del lstS[s]
                 p = dataSource.parent
                 dataSource.parent = dataTarget.parent
+                
                 self.sequence.OrdonnerSeances()
                 self.sequence.reconstruireBrancheSeances(dataTarget.parent, p)
                 self.panelVide.sendEvent(self.sequence) # Solution pour déclencher un "redessiner"
@@ -13857,8 +14149,10 @@ class ArbreProjet(ArbreDoc):
         
         self.panelProp.AfficherPanel(self.projet.panelPropriete)
 
-        self.CurseurInsert = wx.CursorFromImage(constantes.images.CurseurInsert.GetImage())
-        
+#        self.CurseurInsert = wx.CursorFromImage(constantes.images.CurseurInsert.GetImage())
+        self.CurseurInsertApres = wx.CursorFromImage(constantes.images.Curseur_InsererApres.GetImage())
+        self.CurseurInsertDans = wx.CursorFromImage(constantes.images.Curseur_InsererDans.GetImage())
+                
         
             
     ###############################################################################################
@@ -13952,7 +14246,7 @@ class ArbreProjet(ArbreDoc):
                         self.SetCursor(wx.StockCursor(wx.CURSOR_NO_ENTRY))
                     else:
                         if dataTarget != dataSource:# and dataTarget.parent == dataSource.parent:
-                            self.SetCursor(self.CurseurInsert)
+                            self.SetCursor(self.CurseurInsertApres)
                         else:
                             self.SetCursor(wx.StockCursor(wx.CURSOR_ARROW))
                         
@@ -14708,7 +15002,7 @@ class ArbreFonctionsPrj(ArbreCompetences):
             self.SetColumnAlignment(i+1, wx.ALIGN_CENTER)
             self.SetColumnWidth(i+1, 30)
             
-        tache = self.pptache.tache
+#        tache = self.pptache.tache
             
 #        font = wx.Font(10, wx.DEFAULT, wx.FONTSTYLE_ITALIC, wx.NORMAL, False)
 #        
@@ -14747,10 +15041,10 @@ class ArbreFonctionsPrj(ArbreCompetences):
             
         const(dic, branche, debug = False)
             
-        if tache == None: # Cas des arbres dans popup
-            self.SetColumnWidth(1, 0)
-            self.SetColumnWidth(2, 0)
-        self.Refresh()
+#        if tache == None: # Cas des arbres dans popup
+#            self.SetColumnWidth(1, 0)
+#            self.SetColumnWidth(2, 0)
+#        self.Refresh()
             
         return
     
@@ -15683,7 +15977,7 @@ class TestListCtrl(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin):
     def startDrag(self, e):
 
         self.idx = e.GetIndex()
-        self.SetCursor(wx.CursorFromImage(constantes.images.CurseurInsert.GetImage()))
+        self.SetCursor(wx.CursorFromImage(constantes.images.Curseur_InsererApres.GetImage()))
 
     def onLeave(self, event):
         if self.idx != None:
@@ -15913,12 +16207,12 @@ class Panel_BO(wx.Panel):
         wx.BeginBusyCursor()
         
         lst_pdf = []
-        path = os.path.join(constantes.BO_PATH, ref.BO_dossier)
-      
-        for root, dirs, files in os.walk(path):
-            for f in files:
-                if os.path.splitext(f)[1] == r".pdf":
-                    lst_pdf.append(os.path.join(root, f))
+        for d in ref.BO_dossier:
+            path = os.path.join(constantes.BO_PATH, d)
+            for root, dirs, files in os.walk(path):
+                for f in files:
+                    if os.path.splitext(f)[1] == r".pdf":
+                        lst_pdf.append(os.path.join(root, f))
             
       
 #        print self.nb.GetPageCount()
