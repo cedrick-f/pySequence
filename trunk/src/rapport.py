@@ -727,7 +727,7 @@ class RapportRTF(rt.RichTextCtrl):
         else:
             self.AddTitreSeance(doc)
     
-            for s in doc.seance:
+            for s in doc.seances:
                 self.AddSeance(s)
             
             self.AddPieds(fichierCourant)

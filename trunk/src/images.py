@@ -9036,6 +9036,38 @@ getLogoAcadClermontBitmap = LogoAcadClermont.GetBitmap
 getLogoAcadClermontIcon = LogoAcadClermont.GetIcon
 
 #----------------------------------------------------------------------
+Curseur_InsererDans = PyEmbeddedImage(
+    "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1B"
+    "AACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAYdEVYdFNvZnR3YXJlAHBhaW50Lm5l"
+    "dCA0LjAuNWWFMmUAAASeSURBVFhHzZZrTFNnGMeP5TbF3oBRoUexWxiCjItL5VIl6HBSSBzY"
+    "1XGxdXiBSNySTdnAUloo5RLWZGMRrXPMGTNQQ2aMw7lpxshkHxwaGQnTZh9qtixzJYEPJtsX"
+    "nz3v4W25nNMOlzbZP/nn7ZPzPuf59XkvLSMsi0ix2fAEDf4cv9nwJ50cCs0BvFzbC3uah6Dk"
+    "2CBo6s/DxgNnQWnsh7hSKyTkGmfNZrPOYrGsoUnB1BzAa6ZLcPjUT6Drvg355jF47tgoxL49"
+    "AmsrToAyz/gYi1ubm5uTadJ/1grqBZoD0L4zQIvfAhUtnvLuKKQZTgYPwGq1NqEd+LIjOH7T"
+    "0tKyD32BAOQfPscrXmj5AXIPng4eAACsIMaXxWPhoziKamtrIwhA2v5PecUrHONQdKQ/qEvA"
+    "qaOjIxY7UDcXzS1BouETXvE3P56EXUfPBR+AdIAsB404gDitGVj9B5Ba1QvqN07AtjonaN86"
+    "A+rXW0MCEIMANTQSKdSGB2ye8fckzb5pIT9fUPNrUAHsdrsCASw05NTa2lpOigRyMDsgQ4Bq"
+    "GnLq7OyUt7e3K4nxOdtbWblhqS9kZT37PcOIib9lmNU09emFBdagO2jI0xjDrBzBQxPICPCQ"
+    "Tp/XUHk6c6VMK+xyNZ3FMF1dXVI8hnoa8uQF+EWdAx5tKXgKCsGTmQ2e9SrwyOUwFR4ONyMi"
+    "PNjFyqamJgWX9MWrW6XXix+rRgtByKsGSia4eUTY5gRc8/dpyJMX4NErxQDVRoCdWoDslwCU"
+    "LIBMBm6ZHG5ERc2SfWEymVT47TZJvyqdybu3BTQTGkGLB7RT9PXcEkjopotBi8i9QC6oxsbG"
+    "WPL8w/JylgPI38IrDskvgJtlfQA5zkNa6de7Hm37eQcUPSjya8kSgET0VWzhHdINHF3d3d1i"
+    "HP8gQG0m0wwH8GIGFt+ExZVYXM4VB4Ryp2zgAN5rNbVHX949rXWXQdlvgS0ZKJkHaGhoEGOh"
+    "Yhry5FuCdUkAiQuKa7YClO0GN3bE24Hk07q+lNu6J1UzVRDI0sEFAOSo4bd10pAnH4BUCoCb"
+    "br64DmD/IXDn5fsAbDaTSvyZtitrsgJq/q7x60UAPT090Zi8nYY8eQEmwsLAJRaDK14BrqT1"
+    "4EpJBVdGJtxJSFy0CS0WRhR9vqQv11UNhr8OCFo6WLpoD7DoszTkaZhhohDg1vXo6PvXpNKH"
+    "Qr6qUEx5AUiOXq8Pi+nf2RdzZse4kNmPCq9wLyfCxFV4CjQ09Cuct4cUCWQvABHphF6fFunP"
+    "dBrD2Gy2tbgHBmjIE+C/pu8YRjXEsumXUlOzhfx5enoGAsjQ4TRt+XI4HCuxA/NX4xJ590Ag"
+    "C17FyxVSr8MODNGQJy+A226H2bExnu/X1cHNyMhpfM9Bco/QtOULE5/Bn9ZMGvLkO4YXL+IF"
+    "yRcBW3gKaNryhUlJmHyjra1to9PpjMDPGWQXk5E876mvzwkpABFuRDy/lmE0+Xs2guNqHMdx"
+    "FNmOH58MOUAghXwJ/k3/G4C7BQUwtXcvzz9mZYUWgFzFeM6Hr0kkd7+Mi3MJ+TLL3gsZgFdY"
+    "4Kmu4sBimH8AZCI7+8UWxVQAAAAASUVORK5CYII=")
+getCurseur_InsererDansData = Curseur_InsererDans.GetData
+getCurseur_InsererDansImage = Curseur_InsererDans.GetImage
+getCurseur_InsererDansBitmap = Curseur_InsererDans.GetBitmap
+getCurseur_InsererDansIcon = Curseur_InsererDans.GetIcon
+
+#----------------------------------------------------------------------
 Icone_prof = PyEmbeddedImage(
     "iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IArs4c6QAAAARnQU1B"
     "AACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5F"
@@ -13497,6 +13529,34 @@ getImageACData = ImageAC.GetData
 getImageACImage = ImageAC.GetImage
 getImageACBitmap = ImageAC.GetBitmap
 getImageACIcon = ImageAC.GetIcon
+
+#----------------------------------------------------------------------
+Curseur_InsererApres = PyEmbeddedImage(
+    "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1B"
+    "AACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAYdEVYdFNvZnR3YXJlAHBhaW50Lm5l"
+    "dCA0LjAuNWWFMmUAAAPOSURBVFhHzZZ/TBNnGMePya/IakE6utKyQpxIUUBGYAplU5OqLWOU"
+    "mrp1pVV+SNgWJAQ3AaEUC38YMFsVXbbJIMs2xcXAYpzJNqJjU5fM6YLZ3NItaZYlJtglc/tH"
+    "XfTrc80dQ+5KW0PRb/Lpe7nc+z6f99733pQRy9ObG+PkRTbMRUqhzcs9HnIACBANL6BrGIC5"
+    "4wQMLcdQ8tpHWFkzDKXtA8j0DijX2Kc6Ozu3dHV1ybhuQRO2wEuOUTS8cwWmfd+juOMcMnZN"
+    "ILn5LNK2upFWbP+bijtdLpea6xY0gQSiOKbDC5S9cdxffO2M4llvTkDzysH5E6BBOpxO5z6i"
+    "ia4PU1u7p9MxwgqUvP7xrOLfYJ3zAoqqD8+fAP1EsdBgj/EUvFC/mBVYWfsh0mfMfD0Vt+z/"
+    "Aesb3pvXJRCEX4JU+5Cg+M73f4KhaXBhBGQGB224t2nND6Bo+yGa+bvQ7zyCAjPdj6RAdrY5"
+    "Vl5o86jW2q+pS7b9Jcby56u9ERPg43A4zGyRuYiYwLcMIzliMKgPWCxZYrxlta7o6elRNjY2"
+    "xnFdgiZkgc8ZJu4sPR8E4VH8mbGCGa3cJU7FlrAFfi98Fj59GXzPrYMvLx++9Az4kpJwNToa"
+    "X8XEXKczw0LLkOLvNPaiXT6uu5N9QQsxHv/EMBm2wJRuE2C1A5v0QH4BoFQBiYnwEl/Gx///"
+    "FYxWGOXj+v+0V7QIREABGmRxX19fArXxbOt2u+MOGo3JfoFiraA4lmfCS9e8gGZoW638TPlN"
+    "nWcjNv4WGEkgAXqNLexAlFe7u7v7qbW52tqG/AKrcrniyuniKNHCm5nlF9jdvacnYazy3/I/"
+    "K2G6ZpqTgAJimV6Cp9RAKls8iSteChhN8K5+ZvoNrB7Y2qKaMN223LDC+k9gJEfLHkBAKp1V"
+    "nDZyzQ541xTftweWDupql31nvlN9qxo1t2tEeSCByUWL4JFI4EmRw6NOh2eFBp7cPFxSpN6/"
+    "CSnS4c3NWZdevlt+fTvECEvgOMPEksC5LxISfjktlf4hxkmF4ueZAmwUhzY0KQY2HBNjWX+p"
+    "O2QBPg/tKKbbUV8zTMYJlWrVpxpNvhgjOTk5JJBIRHPdgiZkAX4PBCFy/4p5Aa/LhRvnzwv4"
+    "tb4e47GxPpp9HfEk1y1owhaYGhmhZ4RhxWZ/BaGEugoF2Bm0t7cre3t7n6BrVWtra3J/XV3m"
+    "ggnQ0buDaKbBqogOwrS3rW3/ggmIZUGXQCyPjMDl0lJcraoScDEvL7ICFxkm5gx5nF6y5PIp"
+    "mcwjxlha2o8RE+AT+aMYzD3GmMJIa278DwAAAABJRU5ErkJggg==")
+getCurseur_InsererApresData = Curseur_InsererApres.GetData
+getCurseur_InsererApresImage = Curseur_InsererApres.GetImage
+getCurseur_InsererApresBitmap = Curseur_InsererApres.GetBitmap
+getCurseur_InsererApresIcon = Curseur_InsererApres.GetIcon
 
 #----------------------------------------------------------------------
 Icone_defaut_pref = PyEmbeddedImage(

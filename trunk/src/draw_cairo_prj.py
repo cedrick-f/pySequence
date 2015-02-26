@@ -340,8 +340,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
 #    ctx.set_line_width (0.0015)
 #    ctx.stroke ()
     
-    
-#    print "     2 ", time.time() - tps
+
     #
     # Position dans l'année
     #
@@ -353,8 +352,22 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
     prj.rectPos = DrawPeriodes(ctx, prj.position, prj.classe.referentiel.periodes,
                                prj.classe.referentiel.periode_prj,  tailleTypeEns = tailleTypeEns)
     prj.rect.append(posPos+taillePos)
+
+
+
+    #
+    # Etablissement
+    #
+    if prj.classe.etablissement != u"":
+        t = prj.classe.etablissement + u" (" + prj.classe.ville + u")"
+        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+                                          cairo.FONT_WEIGHT_NORMAL)
+        show_text_rect(ctx, t, (posPos[0] , posPos[1]+taillePos[1], taillePos[0], posPro[1]-posPos[1]-taillePos[1]), 
+                       va = 'c', ha = 'g', b = 0.15, orient = 'h', 
+                       fontsizeMinMax = (-1, -1), fontsizePref = -1, wrap = True, couper = False,
+                       bordure = (0, 0, 0))
+
     
-#    print "     3 ", time.time() - tps
     #
     # Image
     #

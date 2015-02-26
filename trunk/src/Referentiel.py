@@ -421,8 +421,8 @@ class Referentiel(XMLelem):
         #
         # Bulletins Officiels
         #
-        self.BO_dossier = u""
-        self.BO_URL = u""
+        self.BO_dossier = []
+        self.BO_URL = []
         
         
         #
@@ -639,6 +639,10 @@ class Referentiel(XMLelem):
         if self.attributs_prj == {}:
             self.attributs_prj = REFERENTIELS[self.Code].attributs_prj
             
+#        print "self.BO_dossier", self.BO_dossier
+#        # Pour les BO
+#        if type(self.BO_dossier) != list:
+#            self.BO_dossier = [self.BO_dossier]
         
         return
         
@@ -821,27 +825,29 @@ class Referentiel(XMLelem):
         #
         # tronc commun
         #
-        sh_g = wb.sheet_by_name(u"Généralités")
         if sh_g.cell(21,0).value != u"":
             self.tr_com = [sh_g.cell(21,0).value, sh_g.cell(21,1).value]
            
         #
         # projet
         #
-        sh_g = wb.sheet_by_name(u"Généralités")
         self.projet = sh_g.cell(23,1).value[0].upper() == "O"
         if self.projet:
             self.duree_prj = int(sh_g.cell(24,1).value)
             self.periode_prj = [int(i) for i in sh_g.cell(25,1).value.split()]
-#            print ">>", self.periode_prj
-
 
         #
         # Bulletins Officiels
         #
-        if sh_g.nrows > 28:
-            self.BO_dossier = sh_g.cell(29,0).value
-            self.BO_URL = sh_g.cell(29,1).value
+#        print self.Code, sh_g.nrows
+        self.BO_dossier = [sh_g.cell(l,0).value for l in range(29, sh_g.nrows) if sh_g.cell(l,0).value != u""]
+        self.BO_URL = [[sh_g.cell(l,1).value, sh_g.cell(l,2).value] for l in range(30, sh_g.nrows) if sh_g.cell(l,1).value != u""]
+        
+#        self.BO_URL = sh_g.cell(29,1).value
+#        
+#        if sh_g.nrows > 28:
+#            self.BO_dossier = [sh_g.cell(ll,0).value for l in [29, 30, 31]]
+#            self.BO_URL = sh_g.cell(29,1).value
         
         
         #
