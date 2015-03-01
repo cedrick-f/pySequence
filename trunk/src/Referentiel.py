@@ -349,7 +349,7 @@ class Referentiel(XMLelem):
         self.nomCompetences = u"Compétences"    # nom donnés aux compétences : "Compétences", ...
         self.nomIndicateurs = u"Indicateurs de performance" 
         self.dicCompetences = {}
-        self.compImposees = False       # Indique que les competences sont imposées par revue
+        self.compImposees = False       # Indique que les competences sont imposées pour chaque revue
         self.projet = False             # si l'enseignement fait l'objet d'une épreuve de projet
         self.duree_prj = 0
         self.periode_prj = []
@@ -574,7 +574,7 @@ class Referentiel(XMLelem):
                     lst = []
                     for l in v0[1]:
                         if debug: print l
-                        if not isinstance(l, Indicateur):
+                        if l != None and not isinstance(l, Indicateur):
                             if debug: print "Correction"
                             lst.append(Indicateur(l[0], l[1], l[2]))
                     v0[1] = lst
