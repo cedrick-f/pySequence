@@ -70,12 +70,12 @@ try:
 except:
     INSTALL_PATH = '' # Pas installé sur cet ordi
     
-print "Dossier d'installation :", INSTALL_PATH
+
 PORTABLE = not(os.path.abspath(INSTALL_PATH) == os.path.abspath(PATH))
 
 
 TABLE_PATH = os.path.join(os.path.abspath(os.path.join(PATH, os.pardir)), 'tables')
-print u"Dossier des tableaux Excel :", TABLE_PATH
+#print u"Dossier des tableaux Excel :", TABLE_PATH
 
 BO_PATH = os.path.join(os.path.abspath(os.path.join(PATH, os.pardir)), 'BO')
 
@@ -105,7 +105,8 @@ if not PORTABLE:
         
     if not os.path.exists(APP_DATA_PATH):
         os.mkdir(APP_DATA_PATH)    
-        
+    print "Dossier d'installation :", INSTALL_PATH
+    
 else: # C'est une version portable qui tourne
     APP_DATA_PATH = PATH
     print "Version portable !!"
@@ -184,7 +185,7 @@ ERR_INCONNUE = 65536
 ERREURS = {ERR_PRJ_EQUIPE :     u"Equipe pédagogique",
            ERR_PRJ_SUPPORT :    u"Support",
            ERR_PRJ_ELEVES :     u"Eleve",
-           ERR_PRJ_TACHES :     u"Tâche :",
+           ERR_PRJ_TACHES :     u"Tâche : %s",
            ERR_PRJ_T_VERSION :  u"Problème de version",
            ERR_PRJ_T_TYPENS :   u"Type d'enseignement incompatible",
            ERR_PRJ_C_TYPENS :   u"Référentiel %s non trouvé !",
@@ -206,6 +207,7 @@ class Erreur():
 
 
     def getMessage(self):
+        print self.info, ERREURS[self.num]
         if self.info != None:
             return ERREURS[self.num] %self.info
         else:

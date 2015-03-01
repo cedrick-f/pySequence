@@ -40,7 +40,7 @@ Copyright (C) 2011-2015
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "6beta4"
+__version__ = "6beta5"
 print __version__
 
 #from threading import Thread
@@ -195,7 +195,8 @@ from constantes import calculerEffectifs, revCalculerEffectifs, PATH, getSinguli
                         toList, COUL_COMPETENCES, TABLE_PATH, CHAR_POINT, COUL_SOUT, COUL_REVUE, COUL_ABS
 import constantes
 
-
+# Pour les copier/coller
+import pyperclip
 
 # Les constantes partagées
 from Referentiel import REFERENTIELS, ARBRE_REF
@@ -727,7 +728,9 @@ class Objet_sequence():
 #        self.elem.appendChild(p)
 #        return self.elem
 
-
+    ######################################################################################  
+    def CopyToClipBoard(self, event = None):
+        pyperclip.copy(ET.tostring(self.getBranche()))
         
     ######################################################################################  
     def EnrichiSVG(self, doc, seance = False):
@@ -875,7 +878,7 @@ class Objet_sequence():
         
         
         
-        
+
 class Classe():
     def __init__(self, app, panelParent = None, intitule = u"", pourProjet = False, ouverture = False):
         self.intitule = intitule
@@ -913,13 +916,10 @@ class Classe():
 #        self.posCI_ET = self.options.optClasse["PositionsCI_ET"]
         
 
-    ######################################################################################  
-    def SetCI(self, num, ci):
-        self.CI[num] = ci
-#        if self.typeEnseignement == "SSI":
-#            self.ci_SSI[num] = ci
-#        else:
-#            self.ci_ET[num] = ci
+#    ######################################################################################  
+#    def SetCI(self, num, ci):
+#        self.CI[num] = ci
+        
             
     ######################################################################################  
     def Initialise(self, pourProjet):
@@ -938,9 +938,7 @@ class Classe():
                            "G" : constantes.NbrGroupes["G"],
                            "E" : constantes.NbrGroupes["E"],
                            "P" : constantes.NbrGroupes["P"]}
-        
-        
-#        self.effectifs = constantes.Effectifs
+
         self.effectifs['C'] = self.options.optClasse["Effectifs"]['C']
 
         self.nbrGroupes = {"P" : self.options.optClasse["Effectifs"]["P"],
@@ -949,7 +947,8 @@ class Classe():
                            }
 
         calculerEffectifs(self)
-        
+
+
     ######################################################################################  
     def SetDocument(self, doc):   
         self.doc = doc 
@@ -1039,7 +1038,7 @@ class Classe():
                 else:
                     err.append(constantes.Erreur(constantes.ERR_PRJ_C_TYPENS, self.typeEnseignement))
         
-    #            print self.referentiel
+#                print self.referentiel.posRevues
         else:
             self.version5 = False
             self.referentiel = REFERENTIELS[self.typeEnseignement]
@@ -1062,7 +1061,7 @@ class Classe():
                             i += 1
                         
                     if i > 1:
-                        self.CI = CI
+#                        self.CI = CI
                         if self.referentiel.CI_cible:
                             self.referentiel.positions_CI = posCI
         
@@ -2179,6 +2178,8 @@ class Projet(BaseDoc, Objet_sequence):
         self.commentaires = branche.get("Commentaires", u"")
         
         self.nbrRevues = eval(branche.get("NbrRevues", str(self.GetReferentiel().getNbrRevuesDefaut())))
+        if not self.nbrRevues in self.GetReferentiel().posRevues.keys():
+            self.nbrRevues = self.GetReferentiel().getNbrRevuesDefaut()
         self.positionRevues = branche.get("PosRevues", 
                                           '-'.join(list(self.GetReferentiel().posRevues[self.nbrRevues]))).split('-')
 
@@ -2506,32 +2507,53 @@ class Projet(BaseDoc, Objet_sequence):
 
         return tache
     
-    ######################################################################################  
-    def CopierTache(self, event = None, item = None):
-        tache = self.arbre.GetItemPyData(item)
-        if isinstance(tache, Tache):
-            self.GetApp().parent.SetData(tache.getBranche())
+#    ######################################################################################  
+#    def CopierTache(self, event = None, item = None):
+#        tache = self.arbre.GetItemPyData(item)
+#        if isinstance(tache, Tache):
+#            self.GetApp().parent.SetData(tache.getBranche())
 #            print "Tache", tache, u"copiée"
 
     ######################################################################################  
-    def CollerTache(self, event = None, item = None):
+    def CollerTache(self, event = None, item = None, btache = None):
+        """ Colle la tâche présente dans le presse-papier (branche <btache>)
+            après la tâche désignée par l'item d'arbre <item>
+        """
         tache_avant = self.arbre.GetItemPyData(item)
         if not isinstance(tache_avant, Tache):
             return
         
-        elementCopie = self.GetApp().parent.elementCopie
-        if elementCopie == None or tache_avant.phase != elementCopie.get("Phase", ""): # la phase est la même
-            return
+        if btache == None:
+            try:
+                b = ET.fromstring(pyperclip.paste())
+            except:
+                b = None
+            if isinstance(b, Element): # Le presse contient un Element
+                if b.tag[:5] == 'Tache': # Le presse contient une tache
+                    phase = b.get("Phase", "")
+                    if tache_avant.phase == phase or tache_avant.GetSuivante().phase == phase : # la phase est la même
+                        btache = b
+            if btache == None:
+                return
         
-        tache = Tache(self, self.panelParent, phaseTache = "Rev")
-        tache.setBranche(elementCopie)
+        phase = btache.get("Phase", "")
+        if tache_avant.phase != phase and tache_avant.GetSuivante().phase != phase : # la phase est la même
+            return
+#
+#         or tache_avant.phase != btache.get("Phase", ""): # la phase est la même
+#            return
+        
+        tache = Tache(self, self.panelParent, phaseTache = "", branche = btache)
         
         tache.ordre = tache_avant.ordre+1
         for t in self.taches[tache_avant.ordre:]:
             t.ordre += 1
-        self.taches.append(tache)
-        self.taches.sort(key=attrgetter('ordre'))
-        
+        self.taches.insert(tache_avant.ordre, tache)
+#        self.taches.sort(key=attrgetter('ordre'))
+        for t in self.taches[tache_avant.ordre:]:
+            t.SetCode()
+
+            
         tache.ConstruireArbre(self.arbre, self.brancheTac)
         tache.SetCode()
         if hasattr(tache, 'panelPropriete'):
@@ -5151,7 +5173,8 @@ class Tache(Objet_sequence):
                                 # si le type d'enseignement ne colle pas avec les indicateurs (pb lors de l'enregistrement)
                                 if not code in self.GetReferentiel()._dicIndicateurs_prj_simple.keys():
                                     print "Erreur 3", code, "<>", self.GetReferentiel()._dicIndicateurs_prj_simple.keys()
-                                    err.append(constantes.Erreur(constantes.ERR_PRJ_T_TYPENS))
+                                    if not constantes.Erreur(constantes.ERR_PRJ_T_TYPENS) in err:
+                                        err.append(constantes.Erreur(constantes.ERR_PRJ_T_TYPENS))
                                 else:
                                     self.indicateursEleve[0].append(codeindic)
 #                                except:
@@ -5434,6 +5457,11 @@ class Tache(Objet_sequence):
     def GetClasse(self):
         return self.GetDocument().classe
     
+    ######################################################################################  
+    def GetSuivante(self):
+        i = self.projet.taches.index(self)
+        if len(self.projet.taches) > i:
+            return self.projet.taches[i+1]
     
     ######################################################################################  
     def AfficherMenuContextuel(self, itemArbre):
@@ -5443,15 +5471,23 @@ class Tache(Objet_sequence):
             else:
                 listItems = []
             listItems.append([u"Insérer une revue après", functools.partial(self.projet.InsererRevue, item = itemArbre)])
-            listItems.append([u"Copier", functools.partial(self.projet.CopierTache, item = itemArbre)])
-            
+#            listItems.append([u"Copier", functools.partial(self.projet.CopierTache, item = itemArbre)])
+            listItems.append([u"Copier", self.CopyToClipBoard])
  
-            elementCopie = self.GetApp().parent.elementCopie
+#            elementCopie = self.GetApp().parent.elementCopie
+            try:
+                elementCopie = ET.fromstring(pyperclip.paste())
+            except:
+                elementCopie = None
+            
             if elementCopie != None: # Le presse papier n'est pas vide
                 if isinstance(elementCopie, Element): # Le presse contient un Element
                     if elementCopie.tag[:5] == 'Tache': # Le presse contient une tache
-                        if self.phase == elementCopie.get("Phase", ""): # la phase est la même
-                            listItems.append([u"Coller après", functools.partial(self.projet.CollerTache, item = itemArbre)])
+                        phase = elementCopie.get("Phase", "")
+                        if self.phase == phase or self.GetSuivante().phase == phase : # la phase est la même
+                            listItems.append([u"Coller après", functools.partial(self.projet.CollerTache, 
+                                                                                 item = itemArbre, 
+                                                                                 btache = elementCopie)])
                     
             self.GetApp().AfficherMenuContextuel(listItems)
 #            item2 = menu.Append(wx.ID_ANY, u"Créer une rotation")
@@ -7453,6 +7489,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         dlg.Destroy() 
         if res == wx.ID_YES:
             self.commandeOuvrir(reparer = True)
+            
 
          
                 
@@ -8250,7 +8287,23 @@ class FenetreSequence(FenetreDocument):
         wx.EndBusyCursor()
         
         
-        
+    ###############################################################################################
+    def VerifierReparation(self):
+        """ Vérification (et correction) de la compatibilité de la séquence avec la classe
+            après une ouverture avec réparation
+        """
+#        print "VerifierReparation", self.sequence.CI.numCI, self.sequence.GetReferentiel().CentresInterets
+        for ci in self.sequence.CI.numCI:
+            if ci >= len(self.sequence.GetReferentiel().CentresInterets):
+                self.sequence.CI.numCI.remove(ci)
+                messageErreur(self,u"CI inexistant",
+                              u"Pas de CI numéro " + str(ci) + " !\n\n" \
+                              u"La séquence ouverte fait référence à un Centre d'Intérêt\n" \
+                              u"qui n'existe pas dans le référentiel par défaut.\n\n" \
+                              u"Il a été supprimé !")
+        return
+    
+    
     ###############################################################################################
     def ouvrir(self, nomFichier, redessiner = True, reparer = False):
 #        print "ouvrir sequence"
@@ -8259,48 +8312,52 @@ class FenetreSequence(FenetreDocument):
         
         fichier = open(nomFichier,'r')
         self.definirNomFichierCourant(nomFichier)
-#        nomCourt = os.path.splitext(os.path.split(nomFichier)[1])[0]
-        
-#        try:
-        root = ET.parse(fichier).getroot()
-        
-        # La séquence
-        sequence = root.find("Sequence")
-        if sequence == None: # Ancienne version , forcément STI2D-ETT !!
-            if hasattr(self.classe, 'panelPropriete'):
-                self.classe.panelPropriete.EvtRadioBox(CodeFam = ('ET', 'STI'))
-            self.sequence.setBranche(root)
-        else:
-            # La classe
-            classe = root.find("Classe")
-            self.classe.setBranche(classe, reparer = reparer)
-            self.sequence.MiseAJourTypeEnseignement()
-            self.sequence.setBranche(sequence)  
+    
+        def ouvre():
+            root = ET.parse(fichier).getroot()
+            
+            # La séquence
+            sequence = root.find("Sequence")
+            if sequence == None: # Ancienne version , forcément STI2D-ETT !!
+                if hasattr(self.classe, 'panelPropriete'):
+                    self.classe.panelPropriete.EvtRadioBox(CodeFam = ('ET', 'STI'))
+                self.sequence.setBranche(root)
+            else:
+                # La classe
+                classe = root.find("Classe")
+                self.classe.setBranche(classe, reparer = reparer)
+                self.sequence.MiseAJourTypeEnseignement()
+                self.sequence.setBranche(sequence)  
+
+            if reparer:
+                self.VerifierReparation()
                 
-          
-#        except:
-#            messageErreur(self,u"Erreur d'ouverture",
-#                          u"La séquence pédagogique\n    %s\n n'a pas pu être ouverte !" %nomCourt)
-#            fichier.close()
-#            self.Close()
-#            return
+            self.arbre.DeleteAllItems()
+            root = self.arbre.AddRoot("")
+            self.classe.ConstruireArbre(self.arbre, root)
+            self.sequence.ConstruireArbre(self.arbre, root)
+            self.sequence.CI.SetNum()
+            self.sequence.SetCodes()
+            self.sequence.PubDescription()
+            self.sequence.SetLiens()
+            self.sequence.VerifPb()
+    
+            self.sequence.VerrouillerClasse()
+            self.arbre.SelectItem(self.classe.branche)
 
 
-
-        self.arbre.DeleteAllItems()
-        root = self.arbre.AddRoot("")
-        self.classe.ConstruireArbre(self.arbre, root)
-        self.sequence.ConstruireArbre(self.arbre, root)
-        self.sequence.CI.SetNum()
-        self.sequence.SetCodes()
-        self.sequence.PubDescription()
-        self.sequence.SetLiens()
-        self.sequence.VerifPb()
-        
-        
-
-        self.sequence.VerrouillerClasse()
-        self.arbre.SelectItem(self.classe.branche)
+        if "beta" in __version__:
+            ouvre()
+        else:
+            try:
+                ouvre()
+            except:
+                nomCourt = os.path.splitext(os.path.split(nomFichier)[1])[0]
+                messageErreur(self,u"Erreur d'ouverture",
+                              u"La séquence pédagogique\n    %s\n n'a pas pu être ouverte !" %nomCourt)
+                fichier.close()
+                self.Close()
+                return
 
         self.arbre.Layout()
         self.arbre.ExpandAll()
@@ -8310,7 +8367,8 @@ class FenetreSequence(FenetreDocument):
         
         if redessiner:
             wx.CallAfter(self.fiche.Redessiner)
-        
+
+
     #############################################################################
     def definirNomFichierCourant(self, nomFichier = ''):
         self.fichierCourant = nomFichier
@@ -8322,6 +8380,7 @@ class FenetreSequence(FenetreDocument):
     def AppliquerOptions(self):
         self.sequence.AppliquerOptions()   
     
+
 
 ########################################################################################
 #
@@ -8473,20 +8532,26 @@ class FenetreProjet(FenetreDocument):
         nomCourt = os.path.splitext(os.path.split(nomFichier)[1])[0]
         
         message = nomCourt+"\n"
-        dlg =    wx.ProgressDialog(u"Ouverture d'un projet",
+        dlg = myProgressDialog(u"Ouverture d'un projet",
                                    message,
-                                   maximum = nbr_etapes,
-                                   parent=self.parent,
-                                   style = 0
-                                    | wx.PD_APP_MODAL
-                                    #| wx.PD_CAN_ABORT
-                                    #| wx.PD_CAN_SKIP
-                                    #| wx.PD_ELAPSED_TIME
-                                    | wx.PD_ESTIMATED_TIME
-                                    | wx.PD_REMAINING_TIME
-                                    #| wx.PD_AUTO_HIDE
-                                    )
+                                   nbr_etapes,
+                                   self.parent)
+        
+#        dlg =    wx.ProgressDialog(u"Ouverture d'un projet",
+#                                   message,
+#                                   maximum = nbr_etapes,
+#                                   parent=self.parent,
+#                                   style = 0
+#                                    | wx.PD_APP_MODAL
+#                                    #| wx.PD_CAN_ABORT
+#                                    #| wx.PD_CAN_SKIP
+#                                    #| wx.PD_ELAPSED_TIME
+#                                    | wx.PD_ESTIMATED_TIME
+#                                    | wx.PD_REMAINING_TIME
+#                                    #| wx.PD_AUTO_HIDE
+#                                    )
 
+#        print dir(dlg)
         
         self.fiche.Hide()
         
@@ -8527,6 +8592,7 @@ class FenetreProjet(FenetreDocument):
                 dlg.Update(count, message)
                 count += 1
 #                print "ref :", 
+#                self.projet.classe = self.classe
                 err = self.projet.setBranche(projet)
                 if len(err) > 0 :
                     Ok = False
@@ -8624,8 +8690,7 @@ class FenetreProjet(FenetreDocument):
         
         fichier.close()
         
-        wx.CallAfter(self.fiche.Show)
-        wx.CallAfter(self.fiche.Redessiner)
+        
 
 #        if redessiner:
 #
@@ -8649,8 +8714,14 @@ class FenetreProjet(FenetreDocument):
 
         if Ok:
             dlg.Destroy()
+        else:
+            dlg.Update(nbr_etapes, message)
+            dlg.Raise()
+            dlg.Close() 
     
-
+        wx.CallAfter(self.fiche.Show)
+        wx.CallAfter(self.fiche.Redessiner)
+        wx.CallAfter(dlg.Raise)
 
     #############################################################################
     def genererGrilles(self, event = None):
@@ -9332,7 +9403,8 @@ class PanelPropriete_Racine(wx.Panel):
 #        wx.CallAfter(self.Layout)
         self.Layout()
 
-
+#    def GetNiveau(self):
+#        return 0
      
 
 ####################################################################################
@@ -13711,16 +13783,27 @@ class ArbreDoc(CT.CustomTreeCtrl):
         self.SetFocus()
         event.Skip()
         
-#    ####################################################################################
-#    def SelectItem(self, item, select=True):
-#        if select:
-#            CT.CustomTreeCtrl.SelectItem(self, item, False)
-#        CT.CustomTreeCtrl.SelectItem(self, item, select)
+    
+    ###############################################################################################
+    def OnKey(self, evt):
+        keycode = evt.GetKeyCode()
+        item = self.GetSelection()
+        
+        if keycode == wx.WXK_DELETE:
+            self.doc.SupprimerItem(item)
+            
+        elif evt.ControlDown() and keycode == 67: # Crtl-C
+            self.GetItemPyData(item).CopyToClipBoard()
+
+
+        elif evt.ControlDown() and keycode == 86: # Crtl-V
+            self.doc.CollerTache(item = item)
+            
+        evt.Skip()
 
 
     ####################################################################################
     def OnSelChanged(self, event):
-        
         self.item = event.GetItem()
         data = self.GetItemPyData(self.item)
         if data == None:
@@ -13770,6 +13853,7 @@ class ArbreSequence(ArbreDoc):
         # La séquence 
         #
         self.sequence = sequence
+        self.doc = sequence
         
         #
         # Les icones des branches
@@ -13793,12 +13877,7 @@ class ArbreSequence(ArbreDoc):
         self.CurseurInsertApres = wx.CursorFromImage(constantes.images.Curseur_InsererApres.GetImage())
         self.CurseurInsertDans = wx.CursorFromImage(constantes.images.Curseur_InsererDans.GetImage())
         
-    ###############################################################################################
-    def OnKey(self, evt):
-        keycode = evt.GetKeyCode()
-        if keycode == wx.WXK_DELETE:
-            item = self.GetSelection()
-            self.sequence.SupprimerItem(item)
+
             
         
     ####################################################################################
@@ -13862,6 +13941,8 @@ class ArbreSequence(ArbreDoc):
             item = self.HitTest(wx.Point(event.GetX(), event.GetY()))[0]
             if item != None:
                 dataTarget = self.GetItemPyData(item)
+                if isinstance(dataTarget, PanelPropriete_Racine):
+                    dataTarget = self.sequence
                 dataSource = self.GetItemPyData(self.itemDrag)
                 a = self.getActionDnD(dataSource, dataTarget)
                 if a == 0:
@@ -13903,15 +13984,15 @@ class ArbreSequence(ArbreDoc):
                 3 : 
         """
         if isinstance(dataSource, Seance) and dataTarget != dataSource:
-            if dataTarget.GetNiveau() + dataSource.GetProfondeur() > 2:
+            if not hasattr(dataTarget, 'GetNiveau') or dataTarget.GetNiveau() + dataSource.GetProfondeur() > 2:
                 return 0
-            
-            
-            # Insérer "dans"  (racine ou "R" ou "S")
-            if dataTarget == self.sequence.panelSeances \
+
+
+            # Insérer "dans"  (racine ou "R" ou "S")  .panelSeances
+            if dataTarget == self.sequence \
                or (isinstance(dataTarget, Seance) and dataTarget.typeSeance in ["R","S"]):
                 if not dataSource in dataTarget.seances:    # parents différents
-                    print dataSource.typeSeance, dataTarget.seances[0].GetListeTypes()
+#                    print dataSource.typeSeance, dataTarget.seances[0].GetListeTypes()
                     if dataTarget.GetNiveau() + dataSource.GetProfondeur() > 1:
                         return 0
                     elif not dataSource.typeSeance in dataTarget.seances[0].GetListeTypes():
@@ -13924,7 +14005,7 @@ class ArbreSequence(ArbreDoc):
             # Insérer "après"
             else:
                 if dataTarget.parent != dataSource.parent:  # parents différents
-                    print dataSource.typeSeance, dataTarget.GetListeTypes()
+#                    print dataSource.typeSeance, dataTarget.GetListeTypes()
                     if not dataSource.typeSeance in dataTarget.GetListeTypes():
                         return 0
                     else:
@@ -13933,10 +14014,10 @@ class ArbreSequence(ArbreDoc):
                     return 4
             
             
-            
-            
-            
-            
+
+
+
+
 #            if isinstance(dataTarget, Seance):
 #                # source et target ont le même parent (même niveau dans l'arbre)
 #                if dataTarget.parent == dataSource.parent:
@@ -13960,6 +14041,8 @@ class ArbreSequence(ArbreDoc):
         """
         self.item = event.GetItem() 
         dataTarget = self.GetItemPyData(self.item)
+        if isinstance(dataTarget, PanelPropriete_Racine):
+            dataTarget = self.sequence
         dataSource = self.GetItemPyData(self.itemDrag)
         
         a = self.getActionDnD(dataSource, dataTarget)
@@ -14132,6 +14215,7 @@ class ArbreProjet(ArbreDoc):
         # La séquence 
         #
         self.projet = projet
+        self.doc = projet
         
         #
         # Les icones des branches
@@ -14155,19 +14239,7 @@ class ArbreProjet(ArbreDoc):
                 
         
             
-    ###############################################################################################
-    def OnKey(self, evt):
-        keycode = evt.GetKeyCode()
-        if keycode == wx.WXK_DELETE:
-            item = self.GetSelection()
-            self.projet.SupprimerItem(item)
-        elif evt.ControlDown() and keycode == 67: # Crtl-C
-            item = self.GetSelection()
-            self.projet.CopierTache(item = item)
-        elif evt.ControlDown() and keycode == 86: # Crtl-V
-            item = self.GetSelection()
-            self.projet.CollerTache(item = item)
-        evt.Skip()
+    
             
     ####################################################################################
     def AjouterEleve(self, event = None):
@@ -18050,9 +18122,33 @@ class MessageAideCI(GMD.GenericMessageDialog):
         
         
 
+#############################################################################################################
+#
+# ProgressDialog personnalisé
+# 
+#############################################################################################################
+class myProgressDialog(wx.ProgressDialog):
+    def __init__(self, titre, message, nbr_etapes, parent):
+        wx.ProgressDialog.__init__(self, u"Ouverture d'un projet",
+                                   message,
+                                   maximum = nbr_etapes,
+                                   parent = parent,
+                                   style = 0
+                                    | wx.PD_APP_MODAL
+                                    #| wx.PD_CAN_ABORT
+                                    #| wx.PD_CAN_SKIP
+                                    #| wx.PD_ELAPSED_TIME
+                                    | wx.PD_ESTIMATED_TIME
+                                    | wx.PD_REMAINING_TIME
+                                    #| wx.PD_AUTO_HIDE
+                                    )
+
+        self.Bind(wx.EVT_CLOSE, self.OnClose)
         
     
-        
+    def OnClose(self, event):
+        print "Close dlg"
+        self.Destroy()        
         
 #############################################################################################################
 #

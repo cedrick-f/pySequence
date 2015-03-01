@@ -1035,6 +1035,9 @@ class Cadre():
         
         return x + self.w, y + self.h
 
+
+
+
 class Bloc():
     """ Ensemble de cadres.
         contenu = [[], [], ...]
@@ -1050,13 +1053,15 @@ class Bloc():
 #        return ""
     
     def Draw(self, x, y):
+        print self.contenu
         self.x = x
         self.y = y
         for ligne in self.contenu:
+            print 
             x = self.x
 #            x = posZSeances[0]
             for elem in ligne:
-                
+                print "  > ", elem
                 if isinstance(elem, Cadre):
                     xf, yf = elem.Draw(x, y)
                     
@@ -1158,14 +1163,18 @@ def DrawSeanceRacine(ctx, seance):
     #
     # Remplissage du tableau de blocs : [[], [], ...]
     #
-    def getBloc(seance, h, filigrane = False, decal = 0):
+    def getBloc(seance, h, filigrane = False, decal = 0, rotation = False):
         # Séance "simple" --> un seul bloc d'une ligne de un ou plusieurs cadres 
         if not seance.typeSeance in ["R", "S", ""]:
             bloc = Bloc()
             seance.pts_caract = []
 #            if seance.typeSeance in ["AP", "ED", "P"]:
             l = []
-            for i in range(int(seance.nombre.v[0])):
+            if rotation:
+                n = 1
+            else:
+                n = int(seance.nombre.v[0])
+            for i in range(n):
                 l.append(Cadre(ctx, seance, h, signEgal = (i>0), filigrane = filigrane))
             bloc.contenu.append(l)
             if not filigrane:
@@ -1173,6 +1182,8 @@ def DrawSeanceRacine(ctx, seance):
                     l[-1].dy = l[-1].h/2
                 else:
                     l[-1].dy = decal * l[-1].h
+            else:
+                l[-1].dy = decal * l[-1].h
 #            else:
 #                bloc.contenu.append([Cadre(ctx, seance, h, filigrane = filigrane)])
 #                if not filigrane:
@@ -1189,25 +1200,28 @@ def DrawSeanceRacine(ctx, seance):
             # Rotation : plusieurs lignes
             if seance.typeSeance == "R":           
                 bloc = Bloc()
-                l0 = seance.GetListSousSeancesRot()
+                l0 = seance.GetListSousSeancesRot() # Liste des sous séances de la première colonne (têtes de ligne - foncé)
+                print "l0 =", l0
                 for ss in l0[:seance.nbrRotations.v[0]]:
 #                for i in range(seance.nbrRotations.v[0]):
 #                    ss = seance.seances[i]
                     hl = h * ss.GetDuree()/seance.GetDuree() * len(l0)/  seance.nbrRotations.v[0] 
-                    bloc.contenu.append([getBloc(ss, hl)])
+                    bloc.contenu.append([getBloc(ss, hl, rotation = True)])
                     
                 #
                 # Aperçu en filigrane de la rotation
                 #
                 if True:#seance.IsEffectifOk() <= 3:
                     l = seance.GetListSousSeancesRot(True)
-                    for t in range(len(seance.GetListSousSeancesRot(True))-1):
+                    print "  l =", l
+                    for t in range(len(l)-1): # Colonnes
                         l = permut(l)
-                        for i, ss in enumerate(l[:seance.nbrRotations.v[0]]):
+                        print "   ", l
+                        for i, ss in enumerate(l[:seance.nbrRotations.v[0]]):   # Lignes
                             hl = h * ss.GetDuree()/seance.GetDuree() * len(l0)/  seance.nbrRotations.v[0] 
-                            bloc.contenu[i].extend([getBloc(ss, hl, filigrane = True)])
+                            bloc.contenu[i].extend([getBloc(ss, hl, filigrane = True, rotation = True)])
 #                blocs.extend(bloc)
-                
+#                print "   >>", bloc.contenu
                 return bloc
                 
             elif seance.typeSeance == "S":
