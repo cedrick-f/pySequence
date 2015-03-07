@@ -205,7 +205,8 @@ def modifierGrille(doc, tableaux, eleve):
         
         for i, indic in dicNon.items():
 #            print "**", i, indic
-            lignes = [ind[2] for ind in indic if ind[2] != 0]
+#            lignes = [ind[2] for ind in indic if ind[2] != 0]
+            lignes = [ind.ligne for ind in indic if ind.ligne != 0]
 #            print "    lignes", lignes
 #            print "    colNON", colNON
             for j, ligne in enumerate(lignes):

@@ -1053,15 +1053,15 @@ class Bloc():
 #        return ""
     
     def Draw(self, x, y):
-        print self.contenu
+#        print self.contenu
         self.x = x
         self.y = y
         for ligne in self.contenu:
-            print 
+#            print 
             x = self.x
 #            x = posZSeances[0]
             for elem in ligne:
-                print "  > ", elem
+#                print "  > ", elem
                 if isinstance(elem, Cadre):
                     xf, yf = elem.Draw(x, y)
                     
@@ -1080,13 +1080,13 @@ class Bloc():
         for ligne in self.contenu:
             for cadre in ligne:
                 if isinstance(cadre, Cadre):
-                    if not cadre.filigrane:
+                    if not cadre.filigrane and cadre.dy != None:
 #                    if cadre.seance.typeSeance in ["AP", "ED", "P"]:#  and cadre.dy: #and 
                         if len(cadre.seance.GetReferentiel().listeDemarches) > 0:
-    #                    if cadre.seance.GetClasse().typeEnseignement != "SSI":
                             DrawCroisementsDemarche(cadre.ctx, cadre.seance, cadre.y + cadre.dy)
                         if not estRotation:
-                            DrawCroisementSystemes(cadre.ctx, cadre.seance, cadre.xd, cadre.y + cadre.dy, cadre.seance.GetNbrSystemes())
+                            DrawCroisementSystemes(cadre.ctx, cadre.seance, cadre.xd, cadre.y + cadre.dy, 
+                                                   cadre.seance.GetNbrSystemes())
                 else:
                     cadre.DrawCoisement(estRotation)
                           
@@ -1132,32 +1132,32 @@ def DrawSeanceRacine(ctx, seance):
                    (posZDeroul[0]-e/2, cursY, e, h-he), 
                    orient = o, b = 0.2)
 
-    #
-    # Fonction pour obtenir les lignes de séances du bloc
-    #
-    def getLigne(s, hc, filigrane = False):
-        l = []
-#        if s.typeSeance == "S":
-#            for j,ss in enumerate(s.sousSeances):
-#                if ss.typeSeance != '':
-#                    ss.pts_caract = []
-#                    for i in range(int(ss.nombre.v[0])):
-#                        l.append(Cadre(ctx, ss, hc, filigrane = filigrane, signEgal = (i>0)))
-#                    
-#                    # On en profite pour calculer les positions des lignes de croisement
-#                    if not filigrane:
-#                        l[-1].dy = (j+1) * l[-1].h/(len(s.sousSeances)+1)
-#        
-#        else:
-        if s.typeSeance != '':
-            s.pts_caract = []
-#            for i in range(int(s.nombre.v[0])):
-            l.append(Cadre(ctx, s, hc, filigrane = filigrane))#, signEgal = (i>0)))
-            
-            # On en profite pour calculer les positions des lignes de croisement
-            if not filigrane:
-                l[-1].dy = l[-1].h/2
-        return l
+#    #
+#    # Fonction pour obtenir les lignes de séances du bloc
+#    #
+#    def getLigne(s, hc, filigrane = False):
+#        l = []
+##        if s.typeSeance == "S":
+##            for j,ss in enumerate(s.sousSeances):
+##                if ss.typeSeance != '':
+##                    ss.pts_caract = []
+##                    for i in range(int(ss.nombre.v[0])):
+##                        l.append(Cadre(ctx, ss, hc, filigrane = filigrane, signEgal = (i>0)))
+##                    
+##                    # On en profite pour calculer les positions des lignes de croisement
+##                    if not filigrane:
+##                        l[-1].dy = (j+1) * l[-1].h/(len(s.sousSeances)+1)
+##        
+##        else:
+#        if s.typeSeance != '':
+#            s.pts_caract = []
+##            for i in range(int(s.nombre.v[0])):
+#            l.append(Cadre(ctx, s, hc, filigrane = filigrane))#, signEgal = (i>0)))
+#            
+#            # On en profite pour calculer les positions des lignes de croisement
+#            if not filigrane:
+#                l[-1].dy = l[-1].h/2
+#        return l
     
 
     #
@@ -1201,7 +1201,7 @@ def DrawSeanceRacine(ctx, seance):
             if seance.typeSeance == "R":           
                 bloc = Bloc()
                 l0 = seance.GetListSousSeancesRot() # Liste des sous séances de la première colonne (têtes de ligne - foncé)
-                print "l0 =", l0
+#                print "l0 =", l0
                 for ss in l0[:seance.nbrRotations.v[0]]:
 #                for i in range(seance.nbrRotations.v[0]):
 #                    ss = seance.seances[i]
@@ -1213,10 +1213,10 @@ def DrawSeanceRacine(ctx, seance):
                 #
                 if True:#seance.IsEffectifOk() <= 3:
                     l = seance.GetListSousSeancesRot(True)
-                    print "  l =", l
+#                    print "  l =", l
                     for t in range(len(l)-1): # Colonnes
                         l = permut(l)
-                        print "   ", l
+#                        print "   ", l
                         for i, ss in enumerate(l[:seance.nbrRotations.v[0]]):   # Lignes
                             hl = h * ss.GetDuree()/seance.GetDuree() * len(l0)/  seance.nbrRotations.v[0] 
                             bloc.contenu[i].extend([getBloc(ss, hl, filigrane = True, rotation = True)])

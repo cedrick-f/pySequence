@@ -40,7 +40,7 @@ Copyright (C) 2011-2015
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "6beta5"
+__version__ = "6beta6"
 print __version__
 
 #from threading import Thread
@@ -447,7 +447,7 @@ class Lien():
     ######################################################################################  
     def Afficher(self, pathseq, fenSeq = None):
         path = self.GetAbsPath(pathseq)
-        print "Afficher", path
+#        print "Afficher", path
         
         if self.type == "f":
             try:
@@ -874,7 +874,9 @@ class Objet_sequence():
             return self.branche
         
         
-        
+    ######################################################################################  
+    def GetProfondeur(self):
+        return 0  
         
         
         
@@ -6276,7 +6278,7 @@ class Eleve(Personne, Objet_sequence):
 #        print "  ", nomFichiers
         if nomFichiers == None:
             nomFichiers = self.GetNomGrilles(path)
-            if not self.projet.TesterExistanceGrilles(nomFichiers):
+            if not self.projet.TesterExistanceGrilles({0:nomFichiers}):
                 return
 #        print "  ", nomFichiers
         
@@ -7057,6 +7059,8 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         self.Bind(wx.EVT_MENU, self.commandeEnregistrerSous, id=13)
         self.Bind(wx.EVT_MENU, self.exporterFiche, id=15)
         self.Bind(wx.EVT_MENU, self.exporterDetails, id=16)
+        self.Bind(wx.EVT_MENU_RANGE, self.OnFileHistory, id=wx.ID_FILE1, id2=wx.ID_FILE9)
+        
         
         if sys.platform == "win32":
             self.Bind(wx.EVT_MENU, self.genererGrilles, id=17)
@@ -7392,6 +7396,9 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         file_menu.Append(12, u"&Enregistrer\tCtrl+S")
         file_menu.Append(13, u"&Enregistrer sous ...")
         file_menu.AppendSeparator()
+        self.filehistory = wx.FileHistory()
+        self.filehistory.UseMenu(file_menu)
+#        file_menu.AppendSeparator()
         file_menu.Append(15, u"&Exporter la fiche (PDF ou SVG)\tCtrl+E")
         file_menu.Append(16, u"&Exporter les détails\tCtrl+D")
         
@@ -7575,7 +7582,8 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                     
         wx.EndBusyCursor()
         self.Thaw()
-        
+
+
     ###############################################################################################
     def commandeOuvrir(self, event = None, nomFichier = None, reparer = False):
         mesFormats = constantes.FORMAT_FICHIER['seqprj'] + constantes.FORMAT_FICHIER['seq'] + constantes.FORMAT_FICHIER['prj'] + constantes.TOUS_FICHIER
@@ -7597,8 +7605,24 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             
             dlg.Destroy()
         
+        if not reparer:
+            self.filehistory.AddFileToHistory(nomFichier)
+            
         self.ouvrir(nomFichier, reparer = reparer)
         
+        
+    ###############################################################################################
+    def OnFileHistory(self, evt):
+        # get the file based on the menu ID
+        fileNum = evt.GetId() - wx.ID_FILE1
+        path = self.filehistory.GetHistoryFile(fileNum)
+        print "You selected %s\n" % path
+
+        # add it back to the history so it will be moved up the list
+        self.filehistory.AddFileToHistory(path)
+        self.commandeOuvrir(nomFichier = path)
+
+
     ###############################################################################################
     def OnAppelOuvrir(self, evt):
 #        print "OnAppelOuvrir"
@@ -11699,14 +11723,25 @@ class PanelPropriete_Competences(PanelPropriete):
         
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
-
+#        print "MiseAJour compétences"
+#        print "  ", self.arbre.items.keys()
+#        print "   ", self.competence.competences
         self.arbre.UnselectAll()
         for s in self.competence.competences:
-            i = self.arbre.get_item_by_label(s, self.arbre.GetRootItem())
-
-            if i.IsOk():
-
-                self.arbre.CheckItem2(i)
+            if s in self.arbre.items.keys():
+                self.arbre.CheckItem2(self.arbre.items[s])
+                    
+                    
+        
+        
+        
+#        for s in self.competence.competences:
+#            
+#            i = self.arbre.get_item_by_label(s, self.arbre.GetRootItem())
+#            print s, 
+#            print i, i.IsOk()
+#            if i.IsOk():
+#                self.arbre.CheckItem2(i)
         
         if sendEvt:
             self.sendEvent()
@@ -13828,7 +13863,7 @@ class ArbreDoc(CT.CustomTreeCtrl):
     def OnBeginDrag(self, event):
         self.itemDrag = event.GetItem()
 #        print self.GetItemPyData(self.itemDrag).GetNiveau(), 
-        print self.GetItemPyData(self.itemDrag).GetProfondeur()
+#        print self.GetItemPyData(self.itemDrag).GetProfondeur()
         if self.item:
             event.Allow()
 
@@ -14658,6 +14693,7 @@ class ArbreCompetences(HTL.HyperTreeList):
                     wnd.Destroy()
                     
         self.DeleteChildren(self.root)
+        self.items = {}
         self.Construire(self.root, ref = ref)
         self.ExpandAll()
 #        self.Layout()
@@ -14714,6 +14750,7 @@ class ArbreCompetences(HTL.HyperTreeList):
                 self.Construire(b, dic[k][1], ct_type = 1)
             else:
                 b = self.AppendItem(branche, k+" "+dic[k][0], ct_type = 1, data = k)
+            self.items[k] = b
             
             if ct_type == 0:
                 self.SetItemBold(b, True)
@@ -16228,10 +16265,13 @@ class PanelListe(wx.Panel, listmix.ColumnSorterMixin):
             f = seq.nomFichier
             d, f = os.path.split(f)
             f = os.path.splitext(f)[0]
-            pos = self.listeSeq.InsertStringItem(i, f)
-            self.listeSeq.SetStringItem(pos, 1, d)
-            self.itemDataMap[i] = (f, d, seq)
-            self.listeSeq.SetItemData(i, i)
+            try:
+                pos = self.listeSeq.InsertStringItem(i, f)
+                self.listeSeq.SetStringItem(pos, 1, d)
+                self.itemDataMap[i] = (f, d, seq)
+                self.listeSeq.SetItemData(i, i)
+            except:
+                print "Erreur", f
             
 #        self.listeSeq.SetColumnWidth(0, wx.LIST_AUTOSIZE)
 #        self.listeSeq.SetColumnWidth(1, wx.LIST_AUTOSIZE)
@@ -16318,6 +16358,7 @@ class FenetreBilan(wx.Frame):
         wx.Frame.__init__(self, parent, -1, u"Synthèse pédagogique", style = wx.DEFAULT_FRAME_STYLE|wx.STAY_ON_TOP)
         
         self.pourProjet = False
+        self.lastPath = None
         
         self.sizer = wx.GridBagSizer()
         panel = wx.Panel(self, -1)
@@ -16447,8 +16488,16 @@ class FenetreBilan(wx.Frame):
         self.tb.AddLabelTool(30, u"Actualiser", images.Bouton_Actualiser.GetBitmap(), 
                              shortHelp=u"Actualiser la liste des séquences", 
                              longHelp=u"Actualiser la liste des séquences")
-        self.Bind(wx.EVT_TOOL, self.MiseAJourListe, id=30)    
+        self.Bind(wx.EVT_TOOL, self.MiseAJourListe, id=30)
         
+        open_bmp = wx.ArtProvider.GetBitmap(wx.ART_FILE_OPEN, wx.ART_TOOLBAR, tsize)
+        self.tool_open = self.tb.AddLabelTool(20, u"Ouvrir", open_bmp, 
+                             shortHelp=u"Ouvrir la synthèse", 
+                             longHelp=u"Ouvrir la synthèse")
+        self.Bind(wx.EVT_TOOL, self.OuvrirSynthese, id=20)     
+        
+        print "fini"
+
         
         #################################################################################################################
         #
@@ -16457,6 +16506,8 @@ class FenetreBilan(wx.Frame):
         #################################################################################################################
         self.tb.Realize()
         
+        self.tb.RemoveTool(20)
+        print "fini 2"
     
     
     ######################################################################################  
@@ -16478,6 +16529,10 @@ class FenetreBilan(wx.Frame):
                            wx.OK | wx.ICON_INFORMATION)
                 dlg.ShowModal()
                 dlg.Destroy()
+                self.lastPath = path
+                self.tb.InsertToolItem(2,self.tool_open)
+                self.tb.Realize()
+                
             else:
                 dlg = wx.MessageDialog(self, u"L'export de la synthèse a échoué !", u"Echec de l'export de la synthèse",
                            wx.OK | wx.ICON_WARNING)
@@ -16486,6 +16541,16 @@ class FenetreBilan(wx.Frame):
         else:
             dlg.Destroy()
 
+    ######################################################################################  
+    def OuvrirSynthese(self, event = None):
+        if self.lastPath != None and os.path.isfile(self.lastPath):
+            try:
+                os.startfile(self.lastPath)
+            except:
+                messageErreur(None, u"Ouverture impossible",
+                              u"Impossible d'ouvrir la synthèse\n\n%s\n" %toDefautEncoding(self.lastPath))
+
+    ######################################################################################  
     def definirStyles(self, book):
         #
         # Couleurs
@@ -17400,10 +17465,18 @@ class FenetreBilan(wx.Frame):
         
         
         def CodeDansListe(code, dic):
+#            print code
+#            print dic
             if comp_sav == 'C':
-                return code in dic.keys(), dic[code][0]
+                if code in dic.keys():
+                    return True, dic[code][0]
+                else:
+                    return False, None
             else:
-                return code[1:] in dic.keys() and (code[0] == 'S' or code[0] == 'B'), dic[code[1:]][0]
+                if code[1:] in dic.keys() and (code[0] == 'S' or code[0] == 'B'):
+                    return True , dic[code[1:]][0]
+                else:
+                    return False, None
         
         
         #
@@ -17811,7 +17884,7 @@ class FenetreBilan(wx.Frame):
         
     ######################################################################################  
     def EvtRadioBox(self, event):
-        print "EvtRadioBox"
+#        print "EvtRadioBox"
         radio_selected = event.GetEventObject()
         typeEnseignement = Referentiel.getEnseignementLabel(radio_selected.GetLabel())[0]
         self.referentiel = REFERENTIELS[typeEnseignement]
@@ -17901,7 +17974,10 @@ class FenetreBilan(wx.Frame):
             listSequences = []
             count = 0
             for f in l:
-                dlg.Update(count, f)
+                try:
+                    dlg.Update(count, f)
+                except:
+                    print "Erreur", f
                 
                 classe, sequence = self.OuvrirFichierSeq(f)
 #                print classe.typeEnseignement ,  self.referentiel.Code
@@ -17922,6 +17998,9 @@ class FenetreBilan(wx.Frame):
             
 #            print "listSequences APRES", listSequences
             self.listeSeq.MiseAJourListe(listSequences)
+            self.tb.RemoveTool(20)
+#            self.tb.Realize()
+            
             dlg.Update(count, u"Terminé")
             dlg.Destroy()
             wx.EndBusyCursor()
