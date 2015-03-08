@@ -141,8 +141,10 @@ tailleZComp = [None, None]
 wColCompBase = 0.018
 wColComp = wColCompBase
 xComp = {}
-ICoulCompS = (0.598, 0.7, 1, 0.2)      # couleur "Soutenance"
-ICoulCompR = (1, 0.6, 0.7, 0.2)      # couleur "Revue"
+ICoulComp = {'C' : (1, 0.6, 0.7, 0.2),      # couleur "Revue"
+             'S' : (0.598, 0.7, 1, 0.2)}    # couleur "Soutenance"
+#ICoulComp['S'] = (0.598, 0.7, 1, 0.2)      
+#ICoulComp['C'] = (1, 0.6, 0.7, 0.2)      
 #BCoulCompR = (0.3, 0.2, 0.4, 1)      # couleur "Revue"
 BCoulCompS = (0.7, 0.7, 0.7, 0.2)      # couleur "Soutenance"
 
@@ -350,7 +352,8 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
     taillePos[0] = taillePro[0]/2
     ctx.set_line_width (0.0015)
     prj.rectPos = DrawPeriodes(ctx, prj.position, prj.classe.referentiel.periodes,
-                               prj.classe.referentiel.periode_prj,  tailleTypeEns = tailleTypeEns)
+                               [p.periode for p in prj.classe.referentiel.projets.values()],  
+                               tailleTypeEns = tailleTypeEns)
     prj.rect.append(posPos+taillePos)
 
 
@@ -482,9 +485,9 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
             ctx.stroke()
             ctx.set_source_rgba(0.5, 0.5, 0.5, 0.2)
 #            if True :#estCompetenceRevue(prj.classe.typeEnseignement, s):
-#                ctx.set_source_rgba(ICoulCompS[0], ICoulCompS[1], ICoulCompS[2], 0.2)
+#                ctx.set_source_rgba(ICoulComp['S'][0], ICoulComp['S'][1], ICoulComp['S'][2], 0.2)
 #            else:
-#                ctx.set_source_rgba(ICoulCompR[0], ICoulCompR[1], ICoulCompR[2], 0.2)
+#                ctx.set_source_rgba(ICoulComp['C'][0], ICoulComp['C'][1], ICoulComp['C'][2], 0.2)
             ctx.rectangle(_x, _y0,  
                           wc, _y1-_y0)
             ctx.fill()
@@ -546,16 +549,24 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
             y = posZElevesH[1] + i*hEleves
 #            wr = tailleZElevesH[0]*r
 #            ws = tailleZElevesH[0]*s
-            hb = hEleves/3
+            hb = hEleves/(len(prj.GetProjetRef().parties)+1)
 #            y = posZElevesH[1] + (2*i*hb)+hb/2
             
-            barreH(ctx, posZElevesH[0], y+hb, tailleZElevesH[0], ev['R'][0], ev['R'][1], hb, 
-                   (1, 0, 0, 0.7), (0, 1, 0, 0.7), 
-                   (ICoulCompR[0], ICoulCompR[1], ICoulCompR[2], 1))
+
             
-            barreH(ctx, posZElevesH[0], y+2*hb, tailleZElevesH[0], ev['S'][0], ev['S'][1], hb, 
-                   (1, 0, 0, 0.7), (0, 1, 0, 0.7), 
-                   (ICoulCompS[0], ICoulCompS[1], ICoulCompS[2], 1))
+            for j, part in enumerate(prj.GetProjetRef().parties.keys()):
+                barreH(ctx, posZElevesH[0], y+(j+1)*hb, tailleZElevesH[0], ev[part][0], ev[part][1], hb, 
+                       (1, 0, 0, 0.7), (0, 1, 0, 0.7), 
+                       (ICoulComp[part][0], ICoulComp[part][1], ICoulComp[part][2], 1))
+            
+            
+#            barreH(ctx, posZElevesH[0], y+hb, tailleZElevesH[0], ev['R'][0], ev['R'][1], hb, 
+#                   (1, 0, 0, 0.7), (0, 1, 0, 0.7), 
+#                   (ICoulComp['C'][0], ICoulComp['C'][1], ICoulComp['C'][2], 1))
+#            
+#            barreH(ctx, posZElevesH[0], y+2*hb, tailleZElevesH[0], ev['S'][0], ev['S'][1], hb, 
+#                   (1, 0, 0, 0.7), (0, 1, 0, 0.7), 
+#                   (ICoulComp['S'][0], ICoulComp['S'][1], ICoulComp['S'][2], 1))
 
         rec = tableauH(ctx, l, posZElevesH[0], posZElevesH[1], 
                      tailleZElevesH[0], 0, tailleZElevesH[1], 
@@ -679,7 +690,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
             else:
                 orient = "v"
             
-            show_text_rect(ctx, prj.GetReferentiel().phases_prj[phase][1], 
+            show_text_rect(ctx, prj.GetProjetRef().phases[phase][1], 
                            (posZDeroul[0] + ecartX/6, yh[0], 
                             wPhases, yh[1]-yh[0]), 
                            ha = 'c', orient = orient, b = 0,
@@ -697,7 +708,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
     # Durées élève entre revues (uniquement en période "terminale")
     #
 #    tps = time.time()
-    posEpreuve = prj.GetReferentiel().periode_prj[0] - 1
+    posEpreuve = prj.GetProjetRef().periode[0] - 1
     if prj.position == posEpreuve:
         y0 = posZTaches[1]
         y4 = y1+len(prj.eleves) * hRevue + 2*ecartTacheY
@@ -752,7 +763,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
         x = xEleves[i]-wEleves*3/4
         y = posZTaches[1] + tailleZTaches[1] + (i % 2)*(ecartY/2)+ecartY/2
         d = e.GetDuree()
-        taux = abs((d-prj.GetReferentiel().duree_prj)/prj.GetReferentiel().duree_prj)*100
+        taux = abs((d-prj.GetProjetRef().duree)/prj.GetProjetRef().duree)*100
         if taux < constantes.DELTA_DUREE:
             ctx.set_source_rgb(0.1,1,0.1)
         elif taux < constantes.DELTA_DUREE2:
@@ -793,9 +804,9 @@ def DrawLigneEff(ctx, x, y):
     ctx.set_dash([], 0)
 
 ######################################################################################  
-def DrawPeriodes(ctx, pos = None, periodes = [[u"Année", 5]], periode_prj = [], tailleTypeEns = 0, origine = False):
-#    print "DrawPeriodes", pos
-#    print "   ", periodes
+def DrawPeriodes(ctx, pos = None, periodes = [[u"Année", 5]], periodes_prj = [], tailleTypeEns = 0, origine = False):
+    print "DrawPeriodes", pos
+    print "   ", periodes, periodes_prj
     ctx.set_line_width (0.001)
     if origine:
         x = 0
@@ -820,71 +831,138 @@ def DrawPeriodes(ctx, pos = None, periodes = [[u"Année", 5]], periode_prj = [],
     ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                        cairo.FONT_WEIGHT_NORMAL)
     
+    # Ecart entre les cases
     dx = 0.02 * wt
+    # Hauteur des cases
     h = ht/2-2*dx
     
+    # Les rectangles à cliquer
     rect = []
-#    print "Périodes", periodes
-#    print "periode_prj", periode_prj
-#    wi = wt/len(periodes) - dx*(len(periodes)-1)
-    wi = (wt+dx)/len(periodes) - dx
-    pa = 0
-    xa = []
-    for i, (an, np) in enumerate(periodes):
+    
+    # Les différentes positions des cases
+    posc = []
+
+    # Nombre d'années
+    na = len(periodes)
+    
+    # Nombre total de périodes
+    nt = 0
+    for a in periodes:
+        nt += a[1]
         
+    # Largeur d'une case "simple"
+    w = (wt-(nt+na)*dx)/nt
+    
+#    # Largeur d'une année
+#    wi = (wt+dx)/len(periodes) - dx
+    
+    pa = 0
+    
+    # Abscisses des cases "simples"
+    xcs = []
+    
+    # Curseur "année"
+    xi = x
+    for i, (an, np) in enumerate(periodes):
+        # Largeur de l'année
+        wa = np*w + (np+1) * dx
+        
+        # Nom de l'année
         annee = an.split("_")
         ctx.set_font_size(fontPos)
-        w0, h0 = ctx.text_extents(annee[0])[2:4]
-        xi = x + wi/2 + (dx+wi)*i
+        w0 = ctx.text_extents(annee[0])[2]
+#        xi = x + wi/2 + (dx+wi)*i
         if len(annee) > 1:
             ctx.set_font_size(fontPos*0.9)
-            w1, h1 = ctx.text_extents(annee[1])[2:4]
-            show_text_rect_fix(ctx, annee[0], xi-(w0+w1)/2, y, w0, ht*2/3, fontPos, 1)
+            w1 = ctx.text_extents(annee[1])[2]
+            show_text_rect_fix(ctx, annee[0], xi+wa/2-(w0+w1)/2, y, w0, ht*2/3, fontPos, 1)
             ctx.stroke ()
-            show_text_rect_fix(ctx, annee[1], xi-(w0+w1)/2 + w0 +0.01, y, w1, ht/3, fontPos*0.9, 1, ha = 'c')
+            show_text_rect_fix(ctx, annee[1], xi+wa/2-(w0+w1)/2 + w0 +0.01, y, w1, ht/3, fontPos*0.9, 1, ha = 'c')
             ctx.stroke ()
         else:
-            show_text_rect_fix(ctx, annee[0], xi-w0/2, y, w0, ht*2/3, fontPos, 1)
+            show_text_rect_fix(ctx, annee[0], xi+wa/2-w0/2, y, w0, ht*2/3, fontPos, 1)
             ctx.stroke ()
         
-        w = (wi-dx)/np-dx
-        xi = x + (dx+wi)*i + dx
-        for p in range(np):
+        for c in range(np):
             pa += 1
-#            print pa , range(periode_prj[0], periode_prj[1]+1)
-            if len(periode_prj) != 2 or not pa in range(periode_prj[0], periode_prj[1]+1):
-                ctx.rectangle (xi, y+ht/2+dx, w, h)
-                rect.append((xi, y+ht/2+dx, w, h))
-                if pos == pa-1:
-                    ctx.set_source_rgba (AcoulPos[0], AcoulPos[1], AcoulPos[2], AcoulPos[3])
-                else:
-                    ctx.set_source_rgba (IcoulPos[0], IcoulPos[1], IcoulPos[2], IcoulPos[3])
-                ctx.fill_preserve ()
-                ctx.set_source_rgba (BcoulPos[0], BcoulPos[1], BcoulPos[2], BcoulPos[3])
-                ctx.stroke ()
-            else:
-                xa.append(xi)
-#            if p == 3:
-#                x += dx
-            xi += dx + w
+            xcs.append((xi + c*(w+dx) + dx, pos == pa-1))
+            
+        xi += np*w + (np+1)*dx
         
+    # Liste des positions qui fusionnent avec leur position précédente
+    lstGrp = []
+    for periode_prj in periodes_prj:  
+        lstGrp.extend(periode_prj[1:])
+#    print lstGrp
     
-    if len(periode_prj) == 2:
-#        print "projet"
+    for p in reversed(sorted(lstGrp)):
+        del xcs[p-1]
         
-        xi = xa[0]
+    print xcs    
+    for p, xc in enumerate(xcs):
         
-#        xi = x + (dx+wi)*(periode_prj[0]-1) + dx*len(periodes)
-        wi = (dx+w)*(periode_prj[1]-periode_prj[0]+1) - dx
-        ctx.rectangle (xi, y+ht/2+dx, wi, h)
-        rect.append((xi, y+ht/2+dx, wi, h))
-        if pos == periode_prj[0]-1:
+        if p < len(xcs)-1:
+            w = xcs[p+1][0] - xc[0] - dx
+        else:
+            w = x+wt - xc[0] - dx
+        print "   ", w
+        ctx.rectangle (xc[0], y+ht/2+dx, w, h)
+        rect.append((xc[0], y+ht/2+dx, w, h))
+        if xc[1]:
             ctx.set_source_rgba (AcoulPos[0], AcoulPos[1], AcoulPos[2], AcoulPos[3])
         else:
             ctx.set_source_rgba (IcoulPos[0], IcoulPos[1], IcoulPos[2], IcoulPos[3])
         ctx.fill_preserve ()
         ctx.set_source_rgba (BcoulPos[0], BcoulPos[1], BcoulPos[2], BcoulPos[3])
-        ctx.stroke ()
+        ctx.stroke ()    
+            
+            
+            
+        
+#        # largeur des cases
+#        w = (wi-dx)/np-dx
+#        
+        # abscisse de l'année
+#        xi = x + (dx+wi)*i + dx
+#        for p in range(np):
+#            pa += 1
+#
+#            
+##            print pa , range(periode_prj[0], periode_prj[1]+1)
+#            for periode_prj in periodes_prj:
+#                if len(periode_prj) != 2 or not pa in range(periode_prj[0], periode_prj[1]+1):
+#                    ctx.rectangle (xi, y+ht/2+dx, w, h)
+#                    rect.append((xi, y+ht/2+dx, w, h))
+#                    if pos == pa-1:
+#                        ctx.set_source_rgba (AcoulPos[0], AcoulPos[1], AcoulPos[2], AcoulPos[3])
+#                    else:
+#                        ctx.set_source_rgba (IcoulPos[0], IcoulPos[1], IcoulPos[2], IcoulPos[3])
+#                    ctx.fill_preserve ()
+#                    ctx.set_source_rgba (BcoulPos[0], BcoulPos[1], BcoulPos[2], BcoulPos[3])
+#                    ctx.stroke ()
+#                else:
+#                    xa.append(xi)
+##            if p == 3:
+##                x += dx
+#            xi += dx + w
+#        
+#    
+#    if len(periode_prj) == 2:
+##        print "projet"
+#        
+#        xi = xa[0]
+#        
+##        xi = x + (dx+wi)*(periode_prj[0]-1) + dx*len(periodes)
+#        wi = (dx+w)*(periode_prj[1]-periode_prj[0]+1) - dx
+#        ctx.rectangle (xi, y+ht/2+dx, wi, h)
+#        rect.append((xi, y+ht/2+dx, wi, h))
+#        if pos == periode_prj[0]-1:
+#            ctx.set_source_rgba (AcoulPos[0], AcoulPos[1], AcoulPos[2], AcoulPos[3])
+#        else:
+#            ctx.set_source_rgba (IcoulPos[0], IcoulPos[1], IcoulPos[2], IcoulPos[3])
+#        ctx.fill_preserve ()
+#        ctx.set_source_rgba (BcoulPos[0], BcoulPos[1], BcoulPos[2], BcoulPos[3])
+#        ctx.stroke ()
             
 #    print "fin"
     
@@ -1232,10 +1310,10 @@ def DrawLigne(ctx, x, y, gras = False):
 def regrouperDic(obj, dicIndicateurs):
 #    print "regrouperDic", dicIndicateurs
 #    print "   _dicCompetences_prj", obj.GetReferentiel()._dicCompetences_prj
-    if obj.GetReferentiel()._niveau == 3:
+    if obj.GetProjetRef()._niveau == 3:
         dic = {}
         typ = {}
-        tousIndicateurs = obj.GetReferentiel()._dicCompetences_prj
+        tousIndicateurs = obj.GetProjetRef()._dicCompetences
         for k0, v0 in tousIndicateurs.items():
             for k1, v1 in v0[1].items():
                 dic[k1] = []
@@ -1263,7 +1341,7 @@ def regrouperDic(obj, dicIndicateurs):
     else:
         typ = {}
         for k in dicIndicateurs.keys():
-            typ[k] = [p.poids for p in obj.GetReferentiel().getIndicateur(k)]
+            typ[k] = [p.poids for p in obj.GetProjetRef().getIndicateur(k)]
 #        print "  >>>", dicIndicateurs, typ
         return dicIndicateurs, typ
      
@@ -1272,9 +1350,9 @@ def regrouperLst(obj, lstCompetences):
 #    print "regrouperLst", lstCompetences
 #    print "   _dicCompetences_prj", obj.GetReferentiel()._dicCompetences_prj
     lstCompetences.sort()
-    if obj.GetReferentiel()._niveau == 3:
+    if obj.GetProjetRef()._niveau == 3:
         dic = []
-        tousIndicateurs = obj.GetReferentiel()._dicCompetences_prj
+        tousIndicateurs = obj.GetProjetRef()._dicCompetences
         for k0, v0 in tousIndicateurs.items():
             for k1, v1 in v0[1].items():
                 lk2 = v1[1].keys()
@@ -1371,9 +1449,9 @@ def DrawBoutonCompetence(ctx, objet, dicIndic, y, h = None):
 #        ctx.arc(x, y, r, 0, 2*pi)
 #        if True:#estCompetenceRevue(objet.parent.classe.typeEnseignement, s):
 ##        if len(constantes.dicCompetences_prj_simple[tache.parent.classe.typeEnseignement][s]) > 2:
-#            ctx.set_source_rgba (ICoulCompS[0],ICoulCompS[1],ICoulCompS[2],1.0)
+#            ctx.set_source_rgba (ICoulComp['S'][0],ICoulComp['S'][1],ICoulComp['S'][2],1.0)
 #        else:
-#            ctx.set_source_rgba (ICoulCompR[0],ICoulCompR[1],ICoulCompR[2],1.0)
+#            ctx.set_source_rgba (ICoulComp['C'][0],ICoulComp['C'][1],ICoulComp['C'][2],1.0)
 #        ctx.fill_preserve ()
 #        ctx.set_source_rgba (0,0,0,1)
 #        ctx.stroke ()
@@ -1393,13 +1471,14 @@ def DrawBoutonCompetence(ctx, objet, dicIndic, y, h = None):
         dx = wColComp/len(indic)
         for a, i in enumerate(indic):
             if i: # Rose ou bleu
-                if dictype[s][a][1] != 0:#objet.projet.classe.GetReferentiel().getTypeIndicateur(s+'_'+str(a+1)) == "C": # Conduite     #dicIndicateurs_prj[s][a][1]:
-                    c = ICoulCompR
+#                print dictype[s][a]
+                part = dictype[s][a].keys()[0]
+                if part == 'S':
+#                if dictype[s][a][1] != 0:   #objet.projet.classe.GetReferentiel().getTypeIndicateur(s+'_'+str(a+1)) == "C": # Conduite     #dicIndicateurs_prj[s][a][1]:
                     d = -1
                 else:
-                    c = ICoulCompS
                     d = 1
-                ctx.set_source_rgba (c[0], c[1], c[2], 1.0)
+                ctx.set_source_rgba (ICoulComp[part][0], ICoulComp[part][1], ICoulComp[part][2], 1.0)
             else: # Rien => Transparent
                 d = 0
                 ctx.set_source_rgba (1, 1, 1, 0)
@@ -1428,9 +1507,9 @@ def DrawBoutonCompetence(ctx, objet, dicIndic, y, h = None):
 #        ctx.arc(x, y, r, 0, 2*pi)
 #        if True:#estCompetenceRevue(objet.parent.classe.typeEnseignement, s):
 ##        if len(constantes.dicCompetences_prj_simple[tache.parent.classe.typeEnseignement][s]) > 2:
-#            ctx.set_source_rgba (ICoulCompS[0],ICoulCompS[1],ICoulCompS[2],1.0)
+#            ctx.set_source_rgba (ICoulComp['S'][0],ICoulComp['S'][1],ICoulComp['S'][2],1.0)
 #        else:
-#            ctx.set_source_rgba (ICoulCompR[0],ICoulCompR[1],ICoulCompR[2],1.0)
+#            ctx.set_source_rgba (ICoulComp['C'][0],ICoulComp['C'][1],ICoulComp['C'][2],1.0)
 #        ctx.fill_preserve ()
 #        ctx.set_source_rgba (0,0,0,1)
 #        ctx.stroke ()

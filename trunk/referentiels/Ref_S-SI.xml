@@ -1,4 +1,4 @@
-<Referentiel B_CI_BO="False" B_CI_cible="False" B_compImposees="False" B_objSavoirs_Math="False" B_objSavoirs_Phys="False" B_preSavoirs_Math="True" B_preSavoirs_Phys="True" B_projet="True" I_duree_prj="70" S_Code="SSI" S_Famille="SSI" S_FichierLogo="" S_abrevCI="CI" S_ficheValid_prj="" S_nomCI="Centre(s) d'Int&#233;r&#234;t" S_nomCompetences="Comp&#233;tences" S_nomFonctions="Fonctions" S_nomIndicateurs="Indicateurs de performance" S_nomSavoirs="Connaissances &amp; Capacit&#233;s" S_nomSavoirs_Math="Math&#233;matiques" S_nomSavoirs_Phys="Physique - Chimie" S_nomTaches="T&#226;ches" S_surnomSavoirs="">
+<Referentiel B_CI_BO="False" B_CI_cible="False" B_objSavoirs_Math="False" B_objSavoirs_Phys="False" B_preSavoirs_Math="True" B_preSavoirs_Phys="True" S_Code="SSI" S_Famille="SSI" S_FichierLogo="" S_abrevCI="CI" S_nomCI="Centre(s) d'Int&#233;r&#234;t" S_nomCompetences="Comp&#233;tences" S_nomFonctions="Fonctions" S_nomIndicateurs="Indicateurs de performance" S_nomSavoirs="Connaissances &amp; Capacit&#233;s" S_nomSavoirs_Math="Math&#233;matiques" S_nomSavoirs_Phys="Physique - Chimie" S_nomTaches="T&#226;ches" S_surnomSavoirs="">
   <l_BO_URL>
     <l_00 S_00="Programme" S_01="http://www.education.gouv.fr/cid53329/mene1019619a.html" />
     <l_01 S_00="Epreuves" S_01="http://www.education.gouv.fr/pid25535/bulletin_officiel.html?cid_bo=82979" />
@@ -7,77 +7,13 @@
   <l_BO_dossier S_00="SSI" />
   <l_CentresInterets S_00="Analyser un syst&#232;me fonctionnellement et structurellement" S_01="Exp&#233;rimenter et mesurer sur un syst&#232;me r&#233;el pour &#233;valuer ses performances" S_02="Analyser des constituants d&#8217;un syst&#232;me r&#233;el d&#8217;un point de vue structurel et comportemental" S_03="Concevoir et utiliser un mod&#232;le relatif &#224; un syst&#232;me en vue d&#8217;&#233;valuer les performances de la cha&#238;ne d&#8217;information" S_04="Concevoir et utiliser un mod&#232;le relatif &#224; un syst&#232;me en vue d&#8217;&#233;valuer les performances de la cha&#238;ne d&#8217;&#233;nergie&quot;" />
   <l_Enseignement S_00="S-SI" S_01="Bac S - Sciences de l'ing&#233;nieur" S_02="S-SI" />
-  <d_aColNon B_R="True" B_S="False" />
+  <d_aColNon B_C="True" />
   <d_activites>
     <l_ED S_00="Etude de dossier" S_01="Activit&#233; d'&#233;tude de dossier" />
     <l_P S_00="Projet" S_01="Activit&#233; de projet" />
     <l_AP S_00="Activit&#233; pratique" S_01="Activit&#233; pratique" />
   </d_activites>
-  <d_attributs_prj>
-    <l_SRC S_00="" S_01="" S_02="" />
-    <l_PAR S_00="" S_01="" S_02="" />
-    <l_DEC S_00="D&#233;coupage du projet" S_01="" S_02="" />
-    <l_OBJ S_00="Production finale attendue" S_01="Indiquer :-- - documents de formalisation des solutions propos&#233;es ;-- - sous-ensemble fonctionnel d&#8217;un prototype, &#233;l&#233;ments d&#8217;une maquette r&#233;elle ou virtuelle ;-- - supports de communication." S_02="" />
-    <l_TIT S_00="Intitul&#233; du projet" S_01="Intitul&#233; du projet" S_02="" />
-    <l_SYN S_00="" S_01="" S_02="" />
-    <l_PB S_00="Probl&#233;matique - &#201;nonc&#233; g&#233;n&#233;ral du besoin" S_01="Indiquer :-- - description du contexte dans lequel l&#8217;objet du projet va &#234;tre int&#233;gr&#233; ;-- - fonctionnalit&#233;s de cet objet ;-- - caract&#233;ristiques fonctionnelles et techniques." S_02="" />
-    <l_ORI S_00="Origine" S_01="Partenariat, th&#233;matique, concours&#8230;" S_02="" />
-    <l_CCF S_00="Contraintes impos&#233;es" S_01="Indiquer :-- - co&#251;t maximal ;-- - nature d&#8217;une ou des solutions techniques ou de familles de mat&#233;riels, de constituants ou de composants ;-- - environnement." S_02="" />
-    <l_TYP S_00="" S_01="" S_02="" />
-    <l_PRX S_00="" S_01="" S_02="" />
-  </d_attributs_prj>
-  <d_cellulesInfo_prj>
-    <l_Pre>
-      <l_00 S_00="R" S_01="Identification" S_03="">
-        <l_02 I_00="10" I_01="2" I_02="0" />
-      </l_00>
-      <l_01 S_00="S" S_01="Identification" S_03="">
-        <l_02 I_00="10" I_01="2" I_02="0" />
-      </l_01>
-    </l_Pre>
-    <l_Nom>
-      <l_00 S_00="R" S_01="Identification" S_03="">
-        <l_02 I_00="9" I_01="2" I_02="0" />
-      </l_00>
-      <l_01 S_00="S" S_01="Identification" S_03="">
-        <l_02 I_00="9" I_01="2" I_02="0" />
-      </l_01>
-    </l_Nom>
-    <l_NON>
-      <l_00 S_00="R" S_01="Conduite de projet" S_03="">
-        <l_02 I_00="5" I_01="8" I_02="0" />
-      </l_00>
-    </l_NON>
-    <l_Tit>
-      <l_00 S_00="R" S_01="Identification" S_03="">
-        <l_02 I_00="12" I_01="2" I_02="0" />
-      </l_00>
-      <l_01 S_00="S" S_01="Identification" S_03="">
-        <l_02 I_00="12" I_01="2" I_02="0" />
-      </l_01>
-    </l_Tit>
-    <l_Des>
-      <l_00 S_00="R" S_01="Identification" S_03="">
-        <l_02 I_00="14" I_01="1" I_02="0" />
-      </l_00>
-      <l_01 S_00="S" S_01="Identification" S_03="">
-        <l_02 I_00="14" I_01="1" I_02="0" />
-      </l_01>
-    </l_Des>
-    <l_Etab>
-      <l_00 S_00="R" S_01="Identification" S_03="">
-        <l_02 I_00="7" I_01="2" I_02="0" />
-      </l_00>
-      <l_01 S_00="S" S_01="Identification" S_03="">
-        <l_02 I_00="7" I_01="2" I_02="0" />
-      </l_01>
-    </l_Etab>
-    <l_Prof>
-      <l_00 S_00="R" S_01="Identification" S_03="">
-        <l_02 I_00="18" I_01="2" I_02="1" />
-      </l_00>
-    </l_Prof>
-  </d_cellulesInfo_prj>
+  <d_compImposees B_C="False" B_S="False" />
   <d_demarcheSeance>
     <l_ED S_00="I" S_01="R" />
     <l_P S_00="I" S_01="R" S_02="P" />
@@ -95,25 +31,29 @@
           <d_01>
             <l_A1.4 S_00="traduire un besoin fonctionnel en probl&#233;matique technique">
               <l_01>
-                <Indicateur_00 I_ligne="0" I_revue="0" S_intitule="Le probl&#232;me technique est bien d&#233;crit">
-                  <l_poids F_02="20.0" I_00="0" I_01="0" />
+                <Indicateur_00 S_intitule="Le probl&#232;me technique est bien d&#233;crit">
+                  <d_ligne I_S="0" />
+                  <d_poids F_S="20.0" />
+                  <d_revue I_S="0" />
                 </Indicateur_00>
               </l_01>
             </l_A1.4>
             <l_A1.1 S_00="d&#233;finir le besoin">
               <l_01>
-                <Indicateur_00 I_ligne="0" I_revue="0" S_intitule="Le besoin et la fonction globale sont bien d&#233;finis">
-                  <l_poids F_02="20.0" I_00="0" I_01="0" />
+                <Indicateur_00 S_intitule="Le besoin et la fonction globale sont bien d&#233;finis">
+                  <d_ligne I_S="0" />
+                  <d_poids F_S="20.0" />
+                  <d_revue I_S="0" />
                 </Indicateur_00>
               </l_01>
             </l_A1.1>
             <l_A1.2 S_00="d&#233;finir les fonctions de service">
               <l_01 />
-              <l_02 I_00="0" I_01="0" I_02="0" />
+              <d_02 />
             </l_A1.2>
             <l_A1.3 S_00="identifier les contraintes">
               <l_01 />
-              <l_02 I_00="0" I_01="0" I_02="0" />
+              <d_02 />
             </l_A1.3>
           </d_01>
         </l_A1>
@@ -121,22 +61,28 @@
           <d_01>
             <l_A3.2 S_00="comparer les r&#233;sultats exp&#233;rimentaux avec les crit&#232;res du cahier des charges et interpr&#233;ter les &#233;carts">
               <l_01>
-                <Indicateur_00 I_ligne="0" I_revue="0" S_intitule="Les &#233;carts constat&#233;s sont expliqu&#233;s">
-                  <l_poids F_02="20.0" I_00="0" I_01="0" />
+                <Indicateur_00 S_intitule="Les &#233;carts constat&#233;s sont expliqu&#233;s">
+                  <d_ligne I_S="0" />
+                  <d_poids F_S="20.0" />
+                  <d_revue I_S="0" />
                 </Indicateur_00>
               </l_01>
             </l_A3.2>
             <l_A3.3 S_00="comparer les r&#233;sultats simul&#233;s avec les crit&#232;res du cahier des charges et interpr&#233;ter les &#233;carts">
               <l_01>
-                <Indicateur_00 I_ligne="0" I_revue="0" S_intitule="Les &#233;carts constat&#233;s sont expliqu&#233;s">
-                  <l_poids F_02="20.0" I_00="0" I_01="0" />
+                <Indicateur_00 S_intitule="Les &#233;carts constat&#233;s sont expliqu&#233;s">
+                  <d_ligne I_S="0" />
+                  <d_poids F_S="20.0" />
+                  <d_revue I_S="0" />
                 </Indicateur_00>
               </l_01>
             </l_A3.3>
             <l_A3.1 S_00="comparer les r&#233;sultats exp&#233;rimentaux avec les r&#233;sultats simul&#233;s et interpr&#233;ter les &#233;carts">
               <l_01>
-                <Indicateur_00 I_ligne="0" I_revue="0" S_intitule="Les &#233;carts constat&#233;s sont expliqu&#233;s">
-                  <l_poids F_02="20.0" I_00="0" I_01="0" />
+                <Indicateur_00 S_intitule="Les &#233;carts constat&#233;s sont expliqu&#233;s">
+                  <d_ligne I_S="0" />
+                  <d_poids F_S="20.0" />
+                  <d_revue I_S="0" />
                 </Indicateur_00>
               </l_01>
             </l_A3.1>
@@ -146,28 +92,28 @@
           <d_01>
             <l_A2.3 S_00="d&#233;crire les liaisons entre les blocs fonctionnels">
               <l_01 />
-              <l_02 I_00="0" I_01="0" I_02="0" />
+              <d_02 />
             </l_A2.3>
             <l_A2.2 S_00="identifier les &#233;l&#233;ments transform&#233;s et les flux">
               <l_01 />
-              <l_02 I_00="0" I_01="0" I_02="0" />
+              <d_02 />
             </l_A2.2>
             <l_A2.1 S_00="identifier et ordonner les fonctions techniques qui r&#233;alisent les fonctions de services et respectent les contraintes">
               <l_01 />
-              <l_02 I_00="0" I_01="0" I_02="0" />
+              <d_02 />
             </l_A2.1>
             <l_A2.5 S_00="identifier les mat&#233;riaux des constituants et leurs propri&#233;t&#233;s en relation avec les fonctions et les contraintes">
               <l_01 />
-              <l_02 I_00="0" I_01="0" I_02="0" />
+              <d_02 />
             </l_A2.5>
             <l_A2.4 S_00="identifier l&#8217;organisation structurelle">
               <l_01 />
-              <l_02 I_00="0" I_01="0" I_02="0" />
+              <d_02 />
             </l_A2.4>
           </d_01>
         </l_A2>
       </d_01>
-      <l_02 I_00="0" I_01="0" I_02="30" />
+      <d_02 I_S="30" />
     </l_A>
     <l_C S_00="Exp&#233;rimenter">
       <d_01>
@@ -175,27 +121,39 @@
           <d_01>
             <l_C2.1 S_00="conduire les essais en respectant les consignes de s&#233;curit&#233; &#224; partir d&#8217;un protocole fourni">
               <l_01>
-                <Indicateur_00 I_ligne="17" I_revue="0" S_intitule="Le syst&#232;me est correctement mis en &#339;uvre">
-                  <l_poids F_01="12.5" F_02="0.0" I_00="0" />
+                <Indicateur_00 S_intitule="Le syst&#232;me est correctement mis en &#339;uvre">
+                  <d_ligne I_C="17" />
+                  <d_poids F_C="12.5" />
+                  <d_revue I_C="0" />
                 </Indicateur_00>
-                <Indicateur_01 I_ligne="18" I_revue="0" S_intitule="Les capteurs et les appareils de mesure sont correctement mis en &#339;uvre">
-                  <l_poids F_01="12.5" F_02="0.0" I_00="0" />
+                <Indicateur_01 S_intitule="Les capteurs et les appareils de mesure sont correctement mis en &#339;uvre">
+                  <d_ligne I_C="18" />
+                  <d_poids F_C="12.5" />
+                  <d_revue I_C="0" />
                 </Indicateur_01>
-                <Indicateur_02 I_ligne="19" I_revue="0" S_intitule="Le protocole d'essai est respect&#233; ">
-                  <l_poids F_01="12.5" F_02="0.0" I_00="0" />
+                <Indicateur_02 S_intitule="Le protocole d'essai est respect&#233; ">
+                  <d_ligne I_C="19" />
+                  <d_poids F_C="12.5" />
+                  <d_revue I_C="0" />
                 </Indicateur_02>
-                <Indicateur_03 I_ligne="20" I_revue="0" S_intitule="Les r&#232;gles de s&#233;curit&#233; sont connues et respect&#233;es">
-                  <l_poids F_01="12.5" F_02="0.0" I_00="0" />
+                <Indicateur_03 S_intitule="Les r&#232;gles de s&#233;curit&#233; sont connues et respect&#233;es">
+                  <d_ligne I_C="20" />
+                  <d_poids F_C="12.5" />
+                  <d_revue I_C="0" />
                 </Indicateur_03>
               </l_01>
             </l_C2.1>
             <l_C2.2 S_00="traiter les donn&#233;es mesur&#233;es en vue d&#8217;analyser les &#233;carts">
               <l_01>
-                <Indicateur_00 I_ligne="21" I_revue="0" S_intitule="Les m&#233;thodes et outils de traitement sont coh&#233;rents avec le probl&#232;me pos&#233;">
-                  <l_poids F_01="12.5" F_02="0.0" I_00="0" />
+                <Indicateur_00 S_intitule="Les m&#233;thodes et outils de traitement sont coh&#233;rents avec le probl&#232;me pos&#233;">
+                  <d_ligne I_C="21" />
+                  <d_poids F_C="12.5" />
+                  <d_revue I_C="0" />
                 </Indicateur_00>
-                <Indicateur_01 I_ligne="0" I_revue="0" S_intitule="Les r&#233;sultats exp&#233;rimentaux sont trait&#233;s et pr&#233;sent&#233;s clairement">
-                  <l_poids F_01="0.0" F_02="35.0" I_00="0" />
+                <Indicateur_01 S_intitule="Les r&#233;sultats exp&#233;rimentaux sont trait&#233;s et pr&#233;sent&#233;s clairement">
+                  <d_ligne I_S="0" />
+                  <d_poids F_S="35.0" />
+                  <d_revue I_S="0" />
                 </Indicateur_01>
               </l_01>
             </l_C2.2>
@@ -205,39 +163,49 @@
           <d_01>
             <l_C1.4 S_00="justifier le choix des essais r&#233;alis&#233;s">
               <l_01>
-                <Indicateur_00 I_ligne="0" I_revue="0" S_intitule="Un protocole exp&#233;rimental adapt&#233; est d&#233;crit">
-                  <l_poids F_01="0.0" F_02="35.0" I_00="0" />
+                <Indicateur_00 S_intitule="Un protocole exp&#233;rimental adapt&#233; est d&#233;crit">
+                  <d_ligne I_S="0" />
+                  <d_poids F_S="35.0" />
+                  <d_revue I_S="0" />
                 </Indicateur_00>
               </l_01>
             </l_C1.4>
             <l_C1.2 S_00="d&#233;crire une cha&#238;ne d&#8217;acquisition">
               <l_01>
-                <Indicateur_00 I_ligne="15" I_revue="0" S_intitule="Les &#233;l&#233;ments de la cha&#238;ne d'acquisition sont correctement identifi&#233;s">
-                  <l_poids F_01="12.5" F_02="0.0" I_00="0" />
+                <Indicateur_00 S_intitule="Les &#233;l&#233;ments de la cha&#238;ne d'acquisition sont correctement identifi&#233;s">
+                  <d_ligne I_C="15" />
+                  <d_poids F_C="12.5" />
+                  <d_revue I_C="0" />
                 </Indicateur_00>
-                <Indicateur_01 I_ligne="16" I_revue="0" S_intitule="Les choix et r&#233;glages des capteurs et appareils de mesure sont correctement explicit&#233;s">
-                  <l_poids F_01="12.5" F_02="0.0" I_00="0" />
+                <Indicateur_01 S_intitule="Les choix et r&#233;glages des capteurs et appareils de mesure sont correctement explicit&#233;s">
+                  <d_ligne I_C="16" />
+                  <d_poids F_C="12.5" />
+                  <d_revue I_C="0" />
                 </Indicateur_01>
               </l_01>
             </l_C1.2>
             <l_C1.3 S_00="identifier le comportement des composants">
               <l_01>
-                <Indicateur_00 I_ligne="0" I_revue="0" S_intitule="Le comportement est pr&#233;cis&#233;ment d&#233;crit">
-                  <l_poids F_01="0.0" F_02="30.0" I_00="0" />
+                <Indicateur_00 S_intitule="Le comportement est pr&#233;cis&#233;ment d&#233;crit">
+                  <d_ligne I_S="0" />
+                  <d_poids F_S="30.0" />
+                  <d_revue I_S="0" />
                 </Indicateur_00>
               </l_01>
             </l_C1.3>
             <l_C1.1 S_00="identifier les grandeurs physiques &#224; mesurer">
               <l_01>
-                <Indicateur_00 I_ligne="14" I_revue="0" S_intitule="Les grandeurs &#224; mesurer sont bien identifi&#233;es, leur nature et caract&#233;ristiques bien d&#233;finies">
-                  <l_poids F_01="12.5" F_02="0.0" I_00="0" />
+                <Indicateur_00 S_intitule="Les grandeurs &#224; mesurer sont bien identifi&#233;es, leur nature et caract&#233;ristiques bien d&#233;finies">
+                  <d_ligne I_C="14" />
+                  <d_poids F_C="12.5" />
+                  <d_revue I_C="0" />
                 </Indicateur_00>
               </l_01>
             </l_C1.1>
           </d_01>
         </l_C1>
       </d_01>
-      <l_02 I_00="0" I_01="50" I_02="30" />
+      <d_02 I_C="50" I_S="30" />
     </l_C>
     <l_B S_00="Mod&#233;liser">
       <d_01>
@@ -245,35 +213,47 @@
           <d_01>
             <l_B4.4 S_00="valider un mod&#232;le optimis&#233; fourni">
               <l_01>
-                <Indicateur_00 I_ligne="11" I_revue="0" S_intitule="Les r&#233;sultats obtenus, en amplitude et variation, sont conformes aux attendus du cahier des charges">
-                  <l_poids F_01="12.5" I_00="0" I_02="0" />
+                <Indicateur_00 S_intitule="Les r&#233;sultats obtenus, en amplitude et variation, sont conformes aux attendus du cahier des charges">
+                  <d_ligne I_C="11" />
+                  <d_poids F_C="12.5" />
+                  <d_revue I_C="0" />
                 </Indicateur_00>
-                <Indicateur_01 I_ligne="12" I_revue="0" S_intitule="Les r&#233;sultats obtenus, en amplitude et variation, sont conformes aux r&#233;sultats exp&#233;rimentaux">
-                  <l_poids F_01="12.5" I_00="0" I_02="0" />
+                <Indicateur_01 S_intitule="Les r&#233;sultats obtenus, en amplitude et variation, sont conformes aux r&#233;sultats exp&#233;rimentaux">
+                  <d_ligne I_C="12" />
+                  <d_poids F_C="12.5" />
+                  <d_revue I_C="0" />
                 </Indicateur_01>
               </l_01>
             </l_B4.4>
             <l_B4.1 S_00="interpr&#233;ter les r&#233;sultats obtenus">
               <l_01>
-                <Indicateur_00 I_ligne="7" I_revue="0" S_intitule="Les r&#233;sultats obtenus sont bien interpr&#233;t&#233;s, en amplitude et variation, de fa&#231;on conforme aux lois et principes d'&#233;volution des grandeurs physiques">
-                  <l_poids F_01="12.5" I_00="0" I_02="0" />
+                <Indicateur_00 S_intitule="Les r&#233;sultats obtenus sont bien interpr&#233;t&#233;s, en amplitude et variation, de fa&#231;on conforme aux lois et principes d'&#233;volution des grandeurs physiques">
+                  <d_ligne I_C="7" />
+                  <d_poids F_C="12.5" />
+                  <d_revue I_C="0" />
                 </Indicateur_00>
               </l_01>
             </l_B4.1>
             <l_B4.2 S_00="pr&#233;ciser les limites de validit&#233; du mod&#232;le utilis&#233;">
               <l_01>
-                <Indicateur_00 I_ligne="8" I_revue="0" S_intitule="Les principales limites sont explicit&#233;es">
-                  <l_poids F_01="12.5" I_00="0" I_02="0" />
+                <Indicateur_00 S_intitule="Les principales limites sont explicit&#233;es">
+                  <d_ligne I_C="8" />
+                  <d_poids F_C="12.5" />
+                  <d_revue I_C="0" />
                 </Indicateur_00>
               </l_01>
             </l_B4.2>
             <l_B4.3 S_00="modifier les param&#232;tres du mod&#232;le pour r&#233;pondre au cahier des charges ou aux r&#233;sultats exp&#233;rimentaux">
               <l_01>
-                <Indicateur_00 I_ligne="9" I_revue="0" S_intitule="Les param&#232;tres modifi&#233;s sont pertinents et font &#233;voluer  les r&#233;sultats simul&#233;s vers ceux attendus au cahier des charges">
-                  <l_poids F_01="12.5" I_00="0" I_02="0" />
+                <Indicateur_00 S_intitule="Les param&#232;tres modifi&#233;s sont pertinents et font &#233;voluer  les r&#233;sultats simul&#233;s vers ceux attendus au cahier des charges">
+                  <d_ligne I_C="9" />
+                  <d_poids F_C="12.5" />
+                  <d_revue I_C="0" />
                 </Indicateur_00>
-                <Indicateur_01 I_ligne="10" I_revue="0" S_intitule="Les param&#232;tres modifi&#233;s sont pertinents et font &#233;voluer les r&#233;sultats simul&#233;s vers les r&#233;sultats exp&#233;rimentaux">
-                  <l_poids F_01="12.5" I_00="0" I_02="0" />
+                <Indicateur_01 S_intitule="Les param&#232;tres modifi&#233;s sont pertinents et font &#233;voluer les r&#233;sultats simul&#233;s vers les r&#233;sultats exp&#233;rimentaux">
+                  <d_ligne I_C="10" />
+                  <d_poids F_C="12.5" />
+                  <d_revue I_C="0" />
                 </Indicateur_01>
               </l_01>
             </l_B4.3>
@@ -283,11 +263,11 @@
           <d_01>
             <l_B1.1 S_00="d&#233;finir, justifier la fronti&#232;re de tout ou partie d&#8217;un syst&#232;me et r&#233;pertorier les interactions">
               <l_01 />
-              <l_02 I_00="0" I_01="0" I_02="0" />
+              <d_02 />
             </l_B1.1>
             <l_B1.2 S_00="choisir les grandeurs et les param&#232;tres influents en vue de les mod&#233;liser">
               <l_01 />
-              <l_02 I_00="0" I_01="0" I_02="0" />
+              <d_02 />
             </l_B1.2>
           </d_01>
         </l_B1>
@@ -295,11 +275,11 @@
           <d_01>
             <l_B2.2 S_00="pr&#233;ciser ou justifier les limites de validit&#233; du mod&#232;le envisag&#233;">
               <l_01 />
-              <l_02 I_00="0" I_01="0" I_02="0" />
+              <d_02 />
             </l_B2.2>
             <l_B2.1 S_00="associer un mod&#232;le &#224; un syst&#232;me ou &#224; son comportement">
               <l_01 />
-              <l_02 I_00="0" I_01="0" I_02="0" />
+              <d_02 />
             </l_B2.1>
           </d_01>
         </l_B2>
@@ -307,22 +287,26 @@
           <d_01>
             <l_B3.2 S_00="simuler le fonctionnement de tout ou partie d&#8217;un syst&#232;me &#224; l&#8217;aide d&#8217;un mod&#232;le fourni">
               <l_01>
-                <Indicateur_00 I_ligne="5" I_revue="0" S_intitule="Les param&#232;tres de simulation sont adapt&#233;s aux grandeurs simul&#233;es">
-                  <l_poids F_01="12.5" I_00="0" I_02="0" />
+                <Indicateur_00 S_intitule="Les param&#232;tres de simulation sont adapt&#233;s aux grandeurs simul&#233;es">
+                  <d_ligne I_C="5" />
+                  <d_poids F_C="12.5" />
+                  <d_revue I_C="0" />
                 </Indicateur_00>
-                <Indicateur_01 I_ligne="6" I_revue="0" S_intitule="Les plages de simulation retenues sont correctement d&#233;finies">
-                  <l_poids F_01="12.5" I_00="0" I_02="0" />
+                <Indicateur_01 S_intitule="Les plages de simulation retenues sont correctement d&#233;finies">
+                  <d_ligne I_C="6" />
+                  <d_poids F_C="12.5" />
+                  <d_revue I_C="0" />
                 </Indicateur_01>
               </l_01>
             </l_B3.2>
             <l_B3.1 S_00="choisir et mettre en oeuvre une m&#233;thode de r&#233;solution">
               <l_01 />
-              <l_02 I_00="0" I_01="0" I_02="0" />
+              <d_02 />
             </l_B3.1>
           </d_01>
         </l_B3>
       </d_01>
-      <l_02 I_00="0" I_01="40" I_02="0" />
+      <d_02 I_C="40" />
     </l_B>
     <l_D S_00="Communiquer">
       <d_01>
@@ -330,22 +314,28 @@
           <d_01>
             <l_D2.1 S_00="choisir un support de communication et un m&#233;dia adapt&#233;, argumenter">
               <l_01>
-                <Indicateur_00 I_ligne="0" I_revue="0" S_intitule="Le support est bien choisi et adapt&#233; &#224; l'objectif de pr&#233;sentation">
-                  <l_poids F_01="0.0" F_02="20.0" I_00="0" />
+                <Indicateur_00 S_intitule="Le support est bien choisi et adapt&#233; &#224; l'objectif de pr&#233;sentation">
+                  <d_ligne I_S="0" />
+                  <d_poids F_S="20.0" />
+                  <d_revue I_S="0" />
                 </Indicateur_00>
               </l_01>
             </l_D2.1>
             <l_D2.2 S_00="produire un support de communication">
               <l_01>
-                <Indicateur_00 I_ligne="0" I_revue="0" S_intitule="Un document multim&#233;dia est bien r&#233;alis&#233; et sc&#233;naris&#233;">
-                  <l_poids F_01="0.0" F_02="30.0" I_00="0" />
+                <Indicateur_00 S_intitule="Un document multim&#233;dia est bien r&#233;alis&#233; et sc&#233;naris&#233;">
+                  <d_ligne I_S="0" />
+                  <d_poids F_S="30.0" />
+                  <d_revue I_S="0" />
                 </Indicateur_00>
               </l_01>
             </l_D2.2>
             <l_D2.3 S_00="adapter sa strat&#233;gie de communication au contexte">
               <l_01>
-                <Indicateur_00 I_ligne="0" I_revue="0" S_intitule="La production respecte le cahier des charges (&#233;crit/oral, texte/vid&#233;o, dur&#233;e, public vis&#233;, &#8230;)">
-                  <l_poids F_01="0.0" F_02="30.0" I_00="0" />
+                <Indicateur_00 S_intitule="La production respecte le cahier des charges (&#233;crit/oral, texte/vid&#233;o, dur&#233;e, public vis&#233;, &#8230;)">
+                  <d_ligne I_S="0" />
+                  <d_poids F_S="30.0" />
+                  <d_revue I_S="0" />
                 </Indicateur_00>
               </l_01>
             </l_D2.3>
@@ -355,31 +345,41 @@
           <d_01>
             <l_D1.2 S_00="analyser, choisir et classer des informations">
               <l_01>
-                <Indicateur_00 I_ligne="25" I_revue="0" S_intitule="Les informations sont trait&#233;es selon des crit&#232;res pertinents">
-                  <l_poids F_01="25.0" F_02="0.0" I_00="0" />
+                <Indicateur_00 S_intitule="Les informations sont trait&#233;es selon des crit&#232;res pertinents">
+                  <d_ligne I_C="25" />
+                  <d_poids F_C="25.0" />
+                  <d_revue I_C="0" />
                 </Indicateur_00>
-                <Indicateur_01 I_ligne="26" I_revue="0" S_intitule="Les informations sont v&#233;rifi&#233;es et mises &#224; jour">
-                  <l_poids F_01="25.0" F_02="0.0" I_00="0" />
+                <Indicateur_01 S_intitule="Les informations sont v&#233;rifi&#233;es et mises &#224; jour">
+                  <d_ligne I_C="26" />
+                  <d_poids F_C="25.0" />
+                  <d_revue I_C="0" />
                 </Indicateur_01>
-                <Indicateur_02 I_ligne="0" I_revue="0" S_intitule="Les informations pr&#233;sent&#233;es sont bien choisies">
-                  <l_poids F_01="0.0" F_02="20.0" I_00="0" />
+                <Indicateur_02 S_intitule="Les informations pr&#233;sent&#233;es sont bien choisies">
+                  <d_ligne I_S="0" />
+                  <d_poids F_S="20.0" />
+                  <d_revue I_S="0" />
                 </Indicateur_02>
               </l_01>
             </l_D1.2>
             <l_D1.1 S_00="rechercher des informations">
               <l_01>
-                <Indicateur_00 I_ligne="23" I_revue="0" S_intitule="Les outils de recherche documentaire sont bien choisis et ma&#238;tris&#233;s. ">
-                  <l_poids F_01="25.0" F_02="0.0" I_00="0" />
+                <Indicateur_00 S_intitule="Les outils de recherche documentaire sont bien choisis et ma&#238;tris&#233;s. ">
+                  <d_ligne I_C="23" />
+                  <d_poids F_C="25.0" />
+                  <d_revue I_C="0" />
                 </Indicateur_00>
-                <Indicateur_01 I_ligne="24" I_revue="0" S_intitule="Une synth&#232;se des informations collect&#233;es est correctement r&#233;alis&#233;e">
-                  <l_poids F_01="25.0" F_02="0.0" I_00="0" />
+                <Indicateur_01 S_intitule="Une synth&#232;se des informations collect&#233;es est correctement r&#233;alis&#233;e">
+                  <d_ligne I_C="24" />
+                  <d_poids F_C="25.0" />
+                  <d_revue I_C="0" />
                 </Indicateur_01>
               </l_01>
             </l_D1.1>
           </d_01>
         </l_D1>
       </d_01>
-      <l_02 I_00="0" I_01="10" I_02="40" />
+      <d_02 I_C="10" I_S="40" />
     </l_D>
   </d_dicCompetences>
   <d_dicFonctions />
@@ -895,38 +895,121 @@
     <l_SA S_00="C" S_01="G" />
     <l_TD S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" />
   </d_effectifsSeance>
-  <d_grilles_prj>
-    <l_S S_00="Grille-pr&#233;sentation du projet-S-SI.xlsx" S_01="I" />
-    <l_R S_00="Grille-conduite de projet-S-SI.xlsx" S_01="I" />
-  </d_grilles_prj>
-  <l_listPhasesEval_prj S_00="Rev" S_01="R1" S_02="R2" S_03="R3" S_04="S" />
-  <l_listPhases_prj S_00="Ana" S_01="Rea" S_02="XXX" S_03="Rev" S_04="R1" S_05="R2" S_06="R3" S_07="S" />
   <l_listeDemarches S_00="I" S_01="R" S_02="P" />
   <l_listeEffectifs S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" />
   <l_listeTypeActivite S_00="ED" S_01="AP" S_02="P" />
   <l_listeTypeSeance S_00="ED" S_01="AP" S_02="P" S_03="C" S_04="TD" S_05="SA" S_06="SS" S_07="E" S_08="R" S_09="S" />
-  <d_nomParties_prj S_R="Conduite" S_S="Pr&#233;sentation" />
   <d_options />
-  <l_periode_prj I_00="7" I_01="10" />
   <l_periodes>
     <l_00 I_01="5" S_00="1_&#232;re" />
     <l_01 I_01="5" S_00="T_ale" />
   </l_periodes>
-  <d_phases_prj>
-    <l_Ana S_00="Appropriation" S_01="Appropriation" S_02="Ap" />
-    <l_R2 S_00="Revue n&#176;2" S_01="Revue de projet n&#176;2" S_02="R2" />
-    <l_R3 S_00="Revue n&#176;3" S_01="Revue de projet n&#176;3" S_02="R3" />
-    <l_XXX S_00="Synth et com" S_01="Synth&#232;se et communication" S_02="SC" />
-    <l_Rev S_00="Revue inter" S_01="Revue interm&#233;diaire" S_02="Ri" />
-    <l_S S_00="Soutenance" S_01="Soutenance finale" S_02="S" />
-    <l_Rea S_00="Exp&#233;rimentations" S_01="R&#233;alisation d'exp&#233;rimentations" S_02="Re" />
-    <l_R1 S_00="Revue n&#176;1" S_01="Revue de projet n&#176;1" S_02="R1" />
-  </d_phases_prj>
-  <d_posRevues>
-    <l__02 S_00="Ana" S_01="Rea" />
-    <l__03 S_00="Ana" S_01="Rea" S_02="XXX" />
-  </d_posRevues>
   <l_positions_CI />
+  <d_projets>
+    <Projet_PRJ I_duree="70" S_code="PRJ" S_ficheValid="" S_intitule="Projet de fin d'ann&#233;e">
+      <d_attributs>
+        <l_SRC S_00="" S_01="" S_02="" />
+        <l_PAR S_00="" S_01="" S_02="" />
+        <l_DEC S_00="D&#233;coupage du projet" S_01="" S_02="" />
+        <l_OBJ S_00="Production finale attendue" S_01="Indiquer :-- - documents de formalisation des solutions propos&#233;es ;-- - sous-ensemble fonctionnel d&#8217;un prototype, &#233;l&#233;ments d&#8217;une maquette r&#233;elle ou virtuelle ;-- - supports de communication." S_02="" />
+        <l_TIT S_00="Intitul&#233; du projet" S_01="Intitul&#233; du projet" S_02="" />
+        <l_SYN S_00="" S_01="" S_02="" />
+        <l_PB S_00="Probl&#233;matique - &#201;nonc&#233; g&#233;n&#233;ral du besoin" S_01="Indiquer :-- - description du contexte dans lequel l&#8217;objet du projet va &#234;tre int&#233;gr&#233; ;-- - fonctionnalit&#233;s de cet objet ;-- - caract&#233;ristiques fonctionnelles et techniques." S_02="" />
+        <l_ORI S_00="Origine" S_01="Partenariat, th&#233;matique, concours&#8230;" S_02="" />
+        <l_CCF S_00="Contraintes impos&#233;es" S_01="Indiquer :-- - co&#251;t maximal ;-- - nature d&#8217;une ou des solutions techniques ou de familles de mat&#233;riels, de constituants ou de composants ;-- - environnement." S_02="" />
+        <l_TYP S_00="" S_01="" S_02="" />
+        <l_PRX S_00="" S_01="" S_02="" />
+      </d_attributs>
+      <d_cellulesInfo>
+        <d_C>
+          <l_Pre>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="10" I_01="2" I_02="0" />
+            </l_00>
+          </l_Pre>
+          <l_Nom>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="9" I_01="2" I_02="0" />
+            </l_00>
+          </l_Nom>
+          <l_NON>
+            <l_00 S_00="Conduite de projet" S_02="">
+              <l_01 I_00="5" I_01="8" I_02="0" />
+            </l_00>
+          </l_NON>
+          <l_Tit>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="12" I_01="2" I_02="0" />
+            </l_00>
+          </l_Tit>
+          <l_Des>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="14" I_01="1" I_02="0" />
+            </l_00>
+          </l_Des>
+          <l_Etab>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="7" I_01="2" I_02="0" />
+            </l_00>
+          </l_Etab>
+          <l_Prof>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="18" I_01="2" I_02="1" />
+            </l_00>
+          </l_Prof>
+        </d_C>
+        <d_S>
+          <l_Tit>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="12" I_01="2" I_02="0" />
+            </l_00>
+          </l_Tit>
+          <l_Nom>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="9" I_01="2" I_02="0" />
+            </l_00>
+          </l_Nom>
+          <l_Des>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="14" I_01="1" I_02="0" />
+            </l_00>
+          </l_Des>
+          <l_Pre>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="10" I_01="2" I_02="0" />
+            </l_00>
+          </l_Pre>
+          <l_Etab>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="7" I_01="2" I_02="0" />
+            </l_00>
+          </l_Etab>
+        </d_S>
+      </d_cellulesInfo>
+      <d_grilles>
+        <l_C S_00="Grille-conduite de projet-S-SI.xlsx" S_01="I" />
+        <l_S S_00="Grille-pr&#233;sentation du projet-S-SI.xlsx" S_01="I" />
+      </d_grilles>
+      <l_listPhases S_00="Ana" S_01="Rea" S_02="XXX" S_03="Rev" S_04="R1" S_05="R2" S_06="R3" S_07="S" />
+      <l_listPhasesEval S_00="Rev" S_01="R1" S_02="R2" S_03="R3" S_04="S" />
+      <d_parties S_C="Conduite" S_S="Soutenance" />
+      <l_periode I_00="7" I_01="10" />
+      <d_phases>
+        <l_Ana S_00="Appropriation" S_01="Appropriation" S_02="Ap" />
+        <l_R2 S_00="Revue n&#176;2" S_01="Revue de projet n&#176;2" S_02="R2" />
+        <l_R3 S_00="Revue n&#176;3" S_01="Revue de projet n&#176;3" S_02="R3" />
+        <l_XXX S_00="Synth et com" S_01="Synth&#232;se et communication" S_02="SC" />
+        <l_Rev S_00="Revue inter" S_01="Revue interm&#233;diaire" S_02="Ri" />
+        <l_S S_00="Soutenance" S_01="Soutenance finale" S_02="S" />
+        <l_Rea S_00="Exp&#233;rimentations" S_01="R&#233;alisation d'exp&#233;rimentations" S_02="Re" />
+        <l_R1 S_00="Revue n&#176;1" S_01="Revue de projet n&#176;1" S_02="R1" />
+      </d_phases>
+      <d_posRevues>
+        <l__02 S_00="Ana" S_01="Rea" />
+        <l__03 S_00="Ana" S_01="Rea" S_02="XXX" />
+      </d_posRevues>
+    </Projet_PRJ>
+  </d_projets>
   <d_seances>
     <l_C S_00="Cours" S_01="Cours" />
     <l_E S_00="Evaluation" S_01="Evaluation" />

@@ -111,8 +111,8 @@ def getTableaux(parent, doc):
     """
     typ = doc.GetTypeEnseignement()
     ref = doc.GetReferentiel()
-    
-    fichiers = ref.grilles_prj
+    prj = doc.GetProjetRef()
+    fichiers = prj.grilles
 
     fichierPB = []
     
@@ -171,57 +171,99 @@ def getTableaux(parent, doc):
 def modifierGrille(doc, tableaux, eleve):
 #    print "modifierGrille", eleve
     
-    dicInfo = doc.GetReferentiel().cellulesInfo_prj
+    ref = doc.GetReferentiel()
+    prj = doc.GetProjetRef()
+    
     
     #
     # On coche les cellules "non" (uniquement grilles "Revues" STI2D)
     #     
-    classNON = dicInfo["NON"][0][0]
-#    print "classNON", classNON
-    feuilNON = dicInfo["NON"][0][1]
-#    print "feuilNON", feuilNON
-    if feuilNON != '':
-        #clef = code compétence
-        #valeur = liste [True False ...] des indicateurs à mobiliser
-        dicIndic = eleve.GetDicIndicateurs()
-        dicNon = doc.GetReferentiel()._dicIndicateurs_prj_simple
-        colNON = dicInfo["NON"][0][2][1]
-        
-        # On rajoute la feuille du cadidat si elle n'existe pas encore
-        if doc.GetReferentiel().grilles_prj[classNON][1] == 'C': # fichier "Collectif"
-            feuille = feuilNON+str(eleve.id+1)
-#            if not feuille in tableaux['R'].getSheets():
-#                sh = [int(s[-1]) for s in tableaux['R'].getSheets() if s[-1] in range(1,6)]
-#                b = max([n for n in sh if n < eleve.id+1]+[0])
-#                if b > 0:
-#                    a = feuilNON+" "+b
-#                else:
-#                    a = ''
-#                tableaux['R'].addSheetName(feuille, After = a)
-#                print "Feuille ajoutée:", feuille, a
-
-        else:
-            feuille = feuilNON
-        
-        for i, indic in dicNon.items():
-#            print "**", i, indic
-#            lignes = [ind[2] for ind in indic if ind[2] != 0]
-            lignes = [ind.ligne for ind in indic if ind.ligne != 0]
-#            print "    lignes", lignes
-#            print "    colNON", colNON
-            for j, ligne in enumerate(lignes):
+    for part, grille in prj.grilles.items():
+        dicInfo = prj.cellulesInfo[part]
+        if part in ref.aColNon.keys() and ref.aColNon[part]:
+            feuilNON = dicInfo["NON"][0][0]
+            dicIndic = eleve.GetDicIndicateurs()
+            dicNon = doc.GetProjetRef()._dicIndicateurs_simple
+#            print dicInfo["NON"]
+            colNON = dicInfo["NON"][0][1][1]
+            
+            # On rajoute la feuille du cadidat si elle n'existe pas encore
+            if grille[1] == 'C': # fichier "Collectif"
+                feuille = feuilNON+str(eleve.id+1)
+            else:
+                feuille = feuilNON
+            
+            for i, indics in dicNon.items():
+#                print "   ", indics
+                lignes = [ind.ligne[part] for ind in indics if part in ind.ligne.keys() and ind.ligne[part] != 0]
                 
-                # indic = l'indicateur "i" doit être évalué
-                if i in dicIndic.keys():
-                    indic = dicIndic[i][j]
-                else:
-                    indic = False
-                if classNON in tableaux.keys():
-                    nf = tableaux[classNON].getSheetNum(feuille)
-                    if not indic: # indicateur pas évalué --> on coche NON !
-                        tableaux[classNON].setCell(nf, ligne, colNON, COCHE)
+                for j, ligne in enumerate(lignes):
+#                    print "    ", ligne
+                    # indic = l'indicateur "i" doit être évalué
+                    if i in dicIndic.keys():
+                        indic = dicIndic[i][j]
                     else:
-                        tableaux[classNON].setCell(nf, ligne, colNON, '')
+                        indic = False
+                    if part in tableaux.keys():
+                        nf = tableaux[part].getSheetNum(feuille)
+                        if not indic: # indicateur pas évalué --> on coche NON !
+                            tableaux[part].setCell(nf, ligne, colNON, COCHE)
+                        else:
+                            tableaux[part].setCell(nf, ligne, colNON, '')
+
+    
+    
+    
+#    classNON = dicInfo["NON"][0][0]
+##    print "classNON", classNON
+#    feuilNON = dicInfo["NON"][0][1]
+##    print "feuilNON", feuilNON
+#
+#
+#
+#    if feuilNON != '':
+#        #clef = code compétence
+#        #valeur = liste [True False ...] des indicateurs à mobiliser
+#        dicIndic = eleve.GetDicIndicateurs()
+#        dicNon = doc.GetProjetRef()._dicIndicateurs_simple
+#        print dicInfo["NON"]
+#        colNON = dicInfo["NON"][0][2][1]
+#        
+#        # On rajoute la feuille du cadidat si elle n'existe pas encore
+#        if doc.GetProjetRef().grilles[classNON][1] == 'C': # fichier "Collectif"
+#            feuille = feuilNON+str(eleve.id+1)
+##            if not feuille in tableaux['R'].getSheets():
+##                sh = [int(s[-1]) for s in tableaux['R'].getSheets() if s[-1] in range(1,6)]
+##                b = max([n for n in sh if n < eleve.id+1]+[0])
+##                if b > 0:
+##                    a = feuilNON+" "+b
+##                else:
+##                    a = ''
+##                tableaux['R'].addSheetName(feuille, After = a)
+##                print "Feuille ajoutée:", feuille, a
+#
+#        else:
+#            feuille = feuilNON
+#        
+#        for i, indic in dicNon.items():
+##            print "**", i, indic
+##            lignes = [ind[2] for ind in indic if ind[2] != 0]
+#            lignes = [ind.ligne for ind in indic if ind.ligne != 0]
+##            print "    lignes", lignes
+##            print "    colNON", colNON
+#            for j, ligne in enumerate(lignes):
+#                
+#                # indic = l'indicateur "i" doit être évalué
+#                if i in dicIndic.keys():
+#                    indic = dicIndic[i][j]
+#                else:
+#                    indic = False
+#                if classNON in tableaux.keys():
+#                    nf = tableaux[classNON].getSheetNum(feuille)
+#                    if not indic: # indicateur pas évalué --> on coche NON !
+#                        tableaux[classNON].setCell(nf, ligne, colNON, COCHE)
+#                    else:
+#                        tableaux[classNON].setCell(nf, ligne, colNON, '')
 
 
     #
@@ -240,49 +282,56 @@ def modifierGrille(doc, tableaux, eleve):
 #    print tableaux
     
     for ct, t in tableaux.items():
-#        print " ", ct, t
+        dicInfo = prj.cellulesInfo[ct]
+#        print "  ", dicInfo
+#        print "  ", ct, t
         for k, v in schem.items():
-#            print "  ", k
             if k in dicInfo.keys():
+#                print "    ", k
                 for d in dicInfo[k]:
-                    if d[0] == ct: # Classeur
-                        f = d[1]   # Feuille
-                        nf = t.getSheetNum(f)
-                        l,c, p = d[2] # ligne , colonne
-                        pre = d[3]
-                        if p > 0: # Période - pour classeurs collectifs
-                            l += eleve.id * p
-                        t.setCell(nf, l, c, pre+v)
+                    f = d[0]   # Feuille
+                    nf = t.getSheetNum(f)
+                    l, c, p = d[1] # ligne , colonne
+                    pre = d[2]
+                    if p > 0: # Période - pour classeurs collectifs
+                        l += eleve.id * p
+                    t.setCell(nf, l, c, pre+v)
     
     #
     # On rajoute les noms des professeurs
     #
-    cl, f, lcp , pre = dicInfo["Prof"][0] 
-    l, c, p = lcp
-    if doc.GetReferentiel().grilles_prj[cl][1] == 'C': # fichier "Collectif"
-        f = f+str(eleve.id+1)
-    nf = tableaux[cl].getSheetNum(f)
-    profs = [pr.GetNomPrenom() for pr in doc.equipe]
-    for i in range(5):
-        l += i*p
-
-        try:
-            if i < len(profs):
-                tableaux[cl].setCell(nf, l, c, profs[i])
-            else:
-                tableaux[cl].setCell(nf, l, c, '')
-        except:
-            pass
+    for part, grille in prj.grilles.items():
+        dicInfo = prj.cellulesInfo[part]
+        if "Prof" in dicInfo.keys() and part in tableaux.keys():
+            f, lcp , pre = dicInfo["Prof"][0] 
+            l, c, p = lcp
+            if grille[1] == 'C': # fichier "Collectif"
+                f = f+str(eleve.id+1)
+            nf = tableaux[part].getSheetNum(f)
+            profs = [pr.GetNomPrenom() for pr in doc.equipe]
+            for i in range(5):
+                l += i*p
+        
+                try:
+                    if i < len(profs):
+                        tableaux[part].setCell(nf, l, c, profs[i])
+                    else:
+                        tableaux[part].setCell(nf, l, c, '')
+                except:
+                    pass
+    
+    
+    
     
 
 
-
+###############################################################################################################################
 import shutil
 def copierClasseurs(doc, nomFichiers):
     typ = doc.GetTypeEnseignement()
     ref = doc.GetReferentiel()
-    
-    fichiers = ref.grilles_prj
+    prj = doc.GetProjetRef()
+    fichiers = prj.grilles
     
     fichierPB = []
     

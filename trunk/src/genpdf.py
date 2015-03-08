@@ -154,7 +154,7 @@ def genererFicheValidationHTML(nomFichierPDF, nomFichierHTML, projet):
     NP = liste(le) 
     
     # Typologie
-    typo = projet.GetReferentiel().attributs_prj['TYP'][2].split(u"\n")
+    typo = projet.GetProjetRef().attributs['TYP'][2].split(u"\n")
     
     TY = "<br>".join([checkbox(i in projet.typologie) + t for i, t in enumerate(typo)])
 #    TY = liste(, classe = "b")
@@ -242,6 +242,7 @@ def genererFicheValidation(nomFichier, projet):
     story = [] # Fill this list with flowable objects
     
     ref = projet.GetReferentiel()
+    prj = projet.GetProjetRef()
     #
     # En-tête
     #
@@ -302,17 +303,17 @@ def genererFicheValidation(nomFichier, projet):
     ppo = Paragraph(gras(u'Origine de la proposition'),normal_style)
     
     ppb = [Paragraph(gras(u'Problématique - Énoncé général du besoin'),normal_style)]
-    ppb.append(splitParagraph(ref.attributs_prj['PB'][1], entete_style))
+    ppb.append(splitParagraph(prj.attributs['PB'][1], entete_style))
 
     pco = [Paragraph(gras(u'Contraintes imposées au projet'),normal_style)]
-    pco.append(splitParagraph(ref.attributs_prj['CCF'][1], entete_style))
+    pco.append(splitParagraph(prj.attributs['CCF'][1], entete_style))
 
     ppig = Paragraph(gras(u'Intitulé des parties du projet confiées à chaque groupe'),normal_style)
     
     ppbg = Paragraph(gras(u'Énoncé du besoin pour la partie du projet confiée à chaque groupe'),normal_style)
     
     ppr = [Paragraph(gras(u'Production finale attendue'),normal_style)]
-    ppr.append(splitParagraph(ref.attributs_prj['OBJ'][1], entete_style))
+    ppr.append(splitParagraph(prj.attributs['OBJ'][1], entete_style))
     
     
     # Colonne de droite
@@ -385,7 +386,7 @@ def genererDossierValidation(nomFichier, projet, fenDoc):
     
     wx.BeginBusyCursor()
     
-    nomFichierHTML = os.path.join(constantes.PATH, r"..", DOSSIER_REF, projet.GetReferentiel().ficheValid_prj)
+    nomFichierHTML = os.path.join(constantes.PATH, r"..", DOSSIER_REF, projet.GetProjetRef().ficheValid)
     
     if os.path.isfile(nomFichierHTML):
         Ok = genererFicheValidationHTML(fichertempV, nomFichierHTML, projet)
