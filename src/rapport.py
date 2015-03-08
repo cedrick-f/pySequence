@@ -812,7 +812,7 @@ class RapportRTF(rt.RichTextCtrl):
         Styles["Titre 1"].SetTextColour(fgCoul)  
         self.BeginStyle(Styles["Titre 1"])
         
-        phase = tache.GetReferentiel().phases_prj[tache.phase][1]
+        phase = tache.GetProjetRef().phases[tache.phase][1]
         self.WriteText(phase)
         self.EndStyle()
 #        self.EndAlignment()
