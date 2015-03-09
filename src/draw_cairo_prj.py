@@ -352,7 +352,8 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
     taillePos[0] = taillePro[0]/2
     ctx.set_line_width (0.0015)
     prj.rectPos = DrawPeriodes(ctx, prj.position, prj.classe.referentiel.periodes,
-                               [p.periode for p in prj.classe.referentiel.projets.values()],  
+#                               [p.periode for p in prj.classe.referentiel.projets.values()],  
+                               prj.classe.referentiel.projets,
                                tailleTypeEns = tailleTypeEns)
     prj.rect.append(posPos+taillePos)
 
@@ -804,9 +805,9 @@ def DrawLigneEff(ctx, x, y):
     ctx.set_dash([], 0)
 
 ######################################################################################  
-def DrawPeriodes(ctx, pos = None, periodes = [[u"Année", 5]], periodes_prj = [], tailleTypeEns = 0, origine = False):
-    print "DrawPeriodes", pos
-    print "   ", periodes, periodes_prj
+def DrawPeriodes(ctx, pos = None, periodes = [[u"Année", 5]], projets = {}, tailleTypeEns = 0, origine = False):
+#    print "DrawPeriodes", pos
+#    print "   ", periodes, periodes_prj
     ctx.set_line_width (0.001)
     if origine:
         x = 0
@@ -818,6 +819,16 @@ def DrawPeriodes(ctx, pos = None, periodes = [[u"Année", 5]], periodes_prj = []
         y = posPos[1]
         wt = taillePos[0]# - ecartX
         ht = taillePos[1]
+    
+    # Toutes le périodes de projet
+    periodes_prj = [p.periode for p in projets.values()]
+    
+    # Les noms des projets par période
+    noms_prj = {}
+    for n, p in projets.items():
+        for per in p.periode:
+            noms_prj[per] = n
+    
     
     pat = cairo.LinearGradient (x, y,  x + wt, y)
     pat.add_color_stop_rgba (1, 0.90, 0.55, 0.65, 1)
@@ -885,27 +896,34 @@ def DrawPeriodes(ctx, pos = None, periodes = [[u"Année", 5]], periodes_prj = []
         
         for c in range(np):
             pa += 1
-            xcs.append((xi + c*(w+dx) + dx, pos == pa-1))
+            if pa in noms_prj.keys():
+                n = noms_prj[pa]
+            else:
+                n = ""
+            xcs.append((xi + c*(w+dx) + dx, pos == pa-1, i, n))
             
         xi += np*w + (np+1)*dx
         
     # Liste des positions qui fusionnent avec leur position précédente
     lstGrp = []
     for periode_prj in periodes_prj:  
-        lstGrp.extend(periode_prj[1:])
+        lstGrp.extend(range(periode_prj[0]+1, periode_prj[-1]+1))
 #    print lstGrp
     
     for p in reversed(sorted(lstGrp)):
         del xcs[p-1]
         
-    print xcs    
+
     for p, xc in enumerate(xcs):
         
         if p < len(xcs)-1:
             w = xcs[p+1][0] - xc[0] - dx
+            if xcs[p+1][2] != xc[2]:
+                w -= dx
         else:
             w = x+wt - xc[0] - dx
-        print "   ", w
+        
+
         ctx.rectangle (xc[0], y+ht/2+dx, w, h)
         rect.append((xc[0], y+ht/2+dx, w, h))
         if xc[1]:
@@ -915,6 +933,12 @@ def DrawPeriodes(ctx, pos = None, periodes = [[u"Année", 5]], periodes_prj = []
         ctx.fill_preserve ()
         ctx.set_source_rgba (BcoulPos[0], BcoulPos[1], BcoulPos[2], BcoulPos[3])
         ctx.stroke ()    
+        
+        if xc[3] != "":
+            show_text_rect(ctx, xc[3], 
+                           rect[-1], ha = 'c', b = 0.2, wrap = False, couper = False)
+            ctx.stroke ()
+            
             
             
             
