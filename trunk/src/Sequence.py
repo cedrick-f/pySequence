@@ -1920,8 +1920,12 @@ class Projet(BaseDoc, Objet_sequence):
         self.version = "" # version de pySéquence avec laquelle le fichier a été sauvegardé
         
         # code désignant le type de projet
+#        print "init Projet"
+#        print "   ", self.GetReferentiel()
         self.code = self.GetReferentiel().getCodeProjetDefaut()
+#        print "   ", self.code
         self.position = self.GetProjetRef().getPeriodeEval()
+#        print "   ", self.position
         self.nbrParties = 1
         
         # Organisation des revues du projet
@@ -2333,17 +2337,31 @@ class Projet(BaseDoc, Objet_sequence):
     
     ######################################################################################  
     def SetPosition(self, pos):
-        print "SetPosition", pos
-        print "  position actuelle :", self.position
+#        print "SetPosition", pos
+#        print "  position actuelle :", self.position
         posEpreuve = self.GetProjetRef().getPeriodeEval()
         kproj = self.GetReferentiel().getProjetEval(pos+1)
-        print "   ", kproj
+#        print "   ", kproj
 #        print "  posEpreuve", posEpreuve
+    
+
+        ###################################################################
+        # on efface toutes les revues
+        def effacerRevues():
+            lst = []
+            for t in self.taches:
+                if t.phase in TOUTES_REVUES_EVAL_SOUT:
+                    lst.append(t.branche)
+            for a in reversed(lst):
+                self.SupprimerTache(item = a, verrouiller = False)
+        
+        
         
         # On change de projet
         if self.code != kproj:
             self.code = kproj
-        
+            effacerRevues()
+            
             # On passe à une position "épreuve"
             if self.code != None:
                 for tr in self.creerTachesRevue():
@@ -2357,15 +2375,8 @@ class Projet(BaseDoc, Objet_sequence):
                 if hasattr(self, 'panelPropriete'):
                     self.panelPropriete.sendEvent()
     
-                    
-            # On passe d'une position "épreuve" à une autre
-            else:
-                lst = []
-                for t in self.taches:
-                    if t.phase in TOUTES_REVUES_EVAL_SOUT:
-                        lst.append(t.branche)
-                for a in reversed(lst):
-                    self.SupprimerTache(item = a, verrouiller = False)
+
+                
             
             
         # Sinon on se contente de redessiner
@@ -3084,12 +3095,30 @@ class Projet(BaseDoc, Objet_sequence):
 
     #############################################################################
     def MiseAJourTypeEnseignement(self, ancienRef = None, ancienneFam = None):#, changeFamille = False):
-#        print "MiseAJourTypeEnseignement projet"
-        
-        self.code = self.GetReferentiel().getCodeProjetDefaut()
-        self.position = self.GetProjetRef().getPeriodeEval()
+        print "MiseAJourTypeEnseignement projet", ancienRef, ">>", self.GetReferentiel()
         
         self.app.SetTitre()
+        
+        self.code = self.GetReferentiel().getCodeProjetDefaut()
+        print "   ", self.code
+
+        if ancienRef != None:
+            print "   anciennePos", self.position
+            anciennePos = self.position
+            
+            kprj = ancienRef.getProjetEval(anciennePos+1)
+            print "   ancien prj", kprj, self.GetReferentiel().projets.keys()
+            if kprj in self.GetReferentiel().projets.keys():
+                self.code = kprj
+                self.position = self.GetProjetRef().getPeriodeEval()
+            else:
+                posRel = 1.0*anciennePos/ancienRef.getNbrPeriodes()
+                self.position = round(self.GetReferentiel().getNbrPeriodes()*posRel)-1
+                self.code = self.GetReferentiel().getProjetEval(self.position+1)
+            
+        else:
+            self.position = self.GetProjetRef().getPeriodeEval()
+            
         
         for t in self.taches:
             if t.phase in TOUTES_REVUES_EVAL and self.GetReferentiel().compImposees['C']:
@@ -3099,24 +3128,9 @@ class Projet(BaseDoc, Objet_sequence):
         
         for e in self.eleves:
             e.MiseAJourTypeEnseignement()
+        
             
-    
-        if ancienRef != None:
-#            print "   anciennePos", self.position
-            anciennePos = self.position
-            
-            kprj = ancienRef.getProjetEval(anciennePos)
-            if kprj in self.GetReferentiel().projets.keys():
-                self.code = kprj
-                self.position = self.GetProjetRef().getPeriodeEval()
-            else:
-                posRel = 1.0*anciennePos/ancienRef.getNbrPeriodes()
-                self.position = round(self.GetReferentiel().getNbrPeriodes()*posRel)-1
-                self.code = self.GetReferentiel().getProjetEval(self.position)
-            
-            
-            
-            
+        print "   ", self.position
 #            if ancienRef.estPeriodeEval(anciennePos):
 #                self.position = self.GetProjetRef().getPeriodeEval()
 ##                print "   new pos eval =", self.position
@@ -3124,13 +3138,19 @@ class Projet(BaseDoc, Objet_sequence):
 #                posRel = 1.0*anciennePos/ancienRef.getNbrPeriodes()
 #                self.position = round(self.GetProjetRef().getNbrPeriodes()*posRel)-1
 ##                print "   new pos =", self.position
-            
+        
+        
+        
         if hasattr(self, 'panelPropriete'):
 #            if ancienneFam != self.classe.familleEnseignement:
             self.initRevues()
             self.MiseAJourNbrRevues()
             
             self.panelPropriete.MiseAJourTypeEnseignement()
+        
+        self.SetPosition(self.position)
+
+
 
 
     #############################################################################
@@ -9769,7 +9789,8 @@ class PanelPropriete_Projet(PanelPropriete):
         ctx.scale(larg/w, larg/w) 
         draw_cairo_prj.DrawPeriodes(ctx, self.projet.position, 
                                     self.projet.GetReferentiel().periodes ,
-                                    [p.periode for p in self.projet.GetReferentiel().projets.values()], 
+                                    self.projet.GetReferentiel().projets,
+#                                    [p.periode for p in self.projet.GetReferentiel().projets.values()], 
                                     origine = True)
 
         bmp = wx.lib.wxcairo.BitmapFromImageSurface(imagesurface)

@@ -90,7 +90,7 @@ def getTableau(parent, nomFichier):
 
 
 def getExentionExcel():
-    xlApp = win32com.client.dynamic.Dispatch('Excel.Application')
+    xlApp = win32com.client.DispatchEx('Excel.Application')
     if xlApp.Version < 12:
         ext = ".xls"
     else:
@@ -387,7 +387,7 @@ xlLandscape = 1
 
 class PyExcel:
     def __init__(self,filename=None):
-        self.xlApp = win32com.client.dynamic.Dispatch('Excel.Application')
+        self.xlApp = win32com.client.dynamic.Dispatch('Excel.Application')  # voir aussi avec DispatchEx ? ou bien win32com.client.gencache.EnsureDispatch("Excel.Application")
         if filename:
             self.filename = filename
             self.xlBook = self.xlApp.Workbooks.Open(filename)

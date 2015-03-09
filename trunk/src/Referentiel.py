@@ -293,38 +293,26 @@ class Referentiel(XMLelem):
 
     ######################################################################################  
     def __repr__(self):
-        print "*********************"
-        print self.Code, self.projet
-        print "positions_CI", self.positions_CI
-#        print "CI_BO :", self.CI_BO
-#        print "CI  :", self.CentresInterets
-#        print "Sav :", self.dicSavoirs
-#        print "dicSavoirs_Math", self.dicSavoirs_Math
-        print "_dicCompetences_prj", self._dicCompetences_prj
-#        print "_dicCompetences_prj_simple", self._dicCompetences_prj_simple
-#        for p in self.getParams():
-#            v = getattr(self, p)
-#            if type(v) == dict:
-#                print p, v
-#        print "dicCompetences :", self.dicCompetences
-#        print "CoP :", self.dicCompetences_prj
-#        print "_dicIndicateurs_prj_simple :", self._dicIndicateurs_prj_simple.keys()
-#        print "_dicIndicateurs_prj :", self._dicIndicateurs_prj
-#        print "Poi :", self.dicPoidsIndicateurs_prj
-#        print "Lig :", self.dicLignesIndicateurs_prj
-#        print "Mat :", self.dicSavoirs_Math
-#        print "Phy :", self.dicSavoirs_Phys
-        print "Dem :", self.demarches
-#        print "Act :", self.activites
-#        print "Sea :", self.seances
-        print "DeS :", self.demarcheSeance
-#        print self.phases_prj
-#        print self.listPhasesEval_prj
-#        print "listPhases_prj =", self.listPhases_prj
-#        print
-#        print "colonneNON", self.colonneNON
-#        print "feuilleNON", self.feuilleNON
-        return ""
+#        print "*********************"
+#        print self.Code
+#        print "positions_CI", self.positions_CI
+##        print "CI_BO :", self.CI_BO
+##        print "CI  :", self.CentresInterets
+##        print "Sav :", self.dicSavoirs
+##        print "dicSavoirs_Math", self.dicSavoirs_Math
+##        for p in self.getParams():
+##            v = getattr(self, p)
+##            if type(v) == dict:
+##                print p, v
+##        print "dicCompetences :", self.dicCompetences
+##        print "Mat :", self.dicSavoirs_Math
+##        print "Phy :", self.dicSavoirs_Phys
+#        print "Dem :", self.demarches
+##        print "Act :", self.activites
+##        print "Sea :", self.seances
+#        print "DeS :", self.demarcheSeance
+
+        return self.Code
     
     ######################################################################################  
     def initParam(self):
@@ -830,7 +818,7 @@ class Referentiel(XMLelem):
                                                          intitule = sh_g.cell(24,c).value, 
                                                          duree = int0(sh_g.cell(26,c).value), 
                                                          periode = [int(i) for i in sh_g.cell(27,c).value.split()])
-        print self.projets
+#        print self.projets
         
         #
         # options
@@ -1151,7 +1139,9 @@ class Referentiel(XMLelem):
         """ Renvoie l'épreuve de projet (évaluation)
             situé à la position <position>
         """
+#        print "getProjetEval", position
         for k, p in self.projets.items():
+#            print "   ", p.periode
             if position in p.periode:
                 return k
 
