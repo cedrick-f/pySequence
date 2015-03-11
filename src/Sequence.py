@@ -40,7 +40,7 @@ Copyright (C) 2011-2015
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "6beta6"
+__version__ = "6beta7"
 print __version__
 
 #from threading import Thread
@@ -895,8 +895,6 @@ class Classe():
         self.options = app.options
         self.Initialise(pourProjet)
         
-        self.version5 = True
-        
         if panelParent:
             self.panelPropriete = PanelPropriete_Classe(panelParent, self, pourProjet, ouverture = ouverture)
             
@@ -1007,76 +1005,135 @@ class Classe():
 #        print "setBranche classe"
         self.typeEnseignement = branche.get("Type", constantes.TYPE_ENSEIGNEMENT_DEFAUT)
         
-        self.version = branche.get("Version", "")       # A partir de la version 6 !
+        self.version = branche.get("Version", "0")       # A partir de la version 6 !
         
-        brancheRef = branche.find("Referentiel")        # A partir de la version 5 !
-        if brancheRef != None:   
-            self.referentiel = Referentiel.Referentiel()
-            self.version5 = True
-            if not reparer:
-#                self.referentiel.setBranche(brancheRef)
-                try:
-                    self.referentiel.initParam()
-                    errr = self.referentiel.setBranche(brancheRef)[1]
-                    self.referentiel.corrigerVersion(errr)
-                    self.referentiel.postTraiter()
-                    self.referentiel.completer()
-    
-#                    print self.referentiel.CentresInterets
-                except:
-#                    try:
-                    self.referentiel.initParam()
-                    self.referentiel.setBrancheV5(brancheRef)
-#                    except:
-#                        print "Erreur ouverture référentiel intégré !"
-#                        self.referentiel = REFERENTIELS[self.typeEnseignement]
-            else:
-                print "Réparation = pas référentiel intégré !"
+        #
+        # Référentiel
+        #
+        
+        def ChargerRefOriginal():
+            print "Réparation = pas référentiel intégré !"
+            if self.GetVersionNum() >= 5:
                 code = self.referentiel.setBrancheCodeV5(brancheRef)
                 print "   Code trouvé dans référentiel :", code
-                print "   TypeEnseignement :", self.typeEnseignement
                 if code != self.typeEnseignement:
                     self.typeEnseignement = code
+                    
+            print "   TypeEnseignement :", self.typeEnseignement
+            if self.typeEnseignement in REFERENTIELS:
+                self.referentiel = REFERENTIELS[self.typeEnseignement]
+            else:
+                err.append(constantes.Erreur(constantes.ERR_PRJ_C_TYPENS, self.typeEnseignement))
+        
+        def RecupCI():
+            if self.GetVersionNum() < 5:
+                brancheCI = branche.find("CentreInteret")
+                if brancheCI != None: # Uniquement pour rétrocompatibilité : normalement cet élément existe !
+                    continuer = True
+                    i = 1
+                    if self.typeEnseignement == 'ET':
+                        CI = []
+                        posCI = []
+                        while continuer:
+                            c = brancheCI.get("CI"+str(i))
+                            p = brancheCI.get("pos"+str(i))
+                            if c == None or p == None:
+                                continuer = False
+                            else:
+                                CI.append(c)
+                                posCI.append(p) 
+                                i += 1
+                            
+                        if i > 1:
+    #                        self.CI = CI
+                            if self.referentiel.CI_cible:
+                                self.referentiel.positions_CI = posCI
+                                
+            elif self.GetVersionNum() == 5:
+                brancheCI = branche.find("l_CentresInterets")
+                if brancheCI != None: 
+                    continuer = True
+                    i = 1
+                    if self.typeEnseignement == 'ET':
+                        CI = []
+                        posCI = []
+                        while continuer:
+                            c = brancheCI.get("S_CentresInterets"+format(i, "02d"))
+                            p = brancheCI.get("S_positions_CI"+format(i, "02d"))
+                            if c == None or p == None:
+                                continuer = False
+                            else:
+                                CI.append(c)
+                                posCI.append(p) 
+                                i += 1
+                            
+                        if i > 1:
+                            if self.referentiel.CI_cible:
+                                self.referentiel.positions_CI = posCI
+    
+    
+   
+        #
+        # A partir de la version 5 !
+        #
+        brancheRef = branche.find("Referentiel")
+        if brancheRef != None:   
+            self.referentiel = Referentiel.Referentiel()
+            if self.GetVersionNum() == 0:       # la version n'était pas encore intégrée dans la version 5 !
+                self.version = "5" 
                 
-                if self.typeEnseignement in REFERENTIELS:
-                    self.referentiel = REFERENTIELS[self.typeEnseignement]
-                else:
-                    err.append(constantes.Erreur(constantes.ERR_PRJ_C_TYPENS, self.typeEnseignement))
-        
-#                print self.referentiel.posRevues
-        else:
-            self.version5 = False
-            self.referentiel = REFERENTIELS[self.typeEnseignement]
+            #
+            # Ouverture du référentiel original (fourni avec pySéquence)
+            #
+            if reparer:
+                ChargerRefOriginal()
             
-            brancheCI = branche.find("CentreInteret")
-            if brancheCI != None: # Uniquement pour rétrocompatibilité : normalement cet élément existe !
-                continuer = True
-                i = 1
-                if self.typeEnseignement == 'ET':
-                    CI = []
-                    posCI = []
-                    while continuer:
-                        c = brancheCI.get("CI"+str(i))
-                        p = brancheCI.get("pos"+str(i))
-                        if c == None or p == None:
-                            continuer = False
-                        else:
-                            CI.append(c)
-                            posCI.append(p) 
-                            i += 1
-                        
-                    if i > 1:
-#                        self.CI = CI
-                        if self.referentiel.CI_cible:
-                            self.referentiel.positions_CI = posCI
+            #
+            # Ouverture du référentiel intrégré
+            #
+            else:
+                versionNum = self.GetVersionNum()
+                if self.GetVersionNum() == 5:
+                    ChargerRefOriginal()
+                    RecupCI()
+                else:
+                    try:
+                        self.referentiel.initParam()
+                        errr = self.referentiel.setBranche(brancheRef)[1]
+                        self.referentiel.corrigerVersion(errr)
+                        self.referentiel.postTraiter()
+                        self.referentiel.completer()
         
-#        print "version 5", self.version5
+    #                    print self.referentiel.CentresInterets
+                    except:
+    #                    try:
+                        self.referentiel.initParam()
+                        self.referentiel.setBrancheV5(brancheRef)
+                        ChargerRefOriginal()
+                        RecupCI()
+    #                    except:
+    #                        print "Erreur ouverture référentiel intégré !"
+    #                        self.referentiel = REFERENTIELS[self.typeEnseignement]
+
+
+        #
+        # Version < 5 !
+        #
+        else:
+            ChargerRefOriginal()
+            RecupCI()
         
         # Correction contradiction 
         if self.typeEnseignement != self.referentiel.Code:
             print "Correction type enseignement", self.typeEnseignement, ">>", self.referentiel.Code
             self.typeEnseignement = self.referentiel.Code
+
         
+            
+
+        #
+        #
+        #
         self.etablissement = branche.get("Etab", u"")
         self.ville = branche.get("Ville", u"")
         self.academie = branche.get("Acad", u"")
@@ -1132,10 +1189,17 @@ class Classe():
         elif eff == 'P':
             return self.GetEffectifNorm('G') / self.nbrGroupes['P']
         
+        
     ######################################################################################  
     def GetReferentiel(self):
         return self.referentiel
+       
         
+    ######################################################################################  
+    def GetVersionNum(self):
+        return int(self.version.split(".")[0].split("beta")[0])
+    
+    
     ######################################################################################  
     def Verrouiller(self, etat):
         if hasattr(self, 'panelPropriete'):
@@ -1233,6 +1297,8 @@ class Sequence(BaseDoc):
         
         self.prerequis = Savoirs(self, panelParent, prerequis = True)
         self.prerequisSeance = []
+        
+        self.pasVerouille = True
         
         self.CI = CentreInteret(self, panelParent)
         
@@ -1990,7 +2056,10 @@ class Projet(BaseDoc, Objet_sequence):
         if self.code == None:
             return self.GetReferentiel().getProjetDefaut()
         else:
-            return self.GetReferentiel().projets[self.code]
+            if self.code in self.GetReferentiel().projets.keys():
+                return self.GetReferentiel().projets[self.code]
+            else:
+                return None
     
     
 #    ######################################################################################  
@@ -2797,6 +2866,7 @@ class Projet(BaseDoc, Objet_sequence):
             self.panelPropriete.sendEvent()
             self.arbre.SelectItem(e.branche)
             self.AjouterEleveDansPanelTache()
+
         
 
     
@@ -3095,19 +3165,19 @@ class Projet(BaseDoc, Objet_sequence):
 
     #############################################################################
     def MiseAJourTypeEnseignement(self, ancienRef = None, ancienneFam = None):#, changeFamille = False):
-        print "MiseAJourTypeEnseignement projet", ancienRef, ">>", self.GetReferentiel()
+#        print "MiseAJourTypeEnseignement projet", ancienRef, ">>", self.GetReferentiel()
         
         self.app.SetTitre()
         
         self.code = self.GetReferentiel().getCodeProjetDefaut()
-        print "   ", self.code
+#        print "   ", self.code
 
         if ancienRef != None:
-            print "   anciennePos", self.position
+#            print "   anciennePos", self.position
             anciennePos = self.position
             
             kprj = ancienRef.getProjetEval(anciennePos+1)
-            print "   ancien prj", kprj, self.GetReferentiel().projets.keys()
+#            print "   ancien prj", kprj, self.GetReferentiel().projets.keys()
             if kprj in self.GetReferentiel().projets.keys():
                 self.code = kprj
                 self.position = self.GetProjetRef().getPeriodeEval()
@@ -3130,7 +3200,7 @@ class Projet(BaseDoc, Objet_sequence):
             e.MiseAJourTypeEnseignement()
         
             
-        print "   ", self.position
+#        print "   ", self.position
 #            if ancienRef.estPeriodeEval(anciennePos):
 #                self.position = self.GetProjetRef().getPeriodeEval()
 ##                print "   new pos eval =", self.position
@@ -3231,7 +3301,16 @@ class Projet(BaseDoc, Objet_sequence):
         return
 
 
-
+    #############################################################################
+    def MiseAJourTachesEleves(self):
+        """ Mise à jour des phases de revue 
+            pour lesquelles il y a des compétences à cocher
+        """
+        for t in self.taches:
+            if t.phase in [_R1, "Rev"] or (t.phase == _R2 and self.nbrRevues == 3):
+                if hasattr(t.panelPropriete, 'arbre'):
+                    t.panelPropriete.arbre.MiseAJourTypeEnseignement(t.GetReferentiel())
+                    t.panelPropriete.MiseAJour()
 
     
     #############################################################################
@@ -3293,7 +3372,6 @@ class Projet(BaseDoc, Objet_sequence):
                                         t.indicateursEleve[neleve].append(codeIndic)
     
                     if neleve == 0:
-
                         if t.phase in [_R1, "Rev"] or (t.phase == _R2 and self.nbrRevues == 3):
                             ti = []
                             for i in t.indicateursEleve[neleve]:
@@ -5020,7 +5098,7 @@ class Tache(Objet_sequence):
         
         self.indicateursEleve = { 0 : [], 1 : [], 2 : [], 3 : [],4 : [], 5 : [],6 : []}
         
-        if not self.GetClasse().version5:
+        if self.GetClasse().GetVersionNum() < 5:
             if not self.phase in [self.projet.getCodeLastRevue(), "S"]:
                 self.indicateursMaxiEleve = { 0 : [], 1 : [], 2 : [], 3 : [],4 : [], 5 : [],6 : []}
                 
@@ -5150,7 +5228,7 @@ class Tache(Objet_sequence):
                                     
                                 # Si c'est la dernière phase et que c'est une compétence "Conduite" ... on passe
                                 indic = eval(indic)-1
-                                if self.phase == 'XXX' and self.GetReferentiel().getTypeIndicateur(codeindic) == 'C':
+                                if self.phase == 'XXX' and self.GetProjetRef().getTypeIndicateur(codeindic) == 'C':
                                     continue
                                 
                                     
@@ -8656,7 +8734,8 @@ class FenetreProjet(FenetreDocument):
                     message += (u"\n  "+CHAR_POINT).join([e.getMessage() for e in err]) 
                 message += u"\n"
                 
-                if not self.classe.version5:
+#                print "V",self.classe.GetVersionNum()
+                if self.classe.GetVersionNum() < 5:
                     messageErreur(None, u"Ancien programme", 
                                   u"Projet enregistré avec les indicateurs de compétence antérieurs à la session 2014\n\n"\
                                   u"Les indicateurs de compétence ne seront pas chargés.")
@@ -8667,7 +8746,13 @@ class FenetreProjet(FenetreDocument):
                 count += 1
 #                print "ref :", 
 #                self.projet.classe = self.classe
+                # Dernière vérification
+                if self.projet.GetProjetRef() == None:
+                    print "Pas bon référentiel"
+                    self.classe.setBranche(classe, reparer = True)
                 err = self.projet.setBranche(projet)
+    
+            
                 if len(err) > 0 :
                     Ok = False
                     message += (u"\n  "+CHAR_POINT).join([e.getMessage() for e in err])
@@ -9132,7 +9217,8 @@ class BaseFiche(wx.ScrolledWindow):
         if branche != None:
             self.GetDoc().SelectItem(branche, depuisFiche = True)
             
-        if self.projet.pasVerouille:
+            
+        if self.GetDoc().pasVerouille:
             #
             # Autres actions
             #
@@ -9551,9 +9637,8 @@ class PanelPropriete_Sequence(PanelPropriete):
         imagesurface = cairo.ImageSurface(cairo.FORMAT_ARGB32,  larg, int(h/w*larg))#cairo.FORMAT_ARGB32,cairo.FORMAT_RGB24
         ctx = cairo.Context(imagesurface)
         ctx.scale(larg/w, larg/w) 
-        draw_cairo_seq.DrawPeriodes(ctx, self.sequence.position,
-                                    self.sequence.GetReferentiel().periodes,
-                                    origine = True)
+        draw_cairo_seq.DrawPeriodes(ctx, (0,0,w,h), self.sequence.position,
+                                    self.sequence.GetReferentiel().periodes)
 
         bmp = wx.lib.wxcairo.BitmapFromImageSurface(imagesurface)
         
@@ -9787,11 +9872,9 @@ class PanelPropriete_Projet(PanelPropriete):
         imagesurface = cairo.ImageSurface(cairo.FORMAT_ARGB32,  larg, int(h/w*larg))#cairo.FORMAT_ARGB32,cairo.FORMAT_RGB24
         ctx = cairo.Context(imagesurface)
         ctx.scale(larg/w, larg/w) 
-        draw_cairo_prj.DrawPeriodes(ctx, self.projet.position, 
+        draw_cairo_prj.DrawPeriodes(ctx, (0,0,w,h), self.projet.position, 
                                     self.projet.GetReferentiel().periodes ,
-                                    self.projet.GetReferentiel().projets,
-#                                    [p.periode for p in self.projet.GetReferentiel().projets.values()], 
-                                    origine = True)
+                                    self.projet.GetReferentiel().projets)
 
         bmp = wx.lib.wxcairo.BitmapFromImageSurface(imagesurface)
         
@@ -9905,7 +9988,7 @@ class PanelPropriete_Projet(PanelPropriete):
     def MiseAJourTypeEnseignement(self, sendEvt = False):
         
         ref = self.projet.GetProjetRef()
-#        print "MiseAJourTypeEnseignement", ref.Code
+#        print "MiseAJourTypeEnseignement", ref.code
         
         
         #
@@ -10012,9 +10095,10 @@ class PanelPropriete_Projet(PanelPropriete):
                 del self.pages['TYP']
         
         # La page "Partenariat" ('PAR')
-        self.parctrl = {}
+        
         if ref.attributs['PAR'][0] != "":
             if not 'PAR' in self.pages.keys():
+                self.parctrl = {}
                 self.pages['PAR'] = PanelPropriete(self.nb)
                 bg_color = self.Parent.GetBackgroundColour()
                 self.pages['PAR'].SetBackgroundColour(bg_color)
@@ -12964,7 +13048,7 @@ class PanelPropriete_Tache(PanelPropriete):
 
     ######################################################################################  
     def AjouterCompetence(self, code, propag = True):
-#        print "AjouterCompetence", self, code
+#        print "AjouterCompetence !!", self, code
         if not code in self.tache.indicateursEleve[0]:
             self.tache.indicateursEleve[0].append(code)
         
@@ -13053,6 +13137,10 @@ class PanelPropriete_Tache(PanelPropriete):
 #            self.box.SetMinSize((200,200))
             self.pageGen.Layout()
             self.pageGen.Thaw()
+            
+        # On reconstruit l'arbre pour ajouter/enlever des cases "élève"
+        if hasattr(self, 'arbre') and self.arbre.eleves:
+            self.arbre.ConstruireCasesEleve()
         
         
     #############################################################################            
@@ -13108,6 +13196,7 @@ class PanelPropriete_Tache(PanelPropriete):
                 lst.append(i)
         self.tache.eleves = lst
         self.GetDocument().MiseAJourDureeEleves()
+        self.GetDocument().MiseAJourTachesEleves()
         self.sendEvent()    
 
 
@@ -13157,6 +13246,20 @@ class PanelPropriete_Tache(PanelPropriete):
         if hasattr(self, 'vcDuree'):
             self.vcDuree.mofifierValeursSsEvt()
 
+    
+    #############################################################################            
+    def MiseAJourCases(self):
+#        print "MiseAJourCases", self.tache.phase, self.tache.intitule
+        if hasattr(self, 'arbre'):
+            self.arbre.UnselectAll()
+            
+            for codeIndic in self.tache.indicateursEleve[0]:
+                if codeIndic in self.arbre.items.keys():
+                    item = self.arbre.items[codeIndic]
+                    cases = self.arbre.GetItemWindow(item, 3)
+                    cases.MiseAJour()
+                    cases.Actualiser()
+                  
             
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
@@ -13164,10 +13267,11 @@ class PanelPropriete_Tache(PanelPropriete):
         if hasattr(self, 'arbre'):
             self.arbre.UnselectAll()
             
-#            root = self.arbre.GetRootItem()
-            for s in self.tache.indicateursEleve[0]:
-                if s in self.arbre.items.keys():
-                    self.arbre.CheckItem2(self.arbre.items[s])
+            for codeIndic in self.tache.indicateursEleve[0]:
+                if codeIndic in self.arbre.items.keys():
+                    item = self.arbre.items[codeIndic]
+                    self.arbre.CheckItem2(item)
+
             
         if hasattr(self, 'textctrl'):
             self.textctrl.SetValue(self.tache.intitule)
@@ -14838,6 +14942,7 @@ class ArbreCompetences(HTL.HyperTreeList):
         
     ####################################################################################
     def OnItemCheck(self, event, item = None):
+        print "OnItemCheck"
         if event != None:
             item = event.GetItem()
         
@@ -14850,6 +14955,7 @@ class ArbreCompetences(HTL.HyperTreeList):
     
     ####################################################################################
     def AjouterEnleverCompetencesItem(self, item, propag = True):
+        print "AjouterEnleverCompetencesItem"
         code = self.GetItemPyData(item)#.split()[0]
 #        print "AjouterEnleverCompetencesItem", code
         if code != None: # un seul indicateur séléctionné
@@ -14860,6 +14966,7 @@ class ArbreCompetences(HTL.HyperTreeList):
 
     ####################################################################################
     def AjouterEnleverCompetences(self, lstitem, propag = True):
+        print "AjouterEnleverCompetences"
         for item in lstitem:
             code = self.GetItemPyData(item)#.split()[0]
 #            print "  ", code, item.GetValue()
@@ -14922,11 +15029,11 @@ class ArbreCompetencesPrj(ArbreCompetences):
     """
     def __init__(self, parent, ref, pptache, revue = False, eleves = False, 
                  agwStyle = CT.TR_HIDE_ROOT|CT.TR_HAS_VARIABLE_ROW_HEIGHT|\
-                            CT.TR_ROW_LINES|CT.TR_ALIGN_WINDOWS|CT.TR_AUTO_CHECK_CHILD|\
+                            CT.TR_ROW_LINES|CT.TR_ALIGN_WINDOWS| \
                             CT.TR_AUTO_CHECK_PARENT|CT.TR_AUTO_TOGGLE_CHILD):
-        self.revue = revue
+        self.revue = revue#|CT.TR_AUTO_CHECK_CHILD|\
         self.eleves = eleves
-          
+ 
         ArbreCompetences.__init__(self, parent, ref, pptache,
                                   agwStyle = agwStyle)#|CT.TR_ELLIPSIZE_LONG_ITEMS)#|CT.TR_TOOLTIP_ON_LONG_ITEMS)#
         self.Bind(wx.EVT_SIZE, self.OnSize2)
@@ -14947,12 +15054,26 @@ class ArbreCompetencesPrj(ArbreCompetences):
         
 #        self.Bind(CT.EVT_TREE_ITEM_GETTOOLTIP, self.OnToolTip)
         
-       
+    ####################################################################################
+    def ConstruireCasesEleve(self):
+        """ 
+        """
+#        print "ConstruireCasesEleve"
+        tache = self.pptache.tache
+        prj = tache.GetProjetRef()
+        for codeIndic, item in self.items.items():
+            cases = self.GetItemWindow(item, 3)
+            if isinstance(cases, ChoixCompetenceEleve):
+                item.DeleteWindow(3)
+                cases = ChoixCompetenceEleve(self.GetMainWindow(), codeIndic,
+                                             tache.projet, tache)
+                item.SetWindow(cases, 3)
+            
     
 
     ####################################################################################
     def Construire(self, branche = None, dic = None, ref = None):
-#        print "Construire compétences prj", 
+#        print "Construire compétences prj", self.pptache.tache
         if ref == None:
             ref = self.ref
         
@@ -15071,15 +15192,22 @@ class ArbreCompetencesPrj(ArbreCompetences):
                             self.items[codeIndic] = b
                             
                             if self.eleves:
-                                self.SetItemWindow(b, ChoixCompetenceEleve(self, codeIndic, 
+#                                print "   ", tache.projet.eleves,
+                                cases = ChoixCompetenceEleve(self.GetMainWindow(), codeIndic, 
                                                                            tache.projet, 
-                                                                           tache), 3)
-                            
+                                                                           tache)
+
+#                                cases.SetSize(cases.GetBestSize())
+                                self.SetItemWindow(b, cases, 3)
                                 
                                 for e in range(len(tache.projet.eleves)):
                                     tousEleve[e] = tousEleve[e] and self.GetItemWindow(b, 3).EstCocheEleve(e+1)
 #                                size = self.GetItemWindow(b, 3).GetSize()[0]
-
+#                                print cases.GetSize()
+                                b.SetWindowEnabled(True, 3)
+#                                self.Collapse(comp)
+#                                self.Refresh()
+#                                self.Layout()
                     
                     if b == None: # Désactivation si branche vide d'indicateurs
                         self.SetItemType(br,0)
@@ -15098,6 +15226,10 @@ class ArbreCompetencesPrj(ArbreCompetences):
         if tache == None: # Cas des arbres dans popup
             self.SetColumnWidth(1, 0)
             self.SetColumnWidth(2, 0)
+        
+        
+#        self.ExpandAll()
+#        self.CalculatePositions()
         self.Refresh()
             
         return
@@ -15486,15 +15618,15 @@ class ChoixCompetenceEleve(wx.Panel):
         cb = []
         for e in projet.eleves:
             cb.append(wx.CheckBox(self, -1, ""))
-            sizer.Add(cb[-1])
+            sizer.Add(cb[-1], 1, flag = wx.EXPAND)
             self.Bind(wx.EVT_CHECKBOX, self.EvtCheckBox, cb[-1])
         self.cb = cb
-        
         self.projet = projet
         self.tache = tache
         
         self.MiseAJour()
         self.Actualiser()
+        self.Layout()
         self.SetSizerAndFit(sizer)
     
 

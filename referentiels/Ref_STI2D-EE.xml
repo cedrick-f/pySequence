@@ -1,0 +1,459 @@
+<Referentiel B_CI_BO="True" B_CI_cible="False" B_objSavoirs_Math="False" B_objSavoirs_Phys="False" B_preSavoirs_Math="True" B_preSavoirs_Phys="True" S_Code="EE" S_Famille="STI" S_FichierLogo="" S_abrevCI="CI" S_nomCI="Centre(s) d'Int&#233;r&#234;t" S_nomCompetences="Comp&#233;tences" S_nomFonctions="Fonctions" S_nomIndicateurs="Indicateurs" S_nomSavoirs="Savoirs" S_nomSavoirs_Math="Math&#233;matiques" S_nomSavoirs_Phys="Sciences Physiques" S_nomTaches="T&#226;ches" S_surnomSavoirs="">
+  <l_BO_URL>
+    <l_00 S_00="Programme" S_01="http://www.education.gouv.fr/pid25535/bulletin_officiel.html?cid_bo=82984" />
+  </l_BO_URL>
+  <l_BO_dossier S_00="STI2D" />
+  <l_CentresInterets S_00="Typologie des syst&#232;mes &#233;nerg&#233;tiques" S_01="Production d'&#233;nergie" S_02="Transport, stockage et distribution de l'&#233;nergie et r&#233;seaux sp&#233;cifiques" S_03="Efficacit&#233; &#233;nerg&#233;tique passive" S_04="Efficacit&#233; &#233;nerg&#233;tique active" />
+  <l_Enseignement S_00="STI2D-EE" S_01="STI2D : Energies et Environnement" S_02="STI2D" />
+  <d_aColNon B_C="True" />
+  <d_activites>
+    <l_ED S_00="Etude de dossier" S_01="Activit&#233; d'&#233;tude de dossier" />
+    <l_P S_00="Projet" S_01="Activit&#233; de projet" />
+    <l_AP S_00="Activit&#233; pratique" S_01="Activit&#233; pratique" />
+  </d_activites>
+  <d_compImposees B_C="False" B_S="False" />
+  <d_demarcheSeance>
+    <l_ED S_00="I" S_01="R" />
+    <l_P S_00="I" S_01="R" S_02="P" />
+    <l_AP S_00="I" S_01="R" />
+  </d_demarcheSeance>
+  <d_demarches>
+    <l_I S_00="Investigation" S_01="Investigation" />
+    <l_P S_00="Projet" S_01="Projet" />
+    <l_R S_00="R&#233;s. Probl&#232;me" S_01="R&#233;solution de probl&#232;me" />
+  </d_demarches>
+  <d_dicCompetences>
+    <l_O7 S_00="Imaginer une solution, r&#233;pondre &#224; un besoin">
+      <d_01>
+        <l_CO7.ee2 S_00="Justifier une solution retenue en int&#233;grant les cons&#233;quences des choix sur le triptyque Mat&#233;riau - Energie - Information">
+          <l_01>
+            <Indicateur_00 S_intitule="Les caract&#233;ristiques comportementales de la solution retenue r&#233;pondent au cahier des charges">
+              <d_ligne I_C="10" />
+              <d_poids F_C="9.090909" />
+              <d_revue I_C="0" />
+            </Indicateur_00>
+            <Indicateur_01 S_intitule="Les choix sont explicit&#233;s et la solution justifi&#233;e en int&#233;grant les cons&#233;quences sur le triptyque MEI">
+              <d_ligne I_C="11" />
+              <d_poids F_C="9.090909" />
+              <d_revue I_C="0" />
+            </Indicateur_01>
+          </l_01>
+        </l_CO7.ee2>
+        <l_CO7.ee3 S_00="D&#233;finir la structure, la constitution d'un syst&#232;me en fonction des caract&#233;ristiques technico-&#233;conomiques et environnementales attendues">
+          <l_01>
+            <Indicateur_00 S_intitule="Les croquis et sch&#233;mas &#224; main lev&#233;e sont utilis&#233;s &#224; bon escient">
+              <d_ligne I_C="12" />
+              <d_poids F_C="9.090909" />
+              <d_revue I_C="0" />
+            </Indicateur_00>
+            <Indicateur_01 S_intitule="Les moyens num&#233;riques de description sont correctement utilis&#233;s">
+              <d_ligne I_C="13" />
+              <d_poids F_C="9.090909" />
+              <d_revue I_C="0" />
+            </Indicateur_01>
+            <Indicateur_02 S_intitule="La solution choisie pour la gestion de l'&#233;nergie est pertinente et adapt&#233;e aux exigences">
+              <d_ligne I_C="14" />
+              <d_poids F_C="9.090909" />
+              <d_revue I_C="0" />
+            </Indicateur_02>
+            <Indicateur_03 S_intitule="Les grandes &#233;tapes d'une d&#233;marche de cr&#233;ativit&#233; sont franchies de mani&#232;re coh&#233;rente">
+              <d_ligne I_C="15" />
+              <d_poids F_C="9.090909" />
+              <d_revue I_C="0" />
+            </Indicateur_03>
+            <Indicateur_04 S_intitule="La structure propos&#233;e et le choix des composants respectent les exigences">
+              <d_ligne I_C="16" />
+              <d_poids F_C="9.090909" />
+              <d_revue I_C="0" />
+            </Indicateur_04>
+          </l_01>
+        </l_CO7.ee3>
+        <l_CO7.ee1 S_00="Participer &#224; une d&#233;marche de conception dans le but de proposer plusieurs solutions possibles &#224; un probl&#232;me technique identifi&#233; en lien avec un enjeu &#233;nerg&#233;tique">
+          <l_01>
+            <Indicateur_00 S_intitule="Le besoin relatif au projet et les fonctions sont identifi&#233;s et justifi&#233;s">
+              <d_ligne I_C="6" />
+              <d_poids F_C="9.090909" />
+              <d_revue I_C="0" />
+            </Indicateur_00>
+            <Indicateur_01 S_intitule="Les crit&#232;res du cahier des charges sont d&#233;cod&#233;s et les principaux points de vigilance relatifs au projet sont identifi&#233;s">
+              <d_ligne I_C="7" />
+              <d_poids F_C="9.090909" />
+              <d_revue I_C="0" />
+            </Indicateur_01>
+            <Indicateur_02 S_intitule="Les contraintes de normes, propri&#233;t&#233; industrielle, brevets sont identifi&#233;es">
+              <d_ligne I_C="8" />
+              <d_poids F_C="9.090909" />
+              <d_revue I_C="0" />
+            </Indicateur_02>
+            <Indicateur_03 S_intitule="La d&#233;marche d'analyse du probl&#232;me est pertinente ">
+              <d_ligne I_C="9" />
+              <d_poids F_C="9.090909" />
+              <d_revue I_C="0" />
+            </Indicateur_03>
+          </l_01>
+        </l_CO7.ee1>
+        <l_CO7.ee4 S_00="D&#233;finir les modifications de la structure, les choix de constituants et du type de syst&#232;me de gestion d'une cha&#238;ne d'&#233;nergie afin de r&#233;pondre &#224; une &#233;volution d'un cahier des charges">
+          <l_01>
+            <Indicateur_00 S_intitule="idem CO7.ee3">
+              <d_ligne I_C="0" />
+              <d_poids I_C="1" />
+              <d_revue I_C="0" />
+            </Indicateur_00>
+          </l_01>
+        </l_CO7.ee4>
+      </d_01>
+      <d_02 I_C="40" />
+    </l_O7>
+    <l_O9 S_00="G&#233;rer la vie du produit">
+      <d_01>
+        <l_CO9.ee1 S_00="Exp&#233;rimenter des proc&#233;d&#233;s de stockage, de production, de transport, de transformation, d'&#233;nergie pour aider &#224; la conception d'une cha&#238;ne d'&#233;nergie">
+          <l_01>
+            <Indicateur_00 S_intitule="Les param&#232;tres significatifs &#224; observer sont identifi&#233;s">
+              <d_ligne I_C="31" />
+              <d_poids F_C="11.111111" />
+              <d_revue I_C="0" />
+            </Indicateur_00>
+            <Indicateur_01 S_intitule="Le protocole d'exp&#233;rimentation est adapt&#233; &#224; l'objectif">
+              <d_ligne I_C="32" />
+              <d_poids F_C="11.111111" />
+              <d_revue I_C="0" />
+            </Indicateur_01>
+            <Indicateur_02 S_intitule="Les caract&#233;ristiques principales et leurs cons&#233;quences constructives sont identifi&#233;es">
+              <d_ligne I_C="33" />
+              <d_poids F_C="11.111111" />
+              <d_revue I_C="0" />
+            </Indicateur_02>
+          </l_01>
+        </l_CO9.ee1>
+        <l_CO9.ee2 S_00="R&#233;aliser et valider un prototype obtenu en r&#233;ponse &#224; tout ou partie du cahier des charges initial">
+          <l_01>
+            <Indicateur_00 S_intitule="Le prototype choisi et sa r&#233;alisation, respecte le diagramme des exigences">
+              <d_ligne I_C="34" />
+              <d_poids F_C="11.111111" />
+              <d_revue I_C="0" />
+            </Indicateur_00>
+            <Indicateur_01 S_intitule="Les caract&#233;ristiques &#224; valider sont identifi&#233;es et permettent de valider les exigences">
+              <d_ligne I_C="35" />
+              <d_poids F_C="11.111111" />
+              <d_revue I_C="0" />
+            </Indicateur_01>
+          </l_01>
+        </l_CO9.ee2>
+        <l_CO9.ee3 S_00="Int&#233;grer un prototype dans un syst&#232;me &#224; modifier pour valider son comportement et ses performances">
+          <l_01>
+            <Indicateur_00 S_intitule="Le prototype s'ins&#232;re dans le syst&#232;me">
+              <d_ligne I_C="36" />
+              <d_poids F_C="11.111111" />
+              <d_revue I_C="0" />
+            </Indicateur_00>
+            <Indicateur_01 S_intitule="Un protocole d'essai pertinent est d&#233;fini">
+              <d_ligne I_C="37" />
+              <d_poids F_C="11.111111" />
+              <d_revue I_C="0" />
+            </Indicateur_01>
+            <Indicateur_02 S_intitule="L'essai respecte le protocole et le comportement du syst&#232;me est relev&#233;">
+              <d_ligne I_C="38" />
+              <d_poids F_C="11.111111" />
+              <d_revue I_C="0" />
+            </Indicateur_02>
+            <Indicateur_03 S_intitule="Les mesures et leurs interpr&#233;tations montrent des r&#233;sultats coh&#233;rents ">
+              <d_ligne I_C="39" />
+              <d_poids F_C="11.111111" />
+              <d_revue I_C="0" />
+            </Indicateur_03>
+          </l_01>
+        </l_CO9.ee3>
+      </d_01>
+      <d_02 I_C="20" />
+    </l_O9>
+    <l_O8 S_00="Valider des solutions techniques">
+      <d_01>
+        <l_CO8.ee1 S_00="Renseigner un logiciel de simulation du comportement &#233;nerg&#233;tique avec les caract&#233;ristiques du syst&#232;me et les param&#232;tres externes pour un point de fonctionnement donn&#233;">
+          <l_01>
+            <Indicateur_00 S_intitule="Les variables et les param&#232;tres du mod&#232;le sont identifi&#233;s">
+              <d_ligne I_C="18" />
+              <d_poids F_C="8.333333" />
+              <d_revue I_C="0" />
+            </Indicateur_00>
+            <Indicateur_01 S_intitule="Leurs influences respectives sont identifi&#233;es">
+              <d_ligne I_C="19" />
+              <d_poids F_C="8.333333" />
+              <d_revue I_C="0" />
+            </Indicateur_01>
+          </l_01>
+        </l_CO8.ee1>
+        <l_CO8.ee3 S_00="Comparer et interpr&#233;ter le r&#233;sultat d'une simulation d'un comportement d'un syst&#232;me avec un comportement r&#233;el">
+          <l_01>
+            <Indicateur_00 S_intitule="Les r&#233;sultats de la simulation et les mesures sont corr&#233;l&#233;s">
+              <d_ligne I_C="24" />
+              <d_poids F_C="8.333333" />
+              <d_revue I_C="0" />
+            </Indicateur_00>
+            <Indicateur_01 S_intitule="L'analyse des &#233;carts est m&#233;thodique">
+              <d_ligne I_C="25" />
+              <d_poids F_C="8.333333" />
+              <d_revue I_C="0" />
+            </Indicateur_01>
+            <Indicateur_02 S_intitule="L'interpr&#233;tation des r&#233;sultats est coh&#233;rente et pertinente">
+              <d_ligne I_C="26" />
+              <d_poids F_C="8.333333" />
+              <d_revue I_C="0" />
+            </Indicateur_02>
+          </l_01>
+        </l_CO8.ee3>
+        <l_CO8.ee2 S_00="Interpr&#233;ter les r&#233;sultats d'une simulation afin de valider une solution ou l'optimiser">
+          <l_01>
+            <Indicateur_00 S_intitule="Les sc&#233;narios de simulation sont identifi&#233;s">
+              <d_ligne I_C="20" />
+              <d_poids F_C="8.333333" />
+              <d_revue I_C="0" />
+            </Indicateur_00>
+            <Indicateur_01 S_intitule="Les param&#232;tres influents sont identifi&#233;s">
+              <d_ligne I_C="21" />
+              <d_poids F_C="8.333333" />
+              <d_revue I_C="0" />
+            </Indicateur_01>
+            <Indicateur_02 S_intitule="L'interpr&#233;tation des r&#233;sultats de la simulation est pertinente">
+              <d_ligne I_C="22" />
+              <d_poids F_C="8.333333" />
+              <d_revue I_C="0" />
+            </Indicateur_02>
+            <Indicateur_03 S_intitule="Les modifications propos&#233;es sont coh&#233;rentes">
+              <d_ligne I_C="23" />
+              <d_poids F_C="8.333333" />
+              <d_revue I_C="0" />
+            </Indicateur_03>
+          </l_01>
+        </l_CO8.ee2>
+        <l_CO8.ee4 S_00="Mettre en oeuvre un protocole d'essais et de mesures sur le prototype d'une cha&#238;ne d'&#233;nergie, interpr&#233;ter les r&#233;sultats">
+          <l_01>
+            <Indicateur_00 S_intitule="le protocole d'essai est justifi&#233; et adapt&#233; &#224; l'objectif">
+              <d_ligne I_C="27" />
+              <d_poids F_C="8.333333" />
+              <d_revue I_C="0" />
+            </Indicateur_00>
+            <Indicateur_01 S_intitule="Les observations et mesures sont m&#233;thodiquement men&#233;s et les incertitudes de mesures estim&#233;es">
+              <d_ligne I_C="28" />
+              <d_poids F_C="8.333333" />
+              <d_revue I_C="0" />
+            </Indicateur_01>
+            <Indicateur_02 S_intitule="L'interpr&#233;tation des r&#233;sultats est coh&#233;rente et pertinente">
+              <d_ligne I_C="29" />
+              <d_poids F_C="8.333333" />
+              <d_revue I_C="0" />
+            </Indicateur_02>
+          </l_01>
+        </l_CO8.ee4>
+      </d_01>
+      <d_02 I_C="40" />
+    </l_O8>
+  </d_dicCompetences>
+  <d_dicFonctions />
+  <d_dicSavoirs>
+    <l_1 S_00="Projet technologique">
+      <d_01>
+        <l_1.4 S_00="Communication technique">
+          <l_01 S_00="Compte rendu d'une activit&#233; de projet. Pr&#233;sentation d'une intention de conception ou d'une solution. Animation d'une revue de projet" />
+        </l_1.4>
+        <l_1.1 S_00="La d&#233;marche de projet">
+          <d_01>
+            <l_1.1.1 S_00="Les projets industriels">
+              <l_01 S_00="Typologie des entreprises industrielles et des projets techniques associ&#233;s (projets locaux, transversaux, \&quot;joint venture\&quot;)" S_01="Phases d'un projet industriel (marketing, pr&#233; conception, pr&#233; industrialisation et conception d&#233;taill&#233;, industrialisation, maintenance et fin de vie)" S_02="Principes d'organisation et planification d'un projet (d&#233;veloppement s&#233;quentiel, chemin critique, d&#233;coupage du projet en fonctions &#233;l&#233;mentaires ou en phases) Gestion, suivi et finalisation d'un projet (co&#251;t, budget, bilan d'exp&#233;rience)" />
+            </l_1.1.1>
+            <l_1.1.2 S_00="Les projets p&#233;dagogiques et technologiques">
+              <l_01 S_00="Etapes et planification d'un projet technologique (revues de projets, travail collaboratif en &#233;quipe projet : ENT, base de donn&#233;es, formats d'&#233;change, carte mentale, flux op&#233;rationnels)" S_01="Animation d'une revue de projet ou management d'une &#233;quipe projet" S_02="Evaluation de la prise de risque dans un projet par le choix des solutions technologiques (innovations technologiques, notion de co&#251;t global, veille technologique)" />
+            </l_1.1.2>
+          </d_01>
+        </l_1.1>
+        <l_1.2 S_00="Param&#232;tres de la comp&#233;titivit&#233;">
+          <l_01 S_00="Conformit&#233; &#224; une norme. L'ergonomie : s&#233;curit&#233; dans les relations homme - syst&#232;me, maintenabilit&#233;, fiabilit&#233;. Innovation technologique : int&#233;gration des fonctions et optimisation du fonctionnement, solutions int&#233;grant des &#233;nergies renouvelables. Influence de la dur&#233;e de vie des constituants" />
+        </l_1.2>
+        <l_1.3 S_00="V&#233;rification des performances          ">
+          <l_01 S_00="Contraintes du cahier des charges : performances, qualit&#233;, s&#233;curit&#233;, temps caract&#233;ristiques" S_01="Recette du prototype au regard des besoins formalis&#233;s dans le cahier des charges" S_02="Int&#233;gration des fonctions et optimisation du fonctionnement : approche pluritechnologique et transferts de technologie" />
+        </l_1.3>
+      </d_01>
+    </l_1>
+    <l_3 S_00="Transports et distribution d'&#233;nergie, &#233;tudes de dossiers technologiques">
+      <d_01>
+        <l_3.1 S_00="Production et transport d'&#233;nergie">
+          <l_01 S_00="Types et caract&#233;ristiques des centrales &#233;lectriques, hydrauliques, thermiques. Types de solutions de production d'&#233;nergies renouvelables, caract&#233;ristiques" S_01="Structure d'un r&#233;seau de transport et de distribution d'&#233;nergie &#233;lectrique, caract&#233;ristiques et pertes" S_02="Distribution de l'&#233;nergie &#233;lectrique" S_03="Structure d'un r&#233;seau de production, de transport et de distribution de fluides" S_04="Gestion du r&#233;seau de transport. Comptage et facturation de l'&#233;nergie. Impact environnemental" />
+        </l_3.1>
+      </d_01>
+    </l_3>
+    <l_2 S_00="Conception d'un syst&#232;me">
+      <d_01>
+        <l_2.3 S_00="Param&#232;tres influant la conception">
+          <l_01 S_00="Efficacit&#233; &#233;nerg&#233;tique passive et active d'un syst&#232;me" />
+        </l_2.3>
+        <l_2.2 S_00="Approche fonctionnelle du syst&#232;me de gestion de la cha&#238;ne d'&#233;nergie">
+          <l_01 S_00="Gestion de l'information d&#233;di&#233;e aux applications &#233;nerg&#233;tiques, caract&#233;ristiques des fonctions des syst&#232;mes" S_01="Fonctions de communication homme-syst&#232;me : types et caract&#233;ristiques" S_02="Autour d'un point de fonctionnement donn&#233;, syst&#232;mes asservis ou r&#233;gul&#233;s : - repr&#233;sentation fonctionnelle (sch&#233;ma blocs, cha&#238;ne d'action et de retour, correcteur - grandeur r&#233;gl&#233;e, r&#233;glante et pertubatrice" />
+        </l_2.2>
+        <l_2.1 S_00="Approche fonctionnelle d'une cha&#238;ne d'&#233;nergie">
+          <l_01 S_00="Structure fonctionnelle d'une cha&#238;ne d'&#233;nergie, graphe de structure d'une cha&#238;ne d'&#233;nergie" S_01="Sch&#233;ma de transfert d'&#233;nergie" S_02="Structures d'alimentation en &#233;nergie multi-transformateur" />
+        </l_2.1>
+        <l_2.5 S_00="Crit&#232;res de choix de solutions">
+          <l_01 S_00=" Constituants mat&#233;riels et logiciels associ&#233;s aux fonctions techniques assur&#233;es par la cha&#238;ne d'&#233;nergie et r&#233;pondant aux performances attendues. Type de syst&#232;me de gestion de l'&#233;nergie. Interfaces entre le syst&#232;me de gestion de l'&#233;nergie et la cha&#238;ne d'&#233;nergie. Capteurs. Protections contre les surintensit&#233;s et contre les surcharges. Conducteurs" S_01="  Co&#251;t global d'un syst&#232;me : investissement initial, maintenance, entretien, adaptation &#224; l'usage, consommation &#233;nerg&#233;tique" />
+        </l_2.5>
+        <l_2.4 S_00="Approche comportementale">
+          <d_01>
+            <l_2.4.3 S_00="Validation comportementale par simulation">
+              <l_01 S_00=" Loi de dcommande, param&#232;tres du mod&#232;le de comportement, param&#232;tres de l'environnement. Validation du comportement &#233;nerg&#233;tique d'une structure par simulation. Validation du comportement du syst&#232;me de gestion d'une cha&#238;ne d'&#233;nergie par simulation" />
+            </l_2.4.3>
+            <l_2.4.2 S_00="Gestion de l'&#233;nergie en temps r&#233;el">
+              <l_01 S_00=" Contr&#244;le instantan&#233; du fonctionnement du syst&#232;me en vue d'un maintien au plus pr&#232;s d'un point de fonctionnement" S_01=" Diagramme &#233;tats - transitions pour un syst&#232;me &#233;v&#232;nementiel" />
+            </l_2.4.2>
+            <l_2.4.1 S_00="Comportement &#233;nerg&#233;tique des syst&#232;mes">
+              <l_01 S_00=" Comportement dynamique d'un m&#233;canisme. Th&#233;or&#232;me de l'&#233;nergie cin&#233;tique. Inertie ramen&#233;e sur l'arbre primaire. Exploitation d'une maquette num&#233;rique et d'un r&#233;sultat de simulation" S_01=" Comportement temporel des constituants d'une cha&#238;ne d'&#233;nergie, repr&#233;sentation. Caract&#233;ristiques et comportements thermique et acoustique des mat&#233;riaux et parois d'un b&#226;timent" S_02=" Charge d'une cha&#238;ne d'&#233;nergie : d&#233;finition, types de charges, caract&#233;risation" S_03=" Optimisation des &#233;changes d'&#233;nergie entre source et charge, am&#233;lioration de l'efficacit&#233; &#233;nerg&#233;tique : disponibilit&#233;, puissance, reconfiguration, qualit&#233;, adaptabilit&#233; au profil de charge, inertie, r&#233;gularit&#233;, modes de fonctionnement (marche, arr&#234;t, intermittence)" />
+            </l_2.4.1>
+          </d_01>
+        </l_2.4>
+      </d_01>
+    </l_2>
+    <l_4 S_00="R&#233;alisation et qualification d'un prototype">
+      <d_01>
+        <l_4.1 S_00="R&#233;alisation d'un prototype">
+          <l_01 S_00="D&#233;codage de notices techniques et des proc&#233;dures d'installation" S_01="Agencement, param&#233;trage et interconnexion de constituants de la cha&#238;ne d'&#233;nergie" S_02="Mise en oeuvre d'un syst&#232;me local de gestion de l'&#233;nergie" S_03="Mise en oeuvre d'un syst&#232;me de t&#233;l&#233;gestion et de t&#233;l&#233;surveillance" />
+        </l_4.1>
+        <l_4.3 S_00="Essais et r&#233;glages en vue d'assurer le fonctionnement et d'am&#233;liorer les performances">
+          <l_01 S_00="Protocole d'essais, essais et caract&#233;risation des &#233;carts par rapport au comportement attendu. Essais hors &#233;nergie, essais statiques en &#233;nergie, essais dynamiques. D&#233;marche raisonn&#233;e d'identification des causes des &#233;carts et de r&#233;solution des probl&#232;mes. Param&#232;tres &#224; ajuster pour un fonctionnement sp&#233;cifi&#233; d'un syst&#232;me ou d'un constituant" S_01="                      " />
+        </l_4.3>
+        <l_4.2 S_00="S&#233;curit&#233;">
+          <l_01 S_00="Techniques li&#233;es &#224; la s&#233;curit&#233; : notion de redondance, auto-surveillance. Pr&#233;vention des risques : pr&#233;vention intrins&#232;que, protection, information" />
+        </l_4.2>
+      </d_01>
+    </l_4>
+  </d_dicSavoirs>
+  <d_dicSavoirs_Math />
+  <d_dicSavoirs_Phys />
+  <d_effectifs>
+    <l_P S_00="Act. Pra." S_01="Activit&#233; Pratique" />
+    <l_C S_00="Classe enti&#232;re" S_01="Classe enti&#232;re" />
+    <l_E S_00="Etude ou Projet" S_01="Etude et Projet" />
+    <l_D S_00="Demi-groupe" S_01="Demi-groupe" />
+    <l_G S_00="Effectif r&#233;duit" S_01="Effectif r&#233;duit" />
+  </d_effectifs>
+  <d_effectifsSeance>
+    <l_C S_00="C" />
+    <l_E S_00="C" />
+    <l_AP S_00="E" S_01="P" />
+    <l_SS S_00="C" />
+    <l_ED S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" />
+    <l_P S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" />
+    <l_S />
+    <l_R />
+    <l_SA S_00="C" S_01="G" />
+    <l_TD S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" />
+  </d_effectifsSeance>
+  <l_listeDemarches S_00="I" S_01="R" S_02="P" />
+  <l_listeEffectifs S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" />
+  <l_listeTypeActivite S_00="ED" S_01="AP" S_02="P" />
+  <l_listeTypeSeance S_00="ED" S_01="AP" S_02="P" S_03="C" S_04="TD" S_05="SA" S_06="SS" S_07="E" S_08="R" S_09="S" />
+  <d_options />
+  <d_parties S_C="Conduite" S_S="Soutenance" />
+  <l_periodes>
+    <l_00 I_01="5" S_00="1_&#232;re" />
+    <l_01 I_01="5" S_00="T_ale" />
+  </l_periodes>
+  <l_positions_CI />
+  <d_projets>
+    <Projet_PRJ I_duree="70" S_code="PRJ" S_ficheValid="" S_intitule="Projet de fin d'ann&#233;e">
+      <d_attributs>
+        <l_SRC S_00="" S_01="" S_02="" />
+        <l_PAR S_00="" S_01="" S_02="" />
+        <l_DEC S_00="D&#233;coupage du projet" S_01="" S_02="" />
+        <l_OBJ S_00="Production finale attendue" S_01=" " S_02="" />
+        <l_TIT S_00="Intitul&#233; du projet" S_01="Intitul&#233; du projet" S_02="" />
+        <l_SYN S_00="" S_01="" S_02="" />
+        <l_PB S_00="Probl&#233;matique - &#201;nonc&#233; g&#233;n&#233;ral du besoin" S_01="Indiquer :-- - description du contexte dans lequel l&#8217;objet du projet va &#234;tre int&#233;gr&#233; ;-- - fonctionnalit&#233;s de cet objet ;-- - caract&#233;ristiques fonctionnelles et techniques." S_02="" />
+        <l_ORI S_00="Origine" S_01="Partenariat, th&#233;matique, concours&#8230;" S_02="" />
+        <l_CCF S_00="Contraintes impos&#233;es" S_01="Indiquer :-- - co&#251;t maximal ;-- - nature d&#8217;une ou des solutions techniques ou de familles de mat&#233;riels, de constituants ou de composants ;-- - environnement." S_02="" />
+        <l_TYP S_00="" S_01="" S_02="" />
+        <l_PRX S_00="" S_01="" S_02="" />
+      </d_attributs>
+      <d_cellulesInfo>
+        <d_C>
+          <l_Pre>
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="12" I_01="2" I_02="3" />
+            </l_00>
+          </l_Pre>
+          <l_Nom>
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="11" I_01="2" I_02="3" />
+            </l_00>
+          </l_Nom>
+          <l_NON>
+            <l_00 S_00="Notation Candidat " S_02="">
+              <l_01 I_00="6" I_01="4" I_02="0" />
+            </l_00>
+          </l_NON>
+          <l_Tit>
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="26" I_01="1" I_02="0" />
+            </l_00>
+          </l_Tit>
+          <l_Des>
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="26" I_01="1" I_02="0" />
+            </l_00>
+          </l_Des>
+          <l_Etab>
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="6" I_01="2" I_02="0" />
+            </l_00>
+          </l_Etab>
+          <l_Prof>
+            <l_00 S_00="Notation Candidat " S_02="">
+              <l_01 I_00="52" I_01="1" I_02="1" />
+            </l_00>
+          </l_Prof>
+        </d_C>
+        <d_S>
+          <l_N-P>
+            <l_00 S_00="Feuil1" S_02="Nom du candidat :--">
+              <l_01 I_00="24" I_01="11" I_02="0" />
+            </l_00>
+          </l_N-P>
+        </d_S>
+      </d_cellulesInfo>
+      <d_grilles>
+        <l_C S_00="Grille EE V2015.xlsx" S_01="C" />
+        <l_S S_00="Grille_presentation_projet_STI2D_V2015.xlsx" S_01="I" />
+      </d_grilles>
+      <l_listPhases S_00="Ana" S_01="Con" S_02="DCo" S_03="Rea" S_04="Val" S_05="XXX" S_06="Rev" S_07="R1" S_08="R2" S_09="R3" S_10="S" />
+      <l_listPhasesEval S_00="Rev" S_01="R1" S_02="R2" S_03="R3" S_04="S" />
+      <d_parties S_C="Conduite" S_S="Soutenance" />
+      <l_periode I_00="7" I_01="10" />
+      <d_phases>
+        <l_DCo S_00="Concep d&#233;taill&#233;e" S_01="Conception d&#233;taill&#233;e" S_02="Cd" />
+        <l_Ana S_00="Analyse besoins" S_01="Analyse des besoins" S_02="Ab" />
+        <l_Val S_00="Validation" S_01="Validation" S_02="V" />
+        <l_R2 S_00="Revue n&#176;2" S_01="Revue de projet n&#176;2" S_02="R2" />
+        <l_R3 S_00="Revue n&#176;3" S_01="Revue de projet n&#176;3" S_02="R3" />
+        <l_XXX S_00="Pr&#233;pa soutenance" S_01="Pr&#233;paration de la soutenance" S_02="P" />
+        <l_Rev S_00="Revue inter" S_01="Revue interm&#233;diaire" S_02="Ri" />
+        <l_R1 S_00="Revue n&#176;1" S_01="Revue de projet n&#176;1" S_02="R1" />
+        <l_S S_00="Soutenance" S_01="Soutenance finale" S_02="S" />
+        <l_Rea S_00="R&#233;alisation" S_01="R&#233;alisation" S_02="R" />
+        <l_Con S_00="Concep pr&#233;liminaire" S_01="Conception pr&#233;liminaire" S_02="Cp" />
+      </d_phases>
+      <d_posRevues>
+        <l__02 S_00="Con" S_01="Val" />
+        <l__03 S_00="Ana" S_01="Con" S_02="Val" />
+      </d_posRevues>
+    </Projet_PRJ>
+  </d_projets>
+  <d_seances>
+    <l_C S_00="Cours" S_01="Cours" />
+    <l_E S_00="Evaluation" S_01="Evaluation" />
+    <l_P S_00="Projet" S_01="Activit&#233; de projet" />
+    <l_SS S_00="Synt. s&#233;quence" S_01="Synth&#232;se de s&#233;quence" />
+    <l_ED S_00="Etude de dossier" S_01="Activit&#233; d'&#233;tude de dossier" />
+    <l_AP S_00="Activit&#233; pratique" S_01="Activit&#233; pratique" />
+    <l_S S_00="Parall&#232;le" S_01="Activit&#233;s en parall&#232;le" />
+    <l_R S_00="Rotation" S_01="Rotation d'activit&#233;s" />
+    <l_TD S_00="TD" S_01="Travaux Dirig&#233;s" />
+    <l_SA S_00="Synt. activit&#233;" S_01="Synth&#232;se d'activit&#233;" />
+  </d_seances>
+  <l_tr_com S_00="ET" S_01="Ref_STI2D-ETT.xls" />
+</Referentiel>

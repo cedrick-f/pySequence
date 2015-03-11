@@ -1,0 +1,405 @@
+<Referentiel B_CI_BO="True" B_CI_cible="False" B_objSavoirs_Math="False" B_objSavoirs_Phys="False" B_preSavoirs_Math="True" B_preSavoirs_Phys="True" S_Code="AC" S_Famille="STI" S_FichierLogo="" S_abrevCI="CI" S_nomCI="Centre(s) d'Int&#233;r&#234;t" S_nomCompetences="Comp&#233;tences" S_nomFonctions="Fonctions" S_nomIndicateurs="Indicateurs de performance" S_nomSavoirs="Savoirs" S_nomSavoirs_Math="Math&#233;matiques" S_nomSavoirs_Phys="Sciences Physiques" S_nomTaches="T&#226;ches" S_surnomSavoirs="">
+  <l_BO_URL>
+    <l_00 S_00="Programme" S_01="http://www.education.gouv.fr/pid25535/bulletin_officiel.html?cid_bo=82984" />
+  </l_BO_URL>
+  <l_BO_dossier S_00="STI2D" />
+  <l_CentresInterets S_00="Participation &#224; une &#233;tude architecturale" S_01="V&#233;rification de la r&#233;sistance" S_02="Protection" S_03="Le confort" S_04="Organisation de r&#233;alisation" S_05="Vie en oeuvre" S_06="Reconditionnement de l'ouvrage" S_07="Valorisation de la fin de vie de l'ouvrage" />
+  <l_Enseignement S_00="STI2D-AC" S_01="STI2D : Architecture et Construction" S_02="STI2D" />
+  <d_aColNon B_C="True" />
+  <d_activites>
+    <l_ED S_00="Etude de dossier" S_01="Activit&#233; d'&#233;tude de dossier" />
+    <l_P S_00="Projet" S_01="Activit&#233; de projet" />
+    <l_AP S_00="Activit&#233; pratique" S_01="Activit&#233; pratique" />
+  </d_activites>
+  <d_compImposees B_C="False" B_S="False" />
+  <d_demarcheSeance>
+    <l_ED S_00="I" S_01="R" />
+    <l_P S_00="I" S_01="R" S_02="P" />
+    <l_AP S_00="I" S_01="R" />
+  </d_demarcheSeance>
+  <d_demarches>
+    <l_I S_00="Investigation" S_01="Investigation" />
+    <l_P S_00="Projet" S_01="Projet" />
+    <l_R S_00="R&#233;s. Probl&#232;me" S_01="R&#233;solution de probl&#232;me" />
+  </d_demarches>
+  <d_dicCompetences>
+    <l_O7 S_00="Imaginer une solution, r&#233;pondre &#224; un besoin">
+      <d_01>
+        <l_CO7.ac1 S_00="Participer &#224; une &#233;tude architecturale, dans une d&#233;marche de d&#233;veloppement durable">
+          <l_01>
+            <Indicateur_00 S_intitule="Le besoin relatif au projet et les fonctions principales sont identifi&#233;s et justifi&#233;s">
+              <d_ligne I_C="6" />
+              <d_poids F_C="9.090909" />
+              <d_revue I_C="0" />
+            </Indicateur_00>
+            <Indicateur_01 S_intitule="Les crit&#232;res du cahier des charges sont d&#233;cod&#233;s et les principaux points de vigilance relatifs au projet sont identifi&#233;s">
+              <d_ligne I_C="7" />
+              <d_poids F_C="9.090909" />
+              <d_revue I_C="0" />
+            </Indicateur_01>
+            <Indicateur_02 S_intitule="La d&#233;marche d'analyse du probl&#232;me est pertinente">
+              <d_ligne I_C="8" />
+              <d_poids F_C="9.090909" />
+              <d_revue I_C="0" />
+            </Indicateur_02>
+          </l_01>
+        </l_CO7.ac1>
+        <l_CO7.ac2 S_00="Proposer/Choisir des solutions techniques r&#233;pondant aux contraintes et attentes d'une construction">
+          <l_01>
+            <Indicateur_00 S_intitule="Les moyens conventionnels de repr&#233;sentation des solutions sont correctement utilis&#233;s (croquis, sch&#233;mas, &#8230;)">
+              <d_ligne I_C="9" />
+              <d_poids F_C="9.090909" />
+              <d_revue I_C="0" />
+            </Indicateur_00>
+            <Indicateur_01 S_intitule="Les contraintes de normes, propri&#233;t&#233; industrielle, brevets sont identifi&#233;es">
+              <d_ligne I_C="10" />
+              <d_poids F_C="9.090909" />
+              <d_revue I_C="0" />
+            </Indicateur_01>
+            <Indicateur_02 S_intitule="Les solutions techniques propos&#233;es et les produits innovants choisis sont pertinents des points de vue DD, &#233;conomique et comportemental">
+              <d_ligne I_C="11" />
+              <d_poids F_C="9.090909" />
+              <d_revue I_C="0" />
+            </Indicateur_02>
+            <Indicateur_03 S_intitule="Les choix sont explicit&#233;s dans une d&#233;marche d'analyse globale de r&#233;ponse au cahier des charges">
+              <d_ligne I_C="12" />
+              <d_poids F_C="9.090909" />
+              <d_revue I_C="0" />
+            </Indicateur_03>
+          </l_01>
+        </l_CO7.ac2>
+        <l_CO7.ac3 S_00="Concevoir une organisation de r&#233;alisation">
+          <l_01>
+            <Indicateur_00 S_intitule="Le phasage des op&#233;rations de r&#233;alisation est r&#233;aliste, le chemin critique est identifi&#233;">
+              <d_ligne I_C="13" />
+              <d_poids F_C="9.090909" />
+              <d_revue I_C="0" />
+            </Indicateur_00>
+            <Indicateur_01 S_intitule="Les proc&#233;d&#233;s de mise en &#339;uvre sont choisis et justifi&#233;s">
+              <d_ligne I_C="14" />
+              <d_poids F_C="9.090909" />
+              <d_revue I_C="0" />
+            </Indicateur_01>
+            <Indicateur_02 S_intitule="La logistique de r&#233;alisation r&#233;pond aux contraintes techniques et de site du chantier">
+              <d_ligne I_C="15" />
+              <d_poids F_C="9.090909" />
+              <d_revue I_C="0" />
+            </Indicateur_02>
+            <Indicateur_03 S_intitule="Les impacts environnementaux sont identifi&#233;s, des solutions de limitation sont propos&#233;es">
+              <d_ligne I_C="16" />
+              <d_poids F_C="9.090909" />
+              <d_revue I_C="0" />
+            </Indicateur_03>
+          </l_01>
+        </l_CO7.ac3>
+      </d_01>
+      <d_02 I_C="40" />
+    </l_O7>
+    <l_O9 S_00="G&#233;rer la vie d'un syst&#232;me">
+      <d_01>
+        <l_CO9.ac2 S_00="Identifier et d&#233;crire les causes de d&#233;sordre dans une construction">
+          <l_01>
+            <Indicateur_00 S_intitule="Une d&#233;marche pertinente d'investigation est r&#233;alis&#233;e pour identifier les d&#233;sordres et leurs causes">
+              <d_ligne I_C="35" />
+              <d_poids F_C="12.5" />
+              <d_revue I_C="0" />
+            </Indicateur_00>
+            <Indicateur_01 S_intitule="Des solutions de rem&#233;diations sont envisag&#233;es">
+              <d_ligne I_C="36" />
+              <d_poids F_C="12.5" />
+              <d_revue I_C="0" />
+            </Indicateur_01>
+          </l_01>
+        </l_CO9.ac2>
+        <l_CO9.ac3 S_00="Valoriser la fin de vie du produit : d&#233;construction, gestion des d&#233;chets, valorisation des produits">
+          <l_01>
+            <Indicateur_00 S_intitule="Une analyse de cycle de vie de tout ou partie d'une construction est men&#233;e">
+              <d_ligne I_C="37" />
+              <d_poids F_C="12.5" />
+              <d_revue I_C="0" />
+            </Indicateur_00>
+            <Indicateur_01 S_intitule="Une proc&#233;dure de valorisation des produits au sens DD est propos&#233;e">
+              <d_ligne I_C="38" />
+              <d_poids F_C="12.5" />
+              <d_revue I_C="0" />
+            </Indicateur_01>
+          </l_01>
+        </l_CO9.ac3>
+        <l_CO9.ac1 S_00="Am&#233;liorer les performances d'une construction du point de vue &#233;nerg&#233;tique, domotique et informationnel">
+          <l_01>
+            <Indicateur_00 S_intitule="Un bilan des performances de la construction existante est &#233;tabli">
+              <d_ligne I_C="31" />
+              <d_poids F_C="12.5" />
+              <d_revue I_C="0" />
+            </Indicateur_00>
+            <Indicateur_01 S_intitule="Les besoins de l'usager sont traduits en solutions technologiques">
+              <d_ligne I_C="32" />
+              <d_poids F_C="12.5" />
+              <d_revue I_C="0" />
+            </Indicateur_01>
+            <Indicateur_02 S_intitule="Une r&#233;alisation permet de constater les am&#233;liorations attendues">
+              <d_ligne I_C="33" />
+              <d_poids F_C="12.5" />
+              <d_revue I_C="0" />
+            </Indicateur_02>
+            <Indicateur_03 S_intitule="L'adaptabilit&#233; de la construction r&#233;nov&#233;e est prise en compte">
+              <d_ligne I_C="34" />
+              <d_poids F_C="12.5" />
+              <d_revue I_C="0" />
+            </Indicateur_03>
+          </l_01>
+        </l_CO9.ac1>
+      </d_01>
+      <d_02 I_C="20" />
+    </l_O9>
+    <l_O8 S_00="Valider des solutions techniques">
+      <d_01>
+        <l_CO8.ac3 S_00="Analyser/Valider les choix structurels et de confort">
+          <l_01>
+            <Indicateur_00 S_intitule="Une d&#233;marche d'analyse de la structure est mise en &#339;uvre">
+              <d_ligne I_C="26" />
+              <d_poids F_C="8.333333" />
+              <d_revue I_C="0" />
+            </Indicateur_00>
+            <Indicateur_01 S_intitule="Les &#233;carts entre les performances attendues et celles cons&#233;cutives aux choix faits sont &#233;tablis">
+              <d_ligne I_C="27" />
+              <d_poids F_C="8.333333" />
+              <d_revue I_C="0" />
+            </Indicateur_01>
+            <Indicateur_02 S_intitule="Les contraintes de normes, propri&#233;t&#233; industrielle, brevets sont identifi&#233;es">
+              <d_ligne I_C="28" />
+              <d_poids F_C="8.333333" />
+              <d_revue I_C="0" />
+            </Indicateur_02>
+            <Indicateur_03 S_intitule="Les impacts environnementaux sont identifi&#233;s, des solutions de limitation sont propos&#233;es">
+              <d_ligne I_C="29" />
+              <d_poids F_C="8.333333" />
+              <d_revue I_C="0" />
+            </Indicateur_03>
+          </l_01>
+        </l_CO8.ac3>
+        <l_CO8.ac2 S_00="Analyser les r&#233;sultats issus de simulations ou d'essais de laboratoire">
+          <l_01>
+            <Indicateur_00 S_intitule="Les conditions de l'essai sont identifi&#233;es et justifi&#233;es">
+              <d_ligne I_C="21" />
+              <d_poids F_C="8.333333" />
+              <d_revue I_C="0" />
+            </Indicateur_00>
+            <Indicateur_01 S_intitule="Les observations et mesures sont rigoureuses">
+              <d_ligne I_C="22" />
+              <d_poids F_C="8.333333" />
+              <d_revue I_C="0" />
+            </Indicateur_01>
+            <Indicateur_02 S_intitule="Les incertitudes sont estim&#233;es">
+              <d_ligne I_C="23" />
+              <d_poids F_C="8.333333" />
+              <d_revue I_C="0" />
+            </Indicateur_02>
+            <Indicateur_03 S_intitule="L'interpr&#233;tation des r&#233;sultats est pertinent">
+              <d_ligne I_C="24" />
+              <d_poids F_C="8.333333" />
+              <d_revue I_C="0" />
+            </Indicateur_03>
+            <Indicateur_04 S_intitule="Les r&#233;sultats de la simulation et les mesures sont corr&#233;l&#233;s (validation des mod&#232;les)">
+              <d_ligne I_C="25" />
+              <d_poids F_C="8.333333" />
+              <d_revue I_C="0" />
+            </Indicateur_04>
+          </l_01>
+        </l_CO8.ac2>
+        <l_CO8.ac1 S_00="Simuler un comportement structurel, thermique et acoustique de tout ou partie d'une construction">
+          <l_01>
+            <Indicateur_00 S_intitule="Les variables et les param&#232;tres des mod&#232;les sont identifi&#233;s">
+              <d_ligne I_C="18" />
+              <d_poids F_C="8.333333" />
+              <d_revue I_C="0" />
+            </Indicateur_00>
+            <Indicateur_01 S_intitule="Leurs influences respectives sont identifi&#233;es">
+              <d_ligne I_C="19" />
+              <d_poids F_C="8.333333" />
+              <d_revue I_C="0" />
+            </Indicateur_01>
+            <Indicateur_02 S_intitule="Les sc&#233;narios de simulation sont identifi&#233;s">
+              <d_ligne I_C="20" />
+              <d_poids F_C="8.333333" />
+              <d_revue I_C="0" />
+            </Indicateur_02>
+          </l_01>
+        </l_CO8.ac1>
+      </d_01>
+      <d_02 I_C="40" />
+    </l_O8>
+  </d_dicCompetences>
+  <d_dicFonctions />
+  <d_dicSavoirs>
+    <l_1 S_00="Projet technologique">
+      <d_01>
+        <l_1.1 S_00="La d&#233;marche de projet">
+          <l_01 S_00="Environnement &#233;conomique et professionnel" S_01="Planification d'un projet de construction : d&#233;coupage en phase, diagramme de Gantt, notion de chemin critique" S_02="Pilotage d'un projet : revue de projet, notion de co&#251;t et de budget, &#233;laboration d'un bilan d'exp&#233;rience en vue de tra&#231;abilit&#233;. Travail collaboratif : ENT, base de donn&#233;es, formats d'&#233;change, carte mentale, flux op&#233;rationnels" S_03="Evaluation de la prise de risque dans un projet par le choix des solutions technologiques (innovations technologiques, notion de co&#251;t global, veille technologique" S_04="Outils de communication technique : croquis, maquette, repr&#233;sentation normalis&#233;e, modeleur volumique et module m&#233;tier, notice descriptive" />
+        </l_1.1>
+        <l_1.2 S_00="Projet architectural">
+          <l_01 S_00="Analyse fonctionnelle adapt&#233;e &#224; la construction. Organigramme fonctionnel" S_01="Conception bioclimatique. Syst&#232;me porteurs. Conformit&#233; aux r&#232;glementations" S_02="Association de dispositions constructives et de performances attendues : - isolation thermique et acoustique, &#233;clairage, qualit&#233; de l'air - accessibilit&#233; du cadre b&#226;ti pour personnes en situation de handicap, pr&#233;dimensionnements architecturaux, architecture bioclimatique" />
+        </l_1.2>
+        <l_1.3 S_00="Etablir une organisation de r&#233;alisation          ">
+          <l_01 S_00="Phasage des op&#233;rations. Logistique de chantier. Validations de proc&#233;d&#233;s de mise en oeuvre. Impact carbone. Tri des d&#233;chets" />
+        </l_1.3>
+      </d_01>
+    </l_1>
+    <l_3 S_00="Vie de la construction">
+      <d_01>
+        <l_3.2 S_00="Gestion de la vie d'une construction">
+          <l_01 S_00="Cycle vie de l'ouvrage : - mat&#233;riaux de la construction (extraction, transformation, mise en oeuvre) - &#233;nergie grise - proc&#233;d&#233;s et mat&#233;riels de d&#233;construction - l&#233;gislation en vigueur - tra&#231;abilit&#233;" S_01="- Planification de la d&#233;construction d'un ouvrage - typologie des d&#233;chets, valorisation, traitements" S_02="Inventorier la nature des pathologies : - histoire des mat&#233;riaux de la construction, leur &#233;volution dans le temps - nature et &#233;volutions des sols" S_03="- Techniques de relev&#233; des constructions (imagerie, topographie, m&#233;tr&#233;, pr&#233;l&#232;vement d'&#233;chantillon)" />
+        </l_3.2>
+        <l_3.1 S_00="Am&#233;liorer les performances de la construction">
+          <l_01 S_00="Protection anti intrusion. Gestion des acc&#232;s. Pilotage d'automatismes (volets, brise-soleil... R&#233;seaux Voix, Donn&#233;es, Images. Centralisation des commandes. Instrumentation d'&#233;quipements (relev&#233; et affichage de consommation, etc.). Pilotage &#224; distance (t&#233;l&#233;phone, internet, etc.). Asservissement de syst&#232;mes (coupure du chauffage sur ouverture de fen&#234;tre, etc.)" S_01="Gestion du r&#233;seau de transport. Comptage et facturation de l'&#233;nergie. Impact environnemental," />
+        </l_3.1>
+      </d_01>
+    </l_3>
+    <l_2 S_00="Conception d'un ouvrage">
+      <d_01>
+        <l_2.3 S_00="Mod&#233;lisations, essais et simulations">
+          <l_01 S_00=" Etude des structures : - mod&#233;lisation, degr&#233; d'hyperstaticit&#233;, typologie des charges, descente de charges, force portante du sol, sollicitations et d&#233;formations des structures - comportement &#233;lastique, &#233;lastoplastique - rupture fragile, ductilit&#233; - coefficients de s&#233;curit&#233; - moment quadratique, principe de superposition, r&#233;partition des d&#233;formations dans une section de poutre soumise &#224; de la flexion simple" S_01=" Confort hygromthermique : - caract&#233;ristiques et comportements thermiques des mat&#233;riaux et parois" S_02=" Confort acoustique : - transmission du bruit au travers d'une paroi - les pi&#232;ges &#224; sons - loi de masse - ph&#233;nom&#232;ne de r&#233;sonnance - temps de r&#233;verb&#233;ration" S_03=" Confort visuel : - &#233;clairement, luminance, facteur de lumi&#232;re du jour - strat&#233;gie de l'&#233;clairement naturel" S_04=" Confort respiratoire : - conditions d'hygi&#232;ne, pollution - renouvellement d'air, VMC" />
+        </l_2.3>
+        <l_2.2 S_00="Solutions technologiques">
+          <l_01 S_00="Ma&#238;trise des consommations d'&#233;nergie : -performances thermiques du b&#226;ti - gains passifs (enveloppe, &#233;crans solaire, &#233;clairage naturel). Ma&#238;trise des pertes : - temp&#233;ratures ambiantes de confort intermittence des consignes - gestion d'&#233;clairage et d'&#233;crans solaires - r&#233;cup&#233;ration d'&#233;nergie - pilotage d'&#233;nergie - pilotage global de l'&#233;nergie sur site" S_01="Assurer la stabilit&#233; : - charmente - porteurs verticaux et horizontaux - liaison au sol, stabilit&#233; des terres, drainage" S_02="Le confort : - thermique - acoustique - visuel - respiratoire" />
+        </l_2.2>
+        <l_2.1 S_00="Param&#232;tres influant la conception">
+          <l_01 S_00="Rep&#233;rage des caract&#233;ristiques propres de solutions architecturales : - articulation entre les grandes &#233;tapes de l'histoire des constructions et leur contexte socio-&#233;conomique - principales r&#233;alisations des b&#226;tisseurs depuis le XVIII&#176; si&#232;cle - composition architecturale : vocabulaire, &#233;l&#233;ments de syntaxe, proportion, &#233;chelle - r&#233;f&#233;rences culturelles, historiques, sociales" S_01="Le confort : - hygromthermique - acoustique - visuel - repiratoire" S_02="Choix des sources d'&#233;nergie du projet : - transformation de l'&#233;nergie - co&#251;t des &#233;nergies - association de sources d'&#233;nergie - cheminement physique des flux de fluide dans une construction" S_03="Infrastructure et superstructure : - &#233;l&#233;ments de g&#233;ologie, caract&#233;ristiques physiques et m&#233;caniques des sols - &#233;l&#233;ments de structure porteuse - &#233;l&#233;ments d'enveloppe du b&#226;timent - cloisonnement" S_04="Am&#233;nagement du territoire : - typologies des ouvrages (ponts, routes, barrages, lieu de production d'&#233;nergie) - impact environnemental li&#233; &#224; l'am&#233;nagement de l'espace public" S_05="Am&#233;nagement urbain : - distribution des fluides, des &#233;nergies - collecte et traitement des effluents - am&#233;nagement des espaces communs - &#233;clairage public" />
+        </l_2.1>
+      </d_01>
+    </l_2>
+  </d_dicSavoirs>
+  <d_dicSavoirs_Math />
+  <d_dicSavoirs_Phys />
+  <d_effectifs>
+    <l_P S_00="Act. Pra." S_01="Activit&#233; Pratique" />
+    <l_C S_00="Classe enti&#232;re" S_01="Classe enti&#232;re" />
+    <l_E S_00="Etude ou Projet" S_01="Etude et Projet" />
+    <l_D S_00="Demi-groupe" S_01="Demi-groupe" />
+    <l_G S_00="Effectif r&#233;duit" S_01="Effectif r&#233;duit" />
+  </d_effectifs>
+  <d_effectifsSeance>
+    <l_C S_00="C" />
+    <l_E S_00="C" />
+    <l_AP S_00="E" S_01="P" />
+    <l_SS S_00="C" />
+    <l_ED S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" />
+    <l_P S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" />
+    <l_S />
+    <l_R />
+    <l_SA S_00="C" S_01="G" />
+    <l_TD S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" />
+  </d_effectifsSeance>
+  <l_listeDemarches S_00="I" S_01="R" S_02="P" />
+  <l_listeEffectifs S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" />
+  <l_listeTypeActivite S_00="ED" S_01="AP" S_02="P" />
+  <l_listeTypeSeance S_00="ED" S_01="AP" S_02="P" S_03="C" S_04="TD" S_05="SA" S_06="SS" S_07="E" S_08="R" S_09="S" />
+  <d_options />
+  <d_parties S_C="Conduite" S_S="Soutenance" />
+  <l_periodes>
+    <l_00 I_01="5" S_00="1_&#232;re" />
+    <l_01 I_01="5" S_00="T_ale" />
+  </l_periodes>
+  <l_positions_CI />
+  <d_projets>
+    <Projet_PRJ I_duree="70" S_code="PRJ" S_ficheValid="" S_intitule="Projet de fin d'ann&#233;e">
+      <d_attributs>
+        <l_SRC S_00="" S_01="" S_02="" />
+        <l_PAR S_00="" S_01="" S_02="" />
+        <l_DEC S_00="D&#233;coupage du projet" S_01="" S_02="" />
+        <l_OBJ S_00="Production finale attendue" S_01=" " S_02="" />
+        <l_TIT S_00="Intitul&#233; du projet" S_01="Intitul&#233; du projet" S_02="" />
+        <l_SYN S_00="" S_01="" S_02="" />
+        <l_PB S_00="Probl&#233;matique - &#201;nonc&#233; g&#233;n&#233;ral du besoin" S_01="Indiquer :-- - description du contexte dans lequel l&#8217;objet du projet va &#234;tre int&#233;gr&#233; ;-- - fonctionnalit&#233;s de cet objet ;-- - caract&#233;ristiques fonctionnelles et techniques." S_02="" />
+        <l_ORI S_00="Origine" S_01="Partenariat, th&#233;matique, concours&#8230;" S_02="" />
+        <l_CCF S_00="Contraintes impos&#233;es" S_01="Indiquer :-- - co&#251;t maximal ;-- - nature d&#8217;une ou des solutions techniques ou de familles de mat&#233;riels, de constituants ou de composants ;-- - environnement." S_02="" />
+        <l_TYP S_00="" S_01="" S_02="" />
+        <l_PRX S_00="" S_01="" S_02="" />
+      </d_attributs>
+      <d_cellulesInfo>
+        <d_C>
+          <l_Pre>
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="12" I_01="2" I_02="3" />
+            </l_00>
+          </l_Pre>
+          <l_Nom>
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="11" I_01="2" I_02="3" />
+            </l_00>
+          </l_Nom>
+          <l_NON>
+            <l_00 S_00="Notation Candidat " S_02="">
+              <l_01 I_00="6" I_01="4" I_02="0" />
+            </l_00>
+          </l_NON>
+          <l_Tit>
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="26" I_01="1" I_02="0" />
+            </l_00>
+          </l_Tit>
+          <l_Des>
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="26" I_01="1" I_02="0" />
+            </l_00>
+          </l_Des>
+          <l_Etab>
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="6" I_01="2" I_02="0" />
+            </l_00>
+          </l_Etab>
+          <l_Prof>
+            <l_00 S_00="Notation Candidat " S_02="">
+              <l_01 I_00="51" I_01="1" I_02="1" />
+            </l_00>
+          </l_Prof>
+        </d_C>
+        <d_S>
+          <l_N-P>
+            <l_00 S_00="Feuil1" S_02="Nom du candidat :--">
+              <l_01 I_00="24" I_01="11" I_02="0" />
+            </l_00>
+          </l_N-P>
+        </d_S>
+      </d_cellulesInfo>
+      <d_grilles>
+        <l_C S_00="Grille AC V2015.xlsx" S_01="C" />
+        <l_S S_00="Grille_presentation_projet_STI2D_V2015.xlsx" S_01="I" />
+      </d_grilles>
+      <l_listPhases S_00="Ana" S_01="Con" S_02="DCo" S_03="Rea" S_04="Val" S_05="XXX" S_06="Rev" S_07="R1" S_08="R2" S_09="R3" S_10="S" />
+      <l_listPhasesEval S_00="Rev" S_01="R1" S_02="R2" S_03="R3" S_04="S" />
+      <d_parties S_C="Conduite" S_S="Soutenance" />
+      <l_periode I_00="7" I_01="10" />
+      <d_phases>
+        <l_DCo S_00="Concep d&#233;taill&#233;e" S_01="Conception d&#233;taill&#233;e" S_02="Cd" />
+        <l_Ana S_00="Analyse besoins" S_01="Analyse des besoins" S_02="Ab" />
+        <l_Val S_00="Validation" S_01="Validation" S_02="V" />
+        <l_R2 S_00="Revue n&#176;2" S_01="Revue de projet n&#176;2" S_02="R2" />
+        <l_R3 S_00="Revue n&#176;3" S_01="Revue de projet n&#176;3" S_02="R3" />
+        <l_XXX S_00="Pr&#233;pa soutenance" S_01="Pr&#233;paration de la soutenance" S_02="P" />
+        <l_Rev S_00="Revue inter" S_01="Revue interm&#233;diaire" S_02="Ri" />
+        <l_R1 S_00="Revue n&#176;1" S_01="Revue de projet n&#176;1" S_02="R1" />
+        <l_S S_00="Soutenance" S_01="Soutenance finale" S_02="S" />
+        <l_Rea S_00="R&#233;alisation" S_01="R&#233;alisation" S_02="R" />
+        <l_Con S_00="Concep pr&#233;liminaire" S_01="Conception pr&#233;liminaire" S_02="Cp" />
+      </d_phases>
+      <d_posRevues>
+        <l__02 S_00="Con" S_01="Val" />
+        <l__03 S_00="Ana" S_01="Con" S_02="Val" />
+      </d_posRevues>
+    </Projet_PRJ>
+  </d_projets>
+  <d_seances>
+    <l_C S_00="Cours" S_01="Cours" />
+    <l_E S_00="Evaluation" S_01="Evaluation" />
+    <l_P S_00="Projet" S_01="Activit&#233; de projet" />
+    <l_SS S_00="Synt. s&#233;quence" S_01="Synth&#232;se de s&#233;quence" />
+    <l_ED S_00="Etude de dossier" S_01="Activit&#233; d'&#233;tude de dossier" />
+    <l_AP S_00="Activit&#233; pratique" S_01="Activit&#233; pratique" />
+    <l_S S_00="Parall&#232;le" S_01="Activit&#233;s en parall&#232;le" />
+    <l_R S_00="Rotation" S_01="Rotation d'activit&#233;s" />
+    <l_TD S_00="TD" S_01="Travaux Dirig&#233;s" />
+    <l_SA S_00="Synt. activit&#233;" S_01="Synth&#232;se d'activit&#233;" />
+  </d_seances>
+  <l_tr_com S_00="ET" S_01="Ref_STI2D-ETT.xls" />
+</Referentiel>
