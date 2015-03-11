@@ -38,7 +38,8 @@ Created on 26 oct. 2011
 
 import cairo
 from draw_cairo import LargeurTotale, font_family, curve_rect_titre, show_text_rect_fix, show_text_rect, \
-                        boule, getHoraireTxt, liste_code_texte, rectangle_plein, barreH, tableauV, minFont, maxFont, tableauH
+                        boule, getHoraireTxt, liste_code_texte, rectangle_plein, barreH, tableauV, minFont, maxFont, tableauH, \
+                        DrawPeriodes
 
 from math import log
 
@@ -69,15 +70,12 @@ margeY = 0.04
 ecartX = 0.02
 ecartY = 0.02
 
-
-
 # Support du projet
 tailleSup = (0.17, 0.085)
 posSup = (margeX, margeY)
 IcoulSup = (0.9, 0.8, 0.8, 0.85)
 BcoulSup = (0.3, 0.2, 0.25, 1)
 fontSup = 0.014
-
 
 # Equipe pédagogique
 tailleEqu = (0.29, 0.18 - tailleSup[1] - ecartY/2)
@@ -89,11 +87,6 @@ fontEqu = 0.014
 # Position dans l'année
 posPos = [None, margeY - ecartY/2]
 taillePos = [None, 0.04]
-IcoulPos = (0.8, 0.8, 1, 0.85)
-BcoulPos = (0.1, 0.1, 0.25, 1)
-AcoulPos = (1, 0.4, 0, 1)
-fontPos = 0.014
-
 
 # Problématique
 posPro = [posEqu[0] + tailleEqu[0] + ecartX/2, margeY + taillePos[1] + ecartY/2]
@@ -351,7 +344,8 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
 #    taillePos[0] =  0.72414 - posPos[0] - margeX
     taillePos[0] = taillePro[0]/2
     ctx.set_line_width (0.0015)
-    prj.rectPos = DrawPeriodes(ctx, prj.position, prj.classe.referentiel.periodes,
+    r = (posPos[0], posPos[1], taillePos[0], taillePos[1])
+    prj.rectPos = DrawPeriodes(ctx, r, prj.position, prj.classe.referentiel.periodes,
 #                               [p.periode for p in prj.classe.referentiel.projets.values()],  
                                prj.classe.referentiel.projets,
                                tailleTypeEns = tailleTypeEns)
@@ -804,140 +798,140 @@ def DrawLigneEff(ctx, x, y):
     ctx.stroke()
     ctx.set_dash([], 0)
 
-######################################################################################  
-def DrawPeriodes(ctx, pos = None, periodes = [[u"Année", 5]], projets = {}, tailleTypeEns = 0, origine = False):
-#    print "DrawPeriodes", pos
-#    print "   ", periodes, periodes_prj
-    ctx.set_line_width (0.001)
-    if origine:
-        x = 0
-        y = 0
-        wt = 0.04*7
-        ht = 0.04
-    else:
-        x = posPos[0]# + ecartX
-        y = posPos[1]
-        wt = taillePos[0]# - ecartX
-        ht = taillePos[1]
-    
-    # Toutes le périodes de projet
-    periodes_prj = [p.periode for p in projets.values()]
-    
-    # Les noms des projets par période
-    noms_prj = {}
-    for n, p in projets.items():
-        for per in p.periode:
-            noms_prj[per] = n
-    
-    
-    pat = cairo.LinearGradient (x, y,  x + wt, y)
-    pat.add_color_stop_rgba (1, 0.90, 0.55, 0.65, 1)
-    pat.add_color_stop_rgba (0, 0.98, 0.88, 0.98, 1)
-    ctx.rectangle (x, y, wt, ht)
-    src = ctx.get_source()
-    ctx.set_source (pat)
-    ctx.fill ()
-    ctx.set_source(src)
-    
-    ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-                                       cairo.FONT_WEIGHT_NORMAL)
-    
-    # Ecart entre les cases
-    dx = 0.02 * wt
-    # Hauteur des cases
-    h = ht/2-2*dx
-    
-    # Les rectangles à cliquer
-    rect = []
-    
-    # Les différentes positions des cases
-    posc = []
-
-    # Nombre d'années
-    na = len(periodes)
-    
-    # Nombre total de périodes
-    nt = 0
-    for a in periodes:
-        nt += a[1]
-        
-    # Largeur d'une case "simple"
-    w = (wt-(nt+na)*dx)/nt
-    
-#    # Largeur d'une année
-#    wi = (wt+dx)/len(periodes) - dx
-    
-    pa = 0
-    
-    # Abscisses des cases "simples"
-    xcs = []
-    
-    # Curseur "année"
-    xi = x
-    for i, (an, np) in enumerate(periodes):
-        # Largeur de l'année
-        wa = np*w + (np+1) * dx
-        
-        # Nom de l'année
-        annee = an.split("_")
-        ctx.set_font_size(fontPos)
-        w0 = ctx.text_extents(annee[0])[2]
-#        xi = x + wi/2 + (dx+wi)*i
-        if len(annee) > 1:
-            ctx.set_font_size(fontPos*0.9)
-            w1 = ctx.text_extents(annee[1])[2]
-            show_text_rect_fix(ctx, annee[0], xi+wa/2-(w0+w1)/2, y, w0, ht*2/3, fontPos, 1)
-            ctx.stroke ()
-            show_text_rect_fix(ctx, annee[1], xi+wa/2-(w0+w1)/2 + w0 +0.01, y, w1, ht/3, fontPos*0.9, 1, ha = 'c')
-            ctx.stroke ()
-        else:
-            show_text_rect_fix(ctx, annee[0], xi+wa/2-w0/2, y, w0, ht*2/3, fontPos, 1)
-            ctx.stroke ()
-        
-        for c in range(np):
-            pa += 1
-            if pa in noms_prj.keys():
-                n = noms_prj[pa]
-            else:
-                n = ""
-            xcs.append((xi + c*(w+dx) + dx, pos == pa-1, i, n))
-            
-        xi += np*w + (np+1)*dx
-        
-    # Liste des positions qui fusionnent avec leur position précédente
-    lstGrp = []
-    for periode_prj in periodes_prj:  
-        lstGrp.extend(range(periode_prj[0]+1, periode_prj[-1]+1))
-#    print lstGrp
-    
-    for p in reversed(sorted(lstGrp)):
-        del xcs[p-1]
-        
-
-    for p, xc in enumerate(xcs):
-        
-        if p < len(xcs)-1:
-            w = xcs[p+1][0] - xc[0] - dx
-            if xcs[p+1][2] != xc[2]:
-                w -= dx
-        else:
-            w = x+wt - xc[0] - dx
-        
-
-        ctx.rectangle (xc[0], y+ht/2+dx, w, h)
-        rect.append((xc[0], y+ht/2+dx, w, h))
-        if xc[1]:
-            ctx.set_source_rgba (AcoulPos[0], AcoulPos[1], AcoulPos[2], AcoulPos[3])
-        else:
-            ctx.set_source_rgba (IcoulPos[0], IcoulPos[1], IcoulPos[2], IcoulPos[3])
-        ctx.fill_preserve ()
-        ctx.set_source_rgba (BcoulPos[0], BcoulPos[1], BcoulPos[2], BcoulPos[3])
-        ctx.stroke ()    
-        
-        if xc[3] != "":
-            show_text_rect(ctx, xc[3], 
-                           rect[-1], ha = 'c', b = 0.2, wrap = False, couper = False)
-            ctx.stroke ()
+#######################################################################################  
+#def DrawPeriodes(ctx, pos = None, periodes = [[u"Année", 5]], projets = {}, tailleTypeEns = 0, origine = False):
+##    print "DrawPeriodes", pos
+##    print "   ", periodes, periodes_prj
+#    ctx.set_line_width (0.001)
+#    if origine:
+#        x = 0
+#        y = 0
+#        wt = 0.04*7
+#        ht = 0.04
+#    else:
+#        x = posPos[0]# + ecartX
+#        y = posPos[1]
+#        wt = taillePos[0]# - ecartX
+#        ht = taillePos[1]
+#    
+#    # Toutes le périodes de projet
+#    periodes_prj = [p.periode for p in projets.values()]
+#    
+#    # Les noms des projets par période
+#    noms_prj = {}
+#    for n, p in projets.items():
+#        for per in p.periode:
+#            noms_prj[per] = n
+#    
+#    
+#    pat = cairo.LinearGradient (x, y,  x + wt, y)
+#    pat.add_color_stop_rgba (1, 0.90, 0.55, 0.65, 1)
+#    pat.add_color_stop_rgba (0, 0.98, 0.88, 0.98, 1)
+#    ctx.rectangle (x, y, wt, ht)
+#    src = ctx.get_source()
+#    ctx.set_source (pat)
+#    ctx.fill ()
+#    ctx.set_source(src)
+#    
+#    ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+#                                       cairo.FONT_WEIGHT_NORMAL)
+#    
+#    # Ecart entre les cases
+#    dx = 0.02 * wt
+#    # Hauteur des cases
+#    h = ht/2-2*dx
+#    
+#    # Les rectangles à cliquer
+#    rect = []
+#    
+#    # Les différentes positions des cases
+#    posc = []
+#
+#    # Nombre d'années
+#    na = len(periodes)
+#    
+#    # Nombre total de périodes
+#    nt = 0
+#    for a in periodes:
+#        nt += a[1]
+#        
+#    # Largeur d'une case "simple"
+#    w = (wt-(nt+na)*dx)/nt
+#    
+##    # Largeur d'une année
+##    wi = (wt+dx)/len(periodes) - dx
+#    
+#    pa = 0
+#    
+#    # Abscisses des cases "simples"
+#    xcs = []
+#    
+#    # Curseur "année"
+#    xi = x
+#    for i, (an, np) in enumerate(periodes):
+#        # Largeur de l'année
+#        wa = np*w + (np+1) * dx
+#        
+#        # Nom de l'année
+#        annee = an.split("_")
+#        ctx.set_font_size(fontPos)
+#        w0 = ctx.text_extents(annee[0])[2]
+##        xi = x + wi/2 + (dx+wi)*i
+#        if len(annee) > 1:
+#            ctx.set_font_size(fontPos*0.9)
+#            w1 = ctx.text_extents(annee[1])[2]
+#            show_text_rect_fix(ctx, annee[0], xi+wa/2-(w0+w1)/2, y, w0, ht*2/3, fontPos, 1)
+#            ctx.stroke ()
+#            show_text_rect_fix(ctx, annee[1], xi+wa/2-(w0+w1)/2 + w0 +0.01, y, w1, ht/3, fontPos*0.9, 1, ha = 'c')
+#            ctx.stroke ()
+#        else:
+#            show_text_rect_fix(ctx, annee[0], xi+wa/2-w0/2, y, w0, ht*2/3, fontPos, 1)
+#            ctx.stroke ()
+#        
+#        for c in range(np):
+#            pa += 1
+#            if pa in noms_prj.keys():
+#                n = noms_prj[pa]
+#            else:
+#                n = ""
+#            xcs.append((xi + c*(w+dx) + dx, pos == pa-1, i, n))
+#            
+#        xi += np*w + (np+1)*dx
+#        
+#    # Liste des positions qui fusionnent avec leur position précédente
+#    lstGrp = []
+#    for periode_prj in periodes_prj:  
+#        lstGrp.extend(range(periode_prj[0]+1, periode_prj[-1]+1))
+##    print lstGrp
+#    
+#    for p in reversed(sorted(lstGrp)):
+#        del xcs[p-1]
+#        
+#
+#    for p, xc in enumerate(xcs):
+#        
+#        if p < len(xcs)-1:
+#            w = xcs[p+1][0] - xc[0] - dx
+#            if xcs[p+1][2] != xc[2]:
+#                w -= dx
+#        else:
+#            w = x+wt - xc[0] - dx
+#        
+#
+#        ctx.rectangle (xc[0], y+ht/2+dx, w, h)
+#        rect.append((xc[0], y+ht/2+dx, w, h))
+#        if xc[1]:
+#            ctx.set_source_rgba (AcoulPos[0], AcoulPos[1], AcoulPos[2], AcoulPos[3])
+#        else:
+#            ctx.set_source_rgba (IcoulPos[0], IcoulPos[1], IcoulPos[2], IcoulPos[3])
+#        ctx.fill_preserve ()
+#        ctx.set_source_rgba (BcoulPos[0], BcoulPos[1], BcoulPos[2], BcoulPos[3])
+#        ctx.stroke ()    
+#        
+#        if xc[3] != "":
+#            show_text_rect(ctx, xc[3], 
+#                           rect[-1], ha = 'c', b = 0.2, wrap = False, couper = False)
+#            ctx.stroke ()
             
             
             
@@ -1063,7 +1057,7 @@ def DrawPeriodes(ctx, pos = None, periodes = [[u"Année", 5]], projets = {}, tai
 #                x += dx
 #            x+= dx + w
         
-    return rect
+#    return rect
     
     
 ######################################################################################  

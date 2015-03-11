@@ -1,0 +1,445 @@
+<Referentiel B_CI_BO="True" B_CI_cible="False" B_objSavoirs_Math="False" B_objSavoirs_Phys="False" B_preSavoirs_Math="True" B_preSavoirs_Phys="True" S_Code="SIN" S_Famille="STI" S_FichierLogo="" S_abrevCI="CI" S_nomCI="Centre(s) d'Int&#233;r&#234;t" S_nomCompetences="Comp&#233;tences" S_nomFonctions="Fonctions" S_nomIndicateurs="Indicateurs de performance" S_nomSavoirs="Savoirs" S_nomSavoirs_Math="Math&#233;matiques" S_nomSavoirs_Phys="Sciences Physiques" S_nomTaches="T&#226;ches" S_surnomSavoirs="">
+  <l_BO_URL>
+    <l_00 S_00="Programme" S_01="http://www.education.gouv.fr/pid25535/bulletin_officiel.html?cid_bo=82984" />
+  </l_BO_URL>
+  <l_BO_dossier S_00="STI2D" />
+  <l_CentresInterets S_00="Configuration et performances du traitement de l'information" S_01="Instrumentation/Acquisition et restitution de grandeurs physiques" S_02="Communication de l'information/Au sein d'un syst&#232;me" S_03="Gestion de l'information/Structures mat&#233;rielles et logicielles associ&#233;es au traitement de l'information" S_04="Communication entre syst&#232;mes" S_05="Traitement analogique de l'information" S_06="Cycle de vie d'un produit" />
+  <l_Enseignement S_00="STI2D-SIN" S_01="STI2D : Syst&#232;mes d'Information et Num&#233;rique" S_02="STI2D" />
+  <d_aColNon B_C="True" />
+  <d_activites>
+    <l_ED S_00="Etude de dossier" S_01="Activit&#233; d'&#233;tude de dossier" />
+    <l_P S_00="Projet" S_01="Activit&#233; de projet" />
+    <l_AP S_00="Activit&#233; pratique" S_01="Activit&#233; pratique" />
+  </d_activites>
+  <d_compImposees B_C="False" B_S="False" />
+  <d_demarcheSeance>
+    <l_ED S_00="I" S_01="R" />
+    <l_P S_00="I" S_01="R" S_02="P" />
+    <l_AP S_00="I" S_01="R" />
+  </d_demarcheSeance>
+  <d_demarches>
+    <l_I S_00="Investigation" S_01="Investigation" />
+    <l_P S_00="Projet" S_01="Projet" />
+    <l_R S_00="R&#233;s. Probl&#232;me" S_01="R&#233;solution de probl&#232;me" />
+  </d_demarches>
+  <d_dicCompetences>
+    <l_O7 S_00="Imaginer une solution, r&#233;pondre &#224; un besoin">
+      <d_01>
+        <l_CO7.sin3 S_00="Exprimer le principe de fonctionnement d'un syst&#232;me &#224; partir des diagrammes SysML pertinents. Rep&#233;rer les constituants de la cha&#238;ne d'&#233;nergie et d'information">
+          <l_01>
+            <Indicateur_00 S_intitule="Le syst&#232;me est mod&#233;lis&#233; &#224; l'aide de diagrammes conformes ">
+              <d_ligne I_C="13" />
+              <d_poids F_C="10.0" />
+              <d_revue I_C="0" />
+            </Indicateur_00>
+            <Indicateur_01 S_intitule="Les diagrammes comportementaux permettant d'exprimer le principe de fonctionnement sont correctement utilis&#233;s ">
+              <d_ligne I_C="14" />
+              <d_poids F_C="10.0" />
+              <d_revue I_C="0" />
+            </Indicateur_01>
+            <Indicateur_02 S_intitule="Les constituants sont identifi&#233;s">
+              <d_ligne I_C="15" />
+              <d_poids F_C="10.0" />
+              <d_revue I_C="0" />
+            </Indicateur_02>
+          </l_01>
+        </l_CO7.sin3>
+        <l_CO7.sin2 S_00="D&#233;coder le cahier des charges fonctionnel d&#233;crivant le besoin exprim&#233;, identifier la fonction d&#233;finie par un besoin exprim&#233;, faire des mesures pour caract&#233;riser cette fonction et conclure sur sa conformit&#233;">
+          <l_01>
+            <Indicateur_00 S_intitule="Les diagrammes Sysml utilis&#233;s sont bien interpr&#233;t&#233;s">
+              <d_ligne I_C="10" />
+              <d_poids F_C="10.0" />
+              <d_revue I_C="0" />
+            </Indicateur_00>
+            <Indicateur_01 S_intitule="Une proc&#233;dure pertinente est propos&#233;e et mise en &#339;uvre">
+              <d_ligne I_C="11" />
+              <d_poids F_C="10.0" />
+              <d_revue I_C="0" />
+            </Indicateur_01>
+            <Indicateur_02 S_intitule="Un rapport de conformit&#233; est r&#233;dig&#233;">
+              <d_ligne I_C="12" />
+              <d_poids F_C="10.0" />
+              <d_revue I_C="0" />
+            </Indicateur_02>
+          </l_01>
+        </l_CO7.sin2>
+        <l_CO7.sin1 S_00="D&#233;coder la notice technique d'un syst&#232;me, v&#233;rifier la conformit&#233; du fonctionnement">
+          <l_01>
+            <Indicateur_00 S_intitule="L'interpr&#233;tation de la notice du syst&#232;me permet de d&#233;crire une proc&#233;dure">
+              <d_ligne I_C="6" />
+              <d_poids F_C="10.0" />
+              <d_revue I_C="0" />
+            </Indicateur_00>
+            <Indicateur_01 S_intitule="Le syst&#232;me est install&#233; et param&#233;tr&#233;">
+              <d_ligne I_C="7" />
+              <d_poids F_C="10.0" />
+              <d_revue I_C="0" />
+            </Indicateur_01>
+            <Indicateur_02 S_intitule="Les mesures sont effectu&#233;es et compar&#233;es aux caract&#233;ristiques de la notice technique">
+              <d_ligne I_C="8" />
+              <d_poids F_C="10.0" />
+              <d_revue I_C="0" />
+            </Indicateur_02>
+            <Indicateur_03 S_intitule="Un rapport de mise en &#339;uvre et d'essais est r&#233;dig&#233;">
+              <d_ligne I_C="9" />
+              <d_poids F_C="10.0" />
+              <d_revue I_C="0" />
+            </Indicateur_03>
+          </l_01>
+        </l_CO7.sin1>
+      </d_01>
+      <d_02 I_C="40" />
+    </l_O7>
+    <l_O9 S_00="G&#233;rer la vie d'un syst&#232;me">
+      <d_01>
+        <l_CO9.sin4 S_00="Rechercher et choisir de nouveaux constituants d'un syst&#232;me (ou d'un projet finalis&#233;) au regard d'&#233;volutions technologiques, socio&#233;conomiques sp&#233;cifi&#233;es dans un cahier des charges. Organiser le projet permettant de maquettiser la solution choisie">
+          <l_01>
+            <Indicateur_00 S_intitule="Les diagrammes comportementaux sont correctement mis &#224; jour">
+              <d_ligne I_C="41" />
+              <d_poids F_C="7.142857" />
+              <d_revue I_C="0" />
+            </Indicateur_00>
+            <Indicateur_01 S_intitule="Des constituants sont choisis et justifi&#233;s">
+              <d_ligne I_C="42" />
+              <d_poids F_C="7.142857" />
+              <d_revue I_C="0" />
+            </Indicateur_01>
+            <Indicateur_02 S_intitule="Le prototypage rapide de la solution est organis&#233;e">
+              <d_ligne I_C="43" />
+              <d_poids F_C="7.142857" />
+              <d_revue I_C="0" />
+            </Indicateur_02>
+          </l_01>
+        </l_CO9.sin4>
+        <l_CO9.sin1 S_00="Utiliser les outils adapt&#233;s pour planifier un projet (diagramme de Gantt, chemin critique, donn&#233;es &#233;conomiques, r&#233;unions de projet)">
+          <l_01>
+            <Indicateur_00 S_intitule="Le cahier des charges fonctionnel est analys&#233; et reformul&#233;">
+              <d_ligne I_C="30" />
+              <d_poids F_C="7.142857" />
+              <d_revue I_C="0" />
+            </Indicateur_00>
+            <Indicateur_01 S_intitule="Les donn&#233;es &#233;conomiques sont identifi&#233;es">
+              <d_ligne I_C="31" />
+              <d_poids F_C="7.142857" />
+              <d_revue I_C="0" />
+            </Indicateur_01>
+            <Indicateur_02 S_intitule="Les chemins critiques sont mis en &#233;vidence et les dates de r&#233;unions de projet sont fix&#233;es">
+              <d_ligne I_C="32" />
+              <d_poids F_C="7.142857" />
+              <d_revue I_C="0" />
+            </Indicateur_02>
+          </l_01>
+        </l_CO9.sin1>
+        <l_CO9.sin3 S_00="Rechercher des &#233;volutions de constituants dans le cadre d'une d&#233;marche de veille technologique, analyser la structure d'un syst&#232;me pour intervenir sur les constituants dans le cadre d'une op&#233;ration de maintenance">
+          <l_01>
+            <Indicateur_00 S_intitule="Les proc&#233;dures adapt&#233;es d'intervention sur les constituants sont propos&#233;es">
+              <d_ligne I_C="38" />
+              <d_poids F_C="7.142857" />
+              <d_revue I_C="0" />
+            </Indicateur_00>
+            <Indicateur_01 S_intitule="L'intervention de maintenance sur le syst&#232;me est planifi&#233;e et la continuit&#233; de service assur&#233;e">
+              <d_ligne I_C="39" />
+              <d_poids F_C="7.142857" />
+              <d_revue I_C="0" />
+            </Indicateur_01>
+            <Indicateur_02 S_intitule="Le rapport d'intervention est &#233;tabli">
+              <d_ligne I_C="40" />
+              <d_poids F_C="7.142857" />
+              <d_revue I_C="0" />
+            </Indicateur_02>
+          </l_01>
+        </l_CO9.sin3>
+        <l_CO9.sin2 S_00="Installer, configurer et instrumenter un syst&#232;me r&#233;el. Mettre en oeuvre la cha&#238;ne d'acquisition puis acqu&#233;rir, traiter, transmettre et restituer l'information">
+          <l_01>
+            <Indicateur_00 S_intitule="La notice du syst&#232;me est correctement interpr&#233;t&#233;e">
+              <d_ligne I_C="33" />
+              <d_poids F_C="7.142857" />
+              <d_revue I_C="0" />
+            </Indicateur_00>
+            <Indicateur_01 S_intitule="Le syst&#232;me est install&#233; et param&#233;tr&#233;">
+              <d_ligne I_C="34" />
+              <d_poids F_C="7.142857" />
+              <d_revue I_C="0" />
+            </Indicateur_01>
+            <Indicateur_02 S_intitule="Les grandeurs caract&#233;ristiques sont identifi&#233;es et les appareils de mesure sont adapt&#233;s">
+              <d_ligne I_C="35" />
+              <d_poids F_C="7.142857" />
+              <d_revue I_C="0" />
+            </Indicateur_02>
+            <Indicateur_03 S_intitule="Les grandeurs sont acquises, trait&#233;es et transmises">
+              <d_ligne I_C="36" />
+              <d_poids F_C="7.142857" />
+              <d_revue I_C="0" />
+            </Indicateur_03>
+            <Indicateur_04 S_intitule="Les contraintes temporelles et fr&#233;quentielles sont respect&#233;es, l'information est restitu&#233;e">
+              <d_ligne I_C="37" />
+              <d_poids F_C="7.142857" />
+              <d_revue I_C="0" />
+            </Indicateur_04>
+          </l_01>
+        </l_CO9.sin2>
+      </d_01>
+      <d_02 I_C="20" />
+    </l_O9>
+    <l_O8 S_00="Valider des solutions techniques">
+      <d_01>
+        <l_CO8.sin2 S_00="Etablir pour une fonction pr&#233;c&#233;demment identifi&#233;e, un mod&#232;le de comportement &#224; partir de mesures faites sur le syt&#232;me">
+          <l_01>
+            <Indicateur_00 S_intitule="Les mesures n&#233;cessaires sont effectu&#233;es">
+              <d_ligne I_C="20" />
+              <d_poids F_C="8.333333" />
+              <d_revue I_C="0" />
+            </Indicateur_00>
+            <Indicateur_01 S_intitule="Un mod&#232;le de comportement pertinent est &#233;tabli">
+              <d_ligne I_C="21" />
+              <d_poids F_C="8.333333" />
+              <d_revue I_C="0" />
+            </Indicateur_01>
+            <Indicateur_02 S_intitule="Les param&#232;tres du  mod&#232;le sont renseign&#233;s pour limiter les &#233;carts avec les mesures">
+              <d_ligne I_C="22" />
+              <d_poids F_C="8.333333" />
+              <d_revue I_C="0" />
+            </Indicateur_02>
+          </l_01>
+        </l_CO8.sin2>
+        <l_CO8.sin3 S_00="Traduire sous forme graphique l'architecture de la cha&#238;ne d'information identifi&#233;e pour un syst&#232;me et d&#233;finir les param&#232;tres d'utilisation du simulateur">
+          <l_01>
+            <Indicateur_00 S_intitule="La cha&#238;ne d'information est mod&#233;lis&#233;e par des diagrammes adapt&#233;s (SysML)">
+              <d_ligne I_C="23" />
+              <d_poids F_C="8.333333" />
+              <d_revue I_C="0" />
+            </Indicateur_00>
+            <Indicateur_01 S_intitule="Le diagramme &#233;tats transitions est programm&#233;">
+              <d_ligne I_C="24" />
+              <d_poids F_C="8.333333" />
+              <d_revue I_C="0" />
+            </Indicateur_01>
+          </l_01>
+        </l_CO8.sin3>
+        <l_CO8.sin1 S_00="Rechercher et choisir une solution logicielle ou mat&#233;rielle au regard de la d&#233;finition d'un syst&#232;me">
+          <l_01>
+            <Indicateur_00 S_intitule="La d&#233;finition du syst&#232;me est exprim&#233;e correctement">
+              <d_ligne I_C="17" />
+              <d_poids F_C="8.333333" />
+              <d_revue I_C="0" />
+            </Indicateur_00>
+            <Indicateur_01 S_intitule="Une liste non exhaustive de solutions pertinentes est &#233;tablie ">
+              <d_ligne I_C="18" />
+              <d_poids F_C="8.333333" />
+              <d_revue I_C="0" />
+            </Indicateur_01>
+            <Indicateur_02 S_intitule="Le choix de la solution est argument&#233;">
+              <d_ligne I_C="19" />
+              <d_poids F_C="8.333333" />
+              <d_revue I_C="0" />
+            </Indicateur_02>
+          </l_01>
+        </l_CO8.sin1>
+        <l_CO8.sin4 S_00="Identifier les variables simul&#233;es et mesur&#233;es sur un syst&#232;me pour valider le choix d'une solution">
+          <l_01>
+            <Indicateur_00 S_intitule="Les variables caract&#233;ristiques du syst&#232;me simul&#233; sont identifi&#233;es">
+              <d_ligne I_C="25" />
+              <d_poids F_C="8.333333" />
+              <d_revue I_C="0" />
+            </Indicateur_00>
+            <Indicateur_01 S_intitule="Les variables caract&#233;ristiques du syst&#232;me r&#233;el sont mesurables">
+              <d_ligne I_C="26" />
+              <d_poids F_C="8.333333" />
+              <d_revue I_C="0" />
+            </Indicateur_01>
+            <Indicateur_02 S_intitule="Les param&#232;tres du syst&#232;me simul&#233; sont affin&#233;s pour r&#233;duire les &#233;carts avec le syst&#232;me r&#233;el">
+              <d_ligne I_C="27" />
+              <d_poids F_C="8.333333" />
+              <d_revue I_C="0" />
+            </Indicateur_02>
+            <Indicateur_03 S_intitule="Les conditions de simulation sont argument&#233;es pour valider le choix d'une solution">
+              <d_ligne I_C="28" />
+              <d_poids F_C="8.333333" />
+              <d_revue I_C="0" />
+            </Indicateur_03>
+          </l_01>
+        </l_CO8.sin4>
+      </d_01>
+      <d_02 I_C="40" />
+    </l_O8>
+  </d_dicCompetences>
+  <d_dicFonctions />
+  <d_dicSavoirs>
+    <l_1 S_00="Projet technologique">
+      <d_01>
+        <l_1.1 S_00="La d&#233;marche de projet">
+          <d_01>
+            <l_1.1.1 S_00="Les projets industriels">
+              <l_01 S_00="Typologie des entreprises industrielles et des projets techniques associ&#233;s (projets locaux, transversaux, \&quot;joint venture\&quot;)" S_01="Phases d'un projet industriel (marketing, pr&#233; conception, pr&#233; industrialisation et conception d&#233;taill&#233;, industrialisation, maintenance et fin de vie)" S_02="Principes d'organisation et planification d'un projet (d&#233;veloppement s&#233;quentiel, chemin critique, d&#233;coupage du projet en fonctions &#233;l&#233;mentaires ou en phases) Gestion, suivi et finalisation d'un projet (co&#251;t, budget, bilan d'exp&#233;rience)" />
+            </l_1.1.1>
+            <l_1.1.2 S_00="Les projets p&#233;dagogiques et technologiques">
+              <l_01 S_00="Etapes et planification d'un projet technologique (revues de projets, travail collaboratif en &#233;quipe projet : ENT, base de donn&#233;es, formats d'&#233;change, carte mentale, flux op&#233;rationnels)" S_01="Animation d'une revue de projet ou management d'une &#233;quipe projet" S_02="Evaluation de la prise de risque dans un projet par le choix des solutions technologiques (innovations technologiques, notion de co&#251;t global, veille technologique)" />
+            </l_1.1.2>
+          </d_01>
+        </l_1.1>
+        <l_1.2 S_00="Mise en oeuvre d'un syst&#232;me">
+          <l_01 S_00="D&#233;codage des notices techniques d'un syst&#232;me et des proc&#233;dures d'installation" S_01="Compte-rendu de la mise en oeuvre d'un syst&#232;me, en utilisant un langage technique pr&#233;cis" S_02="Identification des dysfonctionnements et/ou description des solutions" />
+        </l_1.2>
+        <l_1.3 S_00="Description et repr&#233;sentation          ">
+          <l_01 S_00="D&#233;codage d'un cahier des charges fonctionnel d&#233;crivant un besoin exprim&#233;" S_01="Identification des fonctions d&#233;finies par l'expression du besoin. Caract&#233;risation de leurs performances &#224; partir de mesures, conclusions sur leur conformit&#233; au regard du cahier des charges" S_02="Propositions d'&#233;volutions pour chaque fonction caract&#233;ris&#233;e &#224; partir d'un sch&#233;ma de principe relatif &#224; son fonctionnement, en rep&#233;rant les constituants des cha&#238;nes d'&#233;nergie et d'information" S_03="R&#233;alisation d'une repr&#233;sentation fonctionnelle (sch&#233;mas blocs, norme SysML)" S_04="Repr&#233;sentation du comportement des constituants (dans les domaines temporel et/ou fr&#233;quentiel)" />
+        </l_1.3>
+      </d_01>
+    </l_1>
+    <l_3 S_00="R&#233;alisation et qualification d'un prototype">
+      <d_01>
+        <l_3.2 S_00="Gestion de la vie d'un syst&#232;me">
+          <l_01 S_00="Validation d'un prototype" S_01="Proc&#233;dures d'intervention" S_02="Mise &#224; jour d'un syst&#232;me d'information" S_03="R&#233;daction d'un compte-rendu sur l'activit&#233; de maintenance" S_04="Performances d'un projet finalis&#233;" S_05="Etude prospective technique et &#233;conomique" S_06="Proposition d'une solution et organisation du nouveau projet" />
+        </l_3.2>
+        <l_3.1 S_00="R&#233;alisation d'un prototype">
+          <l_01 S_00="Impl&#233;mentation d'un programme dans un composant programmable" S_01="Interfa&#231;age de composants" S_02="Interconnexion des fonctions distribu&#233;es" S_03="Programmation de l'interface de communication" S_04="Conditionnement des grandeurs acquises (convertir, amplifier, traiter)" S_05="Adaptation d'une cha&#238;ne d'acquisition aux caract&#233;ristiques des grandeurs &#224; acqu&#233;rir" S_06="Recette du prototype au regard des sp&#233;cifications attendues du cahier des charges" />
+        </l_3.1>
+      </d_01>
+    </l_3>
+    <l_2 S_00="Maquettage des solutions constructives">
+      <d_01>
+        <l_2.3 S_00="Mod&#233;lisations et simulations">
+          <l_01 S_00=" Mod&#232;le de comportement fr&#233;quentiel relatif &#224; la fonction filtrage (bande-passante, fr&#233;quence de coupure)" S_01="Diagramme &#233;tats-transitions pour un syst&#232;me &#233;v&#233;nementiel" S_02="Mod&#232;le de comportement : utilisation de librairies logicielles et param&#233;trage de caract&#233;ristiques" S_03="Architecture de la cha&#238;ne d'information et param&#233;trage du simulateur" S_04="Simulations et analyses des r&#233;sultats" S_05="Identification des variables simul&#233;es et mesur&#233;es sur le syst&#232;me pour valider le choix d'une solution" />
+        </l_2.3>
+        <l_2.2 S_00="Architecture fonctionnelle d'un syst&#232;me communicant">
+          <l_01 S_00="Mod&#232;les en couche des r&#233;seaux, protocole Ethernet et adresse logique (IP) du protocole IP. Lien adresse MAC/IP : Protocole ARP" S_01="Architecture client/serveur" />
+        </l_2.2>
+        <l_2.1 S_00="Conception fonctionnelle d'un syst&#232;me local">
+          <l_01 S_00="Acquisition, conditionnement et filtrage d'une information (sous forme analogique)" S_01="Conversion d'une information (CAN et CNA)" S_02="Traitement d'une information num&#233;rique" S_03="Traitement d'une information analogique" S_04="Traitement programm&#233; et composants programmables" S_05="Modulation, d&#233;modulation d'un signal porteur d'une information : amplitude, fr&#233;quence, phase" S_06="Multiplexage d'une information et codage d'une transmission en bande de base" S_07="Transmission d'une information (liaison filaire et non filaire)" S_08="Restitution d'une information : voix, donn&#233;es, images" />
+        </l_2.1>
+      </d_01>
+    </l_2>
+  </d_dicSavoirs>
+  <d_dicSavoirs_Math />
+  <d_dicSavoirs_Phys />
+  <d_effectifs>
+    <l_P S_00="Act. Pra." S_01="Activit&#233; Pratique" />
+    <l_C S_00="Classe enti&#232;re" S_01="Classe enti&#232;re" />
+    <l_E S_00="Etude ou Projet" S_01="Etude et Projet" />
+    <l_D S_00="Demi-groupe" S_01="Demi-groupe" />
+    <l_G S_00="Effectif r&#233;duit" S_01="Effectif r&#233;duit" />
+  </d_effectifs>
+  <d_effectifsSeance>
+    <l_C S_00="C" />
+    <l_E S_00="C" />
+    <l_AP S_00="E" S_01="P" />
+    <l_SS S_00="C" />
+    <l_ED S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" />
+    <l_P S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" />
+    <l_S />
+    <l_R />
+    <l_SA S_00="C" S_01="G" />
+    <l_TD S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" />
+  </d_effectifsSeance>
+  <l_listeDemarches S_00="I" S_01="R" S_02="P" />
+  <l_listeEffectifs S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" />
+  <l_listeTypeActivite S_00="ED" S_01="AP" S_02="P" />
+  <l_listeTypeSeance S_00="ED" S_01="AP" S_02="P" S_03="C" S_04="TD" S_05="SA" S_06="SS" S_07="E" S_08="R" S_09="S" />
+  <d_options />
+  <d_parties S_C="Conduite" S_S="Soutenance" />
+  <l_periodes>
+    <l_00 I_01="5" S_00="1_&#232;re" />
+    <l_01 I_01="5" S_00="T_ale" />
+  </l_periodes>
+  <l_positions_CI />
+  <d_projets>
+    <Projet_PRJ I_duree="70" S_code="PRJ" S_ficheValid="" S_intitule="Projet de fin d'ann&#233;e">
+      <d_attributs>
+        <l_SRC S_00="" S_01="" S_02="" />
+        <l_PAR S_00="" S_01="" S_02="" />
+        <l_DEC S_00="D&#233;coupage du projet" S_01="" S_02="" />
+        <l_OBJ S_00="Production finale attendue" S_01=" " S_02="" />
+        <l_TIT S_00="Intitul&#233; du projet" S_01="Intitul&#233; du projet" S_02="" />
+        <l_SYN S_00="" S_01="" S_02="" />
+        <l_PB S_00="Probl&#233;matique - &#201;nonc&#233; g&#233;n&#233;ral du besoin" S_01="Indiquer :-- - description du contexte dans lequel l&#8217;objet du projet va &#234;tre int&#233;gr&#233; ;-- - fonctionnalit&#233;s de cet objet ;-- - caract&#233;ristiques fonctionnelles et techniques." S_02="" />
+        <l_ORI S_00="Origine" S_01="Partenariat, th&#233;matique, concours&#8230;" S_02="" />
+        <l_CCF S_00="Contraintes impos&#233;es" S_01="Indiquer :-- - co&#251;t maximal ;-- - nature d&#8217;une ou des solutions techniques ou de familles de mat&#233;riels, de constituants ou de composants ;-- - environnement." S_02="" />
+        <l_TYP S_00="" S_01="" S_02="" />
+        <l_PRX S_00="" S_01="" S_02="" />
+      </d_attributs>
+      <d_cellulesInfo>
+        <d_C>
+          <l_Pre>
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="12" I_01="2" I_02="3" />
+            </l_00>
+          </l_Pre>
+          <l_Nom>
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="11" I_01="2" I_02="3" />
+            </l_00>
+          </l_Nom>
+          <l_NON>
+            <l_00 S_00="Notation Candidat " S_02="">
+              <l_01 I_00="6" I_01="4" I_02="0" />
+            </l_00>
+          </l_NON>
+          <l_Tit>
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="26" I_01="1" I_02="0" />
+            </l_00>
+          </l_Tit>
+          <l_Des>
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="26" I_01="1" I_02="0" />
+            </l_00>
+          </l_Des>
+          <l_Etab>
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="6" I_01="2" I_02="0" />
+            </l_00>
+          </l_Etab>
+          <l_Prof>
+            <l_00 S_00="Notation Candidat " S_02="">
+              <l_01 I_00="56" I_01="1" I_02="1" />
+            </l_00>
+          </l_Prof>
+        </d_C>
+        <d_S>
+          <l_N-P>
+            <l_00 S_00="Feuil1" S_02="Nom du candidat :--">
+              <l_01 I_00="24" I_01="11" I_02="0" />
+            </l_00>
+          </l_N-P>
+        </d_S>
+      </d_cellulesInfo>
+      <d_grilles>
+        <l_C S_00="Grille SIN V2015.xlsx" S_01="C" />
+        <l_S S_00="Grille_presentation_projet_STI2D_V2015.xlsx" S_01="I" />
+      </d_grilles>
+      <l_listPhases S_00="Ana" S_01="Con" S_02="DCo" S_03="Rea" S_04="Val" S_05="XXX" S_06="Rev" S_07="R1" S_08="R2" S_09="R3" S_10="S" />
+      <l_listPhasesEval S_00="Rev" S_01="R1" S_02="R2" S_03="R3" S_04="S" />
+      <d_parties S_C="Conduite" S_S="Soutenance" />
+      <l_periode I_00="7" I_01="10" />
+      <d_phases>
+        <l_DCo S_00="Concep d&#233;taill&#233;e" S_01="Conception d&#233;taill&#233;e" S_02="Cd" />
+        <l_Ana S_00="Analyse besoins" S_01="Analyse des besoins" S_02="Ab" />
+        <l_Val S_00="Validation" S_01="Validation" S_02="V" />
+        <l_R2 S_00="Revue n&#176;2" S_01="Revue de projet n&#176;2" S_02="R2" />
+        <l_R3 S_00="Revue n&#176;3" S_01="Revue de projet n&#176;3" S_02="R3" />
+        <l_XXX S_00="Pr&#233;pa soutenance" S_01="Pr&#233;paration de la soutenance" S_02="P" />
+        <l_Rev S_00="Revue inter" S_01="Revue interm&#233;diaire" S_02="Ri" />
+        <l_R1 S_00="Revue n&#176;1" S_01="Revue de projet n&#176;1" S_02="R1" />
+        <l_S S_00="Soutenance" S_01="Soutenance finale" S_02="S" />
+        <l_Rea S_00="R&#233;alisation" S_01="R&#233;alisation" S_02="R" />
+        <l_Con S_00="Concep pr&#233;liminaire" S_01="Conception pr&#233;liminaire" S_02="Cp" />
+      </d_phases>
+      <d_posRevues>
+        <l__02 S_00="Con" S_01="Val" />
+        <l__03 S_00="Ana" S_01="Con" S_02="Val" />
+      </d_posRevues>
+    </Projet_PRJ>
+  </d_projets>
+  <d_seances>
+    <l_C S_00="Cours" S_01="Cours" />
+    <l_E S_00="Evaluation" S_01="Evaluation" />
+    <l_P S_00="Projet" S_01="Activit&#233; de projet" />
+    <l_SS S_00="Synt. s&#233;quence" S_01="Synth&#232;se de s&#233;quence" />
+    <l_ED S_00="Etude de dossier" S_01="Activit&#233; d'&#233;tude de dossier" />
+    <l_AP S_00="Activit&#233; pratique" S_01="Activit&#233; pratique" />
+    <l_S S_00="Parall&#232;le" S_01="Activit&#233;s en parall&#232;le" />
+    <l_R S_00="Rotation" S_01="Rotation d'activit&#233;s" />
+    <l_TD S_00="TD" S_01="Travaux Dirig&#233;s" />
+    <l_SA S_00="Synt. activit&#233;" S_01="Synth&#232;se d'activit&#233;" />
+  </d_seances>
+  <l_tr_com S_00="ET" S_01="Ref_STI2D-ETT.xls" />
+</Referentiel>

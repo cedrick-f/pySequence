@@ -900,6 +900,7 @@
   <l_listeTypeActivite S_00="ED" S_01="AP" S_02="P" />
   <l_listeTypeSeance S_00="ED" S_01="AP" S_02="P" S_03="C" S_04="TD" S_05="SA" S_06="SS" S_07="E" S_08="R" S_09="S" />
   <d_options />
+  <d_parties S_C="Conduite" S_S="Soutenance" />
   <l_periodes>
     <l_00 I_01="5" S_00="1_&#232;re" />
     <l_01 I_01="5" S_00="T_ale" />

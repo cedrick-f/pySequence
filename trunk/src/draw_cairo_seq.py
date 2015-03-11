@@ -67,9 +67,6 @@ margeY = 0.03
 ecartX = 0.02
 ecartY = 0.02
 
-
-
-
 # CI
 tailleCI = (0.17, 0.085)
 #posCI = (posPre[0] + taillePre[0]+ecartX, 0.1)
@@ -77,7 +74,6 @@ posCI = (margeX, margeY)
 IcoulCI = (0.9, 0.8, 0.8, 0.85)
 BcoulCI = (0.3, 0.2, 0.25, 1)
 fontCI = 0.014
-
 
 # Rectangle des prerequis
 taillePre = (0.29, 0.18 - tailleCI[1] - ecartY)
@@ -89,11 +85,6 @@ fontPre = 0.014
 # Position dans l'année
 posPos = [None, margeY - ecartY/2]
 taillePos = [None, 0.04]
-IcoulPos = (0.8, 0.8, 1, 0.85)
-BcoulPos = (0.1, 0.1, 0.25, 1)
-AcoulPos = (1, 0.4, 0, 1)
-fontPos = 0.014
-
 
 # Rectangle des objectifs
 posObj = (posPre[0] + taillePre[0] + ecartX/2, margeY + taillePos[1] + ecartY/2)
@@ -109,7 +100,6 @@ tailleCib[1] = tailleCib[0]
 IcoulCib = (0.8, 0.8, 1, 0.85)
 BcoulCib = (0.1, 0.1, 0.25, 1)
 centreCib = (posCib[0] + tailleCib[0] / 2 + 0.0006, posCib[1] + tailleCib[0] / 2 - 0.004)
-
 
 # Zone de commentaire
 fontIntComm = 0.01
@@ -382,7 +372,8 @@ def Draw(ctx, seq, mouchard = False):
     posPos[0] = posPre[0] + taillePre[0] + ecartX + tailleTypeEns
     taillePos[0] =  0.72414 - posPos[0] - margeX
     ctx.set_line_width (0.0015)
-    seq.rectPos = DrawPeriodes(ctx, seq.position, 
+    r = (posPos[0], posPos[1], taillePos[0], taillePos[1])
+    seq.rectPos = DrawPeriodes(ctx, r, seq.position, 
                                seq.classe.referentiel.periodes,
                                tailleTypeEns = tailleTypeEns)
     seq.rect.append(posPos+taillePos)
@@ -780,75 +771,75 @@ def DrawLigneEff(ctx, x, y):
     ctx.stroke()
     ctx.set_dash([], 0)
 
-######################################################################################  
-def DrawPeriodes(ctx, pos = None, periodes = [[u"Année", 5]], tailleTypeEns = 0, origine = False):
-    ctx.set_line_width (0.001)
-    if origine:
-        x = 0
-        y = 0
-        wt = 0.04*5
-        ht = 0.04
-    else:
-        x = posPos[0]# + ecartX
-        y = posPos[1]
-        wt = taillePos[0]# - ecartX
-        ht = taillePos[1]
-    
-    pat = cairo.LinearGradient (x, y,  x + wt, y)
-    pat.add_color_stop_rgba (1, 0.90, 0.55, 0.65, 1)
-    pat.add_color_stop_rgba (0, 0.98, 0.88, 0.98, 1)
-    ctx.rectangle (x, y, wt, ht)
-    src = ctx.get_source()
-    ctx.set_source (pat)
-    ctx.fill ()
-    ctx.set_source(src)
-    
-    ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-                                       cairo.FONT_WEIGHT_NORMAL)
-    
-    dx = 0.02 * wt
-    h = ht/2-2*dx
-    
-    rect = []
-#    print "Périodes", periodes
-#    wi = wt/len(periodes) - dx*(len(periodes)-1)
-    wi = (wt+dx)/len(periodes) - dx
-    pa = 0
-    for i, (an, np) in enumerate(periodes):
-        annee = an.split("_")
-#        print "   ", annee
-        ctx.set_font_size(fontPos)
-        w0, h0 = ctx.text_extents(annee[0])[2:4]
-        xi = x + wi/2 + (dx+wi)*i
-#        print "   ", w0, h0, xi
-        if len(annee) > 1:
-            ctx.set_font_size(fontPos*0.9)
-            w1, h1 = ctx.text_extents(annee[1])[2:4]
-#            print "   ", w1, h1
-            show_text_rect_fix(ctx, annee[0], xi-(w0+w1)/2, y, w0, ht*2/3, fontPos, 1)
-            ctx.stroke ()
-            show_text_rect_fix(ctx, annee[1], xi-(w0+w1)/2 + w0 + 0.01, y, w1, ht/3, fontPos*0.9, 1, ha = 'g')
-            ctx.stroke ()
-        else:
-            show_text_rect_fix(ctx, annee[0], xi-w0/2, y, w0, ht*2/3, fontPos, 1)
-            ctx.stroke ()
-        
-        w = (wi-dx)/np-dx
-        xi = x + (dx+wi)*i + dx
-        for p in range(np):
-            pa += 1
-            ctx.rectangle (xi, y+ht/2+dx, w, h)
-            rect.append((xi, y+ht/2+dx, w, h))
-            if pos == pa - 1:
-                ctx.set_source_rgba (AcoulPos[0], AcoulPos[1], AcoulPos[2], AcoulPos[3])
-            else:
-                ctx.set_source_rgba (IcoulPos[0], IcoulPos[1], IcoulPos[2], IcoulPos[3])
-            ctx.fill_preserve ()
-            ctx.set_source_rgba (BcoulPos[0], BcoulPos[1], BcoulPos[2], BcoulPos[3])
-            ctx.stroke ()
-#            if p == 3:
-#                x += dx
-            xi += dx + w
+#######################################################################################  
+#def DrawPeriodes(ctx, pos = None, periodes = [[u"Année", 5]], tailleTypeEns = 0, origine = False):
+#    ctx.set_line_width (0.001)
+#    if origine:
+#        x = 0
+#        y = 0
+#        wt = 0.04*5
+#        ht = 0.04
+#    else:
+#        x = posPos[0]# + ecartX
+#        y = posPos[1]
+#        wt = taillePos[0]# - ecartX
+#        ht = taillePos[1]
+#    
+#    pat = cairo.LinearGradient (x, y,  x + wt, y)
+#    pat.add_color_stop_rgba (1, 0.90, 0.55, 0.65, 1)
+#    pat.add_color_stop_rgba (0, 0.98, 0.88, 0.98, 1)
+#    ctx.rectangle (x, y, wt, ht)
+#    src = ctx.get_source()
+#    ctx.set_source (pat)
+#    ctx.fill ()
+#    ctx.set_source(src)
+#    
+#    ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+#                                       cairo.FONT_WEIGHT_NORMAL)
+#    
+#    dx = 0.02 * wt
+#    h = ht/2-2*dx
+#    
+#    rect = []
+##    print "Périodes", periodes
+##    wi = wt/len(periodes) - dx*(len(periodes)-1)
+#    wi = (wt+dx)/len(periodes) - dx
+#    pa = 0
+#    for i, (an, np) in enumerate(periodes):
+#        annee = an.split("_")
+##        print "   ", annee
+#        ctx.set_font_size(fontPos)
+#        w0, h0 = ctx.text_extents(annee[0])[2:4]
+#        xi = x + wi/2 + (dx+wi)*i
+##        print "   ", w0, h0, xi
+#        if len(annee) > 1:
+#            ctx.set_font_size(fontPos*0.9)
+#            w1, h1 = ctx.text_extents(annee[1])[2:4]
+##            print "   ", w1, h1
+#            show_text_rect_fix(ctx, annee[0], xi-(w0+w1)/2, y, w0, ht*2/3, fontPos, 1)
+#            ctx.stroke ()
+#            show_text_rect_fix(ctx, annee[1], xi-(w0+w1)/2 + w0 + 0.01, y, w1, ht/3, fontPos*0.9, 1, ha = 'g')
+#            ctx.stroke ()
+#        else:
+#            show_text_rect_fix(ctx, annee[0], xi-w0/2, y, w0, ht*2/3, fontPos, 1)
+#            ctx.stroke ()
+#        
+#        w = (wi-dx)/np-dx
+#        xi = x + (dx+wi)*i + dx
+#        for p in range(np):
+#            pa += 1
+#            ctx.rectangle (xi, y+ht/2+dx, w, h)
+#            rect.append((xi, y+ht/2+dx, w, h))
+#            if pos == pa - 1:
+#                ctx.set_source_rgba (AcoulPos[0], AcoulPos[1], AcoulPos[2], AcoulPos[3])
+#            else:
+#                ctx.set_source_rgba (IcoulPos[0], IcoulPos[1], IcoulPos[2], IcoulPos[3])
+#            ctx.fill_preserve ()
+#            ctx.set_source_rgba (BcoulPos[0], BcoulPos[1], BcoulPos[2], BcoulPos[3])
+#            ctx.stroke ()
+##            if p == 3:
+##                x += dx
+#            xi += dx + w
             
 #    if niv == 'lyc':
 #        pm = show_text_rect_fix(ctx, u"1", x, y, wt/2, ht*2/3, fontPos, 1)#, outPosMax = True)
@@ -904,7 +895,7 @@ def DrawPeriodes(ctx, pos = None, periodes = [[u"Année", 5]], tailleTypeEns = 0
 #            
 #            x+= dx + w
             
-    return rect
+#    return rect
     
     
 ######################################################################################  

@@ -1,0 +1,399 @@
+<Referentiel B_CI_BO="False" B_CI_cible="False" B_objSavoirs_Math="False" B_objSavoirs_Phys="False" B_preSavoirs_Math="True" B_preSavoirs_Phys="True" S_Code="CLG3" S_Famille="CLG" S_FichierLogo="" S_abrevCI="CI" S_nomCI="Centre(s) d'Int&#233;r&#234;t" S_nomCompetences="Capacit&#233;s" S_nomFonctions="Fonctions" S_nomIndicateurs="" S_nomSavoirs="Savoirs" S_nomSavoirs_Math="Math&#233;matiques" S_nomSavoirs_Phys="Sciences Physiques" S_nomTaches="T&#226;ches" S_surnomSavoirs="">
+  <l_BO_URL>
+    <l_00 S_00="Programme" S_01="http://cache.media.eduscol.education.fr/file/special_6/53/1/Programme_technologie_33531.pdf" />
+  </l_BO_URL>
+  <l_BO_dossier S_00="Coll&#232;ge" />
+  <l_CentresInterets S_00="Appropriation du cahier des charges" S_01="Recherche de solutions techniques" S_02="Revue de projet et choix de solutions" S_03="R&#233;alisation et validation du prototype" S_04="Pr&#233;sentation finale d'un projet" />
+  <l_Enseignement S_00="Techno 3e" S_01="3e Technologie coll&#232;ge" S_02="Techno Coll&#232;ge" />
+  <d_aColNon />
+  <d_activites>
+    <l_ED S_00="Etude de dossier" S_01="Activit&#233; d'&#233;tude de dossier" />
+    <l_P S_00="Projet" S_01="Activit&#233; de projet" />
+    <l_AP S_00="Activit&#233; pratique" S_01="Activit&#233; pratique" />
+  </d_activites>
+  <d_compImposees />
+  <d_demarcheSeance>
+    <l_ED S_00="I" S_01="R" />
+    <l_P S_00="I" S_01="R" S_02="P" />
+    <l_AP S_00="I" S_01="R" />
+  </d_demarcheSeance>
+  <d_demarches>
+    <l_I S_00="Investigation" S_01="Investigation" />
+    <l_P S_00="Projet" S_01="Projet" />
+    <l_R S_00="R&#233;s. Probl&#232;me" S_01="R&#233;solution de probl&#232;me" />
+  </d_demarches>
+  <d_dicCompetences>
+    <l_1FOT S_00="L'analyse et la conception de l'objet technique">
+      <d_01>
+        <l_FOT11 S_00="R&#233;aliser un sch&#233;ma, un dessin scientifique ou technique par une repr&#233;sentation num&#233;rique &#224; l&#8217;aide d&#8217;un logiciel de conception assist&#233;e par ordinateur, en respectant les conventions">
+          <l_01 />
+          <d_02 />
+        </l_FOT11>
+        <l_FOT12 S_00="G&#233;rer l&#8217;organisation et la coordination du projet">
+          <l_01 />
+          <d_02 />
+        </l_FOT12>
+        <l_FOT9 S_00="Valider une solution technique propos&#233;e">
+          <l_01 />
+          <d_02 />
+        </l_FOT9>
+        <l_FOT8 S_00="Proposer des solutions techniques diff&#233;rentes qui r&#233;alisent une m&#234;me fonction">
+          <l_01 />
+          <d_02 />
+        </l_FOT8>
+        <l_FOT5 S_00="Pour quelques contraintes choisies, d&#233;finir le niveau que doit respecter l&#8217;objet technique &#224; concevoir">
+          <l_01 />
+          <d_02 />
+        </l_FOT5>
+        <l_FOT4 S_00="Dresser la liste des contraintes &#224; respecter">
+          <l_01 />
+          <d_02 />
+        </l_FOT4>
+        <l_FOT7 S_00="R&#233;diger ou compl&#233;ter un cahier des charges simplifi&#233; de l&#8217;objet technique">
+          <l_01 />
+          <d_02 />
+        </l_FOT7>
+        <l_FOT6 S_00="&#201;valuer le co&#251;t d&#8217;une solution technique et d&#8217;un objet technique dans le cadre d&#8217;une r&#233;alisation au coll&#232;ge">
+          <l_01 />
+          <d_02 />
+        </l_FOT6>
+        <l_FOT1 S_00="Formaliser sans ambigu&#239;t&#233; une description du besoin">
+          <l_01 />
+          <d_02 />
+        </l_FOT1>
+        <l_FOT10 S_00="Choisir et r&#233;aliser une ou plusieurs solutions techniques permettant de r&#233;aliser une fonction donn&#233;e">
+          <l_01 />
+          <d_02 />
+        </l_FOT10>
+        <l_FOT3 S_00="D&#233;finir les crit&#232;res d&#8217;appr&#233;ciation d&#8217;une ou plusieurs fonctions">
+          <l_01 />
+          <d_02 />
+        </l_FOT3>
+        <l_FOT2 S_00="&#201;noncer et d&#233;crire sous forme graphique des fonctions que l&#8217;objet technique doit satisfaire">
+          <l_01 />
+          <d_02 />
+        </l_FOT2>
+      </d_01>
+      <d_02 />
+    </l_1FOT>
+    <l_2MAT S_00="Mati&#232;re">
+      <d_01>
+        <l_MAT6 S_00="Identifier l&#8217;origine des mati&#232;res premi&#232;res et leur disponibilit&#233;.">
+          <l_01 />
+          <d_02 />
+        </l_MAT6>
+        <l_MAT7 S_00="Identifier l&#8217;impact d&#8217;une transformation et d&#8217;un recyclage en terme de d&#233;veloppement durable">
+          <l_01 />
+          <d_02 />
+        </l_MAT7>
+        <l_MAT4 S_00="Hi&#233;rarchiser les propri&#233;t&#233;s">
+          <l_01 />
+          <d_02 />
+        </l_MAT4>
+        <l_MAT5 S_00="Choisir un mat&#233;riau dans une liste fournie en fonction d&#8217;un crit&#232;re d&#233;fini dans le cahier des charges">
+          <l_01 />
+          <d_02 />
+        </l_MAT5>
+        <l_MAT2 S_00="Identifier quelques proc&#233;d&#233;s permettant de mettre en forme le mat&#233;riau au niveau industriel et au niveau artisanal">
+          <l_01 />
+          <d_02 />
+        </l_MAT2>
+        <l_MAT3 S_00="Identifier les propri&#233;t&#233;s pertinentes des mat&#233;riaux &#224; prendre en compte pour r&#233;pondre aux contraintes du cahier des charges">
+          <l_01 />
+          <d_02 />
+        </l_MAT3>
+        <l_MAT1 S_00="Identifier les relations principales entre solutions, mat&#233;riaux et proc&#233;d&#233;s de r&#233;alisation">
+          <l_01 />
+          <d_02 />
+        </l_MAT1>
+      </d_01>
+      <d_02 />
+    </l_2MAT>
+    <l_6ROT S_00="Repr&#233;sentation de l'objet technique">
+      <d_01>
+        <l_ROT1 S_00="Justifier le choix d&#8217;un mat&#233;riau au regard de contraintes de r&#233;alisation">
+          <l_01 />
+          <d_02 />
+        </l_ROT1>
+        <l_ROT3 S_00="R&#233;diger les consignes relatives &#224; la s&#233;curit&#233; dans une fiche de proc&#233;dure d&#8217;une op&#233;ration">
+          <l_01 />
+          <d_02 />
+        </l_ROT3>
+        <l_ROT2 S_00="&#201;noncer les contraintes li&#233;es &#224; la mise en oeuvre d&#8217;un proc&#233;d&#233; de r&#233;alisation et notamment celle li&#233;es &#224; la s&#233;curit&#233;">
+          <l_01 />
+          <d_02 />
+        </l_ROT2>
+        <l_ROT5 S_00="Cr&#233;er le planning de r&#233;alisation du prototype">
+          <l_01 />
+          <d_02 />
+        </l_ROT5>
+        <l_ROT4 S_00="D&#233;finir &#224; l&#8217;avance les contr&#244;les &#224; effectuer pour toute op&#233;ration de fabrication ou d&#8217;assemblage">
+          <l_01 />
+          <d_02 />
+        </l_ROT4>
+        <l_ROT7 S_00="Conduire la r&#233;alisation du prototype">
+          <l_01 />
+          <d_02 />
+        </l_ROT7>
+        <l_ROT6 S_00="Concevoir le processus de r&#233;alisation">
+          <l_01 />
+          <d_02 />
+        </l_ROT6>
+      </d_01>
+      <d_02 />
+    </l_6ROT>
+    <l_5CGI S_00="Information">
+      <d_01>
+        <l_CGI5 S_00="Distinguer les diff&#233;rents types de documents multim&#233;dias en fonction de leurs usages">
+          <l_01 />
+          <d_02 />
+        </l_CGI5>
+        <l_CGI4 S_00="G&#233;rer son espace num&#233;rique : structure des donn&#233;es, espace m&#233;moire, sauvegarde et versions, droits d&#8217;acc&#232;s aux documents num&#233;riques">
+          <l_01 />
+          <d_02 />
+        </l_CGI4>
+        <l_CGI7 S_00="Cr&#233;er et sc&#233;nariser un document multim&#233;dia en r&#233;ponse &#224; un projet de publication, mobilisant plusieurs m&#233;dias">
+          <l_01 />
+          <d_02 />
+        </l_CGI7>
+        <l_CGI6 S_00="Choisir et justifier un format de fichier pour r&#233;aliser un document multim&#233;dia">
+          <l_01 />
+          <d_02 />
+        </l_CGI6>
+        <l_CGI1 S_00="Choisir un mode de dialogue ou de diffusion adapt&#233; &#224; un besoin de communication">
+          <l_01 />
+          <d_02 />
+        </l_CGI1>
+        <l_CGI3 S_00="Rechercher l&#8217;information utile dans le plan d&#8217;actions, le suivi des modifications et la planification des travaux &#224; livrer">
+          <l_01 />
+          <d_02 />
+        </l_CGI3>
+        <l_CGI2 S_00="Choisir et utiliser les services ou les outils adapt&#233;s aux t&#226;ches &#224; r&#233;aliser dans un travail de groupe ou pour un travail collaboratif">
+          <l_01 />
+          <d_02 />
+        </l_CGI2>
+      </d_01>
+      <d_02 />
+    </l_5CGI>
+    <l_3EN S_00="Energie">
+      <d_01>
+        <l_EN1 S_00="Identifier les caract&#233;ristiques de diff&#233;rentes sources d&#8217;&#233;nergie possibles pour l&#8217;objet technique">
+          <l_01 />
+          <d_02 />
+        </l_EN1>
+        <l_EN2 S_00="Choisir, pour une application donn&#233;e, une &#233;nergie adapt&#233;e au besoin">
+          <l_01 />
+          <d_02 />
+        </l_EN2>
+        <l_EN3 S_00="Identifier les grandes familles de sources d&#8217;&#233;nergies">
+          <l_01 />
+          <d_02 />
+        </l_EN3>
+        <l_EN4 S_00="Indiquer le caract&#232;re plus ou moins polluant de la source d&#8217;&#233;nergie utilis&#233;e pour le fonctionnement de l&#8217;objet technique.">
+          <l_01 />
+          <d_02 />
+        </l_EN4>
+      </d_01>
+      <d_02 />
+    </l_3EN>
+    <l_4EOT S_00="Evolution de l'objet technique">
+      <d_01>
+        <l_EOT1 S_00="Rep&#233;rer pour un objet technique donn&#233;, sa dur&#233;e de vie et les conditions r&#233;elles ou imagin&#233;es de sa disparition">
+          <l_01 />
+          <d_02 />
+        </l_EOT1>
+        <l_EOT2 S_00="Situer dans le temps les inventions en rapport avec l&#8217;objet technique &#233;tudi&#233;">
+          <l_01 />
+          <d_02 />
+        </l_EOT2>
+        <l_EOT3 S_00="Rep&#233;rer le ou les progr&#232;s apport&#233;s par cet objet">
+          <l_01 />
+          <d_02 />
+        </l_EOT3>
+        <l_EOT4 S_00="Rep&#233;rer dans un objet technique donn&#233; une ou des &#233;volutions dans les principes techniques de construction (mat&#233;riaux, &#233;nergies, structures, design, proc&#233;d&#233;s)">
+          <l_01 />
+          <d_02 />
+        </l_EOT4>
+        <l_EOT5 S_00="Rep&#233;rer les &#233;poques et identifier les mesures qui ont entrain&#233; l&#8217;homme &#224; prendre conscience de la protection de l&#8217;environnement">
+          <l_01 />
+          <d_02 />
+        </l_EOT5>
+        <l_EOT6 S_00="Organiser une veille technologique">
+          <l_01 />
+          <d_02 />
+        </l_EOT6>
+      </d_01>
+      <d_02 />
+    </l_4EOT>
+  </d_dicCompetences>
+  <d_dicFonctions />
+  <d_dicSavoirs>
+    <l_1 S_00="L'analyse la conception d'un objet technique">
+      <d_01>
+        <l_1.4 S_00="Contraintes li&#233;es (au fonctionnement, &#224; la s&#233;curit&#233;, &#224; l'esth&#233;tique, au d&#233;veloppement durable, aux aspects &#233;conomiques)">
+          <l_01 />
+        </l_1.4>
+        <l_1.5 S_00="Cahier des charges simplifi&#233;">
+          <l_01 />
+        </l_1.5>
+        <l_1.6 S_00="Solution technique">
+          <l_01 />
+        </l_1.6>
+        <l_1.7 S_00="Repr&#233;sentation structurelle">
+          <l_01 />
+        </l_1.7>
+        <l_1.1 S_00="Besoin">
+          <l_01 />
+        </l_1.1>
+        <l_1.2 S_00="Repr&#233;sentation fonctionnelle">
+          <l_01 />
+        </l_1.2>
+        <l_1.3 S_00="Crit&#232;res d'app&#233;ciation">
+          <l_01 />
+        </l_1.3>
+        <l_1.8 S_00="Mod&#233;lisation du r&#233;el">
+          <l_01 />
+        </l_1.8>
+        <l_1.9 S_00="Planification, ant&#233;riorit&#233;, chronologie des op&#233;rations">
+          <l_01 />
+        </l_1.9>
+      </d_01>
+    </l_1>
+    <l_3 S_00="Les &#233;nergies mises en &#339;uvre">
+      <d_01>
+        <l_3.4 S_00="Impact sur l'environnement : d&#233;gradation de l'air, de l'eau et du sol">
+          <l_01 />
+        </l_3.4>
+        <l_3.2 S_00="Crit&#232;res de choix &#233;nerg&#233;tiques">
+          <l_01 />
+        </l_3.2>
+        <l_3.3 S_00="Sources et disponibilit&#233;s des ressources &#233;nerg&#233;tiques (fossile, nucl&#233;aire, renouvelable)">
+          <l_01 />
+        </l_3.3>
+        <l_3.1 S_00="Caract&#233;ristique d'une source d'&#233;nergie">
+          <l_01 />
+        </l_3.1>
+      </d_01>
+    </l_3>
+    <l_2 S_00="Les mat&#233;riaux utilis&#233;s">
+      <d_01>
+        <l_2.3 S_00="M&#233;thodologie de choix de mat&#233;riaux">
+          <l_01 />
+        </l_2.3>
+        <l_2.2 S_00="La mise en forme des mat&#233;riaux">
+          <l_01 />
+        </l_2.2>
+        <l_2.1 S_00="Crit&#232;res de choix d'un mat&#233;riau pour une solution technique donn&#233;e">
+          <l_01 />
+        </l_2.1>
+        <l_2.4 S_00="Origine des mati&#232;res premi&#232;res et disponibilit&#233; des mat&#233;riaux">
+          <l_01 />
+        </l_2.4>
+      </d_01>
+    </l_2>
+    <l_5 S_00="La communication et la gestion de l'information">
+      <d_01>
+        <l_5.1 S_00="Messageries diverses, flux audio ou vid&#233;o">
+          <l_01 />
+        </l_5.1>
+        <l_5.2 S_00="Outils de travail collaboratif : liste de diffusion, forum, blog, partage de documents, partage d'applications&#8230;">
+          <l_01 />
+        </l_5.2>
+        <l_5.3 S_00="Planification, calendrier">
+          <l_01 />
+        </l_5.3>
+        <l_5.4 S_00="Identit&#233; num&#233;rique, mot de passe, identifiant">
+          <l_01 />
+        </l_5.4>
+        <l_5.5 S_00="Document multim&#233;dia. Nature et caract&#233;ristiques des documents multim&#233;dias">
+          <l_01 />
+        </l_5.5>
+      </d_01>
+    </l_5>
+    <l_4 S_00="L'&#233;volution de l'objet technique">
+      <d_01>
+        <l_4.4 S_00="Veille technologique">
+          <l_01 />
+        </l_4.4>
+        <l_4.1 S_00="Dur&#233;e de vie">
+          <l_01 />
+        </l_4.1>
+        <l_4.3 S_00="Progr&#232;s technique, inventions et innovations, d&#233;veloppement durable">
+          <l_01 />
+        </l_4.3>
+        <l_4.2 S_00="Cycle de vie d'un objet technique">
+          <l_01 />
+        </l_4.2>
+      </d_01>
+    </l_4>
+    <l_6 S_00="Les processus de r&#233;alisation d'un objet technique">
+      <d_01>
+        <l_6.6 S_00="Ant&#233;riorit&#233;s et ordonnancement">
+          <l_01 />
+        </l_6.6>
+        <l_6.5 S_00="Processus de r&#233;alisation">
+          <l_01 />
+        </l_6.5>
+        <l_6.4 S_00="Planning de r&#233;alisation">
+          <l_01 />
+        </l_6.4>
+        <l_6.3 S_00="Contraintes li&#233;es aux proc&#233;d&#233;s de contr&#244;le et de validation">
+          <l_01 />
+        </l_6.3>
+        <l_6.2 S_00="Contraintes li&#233;es aux proc&#233;d&#233;s et mode de r&#233;alisation">
+          <l_01 />
+        </l_6.2>
+        <l_6.1 S_00="Propri&#233;t&#233;s des mat&#233;riaux et proc&#233;d&#233;s de r&#233;alisation">
+          <l_01 />
+        </l_6.1>
+      </d_01>
+    </l_6>
+  </d_dicSavoirs>
+  <d_dicSavoirs_Math />
+  <d_dicSavoirs_Phys />
+  <d_effectifs>
+    <l_P S_00="Act. Pra." S_01="Activit&#233; Pratique" />
+    <l_C S_00="Classe enti&#232;re" S_01="Classe enti&#232;re" />
+    <l_E S_00="Etude ou Projet" S_01="Etude et Projet" />
+    <l_D S_00="Demi-groupe" S_01="Demi-groupe" />
+    <l_G S_00="Effectif r&#233;duit" S_01="Effectif r&#233;duit" />
+  </d_effectifs>
+  <d_effectifsSeance>
+    <l_C S_00="C" />
+    <l_E S_00="C" />
+    <l_AP S_00="E" S_01="P" />
+    <l_SS S_00="C" />
+    <l_ED S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" />
+    <l_P S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" />
+    <l_S />
+    <l_R />
+    <l_SA S_00="C" S_01="G" />
+    <l_TD S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" />
+  </d_effectifsSeance>
+  <l_listeDemarches S_00="I" S_01="R" S_02="P" />
+  <l_listeEffectifs S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" />
+  <l_listeTypeActivite S_00="ED" S_01="AP" S_02="P" />
+  <l_listeTypeSeance S_00="ED" S_01="AP" S_02="P" S_03="C" S_04="TD" S_05="SA" S_06="SS" S_07="E" S_08="R" S_09="S" />
+  <d_options />
+  <d_parties />
+  <l_periodes>
+    <l_00 I_01="2" S_00="T1" />
+    <l_01 I_01="2" S_00="T2" />
+    <l_02 I_01="2" S_00="T3" />
+  </l_periodes>
+  <l_positions_CI />
+  <d_projets />
+  <d_seances>
+    <l_C S_00="Cours" S_01="Cours" />
+    <l_E S_00="Evaluation" S_01="Evaluation" />
+    <l_P S_00="Projet" S_01="Activit&#233; de projet" />
+    <l_SS S_00="Synt. s&#233;quence" S_01="Synth&#232;se de s&#233;quence" />
+    <l_ED S_00="Etude de dossier" S_01="Activit&#233; d'&#233;tude de dossier" />
+    <l_AP S_00="Activit&#233; pratique" S_01="Activit&#233; pratique" />
+    <l_S S_00="Parall&#232;le" S_01="Activit&#233;s en parall&#232;le" />
+    <l_R S_00="Rotation" S_01="Rotation d'activit&#233;s" />
+    <l_TD S_00="TD" S_01="Travaux Dirig&#233;s" />
+    <l_SA S_00="Synt. activit&#233;" S_01="Synth&#232;se d'activit&#233;" />
+  </d_seances>
+  <l_tr_com />
+</Referentiel>

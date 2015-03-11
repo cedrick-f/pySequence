@@ -58,8 +58,19 @@ def int0(txt):
     except:
         return 0
     
-    
+###########################################################
+def includeElem(pl, gl):
+    """ Teste si un élément de la petite liste <pl>
+        est inclu dans la grande liste <gl>
+    """
+    for e in pl:
+        if e in gl: return True
+    return False
 
+
+
+                                
+                                
 class XMLelem():
     ######################################################################################  
     def getBranche(self, nomb = ""):
@@ -271,8 +282,130 @@ class XMLelem():
                         break
                         return False
         return True
+
+
+
+    ###########################################################
+    def normaliserPoids(self, dic, debug = False):
+        for k0, v0 in dic.items():
+            if len(v0) > 2:
+    #                    print self.parties.keys()
+                tot = {}
+                for p in self.parties.keys():
+                    tot[p] = 0
+                    
+                if type(v0[1]) == dict :
+                    lstindic = []
+                    for v1 in v0[1].values():
+                        for ii in v1[1]:
+                            lstindic.append(ii)
+                else:
+                    lstindic = v0[1]
+                    
+                if debug: print "   ", lstindic
+                
+                for indic in lstindic:
+                    for part, poids in indic.poids.items():
+                        if part in tot.keys():
+                            tot[part] = tot[part] + poids
+                if debug: print "  tot", tot
+                
+                coef = {}
+                for p in self.parties.keys():
+                    coef[p] = 1.0*tot[p]/100
+                if debug: print "  coef", coef
+                
+                for indic in lstindic:
+                    for part, poids in indic.poids.items():
+                        if part in coef.keys() and coef[part] != 0:
+                            indic.poids[part] = round(indic.poids[part] / coef[part], 6)
+
+
+    ###########################################################
+    def getPremierEtDernierNiveauArbre(self, dic):
+        sdic = {}
+        for k0, v0 in dic.items():
+            if len(v0) > 1 and  type(v0[1]) == dict:
+                if len(v0) == 3: # premier niveau = [intitule, dict ou liste, poids]
+                    sdic[k0] = [v0[0], self.getDernierNiveauArbre(v0[1]), v0[2]]
+                else:
+                    sdic.update(self.getDernierNiveauArbre(v0[1]))
+            else:
+                sdic[k0] = v0
+        return sdic
     
     
+    ###########################################################
+    def getArbreProjet(self, dic, debug = False):
+#        print "getArbreProjet", self.parties.keys()
+        sdic = {}
+        for k0, v0 in dic.items():
+            if debug: print k0
+            if len(v0) > 1 and type(v0[1]) == dict:
+                if debug: print "   ", v0
+                if len(v0) == 2:
+                    sdic[k0] = [v0[0], self.getArbreProjet(v0[1], debug = debug)]
+                else:
+                    if debug: print "   prem's", v0[2]
+                    
+                    if includeElem(self.parties.keys(), v0[2].keys()):
+#                        if len(v0[2]) > 0 and not v0[2].keys() == ['E']:
+#                        if v0[2][1] != 0 or v0[2][2] != 0: # Conduite ou Soutenance
+                        sdic[k0] = [v0[0], self.getArbreProjet(v0[1], debug = debug), v0[2]]
+            else:
+                lst = []
+                for l in v0[1]:
+                    if debug: print l
+                    if l.estProjet(): # Conduite ou Soutenance
+                        lst.append(l)
+                if lst != []:
+                    if len(v0) > 2:
+                        sdic[k0] = [v0[0], lst, v0[2]]
+                    else:
+                        sdic[k0] = [v0[0], lst]
+        return sdic
+    
+    ###########################################################
+    def getDernierNiveauArbre2(self, dic):
+        sdic = {}
+        for k0, v0 in dic.items():
+            if type(v0) == dict:
+                sdic.update(self.getDernierNiveauArbre(v0))
+            else:
+                sdic[k0] = v0
+        return sdic
+    
+    
+    ###########################################################
+    def getDeuxiemeNiveauArbre(self, dic):
+        sdic = {}
+#            if len(dic) > 0 and type(dic.values()[0][1]) == dict:
+        for k0, v0 in dic.items():
+            if type(v0[1]) == dict:
+                for k1, v1 in v0[1].items():
+                    if len(v1) > 1 and  type(v1[1]) == dict: # pas fini = 3ème niveau
+                        self._niveau = 3
+                        sdic[k1] = {}
+                        for k2, v2 in v1[1].items():
+                            sdic[k1][k2] = v2[1]
+                    else:   # Niveau "indicateur"
+                        self._niveau = 2
+                        sdic[k1] = v1[1]
+            else:
+                sdic[k0] = v0[1]
+#            else:
+#                return dic
+        return sdic
+    
+    ###########################################################
+    def getDernierNiveauArbre(self, dic):
+        sdic = {}
+        for k0, v0 in dic.items():
+            if len(v0) > 1 and  type(v0[1]) == dict:
+                sdic.update(self.getDernierNiveauArbre(v0[1]))
+            else:
+                sdic[k0] = v0
+        return sdic
     
 #################################################################################################################################
 #
@@ -335,7 +468,8 @@ class Referentiel(XMLelem):
         self.projets = {}
         self.aColNon = {}               # Pour indiquer si les différentes parties d'un projet ont une colonne "NON" dans leur grille
         self.compImposees = {}          # Indique que les competences sont imposées pour chaque revue
-
+        self.parties = {}
+        
         #
         # Centre d'intérêt
         #
@@ -427,7 +561,7 @@ class Referentiel(XMLelem):
         """ Lecture de la branche XML
             (ouverture de fichier)
         """
-#        print "setBranche référentiel"
+        print "setBranche référentiel V5"
         self.initParam()
 
         nomerr = []
@@ -590,7 +724,11 @@ class Referentiel(XMLelem):
         """ Lecture de la branche XML
             (ouverture de fichier)
         """
-
+#        print "corrigerVersion"
+#        print self.projets
+#        print 
+        
+        
         # Pour corriger une erreur de jeunesse de la 5.0beta1
 #        if len(self.aColNon) == 0:
 #            self.aColNon = {'R' : True,  'S' : False}
@@ -902,30 +1040,49 @@ class Referentiel(XMLelem):
         self.nomCompetences =   sh_va.cell(0,0).value
         self.nomIndicateurs = sh_va.cell(0,5).value
         
+
         # Décomposition des projets en parties
         self._colParties = []
-#        self._aColNon = {}
         col = [c  for c in range(8, sh_va.ncols) if sh_va.cell(1,c).value != u""]
 #        print ">>>", col
         for i, c in enumerate(col):
-            t = sh_va.cell(1,c).value
-            for p in self.projets.values():
-                if t == p.intitule:
-                    if i == len(col)-1:
-                        n = sh_va.ncols
-                    else:
-                        n = col[i+1]
-#                    print "     ",n, t
-                    for j in range((n-c)/3):
-                        cp = c+j*3
-#                        print "         --", cp
-                        part = sh_va.cell(3,cp).value
+            if i == len(col)-1:
+                n = sh_va.ncols
+            else:
+                n = col[i+1]
+            
+            for j in range((n-c)/3):
+                cp = c+j*3
+                part = sh_va.cell(3,cp).value
+                self._colParties.append((part, cp))
+                t = sh_va.cell(1,c).value
+                for p in self.projets.values():
+                    if t == p.intitule:
                         p.parties[part] = sh_va.cell(2,cp).value
-                        self._colParties.append((part, cp))
-                        self.compImposees[part] = False
-#                print "   >", p.parties
-        print "_colParties 1 :", self._colParties
+                self.compImposees[part] = False
+            
+#            t = sh_va.cell(1,c).value
+#            for p in self.projets.values():
+#                if t == p.intitule:
+#                    if i == len(col)-1:
+#                        n = sh_va.ncols
+#                    else:
+#                        n = col[i+1]
+#        #                    print "     ",n, t
+#                    for j in range((n-c)/3):
+#                        cp = c+j*3
+#        #                        print "         --", cp
+#                        part = sh_va.cell(3,cp).value
+#                        p.parties[part] = sh_va.cell(2,cp).value
+#                        self._colParties.append((part, cp))
+#                        self.compImposees[part] = False
+#        #                print "   >", p.parties
+#        print "_colParties :", self, self._colParties
+#        print "compImposees :", self, self.compImposees
         
+        for part, col in list(set([cp for cp in self._colParties])):
+            self.parties[part] = sh_va.cell(2,col).value
+            
         for p in self.projets.values():
             p.importer(wb)
             
@@ -1032,28 +1189,9 @@ class Referentiel(XMLelem):
 #            return 10
 #        return 10
         
-    ###########################################################
-    def getDernierNiveauArbre(self, dic):
-        sdic = {}
-        for k0, v0 in dic.items():
-            if len(v0) > 1 and  type(v0[1]) == dict:
-                sdic.update(self.getDernierNiveauArbre(v0[1]))
-            else:
-                sdic[k0] = v0
-        return sdic
+    
         
-    ###########################################################
-    def getPremierEtDernierNiveauArbre(self, dic):
-        sdic = {}
-        for k0, v0 in dic.items():
-            if len(v0) > 1 and  type(v0[1]) == dict:
-                if len(v0) == 3: # premier niveau = [intitule, dict ou liste, poids]
-                    sdic[k0] = [v0[0], self.getDernierNiveauArbre(v0[1]), v0[2]]
-                else:
-                    sdic.update(self.getDernierNiveauArbre(v0[1]))
-            else:
-                sdic[k0] = v0
-        return sdic
+    
     
     
     #########################################################################
@@ -1063,11 +1201,20 @@ class Referentiel(XMLelem):
             --> le "_" évite que les attributs ne soient sauvegardés dans les XML
             
         """
-        self._parties = []
-        for proj in self.projets.values():
-            for part in proj.parties:
-                if not part in self._parties:
-                    self._parties.append(part)
+#        print "postTraiter", self, self.parties
+        
+#        self._parties = []
+#        for proj in self.projets.values():
+#            for part in proj.parties:
+#                if not part in self._parties:
+#                    self._parties.append(part)
+                    
+                    
+        
+            
+        
+        
+        
                     
         for p in self.projets.values():
             p.postTraiter(self)
@@ -1076,7 +1223,7 @@ class Referentiel(XMLelem):
         
         
     #########################################################################
-    def completer(self):
+    def completer(self, forcer = False):
         """ Complète les données selon que le référentiel ait un tronc commun ou des options
             Exécuté lorsque tous les référentiels sont chargés !
             
@@ -1084,6 +1231,37 @@ class Referentiel(XMLelem):
             
         """
         
+        # C'est une option (il y a un tronc commun) ==> on complète plus tard
+        if not forcer and len(self.tr_com) != 0:
+            return
+        
+#        print "completer ref :", self, self.options
+        
+        if len(self.options) != 0:
+            self.parties = {}
+            for ro in self.options.keys():
+                for proj in REFERENTIELS[ro].projets.values():
+                    for part, n in proj.parties.items():
+                        if not part in self.parties.keys():
+                            self.parties[part] = n
+                
+#            print "    ", self.parties
+#            print "    ", self.dicCompetences
+            self._dicCompetences = self.getArbreProjet(self.dicCompetences, debug = False)
+#            print "   >", self._dicCompetences
+            self._dicIndicateurs = self.getPremierEtDernierNiveauArbre(self._dicCompetences)
+            
+            self.normaliserPoids(self._dicIndicateurs, debug = False)
+    #        print "                   ", self._dicIndicateurs_prj
+            
+            self._niveau = 0
+            self._dicIndicateurs_famille = self.getDeuxiemeNiveauArbre(self._dicCompetences)
+    
+            self._dicIndicateurs_simple = self.getDernierNiveauArbre2(self._dicIndicateurs_famille)
+        
+            for ro in self.options:
+                REFERENTIELS[ro].completer(forcer = True)
+            
         for p in self.projets.values():
             p.completer(self) 
         
@@ -1483,77 +1661,41 @@ class Projet(XMLelem):
 
     ##################################################################################################################
     def postTraiter(self, ref):
+#        print " postTraiter", self, ref
         
-        ###########################################################
-        def includeElem(pl, gl):
-            """ Teste si un élément de la petite liste <pl>
-                est inclu dans la grande liste <gl>
-            """
-            for e in pl:
-                if e in gl: return True
-            return False
         
-        ###########################################################
-        def getArbreProjet(dic, debug = False):
-            sdic = {}
-            for k0, v0 in dic.items():
-                if debug: print k0
-                if len(v0) > 1 and type(v0[1]) == dict:
-                    if debug: print "   ", v0[0]
-                    if len(v0) == 2:
-                        sdic[k0] = [v0[0], getArbreProjet(v0[1], debug = debug)]
-                    else:
-                        if debug: print "   prem's", v0[2]
-                        
-                        if includeElem(self.parties.keys(), v0[2].keys()):
-#                        if len(v0[2]) > 0 and not v0[2].keys() == ['E']:
-#                        if v0[2][1] != 0 or v0[2][2] != 0: # Conduite ou Soutenance
-                            sdic[k0] = [v0[0], getArbreProjet(v0[1], debug = debug), v0[2]]
-                else:
-                    lst = []
-                    for l in v0[1]:
-                        if debug: print l[1]
-                        if l.estProjet(): # Conduite ou Soutenance
-                            lst.append(l)
-                    if lst != []:
-                        if len(v0) > 2:
-                            sdic[k0] = [v0[0], lst, v0[2]]
-                        else:
-                            sdic[k0] = [v0[0], lst]
-            return sdic
+        
+#        ###########################################################
+#        def getArbreProjet(dic, debug = False):
+#            sdic = {}
+#            for k0, v0 in dic.items():
+#                if debug: print k0
+#                if len(v0) > 1 and type(v0[1]) == dict:
+#                    if debug: print "   ", v0[0]
+#                    if len(v0) == 2:
+#                        sdic[k0] = [v0[0], getArbreProjet(v0[1], debug = debug)]
+#                    else:
+#                        if debug: print "   prem's", v0[2]
+#                        
+#                        if includeElem(self.parties.keys(), v0[2].keys()):
+##                        if len(v0[2]) > 0 and not v0[2].keys() == ['E']:
+##                        if v0[2][1] != 0 or v0[2][2] != 0: # Conduite ou Soutenance
+#                            sdic[k0] = [v0[0], getArbreProjet(v0[1], debug = debug), v0[2]]
+#                else:
+#                    lst = []
+#                    for l in v0[1]:
+#                        if debug: print l[1]
+#                        if l.estProjet(): # Conduite ou Soutenance
+#                            lst.append(l)
+#                    if lst != []:
+#                        if len(v0) > 2:
+#                            sdic[k0] = [v0[0], lst, v0[2]]
+#                        else:
+#                            sdic[k0] = [v0[0], lst]
+#            return sdic
  
         
-        ###########################################################
-        def getDernierNiveauArbre2(dic):
-            sdic = {}
-            for k0, v0 in dic.items():
-                if type(v0) == dict:
-                    sdic.update(ref.getDernierNiveauArbre(v0))
-                else:
-                    sdic[k0] = v0
-            return sdic
         
-        
-        ###########################################################
-        def getDeuxiemeNiveauArbre(dic):
-            sdic = {}
-#            if len(dic) > 0 and type(dic.values()[0][1]) == dict:
-            for k0, v0 in dic.items():
-                if type(v0[1]) == dict:
-                    for k1, v1 in v0[1].items():
-                        if len(v1) > 1 and  type(v1[1]) == dict: # pas fini = 3ème niveau
-                            self._niveau = 3
-                            sdic[k1] = {}
-                            for k2, v2 in v1[1].items():
-                                sdic[k1][k2] = v2[1]
-                        else:   # Niveau "indicateur"
-                            self._niveau = 2
-                            sdic[k1] = v1[1]
-                else:
-                    sdic[k0] = v0[1]
-#            else:
-#                return dic
-            return sdic
         
         
         ###########################################################
@@ -1591,46 +1733,14 @@ class Projet(XMLelem):
                         if sdic != None : return sdic
             return
             
-        ###########################################################
-        def normaliserPoids(dic, debug = False):
-            for k0, v0 in dic.items():
-                if len(v0) > 2:
-#                    print self.parties.keys()
-                    tot = {}
-                    for p in self.parties.keys():
-                        tot[p] = 0
-                        
-                    if type(v0[1]) == dict :
-                        lstindic = []
-                        for v1 in v0[1].values():
-                            for ii in v1[1]:
-                                lstindic.append(ii)
-                    else:
-                        lstindic = v0[1]
-                        
-                    if debug: print "   ", lstindic
-                    
-                    for indic in lstindic:
-                        for part, poids in indic.poids.items():
-                            if part in tot.keys():
-                                tot[part] = tot[part] + poids
-                    if debug: print "  tot", tot
-                    
-                    coef = {}
-                    for p in self.parties.keys():
-                        coef[p] = 1.0*tot[p]/100
-                    if debug: print "  coef", coef
-                    
-                    for indic in lstindic:
-                        for part, poids in indic.poids.items():
-                            if part in coef.keys() and coef[part] != 0:
-                                indic.poids[part] = round(indic.poids[part] / coef[part], 6)
+        
                                 
                                 
                                 
         
-#        print "dicCompetences", self.dicCompetences
-        self._dicCompetences = getArbreProjet(ref.dicCompetences, debug = False)
+#        print "dicCompetences", ref.dicCompetences
+        self._dicCompetences = self.getArbreProjet(ref.dicCompetences, debug = False)
+#        print "_dicCompetences", self._dicCompetences
         
         # On regroupe les compétences qui ont les mêmes indicateurs dans la grille (cas de STI2D EE !!)
         lst_codeindic = chercherIndicIdem(self._dicCompetences, debug = False)
@@ -1647,13 +1757,13 @@ class Projet(XMLelem):
         self._dicIndicateurs = ref.getPremierEtDernierNiveauArbre(self._dicCompetences)
         
         
-        normaliserPoids(self._dicIndicateurs, debug = False)
+        self.normaliserPoids(self._dicIndicateurs, debug = False)
 #        print "                   ", self._dicIndicateurs_prj
         
         self._niveau = 0
-        self._dicIndicateurs_famille = getDeuxiemeNiveauArbre(self._dicCompetences)
+        self._dicIndicateurs_famille = self.getDeuxiemeNiveauArbre(self._dicCompetences)
 
-        self._dicIndicateurs_simple = getDernierNiveauArbre2(self._dicIndicateurs_famille)
+        self._dicIndicateurs_simple = self.getDernierNiveauArbre2(self._dicIndicateurs_famille)
 #        print "_dicIndicateurs_prj_simple", self._dicIndicateurs_prj_simple
         
 #        lst.extend()
@@ -1673,6 +1783,8 @@ class Projet(XMLelem):
     def completer(self, ref):
         """
         """
+#        print " completer", ref, self
+        
         ###########################################################
         def aplatir(dic, niv=1):
             ddic = {}
@@ -1735,7 +1847,9 @@ class Projet(XMLelem):
         #
         if ref.tr_com != []:
             t = ref.tr_com[0]
+#            print "   ++", t, REFERENTIELS.keys()
             if t in REFERENTIELS.keys():
+#                print "         ",REFERENTIELS[t]._dicCompetences
                 self._dicCompetences.update(REFERENTIELS[t]._dicCompetences)
                 self._dicIndicateurs.update(REFERENTIELS[t]._dicIndicateurs)
                 self._dicIndicateurs_simple.update(REFERENTIELS[t]._dicIndicateurs_simple)
@@ -1755,8 +1869,8 @@ class Projet(XMLelem):
             self._lstGrpIndicateur[p] = list(set(self._lstGrpIndicateur[p]))
 
     
-        if ref.tr_com != []:
-            self.grilles.update(REFERENTIELS[ref.tr_com[0]].projets[self.code].grilles)
+#        if ref.tr_com != []:
+#            self.grilles.update(REFERENTIELS[ref.tr_com[0]].projets[self.code].grilles)
                 
                 
 
@@ -1869,7 +1983,7 @@ def chargerReferentiels():
     #
     liste = os.listdir(os.path.join(constantes.PATH, r"..", DOSSIER_REF))
     
-    for fich_ref in ["Ref_STS-SN_EC-1.xls", "Ref_SSI.xls"]:#, "Ref_STI2D-EE.xls", "Ref_STI2D-ETT.xls"]:#["Ref_6CLG.xls"]:#
+    for fich_ref in liste:#["Ref_STS-SN_EC-1.xls", "Ref_SSI.xls"]:#, "Ref_STI2D-EE.xls", "Ref_STI2D-ETT.xls"]:#["Ref_6CLG.xls"]:#
         
         if os.path.splitext(fich_ref)[1] == ".xls":
 #            print
@@ -1880,6 +1994,7 @@ def chargerReferentiels():
             
 
     for r in REFERENTIELS.values():
+#        print r
         r.completer()
 #        if r.Code == "ITEC":
 #        print r
