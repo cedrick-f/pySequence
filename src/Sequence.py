@@ -7707,7 +7707,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     #############################################################################
     def OnAide(self, event):
         try:
-            webbrowser.open('http://code.google.com/p/pysequence/wiki/Aide',new=2)
+            webbrowser.open('https://github.com/cedrick-f/pySequence/blob/master/Aide.md',new=2)
         except:
             messageErreur(None, u"Ouverture impossible",
                           u"Impossible d'ouvrir l'url\n\n%s\n" %toDefautEncoding(self.path))
@@ -18605,16 +18605,16 @@ class A_propos(wx.Dialog):
         t = wx.StaticText(descrip, -1,u"",
                           size = (400, -1))#,
 #                        style = wx.TE_READONLY|wx.TE_MULTILINE|wx.BORDER_NONE) 
-        t.SetLabelMarkup( wordwrap(u"<b>pySequence</b> est un logiciel d'aide à l'élaboration de séquences pédagogiques et à la validation de projet,\n"
+        t.SetLabelMarkup( wordwrap(u"<b>pySequence</b> est un logiciel d'aide à l'élaboration de séquences pédagogiques et à la validation de projets,\n"
                                           u"sous forme de fiches exportables au format PDF ou SVG.\n"
-                                          u"Il est élaboré en relation avec le programme et le document d'accompagnement\n"
-                                          u"des enseignements des filières STI2D et SSI.",500, wx.ClientDC(self)))
+                                          u"Il est élaboré en relation avec les programmes et les documents d'accompagnement\n"
+                                          u"des enseignements des filières STI2D, SSI et Technologie Collège",500, wx.ClientDC(self)))
         nb.AddPage(descrip, u"Description")
         nb.AddPage(auteurs, u"Auteurs")
         nb.AddPage(licence, u"Licence")
         
-        sizer.Add(hl.HyperLinkCtrl(self, wx.ID_ANY, u"Informations et téléchargement : http://code.google.com/p/pysequence/",
-                                   URL="http://code.google.com/p/pysequence/"),  
+        sizer.Add(hl.HyperLinkCtrl(self, wx.ID_ANY, u"Informations et téléchargement : https://github.com/cedrick-f/pySequence",
+                                   URL="https://github.com/cedrick-f/pySequence"),  
                   flag = wx.ALIGN_RIGHT|wx.ALL, border = 5)
         sizer.Add(nb)
         
