@@ -21,7 +21,7 @@ shutil.rmtree("build", ignore_errors=True)
 
 # Inculsion des fichiers de donn�es
 #################################################################################################
-includefiles = [('Microsoft.VC90.CRT', "Microsoft.VC90.CRT"),
+includefiles = [('D:/Developpement/Microsoft.VC90.CRT', "Microsoft.VC90.CRT"),
                      'gpl.txt', 
                      'fichier_prj.ico', 'fichier_seq.ico',
                      'etablissements.xml',

@@ -7260,7 +7260,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     def GetNewVersion(self):  
         # url = 'https://code.google.com/p/pysequence/downloads/list'
         print "Recherche nouvelle version ..."
-        url = 'https://github.com/cedrick-f/pylogyc/releases'
+        url = 'https://github.com/cedrick-f/pySequence/releases'
         try:
             self.downloadPage = BeautifulSoup(urllib2.urlopen(url, timeout = 5))
         except IOError:
@@ -7269,25 +7269,29 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
         # Dernière version
         div_latest = self.downloadPage.find_all('div', attrs={'class':"release label-latest"})
-        latest = div_latest[0].contents[1].find_all('span', attrs={'class':"css-truncate-target"})[0].contents[0]
+        try:
+            latest = div_latest[0].contents[1].find_all('span', attrs={'class':"css-truncate-target"})[0].contents[0]
+        except:
+            print "aucune"
+            return
         latest = latest.lstrip('v')
         
         # Version actuelle
         a = __version__.split('.')
-        print a
         
         # Comparaison
         new = True
-        print latest.split('.')
         for i, l in enumerate(latest.split('.')):
             nl = int(l.rstrip("-beta"))
             na = int(a[i].rstrip("-beta"))
             if nl < na:
                 new = False
                 break
-            
-        print new
-        
+        if new:
+            print latest
+        else:
+            print
+
         if new:
             dialog = wx.MessageDialog(self, u"Une nouvelle version de pySéquence est disponible\n\n" \
                                             u"\t%s\n\n" \
@@ -7302,107 +7306,64 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                                   u"Impossible d'ouvrir l'url\n\n%s\n" %toDefautEncoding(self.path))
 
 
-
-#        div_latest = BeautifulSoup(div_latest[0].contents[1])
-#        print div_latest.find_all('span', attrs={'class':"css-truncate-target"})
         return
         
-        
-        
-#        ligne = self.downloadPage.find('div', attrs={'class':"flip-entry-title"})
-        ligne = self.downloadPage.find_all('div', attrs={'class':"flip-entry-title"})
-#        fichier = ligne.text.strip()
-        
-        
-        
-#        print vba, va, ba
-        # version en ligne plus récente
-        versionPlusRecente = False    
-                    
-        for l in ligne:
-            if len(l.text.split('_')) > 1:
-                v = l.text.split('_')[1].split('.zip')[0]
-                vb = v.split("beta")
-                vn = vb[0]
-                if len(vb) >1:
-                    bn = eval(vb[1])
-                else:
-                    bn = 100
-#                print vb, vn, bn
-                if vn > va or (vn == va and bn > ba): # Nouvelle version disponible
-                    versionPlusRecente = True
-                    break
-#        print v
-        
-        if versionPlusRecente:
-            dialog = wx.MessageDialog(self, u"Une nouvelle version de pySéquence est disponible\n\n" \
-                                            u"\t%s\n\n" \
-                                            u"Voulez-vous visiter la page de téléchargement ?" % v, 
-                                          u"Nouvelle version", wx.YES_NO | wx.ICON_INFORMATION)
-            retCode = dialog.ShowModal()
-            if retCode == wx.ID_YES:
-                try:
-                    webbrowser.open(url,new=2)
-                except:
-                    messageErreur(None, u"Ouverture impossible",
-                                  u"Impossible d'ouvrir l'url\n\n%s\n" %toDefautEncoding(self.path))
-
                     
                     
-    ###############################################################################################
-    def GetNewVersionOld(self):  
-        # url = 'https://code.google.com/p/pysequence/downloads/list'
-        print "Recherche nouvelle version ...",
-        url = 'https://drive.google.com/folderview?id=0B2jxnxsuUscPX0tFLVN0cF91TGc#list'
-        try:
-            self.downloadPage = BeautifulSoup(urllib2.urlopen(url, timeout = 5))
-        except IOError:
-            print "pas d'accès Internet"
-            return   
-
-#        ligne = self.downloadPage.find('div', attrs={'class':"flip-entry-title"})
-        ligne = self.downloadPage.find_all('div', attrs={'class':"flip-entry-title"})
-#        fichier = ligne.text.strip()
-        
-        # Version actuelle
-        vba = __version__.split("beta")
-        va = vba[0]
-        if len(vba) > 1:
-            ba = eval(vba[1])
-        else:
-            ba = 100
-        
-#        print vba, va, ba
-        # version en ligne plus récente
-        versionPlusRecente = False    
-                    
-        for l in ligne:
-            if len(l.text.split('_')) > 1:
-                v = l.text.split('_')[1].split('.zip')[0]
-                vb = v.split("beta")
-                vn = vb[0]
-                if len(vb) >1:
-                    bn = eval(vb[1])
-                else:
-                    bn = 100
-#                print vb, vn, bn
-                if vn > va or (vn == va and bn > ba): # Nouvelle version disponible
-                    versionPlusRecente = True
-                    break
-#        print v
-        
-        if versionPlusRecente:
-            dialog = wx.MessageDialog(self, u"Une nouvelle version de pySéquence est disponible\n\n" \
-                                            u"\t%s\n\n" \
-                                            u"Voulez-vous visiter la page de téléchargement ?" % v, 
-                                          u"Nouvelle version", wx.YES_NO | wx.ICON_INFORMATION)
-            retCode = dialog.ShowModal()
-            if retCode == wx.ID_YES:
-                try:
-                    webbrowser.open(url,new=2)
-                except:
-                    messageErreur(None, u"Ouverture impossible",
-                                  u"Impossible d'ouvrir l'url\n\n%s\n" %toDefautEncoding(self.path))
+#    ###############################################################################################
+#    def GetNewVersionOld(self):  
+#        # url = 'https://code.google.com/p/pysequence/downloads/list'
+#        print "Recherche nouvelle version ...",
+#        url = 'https://drive.google.com/folderview?id=0B2jxnxsuUscPX0tFLVN0cF91TGc#list'
+#        try:
+#            self.downloadPage = BeautifulSoup(urllib2.urlopen(url, timeout = 5))
+#        except IOError:
+#            print "pas d'accès Internet"
+#            return   
+#
+##        ligne = self.downloadPage.find('div', attrs={'class':"flip-entry-title"})
+#        ligne = self.downloadPage.find_all('div', attrs={'class':"flip-entry-title"})
+##        fichier = ligne.text.strip()
+#        
+#        # Version actuelle
+#        vba = __version__.split("beta")
+#        va = vba[0]
+#        if len(vba) > 1:
+#            ba = eval(vba[1])
+#        else:
+#            ba = 100
+#        
+##        print vba, va, ba
+#        # version en ligne plus récente
+#        versionPlusRecente = False    
+#                    
+#        for l in ligne:
+#            if len(l.text.split('_')) > 1:
+#                v = l.text.split('_')[1].split('.zip')[0]
+#                vb = v.split("beta")
+#                vn = vb[0]
+#                if len(vb) >1:
+#                    bn = eval(vb[1])
+#                else:
+#                    bn = 100
+##                print vb, vn, bn
+#                if vn > va or (vn == va and bn > ba): # Nouvelle version disponible
+#                    versionPlusRecente = True
+#                    break
+##        print v
+#        
+#        if versionPlusRecente:
+#            dialog = wx.MessageDialog(self, u"Une nouvelle version de pySéquence est disponible\n\n" \
+#                                            u"\t%s\n\n" \
+#                                            u"Voulez-vous visiter la page de téléchargement ?" % v, 
+#                                          u"Nouvelle version", wx.YES_NO | wx.ICON_INFORMATION)
+#            retCode = dialog.ShowModal()
+#            if retCode == wx.ID_YES:
+#                try:
+#                    webbrowser.open(url,new=2)
+#                except:
+#                    messageErreur(None, u"Ouverture impossible",
+#                                  u"Impossible d'ouvrir l'url\n\n%s\n" %toDefautEncoding(self.path))
 
                     
                 
@@ -14959,6 +14920,7 @@ class ArbreCompetences(HTL.HyperTreeList):
 
     ######################################################################################################
     def ToolTip(self, event):
+        return
         print self.HitTest((event.x, event.y))
         
     ######################################################################################################
@@ -15043,7 +15005,7 @@ class ArbreCompetences(HTL.HyperTreeList):
         
     ####################################################################################
     def OnItemCheck(self, event, item = None):
-        print "OnItemCheck"
+#        print "OnItemCheck"
         if event != None:
             item = event.GetItem()
         
@@ -15056,7 +15018,7 @@ class ArbreCompetences(HTL.HyperTreeList):
     
     ####################################################################################
     def AjouterEnleverCompetencesItem(self, item, propag = True):
-        print "AjouterEnleverCompetencesItem"
+#        print "AjouterEnleverCompetencesItem"
         code = self.GetItemPyData(item)#.split()[0]
 #        print "AjouterEnleverCompetencesItem", code
         if code != None: # un seul indicateur séléctionné
@@ -15067,7 +15029,7 @@ class ArbreCompetences(HTL.HyperTreeList):
 
     ####################################################################################
     def AjouterEnleverCompetences(self, lstitem, propag = True):
-        print "AjouterEnleverCompetences"
+#        print "AjouterEnleverCompetences"
         for item in lstitem:
             code = self.GetItemPyData(item)#.split()[0]
 #            print "  ", code, item.GetValue()
