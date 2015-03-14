@@ -153,6 +153,7 @@ wEff =  {"C" : None,
          "D" : None,
          "E" : None,
          "P" : None,
+         "I" : None
          }
 #hHoraire = None
 ecartSeanceY = None
@@ -165,7 +166,10 @@ BCoulSeance = {"ED" : (0.3,0.5,0.5),
                "SS" : (0.4,0.5,0.4), 
                "E"  : (0.7,0.3,0.3), 
                "R"  : (0.45,0.35,0.45), 
-               "S"  : (0.45,0.45,0.35)}
+               "S"  : (0.45,0.45,0.35),
+               "HC": (0.51,0.29,0.24),
+               "ST" : (0.12,0.29,0.53)}
+
 ICoulSeance = {"ED" : (0.6, 0.8, 0.8), 
                "AP" : (0.8, 0.6, 0.8), 
                "P"  : (0.8, 0.8, 0.6), 
@@ -176,7 +180,23 @@ ICoulSeance = {"ED" : (0.6, 0.8, 0.8),
                "E"  : (1.0, 0.6, 0.6), 
                "R"  : (0.75, 0.65, 0.75), 
                "S"  : (0.75, 0.75, 0.65),
-               ""   : (1.0, 1.0, 1.0)}
+               ""   : (1.0, 1.0, 1.0),
+               "HC": (0.86,0.49,0.41),
+               "ST" : (0.21,0.49,0.54)}
+
+BStylSeance = {"ED" : [], 
+               "AP" : [], 
+               "P"  : [], 
+               "C"  : [],
+               "TD" : [],
+               "SA" : [], 
+               "SS" : [], 
+               "E"  : [], 
+               "R"  : [], 
+               "S"  : [],
+               ""   : [],
+               "HC": [0.01, 0.005],
+               "ST" : [0.01, 0.005]}
 
 
 # paramètres pour la fonction qui calcule la hauteur des tâches 
@@ -261,15 +281,19 @@ def DefinirZones(seq, ctx):
              "D" : tailleZSeances[0]*3/7,
              "E" : tailleZSeances[0]/seq.classe.nbrGroupes['E']*6/7,
              "P" : tailleZSeances[0]/seq.classe.nbrGroupes['P']*6/7,
+             "I" : tailleZSeances[0]
 #             "E" : tailleZSeances[0]*Effectifs["E"][1]/Effectifs["G"][1]*6/7,
 #             "P" : tailleZSeances[0]*Effectifs["P"][1]/Effectifs["G"][1]*6/7,
              }
     
+#    print "durées :"
     ecartSeanceY = 0.006    # écart mini entre deux séances
     hmin = 0.016             # hauteur minimum d'une séance
     tmin = seq.GetDureeGraphMini() # durée minimale de séance
     n = len(seq.seances)
     d = seq.GetDureeGraph()- n*tmin
+#    print "   ", seq.GetDureeGraphMini()
+    
     if d == 0:
         a = 0
         b = (tailleZSeances[1] - ecartSeanceY*(n-1)) / n
@@ -283,6 +307,7 @@ def DefinirZones(seq, ctx):
             if b < 0:
                 a = (tailleZSeances[1] - (n-1)*ecartSeanceY) / seq.GetDureeGraph()
                 b = 0
+#    print "   ", a, b
     
 #    hHoraire = tailleZSeances[1] / (seq.GetDureeGraph() + 0.25*(len(seq.seances)-1))
 #    print "hHoraire", hHoraire
@@ -969,9 +994,10 @@ class Cadre():
         #
         epaisseurTrait = 0.002
         self.ctx.set_line_width(epaisseurTrait)
+        self.ctx.set_dash(BStylSeance[self.seance.typeSeance], 0)
         rectangle_plein(self.ctx, x, y, self.w, self.h, 
                         BCoulSeance[self.seance.typeSeance], ICoulSeance[self.seance.typeSeance], alpha)
-        
+        self.ctx.set_dash([], 0)
         
         wc = 0
         #
@@ -1100,28 +1126,30 @@ class Bloc():
 ######################################################################################  
 def DrawSeanceRacine(ctx, seance):
     global cursY
-    if seance.GetDureeGraph() == 0:
-        return
+#    if seance.GetDureeGraph() == 0:
+#        return
         
     #
     # Flèche indiquant la durée
     #
     h = calcH(seance.GetDureeGraph())
-    e = largeFlecheDuree
-    fleche_verticale(ctx, posZDeroul[0], cursY, 
-                     h, e, (0.9,0.8,0.8,0.5))
-    ctx.set_source_rgb(0.5,0.8,0.8)
-    ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-                              cairo.FONT_WEIGHT_BOLD)
-    he = min(e/2, h/3)
-    
-    if h-he < e:
-        o = 'h'
-    else:
-        o = 'v'
-    show_text_rect(ctx, getHoraireTxt(seance.GetDuree()), 
-                   (posZDeroul[0]-e/2, cursY, e, h-he), 
-                   orient = o, b = 0.2)
+    if seance.GetDureeGraph() > 0:
+        
+        e = largeFlecheDuree
+        fleche_verticale(ctx, posZDeroul[0], cursY, 
+                         h, e, (0.9,0.8,0.8,0.5))
+        ctx.set_source_rgb(0.5,0.8,0.8)
+        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+                                  cairo.FONT_WEIGHT_BOLD)
+        he = min(e/2, h/3)
+        
+        if h-he < e:
+            o = 'h'
+        else:
+            o = 'v'
+        show_text_rect(ctx, getHoraireTxt(seance.GetDuree()), 
+                       (posZDeroul[0]-e/2, cursY, e, h-he), 
+                       orient = o, b = 0.2)
 
 #    #
 #    # Fonction pour obtenir les lignes de séances du bloc

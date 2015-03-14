@@ -335,7 +335,9 @@ imagesSeance = {"R" : images.Icone_rotation,
                 "TD" : images.Icone_TD,
                 "P"  : images.Icone_projet,
                 "SA" : images.Icone_synthese_Act,
-                "SS" : images.Icone_synthese_Seq}
+                "SS" : images.Icone_synthese_Seq,
+                "HC": images.Icone_maison,
+                "ST" : images.Icone_usine}
 
 imagesProjet = {"Prj" : images.Icone_projet,
                 "Elv" : images.Icone_eleve,
@@ -409,30 +411,37 @@ def strEffectif(classe, e, n = 0, eleve = True):
     if e == "C":
         return str(classe.effectifs[e])
     else:
-        lsteff = classe.effectifs[e]
-        if type(lsteff[0]) == list:
-            lsteff = lsteff[0]
-        if n == -1:
-            mini, maxi = min(lsteff), max(lsteff)
-            if mini != maxi:
-                eff_str = str(mini) + "-" + str(maxi)
-            else:
-                eff_str = str(mini)
-            eleves = u"élèves"
-        else:
-            eff_str = str(lsteff[n])
-            if lsteff[n] == 1:
-                eleves = u"élève"
-            else:
+        if e in classe.effectifs:
+            lsteff = classe.effectifs[e]
+            if type(lsteff[0]) == list:
+                lsteff = lsteff[0]
+            if n == -1:
+                mini, maxi = min(lsteff), max(lsteff)
+                if mini != maxi:
+                    eff_str = str(mini) + "-" + str(maxi)
+                else:
+                    eff_str = str(mini)
                 eleves = u"élèves"
-        if eleve:
-            return eff_str+" "+eleves
+            else:
+                eff_str = str(lsteff[n])
+                if lsteff[n] == 1:
+                    eleves = u"élève"
+                else:
+                    eleves = u"élèves"
+            if eleve:
+                return eff_str+" "+eleves
+            else:
+                return eff_str
         else:
-            return eff_str
+            return u""
 
 def strEffectifComplet(classe, e, n = 0):
     tit_eff = classe.GetReferentiel().effectifs[e][0]
-    return tit_eff+" ("+strEffectif(classe, e, n)+")"
+    num_eff = strEffectif(classe, e, n)
+    if num_eff != u"":
+        return tit_eff+" ("+num_eff+")"
+    else:
+        return tit_eff
 
 
 def partitionne(total, ngroupe):

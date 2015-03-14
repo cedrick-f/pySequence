@@ -1287,11 +1287,12 @@
     </l_H>
   </d_dicSavoirs_Phys>
   <d_effectifs>
-    <l_P S_00="Act. Pra." S_01="Activit&#233; Pratique" />
     <l_C S_00="Classe enti&#232;re" S_01="Classe enti&#232;re" />
     <l_E S_00="Etude ou Projet" S_01="Etude et Projet" />
     <l_D S_00="Demi-groupe" S_01="Demi-groupe" />
     <l_G S_00="Effectif r&#233;duit" S_01="Effectif r&#233;duit" />
+    <l_I S_00="Individuel" S_01="Individuel" />
+    <l_P S_00="Act. Pra." S_01="Activit&#233; Pratique" />
   </d_effectifs>
   <d_effectifsSeance>
     <l_C S_00="C" />
@@ -1299,16 +1300,23 @@
     <l_AP S_00="E" S_01="P" />
     <l_SS S_00="C" />
     <l_ED S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" />
+    <l_ST S_00="I" />
     <l_P S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" />
     <l_S />
     <l_R />
+    <l_HC S_00="I" />
     <l_SA S_00="C" S_01="G" />
     <l_TD S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" />
   </d_effectifsSeance>
+  <d_horsClasse>
+    <l_HC S_00="Hors classe" S_01="Temps hors classe" />
+    <l_ST S_00="Stage" S_01="Stage" />
+  </d_horsClasse>
   <l_listeDemarches S_00="I" S_01="R" S_02="P" />
-  <l_listeEffectifs S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" />
+  <l_listeEffectifs S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
   <l_listeTypeActivite S_00="ED" S_01="AP" S_02="P" />
-  <l_listeTypeSeance S_00="ED" S_01="AP" S_02="P" S_03="C" S_04="TD" S_05="SA" S_06="SS" S_07="E" S_08="R" S_09="S" />
+  <l_listeTypeHorsClasse S_00="HC" S_01="ST" />
+  <l_listeTypeSeance S_00="ED" S_01="AP" S_02="P" S_03="HC" S_04="ST" S_05="C" S_06="TD" S_07="SA" S_08="SS" S_09="E" S_10="R" S_11="S" />
   <d_options />
   <d_parties S_C="Conduite" S_S="Soutenance" S_S1="Situation 1" S_S2="Situation 2" />
   <l_periodes>
@@ -1573,9 +1581,11 @@
     <l_P S_00="Projet" S_01="Activit&#233; de projet" />
     <l_SS S_00="Synt. s&#233;quence" S_01="Synth&#232;se de s&#233;quence" />
     <l_ED S_00="Etude de dossier" S_01="Activit&#233; d'&#233;tude de dossier" />
+    <l_ST S_00="Stage" S_01="Stage" />
     <l_AP S_00="Activit&#233; pratique" S_01="Activit&#233; pratique" />
     <l_S S_00="Parall&#232;le" S_01="Activit&#233;s en parall&#232;le" />
     <l_R S_00="Rotation" S_01="Rotation d'activit&#233;s" />
+    <l_HC S_00="Hors classe" S_01="Temps hors classe" />
     <l_TD S_00="TD" S_01="Travaux Dirig&#233;s" />
     <l_SA S_00="Synt. activit&#233;" S_01="Synth&#232;se d'activit&#233;" />
   </d_seances>
