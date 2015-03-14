@@ -6,8 +6,8 @@ _**pySequence**_ est un logiciel **[libre](http://www.gnu.org/licenses/gpl.html)
 _**pySequence**_ s'adresse particulièrement aux professeurs de _**[Sciences Industrielles de l'Ingénieur](http://fr.wikipedia.org/wiki/Sciences_de_l%27ing%C3%A9nieur)**_ enseignant dans les filières :
   * STI2D (**enseignements technologiques transversaux** et de **spécialité**)
   * S-SI (**Sciences de l'ingénieur** du bac S)
-prochainement :
   * Technologie collège
+  * STS Electrotechnique et Systèmes Numériques (en travaux !)
 et potentiellement [n'importe quel programme d'enseignement](Nouveau_programme.md).
 
 
@@ -26,7 +26,7 @@ et potentiellement [n'importe quel programme d'enseignement](Nouveau_programme.m
   * Structure du **projet**
   * Présentation sous forme de fiche,
   * Nombreux outils d'aide
-  * Génération de la **fiche de validation** conforme aux BO 2014 ![http://pysequence.googlecode.com/svn/trunk/images_aide/nouveau.gif](http://pysequence.googlecode.com/svn/trunk/images_aide/nouveau.gif)
+  * Génération de la **fiche de validation** conforme aux BO 2014 
 
 [Quelques exemples de fiches de projet](ExemplesProjets.md)
 
@@ -74,8 +74,4 @@ Pour ceux qui souhaitent intervenir sur le code, voici les prérequis :
 Et merci à David Woods pour son module [PyRTFParser](http://www.transana.org/developers/PyRTFParser/)
 
 
----
 
-
-# Capture d'écran #
-![http://pysequence.googlecode.com/svn/trunk/images_aide/CaptureEcran.png](http://pysequence.googlecode.com/svn/trunk/images_aide/CaptureEcran.png)
