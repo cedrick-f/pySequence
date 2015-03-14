@@ -514,10 +514,16 @@ class Referentiel(XMLelem):
         #
         self.demarches = {}
         self.listeDemarches = []
+        
         self.seances = {}
-        self.activites = {}
         self.listeTypeSeance = []
+        
+        self.activites = {}
         self.listeTypeActivite = []
+        
+        self.horsClasse = {}
+        self.listeTypeHorsClasse = []
+                
         self.demarcheSeance = {}
         
         #
@@ -1110,39 +1116,55 @@ class Referentiel(XMLelem):
         # Pratique pédagogiques
         #
         sh_g = wb.sheet_by_name(u"Activité-Démarche")
+        
+        # Démarches
         for l in range(2, 5):
             if sh_g.cell(l,1).value != u"":
                 self.demarches[str(sh_g.cell(l,0).value)] = [sh_g.cell(l,1).value, sh_g.cell(l,2).value]
                 self.listeDemarches.append(sh_g.cell(l,0).value)
 
+        # Activités
         for l in range(8, 11):
             if sh_g.cell(l,0).value != u"":
                 self.activites[str(sh_g.cell(l,0).value)] = [sh_g.cell(l,1).value, sh_g.cell(l,2).value]
                 self.listeTypeActivite.append(sh_g.cell(l,0).value)
-                
         self.seances.update(self.activites)
-        self.listeTypeSeance = self.listeTypeActivite[:]
+                
+        # Hors classe
+        for l in range(24, 26):
+            if l < sh_g.nrows and sh_g.cell(l,0).value != u"":
+                self.horsClasse[str(sh_g.cell(l,0).value)] = [sh_g.cell(l,1).value, sh_g.cell(l,2).value]
+                self.listeTypeHorsClasse.append(sh_g.cell(l,0).value)
+        self.seances.update(self.horsClasse)
+        
+        # Autres Séances
+        self.listeTypeSeance = self.listeTypeActivite[:] + self.listeTypeHorsClasse[:]
         for l in range(14, 21):
             if sh_g.cell(l,0).value != u"":
                 self.seances[str(sh_g.cell(l,0).value)] = [sh_g.cell(l,1).value, sh_g.cell(l,2).value]
                 self.listeTypeSeance.append(sh_g.cell(l,0).value)
         
+#        print self, self.listeTypeSeance
+        # Croisement démarche/activité
         for l, s in enumerate(self.listeTypeActivite):
             l = l + 3
+#            print l
             self.demarcheSeance[str(s)] = [sh_g.cell(2,c).value for c in range(5,8) if sh_g.cell(l,c).value != u""]
-        
+
+
         #
         # effectifs
         #
         sh_g = wb.sheet_by_name(u"Activité-Effectif")
-        for l in range(2, 7):
+        for l in range(2, 8):
             if sh_g.cell(l,0).value != u"":
                 self.effectifs[str(sh_g.cell(l,0).value)] = [sh_g.cell(l,1).value, sh_g.cell(l,2).value]
                 self.listeEffectifs.append(sh_g.cell(l,0).value)
-                
+    
+        
         for l, s in enumerate(self.listeTypeSeance):
             l = l + 3
-            self.effectifsSeance[str(s)] = [sh_g.cell(2,c).value for c in range(5,10) if sh_g.cell(l,c).value != u""]
+            self.effectifsSeance[str(sh_g.cell(l,4).value)] = [sh_g.cell(2,c).value for c in range(5,11) if sh_g.cell(l,c).value != u""]
 
         #
         # Savoirs Math
@@ -1974,6 +1996,17 @@ def ouvrir(nomFichier):
 SAUVEGARDE = False
 
 
+######################################################################################  
+import sys
+FILE_ENCODING = sys.getfilesystemencoding()
+DEFAUT_ENCODING = "utf-8"
+def toFileEncoding(path):
+    try:
+        path = path.decode(DEFAUT_ENCODING)
+        return path.encode(FILE_ENCODING)
+    except:
+        return path
+
 ##########################################################################################
 def chargerReferentiels():
     global REFERENTIELS, ARBRE_REF
@@ -1981,14 +2014,16 @@ def chargerReferentiels():
     #
     # Chargement des fichiers .xls
     #
-    liste = os.listdir(os.path.join(constantes.PATH, r"..", DOSSIER_REF))
+    path_ref = toFileEncoding(os.path.join(constantes.PATH, r"..", DOSSIER_REF))
+#    print path_ref
+    liste = os.listdir(path_ref)
     
     for fich_ref in liste:#["Ref_STS-SN_EC-1.xls", "Ref_SSI.xls"]:#, "Ref_STI2D-EE.xls", "Ref_STI2D-ETT.xls"]:#["Ref_6CLG.xls"]:#
         
         if os.path.splitext(fich_ref)[1] == ".xls":
 #            print
 #            print fich_ref
-            ref = Referentiel(os.path.join(constantes.PATH, r"..", DOSSIER_REF, fich_ref))
+            ref = Referentiel(os.path.join(path_ref, fich_ref))
             ref.postTraiter()
             REFERENTIELS[ref.Code] = ref
             
@@ -2006,7 +2041,8 @@ def chargerReferentiels():
     if not SAUVEGARDE:
         dicOk = {}
         for k, r in REFERENTIELS.items():
-            f = os.path.join(constantes.PATH, r"..", DOSSIER_REF, "Ref_"+r.Enseignement[0]+".xml")
+            f = toFileEncoding(r"Ref_"+r.Enseignement[0]+r".xml")
+            f = os.path.join(path_ref, f)
             dicOk[k] = False
             if os.path.exists(f):
                 ref = ouvrir(f)

@@ -351,11 +351,12 @@
   <d_dicSavoirs_Math />
   <d_dicSavoirs_Phys />
   <d_effectifs>
-    <l_P S_00="Act. Pra." S_01="Activit&#233; Pratique" />
     <l_C S_00="Classe enti&#232;re" S_01="Classe enti&#232;re" />
     <l_E S_00="Etude ou Projet" S_01="Etude et Projet" />
     <l_D S_00="Demi-groupe" S_01="Demi-groupe" />
     <l_G S_00="Effectif r&#233;duit" S_01="Effectif r&#233;duit" />
+    <l_I S_00="Individuel" S_01="Individuel" />
+    <l_P S_00="Act. Pra." S_01="Activit&#233; Pratique" />
   </d_effectifs>
   <d_effectifsSeance>
     <l_C S_00="C" />
@@ -369,9 +370,11 @@
     <l_SA S_00="C" S_01="G" />
     <l_TD S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" />
   </d_effectifsSeance>
+  <d_horsClasse />
   <l_listeDemarches S_00="I" S_01="R" S_02="P" />
-  <l_listeEffectifs S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" />
+  <l_listeEffectifs S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
   <l_listeTypeActivite S_00="ED" S_01="AP" S_02="P" />
+  <l_listeTypeHorsClasse />
   <l_listeTypeSeance S_00="ED" S_01="AP" S_02="P" S_03="C" S_04="TD" S_05="SA" S_06="SS" S_07="E" S_08="R" S_09="S" />
   <d_options />
   <d_parties />

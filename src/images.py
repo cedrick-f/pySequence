@@ -16693,6 +16693,32 @@ getIcone_rotationBitmap = Icone_rotation.GetBitmap
 getIcone_rotationIcon = Icone_rotation.GetIcon
 
 #----------------------------------------------------------------------
+Icone_maison = PyEmbeddedImage(
+    "iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IArs4c6QAAAARnQU1B"
+    "AACxjwv8YQUAAAAJcEhZcwAACxIAAAsSAdLdfvwAAAAYdEVYdFNvZnR3YXJlAHBhaW50Lm5l"
+    "dCA0LjAuNWWFMmUAAANwSURBVDhPldRdTFpnGAdwK6DCKRSqhUYFwvdAwQ+OChykFIUKViNY"
+    "rdT6gcaJKbbEuo0ZF5xm88I0i1liai+2xIslS3ax7GZp2vTDK6+aNt2yy2VpumXJ0qtetcV/"
+    "33OqiKCte5In5Lzv+/zynPO8oQhA0f+IeovF8kihUKR2nvcFZx0RLCP5ldPpfLWxsYGFhQXI"
+    "ZLLr77b24qigSyQS/dHZ2Yn19XWsra1hdXUViURiWyKRTO+c4eJDIEUKVlUqVWZoaAgrKytY"
+    "Xl7G0tIS0uk05ubmMDAwsC0UCuM7598LaisqKp4aDAaMjY1hfn4eqVQKs7OzSCaTbHeIx+MY"
+    "Hx+H3+/PlJaWjrNFh4E+qVT6H3lNyOVyTE1NcTkxMYFYLAa222g0ir6+PoTDYXR1dcFut2cE"
+    "AsHwQWCCbLwSlQjQWaNDOSWEUqlEf38/IpEIuru7EQqFEAgE4PP54PF44HK5WBBisfheLlhC"
+    "8hZJ2Crl+LTNgTjTgGmPHRTB1Wo1vF4v3G43HA4HmpqaQNM0B1mtVhwXiZ6Q2rJc8IFMVIbh"
+    "5loshlrRVatnF6GrkOJjVz0EPB7IcDggN8mdREejDcxH2l9ZJBe8ELLoMizGJqOt5sBjJNMd"
+    "DAbpGvCKi6HX67OYyWRCj5NGouMsPCbd7XyQF7Ro3+yCSS+NKqkYbgLvrrFd80inZrMZBgJf"
+    "9DKw1dngNGhY8E4BGDJrX08y9Thv0XHf78ugO4vtZlW5DGJKhEG/FyfI7+LmJpq1KgJq7haA"
+    "QQL21pnw+4Uz+CVA4wu7ESNWHaKN5iw4GmzHtzNXUEMG0kImf3VrC9pT5bBUyu8dCEYI+OeA"
+    "Dy+GA9lMNhizYIyAP6Q/Qzu50C2Tk1AzDLQSCpUyyf2DwDdhmxF/RQ8HRzva8ONCCvWkO5Wb"
+    "QYviJIZddujk5d8VgmQoPVYDnl1qy2LfOCw4r6vaA8/58NPi55CQu+lVKjDU2gzVSelNUs/P"
+    "BwU+o3q7m4DPB/fA78/UIWJQZsGRwFl8cjGMdk0VLrW2ZGQUte8vLBdkIyjk89ev1Wr++dlP"
+    "49/L/oJXHiHTvREfRa+r6WVJCa9npy4b+eBuFJN0VFKlX8eM1b+1q09j/pyLAy+3taLX7fib"
+    "7NPcybw4DMwPfRmfP9OoVDw8QQkfk2flu+XCAFD0FpBjIk3PF/IYAAAAAElFTkSuQmCC")
+getIcone_maisonData = Icone_maison.GetData
+getIcone_maisonImage = Icone_maison.GetImage
+getIcone_maisonBitmap = Icone_maison.GetBitmap
+getIcone_maisonIcon = Icone_maison.GetIcon
+
+#----------------------------------------------------------------------
 Icone_synthese_Act = PyEmbeddedImage(
     "iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAMAAAC6V+0/AAAAB3RJTUUH2wsKDxsjrE1q7AAA"
     "AAlwSFlzAAAewgAAHsIBbtB1PgAAAARnQU1BAACxjwv8YQUAAAFKUExURf////j4+Lu7u6mp"
@@ -17040,6 +17066,27 @@ getIcone_projetData = Icone_projet.GetData
 getIcone_projetImage = Icone_projet.GetImage
 getIcone_projetBitmap = Icone_projet.GetBitmap
 getIcone_projetIcon = Icone_projet.GetIcon
+
+#----------------------------------------------------------------------
+Icone_usine = PyEmbeddedImage(
+    "iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IArs4c6QAAAARnQU1B"
+    "AACxjwv8YQUAAAAJcEhZcwAACxIAAAsSAdLdfvwAAAAYdEVYdFNvZnR3YXJlAHBhaW50Lm5l"
+    "dCA0LjAuNWWFMmUAAAJYSURBVDhPY/j//z9VMVZBSjBFQM4mU1AzqKda3qvFACpEGRAyDNc0"
+    "iJr6XzukOwsqRBkQMgjR0o+c8l8npDcHKkQZABmoFzH5v15Efx5UiIFB2qHCXDe8v1rGIoQT"
+    "LCBvz6Hq19Eha5UtBeZDgbJXi7+sY4kylAsGIAN1wyf914/oL4AKMTBIWGV5GcfN+G8QNeWm"
+    "mk+LJwMDv4BmcN8/Fd/Ob6q+HVPkbIsVgcqY9EK7ZqsH9n7XCOzqkbEoFALpBRmoEzbxv2Hk"
+    "xCIQHwxABmqFTviv4NX+XyO477+6X/tW7ZAJf0F8EFb27fqp4tcxXyekaweIr+TT+V8zqO+1"
+    "ekBnvohehKE20ECjmMklUONQDYRhtYAeFD4IgyxD5qv6d//XDO55BvZy5ITVSl4NkdIuNapY"
+    "DSQFK3qDcMd/YHD8N0+YUYNioCISRudjE4MZCsIgF5vGT6+GG1jet+H/ucu34Dgwf+7/w6ev"
+    "wvmLNxz9X9a7HkWNT85shIHAYDKLm1oJNzC3ddX/7QfOwbFv9sz/a3ecgvMnL97zP6dlJYoa"
+    "94wZcANB4W4aN7UcYWDzkv879x2DY5+MKf837jgM509esOV/btPi/7v2H4djj/SpcANBYWgc"
+    "M6kMbqCqb/t/Tb82OFbxQeVrADFYjT+QD8XKQDXIBoKTj4R1jqdJ/Mz/OsDoByVSULoC41AY"
+    "nkAUNoyZ9t8walIhuAiSdakMk3eujJJzrYlRcKuJA2PX6ngQlnetSZB3B2K36kQwG4ph8mAM"
+    "Uu9SHavoXK+GtZCkBGMVJB//ZwAAo3+5hyd1V/AAAAAASUVORK5CYII=")
+getIcone_usineData = Icone_usine.GetData
+getIcone_usineImage = Icone_usine.GetImage
+getIcone_usineBitmap = Icone_usine.GetBitmap
+getIcone_usineIcon = Icone_usine.GetIcon
 
 #----------------------------------------------------------------------
 Icone_objectif = PyEmbeddedImage(

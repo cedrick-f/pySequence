@@ -47,26 +47,39 @@ from xlwt import Workbook
 import os
 from widgets import messageErreur
 
+
+
+def ouvrirXLS(fichier):
+    """ Ouvre la grille XLS nommée <fichier>
+        renvoie le classeur PyExcel
+    """
+    fichierPB = []      # Liste des fichiers dont l'ouverture aura échoué
+    fichier = os.path.join(TABLE_PATH, fichier)
+    tableau = None
+    err = 0
+    
+    if os.path.isfile(fichier):
+        try:
+            tableau = PyExcel(fichier)
+        except:
+            err = 1
+    else:
+        err = 2
+        fichierPB.append(fichier)
+        
+    return tableau, err, fichierPB
+    
+
+
 def getTableau(parent, nomFichier):
     """ Ouvre et renvoie le classeur
         contenant la grille d'évaluation
     """
-    fichierPB = []
-    def ouvrir(fichier):
-        fichier = os.path.join(TABLE_PATH, fichier)
-        tableau = None
-        err = 0
-        if os.path.isfile(fichier):
-            try:
-                tableau = PyExcel(fichier)
-            except:
-                err = 1
-        else:
-            err = 2
-            fichierPB.append(fichier)
-        return err, tableau
+#    prj = doc.GetProjetRef()
+#    fichiers = prj.grilles
+    
 
-    err, tableau = ouvrir(nomFichier)
+    tableau, err, fichierPB = ouvrirXLS(nomFichier)
                                       
     #
     # Gestion des éventuelles erreurs
@@ -113,7 +126,7 @@ def getTableaux(parent, doc):
     ref = doc.GetReferentiel()
     prj = doc.GetProjetRef()
     fichiers = prj.grilles
-
+    print "grilles :", fichiers
     fichierPB = []
     
     def ouvrir(fichier):
@@ -169,7 +182,7 @@ def getTableaux(parent, doc):
 
 
 def modifierGrille(doc, tableaux, eleve):
-#    print "modifierGrille", eleve
+    print "modifierGrille", eleve
     
     ref = doc.GetReferentiel()
     prj = doc.GetProjetRef()
@@ -279,12 +292,12 @@ def modifierGrille(doc, tableaux, eleve):
     
 #    print schem
 #    print dicInfo
-#    print tableaux
+    print tableaux
     
     for ct, t in tableaux.items():
         dicInfo = prj.cellulesInfo[ct]
-#        print "  ", dicInfo
-#        print "  ", ct, t
+        print "  ", dicInfo
+        print "  ", ct, t
         for k, v in schem.items():
             if k in dicInfo.keys():
 #                print "    ", k

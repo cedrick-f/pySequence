@@ -40,7 +40,7 @@ Copyright (C) 2011-2015
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "6beta7"
+__version__ = "6.0-beta.9"
 print __version__
 
 #from threading import Thread
@@ -4274,13 +4274,18 @@ class Seance(ElementDeSequence, Objet_sequence):
         elif self.typeSeance == "S":
             if len(self.seances) > 0:
                 duree += self.seances[0].GetDuree()
+        elif self.typeSeance in self.GetReferentiel().listeTypeHorsClasse:
+            duree = 0
         else:
             duree = self.duree.v[0]
         return duree
                 
     ######################################################################################  
     def GetDureeGraph(self):
-        return self.GetDuree()
+        if self.typeSeance in self.GetReferentiel().listeTypeHorsClasse:
+            return 1
+        else:
+            return self.GetDuree()
 #        d = self.GetDuree(graph = True)
 #        if d != 0:
 #            return 0.001*log(d*2)+0.001
@@ -6358,21 +6363,21 @@ class Eleve(Personne, Objet_sequence):
         #
         tableaux = {}
         for k, f in nomFichiers.items():
-            if os.path.isfile(f):
-                tableaux[k] = grilles.getTableau(self.projet.GetApp(), f)
-            else:
-                tableaux[k] = grilles.getTableau(self.projet.GetApp(),
-                                                 prj.grilles[k][0])
-                if tableaux[k] != None: # and tableaux[k].filename !=f:
-                    print "      créé :", f
+#            if os.path.isfile(f):
+#                tableaux[k] = grilles.getTableau(self.projet.GetApp(), f)
+#            else:
+            tableaux[k] = grilles.getTableau(self.projet.GetApp(),
+                                             prj.grilles[k][0])
+            if tableaux[k] != None: # and tableaux[k].filename !=f:
+#                print "      créé :", f
+#                tableaux[k].save(f)
+                try:
                     tableaux[k].save(f)
-#                    try:
-#                        tableaux[k].save(f)
-#                    except:
-#                        messageErreur(self.projet.GetApp(), u"Erreur !",
-#                                      u"Impossible d'enregistrer le fichier\n\n%s\nVérifier :\n" \
-#                                      u" - qu'aucun fichier portant le même nom n'est déja ouvert\n" \
-#                                      u" - que le dossier choisi n'est pas protégé en écriture"%f)
+                except:
+                    messageErreur(self.projet.GetApp(), u"Erreur !",
+                                  u"Impossible d'enregistrer le fichier\n\n%s\nVérifier :\n" \
+                                  u" - qu'aucun fichier portant le même nom n'est déja ouvert\n" \
+                                  u" - que le dossier choisi n'est pas protégé en écriture"%f)
 
         if tableaux == None:
             return
@@ -7251,9 +7256,101 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
         self.Thaw()
         
-        
     ###############################################################################################
     def GetNewVersion(self):  
+        # url = 'https://code.google.com/p/pysequence/downloads/list'
+        print "Recherche nouvelle version ..."
+        url = 'https://github.com/cedrick-f/pylogyc/releases'
+        try:
+            self.downloadPage = BeautifulSoup(urllib2.urlopen(url, timeout = 5))
+        except IOError:
+            print "pas d'accès Internet"
+            return
+        
+        # Dernière version
+        div_latest = self.downloadPage.find_all('div', attrs={'class':"release label-latest"})
+        latest = div_latest[0].contents[1].find_all('span', attrs={'class':"css-truncate-target"})[0].contents[0]
+        latest = latest.lstrip('v')
+        
+        # Version actuelle
+        a = __version__.split('.')
+        print a
+        
+        # Comparaison
+        new = True
+        print latest.split('.')
+        for i, l in enumerate(latest.split('.')):
+            nl = int(l.rstrip("-beta"))
+            na = int(a[i].rstrip("-beta"))
+            if nl < na:
+                new = False
+                break
+            
+        print new
+        
+        if new:
+            dialog = wx.MessageDialog(self, u"Une nouvelle version de pySéquence est disponible\n\n" \
+                                            u"\t%s\n\n" \
+                                            u"Voulez-vous visiter la page de téléchargement ?" % latest, 
+                                          u"Nouvelle version", wx.YES_NO | wx.ICON_INFORMATION)
+            retCode = dialog.ShowModal()
+            if retCode == wx.ID_YES:
+                try:
+                    webbrowser.open(url,new=2)
+                except:
+                    messageErreur(None, u"Ouverture impossible",
+                                  u"Impossible d'ouvrir l'url\n\n%s\n" %toDefautEncoding(self.path))
+
+
+
+#        div_latest = BeautifulSoup(div_latest[0].contents[1])
+#        print div_latest.find_all('span', attrs={'class':"css-truncate-target"})
+        return
+        
+        
+        
+#        ligne = self.downloadPage.find('div', attrs={'class':"flip-entry-title"})
+        ligne = self.downloadPage.find_all('div', attrs={'class':"flip-entry-title"})
+#        fichier = ligne.text.strip()
+        
+        
+        
+#        print vba, va, ba
+        # version en ligne plus récente
+        versionPlusRecente = False    
+                    
+        for l in ligne:
+            if len(l.text.split('_')) > 1:
+                v = l.text.split('_')[1].split('.zip')[0]
+                vb = v.split("beta")
+                vn = vb[0]
+                if len(vb) >1:
+                    bn = eval(vb[1])
+                else:
+                    bn = 100
+#                print vb, vn, bn
+                if vn > va or (vn == va and bn > ba): # Nouvelle version disponible
+                    versionPlusRecente = True
+                    break
+#        print v
+        
+        if versionPlusRecente:
+            dialog = wx.MessageDialog(self, u"Une nouvelle version de pySéquence est disponible\n\n" \
+                                            u"\t%s\n\n" \
+                                            u"Voulez-vous visiter la page de téléchargement ?" % v, 
+                                          u"Nouvelle version", wx.YES_NO | wx.ICON_INFORMATION)
+            retCode = dialog.ShowModal()
+            if retCode == wx.ID_YES:
+                try:
+                    webbrowser.open(url,new=2)
+                except:
+                    messageErreur(None, u"Ouverture impossible",
+                                  u"Impossible d'ouvrir l'url\n\n%s\n" %toDefautEncoding(self.path))
+
+                    
+                    
+    ###############################################################################################
+    def GetNewVersionOld(self):  
         # url = 'https://code.google.com/p/pysequence/downloads/list'
         print "Recherche nouvelle version ...",
         url = 'https://drive.google.com/folderview?id=0B2jxnxsuUscPX0tFLVN0cF91TGc#list'
@@ -12595,7 +12692,6 @@ class PanelPropriete_Seance(PanelPropriete):
         
         deja = self.seance.typeSeance in ["AP", "ED", "P"]
         
-        
         self.seance.SetType(get_key(self.GetReferentiel().seances, self.cbType.GetStringSelection(), 1))
         self.seance.parent.OrdonnerSeances()
         
@@ -12639,17 +12735,14 @@ class PanelPropriete_Seance(PanelPropriete):
     def AdapterAuType(self):
         """ Adapte le panel au type de séance
         """
-#        print "AdapterAuType"
+#        print "AdapterAuType", self.seance
         #
         # Type de parent
         #
-
-#        ref = REFERENTIELS[self.seance.GetClasse().typeEnseignement]
         ref = self.GetReferentiel()
 
         listType = self.seance.GetListeTypes()
-        listTypeS = [(ref.seances[t][1], constantes.imagesSeance[t].GetBitmap()) for t in listType]
-        
+        listTypeS = [(ref.seances[t][1], constantes.imagesSeance[t].GetBitmap()) for t in listType] 
         
         n = self.cbType.GetSelection()   
         self.cbType.Clear()
@@ -12664,11 +12757,15 @@ class PanelPropriete_Seance(PanelPropriete):
         if self.seance.typeSeance in ["R", "S"]:
             self.vcDuree.Activer(False)
         
+        #
         # Effectif
+        #
         if self.seance.typeSeance == "":
             listEff = []
         else:
             listEff = ref.effectifsSeance[self.seance.typeSeance]
+#        print "  ", listEff
+        
         self.cbEff.Show(len(listEff) > 0)
         self.titreEff.Show(len(listEff) > 0)
             
@@ -14858,8 +14955,12 @@ class ArbreCompetences(HTL.HyperTreeList):
         self.Bind(CT.EVT_TREE_ITEM_CHECKED, self.OnItemCheck)
         self.Bind(wx.EVT_SIZE, self.OnSize2)
         self.Bind(wx.EVT_ENTER_WINDOW, self.OnEnter)
+        self.GetMainWindow().Bind(wx.EVT_MOTION, self.ToolTip)
 
-
+    ######################################################################################################
+    def ToolTip(self, event):
+        print self.HitTest((event.x, event.y))
+        
     ######################################################################################################
     def OnEnter(self, event):
 #        print "OnEnter PanelPropriete"
@@ -15324,7 +15425,7 @@ class ArbreFonctionsPrj(ArbreCompetences):
 #        print "Construire fonctions",
         if ref == None:
             ref = self.ref
-        prj = ref.GetProjetRef()
+#        prj = self.pptache.tache.GetProjetRef()
         
         if dic == None: # Construction de la racine
             dic = ref.dicFonctions
@@ -15335,8 +15436,8 @@ class ArbreFonctionsPrj(ArbreCompetences):
 #        print "   ", self.GetColumnCount()
         for c in range(1, self.GetColumnCount()):
             self.RemoveColumn(1)
-        
-        for i, c in enumerate(sorted(prj._dicCompetences.keys())):
+#        print "  ", dic
+        for i, c in enumerate(sorted(ref.dicCompetences.keys())):
             self.AddColumn(u"")
             self.SetColumnText(i+1, c)
             self.SetColumnAlignment(i+1, wx.ALIGN_CENTER)
@@ -15366,9 +15467,12 @@ class ArbreFonctionsPrj(ArbreCompetences):
                
                     if debug: print "   prem's 2", v[1]
                     
-                    for i, p in enumerate(v[1]):
-                        if p == self.GetColumnText(i+1):
-                            self.SetItemText(comp, "X", i+1)
+                    
+                    for c, p in enumerate(sorted(ref.dicCompetences.keys())):
+                        if p in v[1]:
+#                    for i, p in enumerate(v[1]):
+#                        if p == self.GetColumnText(i+1):
+                            self.SetItemText(comp, "X", c+1)
                                 
                     self.items[k] = comp
 
