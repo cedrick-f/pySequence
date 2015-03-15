@@ -8,27 +8,29 @@ _**pySequence**_ s'adresse particulièrement aux professeurs de _**[Sciences Ind
   * S-SI (**Sciences de l'ingénieur** du bac S)
   * Technologie collège
   * STS Electrotechnique et Systèmes Numériques (en travaux !)
-et potentiellement [n'importe quel programme d'enseignement](Nouveau_programme.md).
+et potentiellement [n'importe quel programme d'enseignement](https://github.com/cedrick-f/pySequence/wiki/Nouveau_programme).
 
 
 ---
 
 
 ## Fonctionnalités ##
-### Aide à l'élaboration de [séquences pédagogiques](https://github.com/cedrick-f/pySequence.wiki/blob/master/Fonctionalite_Seq) : ###
+### Aide à l'élaboration de [séquences pédagogiques](https://github.com/cedrick-f/pySequence/wiki/Fonctionalite_Seq) : ###
   * Structure d'une **séquence pédagogique**
   * Présentation sous forme de fiche de séquence,
   * Nombreux outils d'aide
-[Quelques captures d'écran de fiches de séquence](captures_ecran.md)
-[Quelques exemples de fiches de séquence](ExemplesSequences.md)
 
-### Aide à la validation de [projets](Fonctionnalite_Prj.md) ###
+[Quelques captures d'écran de fiches de séquence](https://github.com/cedrick-f/pySequence/wiki/captures_ecran)
+
+[Quelques exemples de fiches de séquence](https://github.com/cedrick-f/pySequence/wiki/ExemplesSequences)
+
+### Aide à la validation de [projets](https://github.com/cedrick-f/pySequence/wiki/Fonctionnalite_Prj) ###
   * Structure du **projet**
   * Présentation sous forme de fiche,
   * Nombreux outils d'aide
   * Génération de la **fiche de validation** conforme aux BO 2014 
 
-[Quelques exemples de fiches de projet](ExemplesProjets.md)
+[Quelques exemples de fiches de projet](https://github.com/cedrick-f/pySequence/wiki/ExemplesProjets)
 
 
 ---
@@ -59,6 +61,6 @@ possible à partir des sources ...
 _**pySequence**_ est développé par _Cédrick FAURY_ et _Jean-Claude FRICOU_
 
 Toutes les bonnes volontés pour le développement de _**pySequence**_ sont les bienvenues.
-Pour ceux qui souhaitent intervenir sur le code, voici les [prérequis](https://github.com/cedrick-f/pySequence.wiki/blob/master/LangageEtDependances)
+Pour ceux qui souhaitent intervenir sur le code, voici les [prérequis](https://github.com/cedrick-f/pySequence/wiki/LangageEtDependances)
 
 
