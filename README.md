@@ -15,7 +15,7 @@ et potentiellement [n'importe quel programme d'enseignement](Nouveau_programme.m
 
 
 ## Fonctionnalités ##
-### Aide à l'élaboration de [séquences pédagogiques](Fonctionalite_Seq.md) : ###
+### Aide à l'élaboration de [séquences pédagogiques](https://github.com/cedrick-f/pySequence.wiki/blob/master/Fonctionalite_Seq) : ###
   * Structure d'une **séquence pédagogique**
   * Présentation sous forme de fiche de séquence,
   * Nombreux outils d'aide
@@ -48,7 +48,7 @@ possible à partir des sources ...
 
 
 # Documentation #
-  * [Aide](../wiki/Aide) en ligne de pySequence.
+  * [Aide](https://github.com/cedrick-f/pySequence.wiki/blob/master/Aide) en ligne de pySequence.
   * Quelques exemples sont fournis avec les packs.
 
 
@@ -59,6 +59,6 @@ possible à partir des sources ...
 _**pySequence**_ est développé par _Cédrick FAURY_ et _Jean-Claude FRICOU_
 
 Toutes les bonnes volontés pour le développement de _**pySequence**_ sont les bienvenues.
-Pour ceux qui souhaitent intervenir sur le code, voici les [prérequis](LangageEtDependances)
+Pour ceux qui souhaitent intervenir sur le code, voici les [prérequis](https://github.com/cedrick-f/pySequence.wiki/blob/master/LangageEtDependances)
 
 
