@@ -48,7 +48,7 @@ possible à partir des sources ...
 
 
 # Documentation #
-  * [Aide](https://github.com/cedrick-f/pySequence.wiki/blob/master/Aide.md) en ligne de pySequence.
+  * [Aide](https://github.com/cedrick-f/pySequence/wiki/Aide) en ligne de pySequence.
   * Quelques exemples sont fournis avec les packs.
 
 
