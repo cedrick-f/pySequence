@@ -37,6 +37,7 @@ import wx.combo
 import constantes#, constantes_SSI
 #from constantes_ETT import PositionCibleCI
 from Referentiel import REFERENTIELS
+import xml.etree.ElementTree as ET
 
 ##############################################################################
 #      Options     #
@@ -50,6 +51,7 @@ class Options:
         #
         self.optClasse = {}
         self.optSystemes = {}
+        self.optProjet = {}
 #        self.optGenerales = {}
 #        self.optImpression = {}
 #        self.optCalcul = {}
@@ -61,7 +63,7 @@ class Options:
          
         self.typesOptions = {u"Classe" : self.optClasse,
                              u"Systèmes" : self.optSystemes,
-#                             u"Calcul" : self.optCalcul,
+                             u"Projet" : self.optProjet,
 #                             u"Couleurs" : self.optCouleurs,
 #                             u"Impression" : self.optImpression,
                              }
@@ -75,6 +77,8 @@ class Options:
     #########################################################################################################
     def __repr__(self):
         print self.optClasse
+        print self.optProjet
+        print self.optSystemes
         return ""
     
 #        t = "Options :\n"
@@ -108,21 +112,37 @@ class Options:
 #        print "Enregistrement",self
         config = ConfigParser.ConfigParser()
 
+        
+        def sav(nom, val):
+            if type(val) == list:
+                for i,v in enumerate(val):
+                    sav(nom+"_"+format(i, "02d"), v)
+       
+            elif type(val) == dict:
+                for k,v in val.items():
+                    sav(nom+"."+k, v)
+            
+            else:
+                config.set(titre, nom, val)
+
+
         for titre,dicopt in self.typesOptions.items():
             titre = titre.encode('utf-8')
             config.add_section(titre)
-            for opt in dicopt.items():
-                
-                if type(opt[1]) == list:
-                    for i,v in enumerate(opt[1]):
-                        config.set(titre, opt[0]+"_"+str(i), "-"+v+"-")
-                
-                elif type(opt[1]) == dict:
-                    for k,v in opt[1].items():
-                        config.set(titre, opt[0]+"_"+k, v)
-                
-                else:
-                    config.set(titre, opt[0], opt[1])
+            for nom, val in dicopt.items():
+                sav(nom, val)
+#                if type(opt[1]) == list:
+#                    for i,v in enumerate(opt[1]):nom
+#                        config.set(titre, opt[0]+"_"+str(i), "-"+v+"-")
+#                
+#                elif type(opt[1]) == dict:
+#                    for k,v in opt[1].items():
+#                        config.set(titre, opt[0]+"_"+k, v)
+#                
+#                elif hasattr(opt[1], 'getBranche'):
+#                    
+#                else:
+#                    config.set(titre, opt[0], opt[1])
         
         config.write(open(self.fichierOpt,'w'))
 
@@ -140,66 +160,156 @@ class Options:
             with io.open(self.fichierOpt, 'r', encoding='utf_8_sig') as fp:
                 config.readfp(fp)
         config.read(self.fichierOpt)
-        print "Ouverture Options:",self.fichierOpt
+#        print "Ouverture Options:",self.fichierOpt
+        
+        def evl(opt):
+            try:
+                val = config.getint(titreUtf, opt)
+            except:
+                try:
+                    val = config.getfloat(titreUtf, opt)
+                except:
+                    try:
+                        val = config.getboolean(titreUtf, opt)
+                    except:
+                        val = config.get(titreUtf, opt)
+            return val
+        
+        def lec(titreopt):
+            titreopt = titreopt.lower()
+            if titreopt in zip(*config.items(titreUtf))[0]:
+                return evl(titreopt)
+            else:
+                lstopt = [(n, v) for n, v in config.items(titreUtf) if titreopt in n]
+                if len(lstopt) > 0:
+                    d = {}
+                    for n, v in lstopt:
+                        if "_" in n:
+                            num = ast.literal_eval(n.rsplit("_")[-1])
+                            d[num] = lec(n)
+                            liste = True
+                        elif "." in n:
+                            d[n.rsplit(".")[-1].upper()] = lec(n)
+                            liste = False
+                    if liste:
+                        return [d[i] for i in range(len(d))] #[1:-1]
+                    else:
+                        return d
+                
+#            if type(opt) == int:
+#                opt = config.getint(titreUtf, titreopt)
+#            elif type(opt) == float:
+#                opt = config.getfloat(titreUtf, titreopt)
+#            elif type(opt) == bool:
+#                opt = config.getboolean(titreUtf, titreopt)
+#            elif type(opt) == str or type(opt) == unicode:
+#                opt = unicode(config.get(titreUtf, titreopt))
+#            elif isinstance(opt, wx._gdi.Colour):
+#                v = eval(config.get(titreUtf, titreopt))
+#                opt = wx.Colour(v[0], v[1], v[2], v[3])
+#            elif type(opt) == list:
+#                d = {}
+#                num = None
+#                for n, v in config.items(titreUtf):
+#                    if titreopt.lower() in n:
+#                        try:
+#                            num = ast.literal_eval(n.rsplit("_")[-1])
+##                            d[num] = unicode(config.get(titreUtf, n))
+#                            d[num] = lec(n)
+#                        except ValueError:
+#                            num = None
+#                        
+##                    print d, "-->",
+#                if num != None:
+#                    l = [d[i][1:-1] for i in range(len(d))]
+##                        l = []
+##                        for i in range(len(d)):
+##                            l.append(d[i][1:-1])
+#                else:
+#                    l= []
+#                opt = l
+##                    print l, type(l[0])
+#                
+#            elif type(opt) == dict:
+#                d = {}
+#                for n, v in config.items(titreUtf):
+#                    if titreopt.lower() in n:
+#                        d[n.rsplit(".")[-1].upper()] = eval(config.get(titreUtf, n))
+#                opt = d
+#                
+#            # pour un passage correct de la version 2.5 à 2.6
+#            try:
+#                v = eval(opt)
+#                if type(v) == tuple:
+#                    opt = wx.Colour(v[0], v[1], v[2]).GetAsString(wx.C2S_HTML_SYNTAX)
+##                    print "  ", opt
+#            except:
+#                pass
+#            
+#            self.typesOptions[titre][titreopt] = opt
+
         
         for titre in self.typesOptions.keys():
             titreUtf = titre.encode('utf-8')
 #            print titreUtf, self.typesOptions[titre].keys()
             
             for titreopt in self.typesOptions[titre].keys():
-                opt = self.typesOptions[titre][titreopt] 
-#                print titreopt, type(opt), opt
-                if type(opt) == int:
-                    opt = config.getint(titreUtf, titreopt)
-                elif type(opt) == float:
-                    opt = config.getfloat(titreUtf, titreopt)
-                elif type(opt) == bool:
-                    opt = config.getboolean(titreUtf, titreopt)
-                elif type(opt) == str or type(opt) == unicode:
-                    opt = config.get(titreUtf, titreopt)
-                elif isinstance(opt, wx._gdi.Colour):
-                    v = eval(config.get(titreUtf, titreopt))
-                    opt = wx.Colour(v[0], v[1], v[2], v[3])
-                elif type(opt) == list:
-                    d = {}
-                    num = None
-                    for n, v in config.items(titreUtf):
-#                        print titreopt, n, v
-                        if titreopt.lower() in n:
-                            try:
-                                num = ast.literal_eval(n.rsplit("_")[-1])
-                                d[num] = unicode(config.get(titreUtf, n))
-                            except ValueError:
-                                num = None
-                            
-#                    print d, "-->",
-                    if num != None:
-                        l = [d[i][1:-1] for i in range(len(d))]
-#                        l = []
-#                        for i in range(len(d)):
-#                            l.append(d[i][1:-1])
-                    else:
-                        l= []
-                    opt = l
-#                    print l, type(l[0])
-                    
-                elif type(opt) == dict:
-                    d = {}
-                    for n, v in config.items(titreUtf):
-                        if titreopt.lower() in n:
-                            d[n.rsplit("_")[-1].upper()] = eval(config.get(titreUtf, n))
-                    opt = d
-                    
-                # pour un passage correct de la version 2.5 à 2.6
-                try:
-                    v = eval(opt)
-                    if type(v) == tuple:
-                        opt = wx.Colour(v[0], v[1], v[2]).GetAsString(wx.C2S_HTML_SYNTAX)
-#                    print "  ", opt
-                except:
-                    pass
+#                opt = self.typesOptions[titre][titreopt]
                 
-                self.typesOptions[titre][titreopt] = opt
+                self.typesOptions[titre][titreopt] = lec(titreopt)
+                
+#                print titreopt, type(opt), opt
+#                if type(opt) == int:
+#                    opt = config.getint(titreUtf, titreopt)
+#                elif type(opt) == float:
+#                    opt = config.getfloat(titreUtf, titreopt)
+#                elif type(opt) == bool:
+#                    opt = config.getboolean(titreUtf, titreopt)
+#                elif type(opt) == str or type(opt) == unicode:
+#                    opt = config.get(titreUtf, titreopt)
+#                elif isinstance(opt, wx._gdi.Colour):
+#                    v = eval(config.get(titreUtf, titreopt))
+#                    opt = wx.Colour(v[0], v[1], v[2], v[3])
+#                elif type(opt) == list:
+#                    d = {}
+#                    num = None
+#                    for n, v in config.items(titreUtf):
+##                        print titreopt, n, v
+#                        if titreopt.lower() in n:
+#                            try:
+#                                num = ast.literal_eval(n.rsplit("_")[-1])
+#                                d[num] = unicode(config.get(titreUtf, n))
+#                            except ValueError:
+#                                num = None
+#                            
+##                    print d, "-->",
+#                    if num != None:
+#                        l = [d[i][1:-1] for i in range(len(d))]
+##                        l = []
+##                        for i in range(len(d)):
+##                            l.append(d[i][1:-1])
+#                    else:
+#                        l= []
+#                    opt = l
+##                    print l, type(l[0])
+#                    
+#                elif type(opt) == dict:
+#                    d = {}
+#                    for n, v in config.items(titreUtf):
+#                        if titreopt.lower() in n:
+#                            d[n.rsplit("_")[-1].upper()] = eval(config.get(titreUtf, n))
+#                    opt = d
+#                    
+#                # pour un passage correct de la version 2.5 à 2.6
+#                try:
+#                    v = eval(opt)
+#                    if type(v) == tuple:
+#                        opt = wx.Colour(v[0], v[1], v[2]).GetAsString(wx.C2S_HTML_SYNTAX)
+##                    print "  ", opt
+#                except:
+#                    pass
+#                
+#                self.typesOptions[titre][titreopt] = opt
                 
                 
         
@@ -239,19 +349,33 @@ class Options:
                                        "E" : constantes.NbrGroupes["E"],
                                        "P" : constantes.NbrGroupes["P"]}
 #        self.optClasse["CentresInteretSSI"] = [ci for ci in constantes_SSI.CentresInterets]
-        self.optClasse["CentresInteret"] = [ci for ci in REFERENTIELS["SSI"].CentresInterets]
-        self.optClasse["PositionsCI"] = []
+#        self.optClasse["CentresInteret"] = [ci for ci in REFERENTIELS["SSI"].CentresInterets]
+
         self.optClasse["TypeEnseignement"] = "SSI"
+        
+        self.optClasse["Etab_Academie"] = u""
+        self.optClasse["Etab_Ville"] = u""
+        self.optClasse["Etablissement"] = u""
         
 #        self.optClasse["NombreRevues"] = 2
 #        self.optClasse["PositionRevue"] = constantes.POSITIONS_REVUES[self.optClasse["TypeEnseignement"]][self.optClasse["NombreRevues"]]
         
+        #
+        # Systèmes
+        #
         self.optSystemes["Systemes"] = []
-        self.optSystemes["Nombre"] = []
+#        self.optSystemes["Nombres"] = []
+
+        
+        #
+        # Projet
+        #
+        self.optProjet["NbrRevues"] = 2
+        self.optProjet["PosRevues"] = []
         
 
     ############################################################################
-    def valider(self, classe):
+    def valider(self, classe, doc):
         self.optClasse["Effectifs"] = {"C" : classe.effectifs["C"],
                                        "G" : classe.nbrGroupes["G"],
                                        "E" : classe.nbrGroupes["E"],
@@ -266,9 +390,25 @@ class Options:
 #            self.optClasse["CentresInteretSSI"] = classe.ci_SSI
         
         self.optClasse["TypeEnseignement"] = classe.typeEnseignement
+        self.optClasse["Etab_Academie"] = classe.academie
+        self.optClasse["Etab_Ville"] = classe.ville
+        self.optClasse["Etablissement"] = classe.etablissement
         
-#        self.optClasse["NombreRevues"] = classe.nbrRevues
-#        self.optClasse["PositionRevue"] = constantes.POSITIONS_REVUES[self.optClasse["TypeEnseignement"]][self.optClasse["NombreRevues"]]
+        
+        #
+        # Projet
+        #
+        if doc.GetType() == 'prj':
+            self.optProjet["NbrRevues"] = doc.nbrRevues
+            self.optProjet["PosRevues"] = doc.positionRevues
+        
+        #
+        # Séquence
+        #
+        elif doc.GetType() == 'seq':
+            self.optSystemes["Systemes"] = [ET.tostring(s.getBranche()) for s in doc.systemes]
+
+            
         
         
     ############################################################################

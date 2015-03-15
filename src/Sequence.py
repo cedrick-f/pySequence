@@ -40,7 +40,7 @@ Copyright (C) 2011-2015
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "6.0-beta.9"
+__version__ = "6.0-beta.10"
 print __version__
 
 #from threading import Thread
@@ -197,6 +197,9 @@ import constantes
 
 # Pour les copier/coller
 import pyperclip
+
+import threading 
+
 
 # Les constantes partagées
 from Referentiel import REFERENTIELS, ARBRE_REF
@@ -885,7 +888,8 @@ class Objet_sequence():
         
 
 class Classe():
-    def __init__(self, app, panelParent = None, intitule = u"", pourProjet = False, ouverture = False):
+    def __init__(self, app, panelParent = None, intitule = u"", 
+                 pourProjet = False, ouverture = False, typedoc = ''):
         self.intitule = intitule
         
         self.academie = u""
@@ -896,7 +900,9 @@ class Classe():
         self.Initialise(pourProjet)
         
         if panelParent:
-            self.panelPropriete = PanelPropriete_Classe(panelParent, self, pourProjet, ouverture = ouverture)
+            self.panelPropriete = PanelPropriete_Classe(panelParent, self, pourProjet, 
+                                                        ouverture = ouverture, typedoc = typedoc)
+            self.panelPropriete.MiseAJour()
             
         self.panelParent = panelParent
 
@@ -949,6 +955,11 @@ class Classe():
                            "G" : self.options.optClasse["Effectifs"]["G"]
                            }
 
+        self.academie = self.options.optClasse["Etab_Academie"]
+        self.ville = self.options.optClasse["Etab_Ville"]
+        self.etablissement = self.options.optClasse["Etablissement"]
+        
+        
         calculerEffectifs(self)
 
 
@@ -1324,10 +1335,13 @@ class Sequence(BaseDoc):
 #        return t
 
     ######################################################################################  
+    def GetType(self):
+        return 'seq'
+    
+    
+    ######################################################################################  
     def Initialise(self):
-        self.AjouterListeSystemes(zip(self.options.optSystemes["Systemes"], 
-                                      self.options.optSystemes["Nombre"]))
-            
+        self.AjouterListeSystemes(self.options.optSystemes["Systemes"])
             
             
     ######################################################################################  
@@ -1663,18 +1677,24 @@ class Sequence(BaseDoc):
         return
     
     ######################################################################################  
-    def AjouterListeSystemes(self, propr = []):
+    def AjouterListeSystemes(self, syst = []):
 #        print "AjouterListeSystemes séquence"
         nouvListe = []
-        for p in propr:
-            nom = unicode(p[0])
-            sy = Systeme(self, self.panelParent, nom = nom)
+        for s in syst:
+            sy = Systeme(self, self.panelParent)
+            try:
+                sy.setBranche(ET.fromstring(s))
+            except:
+                print "Erreur parsing :", s
+                continue
+            
+#            nom = unicode(s)
+#            sy = Systeme(self, self.panelParent, nom = nom)
             self.systemes.append(sy)
-            nouvListe.append(nom)
+            nouvListe.append(sy.nom)
             sy.ConstruireArbre(self.arbre, self.brancheSys)
             sy.SetCode()
-            if len(p) > 1:
-                sy.nbrDispo.v[0] = eval(p[1])
+#            sy.nbrDispo.v[0] = eval(n)
             sy.panelPropriete.MiseAJour()
         
         self.arbre.Expand(self.brancheSys)
@@ -2050,7 +2070,10 @@ class Projet(BaseDoc, Objet_sequence):
     def __repr__(self):
         return self.intitule
 
-
+    ######################################################################################  
+    def GetType(self):
+        return 'prj'
+        
     ######################################################################################  
     def GetProjetRef(self):
         if self.code == None:
@@ -7169,15 +7192,15 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         options = Options.Options()
         if options.fichierExiste():
 #            options.ouvrir(DEFAUT_ENCODING)
-            try :
-                options.ouvrir(DEFAUT_ENCODING)
-            except:
-                print "Fichier d'options corrompus ou inexistant !! Initialisation ..."
-                options.defaut()
+#            try :
+            options.ouvrir(DEFAUT_ENCODING)
+#            except:
+#                print "Fichier d'options corrompus ou inexistant !! Initialisation ..."
+#                options.defaut()
         else:
             options.defaut()
         self.options = options
-
+#        print options
         
         # On applique les options ...
 #        self.DefinirOptions(options)
@@ -7251,7 +7274,11 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
         
         # Récupération de la dernière version
-        wx.CallAfter(self.GetNewVersion)
+        a = threading.Thread(None, self.GetNewVersion, None) 
+        a.start()
+
+
+#        wx.CallAfter(self.GetNewVersion)
         
         
         self.Thaw()
@@ -7802,7 +7829,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         # get the file based on the menu ID
         fileNum = evt.GetId() - wx.ID_FILE1
         path = self.filehistory.GetHistoryFile(fileNum)
-        print "You selected %s\n" % path
+#        print "You selected %s\n" % path
 
         # add it back to the history so it will be moved up the list
         self.filehistory.AddFileToHistory(path)
@@ -8404,7 +8431,7 @@ class FenetreSequence(FenetreDocument):
         #
         # La classe
         #
-        self.classe = Classe(parent, self.panelProp, ouverture = ouverture)
+        self.classe = Classe(parent, self.panelProp, ouverture = ouverture, typedoc = self.typ)
         
         #
         # La séquence
@@ -8610,7 +8637,7 @@ class FenetreProjet(FenetreDocument):
         #
         # La classe
         #
-        self.classe = Classe(parent, self.panelProp, pourProjet = True)
+        self.classe = Classe(parent, self.panelProp, pourProjet = True, typedoc = self.typ)
         
         #
         # Le projet
@@ -10370,7 +10397,7 @@ class PanelOrganisation(wx.Panel):
 #
 ####################################################################################
 class PanelPropriete_Classe(PanelPropriete):
-    def __init__(self, parent, classe, pourProjet, ouverture = False):
+    def __init__(self, parent, classe, pourProjet, ouverture = False, typedoc = ''):
 #        print "__init__ PanelPropriete_Classe"
         PanelPropriete.__init__(self, parent)
 #        self.BeginRepositioningChildren()
@@ -10405,8 +10432,16 @@ class PanelPropriete_Classe(PanelPropriete):
         #
         self.tb = tb = wx.ToolBar(self, style = wx.TB_VERTICAL|wx.TB_FLAT|wx.TB_NODIVIDER)
         self.sizer.Add(tb, (0,0), (2,1), flag = wx.ALL|wx.ALIGN_RIGHT, border = 1)
-        tb.AddSimpleTool(30, images.Icone_valid_pref.GetBitmap(),
-                         u"Choisir ces paramètres de classe pour les futurs documents")
+        t = u"Sauvegarder ces paramètres de classe pour les futurs nouveaux documents :\n" \
+            u" - type d'enseignement\n" \
+            u" - effectifs\n" \
+            u" - établissement\n"
+        if typedoc == 'seq':
+            t += u" - systèmes\n"
+        elif typedoc == 'prj':
+            t += u" - nombre de revues et positions\n"
+        
+        tb.AddSimpleTool(30, images.Icone_valid_pref.GetBitmap(), t)
         self.Bind(wx.EVT_TOOL, self.OnValidPref, id=30)
         tb.AddSimpleTool(31, images.Icone_defaut_pref.GetBitmap(), 
                          u"Rétablir les paramètres de classe par défaut")
@@ -10579,7 +10614,7 @@ class PanelPropriete_Classe(PanelPropriete):
     #############################################################################            
     def OnValidPref(self, evt):
         try:
-            self.classe.options.valider(self.classe)
+            self.classe.options.valider(self.classe, self.classe.doc)
             self.classe.options.enregistrer()
         except IOError:
             messageErreur(self, u"Permission refusée",
@@ -10805,7 +10840,7 @@ class PanelPropriete_Classe(PanelPropriete):
         
     ######################################################################################  
     def MiseAJour(self):
-#        print "MiseAJour classe", self.classe.academie
+        print "MiseAJour classe", self.classe.academie
 #        self.MiseAJourType()
         
         self.cb_type.SetStringSelection(self.classe.referentiel.Enseignement[0])
@@ -18566,7 +18601,6 @@ class A_propos(wx.Dialog):
 #                      (_(u"Remerciements : "),()) 
 
 
-        
         for ac in lstActeurs:
             t = wx.StaticText(auteurs, -1, ac[0])
             fgs1.Add(t, flag=wx.ALIGN_RIGHT | wx.ALIGN_CENTER_VERTICAL | wx.ALL, border=4)
