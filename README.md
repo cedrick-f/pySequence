@@ -47,7 +47,7 @@ _**pySequence**_ existe :
    * en version "portable" (idéale pour utilisation sur des dossiers partagés : réseaux, Dropbox, ...)
    * en version "installable"
  * pour Linux ou Mac :
-   * possible à partir des sources ... en suivant [cette méthode]()
+   * possible à partir des sources ... en suivant [cette méthode](https://github.com/cedrick-f/pySequence/wiki/InstallationMAC)
 
 
 ---
