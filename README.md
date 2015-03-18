@@ -1,4 +1,4 @@
-#![logo.png](logo.png)pySéquence
+#![](Logo.png)pySéquence
 _**pySequence**_ est un logiciel **[libre](http://www.gnu.org/licenses/gpl.html)** qui fournit une aide pour :
   * élaborer des séquences pédagogiques
   * décrire et valider des projets
@@ -38,7 +38,11 @@ et potentiellement [n'importe quel programme d'enseignement](https://github.com/
 
 
 ## Téléchargement ##
-pySequence existe :
+Versions récentes : 
+
+Anciennes versions : [https://code.google.com/p/pysequence/downloads/list](https://code.google.com/p/pysequence/downloads/list)
+
+_**pySequence**_ existe :
 pour Windows :
   * en version "portable" (idéale pour utilisation sur des dossiers partagés : réseaux, Dropbox, ...)
   * en version "installable"
