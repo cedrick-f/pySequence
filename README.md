@@ -1,3 +1,4 @@
+#pySéquence
 # Description #
 _**pySequence**_ est un logiciel **[libre](http://www.gnu.org/licenses/gpl.html)** qui permet d'aider les professeurs de _**Sciences Industrielles de l'Ingénieur**_ à :
   * élaborer des séquences pédagogiques
