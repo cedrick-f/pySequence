@@ -40,7 +40,7 @@ et potentiellement [n'importe quel programme d'enseignement](https://github.com/
 ## Téléchargement ##
  * Versions récentes : [https://github.com/cedrick-f/pySequence/releases](https://github.com/cedrick-f/pySequence/releases)
 
- * Anciennes versions : [https://code.google.com/p/pysequence/downloads/list](https://code.google.com/p/pysequence/downloads/list)
+ * Anciennes versions : [https://drive.google.com/folderview?id=0B2jxnxsuUscPX0tFLVN0cF91TGc#list](https://drive.google.com/folderview?id=0B2jxnxsuUscPX0tFLVN0cF91TGc#list)
 
 _**pySequence**_ existe :
  * pour Windows :
