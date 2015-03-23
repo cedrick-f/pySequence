@@ -192,7 +192,7 @@ from widgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_ENTI
 # Les constantes partagées
 from constantes import calculerEffectifs, revCalculerEffectifs, PATH, getSingulierPluriel,\
                         strEffectifComplet, getElementFiltre, COUL_OK, COUL_NON, COUL_BOF, COUL_BIEN, \
-                        toList, COUL_COMPETENCES, TABLE_PATH, CHAR_POINT, COUL_PARTIE, COUL_ABS
+                        toList, COUL_COMPETENCES, CHAR_POINT, COUL_PARTIE, COUL_ABS
 import constantes
 
 # Pour les copier/coller
@@ -1103,7 +1103,7 @@ class Classe():
             # Ouverture du référentiel intrégré
             #
             else:
-                versionNum = self.GetVersionNum()
+#                versionNum = self.GetVersionNum()
                 if self.GetVersionNum() == 5:
                     ChargerRefOriginal()
                     RecupCI()
@@ -1591,11 +1591,62 @@ class Sequence(BaseDoc):
         
         return seance
     
+    ######################################################################################  
+    def CollerElem(self, event = None, item = None, bseance = None):
+        """ Colle la séance présente dans le presse-papier (branche <bseance>)
+            après la séance désignée par l'item d'arbre <item>
+        """
+        
+        seance_avant = self.arbre.GetItemPyData(item)
+        
+        
+        if not isinstance(seance_avant, Seance):
+            return
+        
+        if bseance == None:
+            try:
+                b = ET.fromstring(pyperclip.paste())
+            except:
+                b = None
+            if isinstance(b, Element): # Le presse contient un Element
+                if b.tag[:6] == 'Seance': # Le presse contient une tache
+                    bseance = b
+            if bseance == None:
+                return
+        
+        print "CollerElem", ET.tostring(bseance)
+        print u"   après :", seance_avant
+        
+        typeSeance = bseance.get("Type", "")
+        
+        
+        if seance_avant.typeSeance in ['R', 'S']:
+            seance = Seance(seance_avant, self.panelParent, typeSeance = typeSeance,
+                            branche = bseance)
+            seance_avant.seances.insert(0, seance)
+        else:
+            seance = Seance(self, self.panelParent, typeSeance = typeSeance,
+                            branche = bseance)
+            i = seance_avant.parent.seances.index(seance_avant)
+            seance_avant.parent.seances.insert(i+1, seance)
+        
+        
+        self.OrdonnerSeances()
+        seance.ConstruireArbre(self.arbre, self.brancheSce)
+        self.reconstruireBrancheSeances(seance_avant, seance)
+        
+        
+        self.panelPropriete.sendEvent()
+        
+        self.arbre.SelectItem(seance.branche)
     
     ######################################################################################  
     def SupprimerSeance(self, event = None, item = None):
+        print "SupprimerSeance depuis :", self.code
+        print "   ", self.seances
         if len(self.seances) > 1: # On en laisse toujours une !!
             seance = self.arbre.GetItemPyData(item)
+            print " ---",  seance
             self.seances.remove(seance)
             self.arbre.Delete(item)
             self.OrdonnerSeances()
@@ -2431,7 +2482,7 @@ class Projet(BaseDoc, Objet_sequence):
     def SetPosition(self, pos):
 #        print "SetPosition", pos
 #        print "  position actuelle :", self.position
-        posEpreuve = self.GetProjetRef().getPeriodeEval()
+#        posEpreuve = self.GetProjetRef().getPeriodeEval()
         kproj = self.GetReferentiel().getProjetEval(pos+1)
 #        print "   ", kproj
 #        print "  posEpreuve", posEpreuve
@@ -2672,7 +2723,7 @@ class Projet(BaseDoc, Objet_sequence):
 #            print "Tache", tache, u"copiée"
 
     ######################################################################################  
-    def CollerTache(self, event = None, item = None, btache = None):
+    def CollerElem(self, event = None, item = None, btache = None):
         """ Colle la tâche présente dans le presse-papier (branche <btache>)
             après la tâche désignée par l'item d'arbre <item>
         """
@@ -3850,7 +3901,7 @@ class Savoirs(Objet_sequence):
 class Seance(ElementDeSequence, Objet_sequence):
     
                   
-    def __init__(self, parent, panelParent, typeSeance = "", typeParent = 0):
+    def __init__(self, parent, panelParent = None, typeSeance = "", typeParent = 0, branche = None):
         """ Séance :
                 parent = le parent wx pour contenir "panelPropriete"
                 typeSceance = type de séance parmi "TypeSeance"
@@ -3895,8 +3946,15 @@ class Seance(ElementDeSequence, Objet_sequence):
         self.parent = parent
         self.panelParent = panelParent
         
-        self.SetType(typeSeance)
-        self.seances = []
+        if branche != None:
+            self.setBranche(branche)
+        else:
+            self.seances = []
+            self.SetType(typeSeance)
+            self.AjouterListeSystemes(self.GetDocument().systemes)
+            
+#        self.SetType(typeSeance)
+        
         
         #
         # Création du Tip (PopupInfo)
@@ -3908,9 +3966,9 @@ class Seance(ElementDeSequence, Objet_sequence):
             self.tip_titrelien, self.tip_ctrllien = self.tip.CreerLien((3,0))
             self.tip_description = self.tip.CreerRichTexte(self, (4,0))
         
-        self.AjouterListeSystemes(self.GetDocument().systemes)
         
-        if panelParent:
+        
+        if panelParent != None:
             self.panelPropriete = PanelPropriete_Seance(panelParent, self)
             self.panelPropriete.AdapterAuType()
         
@@ -4666,7 +4724,7 @@ class Seance(ElementDeSequence, Objet_sequence):
     
     ######################################################################################  
     def AjouterListeSystemes(self, lstSys, lstNSys = None):
-#        print "  AjouterListeSystemes", self
+#        print "  AjouterListeSystemes", self.typeSeance
         if self.typeSeance in ["AP", "ED", "P"]:
             if lstNSys == None:
                 lstNSys = [0]*len(lstSys)
@@ -4703,9 +4761,37 @@ class Seance(ElementDeSequence, Objet_sequence):
         if itemArbre == self.branche:
             listItems = [[u"Supprimer", functools.partial(self.parent.SupprimerSeance, item = itemArbre)],
                          [u"Créer un lien", self.CreerLien]]
+            
             if self.typeSeance in ["R", "S"]:
                 listItems.append([u"Ajouter une séance", self.AjouterSeance])
-            self.GetApp().AfficherMenuContextuel(listItems)
+            
+            listItems.append([u"Copier", self.CopyToClipBoard])
+            
+            ################
+            try:
+                elementCopie = ET.fromstring(pyperclip.paste())
+            except:
+                elementCopie = None
+                
+            if elementCopie != None: # Le presse papier n'est pas vide
+                if isinstance(elementCopie, Element): # Le presse contient un Element
+                    if elementCopie.tag[:6] == 'Seance': # Le presse contient une tache
+                        dataSource = Seance(self.parent)
+                        dataSource.setBranche(elementCopie)
+                        
+                        if not hasattr(self, 'GetNiveau') or self.GetNiveau() + dataSource.GetProfondeur() > 2:
+                            return
+                        
+                        if self.typeSeance in ["R", "S"] : # la phase est la même
+                            t = u"Coller dans"
+                        else:
+                            t = u"Coller après"
+                        listItems.append([t, functools.partial(self.parent.CollerElem, 
+                                                                                 item = itemArbre, 
+                                                                                 bseance = elementCopie)])
+                            
+            self.GetApp().AfficherMenuContextuel(listItems)           
+                            
 #            item2 = menu.Append(wx.ID_ANY, u"Créer une rotation")
 #            self.Bind(wx.EVT_MENU, functools.partial(self.AjouterRotation, item = item), item2)
 #            
@@ -5577,7 +5663,7 @@ class Tache(Objet_sequence):
                     if elementCopie.tag[:5] == 'Tache': # Le presse contient une tache
                         phase = elementCopie.get("Phase", "")
                         if self.phase == phase or self.GetSuivante().phase == phase : # la phase est la même
-                            listItems.append([u"Coller après", functools.partial(self.projet.CollerTache, 
+                            listItems.append([u"Coller après", functools.partial(self.projet.CollerElem, 
                                                                                  item = itemArbre, 
                                                                                  btache = elementCopie)])
                     
@@ -7734,7 +7820,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     #############################################################################
     def OnAide(self, event):
         try:
-            webbrowser.open('https://github.com/cedrick-f/pySequence/blob/master/Aide.md',new=2)
+            webbrowser.open('https://github.com/cedrick-f/pySequence/wiki',new=2)
         except:
             messageErreur(None, u"Ouverture impossible",
                           u"Impossible d'ouvrir l'url\n\n%s\n" %toDefautEncoding(self.path))
@@ -7743,7 +7829,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
     ###############################################################################################
     def commandeNouveau(self, event = None, ext = None, ouverture = False):
-        print "commandeNouveau"
+#        print "commandeNouveau"
         if ext == None:
             dlg = DialogChoixDoc(self)
             val = dlg.ShowModal()
@@ -7764,7 +7850,8 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         if child != None:
             wx.CallAfter(child.Activate)
         return child
-        
+
+
     ###############################################################################################
     def ouvrir(self, nomFichier, reparer = False):
         self.Freeze()
@@ -9341,34 +9428,43 @@ class BaseFiche(wx.ScrolledWindow):
 
     #############################################################################            
     def Redessiner(self, event = None):  
-        wx.BeginBusyCursor()
-#        tps1 = time.clock() 
+        
+        def redess():
+            wx.BeginBusyCursor()
+                
+    #        tps1 = time.clock() 
+                
             
-        cdc = wx.ClientDC(self)
-        self.PrepareDC(cdc) 
-        dc = wx.BufferedDC(cdc, self.buffer, wx.BUFFER_VIRTUAL_AREA)
-        dc.SetBackground(wx.Brush('white'))
-        dc.Clear()
-        ctx = wx.lib.wxcairo.ContextFromDC(dc)
-#        face = wx.lib.wxcairo.FontFaceFromFont(wx.FFont(10, wx.SWISS, wx.FONTFLAG_BOLD))
-#        ctx.set_font_face(face)
-        dc.BeginDrawing()
-        self.normalize(ctx)
-        
-        
-        self.Draw(ctx)
-        
-#        b = Thread(None, self.Draw, None, (ctx,))
-#        b.start()
-        
-        dc.EndDrawing()
-        self.ctx = ctx
-        self.Refresh()
-
-#        tps2 = time.clock() 
-#        print "Tracé :"#, tps2 - tps1
-        
-        wx.EndBusyCursor()
+    #        face = wx.lib.wxcairo.FontFaceFromFont(wx.FFont(10, wx.SWISS, wx.FONTFLAG_BOLD))
+    #        ctx.set_font_face(face)
+            
+            cdc = wx.ClientDC(self)
+            self.PrepareDC(cdc) 
+            dc = wx.BufferedDC(cdc, self.buffer, wx.BUFFER_VIRTUAL_AREA)
+            dc.SetBackground(wx.Brush('white'))
+            dc.Clear()
+            ctx = wx.lib.wxcairo.ContextFromDC(dc)
+            dc.BeginDrawing()
+            self.normalize(ctx)
+            
+            self.Draw(ctx)
+            
+    #        b = Thread(None, self.Draw, None, (ctx,))
+    #        b.start()
+            
+            dc.EndDrawing()
+            self.ctx = ctx
+            self.Refresh()
+    
+    #        tps2 = time.clock() 
+    #        print "Tracé :"#, tps2 - tps1
+            
+            wx.EndBusyCursor()
+            
+        redess()
+#        wx.CallAfter(redess)
+#        a = threading.Thread(None, redess, None) 
+#        a.start()
     
     #############################################################################            
     def normalize(self, cr):
@@ -10840,7 +10936,7 @@ class PanelPropriete_Classe(PanelPropriete):
         
     ######################################################################################  
     def MiseAJour(self):
-        print "MiseAJour classe", self.classe.academie
+#        print "MiseAJour classe", self.classe.academie
 #        self.MiseAJourType()
         
         self.cb_type.SetStringSelection(self.classe.referentiel.Enseignement[0])
@@ -12579,6 +12675,7 @@ class PanelPropriete_Seance(PanelPropriete):
                 
             self.systemeCtrl = []
             for s in self.seance.systemes:
+#                print "   ", type(s), "---", s
                 v = VariableCtrl(self, s, signeEgal = False, 
                                  slider = False, fct = None, help = "", sizeh = 30)
                 self.Bind(EVT_VAR_CTRL, self.EvtVarSysteme, v)
@@ -14110,7 +14207,7 @@ class ArbreDoc(CT.CustomTreeCtrl):
 
 
         elif evt.ControlDown() and keycode == 86: # Crtl-V
-            self.doc.CollerTache(item = item)
+            self.doc.CollerElem(item = item)
             
         evt.Skip()
 
@@ -14298,6 +14395,7 @@ class ArbreSequence(ArbreDoc):
         """
         if isinstance(dataSource, Seance) and dataTarget != dataSource:
             if not hasattr(dataTarget, 'GetNiveau') or dataTarget.GetNiveau() + dataSource.GetProfondeur() > 2:
+#                print "0.1"
                 return 0
 
 
@@ -14307,12 +14405,16 @@ class ArbreSequence(ArbreDoc):
                 if not dataSource in dataTarget.seances:    # parents différents
 #                    print dataSource.typeSeance, dataTarget.seances[0].GetListeTypes()
                     if dataTarget.GetNiveau() + dataSource.GetProfondeur() > 1:
+#                        print "0-2"
                         return 0
                     elif not dataSource.typeSeance in dataTarget.seances[0].GetListeTypes():
+#                        print "0-3"
                         return 0
                     else:
+#                        print "1"
                         return 1
                 else:
+#                    print "2"
                     return 2
             
             # Insérer "après"
@@ -14320,10 +14422,13 @@ class ArbreSequence(ArbreDoc):
                 if dataTarget.parent != dataSource.parent:  # parents différents
 #                    print dataSource.typeSeance, dataTarget.GetListeTypes()
                     if not dataSource.typeSeance in dataTarget.GetListeTypes():
+#                        print "0-4"
                         return 0
                     else:
+#                        print "3"
                         return 3
                 else:
+#                    print "4"
                     return 4
             
             
@@ -14429,78 +14534,78 @@ class ArbreSequence(ArbreDoc):
         
         
         
-    ####################################################################################
-    def OnEndDrag2(self, event):
-        """ Gestion des glisser-déposer
-        """
-        self.item = event.GetItem() 
-        dataTarget = self.GetItemPyData(self.item)
-        dataSource = self.GetItemPyData(self.itemDrag)
-        if dataTarget == self.sequence.panelSeances: # racine des séances
-            dataTarget = self.sequence.seances[0]
-            self.item = self.GetFirstChild(self.item)[0]
-            root = True
-        else:
-            root = False
-            
-        if isinstance(dataSource, Seance) and isinstance(dataTarget, Seance)  and dataTarget != dataSource:
-            
-            # source et target ont le même parent (même niveau dans l'arbre)
-            if dataTarget.parent == dataSource.parent:
-                
-                if dataTarget.typeSeance in ["R","S"]:          # rotation ou parallele
-                    if not dataSource in dataTarget.seances:    # changement de parent
-                        lstS = dataSource.parent.seances
-                        lstT = dataTarget.seances
-                        s = lstS.index(dataSource)
-                        lstT.insert(0, lstS.pop(s))
-                        dataSource.parent = dataTarget
-                        
-                        self.sequence.OrdonnerSeances()
-                        self.sequence.reconstruireBrancheSeances(dataSource.parent, dataTarget)
-                        self.panelVide.sendEvent(self.sequence) # Solution pour déclencher un "redessiner"
-                    
-                else:
-                    lst = dataTarget.parent.seances
-
-                    s = lst.index(dataSource)
-                    if root:
-                        t = -1
-                    else:
-                        t = lst.index(dataTarget)
-                    
-                    if t > s:
-                        lst.insert(t, lst.pop(s))
-                    else:
-                        lst.insert(t+1, lst.pop(s))
-                       
-                    self.sequence.OrdonnerSeances() 
-                    self.SortChildren(self.GetItemParent(self.item))
-                    self.panelVide.sendEvent(self.sequence) # Solution pour déclencher un "redessiner"
-            
-            # source et target ont des parents différents
-            elif dataTarget.parent != dataSource.parent:
-                lstT = dataTarget.parent.seances
-                lstS = dataSource.parent.seances
-
-                s = lstS.index(dataSource)
-                if root:
-                    t = -1
-                else:
-                    t = lstT.index(dataTarget)
-                lstT[t+1:t+1] = [dataSource]
-                del lstS[s]
-                p = dataSource.parent
-                dataSource.parent = dataTarget.parent
-                
-                self.sequence.OrdonnerSeances()
-                self.sequence.reconstruireBrancheSeances(dataTarget.parent, p)
-                self.panelVide.sendEvent(self.sequence) # Solution pour déclencher un "redessiner"
-            else:
-                pass
-            
-        self.itemDrag = None
-        event.Skip()            
+#    ####################################################################################
+#    def OnEndDrag2(self, event):
+#        """ Gestion des glisser-déposer
+#        """
+#        self.item = event.GetItem() 
+#        dataTarget = self.GetItemPyData(self.item)
+#        dataSource = self.GetItemPyData(self.itemDrag)
+#        if dataTarget == self.sequence.panelSeances: # racine des séances
+#            dataTarget = self.sequence.seances[0]
+#            self.item = self.GetFirstChild(self.item)[0]
+#            root = True
+#        else:
+#            root = False
+#            
+#        if isinstance(dataSource, Seance) and isinstance(dataTarget, Seance)  and dataTarget != dataSource:
+#            
+#            # source et target ont le même parent (même niveau dans l'arbre)
+#            if dataTarget.parent == dataSource.parent:
+#                
+#                if dataTarget.typeSeance in ["R","S"]:          # rotation ou parallele
+#                    if not dataSource in dataTarget.seances:    # changement de parent
+#                        lstS = dataSource.parent.seances
+#                        lstT = dataTarget.seances
+#                        s = lstS.index(dataSource)
+#                        lstT.insert(0, lstS.pop(s))
+#                        dataSource.parent = dataTarget
+#                        
+#                        self.sequence.OrdonnerSeances()
+#                        self.sequence.reconstruireBrancheSeances(dataSource.parent, dataTarget)
+#                        self.panelVide.sendEvent(self.sequence) # Solution pour déclencher un "redessiner"
+#                    
+#                else:
+#                    lst = dataTarget.parent.seances
+#
+#                    s = lst.index(dataSource)
+#                    if root:
+#                        t = -1
+#                    else:
+#                        t = lst.index(dataTarget)
+#                    
+#                    if t > s:
+#                        lst.insert(t, lst.pop(s))
+#                    else:
+#                        lst.insert(t+1, lst.pop(s))
+#                       
+#                    self.sequence.OrdonnerSeances() 
+#                    self.SortChildren(self.GetItemParent(self.item))
+#                    self.panelVide.sendEvent(self.sequence) # Solution pour déclencher un "redessiner"
+#            
+#            # source et target ont des parents différents
+#            elif dataTarget.parent != dataSource.parent:
+#                lstT = dataTarget.parent.seances
+#                lstS = dataSource.parent.seances
+#
+#                s = lstS.index(dataSource)
+#                if root:
+#                    t = -1
+#                else:
+#                    t = lstT.index(dataTarget)
+#                lstT[t+1:t+1] = [dataSource]
+#                del lstS[s]
+#                p = dataSource.parent
+#                dataSource.parent = dataTarget.parent
+#                
+#                self.sequence.OrdonnerSeances()
+#                self.sequence.reconstruireBrancheSeances(dataTarget.parent, p)
+#                self.panelVide.sendEvent(self.sequence) # Solution pour déclencher un "redessiner"
+#            else:
+#                pass
+#            
+#        self.itemDrag = None
+#        event.Skip()            
 
     
     ####################################################################################

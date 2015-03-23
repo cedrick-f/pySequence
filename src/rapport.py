@@ -1056,7 +1056,7 @@ class RapportRTF(rt.RichTextCtrl):
         self.EndStyle()
         
         if seance.typeSeance in ["R", "S"]:
-            for sseance in seance.sousSeances:
+            for sseance in seance.seances:
                 self.AddSeance(sseance, indent + 1)
             self.Newline()
         
