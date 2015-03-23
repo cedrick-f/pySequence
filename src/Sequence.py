@@ -1614,8 +1614,8 @@ class Sequence(BaseDoc):
             if bseance == None:
                 return
         
-        print "CollerElem", ET.tostring(bseance)
-        print u"   après :", seance_avant
+#        print "CollerElem", ET.tostring(bseance)
+#        print u"   après :", seance_avant
         
         typeSeance = bseance.get("Type", "")
         
@@ -1642,11 +1642,11 @@ class Sequence(BaseDoc):
     
     ######################################################################################  
     def SupprimerSeance(self, event = None, item = None):
-        print "SupprimerSeance depuis :", self.code
-        print "   ", self.seances
+#        print "SupprimerSeance depuis :", self.code
+#        print "   ", self.seances
         if len(self.seances) > 1: # On en laisse toujours une !!
             seance = self.arbre.GetItemPyData(item)
-            print " ---",  seance
+#            print " ---",  seance
             self.seances.remove(seance)
             self.arbre.Delete(item)
             self.OrdonnerSeances()
