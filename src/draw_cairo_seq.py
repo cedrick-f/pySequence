@@ -575,7 +575,6 @@ def Draw(ctx, seq, mouchard = False):
             lstCoul.append(constantes.COUL_DISCIPLINES['Phy'])
         else:
             if seq.GetReferentiel().tr_com == []:
-#            if seq.classe.typeEnseignement == 'SSI':
                 lstTexte.append(seq.GetReferentiel().getSavoir(cod))
                 lstCodes.append(cod)
             else:

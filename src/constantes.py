@@ -590,14 +590,22 @@ FORMAT_FICHIER = {'seqprj' : u"Séquence ou Projet (.seq ou .prj)|*.seq;*.prj|",
                   'seq' : u"Séquence (.seq)|*.seq|",
                   'prj' : u"Projet (.prj)|*.prj|"}
 
+FORMAT_FICHIER_CLASSE = {'cla' : u"Classe pySéquence (.cla)|*.cla|"}
+
+
 TOUS_FICHIER = u"Tous les fichiers|*.*'"
 
 MESSAGE_ENR = {'seq' : u"Enregistrer la séquence sous ...",
-               'prj' : u"Enregistrer le projet sous ..."}
+               'prj' : u"Enregistrer le projet sous ...",
+               'cla' : u"Enregistrer la classe sous ..."}
+
 MESSAGE_DEJA = {'seq' : u"La séquence est déja ouverte.\n\n%s\n\nVoulez vous ignorer les changements et rouvrir la séquence ?",
-                'prj' : u"Le projet est déja ouvert.\n\n%s\n\nVoulez vous ignorer les changements et rouvrir le projet ?"}
+                'prj' : u"Le projet est déja ouvert.\n\n%s\n\nVoulez vous ignorer les changements et rouvrir le projet ?",
+                'cla' : u"La classe est déja ouverte.\n\n%s\n\nVoulez vous ignorer les changements et rouvrir la classe ?"}
+
 TITRE_DEFAUT = {'seq' : u"Nouvelle séquence",
                 'prj' : u"Nouveau projet"}
+
 MESSAGE_FERMER = {'seq' : u"La séquence a été modifiée.\n\n%s\n\nVoulez vous enregistrer les changements ?",
                   'prj' : u"Le projet a été modifié.\n\n%s\n\nVoulez vous enregistrer les changements ?"}
 

@@ -22,7 +22,7 @@ shutil.rmtree("build", ignore_errors=True)
 # Inculsion des fichiers de donn�es
 #################################################################################################
 includefiles = [('D:/Developpement/Microsoft.VC90.CRT', "Microsoft.VC90.CRT"),
-                     'gpl.txt', 
+                     'LICENSE.txt', 
                      'fichier_prj.ico', 'fichier_seq.ico',
                      'etablissements.xml',
                      ('../tables', "../tables"),
@@ -106,7 +106,7 @@ cible = Executable(
 
 
 setup(  name = "pySequence",
-        version = "6.0.0.10",
+        version = "6.0.0.11",
         author = "Cédrick FAURY & Jean-Claude FRICOU",
         description = u"pySéquence",
         options = {"build_exe": build_exe_options},

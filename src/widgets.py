@@ -485,6 +485,9 @@ class VariableCtrl(wx.Panel):
         # Nom de la variable (titre)
         #
         self.variable = variable
+        self.help = help
+        self.signeEgal = signeEgal
+        
         txt = self.variable.n
         if signeEgal:
             txt += " ="
@@ -544,6 +547,26 @@ class VariableCtrl(wx.Panel):
         sizer.Add(self.unite, 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_LEFT|wx.RIGHT, 3)
         self.SetSizer(sizer)
     
+    
+    #########################################################################################################
+    def SetVariable(self, variable):
+        self.multiple = variable.multiple
+        self.variable = variable
+        
+        txt = self.variable.n
+        if self.signeEgal:
+            txt += " ="
+
+        self.txtnom.SetLabel(txt)
+        
+        if len(self.help) == 0:
+            if self.variable.nn == "":
+                txtn = u"de la variable "+self.variable.n
+            else:
+                txtn = self.variable.nn
+            self.text.SetToolTipString(u"Saisir la valeur "+txtn)
+        
+        
     #########################################################################################################
     def Renommer(self, nom):
         self.txtnom.SetLabel(nom)

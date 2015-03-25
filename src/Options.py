@@ -177,7 +177,8 @@ class Options:
         
         def lec(titreopt):
             titreopt = titreopt.lower()
-            if titreopt in zip(*config.items(titreUtf))[0]:
+            lst = zip(*config.items(titreUtf))
+            if len(lst) > 0 and titreopt in lst[0]:
                 return evl(titreopt)
             else:
                 lstopt = [(n, v) for n, v in config.items(titreUtf) if titreopt in n]
@@ -195,6 +196,8 @@ class Options:
                         return [d[i] for i in range(len(d))] #[1:-1]
                     else:
                         return d
+                else:
+                    return []
                 
 #            if type(opt) == int:
 #                opt = config.getint(titreUtf, titreopt)

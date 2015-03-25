@@ -1355,7 +1355,6 @@ class Referentiel(XMLelem):
         for k, p in self.projets.items():
             prj.append(k)
             pos.append(max(p.periode))
-
         return prj[pos.index(max(pos))]
     
     #############################################################################
