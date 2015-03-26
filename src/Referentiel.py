@@ -336,7 +336,7 @@ class XMLelem():
     
     
     ###########################################################
-    def getArbreProjet(self, dic, debug = False):
+    def getArbreProjet(self, dic, prj = None, debug = False):
 #        print "getArbreProjet", self.parties.keys()
         sdic = {}
         for k0, v0 in dic.items():
@@ -344,20 +344,23 @@ class XMLelem():
             if len(v0) > 1 and type(v0[1]) == dict:
                 if debug: print "   ", v0
                 if len(v0) == 2:
-                    sdic[k0] = [v0[0], self.getArbreProjet(v0[1], debug = debug)]
+                    sdic[k0] = [v0[0], self.getArbreProjet(v0[1], prj = prj,  debug = debug)]
                 else:
                     if debug: print "   prem's", v0[2]
                     
                     if includeElem(self.parties.keys(), v0[2].keys()):
 #                        if len(v0[2]) > 0 and not v0[2].keys() == ['E']:
 #                        if v0[2][1] != 0 or v0[2][2] != 0: # Conduite ou Soutenance
-                        sdic[k0] = [v0[0], self.getArbreProjet(v0[1], debug = debug), v0[2]]
+                        sdic[k0] = [v0[0], self.getArbreProjet(v0[1], prj = prj, debug = debug), v0[2]]
             else:
                 lst = []
                 for l in v0[1]:
                     if debug: print l
+#                    print v0
                     if l.estProjet(): # Conduite ou Soutenance
-                        lst.append(l)
+                        if prj == None or l.getType() in prj.parties.keys():
+#                        if l.getType() == v0[2].keys():
+                            lst.append(l)
                 if lst != []:
                     if len(v0) > 2:
                         sdic[k0] = [v0[0], lst, v0[2]]
@@ -781,6 +784,7 @@ class Referentiel(XMLelem):
     def importer(self, nomFichier):
         """
         """
+#        print "IMPORTER" , 
         self.initParam()
         
         ###########################################################
@@ -945,7 +949,9 @@ class Referentiel(XMLelem):
         self.Enseignement[0] = sh_g.cell(6,0).value #Abréviation    
         self.Enseignement[1] = sh_g.cell(6,1).value #Nom complet    
         self.Enseignement[2] = sh_g.cell(6,2).value #Famille
-
+#        print self.Code
+        
+        
         if sh_g.ncols > 3:
             lig = [l  for l in range(10, 17) if sh_g.cell(l,3).value != u""]
             for l in lig:
@@ -1090,6 +1096,7 @@ class Referentiel(XMLelem):
             self.parties[part] = sh_va.cell(2,col).value
             
         for p in self.projets.values():
+#            print "  importer", self, p
             p.importer(wb)
             
 #        self.prof_Comp = 0 # compteur de profondeur 
@@ -1529,7 +1536,6 @@ class Projet(XMLelem):
         self.periode = periode
         self.parties = {}
         
-        
         #
         # grilles d'évaluation de projet
         #
@@ -1619,6 +1625,7 @@ class Projet(XMLelem):
 
     ##################################################################################################################
     def importer(self, wb):
+#        print "importer", self.parties.keys()
         for part in self.parties.keys():
             #
             # Grilles d'évaluation projet
@@ -1682,7 +1689,7 @@ class Projet(XMLelem):
 
     ##################################################################################################################
     def postTraiter(self, ref):
-#        print " postTraiter", self, ref
+#        print " postTraiter",  ref, self
         
         
         
@@ -1758,10 +1765,9 @@ class Projet(XMLelem):
                                 
                                 
                                 
-        
-#        print "dicCompetences", ref.dicCompetences
-        self._dicCompetences = self.getArbreProjet(ref.dicCompetences, debug = False)
-#        print "_dicCompetences", self._dicCompetences
+#        print "dicCompetences ref", ref.dicCompetences
+        self._dicCompetences = self.getArbreProjet(ref.dicCompetences, self, debug = False)
+#        print ">> _dicCompetences prj", self._dicCompetences
         
         # On regroupe les compétences qui ont les mêmes indicateurs dans la grille (cas de STI2D EE !!)
         lst_codeindic = chercherIndicIdem(self._dicCompetences, debug = False)
@@ -1805,6 +1811,7 @@ class Projet(XMLelem):
         """
         """
 #        print " completer", ref, self
+#        print " ", self._dicCompetences
         
         ###########################################################
         def aplatir(dic, niv=1):
@@ -1871,6 +1878,7 @@ class Projet(XMLelem):
 #            print "   ++", t, REFERENTIELS.keys()
             if t in REFERENTIELS.keys():
 #                print "         ",REFERENTIELS[t]._dicCompetences
+#                print "       ++", self._dicCompetences
                 self._dicCompetences.update(REFERENTIELS[t]._dicCompetences)
                 self._dicIndicateurs.update(REFERENTIELS[t]._dicIndicateurs)
                 self._dicIndicateurs_simple.update(REFERENTIELS[t]._dicIndicateurs_simple)

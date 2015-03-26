@@ -40,7 +40,7 @@ Copyright (C) 2011-2015
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "6.0-beta.11"
+__version__ = "6.0-beta.12"
 print __version__
 
 #from threading import Thread
@@ -15491,6 +15491,8 @@ class ArbreCompetencesPrj(ArbreCompetences):
         if dic == None: # Construction de la racine
             dic = prj._dicCompetences
         
+#        print "   ProjetRef", prj
+#        print "   dicCompetences", dic
 #        print tache
         
         font = wx.Font(10, wx.DEFAULT, wx.FONTSTYLE_ITALIC, wx.NORMAL, False)
@@ -15591,7 +15593,10 @@ class ArbreCompetencesPrj(ArbreCompetences):
 #                            for j, p in enumerate(indic.poids[1:]):
 #                                if p != 0:
                                     self.SetItemText(b, pourCent2(0.01*indic.poids[part]), j+1)
-                                    self.SetItemTextColour(b, COUL_PARTIE[part])
+                                    if part in COUL_PARTIE.keys():
+                                        self.SetItemTextColour(b, COUL_PARTIE[part])
+                                    else:
+                                        self.SetItemTextColour(b, COUL_PARTIE[''])
                             self.SetItemFont(b, font)        
                             
                             self.items[codeIndic] = b
@@ -18037,8 +18042,8 @@ class FenetreBilan(wx.Frame):
                 l += 1
             if len(lst) > 0:
                 ws0.write_merge(l-i-1, l-1, c-5, c-5, seq.position+1, self.stylePer)  # Période
-            if pt == 0 and seq.position == 4:
-                pt = l
+                if pt == 0 and seq.position == 4:
+                    pt = l
             ws0.row(c).height = 10*20
             l += 1
         lastSeq = l-1
@@ -18204,8 +18209,8 @@ class FenetreBilan(wx.Frame):
                     c += 1
                 if len(lst) > 0:
                     ws0.write_merge(l-5, l-5, c-i-1, c-1, seq.position+1, self.styleN) # Période
-                if pt == 0 and seq.position == 4:
-                    pt = c
+                    if pt == 0 and seq.position == 4:
+                        pt = c
                 ws0.col(c).width = 15*20
                 c += 1
             

@@ -1461,6 +1461,7 @@ def DrawBoutonCompetence(ctx, objet, dicIndic, y, h = None):
     dh = h/10
     ctx.set_line_width (0.0004)
     dicIndic, dictype = dicIndic
+ 
     for s in dicIndic.keys():
         
         x = xComp[s]-wColComp/2
@@ -1489,7 +1490,7 @@ def DrawBoutonCompetence(ctx, objet, dicIndic, y, h = None):
         dx = wColComp/len(indic)
         for a, i in enumerate(indic):
             if i: # Rose ou bleu
-#                print dictype[s][a]
+#                print "   ", s, a
                 part = dictype[s][a].keys()[0]
                 if part == 'S':
 #                if dictype[s][a][1] != 0:   #objet.projet.classe.GetReferentiel().getTypeIndicateur(s+'_'+str(a+1)) == "C": # Conduite     #dicIndicateurs_prj[s][a][1]:
