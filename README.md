@@ -4,10 +4,10 @@ _**pySequence**_ est un logiciel **[libre](http://www.gnu.org/licenses/gpl.html)
   * décrire et valider des projets
 
 _**pySequence**_ s'adresse particulièrement aux professeurs de _**[Sciences Industrielles de l'Ingénieur](http://fr.wikipedia.org/wiki/Sciences_de_l%27ing%C3%A9nieur)**_ enseignant dans les filières :
-  * STI2D (**enseignements technologiques transversaux** et de **spécialité**)
-  * S-SI (**Sciences de l'ingénieur** du bac S)
-  * Technologie collège
-  * STS Electrotechnique et Systèmes Numériques (en travaux !)
+  * **STI2D** (**enseignements technologiques transversaux** et de **spécialité**)
+  * **S-SI** (**Sciences de l'ingénieur** du bac S)
+  * **Technologie collège**
+  * **STS Electrotechnique** et **STS Systèmes Numériques** (en travaux !)
 
 et potentiellement [n'importe quel programme d'enseignement](https://github.com/cedrick-f/pySequence/wiki/Nouveau_programme).
 
