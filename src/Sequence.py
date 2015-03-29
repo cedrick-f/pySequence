@@ -685,7 +685,9 @@ class LienSequence():
     ######################################################################################  
     def AfficherMenuContextuel(self, itemArbre):
         if itemArbre == self.branche:
-            self.parent.app.AfficherMenuContextuel([[u"Supprimer", functools.partial(self.parent.SupprimerSequencePre, item = itemArbre)],
+            self.parent.app.AfficherMenuContextuel([[u"Supprimer", 
+                                                     functools.partial(self.parent.SupprimerSequencePre, item = itemArbre), 
+                                                     images.Icone_suppr_seq.GetBitmap()]
                                                     ])
             
     ######################################################################################  
@@ -907,20 +909,22 @@ class Classe():
         self.academie = u""
         self.ville = u""
         self.etablissement = u""
-        
+        self.effectifs = {}
+        self.nbrGroupes = {}
         self.systemes = []
         
         self.app = app
+        self.panelParent = panelParent
         
-        self.options = app.options
         self.Initialise(pourProjet)
+        
         
         if panelParent:
             self.panelPropriete = PanelPropriete_Classe(panelParent, self, pourProjet, 
                                                         ouverture = ouverture, typedoc = typedoc)
             self.panelPropriete.MiseAJour()
             
-        self.panelParent = panelParent
+        
 
         
     ######################################################################################  
@@ -948,36 +952,45 @@ class Classe():
 #    def SetCI(self, num, ci):
 #        self.CI[num] = ci
         
-            
     ######################################################################################  
-    def Initialise(self, pourProjet):
-        self.typeEnseignement = self.options.optClasse["TypeEnseignement"]
-        self.referentiel = REFERENTIELS[self.typeEnseignement]
+    def setDefaut(self):
+        self.typeEnseignement = 'SSI'
+            
+        self.effectifs['C'] = constantes.Effectifs["C"]
+        self.nbrGroupes = {"G" : constantes.NbrGroupes["G"],
+                           "E" : constantes.NbrGroupes["E"],
+                           "P" : constantes.NbrGroupes["P"]}
         
-        if not pourProjet:
-            self.MiseAJourTypeEnseignement()
+        self.academie = u""
+        self.ville = u""
+        self.etablissement = u""
+        
+        self.systemes = []
+
+
+    ######################################################################################  
+    def Initialise(self, pourProjet, defaut = False):
+        
+        if defaut or self.app.options.optClasse["FichierClasse"] == r"":
+            self.setDefaut()
+            
         else:
+            if not self.ouvrir(self.app.options.optClasse["FichierClasse"]):
+                self.setDefaut()
+            
+            
+        self.referentiel = REFERENTIELS[self.typeEnseignement]    
+        
+        # On vérifie que c'est bien un type d'enseignement avec projet
+        if pourProjet:
             if not self.typeEnseignement in [ref.Code for ref in REFERENTIELS.values() if len(ref.projets) > 0]:
                 self.typeEnseignement = constantes.TYPE_ENSEIGNEMENT_DEFAUT
                 self.referentiel = REFERENTIELS[self.typeEnseignement]
-
+        else:    
+            self.MiseAJourTypeEnseignement()
+        
         self.familleEnseignement = self.GetReferentiel().Famille  
-         
-        self.effectifs =  {"C" : constantes.Effectifs["C"],
-                           "G" : constantes.NbrGroupes["G"],
-                           "E" : constantes.NbrGroupes["E"],
-                           "P" : constantes.NbrGroupes["P"]}
-
-        self.effectifs['C'] = self.options.optClasse["Effectifs"]['C']
-
-        self.nbrGroupes = {"P" : self.options.optClasse["Effectifs"]["P"],
-                           "E" : self.options.optClasse["Effectifs"]["E"],
-                           "G" : self.options.optClasse["Effectifs"]["G"]
-                           }
-
-        self.academie = self.options.optClasse["Etab_Academie"]
-        self.ville = self.options.optClasse["Etab_Ville"]
-        self.etablissement = self.options.optClasse["Etablissement"]
+        
         
         
         calculerEffectifs(self)
@@ -986,8 +999,30 @@ class Classe():
     ######################################################################################  
     def SetDocument(self, doc):   
         self.doc = doc 
+
+
+    ###############################################################################################
+    def ouvrir(self, nomFichier):
+        print "Ouverture classe", nomFichier
         
+        try:
+            fichier = open(nomFichier,'r')
     
+            root = ET.parse(fichier).getroot()
+            self.setBranche(root)
+            
+            fichier.close()
+            self.app.fichierClasse = nomFichier
+            
+            return True
+
+        except:
+            print "Erreur Ouverture classe", nomFichier
+            return False
+        
+        self.MiseAJour()
+
+
     ######################################################################################  
     def getBranche(self):
 #        print "getBranche classe"
@@ -1048,7 +1083,6 @@ class Classe():
         #
         # Référentiel
         #
-        
         def ChargerRefOriginal():
             print "Réparation = pas référentiel intégré !"
             if self.GetVersionNum() >= 5:
@@ -1358,7 +1392,7 @@ class Sequence(BaseDoc):
         self.systemes = []
         self.seances = [Seance(self, panelParent)]
         
-        self.options = classe.options
+#        self.options = classe.options
         
         self.draw = draw_cairo_seq
         
@@ -1381,7 +1415,8 @@ class Sequence(BaseDoc):
     
     ######################################################################################  
     def Initialise(self):
-        self.AjouterListeSystemes(self.options.optSystemes["Systemes"])
+        self.AjouterListeSystemes(self.classe.systemes)
+#        self.AjouterListeSystemes(self.options.optSystemes["Systemes"])
             
             
     ######################################################################################  
@@ -1774,15 +1809,26 @@ class Sequence(BaseDoc):
 #        print "AjouterListeSystemes séquence"
         nouvListe = []
         for s in syst:
-            sy = Systeme(self, self.panelParent)
-            try:
+#            print "   ",s
+            
+            if not isinstance(s, Systeme):
+                erreur
+                sy = Systeme(self, self.panelParent)
                 sy.setBranche(ET.fromstring(s))
-            except:
-                print "Erreur parsing :", s
-                continue
+            else:
+                sy = s.Copie(self, self.panelParent)
+                sy.lienClasse = s
+                sy.panelPropriete.Verrouiller(False)
+                sy.panelPropriete.cbListSys.SetSelection(sy.panelPropriete.cbListSys.FindString(s.nom))
+#            try:
+#                sy.setBranche(ET.fromstring(s))
+#            except:
+#                print "Erreur parsing :", s
+#                continue
             
 #            nom = unicode(s)
 #            sy = Systeme(self, self.panelParent, nom = nom)
+            
             self.systemes.append(sy)
             nouvListe.append(sy.nom)
             sy.ConstruireArbre(self.arbre, self.brancheSys)
@@ -1906,9 +1952,10 @@ class Sequence(BaseDoc):
             ... ou bien celui de itemArbre concerné ...
         """
         if itemArbre == self.branche:
-            self.app.AfficherMenuContextuel([[u"Enregistrer", self.app.commandeEnregistrer],
+            self.app.AfficherMenuContextuel([[u"Enregistrer", self.app.commandeEnregistrer, 
+                                              wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE_AS, wx.ART_TOOLBAR, (20,20))],
 #                                             [u"Ouvrir", self.app.commandeOuvrir],
-                                             [u"Exporter la fiche (PDF ou SVG)", self.app.exporterFiche],
+                                             [u"Exporter la fiche (PDF ou SVG)", self.app.exporterFiche, None],
                                             ])
             
 #        [u"Séquence pédagogique",
@@ -1934,16 +1981,23 @@ class Sequence(BaseDoc):
             
             
         elif self.arbre.GetItemText(itemArbre) == Titres[3]: # Séances
-            self.app.AfficherMenuContextuel([[u"Ajouter une séance", self.AjouterSeance]])
+            self.app.AfficherMenuContextuel([[u"Ajouter une séance", 
+                                              self.AjouterSeance,
+                                             images.Icone_ajout_seance.GetBitmap()]])
             
         elif self.arbre.GetItemText(itemArbre) == Titres[4]: # Système
-            self.app.AfficherMenuContextuel([[u"Ajouter un système", self.AjouterSysteme], 
-                                             [u"Selectionner depuis un fichier", self.SelectSystemes],
+            self.app.AfficherMenuContextuel([[u"Ajouter un système", 
+                                              self.AjouterSysteme,
+                                              images.Icone_ajout_systeme.GetBitmap()], 
+                                             [u"Selectionner depuis un fichier", 
+                                              self.SelectSystemes, 
+                                              None],
 #                                             [u"Sauvegarder la liste dans les préférences", self.SauvSystemes]
                                              ])
          
         elif self.arbre.GetItemText(itemArbre) == Titres[1]: # Prérequis
-            self.app.AfficherMenuContextuel([[u"Ajouter une séquence", self.AjouterSequencePre], 
+            self.app.AfficherMenuContextuel([[u"Ajouter une séquence", self.AjouterSequencePre, 
+                                              images.Icone_ajout_seq.GetBitmap()], 
                                              ])
          
             
@@ -3101,9 +3155,10 @@ class Projet(BaseDoc, Objet_sequence):
             ... ou bien celui de itemArbre concerné ...
         """
         if itemArbre == self.branche:
-            self.app.AfficherMenuContextuel([[u"Enregistrer", self.app.commandeEnregistrer],
+            self.app.AfficherMenuContextuel([[u"Enregistrer", self.app.commandeEnregistrer,
+                                              wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE_AS, wx.ART_TOOLBAR, (20,20))],
 #                                             [u"Ouvrir", self.app.commandeOuvrir],
-                                             [u"Exporter la fiche (PDF ou SVG)", self.app.exporterFiche],
+                                             [u"Exporter la fiche (PDF ou SVG)", self.app.exporterFiche, None],
                                             ])
             
 #        [u"Séquence pédagogique",
@@ -3128,13 +3183,13 @@ class Projet(BaseDoc, Objet_sequence):
             self.arbre.GetItemPyData(itemArbre).AfficherMenuContextuel(itemArbre)           
             
         elif self.arbre.GetItemText(itemArbre) == Titres[6]: # Eleve
-            self.app.AfficherMenuContextuel([[u"Ajouter un élève", self.AjouterEleve]])
+            self.app.AfficherMenuContextuel([[u"Ajouter un élève", self.AjouterEleve, images.Icone_ajout_eleve.GetBitmap()]])
             
         elif self.arbre.GetItemText(itemArbre) == Titres[8]: # Tache
-            self.app.AfficherMenuContextuel([[u"Ajouter une tâche", self.AjouterTache]])
+            self.app.AfficherMenuContextuel([[u"Ajouter une tâche", self.AjouterTache, images.Icone_ajout_tache.GetBitmap()]])
          
         elif self.arbre.GetItemText(itemArbre) == Titres[10]: # Eleve
-            self.app.AfficherMenuContextuel([[u"Ajouter un professeur", self.AjouterProf]])
+            self.app.AfficherMenuContextuel([[u"Ajouter un professeur", self.AjouterProf, images.Icone_ajout_prof.GetBitmap()]])
                                              
          
             
@@ -4802,13 +4857,21 @@ class Seance(ElementDeSequence, Objet_sequence):
     ######################################################################################  
     def AfficherMenuContextuel(self, itemArbre):
         if itemArbre == self.branche:
-            listItems = [[u"Supprimer", functools.partial(self.parent.SupprimerSeance, item = itemArbre)],
-                         [u"Créer un lien", self.CreerLien]]
+            listItems = [[u"Supprimer", 
+                          functools.partial(self.parent.SupprimerSeance, item = itemArbre), 
+                          images.Icone_suppr_seance.GetBitmap()],
+                         [u"Créer un lien", 
+                          self.CreerLien, 
+                          None]]
             
             if self.typeSeance in ["R", "S"]:
-                listItems.append([u"Ajouter une séance", self.AjouterSeance])
+                listItems.append([u"Ajouter une séance", 
+                                  self.AjouterSeance, 
+                                  images.Icone_ajout_seance.GetBitmap()])
             
-            listItems.append([u"Copier", self.CopyToClipBoard])
+            listItems.append([u"Copier", 
+                              self.CopyToClipBoard, 
+                              wx.ArtProvider.GetBitmap(wx.ART_COPY, wx.ART_TOOLBAR, (20,20))])
             
             ################
             try:
@@ -4831,7 +4894,8 @@ class Seance(ElementDeSequence, Objet_sequence):
                             t = u"Coller après"
                         listItems.append([t, functools.partial(self.parent.CollerElem, 
                                                                                  item = itemArbre, 
-                                                                                 bseance = elementCopie)])
+                                                                                 bseance = elementCopie),
+                                          wx.ArtProvider.GetBitmap(wx.ART_PASTE, wx.ART_TOOLBAR, (20,20))])
                             
             self.GetApp().AfficherMenuContextuel(listItems)           
                             
@@ -5688,12 +5752,18 @@ class Tache(Objet_sequence):
     def AfficherMenuContextuel(self, itemArbre):
         if itemArbre == self.branche:
             if not self.phase in TOUTES_REVUES_EVAL_SOUT:
-                listItems = [[u"Supprimer", functools.partial(self.projet.SupprimerTache, item = itemArbre)]]
+                listItems = [[u"Supprimer", 
+                              functools.partial(self.projet.SupprimerTache, item = itemArbre), 
+                              images.Icone_suppr_tache.GetBitmap()]]
             else:
                 listItems = []
-            listItems.append([u"Insérer une revue après", functools.partial(self.projet.InsererRevue, item = itemArbre)])
+            listItems.append([u"Insérer une revue après", 
+                              functools.partial(self.projet.InsererRevue, item = itemArbre), 
+                              images.Icone_ajout_revue.GetBitmap()])
 #            listItems.append([u"Copier", functools.partial(self.projet.CopierTache, item = itemArbre)])
-            listItems.append([u"Copier", self.CopyToClipBoard])
+            listItems.append([u"Copier", 
+                              self.CopyToClipBoard, 
+                              wx.ArtProvider.GetBitmap(wx.ART_COPY, wx.ART_TOOLBAR, (20,20))])
  
 #            elementCopie = self.GetApp().parent.elementCopie
             try:
@@ -5708,7 +5778,8 @@ class Tache(Objet_sequence):
                         if self.phase == phase or self.GetSuivante().phase == phase : # la phase est la même
                             listItems.append([u"Coller après", functools.partial(self.projet.CollerElem, 
                                                                                  item = itemArbre, 
-                                                                                 btache = elementCopie)])
+                                                                                 btache = elementCopie),
+                                              wx.ArtProvider.GetBitmap(wx.ART_PASTE, wx.ART_TOOLBAR, (20,20))])
                     
             self.GetApp().AfficherMenuContextuel(listItems)
 #            item2 = menu.Append(wx.ID_ANY, u"Créer une rotation")
@@ -5844,22 +5915,26 @@ class Systeme(ElementDeSequence, Objet_sequence):
 
 
     ######################################################################################  
-    def Copie(self):
-        s = Systeme(self.parent, None)
+    def Copie(self, parent, panelParent = None):
+        s = Systeme(parent, panelParent)
         s.setBranche(self.getBranche())
         return s
     
     ######################################################################################  
     def propagerChangements(self):
+#        print "propagerChangements", self
         if isinstance(self.parent, Classe) and hasattr(self.parent, 'doc'):
-            seq = self.parent.doc
-            for s in seq.systemes:
-                if s.lienClasse == self:
-                    s.setBranche(self.getBranche())
-                    if hasattr(s, 'arbre'):
-                        s.SetCode()
-                    if hasattr(s, 'panelPropriete'):
-                        s.panelPropriete.MiseAJourListeSys(self.nom)
+            
+            if isinstance(self.parent.doc, Sequence):
+#                print "   ",self.parent, self.parent.doc
+                seq = self.parent.doc
+                for s in seq.systemes:
+                    if s.lienClasse == self:
+                        s.setBranche(self.getBranche())
+                        if hasattr(s, 'arbre'):
+                            s.SetCode()
+                        if hasattr(s, 'panelPropriete'):
+                            s.panelPropriete.MiseAJourListeSys(self.nom)
         
     ######################################################################################  
     def SetNombre(self):
@@ -5925,8 +6000,10 @@ class Systeme(ElementDeSequence, Objet_sequence):
     ######################################################################################  
     def AfficherMenuContextuel(self, itemArbre):
         if itemArbre == self.branche:
-            self.parent.app.AfficherMenuContextuel([[u"Supprimer", functools.partial(self.parent.SupprimerSysteme, item = itemArbre)],
-                                                    [u"Créer un lien", self.CreerLien]])
+            self.parent.app.AfficherMenuContextuel([[u"Supprimer", 
+                                                     functools.partial(self.parent.SupprimerSysteme, item = itemArbre),
+                                                     images.Icone_suppr_systeme.GetBitmap()],
+                                                    [u"Créer un lien", self.CreerLien, None]])
             
             
 #    ######################################################################################  
@@ -6125,7 +6202,7 @@ class Support(ElementDeSequence, Objet_sequence):
     ######################################################################################  
     def AfficherMenuContextuel(self, itemArbre):
         if itemArbre == self.branche:
-            self.parent.app.AfficherMenuContextuel([[u"Créer un lien", self.CreerLien]])
+            self.parent.app.AfficherMenuContextuel([[u"Créer un lien", self.CreerLien, None]])
             
             
 #    ######################################################################################  
@@ -6879,7 +6956,9 @@ class Eleve(Personne, Objet_sequence):
     ######################################################################################  
     def AfficherMenuContextuel(self, itemArbre):
         if itemArbre == self.branche:
-            listItems = [[u"Supprimer", functools.partial(self.projet.SupprimerEleve, item = itemArbre)]]
+            listItems = [[u"Supprimer", 
+                          functools.partial(self.projet.SupprimerEleve, item = itemArbre), 
+                          images.Icone_suppr_eleve.GetBitmap()]]
             if len(self.GetProjetRef().parties) > 0:
                 tg = u"Générer grille"
                 to = u"Ouvrir grille"
@@ -6888,8 +6967,8 @@ class Eleve(Personne, Objet_sequence):
                     to += u"s"
                 
                 if self.GrillesGenerees():
-                    listItems.append([to, functools.partial(self.OuvrirGrilles)])
-            listItems.append([tg, functools.partial(self.GenererGrille)])    
+                    listItems.append([to, functools.partial(self.OuvrirGrilles), None])
+            listItems.append([tg, functools.partial(self.GenererGrille), None])    
             
 #            if self.projet.GetTypeEnseignement(simple = True) == "SSI":
 #                
@@ -7274,7 +7353,9 @@ class Prof(Personne):
     ######################################################################################  
     def AfficherMenuContextuel(self, itemArbre):
         if itemArbre == self.branche:
-            self.projet.app.AfficherMenuContextuel([[u"Supprimer", functools.partial(self.projet.SupprimerProf, item = itemArbre)]])
+            self.projet.app.AfficherMenuContextuel([[u"Supprimer", 
+                                                     functools.partial(self.projet.SupprimerProf, item = itemArbre), 
+                                                     images.Icone_suppr_prof.GetBitmap()]])
         
     ######################################################################################  
     def MiseAJourCodeBranche(self):
@@ -7391,26 +7472,19 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         self.tabmgr.GetManagedWindow().Bind(aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.OnDocChanged)
         
         
+        
+        
+        
+        #############################################################################################
+        # Quelques variables ...
+        #############################################################################################
+        self.fichierClasse = r""
         self.pleinEcran = False
+        # Element placé dans le "presse papier"
+        self.elementCopie = None
         
-        #############################################################################################
-        # Instanciation et chargement des options
-        #############################################################################################
-        options = Options.Options()
-        if options.fichierExiste():
-#            options.ouvrir(DEFAUT_ENCODING)
-#            try :
-            options.ouvrir(DEFAUT_ENCODING)
-#            except:
-#                print "Fichier d'options corrompus ou inexistant !! Initialisation ..."
-#                options.defaut()
-        else:
-            options.defaut()
-        self.options = options
-#        print options
         
-        # On applique les options ...
-#        self.DefinirOptions(options)
+        
         
         #############################################################################################
         # Création du menu
@@ -7423,7 +7497,6 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         self.Bind(wx.EVT_MENU, self.exporterFiche, id=15)
         self.Bind(wx.EVT_MENU, self.exporterDetails, id=16)
         self.Bind(wx.EVT_MENU_RANGE, self.OnFileHistory, id=wx.ID_FILE1, id2=wx.ID_FILE9)
-        
         
         if sys.platform == "win32":
             self.Bind(wx.EVT_MENU, self.genererGrilles, id=17)
@@ -7439,7 +7512,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         self.Bind(wx.EVT_MENU, self.OnAide, id=21)
         self.Bind(wx.EVT_MENU, self.OnAbout, id=22)
         
-        self.Bind(wx.EVT_MENU, self.OnOptions, id=31)
+#        self.Bind(wx.EVT_MENU, self.OnOptions, id=31)
         
         if sys.platform == "win32" :
             self.Bind(wx.EVT_MENU, self.OnRegister, id=32)
@@ -7462,6 +7535,26 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         #############################################################################################
         self.ConstruireTb()
         
+        
+        #############################################################################################
+        # Instanciation et chargement des options
+        #############################################################################################
+        options = Options.Options()
+        if options.fichierExiste():
+#            options.ouvrir(DEFAUT_ENCODING)
+            try :
+                options.ouvrir(DEFAUT_ENCODING)
+            except:
+                print "Fichier d'options corrompus ou inexistant !! Initialisation ..."
+                options.defaut()
+        else:
+            options.defaut()
+        self.options = options
+        print options
+        
+        # On applique les options ...
+        self.DefinirOptions(options)
+        
 #        #################################################################################################################
 #        #
 #        # Mise en place
@@ -7475,8 +7568,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         if fichier != "":
             self.ouvrir(fichier)
     
-        # Element placé dans le "presse papier"
-        self.elementCopie = None
+        
         
         
         
@@ -7813,11 +7905,16 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         file_menu = wx.Menu()
         file_menu.Append(10, u"&Nouveau\tCtrl+N")
         file_menu.Append(11, u"&Ouvrir\tCtrl+O")
+        
+        submenu = wx.Menu()
+        file_menu.AppendMenu(14, u"&Ouvrir un fichier récent", submenu)
+        self.filehistory = wx.FileHistory()
+        self.filehistory.UseMenu(submenu)
+        
         file_menu.Append(12, u"&Enregistrer\tCtrl+S")
         file_menu.Append(13, u"&Enregistrer sous ...")
         file_menu.AppendSeparator()
-        self.filehistory = wx.FileHistory()
-        self.filehistory.UseMenu(file_menu)
+        
 #        file_menu.AppendSeparator()
         file_menu.Append(15, u"&Exporter la fiche (PDF ou SVG)\tCtrl+E")
         file_menu.Append(16, u"&Exporter les détails\tCtrl+D")
@@ -7866,9 +7963,11 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             
             
             
-#    #############################################################################
-#    def DefinirOptions(self, options):
-#        return
+    #############################################################################
+    def DefinirOptions(self, options):
+        for f in reversed(options.optFichiers["FichiersRecents"]):
+            self.filehistory.AddFileToHistory(f)
+            
 #        self.options = options.copie()
 #        #
 #        # Options de Classe
@@ -8000,7 +8099,10 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                 retCode = dialog.ShowModal()
                 if retCode == wx.ID_YES:
                     child.ouvrir(nomFichier, reparer = reparer)
-                    
+            
+            if not reparer:
+                self.filehistory.AddFileToHistory(nomFichier)
+            
         wx.EndBusyCursor()
         self.Thaw()
 
@@ -8026,8 +8128,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             
             dlg.Destroy()
         
-        if not reparer:
-            self.filehistory.AddFileToHistory(nomFichier)
+        
             
         self.ouvrir(nomFichier, reparer = reparer)
         
@@ -8042,6 +8143,14 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         # add it back to the history so it will be moved up the list
         self.filehistory.AddFileToHistory(path)
         self.commandeOuvrir(nomFichier = path)
+
+
+    ###############################################################################################
+    def GetFichiersRecents(self):
+        lst = []
+        for n in range(self.filehistory.GetCount()):
+            lst.append(self.filehistory.GetHistoryFile(n))
+        return lst
 
 
     ###############################################################################################
@@ -8116,24 +8225,24 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
         
         
-    #############################################################################
-    def OnOptions(self, event, page = 0):
-        options = self.options.copie()
-        dlg = Options.FenOptions(self, options)
-        dlg.CenterOnScreen()
-        dlg.nb.SetSelection(page)
-
-        # this does not return until the dialog is closed.
-        val = dlg.ShowModal()
-    
-        if val == wx.ID_OK:
-            self.DefinirOptions(options)
-            self.AppliquerOptions()
-            
-        else:
-            pass
-
-        dlg.Destroy()
+#    #############################################################################
+#    def OnOptions(self, event, page = 0):
+#        options = self.options.copie()
+#        dlg = Options.FenOptions(self, options)
+#        dlg.CenterOnScreen()
+#        dlg.nb.SetSelection(page)
+#
+#        # this does not return until the dialog is closed.
+#        val = dlg.ShowModal()
+#    
+#        if val == wx.ID_OK:
+#            self.DefinirOptions(options)
+#            self.AppliquerOptions()
+#            
+#        else:
+#            pass
+#
+#        dlg.Destroy()
             
             
             
@@ -8206,8 +8315,9 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     
     
     #############################################################################
-    def GetSequenceActive(self):
-        return self.GetNotebook().GetCurrentPage().sequence
+    def GetDocActif(self):
+        if self.GetNotebook().GetCurrentPage() != None:
+            return self.GetNotebook().GetCurrentPage().GetDocument()
     
     #############################################################################
     def GetFenetreActive(self):
@@ -8236,13 +8346,16 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
 #        except:
 #            print "   Erreur enregistrement options...",
             
-#        try:
-#            self.options.definir()
-#            self.options.enregistrer()
-#        except IOError:
-#            print "   Permission d'enregistrer les options refusée...",
-#        except:
-#            print "   Erreur enregistrement options...",
+        try:
+            self.options.definir()
+            self.options.valider(self)
+            self.options.enregistrer()
+        except IOError:
+            print "   Permission d'enregistrer les options refusée...",
+        except:
+            print "   Erreur enregistrement options...",
+        
+        
         
         # Close all ChildFrames first else Python crashes
         toutferme = True
@@ -8404,8 +8517,11 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         """
         menu = wx.Menu()
         
-        for nom, fct in items:
-            item1 = menu.Append(wx.ID_ANY, nom)
+        for nom, fct, img in items:
+            item = wx.MenuItem(menu, wx.ID_ANY, nom)
+            if img != None:
+                item.SetBitmap(img)
+            item1 = menu.AppendItem(item)    
             self.Bind(wx.EVT_MENU, fct, item1)
         
         self.PopupMenu(menu)
@@ -8683,6 +8799,11 @@ class FenetreSequence(FenetreDocument):
         self.miseEnPlace()
         
     ###############################################################################################
+    def GetDocument(self):
+        return self.sequence
+        
+        
+    ###############################################################################################
     def OnPageChanged(self, event):
         new = event.GetSelection()
         event.Skip()
@@ -8894,6 +9015,9 @@ class FenetreProjet(FenetreDocument):
         wx.CallAfter(self.Thaw)
         self.nb.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
         
+    ###############################################################################################
+    def GetDocument(self):
+        return self.projet
     
     ###############################################################################################
     def AjouterTache(self, event = None):
@@ -10718,7 +10842,7 @@ class PanelPropriete_Classe(PanelPropriete):
         
         lstAcad = sorted([a[0] for a in constantes.ETABLISSEMENTS.values()])
         self.cba = wx.ComboBox(pageGen, -1, u"sélectionner une académie ...", (-1,-1), 
-                         (-1, -1), lstAcad,
+                         (-1, -1), lstAcad+[u""],
                          wx.CB_DROPDOWN
                          |wx.CB_READONLY
                          #| wx.TE_PROCESS_ENTER
@@ -10833,17 +10957,7 @@ class PanelPropriete_Classe(PanelPropriete):
             evt.Skip()
 
 
-    ###############################################################################################
-    def ouvrir(self, nomFichier):
-        print "Ouverture classe", nomFichier
-        
-        fichier = open(nomFichier,'r')
-
-        root = ET.parse(fichier).getroot()
-        self.classe.setBranche(root)
-        
-        fichier.close()
-#        self.MiseAJour()
+    
         
         
     ###############################################################################################
@@ -10866,7 +10980,9 @@ class PanelPropriete_Classe(PanelPropriete):
             
             dlg.Destroy()
         if nomFichier != '':
-            self.ouvrir(nomFichier)
+            self.classe.ouvrir(nomFichier)
+        
+        self.sendEvent()
     
     ###############################################################################################
     def enregistrer(self, nomFichier):
@@ -10918,24 +11034,26 @@ class PanelPropriete_Classe(PanelPropriete):
         
     #############################################################################            
     def OnDefautPref(self, evt):
-        self.classe.options.defaut()
-        self.classe.Initialise(isinstance(self.classe.doc, Projet))
+#        self.classe.options.defaut()
+        self.classe.Initialise(isinstance(self.classe.doc, Projet), defaut = True)
+#        self.classe.doc.AjouterListeSystemes(self.classe.systemes)
         self.MiseAJour()
+        self.sendEvent()
         
         
-    #############################################################################            
-    def OnValidPref(self, evt):
-        try:
-            self.classe.options.valider(self.classe, self.classe.doc)
-            self.classe.options.enregistrer()
-        except IOError:
-            messageErreur(self, u"Permission refusée",
-                          u"Permission d'enregistrer les préférences refusée.\n\n" \
-                          u"Le dossier est protégé en écriture")
-        except:
-            messageErreur(self, u"Enregistrement impossible",
-                          u"Imposible d'enregistrer les préférences\n\n")
-        return   
+#    #############################################################################            
+#    def OnValidPref(self, evt):
+#        try:
+#            self.classe.options.valider(self.classe, self.classe.doc)
+#            self.classe.options.enregistrer()
+#        except IOError:
+#            messageErreur(self, u"Permission refusée",
+#                          u"Permission d'enregistrer les préférences refusée.\n\n" \
+#                          u"Le dossier est protégé en écriture")
+#        except:
+#            messageErreur(self, u"Enregistrement impossible",
+#                          u"Imposible d'enregistrer les préférences\n\n")
+#        return   
         
         
     #############################################################################            
@@ -11015,7 +11133,7 @@ class PanelPropriete_Classe(PanelPropriete):
         else:
             n = 0
         if len(self.classe.systemes) > n:
-            s = self.classe.systemes[n]
+#            s = self.classe.systemes[n]
             self.panelSys.SetSysteme(self.classe.systemes[n])
             
 #            self.panelSys.systeme.setBranche(s.getBranche())
@@ -11053,7 +11171,6 @@ class PanelPropriete_Classe(PanelPropriete):
         n = self.lstSys.GetSelection()
         if n != wx.NOT_FOUND:
             self.lstSys.SetString(n, nom)
-            
             self.lstSys.SetSelection(self.lstSys.FindString(nom))
 
 
@@ -11064,7 +11181,6 @@ class PanelPropriete_Classe(PanelPropriete):
         if event != None:
             radio_selected = event.GetEventObject()
             CodeFam = Referentiel.getEnseignementLabel(radio_selected.GetLabel())
-        
         
         
 #        fam = self.classe.familleEnseignement
@@ -11111,7 +11227,7 @@ class PanelPropriete_Classe(PanelPropriete):
         
     ######################################################################################  
     def MiseAJour(self):
-#        print "MiseAJour classe"
+#        print "MiseAJour panelPropriete classe"
 #        self.MiseAJourType()
         
         self.cb_type.SetStringSelection(self.classe.referentiel.Enseignement[0])
@@ -11127,7 +11243,10 @@ class PanelPropriete_Classe(PanelPropriete):
         
 #        print "   ", self.classe.systemes
         
+        self.lstSys.Set([])
+        
         if len(self.classe.systemes) == 0:
+            # On crée un système vide
             self.EvtButtonSyst()
 #            print "   +++", self.classe.systemes
             self.EvtListBoxSyst()
@@ -13640,8 +13759,8 @@ class PanelPropriete_Systeme(PanelPropriete):
         textctrl = wx.TextCtrl(self, -1, u"")
         self.textctrl = textctrl
         
-        self.sizer.Add(titre, (0,0), (2,1), flag = wx.ALIGN_TOP|wx.TOP|wx.BOTTOM|wx.LEFT, border = 3)
-        self.sizer.Add(textctrl, (1,1), flag = wx.EXPAND|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM|wx.RIGHT, border = 3)
+        self.sizer.Add(titre, (0,0), (1,1), flag = wx.ALIGN_TOP|wx.TOP|wx.BOTTOM|wx.LEFT, border = 3)
+        self.sizer.Add(textctrl, (1,0), (1,2),  flag = wx.EXPAND|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM|wx.RIGHT, border = 3)
         
         #
         # Nombre de systèmes disponibles en parallèle
@@ -13683,7 +13802,7 @@ class PanelPropriete_Systeme(PanelPropriete):
         self.sizer.Add(bsizer, (0,3), (3, 1), flag = wx.EXPAND|wx.TOP|wx.LEFT, border = 2)
         
         self.sizer.AddGrowableCol(3)
-        self.sizer.AddGrowableRow(1)
+#        self.sizer.AddGrowableRow(1)
         self.sizer.Layout()
         
         self.Bind(wx.EVT_TEXT, self.EvtText, textctrl)
@@ -13788,7 +13907,8 @@ class PanelPropriete_Systeme(PanelPropriete):
             if not self.eventAttente:
                 wx.CallLater(DELAY, self.sendEvent)
                 self.eventAttente = True
-        else:
+        elif isinstance(self.systeme.parent, Classe):
+#            print "  ***", self.systeme.parent
             self.systeme.parent.panelPropriete.MiseAJourListeSys(self.systeme.nom)
 
 

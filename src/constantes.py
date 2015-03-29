@@ -385,7 +385,7 @@ FICHIER_CI_STI2D_ETT = "CI_STI2D_ETT.xml"
 #
 ####################################################################################
 
-Effectifs = {"C" : 32,
+Effectifs = {"C" : 36,
              "G" : None,
              "D" : None, 
              "E" : None, 

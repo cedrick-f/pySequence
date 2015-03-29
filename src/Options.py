@@ -50,8 +50,9 @@ class Options:
         # Avec leurs valeurs par défaut.
         #
         self.optClasse = {}
-        self.optSystemes = {}
+#        self.optSystemes = {}
         self.optProjet = {}
+        self.optFichiers = {}
 #        self.optGenerales = {}
 #        self.optImpression = {}
 #        self.optCalcul = {}
@@ -62,8 +63,9 @@ class Options:
 #        self.listeOptions = [u"Général", u"Affichage", u"Couleurs", u"Impression"] 
          
         self.typesOptions = {u"Classe" : self.optClasse,
-                             u"Systèmes" : self.optSystemes,
+                             #u"Systèmes" : self.optSystemes,
                              u"Projet" : self.optProjet,
+                             u"Fichiers" : self.optFichiers,
 #                             u"Couleurs" : self.optCouleurs,
 #                             u"Impression" : self.optImpression,
                              }
@@ -78,7 +80,8 @@ class Options:
     def __repr__(self):
         print self.optClasse
         print self.optProjet
-        print self.optSystemes
+#        print self.optSystemes
+        print self.optFichiers
         return ""
     
 #        t = "Options :\n"
@@ -160,7 +163,8 @@ class Options:
             with io.open(self.fichierOpt, 'r', encoding='utf_8_sig') as fp:
                 config.readfp(fp)
         config.read(self.fichierOpt)
-#        print "Ouverture Options:",self.fichierOpt
+        
+        print "Ouverture Options:", self.fichierOpt
         
         def evl(opt):
             try:
@@ -347,18 +351,20 @@ class Options:
     ############################################################################
     def definir(self):
 #        self.optClasse["TypeEnseignement"] = TYPE_ENSEIGNEMENT
-        self.optClasse["Effectifs"] = {"C" : constantes.Effectifs["C"],
-                                       "G" : constantes.NbrGroupes["G"],
-                                       "E" : constantes.NbrGroupes["E"],
-                                       "P" : constantes.NbrGroupes["P"]}
+#        self.optClasse["Effectifs"] = {"C" : constantes.Effectifs["C"],
+#                                       "G" : constantes.NbrGroupes["G"],
+#                                       "E" : constantes.NbrGroupes["E"],
+#                                       "P" : constantes.NbrGroupes["P"]}
 #        self.optClasse["CentresInteretSSI"] = [ci for ci in constantes_SSI.CentresInterets]
 #        self.optClasse["CentresInteret"] = [ci for ci in REFERENTIELS["SSI"].CentresInterets]
 
-        self.optClasse["TypeEnseignement"] = "SSI"
+#        self.optClasse["TypeEnseignement"] = "SSI"
+#        
+#        self.optClasse["Etab_Academie"] = u""
+#        self.optClasse["Etab_Ville"] = u""
+#        self.optClasse["Etablissement"] = u""
         
-        self.optClasse["Etab_Academie"] = u""
-        self.optClasse["Etab_Ville"] = u""
-        self.optClasse["Etablissement"] = u""
+        self.optClasse["FichierClasse"] = r""
         
 #        self.optClasse["NombreRevues"] = 2
 #        self.optClasse["PositionRevue"] = constantes.POSITIONS_REVUES[self.optClasse["TypeEnseignement"]][self.optClasse["NombreRevues"]]
@@ -366,7 +372,7 @@ class Options:
         #
         # Systèmes
         #
-        self.optSystemes["Systemes"] = []
+#        self.optSystemes["Systemes"] = []
 #        self.optSystemes["Nombres"] = []
 
         
@@ -376,13 +382,19 @@ class Options:
         self.optProjet["NbrRevues"] = 2
         self.optProjet["PosRevues"] = []
         
-
+        #
+        # Fichiers récents
+        #
+        self.optFichiers["FichiersRecents"] = []
+        
+        
+        
     ############################################################################
-    def valider(self, classe, doc):
-        self.optClasse["Effectifs"] = {"C" : classe.effectifs["C"],
-                                       "G" : classe.nbrGroupes["G"],
-                                       "E" : classe.nbrGroupes["E"],
-                                       "P" : classe.nbrGroupes["P"]}
+    def valider(self, app):
+#        self.optClasse["Effectifs"] = {"C" : classe.effectifs["C"],
+#                                       "G" : classe.nbrGroupes["G"],
+#                                       "E" : classe.nbrGroupes["E"],
+#                                       "P" : classe.nbrGroupes["P"]}
         
 #        self.optClasse["CentresInteret"] = classe.CI
 #        self.optClasse["PositionsCI"] = classe.posCI
@@ -392,26 +404,36 @@ class Options:
 #        if hasattr(classe, 'ci_SSI'):    
 #            self.optClasse["CentresInteretSSI"] = classe.ci_SSI
         
-        self.optClasse["TypeEnseignement"] = classe.typeEnseignement
-        self.optClasse["Etab_Academie"] = classe.academie
-        self.optClasse["Etab_Ville"] = classe.ville
-        self.optClasse["Etablissement"] = classe.etablissement
+#        self.optClasse["TypeEnseignement"] = classe.typeEnseignement
+#        self.optClasse["Etab_Academie"] = classe.academie
+#        self.optClasse["Etab_Ville"] = classe.ville
+#        self.optClasse["Etablissement"] = classe.etablissement
+        
+        
+        doc = app.GetDocActif()
+        
+        self.optClasse["FichierClasse"] = app.fichierClasse
         
         
         #
         # Projet
         #
-        if doc.GetType() == 'prj':
+        if doc != None and doc.GetType() == 'prj':
             self.optProjet["NbrRevues"] = doc.nbrRevues
             self.optProjet["PosRevues"] = doc.positionRevues
         
-        #
-        # Séquence
-        #
-        elif doc.GetType() == 'seq':
-            self.optSystemes["Systemes"] = [ET.tostring(s.getBranche()) for s in doc.systemes]
+#        #
+#        # Séquence
+#        #
+#        elif doc.GetType() == 'seq':
+#            self.optSystemes["Systemes"] = [ET.tostring(s.getBranche()) for s in doc.systemes]
 
             
+        #
+        # Fichiers récents
+        #
+        self.optFichiers["FichiersRecents"] = app.GetFichiersRecents()
+        
         
         
     ############################################################################
