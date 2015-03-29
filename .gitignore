@@ -5,6 +5,7 @@ exemples/
 images_aide/
 src/build/
 ressources/
+*.cfg
 
 
 #################
