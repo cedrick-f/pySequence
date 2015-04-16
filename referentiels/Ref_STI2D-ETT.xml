@@ -29,12 +29,12 @@
           <l_01>
             <Indicateur_00 S_intitule="Les solutions techniques envisag&#233;es sont correctement analys&#233;es au regard des r&#233;sultats d'exp&#233;rimentations et/ou de tests et/ou de simulations">
               <d_ligne I_S="0" />
-              <d_poids F_S="60.0" />
+              <d_poids F_S="50.0" />
               <d_revue I_S="0" />
             </Indicateur_00>
             <Indicateur_01 S_intitule="L'origine des &#233;carts entre les r&#233;sultats obtenus et les exigences du cahier des charges est correctement identifi&#233;e">
               <d_ligne I_S="0" />
-              <d_poids F_S="40.0" />
+              <d_poids F_S="50.0" />
               <d_revue I_S="0" />
             </Indicateur_01>
           </l_01>
@@ -174,12 +174,12 @@
           <l_01>
             <Indicateur_00 S_intitule="Le choix des mat&#233;riaux et/ou des mat&#233;riels est justifi&#233;, des crit&#232;res d'&#233;co conception sont pris en compte">
               <d_ligne I_S="0" />
-              <d_poids F_S="35.0" />
+              <d_poids F_S="33.333333" />
               <d_revue I_S="0" />
             </Indicateur_00>
             <Indicateur_01 S_intitule="La  structure mat&#233;rielle et/ou informationnelle est correctement justifi&#233;e ">
               <d_ligne I_S="0" />
-              <d_poids F_S="35.0" />
+              <d_poids F_S="33.333333" />
               <d_revue I_S="0" />
             </Indicateur_01>
           </l_01>
@@ -188,7 +188,7 @@
           <l_01>
             <Indicateur_00 S_intitule="La justification des param&#232;tres de confort et/ou la r&#233;ponse apport&#233;e par le syst&#232;me aux contraintes de pr&#233;servation de la sant&#233; et du respect de la s&#233;curit&#233; sont explicit&#233;es">
               <d_ligne I_S="0" />
-              <d_poids F_S="30.0" />
+              <d_poids F_S="33.333333" />
               <d_revue I_S="0" />
             </Indicateur_00>
           </l_01>

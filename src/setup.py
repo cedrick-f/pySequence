@@ -11,6 +11,7 @@
 import sys, os
 from glob import glob
 from cx_Freeze import setup, Executable
+from Sequence import __version__
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -106,7 +107,7 @@ cible = Executable(
 
 
 setup(  name = "pySequence",
-        version = "6.0.0.12",
+        version = __version__.replace("-beta", ".0"),
         author = "Cédrick FAURY & Jean-Claude FRICOU",
         description = u"pySéquence",
         options = {"build_exe": build_exe_options},

@@ -40,7 +40,7 @@ Copyright (C) 2011-2015
 """
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "6.0-beta.12"
+__version__ = "6.0-beta.13"
 print __version__
 
 #from threading import Thread
@@ -9713,7 +9713,9 @@ class BaseFiche(wx.ScrolledWindow):
     
     #############################################################################            
     def normalize(self, cr):
-        h = self.GetVirtualSize()[1]
+        h = float(self.GetVirtualSize()[1])
+        if h <= 0:
+            h = float(100)
         cr.scale(h, h) 
         
         
@@ -13155,6 +13157,9 @@ class PanelPropriete_Seance(PanelPropriete):
             self.cbEff.SetSelection(ref.findEffectif(self.cbEff.GetStrings(), self.seance.effectif))
         
         if self.cbDem.IsShown():#self.cbDem.IsEnabled() and :
+#            print ref.demarches[self.seance.demarche][1]
+#            print self.cbDem.GetStrings()
+#            print self.seance
             self.cbDem.SetSelection(self.cbDem.GetStrings().index(ref.demarches[self.seance.demarche][1]))
             
         if self.seance.typeSeance in ["AP", "ED", "P"]:

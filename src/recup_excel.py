@@ -8,7 +8,9 @@ Created on 24 oct. 2011
 
 #import du module permettant la liaison avec excel
 #import xlrd
-import win32com.client
+import sys
+if sys.platform == "win32" :
+    import win32com.client
 import wx
 #import excel
 

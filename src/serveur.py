@@ -33,7 +33,7 @@ import os
 import SocketServer
 import socket
 import threading
-    
+import time
     
 class MyFrame(wx.Frame):
     def __init__(self, parent, id, title):
@@ -63,8 +63,12 @@ class ThreadedTCPRequestHandler(SocketServer.BaseRequestHandler):
 #        gfile = unicode(gfile, 'cp1252')
 #        print gfile
         
-        
-        
+#        c = 0
+#        while not hasattr(self.server, 'app') or c < 100:
+#            time.sleep(0.2)
+#            c += 1
+#            
+#        if c < 100:    
         self.server.app.AppelOuvrir(gfile)
 #        fopen = open(gfile, 'r')
 #        fread = fopen.read()
