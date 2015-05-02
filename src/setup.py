@@ -11,10 +11,13 @@
 import sys, os
 from glob import glob
 from cx_Freeze import setup, Executable
-from Sequence import __version__
+from version import __version__, GetVersion_cxFreeze
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
+if hasattr(sys, 'setdefaultencoding'):
+    sys.setdefaultencoding('utf8')
+else:
+    reload(sys)  # Reload does the trick!
+    sys.setdefaultencoding('utf-8')
     
 ## Remove the build folder, a bit slower but ensures that build contains the latest
 import shutil
@@ -87,11 +90,13 @@ build_exe_options = {'build_exe': 'build/bin',
                                               'tk85.dll', "UxTheme.dll", "mswsock.dll", "POWRPROF.dll",
                                               "QtCore4.dll", "QtGui4.dll" ]}
 
+
 # GUI applications require a different base on Windows (the default is for a
 # console application).
 base = None
-#if sys.platform == "win32":
-#    base = "Win32GUI"
+if not "beta" in __version__:
+    if sys.platform == "win32":
+        base = "Win32GUI"
 
 
 cible = Executable(
@@ -107,7 +112,7 @@ cible = Executable(
 
 
 setup(  name = "pySequence",
-        version = __version__.replace("-beta", ".0"),
+        version = GetVersion_cxFreeze(),
         author = "Cédrick FAURY & Jean-Claude FRICOU",
         description = u"pySéquence",
         options = {"build_exe": build_exe_options},

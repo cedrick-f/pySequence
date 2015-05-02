@@ -38,15 +38,8 @@ Copyright (C) 2011-2015
 @author: Cedrick FAURY
 
 """
-__appname__= "pySequence"
-__author__ = u"Cédrick FAURY"
-__version__ = "6.0-beta.13"
-print __version__
+import version
 
-#from threading import Thread
-
-#import psyco
-#psyco.full()
 
 ####################################################################################
 #
@@ -79,7 +72,7 @@ def MyExceptionHook(etype, value, trace):
     mes = u"pySéquence %s a rencontré une erreur et doit fermer !\n\n"\
          u"Merci de copier le message ci-dessous\n" \
          u"et de l'envoyer à l'équipe de développement :\n"\
-         u"cedrick point faury arobase ac-clermont point fr\n\n" %__version__
+         u"cedrick point faury arobase ac-clermont point fr\n\n" %version.__version__
     exception = mes + "".join(tmp)
     
     try:
@@ -97,7 +90,7 @@ try:
 except ImportError: # if it's not there locally, try the wxPython lib.
     import wx.lib.agw.genericmessagedialog as GMD
 
-
+#if not "beta" in version.__version__:
 sys.excepthook = MyExceptionHook
 
 
@@ -112,23 +105,7 @@ sys.excepthook = MyExceptionHook
 import os
 import glob
 
-if hasattr(sys, 'setdefaultencoding'):
-    sys.setdefaultencoding('utf8')
-#    import locale
-#    loc = locale.getdefaultlocale()
-#    print loc
-#    if loc[1]:
-#        encoding = loc[1]
-#        sys.setdefaultencoding(encoding)
-else:
-    reload(sys)  # Reload does the trick!
-    sys.setdefaultencoding('utf-8')
 
-FILE_ENCODING = sys.getfilesystemencoding() #'cp1252'#
-DEFAUT_ENCODING = "utf-8"
-SYSTEM_ENCODING = sys.getdefaultencoding()#sys.stdout.encoding#
-print "FILE_ENCODING", FILE_ENCODING
-print "SYSTEM_ENCODING", SYSTEM_ENCODING
 
 
 import webbrowser
@@ -192,7 +169,8 @@ from widgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_ENTI
 # Les constantes partagées
 from constantes import calculerEffectifs, revCalculerEffectifs, PATH, getSingulierPluriel,\
                         strEffectifComplet, getElementFiltre, COUL_OK, COUL_NON, COUL_BOF, COUL_BIEN, \
-                        toList, COUL_COMPETENCES, CHAR_POINT, COUL_PARTIE, COUL_ABS
+                        toList, COUL_COMPETENCES, CHAR_POINT, COUL_PARTIE, COUL_ABS, \
+                        toDefautEncoding, toFileEncoding, toSystemEncoding, DEFAUT_ENCODING, FILE_ENCODING
 import constantes
 
 # Pour les copier/coller
@@ -224,8 +202,8 @@ import grilles, genpdf
 
 from rapport import FrameRapport, RapportRTF
 
-import urllib2
-from bs4 import BeautifulSoup
+
+
 from xml.dom.minidom import parse, parseString
 import xml.dom
         
@@ -312,30 +290,7 @@ def testRel(lien, path):
         return os.path.relpath(lien,path)
     except:
         return lien
-######################################################################################  
-def toDefautEncoding(path): 
-#        try:
-    path = path.decode(FILE_ENCODING)
-    path = path.encode(DEFAUT_ENCODING)
-    return path  
-#        except:
-#            return self.path        
-######################################################################################  
-def toSystemEncoding(path): 
-#        try:
-    path = path.decode(FILE_ENCODING)
-    path = path.encode(SYSTEM_ENCODING)
-    return path  
-#        except:
-#            return self.path    
-    
-######################################################################################  
-def toFileEncoding(path):
-    try:
-        path = path.decode(DEFAUT_ENCODING)
-        return path.encode(FILE_ENCODING)
-    except:
-        return path
+
     
     
 ######################################################################################  
@@ -717,6 +672,25 @@ class LienSequence():
             return self.branche
 
 
+
+######################################################################################  
+def GetObjectFromClipBoard(instance):
+    try:
+        b = ET.fromstring(pyperclip.paste())
+    except:
+        b = None
+
+    if isinstance(b, Element): # Le presse contient un Element
+        if b.tag[:len(instance)] == instance: # Le presse contient une instance attendue
+            return b
+    return None
+
+
+######################################################################################  
+#
+#   Objet_sequence
+#
+######################################################################################  
 class Objet_sequence():
     def __init__(self):
         self.elem = None
@@ -748,6 +722,9 @@ class Objet_sequence():
     def CopyToClipBoard(self, event = None):
         pyperclip.copy(ET.tostring(self.getBranche()))
         
+    
+    
+
     ######################################################################################  
     def EnrichiSVG(self, doc, seance = False):
 #        print "EnrichiSVG", doc, seance
@@ -1030,7 +1007,7 @@ class Classe():
         classe = ET.Element("Classe")
         classe.set("Type", self.typeEnseignement)
         
-        classe.set("Version", __version__) # à partir de la version 6
+        classe.set("Version", version.__version__) # à partir de la version 6
         
         classe.append(self.referentiel.getBranche())
         
@@ -1654,8 +1631,42 @@ class Sequence(BaseDoc):
         for s in self.seances:
             s.SupprimerSysteme(i) 
             
+    ######################################################################################  
+    def CollerElem(self, event = None, bseance = None):
+        """ Colle la séance présente dans le presse-papier (branche <bseance>)
+            en première position
+        """
+        print "CollerElem 1ere pos"
+        
+        if bseance == None:
+            bseance = GetObjectFromClipBoard('Seance')
+            if bseance == None:
+                return
+        
+        typeSeance = bseance.get("Type", "")
+        
+        seance = Seance(self, self.panelParent, typeSeance = typeSeance,
+                        branche = bseance)
+        self.seances.insert(0, seance)
+        
+        self.OrdonnerSeances()
+        #seance.ConstruireArbre(self.arbre, self.brancheSce)
+        
+        self.arbre.DeleteChildren(self.brancheSce)
+        for sce in self.seances:
+            sce.ConstruireArbre(self.arbre, self.brancheSce) 
+        self.arbre.Expand(self.brancheSce)
+        for b in self.brancheSce.GetChildren():
+            self.arbre.Expand(b)
             
-                   
+        seance.panelPropriete.MiseAJour()
+        seance.panelPropriete.MiseAJourListeSystemes()
+        
+        self.panelPropriete.sendEvent()
+        
+        self.arbre.SelectItem(seance.branche)    
+
+
     ######################################################################################  
     def AjouterSeance(self, event = None):
         seance = Seance(self, self.panelParent)
@@ -1668,54 +1679,7 @@ class Sequence(BaseDoc):
         
         return seance
     
-    ######################################################################################  
-    def CollerElem(self, event = None, item = None, bseance = None):
-        """ Colle la séance présente dans le presse-papier (branche <bseance>)
-            après la séance désignée par l'item d'arbre <item>
-        """
-        
-        seance_avant = self.arbre.GetItemPyData(item)
-        
-        
-        if not isinstance(seance_avant, Seance):
-            return
-        
-        if bseance == None:
-            try:
-                b = ET.fromstring(pyperclip.paste())
-            except:
-                b = None
-            if isinstance(b, Element): # Le presse contient un Element
-                if b.tag[:6] == 'Seance': # Le presse contient une tache
-                    bseance = b
-            if bseance == None:
-                return
-        
-#        print "CollerElem", ET.tostring(bseance)
-#        print u"   après :", seance_avant
-        
-        typeSeance = bseance.get("Type", "")
-        
-        
-        if seance_avant.typeSeance in ['R', 'S']:
-            seance = Seance(seance_avant, self.panelParent, typeSeance = typeSeance,
-                            branche = bseance)
-            seance_avant.seances.insert(0, seance)
-        else:
-            seance = Seance(self, self.panelParent, typeSeance = typeSeance,
-                            branche = bseance)
-            i = seance_avant.parent.seances.index(seance_avant)
-            seance_avant.parent.seances.insert(i+1, seance)
-        
-        
-        self.OrdonnerSeances()
-        seance.ConstruireArbre(self.arbre, self.brancheSce)
-        self.reconstruireBrancheSeances(seance_avant, seance)
-        
-        
-        self.panelPropriete.sendEvent()
-        
-        self.arbre.SelectItem(seance.branche)
+    
     
     ######################################################################################  
     def SupprimerSeance(self, event = None, item = None):
@@ -1957,7 +1921,8 @@ class Sequence(BaseDoc):
 #                                             [u"Ouvrir", self.app.commandeOuvrir],
                                              [u"Exporter la fiche (PDF ou SVG)", self.app.exporterFiche, None],
                                             ])
-            
+                
+                
 #        [u"Séquence pédagogique",
 #          u"Prérequis",
 #          u"Objectifs pédagogiques",
@@ -1981,10 +1946,20 @@ class Sequence(BaseDoc):
             
             
         elif self.arbre.GetItemText(itemArbre) == Titres[3]: # Séances
-            self.app.AfficherMenuContextuel([[u"Ajouter une séance", 
-                                              self.AjouterSeance,
-                                             images.Icone_ajout_seance.GetBitmap()]])
+            listItems = [[u"Ajouter une séance", 
+                          self.AjouterSeance,
+                          images.Icone_ajout_seance.GetBitmap()]]
             
+            ################
+            elementCopie = GetObjectFromClipBoard('Seance')
+            if elementCopie is not None:
+                listItems.append([u"Coller", functools.partial(self.CollerElem, 
+                                                       bseance = elementCopie),
+                                                       wx.ArtProvider.GetBitmap(wx.ART_PASTE, wx.ART_TOOLBAR, (20,20))])
+            
+            self.app.AfficherMenuContextuel(listItems)
+                
+                
         elif self.arbre.GetItemText(itemArbre) == Titres[4]: # Système
             self.app.AfficherMenuContextuel([[u"Ajouter un système", 
                                               self.AjouterSysteme,
@@ -2366,7 +2341,7 @@ class Projet(BaseDoc, Objet_sequence):
         # Création de la racine
         projet = ET.Element("Projet")
         
-        projet.set("Version", __version__) # à partir de la version 5.7
+        projet.set("Version", version.__version__) # à partir de la version 5.7
         
         projet.set("Intitule", self.intitule)
         
@@ -2829,15 +2804,7 @@ class Projet(BaseDoc, Objet_sequence):
             return
         
         if btache == None:
-            try:
-                b = ET.fromstring(pyperclip.paste())
-            except:
-                b = None
-            if isinstance(b, Element): # Le presse contient un Element
-                if b.tag[:5] == 'Tache': # Le presse contient une tache
-                    phase = b.get("Phase", "")
-                    if tache_avant.phase == phase or tache_avant.GetSuivante().phase == phase : # la phase est la même
-                        btache = b
+            btache = GetObjectFromClipBoard("Tache")
             if btache == None:
                 return
         
@@ -4151,6 +4118,7 @@ class Seance(ElementDeSequence, Objet_sequence):
         
     ######################################################################################  
     def setBranche(self, branche):
+        print "setBranche séance"
         self.ordre = eval(branche.tag[6:])
         
         self.intitule  = branche.get("Intitule", "")
@@ -4711,6 +4679,54 @@ class Seance(ElementDeSequence, Objet_sequence):
         
         self.SetCode()
     
+    ######################################################################################  
+    def CollerElem(self, event = None, item = None, bseance = None):
+        """ Colle la séance présente dans le presse-papier (branche <bseance>)
+            après la séance désignée par l'item d'arbre <item>
+        """
+        print "CollerElem"
+        seance_avant = self.arbre.GetItemPyData(item)
+        print "   ", seance_avant
+        
+        if not isinstance(seance_avant, Seance):
+            return
+        
+        if bseance == None:
+            bseance = GetObjectFromClipBoard('Seance')
+            if bseance == None:
+                return
+        
+#        print "CollerElem", ET.tostring(bseance)
+#        print u"   après :", seance_avant
+        
+        typeSeance = bseance.get("Type", "")
+        
+        
+        if seance_avant.typeSeance in ['R', 'S']:
+            print "     dans :"
+            seance = Seance(seance_avant, self.panelParent, typeSeance = typeSeance,
+                            branche = bseance)
+            seance_avant.seances.insert(0, seance)
+            
+        else:
+            print "     après :"
+            seance = Seance(self.parent, self.panelParent, typeSeance = typeSeance,
+                            branche = bseance)
+            i = seance_avant.parent.seances.index(seance_avant)
+            seance_avant.parent.seances.insert(i+1, seance)
+        
+        seq = self.GetDocument()
+        
+        seq.OrdonnerSeances()
+#        seance.ConstruireArbre(self.arbre, seq.brancheSce)
+        seq.reconstruireBrancheSeances(seance_avant, seance)
+        
+        seance.panelPropriete.MiseAJour()
+        seance.panelPropriete.MiseAJourListeSystemes()
+        
+        self.panelPropriete.sendEvent()
+        
+        self.arbre.SelectItem(seance.branche)        
             
     ######################################################################################  
     def AjouterSeance(self, event = None):
@@ -4874,28 +4890,22 @@ class Seance(ElementDeSequence, Objet_sequence):
                               wx.ArtProvider.GetBitmap(wx.ART_COPY, wx.ART_TOOLBAR, (20,20))])
             
             ################
-            try:
-                elementCopie = ET.fromstring(pyperclip.paste())
-            except:
-                elementCopie = None
+            elementCopie = GetObjectFromClipBoard('Seance')
+            if elementCopie is not None:
+                dataSource = Seance(self.parent)
+                dataSource.setBranche(elementCopie)
                 
-            if elementCopie != None: # Le presse papier n'est pas vide
-                if isinstance(elementCopie, Element): # Le presse contient un Element
-                    if elementCopie.tag[:6] == 'Seance': # Le presse contient une tache
-                        dataSource = Seance(self.parent)
-                        dataSource.setBranche(elementCopie)
-                        
-                        if not hasattr(self, 'GetNiveau') or self.GetNiveau() + dataSource.GetProfondeur() > 2:
-                            return
-                        
-                        if self.typeSeance in ["R", "S"] : # la phase est la même
-                            t = u"Coller dans"
-                        else:
-                            t = u"Coller après"
-                        listItems.append([t, functools.partial(self.parent.CollerElem, 
-                                                                                 item = itemArbre, 
-                                                                                 bseance = elementCopie),
-                                          wx.ArtProvider.GetBitmap(wx.ART_PASTE, wx.ART_TOOLBAR, (20,20))])
+                if not hasattr(self, 'GetNiveau') or self.GetNiveau() + dataSource.GetProfondeur() > 2:
+                    return
+                
+                if self.typeSeance in ["R", "S"] : # la phase est la même
+                    t = u"Coller dans"
+                else:
+                    t = u"Coller après"
+                listItems.append([t, functools.partial(self.CollerElem, 
+                                                                         item = itemArbre, 
+                                                                         bseance = elementCopie),
+                                  wx.ArtProvider.GetBitmap(wx.ART_PASTE, wx.ART_TOOLBAR, (20,20))])
                             
             self.GetApp().AfficherMenuContextuel(listItems)           
                             
@@ -5766,20 +5776,14 @@ class Tache(Objet_sequence):
                               wx.ArtProvider.GetBitmap(wx.ART_COPY, wx.ART_TOOLBAR, (20,20))])
  
 #            elementCopie = self.GetApp().parent.elementCopie
-            try:
-                elementCopie = ET.fromstring(pyperclip.paste())
-            except:
-                elementCopie = None
-            
-            if elementCopie != None: # Le presse papier n'est pas vide
-                if isinstance(elementCopie, Element): # Le presse contient un Element
-                    if elementCopie.tag[:5] == 'Tache': # Le presse contient une tache
-                        phase = elementCopie.get("Phase", "")
-                        if self.phase == phase or self.GetSuivante().phase == phase : # la phase est la même
-                            listItems.append([u"Coller après", functools.partial(self.projet.CollerElem, 
-                                                                                 item = itemArbre, 
-                                                                                 btache = elementCopie),
-                                              wx.ArtProvider.GetBitmap(wx.ART_PASTE, wx.ART_TOOLBAR, (20,20))])
+            elementCopie = GetObjectFromClipBoard('Tache')
+            if elementCopie is not None:
+                phase = elementCopie.get("Phase", "")
+                if self.phase == phase or self.GetSuivante().phase == phase : # la phase est la même
+                    listItems.append([u"Coller après", functools.partial(self.projet.CollerElem, 
+                                                                         item = itemArbre, 
+                                                                         btache = elementCopie),
+                                      wx.ArtProvider.GetBitmap(wx.ART_PASTE, wx.ART_TOOLBAR, (20,20))])
                     
             self.GetApp().AfficherMenuContextuel(listItems)
 #            item2 = menu.Append(wx.ID_ANY, u"Créer une rotation")
@@ -6661,6 +6665,7 @@ class Eleve(Personne, Objet_sequence):
             nomFichiers = self.GetNomGrilles(path)
             if not self.projet.TesterExistanceGrilles({0:nomFichiers}):
                 return
+            
         print "  Fichiers :", nomFichiers
         
         prj = self.projet.GetProjetRef()
@@ -6670,16 +6675,16 @@ class Eleve(Personne, Objet_sequence):
         #
         tableaux = {}
         for k, f in nomFichiers.items():
-#            if os.path.isfile(f):
-#                tableaux[k] = grilles.getTableau(self.projet.GetApp(), f)
-#            else:
-            tableaux[k] = grilles.getTableau(self.projet.GetApp(),
-                                             prj.grilles[k][0])
+            if os.path.isfile(f):
+                tableaux[k] = grilles.getTableau(self.projet.GetApp(), f)
+            else:
+                tableaux[k] = grilles.getTableau(self.projet.GetApp(),
+                                                 prj.grilles[k][0])
+            
             if tableaux[k] != None: # and tableaux[k].filename !=f:
 #                print "      créé :", f
-#                tableaux[k].save(f)
                 try:
-                    tableaux[k].save(f)
+                    tableaux[k].save(f, ConflictResolution = 2)
                 except:
                     messageErreur(self.projet.GetApp(), u"Erreur !",
                                   u"Impossible d'enregistrer le fichier\n\n%s\nVérifier :\n" \
@@ -6692,7 +6697,7 @@ class Eleve(Personne, Objet_sequence):
         #
         # Remplissage des grilles
         #
-        if "beta" in __version__:
+        if "beta" in version.__version__:
             grilles.modifierGrille(self.projet, tableaux, self)
         else:
             try:
@@ -7443,7 +7448,7 @@ class PanelConteneur(wx.Panel):
 ####################################################################################
 class FenetrePrincipale(aui.AuiMDIParentFrame):
     def __init__(self, parent, fichier):
-        aui.AuiMDIParentFrame.__init__(self, parent, -1, __appname__, style=wx.DEFAULT_FRAME_STYLE)
+        aui.AuiMDIParentFrame.__init__(self, parent, -1, version.__appname__, style=wx.DEFAULT_FRAME_STYLE)
         
         self.Freeze()
         wx.lib.colourdb.updateColourDB()
@@ -7573,7 +7578,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
         
         # Récupération de la dernière version
-        a = threading.Thread(None, self.GetNewVersion, None) 
+        a = threading.Thread(None, version.GetNewVersion, None,  (self,) )
         a.start()
 
 
@@ -7582,57 +7587,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
         self.Thaw()
         
-    ###############################################################################################
-    def GetNewVersion(self):  
-        # url = 'https://code.google.com/p/pysequence/downloads/list'
-        print "Recherche nouvelle version ..."
-        url = 'https://github.com/cedrick-f/pySequence/releases'
-        try:
-            self.downloadPage = BeautifulSoup(urllib2.urlopen(url, timeout = 5))
-        except IOError:
-            print "pas d'accès Internet"
-            return
-        
-        # Dernière version
-        div_latest = self.downloadPage.find_all('div', attrs={'class':"release label-latest"})
-        try:
-            latest = div_latest[0].contents[1].find_all('span', attrs={'class':"css-truncate-target"})[0].contents[0]
-        except:
-            print "aucune"
-            return
-        latest = latest.lstrip('v')
-        
-        # Version actuelle
-        a = __version__.split('.')
-        
-        # Comparaison
-        new = True
-        for i, l in enumerate(latest.split('.')):
-            nl = int(l.rstrip("-beta"))
-            na = int(a[i].rstrip("-beta"))
-            if nl < na:
-                new = False
-                break
-        if new:
-            print latest
-        else:
-            print
-
-        if new:
-            dialog = wx.MessageDialog(self, u"Une nouvelle version de pySéquence est disponible\n\n" \
-                                            u"\t%s\n\n" \
-                                            u"Voulez-vous visiter la page de téléchargement ?" % latest, 
-                                          u"Nouvelle version", wx.YES_NO | wx.ICON_INFORMATION)
-            retCode = dialog.ShowModal()
-            if retCode == wx.ID_YES:
-                try:
-                    webbrowser.open(url,new=2)
-                except:
-                    messageErreur(None, u"Ouverture impossible",
-                                  u"Impossible d'ouvrir l'url\n\n%s\n" %toDefautEncoding(self.path))
-
-
-        return
+    
         
                     
                     
@@ -8912,7 +8867,7 @@ class FenetreSequence(FenetreDocument):
             self.arbre.SelectItem(self.classe.branche)
 
 
-        if "beta" in __version__:
+        if "beta" in version.__version__:
             ouvre()
         else:
             try:
@@ -9193,7 +9148,7 @@ class FenetreProjet(FenetreDocument):
             return root, message, count, Ok, Annuler
         
         
-        if "beta" in __version__:
+        if "beta" in version.__version__:
 #            print "beta"
             root, message, count, Ok, Annuler = ouvre(fichier, message)
             err = []
@@ -13146,6 +13101,7 @@ class PanelPropriete_Seance(PanelPropriete):
         
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
+        print "MiseAJour PP séance"
         self.AdapterAuType()
         ref = self.GetReferentiel()
         if self.seance.typeSeance != "" and ref.seances[self.seance.typeSeance][1] in self.cbType.GetStrings():
@@ -19005,16 +18961,16 @@ class myProgressDialog(wx.ProgressDialog):
 #############################################################################################################
 class A_propos(wx.Dialog):
     def __init__(self, parent):
-        wx.Dialog.__init__(self, parent, -1, u"A propos de "+ __appname__)
+        wx.Dialog.__init__(self, parent, -1, u"A propos de "+ version.__appname__)
         
         self.app = parent
         
         sizer = wx.BoxSizer(wx.VERTICAL)
-        titre = wx.StaticText(self, -1, " "+__appname__)
+        titre = wx.StaticText(self, -1, " "+version.__appname__)
         titre.SetFont(wx.Font(14, wx.DEFAULT, wx.NORMAL, wx.BOLD, False))
         titre.SetForegroundColour(wx.NamedColour("BROWN"))
         sizer.Add(titre, border = 10)
-        sizer.Add(wx.StaticText(self, -1, "Version : "+__version__+ " "), 
+        sizer.Add(wx.StaticText(self, -1, "Version : "+version.__version__+ " "), 
                   flag=wx.ALIGN_RIGHT)
 #        sizer.Add(wx.StaticBitmap(self, -1, Images.Logo.GetBitmap()),
 #                  flag=wx.ALIGN_CENTER)

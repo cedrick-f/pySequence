@@ -46,7 +46,44 @@ import time
 #
 import sys, os
 
+if hasattr(sys, 'setdefaultencoding'):
+    sys.setdefaultencoding('utf8')
+else:
+    reload(sys)  # Reload does the trick!
+    sys.setdefaultencoding('utf-8')
 
+FILE_ENCODING = sys.getfilesystemencoding() #'cp1252'#
+DEFAUT_ENCODING = "utf-8"
+SYSTEM_ENCODING = sys.getdefaultencoding()#sys.stdout.encoding#
+print "FILE_ENCODING", FILE_ENCODING
+print "SYSTEM_ENCODING", SYSTEM_ENCODING
+
+######################################################################################  
+def toDefautEncoding(path): 
+#        try:
+    path = path.decode(FILE_ENCODING)
+    path = path.encode(DEFAUT_ENCODING)
+    return path  
+#        except:
+#            return self.path        
+######################################################################################  
+def toSystemEncoding(path): 
+#        try:
+    path = path.decode(FILE_ENCODING)
+    path = path.encode(SYSTEM_ENCODING)
+    return path  
+#        except:
+#            return self.path    
+    
+######################################################################################  
+def toFileEncoding(path):
+    try:
+        path = path.decode(DEFAUT_ENCODING)
+        return path.encode(FILE_ENCODING)
+    except:
+        return path
+    
+    
 FILE_ENCODING = sys.getfilesystemencoding()
 print sys.argv
 PATH = os.path.dirname(os.path.abspath(sys.argv[0]))
@@ -112,7 +149,9 @@ else: # C'est une version portable qui tourne
     print "Version portable !!"
         
 print u"Dossier pour les données :", APP_DATA_PATH
-    
+
+
+
     
 ####################################################################################
 #

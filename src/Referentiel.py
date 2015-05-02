@@ -47,7 +47,7 @@ Element = type(ET.Element(None))
 
 
 #########################################################################################
-DOSSIER_REF = "referentiels"
+DOSSIER_REF = constantes.toFileEncoding(os.path.join(constantes.PATH, r"..", r"referentiels")) 
 REFERENTIELS = {}
 ARBRE_REF = {}    
 
@@ -957,7 +957,7 @@ class Referentiel(XMLelem):
             for l in lig:
                 self.periodes.append([sh_g.cell(l,2).value, int(sh_g.cell(l,3).value)])
             
-        self.FichierLogo = sh_g.cell(6,3).value
+        self.FichierLogo = constantes.toFileEncoding(sh_g.cell(6,3).value)
         
         #
         # Projets
@@ -1465,7 +1465,7 @@ class Referentiel(XMLelem):
             elif self.Code == "SSI":
                 self._bmp = constantes.images.SSI_ASR.GetBitmap()
             elif self.FichierLogo != r"":
-                self._bmp = wx.Bitmap(os.path.join(constantes.PATH, r"..", DOSSIER_REF, self.FichierLogo))
+                self._bmp = wx.Bitmap(os.path.join(DOSSIER_REF, self.FichierLogo))
 #                try:
 #                    self._bmp = wx.Bitmap(os.path.join(constantes.PATH, r"..", DOSSIER_REF, self.FichierLogo))
 #                except:
@@ -2021,16 +2021,16 @@ def chargerReferentiels():
     #
     # Chargement des fichiers .xls
     #
-    path_ref = toFileEncoding(os.path.join(constantes.PATH, r"..", DOSSIER_REF))
+    
 #    print path_ref
-    liste = os.listdir(path_ref)
+    liste = os.listdir(DOSSIER_REF)
     
     for fich_ref in liste:#["Ref_STS-SN_EC-1.xls", "Ref_SSI.xls"]:#, "Ref_STI2D-EE.xls", "Ref_STI2D-ETT.xls"]:#["Ref_6CLG.xls"]:#
         
         if os.path.splitext(fich_ref)[1] == ".xls":
 #            print
 #            print fich_ref
-            ref = Referentiel(os.path.join(path_ref, fich_ref))
+            ref = Referentiel(os.path.join(DOSSIER_REF, fich_ref))
             ref.postTraiter()
             REFERENTIELS[ref.Code] = ref
             
@@ -2049,7 +2049,7 @@ def chargerReferentiels():
         dicOk = {}
         for k, r in REFERENTIELS.items():
             f = toFileEncoding(r"Ref_"+r.Enseignement[0]+r".xml")
-            f = os.path.join(path_ref, f)
+            f = os.path.join(DOSSIER_REF, f)
             dicOk[k] = False
             if os.path.exists(f):
                 ref = ouvrir(f)
@@ -2110,7 +2110,7 @@ def sauvegarderOriginaux():
     global SAUVEGARDE
     SAUVEGARDE = True
     for r in REFERENTIELS.values():
-        f = os.path.join(constantes.PATH, r"..", DOSSIER_REF, "Ref_"+r.Enseignement[0]+".xml")
+        f = os.path.join(DOSSIER_REF, "Ref_"+r.Enseignement[0]+".xml")
         enregistrer(r.Code, f)
         
 #

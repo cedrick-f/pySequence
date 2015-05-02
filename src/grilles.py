@@ -93,8 +93,8 @@ def getTableau(parent, nomFichier):
         
     elif err&2 != 0:
         messageErreur(parent, u"Fichier non trouvé !",
-                              u"Le fichier original de la grille,\n    " + fichierPB[0] + u"\n" \
-                              u"n'a pas été trouvé ! \n")
+                      u"Le fichier original de la grille,\n    " + fichierPB[0] + u"\n" \
+                      u"n'a pas été trouvé ! \n")
         
     else:
         print "Erreur", err
@@ -126,7 +126,7 @@ def getTableaux(parent, doc):
     ref = doc.GetReferentiel()
     prj = doc.GetProjetRef()
     fichiers = prj.grilles
-    print "grilles :", fichiers
+#    print "grilles :", fichiers
     fichierPB = []
     
     def ouvrir(fichier):
@@ -182,7 +182,7 @@ def getTableaux(parent, doc):
 
 
 def modifierGrille(doc, tableaux, eleve):
-    print "modifierGrille", eleve
+#    print "modifierGrille", eleve
     
     ref = doc.GetReferentiel()
     prj = doc.GetProjetRef()
@@ -292,12 +292,12 @@ def modifierGrille(doc, tableaux, eleve):
     
 #    print schem
 #    print dicInfo
-    print tableaux
+#    print tableaux
     
     for ct, t in tableaux.items():
         dicInfo = prj.cellulesInfo[ct]
-        print "  ", dicInfo
-        print "  ", ct, t
+#        print "  ", dicInfo
+#        print "  ", ct, t
         for k, v in schem.items():
             if k in dicInfo.keys():
 #                print "    ", k
@@ -317,14 +317,12 @@ def modifierGrille(doc, tableaux, eleve):
         dicInfo = prj.cellulesInfo[part]
         if "Prof" in dicInfo.keys() and part in tableaux.keys():
             f, lcp , pre = dicInfo["Prof"][0] 
-            l, c, p = lcp
+            l, c, p = lcp # ligne, colonne, période
             if grille[1] == 'C': # fichier "Collectif"
                 f = f+str(eleve.id+1)
             nf = tableaux[part].getSheetNum(f)
             profs = [pr.GetNomPrenom() for pr in doc.equipe]
             for i in range(5):
-                l += i*p
-        
                 try:
                     if i < len(profs):
                         tableaux[part].setCell(nf, l, c, profs[i])
@@ -332,6 +330,7 @@ def modifierGrille(doc, tableaux, eleve):
                         tableaux[part].setCell(nf, l, c, '')
                 except:
                     pass
+                l += p
     
     
     
@@ -407,13 +406,14 @@ class PyExcel:
         else:
             self.xlBook = self.xlApp.Workbooks.Add()
             self.filename=''
- 
-    def save(self, newfilename=None):
+        self.xlBook.Application.DisplayAlerts = False
+
+    def save(self, newfilename=None, ConflictResolution = 1):
         if newfilename:
-                self.filename = newfilename
-                self.xlBook.SaveAs(newfilename, ConflictResolution = 1)
+            self.filename = newfilename
+            self.xlBook.SaveAs(newfilename, ConflictResolution = ConflictResolution)
         else:
-                self.xlBook.Save()
+            self.xlBook.Save()
  
     def save_pdf(self, nomFichier, orientation = xlLandscape):
         ws = self.xlBook.ActiveSheet
