@@ -47,7 +47,7 @@ Element = type(ET.Element(None))
 
 
 #########################################################################################
-DOSSIER_REF = constantes.toFileEncoding(os.path.join(constantes.PATH, r"..", r"referentiels")) 
+DOSSIER_REF = os.path.join(constantes.PATH, r"..", r"referentiels")
 REFERENTIELS = {}
 ARBRE_REF = {}    
 
@@ -957,7 +957,7 @@ class Referentiel(XMLelem):
             for l in lig:
                 self.periodes.append([sh_g.cell(l,2).value, int(sh_g.cell(l,3).value)])
             
-        self.FichierLogo = constantes.toFileEncoding(sh_g.cell(6,3).value)
+        self.FichierLogo = sh_g.cell(6,3).value
         
         #
         # Projets
@@ -1465,7 +1465,7 @@ class Referentiel(XMLelem):
             elif self.Code == "SSI":
                 self._bmp = constantes.images.SSI_ASR.GetBitmap()
             elif self.FichierLogo != r"":
-                self._bmp = wx.Bitmap(os.path.join(DOSSIER_REF, self.FichierLogo))
+                self._bmp = wx.Bitmap(os.path.join(DOSSIER_REF, constantes.toFileEncoding(self.FichierLogo)))
 #                try:
 #                    self._bmp = wx.Bitmap(os.path.join(constantes.PATH, r"..", DOSSIER_REF, self.FichierLogo))
 #                except:
@@ -2003,16 +2003,16 @@ def ouvrir(nomFichier):
 SAUVEGARDE = False
 
 
-######################################################################################  
-import sys
-FILE_ENCODING = sys.getfilesystemencoding()
-DEFAUT_ENCODING = "utf-8"
-def toFileEncoding(path):
-    try:
-        path = path.decode(DEFAUT_ENCODING)
-        return path.encode(FILE_ENCODING)
-    except:
-        return path
+#######################################################################################  
+#import sys
+#FILE_ENCODING = sys.getfilesystemencoding()
+#DEFAUT_ENCODING = "utf-8"
+#def toFileEncoding(path):
+#    try:
+#        path = path.decode(DEFAUT_ENCODING)
+#        return path.encode(FILE_ENCODING)
+#    except:
+#        return path
 
 ##########################################################################################
 def chargerReferentiels():
@@ -2048,8 +2048,7 @@ def chargerReferentiels():
     if not SAUVEGARDE:
         dicOk = {}
         for k, r in REFERENTIELS.items():
-            f = toFileEncoding(r"Ref_"+r.Enseignement[0]+r".xml")
-            f = os.path.join(DOSSIER_REF, f)
+            f = os.path.join(DOSSIER_REF, constantes.toFileEncoding(r"Ref_"+r.Enseignement[0]+r".xml"))
             dicOk[k] = False
             if os.path.exists(f):
                 ref = ouvrir(f)

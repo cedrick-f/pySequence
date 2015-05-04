@@ -28,12 +28,9 @@
 
 """
 Sequence.py
-Aide à la r�alisation de fiches  de s�quence p�dagogiques
+Aide à la réalisation de fiches  de séquence pédagogiques
 et à la validation de projets
-*************
-*   STIDD   *
-*    SSI    *
-*************
+
 Copyright (C) 2011-2015
 @author: Cedrick FAURY
 
@@ -44,15 +41,17 @@ import urllib2
 import webbrowser
 from widgets import messageErreur
 import wx
-from constantes import toDefautEncoding
 
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "6.0-beta.14"
+__version__ = "6.0-beta.15"
 print __version__
 
+
+###############################################################################################
 def GetVersion_cxFreeze():
     return __version__.replace("-beta", ".0")
+
 
 ###############################################################################################
 def GetNewVersion(win):  

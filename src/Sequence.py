@@ -170,7 +170,7 @@ from widgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_ENTI
 from constantes import calculerEffectifs, revCalculerEffectifs, PATH, getSingulierPluriel,\
                         strEffectifComplet, getElementFiltre, COUL_OK, COUL_NON, COUL_BOF, COUL_BIEN, \
                         toList, COUL_COMPETENCES, CHAR_POINT, COUL_PARTIE, COUL_ABS, \
-                        toDefautEncoding, toFileEncoding, toSystemEncoding, DEFAUT_ENCODING, FILE_ENCODING
+                        toFileEncoding, toSystemEncoding, FILE_ENCODING, SYSTEM_ENCODING
 import constantes
 
 # Pour les copier/coller
@@ -389,12 +389,12 @@ def XML_AjouterCol(node, idLigne, text, bcoul = None, fcoul = "black", size = No
 ####################################################################################
 class Lien():
     def __init__(self, path = u"", typ = ""):
-        self.path = path
+        self.path = path # Impérativement toujours encodé en FILE_ENCODING !!
         self.type = typ
         
     ######################################################################################  
     def __repr__(self):
-        return self.type + " : " + self.path
+        return self.type + " : " + toSystemEncoding(self.path)
     
     
     ######################################################################################  
@@ -415,6 +415,9 @@ class Lien():
 
     ######################################################################################  
     def Afficher(self, pathseq, fenSeq = None):
+        """ Lance l'affichage du contenu du lien
+            <pathseq> = chemin de l'application pour déterminer le chemin absolu
+        """
         path = self.GetAbsPath(pathseq)
 #        print "Afficher", path
         
@@ -423,21 +426,21 @@ class Lien():
                 os.startfile(path)
             except:
                 messageErreur(None, u"Ouverture impossible",
-                              u"Impossible d'ouvrir le fichier\n\n%s\n" %toDefautEncoding(path))
+                              u"Impossible d'ouvrir le fichier\n\n%s\n" %toSystemEncoding(path))
                 
         elif self.type == 'd':
             try:
                 subprocess.Popen(["explorer", path])
             except:
                 messageErreur(None, u"Ouverture impossible",
-                              u"Impossible d'accéder au dossier\n\n%s\n" %toDefautEncoding(path))
+                              u"Impossible d'accéder au dossier\n\n%s\n" %toSystemEncoding(path))
             
         elif self.type == 'u':
             try:
                 webbrowser.open(self.path)
             except:
                 messageErreur(None, u"Ouverture impossible",
-                              u"Impossible d'ouvrir l'url\n\n%s\n" %toDefautEncoding(self.path))
+                              u"Impossible d'ouvrir l'url\n\n%s\n" %toSystemEncoding(self.path))
         
         elif self.type == 's':
             if os.path.isfile(path):
@@ -463,13 +466,17 @@ class Lien():
                 
     ######################################################################################  
     def EvalLien(self, path, pathseq):
+        """ Teste la validité du chemin <path> (SYSTEM_ENCODING)
+            et change self.path (FILE_ENCODING)
+            <pathseq> doit être en FILE_ENCODING
+        """
         if path == "" or path.split() == []:
-            self.path = ""
+            self.path = r""
             self.type = ""
             return
         
         path = toFileEncoding(path)
-        pathseq = toFileEncoding(pathseq)
+#        pathseq = toFileEncoding(pathseq)
         abspath = self.GetAbsPath(pathseq, path)
         
         relpath = testRel(abspath, pathseq)
@@ -487,6 +494,9 @@ class Lien():
               
     ######################################################################################  
     def GetAbsPath(self, pathseq, path = None):
+        """ Renvoie le chemin absolu du lien
+            grace au chemin de l'application <pathseq>
+        """
         if path == None:
             path = self.path
         
@@ -506,15 +516,15 @@ class Lien():
     
     ######################################################################################  
     def getBranche(self, branche):
-        branche.set("Lien", toDefautEncoding(self.path))
+        branche.set("Lien", toSystemEncoding(self.path))
         branche.set("TypeLien", self.type)
         
         
     ######################################################################################  
     def setBranche(self, branche, pathseq):
-        self.path = branche.get("Lien", "")
+        self.path = toFileEncoding(branche.get("Lien", r""))
         self.type = branche.get("TypeLien", "")
-        if self.type == "" and self.path != "":
+        if self.type == "" and self.path != r"":
             self.EvalTypeLien(pathseq)
         return True
 
@@ -553,11 +563,11 @@ class ElementDeSequence():
     def GetLienHTML(self):
         if self.lien.type in ['f', 'd', 's']:
             if self.lien.path != '':
-                return 'file:///' + os.path.abspath(self.lien.path)
+                return toSystemEncoding('file:///' + os.path.abspath(self.lien.path))
             else:
                 return ''
         else:
-            return self.lien.path
+            return toSystemEncoding(self.lien.path)
     
     ######################################################################################  
     def CreerLien(self, event):
@@ -704,8 +714,7 @@ class Objet_sequence():
      
     def SetSVGLien(self, p, lien):
 #        print "SetSVGLien", lien
-        lien = lien.decode(FILE_ENCODING)
-        lien = lien.encode('utf-8')
+        
         p.setAttribute("xlink:href", lien) #
         p.setAttribute("target", "_top")
 #        self.elem.setAttribute("xlink:href", lien)
@@ -783,6 +792,8 @@ class Objet_sequence():
                 
             if hasattr(self, 'GetLien'):
                 lien = self.GetLienHTML()
+#                lien = lien.decode(FILE_ENCODING)
+                lien = lien.encode('utf-8')
                 t = doc.createElement("a")
                 txt = doc.createTextNode(lien)
                 t.appendChild(txt)
@@ -829,7 +840,7 @@ class Objet_sequence():
         if self.GetDescription() != None:
             des = "\n\n" + self.GetDescription()
         t = self.GetCode(i) + " :\n" + self.GetIntit(i) + des
-        return t.encode(DEFAUT_ENCODING)#.replace("\n", "&#10;")#"&#xD;")#
+        return t.encode(SYSTEM_ENCODING)#.replace("\n", "&#10;")#"&#xD;")#
     
            
            
@@ -1306,9 +1317,9 @@ class BaseDoc():
     ######################################################################################  
     def GetPath(self):
         if hasattr(self.app, 'fichierCourant'):
-            return os.path.split(self.app.fichierCourant)[0]
+            return os.path.split(toFileEncoding(self.app.fichierCourant))[0]
         else:
-            return ''
+            return r""
     
     ######################################################################################  
     def GetApercu(self, mult = 3):
@@ -1398,7 +1409,7 @@ class Sequence(BaseDoc):
             
     ######################################################################################  
     def SetPath(self, fichierCourant):
-        pathseq = os.path.split(fichierCourant)[0]
+        pathseq = toFileEncoding(os.path.split(fichierCourant)[0])
         for sce in self.seances:
             sce.SetPathSeq(pathseq)    
         for sy in self.systemes:
@@ -2183,7 +2194,7 @@ class Projet(BaseDoc, Objet_sequence):
         self.src_finance = u""
         
         
-        self.SetPosition(self.position)
+        self.SetPosition(self.position, first = True)
         
         
 #       
@@ -2317,16 +2328,19 @@ class Projet(BaseDoc, Objet_sequence):
             lstIndic = prj._dicIndicateurs_simple[c[i]]
 #            lstIndic = REFERENTIELS[self.classe.typeEnseignement]._dicIndicateurs_prj_simple[c[i]]
             t = c[i] + " :\n" + u"\n".join([indic.intitule for indic in lstIndic])
-            return t.encode(DEFAUT_ENCODING)
+            return t.encode(SYSTEM_ENCODING)
         else:
             e = self.eleves[-1-i]
             t = e.GetNomPrenom()+"\n"
             t += u"Durée d'activité : "+draw_cairo.getHoraireTxt(e.GetDuree())+"\n"
             t += u"Evaluabilité :\n"
             ev_tot = e.GetEvaluabilite()[1]
-            t += u"\tconduite : "+pourCent2(ev_tot['R'][0], True)+"\n"
-            t += u"\tsoutenance : "+pourCent2(ev_tot['S'][0], True)+"\n"
-            return t.encode(DEFAUT_ENCODING)
+            for ph, nomph in self.GetProjetRef().parties.items():
+                t += nomph + pourCent2(ev_tot[ph][0], True)+"\n"
+            
+#            t += u"\tconduite : "+pourCent2(ev_tot['R'][0], True)+"\n"
+#            t += u"\tsoutenance : "+pourCent2(ev_tot['S'][0], True)+"\n"
+            return t.encode(SYSTEM_ENCODING)
             
             
             
@@ -2551,7 +2565,7 @@ class Projet(BaseDoc, Objet_sequence):
     
     
     ######################################################################################  
-    def SetPosition(self, pos):
+    def SetPosition(self, pos, first = False):
 #        print "SetPosition", pos
 #        print "  position actuelle :", self.position
 #        posEpreuve = self.GetProjetRef().getPeriodeEval()
@@ -2596,7 +2610,7 @@ class Projet(BaseDoc, Objet_sequence):
             
         # Sinon on se contente de redessiner
         else:
-            if hasattr(self, 'panelPropriete'):
+            if hasattr(self, 'panelPropriete') and not first:
                 self.panelPropriete.sendEvent()
         
         
@@ -3357,7 +3371,7 @@ class Projet(BaseDoc, Objet_sequence):
             
             self.panelPropriete.MiseAJourTypeEnseignement()
         
-        self.SetPosition(self.position)
+#        self.SetPosition(self.position)
 
 
 
@@ -4118,7 +4132,7 @@ class Seance(ElementDeSequence, Objet_sequence):
         
     ######################################################################################  
     def setBranche(self, branche):
-        print "setBranche séance"
+#        print "setBranche séance"
         self.ordre = eval(branche.tag[6:])
         
         self.intitule  = branche.get("Intitule", "")
@@ -6275,7 +6289,7 @@ class Personne(Objet_sequence):
         """ Renvoie la branche XML de la compétence pour enregistrement
         """
 #        print "getBranche", supprime_accent(self.titre)
-        root = ET.Element(toDefautEncoding(supprime_accent(self.titre).capitalize()))
+        root = ET.Element(toSystemEncoding(supprime_accent(self.titre).capitalize()))
         
         root.set("Id", str(self.id))
         root.set("Nom", self.nom)
@@ -6291,7 +6305,7 @@ class Personne(Objet_sequence):
             
         if hasattr(self, 'grille'):
             for k, g in self.grille.items():
-                root.set("Grille"+k, toDefautEncoding(g.path))
+                root.set("Grille"+k, toSystemEncoding(g.path))
 #            root.set("Grille0", self.grille[0].path)
 #            root.set("Grille1", self.grille[1].path)
            
@@ -6323,7 +6337,7 @@ class Personne(Objet_sequence):
 #            print self.grille
             for k in self.GetProjetRef().parties.keys():
                 self.grille[k] = Lien(typ = "f")
-                self.grille[k].path = toFileEncoding(branche.get("Grille"+k, u""))
+                self.grille[k].path = toFileEncoding(branche.get("Grille"+k, r""))
 #                print self.grille
 #            self.grille[0].path = branche.get("Grille0", u"")
 #            self.grille[1].path = branche.get("Grille1", u"")
@@ -6529,7 +6543,7 @@ class Eleve(Personne, Objet_sequence):
             self.grille[k].Afficher(self.projet.GetPath())#os.startfile(self.grille[num])
         except:
             messageErreur(None, u"Ouverture impossible",
-                          u"Impossible d'ouvrir le fichier\n\n%s!\n" %toDefautEncoding(self.grille[k].path))
+                          u"Impossible d'ouvrir le fichier\n\n%s!\n" %toSystemEncoding(self.grille[k].path))
             
             
     ######################################################################################  
@@ -6723,7 +6737,7 @@ class Eleve(Personne, Objet_sequence):
             except:
                 pass
             self.grille[k] = Lien(typ = 'f')
-            self.grille[k].path = nomFichiers[k]
+            self.grille[k].path = toFileEncoding(nomFichiers[k])
         
         
         #
@@ -7548,7 +7562,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         if options.fichierExiste():
 #            options.ouvrir(DEFAUT_ENCODING)
             try :
-                options.ouvrir(DEFAUT_ENCODING)
+                options.ouvrir(SYSTEM_ENCODING)
             except:
                 print "Fichier d'options corrompus ou inexistant !! Initialisation ..."
                 options.defaut()
@@ -7644,7 +7658,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
 #                    webbrowser.open(url,new=2)
 #                except:
 #                    messageErreur(None, u"Ouverture impossible",
-#                                  u"Impossible d'ouvrir l'url\n\n%s\n" %toDefautEncoding(self.path))
+#                                  u"Impossible d'ouvrir l'url\n\n%s\n" %toSystemEncoding(self.path))
 
                     
                 
@@ -7998,7 +8012,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             webbrowser.open('https://github.com/cedrick-f/pySequence/wiki',new=2)
         except:
             messageErreur(None, u"Ouverture impossible",
-                          u"Impossible d'ouvrir l'url\n\n%s\n" %toDefautEncoding(self.path))
+                          u"Impossible d'ouvrir l'url\n\n%s\n" %toSystemEncoding(self.path))
 
         
         
@@ -8487,7 +8501,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         mesFormats = constantes.FORMAT_FICHIER[self.typ] + constantes.TOUS_FICHIER
         dlg = wx.FileDialog(self, 
                             message = constantes.MESSAGE_ENR[self.typ], 
-                            defaultDir=toDefautEncoding(self.DossierSauvegarde) , 
+                            defaultDir=toSystemEncoding(self.DossierSauvegarde) , # encodage?
                             defaultFile="", wildcard=mesFormats, 
                             style=wx.SAVE|wx.OVERWRITE_PROMPT|wx.CHANGE_DIR
                             )
@@ -8521,7 +8535,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
             t += u" - "+os.path.splitext(os.path.basename(self.fichierCourant))[0]
         if modif :
             t += " **"
-        self.SetTitle(t)#toDefautEncoding(t))
+        self.SetTitle(t)#toSystemEncoding(t))
         
     #############################################################################
     def exporterFichePDF(self, nomFichier, pourDossierValidation = False):
@@ -8548,13 +8562,13 @@ class FenetreDocument(aui.AuiMDIChildFrame):
                      "svg (.svg)|*.svg"
 #                     "swf (.swf)|*.swf"
         dlg = wx.FileDialog(
-            self, message=u"Enregistrer la fiche sous ...", defaultDir=toDefautEncoding(self.DossierSauvegarde) , 
+            self, message=u"Enregistrer la fiche sous ...", defaultDir=toSystemEncoding(self.DossierSauvegarde) , 
             defaultFile = os.path.splitext(self.fichierCourant)[0]+".pdf", 
             wildcard=mesFormats, style=wx.SAVE|wx.OVERWRITE_PROMPT|wx.CHANGE_DIR
             )
         dlg.SetFilterIndex(0)
         if dlg.ShowModal() == wx.ID_OK:
-            path = dlg.GetPath().encode(FILE_ENCODING)
+            path = dlg.GetPath()#.encode(FILE_ENCODING)
             ext = os.path.splitext(path)[1]
             dlg.Destroy()
             wx.BeginBusyCursor()
@@ -8692,7 +8706,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
  
 def Dialog_ErreurAccesFichier(nomFichier):
     messageErreur(None, u'Erreur !',
-                  u"Impossible d'accéder en écriture au fichier\n\n%s" %toDefautEncoding(nomFichier))
+                  u"Impossible d'accéder en écriture au fichier\n\n%s" %toSystemEncoding(nomFichier))
 
 
 ########################################################################################
@@ -8800,7 +8814,7 @@ class FenetreSequence(FenetreDocument):
         root.append(classe)
         constantes.indent(root)
         
-        ET.ElementTree(root).write(fichier, encoding = DEFAUT_ENCODING)
+        ET.ElementTree(root).write(fichier, xml_declaration=False, encoding = SYSTEM_ENCODING)
         
         fichier.close()
         self.definirNomFichierCourant(nomFichier)
@@ -9026,7 +9040,8 @@ class FenetreProjet(FenetreDocument):
         
 #        print ET.tostring(projet)#, encoding="utf8",  method="xml")
         try:
-            ET.ElementTree(root).write(fichier, encoding = DEFAUT_ENCODING)
+#            ET.ElementTree(root).write(fichier, encoding = SYSTEM_ENCODING)
+            ET.ElementTree(root).write(fichier, xml_declaration=False, encoding = SYSTEM_ENCODING)
         except IOError:
             messageErreur(None, u"Accès refusé", 
                                   u"L'accès au fichier %s a été refusé !\n\n"\
@@ -9347,7 +9362,7 @@ class FenetreProjet(FenetreDocument):
             
             
             pathprj = self.projet.GetPath()
-            print "pathprj", pathprj
+#            print "pathprj", pathprj
             
             #
             # Détermination des fichiers grille à créer
@@ -9360,7 +9375,7 @@ class FenetreProjet(FenetreDocument):
                     for g in e.grille.values():
                         if not os.path.exists(g.path): # Le fichier grille pour cet élève n'a pas été trouvé
                             nomFichiers[e.id] = e.GetNomGrilles(path = os.path.split(nomFichier)[0])
-            print "nomFichiers grille", nomFichiers
+#            print "nomFichiers grille", nomFichiers
             
             # Si des fichiers existent avec le même nom, on demande si on peut les écraser
             if not self.projet.TesterExistanceGrilles(nomFichiers):
@@ -9383,7 +9398,7 @@ class FenetreProjet(FenetreDocument):
                     e.GenererGrille(nomFichiers = nomFichiers[e.id], messageFin = False)
 
                 for k, g in e.grille.items():
-                    grille = os.path.join(toFileEncoding(pathprj), g.path)
+                    grille = os.path.join(toFileEncoding(pathprj), toFileEncoding(g.path))
                     if k in self.projet.GetReferentiel().aColNon.keys():
 #                    if k == classNON:
                         collectif = self.projet.GetProjetRef().grilles[k][1] == 'C'
@@ -10954,7 +10969,8 @@ class PanelPropriete_Classe(PanelPropriete):
         constantes.indent(classe)
         
         try:
-            ET.ElementTree(classe).write(fichier, encoding = DEFAUT_ENCODING)
+#            ET.ElementTree(classe).write(fichier, encoding = SYSTEM_ENCODING)
+            ET.ElementTree(classe).write(fichier, xml_declaration=False, encoding = SYSTEM_ENCODING)
         except IOError:
             messageErreur(None, u"Accès refusé", 
                                   u"L'accès au fichier %s a été refusé !\n\n"\
@@ -11154,6 +11170,7 @@ class PanelPropriete_Classe(PanelPropriete):
         
         self.classe.MiseAJourTypeEnseignement()
         self.classe.doc.MiseAJourTypeEnseignement(ancienRef, ancienneFam)
+        self.classe.doc.SetPosition(self.classe.doc.position)
 #        self.classe.doc.MiseAJourTypeEnseignement(fam != self.classe.familleEnseignement)
 #        self.MiseAJourType()
 #        if hasattr(self, 'list'):
@@ -13101,7 +13118,7 @@ class PanelPropriete_Seance(PanelPropriete):
         
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
-        print "MiseAJour PP séance"
+#        print "MiseAJour PP séance"
         self.AdapterAuType()
         ref = self.GetReferentiel()
         if self.seance.typeSeance != "" and ref.seances[self.seance.typeSeance][1] in self.cbType.GetStrings():
@@ -13135,7 +13152,7 @@ class PanelPropriete_Seance(PanelPropriete):
         
     #############################################################################            
     def MiseAJourLien(self):
-        self.selec.SetPath(self.seance.lien.path)
+        self.selec.SetPath(toSystemEncoding(self.seance.lien.path))
         self.btnlien.Show(self.seance.lien.path != "")
         self.sizer.Layout()
         
@@ -13921,8 +13938,8 @@ class PanelPropriete_Systeme(PanelPropriete):
         
     #############################################################################            
     def MiseAJourLien(self):
-        self.selec.SetPath(self.systeme.lien.path)
-        self.btnlien.Show(self.systeme.lien.path != "")
+        self.selec.SetPath(toSystemEncoding(self.systeme.lien.path))
+        self.btnlien.Show(len(self.systeme.lien.path) > 0)
         self.Layout()
 
 
@@ -14172,7 +14189,7 @@ class PanelPropriete_Personne(PanelPropriete):
             self.cbInt.SetValue(self.personne.referent)
         if hasattr(self, 'SelectGrille'):
             for k, select in self.SelectGrille.items():
-                select.SetPath(self.personne.grille[k].path, marquerModifier = marquerModifier)
+                select.SetPath(toSystemEncoding(self.personne.grille[k].path), marquerModifier = marquerModifier)
 #            self.OnPathModified()
         if sendEvt:
             self.sendEvent()
@@ -14401,8 +14418,8 @@ class PanelPropriete_Support(PanelPropriete):
         
     #############################################################################            
     def MiseAJourLien(self):
-        self.selec.SetPath(self.support.lien.path)
-        self.btnlien.Show(self.support.lien.path != "")
+        self.selec.SetPath(toSystemEncoding(self.support.lien.path))
+        self.btnlien.Show(len(self.support.lien.path) > 0)
         self.Layout()
         
         
@@ -16411,7 +16428,7 @@ class URLSelectorCombo(wx.Panel):
         if event.GetId() == 100:
             dlg = wx.DirDialog(self, u"Sélectionner un dossier",
                           style=wx.DD_DEFAULT_STYLE,
-                          defaultPath = self.pathseq
+                          defaultPath = constantes.toSystemEncoding(self.pathseq)
                            #| wx.DD_DIR_MUST_EXIST
                            #| wx.DD_CHANGE_DIR
                            )
@@ -16423,6 +16440,7 @@ class URLSelectorCombo(wx.Panel):
         else:
             dlg = wx.FileDialog(self, u"Sélectionner un fichier",
                                 wildcard = self.ext,
+                                defaultDir = constantes.toSystemEncoding(self.pathseq),
     #                           defaultPath = globdef.DOSSIER_EXEMPLES,
                                style = wx.DD_DEFAULT_STYLE
                                #| wx.DD_DIR_MUST_EXIST
@@ -16439,8 +16457,7 @@ class URLSelectorCombo(wx.Panel):
 
     ##########################################################################################
     def EvtText(self, event):
-        path = event.GetString()
-        self.SetPath(path)
+        self.SetPath(event.GetString())
 
 
     ##########################################################################################
@@ -16450,12 +16467,15 @@ class URLSelectorCombo(wx.Panel):
     
     ##########################################################################################
     def SetPath(self, lien, marquerModifier = True):
-        """ lien doit être de type 'String'
+        """ lien doit être de type 'String' encodé en SYSTEM_ENCODING
+            
         """
-        
         self.lien.EvalLien(lien, self.pathseq)
         
-        self.texte.ChangeValue(toSystemEncoding(self.lien.path)) # On le met en DEFAUT_ENCODING
+        try:
+            self.texte.ChangeValue(self.lien.path)
+        except:
+            self.texte.ChangeValue(toSystemEncoding(self.lien.path)) # On le met en SYSTEM_ENCODING
 #        self.texte.ChangeValue(self.lien.path) 
 #            self.texte.SetBackgroundColour(("white"))
 #        else:
@@ -16644,9 +16664,9 @@ class PopupInfo2(wx.PopupWindow):
         if lien.type == "":
             ctrlLien.Show(False)
             titreLien.Show(False)
-            ctrlLien.SetToolTipString(toDefautEncoding(lien.path))
+            ctrlLien.SetToolTipString(toSystemEncoding(lien.path))
         else:
-            ctrlLien.SetToolTipString(toDefautEncoding(lien.path))
+            ctrlLien.SetToolTipString(toSystemEncoding(lien.path))
             if lien.type == "f":
                 titreLien.SetLabel(u"Fichier :")
                 ctrlLien.SetBitmapLabel(wx.ArtProvider_GetBitmap(wx.ART_NORMAL_FILE))
@@ -16672,7 +16692,7 @@ class PopupInfo2(wx.PopupWindow):
             path = self.parent.sequence.GetPath()
         else:
             path = self.parent.projet.GetPath()
-        self.lien.Afficher(path, self.parent.parent)
+        self.lien.Afficher(path, fenSeq = self.parent.parent)
         
     ##########################################################################################
     def CreerImage(self, position = (4,0), span = (1,1), flag = wx.ALIGN_CENTER):
@@ -17045,7 +17065,7 @@ class Panel_BO(wx.Panel):
         
         lst_pdf = []
         for d in ref.BO_dossier:
-            path = os.path.join(constantes.BO_PATH, d)
+            path = os.path.join(constantes.BO_PATH, constantes.toFileEncoding(d))
             for root, dirs, files in os.walk(path):
                 for f in files:
                     if os.path.splitext(f)[1] == r".pdf":
@@ -17273,7 +17293,7 @@ class FenetreBilan(wx.Frame):
                 os.startfile(self.lastPath)
             except:
                 messageErreur(None, u"Ouverture impossible",
-                              u"Impossible d'ouvrir la synthèse\n\n%s\n" %toDefautEncoding(self.lastPath))
+                              u"Impossible d'ouvrir la synthèse\n\n%s\n" %toSystemEncoding(self.lastPath))
 
     ######################################################################################  
     def definirStyles(self, book):

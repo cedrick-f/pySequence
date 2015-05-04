@@ -45,6 +45,8 @@ import time
 # relatifs ne soit perturbée
 #
 import sys, os
+print "defaultencoding", sys.getdefaultencoding()
+print "stdin, stdout", sys.stdin.encoding,sys.stdout.encoding
 
 if hasattr(sys, 'setdefaultencoding'):
     sys.setdefaultencoding('utf8')
@@ -53,17 +55,19 @@ else:
     sys.setdefaultencoding('utf-8')
 
 FILE_ENCODING = sys.getfilesystemencoding() #'cp1252'#
-DEFAUT_ENCODING = "utf-8"
+
 SYSTEM_ENCODING = sys.getdefaultencoding()#sys.stdout.encoding#
 print "FILE_ENCODING", FILE_ENCODING
 print "SYSTEM_ENCODING", SYSTEM_ENCODING
 
-######################################################################################  
-def toDefautEncoding(path): 
-#        try:
-    path = path.decode(FILE_ENCODING)
-    path = path.encode(DEFAUT_ENCODING)
-    return path  
+#assert sys.stdout.encoding == "UTF-8"
+
+#######################################################################################  
+#def toDefautEncoding(path): 
+##        try:
+#    path = path.decode(FILE_ENCODING)
+#    path = path.encode(DEFAUT_ENCODING)
+#    return path  
 #        except:
 #            return self.path        
 ######################################################################################  
@@ -77,11 +81,11 @@ def toSystemEncoding(path):
     
 ######################################################################################  
 def toFileEncoding(path):
-    try:
-        path = path.decode(DEFAUT_ENCODING)
-        return path.encode(FILE_ENCODING)
-    except:
-        return path
+#    try:
+    path = path.decode(SYSTEM_ENCODING)
+    return path.encode(FILE_ENCODING)
+#    except:
+#        return path
     
     
 FILE_ENCODING = sys.getfilesystemencoding()
@@ -111,10 +115,10 @@ except:
 PORTABLE = not(os.path.abspath(INSTALL_PATH) == os.path.abspath(PATH))
 
 
-TABLE_PATH = os.path.join(os.path.abspath(os.path.join(PATH, os.pardir)), 'tables')
+TABLE_PATH = os.path.join(os.path.abspath(os.path.join(PATH, os.pardir)), r'tables')
 #print u"Dossier des tableaux Excel :", TABLE_PATH
 
-BO_PATH = os.path.join(os.path.abspath(os.path.join(PATH, os.pardir)), 'BO')
+BO_PATH = os.path.join(os.path.abspath(os.path.join(PATH, os.pardir)), r'BO')
 
 if not PORTABLE: # Ce n'est pas une version portable qui tourne
     # On lit la clef de registre indiquant le type d'installation

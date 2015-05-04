@@ -9,15 +9,17 @@
 ##################################################################################################
 
 import sys, os
-from glob import glob
-from cx_Freeze import setup, Executable
-from version import __version__, GetVersion_cxFreeze
-
 if hasattr(sys, 'setdefaultencoding'):
     sys.setdefaultencoding('utf8')
 else:
     reload(sys)  # Reload does the trick!
     sys.setdefaultencoding('utf-8')
+print sys.getdefaultencoding()
+
+from glob import glob
+from cx_Freeze import setup, Executable
+from version import __version__, GetVersion_cxFreeze    
+    
     
 ## Remove the build folder, a bit slower but ensures that build contains the latest
 import shutil
@@ -71,7 +73,7 @@ for p in ['C:\\Python27\\Lib\site-packages\\html5lib',
 # Dependencies are automatically detected, but it might need fine tuning.
 build_exe_options = {'build_exe': 'build/bin',
                      "packages": ["os", "xhtml2pdf","html5lib"], 
-                     "includes": ["xhtml2pdf", "xhtml2pdf.pisa","html5lib", "xhtml2pdf.w3c"],
+                     "includes": ["xhtml2pdf", "xhtml2pdf.pisa","html5lib", "xhtml2pdf.w3c", "encodings.ascii"],
                      "optimize" : 0,
 #                     "path" : ["../packages/html5lib"],#, "../packages/xhtml2pdf",  "../packages/xhtml2pdf/w3c"],
 #                     "zip_includes": [("../packages/html5lib/", "html5lib"),

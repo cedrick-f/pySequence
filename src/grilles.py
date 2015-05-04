@@ -28,7 +28,7 @@
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 # Dossier contenant les grilles
-from constantes import TABLE_PATH
+from constantes import TABLE_PATH, toFileEncoding
 
 # Caractère utilisé pour cocher les cases :
 COCHE = u"X"
@@ -54,7 +54,7 @@ def ouvrirXLS(fichier):
         renvoie le classeur PyExcel
     """
     fichierPB = []      # Liste des fichiers dont l'ouverture aura échoué
-    fichier = os.path.join(TABLE_PATH, fichier)
+    fichier = os.path.join(TABLE_PATH, toFileEncoding(fichier))
     tableau = None
     err = 0
     
@@ -130,7 +130,7 @@ def getTableaux(parent, doc):
     fichierPB = []
     
     def ouvrir(fichier):
-        fichier = os.path.join(TABLE_PATH, fichier)
+        fichier = os.path.join(TABLE_PATH, toFileEncoding(fichier))
         tableau = None
         err = 0
         
@@ -348,7 +348,7 @@ def copierClasseurs(doc, nomFichiers):
     fichierPB = []
     
     for k, f in fichiers.items():
-        shutil.copyfile(os.path.join(TABLE_PATH, f[0]), nomFichiers[k])
+        shutil.copyfile(os.path.join(TABLE_PATH, toFileEncoding(f[0])), toFileEncoding(nomFichiers[k]))
 
     err = 0
     if err == 0:
