@@ -423,8 +423,8 @@ def genererDossierValidation(nomFichier, projet, fenDoc):
 
 import grilles
 def genererGrillePDF(nomFichier, grilles_feuilles):
-    print "genererGrillePDF" 
-    print grilles_feuilles
+#    print "genererGrillePDF" 
+#    print grilles_feuilles
     
     wx.BeginBusyCursor()
     dosstemp = tempfile.mkdtemp()
@@ -436,7 +436,7 @@ def genererGrillePDF(nomFichier, grilles_feuilles):
         grille = grilles.PyExcel(grille)
         if feuille is None:
             feuille = grille.getSheets()[-1]
-        print "   ", feuille
+#        print "   ", feuille
         # Création du fichier temporaire PDF
         nomGrille = r"grille"+str(i)+r".pdf"
         fichertempV = os.path.join(dosstemp, nomGrille)

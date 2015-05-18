@@ -27,8 +27,10 @@
 
 import wx
 
-# désactivation du module scipy
-# import scipy
+#try:
+#    from agw import hypertreelist as HTL
+#except ImportError: # if it's not there locally, try the wxPython lib.
+#    import wx.lib.agw.hypertreelist as HTL
 
 import time
 import  wx.lib.scrolledpanel as scrolled
@@ -260,10 +262,8 @@ class Expression():
             return False
 #        print type (v)
         # On analyse le résultat
-        if not type(v) == float and not type(v) == scipy.float64 and not type(v) == int:
+        if not type(v) == float  and not type(v) == int:
             return False
-        elif scipy.isinf(v) or scipy.isnan(v):
-            return None
         else:
             return v
     
@@ -802,6 +802,5 @@ def getHoraireTxt(v, prefixe = u""):
         return prefixe+m+"'"
     else:
         return prefixe+h+"h"+m
-    
     
     
