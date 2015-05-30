@@ -7,7 +7,7 @@ src/build/
 ressources/
 releases/
 *.cfg
-
+src/sequence.cfg
 
 #################
 ## Eclipse
