@@ -39,14 +39,15 @@ import images
 
 import time
 
+import sys
+
+#######################################################################################  
 #
-# Les deuxlignes suivantes permettent de lancer le script sequence.py depuis n'importe
-# quel répertoire sans que l'utilisation de chemins
-# relatifs ne soit perturbée
+#    Tout ce qui concerne l'encodage des caractères
 #
-import sys, os
-print "defaultencoding", sys.getdefaultencoding()
-print "stdin, stdout", sys.stdin.encoding,sys.stdout.encoding
+#######################################################################################  
+#print "defaultencoding", sys.getdefaultencoding()
+#print "stdin, stdout", sys.stdin.encoding,sys.stdout.encoding
 
 if hasattr(sys, 'setdefaultencoding'):
     sys.setdefaultencoding('utf8')
@@ -54,22 +55,11 @@ else:
     reload(sys)  # Reload does the trick!
     sys.setdefaultencoding('utf-8')
 
-FILE_ENCODING = sys.getfilesystemencoding() #'cp1252'#
-
+FILE_ENCODING = sys.getfilesystemencoding() 
 SYSTEM_ENCODING = sys.getdefaultencoding()#sys.stdout.encoding#
 print "FILE_ENCODING", FILE_ENCODING
 print "SYSTEM_ENCODING", SYSTEM_ENCODING
-
-#assert sys.stdout.encoding == "UTF-8"
-
-#######################################################################################  
-#def toDefautEncoding(path): 
-##        try:
-#    path = path.decode(FILE_ENCODING)
-#    path = path.encode(DEFAUT_ENCODING)
-#    return path  
-#        except:
-#            return self.path        
+  
 ######################################################################################  
 def toSystemEncoding(path): 
 #        try:
@@ -88,71 +78,74 @@ def toFileEncoding(path):
 #        return path
     
     
-FILE_ENCODING = sys.getfilesystemencoding()
-print sys.argv
-PATH = os.path.dirname(os.path.abspath(sys.argv[0]))
-#PATH = os.path.split(PATH)[0]
-os.chdir(PATH)
-sys.path.append(PATH)
-print u"Dossier de l'application :",PATH
 
 
-# 
-# On récupère là le dossier "Application data" 
-# où devra être enregistré le fichier .cfg de pysylic
+
+
+#print sys.argv
+#PATH = os.path.dirname(os.path.abspath(sys.argv[0]))
+##PATH = os.path.split(PATH)[0]
+#os.chdir(PATH)
+#sys.path.append(PATH)
+#print u"Dossier de l'application :",PATH
 #
+#
+## 
+## On récupère là le dossier "Application data" 
+## où devra être enregistré le fichier .cfg de pySequence
+##
+#
+## On récupère le répertoire d'installation de pySequence
+#try:
+#    import _winreg
+#    regkey = _winreg.OpenKey( _winreg.HKEY_CLASSES_ROOT, 'pySequence.sequence\\DefaultIcon',0, _winreg.KEY_READ)
+#    (value,keytype) = _winreg.QueryValueEx(regkey , '') 
+#    INSTALL_PATH = os.path.dirname(value.encode(FILE_ENCODING))
+#except:
+#    INSTALL_PATH = '' # Pas installé sur cet ordi
+#    
+#
+#PORTABLE = not(os.path.abspath(INSTALL_PATH) == os.path.abspath(PATH))
 
-# On récupère le répertoire d'installation de pySyLiC
-try:
-    import _winreg
-    regkey = _winreg.OpenKey( _winreg.HKEY_CLASSES_ROOT, 'pySequence.sequence\\DefaultIcon',0, _winreg.KEY_READ)
-    (value,keytype) = _winreg.QueryValueEx(regkey , '') 
-    INSTALL_PATH = os.path.dirname(value.encode(FILE_ENCODING))
-except:
-    INSTALL_PATH = '' # Pas installé sur cet ordi
-    
 
-PORTABLE = not(os.path.abspath(INSTALL_PATH) == os.path.abspath(PATH))
-
-
-TABLE_PATH = os.path.join(os.path.abspath(os.path.join(PATH, os.pardir)), r'tables')
-#print u"Dossier des tableaux Excel :", TABLE_PATH
-
-BO_PATH = os.path.join(os.path.abspath(os.path.join(PATH, os.pardir)), r'BO')
-
-if not PORTABLE: # Ce n'est pas une version portable qui tourne
-    # On lit la clef de registre indiquant le type d'installation
-    try: # Machine 32 bits
-        regkey = _winreg.OpenKey(_winreg.HKEY_LOCAL_MACHINE, 'SOFTWARE\\pySequence', 0, _winreg.KEY_READ )
-    except: # Machine 64 bits
-        try :
-            regkey = _winreg.OpenKey(_winreg.HKEY_LOCAL_MACHINE, 'SOFTWARE\\Wow6432Node\\pySequence', 0, _winreg.KEY_READ )
-        except:
-            PORTABLE = True # en fait, pySequence n'est pas installé !!!
-    
-if not PORTABLE:
-    try:
-        (value,keytype) = _winreg.QueryValueEx(regkey, 'DataFolder' ) 
-        APP_DATA_PATH = value
-    except:
-        dlg = wx.MessageDialog(None, u"L'installation de pySequence est incorrecte !\nVeuillez désinstaller pySequence puis le réinstaller." ,
-                               u"Installation incorrecte",
-                               wx.OK | wx.ICON_WARNING
-                               #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
-                               )
-        dlg.ShowModal()
-        dlg.Destroy()
-        APP_DATA_PATH = PATH
-        
-    if not os.path.exists(APP_DATA_PATH):
-        os.mkdir(APP_DATA_PATH)    
-    print "Dossier d'installation :", INSTALL_PATH
-    
-else: # C'est une version portable qui tourne
-    APP_DATA_PATH = PATH
-    print "Version portable !!"
-        
-print u"Dossier pour les données :", APP_DATA_PATH
+#TABLE_PATH = os.path.join(os.path.abspath(os.path.join(PATH, os.pardir)), r'tables')
+##print u"Dossier des tableaux Excel :", TABLE_PATH
+#
+#BO_PATH = os.path.join(os.path.abspath(os.path.join(PATH, os.pardir)), r'BO')
+#
+#if not PORTABLE: # Ce n'est pas une version portable qui tourne
+#    # On lit la clef de registre indiquant le type d'installation
+#    try: # Machine 32 bits
+#        regkey = _winreg.OpenKey(_winreg.HKEY_LOCAL_MACHINE, 'SOFTWARE\\pySequence', 0, _winreg.KEY_READ )
+#    except: # Machine 64 bits
+#        try :
+#            regkey = _winreg.OpenKey(_winreg.HKEY_LOCAL_MACHINE, 'SOFTWARE\\Wow6432Node\\pySequence', 0, _winreg.KEY_READ )
+#        except:
+#            PORTABLE = True # en fait, pySequence n'est pas installé !!!
+#    
+#if not PORTABLE:
+#    try:
+#        (value,keytype) = _winreg.QueryValueEx(regkey, 'DataFolder' ) 
+#        APP_DATA_PATH = value
+#    except:
+#        dlg = wx.MessageDialog(None, u"L'installation de pySequence est incorrecte !\nVeuillez désinstaller pySequence puis le réinstaller." ,
+#                               u"Installation incorrecte",
+#                               wx.OK | wx.ICON_WARNING
+#                               #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
+#                               )
+#        dlg.ShowModal()
+#        dlg.Destroy()
+#        APP_DATA_PATH = PATH
+#        
+#    if not os.path.exists(APP_DATA_PATH):
+#        os.mkdir(APP_DATA_PATH)    
+#    print "Dossier d'installation :", INSTALL_PATH
+#    
+#else: # C'est une version portable qui tourne
+#    APP_DATA_PATH = PATH
+#    print "Version portable !!"
+#        
+#print u"Dossier pour les données :", APP_DATA_PATH
 
 
 
@@ -1134,7 +1127,7 @@ if  wx.PlatformInfo[1] == 'wxMSW':
     except:
         ADOBE_VERSION = None
         
-    print "Version Adobe", ADOBE_VERSION
+    print "Version Adobe Reader", ADOBE_VERSION
 
 ############################################################################
 #

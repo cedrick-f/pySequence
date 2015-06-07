@@ -103,10 +103,6 @@ sys.excepthook = MyExceptionHook
 
 # Outils "système"
 import os
-import glob
-
-
-
 
 import webbrowser
 import subprocess
@@ -124,7 +120,10 @@ import wx.lib.platebtn as platebtn
 import wx.lib.colourdb
 #import  wx.lib.fancytext as fancytext
 
+# Module de gestion des dossiers, de l'installation et de l'enregistrement
+import util_path
 
+# Chargement des images
 import images
 
 # Graphiques vectoriels
@@ -161,17 +160,19 @@ Element = type(ET.Element(None))
 
 
 # des widgets wx évolués "faits maison"
-from widgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_ENTIER_POS, getHoraireTxt#, chronometrer
+from widgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_ENTIER_POS#, chronometrer
 #from CustomCheckBox import CustomCheckBox
 # Les constantes et les fonctions de dessin
 
 
 # Les constantes partagées
-from constantes import calculerEffectifs, revCalculerEffectifs, PATH, getSingulierPluriel,\
+from constantes import calculerEffectifs, revCalculerEffectifs, getSingulierPluriel,\
                         strEffectifComplet, getElementFiltre, COUL_OK, COUL_NON, COUL_BOF, COUL_BIEN, \
                         toList, COUL_COMPETENCES, CHAR_POINT, COUL_PARTIE, COUL_ABS, \
                         toFileEncoding, toSystemEncoding, FILE_ENCODING, SYSTEM_ENCODING
 import constantes
+
+
 
 # Pour les copier/coller
 import pyperclip
@@ -182,7 +183,6 @@ import threading
 # Les constantes partagées
 from Referentiel import REFERENTIELS, ARBRE_REF
 import Referentiel
-#import constantes_ETT
 
 import synthesePeda
 
@@ -202,8 +202,6 @@ import grilles, genpdf
 
 from rapport import FrameRapport, RapportRTF
 
-
-
 from xml.dom.minidom import parse, parseString
 import xml.dom
         
@@ -216,7 +214,7 @@ import xml.dom
 #import wx.richtext as rt
 import richtext
 
-from math import sin,cos,pi, log
+from math import sin, cos, pi
 from operator import attrgetter
 
 ####################################################################################
@@ -4384,7 +4382,6 @@ class Seance(ElementDeSequence, Objet_sequence):
     ######################################################################################  
     def GetListSousSeancesRot(self, tout = False):
         l = []
-        i = 0
         for ss in self.seances:
             for n in range(ss.nombre.v[0]):
                 l.append(ss)
@@ -7904,7 +7901,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
         tool_menu = wx.Menu()
         
-        if sys.platform == "win32" :
+        if sys.platform == "win32" and util_path.INSTALL_PATH != None:
     #        tool_menu.Append(31, u"Options")
             self.menuReg = tool_menu.Append(32, u"a")
             self.MiseAJourMenu()
@@ -7993,7 +7990,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         if register.IsRegistered():
             ok = register.UnRegister()
         else:
-            ok = register.Register(PATH)
+            ok = register.Register(util_path.PATH)
         if not ok:
             messageErreur(self, u"Accès refusé",
                           u"Accès à la base de registre refusé !\n\n" \
@@ -8191,7 +8188,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             else:
                 ref = None
         else:
-            dossier = constantes.INSTALL_PATH
+            dossier = util_path.INSTALL_PATH
             ref = None
         win = synthesePeda.FenetreBilan(self, dossier, ref)
         win.Show()
@@ -15497,7 +15494,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
         """
 #        print "ConstruireCasesEleve"
         tache = self.pptache.tache
-        prj = tache.GetProjetRef()
+#        prj = tache.GetProjetRef()
         for codeIndic, item in self.items.items():
             cases = self.GetItemWindow(item, 3)
             if isinstance(cases, ChoixCompetenceEleve):
@@ -16869,7 +16866,7 @@ class Panel_BO(wx.Panel):
         
         lst_pdf = []
         for d in ref.BO_dossier:
-            path = os.path.join(constantes.BO_PATH, constantes.toFileEncoding(d))
+            path = os.path.join(util_path.BO_PATH, constantes.toFileEncoding(d))
             for root, dirs, files in os.walk(path):
                 for f in files:
                     if os.path.splitext(f)[1] == r".pdf":
@@ -17089,7 +17086,7 @@ class A_propos(wx.Dialog):
         #---------
         licence = wx.Panel(nb, -1)
         try:
-            txt = open(os.path.join(PATH, "gpl.txt"))
+            txt = open(os.path.join(util_path.PATH, "gpl.txt"))
             lictext = txt.read()
             txt.close()
         except:

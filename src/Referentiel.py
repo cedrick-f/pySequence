@@ -45,9 +45,9 @@ import wx   # Juste pour la fonction GetBitmap()
 import xml.etree.ElementTree as ET
 Element = type(ET.Element(None))
 
-
+import util_path
 #########################################################################################
-DOSSIER_REF = os.path.join(constantes.PATH, r"..", r"referentiels")
+DOSSIER_REF = os.path.join(util_path.PATH, r"..", r"referentiels")
 REFERENTIELS = {}
 ARBRE_REF = {}    
 

@@ -39,6 +39,7 @@ import xlwt
 from xlwt import Workbook, Font, XFStyle, Borders, Alignment, Formula, Pattern
 
 import constantes
+import util_path
 
 from Referentiel import REFERENTIELS
 import Referentiel
@@ -62,7 +63,7 @@ import  wx.lib.mixins.listctrl  as  listmix
 #
 #################################################################################################################
 class FenetreBilan(wx.Frame):
-    def __init__(self, parent, dossierCourant = constantes.PATH, 
+    def __init__(self, parent, dossierCourant = util_path.PATH, 
                  referentiel = None):
         wx.Frame.__init__(self, parent, -1, u"Synthèse pédagogique", style = wx.DEFAULT_FRAME_STYLE|wx.STAY_ON_TOP)
         

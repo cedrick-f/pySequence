@@ -35,6 +35,8 @@ import ast
 import wx.combo
 #from constantes import *
 import constantes#, constantes_SSI
+import util_path
+
 #from constantes_ETT import PositionCibleCI
 from Referentiel import REFERENTIELS
 import xml.etree.ElementTree as ET
@@ -72,7 +74,7 @@ class Options:
         
         
         # Le fichier où seront sauvées les options
-        self.fichierOpt = os.path.join(constantes.APP_DATA_PATH, "sequence.cfg")
+        self.fichierOpt = os.path.join(util_path.APP_DATA_PATH, "sequence.cfg")
         
         
 

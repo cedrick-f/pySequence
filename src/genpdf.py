@@ -28,6 +28,7 @@
 
 from  constantes import ellipsizer, getAnneeScolaireStr, \
                         LONG_MAX_PROBLEMATIQUE, ADOBE_VERSION, LONG_MAX_FICHE_VALID, LIMITE_GRAND_PETIT_CARACT
+import util_path
 import os.path
 #from textwrap import wrap
 #import csv
@@ -184,7 +185,7 @@ def genererFicheValidationHTML(nomFichierPDF, nomFichierHTML, projet):
     for code, val in champs.items():
         sourceHtml = sourceHtml.replace(u"[["+code+u"]]", val)
     
-    sourceHtml = sourceHtml.replace("{{MEDIA_URL}}", os.path.join(constantes.PATH, r"..", DOSSIER_REF))
+    sourceHtml = sourceHtml.replace("{{MEDIA_URL}}", os.path.join(util_path.PATH, r"..", DOSSIER_REF))
     
     resultFile = open(nomFichierPDF, "w+b")
 
@@ -391,7 +392,7 @@ def genererDossierValidation(nomFichier, projet, fenDoc):
     
     wx.BeginBusyCursor()
     
-    nomFichierHTML = os.path.join(constantes.PATH, r"..", DOSSIER_REF, projet.GetProjetRef().ficheValid)
+    nomFichierHTML = os.path.join(util_path.PATH, r"..", DOSSIER_REF, projet.GetProjetRef().ficheValid)
     
     if os.path.isfile(nomFichierHTML):
         Ok = genererFicheValidationHTML(fichertempV, nomFichierHTML, projet)
