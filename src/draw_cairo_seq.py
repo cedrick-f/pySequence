@@ -235,7 +235,6 @@ def DefinirZones(seq, ctx):
     
     intituleSeances[0], lstInt = seq.GetIntituleSeances()
     for intS in lstInt:
-#        print "   ", intS
         h, t = calc_h_texte(ctx, intS, tailleZIntSeances[0], fontIntSeances)
         intituleSeances[2].append(h)
         intituleSeances[1].append(t)
@@ -1019,11 +1018,14 @@ class Cadre():
             self.ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
                                   cairo.FONT_WEIGHT_NORMAL)
             self.ctx.set_source_rgba (0,0,0, alpha)
+#            print (x, y + hc, self.w, self.h-hc)
+#            print (wc, y, self.w - (wc-x), self.h)
+#            print 
             if self.h < 0.02: # h petit -> on écrit à coté du code !
-                rct = (wc, y, self.w - wc-x, self.h)
+                rct = (wc, y, self.w - (wc-x), self.h)
             else:
                 rct = (x, y + hc, self.w, self.h-hc)
-            
+
             show_text_rect(self.ctx, self.seance.intitule, rct, 
                            ha = 'g', b = 0.2, fontsizeMinMax = (minFont, 0.015), 
                            fontsizePref = self.seance.taille.v[0])

@@ -290,7 +290,7 @@ def calc_h_texte(ctx, texte, w, taille, va = 'c', ha = 'c', b = 0.1, orient = 'h
             width = ctx.text_extents(t)[2]
             if width > w:
                 if j - i == 1:
-                    lt[i:j] = textwrap.wrap(lt[i], int(1.0*len(lt)*w/width))
+                    lt[i:j] = textwrap.wrap(lt[i], max(1,int(1.0*len(lt)*w/width)))
                 else:
                     ll.append(" ".join(lt[i:j-1]))
                     i = j-1
