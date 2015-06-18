@@ -38,6 +38,7 @@ Copyright (C) 2011-2015
 @author: Cedrick FAURY
 
 """
+
 import version
 
 
@@ -56,6 +57,11 @@ import version
 import traceback
 import time
 import sys
+
+#if 'threading' in sys.modules:
+#    del sys.modules['threading']
+    
+    
 from widgets import messageErreur
 
 def MyExceptionHook(etype, value, trace):
@@ -108,17 +114,33 @@ import webbrowser
 import subprocess
 #import urllib
 
-# GUI wxpython
+
+
 import wx
+# Arbre
+try:
+    from agw import customtreectrl as CT
+except ImportError: # if it's not there locally, try the wxPython lib.
+    import wx.lib.agw.customtreectrl as CT
+
+try:
+    from agw import hypertreelist as HTL
+except ImportError: # if it's not there locally, try the wxPython lib.
+    import wx.lib.agw.hypertreelist as HTL
+    
+    
+# Gestionnaire de "pane"
+import wx.aui as aui
+
 from wx.lib.wordwrap import wordwrap
 import wx.lib.hyperlink as hl
 import  wx.lib.scrolledpanel as scrolled
 import wx.combo
 import wx.lib.platebtn as platebtn
-#import  wx.lib.buttons  as  buttons
-
 import wx.lib.colourdb
-#import  wx.lib.fancytext as fancytext
+# Pour les descriptions
+import richtext
+
 
 # Module de gestion des dossiers, de l'installation et de l'enregistrement
 import util_path
@@ -136,20 +158,7 @@ except ImportError:
     haveCairo = False
 
 
-# Arbre
-try:
-    from agw import customtreectrl as CT
-except ImportError: # if it's not there locally, try the wxPython lib.
-    import wx.lib.agw.customtreectrl as CT
 
-try:
-    from agw import hypertreelist as HTL
-except ImportError: # if it's not there locally, try the wxPython lib.
-    import wx.lib.agw.hypertreelist as HTL
-    
-    
-# Gestionnaire de "pane"
-import wx.aui as aui
 
 # Pour passer des arguments aux callback
 import functools
@@ -172,13 +181,8 @@ from constantes import calculerEffectifs, revCalculerEffectifs, getSingulierPlur
                         toFileEncoding, toSystemEncoding, FILE_ENCODING, SYSTEM_ENCODING
 import constantes
 
-
-
 # Pour les copier/coller
 import pyperclip
-
-import threading 
-
 
 # Les constantes partagées
 from Referentiel import REFERENTIELS, ARBRE_REF
@@ -194,7 +198,8 @@ if sys.platform == "win32" :
     import register
     # Pour lire les classeurs Excel
     import recup_excel
-print "OS :", sys.platform
+    
+#print "OS :", sys.platform
 
 import textwrap
 
@@ -204,18 +209,13 @@ from rapport import FrameRapport, RapportRTF
 
 from xml.dom.minidom import parse, parseString
 import xml.dom
-        
-        
-# Pour l'export en swf
-#import tempfile
-#import svg_export
 
-# Pour les descriptions
-#import wx.richtext as rt
-import richtext
+
 
 from math import sin, cos, pi
 from operator import attrgetter
+
+
 
 ####################################################################################
 #
@@ -7459,7 +7459,8 @@ class PanelConteneur(wx.Panel):
 ####################################################################################
 class FenetrePrincipale(aui.AuiMDIParentFrame):
     def __init__(self, parent, fichier):
-        aui.AuiMDIParentFrame.__init__(self, parent, -1, version.__appname__, style=wx.DEFAULT_FRAME_STYLE)
+        aui.AuiMDIParentFrame.__init__(self, parent, -1, version.GetAppnameVersion(), style=wx.DEFAULT_FRAME_STYLE)
+        
         
         self.Freeze()
         wx.lib.colourdb.updateColourDB()
@@ -7488,9 +7489,6 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         self.tabmgr.GetManagedWindow().Bind(aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.OnDocChanged)
         
         
-        
-        
-        
         #############################################################################################
         # Quelques variables ...
         #############################################################################################
@@ -7500,12 +7498,14 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         self.elementCopie = None
         
         
-        
-        
         #############################################################################################
         # Création du menu
         #############################################################################################
         self.CreateMenuBar()
+        
+        # !!! cette ligne pose problème à la fermeture : mystère
+        self.renommerWindow()
+        
         self.Bind(wx.EVT_MENU, self.commandeNouveau, id=10)
         self.Bind(wx.EVT_MENU, self.commandeOuvrir, id=11)
         self.Bind(wx.EVT_MENU, self.commandeEnregistrer, id=12)
@@ -7583,98 +7583,22 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
         if fichier != "":
             self.ouvrir(fichier)
-    
-        
-        
-        
-        
+
+
         # Récupération de la dernière version
+        import threading 
         a = threading.Thread(None, version.GetNewVersion, None,  (self,) )
         a.start()
 
-
-#        wx.CallAfter(self.GetNewVersion)
-        
-        
         self.Thaw()
         
     
+    def renommerWindow(self):
+        menu_bar = self.GetMenuBar()
+#        menu_bar.SetMenuLabel(3, u"Fenêtre")
+#        menu_bar.SetMenuLabel(menu_bar.FindMenu("Window"), u"Fenêtre")
         
-                    
-                    
-#    ###############################################################################################
-#    def GetNewVersionOld(self):  
-#        # url = 'https://code.google.com/p/pysequence/downloads/list'
-#        print "Recherche nouvelle version ...",
-#        url = 'https://drive.google.com/folderview?id=0B2jxnxsuUscPX0tFLVN0cF91TGc#list'
-#        try:
-#            self.downloadPage = BeautifulSoup(urllib2.urlopen(url, timeout = 5))
-#        except IOError:
-#            print "pas d'accès Internet"
-#            return   
-#
-##        ligne = self.downloadPage.find('div', attrs={'class':"flip-entry-title"})
-#        ligne = self.downloadPage.find_all('div', attrs={'class':"flip-entry-title"})
-##        fichier = ligne.text.strip()
-#        
-#        # Version actuelle
-#        vba = __version__.split("beta")
-#        va = vba[0]
-#        if len(vba) > 1:
-#            ba = eval(vba[1])
-#        else:
-#            ba = 100
-#        
-##        print vba, va, ba
-#        # version en ligne plus récente
-#        versionPlusRecente = False    
-#                    
-#        for l in ligne:
-#            if len(l.text.split('_')) > 1:
-#                v = l.text.split('_')[1].split('.zip')[0]
-#                vb = v.split("beta")
-#                vn = vb[0]
-#                if len(vb) >1:
-#                    bn = eval(vb[1])
-#                else:
-#                    bn = 100
-##                print vb, vn, bn
-#                if vn > va or (vn == va and bn > ba): # Nouvelle version disponible
-#                    versionPlusRecente = True
-#                    break
-##        print v
-#        
-#        if versionPlusRecente:
-#            dialog = wx.MessageDialog(self, u"Une nouvelle version de pySéquence est disponible\n\n" \
-#                                            u"\t%s\n\n" \
-#                                            u"Voulez-vous visiter la page de téléchargement ?" % v, 
-#                                          u"Nouvelle version", wx.YES_NO | wx.ICON_INFORMATION)
-#            retCode = dialog.ShowModal()
-#            if retCode == wx.ID_YES:
-#                try:
-#                    webbrowser.open(url,new=2)
-#                except:
-#                    messageErreur(None, u"Ouverture impossible",
-#                                  u"Impossible d'ouvrir l'url\n\n%s\n" %toSystemEncoding(self.path))
-
-                    
-                
-#                dlg = wx.DirDialog(self, message = u"Emplacement du téléchargement", 
-#                                style=wx.DD_DEFAULT_STYLE|wx.CHANGE_DIR
-#                                )
-#        
-#                if dlg.ShowModal() == wx.ID_OK:
-#                    path = dlg.GetPath()
-#                    url = 'https://code.google.com/p/pysequence/downloads/'+ligne.a['href']
-#                    filename, headers = urllib.urlretrieve(url, os.path.join(path, fichier))
-#                    print filename
-#                    dlg.Destroy()
-#                else:
-#                    dlg.Destroy()
-                
     
-        
-
     ###############################################################################################
     def SetData(self, data):  
         self.elementCopie = data      
@@ -7866,6 +7790,13 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     ###############################################################################################
     def CreateMenuBar(self):
         # create menu
+        
+        window_menu = self.GetWindowMenu()
+        window_menu.SetLabel(4001, u"Fermer")
+        window_menu.SetLabel(4002, u"Fermer tout")
+        window_menu.SetLabel(4003, u"Suivante")
+        window_menu.SetLabel(4004, u"Précédente")
+        
         mb = wx.MenuBar()
 
         file_menu = wx.Menu()
@@ -8287,7 +8218,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     
     #############################################################################
     def GetDocActif(self):
-        if self.GetNotebook().GetCurrentPage() != None:
+        if self.GetNotebook() != None and self.GetNotebook().GetCurrentPage() != None:
             return self.GetNotebook().GetCurrentPage().GetDocument()
     
     #############################################################################
@@ -8310,6 +8241,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     
     #############################################################################
     def OnClose(self, evt):
+#        print "OnClose"
 #        try:
 #            draw_cairo.enregistrerConfigFiche(self.nomFichierConfig)
 #        except IOError:
@@ -8325,7 +8257,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             print "   Permission d'enregistrer les options refusée...",
         except:
             print "   Erreur enregistrement options...",
-        
+#        
         
         
         # Close all ChildFrames first else Python crashes
@@ -8336,9 +8268,11 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                     if isinstance(k, FenetreDocument):
                         toutferme = toutferme and k.quitter()  
         
+#        print ">>", toutferme
         if toutferme:
             evt.Skip()
             sys.exit()
+#            self.Destroy()
 
         
         
@@ -9686,9 +9620,8 @@ class BaseFiche(wx.ScrolledWindow):
             wx.EndBusyCursor()
             
         redess()
-#        wx.CallAfter(redess)
-#        a = threading.Thread(None, redess, None) 
-#        a.start()
+
+
     
     #############################################################################            
     def normalize(self, cr):
@@ -16289,9 +16222,6 @@ def get_key(dic, value, pos = None):
 #    --> récupération des paramétres passés en ligne de commande
 #
 ####################################################################################
-#from asyncore import dispatcher, loop
-#import sys, time, socket, threading
-
 class SeqApp(wx.App):
     def OnInit(self):
         wx.Log.SetLogLevel(0) # ?? Pour éviter le plantage de wxpython 3.0 avec Win XP pro ???
@@ -17122,52 +17052,17 @@ class A_propos(wx.Dialog):
         
         self.SetSizerAndFit(sizer)
 
-##############################################################################################################
-##
-## Connexion à la page Google Drive
-## 
-##############################################################################################################
-#import threading
-#class Connexion(threading.Thread): 
-#    def __init__(self, nom = ''): 
-#        threading.Thread.__init__(self) 
-#        self.nom = nom 
-#        self._stopevent = threading.Event( ) 
-#    
-#    def run(self): 
-#        i = 0 
-#        while not self._stopevent.isSet(): 
-#            print self.nom, i 
-#            i += 1 
-#            self._stopevent.wait(2.0) 
-#        print "le thread "+self.nom +" s'est termine proprement" 
-#    
-#    def stop(self): 
-#        self._stopevent.set( ) 
-  
-#a = Affiche('Thread A') 
-#b = Affiche('Thread B') 
-#c = Affiche2('Thread C') 
-#  
-#a.start() 
-#b.start() 
-#c.start() 
-#time.sleep(6.5) 
-#a._Thread__stop() 
-#b.stop() 
-#c.stop()
-        
+
 
 
 if __name__ == '__main__':
+    server = None
     if sys.platform == "win32":
         import serveur
         import socket
         HOST, PORT = socket.gethostname(), 61955
         
         print "HOST :", HOST
-        
-        server = None
         # On teste si pySequence est déja ouvert ...
         #  = demande de connection au client (HOST,PORT) accéptée
         try:
@@ -17188,6 +17083,7 @@ if __name__ == '__main__':
                 pass 
             app = SeqApp(False)
             app.MainLoop()
+
     else:
         app = SeqApp(False)
         app.MainLoop()

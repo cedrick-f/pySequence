@@ -44,7 +44,7 @@ import wx
 
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "6.0-beta.19"
+__version__ = "6.0-beta.20"
 print __version__
 
 
@@ -52,6 +52,13 @@ print __version__
 def GetVersion_cxFreeze():
     return __version__.replace("-beta", ".0")
 
+###############################################################################################
+def GetVersion_short():
+    return __version__.split('.')[0]
+
+###############################################################################################
+def GetAppnameVersion():
+    return __appname__+" "+GetVersion_short()
 
 ###############################################################################################
 def GetNewVersion(win):  
