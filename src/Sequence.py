@@ -97,7 +97,7 @@ except ImportError: # if it's not there locally, try the wxPython lib.
     import wx.lib.agw.genericmessagedialog as GMD
 
 #if not "beta" in version.__version__:
-sys.excepthook = MyExceptionHook
+#sys.excepthook = MyExceptionHook
 
 
 
@@ -283,6 +283,7 @@ class AppelEvent(wx.PyCommandEvent):
         return self.file
     
     
+######################################################################################  
 def testRel(lien, path):
     try:
         return os.path.relpath(lien,path)
@@ -700,8 +701,8 @@ def GetObjectFromClipBoard(instance):
 #
 ######################################################################################  
 class Objet_sequence():
-    def __init__(self):
-        self.elem = None
+#    def __init__(self):
+#        self.elem = None
         
 #    def SetSVGTitre(self, p, titre):
 #        print "SetSVGTitre", titre
@@ -734,6 +735,12 @@ class Objet_sequence():
 
     ######################################################################################  
     def EnrichiSVG(self, doc, seance = False):
+        """ Enrichissement de l'image SVG <doc> (format XML) avec :
+             - mise en surbrillance des éléments actifs
+             - infobulles sur les éléments actifs
+             - liens 
+             - ...
+        """
 #        print "EnrichiSVG", doc, seance
         # 
         # Le titre de la page
@@ -852,7 +859,6 @@ class Objet_sequence():
             cl = self.parent.classe
         else:
             cl = self.classe
-            
         return cl
             
     ######################################################################################  
@@ -863,12 +869,17 @@ class Objet_sequence():
             return cl.familleEnseignement
         
         return cl.typeEnseignement
-        
-        
+    
+#    ######################################################################################  
+#    def GetDocument(self):    
+#        return self.projet
+    
     ######################################################################################  
     def GetReferentiel(self):
-        return self.GetClasse().referentiel
-            
+        try:
+            return self.GetClasse().referentiel
+        except:
+            return REFERENTIELS[self.GetTypeEnseignement()]
     
     ######################################################################################  
     def GetProjetRef(self):
@@ -1356,7 +1367,7 @@ class BaseDoc():
 
         
 ####################################################################################################          
-class Sequence(BaseDoc):
+class Sequence(BaseDoc, Objet_sequence):
     def __init__(self, app, classe = None, panelParent = None, intitule = u"Intitulé de la séquence pédagogique"):
         BaseDoc.__init__(self, app, classe, panelParent, intitule)
         
@@ -1446,13 +1457,17 @@ class Sequence(BaseDoc):
     
     ######################################################################################  
     def EnrichiSVG(self, doc):
+        """ Enrichissement de l'image SVG <doc> (format XML) avec :
+             - mise en surbrillance des éléments actifs
+             - infobulles sur les éléments actifs
+             - liens 
+             - ...
+        """
         if hasattr(self, 'app'):
-#            print "   ajout titre"
             t = doc.createElement("title")
             txt = doc.createTextNode(os.path.split(self.app.fichierCourant)[1])
             t.appendChild(txt)
             svg = doc.getElementsByTagName("svg")[0]
-#            print svg
             svg.insertBefore(t, svg.childNodes[0])
             
         self.obj["C"].EnrichiSVG(doc)
@@ -2045,21 +2060,9 @@ class Sequence(BaseDoc):
         return nomsSeances, intSeances
         
         
-    ######################################################################################  
-    def GetTypeEnseignement(self, simple = False):
-        cl = self.classe
-            
-        if simple:
-            return cl.familleEnseignement
+
         
-        return cl.typeEnseignement
-        
-    ######################################################################################  
-    def GetReferentiel(self):
-        try:
-            return self.classe.GetReferentiel()
-        except:
-            return REFERENTIELS[self.GetTypeEnseignement()]
+
         
     ######################################################################################  
     def HitTest(self, x, y):     
@@ -2125,15 +2128,19 @@ class Sequence(BaseDoc):
         else:
             if self.classe != None:
                 self.classe.Verrouiller(True)
-        
-        
-        
-        
+
+
+
+
+####################################################################################################
+#
+#        Projet
+#
 ####################################################################################################
 class Projet(BaseDoc, Objet_sequence):
     def __init__(self, app, classe = None, panelParent = None, intitule = u""):
         BaseDoc.__init__(self, app, classe, panelParent, intitule)
-        Objet_sequence.__init__(self)
+#        Objet_sequence.__init__(self)
         
         self.version = "" # version de pySéquence avec laquelle le fichier a été sauvegardé
         
@@ -2202,12 +2209,16 @@ class Projet(BaseDoc, Objet_sequence):
     def __repr__(self):
         return self.intitule
 
+
     ######################################################################################  
     def GetType(self):
         return 'prj'
-        
+
+
     ######################################################################################  
     def GetProjetRef(self):
+        """ Renvoie le projet (Referentiel.Projet) de référence
+        """
         if self.code == None:
             return self.GetReferentiel().getProjetDefaut()
         else:
@@ -2215,15 +2226,7 @@ class Projet(BaseDoc, Objet_sequence):
                 return self.GetReferentiel().projets[self.code]
             else:
                 return None
-    
-    
-#    ######################################################################################  
-#    def SetPath(self, fichierCourant):
-#        pathseq = os.path.split(fichierCourant)[0]
-#        for t in self.taches:
-#            t.SetPathSeq(pathseq)    
-#        for sy in self.systemes:
-#            sy.SetPathSeq(pathseq) 
+
         
     ######################################################################################  
     def GetDuree(self):
@@ -2304,17 +2307,17 @@ class Projet(BaseDoc, Objet_sequence):
         return None
         
     ######################################################################################  
-    def EnrichiObjetsSVG(self, doc):
+    def EnrichiSVG(self, doc):
+        """ Enrichissement de l'image SVG <doc> (format XML) avec :
+             - mise en surbrillance des éléments actifs
+             - infobulles sur les éléments actifs
+             - liens 
+             - ...
+        """
         for s in self.taches:
             s.EnrichiSVG(doc)
         self.support.EnrichiSVG(doc)
         self.EnrichiSVG(doc)
-#        self.obj["C"].EnrichiSVG(doc)
-#        self.obj["S"].EnrichiSVG(doc)
-#        self.prerequis.EnrichiSVG(doc)
-#        self.CI.EnrichiSVG(doc)
-#        for s in self.seances:
-#            s.EnrichiSVGse(doc)
         return
             
     
@@ -3561,7 +3564,7 @@ class Projet(BaseDoc, Objet_sequence):
 ####################################################################################
 class CentreInteret(Objet_sequence):
     def __init__(self, parent, panelParent, numCI = []):
-        Objet_sequence.__init__(self)
+#        Objet_sequence.__init__(self)
         self.parent = parent
         self.numCI = []
         self.poids = []
@@ -3738,7 +3741,7 @@ class CentreInteret(Objet_sequence):
 ####################################################################################
 class Competences(Objet_sequence):
     def __init__(self, parent, panelParent, numComp = None):
-        Objet_sequence.__init__(self)
+#        Objet_sequence.__init__(self)
 #        self.clefs = Competences.keys()
 #        self.clefs.sort()
         self.parent = parent
@@ -3839,7 +3842,7 @@ class Competences(Objet_sequence):
 ####################################################################################
 class Savoirs(Objet_sequence):
     def __init__(self, parent, panelParent, num = None, prerequis = False):
-        Objet_sequence.__init__(self)
+#        Objet_sequence.__init__(self)
         self.parent = parent # la séquence
 #        self.num = num
         self.savoirs = []
@@ -3988,7 +3991,7 @@ class Seance(ElementDeSequence, Objet_sequence):
         """
     
         ElementDeSequence.__init__(self)
-        Objet_sequence.__init__(self)
+#        Objet_sequence.__init__(self)
         
         # Les données sauvegardées
         self.ordre = 0
@@ -5022,7 +5025,7 @@ class Tache(Objet_sequence):
         """
 #        print "__init__ tâche", phaseTache
         
-        Objet_sequence.__init__(self)
+#        Objet_sequence.__init__(self)
         
         # Les données sauvegardées
         self.ordre = 100
@@ -6071,7 +6074,7 @@ class Support(ElementDeSequence, Objet_sequence):
     def __init__(self, parent, panelParent, nom = u""):
         
         ElementDeSequence.__init__(self)
-        Objet_sequence.__init__(self)
+#        Objet_sequence.__init__(self)
         
         self.parent = parent
         self.nom = nom
@@ -6491,6 +6494,7 @@ class Eleve(Personne, Objet_sequence):
  
         
         
+    ######################################################################################  
     def GetFicheHTML(self):
         cr = constantes.GetCouleurHTML(COUL_PARTIE['C'])
         cs = constantes.GetCouleurHTML(COUL_PARTIE['S'])
@@ -7454,13 +7458,28 @@ class PanelConteneur(wx.Panel):
 
 ####################################################################################
 #
+#   Classes pour gérer les boutons de la Toolbar principale
+#
+####################################################################################
+class BoutonToolBar():
+    def __init__(self, label, image, shortHelp = u"", longHelp = u""):
+        self.label = label
+        self.image = image
+        self.shortHelp = shortHelp
+        self.longHelp = longHelp
+#        self.fonction = fonction
+    
+
+        
+        
+####################################################################################
+#
 #   Classes définissant la fenêtre principale de l'application
 #
 ####################################################################################
 class FenetrePrincipale(aui.AuiMDIParentFrame):
     def __init__(self, parent, fichier):
         aui.AuiMDIParentFrame.__init__(self, parent, -1, version.GetAppnameVersion(), style=wx.DEFAULT_FRAME_STYLE)
-        
         
         self.Freeze()
         wx.lib.colourdb.updateColourDB()
@@ -7604,6 +7623,44 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         self.elementCopie = data      
         
     ###############################################################################################
+    def GetTools(self, typ):
+        if typ == 'prj':
+            return {50 : BoutonToolBar(u"Ajouter un élève",
+                                   images.Icone_ajout_eleve.GetBitmap(), 
+                                   shortHelp = u"Ajout d'un élève au projet", 
+                                   longHelp = u"Ajout d'un élève au projet"),
+                
+                    51 : BoutonToolBar(u"Ajouter un professeur", 
+                                       images.Icone_ajout_prof.GetBitmap(), 
+                                       shortHelp = u"Ajout d'un professeur à l'équipe pédagogique", 
+                                       longHelp = u"Ajout d'un professeur à l'équipe pédagogique"),
+                    
+                    52 : BoutonToolBar(u"Ajouter une tâche", 
+                                       images.Icone_ajout_tache.GetBitmap(), 
+                                       shortHelp=u"Ajout d'une tâche au projet", 
+                                       longHelp=u"Ajout d'une tâche au projet"),
+                    
+                    53 : BoutonToolBar(u"Ajouter une revue", 
+                                       images.Icone_ajout_revue.GetBitmap(), 
+                                       shortHelp = u"Ajout d'une revue au projet", 
+                                       longHelp = u"Ajout d'une revue au projet")
+                }
+        
+        elif typ == 'seq':
+            return {60 : BoutonToolBar(u"Ajouter une séance", 
+                                    images.Icone_ajout_seance.GetBitmap(), 
+                                    shortHelp=u"Ajout d'une séance dans la séquence", 
+                                    longHelp=u"Ajout d'une séance dans la séquence"),
+
+                  61 : BoutonToolBar(u"Ajouter un système", 
+                                     images.Icone_ajout_systeme.GetBitmap(), 
+                                     shortHelp=u"Ajout d'un système", 
+                                     longHelp=u"Ajout d'un système")
+                  }
+            
+            
+            
+    ###############################################################################################
     def ConstruireTb(self):
         """ Construction de la ToolBar
         """
@@ -7652,49 +7709,16 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
 
         #################################################################################################################
         #
-        # Outils "Projet"
+        # Outils "Projet" ou  "séquence" ou ...
         #
         #################################################################################################################
-        self.tool_pe = self.tb.AddLabelTool(50, u"Ajouter un élève", images.Icone_ajout_eleve.GetBitmap(), 
-                             shortHelp=u"Ajout d'un élève au projet", 
-                             longHelp=u"Ajout d'un élève au projet")
+        self.tools = {'prj' : {}, 'seq' : {}}
+        for typ in ['prj', 'seq']:
+            for i, tool in self.GetTools(typ).items():
+                self.tools[typ][i] = self.tb.AddLabelTool(i, tool.label, tool.image, 
+                                                           shortHelp = tool.shortHelp, 
+                                                           longHelp = tool.longHelp)
 
-        
-        
-        self.tool_pp = self.tb.AddLabelTool(51, u"Ajouter un professeur", images.Icone_ajout_prof.GetBitmap(), 
-                             shortHelp=u"Ajout d'un professeur à l'équipe pédagogique", 
-                             longHelp=u"Ajout d'un professeur à l'équipe pédagogique")
-
-        
-        
-        self.tool_pt = self.tb.AddLabelTool(52, u"Ajouter une tâche", images.Icone_ajout_tache.GetBitmap(), 
-                             shortHelp=u"Ajout d'une tâche au projet", 
-                             longHelp=u"Ajout d'une tâche au projet")
-        
-
-        
-        
-        
-        #################################################################################################################
-        #
-        # Outils "Séquence"
-        #
-        #################################################################################################################
-        self.tool_ss = self.tb.AddLabelTool(60, u"Ajouter une séance", images.Icone_ajout_seance.GetBitmap(), 
-                             shortHelp=u"Ajout d'une séance dans la séquence", 
-                             longHelp=u"Ajout d'une séance dans la séquence")
-
-        
-        
-        self.tool_sy = self.tb.AddLabelTool(61, u"Ajouter un système", images.Icone_ajout_systeme.GetBitmap(), 
-                             shortHelp=u"Ajout d'un système", 
-                             longHelp=u"Ajout d'un système")
-#
-#        
-#        
-#        self.tool_pt = self.tb_p.AddLabelTool(62, u"Ajouter ", images.Icone_ajout_tache.GetBitmap(), 
-#                             shortHelp=u"Ajout d'une tâche au projet", 
-#                             longHelp=u"Ajout d'une tâche au projet")
         
 
         self.tb.AddSeparator()
@@ -7729,41 +7753,33 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         #
         #################################################################################################################
         self.tb.Realize()
+        self.supprimerOutils()
         
         
+    ###############################################################################################
+    def supprimerOutils(self):
         self.tb.RemoveTool(60)
         self.tb.RemoveTool(61)
         self.tb.RemoveTool(50)
         self.tb.RemoveTool(51)
         self.tb.RemoveTool(52)
+        self.tb.RemoveTool(53)
 
 
     ###############################################################################################
-    def ajouterOutilsProjet(self):
-        self.tb.RemoveTool(50)
-        self.tb.RemoveTool(51)
-        self.tb.RemoveTool(52)
-        self.tb.RemoveTool(60)
-        self.tb.RemoveTool(61)
+    def ajouterOutils(self, typ):
+        self.supprimerOutils()
 
-        self.tb.InsertToolItem(5,self.tool_pe)
-        self.tb.InsertToolItem(6, self.tool_pp)
-        self.tb.InsertToolItem(7, self.tool_pt)
-        self.tb.Realize()
-
-
-    ###############################################################################################
-    def ajouterOutilsSequence(self):
-        self.tb.RemoveTool(50)
-        self.tb.RemoveTool(51)
-        self.tb.RemoveTool(52)
-        self.tb.RemoveTool(60)
-        self.tb.RemoveTool(61)
+        d = 5
+        for i, tool in self.tools[typ].items():
+            self.tb.InsertToolItem(d,tool)
+            d += 1
         
-        self.tb.InsertToolItem(5, self.tool_ss)
-        self.tb.InsertToolItem(6, self.tool_sy)
-
+        
         self.tb.Realize()
+
+
+    
         
         
     ###############################################################################################
@@ -8153,32 +8169,29 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
     ###############################################################################################
     def OnDocChanged(self, evt):
-        """ Opérations de modification du menu et des barres d'outil 
+        """ Opérations de modification du menu et des barres d'outils 
             en fonction du type de document en cours
         """
-        doc = self.GetClientWindow().GetAuiManager().GetManagedWindow().GetCurrentPage()
-        if hasattr(doc, 'typ'):
-            
-            if doc.typ == "prj":
-                self.ajouterOutilsProjet()
-                self.Bind(wx.EVT_TOOL, doc.projet.AjouterEleve, id=50)
-                self.Bind(wx.EVT_TOOL, doc.projet.AjouterProf, id=51)
-                self.Bind(wx.EVT_TOOL, doc.AjouterTache, id=52)
+        fenDoc = self.GetClientWindow().GetAuiManager().GetManagedWindow().GetCurrentPage()
+        if hasattr(fenDoc, 'typ'):
+            self.ajouterOutils(fenDoc.typ )
+            if fenDoc.typ == "prj":
+                self.Bind(wx.EVT_TOOL, fenDoc.projet.AjouterEleve, id=50)
+                self.Bind(wx.EVT_TOOL, fenDoc.projet.AjouterProf, id=51)
+                self.Bind(wx.EVT_TOOL, fenDoc.AjouterTache, id=52)
+                self.Bind(wx.EVT_TOOL, fenDoc.projet.InsererRevue, id=53)
                 
-            elif doc.typ == "seq":
-                self.ajouterOutilsSequence()
-                self.Bind(wx.EVT_TOOL, doc.sequence.AjouterSeance, id=60)
-                self.Bind(wx.EVT_TOOL, doc.sequence.AjouterSysteme, id=61)
-    #                self.Bind(wx.EVT_TOOL, self.GetActiveChild().projet.AjouterEleve, id=50)
-    #                self.Bind(wx.EVT_TOOL, self.GetActiveChild().projet.AjouterProf, id=51)
-    #                self.Bind(wx.EVT_TOOL, self.GetActiveChild().projet.AjouterTache, id=52)
+            elif fenDoc.typ == "seq":
+                self.Bind(wx.EVT_TOOL, fenDoc.sequence.AjouterSeance, id=60)
+                self.Bind(wx.EVT_TOOL, fenDoc.sequence.AjouterSysteme, id=61)
     
-            if doc.typ == "prj":
+            if fenDoc.typ == "prj":
                 self.file_menu.Enable(18, True)
                 self.file_menu.Enable(17, True)
                 self.file_menu.Enable(19, True)
                 self.file_menu.Enable(20, True)
-            elif doc.typ == "seq":
+                
+            elif fenDoc.typ == "seq":
                 self.file_menu.Enable(18, True)
                 self.file_menu.Enable(17, False)
                 self.file_menu.Enable(19, False)
@@ -8289,7 +8302,6 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         
         aui.AuiMDIChildFrame.__init__(self, parent, -1, "")#, style = wx.DEFAULT_FRAME_STYLE | wx.SYSTEM_MENU)
 #        self.SetExtraStyle(wx.FRAME_EX_CONTEXTHELP)
-        
         
         self.parent = parent
         
@@ -8592,7 +8604,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
 
     #############################################################################
     def enrichirSVG(self, path):
-        """ Enrichissement de l'image SVG avec :
+        """ Enrichissement de l'image SVG <path> avec :
              - mise en surbrillance des éléments actifs
              - infobulles sur les éléments actifs
              - liens 
@@ -8610,10 +8622,11 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         def match(p0, p1):
             return abs(p0[0]-p1[0])<epsilon and abs(p0[1]-p1[1])<epsilon
         
-        if self.typ == 'seq':
-            pts_caract = self.sequence.GetPtCaract()
-        else:
-            pts_caract = self.projet.GetPtCaract()
+        pts_caract = self.GetDocument().GetPtCaract()
+#        if self.typ == 'seq':
+#            pts_caract = self.sequence.GetPtCaract()
+#        else:
+#            pts_caract = self.projet.GetPtCaract()
         
         
         for p in doc.getElementsByTagName("path"):
@@ -8630,10 +8643,11 @@ class FenetreDocument(aui.AuiMDIChildFrame):
                         if type(flag) != str:
                             break 
         
-        if self.typ == 'seq':
-            self.sequence.EnrichiSVG(doc)
-        elif self.typ == 'prj':
-            self.projet.EnrichiObjetsSVG(doc)
+        self.GetDocument().EnrichiSVG(doc)
+#        if self.typ == 'seq':
+#            self.sequence.EnrichiSVG(doc)
+#        elif self.typ == 'prj':
+#            self.projet.EnrichiObjetsSVG(doc)
             
         doc.writexml(f, '   ', encoding = "utf-8")
         f.close
@@ -8702,6 +8716,18 @@ class FenetreSequence(FenetreDocument):
         self.nb.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
         
         self.miseEnPlace()
+        
+    
+    ###############################################################################################
+    def ajouterOutils(self):
+        self.parent.supprimerOutils()
+        
+        self.parent.tb.InsertToolItem(5, self.parent.tool_ss)
+        self.parent.tb.InsertToolItem(6, self.parent.tool_sy)
+
+        self.parent.tb.Realize()
+    
+        
         
     ###############################################################################################
     def GetDocument(self):
@@ -8919,6 +8945,20 @@ class FenetreProjet(FenetreDocument):
         
         wx.CallAfter(self.Thaw)
         self.nb.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
+        
+        
+    
+
+
+    ###############################################################################################
+    def ajouterOutils(self):
+        self.parent.supprimerOutils()
+
+        self.parent.tb.InsertToolItem(5,self.parent.tool_pe)
+        self.parent.tb.InsertToolItem(6, self.parent.tool_pp)
+        self.parent.tb.InsertToolItem(7, self.parent.tool_pt)
+        self.parent.tb.InsertToolItem(7, self.parent.tool_pr)
+        self.parent.tb.Realize()
         
     ###############################################################################################
     def GetDocument(self):
