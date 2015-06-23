@@ -10756,6 +10756,7 @@ class PanelPropriete_Classe(PanelPropriete):
         #
         self.pourProjet = pourProjet
         titre = wx.StaticBox(pageGen, -1, u"Type d'enseignement")
+        titre.SetMinSize((180, 100))
         sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
         te = ArbreTypeEnseignement(pageGen, self)
         self.st_type = wx.StaticText(pageGen, -1, "")
@@ -10891,6 +10892,7 @@ class PanelPropriete_Classe(PanelPropriete):
     
         self.Bind(wx.EVT_SIZE, self.OnResize)
         
+        self.Layout()
         
 #        wx.CallAfter(self.cb_type.CollapseAll)
 #        wx.CallAfter(self.Thaw)
@@ -10898,17 +10900,12 @@ class PanelPropriete_Classe(PanelPropriete):
         
     ######################################################################################              
     def OnResize(self, evt = None):
-#        print "Resize ArbreTypeEnseignement", self.GetClientSize()
-        self.cb_type.SetMinSize((-1, self.GetClientSize()[1]-30))
-        self.cb_type.Layout()
-        self.pageGen.sizer.Layout()
+        self.nb.SetMinSize((-1,self.GetClientSize()[1]))
+        self.Layout()
         if evt:
             evt.Skip()
-
-
     
-        
-        
+
     ###############################################################################################
     def commandeOuvrir(self, event = None, nomFichier = None):
         mesFormats = constantes.FORMAT_FICHIER_CLASSE['cla'] + constantes.TOUS_FICHIER
@@ -16018,59 +16015,48 @@ class ArbreCompetencesPopup(CT.CustomTreeCtrl):
 #
 ####################################################################################*
 
-class ArbreTypeEnseignement(HTL.HyperTreeList):
+class ArbreTypeEnseignement(CT.CustomTreeCtrl):
     def __init__(self, parent, panelParent, 
                  pos = wx.DefaultPosition,
                  size = wx.DefaultSize,
-                 style = wx.WANTS_CHARS|wx.NO_BORDER):
+                 style = wx.WANTS_CHARS):#|wx.BORDER_SIMPLE):
 
 #        wx.Panel.__init__(self, parent, -1, pos, size)
         
-        HTL.HyperTreeList.__init__(self, parent, -1, pos, size, style, 
-                                   agwStyle = CT.TR_HIDE_ROOT|HTL.TR_NO_HEADER|\
-                                  CT.TR_ALIGN_WINDOWS|CT.TR_AUTO_CHECK_CHILD|\
-                                  CT.TR_AUTO_CHECK_PARENT|CT.TR_AUTO_TOGGLE_CHILD|\
-                                  CT.TR_HAS_VARIABLE_ROW_HEIGHT)
+        CT.CustomTreeCtrl.__init__(self, parent, -1, pos, (150, -1), style, 
+                                   agwStyle = CT.TR_HIDE_ROOT|CT.TR_FULL_ROW_HIGHLIGHT\
+                                   |CT.TR_HAS_VARIABLE_ROW_HEIGHT)#CT.TR_ALIGN_WINDOWS|CT.TR_HAS_BUTTONS|CCT.TR_NO_HEADER|T.TR_AUTO_TOGGLE_CHILD|\CT.TR_AUTO_CHECK_CHILD|\CT.TR_AUTO_CHECK_PARENT|
         self.Unbind(wx.EVT_KEY_DOWN)
         self.panelParent = panelParent
 #        self.SetBackgroundColour(wx.WHITE)
         self.SetToolTip(wx.ToolTip(u"Choisir le type d'enseignement"))
         
-        self.AddColumn(u"")
-        self.SetMainColumn(0)
+        self.Bind(wx.EVT_TREE_SEL_CHANGED, self.OnClick)
+#        self.Bind(wx.EVT_TREE_ITEM_COLLAPSING, self.OnItemCollapsed)
+        
+#        self.AddColumn(u"")
+#        self.SetMainColumn(0)
         self.root = self.AddRoot("r")
         self.Construire(self.root)
-        self.ExpandAll()
         
-#        wx.CallAfter(self.ExpandAll)
+
         
-#        sizer = wx.BoxSizer()
-#        sizer.Add(self.ctc, flag = wx.EXPAND)
-#        self.SetSizer(sizer)
-#        self.Bind(wx.EVT_SIZE, self.OnResize)
-#        
-#    ######################################################################################              
-#    def OnResize(self, evt):
-#        print "Resize ArbreTypeEnseignement", self.GetVirtualSize()
-#        self.SetMinSize(self.GetVirtualSize())
-#        self.Update()
-#        evt.Skip()
-#        
         
     ######################################################################################  
     def Construire(self, racine):
         """ Construction de l'arbre
         """
 #        print "Construire ArbreTypeEnseignement"
+#        print ARBRE_REF
         self.branche = []
-        self.ExpandAll()
+#        self.ExpandAll()
         for t, st in ARBRE_REF.items():
             if t[0] == "_":
                 branche = self.AppendItem(racine, REFERENTIELS[st[0]].Enseignement[2])
             else:
                 branche = self.AppendItem(racine, u"")#, ct_type=2)#, image = self.arbre.images["Seq"])
                 rb = wx.RadioButton(self, -1, REFERENTIELS[t].Enseignement[0])
-                self.Bind(wx.EVT_RADIOBUTTON, self.panelParent.EvtRadioBox, rb)
+                self.Bind(wx.EVT_RADIOBUTTON, self.EvtRadioBox, rb)
                 self.SetItemWindow(branche, rb)
                 rb.SetToolTipString(REFERENTIELS[t].Enseignement[1])
                 rb.Enable(len(REFERENTIELS[t].projets) > 0 or not self.panelParent.pourProjet)
@@ -16078,13 +16064,28 @@ class ArbreTypeEnseignement(HTL.HyperTreeList):
             for sst in st:
                 sbranche = self.AppendItem(branche, u"")#, ct_type=2)
                 rb = wx.RadioButton(self, -1, REFERENTIELS[sst].Enseignement[0])
-                self.Bind(wx.EVT_RADIOBUTTON, self.panelParent.EvtRadioBox, rb)
+                self.Bind(wx.EVT_RADIOBUTTON, self.EvtRadioBox, rb)
                 self.SetItemWindow(sbranche, rb)
                 rb.SetToolTipString(REFERENTIELS[sst].Enseignement[1])
                 rb.Enable(len(REFERENTIELS[sst].projets) > 0 or not self.panelParent.pourProjet)
                 self.branche.append(sbranche)
-#        self.Layout()
-    
+        
+        self.ExpandAll()
+        self.CollapseAll()
+        
+    ######################################################################################              
+    def EvtRadioBox(self, event):
+        wnd = event.GetEventObject()
+        for item in self.branche:
+            if item.GetWindow() == wnd:# and item.GetParent()== self.root:
+                self.OnClick(item = item)
+                break
+        
+#        if event.GetEventObject().GetParent() == self.root:
+#            self.OnClick(event)
+        self.panelParent.EvtRadioBox(event)
+        
+        
     ######################################################################################              
     def SetStringSelection(self, label):
         for rb in self.branche:
@@ -16092,6 +16093,38 @@ class ArbreTypeEnseignement(HTL.HyperTreeList):
                 rb.GetWindow().SetValue(True)
           
       
+    ######################################################################################              
+    def OnClick(self, event = None, item = None):
+#        print "OnClick"
+        if item == None:
+            item = event.GetItem()
+        else:
+            self.SelectItem(item)
+            
+        if item.GetParent()== self.root:
+            self.Freeze()
+            self.CollapseAll()
+            self.Expand(item)
+            self.AdjustMyScrollbars()
+            self.ScrollLines(1)
+            self.ScrollLines(-1)
+            self.Thaw()
+#            self.Scroll()
+
+
+    ######################################################################################              
+    def CollapseAll(self):
+#        print "CollapseAll"
+        (child, cookie) = self.GetFirstChild(self.root)
+        while child:
+            self.Collapse(child)
+#            self.CalculatePositions()
+            child = self.GetNextSibling(child)
+        self.RefreshSubtree(self.root)
+#        self.GetMainWindow().AdjustMyScrollbars()
+#        self.GetMainWindow().Layout()
+
+ 
     
     
     
