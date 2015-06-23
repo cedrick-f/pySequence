@@ -6452,7 +6452,25 @@ def supprime_accent(ligne):
 #   Classe définissant les propriétés d'un élève
 #
 ####################################################################################
-BASE_FICHE_HTML = u"""<?xml version="1.0" encoding="utf-8"?><HTML>
+class Eleve(Personne, Objet_sequence):
+    def __init__(self, projet, panelParent, ident = 0):
+        
+        self.titre = u"élève"
+        self.code = "Elv"
+        
+        self.grille = {} #[Lien(typ = 'f'), Lien(typ = 'f')]
+        for k in projet.GetProjetRef().parties.keys():
+            self.grille[k] = Lien(typ = 'f')
+        
+        Personne.__init__(self, projet, panelParent, ident)
+ 
+        
+        
+    ######################################################################################  
+    def GetFicheHTML(self):
+        cr = constantes.GetCouleurHTML(COUL_PARTIE['C'])
+        cs = constantes.GetCouleurHTML(COUL_PARTIE['S'])
+        BASE_FICHE_HTML = u"""<?xml version="1.0" encoding="utf-8"?><HTML>
     <p style="text-align: center;"><font size="12"><b>Elève</b></font></p>
 <p id="nom">Nom-Prénom</p>
 <p id="av"></p>
@@ -6479,25 +6497,6 @@ BASE_FICHE_HTML = u"""<?xml version="1.0" encoding="utf-8"?><HTML>
 </table>
 </HTML>
 """
-
-class Eleve(Personne, Objet_sequence):
-    def __init__(self, projet, panelParent, ident = 0):
-        
-        self.titre = u"élève"
-        self.code = "Elv"
-        
-        self.grille = {} #[Lien(typ = 'f'), Lien(typ = 'f')]
-        for k in projet.GetProjetRef().parties.keys():
-            self.grille[k] = Lien(typ = 'f')
-        
-        Personne.__init__(self, projet, panelParent, ident)
- 
-        
-        
-    ######################################################################################  
-    def GetFicheHTML(self):
-        cr = constantes.GetCouleurHTML(COUL_PARTIE['C'])
-        cs = constantes.GetCouleurHTML(COUL_PARTIE['S'])
         return BASE_FICHE_HTML %(cr,cs)
 
             
@@ -8162,10 +8161,6 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
 #
 #        dlg.Destroy()
             
-            
-            
-
-        
         
     ###############################################################################################
     def OnDocChanged(self, evt):

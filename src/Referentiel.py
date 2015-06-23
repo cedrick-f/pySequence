@@ -786,27 +786,30 @@ class Referentiel(XMLelem):
         """
 #        print "IMPORTER" , 
         self.initParam()
+
         
         ###########################################################
-        def remplir(sh, col, rng, mode = 1, condition = None, debug = False):
+        def remplir(sh, col, rng, mode = 1, condition = None, debug = False, niveau = 0):
             """ Mode = 1 : on finit par une liste
                 Mode = 2 : on finit par un dict
             """
-            if debug: print "***", col, rng
+            if debug: print "  "*niveau+"remplir : col="+chr(65+col), "lignes=",[n+1 for n in rng]
             if rng == [] and mode == 2:
                 return None
 #            self.prof_Comp = max(self.prof_Comp, col)
             lig = [l  for l in rng if sh.cell(l,col).value != u""]
-            if debug: print lig
+            if debug: print "  "*niveau+">> branches :", [n+1 for n in lig]
+            
             if lig == rng:
-                if debug: print "FIN"
+                if debug: print "  "*niveau+"FIN"
                 if mode == 1:
-                    if col+1 >= sh.ncols or sh.cell(lig[0],col+1).value == u"":
+                    if  col+1 >= sh.ncols or (len(lig)>0 and sh.cell(lig[0],col+1).value) == u"":
                         return [sh.cell(l,col).value for l in lig]
                     else:
                         d = {}
                         for l in lig:
                             if condition == None or sh.cell(l,4).value == condition:
+                                if debug: print "  "*niveau+str(sh.cell(l,col).value)
                                 d[str(sh.cell(l,col).value)] = [sh.cell(l,col+1).value, []]
                         return d
                         
@@ -815,6 +818,7 @@ class Referentiel(XMLelem):
                     d = {}
                     for l in lig:
                         if condition == None or sh.cell(l,4).value == condition:
+                            if debug: print "  "*niveau+str(sh.cell(l,col).value)
                             d[str(sh.cell(l,col).value)] = sh.cell(l,col+1).value
                     if condition == None or len(d) > 0:
                         return d
@@ -824,11 +828,13 @@ class Referentiel(XMLelem):
 #                if len(lig) > 0:
                 
                 llig = lig + [rng[-1]+1]
+                
                 dic = {}
                 for i, p in enumerate(lig):
-                    if debug: print "-> ",lig
-                    sdic = remplir(sh, col+1, range(p+1, llig[i+1]), mode = mode, condition = condition, debug = debug)
+                    if debug: print "  "*niveau+"-> ", i, [n+1 for n in lig], [n+1 for n in llig]
+                    sdic = remplir(sh, col+1, range(p+1, llig[i+1]), mode = mode, condition = condition, debug = debug, niveau = niveau+1)
                     if sdic != None:
+                        if debug: print "  "*niveau+"+++"+str(sh.cell(p,col).value)
                         dic[str(sh.cell(p,col).value)] = [sh.cell(p,col+1).value, sdic]
                 return dic
           
@@ -1179,7 +1185,7 @@ class Referentiel(XMLelem):
         if u"Math" in wb.sheet_names():
             sh_va = wb.sheet_by_name(u"Math")   
             self.nomSavoirs_Math = sh_va.cell(0,0).value
-            self.dicSavoirs_Math = remplir(sh_va, 0, range(1, sh_va.nrows))
+            self.dicSavoirs_Math = remplir(sh_va, 0, range(1, sh_va.nrows), debug = False, niveau = 0)
             self.objSavoirs_Math = 'O' in sh_va.cell(0,5).value
             self.preSavoirs_Math = 'P' in sh_va.cell(0,5).value
         
