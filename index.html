@@ -24,6 +24,15 @@
       });
     </script>
     <script>
+      $(function() {
+          // Use .on() to bind click even on dynamically added elements
+          $(document).on('click', '.lien', function(e) {
+            e.preventDefault();
+            $('#includedContent').load($(this).attr('href'));
+          });
+      });
+    </script>
+    <script>
       $(document).ready(function () {
         $('#menuDeroulant > li > a').click(function(e){
            if ($(this).attr('class') != 'active'){
@@ -75,11 +84,8 @@
               <li><a href="#">champagne</a></li>
             </ul>
           </li>
-            <li> <a href="faq.html">F.A.Q.</a>
- 
-          </li>
-          <li> <a href="contact.html">Contact</a>
-          </li>
+          <li> <a href="faq.html">F.A.Q.</a> </li>
+          <li> <a href="contact.html">Contact</a> </li>
         </ul>
       </section>
       <section id="main_content" class="inner">
