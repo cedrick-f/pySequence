@@ -1,93 +1,155 @@
 <!DOCTYPE html>
 <html>
+
   <head>
-    <meta content="text/html; charset=utf-8" http-equiv="content-type">
+    <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <meta name="description" content="pySequence : aide à la création de séquences pédagogiques et à la validation de projets">
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet-base.css">
-    <script src="jquery-1.11.3.min.js"></script>
-    <script>
-      $(function() {
-          // Use .on() to bind click even on dynamically added elements
-          $(document).on('click', '.menu a', function(e) {
-      
-              // Prevents default behavior
-              // Clicking on <a> will not redirect the page
-            e.preventDefault();
-              
-              // Get hyperlink, and load page
-            $('#includedContent').load($(this).attr('href'));
-              
-          });
-          // Load the first link by default, when DOM is ready
-        $('#includedContent').load('accueil.html');
-      });
-    </script>
-    <script>
-      $(document).ready(function () {
-        $('#menuDeroulant > li > a').click(function(e){
-           if ($(this).attr('class') != 'active'){
-             $('#menuDeroulant li ul').slideUp();
-             $(this).next().slideToggle();
-             $('#menuDeroulant li a').removeClass('active');
-             $(this).addClass('active');
-           }
-         e.preventDefault();
-        });
-      });
-    </script>
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
     <title>pySequence</title>
   </head>
-  <body>
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer"> <img id="logo_img" src="images/Logo.png"
 
-        height="100" width="100">
-      <header class="inner"> <a id="forkme_banner" href="https://github.com/cedrick-f/pySequence">Voir
-          sur GitHub</a>
-        <h1 id="project_title">pySequence</h1>
-        <h2 id="project_tagline">aide à la création de séquences pédagogiques et
-          à la validation de projets</h2>
-        <section id="downloads"> <a class="zip_download_link" href="https://github.com/cedrick-f/pySequence/zipball/master">Télécharger
-            this project as a .zip file</a> <a class="tar_download_link" href="https://github.com/cedrick-f/pySequence/tarball/master">Download
-            this project as a tar.gz file</a> </section>
-      </header>
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/cedrick-f/pySequence">View on GitHub</a>
+
+          <h1 id="project_title">pySequence</h1>
+          <h2 id="project_tagline">aide à la création de séquences pédagogiques et à la validation de projets</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/cedrick-f/pySequence/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/cedrick-f/pySequence/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
     </div>
+
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
-      <section id="main_menu" class="outer">
-        <ul id="menuDeroulant" class="menu">
-          <li> <a href="accueil.html">Accueil</a> </li>
-          <li> <a href="installation.html">Installation</a> </li>
-          <li> <a href="utilisation.html">Utilisation</a>
-            <ul class="menu">
-              <li><a href="premiers_pas.html">Premiers pas</a></li>
-              <li><a href="sequence.html">Séquence</a></li>
-              <li><a href="projet.html">Projet</a></li>
-            </ul>
-          </li>
-          <li> <a href="#">Partie 2</a>
-            <ul class="menu">
-              <li><a href="#">whisky</a></li>
-              <li><a href="#">vodka</a></li>
-              <li><a href="#">gin</a></li>
-              <li><a href="#">vin</a></li>
-              <li><a href="#">champagne</a></li>
-            </ul>
-          </li>
-            <li> <a href="faq.html">F.A.Q.</a>
- 
-          </li>
-          <li> <a href="contact.html">Contact</a>
-          </li>
-        </ul>
-      </section>
       <section id="main_content" class="inner">
-        <div id="includedContent">a</div>
+        <h1>
+<a id="pyséquence" class="anchor" href="#pys%C3%A9quence" aria-hidden="true"><span class="octicon octicon-link"></span></a>
+<img src="Logo.png" alt="">pySéquence</h1>
+
+<p><em><strong>pySequence</strong></em> est un logiciel <strong><a href="http://www.gnu.org/licenses/gpl.html">libre</a></strong> qui fournit une aide pour :</p>
+
+<ul>
+<li>élaborer des séquences pédagogiques</li>
+<li>décrire et valider des projets</li>
+</ul>
+
+<p><em><strong>pySequence</strong></em> s'adresse particulièrement aux professeurs de <em><strong><a href="http://fr.wikipedia.org/wiki/Sciences_de_l%27ing%C3%A9nieur">Sciences Industrielles de l'Ingénieur</a></strong></em> enseignant dans les filières :</p>
+
+<ul>
+<li>
+<strong>STI2D</strong> (<em>enseignements technologiques transversaux</em> et de <em>spécialité</em>)</li>
+<li>
+<strong>S-SI</strong> (<em>Sciences de l'ingénieur</em> du bac S)</li>
+<li><strong>Technologie collège</strong></li>
+<li>
+<strong>STS Electrotechnique</strong> et <strong>STS Systèmes Numériques</strong> (en travaux !)</li>
+</ul>
+
+<p>et potentiellement <a href="https://github.com/cedrick-f/pySequence/wiki/Nouveau_programme">n'importe quel programme d'enseignement</a>.</p>
+
+<hr>
+
+<h2>
+<a id="fonctionnalités" class="anchor" href="#fonctionnalit%C3%A9s" aria-hidden="true"><span class="octicon octicon-link"></span></a>Fonctionnalités</h2>
+
+<h3>
+<a id="aide-à-lélaboration-de-séquences-pédagogiques-" class="anchor" href="#aide-%C3%A0-l%C3%A9laboration-de-s%C3%A9quences-p%C3%A9dagogiques-" aria-hidden="true"><span class="octicon octicon-link"></span></a>Aide à l'élaboration de <a href="https://github.com/cedrick-f/pySequence/wiki/Fonctionalite_Seq">séquences pédagogiques</a> :</h3>
+
+<ul>
+<li>Structure d'une <strong>séquence pédagogique</strong>
+</li>
+<li>Présentation sous forme de fiche de séquence,</li>
+<li>Nombreux outils d'aide</li>
+</ul>
+
+<p><a href="https://github.com/cedrick-f/pySequence/wiki/captures_ecran">Quelques captures d'écran de fiches de séquence</a></p>
+
+<p><a href="https://github.com/cedrick-f/pySequence/wiki/ExemplesSequences">Quelques exemples de fiches de séquence</a></p>
+
+<h3>
+<a id="aide-à-la-validation-de-projets" class="anchor" href="#aide-%C3%A0-la-validation-de-projets" aria-hidden="true"><span class="octicon octicon-link"></span></a>Aide à la validation de <a href="https://github.com/cedrick-f/pySequence/wiki/Fonctionnalite_Prj">projets</a>
+</h3>
+
+<ul>
+<li>Structure du <strong>projet</strong>
+</li>
+<li>Présentation sous forme de fiche,</li>
+<li>Nombreux outils d'aide</li>
+<li>Génération de la <strong>fiche de validation</strong> conforme aux BO 2014 </li>
+</ul>
+
+<p><a href="https://github.com/cedrick-f/pySequence/wiki/ExemplesProjets">Quelques exemples de fiches de projet</a></p>
+
+<hr>
+
+<h2>
+<a id="téléchargement" class="anchor" href="#t%C3%A9l%C3%A9chargement" aria-hidden="true"><span class="octicon octicon-link"></span></a>Téléchargement</h2>
+
+<ul>
+<li><p>Versions récentes : <a href="https://github.com/cedrick-f/pySequence/releases">https://github.com/cedrick-f/pySequence/releases</a></p></li>
+<li><p>Anciennes versions : <a href="https://drive.google.com/folderview?id=0B2jxnxsuUscPX0tFLVN0cF91TGc#list">https://drive.google.com/folderview?id=0B2jxnxsuUscPX0tFLVN0cF91TGc#list</a></p></li>
+</ul>
+
+<p><em><strong>pySequence</strong></em> existe :</p>
+
+<ul>
+<li>pour Windows :
+
+<ul>
+<li>en version "portable" (idéale pour utilisation sur des dossiers partagés : réseaux, Dropbox, ...)</li>
+<li>en version "installable"</li>
+</ul>
+</li>
+<li>pour Linux ou Mac :
+
+<ul>
+<li>possible à partir des sources ... en suivant <a href="https://github.com/cedrick-f/pySequence/wiki/InstallationMAC">cette méthode</a>
+</li>
+</ul>
+</li>
+</ul>
+
+<hr>
+
+<h2>
+<a id="documentation" class="anchor" href="#documentation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Documentation</h2>
+
+<ul>
+<li>
+<a href="https://github.com/cedrick-f/pySequence/wiki/Aide">Aide</a> en ligne de pySequence.</li>
+<li>Quelques exemples sont fournis avec les packs.</li>
+</ul>
+
+<hr>
+
+<h2>
+<a id="développement" class="anchor" href="#d%C3%A9veloppement" aria-hidden="true"><span class="octicon octicon-link"></span></a>Développement</h2>
+
+<p><em><strong>pySequence</strong></em> est développé par <em>Cédrick FAURY</em> et <em>Jean-Claude FRICOU</em></p>
+
+<p>Toutes les bonnes volontés pour le développement de <em><strong>pySequence</strong></em> sont les bienvenues.
+Pour ceux qui souhaitent intervenir sur le code, voici les <a href="https://github.com/cedrick-f/pySequence/wiki/LangageEtDependances">prérequis</a></p>
       </section>
     </div>
-    <p class="copyright">pySequence maintained by <a href="https://github.com/cedrick-f">cedrick-f</a></p>
-    <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">pySequence maintained by <a href="https://github.com/cedrick-f">cedrick-f</a></p>
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
     
+
   </body>
 </html>
