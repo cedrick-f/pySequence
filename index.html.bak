@@ -20,7 +20,7 @@
               
           });
           // Load the first link by default, when DOM is ready
-        $('#includedContent').load('accueil.html');
+        $('#includedContent').load('sanstitre.html');
       });
     </script>
     <script>
