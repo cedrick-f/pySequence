@@ -6,62 +6,54 @@
   </head>
   <body>
     <h1>Installation</h1>
-    <h2>
-      Téléchargement</h2>
-    <p>Télécharger la dernière version de <em><strong>pySequence</strong></em>
+    <h2> TÃ©lÃ©chargement</h2>
+    <p>TÃ©lÃ©charger la derniÃ¨re version de <em><strong>pySequence</strong></em>
       depuis la <a href="https://github.com/cedrick-f/pySequence/releases">page
-        de téléchargement</a></p>
+        de tÃ©lÃ©chargement</a></p>
     <p><a href="https://drive.google.com/folderview?id=0B2jxnxsuUscPX0tFLVN0cF91TGc&amp;usp=sharing#list">anciennes
         versions</a>.</p>
     <p><em><strong>pySequence</strong></em> existe en 2 versions :</p>
     <ul>
       <li>une <a href="https://github.com/cedrick-f/pySequence/wiki/Installation#Version_%22portable%22">version
-          "portable"</a> (<strong>conseillé !</strong>)</li>
-      <li>une <a href="https://github.com/cedrick-f/pySequence/wiki/Installation#Version_%22installable%22">version
+          "portable"</a> (<strong>conseillÃ© !</strong>)</li>
+      <li>une <a href="accueil.html" class = "lien">version
           "installable"</a> (pas disponible pour toutes les versions)</li>
     </ul>
     <hr>
-    <h2>
-      Version "portable"</h2>
+    <h2> Version "portable"</h2>
     <p><em><strong>pySequence</strong></em> en version <strong>portable</strong>
-      ne nécessite pas d'installation (au sens de Windows), et a fortiori, il
-      n'est pas nécessaire d'être <em>administrateur</em> de l'ordinateur pour
+      ne nÃ©cessite pas d'installation (au sens de Windows), et a fortiori, il
+      n'est pas nÃ©cessaire d'Ãªtre <em>administrateur</em> de l'ordinateur pour
       pouvoir s'en servir.</p>
-    <h3>
-      Installation</h3>
-    <p>Dézipper l'archive sur le disque dur de l'ordinateur (à l'emplacement <code>C:\pySequence</code>
+    <h3> Installation</h3>
+    <p>DÃ©zipper l'archive sur le disque dur de l'ordinateur (Ã  l'emplacement <code>C:\pySequence</code>
       par exemple), sur un <em>disque dur externe</em>, une <em>clef USB</em>...</p>
-    <h3>
-      Lancement de l'application</h3>
+    <h3> Lancement de l'application</h3>
     <p>Double-cliquer sur le fichier <img src="https://github.com/cedrick-f/pySequence/wiki/images/Fichier_exe.png">.</p>
     <p>En cas d'erreur, consulter la <a href="https://github.com/cedrick-f/pySequence/wiki/FAQ">F.A.Q.</a></p>
-    <p><em>Remarque : si</em><strong>pySequence</strong><em>est installé sur le
+    <p><em>Remarque : si</em><strong>pySequence</strong><em>est installÃ© sur le
         disque dur d'un ordinateur, il est possible, depuis</em><strong>pySequence</strong><em>,
         d'inscrire des informations dans sa_base de registre_afin que
-        l'ordinateur reconnaisse les fichiers_Séquence pédagogique</em>(.seq)
+        l'ordinateur reconnaisse les fichiers_SÃ©quence pÃ©dagogique</em>(.seq)
       ou_Projet_(.prj) [Outils/inscrire dans la base de registre]._</p>
-    <p><a href="https://github.com/cedrick-f/pySequence/wiki/Installation#T%C3%A9l%C3%A9chargement">Téléchargement</a></p>
+    <p><a href="https://github.com/cedrick-f/pySequence/wiki/Installation#T%C3%A9l%C3%A9chargement">TÃ©lÃ©chargement</a></p>
     <hr>
-    <h2>
-      Version "installable"</h2>
-    <h3>
-      Installation</h3>
-    <p>Exécuter pySequence_1.x.exe (en tant qu'administrateur de l'ordinateur)
+    <h2> Version "installable"</h2>
+    <h3> Installation</h3>
+    <p>ExÃ©cuter pySequence_1.x.exe (en tant qu'administrateur de l'ordinateur)
       et suivre les instructions pour l'installation.</p>
-    <h3>
-      Lancement de l'application</h3>
+    <h3> Lancement de l'application</h3>
     <p>Trouver un des raccourcis vers l'application <em><strong>pySequence</strong></em>
-      (menu Démarrer, Bureau, ...)
-      ou bien
-      Double-cliquer sur un fichier .seq depuis l'Explorateur de Windows.</p>
+      (menu DÃ©marrer, Bureau, ...) ou bien Double-cliquer sur un fichier .seq
+      depuis l'Explorateur de Windows.</p>
     <p>En cas d'erreur, consulter la <a href="https://github.com/cedrick-f/pySequence/wiki/FAQ">F.A.Q.</a></p>
-    <p><a href="https://github.com/cedrick-f/pySequence/wiki/Installation#T%C3%A9l%C3%A9chargement">Téléchargement</a></p>
+    <p><a href="https://github.com/cedrick-f/pySequence/wiki/Installation#T%C3%A9l%C3%A9chargement">TÃ©lÃ©chargement</a></p>
     <hr>
-    <h2>
-      pySéquence sur MAC</h2>
+    <h2> pySÃ©quence sur MAC</h2>
     <p>Voir la rubrique <a href="https://github.com/cedrick-f/pySequence/wiki/InstallationMAC">"Comment
-        installer pySéquence sur un MAC"</a></p>
+        installer pySÃ©quence sur un MAC"</a></p>
     <p><a href="https://github.com/cedrick-f/pySequence/wiki/Aide">Sommaire de
         l'aide</a></p>
+    
   </body>
 </html>

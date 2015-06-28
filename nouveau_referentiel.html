@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type">
+    <title>Nouveau référentiel</title>
+  </head>
+  <body>
+    <h1>Comment intégrer un nouveau programme d'enseignement à pySéquence ?</h1>
+    <p>Selon la nature du programme à intégrer, créer une copie d'un des
+      fichiers "référentiel" existant :</p>
+    <ul>
+      <li>Ref_SSI.xls : s'il n'y a pas de tronc commun ni d'option à cet enseignement</li>
+      <li>Ref_STI2D-ETT.xls et Ref_STI2D-AC.xls : dans le cas contraire</li>
+    </ul>
+    <p>Modifier le contenu du classeur en adéquation avec le programme à
+      intégrer.</p>
+    <ul>
+      <li>Attention à bien respecter les consignes et informations figurant dans
+        les zones de commentaire.</li>
+      <li>Ne pas modifier les cellules protégées</li>
+      <li>Ne pas utiliser de caractères spéciaux, ni de retour à la ligne</li>
+      <li>Ne pas lancer pySéquence avant d'avoir totalement complété le fichier</li>
+    </ul>
+    <h3> Cas particulier des programmes avec Tronc-commun et Options</h3>
+    <p>Le programme du tronc commun et ceux des options doivent figurer dans des
+      fichiers différents, reliés entre eux de la manière suirante :</p>
+    <p><img src="https://camo.githubusercontent.com/ff4241554f76388056bf5596cfe43ef2c2ed3445/687474703a2f2f707973657175656e63652e676f6f676c65636f64652e636f6d2f73766e2f7472756e6b2f696d616765735f616964652f5265665f54432d4f7074696f6e732e706e67"
+        alt="http://pysequence.googlecode.com/svn/trunk/images_aide/Ref_TC-Options.png"
+        data-canonical-src="http://pysequence.googlecode.com/svn/trunk/images_aide/Ref_TC-Options.png"></p>
+    <p>Afin que la relation de Tronc-commun / Options apparaisse dans
+      pySéquence, il faut leur donner le même nom de famille :</p>
+    <p><img src="https://camo.githubusercontent.com/ce1f5caeb4a4930f3718995d836ba546f67ce630/687474703a2f2f707973657175656e63652e676f6f676c65636f64652e636f6d2f73766e2f7472756e6b2f696d616765735f616964652f5265665f46616d696c6c652e706e67"
+        alt="http://pysequence.googlecode.com/svn/trunk/images_aide/Ref_Famille.png"
+        data-canonical-src="http://pysequence.googlecode.com/svn/trunk/images_aide/Ref_Famille.png"></p>
+    <h2> Intégration à pySéquence</h2>
+    <p>L'intégration à pySéquence est automatique dès lors que le fichier
+      Ref_xxx.xls se trouve dans le dossier "Referentiels". Lors du lancement de
+      pySéquence, si tout s'est bien passé, un nouveau fichier Ref_xxx.xml est
+      généré. Dans le cas contraire, ou bien si pySéquence ne se lance plus et
+      renvoie une erreur, c'est que le fichier Ref_xxx.xls n'a pas pu être
+      correctement interprété. Merci de <a href="https://github.com/cedrick-f/pySequence/wiki/Contact.md">contacter
+        les auteurs</a> dans ce cas.</p>
+    <h2> Publication</h2>
+    <p>Si vous avez réalisé un référentiel (qui fonctionne), et afin de rester
+      dans l'esprit "logiciel libre" de pySéquence, merci de partager votre
+      travail afin d'en faire profiter tout les utilisateurs de pySéquence. Pour
+      cela, il suffit d'envoyer le fichier Ref_xxx.xls aux auteurs, qui le
+      publieront sur l'espace de <a href="https://drive.google.com/folderview?id=0B2jxnxsuUscPX0tFLVN0cF91TGc&amp;usp=sharing#list">téléchargement</a>.</p>
+  </body>
+</html>

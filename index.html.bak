@@ -20,7 +20,16 @@
               
           });
           // Load the first link by default, when DOM is ready
-        $('#includedContent').load('sanstitre.html');
+        $('#includedContent').load('accueil.html');
+      });
+    </script>
+    <script>
+      $(function() {
+          // Use .on() to bind click even on dynamically added elements
+          $(document).on('click', '.lien', function(e) {
+            e.preventDefault();
+            $('#includedContent').load($(this).attr('href'));
+          });
       });
     </script>
     <script>
@@ -36,6 +45,26 @@
         });
       });
     </script>
+    <script type="text/javascript">
+      $(document).ready(function () {
+              GetLatestReleaseInfo();
+          });
+          function GetLatestReleaseInfo() {
+              $.getJSON("https://api.github.com/repos/cedrick-f/pySequence/releases/latest").done(function (release) {
+                  var asset = release.assets[0];
+                  var downloadURL = "https://github.com/cedrick-f/pySequence/releases/download/" + release.tag_name + "/" + asset.name;
+                  var downloadCount = 0;
+                  for (var i = 0; i < release.assets.length; i++) {
+                      downloadCount += release.assets[i].download_count;
+                  }
+                  var releaseInfo = release.name + " was downloaded " + downloadCount + " times.";
+                  alert(downloadURL);
+                  $(".zip_win_download_link").attr("href", downloadURL);
+                //$(".release-info").text(releaseInfo);
+                //$(".release-info").fadeIn("slow");
+              });
+          }
+      </script>
     <title>pySequence</title>
   </head>
   <body>
@@ -49,8 +78,14 @@
         <h2 id="project_tagline">aide à la création de séquences pédagogiques et
           à la validation de projets</h2>
         <section id="downloads"> <a class="zip_download_link" href="https://github.com/cedrick-f/pySequence/zipball/master">Télécharger
-            this project as a .zip file</a> <a class="tar_download_link" href="https://github.com/cedrick-f/pySequence/tarball/master">Download
-            this project as a tar.gz file</a> </section>
+            les sources (fichier .zip)</a> <a class="tar_download_link" href="https://github.com/cedrick-f/pySequence/tarball/master">Télécharger
+            les sources (fichier .tar.gz)</a> <a class="zip_win_download_link"
+
+            href="https://github.com/cedrick-f/pySequence/releases/latest">Télécharger
+            la version portable pour Windows (fichier .zip)</a> <a class="exe_win_download_link"
+
+            href="https://github.com/cedrick-f/pySequence/releases/latest">Télécharger
+            la version installable pour Windows (fichier .exe)</a> </section>
       </header>
     </div>
     <!-- MAIN CONTENT -->
@@ -59,27 +94,34 @@
         <ul id="menuDeroulant" class="menu">
           <li> <a href="accueil.html">Accueil</a> </li>
           <li> <a href="installation.html">Installation</a> </li>
-          <li> <a href="utilisation.html">Utilisation</a>
+          <li> <a href="vue_ensemble.html">Vue d'ensemble</a>
             <ul class="menu">
               <li><a href="premiers_pas.html">Premiers pas</a></li>
-              <li><a href="sequence.html">Séquence</a></li>
-              <li><a href="projet.html">Projet</a></li>
+              <li><a href="fonctionnalites.html">Fonctionnalités</a></li>
+              <li><a href="classe.html">Classe</a></li>
+              <li><a href="nouveau_referentiel.html">Nouveau référentiel</a></li>
             </ul>
           </li>
-          <li> <a href="#">Partie 2</a>
+          <li> <a href="sequences.html">Séquences</a>
             <ul class="menu">
-              <li><a href="#">whisky</a></li>
+              <li><a href="fiche_sequence.html">Aperçu de la fiche de séquence</a></li>
               <li><a href="#">vodka</a></li>
               <li><a href="#">gin</a></li>
               <li><a href="#">vin</a></li>
               <li><a href="#">champagne</a></li>
             </ul>
           </li>
-            <li> <a href="faq.html">F.A.Q.</a>
- 
+          <li> <a href="projets.html">Projets</a>
+            <ul class="menu">
+              <li><a href="fiche_projet.html">Aperçu de la fiche de projet</a></li>
+              <li><a href="#">vodka</a></li>
+              <li><a href="#">gin</a></li>
+              <li><a href="#">vin</a></li>
+              <li><a href="#">champagne</a></li>
+            </ul>
           </li>
-          <li> <a href="contact.html">Contact</a>
-          </li>
+          <li> <a href="faq.html">F.A.Q.</a> </li>
+          <li> <a href="contact.html">Contact</a> </li>
         </ul>
       </section>
       <section id="main_content" class="inner">

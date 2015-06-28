@@ -331,11 +331,12 @@ Full-Width Styles
 
 #downloads {
   position: absolute;
-  width: 210px;
+  width: 400px;
   z-index: 10;
   bottom: -40px;
   right: 0;
   height: 70px;
+  background-color: #111;
   background: url('../images/icon_download.png') no-repeat 0% 90%;
 }
 
@@ -368,6 +369,47 @@ Full-Width Styles
   background: url(../images/sprite_download.png) no-repeat top right;
 }
 
+
+/*#downloads_win {
+  position: absolute;
+  width: 210px;
+  z-index: 10;
+  bottom: -40px;
+  right: 210;
+  height: 70px;
+  background: url('../images/icon_download_win.png') no-repeat 0% 90%;
+}*/
+
+.zip_win_download_link {
+  display: block;
+  float: right;
+  width: 90px;
+  height:70px;
+  text-indent: -5000px;
+  overflow: hidden;
+  background: url(../images/sprite_download_win.png) no-repeat bottom left;
+}
+
+.exe_win_download_link {
+  display: block;
+  float: right;
+  width: 90px;
+  height:70px;
+  text-indent: -5000px;
+  overflow: hidden;
+  background: url(../images/sprite_download_win.png) no-repeat bottom right;
+  margin-left: 10px;
+}
+
+.zip_win_download_link:hover {
+  background: url(../images/sprite_download_win.png) no-repeat top left;
+}
+
+.exe_win_download_link:hover {
+  background: url(../images/sprite_download_win.png) no-repeat top right;
+}
+
+
 #main_content_wrap {
   background: #f2f2f2;
   border-top: 1px solid #111;
@@ -394,7 +436,7 @@ Small Device Styles
     font-size:14px;
   }
 
-  #downloads {
+  #downloads, #downloads_win {
     display: none;
   }
 
@@ -440,114 +482,18 @@ Small Device Styles
 }
 
 
-/*.menu {  
-  position: relative;  
-  max-width: 200px;  
-  padding-top: 20px;  
-  padding-right: 10px;  
-  padding-bottom: 20px;  
-  padding-left: 0px;  
-  margin-top: 0px;  
-  margin-right: auto;  
-  margin-bottom: 0px;  
-  margin-left: 0px;
-}*/
+
 
 
 
 #main_menu {  
-  padding-top: 00px;
+  padding-top: 0px;
 }
 
 
-
-/*
-
-#menuDeroulant
-{
- width: 200px;
- list-style-type: none;
- margin: 0;
- padding: 0;
- border: 0;
- position: absolute;
- top: 0;
- left: 0;
-}         
-
-
-#menuDeroulant li
-{
- float: top;
- width: 200px;
- margin: 1px;
- padding: 0;
- border: 1px;
-}
-
-
-#menuDeroulant li a:link, #menuDeroulant li a:visited
-{
- display: block;
- height: 1%;
- color: #F00;
- background: #3B4E77;
- margin: 0;
- padding: 4px 8px;
- border-top: 1px solid #fff;
- text-decoration: none;
-}
-
-#menuDeroulant li a:hover { background-color: #F2462E; }
-#menuDeroulant li a:active { background-color: #5F879D; }
- 
-#menuDeroulant .sousMenu li a:link,
-#menuDeroulant .sousMenu li a:visited
-{
- display: block;
- color: #F0F;
- margin: 0;
- border: 0;
- text-decoration: none;
- background: transparent url("fondTR.png") repeat;
-}
-#menuDeroulant .sousMenu li a:hover
-{
- background-image: none;
- background-color: #F2462E;
-}
-
-#menuDeroulant .sousMenu li
-{
- float: none;
- margin: 0;
- padding: 0;
- border: 0;
- width: 179px;
- border-top: 1px solid transparent;
- border-right: 1px solid transparent;
- position: relative;
- top: 0;
- left: 20px;
-}	
-
-#menuDeroulant .sousMenu
-{
- float :  left;
- display: none;
- /*list-style-type: none;*/
- /*margin: 0;
- padding: 0;
- border: 0;
- position: relative;
- top: 0;
- left: 0px;
-}	
-
-#menuDeroulant li:hover > .sousMenu { display: block; }
-#menuDeroulant li:visited > .sousMenu { display: block; }
-}
-*/
+/*******************************************************************************************
+ Menu déroulant
+********************************************************************************************/
 
 #menuDeroulant {
     position: relative;
@@ -556,10 +502,7 @@ Small Device Styles
     margin-right: auto;  
     margin-bottom: 0px;  
     margin-left: 0px;
-
     list-style-type: none;
-
-
 
     /*top: 0;
     left: 0;*/
