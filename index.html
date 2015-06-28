@@ -6,6 +6,8 @@
     <meta name="description" content="pySequence : aide à la création de séquences pédagogiques et à la validation de projets">
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet-base.css">
     <script src="jquery-1.11.3.min.js"></script>
+    <script src="jquery.timeago.js"></script>
+    <script src="jquery.timeago.fr-short.js"></script>
     <script>
       $(function() {
           // Use .on() to bind click even on dynamically added elements
@@ -57,10 +59,10 @@
                   for (var i = 0; i < release.assets.length; i++) {
                       downloadCount += release.assets[i].download_count;
                   }
-                  var releaseInfo = release.name + " was downloaded " + downloadCount + " times.";
+                var releaseInfo = release.name + "   -   mis à jour " + $.timeago(asset.updated_at) + "   -   téléchargé " + downloadCount + " fois";
                   $(".zip_win_download_link").attr("href", downloadURL);
-                //$(".release-info").text(releaseInfo);
-                //$(".release-info").fadeIn("slow");
+                  $(".release-info").text(releaseInfo);
+                  $(".release-info").fadeIn("slow");
               });
           }
       </script>
@@ -68,8 +70,7 @@
   </head>
   <body>
     <!-- HEADER -->
-    <div id="header_wrap" class="outer"> <img id="logo_img" src="images/Logo.png"
-
+    <div id="header_wrap" class="outer"> <img id="logo_img" src="images/Logo.png"
         height="100" width="100">
       <header class="inner"> <a id="forkme_banner" href="https://github.com/cedrick-f/pySequence">Voir
           sur GitHub</a>
@@ -78,13 +79,12 @@
           à la validation de projets</h2>
         <section id="downloads"> <a class="zip_download_link" href="https://github.com/cedrick-f/pySequence/zipball/master">Télécharger
             les sources (fichier .zip)</a> <a class="tar_download_link" href="https://github.com/cedrick-f/pySequence/tarball/master">Télécharger
-            les sources (fichier .tar.gz)</a> <a class="zip_win_download_link"
-
+            les sources (fichier .tar.gz)</a> <a class="zip_win_download_link"
             href="https://github.com/cedrick-f/pySequence/releases/latest">Télécharger
-            la version portable pour Windows (fichier .zip)</a> <a class="exe_win_download_link"
-
+            la version portable pour Windows (fichier .zip)</a> <a class="exe_win_download_link"
             href="https://github.com/cedrick-f/pySequence/releases/latest">Télécharger
-            la version installable pour Windows (fichier .exe)</a> </section>
+            la version installable pour Windows (fichier .exe)</a> <a class="release-info">pySéquence</a>
+        </section>
       </header>
     </div>
     <!-- MAIN CONTENT -->
@@ -129,6 +129,5 @@
     </div>
     <p class="copyright">pySequence maintained by <a href="https://github.com/cedrick-f">cedrick-f</a></p>
     <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
-    
   </body>
 </html>
