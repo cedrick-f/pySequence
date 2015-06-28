@@ -8,12 +8,15 @@ _**pySequence**_ s'adresse particulièrement aux professeurs de _**[Sciences Ind
   * **S-SI** (_Sciences de l'ingénieur_ du bac S)
   * **Technologie collège**
   * **STS Electrotechnique** et **STS Systèmes Numériques** (en travaux !)
+  * .......
 
 et potentiellement [n'importe quel programme d'enseignement](https://github.com/cedrick-f/pySequence/wiki/Nouveau_programme).
 
 
 ---
 
+## Site web ##
+[http://cedrick-f.github.io/pySequence](http://cedrick-f.github.io/pySequence)
 
 ## Fonctionnalités ##
 ### Aide à l'élaboration de [séquences pédagogiques](https://github.com/cedrick-f/pySequence/wiki/Fonctionalite_Seq) : ###
