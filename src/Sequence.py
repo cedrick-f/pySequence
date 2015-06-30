@@ -741,12 +741,12 @@ class Objet_sequence():
              - liens 
              - ...
         """
-#        print "EnrichiSVG", doc, seance
+        print "EnrichiSVG", self, doc, seance
         # 
         # Le titre de la page
         #
         
-
+        print self.cadre
         pid = ''
         for p, f in self.cadre:
             if type(f) == str:
@@ -1072,7 +1072,7 @@ class Classe():
     ######################################################################################  
     def setBranche(self, branche, reparer = False):
         err = []
-#        print "setBranche classe"
+        print "setBranche classe"
         self.typeEnseignement = branche.get("Type", constantes.TYPE_ENSEIGNEMENT_DEFAUT)
         
         self.version = branche.get("Version", "0")       # A partir de la version 6 !
@@ -1161,6 +1161,7 @@ class Classe():
             # Ouverture du référentiel intrégré
             #
             else:
+#                print "VersionNum", self.GetVersionNum()
 #                versionNum = self.GetVersionNum()
                 if self.GetVersionNum() == 5:
                     ChargerRefOriginal()
@@ -1169,20 +1170,17 @@ class Classe():
                     try:
                         self.referentiel.initParam()
                         errr = self.referentiel.setBranche(brancheRef)[1]
+#                        print "errr", errr
                         self.referentiel.corrigerVersion(errr)
                         self.referentiel.postTraiter()
-                        self.referentiel.completer()
-        
-    #                    print self.referentiel.CentresInterets
+                        self.referentiel.completer(forcer = True)
+
                     except:
-    #                    try:
                         self.referentiel.initParam()
                         self.referentiel.setBrancheV5(brancheRef)
                         ChargerRefOriginal()
                         RecupCI()
-    #                    except:
-    #                        print "Erreur ouverture référentiel intégré !"
-    #                        self.referentiel = REFERENTIELS[self.typeEnseignement]
+
 
 
         #

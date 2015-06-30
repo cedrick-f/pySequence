@@ -36,8 +36,9 @@ Copyright (C) 2011-2015
 
 """
 
-from bs4 import BeautifulSoup
+#from bs4 import BeautifulSoup
 import urllib2
+import json
 import webbrowser
 from widgets import messageErreur
 import wx
@@ -60,29 +61,73 @@ def GetVersion_short():
 def GetAppnameVersion():
     return __appname__+" "+GetVersion_short()
 
+################################################################################################
+#def GetNewVersion_old(win):  
+#    # url = 'https://code.google.com/p/pysequence/downloads/list'
+#    print "Recherche nouvelle version ..."
+#    url = 'https://github.com/cedrick-f/pySequence/releases'
+#    try:
+#        downloadPage = BeautifulSoup(urllib2.urlopen(url, timeout = 5))
+#    except IOError:
+#        print "pas d'accès Internet"
+#        return
+#    
+#    # Dernière version
+#    div_latest = downloadPage.find_all('div', attrs={'class':"release label-latest"})
+#    try:
+#        latest = div_latest[0].contents[1].find_all('span', attrs={'class':"css-truncate-target"})[0].contents[0]
+#    except:
+#        print "aucune"
+#        return
+#    latest = latest.lstrip('v')
+#    
+#    # Version actuelle
+#    a = __version__.split('.')
+#    
+#    # Comparaison
+#    new = True
+#    for i, l in enumerate(latest.split('.')):
+#        nl = int(l.rstrip("-beta"))
+#        na = int(a[i].rstrip("-beta"))
+#        if nl < na:
+#            new = False
+#            break
+#    if new:
+#        print latest
+#    else:
+#        print
+#
+#    if new:
+#        dialog = wx.MessageDialog(win, u"Une nouvelle version de pySéquence est disponible\n\n" \
+#                                        u"\t%s\n\n" \
+#                                        u"Voulez-vous visiter la page de téléchargement ?" % latest, 
+#                                      u"Nouvelle version", wx.YES_NO | wx.ICON_INFORMATION)
+#        retCode = dialog.ShowModal()
+#        if retCode == wx.ID_YES:
+#            try:
+#                webbrowser.open(url,new=2)
+#            except:
+#                messageErreur(None, u"Ouverture impossible",
+#                              u"Impossible d'ouvrir l'url\n\n%s\n" %url)
+#
+#
+#    return
+
 ###############################################################################################
-def GetNewVersion(win):  
-    # url = 'https://code.google.com/p/pysequence/downloads/list'
+def GetNewVersion(win):
     print "Recherche nouvelle version ..."
-    url = 'https://github.com/cedrick-f/pySequence/releases'
-    try:
-        downloadPage = BeautifulSoup(urllib2.urlopen(url, timeout = 5))
-    except IOError:
-        print "pas d'accès Internet"
-        return
+    url = "https://api.github.com/repos/cedrick-f/pySequence/releases/latest"
+    req = urllib2.Request(url)
+    handler = urllib2.urlopen(req)
+    dic = json.loads(handler.read())
     
-    # Dernière version
-    div_latest = downloadPage.find_all('div', attrs={'class':"release label-latest"})
-    try:
-        latest = div_latest[0].contents[1].find_all('span', attrs={'class':"css-truncate-target"})[0].contents[0]
-    except:
-        print "aucune"
-        return
-    latest = latest.lstrip('v')
+    latest = dic['tag_name'].lstrip('v')
     
     # Version actuelle
     a = __version__.split('.')
     
+    print "  actuelle :", __version__
+    print "  nouvelle :",latest
     # Comparaison
     new = True
     for i, l in enumerate(latest.split('.')):
@@ -104,10 +149,50 @@ def GetNewVersion(win):
         retCode = dialog.ShowModal()
         if retCode == wx.ID_YES:
             try:
-                webbrowser.open(url,new=2)
+                webbrowser.open("https://github.com/cedrick-f/pySequence/releases/latest",new=2)
             except:
                 messageErreur(None, u"Ouverture impossible",
                               u"Impossible d'ouvrir l'url\n\n%s\n" %url)
 
 
     return
+
+
+    
+def test():
+    import json
+    import urllib2
+    url = "https://api.github.com/repos/cedrick-f/pySequence/releases/latest"
+    req = urllib2.Request(url)
+    print req
+    print dir(req)
+    handler = urllib2.urlopen(req)
+ 
+    
+    print dir(handler)
+    dic = json.loads(handler.read())
+    print dic['tag_name']
+    print dic['name']
+    print dic['draft']
+    print dic['published_at']
+    for assets in dic['assets']:
+        print "   ", assets
+        print "   ", assets['browser_download_url']
+        print "   ", assets['download_count']
+    
+    
+    
+    print handler.getcode()
+    print req.get_data()
+    print handler.headers.getheader('content-type')
+    
+#    repoItem = json.loads(handler.text or handler.content)
+#    print repoItem
+    
+
+    
+
+    
+    
+    
+    

@@ -1814,7 +1814,7 @@ class Projet(XMLelem):
 
     ##################################################################################################################
     def completer(self, ref):
-        """
+        """ Complète le projet
         """
 #        print " completer", ref, self
 #        print " ", self._dicCompetences
