@@ -53,24 +53,31 @@
           });
           function GetLatestReleaseInfo() {
               $.getJSON("https://api.github.com/repos/cedrick-f/pySequence/releases/latest").done(function (release) {
-                  var asset = release.assets[0];
+                var asset = release.assets[0];
+                var downloadURL = "https://github.com/cedrick-f/pySequence/releases/download/" + release.tag_name + "/" + asset.name;
+                $(".zip_win_download_link").attr("href", downloadURL);
+                if (release.assets.length > 1) {
+                  var asset = release.assets[1];
                   var downloadURL = "https://github.com/cedrick-f/pySequence/releases/download/" + release.tag_name + "/" + asset.name;
-                  var downloadCount = 0;
-                  for (var i = 0; i < release.assets.length; i++) {
-                      downloadCount += release.assets[i].download_count;
-                  }
+                  $(".exe_win_download_link").attr("href", downloadURL);
+                }
+                
+                var downloadCount = 0;
+                for (var i = 0; i < release.assets.length; i++) {
+                    downloadCount += release.assets[i].download_count;
+                }
                 var releaseInfo = release.name + "   -   mis à jour " + $.timeago(asset.updated_at) + "   -   téléchargé " + downloadCount + " fois";
-                  $(".zip_win_download_link").attr("href", downloadURL);
-                  $(".release-info").text(releaseInfo);
-                  $(".release-info").fadeIn("slow");
+                
+                $(".release-info").text(releaseInfo);
+                $(".release-info").fadeIn("slow");
               });
           }
       </script>
     <title>pySequence</title>
   </head>
-  <body>
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer"> <img id="logo_img" src="images/Logo.png"
+  <body> <!-- HEADER -->
+    <div id="header_wrap" class="outer"> <img id="logo_img" src="images/Logo.png"
+
         height="100" width="100">
       <header class="inner"> <a id="forkme_banner" href="https://github.com/cedrick-f/pySequence">Voir
           sur GitHub</a>
@@ -79,9 +86,11 @@
           à la validation de projets</h2>
         <section id="downloads"> <a class="zip_download_link" href="https://github.com/cedrick-f/pySequence/zipball/master">Télécharger
             les sources (fichier .zip)</a> <a class="tar_download_link" href="https://github.com/cedrick-f/pySequence/tarball/master">Télécharger
-            les sources (fichier .tar.gz)</a> <a class="zip_win_download_link"
+            les sources (fichier .tar.gz)</a> <a class="zip_win_download_link"
+
             href="https://github.com/cedrick-f/pySequence/releases/latest">Télécharger
-            la version portable pour Windows (fichier .zip)</a> <a class="exe_win_download_link"
+            la version portable pour Windows (fichier .zip)</a> <a class="exe_win_download_link"
+
             href="https://github.com/cedrick-f/pySequence/releases/latest">Télécharger
             la version installable pour Windows (fichier .exe)</a> <a class="release-info">pySéquence</a>
         </section>

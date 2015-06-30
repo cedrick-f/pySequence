@@ -137,7 +137,7 @@ img {
   position: relative;
   margin: 0 auto;
   max-width: 739px;
-  padding: 5px;
+  /*padding: 5px;
   margin: 10px 0 10px 0;
   border: 1px solid #ebebeb;
 
@@ -145,7 +145,7 @@ img {
   -webkit-box-shadow: 0 0 5px #ebebeb;
   -moz-box-shadow: 0 0 5px #ebebeb;
   -o-box-shadow: 0 0 5px #ebebeb;
-  -ms-box-shadow: 0 0 5px #ebebeb;
+  -ms-box-shadow: 0 0 5px #ebebeb;*/
 }
 
 p img {
@@ -300,7 +300,7 @@ Full-Width Styles
 }
 
 #header_wrap .inner {
-  padding: 20px 10px 20px 10px;
+  padding: 10px 10px 20px 10px;
 }
 
 #project_title {
@@ -316,7 +316,7 @@ Full-Width Styles
   display: inline-block;
   float: left;
   margin-top: 10px;  
-  margin-left: 10px;
+  margin-left: 20px;
   box-shadow: none;
   border: none;
 }
@@ -421,7 +421,7 @@ Full-Width Styles
 }
 
 #main_content {
-  padding-top: 14px;
+  padding-top: 30px;
 }
 
 #footer_wrap {
