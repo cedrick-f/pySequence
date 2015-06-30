@@ -741,12 +741,10 @@ class Objet_sequence():
              - liens 
              - ...
         """
-        print "EnrichiSVG", self, doc, seance
+#        print "EnrichiSVG", self, doc, seance
         # 
         # Le titre de la page
         #
-        
-        print self.cadre
         pid = ''
         for p, f in self.cadre:
             if type(f) == str:
@@ -804,8 +802,9 @@ class Objet_sequence():
                 t.appendChild(txt)
                 np = p.cloneNode(True)
                 t.appendChild(np)
-                p.parentNode.insertBefore(t, p)
-                p.parentNode.removeChild(p)
+                if p.parentNode is not None:
+                    p.parentNode.insertBefore(t, p)
+                    p.parentNode.removeChild(p)
 #                p.appendChild(t)
                 
                 if lien != '':
@@ -1461,6 +1460,7 @@ class Sequence(BaseDoc, Objet_sequence):
              - liens 
              - ...
         """
+#        print "EnrichiSVG sequence"
         if hasattr(self, 'app'):
             t = doc.createElement("title")
             txt = doc.createTextNode(os.path.split(self.app.fichierCourant)[1])
@@ -2315,7 +2315,7 @@ class Projet(BaseDoc, Objet_sequence):
         for s in self.taches:
             s.EnrichiSVG(doc)
         self.support.EnrichiSVG(doc)
-        self.EnrichiSVG(doc)
+#        self.EnrichiSVG(doc)
         return
             
     
