@@ -148,6 +148,10 @@ img {
   -ms-box-shadow: 0 0 5px #ebebeb;*/
 }
 
+.img_chap {
+  margin-right: 10px;
+}
+
 p img {
   display: inline;
   margin: 0;

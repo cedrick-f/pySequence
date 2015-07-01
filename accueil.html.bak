@@ -5,68 +5,67 @@
     <title>pySequence - accueil</title>
   </head>
   <body>
-    <h1> <a id="pysequence" class="anchor" href="#pysequence" aria-hidden="true"><span
-
-          class="octicon octicon-link"></span></a>pySÃ©quence</h1>
+    <h1><img alt="Logo : " src="images/Icones/Logo.png" class="img_chap">pySéquence</h1>
     <p><em><strong>pySequence</strong></em> est un logiciel <strong><a href="http://www.gnu.org/licenses/gpl.html">libre</a></strong>
       qui fournit une aide pour :</p>
     <ul>
       <li>élaborer des séquences pédagogiques</li>
       <li>d''écrire et valider des projets</li>
     </ul>
-    <p><em><strong>pySequence</strong></em> s'adresse particuliÃ¨rement aux
+    <p><em><strong>pySequence</strong></em> s'adresse particulièrement aux
       professeurs de <em><strong><a href="http://fr.wikipedia.org/wiki/Sciences_de_l%27ing%C3%A9nieur">Sciences
-            Industrielles de l'IngÃ©nieur</a></strong></em> enseignant dans les
-      filiÃ¨res :</p>
+            Industrielles de l'Ingénieur</a></strong></em> enseignant dans les
+      filières :</p>
     <ul>
       <li> <strong>STI2D</strong> (<em>enseignements technologiques
-          transversaux</em> et de <em>spÃ©cialitÃ©</em>)</li>
-      <li> <strong>S-SI</strong> (<em>Sciences de l'ingÃ©nieur</em> du bac S)</li>
-      <li><strong>Technologie collÃ¨ge</strong></li>
-      <li> <strong>STS Electrotechnique</strong> et <strong>STS SystÃ¨mes
-          NumÃ©riques</strong> (en travaux !)</li>
+          transversaux</em> et de <em>spécialité</em>)</li>
+      <li> <strong>S-SI</strong> (<em>Sciences de l'ingénieur</em> du bac S)</li>
+      <li><strong>Technologie collège</strong></li>
+    </ul>
+    <p><img style="width: 46px; height: 40px;" alt="En travaux" src="images/Icones/travaux.png">Et
+      en travaux :</p>
+    <ul>
+      <li> <strong>STS Electrotechnique</strong> et <strong>STS Systèmes
+          Numériques</strong> (en travaux !)</li>
+      <li>Enseignement d'exploration de seconde : SI et CIT</li>
     </ul>
     <p>et potentiellement <a href="https://github.com/cedrick-f/pySequence/wiki/Nouveau_programme">n'importe
         quel programme d'enseignement</a>.</p>
     <h2> <a id="fonctionnalitÃ©s" class="anchor" href="#fonctionnalit%C3%A9s" aria-hidden="true"><span
 
-          class="octicon octicon-link"></span></a>FonctionnalitÃ©s</h2>
+          class="octicon octicon-link"></span></a>Fonctionnalités</h2>
     <h3> <a id="aide-Ã&nbsp;-lÃ©laboration-de-sÃ©quences-pÃ©dagogiques-" class="anchor"
 
         href="#aide-%C3%A0-l%C3%A9laboration-de-s%C3%A9quences-p%C3%A9dagogiques-"
 
-        aria-hidden="true"><span class="octicon octicon-link"></span></a>Aide
-      Ã&nbsp; l'Ã©laboration de <a href="https://github.com/cedrick-f/pySequence/wiki/Fonctionalite_Seq">sÃ©quences
-        pÃ©dagogiques</a> :</h3>
+        aria-hidden="true"><span class="octicon octicon-link"></span></a>Aide à
+      l'élaboration de <a href="https://github.com/cedrick-f/pySequence/wiki/Fonctionalite_Seq">séquences
+        pédagogiques</a> :</h3>
     <ul>
-      <li>Structure d'une <strong>sÃ©quence pÃ©dagogique</strong> </li>
-      <li>PrÃ©sentation sous forme de fiche de sÃ©quence,</li>
+      <li>Structure d'une <strong>séquence pédagogique</strong> </li>
+      <li>Présentation sous forme de fiche de séquence,</li>
       <li>Nombreux outils d'aide</li>
     </ul>
-    <p><a href="https://github.com/cedrick-f/pySequence/wiki/captures_ecran">Quelques
-        captures d'Ã©cran de fiches de sÃ©quence</a></p>
-    <p><a href="https://github.com/cedrick-f/pySequence/wiki/ExemplesSequences">Quelques
-        exemples de fiches de sÃ©quence</a></p>
+    <p><a href="exemples_seq.html">Quelques exemples de fiches de séquence</a></p>
     <h3> <a id="aide-Ã&nbsp;-la-validation-de-projets" class="anchor" href="#aide-%C3%A0-la-validation-de-projets"
 
-        aria-hidden="true"><span class="octicon octicon-link"></span></a>Aide
-      Ã&nbsp; la validation de <a href="https://github.com/cedrick-f/pySequence/wiki/Fonctionnalite_Prj">projets</a>
+        aria-hidden="true"><span class="octicon octicon-link"></span></a>Aide à
+      la validation de <a href="https://github.com/cedrick-f/pySequence/wiki/Fonctionnalite_Prj">projets</a>
     </h3>
     <ul>
       <li>Structure du <strong>projet</strong> </li>
-      <li>PrÃ©sentation sous forme de fiche,</li>
-      <li>Nombreux outils d'aide</li>
-      <li>GÃ©nÃ©ration de la <strong>fiche de validation</strong> conforme aux
-        BO 2014 </li>
+      <li>Présentation sous forme de fiche,</li>
+      <li>Nombreux outils d'aide,</li>
+      <li>Génération de la <strong>fiche de validation</strong> conforme aux
+        dernier B.O.</li>
     </ul>
-    <p><a href="https://github.com/cedrick-f/pySequence/wiki/ExemplesProjets">Quelques
-        exemples de fiches de projet</a></p>
-    <h2> <a id="tÃ©lÃ©chargement" class="anchor" href="#t%C3%A9l%C3%A9chargement"
+    <p><a href="exemples_prj.html">Quelques exemples de fiches de projet</a></p>
+    <h2> <a id="telechargement" class="anchor" href="#t%C3%A9l%C3%A9chargement"
 
-        aria-hidden="true"><span class="octicon octicon-link"></span></a>TÃ©lÃ©chargement</h2>
+        aria-hidden="true"><span class="octicon octicon-link"></span></a>Téléchargement</h2>
     <ul>
       <li>
-        <p>Versions rÃ©centes : <a href="https://github.com/cedrick-f/pySequence/releases">https://github.com/cedrick-f/pySequence/releases</a></p>
+        <p>Versions récentes : <a href="https://github.com/cedrick-f/pySequence/releases">https://github.com/cedrick-f/pySequence/releases</a></p>
       </li>
       <li>
         <p>Anciennes versions : <a href="https://drive.google.com/folderview?id=0B2jxnxsuUscPX0tFLVN0cF91TGc#list">https://drive.google.com/folderview?id=0B2jxnxsuUscPX0tFLVN0cF91TGc#list</a></p>
@@ -76,15 +75,15 @@
     <ul>
       <li>pour Windows :
         <ul>
-          <li>en version "portable" (idÃ©ale pour utilisation sur des dossiers
-            partagÃ©s : rÃ©seaux, Dropbox, ...)</li>
+          <li>en version "portable" (idéale pour utilisation sur des dossiers
+            partagés : réseaux, Dropbox, ...)</li>
           <li>en version "installable"</li>
         </ul>
       </li>
       <li>pour Linux ou Mac :
         <ul>
-          <li>possible Ã&nbsp; partir des sources ... en suivant <a href="https://github.com/cedrick-f/pySequence/wiki/InstallationMAC">cette
-              mÃ©thode</a> </li>
+          <li>possible à partir des sources ... en suivant <a href="https://github.com/cedrick-f/pySequence/wiki/InstallationMAC">cette
+              méthode</a> </li>
         </ul>
       </li>
     </ul>
@@ -96,13 +95,13 @@
         en ligne de pySequence.</li>
       <li>Quelques exemples sont fournis avec les packs.</li>
     </ul>
-    <h2> <a id="dÃ©veloppement" class="anchor" href="#d%C3%A9veloppement" aria-hidden="true"><span
+    <h2> <a id="developpement" class="anchor" href="#d%C3%A9veloppement%22" aria-hidden="true"><span
 
-          class="octicon octicon-link"></span></a>DÃ©veloppement</h2>
-    <p><em><strong>pySequence</strong></em> est dÃ©veloppÃ© par <em>CÃ©drick
-        FAURY</em> et <em>Jean-Claude FRICOU</em></p>
-    <p>Toutes les bonnes volontÃ©s pour le dÃ©veloppement de <em><strong>pySequence</strong></em>
+          class="octicon octicon-link"></span></a>Développement</h2>
+    <p><em><strong>pySequence</strong></em> est développé par <em>Cédrick FAURY</em>
+      et <em>Jean-Claude FRICOU</em></p>
+    <p>Toutes les bonnes volontés pour le développement de <em><strong>pySequence</strong></em>
       sont les bienvenues. Pour ceux qui souhaitent intervenir sur le code,
-      voici les <a href="https://github.com/cedrick-f/pySequence/wiki/LangageEtDependances">prÃ©requis</a></p>
+      voici les <a href="LangageEtDependances.html">prérequis</a></p>
   </body>
 </html>
