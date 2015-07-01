@@ -1453,7 +1453,7 @@ class Sequence(BaseDoc, Objet_sequence):
     
     
     ######################################################################################  
-    def EnrichiSVG(self, doc):
+    def EnrichiSVGdoc(self, doc):
         """ Enrichissement de l'image SVG <doc> (format XML) avec :
              - mise en surbrillance des éléments actifs
              - infobulles sur les éléments actifs
@@ -2305,7 +2305,7 @@ class Projet(BaseDoc, Objet_sequence):
         return None
         
     ######################################################################################  
-    def EnrichiSVG(self, doc):
+    def EnrichiSVGdoc(self, doc):
         """ Enrichissement de l'image SVG <doc> (format XML) avec :
              - mise en surbrillance des éléments actifs
              - infobulles sur les éléments actifs
@@ -2315,7 +2315,7 @@ class Projet(BaseDoc, Objet_sequence):
         for s in self.taches:
             s.EnrichiSVG(doc)
         self.support.EnrichiSVG(doc)
-#        self.EnrichiSVG(doc)
+        self.EnrichiSVG(doc)
         return
             
     
@@ -8615,20 +8615,21 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         def match(p0, p1):
             return abs(p0[0]-p1[0])<epsilon and abs(p0[1]-p1[1])<epsilon
         
+        # Récupération des points caractéristiques sur la fiche
         pts_caract = self.GetDocument().GetPtCaract()
 #        if self.typ == 'seq':
 #            pts_caract = self.sequence.GetPtCaract()
 #        else:
 #            pts_caract = self.projet.GetPtCaract()
         
-        
+        # Identification des items correspondants sur le doc SVG
         for p in doc.getElementsByTagName("path"):
             a = p.getAttribute("d")
-            a = str(a).translate(None, 'MCLZ')
+            a = str(a).translate(None, 'MCLZ')  # Supprime les  lettres
             l = a.split()
-            if len(l) > 1:
+            if len(l) > 1:      # On récupère le premier point du <path>
                 x, y = l[0], l[1]
-                x, y = eval(x), eval(y)
+                x, y = float(x), float(y)
                 
                 for pt, obj, flag in pts_caract:
                     if match((x, y), pt) :
@@ -8636,7 +8637,8 @@ class FenetreDocument(aui.AuiMDIChildFrame):
                         if type(flag) != str:
                             break 
         
-        self.GetDocument().EnrichiSVG(doc)
+        # On lance la procédure d'enrichissement ...
+        self.GetDocument().EnrichiSVGdoc(doc)
 #        if self.typ == 'seq':
 #            self.sequence.EnrichiSVG(doc)
 #        elif self.typ == 'prj':
