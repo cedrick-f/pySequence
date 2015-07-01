@@ -75,7 +75,8 @@
       </script>
     <title>pySequence</title>
   </head>
-  <body> <!-- HEADER -->
+  <body>
+    <!-- HEADER -->
     <div id="header_wrap" class="outer"> <img id="logo_img" src="images/Logo.png"
 
         height="100" width="100">
@@ -116,7 +117,7 @@
               <li><a href="#">vodka</a></li>
               <li><a href="#">gin</a></li>
               <li><a href="#">vin</a></li>
-              <li><a href="#">champagne</a></li>
+              <li><a href="images/exemple1.html">Exemples</a></li>
             </ul>
           </li>
           <li> <a href="projets.html">Projets</a>
