@@ -36,7 +36,6 @@ Copyright (C) 2011-2015
 
 """
 
-#from bs4 import BeautifulSoup
 import urllib2
 import json
 import webbrowser

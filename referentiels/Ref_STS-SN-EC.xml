@@ -31,7 +31,7 @@
           <d_revue I_S2="0" />
         </Indicateur_00>
       </l_01>
-      <d_02 />
+      <d_02 I_S2="10" />
     </l_C7.1>
     <l_C7.2 S_00=" proposer des corrections ou des am&#233;liorations">
       <l_01>
@@ -46,7 +46,7 @@
           <d_revue I_S2="0" />
         </Indicateur_01>
       </l_01>
-      <d_02 />
+      <d_02 I_S2="20" />
     </l_C7.2>
     <l_C7.3 S_00="d&#233;panner une installation mat&#233;rielle et/ou logicielle">
       <l_01>
@@ -56,7 +56,7 @@
           <d_revue I_S2="0" />
         </Indicateur_00>
       </l_01>
-      <d_02 />
+      <d_02 I_S2="10" />
     </l_C7.3>
     <l_C6.1 S_00="superviser le fonc--tionnement d&#8217;un produit mat&#233;riel/logiciel ">
       <l_01>
@@ -76,7 +76,7 @@
           <d_revue I_S2="0" />
         </Indicateur_02>
       </l_01>
-      <d_02 />
+      <d_02 I_S2="40" />
     </l_C6.1>
     <l_C6.2 S_00="analyser les compte rendus d&#8217;exploitation ">
       <l_01>
@@ -91,7 +91,7 @@
           <d_revue I_S2="0" />
         </Indicateur_01>
       </l_01>
-      <d_02 />
+      <d_02 I_S2="20" />
     </l_C6.2>
     <l_C1.6 S_00="collecter des donn&#233;es commerciales ">
       <l_01 />
@@ -161,30 +161,15 @@
           <d_revue I_S2="0" />
         </Indicateur_00>
       </l_01>
-      <d_02 />
+      <d_02 I_S2="10" />
     </l_C7.4>
     <l_C5.2 S_00="mettre en &#339;uvre une solution mat&#233;rielle/logicielle en situation">
       <l_01>
-        <Indicateur_00 S_intitule="Les contraintes li&#233;es au client (horaires, nuisances sonores, qualit&#233; de la relation &#8230;) sont respect&#233;es.">
+        <Indicateur_00 S_intitule="Les contraintes li&#233;es au client (horaires, nuisances sonores, qualit&#233; de la relation &#8230;) sont respect&#233;es.--Les normes m&#233;tier et les proc&#233;dures sont respect&#233;es.--Les r&#233;sultats de test sont conformes aux sp&#233;cifications des proc&#233;dures d'installation.--Le syst&#232;me ou le service est conforme aux sp&#233;cifications du cahier des charges.">
           <d_ligne I_S1="11" />
-          <d_poids F_S1="25.0" />
+          <d_poids F_S1="100.0" />
           <d_revue I_S1="0" />
         </Indicateur_00>
-        <Indicateur_01 S_intitule="Les normes m&#233;tier et les proc&#233;dures sont respect&#233;es.">
-          <d_ligne I_S1="12" />
-          <d_poids F_S1="25.0" />
-          <d_revue I_S1="0" />
-        </Indicateur_01>
-        <Indicateur_02 S_intitule="Les r&#233;sultats de test sont conformes aux sp&#233;cifications des proc&#233;dures d'installation.">
-          <d_ligne I_S1="13" />
-          <d_poids F_S1="25.0" />
-          <d_revue I_S1="0" />
-        </Indicateur_02>
-        <Indicateur_03 S_intitule="Le syst&#232;me ou le service est conforme aux sp&#233;cifications du cahier des charges.">
-          <d_ligne I_S1="14" />
-          <d_poids F_S1="25.0" />
-          <d_revue I_S1="0" />
-        </Indicateur_03>
       </l_01>
       <d_02 I_S1="40" />
     </l_C5.2>
@@ -1383,6 +1368,7 @@
       </d_grilles>
       <l_listPhases S_00="Ana" S_01="Con" S_02="DCo" S_03="Rea" S_04="XXX" S_05="Rev" S_06="R1" S_07="R2" S_08="R3" S_09="S" />
       <l_listPhasesEval S_00="Rev" S_01="R1" S_02="R2" S_03="R3" S_04="S" />
+      <l_listeParties S_00="S1" />
       <d_parties S_S1="Situation 1" />
       <l_periode I_00="3" />
       <d_phases>
@@ -1450,6 +1436,7 @@
       </d_grilles>
       <l_listPhases S_00="Ana" S_01="Con" S_02="DCo" S_03="Rea" S_04="XXX" S_05="Rev" S_06="R1" S_07="R2" S_08="R3" S_09="S" />
       <l_listPhasesEval S_00="Rev" S_01="R1" S_02="R2" S_03="R3" S_04="S" />
+      <l_listeParties S_00="S2" />
       <d_parties S_S2="Situation 2" />
       <l_periode I_00="4" />
       <d_phases>
@@ -1555,6 +1542,7 @@
       </d_grilles>
       <l_listPhases S_00="Ana" S_01="Con" S_02="DCo" S_03="Rea" S_04="XXX" S_05="Rev" S_06="R1" S_07="R2" S_08="R3" S_09="S" />
       <l_listPhasesEval S_00="Rev" S_01="R1" S_02="R2" S_03="R3" S_04="S" />
+      <l_listeParties S_00="C" S_01="S" />
       <d_parties S_C="Conduite" S_S="Soutenance" />
       <l_periode I_00="7" I_01="8" />
       <d_phases>

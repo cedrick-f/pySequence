@@ -50,7 +50,8 @@ import os, glob
 
 from widgets import messageErreur, getHoraireTxt
 
-from Sequence import Classe, Sequence, ArbreTypeEnseignement
+from Sequence import Classe, Sequence
+import wx_pysequence
 
 # Pour enregistrer en xml
 import xml.etree.ElementTree as ET
@@ -59,7 +60,7 @@ import  wx.lib.mixins.listctrl  as  listmix
 
 #################################################################################################################
 #
-# Synth�se p�dagogique (sur pluieures s�quences)
+# Synthèse pédagogique (sur pluieures séquences)
 #
 #################################################################################################################
 class FenetreBilan(wx.Frame):
@@ -89,7 +90,7 @@ class FenetreBilan(wx.Frame):
         #
         titre = wx.StaticBox(panel, -1, u"Type d'enseignement")
         sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
-        te = ArbreTypeEnseignement(panel, self)
+        te = wx_pysequence.ArbreTypeEnseignement(panel, self)
         self.Bind(wx.EVT_RADIOBUTTON, self.EvtRadioBox, te)
         sb.Add(te, flag = wx.EXPAND)
         self.referentiel = referentiel

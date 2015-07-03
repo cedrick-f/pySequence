@@ -1427,6 +1427,19 @@ def drange(start, stop, step):
         yield r
         r += step    
     
+def get_apercu(doc, mult = 3):
+    """ Renvoi un apercu du document <doc>
+        sous la forme d'une cairo.ImageSurface
+    
+    """
+    imagesurface = cairo.ImageSurface(cairo.FORMAT_ARGB32,  210*mult, 297*mult)#cairo.FORMAT_ARGB32,cairo.FORMAT_RGB24
+    ctx = cairo.Context(imagesurface)
+    ctx.scale(297*mult, 297*mult) 
+    doc.draw.Draw(ctx, doc)
+    return imagesurface
+
+
+
 ##########################################################################################
 #
 #  Un système de "cache" pour les textes wrappés

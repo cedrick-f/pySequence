@@ -1074,6 +1074,7 @@
       </d_grilles>
       <l_listPhases S_00="Ana" S_01="Con" S_02="DCo" S_03="Rea" S_04="XXX" S_05="Rev" S_06="R1" S_07="R2" S_08="R3" S_09="S" />
       <l_listPhasesEval S_00="Rev" S_01="R1" S_02="R2" S_03="R3" S_04="S" />
+      <l_listeParties S_00="S1" />
       <d_parties S_S1="PRJ1" />
       <l_periode I_00="1" />
       <d_phases>
@@ -1141,6 +1142,7 @@
       </d_grilles>
       <l_listPhases S_00="Ana" S_01="Con" S_02="DCo" S_03="Rea" S_04="XXX" S_05="Rev" S_06="R1" S_07="R2" S_08="R3" S_09="S" />
       <l_listPhasesEval S_00="Rev" S_01="R1" S_02="R2" S_03="R3" S_04="S" />
+      <l_listeParties S_00="S2" />
       <d_parties S_S2="PRJ2" />
       <l_periode I_00="2" />
       <d_phases>
@@ -1246,6 +1248,7 @@
       </d_grilles>
       <l_listPhases S_00="Ana" S_01="Con" S_02="DCo" S_03="Rea" S_04="XXX" S_05="Rev" S_06="R1" S_07="R2" S_08="R3" S_09="S" />
       <l_listPhasesEval S_00="Rev" S_01="R1" S_02="R2" S_03="R3" S_04="S" />
+      <l_listeParties S_00="C" S_01="S" />
       <d_parties S_C="PRJ3" S_S="Soutenance" />
       <l_periode I_00="3" />
       <d_phases>

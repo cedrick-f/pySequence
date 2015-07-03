@@ -733,7 +733,7 @@ class Referentiel(XMLelem):
         """ Lecture de la branche XML
             (ouverture de fichier)
         """
-#        print "corrigerVersion"
+        print "corrigerVersion"
 #        print self.projets
 #        print 
         
@@ -773,6 +773,12 @@ class Referentiel(XMLelem):
 #        # Pour les BO
 #        if type(self.BO_dossier) != list:
 #            self.BO_dossier = [self.BO_dossier]
+        
+        for p in self.projets.values():
+#            print p.listeParties, p.parties
+            if len(p.listeParties) <> len(p.parties):
+                p.listeParties = p.parties.keys()
+#            print p.listeParties, p.parties
         
         return
         
@@ -1076,6 +1082,7 @@ class Referentiel(XMLelem):
                 t = sh_va.cell(1,c).value
                 for p in self.projets.values():
                     if t == p.intitule:
+                        p.listeParties.append(part)
                         p.parties[part] = sh_va.cell(2,cp).value
                 self.compImposees[part] = False
             
@@ -1540,7 +1547,8 @@ class Projet(XMLelem):
         self.intitule = intitule
         self.duree = duree
         self.periode = periode
-        self.parties = {}
+        self.parties = {}       # Le dictionnaire des parties (code, nom)
+        self.listeParties = [] # La liste ordonnée des parties
         
         #
         # grilles d'évaluation de projet
@@ -1890,18 +1898,18 @@ class Projet(XMLelem):
                 self._dicIndicateurs_simple.update(REFERENTIELS[t]._dicIndicateurs_simple)
         
 
-        self._lstGrpIndicateur = {}
+        self._dicGrpIndicateur = {}
         for p in self.parties.keys():
-            self._lstGrpIndicateur[p] = []
+            self._dicGrpIndicateur[p] = []
 
         for comp, dic in self._dicIndicateurs.items():
             for indic in getListeIndic(dic[1]):
                 for part in indic.poids.keys():
-                    if part in self._lstGrpIndicateur.keys():
-                        self._lstGrpIndicateur[part].append(comp)
+                    if part in self._dicGrpIndicateur.keys():
+                        self._dicGrpIndicateur[part].append(comp)
 
         for p in self.parties.keys():
-            self._lstGrpIndicateur[p] = list(set(self._lstGrpIndicateur[p]))
+            self._dicGrpIndicateur[p] = list(set(self._dicGrpIndicateur[p]))
 
     
 #        if ref.tr_com != []:

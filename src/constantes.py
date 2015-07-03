@@ -197,6 +197,21 @@ def toFileEncoding(path):
 #    sys.excepthook = _exceptionhook
 #    sys.stderr=RedirectErr(sys.stderr)
 
+####################################################################################
+#
+#   Quelques constantes liées aux projets
+#
+####################################################################################
+_R1 = 'R1'
+_R2 = 'R2'
+_R3 = 'R3'
+_Rev = 'Rev'
+_S = 'S'
+TOUTES_REVUES = [_R1, _R2, _R3, _Rev]
+TOUTES_REVUES_EVAL = [_R1, _R2, _R3]
+TOUTES_REVUES_SOUT = [_R1, _R2, _R3, _Rev, _S]
+TOUTES_REVUES_EVAL_SOUT = [_R1, _R2, _R3, _S]
+
 
 ####################################################################################
 #

@@ -27,15 +27,62 @@
 
 import wx
 
-#try:
-#    from agw import hypertreelist as HTL
-#except ImportError: # if it's not there locally, try the wxPython lib.
-#    import wx.lib.agw.hypertreelist as HTL
-
-import time
+import time, os
 import  wx.lib.scrolledpanel as scrolled
 
+######################################################################################  
+def getNomFichier(prefixe, intitule, extension = r""):
+    nomFichier = prefixe+"_"+intitule
+    for c in [u"\t", u"\n", "\"", "/", "\\", "?", "<", ">", "|", ":", "."]:
+        nomFichier = nomFichier.replace(c, r"_")
+    return nomFichier+extension
 
+######################################################################################  
+def rallonge(txt):
+    return u" "+txt+" "
+
+
+######################################################################################  
+def pourCent(v, ajuster = False):
+    if ajuster:
+        return str(int(round(v*100))).rjust(3)+"%"
+    else:
+        return str(int(round(v*100)))+"%"
+
+######################################################################################  
+def pourCent2(v, ajuster = False):
+    if ajuster:
+        return str(int(v*100)).rjust(3)+"%"
+    else:
+        return str(int(v*100))+"%"
+
+######################################################################################  
+def remplaceLF2Code(txt):
+    return txt.replace("\n", "##13##")#.replace("\n", "##13##")#&#13")
+    
+    
+######################################################################################  
+def remplaceCode2LF(txt):
+    return txt.replace("##13##", "\n")#&#13")
+    
+
+######################################################################################  
+def testRel(lien, path):
+    try:
+        return os.path.relpath(lien,path)
+    except:
+        return lien
+    
+#
+# Fonction pour vérifier si un point x, y est dans un rectangle (x0, y0, x1, y1)
+#
+def dansRectangle(x, y, rect):
+    """ Renvoie True si le point x, y est dans un des rectangles de la liste de rectangles r(xr, yr, wr, hr)
+    """
+    for i, r in enumerate(rect):
+        if x > r[0] and y > r[1] and x < r[0] + r[2] and y < r[1] + r[3]:
+            return True, i
+    return False, 0
 
 #########################################################################################################
 #########################################################################################################
@@ -782,6 +829,30 @@ def messageErreur(parent, titre, message, icon = wx.ICON_WARNING):
     dlg.ShowModal()
     dlg.Destroy()
 
+#############################################################################################################
+def messageWarning(parent, titre, message, icon = wx.ICON_WARNING):
+    dlg = wx.MessageDialog(parent, message, titre,
+                           wx.OK | icon)
+    dlg.ShowModal()
+    dlg.Destroy()
+    
+#############################################################################################################
+def messageInfo(parent, titre, message, icon = wx.ICON_INFORMATION):
+    dlg = wx.MessageDialog(parent, message, titre,
+                           wx.OK | icon)
+    dlg.ShowModal()
+    dlg.Destroy()
+    
+#############################################################################################################
+def messageYesNo(parent, titre, message, icon = wx.ICON_INFORMATION):
+    dlg = wx.MessageDialog(parent, message, titre,
+                           wx.YES_NO | icon)
+    retCode = dlg.ShowModal()
+    dlg.Destroy()
+    if retCode == wx.ID_YES:
+        return True
+    else:
+        return False
 
 #############################################################################################################
 def chronometrer(fct, *args, **kargs):
