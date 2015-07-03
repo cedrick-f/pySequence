@@ -77,8 +77,7 @@
   </head>
   <body>
     <!-- HEADER -->
-    <div id="header_wrap" class="outer"> <img id="logo_img" src="images/Icones/Logo.png"
-
+    <div id="header_wrap" class="outer"> <img id="logo_img" src="images/Icones/Logo.png"
         height="100" width="100">
       <header class="inner"> <a id="forkme_banner" href="https://github.com/cedrick-f/pySequence">Voir
           sur GitHub</a>
@@ -87,11 +86,9 @@
           à la validation de projets</h2>
         <section id="downloads"> <a class="zip_download_link" href="https://github.com/cedrick-f/pySequence/zipball/master">Télécharger
             les sources (fichier .zip)</a> <a class="tar_download_link" href="https://github.com/cedrick-f/pySequence/tarball/master">Télécharger
-            les sources (fichier .tar.gz)</a> <a class="zip_win_download_link"
-
+            les sources (fichier .tar.gz)</a> <a class="zip_win_download_link"
             href="https://github.com/cedrick-f/pySequence/releases/latest">Télécharger
-            la version portable pour Windows (fichier .zip)</a> <a class="exe_win_download_link"
-
+            la version portable pour Windows (fichier .zip)</a> <a class="exe_win_download_link"
             href="https://github.com/cedrick-f/pySequence/releases/latest">Télécharger
             la version installable pour Windows (fichier .exe)</a> <a class="release-info">pySéquence</a>
         </section>
@@ -118,7 +115,6 @@
               <li><a href="demarche_seq.html">Démarche de création d'une
                   séquence</a></li>
               <li><a href="seances.html">Séances</a></li>
-              <li><a href="#">vin</a></li>
               <li><a href="exemples_seq.html">Exemples</a></li>
             </ul>
           </li>
