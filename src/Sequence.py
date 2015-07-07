@@ -58,6 +58,8 @@ import error
 #from wx_pysequence import *
 import wx_pysequence as GUI
 
+from undo import UndoStack
+
 # Pour passer des arguments aux callback
 import functools
     
@@ -354,7 +356,7 @@ class ElementDeSequence():
         self.lien.DialogCreer(self.GetPath())
         self.SetLien()
         if hasattr(self, 'panelPropriete'): 
-            self.panelPropriete.sendEvent()
+            self.panelPropriete.sendEvent(modif = u"Création d'un lien")
     
     
     ######################################################################################  
@@ -683,6 +685,8 @@ class Classe():
                  pourProjet = False, ouverture = False, typedoc = ''):
         self.intitule = intitule
         
+        self.undoStack = UndoStack(self)
+        
         self.academie = u""
         self.ville = u""
         self.etablissement = u""
@@ -695,6 +699,7 @@ class Classe():
         
         self.Initialise(pourProjet)
         
+        self.undoStack.do(u"Création de la Classe")
         
         if panelParent:
             self.panelPropriete = GUI.PanelPropriete_Classe(panelParent, self, pourProjet, 
@@ -852,7 +857,7 @@ class Classe():
     ######################################################################################  
     def setBranche(self, branche, reparer = False):
         err = []
-        print "setBranche classe"
+#        print "setBranche classe"
         self.typeEnseignement = branche.get("Type", constantes.TYPE_ENSEIGNEMENT_DEFAUT)
         
         self.version = branche.get("Version", "0")       # A partir de la version 6 !
@@ -1119,6 +1124,11 @@ class BaseDoc():
         return bmp
     
     ######################################################################################  
+    def restaurer(self, root):
+        if self.panelParent != None:
+            self.panelParent.restaurer(root)
+            
+    ######################################################################################  
     def SetText(self, text):
         self.intitule = text
     
@@ -1150,6 +1160,8 @@ class Sequence(BaseDoc, Objet_sequence):
     def __init__(self, app, classe = None, panelParent = None, intitule = u"Intitulé de la séquence pédagogique"):
         BaseDoc.__init__(self, app, classe, panelParent, intitule)
         
+        self.undoStack = UndoStack(self)
+        
         if panelParent:
             self.panelPropriete = GUI.PanelPropriete_Sequence(panelParent, self)
             self.panelSeances = GUI.PanelPropriete_Racine(panelParent, constantes.TxtRacineSeance)
@@ -1167,12 +1179,12 @@ class Sequence(BaseDoc, Objet_sequence):
                     "S" : Savoirs(self, panelParent)}
         self.systemes = []
         self.seances = [Seance(self, panelParent)]
-        
-#        self.options = classe.options
+
         
         # Le module de dessin
         self.draw = draw_cairo_seq
         
+        self.undoStack.do(u"Création de la Séquence")
         
     ######################################################################################  
     def __repr__(self):
@@ -1441,7 +1453,7 @@ class Sequence(BaseDoc, Objet_sequence):
         """ Colle la séance présente dans le presse-papier (branche <bseance>)
             en première position
         """
-        print "CollerElem 1ere pos"
+#        print "CollerElem 1ere pos"
         
         if bseance == None:
             bseance = GetObjectFromClipBoard('Seance')
@@ -1467,7 +1479,7 @@ class Sequence(BaseDoc, Objet_sequence):
         seance.panelPropriete.MiseAJour()
         seance.panelPropriete.MiseAJourListeSystemes()
         
-        self.panelPropriete.sendEvent()
+        self.panelPropriete.sendEvent(modif = u"Collé d'un élément")
         
         self.arbre.SelectItem(seance.branche)    
 
@@ -1478,7 +1490,7 @@ class Sequence(BaseDoc, Objet_sequence):
         self.seances.append(seance)
         self.OrdonnerSeances()
         seance.ConstruireArbre(self.arbre, self.brancheSce)
-        self.panelPropriete.sendEvent()
+        self.panelPropriete.sendEvent(modif = u"Ajout d'une Séance")
         
         self.arbre.SelectItem(seance.branche)
         
@@ -1496,7 +1508,7 @@ class Sequence(BaseDoc, Objet_sequence):
             self.seances.remove(seance)
             self.arbre.Delete(item)
             self.OrdonnerSeances()
-            self.panelPropriete.sendEvent()
+            self.panelPropriete.sendEvent(modif = u"Suppression d'une Séance")
             return True
         return False
     
@@ -1551,14 +1563,14 @@ class Sequence(BaseDoc, Objet_sequence):
         ps = self.arbre.GetItemPyData(item)
         self.prerequisSeance.remove(ps)
         self.arbre.Delete(item)
-        self.panelPropriete.sendEvent()
+        self.panelPropriete.sendEvent(modif = u"Suppression d'une Séquence prérequise")
         
     ######################################################################################  
     def AjouterSequencePre(self, event = None):
         ps = LienSequence(self, self.panelParent)
         self.prerequisSeance.append(ps)
         ps.ConstruireArbre(self.arbre, self.branchePre)
-        self.panelPropriete.sendEvent()
+        self.panelPropriete.sendEvent(modif = u"Ajout d'une Séquence prérequise")
         self.arbre.SelectItem(ps.branche)
         
         
@@ -1568,7 +1580,7 @@ class Sequence(BaseDoc, Objet_sequence):
         self.systemes.append(sy)
         sy.ConstruireArbre(self.arbre, self.brancheSys)
         self.arbre.Expand(self.brancheSys)
-        self.panelPropriete.sendEvent()
+        self.panelPropriete.sendEvent(modif = u"Ajout d'un Système")
         self.arbre.SelectItem(sy.branche)
         self.AjouterSystemeSeance()
         return
@@ -1606,7 +1618,7 @@ class Sequence(BaseDoc, Objet_sequence):
         
         self.arbre.Expand(self.brancheSys)
         self.AjouterListeSystemesSeance(nouvListe)
-        self.panelPropriete.sendEvent()
+        self.panelPropriete.sendEvent(modif = u"Ajout d'une liste de Systèmes")
         return
     
     ######################################################################################  
@@ -1616,7 +1628,7 @@ class Sequence(BaseDoc, Objet_sequence):
         self.systemes.remove(sy)
         self.arbre.Delete(item)
         self.SupprimerSystemeSeance(i)
-        self.panelPropriete.sendEvent()
+        self.panelPropriete.sendEvent(modif = u"Suppression d'un Système")
     
     ######################################################################################  
     def SelectSystemes(self, event = None):
@@ -1920,6 +1932,7 @@ class Projet(BaseDoc, Objet_sequence):
     def __init__(self, app, classe = None, panelParent = None, intitule = u""):
         BaseDoc.__init__(self, app, classe, panelParent, intitule)
 #        Objet_sequence.__init__(self)
+        self.undoStack = UndoStack(self)
         
         self.version = "" # version de pySéquence avec laquelle le fichier a été sauvegardé
         
@@ -1983,7 +1996,7 @@ class Projet(BaseDoc, Objet_sequence):
         # Le module de dessin
         self.draw = draw_cairo_prj
         
-#       
+        self.undoStack.do(u"Création du Projet")
         
         
     ######################################################################################  
@@ -2384,7 +2397,7 @@ class Projet(BaseDoc, Objet_sequence):
                 self.OrdonnerTaches()
                 self.arbre.Ordonner(self.brancheTac)
                 if hasattr(self, 'panelPropriete'):
-                    self.panelPropriete.sendEvent()
+                    self.panelPropriete.sendEvent(modif = u"Changement de projet")
     
 
                 
@@ -2579,7 +2592,7 @@ class Projet(BaseDoc, Objet_sequence):
             self.arbre.HideWindows()
         self.arbre.SelectItem(tache.branche)
 
-        self.panelPropriete.sendEvent()
+        self.panelPropriete.sendEvent(modif = u"Ajout d'une Tâche")
 
         return tache
     
@@ -2629,7 +2642,7 @@ class Projet(BaseDoc, Objet_sequence):
             tache.panelPropriete.MiseAJourEleves()
         
         self.arbre.Ordonner(self.brancheTac)
-        self.panelPropriete.sendEvent()
+        self.panelPropriete.sendEvent(modif = u"Collé d'un élément")
         self.arbre.SelectItem(tache.branche)
             
         self.Verrouiller()
@@ -2651,7 +2664,7 @@ class Projet(BaseDoc, Objet_sequence):
             tache.panelPropriete.MiseAJour()
         
         self.arbre.Ordonner(self.brancheTac)
-        self.panelPropriete.sendEvent()
+        self.panelPropriete.sendEvent(modif = u"Insertion d'une revue")
         self.arbre.SelectItem(tache.branche)
             
         self.Verrouiller()
@@ -2662,7 +2675,7 @@ class Projet(BaseDoc, Objet_sequence):
         self.taches.remove(tache)
         self.arbre.Delete(item)
         self.SetOrdresTaches()
-        self.panelPropriete.sendEvent()
+        self.panelPropriete.sendEvent(modif = u"Suppression d'une Tâche")
         if verrouiller:
             self.Verrouiller()
         
@@ -2797,7 +2810,7 @@ class Projet(BaseDoc, Objet_sequence):
             self.OrdonnerEleves()
             e.ConstruireArbre(self.arbre, self.brancheElv)
             self.arbre.Expand(self.brancheElv)
-            self.panelPropriete.sendEvent()
+            self.panelPropriete.sendEvent(modif = u"Ajout d'un Elève")
             self.arbre.SelectItem(e.branche)
             self.AjouterEleveDansPanelTache()
 
@@ -2819,7 +2832,7 @@ class Projet(BaseDoc, Objet_sequence):
         for i, e in enumerate(self.eleves):
             e.SetCode()
             
-        self.panelPropriete.sendEvent()
+        self.panelPropriete.sendEvent(modif = u"Suppression d'un Elève")
     
     ######################################################################################  
     def OrdonnerEleves(self):
@@ -2848,7 +2861,7 @@ class Projet(BaseDoc, Objet_sequence):
             self.equipe.append(e)
             e.ConstruireArbre(self.arbre, self.branchePrf)
             self.arbre.Expand(self.branchePrf)
-            self.panelPropriete.sendEvent()
+            self.panelPropriete.sendEvent(modif = u"Ajout d'un professeur")
             self.arbre.SelectItem(e.branche)
 
     
@@ -2858,7 +2871,7 @@ class Projet(BaseDoc, Objet_sequence):
 #        i = self.equipe.index(e)
         self.equipe.remove(e)
         self.arbre.Delete(item)
-        self.panelPropriete.sendEvent()
+        self.panelPropriete.sendEvent(modif = u"Suppression d'un professeur")
         
     
     ######################################################################################  
@@ -4380,7 +4393,7 @@ class Seance(ElementDeSequence, Objet_sequence):
         if self.description != description:
             self.description = description
             if hasattr(self, 'panelPropriete'):
-                self.panelPropriete.sendEvent()
+                self.panelPropriete.sendEvent(modif = u"Modification de la description")
             self.tip.SetRichTexte()
 
     ######################################################################################  
@@ -4477,9 +4490,9 @@ class Seance(ElementDeSequence, Objet_sequence):
         """ Colle la séance présente dans le presse-papier (branche <bseance>)
             après la séance désignée par l'item d'arbre <item>
         """
-        print "CollerElem"
+#        print "CollerElem"
         seance_avant = self.arbre.GetItemPyData(item)
-        print "   ", seance_avant
+#        print "   ", seance_avant
         
         if not isinstance(seance_avant, Seance):
             return
@@ -4496,13 +4509,13 @@ class Seance(ElementDeSequence, Objet_sequence):
         
         
         if seance_avant.typeSeance in ['R', 'S']:
-            print "     dans :"
+#            print "     dans :"
             seance = Seance(seance_avant, self.panelParent, typeSeance = typeSeance,
                             branche = bseance)
             seance_avant.seances.insert(0, seance)
             
         else:
-            print "     après :"
+#            print "     après :"
             seance = Seance(self.parent, self.panelParent, typeSeance = typeSeance,
                             branche = bseance)
             i = seance_avant.parent.seances.index(seance_avant)
@@ -4517,7 +4530,7 @@ class Seance(ElementDeSequence, Objet_sequence):
         seance.panelPropriete.MiseAJour()
         seance.panelPropriete.MiseAJourListeSystemes()
         
-        self.panelPropriete.sendEvent()
+        self.panelPropriete.sendEvent(modif = u"Collé d'un élément")
         
         self.arbre.SelectItem(seance.branche)        
             
@@ -4552,7 +4565,7 @@ class Seance(ElementDeSequence, Objet_sequence):
                 self.seances.remove(seance)
                 self.arbre.Delete(item)
                 self.OrdonnerSeances()
-                self.panelPropriete.sendEvent()
+                self.panelPropriete.sendEvent(modif = u"Suppression d'une Séance")
             if self.typeSeance == "R":  # Séances en Rotation
                 self.reglerNbrRotMaxi()
         return
@@ -5408,7 +5421,7 @@ class Tache(Objet_sequence):
         if self.description != description:
             self.description = description
             if hasattr(self, 'panelPropriete'):
-                self.panelPropriete.sendEvent()
+                self.panelPropriete.sendEvent(modif = u"Modification de la description de la Tâche")
             self.tip.SetRichTexte()
             
     ######################################################################################  
@@ -5959,7 +5972,7 @@ class Support(ElementDeSequence, Objet_sequence):
         if self.description != description:
             self.description = description
             if hasattr(self, 'panelPropriete'):
-                self.panelPropriete.sendEvent()
+                self.panelPropriete.sendEvent(modif = u"Modification de la description du Support")
             self.tip.SetRichTexte()
             
     ######################################################################################  

@@ -733,7 +733,7 @@ class Referentiel(XMLelem):
         """ Lecture de la branche XML
             (ouverture de fichier)
         """
-        print "corrigerVersion"
+#        print "corrigerVersion"
 #        print self.projets
 #        print 
         

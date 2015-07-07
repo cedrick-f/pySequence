@@ -29,7 +29,7 @@
 """
 wx_pysequence.py
 
-pySéquence : aide à la réalisation de fiches  de séquence pédagogiques
+pySéquence : aide à la réalisation de fiches de séquence pédagogiques
 et à la validation de projets
 
 Copyright (C) 2011-2015
@@ -154,8 +154,8 @@ class SeqEvent(wx.PyCommandEvent):
     def __init__(self, evtType, idd):
         wx.PyCommandEvent.__init__(self, evtType, idd)
         self.doc = None
-        
-        
+        self.modif = u""
+        self.draw = True
         
     ######################################################################################  
     def SetDocument(self, doc):
@@ -164,6 +164,22 @@ class SeqEvent(wx.PyCommandEvent):
     ######################################################################################  
     def GetDocument(self):
         return self.doc
+    
+    ######################################################################################  
+    def SetModif(self, modif):
+        self.modif = modif
+        
+    ######################################################################################  
+    def GetModif(self):
+        return self.modif
+    
+    ######################################################################################  
+    def SetDraw(self, draw):
+        self.draw = draw
+        
+    ######################################################################################  
+    def GetDraw(self):
+        return self.draw
 
 
 ####################################################################################
@@ -227,17 +243,20 @@ def getFont_9():
 #   Quelques icones "wx"
 #
 ####################################################################################
-def getIconeFileSave():
-    return wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE_AS, wx.ART_TOOLBAR, (20,20))
+def getIconeFileSave(size = (20,20)):
+    return wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE_AS, wx.ART_TOOLBAR, size)
 
-def getIconePaste():
-    return wx.ArtProvider.GetBitmap(wx.ART_PASTE, wx.ART_TOOLBAR, (20,20))
+def getIconePaste(size = (20,20)):
+    return wx.ArtProvider.GetBitmap(wx.ART_PASTE, wx.ART_TOOLBAR, size)
 
-def getIconeCopy():
-    return wx.ArtProvider.GetBitmap(wx.ART_COPY, wx.ART_TOOLBAR, (20,20))
+def getIconeCopy(size = (20,20)):
+    return wx.ArtProvider.GetBitmap(wx.ART_COPY, wx.ART_TOOLBAR, size)
 
-def getIconeCopy2():
-    return wx.ArtProvider.GetBitmap(wx.ART_COPY, wx.ART_TOOLBAR, (20,20))
+def getIconeUndo(size = (20,20)):
+    return wx.ArtProvider.GetBitmap(wx.ART_UNDO, wx.ART_TOOLBAR, size)
+
+def getIconeRedo(size = (20,20)):
+    return wx.ArtProvider.GetBitmap(wx.ART_REDO, wx.ART_TOOLBAR, size)
 
 def getBitmapFromImageSurface(imagesurface):
     """ Renvoi une wx.Bitmap en fonction d'une cairo.ImageSurface
@@ -279,7 +298,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
 #        try:
 #            draw_cairo_seq.ouvrirConfigFiche(self.nomFichierConfig)
 #        except:
-#            print "Erreur é l'ouverture de configFiche.cfg" 
+#            print "Erreur à l'ouverture de configFiche.cfg" 
 
         #
         # Taille et position de la fenétre
@@ -309,7 +328,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         #############################################################################################
         self.CreateMenuBar()
         
-        # !!! cette ligne pose probléme é la fermeture : mystére
+        # !!! cette ligne pose probléme à la fermeture : mystére
         self.renommerWindow()
         
         self.Bind(wx.EVT_MENU, self.commandeNouveau, id=10)
@@ -412,20 +431,20 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     ###############################################################################################
     def GetTools(self, typ):
         if typ == 'prj':
-            return {50 : BoutonToolBar(u"Ajouter un éléve",
+            return {50 : BoutonToolBar(u"Ajouter un élève",
                                    images.Icone_ajout_eleve.GetBitmap(), 
-                                   shortHelp = u"Ajout d'un éléve au projet", 
-                                   longHelp = u"Ajout d'un éléve au projet"),
+                                   shortHelp = u"Ajout d'un élève au projet", 
+                                   longHelp = u"Ajout d'un élève au projet"),
                 
                     51 : BoutonToolBar(u"Ajouter un professeur", 
                                        images.Icone_ajout_prof.GetBitmap(), 
-                                       shortHelp = u"Ajout d'un professeur é l'équipe pédagogique", 
-                                       longHelp = u"Ajout d'un professeur é l'équipe pédagogique"),
+                                       shortHelp = u"Ajout d'un professeur à l'équipe pédagogique", 
+                                       longHelp = u"Ajout d'un professeur à l'équipe pédagogique"),
                     
-                    52 : BoutonToolBar(u"Ajouter une téche", 
+                    52 : BoutonToolBar(u"Ajouter une tâche", 
                                        images.Icone_ajout_tache.GetBitmap(), 
-                                       shortHelp=u"Ajout d'une téche au projet", 
-                                       longHelp=u"Ajout d'une téche au projet"),
+                                       shortHelp=u"Ajout d'une tâche au projet", 
+                                       longHelp=u"Ajout d'une tâche au projet"),
                     
                     53 : BoutonToolBar(u"Ajouter une revue", 
                                        images.Icone_ajout_revue.GetBitmap(), 
@@ -439,10 +458,10 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                                     shortHelp=u"Ajout d'une séance dans la séquence", 
                                     longHelp=u"Ajout d'une séance dans la séquence"),
 
-                  61 : BoutonToolBar(u"Ajouter un systéme", 
+                  61 : BoutonToolBar(u"Ajouter un système", 
                                      images.Icone_ajout_systeme.GetBitmap(), 
-                                     shortHelp=u"Ajout d'un systéme", 
-                                     longHelp=u"Ajout d'un systéme")
+                                     shortHelp=u"Ajout d'un système", 
+                                     longHelp=u"Ajout d'un système")
                   }
             
             
@@ -464,6 +483,8 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         open_bmp = wx.ArtProvider.GetBitmap(wx.ART_FILE_OPEN, wx.ART_TOOLBAR, tsize)
         save_bmp =  wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE, wx.ART_TOOLBAR, tsize)
         saveas_bmp = wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE_AS, wx.ART_TOOLBAR, tsize)
+        undo_bmp = wx.ArtProvider.GetBitmap(wx.ART_UNDO, wx.ART_TOOLBAR, tsize)
+        redo_bmp = wx.ArtProvider.GetBitmap(wx.ART_REDO, wx.ART_TOOLBAR, tsize)
         
         self.tb.SetToolBitmapSize(tsize)
         
@@ -493,7 +514,22 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
         self.tb.AddSeparator()
         
+        self.tb.AddLabelTool(200, u"Annuler", undo_bmp, 
+                             shortHelp=u"Annuler", 
+                             longHelp=u"Annuler")
+        
 
+        self.tb.AddLabelTool(201, u"Rétablir", redo_bmp, 
+                             shortHelp=u"Rétablir", 
+                             longHelp=u"Rétablir")
+        
+        
+        self.tb.AddSeparator()
+        
+        self.Bind(wx.EVT_TOOL, self.commandeUndo, id=200)
+        self.Bind(wx.EVT_TOOL, self.commandeRedo, id=201)
+        
+        
         #################################################################################################################
         #
         # Outils "Projet" ou  "séquence" ou ...
@@ -541,6 +577,8 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         #################################################################################################################
         self.tb.Realize()
         self.supprimerOutils()
+        self.miseAJourUndo()
+        
         
         
     ###############################################################################################
@@ -557,7 +595,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     def ajouterOutils(self, typ):
         self.supprimerOutils()
 
-        d = 5
+        d = 8 # Position à changer selon le nombre d'outils "communs"
         for i, tool in self.tools[typ].items():
             self.tb.InsertToolItem(d,tool)
             d += 1
@@ -566,7 +604,27 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         self.tb.Realize()
 
 
-    
+    ###############################################################################################
+    def miseAJourUndo(self):
+        doc = self.GetDocActif()
+        if doc == None:
+            self.tb.EnableTool(200, False)
+            self.tb.EnableTool(201, False)
+            return
+            
+        undoAction = doc.undoStack.getUndoAction()
+        if undoAction == None:
+            self.tb.EnableTool(200, False)
+        else:
+            self.tb.EnableTool(200, True)
+            self.tb.SetToolShortHelp(200, u"Annuler"+u"\n"+undoAction)
+
+        redoAction = doc.undoStack.getRedoAction()
+        if redoAction == None:
+            self.tb.EnableTool(201, False)
+        else:
+            self.tb.EnableTool(201, True)
+            self.tb.SetToolShortHelp(201, u"Rétablir"+u"\n"+redoAction)
         
         
     ###############################################################################################
@@ -727,7 +785,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             ok = register.Register(util_path.PATH)
         if not ok:
             messageErreur(self, u"Accés refusé",
-                          u"Accés é la base de registre refusé !\n\n" \
+                          u"Accés à la base de registre refusé !\n\n" \
                           u"Redémarrer pySequence en tant qu'administrateur.")
         else:
             self.MiseAJourMenu()
@@ -866,6 +924,18 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         self.GetEventHandler().ProcessEvent(evt)
         
     #############################################################################
+    def commandeUndo(self, event = None):
+        page = self.GetNotebook().GetCurrentPage()
+        if page != None:
+            page.commandeUndo(event)
+    
+    #############################################################################
+    def commandeRedo(self, event = None):
+        page = self.GetNotebook().GetCurrentPage()
+        if page != None:
+            page.commandeRedo(event)     
+            
+    #############################################################################
     def commandeEnregistrer(self, event = None):
         page = self.GetNotebook().GetCurrentPage()
         if page != None:
@@ -987,6 +1057,14 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         keycode = evt.GetKeyCode()
         if keycode == wx.WXK_ESCAPE and self.pleinEcran:
             self.commandePleinEcran(evt)
+            
+        elif evt.ControlDown() and keycode == 90: # Crtl-Z
+            self.commandeUndo(evt)
+
+
+        elif evt.ControlDown() and keycode == 89: # Crtl-Y
+            self.commandeRedo(evt)
+            
         evt.Skip()
         
         
@@ -1245,6 +1323,19 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         else:
             dlg.Destroy()
     
+    
+    #############################################################################
+    def commandeRedo(self, event = None):
+        self.GetDocument().undoStack.redo()
+        self.GetDocument().classe.undoStack.redo()
+        self.restaurer()
+        
+    #############################################################################
+    def commandeUndo(self, event = None):
+        self.GetDocument().undoStack.undo()
+        self.GetDocument().classe.undoStack.undo()
+        self.restaurer()
+    
     #############################################################################
     def commandeEnregistrer(self, event = None):
         if self.fichierCourant != '':
@@ -1476,7 +1567,7 @@ class FenetreSequence(FenetreDocument):
         self.arbre.ExpandAll()
         
         #
-        # Permet d'ajouter automatiquement les systémes des préférences
+        # Permet d'ajouter automatiquement les systèmes des préférences
         #
         self.sequence.Initialise()
         
@@ -1534,16 +1625,25 @@ class FenetreSequence(FenetreDocument):
             
     ###############################################################################################
     def OnDocModified(self, event):
-#        print "OnDocModified"
+        if event.GetModif() != u"":
+            print "OnDocModified", event.GetModif()
+            self.classe.undoStack.do(event.GetModif())
+            self.sequence.undoStack.do(event.GetModif())
+        
         if event.GetDocument() == self.sequence:
             self.sequence.VerifPb()
-            wx.CallAfter(self.fiche.Redessiner)
+            if event.GetDraw():
+                wx.CallAfter(self.fiche.Redessiner)
             self.MarquerFichierCourantModifie()
             
         elif event.GetDocument() == self.classe:
             self.sequence.VerifPb()
-            wx.CallAfter(self.fiche.Redessiner)
+            if event.GetDraw():
+                wx.CallAfter(self.fiche.Redessiner)
             self.MarquerFichierCourantModifie()
+        
+        self.parent.miseAJourUndo()
+        
         
     ###############################################################################################
     def enregistrer(self, nomFichier):
@@ -1580,12 +1680,41 @@ class FenetreSequence(FenetreDocument):
                 self.sequence.CI.numCI.remove(ci)
                 messageErreur(self,u"CI inexistant",
                               u"Pas de CI numéro " + str(ci) + " !\n\n" \
-                              u"La séquence ouverte fait référence é un Centre d'Intérét\n" \
+                              u"La séquence ouverte fait référence à un Centre d'Intérét\n" \
                               u"qui n'existe pas dans le référentiel par défaut.\n\n" \
                               u"Il a été supprimé !")
         return
-    
-    
+
+
+    ###############################################################################################
+    def restaurer(self):
+
+        wx.BeginBusyCursor()
+        
+        self.sequence.MiseAJourTypeEnseignement()
+            
+        self.arbre.DeleteAllItems()
+        root = self.arbre.AddRoot("")
+        self.classe.ConstruireArbre(self.arbre, root)
+        self.sequence.ConstruireArbre(self.arbre, root)
+        self.sequence.CI.SetNum()
+        self.sequence.SetCodes()
+        self.sequence.PubDescription()
+        self.sequence.SetLiens()
+        self.sequence.VerifPb()
+
+        self.sequence.Verrouiller()
+        self.arbre.SelectItem(self.classe.branche)
+        
+        self.arbre.Layout()
+        self.arbre.ExpandAll()
+        self.arbre.CalculatePositions()
+        
+        self.fiche.Redessiner()
+        self.parent.miseAJourUndo()
+        
+        wx.EndBusyCursor()
+        
     ###############################################################################################
     def ouvrir(self, nomFichier, redessiner = True, reparer = False):
 #        print "ouvrir sequence"
@@ -1650,6 +1779,10 @@ class FenetreSequence(FenetreDocument):
         if redessiner:
             wx.CallAfter(self.fiche.Redessiner)
 
+        self.classe.undoStack.do(u"Ouverture de la Classe")
+        self.sequence.undoStack.do(u"Ouverture de la Séquence")
+        self.parent.miseAJourUndo()
+        
 
     #############################################################################
     def definirNomFichierCourant(self, nomFichier = ''):
@@ -1712,7 +1845,7 @@ class FenetreProjet(FenetreDocument):
         # Détails
         #
         self.pageDetails = RapportRTF(self.nb, rt.RE_READONLY)
-        self.nb.AddPage(self.pageDetails, u"Téches éléves détaillées")
+        self.nb.AddPage(self.pageDetails, u"Tâches élèves détaillées")
         
         #
         # Dossier de validation
@@ -1773,15 +1906,21 @@ class FenetreProjet(FenetreDocument):
             
     ###############################################################################################
     def OnDocModified(self, event):
-#        print "OnDocModified"
+        if event.GetModif() != u"":
+            print "OnDocModified", event.GetModif()
+            self.classe.undoStack.do(event.GetModif())
+            self.projet.undoStack.do(event.GetModif())
+            
         if event.GetDocument() == self.projet:
             self.projet.VerifPb()
             self.projet.SetCompetencesRevuesSoutenance(miseAJourPanel = False)
-            
-            wx.CallAfter(self.fiche.Redessiner)
+            if event.GetDraw():
+                wx.CallAfter(self.fiche.Redessiner)
 
             self.MarquerFichierCourantModifie()
             
+        self.parent.miseAJourUndo()
+        
         
     ###############################################################################################
     def enregistrer(self, nomFichier):
@@ -1819,6 +1958,32 @@ class FenetreProjet(FenetreDocument):
         wx.EndBusyCursor()
         
         
+    ###############################################################################################
+    def restaurer(self):
+        wx.BeginBusyCursor()
+        
+        self.arbre.DeleteAllItems()
+        root = self.arbre.AddRoot("")
+        self.projet.SetCompetencesRevuesSoutenance()
+   
+        self.classe.ConstruireArbre(self.arbre, root)
+        self.projet.ConstruireArbre(self.arbre, root)
+        self.projet.OrdonnerTaches()
+        self.projet.PubDescription()
+        self.projet.MiseAJourDureeEleves()
+        self.projet.MiseAJourNomProfs()
+
+        self.projet.Verrouiller()
+        
+        self.arbre.Layout()
+        self.arbre.ExpandAll()
+        self.arbre.CalculatePositions()
+        
+        self.fiche.Redessiner()
+        self.parent.miseAJourUndo()
+        
+        wx.EndBusyCursor()
+        
         
     ###############################################################################################
     def ouvrir(self, nomFichier, redessiner = True, reparer = False):
@@ -1836,22 +2001,6 @@ class FenetreProjet(FenetreDocument):
                                    message,
                                    nbr_etapes,
                                    self.parent)
-        
-#        dlg =    wx.ProgressDialog(u"Ouverture d'un projet",
-#                                   message,
-#                                   maximum = nbr_etapes,
-#                                   parent=self.parent,
-#                                   style = 0
-#                                    | wx.PD_APP_MODAL
-#                                    #| wx.PD_CAN_ABORT
-#                                    #| wx.PD_CAN_SKIP
-#                                    #| wx.PD_ELAPSED_TIME
-#                                    | wx.PD_ESTIMATED_TIME
-#                                    | wx.PD_REMAINING_TIME
-#                                    #| wx.PD_AUTO_HIDE
-#                                    )
-
-#        print dir(dlg)
         
         self.fiche.Hide()
         
@@ -1885,7 +2034,7 @@ class FenetreProjet(FenetreDocument):
 #                print "V",self.classe.GetVersionNum()
                 if self.classe.GetVersionNum() < 5:
                     messageErreur(None, u"Ancien programme", 
-                                  u"Projet enregistré avec les indicateurs de compétence antérieurs é la session 2014\n\n"\
+                                  u"Projet enregistré avec les indicateurs de compétence antérieurs à la session 2014\n\n"\
                                   u"Les indicateurs de compétence ne seront pas chargés.")
                 
                 # Le projet
@@ -1960,7 +2109,7 @@ class FenetreProjet(FenetreDocument):
                          [self.projet.ConstruireArbre, [self.arbre, root], {},
                           u"Construction de l'arborescence du projet...\t"],
                          [self.projet.OrdonnerTaches, [], {},
-                          u"Ordonnancement des téches...\t"],
+                          u"Ordonnancement des tâches...\t"],
                          [self.projet.PubDescription, [], {},
                           u"Traitement des descriptions...\t"],
                          [self.projet.SetLiens, [], {},
@@ -2010,6 +2159,10 @@ class FenetreProjet(FenetreDocument):
     
         wx.CallAfter(self.fiche.Show)
         wx.CallAfter(self.fiche.Redessiner)
+        
+        self.classe.undoStack.do(u"Ouverture de la Classe")
+        self.projet.undoStack.do(u"Ouverture du Projet")
+        self.parent.miseAJourUndo()
 #        wx.CallAfter(dlg.Raise)
 
     #############################################################################
@@ -2108,15 +2261,15 @@ class FenetreProjet(FenetreDocument):
 #            print "pathprj", pathprj
             
             #
-            # Détermination des fichiers grille é créer
+            # Détermination des fichiers grille à créer
             #
             nomFichiers = {}
             for e in self.projet.eleves:
-                if len(e.grille) == 0: # Pas de fichier grille connu pour cet éléve
+                if len(e.grille) == 0: # Pas de fichier grille connu pour cet élève
                     nomFichiers[e.id] = e.GetNomGrilles(path = os.path.split(nomFichier)[0])
                 else:
                     for g in e.grille.values():
-                        if not os.path.exists(g.path): # Le fichier grille pour cet éléve n'a pas été trouvé
+                        if not os.path.exists(g.path): # Le fichier grille pour cet élève n'a pas été trouvé
                             nomFichiers[e.id] = e.GetNomGrilles(path = os.path.split(nomFichier)[0])
 #            print "nomFichiers grille", nomFichiers
             
@@ -2132,7 +2285,7 @@ class FenetreProjet(FenetreDocument):
 #            feuilNON = dicInfo["NON"][0][1]
 #            collectif = self.projet.GetProjetRef().grilles[classNON][1] == 'C'
             
-            # Elaboration de la liste des fichiers/feuilles é exporter en PDF
+            # Elaboration de la liste des fichiers/feuilles à exporter en PDF
             lst_grilles = []
             for e in self.projet.eleves:
                 dlgb.Update(count, u"Traitement de la grille de \n\n"+e.GetNomPrenom())
@@ -2633,7 +2786,7 @@ class FicheProjet(BaseFiche):
 
     #############################################################################
 #    def MiseAJourTypeEnseignement(self, type_ens):
-#        print u"Sert é rien", a
+#        print u"Sert à rien", a
 #        texte = u"Indicateur"
 #        ref = self.projet.GetReferentiel()
 #        if ref.prof_Comp <= 1:
@@ -2688,7 +2841,7 @@ class PanelConteneur(wx.Panel):
 #   Classe définissant le panel de propriété par défaut
 #
 ####################################################################################
-DELAY = 100 # Delai en millisecondes avant de rafraichir l'affichage suite é un saisie au clavier
+DELAY = 100 # Delai en millisecondes avant de rafraichir l'affichage suite à un saisie au clavier
 class PanelPropriete(scrolled.ScrolledPanel):
     def __init__(self, parent, titre = u"", objet = None, style = wx.VSCROLL | wx.RETAINED):
         scrolled.ScrolledPanel.__init__(self, parent, -1, style = style)#|wx.BORDER_SIMPLE)
@@ -2713,14 +2866,19 @@ class PanelPropriete(scrolled.ScrolledPanel):
 
        
     #########################################################################################################
-    def sendEvent(self, doc = None):
+    def sendEvent(self, doc = None, modif = u"", draw = True):
         self.eventAttente = False
         evt = SeqEvent(myEVT_DOC_MODIFIED, self.GetId())
         if doc != None:
             evt.SetDocument(doc)
         else:
             evt.SetDocument(self.GetDocument())
-
+        
+        if modif != u"":
+            evt.SetModif(modif)
+            
+        evt.SetDraw(draw)
+        
         self.GetEventHandler().ProcessEvent(evt)
         
         
@@ -2833,7 +2991,7 @@ class PanelPropriete_Sequence(PanelPropriete):
         
     #############################################################################            
     def SetBitmapPosition(self, bougerSlider = None):
-        self.sendEvent()
+        self.sendEvent(modif = u"Changement de position de la séquence")
         self.bmp.SetBitmap(self.getBitmapPeriode(250))
         if bougerSlider != None:
             self.position.SetValue(bougerSlider)
@@ -2842,15 +3000,17 @@ class PanelPropriete_Sequence(PanelPropriete):
     def EvtText(self, event):
         if event.GetEventObject() == self.textctrl:
             self.sequence.SetText(event.GetString())
+            t = u"Modification de l'intitulé de la séquence"
         else:
             self.sequence.SetCommentaire(event.GetString())
+            t = u"Modification du commentaire de la séquence"
         if not self.eventAttente:
-            wx.CallLater(DELAY, self.sendEvent)
+            wx.CallLater(DELAY, self.sendEvent, modif = t)
             self.eventAttente = True
         
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
-#        print "Miseéjour"
+#        print "Miseàjour"
         self.textctrl.ChangeValue(self.sequence.intitule)
         
         self.position.SetMax(self.sequence.GetReferentiel().getNbrPeriodes()-1)
@@ -3070,7 +3230,7 @@ class PanelPropriete_Projet(PanelPropriete):
         
     #############################################################################            
     def SetBitmapPosition(self, bougerSlider = None):
-        self.sendEvent()
+        self.sendEvent(modif = u"Changement de position du projet")
         self.bmp.SetBitmap(self.getBitmapPeriode(250))
         if bougerSlider != None:
             self.position.SetValue(bougerSlider)
@@ -3141,8 +3301,10 @@ class PanelPropriete_Projet(PanelPropriete):
 #            maj = False
             
             
-        if maj and not self.eventAttente:
-            wx.CallLater(DELAY, self.sendEvent)
+        if not self.eventAttente:
+            wx.CallLater(DELAY, self.sendEvent, 
+                         modif = u"Modification des propriétés du projet",
+                         draw = maj)
             self.eventAttente = True
 
   
@@ -3220,8 +3382,8 @@ class PanelPropriete_Projet(PanelPropriete):
                 sb = wx.StaticBoxSizer(titreInt)
                 
                 self.intctrl = wx.TextCtrl(self.pages['DEC'], -1, u"", style=wx.TE_MULTILINE)
-                self.intctrl.SetToolTipString(u"Intitulés des parties du projet confiées é chaque groupe.\n" \
-                                              u"Les groupes d'éléves sont désignés par des lettres (A, B, C, ...)\n" \
+                self.intctrl.SetToolTipString(u"Intitulés des parties du projet confiées à chaque groupe.\n" \
+                                              u"Les groupes d'élèves sont désignés par des lettres (A, B, C, ...)\n" \
                                               u"et leur effectif est indiqué.")
                 self.pages['DEC'].Bind(wx.EVT_TEXT, self.EvtText, self.intctrl)
                 sb.Add(self.intctrl, 1, flag = wx.EXPAND)
@@ -3230,7 +3392,7 @@ class PanelPropriete_Projet(PanelPropriete):
                 titreInt = wx.StaticBox(self.pages['DEC'], -1, u"Enoncés du besoin des différentes parties du projet")
                 sb = wx.StaticBoxSizer(titreInt)
                 self.enonctrl = wx.TextCtrl(self.pages['DEC'], -1, u"", style=wx.TE_MULTILINE)
-                self.enonctrl.SetToolTipString(u"Enoncés du besoin des parties du projet confiées é chaque groupe")
+                self.enonctrl.SetToolTipString(u"Enoncés du besoin des parties du projet confiées à chaque groupe")
                 self.pages['DEC'].Bind(wx.EVT_TEXT, self.EvtText, self.enonctrl)
                 sb.Add(self.enonctrl, 1, flag = wx.EXPAND)
                 self.pages['DEC'].sizer.Add(sb, (0,1), (2,1), flag = wx.EXPAND|wx.ALL, border = 2)
@@ -3310,7 +3472,7 @@ class PanelPropriete_Projet(PanelPropriete):
 
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
-#        print "mise é jour panel table"
+#        print "mise à jour panel table"
         ref = self.projet.GetProjetRef()
         
         # La page "Généralités"
@@ -3385,7 +3547,7 @@ class PanelOrganisation(wx.Panel):
         gbsizer.Add(self.ctrlNbrRevues, (0,0), (1,2), flag = wx.EXPAND)
         
         liste = wx.ListBox(self, -1, choices = self.objet.GetListeNomsPhases(), style = wx.LB_SINGLE)
-        liste.SetToolTipString(u"Séléctionner la revue é déplacer")
+        liste.SetToolTipString(u"Séléctionner la revue à déplacer")
         gbsizer.Add(liste, (1,0), (2,1), flag = wx.EXPAND)
         self.liste = liste
         self.Bind(wx.EVT_LISTBOX, self.EvtListBox, self.liste)
@@ -3426,6 +3588,9 @@ class PanelOrganisation(wx.Panel):
         
     #############################################################################            
     def OnClick(self, event):
+        """ Déplacement de la revue sélectionnée
+            vers le haut ou vers le bas
+        """
         i = event.GetId()
         revue = self.liste.GetStringSelection()
         ref = self.objet.GetProjetRef()
@@ -3460,7 +3625,7 @@ class PanelOrganisation(wx.Panel):
             self.objet.OrdonnerTaches()
             if monte:
                 self.objet.VerifierIndicRevue(numRevue)
-            self.parent.sendEvent()
+            self.parent.sendEvent(modif = u"Déplacement de la revue")
         
     #############################################################################            
     def MiseAJourListe(self):
@@ -3480,7 +3645,7 @@ class PanelOrganisation(wx.Panel):
                 self.objet.nbrRevues = var.v[0]
                 self.objet.MiseAJourNbrRevues()
                 self.MiseAJourListe()
-                self.parent.sendEvent()
+                self.parent.sendEvent(modif = u"Modification du nombre de revues")
         
 ####################################################################################
 #
@@ -3531,7 +3696,7 @@ class PanelPropriete_Classe(PanelPropriete):
             u" - effectifs\n" \
             u" - établissement\n"
         if typedoc == 'seq':
-            t += u" - systémes\n"
+            t += u" - systèmes\n"
         elif typedoc == 'prj':
             t += u" - nombre de revues et positions\n"
     
@@ -3673,8 +3838,8 @@ class PanelPropriete_Classe(PanelPropriete):
         #
         # Systémes
         #
-        self.btnAjouterSys = wx.Button(pageSys, -1, u"Ajouter un systéme")
-        self.btnAjouterSys.SetToolTipString(u"Ajouter un nouveau systéme é la liste")
+        self.btnAjouterSys = wx.Button(pageSys, -1, u"Ajouter un système")
+        self.btnAjouterSys.SetToolTipString(u"Ajouter un nouveau système à la liste")
         self.Bind(wx.EVT_BUTTON, self.EvtButtonSyst, self.btnAjouterSys)
         
         self.lstSys = wx.ListBox(pageSys, -1,
@@ -3729,7 +3894,7 @@ class PanelPropriete_Classe(PanelPropriete):
         if nomFichier != '':
             self.classe.ouvrir(nomFichier)
         
-        self.sendEvent()
+        self.sendEvent(modif = u"Ouverture d'une Classe")
     
     ###############################################################################################
     def enregistrer(self, nomFichier):
@@ -3786,7 +3951,7 @@ class PanelPropriete_Classe(PanelPropriete):
         self.classe.Initialise(isinstance(self.classe.doc, Projet), defaut = True)
 #        self.classe.doc.AjouterListeSystemes(self.classe.systemes)
         self.MiseAJour()
-        self.sendEvent()
+        self.sendEvent(modif = u"Réinitialisation des paramètres de Classe")
         
         
 #    #############################################################################            
@@ -3809,11 +3974,11 @@ class PanelPropriete_Classe(PanelPropriete):
         return self.classe.doc
     
     
-    #############################################################################            
-    def EvtText(self, event):
-        if event.GetEventObject() == self.textctrl:
-            self.classe.etablissement = event.GetString()
-            self.sendEvent()
+#    #############################################################################            
+#    def EvtText(self, event):
+#        if event.GetEventObject() == self.textctrl:
+#            self.classe.etablissement = event.GetString()
+#            self.sendEvent()
             
             
     ######################################################################################  
@@ -3871,7 +4036,7 @@ class PanelPropriete_Classe(PanelPropriete):
         self.classe.etablissement = evt.GetString()
 #        self.AfficherAutre(False)
         
-        self.sendEvent()
+        self.sendEvent(modif = u"Modification de l'établissement")
      
 
     ######################################################################################  
@@ -3956,7 +4121,7 @@ class PanelPropriete_Classe(PanelPropriete):
         
         self.Refresh()
         
-        self.sendEvent()
+        self.sendEvent(modif = u"Modification du type d'enseignement")
         
     ######################################################################################  
     def SetLienBO(self):
@@ -3995,7 +4160,7 @@ class PanelPropriete_Classe(PanelPropriete):
         self.lstSys.Set([])
         
         if len(self.classe.systemes) == 0:
-            # On crée un systéme vide
+            # On crée un système vide
             self.EvtButtonSyst()
 #            print "   +++", self.classe.systemes
             self.EvtListBoxSyst()
@@ -4185,20 +4350,20 @@ class PanelEffectifsClasse(wx.Panel):
         bsizerClasse.Add(sizerClasse_b)
         
         # Effectif de la classe
-        self.vEffClas = Variable(u"Nombre d'éléves",  
+        self.vEffClas = Variable(u"Nombre d'élèves",  
                             lstVal = classe.effectifs['C'], 
                             typ = VAR_ENTIER_POS, bornes = [4,40])
         self.cEffClas = VariableCtrl(self, self.vEffClas, coef = 1, signeEgal = False,
-                                help = u"Nombre d'éléves dans la classe entiére", sizeh = 30, color = coulClasse)
+                                help = u"Nombre d'élèves dans la classe entiére", sizeh = 30, color = coulClasse)
         self.Bind(EVT_VAR_CTRL, self.EvtVariableEff, self.cEffClas)
         sizerClasse_h.Add(self.cEffClas, 0, wx.TOP|wx.BOTTOM|wx.LEFT, 5)
         
-        # Nombre de groupes é effectif réduits
+        # Nombre de groupes à effectif réduits
         self.vNbERed = Variable(u"Nbr de groupes\né effectif réduit",  
                                 lstVal = classe.nbrGroupes['G'], 
                                 typ = VAR_ENTIER_POS, bornes = [1,4])
         self.cNbERed = VariableCtrl(self, self.vNbERed, coef = 1, signeEgal = False,
-                                    help = u"Nombre de groupes é effectif réduit dans la classe", sizeh = 20, color = self.coulEffRed)
+                                    help = u"Nombre de groupes à effectif réduit dans la classe", sizeh = 20, color = self.coulEffRed)
         self.Bind(EVT_VAR_CTRL, self.EvtVariableEff, self.cNbERed)
         sizerClasse_h.Add(self.cNbERed, 0, wx.TOP|wx.LEFT, 5)
         
@@ -4222,7 +4387,7 @@ class PanelEffectifsClasse(wx.Panel):
                             lstVal = classe.nbrGroupes['E'], 
                             typ = VAR_ENTIER_POS, bornes = [1,10])
         self.cNbEtPr = VariableCtrl(self, self.vNbEtPr, coef = 1, signeEgal = False,
-                                help = u"Nombre de groupes d'étude/projet par groupe é effectif réduit", sizeh = 20, color = self.coulEP)
+                                help = u"Nombre de groupes d'étude/projet par groupe à effectif réduit", sizeh = 20, color = self.coulEP)
         self.Bind(EVT_VAR_CTRL, self.EvtVariableEff, self.cNbEtPr)
         self.sizerEffRed_g.Add(self.cNbEtPr, 0, wx.TOP|wx.BOTTOM|wx.LEFT, 3)
         
@@ -4237,7 +4402,7 @@ class PanelEffectifsClasse(wx.Panel):
                             lstVal = classe.nbrGroupes['P'], 
                             typ = VAR_ENTIER_POS, bornes = [2,20])
         self.cNbActP = VariableCtrl(self, self.vNbActP, coef = 1, signeEgal = False,
-                                help = u"Nombre de groupes d'activité pratique par groupe é effectif réduit", sizeh = 20, color = self.coulAP)
+                                help = u"Nombre de groupes d'activité pratique par groupe à effectif réduit", sizeh = 20, color = self.coulAP)
         self.Bind(EVT_VAR_CTRL, self.EvtVariableEff, self.cNbActP)
         self.sizerEffRed_d.Add(self.cNbActP, 0, wx.TOP|wx.BOTTOM|wx.LEFT, 3)
         
@@ -4274,7 +4439,7 @@ class PanelEffectifsClasse(wx.Panel):
             self.classe.nbrGroupes['P'] = var.v[0]
         calculerEffectifs(self.classe)
             
-        self.Parent.sendEvent(self.classe)
+        self.Parent.sendEvent(self.classe, modif = u"Modification du découpage de la Classe")
 #        self.AjouterGroupesVides()
         self.MiseAJourNbrEleve()
         
@@ -4405,14 +4570,14 @@ class PanelPropriete_CI(PanelPropriete):
             self.sizer.Add(self.grid1, (0,1), (2,1), flag = wx.EXPAND)
             
             aide = wx.BitmapButton(self, -1, images.Bouton_Aide.GetBitmap())
-            aide.SetToolTipString(u"Informations é propos de la cible "+abrevCI)
+            aide.SetToolTipString(u"Informations à propos de la cible "+abrevCI)
             self.sizer.Add(aide, (0,2), flag = wx.ALL, border = 2)
             self.Bind(wx.EVT_BUTTON, self.OnAide, aide )
             
             b = wx.ToggleButton(self, -1, "")
             b.SetValue(self.CI.max2CI)
             b.SetBitmap(images.Bouton_2CI.GetBitmap())
-            b.SetToolTipString(u"Limite é 2 le nombre de "+abrevCI+" sélectionnables")
+            b.SetToolTipString(u"Limite à 2 le nombre de "+abrevCI+" sélectionnables")
             self.sizer.Add(b, (1,2), flag = wx.ALL, border = 2)
 #            b.SetSize((30,30)) # adjust default size for the bitmap
             b.SetInitialSize((32,32))
@@ -4482,7 +4647,7 @@ class PanelPropriete_CI(PanelPropriete):
                 self.b2CI.Enable(len(self.CI.numCI) <= 2)
             
         self.Layout()
-        self.sendEvent()
+        self.sendEvent(modif = u"Modification du nombre de CI sélectionnables")
     
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
@@ -4502,17 +4667,17 @@ class PanelPropriete_CI(PanelPropriete):
         if sendEvt:
             self.sendEvent()
             
-    #############################################################################            
-    def OnClick(self, event):
-        if self.CI.num != None:
-            self.group_ctrls[self.CI.num][0].SetValue(False)
-            self.CI.SetNum(None)
-            self.sendEvent()
+#    #############################################################################            
+#    def OnClick(self, event):
+#        if self.CI.num != None:
+#            self.group_ctrls[self.CI.num][0].SetValue(False)
+#            self.CI.SetNum(None)
+#            self.sendEvent()
 
     #############################################################################            
     def GererCases(self, liste, appuyer = False):
-        """ Permet de cacher les cases des CI au fur et é mesure que l'on selectionne des CI
-            <liste> : liste des CI é activer
+        """ Permet de cacher les cases des CI au fur et à mesure que l'on selectionne des CI
+            <liste> : liste des CI à activer
         """ 
         for i, b in enumerate(self.group_ctrls):
             if i in liste:
@@ -4639,12 +4804,14 @@ class Panel_Cible(wx.Panel):
     #############################################################################            
     def OnButton(self, event):
         button_selected = event.GetEventObject().GetId()-100
-        
+        t = u""
         if event.GetEventObject().IsPressed():
             self.CI.AddNum(button_selected)
+            t = u"Ajout d'un CI"
         else:
             try: # sinon probléme avec les doubles clics
                 self.CI.DelNum(button_selected)
+                t = u"Suppression d'un CI"
             except:
                 pass
 
@@ -4652,12 +4819,12 @@ class Panel_Cible(wx.Panel):
         
         self.Layout()
         self.Parent.group_ctrls[button_selected][0].SetValue(event.GetEventObject().IsPressed())
-        self.Parent.sendEvent()    
+        self.Parent.sendEvent(modif = t)    
         
         
     #############################################################################            
     def GererBoutons(self, appuyer = False):
-        """ Permet de cacher les boutons des CI au fur et é mesure que l'on selectionne des CI
+        """ Permet de cacher les boutons des CI au fur et à mesure que l'on selectionne des CI
             Régles :
              - Maximum 2 CI
              - CI voisins sur la cible
@@ -4983,7 +5150,7 @@ class PanelPropriete_Competences(PanelPropriete):
     ######################################################################################  
     def SetCompetences(self): 
         self.competence.parent.Verrouiller()
-        self.sendEvent()
+        self.sendEvent(modif = u"Ajout/suppression d'une compétance")
         
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
@@ -5178,7 +5345,7 @@ class PanelPropriete_Savoirs(PanelPropriete):
     ######################################################################################  
     def SetSavoirs(self): 
         self.savoirs.parent.Verrouiller()
-        self.sendEvent()
+        self.sendEvent(modif = u"Ajout/suppression d'un Savoir")
         
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
@@ -5403,7 +5570,7 @@ class PanelPropriete_Seance(PanelPropriete):
         bsizer.Add(cb, flag = wx.EXPAND)
         
         vcTaille = VariableCtrl(self, seance.taille, signeEgal = True, slider = False, sizeh = 40,
-                                help = u"Taille des caractéres", unite = u"%")
+                                help = u"Taille des caractères", unite = u"%")
         self.Bind(EVT_VAR_CTRL, self.EvtText, vcTaille)
         bsizer.Add(vcTaille, flag = wx.EXPAND)
         self.vcTaille = vcTaille
@@ -5451,7 +5618,7 @@ class PanelPropriete_Seance(PanelPropriete):
         
         # Nombre de séances en paralléle
         vcNombre = VariableCtrl(self, seance.nombre, signeEgal = True, slider = False, sizeh = 30,
-                                help = u"Nombre de groupes réalisant simultanément la méme séance")
+                                help = u"Nombre de groupes réalisant simultanément la même séance")
         self.Bind(EVT_VAR_CTRL, self.EvtText, vcNombre)
         self.vcNombre = vcNombre
         bsizer2.Add(vcNombre, flag = wx.EXPAND|wx.ALL, border = 2)
@@ -5506,7 +5673,7 @@ class PanelPropriete_Seance(PanelPropriete):
         #
         # Systémes
         #
-        self.box = wx.StaticBox(self, -1, u"Systémes ou matériels nécessaires", size = (200,200))
+        self.box = wx.StaticBox(self, -1, u"Systèmes ou matériels nécessaires", size = (200,200))
         self.box.SetMinSize((200,200))
         self.bsizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
         self.systemeCtrl = []
@@ -5645,38 +5812,43 @@ class PanelPropriete_Seance(PanelPropriete):
         
     #############################################################################            
     def EvtVarSysteme(self, event):
-        self.sendEvent()
+        self.sendEvent(modif = u"Modification du nombre de systèmes nécessaires")
         
     #############################################################################            
     def EvtCheckBox(self, event):
         self.seance.intituleDansDeroul = event.IsChecked()
-        self.sendEvent()
+        self.sendEvent(modif = u"Ajout/Suppression d'un système nécessaire")
     
     #############################################################################            
     def EvtTextIntitule(self, event):
         self.seance.SetIntitule(self.textctrl.GetValue())
         event.Skip()
         if not self.eventAttente:
-            wx.CallLater(DELAY, self.sendEvent)
+            wx.CallLater(DELAY, self.sendEvent, modif = u"Modification de l'intitulé de la Séance")
             self.eventAttente = True
             
     
     #############################################################################            
     def EvtText(self, event):
+        t = u""
         if event.GetId() == self.vcDuree.GetId():
             self.seance.SetDuree(event.GetVar().v[0])
+            t = u"Modification de la durée de la Séance"
         
         elif event.GetId() == self.vcNombre.GetId():
             self.seance.SetNombre(event.GetVar().v[0])
+            t = u"Modification du nombre de groupes réalisant simultanément la méme séance"
         
         elif event.GetId() == self.vcNombreRot.GetId():
             self.seance.SetNombreRot(event.GetVar().v[0])
+            t = u"Modification du nombre de rotations successives"
             
         elif event.GetId() == self.vcTaille.GetId():
             self.seance.SetTaille(event.GetVar().v[0])
+            t = u"Modification de la taille des caractères"
             
         if not self.eventAttente:
-            wx.CallLater(DELAY, self.sendEvent)
+            wx.CallLater(DELAY, self.sendEvent, modif = t)
             self.eventAttente = True
             
    
@@ -5715,21 +5887,21 @@ class PanelPropriete_Seance(PanelPropriete):
         self.AdapterAuType()
         self.ConstruireListeSystemes()
         self.Layout()
-        self.sendEvent()
+        self.sendEvent(modif = u"Modification du type de Séance")
        
         
         
     #############################################################################            
     def EvtComboBoxEff(self, event):
         self.seance.SetEffectif(event.GetString())  
-        self.sendEvent()
+        self.sendEvent(modif = u"Modification de l'effectif de la Séance")
 
 
 
     #############################################################################            
     def EvtComboBoxDem(self, event):
         self.seance.SetDemarche(event.GetString())  
-        self.sendEvent()
+        self.sendEvent(modif = u"Modification de la démarche de la Séance")
        
        
         
@@ -5929,13 +6101,13 @@ class PanelPropriete_Tache(PanelPropriete):
         # Intitulé de la tache
         #
         if not tache.phase in TOUTES_REVUES_EVAL_SOUT:
-            box = wx.StaticBox(pageGen, -1, u"Intitulé de la téche")
+            box = wx.StaticBox(pageGen, -1, u"Intitulé de la tâche")
             bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
             textctrl = wx.TextCtrl(pageGen, -1, u"", style=wx.TE_MULTILINE)
-            textctrl.SetToolTipString(u"Donner l'intitulé de la téche\n"\
+            textctrl.SetToolTipString(u"Donner l'intitulé de la tâche\n"\
                                       u" = un simple résumé !\n" \
                                       u"les détails doivent figurer dans la zone\n" \
-                                      u"\"Description détaillée de la téche\"")
+                                      u"\"Description détaillée de la tâche\"")
             bsizer.Add(textctrl,1, flag = wx.EXPAND)
             self.textctrl = textctrl
             self.boxInt = box
@@ -5949,7 +6121,7 @@ class PanelPropriete_Tache(PanelPropriete):
         #
         if not tache.phase in TOUTES_REVUES_EVAL_SOUT:
             vcDuree = VariableCtrl(pageGen, tache.duree, coef = 0.5, signeEgal = True, slider = False,
-                                   help = u"Volume horaire de la téche en heures", sizeh = 60)
+                                   help = u"Volume horaire de la tâche en heures", sizeh = 60)
             pageGen.Bind(EVT_VAR_CTRL, self.EvtText, vcDuree)
             self.vcDuree = vcDuree
             pageGen.sizer.Add(vcDuree, (2,0), (1, 2), flag = wx.EXPAND|wx.ALL, border = 2)
@@ -5970,18 +6142,18 @@ class PanelPropriete_Tache(PanelPropriete):
         
         
         #
-        # Description de la téche
+        # Description de la tâche
         #
-        dbox = wx.StaticBox(pageGen, -1, u"Description détaillée de la téche")
+        dbox = wx.StaticBox(pageGen, -1, u"Description détaillée de la tâche")
         dbsizer = wx.StaticBoxSizer(dbox, wx.VERTICAL)
 #        bd = wx.Button(pageGen, -1, u"Editer")
         tc = richtext.RichTextPanel(pageGen, self.tache, toolBar = True)
-        tc.SetToolTipString(u"Donner une description détaillée de la téche :\n" \
+        tc.SetToolTipString(u"Donner une description détaillée de la tâche :\n" \
                             u" - les conditions nécessaires\n" \
                             u" - ce qui est fourni\n" \
                             u" - les résultats attendus\n" \
                             u" - les différentes étapes\n" \
-                            u" - la répartition du travail entre les éléves\n"\
+                            u" - la répartition du travail entre les élèves\n"\
                             u" - ..."
                             )
 #        tc.SetMaxSize((-1, 150))
@@ -6019,7 +6191,7 @@ class PanelPropriete_Tache(PanelPropriete):
             pageComsizer.Add(self.arbre, 1, flag = wx.EXPAND)
         
             pageCom.SetSizer(pageComsizer)
-            nb.AddPage(pageCom, tache.GetReferentiel().nomCompetences + u" é mobiliser") 
+            nb.AddPage(pageCom, tache.GetReferentiel().nomCompetences + u" à mobiliser") 
             
             self.pageComsizer = pageComsizer
             
@@ -6118,32 +6290,32 @@ class PanelPropriete_Tache(PanelPropriete):
         self.Thaw()
         
         
-    ######################################################################################  
-    def EvtCheckListBox(self, event):
-        index = event.GetSelection()
-        
-        if self.competence in self.tache.indicateursEleve[0].keys():
-            lst = self.tache.indicateursEleve[0][self.competence]
-        else:
-            prj = self.tache.GetProjetRef()
-            lst = [self.competence in self.tache.competences]*len(prj.dicIndicateurs[self.competence])
-#            lst = [self.competence in self.tache.competences]*len(REFERENTIELS[self.tache.GetTypeEnseignement()].dicIndicateurs_prj[self.competence])
-            
-        lst[index] = self.liste.IsChecked(index)
-        
-        if True in lst and not self.competence in self.tache.competences:
-            self.tache.competences.append(self.competence)
-            self.arbre.CheckItem2(self.arbre.FindItem(self.arbre.GetRootItem(), self.competence), True)
-            self.arbre.SelectItem(self.arbre.FindItem(self.arbre.GetRootItem(), self.competence))
-        if not True in lst and self.competence in self.tache.competences:
-            self.tache.competences.remove(self.competence)
-#            self.MiseAJour(sendEvt = False)
-            self.arbre.CheckItem2(self.arbre.FindItem(self.arbre.GetRootItem(), self.competence), False)
-            self.arbre.SelectItem(self.arbre.FindItem(self.arbre.GetRootItem(), self.competence))
-            
-        self.Refresh()    
-        self.sendEvent()
-        
+#    ######################################################################################  
+#    def EvtCheckListBox(self, event):
+#        index = event.GetSelection()
+#        
+#        if self.competence in self.tache.indicateursEleve[0].keys():
+#            lst = self.tache.indicateursEleve[0][self.competence]
+#        else:
+#            prj = self.tache.GetProjetRef()
+#            lst = [self.competence in self.tache.competences]*len(prj.dicIndicateurs[self.competence])
+##            lst = [self.competence in self.tache.competences]*len(REFERENTIELS[self.tache.GetTypeEnseignement()].dicIndicateurs_prj[self.competence])
+#            
+#        lst[index] = self.liste.IsChecked(index)
+#        
+#        if True in lst and not self.competence in self.tache.competences:
+#            self.tache.competences.append(self.competence)
+#            self.arbre.CheckItem2(self.arbre.FindItem(self.arbre.GetRootItem(), self.competence), True)
+#            self.arbre.SelectItem(self.arbre.FindItem(self.arbre.GetRootItem(), self.competence))
+#        if not True in lst and self.competence in self.tache.competences:
+#            self.tache.competences.remove(self.competence)
+##            self.MiseAJour(sendEvt = False)
+#            self.arbre.CheckItem2(self.arbre.FindItem(self.arbre.GetRootItem(), self.competence), False)
+#            self.arbre.SelectItem(self.arbre.FindItem(self.arbre.GetRootItem(), self.competence))
+#            
+#        self.Refresh()    
+#        self.sendEvent(modif = u"Modification du type de séance")
+#        
 #        self.liste.Check()
 #        self.tache.indicateurs[]
 #        label = self.liste.GetString(index)
@@ -6215,7 +6387,7 @@ class PanelPropriete_Tache(PanelPropriete):
     ############################################################################            
     def SetCompetences(self):
         self.GetDocument().MiseAJourDureeEleves()
-        wx.CallAfter(self.sendEvent)
+        wx.CallAfter(self.sendEvent, modif = u"Ajout/Suppression d'une compétence à la Tâche")
         self.tache.projet.Verrouiller()
         
     ############################################################################            
@@ -6246,14 +6418,14 @@ class PanelPropriete_Tache(PanelPropriete):
             self.pageGen.Layout()
             self.pageGen.Thaw()
             
-        # On reconstruit l'arbre pour ajouter/enlever des cases "éléve"
+        # On reconstruit l'arbre pour ajouter/enlever des cases "élève"
         if hasattr(self, 'arbre') and self.arbre.eleves:
             self.arbre.ConstruireCasesEleve()
         
         
     #############################################################################            
     def MiseAJourListeEleves(self):
-        """ Met é jour la liste des éléves
+        """ Met à jour la liste des élèves
         """
         if not self.tache.phase in TOUTES_REVUES_EVAL_SOUT:
             self.pageGen.Freeze()
@@ -6265,7 +6437,7 @@ class PanelPropriete_Tache(PanelPropriete):
 
     #############################################################################            
     def MiseAJourEleves(self):
-        """ Met é jour le cochage des éléves concernés par la téche
+        """ Met à jour le cochage des élèves concernés par la tâche
         """
         if not self.tache.phase in TOUTES_REVUES_EVAL_SOUT:
             for i in range(len(self.GetDocument().eleves)):
@@ -6281,17 +6453,17 @@ class PanelPropriete_Tache(PanelPropriete):
 #    #############################################################################            
 #    def EvtClick(self, event):
 #        if not self.edition:
-#            self.win = richtext.RichTextFrame(u"Description de la téche "+ self.tache.code, self.tache)
+#            self.win = richtext.RichTextFrame(u"Description de la tâche "+ self.tache.code, self.tache)
 #            self.edition = True
 #            self.win.Show(True)
 #        else:
 #            self.win.SetFocus()
         
         
-    #############################################################################            
-    def EvtVarSysteme(self, event):
-        self.sendEvent()
-        
+#    #############################################################################            
+#    def EvtVarSysteme(self, event):
+#        self.sendEvent(modif = u"Modification ")
+#        
         
     
         
@@ -6305,7 +6477,7 @@ class PanelPropriete_Tache(PanelPropriete):
         self.tache.eleves = lst
         self.GetDocument().MiseAJourDureeEleves()
         self.GetDocument().MiseAJourTachesEleves()
-        self.sendEvent()    
+        self.sendEvent(modif = u"Changement d'élève concerné par la tâche")    
 
 
     #############################################################################            
@@ -6313,18 +6485,22 @@ class PanelPropriete_Tache(PanelPropriete):
         self.tache.SetIntitule(self.textctrl.GetValue())
         event.Skip()
         if not self.eventAttente:
-            wx.CallLater(DELAY, self.sendEvent)
+            wx.CallLater(DELAY, self.sendEvent, modif = u"Modification de l'intitulé de la Tâche")
             self.eventAttente = True
         
         
     #############################################################################            
     def EvtText(self, event):
+        t = u""
         if event.GetId() == self.vcDuree.GetId():
             self.tache.SetDuree(event.GetVar().v[0])
-        elif event.GetId() == self.vcNombre.GetId():
-            self.tache.SetNombre(event.GetVar().v[0])
+            t = u"Modification de la durée de la Tâche"
+#        elif event.GetId() == self.vcNombre.GetId():
+#            self.tache.SetNombre(event.GetVar().v[0])
+#            t = u"Modification de la durée de la Tâche"
+        
         if not self.eventAttente:
-            wx.CallLater(DELAY, self.sendEvent)
+            wx.CallLater(DELAY, self.sendEvent, modif = t)
             self.eventAttente = True
         
     #############################################################################            
@@ -6343,13 +6519,13 @@ class PanelPropriete_Tache(PanelPropriete):
             self.tache.SetPhase(newPhase)
             self.arbre.MiseAJourPhase(newPhase)
             self.pageGen.Layout()
-            self.sendEvent()
+            self.sendEvent(modif = u"Changement de phase de la Tâche")
         
     
     #############################################################################            
     def MiseAJourDuree(self):
-        """ Mise é jour du champ de texte de la durée
-            (conformément é la valeur de la variable associée)
+        """ Mise à jour du champ de texte de la durée
+            (conformément à la valeur de la variable associée)
         """
         if hasattr(self, 'vcDuree'):
             self.vcDuree.mofifierValeursSsEvt()
@@ -6404,7 +6580,7 @@ class PanelPropriete_Tache(PanelPropriete):
         
 ####################################################################################
 #
-#   Classe définissant le panel de propriété d'un systéme
+#   Classe définissant le panel de propriété d'un système
 #
 ####################################################################################
 class PanelPropriete_Systeme(PanelPropriete):
@@ -6430,7 +6606,7 @@ class PanelPropriete_Systeme(PanelPropriete):
         #
         # Nom
         #
-        titre = wx.StaticText(self, -1, u"Nom du systéme :")
+        titre = wx.StaticText(self, -1, u"Nom du système :")
         textctrl = wx.TextCtrl(self, -1, u"")
         self.textctrl = textctrl
         
@@ -6438,10 +6614,10 @@ class PanelPropriete_Systeme(PanelPropriete):
         self.sizer.Add(textctrl, (1,0), (1,2),  flag = wx.EXPAND|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM|wx.RIGHT, border = 3)
         
         #
-        # Nombre de systémes disponibles en paralléle
+        # Nombre de systèmes disponibles en paralléle
         #
         vcNombre = VariableCtrl(self, systeme.nbrDispo, signeEgal = True, slider = False, 
-                                help = u"Nombre de d'exemplaires de ce systéme disponibles simultanément.")
+                                help = u"Nombre de d'exemplaires de ce système disponibles simultanément.")
         self.Bind(EVT_VAR_CTRL, self.EvtVar, vcNombre)
         self.vcNombre = vcNombre
         self.sizer.Add(vcNombre, (2,0), (1, 2), flag = wx.TOP|wx.BOTTOM, border = 3)
@@ -6449,7 +6625,7 @@ class PanelPropriete_Systeme(PanelPropriete):
         #
         # Image
         #
-        box = wx.StaticBox(self, -1, u"Image du systéme")
+        box = wx.StaticBox(self, -1, u"Image du système")
         bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
         image = wx.StaticBitmap(self, -1, wx.NullBitmap)
         self.image = image
@@ -6522,7 +6698,7 @@ class PanelPropriete_Systeme(PanelPropriete):
         if isinstance(self.systeme.parent, Sequence):
             self.systeme.parent.MiseAJourNomsSystemes()
             if not self.eventAttente:
-                wx.CallLater(DELAY, self.sendEvent)
+                wx.CallLater(DELAY, self.sendEvent, modif = u"Modification des systèmes nécessaires")
                 self.eventAttente = True
 
 
@@ -6580,7 +6756,7 @@ class PanelPropriete_Systeme(PanelPropriete):
         if isinstance(self.systeme.parent, Sequence):
             self.systeme.parent.MiseAJourNomsSystemes()
             if not self.eventAttente:
-                wx.CallLater(DELAY, self.sendEvent)
+                wx.CallLater(DELAY, self.sendEvent, modif = u"Modification du nom du Système")
                 self.eventAttente = True
         elif isinstance(self.systeme.parent, Classe):
 #            print "  ***", self.systeme.parent
@@ -6593,7 +6769,7 @@ class PanelPropriete_Systeme(PanelPropriete):
         
         if isinstance(self.systeme.parent, Sequence):
             if not self.eventAttente:
-                wx.CallLater(DELAY, self.sendEvent)
+                wx.CallLater(DELAY, self.sendEvent, modif = u"Modification du nombre de Systèmes disponibles")
                 self.eventAttente = True
 
 
@@ -6824,7 +7000,7 @@ class PanelPropriete_Personne(PanelPropriete):
             nomFichier = paths[0]
             self.personne.avatar = wx.Image(nomFichier).ConvertToBitmap()
             self.SetImage()
-            self.sendEvent()
+            self.sendEvent(modif = u"Modification du portrait de la personne")
             
         dlg.Destroy()
         
@@ -6851,7 +7027,7 @@ class PanelPropriete_Personne(PanelPropriete):
             self.personne.SetPrenom(event.GetString())
         self.personne.projet.MiseAJourNomsEleves()
         if not self.eventAttente:
-            wx.CallLater(DELAY, self.sendEvent)
+            wx.CallLater(DELAY, self.sendEvent, modif = u"Modification du nom de la personne")
             self.eventAttente = True
         
 
@@ -6859,12 +7035,12 @@ class PanelPropriete_Personne(PanelPropriete):
     def EvtComboBox(self, event):
         self.personne.SetDiscipline(get_key(constantes.NOM_DISCIPLINES, self.cbPhas.GetStringSelection()))
         self.Layout()
-        self.sendEvent()
+        self.sendEvent(modif = u"Modification de la discipline du professeur")
         
     #############################################################################            
     def EvtCheckBox(self, event):
         self.personne.projet.SetReferent(self.personne, event.IsChecked())
-        self.sendEvent()
+        self.sendEvent(modif = u"Changement de status (référent) du professeur")
         
     #############################################################################            
     def MiseAJourTypeEnseignement(self):
@@ -7076,7 +7252,7 @@ class PanelPropriete_Support(PanelPropriete):
         self.support.SetImage()
         self.Layout()
         if sendEvt:
-            self.sendEvent()
+            self.sendEvent(modif = u"Modification de l'illustration du Support")
         
         
         
@@ -7092,7 +7268,7 @@ class PanelPropriete_Support(PanelPropriete):
         self.support.SetNom(nt)
 #        self.support.parent.MiseAJourNomsSystemes()
         if not self.eventAttente:
-            wx.CallLater(DELAY, self.sendEvent)
+            wx.CallLater(DELAY, self.sendEvent, modif = u"Modification de l'intitulé du Support")
             self.eventAttente = True
         
 #    #############################################################################            
@@ -7384,7 +7560,7 @@ class ArbreSequence(ArbreDoc):
         
     ####################################################################################
     def getActionDnD(self, dataSource, dataTarget):
-        """ Renvoie un code indiquant l'action é réaliser en cas de EnDrag :
+        """ Renvoie un code indiquant l'action à réaliser en cas de EnDrag :
                 0 : rien
                 1 : 
                 2 : 
@@ -7459,7 +7635,7 @@ class ArbreSequence(ArbreDoc):
         if isinstance(dataTarget, PanelPropriete_Racine):
             dataTarget = self.sequence
         dataSource = self.GetItemPyData(self.itemDrag)
-        
+        t = u"Changement de position de la Séance"
         a = self.getActionDnD(dataSource, dataTarget)
         if a == 1:
             lstS = dataSource.parent.seances
@@ -7470,7 +7646,7 @@ class ArbreSequence(ArbreDoc):
             
             self.sequence.OrdonnerSeances()
             self.sequence.reconstruireBrancheSeances(dataSource.parent, dataTarget)
-            self.panelVide.sendEvent(self.sequence) # Solution pour déclencher un "redessiner"
+            self.panelVide.sendEvent(self.sequence, modif = t) # Solution pour déclencher un "redessiner"
         elif a == 2:
             lst = dataSource.parent.seances
             s = lst.index(dataSource)
@@ -7478,7 +7654,7 @@ class ArbreSequence(ArbreDoc):
                
             self.sequence.OrdonnerSeances() 
             self.SortChildren(self.GetItemParent(self.item))
-            self.panelVide.sendEvent(self.sequence) # Solution pour déclencher un "redessiner"
+            self.panelVide.sendEvent(self.sequence, modif = t) # Solution pour déclencher un "redessiner"
         elif a == 3:
             lstT = dataTarget.parent.seances
             lstS = dataSource.parent.seances
@@ -7491,7 +7667,7 @@ class ArbreSequence(ArbreDoc):
             
             self.sequence.OrdonnerSeances()
             self.sequence.reconstruireBrancheSeances(dataTarget.parent, p)
-            self.panelVide.sendEvent(self.sequence) # Solution pour déclencher un "redessiner"
+            self.panelVide.sendEvent(self.sequence, modif = t) # Solution pour déclencher un "redessiner"
         elif a == 4:
             lst = dataTarget.parent.seances
             s = lst.index(dataSource)
@@ -7504,7 +7680,7 @@ class ArbreSequence(ArbreDoc):
                
             self.sequence.OrdonnerSeances() 
             self.SortChildren(self.GetItemParent(self.item))
-            self.panelVide.sendEvent(self.sequence) # Solution pour déclencher un "redessiner"
+            self.panelVide.sendEvent(self.sequence, modif = t) # Solution pour déclencher un "redessiner"
         
         
 #        if isinstance(dataSource, Seance) and dataTarget != dataSource:
@@ -7672,7 +7848,7 @@ class ArbreProjet(ArbreDoc):
         if not isinstance(obj, Tache):
             obj = None
         self.projet.AjouterTache(tacheAct = obj)
-#        self.lstTaches.append(self.AppendItem(self.taches, u"Téche :", data = tache))
+#        self.lstTaches.append(self.AppendItem(self.taches, u"Tâche :", data = tache))
         
     ####################################################################################
     def SupprimerTache(self, event = None, item = None):
@@ -7764,7 +7940,7 @@ class ArbreProjet(ArbreDoc):
                         lst.insert(t+1, lst.pop(s))
                     dataTarget.projet.SetOrdresTaches()
                     self.SortChildren(self.GetItemParent(self.item))
-                    self.panelVide.sendEvent(self.projet) # Solution pour déclencher un "redessiner"
+                    self.panelVide.sendEvent(self.projet, modif = u"Changement de position de la Tâche") # Solution pour déclencher un "redessiner"
     
                 else:
                     pass
@@ -8223,8 +8399,8 @@ class ArbreCompetences(HTL.HyperTreeList):
 
 
 class ArbreCompetencesPrj(ArbreCompetences):
-    """ Arbre des compétences abordées en projet lors d'une téche <pptache>
-        <revue> : vrai si la téche est une revue
+    """ Arbre des compétences abordées en projet lors d'une tâche <pptache>
+        <revue> : vrai si la tâche est une revue
         <eleves> : vrai s'il faut afficher une colonne supplémentaire pour distinguer les compétences pour chaque éleve
     """
     def __init__(self, parent, ref, pptache, revue = False, eleves = False, 
@@ -8504,8 +8680,8 @@ class ArbreCompetencesPrj(ArbreCompetences):
 
 
 class ArbreFonctionsPrj(ArbreCompetences):
-    """ Arbre des fonctions abordées en projet lors d'une téche <pptache>
-        <revue> : vrai si la téche est une revue
+    """ Arbre des fonctions abordées en projet lors d'une tâche <pptache>
+        <revue> : vrai si la tâche est une revue
         <eleves> : vrai s'il faut afficher une colonne supplémentaire pour distinguer les compétences pour chaque éleve
     """
     def __init__(self, parent, ref, pptache, 
@@ -8610,8 +8786,8 @@ class ArbreFonctionsPrj(ArbreCompetences):
 
 
 class ArbreCompetencesPopup(CT.CustomTreeCtrl):
-    """ Arbre des compétences abordées en projet lors d'une téche <pptache>
-        <revue> : vrai si la téche est une revue
+    """ Arbre des compétences abordées en projet lors d'une tâche <pptache>
+        <revue> : vrai si la tâche est une revue
         <eleves> : vrai s'il faut afficher une colonne supplémentaire pour distinguer les compétences pour chaque éleve
     """
     def __init__(self, parent):
@@ -8960,8 +9136,8 @@ class ChoixCompetenceEleve(wx.Panel):
 
     #############################################################################
     def MiseAJour(self):
-        """ Active/désactive les cases é cocher
-            selon que les éléves ont é mobiliser cette compétence/indicateur
+        """ Active/désactive les cases à cocher
+            selon que les élèves ont à mobiliser cette compétence/indicateur
         """
 #        print "MiseAJour", self.tache
         for i, e in enumerate(self.projet.eleves): 
@@ -8977,7 +9153,7 @@ class ChoixCompetenceEleve(wx.Panel):
         
     #############################################################################
     def Actualiser(self):
-        """ Coche/décoche les cases é cocher
+        """ Coche/décoche les cases à cocher
             
         """
 #        print "Actualiser", self.tache
@@ -9054,7 +9230,7 @@ class ChoixCompetenceEleve(wx.Panel):
 
 
 def get_key(dic, value, pos = None):
-    """ Renvoie la clef du dictionnaire <dic> correspondant é la valeur <value>
+    """ Renvoie la clef du dictionnaire <dic> correspondant à la valeur <value>
     """
     i = 0
     continuer = True
@@ -9371,7 +9547,7 @@ class A_propos(wx.Dialog):
         t = wx.StaticText(descrip, -1,u"",
                           size = (400, -1))#,
 #                        style = wx.TE_READONLY|wx.TE_MULTILINE|wx.BORDER_NONE) 
-        t.SetLabelMarkup( wordwrap(u"<b>pySequence</b> est un logiciel d'aide é l'élaboration de séquences pédagogiques et é la validation de projets,\n"
+        t.SetLabelMarkup( wordwrap(u"<b>pySequence</b> est un logiciel d'aide à l'élaboration de séquences pédagogiques et à la validation de projets,\n"
                                           u"sous forme de fiches exportables au format PDF ou SVG.\n"
                                           u"Il est élaboré en relation avec les programmes et les documents d'accompagnement\n"
                                           u"des enseignements des filiéres STI2D, SSI et Technologie Collége",500, wx.ClientDC(self)))
@@ -9686,7 +9862,7 @@ class PopupInfo2(wx.PopupWindow):
 
 #############################################################################################################
 #
-# Dialog pour choisir le type de document é créer
+# Dialog pour choisir le type de document à créer
 # 
 #############################################################################################################
 class DialogChoixDoc(wx.Dialog):
@@ -9927,8 +10103,8 @@ def img2str(img):
 class MessageAideCI(GMD.GenericMessageDialog):
     def __init__(self, parent):
         GMD.GenericMessageDialog.__init__(self,  parent, 
-                                  u"Informations é propos de la cible CI",
-                                  u"Informations é propos de la cible CI",
+                                  u"Informations à propos de la cible CI",
+                                  u"Informations à propos de la cible CI",
                                    wx.OK | wx.ICON_QUESTION
                                    #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
                                    )
@@ -9937,7 +10113,7 @@ class MessageAideCI(GMD.GenericMessageDialog):
                                   u"et des niveaux (FSC) différents.\n\n"\
                                   u"Les CI ne pouvant pas étre placés sur la cible\n"\
                                   u"apparaitront en orbite autour de la cible (2 maxi).\n\n"\
-                                  u"Si le nombre de CI sélectionnés est limité é 2,\n"\
+                                  u"Si le nombre de CI sélectionnés est limité à 2,\n"\
                                   u"le deuxiéme CI sélectionnable est forcément\n"\
                                   u"du méme domaine (MEI) que le premier\n"\
                                   u"ou bien un des CI en orbite.")
