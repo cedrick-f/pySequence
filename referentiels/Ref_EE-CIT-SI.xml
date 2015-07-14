@@ -989,7 +989,7 @@
   </l_periodes>
   <l_positions_CI />
   <d_projets>
-    <Projet_PRJ1 I_duree="12" S_code="PRJ1" S_ficheValid="STS-EE _ Dossier projet.html" S_intitule="Projet d&#233;but d'ann&#233;e">
+    <Projet_PRJ1 I_duree="12" I_maxEleves="5" I_minEleves="3" S_code="PRJ1" S_ficheValid="STS-EE _ Dossier projet.html" S_intitule="Projet d&#233;but d'ann&#233;e">
       <d_attributs>
         <l_SRC S_00="Source de financement" S_01="" S_02="" />
         <l_PAR S_00="Partenaires du projet" S_01="" S_02="" />
@@ -1094,7 +1094,7 @@
         <l__03 S_00="Ana" S_01="Con" S_02="DCo" />
       </d_posRevues>
     </Projet_PRJ1>
-    <Projet_PRJ2 I_duree="12" S_code="PRJ2" S_ficheValid="STS-EE _ Dossier projet.html" S_intitule="Projet">
+    <Projet_PRJ2 I_duree="12" I_maxEleves="5" I_minEleves="3" S_code="PRJ2" S_ficheValid="STS-EE _ Dossier projet.html" S_intitule="Projet">
       <d_attributs>
         <l_SRC S_00="Source de financement" S_01="" S_02="" />
         <l_PAR S_00="Partenaires du projet" S_01="" S_02="" />
@@ -1162,7 +1162,7 @@
         <l__03 S_00="Ana" S_01="Con" S_02="DCo" />
       </d_posRevues>
     </Projet_PRJ2>
-    <Projet_PRJ3 I_duree="50" S_code="PRJ3" S_ficheValid="STS-EE _ Dossier projet.html" S_intitule="Projet de fin d'ann&#233;e">
+    <Projet_PRJ3 I_duree="50" I_maxEleves="5" I_minEleves="3" S_code="PRJ3" S_ficheValid="STS-EE _ Dossier projet.html" S_intitule="Projet de fin d'ann&#233;e">
       <d_attributs>
         <l_SRC S_00="Source de financement" S_01="" S_02="" />
         <l_PAR S_00="Partenaires du projet" S_01="" S_02="" />

@@ -444,10 +444,11 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
     #
     prj.support.pt_caract = []
     rectSup = posSup+tailleSup
-    prj.support.pts_caract.append(curve_rect_titre(ctx, u"Support",  rectSup, BcoulSup, IcoulSup, fontSup))
+    prj.support.pts_caract.append(curve_rect_titre(ctx, prj.GetCode() + u" - "+ prj.support.GetCode(),  
+                                                   rectSup, BcoulSup, IcoulSup, fontSup))
     ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                        cairo.FONT_WEIGHT_NORMAL)
-    show_text_rect(ctx, prj.support.nom, 
+    show_text_rect(ctx, prj.GetNom(), 
                    rectSup, ha = 'c', b = 0.2,
                    fontsizeMinMax = (-1, 0.016))
     

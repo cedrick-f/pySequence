@@ -1310,7 +1310,7 @@
   </l_periodes>
   <l_positions_CI />
   <d_projets>
-    <Projet_CCF1 I_duree="12" S_code="CCF1" S_ficheValid="STS-EE _ Dossier projet.html" S_intitule="CCF1">
+    <Projet_CCF1 I_duree="12" I_maxEleves="5" I_minEleves="3" S_code="CCF1" S_ficheValid="STS-EE _ Dossier projet.html" S_intitule="CCF1">
       <d_attributs>
         <l_SRC S_00="Source de financement" S_01="" S_02="" />
         <l_PAR S_00="Partenaires du projet" S_01="" S_02="" />
@@ -1388,7 +1388,7 @@
         <l__03 S_00="Ana" S_01="Con" S_02="DCo" />
       </d_posRevues>
     </Projet_CCF1>
-    <Projet_CCF2 I_duree="12" S_code="CCF2" S_ficheValid="STS-EE _ Dossier projet.html" S_intitule="CCF2">
+    <Projet_CCF2 I_duree="12" I_maxEleves="5" I_minEleves="3" S_code="CCF2" S_ficheValid="STS-EE _ Dossier projet.html" S_intitule="CCF2">
       <d_attributs>
         <l_SRC S_00="Source de financement" S_01="" S_02="" />
         <l_PAR S_00="Partenaires du projet" S_01="" S_02="" />
@@ -1456,7 +1456,7 @@
         <l__03 S_00="Ana" S_01="Con" S_02="DCo" />
       </d_posRevues>
     </Projet_CCF2>
-    <Projet_PRJ I_duree="50" S_code="PRJ" S_ficheValid="STS-EE _ Dossier projet.html" S_intitule="Projet de fin d'ann&#233;e">
+    <Projet_PRJ I_duree="50" I_maxEleves="5" I_minEleves="3" S_code="PRJ" S_ficheValid="STS-EE _ Dossier projet.html" S_intitule="Projet de fin d'ann&#233;e">
       <d_attributs>
         <l_SRC S_00="Source de financement" S_01="" S_02="" />
         <l_PAR S_00="Partenaires du projet" S_01="" S_02="" />

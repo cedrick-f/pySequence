@@ -47,22 +47,23 @@ class UndoStack():
         self.index = 1
         
     def do(self, action):
-        print "do", action
+        print self.doc, ": do", action
         s = self.doc.getBranche()
         self.stack[min(self.getTaille(), TAILLE):] = [(s, action)]
         
     def undo(self):
         if self.index < TAILLE:
+            print self.doc, ": undo <<", self.stack[-self.index][1]
             self.index += 1
             self.doc.setBranche(self.stack[-self.index][0])
-            print "undo", self.stack[-self.index][1]
             
-    
+            
     def redo(self):
         if self.index > 1:
+            print self.doc, ": redo >>", self.stack[-self.index][1]
             self.index -= 1
             self.doc.setBranche(self.stack[-self.index][0])
-            print "redo", self.stack[-self.index][1]
+            
             
     def getUndoAction(self):
         if self.index+1 < self.getTaille():

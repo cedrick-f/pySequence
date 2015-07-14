@@ -359,7 +359,7 @@
   </l_periodes>
   <l_positions_CI />
   <d_projets>
-    <Projet_PRJ I_duree="70" S_code="PRJ" S_ficheValid="" S_intitule="Projet de fin d'ann&#233;e">
+    <Projet_PRJ I_duree="70" I_maxEleves="5" I_minEleves="3" S_code="PRJ" S_ficheValid="" S_intitule="Projet de fin d'ann&#233;e">
       <d_attributs>
         <l_SRC S_00="" S_01="" S_02="" />
         <l_PAR S_00="" S_01="" S_02="" />

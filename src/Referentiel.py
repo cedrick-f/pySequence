@@ -129,12 +129,19 @@ class XMLelem():
         def lect(branche, nom = ""):
             if nom[:2] == "S_":
                 return unicode(branche.get(nom)).replace(u"--", u"\n")
+            
             elif nom[:2] == "I_":
-                return int(eval(branche.get(nom)))
+                if branche.get(nom) == None: # Pour passage 6.0-beta19 à beta20
+                    nomerr.append(nom)
+                    return 0
+                return int(branche.get(nom))
+            
             elif nom[:2] == "L_":
-                return long(eval(branche.get(nom)))
+                return long(branche.get(nom))
+            
             elif nom[:2] == "F_":
-                return float(eval(branche.get(nom)))
+                return float(branche.get(nom))
+            
             elif nom[:2] == "B_":
                 if branche.get(nom) == None: # Pour corriger un bug (version <=5.0beta3)
                     nomerr.append(nom)
@@ -188,11 +195,15 @@ class XMLelem():
             
             elif nom.split("_")[0] == "Indicateur":
                 sbranche = branche.find(nom)
-                return Indicateur().setBranche(sbranche)[0]
+                indic, err = Indicateur().setBranche(sbranche)
+                nomerr.extend(err)
+                return indic
             
             elif nom.split("_")[0] == "Projet":
                 sbranche = branche.find(nom)
-                return Projet().setBranche(sbranche)[0]
+                proj, err = Projet().setBranche(sbranche)
+                nomerr.extend(err)
+                return proj
             
 
         for attr in dir(self):
@@ -214,12 +225,13 @@ class XMLelem():
                     _attr = "d_"+attr
                 else:
                     _attr = None
-                    
+
                 if _attr != None:
-                    setattr(self, attr, lect(branche, _attr.replace("\n", "--")))
-                
+                    v = lect(branche, _attr.replace("\n", "--"))
+                    setattr(self, attr, v)
 
         return self, nomerr
+
 
     ######################################################################################  
     def __eq__(self, ref):
@@ -730,8 +742,8 @@ class Referentiel(XMLelem):
         
     ######################################################################################
     def corrigerVersion(self, nomerr):
-        """ Lecture de la branche XML
-            (ouverture de fichier)
+        """ Correction d'erreur de lecture de la branche XML
+            pour cause de changement de version
         """
 #        print "corrigerVersion"
 #        print self.projets
@@ -765,6 +777,7 @@ class Referentiel(XMLelem):
             self.objSavoirs_Phys = False
             self.preSavoirs_Phys = True
         
+        
 #        # Pour mettre à jour les généralités sur le projet
 #        if self.attributs_prj == {}:
 #            self.attributs_prj = REFERENTIELS[self.Code].attributs_prj
@@ -778,6 +791,7 @@ class Referentiel(XMLelem):
 #            print p.listeParties, p.parties
             if len(p.listeParties) <> len(p.parties):
                 p.listeParties = p.parties.keys()
+            p.corrigerVersion(nomerr)
 #            print p.listeParties, p.parties
         
         return
@@ -1564,6 +1578,11 @@ class Projet(XMLelem):
         self.listPhases = []
         self.posRevues = {}
         
+        #
+        # Effectifs
+        #
+        self.maxEleves = 5
+        self.minEleves = 3
         
         #
         # Généralités sur le projet
@@ -1581,7 +1600,17 @@ class Projet(XMLelem):
     def __repr__(self):
         return self.code + " : " + self.intitule + u" (" + str(self.duree) + u"h)"
 
-
+    ######################################################################################
+    def corrigerVersion(self, nomerr):
+        """ Correction d'erreur de lecture de la branche XML
+            pour cause de changement de version
+        """
+#        print "corrigerVersion", nomerr
+        if "I_maxEleves" in nomerr:
+            self.maxEleves = 5
+        if "I_minEleves" in nomerr:
+            self.minEleves = 3
+        
     #########################################################################
     def getNbrRevuesDefaut(self):
         return min(self.posRevues.keys())

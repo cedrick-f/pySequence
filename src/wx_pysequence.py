@@ -606,7 +606,13 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
 
     ###############################################################################################
     def miseAJourUndo(self):
-        doc = self.GetDocActif()
+        """ Mise à jour des boutons (et menus)
+            après une opération undo ou redo
+        """
+        try:
+            doc = self.GetDocActif()
+        except:
+            doc = None
         if doc == None:
             self.tb.EnableTool(200, False)
             self.tb.EnableTool(201, False)
@@ -615,16 +621,20 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         undoAction = doc.undoStack.getUndoAction()
         if undoAction == None:
             self.tb.EnableTool(200, False)
+            t = u""
         else:
             self.tb.EnableTool(200, True)
-            self.tb.SetToolShortHelp(200, u"Annuler"+u"\n"+undoAction)
+            t = u"\n"+undoAction
+        self.tb.SetToolShortHelp(200, u"Annuler"+t)
 
         redoAction = doc.undoStack.getRedoAction()
         if redoAction == None:
             self.tb.EnableTool(201, False)
+            t = u""
         else:
             self.tb.EnableTool(201, True)
-            self.tb.SetToolShortHelp(201, u"Rétablir"+u"\n"+redoAction)
+            u"\n"+redoAction
+        self.tb.SetToolShortHelp(201, u"Rétablir"+t)
         
         
     ###############################################################################################
@@ -1050,6 +1060,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                 self.file_menu.Enable(19, False)
                 self.file_menu.Enable(20, False)
                 
+        self.miseAJourUndo()
            
         
     ###############################################################################################
@@ -1328,13 +1339,24 @@ class FenetreDocument(aui.AuiMDIChildFrame):
     def commandeRedo(self, event = None):
         self.GetDocument().undoStack.redo()
         self.GetDocument().classe.undoStack.redo()
+        wx.BeginBusyCursor()
         self.restaurer()
+        wx.EndBusyCursor()
         
     #############################################################################
     def commandeUndo(self, event = None):
+        t0 = time.time()
         self.GetDocument().undoStack.undo()
+        t1 = time.time()
+        print "  ", t1-t0
+        
         self.GetDocument().classe.undoStack.undo()
+        t2 = time.time()
+        print "  ", t2-t1
+        
+        wx.BeginBusyCursor()
         self.restaurer()
+        wx.EndBusyCursor()
     
     #############################################################################
     def commandeEnregistrer(self, event = None):
@@ -1626,7 +1648,7 @@ class FenetreSequence(FenetreDocument):
     ###############################################################################################
     def OnDocModified(self, event):
         if event.GetModif() != u"":
-            print "OnDocModified", event.GetModif()
+#            print "OnDocModified", event.GetModif()
             self.classe.undoStack.do(event.GetModif())
             self.sequence.undoStack.do(event.GetModif())
         
@@ -1688,32 +1710,68 @@ class FenetreSequence(FenetreDocument):
 
     ###############################################################################################
     def restaurer(self):
-
-        wx.BeginBusyCursor()
+        """ Restaure l'arbre de construction
+            et redessine la fiche
+            (après undo ou redo)
+        """
         
         self.sequence.MiseAJourTypeEnseignement()
-            
+        t0 = time.time()
+        
+        #
+        # Réinitialisation de l'arbre
+        #
         self.arbre.DeleteAllItems()
         root = self.arbre.AddRoot("")
+        t1 = time.time()
+        print "  ", t1-t0
+        
         self.classe.ConstruireArbre(self.arbre, root)
+        t2 = time.time()
+        print "  ", t2-t1
+        
         self.sequence.ConstruireArbre(self.arbre, root)
+        t3 = time.time()
+        print "  ", t3-t2
+        
         self.sequence.CI.SetNum()
+        t4 = time.time()
+        print "  ", t4-t3
+        
         self.sequence.SetCodes()
+        t5 = time.time()
+        print "  ", t5-t4
+        
         self.sequence.PubDescription()
+        t6 = time.time()
+        print "  ", t6-t5
+        
         self.sequence.SetLiens()
+        t7 = time.time()
+        print "  ", t7-t6
+        
         self.sequence.VerifPb()
+        t8 = time.time()
+        print "  ", t8-t7
 
         self.sequence.Verrouiller()
+        t9 = time.time()
+        print "  ", t9-t8
+        
         self.arbre.SelectItem(self.classe.branche)
+        t10 = time.time()
+        print "  ", t10-t9
         
         self.arbre.Layout()
         self.arbre.ExpandAll()
         self.arbre.CalculatePositions()
         
         self.fiche.Redessiner()
+        t11 = time.time()
+        print "  ", t11-t10
         self.parent.miseAJourUndo()
         
-        wx.EndBusyCursor()
+        
         
     ###############################################################################################
     def ouvrir(self, nomFichier, redessiner = True, reparer = False):
@@ -1907,7 +1965,7 @@ class FenetreProjet(FenetreDocument):
     ###############################################################################################
     def OnDocModified(self, event):
         if event.GetModif() != u"":
-            print "OnDocModified", event.GetModif()
+#            print "OnDocModified", event.GetModif()
             self.classe.undoStack.do(event.GetModif())
             self.projet.undoStack.do(event.GetModif())
             
@@ -1960,10 +2018,16 @@ class FenetreProjet(FenetreDocument):
         
     ###############################################################################################
     def restaurer(self):
-        wx.BeginBusyCursor()
-        
+        """ Restaure l'arbre de construction
+            et redessine la fiche
+            (après undo ou redo)
+        """
+        #
+        # Réinitialisation de l'arbre
+        #
         self.arbre.DeleteAllItems()
         root = self.arbre.AddRoot("")
+        
         self.projet.SetCompetencesRevuesSoutenance()
    
         self.classe.ConstruireArbre(self.arbre, root)
@@ -1982,7 +2046,6 @@ class FenetreProjet(FenetreDocument):
         self.fiche.Redessiner()
         self.parent.miseAJourUndo()
         
-        wx.EndBusyCursor()
         
         
     ###############################################################################################
@@ -2833,7 +2896,8 @@ class PanelConteneur(wx.Panel):
         self.bsizer.Layout()
 #        self.panel.Refresh()
 #        self.Refresh()        
-            
+    
+
                          
                 
 ####################################################################################
@@ -2866,7 +2930,7 @@ class PanelPropriete(scrolled.ScrolledPanel):
 
        
     #########################################################################################################
-    def sendEvent(self, doc = None, modif = u"", draw = True):
+    def sendEvent(self, doc = None, modif = u"", draw = True, obj = None):
         self.eventAttente = False
         evt = SeqEvent(myEVT_DOC_MODIFIED, self.GetId())
         if doc != None:
@@ -2881,6 +2945,8 @@ class PanelPropriete(scrolled.ScrolledPanel):
         
         self.GetEventHandler().ProcessEvent(evt)
         
+    def GetFenetreDoc(self):
+        return self.GetDocument().app
         
 ####################################################################################
 #
@@ -2991,7 +3057,8 @@ class PanelPropriete_Sequence(PanelPropriete):
         
     #############################################################################            
     def SetBitmapPosition(self, bougerSlider = None):
-        self.sendEvent(modif = u"Changement de position de la séquence")
+        self.sendEvent(modif = u"Changement de position de la séquence",
+                       obj = self.sequence)
         self.bmp.SetBitmap(self.getBitmapPeriode(250))
         if bougerSlider != None:
             self.position.SetValue(bougerSlider)
@@ -3230,7 +3297,8 @@ class PanelPropriete_Projet(PanelPropriete):
         
     #############################################################################            
     def SetBitmapPosition(self, bougerSlider = None):
-        self.sendEvent(modif = u"Changement de position du projet")
+        self.sendEvent(modif = u"Changement de position du projet",
+                       obj = self.projet)
         self.bmp.SetBitmap(self.getBitmapPeriode(250))
         if bougerSlider != None:
             self.position.SetValue(bougerSlider)
@@ -3625,7 +3693,8 @@ class PanelOrganisation(wx.Panel):
             self.objet.OrdonnerTaches()
             if monte:
                 self.objet.VerifierIndicRevue(numRevue)
-            self.parent.sendEvent(modif = u"Déplacement de la revue")
+            self.parent.sendEvent(modif = u"Déplacement de la revue",
+                                  obj = self.objet)
         
     #############################################################################            
     def MiseAJourListe(self):
@@ -3645,8 +3714,11 @@ class PanelOrganisation(wx.Panel):
                 self.objet.nbrRevues = var.v[0]
                 self.objet.MiseAJourNbrRevues()
                 self.MiseAJourListe()
-                self.parent.sendEvent(modif = u"Modification du nombre de revues")
-        
+                self.parent.sendEvent(modif = u"Modification du nombre de revues",
+                                      obj = self.objet)
+
+
+
 ####################################################################################
 #
 #   Classe définissant le panel de propriété de la classe
@@ -3894,7 +3966,8 @@ class PanelPropriete_Classe(PanelPropriete):
         if nomFichier != '':
             self.classe.ouvrir(nomFichier)
         
-        self.sendEvent(modif = u"Ouverture d'une Classe")
+        self.sendEvent(modif = u"Ouverture d'une Classe",
+                       obj = self.classe)
     
     ###############################################################################################
     def enregistrer(self, nomFichier):
@@ -3951,7 +4024,8 @@ class PanelPropriete_Classe(PanelPropriete):
         self.classe.Initialise(isinstance(self.classe.doc, Projet), defaut = True)
 #        self.classe.doc.AjouterListeSystemes(self.classe.systemes)
         self.MiseAJour()
-        self.sendEvent(modif = u"Réinitialisation des paramètres de Classe")
+        self.sendEvent(modif = u"Réinitialisation des paramètres de Classe",
+                       obj = self.classe)
         
         
 #    #############################################################################            
@@ -4036,7 +4110,8 @@ class PanelPropriete_Classe(PanelPropriete):
         self.classe.etablissement = evt.GetString()
 #        self.AfficherAutre(False)
         
-        self.sendEvent(modif = u"Modification de l'établissement")
+        self.sendEvent(modif = u"Modification de l'établissement",
+                       obj = self.classe)
      
 
     ######################################################################################  
@@ -4121,7 +4196,8 @@ class PanelPropriete_Classe(PanelPropriete):
         
         self.Refresh()
         
-        self.sendEvent(modif = u"Modification du type d'enseignement")
+        self.sendEvent(modif = u"Modification du type d'enseignement",
+                       obj = self.classe)
         
     ######################################################################################  
     def SetLienBO(self):
@@ -4439,7 +4515,8 @@ class PanelEffectifsClasse(wx.Panel):
             self.classe.nbrGroupes['P'] = var.v[0]
         calculerEffectifs(self.classe)
             
-        self.Parent.sendEvent(self.classe, modif = u"Modification du découpage de la Classe")
+        self.Parent.sendEvent(self.classe, modif = u"Modification du découpage de la Classe",
+                              obj = self.classe)
 #        self.AjouterGroupesVides()
         self.MiseAJourNbrEleve()
         
@@ -5551,8 +5628,6 @@ class PanelPropriete_Seance(PanelPropriete):
         self.sizer.Add(cbType, (0,1), flag = wx.EXPAND|wx.ALL, border = 2)
         
         
-        
-        
         #
         # Intitulé de la séance
         #
@@ -5577,11 +5652,7 @@ class PanelPropriete_Seance(PanelPropriete):
         
         self.Bind(wx.EVT_CHECKBOX, self.EvtCheckBox, cb)
         self.cbInt = cb
-        self.sizer.Add(bsizer, (2,0), (2,2), flag = wx.ALIGN_RIGHT|wx.ALL|wx.EXPAND, border = 2)
-#        self.sizer.Add(textctrl, (1,1), flag = wx.EXPAND)
-        
-        
-        
+        self.sizer.Add(bsizer, (2,0), (2,2), flag = wx.ALIGN_RIGHT|wx.ALL|wx.EXPAND, border = 2)    
         
         
         #
@@ -5659,16 +5730,10 @@ class PanelPropriete_Seance(PanelPropriete):
         self.cbDem = cbDem
         self.titreDem = titre
         
-#        nombre = wx.StaticText(self, -1, u"")
-#        self.nombre = nombre
         
         self.sizer.Add(titre, (1,0), flag = wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT|wx.ALL, border = 2)
         self.sizer.Add(cbDem, (1,1), flag = wx.EXPAND|wx.ALL, border = 2)
-#        self.sizer.AddGrowableRow(4)
-#        self.sizer.Add(self.nombre, (4,2))
-        
-        
-        
+
         
         #
         # Systémes
@@ -5679,10 +5744,7 @@ class PanelPropriete_Seance(PanelPropriete):
         self.systemeCtrl = []
         self.ConstruireListeSystemes()
         self.sizer.Add(self.bsizer, (0,3), (4, 1), flag = wx.EXPAND|wx.ALL, border = 2)
-        
-#        self.sizer.AddGrowableCol(4, proportion = 1)
-
-
+    
 
         #
         # Lien
@@ -5697,9 +5759,6 @@ class PanelPropriete_Seance(PanelPropriete):
         self.Bind(wx.EVT_BUTTON, self.OnClick, self.btnlien)
         bsizer.Add(self.btnlien, 1,  flag = wx.EXPAND)
         self.sizer.Add(bsizer, (3,4), (1, 1), flag = wx.EXPAND|wx.ALL, border = 2)
-        
-        
-        
         
         #
         # Description de la séance
@@ -5724,8 +5783,8 @@ class PanelPropriete_Seance(PanelPropriete):
         #
         self.sizer.AddGrowableCol(4)
         self.sizer.AddGrowableRow(2)
-        self.sizer.Layout()
-        self.Layout()
+#        self.sizer.Layout()
+#        self.Layout()
     
     
     ######################################################################################  
@@ -5970,15 +6029,13 @@ class PanelPropriete_Seance(PanelPropriete):
 
 
         # Nombre
-        if self.seance.typeSeance in ["AP", "ED"]:
-            self.vcNombre.Show(True)
-        else:
-            self.vcNombre.Show(False) 
+        self.vcNombre.Show(self.seance.typeSeance in ["AP", "ED"])
             
         self.cbDem.Clear()
         for s in listDem:
             self.cbDem.Append(ref.demarches[s][1])
         self.cbDem.SetSelection(0)
+        
         
     #############################################################################            
     def MarquerProblemeDuree(self, etat):
@@ -6017,6 +6074,7 @@ class PanelPropriete_Seance(PanelPropriete):
         
         self.MiseAJourLien()
         
+        self.ConstruireListeSystemes()
         
         
     #############################################################################            
@@ -6482,12 +6540,13 @@ class PanelPropriete_Tache(PanelPropriete):
 
     #############################################################################            
     def EvtTextIntitule(self, event):
-        self.tache.SetIntitule(self.textctrl.GetValue())
+        txt = self.textctrl.GetValue()
+        if self.tache.intitule != txt:
+            self.tache.SetIntitule(txt)
+            if not self.eventAttente:
+                wx.CallLater(DELAY, self.sendEvent, modif = u"Modification de l'intitulé de la Tâche")
+                self.eventAttente = True
         event.Skip()
-        if not self.eventAttente:
-            wx.CallLater(DELAY, self.sendEvent, modif = u"Modification de l'intitulé de la Tâche")
-            self.eventAttente = True
-        
         
     #############################################################################            
     def EvtText(self, event):
@@ -6774,11 +6833,19 @@ class PanelPropriete_Systeme(PanelPropriete):
 
 
     #############################################################################            
-    def Verrouiller(self, etat = True):
+    def Verrouiller(self, nom = u""):
+        """ Vérrouiller les propriétés du Système
+            (quand le Système est défini dans la Classe)
+            False = vérrouillé
+        """
+        try:
+            self.cbListSys.SetSelection(self.cbListSys.FindString(nom))
+        except:
+            nom = u""
+        etat = nom != u""
         self.textctrl.Show(etat)
         self.vcNombre.Enable(etat)
         self.selec.Enable(etat)
-#        self.btnlien.Enable(etat)
         self.btImg.Enable(etat)
         self.sizer.Layout()
     
@@ -7160,6 +7227,7 @@ class PanelPropriete_Support(PanelPropriete):
         box = wx.StaticBox(self, -1, u"Image du support")
         bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
         image = wx.StaticBitmap(self, -1, wx.NullBitmap)
+        image.Bind(wx.EVT_RIGHT_UP, self.OnRClickImage)
         self.image = image
         self.SetImage()
         bsizer.Add(image, flag = wx.EXPAND)
@@ -7193,6 +7261,9 @@ class PanelPropriete_Support(PanelPropriete):
         
         self.Bind(wx.EVT_TEXT, self.EvtText, textctrl)
         
+        self.clip = wx.Clipboard()
+        self.x = wx.BitmapDataObject()
+        
         
     ######################################################################################  
     def SetPathSeq(self, pathSeq):
@@ -7206,11 +7277,23 @@ class PanelPropriete_Support(PanelPropriete):
         self.Layout()
         self.Refresh()
         
+        
     #############################################################################            
     def GetDocument(self):
         return self.support.parent
     
     
+    #############################################################################            
+    def OnRClickImage(self, event):
+        self.clip.Open()
+        ok = self.clip.GetData(self.x)
+        self.clip.Close()
+        if ok:
+            self.GetFenetreDoc().AfficherMenuContextuel([[u"Coller l'image", self.collerImage, None
+                                              ]
+                                            ])
+            
+            
     #############################################################################            
     def OnClick(self, event):
         if event.GetId() == self.btnlien.GetId():
@@ -7239,7 +7322,8 @@ class PanelPropriete_Support(PanelPropriete):
             
             
             dlg.Destroy()
-        
+
+
     #############################################################################            
     def SetImage(self, sendEvt = False):
         if self.support.image != None:
@@ -7251,11 +7335,18 @@ class PanelPropriete_Support(PanelPropriete):
             self.image.SetBitmap(self.support.image.ConvertToImage().Scale(_w, _h).ConvertToBitmap())
         self.support.SetImage()
         self.Layout()
+        
         if sendEvt:
-            self.sendEvent(modif = u"Modification de l'illustration du Support")
-        
-        
-        
+            self.sendEvent(modif = u"Modification de l'illustration du Support",
+                           obj = self)
+
+
+    #############################################################################            
+    def collerImage(self, sendEvt = False):
+        self.support.image = self.x.GetBitmap()
+        self.SetImage(True)
+    
+
     #############################################################################            
     def EvtText(self, event):
         nt = event.GetString()
@@ -7286,6 +7377,7 @@ class PanelPropriete_Support(PanelPropriete):
         if sendEvt:
             self.sendEvent()
         self.MiseAJourLien()
+        self.SetImage()
         
         
         
@@ -7387,20 +7479,28 @@ class ArbreDoc(CT.CustomTreeCtrl):
 
     ####################################################################################
     def OnSelChanged(self, event):
+        """ Fonction appelée lorsque la selection a été changée dans l'arbre
+        
+        """
         self.item = event.GetItem()
         data = self.GetItemPyData(self.item)
-        if data == None:
+        
+        if data == None:        # pas d'objet associé à la branche
             panelPropriete = self.panelVide
         else:
-            if isinstance(data, wx.Panel):
+            if isinstance(data, wx.Panel): # 
                 panelPropriete = data
             else:
                 panelPropriete = data.panelPropriete
 
+        if hasattr(panelPropriete, 'MiseAJour'):
+            panelPropriete.MiseAJour()
         self.panelProp.AfficherPanel(panelPropriete)
-#        panelPropriete.Refresh()
         self.parent.Refresh()
         
+        #
+        # On centre la fiche sur l'objet
+        #
         if hasattr(self.classe.doc.GetApp(), 'fiche') and self.classe.doc.centrer:
             self.classe.doc.GetApp().fiche.CentrerSur(data)
         self.classe.doc.centrer = True
