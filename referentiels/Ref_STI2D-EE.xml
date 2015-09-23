@@ -377,27 +377,27 @@
         <d_C>
           <l_Pre>
             <l_00 S_00="Identification projet" S_02="">
-              <l_01 I_00="12" I_01="2" I_02="3" />
+              <l_01 I_00="9" I_01="2" I_02="0" />
             </l_00>
           </l_Pre>
           <l_Nom>
             <l_00 S_00="Identification projet" S_02="">
-              <l_01 I_00="11" I_01="2" I_02="3" />
+              <l_01 I_00="8" I_01="2" I_02="0" />
             </l_00>
           </l_Nom>
           <l_NON>
-            <l_00 S_00="Notation Candidat " S_02="">
+            <l_00 S_00="Notation Candidat" S_02="">
               <l_01 I_00="6" I_01="4" I_02="0" />
             </l_00>
           </l_NON>
           <l_Tit>
             <l_00 S_00="Identification projet" S_02="">
-              <l_01 I_00="26" I_01="1" I_02="0" />
+              <l_01 I_00="13" I_01="1" I_02="0" />
             </l_00>
           </l_Tit>
           <l_Des>
             <l_00 S_00="Identification projet" S_02="">
-              <l_01 I_00="26" I_01="1" I_02="0" />
+              <l_01 I_00="15" I_01="1" I_02="0" />
             </l_00>
           </l_Des>
           <l_Etab>
@@ -406,22 +406,42 @@
             </l_00>
           </l_Etab>
           <l_Prof>
-            <l_00 S_00="Notation Candidat " S_02="">
+            <l_00 S_00="Notation Candidat" S_02="">
               <l_01 I_00="52" I_01="1" I_02="1" />
             </l_00>
           </l_Prof>
         </d_C>
         <d_S>
-          <l_N-P>
-            <l_00 S_00="Feuil1" S_02="Nom du candidat :--">
-              <l_01 I_00="24" I_01="11" I_02="0" />
+          <l_Tit>
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="13" I_01="1" I_02="0" />
             </l_00>
-          </l_N-P>
+          </l_Tit>
+          <l_Nom>
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="8" I_01="2" I_02="0" />
+            </l_00>
+          </l_Nom>
+          <l_Des>
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="15" I_01="1" I_02="0" />
+            </l_00>
+          </l_Des>
+          <l_Pre>
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="9" I_01="2" I_02="0" />
+            </l_00>
+          </l_Pre>
+          <l_Etab>
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="6" I_01="2" I_02="0" />
+            </l_00>
+          </l_Etab>
         </d_S>
       </d_cellulesInfo>
       <d_grilles>
-        <l_C S_00="Grille EE V2015.xlsx" S_01="C" />
-        <l_S S_00="Grille_presentation_projet_STI2D_V2015.xlsx" S_01="I" />
+        <l_C S_00="Grille STI2D_EE Conduite V2016.xlsx" S_01="I" />
+        <l_S S_00="Grille STI2D Soutenance V2016.xlsx" S_01="I" />
       </d_grilles>
       <l_listPhases S_00="Ana" S_01="Con" S_02="DCo" S_03="Rea" S_04="Val" S_05="XXX" S_06="Rev" S_07="R1" S_08="R2" S_09="R3" S_10="S" />
       <l_listPhasesEval S_00="Rev" S_01="R1" S_02="R2" S_03="R3" S_04="S" />

@@ -29,12 +29,12 @@
           <l_01>
             <Indicateur_00 S_intitule="Les solutions techniques envisag&#233;es sont correctement analys&#233;es au regard des r&#233;sultats d'exp&#233;rimentations et/ou de tests et/ou de simulations">
               <d_ligne I_S="0" />
-              <d_poids F_S="50.0" />
+              <d_poids F_S="66.666667" />
               <d_revue I_S="0" />
             </Indicateur_00>
             <Indicateur_01 S_intitule="L'origine des &#233;carts entre les r&#233;sultats obtenus et les exigences du cahier des charges est correctement identifi&#233;e">
               <d_ligne I_S="0" />
-              <d_poids F_S="50.0" />
+              <d_poids F_S="33.333333" />
               <d_revue I_S="0" />
             </Indicateur_01>
           </l_01>

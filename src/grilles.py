@@ -49,13 +49,16 @@ import os
 from widgets import messageErreur
 
 
+def getFullNameGrille(fichier):
+    return os.path.join(TABLE_PATH, toFileEncoding(fichier))
+
 
 def ouvrirXLS(fichier):
     """ Ouvre la grille XLS nommée <fichier>
         renvoie le classeur PyExcel
     """
     fichierPB = []      # Liste des fichiers dont l'ouverture aura échoué
-    fichier = os.path.join(TABLE_PATH, toFileEncoding(fichier))
+    fichier = getFullNameGrille(fichier)
     tableau = None
     err = 0
     
@@ -76,9 +79,6 @@ def getTableau(parent, nomFichier):
     """ Ouvre et renvoie le classeur
         contenant la grille d'évaluation
     """
-#    prj = doc.GetProjetRef()
-#    fichiers = prj.grilles
-    
 
     tableau, err, fichierPB = ouvrirXLS(nomFichier)
                                       
@@ -92,10 +92,10 @@ def getTableau(parent, nomFichier):
         messageErreur(parent, u"Lancement d'Excel impossible !",
                       u"L'application Excel ne semble pas installée !")
         
-    elif err&2 != 0:
-        messageErreur(parent, u"Fichier non trouvé !",
-                      u"Le fichier original de la grille,\n    " + fichierPB[0] + u"\n" \
-                      u"n'a pas été trouvé ! \n")
+#    elif err&2 != 0:
+#        messageErreur(parent, u"Fichier non trouvé !",
+#                      u"Le fichier original de la grille,\n    " + fichierPB[0] + u"\n" \
+#                      u"n'a pas été trouvé ! \n")
         
     else:
         print "Erreur", err
@@ -185,9 +185,9 @@ def getTableaux(parent, doc):
 def modifierGrille(doc, tableaux, eleve):
 #    print "modifierGrille", eleve
     
+    log = []
     ref = doc.GetReferentiel()
     prj = doc.GetProjetRef()
-    
     
     #
     # On coche les cellules "non" (uniquement grilles "Revues" STI2D)
@@ -218,67 +218,17 @@ def modifierGrille(doc, tableaux, eleve):
                         indic = dicIndic[i][j]
                     else:
                         indic = False
-                    if part in tableaux.keys():
-                        nf = tableaux[part].getSheetNum(feuille)
-                        if not indic: # indicateur pas évalué --> on coche NON !
-                            tableaux[part].setCell(nf, ligne, colNON, COCHE)
+                    if part in tableaux.keys() and tableaux[part] != None:
+                        if feuille in tableaux[part].getSheets():
+                            nf = tableaux[part].getSheetNum(feuille)
+                            if not indic: # indicateur pas évalué --> on coche NON !
+                                tableaux[part].setCell(nf, ligne, colNON, COCHE)
+                            else:
+                                tableaux[part].setCell(nf, ligne, colNON, '')
                         else:
-                            tableaux[part].setCell(nf, ligne, colNON, '')
-
+                            log.append(u"Feuille " + feuille + u" non trouvée")
+                            
     
-    
-    
-#    classNON = dicInfo["NON"][0][0]
-##    print "classNON", classNON
-#    feuilNON = dicInfo["NON"][0][1]
-##    print "feuilNON", feuilNON
-#
-#
-#
-#    if feuilNON != '':
-#        #clef = code compétence
-#        #valeur = liste [True False ...] des indicateurs à mobiliser
-#        dicIndic = eleve.GetDicIndicateurs()
-#        dicNon = doc.GetProjetRef()._dicIndicateurs_simple
-#        print dicInfo["NON"]
-#        colNON = dicInfo["NON"][0][2][1]
-#        
-#        # On rajoute la feuille du cadidat si elle n'existe pas encore
-#        if doc.GetProjetRef().grilles[classNON][1] == 'C': # fichier "Collectif"
-#            feuille = feuilNON+str(eleve.id+1)
-##            if not feuille in tableaux['R'].getSheets():
-##                sh = [int(s[-1]) for s in tableaux['R'].getSheets() if s[-1] in range(1,6)]
-##                b = max([n for n in sh if n < eleve.id+1]+[0])
-##                if b > 0:
-##                    a = feuilNON+" "+b
-##                else:
-##                    a = ''
-##                tableaux['R'].addSheetName(feuille, After = a)
-##                print "Feuille ajoutée:", feuille, a
-#
-#        else:
-#            feuille = feuilNON
-#        
-#        for i, indic in dicNon.items():
-##            print "**", i, indic
-##            lignes = [ind[2] for ind in indic if ind[2] != 0]
-#            lignes = [ind.ligne for ind in indic if ind.ligne != 0]
-##            print "    lignes", lignes
-##            print "    colNON", colNON
-#            for j, ligne in enumerate(lignes):
-#                
-#                # indic = l'indicateur "i" doit être évalué
-#                if i in dicIndic.keys():
-#                    indic = dicIndic[i][j]
-#                else:
-#                    indic = False
-#                if classNON in tableaux.keys():
-#                    nf = tableaux[classNON].getSheetNum(feuille)
-#                    if not indic: # indicateur pas évalué --> on coche NON !
-#                        tableaux[classNON].setCell(nf, ligne, colNON, COCHE)
-#                    else:
-#                        tableaux[classNON].setCell(nf, ligne, colNON, '')
-
 
     #
     # On rajoute quelques informations
@@ -290,49 +240,54 @@ def modifierGrille(doc, tableaux, eleve):
              "Etab": doc.classe.etablissement,
              "N-P" : eleve.GetNomPrenom()
              }
-    
-#    print schem
-#    print dicInfo
-#    print tableaux
+
     
     for ct, t in tableaux.items():
         dicInfo = prj.cellulesInfo[ct]
 #        print "  ", dicInfo
 #        print "  ", ct, t
         for k, v in schem.items():
-            if k in dicInfo.keys():
+            if k in dicInfo.keys() and t != None:
 #                print "    ", k
                 for d in dicInfo[k]:
                     f = d[0]   # Feuille
-                    nf = t.getSheetNum(f)
-                    l, c, p = d[1] # ligne , colonne
-                    pre = d[2]
-                    if p > 0: # Période - pour classeurs collectifs
-                        l += eleve.id * p
-                    t.setCell(nf, l, c, pre+v)
+                    if f in t.getSheets():
+                        nf = t.getSheetNum(f)
+                        l, c, p = d[1] # ligne , colonne
+                        pre = d[2]
+                        if p > 0: # Période - pour classeurs collectifs
+                            l += eleve.id * p
+                        t.setCell(nf, l, c, pre+v)
+                    else:
+                        log.append(u"Feuille " + f + u" non trouvée")
     
     #
     # On rajoute les noms des professeurs
     #
     for part, grille in prj.grilles.items():
         dicInfo = prj.cellulesInfo[part]
-        if "Prof" in dicInfo.keys() and part in tableaux.keys():
+        if "Prof" in dicInfo.keys() and part in tableaux.keys() and tableaux[part] != None:
             f, lcp , pre = dicInfo["Prof"][0] 
             l, c, p = lcp # ligne, colonne, période
             if grille[1] == 'C': # fichier "Collectif"
                 f = f+str(eleve.id+1)
-            nf = tableaux[part].getSheetNum(f)
-            profs = [pr.GetNomPrenom() for pr in doc.equipe]
-            for i in range(5):
-                try:
-                    if i < len(profs):
-                        tableaux[part].setCell(nf, l, c, profs[i])
-                    else:
-                        tableaux[part].setCell(nf, l, c, '')
-                except:
-                    pass
-                l += p
+            if f in tableaux[part].getSheets():
+                nf = tableaux[part].getSheetNum(f)
+                profs = [pr.GetNomPrenom() for pr in doc.equipe]
+                for i in range(5):
+                    try:
+                        if i < len(profs):
+                            tableaux[part].setCell(nf, l, c, profs[i])
+                        else:
+                            tableaux[part].setCell(nf, l, c, '')
+                    except:
+                        log.append(u"Impossible d'écrire dans la cellule "\
+                                   + str(nf) + " " + str(l) + " " + str(c))
+                    l += p
+            else:
+                log.append(u"Feuille " + f + u" non trouvée")
     
+    return list(set(log))
     
     
     
@@ -341,28 +296,28 @@ def modifierGrille(doc, tableaux, eleve):
 ###############################################################################################################################
 import shutil
 def copierClasseurs(doc, nomFichiers):
-    typ = doc.GetTypeEnseignement()
-    ref = doc.GetReferentiel()
+#    typ = doc.GetTypeEnseignement()
+#    ref = doc.GetReferentiel()
     prj = doc.GetProjetRef()
     fichiers = prj.grilles
     
-    fichierPB = []
+#    fichierPB = []
     
     for k, f in fichiers.items():
         shutil.copyfile(os.path.join(TABLE_PATH, toFileEncoding(f[0])), toFileEncoding(nomFichiers[k]))
 
-    err = 0
-    if err == 0:
-        return
-    elif err&1 != 0:
-        messageErreur(None, u"Ouverture d'Excel impossible !",
-                      u"L'application Excel ne semble pas installée !")
-    elif err&2 != 0:
-        messageErreur(None, u"Fichier non trouvé !",
-                              u"Le fichier original de la grille,\n    " + fichierPB[0] + u"\n" \
-                              u"n'a pas été trouvé ! \n")
-    else:
-        print "Erreur", err
+#    err = 0
+#    if err == 0:
+#        return
+#    elif err&1 != 0:
+#        messageErreur(None, u"Ouverture d'Excel impossible !",
+#                      u"L'application Excel ne semble pas installée !")
+#    elif err&2 != 0:
+#        messageErreur(None, u"Fichier non trouvé !",
+#                              u"Le fichier original de la grille,\n    " + fichierPB[0] + u"\n" \
+#                              u"n'a pas été trouvé ! \n")
+#    else:
+#        print "Erreur", err
 
 
 

@@ -3254,8 +3254,9 @@ class Projet(BaseDoc, Objet_sequence):
             
             
                                             
-            return messageYesNo(self.GetApp(), m, 
-                                      u"Fichier existant", GUI.ICON_WARNING)
+            return messageYesNo(self.GetApp(),
+                                      u"Fichier existant", 
+                                      m, GUI.ICON_WARNING)
             
         return True
     
@@ -3278,6 +3279,29 @@ class Projet(BaseDoc, Objet_sequence):
         return
 
 
+    ######################################################################################  
+    def VerifierVersionGrilles(self):
+        """ Vérification que les grilles d'évaluation enregistrées dans le fichier du projet
+            sont toujours valides et à jour.
+            (Exécuté à l'ouverture d'un projet)
+        """
+        pb = []
+        prj = self.GetProjetRef()
+        for k, g in prj.parties.items():
+            if not os.path.isfile(grilles.getFullNameGrille(prj.grilles[k][0])):
+                prjdef = REFERENTIELS[self.GetTypeEnseignement()].getProjetDefaut()
+                if os.path.isfile(grilles.getFullNameGrille(prjdef.grilles[k][0])):
+                    prj.grilles[k] = prjdef.grilles[k]
+                    prj.cellulesInfo[k] = prjdef.cellulesInfo[k]
+                else:
+                    pb.append(k)
+        
+        if len(pb) > 0:
+            messageErreur(self.GetApp(), u"Fichier non trouvé !",
+                                  u"Le(s) fichier(s) grille :\n    " + ";".join(pb) + u"\n" \
+                                  u"n'a(ont) pas été trouvé(s) ! \n")
+    
+    
     #############################################################################
     def MiseAJourTachesEleves(self):
         """ Mise à jour des phases de revue 
@@ -6392,7 +6416,7 @@ class Eleve(Personne, Objet_sequence):
         if nomFichiers == None:
             nomFichiers = self.GetNomGrilles(path)
             if not self.projet.TesterExistanceGrilles({0:nomFichiers}):
-                return
+                return []
             
 #        print "  Fichiers :", nomFichiers
         
@@ -6406,8 +6430,16 @@ class Eleve(Personne, Objet_sequence):
             if os.path.isfile(f):
                 tableaux[k] = grilles.getTableau(self.projet.GetApp(), f)
             else:
-                tableaux[k] = grilles.getTableau(self.projet.GetApp(),
-                                                 prj.grilles[k][0])
+                if os.path.isfile(grilles.getFullNameGrille(prj.grilles[k][0])):
+                    tableaux[k] = grilles.getTableau(self.projet.GetApp(),
+                                                     prj.grilles[k][0])
+                else: # fichier original de grille non trouvé ==> nouvelle tentative avec les noms du référentiel par défaut
+                    prjdef = REFERENTIELS[self.projet.GetTypeEnseignement()].getProjetDefaut()
+                    tableaux[k] = None
+                    messageErreur(self.projet.GetApp(), u"Fichier non trouvé !",
+                                  u"Le fichier original de la grille,\n    " + prjdef.grilles[k][0] + u"\n" \
+                                  u"n'a pas été trouvé ! \n")
+                        
             
             if tableaux[k] != None: # and tableaux[k].filename !=f:
 #                print "      créé :", f
@@ -6420,16 +6452,17 @@ class Eleve(Personne, Objet_sequence):
                                   u" - que le dossier choisi n'est pas protégé en écriture"%f)
 
         if tableaux == None:
-            return
+            return []
         
         #
         # Remplissage des grilles
         #
+        log = []
         if "beta" in version.__version__:
-            grilles.modifierGrille(self.projet, tableaux, self)
+            log = grilles.modifierGrille(self.projet, tableaux, self)
         else:
             try:
-                grilles.modifierGrille(self.projet, tableaux, self)
+                log = grilles.modifierGrille(self.projet, tableaux, self)
             except:
                 messageErreur(self.projet.GetApp(), u"Erreur !",
                               u"Impossible de modifier les grilles !") 
@@ -6458,17 +6491,24 @@ class Eleve(Personne, Objet_sequence):
         # Message de fin
         #
         if messageFin:
+            t = u"Génération "
             if len(tableaux)>1:
-                t = u"Génération des grilles réussie !"
+                t += u"des grilles"
             else:
-                t = u"Génération de la grille réussie !"
+                t += u"de la grille"
             t += u"\n\n"
             t += u"\n".join(nomFichiers.values())
-            
-            messageInfo(self.projet.GetApp(), t, u"Génération réussie")
+            t += u"terminée avec "
+            if len(log) == 0:
+                t += u"succès !"
+            else:
+                t += u"des erreurs :\n"
+                t += u"\n".join(log)
+            messageInfo(self.projet.GetApp(), t, u"Génération terminée")
             
         
         self.panelPropriete.MiseAJour()
+        return log
         
         
     ######################################################################################  

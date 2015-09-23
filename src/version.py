@@ -127,13 +127,14 @@ def GetNewVersion(win):
     
     print "  actuelle :", __version__
     print "  nouvelle :",latest
+    
     # Comparaison
-    new = True
+    new = False
     for i, l in enumerate(latest.split('.')):
         nl = int(l.rstrip("-beta"))
         na = int(a[i].rstrip("-beta"))
-        if nl < na:
-            new = False
+        if nl > na:
+            new = True
             break
     if new:
         print latest

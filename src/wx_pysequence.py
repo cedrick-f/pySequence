@@ -2209,6 +2209,10 @@ class FenetreProjet(FenetreDocument):
         
         fichier.close()
     
+        #
+        # Vérification de la version des grilles
+        #
+        self.projet.VerifierVersionGrilles()
         
         tps2 = time.clock() 
         print "Ouverture :", tps2 - tps1
@@ -2233,6 +2237,8 @@ class FenetreProjet(FenetreDocument):
         """ Génération de toutes les grilles d'évaluation
              - demande d'un dossier -
         """
+        log = []
+        
         dlg = wx.DirDialog(self, message = u"Emplacement des grilles", 
                             style=wx.DD_DEFAULT_STYLE|wx.CHANGE_DIR
                             )
@@ -2267,21 +2273,32 @@ class FenetreProjet(FenetreDocument):
                 dlgb.Destroy()
                 return
             
+            
             for e in self.projet.eleves:
-                e.GenererGrille(nomFichiers = nomFichiers[e.id], messageFin = False)
+                log.extend(e.GenererGrille(nomFichiers = nomFichiers[e.id], messageFin = False))
                 dlgb.Update(count, u"Traitement de la grille de \n\n"+e.GetNomPrenom())
                 dlgb.Refresh()
                 count += 1
                 dlgb.Refresh()
            
+            t = u"Génération des grilles terminée "
+            if len(log) == 0:
+                t += u"avec succès !\n\n"
+            else:
+                t += u"avec des erreurs :\n\n"
+                t += u"\n".join(log)
             
-            dlgb.Update(count, u"Toutes les grilles ont été créées avec succés dans le dossier :\n\n"+path)
+            t += "\n\nDossier des grilles :\n" + path
+            dlgb.Update(count, t)
             dlgb.Destroy() 
                 
                 
         else:
             dlg.Destroy()
-            
+        
+        return list(set(log))
+    
+    
             
     #############################################################################
     def genererGrillesPdf(self, event = None):
@@ -2302,7 +2319,7 @@ class FenetreProjet(FenetreDocument):
         if dlg.ShowModal() == wx.ID_OK:
             nomFichier = dlg.GetPath()
             dlg.Destroy()
-            dlgb = myProgressDialog  (u"Génération des grilles",
+            dlgb = myProgressDialog(u"Génération des grilles",
                                         u"",
                                         maximum = len(self.projet.eleves)+1,
                                         parent=self,
@@ -2341,7 +2358,10 @@ class FenetreProjet(FenetreDocument):
                 dlgb.Destroy()
                 return
             
-            dlgb.top()
+            try:
+                dlgb.top()
+            except:
+                print "Top erreur"
             
 #            dicInfo = self.projet.GetProjetRef().cellulesInfo
 #            classNON = dicInfo["NON"][0][0]
@@ -9671,7 +9691,7 @@ import win32gui
 import win32con
 class myProgressDialog(wx.ProgressDialog):
     def __init__(self, titre, message, maximum, parent, style = 0):
-        wx.ProgressDialog.__init__(self, u"Ouverture d'un projet",
+        wx.ProgressDialog.__init__(self, titre,
                                    message,
                                    maximum = maximum,
                                    parent = parent,
