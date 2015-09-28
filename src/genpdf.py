@@ -548,7 +548,13 @@ class PdfPanel(wx.Panel):
         wx.BeginBusyCursor()
         Ok = genererDossierValidation(fichertemp, projet, fenDoc)
         if Ok:
-            self.pdf.LoadFile(fichertemp)
+            try:
+                self.pdf.LoadFile(fichertemp)
+            except:
+                print "ERREUR PDF"
+                wx.EndBusyCursor()
+                return
+            
         if True:#get_min_adobe_version() != None:
             try:
                 shutil.rmtree(self.dosstemp)

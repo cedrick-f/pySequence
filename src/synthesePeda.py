@@ -50,7 +50,6 @@ import os, glob
 
 from widgets import messageErreur, getHoraireTxt
 
-from Sequence import Classe, Sequence
 import wx_pysequence
 
 # Pour enregistrer en xml
@@ -1723,8 +1722,8 @@ class FenetreBilan(wx.Frame):
     def OuvrirFichierSeq(self, nomFichier):
         fichier = open(nomFichier,'r')
 
-        classe = Classe(self.Parent)
-        sequence = Sequence(self, classe)
+        classe = wx_pysequence.Classe(self.Parent)
+        sequence = wx_pysequence.Sequence(self, classe)
         classe.SetDocument(sequence)
 
         try:

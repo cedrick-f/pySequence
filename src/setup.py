@@ -31,6 +31,7 @@ includefiles = [('D:/Developpement/Microsoft.VC90.CRT', "Microsoft.VC90.CRT"),
                      'LICENSE.txt', 
                      'fichier_prj.ico', 'fichier_seq.ico',
                      'etablissements.xml',
+                     'splash.png',
                      ('../tables', "../tables"),
                      ('../BO', "../BO"),
                      ('../referentiels', "../referentiels")]
@@ -102,7 +103,8 @@ if not "beta" in __version__:
 
 
 cible = Executable(
-    script = "sequence.py",
+    script = "wx_pysequence.py",
+    targetName="Sequence.exe",
     base = base,
     compress = True,
     icon = os.path.join("", 'logo.ico'),

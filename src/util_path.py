@@ -5,7 +5,7 @@
 #############################################################################
 #############################################################################
 ##                                                                         ##
-##                                  util_path                                ##
+##                                  util_path                              ##
 ##                                                                         ##
 #############################################################################
 #############################################################################
@@ -56,28 +56,10 @@ else:
 if sys.platform == 'win32':
     #On récupèreﾠ le dossier "Application data" 
     #On lit la clef de registre indiquant le type d'installation
-#    import win32api, win32con
     import _winreg
 
     try:
         # Vérifie si pySequence est installé
-#        regkey = win32api.RegOpenKeyEx(win32con.HKEY_LOCAL_MACHINE, 'SOFTWARE\\pySequence', 0, win32con.KEY_READ)
-#        (value, keytype) = win32api.RegQueryValueEx(regkey, 'DataFolder')
-#        APP_DATA_PATH = value
-#        
-#        # pyXorga installé : on récupère le dossier d'installation
-#        try:
-#            regkey = win32api.RegOpenKeyEx(win32con.HKEY_LOCAL_MACHINE, 'SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\pySequence 1.0_is1', 0, win32con.KEY_READ)
-#            (value, keytype) = win32api.RegQueryValueEx(regkey, 'Inno Setup: App Path')
-#            INSTALL_PATH = value
-#        except:
-#            try:
-#                regkey = win32api.RegOpenKeyEx(win32con.HKEY_LOCAL_MACHINE, 'SOFTWARE\\pySequence', 0, win32con.KEY_READ)
-#                (value, keytype) = win32api.RegQueryValueEx(regkey, 'UninstallPath')
-#                INSTALL_PATH = value
-#            except:
-#                print u"install_path non trouvé"
-
         regkey = _winreg.OpenKey(_winreg.HKEY_LOCAL_MACHINE, 'SOFTWARE\\pySequence')
         (value, keytype) = _winreg.QueryValueEx(regkey, 'DataFolder')
         APP_DATA_PATH = value
@@ -94,23 +76,6 @@ if sys.platform == 'win32':
                 INSTALL_PATH = value
             except:
                 print u"install_path non trouvé"
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
                 
         INSTALL_PATH = os.path.join(os.path.split(INSTALL_PATH)[0], 'bin')
         print u"pySequence installé dans", INSTALL_PATH
