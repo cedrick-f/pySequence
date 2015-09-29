@@ -192,7 +192,9 @@ class Options:
                     d = {}
                     for n, v in lstopt:
                         if "_" in n:
-                            num = ast.literal_eval(n.rsplit("_")[-1])
+#                            print n.rsplit("_")[-1]
+                            num = int(n.rsplit("_")[-1])
+#                            num = ast.literal_eval(n.rsplit("_")[-1])
                             d[num] = lec(n)
                             liste = True
                         elif "." in n:

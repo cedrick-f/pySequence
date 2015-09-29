@@ -2073,7 +2073,7 @@ class FenetreSequence(FenetreDocument):
 class FenetreProjet(FenetreDocument):
     def __init__(self, parent):
         self.typ = 'prj'
-        print "FenetreProjet"
+        print "__init__ FenetreProjet"
         FenetreDocument.__init__(self, parent)
         
         self.Freeze()
@@ -2183,6 +2183,9 @@ class FenetreProjet(FenetreDocument):
             if event.GetDraw():
                 wx.CallAfter(self.fiche.Redessiner)
 
+            self.MarquerFichierCourantModifie()
+        
+        elif event.GetDocument() == self.classe:
             self.MarquerFichierCourantModifie()
             
         self.parent.miseAJourUndo()
@@ -2435,6 +2438,7 @@ class FenetreProjet(FenetreDocument):
         wx.CallAfter(self.fiche.Show)
         wx.CallAfter(self.fiche.Redessiner)
         
+        # Mise en liste undo/redo
         self.classe.undoStack.do(u"Ouverture de la Classe")
         self.projet.undoStack.do(u"Ouverture du Projet")
         self.parent.miseAJourUndo()
@@ -3971,7 +3975,7 @@ class PanelPropriete_Classe(PanelPropriete):
 
 
         #
-        # la page "Systémes"
+        # la page "Systèmes"
         #
         pageSys = PanelPropriete(nb)
         pageSys.SetBackgroundColour(bg_color)
@@ -4447,7 +4451,7 @@ class PanelPropriete_Classe(PanelPropriete):
         
     ######################################################################################  
     def MiseAJour(self):
-#        print "MiseAJour panelPropriete classe"
+        print "MiseAJour panelPropriete classe"
 #        self.MiseAJourType()
         
         self.cb_type.SetStringSelection(self.classe.referentiel.Enseignement[0])
@@ -4504,6 +4508,8 @@ class PanelPropriete_Classe(PanelPropriete):
     def Verrouiller(self, etat):
         self.cb_type.Show(etat)
         self.st_type.Show(not etat)
+        self.tb.EnableTool(30, etat)
+        self.tb.EnableTool(31, etat)
         self.pasVerrouille = etat
 
         
@@ -6850,7 +6856,13 @@ class PanelPropriete_Tache(PanelPropriete):
             self.textctrl.SetValue(self.tache.intitule)
         
         if hasattr(self, 'cbPhas') and self.tache.phase != '':
-            self.cbPhas.SetStringSelection(self.tache.GetProjetRef().phases[self.tache.phase][1])
+#            print self.tache.phase
+#            print self.tache.GetProjetRef().phases[self.tache.phase][1]
+            try:
+                self.cbPhas.SetStringSelection(self.tache.GetProjetRef().phases[self.tache.phase][1])
+            except:
+                print "Erreur : conflit de type d'enseignement !"
+                pass
             
         if sendEvt:
             self.sendEvent()
@@ -11122,7 +11134,8 @@ class Classe():
         if panelParent:
             self.panelPropriete = PanelPropriete_Classe(panelParent, self, pourProjet, 
                                                         ouverture = ouverture, typedoc = typedoc)
-            self.panelPropriete.MiseAJour()
+            if ouverture:
+                self.panelPropriete.MiseAJour()
             
         
 
@@ -11154,6 +11167,7 @@ class Classe():
         
     ######################################################################################  
     def setDefaut(self):
+        print "setDefaut Classe"
         self.typeEnseignement = 'SSI'
             
         self.effectifs['C'] = constantes.Effectifs["C"]
@@ -11171,10 +11185,12 @@ class Classe():
     ######################################################################################  
     def Initialise(self, pourProjet, defaut = False):
         
+        # Força "défaut" ou pas de fichier Classe dans les options
         if defaut or self.app.options.optClasse["FichierClasse"] == r"":
             self.setDefaut()
             
         else:
+            # Impossible de charger le fichier Classe
             if not self.ouvrir(self.app.options.optClasse["FichierClasse"]):
                 self.setDefaut()
             
@@ -11440,8 +11456,8 @@ class Classe():
                 self.systemes.append(systeme)    
             self.systemes.sort(key=attrgetter('nom'))
             
-#        if hasattr(self, 'panelPropriete'):
-#            self.panelPropriete.MiseAJour()
+        if hasattr(self, 'panelPropriete'):
+            self.panelPropriete.MiseAJour()
             
         return err
         
@@ -13096,6 +13112,8 @@ class Projet(BaseDoc, Objet_sequence):
         
     ######################################################################################  
     def InsererRevue(self, event = None, item = None):
+        if item == None:
+            return
         tache_avant = self.arbre.GetItemPyData(item)
         tache = Tache(self, self.panelParent, phaseTache = "Rev")
         tache.ordre = tache_avant.ordre+1
