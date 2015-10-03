@@ -579,9 +579,17 @@ def trier(l):
 
 #ouvrirConfig()
 #filterUnits="userSpaceOnUse"
-FILTRE1 = """<filter id="f1"  x="-10%" y="-10%" width="200%" height="200%">
-      <feGaussianBlur in="SourceAlpha" stdDeviation="0.003" result="blur"/>
-      <feOffset in="blur" dx="0.003" dy="0.003" result="offsetBlur"/>
+
+FILTRE5 = """<filter id = "f1" width = "200%" height = "200%">
+    <feOffset result = "offOut" in = "SourceGraphic" dx = "%1" dy = "%1"/>
+    <feColorMatrix result = "matrixOut" in = "offOut" type = "matrix" values = "0.2 0 0 0 0 0 0.2 0 0 0 0 0 0.2 0 0 0 0 0 1 0"/>
+    <feGaussianBlur result = "blurOut" in = "matrixOut" stdDeviation = "%2"/>
+    <feBlend in = "SourceGraphic" in2 = "blurOut" mode = "normal"/>
+</filter>""".replace("%1", str(.3)).replace("%2", str(0.03))
+
+FILTRE1 = """<filter id="f1"  x="-10%" y="-10%" width="200%" height="200%" filterUnits="">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="%1" result="blur"/>
+      <feOffset in="blur" dx="%1" dy="%1" result="offsetBlur"/>
       <feSpecularLighting in="blur" surfaceScale="5" specularConstant=".75" 
                           specularExponent="20" lighting-color="#bbbbbb"  
                           result="specOut">
@@ -594,7 +602,7 @@ FILTRE1 = """<filter id="f1"  x="-10%" y="-10%" width="200%" height="200%">
         <feMergeNode in="offsetBlur"/>
         <feMergeNode in="litPaint"/>
       </feMerge>
-    </filter>"""
+    </filter>""".replace("%1", str(0.002*100)).replace("%2", str(0.03))
     
 FILTRE2 = """<filter id="f1" x="0" y="0" width="200%" height="200%">
               <feOffset result="offOut" in="SourceAlpha" dx="0.006" dy="0.006" />

@@ -60,38 +60,38 @@ import wx
 #
 
 # Marges
-margeX = 0.02
-margeY = 0.03
+margeX = 0.02 * COEF
+margeY = 0.03 * COEF
 
 # Ecarts
-ecartX = 0.02
-ecartY = 0.02
+ecartX = 0.02 * COEF
+ecartY = 0.02 * COEF
 
 # CI
-tailleCI = (0.17, 0.085)
+tailleCI = (0.17 * COEF, 0.085 * COEF)
 #posCI = (posPre[0] + taillePre[0]+ecartX, 0.1)
 posCI = (margeX, margeY)
 IcoulCI = (0.9, 0.8, 0.8, 0.85)
 BcoulCI = (0.3, 0.2, 0.25, 1)
-fontCI = 0.014
+fontCI = 0.014 * COEF
 
 # Rectangle des prerequis
-taillePre = (0.29, 0.18 - tailleCI[1] - ecartY)
+taillePre = (0.29 * COEF, 0.18 * COEF - tailleCI[1] - ecartY)
 posPre = (margeX, posCI[1] + tailleCI[1] + ecartY)
 IcoulPre = (0.8, 0.8, 0.9, 0.85)
 BcoulPre = (0.2, 0.25, 0.3, 1)
-fontPre = 0.014
+fontPre = 0.014 * COEF
 
 # Position dans l'année
 posPos = [None, margeY - ecartY/2]
-taillePos = [None, 0.04]
+taillePos = [None, 0.04 * COEF]
 
 # Rectangle des objectifs
 posObj = (posPre[0] + taillePre[0] + ecartX/2, margeY + taillePos[1] + ecartY/2)
 tailleObj = [LargeurTotale - margeX - posObj[0], posPre[1] + taillePre[1] - posObj[1]]
 IcoulObj = (0.8, 0.9, 0.8, 0.85)
 BcoulObj = (0.25, 0.3, 0.2, 1)
-fontObj = 0.014
+fontObj = 0.014 * COEF
 
 # Cible
 posCib = [posCI[0] + tailleCI[0] + ecartX/4, margeY - ecartY/2]
@@ -99,7 +99,7 @@ tailleCib = [posObj[0] - posCI[0] - tailleCI[0] - ecartX/2, None]
 tailleCib[1] = tailleCib[0] 
 IcoulCib = (0.8, 0.8, 1, 0.85)
 BcoulCib = (0.1, 0.1, 0.25, 1)
-centreCib = (posCib[0] + tailleCib[0] / 2 + 0.0006, posCib[1] + tailleCib[0] / 2 - 0.004)
+centreCib = (posCib[0] + tailleCib[0] / 2 + 0.0006 * COEF, posCib[1] + tailleCib[0] / 2 - 0.004 * COEF)
 
 # Zone de commentaire
 fontIntComm = 0.01
@@ -108,45 +108,45 @@ tailleComm = [LargeurTotale-2*margeX, None]
 intComm = []
 
 # Zone d'organisation de la séquence (intérieur du grand cadre vert - bordure)
-bordureZOrganis = 0.01
-posZOrganis = (margeX+bordureZOrganis, 0.24)
+bordureZOrganis = 0.01 * COEF
+posZOrganis = (margeX+bordureZOrganis, 0.24 * COEF)
 tailleZOrganis = [LargeurTotale-2*(margeX+bordureZOrganis), None]
 
 
 # Rectangle de l'intitulé
-tailleIntitule = [0.4, 0.04]
+tailleIntitule = [0.4 * COEF, 0.04 * COEF]
 posIntitule = [(LargeurTotale-tailleIntitule[0])/2, posZOrganis[1]-tailleIntitule[1]]
 IcoulIntitule = (0.98, 0.99, 0.98, 0.8)
 BcoulIntitule = (0.2, 0.8, 0.2, 1)
-FontIntitule = 0.02
+FontIntitule = 0.02 * COEF
 
 # Zone de déroulement de la séquence
-posZDeroul = (margeX+ecartX, posZOrganis[1]+0.06)
+posZDeroul = (margeX+ecartX, posZOrganis[1]+0.06 * COEF)
 tailleZDeroul = [None, None]
 
 # Zone du tableau des Systèmes
-posZSysteme = [None, posZOrganis[1]+0.01]
+posZSysteme = [None, posZOrganis[1]+0.01 * COEF]
 tailleZSysteme = [None, None]
-wColSysteme = 0.025
+wColSysteme = 0.025 * COEF
 xSystemes = {}
 
 # Zone du tableau des démarches
 posZDemarche = [None, posZSysteme[1]]
-tailleZDemarche = [0.07, None]
+tailleZDemarche = [0.07 * COEF, None]
 xDemarche = {"I" : None,
              "R" : None,
              "P" : None}
 
 # Zone des intitulés des séances
-fontIntSeances = 0.01
-posZIntSeances = [0.06, None]
-tailleZIntSeances = [LargeurTotale-0.12, None]
-hIntSeance = 0.02
+fontIntSeances = 0.01 * COEF
+posZIntSeances = [0.06 * COEF, None]
+tailleZIntSeances = [LargeurTotale-0.12 * COEF, None]
+hIntSeance = 0.02 * COEF
 intituleSeances = []
 
 # Zone des séances
-largeFlecheDuree = 0.02
-posZSeances = (margeX+ecartX+largeFlecheDuree, posZOrganis[1]+0.08)
+largeFlecheDuree = 0.02 * COEF
+posZSeances = (margeX+ecartX+largeFlecheDuree, posZOrganis[1]+0.08 * COEF)
 tailleZSeances = [None, None]
 wEff =  {"C" : None,
          "G" : None,
@@ -195,8 +195,8 @@ BStylSeance = {"ED" : [],
                "R"  : [], 
                "S"  : [],
                ""   : [],
-               "HC": [0.01, 0.005],
-               "ST" : [0.01, 0.005]}
+               "HC": [0.01 * COEF, 0.005 * COEF],
+               "ST" : [0.01 * COEF, 0.005 * COEF]}
 
 
 # paramètres pour la fonction qui calcule la hauteur des tâches 
@@ -219,7 +219,7 @@ def DefinirZones(seq, ctx):
     else:
         tailleComm[1], intComm = calc_h_texte(ctx, u"Commentaires : " + seq.commentaires, tailleComm[0], fontIntComm)
 
-    posComm[1] = 1-tailleComm[1]-margeY
+    posComm[1] = 1 * COEF - tailleComm[1] - margeY
     
     # Zone d'organisation de la séquence (grand cadre)
     tailleZOrganis[1] = posComm[1]-posZOrganis[1]-bordureZOrganis
@@ -256,7 +256,7 @@ def DefinirZones(seq, ctx):
     
     # Zone du tableau des démarches
     if len(seq.classe.GetReferentiel().listeDemarches) > 0:
-        tailleZDemarche[0] = 0.07
+        tailleZDemarche[0] = 0.07 * COEF
         posZDemarche[0] = posZSysteme[0] - tailleZDemarche[0] - ecartX
         tailleZDemarche[1] = tailleZSysteme[1]
         xDemarche["I"] = posZDemarche[0] + tailleZDemarche[0]/6
@@ -274,7 +274,7 @@ def DefinirZones(seq, ctx):
     
     # Zone des séances
     tailleZSeances[0] = tailleZDeroul[0] - ecartX# - largeFlecheDuree - ecartX - bordureZOrganis#0.05 # écart pour les durées
-    tailleZSeances[1] = tailleZSysteme[1] - posZSeances[1] + posZDeroul[1] - 0.05
+    tailleZSeances[1] = tailleZSysteme[1] - posZSeances[1] + posZDeroul[1] - 0.05 * COEF
     wEff = {"C" : tailleZSeances[0],
              "G" : tailleZSeances[0]*6/7,
              "D" : tailleZSeances[0]*3/7,
@@ -286,8 +286,8 @@ def DefinirZones(seq, ctx):
              }
     
 #    print "durées :"
-    ecartSeanceY = 0.006    # écart mini entre deux séances
-    hmin = 0.016             # hauteur minimum d'une séance
+    ecartSeanceY = 0.006 * COEF    # écart mini entre deux séances
+    hmin = 0.016   * COEF           # hauteur minimum d'une séance
     tmin = seq.GetDureeGraphMini() # durée minimale de séance
     n = len(seq.seances)
     d = seq.GetDureeGraph()- n*tmin
@@ -357,11 +357,11 @@ def Draw(ctx, seq, mouchard = False):
     #
     # Flèche
     #
-    rayon = 0.30
+    rayon = 0.30 * COEF
     alpha0 = 55
     alpha1 = 155
     y = posObj[1]+tailleObj[1] - rayon*sin(alpha0*pi/180)
-    fleche_ronde(ctx, 0.72414/2, y, rayon, alpha0, alpha1, 0.035, 0.06, (0.8, 0.9, 0.8, 1))
+    fleche_ronde(ctx, LargeurTotale/2, y, rayon, alpha0, alpha1, 0.035 * COEF, 0.06 * COEF, (0.8, 0.9, 0.8, 1))
     
     
     #
@@ -394,8 +394,8 @@ def Draw(ctx, seq, mouchard = False):
     # Position dans l'année
     #
     posPos[0] = posPre[0] + taillePre[0] + ecartX + tailleTypeEns
-    taillePos[0] =  0.72414 - posPos[0] - margeX
-    ctx.set_line_width (0.0015)
+    taillePos[0] =  LargeurTotale - posPos[0] - margeX
+    ctx.set_line_width (0.0015 * COEF)
     r = (posPos[0], posPos[1], taillePos[0], taillePos[1])
     seq.rectPos = DrawPeriodes(ctx, r, seq.position, 
                                seq.classe.referentiel.periodes,
@@ -482,7 +482,7 @@ def Draw(ctx, seq, mouchard = False):
                     
             pos = (centreCib[0] + ray * sin(ang*pi/180) ,
                    centreCib[1] - ray * cos(ang*pi/180))
-            boule(ctx, pos[0], pos[1], 0.005, (0.95, 1, 0.9, 1), (0.1, 0.3, 0.05, 1))
+            boule(ctx, pos[0], pos[1], 0.005 * COEF, (0.95, 1, 0.9, 1), (0.1, 0.3, 0.05, 1))
 
 
 
@@ -494,8 +494,8 @@ def Draw(ctx, seq, mouchard = False):
     ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                        cairo.FONT_WEIGHT_BOLD)
     show_text_rect(ctx, getHoraireTxt(seq.GetDuree()), 
-                   (posZDeroul[0]-0.01, posZDemarche[1] + tailleZDemarche[1] , #- 0.015
-                   0.1, 0.015), ha = 'g', b = 0)
+                   (posZDeroul[0]-0.01 * COEF, posZDemarche[1] + tailleZDemarche[1] , #- 0.015
+                   0.1 * COEF, 0.015 * COEF), ha = 'g', b = 0)
 
 
 
@@ -526,10 +526,10 @@ def Draw(ctx, seq, mouchard = False):
     #
     for i, e in enumerate(["C", "G", "D", "E", "P"]):
         x = posZSeances[0]
-        h = (posZSeances[1]-posZDemarche[1]-0.01) / 5
+        h = (posZSeances[1]-posZDemarche[1]-0.01 * COEF) / 5
         y = posZDemarche[1] + i * h
         w = wEff[e]
-        ctx.set_line_width(0.001)
+        ctx.set_line_width(0.001 * COEF)
         ctx.set_source_rgb(0.8, 0.9, 0.8)
         ctx.rectangle(x, y, w, h)
         ctx.stroke()
@@ -548,7 +548,8 @@ def Draw(ctx, seq, mouchard = False):
     # Rectangle arrondi
     x0, y0 = posPre
     rect_width, rect_height  = taillePre
-    seq.prerequis.pt_caract = (curve_rect_titre(ctx, u"Prérequis",  (x0, y0, rect_width, rect_height), BcoulPre, IcoulPre, fontPre),
+    seq.prerequis.pt_caract = (curve_rect_titre(ctx, u"Prérequis",  
+                                                (x0, y0, rect_width, rect_height), BcoulPre, IcoulPre, fontPre),
                                'pre')
     
     
@@ -586,22 +587,25 @@ def Draw(ctx, seq, mouchard = False):
     for c in seq.prerequisSeance:
         lstTexteS.append(c.GetNomFichier())    
         
-    hl = rect_height+0.0001
+    hl = rect_height+0.0001 * COEF
     
     if len(lstTexte) + len(lstTexteS) > 0:
-        e = 0.008
+#        e = 0.008 * COEF
         hC = hl*len(lstTexte)/(len(lstTexte) + len(lstTexteS))
         hS = hl*len(lstTexteS)/(len(lstTexte) + len(lstTexteS))
         r = liste_code_texte(ctx, lstCodes, lstTexte, 
-                             x0, y0, rect_width, hC, e,
-                             lstCoul = lstCoul)
+                             x0, y0, rect_width, hC, 
+                             0.05*rect_width, 0.1,
+                             lstCoul = lstCoul, va = 'c')
         ctx.set_source_rgba (0.0, 0.0, 0.5, 1.0)
         seq.prerequis.pts_caract = getPts(r)
-        lstRect = liste_code_texte(ctx, ["Seq."]*len(lstTexteS), lstTexteS, x0, y0+hC, rect_width, hS, 0.01)
+        lstRect = liste_code_texte(ctx, ["Seq."]*len(lstTexteS), lstTexteS, 
+                                   x0, y0+hC, rect_width, hS, 
+                                   0.05*rect_width, 0.1, va = 'c')
         for i, c in enumerate(seq.prerequisSeance): 
             c.rect = [lstRect[i]]
     else:
-        show_text_rect(ctx, u"Aucun", (x0, y0, rect_width, hl), fontsizeMinMax = (-1, 0.015))
+        show_text_rect(ctx, u"Aucun", (x0, y0, rect_width, hl), fontsizeMinMax = (-1, 0.015 * COEF))
     
     
     #
@@ -652,7 +656,7 @@ def Draw(ctx, seq, mouchard = False):
                 lstCodes.append(seq.GetReferentiel().tr_com[0]+" "+cod)
             lstCoul.append((0.3,0.3,0.3))
             
-    h = rect_height+0.0001
+    h = rect_height+0.0001 * COEF
     hC = hS = h/2
     if len(lstTexteS) > 0 or len(lstTexteC) > 0:
         hC = h*len(lstTexteC)/(len(lstTexteC) + len(lstTexteS))
@@ -660,14 +664,18 @@ def Draw(ctx, seq, mouchard = False):
         
         
         ctx.set_source_rgba (COUL_COMPETENCES[0], COUL_COMPETENCES[1], COUL_COMPETENCES[2], COUL_COMPETENCES[3])
-        r = liste_code_texte(ctx, seq.obj["C"].competences, lstTexteC, x0, y0, rect_width, hC, 0.008) 
+        r = liste_code_texte(ctx, seq.obj["C"].competences, lstTexteC, 
+                             x0, y0, rect_width, hC, 
+                             0.05*rect_width, 0.1, va = 'c') 
         seq.obj["C"].pts_caract = getPts(r)
         
         ctx.set_source_rgba (0.0, 0.0, 0.0, 1.0)
 #        r = liste_code_texte(ctx, [s[1:] for s in seq.obj["S"].savoirs], 
 #                             lstTexteS, x0, y0+hC, rect_width, hS, 0.008)
         r = liste_code_texte(ctx, lstCodes, lstTexteS, 
-                             x0, y0+hC, rect_width, hS, 0.008, lstCoul = lstCoul)
+                             x0, y0+hC, rect_width, hS, 
+                             0.05*rect_width, 0.1, 
+                             lstCoul = lstCoul, va = 'c')
         seq.obj["S"].pts_caract = getPts(r)
     
     seq.obj["C"].rect = [(x0, y0, rect_width, hC)]
@@ -700,7 +708,7 @@ def Draw(ctx, seq, mouchard = False):
         ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                               cairo.FONT_WEIGHT_NORMAL)
         ctx.set_source_rgb(0, 0, 0)
-        ctx.set_line_width(0.001)
+        ctx.set_line_width(0.001 * COEF)
         tableauV(ctx, nomsSystemes, posZSysteme[0], posZSysteme[1], 
                 tailleZSysteme[0], posZSeances[1] - posZSysteme[1], 
                 0, nlignes = 0, va = 'c', ha = 'g', orient = 'v', coul = (0.8,0.8,0.8))
@@ -733,7 +741,7 @@ def Draw(ctx, seq, mouchard = False):
         ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                               cairo.FONT_WEIGHT_NORMAL)
         ctx.set_source_rgb(0, 0, 0)
-        ctx.set_line_width(0.001)
+        ctx.set_line_width(0.001 * COEF)
         l=[]
         for d in seq.GetReferentiel().listeDemarches : 
             l.append(seq.GetReferentiel().demarches[d][0])
@@ -759,35 +767,29 @@ def Draw(ctx, seq, mouchard = False):
         ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                               cairo.FONT_WEIGHT_NORMAL)
         ctx.set_source_rgb(0, 0, 0)
-        ctx.set_line_width(0.001)
+        ctx.set_line_width(0.001 * COEF)
         tableauH_var(ctx, intituleSeances[0], posZIntSeances[0], posZIntSeances[1], 
-                0.05, tailleZIntSeances[0]-0.05, intituleSeances[2], fontIntSeances, 
+                0.05, tailleZIntSeances[0]-0.05 * COEF, intituleSeances[2], fontIntSeances, 
                 nCol = 1, va = 'c', ha = 'g', orient = 'h', coul = ICoulSeance, 
                 contenu = [intituleSeances[1]])
         
     #
     # Informations
     #
-    ctx.select_font_face ("Sans", cairo.FONT_SLANT_ITALIC,
-                     cairo.FONT_WEIGHT_BOLD)
-    ctx.set_font_size (0.006)
-    ctx.set_source_rgb(0.6, 0.6, 0.6)
-    ctx.move_to (margeX, 1 - margeY + 0.02)
-    ctx.show_text ("Fiche créée avec le logiciel pySequence (http://code.google.com/p/pysequence)")
-
+    info(ctx, margeX, margeY)
     
     
     
 
 ######################################################################################  
 def DrawLigneEff(ctx, x, y):
-    dashes = [ 0.010,   # ink
-               0.002,   # skip
-               0.005,   # ink
-               0.002,   # skip
+    dashes = [ 0.010 * COEF,   # ink
+               0.002 * COEF,   # skip
+               0.005 * COEF,   # ink
+               0.002 * COEF,   # skip
                ]
     ctx.set_source_rgba (0.6, 0.8, 0.6)
-    ctx.set_line_width (0.001)
+    ctx.set_line_width (0.001 * COEF)
     ctx.set_dash(dashes, 0)
     ctx.move_to(x, posZDemarche[1] + tailleZDemarche[1])
     ctx.line_to(x, y)
@@ -950,8 +952,9 @@ def Draw_CI(ctx, CI):
         lstIntit.append(CI.GetIntit(i))
         
     if CI.numCI != []:
-        e = 0.008
-        r = liste_code_texte(ctx, lstCodes, lstIntit, x0, y0+0.0001, rect_width, rect_height, e, b = 0.2)
+        r = liste_code_texte(ctx, lstCodes, lstIntit, 
+                             x0, y0+0.0001 * COEF, rect_width, rect_height, 
+                             0.05*rect_width, 0.1, va = 'c')
         CI.pts_caract = getPts(r)
         
 
@@ -990,7 +993,7 @@ class Cadre():
         #
         # Le cadre
         #
-        epaisseurTrait = 0.002
+        epaisseurTrait = 0.002 * COEF
         self.ctx.set_line_width(epaisseurTrait)
         self.ctx.set_dash(BStylSeance[self.seance.typeSeance], 0)
         rectangle_plein(self.ctx, x, y, self.w, self.h, 
@@ -1006,7 +1009,7 @@ class Cadre():
                                   cairo.FONT_WEIGHT_BOLD)
             self.ctx.set_source_rgba (0,0,0, alpha)
 #            hc = max(hHoraire/4, 0.01)
-            hc = max(ecartY/4, 0.01)
+            hc = max(ecartY/4, 0.01 * COEF)
             f, wc, r = show_text_rect(self.ctx, self.seance.code, (x, y, wEff["P"], hc), ha = 'g', 
                                    wrap = False, fontsizeMinMax = (minFont, -1), b = 0.2)
             wc += ecartX/2
@@ -1021,13 +1024,13 @@ class Cadre():
 #            print (x, y + hc, self.w, self.h-hc)
 #            print (wc, y, self.w - (wc-x), self.h)
 #            print 
-            if self.h < 0.02: # h petit -> on écrit à coté du code !
+            if self.h < 0.02 * COEF: # h petit -> on écrit à coté du code !
                 rct = (wc, y, self.w - (wc-x), self.h)
             else:
                 rct = (x, y + hc, self.w, self.h-hc)
 
             show_text_rect(self.ctx, self.seance.intitule, rct, 
-                           ha = 'g', b = 0.2, fontsizeMinMax = (minFont, 0.015), 
+                           ha = 'g', b = 0.2, fontsizeMinMax = (minFont, 0.015 * COEF), 
                            fontsizePref = self.seance.taille.v[0])
         
         #
@@ -1038,7 +1041,7 @@ class Cadre():
 #            dy = hHoraire/32
             dy = b/4
             self.ctx.set_source_rgba (0, 0.0, 0.2, alpha)
-            self.ctx.set_line_width (0.002)
+            self.ctx.set_line_width (0.002 * COEF)
             self.ctx.move_to(x-dx, y+self.h/2 - dy)
             self.ctx.line_to(x+dx, y+self.h/2 - dy)
             self.ctx.move_to(x-dx, y+self.h/2 + dy)
@@ -1534,13 +1537,13 @@ def DrawCroisementSystemes(ctx, seance, x, y, ns):
             
 ######################################################################################  
 def DrawLigne(ctx, x, y):
-    dashes = [ 0.010,   # ink
-               0.002,   # skip
-               0.005,   # ink
-               0.002,   # skip
+    dashes = [ 0.010 * COEF,   # ink
+               0.002 * COEF,   # skip
+               0.005 * COEF,   # ink
+               0.002 * COEF,   # skip
                ]
     ctx.set_source_rgba (0, 0.0, 0.2, 0.6)
-    ctx.set_line_width (0.001)
+    ctx.set_line_width (0.001 * COEF)
     ctx.set_dash(dashes, 0)
     ctx.move_to(posZOrganis[0]+tailleZOrganis[0], y)
     ctx.line_to(x, y)
@@ -1556,7 +1559,7 @@ def DrawCroisementsDemarche(ctx, seance, y):
     #
     _x = xDemarche[seance.demarche]
 #        if self.typeSeance in ["AP", "ED", "P"]:
-    r = 0.008
+    r = 0.008 * COEF
     boule(ctx, _x, y, r)
     seance.rect.append((_x -r , y - r, 2*r, 2*r))
 

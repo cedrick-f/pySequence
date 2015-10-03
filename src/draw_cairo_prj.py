@@ -39,7 +39,7 @@ Created on 26 oct. 2011
 import cairo
 from draw_cairo import LargeurTotale, font_family, curve_rect_titre, show_text_rect_fix, show_text_rect, \
                         boule, getHoraireTxt, liste_code_texte, rectangle_plein, barreH, tableauV, minFont, maxFont, tableauH, \
-                        DrawPeriodes
+                        DrawPeriodes, COEF, info
 
 from math import log
 
@@ -63,37 +63,37 @@ import wx
 #
 
 # Marges
-margeX = 0.02
-margeY = 0.04
+margeX = 0.02 * COEF
+margeY = 0.04 * COEF
 
 # Ecarts
-ecartX = 0.02
-ecartY = 0.02
+ecartX = 0.02 * COEF
+ecartY = 0.02 * COEF
 
 # Support du projet
-tailleSup = (0.17, 0.085)
+tailleSup = (0.17 * COEF, 0.085 * COEF)
 posSup = (margeX, margeY)
 IcoulSup = (0.9, 0.8, 0.8, 0.85)
 BcoulSup = (0.3, 0.2, 0.25, 1)
-fontSup = 0.014
+fontSup = 0.014 * COEF
 
 # Equipe pédagogique
-tailleEqu = (0.29, 0.18 - tailleSup[1] - ecartY/2)
+tailleEqu = (0.29 * COEF, 0.18 * COEF - tailleSup[1] - ecartY/2)
 posEqu = (margeX, posSup[1] + tailleSup[1] + ecartY)
 IcoulEqu = (0.8, 0.8, 0.9, 0.85)
 BcoulEqu = (0.2, 0.25, 0.3, 1)
-fontEqu = 0.014
+fontEqu = 0.014 * COEF
 
 # Position dans l'année
 posPos = [None, margeY - ecartY/2]
-taillePos = [None, 0.04]
+taillePos = [None, 0.04 * COEF]
 
 # Problématique
 posPro = [posEqu[0] + tailleEqu[0] + ecartX/2, margeY + taillePos[1] + ecartY/2]
 taillePro = [LargeurTotale - margeX - posPro[0], posEqu[1] + tailleEqu[1] - posPro[1]]
 IcoulPro = (0.8, 0.9, 0.8, 0.85)
 BcoulPro = (0.25, 0.3, 0.2, 1)
-fontPro = 0.014
+fontPro = 0.014 * COEF
 
 # Image du support
 posImg = [posSup[0] + tailleSup[0] + ecartX/4, margeY - ecartY/2]
@@ -101,37 +101,37 @@ tailleImg = [posPro[0] - posSup[0] - tailleSup[0] - ecartX/2, None]
 tailleImg[1] = tailleImg[0] 
 IcoulImg = (0.8, 0.8, 1, 0.85)
 BcoulImg = (0.1, 0.1, 0.25, 1)
-centreImg = (posImg[0] + tailleImg[0] / 2 + 0.0006, posImg[1] + tailleImg[0] / 2 - 0.004)
+centreImg = (posImg[0] + tailleImg[0] / 2 + 0.0006 * COEF, posImg[1] + tailleImg[0] / 2 - 0.004 * COEF)
 
 # Zone d'organisation du projet (grand cadre)
-posZOrganis = (margeX, 0.24)
-bordureZOrganis = 0.01
-tailleZOrganis = (LargeurTotale-2*margeX, 1-ecartY-posZOrganis[1]-bordureZOrganis)
+posZOrganis = (margeX, 0.24 * COEF)
+bordureZOrganis = 0.01 * COEF
+tailleZOrganis = (LargeurTotale-2*margeX, 1 * COEF-ecartY-posZOrganis[1]-bordureZOrganis)
 
 # Zone de déroulement du projet
 posZDeroul = [margeX, None]
 tailleZDeroul = [None, None]
 IcoulZDeroul = (1, 1, 0.7, 0.85)
 BcoulZDeroul = (0.4, 0.4, 0.03, 1)
-fontZDeroul = 0.014
-wPhases = 0.04      # Taille du label "phases"
-wDuree = 0.012       # Taille de la fleche "duree"
+fontZDeroul = 0.014 * COEF
+wPhases = 0.04 * COEF      # Taille du label "phases"
+wDuree = 0.012 * COEF       # Taille de la fleche "duree"
 
 
 # Zones des tableaux des éléves
-posZElevesV = [None, 0.24]
+posZElevesV = [None, 0.24 * COEF]
 tailleZElevesV = [None, None]
 posZElevesH = [posZDeroul[0], posZElevesV[1]]
 tailleZElevesH = [None, None]
-wEleves = 0.015
-hEleves = 0.020
+wEleves = 0.015 * COEF
+hEleves = 0.020 * COEF
 xEleves = []
 yEleves = []
 
 # Zone du tableau des compétences
 posZComp = [None, None]
 tailleZComp = [None, None]
-wColCompBase = 0.018
+wColCompBase = 0.018 * COEF
 wColComp = wColCompBase
 xComp = {}
 ICoulComp = {'C' : (1, 0.6, 0.7, 0.2),      # couleur "Revue"
@@ -184,7 +184,7 @@ ICoulTache = {'Ana' : (0.6, 0.8, 0.8,1),
               'S'   : (0.6,0.5,1,0.8)}
 
 
-ecartYElevesTaches = 0.05
+ecartYElevesTaches = 0.05 * COEF
 
 
 
@@ -236,7 +236,7 @@ def DefinirZones(prj, ctx):
     yTaches = []
     posZTaches[1] = posZDeroul[1] + ecartY/2
     tailleZTaches[0] = posZDeroul[0] + tailleZDeroul[0] - posZTaches[0] - ecartX/2
-    tailleZTaches[1] = tailleZDeroul[1] - ecartY/2 - 0.04    # écart pour la durée totale
+    tailleZTaches[1] = tailleZDeroul[1] - ecartY/2 - 0.04 * COEF    # écart pour la durée totale
     
    
     calculCoefCalcH(prj, ctx, hTacheMini)
@@ -321,19 +321,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
                    fontsizeMinMax = (-1, -1), fontsizePref = -1, wrap = True, couper = False,
                    bordure = (0, 0, 0))
     
-    
-#    ctx.set_font_size(0.04)
-#    ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-#                                       cairo.FONT_WEIGHT_BOLD)
-#    xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(t)
-##    fascent, fdescent, fheight, fxadvance, fyadvance = ctx.font_extents()
-#    ctx.move_to (posPro[0] , posSup[1] - ybearing - 0.01)
-#    ctx.text_path (t)
-    
-#    ctx.fill_preserve ()
-#    ctx.set_source_rgb (0, 0, 0)
-#    ctx.set_line_width (0.0015)
-#    ctx.stroke ()
+
     
 
     #
@@ -343,7 +331,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
     posPos[0] = posEqu[0] + tailleEqu[0] + ecartX + tailleTypeEns
 #    taillePos[0] =  0.72414 - posPos[0] - margeX
     taillePos[0] = taillePro[0]/2
-    ctx.set_line_width (0.0015)
+    ctx.set_line_width (0.0015 * COEF)
     r = (posPos[0], posPos[1], taillePos[0], taillePos[1])
     prj.rectPos = DrawPeriodes(ctx, r, prj.position, prj.classe.referentiel.periodes,
 #                               [p.periode for p in prj.classe.referentiel.projets.values()],  
@@ -361,7 +349,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
         ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                           cairo.FONT_WEIGHT_NORMAL)
         show_text_rect(ctx, t, (posPos[0] , posPos[1]+taillePos[1], taillePos[0], posPro[1]-posPos[1]-taillePos[1]), 
-                       va = 'c', ha = 'g', b = 0.15, orient = 'h', 
+                       va = 'c', ha = 'g', b = 0.2, orient = 'h', 
                        fontsizeMinMax = (-1, -1), fontsizePref = -1, wrap = True, couper = False,
                        bordure = (0, 0, 0))
 
@@ -395,7 +383,8 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
         prj.support.rect.append(posImg + tailleImg)
         prj.support.pts_caract.append(posImg)
     
-#    print "     4 ", time.time() - tps
+
+
     #
     #  Equipe
     #
@@ -415,8 +404,9 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
    
     if len(lstTexte) > 0:
         r = liste_code_texte(ctx, lstCodes, lstTexte, 
-                             posEqu[0], posEqu[1], tailleEqu[0], tailleEqu[1]+0.0001, 0.008, 
-                             gras = g, lstCoul = c)
+                             posEqu[0], posEqu[1], tailleEqu[0], tailleEqu[1]+0.0001 * COEF,
+                             0.1*tailleEqu[1]+0.0001 * COEF, 0.1,
+                             gras = g, lstCoul = c, va = 'c')
 
         
     for i, p in enumerate(prj.equipe):
@@ -434,8 +424,8 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
     ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                        cairo.FONT_WEIGHT_NORMAL)
     show_text_rect(ctx, constantes.ellipsizer(prj.problematique, constantes.LONG_MAX_PROBLEMATIQUE), 
-                   rectPro, ha = 'g', b = 0.2,
-                   fontsizeMinMax = (-1, 0.016))
+                   rectPro, ha = 'g', b = 0.5,
+                   fontsizeMinMax = (-1, 0.016 * COEF))
     prj.rect.append(rectPro)
     
 #    print "     6 ", time.time() - tps
@@ -450,7 +440,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
                                        cairo.FONT_WEIGHT_NORMAL)
     show_text_rect(ctx, prj.GetNom(), 
                    rectSup, ha = 'c', b = 0.2,
-                   fontsizeMinMax = (-1, 0.016))
+                   fontsizeMinMax = (-1, 0.016 * COEF))
     
     prj.support.rect.append(rectSup)
     prj.support.pts_caract.append(posSup)
@@ -468,7 +458,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
     
     if competences != []:
         
-        ctx.set_line_width(0.001)
+        ctx.set_line_width(0.001 * COEF)
         wc = tailleZComp[0]/len(competences)
         _x = posZComp[0]
         _y0, _y1 = posZElevesH[1], posZDeroul[1] + tailleZDeroul[1]
@@ -496,7 +486,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
         ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                               cairo.FONT_WEIGHT_NORMAL)
         ctx.set_source_rgb(0, 0, 0)
-        ctx.set_line_width(0.001)
+        ctx.set_line_width(0.001 * COEF)
         p = tableauV(ctx, competences, posZComp[0], posZComp[1], 
                 tailleZComp[0], tailleZComp[1], 
                 0, nlignes = 0, va = 'c', ha = 'g', orient = 'v', coul = BCoulCompS)
@@ -513,7 +503,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
     ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                           cairo.FONT_WEIGHT_NORMAL)
     ctx.set_source_rgb(0, 0, 0)
-    ctx.set_line_width(0.001)
+    ctx.set_line_width(0.001 * COEF)
     l=[]
     for i,e in enumerate(prj.eleves) : 
         e.pts_caract = []
@@ -532,7 +522,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
     for t, ha in [("0%", 'g'), ("50%", 'c'), ("100%", 'd')]:
         show_text_rect(ctx, t, 
                        (posZElevesH[0], y, w, h), ha = ha, b = 0.1,
-                       fontsizeMinMax = (-1, 0.016))
+                       fontsizeMinMax = (-1, 0.016 * COEF))
     
     prj.pt_caract_eleve = []
     if len(l) > 0:
@@ -578,7 +568,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
             Ic = constantes.COUL_ELEVES[i][0]
             
             ctx.set_source_rgb(Ic[0],Ic[1],Ic[2])
-            ctx.set_line_width(0.003)
+            ctx.set_line_width(0.003 * COEF)
             ctx.move_to(posZElevesH[0]+tailleZElevesH[0], yEleves[i])
             ctx.line_to(posZComp[0]+tailleZComp[0], yEleves[i])
             ctx.stroke()
@@ -590,7 +580,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
             Ic = constantes.COUL_ELEVES[i][0]
             
             ctx.set_source_rgb(Ic[0],Ic[1],Ic[2])
-            ctx.set_line_width(0.003)
+            ctx.set_line_width(0.003 * COEF)
             ctx.move_to(xEleves[i], yEleves[i])
             ctx.line_to(xEleves[i], posZTaches[1] + tailleZTaches[1] + (i % 2)*(ecartY/2) + ecartY/2)
             ctx.stroke()    
@@ -599,8 +589,8 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
         #
         # Ombres des lignes verticales
         #
-        e = 0.003
-        ctx.set_line_width(0.003)
+        e = 0.003 * COEF
+        ctx.set_line_width(0.003 * COEF)
         for i in range(len(prj.eleves)) :
             y = posZTaches[1] + tailleZTaches[1] + (i % 2)*(ecartY/2) + ecartY/2
             ctx.set_source_rgb(1,1,1)
@@ -666,8 +656,9 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
             dy = hRevue
             y = y - ((len(prj.eleves)-1)*dy)/2
 #            print "phase = ", t.phase
+            h = 0.006 * COEF
             for eleve in prj.eleves:
-                DrawCroisementsCompetencesRevue(ctx, t, eleve, y)
+                DrawCroisementsCompetencesRevue(ctx, t, eleve, y, h)
                 y += dy
         else:
             DrawCroisementsCompetencesTaches(ctx, t, y)
@@ -689,7 +680,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
             show_text_rect(ctx, prj.GetProjetRef().phases[phase][1], 
                            (posZDeroul[0] + ecartX/6, yh[0], 
                             wPhases, yh[1]-yh[0]), 
-                           ha = 'c', orient = orient, b = 0,
+                           ha = 'c', orient = orient, b = 0.1, le = 0.6,
                            couper = False) 
             
 #            show_text_rect(ctx, constantes.NOM_PHASE_TACHE[prj.GetTypeEnseignement(True)][phase], 
@@ -723,7 +714,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
             d3 = e.GetDuree(phase = "R3")
             Ic = constantes.COUL_ELEVES[i][0]
             ctx.set_source_rgb(Ic[0],Ic[1],Ic[2])
-            ctx.set_line_width(0.005)
+            ctx.set_line_width(0.005 * COEF)
             if md1 > 0:
                 ctx.move_to(xEleves[i], y0)
                 ctx.line_to(xEleves[i], y0+(y1-y0)*d1/md1)
@@ -773,26 +764,20 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
     #
     # Informations
     #
-    ctx.select_font_face ("Sans", cairo.FONT_SLANT_ITALIC,
-                     cairo.FONT_WEIGHT_BOLD)
-    ctx.set_font_size (0.007)
-    ctx.set_source_rgb(0.6, 0.6, 0.6)
-    ctx.move_to (margeX, 1 - margeY + 0.02)
-    ctx.show_text ("Fiche créée avec le logiciel pySequence (http://code.google.com/p/pysequence)")
-
+    info(ctx, margeX, margeY)
     
     
     
 
 ######################################################################################  
 def DrawLigneEff(ctx, x, y):
-    dashes = [ 0.010,   # ink
-               0.002,   # skip
-               0.005,   # ink
-               0.002,   # skip
+    dashes = [ 0.010 * COEF,   # ink
+               0.002 * COEF,   # skip
+               0.005 * COEF,   # ink
+               0.002 * COEF,   # skip
                ]
     ctx.set_source_rgba (0.6, 0.8, 0.6)
-    ctx.set_line_width (0.001)
+    ctx.set_line_width (0.001 * COEF)
     ctx.set_dash(dashes, 0)
     ctx.move_to(x, posZElevesV[1] + tailleZElevesV[1])
     ctx.line_to(x, y)
@@ -1061,34 +1046,34 @@ def DrawLigneEff(ctx, x, y):
 #    return rect
     
     
-######################################################################################  
-def Draw_CI(ctx, CI):
-    # Rectangle arrondi
-    x0, y0 = posSup
-    rect_width, rect_height  = tailleSup
-#    if len(CI.numCI) <= 1:
-#        t = u"Centre d'intérêt"
-#    else:
-    t = u"Centre%s d'intérêt" %"s"*len(CI.numCI) > 1
-    CI.pt_caract = (curve_rect_titre(ctx, t,  (x0, y0, rect_width, rect_height), BcoulSup, IcoulSup, fontSup), 
-                    'CI')
-    
-    CI.rect.append((x0, y0, rect_width, rect_height))
-    
-    
-    #
-    # code et intitulé des CI
-    #
-    lstCodes = []
-    lstIntit = []
-    for i in range(len(CI.numCI)):
-        lstCodes.append(CI.GetCode(i))
-        lstIntit.append(CI.GetIntit(i))
-        
-    if CI.numCI != []:
-        e = 0.008
-        r = liste_code_texte(ctx, lstCodes, lstIntit, x0, y0+0.0001, rect_width, rect_height, e)
-        CI.pts_caract = getPts(r)
+#######################################################################################  
+#def Draw_CI(ctx, CI):
+#    # Rectangle arrondi
+#    x0, y0 = posSup
+#    rect_width, rect_height  = tailleSup
+##    if len(CI.numCI) <= 1:
+##        t = u"Centre d'intérêt"
+##    else:
+#    t = u"Centre%s d'intérêt" %"s"*len(CI.numCI) > 1
+#    CI.pt_caract = (curve_rect_titre(ctx, t,  (x0, y0, rect_width, rect_height), BcoulSup, IcoulSup, fontSup), 
+#                    'CI')
+#    
+#    CI.rect.append((x0, y0, rect_width, rect_height))
+#    
+#    
+#    #
+#    # code et intitulé des CI
+#    #
+#    lstCodes = []
+#    lstIntit = []
+#    for i in range(len(CI.numCI)):
+#        lstCodes.append(CI.GetCode(i))
+#        lstIntit.append(CI.GetIntit(i))
+#        
+#    if CI.numCI != []:
+#        e = 0.008 * COEF
+#        r = liste_code_texte(ctx, lstCodes, lstIntit, x0, y0+0.0001 * COEF, rect_width, rect_height, e)
+#        CI.pts_caract = getPts(r)
         
 
 
@@ -1185,7 +1170,7 @@ def DrawTacheRacine(ctx, tache, y):
         ctx.rectangle(x, y, wDuree, h)
         ctx.fill_preserve ()    
         ctx.set_source_rgba(0.4,  0.4,  0.4,  1)
-        ctx.set_line_width(0.0006)
+        ctx.set_line_width(0.0006 * COEF)
         ctx.stroke ()
         
         ctx.set_source_rgb(0.5,0.8,0.8)
@@ -1215,7 +1200,7 @@ def DrawTacheRacine(ctx, tache, y):
         ctx.rectangle(x, y, w, h)
         ctx.fill_preserve ()    
         ctx.set_source_rgba(0.4,  0.4,  0.4,  1)
-        ctx.set_line_width(0.0006)
+        ctx.set_line_width(0.0006 * COEF)
         ctx.stroke ()
         
         ctx.set_source_rgb(0.5,0.8,0.8)
@@ -1223,7 +1208,7 @@ def DrawTacheRacine(ctx, tache, y):
                                   cairo.FONT_WEIGHT_BOLD)
         show_text_rect(ctx, getHoraireTxt(tache.GetDelai(), constantes.CHAR_FLECHE), 
                        (x, y, w, h), 
-                       orient = 'h', fontsizeMinMax = (minFont, 0.015), b = 0.1)
+                       orient = 'h', fontsizeMinMax = (minFont, 0.015 * COEF), b = 0.1)
     
 
     
@@ -1249,7 +1234,7 @@ def DrawTacheRacine(ctx, tache, y):
 
     tache.pts_caract.append((x, y))
         
-    ctx.set_line_width(0.002)
+    ctx.set_line_width(0.002 * COEF)
     rectangle_plein(ctx, x, y, w, h, 
                     BCoulTache[tache.phase], ICoulTache[tache.phase], ICoulTache[tache.phase][3])
     
@@ -1264,12 +1249,12 @@ def DrawTacheRacine(ctx, tache, y):
         
         if not tache.phase in ["R1", "R2", "R3", "S"]:
             t = tache.code
-            hc = max(hTacheMini/2, 0.01)
+            hc = max(hTacheMini/2, 0.01 * COEF)
         else:
             t = tache.intitule
             hc = h
         show_text_rect(ctx, t, (x, y, tailleZTaches[0], hc), ha = 'g', 
-                       wrap = False, fontsizeMinMax = (minFont, 0.02), b = 0.2)
+                       wrap = False, fontsizeMinMax = (minFont, 0.02 * COEF), b = 0.2)
     
     
     #
@@ -1288,7 +1273,7 @@ def DrawTacheRacine(ctx, tache, y):
             rect = (x, y + hc, tailleZTaches[0], h-hc)
         if rect[2] > 0:
             show_text_rect(ctx, tache.intitule, rect, 
-                           ha = 'g', fontsizeMinMax = (minFont, 0.015))
+                           ha = 'g', fontsizeMinMax = (minFont, 0.015 * COEF))
         
     
     tache.rect.append([x, y, tailleZTaches[0], h])
@@ -1309,16 +1294,16 @@ def DrawTacheRacine(ctx, tache, y):
         
 ######################################################################################  
 def DrawLigne(ctx, x, y, gras = False):
-    dashes = [ 0.002,   # ink
-               0.002,   # skip
-               0.002,   # ink
-               0.002,   # skip
+    dashes = [ 0.002 * COEF,   # ink
+               0.002 * COEF,   # skip
+               0.002 * COEF,   # ink
+               0.002 * COEF,   # skip
                ]
     ctx.set_source_rgba (0, 0.0, 0.2, 0.6)
     if gras:
-        ctx.set_line_width (0.002)
+        ctx.set_line_width (0.002 * COEF)
     else:
-        ctx.set_line_width (0.001)
+        ctx.set_line_width (0.001 * COEF)
     ctx.set_dash(dashes, 0)
     ctx.move_to(posZOrganis[0]+tailleZOrganis[0], y)
     ctx.line_to(x, y)
@@ -1392,10 +1377,10 @@ def DrawCroisementsCompetencesTaches(ctx, tache, y):
     
 
 ######################################################################################  
-def DrawCroisementsCompetencesRevue(ctx, revue, eleve, y):
+def DrawCroisementsCompetencesRevue(ctx, revue, eleve, y, h):
 #    print "DrawCroisementsCompetencesRevue", eleve, revue.phase
 #    print "   ", revue.GetDicIndicateursEleve(eleve)
-    DrawBoutonCompetence(ctx, revue, regrouperDic(revue, revue.GetDicIndicateursEleve(eleve)), y, h = 0.008)
+    DrawBoutonCompetence(ctx, revue, regrouperDic(revue, revue.GetDicIndicateursEleve(eleve)), y, h)
     
 #####################################################################################  
 def DrawCroisementsElevesTaches(ctx, tache, y):
@@ -1417,10 +1402,10 @@ def DrawCroisementsElevesTaches(ctx, tache, y):
     if tache.phase in ["R1", "R2", "R3", "S"] and differeSuivantEleve:
         dy = hRevue
         y = y - ((len(tache.projet.eleves)-1)*dy)/2
-        r = 0.005
+        r = 0.005 * COEF
     else:
         dy = 0
-        r = 0.006
+        r = 0.006 * COEF
         
     for i in lstElv:
         if tache.phase in ["R1", "R2", "R3", "S"] and differeSuivantEleve:
@@ -1460,7 +1445,7 @@ def DrawBoutonCompetence(ctx, objet, dicIndic, y, h = None):
     
     # Un petit décalage pour distinguer R et S en N&B    
     dh = h/10
-    ctx.set_line_width (0.0004)
+    ctx.set_line_width (0.0004 * COEF)
     dicIndic, dictype = dicIndic
  
     for s in dicIndic.keys():

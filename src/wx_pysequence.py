@@ -1599,7 +1599,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
             return
         
         ctx = cairo.Context(PDFsurface)
-        ctx.scale(820, 820) 
+        ctx.scale(820 / draw_cairo.COEF, 820/ draw_cairo.COEF) 
         if self.typ == 'seq':
             draw_cairo_seq.Draw(ctx, self.sequence)
         elif self.typ == 'prj':
@@ -1637,7 +1637,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
                     return
                 
                 ctx = cairo.Context (SVGsurface)
-                ctx.scale(820, 820) 
+                ctx.scale(820/ draw_cairo.COEF, 820/ draw_cairo.COEF) 
                 if self.typ == 'seq':
                     draw_cairo_seq.Draw(ctx, self.sequence, mouchard = True)
                 elif self.typ == 'prj':
@@ -2073,7 +2073,7 @@ class FenetreSequence(FenetreDocument):
 class FenetreProjet(FenetreDocument):
     def __init__(self, parent):
         self.typ = 'prj'
-        print "__init__ FenetreProjet"
+#        print "__init__ FenetreProjet"
         FenetreDocument.__init__(self, parent)
         
         self.Freeze()
@@ -2883,7 +2883,8 @@ class BaseFiche(wx.ScrolledWindow):
         h = float(self.GetVirtualSize()[1])
         if h <= 0:
             h = float(100)
-        cr.scale(h, h) 
+#        print h
+        cr.scale(h / draw_cairo.COEF, h / draw_cairo.COEF) 
         
         
         
@@ -3265,7 +3266,7 @@ class PanelPropriete_Sequence(PanelPropriete):
     
     #############################################################################            
     def getBitmapPeriode(self, larg):
-        w, h = 0.04*5, 0.04
+        w, h = 0.04*5 * draw_cairo.COEF, 0.04 * draw_cairo.COEF
         imagesurface = cairo.ImageSurface(cairo.FORMAT_ARGB32,  larg, int(h/w*larg))#cairo.FORMAT_ARGB32,cairo.FORMAT_RGB24
         ctx = cairo.Context(imagesurface)
         ctx.scale(larg/w, larg/w) 
@@ -3503,7 +3504,7 @@ class PanelPropriete_Projet(PanelPropriete):
 #        print "  ", self.projet.position
 #        print "  ", self.projet.GetReferentiel().periodes
 #        print "  ", self.projet.GetReferentiel().periode_prj
-        w, h = 0.04*7, 0.04
+        w, h = 0.04*7 * draw_cairo.COEF, 0.04 * draw_cairo.COEF
         imagesurface = cairo.ImageSurface(cairo.FORMAT_ARGB32,  larg, int(h/w*larg))#cairo.FORMAT_ARGB32,cairo.FORMAT_RGB24
         ctx = cairo.Context(imagesurface)
         ctx.scale(larg/w, larg/w) 
@@ -4451,7 +4452,7 @@ class PanelPropriete_Classe(PanelPropriete):
         
     ######################################################################################  
     def MiseAJour(self):
-        print "MiseAJour panelPropriete classe"
+#        print "MiseAJour panelPropriete classe"
 #        self.MiseAJourType()
         
         self.cb_type.SetStringSelection(self.classe.referentiel.Enseignement[0])
@@ -6625,11 +6626,11 @@ class PanelPropriete_Tache(PanelPropriete):
 #        print "AjouterCompetence !!", self, code
         if not code in self.tache.indicateursEleve[0]:
             self.tache.indicateursEleve[0].append(code)
-        
+
         if propag:
             for i in range(len(self.tache.projet.eleves)):
                 self.AjouterCompetenceEleve(code, i+1)
-        
+       
         self.tache.projet.SetCompetencesRevuesSoutenance()
         
         
@@ -6680,6 +6681,7 @@ class PanelPropriete_Tache(PanelPropriete):
     
     ############################################################################            
     def SetCompetences(self):
+#        print "SetCompetences"
         self.GetDocument().MiseAJourDureeEleves()
         wx.CallAfter(self.sendEvent, modif = u"Ajout/Suppression d'une compétence à la Tâche")
         self.tache.projet.Verrouiller()
@@ -8588,17 +8590,29 @@ class ArbreCompetences(HTL.HyperTreeList):
     def MiseAJourTypeEnseignement(self, ref):
 #        print "MiseAJourTypeEnseignement"
         self.ref = ref
+ 
+        self.DeleteChildren(self.root)
         
         for i in self.items.values():
             for wnd in i._wnd:
                 if wnd:
                     wnd.Hide()
                     wnd.Destroy()
-                    
-        self.DeleteChildren(self.root)
+       
+#        self.DestroyChildren()
+#        self.DeleteAllItems()
+#        print "1"
+#        for item in self.GetChildren():
+#            
+#            item.DeleteAllItems()         
+#        
+#        self.DeleteChildren(self.root)
+
         self.items = {}
         self.Construire(self.root, ref = ref)
+
         self.ExpandAll()
+
 #        self.Layout()
         
     
@@ -8624,22 +8638,23 @@ class ArbreCompetences(HTL.HyperTreeList):
     ####################################################################################
     def wrap(self,w):
         item = self.GetRootItem()
-        while 1:
-            item = self.GetNext(item)
-            if item == None:
-                break
-             
-            # Coefficient pour le texte en gras (plus large)
-            # Et position en X du texte
-            if item._type == 0:
-                W = w*0.93 - 5
-            else:
-                W = w - 35
-                
-            text = self.GetItemText(item, 0).replace("\n", "")
-            text = wordwrap(text, W, wx.ClientDC(self))
-
-            self.SetItemText(item, text, 0)
+        if item != None:
+            while 1:
+                item = self.GetNext(item)
+                if item == None:
+                    break
+                 
+                # Coefficient pour le texte en gras (plus large)
+                # Et position en X du texte
+                if item._type == 0:
+                    W = w*0.93 - 5
+                else:
+                    W = w - 35
+                    
+                text = self.GetItemText(item, 0).replace("\n", "")
+                text = wordwrap(text, W, wx.ClientDC(self))
+    
+                self.SetItemText(item, text, 0)
         
     ####################################################################################
     def Construire(self, branche, dic = None, ref = None, ct_type = 0):
@@ -8660,20 +8675,21 @@ class ArbreCompetences(HTL.HyperTreeList):
         
     ####################################################################################
     def OnItemCheck(self, event, item = None):
-#        print "OnItemCheck"
+
         if event != None:
             item = event.GetItem()
-        
+
         self.AjouterEnleverCompetencesItem(item)
-        
+
         if event != None:
             event.Skip()
+
         wx.CallAfter(self.pptache.SetCompetences)
         
     
     ####################################################################################
     def AjouterEnleverCompetencesItem(self, item, propag = True):
-#        print "AjouterEnleverCompetencesItem"
+
         code = self.GetItemPyData(item)#.split()[0]
 #        print "AjouterEnleverCompetencesItem", code
         if code != None: # un seul indicateur séléctionné
@@ -11167,7 +11183,7 @@ class Classe():
         
     ######################################################################################  
     def setDefaut(self):
-        print "setDefaut Classe"
+#        print "setDefaut Classe"
         self.typeEnseignement = 'SSI'
             
         self.effectifs['C'] = constantes.Effectifs["C"]
@@ -13762,7 +13778,7 @@ class Projet(BaseDoc, Objet_sequence):
         tR1 = None
         tR2 = None
         indicateurs = [{} for e in range(len(self.eleves)+1)]   # 0 : tous les élèves
-        
+
         for t in self.taches:   # toutes les tâches, dans l'ordre
             
             if t.phase in TOUTES_REVUES_SOUT:
@@ -13806,16 +13822,19 @@ class Projet(BaseDoc, Objet_sequence):
                                 else:
                                     if t.phase == _S:
                                         t.indicateursEleve[neleve].append(codeIndic)
-    
+
                     if neleve == 0:
                         if t.phase in [_R1, "Rev"] or (t.phase == _R2 and self.nbrRevues == 3):
                             ti = []
                             for i in t.indicateursEleve[neleve]:
                                 if i in t.indicateursMaxiEleve[neleve]:
                                     ti.append(i)
+
                             t.indicateursEleve[neleve] = ti
                             if miseAJourPanel and hasattr(t.panelPropriete, 'arbre'):
                                 t.panelPropriete.arbre.MiseAJourTypeEnseignement(t.GetReferentiel())
+                            
+
 #                                t.panelPropriete.MiseAJour()
                             if t.phase == _R1:
                                 tR1 = t # la revue 1 est passée !
