@@ -940,7 +940,10 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     #############################################################################
     def DefinirOptions(self, options):
         for f in reversed(options.optFichiers["FichiersRecents"]):
-            self.filehistory.AddFileToHistory(toFileEncoding(f))
+            try:
+                self.filehistory.AddFileToHistory(toFileEncoding(f))
+            except:
+                self.filehistory.AddFileToHistory(f)
             
 #        self.options = options.copie()
 #        #
@@ -1115,10 +1118,10 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         fileNum = evt.GetId() - wx.ID_FILE1
         path = self.filehistory.GetHistoryFile(fileNum)
 #        print "You selected %s\n" % path
-
-        # add it back to the history so it will be moved up the list
-        self.filehistory.AddFileToHistory(path)
-        self.commandeOuvrir(nomFichier = path)
+        if os.path.isfile(path):
+            # add it back to the history so it will be moved up the list
+            self.filehistory.AddFileToHistory(path)
+            self.commandeOuvrir(nomFichier = path)
 
 
     ###############################################################################################
