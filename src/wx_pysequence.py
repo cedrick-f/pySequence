@@ -940,7 +940,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     #############################################################################
     def DefinirOptions(self, options):
         for f in reversed(options.optFichiers["FichiersRecents"]):
-            self.filehistory.AddFileToHistory(f)
+            self.filehistory.AddFileToHistory(toFileEncoding(f))
             
 #        self.options = options.copie()
 #        #
@@ -1125,6 +1125,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     def GetFichiersRecents(self):
         lst = []
         for n in range(self.filehistory.GetCount()):
+#            lst.append(toSystemEncoding(self.filehistory.GetHistoryFile(n)))
             lst.append(self.filehistory.GetHistoryFile(n))
         return lst
 

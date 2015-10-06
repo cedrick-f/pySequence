@@ -128,6 +128,8 @@ class Options:
                     sav(nom+"."+k, v)
             
             else:
+#                if type(val) in [str, unicode]:
+#                    val = val.encode('utf-8')
                 config.set(titre, nom, val)
 
 
@@ -154,19 +156,21 @@ class Options:
 
 
     ############################################################################
-    def ouvrir(self, encoding = 'utf_8_sig'):
+    def ouvrir(self, encoding = 'utf_8'):
         """ Ouvre un fichier d'options 
         """
+        print "Ouverture Options:", self.fichierOpt
         config = ConfigParser.ConfigParser()
         try :
             with io.open(self.fichierOpt, 'r', encoding=encoding) as fp:
                 config.readfp(fp)
         except:
+#            print "  err"
             with io.open(self.fichierOpt, 'r', encoding='utf_8_sig') as fp:
                 config.readfp(fp)
         config.read(self.fichierOpt)
         
-        print "Ouverture Options:", self.fichierOpt
+        
         
         def evl(opt):
             try:
@@ -262,12 +266,13 @@ class Options:
         
         for titre in self.typesOptions.keys():
             titreUtf = titre.encode('utf-8')
-#            print titreUtf, self.typesOptions[titre].keys()
+#            print "   ", titreUtf, self.typesOptions[titre].keys()
             
             for titreopt in self.typesOptions[titre].keys():
 #                opt = self.typesOptions[titre][titreopt]
                 
                 self.typesOptions[titre][titreopt] = lec(titreopt)
+#            print "    >>", self.typesOptions[titre]
                 
 #                print titreopt, type(opt), opt
 #                if type(opt) == int:
