@@ -7598,12 +7598,12 @@ class PanelPropriete_Support(PanelPropriete):
     #############################################################################            
     def EvtText(self, event):
         nt = event.GetString()
-        if nt == u"":
-            nt = self.support.parent.intitule
-            self.textctrl.ChangeValue(nt)
-        elif self.support.parent.intitule == self.support.nom:
-            self.support.parent.SetText(nt)
-            self.support.parent.panelPropriete.textctrl.ChangeValue(nt)
+#        if nt == u"":
+#            nt = self.support.parent.intitule
+#            self.textctrl.ChangeValue(nt)
+#        elif self.support.parent.intitule == self.support.nom:
+#            self.support.parent.SetText(nt)
+#            self.support.parent.panelPropriete.textctrl.ChangeValue(nt)
         self.support.SetNom(nt)
 #        self.support.parent.MiseAJourNomsSystemes()
         if not self.eventAttente:
@@ -12616,13 +12616,14 @@ class Projet(BaseDoc, Objet_sequence):
 
     ######################################################################################  
     def GetNom(self):
-        if self.intitule != self.support.nom:
-            return self.intitule + u"\n-\n" + self.support.nom
-        else:
-            if self.intitule != u"":
-                return self.intitule
-            else:
-                return self.support.nom
+        return self.intitule
+#        if self.intitule != self.support.nom:
+#            return self.intitule + u"\n-\n" + self.support.nom
+#        else:
+#            if self.intitule != u"":
+#                return self.intitule
+#            else:
+#                return self.support.nom
     
     
     ######################################################################################  
@@ -16467,7 +16468,10 @@ class Support(ElementDeSequence, Objet_sequence):
         if hasattr(self, 'arbre'):
             self.SetCode()
 
-
+    ######################################################################################  
+    def GetNom(self):
+        return self.nom
+        
     ######################################################################################  
     def PubDescription(self):
         """ Publie toutes les descriptions de séance

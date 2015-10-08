@@ -70,35 +70,42 @@ margeY = 0.04 * COEF
 ecartX = 0.02 * COEF
 ecartY = 0.02 * COEF
 
+# Nom du projet
+tailleNom = (0.29 * COEF, 0.04 * COEF)
+posNom = (margeX, margeY)
+IcoulNom = (0.9, 0.8, 0.8, 0.85)
+BcoulNom = (0.3, 0.2, 0.25, 1)
+fontNom = 0.014 * COEF
+
 # Support du projet
-tailleSup = (0.17 * COEF, 0.085 * COEF)
-posSup = (margeX, margeY)
-IcoulSup = (0.9, 0.8, 0.8, 0.85)
-BcoulSup = (0.3, 0.2, 0.25, 1)
-fontSup = 0.014 * COEF
+tailleSup = (0.17 * COEF, 0.06 * COEF)
+posSup = (margeX, posNom[1] + tailleNom[1] + ecartY)
+IcoulSup = (0.85, 0.8, 0.8, 0.85)
+BcoulSup = (0.28, 0.2, 0.25, 1)
+fontSup = 0.012 * COEF
 
 # Equipe pédagogique
-tailleEqu = (0.29 * COEF, 0.18 * COEF - tailleSup[1] - ecartY/2)
+tailleEqu = (0.17 * COEF, 0.18 * COEF - tailleSup[1]- tailleNom[1] - 3*ecartY/2)
 posEqu = (margeX, posSup[1] + tailleSup[1] + ecartY)
 IcoulEqu = (0.8, 0.8, 0.9, 0.85)
 BcoulEqu = (0.2, 0.25, 0.3, 1)
-fontEqu = 0.014 * COEF
+fontEqu = 0.011 * COEF
 
 # Position dans l'année
 posPos = [None, margeY - ecartY/2]
 taillePos = [None, 0.04 * COEF]
 
 # Problématique
-posPro = [posEqu[0] + tailleEqu[0] + ecartX/2, margeY + taillePos[1] + ecartY/2]
+posPro = [posNom[0] + tailleNom[0] + ecartX/2, margeY + taillePos[1] + ecartY/2]
 taillePro = [LargeurTotale - margeX - posPro[0], posEqu[1] + tailleEqu[1] - posPro[1]]
 IcoulPro = (0.8, 0.9, 0.8, 0.85)
 BcoulPro = (0.25, 0.3, 0.2, 1)
 fontPro = 0.014 * COEF
 
 # Image du support
-posImg = [posSup[0] + tailleSup[0] + ecartX/4, margeY - ecartY/2]
-tailleImg = [posPro[0] - posSup[0] - tailleSup[0] - ecartX/2, None]
-tailleImg[1] = tailleImg[0] 
+posImg = [posSup[0] + tailleSup[0] + ecartX/4, posNom[1] + tailleNom[1] + ecartY]
+tailleImg = [posPro[0] - posSup[0] - tailleSup[0], None]
+tailleImg[1] = posEqu[1] + tailleEqu[1] - posSup[1]
 IcoulImg = (0.8, 0.8, 1, 0.85)
 BcoulImg = (0.1, 0.1, 0.25, 1)
 centreImg = (posImg[0] + tailleImg[0] / 2 + 0.0006 * COEF, posImg[1] + tailleImg[0] / 2 - 0.004 * COEF)
@@ -328,7 +335,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
     # Position dans l'année
     #
 #    posPos[0] = posEqu[0] + tailleEqu[0] + ecartX + tailleTypeEns
-    posPos[0] = posEqu[0] + tailleEqu[0] + ecartX + tailleTypeEns
+    posPos[0] = posNom[0] + tailleNom[0] + ecartX + tailleTypeEns
 #    taillePos[0] =  0.72414 - posPos[0] - margeX
     taillePos[0] = taillePro[0]/2
     ctx.set_line_width (0.0015 * COEF)
@@ -389,7 +396,8 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
     #  Equipe
     #
     rectEqu = posEqu + tailleEqu
-    prj.pt_caract.append(curve_rect_titre(ctx, u"Equipe pédagogique",  rectEqu, BcoulEqu, IcoulEqu, fontEqu))
+    prj.pt_caract.append(curve_rect_titre(ctx, u"Equipe pédagogique",  rectEqu, 
+                                          BcoulEqu, IcoulEqu, fontEqu))
     
     lstTexte = []
     g = None
@@ -429,24 +437,44 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
     prj.rect.append(rectPro)
     
 #    print "     6 ", time.time() - tps
+
+
+    #
+    #  Projet
+    #
+    prj.pt_caract = []
+    prj.pts_caract = []
+    rectNom = posNom+tailleNom
+    prj.pts_caract.append(curve_rect_titre(ctx, prj.GetCode(),  
+                                                   rectNom, BcoulNom, IcoulNom, fontNom))
+    ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+                                       cairo.FONT_WEIGHT_NORMAL)
+    show_text_rect(ctx, prj.GetNom(), 
+                   rectNom, ha = 'c', b = 0.2,
+                   fontsizeMinMax = (-1, 0.016 * COEF))
+    
+    prj.rect.append(rectNom)
+    prj.pts_caract.append(posNom)
+
+    
+    
     #
     #  Support
     #
     prj.support.pt_caract = []
     rectSup = posSup+tailleSup
-    prj.support.pts_caract.append(curve_rect_titre(ctx, prj.GetCode() + u" - "+ prj.support.GetCode(),  
+    prj.support.pts_caract.append(curve_rect_titre(ctx, prj.support.GetCode(),  
                                                    rectSup, BcoulSup, IcoulSup, fontSup))
     ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                        cairo.FONT_WEIGHT_NORMAL)
-    show_text_rect(ctx, prj.GetNom(), 
+    show_text_rect(ctx, prj.support.GetNom(), 
                    rectSup, ha = 'c', b = 0.2,
                    fontsizeMinMax = (-1, 0.016 * COEF))
     
     prj.support.rect.append(rectSup)
     prj.support.pts_caract.append(posSup)
-    
-    
-        
+
+
 #    print "intro", time.time() - tps
     #
     #  Tableau des compétenecs
