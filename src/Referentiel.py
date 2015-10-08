@@ -367,7 +367,7 @@ class XMLelem():
             else:
                 lst = []
                 for l in v0[1]:
-                    if debug: print l
+                    if debug: print l, l.getType(), l.poids, l.estProjet()
 #                    print v0
                     if l.estProjet(): # Conduite ou Soutenance
                         if prj == None or l.getType() in prj.parties.keys():
@@ -1286,7 +1286,8 @@ class Referentiel(XMLelem):
             --> le "_" évite que les attributs ne soient sauvegardés dans les XML
             
         """
-        
+#        debug = self.Code[:4] == "EE-C"
+
         # C'est une option (il y a un tronc commun) ==> on complète plus tard
         if not forcer and len(self.tr_com) != 0:
             return
@@ -1302,9 +1303,9 @@ class Referentiel(XMLelem):
                             self.parties[part] = n
                 
 #            print "    ", self.parties
-#            print "    ", self.dicCompetences
+            
             self._dicCompetences = self.getArbreProjet(self.dicCompetences, debug = False)
-#            print "   >", self._dicCompetences
+            
             self._dicIndicateurs = self.getPremierEtDernierNiveauArbre(self._dicCompetences)
             
             self.normaliserPoids(self._dicIndicateurs, debug = False)
@@ -1732,7 +1733,8 @@ class Projet(XMLelem):
 
     ##################################################################################################################
     def postTraiter(self, ref):
-#        print " postTraiter",  ref, self
+        debug = False#ref.Code[:4] == "EE-C"
+        if debug: print " postTraiter",  ref, self, self.parties
         
         
         
@@ -1807,9 +1809,11 @@ class Projet(XMLelem):
         
                                 
                                 
-                                
+        debug = ref.Code[:4] == "EE-C"
+        if debug: print "    ", ref.dicCompetences                   
 #        print "dicCompetences ref", ref.dicCompetences
-        self._dicCompetences = self.getArbreProjet(ref.dicCompetences, self, debug = False)
+        self._dicCompetences = self.getArbreProjet(ref.dicCompetences, self, debug = debug)
+        if debug: print "   >", self._dicCompetences 
 #        print ">> _dicCompetences prj", self._dicCompetences
         
         # On regroupe les compétences qui ont les mêmes indicateurs dans la grille (cas de STI2D EE !!)
@@ -1968,11 +1972,17 @@ class Indicateur(XMLelem):
         """ E : écrit
             C : conduite
             S : soutenance
-            ...
+            Sinon : None
+            
+            E, C ou S doit être exclusif !!
         """
-        for t, p in self.poids.items():
-            if p !=0:
-                return t
+        types = [t for t, p in self.poids.items() if p !=0 and t in ['E', 'C', 'S']]
+        if len(types) > 0:
+            return types[0]
+        
+#        for t, p in self.poids.items():
+#            if p !=0:
+#                return t
         
 #        if self.poids[0] != 0:
 #            return "E"

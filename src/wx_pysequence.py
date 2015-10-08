@@ -3556,9 +3556,9 @@ class PanelPropriete_Projet(PanelPropriete):
     def EvtText(self, event):
         if event.GetEventObject() == self.textctrl:
             nt = event.GetString()
-            if nt == u"":
-                nt = self.projet.support.nom
-            self.projet.SetText(nt)
+#            if nt == u"":
+#                nt = self.projet.support.nom
+#            self.projet.SetText(nt)
             self.textctrl.ChangeValue(nt)
             maj = True
             
