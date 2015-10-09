@@ -142,7 +142,8 @@ wColCompBase = 0.018 * COEF
 wColComp = wColCompBase
 xComp = {}
 ICoulComp = {'C' : (1, 0.6, 0.7, 0.2),      # couleur "Revue"
-             'S' : (0.598, 0.7, 1, 0.2)}    # couleur "Soutenance"
+             'S' : (0.598, 0.7, 1, 0.2),
+             ''  : (0.598, 0.7, 0.7, 0.2)}    # couleur "Soutenance"
 #ICoulComp['S'] = (0.598, 0.7, 1, 0.2)      
 #ICoulComp['C'] = (1, 0.6, 0.7, 0.2)      
 #BCoulCompR = (0.3, 0.2, 0.4, 1)      # couleur "Revue"
@@ -281,8 +282,13 @@ def calculCoefCalcH(prj, ctx, hm):
     a = (tailleZTaches[1] - hFixe - b*nt) / h
 
     
+######################################################################################  
+def getCoulComp(partie, alpha = 1.0):
+    if partie in ICoulComp.keys():
+        return (ICoulComp[partie][0], ICoulComp[partie][1], ICoulComp[partie][2], alpha)  
+    return (ICoulComp[''][0], ICoulComp[''][1], ICoulComp[''][2], alpha)
     
-    
+######################################################################################  
 def getPts(lst_rect):
         lst = []
         for rect in lst_rect:
@@ -569,9 +575,10 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
 
             
             for j, part in enumerate(prj.GetProjetRef().parties.keys()):
+                
                 barreH(ctx, posZElevesH[0], y+(j+1)*hb, tailleZElevesH[0], ev[part][0], ev[part][1], hb, 
                        (1, 0, 0, 0.7), (0, 1, 0, 0.7), 
-                       (ICoulComp[part][0], ICoulComp[part][1], ICoulComp[part][2], 1))
+                       getCoulComp(part))
             
             
 #            barreH(ctx, posZElevesH[0], y+hb, tailleZElevesH[0], ev['R'][0], ev['R'][1], hb, 
@@ -708,7 +715,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
             show_text_rect(ctx, prj.GetProjetRef().phases[phase][1], 
                            (posZDeroul[0] + ecartX/6, yh[0], 
                             wPhases, yh[1]-yh[0]), 
-                           ha = 'c', orient = orient, b = 0.1, le = 0.6,
+                           ha = 'c', orient = orient, b = 0.1, le = 0.7,
                            couper = False) 
             
 #            show_text_rect(ctx, constantes.NOM_PHASE_TACHE[prj.GetTypeEnseignement(True)][phase], 
@@ -1511,7 +1518,7 @@ def DrawBoutonCompetence(ctx, objet, dicIndic, y, h = None):
                     d = -1
                 else:
                     d = 1
-                ctx.set_source_rgba (ICoulComp[part][0], ICoulComp[part][1], ICoulComp[part][2], 1.0)
+                ctx.set_source_rgba (*getCoulComp(part))
             else: # Rien => Transparent
                 d = 0
                 ctx.set_source_rgba (1, 1, 1, 0)

@@ -1,18 +1,18 @@
-<Referentiel B_CI_BO="False" B_CI_cible="False" B_objSavoirs_Math="False" B_objSavoirs_Phys="True" B_preSavoirs_Math="True" B_preSavoirs_Phys="True" S_Code="EE-CIT-SI" S_Famille="2nde" S_FichierLogo="logo_si_cit_2.jpg" S_abrevCI="Th " S_nomCI="Th&#232;mes" S_nomCompetences="Comp&#233;tences" S_nomFonctions="Fonctions" S_nomIndicateurs="Indicateurs de performance" S_nomSavoirs="Savoirs" S_nomSavoirs_Math="S3 - Math&#233;matiques" S_nomSavoirs_Phys="S5 - Sciences Appliqu&#233;es" S_nomTaches="T&#226;ches" S_surnomSavoirs="S6 - G&#233;nie &#201;lectrique">
+<Referentiel B_CI_BO="False" B_CI_cible="False" B_objSavoirs_Math="False" B_objSavoirs_Phys="True" B_preSavoirs_Math="True" B_preSavoirs_Phys="True" S_Code="EE-CIT-DIT-SI" S_Famille="2nde" S_FichierLogo="logo_si_cit_2.jpg" S_abrevCI="Th " S_nomCI="Th&#232;mes" S_nomCompetences="Comp&#233;tences" S_nomFonctions="Fonctions" S_nomIndicateurs="Indicateurs de performance" S_nomSavoirs="Savoirs" S_nomSavoirs_Math="S3 - Math&#233;matiques" S_nomSavoirs_Phys="S5 - Sciences Appliqu&#233;es" S_nomTaches="T&#226;ches" S_surnomSavoirs="S6 - G&#233;nie &#201;lectrique">
   <l_BO_URL>
     <l_00 S_00="Programme SI" S_01="http://media.education.gouv.fr/file/special_4/74/7/sciences_ingenieur_143747.pdf" />
     <l_01 S_00="Programme CIT" S_01="http://media.education.gouv.fr/file/special_4/75/1/creation_innovation_technologiques_143751.pdf" />
   </l_BO_URL>
   <l_BO_dossier S_00="2nde" />
   <l_CentresInterets S_00="La mobilit&#233;" S_01="Le sport" S_02="La sant&#233;" S_03="L'habitat" S_04="L'&#233;nergie" S_05="La communication" S_06="La culture et les loisirs" S_07="Les infrastructures" S_08="La bionique" S_09="La d&#233;mat&#233;rialisation des biens et des services" />
-  <l_Enseignement S_00="EE-CIT-SI" S_01="Enseignement d'exploration" S_02="2nde" />
-  <d_aColNon />
+  <l_Enseignement S_00="EE-CIT-DIT-SI" S_01="Enseignement d'exploration" S_02="2nde" />
+  <d_aColNon B_C="True" />
   <d_activites>
     <l_ED S_00="Etude de dossier" S_01="Activit&#233; d'&#233;tude de dossier" />
     <l_P S_00="Projet" S_01="Activit&#233; de projet" />
     <l_AP S_00="Activit&#233; pratique" S_01="Activit&#233; pratique" />
   </d_activites>
-  <d_compImposees B_C="False" B_S="False" B_S1="False" B_S2="False" />
+  <d_compImposees B_C="False" B_S1="False" B_S2="False" />
   <d_demarcheSeance>
     <l_ED S_00="I" S_01="R" />
     <l_P S_00="I" S_01="R" S_02="P" />
@@ -24,96 +24,166 @@
     <l_R S_00="R&#233;s. Probl&#232;me" S_01="R&#233;solution de probl&#232;me" />
   </d_demarches>
   <d_dicCompetences>
-    <l_C1.2 S_00="Acqu&#233;rir la culture technologique">
+    <l_C1.2 S_00="Mettre en &#339;uvre une d&#233;marche de cr&#233;ativit&#233;">
       <l_01>
-        <Indicateur_00 S_intitule="Indicateur 1.2a">
-          <d_ligne />
-          <d_poids />
-          <d_revue />
+        <Indicateur_00 S_intitule="formuler des hypoth&#232;ses, hierarchiser, s&#233;lectionner, expliciter, contextualiser">
+          <d_ligne I_C="12" />
+          <d_poids F_C="33.333333" />
+          <d_revue I_C="0" />
         </Indicateur_00>
-        <Indicateur_01 S_intitule="Indicateur 1.2b">
-          <d_ligne />
-          <d_poids />
-          <d_revue />
+        <Indicateur_01 S_intitule="mettre en &#339;uvre une ou des m&#233;thodes de cr&#233;ativit&#233;">
+          <d_ligne I_C="13" />
+          <d_poids F_C="33.333333" />
+          <d_revue I_C="0" />
         </Indicateur_01>
+        <Indicateur_02 S_intitule="mat&#233;rialiser une solution innovante">
+          <d_ligne I_C="14" />
+          <d_poids F_C="33.333333" />
+          <d_revue I_C="0" />
+        </Indicateur_02>
       </l_01>
-      <d_02 />
+      <d_02 I_C="20" />
     </l_C1.2>
     <l_C1.1 S_00="Acqu&#233;rir les bases d'une culture de l'innovation technologique">
       <l_01>
-        <Indicateur_00 S_intitule="Indicateur 1.1a">
-          <d_ligne />
-          <d_poids />
-          <d_revue />
+        <Indicateur_00 S_intitule="relier les &#233;volutions technologiques aux innovations qui marquent des ruptures dans les solutions techniques">
+          <d_ligne I_C="6" />
+          <d_poids F_C="20.0" />
+          <d_revue I_C="0" />
         </Indicateur_00>
-        <Indicateur_01 S_intitule="Indicateur 1.1b">
-          <d_ligne />
-          <d_poids />
-          <d_revue />
+        <Indicateur_01 S_intitule="utiliser un vocabulaire sp&#233;cifique &#224; l'innovation et la cr&#233;ativit&#233;">
+          <d_ligne I_C="7" />
+          <d_poids F_C="20.0" />
+          <d_revue I_C="0" />
         </Indicateur_01>
+        <Indicateur_02 S_intitule="Identifier les principes qui r&#233;gissent la propri&#233;t&#233; intellectuelle, la normalisation et l'intelligence &#233;conomique">
+          <d_ligne I_C="8" />
+          <d_poids F_C="20.0" />
+          <d_revue I_C="0" />
+        </Indicateur_02>
+        <Indicateur_03 S_intitule="analyser le cycle de vie d'un produit">
+          <d_ligne I_C="9" />
+          <d_poids F_C="20.0" />
+          <d_revue I_C="0" />
+        </Indicateur_03>
+        <Indicateur_04 S_intitule="analyser l'impact environnemental d'un objet et de ses constituants">
+          <d_ligne I_C="10" />
+          <d_poids F_C="20.0" />
+          <d_revue I_C="0" />
+        </Indicateur_04>
       </l_01>
-      <d_02 />
+      <d_02 I_C="20" />
     </l_C1.1>
-    <l_C2.1 S_00="S'inscrire dans la d&#233;marche de projet">
+    <l_C2.1 S_00="Design et significations">
       <l_01>
-        <Indicateur_00 S_intitule="Indicateur 2.1a">
-          <d_ligne />
-          <d_poids />
-          <d_revue />
+        <Indicateur_00 S_intitule="Associer un objet &#224; une grande p&#233;riode de la conception, des arts aux design industriel">
+          <d_ligne I_C="16" />
+          <d_poids F_C="25.0" />
+          <d_revue I_C="0" />
         </Indicateur_00>
-        <Indicateur_01 S_intitule="Indicateur 2.2b">
-          <d_ligne />
-          <d_poids />
-          <d_revue />
+        <Indicateur_01 S_intitule="Observer un objet d'un point de vue description, communication et repr&#233;sentation">
+          <d_ligne I_C="17" />
+          <d_poids F_C="25.0" />
+          <d_revue I_C="0" />
         </Indicateur_01>
+        <Indicateur_02 S_intitule="Identifier un contexte (culturel, &#233;cologique, &#233;conomique, soci&#233;tal, technologique)">
+          <d_ligne I_C="18" />
+          <d_poids F_C="25.0" />
+          <d_revue I_C="0" />
+        </Indicateur_02>
+        <Indicateur_03 S_intitule="Identifier des fonctions de besoins et d'usages">
+          <d_ligne I_C="19" />
+          <d_poids F_C="25.0" />
+          <d_revue I_C="0" />
+        </Indicateur_03>
       </l_01>
-      <d_02 />
+      <d_02 I_C="20" />
     </l_C2.1>
-    <l_C2.3 S_00="Simuler, mesurer un comportement">
+    <l_C2.2 S_00="Mettre en &#339;uvre une d&#233;marche de cr&#233;ation">
       <l_01>
-        <Indicateur_00 S_intitule="Indicateur 2.3a">
-          <d_ligne />
-          <d_poids />
-          <d_revue />
+        <Indicateur_00 S_intitule="Concevoir, r&#233;aliser, un projet de design, individuel ou collectif">
+          <d_ligne I_C="21" />
+          <d_poids F_C="25.0" />
+          <d_revue I_C="0" />
         </Indicateur_00>
-        <Indicateur_01 S_intitule="Indicateur 2.3b">
-          <d_ligne />
-          <d_poids />
-          <d_revue />
+        <Indicateur_01 S_intitule="confronter intension et r&#233;alisation dans la conduite d'un projet pour l'adapter et l'orienter, s'assurer de la dimension cr&#233;ative">
+          <d_ligne I_C="22" />
+          <d_poids F_C="25.0" />
+          <d_revue I_C="0" />
         </Indicateur_01>
+        <Indicateur_02 S_intitule="faire preuve d'autonomie, d'initiative, d'engagement et d'esprit critique dans la conduite du projet">
+          <d_ligne I_C="23" />
+          <d_poids F_C="25.0" />
+          <d_revue I_C="0" />
+        </Indicateur_02>
+        <Indicateur_03 S_intitule="mener &#224; terme une production individuelle dans le cadre d'un projet">
+          <d_ligne I_C="24" />
+          <d_poids F_C="25.0" />
+          <d_revue I_C="0" />
+        </Indicateur_03>
       </l_01>
-      <d_02 />
-    </l_C2.3>
-    <l_C2.2 S_00="Mettre en &#339;uvre une d&#233;marche de cr&#233;ativit&#233;">
-      <l_01>
-        <Indicateur_00 S_intitule="Indicateur 2.2a">
-          <d_ligne />
-          <d_poids />
-          <d_revue />
-        </Indicateur_00>
-        <Indicateur_01 S_intitule="Indicateur 2.2b">
-          <d_ligne />
-          <d_poids />
-          <d_revue />
-        </Indicateur_01>
-      </l_01>
-      <d_02 />
+      <d_02 I_C="20" />
     </l_C2.2>
-    <l_C3.1 S_00="Repr&#233;senter - Communiquer">
+    <l_C3.1 S_00="Approfondir la culture technologiques">
       <l_01>
-        <Indicateur_00 S_intitule="Indicateur 3.1a">
-          <d_ligne />
-          <d_poids />
-          <d_revue />
+        <Indicateur_00 S_intitule="Identifier des contraintes associ&#233;es &#224; une norme">
+          <d_ligne I_C="26" />
+          <d_poids F_C="20.0" />
+          <d_revue I_C="0" />
         </Indicateur_00>
-        <Indicateur_01 S_intitule="Indicateur 3.1b">
-          <d_ligne />
-          <d_poids />
-          <d_revue />
+        <Indicateur_01 S_intitule="identifier la dimension sensible ou esth&#233;tique">
+          <d_ligne I_C="27" />
+          <d_poids F_C="20.0" />
+          <d_revue I_C="0" />
         </Indicateur_01>
+        <Indicateur_02 S_intitule="identifier les fonctions d'un syst&#232;me technique">
+          <d_ligne I_C="28" />
+          <d_poids F_C="20.0" />
+          <d_revue I_C="0" />
+        </Indicateur_02>
+        <Indicateur_03 S_intitule="Identifier mat&#233;riaux, flux d'&#233;nergie et d'information">
+          <d_ligne I_C="29" />
+          <d_poids F_C="20.0" />
+          <d_revue I_C="0" />
+        </Indicateur_03>
+        <Indicateur_04 S_intitule="d&#233;crire la relation produit/mat&#233;riau/proc&#233;d&#233; ">
+          <d_ligne I_C="30" />
+          <d_poids F_C="20.0" />
+          <d_revue I_C="0" />
+        </Indicateur_04>
       </l_01>
-      <d_02 />
+      <d_02 I_C="10" />
     </l_C3.1>
+    <l_C3.2 S_00="Repr&#233;senter - Communiquer">
+      <l_01>
+        <Indicateur_00 S_intitule="exprimer une r&#233;flexion, un principe, une id&#233;e, une solution technique">
+          <d_ligne I_C="32" />
+          <d_poids F_C="20.0" />
+          <d_revue I_C="0" />
+        </Indicateur_00>
+        <Indicateur_01 S_intitule="exprimer sa pens&#233;e &#224; l'aide d'outils de description adapt&#233;s, manuels ou num&#233;riques">
+          <d_ligne I_C="33" />
+          <d_poids F_C="20.0" />
+          <d_revue I_C="0" />
+        </Indicateur_01>
+        <Indicateur_02 S_intitule="D&#233;crire, en utilisant les outils et les languages de descriptions adapt&#233;s">
+          <d_ligne I_C="34" />
+          <d_poids F_C="20.0" />
+          <d_revue I_C="0" />
+        </Indicateur_02>
+        <Indicateur_03 S_intitule="Interpr&#233;ter des r&#233;sultats exp&#233;rimentaux, en tirer une conclusion et la communiquer en argumentant">
+          <d_ligne I_C="35" />
+          <d_poids F_C="20.0" />
+          <d_revue I_C="0" />
+        </Indicateur_03>
+        <Indicateur_04 S_intitule="Mod&#233;liser, simuler num&#233;riquement la structure et/ou le comportement d'un objet">
+          <d_ligne I_C="36" />
+          <d_poids F_C="20.0" />
+          <d_revue I_C="0" />
+        </Indicateur_04>
+      </l_01>
+      <d_02 I_C="10" />
+    </l_C3.2>
   </d_dicCompetences>
   <d_dicFonctions />
   <d_dicSavoirs>
@@ -983,7 +1053,7 @@
   <l_listeTypeHorsClasse S_00="HC" S_01="ST" />
   <l_listeTypeSeance S_00="ED" S_01="AP" S_02="P" S_03="HC" S_04="ST" S_05="C" S_06="TD" S_07="SA" S_08="SS" S_09="E" S_10="R" S_11="S" />
   <d_options />
-  <d_parties S_C="PRJ3" S_S="Soutenance" S_S1="PRJ1" S_S2="PRJ2" />
+  <d_parties S_C="PRJ2" S_S1="PRJ1" S_S2="PRJ3" />
   <l_periodes>
     <l_00 I_01="3" S_00="1_&#232;re ann&#233;e" />
   </l_periodes>
@@ -1006,71 +1076,44 @@
       <d_cellulesInfo>
         <d_S1>
           <l_Pre>
-            <l_00 S_00="Identification" S_02="">
+            <l_00 S_00="Identification projet" S_02="">
               <l_01 I_00="12" I_01="2" I_02="0" />
             </l_00>
-            <l_01 S_00="Identification" S_02="">
-              <l_01 I_00="15" I_01="2" I_02="0" />
-            </l_01>
-            <l_02 S_00="Identification" S_02="">
-              <l_01 I_00="18" I_01="2" I_02="0" />
-            </l_02>
-            <l_03 S_00="Identification" S_02="">
-              <l_01 I_00="21" I_01="2" I_02="0" />
-            </l_03>
           </l_Pre>
           <l_Nom>
-            <l_00 S_00="Identification" S_02="">
+            <l_00 S_00="Identification projet" S_02="">
               <l_01 I_00="11" I_01="2" I_02="0" />
             </l_00>
-            <l_01 S_00="Identification" S_02="">
-              <l_01 I_00="14" I_01="2" I_02="0" />
-            </l_01>
-            <l_02 S_00="Identification" S_02="">
-              <l_01 I_00="17" I_01="2" I_02="0" />
-            </l_02>
-            <l_03 S_00="Identification" S_02="">
-              <l_01 I_00="20" I_01="2" I_02="0" />
-            </l_03>
           </l_Nom>
           <l_NON>
-            <l_00 S_00="Notation candidat 1" S_02="">
+            <l_00 S_00="Notation Candidat" S_02="">
               <l_01 I_00="0" I_01="4" I_02="0" />
             </l_00>
-            <l_01 S_00="Notation candidat 2" S_02="">
-              <l_01 I_00="0" I_01="4" I_02="0" />
-            </l_01>
-            <l_02 S_00="Notation candidat 3" S_02="">
-              <l_01 I_00="0" I_01="4" I_02="0" />
-            </l_02>
-            <l_03 S_00="Notation candidat 4" S_02="">
-              <l_01 I_00="0" I_01="4" I_02="0" />
-            </l_03>
           </l_NON>
           <l_Tit>
-            <l_00 S_00="Identification" S_02="">
+            <l_00 S_00="Identification projet" S_02="">
               <l_01 I_00="4" I_01="2" I_02="0" />
             </l_00>
           </l_Tit>
           <l_Des>
-            <l_00 S_00="Identification" S_02="">
+            <l_00 S_00="Identification projet" S_02="">
               <l_01 I_00="23" I_01="1" I_02="0" />
             </l_00>
           </l_Des>
           <l_Etab>
-            <l_00 S_00="Identification" S_02="">
+            <l_00 S_00="Identification projet" S_02="">
               <l_01 I_00="6" I_01="2" I_02="0" />
             </l_00>
           </l_Etab>
           <l_Prof>
-            <l_00 S_00="Identification" S_02="">
+            <l_00 S_00="Identification projet" S_02="">
               <l_01 I_00="0" I_01="0" I_02="0" />
             </l_00>
           </l_Prof>
         </d_S1>
       </d_cellulesInfo>
       <d_grilles>
-        <l_S1 S_00="Grille 2nde.xlsx" S_01="C" />
+        <l_S1 S_00="Grille 2nde.xlsx" S_01="I" />
       </d_grilles>
       <l_listPhases S_00="Ana" S_01="Con" S_02="DCo" S_03="Rea" S_04="XXX" S_05="Rev" S_06="R1" S_07="R2" S_08="R3" S_09="S" />
       <l_listPhasesEval S_00="Rev" S_01="R1" S_02="R2" S_03="R3" S_04="S" />
@@ -1109,41 +1152,51 @@
         <l_PRX S_00="Montant estim&#233; du projet" S_01="" S_02="" />
       </d_attributs>
       <d_cellulesInfo>
-        <d_S2>
-          <l_Tit>
-            <l_00 S_00="Identification" S_02="">
+        <d_C>
+          <l_Pre>
+            <l_00 S_00="Identification projet" S_02="">
               <l_01 I_00="12" I_01="2" I_02="0" />
             </l_00>
-          </l_Tit>
+          </l_Pre>
           <l_Nom>
-            <l_00 S_00="Identification" S_02="">
-              <l_01 I_00="9" I_01="2" I_02="0" />
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="11" I_01="2" I_02="0" />
             </l_00>
           </l_Nom>
+          <l_NON>
+            <l_00 S_00="Notation Candidat" S_02="">
+              <l_01 I_00="0" I_01="4" I_02="0" />
+            </l_00>
+          </l_NON>
+          <l_Tit>
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="4" I_01="2" I_02="0" />
+            </l_00>
+          </l_Tit>
           <l_Des>
-            <l_00 S_00="Identification" S_02="">
-              <l_01 I_00="14" I_01="1" I_02="0" />
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="23" I_01="1" I_02="0" />
             </l_00>
           </l_Des>
-          <l_Pre>
-            <l_00 S_00="Identification" S_02="">
-              <l_01 I_00="10" I_01="2" I_02="0" />
-            </l_00>
-          </l_Pre>
           <l_Etab>
-            <l_00 S_00="Identification" S_02="">
-              <l_01 I_00="7" I_01="2" I_02="0" />
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="6" I_01="2" I_02="0" />
             </l_00>
           </l_Etab>
-        </d_S2>
+          <l_Prof>
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="0" I_01="0" I_02="0" />
+            </l_00>
+          </l_Prof>
+        </d_C>
       </d_cellulesInfo>
       <d_grilles>
-        <l_S2 S_00="Grille BTS SN EC_Sit1.xlsx" S_01="I" />
+        <l_C S_00="Grille 2nde.xlsx" S_01="I" />
       </d_grilles>
       <l_listPhases S_00="Ana" S_01="Con" S_02="DCo" S_03="Rea" S_04="XXX" S_05="Rev" S_06="R1" S_07="R2" S_08="R3" S_09="S" />
       <l_listPhasesEval S_00="Rev" S_01="R1" S_02="R2" S_03="R3" S_04="S" />
-      <l_listeParties S_00="S2" />
-      <d_parties S_S2="PRJ2" />
+      <l_listeParties S_00="C" />
+      <d_parties S_C="PRJ2" />
       <l_periode I_00="2" />
       <d_phases>
         <l_DCo S_00="Maint" S_01="Maintenance" S_02="maint" />
@@ -1177,79 +1230,51 @@
         <l_PRX S_00="Montant estim&#233; du projet" S_01="" S_02="" />
       </d_attributs>
       <d_cellulesInfo>
-        <d_C>
+        <d_S2>
           <l_Pre>
-            <l_00 S_00="Identification" S_02="">
-              <l_01 I_00="10" I_01="2" I_02="0" />
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="12" I_01="2" I_02="0" />
             </l_00>
           </l_Pre>
           <l_Nom>
-            <l_00 S_00="Identification" S_02="">
-              <l_01 I_00="9" I_01="2" I_02="0" />
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="11" I_01="2" I_02="0" />
             </l_00>
           </l_Nom>
           <l_NON>
-            <l_00 S_00="Conduite de projet" S_02="">
-              <l_01 I_00="5" I_01="8" I_02="0" />
+            <l_00 S_00="Notation Candidat" S_02="">
+              <l_01 I_00="0" I_01="4" I_02="0" />
             </l_00>
           </l_NON>
           <l_Tit>
-            <l_00 S_00="Identification" S_02="">
-              <l_01 I_00="12" I_01="2" I_02="0" />
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="4" I_01="2" I_02="0" />
             </l_00>
           </l_Tit>
           <l_Des>
-            <l_00 S_00="Identification" S_02="">
-              <l_01 I_00="14" I_01="1" I_02="0" />
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="23" I_01="1" I_02="0" />
             </l_00>
           </l_Des>
           <l_Etab>
-            <l_00 S_00="Identification" S_02="">
-              <l_01 I_00="7" I_01="2" I_02="0" />
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="6" I_01="2" I_02="0" />
             </l_00>
           </l_Etab>
           <l_Prof>
-            <l_00 S_00="Identification" S_02="">
-              <l_01 I_00="18" I_01="2" I_02="1" />
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="0" I_01="0" I_02="0" />
             </l_00>
           </l_Prof>
-        </d_C>
-        <d_S>
-          <l_Tit>
-            <l_00 S_00="Identification" S_02="">
-              <l_01 I_00="12" I_01="2" I_02="0" />
-            </l_00>
-          </l_Tit>
-          <l_Nom>
-            <l_00 S_00="Identification" S_02="">
-              <l_01 I_00="9" I_01="2" I_02="0" />
-            </l_00>
-          </l_Nom>
-          <l_Des>
-            <l_00 S_00="Identification" S_02="">
-              <l_01 I_00="14" I_01="1" I_02="0" />
-            </l_00>
-          </l_Des>
-          <l_Pre>
-            <l_00 S_00="Identification" S_02="">
-              <l_01 I_00="10" I_01="2" I_02="0" />
-            </l_00>
-          </l_Pre>
-          <l_Etab>
-            <l_00 S_00="Identification" S_02="">
-              <l_01 I_00="7" I_01="2" I_02="0" />
-            </l_00>
-          </l_Etab>
-        </d_S>
+        </d_S2>
       </d_cellulesInfo>
       <d_grilles>
-        <l_C S_00="Grille BTS SN EC.xlsx" S_01="I" />
-        <l_S S_00="Grille BTS SN EC.xlsx" S_01="I" />
+        <l_S2 S_00="Grille 2nde.xlsx" S_01="I" />
       </d_grilles>
       <l_listPhases S_00="Ana" S_01="Con" S_02="DCo" S_03="Rea" S_04="XXX" S_05="Rev" S_06="R1" S_07="R2" S_08="R3" S_09="S" />
       <l_listPhasesEval S_00="Rev" S_01="R1" S_02="R2" S_03="R3" S_04="S" />
-      <l_listeParties S_00="C" S_01="S" />
-      <d_parties S_C="PRJ3" S_S="Soutenance" />
+      <l_listeParties S_00="S2" />
+      <d_parties S_S2="PRJ3" />
       <l_periode I_00="3" />
       <d_phases>
         <l_DCo S_00="Maint" S_01="Maintenance" S_02="maint" />

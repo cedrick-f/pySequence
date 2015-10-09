@@ -1809,7 +1809,7 @@ class Projet(XMLelem):
         
                                 
                                 
-        debug = ref.Code[:4] == "EE-C"
+       
         if debug: print "    ", ref.dicCompetences                   
 #        print "dicCompetences ref", ref.dicCompetences
         self._dicCompetences = self.getArbreProjet(ref.dicCompetences, self, debug = debug)

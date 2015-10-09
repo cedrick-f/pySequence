@@ -252,7 +252,7 @@ except ImportError: # if it's not there locally, try the wxPython lib.
 # Les constantes partagées
 from constantes import calculerEffectifs, \
                         strEffectifComplet, getElementFiltre, \
-                        CHAR_POINT, COUL_PARTIE, COUL_ABS, \
+                        CHAR_POINT, COUL_PARTIE, getCoulPartie, COUL_ABS, \
                         toFileEncoding, toSystemEncoding, FILE_ENCODING, SYSTEM_ENCODING, \
                         TOUTES_REVUES_EVAL, TOUTES_REVUES_EVAL_SOUT, TOUTES_REVUES_SOUT, TOUTES_REVUES, \
                         _S, _Rev, _R1, _R2, _R3, \
@@ -2996,7 +2996,7 @@ class FicheProjet(BaseFiche):
         for i, (part , tit) in enumerate(self.projet.GetProjetRef().parties.items()):
             self.lab_legend[part] = popup.CreerTexte((l,i), txt = tit, flag = wx.ALIGN_RIGHT|wx.RIGHT)
             self.lab_legend[part].SetFont(wx.Font(8, wx.SWISS, wx.FONTSTYLE_ITALIC, wx.NORMAL))
-            self.lab_legend[part].SetForegroundColour(constantes.COUL_PARTIE[part])
+            self.lab_legend[part].SetForegroundColour(constantes.getCoulPartie(part))
             
             
 #        self.lab_legend1 = popup.CreerTexte((l,0), txt = u"Conduite", flag = wx.ALIGN_RIGHT|wx.RIGHT)
@@ -8926,10 +8926,8 @@ class ArbreCompetencesPrj(ArbreCompetences):
 #                            for j, p in enumerate(indic.poids[1:]):
 #                                if p != 0:
                                     self.SetItemText(b, pourCent2(0.01*indic.poids[part]), j+1)
-                                    if part in COUL_PARTIE.keys():
-                                        self.SetItemTextColour(b, COUL_PARTIE[part])
-                                    else:
-                                        self.SetItemTextColour(b, COUL_PARTIE[''])
+                                    self.SetItemTextColour(b, getCoulPartie(part))
+                                   
                             self.SetItemFont(b, font)        
                             
                             self.items[codeIndic] = b
@@ -9207,7 +9205,7 @@ class ArbreCompetencesPopup(CT.CustomTreeCtrl):
                         if listIndicUtil == None or not listIndicUtil[i]:
                             self.SetItemTextColour(b, COUL_ABS)
                         else:
-                            self.SetItemTextColour(b, COUL_PARTIE[part])
+                            self.SetItemTextColour(b, getCoulPartie(part))
                 self.SetItemFont(b, font)
         
         if type(dic) == dict:  
@@ -17321,7 +17319,7 @@ class Eleve(Personne, Objet_sequence):
         dic = {}
         ligne = []
         for ph in self.GetProjetRef().listeParties:
-            dic['coul'] = constantes.GetCouleurHTML(COUL_PARTIE[ph])
+            dic['coul'] = constantes.GetCouleurHTML(getCoulPartie(ph))
             dic['nom'] = self.GetProjetRef().parties[ph]
             dic['id'] = ph
             ligne.append("""<tr  id = "le%(id)s" align="right" valign="middle" >
@@ -17425,7 +17423,8 @@ class Eleve(Personne, Objet_sequence):
                             coul = coulNON
                         else:
                             coul = None
-                    XML_AjouterCol(self.ficheXML, "le"+part, l, coul, constantes.GetCouleurHTML(COUL_PARTIE[part]), size, bold)
+                    XML_AjouterCol(self.ficheXML, "le"+part, l, coul,
+                                   constantes.GetCouleurHTML(getCoulPartie(part)), size, bold)
 
             for t in keys:
                 XML_AjouterCol(self.ficheXML, "le", t, size = 2) 

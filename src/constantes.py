@@ -341,6 +341,12 @@ COUL_BOF = "ORANGE"
 COUL_PARTIE = {'C' : "DEEPPINK2",
                'S' : "BLUEVIOLET",
                ''  : "FIREBRICK"}
+
+def getCoulPartie(partie):
+    if partie in COUL_PARTIE.keys():
+        return COUL_PARTIE[partie]
+    else:
+        return COUL_PARTIE['']
 #COUL_REVUE = "DEEPPINK2"#"FIREBRICK"
 #COUL_SOUT = "BLUEVIOLET"#"MEDIUMBLUE"
 COUL_ABS = "GREY"#"MEDIUMBLUE"
