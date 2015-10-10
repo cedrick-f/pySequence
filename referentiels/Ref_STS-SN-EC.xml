@@ -27,7 +27,7 @@
       <l_01>
         <Indicateur_00 S_intitule="Les causes du dysfonctionnement sont identifi&#233;es">
           <d_ligne I_S2="0" />
-          <d_poids F_S2="100.0" />
+          <d_poids I_S2="1" />
           <d_revue I_S2="0" />
         </Indicateur_00>
       </l_01>
@@ -37,12 +37,12 @@
       <l_01>
         <Indicateur_00 S_intitule="Une strat&#233;gie pour le maintien en condition op&#233;rationnelle est mise en place">
           <d_ligne I_S2="0" />
-          <d_poids F_S2="50.0" />
+          <d_poids I_S2="1" />
           <d_revue I_S2="0" />
         </Indicateur_00>
         <Indicateur_01 S_intitule="Des correctifs sont propos&#233;s">
           <d_ligne I_S2="0" />
-          <d_poids F_S2="50.0" />
+          <d_poids I_S2="1" />
           <d_revue I_S2="0" />
         </Indicateur_01>
       </l_01>
@@ -52,7 +52,7 @@
       <l_01>
         <Indicateur_00 S_intitule="Les besoins du client sont r&#233;solus">
           <d_ligne I_S2="0" />
-          <d_poids F_S2="100.0" />
+          <d_poids I_S2="1" />
           <d_revue I_S2="0" />
         </Indicateur_00>
       </l_01>
@@ -62,17 +62,17 @@
       <l_01>
         <Indicateur_00 S_intitule="Le compte rendu de suivi d'incident est &#233;tabli">
           <d_ligne I_S2="0" />
-          <d_poids F_S2="33.333333" />
+          <d_poids I_S2="1" />
           <d_revue I_S2="0" />
         </Indicateur_00>
         <Indicateur_01 S_intitule="Des fichiers de journalisation (logs) de supervision (recette et/ou archivage) sont cr&#233;&#233;s">
           <d_ligne I_S2="0" />
-          <d_poids F_S2="33.333333" />
+          <d_poids I_S2="1" />
           <d_revue I_S2="0" />
         </Indicateur_01>
         <Indicateur_02 S_intitule="Des alertes sont &#233;mises en cas de d&#233;faillance ou pour l'aide &#224; la conduite du syst&#232;me">
           <d_ligne I_S2="0" />
-          <d_poids F_S2="33.333333" />
+          <d_poids I_S2="1" />
           <d_revue I_S2="0" />
         </Indicateur_02>
       </l_01>
@@ -82,12 +82,12 @@
       <l_01>
         <Indicateur_00 S_intitule="Les r&#233;sultats pertinents de l'analyse sont pr&#233;sent&#233;s">
           <d_ligne I_S2="0" />
-          <d_poids F_S2="50.0" />
+          <d_poids I_S2="1" />
           <d_revue I_S2="0" />
         </Indicateur_00>
         <Indicateur_01 S_intitule="Les situations probl&#233;matiques (seuil d'erreur admissible, nombre de tentatives) sont d&#233;termin&#233;es">
           <d_ligne I_S2="0" />
-          <d_poids F_S2="50.0" />
+          <d_poids I_S2="1" />
           <d_revue I_S2="0" />
         </Indicateur_01>
       </l_01>
@@ -157,7 +157,7 @@
       <l_01>
         <Indicateur_00 S_intitule="Des outils de tra&#231;abilit&#233; sont mis en place">
           <d_ligne I_S2="0" />
-          <d_poids F_S2="100.0" />
+          <d_poids I_S2="1" />
           <d_revue I_S2="0" />
         </Indicateur_00>
       </l_01>
@@ -167,7 +167,7 @@
       <l_01>
         <Indicateur_00 S_intitule="Les contraintes li&#233;es au client (horaires, nuisances sonores, qualit&#233; de la relation &#8230;) sont respect&#233;es.--Les normes m&#233;tier et les proc&#233;dures sont respect&#233;es.--Les r&#233;sultats de test sont conformes aux sp&#233;cifications des proc&#233;dures d'installation.--Le syst&#232;me ou le service est conforme aux sp&#233;cifications du cahier des charges.">
           <d_ligne I_S1="11" />
-          <d_poids F_S1="100.0" />
+          <d_poids I_S1="1" />
           <d_revue I_S1="0" />
         </Indicateur_00>
       </l_01>
@@ -177,22 +177,22 @@
       <l_01>
         <Indicateur_00 S_intitule="La fiche recette est conforme aux sp&#233;cifications du cahier des charges.">
           <d_ligne I_S1="16" />
-          <d_poids F_S1="25.0" />
+          <d_poids I_S1="1" />
           <d_revue I_S1="0" />
         </Indicateur_00>
         <Indicateur_01 S_intitule="La fiche de recette est suivie, les remarques &#233;ventuelles sont prises en compte.">
           <d_ligne I_S1="17" />
-          <d_poids F_S1="25.0" />
+          <d_poids I_S1="1" />
           <d_revue I_S1="0" />
         </Indicateur_01>
         <Indicateur_02 S_intitule="Les documents (mise en route, exploitation et maintenance) sont remis au client.">
           <d_ligne I_S1="18" />
-          <d_poids F_S1="25.0" />
+          <d_poids I_S1="1" />
           <d_revue I_S1="0" />
         </Indicateur_02>
         <Indicateur_03 S_intitule="Le syst&#232;me ou le service fonctionne.">
           <d_ligne I_S1="19" />
-          <d_poids F_S1="25.0" />
+          <d_poids I_S1="1" />
           <d_revue I_S1="0" />
         </Indicateur_03>
       </l_01>
@@ -202,22 +202,22 @@
       <l_01>
         <Indicateur_00 S_intitule="L'&#233;quipe est constitu&#233;e et les t&#226;ches professionnelles sont attribu&#233;es.">
           <d_ligne I_S1="6" />
-          <d_poids F_S1="25.0" />
+          <d_poids I_S1="1" />
           <d_revue I_S1="0" />
         </Indicateur_00>
         <Indicateur_01 S_intitule="Le plan d'action est traduit dans un diagramme de Gantt et indique les jalons.">
           <d_ligne I_S1="7" />
-          <d_poids F_S1="25.0" />
+          <d_poids I_S1="1" />
           <d_revue I_S1="0" />
         </Indicateur_01>
         <Indicateur_02 S_intitule="Le mat&#233;riel est pr&#233;par&#233; pour mettre en &#339;uvre la solution.">
           <d_ligne I_S1="8" />
-          <d_poids F_S1="25.0" />
+          <d_poids I_S1="1" />
           <d_revue I_S1="0" />
         </Indicateur_02>
         <Indicateur_03 S_intitule="La proc&#233;dure d&#8217;installation sur site est r&#233;dig&#233;e.">
           <d_ligne I_S1="9" />
-          <d_poids F_S1="25.0" />
+          <d_poids I_S1="1" />
           <d_revue I_S1="0" />
         </Indicateur_03>
       </l_01>

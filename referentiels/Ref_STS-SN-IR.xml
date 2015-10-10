@@ -29,7 +29,7 @@
           <l_01>
             <Indicateur_00 S_intitule="Les causes du dysfonctionnement sont identifi&#233;es">
               <d_ligne I_S1="22" />
-              <d_poids F_S1="20.0" />
+              <d_poids I_S1="1" />
               <d_revue I_S1="0" />
             </Indicateur_00>
           </l_01>
@@ -38,12 +38,12 @@
           <l_01>
             <Indicateur_00 S_intitule="Une strat&#233;gie pour le maintien en condition op&#233;rationnelle est mise en place">
               <d_ligne I_S1="23" />
-              <d_poids F_S1="20.0" />
+              <d_poids I_S1="1" />
               <d_revue I_S1="0" />
             </Indicateur_00>
             <Indicateur_01 S_intitule="Des correctifs sont propos&#233;s">
               <d_ligne I_S1="24" />
-              <d_poids F_S1="20.0" />
+              <d_poids I_S1="1" />
               <d_revue I_S1="0" />
             </Indicateur_01>
           </l_01>
@@ -52,7 +52,7 @@
           <l_01>
             <Indicateur_00 S_intitule="Les besoins du client sont r&#233;solus">
               <d_ligne I_S1="25" />
-              <d_poids F_S1="20.0" />
+              <d_poids I_S1="1" />
               <d_revue I_S1="0" />
             </Indicateur_00>
           </l_01>
@@ -61,7 +61,7 @@
           <l_01>
             <Indicateur_00 S_intitule="Des outils de tra&#231;abilit&#233; sont mis en place">
               <d_ligne I_S1="26" />
-              <d_poids F_S1="20.0" />
+              <d_poids I_S1="1" />
               <d_revue I_S1="0" />
             </Indicateur_00>
           </l_01>
@@ -75,17 +75,17 @@
           <l_01>
             <Indicateur_00 S_intitule="Le compte rendu de suivi d'incident est &#233;tabli">
               <d_ligne I_S1="16" />
-              <d_poids F_S1="20.0" />
+              <d_poids I_S1="1" />
               <d_revue I_S1="0" />
             </Indicateur_00>
             <Indicateur_01 S_intitule="Des fichiers de journalisation (logs) de supervision (recette et/ou archivage) sont cr&#233;&#233;s">
               <d_ligne I_S1="17" />
-              <d_poids F_S1="20.0" />
+              <d_poids I_S1="1" />
               <d_revue I_S1="0" />
             </Indicateur_01>
             <Indicateur_02 S_intitule="Des alertes sont &#233;mises en cas de d&#233;faillance ou pour l'aide &#224; la conduite du syst&#232;me">
               <d_ligne I_S1="18" />
-              <d_poids F_S1="20.0" />
+              <d_poids I_S1="1" />
               <d_revue I_S1="0" />
             </Indicateur_02>
           </l_01>
@@ -94,12 +94,12 @@
           <l_01>
             <Indicateur_00 S_intitule="Les r&#233;sultats pertinents de l'analyse sont pr&#233;sent&#233;s">
               <d_ligne I_S1="19" />
-              <d_poids F_S1="20.0" />
+              <d_poids I_S1="1" />
               <d_revue I_S1="0" />
             </Indicateur_00>
             <Indicateur_01 S_intitule="Les situations probl&#233;matiques (seuil d'erreur admissible, nombre de tentatives) sont d&#233;termin&#233;es">
               <d_ligne I_S1="20" />
-              <d_poids F_S1="20.0" />
+              <d_poids I_S1="1" />
               <d_revue I_S1="0" />
             </Indicateur_01>
           </l_01>
@@ -113,12 +113,12 @@
           <l_01>
             <Indicateur_00 S_intitule="Le syst&#232;me ou le service est en production">
               <d_ligne I_S1="8" />
-              <d_poids F_S1="11.111111" />
+              <d_poids I_S1="1" />
               <d_revue I_S1="0" />
             </Indicateur_00>
             <Indicateur_01 S_intitule="Les documents clients (mise en route, exploitation et maintenance) sont finalis&#233;es">
               <d_ligne I_S1="9" />
-              <d_poids F_S1="11.111111" />
+              <d_poids I_S1="1" />
               <d_revue I_S1="0" />
             </Indicateur_01>
           </l_01>
@@ -127,17 +127,17 @@
           <l_01>
             <Indicateur_00 S_intitule="Le syst&#232;me ou le service fonctionne">
               <d_ligne I_S1="10" />
-              <d_poids F_S1="11.111111" />
+              <d_poids I_S1="1" />
               <d_revue I_S1="0" />
             </Indicateur_00>
             <Indicateur_01 S_intitule="Le cahier de recette est &#233;labor&#233;">
               <d_ligne I_S1="11" />
-              <d_poids F_S1="11.111111" />
+              <d_poids I_S1="1" />
               <d_revue I_S1="0" />
             </Indicateur_01>
             <Indicateur_02 S_intitule="Le proc&#232;s-verbal de r&#233;ception est sign&#233; par le client">
               <d_ligne I_S1="12" />
-              <d_poids F_S1="11.111111" />
+              <d_poids I_S1="1" />
               <d_revue I_S1="0" />
             </Indicateur_02>
           </l_01>
@@ -146,12 +146,12 @@
           <l_01>
             <Indicateur_00 S_intitule="Le besoin relatif au client est identifi&#233; et justifi&#233;">
               <d_ligne I_S1="6" />
-              <d_poids F_S1="11.111111" />
+              <d_poids I_S1="1" />
               <d_revue I_S1="0" />
             </Indicateur_00>
             <Indicateur_01 S_intitule="Le phasage des op&#233;rations de r&#233;alisation est r&#233;aliste, le chemin critique est identifi&#233;">
               <d_ligne I_S1="7" />
-              <d_poids F_S1="11.111111" />
+              <d_poids I_S1="1" />
               <d_revue I_S1="0" />
             </Indicateur_01>
           </l_01>
@@ -160,7 +160,7 @@
           <l_01>
             <Indicateur_00 S_intitule="Le syst&#232;me d'exploitation et/ou une biblioth&#232;que est install&#233;">
               <d_ligne I_S1="13" />
-              <d_poids F_S1="11.111111" />
+              <d_poids I_S1="1" />
               <d_revue I_S1="0" />
             </Indicateur_00>
           </l_01>
@@ -169,7 +169,7 @@
           <l_01>
             <Indicateur_00 S_intitule="Un mode de contournement imm&#233;diat est mis en place">
               <d_ligne I_S1="14" />
-              <d_poids F_S1="11.111111" />
+              <d_poids I_S1="1" />
               <d_revue I_S1="0" />
             </Indicateur_00>
           </l_01>

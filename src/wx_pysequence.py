@@ -2319,8 +2319,9 @@ class FenetreProjet(FenetreDocument):
                 message += u"Construction de la structure du projet...\t"
                 dlg.Update(count, message)
                 count += 1
-#                print "ref :", 
-#                self.projet.classe = self.classe
+
+                self.projet.code = self.projet.GetReferentiel().getCodeProjetDefaut()
+
                 # Derniére vérification
                 if self.projet.GetProjetRef() == None:
                     print "Pas bon référentiel"
@@ -3738,7 +3739,7 @@ class PanelPropriete_Projet(PanelPropriete):
                 del self.pages['TYP']
         
         # La page "Partenariat" ('PAR')
-        
+#        print "xxx ", ref.attributs
         if ref.attributs['PAR'][0] != "":
             if not 'PAR' in self.pages.keys():
                 self.parctrl = {}
@@ -12408,9 +12409,9 @@ class Projet(BaseDoc, Objet_sequence):
 #        print "init Projet"
 #        print "   ", self.GetReferentiel()
         self.code = self.GetReferentiel().getCodeProjetDefaut()
-#        print "   ", self.code
+  
         self.position = self.GetProjetRef().getPeriodeEval()
-#        print "   ", self.position
+        
         self.nbrParties = 1
         
         # Organisation des revues du projet
@@ -12481,6 +12482,7 @@ class Projet(BaseDoc, Objet_sequence):
     def GetProjetRef(self):
         """ Renvoie le projet (Referentiel.Projet) de référence
         """
+#        print "GetProjetRef", self.code
         if self.code == None:
             return self.GetReferentiel().getProjetDefaut()
         else:
@@ -12703,6 +12705,14 @@ class Projet(BaseDoc, Objet_sequence):
         
         self.commentaires = branche.get("Commentaires", u"")
         
+        self.position = eval(branche.get("Position", "0"))
+        if self.version == "": # Enregistré avec une version de pySequence > 5.7
+            if self.position == 5:
+                print "Correction position"
+                self.position = self.GetProjetRef().getPeriodeEval()
+        
+        self.code = self.GetReferentiel().getProjetEval(self.position+1)
+        
         self.nbrRevues = eval(branche.get("NbrRevues", str(self.GetProjetRef().getNbrRevuesDefaut())))
         if not self.nbrRevues in self.GetProjetRef().posRevues.keys():
             self.nbrRevues = self.GetProjetRef().getNbrRevuesDefaut()
@@ -12712,14 +12722,6 @@ class Projet(BaseDoc, Objet_sequence):
         if self.nbrRevues == 3:
             self.MiseAJourNbrRevues()
         
-        self.MiseAJourTypeEnseignement()
-        
-        self.position = eval(branche.get("Position", "0"))
-        if self.version == "": # Enregistré avec une version de pySequence > 5.7
-            if self.position == 5:
-#                print "Correction position"
-                self.position = self.GetProjetRef().getPeriodeEval()
-            
             
         self.annee = eval(branche.get("Annee", str(constantes.getAnneeScolaire())))
 
@@ -12828,6 +12830,13 @@ class Projet(BaseDoc, Objet_sequence):
 #        if hasattr(self, 'panelPropriete'):
 #            self.panelPropriete.MiseAJour()
 
+        if hasattr(self, 'panelPropriete'):
+#            if ancienneFam != self.classe.familleEnseignement:
+            self.initRevues()
+            self.MiseAJourNbrRevues()
+            
+            self.panelPropriete.MiseAJourTypeEnseignement()
+            
         return err
         
     ######################################################################################  
@@ -13555,7 +13564,8 @@ class Projet(BaseDoc, Objet_sequence):
 #        for c in ["\"", "/", "\", ", "?", "<", ">", "|", ":", "."]:
 #            nomFichier = nomFichier.replace(c, "_")
 #        return nomFichier
-        
+
+
     ######################################################################################  
     def HitTest(self, x, y):
         branche = None
@@ -13576,7 +13586,8 @@ class Projet(BaseDoc, Objet_sequence):
                 return self.branche
 
         return branche
-        
+
+
     ######################################################################################  
     def HitTestCompetence(self, x, y):
         if hasattr(self, 'rectComp'):
@@ -13616,12 +13627,12 @@ class Projet(BaseDoc, Objet_sequence):
                 self.position = self.GetProjetRef().getPeriodeEval()
             else:
                 posRel = 1.0*anciennePos/ancienRef.getNbrPeriodes()
-                self.position = round(self.GetReferentiel().getNbrPeriodes()*posRel)-1
+                self.position = int(round(self.GetReferentiel().getNbrPeriodes()*posRel)-1)
                 self.code = self.GetReferentiel().getProjetEval(self.position+1)
             
         else:
             self.position = self.GetProjetRef().getPeriodeEval()
-            
+
         
         for t in self.taches:
             if t.phase in TOUTES_REVUES_EVAL and self.GetReferentiel().compImposees['C']:
@@ -13632,18 +13643,7 @@ class Projet(BaseDoc, Objet_sequence):
         for e in self.eleves:
             e.MiseAJourTypeEnseignement()
         
-            
-#        print "   ", self.position
-#            if ancienRef.estPeriodeEval(anciennePos):
-#                self.position = self.GetProjetRef().getPeriodeEval()
-##                print "   new pos eval =", self.position
-#            else:
-#                posRel = 1.0*anciennePos/ancienRef.getNbrPeriodes()
-#                self.position = round(self.GetProjetRef().getNbrPeriodes()*posRel)-1
-##                print "   new pos =", self.position
-        
-        
-        
+
         if hasattr(self, 'panelPropriete'):
 #            if ancienneFam != self.classe.familleEnseignement:
             self.initRevues()
@@ -13651,9 +13651,6 @@ class Projet(BaseDoc, Objet_sequence):
             
             self.panelPropriete.MiseAJourTypeEnseignement()
         
-#        self.SetPosition(self.position)
-
-
 
 
     #############################################################################

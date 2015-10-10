@@ -143,7 +143,7 @@ else:
     import ho.pisa as pisa
 #from xhtml2pdf import pisa
 def genererFicheValidationHTML(nomFichierPDF, nomFichierHTML, projet):
-    print "genererFicheValidationHTML"
+#    print "genererFicheValidationHTML"
     with open(nomFichierHTML,'r') as f:
         sourceHtml = f.read()
 
@@ -197,7 +197,7 @@ def genererFicheValidationHTML(nomFichierPDF, nomFichierHTML, projet):
     # close output file
     resultFile.close()                 # close output file
 
-    print pisaStatus.err
+#    print pisaStatus.err
     # return True on success and False on errors
     return pisaStatus.err == 0
 
