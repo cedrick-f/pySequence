@@ -9384,12 +9384,13 @@ class ArbreTypeEnseignement(CT.CustomTreeCtrl):
     def Construire(self, racine):
         """ Construction de l'arbre
         """
-#        print "Construire ArbreTypeEnseignement"
-#        print ARBRE_REF
+        print "Construire ArbreTypeEnseignement"
+        print ARBRE_REF
         self.branche = []
 #        self.ExpandAll()
         for t, st in ARBRE_REF.items():
-            if t[0] == "_":
+            print "   ", t, st, self.panelParent.pourProjet
+            if t[0] == "_" or len(REFERENTIELS[t].projets) == 0:
                 branche = self.AppendItem(racine, REFERENTIELS[st[0]].Enseignement[2])
             else:
                 branche = self.AppendItem(racine, u"")#, ct_type=2)#, image = self.arbre.images["Seq"])
@@ -13609,30 +13610,31 @@ class Projet(BaseDoc, Objet_sequence):
 
     #############################################################################
     def MiseAJourTypeEnseignement(self, ancienRef = None, ancienneFam = None):#, changeFamille = False):
-#        print "MiseAJourTypeEnseignement projet", ancienRef, ">>", self.GetReferentiel()
+        print "MiseAJourTypeEnseignement projet", ancienRef, ">>", self.GetReferentiel()
         
         self.app.SetTitre()
         
         self.code = self.GetReferentiel().getCodeProjetDefaut()
-#        print "   ", self.code
+        print "   ", self.code
 
-        if ancienRef != None:
-#            print "   anciennePos", self.position
-            anciennePos = self.position
-            
-            kprj = ancienRef.getProjetEval(anciennePos+1)
-#            print "   ancien prj", kprj, self.GetReferentiel().projets.keys()
-            if kprj in self.GetReferentiel().projets.keys():
-                self.code = kprj
-                self.position = self.GetProjetRef().getPeriodeEval()
-            else:
-                posRel = 1.0*anciennePos/ancienRef.getNbrPeriodes()
-                self.position = int(round(self.GetReferentiel().getNbrPeriodes()*posRel)-1)
-                self.code = self.GetReferentiel().getProjetEval(self.position+1)
-            
-        else:
-            self.position = self.GetProjetRef().getPeriodeEval()
+#        if ancienRef != None:
+##            print "   anciennePos", self.position
+#            anciennePos = self.position
+#            
+#            kprj = ancienRef.getProjetEval(anciennePos+1)
+##            print "   ancien prj", kprj, self.GetReferentiel().projets.keys()
+#            if kprj in self.GetReferentiel().projets.keys():
+#                self.code = kprj
+#                self.position = self.GetProjetRef().getPeriodeEval()
+#            else:
+#                posRel = 1.0*anciennePos/ancienRef.getNbrPeriodes()
+#                self.position = int(round(self.GetReferentiel().getNbrPeriodes()*posRel)-1)
+#                self.code = self.GetReferentiel().getProjetEval(self.position+1)
+#            
+#        else:
+        self.position = self.GetProjetRef().getPeriodeEval()
 
+        print "   ", self.position, self.code
         
         for t in self.taches:
             if t.phase in TOUTES_REVUES_EVAL and self.GetReferentiel().compImposees['C']:
@@ -13655,7 +13657,7 @@ class Projet(BaseDoc, Objet_sequence):
 
     #############################################################################
     def initRevues(self):
-#        print "initRevues",
+        print "initRevues",self.code
         self.nbrRevues = self.GetReferentiel().getNbrRevuesDefaut(self.code)
         self.positionRevues = list(self.GetReferentiel().getPosRevuesDefaut(self.code))
 #        print self.nbrRevues, self.positionRevues
