@@ -241,6 +241,8 @@ import wx.lib.platebtn as platebtn
 import wx.lib.colourdb
 # Pour les descriptions
 import richtext
+import orthographe
+import  wx.stc  as  stc
 
 ########################################################################
 try:
@@ -3373,8 +3375,9 @@ class PanelPropriete_Projet(PanelPropriete):
         page = PanelPropriete(self.nb)
         page.SetBackgroundColour(bg_color)
         self.nb.AddPage(page, u"")
-        ctrl = wx.TextCtrl(page, -1, u"", style=wx.TE_MULTILINE)
-        page.Bind(wx.EVT_TEXT, fct, ctrl)
+        ctrl = orthographe.STC_ortho(page, -1)#, u"", style=wx.TE_MULTILINE)
+        page.Bind(stc.EVT_STC_MODIFIED, fct, ctrl)
+#        page.Bind(wx.EVT_TEXT, fct, ctrl)
         page.sizer.Add(ctrl, (0,0), flag = wx.EXPAND)
         page.sizer.AddGrowableCol(0)
         page.sizer.AddGrowableRow(0)  
@@ -3396,8 +3399,8 @@ class PanelPropriete_Projet(PanelPropriete):
         pageGen.SetBackgroundColour(bg_color)
         self.pageGen = pageGen
         self.nb.AddPage(pageGen, u"Propriétés générales")
-        
-            
+
+
         #
         # Intitulé du projet (TIT)
         #
@@ -3407,6 +3410,7 @@ class PanelPropriete_Projet(PanelPropriete):
         sb.Add(textctrl, 1, flag = wx.EXPAND)
         self.textctrl = textctrl
         pageGen.sizer.Add(sb, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.EXPAND, border = 2)
+#        pageGen.Bind(stc.EVT_STC_MODIFIED, self.EvtText)
         pageGen.Bind(wx.EVT_TEXT, self.EvtText, textctrl)
         
         
@@ -3415,10 +3419,12 @@ class PanelPropriete_Projet(PanelPropriete):
         #
         self.tit_pb = wx.StaticBox(pageGen, -1, u"")
         sb = wx.StaticBoxSizer(self.tit_pb)
-        self.commctrl = wx.TextCtrl(pageGen, -1, u"", style=wx.TE_MULTILINE)
+#        self.commctrl = wx.TextCtrl(pageGen, -1, u"", style=wx.TE_MULTILINE)
+        self.commctrl = orthographe.STC_ortho(pageGen, -1)
         sb.Add(self.commctrl, 1, flag = wx.EXPAND)
         pageGen.sizer.Add(sb, (0,1), (2,1),  flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.EXPAND, border = 2)
-        pageGen.Bind(wx.EVT_TEXT, self.EvtText, self.commctrl)
+#        pageGen.Bind(wx.EVT_TEXT, self.EvtText, self.commctrl)
+        pageGen.Bind(stc.EVT_STC_MODIFIED, self.EvtText, self.commctrl)
         pageGen.sizer.AddGrowableCol(1)
         
         
@@ -3564,43 +3570,43 @@ class PanelPropriete_Projet(PanelPropriete):
             maj = True
             
         elif 'ORI' in self.pages.keys() and event.GetEventObject() == self.pages['ORI'][1]:
-            self.projet.origine = event.GetString()
+            self.projet.origine = self.pages['ORI'][1].GetText()
             maj = False
             
         elif 'CCF' in self.pages.keys() and event.GetEventObject() == self.pages['CCF'][1]:
-            self.projet.contraintes = event.GetString()
+            self.projet.contraintes = self.pages['CCF'][1].GetText()
             maj = False
             
         elif 'OBJ' in self.pages.keys() and event.GetEventObject() == self.pages['OBJ'][1]:
-            self.projet.production = event.GetString()
+            self.projet.production = self.pages['OBJ'][1].GetText()
             maj = False
             
         elif 'SYN' in self.pages.keys() and event.GetEventObject() == self.pages['SYN'][1]:
-            self.projet.synoptique = event.GetString()
+            self.projet.synoptique = self.pages['SYN'][1].GetText()
             maj = False
         
         elif hasattr(self, 'intctrl') and event.GetEventObject() == self.intctrl:
-            self.projet.intituleParties = event.GetString()
+            self.projet.intituleParties = self.intctrl.GetText()
             maj = False
         
         elif hasattr(self, 'enonctrl') and event.GetEventObject() == self.enonctrl:
-            self.projet.besoinParties = event.GetString()
+            self.projet.besoinParties = self.enonctrl.GetText()
             maj = False
             
         elif event.GetEventObject() == self.commctrl:
-            self.projet.SetProblematique(event.GetString())
+            self.projet.SetProblematique(self.commctrl.GetText())
             maj = True
             
         elif 'PAR' in self.parctrl.keys() and event.GetEventObject() == self.parctrl['PAR']:
-            self.projet.partenariat = event.GetString()
+            self.projet.partenariat = self.parctrl['PAR'].GetText()
             maj = False
             
         elif 'PRX' in self.parctrl.keys() and event.GetEventObject() == self.parctrl['PRX']:
-            self.projet.montant = event.GetString()
+            self.projet.montant = self.parctrl['PRX'].GetText()
             maj = False
             
         elif 'SRC' in self.parctrl.keys() and event.GetEventObject() == self.parctrl['SRC']:
-            self.projet.src_finance = event.GetString()
+            self.projet.src_finance = self.parctrl['SRC'].GetText()
             maj = False
         
 #        else:
@@ -3687,19 +3693,21 @@ class PanelPropriete_Projet(PanelPropriete):
                 titreInt = wx.StaticBox(self.pages['DEC'], -1, u"Intitulés des différentes parties")
                 sb = wx.StaticBoxSizer(titreInt)
                 
-                self.intctrl = wx.TextCtrl(self.pages['DEC'], -1, u"", style=wx.TE_MULTILINE)
+                self.intctrl = orthographe.STC_ortho(self.pages['DEC'], -1)#, u"", style=wx.TE_MULTILINE)
                 self.intctrl.SetToolTipString(u"Intitulés des parties du projet confiées à chaque groupe.\n" \
                                               u"Les groupes d'élèves sont désignés par des lettres (A, B, C, ...)\n" \
                                               u"et leur effectif est indiqué.")
-                self.pages['DEC'].Bind(wx.EVT_TEXT, self.EvtText, self.intctrl)
+#                self.pages['DEC'].Bind(wx.EVT_TEXT, self.EvtText, self.intctrl)
+                self.pages['DEC'].Bind(stc.EVT_STC_MODIFIED, self.EvtText, self.intctrl)
                 sb.Add(self.intctrl, 1, flag = wx.EXPAND)
                 self.pages['DEC'].sizer.Add(sb, (1,0), flag = wx.EXPAND|wx.ALL, border = 2)
                 
                 titreInt = wx.StaticBox(self.pages['DEC'], -1, u"Enoncés du besoin des différentes parties du projet")
                 sb = wx.StaticBoxSizer(titreInt)
-                self.enonctrl = wx.TextCtrl(self.pages['DEC'], -1, u"", style=wx.TE_MULTILINE)
+                self.enonctrl = orthographe.STC_ortho(self.pages['DEC'], -1)#, u"", style=wx.TE_MULTILINE)
                 self.enonctrl.SetToolTipString(u"Enoncés du besoin des parties du projet confiées à chaque groupe")
-                self.pages['DEC'].Bind(wx.EVT_TEXT, self.EvtText, self.enonctrl)
+#                self.pages['DEC'].Bind(wx.EVT_TEXT, self.EvtText, self.enonctrl)
+                self.pages['DEC'].Bind(stc.EVT_STC_MODIFIED, self.EvtText, self.enonctrl)
                 sb.Add(self.enonctrl, 1, flag = wx.EXPAND)
                 self.pages['DEC'].sizer.Add(sb, (0,1), (2,1), flag = wx.EXPAND|wx.ALL, border = 2)
                 
@@ -3753,9 +3761,10 @@ class PanelPropriete_Projet(PanelPropriete):
                     titreInt = wx.StaticBox(self.pages['PAR'], -1, ref.attributs[k][0])
                     sb = wx.StaticBoxSizer(titreInt)
                 
-                    self.parctrl[k] = wx.TextCtrl(self.pages['PAR'], -1, u"", style=wx.TE_MULTILINE)
+                    self.parctrl[k] = orthographe.STC_ortho(self.pages['PAR'], -1)#, u"", style=wx.TE_MULTILINE)
                     self.parctrl[k].SetToolTipString(ref.attributs[k][1])
-                    self.pages['PAR'].Bind(wx.EVT_TEXT, self.EvtText, self.parctrl[k])
+#                    self.pages['PAR'].Bind(wx.EVT_TEXT, self.EvtText, self.parctrl[k])
+                    self.pages['PAR'].Bind(stc.EVT_STC_MODIFIED, self.EvtText, self.parctrl[k])
                     sb.Add(self.parctrl[k], 1, flag = wx.EXPAND)
                     self.pages['PAR'].sizer.Add(sb, (0,i), flag = wx.EXPAND|wx.ALL, border = 2)
                 
@@ -13610,12 +13619,12 @@ class Projet(BaseDoc, Objet_sequence):
 
     #############################################################################
     def MiseAJourTypeEnseignement(self, ancienRef = None, ancienneFam = None):#, changeFamille = False):
-        print "MiseAJourTypeEnseignement projet", ancienRef, ">>", self.GetReferentiel()
+#        print "MiseAJourTypeEnseignement projet", ancienRef, ">>", self.GetReferentiel()
         
         self.app.SetTitre()
         
         self.code = self.GetReferentiel().getCodeProjetDefaut()
-        print "   ", self.code
+#        print "   ", self.code
 
 #        if ancienRef != None:
 ##            print "   anciennePos", self.position
@@ -13634,7 +13643,7 @@ class Projet(BaseDoc, Objet_sequence):
 #        else:
         self.position = self.GetProjetRef().getPeriodeEval()
 
-        print "   ", self.position, self.code
+#        print "   ", self.position, self.code
         
         for t in self.taches:
             if t.phase in TOUTES_REVUES_EVAL and self.GetReferentiel().compImposees['C']:
@@ -13657,7 +13666,7 @@ class Projet(BaseDoc, Objet_sequence):
 
     #############################################################################
     def initRevues(self):
-        print "initRevues",self.code
+#        print "initRevues",self.code
         self.nbrRevues = self.GetReferentiel().getNbrRevuesDefaut(self.code)
         self.positionRevues = list(self.GetReferentiel().getPosRevuesDefaut(self.code))
 #        print self.nbrRevues, self.positionRevues

@@ -287,7 +287,7 @@ class XMLelem():
                 if isinstance(val1, (str, unicode, int, long, float, bool, list, dict, XMLelem)) :
                     val2 = getattr(ref, attr)
                     if not egal(val1, val2):
-                        print "Différence", self.intitule
+#                        print "Différence", self.intitule
                         print "  ", attr
                         print "  ", val1
                         print "  ", val2
