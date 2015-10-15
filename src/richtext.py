@@ -47,11 +47,14 @@ typesImg = {".bmp" : wx.BITMAP_TYPE_BMP,
             ".ico" : wx.BITMAP_TYPE_ICO}
 
 
+from stcspellcheck import RTCSpellCheck
+        
 class RichTextPanel(wx.Panel):
     def __init__(self, parent, objet, toolBar = False, size = wx.DefaultSize):
         wx.Panel.__init__(self, parent, -1, style = wx.BORDER_SUNKEN)
         
         self.objet = objet
+        
         
         self.sizer = wx.BoxSizer(wx.VERTICAL)
         
@@ -61,17 +64,94 @@ class RichTextPanel(wx.Panel):
                 self.sizer.Add(self.tbar, flag = wx.EXPAND)
             
         self.rtc = rt.RichTextCtrl(self, size = size, style=wx.VSCROLL|wx.HSCROLL|wx.NO_BORDER|wx.WANTS_CHARS);
+#        self.spell = RTCSpellCheck(self.rtc, language="fr_FR")
+        self.toutVerifier = False
+        
+        
         self.sizer.Add(self.rtc, 1, flag = wx.EXPAND)
         self.SetSizer(self.sizer)
     
                     
         self.Ouvrir()
-        
+#        self.rtc.Bind(rt.EVT_RICHTEXT_LEFT_CLICK, self.OnModified)
+#        self.rtc.Bind(wx.EVT_IDLE, self.OnIdle)
         self.rtc.Bind(wx.EVT_KILL_FOCUS, self.Sauver)
         self.rtc.Bind(wx.EVT_TEXT_URL, self.OnURLClick)
 
+        
+    
+    def OnIdle(self, evt):
+        self.spell.processIdleBlock()
 
+    def OnContextMenu(self,evt):
+        pos = evt.GetPosition()
+        bpos = self.PositionFromPoint(self.ScreenToClient(pos))
+        words = self.GetWordFromPosition(bpos)
 
+#        print dir(evt)
+#        print evt.GetClientObject()
+        
+        spell = self.spell._spelling_dict
+        if not spell.check(words[0]):
+            sugg = self.spell.getSuggestions(words[0])
+            menu = wx.Menu()
+        
+            for w in sugg:
+                item = wx.MenuItem(menu, wx.ID_ANY, w)
+                item1 = menu.AppendItem(item)    
+                self.Bind(wx.EVT_MENU, 
+                          functools.partial(self.Remplacer, mot = w, start = words[1], end = words[2]), 
+                          item1)
+            
+            self.PopupMenu(menu)
+            menu.Destroy()
+            
+        else:
+            evt.Skip()
+        
+    def Remplacer(self, event = None, mot = u"", start = 0, end = 0):
+        self.Replace(start, end, mot)
+        
+    def GetWordFromPosition(self, pos):
+        """Get the word at the given position
+        @param pos: int
+        @return: (string, int_start, int_end)
+
+        """
+        end = self.WordEndPosition(pos, True)
+        start = self.WordStartPosition(pos, True)
+        word = self.GetTextRange(start, end)
+        return (word, start, end)
+        
+        
+    def SetValue(self, text):
+#        print "SetValue", text
+        self.toutVerifier = True
+        self.SetText(text)
+
+ 
+    def OnModified(self, evt):
+        # NOTE: on really big insertions, evt.GetText can cause a
+        # MemoryError on MSW, so I've commented this dprint out.
+        print "OnModified"
+                    
+        if self.toutVerifier:
+            pos = 1
+            last = self.rtc.GetLastPosition()
+        else:
+            pos = self.rtc.GetInsertionPoint()
+            last = pos + evt.GetPosition()
+        
+        self.toutVerifier = False
+            
+        self.spell.addDirtyRange(pos, last)
+        
+        #self.modified_count += 1
+        #if self.modified_count > 10:
+        #    wx.CallAfter(self.spell.processDirtyRanges)
+        #    self.modified_count = 0
+        evt.Skip()
+        
     def GetValue(self):
         return self.rtc.GetValue()
     
@@ -480,317 +560,6 @@ class RichTextPanel(wx.Panel):
         
     def OnURL(self, evt):
         self.InsertURL()
-        
-############################################################################################################            
-#class RichTextFrame(wx.Frame):
-#    def __init__(self, titre, objet):
-#        wx.Frame.__init__(self, None, -1, titre,
-#                                     size = (700, 500),
-#                                     style = wx.DEFAULT_FRAME_STYLE)
-#
-#        self.objet = objet
-#        
-#        self.MakeMenuBar()
-#        self.MakeToolBar()
-#        self.CreateStatusBar()
-#        self.SetStatusText(u"Saisir le texte descriptif")
-#
-#        self.rtp = RichTextPanel(self, objet)
-#        wx.CallAfter(self.rtp.rtc.SetFocus)
-#        
-##        self.EcrireHTML()
-#
-#        self.Bind(wx.EVT_CLOSE, self.OnClose)
-#        
-#        
-#    def OnClose(self, evt):
-#        self.rtp.Sauver()
-#        if hasattr(self.objet, 'panelPropriete'):
-#            self.objet.panelPropriete.rtc.Ouvrir()
-#            self.objet.panelPropriete.edition = False
-#        evt.Skip()
-#        
-#    def OnURL(self, evt):
-#        wx.MessageBox(evt.GetString(), "URL Clicked")
-#        
-#    def OnImage(self, evt):
-#        self.rtp.InsertImage()
-#        
-#
-#    def OnFileOpen(self, evt):
-#        # This gives us a string suitable for the file dialog based on
-#        # the file handlers that are loaded
-#        wildcard, types = rt.RichTextBuffer.GetExtWildcard(save=False)
-#        dlg = wx.FileDialog(self, "Choose a filename",
-#                            wildcard=wildcard,
-#                            style=wx.OPEN)
-#        if dlg.ShowModal() == wx.ID_OK:
-#            path = dlg.GetPath()
-#            if path:
-#                fileType = types[dlg.GetFilterIndex()]
-#                self.rtp.rtc.LoadFile(path, fileType)
-#        dlg.Destroy()
-#
-#        
-#    def OnFileSave(self, evt):
-#        if not self.rtp.rtc.GetFilename():
-#            self.OnFileSaveAs(evt)
-#            return
-#        self.rtp.rtc.SaveFile()
-#
-#        
-#    def OnFileSaveAs(self, evt):
-#        wildcard, types = rt.RichTextBuffer.GetExtWildcard(save=True)
-#
-#        dlg = wx.FileDialog(self, "Choose a filename",
-#                            wildcard=wildcard,
-#                            style=wx.SAVE)
-#        if dlg.ShowModal() == wx.ID_OK:
-#            path = dlg.GetPath()
-#            if path:
-#                fileType = types[dlg.GetFilterIndex()]
-#                ext = rt.RichTextBuffer.FindHandlerByType(fileType).GetExtension()
-#                if not path.endswith(ext):
-#                    path += '.' + ext
-#                self.rtp.rtc.SaveFile(path, fileType)
-#        dlg.Destroy()
-#        
-#        
-#        
-#    def Ouvrir(self):
-#        self.rtp.Ouvrir()
-#
-#                
-#    def OnFileViewHTML(self, evt):
-#        # Get an instance of the html file handler, use it to save the
-#        # document to a StringIO stream, and then display the
-#        # resulting html text in a dialog with a HtmlWindow.
-#        handler = rt.RichTextHTMLHandler()
-#        handler.SetFlags(rt.RICHTEXT_HANDLER_SAVE_IMAGES_TO_MEMORY)
-#        handler.SetFontSizeMapping([7,9,11,12,14,22,100])
-#
-#        import cStringIO
-#        stream = cStringIO.StringIO()
-#        if not handler.SaveStream(self.rtc.GetBuffer(), stream):
-#            return
-#
-#        import wx.html
-#        dlg = wx.Dialog(self, title="HTML", style=wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER)
-#        html = wx.html.HtmlWindow(dlg, size=(500,400), style=wx.BORDER_SUNKEN)
-#        html.SetPage(stream.getvalue())
-#        btn = wx.Button(dlg, wx.ID_CANCEL)
-#        sizer = wx.BoxSizer(wx.VERTICAL)
-#        sizer.Add(html, 1, wx.ALL|wx.EXPAND, 5)
-#        sizer.Add(btn, 0, wx.ALL|wx.CENTER, 10)
-#        dlg.SetSizer(sizer)
-#        sizer.Fit(dlg)
-#
-#        dlg.ShowModal()
-#
-#        handler.DeleteTemporaryImages()
-#    
-#    def OnFileExit(self, evt):
-#        self.Close(True)
-#
-#    def OnBold(self, evt):
-#        self.rtp.ApplyBoldToSelection()
-#        
-#    def OnItalic(self, evt): 
-#        self.rtp.ApplyItalicToSelection()
-#        
-#    def OnUnderline(self, evt):
-#        self.rtp.ApplyUnderlineToSelection()
-#        
-#    def OnAlignLeft(self, evt):
-#        self.rtp.ApplyAlignmentLeftToSelection()
-#        
-#    def OnAlignRight(self, evt):
-#        self.rtp.ApplyAlignmentRightToSelection()
-#        
-#    def OnAlignCenter(self, evt):
-#        self.rtp.ApplyAlignmentCenterToSelection()
-#        
-#    def OnIndentMore(self, evt):
-#        self.rtp.IndentMore()
-#       
-#    def OnIndentLess(self, evt):
-#        self.rtp.IndentLess()
-#        
-#    def OnParagraphSpacingMore(self, evt):
-#        self.rtp.ParagraphSpacingMore()
-#        
-#    def OnParagraphSpacingLess(self, evt):
-#        self.rtp.ParagraphSpacingLess()
-#
-#    def OnLineSpacingSingle(self, evt): 
-#        self.rtp.LineSpacingSingle()
-# 
-#    def OnLineSpacingHalf(self, evt):
-#        self.rtp.LineSpacingHalf()
-#        
-#    def OnLineSpacingDouble(self, evt):
-#        self.rtp.LineSpacingDouble()
-#
-#    def OnFont(self, evt):
-#        self.rtp.Font()
-#        
-#    def OnColour(self, evt):
-#        self.rtp.Colour()
-#        
-#    def OnUpdateBold(self, evt):
-#        evt.Check(self.rtp.rtc.IsSelectionBold())
-#    
-#    def OnUpdateItalic(self, evt): 
-#        evt.Check(self.rtp.rtc.IsSelectionItalics())
-#    
-#    def OnUpdateUnderline(self, evt): 
-#        evt.Check(self.rtp.rtc.IsSelectionUnderlined())
-#    
-#    def OnUpdateAlignLeft(self, evt):
-#        evt.Check(self.rtp.rtc.IsSelectionAligned(wx.TEXT_ALIGNMENT_LEFT))
-#        
-#    def OnUpdateAlignCenter(self, evt):
-#        evt.Check(self.rtp.rtc.IsSelectionAligned(wx.TEXT_ALIGNMENT_CENTRE))
-#        
-#    def OnUpdateAlignRight(self, evt):
-#        evt.Check(self.rtp.rtc.IsSelectionAligned(wx.TEXT_ALIGNMENT_RIGHT))
-#
-#    
-#    def ForwardEvent(self, evt):
-#        # The RichTextCtrl can handle menu and update events for undo,
-#        # redo, cut, copy, paste, delete, and select all, so just
-#        # forward the event to it.
-#        self.rtp.rtc.ProcessEvent(evt)
-#
-#
-#    def MakeMenuBar(self):
-#        def doBind(item, handler, updateUI=None):
-#            self.Bind(wx.EVT_MENU, handler, item)
-#            if updateUI is not None:
-#                self.Bind(wx.EVT_UPDATE_UI, updateUI, item)
-#            
-#        fileMenu = wx.Menu()
-#        doBind( fileMenu.Append(-1, u"&Ouvrir\tCtrl+O", u"Ouvrir un fichier"),
-#                self.OnFileOpen )
-##        doBind( fileMenu.Append(-1, u"&Enregistrer\tCtrl+S", u"Enregistrer le fichier"),
-##                self.OnFileSave )
-##        doBind( fileMenu.Append(-1, u"&Enregistrer sous...\tF12", u"Enregistrer dans un nouveau fichier"),
-##                self.OnFileSaveAs )
-#        fileMenu.AppendSeparator()
-#        doBind( fileMenu.Append(-1, "&Visualiser en HTML", u"Visualiser en HTML"),
-#                self.OnFileViewHTML)
-#        fileMenu.AppendSeparator()
-#        doBind( fileMenu.Append(-1, "&Quitter\tCtrl+Q", "Fermer la fenêtre"),
-#                self.OnFileExit )
-#        
-#        editMenu = wx.Menu()
-#        doBind( editMenu.Append(wx.ID_UNDO, u"&Annuler\tCtrl+Z"),
-#                self.ForwardEvent, self.ForwardEvent)
-#        doBind( editMenu.Append(wx.ID_REDO, u"&Rétablir\tCtrl+Y"),
-#                self.ForwardEvent, self.ForwardEvent )
-#        editMenu.AppendSeparator()
-#        doBind( editMenu.Append(wx.ID_CUT, u"Couper\tCtrl+X"),
-#                self.ForwardEvent, self.ForwardEvent )
-#        doBind( editMenu.Append(wx.ID_COPY, u"&Copier\tCtrl+C"),
-#                self.ForwardEvent, self.ForwardEvent)
-#        doBind( editMenu.Append(wx.ID_PASTE, u"&Coller\tCtrl+V"),
-#                self.ForwardEvent, self.ForwardEvent)
-#        doBind( editMenu.Append(wx.ID_CLEAR, u"&Effacer\tDel"),
-#                self.ForwardEvent, self.ForwardEvent)
-#        editMenu.AppendSeparator()
-#        doBind( editMenu.Append(wx.ID_SELECTALL, u"Selectionner tout\tCtrl+A"),
-#                self.ForwardEvent, self.ForwardEvent )
-#        
-#        #doBind( editMenu.AppendSeparator(),  )
-#        #doBind( editMenu.Append(-1, "&Find...\tCtrl+F"),  )
-#        #doBind( editMenu.Append(-1, "&Replace...\tCtrl+R"),  )
-#
-#        formatMenu = wx.Menu()
-#        doBind( formatMenu.AppendCheckItem(-1, u"&Gras\tCtrl+B"),
-#                self.OnBold, self.OnUpdateBold)
-#        doBind( formatMenu.AppendCheckItem(-1, u"&Italique\tCtrl+I"),
-#                self.OnItalic, self.OnUpdateItalic)
-#        doBind( formatMenu.AppendCheckItem(-1, u"&Souligné\tCtrl+U"),
-#                self.OnUnderline, self.OnUpdateUnderline)
-#        formatMenu.AppendSeparator()
-#        doBind( formatMenu.AppendCheckItem(-1, u"Aligner à gauche"),
-#                self.OnAlignLeft, self.OnUpdateAlignLeft)
-#        doBind( formatMenu.AppendCheckItem(-1, u"&Centrer"),
-#                self.OnAlignCenter, self.OnUpdateAlignCenter)
-#        doBind( formatMenu.AppendCheckItem(-1, u"Aligner à droite"),
-#                self.OnAlignRight, self.OnUpdateAlignRight)
-#        formatMenu.AppendSeparator()
-#        doBind( formatMenu.Append(-1, u"Augmenter le retrait"), self.OnIndentMore)
-#        doBind( formatMenu.Append(-1, u"Diminuer le retrait"), self.OnIndentLess)
-#        formatMenu.AppendSeparator()
-#        doBind( formatMenu.Append(-1, u"Augmenter l'espacement des paragraphes"), self.OnParagraphSpacingMore)
-#        doBind( formatMenu.Append(-1, u"Diminuer l'espacement des paragraphes"), self.OnParagraphSpacingLess)
-#        formatMenu.AppendSeparator()
-#        doBind( formatMenu.Append(-1, u"Interligne normal"), self.OnLineSpacingSingle)
-#        doBind( formatMenu.Append(-1, u"Interligne de 1.5"), self.OnLineSpacingHalf)
-#        doBind( formatMenu.Append(-1, u"Interligne double"), self.OnLineSpacingDouble)
-#        formatMenu.AppendSeparator()
-#        doBind( formatMenu.Append(-1, u"&Police..."), self.OnFont)
-#        
-#        mb = wx.MenuBar()
-#        mb.Append(fileMenu, u"&Fichier")
-#        mb.Append(editMenu, u"&Edition")
-#        mb.Append(formatMenu, u"F&ormat")
-#        self.SetMenuBar(mb)
-#
-#
-#    def MakeToolBar(self):
-#        def doBind(item, handler, updateUI=None):
-#            self.Bind(wx.EVT_TOOL, handler, item)
-#            if updateUI is not None:
-#                self.Bind(wx.EVT_UPDATE_UI, updateUI, item)
-#        
-#        tbar = self.CreateToolBar()
-#        doBind( tbar.AddTool(-1, _rt_open.GetBitmap(),
-#                            shortHelpString=u"Ouvrir"), self.OnFileOpen)
-##        doBind( tbar.AddTool(-1, _rt_save.GetBitmap(),
-##                            shortHelpString=u"Enregistrer"), self.OnFileSave)
-#        tbar.AddSeparator()
-#        doBind( tbar.AddTool(wx.ID_CUT, _rt_cut.GetBitmap(),
-#                            shortHelpString=u"Couper"), self.ForwardEvent, self.ForwardEvent)
-#        doBind( tbar.AddTool(wx.ID_COPY, _rt_copy.GetBitmap(),
-#                            shortHelpString=u"Copier"), self.ForwardEvent, self.ForwardEvent)
-#        doBind( tbar.AddTool(wx.ID_PASTE, _rt_paste.GetBitmap(),
-#                            shortHelpString=u"Coller"), self.ForwardEvent, self.ForwardEvent)
-#        tbar.AddSeparator()
-#        doBind( tbar.AddTool(wx.ID_UNDO, _rt_undo.GetBitmap(),
-#                            shortHelpString=u"Annuler"), self.ForwardEvent, self.ForwardEvent)
-#        doBind( tbar.AddTool(wx.ID_REDO, _rt_redo.GetBitmap(),
-#                            shortHelpString=u"Rétablir"), self.ForwardEvent, self.ForwardEvent)
-#        tbar.AddSeparator()
-#        doBind( tbar.AddTool(-1, _rt_bold.GetBitmap(), isToggle=True,
-#                            shortHelpString=u"Gras"), self.OnBold, self.OnUpdateBold)
-#        doBind( tbar.AddTool(-1, _rt_italic.GetBitmap(), isToggle=True,
-#                            shortHelpString=u"Italique"), self.OnItalic, self.OnUpdateItalic)
-#        doBind( tbar.AddTool(-1, _rt_underline.GetBitmap(), isToggle=True,
-#                            shortHelpString=u"Souligné"), self.OnUnderline, self.OnUpdateUnderline)
-#        tbar.AddSeparator()
-#        doBind( tbar.AddTool(-1, _rt_alignleft.GetBitmap(), isToggle=True,
-#                            shortHelpString=u"Aligner à gauche"), self.OnAlignLeft, self.OnUpdateAlignLeft)
-#        doBind( tbar.AddTool(-1, _rt_centre.GetBitmap(), isToggle=True,
-#                            shortHelpString=u"Centrer"), self.OnAlignCenter, self.OnUpdateAlignCenter)
-#        doBind( tbar.AddTool(-1, _rt_alignright.GetBitmap(), isToggle=True,
-#                            shortHelpString=u"Aligner à droite"), self.OnAlignRight, self.OnUpdateAlignRight)
-#        tbar.AddSeparator()
-#        doBind( tbar.AddTool(-1, _rt_indentless.GetBitmap(),
-#                            shortHelpString=u"Diminuer le retrait"), self.OnIndentLess)
-#        doBind( tbar.AddTool(-1, _rt_indentmore.GetBitmap(),
-#                            shortHelpString=u"Augmenter le retrait"), self.OnIndentMore)
-#        tbar.AddSeparator()
-#        doBind( tbar.AddTool(-1, _rt_font.GetBitmap(),
-#                            shortHelpString=u"Police de caractères"), self.OnFont)
-#        doBind( tbar.AddTool(-1, _rt_colour.GetBitmap(),
-#                            shortHelpString=u"Couleur de la police"), self.OnColour)
-#        tbar.AddSeparator()
-#        doBind( tbar.AddTool(-1, _rt_images.GetBitmap(),
-#                            shortHelpString=u"Insérer une image"), self.OnImage)
-#        tbar.Realize()
-        
 #----------------------------------------------------------------------
 _rt_alignleft = PyEmbeddedImage(
     "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAEJJ"

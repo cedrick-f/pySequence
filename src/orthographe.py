@@ -48,8 +48,11 @@ class STC_ortho(stc.StyledTextCtrl):
 #        self.SetUseHorizontalScrollBar(False)
         self.SetWrapMode(stc.STC_WRAP_WORD)
 #        self.SetLayoutCache(stc.STC_CACHE_NONE )
-    
+        self.toutVerifier = False
+        
+        
         self.Bind(stc.EVT_STC_MODIFIED, self.OnModified)
+#        self.Bind(stc.EVT_STC_CHANGE, self.OnChange)
         
         self.Bind(wx.EVT_CONTEXT_MENU, self.OnContextMenu)
         
@@ -74,10 +77,16 @@ class STC_ortho(stc.StyledTextCtrl):
 #        print evt.GetClientObject()
         
         spell = self.spell._spelling_dict
-        if not spell.check(words[0]):
+        print words
+        if len(words[0]) > 0 and not spell.check(words[0]):
             sugg = self.spell.getSuggestions(words[0])
             menu = wx.Menu()
-        
+            
+            if len(sugg) == 0:
+                item = wx.MenuItem(menu, wx.ID_ANY, u"Aucune suggestion")
+                item.Enable(False)
+                item1 = menu.AppendItem(item)    
+                
             for w in sugg:
                 item = wx.MenuItem(menu, wx.ID_ANY, w)
                 item1 = menu.AppendItem(item)    
@@ -105,21 +114,39 @@ class STC_ortho(stc.StyledTextCtrl):
         word = self.GetTextRange(start, end)
         return (word, start, end)
         
+        
+    def SetValue(self, text):
+#        print "SetValue", text
+        self.toutVerifier = True
+        self.SetText(text)
+
+ 
     def OnModified(self, evt):
         # NOTE: on really big insertions, evt.GetText can cause a
         # MemoryError on MSW, so I've commented this dprint out.
         mod = evt.GetModificationType()
-        if mod & stc.STC_MOD_INSERTTEXT or mod & stc.STC_MOD_DELETETEXT:
+        if mod & stc.STC_MOD_INSERTTEXT or mod & stc.STC_MOD_DELETETEXT or self.toutVerifier:
+            print "OnModified", self.toutVerifier
             #print("(%s) at %d: text=%s len=%d" % (self.transModType(evt.GetModificationType()),evt.GetPosition(), repr(evt.GetText()), evt.GetLength()))
-            pos = evt.GetPosition()
-            last = pos + evt.GetLength()
+            
+            if self.toutVerifier:
+                pos = 1
+                last = self.GetLastPosition()
+            else:
+                pos = evt.GetPosition()
+                last = pos + evt.GetLength()
+            
+            self.toutVerifier = False
+                
             self.spell.addDirtyRange(pos, last, evt.GetLinesAdded(), mod & stc.STC_MOD_DELETETEXT)
+            
             #self.modified_count += 1
             #if self.modified_count > 10:
             #    wx.CallAfter(self.spell.processDirtyRanges)
             #    self.modified_count = 0
         evt.Skip()
-    
+
+
     def OnIdle(self, evt):
         self.spell.processIdleBlock()
         

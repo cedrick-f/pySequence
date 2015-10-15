@@ -243,6 +243,9 @@ def show_text_rect(ctx, texte, rect, \
         lt, fontSize, maxw = wrapp(ctx, texte, w, h, le, pe, wrap, couper)
         CACHE[texte] = (w, h, lt, fontSize, maxw)
     
+    if lt == []:
+        return 0, 0, 0
+    
     nLignes = len(lt)
     hTotale = hl*nLignes
     
@@ -1651,6 +1654,9 @@ def wrapp(ctx, texte, w, h, le = 0.8, pe = 1.0, wrap = True, couper = True):
         
         wrap1 = 0
         st = texte.split("\n")
+        
+        
+        
         for l in st:
             wrap1 = max(wrap1, len(l))
         
@@ -1671,6 +1677,9 @@ def wrapp(ctx, texte, w, h, le = 0.8, pe = 1.0, wrap = True, couper = True):
             for l in texte.split("\n"):
                 lt.extend(textwrap.wrap(l, wrap, break_long_words = couper))
                 
+            if lt == []:
+                return lt, 1, 0
+        
             # On mémorise la longueur de la plus longue ligne 
             #    (en caractères et en unité Cairo)
             maxw = maxl = 0
@@ -1679,6 +1688,7 @@ def wrapp(ctx, texte, w, h, le = 0.8, pe = 1.0, wrap = True, couper = True):
                 maxl = max(maxl, len(t))
             
             # On calcule la taille de police nécessaire pour que ça rentre
+#            print lt, maxw, hl*len(lt)
             fontSize = min(w/maxw, h/(hl*len(lt)))  * COEF
             
             # On calcul le rapport des rapports h/w

@@ -10,7 +10,7 @@
 #############################################################################
 #############################################################################
 
-## Copyright (C) 2014 C�drick FAURY - Jean-Claude FRICOU
+## Copyright (C) 2014 Cédrick FAURY - Jean-Claude FRICOU
 
 #    pySequence is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by

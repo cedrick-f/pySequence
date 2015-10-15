@@ -2793,7 +2793,7 @@ class BaseFiche(wx.ScrolledWindow):
     def CentrerSur(self, obj):
         if hasattr(obj, 'rect'):
             y = (obj.rect[0][1])*self.GetVirtualSizeTuple()[1]
-            self.Scroll(0, y/20)
+            self.Scroll(0, y/20/draw_cairo.COEF)
             self.Refresh()
     
     
@@ -3427,7 +3427,7 @@ class PanelPropriete_Projet(PanelPropriete):
         pageGen.Bind(stc.EVT_STC_MODIFIED, self.EvtText, self.commctrl)
         pageGen.sizer.AddGrowableCol(1)
         
-        
+
         #
         # Année scolaire et Position dans l'année
         #
@@ -3565,7 +3565,7 @@ class PanelPropriete_Projet(PanelPropriete):
             nt = event.GetString()
 #            if nt == u"":
 #                nt = self.projet.support.nom
-#            self.projet.SetText(nt)
+            self.projet.SetText(nt)
             self.textctrl.ChangeValue(nt)
             maj = True
             
@@ -6412,7 +6412,7 @@ class PanelPropriete_Tache(PanelPropriete):
         if not tache.phase in TOUTES_REVUES_EVAL_SOUT:
             box = wx.StaticBox(pageGen, -1, u"Intitulé de la tâche")
             bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
-            textctrl = wx.TextCtrl(pageGen, -1, u"", style=wx.TE_MULTILINE)
+            textctrl = orthographe.STC_ortho(pageGen, -1)#, u"", style=wx.TE_MULTILINE)
             textctrl.SetToolTipString(u"Donner l'intitulé de la tâche\n"\
                                       u" = un simple résumé !\n" \
                                       u"les détails doivent figurer dans la zone\n" \
@@ -7751,8 +7751,9 @@ class ArbreDoc(CT.CustomTreeCtrl):
             else:
                 panelPropriete = data.panelPropriete
 
-        if hasattr(panelPropriete, 'MiseAJour'):
-            panelPropriete.MiseAJour()
+#        if hasattr(panelPropriete, 'MiseAJour'):
+#            panelPropriete.MiseAJour()
+            
         self.panelProp.AfficherPanel(panelPropriete)
         self.parent.Refresh()
         
@@ -9393,12 +9394,12 @@ class ArbreTypeEnseignement(CT.CustomTreeCtrl):
     def Construire(self, racine):
         """ Construction de l'arbre
         """
-        print "Construire ArbreTypeEnseignement"
-        print ARBRE_REF
+#        print "Construire ArbreTypeEnseignement"
+#        print ARBRE_REF
         self.branche = []
 #        self.ExpandAll()
         for t, st in ARBRE_REF.items():
-            print "   ", t, st, self.panelParent.pourProjet
+#            print "   ", t, st, self.panelParent.pourProjet
             if t[0] == "_" or len(REFERENTIELS[t].projets) == 0:
                 branche = self.AppendItem(racine, REFERENTIELS[st[0]].Enseignement[2])
             else:
@@ -12837,16 +12838,18 @@ class Projet(BaseDoc, Objet_sequence):
         if adapterVersion:
             self.taches.extend(tachesRevue)
         
-#        if hasattr(self, 'panelPropriete'):
-#            self.panelPropriete.MiseAJour()
+            
 
         if hasattr(self, 'panelPropriete'):
 #            if ancienneFam != self.classe.familleEnseignement:
             self.initRevues()
-            self.MiseAJourNbrRevues()
             
+            self.MiseAJourNbrRevues()
+           
             self.panelPropriete.MiseAJourTypeEnseignement()
             
+            self.panelPropriete.MiseAJour()
+ 
         return err
         
     ######################################################################################  

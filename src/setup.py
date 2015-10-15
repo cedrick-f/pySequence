@@ -73,8 +73,9 @@ for p in ['C:\\Python27\\Lib\site-packages\\html5lib',
 
 # Dependencies are automatically detected, but it might need fine tuning.
 build_exe_options = {'build_exe': 'build/bin',
-                     "packages": ["os", "xhtml2pdf","html5lib"], 
+                     "packages": ["os", "xhtml2pdf","html5lib", "enchant"], 
                      "includes": ["xhtml2pdf", "xhtml2pdf.pisa","html5lib", "xhtml2pdf.w3c", "encodings.ascii"],
+                
                      "optimize" : 0,
 #                     "path" : ["../packages/html5lib"],#, "../packages/xhtml2pdf",  "../packages/xhtml2pdf/w3c"],
 #                     "zip_includes": [("../packages/html5lib/", "html5lib"),
