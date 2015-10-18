@@ -161,9 +161,16 @@ ecartTacheY = None  # Ecartement entre les tâches de phase différente
 # paramètres pour la fonction qui calcule la hauteur des tâches 
 # en fonction de leur durée
 a = b = None
+def calcH_tache(tache):
+    if tache.phase in ["R1", "R2", "R3", "S"] and tache.DiffereSuivantEleve():
+        return max(len(tache.projet.eleves) * hRevue, hRevue)
+    else:
+        return calcH(tache.GetDuree())
+        
+
 def calcH(t):
     if t != 0:
-        return a*log(t*2)+b
+        return a*log(t/constantes.DUREE_REVUES)+b
     return 2*ecartTacheY
 
 
@@ -246,7 +253,6 @@ def DefinirZones(prj, ctx):
     tailleZTaches[0] = posZDeroul[0] + tailleZDeroul[0] - posZTaches[0] - ecartX/2
     tailleZTaches[1] = tailleZDeroul[1] - ecartY/2 - 0.04 * COEF    # écart pour la durée totale
     
-   
     calculCoefCalcH(prj, ctx, hTacheMini)
     if a < 0:
         calculCoefCalcH(prj, ctx, hTacheMini/2)
@@ -254,32 +260,39 @@ def DefinirZones(prj, ctx):
 
 
 def calculCoefCalcH(prj, ctx, hm):
-    global ecartTacheY, intituleTaches, fontIntTaches, xEleves, yEleves, a, b, yTaches
-    
+    global ecartTacheY, a, b
     ecartTacheY = ecartY/3
-    sommeEcarts = (prj.GetNbrPhases()-2)*ecartTacheY
+    sommeEcarts = (prj.GetNbrPhases()-1)*ecartTacheY
     
     # Calcul des paramètres de la fonction hauteur = f(durée)
     # hauteur = a * log(durée) + b
     b = 0
     a = 1
-    h = ecartTacheY
-    nt = 0 # nombre de tâches de hauteur variable
+    h = 0#ecartTacheY
+    nt = 0 # nombre de tâches de hauteur variable ( = calculée par calcH() )
+    hrv = 0 # Hauteur totale des revues différenciant les élèves
+    hrf = 0 # Hauteur totale des revues de taille fixe
     for t in prj.taches:
-        if not t.phase in ["R1", "R2", "R3", "S"] or not t.DiffereSuivantEleve():
+        if t.phase in ["R1", "R2", "R3", "S"]:
+            if t.DiffereSuivantEleve():
+                hrv += max(len(t.projet.eleves) * hRevue, hRevue)
+            else:
+                hrf += hRevue
+        else:
             h += calcH(t.GetDuree())
             nt += 1
-        
     
 #    hr = (prj.nbrRevues+1)*len(prj.eleves)*hRevue
     
-    # Hauteur totale des revues différenciant les élèves
-    hr = (len(prj.taches)-nt)*len(prj.eleves)*hRevue
-
-    b = hm
     
-    hFixe = sommeEcarts + hr
-    a = (tailleZTaches[1] - hFixe - b*nt) / h
+#    hr = (len(prj.taches)-nt)*len(prj.eleves)*hRevue
+
+    b = hm # Hauteur mini
+    
+    hFixe = sommeEcarts + hrv + hrf
+
+    if h != 0:
+        a = (tailleZTaches[1] - hFixe - b*nt) / h
 
     
 ######################################################################################  
@@ -1187,11 +1200,7 @@ def DrawLigneEff(ctx, x, y):
 def DrawTacheRacine(ctx, tache, y):
     global yTaches
     
-
-    if tache.phase in ["R1", "R2", "R3", "S"] and tache.DiffereSuivantEleve():
-        h = max(len(tache.projet.eleves) * hRevue, hRevue)
-    else:
-        h = calcH(tache.GetDuree())
+    h = calcH_tache(tache)
     
     #
     # Flèche verticale indiquant la durée de la tâche

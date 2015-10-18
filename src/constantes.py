@@ -211,7 +211,7 @@ TOUTES_REVUES = [_R1, _R2, _R3, _Rev]
 TOUTES_REVUES_EVAL = [_R1, _R2, _R3]
 TOUTES_REVUES_SOUT = [_R1, _R2, _R3, _Rev, _S]
 TOUTES_REVUES_EVAL_SOUT = [_R1, _R2, _R3, _S]
-
+DUREE_REVUES = 0.25 # Durée "factice" : uniquement pour que CalcH renvoie 0
 
 ####################################################################################
 #

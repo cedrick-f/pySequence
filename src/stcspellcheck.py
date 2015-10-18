@@ -67,12 +67,15 @@ if wx.Platform == '__WXMAC__':
     if 'PYENCHANT_LIBRARY_PATH' not in os.environ:
         os.environ['PYENCHANT_LIBRARY_PATH'] = '/opt/local/lib/libenchant.dylib'
 
+
 try:
     import enchant
 except ImportError:
+    print "pas enchant"
     # no big deal; support for enchant simply won't be included
     pass
 except:
+    print "error enchant"
     # big deal; enchant is there but there's some error that is preventing
     # its import
     import traceback

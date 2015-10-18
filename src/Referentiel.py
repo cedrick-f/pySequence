@@ -287,7 +287,7 @@ class XMLelem():
                 if isinstance(val1, (str, unicode, int, long, float, bool, list, dict, XMLelem)) :
                     val2 = getattr(ref, attr)
                     if not egal(val1, val2):
-#                        print "Différence", self.intitule
+                        print "Différence"
                         print "  ", attr
                         print "  ", val1
                         print "  ", val2
@@ -1845,6 +1845,9 @@ class Projet(XMLelem):
 
     #########################################################################    
     def getClefDic(self, dicattr, nom, num = None):
+        """ Renvoie la clef associée à une valeur dans un dictionnaire
+            num est utilisé pour rechercher avec le numiemme élément d'une valeur de type liste
+        """
         dic = getattr(self, dicattr)
         for k,v in dic.items():
             if num != None:

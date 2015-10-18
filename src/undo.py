@@ -44,35 +44,52 @@ class UndoStack():
     def __init__(self, doc):
         self.doc = doc
         self.stack = []
-        self.index = 1
-        
+        self.index = 1 # Le curseur qui point sur l'état "actuel" (en partant de la fin)
+        self.onUndoRedo = False # Flag pour geler le "do" (True = pas de nouveau "do")
+
+
     def do(self, action):
-        print self.doc, ": do", action
-        s = self.doc.getBranche()
-        self.stack[min(self.getTaille(), TAILLE):] = [(s, action)]
-        
+        if not self.onUndoRedo:
+            
+            s = self.doc.getBranche()
+            self.stack[min(self.getTaille(), TAILLE):] = [(s, action)]
+            print self.doc, ": do =", len(self.stack), self.index, action
+
     def undo(self):
         if self.index < TAILLE:
-            print self.doc, ": undo <<", self.stack[-self.index][1]
+            
+            
             self.index += 1
             self.doc.setBranche(self.stack[-self.index][0])
+            print self.doc, ": undo <<", len(self.stack), self.index, self.stack[-self.index][1]
             
-            
+
+
     def redo(self):
         if self.index > 1:
-            print self.doc, ": redo >>", self.stack[-self.index][1]
+            
             self.index -= 1
             self.doc.setBranche(self.stack[-self.index][0])
+            print self.doc, ": redo >>", len(self.stack), self.index, self.stack[-self.index][1]
             
-            
-    def getUndoAction(self):
-        if self.index+1 < self.getTaille():
-            return self.stack[-self.index][1]
+
+    def setOnUndoRedo(self):
+        self.onUndoRedo = True
         
+    def resetOnUndoRedo(self):
+        self.onUndoRedo = False
+
+
+    def getUndoAction(self):
+        if self.index < self.getTaille():
+            return self.stack[-self.index][1]
+
+
     def getRedoAction(self):
         if self.index > 1:
             return self.stack[-self.index+1][1]
-        
+
+
     def getTaille(self):
         return len(self.stack)
 

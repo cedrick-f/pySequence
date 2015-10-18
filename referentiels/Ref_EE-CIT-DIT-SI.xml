@@ -184,6 +184,36 @@
       </l_01>
       <d_02 I_C="10" />
     </l_C3.2>
+    <l_C4 S_00="Repr&#233;senter - C">
+      <l_01>
+        <Indicateur_00 S_intitule="exprimer une r&#233;flexion, un principe, une id&#233;e, une solution technique">
+          <d_ligne I_C="32" />
+          <d_poids F_C="20.0" />
+          <d_revue I_C="0" />
+        </Indicateur_00>
+        <Indicateur_01 S_intitule="exprimer sa pens&#233;e &#224; l'aide d'outils de description adapt&#233;s, manuels ou num&#233;riques">
+          <d_ligne I_C="33" />
+          <d_poids F_C="20.0" />
+          <d_revue I_C="0" />
+        </Indicateur_01>
+        <Indicateur_02 S_intitule="D&#233;crire, en utilisant les outils et les languages de descriptions adapt&#233;s">
+          <d_ligne I_C="34" />
+          <d_poids F_C="20.0" />
+          <d_revue I_C="0" />
+        </Indicateur_02>
+        <Indicateur_03 S_intitule="Interpr&#233;ter des r&#233;sultats exp&#233;rimentaux, en tirer une conclusion et la communiquer en argumentant">
+          <d_ligne I_C="35" />
+          <d_poids F_C="20.0" />
+          <d_revue I_C="0" />
+        </Indicateur_03>
+        <Indicateur_04 S_intitule="Mod&#233;liser, simuler num&#233;riquement la structure et/ou le comportement d'un objet">
+          <d_ligne I_C="36" />
+          <d_poids F_C="20.0" />
+          <d_revue I_C="0" />
+        </Indicateur_04>
+      </l_01>
+      <d_02 I_C="10" />
+    </l_C4>
   </d_dicCompetences>
   <d_dicFonctions />
   <d_dicSavoirs>

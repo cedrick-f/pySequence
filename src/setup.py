@@ -25,22 +25,45 @@ from version import __version__, GetVersion_cxFreeze
 import shutil
 shutil.rmtree("build", ignore_errors=True)
 
-# Inculsion des fichiers de donn�es
+import enchant.utils
+enchant_files = enchant.utils.win32_data_files() 
+le = []
+for d, s in enchant_files:
+    for f in s:
+        if d =='':
+            le.append((f, os.path.join(d, os.path.split(f)[1])))
+        else:
+            le.append((f, os.path.join('..',d, os.path.split(f)[1])))
+enchant_files = le
+#enchant_files = [([r.replace("\\", "/") for r in a], b.replace("\\", "/")) for b, a in enchant_files]
+#print enchant_files
+
+# Inculsion des fichiers de données
 #################################################################################################
 includefiles = [('D:/Developpement/Microsoft.VC90.CRT', "Microsoft.VC90.CRT"),
                      'LICENSE.txt', 
-                     'fichier_prj.ico', 'fichier_seq.ico',
+                     'fichier_prj.ico', 
+                     'fichier_seq.ico',
                      'etablissements.xml',
                      'splash.png',
                      ('../tables', "../tables"),
                      ('../BO', "../BO"),
-                     ('../referentiels', "../referentiels")]
+                     ('../referentiels', "../referentiels"),
+#                     ('C:\\Python27\\lib\\site-packages\\enchant\\share\\enchant\\myspell', 'share/enchant/myspell'), 
+#                     ('C:\\Python27\\lib\\site-packages\\enchant\\*.dll', ''),
+#                     ('C:\\Python27\\lib\\site-packages\\enchant\\share\\enchant\\ispell', 'share/enchant/ispell'),
+#                     ('C:\\Python27\\lib\\site-packages\\enchant\\lib\\enchant\\*.dll', 'lib/enchant'),
+                     ]
+ 
+includefiles.extend(enchant_files)
+
 #includefiles.extend(glob(r"*.xlsx"))
 #includefiles.extend(glob(r"*.xls"))
 #includefiles.extend(glob(r"*.xlsm"))
 for p in ['C:\\Python27\\Lib\site-packages\\html5lib',
             'C:\\Python27\\Lib\\site-packages\\xhtml2pdf',
-            'C:\\Python27\\Lib\\site-packages\\PIL']:
+            'C:\\Python27\\Lib\\site-packages\\PIL',
+            "C:\\Python27\\Lib\\site-packages\\enchant"]:
     if not p in sys.path:
         sys.path.append(p)
 

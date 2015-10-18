@@ -817,6 +817,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         """ Mise à jour des boutons (et menus)
             après une opération undo ou redo
         """
+#        print "miseAJourUndo"
         try:
             doc = self.GetDocActif()
         except:
@@ -825,7 +826,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             self.tb.EnableTool(200, False)
             self.tb.EnableTool(201, False)
             return
-            
+        
         undoAction = doc.undoStack.getUndoAction()
         if undoAction == None:
             self.tb.EnableTool(200, False)
@@ -1551,25 +1552,38 @@ class FenetreDocument(aui.AuiMDIChildFrame):
     
     #############################################################################
     def commandeRedo(self, event = None):
+        wx.BeginBusyCursor()
+        self.GetDocument().undoStack.setOnUndoRedo()
+        self.GetDocument().classe.undoStack.setOnUndoRedo()
+        
         self.GetDocument().undoStack.redo()
         self.GetDocument().classe.undoStack.redo()
-        wx.BeginBusyCursor()
+        
+        
         self.restaurer()
+        
+        self.GetDocument().undoStack.resetOnUndoRedo()
+        self.GetDocument().classe.undoStack.resetOnUndoRedo()
+        
         wx.EndBusyCursor()
         
     #############################################################################
     def commandeUndo(self, event = None):
-        t0 = time.time()
+        wx.BeginBusyCursor()
+        self.GetDocument().undoStack.setOnUndoRedo()
+        self.GetDocument().classe.undoStack.setOnUndoRedo()
+#        t0 = time.time()
         self.GetDocument().undoStack.undo()
-        t1 = time.time()
-        print "  ", t1-t0
+#        t1 = time.time()
+#        print "  ", t1-t0
         
         self.GetDocument().classe.undoStack.undo()
-        t2 = time.time()
-        print "  ", t2-t1
+#        t2 = time.time()
+#        print "  ", t2-t1
         
-        wx.BeginBusyCursor()
         self.restaurer()
+        self.GetDocument().undoStack.resetOnUndoRedo()
+        self.GetDocument().classe.undoStack.resetOnUndoRedo()
         wx.EndBusyCursor()
     
     #############################################################################
@@ -3150,6 +3164,8 @@ class PanelPropriete(scrolled.ScrolledPanel):
     def __init__(self, parent, titre = u"", objet = None, style = wx.VSCROLL | wx.RETAINED):
         scrolled.ScrolledPanel.__init__(self, parent, -1, style = style)#|wx.BORDER_SIMPLE)
         
+        
+        
         self.sizer = wx.GridBagSizer()
         self.Hide()
 #        self.SetMinSize((400, 200))
@@ -3162,13 +3178,25 @@ class PanelPropriete(scrolled.ScrolledPanel):
         self.Bind(wx.EVT_ENTER_WINDOW, self.OnEnter)
 
 
+
     ######################################################################################################
     def OnEnter(self, event):
 #        print "OnEnter PanelPropriete"
         self.SetFocus()
         event.Skip()
 
-       
+    #########################################################################################################
+    def onUndoRedo(self):
+        """ Renvoi True pendant une phase de Undo/Redo
+        """
+        
+#        if hasattr(self.GetDocument(), 'undoStack'):
+#            return self.objet.undoStack.onUndoRedo
+#        else:
+        return self.GetDocument().undoStack.onUndoRedo or self.GetDocument().classe.undoStack.onUndoRedo
+#        return False
+    
+    
     #########################################################################################################
     def sendEvent(self, doc = None, modif = u"", draw = True, obj = None):
         self.eventAttente = False
@@ -3311,13 +3339,18 @@ class PanelPropriete_Sequence(PanelPropriete):
         else:
             self.sequence.SetCommentaire(event.GetString())
             t = u"Modification du commentaire de la séquence"
-        if not self.eventAttente:
-            wx.CallLater(DELAY, self.sendEvent, modif = t)
-            self.eventAttente = True
+        
+        if self.onUndoRedo():
+            self.sendEvent(modif = t)
+        else:
+            if not self.eventAttente:
+                wx.CallLater(DELAY, self.sendEvent, modif = t)
+                self.eventAttente = True
         
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
 #        print "Miseàjour"
+        
         self.textctrl.ChangeValue(self.sequence.intitule)
         
         self.position.SetMax(self.sequence.GetReferentiel().getNbrPeriodes()-1)
@@ -3325,6 +3358,9 @@ class PanelPropriete_Sequence(PanelPropriete):
         self.position.SetValue(self.sequence.position)
         self.bmp.SetBitmap(self.getBitmapPeriode(250))
         self.Layout()
+        
+        
+        
         if sendEvt:
             self.sendEvent()
 
@@ -3561,6 +3597,7 @@ class PanelPropriete_Projet(PanelPropriete):
               
     #############################################################################            
     def EvtText(self, event):
+#        print "EvtText", 
         if event.GetEventObject() == self.textctrl:
             nt = event.GetString()
 #            if nt == u"":
@@ -3568,56 +3605,72 @@ class PanelPropriete_Projet(PanelPropriete):
             self.projet.SetText(nt)
             self.textctrl.ChangeValue(nt)
             maj = True
+            obj = 'intit'
             
         elif 'ORI' in self.pages.keys() and event.GetEventObject() == self.pages['ORI'][1]:
             self.projet.origine = self.pages['ORI'][1].GetText()
             maj = False
+            obj = 'ORI'
             
         elif 'CCF' in self.pages.keys() and event.GetEventObject() == self.pages['CCF'][1]:
             self.projet.contraintes = self.pages['CCF'][1].GetText()
             maj = False
+            obj = 'CCF'
             
         elif 'OBJ' in self.pages.keys() and event.GetEventObject() == self.pages['OBJ'][1]:
             self.projet.production = self.pages['OBJ'][1].GetText()
             maj = False
+            obj = 'OBJ'
             
         elif 'SYN' in self.pages.keys() and event.GetEventObject() == self.pages['SYN'][1]:
             self.projet.synoptique = self.pages['SYN'][1].GetText()
             maj = False
+            obj = 'SYN'
         
         elif hasattr(self, 'intctrl') and event.GetEventObject() == self.intctrl:
             self.projet.intituleParties = self.intctrl.GetText()
             maj = False
+            obj = 'intctrl'
         
         elif hasattr(self, 'enonctrl') and event.GetEventObject() == self.enonctrl:
             self.projet.besoinParties = self.enonctrl.GetText()
             maj = False
+            obj = 'enonctrl'
             
         elif event.GetEventObject() == self.commctrl:
             self.projet.SetProblematique(self.commctrl.GetText())
             maj = True
+            obj = 'commctrl'
             
         elif 'PAR' in self.parctrl.keys() and event.GetEventObject() == self.parctrl['PAR']:
             self.projet.partenariat = self.parctrl['PAR'].GetText()
             maj = False
+            obj = 'PAR'
             
         elif 'PRX' in self.parctrl.keys() and event.GetEventObject() == self.parctrl['PRX']:
             self.projet.montant = self.parctrl['PRX'].GetText()
             maj = False
+            obj = 'PRX'
             
         elif 'SRC' in self.parctrl.keys() and event.GetEventObject() == self.parctrl['SRC']:
             self.projet.src_finance = self.parctrl['SRC'].GetText()
             maj = False
+            obj = 'SRC'
         
 #        else:
 #            maj = False
             
-            
-        if not self.eventAttente:
-            wx.CallLater(DELAY, self.sendEvent, 
-                         modif = u"Modification des propriétés du projet",
-                         draw = maj)
-            self.eventAttente = True
+#        print obj
+        modif = u"Modification des propriétés du projet"
+        if self.onUndoRedo():
+            self.sendEvent(modif = modif)
+        else:
+            if not self.eventAttente:
+                print "   modif", obj
+                wx.CallLater(DELAY, self.sendEvent, 
+                             modif = modif,
+                             draw = maj)
+                self.eventAttente = True
 
   
     #############################################################################            
@@ -3790,19 +3843,20 @@ class PanelPropriete_Projet(PanelPropriete):
 #        print "mise à jour panel table"
         ref = self.projet.GetProjetRef()
         
+        
         # La page "Généralités"
         self.textctrl.ChangeValue(self.projet.intitule)
-        self.commctrl.ChangeValue(self.projet.problematique)
-        
+        self.commctrl.SetValue(self.projet.problematique, False)
+
         # Les pages simples
         if 'ORI' in self.pages.keys():
-            self.pages['ORI'][1].ChangeValue(self.projet.origine)
+            self.pages['ORI'][1].SetValue(self.projet.origine, False)
         if 'CCF' in self.pages.keys():
-            self.pages['CCF'][1].ChangeValue(self.projet.contraintes)
+            self.pages['CCF'][1].SetValue(self.projet.contraintes, False)
         if 'OBJ' in self.pages.keys():
-            self.pages['OBJ'][1].ChangeValue(self.projet.production)
+            self.pages['OBJ'][1].SetValue(self.projet.production, False)
         if 'SYN' in self.pages.keys():
-            self.pages['SYN'][1].ChangeValue(self.projet.synoptique)
+            self.pages['SYN'][1].SetValue(self.projet.synoptique, False)
         
         # La page "typologie" ('TYP')
         if ref.attributs['TYP'][0] != "":
@@ -3811,21 +3865,23 @@ class PanelPropriete_Projet(PanelPropriete):
                 
         # La page "sous parties" ('DEC')
         if ref.attributs['DEC'][0] != "":
-            self.intctrl.ChangeValue(self.projet.intituleParties)
-            self.enonctrl.ChangeValue(self.projet.besoinParties)
+            self.intctrl.SetValue(self.projet.intituleParties, False)
+            self.enonctrl.SetValue(self.projet.besoinParties, False)
             self.nbrParties.v[0] = self.projet.nbrParties
             self.ctrlNbrParties.mofifierValeursSsEvt()
         
         # La page "Partenariat" ('PAR')
         if ref.attributs['PAR'][0] != "":
-            self.parctrl['PAR'].ChangeValue(self.projet.partenariat)
-            self.parctrl['PRX'].ChangeValue(self.projet.montant)
-            self.parctrl['SRC'].ChangeValue(self.projet.src_finance)
+            self.parctrl['PAR'].SetValue(self.projet.partenariat, False)
+            self.parctrl['PRX'].SetValue(self.projet.montant, False)
+            self.parctrl['SRC'].SetValue(self.projet.src_finance, False)
                     
         self.MiseAJourPosition()
      
         self.panelOrga.MiseAJourListe()
         self.Layout()
+        
+        
         
         if sendEvt:
             self.sendEvent()
@@ -3906,22 +3962,26 @@ class PanelOrganisation(wx.Panel):
         """ Déplacement de la revue sélectionnée
             vers le haut ou vers le bas
         """
-        i = event.GetId()
+     
         revue = self.liste.GetStringSelection()
-        ref = self.objet.GetProjetRef()
         
         if revue[:5] == "Revue":
+            i = event.GetId()
+            ref = self.objet.GetProjetRef()
             posRevue = self.liste.GetSelection()
             numRevue = eval(revue[-1])
+    
             if i == 11 and posRevue-2 >= 0:
                 nouvPosRevue = posRevue-2   # Montée
                 monte = True
             elif i == 12 and posRevue < self.liste.GetCount() - 1:
                 nouvPosRevue = posRevue+1   # Descente
                 monte = False
-            else:
+            else: 
                 return
-            itemPrecedent = ref.getClefDic('phases', self.liste.GetString(nouvPosRevue), 0)
+#            print posRevue, ">>", nouvPosRevue, self.liste.GetString(nouvPosRevue), toSystemEncoding(self.liste.GetString(nouvPosRevue))
+            itemPrecedent = ref.getClefDic('phases', self.liste.GetString(nouvPosRevue).lstrip(), 0)
+            
 #            itemPrecedent = constantes.getCodeNomCourt(self.liste.'(nouvPosRevue), 
 #                                                       self.objet.GetTypeEnseignement(simple = True))
             j=1
@@ -3931,7 +3991,7 @@ class PanelOrganisation(wx.Panel):
 #                                                           self.objet.GetTypeEnseignement(simple = True))
                 j += 1
             self.objet.positionRevues[numRevue-1] = itemPrecedent
-        else:
+        else: 
             return
           
         self.MiseAJourListe()
@@ -4469,6 +4529,7 @@ class PanelPropriete_Classe(PanelPropriete):
 #        print "MiseAJour panelPropriete classe"
 #        self.MiseAJourType()
         
+        
         self.cb_type.SetStringSelection(self.classe.referentiel.Enseignement[0])
         self.st_type.SetLabel(self.classe.referentiel.Enseignement[0])
 #        self.cb_type.SetStringSelection(REFERENTIELS[self.classe.typeEnseignement].Enseignement[0])
@@ -4511,6 +4572,8 @@ class PanelPropriete_Classe(PanelPropriete):
                 
         self.ec.MiseAJour()
 
+        
+        
             
     #############################################################################            
     def OnAide(self, event):
@@ -6133,9 +6196,14 @@ class PanelPropriete_Seance(PanelPropriete):
     def EvtTextIntitule(self, event):
         self.seance.SetIntitule(self.textctrl.GetValue())
         event.Skip()
-        if not self.eventAttente:
-            wx.CallLater(DELAY, self.sendEvent, modif = u"Modification de l'intitulé de la Séance")
-            self.eventAttente = True
+        
+        modif = u"Modification de l'intitulé de la Séance"
+        if self.onUndoRedo():
+            self.sendEvent(modif = modif)
+        else:
+            if not self.eventAttente:
+                wx.CallLater(DELAY, self.sendEvent, modif = modif)
+                self.eventAttente = True
             
     
     #############################################################################            
@@ -6156,10 +6224,13 @@ class PanelPropriete_Seance(PanelPropriete):
         elif event.GetId() == self.vcTaille.GetId():
             self.seance.SetTaille(event.GetVar().v[0])
             t = u"Modification de la taille des caractères"
-            
-        if not self.eventAttente:
-            wx.CallLater(DELAY, self.sendEvent, modif = t)
-            self.eventAttente = True
+        
+        if self.onUndoRedo():
+            self.sendEvent(modif = t)
+        else:
+            if not self.eventAttente:
+                wx.CallLater(DELAY, self.sendEvent, modif = t)
+                self.eventAttente = True
             
    
         
@@ -6692,14 +6763,20 @@ class PanelPropriete_Tache(PanelPropriete):
             if code in self.tache.indicateursEleve[eleve]:
                 self.tache.indicateursEleve[eleve].remove(code)
 #            self.tache.ActualiserDicIndicateurs()
-    
+
+
     ############################################################################            
     def SetCompetences(self):
 #        print "SetCompetences"
         self.GetDocument().MiseAJourDureeEleves()
-        wx.CallAfter(self.sendEvent, modif = u"Ajout/Suppression d'une compétence à la Tâche")
+        modif = u"Ajout/Suppression d'une compétence à la Tâche"
+        if self.onUndoRedo():
+            self.sendEvent(modif = modif)
+        else:
+            wx.CallAfter(self.sendEvent, modif = modif)
         self.tache.projet.Verrouiller()
-        
+
+
     ############################################################################            
     def ConstruireListeEleves(self):
         if hasattr(self, 'elevesCtrl'):
@@ -6795,9 +6872,13 @@ class PanelPropriete_Tache(PanelPropriete):
         txt = self.textctrl.GetValue()
         if self.tache.intitule != txt:
             self.tache.SetIntitule(txt)
-            if not self.eventAttente:
-                wx.CallLater(DELAY, self.sendEvent, modif = u"Modification de l'intitulé de la Tâche")
-                self.eventAttente = True
+            modif = u"Modification de l'intitulé de la Tâche"
+            if self.onUndoRedo():
+                self.sendEvent(modif = modif)
+            else:
+                if not self.eventAttente:
+                    wx.CallLater(DELAY, self.sendEvent, modif = modif)
+                    self.eventAttente = True
         event.Skip()
         
     #############################################################################            
@@ -6809,10 +6890,13 @@ class PanelPropriete_Tache(PanelPropriete):
 #        elif event.GetId() == self.vcNombre.GetId():
 #            self.tache.SetNombre(event.GetVar().v[0])
 #            t = u"Modification de la durée de la Tâche"
-        
-        if not self.eventAttente:
-            wx.CallLater(DELAY, self.sendEvent, modif = t)
-            self.eventAttente = True
+    
+        if self.onUndoRedo():
+            self.sendEvent(modif = t)
+        else:
+            if not self.eventAttente:
+                wx.CallLater(DELAY, self.sendEvent, modif = t)
+                self.eventAttente = True
         
     #############################################################################            
     def EvtComboBox(self, event):
@@ -7014,9 +7098,13 @@ class PanelPropriete_Systeme(PanelPropriete):
         self.systeme.SetNom(evt.GetString())
         if isinstance(self.systeme.parent, Sequence):
             self.systeme.parent.MiseAJourNomsSystemes()
-            if not self.eventAttente:
-                wx.CallLater(DELAY, self.sendEvent, modif = u"Modification des systèmes nécessaires")
-                self.eventAttente = True
+            modif = u"Modification des systèmes nécessaires"
+            if self.onUndoRedo():
+                self.sendEvent(modif = modif)
+            else:
+                if not self.eventAttente:
+                    wx.CallLater(DELAY, self.sendEvent, modif = modif)
+                    self.eventAttente = True
 
 
     #############################################################################            
@@ -7072,9 +7160,13 @@ class PanelPropriete_Systeme(PanelPropriete):
         
         if isinstance(self.systeme.parent, Sequence):
             self.systeme.parent.MiseAJourNomsSystemes()
-            if not self.eventAttente:
-                wx.CallLater(DELAY, self.sendEvent, modif = u"Modification du nom du Système")
-                self.eventAttente = True
+            modif = u"Modification du nom du Système"
+            if self.onUndoRedo():
+                self.sendEvent(modif = modif)
+            else:
+                if not self.eventAttente:
+                    wx.CallLater(DELAY, self.sendEvent, modif = modif)
+                    self.eventAttente = True
         elif isinstance(self.systeme.parent, Classe):
 #            print "  ***", self.systeme.parent
             self.systeme.parent.panelPropriete.MiseAJourListeSys(self.systeme.nom)
@@ -7085,9 +7177,13 @@ class PanelPropriete_Systeme(PanelPropriete):
         self.systeme.SetNombre()
         
         if isinstance(self.systeme.parent, Sequence):
-            if not self.eventAttente:
-                wx.CallLater(DELAY, self.sendEvent, modif = u"Modification du nombre de Systèmes disponibles")
-                self.eventAttente = True
+            modif = u"Modification du nombre de Systèmes disponibles"
+            if self.onUndoRedo():
+                self.sendEvent(modif = modif)
+            else:
+                if not self.eventAttente:
+                    wx.CallLater(DELAY, self.sendEvent, modif = modif)
+                    self.eventAttente = True
 
 
     #############################################################################            
@@ -7351,9 +7447,14 @@ class PanelPropriete_Personne(PanelPropriete):
         else:
             self.personne.SetPrenom(event.GetString())
         self.personne.projet.MiseAJourNomsEleves()
-        if not self.eventAttente:
-            wx.CallLater(DELAY, self.sendEvent, modif = u"Modification du nom de la personne")
-            self.eventAttente = True
+        
+        modif = u"Modification du nom de la personne"
+        if self.onUndoRedo():
+            self.sendEvent(modif = modif)
+        else:
+            if not self.eventAttente:
+                wx.CallLater(DELAY, self.sendEvent, modif = modif)
+                self.eventAttente = True
         
 
     #############################################################################            
@@ -7616,9 +7717,14 @@ class PanelPropriete_Support(PanelPropriete):
 #            self.support.parent.panelPropriete.textctrl.ChangeValue(nt)
         self.support.SetNom(nt)
 #        self.support.parent.MiseAJourNomsSystemes()
-        if not self.eventAttente:
-            wx.CallLater(DELAY, self.sendEvent, modif = u"Modification de l'intitulé du Support")
-            self.eventAttente = True
+        
+        modif = u"Modification de l'intitulé du Support"
+        if self.onUndoRedo():
+            self.sendEvent(modif = modif)
+        else:
+            if not self.eventAttente:
+                wx.CallLater(DELAY, self.sendEvent, modif = modif)
+                self.eventAttente = True
         
 #    #############################################################################            
 #    def EvtClick(self, event):
@@ -10974,7 +11080,15 @@ class Objet_sequence():
         pyperclip.copy(ET.tostring(self.getBranche()))
         
     
-    
+    ######################################################################################  
+    def SetDescription(self, description):
+        if self.description != description:
+            print "SetDescription", self.nom_obj, self
+            self.description = description
+            if hasattr(self, 'panelPropriete'):
+                self.panelPropriete.sendEvent(modif = u" ".join([u"Modification de la description", 
+                                                                 self.article_obj, self.nom_obj]))
+            self.tip.SetRichTexte()
 
     ######################################################################################  
     def EnrichiSVG(self, doc, seance = False):
@@ -11266,7 +11380,7 @@ class Classe():
             print "Erreur Ouverture classe", nomFichier
             return False
         
-        self.MiseAJour()
+#        self.MiseAJour()
 
 
     ######################################################################################  
@@ -11523,10 +11637,16 @@ class Classe():
     def GetReferentiel(self):
         return self.referentiel
        
+    ######################################################################################  
+    def GetVersion(self):
+        if hasattr(self, 'version'):
+            return self.version
+        elif hasattr(self, 'doc'):
+            return self.doc.version
         
     ######################################################################################  
     def GetVersionNum(self):
-        return int(self.version.split(".")[0].split("beta")[0])
+        return int(self.GetVersion().split(".")[0].split("beta")[0])
     
     
     ######################################################################################  
@@ -11661,6 +11781,7 @@ class Sequence(BaseDoc, Objet_sequence):
 #            t += "   " + s.__repr__() + "\n"
 #        return t
 
+
     ######################################################################################  
     def GetType(self):
         return 'seq'
@@ -11679,7 +11800,8 @@ class Sequence(BaseDoc, Objet_sequence):
             sce.SetPathSeq(pathseq)    
         for sy in self.systemes:
             sy.SetPathSeq(pathseq) 
-        
+
+
     ######################################################################################  
     def GetDuree(self):
         duree = 0
@@ -11858,8 +11980,8 @@ class Sequence(BaseDoc, Objet_sequence):
         
         
         
-#        if hasattr(self, 'panelPropriete'):
-#            self.panelPropriete.MiseAJour()
+        if hasattr(self, 'panelPropriete'):
+            self.panelPropriete.MiseAJour()
 
         
 #        t5 = time.time()
@@ -12481,7 +12603,7 @@ class Projet(BaseDoc, Objet_sequence):
         
     ######################################################################################  
     def __repr__(self):
-        return self.intitule
+        return "Projet "+ self.intitule
 
 
     ######################################################################################  
@@ -12639,6 +12761,7 @@ class Projet(BaseDoc, Objet_sequence):
     
     ######################################################################################  
     def getBranche(self):
+#        print "getBranche Projet"
         """ Renvoie la branche XML du projet pour enregistrement
         """
         # Création de la racine
@@ -12649,6 +12772,7 @@ class Projet(BaseDoc, Objet_sequence):
         projet.set("Intitule", self.intitule)
         
         projet.set("Problematique", remplaceLF2Code(self.problematique))
+#        print "   ", self.problematique
 #
         if self.commentaires != u"":
             projet.set("Commentaires", self.commentaires)
@@ -12712,6 +12836,7 @@ class Projet(BaseDoc, Objet_sequence):
         
         self.version = branche.get("Version", "")       # A partir de la version 5.7 !
 
+#        print "   ", self.problematique
         self.problematique = remplaceCode2LF(branche.get("Problematique", u""))
         
         self.commentaires = branche.get("Commentaires", u"")
@@ -12945,7 +13070,7 @@ class Projet(BaseDoc, Objet_sequence):
             
         self.position = pos
         
-        if hasattr(self, 'panelPropriete'):
+        if hasattr(self, 'panelPropriete') and not first:
             self.panelPropriete.MiseAJour()
 
 
@@ -13492,9 +13617,9 @@ class Projet(BaseDoc, Objet_sequence):
     
     ######################################################################################  
     def GetNbrPhases(self):
-        """ Renvoie le nombre de phases dans le projet
-            (les revues intermédiaires coupent parfois une phase en deux !)
-            (pour tracé fiche)
+        """ Renvoie le nombre de phases dans le projet, y compris les revues
+                 !! les revues intermédiaires coupent parfois une phase en deux !
+            (pour tracé de la fiche)
         """
         n = 0
         for i, t in enumerate(self.taches):
@@ -13939,8 +14064,8 @@ class CentreInteret(Objet_sequence):
                     self.AddNum(num)
         
 
-#        if hasattr(self, 'panelPropriete'):
-#            self.panelPropriete.MiseAJour()
+        if hasattr(self, 'panelPropriete'):
+            self.panelPropriete.MiseAJour()
 
 
     
@@ -14079,8 +14204,8 @@ class Competences(Objet_sequence):
         for i in range(len(branche.keys())):
             self.competences.append(branche.get("C"+str(i), ""))
         
-#        if hasattr(self, 'panelPropriete'):
-#            self.panelPropriete.MiseAJour()
+        if hasattr(self, 'panelPropriete'):
+            self.panelPropriete.MiseAJour()
     
     
     ######################################################################################  
@@ -14203,9 +14328,9 @@ class Savoirs(Objet_sequence):
 
                 self.savoirs.append(code)
                 
-#        if hasattr(self, 'panelPropriete'):
-##            self.panelPropriete.construire()
-#            self.panelPropriete.MiseAJour()
+        if hasattr(self, 'panelPropriete'):
+#            self.panelPropriete.construire()
+            self.panelPropriete.MiseAJour()
         
     ######################################################################################  
     def GetCode(self, num):
@@ -14293,7 +14418,9 @@ class Seance(ElementDeSequence, Objet_sequence):
                                                             1 = séance "Rotation"
                                                             2 = séance "parallèle"
         """
-    
+        self.nom_obj = "Séance"
+        self.article_obj = "de la"
+        
         ElementDeSequence.__init__(self)
 #        Objet_sequence.__init__(self)
         
@@ -14499,9 +14626,9 @@ class Seance(ElementDeSequence, Objet_sequence):
         
 #        self.MiseAJourListeSystemes()
         # Lent !!
-#        if hasattr(self, 'panelPropriete'):
-#            self.panelPropriete.ConstruireListeSystemes()
-#            self.panelPropriete.MiseAJour()
+        if hasattr(self, 'panelPropriete'):
+            self.panelPropriete.ConstruireListeSystemes()
+            self.panelPropriete.MiseAJour()
         
 #        t3 = time.time()
 #        print "    t3", t3-t2
@@ -14906,13 +15033,6 @@ class Seance(ElementDeSequence, Objet_sequence):
             for sce in self.seances:
                 sce.PubDescription() 
                 
-    ######################################################################################  
-    def SetDescription(self, description):   
-        if self.description != description:
-            self.description = description
-            if hasattr(self, 'panelPropriete'):
-                self.panelPropriete.sendEvent(modif = u"Modification de la description")
-            self.tip.SetRichTexte()
 
     ######################################################################################  
     def SetCodeBranche(self):
@@ -15334,7 +15454,8 @@ class Tache(Objet_sequence):
                 phaseTache = phase de la tache parmi 'Ana', 'Con', 'Rea', 'Val'
         """
 #        print "__init__ tâche", phaseTache
-        
+        self.nom_obj = "Tâche"
+        self.article_obj = "de la"
 #        Objet_sequence.__init__(self)
         
         # Les données sauvegardées
@@ -15515,7 +15636,10 @@ class Tache(Objet_sequence):
     ######################################################################################  
     def DiffereSuivantEleve(self):
         """ Renvoie True si cette REVUE est différente selon l'élève
+                --> épaisseur variable selon le nombre d'élèves
             Renvoie False si tous les élèves abordent les mêmes compétences/indicateurs
+                --> épaisseur fixe
+            (utilisé pour tracer la fiche)
         """
 #        print "DiffereSuivantEleve", self, self.phase
         if len(self.projet.eleves) == 0:
@@ -15649,7 +15773,7 @@ class Tache(Objet_sequence):
         if not self.phase in TOUTES_REVUES_EVAL_SOUT:
             self.duree.v[0] = eval(branche.get("Duree", "1"))
         else:
-            self.duree.v[0] = 0.5
+            self.duree.v[0] = constantes.DUREE_REVUES
         
         brancheElv = branche.find("Eleves")
         self.eleves = []
@@ -15811,14 +15935,15 @@ class Tache(Objet_sequence):
             
         self.intituleDansDeroul = eval(branche.get("IntituleDansDeroul", "True"))
 
-        return err
+        
     
-#        if hasattr(self, 'panelPropriete'):
-#            self.panelPropriete.ConstruireListeEleves()
-#            self.panelPropriete.MiseAJourDuree()
-#            self.panelPropriete.MiseAJour()
+        if hasattr(self, 'panelPropriete'):
+            self.panelPropriete.ConstruireListeEleves()
+            self.panelPropriete.MiseAJourDuree()
+            self.panelPropriete.MiseAJour()
 #            self.panelPropriete.MiseAJourPoidsCompetences()
-
+        
+        return err
 
     ######################################################################################  
     def GetPtCaract(self): 
@@ -15934,13 +16059,6 @@ class Tache(Objet_sequence):
             self.panelPropriete.rtc.Ouvrir()
 
                 
-    ######################################################################################  
-    def SetDescription(self, description):   
-        if self.description != description:
-            self.description = description
-            if hasattr(self, 'panelPropriete'):
-                self.panelPropriete.sendEvent(modif = u"Modification de la description de la Tâche")
-            self.tip.SetRichTexte()
             
     ######################################################################################  
     def SetCode(self):
@@ -16245,8 +16363,8 @@ class Systeme(ElementDeSequence, Objet_sequence):
             else:
                 self.image = None
             
-#            if hasattr(self, 'panelPropriete'):
-#                self.panelPropriete.MiseAJour()
+        if hasattr(self, 'panelPropriete'):
+            self.panelPropriete.MiseAJour()
 
 
     ######################################################################################  
@@ -16390,6 +16508,9 @@ class Systeme(ElementDeSequence, Objet_sequence):
 class Support(ElementDeSequence, Objet_sequence):
     def __init__(self, parent, panelParent, nom = u""):
         
+        self.nom_obj = "Support"
+        self.article_obj = "du"
+        
         ElementDeSequence.__init__(self)
 #        Objet_sequence.__init__(self)
         
@@ -16449,9 +16570,9 @@ class Support(ElementDeSequence, Objet_sequence):
                 self.image = None
                 Ok = False
             
-#        if hasattr(self, 'panelPropriete'):
-#            self.panelPropriete.SetImage()
-#            self.panelPropriete.MiseAJour()
+        if hasattr(self, 'panelPropriete'):
+            self.panelPropriete.SetImage()
+            self.panelPropriete.MiseAJour()
         
         return Ok
     
@@ -16491,13 +16612,7 @@ class Support(ElementDeSequence, Objet_sequence):
             self.panelPropriete.rtc.Ouvrir()
         
                 
-    ######################################################################################  
-    def SetDescription(self, description):   
-        if self.description != description:
-            self.description = description
-            if hasattr(self, 'panelPropriete'):
-                self.panelPropriete.sendEvent(modif = u"Modification de la description du Support")
-            self.tip.SetRichTexte()
+    
             
     ######################################################################################  
     def GetCode(self, i = None):

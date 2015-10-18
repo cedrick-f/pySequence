@@ -49,7 +49,8 @@ class STC_ortho(stc.StyledTextCtrl):
         self.SetWrapMode(stc.STC_WRAP_WORD)
 #        self.SetLayoutCache(stc.STC_CACHE_NONE )
         self.toutVerifier = False
-        
+        self.skipEvt = True
+        self.remplace = False
         
         self.Bind(stc.EVT_STC_MODIFIED, self.OnModified)
 #        self.Bind(stc.EVT_STC_CHANGE, self.OnChange)
@@ -77,8 +78,8 @@ class STC_ortho(stc.StyledTextCtrl):
 #        print evt.GetClientObject()
         
         spell = self.spell._spelling_dict
-        print words
-        if len(words[0]) > 0 and not spell.check(words[0]):
+        
+        if spell != None and len(words[0]) > 0 and not spell.check(words[0]):
             sugg = self.spell.getSuggestions(words[0])
             menu = wx.Menu()
             
@@ -101,7 +102,10 @@ class STC_ortho(stc.StyledTextCtrl):
             evt.Skip()
         
     def Remplacer(self, event = None, mot = u"", start = 0, end = 0):
+#        print "Remplacer"
+        self.remplace = True
         self.Replace(start, end, mot)
+#        print "fin Remplacer"
         
     def GetWordFromPosition(self, pos):
         """Get the word at the given position
@@ -115,27 +119,32 @@ class STC_ortho(stc.StyledTextCtrl):
         return (word, start, end)
         
         
-    def SetValue(self, text):
-#        print "SetValue", text
+    def SetValue(self, text, event = True):
+#        print "SetValue", text[:10], "..."
         self.toutVerifier = True
+        self.skipEvt = event
         self.SetText(text)
-
+        
+        
  
     def OnModified(self, evt):
         # NOTE: on really big insertions, evt.GetText can cause a
         # MemoryError on MSW, so I've commented this dprint out.
         mod = evt.GetModificationType()
-        if mod & stc.STC_MOD_INSERTTEXT or mod & stc.STC_MOD_DELETETEXT or self.toutVerifier:
-            print "OnModified", self.toutVerifier
+#        print "mod", mod & stc.STC_MOD_BEFOREINSERT, mod & stc.STC_MOD_CHANGEFOLD, mod & stc.STC_MOD_CONTAINER, mod & stc.STC_MOD_BEFOREDELETE
+        if mod & stc.STC_MOD_INSERTTEXT or mod & stc.STC_MOD_DELETETEXT:# or self.toutVerifier:
+#            print "OnModified", self.toutVerifier
             #print("(%s) at %d: text=%s len=%d" % (self.transModType(evt.GetModificationType()),evt.GetPosition(), repr(evt.GetText()), evt.GetLength()))
             
             if self.toutVerifier:
+#                print "   toutVerifier"
                 pos = 1
                 last = self.GetLastPosition()
             else:
                 pos = evt.GetPosition()
                 last = pos + evt.GetLength()
-            
+                
+                
             self.toutVerifier = False
                 
             self.spell.addDirtyRange(pos, last, evt.GetLinesAdded(), mod & stc.STC_MOD_DELETETEXT)
@@ -144,14 +153,26 @@ class STC_ortho(stc.StyledTextCtrl):
             #if self.modified_count > 10:
             #    wx.CallAfter(self.spell.processDirtyRanges)
             #    self.modified_count = 0
-        evt.Skip()
-
-
+        
+            evt.Skip(self.skipEvt)
+            self.skipEvt = True
+        
+        else:
+            evt.Skip(False)
+#        if self.remplace:
+#            evt.Skip()
+#            self.remplace = False
+#        else:
+#            evt.Skip(False)
+#            
+        
+        
     def OnIdle(self, evt):
         self.spell.processIdleBlock()
         
     def transModType(self, modType):
         st = ""
+        
         table = [(stc.STC_MOD_INSERTTEXT, "InsertText"),
                  (stc.STC_MOD_DELETETEXT, "DeleteText"),
                  (stc.STC_MOD_CHANGESTYLE, "ChangeStyle"),
