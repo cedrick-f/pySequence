@@ -392,7 +392,8 @@ def genererDossierValidation(nomFichier, projet, fenDoc):
     
     wx.BeginBusyCursor()
     
-    nomFichierHTML = os.path.join(util_path.PATH, r"..", DOSSIER_REF, projet.GetProjetRef().ficheValid)
+    nomFichierHTML = os.path.join(util_path.PATH, r"..", DOSSIER_REF, 
+                                  constantes.toFileEncoding(projet.GetProjetRef().ficheValid))
     
     if os.path.isfile(nomFichierHTML):
         Ok = genererFicheValidationHTML(fichertempV, nomFichierHTML, projet)

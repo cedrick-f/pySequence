@@ -1599,8 +1599,11 @@ class FenetreDocument(aui.AuiMDIChildFrame):
     
     #############################################################################
     def SetTitre(self, modif = False):
+#        print "SetTitre",
         t = self.classe.typeEnseignement
+
         t = REFERENTIELS[t].Enseignement[0]
+
         if self.fichierCourant == '':
             t += u" - "+constantes.TITRE_DEFAUT[self.typ]
         else:
@@ -2456,6 +2459,7 @@ class FenetreProjet(FenetreDocument):
             dlg.Raise()
             dlg.Close() 
     
+        self.SetTitre()
         wx.CallAfter(self.fiche.Show)
         wx.CallAfter(self.fiche.Redessiner)
         
@@ -3840,7 +3844,7 @@ class PanelPropriete_Projet(PanelPropriete):
 
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
-#        print "mise à jour panel table"
+#        print "MiseAJour Projet"
         ref = self.projet.GetProjetRef()
         
         
@@ -4526,7 +4530,7 @@ class PanelPropriete_Classe(PanelPropriete):
         
     ######################################################################################  
     def MiseAJour(self):
-#        print "MiseAJour panelPropriete classe"
+#        print "MiseAJour panelPropriete Classe"
 #        self.MiseAJourType()
         
         
@@ -6942,6 +6946,7 @@ class PanelPropriete_Tache(PanelPropriete):
             
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
+#        print "MiseAJour panelPropriete Tache"
 #        print "MiseAJour", self.tache.phase, self.tache.intitule
         if hasattr(self, 'arbre'):
             self.arbre.UnselectAll()
@@ -7216,6 +7221,7 @@ class PanelPropriete_Systeme(PanelPropriete):
     def MiseAJour(self, sendEvt = False):
         """
         """
+#        print "MiseAJour panelPropriete Systeme"
 #        print "MiseAJour", self.systeme
             
         self.textctrl.ChangeValue(self.systeme.nom)
@@ -7480,6 +7486,7 @@ class PanelPropriete_Personne(PanelPropriete):
         
     #############################################################################            
     def MiseAJour(self, sendEvt = False, marquerModifier = True):
+#        print "MiseAJour panelPropriete Personne"
         self.textctrln.ChangeValue(self.personne.nom)
         self.textctrlp.ChangeValue(self.personne.prenom)
         if hasattr(self, 'cbPhas'):
@@ -7737,6 +7744,7 @@ class PanelPropriete_Support(PanelPropriete):
         
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
+#        print "MiseAJour panelPropriete Support"
         self.textctrl.ChangeValue(self.support.nom)
         if sendEvt:
             self.sendEvent()
@@ -9985,8 +9993,11 @@ class A_propos(wx.Dialog):
         auteurs = wx.Panel(nb, -1)
         fgs1 = wx.FlexGridSizer(cols=2, vgap=4, hgap=4)
         
-        lstActeurs = ((u"Développement : ",(u"Cédrick FAURY", u"Jean-Claude FRICOU")),)#,
-#                      (_(u"Remerciements : "),()) 
+        lstActeurs = ((u"Développement : ",(u"Cédrick FAURY", u"Jean-Claude FRICOU")), \
+                      (u"Référentiels : ",(u"Thierry VALETTE (STS EE)", \
+                                           u"Jean-Claude FRICOU (STS-SN)", \
+                                           u"Arnaud BULCKE (Techno Collège)")), \
+                      (u"Remerciements : ",()))
 
 
         for ac in lstActeurs:
@@ -10006,11 +10017,11 @@ class A_propos(wx.Dialog):
         #---------
         licence = wx.Panel(nb, -1)
         try:
-            txt = open(os.path.join(util_path.PATH, "gpl.txt"))
+            txt = open(os.path.join(util_path.PATH, "LICENSE.txt"))
             lictext = txt.read()
             txt.close()
         except:
-            lictext = u"Le fichier de licence (gpl.txt) est introuvable !\n\n" \
+            lictext = u"Le fichier de licence (LICENSE.txt) est introuvable !\n\n" \
                       u"Veuillez réinstaller pySequence !"
             messageErreur(self, u'Licence introuvable',
                           lictext)
@@ -10592,7 +10603,10 @@ def img2str(img):
         data = b64encode(open(tfname, "rb").read())
     finally:
         if os.path.exists(tfname):
-            os.remove(tfname)
+            try:
+                os.remove(tfname)
+            except:
+                pass
     return data
 
 

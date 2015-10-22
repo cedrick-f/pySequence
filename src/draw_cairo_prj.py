@@ -547,8 +547,8 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
     #  Tableau des élèves
     #   
 #    tps = time.time()
-    ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-                          cairo.FONT_WEIGHT_NORMAL)
+    ctx.select_font_face(font_family, cairo.FONT_SLANT_NORMAL,
+                         cairo.FONT_WEIGHT_NORMAL)
     ctx.set_source_rgb(0, 0, 0)
     ctx.set_line_width(0.001 * COEF)
     l=[]

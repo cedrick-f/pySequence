@@ -52,7 +52,9 @@ class UndoStack():
         if not self.onUndoRedo:
             
             s = self.doc.getBranche()
-            self.stack[min(self.getTaille(), TAILLE):] = [(s, action)]
+            self.stack.append((s, action))
+            del self.stack[:-TAILLE]
+#            self.stack[min(self.getTaille(), TAILLE):] = [(s, action)]
             print self.doc, ": do =", len(self.stack), self.index, action
 
     def undo(self):
