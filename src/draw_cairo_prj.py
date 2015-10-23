@@ -174,7 +174,8 @@ def calcH(t):
     return 2*ecartTacheY
 
 
-BCoulTache = {'Ana' : (0.3,0.5,0.5), 
+BCoulTache = {'Sup' : (0.3,0.4,0.4), 
+              'Ana' : (0.3,0.5,0.5), 
               'Con' : (0.5,0.3,0.5), 
               'DCo' : (0.55,0.3,0.45),
               'Rea' : (0.5,0.5,0.3), 
@@ -186,7 +187,8 @@ BCoulTache = {'Ana' : (0.3,0.5,0.5),
               'R3'  : (0.8,0.3,0.2),
               'S'   : (0.3,0.1,0.8)}
 
-ICoulTache = {'Ana' : (0.6, 0.8, 0.8,1), 
+ICoulTache = {'Sup' : (0.6, 0.7, 0.7,1),
+              'Ana' : (0.6, 0.8, 0.8,1), 
               'Con' : (0.8, 0.6, 0.8,1),
               'DCo' : (0.9, 0.6, 0.7,1),
               'Rea' : (0.8, 0.8, 0.6,1), 
@@ -662,7 +664,8 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
     y = posZTaches[1] - ecartTacheY
     
     # Les positions en Y haut et bas des phases
-    yh_phase = {'Ana' : [[], []], 
+    yh_phase = {'Sup' : [[], []], 
+                'Ana' : [[], []],
                 'Con' : [[], []], 
                 'DCo' : [[], []],
                 'Rea' : [[], []], 
@@ -1252,7 +1255,7 @@ def DrawTacheRacine(ctx, tache, y):
                                   cairo.FONT_WEIGHT_BOLD)
         show_text_rect(ctx, getHoraireTxt(tache.GetDelai(), constantes.CHAR_FLECHE), 
                        (x, y, w, h), 
-                       orient = 'h', fontsizeMinMax = (minFont, 0.015 * COEF), b = 0.1)
+                       orient = 'h', fontsizeMinMax = (minFont, 0.015 * COEF), b = 0.1, couper = False)
     
 
     

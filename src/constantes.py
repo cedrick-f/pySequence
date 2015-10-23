@@ -327,7 +327,7 @@ def lettreCol(num):
 #
 ####################################################################################
 CHAR_POINT = u"\u25CF" 
-CHAR_FLECHE = u">>" # u"\u2192" 
+CHAR_FLECHE = u"\u2192" 
 
 ####################################################################################
 #
@@ -404,7 +404,8 @@ imagesProjet = {"Prj" : images.Icone_projet,
                 "Tac" : images.Icone_projet
                 }
 
-imagesTaches =  {'Ana' : images.Icone_CdCF, 
+imagesTaches =  {'Sup' : images.Icone_CdCF, 
+                 'Ana' : images.Icone_CdCF, 
                  'Con' : images.Icone_conception, 
                  'DCo' : images.Icone_conception,
                  'Rea' : images.Icone_fabrication, 

@@ -13007,7 +13007,7 @@ class Projet(BaseDoc, Objet_sequence):
 #        print "  position actuelle :", self.position
 #        posEpreuve = self.GetProjetRef().getPeriodeEval()
         kproj = self.GetReferentiel().getProjetEval(pos+1)
-#        print "   ", kproj
+#        print "  >", kproj
 #        print "  posEpreuve", posEpreuve
     
 
@@ -13019,7 +13019,7 @@ class Projet(BaseDoc, Objet_sequence):
                 if t.phase in TOUTES_REVUES_EVAL_SOUT:
                     lst.append(t.branche)
             for a in reversed(lst):
-                self.SupprimerTache(item = a, verrouiller = False)
+                self.SupprimerTache(item = a, verrouiller = False, doUndo = False)
         
         
         
@@ -13031,6 +13031,7 @@ class Projet(BaseDoc, Objet_sequence):
             # On passe à une position "épreuve"
             if self.code != None:
                 for tr in self.creerTachesRevue():
+                    print tr
                     self.taches.append(tr)
                     tr.ConstruireArbre(self.arbre, self.brancheTac)
                     tr.SetCode()
@@ -13314,12 +13315,16 @@ class Projet(BaseDoc, Objet_sequence):
         self.Verrouiller()
         
     ######################################################################################  
-    def SupprimerTache(self, event = None, item = None, verrouiller = True):
+    def SupprimerTache(self, event = None, item = None, verrouiller = True, doUndo = True):
         tache = self.arbre.GetItemPyData(item)
         self.taches.remove(tache)
         self.arbre.Delete(item)
         self.SetOrdresTaches()
-        self.panelPropriete.sendEvent(modif = u"Suppression d'une Tâche")
+        if doUndo:
+            modif = u"Suppression d'une Tâche"
+        else:
+            modif = ""
+        self.panelPropriete.sendEvent(modif = modif)
         if verrouiller:
             self.Verrouiller()
         
@@ -13361,7 +13366,7 @@ class Projet(BaseDoc, Objet_sequence):
         for t in lstTaches:
             paquet[t.phase].append(t)
             
-#        print paquet
+        print paquet
         
         # On trie les tâches de chaque paquet  
         for c in [k for k in prj.listPhases if not k in prj.listPhasesEval]:#['Ana', 'Con', 'Rea', 'DCo', 'Val', 'XXX']:
@@ -13370,10 +13375,13 @@ class Projet(BaseDoc, Objet_sequence):
         #
         # On assemble les paquets
         #
+#        print "GetListePhases", self.GetListePhases()
         lst = []
         for p in self.GetListePhases()+["S"]:
             lst.extend(paquet[p]) 
 
+#        print lst
+        
         #
         # On ajoute les revues intermédiaires
         #
@@ -13397,7 +13405,10 @@ class Projet(BaseDoc, Objet_sequence):
         
     ######################################################################################  
     def OrdonnerTaches(self):
+#        print "OrdonnerTaches"
+#        print "  ", self.taches,
         self.taches = self.OrdonnerListeTaches(self.taches)
+#        print self.taches
         
         self.SetOrdresTaches()
         self.SetCodes()
@@ -13676,7 +13687,7 @@ class Projet(BaseDoc, Objet_sequence):
 #        lst = list(self.GetReferentiel().listPhases_prj)
 #        print "  ", self.classe.GetReferentiel()
 #        print "  ", lst
-#        print "  ", self.nbrRevues,
+#        print "  ", self.nbrRevues
         lr = range(1, self.nbrRevues+1)
         lr.reverse()
 
@@ -15572,7 +15583,7 @@ class Tache(Objet_sequence):
 #        t += " " +str(self.effectif)
 #        for s in self.seances:
 #            t += "  " + s.__repr__()
-        return self.code +" ("+str(self.ordre)+")"
+        return self.code +" ("+str(self.ordre)+") "+ self.phase
     
     
     ######################################################################################  

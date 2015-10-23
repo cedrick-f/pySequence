@@ -804,6 +804,7 @@ class Referentiel(XMLelem):
     def importer(self, nomFichier):
         """
         """
+        
 #        print "IMPORTER" , 
         self.initParam()
 
@@ -975,6 +976,8 @@ class Referentiel(XMLelem):
         self.Enseignement[0] = sh_g.cell(6,0).value #Abréviation    
         self.Enseignement[1] = sh_g.cell(6,1).value #Nom complet    
         self.Enseignement[2] = sh_g.cell(6,2).value #Famille
+        debug = self.Code[:3] == "STS"
+        if debug: print "code :", self.Code
 #        print self.Code
         
         
@@ -994,7 +997,7 @@ class Referentiel(XMLelem):
                                                          intitule = sh_g.cell(24,c).value, 
                                                          duree = int0(sh_g.cell(26,c).value), 
                                                          periode = [int(i) for i in sh_g.cell(27,c).value.split()])
-#        print self.projets
+        if debug: print "  projets :", self.projets
         
         #
         # options
@@ -1078,11 +1081,13 @@ class Referentiel(XMLelem):
         self.nomCompetences =   sh_va.cell(0,0).value
         self.nomIndicateurs = sh_va.cell(0,5).value
         
-
+        #
         # Décomposition des projets en parties
+        #
         self._colParties = []
         col = [c  for c in range(8, sh_va.ncols) if sh_va.cell(1,c).value != u""]
-#        print ">>>", col
+        if debug: print ">>>", col
+        
         for i, c in enumerate(col):
             if i == len(col)-1:
                 n = sh_va.ncols
@@ -1118,7 +1123,7 @@ class Referentiel(XMLelem):
 #        #                print "   >", p.parties
 #        print "_colParties :", self, self._colParties
 #        print "compImposees :", self, self.compImposees
-        
+        if debug: print "colParties", self._colParties
         for part, col in list(set([cp for cp in self._colParties])):
             self.parties[part] = sh_va.cell(2,col).value
             

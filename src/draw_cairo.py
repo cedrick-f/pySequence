@@ -183,7 +183,7 @@ def show_text_rect(ctx, texte, rect, \
         
         Retourne : Taille de police, wc, yh
     """
-    debug = texte[:3] ==u'Ap1'
+    debug = texte[:3] ==u'Syn'
     if debug:
         print "show_text_rect", texte, rect
 
@@ -255,7 +255,11 @@ def show_text_rect(ctx, texte, rect, \
     #
     # "réduction" du rectangle
     #
-    ecart = (w-h*ratio) / (2*(1-ratio))
+    if ratio != 1:
+        ecart = (w-h*ratio) / ((1-ratio))
+    else:
+        ecart = h/len(lt)
+    if debug: print "   ecart :", ecart
     if debug: print "   ratio 1 :", w/h,
     x, y, w, h = reduire_rect(ctx, x, y, w, h, ecart, va)
     if debug: print w/h
@@ -263,7 +267,7 @@ def show_text_rect(ctx, texte, rect, \
     #
     # Ajustement de la taille de font
     #
-    fontSize = min(w/maxw, h/hl * nLignes) * COEF
+    fontSize = min(w/maxw, h/(hl * nLignes)) * COEF
     if debug: print "   fontSize 1 :", fontSize
     
     
@@ -2065,15 +2069,15 @@ def ajuster_texte(ctx, texte, w, h, le = 0.8, pe = 1.0, b = 0.4, wrap = True, co
             couper = False : les mots ne sont jamais coupés
             
     """
-    debug = texte[:3] ==u'Ap1'
+    debug = texte[:3] ==u'Syn'
     if debug: print "ajuster_texte", texte, w, h
     if debug: print "  couper", couper
-#    print "wrapp", texte, w, h
+
 
     #
     # Estimation de l'encombrement du texte (pour une taille de police de 1)
     # 
-    fontSize = 1.0 * COEF
+#    fontSize = 1.0 * COEF
     ctx.set_font_size(1.0 * COEF)
     fheight = ctx.font_extents()[2]
 
@@ -2129,7 +2133,7 @@ def ajuster_texte(ctx, texte, w, h, le = 0.8, pe = 1.0, b = 0.4, wrap = True, co
             
             ecart = b * hl
             if debug: print "  ecart", ecart
-            c = min(maxw/w, hl*len(lt)/h)
+            c = max(maxw/w, hl*len(lt)/h)
             if debug: print "  c, w, h", c, w, h
             ratioRect = (w*c-ecart)/(h*c-ecart)
             if debug: print "  r", w/h, ratioRect
@@ -2158,10 +2162,10 @@ def ajuster_texte(ctx, texte, w, h, le = 0.8, pe = 1.0, b = 0.4, wrap = True, co
             
         
     else:
-        lt = [texte]
-        maxw = ctx.text_extents(texte)[2]
+        lt = texte.split("\n")
+        maxw = max([ctx.text_extents(t)[2] for t in lt])
         ecart = b * hl
-        c = min(maxw/w, hl/h)
+        c = max(maxw/w, hl*len(lt)/h)
         ratioRect = (w*c-ecart)/(h*c-ecart)
 #        fontSize = min(w/maxw, h/hl) * COEF
     
@@ -2201,8 +2205,8 @@ def wordwrap(ctx, text, width, pte, breakLongWords=True):
     character boundary, but this can be disabled by passing ``False``
     for the ``breakLongWords`` parameter.
     """
-    debug = text[:3] ==u'Ap1'
-    if debug: print "wordwrap", width, text
+    debug = text[:3] ==u'Réa'
+#    if debug: print "wordwrap", width, text
    
 #    pas = ctx.text_extents('a')[2]
     
@@ -2213,7 +2217,7 @@ def wordwrap(ctx, text, width, pte, breakLongWords=True):
     wrapped_lines = []
     text = text.split('\n')
     for line in text:
-        if debug: print "  pte", pte
+#        if debug: print "  pte", pte
         idx = 0
         start = 0
         startIdx = 0

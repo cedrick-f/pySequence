@@ -102,7 +102,7 @@ BcoulCib = (0.1, 0.1, 0.25, 1)
 centreCib = (posCib[0] + tailleCib[0] / 2 + 0.0006 * COEF, posCib[1] + tailleCib[0] / 2 - 0.004 * COEF)
 
 # Zone de commentaire
-fontIntComm = 0.01
+fontIntComm = 0.01* COEF
 posComm = [margeX, None]
 tailleComm = [LargeurTotale-2*margeX, None]
 intComm = []
@@ -769,7 +769,7 @@ def Draw(ctx, seq, mouchard = False):
         ctx.set_source_rgb(0, 0, 0)
         ctx.set_line_width(0.001 * COEF)
         tableauH_var(ctx, intituleSeances[0], posZIntSeances[0], posZIntSeances[1], 
-                0.05, tailleZIntSeances[0]-0.05 * COEF, intituleSeances[2], fontIntSeances, 
+                0.05* COEF, tailleZIntSeances[0]-0.05 * COEF, intituleSeances[2], fontIntSeances, 
                 nCol = 1, va = 'c', ha = 'g', orient = 'h', coul = ICoulSeance, 
                 contenu = [intituleSeances[1]])
         
