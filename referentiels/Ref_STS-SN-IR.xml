@@ -1,11 +1,11 @@
 <Referentiel B_CI_BO="False" B_CI_cible="False" B_objSavoirs_Math="False" B_objSavoirs_Phys="True" B_preSavoirs_Math="True" B_preSavoirs_Phys="True" S_Code="STS_SN_IR" S_Famille="STS" S_FichierLogo="Logo_STS_SN_IR.jpg" S_abrevCI="Th " S_nomCI="Th&#232;mes" S_nomCompetences="Comp&#233;tences" S_nomFonctions="Fonctions" S_nomIndicateurs="Indicateurs de performance" S_nomSavoirs="S6 - G&#233;nie &#201;lectrique" S_nomSavoirs_Math="S3 - Math&#233;matiques" S_nomSavoirs_Phys="S5 - Sciences Appliqu&#233;es" S_nomTaches="T&#226;ches" S_surnomSavoirs="">
   <l_BO_URL>
-    <l_00 S_00="Programme" S_01="http://www.education.gouv.fr/pid25535/bulletin_officiel.html?cid_bo=82979" />
+    <l_00 S_00="Programme" S_01="http://eduscol.education.fr/sti/sites/eduscol.education.fr.sti/files/textes/formations-bts-bts-systemes-numeriques/3321-referentiel-bts-systemes-numeriques.pdf" />
   </l_BO_URL>
-  <l_BO_dossier S_00="STS/EE" />
+  <l_BO_dossier S_00="STS/SN" />
   <l_CentresInterets S_00="Mise en service d&#8217;un syst&#232;me d&#8217;un ouvrage ou d&#8217;un &#233;quipement" S_01="La distribution de l&#8217;&#233;nergie &#233;lectrique" S_02="Comportement des charges m&#233;caniques" S_03="Les diff&#233;rents proc&#233;d&#233;s de transformation de l&#8217;&#233;nergie" S_04="La r&#233;versibilit&#233; &#233;nerg&#233;tique" S_05="Dimensionnement &#233;nerg&#233;tique dans les syst&#232;mes autonomes et embarqu&#233;s" S_06="La qualit&#233; de l&#8217;&#233;nergie &#233;lectrique" S_07="La gestion des co&#251;ts" S_08="Asservissement et r&#233;gulation" S_09="Les &#233;quipements communicants" />
   <l_Enseignement S_00="STS-SN-IR" S_01="BTS - Syst&#232;mes Num&#233;riques" S_02="STS" />
-  <d_aColNon B_S1="True" />
+  <d_aColNon B_S1="True" B_S2="True" />
   <d_activites>
     <l_ED S_00="Etude de dossier" S_01="Activit&#233; d'&#233;tude de dossier" />
     <l_P S_00="Projet" S_01="Activit&#233; de projet" />
@@ -23,160 +23,362 @@
     <l_R S_00="R&#233;s. Probl&#232;me" S_01="R&#233;solution de probl&#232;me" />
   </d_demarches>
   <d_dicCompetences>
-    <l_C7 S_00="Maintenir">
-      <d_01>
-        <l_C7.1 S_00="Diagnostiquer les causes d'un dysfonctionnement">
-          <l_01>
-            <Indicateur_00 S_intitule="Les causes du dysfonctionnement sont identifi&#233;es">
-              <d_ligne I_S1="22" />
-              <d_poids I_S1="1" />
-              <d_revue I_S1="0" />
-            </Indicateur_00>
-          </l_01>
-        </l_C7.1>
-        <l_C7.2 S_00="Proposer des corrections ou des am&#233;liorations">
-          <l_01>
-            <Indicateur_00 S_intitule="Une strat&#233;gie pour le maintien en condition op&#233;rationnelle est mise en place">
-              <d_ligne I_S1="23" />
-              <d_poids I_S1="1" />
-              <d_revue I_S1="0" />
-            </Indicateur_00>
-            <Indicateur_01 S_intitule="Des correctifs sont propos&#233;s">
-              <d_ligne I_S1="24" />
-              <d_poids I_S1="1" />
-              <d_revue I_S1="0" />
-            </Indicateur_01>
-          </l_01>
-        </l_C7.2>
-        <l_C7.3 S_00="D&#233;panner une installation mat&#233;rielle et/ou logicielle">
-          <l_01>
-            <Indicateur_00 S_intitule="Les besoins du client sont r&#233;solus">
-              <d_ligne I_S1="25" />
-              <d_poids I_S1="1" />
-              <d_revue I_S1="0" />
-            </Indicateur_00>
-          </l_01>
-        </l_C7.3>
-        <l_C7.4 S_00="Rechercher et choisir de nouveaux constituants d'un syst&#232;me (ou d'un projet finalis&#233;) au regard d'&#233;volutions technologiques, socio&#233;conomiques sp&#233;cifi&#233;es dans un cahier des charges. Organiser le projet permettant de maquettiser la solution choisie">
-          <l_01>
-            <Indicateur_00 S_intitule="Des outils de tra&#231;abilit&#233; sont mis en place">
-              <d_ligne I_S1="26" />
-              <d_poids I_S1="1" />
-              <d_revue I_S1="0" />
-            </Indicateur_00>
-          </l_01>
-        </l_C7.4>
-      </d_01>
-      <d_02 I_S1="34" />
-    </l_C7>
-    <l_C6 S_00="Exploiter">
-      <d_01>
-        <l_C6.1 S_00="Superviser le fonctionnement d'un produit mat&#233;riel/logiciel">
-          <l_01>
-            <Indicateur_00 S_intitule="Le compte rendu de suivi d'incident est &#233;tabli">
-              <d_ligne I_S1="16" />
-              <d_poids I_S1="1" />
-              <d_revue I_S1="0" />
-            </Indicateur_00>
-            <Indicateur_01 S_intitule="Des fichiers de journalisation (logs) de supervision (recette et/ou archivage) sont cr&#233;&#233;s">
-              <d_ligne I_S1="17" />
-              <d_poids I_S1="1" />
-              <d_revue I_S1="0" />
-            </Indicateur_01>
-            <Indicateur_02 S_intitule="Des alertes sont &#233;mises en cas de d&#233;faillance ou pour l'aide &#224; la conduite du syst&#232;me">
-              <d_ligne I_S1="18" />
-              <d_poids I_S1="1" />
-              <d_revue I_S1="0" />
-            </Indicateur_02>
-          </l_01>
-        </l_C6.1>
-        <l_C6.2 S_00="Analyser les comptes rendus d'exploitation">
-          <l_01>
-            <Indicateur_00 S_intitule="Les r&#233;sultats pertinents de l'analyse sont pr&#233;sent&#233;s">
-              <d_ligne I_S1="19" />
-              <d_poids I_S1="1" />
-              <d_revue I_S1="0" />
-            </Indicateur_00>
-            <Indicateur_01 S_intitule="Les situations probl&#233;matiques (seuil d'erreur admissible, nombre de tentatives) sont d&#233;termin&#233;es">
-              <d_ligne I_S1="20" />
-              <d_poids I_S1="1" />
-              <d_revue I_S1="0" />
-            </Indicateur_01>
-          </l_01>
-        </l_C6.2>
-      </d_01>
-      <d_02 I_S1="33" />
-    </l_C6>
-    <l_C5 S_00="Installer">
-      <d_01>
-        <l_C5.2 S_00="Mettre en &#339;uvre une solution mat&#233;rielle/logicielle en situation">
-          <l_01>
-            <Indicateur_00 S_intitule="Le syst&#232;me ou le service est en production">
-              <d_ligne I_S1="8" />
-              <d_poids I_S1="1" />
-              <d_revue I_S1="0" />
-            </Indicateur_00>
-            <Indicateur_01 S_intitule="Les documents clients (mise en route, exploitation et maintenance) sont finalis&#233;es">
-              <d_ligne I_S1="9" />
-              <d_poids I_S1="1" />
-              <d_revue I_S1="0" />
-            </Indicateur_01>
-          </l_01>
-        </l_C5.2>
-        <l_C5.3 S_00="Effectuer la recette d'un produit avec le client">
-          <l_01>
-            <Indicateur_00 S_intitule="Le syst&#232;me ou le service fonctionne">
-              <d_ligne I_S1="10" />
-              <d_poids I_S1="1" />
-              <d_revue I_S1="0" />
-            </Indicateur_00>
-            <Indicateur_01 S_intitule="Le cahier de recette est &#233;labor&#233;">
-              <d_ligne I_S1="11" />
-              <d_poids I_S1="1" />
-              <d_revue I_S1="0" />
-            </Indicateur_01>
-            <Indicateur_02 S_intitule="Le proc&#232;s-verbal de r&#233;ception est sign&#233; par le client">
-              <d_ligne I_S1="12" />
-              <d_poids I_S1="1" />
-              <d_revue I_S1="0" />
-            </Indicateur_02>
-          </l_01>
-        </l_C5.3>
-        <l_C5.1 S_00="Pr&#233;parer la solution et le plan d'action">
-          <l_01>
-            <Indicateur_00 S_intitule="Le besoin relatif au client est identifi&#233; et justifi&#233;">
-              <d_ligne I_S1="6" />
-              <d_poids I_S1="1" />
-              <d_revue I_S1="0" />
-            </Indicateur_00>
-            <Indicateur_01 S_intitule="Le phasage des op&#233;rations de r&#233;alisation est r&#233;aliste, le chemin critique est identifi&#233;">
-              <d_ligne I_S1="7" />
-              <d_poids I_S1="1" />
-              <d_revue I_S1="0" />
-            </Indicateur_01>
-          </l_01>
-        </l_C5.1>
-        <l_C5.4 S_00="Installer un syst&#232;me d'exploitation et/ou une biblioth&#232;que logicielle">
-          <l_01>
-            <Indicateur_00 S_intitule="Le syst&#232;me d'exploitation et/ou une biblioth&#232;que est install&#233;">
-              <d_ligne I_S1="13" />
-              <d_poids I_S1="1" />
-              <d_revue I_S1="0" />
-            </Indicateur_00>
-          </l_01>
-        </l_C5.4>
-        <l_C5.5 S_00="Installer un dispositif de correction et/ou mise &#224; jour de logiciel">
-          <l_01>
-            <Indicateur_00 S_intitule="Un mode de contournement imm&#233;diat est mis en place">
-              <d_ligne I_S1="14" />
-              <d_poids I_S1="1" />
-              <d_revue I_S1="0" />
-            </Indicateur_00>
-          </l_01>
-        </l_C5.5>
-      </d_01>
-      <d_02 I_S1="33" />
-    </l_C5>
+    <l_C7.1 S_00="diagnostiquer les causes d&#8217;un dysfonctionnement">
+      <l_01>
+        <Indicateur_00 S_intitule="Les param&#232;tres sont identifi&#233;s.">
+          <d_ligne I_S2="16" />
+          <d_poids F_S2="25.0" />
+          <d_revue I_S2="0" />
+        </Indicateur_00>
+        <Indicateur_01 S_intitule="L&#8217;&#233;tat de fonctionnement de l&#8217;appareil est identifi&#233;.">
+          <d_ligne I_S2="17" />
+          <d_poids F_S2="25.0" />
+          <d_revue I_S2="0" />
+        </Indicateur_01>
+        <Indicateur_02 S_intitule="Un diagnostic est &#233;tabli.">
+          <d_ligne I_S2="18" />
+          <d_poids F_S2="25.0" />
+          <d_revue I_S2="0" />
+        </Indicateur_02>
+        <Indicateur_03 S_intitule="Les vuln&#233;rabilit&#233;s et/ou les dysfonctionnements du syst&#232;me sont analys&#233;s.">
+          <d_ligne I_S2="19" />
+          <d_poids F_S2="25.0" />
+          <d_revue I_S2="0" />
+        </Indicateur_03>
+      </l_01>
+      <d_02 I_S2="10" />
+    </l_C7.1>
+    <l_C7.2 S_00=" proposer des corrections ou des am&#233;liorations">
+      <l_01>
+        <Indicateur_00 S_intitule="Une strat&#233;gie pour le maintien en condition op&#233;rationnelle est mise en place">
+          <d_ligne />
+          <d_poids />
+          <d_revue />
+        </Indicateur_00>
+        <Indicateur_01 S_intitule="Des correctifs sont propos&#233;s">
+          <d_ligne />
+          <d_poids />
+          <d_revue />
+        </Indicateur_01>
+      </l_01>
+      <d_02 />
+    </l_C7.2>
+    <l_C7.3 S_00="d&#233;panner une installation mat&#233;rielle et/ou logicielle">
+      <l_01>
+        <Indicateur_00 S_intitule="L&#8217;application des proc&#233;dures de d&#233;pannage ou de relance de services ou d&#8217;applicatifs.">
+          <d_ligne I_S2="21" />
+          <d_poids F_S2="50.0" />
+          <d_revue I_S2="0" />
+        </Indicateur_00>
+        <Indicateur_01 S_intitule="La remise en service est nominale.">
+          <d_ligne I_S2="22" />
+          <d_poids F_S2="50.0" />
+          <d_revue I_S2="0" />
+        </Indicateur_01>
+      </l_01>
+      <d_02 I_S2="10" />
+    </l_C7.3>
+    <l_C6.1 S_00="superviser le fonc--tionnement d&#8217;un produit mat&#233;riel/logiciel ">
+      <l_01>
+        <Indicateur_00 S_intitule="Les donn&#233;es sont acquises et disponibles.">
+          <d_ligne I_S2="6" />
+          <d_poids F_S2="33.333333" />
+          <d_revue I_S2="0" />
+        </Indicateur_00>
+        <Indicateur_01 S_intitule="L&#8217;outil de supervision est configur&#233; pour g&#233;n&#233;rer les fichiers de journalisation, de supervision et les alertes.">
+          <d_ligne I_S2="7" />
+          <d_poids F_S2="33.333333" />
+          <d_revue I_S2="0" />
+        </Indicateur_01>
+        <Indicateur_02 S_intitule="Les informations cibl&#233;es sont localis&#233;es dans les enregistrements des fichiers de supervision.">
+          <d_ligne />
+          <d_poids />
+          <d_revue />
+        </Indicateur_02>
+        <Indicateur_03 S_intitule="Le m&#233;canisme producteur communique avec le syst&#232;me r&#233;cepteur.">
+          <d_ligne I_S2="9" />
+          <d_poids F_S2="33.333333" />
+          <d_revue I_S2="0" />
+        </Indicateur_03>
+      </l_01>
+      <d_02 I_S2="40" />
+    </l_C6.1>
+    <l_C6.2 S_00="analyser les compte rendus d&#8217;exploitation ">
+      <l_01>
+        <Indicateur_00 S_intitule="Les informations utiles &#224; l&#8217;exploitation sont accessibles dans le syst&#232;me r&#233;cepteur.  Les informations issues de l&#8217;outil de supervision sont synth&#233;tis&#233;es et analys&#233;es.">
+          <d_ligne I_S2="11" />
+          <d_poids F_S2="25.0" />
+          <d_revue I_S2="0" />
+        </Indicateur_00>
+        <Indicateur_01 S_intitule="Les informations issues de l&#8217;outil de supervision relatives aux d&#233;fauts sont identifi&#233;es.">
+          <d_ligne I_S2="12" />
+          <d_poids F_S2="25.0" />
+          <d_revue I_S2="0" />
+        </Indicateur_01>
+        <Indicateur_02 S_intitule="Les causes des d&#233;fauts sont identifi&#233;es et une proposition de solution est avanc&#233;e.">
+          <d_ligne I_S2="13" />
+          <d_poids F_S2="25.0" />
+          <d_revue I_S2="0" />
+        </Indicateur_02>
+        <Indicateur_03 S_intitule="Le document produit permet une maintenance pr&#233;ventive et curative du syst&#232;me.">
+          <d_ligne I_S2="14" />
+          <d_poids F_S2="25.0" />
+          <d_revue I_S2="0" />
+        </Indicateur_03>
+      </l_01>
+      <d_02 I_S2="20" />
+    </l_C6.2>
+    <l_C1.6 S_00="collecter des donn&#233;es commerciales ">
+      <l_01 />
+      <d_02 />
+    </l_C1.6>
+    <l_C1.4 S_00=" s'entretenir d'une probl&#233;matique professionnelle ">
+      <l_01 />
+      <d_02 />
+    </l_C1.4>
+    <l_C1.5 S_00=" analyser l'expression d'un besoin client ">
+      <l_01 />
+      <d_02 />
+    </l_C1.5>
+    <l_C1.2 S_00=" pr&#233;senter des informat--ions &#224; des interlocuteurs identifi&#233;s ">
+      <l_01 />
+      <d_02 />
+    </l_C1.2>
+    <l_C1.3 S_00="assister des utilisateurs ">
+      <l_01 />
+      <d_02 />
+    </l_C1.3>
+    <l_C1.1 S_00="rechercher et structurer des informations techniques">
+      <l_01 />
+      <d_02 />
+    </l_C1.1>
+    <l_C3.4 S_00=" valider le choix d&#8217;une architecture mat&#233;rielle/logicielle">
+      <l_01 />
+      <d_02 />
+    </l_C3.4>
+    <l_C3.5 S_00=" contribuer &#224; la d&#233;finition des &#233;l&#233;ments de recette au regard des contraintes--du cahier des charges ">
+      <l_01 />
+      <d_02 />
+    </l_C3.5>
+    <l_C3.6 S_00=" recenser les solutions existantes r&#233;pondant au cahier des charges">
+      <l_01 />
+      <d_02 />
+    </l_C3.6>
+    <l_C3.7 S_00=" contribuer &#224; la mod&#233;lisation de tout ou partie d&#8217;un produit ">
+      <l_01 />
+      <d_02 />
+    </l_C3.7>
+    <l_C3.1 S_00="analyser un cahier des charges ">
+      <l_01 />
+      <d_02 />
+    </l_C3.1>
+    <l_C3.2 S_00="analyser et compl&#233;ter un dossier de sp&#233;cifications techniques ">
+      <l_01 />
+      <d_02 />
+    </l_C3.2>
+    <l_C3.3 S_00="d&#233;finir l&#8217;architecture--globale d&#8217;un prototype ou d&#8217;un syst&#232;me ">
+      <l_01 />
+      <d_02 />
+    </l_C3.3>
+    <l_C3.8 S_00=" &#233;laborer le dossier de d&#233;finition de la solution technique retenue">
+      <l_01 />
+      <d_02 />
+    </l_C3.8>
+    <l_C3.9 S_00=" valider une fonction du syst&#232;me &#224; partir d&#8217;une maquette r&#233;elle ">
+      <l_01 />
+      <d_02 />
+    </l_C3.9>
+    <l_C7.4 S_00="assurer la tra&#231;abilit&#233;">
+      <l_01>
+        <Indicateur_00 S_intitule="Les outils sont correctement mis en place.">
+          <d_ligne I_S2="26" />
+          <d_poids F_S2="50.0" />
+          <d_revue I_S2="0" />
+        </Indicateur_00>
+        <Indicateur_01 S_intitule="Les op&#233;rations sont trac&#233;es.">
+          <d_ligne I_S2="27" />
+          <d_poids F_S2="50.0" />
+          <d_revue I_S2="0" />
+        </Indicateur_01>
+      </l_01>
+      <d_02 I_S2="10" />
+    </l_C7.4>
+    <l_C5.2 S_00="mettre en &#339;uvre une solution mat&#233;rielle/logicielle en situation">
+      <l_01>
+        <Indicateur_00 S_intitule="Les contraintes li&#233;es au client (horaires, nuisances sonores, qualit&#233; de la relation &#8230;) sont respect&#233;es.">
+          <d_ligne I_S1="11" />
+          <d_poids F_S1="25.0" />
+          <d_revue I_S1="0" />
+        </Indicateur_00>
+        <Indicateur_01 S_intitule="Les normes m&#233;tier et les proc&#233;dures sont respect&#233;es.">
+          <d_ligne I_S1="12" />
+          <d_poids F_S1="25.0" />
+          <d_revue I_S1="0" />
+        </Indicateur_01>
+        <Indicateur_02 S_intitule="Les r&#233;sultats de test sont conformes aux sp&#233;cifications des proc&#233;dures d'installation.">
+          <d_ligne I_S1="13" />
+          <d_poids F_S1="25.0" />
+          <d_revue I_S1="0" />
+        </Indicateur_02>
+        <Indicateur_03 S_intitule="Le syst&#232;me ou le service est conforme aux sp&#233;cifications du cahier des charges">
+          <d_ligne I_S1="14" />
+          <d_poids F_S1="25.0" />
+          <d_revue I_S1="0" />
+        </Indicateur_03>
+      </l_01>
+      <d_02 I_S1="40" />
+    </l_C5.2>
+    <l_C5.3 S_00="effectuer la r--ecette d&#8217;un produit avec le client ">
+      <l_01>
+        <Indicateur_00 S_intitule="La fiche de recette est suivie, les remarques &#233;ventuelles sont prises en compte.">
+          <d_ligne I_S1="16" />
+          <d_poids F_S1="33.333333" />
+          <d_revue I_S1="0" />
+        </Indicateur_00>
+        <Indicateur_01 S_intitule="Les documents (mise en route, exploitation et maintenance) sont remis au client.">
+          <d_ligne I_S1="17" />
+          <d_poids F_S1="33.333333" />
+          <d_revue I_S1="0" />
+        </Indicateur_01>
+        <Indicateur_02 S_intitule="La solution est mise en &#339;uvre. ">
+          <d_ligne I_S1="18" />
+          <d_poids F_S1="33.333333" />
+          <d_revue I_S1="0" />
+        </Indicateur_02>
+      </l_01>
+      <d_02 I_S1="40" />
+    </l_C5.3>
+    <l_C5.1 S_00=" pr&#233;parer la solution et le plan d&#8217;action ">
+      <l_01>
+        <Indicateur_00 S_intitule="Les T&#226;ches professionnelles &#224; r&#233;aliser et les ressources n&#233;cessaires (mat&#233;riel, sous-traitance, etc.) sont estim&#233;es.">
+          <d_ligne I_S1="6" />
+          <d_poids F_S1="25.0" />
+          <d_revue I_S1="0" />
+        </Indicateur_00>
+        <Indicateur_01 S_intitule="Les commandes d'approvisionnement ont &#233;t&#233; programm&#233;es et r&#233;ceptionn&#233;es. Le rangement du mat&#233;riel est organis&#233; en vue de son d&#233;placement.">
+          <d_ligne I_S1="7" />
+          <d_poids F_S1="25.0" />
+          <d_revue I_S1="0" />
+        </Indicateur_01>
+        <Indicateur_02 S_intitule="La solution est mise en &#339;uvre sur une machine virtuelle. Un m&#233;canisme de s&#233;curisation des donn&#233;es est utilis&#233;. La proc&#233;dure d'installation sur site est r&#233;dig&#233;e.">
+          <d_ligne I_S1="8" />
+          <d_poids F_S1="25.0" />
+          <d_revue I_S1="0" />
+        </Indicateur_02>
+        <Indicateur_03 S_intitule="Les plannings d'ex&#233;cution sont cr&#233;&#233;s. Le livrable &#224; chaque jalon est d&#233;fini. ">
+          <d_ligne I_S1="9" />
+          <d_poids F_S1="25.0" />
+          <d_revue I_S1="0" />
+        </Indicateur_03>
+      </l_01>
+      <d_02 I_S1="20" />
+    </l_C5.1>
+    <l_C3.10 S_00=" r&#233;aliser la conception d&#233;--taill&#233;e d&#8217;un module mat&#233;riel et/ou logiciel ">
+      <l_01 />
+      <d_02 />
+    </l_C3.10>
+    <l_P S_00="Le technicien participe &#224; la t&#226;che mais n'en a pas la ma&#238;trise. Il doit n&#233;anmoins comprendre son fondement et apporter ses comp&#233;tences &#224; l'&#233;quipe qui en a la charge.">
+      <l_01 />
+      <d_02 />
+    </l_P>
+    <l_C2.1 S_00="maintenir les informations">
+      <l_01 />
+      <d_02 />
+    </l_C2.1>
+    <l_C2.3 S_00="organiser et/ou respecter la planification d'un projet">
+      <l_01 />
+      <d_02 />
+    </l_C2.3>
+    <l_C2.2 S_00="formaliser l&#8217;expression d&#8217;un besoin">
+      <l_01 />
+      <d_02 />
+    </l_C2.2>
+    <l_C2.5 S_00=" travailler en &#233;quipe ">
+      <l_01 />
+      <d_02 />
+    </l_C2.5>
+    <l_C2.4 S_00="assumer le r&#244;le total ou partiel de chef de projet ">
+      <l_01 />
+      <d_02 />
+    </l_C2.4>
+    <l_C5.4 S_00="Installer un syst&#232;me d&#8217;exploitation et/ou une biblioth&#232;que logicielle ">
+      <l_01>
+        <Indicateur_00 S_intitule="Le syst&#232;me d'exploitation ou la biblioth&#232;que est identifi&#233;">
+          <d_ligne I_S1="20" />
+          <d_poids F_S1="25.0" />
+          <d_revue I_S1="0" />
+        </Indicateur_00>
+        <Indicateur_01 S_intitule="Une documentation utilisateur est r&#233;dig&#233;e.">
+          <d_ligne I_S1="21" />
+          <d_poids F_S1="25.0" />
+          <d_revue I_S1="0" />
+        </Indicateur_01>
+        <Indicateur_02 S_intitule="L'installation est param&#233;tr&#233;e en fonction des caract&#233;ristiques du support mat&#233;riel.">
+          <d_ligne I_S1="22" />
+          <d_poids F_S1="25.0" />
+          <d_revue I_S1="0" />
+        </Indicateur_02>
+        <Indicateur_03 S_intitule="Le syst&#232;me d'exploitation est configur&#233;.">
+          <d_ligne I_S1="23" />
+          <d_poids F_S1="25.0" />
+          <d_revue I_S1="0" />
+        </Indicateur_03>
+      </l_01>
+      <d_02 I_S1="40" />
+    </l_C5.4>
+    <l_C4.7 S_00=" documenter une r&#233;alisation mat&#233;rielle et/ou logicielle">
+      <l_01 />
+      <d_02 />
+    </l_C4.7>
+    <l_C4.6 S_00=" produire les documents de fabrication d&#8217;un sous ensemble">
+      <l_01 />
+      <d_02 />
+    </l_C4.6>
+    <l_C4.5 S_00=" tester et valider--un module logiciel et mat&#233;riel ">
+      <l_01 />
+      <d_02 />
+    </l_C4.5>
+    <l_C4.4 S_00=" fabriquer un sous-ensemble">
+      <l_01 />
+      <d_02 />
+    </l_C4.4>
+    <l_C4.3 S_00=" adapter et/ou configurer une structure logicielle">
+      <l_01 />
+      <d_02 />
+    </l_C4.3>
+    <l_C4.2 S_00="adapter et/ou configurer un mat&#233;riel">
+      <l_01 />
+      <d_02 />
+    </l_C4.2>
+    <l_C4.1 S_00=" c&#226;bler et/ou int&#233;grer un mat&#233;riel ">
+      <l_01 />
+      <d_02 />
+    </l_C4.1>
+    <l_C5.5 S_00="Installer un dispositif de correction et/ou mise a&#768; jour de logiciel  --ecette d&#8217;un produit avec le client ">
+      <l_01>
+        <Indicateur_00 S_intitule="Les services n&#8217;ont pas &#233;t&#233; interrompus inutilement.">
+          <d_ligne I_S1="25" />
+          <d_poids F_S1="25.0" />
+          <d_revue I_S1="0" />
+        </Indicateur_00>
+        <Indicateur_01 S_intitule="Un compte rendu d&#8217;intervention est fourni.">
+          <d_ligne I_S1="26" />
+          <d_poids F_S1="25.0" />
+          <d_revue I_S1="0" />
+        </Indicateur_01>
+        <Indicateur_02 S_intitule="Les interventions sont consign&#233;es correctement">
+          <d_ligne I_S1="27" />
+          <d_poids F_S1="25.0" />
+          <d_revue I_S1="0" />
+        </Indicateur_02>
+        <Indicateur_03 S_intitule="L&#8217;installation du correctif ou de la mise &#224; jour est effectif.">
+          <d_ligne I_S1="28" />
+          <d_poids F_S1="25.0" />
+          <d_revue I_S1="0" />
+        </Indicateur_03>
+      </l_01>
+      <d_02 I_S1="40" />
+    </l_C5.5>
   </d_dicCompetences>
   <d_dicFonctions />
   <d_dicSavoirs>
@@ -1224,44 +1426,29 @@
       <d_cellulesInfo>
         <d_S1>
           <l_Pre>
-            <l_00 S_00="Identification" S_02="">
-              <l_01 I_00="10" I_01="2" I_02="0" />
+            <l_00 S_00="Identification Projet" S_02="">
+              <l_01 I_00="5" I_01="8" I_02="0" />
             </l_00>
           </l_Pre>
           <l_Nom>
-            <l_00 S_00="Identification" S_02="">
-              <l_01 I_00="9" I_01="2" I_02="0" />
+            <l_00 S_00="Identification Projet" S_02="">
+              <l_01 I_00="5" I_01="4" I_02="0" />
             </l_00>
           </l_Nom>
-          <l_NON>
-            <l_00 S_00="Conduite de projet" S_02="">
-              <l_01 I_00="5" I_01="8" I_02="0" />
-            </l_00>
-          </l_NON>
-          <l_Tit>
-            <l_00 S_00="Identification" S_02="">
-              <l_01 I_00="12" I_01="2" I_02="0" />
-            </l_00>
-          </l_Tit>
-          <l_Des>
-            <l_00 S_00="Identification" S_02="">
-              <l_01 I_00="14" I_01="1" I_02="0" />
-            </l_00>
-          </l_Des>
           <l_Etab>
-            <l_00 S_00="Identification" S_02="">
-              <l_01 I_00="7" I_01="2" I_02="0" />
+            <l_00 S_00="Identification Projet" S_02="">
+              <l_01 I_00="4" I_01="3" I_02="0" />
             </l_00>
           </l_Etab>
           <l_Prof>
-            <l_00 S_00="Identification" S_02="">
-              <l_01 I_00="18" I_01="2" I_02="1" />
+            <l_00 S_00="Identification Projet" S_02="">
+              <l_01 I_00="10" I_01="4" I_02="0" />
             </l_00>
           </l_Prof>
         </d_S1>
       </d_cellulesInfo>
       <d_grilles>
-        <l_S1 S_00="Grille BTS SN EC_Sit1.xlsx" S_01="I" />
+        <l_S1 S_00="Grille BTS SN IR_Sit.xlsx" S_01="I" />
       </d_grilles>
       <l_listPhases S_00="Ana" S_01="Con" S_02="DCo" S_03="Rea" S_04="XXX" S_05="Rev" S_06="R1" S_07="R2" S_08="R3" S_09="S" />
       <l_listPhasesEval S_00="Rev" S_01="R1" S_02="R2" S_03="R3" S_04="S" />
@@ -1269,20 +1456,20 @@
       <d_parties S_S1="Situation 1" />
       <l_periode I_00="3" />
       <d_phases>
-        <l_DCo S_00="Maint" S_01="Maintenance" S_02="maint" />
-        <l_Ana S_00="Install" S_01="Installation" S_02="inst" />
+        <l_DCo S_00="Recette" S_01="Recette" S_02="recet" />
+        <l_Ana S_00="Preparation" S_01="Preparation" S_02="prepa" />
         <l_R2 S_00="Revue n&#176;2" S_01="Revue de projet n&#176;2" S_02="R2" />
         <l_R3 S_00="Revue n&#176;3" S_01="Revue de projet n&#176;3" S_02="R3" />
         <l_XXX S_00="Synth et com" S_01="Synth&#232;se et communication" S_02="SC" />
         <l_Rev S_00="Revue inter" S_01="Revue interm&#233;diaire" S_02="Ri" />
         <l_R1 S_00="Revue n&#176;1" S_01="Revue de projet n&#176;1" S_02="R1" />
         <l_S S_00="Soutenance" S_01="Soutenance finale" S_02="S" />
-        <l_Rea S_00="Exp&#233;rimentations" S_01="R&#233;alisation d'exp&#233;rimentations" S_02="Re" />
-        <l_Con S_00="Expl" S_01="Exploitation" S_02="expl" />
+        <l_Rea S_00="Installation" S_01="Installation" S_02="inst" />
+        <l_Con S_00="Mise en &#339;uvre" S_01="Mise en &#339;uvre" S_02="mis oeu" />
       </d_phases>
       <d_posRevues>
-        <l__02 S_00="Ana" S_01="Con" />
-        <l__03 S_00="Ana" S_01="Con" S_02="DCo" />
+        <l__02 S_00="Con" S_01="Rea" />
+        <l__03 S_00="Ana" S_01="Con" S_02="Rea" />
       </d_posRevues>
     </Projet_CCF1>
     <Projet_CCF2 I_duree="12" I_maxEleves="5" I_minEleves="3" S_code="CCF2" S_ficheValid="STS-EE _ Dossier projet.html" S_intitule="CCF2">
@@ -1302,55 +1489,56 @@
       <d_cellulesInfo>
         <d_S2>
           <l_Tit>
-            <l_00 S_00="Identification" S_02="">
-              <l_01 I_00="12" I_01="2" I_02="0" />
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="0" I_01="0" I_02="0" />
             </l_00>
           </l_Tit>
           <l_Nom>
-            <l_00 S_00="Identification" S_02="">
-              <l_01 I_00="9" I_01="2" I_02="0" />
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="0" I_01="0" I_02="0" />
             </l_00>
           </l_Nom>
           <l_Des>
-            <l_00 S_00="Identification" S_02="">
-              <l_01 I_00="14" I_01="1" I_02="0" />
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="0" I_01="0" I_02="0" />
             </l_00>
           </l_Des>
           <l_Pre>
-            <l_00 S_00="Identification" S_02="">
-              <l_01 I_00="10" I_01="2" I_02="0" />
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="0" I_01="0" I_02="0" />
             </l_00>
           </l_Pre>
           <l_Etab>
-            <l_00 S_00="Identification" S_02="">
-              <l_01 I_00="7" I_01="2" I_02="0" />
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="0" I_01="0" I_02="0" />
             </l_00>
           </l_Etab>
         </d_S2>
       </d_cellulesInfo>
       <d_grilles>
-        <l_S2 S_00="Grille BTS SN EC_Sit1.xlsx" S_01="I" />
+        <l_S2 S_00="Grille BTS SN IR_Sit1.xlsx" S_01="I" />
       </d_grilles>
-      <l_listPhases S_00="Ana" S_01="Con" S_02="DCo" S_03="Rea" S_04="XXX" S_05="Rev" S_06="R1" S_07="R2" S_08="R3" S_09="S" />
+      <l_listPhases S_00="Sup" S_01="Ana" S_02="Con" S_03="Rea" S_04="Val" S_05="XXX" S_06="Rev" S_07="R1" S_08="R2" S_09="R3" S_10="S" />
       <l_listPhasesEval S_00="Rev" S_01="R1" S_02="R2" S_03="R3" S_04="S" />
       <l_listeParties S_00="S2" />
       <d_parties S_S2="Situation 2" />
       <l_periode I_00="4" />
       <d_phases>
-        <l_DCo S_00="Maint" S_01="Maintenance" S_02="maint" />
-        <l_Ana S_00="Install" S_01="Installation" S_02="inst" />
+        <l_Ana S_00="Analyser" S_01="Analyser" S_02="ana" />
+        <l_Val S_00="Tra&#231;abilit&#233;" S_01="Assurer la tra&#231;abilit&#233;" S_02="trac" />
         <l_R2 S_00="Revue n&#176;2" S_01="Revue de projet n&#176;2" S_02="R2" />
         <l_R3 S_00="Revue n&#176;3" S_01="Revue de projet n&#176;3" S_02="R3" />
         <l_XXX S_00="Synth et com" S_01="Synth&#232;se et communication" S_02="SC" />
         <l_Rev S_00="Revue inter" S_01="Revue interm&#233;diaire" S_02="Ri" />
         <l_R1 S_00="Revue n&#176;1" S_01="Revue de projet n&#176;1" S_02="R1" />
         <l_S S_00="Soutenance" S_01="Soutenance finale" S_02="S" />
-        <l_Rea S_00="Exp&#233;rimentations" S_01="R&#233;alisation d'exp&#233;rimentations" S_02="Re" />
-        <l_Con S_00="Expl" S_01="Exploitation" S_02="expl" />
+        <l_Sup S_00="Superviser" S_01="Superviser" S_02="superv" />
+        <l_Rea S_00="Depanner" S_01="Depanner" S_02="dep" />
+        <l_Con S_00="Diagnostiquer" S_01="Diagnostiquer" S_02="diag" />
       </d_phases>
       <d_posRevues>
-        <l__02 S_00="Ana" S_01="Con" />
-        <l__03 S_00="Ana" S_01="Con" S_02="DCo" />
+        <l__02 S_00="Sup" S_01="Ana" />
+        <l__03 S_00="Sup" S_01="Ana" S_02="Con" />
       </d_posRevues>
     </Projet_CCF2>
     <Projet_PRJ I_duree="50" I_maxEleves="5" I_minEleves="3" S_code="PRJ" S_ficheValid="STS-EE _ Dossier projet.html" S_intitule="Projet de fin d'ann&#233;e">

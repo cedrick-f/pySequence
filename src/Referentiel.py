@@ -367,10 +367,10 @@ class XMLelem():
             else:
                 lst = []
                 for l in v0[1]:
-                    if debug: print l, l.getType(), l.poids, l.estProjet()
+                    if debug: print l, l.getType(), l.poids, l.estProjet(), prj
 #                    print v0
                     if l.estProjet(): # Conduite ou Soutenance
-                        if prj == None or l.getType() in prj.parties.keys():
+                        if prj == None or len([p for p in l.poids.keys() if p in prj.parties.keys()]) > 0:#or l.getType() in prj.parties.keys():
 #                        if l.getType() == v0[2].keys():
                             lst.append(l)
                 if lst != []:
@@ -976,7 +976,7 @@ class Referentiel(XMLelem):
         self.Enseignement[0] = sh_g.cell(6,0).value #Abréviation    
         self.Enseignement[1] = sh_g.cell(6,1).value #Nom complet    
         self.Enseignement[2] = sh_g.cell(6,2).value #Famille
-        debug = self.Code[:3] == "STS"
+        debug = False#self.Code == "STS_SN_IR"
         if debug: print "code :", self.Code
 #        print self.Code
         
@@ -1291,7 +1291,9 @@ class Referentiel(XMLelem):
             --> le "_" évite que les attributs ne soient sauvegardés dans les XML
             
         """
-#        debug = self.Code[:4] == "EE-C"
+        
+        debug = False#self.Code == "STS_SN_IR"
+        if debug: print "completer", self.Code, self.tr_com
 
         # C'est une option (il y a un tronc commun) ==> on complète plus tard
         if not forcer and len(self.tr_com) != 0:
@@ -1307,9 +1309,9 @@ class Referentiel(XMLelem):
                         if not part in self.parties.keys():
                             self.parties[part] = n
                 
-#            print "    ", self.parties
+            if debug: print "    ", self.parties
             
-            self._dicCompetences = self.getArbreProjet(self.dicCompetences, debug = False)
+            self._dicCompetences = self.getArbreProjet(self.dicCompetences, debug = debug)
             
             self._dicIndicateurs = self.getPremierEtDernierNiveauArbre(self._dicCompetences)
             
@@ -1738,7 +1740,7 @@ class Projet(XMLelem):
 
     ##################################################################################################################
     def postTraiter(self, ref):
-        debug = False#ref.Code[:4] == "EE-C"
+        debug = False#ref.Code == "STS_SN_IR"
         if debug: print " postTraiter",  ref, self, self.parties
         
         
@@ -1976,6 +1978,12 @@ class Indicateur(XMLelem):
         return self.getType() != 'E'
 #        return self.poids[1] != 0 or self.poids[2] != 0
     
+    def getTypes(self):
+        """ Renvoie la liste de toutes les parties de projet concernées par l'indicateur
+        
+        """
+        return [t for t, p in self.poids.items() if p !=0]
+    
     def getType(self):
         """ E : écrit
             C : conduite
@@ -1999,8 +2007,10 @@ class Indicateur(XMLelem):
 #        elif self.poids[2] != 0:
 #            return "S"
 
+    
     def getRevue(self):
-        return 'R'+str(self.revue[self.getType()])
+#        print self.getTypes(), self.revue
+        return 'R'+str(self.revue[self.getTypes()[0]])
 
 #################################################################################################################################
 #

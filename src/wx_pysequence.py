@@ -9012,7 +9012,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
                         codeIndic = str(k+'_'+str(i+1))
                         if debug:
 #                            print not tache.phase in [_R1, "Rev", tache.projet.getCodeLastRevue()]
-                            print codeIndic , indic.revue,
+#                            print codeIndic , indic.revue,
                             if hasattr(tache, 'indicateursMaxiEleve'):
                                 print tache.indicateursMaxiEleve[0]
                             print prj.getTypeIndicateur(codeIndic)
@@ -13031,7 +13031,6 @@ class Projet(BaseDoc, Objet_sequence):
             # On passe à une position "épreuve"
             if self.code != None:
                 for tr in self.creerTachesRevue():
-                    print tr
                     self.taches.append(tr)
                     tr.ConstruireArbre(self.arbre, self.brancheTac)
                     tr.SetCode()
@@ -13366,7 +13365,7 @@ class Projet(BaseDoc, Objet_sequence):
         for t in lstTaches:
             paquet[t.phase].append(t)
             
-        print paquet
+       
         
         # On trie les tâches de chaque paquet  
         for c in [k for k in prj.listPhases if not k in prj.listPhasesEval]:#['Ana', 'Con', 'Rea', 'DCo', 'Val', 'XXX']:
