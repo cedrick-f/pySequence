@@ -183,7 +183,7 @@ def show_text_rect(ctx, texte, rect, \
         
         Retourne : Taille de police, wc, yh
     """
-    debug = texte[:3] ==u'Syn'
+    debug = False#texte[:3] ==u'Syn'
     if debug:
         print "show_text_rect", texte, rect
 

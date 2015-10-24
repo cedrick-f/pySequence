@@ -1370,24 +1370,24 @@
   <d_options />
   <d_parties S_C="Conduite" S_S="Soutenance" S_S1="Situation 1" S_S2="Situation 2" />
   <l_periodes>
-    <l_00 I_01="4" S_00="1_&#232;re ann&#233;e" />
-    <l_01 I_01="4" S_00="2_&#232;me ann&#233;e" />
+    <l_00 I_01="2" S_00="1_&#232;re ann&#233;e" />
+    <l_01 I_01="3" S_00="2_&#232;me ann&#233;e" />
   </l_periodes>
   <l_positions_CI />
   <d_projets>
-    <Projet_CCF1 I_duree="12" I_maxEleves="5" I_minEleves="3" S_code="CCF1" S_ficheValid="STS-EE _ Dossier projet.html" S_intitule="CCF1">
+    <Projet_CCF1 I_duree="12" I_maxEleves="5" I_minEleves="3" S_code="CCF1" S_ficheValid="STS_SN_EC_Sit1.html" S_intitule="CCF1">
       <d_attributs>
-        <l_SRC S_00="Source de financement" S_01="" S_02="" />
-        <l_PAR S_00="Partenaires du projet" S_01="" S_02="" />
-        <l_DEC S_00="" S_01="" S_02="" />
-        <l_OBJ S_00="Objectif" S_01="Identification de la valeur ajout&#233;e.--Enjeux." S_02="" />
+        <l_SRC S_00="" S_01="" S_02="" />
+        <l_PAR S_00="" S_01="" S_02="" />
+        <l_DEC S_00="Description de l'intervention" S_01="" S_02="" />
+        <l_OBJ S_00="Description de l'intervention" S_01="Identification de la valeur ajout&#233;e.--Enjeux." S_02="" />
         <l_TIT S_00="Titre du projet" S_01="Titre du projet" S_02="" />
-        <l_SYN S_00="Synoptique" S_01="&#8226; Identification des proc&#233;d&#233;s et de leurs agencements.--&#8226; Description du ou des processus." S_02="" />
-        <l_PB S_00="Pr&#233;sentation du projet" S_01="Indiquer :-- - description du contexte dans lequel l&#8217;objet du projet va &#234;tre int&#233;gr&#233; ;-- - fonctionnalit&#233;s de cet objet ;-- - caract&#233;ristiques fonctionnelles et techniques." S_02="" />
+        <l_SYN S_00="" S_01="" S_02="" />
+        <l_PB S_00="" S_01="" S_02="" />
         <l_ORI S_00="" S_01="" S_02="" />
-        <l_CCF S_00="Cahier des charges" S_01="" S_02="" />
-        <l_TYP S_00="Typologie" S_01="" S_02="Construction ou r&#233;novation d'un syst&#232;me inclus dans une cha&#238;ne de fabrication.--Construction ou r&#233;novation d'une machine de production.--Conception ou modification d'une installation &#233;lectrique d'une infrastructure.--Conception ou modification d'une installation &#233;lectrique d'un b&#226;timent tertiaire ou industriel.--Conception ou am&#233;lioration d'un produit de consommation.--&#201;laboration ou am&#233;lioration de services." />
-        <l_PRX S_00="Montant estim&#233; du projet" S_01="" S_02="" />
+        <l_CCF S_00="Pr&#233;sentation du support" S_01="Indiquer :-- - description du contexte dans lequel l&#8217;objet du projet va &#234;tre int&#233;gr&#233; ;-- - fonctionnalit&#233;s de cet objet ;-- - caract&#233;ristiques fonctionnelles et techniques." S_02="" />
+        <l_TYP S_00="Typologie" S_01="" S_02="T&#233;l&#233;communication, t&#233;l&#233;phonie et r&#233;seaux t&#233;l&#233;phonique--Informatique, r&#233;seaux et infrastructures--Multim&#233;dia, son et image, radio et t&#233;l&#233;diffusion--Mobilit&#233; et syst&#232;mes embarqu&#233;s--Electronique et informatique m&#233;dicale--Mesure, instrumentation et microsyst&#232;mes--Automatique et robotique" />
+        <l_PRX S_00="" S_01="" S_02="" />
       </d_attributs>
       <d_cellulesInfo>
         <d_S1>
@@ -1420,7 +1420,7 @@
       <l_listPhasesEval S_00="R1" S_01="R2" S_02="R3" S_03="S" />
       <l_listeParties S_00="S1" />
       <d_parties S_S1="Situation 1" />
-      <l_periode I_00="3" />
+      <l_periode I_00="2" />
       <d_phases>
         <l_DCo S_00="Recette" S_01="Recette" S_02="recet" />
         <l_R1 S_00="Revue n&#176;1" S_01="Revue de projet n&#176;1" S_02="R1" />
@@ -1437,19 +1437,19 @@
         <l__03 S_00="Ana" S_01="Con" S_02="Rea" />
       </d_posRevues>
     </Projet_CCF1>
-    <Projet_CCF2 I_duree="12" I_maxEleves="5" I_minEleves="3" S_code="CCF2" S_ficheValid="STS-EE _ Dossier projet.html" S_intitule="CCF2">
+    <Projet_CCF2 I_duree="12" I_maxEleves="5" I_minEleves="3" S_code="CCF2" S_ficheValid="STS_SN_EC_Sit2.html" S_intitule="CCF2">
       <d_attributs>
-        <l_SRC S_00="Source de financement" S_01="" S_02="" />
-        <l_PAR S_00="Partenaires du projet" S_01="" S_02="" />
-        <l_DEC S_00="" S_01="" S_02="" />
-        <l_OBJ S_00="Objectif" S_01="Identification de la valeur ajout&#233;e.--Enjeux." S_02="" />
+        <l_SRC S_00="" S_01="" S_02="" />
+        <l_PAR S_00="" S_01="" S_02="" />
+        <l_DEC S_00="Description de l'intervention" S_01="" S_02="" />
+        <l_OBJ S_00="Description de l'intervention" S_01="Identification de la valeur ajout&#233;e.--Enjeux." S_02="" />
         <l_TIT S_00="Titre du projet" S_01="Titre du projet" S_02="" />
-        <l_SYN S_00="Synoptique" S_01="&#8226; Identification des proc&#233;d&#233;s et de leurs agencements.--&#8226; Description du ou des processus." S_02="" />
-        <l_PB S_00="Pr&#233;sentation du projet" S_01="Indiquer :-- - description du contexte dans lequel l&#8217;objet du projet va &#234;tre int&#233;gr&#233; ;-- - fonctionnalit&#233;s de cet objet ;-- - caract&#233;ristiques fonctionnelles et techniques." S_02="" />
+        <l_SYN S_00="" S_01="" S_02="" />
+        <l_PB S_00="" S_01="" S_02="" />
         <l_ORI S_00="" S_01="" S_02="" />
-        <l_CCF S_00="Cahier des charges" S_01="" S_02="" />
-        <l_TYP S_00="Typologie" S_01="" S_02="Construction ou r&#233;novation d'un syst&#232;me inclus dans une cha&#238;ne de fabrication.--Construction ou r&#233;novation d'une machine de production.--Conception ou modification d'une installation &#233;lectrique d'une infrastructure.--Conception ou modification d'une installation &#233;lectrique d'un b&#226;timent tertiaire ou industriel.--Conception ou am&#233;lioration d'un produit de consommation.--&#201;laboration ou am&#233;lioration de services." />
-        <l_PRX S_00="Montant estim&#233; du projet" S_01="" S_02="" />
+        <l_CCF S_00="Pr&#233;sentation du support" S_01="Indiquer :-- - description du contexte dans lequel l&#8217;objet du projet va &#234;tre int&#233;gr&#233; ;-- - fonctionnalit&#233;s de cet objet ;-- - caract&#233;ristiques fonctionnelles et techniques." S_02="" />
+        <l_TYP S_00="Typologie" S_01="" S_02="T&#233;l&#233;communication, t&#233;l&#233;phonie et r&#233;seaux t&#233;l&#233;phonique--Informatique, r&#233;seaux et infrastructures--Multim&#233;dia, son et image, radio et t&#233;l&#233;diffusion--Mobilit&#233; et syst&#232;mes embarqu&#233;s--Electronique et informatique m&#233;dicale--Mesure, instrumentation et microsyst&#232;mes--Automatique et robotique" />
+        <l_PRX S_00="" S_01="" S_02="" />
       </d_attributs>
       <d_cellulesInfo>
         <d_S2>
@@ -1487,7 +1487,7 @@
       <l_listPhasesEval S_00="Rev" S_01="R1" S_02="R2" S_03="R3" S_04="S" />
       <l_listeParties S_00="S2" />
       <d_parties S_S2="Situation 2" />
-      <l_periode I_00="4" />
+      <l_periode I_00="3" />
       <d_phases>
         <l_Ana S_00="Analyser" S_01="Analyser" S_02="ana" />
         <l_Val S_00="Tra&#231;abilit&#233;" S_01="Assurer la tra&#231;abilit&#233;" S_02="trac" />
@@ -1506,19 +1506,19 @@
         <l__03 S_00="Sup" S_01="Ana" S_02="Con" />
       </d_posRevues>
     </Projet_CCF2>
-    <Projet_PRJ I_duree="50" I_maxEleves="5" I_minEleves="3" S_code="PRJ" S_ficheValid="STS-EE _ Dossier projet.html" S_intitule="Projet de fin d'ann&#233;e">
+    <Projet_PRJ I_duree="50" I_maxEleves="5" I_minEleves="3" S_code="PRJ" S_ficheValid="STS_SN_EC_Sit1.html" S_intitule="Projet de fin d'ann&#233;e">
       <d_attributs>
-        <l_SRC S_00="Source de financement" S_01="" S_02="" />
-        <l_PAR S_00="Partenaires du projet" S_01="" S_02="" />
-        <l_DEC S_00="" S_01="" S_02="" />
-        <l_OBJ S_00="Objectif" S_01="Identification de la valeur ajout&#233;e.--Enjeux." S_02="" />
+        <l_SRC S_00="" S_01="" S_02="" />
+        <l_PAR S_00="" S_01="" S_02="" />
+        <l_DEC S_00="Description de l'intervention" S_01="" S_02="" />
+        <l_OBJ S_00="Description de l'intervention" S_01="Identification de la valeur ajout&#233;e.--Enjeux." S_02="" />
         <l_TIT S_00="Titre du projet" S_01="Titre du projet" S_02="" />
-        <l_SYN S_00="Synoptique" S_01="&#8226; Identification des proc&#233;d&#233;s et de leurs agencements.--&#8226; Description du ou des processus." S_02="" />
-        <l_PB S_00="Pr&#233;sentation du projet" S_01="Indiquer :-- - description du contexte dans lequel l&#8217;objet du projet va &#234;tre int&#233;gr&#233; ;-- - fonctionnalit&#233;s de cet objet ;-- - caract&#233;ristiques fonctionnelles et techniques." S_02="" />
+        <l_SYN S_00="" S_01="" S_02="" />
+        <l_PB S_00="" S_01="" S_02="" />
         <l_ORI S_00="" S_01="" S_02="" />
-        <l_CCF S_00="Cahier des charges" S_01="" S_02="" />
-        <l_TYP S_00="Typologie" S_01="" S_02="Construction ou r&#233;novation d'un syst&#232;me inclus dans une cha&#238;ne de fabrication.--Construction ou r&#233;novation d'une machine de production.--Conception ou modification d'une installation &#233;lectrique d'une infrastructure.--Conception ou modification d'une installation &#233;lectrique d'un b&#226;timent tertiaire ou industriel.--Conception ou am&#233;lioration d'un produit de consommation.--&#201;laboration ou am&#233;lioration de services." />
-        <l_PRX S_00="Montant estim&#233; du projet" S_01="" S_02="" />
+        <l_CCF S_00="Pr&#233;sentation du support" S_01="Indiquer :-- - description du contexte dans lequel l&#8217;objet du projet va &#234;tre int&#233;gr&#233; ;-- - fonctionnalit&#233;s de cet objet ;-- - caract&#233;ristiques fonctionnelles et techniques." S_02="" />
+        <l_TYP S_00="Typologie" S_01="" S_02="T&#233;l&#233;communication, t&#233;l&#233;phonie et r&#233;seaux t&#233;l&#233;phonique--Informatique, r&#233;seaux et infrastructures--Multim&#233;dia, son et image, radio et t&#233;l&#233;diffusion--Mobilit&#233; et syst&#232;mes embarqu&#233;s--Electronique et informatique m&#233;dicale--Mesure, instrumentation et microsyst&#232;mes--Automatique et robotique" />
+        <l_PRX S_00="" S_01="" S_02="" />
       </d_attributs>
       <d_cellulesInfo>
         <d_C>
@@ -1594,7 +1594,7 @@
       <l_listPhasesEval S_00="Rev" S_01="R1" S_02="R2" S_03="R3" S_04="S" />
       <l_listeParties S_00="C" S_01="S" />
       <d_parties S_C="Conduite" S_S="Soutenance" />
-      <l_periode I_00="7" I_01="8" />
+      <l_periode I_00="4" I_01="5" />
       <d_phases>
         <l_DCo S_00="Maint" S_01="Maintenance" S_02="maint" />
         <l_Ana S_00="Install" S_01="Installation" S_02="inst" />

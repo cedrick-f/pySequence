@@ -2306,7 +2306,15 @@ class FenetreProjet(FenetreDocument):
     
         
         def ouvre(fichier, message):
-            root = ET.parse(fichier).getroot()
+            try:
+                root = ET.parse(fichier).getroot()
+            except ET.ParseError:
+                messageErreur(None, u"Fichier corrompu", 
+                                  u"Le ficheir %s est corrompu !!\n\n"\
+                                  u"Il est probablement tronqué suite à un echec d'enregistrement." %nomFichier)
+                Annuler = True
+                return None, u"", 0, False, Annuler
+             
             count = 0
             Ok = True
             Annuler = False
@@ -9995,9 +10003,13 @@ class A_propos(wx.Dialog):
         
         lstActeurs = ((u"Développement : ",(u"Cédrick FAURY", u"Jean-Claude FRICOU")), \
                       (u"Référentiels : ",(u"Thierry VALETTE (STS EE)", \
-                                           u"Jean-Claude FRICOU (STS-SN)", \
+                                           u"Jean-Claude FRICOU (STS SN)", \
+                                           u"Emmanuel VIGNAUD (Ede SI-CIT-DIT 2nde)", \
                                            u"Arnaud BULCKE (Techno Collège)")), \
-                      (u"Remerciements : ",()))
+                      (u"Remerciements : ",(u"un grand merci aux très nombreux", \
+                                            u"utilisateurs qui ont pris le temps", \
+                                            u"de nous signaler les dysfonctionnements,", \
+                                            u"et de nous faire part de leurs remarques.",)))
 
 
         for ac in lstActeurs:
@@ -10027,10 +10039,11 @@ class A_propos(wx.Dialog):
                           lictext)
             
             
-        wx.TextCtrl(licence, -1, lictext, size = (400, -1), 
+        tl = wx.TextCtrl(licence, -1, lictext, size = (400, -1), 
                     style = wx.TE_READONLY|wx.TE_MULTILINE|wx.BORDER_NONE )
-        
-
+        s = wx.BoxSizer()
+        s.Add(tl, flag = wx.EXPAND)
+        licence.SetSizer(s)
         
         # Description
         #-------------
@@ -10041,7 +10054,8 @@ class A_propos(wx.Dialog):
         t.SetLabelMarkup( wordwrap(u"<b>pySequence</b> est un logiciel d'aide à l'élaboration de séquences pédagogiques et à la validation de projets,\n"
                                           u"sous forme de fiches exportables au format PDF ou SVG.\n"
                                           u"Il est élaboré en relation avec les programmes et les documents d'accompagnement\n"
-                                          u"des enseignements des filiéres STI2D, SSI et Technologie Collége",500, wx.ClientDC(self)))
+                                          u"des enseignements des filiéres :\n"
+                                          u" STI2D, \n SSI\n Technologie Collège\n STS EE et SN\n EdE SI-CIT-DIT 2nde.",500, wx.ClientDC(self)))
         nb.AddPage(descrip, u"Description")
         nb.AddPage(auteurs, u"Auteurs")
         nb.AddPage(licence, u"Licence")
@@ -10094,7 +10108,7 @@ class myProgressDialog(wx.ProgressDialog):
                               ) 
         
     def OnClose(self, event):
-        print "Close dlg"
+#        print "Close dlg"
         self.Destroy()        
 
 

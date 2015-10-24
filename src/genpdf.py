@@ -168,7 +168,7 @@ def genererFicheValidationHTML(nomFichierPDF, nomFichierHTML, projet):
     etab = projet.classe.etablissement+"<br>("+italic(projet.classe.ville)+u")"
     
     champs = {'ACA' : projet.classe.academie,
-              'SES' : str(projet.annee),
+              'SES' : str(projet.annee+1),
               'TIT' : remplaceCR(projet.intitule),
               'ETA' : etab,
               'PAR' : remplaceCR(projet.partenariat),
