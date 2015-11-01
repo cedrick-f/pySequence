@@ -183,7 +183,7 @@ def show_text_rect(ctx, texte, rect, \
         
         Retourne : Taille de police, wc, yh
     """
-    debug = False#texte[:3] ==u'Syn'
+    debug = False#texte[:3] ==u'Ést'
     if debug:
         print "show_text_rect", texte, rect
 
@@ -705,7 +705,7 @@ def decoupe_text(ctx, texte, w, nLignesMax):
     """
     
     # Découpages du texte en lignes
-    lignes = texte.split("\n")
+    lignes = texte.splitlines()#("\n")
     
     # Longueur maxi des lignes (nbr de caractères)
     wmax = max([len(l) for l in lignes])
@@ -2069,7 +2069,7 @@ def ajuster_texte(ctx, texte, w, h, le = 0.8, pe = 1.0, b = 0.4, wrap = True, co
             couper = False : les mots ne sont jamais coupés
             
     """
-    debug = False#texte[:3] ==u'Syn'
+    debug = False# texte[:3] ==u'Ést'
     if debug: print "ajuster_texte", texte, w, h
     if debug: print "  couper", couper
 
@@ -2095,7 +2095,7 @@ def ajuster_texte(ctx, texte, w, h, le = 0.8, pe = 1.0, b = 0.4, wrap = True, co
         if debug: print "  width", width
         
         pas = ctx.text_extents('a')[2]
-        lignes = texte.split("\n")
+        lignes = texte.splitlines()#("\n")
         
         ancienWrap = width
 #        ancienFontSize = 0
@@ -2162,7 +2162,7 @@ def ajuster_texte(ctx, texte, w, h, le = 0.8, pe = 1.0, b = 0.4, wrap = True, co
             
         
     else:
-        lt = texte.split("\n")
+        lt = texte.splitlines()#("\n")
         maxw = max([ctx.text_extents(t)[2] for t in lt])
         ecart = b * hl
         c = max(maxw/w, hl*len(lt)/h)
@@ -2205,7 +2205,7 @@ def wordwrap(ctx, text, width, pte, breakLongWords=True):
     character boundary, but this can be disabled by passing ``False``
     for the ``breakLongWords`` parameter.
     """
-    debug = text[:3] ==u'Réa'
+    debug = False#text[:3] ==u'Ést'
 #    if debug: print "wordwrap", width, text
    
 #    pas = ctx.text_extents('a')[2]
@@ -2215,14 +2215,22 @@ def wordwrap(ctx, text, width, pte, breakLongWords=True):
     wid = width
 
     wrapped_lines = []
-    text = text.split('\n')
+    if debug: print "<<", text.splitlines()
+    if debug: print "<<", text.split("\n")
+    if debug: print type(text.splitlines()[0]), type(text.split("\n")[0])
+    text = text.splitlines()
+    
+#    text = text.split("\n")
+    
     for line in text:
-#        if debug: print "  pte", pte
         idx = 0
         start = 0
         startIdx = 0
         spcIdx = -1
+        if debug: print "  line", type(line), line
+        if debug: print "  pte", pte
         while idx < len(pte):
+            if debug: print "  idx", idx
             # remember the last seen space
             if line[idx] == ' ':
                 spcIdx = idx
