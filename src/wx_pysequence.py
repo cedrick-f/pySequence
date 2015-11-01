@@ -16944,7 +16944,7 @@ class Eleve(Personne, Objet_sequence):
             
     ######################################################################################  
     def GetDuree(self, phase = None, total = False):
-        d = 0
+        d = 0.0
         p = 0
         if not total and phase != None:
             for i, t in enumerate(self.projet.taches):
@@ -17398,10 +17398,10 @@ class Eleve(Personne, Objet_sequence):
         #
         # Durée
         #
-        duree = int(self.GetDuree())
+        duree = self.GetDuree()
         dureeRef = self.GetProjetRef().duree
 #        print "   duree", duree, "/", dureeRef
-        lab = " ("+str(duree)+"h) "
+        lab = " ("+str(int(duree))+"h) "
         self.codeBranche.SetLabel(lab)
         tol1 = constantes.DELTA_DUREE
         tol2 = constantes.DELTA_DUREE2

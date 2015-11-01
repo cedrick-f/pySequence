@@ -2069,7 +2069,7 @@ def ajuster_texte(ctx, texte, w, h, le = 0.8, pe = 1.0, b = 0.4, wrap = True, co
             couper = False : les mots ne sont jamais coupés
             
     """
-    debug = False# texte[:3] ==u'Ést'
+    debug = False#texte[:3] ==u'Lyc'
     if debug: print "ajuster_texte", texte, w, h
     if debug: print "  couper", couper
 
@@ -2083,6 +2083,8 @@ def ajuster_texte(ctx, texte, w, h, le = 0.8, pe = 1.0, b = 0.4, wrap = True, co
 
     hl = fheight * le
     if debug: print "  hl", hl
+    ecart = b * hl
+    if debug: print "  ecart", ecart
     ratioRect = 1.0*w/h
     
     #
@@ -2116,6 +2118,7 @@ def ajuster_texte(ctx, texte, w, h, le = 0.8, pe = 1.0, b = 0.4, wrap = True, co
                 
             if lt == []:
                 return lt, 1, 0
+            if debug: print
             if debug: print "  lt", lt
             # On mémorise la longueur de la plus longue ligne 
             #    (en caractères et en unité Cairo)
@@ -2131,23 +2134,27 @@ def ajuster_texte(ctx, texte, w, h, le = 0.8, pe = 1.0, b = 0.4, wrap = True, co
 #            if debug: print "  fontSize", fontSize
             # On calcul le rapport des rapports h/w
             
-            ecart = b * hl
-            if debug: print "  ecart", ecart
+            
             c = max(maxw/w, hl*len(lt)/h)
+#            c = 1
             if debug: print "  c, w, h", c, w, h
             ratioRect = (w*c-ecart)/(h*c-ecart)
             if debug: print "  r", w/h, ratioRect
-            rapport = maxw / (hl*len(lt)) / ratioRect
+            rapport = (maxw / (hl*len(lt))) / ratioRect
+#            fontSize = min(w/maxw, h/(hl * len(lt))) * COEF
             
-            
-            if debug: print "  rapports", maxw / (hl*len(lt)), ratioRect
+            if debug: print "  rapports", maxw / (hl*len(lt)), "/", ratioRect
             if rapport <= 1:  # on a passé le cap ...
                 continuer = False
+#                if debug: print "  fontSize", fontSize, ancienFontSize
+                
+                
+#                if i > 1 and fontSize < ancienFontSize:
                 if i > 1 and abs(ancienRapport-1) < abs(rapport-1):#fontSize <= ancienFontSize:
                     width = ancienWrap
                     lt = ancienLt
                     maxw = ancienMaxw
-#                fontSize = ancienFontSize
+#                    fontSize = ancienFontSize
 
             else:
                 ancienWrap = width
@@ -2164,7 +2171,6 @@ def ajuster_texte(ctx, texte, w, h, le = 0.8, pe = 1.0, b = 0.4, wrap = True, co
     else:
         lt = texte.splitlines()#("\n")
         maxw = max([ctx.text_extents(t)[2] for t in lt])
-        ecart = b * hl
         c = max(maxw/w, hl*len(lt)/h)
         ratioRect = (w*c-ecart)/(h*c-ecart)
 #        fontSize = min(w/maxw, h/hl) * COEF
