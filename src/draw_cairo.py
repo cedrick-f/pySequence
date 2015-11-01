@@ -2069,7 +2069,7 @@ def ajuster_texte(ctx, texte, w, h, le = 0.8, pe = 1.0, b = 0.4, wrap = True, co
             couper = False : les mots ne sont jamais coupés
             
     """
-    debug = texte[:3] ==u'Syn'
+    debug = False#texte[:3] ==u'Syn'
     if debug: print "ajuster_texte", texte, w, h
     if debug: print "  couper", couper
 

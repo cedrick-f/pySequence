@@ -3063,7 +3063,7 @@ class FicheProjet(BaseFiche):
             elem = branche.GetData()
             if hasattr(elem, 'tip'):
                 x, y = self.ClientToScreen((x, y))
-                elem.tip.Position((x,y), (0,0))
+                elem.tip.Position((x+1,y+1), (0,0))
                 self.call = wx.CallLater(500, elem.tip.Show, True)
                 self.tip = elem.tip
                 evt.Skip()
@@ -17399,20 +17399,24 @@ class Eleve(Personne, Objet_sequence):
         # Durée
         #
         duree = int(self.GetDuree())
+        dureeRef = self.GetProjetRef().duree
+#        print "   duree", duree, "/", dureeRef
         lab = " ("+str(duree)+"h) "
         self.codeBranche.SetLabel(lab)
         tol1 = constantes.DELTA_DUREE
         tol2 = constantes.DELTA_DUREE2
+        taux = abs((duree-dureeRef)/dureeRef)*100
+#        print "   taux", taux, "(", tol1, tol2, ")"
         t = u"Durée de travail "
-        if abs(duree-70) < tol1:
+        if taux < tol1:
             self.codeBranche.SetBackgroundColour(COUL_OK)
             self.codeBranche.SetToolTipString(t + u"conforme")
-        elif abs(duree-70) < tol2:
+        elif taux < tol2:
             self.codeBranche.SetBackgroundColour(COUL_BOF)
             self.codeBranche.SetToolTipString(t + u"acceptable")
         else:
             self.codeBranche.SetBackgroundColour(COUL_NON)
-            if duree < 70:
+            if duree < dureeRef:
                 self.codeBranche.SetToolTipString(t + u"insuffisante")
             else:
                 self.codeBranche.SetToolTipString(t + u"trop importante")
@@ -17464,7 +17468,9 @@ class Eleve(Personne, Objet_sequence):
             st.SetToolTipString(t)
 
         self.codeBranche.LayoutFit()
-    
+
+
+
     ######################################################################################  
     def SetCode(self):
 
