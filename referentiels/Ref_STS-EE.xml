@@ -4,7 +4,7 @@
   </l_BO_URL>
   <l_BO_dossier S_00="STS/EE" />
   <l_CentresInterets S_00="Mise en service d&#8217;un syst&#232;me d&#8217;un ouvrage ou d&#8217;un &#233;quipement" S_01="La distribution de l&#8217;&#233;nergie &#233;lectrique" S_02="Comportement des charges m&#233;caniques" S_03="Les diff&#233;rents proc&#233;d&#233;s de transformation de l&#8217;&#233;nergie" S_04="La r&#233;versibilit&#233; &#233;nerg&#233;tique" S_05="Dimensionnement &#233;nerg&#233;tique dans les syst&#232;mes autonomes et embarqu&#233;s" S_06="La qualit&#233; de l&#8217;&#233;nergie &#233;lectrique" S_07="La gestion des co&#251;ts" S_08="Asservissement et r&#233;gulation" S_09="Les &#233;quipements communicants" />
-  <l_Enseignement S_00="STS-EE" S_01="BTS - Electrotechnique" S_02="STS" />
+  <l_Enseignement S_00="STS-EE" S_01="BTS - Electrotechnique (beta)" S_02="STS" />
   <d_aColNon />
   <d_activites>
     <l_ED S_00="Etude de dossier" S_01="Activit&#233; d'&#233;tude de dossier" />

@@ -842,7 +842,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             t = u""
         else:
             self.tb.EnableTool(201, True)
-            u"\n"+redoAction
+            t = u"\n"+redoAction
         self.tb.SetToolShortHelp(201, u"Rétablir"+t)
         
         
@@ -2256,30 +2256,37 @@ class FenetreProjet(FenetreDocument):
             et redessine la fiche
             (après undo ou redo)
         """
+        print "restaurer"
         #
         # Réinitialisation de l'arbre
         #
         self.arbre.DeleteAllItems()
         root = self.arbre.AddRoot("")
-        
+        print 1
         self.projet.SetCompetencesRevuesSoutenance()
-   
+        print 2
         self.classe.ConstruireArbre(self.arbre, root)
+        print 3
         self.projet.ConstruireArbre(self.arbre, root)
+        print 4
         self.projet.OrdonnerTaches()
+        print 5
         self.projet.PubDescription()
+        print 6
         self.projet.MiseAJourDureeEleves()
-        self.projet.MiseAJourNomProfs()
-
+        print 7
+#        self.projet.MiseAJourNomProfs()
+        print 8
         self.projet.Verrouiller()
         
         self.arbre.Layout()
         self.arbre.ExpandAll()
         self.arbre.CalculatePositions()
         
-        self.fiche.Redessiner()
+#        self.fiche.Redessiner()
+        print 10
         self.parent.miseAJourUndo()
-        
+        print 11
         
         
     ###############################################################################################
@@ -2874,7 +2881,7 @@ class BaseFiche(wx.ScrolledWindow):
 
     #############################################################################            
     def Redessiner(self, event = None):  
-        
+        print "Redessiner"
         def redess():
             wx.BeginBusyCursor()
                 
@@ -13338,6 +13345,7 @@ class Projet(BaseDoc, Objet_sequence):
         else:
             modif = ""
         self.panelPropriete.sendEvent(modif = modif)
+        self.MiseAJourDureeEleves()
         if verrouiller:
             self.Verrouiller()
         

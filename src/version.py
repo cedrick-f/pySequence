@@ -44,7 +44,7 @@ import wx
 
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "6.0-beta.30"
+__version__ = "6.1.0"
 print __version__
 
 
@@ -133,8 +133,11 @@ def GetNewVersion(win):
     for i, l in enumerate(latest.split('.')):
         nl = int(l.rstrip("-beta"))
         na = int(a[i].rstrip("-beta"))
+#        print nl,na
         if nl > na:
             new = True
+            break
+        elif nl < na:
             break
     if new:
         print latest
