@@ -123,7 +123,7 @@ class STC_ortho(stc.StyledTextCtrl):
 #        print "SetValue", text[:10], "..."
         self.toutVerifier = True
         self.skipEvt = event
-        self.SetText(text)
+        wx.CallAfter(self.SetText, text)
         
         
  
@@ -153,7 +153,7 @@ class STC_ortho(stc.StyledTextCtrl):
             #if self.modified_count > 10:
             #    wx.CallAfter(self.spell.processDirtyRanges)
             #    self.modified_count = 0
-        
+#            print self.skipEvt
             evt.Skip(self.skipEvt)
             self.skipEvt = True
         

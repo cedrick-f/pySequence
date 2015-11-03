@@ -344,12 +344,18 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
     ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                        cairo.FONT_WEIGHT_BOLD)
     ctx.set_source_rgb (0.6, 0.6, 0.9)
-    show_text_rect(ctx, t, (posPro[0] , posPos[1], tailleTypeEns, taillePos[1]), 
+    
+    h = taillePos[1] * 0.8
+    show_text_rect(ctx, t, (posPro[0] , posPos[1], tailleTypeEns, h), 
                    va = 'c', ha = 'g', b = 0, orient = 'h', 
                    fontsizeMinMax = (-1, -1), fontsizePref = -1, wrap = True, couper = False,
                    bordure = (0, 0, 0))
     
-
+    t = prj.classe.referentiel.Enseignement[1]
+    ctx.set_source_rgb (0.3, 0.3, 0.8)
+    show_text_rect(ctx, t, (posPro[0] , posPos[1] + h, tailleTypeEns, taillePos[1] - h), 
+                   va = 'c', ha = 'g', b = 0, orient = 'h', 
+                   fontsizeMinMax = (-1, -1), fontsizePref = -1, wrap = True, couper = False)
     
 
     #

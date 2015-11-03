@@ -2256,27 +2256,27 @@ class FenetreProjet(FenetreDocument):
             et redessine la fiche
             (après undo ou redo)
         """
-        print "restaurer"
+
         #
         # Réinitialisation de l'arbre
         #
         self.arbre.DeleteAllItems()
         root = self.arbre.AddRoot("")
-        print 1
+
         self.projet.SetCompetencesRevuesSoutenance()
-        print 2
+
         self.classe.ConstruireArbre(self.arbre, root)
-        print 3
+
         self.projet.ConstruireArbre(self.arbre, root)
-        print 4
+
         self.projet.OrdonnerTaches()
-        print 5
+
         self.projet.PubDescription()
-        print 6
+  
         self.projet.MiseAJourDureeEleves()
-        print 7
-#        self.projet.MiseAJourNomProfs()
-        print 8
+
+        self.projet.MiseAJourNomProfs()
+
         self.projet.Verrouiller()
         
         self.arbre.Layout()
@@ -2284,9 +2284,9 @@ class FenetreProjet(FenetreDocument):
         self.arbre.CalculatePositions()
         
 #        self.fiche.Redessiner()
-        print 10
+
         self.parent.miseAJourUndo()
-        print 11
+
         
         
     ###############################################################################################
@@ -3616,7 +3616,7 @@ class PanelPropriete_Projet(PanelPropriete):
               
     #############################################################################            
     def EvtText(self, event):
-#        print "EvtText", 
+#        print "EvtText"
         if event.GetEventObject() == self.textctrl:
             nt = event.GetString()
 #            if nt == u"":
@@ -3859,9 +3859,9 @@ class PanelPropriete_Projet(PanelPropriete):
 
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
-#        print "MiseAJour Projet"
+#        print "MiseAJour Projet", sendEvt
+
         ref = self.projet.GetProjetRef()
-        
         
         # La page "Généralités"
         self.textctrl.ChangeValue(self.projet.intitule)
@@ -3899,8 +3899,6 @@ class PanelPropriete_Projet(PanelPropriete):
      
         self.panelOrga.MiseAJourListe()
         self.Layout()
-        
-        
         
         if sendEvt:
             self.sendEvent()
