@@ -2881,13 +2881,12 @@ class BaseFiche(wx.ScrolledWindow):
 
     #############################################################################            
     def Redessiner(self, event = None):  
-        print "Redessiner"
+#        print "Redessiner"
         def redess():
             wx.BeginBusyCursor()
-                
+
     #        tps1 = time.clock() 
-                
-            
+
     #        face = wx.lib.wxcairo.FontFaceFromFont(wx.FFont(10, wx.SWISS, wx.FONTFLAG_BOLD))
     #        ctx.set_font_face(face)
             
@@ -3685,7 +3684,7 @@ class PanelPropriete_Projet(PanelPropriete):
             self.sendEvent(modif = modif)
         else:
             if not self.eventAttente:
-                print "   modif", obj
+#                print "   modif", obj
                 wx.CallLater(DELAY, self.sendEvent, 
                              modif = modif,
                              draw = maj)

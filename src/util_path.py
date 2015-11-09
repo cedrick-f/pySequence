@@ -35,6 +35,12 @@ Copyright (C) 2015
 #import _winreg
 import os, sys
 
+if hasattr(sys, 'setdefaultencoding'):
+    sys.setdefaultencoding('utf8')
+else:
+    reload(sys)  # Reload does the trick!
+    sys.setdefaultencoding('utf-8')
+    
 if sys.platform == 'win32':
     #
     # Les deuxlignes suivantes permettent de lancer le script .py depuis n'importe
@@ -93,7 +99,7 @@ if sys.platform == 'win32':
     except:
         INSTALL_PATH = None
         APP_DATA_PATH = PATH
-        print u"Version PORTABLE", PATH
+        print u"Version PORTABLE é", PATH
         
     sys.path.append(os.path.join(PATH, 'bin'))
 

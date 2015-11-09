@@ -19,8 +19,8 @@
 
 [ISPP]
 #define AppName "pySequence"
-#define AppVersion "6.1.0"
-#define AppVersionInfo "6.1.0"
+#define AppVersion "6.1"
+#define AppVersionInfo "6.1.1"
 #define AppVersionBase "6"
 
 #define AppURL "https://github.com/cedrick-f/pySequence"
@@ -53,7 +53,7 @@ SolidCompression=yes
 PrivilegesRequired=none
 
 ;Nom du fichier généré et répertoire de destination
-OutputBaseFilename=setup_pySequence_{#AppVersion}_win32
+OutputBaseFilename=setup_pySequence_{#AppVersionInfo}_win32
 OutputDir=releases
 
 UninstallDisplayIcon={app}\logo.ico

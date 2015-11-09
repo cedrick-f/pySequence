@@ -281,8 +281,9 @@ def modifierGrille(doc, tableaux, eleve):
                         else:
                             tableaux[part].setCell(nf, l, c, '')
                     except:
-                        log.append(u"Impossible d'écrire dans la cellule "\
-                                   + str(nf) + " " + str(l) + " " + str(c))
+                        pass
+#                        log.append(u"Impossible d'écrire dans la cellule "\
+#                                   + part + str(nf) + " " + str(l) + " " + str(c))
                     l += p
             else:
                 log.append(u"Feuille " + f + u" non trouvée")
