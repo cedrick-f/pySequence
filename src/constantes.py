@@ -369,6 +369,19 @@ def GetCouleurWx(C):
 def GetCouleurHTML(C):
     return GetCouleurWx(C).GetAsString(wx.C2S_CSS_SYNTAX)
 
+def Couleur2Str(C):
+    return ';'.join([str(c) for c in C])
+    
+def Str2Couleur(s):
+    return tuple([float(c) for c in s.split(';')])
+
+def Wx2Couleur(Wx):
+    return (float(Wx.Red())/255, float(Wx.Green())/255, float(Wx.Blue())/255, float(Wx.Alpha())/255)
+
+def Couleur2Wx(C):
+    return wx.Colour(C[0]*255, C[1]*255, C[2]*255, C[3]*255)
+
+
 ####################################################################################
 #
 #   Définition des images

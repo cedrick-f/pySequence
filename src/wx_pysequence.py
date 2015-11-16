@@ -239,6 +239,7 @@ import  wx.lib.scrolledpanel as scrolled
 import wx.combo
 import wx.lib.platebtn as platebtn
 import wx.lib.colourdb
+import  wx.lib.colourselect as  csel
 # Pour les descriptions
 import richtext
 import orthographe
@@ -260,7 +261,7 @@ from constantes import calculerEffectifs, \
                         _S, _Rev, _R1, _R2, _R3, \
                         revCalculerEffectifs, getSingulierPluriel,\
                         COUL_OK, COUL_NON, COUL_BOF, COUL_BIEN, \
-                        toList, COUL_COMPETENCES
+                        toList, COUL_COMPETENCES, Str2Couleur, Couleur2Str
 import constantes
 
 # Graphiques vectoriels
@@ -6032,7 +6033,7 @@ class PanelPropriete_Seance(PanelPropriete):
         self.vcNombreRot = vcNombreRot
         bsizer2.Add(vcNombreRot, flag = wx.EXPAND|wx.ALL, border = 2)
         
-        self.sizer.Add(bsizer2, (0,2), (4,1), flag =wx.ALL|wx.EXPAND, border = 2)
+        self.sizer.Add(bsizer2, (0,2), (3,1), flag =wx.ALL|wx.EXPAND, border = 2)
         
         # Nombre de groupes
 #        vcNombreGrp = VariableCtrl(self, seance.nbrGroupes, signeEgal = True, slider = False, sizeh = 30,
@@ -6042,9 +6043,22 @@ class PanelPropriete_Seance(PanelPropriete):
 #        bsizer2.Add(vcNombreGrp, flag = wx.EXPAND|wx.ALL, border = 2)
 #        
 #        self.sizer.Add(bsizer2, (0,2), (4,1), flag =wx.ALL|wx.EXPAND, border = 2)
+
+
+        #
+        # Apparence
+        #
+        box2 = wx.StaticBox(self, -1, u"Apparence")
+        bsizer3 = wx.StaticBoxSizer(box2, wx.VERTICAL)
         
+        b = csel.ColourSelect(self, -1, u"Couleur", constantes.GetCouleurWx(self.seance.couleur))
+        bsizer3.Add(b, flag = wx.EXPAND|wx.ALL, border = 2)
         
-        
+        b.Bind(csel.EVT_COLOURSELECT, self.OnSelectColour)
+        self.coulCtrl = b
+        self.sizer.Add(bsizer3, (3,2), (1,1), flag =wx.ALL|wx.EXPAND, border = 2)
+
+
         #
         # Démarche
         #
@@ -6198,6 +6212,11 @@ class PanelPropriete_Seance(PanelPropriete):
 #        else:
 #            self.win.SetFocus()
         
+    #############################################################################            
+    def OnSelectColour(self, event):
+        print event.GetValue()
+        self.seance.couleur = constantes.Wx2Couleur(event.GetValue())
+        self.sendEvent(modif = u"Mofification de la couleur de la séance")
         
     #############################################################################            
     def EvtVarSysteme(self, event):
@@ -6389,6 +6408,8 @@ class PanelPropriete_Seance(PanelPropriete):
             self.cbType.SetSelection(self.cbType.GetStrings().index(ref.seances[self.seance.typeSeance][1]))
         self.textctrl.ChangeValue(self.seance.intitule)
         self.vcDuree.mofifierValeursSsEvt()
+        
+        self.coulCtrl.SetColour(constantes.Couleur2Wx(self.seance.couleur))
         
         if self.cbEff.IsShown():#self.cbEff.IsEnabled() and 
             self.cbEff.SetSelection(ref.findEffectif(self.cbEff.GetStrings(), self.seance.effectif))
@@ -9520,12 +9541,12 @@ class ArbreTypeEnseignement(CT.CustomTreeCtrl):
     def Construire(self, racine):
         """ Construction de l'arbre
         """
-        print "Construire ArbreTypeEnseignement"
-        print ARBRE_REF
+#        print "Construire ArbreTypeEnseignement"
+#        print ARBRE_REF
         self.branche = []
 #        self.ExpandAll()
         for t, st in ARBRE_REF.items():
-            print "   ", t, st, self.panelParent.pourProjet
+#            print "   ", t, st, self.panelParent.pourProjet
             
             if t[0] == "_" or (self.panelParent.pourProjet and len(REFERENTIELS[t].projets) == 0):
                 branche = self.AppendItem(racine, REFERENTIELS[st[0]].Enseignement[2])
@@ -12464,6 +12485,8 @@ class Sequence(BaseDoc, Objet_sequence):
 
     ######################################################################################  
     def GetNbrSystemes(self):
+        """
+        """
         dic = {}
         for s in self.GetToutesSeances():
             d = s.GetNbrSystemes()
@@ -14480,6 +14503,7 @@ class Seance(ElementDeSequence, Objet_sequence):
         self.demarche = "I"
         self.systemes = []
         self.code = u""
+        self.couleur = (0,0,0,1)
         self.description = None
         self.taille = Variable(u"Taille des caractères", lstVal = 100, nomNorm = "", typ = VAR_ENTIER_POS, 
                               bornes = [10,100], modeLog = False,
@@ -14573,6 +14597,8 @@ class Seance(ElementDeSequence, Objet_sequence):
         if self.description != None:
             root.set("Description", self.description)
         
+        root.set("Couleur", Couleur2Str(self.couleur))
+        
         self.lien.getBranche(root)
         
         if self.typeSeance in ["R", "S"]:
@@ -14612,6 +14638,8 @@ class Seance(ElementDeSequence, Objet_sequence):
         self.taille.v[0] = eval(branche.get("Taille", "100"))
         self.typeSeance = branche.get("Type", "C")
         self.description = branche.get("Description", None)
+        
+        self.couleur = Str2Couleur(branche.get("Couleur", "0;0;0;1"))
         
         self.lien.setBranche(branche, self.GetPath())
         

@@ -1014,7 +1014,8 @@ class Cadre():
         if hasattr(self.seance, 'code'):
             self.ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                   cairo.FONT_WEIGHT_BOLD)
-            self.ctx.set_source_rgba (0,0,0, alpha)
+            c = self.seance.couleur
+            self.ctx.set_source_rgba (c[0], c[1], c[2], alpha)
 #            hc = max(hHoraire/4, 0.01)
             hc = max(ecartY/4, 0.01 * COEF)
             f, wc, r = show_text_rect(self.ctx, self.seance.code, (x, y, wEff["P"], hc), ha = 'g', 
@@ -1110,8 +1111,9 @@ class Bloc():
                 if isinstance(cadre, Cadre):
                     if not cadre.filigrane and cadre.dy != None:
 #                    if cadre.seance.typeSeance in ["AP", "ED", "P"]:#  and cadre.dy: #and 
+                        r = min(0.008*COEF, cadre.dy/3*COEF)
                         if len(cadre.seance.GetReferentiel().listeDemarches) > 0:
-                            DrawCroisementsDemarche(cadre.ctx, cadre.seance, cadre.y + cadre.dy)
+                            DrawCroisementsDemarche(cadre.ctx, cadre.seance, cadre.y + cadre.dy, r)
                         if not estRotation:
                             DrawCroisementSystemes(cadre.ctx, cadre.seance, cadre.xd, cadre.y + cadre.dy, 
                                                    cadre.seance.GetNbrSystemes())
@@ -1515,7 +1517,8 @@ def DrawSeanceRacine(ctx, seance):
 ##            for i in range(seance.Nombre.v[0] -1):
 ##                Draw_seance(ctx, s, curseur, typParent = seance.typeSeance, rotation = rotation)
 #        
-        
+
+
 ######################################################################################  
 def DrawCroisementSystemes(ctx, seance, x, y, ns):
 #        if self.typeSeance in ["AP", "ED", "P"]:
@@ -1524,9 +1527,11 @@ def DrawCroisementSystemes(ctx, seance, x, y, ns):
     # Les lignes horizontales
     #
     if seance.typeSeance in ["AP", "ED", "P"]:
-        DrawLigne(ctx, x, y)
+        DrawLigne(ctx, x, y, seance.couleur)
         
-        
+    #
+    # Cercle avec nombre de systèmes dedans
+    #
     r = wColSysteme/3
 #    ns = seance.GetNbrSystemes(posDansRot = posDansRot)
     for s, n in ns.items():
@@ -1540,16 +1545,19 @@ def DrawCroisementSystemes(ctx, seance, x, y, ns):
             ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                   cairo.FONT_WEIGHT_BOLD)
             show_text_rect(ctx, str(n), (x-r, y-r, 2*r, 2*r))
-            seance.rect.append((x-r, y-r, 2*r, 2*r)) 
-            
+            seance.rect.append((x-r, y-r, 2*r, 2*r))
+
+
+
 ######################################################################################  
-def DrawLigne(ctx, x, y):
+def DrawLigne(ctx, x, y, c = (0, 0.0, 0.2, 0.6)):
     dashes = [ 0.010 * COEF,   # ink
                0.002 * COEF,   # skip
                0.005 * COEF,   # ink
                0.002 * COEF,   # skip
                ]
-    ctx.set_source_rgba (0, 0.0, 0.2, 0.6)
+    
+    ctx.set_source_rgba (c[0], c[1], c[2], c[3])
     ctx.set_line_width (0.001 * COEF)
     ctx.set_dash(dashes, 0)
     ctx.move_to(posZOrganis[0]+tailleZOrganis[0], y)
@@ -1559,14 +1567,14 @@ def DrawLigne(ctx, x, y):
           
 
 #####################################################################################  
-def DrawCroisementsDemarche(ctx, seance, y):
+def DrawCroisementsDemarche(ctx, seance, y, r):
         
     #
     # Croisements Séance/Démarche
     #
     _x = xDemarche[seance.demarche]
 #        if self.typeSeance in ["AP", "ED", "P"]:
-    r = 0.008 * COEF
+#    r = 0.008 * COEF
     boule(ctx, _x, y, r)
     seance.rect.append((_x -r , y - r, 2*r, 2*r))
 
