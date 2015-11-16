@@ -9520,13 +9520,14 @@ class ArbreTypeEnseignement(CT.CustomTreeCtrl):
     def Construire(self, racine):
         """ Construction de l'arbre
         """
-#        print "Construire ArbreTypeEnseignement"
-#        print ARBRE_REF
+        print "Construire ArbreTypeEnseignement"
+        print ARBRE_REF
         self.branche = []
 #        self.ExpandAll()
         for t, st in ARBRE_REF.items():
-#            print "   ", t, st, self.panelParent.pourProjet
-            if t[0] == "_" or len(REFERENTIELS[t].projets) == 0:
+            print "   ", t, st, self.panelParent.pourProjet
+            
+            if t[0] == "_" or (self.panelParent.pourProjet and len(REFERENTIELS[t].projets) == 0):
                 branche = self.AppendItem(racine, REFERENTIELS[st[0]].Enseignement[2])
             else:
                 branche = self.AppendItem(racine, u"")#, ct_type=2)#, image = self.arbre.images["Seq"])
