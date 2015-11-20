@@ -140,7 +140,10 @@ import sys
 if sys.platform == "win32" :
     from xhtml2pdf import pisa
 else:
-    import ho.pisa as pisa
+    try:
+        import ho.pisa as pisa
+    except:
+        pass
 #from xhtml2pdf import pisa
 def genererFicheValidationHTML(nomFichierPDF, nomFichierHTML, projet):
 #    print "genererFicheValidationHTML"

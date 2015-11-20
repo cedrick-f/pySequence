@@ -4585,7 +4585,7 @@ class PanelPropriete_Classe(PanelPropriete):
         
     ######################################################################################  
     def MiseAJour(self):
-        print "MiseAJour panelPropriete Classe"
+#        print "MiseAJour panelPropriete Classe"
 #        self.MiseAJourType()
         
         
@@ -7074,7 +7074,7 @@ class PanelPropriete_Systeme(PanelPropriete):
         
         if isinstance(systeme.parent, Sequence):
             self.cbListSys = wx.ComboBox(self, -1, u"",
-                                         choices = [u""],
+                                         choices = [u"défini localement"],
                                          style = wx.CB_DROPDOWN
                                          | wx.TE_PROCESS_ENTER
                                          | wx.CB_READONLY

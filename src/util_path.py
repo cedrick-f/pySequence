@@ -52,14 +52,6 @@ if sys.platform == 'win32':
     os.chdir(PATH)
     sys.path.append(PATH)
 
-else:
-    pass
-
-
-#
-# Dossier des données "temporaires"
-#
-if sys.platform == 'win32':
     #On récupèreﾠ le dossier "Application data" 
     #On lit la clef de registre indiquant le type d'installation
     import _winreg
