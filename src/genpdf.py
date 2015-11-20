@@ -143,7 +143,10 @@ else:
     try:
         import ho.pisa as pisa
     except:
-        pass
+        try:
+            from xhtml2pdf import pisa
+        except:
+            pass
 #from xhtml2pdf import pisa
 def genererFicheValidationHTML(nomFichierPDF, nomFichierHTML, projet):
 #    print "genererFicheValidationHTML"
