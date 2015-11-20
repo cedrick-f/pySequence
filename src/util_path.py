@@ -105,7 +105,7 @@ if sys.platform == 'win32':
 
 
 else:
-    datalocation = os.getenv('APPDATA')
+    
     import subprocess
     #import standardpaths
     #import version
@@ -115,9 +115,16 @@ else:
     
     #datalocation = standardpaths.get_writable_path('app_local_data')
     #datalocation = standardpaths.get_writable_path(standardpaths.Location.app_local_data)
-    datalocation = os.path.join(datalocation, "pySequence")
     PATH = os.path.dirname(os.path.abspath(sys.argv[0]))
-    APP_DATA_PATH = datalocation
+    
+    datalocation = os.getenv('APPDATA')
+    if datalocation != None:
+        datalocation = os.path.join(datalocation, "pySequence")
+    
+        APP_DATA_PATH = datalocation
+    else:
+        APP_DATA_PATH = PATH
+        
     if not os.path.exists(datalocation):
         subprocess.call("mkdir -p %s" %datalocation, shell=True)
         

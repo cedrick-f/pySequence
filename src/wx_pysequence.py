@@ -4448,12 +4448,12 @@ class PanelPropriete_Classe(PanelPropriete):
 
     ######################################################################################  
     def EvtListBoxSyst(self, event = None, num = 0):
-        print "EvtListBoxSyst"
+#        print "EvtListBoxSyst"
         if event != None:
             n = event.GetSelection()
         else:
             n = num
-        print "   ", n
+#        print "   ", n
         if len(self.classe.systemes) > n:
 #            s = self.classe.systemes[n]
             self.panelSys.SetSysteme(self.classe.systemes[n])
@@ -4487,7 +4487,7 @@ class PanelPropriete_Classe(PanelPropriete):
 
 #        s = self.panelSys.systeme.Copie()
         s = Systeme(self.classe, None, nom)
-        print "   +++", s.nom
+#        print "   +++", s.nom
         self.lstSys.Append(s.nom)
         self.classe.systemes.append(s)
 #        self.classe.systemes.sort(key=attrgetter('nom'))
@@ -4499,7 +4499,7 @@ class PanelPropriete_Classe(PanelPropriete):
         
         if hasattr(self.classe, 'doc'):
             self.classe.doc.MiseAJourListeSystemesClasse()
-        print "   >>>",self.classe.systemes
+#        print "   >>>",self.classe.systemes
 
     ######################################################################################  
     def EvtButtonSupprSyst(self, event = None):

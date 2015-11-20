@@ -1136,7 +1136,7 @@ class Bloc():
                         #
                         # La boule "démarche"
                         #
-                        r = min(0.008*COEF, cadre.h/(cadre.nf+1)/2)
+                        r = min(0.008*COEF, cadre.h/(cadre.nf+1)/3)
                         if len(cadre.seance.GetReferentiel().listeDemarches) > 0:
                             DrawCroisementsDemarche(cadre.ctx, cadre.seance, cadre.y + cadre.dy, r)
                             
@@ -1145,7 +1145,7 @@ class Bloc():
                         #
                         if not estRotation: # Cas des rotations traité plus bas ...
                             DrawCroisementSystemes(cadre.ctx, cadre.seance, cadre.xd, cadre.y + cadre.dy, 
-                                                   cadre.seance.GetNbrSystemes())
+                                                   cadre.seance.GetNbrSystemes(), r)
                 
                 else:
                     cadre.DrawCoisement(estRotation)
@@ -1161,14 +1161,16 @@ class Bloc():
                         ns = cadre.seance.GetNbrSystemes(simple = True)
                         mergeDict(NS, ns)
                         
-                        if cadre.dy:# != None:
+#                        if cadre.dy:# != None:
+                        if not cadre.filigrane:
 #                            print cadre.dy
                             cadreOk = cadre
                     else:
                         cadre.DrawCoisement(estRotation)
                 if cadreOk:
 #                    print "!!!"
-                    DrawCroisementSystemes(cadreOk.ctx, cadreOk.seance, cadre.xd, cadreOk.y + cadreOk.dy, NS)
+                    r = min(0.008*COEF, cadreOk.h/(cadreOk.nf+1)/3)
+                    DrawCroisementSystemes(cadreOk.ctx, cadreOk.seance, cadre.xd, cadreOk.y + cadreOk.dy, NS, r)
             
     
 ######################################################################################  
@@ -1341,7 +1343,7 @@ def DrawSeanceRacine(ctx, seance):
 
 
 ######################################################################################  
-def DrawCroisementSystemes(ctx, seance, x, y, ns):
+def DrawCroisementSystemes(ctx, seance, x, y, ns, r):
 #        if self.typeSeance in ["AP", "ED", "P"]:
 #            and not (self.EstSousSeance() and self.parent.typeSeance == "S"):
 #    #
@@ -1353,20 +1355,36 @@ def DrawCroisementSystemes(ctx, seance, x, y, ns):
     #
     # Cercle avec nombre de systèmes dedans
     #
-    r = wColSysteme/3
-#    ns = seance.GetNbrSystemes(posDansRot = posDansRot)
-    for s, n in ns.items():
-        if n > 0:
-            x = xSystemes[s]
-            ctx.arc(x, y, r, 0, 2*pi)
-            ctx.set_source_rgba (1,0.2,0.2,1.0)
-            ctx.fill_preserve ()
-            ctx.set_source_rgba (0,0,0,1)
-            ctx.stroke ()
-            ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-                                  cairo.FONT_WEIGHT_BOLD)
-            show_text_rect(ctx, str(n), (x-r, y-r, 2*r, 2*r))
-            seance.rect.append((x-r, y-r, 2*r, 2*r))
+    if r >= wColSysteme/4:
+    #    ns = seance.GetNbrSystemes(posDansRot = posDansRot)
+        for s, n in ns.items():
+            if n > 0:
+                x = xSystemes[s]
+                ctx.arc(x, y, r, 0, 2*pi)
+                ctx.set_source_rgba (1,0.2,0.2,1.0)
+                ctx.fill_preserve ()
+                ctx.set_source_rgba (0,0,0,1)
+                ctx.stroke ()
+                ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+                                      cairo.FONT_WEIGHT_BOLD)
+                show_text_rect(ctx, str(n), (x-r, y-r, 2*r, 2*r),
+                               wrap = False, couper = False)
+                seance.rect.append((x-r, y-r, 2*r, 2*r))
+    else:
+        for s, n in ns.items():
+            if n > 0:
+                x = xSystemes[s] - wColSysteme/2
+                p = wColSysteme/n
+                for i in range(n):
+                    ctx.arc(x+p*i+p/2, y, r, 0, 2*pi)
+                    ctx.set_source_rgba (1,0.2,0.2,1.0)
+                    ctx.fill_preserve ()
+                    ctx.set_source_rgba (0,0,0,1)
+                ctx.stroke ()
+
+                seance.rect.append((x-wColSysteme/2, y-r, wColSysteme, 2*r))
+        
+        
 
 
 
@@ -1379,7 +1397,7 @@ def DrawLigne(ctx, x, y, c = (0, 0.0, 0.2, 0.6)):
                ]
     
     ctx.set_source_rgba (c[0], c[1], c[2], 0.5)
-    ctx.set_line_width (0.001 * COEF)
+    ctx.set_line_width (0.0006 * COEF)
     ctx.set_dash(dashes, 0)
     ctx.move_to(posZOrganis[0]+tailleZOrganis[0], y)
     ctx.line_to(x, y)
