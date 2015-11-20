@@ -46,7 +46,7 @@ from constantes import Effectifs,COUL_COMPETENCES, mergeDict, getSingulierPlurie
 import constantes
 
 # Les constantes partagées
-from Referentiel import REFERENTIELS
+from Referentiel import REFERENTIELS, ACTIVITES
 import Referentiel
 
 
@@ -929,7 +929,13 @@ def DrawLigneEff(ctx, x, y):
             
 #    return rect
     
-    
+######################################################################################  
+def H_code():
+    """ Renvoie la hauteur des codes de séance
+    """  
+    return max(ecartY/4, 0.01 * COEF)
+            
+              
 ######################################################################################  
 def Draw_CI(ctx, CI):
     # Rectangle arrondi
@@ -980,8 +986,9 @@ class Cadre():
         self.h = h
         self.filigrane = filigrane
         self.xd = None
-        self.y = None
-        self.dy = None
+        self.y = None   # Position en Y du cadre
+        self.dy = None  # Position en Y relative de la ligne
+        self.nf = 0     # Nombre de "frères" (pour calcul rayon boule
         self.seance.rect = []
         self.signEgal = signEgal
         
@@ -1017,7 +1024,7 @@ class Cadre():
             c = self.seance.couleur
             self.ctx.set_source_rgba (c[0], c[1], c[2], alpha)
 #            hc = max(hHoraire/4, 0.01)
-            hc = max(ecartY/4, 0.01 * COEF)
+            hc = H_code()
             f, wc, r = show_text_rect(self.ctx, self.seance.code, (x, y, wEff["P"], hc), ha = 'g', 
                                    wrap = False, fontsizeMinMax = (minFont, -1), b = 0.2)
             wc += ecartX/2
@@ -1106,20 +1113,46 @@ class Bloc():
     
     
     def DrawCoisement(self, estRotation):
+        """ Dessine les différents croisement :
+             - séance/système  : rond avec nbr syst
+             - séance/démarche : boule
+            et un trait en pointillé ._._.
+        """
+        
+#        print "DrawCoisement", estRotation
         for ligne in self.contenu:
             for cadre in ligne:
+                
                 if isinstance(cadre, Cadre):
                     if not cadre.filigrane and cadre.dy != None:
-#                    if cadre.seance.typeSeance in ["AP", "ED", "P"]:#  and cadre.dy: #and 
-                        r = min(0.008*COEF, cadre.dy/3*COEF)
+                        #
+                        # Les lignes horizontales
+                        #
+                        if cadre.seance.typeSeance in ACTIVITES:
+                            DrawLigne(cadre.ctx, 
+                                      cadre.xd, cadre.y + cadre.dy, 
+                                      cadre.seance.couleur)
+    
+                        #
+                        # La boule "démarche"
+                        #
+                        r = min(0.008*COEF, cadre.h/(cadre.nf+1)/2)
                         if len(cadre.seance.GetReferentiel().listeDemarches) > 0:
                             DrawCroisementsDemarche(cadre.ctx, cadre.seance, cadre.y + cadre.dy, r)
-                        if not estRotation:
+                            
+                        #
+                        # Le rond "nombre de systèmes nécessaires"
+                        #
+                        if not estRotation: # Cas des rotations traité plus bas ...
                             DrawCroisementSystemes(cadre.ctx, cadre.seance, cadre.xd, cadre.y + cadre.dy, 
                                                    cadre.seance.GetNbrSystemes())
+                
                 else:
                     cadre.DrawCoisement(estRotation)
-                          
+            
+            #
+            # Cas des rotations :
+            #
             if estRotation:
                 NS = {}
                 cadreOk = False
@@ -1128,11 +1161,13 @@ class Bloc():
                         ns = cadre.seance.GetNbrSystemes(simple = True)
                         mergeDict(NS, ns)
                         
-                        if cadre.dy:
+                        if cadre.dy:# != None:
+#                            print cadre.dy
                             cadreOk = cadre
                     else:
                         cadre.DrawCoisement(estRotation)
                 if cadreOk:
+#                    print "!!!"
                     DrawCroisementSystemes(cadreOk.ctx, cadreOk.seance, cadre.xd, cadreOk.y + cadreOk.dy, NS)
             
     
@@ -1195,7 +1230,7 @@ def DrawSeanceRacine(ctx, seance):
     #
     # Remplissage du tableau de blocs : [[], [], ...]
     #
-    def getBloc(seance, h, filigrane = False, decal = 0, rotation = False):
+    def getBloc(seance, h, filigrane = False, decal = 0, nbr = 0, rotation = False):
         # Séance "simple" --> un seul bloc d'une ligne de un ou plusieurs cadres 
         if not seance.typeSeance in ["R", "S", ""]:
             bloc = Bloc()
@@ -1209,13 +1244,19 @@ def DrawSeanceRacine(ctx, seance):
             for i in range(n):
                 l.append(Cadre(ctx, seance, h, signEgal = (i>0), filigrane = filigrane))
             bloc.contenu.append(l)
+            hc = H_code()
             if not filigrane:
                 if decal == 0 :
                     l[-1].dy = l[-1].h/2
+                    l[-1].nf = 0
                 else:
-                    l[-1].dy = decal * l[-1].h
+                    l[-1].dy = hc + decal * (l[-1].h - hc)
+#                    l[-1].dy = decal * (l[-1].h)
+                    l[-1].nf = nbr
             else:
-                l[-1].dy = decal * l[-1].h
+                l[-1].dy = hc + decal * (l[-1].h - hc)
+#                l[-1].dy = decal * (l[-1].h)
+                l[-1].nf = nbr
 #            else:
 #                bloc.contenu.append([Cadre(ctx, seance, h, filigrane = filigrane)])
 #                if not filigrane:
@@ -1262,7 +1303,9 @@ def DrawSeanceRacine(ctx, seance):
                 bloc.contenu.append([])
 #                bloc.contenu.append(getLigne(seance, h))
                 for j, ss in enumerate(seance.seances):
-                    bloc.contenu[0].append(getBloc(ss, h*ss.GetDuree()/seance.GetDuree(), decal = 1.0*(j+1)/(len(seance.seances)+1)))
+                    bloc.contenu[0].append(getBloc(ss, h*ss.GetDuree()/seance.GetDuree(), 
+                                                   decal = 1.0*(j+1)/(len(seance.seances)+1),
+                                                   nbr = len(seance.seances)))
                 
                 return bloc
             
@@ -1296,238 +1339,16 @@ def DrawSeanceRacine(ctx, seance):
 
 
 
-#######################################################################################  
-#def DrawSeanceRacine(ctx, seance):
-#    global cursY
-#    if seance.GetDureeGraph() == 0:
-#        return
-#        
-#    #
-#    # Flèche indiquant la durée
-#    #
-#    h = calcH(seance.GetDureeGraph())
-#    e = largeFlecheDuree
-#    fleche_verticale(ctx, posZDeroul[0], cursY, 
-#                     h, e, (0.9,0.8,0.8,0.5))
-#    ctx.set_source_rgb(0.5,0.8,0.8)
-#    ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-#                              cairo.FONT_WEIGHT_BOLD)
-#    he = min(e/2, h/3)
-#    
-#    if h-he < e:
-#        o = 'h'
-#    else:
-#        o = 'v'
-#    show_text_rect(ctx, getHoraireTxt(seance.GetDuree()), 
-#                   (posZDeroul[0]-e/2, cursY, e, h-he), 
-#                   orient = o, b = 0.2)
-#
-#    #
-#    # Fonction pour obtenir les lignes de séances du bloc
-#    #
-#    def getLigne(s, hc, filigrane = False):
-#        l = []
-#        if s.typeSeance == "S":
-#            for j,ss in enumerate(s.sousSeances):
-#                if ss.typeSeance != '':
-#                    ss.pts_caract = []
-#                    for i in range(int(ss.nombre.v[0])):
-#                        l.append(Cadre(ctx, ss, hc, filigrane = filigrane, signEgal = (i>0)))
-#                    
-#                    # On en profite pour calculer les positions des lignes de croisement
-#                    if not filigrane:
-#                        l[-1].dy = (j+1) * l[-1].h/(len(s.sousSeances)+1)
-#        
-#        else:
-#            if s.typeSeance != '':
-#                s.pts_caract = []
-#                for i in range(int(s.nombre.v[0])):
-#                    l.append(Cadre(ctx, s, hc, filigrane = filigrane, signEgal = (i>0)))
-#                
-#                # On en profite pour calculer les positions des lignes de croisement
-#                if not filigrane:
-#                    l[-1].dy = l[-1].h/2
-#        return l
-#    
-#
-#    #
-#    # Remplissage du(des) bloc(s)
-#    #
-#    def getBlocs(seance):
-#        # Séance "simple" --> un seul bloc d'une ligne de un ou plusieurs cadres 
-#        if not seance.typeSeance in ["R", "S", ""]:
-#            bloc = Bloc()
-#            seance.pts_caract = []
-#            if seance.typeSeance in ["AP", "ED", "P"]:
-#                l = []
-#                for i in range(int(seance.nombre.v[0])):
-#                    l.append(Cadre(ctx, seance, h, signEgal = (i>0)))
-#                bloc.contenu.append(l)
-#                l[-1].dy = l[-1].h/2
-#            else:
-#                bloc.contenu.append([Cadre(ctx, seance, h)])
-#                
-#            return [bloc]
-#            
-#            
-#        # Séance "complexe"    
-#        else:
-#            bloc = Bloc()
-#            # Rotation : plusieurs lignes
-#            if seance.typeSeance == "R":
-#                hl = h / seance.nbrRotations.v[0]
-#                for i in range(seance.nbrRotations.v[0]):
-#                    s = seance.sousSeances[i]
-#                    bloc.contenu.append(getLigne(s, hl))
-#                    
-#                #
-#                # Aperçu en filigrane de la rotation
-#                #
-#                if seance.IsEffectifOk() <= 3:
-#                    l = seance.sousSeances
-#                    for t in range(len(seance.sousSeances)-1):
-#                        l = permut(l)
-#                        for i, s in enumerate(l[:seance.nbrRotations.v[0]]):
-#                            bloc.contenu[i].extend(getLigne(s, hl, filigrane = True))
-#                
-#            elif seance.typeSeance == "S":
-#                n = len(seance.sousSeances)
-#                bloc.contenu.append(getLigne(seance, h))
-#            
-#            return [bloc]
-#
-#
-#    blocs = getBlocs(seance)
-#    for bloc in blocs:
-#        # Tracé des blocs
-#        cursY = bloc.Draw(posZSeances[0], cursY)
-#    
-#        # Tracé des croisements "Démarche" et "Systèmes"
-#        bloc.DrawCoisement(seance.typeSeance == "R") 
-
-
-#######################################################################################  
-#def Draw_seance2(ctx, seance, curseur, typParent = "", rotation = False, ):
-#    if not seance.EstSousSeance():
-#        h = hHoraire * seance.GetDuree()
-#        fleche_verticale(ctx, posZDeroul[0], curseur[1], 
-#                         h, 0.02, (0.9,0.8,0.8,0.5))
-#        ctx.set_source_rgb(0.5,0.8,0.8)
-#        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-#                                  cairo.FONT_WEIGHT_BOLD)
-#        show_text_rect(ctx, getHoraireTxt(seance.GetDuree()), posZDeroul[0]-0.01, curseur[1], 
-#                       0.02, h, orient = 'v')
-#        
-#        
-#    if not seance.typeSeance in ["R", "S", ""]:
-##            print "Draw", self
-#        x, y = curseur
-#        w = wEff[seance.effectif]
-#        h = hHoraire * seance.GetDuree()
-#        if rotation:
-#            seance.rect.append((x, y, w, h))
-#        else:
-#            seance.rect=[(x, y, w, h),] # Rectangles pour clic
-#        
-#        if rotation:
-#            alpha = 0.2
-#        else:
-#            alpha = 1
-#        
-#        for i in range(int(seance.nombre.v[0])):
-#            ctx.set_line_width(0.002)
-#            rectangle_plein(ctx, x+w*i, y, w, h, 
-#                            BCoulSeance[seance.typeSeance], ICoulSeance[seance.typeSeance], alpha)
-#            
-#            if not rotation and hasattr(seance, 'code'):
-#                ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-#                                      cairo.FONT_WEIGHT_BOLD)
-#                ctx.set_source_rgb (0,0,0)
-#                show_text_rect(ctx, seance.code, x+w*i, y, wEff["P"], hHoraire/4, ha = 'g', wrap = False)
-#            
-#            if not rotation and seance.intituleDansDeroul and seance.intitule != "":
-#                ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
-#                                      cairo.FONT_WEIGHT_NORMAL)
-#                ctx.set_source_rgb (0,0,0)
-#                show_text_rect(ctx, seance.intitule, x+w*i, y + hHoraire/4, 
-#                               w, h-hHoraire/4, ha = 'g')
-#        
-#        
-#        # Les croisements "Démarche" et "Systèmes"
-#        if not rotation and seance.typeSeance in ["AP", "ED", "P"]:
-#            if seance.EstSousSeance() and seance.parent.typeSeance == "S":
-#                ns = len(seance.parent.sousSeances)
-#                ys = y+(seance.ordre+1) * h/(ns+1)
-##                    print ns, ys, self.ordre
-#            else:
-#                ys = y+h/2           
-#                
-#            DrawCroisementsDemarche(ctx, seance, x+w*seance.nombre.v[0], ys)
-#            DrawCroisementSystemes(ctx, seance, ys)      
-#                
-#            
-#        if typParent == "R":
-#            curseur[1] += h
-#        elif typParent == "S":
-#            curseur[0] += w
-#        else:
-#            curseur[1] += h + ecartSeanceY
-#    else:
-#        if seance.typeSeance in ["R", "S"]:
-#            for s in seance.sousSeances:
-#                Draw_seance(ctx, s, curseur, typParent = seance.typeSeance, rotation = rotation)
-##                    if self.typeSeance == "S":
-#            
-#            #
-#            # Aperçu en filigrane de la rotation
-#            #
-#            if seance.typeSeance == "R" and seance.IsEffectifOk() < 2:
-#                l = seance.sousSeances
-#                eff = seance.GetEffectif()
-#                if eff == 16:
-#                    codeEff = "C"
-#                elif eff == 8:
-#                    codeEff = "G"
-#                elif eff == 4:
-#                    codeEff = "D"
-#                elif eff == 2:
-#                    codeEff = "E"
-#                elif eff == 1:
-#                    codeEff = "P"
-#                
-#                for t in range(len(seance.sousSeances)-1):
-#                    curs = [curseur[0]+wEff[codeEff]*(t+1), curseur[1]-hHoraire * seance.GetDuree()]
-#                    l = permut(l)
-#                    for i, s in enumerate(l):
-##                        print "filigrane", s, curs
-#                        Draw_seance(ctx, s, curs, typParent = "R", rotation = True)
-#                        if s.typeSeance == "S":
-#                            curs[0]  += wEff[codeEff]*(i+1)
-##                    curs[0] += wEff[codeEff]
-##                    curs[1] = curseur[1]-hHoraire * seance.GetDuree()
-#            
-#            curseur[0] = posZSeances[0]
-#            if typParent == "":
-#                curseur[1] += ecartSeanceY
-#            if seance.typeSeance == "S":
-#                curseur[1] += hHoraire * seance.GetDuree()
-#
-##        elif seance.typeSeance in ["AP", "ED"] and seance.Nombre.v[0]>0:
-##            curs = [curseur[0]+wEff[codeEff]*(t+1), curseur[1]-hHoraire * seance.GetDuree()]
-##            for i in range(seance.Nombre.v[0] -1):
-##                Draw_seance(ctx, s, curseur, typParent = seance.typeSeance, rotation = rotation)
-#        
-
 
 ######################################################################################  
 def DrawCroisementSystemes(ctx, seance, x, y, ns):
 #        if self.typeSeance in ["AP", "ED", "P"]:
 #            and not (self.EstSousSeance() and self.parent.typeSeance == "S"):
-    #
-    # Les lignes horizontales
-    #
-    if seance.typeSeance in ["AP", "ED", "P"]:
-        DrawLigne(ctx, x, y, seance.couleur)
+#    #
+#    # Les lignes horizontales
+#    #
+#    if seance.typeSeance in ACTIVITES:
+#        DrawLigne(ctx, x, y, seance.couleur)
         
     #
     # Cercle avec nombre de systèmes dedans
@@ -1557,7 +1378,7 @@ def DrawLigne(ctx, x, y, c = (0, 0.0, 0.2, 0.6)):
                0.002 * COEF,   # skip
                ]
     
-    ctx.set_source_rgba (c[0], c[1], c[2], c[3])
+    ctx.set_source_rgba (c[0], c[1], c[2], 0.5)
     ctx.set_line_width (0.001 * COEF)
     ctx.set_dash(dashes, 0)
     ctx.move_to(posZOrganis[0]+tailleZOrganis[0], y)

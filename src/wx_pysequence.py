@@ -297,7 +297,7 @@ from rapport import FrameRapport, RapportRTF
 
 from math import sin, cos, pi
 
-from Referentiel import REFERENTIELS, ARBRE_REF
+from Referentiel import REFERENTIELS, ARBRE_REF, ACTIVITES
 import Referentiel
 
 from operator import attrgetter
@@ -829,6 +829,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             return
         
         undoAction = doc.undoStack.getUndoAction()
+    
         if undoAction == None:
             self.tb.EnableTool(200, False)
             t = u""
@@ -4239,8 +4240,12 @@ class PanelPropriete_Classe(PanelPropriete):
         self.Bind(wx.EVT_BUTTON, self.EvtButtonSyst, self.btnAjouterSys)
         
         self.lstSys = wx.ListBox(pageSys, -1,
-                                 choices = [""], style = wx.LB_SINGLE | wx.LB_SORT)
+                                 choices = [""], style = wx.LB_SINGLE)# | wx.LB_SORT)
         self.Bind(wx.EVT_LISTBOX, self.EvtListBoxSyst, self.lstSys)
+        
+        self.btnSupprimerSys = wx.Button(pageSys, -1, u"Supprimer")
+        self.btnSupprimerSys.SetToolTipString(u"Supprimer le système de la liste")
+        self.Bind(wx.EVT_BUTTON, self.EvtButtonSupprSyst, self.btnSupprimerSys)
         
         s = Systeme(self.classe, pageSys, "")
         self.panelSys = s.panelPropriete
@@ -4248,7 +4253,8 @@ class PanelPropriete_Classe(PanelPropriete):
     
         pageSys.sizer.Add(self.btnAjouterSys, (0,0), flag = wx.ALL|wx.EXPAND, border = 2)
         pageSys.sizer.Add(self.lstSys, (1,0), flag = wx.ALL|wx.EXPAND, border = 2)
-        pageSys.sizer.Add(self.panelSys, (0,1), (2,1),  flag = wx.ALL|wx.EXPAND, border = 2)
+        pageSys.sizer.Add(self.btnSupprimerSys, (2,0), flag = wx.ALL|wx.EXPAND, border = 2)
+        pageSys.sizer.Add(self.panelSys, (0,1), (3,1),  flag = wx.ALL|wx.EXPAND, border = 2)
         pageSys.sizer.AddGrowableRow(1)
         pageSys.sizer.AddGrowableCol(1)
     
@@ -4441,20 +4447,34 @@ class PanelPropriete_Classe(PanelPropriete):
      
 
     ######################################################################################  
-    def EvtListBoxSyst(self, event = None):
+    def EvtListBoxSyst(self, event = None, num = 0):
+        print "EvtListBoxSyst"
         if event != None:
             n = event.GetSelection()
         else:
-            n = 0
+            n = num
+        print "   ", n
         if len(self.classe.systemes) > n:
 #            s = self.classe.systemes[n]
             self.panelSys.SetSysteme(self.classe.systemes[n])
             
 #            self.panelSys.systeme.setBranche(s.getBranche())
 
+    
 
     ######################################################################################  
     def EvtButtonSyst(self, event = None):
+        """ Ajoute un nouveau système à la liste des système de la classe
+        """
+        #
+        # Définition du nouveau nom
+        #
+        nom0 = u"Nouveau système"
+        nom = nom0
+        i = 1
+        while nom in [s.nom for s in self.classe.systemes]:
+            nom = nom0 + u" " + str(i)
+            i += 1
 #        print "EvtButtonSyst"
 #        print self.classe.systemes
 #        print self.panelSys.systeme
@@ -4466,21 +4486,43 @@ class PanelPropriete_Classe(PanelPropriete):
 #                break
 
 #        s = self.panelSys.systeme.Copie()
-        s = Systeme(self.classe, None)
-#        print "   +++", s
+        s = Systeme(self.classe, None, nom)
+        print "   +++", s.nom
         self.lstSys.Append(s.nom)
         self.classe.systemes.append(s)
-        self.classe.systemes.sort(key=attrgetter('nom'))
-        self.lstSys.SetSelection(0)
+#        self.classe.systemes.sort(key=attrgetter('nom'))
+        num = self.lstSys.GetCount()-1
+        self.lstSys.SetSelection(num)
+        self.lstSys.EnsureVisible(num)
+        self.EvtListBoxSyst(num = num)
+        self.MiseAJourBoutonsSystem()
+        
+        if hasattr(self.classe, 'doc'):
+            self.classe.doc.MiseAJourListeSystemesClasse()
+        print "   >>>",self.classe.systemes
+
+    ######################################################################################  
+    def EvtButtonSupprSyst(self, event = None):
+        """ Supprime un  système de la liste des système de la classe
+        """
+        num = self.lstSys.GetSelection()
+        self.lstSys.Delete(num)
+        del self.classe.systemes[num]
         self.EvtListBoxSyst()
-#        print "   >>>",self.classe.systemes
-
-
+        self.MiseAJourBoutonsSystem()
+        
+        if hasattr(self.classe, 'doc'):
+            self.classe.doc.MiseAJourListeSystemesClasse()
+        
+    ######################################################################################  
+    def MiseAJourBoutonsSystem(self):
+        self.btnSupprimerSys.Enable(self.lstSys.GetCount() > 1)
+        
     ######################################################################################  
     def MiseAJourListeSys(self, nom = u""):
 #        print "MiseAJourListeSys", nom, self.lstSys.GetSelection()
-        if nom == u"":
-            nom = u"Systéme sans nom"
+#        if nom == u"":
+#            nom = u"Système sans nom"
             
         n = self.lstSys.GetSelection()
         if n != wx.NOT_FOUND:
@@ -4543,7 +4585,7 @@ class PanelPropriete_Classe(PanelPropriete):
         
     ######################################################################################  
     def MiseAJour(self):
-#        print "MiseAJour panelPropriete Classe"
+        print "MiseAJour panelPropriete Classe"
 #        self.MiseAJourType()
         
         
@@ -4567,7 +4609,7 @@ class PanelPropriete_Classe(PanelPropriete):
             self.EvtButtonSyst()
 #            print "   +++", self.classe.systemes
             self.EvtListBoxSyst()
-            self.MiseAJourListeSys()
+#            self.MiseAJourListeSys()
         else:
             self.lstSys.Set([s.nom for s in self.classe.systemes])
             self.lstSys.SetSelection(0)
@@ -6152,7 +6194,7 @@ class PanelPropriete_Seance(PanelPropriete):
     ############################################################################            
     def ConstruireListeSystemes(self):
         self.Freeze()
-        if self.seance.typeSeance in ["AP", "ED", "P"]:
+        if self.seance.typeSeance in ACTIVITES:
             for ss in self.systemeCtrl:
                 self.bsizer.Detach(ss)
                 ss.Destroy()
@@ -6185,7 +6227,7 @@ class PanelPropriete_Seance(PanelPropriete):
     
     #############################################################################            
     def MiseAJourListeSystemes(self):
-        if self.seance.typeSeance in ["AP", "ED", "P"]:
+        if self.seance.typeSeance in ACTIVITES:
             self.Freeze()
             for i, s in enumerate(self.seance.systemes):
                 self.systemeCtrl[i].Renommer(s.n)
@@ -6285,12 +6327,12 @@ class PanelPropriete_Seance(PanelPropriete):
             else:
                 self.seance.SupprimerSousSeances()
         
-        deja = self.seance.typeSeance in ["AP", "ED", "P"]
+        deja = self.seance.typeSeance in ACTIVITES
         
         self.seance.SetType(get_key(self.GetReferentiel().seances, self.cbType.GetStringSelection(), 1))
         self.seance.parent.OrdonnerSeances()
         
-        if self.seance.typeSeance in ["AP", "ED", "P"]:
+        if self.seance.typeSeance in ACTIVITES:
             if not deja:
                 for sy in self.seance.GetDocument().systemes:
                     self.seance.AjouterSysteme(nom = sy.nom, construire = False)
@@ -6420,7 +6462,7 @@ class PanelPropriete_Seance(PanelPropriete):
 #            print self.seance
             self.cbDem.SetSelection(self.cbDem.GetStrings().index(ref.demarches[self.seance.demarche][1]))
             
-        if self.seance.typeSeance in ["AP", "ED", "P"]:
+        if self.seance.typeSeance in ACTIVITES:
             self.vcNombre.mofifierValeursSsEvt()
         elif self.seance.typeSeance == "R":
             self.vcNombreRot.mofifierValeursSsEvt()
@@ -7285,6 +7327,7 @@ class PanelPropriete_Systeme(PanelPropriete):
 
 
 
+
 ####################################################################################
 #
 #   Classe définissant le panel de propriété d'une personne
@@ -8141,7 +8184,7 @@ class ArbreSequence(ArbreDoc):
         if isinstance(dataTarget, PanelPropriete_Racine):
             dataTarget = self.sequence
         dataSource = self.GetItemPyData(self.itemDrag)
-        t = u"Changement de position de la Séance"
+        tx = u"Changement de position de la Séance"
         a = self.getActionDnD(dataSource, dataTarget)
         if a == 1:
             lstS = dataSource.parent.seances
@@ -8152,7 +8195,7 @@ class ArbreSequence(ArbreDoc):
             
             self.sequence.OrdonnerSeances()
             self.sequence.reconstruireBrancheSeances(dataSource.parent, dataTarget)
-            self.panelVide.sendEvent(self.sequence, modif = t) # Solution pour déclencher un "redessiner"
+            self.panelVide.sendEvent(self.sequence, modif = tx) # Solution pour déclencher un "redessiner"
         elif a == 2:
             lst = dataSource.parent.seances
             s = lst.index(dataSource)
@@ -8160,7 +8203,7 @@ class ArbreSequence(ArbreDoc):
                
             self.sequence.OrdonnerSeances() 
             self.SortChildren(self.GetItemParent(self.item))
-            self.panelVide.sendEvent(self.sequence, modif = t) # Solution pour déclencher un "redessiner"
+            self.panelVide.sendEvent(self.sequence, modif = tx) # Solution pour déclencher un "redessiner"
         elif a == 3:
             lstT = dataTarget.parent.seances
             lstS = dataSource.parent.seances
@@ -8186,7 +8229,7 @@ class ArbreSequence(ArbreDoc):
                
             self.sequence.OrdonnerSeances() 
             self.SortChildren(self.GetItemParent(self.item))
-            self.panelVide.sendEvent(self.sequence, modif = t) # Solution pour déclencher un "redessiner"
+            self.panelVide.sendEvent(self.sequence, modif = tx) # Solution pour déclencher un "redessiner"
         
         
 #        if isinstance(dataSource, Seance) and dataTarget != dataSource:
@@ -11703,6 +11746,7 @@ class Classe():
         return int(self.GetVersion().split(".")[0].split("beta")[0])
     
     
+    
     ######################################################################################  
     def Verrouiller(self, etat):
         if hasattr(self, 'panelPropriete'):
@@ -11792,7 +11836,12 @@ class BaseDoc():
             self.arbre.HideWindows()
         self.arbre.SelectItem(branche) 
 
-        
+    ######################################################################################  
+    def MiseAJourListeSystemesClasse(self):
+        return
+    
+    
+    
 ####################################################################################################          
 class Sequence(BaseDoc, Objet_sequence):
     def __init__(self, app, classe = None, panelParent = None, intitule = u"Intitulé de la séquence pédagogique"):
@@ -12324,6 +12373,11 @@ class Sequence(BaseDoc, Objet_sequence):
                           u"Imposible d'enregistrer les préférences\n\n")
         return
     
+    ######################################################################################  
+    def MiseAJourListeSystemesClasse(self):
+        for s in self.systemes:
+            s.MiseAJourListeSystemesClasse()
+        
     ######################################################################################  
     def AjouterRotation(self, seance):
         seanceR1 = Seance(self.panelParent)
@@ -14607,7 +14661,7 @@ class Seance(ElementDeSequence, Objet_sequence):
             root.set("nbrRotations", str(self.nbrRotations.v[0]))
 #            root.set("nbrGroupes", str(self.nbrGroupes.v[0]))
             
-        elif self.typeSeance in ["AP", "ED", "P"]:
+        elif self.typeSeance in ACTIVITES:
             root.set("Demarche", self.demarche)
             root.set("Duree", str(self.duree.v[0]))
             root.set("Effectif", self.effectif)
@@ -14658,7 +14712,7 @@ class Seance(ElementDeSequence, Objet_sequence):
 #                self.nbrGroupes.v[0] = eval(branche.get("nbrGroupes", str(len(self.Get???))))
                 self.reglerNbrRotMaxi()
             
-        elif self.typeSeance in ["AP", "ED", "P"]:   
+        elif self.typeSeance in ACTIVITES:   
             self.effectif = branche.get("Effectif", "C")
             self.demarche = branche.get("Demarche", "I")
             self.nombre.v[0] = eval(branche.get("Nombre", "1"))
@@ -15314,7 +15368,7 @@ class Seance(ElementDeSequence, Objet_sequence):
         
     ######################################################################################  
     def MiseAJourNomsSystemes(self):
-        if self.typeSeance in ["AP", "ED", "P"]:
+        if self.typeSeance in ACTIVITES:
             sequence = self.GetDocument()
             for i, s in enumerate(sequence.systemes):
                 self.systemes[i].n = s.nom
@@ -15328,7 +15382,7 @@ class Seance(ElementDeSequence, Objet_sequence):
         
     ######################################################################################  
     def SupprimerSysteme(self, i):
-        if self.typeSeance in ["AP", "ED", "P"]:
+        if self.typeSeance in ACTIVITES:
             del self.systemes[i]
             if hasattr(self, 'panelPropriete'):
                 self.panelPropriete.ConstruireListeSystemes()
@@ -15340,7 +15394,7 @@ class Seance(ElementDeSequence, Objet_sequence):
         
     ######################################################################################  
     def AjouterSysteme(self, nom = "", nombre = 0, construire = True):
-        if self.typeSeance in ["AP", "ED", "P"]:
+        if self.typeSeance in ACTIVITES:
             self.systemes.append(Variable(nom, lstVal = nombre, nomNorm = "", typ = VAR_ENTIER_POS, 
                                           bornes = [0,9], modeLog = False,
                                           expression = None, multiple = False))
@@ -15355,7 +15409,7 @@ class Seance(ElementDeSequence, Objet_sequence):
     ######################################################################################  
     def AjouterListeSystemes(self, lstSys, lstNSys = None):
 #        print "  AjouterListeSystemes", self.typeSeance
-        if self.typeSeance in ["AP", "ED", "P"]:
+        if self.typeSeance in ACTIVITES:
             if lstNSys == None:
                 lstNSys = [0]*len(lstSys)
             for i, s in enumerate(lstSys):
@@ -16231,7 +16285,7 @@ class Tache(Objet_sequence):
         
     ######################################################################################  
     def SupprimerSysteme(self, i):
-        if self.typeSeance in ["AP", "ED", "P"]:
+        if self.typeSeance in ACTIVITES:
             del self.systemes[i]
             if hasattr(self, 'panelPropriete'):
                 self.panelPropriete.ConstruireListeSystemes()
@@ -16438,6 +16492,10 @@ class Systeme(ElementDeSequence, Objet_sequence):
         if hasattr(self, 'panelPropriete'):
             self.panelPropriete.MiseAJour()
 
+    ######################################################################################  
+    def MiseAJourListeSystemesClasse(self):
+        if hasattr(self, 'panelPropriete'):
+            self.panelPropriete.MiseAJourListeSys()
 
     ######################################################################################  
     def Copie(self, parent, panelParent = None):

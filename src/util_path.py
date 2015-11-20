@@ -105,10 +105,19 @@ if sys.platform == 'win32':
 
 
 else:
-    print os.getenv('APPDATA')
+    datalocation = os.getenv('APPDATA')
     import subprocess
-    datalocation = os.path.join(QStandardPaths.standardLocations(QStandardPaths.DataLocation)[0], "data", "pySequence")
-    PATH = APP_DATA_PATH = datalocation
+    #import standardpaths
+    #import version
+    
+    #standardpaths.configure(application_name="pySequence", organization_name=version.__author__)
+    #datalocation = standardpaths.Location.app_local_data.value
+    
+    #datalocation = standardpaths.get_writable_path('app_local_data')
+    #datalocation = standardpaths.get_writable_path(standardpaths.Location.app_local_data)
+    datalocation = os.path.join(datalocation, "pySequence")
+    PATH = os.path.dirname(os.path.abspath(sys.argv[0]))
+    APP_DATA_PATH = datalocation
     if not os.path.exists(datalocation):
         subprocess.call("mkdir -p %s" %datalocation, shell=True)
         

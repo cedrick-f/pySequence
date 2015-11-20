@@ -58,13 +58,14 @@ class UndoStack():
             self.stack.append((s, action))
             del self.stack[:-TAILLE]
 #            self.stack[min(self.getTaille(), TAILLE):] = [(s, action)]
+            
 #            print self.doc, ": do =", len(self.stack), self.index, action
 
     def undo(self):
         if self.index < TAILLE:
             self.index += 1
             self.doc.setBranche(self.stack[-self.index][0])
-            print self.doc, ": undo <<", len(self.stack), self.index, self.stack[-self.index][1]
+#            print self.doc, ": undo <<", len(self.stack), self.index, self.stack[-self.index][1]
             
 
 
@@ -72,7 +73,7 @@ class UndoStack():
         if self.index > 1:
             self.index -= 1
             self.doc.setBranche(self.stack[-self.index][0])
-            print self.doc, ": redo >>", len(self.stack), self.index, self.stack[-self.index][1]
+#            print self.doc, ": redo >>", len(self.stack), self.index, self.stack[-self.index][1]
             
 
     def setOnUndoRedo(self):
