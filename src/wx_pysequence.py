@@ -60,7 +60,7 @@ server = None
 #
 ####################################################################################
 SHOW_SPLASH = True
-SPLASH_FN = os.path.join(util_path.PATH, "Splash.png")
+SPLASH_FN = os.path.join(util_path.PATH, "splash.png")
 SPLASH_TIME = 1000
 
 SPLASH = None
