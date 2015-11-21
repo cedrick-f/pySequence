@@ -277,7 +277,7 @@ def setBranche(branche):
 
 
 def ouvrir():
-    fichier = open(os.path.join(util_path.PATH, "etablissements.xml"),'r')
+    fichier = open(os.path.join(util_path.PATH, r"Etablissements.xml"),'r')
     root = ET.parse(fichier).getroot()
     ETABLISSEMENTS = setBranche(root)
     fichier.close()

@@ -48,8 +48,8 @@ from wx.lib.embeddedimage import PyEmbeddedImage
 
 # Module utilisé pour tester la disponibilité du presse-papier
 # (Windows seulement)
-if sys.platform == "win32":
-    import win32clipboard
+#if sys.platform == "win32":
+#    import win32clipboard
     
 import random
 import time
@@ -77,6 +77,7 @@ Styles["Titre 1"].SetTextColour((0,0,180))
 Styles["Titre 1"].SetParagraphSpacingBefore(10)
 Styles["Titre 1"].SetAlignment(wx.TEXT_ALIGNMENT_LEFT)
 Styles["Titre 1"].SetParagraphSpacingAfter(10)
+#if sys.platform == "win32":
 Styles["Titre 1"].SetBulletStyle(wx.TEXT_ATTR_BULLET_STYLE_RIGHT_PARENTHESIS)
 #Styles["Titre 1"].SetFontUnderlined(True)
 

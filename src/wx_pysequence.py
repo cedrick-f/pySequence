@@ -7854,9 +7854,11 @@ class ArbreDoc(CT.CustomTreeCtrl):
                  pos = wx.DefaultPosition,
                  size = wx.DefaultSize,
                  style = wx.SUNKEN_BORDER|wx.WANTS_CHARS,
-                 agwStyle = CT.TR_HAS_BUTTONS|CT.TR_HAS_VARIABLE_ROW_HEIGHT | CT.TR_HIDE_ROOT|CT.TR_TOOLTIP_ON_LONG_ITEMS, 
                  ):
-
+#        if sys.platform == "win32":
+        agwStyle = CT.TR_HAS_BUTTONS|CT.TR_HAS_VARIABLE_ROW_HEIGHT | CT.TR_HIDE_ROOT|CT.TR_TOOLTIP_ON_LONG_ITEMS
+#        else:
+#            agwStyle = CT.TR_HAS_BUTTONS|CT.TR_HAS_VARIABLE_ROW_HEIGHT | CT.TR_HIDE_ROOT
         CT.CustomTreeCtrl.__init__(self, parent, -1, pos, size, style, agwStyle)
         self.SetBackgroundColour(wx.WHITE)
         
@@ -10141,8 +10143,9 @@ class A_propos(wx.Dialog):
 # ProgressDialog personnalisé
 # 
 #############################################################################################################
-import win32gui
-import win32con
+if sys.platform == "win32":
+    import win32gui
+    import win32con
 class myProgressDialog(wx.ProgressDialog):
     def __init__(self, titre, message, maximum, parent, style = 0):
         wx.ProgressDialog.__init__(self, titre,
@@ -10171,6 +10174,8 @@ class myProgressDialog(wx.ProgressDialog):
 #        wx.CallAfter(self.top)
         
     def top(self):
+        if sys.platform != "win32":
+            return
         hwnd = self.GetHandle()
         win32gui.SetWindowPos(hwnd, win32con.HWND_TOPMOST, 0, 0, 0, 0,
                               win32con.SWP_NOSIZE | win32con.SWP_NOMOVE
