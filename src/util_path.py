@@ -97,7 +97,7 @@ if sys.platform == 'win32':
 
 
 else:
-    
+    INSTALL_PATH = None
     import subprocess
     #import standardpaths
     #import version
