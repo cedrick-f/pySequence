@@ -39,10 +39,11 @@ Created on 1 févr. 2015
 
 
 ###############################################################################################
-def GetEtablissements(): 
-     from bs4 import BeautifulSoup
-     import urllib2
-     import xml.etree.ElementTree as ET
+def GetEtablissements():
+    
+    from bs4 import BeautifulSoup
+    import urllib2
+    import xml.etree.ElementTree as ET
 #    def getEtabVille(page):
 #        lst = []
 #        for v in page.find_all('div', attrs={'class':"annuaire-resultats-entete"}):
