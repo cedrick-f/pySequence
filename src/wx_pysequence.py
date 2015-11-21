@@ -71,20 +71,20 @@ def show_splash():
     txt = u"Version : "+version.__version__
     
     bmp = wx.Bitmap(SPLASH_FN, wx.BITMAP_TYPE_PNG)
-    dc = wx.MemoryDC(bmp)
     w, h = bmp.GetWidth(), bmp.GetHeight()
-    
-    bmpv = wx.EmptyBitmapRGBA(w, h, 0,0,0, 0)
-    dcv = wx.MemoryDC(bmpv)
-    dcv.Clear()
-#    dcv.SetTextForeground(wx.Colour(255,30,30, 0))
-    dcv.DrawText(txt, 50, 308)
-    
-#    dc.DrawBitmap(bmpv, 0,0, False)
-    dc.Blit(0,0,w,h,dcv,0,0) 
-    
-    dc.SelectObject(wx.NullBitmap)
-    dcv.SelectObject(wx.NullBitmap)
+    if w > 0: # w, h = -1, -1 sous Linux ... allez savoir pourquoi !
+        dc = wx.MemoryDC(bmp)
+        bmpv = wx.EmptyBitmapRGBA(w, h, 0,0,0, 0)
+        dcv = wx.MemoryDC(bmpv)
+        dcv.Clear()
+    #    dcv.SetTextForeground(wx.Colour(255,30,30, 0))
+        dcv.DrawText(txt, 50, 308)
+        
+    #    dc.DrawBitmap(bmpv, 0,0, False)
+        dc.Blit(0,0,w,h,dcv,0,0) 
+        
+        dc.SelectObject(wx.NullBitmap)
+        dcv.SelectObject(wx.NullBitmap)
     
 #    mdc.SetTextForeground('BLACK')
 #    mdc.SetFont(wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_LIGHT))

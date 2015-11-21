@@ -34,9 +34,11 @@ Created on 15-06-2014
 '''
 
 import wx
+import sys
 
-import xlwt
-from xlwt import Workbook, Font, XFStyle, Borders, Alignment, Formula, Pattern
+if sys.platform == 'win32':
+    import xlwt
+    from xlwt import Workbook, Font, XFStyle, Borders, Alignment, Formula, Pattern
 
 import constantes
 import util_path
