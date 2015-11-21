@@ -36,14 +36,17 @@ Created on 1 févr. 2015
 
 
 
+import xml.etree.ElementTree as ET
+import util_path
+import os
 
 
-###############################################################################################
+#############################################################################################
 def GetEtablissements():
     
     from bs4 import BeautifulSoup
     import urllib2
-    import xml.etree.ElementTree as ET
+    
 #    def getEtabVille(page):
 #        lst = []
 #        for v in page.find_all('div', attrs={'class':"annuaire-resultats-entete"}):
@@ -274,7 +277,7 @@ def setBranche(branche):
 
 
 def ouvrir():
-    fichier = open("etablissements.xml",'r')
+    fichier = open(os.path.join(util_path.PATH, "etablissements.xml"),'r')
     root = ET.parse(fichier).getroot()
     ETABLISSEMENTS = setBranche(root)
     fichier.close()
