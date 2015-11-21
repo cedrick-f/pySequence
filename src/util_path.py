@@ -112,13 +112,13 @@ else:
     datalocation = os.getenv('APPDATA')
     if datalocation != None:
         datalocation = os.path.join(datalocation, "pySequence")
-    
+        if not os.path.exists(datalocation):
+            subprocess.call("mkdir -p %s" %datalocation, shell=True)
         APP_DATA_PATH = datalocation
     else:
         APP_DATA_PATH = PATH
         
-    if not os.path.exists(datalocation):
-        subprocess.call("mkdir -p %s" %datalocation, shell=True)
+    
         
 
 # execution du pySequence "installé"
