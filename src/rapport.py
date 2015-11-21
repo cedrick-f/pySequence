@@ -28,7 +28,9 @@
 #    along with pySequence; if not, write to the Free Software
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import os, sys
-
+if sys.platform != "win32":
+    import wxversion
+    wxversion.select('2.8')
 import wx
 import wx.richtext as rt
 import images
@@ -77,7 +79,7 @@ Styles["Titre 1"].SetTextColour((0,0,180))
 Styles["Titre 1"].SetParagraphSpacingBefore(10)
 Styles["Titre 1"].SetAlignment(wx.TEXT_ALIGNMENT_LEFT)
 Styles["Titre 1"].SetParagraphSpacingAfter(10)
-if wx.version()[0] > 2:
+if int(wx.version()[0]) > 2:
     Styles["Titre 1"].SetBulletStyle(wx.TEXT_ATTR_BULLET_STYLE_RIGHT_PARENTHESIS)
 #Styles["Titre 1"].SetFontUnderlined(True)
 

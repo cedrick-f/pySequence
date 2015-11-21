@@ -44,6 +44,12 @@ Copyright (C) 2011-2015
 ####################################################################################
 
 import version
+
+#Outils système
+import os, sys
+if sys.platform != "win32":
+    import wxversion
+    wxversion.select('2.8')
 import wx
 
 
@@ -51,11 +57,7 @@ import wx
 # Module de gestion des dossiers, de l'installation et de l'enregistrement
 import util_path
 
-#Outils système
-import os, sys
-if sys.platform != "win32":
-    import wxversion
-    wxversion.select('2.8')
+
 server = None
 
 ####################################################################################
@@ -4942,7 +4944,10 @@ class PanelEffectifsClasse(wx.Panel):
         
     
     def MiseAJourNbrEleve(self):
-        self.boxEffRed.SetLabelText(strEffectifComplet(self.classe, 'G', -1))
+        if int(wx.version()[0]) > 2:
+            self.boxEffRed.SetLabelText(strEffectifComplet(self.classe, 'G', -1))
+        else:
+            self.boxEffRed.SetLabel(strEffectifComplet(self.classe, 'G', -1))
 #        t = u"groupes de "
 #        self.BoxEP.SetLabelText(t+strEffectif(self.classe, 'E', -1))
 #        self.BoxAP.SetLabelText(t+strEffectif(self.classe, 'P', -1))
@@ -5037,8 +5042,14 @@ class PanelPropriete_CI(PanelPropriete):
             b.SetInitialSize((32,32))
             self.b2CI = b
             self.Bind(wx.EVT_TOGGLEBUTTON, self.OnOption, b)
-            if not self.sizer.IsColGrowable(1):
-                self.sizer.AddGrowableCol(1)
+            if int(wx.version()[0]) > 2:
+                if not self.sizer.IsColGrowable(1):
+                    self.sizer.AddGrowableCol(1)
+            else:
+                try:
+                    self.sizer.AddGrowableCol(1)
+                except:
+                    pass
             self.sizer.Layout()
         
         #
@@ -5752,10 +5763,20 @@ class PanelPropriete_Savoirs(PanelPropriete):
         self.pageSavoir.DestroyChildren()
         self.arbre = ArbreSavoirs(self.pageSavoir, "B", self.savoirs, self.prerequis)
         self.pageSavoir.sizer.Add(self.arbre, (0,0), flag = wx.EXPAND)
-        if not self.pageSavoir.sizer.IsColGrowable(0):
-            self.pageSavoir.sizer.AddGrowableCol(0)
-        if not self.pageSavoir.sizer.IsRowGrowable(0):
-            self.pageSavoir.sizer.AddGrowableRow(0)
+        if int(wx.version()[0]) > 2:
+            if not self.pageSavoir.sizer.IsColGrowable(0):
+                self.pageSavoir.sizer.AddGrowableCol(0)
+            if not self.pageSavoir.sizer.IsRowGrowable(0):
+                self.pageSavoir.sizer.AddGrowableRow(0)
+        else:
+            try:
+                self.pageSavoir.sizer.AddGrowableCol(0)
+            except:
+                pass
+            try:
+                self.pageSavoir.sizer.AddGrowableRow(0)
+            except:
+                pass
         self.pageSavoir.Layout()
             
         ref = self.GetDocument().GetReferentiel()
@@ -5764,10 +5785,20 @@ class PanelPropriete_Savoirs(PanelPropriete):
             self.pageSavoirSpe.DestroyChildren()
             self.arbreSpe = ArbreSavoirs(self.pageSavoirSpe, "S", self.savoirs, self.prerequis)
             self.pageSavoirSpe.sizer.Add(self.arbreSpe, (0,0), flag = wx.EXPAND)
-            if not self.pageSavoirSpe.sizer.IsColGrowable(0):
-                self.pageSavoirSpe.sizer.AddGrowableCol(0)
-            if not self.pageSavoirSpe.sizer.IsRowGrowable(0):
-                self.pageSavoirSpe.sizer.AddGrowableRow(0)
+            if int(wx.version()[0]) > 2:
+                if not self.pageSavoirSpe.sizer.IsColGrowable(0):
+                    self.pageSavoirSpe.sizer.AddGrowableCol(0)
+                if not self.pageSavoirSpe.sizer.IsRowGrowable(0):
+                    self.pageSavoirSpe.sizer.AddGrowableRow(0)
+            else:
+                try:
+                    self.pageSavoirSpe.sizer.AddGrowableCol(0)
+                except:
+                    pass
+                try:
+                    self.pageSavoirSpe.sizer.AddGrowableRow(0)
+                except:
+                    pass
             self.pageSavoirSpe.Layout()
             
         if (self.prerequis and ref.preSavoirs_Math) or (not self.prerequis and ref.objSavoirs_Math):
@@ -5775,10 +5806,21 @@ class PanelPropriete_Savoirs(PanelPropriete):
             self.pageSavoirM.DestroyChildren()
             self.arbreM = ArbreSavoirs(self.pageSavoirM, "M", self.savoirs, self.prerequis)
             self.pageSavoirM.sizer.Add(self.arbreM, (0,0), flag = wx.EXPAND)
-            if not self.pageSavoirM.sizer.IsColGrowable(0):
-                self.pageSavoirM.sizer.AddGrowableCol(0)
-            if not self.pageSavoirM.sizer.IsRowGrowable(0):
-                self.pageSavoirM.sizer.AddGrowableRow(0)
+            if int(wx.version()[0]) > 2:
+                if not self.pageSavoirM.sizer.IsColGrowable(0):
+                    self.pageSavoirM.sizer.AddGrowableCol(0)
+                if not self.pageSavoirM.sizer.IsRowGrowable(0):
+                    self.pageSavoirM.sizer.AddGrowableRow(0)
+            else:
+                try:
+                    self.pageSavoirM.sizer.AddGrowableCol(0)
+                except:
+                    pass
+                try:
+                    self.pageSavoirM.sizer.AddGrowableRow(0)
+                except:
+                    pass
+                
             self.pageSavoirM.Layout()
             
         if (self.prerequis and ref.preSavoirs_Phys) or (not self.prerequis and ref.objSavoirs_Phys):
@@ -5786,10 +5828,20 @@ class PanelPropriete_Savoirs(PanelPropriete):
             self.pageSavoirP.DestroyChildren()
             self.arbreP = ArbreSavoirs(self.pageSavoirP, "P", self.savoirs, self.prerequis)
             self.pageSavoirP.sizer.Add(self.arbreP, (0,0), flag = wx.EXPAND)
-            if not self.pageSavoirP.sizer.IsColGrowable(0):
-                self.pageSavoirP.sizer.AddGrowableCol(0)
-            if not self.pageSavoirP.sizer.IsRowGrowable(0):
-                self.pageSavoirP.sizer.AddGrowableRow(0)
+            if int(wx.version()[0]) > 2:
+                if not self.pageSavoirP.sizer.IsColGrowable(0):
+                    self.pageSavoirP.sizer.AddGrowableCol(0)
+                if not self.pageSavoirP.sizer.IsRowGrowable(0):
+                    self.pageSavoirP.sizer.AddGrowableRow(0)
+            else:
+                try:
+                    self.pageSavoirP.sizer.AddGrowableCol(0)
+                except:
+                    pass
+                try:
+                    self.pageSavoirP.sizer.AddGrowableRow(0)
+                except:
+                    pass
             self.pageSavoirP.Layout()
         self.Layout()
 #        print " page Math" , self.lstPages[2]
@@ -7859,7 +7911,7 @@ class ArbreDoc(CT.CustomTreeCtrl):
                  size = wx.DefaultSize,
                  style = wx.SUNKEN_BORDER|wx.WANTS_CHARS,
                  ):
-        if wx.version()[0] > 2:
+        if int(wx.version()[0]) > 2:
             agwStyle = CT.TR_HAS_BUTTONS|CT.TR_HAS_VARIABLE_ROW_HEIGHT | CT.TR_HIDE_ROOT|CT.TR_TOOLTIP_ON_LONG_ITEMS
         else:
             agwStyle = CT.TR_HAS_BUTTONS|CT.TR_HAS_VARIABLE_ROW_HEIGHT | CT.TR_HIDE_ROOT
@@ -10458,13 +10510,15 @@ class DialogChoixDoc(wx.Dialog):
         sizer = wx.BoxSizer(wx.VERTICAL)
         button = wx.Button(self, -1, u"Nouvelle Séquence")
         button.SetToolTipString(u"Créer une nouvelle séquence pédagogique")
-        button.SetBitmap(images.Icone_sequence.Bitmap,wx.LEFT)
+        if int(wx.version()[0]) > 2:
+            button.SetBitmap(images.Icone_sequence.Bitmap,wx.LEFT)
         self.Bind(wx.EVT_BUTTON, self.OnSeq, button)
         sizer.Add(button,0, wx.ALIGN_CENTRE|wx.ALL|wx.EXPAND, 5)
         
         button = wx.Button(self, -1, u"Nouveau Projet")
         button.SetToolTipString(u"Créer un nouveau projet")
-        button.SetBitmap(images.Icone_projet.Bitmap,wx.LEFT)
+        if int(wx.version()[0]) > 2:
+            button.SetBitmap(images.Icone_projet.Bitmap,wx.LEFT)
         self.Bind(wx.EVT_BUTTON, self.OnPrj, button)
         sizer.Add(button,0,  wx.ALIGN_CENTRE|wx.ALL|wx.EXPAND, 5)
     
