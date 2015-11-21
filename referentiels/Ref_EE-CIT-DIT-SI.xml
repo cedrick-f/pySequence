@@ -5,7 +5,7 @@
   </l_BO_URL>
   <l_BO_dossier S_00="2nde" />
   <l_CentresInterets S_00="La mobilit&#233;" S_01="Le sport" S_02="La sant&#233;" S_03="L'habitat" S_04="L'&#233;nergie" S_05="La communication" S_06="La culture et les loisirs" S_07="Les infrastructures" S_08="La bionique" S_09="La d&#233;mat&#233;rialisation des biens et des services" />
-  <l_Enseignement S_00="EE-CIT-DIT-SI" S_01="Enseignement d'exploration" S_02="2nde" />
+  <l_Enseignement S_00="EE-CIT-DIT-SI" S_01="Enseignement d'exploration 2nde (beta)" S_02="2nde" />
   <d_aColNon B_C="True" />
   <d_activites>
     <l_ED S_00="Etude de dossier" S_01="Activit&#233; d'&#233;tude de dossier" />
