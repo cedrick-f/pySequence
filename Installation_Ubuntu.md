@@ -22,24 +22,25 @@ sudo ldconfig
 
 ça ne marche pas !
 
-[http://wiki.wxpython.org/CheckInstall]
-Checkinstall
+[CheckInstall](http://wiki.wxpython.org/CheckInstall)
+
+###Checkinstall###
 sudo apt-get install checkinstall
 
-Dépendances
+###Dépendances###
 sudo apt-get install dpkg-dev build-essential swig python2.7-dev libwebkitgtk-dev libjpeg-dev libtiff-dev checkinstall ubuntu-restricted-extras freeglut3 freeglut3-dev libgtk2.0-dev  libsdl1.2-dev libgstreamer-plugins-base0.10-dev 
 
-Sources wxPython3.0
+###Sources wxPython3.0###
 wget http://downloads.sourceforge.net/wxpython/wxPython-src-3.0.2.0.tar.bz2
 tar xvjf wxPython-src-3.0.2.0.tar.bz2
 cd wxPython-src-3.0.2.0/
 mkdir bld
 cd wxPython/
 
-Compilation
+###Compilation###
 sudo checkinstall -y --pkgname=wxpython --pkgversion=3.0.2 --pkgrelease=1 --pkglicense=wxWidgets --pkgsource=http://www.wxpython.org/ --maintainer=reingart@gmail.com --requires=python-wxversion,python2.7,python -D  python build-wxpython.py --build_dir=../bld --install
 
-Test
+###Test###
 
 
 
