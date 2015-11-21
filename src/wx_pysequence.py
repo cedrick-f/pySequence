@@ -46,12 +46,16 @@ Copyright (C) 2011-2015
 import version
 import wx
 
+
+
 # Module de gestion des dossiers, de l'installation et de l'enregistrement
 import util_path
 
 #Outils système
 import os, sys
-
+if sys.platform != "win32":
+    import wxversion
+    wxversion.select('2.8')
 server = None
 
 ####################################################################################
@@ -7855,10 +7859,10 @@ class ArbreDoc(CT.CustomTreeCtrl):
                  size = wx.DefaultSize,
                  style = wx.SUNKEN_BORDER|wx.WANTS_CHARS,
                  ):
-#        if sys.platform == "win32":
-        agwStyle = CT.TR_HAS_BUTTONS|CT.TR_HAS_VARIABLE_ROW_HEIGHT | CT.TR_HIDE_ROOT|CT.TR_TOOLTIP_ON_LONG_ITEMS
-#        else:
-#            agwStyle = CT.TR_HAS_BUTTONS|CT.TR_HAS_VARIABLE_ROW_HEIGHT | CT.TR_HIDE_ROOT
+        if wx.version()[0] > 2:
+            agwStyle = CT.TR_HAS_BUTTONS|CT.TR_HAS_VARIABLE_ROW_HEIGHT | CT.TR_HIDE_ROOT|CT.TR_TOOLTIP_ON_LONG_ITEMS
+        else:
+            agwStyle = CT.TR_HAS_BUTTONS|CT.TR_HAS_VARIABLE_ROW_HEIGHT | CT.TR_HIDE_ROOT
         CT.CustomTreeCtrl.__init__(self, parent, -1, pos, size, style, agwStyle)
         self.SetBackgroundColour(wx.WHITE)
         

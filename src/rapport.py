@@ -77,8 +77,8 @@ Styles["Titre 1"].SetTextColour((0,0,180))
 Styles["Titre 1"].SetParagraphSpacingBefore(10)
 Styles["Titre 1"].SetAlignment(wx.TEXT_ALIGNMENT_LEFT)
 Styles["Titre 1"].SetParagraphSpacingAfter(10)
-#if sys.platform == "win32":
-Styles["Titre 1"].SetBulletStyle(wx.TEXT_ATTR_BULLET_STYLE_RIGHT_PARENTHESIS)
+if wx.version()[0] > 2:
+    Styles["Titre 1"].SetBulletStyle(wx.TEXT_ATTR_BULLET_STYLE_RIGHT_PARENTHESIS)
 #Styles["Titre 1"].SetFontUnderlined(True)
 
 Styles["Titre 2"].SetParagraphStyleName("Titre 2")
