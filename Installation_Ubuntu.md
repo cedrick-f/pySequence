@@ -1,12 +1,12 @@
-#Installation de pySéquence sous Ubuntu
-**testé avec Ubuntu 14.04LT**
+#Installation de pySÃ©quence sous Ubuntu
+**testÃ© avec Ubuntu 14.04LT**
 
 ##Python 2.7##
-déja installé
+dÃ©ja installÃ©
 ##wxPython 3##
 http://wiki.wxpython.org/How%20to%20install%20wxPython#Installing_wxGTK_from_source
-•	Télécharger : http://sourceforge.net/projects/wxpython/files/wxPython/3.0.2.0/wxPython-src-3.0.2.0.tar.bz2/download
-•	depuis le dossier décompacté : wxPython-src-3.0.2.0
+â€¢	TÃ©lÃ©charger : http://sourceforge.net/projects/wxpython/files/wxPython/3.0.2.0/wxPython-src-3.0.2.0.tar.bz2/download
+â€¢	depuis le dossier dÃ©compactÃ© : wxPython-src-3.0.2.0
 ./configure --with-gtk
 
 
@@ -20,13 +20,13 @@ sudo make install
 
 sudo ldconfig
 
-ça ne marche pas !
+Ã§a ne marche pas !
 
-http://wiki.wxpython.org/CheckInstall
+[http://wiki.wxpython.org/CheckInstall]
 Checkinstall
 sudo apt-get install checkinstall
 
-Dépendances
+DÃ©pendances
 sudo apt-get install dpkg-dev build-essential swig python2.7-dev libwebkitgtk-dev libjpeg-dev libtiff-dev checkinstall ubuntu-restricted-extras freeglut3 freeglut3-dev libgtk2.0-dev  libsdl1.2-dev libgstreamer-plugins-base0.10-dev 
 
 Sources wxPython3.0
