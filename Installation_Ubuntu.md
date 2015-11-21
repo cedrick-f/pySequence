@@ -46,34 +46,43 @@ sudo checkinstall -y --pkgname=wxpython --pkgversion=3.0.2 --pkgrelease=1 --pkgl
 
 
 ##wxPython 2.8##
+```bash
 sudo apt-get install python-wxgtk2.8
+```
 
 ##xlrd/xlwt##
 source : https://pypi.python.org/pypi/xlrd
-
+```bash
 sudo pip install xlrd
-source : https://pypi.python.org/pypi/xlwt
+```
 
+source : https://pypi.python.org/pypi/xlwt
+```bash
 sudo pip install xlwt
+```
 
 ##pyPdf2##
 source : https://pypi.python.org/pypi/PyPDF2/1.25.1
-
+```bash
 sudo pip install pypdf2
+```
 
 ##pyperclip##
 source : https://pypi.python.org/pypi/pyperclip
-
+```bash
 sudo pip install pyperclip
+```
 
 ##enchant##
 source : https://pypi.python.org/pypi/pyenchant/
-
+```bash
 sudo pip install pyenchant
+```
 
 ##xxtml2pdf##
 https://pypi.python.org/pypi/xhtml2pdf
+```bash
 sudo pip install xhtml2pdf
-
+```
 
 
