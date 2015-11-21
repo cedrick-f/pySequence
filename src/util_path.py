@@ -41,17 +41,18 @@ else:
     reload(sys)  # Reload does the trick!
     sys.setdefaultencoding('utf-8')
     
-if sys.platform == 'win32':
-    #
-    # Les deuxlignes suivantes permettent de lancer le script .py depuis n'importe
-    # quel répertoire  sans que l'utilisation de chemins
-    # relatifs ne soit perturbée
-    #
-    PATH = os.path.dirname(os.path.abspath(sys.argv[0]))
-    #PATH = os.path.split(PATH)[0]
-    os.chdir(PATH)
-    sys.path.append(PATH)
 
+#
+# Les deuxlignes suivantes permettent de lancer le script .py depuis n'importe
+# quel répertoire  sans que l'utilisation de chemins
+# relatifs ne soit perturbée
+#
+PATH = os.path.dirname(os.path.abspath(sys.argv[0]))
+#PATH = os.path.split(PATH)[0]
+os.chdir(PATH)
+sys.path.append(PATH)
+
+if sys.platform == 'win32':
     #On récupèreﾠ le dossier "Application data" 
     #On lit la clef de registre indiquant le type d'installation
     import _winreg
@@ -107,7 +108,7 @@ else:
     
     #datalocation = standardpaths.get_writable_path('app_local_data')
     #datalocation = standardpaths.get_writable_path(standardpaths.Location.app_local_data)
-    PATH = os.path.dirname(os.path.abspath(sys.argv[0]))
+    
     
     datalocation = os.getenv('APPDATA')
     if datalocation != None:
