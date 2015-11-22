@@ -43,7 +43,7 @@ Copyright (C) 2011-2015
 #
 ####################################################################################
 
-import version
+
 
 #Outils système
 import os, sys
@@ -51,7 +51,7 @@ if sys.platform != "win32":
     import wxversion
     wxversion.select('2.8')
 import wx
-
+import version
 
 
 # Module de gestion des dossiers, de l'installation et de l'enregistrement
@@ -1258,7 +1258,17 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         """ Opérations de modification du menu et des barres d'outils 
             en fonction du type de document en cours
         """
-        fenDoc = self.GetClientWindow().GetAuiManager().GetManagedWindow().GetCurrentPage()
+#        print "OnDocChanged"
+#        print dir(self.GetClientWindow().GetAuiManager().GetManagedWindow())
+#        print self.GetClientWindow().GetAuiManager().GetManagedWindow().GetCurrentPage()
+#        print self.GetClientWindow().GetAuiManager().GetManagedWindow()
+        if int(wx.version()[0]) > 2:
+            fenDoc = self.GetClientWindow().GetAuiManager().GetManagedWindow().GetCurrentPage()
+        else:
+            f = self.GetClientWindow().GetAuiManager().GetManagedWindow()
+            fenDoc = f.GetPage(f.GetSelection())
+            
+
         if hasattr(fenDoc, 'typ'):
             self.ajouterOutils(fenDoc.typ )
             if fenDoc.typ == "prj":
