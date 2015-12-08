@@ -3405,8 +3405,9 @@ class PanelPropriete_Sequence(PanelPropriete):
         self.position.SetValue(self.sequence.position)
         self.bmp.SetBitmap(self.getBitmapPeriode(250))
         
-        for cb, t in [(self.cbM, "M"), (self.cbE, "E"), (self.cbI, "I")]:
-            cb.SetValue(t in self.sequence.domaine)
+        if self.sequence.GetReferentiel().domaines:
+            for cb, t in [(self.cbM, "M"), (self.cbE, "E"), (self.cbI, "I")]:
+                cb.SetValue(t in self.sequence.domaine)
             
         
         self.Layout()
@@ -3418,9 +3419,9 @@ class PanelPropriete_Sequence(PanelPropriete):
 
     #############################################################################            
     def MiseAJourTypeEnseignement(self):
-        print "MiseAJourTypeEnseignement"
+#        print "MiseAJourTypeEnseignement"
         if self.sequence.GetReferentiel().domaines:
-            print self.sizer.FindItemAtPosition((1,0))
+#            print self.sizer.FindItemAtPosition((1,0))
             if self.sizer.FindItemAtPosition((0,1)) is None:
                 titre = wx.StaticBox(self, -1, u"Domaines")
                 self.sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
