@@ -495,6 +495,11 @@ class Referentiel(XMLelem):
         self.parties = {}
         
         #
+        #
+        #
+        self.domaines = False
+        
+        #
         # Centre d'intérêt
         #
         self.nomCI = u"Centres d'intérêt"
@@ -996,6 +1001,12 @@ class Referentiel(XMLelem):
                 self.periodes.append([sh_g.cell(l,2).value, int(sh_g.cell(l,3).value)])
             
         self.FichierLogo = sh_g.cell(6,3).value
+        
+        #
+        #
+        #
+        self.domaines = sh_g.cell(17,3).value[0].upper() == "O"
+        
         
         #
         # Projets
@@ -1520,7 +1531,7 @@ class Referentiel(XMLelem):
 
     #########################################################################
     def getTypeEtab(self):
-        if self.Famille in ["STI", "SSI", "STS"]:
+        if self.Famille in ["STI", "SSI", "STS", "2nde"]:
             return 'L'  # Lycée
         else:
             return 'C'  # Collège

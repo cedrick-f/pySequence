@@ -26,6 +26,8 @@
 #    along with pySequence; if not, write to the Free Software
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+# Source :
+# http://stackoverflow.com/questions/5520639/single-instance-application-passing-commands
 
 import wx
 import sys
@@ -137,13 +139,27 @@ def main():
     app = MyApp(0)
     app.MainLoop()
 
-if __name__ == '__main__':
-    HOST, PORT = socket.gethostname(), 61955
 
-    server = None
-    try:
-        client(HOST, PORT, ' '.join(sys.argv))
-        sys.exit()
-    except socket.error:
-        server = start_server(HOST, PORT)
-        main()
+if __name__ == '__main__':
+    import psutil
+    for n in psutil.pids():
+        p = psutil.Process(n)
+       
+        if p.name() == "Sequence.exe":
+            print n
+            print p.name()
+            print p.exe()
+            print p.cwd()
+            print p.status()
+            print p.cmdline()
+    for p in psutil.process_iter():
+        print p
+#    HOST, PORT = socket.gethostname(), 61955
+#
+#    server = None
+#    try:
+#        client(HOST, PORT, ' '.join(sys.argv))
+#        sys.exit()
+#    except socket.error:
+#        server = start_server(HOST, PORT)
+#        main()

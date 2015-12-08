@@ -92,7 +92,7 @@ if sys.platform == 'win32':
     except:
         INSTALL_PATH = None
         APP_DATA_PATH = PATH
-        print u"Version PORTABLE é", PATH
+        print u"Version PORTABLE : ", PATH
         
     sys.path.append(os.path.join(PATH, 'bin'))
 

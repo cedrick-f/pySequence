@@ -1,11 +1,11 @@
-<Referentiel B_CI_BO="False" B_CI_cible="False" B_objSavoirs_Math="False" B_objSavoirs_Phys="False" B_preSavoirs_Math="True" B_preSavoirs_Phys="True" S_Code="SSI" S_Famille="SSI" S_FichierLogo="" S_abrevCI="CI" S_nomCI="Centre(s) d'Int&#233;r&#234;t" S_nomCompetences="Comp&#233;tences" S_nomFonctions="Fonctions" S_nomIndicateurs="Indicateurs de performance" S_nomSavoirs="Connaissances &amp; Capacit&#233;s" S_nomSavoirs_Math="Math&#233;matiques" S_nomSavoirs_Phys="Physique - Chimie" S_nomTaches="T&#226;ches" S_surnomSavoirs="">
+<Referentiel B_CI_BO="False" B_CI_cible="True" B_domaines="True" B_objSavoirs_Math="False" B_objSavoirs_Phys="False" B_preSavoirs_Math="True" B_preSavoirs_Phys="True" S_Code="SSI" S_Famille="SSI" S_FichierLogo="" S_abrevCI="CI" S_nomCI="Centre(s) d'Int&#233;r&#234;t" S_nomCompetences="Comp&#233;tences" S_nomFonctions="Fonctions" S_nomIndicateurs="Indicateurs de performance" S_nomSavoirs="Connaissances &amp; Capacit&#233;s" S_nomSavoirs_Math="Math&#233;matiques" S_nomSavoirs_Phys="Physique - Chimie" S_nomTaches="T&#226;ches" S_surnomSavoirs="">
   <l_BO_URL>
     <l_00 S_00="Programme" S_01="http://www.education.gouv.fr/cid53329/mene1019619a.html" />
     <l_01 S_00="Epreuves" S_01="http://www.education.gouv.fr/pid25535/bulletin_officiel.html?cid_bo=82979" />
     <l_02 S_00="Ressources" S_01="http://eduscol.education.fr/cid66419/ressources-pour-le-cycle-terminal.html" />
   </l_BO_URL>
   <l_BO_dossier S_00="SSI" />
-  <l_CentresInterets S_00="Analyser un syst&#232;me fonctionnellement et structurellement" S_01="Exp&#233;rimenter et mesurer sur un syst&#232;me r&#233;el pour &#233;valuer ses performances" S_02="Analyser des constituants d&#8217;un syst&#232;me r&#233;el d&#8217;un point de vue structurel et comportemental" S_03="Concevoir et utiliser un mod&#232;le relatif &#224; un syst&#232;me en vue d&#8217;&#233;valuer les performances de la cha&#238;ne d&#8217;information" S_04="Concevoir et utiliser un mod&#232;le relatif &#224; un syst&#232;me en vue d&#8217;&#233;valuer les performances de la cha&#238;ne d&#8217;&#233;nergie&quot;" />
+  <l_CentresInterets S_00="Analyser un syst&#232;me fonctionnellement et structurellement" S_01="Exp&#233;rimenter et mesurer sur un syst&#232;me r&#233;el pour &#233;valuer ses performances" S_02="Analyser des constituants d&#8217;un syst&#232;me r&#233;el d&#8217;un point de vue structurel et comportemental" S_03="Concevoir et utiliser un mod&#232;le relatif &#224; un syst&#232;me en vue d&#8217;&#233;valuer les performances de la cha&#238;ne d&#8217;information" S_04="Concevoir et utiliser un mod&#232;le relatif &#224; un syst&#232;me en vue d&#8217;&#233;valuer les performances de la cha&#238;ne d&#8217;&#233;nergie" />
   <l_Enseignement S_00="S-SI" S_01="Bac S - Sciences de l'ing&#233;nieur" S_02="S-SI" />
   <d_aColNon B_C="True" />
   <d_activites>
@@ -908,7 +908,7 @@
     <l_00 I_01="5" S_00="1_&#232;re" />
     <l_01 I_01="5" S_00="T_ale" />
   </l_periodes>
-  <l_positions_CI />
+  <l_positions_CI S_00="MEI_FS " S_01="MEI_  C" S_02="M  _ SC" S_03="  I_  C" S_04=" E _  C" />
   <d_projets>
     <Projet_PRJ I_duree="70" I_maxEleves="5" I_minEleves="3" S_code="PRJ" S_ficheValid="" S_intitule="Projet de fin d'ann&#233;e">
       <d_attributs>

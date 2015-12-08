@@ -373,6 +373,10 @@ def Draw(ctx, seq, mouchard = False):
                                      seq.rect[0], 
                                      BcoulIntitule, IcoulIntitule, FontIntitule)
 
+    #
+    #    Domaines
+    #
+    DrawDomaines(ctx, seq.domaine, posZOrganis[0]-bordureZOrganis+ecartX/2, posZOrganis[1]-ecartY/2)
     
     #
     # Type d'enseignement
@@ -1418,5 +1422,29 @@ def DrawCroisementsDemarche(ctx, seance, y, r):
     seance.rect.append((_x -r , y - r, 2*r, 2*r))
 
 
-
-
+#####################################################################################  
+def DrawDomaines(ctx, dom, x, y, r = 0.008 * COEF):
+    p = 0.8
+    def draw(x, y, t, c):
+        ctx.set_source_rgba (c[0]/3, c[1]/3, c[2]/3, 0.4)
+        ctx.set_line_width (0.0006 * COEF)
+        ctx.arc(x, y, r, 0, 2*pi)
+        ctx.fill_preserve ()
+        ctx.set_source_rgba (c[0], c[1], c[2], 1)
+        show_text_rect(ctx, t, (x-r, y-r, 2*r, 2*r),
+                               wrap = False, couper = False)
+        ctx.stroke ()
+    
+    d = {"M": (0.0,1.0,0.0),
+         "E": (0.0,0.0,1.0),
+         "I": (1.0,0.0,0.0)}
+    
+    if len(dom) == 3:
+        draw(x, y-p*r, "M", d["M"])
+        draw(x-p*r*0.866, y+p*r*0.5, "E", d["E"])
+        draw(x+p*r*0.866, y+p*r*0.5, "I", d["I"])
+    elif len(dom) == 2:
+        draw(x-p*r*0.866, y, dom[0], d[dom[0]])
+        draw(x+p*r*0.866, y, dom[1], d[dom[1]])
+    elif len(dom) == 1:
+        draw(x, y, dom, d[dom])

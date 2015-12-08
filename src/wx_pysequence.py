@@ -1267,19 +1267,19 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         else:
             f = self.GetClientWindow().GetAuiManager().GetManagedWindow()
             fenDoc = f.GetPage(f.GetSelection())
-            
+
 
         if hasattr(fenDoc, 'typ'):
             self.ajouterOutils(fenDoc.typ )
             if fenDoc.typ == "prj":
-                self.Bind(wx.EVT_TOOL, fenDoc.projet.AjouterEleve, id=50)
-                self.Bind(wx.EVT_TOOL, fenDoc.projet.AjouterProf, id=51)
-                self.Bind(wx.EVT_TOOL, fenDoc.AjouterTache, id=52)
-                self.Bind(wx.EVT_TOOL, fenDoc.projet.InsererRevue, id=53)
+                self.Bind(wx.EVT_TOOL, fenDoc.projet.AjouterEleve,      id=50)
+                self.Bind(wx.EVT_TOOL, fenDoc.projet.AjouterProf,       id=51)
+                self.Bind(wx.EVT_TOOL, fenDoc.AjouterTache,             id=52)
+                self.Bind(wx.EVT_TOOL, fenDoc.projet.InsererRevue,      id=53)
                 
             elif fenDoc.typ == "seq":
-                self.Bind(wx.EVT_TOOL, fenDoc.sequence.AjouterSeance, id=60)
-                self.Bind(wx.EVT_TOOL, fenDoc.sequence.AjouterSysteme, id=61)
+                self.Bind(wx.EVT_TOOL, fenDoc.sequence.AjouterSeance,   id=60)
+                self.Bind(wx.EVT_TOOL, fenDoc.sequence.AjouterSysteme,  id=61)
     
             if fenDoc.typ == "prj":
                 self.file_menu.Enable(18, True)
@@ -1302,11 +1302,11 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         if keycode == wx.WXK_ESCAPE and self.pleinEcran:
             self.commandePleinEcran(evt)
             
-        elif evt.ControlDown() and keycode == 90: # Crtl-Z
+        elif evt.ControlDown() and keycode == 90: # Ctrl-Z
             self.commandeUndo(evt)
 
 
-        elif evt.ControlDown() and keycode == 89: # Crtl-Y
+        elif evt.ControlDown() and keycode == 89: # Ctrl-Y
             self.commandeRedo(evt)
             
         evt.Skip()
@@ -3305,16 +3305,17 @@ class PanelPropriete_Sequence(PanelPropriete):
         self.sizer.Add(sb, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.EXPAND, border = 2)
 #        self.sizer.Add(textctrl, (0,1), flag = wx.EXPAND)
         self.Bind(wx.EVT_TEXT, self.EvtText, textctrl)
-        
+
         titre = wx.StaticBox(self, -1, u"Commentaires")
         sb = wx.StaticBoxSizer(titre)
         commctrl = wx.TextCtrl(self, -1, u"", style=wx.TE_MULTILINE)
         sb.Add(commctrl, 1, flag = wx.EXPAND)
         self.commctrl = commctrl
-        self.sizer.Add(sb, (0,1), (2,1),  flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.EXPAND, border = 2)
+        self.sizer.Add(sb, (0,2), (2,1),  flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.EXPAND, border = 2)
 #        self.sizer.Add(commctrl, (1,1), flag = wx.EXPAND)
         self.Bind(wx.EVT_TEXT, self.EvtText, commctrl)
-        self.sizer.AddGrowableCol(1)
+        self.sizer.AddGrowableCol(2)
+        self.sizer.SetEmptyCellSize((0, 0))
         
         titre = wx.StaticBox(self, -1, u"Position")
         sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
@@ -3327,6 +3328,8 @@ class PanelPropriete_Sequence(PanelPropriete):
         self.position = position
         self.sizer.Add(sb, (1,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 2)
         position.Bind(wx.EVT_SCROLL_CHANGED, self.onChanged)
+        
+        self.MiseAJourTypeEnseignement()
         
         self.sizer.Layout()
 #        wx.CallAfter(self.Layout)
@@ -3368,6 +3371,14 @@ class PanelPropriete_Sequence(PanelPropriete):
             self.position.SetValue(bougerSlider)
         
     #############################################################################            
+    def EvtCheckBox(self, event):
+        cb = event.GetEventObject()
+        self.sequence.domaine = "".join([t for cb, t in [(self.cbM, "M"), (self.cbE, "E"), (self.cbI, "I")] if cb.IsChecked()])
+
+        self.sendEvent(modif = u"Modification du domaine de la séquence")
+        
+            
+    #############################################################################            
     def EvtText(self, event):
         if event.GetEventObject() == self.textctrl:
             self.sequence.SetText(event.GetString())
@@ -3393,6 +3404,11 @@ class PanelPropriete_Sequence(PanelPropriete):
         self.sequence.position = min(self.sequence.position, self.sequence.GetReferentiel().getNbrPeriodes()-1)
         self.position.SetValue(self.sequence.position)
         self.bmp.SetBitmap(self.getBitmapPeriode(250))
+        
+        for cb, t in [(self.cbM, "M"), (self.cbE, "E"), (self.cbI, "I")]:
+            cb.SetValue(t in self.sequence.domaine)
+            
+        
         self.Layout()
         
         
@@ -3400,6 +3416,30 @@ class PanelPropriete_Sequence(PanelPropriete):
         if sendEvt:
             self.sendEvent()
 
+    #############################################################################            
+    def MiseAJourTypeEnseignement(self):
+        print "MiseAJourTypeEnseignement"
+        if self.sequence.GetReferentiel().domaines:
+            print self.sizer.FindItemAtPosition((1,0))
+            if self.sizer.FindItemAtPosition((0,1)) is None:
+                titre = wx.StaticBox(self, -1, u"Domaines")
+                self.sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
+                self.cbM = wx.CheckBox(self, -1, u"Matériaux et Structures")
+                self.cbE = wx.CheckBox(self, -1, u"Energie")
+                self.cbI = wx.CheckBox(self, -1, u"Information")
+                self.Bind(wx.EVT_CHECKBOX, self.EvtCheckBox, self.cbM)
+                self.Bind(wx.EVT_CHECKBOX, self.EvtCheckBox, self.cbE)
+                self.Bind(wx.EVT_CHECKBOX, self.EvtCheckBox, self.cbI)
+                self.sb.AddMany([self.cbM, self.cbE, self.cbI])
+                self.sizer.Add(self.sb, (0,1), (2, 1), flag = wx.ALIGN_TOP | wx.ALIGN_RIGHT|wx.LEFT, border = 2)
+        else:
+            if self.sizer.FindItemAtPosition((0,1)) is not None:
+                self.cbM.Destroy()
+                self.cbE.Destroy()
+                self.cbI.Destroy()
+                self.sizer.RemovePos(self.sb)
+            
+    
     #############################################################################            
     def GetDocument(self):
         return self.sequence
@@ -4435,7 +4475,7 @@ class PanelPropriete_Classe(PanelPropriete):
         lst = []
         for val in constantes.ETABLISSEMENTS.values():
             if self.classe.academie == val[0]:
-                if self.classe.GetReferentiel().getTypeEtab() == 'L':
+                if self.classe.GetReferentiel().getTypeEtab() == 'L':  # Lycée
                     lst = val[2]
                 else:
                     lst = val[1]
@@ -11933,6 +11973,8 @@ class Sequence(BaseDoc, Objet_sequence):
         
         self.pasVerouille = True
         
+        self.domaine = ""   # M E I
+        
         self.CI = CentreInteret(self, panelParent)
         
         self.obj = {"C" : Competences(self, panelParent),
@@ -12058,6 +12100,8 @@ class Sequence(BaseDoc, Objet_sequence):
 
         if self.commentaires != u"":
             sequence.set("Commentaires", self.commentaires)
+        
+        sequence.set("Domaine", self.domaine)
 
         sequence.set("Position", str(self.position))
 
@@ -12093,6 +12137,8 @@ class Sequence(BaseDoc, Objet_sequence):
         self.intitule = branche.get("Intitule", u"")
         
         self.commentaires = branche.get("Commentaires", u"")
+        
+        self.domaine = branche.get("Domaine", "")
         
         self.position = eval(branche.get("Position", "0"))
 
@@ -12692,6 +12738,7 @@ class Sequence(BaseDoc, Objet_sequence):
         self.prerequis.MiseAJourTypeEnseignement()
         for s in self.seances:
             s.MiseAJourTypeEnseignement()
+        self.panelPropriete.MiseAJourTypeEnseignement()
         self.panelPropriete.MiseAJour()
         
         
