@@ -1144,33 +1144,7 @@ TxtRacineTache = """<?xml version="1.0" encoding="UTF-8"?>
 
 """
 
-ADOBE_VERSION = None
-if  wx.PlatformInfo[1] == 'wxMSW':
-    import comtypes.client as cc
-    
-    try:            # Adobe Reader >= 7.0
-        dllpath = cc.GetModule( ('{05BFD3F1-6319-4F30-B752-C7A22889BCC4}', 1, 0) ).typelib_path
-    except:
-        try:        # Adobe Reader 5 or 6
-            dllpath = cc.GetModule( ('{CA8A9783-280D-11CF-A24D-444553540000}', 1, 0) ).typelib_path
-        except:
-            dllpath = r""
-            pass    # Adobe Reader not installed
-    
-    from win32api import GetFileVersionInfo, LOWORD, HIWORD
-    
-    def get_version_number (filename):
-        info = GetFileVersionInfo (filename, "\\")
-        ms = info['FileVersionMS']
-        ls = info['FileVersionLS']
-        return HIWORD (ms), LOWORD (ms), HIWORD (ls), LOWORD (ls)
-    
-    try:
-        ADOBE_VERSION = get_version_number(dllpath)
-    except:
-        ADOBE_VERSION = None
-        
-    print "Version Adobe Reader", ADOBE_VERSION
+
 
 ############################################################################
 #

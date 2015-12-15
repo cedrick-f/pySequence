@@ -1411,17 +1411,17 @@
   <d_projets>
     <Projet_CCF1 I_duree="12" I_maxEleves="5" I_minEleves="3" S_code="CCF1" S_ficheValid="STS_SN_IR_Sit1.html" S_intitule="CCF1">
       <d_attributs>
-        <l_SRC S_00="" S_01="" S_02="" />
-        <l_PAR S_00="" S_01="" S_02="" />
-        <l_DEC S_00="" S_01="" S_02="" />
-        <l_OBJ S_00="Description de l'intervention" S_01="Identification de la valeur ajout&#233;e.--Enjeux." S_02="" />
-        <l_TIT S_00="Titre du projet" S_01="Titre du projet" S_02="" />
-        <l_SYN S_00="" S_01="" S_02="" />
-        <l_PB S_00="" S_01="" S_02="" />
-        <l_ORI S_00="" S_01="" S_02="" />
-        <l_CCF S_00="Pr&#233;sentation du support" S_01="Indiquer :-- - description du contexte dans lequel l&#8217;objet du projet va &#234;tre int&#233;gr&#233; ;-- - fonctionnalit&#233;s de cet objet ;-- - caract&#233;ristiques fonctionnelles et techniques." S_02="" />
-        <l_TYP S_00="Typologie" S_01="" S_02="T&#233;l&#233;communication, t&#233;l&#233;phonie et r&#233;seaux t&#233;l&#233;phonique--Informatique, r&#233;seaux et infrastructures--Multim&#233;dia, son et image, radio et t&#233;l&#233;diffusion--Mobilit&#233; et syst&#232;mes embarqu&#233;s--Electronique et informatique m&#233;dicale--Mesure, instrumentation et microsyst&#232;mes--Automatique et robotique" />
-        <l_PRX S_00="" S_01="" S_02="" />
+        <l_SRC S_00="" S_01="" S_02="" S_03="" />
+        <l_PAR S_00="" S_01="" S_02="" S_03="" />
+        <l_DEC S_00="" S_01="" S_02="" S_03="" />
+        <l_OBJ S_00="Description de l'intervention" S_01="Identification de la valeur ajout&#233;e.--Enjeux." S_02="" S_03="" />
+        <l_TIT S_00="Titre du projet" S_01="Titre du projet" S_02="" S_03="" />
+        <l_SYN S_00="" S_01="" S_02="" S_03="" />
+        <l_PB S_00="" S_01="" S_02="" S_03="" />
+        <l_ORI S_00="" S_01="" S_02="" S_03="" />
+        <l_CCF S_00="Pr&#233;sentation du support" S_01="Indiquer :-- - description du contexte dans lequel l&#8217;objet du projet va &#234;tre int&#233;gr&#233; ;-- - fonctionnalit&#233;s de cet objet ;-- - caract&#233;ristiques fonctionnelles et techniques." S_02="" S_03="" />
+        <l_TYP S_00="Typologie" S_01="" S_02="T&#233;l&#233;communication, t&#233;l&#233;phonie et r&#233;seaux t&#233;l&#233;phonique--Informatique, r&#233;seaux et infrastructures--Multim&#233;dia, son et image, radio et t&#233;l&#233;diffusion--Mobilit&#233; et syst&#232;mes embarqu&#233;s--Electronique et informatique m&#233;dicale--Mesure, instrumentation et microsyst&#232;mes--Automatique et robotique" S_03="" />
+        <l_PRX S_00="" S_01="" S_02="" S_03="" />
       </d_attributs>
       <d_cellulesInfo>
         <d_S1>
@@ -1474,17 +1474,17 @@
     </Projet_CCF1>
     <Projet_CCF2 I_duree="12" I_maxEleves="5" I_minEleves="3" S_code="CCF2" S_ficheValid="STS_SN_IR_Sit2.html" S_intitule="CCF2">
       <d_attributs>
-        <l_SRC S_00="" S_01="" S_02="" />
-        <l_PAR S_00="" S_01="" S_02="" />
-        <l_DEC S_00="" S_01="" S_02="" />
-        <l_OBJ S_00="Description de l'intervention" S_01="Identification de la valeur ajout&#233;e.--Enjeux." S_02="" />
-        <l_TIT S_00="Titre du projet" S_01="Titre du projet" S_02="" />
-        <l_SYN S_00="" S_01="" S_02="" />
-        <l_PB S_00="" S_01="" S_02="" />
-        <l_ORI S_00="" S_01="" S_02="" />
-        <l_CCF S_00="Pr&#233;sentation du support" S_01="Indiquer :-- - description du contexte dans lequel l&#8217;objet du projet va &#234;tre int&#233;gr&#233; ;-- - fonctionnalit&#233;s de cet objet ;-- - caract&#233;ristiques fonctionnelles et techniques." S_02="" />
-        <l_TYP S_00="Typologie" S_01="" S_02="T&#233;l&#233;communication, t&#233;l&#233;phonie et r&#233;seaux t&#233;l&#233;phonique--Informatique, r&#233;seaux et infrastructures--Multim&#233;dia, son et image, radio et t&#233;l&#233;diffusion--Mobilit&#233; et syst&#232;mes embarqu&#233;s--Electronique et informatique m&#233;dicale--Mesure, instrumentation et microsyst&#232;mes--Automatique et robotique" />
-        <l_PRX S_00="" S_01="" S_02="" />
+        <l_SRC S_00="" S_01="" S_02="" S_03="" />
+        <l_PAR S_00="" S_01="" S_02="" S_03="" />
+        <l_DEC S_00="" S_01="" S_02="" S_03="" />
+        <l_OBJ S_00="Description de l'intervention" S_01="Identification de la valeur ajout&#233;e.--Enjeux." S_02="" S_03="" />
+        <l_TIT S_00="Titre du projet" S_01="Titre du projet" S_02="" S_03="" />
+        <l_SYN S_00="" S_01="" S_02="" S_03="" />
+        <l_PB S_00="" S_01="" S_02="" S_03="" />
+        <l_ORI S_00="" S_01="" S_02="" S_03="" />
+        <l_CCF S_00="Pr&#233;sentation du support" S_01="Indiquer :-- - description du contexte dans lequel l&#8217;objet du projet va &#234;tre int&#233;gr&#233; ;-- - fonctionnalit&#233;s de cet objet ;-- - caract&#233;ristiques fonctionnelles et techniques." S_02="" S_03="" />
+        <l_TYP S_00="Typologie" S_01="" S_02="T&#233;l&#233;communication, t&#233;l&#233;phonie et r&#233;seaux t&#233;l&#233;phonique--Informatique, r&#233;seaux et infrastructures--Multim&#233;dia, son et image, radio et t&#233;l&#233;diffusion--Mobilit&#233; et syst&#232;mes embarqu&#233;s--Electronique et informatique m&#233;dicale--Mesure, instrumentation et microsyst&#232;mes--Automatique et robotique" S_03="" />
+        <l_PRX S_00="" S_01="" S_02="" S_03="" />
       </d_attributs>
       <d_cellulesInfo>
         <d_S2>
@@ -1543,17 +1543,17 @@
     </Projet_CCF2>
     <Projet_PRJ I_duree="50" I_maxEleves="5" I_minEleves="3" S_code="PRJ" S_ficheValid="STS_SN_IR_Sit1.html" S_intitule="Projet de fin d'ann&#233;e">
       <d_attributs>
-        <l_SRC S_00="" S_01="" S_02="" />
-        <l_PAR S_00="" S_01="" S_02="" />
-        <l_DEC S_00="" S_01="" S_02="" />
-        <l_OBJ S_00="Description de l'intervention" S_01="Identification de la valeur ajout&#233;e.--Enjeux." S_02="" />
-        <l_TIT S_00="Titre du projet" S_01="Titre du projet" S_02="" />
-        <l_SYN S_00="" S_01="" S_02="" />
-        <l_PB S_00="" S_01="" S_02="" />
-        <l_ORI S_00="" S_01="" S_02="" />
-        <l_CCF S_00="Pr&#233;sentation du support" S_01="Indiquer :-- - description du contexte dans lequel l&#8217;objet du projet va &#234;tre int&#233;gr&#233; ;-- - fonctionnalit&#233;s de cet objet ;-- - caract&#233;ristiques fonctionnelles et techniques." S_02="" />
-        <l_TYP S_00="Typologie" S_01="" S_02="T&#233;l&#233;communication, t&#233;l&#233;phonie et r&#233;seaux t&#233;l&#233;phonique--Informatique, r&#233;seaux et infrastructures--Multim&#233;dia, son et image, radio et t&#233;l&#233;diffusion--Mobilit&#233; et syst&#232;mes embarqu&#233;s--Electronique et informatique m&#233;dicale--Mesure, instrumentation et microsyst&#232;mes--Automatique et robotique" />
-        <l_PRX S_00="" S_01="" S_02="" />
+        <l_SRC S_00="" S_01="" S_02="" S_03="" />
+        <l_PAR S_00="" S_01="" S_02="" S_03="" />
+        <l_DEC S_00="" S_01="" S_02="" S_03="" />
+        <l_OBJ S_00="Description de l'intervention" S_01="Identification de la valeur ajout&#233;e.--Enjeux." S_02="" S_03="" />
+        <l_TIT S_00="Titre du projet" S_01="Titre du projet" S_02="" S_03="" />
+        <l_SYN S_00="" S_01="" S_02="" S_03="" />
+        <l_PB S_00="" S_01="" S_02="" S_03="" />
+        <l_ORI S_00="" S_01="" S_02="" S_03="" />
+        <l_CCF S_00="Pr&#233;sentation du support" S_01="Indiquer :-- - description du contexte dans lequel l&#8217;objet du projet va &#234;tre int&#233;gr&#233; ;-- - fonctionnalit&#233;s de cet objet ;-- - caract&#233;ristiques fonctionnelles et techniques." S_02="" S_03="" />
+        <l_TYP S_00="Typologie" S_01="" S_02="T&#233;l&#233;communication, t&#233;l&#233;phonie et r&#233;seaux t&#233;l&#233;phonique--Informatique, r&#233;seaux et infrastructures--Multim&#233;dia, son et image, radio et t&#233;l&#233;diffusion--Mobilit&#233; et syst&#232;mes embarqu&#233;s--Electronique et informatique m&#233;dicale--Mesure, instrumentation et microsyst&#232;mes--Automatique et robotique" S_03="" />
+        <l_PRX S_00="" S_01="" S_02="" S_03="" />
       </d_attributs>
       <d_cellulesInfo>
         <d_C>

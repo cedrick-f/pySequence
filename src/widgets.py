@@ -822,6 +822,144 @@ class VariableCtrl(wx.Panel):
         self.spin.Enable(etat)
         
 
+##################################################################################################################################################################
+#
+#    Des widgets avec un bouton Help
+#
+##################################################################################################################################################################
+
+# Une fenêtre d'aide unique
+FenHelp = None
+
+def GetImgHelp():
+    return wx.ArtProvider_GetBitmap(wx.ART_HELP, wx.ART_MESSAGE_BOX, (16, 16))
+
+def GetIconHelp():
+    return wx.ArtProvider_GetIcon(wx.ART_HELP, wx.ART_FRAME_ICON, (16, 16))
+
+def CloseFenHelp():
+    global FenHelp
+#    print "FenHelp", FenHelp
+    if FenHelp is not None:
+        try:
+            FenHelp.Close()
+        except:
+            print "Erreur Fermeture FenHelp"
+    FenHelp = None
+    
+class BaseGestionFenHelp():
+    def OnButton(self, evt):
+        global FenHelp
+        
+        CloseFenHelp()
+        
+        w = 400
+        ws, hs = wx.ClientDisplayRect()[2:]
+        FenHelp = md_util.MDFrame(wx.GetActiveWindow(), self.titre, self.md, 
+                                  pos = (ws-w, 0), size = (w, hs))
+        FenHelp.SetIcon(GetIconHelp())
+        FenHelp.Bind(wx.EVT_CLOSE, self.OnClose)
+#        print self.titre
+#        print FenHelp.GetBestHeight()
+#        self.Fit()
+#        print self.GetClientSize ()
+        FenHelp.Show()
+        FenHelp.Fit()
+    
+    def MiseAJour(self, titre, md):
+        self.md = md
+        self.titre = titre
+        
+    def OnClose(self, evt):
+        global FenHelp
+        FenHelp = None
+        evt.Skip()
+        
+        
+class StaticBoxButton(wx.StaticBox, BaseGestionFenHelp):
+    def __init__(self, parent, Id, titre, img = None, md = u""):
+        wx.StaticBox.__init__(self, parent, Id, titre)
+        if img == None:
+            img = GetImgHelp()
+        self.md = md
+        self.titre = titre
+        self.bouton = wx.BitmapButton(self, -1, img, style=wx.BORDER_NONE| wx.TAB_TRAVERSAL |wx.WS_EX_TRANSIENT)
+
+        self.Bind(wx.EVT_BUTTON, self.OnButton, self.bouton)
+        
+#        self.bouton = wx.BitmapButton(parent, -1, img)
+        self.Bind(wx.EVT_SIZE, self.OnSize)
+
+
+    def OnSize(self, evt):
+        w, h = self.GetSize()
+        self.bouton.SetPosition((w-22, 2))
+        
+
+    
+        
+        
+import  wx.lib.buttons  as  buttons
+        
+import orthographe
+import md_util
+class TextCtrl_Help(orthographe.STC_ortho, BaseGestionFenHelp):
+    def __init__(self, parent, titre = u"", md = u""):
+        orthographe.STC_ortho.__init__(self, parent, -1)#, u"", style=wx.TE_MULTILINE)
+        img = GetImgHelp()
+        img.SetMaskColour("white")
+        self.bouton = wx.BitmapButton(self, -1, img, style=wx.BORDER_NONE)
+#        self.bouton = buttons.GenBitmapButton(self, -1, img, style=wx.BORDER_NONE)
+        self.bouton.SetBackgroundColour("white")
+        self.bouton.Hide()
+        self.md = md
+        self.titre = titre
+        self.Bind(wx.EVT_ENTER_WINDOW, self.OnEnter)
+        self.Bind(wx.EVT_LEAVE_WINDOW, self.OnLeave)
+        self.Bind(wx.EVT_SIZE, self.OnSize)
+        self.Bind(wx.EVT_BUTTON, self.OnButton, self.bouton)
+        
+        self.bouton.SetCursor(wx.StockCursor(wx.CURSOR_HAND))
+        self.bouton.SetToolTipString(u"Obtenir de l'aide supplémentaire")
+        
+#        self.bouton.Bind(wx.EVT_ENTER_WINDOW, self.OnButtonEnter)
+        self.bouton.Bind(wx.EVT_LEAVE_WINDOW, self.OnButtonLeave)
+    
+    def OnEnter(self, evt):
+        if len(self.md) > 0:
+            self.bouton.Show()
+        evt.Skip()
+
+    def OnLeave(self, evt):
+        w, h = self.GetSize()
+        if evt.x > w-3 or evt.y < 2 or evt.x < 2 or evt.y > h-2:
+            self.bouton.Hide()
+        evt.Skip()
+
+#    def OnButtonEnter(self, evt):
+#        self.bouton.Show()
+#        evt.Skip()
+
+    def OnButtonLeave(self, evt):
+        w, h = self.GetSize()
+        if evt.x > w-3 or evt.y < 2:
+            self.bouton.Hide()
+        evt.Skip()
+        
+    def OnSize(self, evt):
+        w, h = self.GetSize()
+#        print self.md
+#        print w, h , self.GetSize()[0]-self.GetClientSize()[0]
+        if self.GetSize()[0]-self.GetClientSize()[0] > 10 :
+            d = 22 + 15
+        else:
+            d = 22
+        self.bouton.SetPosition((w-d, 2))
+        evt.Skip()
+
+
+
+    
 #############################################################################################################
 def messageErreur(parent, titre, message, icon = wx.ICON_WARNING):
     dlg = wx.MessageDialog(parent, message, titre,

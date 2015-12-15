@@ -130,8 +130,8 @@ class FenetreBilan(wx.Frame):
         self.Bind(wx.EVT_TEXT, self.EvtTextDoss, self.txtDoss)
         hs.Add(self.txtDoss, 1, flag = wx.EXPAND|wx.ALL)
         
-        self.boutonDoss = wx.Button(panel, -1, "+", size = (30, -1))
-        self.boutonDoss.SetToolTipString(u"Ajouter un dossier de recherche")
+        self.boutonDoss = wx.Button(panel, -1, "...", size = (30, -1))
+        self.boutonDoss.SetToolTipString(u"Selectionner un dossier de recherche")
         self.Bind(wx.EVT_BUTTON, self.OnDossier, self.boutonDoss)
         hs.Add(self.boutonDoss, flag = wx.EXPAND|wx.ALL)
         

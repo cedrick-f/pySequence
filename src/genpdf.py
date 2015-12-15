@@ -27,7 +27,7 @@
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 from  constantes import ellipsizer, getAnneeScolaireStr, \
-                        LONG_MAX_PROBLEMATIQUE, ADOBE_VERSION, LONG_MAX_FICHE_VALID, LIMITE_GRAND_PETIT_CARACT
+                        LONG_MAX_PROBLEMATIQUE, LONG_MAX_FICHE_VALID, LIMITE_GRAND_PETIT_CARACT
 import util_path
 import os.path
 #from textwrap import wrap
@@ -491,16 +491,60 @@ def genererGrillePDF(nomFichier, grilles_feuilles):
     # it embeds the Adobe Acrobat Reader
     # as far as HB knows this works only with Windows
     # tested with Python24 and wxPython26 by HB
+
+
+
 import wx
-if wx.Platform == '__WXMSW__':
-    from wx.lib.pdfwin import PDFWindow, get_min_adobe_version
-elif wx.Platform == '__WXMAC__':
-    print "MAC !!"
+
+# Détermination du lecteur de PDF à utiliser
+ADOBE_VERSION = None
+if  wx.PlatformInfo[1] == 'wxMSW':
+    import comtypes.client as cc
+    
+    try:            # Adobe Reader >= 7.0
+        dllpath = cc.GetModule( ('{05BFD3F1-6319-4F30-B752-C7A22889BCC4}', 1, 0) ).typelib_path
+    except:
+        try:        # Adobe Reader 5 or 6
+            dllpath = cc.GetModule( ('{CA8A9783-280D-11CF-A24D-444553540000}', 1, 0) ).typelib_path
+        except:
+            dllpath = r""
+            pass    # Adobe Reader not installed
+    
+    from win32api import GetFileVersionInfo, LOWORD, HIWORD
+    
+    def get_version_number (filename):
+        info = GetFileVersionInfo (filename, "\\")
+        ms = info['FileVersionMS']
+        ls = info['FileVersionLS']
+        return HIWORD (ms), LOWORD (ms), HIWORD (ls), LOWORD (ls)
+    
+    try:
+        ADOBE_VERSION = get_version_number(dllpath)
+    except:
+        ADOBE_VERSION = None
+        
+    print "Version Adobe Reader", ADOBE_VERSION
+
+from wx.lib.pdfwin import get_min_adobe_version
+NOT_USE_ADOBE = ADOBE_VERSION is None or ADOBE_VERSION[:3] == (11, 0, 7) or ADOBE_VERSION[:3] == (11, 0, 8) or get_min_adobe_version() is None
+#NOT_USE_ADOBE = True
+if NOT_USE_ADOBE:
+    from wx.lib.pdfviewer import pdfViewer
+else:
+    from wx.lib.pdfwin import PDFWindow
+
+
+
+#if wx.Platform == '__WXMSW__':
+#    from wx.lib.pdfwin import PDFWindow, get_min_adobe_version
+#elif wx.Platform == '__WXMAC__':
+#    print "MAC !!"
     
 #    from wx.lib.pdfviewer import pdfViewer
 import tempfile
 import shutil
 from PyPDF2 import PdfFileMerger
+
 
 def getPDFViewer():
     return get_min_adobe_version()
@@ -510,22 +554,31 @@ class PdfPanel(wx.Panel):
         wx.Panel.__init__(self, parent, id=-1)
         self.pdf = None
         sizer = wx.BoxSizer(wx.VERTICAL)
-        if ADOBE_VERSION == None:
-            self.pdf = wx.StaticText(self, -1, u"Cette fonctionnalité n'est disponible qu'avec Adobe Acrobat Reader\n"\
-                                                   u"Pour obtenir le dossier de validation, passer par le menu Fichier/Générer le dossier de validation.")
+        
+        if NOT_USE_ADOBE:
+            self.pdf = wx.StaticText(self, -1, u"Cette fonctionnalité n'est disponible qu'avec Adobe Acrobat Reader\n")
+#            from wx.lib.pdfviewer import pdfViewer
+#            self.pdf = pdfViewer( self, wx.NewId(), wx.DefaultPosition,
+#                                wx.DefaultSize, wx.HSCROLL|wx.VSCROLL|wx.SUNKEN_BORDER)
         else:
-            if ADOBE_VERSION[:3] == (11, 0, 7) or ADOBE_VERSION[:3] == (11, 0, 8):
-                self.pdf = wx.StaticText(self, -1, u"Cette fonctionnalité n'est pas compatible Adobe Acrobat Reader version 11.0.07 !!\n\n"\
-                                                   u"Pour visualiser le dossier de validation :\n"\
-                                                   u" - Passer à la version 10.0.09 - si disponible (http://get.adobe.com/fr/reader)\n" \
-                                                   u" - Utiliser la version 11.0.06 (http://www.adobe.com/support/downloads/product.jsp?product=10&platform=Windows)\n" \
-                                                   u" - Utiliser la version 10 (http://get.adobe.com/fr/reader/otherversions)\n" \
-                                                   u" - Générer le fichier .pdf : menu Fichier/Générer le dossier de validation projet")
-            elif get_min_adobe_version() != None:
-                self.pdf = PDFWindow(self, style=wx.SUNKEN_BORDER)
-            else:
-                self.pdf = wx.StaticText(self, -1, u"Cette fonctionnalité n'est disponible qu'avec Adobe Acrobat Reader\n"\
-                                                   u"Pour obtenir le dossier de validation, passer par le menu Fichier/Générer le dossier de validation.")
+            self.pdf = PDFWindow(self, style=wx.SUNKEN_BORDER)
+        
+#        if ADOBE_VERSION == None:
+#            self.pdf = wx.StaticText(self, -1, u"Cette fonctionnalité n'est disponible qu'avec Adobe Acrobat Reader\n"\
+#                                                   u"Pour obtenir le dossier de validation, passer par le menu Fichier/Générer le dossier de validation.")
+#        else:
+#            if ADOBE_VERSION[:3] == (11, 0, 7) or ADOBE_VERSION[:3] == (11, 0, 8):
+#                self.pdf = wx.StaticText(self, -1, u"Cette fonctionnalité n'est pas compatible Adobe Acrobat Reader version 11.0.07 !!\n\n"\
+#                                                   u"Pour visualiser le dossier de validation :\n"\
+#                                                   u" - Passer à la version 10.0.09 - si disponible (http://get.adobe.com/fr/reader)\n" \
+#                                                   u" - Utiliser la version 11.0.06 (http://www.adobe.com/support/downloads/product.jsp?product=10&platform=Windows)\n" \
+#                                                   u" - Utiliser la version 10 (http://get.adobe.com/fr/reader/otherversions)\n" \
+#                                                   u" - Générer le fichier .pdf : menu Fichier/Générer le dossier de validation projet")
+#            elif get_min_adobe_version() != None:
+#                self.pdf = PDFWindow(self, style=wx.SUNKEN_BORDER)
+#            else:
+#                self.pdf = wx.StaticText(self, -1, u"Cette fonctionnalité n'est disponible qu'avec Adobe Acrobat Reader\n"\
+#                                                   u"Pour obtenir le dossier de validation, passer par le menu Fichier/Générer le dossier de validation.")
 #        else:
 #            self.pdf = pdfViewer( self, -1, wx.DefaultPosition,
 #                                wx.DefaultSize, wx.HSCROLL|wx.VSCROLL|wx.SUNKEN_BORDER)
@@ -557,12 +610,15 @@ class PdfPanel(wx.Panel):
         wx.BeginBusyCursor()
         Ok = genererDossierValidation(fichertemp, projet, fenDoc)
         if Ok:
-            try:
-                self.pdf.LoadFile(fichertemp)
-            except:
-                print "ERREUR PDF"
+            if not self.chargerFichierPDF(fichertemp):
                 wx.EndBusyCursor()
                 return
+#            try:
+#                self.pdf.LoadFile(fichertemp)
+#            except:
+#                print "ERREUR PDF"
+#                wx.EndBusyCursor()
+#                return
             
         if True:#get_min_adobe_version() != None:
             try:
@@ -583,11 +639,32 @@ class PdfPanel(wx.Panel):
         
     def chargerFichierPDF(self, nomFichier):
         if isinstance(self.pdf, wx.StaticText):
-#        if get_min_adobe_version() == None:
-            print "Problème version Adobe"
             return
         
-        self.pdf.LoadFile(nomFichier)
+        if NOT_USE_ADOBE:
+            try:
+                self.pdf.LoadFile(nomFichier)
+            except:
+                print "ERREUR pdfViewer", self.pdf
+        else:
+            try:
+                self.pdf.LoadFile(nomFichier)
+            except:
+                print "ERREUR PDFWindow", self.pdf
+   
+   
+#from pgmagick import Image
+#im = Image('D:\\Developpement\\pysequence\\BO\\SSI\\candidats-individuels.pdf')     
+#im.write('D:\\Developpement\\pysequence\\BO\\SSI\\candidats-individuels.png')    
+#        
+#        if isinstance(self.pdf, wx.StaticText):
+##        if get_min_adobe_version() == None:\
+#            print "Problème version Adobe"
+#            return
+#        try:
+#            self.pdf.LoadFile(nomFichier)
+#        except:
+#            print "ERREUR PDF", self.pdf
         
         
 #    def OnOpenButton(self, event):

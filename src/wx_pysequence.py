@@ -285,6 +285,7 @@ except ImportError:
 from widgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_ENTIER_POS, \
                     messageErreur, getNomFichier, pourCent2, testRel, \
                     rallonge, remplaceCode2LF, \
+                    StaticBoxButton, TextCtrl_Help, CloseFenHelp, \
                     remplaceLF2Code, dansRectangle, messageInfo, messageYesNo#, chronometrer
 
 import Options
@@ -331,7 +332,7 @@ import functools
 import pyperclip
 
 
-
+import md_util
 
 
 if sys.platform == "win32" :
@@ -910,8 +911,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
         file_menu.Append(19, u"&Générer le dossier de validation projet\tAlt+V")
         
-        if sys.platform == "win32":
-            file_menu.Append(18, u"&Générer une Synthése pédagogique\tCtrl+B")
+        
         
         file_menu.AppendSeparator()
         file_menu.Append(wx.ID_EXIT, u"&Quitter\tCtrl+Q")
@@ -920,12 +920,18 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
         tool_menu = wx.Menu()
         
+        if sys.platform == "win32":
+            tool_menu.Append(18, u"&Générer une Synthése pédagogique\tCtrl+B")
+            tool_menu.AppendSeparator()
+        
         if sys.platform == "win32" and util_path.INSTALL_PATH != None:
     #        tool_menu.Append(31, u"Options")
             self.menuReg = tool_menu.Append(32, u"a")
             self.MiseAJourMenu()
         self.menuRep = tool_menu.Append(33, u"Ouvrir et réparer un fichier")
 
+        self.tool_menu = tool_menu
+        
         help_menu = wx.Menu()
         help_menu.Append(21, u"&Aide en ligne\tF1")
         help_menu.AppendSeparator()
@@ -1282,13 +1288,13 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                 self.Bind(wx.EVT_TOOL, fenDoc.sequence.AjouterSysteme,  id=61)
     
             if fenDoc.typ == "prj":
-                self.file_menu.Enable(18, True)
+                self.tool_menu.Enable(18, True)
                 self.file_menu.Enable(17, True)
                 self.file_menu.Enable(19, True)
                 self.file_menu.Enable(20, True)
                 
             elif fenDoc.typ == "seq":
-                self.file_menu.Enable(18, True)
+                self.tool_menu.Enable(18, True)
                 self.file_menu.Enable(17, False)
                 self.file_menu.Enable(19, False)
                 self.file_menu.Enable(20, False)
@@ -3329,7 +3335,7 @@ class PanelPropriete_Sequence(PanelPropriete):
         self.sizer.Add(sb, (1,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 2)
         position.Bind(wx.EVT_SCROLL_CHANGED, self.onChanged)
         
-        self.MiseAJourTypeEnseignement()
+        self.MiseAJourTypeEnseignement() # Permet de créer les Checkbox "Domaine"
         
         self.sizer.Layout()
 #        wx.CallAfter(self.Layout)
@@ -3483,12 +3489,13 @@ class PanelPropriete_Projet(PanelPropriete):
                 return np
         
     #############################################################################            
-    def creerPageSimple(self, fct):
+    def creerPageSimple(self, fct, titre = u"", helpText = u""):
         bg_color = self.Parent.GetBackgroundColour()
         page = PanelPropriete(self.nb)
         page.SetBackgroundColour(bg_color)
         self.nb.AddPage(page, u"")
-        ctrl = orthographe.STC_ortho(page, -1)#, u"", style=wx.TE_MULTILINE)
+#        ctrl = orthographe.STC_ortho(page, -1)#, u"", style=wx.TE_MULTILINE)
+        ctrl = TextCtrl_Help(page, titre, helpText)
         page.Bind(stc.EVT_STC_MODIFIED, fct, ctrl)
 #        page.Bind(wx.EVT_TEXT, fct, ctrl)
         page.sizer.Add(ctrl, (0,0), flag = wx.EXPAND)
@@ -3519,13 +3526,13 @@ class PanelPropriete_Projet(PanelPropriete):
         #
         self.titre = wx.StaticBox(pageGen, -1, u"")
         sb = wx.StaticBoxSizer(self.titre)
-        textctrl = wx.TextCtrl(pageGen, -1, u"", style=wx.TE_MULTILINE)
+        textctrl = TextCtrl_Help(pageGen, u"")
         sb.Add(textctrl, 1, flag = wx.EXPAND)
         self.textctrl = textctrl
         pageGen.sizer.Add(sb, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.EXPAND, border = 2)
 #        pageGen.Bind(stc.EVT_STC_MODIFIED, self.EvtText)
         pageGen.Bind(wx.EVT_TEXT, self.EvtText, textctrl)
-        
+
         
         #
         # Problématique (PB)
@@ -3533,7 +3540,7 @@ class PanelPropriete_Projet(PanelPropriete):
         self.tit_pb = wx.StaticBox(pageGen, -1, u"")
         sb = wx.StaticBoxSizer(self.tit_pb)
 #        self.commctrl = wx.TextCtrl(pageGen, -1, u"", style=wx.TE_MULTILINE)
-        self.commctrl = orthographe.STC_ortho(pageGen, -1)
+        self.commctrl = TextCtrl_Help(pageGen, u"")
         sb.Add(self.commctrl, 1, flag = wx.EXPAND)
         pageGen.sizer.Add(sb, (0,1), (2,1),  flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.EXPAND, border = 2)
 #        pageGen.Bind(wx.EVT_TEXT, self.EvtText, self.commctrl)
@@ -3621,7 +3628,8 @@ class PanelPropriete_Projet(PanelPropriete):
 #        self.pageProd.sizer.AddGrowableRow(0)  
 #        self.pageProd.sizer.Layout()
     
-    
+        
+        
     #############################################################################            
     def getBitmapPeriode(self, larg):
 #        print "getBitmapPeriode"
@@ -3761,7 +3769,7 @@ class PanelPropriete_Projet(PanelPropriete):
             if index in self.projet.typologie:
                 self.projet.typologie.remove(index)
 #        self.lb.SetSelection(index)    # so that (un)checking also selects (moves the highlight)
-        print "typologie", self.projet.typologie
+#        print "typologie", self.projet.typologie
         
             
     #############################################################################            
@@ -3770,13 +3778,16 @@ class PanelPropriete_Projet(PanelPropriete):
         ref = self.projet.GetProjetRef()
 #        print "MiseAJourTypeEnseignement", ref.code
         
+        CloseFenHelp()
         
         #
         # Page "Généralités"
         #
         self.titre.SetLabel(ref.attributs['TIT'][0])
+        self.textctrl.MiseAJour(ref.attributs['TIT'][0], ref.attributs['TIT'][3])
         
         self.tit_pb.SetLabel(ref.attributs['PB'][0])
+        self.commctrl.MiseAJour(ref.attributs['PB'][0], ref.attributs['PB'][3])
         self.commctrl.SetToolTipString(ref.attributs['PB'][1] + constantes.TIP_PB_LIMITE)
         
         self.MiseAJourPosition()
@@ -3789,7 +3800,9 @@ class PanelPropriete_Projet(PanelPropriete):
         for k in ['ORI', 'CCF', 'OBJ', 'SYN']:
             if ref.attributs[k][0] != u"":
                 if not k in self.pages.keys():
-                    self.pages[k] = self.creerPageSimple(self.EvtText)
+                    self.pages[k] = self.creerPageSimple(self.EvtText,ref.attributs[k][0],  ref.attributs[k][3])
+                else:
+                    self.pages[k][1].MiseAJour(ref.attributs[k][0], ref.attributs[k][3])
                 self.nb.SetPageText(self.GetPageNum(self.pages[k][0]), ref.attributs[k][0])
                 self.pages[k][1].SetToolTipString(ref.attributs[k][1])
             else:
@@ -3823,7 +3836,7 @@ class PanelPropriete_Projet(PanelPropriete):
                 titreInt = wx.StaticBox(self.pages['DEC'], -1, u"Intitulés des différentes parties")
                 sb = wx.StaticBoxSizer(titreInt)
                 
-                self.intctrl = orthographe.STC_ortho(self.pages['DEC'], -1)#, u"", style=wx.TE_MULTILINE)
+                self.intctrl = TextCtrl_Help(self.pages['DEC'], u"", ref.attributs['DEC'][1])#, u"", style=wx.TE_MULTILINE)
                 self.intctrl.SetToolTipString(u"Intitulés des parties du projet confiées à chaque groupe.\n" \
                                               u"Les groupes d'élèves sont désignés par des lettres (A, B, C, ...)\n" \
                                               u"et leur effectif est indiqué.")
@@ -3834,7 +3847,7 @@ class PanelPropriete_Projet(PanelPropriete):
                 
                 titreInt = wx.StaticBox(self.pages['DEC'], -1, u"Enoncés du besoin des différentes parties du projet")
                 sb = wx.StaticBoxSizer(titreInt)
-                self.enonctrl = orthographe.STC_ortho(self.pages['DEC'], -1)#, u"", style=wx.TE_MULTILINE)
+                self.enonctrl = TextCtrl_Help(self.pages['DEC'], u"", ref.attributs['DEC'][3])#, u"", style=wx.TE_MULTILINE)
                 self.enonctrl.SetToolTipString(u"Enoncés du besoin des parties du projet confiées à chaque groupe")
 #                self.pages['DEC'].Bind(wx.EVT_TEXT, self.EvtText, self.enonctrl)
                 self.pages['DEC'].Bind(stc.EVT_STC_MODIFIED, self.EvtText, self.enonctrl)
@@ -3844,7 +3857,10 @@ class PanelPropriete_Projet(PanelPropriete):
                 self.pages['DEC'].sizer.AddGrowableCol(1)
                 self.pages['DEC'].sizer.AddGrowableRow(1)  
                 self.pages['DEC'].sizer.Layout()
-                
+            else:
+#                print "MiseAJour :", ref.attributs['DEC'][1]
+                self.intctrl.MiseAJour(u"", ref.attributs['DEC'][1])
+                self.enonctrl.MiseAJour(u"", ref.attributs['DEC'][3])
         else:
             if 'DEC' in self.pages.keys():
                 self.nb.DeletePage(self.GetPageNum(self.pages['DEC']))
@@ -8039,6 +8055,8 @@ class ArbreDoc(CT.CustomTreeCtrl):
         """ Fonction appelée lorsque la selection a été changée dans l'arbre
         
         """
+        CloseFenHelp()
+        
         self.item = event.GetItem()
         data = self.GetItemPyData(self.item)
         

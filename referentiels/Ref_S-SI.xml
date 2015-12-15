@@ -912,17 +912,17 @@
   <d_projets>
     <Projet_PRJ I_duree="70" I_maxEleves="5" I_minEleves="3" S_code="PRJ" S_ficheValid="" S_intitule="Projet de fin d'ann&#233;e">
       <d_attributs>
-        <l_SRC S_00="" S_01="" S_02="" />
-        <l_PAR S_00="" S_01="" S_02="" />
-        <l_DEC S_00="D&#233;coupage du projet" S_01="" S_02="" />
-        <l_OBJ S_00="Production finale attendue" S_01="Indiquer :-- - documents de formalisation des solutions propos&#233;es ;-- - sous-ensemble fonctionnel d&#8217;un prototype, &#233;l&#233;ments d&#8217;une maquette r&#233;elle ou virtuelle ;-- - supports de communication." S_02="" />
-        <l_TIT S_00="Intitul&#233; du projet" S_01="Intitul&#233; du projet" S_02="" />
-        <l_SYN S_00="" S_01="" S_02="" />
-        <l_PB S_00="Probl&#233;matique - &#201;nonc&#233; g&#233;n&#233;ral du besoin" S_01="Indiquer :-- - description du contexte dans lequel l&#8217;objet du projet va &#234;tre int&#233;gr&#233; ;-- - fonctionnalit&#233;s de cet objet ;-- - caract&#233;ristiques fonctionnelles et techniques." S_02="" />
-        <l_ORI S_00="Origine" S_01="Partenariat, th&#233;matique, concours&#8230;" S_02="" />
-        <l_CCF S_00="Contraintes impos&#233;es" S_01="Indiquer :-- - co&#251;t maximal ;-- - nature d&#8217;une ou des solutions techniques ou de familles de mat&#233;riels, de constituants ou de composants ;-- - environnement." S_02="" />
-        <l_TYP S_00="" S_01="" S_02="" />
-        <l_PRX S_00="" S_01="" S_02="" />
+        <l_SRC S_00="" S_01="" S_02="" S_03="" />
+        <l_PAR S_00="" S_01="" S_02="" S_03="" />
+        <l_DEC S_00="D&#233;coupage du projet" S_01="" S_02="" S_03="" />
+        <l_OBJ S_00="Production finale attendue" S_01="Indiquer :-- - documents de formalisation des solutions propos&#233;es ;-- - sous-ensemble fonctionnel d&#8217;un prototype, &#233;l&#233;ments d&#8217;une maquette r&#233;elle ou virtuelle ;-- - supports de communication." S_02="" S_03="" />
+        <l_TIT S_00="Intitul&#233; du projet" S_01="Intitul&#233; du projet" S_02="" S_03="" />
+        <l_SYN S_00="" S_01="" S_02="" S_03="" />
+        <l_PB S_00="Probl&#233;matique - &#201;nonc&#233; g&#233;n&#233;ral du besoin" S_01="Indiquer :-- - description du contexte dans lequel l&#8217;objet du projet va &#234;tre int&#233;gr&#233; ;-- - fonctionnalit&#233;s de cet objet ;-- - caract&#233;ristiques fonctionnelles et techniques." S_02="" S_03="" />
+        <l_ORI S_00="Origine" S_01="Partenariat, th&#233;matique, concours&#8230;" S_02="" S_03="" />
+        <l_CCF S_00="Contraintes impos&#233;es" S_01="Indiquer :-- - co&#251;t maximal ;-- - nature d&#8217;une ou des solutions techniques ou de familles de mat&#233;riels, de constituants ou de composants ;-- - environnement." S_02="" S_03="" />
+        <l_TYP S_00="" S_01="" S_02="" S_03="" />
+        <l_PRX S_00="" S_01="" S_02="" S_03="" />
       </d_attributs>
       <d_cellulesInfo>
         <d_C>

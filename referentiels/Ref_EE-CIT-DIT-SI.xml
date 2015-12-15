@@ -1091,17 +1091,17 @@
   <d_projets>
     <Projet_PRJ1 I_duree="12" I_maxEleves="5" I_minEleves="3" S_code="PRJ1" S_ficheValid="STS-EE _ Dossier projet.html" S_intitule="Projet d&#233;but d'ann&#233;e">
       <d_attributs>
-        <l_SRC S_00="Source de financement" S_01="" S_02="" />
-        <l_PAR S_00="Partenaires du projet" S_01="" S_02="" />
-        <l_DEC S_00="" S_01="" S_02="" />
-        <l_OBJ S_00="Objectif" S_01="Identification de la valeur ajout&#233;e.--Enjeux." S_02="" />
-        <l_TIT S_00="Titre du projet" S_01="Titre du projet" S_02="" />
-        <l_SYN S_00="Synoptique" S_01="&#8226; Identification des proc&#233;d&#233;s et de leurs agencements.--&#8226; Description du ou des processus." S_02="" />
-        <l_PB S_00="Pr&#233;sentation du projet" S_01="Indiquer :-- - description du contexte dans lequel l&#8217;objet du projet va &#234;tre int&#233;gr&#233; ;-- - fonctionnalit&#233;s de cet objet ;-- - caract&#233;ristiques fonctionnelles et techniques." S_02="" />
-        <l_ORI S_00="" S_01="" S_02="" />
-        <l_CCF S_00="Cahier des charges" S_01="" S_02="" />
-        <l_TYP S_00="Typologie" S_01="" S_02="Construction ou r&#233;novation d'un syst&#232;me inclus dans une cha&#238;ne de fabrication.--Construction ou r&#233;novation d'une machine de production.--Conception ou modification d'une installation &#233;lectrique d'une infrastructure.--Conception ou modification d'une installation &#233;lectrique d'un b&#226;timent tertiaire ou industriel.--Conception ou am&#233;lioration d'un produit de consommation.--&#201;laboration ou am&#233;lioration de services." />
-        <l_PRX S_00="Montant estim&#233; du projet" S_01="" S_02="" />
+        <l_SRC S_00="Source de financement" S_01="" S_02="" S_03="" />
+        <l_PAR S_00="Partenaires du projet" S_01="" S_02="" S_03="" />
+        <l_DEC S_00="" S_01="" S_02="" S_03="" />
+        <l_OBJ S_00="Objectif" S_01="Identification de la valeur ajout&#233;e.--Enjeux." S_02="" S_03="" />
+        <l_TIT S_00="Titre du projet" S_01="Titre du projet" S_02="" S_03="" />
+        <l_SYN S_00="Synoptique" S_01="&#8226; Identification des proc&#233;d&#233;s et de leurs agencements.--&#8226; Description du ou des processus." S_02="" S_03="" />
+        <l_PB S_00="Pr&#233;sentation du projet" S_01="Indiquer :-- - description du contexte dans lequel l&#8217;objet du projet va &#234;tre int&#233;gr&#233; ;-- - fonctionnalit&#233;s de cet objet ;-- - caract&#233;ristiques fonctionnelles et techniques." S_02="" S_03="" />
+        <l_ORI S_00="" S_01="" S_02="" S_03="" />
+        <l_CCF S_00="Cahier des charges" S_01="" S_02="" S_03="" />
+        <l_TYP S_00="Typologie" S_01="" S_02="Construction ou r&#233;novation d'un syst&#232;me inclus dans une cha&#238;ne de fabrication.--Construction ou r&#233;novation d'une machine de production.--Conception ou modification d'une installation &#233;lectrique d'une infrastructure.--Conception ou modification d'une installation &#233;lectrique d'un b&#226;timent tertiaire ou industriel.--Conception ou am&#233;lioration d'un produit de consommation.--&#201;laboration ou am&#233;lioration de services." S_03="" />
+        <l_PRX S_00="Montant estim&#233; du projet" S_01="" S_02="" S_03="" />
       </d_attributs>
       <d_cellulesInfo>
         <d_S1>
@@ -1169,17 +1169,17 @@
     </Projet_PRJ1>
     <Projet_PRJ2 I_duree="12" I_maxEleves="5" I_minEleves="3" S_code="PRJ2" S_ficheValid="STS-EE _ Dossier projet.html" S_intitule="Projet">
       <d_attributs>
-        <l_SRC S_00="Source de financement" S_01="" S_02="" />
-        <l_PAR S_00="Partenaires du projet" S_01="" S_02="" />
-        <l_DEC S_00="" S_01="" S_02="" />
-        <l_OBJ S_00="Objectif" S_01="Identification de la valeur ajout&#233;e.--Enjeux." S_02="" />
-        <l_TIT S_00="Titre du projet" S_01="Titre du projet" S_02="" />
-        <l_SYN S_00="Synoptique" S_01="&#8226; Identification des proc&#233;d&#233;s et de leurs agencements.--&#8226; Description du ou des processus." S_02="" />
-        <l_PB S_00="Pr&#233;sentation du projet" S_01="Indiquer :-- - description du contexte dans lequel l&#8217;objet du projet va &#234;tre int&#233;gr&#233; ;-- - fonctionnalit&#233;s de cet objet ;-- - caract&#233;ristiques fonctionnelles et techniques." S_02="" />
-        <l_ORI S_00="" S_01="" S_02="" />
-        <l_CCF S_00="Cahier des charges" S_01="" S_02="" />
-        <l_TYP S_00="Typologie" S_01="" S_02="Construction ou r&#233;novation d'un syst&#232;me inclus dans une cha&#238;ne de fabrication.--Construction ou r&#233;novation d'une machine de production.--Conception ou modification d'une installation &#233;lectrique d'une infrastructure.--Conception ou modification d'une installation &#233;lectrique d'un b&#226;timent tertiaire ou industriel.--Conception ou am&#233;lioration d'un produit de consommation.--&#201;laboration ou am&#233;lioration de services." />
-        <l_PRX S_00="Montant estim&#233; du projet" S_01="" S_02="" />
+        <l_SRC S_00="Source de financement" S_01="" S_02="" S_03="" />
+        <l_PAR S_00="Partenaires du projet" S_01="" S_02="" S_03="" />
+        <l_DEC S_00="" S_01="" S_02="" S_03="" />
+        <l_OBJ S_00="Objectif" S_01="Identification de la valeur ajout&#233;e.--Enjeux." S_02="" S_03="" />
+        <l_TIT S_00="Titre du projet" S_01="Titre du projet" S_02="" S_03="" />
+        <l_SYN S_00="Synoptique" S_01="&#8226; Identification des proc&#233;d&#233;s et de leurs agencements.--&#8226; Description du ou des processus." S_02="" S_03="" />
+        <l_PB S_00="Pr&#233;sentation du projet" S_01="Indiquer :-- - description du contexte dans lequel l&#8217;objet du projet va &#234;tre int&#233;gr&#233; ;-- - fonctionnalit&#233;s de cet objet ;-- - caract&#233;ristiques fonctionnelles et techniques." S_02="" S_03="" />
+        <l_ORI S_00="" S_01="" S_02="" S_03="" />
+        <l_CCF S_00="Cahier des charges" S_01="" S_02="" S_03="" />
+        <l_TYP S_00="Typologie" S_01="" S_02="Construction ou r&#233;novation d'un syst&#232;me inclus dans une cha&#238;ne de fabrication.--Construction ou r&#233;novation d'une machine de production.--Conception ou modification d'une installation &#233;lectrique d'une infrastructure.--Conception ou modification d'une installation &#233;lectrique d'un b&#226;timent tertiaire ou industriel.--Conception ou am&#233;lioration d'un produit de consommation.--&#201;laboration ou am&#233;lioration de services." S_03="" />
+        <l_PRX S_00="Montant estim&#233; du projet" S_01="" S_02="" S_03="" />
       </d_attributs>
       <d_cellulesInfo>
         <d_C>
@@ -1247,17 +1247,17 @@
     </Projet_PRJ2>
     <Projet_PRJ3 I_duree="50" I_maxEleves="5" I_minEleves="3" S_code="PRJ3" S_ficheValid="STS-EE _ Dossier projet.html" S_intitule="Projet de fin d'ann&#233;e">
       <d_attributs>
-        <l_SRC S_00="Source de financement" S_01="" S_02="" />
-        <l_PAR S_00="Partenaires du projet" S_01="" S_02="" />
-        <l_DEC S_00="" S_01="" S_02="" />
-        <l_OBJ S_00="Objectif" S_01="Identification de la valeur ajout&#233;e.--Enjeux." S_02="" />
-        <l_TIT S_00="Titre du projet" S_01="Titre du projet" S_02="" />
-        <l_SYN S_00="Synoptique" S_01="&#8226; Identification des proc&#233;d&#233;s et de leurs agencements.--&#8226; Description du ou des processus." S_02="" />
-        <l_PB S_00="Pr&#233;sentation du projet" S_01="Indiquer :-- - description du contexte dans lequel l&#8217;objet du projet va &#234;tre int&#233;gr&#233; ;-- - fonctionnalit&#233;s de cet objet ;-- - caract&#233;ristiques fonctionnelles et techniques." S_02="" />
-        <l_ORI S_00="" S_01="" S_02="" />
-        <l_CCF S_00="Cahier des charges" S_01="" S_02="" />
-        <l_TYP S_00="Typologie" S_01="" S_02="Construction ou r&#233;novation d'un syst&#232;me inclus dans une cha&#238;ne de fabrication.--Construction ou r&#233;novation d'une machine de production.--Conception ou modification d'une installation &#233;lectrique d'une infrastructure.--Conception ou modification d'une installation &#233;lectrique d'un b&#226;timent tertiaire ou industriel.--Conception ou am&#233;lioration d'un produit de consommation.--&#201;laboration ou am&#233;lioration de services." />
-        <l_PRX S_00="Montant estim&#233; du projet" S_01="" S_02="" />
+        <l_SRC S_00="Source de financement" S_01="" S_02="" S_03="" />
+        <l_PAR S_00="Partenaires du projet" S_01="" S_02="" S_03="" />
+        <l_DEC S_00="" S_01="" S_02="" S_03="" />
+        <l_OBJ S_00="Objectif" S_01="Identification de la valeur ajout&#233;e.--Enjeux." S_02="" S_03="" />
+        <l_TIT S_00="Titre du projet" S_01="Titre du projet" S_02="" S_03="" />
+        <l_SYN S_00="Synoptique" S_01="&#8226; Identification des proc&#233;d&#233;s et de leurs agencements.--&#8226; Description du ou des processus." S_02="" S_03="" />
+        <l_PB S_00="Pr&#233;sentation du projet" S_01="Indiquer :-- - description du contexte dans lequel l&#8217;objet du projet va &#234;tre int&#233;gr&#233; ;-- - fonctionnalit&#233;s de cet objet ;-- - caract&#233;ristiques fonctionnelles et techniques." S_02="" S_03="" />
+        <l_ORI S_00="" S_01="" S_02="" S_03="" />
+        <l_CCF S_00="Cahier des charges" S_01="" S_02="" S_03="" />
+        <l_TYP S_00="Typologie" S_01="" S_02="Construction ou r&#233;novation d'un syst&#232;me inclus dans une cha&#238;ne de fabrication.--Construction ou r&#233;novation d'une machine de production.--Conception ou modification d'une installation &#233;lectrique d'une infrastructure.--Conception ou modification d'une installation &#233;lectrique d'un b&#226;timent tertiaire ou industriel.--Conception ou am&#233;lioration d'un produit de consommation.--&#201;laboration ou am&#233;lioration de services." S_03="" />
+        <l_PRX S_00="Montant estim&#233; du projet" S_01="" S_02="" S_03="" />
       </d_attributs>
       <d_cellulesInfo>
         <d_S2>

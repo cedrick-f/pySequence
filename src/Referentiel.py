@@ -805,8 +805,11 @@ class Referentiel(XMLelem):
 #            print p.listeParties, p.parties
             if len(p.listeParties) <> len(p.parties):
                 p.listeParties = p.parties.keys()
-            p.corrigerVersion(nomerr)
+            p.corrigerVersion(nomerr, self.Code)
 #            print p.listeParties, p.parties
+        
+        
+        
         
         return
         
@@ -1629,7 +1632,7 @@ class Projet(XMLelem):
         return self.code + " : " + self.intitule + u" (" + str(self.duree) + u"h)"
 
     ######################################################################################
-    def corrigerVersion(self, nomerr):
+    def corrigerVersion(self, nomerr, codeRef):
         """ Correction d'erreur de lecture de la branche XML
             pour cause de changement de version
         """
@@ -1638,6 +1641,17 @@ class Projet(XMLelem):
             self.maxEleves = 5
         if "I_minEleves" in nomerr:
             self.minEleves = 3
+            
+        # A partir de la version 6.2 => nouvel attribut "Aide
+#        print "Corriger", self.attributs
+        for k, l in self.attributs.items():
+            if len(l) == 3:
+#                print "Corriger", k, l
+                l.append(REFERENTIELS[codeRef].projets[self.code].attributs[k][3])
+                if k == "DEC":
+                    l[1] = REFERENTIELS[codeRef].projets[self.code].attributs[k][1]
+#                print "  >>", l
+        
         
     #########################################################################
     def getNbrRevuesDefaut(self):
@@ -1753,7 +1767,11 @@ class Projet(XMLelem):
         if shp.nrows > 16:
             self.ficheValid = shp.cell(16,0).value
         for l in range(2, 13):
-            self.attributs[str(shp.cell(l,0).value)] = [shp.cell(l,1).value, shp.cell(l,2).value, shp.cell(l,3).value]
+            try:
+                aide = shp.cell(l,4).value
+            except:
+                aide = u""
+            self.attributs[str(shp.cell(l,0).value)] = [shp.cell(l,1).value, shp.cell(l,2).value, shp.cell(l,3).value, aide]
                             
 
 
