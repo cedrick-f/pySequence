@@ -5104,7 +5104,8 @@ class PanelPropriete_CI(PanelPropriete):
             
             b = wx.ToggleButton(self, -1, "")
             b.SetValue(self.CI.max2CI)
-            b.SetBitmap(images.Bouton_2CI.GetBitmap())
+            if hasattr(b, 'SetBitmap'): # wxpython 3.0
+                b.SetBitmap(images.Bouton_2CI.GetBitmap())
             b.SetToolTipString(u"Limite à 2 le nombre de "+abrevCI+" sélectionnables")
             self.sizer.Add(b, (1,2), flag = wx.ALL, border = 2)
 #            b.SetSize((30,30)) # adjust default size for the bitmap
