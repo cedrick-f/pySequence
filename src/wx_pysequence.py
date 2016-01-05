@@ -5395,7 +5395,7 @@ class Panel_Cible(wx.Panel):
                 
         if appuyer:
             for i, b in enumerate(self.bouton):
-                if hasattr(b, _SetState):
+                if hasattr(b, '_SetState'):
                     if i in self.CI.numCI:
                         b._SetState(platebtn.PLATE_PRESSED)
                     else:
@@ -5761,7 +5761,7 @@ class PanelPropriete_Savoirs(PanelPropriete):
         self.prerequis = prerequis
         PanelPropriete.__init__(self, parent)
         
-        self.nb = wx.Notebook(self, -1,  style= wx.BK_DEFAULT)
+        self.nb = wx.Notebook(self, -1, size = (21,21), style= wx.BK_DEFAULT)
         
         # Liste des numéros de pages attribués é
         # 0 : savoirs spécifiques de l'enseignement
