@@ -5777,10 +5777,11 @@ class PanelPropriete_Savoirs(PanelPropriete):
         self.pageSavoirM    = self.CreerPage()
         self.pageSavoirP    = self.CreerPage()
             
-        self.sizer.Add(self.nb, (0,1), (2,1), flag = wx.ALL|wx.ALIGN_RIGHT|wx.EXPAND, border = 1)
-        
+            
+#        self.sizer.Add(self.nb, (0,1), (2,1), flag = wx.ALL|wx.ALIGN_RIGHT|wx.EXPAND, border = 1)
+        self.sizer.Add(self.nb, (0,0), flag = wx.EXPAND)
         self.sizer.AddGrowableRow(0)
-        self.sizer.AddGrowableCol(1)
+        self.sizer.AddGrowableCol(0)
             
         self.MiseAJourTypeEnseignement()
         
