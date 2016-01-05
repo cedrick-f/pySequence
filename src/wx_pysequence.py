@@ -3218,7 +3218,7 @@ class PanelPropriete(scrolled.ScrolledPanel):
         
         
         self.sizer = wx.GridBagSizer()
-#        self.Hide()  # utilité ?? Commenté au passage à linux v6.2.1
+        self.Hide()  # utilité ?? à priori cause des erreurs au lancement (linux en autres)
 #        self.SetMinSize((400, 200))
         self.SetSizer(self.sizer)
         self.SetAutoLayout(True)
@@ -3227,7 +3227,7 @@ class PanelPropriete(scrolled.ScrolledPanel):
 #        self.EnableScrolling(True, True)
         self.eventAttente = False
         self.Bind(wx.EVT_ENTER_WINDOW, self.OnEnter)
-
+        wx.CallAfter(self.Show)
 
 
     ######################################################################################################
@@ -3298,7 +3298,9 @@ class PanelPropriete_Racine(wx.Panel):
         sizer.Layout()
 #        wx.CallAfter(self.Layout)
         self.Layout()
-
+        
+        wx.CallAfter(self.Show)
+        
 #    def GetNiveau(self):
 #        return 0
      
