@@ -5395,10 +5395,11 @@ class Panel_Cible(wx.Panel):
                 
         if appuyer:
             for i, b in enumerate(self.bouton):
-                if i in self.CI.numCI:
-                    b._SetState(platebtn.PLATE_PRESSED)
-                else:
-                    b._SetState(platebtn.PLATE_NORMAL)
+                if hasattr(b, _SetState):
+                    if i in self.CI.numCI:
+                        b._SetState(platebtn.PLATE_PRESSED)
+                    else:
+                        b._SetState(platebtn.PLATE_NORMAL)
                 b._pressed = i in self.CI.numCI
                 
         self.Parent.GererCases(l, True)    
