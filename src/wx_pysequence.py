@@ -5581,6 +5581,7 @@ class PanelPropriete_Competences(PanelPropriete):
         PanelPropriete.__init__(self, parent)
         
         self.nb = wx.Notebook(self, -1,  size = (21,21), style= wx.BK_DEFAULT)
+        
         pageComp = wx.Panel(self.nb, -1)
         bg_color = self.Parent.GetBackgroundColour()
         pageComp.SetBackgroundColour(bg_color)
@@ -5759,6 +5760,7 @@ class PanelPropriete_Savoirs(PanelPropriete):
         
         self.savoirs = savoirs
         self.prerequis = prerequis
+        
         PanelPropriete.__init__(self, parent)
         
         self.nb = wx.Notebook(self, -1, size = (21,21), style= wx.BK_DEFAULT)
@@ -5770,38 +5772,10 @@ class PanelPropriete_Savoirs(PanelPropriete):
         # 3 : Phys
         self.lstPages = [0,1,2,3]
         
-        
         self.pageSavoir     = self.CreerPage()
         self.pageSavoirSpe  = self.CreerPage()
         self.pageSavoirM    = self.CreerPage()
         self.pageSavoirP    = self.CreerPage()
-        
-#        # Savoirs
-#        pageSavoir = PanelPropriete(nb)
-#        pageSavoir.SetBackgroundColour(bg_color)
-#        self.pageSavoir = pageSavoir
-#        nb.AddPage(pageSavoir, u"")
-#        
-#        
-#        # Savoirs autres
-#        ref = self.GetDocument().GetReferentiel()
-#        if (prerequis and ref.preSavoirs_Math) or (not prerequis and ref.objSavoirs_Math):
-#            # Savoirs Maths
-#            pageSavoirM = PanelPropriete(nb)
-#            pageSavoirM.SetBackgroundColour(bg_color)
-#            self.pageSavoirM = pageSavoirM
-#            nb.AddPage(pageSavoirM, self.GetDocument().GetReferentiel().nomSavoirs_Math)
-#            self.lstPages[2] = nb.GetPageCount()-1
-#            print "page Math" , self.lstPages[2]
-#            
-#        if (prerequis and ref.preSavoirs_Phys) or (not prerequis and ref.objSavoirs_Phys):
-#            # Savoirs Physique
-#            pageSavoirP = PanelPropriete(nb)
-#            pageSavoirP.SetBackgroundColour(bg_color)
-#            self.pageSavoirP = pageSavoirP
-#            nb.AddPage(pageSavoirP, self.GetDocument().GetReferentiel().nomSavoirs_Phys)
-#            self.lstPages[3] = nb.GetPageCount()-1
-#            print "page Phys" , self.lstPages[3]
             
         self.sizer.Add(self.nb, (0,1), (2,1), flag = wx.ALL|wx.ALIGN_RIGHT|wx.EXPAND, border = 1)
         
@@ -5809,7 +5783,8 @@ class PanelPropriete_Savoirs(PanelPropriete):
         self.sizer.AddGrowableCol(1)
             
         self.MiseAJourTypeEnseignement()
-
+        
+        self.Layout()
         
     #############################################################################            
     def GetDocument(self):
