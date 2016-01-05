@@ -10,12 +10,12 @@ source : http://wiki.wxpython.org/CheckInstall
 sudo apt-get install checkinstall
 ```
 
-###Dépendances###
+####Dépendances####
 ```bash
 sudo apt-get install dpkg-dev build-essential swig python2.7-dev libwebkitgtk-dev libjpeg-dev libtiff-dev checkinstall ubuntu-restricted-extras freeglut3 freeglut3-dev libgtk2.0-dev  libsdl1.2-dev libgstreamer-plugins-base0.10-dev 
 ```
 
-###Sources wxPython3.0###
+####Sources wxPython3.0####
 ```bash
 wget http://downloads.sourceforge.net/wxpython/wxPython-src-3.0.2.0.tar.bz2
 tar xvjf wxPython-src-3.0.2.0.tar.bz2
@@ -24,12 +24,12 @@ mkdir bld
 cd wxPython/
 ```
 
-###Compilation###
+####Compilation####
 ```bash
 sudo checkinstall -y --pkgname=wxpython --pkgversion=3.0.2 --pkgrelease=1 --pkglicense=wxWidgets --pkgsource=http://www.wxpython.org/ --maintainer=reingart@gmail.com --requires=python-wxversion,python2.7,python -D  python build-wxpython.py --build_dir=../bld --install
 ```
 
-###Test###
+####Test####
 ```bash
 python
 ```
@@ -42,6 +42,8 @@ Type "help", "copyright", "credits" or "license" for more information.
 '3.0.2.0 gtk2 (classic)'
 ```
 
+Si ça ne fonctionne pas, utiliser wxpython2.8 ...
+
 
 
 
@@ -49,6 +51,9 @@ Type "help", "copyright", "credits" or "license" for more information.
 ```bash
 sudo apt-get install python-wxgtk2.8
 ```
+
+## pip ##
+https://pip.pypa.io/en/stable/installing/
 
 ##xlrd/xlwt##
 source : https://pypi.python.org/pypi/xlrd
