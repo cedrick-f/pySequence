@@ -10250,11 +10250,15 @@ class A_propos(wx.Dialog):
         t = wx.StaticText(descrip, -1,u"",
                           size = (400, -1))#,
 #                        style = wx.TE_READONLY|wx.TE_MULTILINE|wx.BORDER_NONE) 
-        t.SetLabelMarkup( wordwrap(u"<b>pySequence</b> est un logiciel d'aide à l'élaboration de séquences pédagogiques et à la validation de projets,\n"
+        txt = wordwrap(u"<b>pySequence</b> est un logiciel d'aide à l'élaboration de séquences pédagogiques et à la validation de projets,\n"
                                           u"sous forme de fiches exportables au format PDF ou SVG.\n"
                                           u"Il est élaboré en relation avec les programmes et les documents d'accompagnement\n"
                                           u"des enseignements des filiéres :\n"
-                                          u" STI2D, \n SSI\n Technologie Collège\n STS EE et SN\n EdE SI-CIT-DIT 2nde.",500, wx.ClientDC(self)))
+                                          u" STI2D, \n SSI\n Technologie Collège\n STS EE et SN\n EdE SI-CIT-DIT 2nde.",500, wx.ClientDC(self))
+        if hasattr(t, 'SetLabelMarkup'): # wxpython 3.0
+            t.SetLabelMarkup(txt )
+        else:
+            t.SetLabe(txt.replace('<b>', '').replace('</b>', '') )
         nb.AddPage(descrip, u"Description")
         nb.AddPage(auteurs, u"Auteurs")
         nb.AddPage(licence, u"Licence")
@@ -10530,7 +10534,10 @@ class PopupInfo2(wx.PopupWindow):
         if texte == "":
             ctrlTxt.Show(False)
         else:
-            ctrlTxt.SetLabelMarkup(texte)
+            if hasattr(ctrlTxt, 'SetLabelMarkup'):
+                ctrlTxt.SetLabelMarkup(texte)
+            else:
+                ctrlTxt.SetLabel(texte.replace('<b>', '').replace('</b>', '') )
             ctrlTxt.Show(True)
             self.Layout()
             self.Fit()
