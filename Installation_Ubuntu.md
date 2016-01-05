@@ -5,7 +5,7 @@
 déja installé
 ##wxPython 3##
 source : http://wiki.wxpython.org/CheckInstall
-###Checkinstall###
+####Checkinstall####
 ```bash
 sudo apt-get install checkinstall
 ```
