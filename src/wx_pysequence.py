@@ -857,13 +857,22 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
     ###############################################################################################
     def commandePleinEcran(self, event):
-        if self.GetNotebook().GetCurrentPage() == None:
+        if int(wx.version()[0]) > 2:
+            fenDoc = self.GetClientWindow().GetAuiManager().GetManagedWindow().GetCurrentPage()
+        else:
+            f = self.GetClientWindow().GetAuiManager().GetManagedWindow()
+            fenDoc = f.GetPage(f.GetSelection())
+        
+        if fenDoc is None:
             return
+        
+#        if self.GetNotebook().GetCurrentPage() == None:
+#            return
         
         self.pleinEcran = not self.pleinEcran
         
         if self.pleinEcran:
-            win = self.GetNotebook().GetCurrentPage().nb.GetCurrentPage()
+            win = fenDoc.nb.GetCurrentPage()
             self.fsframe = wx.Frame(self, -1)
             win.Reparent(self.fsframe)
             win.Bind(wx.EVT_KEY_DOWN, self.OnKey)
@@ -871,7 +880,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             
         else:
             win = self.fsframe.GetChildren()[0]
-            win.Reparent(self.GetNotebook().GetCurrentPage().nb)
+            win.Reparent(fenDoc.nb)
             self.fsframe.Destroy()
             win.SendSizeEventToParent()
 
@@ -3209,7 +3218,7 @@ class PanelPropriete(scrolled.ScrolledPanel):
         
         
         self.sizer = wx.GridBagSizer()
-        self.Hide()
+#        self.Hide()  # utilité ?? Commenté au passage à linux v6.2.1
 #        self.SetMinSize((400, 200))
         self.SetSizer(self.sizer)
         self.SetAutoLayout(True)
@@ -3267,7 +3276,8 @@ import wx.richtext as rt
 class PanelPropriete_Racine(wx.Panel):
     def __init__(self, parent, texte):
         wx.Panel.__init__(self, parent, -1)
-        self.Hide()
+        
+        self.Hide() # utilité ??
         
         self.rtc = rt.RichTextCtrl(self, style=rt.RE_READONLY|wx.NO_BORDER)#
         wx.CallAfter(self.rtc.SetFocus)
@@ -5765,7 +5775,7 @@ class PanelPropriete_Savoirs(PanelPropriete):
         
         self.nb = wx.Notebook(self, -1, size = (21,21), style= wx.BK_DEFAULT)
         
-        # Liste des numéros de pages attribués é
+        # Liste des numéros de pages attribués
         # 0 : savoirs spécifiques de l'enseignement
         # 1 : savoirs d'un éventuel tronc commun
         # 2 : Math
@@ -5797,7 +5807,7 @@ class PanelPropriete_Savoirs(PanelPropriete):
         bg_color = self.Parent.GetBackgroundColour()
         page = PanelPropriete(self.nb)
         page.SetBackgroundColour(bg_color)
-        self.nb.AddPage(page, u"")
+        self.nb.AddPage(page, u"a")
         return page
         
         
