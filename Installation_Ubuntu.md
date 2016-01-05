@@ -54,10 +54,12 @@ sudo apt-get install python-wxgtk2.8
 
 ## pip ##
 Outil d'installation de modules python
-https://pip.pypa.io/en/stable/installing/
+
+Installation : https://pip.pypa.io/en/stable/installing/
 
 ##xlrd/xlwt##
 Modules de lecture/écriture de fichier Excel
+
 source : https://pypi.python.org/pypi/xlrd
 ```bash
 sudo pip install xlrd
@@ -76,6 +78,7 @@ sudo pip install pypdf2
 
 ##pyperclip##
 Utilisation du clipboard (presse-papier)
+
 source : https://pypi.python.org/pypi/pyperclip
 ```bash
 sudo pip install pyperclip
@@ -83,6 +86,7 @@ sudo pip install pyperclip
 
 ##enchant##
 Correcteur orthographique
+
 source : https://pypi.python.org/pypi/pyenchant/
 ```bash
 sudo pip install pyenchant
@@ -90,6 +94,7 @@ sudo pip install pyenchant
 
 ##xhtml2pdf##
 Convertion html>pdf
+
 source :  https://pypi.python.org/pypi/xhtml2pdf
 ```bash
 sudo pip install xhtml2pdf
