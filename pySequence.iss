@@ -1,7 +1,7 @@
 
 ;This file is part of pySequence
 ;
-; Copyright (C) 2012-2015 Cédrick FAURY
+; Copyright (C) 2012-2016 Cédrick FAURY
 ;
 ;pySequence is free software; you can redistribute it and/or modify
 ;it under the terms of the GNU General Public License as published by
@@ -19,8 +19,8 @@
 
 [ISPP]
 #define AppName "pySequence"
-#define AppVersion "6.1"
-#define AppVersionInfo "6.1.3"
+#define AppVersion "6.2"
+#define AppVersionInfo "6.2.1"
 #define AppVersionBase "6"
 
 #define AppURL "https://github.com/cedrick-f/pySequence"
@@ -33,7 +33,7 @@ AppVersion={#AppVersion}
 AppVerName={#AppName} {#AppVersion}
 
 AppPublisher=Cédrick Faury
-AppCopyright=Copyright © 2011-2015 Cédrick Faury
+AppCopyright=Copyright © 2011-2016 Cédrick Faury
 VersionInfoVersion = {#AppVersionInfo}
 
 ;Répertoire de base contenant les fichiers

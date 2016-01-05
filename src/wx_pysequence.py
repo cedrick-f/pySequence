@@ -3531,7 +3531,8 @@ class PanelPropriete_Projet(PanelPropriete):
         self.textctrl = textctrl
         pageGen.sizer.Add(sb, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.EXPAND, border = 2)
 #        pageGen.Bind(stc.EVT_STC_MODIFIED, self.EvtText)
-        pageGen.Bind(wx.EVT_TEXT, self.EvtText, textctrl)
+#        pageGen.Bind(wx.EVT_TEXT, self.EvtText, textctrl)
+        pageGen.Bind(stc.EVT_STC_MODIFIED, self.EvtText, self.textctrl)
 
         
         #
@@ -3684,7 +3685,8 @@ class PanelPropriete_Projet(PanelPropriete):
     def EvtText(self, event):
 #        print "EvtText"
         if event.GetEventObject() == self.textctrl:
-            nt = event.GetString()
+#            nt = event.GetString()
+            nt = self.textctrl.GetText()
 #            if nt == u"":
 #                nt = self.projet.support.nom
             self.projet.SetText(nt)

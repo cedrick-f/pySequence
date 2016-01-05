@@ -528,8 +528,12 @@ if  wx.PlatformInfo[1] == 'wxMSW':
 from wx.lib.pdfwin import get_min_adobe_version
 NOT_USE_ADOBE = ADOBE_VERSION is None or ADOBE_VERSION[:3] == (11, 0, 7) or ADOBE_VERSION[:3] == (11, 0, 8) or get_min_adobe_version() is None
 #NOT_USE_ADOBE = True
+HAS_PDFVIEWER = True
 if NOT_USE_ADOBE:
-    from wx.lib.pdfviewer import pdfViewer
+    try:
+        from wx.lib.pdfviewer import pdfViewer
+    except:
+        HAS_PDFVIEWER = False
 else:
     from wx.lib.pdfwin import PDFWindow
 
