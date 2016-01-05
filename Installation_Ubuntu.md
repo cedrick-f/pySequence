@@ -100,4 +100,14 @@ source :  https://pypi.python.org/pypi/xhtml2pdf
 sudo pip install xhtml2pdf
 ```
 
+##markdown##
+Générateur de texte Markdown
 
+source :  https://pypi.python.org/pypi/Markdown
+```bash
+sudo pip install markdown
+```
+
+
+##pySéquence##
+Télécharger une archive des sources de pySéquence : 
