@@ -210,7 +210,7 @@ class XMLelem():
             
             elif nom.split("_")[0] == "Projet":
                 sbranche = branche.find(nom)
-                proj, err = Projet().setBranche(sbranche)
+                proj, err = Projet(self).setBranche(sbranche)
                 nomerr.extend(err)
                 return proj
             
@@ -982,7 +982,7 @@ class Referentiel(XMLelem):
         # Ouverture fichier EXCEL
         #
         wb = open_workbook(nomFichier)
-        sh = wb.sheets()
+#        sh = wb.sheets()
         
         #
         # Généralités
@@ -1016,7 +1016,7 @@ class Referentiel(XMLelem):
         #
         col = [c  for c in range(1, sh_g.ncols) if sh_g.cell(24,c).value != u""]
         for c in col:
-            self.projets[sh_g.cell(25,c).value] = Projet(sh_g.cell(25,c).value,
+            self.projets[sh_g.cell(25,c).value] = Projet(self, sh_g.cell(25,c).value,
                                                          intitule = sh_g.cell(24,c).value, 
                                                          duree = int0(sh_g.cell(26,c).value), 
                                                          periode = [int(i) for i in sh_g.cell(27,c).value.split()])
@@ -1586,8 +1586,9 @@ class Referentiel(XMLelem):
 #
 #################################################################################################################################
 class Projet(XMLelem):
-    def __init__(self, code = "", intitule = u"", duree = 0, periode = [], importer = None):
+    def __init__(self, parent, code = "", intitule = u"", duree = 0, periode = [], importer = None):
         self._codeXML = "Projet"
+        self._parent = parent
         self.code = code
         self.intitule = intitule
         self.duree = duree
@@ -1608,6 +1609,11 @@ class Projet(XMLelem):
         self.listPhasesEval = []
         self.listPhases = []
         self.posRevues = {}
+        
+        #
+        # tâches du projet (si imposées)
+        #
+        self.taches = {}
         
         #
         # Effectifs
@@ -1759,6 +1765,17 @@ class Projet(XMLelem):
 #                            if shp.cell(l,6).value != "":
 #                                self.posRevues[3].append(shp.cell(l,0).value)
         
+        #
+        # Taches du projet (si imposées)
+        #
+        shnt = u"Taches_"+self.code
+        if shnt in [s.name for s in wb.sheets()]:
+            shp = wb.sheet_by_name(shnt)
+            for l in range(2, shp.nrows):
+                self.taches[str(shp.cell(l,0).value)] = [shp.cell(l,1).value, 
+                                                         shp.cell(l,2).value, 
+                                                         shp.cell(l,3).value.split()]
+#            print self.taches
         
         #
         # Généralités sur le projet
@@ -1780,6 +1797,8 @@ class Projet(XMLelem):
     def postTraiter(self, ref):
         debug = False#ref.Code == "STS_SN_IR"
         if debug: print " postTraiter",  ref, self, self.parties
+        
+        
         
         
         
@@ -1875,7 +1894,9 @@ class Projet(XMLelem):
         
         self._dicIndicateurs = ref.getPremierEtDernierNiveauArbre(self._dicCompetences)
         
-        
+        for t in self.taches.values():
+            t[2] = [cc for cc in t[2] if cc in self._dicCompetences.keys()]
+            
         self.normaliserPoids(self._dicIndicateurs, debug = False)
 #        print "                   ", self._dicIndicateurs_prj
         

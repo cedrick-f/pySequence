@@ -1326,14 +1326,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             
         evt.Skip()
         
-        
-#    ###############################################################################################
-#    def OnToolClick(self, event):
-#        self.log.WriteText("tool %s clicked\n" % event.GetId())
-#        #tb = self.GetToolBar()
-#        tb = event.GetEventObject()
-#        tb.EnableTool(10, not tb.GetToolEnabled(10))
- 
+
         
     
     

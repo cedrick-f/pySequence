@@ -1567,6 +1567,7 @@
         <l__02 S_00="Con" S_01="Rea" />
         <l__03 S_00="Ana" S_01="Con" S_02="Rea" />
       </d_posRevues>
+      <d_taches />
     </Projet_CCF1>
     <Projet_CCF2 I_duree="12" I_maxEleves="5" I_minEleves="3" S_code="CCF2" S_ficheValid="STS_SN_IR_Sit2.html" S_intitule="CCF2">
       <d_attributs>
@@ -1636,8 +1637,9 @@
         <l__02 S_00="Sup" S_01="Ana" />
         <l__03 S_00="Sup" S_01="Ana" S_02="Con" />
       </d_posRevues>
+      <d_taches />
     </Projet_CCF2>
-    <Projet_PRJ I_duree="50" I_maxEleves="5" I_minEleves="3" S_code="PRJ" S_ficheValid="STS_SN_IR_Sit1.html" S_intitule="Projet de fin d'ann&#233;e">
+    <Projet_PRJ I_duree="50" I_maxEleves="5" I_minEleves="3" S_code="PRJ" S_ficheValid="STS_SC_IR_projet_E6-V2.html" S_intitule="Projet de fin d'ann&#233;e">
       <d_attributs>
         <l_SRC S_00="" S_01="" S_02="" S_03="" />
         <l_PAR S_00="" S_01="" S_02="" S_03="" />
@@ -1767,6 +1769,7 @@
         <l__02 S_00="Ana" S_01="Con" />
         <l__03 S_00="Ana" S_01="Con" S_02="DCo" />
       </d_posRevues>
+      <d_taches />
     </Projet_PRJ>
   </d_projets>
   <d_seances>

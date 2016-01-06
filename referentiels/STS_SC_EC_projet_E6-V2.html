@@ -8,7 +8,8 @@
         size: A4 portrait;
         margin-right: 20pt;
         margin-left: 20pt;
-        margin-top: 40pt;
+        margin-top: 30pt;
+        margin-bottom: 30pt;
             
         @frame footer_frame {
             -pdf-frame-content: footer_content;
@@ -48,12 +49,12 @@ table {
     padding-bottom: 2px;
     border: 1px solid black;
     overflow: hidden;
+    align: left;
     }
     
 td {
       text-align: left;
       vertical-align: center;
-      cellspacing: 0;
       }
 
 p.m { 
@@ -75,24 +76,46 @@ h2 {
     }
 
 
-#NormalTable {  
-    width:100%;
+#TacheTable {  
     border-collapse:collapse;
-    border: 1px solid black;
-    padding: 3px;
-    padding-bottom: 2px;
-    
+    padding: 2px;
+    padding-bottom: 0px;
+    vertical-align: center;
     }
     
-#EnTeteTable {
-    margin-top:4.0pt;
-    margin-right:0cm; 
-    margin-bottom:4.0pt;
-    margin-left:0cm;
+
+.verticalTableHeader {
     text-align:center;
-    line-height:15.0pt
+    white-space:nowrap;
+    transform-origin:50% 50%;
+    transform: rotate(90deg);
+
+}
+.verticalTableHeader:before {
+    content:'';
+    padding-top:110%;/* takes width as reference, + 10% for faking some extra padding */
+    display:inline-block;
+    vertical-align:middle;
+}
+.vertical{
+    writing-mode:tb-rl;
+    -webkit-transform:rotate(90deg);
+    -moz-transform:rotate(90deg);
+    -o-transform: rotate(90deg);
+    -ms-transform:rotate(90deg);
+    transform: rotate(90deg);
+    white-space:nowrap;
+    display:block;
+    bottom:0;
+    width:20px;
+    height:20px;
 }
 
+.pageBreak{
+        page-break-after: always;       
+    }
+    
+    
 </style></head>
 
 <div id="footer_content">Page <pdf:pagenumber> sur <pdf:pagecount>
@@ -108,12 +131,11 @@ h2 {
               <p><b><span  style="font-size:11.0pt">Nom de l'établissement</span></b></p>
               <p>[[ETA]]</p></td>
             
-            <td><b><span  style="font-size:14.0pt">BTS Systèmes Numérique</span><br>
+            <td><b><span  style="font-size:16.0pt">BTS Systèmes Numérique</span><br>
                 Option B électronique et Communication</b></td>
          
             <td style="width: 30%;">
-              <h1  style="text-align:center;line-height:15.0pt"  align="center"><b>Session
-                  </b>[[SES]]</h1>
+              <h1>Session [[SES]]</h1>
             </td>
           </tr>
         </tbody>
@@ -147,10 +169,12 @@ h2 {
           </tr>
         </tbody>
       </table>
-      
-      <table style="padding-bottom: 0px; border: 0px; width:50%; align:left">
-      <td style="text-align: right; padding: 5px;"><p><i>Reprise d'un projet :</i></p></td>
+            
+      <table style="padding-bottom:0px; border:0px; width:100px; align:left">
+      <tr>
+      <td style="text-align: right; padding: 3px; width=20%"><p><i>Reprise d'un projet&nbsp;:</i></p></td>
       <td>[[TYP]]</td>
+      </tr>
       </table>
       
       <hr>
@@ -180,12 +204,12 @@ h2 {
         <table  class="NormalTable">
           <tbody>
             <tr >
-              <td width="50%">
-                <p class="EnTeteTable"><b>Principaux constituants&nbsp;:</b></p>
-              </td>
-              <td width="50%">
-                <p class="EnTeteTable"><b>Caractéristiques techniques&nbsp;:</b></p>
-              </td>
+              <th width="50%">
+                <p><b>Principaux constituants&nbsp;:</b></p>
+              </th>
+              <th width="50%">
+                <p><b>Caractéristiques techniques&nbsp;:</b></p>
+              </th>
             </tr>
             <tr>
               <td><br/><br/><br/><br/></td>
@@ -200,12 +224,12 @@ h2 {
         <table class="NormalTable">
           <tbody>
             <tr>
-              <td width="50%">
-                <p class="EnTeteTable"><b>Désignation&nbsp;:</b></p>
-              </td>
-              <td  width="50%">
-                <p class="EnTeteTable"><b>Caractéristiques techniques&nbsp;:</b></p>
-              </td>
+              <th width="50%">
+                <p><b>Désignation&nbsp;:</b></p>
+              </th>
+              <th  width="50%">
+                <p><b>Caractéristiques techniques&nbsp;:</b></p>
+              </th>
             </tr>
             <tr>
               <td><br/><br/><br/><br/></td>
@@ -215,468 +239,63 @@ h2 {
         </table>
       </div>
       
+
       
-      <p style="text-align:justify;text-autospace:ideograph-numeric ideograph-other">
+      <p class="pageBreak" style="text-align:justify">
       <span style="font-size:10.0pt">Joindre en annexe, les documents explicitant
           le projet : photos, fiches techniques descriptives, procédé(s) mis en
           oeuvre, cahier des charges simplifié, schémas etc.</span></p>
       
+    
+    <table id = "TacheTable" class="pageBreak">
+      [[TCH]]
+    </table>
       
-      <table  class="NormalTable">
-        <tbody  id="texte">
-          <tr>
-            <td  style="width: 6%;">Tâches</td>
-            <td><b>Contrats de tâche</b></td>
-            <td  style="width: 20%;"><b>Compétences</b></td>
-            <td  style="width: 6%;">Cdt1</td>
-            <td  style="width: 6%;">Cdt2</td>
-            <td  style="width: 6%;">Cdt3</td>
-            <td  style="width: 6%;">Cdt4</td>
-          </tr>
-          <tr>
-            <td><span  style="font-size:10.0pt;color:black"></span><br>
-            </td>
-            <td  colspan="6"><b><span  id="objectifs"  style="color: black;">Expression fonctionnelle du besoin</span></b> </td>
-          </tr>
-          <tr>
-            <td  style="text-align: center;"><span  style="font-size:10.0pt;color:black">T1.4</span></td>
-            <td><span  style="font-size:10.0pt;color:black">Vérifier la pérennité et mettre à jour les informations</span> </td>
-            <td><span  style="font-size:10.0pt">C2.1</span> </td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-          </tr>
-          <tr>
-            <td  style="text-align: center;"><span  style="font-size:10.0pt;color:black">T2.1</span>
-            </td>
-            <td><span  style="font-size:10.0pt;color:black">Collecter des informations nécessaires à l'élaboration du cahier des charges préliminaire</span> </td>
-            <td><span  style="font-size:10.0pt">C2.2</span> </td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-          </tr>
-          <tr>
-            <td  style="text-align: center;"><span  style="font-size:10.0pt;color:black">T2.3</span></td>
-            <td><span  style="font-size:10.0pt;color:black">Formaliser le cahier des charges</span></td>
-            <td><span  style="font-size:10.0pt">C2.3 C2.4</span></td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-          </tr>
-          <tr>
-            <td  style="text-align: center;"><span  style="font-size:10.0pt;color:black">T3.1</span></td>
-            <td><span  style="font-size:10.0pt;color:black">S'approprier le cahier des charges</span></td>
-            <td><span  style="font-size:10.0pt">C3.1</span></td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-          </tr>
-          <tr>
-            <td  style="text-align: center;"><span  style="font-size:10.0pt;color:black">T3.3</span></td>
-            <td><span  style="font-size:10.0pt;color:black">élaborer le cahier
-                de recette</span></td>
-            <td><span  style="font-size:10.0pt">C3.5</span></td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-          </tr>
-          <tr>
-            <td  style="text-align: center;"><span  style="font-size:10.0pt;color:black">T3.4</span></td>
-            <td><span  style="font-size:10.0pt;color:black">Négocier et
-                rechercher la validation du client</span></td>
-            <td><span  style="font-size:10.0pt">C2.4</span></td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-          </tr>
-          <tr>
-            <td  style="text-align: center;"><br>
-            </td>
-            <td  colspan="6"><b id="conception">Conception</b></td>
-          </tr>
-          <tr>
-            <td  style="text-align: center;"><span  style="font-size:10.0pt;color:black">T4.1</span></td>
-            <td><span  style="font-size:10.0pt;color:black">Identifier le comportement d'un constituant</span></td>
-            <td><span  style="font-size:10.0pt">C3.4 C4.1</span></td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-          </tr>
-          <tr>
-            <td  style="text-align: center;"><span  style="font-size:10.0pt;color:black">T4.2</span></td>
-            <td><span  style="font-size:10.0pt;color:black">Traduire les éléments du cahier des charges sous la forme de modèles</span></td>
-            <td><span  style="font-size:10.0pt">C3.1</span></td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-          </tr>
-          <tr>
-            <td  style="text-align: center;"><span  style="font-size:10.0pt;color:black">T5.1</span></td>
-            <td><span  style="font-size:10.0pt;color:black">Identifier les solutions existantes de l'entreprise</span></td>
-            <td><span  style="font-size:10.0pt">C3.1 C3.6</span></td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-          </tr>
-          <tr>
-            <td  style="text-align: center;"><span  style="font-size:10.0pt;color:black">T4.3</span></td>
-            <td><span  style="font-size:10.0pt;color:black">Rédiger le document de recette</span></td>
-            <td><span  style="font-size:10.0pt">C3.5</span></td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-          </tr>
-          <tr>
-            <td  style="text-align: center;"><span  style="font-size:10.0pt;color:black">T5.4</span></td>
-            <td><span  style="font-size:10.0pt">Sélectionner et/ou adapter une ou des solutions selon le contexte technicoéconomique</span></td>
-            <td><span  style="font-size:10.0pt">C3.8</span></td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-          </tr>
-          <tr>
-            <td  style="text-align: center;"><span  style="font-size:10.0pt;color:black">T6.1</span></td>
-            <td><span  style="font-size:10.0pt">Prendre connaissance des fonctions associées au projet et définir les tâches </span></td>
-            <td><span  style="font-size:10.0pt">C2.4 C2.5</span></td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-          </tr>
-          <tr>
-            <td  style="text-align: center;"><span  style="font-size:10.0pt;color:black">T6.2</span></td>
-            <td><span  style="font-size:10.0pt">Définir et valider un planning (jalons de livrables)</span></td>
-            <td><span  style="font-size:10.0pt">C2.3 C2.4 C2.5</span></td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-          </tr>
-          <tr>
-            <td  style="text-align: center;"><span  style="font-size:10.0pt;color:black">T6.3</span></td>
-            <td><span  style="font-size:10.0pt">Assurer le suivi du planning et du budget</span></td>
-            <td><span  style="font-size:10.0pt">C2.1 C2.3 C2.4 C2.5</span></td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-          </tr>
-          <tr>
-            <td  style="text-align: center;"><br>
-            </td>
-            <td  colspan="6"><b  id="realisation">Réalisation</b></td>
-          </tr>
-          <tr>
-            <td  style="text-align: center;"><span  style="font-size:10.0pt;color:black">T7.1</span></td>
-            <td><span  style="font-size:10.0pt">Réaliser la conception détaillée du matériel et/ou du logiciel</span></td>
-            <td><span  style="font-size:10.0pt">C3.1 C3.3 C3.6 C3.8 C3.10</span></td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-          </tr>
-          <tr>
-            <td  style="text-align: center;"><span  style="font-size:10.0pt;color:black">T7.2</span></td>
-            <td><span  style="font-size:10.0pt">Produire un prototype logiciel et/ou matériel</span></td>
-            <td><span  style="font-size:10.0pt">C3.9 C4.2 C4.3 C4.4 C4.6 C4.7</span></td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-          </tr>
-          <tr>
-            <td  style="text-align: center;"><span  style="font-size:10.0pt;color:black">T7.3</span></td>
-            <td><span  style="font-size:10.0pt;color:black">Valider le prototype</span></td>
-            <td><span  style="font-size:10.0pt">C3.5 C4.5</span></td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-          </tr>
-          <tr>
-            <td  style="text-align: center;"><span  style="font-size:10.0pt;color:black">T8.1</span></td>
-            <td><span  style="font-size:10.0pt;color:black">Définir une organisation ou un processus de maintenance préventive</span></td>
-            <td><span  style="font-size:10.0pt">C2.1</span></td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-          </tr>
-          <tr>
-            <td  style="text-align: center;"><span  style="font-size:10.0pt;color:black">T8.2</span></td>
-            <td><span  style="font-size:10.0pt;color:black">Définir une organisation ou un processus de maintenance curative</span></td>
-            <td><span  style="font-size:10.0pt">C2.1</span></td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-          </tr>
-          <tr>
-            <td  style="text-align: center;"><span  style="font-size:10.0pt;color:black">T9.2</span></td>
-            <td><span  style="font-size:10.0pt;color:black">Installer un système ou un service</span></td>
-            <td><span  style="font-size:10.0pt">C2.5</span></td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-          </tr>
-          <tr>
-            <td  style="text-align: center;"><span  style="font-size:10.0pt;color:black">T10.3</span></td>
-            <td><span  style="font-size:10.0pt;color:black">Exécuter et/ou planifier les tâches professionnelles de MCO</span></td>
-            <td><span  style="font-size:10.0pt">C2.3</span></td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-          </tr>
-          <tr>
-            <td  style="text-align: center;"><span  style="font-size:10.0pt;color:black">T11.3</span></td>
-            <td><span  style="font-size:10.0pt;color:black">Assurer la formation du client</span></td>
-            <td><span  style="font-size:10.0pt">C2.2 C2.5</span></td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-          </tr>
-          <tr>
-            <td  style="text-align: center;"><span  style="font-size:10.0pt;color:black">T12.1</span></td>
-            <td><span  style="font-size:10.0pt;color:black">Organiser le travail de l'équipe</span></td>
-            <td><span  style="font-size:10.0pt">C2.3 C2.4 C2.5</span></td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-          </tr>
-          <tr>
-            <td  style="text-align: center;"><span  style="font-size:10.0pt;color:black">T12.2</span></td>
-            <td><span  style="font-size:10.0pt;color:black">Animer une équipe</span></td>
-            <td><span  style="font-size:10.0pt">C2.1 C2.3 C2.5</span></td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-          </tr>
-          <tr>
-            <td  style="text-align: center;"><br>
-            </td>
-            <td  colspan="6"><b  id="verif">Vérification des performances attendues</b></td>
-          </tr>
-          <tr>
-            <td  style="text-align: center;"><span  style="font-size:10.0pt;color:black">T9.1</span></td>
-            <td><span  style="font-size:10.0pt;color:black">Finaliser le cahier de recette</span></td>
-            <td><span  style="font-size:10.0pt">C3.1 C3.5 C4.5</span></td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-          </tr>
-          <tr>
-            <td  style="text-align: center;"><span  style="font-size:10.0pt;color:black">T10.4</span></td>
-            <td><span  style="font-size:10.0pt;color:black">Proposer des solutions d'amélioration du système ou du service</span></td>
-            <td><span  style="font-size:10.0pt">C3.6</span></td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-            <td><br>
-            </td>
-          </tr>
-        </tbody>
-      </table>
     </div>
-    <span  style="font-size:10.0pt;font-family:&quot;Arial&quot;,&quot;sans-serif&quot;"><br
+    
 
-         style="page-break-before:always"  clear="all">
-    </span> <span  style="font-size:10.0pt;font-family:&quot;Arial&quot;,&quot;sans-serif&quot;"></span><span
-
-       style="font-size:10.0pt"> <br>
-    </span>
-    <div  class="WordSection3">
-      <div  style="border:solid windowtext 1.0pt;padding:1.0pt 4.0pt 1.0pt 4.0pt;
-margin-left:1.15pt;margin-right:0cm">
-        <p    style="margin-top:6.0pt;text-align:center;
-line-height:15.0pt;border:none;padding:0cm"  align="center"><i><span  style="font-size:12.0pt">Avis de la commission</span></i></p>
-      </div>
-      <p    style="margin-top:6.0pt;line-height:15.0pt">&nbsp;</p>
-      <p    style="margin-top:6.0pt;margin-right:0cm;margin-bottom:0cm;
-margin-left:18.0pt;margin-bottom:.0001pt;text-align:justify;text-indent:-18.0pt;line-height:15.0pt;text-autospace:ideograph-numeric ideograph-other"><span
-
-           style="font-family:Wingdings"><span  style="font-family: &quot;Times New Roman&quot;;">-</span><span
-
-             style="font:7.0pt &quot;Times New Roman&quot;">&nbsp; </span></span><span
-
-           style="font-size:10.0pt">Les concepts et les outils </span>mis en
-        oeuvre par le candidat (1-2-3-4), correspondent au niveau des exigences
-        techniques attendu pour cette formation&nbsp;:<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          </b></p>
-      <p    style="margin-top:6.0pt;text-align:center;
-line-height:15.0pt;text-autospace:ideograph-numeric ideograph-other"  align="center"><b><span
-
-             style="font-size:12.0pt">oui / à reprendre</span></b> pour le
-        candidat (1-2-3-4)</p>
-      <p    style="margin-top:6.0pt;margin-right:0cm;margin-bottom:0cm;
-margin-left:18.0pt;margin-bottom:.0001pt;text-align:justify;text-indent:-18.0pt;line-height:15.0pt;text-autospace:ideograph-numeric ideograph-other"><span
-
-           style="font-family:Wingdings"><span  style="font-family: &quot;Times New Roman&quot;;">-</span><span
-
-             style="font:7.0pt &quot;Times New Roman&quot;">&nbsp; </span></span>L'énoncé
-        des tâches à réaliser par le candidat (1-2-3-4), est suffisamment
-        complet et précis&nbsp;:</p>
-      <p    style="margin-top:6.0pt;text-align:center;
-line-height:15.0pt"  align="center"><b><span  style="font-size:12.0pt">oui / à
-            reprendre</span></b> pour le candidat 1-2-3-4</p>
-      <p    style="margin-top:6.0pt;margin-right:0cm;margin-bottom:0cm;
-margin-left:18.0pt;margin-bottom:.0001pt;text-align:justify;text-indent:-18.0pt;line-height:15.0pt;text-autospace:ideograph-numeric ideograph-other"><span
-
-           style="font-family:Wingdings">-<span  style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
-            </span></span>Les compétences requises pour la réalisation ou les
-        tâches confiées au candidat (1-2-3-4)&nbsp; sont en adéquation avec les
-        savoirs et savoir-faire exigés par le
-        référentiel&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp; </p>
-      <p    style="margin-top:6.0pt;text-align:center;
-line-height:15.0pt;text-autospace:ideograph-numeric ideograph-other"  align="center"><b><span
-
-             style="font-size:12.0pt">oui / à reprendre</span></b> pour le
-        candidat (1-2-3-4)</p>
-      <p    style="margin-top:6.0pt;margin-right:0cm;margin-bottom:0cm;
-margin-left:18.0pt;margin-bottom:.0001pt;text-align:justify;text-indent:-18.0pt;line-height:15.0pt;text-autospace:ideograph-numeric ideograph-other"><span
-
-           style="font-size:12.0pt;font-family:Wingdings">-<span  style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
-            </span></span>Le nombre d'étudiants est adapté aux tâches
-        énumérées&nbsp;:&nbsp; </p>
-      <p    style="margin-top:6.0pt;text-align:center;
-line-height:15.0pt;text-autospace:ideograph-numeric ideograph-other"  align="center"><b><span
-
-             style="font-size:12.0pt">oui / trop / insuffisant</span></b></p>
-      <p    style="margin-top:6.0pt;line-height:15.0pt;text-autospace:
-ideograph-numeric ideograph-other"><b><i>Commentaires</i></b><span  style="font-size:12.0pt">
-        </span></p>
-      <p    style="margin-top:6.0pt;line-height:15.0pt"><span  style="font-size:12.0pt">&nbsp;
-          </span></p>
-      <p    style="margin-top:6.0pt;line-height:15.0pt"><span  style="font-size:12.0pt">Date&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-Le
-          président de la commission&nbsp;&nbsp;&nbsp; </span></p>
-      <p    style="margin-top:6.0pt;margin-right:0cm;
-margin-bottom:0cm;margin-left:1.15pt;margin-bottom:.0001pt;text-align:center;line-height:15.0pt"
-
-         align="center"><b><u><span  style="font-size:12.0pt"><span  style="text-decoration:none">&nbsp;</span></span></u></b></p>
-      <p    style="text-align:justify;text-autospace:ideograph-numeric ideograph-other"><span
-
-           style="font-size:10.0pt">&nbsp;</span></p>
+    <div>
+      <table>
+        <th><h1>Avis de la commission</h1></th>
+      </table>
+      
+      <br/>
+      <ul>
+      <li>Les concepts et les outils mis en oeuvre par le candidat (1-2-3-4), correspondent au niveau des exigences techniques attendu pour cette formation&nbsp;:</li>
+      <p align="center"><b><span style="font-size:12.0pt">oui / à reprendre</span></b> pour le candidat (1-2-3-4)</p>
+      
+      <br/>
+      <li>L'énoncé des tâches à réaliser par le candidat (1-2-3-4), est suffisamment complet et précis&nbsp;:</li>
+      <p align="center"><b><span style="font-size:12.0pt">oui / à reprendre</span></b> pour le candidat (1-2-3-4)</p>
+      
+      <br/>
+      <li>Les compétences requises pour la réalisation ou les tâches confiées au candidat (1-2-3-4) sont en adéquation avec les savoirs et savoir-faire exigés par le référentiel&nbsp;:</li>
+      <p align="center"><b><span style="font-size:12.0pt">oui / à reprendre</span></b> pour le candidat (1-2-3-4)</p>
+      
+      <br/>
+      <li>Le nombre d'étudiants est adapté aux tâches énumérées&nbsp;:</p>
+      <p align="center"><b><span style="font-size:12.0pt">oui / trop / insuffisant</span></b></p>
+      
+      <br/>
+      <h1>Commentaires</h1>
+      
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      
+      <table>
+        <tr style="font-size:12.0pt;border:0px">
+          <td>Date</td>
+          <td>Le président de la commission</td>
+        </tr>
+      </table>
+      </ul>
     </div>
   </body>
 </html>

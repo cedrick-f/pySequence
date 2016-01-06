@@ -72,8 +72,11 @@ from widgets import messageErreur
 import time
 
 #
+# Elements HTML
 #
-#
+def encap(s, t):
+    return "<"+t+">"+s+"</"+t+">"
+    
 def italic(s):
     return "<i>"+s+"</i>"
 
@@ -110,6 +113,26 @@ def splitParagraph(text, style):
         pp.append(Paragraph(l, style))
     return pp
 
+def table_taches(taches, eleves, projet):
+
+    p = None
+    h = u"""<th style="width:6%">Tâches</th>  <th>Contrats de tâche</th>  <th  style="width:30%">Compétences</th>"""
+    for e in eleves:
+        h += u"""<th style="width:6%%" class = "verticalTableHeader">%s</th>""" %e.GetNomPrenom()
+    h = encap(h, u"tr")
+    for c in sorted(taches.keys()):
+        nm = taches[c][1]
+        ph = taches[c][0]
+        cp = taches[c][2]
+
+        if ph != p:
+            phase = projet.phases[ph][1]
+            h += u"""<tr><td colspan = "%s"><b>%s</b></td></tr>""" %(str(3+len(eleves)), phase)
+            p = ph
+
+        h += u"<tr> <td>%s</td> <td>%s</td> <td>%s</td> %s </tr>" %(c, nm, u" ".join(cp), "<td></td>"*len(eleves))
+            
+    return h
 
 
 #######################################################################################################################
@@ -171,7 +194,6 @@ def genererFicheValidationHTML(nomFichierPDF, nomFichierHTML, projet):
     le = []
     for p in projet.eleves:
         np = p.GetNomPrenom()
-        
         le.append(np)
     NE = liste(le) 
     
@@ -197,7 +219,10 @@ def genererFicheValidationHTML(nomFichierPDF, nomFichierHTML, projet):
               'OBJ' : remplaceCR(projet.production),
               'SYN' : remplaceCR(projet.synoptique),
               'ORI' : remplaceCR(projet.origine),
-              'CCF' : remplaceCR(projet.contraintes)}
+              'CCF' : remplaceCR(projet.contraintes),
+              'TCH' : table_taches(projet.GetProjetRef().taches, projet.eleves, projet.GetProjetRef())}
+    
+    print champs['TCH']
     
     for code, val in champs.items():
         sourceHtml = sourceHtml.replace(u"[["+code+u"]]", val)
