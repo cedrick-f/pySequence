@@ -167,11 +167,18 @@ def genererFicheValidationHTML(nomFichierPDF, nomFichierHTML, projet):
         le.append(np)
     NP = liste(le) 
     
+    # Elèves
+    le = []
+    for p in projet.eleves:
+        np = p.GetNomPrenom()
+        
+        le.append(np)
+    NE = liste(le) 
+    
     # Typologie
     typo = projet.GetProjetRef().attributs['TYP'][2].split(u"\n")
-    
     TY = "<br>".join([checkbox(i in projet.typologie) + t for i, t in enumerate(typo)])
-#    TY = liste(, classe = "b")
+
     
     etab = projet.classe.etablissement+"<br>("+italic(projet.classe.ville)+u")"
     
@@ -186,8 +193,10 @@ def genererFicheValidationHTML(nomFichierPDF, nomFichierHTML, projet):
               'TYP' : TY,
               'PRE' : remplaceCR(projet.problematique),
               'EQU' : NP,
+              'ELE' : NE,
               'OBJ' : remplaceCR(projet.production),
               'SYN' : remplaceCR(projet.synoptique),
+              'ORI' : remplaceCR(projet.origine),
               'CCF' : remplaceCR(projet.contraintes)}
     
     for code, val in champs.items():

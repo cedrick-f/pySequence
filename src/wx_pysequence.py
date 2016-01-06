@@ -3227,7 +3227,7 @@ class PanelPropriete(scrolled.ScrolledPanel):
 #        self.EnableScrolling(True, True)
         self.eventAttente = False
         self.Bind(wx.EVT_ENTER_WINDOW, self.OnEnter)
-        wx.CallAfter(self.Show)
+#        wx.CallAfter(self.Show)
 
 
     ######################################################################################################
@@ -3277,7 +3277,7 @@ class PanelPropriete_Racine(wx.Panel):
     def __init__(self, parent, texte):
         wx.Panel.__init__(self, parent, -1)
         
-        self.Hide() # utilité ??
+        self.Hide() # Sans ça cela provoque des problèmes d'affichage
         
         self.rtc = rt.RichTextCtrl(self, style=rt.RE_READONLY|wx.NO_BORDER)#
         wx.CallAfter(self.rtc.SetFocus)
@@ -3296,10 +3296,9 @@ class PanelPropriete_Racine(wx.Panel):
         self.rtc.Refresh()
         
         sizer.Layout()
-#        wx.CallAfter(self.Layout)
         self.Layout()
         
-        wx.CallAfter(self.Show)
+#        wx.CallAfter(self.Show)
         
 #    def GetNiveau(self):
 #        return 0

@@ -11,7 +11,7 @@
     <l_P S_00="Projet" S_01="Activit&#233; de projet" />
     <l_AP S_00="Activit&#233; pratique" S_01="Activit&#233; pratique" />
   </d_activites>
-  <d_compImposees B_C="False" B_S="False" B_S1="False" B_S2="False" />
+  <d_compImposees B_C="True" B_S="False" B_S1="False" B_S2="False" />
   <d_demarcheSeance>
     <l_ED S_00="I" S_01="R" />
     <l_P S_00="I" S_01="R" S_02="P" />
@@ -167,36 +167,72 @@
       <d_02 />
     </l_C3.4>
     <l_C3.5 S_00=" contribuer &#224; la d&#233;finition des &#233;l&#233;ments de recette au regard des contraintes--du cahier des charges ">
-      <l_01 />
-      <d_02 />
+      <l_01>
+        <Indicateur_00 S_intitule=" contribuer &#224; la d&#233;finition des &#233;l&#233;ments de recette au regard des contraintes--du cahier des charges ">
+          <d_ligne I_C="0" />
+          <d_poids F_C="100.0" />
+          <d_revue I_C="6" />
+        </Indicateur_00>
+      </l_01>
+      <d_02 I_C="5" />
     </l_C3.5>
     <l_C3.6 S_00=" recenser les solutions existantes r&#233;pondant au cahier des charges">
-      <l_01 />
-      <d_02 />
+      <l_01>
+        <Indicateur_00 S_intitule=" recenser les solutions existantes r&#233;pondant au cahier des charges">
+          <d_ligne I_C="0" />
+          <d_poids F_C="100.0" />
+          <d_revue I_C="6" />
+        </Indicateur_00>
+      </l_01>
+      <d_02 I_C="5" />
     </l_C3.6>
     <l_C3.7 S_00=" contribuer &#224; la mod&#233;lisation de tout ou partie d&#8217;un produit ">
       <l_01 />
       <d_02 />
     </l_C3.7>
     <l_C3.1 S_00="analyser un cahier des charges ">
-      <l_01 />
-      <d_02 />
+      <l_01>
+        <Indicateur_00 S_intitule="analyser un cahier des charges ">
+          <d_ligne I_C="0" />
+          <d_poids F_C="100.0" />
+          <d_revue I_C="6" />
+        </Indicateur_00>
+      </l_01>
+      <d_02 I_C="5" />
     </l_C3.1>
     <l_C3.2 S_00="analyser et compl&#233;ter un dossier de sp&#233;cifications techniques ">
       <l_01 />
       <d_02 />
     </l_C3.2>
     <l_C3.3 S_00="d&#233;finir l&#8217;architecture--globale d&#8217;un prototype ou d&#8217;un syst&#232;me ">
-      <l_01 />
-      <d_02 />
+      <l_01>
+        <Indicateur_00 S_intitule="d&#233;finir l&#8217;architecture--globale d&#8217;un prototype ou d&#8217;un syst&#232;me ">
+          <d_ligne I_C="0" />
+          <d_poids F_C="100.0" />
+          <d_revue I_C="6" />
+        </Indicateur_00>
+      </l_01>
+      <d_02 I_C="5" />
     </l_C3.3>
     <l_C3.8 S_00=" &#233;laborer le dossier de d&#233;finition de la solution technique retenue">
-      <l_01 />
-      <d_02 />
+      <l_01>
+        <Indicateur_00 S_intitule=" &#233;laborer le dossier de d&#233;finition de la solution technique retenue">
+          <d_ligne I_C="0" />
+          <d_poids F_C="100.0" />
+          <d_revue I_C="6" />
+        </Indicateur_00>
+      </l_01>
+      <d_02 I_C="5" />
     </l_C3.8>
     <l_C3.9 S_00=" valider une fonction du syst&#232;me &#224; partir d&#8217;une maquette r&#233;elle ">
-      <l_01 />
-      <d_02 />
+      <l_01>
+        <Indicateur_00 S_intitule=" valider une fonction du syst&#232;me &#224; partir d&#8217;une maquette r&#233;elle ">
+          <d_ligne I_C="0" />
+          <d_poids F_C="100.0" />
+          <d_revue I_C="6" />
+        </Indicateur_00>
+      </l_01>
+      <d_02 I_C="5" />
     </l_C3.9>
     <l_C7.4 S_00="assurer la tra&#231;abilit&#233;">
       <l_01>
@@ -289,61 +325,138 @@
       <d_02 I_S1="20" />
     </l_C5.1>
     <l_C3.10 S_00=" r&#233;aliser la conception d&#233;--taill&#233;e d&#8217;un module mat&#233;riel et/ou logiciel ">
-      <l_01 />
-      <d_02 />
+      <l_01>
+        <Indicateur_00 S_intitule=" r&#233;aliser la conception d&#233;--taill&#233;e d&#8217;un module mat&#233;riel et/ou logiciel ">
+          <d_ligne I_C="0" />
+          <d_poids F_C="100.0" />
+          <d_revue I_C="6" />
+        </Indicateur_00>
+      </l_01>
+      <d_02 I_C="5" />
     </l_C3.10>
     <l_P S_00="Le technicien participe &#224; la t&#226;che mais n'en a pas la ma&#238;trise. Il doit n&#233;anmoins comprendre son fondement et apporter ses comp&#233;tences &#224; l'&#233;quipe qui en a la charge.">
       <l_01 />
       <d_02 />
     </l_P>
     <l_C2.1 S_00="maintenir les informations">
-      <l_01 />
-      <d_02 />
+      <l_01>
+        <Indicateur_00 S_intitule="maintenir les informations">
+          <d_ligne I_C="0" />
+          <d_poids F_C="100.0" />
+          <d_revue I_C="6" />
+        </Indicateur_00>
+      </l_01>
+      <d_02 I_C="5" />
     </l_C2.1>
     <l_C2.3 S_00="organiser et/ou respecter la planification d'un projet">
-      <l_01 />
-      <d_02 />
+      <l_01>
+        <Indicateur_00 S_intitule="organiser et/ou respecter la planification d'un projet">
+          <d_ligne I_C="0" />
+          <d_poids F_C="100.0" />
+          <d_revue I_C="6" />
+        </Indicateur_00>
+      </l_01>
+      <d_02 I_C="5" />
     </l_C2.3>
     <l_C2.2 S_00="formaliser l&#8217;expression d&#8217;un besoin">
-      <l_01 />
-      <d_02 />
+      <l_01>
+        <Indicateur_00 S_intitule="formaliser l&#8217;expression d&#8217;un besoin">
+          <d_ligne I_C="0" />
+          <d_poids F_C="100.0" />
+          <d_revue I_C="6" />
+        </Indicateur_00>
+      </l_01>
+      <d_02 I_C="5" />
     </l_C2.2>
     <l_C2.5 S_00=" travailler en &#233;quipe ">
-      <l_01 />
-      <d_02 />
+      <l_01>
+        <Indicateur_00 S_intitule=" travailler en &#233;quipe ">
+          <d_ligne I_C="0" />
+          <d_poids F_C="100.0" />
+          <d_revue I_C="6" />
+        </Indicateur_00>
+      </l_01>
+      <d_02 I_C="5" />
     </l_C2.5>
     <l_C2.4 S_00="assumer le r&#244;le total ou partiel de chef de projet ">
-      <l_01 />
-      <d_02 />
+      <l_01>
+        <Indicateur_00 S_intitule="assumer le r&#244;le total ou partiel de chef de projet ">
+          <d_ligne I_C="0" />
+          <d_poids F_C="100.0" />
+          <d_revue I_C="6" />
+        </Indicateur_00>
+      </l_01>
+      <d_02 I_C="5" />
     </l_C2.4>
     <l_C4.7 S_00=" documenter une r&#233;alisation mat&#233;rielle et/ou logicielle">
-      <l_01 />
-      <d_02 />
-      <d_03 />
+      <l_01>
+        <Indicateur_00 S_intitule=" documenter une r&#233;alisation mat&#233;rielle et/ou logicielle">
+          <d_ligne I_C="0" />
+          <d_poids F_C="100.0" />
+          <d_revue I_C="6" />
+        </Indicateur_00>
+      </l_01>
+      <d_02 I_C="5" />
     </l_C4.7>
     <l_C4.6 S_00=" produire les documents de fabrication d&#8217;un sous ensemble">
-      <l_01 />
-      <d_02 />
+      <l_01>
+        <Indicateur_00 S_intitule=" produire les documents de fabrication d&#8217;un sous ensemble">
+          <d_ligne I_C="0" />
+          <d_poids F_C="100.0" />
+          <d_revue I_C="6" />
+        </Indicateur_00>
+      </l_01>
+      <d_02 I_C="5" />
     </l_C4.6>
     <l_C4.5 S_00=" tester et valider--un module logiciel et mat&#233;riel ">
-      <l_01 />
-      <d_02 />
+      <l_01>
+        <Indicateur_00 S_intitule=" tester et valider--un module logiciel et mat&#233;riel ">
+          <d_ligne I_C="0" />
+          <d_poids F_C="100.0" />
+          <d_revue I_C="6" />
+        </Indicateur_00>
+      </l_01>
+      <d_02 I_C="5" />
     </l_C4.5>
     <l_C4.4 S_00=" fabriquer un sous-ensemble">
-      <l_01 />
-      <d_02 />
+      <l_01>
+        <Indicateur_00 S_intitule=" fabriquer un sous-ensemble">
+          <d_ligne I_C="0" />
+          <d_poids F_C="100.0" />
+          <d_revue I_C="6" />
+        </Indicateur_00>
+      </l_01>
+      <d_02 I_C="5" />
     </l_C4.4>
     <l_C4.3 S_00=" adapter et/ou configurer une structure logicielle">
-      <l_01 />
-      <d_02 />
+      <l_01>
+        <Indicateur_00 S_intitule=" adapter et/ou configurer une structure logicielle">
+          <d_ligne I_C="0" />
+          <d_poids F_C="100.0" />
+          <d_revue I_C="6" />
+        </Indicateur_00>
+      </l_01>
+      <d_02 I_C="5" />
     </l_C4.3>
     <l_C4.2 S_00="adapter et/ou configurer un mat&#233;riel">
-      <l_01 />
-      <d_02 />
+      <l_01>
+        <Indicateur_00 S_intitule="adapter et/ou configurer un mat&#233;riel">
+          <d_ligne I_C="0" />
+          <d_poids F_C="100.0" />
+          <d_revue I_C="6" />
+        </Indicateur_00>
+      </l_01>
+      <d_02 I_C="5" />
     </l_C4.2>
     <l_C4.1 S_00=" c&#226;bler et/ou int&#233;grer un mat&#233;riel ">
-      <l_01 />
-      <d_02 />
+      <l_01>
+        <Indicateur_00 S_intitule=" c&#226;bler et/ou int&#233;grer un mat&#233;riel ">
+          <d_ligne I_C="0" />
+          <d_poids F_C="100.0" />
+          <d_revue I_C="6" />
+        </Indicateur_00>
+      </l_01>
+      <d_02 I_C="5" />
     </l_C4.1>
   </d_dicCompetences>
   <d_dicFonctions />
@@ -1506,19 +1619,19 @@
         <l__03 S_00="Sup" S_01="Ana" S_02="Con" />
       </d_posRevues>
     </Projet_CCF2>
-    <Projet_PRJ I_duree="50" I_maxEleves="5" I_minEleves="3" S_code="PRJ" S_ficheValid="STS_SN_EC_Sit1.html" S_intitule="Projet de fin d'ann&#233;e">
+    <Projet_PRJ I_duree="50" I_maxEleves="5" I_minEleves="3" S_code="PRJ" S_ficheValid="STS_SC_EC_projet_E6-V2.html" S_intitule="Projet de fin d'ann&#233;e">
       <d_attributs>
-        <l_SRC S_00="" S_01="" S_02="" S_03="" />
-        <l_PAR S_00="" S_01="" S_02="" S_03="" />
+        <l_SRC S_00="Inventaire des mat&#233;riels" S_01="D&#233;signation" S_02="" S_03="" />
+        <l_PAR S_00="Partenaires du projet" S_01="" S_02="" S_03="" />
         <l_DEC S_00="Description de l'intervention" S_01="" S_02="" S_03="" />
-        <l_OBJ S_00="Description de l'intervention" S_01="Identification de la valeur ajout&#233;e.--Enjeux." S_02="" S_03="" />
+        <l_OBJ S_00="Enonc&#233; des t&#226;ches" S_01="" S_02="" S_03="" />
         <l_TIT S_00="Titre du projet" S_01="Titre du projet" S_02="" S_03="" />
         <l_SYN S_00="" S_01="" S_02="" S_03="" />
-        <l_PB S_00="" S_01="" S_02="" S_03="" />
-        <l_ORI S_00="" S_01="" S_02="" S_03="" />
-        <l_CCF S_00="Pr&#233;sentation du support" S_01="Indiquer :-- - description du contexte dans lequel l&#8217;objet du projet va &#234;tre int&#233;gr&#233; ;-- - fonctionnalit&#233;s de cet objet ;-- - caract&#233;ristiques fonctionnelles et techniques." S_02="" S_03="" />
-        <l_TYP S_00="Typologie" S_01="" S_02="T&#233;l&#233;communication, t&#233;l&#233;phonie et r&#233;seaux t&#233;l&#233;phonique--Informatique, r&#233;seaux et infrastructures--Multim&#233;dia, son et image, radio et t&#233;l&#233;diffusion--Mobilit&#233; et syst&#232;mes embarqu&#233;s--Electronique et informatique m&#233;dicale--Mesure, instrumentation et microsyst&#232;mes--Automatique et robotique" S_03="" />
-        <l_PRX S_00="" S_01="" S_02="" S_03="" />
+        <l_PB S_00="Probl&#233;matique" S_01="" S_02="" S_03="" />
+        <l_ORI S_00="Analyse de l'existant" S_01="" S_02="" S_03="" />
+        <l_CCF S_00="Expression du besoin" S_01="Indiquer :-- - description du contexte dans lequel l&#8217;objet du projet va &#234;tre int&#233;gr&#233; ;-- - fonctionnalit&#233;s de cet objet ;-- - caract&#233;ristiques fonctionnelles et techniques." S_02="" S_03="" />
+        <l_TYP S_00="Reprise d'un projet" S_01="" S_02="oui--non" S_03="" />
+        <l_PRX S_00="Description structurelle du syst&#232;me" S_01="Principaux constituants" S_02="" S_03="" />
       </d_attributs>
       <d_cellulesInfo>
         <d_C>
@@ -1590,22 +1703,21 @@
         <l_C S_00="Grille BTS SN EC.xlsx" S_01="I" />
         <l_S S_00="Grille BTS SN EC.xlsx" S_01="I" />
       </d_grilles>
-      <l_listPhases S_00="Ana" S_01="Con" S_02="DCo" S_03="Rea" S_04="XXX" S_05="Rev" S_06="R1" S_07="R2" S_08="R3" S_09="S" />
+      <l_listPhases S_00="Ana" S_01="Con" S_02="DCo" S_03="Rea" S_04="Rev" S_05="R1" S_06="R2" S_07="R3" S_08="S" />
       <l_listPhasesEval S_00="Rev" S_01="R1" S_02="R2" S_03="R3" S_04="S" />
       <l_listeParties S_00="C" S_01="S" />
       <d_parties S_C="Conduite" S_S="Soutenance" />
       <l_periode I_00="4" I_01="5" />
       <d_phases>
-        <l_DCo S_00="Maint" S_01="Maintenance" S_02="maint" />
-        <l_Ana S_00="Install" S_01="Installation" S_02="inst" />
+        <l_DCo S_00="R&#233;al" S_01="R&#233;alisation" S_02="R&#233;al" />
+        <l_Ana S_00="Besoin" S_01="Expression fonctionnelle du besoin" S_02="Expr" />
         <l_R2 S_00="Revue n&#176;2" S_01="Revue de projet n&#176;2" S_02="R2" />
         <l_R3 S_00="Revue n&#176;3" S_01="Revue de projet n&#176;3" S_02="R3" />
-        <l_XXX S_00="Synth et com" S_01="Synth&#232;se et communication" S_02="SC" />
         <l_Rev S_00="Revue inter" S_01="Revue interm&#233;diaire" S_02="Ri" />
-        <l_R1 S_00="Revue n&#176;1" S_01="Revue de projet n&#176;1" S_02="R1" />
         <l_S S_00="Soutenance" S_01="Soutenance finale" S_02="S" />
-        <l_Rea S_00="Exp&#233;rimentations" S_01="R&#233;alisation d'exp&#233;rimentations" S_02="Re" />
-        <l_Con S_00="Expl" S_01="Exploitation" S_02="expl" />
+        <l_Con S_00="Concept" S_01="Conception" S_02="Conc" />
+        <l_Rea S_00="V&#233;rif" S_01="V&#233;rification des performances attendues" S_02="Verif" />
+        <l_R1 S_00="Revue n&#176;1" S_01="Revue de projet n&#176;1" S_02="R1" />
       </d_phases>
       <d_posRevues>
         <l__02 S_00="Ana" S_01="Con" />
