@@ -7200,9 +7200,10 @@ class PanelPropriete_Tache(PanelPropriete):
             self.textctrl.SetValue(self.tache.intitule)
         
         prj = self.tache.GetProjetRef()
+#        if not tache.estPredeterminee():
         if hasattr(self, 'cbTache'):
             if self.tache.intitule in prj.taches.keys():
-                self.cbPhas.SetStringSelection(self.tache.intitule+" "+prj.taches[self.tache.intitule][1])
+                self.cbTache.SetLabel(self.tache.intitule+"\n"+prj.taches[self.tache.intitule][1])
         
         if hasattr(self, 'txtPhas'):
             if self.tache.intitule in prj.taches.keys():
@@ -9869,7 +9870,10 @@ class TreeCtrlComboBook(wx.Panel):
         sizer.Add(self.texte, 1, flag = wx.EXPAND|wx.RIGHT, border = 10)
         
         self.SetSizerAndFit(sizer)
-        
+    
+    
+    def SetLabel(self, texte):
+        self.texte.SetLabel(wordwrap(texte, self.texte.GetSize()[0], wx.ClientDC(self)))
     
     
     def OnSize(self, evt):
@@ -9894,7 +9898,7 @@ class TreeCtrlComboBook(wx.Panel):
     
     def ExpandAll(self):
         self.tcp.tree.ExpandAll()
-    
+
     def AddItem(self, labelItem, parent = None):
         return self.tcp.AddItem(labelItem, parent)
         
@@ -9902,9 +9906,9 @@ class TreeCtrlComboBook(wx.Panel):
         self.tcp.tree.SetItemBold(item, etat)
         
     def EvtComboBox(self, texte):
-#        print "EvtComboBox", texte, self.texte.GetSize()[0]
         texte = u"\n".join(texte.split(" ", 1))
-        self.texte.SetLabel(wordwrap(texte, self.texte.GetSize()[0], wx.ClientDC(self)))
+#        print "EvtComboBox", texte, self.texte.GetSize()[0]
+        self.SetLabel(texte)
 #        self.texte.Wrap(self.texte.GetSize()[0])
         self.fct(texte)
         self.Layout()
@@ -16658,7 +16662,12 @@ class Tache(Objet_sequence):
             self.tip.SetTexte(draw_cairo.getHoraireTxt(self.GetDelai()), self.tip_delai)
 
         else:
-            self.tip.SetTitre(u"Tâche "+ self.code)
+            if self.estPredeterminee():
+                p = self.intitule
+            else:
+                p = self.code
+                    
+            self.tip.SetTitre(u"Tâche "+ p)
             if self.phase != "":
                     t = self.GetProjetRef().phases[self.phase][1]
             else:
@@ -16669,7 +16678,10 @@ class Tache(Objet_sequence):
 
         if not self.phase in TOUTES_REVUES_EVAL_SOUT:
             if self.intitule != "":
-                t = textwrap.fill(self.intitule, 50)
+                if self.estPredeterminee():
+                    t = textwrap.fill(self.GetProjetRef().taches[self.intitule][1], 50)
+                else:
+                    t = textwrap.fill(self.intitule, 50)
             else:
                 t = u""
             self.tip.SetTexte(t, self.tip_intitule)
