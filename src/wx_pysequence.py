@@ -6641,11 +6641,19 @@ class PanelPropriete_Tache(PanelPropriete):
 #        lstPhases = [p[1] for k, p in ref.phases_prj.items() if not k in ref.listPhasesEval_prj]
         lstPhases = [prj.phases[k][1] for k in prj.listPhases if not k in prj.listPhasesEval]
         
+        titre = wx.StaticText(pageGen, -1, u"Phase :")
+        pageGen.sizer.Add(titre, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 5)
+        
         if tache.phase in TOUTES_REVUES_SOUT:
-            titre = wx.StaticText(pageGen, -1, u"Phase : "+prj.phases[tache.phase][1])
-            pageGen.sizer.Add(titre, (0,0), (1,1), flag = wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_LEFT|wx.ALL, border = 5)
+            txtPhas = wx.StaticText(pageGen, -1, prj.phases[tache.phase][1])
+            pageGen.sizer.Add(txtPhas, (0,1), (1,1), flag = wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_LEFT|wx.ALL, border = 5)
+            
+        elif tache.estPredeterminee():
+            txtPhas = wx.StaticText(pageGen, -1, u"")
+            pageGen.sizer.Add(txtPhas, (0,1), (1,1), flag = wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_LEFT|wx.ALL, border = 5)
+            self.txtPhas = txtPhas
+            
         else:
-            titre = wx.StaticText(pageGen, -1, u"Phase :")
             cbPhas = wx.combo.BitmapComboBox(pageGen, -1, u"Selectionner la phase",
                                  choices = lstPhases,
                                  style = wx.CB_DROPDOWN
@@ -6658,7 +6666,7 @@ class PanelPropriete_Tache(PanelPropriete):
                 cbPhas.SetItemBitmap(i, constantes.imagesTaches[k].GetBitmap())
             pageGen.Bind(wx.EVT_COMBOBOX, self.EvtComboBox, cbPhas)
             self.cbPhas = cbPhas
-            pageGen.sizer.Add(titre, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 5)
+            
             pageGen.sizer.Add(cbPhas, (0,1), flag = wx.EXPAND|wx.ALL, border = 2)
         
 
@@ -6669,18 +6677,25 @@ class PanelPropriete_Tache(PanelPropriete):
         if not tache.phase in TOUTES_REVUES_EVAL_SOUT:
             box = wx.StaticBox(pageGen, -1, u"Intitulé de la tâche")
             bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
-            textctrl = orthographe.STC_ortho(pageGen, -1)#, u"", style=wx.TE_MULTILINE)
-            textctrl.SetToolTipString(u"Donner l'intitulé de la tâche\n"\
-                                      u" = un simple résumé !\n" \
-                                      u"les détails doivent figurer dans la zone\n" \
-                                      u"\"Description détaillée de la tâche\"")
-            bsizer.Add(textctrl,1, flag = wx.EXPAND)
-            self.textctrl = textctrl
             self.boxInt = box
-            self.textctrl.Bind(wx.EVT_KILL_FOCUS, self.EvtTextIntitule)
+            if not tache.estPredeterminee():
+                textctrl = orthographe.STC_ortho(pageGen, -1)#, u"", style=wx.TE_MULTILINE)
+                textctrl.SetToolTipString(u"Donner l'intitulé de la tâche\n"\
+                                          u" = un simple résumé !\n" \
+                                          u"les détails doivent figurer dans la zone\n" \
+                                          u"\"Description détaillée de la tâche\"")
+                bsizer.Add(textctrl,1, flag = wx.EXPAND)
+                self.textctrl = textctrl
+                self.textctrl.Bind(wx.EVT_KILL_FOCUS, self.EvtTextIntitule)
+                
+                
+            else:
+                cc = TreeCtrlComboBook(pageGen, self.tache, self.EvtComboBoxTache)
+                bsizer.Add(cc, 1, flag = wx.EXPAND)
+                self.cbTache = cc
+
             pageGen.sizer.Add(bsizer, (1,0), (1,2), 
-                           flag = wx.EXPAND|wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.RIGHT, border = 2)
-            
+                               flag = wx.EXPAND|wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.RIGHT, border = 2)    
         
         #
         # Durée de la tache
@@ -6791,9 +6806,17 @@ class PanelPropriete_Tache(PanelPropriete):
         self.FitInside()
 #        wx.CallAfter(self.PostSizeEvent)
         self.Show()
+        self.Refresh()
 #        wx.CallAfter(self.Layout)
         
-        
+    ####################################################################################
+    def getListTaches(self): 
+        """ Renvoie la liste des tâches encore disponibles = pas déja sélectionnées
+        """
+        prj = self.tache.GetProjetRef()
+        l = [t+" "+prj.taches[t][1] for t in prj.listTaches if not t in [tt.intitule for tt in self.tache.projet.taches]]
+        return l
+     
     ####################################################################################
     def OnPageChanged(self, event):
 #        sel = self.nb.GetSelection()
@@ -7066,7 +7089,39 @@ class PanelPropriete_Tache(PanelPropriete):
                     wx.CallLater(DELAY, self.sendEvent, modif = modif)
                     self.eventAttente = True
         event.Skip()
+#    #############################################################################            
+#    def    testCloseUp(self, evt):
+#        print "testCloseUp"
+#        self.ccTache.SetTextCtrlStyle(wx.TE_READONLY|wx.TE_WORDWRAP|wx.TE_MULTILINE)
+#        evt.Skip()
         
+    #############################################################################            
+    def EvtComboBoxTache(self, texte):
+        prj = self.tache.GetProjetRef()
+#        ct = event.GetString().split()[0]
+        ct = texte
+        if len(ct) == 0 or ct.split()[0] not in prj.listTaches:
+#            event.Skip()
+            return
+#        print "EvtComboBoxTache", ct.split()[0]
+        ct = ct.split()[0]
+        self.tache.SetIntitule(ct)
+        
+        ph = prj.taches[ct][0]
+        self.txtPhas.SetLabel(prj.phases[ph][1])
+        self.tache.SetPhase(ph)
+        
+        modif = u"Modification de l'intitulé de la Tâche"
+        if self.onUndoRedo():
+            self.sendEvent(modif = modif)
+        else:
+            if not self.eventAttente:
+                wx.CallLater(DELAY, self.sendEvent, modif = modif)
+                self.eventAttente = True
+                
+#        self.ccTache.SetTextCtrlStyle(wx.TE_READONLY|wx.TE_WORDWRAP|wx.TE_MULTILINE)
+#        event.Skip()
+                    
     #############################################################################            
     def EvtText(self, event):
         t = u""
@@ -7083,6 +7138,8 @@ class PanelPropriete_Tache(PanelPropriete):
             if not self.eventAttente:
                 wx.CallLater(DELAY, self.sendEvent, modif = t)
                 self.eventAttente = True
+                
+    
         
     #############################################################################            
     def EvtComboBox(self, event):
@@ -7141,6 +7198,17 @@ class PanelPropriete_Tache(PanelPropriete):
             
         if hasattr(self, 'textctrl'):
             self.textctrl.SetValue(self.tache.intitule)
+        
+        prj = self.tache.GetProjetRef()
+        if hasattr(self, 'cbTache'):
+            if self.tache.intitule in prj.taches.keys():
+                self.cbPhas.SetStringSelection(self.tache.intitule+" "+prj.taches[self.tache.intitule][1])
+        
+        if hasattr(self, 'txtPhas'):
+            if self.tache.intitule in prj.taches.keys():
+                self.txtPhas.SetLabel(prj.phases[prj.taches[self.tache.intitule][0]][1])
+            else:
+                self.txtPhas.SetLabel(u"")
         
         if hasattr(self, 'cbPhas') and self.tache.phase != '':
 #            print self.tache.phase
@@ -9775,7 +9843,224 @@ class ArbreTypeEnseignement(CT.CustomTreeCtrl):
 #        self.GetMainWindow().AdjustMyScrollbars()
 #        self.GetMainWindow().Layout()
 
+
+
+
+###########################################################################################################
+#
+#  Choice
+#
+###########################################################################################################
+class TreeCtrlComboBook(wx.Panel):
+    def __init__(self, parent, tache, fct):
+        self.tache = tache
+        self.fct = fct
+        wx.Panel.__init__(self, parent, -1)#, style = wx.BORDER_SIMPLE)
+        sizer = wx.BoxSizer(wx.VERTICAL)
+#        self.cc = wx.combo.ComboCtrl(self, style=wx.TE_WORDWRAP|wx.TE_MULTILINE|wx.TE_NO_VSCROLL)#wx.TE_READONLY|
+        self.Bouton = wx.BitmapButton(parent, -1, images.Icone_Tache.GetBitmap(), style = wx.NO_BORDER)
+        self.Bouton.SetToolTipString(u"Selectionner une tâche")
+        parent.Bind(wx.EVT_BUTTON, self.OnClick, self.Bouton)
+        self.Bind(wx.EVT_SIZE, self.OnSize)
+        
+        self.texte = wx.StaticText(self, -1, u"", style = wx.ST_NO_AUTORESIZE|wx.ST_ELLIPSIZE_END)#|wx.BORDER_SIMPLE)
+#        self.texte.FitInside()
+#        sizer.Add(self.Bouton, flag = wx.EXPAND)
+        sizer.Add(self.texte, 1, flag = wx.EXPAND|wx.RIGHT, border = 10)
+        
+        self.SetSizerAndFit(sizer)
+        
+    
+    
+    def OnSize(self, evt):
+        self.texte.SetSize(self.GetSize())
+        w, h = self.GetSize()
+        x, y = self.GetPositionTuple()
+        self.Bouton.Move((x+w-10, y-20))
+        self.Refresh()
+        
+    def OnClick(self, evt):
+        win = TreeCtrlComboPopup(self,
+                                 wx.SIMPLE_BORDER,
+                                 self.tache,
+                                 self.EvtComboBox)
+#        w, h = wx.GetDisplaySize()
+
+        btn = evt.GetEventObject()
+        pos = btn.ClientToScreen( (0,0) )
+        win.Position(pos, (600,400))
+        win.Popup()
+    
+    
+    def ExpandAll(self):
+        self.tcp.tree.ExpandAll()
+    
+    def AddItem(self, labelItem, parent = None):
+        return self.tcp.AddItem(labelItem, parent)
+        
+    def SetItemBold(self, item, etat = True):
+        self.tcp.tree.SetItemBold(item, etat)
+        
+    def EvtComboBox(self, texte):
+#        print "EvtComboBox", texte, self.texte.GetSize()[0]
+        texte = u"\n".join(texte.split(" ", 1))
+        self.texte.SetLabel(wordwrap(texte, self.texte.GetSize()[0], wx.ClientDC(self)))
+#        self.texte.Wrap(self.texte.GetSize()[0])
+        self.fct(texte)
+        self.Layout()
+        self.Refresh()
+        
+    def GetStringValue(self):
+        return self.tcp.GetStringValue()
+        
  
+###########################################################################################################
+#
+#  TreeCtrlComboPopup
+#
+###########################################################################################################
+class TreeCtrlComboPopup(wx.PopupTransientWindow):
+    def __init__(self, parent, style, tache, fct):
+        self.fct = fct
+        wx.PopupTransientWindow.__init__(self, parent, style)
+        
+        self.pnl = wx.Panel(self)
+        
+        prj = tache.GetProjetRef()
+
+        self.tree = CT.CustomTreeCtrl(self.pnl, style=wx.TR_HIDE_ROOT
+                                |wx.TR_HAS_BUTTONS
+                                |wx.TR_SINGLE
+                                |wx.TR_ROW_LINES
+                                |wx.TR_LINES_AT_ROOT,
+#                                |wx.SIMPLE_BORDER,
+                                agwStyle = CT.TR_HAS_VARIABLE_ROW_HEIGHT | CT.TR_HIDE_ROOT)
+        self.tree.SetMinSize((600,400))
+        ph = None
+        for ct in prj.listTaches:
+            if ph != prj.taches[ct][0]:
+                pph = self.AddItem(prj.phases[prj.taches[ct][0]][1])
+                self.tree.SetItemBold(pph, True)
+                ph = prj.taches[ct][0]
+            item = self.AddItem(ct+" "+prj.taches[ct][1], parent=pph)
+            self.tree.EnableItem(item, ct not in [t.intitule for t in tache.projet.taches])
+            
+                
+        self.tree.ExpandAll()
+        
+        self.tree.Bind(wx.EVT_MOTION, self.OnMotion)
+        self.tree.Bind(wx.EVT_LEFT_UP, self.OnClick)
+        self.tree.Bind(wx.EVT_SIZE, self.OnSize)
+        
+        sizer = wx.BoxSizer(wx.VERTICAL)
+        sizer.Add(self.tree, 1, wx.ALL, 5)
+     
+        self.pnl.SetSizer(sizer)
+        
+        sizer.Fit(self.pnl )
+        sizer.Fit(self)
+        self.Layout()
+        
+        wx.CallAfter(self.Refresh)
+
+
+
+    def GetControl(self):
+        return self.tree
+
+
+    def GetStringValue(self):
+        if self.value:
+            return self.tree.GetItemText(self.value)
+        return ""
+
+
+    def OnPopup(self):
+        if self.value:
+            self.tree.EnsureVisible(self.value)
+            self.tree.SelectItem(self.value)
+
+
+    def SetStringValue(self, value):
+        # this assumes that item strings are unique...
+        root = self.tree.GetRootItem()
+        if not root:
+            return
+        found = self.FindItem(root, value)
+        if found:
+            self.value = found
+            self.tree.SelectItem(found)
+
+
+    def GetAdjustedSize(self, minWidth, prefHeight, maxHeight):
+        return wx.Size(minWidth, min(200, maxHeight))
+                       
+
+    # helpers
+    
+    def FindItem(self, parentItem, text):        
+        item, cookie = self.tree.GetFirstChild(parentItem)
+        while item:
+            if self.tree.GetItemText(item) == text:
+                return item
+            if self.tree.ItemHasChildren(item):
+                item = self.FindItem(item, text)
+            item, cookie = self.tree.GetNextChild(parentItem, cookie)
+        return wx.TreeItemId();
+
+
+    def AddItem(self, value, parent = None):
+        if not parent:
+            root = self.tree.GetRootItem()
+            if not root:
+                root = self.tree.AddRoot("<hidden root>")
+            parent = root
+
+        item = self.tree.AppendItem(parent, value)
+        return item
+
+    def OnSize(self, evt = None, parentItem = None):
+        if parentItem == None:
+            parentItem = self.tree.GetRootItem()
+            margin = 15
+        else:
+            margin = 30
+            
+        w, h = self.tree.GetSize()
+        item, cookie = self.tree.GetFirstChild(parentItem)
+        while item:
+            text = self.tree.GetItemText(item).replace(u"\n", u"")
+            self.tree.SetItemText(item, wordwrap(text, w-margin-4, wx.ClientDC(self.tree), breakLongWords=False))
+            if self.tree.ItemHasChildren(item):
+                item = self.OnSize(parentItem = item)
+            item, cookie = self.tree.GetNextChild(parentItem, cookie)
+        return
+        
+        
+    def OnMotion(self, evt):
+        # have the selection follow the mouse, like in a real combobox
+        item, flags = self.tree.HitTest(evt.GetPosition())
+        if item and flags & wx.TREE_HITTEST_ONITEMLABEL:
+            self.tree.SelectItem(item)
+            self.curitem = item
+        evt.Skip()
+
+    def OnClick(self, evt):
+        item, flags = self.tree.HitTest(evt.GetPosition())
+#        print self.tree.GetItemParent(item)
+        if self.tree.GetItemParent(item) != self.tree.GetRootItem():
+            self.fct(self.tree.GetItemText(self.tree.GetSelection()).replace(u"\n", u""))
+            self.Dismiss()
+        
+#    def OnLeftDown(self, evt):
+#        # do the combobox selection
+#        item, flags = self.tree.HitTest(evt.GetPosition())
+#        if item and flags & wx.TREE_HITTEST_ONITEMLABEL:
+#            self.curitem = item
+#            self.value = item
+#            self.Dismiss()
+#        evt.Skip()
+
     
     
     
@@ -10258,7 +10543,7 @@ class A_propos(wx.Dialog):
 #############################################################################################################
 if sys.platform == "win32":
     import win32gui
-    import win32con
+#    import win32con
 class myProgressDialog(wx.ProgressDialog):
     def __init__(self, titre, message, maximum, parent, style = 0):
         wx.ProgressDialog.__init__(self, titre,
@@ -10286,13 +10571,13 @@ class myProgressDialog(wx.ProgressDialog):
         
 #        wx.CallAfter(self.top)
         
-    def top(self):
-        if sys.platform != "win32":
-            return
-        hwnd = self.GetHandle()
-        win32gui.SetWindowPos(hwnd, win32con.HWND_TOPMOST, 0, 0, 0, 0,
-                              win32con.SWP_NOSIZE | win32con.SWP_NOMOVE
-                              ) 
+#    def top(self):
+#        if sys.platform != "win32":
+#            return
+#        hwnd = self.GetHandle()
+#        win32gui.SetWindowPos(hwnd, win32con.HWND_TOPMOST, 0, 0, 0, 0,
+#                              win32con.SWP_NOSIZE | win32con.SWP_NOMOVE
+#                              ) 
         
     def OnClose(self, event):
 #        print "Close dlg"
@@ -12914,6 +13199,12 @@ class Projet(BaseDoc, Objet_sequence):
                              phaseTache = p, duree = 0))
         return lst
     
+    
+    ######################################################################################  
+    def areTachesPredeterminees(self):
+        return len(self.GetProjetRef().taches) > 0
+    
+    
     ######################################################################################  
     def getTachesRevue(self):
         return [t for t in self.taches if t.phase in TOUTES_REVUES_EVAL_SOUT]
@@ -13418,7 +13709,7 @@ class Projet(BaseDoc, Objet_sequence):
         """ Ajoute une tâche au projet
             et la place juste après la tâche tacheAct (si précisé)
         """
-        if tacheAct == None or tacheAct.phase == "S" or tacheAct.phase == "":
+        if tacheAct == None or tacheAct.phase == "S" or tacheAct.phase == "" or self.areTachesPredeterminees():
             tache = Tache(self, self.panelParent)
             self.taches.append(tache)
             tache.ordre = len(self.taches)
@@ -14910,7 +15201,7 @@ class Seance(ElementDeSequence, Objet_sequence):
     def GetCode(self, num):
         return self.code
     
-    def GetIntit(self, num):
+    def GetIntit(self, num = None):
         return self.intitule
     
     
@@ -15833,7 +16124,10 @@ class Tache(Objet_sequence):
                     self.indicateursEleve[0].append(c)
 #                self.indicateursEleve[0] = [x or y for x, y in zip(self.indicateursEleve[0], lc)]
 
-            
+    
+    ######################################################################################  
+    def estPredeterminee(self):
+        return len(self.GetProjetRef().taches) > 0 
             
         
     ######################################################################################  
@@ -16215,11 +16509,16 @@ class Tache(Objet_sequence):
         
         return lst
     
+    ######################################################################################  
     def GetCode(self, num):
         return self.code
     
-    def GetIntit(self, num):
-        return self.intitule
+    ######################################################################################  
+    def GetIntit(self, num = None):
+        if self.estPredeterminee() > 0:
+            return self.intitule+"\n"+self.GetProjetRef().taches[self.intitule][1]
+        else:
+            return self.intitule
         
 
     ######################################################################################  
@@ -16343,7 +16642,10 @@ class Tache(Objet_sequence):
                 self.codeBranche.SetLabel(u"")
                 t = u""
             else:
-                self.codeBranche.SetLabel(self.code)
+                if self.estPredeterminee():
+                    self.codeBranche.SetLabel(self.intitule)
+                else:
+                    self.codeBranche.SetLabel(self.code)
                 t = u" :"
             self.arbre.SetItemText(self.branche, self.GetProjetRef().phases[self.phase][1]+t)
             self.codeBranche.LayoutFit()

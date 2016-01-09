@@ -93,7 +93,7 @@ fontEqu = 0.011 * COEF
 
 # Position dans l'année
 posPos = [None, margeY - ecartY/2]
-taillePos = [None, 0.04 * COEF]
+taillePos = [None, 0.03 * COEF]
 
 # Problématique
 posPro = [posNom[0] + tailleNom[0] + ecartX/2, margeY + taillePos[1] + ecartY/2]
@@ -1328,7 +1328,7 @@ def DrawTacheRacine(ctx, tache, y):
         else:
             rect = (x, y + hc, tailleZTaches[0], h-hc)
         if rect[2] > 0:
-            show_text_rect(ctx, tache.intitule, rect, 
+            show_text_rect(ctx, tache.GetIntit(), rect, 
                            ha = 'g', fontsizeMinMax = (minFont, 0.015 * COEF))
         
     

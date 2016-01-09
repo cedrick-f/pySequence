@@ -1531,6 +1531,7 @@
       </d_grilles>
       <l_listPhases S_00="Ana" S_01="Con" S_02="DCo" S_03="Rea" S_04="XXX" S_05="R1" S_06="R2" S_07="R3" S_08="S" />
       <l_listPhasesEval S_00="R1" S_01="R2" S_02="R3" S_03="S" />
+      <l_listTaches />
       <l_listeParties S_00="S1" />
       <d_parties S_S1="Situation 1" />
       <l_periode I_00="2" />
@@ -1599,6 +1600,7 @@
       </d_grilles>
       <l_listPhases S_00="Sup" S_01="Ana" S_02="Con" S_03="Rea" S_04="Val" S_05="XXX" S_06="Rev" S_07="R1" S_08="R2" S_09="R3" S_10="S" />
       <l_listPhasesEval S_00="Rev" S_01="R1" S_02="R2" S_03="R3" S_04="S" />
+      <l_listTaches />
       <l_listeParties S_00="S2" />
       <d_parties S_S2="Situation 2" />
       <l_periode I_00="3" />
@@ -1707,6 +1709,7 @@
       </d_grilles>
       <l_listPhases S_00="Ana" S_01="Con" S_02="DCo" S_03="Rea" S_04="Rev" S_05="R1" S_06="R2" S_07="R3" S_08="S" />
       <l_listPhasesEval S_00="Rev" S_01="R1" S_02="R2" S_03="R3" S_04="S" />
+      <l_listTaches S_00="T1.4" S_01="T2.1" S_02="T2.3" S_03="T3.1" S_04="T3.3" S_05="T3.4" S_06="T4.1" S_07="T4.2" S_08="T4.3" S_09="T5.1" S_10="T5.4" S_11="T6.1" S_12="T6.2" S_13="T6.3" S_14="T7.1" S_15="T7.2" S_16="T7.3" S_17="T8.1" S_18="T8.2" S_19="T9.2" S_20="T10.3" S_21="T11.3" S_22="T12.1" S_23="T12.2" S_24="T9.1" S_25="T10.4" />
       <l_listeParties S_00="C" S_01="S" />
       <d_parties S_C="Conduite" S_S="Soutenance" />
       <l_periode I_00="4" I_01="5" />
@@ -1729,7 +1732,7 @@
         <l_T12.2 S_00="DCo" S_01="Animer une &#233;quipe">
           <l_02 S_00="C2.1" S_01="C2.3" S_02="C2.5" />
         </l_T12.2>
-        <l_T12.1 S_00="DCo" S_01="Organiser le travail de l&#8217;&#233;quipe">
+        <l_T12.1 S_00="DCo" S_01="Organiser le travail de l'&#233;quipe">
           <l_02 S_00="C2.3" S_01="C2.4" S_02="C2.5" />
         </l_T12.1>
         <l_T8.2 S_00="DCo" S_01="D&#233;finir une organisation ou un processus de maintenance curative">
@@ -1744,16 +1747,16 @@
         <l_T9.1 S_00="Rea" S_01="Finaliser le cahier de recette">
           <l_02 S_00="C3.1" S_01="C3.5" S_02="C4.5" />
         </l_T9.1>
-        <l_T2.1 S_00="Ana" S_01="Collecter des informations n&#233;cessaires &#224; l&#8217;&#233;laboration du cahier des charges pr&#233;liminaire">
+        <l_T2.1 S_00="Ana" S_01="Collecter les informations n&#233;cessaires &#224; l'&#233;laboration du cahier des charges pr&#233;liminaire">
           <l_02 S_00="C2.2" />
         </l_T2.1>
         <l_T4.2 S_00="Con" S_01="Traduire les &#233;l&#233;ments du cahier des charges sous la forme de mod&#232;les">
           <l_02 S_00="C3.1" />
         </l_T4.2>
         <l_T4.3 S_00="Con" S_01="R&#233;diger le document de recette">
-          <l_02 S_00="C3.5" />
+          <l_02 S_00="C3.1" S_01="C3.6" />
         </l_T4.3>
-        <l_T4.1 S_00="Con" S_01="Identifier le comportement d&#8217;un constituant">
+        <l_T4.1 S_00="Con" S_01="Identifier le comportement d'un constituant">
           <l_02 S_00="C4.1" />
         </l_T4.1>
         <l_T7.1 S_00="DCo" S_01="R&#233;aliser la conception d&#233;taill&#233;e du mat&#233;riel et/ou du logiciel">
@@ -1765,25 +1768,25 @@
         <l_T7.2 S_00="DCo" S_01="Produire un prototype logiciel et/ou mat&#233;riel">
           <l_02 S_00="C3.9" S_01="C4.2" S_02="C4.3" S_03="C4.4" S_04="C4.6" S_05="C4.7" />
         </l_T7.2>
-        <l_T6.1 S_00="Con" S_01="Prendre connaissance des fonctions associ&#233;es au projet et d&#233;finir les t&#226;ches ">
+        <l_T6.1 S_00="Con" S_01="Prendre connaissance des fonctions associ&#233;es au projet et d&#233;finir les t&#226;ches professionnelles correspondantes dans le respect du budget">
           <l_02 S_00="C2.4" S_01="C2.5" />
         </l_T6.1>
-        <l_T6.2 S_00="Con" S_01="D&#233;finir et valider un planning (jalons de livrables)">
+        <l_T6.2 S_00="Con" S_01="D&#233;finir et valider un planning">
           <l_02 S_00="C2.3" S_01="C2.4" S_02="C2.5" />
         </l_T6.2>
         <l_T6.3 S_00="Con" S_01="Assurer le suivi du planning et du budget">
           <l_02 S_00="C2.1" S_01="C2.3" S_02="C2.4" S_03="C2.5" />
         </l_T6.3>
-        <l_T5.1 S_00="Con" S_01="Identifier les solutions existantes de l&#8217;entreprise">
-          <l_02 S_00="C3.1" S_01="C3.6" />
+        <l_T5.1 S_00="Con" S_01="Identifier les solutions existantes de l'entreprise">
+          <l_02 S_00="C3.5" />
         </l_T5.1>
-        <l_T1.4 S_00="Ana" S_01="V&#233;rifier la p&#233;rennit&#233; et mettre &#224; jour les informations">
+        <l_T1.4 S_00="Ana" S_01="V&#233;rifier la p&#233;rennit&#233; des informations et les mettre &#224; jour">
           <l_02 S_00="C2.1" />
         </l_T1.4>
-        <l_T5.4 S_00="Con" S_01="S&#233;lectionner et/ou adapter une ou des solutions selon le contexte technico&#233;conomique">
+        <l_T5.4 S_00="Con" S_01="S&#233;lectionner et/ou adapter une ou des solutions selon le contexte technico-&#233;conomique">
           <l_02 S_00="C3.8" />
         </l_T5.4>
-        <l_T10.4 S_00="Rea" S_01="Proposer des solutions d&#8217;am&#233;lioration du syst&#232;me ou du service">
+        <l_T10.4 S_00="Rea" S_01="Proposer des solutions d'am&#233;lioration du syst&#232;me ou du service">
           <l_02 S_00="C3.6" />
         </l_T10.4>
         <l_T11.3 S_00="DCo" S_01="Assurer la formation du client">
@@ -1798,10 +1801,10 @@
         <l_T2.3 S_00="Ana" S_01="Formaliser le cahier des charges">
           <l_02 S_00="C2.3" S_01="C2.4" />
         </l_T2.3>
-        <l_T3.1 S_00="Ana" S_01="S&#8217;approprier le cahier des charges">
+        <l_T3.1 S_00="Ana" S_01="S'approprier le cahier des charges">
           <l_02 S_00="C3.1" />
         </l_T3.1>
-        <l_T3.3 S_00="Ana" S_01="&#201;laborer le cahier de recette">
+        <l_T3.3 S_00="Ana" S_01="Elaborer le cahier de recette">
           <l_02 S_00="C3.5" />
         </l_T3.3>
       </d_taches>

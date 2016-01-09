@@ -1614,6 +1614,7 @@ class Projet(XMLelem):
         # tâches du projet (si imposées)
         #
         self.taches = {}
+        self.listTaches = []
         
         #
         # Effectifs
@@ -1714,6 +1715,7 @@ class Projet(XMLelem):
                                 return v1[1][comp]
 
 
+        
     ##################################################################################################################
     def importer(self, wb):
 #        print "importer", self.parties.keys()
@@ -1771,10 +1773,12 @@ class Projet(XMLelem):
         shnt = u"Taches_"+self.code
         if shnt in [s.name for s in wb.sheets()]:
             shp = wb.sheet_by_name(shnt)
-            for l in range(2, shp.nrows):
-                self.taches[str(shp.cell(l,0).value)] = [shp.cell(l,1).value, 
-                                                         shp.cell(l,2).value, 
-                                                         shp.cell(l,3).value.split()]
+            for l in range(2, shp.nrows) :
+                if len(shp.cell(l,3).value) > 0 : # On ne prend que les tâches concernées par le projet
+                    self.listTaches.append(str(shp.cell(l,0).value))
+                    self.taches[str(shp.cell(l,0).value)] = [shp.cell(l,2).value, 
+                                                             shp.cell(l,1).value, 
+                                                             shp.cell(l,3).value.split()]
 #            print self.taches
         
         #
@@ -1894,9 +1898,22 @@ class Projet(XMLelem):
         
         self._dicIndicateurs = ref.getPremierEtDernierNiveauArbre(self._dicCompetences)
         
+        #
+        # Post-traitement des tâches (si prédéterminées)
+        #
+        
+        # On ne prend que les tâches concernées par le projet
         for t in self.taches.values():
             t[2] = [cc for cc in t[2] if cc in self._dicCompetences.keys()]
             
+        # On trie par phase
+        lt = []
+        for p in self.listPhases:
+            for t in self.listTaches:
+                if self.taches[t][0] == p:
+                    lt.append(t)
+        self.listTaches = lt
+                    
         self.normaliserPoids(self._dicIndicateurs, debug = False)
 #        print "                   ", self._dicIndicateurs_prj
         
@@ -1906,6 +1923,9 @@ class Projet(XMLelem):
         self._dicIndicateurs_simple = self.getDernierNiveauArbre2(self._dicIndicateurs_famille)
 #        print "_dicIndicateurs_prj_simple", self._dicIndicateurs_prj_simple
         
+        
+        
+                    
 #        lst.extend()
 
 
@@ -2084,7 +2104,20 @@ class Competence(XMLelem):
 
 
 
-
+##########################################################################################
+## source : http://stackoverflow.com/questions/5967500/how-to-correctly-sort-a-string-with-a-number-inside
+#import re
+#
+#def atoi(text):
+#    return int(text) if text.isdigit() else text
+#
+#def natural_keys(text):
+#    '''
+#    alist.sort(key=natural_keys) sorts in human order
+#    http://nedbatchelder.com/blog/200712/human_sorting.html
+#    (See Toothy's implementation in the comments)
+#    '''
+#    return [ atoi(c) for c in re.split('(\d+)', text) ]
 
 
 

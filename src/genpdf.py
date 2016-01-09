@@ -120,7 +120,7 @@ def table_taches(taches, eleves, projet):
     for e in eleves:
         h += u"""<th style="width:6%%" class = "verticalTableHeader">%s</th>""" %e.GetNomPrenom()
     h = encap(h, u"tr")
-    for c in sorted(taches.keys()):
+    for c in projet.getListTaches():
         nm = taches[c][1]
         ph = taches[c][0]
         cp = taches[c][2]

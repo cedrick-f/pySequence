@@ -1063,12 +1063,14 @@ def DrawPeriodes(ctx, rect, pos = None, periodes = [[u"Année", 5]], projets = {
         ctx.set_font_size(fontPos)
         w0 = ctx.text_extents(annee[0])[2]
 #        xi = x + wi/2 + (dx+wi)*i
-        if len(annee) > 1:
+        if len(annee) > 1: # Exposant
             ctx.set_font_size(fontPos*0.9)
             w1 = ctx.text_extents(annee[1])[2]
-            show_text_rect_fix(ctx, annee[0], xi+wa/2-(w0+w1)/2, y, w0, ht*2/3, fontPos, 1)
+            show_text_rect_fix(ctx, annee[0], xi+wa/2-(w0+w1)/2, y, 
+                               w0, ht*2/3, fontPos, 1, ha = 'd')
             ctx.stroke ()
-            show_text_rect_fix(ctx, annee[1], xi+wa/2-(w0+w1)/2 + w0 +0.01, y, w1, ht/3, fontPos*0.9, 1, ha = 'c')
+            show_text_rect_fix(ctx, annee[1], xi+wa/2-(w0+w1)/2 + w0 +fontPos/10, y, 
+                               w1, ht/3, fontPos*0.9, 1, ha = 'g')
             ctx.stroke ()
         else:
             show_text_rect_fix(ctx, annee[0], xi+wa/2-w0/2, y, w0, ht*2/3, fontPos, 1)
