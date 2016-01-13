@@ -6695,7 +6695,7 @@ class PanelPropriete_Tache(PanelPropriete):
                 self.cbTache = cc
 
             pageGen.sizer.Add(bsizer, (1,0), (1,2), 
-                               flag = wx.EXPAND|wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.RIGHT, border = 2)    
+                               flag = wx.EXPAND|wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.RIGHT, border = 4)    
         
         #
         # Durée de la tache
@@ -6717,7 +6717,7 @@ class PanelPropriete_Tache(PanelPropriete):
             self.bsizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
             self.elevesCtrl = []
             self.ConstruireListeEleves()
-            pageGen.sizer.Add(self.bsizer, (0,2), (4, 1), flag = wx.EXPAND)
+            pageGen.sizer.Add(self.bsizer, (0,2), (4, 1), flag = wx.EXPAND|wx.LEFT|wx.RIGHT, border = 4)
         
         
         
@@ -6768,29 +6768,16 @@ class PanelPropriete_Tache(PanelPropriete):
             
             self.arbre = ArbreCompetencesPrj(pageCom, tache.GetReferentiel(), self,
                                              revue = self.tache.phase in TOUTES_REVUES_SOUT, 
-                                             eleves = self.tache.phase in TOUTES_REVUES_EVAL_SOUT)
+                                             eleves = (self.tache.phase in TOUTES_REVUES_EVAL_SOUT \
+                                                       or self.tache.estPredeterminee()))
+            
             pageComsizer.Add(self.arbre, 1, flag = wx.EXPAND)
-        
             pageCom.SetSizer(pageComsizer)
             nb.AddPage(pageCom, tache.GetReferentiel().nomCompetences + u" à mobiliser") 
             
             self.pageComsizer = pageComsizer
             
-#            if (len(tache.GetReferentiel().dicFonctions) > 0) and (not tache.phase in TOUTES_REVUES_EVAL_SOUT):
-#                #
-#                # La page "Fonctions"
-#                #
-#                pageFct = wx.Panel(nb, -1)
-#                self.pageFct = pageFct
-#                pageFctsizer = wx.BoxSizer(wx.HORIZONTAL)
-#
-#                self.arbreFct = ArbreFonctionsPrj(pageFct, tache.GetReferentiel(), self)
-#                pageFctsizer.Add(self.arbreFct, 1, flag = wx.EXPAND)
-#
-#                pageFct.SetSizer(pageFctsizer)
-#                nb.AddPage(pageFct, tache.GetReferentiel().nomFonctions) 
-#
-#                self.pageFctsizer = pageFctsizer
+
         
         
             self.sizer.Add(nb, (0,0), flag = wx.EXPAND)
@@ -6918,13 +6905,15 @@ class PanelPropriete_Tache(PanelPropriete):
     ######################################################################################  
     def AjouterCompetence(self, code, propag = True):
 #        print "AjouterCompetence !!", self, code
-        if not code in self.tache.indicateursEleve[0]:
+        if not code in self.tache.indicateursEleve[0] and not self.tache.estPredeterminee():
             self.tache.indicateursEleve[0].append(code)
 
         if propag:
             for i in range(len(self.tache.projet.eleves)):
-                self.AjouterCompetenceEleve(code, i+1)
+                if not self.tache.estPredeterminee() or i in self.tache.eleves:
+                    self.AjouterCompetenceEleve(code, i+1)
        
+#        if not self.tache.estPredeterminee():
         self.tache.projet.SetCompetencesRevuesSoutenance()
         
         
@@ -6946,38 +6935,50 @@ class PanelPropriete_Tache(PanelPropriete):
     
     ######################################################################################  
     def AjouterCompetenceEleve(self, code, eleve):
-#        print "AjouterCompetenceEleve", self, code
+#        print "AjouterCompetenceEleve", self, code, self.tache.phase
         if hasattr(self.tache, 'indicateursEleve'):
-            dicIndic = self.tache.projet.eleves[eleve-1].GetDicIndicateursRevue(self.tache.phase)
-            comp = code.split("_")[0]
-            if comp in dicIndic.keys():
-                if comp != code: # Indicateur seul
-                    indic = eval(code.split("_")[1])
-                    ok = dicIndic[comp][indic-1]
-            else:
-                ok = False
-                
-            if ok and not code in self.tache.indicateursEleve[eleve]:
+            
+            if self.tache.estPredeterminee():
                 self.tache.indicateursEleve[eleve].append(code)
+                
+            else:
+                dicIndic = self.tache.projet.eleves[eleve-1].GetDicIndicateursRevue(self.tache.phase)
+                comp = code.split("_")[0]
+                if comp in dicIndic.keys():
+                    if comp != code: # Indicateur seul
+                        indic = eval(code.split("_")[1])
+                        ok = dicIndic[comp][indic-1]
+                else:
+                    ok = False
+                    
+                if ok and not code in self.tache.indicateursEleve[eleve]:
+                    self.tache.indicateursEleve[eleve].append(code)
+            
+#            print "  ", self.tache.indicateursEleve
 #                self.tache.ActualiserDicIndicateurs()
             
         
     ######################################################################################  
     def EnleverCompetenceEleve(self, code, eleve):
 #        print "EnleverCompetenceEleve", self, code
+        
         if hasattr(self.tache, 'indicateursEleve'):
+#            print "  ", self.tache.indicateursEleve
             if code in self.tache.indicateursEleve[eleve]:
                 self.tache.indicateursEleve[eleve].remove(code)
             # on recommence : pour corriger un bug
             if code in self.tache.indicateursEleve[eleve]:
                 self.tache.indicateursEleve[eleve].remove(code)
 #            self.tache.ActualiserDicIndicateurs()
+#            print "  ", self.tache.indicateursEleve
 
 
     ############################################################################            
     def SetCompetences(self):
 #        print "SetCompetences"
+        
         self.GetDocument().MiseAJourDureeEleves()
+        
         modif = u"Ajout/Suppression d'une compétence à la Tâche"
         if self.onUndoRedo():
             self.sendEvent(modif = modif)
@@ -7073,12 +7074,14 @@ class PanelPropriete_Tache(PanelPropriete):
         self.tache.eleves = lst
         self.GetDocument().MiseAJourDureeEleves()
         self.GetDocument().MiseAJourTachesEleves()
+        
         self.sendEvent(modif = u"Changement d'élève concerné par la tâche")    
 
 
     #############################################################################            
     def EvtTextIntitule(self, event):
         txt = self.textctrl.GetValue()
+        
         if self.tache.intitule != txt:
             self.tache.SetIntitule(txt)
             modif = u"Modification de l'intitulé de la Tâche"
@@ -7088,7 +7091,10 @@ class PanelPropriete_Tache(PanelPropriete):
                 if not self.eventAttente:
                     wx.CallLater(DELAY, self.sendEvent, modif = modif)
                     self.eventAttente = True
+        
         event.Skip()
+        
+        
 #    #############################################################################            
 #    def    testCloseUp(self, evt):
 #        print "testCloseUp"
@@ -7111,6 +7117,14 @@ class PanelPropriete_Tache(PanelPropriete):
         self.txtPhas.SetLabel(prj.phases[ph][1])
         self.tache.SetPhase(ph)
         
+        #
+        # Reconstruire l'arbre des compétences (uniquement celles associées à la tâche)
+        #
+        self.arbre.ReConstruire()
+        
+        #
+        # Marquer UNDO
+        #
         modif = u"Modification de l'intitulé de la Tâche"
         if self.onUndoRedo():
             self.sendEvent(modif = modif)
@@ -7169,18 +7183,21 @@ class PanelPropriete_Tache(PanelPropriete):
             self.vcDuree.mofifierValeursSsEvt()
 
     
-    #############################################################################            
-    def MiseAJourCases(self):
+#    #############################################################################            
+#    def MiseAJourCases(self):
+#        """ Mise à jour des cases "élèves" de l'arbre des compétences
+#            > on cécoche tout et on recoche
+#        """
 #        print "MiseAJourCases", self.tache.phase, self.tache.intitule
-        if hasattr(self, 'arbre'):
-            self.arbre.UnselectAll()
-            
-            for codeIndic in self.tache.indicateursEleve[0]:
-                if codeIndic in self.arbre.items.keys():
-                    item = self.arbre.items[codeIndic]
-                    cases = self.arbre.GetItemWindow(item, 3)
-                    cases.MiseAJour()
-                    cases.Actualiser()
+#        print "  ", self.tache.indicateursEleve
+#        if hasattr(self, 'arbre'):
+#            self.arbre.UnselectAll()
+#            
+#            for codeIndic in self.tache.indicateursEleve[0]:
+#                cases = self.arbre.GetCasesEleves(codeIndic)
+#                if cases:
+#                    cases.MiseAJour()
+#                    cases.Actualiser()
                   
             
     #############################################################################            
@@ -8963,7 +8980,7 @@ class ArbreCompetences(HTL.HyperTreeList):
     ######################################################################################################
     def ToolTip(self, event):
         return
-        print self.HitTest((event.x, event.y))
+#        print self.HitTest((event.x, event.y))
         
     ######################################################################################################
     def OnEnter(self, event):
@@ -8977,30 +8994,18 @@ class ArbreCompetences(HTL.HyperTreeList):
         self.ref = ref
  
         self.DeleteChildren(self.root)
-        
         for i in self.items.values():
             for wnd in i._wnd:
                 if wnd:
                     wnd.Hide()
                     wnd.Destroy()
-       
-#        self.DestroyChildren()
-#        self.DeleteAllItems()
-#        print "1"
-#        for item in self.GetChildren():
-#            
-#            item.DeleteAllItems()         
-#        
-#        self.DeleteChildren(self.root)
 
         self.items = {}
         self.Construire(self.root, ref = ref)
 
         self.ExpandAll()
 
-#        self.Layout()
-        
-    
+
     #############################################################################
     def MiseAJourPhase(self, phase):
         self.DeleteChildren(self.root)
@@ -9009,7 +9014,7 @@ class ArbreCompetences(HTL.HyperTreeList):
         
     
     ####################################################################################
-    def OnSize2(self, evt):
+    def OnSize2(self, evt = None):
         ww = 0
         for c in range(1, self.GetColumnCount()):
             ww += self.GetColumnWidth(c)
@@ -9018,8 +9023,11 @@ class ArbreCompetences(HTL.HyperTreeList):
             self.SetColumnWidth(0, w)
             if self.IsShown():
                 self.wrap(w)
-        evt.Skip()
         
+        if evt is not None:
+            evt.Skip()
+
+
     ####################################################################################
     def wrap(self,w):
         item = self.GetRootItem()
@@ -9060,7 +9068,7 @@ class ArbreCompetences(HTL.HyperTreeList):
         
     ####################################################################################
     def OnItemCheck(self, event, item = None):
-
+#        print "OnItemCheck"
         if event != None:
             item = event.GetItem()
 
@@ -9160,7 +9168,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
         
         self.SetColumnText(0, ref.nomCompetences + u" et " + ref.nomIndicateurs)
         
-        tache = self.pptache.tache
+        tache = self.GetTache()
         prj = tache.GetProjetRef()
         
         for i, part in enumerate(prj.parties.keys()):
@@ -9169,7 +9177,9 @@ class ArbreCompetencesPrj(ArbreCompetences):
         if eleves:
             self.SetColumnWidth(i+2, 0)
             
-          
+    ####################################################################################
+    def GetTache(self):
+        return self.pptache.tache  
         
 #        self.Bind(CT.EVT_TREE_ITEM_GETTOOLTIP, self.OnToolTip)
         
@@ -9178,36 +9188,46 @@ class ArbreCompetencesPrj(ArbreCompetences):
         """ 
         """
 #        print "ConstruireCasesEleve"
-        tache = self.pptache.tache
+        tache = self.GetTache()
 #        prj = tache.GetProjetRef()
         for codeIndic, item in self.items.items():
             cases = self.GetItemWindow(item, 3)
             if isinstance(cases, ChoixCompetenceEleve):
                 item.DeleteWindow(3)
                 cases = ChoixCompetenceEleve(self.GetMainWindow(), codeIndic,
-                                             tache.projet, tache)
+                                             tache.projet, tache, self.MiseAJourCaseEleve)
+#                cases = ChoixCompetenceEleve(self, codeIndic,
+#                                             tache.projet, tache)
                 item.SetWindow(cases, 3)
+        self.Layout()
+        
             
-    
+    ####################################################################################
+    def ReConstruire(self):
+#        print "ReConstruire"
+        self.DeleteChildren(self.root)
+        self.Construire()
+        self.ConstruireCasesEleve()
+        self.ExpandAll()
+        self.OnSize2()
 
     ####################################################################################
     def Construire(self, branche = None, dic = None, ref = None):
-#        print "Construire compétences prj", self.pptache.tache
+#        print "Construire compétences prj", self.GetTache().intitule
         if ref == None:
             ref = self.ref
         
         if branche == None:
             branche  = self.root
-#        print dic
         
-        tache = self.pptache.tache
+        tache = self.GetTache()
         prj = tache.GetProjetRef()
         if dic == None: # Construction de la racine
             dic = prj._dicCompetences
         
 #        print "   ProjetRef", prj
-#        print "   dicCompetences", dic
-#        print tache
+#        print "  dicCompetences", dic
+#        if tache.estPredeterminee(): print prj.taches[tache.intitule][2]
         
         font = wx.Font(10, wx.DEFAULT, wx.FONTSTYLE_ITALIC, wx.NORMAL, False)
         
@@ -9221,13 +9241,21 @@ class ArbreCompetencesPrj(ArbreCompetences):
             for k in ks:
                 if debug: print "****", k
                 v = d[k]
+#                print "****", k#, prj.taches[tache.intitule][2]
+
+                #
+                # Groupe de compétences
+                #
                 if len(v) > 1 and type(v[1]) == dict:
+                    
                     if debug: print "   ", v[0]
                     
-                    if len(v) == 2:
-                        b = self.AppendItem(br, k+" "+v[0])
-                    
-                    else:   # Groupe de compétences - avec poids
+                    if len(v) == 2: # Compétence 
+                        if not tache.estPredeterminee() or k in prj.taches[tache.intitule][2]:
+                            b = self.AppendItem(br, k+" "+v[0])
+                        else:
+                            b = None
+                    else:   # Groupe de compétences - avec poids 
                         if debug: print "   prem's", v[2]
                         b = self.AppendItem(br, k+" "+v[0])
 #                        print " * ",v[2]
@@ -9240,96 +9268,111 @@ class ArbreCompetencesPrj(ArbreCompetences):
 #                            if p != 0:
 #                                self.SetItemText(b, pourCent2(0.01*p), i+1)
                         self.SetItemBold(b, True)
-                    self.items[k] = b
-                    const(v[1], b, debug = debug)
+                    
+                    if b is not None:
+                        self.items[k] = b
+                        const(v[1], b, debug = debug)
                         
-                else:   # Indicateur
-                    
-                    cc = [cd+ " " + it for cd, it in zip(k.split(u"\n"), v[0].split(u"\n"))]
-#                    c = self.AppendItem(b, u"\n".join(cc), ct_type=1)
-              
-                    comp = self.AppendItem(br, u"\n ".join(cc))
-                    
-                    if len(v) == 3: # Groupe de compétences - avec poids
-                        if debug: print "   prem's", v[2]
-                        for j, part in enumerate(prj.parties.keys()):
-                            if part in v[2].keys():
-#                        for i, p in enumerate(v[2][1:]):
-#                            if p != 0:
-                                self.SetItemText(comp, pourCent2(0.01*v[2][part]), j+1)
-                        self.SetItemBold(comp, True)
-                                
-#                    comp = self.AppendItem(br, k+" "+v[0])
-                    
-                    self.items[k] = comp
+                #
+                # Compétence avec indicateur(s)
+                #
+                else:
                     b = None #
                     tous = True
-                    for i, indic in enumerate(v[1]):
-                        codeIndic = str(k+'_'+str(i+1))
-                        if debug:
-#                            print not tache.phase in [_R1, "Rev", tache.projet.getCodeLastRevue()]
-#                            print codeIndic , indic.revue,
-                            if hasattr(tache, 'indicateursMaxiEleve'):
-                                print tache.indicateursMaxiEleve[0]
-                            print prj.getTypeIndicateur(codeIndic)
+                    
+                    if not tache.estPredeterminee() or (tache.intitule in prj.taches.keys() and k in prj.taches[tache.intitule][2]):
+                        cc = [cd+ " " + it for cd, it in zip(k.split(u"\n"), v[0].split(u"\n"))]
+    #                    c = self.AppendItem(b, u"\n".join(cc), ct_type=1)
+                  
+                        comp = self.AppendItem(br, u"\n ".join(cc))
                         
-                        if tache == None:
-                            b = self.AppendItem(comp, indic.intitule, data = codeIndic)
+                        #
+                        # Compétence "racine" - avec poids
+                        #
+                        if len(v) == 3: # 
+                            if debug: print "   prem's", v[2]
                             for j, part in enumerate(prj.parties.keys()):
                                 if part in v[2].keys():
-#                            for j, p in enumerate(indic.poids[1:]):
-#                                if p != 0:
-                                    if j == 0:
-                                        self.SetItemTextColour(b, COUL_PARTIE['C'])
-                                    else:
-                                        self.SetItemTextColour(b, COUL_PARTIE['S'])
-                            self.SetItemFont(b, font)
+    #                        for i, p in enumerate(v[2][1:]):
+    #                            if p != 0:
+                                    self.SetItemText(comp, pourCent2(0.01*v[2][part]), j+1)
+                            self.SetItemBold(comp, True)
+                                    
+    #                    comp = self.AppendItem(br, k+" "+v[0])
+                        
+                        self.items[k] = comp
+                        
+                        #
+                        # Ajout des indicateurs
+                        #
+                        
+                        for i, indic in enumerate(v[1]):
+                            codeIndic = str(k+'_'+str(i+1))
+                            if debug:
+    #                            print not tache.phase in [_R1, "Rev", tache.projet.getCodeLastRevue()]
+    #                            print codeIndic , indic.revue,
+                                if hasattr(tache, 'indicateursMaxiEleve'):
+                                    print "  ", tache.indicateursMaxiEleve[0]
+                                print "  ", prj.getTypeIndicateur(codeIndic)
                             
-                            
-                        if tache != None and ((not tache.phase in [_R1,_R2, _Rev, tache.projet.getCodeLastRevue()]) \
-                                              or (codeIndic in tache.indicateursMaxiEleve[0])) \
-                                         and (indic.revue == 0 or indic.revue >= tache.GetProchaineRevue()) \
-                                         and (prj.getTypeIndicateur(codeIndic) == "S" or tache.phase != 'XXX'):
-                            
-                            b = self.AppendItem(comp, indic.intitule, ct_type=1, data = codeIndic)
-                            if codeIndic in tache.indicateursEleve[0]:
-                                self.CheckItem2(b)
-                            else:
-                                tous = False
-                            
-                            if indic.getRevue() == tache.phase:
-                                self.CheckItem2(b)
+                            if tache == None:
+                                b = self.AppendItem(comp, indic.intitule, data = codeIndic)
+                                for j, part in enumerate(prj.parties.keys()):
+                                    if part in v[2].keys():
+    #                            for j, p in enumerate(indic.poids[1:]):
+    #                                if p != 0:
+                                        if j == 0:  coul = 'C'
+                                        else:       coul = 'S'
+                                self.SetItemTextColour(b, COUL_PARTIE[coul])
+                                self.SetItemFont(b, font)
                                 
-                            if debug: print "   indic", indic
-                            
-                            for j, part in enumerate(prj.parties.keys()):
-                                if part in indic.poids.keys():
-#                            for j, p in enumerate(indic.poids[1:]):
-#                                if p != 0:
-                                    self.SetItemText(b, pourCent2(0.01*indic.poids[part]), j+1)
-                                    self.SetItemTextColour(b, getCoulPartie(part))
-                                   
-                            self.SetItemFont(b, font)        
-                            
-                            self.items[codeIndic] = b
-                            
-                            if self.eleves:
-#                                print "   ", tache.projet.eleves,
-                                cases = ChoixCompetenceEleve(self.GetMainWindow(), codeIndic, 
-                                                                           tache.projet, 
-                                                                           tache)
-
-#                                cases.SetSize(cases.GetBestSize())
-                                self.SetItemWindow(b, cases, 3)
+                            if tache != None and ((not tache.phase in [_R1,_R2, _Rev, tache.projet.getCodeLastRevue()]) \
+                                                  or (codeIndic in tache.indicateursMaxiEleve[0])) \
+                                             and (indic.revue == 0 or indic.revue >= tache.GetProchaineRevue()) \
+                                             and (prj.getTypeIndicateur(codeIndic) == "S" or tache.phase != 'XXX'):
                                 
-                                for e in range(len(tache.projet.eleves)):
-                                    tousEleve[e] = tousEleve[e] and self.GetItemWindow(b, 3).EstCocheEleve(e+1)
-#                                size = self.GetItemWindow(b, 3).GetSize()[0]
-#                                print cases.GetSize()
-                                b.SetWindowEnabled(True, 3)
-#                                self.Collapse(comp)
-#                                self.Refresh()
-#                                self.Layout()
+                                b = self.AppendItem(comp, indic.intitule, ct_type=1, data = codeIndic)
+                                if codeIndic in tache.indicateursEleve[0]:
+                                    self.CheckItem2(b)
+                                else:
+                                    tous = False
+                                
+                                if indic.getRevue() == tache.phase:
+                                    self.CheckItem2(b)
+                                    
+                                if debug: print "   indic", indic
+                                
+                                for j, part in enumerate(prj.parties.keys()):
+                                    if part in indic.poids.keys():
+    #                            for j, p in enumerate(indic.poids[1:]):
+    #                                if p != 0:
+                                        self.SetItemText(b, pourCent2(0.01*indic.poids[part]), j+1)
+                                        self.SetItemTextColour(b, getCoulPartie(part))
+                                       
+                                self.SetItemFont(b, font)        
+                                
+                                self.items[codeIndic] = b
+                                
+                                if self.eleves:
+    #                                print "   ", tache.projet.eleves,
+                                    cases = ChoixCompetenceEleve(self.GetMainWindow(), codeIndic, 
+                                                                               tache.projet, 
+                                                                               tache, self.MiseAJourCaseEleve)
+#                                    cases = ChoixCompetenceEleve(self, codeIndic, 
+#                                                                               tache.projet, 
+#                                                                               tache)
+    
+    #                                cases.SetSize(cases.GetBestSize())
+                                    self.SetItemWindow(b, cases, 3)
+                                    
+                                    for e in range(len(tache.projet.eleves)):
+                                        tousEleve[e] = tousEleve[e] and self.GetItemWindow(b, 3).EstCocheEleve(e+1)
+    #                                size = self.GetItemWindow(b, 3).GetSize()[0]
+    #                                print cases.GetSize()
+                                    b.SetWindowEnabled(True, 3)
+    #                                self.Collapse(comp)
+    #                                self.Refresh()
+    #                                self.Layout()
                     
                     if b == None: # Désactivation si branche vide d'indicateurs
                         self.SetItemType(br,0)
@@ -9341,31 +9384,55 @@ class ArbreCompetencesPrj(ArbreCompetences):
 #                                self.GetItemWindow(c, 2).CocherEleve(e+1, tousEleve[e])
             return
             
-        const(dic, branche, debug = False)
             
+        # Démarrage de la récursion
+        const(dic, branche, debug = False)
+        
+        
         if self.eleves:
             self.SetColumnWidth(3, 60)
-        if tache == None: # Cas des arbres dans popup
+        
+        if tache == None: # Cas des arbres dans popup (que l'arbre, pas de poids)
             self.SetColumnWidth(1, 0)
             self.SetColumnWidth(2, 0)
         
-        
-#        self.ExpandAll()
-#        self.CalculatePositions()
         self.Refresh()
-            
-        return
+
     
+    #############################################################################
+    def GetCasesEleves(self, codeIndic):
+        if codeIndic in self.items.keys():
+            return self.GetItemWindow(self.items[codeIndic], 3)
+    
+#    #############################################################################
+#    def MiseAJourCases(self):
+#        """ Mise à jour des cases "élèves" de l'arbre des compétences
+#            > on cécoche tout et on recoche
+#        """
+#        tache = self.GetTache()
+#        print "MiseAJourCases", tache.phase, tache.intitule
+#        print "  ", tache.indicateursEleve
+#        
+#        self.UnselectAll()
+#            
+#        for codeIndic in tache.indicateursEleve[0]:
+#            cases = self.GetCasesEleves(codeIndic)
+#            if cases:
+#                cases.MiseAJour()
+#                cases.Actualiser()
+
 
     #############################################################################
     def MiseAJourCaseEleve(self, codeIndic, etat, eleve, propag = True):
-#        print "MiseAJourCaseEleve", codeIndic, etat, eleve, propag
-        casesEleves = self.GetItemWindow(self.items[codeIndic], 3)
+        """ Mise à jour
+        """
+        print "MiseAJourCaseEleve", codeIndic, etat, eleve, propag
+        casesEleves = self.GetCasesEleves(codeIndic)
         if casesEleves.EstCocheEleve(eleve) != etat:
             return
         
         estToutCoche = casesEleves.EstToutCoche()
-#        print "  estToutCoche =", estToutCoche
+        print "  estToutCoche =", estToutCoche
         
         comp = codeIndic.split("_")[0]
         
@@ -9379,7 +9446,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
                     tout = tout and self.GetItemWindow(i, 3).EstCocheEleve(eleve)
     #            self.GetItemWindow(itemComp, 2).CocherEleve(eleve, tout)
 #                print "MiseAJourCaseEleve", comp, eleve
-                cases = self.GetItemWindow(self.items[comp], 3)
+                cases = self.GetCasesEleves(comp)
                 if cases != None:
                     cases.CocherEleve(eleve, tout, withEvent = True)
             
@@ -9391,7 +9458,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
 #            self.Refresh()
 #            self.AjouterEnleverCompetencesItem(item, propag = False)
             
-        else: #Compétence complete
+        else: #Compétence complete (avec plusieurs indicateurs)
             if propag:
                 itemComp = self.items[comp]
                 for i in itemComp.GetChildren():
@@ -9405,9 +9472,6 @@ class ArbreCompetencesPrj(ArbreCompetences):
         
         if propag:
             self.pptache.SetCompetences()
-#        wx.CallAfter(self.Refresh)
-#        if propag:
-#            wx.CallAfter(self.pptache.SetCompetences)
         
         
     #############################################################################
@@ -9907,9 +9971,9 @@ class TreeCtrlComboBook(wx.Panel):
         
     def EvtComboBox(self, texte):
         texte = u"\n".join(texte.split(" ", 1))
-#        print "EvtComboBox", texte, self.texte.GetSize()[0]
+
         self.SetLabel(texte)
-#        self.texte.Wrap(self.texte.GetSize()[0])
+
         self.fct(texte)
         self.Layout()
         self.Refresh()
@@ -10052,7 +10116,7 @@ class TreeCtrlComboPopup(wx.PopupTransientWindow):
     def OnClick(self, evt):
         item, flags = self.tree.HitTest(evt.GetPosition())
 #        print self.tree.GetItemParent(item)
-        if self.tree.GetItemParent(item) != self.tree.GetRootItem():
+        if item and self.tree.GetItemParent(item) != self.tree.GetRootItem():
             self.fct(self.tree.GetItemText(self.tree.GetSelection()).replace(u"\n", u""))
             self.Dismiss()
         
@@ -10075,10 +10139,12 @@ class TreeCtrlComboPopup(wx.PopupTransientWindow):
 ###########################################################################################################
         
 class ChoixCompetenceEleve(wx.Panel):
-    def __init__(self, parent, indic, projet, tache):
+    def __init__(self, parent, indic, projet, tache, fonction):
+#        print "init ChoixCompetenceEleve"
         wx.Panel.__init__(self, parent, -1)
         sizer = wx.BoxSizer(wx.HORIZONTAL)
         self.indic = indic
+        self.fonction = fonction
         self.parent = parent
         
         cb = []
@@ -10102,7 +10168,7 @@ class ChoixCompetenceEleve(wx.Panel):
         """ Active/désactive les cases à cocher
             selon que les élèves ont à mobiliser cette compétence/indicateur
         """
-#        print "MiseAJour", self.tache
+#        print "MiseAJour ChoixCompetenceEleve", self.tache
         for i, e in enumerate(self.projet.eleves): 
             dicIndic = e.GetDicIndicateursRevue(self.tache.phase)
             comp = self.indic.split("_")[0]
@@ -10110,6 +10176,9 @@ class ChoixCompetenceEleve(wx.Panel):
                 if comp != self.indic: # Indicateur seul
                     indic = eval(self.indic.split("_")[1])
                     self.cb[i].Enable(dicIndic[comp][indic-1])
+            elif self.tache.estPredeterminee():
+#                print "  ", e, self.tache.eleves
+                self.cb[i].Enable(i in self.tache.eleves) 
             else:
                 self.cb[i].Enable(False)
 #            self.cb[i].Update()
@@ -10146,13 +10215,13 @@ class ChoixCompetenceEleve(wx.Panel):
             cb = event.GetEventObject()
             eleve = self.cb.index(cb)+1
             etat = event.IsChecked()
-        self.parent.MiseAJourCaseEleve(self.indic, etat, eleve, event != None)
+        self.fonction(self.indic, etat, eleve, event != None)
         
-    #############################################################################
-    def CocherTout(self, etat):
-        for cb in self.cb:
-            if cb.IsEnabled():
-                cb.SetValue(etat)
+#    #############################################################################
+#    def CocherTout(self, etat):
+#        for cb in self.cb:
+#            if cb.IsEnabled():
+#                cb.SetValue(etat)
             
     #############################################################################
     def CocherEleve(self, eleve, etat, withEvent = False):
@@ -14444,7 +14513,7 @@ class Projet(BaseDoc, Objet_sequence):
             pour lesquelles il y a des compétences à cocher
         """
         for t in self.taches:
-            if t.phase in [_R1, "Rev"] or (t.phase == _R2 and self.nbrRevues == 3):
+            if t.phase in [_R1, "Rev"] or (t.phase == _R2 and self.nbrRevues == 3) or t.estPredeterminee():
                 if hasattr(t.panelPropriete, 'arbre'):
                     t.panelPropriete.arbre.MiseAJourTypeEnseignement(t.GetReferentiel())
 #                    t.panelPropriete.MiseAJour()
@@ -14508,7 +14577,7 @@ class Projet(BaseDoc, Objet_sequence):
                                     if t.phase == _S:
                                         t.indicateursEleve[neleve].append(codeIndic)
 
-                    if neleve == 0:
+                    if neleve == 0: # Une seule fois 
                         if t.phase in [_R1, "Rev"] or (t.phase == _R2 and self.nbrRevues == 3):
                             ti = []
                             for i in t.indicateursEleve[neleve]:
@@ -14538,7 +14607,11 @@ class Projet(BaseDoc, Objet_sequence):
                             else:
                                 indicateurs[neleve][c] = i 
 
-            t.ActualiserDicIndicateurs()
+                if t.estPredeterminee() and miseAJourPanel and hasattr(t.panelPropriete, 'arbre'):
+                    t.panelPropriete.arbre.MiseAJourTypeEnseignement(t.GetReferentiel())
+                
+            if not t.estPredeterminee():
+                t.ActualiserDicIndicateurs()
 
 
 #                        
@@ -16040,9 +16113,9 @@ class Tache(Objet_sequence):
 ##                self.code = -err # Pour renvoyer une éventuelle erreur à l'ouverture d'un fichier
         else:
 #        if branche == None:
-            self.indicateursEleve = { 0 : [], 1 : [], 2 : [], 3 : [],4 : [], 5 : [],6 : []} # clef = n°eleve ;  valeur = liste d'indicateurs
+            self.indicateursEleve = self.IndicateursEleveDefaut()
             if phaseTache in TOUTES_REVUES_SOUT:
-                self.indicateursMaxiEleve = { 0 : [], 1 : [], 2 : [], 3 : [],4 : [], 5 : [],6 : []}
+                self.indicateursMaxiEleve = self.IndicateursEleveDefaut()
             
         if panelParent:
             self.panelPropriete = PanelPropriete_Tache(panelParent, self)
@@ -16122,11 +16195,10 @@ class Tache(Objet_sequence):
         """
 #        print "ActualiserDicIndicateurs", self
         for i in range(len(self.projet.eleves)):
-            indicateurs = self.indicateursEleve[i+1]#self.GetDicIndicateursEleve(eleve)
-            for c in indicateurs:
+            for c in self.indicateursEleve[i+1]:
                 if not c in self.indicateursEleve[0]:
                     self.indicateursEleve[0].append(c)
-#                self.indicateursEleve[0] = [x or y for x, y in zip(self.indicateursEleve[0], lc)]
+
 
     
     ######################################################################################  
@@ -16154,16 +16226,6 @@ class Tache(Objet_sequence):
                 if not competence in indicateurs.keys():
                     indicateurs[competence] = [False]*nbrIndic
                 indicateurs[competence][indicateur] = True
-#            else:
-#                competence, sscomp, indicateur = cci
-#                indicateur = int(eval(indicateur)-1)
-#                nbrIndic = 0
-#                for sc in tousIndicateurs[competence].values():
-#                    nbrIndic += len(sc)
-#                if not competence in indicateurs.keys():
-#                    indicateurs[competence] = [False]*nbrIndic
-#                
-#                indicateurs[competence][indicateur] = True
                     
         return indicateurs
     
@@ -16212,8 +16274,15 @@ class Tache(Objet_sequence):
     ######################################################################################  
     def GetCompetencesUtil(self):
         lst = []
-        for i in self.indicateursEleve[0]:
-            lst.append(i.split('_')[0])
+        for e in self.indicateursEleve.values():
+            for i in e:
+                ci = i.split('_')[0]
+                if not ci in lst:
+                    lst.append(ci)
+        
+        
+#        for i in self.indicateursEleve[0]:
+#            lst.append(i.split('_')[0])
         return lst
         
         
@@ -16236,7 +16305,15 @@ class Tache(Objet_sequence):
 #                    ndict[c] = [True]*len(indicateurs[k][1][c])
 #                self.indicateursEleve[0].update(ndict)
             
-            
+    ######################################################################################  
+    def IndicateursEleveDefaut(self):
+        """ Format pour les indicateurs de performance mobilisés par élève
+            0 = tous les elèves
+            1 = elève 1
+            ...
+            Chaque liste contient les codes des indicateurs : CodeCompétence_Numéro_Indicateur
+        """
+        return { 0 : [], 1 : [], 2 : [], 3 : [],4 : [], 5 : [],6 : []}
         
     ######################################################################################  
     def getBranche(self):
@@ -16269,14 +16346,15 @@ class Tache(Objet_sequence):
             else:
                 lstR = [_R1, _R2]
                     
-            if self.phase in lstR:
+            if self.phase in lstR or self.estPredeterminee():
                 for e, indicateurs in self.indicateursEleve.items()[1:]:
                     if e > len(self.projet.eleves):
                         break
                     brancheE = ET.Element("Eleve"+str(e))
                     brancheCmp.append(brancheE)
                     for i, c in enumerate(indicateurs):
-                        brancheE.set("Indic"+str(i), c)        
+                        brancheE.set("Indic"+str(i), c)
+                        
             elif not self.phase in TOUTES_REVUES_EVAL:
                 for i, c in enumerate(self.indicateursEleve[0]):
                     brancheCmp.set("Indic"+str(i), c)
@@ -16334,158 +16412,156 @@ class Tache(Objet_sequence):
         for i, e in enumerate(brancheElv.keys()):
             self.eleves.append(eval(brancheElv.get("Eleve"+str(i))))
         
-        self.indicateursEleve = { 0 : [], 1 : [], 2 : [], 3 : [],4 : [], 5 : [],6 : []}
+        # Initialisation des Indicateurs par elève
+        self.indicateursEleve = self.IndicateursEleveDefaut() 
+        if not self.phase in [self.projet.getCodeLastRevue(), "S"]:
+            self.indicateursMaxiEleve = self.IndicateursEleveDefaut()
         
         if self.GetClasse().GetVersionNum() < 5:
-            if not self.phase in [self.projet.getCodeLastRevue(), "S"]:
-                self.indicateursMaxiEleve = { 0 : [], 1 : [], 2 : [], 3 : [],4 : [], 5 : [],6 : []}
-                
-                
             pass # Nouveaux indicateurs STI2D !!
+        
         else:
-            if not self.phase in [self.projet.getCodeLastRevue(), "S"]:
-                self.indicateursMaxiEleve = { 0 : [], 1 : [], 2 : [], 3 : [],4 : [], 5 : [],6 : []}
-                #
-                # pour compatibilité acsendante
-                #
-                brancheCmp = branche.find("Competences")
+            #
+            # pour compatibilité acsendante
+            #
+            brancheCmp = branche.find("Competences")
+            
+            if brancheCmp != None: ## ANCIENNE VERSION (<beta6)
+                err.append(constantes.Erreur(constantes.ERR_PRJ_T_VERSION))
                 
-                if brancheCmp != None: ## ANCIENNE VERSION (<beta6)
-                    err.append(constantes.Erreur(constantes.ERR_PRJ_T_VERSION))
-                    
-                    if self.GetTypeEnseignement() == "SSI":
-                        brancheInd = None
-                    else:
-                        brancheInd = branche.find("Indicateurs")
-                    
-                    for i, e in enumerate(brancheCmp.keys()):
-                        if brancheInd != None: #STI2D
-                            i = eval(e[4:])
-                            indic = brancheInd.get("Indic"+str(i))
-                            if indic != None:
-                                lst = toList(indic)
-                            else:
-                                lst = [True]*len(self.GetProjetRef()._dicIndicateurs[e])
-                            for n,j in enumerate(lst):
-                                if j:
-                                    self.indicateursEleve[0].append(brancheCmp.get(e)+"_"+str(n+1))
-                        else:
-                            indic = brancheCmp.get("Comp"+str(i))
-                            self.indicateursEleve[0].append(indic.replace(".", "_"))
-                    
-                
-                
+                if self.GetTypeEnseignement() == "SSI":
+                    brancheInd = None
                 else:
                     brancheInd = branche.find("Indicateurs")
-#                    print "  branche Indicateurs"
-                    if brancheInd != None:
-                        if self.projet.nbrRevues == 2:
-                            lstR = [_R1]
+                
+                for i, e in enumerate(brancheCmp.keys()):
+                    if brancheInd != None: #STI2D
+                        i = eval(e[4:])
+                        indic = brancheInd.get("Indic"+str(i))
+                        if indic != None:
+                            lst = toList(indic)
                         else:
-                            lstR = [_R1, _R2]
+                            lst = [True]*len(self.GetProjetRef()._dicIndicateurs[e])
+                        for n,j in enumerate(lst):
+                            if j:
+                                self.indicateursEleve[0].append(brancheCmp.get(e)+"_"+str(n+1))
+                    else:
+                        indic = brancheCmp.get("Comp"+str(i))
+                        self.indicateursEleve[0].append(indic.replace(".", "_"))
+                
+            
+            #
+            # A partir de la version 6
+            #
+            else:
+                brancheInd = branche.find("Indicateurs")
+#                    print "  branche Indicateurs"
+                if brancheInd != None:
+                    if self.projet.nbrRevues == 2:
+                        lstR = [_R1]
+                    else:
+                        lstR = [_R1, _R2]
 
-                        # 
-                        # Indicateurs revue par élève (première(s) revues)
-                        #
-                        if self.phase in lstR:
-                            for i, e in enumerate(self.projet.eleves):
-                                
-                                self.indicateursEleve[i+1] = []
-                                
-                                brancheE = brancheInd.find("Eleve"+str(i+1))
-                                if brancheE != None:
-                                    for c in brancheE.keys():
-                                        codeindic = brancheE.get(c)
-                                        code, indic = codeindic.split('_')
+                    # 
+                    # Indicateurs revue par élève (première(s) revues)
+                    #
+                    if self.phase in lstR or self.estPredeterminee():
+                        for i, e in enumerate(self.projet.eleves):
+                            
+                            self.indicateursEleve[i+1] = []
+                            
+                            brancheE = brancheInd.find("Eleve"+str(i+1))
+                            if brancheE != None:
+                                for c in brancheE.keys():
+                                    codeindic = brancheE.get(c)
+                                    code, indic = codeindic.split('_')
+                                    
+                                    # pour compatibilité version < 3.19
+                                    if code == "CO8.es":
+                                        code = "CO8.0"
+                                        codeindic = code+"_"+indic
                                         
-                                        # pour compatibilité version < 3.19
-                                        if code == "CO8.es":
-                                            code = "CO8.0"
-                                            codeindic = code+"_"+indic
-                                            
-                                        # Si c'est la dernière phase et que c'est une compétence "Conduite" ... on passe
-                                        indic = eval(indic)-1
-                                        if self.phase == 'XXX' and self.GetReferentiel().getTypeIndicateur(codeindic) == 'C':
-                                            continue
-                                        
-                                        try:
+                                    # Si c'est la dernière phase et que c'est une compétence "Conduite" ... on passe
+                                    indic = eval(indic)-1
+                                    if self.phase == 'XXX' and self.GetReferentiel().getTypeIndicateur(codeindic) == 'C':
+                                        continue
+                                    
+                                    try:
 #                                            print "***",self.GetReferentiel().dicIndicateurs_prj[code][indic]
-                                            # si le type d'enseignement ne colle pas avec les indicateurs (pb lors de l'enregistrement)
-                                            if not code in self.GetProjetRef()._dicIndicateurs_simple:
-                                                print "Erreur 1", code, "<>", self.GetProjetRef()._dicIndicateurs_simple
-                                                err.append(constantes.Erreur(constantes.ERR_PRJ_T_TYPENS))
-                                                return err
-                                            
-                                            if not codeindic in self.indicateursEleve[i+1]:
-                                                self.indicateursEleve[i+1].append(codeindic)
-                                        except:
-                                            pass
-                                
-                                else: # Pour ouverture version <4.8beta1
-                                    indicprov = []
-                                    for c in brancheInd.keys():
-                                        codeindic = brancheInd.get(c)
-                                        code, indic = codeindic.split('_')
-                                        
-                                        # pour compatibilité version < 3.19
-                                        if code == "CO8.es":
-                                            code = "CO8.0"
-                                            codeindic = code+"_"+indic
-                                            
-                                        # Si c'est la dernière phase et que c'est une compétence "Conduite" ... on passe
-                                        indic = eval(indic)-1
-                                        if self.phase == 'XXX' and self.GetReferentiel().getTypeIndicateur(codeindic) == 'C':
-                                            continue
-                                        
-#                                        print "******",self.GetReferentiel().dicIndicateurs_prj[code][indic]
-                                            
                                         # si le type d'enseignement ne colle pas avec les indicateurs (pb lors de l'enregistrement)
-                                        if not code in self.GetProjetRef()._dicIndicateurs:
-                                            print "Erreur 2"
+                                        if not code in self.GetProjetRef()._dicIndicateurs_simple:
+                                            print "Erreur 1", code, "<>", self.GetProjetRef()._dicIndicateurs_simple
                                             err.append(constantes.Erreur(constantes.ERR_PRJ_T_TYPENS))
                                             return err
-    
-                                        indicprov.append(codeindic)
-                                        dic = e.GetDicIndicateursRevue(self.phase)
-                                        if code in dic.keys():
-                                            if dic[code][indic]:
-                                                self.indicateursEleve[i+1].append(codeindic)
+                                        
+                                        if not codeindic in self.indicateursEleve[i+1]:
+                                            self.indicateursEleve[i+1].append(codeindic)
+                                    except:
+                                        pass
+                            
+                            else: # Pour ouverture version <4.8beta1
+                                indicprov = []
+                                for c in brancheInd.keys():
+                                    codeindic = brancheInd.get(c)
+                                    code, indic = codeindic.split('_')
                                     
-                        #
-                        # Indicateurs tâche
-                        #
-                        else:
-                            for i, e in enumerate(brancheInd.keys()):
-                                codeindic = brancheInd.get(e)
-                                code, indic = codeindic.split('_')
-#                                print "     ", code, indic
-                                # pour compatibilité version < 3.19
-                                if code == "CO8.es":
-                                    code = "CO8.0"
-                                    codeindic = code+"_"+indic
+                                    # pour compatibilité version < 3.19
+                                    if code == "CO8.es":
+                                        code = "CO8.0"
+                                        codeindic = code+"_"+indic
+                                        
+                                    # Si c'est la dernière phase et que c'est une compétence "Conduite" ... on passe
+                                    indic = eval(indic)-1
+                                    if self.phase == 'XXX' and self.GetReferentiel().getTypeIndicateur(codeindic) == 'C':
+                                        continue
                                     
-                                # Si c'est la dernière phase et que c'est une compétence "Conduite" ... on passe
-                                indic = eval(indic)-1
-                                if self.phase == 'XXX' and self.GetProjetRef().getTypeIndicateur(codeindic) == 'C':
-                                    continue
+#                                        print "******",self.GetReferentiel().dicIndicateurs_prj[code][indic]
+                                        
+                                    # si le type d'enseignement ne colle pas avec les indicateurs (pb lors de l'enregistrement)
+                                    if not code in self.GetProjetRef()._dicIndicateurs:
+                                        print "Erreur 2"
+                                        err.append(constantes.Erreur(constantes.ERR_PRJ_T_TYPENS))
+                                        return err
+
+                                    indicprov.append(codeindic)
+                                    dic = e.GetDicIndicateursRevue(self.phase)
+                                    if code in dic.keys():
+                                        if dic[code][indic]:
+                                            self.indicateursEleve[i+1].append(codeindic)
                                 
-                                    
+                    #
+                    # Indicateurs tâche
+                    #
+                    else:
+                        for i, e in enumerate(brancheInd.keys()):
+                            codeindic = brancheInd.get(e)
+                            code, indic = codeindic.split('_')
+#                                print "     ", code, indic
+                            # pour compatibilité version < 3.19
+                            if code == "CO8.es":
+                                code = "CO8.0"
+                                codeindic = code+"_"+indic
+                                
+                            # Si c'est la dernière phase et que c'est une compétence "Conduite" ... on passe
+                            indic = eval(indic)-1
+                            if self.phase == 'XXX' and self.GetProjetRef().getTypeIndicateur(codeindic) == 'C':
+                                continue
+                            
+                                
 #                                try:
 #                                    print "******",self.GetReferentiel().dicIndicateurs_prj[code][indic]
-                                # si le type d'enseignement ne colle pas avec les indicateurs (pb lors de l'enregistrement)
-                                if not code in self.GetProjetRef()._dicIndicateurs_simple.keys():
-                                    print "Erreur 3", code, "<>", self.GetProjetRef()._dicIndicateurs_simple.keys()
-                                    if not constantes.Erreur(constantes.ERR_PRJ_T_TYPENS) in err:
-                                        err.append(constantes.Erreur(constantes.ERR_PRJ_T_TYPENS))
-                                else:
-                                    self.indicateursEleve[0].append(codeindic)
-#                                except:
-#                                    pass
-                        
+                            # si le type d'enseignement ne colle pas avec les indicateurs (pb lors de l'enregistrement)
+                            if not code in self.GetProjetRef()._dicIndicateurs_simple.keys():
+                                print "Erreur 3", code, "<>", self.GetProjetRef()._dicIndicateurs_simple.keys()
+                                if not constantes.Erreur(constantes.ERR_PRJ_T_TYPENS) in err:
+                                    err.append(constantes.Erreur(constantes.ERR_PRJ_T_TYPENS))
+                            else:
+                                self.indicateursEleve[0].append(codeindic)
                     
+                
 #        print self.indicateursEleve
-        
-        self.ActualiserDicIndicateurs()
+        if not self.estPredeterminee():
+            self.ActualiserDicIndicateurs()
             
         self.intituleDansDeroul = eval(branche.get("IntituleDansDeroul", "True"))
 
@@ -17822,13 +17898,16 @@ class Eleve(Personne, Objet_sequence):
         for t in self.projet.taches: # Toutes les tâches du projet
             if not t.phase in TOUTES_REVUES_SOUT:
                 if self.id in t.eleves:     # L'élève est concerné par cette tâche
-                    indicTache = t.GetDicIndicateurs() # Les indicateurs des compétences à mobiliser pour cette tâche
+                    if t.estPredeterminee():
+                        indicTache = t.GetDicIndicateursEleve(self) # Les indicateurs des compétences à mobiliser pour cette tâche
+                    else:
+                        indicTache = t.GetDicIndicateurs() # Les indicateurs des compétences à mobiliser pour cette tâche
                     for c, i in indicTache.items():
                         if c in indicateurs.keys():
                             indicateurs[c] = [x or y for x, y in zip(indicateurs[c], i)]
                         else:
                             indicateurs[c] = i
-                
+#        print "  ", indicateurs
         return indicateurs
         
         

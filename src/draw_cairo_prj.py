@@ -162,7 +162,7 @@ ecartTacheY = None  # Ecartement entre les tâches de phase différente
 # en fonction de leur durée
 a = b = None
 def calcH_tache(tache):
-    if tache.phase in ["R1", "R2", "R3", "S"] and tache.DiffereSuivantEleve():
+    if (tache.phase in ["R1", "R2", "R3", "S"] and tache.DiffereSuivantEleve()):
         return max(len(tache.projet.eleves) * hRevue, hRevue)
     else:
         return calcH(tache.GetDuree())
@@ -709,7 +709,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
     for t, y in yTaches: 
         if not t.phase in ["R1", "R2", "R3", "S", "Rev"]:
             DrawLigne(ctx, x, y)
-        if t.phase in ["R1", "R2", "R3", "S"] and t.DiffereSuivantEleve():
+        if (t.phase in ["R1", "R2", "R3", "S"] and t.DiffereSuivantEleve()) or t.estPredeterminee():
             dy = hRevue
             y = y - ((len(prj.eleves)-1)*dy)/2
 #            print "phase = ", t.phase
@@ -1448,14 +1448,16 @@ def DrawCroisementsElevesTaches(ctx, tache, y):
     if tache.phase in ["R1", "R2", "R3", "S"]:
         differeSuivantEleve = tache.DiffereSuivantEleve()
     else:
-        differeSuivantEleve = False
+        differeSuivantEleve = tache.estPredeterminee()
         
-    if tache.phase in ["R1", "R2", "R3", "S"] and differeSuivantEleve: 
+#    if tache.phase in ["R1", "R2", "R3", "S"] and differeSuivantEleve: 
+    if differeSuivantEleve: 
         lstElv = range(len(tache.projet.eleves))
     else:
         lstElv = tache.eleves
     
-    if tache.phase in ["R1", "R2", "R3", "S"] and differeSuivantEleve:
+#    if tache.phase in ["R1", "R2", "R3", "S"] and differeSuivantEleve:
+    if differeSuivantEleve: 
         dy = hRevue
         y = y - ((len(tache.projet.eleves)-1)*dy)/2
         r = 0.005 * COEF
@@ -1464,7 +1466,8 @@ def DrawCroisementsElevesTaches(ctx, tache, y):
         r = 0.006 * COEF
         
     for i in lstElv:
-        if tache.phase in ["R1", "R2", "R3", "S"] and differeSuivantEleve:
+#        if tache.phase in ["R1", "R2", "R3", "S"] and differeSuivantEleve:
+        if differeSuivantEleve: 
             color1 = BCoulTache[tache.phase]
             color0 = (1, 1, 1, 1)
         else:
