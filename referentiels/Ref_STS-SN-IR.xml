@@ -1505,7 +1505,7 @@
   </l_periodes>
   <l_positions_CI />
   <d_projets>
-    <Projet_CCF1 I_duree="12" I_maxEleves="5" I_minEleves="3" S_code="CCF1" S_ficheValid="STS_SN_IR_Sit1.html" S_intitule="CCF1">
+    <Projet_CCF1 B_tachesOnce="False" I_duree="12" I_maxEleves="5" I_minEleves="3" S_code="CCF1" S_ficheValid="STS_SN_IR_Sit1.html" S_intitule="CCF1">
       <d_attributs>
         <l_SRC S_00="" S_01="" S_02="" S_03="" />
         <l_PAR S_00="" S_01="" S_02="" S_03="" />
@@ -1570,7 +1570,7 @@
       </d_posRevues>
       <d_taches />
     </Projet_CCF1>
-    <Projet_CCF2 I_duree="12" I_maxEleves="5" I_minEleves="3" S_code="CCF2" S_ficheValid="STS_SN_IR_Sit2.html" S_intitule="CCF2">
+    <Projet_CCF2 B_tachesOnce="False" I_duree="12" I_maxEleves="5" I_minEleves="3" S_code="CCF2" S_ficheValid="STS_SN_IR_Sit2.html" S_intitule="CCF2">
       <d_attributs>
         <l_SRC S_00="" S_01="" S_02="" S_03="" />
         <l_PAR S_00="" S_01="" S_02="" S_03="" />
@@ -1641,19 +1641,19 @@
       </d_posRevues>
       <d_taches />
     </Projet_CCF2>
-    <Projet_PRJ I_duree="50" I_maxEleves="5" I_minEleves="3" S_code="PRJ" S_ficheValid="STS_SC_IR_projet_E6-V2.html" S_intitule="Projet de fin d'ann&#233;e">
+    <Projet_PRJ B_tachesOnce="True" I_duree="50" I_maxEleves="5" I_minEleves="3" S_code="PRJ" S_ficheValid="STS_SN_IR_projet_E6.html" S_intitule="Projet de fin d'ann&#233;e">
       <d_attributs>
-        <l_SRC S_00="" S_01="" S_02="" S_03="" />
-        <l_PAR S_00="" S_01="" S_02="" S_03="" />
-        <l_DEC S_00="" S_01="" S_02="" S_03="" />
-        <l_OBJ S_00="Description de l'intervention" S_01="Identification de la valeur ajout&#233;e.--Enjeux." S_02="" S_03="" />
+        <l_SRC S_00="Inventaire des mat&#233;riels" S_01="D&#233;signation" S_02="" S_03="" />
+        <l_PAR S_00="Partenaires du projet" S_01="" S_02="" S_03="" />
+        <l_DEC S_00="Description de l'intervention" S_01="" S_02="" S_03="" />
+        <l_OBJ S_00="Enonc&#233; des t&#226;ches" S_01="" S_02="" S_03="" />
         <l_TIT S_00="Titre du projet" S_01="Titre du projet" S_02="" S_03="" />
         <l_SYN S_00="" S_01="" S_02="" S_03="" />
-        <l_PB S_00="" S_01="" S_02="" S_03="" />
-        <l_ORI S_00="" S_01="" S_02="" S_03="" />
-        <l_CCF S_00="Pr&#233;sentation du support" S_01="Indiquer :-- - description du contexte dans lequel l&#8217;objet du projet va &#234;tre int&#233;gr&#233; ;-- - fonctionnalit&#233;s de cet objet ;-- - caract&#233;ristiques fonctionnelles et techniques." S_02="" S_03="" />
-        <l_TYP S_00="Typologie" S_01="" S_02="T&#233;l&#233;communication, t&#233;l&#233;phonie et r&#233;seaux t&#233;l&#233;phonique--Informatique, r&#233;seaux et infrastructures--Multim&#233;dia, son et image, radio et t&#233;l&#233;diffusion--Mobilit&#233; et syst&#232;mes embarqu&#233;s--Electronique et informatique m&#233;dicale--Mesure, instrumentation et microsyst&#232;mes--Automatique et robotique" S_03="" />
-        <l_PRX S_00="" S_01="" S_02="" S_03="" />
+        <l_PB S_00="Probl&#233;matique" S_01="" S_02="" S_03="" />
+        <l_ORI S_00="Analyse de l'existant" S_01="" S_02="" S_03="" />
+        <l_CCF S_00="Expression du besoin" S_01="Indiquer :-- - description du contexte dans lequel l&#8217;objet du projet va &#234;tre int&#233;gr&#233; ;-- - fonctionnalit&#233;s de cet objet ;-- - caract&#233;ristiques fonctionnelles et techniques." S_02="" S_03="" />
+        <l_TYP S_00="Reprise d'un projet" S_01="" S_02="oui--non" S_03="" />
+        <l_PRX S_00="Description structurelle du syst&#232;me" S_01="Principaux constituants" S_02="" S_03="" />
       </d_attributs>
       <d_cellulesInfo>
         <d_C>
@@ -1750,29 +1750,104 @@
         <l_C S_00="R" S_01="I" />
         <l_S S_00="S" S_01="" />
       </d_grilles>
-      <l_listPhases S_00="Ana" S_01="Con" S_02="DCo" S_03="Rea" S_04="XXX" S_05="Rev" S_06="R1" S_07="R2" S_08="R3" S_09="S" />
+      <l_listPhases S_00="Ana" S_01="Con" S_02="DCo" S_03="Rea" S_04="Rev" S_05="R1" S_06="R2" S_07="R3" S_08="S" />
       <l_listPhasesEval S_00="Rev" S_01="R1" S_02="R2" S_03="R3" S_04="S" />
-      <l_listTaches />
+      <l_listTaches S_00="T1.4" S_01="T2.1" S_02="T2.3" S_03="T3.1" S_04="T3.3" S_05="T3.4" S_06="T4.1" S_07="T4.2" S_08="T4.3" S_09="T5.1" S_10="T6.1" S_11="T6.2" S_12="T6.3" S_13="T7.1" S_14="T7.2" S_15="T7.3" S_16="T8.1" S_17="T8.2" S_18="T9.2" S_19="T10.3" S_20="T11.3" S_21="T12.1" S_22="T12.2" S_23="T9.1" S_24="T10.4" />
       <l_listeParties S_00="C" S_01="S" />
       <d_parties S_C="Conduite" S_S="Soutenance" />
       <l_periode I_00="4" I_01="5" />
       <d_phases>
-        <l_DCo S_00="Maint" S_01="Maintenance" S_02="maint" />
-        <l_Ana S_00="Install" S_01="Installation" S_02="inst" />
+        <l_DCo S_00="R&#233;al" S_01="R&#233;alisation" S_02="R&#233;al" />
+        <l_Ana S_00="Besoin" S_01="Expression fonctionnelle du besoin" S_02="Expr" />
         <l_R2 S_00="Revue n&#176;2" S_01="Revue de projet n&#176;2" S_02="R2" />
         <l_R3 S_00="Revue n&#176;3" S_01="Revue de projet n&#176;3" S_02="R3" />
-        <l_XXX S_00="Synth et com" S_01="Synth&#232;se et communication" S_02="SC" />
         <l_Rev S_00="Revue inter" S_01="Revue interm&#233;diaire" S_02="Ri" />
-        <l_R1 S_00="Revue n&#176;1" S_01="Revue de projet n&#176;1" S_02="R1" />
         <l_S S_00="Soutenance" S_01="Soutenance finale" S_02="S" />
-        <l_Rea S_00="Exp&#233;rimentations" S_01="R&#233;alisation d'exp&#233;rimentations" S_02="Re" />
-        <l_Con S_00="Expl" S_01="Exploitation" S_02="expl" />
+        <l_Con S_00="Concept" S_01="Conception" S_02="Conc" />
+        <l_Rea S_00="V&#233;rif" S_01="V&#233;rification des performances attendues" S_02="Verif" />
+        <l_R1 S_00="Revue n&#176;1" S_01="Revue de projet n&#176;1" S_02="R1" />
       </d_phases>
       <d_posRevues>
         <l__02 S_00="Ana" S_01="Con" />
         <l__03 S_00="Ana" S_01="Con" S_02="DCo" />
       </d_posRevues>
-      <d_taches />
+      <d_taches>
+        <l_T12.2 S_00="DCo" S_01="Animer une &#233;quipe">
+          <l_02 S_00="C2.1" S_01="C2.3" S_02="C2.5" />
+        </l_T12.2>
+        <l_T12.1 S_00="DCo" S_01="Organiser le travail de l'&#233;quipe">
+          <l_02 S_00="C2.3" S_01="C2.4" S_02="C2.5" />
+        </l_T12.1>
+        <l_T8.2 S_00="DCo" S_01="D&#233;finir une organisation ou un processus de maintenance curative">
+          <l_02 S_00="C2.1" />
+        </l_T8.2>
+        <l_T8.1 S_00="DCo" S_01="D&#233;finir une organisation ou un processus de maintenance pr&#233;ventive">
+          <l_02 S_00="C2.1" />
+        </l_T8.1>
+        <l_T9.2 S_00="DCo" S_01="Installer un syst&#232;me ou un service">
+          <l_02 S_00="C2.5" />
+        </l_T9.2>
+        <l_T9.1 S_00="Rea" S_01="Finaliser le cahier de recette">
+          <l_02 S_00="C3.1" S_01="C3.5" S_02="C4.5" />
+        </l_T9.1>
+        <l_T2.1 S_00="Ana" S_01="Collecter les informations n&#233;cessaires &#224; l'&#233;laboration du cahier des charges pr&#233;liminaire">
+          <l_02 S_00="C2.2" />
+        </l_T2.1>
+        <l_T4.2 S_00="Con" S_01="Traduire les &#233;l&#233;ments du cahier des charges sous la forme de mod&#232;les">
+          <l_02 S_00="C3.1" />
+        </l_T4.2>
+        <l_T4.3 S_00="Con" S_01="R&#233;diger le document de recette">
+          <l_02 S_00="C3.5" />
+        </l_T4.3>
+        <l_T4.1 S_00="Con" S_01="Identifier le comportement d'un constituant">
+          <l_02 S_00="C4.1" />
+        </l_T4.1>
+        <l_T7.1 S_00="DCo" S_01="R&#233;aliser la conception d&#233;taill&#233;e du mat&#233;riel et/ou du logiciel">
+          <l_02 S_00="C3.1" S_01="C3.3" S_02="C3.6" />
+        </l_T7.1>
+        <l_T7.3 S_00="DCo" S_01="Valider le prototype">
+          <l_02 S_00="C3.5" S_01="C4.5" />
+        </l_T7.3>
+        <l_T7.2 S_00="DCo" S_01="Produire un prototype logiciel et/ou mat&#233;riel">
+          <l_02 S_00="C4.2" S_01="C4.3" S_02="C4.4" S_03="C4.6" S_04="C4.7" />
+        </l_T7.2>
+        <l_T6.1 S_00="Con" S_01="Prendre connaissance des fonctions associ&#233;es au projet et d&#233;finir les t&#226;ches professionnelles correspondantes dans le respect du budget">
+          <l_02 S_00="C2.4" S_01="C2.5" />
+        </l_T6.1>
+        <l_T6.2 S_00="Con" S_01="D&#233;finir et valider un planning">
+          <l_02 S_00="C2.3" S_01="C2.4" S_02="C2.5" />
+        </l_T6.2>
+        <l_T6.3 S_00="Con" S_01="Assurer le suivi du planning et du budget">
+          <l_02 S_00="C2.1" S_01="C2.3" S_02="C2.4" S_03="C2.5" />
+        </l_T6.3>
+        <l_T5.1 S_00="Con" S_01="Identifier les solutions existantes de l'entreprise">
+          <l_02 S_00="C3.1" S_01="C3.6" />
+        </l_T5.1>
+        <l_T1.4 S_00="Ana" S_01="V&#233;rifier la p&#233;rennit&#233; des informations et les mettre &#224; jour">
+          <l_02 S_00="C2.1" />
+        </l_T1.4>
+        <l_T10.4 S_00="Rea" S_01="Proposer des solutions d'am&#233;lioration du syst&#232;me ou du service">
+          <l_02 S_00="C3.6" />
+        </l_T10.4>
+        <l_T11.3 S_00="DCo" S_01="Assurer la formation du client">
+          <l_02 S_00="C2.2" S_01="C2.5" />
+        </l_T11.3>
+        <l_T10.3 S_00="DCo" S_01="Ex&#233;cuter et/ou planifier les t&#226;ches professionnelles de MCO">
+          <l_02 S_00="C2.3" />
+        </l_T10.3>
+        <l_T3.4 S_00="Ana" S_01="N&#233;gocier et rechercher la validation du client">
+          <l_02 S_00="C2.4" />
+        </l_T3.4>
+        <l_T2.3 S_00="Ana" S_01="Formaliser le cahier des charges">
+          <l_02 S_00="C2.3" S_01="C2.4" />
+        </l_T2.3>
+        <l_T3.1 S_00="Ana" S_01="S'approprier le cahier des charges">
+          <l_02 S_00="C3.1" />
+        </l_T3.1>
+        <l_T3.3 S_00="Ana" S_01="Elaborer le cahier de recette">
+          <l_02 S_00="C3.5" />
+        </l_T3.3>
+      </d_taches>
     </Projet_PRJ>
   </d_projets>
   <d_seances>

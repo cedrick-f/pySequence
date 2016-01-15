@@ -120,7 +120,7 @@ def table_taches(taches, eleves, projet):
     for e in eleves:
         h += u"""<th style="width:6%%" class = "verticalTableHeader">%s</th>""" %e.GetNomPrenom()
     h = encap(h, u"tr")
-    for c in projet.getListTaches():
+    for c in projet.listTaches:
         nm = taches[c][1]
         ph = taches[c][0]
         cp = taches[c][2]
@@ -222,7 +222,7 @@ def genererFicheValidationHTML(nomFichierPDF, nomFichierHTML, projet):
               'CCF' : remplaceCR(projet.contraintes),
               'TCH' : table_taches(projet.GetProjetRef().taches, projet.eleves, projet.GetProjetRef())}
     
-    print champs['TCH']
+#    print champs['TCH']
     
     for code, val in champs.items():
         sourceHtml = sourceHtml.replace(u"[["+code+u"]]", val)

@@ -345,7 +345,7 @@
   </l_periodes>
   <l_positions_CI />
   <d_projets>
-    <Projet_PRJ I_duree="70" I_maxEleves="5" I_minEleves="3" S_code="PRJ" S_ficheValid="" S_intitule="Projet de fin d'ann&#233;e">
+    <Projet_PRJ B_tachesOnce="False" I_duree="70" I_maxEleves="5" I_minEleves="3" S_code="PRJ" S_ficheValid="" S_intitule="Projet de fin d'ann&#233;e">
       <d_attributs>
         <l_SRC S_00="" S_01="" S_02="" S_03="" />
         <l_PAR S_00="" S_01="" S_02="" S_03="" />
@@ -398,26 +398,31 @@
           </l_Prof>
         </d_C>
         <d_S>
-          <l_Tit>
-            <l_00 S_00="Identification projet" S_02="">
-              <l_01 I_00="13" I_01="1" I_02="0" />
-            </l_00>
-          </l_Tit>
-          <l_Nom>
-            <l_00 S_00="Identification projet" S_02="">
-              <l_01 I_00="8" I_01="2" I_02="0" />
-            </l_00>
-          </l_Nom>
-          <l_Des>
-            <l_00 S_00="Identification projet" S_02="">
-              <l_01 I_00="15" I_01="1" I_02="0" />
-            </l_00>
-          </l_Des>
           <l_Pre>
             <l_00 S_00="Identification projet" S_02="">
               <l_01 I_00="9" I_01="2" I_02="0" />
             </l_00>
           </l_Pre>
+          <l_Nom>
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="8" I_01="2" I_02="0" />
+            </l_00>
+          </l_Nom>
+          <l_N-P>
+            <l_00 S_00="Notation Candidat" S_02="Nom Prenom--">
+              <l_01 I_00="24" I_01="11" I_02="0" />
+            </l_00>
+          </l_N-P>
+          <l_Tit>
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="13" I_01="1" I_02="0" />
+            </l_00>
+          </l_Tit>
+          <l_Des>
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="15" I_01="1" I_02="0" />
+            </l_00>
+          </l_Des>
           <l_Etab>
             <l_00 S_00="Identification projet" S_02="">
               <l_01 I_00="6" I_01="2" I_02="0" />
@@ -431,6 +436,7 @@
       </d_grilles>
       <l_listPhases S_00="Ana" S_01="Con" S_02="DCo" S_03="Rea" S_04="Val" S_05="XXX" S_06="Rev" S_07="R1" S_08="R2" S_09="R3" S_10="S" />
       <l_listPhasesEval S_00="Rev" S_01="R1" S_02="R2" S_03="R3" S_04="S" />
+      <l_listTaches />
       <l_listeParties S_00="C" S_01="S" />
       <d_parties S_C="Conduite" S_S="Soutenance" />
       <l_periode I_00="7" I_01="10" />
@@ -451,6 +457,7 @@
         <l__02 S_00="Con" S_01="Val" />
         <l__03 S_00="Ana" S_01="Con" S_02="Val" />
       </d_posRevues>
+      <d_taches />
     </Projet_PRJ>
   </d_projets>
   <d_seances>

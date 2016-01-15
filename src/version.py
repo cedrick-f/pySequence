@@ -44,7 +44,7 @@ import wx
 
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "6.3-beta.1"
+__version__ = "6.3-beta.2"
 print __version__
 
 
@@ -117,7 +117,12 @@ def GetNewVersion(win):
     print "Recherche nouvelle version ..."
     url = "https://api.github.com/repos/cedrick-f/pySequence/releases/latest"
     req = urllib2.Request(url)
-    handler = urllib2.urlopen(req)
+    try:
+        handler = urllib2.urlopen(req)
+    except:
+        print u"Pas d'accès à Internet"
+        return
+    
     dic = json.loads(handler.read())
     
     latest = dic['tag_name'].lstrip('v')

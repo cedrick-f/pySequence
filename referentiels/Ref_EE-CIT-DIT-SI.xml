@@ -1089,7 +1089,7 @@
   </l_periodes>
   <l_positions_CI />
   <d_projets>
-    <Projet_PRJ1 I_duree="12" I_maxEleves="5" I_minEleves="3" S_code="PRJ1" S_ficheValid="STS-EE _ Dossier projet.html" S_intitule="Projet d&#233;but d'ann&#233;e">
+    <Projet_PRJ1 B_tachesOnce="False" I_duree="12" I_maxEleves="5" I_minEleves="3" S_code="PRJ1" S_ficheValid="STS-EE _ Dossier projet.html" S_intitule="Projet d&#233;but d'ann&#233;e">
       <d_attributs>
         <l_SRC S_00="Source de financement" S_01="" S_02="" S_03="" />
         <l_PAR S_00="Partenaires du projet" S_01="" S_02="" S_03="" />
@@ -1147,6 +1147,7 @@
       </d_grilles>
       <l_listPhases S_00="Ana" S_01="Con" S_02="DCo" S_03="Rea" S_04="XXX" S_05="Rev" S_06="R1" S_07="R2" S_08="R3" S_09="S" />
       <l_listPhasesEval S_00="Rev" S_01="R1" S_02="R2" S_03="R3" S_04="S" />
+      <l_listTaches />
       <l_listeParties S_00="S1" />
       <d_parties S_S1="PRJ1" />
       <l_periode I_00="1" />
@@ -1166,8 +1167,9 @@
         <l__02 S_00="Ana" S_01="Con" />
         <l__03 S_00="Ana" S_01="Con" S_02="DCo" />
       </d_posRevues>
+      <d_taches />
     </Projet_PRJ1>
-    <Projet_PRJ2 I_duree="12" I_maxEleves="5" I_minEleves="3" S_code="PRJ2" S_ficheValid="STS-EE _ Dossier projet.html" S_intitule="Projet">
+    <Projet_PRJ2 B_tachesOnce="False" I_duree="12" I_maxEleves="5" I_minEleves="3" S_code="PRJ2" S_ficheValid="STS-EE _ Dossier projet.html" S_intitule="Projet">
       <d_attributs>
         <l_SRC S_00="Source de financement" S_01="" S_02="" S_03="" />
         <l_PAR S_00="Partenaires du projet" S_01="" S_02="" S_03="" />
@@ -1225,6 +1227,7 @@
       </d_grilles>
       <l_listPhases S_00="Ana" S_01="Con" S_02="DCo" S_03="Rea" S_04="XXX" S_05="Rev" S_06="R1" S_07="R2" S_08="R3" S_09="S" />
       <l_listPhasesEval S_00="Rev" S_01="R1" S_02="R2" S_03="R3" S_04="S" />
+      <l_listTaches />
       <l_listeParties S_00="C" />
       <d_parties S_C="PRJ2" />
       <l_periode I_00="2" />
@@ -1244,8 +1247,9 @@
         <l__02 S_00="Ana" S_01="Con" />
         <l__03 S_00="Ana" S_01="Con" S_02="DCo" />
       </d_posRevues>
+      <d_taches />
     </Projet_PRJ2>
-    <Projet_PRJ3 I_duree="50" I_maxEleves="5" I_minEleves="3" S_code="PRJ3" S_ficheValid="STS-EE _ Dossier projet.html" S_intitule="Projet de fin d'ann&#233;e">
+    <Projet_PRJ3 B_tachesOnce="False" I_duree="50" I_maxEleves="5" I_minEleves="3" S_code="PRJ3" S_ficheValid="STS-EE _ Dossier projet.html" S_intitule="Projet de fin d'ann&#233;e">
       <d_attributs>
         <l_SRC S_00="Source de financement" S_01="" S_02="" S_03="" />
         <l_PAR S_00="Partenaires du projet" S_01="" S_02="" S_03="" />
@@ -1303,6 +1307,7 @@
       </d_grilles>
       <l_listPhases S_00="Ana" S_01="Con" S_02="DCo" S_03="Rea" S_04="XXX" S_05="Rev" S_06="R1" S_07="R2" S_08="R3" S_09="S" />
       <l_listPhasesEval S_00="Rev" S_01="R1" S_02="R2" S_03="R3" S_04="S" />
+      <l_listTaches />
       <l_listeParties S_00="S2" />
       <d_parties S_S2="PRJ3" />
       <l_periode I_00="3" />
@@ -1322,6 +1327,7 @@
         <l__02 S_00="Ana" S_01="Con" />
         <l__03 S_00="Ana" S_01="Con" S_02="DCo" />
       </d_posRevues>
+      <d_taches />
     </Projet_PRJ3>
   </d_projets>
   <d_seances>

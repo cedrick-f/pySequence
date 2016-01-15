@@ -910,7 +910,7 @@
   </l_periodes>
   <l_positions_CI S_00="MEI_FS " S_01="MEI_  C" S_02="M  _ SC" S_03="  I_  C" S_04=" E _  C" />
   <d_projets>
-    <Projet_PRJ I_duree="70" I_maxEleves="5" I_minEleves="3" S_code="PRJ" S_ficheValid="" S_intitule="Projet de fin d'ann&#233;e">
+    <Projet_PRJ B_tachesOnce="False" I_duree="70" I_maxEleves="5" I_minEleves="3" S_code="PRJ" S_ficheValid="" S_intitule="Projet de fin d'ann&#233;e">
       <d_attributs>
         <l_SRC S_00="" S_01="" S_02="" S_03="" />
         <l_PAR S_00="" S_01="" S_02="" S_03="" />
@@ -996,6 +996,7 @@
       </d_grilles>
       <l_listPhases S_00="Ana" S_01="Rea" S_02="XXX" S_03="Rev" S_04="R1" S_05="R2" S_06="R3" S_07="S" />
       <l_listPhasesEval S_00="Rev" S_01="R1" S_02="R2" S_03="R3" S_04="S" />
+      <l_listTaches />
       <l_listeParties S_00="C" S_01="S" />
       <d_parties S_C="Conduite" S_S="Soutenance" />
       <l_periode I_00="7" I_01="10" />
@@ -1013,6 +1014,7 @@
         <l__02 S_00="Ana" S_01="Rea" />
         <l__03 S_00="Ana" S_01="Rea" S_02="XXX" />
       </d_posRevues>
+      <d_taches />
     </Projet_PRJ>
   </d_projets>
   <d_seances>

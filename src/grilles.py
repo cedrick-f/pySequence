@@ -287,7 +287,7 @@ def modifierGrille(doc, tableaux, eleve):
                     l += p
             else:
                 log.append(u"Feuille " + f + u" non trouvée")
-    
+#    print "log",log
     return list(set(log))
     
     

@@ -6796,13 +6796,13 @@ class PanelPropriete_Tache(PanelPropriete):
         self.Refresh()
 #        wx.CallAfter(self.Layout)
         
-    ####################################################################################
-    def getListTaches(self): 
-        """ Renvoie la liste des tâches encore disponibles = pas déja sélectionnées
-        """
-        prj = self.tache.GetProjetRef()
-        l = [t+" "+prj.taches[t][1] for t in prj.listTaches if not t in [tt.intitule for tt in self.tache.projet.taches]]
-        return l
+#    ####################################################################################
+#    def getListTaches(self): 
+#        """ Renvoie la liste des tâches encore disponibles = pas déja sélectionnées
+#        """
+#        prj = self.tache.GetProjetRef()
+#        l = [t+" "+prj.taches[t][1] for t in prj.listTaches if not t in [tt.intitule for tt in self.tache.projet.taches]]
+#        return l
      
     ####################################################################################
     def OnPageChanged(self, event):
@@ -10011,7 +10011,8 @@ class TreeCtrlComboPopup(wx.PopupTransientWindow):
                 self.tree.SetItemBold(pph, True)
                 ph = prj.taches[ct][0]
             item = self.AddItem(ct+" "+prj.taches[ct][1], parent=pph)
-            self.tree.EnableItem(item, ct not in [t.intitule for t in tache.projet.taches])
+            if prj.tachesOnce:
+                self.tree.EnableItem(item, ct not in [t.intitule for t in tache.projet.taches])
             
                 
         self.tree.ExpandAll()
@@ -14499,6 +14500,7 @@ class Projet(BaseDoc, Objet_sequence):
                     prj.grilles[k] = prjdef.grilles[k]
                     prj.cellulesInfo[k] = prjdef.cellulesInfo[k]
                 else:
+                    print k, grilles.getFullNameGrille(prjdef.grilles[k][0])
                     pb.append(k)
         
         if len(pb) > 0:
@@ -16558,14 +16560,11 @@ class Tache(Objet_sequence):
                             else:
                                 self.indicateursEleve[0].append(codeindic)
                     
-                
 #        print self.indicateursEleve
         if not self.estPredeterminee():
             self.ActualiserDicIndicateurs()
             
         self.intituleDansDeroul = eval(branche.get("IntituleDansDeroul", "True"))
-
-        
     
         if hasattr(self, 'panelPropriete'):
             self.panelPropriete.ConstruireListeEleves()

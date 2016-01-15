@@ -131,7 +131,7 @@ class XMLelem():
         """ Lecture de la branche XML
             (ouverture de fichier)
         """
-#        print "setBranche", self._codeXML
+#        print "setBranche", self._codeXML, self
     
         nomerr = []
         
@@ -152,7 +152,9 @@ class XMLelem():
                 return float(branche.get(nom))
             
             elif nom[:2] == "B_":
+#                print nom
                 if branche.get(nom) == None: # Pour corriger un bug (version <=5.0beta3)
+                    print "Pas trouvé", nom, self._codeXML
                     nomerr.append(nom)
                     return False 
                 return branche.get(nom)[0] == "T"
@@ -252,20 +254,22 @@ class XMLelem():
         def egal(val1, val2):
             if isinstance(val1, (str, unicode)) and isinstance(val2, (str, unicode)):
 #                if val1 != val2:#.replace("\n", "--"):
-#                    print "Erreur s : xml =", val1, "      xls =", val2#.replace("\n", "--")
+#                    print "Erreur str : xml =", val1, "      xls =", val2#.replace("\n", "--")
                 return val1 == val2#.replace("\n", "--")
-            elif isinstance(val1, (int, long, float)) and isinstance(val2, (int, long, float)):
-#                if val1 != val2:
-#                    print "Erreur : xml =", val1, "      xls =", val2
-                return val1 == val2
+            
             elif type(val1) == bool and type(val2) == bool:
-#                if val1 != val2:
-#                    print "Erreur : xml =", val1, "      xls =", val2
+                if val1 != val2:
+                    print "Erreur bool: xml =", val1, "      xls =", val2
+                return val1 == val2
+            
+            elif isinstance(val1, (int, long, float)) and isinstance(val2, (int, long, float)):
+                if val1 != val2:
+                    print "Erreur num: xml =", val1, "      xls =", val2
                 return val1 == val2
             
             elif type(val1) == list:
                 if len(val1) != len(val2):
-#                    print "Erreur : xml =", val1, "      xls =", val2
+#                    print "Erreur list: xml =", val1, "      xls =", val2
                     return False
                 e = True
                 for sval1, sval2 in zip(val1, val2):
@@ -274,7 +278,7 @@ class XMLelem():
             
             elif type(val1) == dict and type(val2) == dict:
                 if not egal(sorted(val1), sorted(val2)):
-#                    print "Erreur : xml =", val1, "      xls =", val2
+#                    print "Erreur dict : xml =", val1, "      xls =", val2
                     return False
                 e = True
                 for k, v in val1.items():
@@ -284,6 +288,7 @@ class XMLelem():
                 return e
             
             elif isinstance(val1, XMLelem) and isinstance(val2, XMLelem):
+#                print "XMLelem", val1 == val2
                 return val1 == val2
             
             else:
@@ -1615,6 +1620,7 @@ class Projet(XMLelem):
         #
         self.taches = {}
         self.listTaches = []
+        self.tachesOnce = False # Pour indiquer que chaque tâche ne peut apparaitre qu'une seulle fois dans me projet
         
         #
         # Effectifs
@@ -1779,7 +1785,8 @@ class Projet(XMLelem):
                     self.taches[str(shp.cell(l,0).value)] = [shp.cell(l,2).value, 
                                                              shp.cell(l,1).value, 
                                                              shp.cell(l,3).value.split()]
-#            print self.taches
+            self.tachesOnce = shp.cell(0,4).value[0].upper() == "O"
+            print self.tachesOnce
         
         #
         # Généralités sur le projet
@@ -2214,7 +2221,9 @@ def chargerReferentiels():
             f = os.path.join(DOSSIER_REF, constantes.toFileEncoding(r"Ref_"+r.Enseignement[0]+r".xml"))
             dicOk[k] = False
             if os.path.exists(f):
+#                print ">>",f
                 ref = ouvrir(f)
+#                print "<<", f
 #                for p in ref.projets.values():
 #                    print p.grilles
                 if ref == r:
