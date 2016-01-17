@@ -9832,7 +9832,7 @@ class ArbreTypeEnseignement(CT.CustomTreeCtrl):
 #        print ARBRE_REF
         self.branche = []
 #        self.ExpandAll()
-        for t, st in ARBRE_REF.items():
+        for t, st in ARBRE_REF:
 #            print "   ", t, st, self.panelParent.pourProjet
             
             if t[0] == "_" or (self.panelParent.pourProjet and len(REFERENTIELS[t].projets) == 0):

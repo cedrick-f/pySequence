@@ -57,7 +57,7 @@ ARBRE_REF = {}
 #
 ########################################################################################
 ACTIVITES = ["AP", "ED", "P"]
-
+PERIODES = ['Pri', 'Sec', 'Sup']
 
 
 ###########################################################
@@ -486,6 +486,7 @@ class Referentiel(XMLelem):
         self.Enseignement = [u""    ,   u"",    u""]
         self.options = {}               # options de l'enseignement : {Code : nomFichier}
         self.tr_com = []                # tronc commun de l'enseignement : [Code, nomFichier]
+        self.AnneeDebut = ""            # Position de l'enseignement dans la scolarité (PERIODE+Année)
         
         self.periodes = []              # découpage de l'enseignement en années/périodes
         self.FichierLogo = r""          # Fichier désignant l'image du Logo de l'enseignement
@@ -814,8 +815,16 @@ class Referentiel(XMLelem):
 #            print p.listeParties, p.parties
         
         
-        
-        
+        if "S_AnneeDebut" in nomerr:
+            if self.Famille == "STS":
+                self.AnneeDebut = "Sup1"
+            elif self.Famille == "2nde":
+                self.AnneeDebut = "Sec5"
+            elif self.Famille == "STI" or self.Famille == "SSI":
+                self.AnneeDebut = "Sec6"
+            elif self.Famille == "CLG":
+                self.AnneeDebut = "Sec1"
+            print "Correction AnneeDebut:", self.AnneeDebut
         return
         
     
@@ -995,6 +1004,7 @@ class Referentiel(XMLelem):
         sh_g = wb.sheet_by_name(u"Généralités")
         self.Famille = sh_g.cell(2,0).value
         self.Code = sh_g.cell(2,1).value
+        self.AnneeDebut = sh_g.cell(2,2).value
         self.Enseignement[0] = sh_g.cell(6,0).value #Abréviation    
         self.Enseignement[1] = sh_g.cell(6,1).value #Nom complet    
         self.Enseignement[2] = sh_g.cell(6,2).value #Famille
@@ -2238,6 +2248,9 @@ def chargerReferentiels():
     # Construction de la structure en arbre
     #
     
+    
+    
+    
     #  Types d'enseignement qui n'ont pas de tronc commun (parents)
     for k, r in REFERENTIELS.items():
         if r.tr_com == []:
@@ -2272,7 +2285,32 @@ def chargerReferentiels():
                         break
         r.sort()
         r.reverse()
-#    print ARBRE_REF
+    
+    
+    
+    # Tri des items par période scolaire (AnneeDebut)
+    def num(k, r):
+        if len(r) > 0:
+            p = REFERENTIELS[r[0]].AnneeDebut
+        else:
+            p = REFERENTIELS[k].AnneeDebut
+        if p[:3] in PERIODES:
+            i = (PERIODES.index(p[:3])+1) * 100
+        else:
+            i = 0
+        try:
+            a = int(p[3:])
+        except:
+            a = 0
+        return i+a
+    
+    print ARBRE_REF.items()
+    def comp_per(ref1, ref2):
+        k1, r1 = ref1
+        k2, r2 = ref2
+        return num(k1, r1) - num(k2, r2)
+    ARBRE_REF = sorted(ARBRE_REF.items(), cmp = comp_per)
+    print ARBRE_REF
     
     
 chargerReferentiels()
