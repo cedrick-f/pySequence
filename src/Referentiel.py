@@ -154,7 +154,7 @@ class XMLelem():
             elif nom[:2] == "B_":
 #                print nom
                 if branche.get(nom) == None: # Pour corriger un bug (version <=5.0beta3)
-                    print "Pas trouvé", nom, self._codeXML
+                    print u"Pas trouvé", nom, self._codeXML
                     nomerr.append(nom)
                     return False 
                 return branche.get(nom)[0] == "T"
@@ -258,13 +258,13 @@ class XMLelem():
                 return val1 == val2#.replace("\n", "--")
             
             elif type(val1) == bool and type(val2) == bool:
-                if val1 != val2:
-                    print "Erreur bool: xml =", val1, "      xls =", val2
+#                if val1 != val2:
+#                    print "Erreur bool: xml =", val1, "      xls =", val2
                 return val1 == val2
             
             elif isinstance(val1, (int, long, float)) and isinstance(val2, (int, long, float)):
-                if val1 != val2:
-                    print "Erreur num: xml =", val1, "      xls =", val2
+#                if val1 != val2:
+#                    print "Erreur num: xml =", val1, "      xls =", val2
                 return val1 == val2
             
             elif type(val1) == list:
@@ -1796,7 +1796,7 @@ class Projet(XMLelem):
                                                              shp.cell(l,1).value, 
                                                              shp.cell(l,3).value.split()]
             self.tachesOnce = shp.cell(0,4).value[0].upper() == "O"
-            print self.tachesOnce
+#            print self.tachesOnce
         
         #
         # Généralités sur le projet

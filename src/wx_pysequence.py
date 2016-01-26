@@ -3244,6 +3244,7 @@ class PanelPropriete(scrolled.ScrolledPanel):
     
     #########################################################################################################
     def sendEvent(self, doc = None, modif = u"", draw = True, obj = None):
+#        print "sendEvent", modif
         self.eventAttente = False
         evt = SeqEvent(myEVT_DOC_MODIFIED, self.GetId())
         if doc != None:
@@ -3688,7 +3689,7 @@ class PanelPropriete_Projet(PanelPropriete):
               
     #############################################################################            
     def EvtText(self, event):
-#        print "EvtText"
+#        print "EvtText",
         if event.GetEventObject() == self.textctrl:
 #            nt = event.GetString()
             nt = self.textctrl.GetText()
@@ -3945,7 +3946,7 @@ class PanelPropriete_Projet(PanelPropriete):
         ref = self.projet.GetProjetRef()
         
         # La page "Généralités"
-        self.textctrl.ChangeValue(self.projet.intitule)
+        self.textctrl.SetValue(self.projet.intitule, False)
         self.commctrl.SetValue(self.projet.problematique, False)
 
         # Les pages simples
@@ -16258,19 +16259,29 @@ class Tache(Objet_sequence):
                 --> épaisseur variable selon le nombre d'élèves
             Renvoie False si tous les élèves abordent les mêmes compétences/indicateurs
                 --> épaisseur fixe
-            (utilisé pour tracer la fiche)
+            (utilisé pour tracer la fiche uniquement)
         """
 #        print "DiffereSuivantEleve", self, self.phase
         if len(self.projet.eleves) == 0:
             return False
         indicateurs = self.GetDicIndicateursEleve(self.projet.eleves[0])
+#        print "   ", indicateurs
         for eleve in self.projet.eleves[1:]:
+            
             ie = self.GetDicIndicateursEleve(eleve)
+#            print "     ", eleve, " >>> ", ie
             if set(indicateurs.keys()) != set(ie.keys()):
+#                print "       >1"
                 return True
             for k, v in ie.items():
-                if set(v) != set(indicateurs[k]):
-                    return True
+                for a, b in zip(v, indicateurs[k]):
+                    if a != b:
+#                        print "       >2"
+                        return True
+#                print set(v) , "------", set(indicateurs[k])
+#                if set(v) != set(indicateurs[k]):
+#                    print "       >2"
+#                    return True
             
         return False
     
