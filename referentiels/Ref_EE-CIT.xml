@@ -24,196 +24,71 @@
     <l_R S_00="R&#233;s. Probl&#232;me" S_01="R&#233;solution de probl&#232;me" />
   </d_demarches>
   <d_dicCompetences>
-    <l_C1.2 S_00="Mettre en &#339;uvre une d&#233;marche de cr&#233;ativit&#233;">
+    <l_C3 S_00="mettre en &#339;uvre une d&#233;marche de cr&#233;ativit&#233;">
       <l_01>
-        <Indicateur_00 S_intitule="formuler des hypoth&#232;ses, hierarchiser, s&#233;lectionner, expliciter, contextualiser">
-          <d_ligne I_C="12" />
+        <Indicateur_00 S_intitule="Les hypoth&#232;ses sont formul&#233;es, hi&#233;rarchis&#233;es, s&#233;lectionn&#233;es, explicit&#233;es, contextualis&#233;es">
+          <d_ligne I_C="16" />
           <d_poids F_C="33.333333" />
           <d_revue I_C="0" />
         </Indicateur_00>
-        <Indicateur_01 S_intitule="mettre en &#339;uvre une ou des m&#233;thodes de cr&#233;ativit&#233;">
-          <d_ligne I_C="13" />
+        <Indicateur_01 S_intitule="Une ou des m&#233;thodes de cr&#233;ativit&#233; sont mise en &#339;uvre">
+          <d_ligne I_C="17" />
           <d_poids F_C="33.333333" />
           <d_revue I_C="0" />
         </Indicateur_01>
-        <Indicateur_02 S_intitule="mat&#233;rialiser une solution innovante">
-          <d_ligne I_C="14" />
+        <Indicateur_02 S_intitule="Une solution innovante est mat&#233;rialis&#233;e">
+          <d_ligne I_C="18" />
           <d_poids F_C="33.333333" />
           <d_revue I_C="0" />
         </Indicateur_02>
       </l_01>
       <d_02 I_C="20" />
-    </l_C1.2>
-    <l_C1.1 S_00="Acqu&#233;rir les bases d'une culture de l'innovation technologique">
+    </l_C3>
+    <l_C2 S_00="communiquer ses intentions">
       <l_01>
-        <Indicateur_00 S_intitule="relier les &#233;volutions technologiques aux innovations qui marquent des ruptures dans les solutions techniques">
+        <Indicateur_00 S_intitule="Une r&#233;flexion, un principe, une id&#233;e, une solution technique sont exprim&#233;es">
+          <d_ligne I_C="12" />
+          <d_poids F_C="50.0" />
+          <d_revue I_C="0" />
+        </Indicateur_00>
+        <Indicateur_01 S_intitule="La pens&#233;e est exprim&#233;e &#224; l'aide d'outils de description adapt&#233;s, manuels ou num&#233;riques">
+          <d_ligne I_C="13" />
+          <d_poids F_C="50.0" />
+          <d_revue I_C="0" />
+        </Indicateur_01>
+      </l_01>
+      <d_02 I_C="20" />
+    </l_C2>
+    <l_C1 S_00="Acqu&#233;rir les bases d'une culture de l'innovation technologique">
+      <l_01>
+        <Indicateur_00 S_intitule="Les &#233;volutions technologiques sont reli&#233;es aux innovations qui marquent des ruptures dans les solutions techniques">
           <d_ligne I_C="6" />
           <d_poids F_C="20.0" />
           <d_revue I_C="0" />
         </Indicateur_00>
-        <Indicateur_01 S_intitule="utiliser un vocabulaire sp&#233;cifique &#224; l'innovation et la cr&#233;ativit&#233;">
+        <Indicateur_01 S_intitule="Le vocabulaire sp&#233;cifique &#224; l'innovation et &#224; la cr&#233;ativit&#233; est utilis&#233;">
           <d_ligne I_C="7" />
           <d_poids F_C="20.0" />
           <d_revue I_C="0" />
         </Indicateur_01>
-        <Indicateur_02 S_intitule="Identifier les principes qui r&#233;gissent la propri&#233;t&#233; intellectuelle, la normalisation et l'intelligence &#233;conomique">
+        <Indicateur_02 S_intitule="Les principes qui r&#233;gissent la propri&#233;t&#233; intellectuelle, la normalisation et l'intelligence &#233;conomique sont identifi&#233;s">
           <d_ligne I_C="8" />
           <d_poids F_C="20.0" />
           <d_revue I_C="0" />
         </Indicateur_02>
-        <Indicateur_03 S_intitule="analyser le cycle de vie d'un produit">
+        <Indicateur_03 S_intitule="L'analyse du  cycle de vie d'un produit est r&#233;alis&#233;e">
           <d_ligne I_C="9" />
           <d_poids F_C="20.0" />
           <d_revue I_C="0" />
         </Indicateur_03>
-        <Indicateur_04 S_intitule="analyser l'impact environnemental d'un objet et de ses constituants">
+        <Indicateur_04 S_intitule="L'analyse de l'impact environnemental d'un objet et de ses constituants est r&#233;alis&#233;e">
           <d_ligne I_C="10" />
           <d_poids F_C="20.0" />
           <d_revue I_C="0" />
         </Indicateur_04>
       </l_01>
       <d_02 I_C="20" />
-    </l_C1.1>
-    <l_C2.1 S_00="Design et significations">
-      <l_01>
-        <Indicateur_00 S_intitule="Associer un objet &#224; une grande p&#233;riode de la conception, des arts aux design industriel">
-          <d_ligne I_C="16" />
-          <d_poids F_C="25.0" />
-          <d_revue I_C="0" />
-        </Indicateur_00>
-        <Indicateur_01 S_intitule="Observer un objet d'un point de vue description, communication et repr&#233;sentation">
-          <d_ligne I_C="17" />
-          <d_poids F_C="25.0" />
-          <d_revue I_C="0" />
-        </Indicateur_01>
-        <Indicateur_02 S_intitule="Identifier un contexte (culturel, &#233;cologique, &#233;conomique, soci&#233;tal, technologique)">
-          <d_ligne I_C="18" />
-          <d_poids F_C="25.0" />
-          <d_revue I_C="0" />
-        </Indicateur_02>
-        <Indicateur_03 S_intitule="Identifier des fonctions de besoins et d'usages">
-          <d_ligne I_C="19" />
-          <d_poids F_C="25.0" />
-          <d_revue I_C="0" />
-        </Indicateur_03>
-      </l_01>
-      <d_02 I_C="20" />
-    </l_C2.1>
-    <l_C2.2 S_00="Mettre en &#339;uvre une d&#233;marche de cr&#233;ation">
-      <l_01>
-        <Indicateur_00 S_intitule="Concevoir, r&#233;aliser, un projet de design, individuel ou collectif">
-          <d_ligne I_C="21" />
-          <d_poids F_C="25.0" />
-          <d_revue I_C="0" />
-        </Indicateur_00>
-        <Indicateur_01 S_intitule="confronter intension et r&#233;alisation dans la conduite d'un projet pour l'adapter et l'orienter, s'assurer de la dimension cr&#233;ative">
-          <d_ligne I_C="22" />
-          <d_poids F_C="25.0" />
-          <d_revue I_C="0" />
-        </Indicateur_01>
-        <Indicateur_02 S_intitule="faire preuve d'autonomie, d'initiative, d'engagement et d'esprit critique dans la conduite du projet">
-          <d_ligne I_C="23" />
-          <d_poids F_C="25.0" />
-          <d_revue I_C="0" />
-        </Indicateur_02>
-        <Indicateur_03 S_intitule="mener &#224; terme une production individuelle dans le cadre d'un projet">
-          <d_ligne I_C="24" />
-          <d_poids F_C="25.0" />
-          <d_revue I_C="0" />
-        </Indicateur_03>
-      </l_01>
-      <d_02 I_C="20" />
-    </l_C2.2>
-    <l_C3.1 S_00="Approfondir la culture technologiques">
-      <l_01>
-        <Indicateur_00 S_intitule="Identifier des contraintes associ&#233;es &#224; une norme">
-          <d_ligne I_C="26" />
-          <d_poids F_C="20.0" />
-          <d_revue I_C="0" />
-        </Indicateur_00>
-        <Indicateur_01 S_intitule="identifier la dimension sensible ou esth&#233;tique">
-          <d_ligne I_C="27" />
-          <d_poids F_C="20.0" />
-          <d_revue I_C="0" />
-        </Indicateur_01>
-        <Indicateur_02 S_intitule="identifier les fonctions d'un syst&#232;me technique">
-          <d_ligne I_C="28" />
-          <d_poids F_C="20.0" />
-          <d_revue I_C="0" />
-        </Indicateur_02>
-        <Indicateur_03 S_intitule="Identifier mat&#233;riaux, flux d'&#233;nergie et d'information">
-          <d_ligne I_C="29" />
-          <d_poids F_C="20.0" />
-          <d_revue I_C="0" />
-        </Indicateur_03>
-        <Indicateur_04 S_intitule="d&#233;crire la relation produit/mat&#233;riau/proc&#233;d&#233; ">
-          <d_ligne I_C="30" />
-          <d_poids F_C="20.0" />
-          <d_revue I_C="0" />
-        </Indicateur_04>
-      </l_01>
-      <d_02 I_C="10" />
-    </l_C3.1>
-    <l_C3.2 S_00="Repr&#233;senter - Communiquer">
-      <l_01>
-        <Indicateur_00 S_intitule="exprimer une r&#233;flexion, un principe, une id&#233;e, une solution technique">
-          <d_ligne I_C="32" />
-          <d_poids F_C="20.0" />
-          <d_revue I_C="0" />
-        </Indicateur_00>
-        <Indicateur_01 S_intitule="exprimer sa pens&#233;e &#224; l'aide d'outils de description adapt&#233;s, manuels ou num&#233;riques">
-          <d_ligne I_C="33" />
-          <d_poids F_C="20.0" />
-          <d_revue I_C="0" />
-        </Indicateur_01>
-        <Indicateur_02 S_intitule="D&#233;crire, en utilisant les outils et les languages de descriptions adapt&#233;s">
-          <d_ligne I_C="34" />
-          <d_poids F_C="20.0" />
-          <d_revue I_C="0" />
-        </Indicateur_02>
-        <Indicateur_03 S_intitule="Interpr&#233;ter des r&#233;sultats exp&#233;rimentaux, en tirer une conclusion et la communiquer en argumentant">
-          <d_ligne I_C="35" />
-          <d_poids F_C="20.0" />
-          <d_revue I_C="0" />
-        </Indicateur_03>
-        <Indicateur_04 S_intitule="Mod&#233;liser, simuler num&#233;riquement la structure et/ou le comportement d'un objet">
-          <d_ligne I_C="36" />
-          <d_poids F_C="20.0" />
-          <d_revue I_C="0" />
-        </Indicateur_04>
-      </l_01>
-      <d_02 I_C="10" />
-    </l_C3.2>
-    <l_C4 S_00="Repr&#233;senter - C">
-      <l_01>
-        <Indicateur_00 S_intitule="exprimer une r&#233;flexion, un principe, une id&#233;e, une solution technique">
-          <d_ligne I_C="32" />
-          <d_poids F_C="20.0" />
-          <d_revue I_C="0" />
-        </Indicateur_00>
-        <Indicateur_01 S_intitule="exprimer sa pens&#233;e &#224; l'aide d'outils de description adapt&#233;s, manuels ou num&#233;riques">
-          <d_ligne I_C="33" />
-          <d_poids F_C="20.0" />
-          <d_revue I_C="0" />
-        </Indicateur_01>
-        <Indicateur_02 S_intitule="D&#233;crire, en utilisant les outils et les languages de descriptions adapt&#233;s">
-          <d_ligne I_C="34" />
-          <d_poids F_C="20.0" />
-          <d_revue I_C="0" />
-        </Indicateur_02>
-        <Indicateur_03 S_intitule="Interpr&#233;ter des r&#233;sultats exp&#233;rimentaux, en tirer une conclusion et la communiquer en argumentant">
-          <d_ligne I_C="35" />
-          <d_poids F_C="20.0" />
-          <d_revue I_C="0" />
-        </Indicateur_03>
-        <Indicateur_04 S_intitule="Mod&#233;liser, simuler num&#233;riquement la structure et/ou le comportement d'un objet">
-          <d_ligne I_C="36" />
-          <d_poids F_C="20.0" />
-          <d_revue I_C="0" />
-        </Indicateur_04>
-      </l_01>
-      <d_02 I_C="10" />
-    </l_C4>
+    </l_C1>
   </d_dicCompetences>
   <d_dicFonctions />
   <d_dicSavoirs>

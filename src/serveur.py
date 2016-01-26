@@ -29,6 +29,7 @@
 # Source :
 # http://stackoverflow.com/questions/5520639/single-instance-application-passing-commands
 
+
 import wx
 import sys
 import os

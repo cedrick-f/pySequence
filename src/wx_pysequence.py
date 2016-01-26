@@ -1469,9 +1469,10 @@ class FenetreDocument(aui.AuiMDIChildFrame):
                          aui.AuiPaneInfo().
 #                         Name(u"Structure").
                          Left().Layer(1).
-                         Floatable(False).
-                         BestSize((250, -1)).
+#                         Floatable(False).
+                         BestSize((250, 400)).
                          MinSize((250, -1)).
+                         Dockable(True).
 #                         DockFixed().
 #                         Gripper(False).
 #                         Movable(False).
@@ -16719,14 +16720,18 @@ class Tache(Objet_sequence):
         if hasattr(self, 'codeBranche') and self.phase != "":
             if self.phase in TOUTES_REVUES_EVAL_SOUT:
                 self.codeBranche.SetLabel(u"")
-                t = u""
+                t = self.GetProjetRef().phases[self.phase][1]
             else:
                 if self.estPredeterminee():
-                    self.codeBranche.SetLabel(self.intitule)
+                    t = self.intitule
+                    self.codeBranche.SetLabel(self.GetProjetRef().taches[self.intitule][1])
+                    self.codeBranche.SetToolTipString(self.GetProjetRef().taches[self.intitule][1])
                 else:
-                    self.codeBranche.SetLabel(self.code)
-                t = u" :"
-            self.arbre.SetItemText(self.branche, self.GetProjetRef().phases[self.phase][1]+t)
+                    t = self.code
+                    self.codeBranche.SetLabel(self.intitule)
+                    self.codeBranche.SetToolTipString(self.intitule)
+                t += u" :"
+            self.arbre.SetItemText(self.branche, t)#self.GetProjetRef().phases[self.phase][1]+
             self.codeBranche.LayoutFit()
             
         #

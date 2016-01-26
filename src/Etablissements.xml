@@ -7129,7 +7129,9 @@
     </l_8>
     <l_99 S_9900="Etranger">
       <l_9901 />
-      <l_9902 />
+      <l_9902>
+		<l_990201 S_99020100="Liceo FrancoMexicano (LFM)" S_99020101="Mexico" /> 
+	  </l_9902>
     </l_99>
     <l_93 S_9300="Polyn&#233;sie fran&#231;aise">
       <l_9301>
