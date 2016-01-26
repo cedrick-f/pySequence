@@ -8958,7 +8958,7 @@ class ArbreCompetences(HTL.HyperTreeList):
         self.AddColumn(u"")
         self.SetColumnWidth(1, 0)
         self.AddColumn(u"")
-        self.SetColumnWidth(1, 0)
+        self.SetColumnWidth(2, 0)
         self.AddColumn(u"Eleves")
         self.SetColumnWidth(3, 0)
         
@@ -9191,6 +9191,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
         """
 #        print "ConstruireCasesEleve"
         tache = self.GetTache()
+        cases = None
 #        prj = tache.GetProjetRef()
         for codeIndic, item in self.items.items():
             cases = self.GetItemWindow(item, 3)
@@ -9201,7 +9202,10 @@ class ArbreCompetencesPrj(ArbreCompetences):
 #                cases = ChoixCompetenceEleve(self, codeIndic,
 #                                             tache.projet, tache)
                 item.SetWindow(cases, 3)
+        if cases is not None:
+            self.SetColumnWidth(3, max(60, cases.GetSize()[0]))
         self.Layout()
+        self.OnSize2()
         
             
     ####################################################################################
@@ -9372,9 +9376,11 @@ class ArbreCompetencesPrj(ArbreCompetences):
     #                                size = self.GetItemWindow(b, 3).GetSize()[0]
     #                                print cases.GetSize()
                                     b.SetWindowEnabled(True, 3)
+#                                    print "  ...", cases.GetSize()[0]
+                                    self.SetColumnWidth(3, max(60, cases.GetSize()[0]))
     #                                self.Collapse(comp)
     #                                self.Refresh()
-    #                                self.Layout()
+                                    self.Layout()
                     
                     if b == None: # Désactivation si branche vide d'indicateurs
                         self.SetItemType(br,0)
@@ -9391,8 +9397,9 @@ class ArbreCompetencesPrj(ArbreCompetences):
         const(dic, branche, debug = False)
         
         
-        if self.eleves:
-            self.SetColumnWidth(3, 60)
+#        if self.eleves:
+#            print "***"
+#            self.SetColumnWidth(3, 10)
         
         if tache == None: # Cas des arbres dans popup (que l'arbre, pas de poids)
             self.SetColumnWidth(1, 0)
