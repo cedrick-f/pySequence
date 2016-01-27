@@ -1141,7 +1141,7 @@ class Referentiel(XMLelem):
                     if t == p.intitule:
                         p.listeParties.append(part)
                         p.parties[part] = sh_va.cell(2,cp).value
-                self.compImposees[part] = False
+                self.compImposees[part] = False # Valeur par défaut
             
 #            t = sh_va.cell(1,c).value
 #            for p in self.projets.values():

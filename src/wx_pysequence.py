@@ -6618,7 +6618,7 @@ class PanelPropriete_Tache(PanelPropriete):
         PanelPropriete.__init__(self, parent)
 #        print "init pptache", tache
         if not tache.phase in [tache.projet.getCodeLastRevue(), _S]  \
-           and not (tache.phase in TOUTES_REVUES_EVAL and tache.GetReferentiel().compImposees['C']):
+           and not (tache.phase in TOUTES_REVUES_EVAL and (True in tache.GetReferentiel().compImposees.values())): #tache.GetReferentiel().compImposees['C']):
             #
             # La page "Généralités"
             #
@@ -6757,7 +6757,7 @@ class PanelPropriete_Tache(PanelPropriete):
         
 #        print ">>>", tache.phase, tache.projet.getCodeLastRevue()
         if not tache.phase in [tache.projet.getCodeLastRevue(), _S] \
-           and not (tache.phase in TOUTES_REVUES_EVAL and tache.GetReferentiel().compImposees['C']):
+           and not (tache.phase in TOUTES_REVUES_EVAL and (True in tache.GetReferentiel().compImposees.values())): #tache.GetReferentiel().compImposees['C']):
             nb.AddPage(pageGen, u"Propriétés générales")
 
             #
@@ -7245,7 +7245,7 @@ class PanelPropriete_Tache(PanelPropriete):
         
     #############################################################################
     def MiseAJourTypeEnseignement(self, ref):
-        if self.tache.phase in TOUTES_REVUES_EVAL and self.tache.GetReferentiel().compImposees['C']:
+        if self.tache.phase in TOUTES_REVUES_EVAL and (True in self.tache.GetReferentiel().compImposees.values()): #self.tache.GetReferentiel().compImposees['C']:
             pass
         else:
             if hasattr(self, 'arbre'):
@@ -8955,12 +8955,17 @@ class ArbreCompetences(HTL.HyperTreeList):
       
         self.AddColumn(ref.nomCompetences)
         self.SetMainColumn(0) # the one with the tree in it...
-        self.AddColumn(u"")
-        self.SetColumnWidth(1, 0)
-        self.AddColumn(u"")
-        self.SetColumnWidth(2, 0)
+        
+        tache = self.GetTache()
+        prj = tache.GetProjetRef()
+        
+        for i, part in enumerate(prj.parties.keys()):
+            self.AddColumn(u"")
+            self.SetColumnWidth(i+1, 0)
+        
+        self.colEleves = len(prj.parties.keys())+1
         self.AddColumn(u"Eleves")
-        self.SetColumnWidth(3, 0)
+        self.SetColumnWidth(self.colEleves, 0)
         
         self.root = self.AddRoot(ref.nomCompetences)
         self.MiseAJourTypeEnseignement(ref)
@@ -9110,7 +9115,7 @@ class ArbreCompetences(HTL.HyperTreeList):
 #        print "AjouterEnleverCompetencesEleve", self, lstitem, eleve
         for item in lstitem:
             code = self.GetItemPyData(item)
-            if self.GetItemWindow(item, 3).EstCocheEleve(eleve):
+            if self.GetItemWindow(item, self.colEleves).EstCocheEleve(eleve):
                 self.pptache.AjouterCompetenceEleve(code, eleve)
             else:
                 self.pptache.EnleverCompetenceEleve(code, eleve)
@@ -9176,6 +9181,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
         for i, part in enumerate(prj.parties.keys()):
             self.SetColumnText(i+1, u"Poids "+part)
             self.SetColumnWidth(i+1, 60)
+        
         if eleves:
             self.SetColumnWidth(i+2, 0)
             
@@ -9194,16 +9200,16 @@ class ArbreCompetencesPrj(ArbreCompetences):
         cases = None
 #        prj = tache.GetProjetRef()
         for codeIndic, item in self.items.items():
-            cases = self.GetItemWindow(item, 3)
+            cases = self.GetItemWindow(item, self.colEleves)
             if isinstance(cases, ChoixCompetenceEleve):
-                item.DeleteWindow(3)
+                item.DeleteWindow(self.colEleves)
                 cases = ChoixCompetenceEleve(self.GetMainWindow(), codeIndic,
                                              tache.projet, tache, self.MiseAJourCaseEleve)
 #                cases = ChoixCompetenceEleve(self, codeIndic,
 #                                             tache.projet, tache)
-                item.SetWindow(cases, 3)
+                item.SetWindow(cases, self.colEleves)
         if cases is not None:
-            self.SetColumnWidth(3, max(60, cases.GetSize()[0]))
+            self.SetColumnWidth(self.colEleves, max(60, cases.GetSize()[0]))
         self.Layout()
         self.OnSize2()
         
@@ -9369,15 +9375,15 @@ class ArbreCompetencesPrj(ArbreCompetences):
 #                                                                               tache)
     
     #                                cases.SetSize(cases.GetBestSize())
-                                    self.SetItemWindow(b, cases, 3)
+                                    self.SetItemWindow(b, cases, self.colEleves)
                                     
                                     for e in range(len(tache.projet.eleves)):
-                                        tousEleve[e] = tousEleve[e] and self.GetItemWindow(b, 3).EstCocheEleve(e+1)
+                                        tousEleve[e] = tousEleve[e] and self.GetItemWindow(b, self.colEleves).EstCocheEleve(e+1)
     #                                size = self.GetItemWindow(b, 3).GetSize()[0]
     #                                print cases.GetSize()
-                                    b.SetWindowEnabled(True, 3)
+                                    b.SetWindowEnabled(True, self.colEleves)
 #                                    print "  ...", cases.GetSize()[0]
-                                    self.SetColumnWidth(3, max(60, cases.GetSize()[0]))
+                                    self.SetColumnWidth(self.colEleves, max(60, cases.GetSize()[0]))
     #                                self.Collapse(comp)
     #                                self.Refresh()
                                     self.Layout()
@@ -9402,8 +9408,8 @@ class ArbreCompetencesPrj(ArbreCompetences):
 #            self.SetColumnWidth(3, 10)
         
         if tache == None: # Cas des arbres dans popup (que l'arbre, pas de poids)
-            self.SetColumnWidth(1, 0)
-            self.SetColumnWidth(2, 0)
+            for i in range(self.colEleves):
+                self.SetColumnWidth(i+1, 0)
         
         self.Refresh()
 
@@ -9411,7 +9417,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
     #############################################################################
     def GetCasesEleves(self, codeIndic):
         if codeIndic in self.items.keys():
-            return self.GetItemWindow(self.items[codeIndic], 3)
+            return self.GetItemWindow(self.items[codeIndic], self.colEleves)
     
 #    #############################################################################
 #    def MiseAJourCases(self):
@@ -9452,7 +9458,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
             if propag:
                 tout = True
                 for i in itemComp.GetChildren():
-                    tout = tout and self.GetItemWindow(i, 3).EstCocheEleve(eleve)
+                    tout = tout and self.GetItemWindow(i, self.colEleves).EstCocheEleve(eleve)
     #            self.GetItemWindow(itemComp, 2).CocherEleve(eleve, tout)
 #                print "MiseAJourCaseEleve", comp, eleve
                 cases = self.GetCasesEleves(comp)
@@ -9473,7 +9479,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
                 for i in itemComp.GetChildren():
     #                self.GetItemWindow(i, 2).CocherEleve(eleve, etat)
     #                self.MiseAJourCaseEleve(self.GetItemPyData(i), etat, eleve, forcer = True)
-                    cases = self.GetItemWindow(i, 3)
+                    cases = self.GetItemWindow(i, self.colEleves)
                     cases.CocherEleve(eleve, etat, withEvent = True)
 #            self.CheckItem2(itemComp, estToutCoche)
 #            self.AjouterEnleverCompetencesEleve(itemComp.GetChildren(), eleve)
@@ -14399,7 +14405,7 @@ class Projet(BaseDoc, Objet_sequence):
 #        print "   ", self.position, self.code
         
         for t in self.taches:
-            if t.phase in TOUTES_REVUES_EVAL and self.GetReferentiel().compImposees['C']:
+            if t.phase in TOUTES_REVUES_EVAL and (True in self.GetReferentiel().compImposees.values()):
                 t.panelPropriete.Destroy()
                 t.panelPropriete = PanelPropriete_Tache(t.panelParent, t)
             t.MiseAJourTypeEnseignement(self.classe.referentiel)
@@ -14564,7 +14570,7 @@ class Projet(BaseDoc, Objet_sequence):
                                 if self.GetProjetRef().getTypeIndicateur(codeIndic) == 'C': # tousIndicateurs[c][i][1]: # Indicateur "revue"
                                     if t.phase in TOUTES_REVUES:
                                         
-                                        if self.GetReferentiel().compImposees['C']:
+                                        if (True in self.GetReferentiel().compImposees.values()): #self.GetReferentiel().compImposees['C']:
                                             if self.GetProjetRef().getIndicateur(codeIndic).getRevue() == t.phase:
 #                                                print "  compImposees", t.phase, ":", codeIndic
                                                 t.indicateursEleve[neleve].append(codeIndic)
