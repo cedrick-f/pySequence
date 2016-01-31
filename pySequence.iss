@@ -19,8 +19,8 @@
 
 [ISPP]
 #define AppName "pySequence"
-#define AppVersion "6.2"
-#define AppVersionInfo "6.2.1"
+#define AppVersion "6.3"
+#define AppVersionInfo "6.3.3"
 #define AppVersionBase "6"
 
 #define AppURL "https://github.com/cedrick-f/pySequence"

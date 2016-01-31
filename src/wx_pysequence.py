@@ -8956,16 +8956,8 @@ class ArbreCompetences(HTL.HyperTreeList):
         self.AddColumn(ref.nomCompetences)
         self.SetMainColumn(0) # the one with the tree in it...
         
-        tache = self.GetTache()
-        prj = tache.GetProjetRef()
+        self.CreerColonnes()
         
-        for i, part in enumerate(prj.parties.keys()):
-            self.AddColumn(u"")
-            self.SetColumnWidth(i+1, 0)
-        
-        self.colEleves = len(prj.parties.keys())+1
-        self.AddColumn(u"Eleves")
-        self.SetColumnWidth(self.colEleves, 0)
         
         self.root = self.AddRoot(ref.nomCompetences)
         self.MiseAJourTypeEnseignement(ref)
@@ -8984,6 +8976,11 @@ class ArbreCompetences(HTL.HyperTreeList):
         self.Bind(wx.EVT_ENTER_WINDOW, self.OnEnter)
         self.GetMainWindow().Bind(wx.EVT_MOTION, self.ToolTip)
 
+    ######################################################################################################
+    def CreerColonnes(self):
+        pass
+    
+    
     ######################################################################################################
     def ToolTip(self, event):
         return
@@ -9190,6 +9187,21 @@ class ArbreCompetencesPrj(ArbreCompetences):
         return self.pptache.tache  
         
 #        self.Bind(CT.EVT_TREE_ITEM_GETTOOLTIP, self.OnToolTip)
+    
+    
+    ####################################################################################
+    def CreerColonnes(self):
+        tache = self.GetTache()
+        prj = tache.GetProjetRef()
+        
+        for i, part in enumerate(prj.parties.keys()):
+            self.AddColumn(u"")
+            self.SetColumnWidth(i+1, 0)
+        
+        self.colEleves = len(prj.parties.keys())+1
+        self.AddColumn(u"Eleves")
+        self.SetColumnWidth(self.colEleves, 0)
+        
         
     ####################################################################################
     def ConstruireCasesEleve(self):
