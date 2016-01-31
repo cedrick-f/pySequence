@@ -11,7 +11,7 @@
     <l_P S_00="Projet" S_01="Activit&#233; de projet" />
     <l_AP S_00="Activit&#233; pratique" S_01="Activit&#233; pratique" />
   </d_activites>
-  <d_compImposees B_R2="True" B_R3="False" B_S="False" B_S1="False" B_S2="False" />
+  <d_compImposees B_R2="False" B_R3="False" B_S="False" B_S1="False" B_S2="False" />
   <d_demarcheSeance>
     <l_ED S_00="I" S_01="R" />
     <l_P S_00="I" S_01="R" S_02="P" />
@@ -161,7 +161,7 @@
         <Indicateur_00 S_intitule=" contribuer &#224; la d&#233;finition des &#233;l&#233;ments de recette au regard des contraintes--du cahier des charges ">
           <d_ligne I_R2="0" />
           <d_poids F_R2="100.0" />
-          <d_revue I_R2="6" />
+          <d_revue I_R2="0" />
         </Indicateur_00>
       </l_01>
       <d_02 I_R2="6" />
@@ -171,7 +171,7 @@
         <Indicateur_00 S_intitule=" recenser les solutions existantes r&#233;pondant au cahier des charges">
           <d_ligne I_R2="0" />
           <d_poids F_R2="100.0" />
-          <d_revue I_R2="6" />
+          <d_revue I_R2="0" />
         </Indicateur_00>
       </l_01>
       <d_02 I_R2="6" />
@@ -185,7 +185,7 @@
         <Indicateur_00 S_intitule="analyser un cahier des charges ">
           <d_ligne I_R2="0" />
           <d_poids F_R2="100.0" />
-          <d_revue I_R2="6" />
+          <d_revue I_R2="0" />
         </Indicateur_00>
       </l_01>
       <d_02 I_R2="6" />
@@ -199,7 +199,7 @@
         <Indicateur_00 S_intitule="d&#233;finir l&#8217;architecture--globale d&#8217;un prototype ou d&#8217;un syst&#232;me ">
           <d_ligne I_R2="0" />
           <d_poids F_R2="100.0" />
-          <d_revue I_R2="6" />
+          <d_revue I_R2="0" />
         </Indicateur_00>
       </l_01>
       <d_02 I_R2="6" />
@@ -310,7 +310,7 @@
         <Indicateur_00 S_intitule="maintenir les informations">
           <d_ligne I_R2="0" />
           <d_poids F_R2="100.0" />
-          <d_revue I_R2="6" />
+          <d_revue I_R2="0" />
         </Indicateur_00>
       </l_01>
       <d_02 I_R2="6" />
@@ -320,7 +320,7 @@
         <Indicateur_00 S_intitule="organiser et/ou respecter la planification d'un projet">
           <d_ligne I_R2="0" />
           <d_poids F_R2="100.0" />
-          <d_revue I_R2="6" />
+          <d_revue I_R2="0" />
         </Indicateur_00>
       </l_01>
       <d_02 I_R2="6" />
@@ -330,7 +330,7 @@
         <Indicateur_00 S_intitule="formaliser l&#8217;expression d&#8217;un besoin">
           <d_ligne I_R2="0" />
           <d_poids F_R2="100.0" />
-          <d_revue I_R2="6" />
+          <d_revue I_R2="0" />
         </Indicateur_00>
       </l_01>
       <d_02 I_R2="6" />
@@ -340,7 +340,7 @@
         <Indicateur_00 S_intitule=" travailler en &#233;quipe ">
           <d_ligne I_R2="0" />
           <d_poids F_R2="100.0" />
-          <d_revue I_R2="6" />
+          <d_revue I_R2="0" />
         </Indicateur_00>
       </l_01>
       <d_02 I_R2="6" />
@@ -350,7 +350,7 @@
         <Indicateur_00 S_intitule="assumer le r&#244;le total ou partiel de chef de projet ">
           <d_ligne I_R2="0" />
           <d_poids F_R2="100.0" />
-          <d_revue I_R2="6" />
+          <d_revue I_R2="0" />
         </Indicateur_00>
       </l_01>
       <d_02 I_R2="6" />
@@ -385,7 +385,7 @@
         <Indicateur_00 S_intitule=" documenter une r&#233;alisation mat&#233;rielle et/ou logicielle">
           <d_ligne I_R2="0" />
           <d_poids F_R2="100.0" />
-          <d_revue I_R2="6" />
+          <d_revue I_R2="0" />
         </Indicateur_00>
       </l_01>
       <d_02 I_R2="6" />
@@ -395,7 +395,7 @@
         <Indicateur_00 S_intitule=" produire les documents de fabrication d&#8217;un sous ensemble">
           <d_ligne I_R2="0" />
           <d_poids F_R2="100.0" />
-          <d_revue I_R2="6" />
+          <d_revue I_R2="0" />
         </Indicateur_00>
       </l_01>
       <d_02 I_R2="6" />
@@ -405,7 +405,7 @@
         <Indicateur_00 S_intitule=" tester et valider--un module logiciel et mat&#233;riel ">
           <d_ligne I_R2="0" />
           <d_poids F_R2="100.0" />
-          <d_revue I_R2="6" />
+          <d_revue I_R2="0" />
         </Indicateur_00>
       </l_01>
       <d_02 I_R2="6" />
@@ -415,7 +415,7 @@
         <Indicateur_00 S_intitule=" fabriquer un sous-ensemble">
           <d_ligne I_R2="0" />
           <d_poids F_R2="100.0" />
-          <d_revue I_R2="6" />
+          <d_revue I_R2="0" />
         </Indicateur_00>
       </l_01>
       <d_02 I_R2="6" />
@@ -425,7 +425,7 @@
         <Indicateur_00 S_intitule=" adapter et/ou configurer une structure logicielle">
           <d_ligne I_R2="0" />
           <d_poids F_R2="100.0" />
-          <d_revue I_R2="6" />
+          <d_revue I_R2="0" />
         </Indicateur_00>
       </l_01>
       <d_02 I_R2="6" />
@@ -435,7 +435,7 @@
         <Indicateur_00 S_intitule="adapter et/ou configurer un mat&#233;riel">
           <d_ligne I_R2="0" />
           <d_poids F_R2="100.0" />
-          <d_revue I_R2="6" />
+          <d_revue I_R2="0" />
         </Indicateur_00>
       </l_01>
       <d_02 I_R2="6" />
@@ -445,7 +445,7 @@
         <Indicateur_00 S_intitule=" c&#226;bler et/ou int&#233;grer un mat&#233;riel ">
           <d_ligne I_R2="0" />
           <d_poids F_R2="100.0" />
-          <d_revue I_R2="6" />
+          <d_revue I_R2="0" />
         </Indicateur_00>
       </l_01>
       <d_02 I_R2="6" />
@@ -1498,7 +1498,7 @@
   <l_listeTypeHorsClasse S_00="HC" S_01="ST" />
   <l_listeTypeSeance S_00="ED" S_01="AP" S_02="P" S_03="HC" S_04="ST" S_05="C" S_06="TD" S_07="SA" S_08="SS" S_09="E" S_10="R" S_11="S" />
   <d_options />
-  <d_parties S_R2="Conduite" S_R3="Soutenance" S_S="Soutenance" S_S1="Situation 1" S_S2="Situation 2" />
+  <d_parties S_R2="Revue 2" S_R3="Revue 3" S_S="Soutenance" S_S1="Situation 1" S_S2="Situation 2" />
   <l_periodes>
     <l_00 I_01="2" S_00="1_&#232;re ann&#233;e" />
     <l_01 I_01="3" S_00="2_&#232;me ann&#233;e" />
@@ -1792,7 +1792,7 @@
       <l_listPhasesEval S_00="Rev" S_01="R1" S_02="R2" S_03="R3" S_04="S" />
       <l_listTaches S_00="T1.4" S_01="T2.1" S_02="T2.3" S_03="T3.1" S_04="T3.3" S_05="T3.4" S_06="T4.1" S_07="T4.2" S_08="T4.3" S_09="T5.1" S_10="T6.1" S_11="T6.2" S_12="T6.3" S_13="T7.1" S_14="T7.2" S_15="T7.3" S_16="T8.1" S_17="T8.2" S_18="T9.2" S_19="T10.3" S_20="T11.3" S_21="T12.1" S_22="T12.2" S_23="T9.1" S_24="T10.4" />
       <l_listeParties S_00="R2" S_01="R3" S_02="S" />
-      <d_parties S_R2="Conduite" S_R3="Soutenance" S_S="Soutenance" />
+      <d_parties S_R2="Revue 2" S_R3="Revue 3" S_S="Soutenance" />
       <l_periode I_00="4" I_01="5" />
       <d_phases>
         <l_DCo S_00="R&#233;al" S_01="R&#233;alisation" S_02="R&#233;al" />
