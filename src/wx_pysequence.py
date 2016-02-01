@@ -5588,31 +5588,37 @@ class PanelPropriete_Competences(PanelPropriete):
         
         self.nb = wx.Notebook(self, -1,  size = (21,21), style= wx.BK_DEFAULT)
         
-        pageComp = wx.Panel(self.nb, -1)
         bg_color = self.Parent.GetBackgroundColour()
-        pageComp.SetBackgroundColour(bg_color)
-        self.pageComp = pageComp   
-        pageCompsizer = wx.BoxSizer(wx.HORIZONTAL)
-        
-        
-
-        pageComp.SetSizer(pageCompsizer)
             
         ref = self.competence.GetReferentiel()
         
-#        self.DestroyChildren()
-#        if hasattr(self, 'arbre'):
-#            self.sizer.Remove(self.arbre)
-        self.arbre = ArbreCompetences(self.pageComp, ref, self)
-        pageCompsizer.Add(self.arbre, 1, flag = wx.EXPAND)
-#        self.pageComp.sizer.Add(self.arbre, (0,0), flag = wx.EXPAND)
-#        if not self.pageComp.sizer.IsColGrowable(0):
-#            self.pageComp.sizer.AddGrowableCol(0)
-#        if not self.pageComp.sizer.IsRowGrowable(0):
-#            self.pageComp.sizer.AddGrowableRow(0)
-#        self.pageComp.Layout()
+        def getPage():
+            page = wx.Panel(self.nb, -1)
+            page.SetBackgroundColour(bg_color) 
+            pageSizer = wx.BoxSizer(wx.HORIZONTAL)
+            page.SetSizer(pageSizer)
+            return page
+            
+        def getNomComp(r):
+            return r.nomCompetences + " " + r.Code
         
-        self.nb.AddPage(pageComp, ref.nomCompetences) 
+        self.pageComp = getPage()
+        
+        
+        # Il y a un tronc commun : 0 = TC - 1 = Spé
+        if ref.tr_com != []:
+            ref_tc = REFERENTIELS[ref.tr_com[0]]
+            self.pageSpe = getPage()
+            self.arbreSpe = ArbreCompetences(self.pageSpe, ref_tc, self, agwStyle = HTL.TR_NO_HEADER)
+            self.pageSpe.GetSizer().Add(self.arbreSpe, 1, flag = wx.EXPAND)
+            self.nb.AddPage(self.pageSpe, getNomComp(ref_tc)) 
+        
+        
+        self.arbre = ArbreCompetences(self.pageComp, ref, self, agwStyle = HTL.TR_NO_HEADER)
+        self.pageComp.GetSizer().Add(self.arbre, 1, flag = wx.EXPAND)
+        self.nb.AddPage(self.pageComp, getNomComp(ref)) 
+        
+        
         
         if (len(ref.dicFonctions) > 0):
             #
@@ -5697,18 +5703,34 @@ class PanelPropriete_Competences(PanelPropriete):
         
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
+        """ On coche tout ce qui doit l'être dans les différents arbres
+        """
 #        print "MiseAJour compétences"
 #        print "  ", self.arbre.items.keys()
 #        print "   ", self.competence.competences
-        self.arbre.UnselectAll()
-        for s in self.competence.competences:
-            if s in self.arbre.items.keys():
-                self.arbre.CheckItem2(self.arbre.items[s])
+
+
+        def checkArbre(arbre):
+            arbre.UnselectAll()
+            for s in self.competence.competences:
+                if s in arbre.items.keys():
+                    arbre.CheckItem2(arbre.items[s])
+          
+        checkArbre(self.arbre)  
+#        self.arbre.UnselectAll()
+#        for s in self.competence.competences:
+#            if s in self.arbre.items.keys():
+#                self.arbre.CheckItem2(self.arbre.items[s])
                     
                     
+        if hasattr(self, 'arbreSpe'):
+            checkArbre(self.arbreSpe)  
+            
         
-        
-        
+        if hasattr(self, 'arbreFct'):
+            checkArbre(self.arbreFct)  
+            
+            
 #        for s in self.competence.competences:
 #            
 #            i = self.arbre.get_item_by_label(s, self.arbre.GetRootItem())
@@ -5942,26 +5964,29 @@ class PanelPropriete_Savoirs(PanelPropriete):
 #        print "MiseAJourTypeEnseignement Savoirs"
         ref = self.GetDocument().GetReferentiel()
         
+        def getNomSavoirs(r):
+            if ref.surnomSavoirs != u"":
+                return r.surnomSavoirs
+            else:
+                return r.nomSavoirs + " " + r.Code
+        
+        
         # Il y a un tronc commun : 0 = TC - 1 = Spé
         if ref.tr_com != []:
             ref_tc = REFERENTIELS[ref.tr_com[0]]
-            self.nb.SetPageText(0, ref_tc.nomSavoirs + " " + ref_tc.Code)
+            self.nb.SetPageText(0, getNomSavoirs(ref_tc))
             if self.lstPages[1] == None:
                 self.lstPages[1] = 1
-                self.nb.InsertPage(self.lstPages[1], self.pageSavoirSpe, ref.nomSavoirs + " " + ref.Code)
+                self.nb.InsertPage(self.lstPages[1], self.pageSavoirSpe, getNomSavoirs(ref))
                 for i in range(2,4):
                     if self.lstPages[i] != None:
                         self.lstPages[i] += 1
             else:
-                self.nb.SetPageText(self.lstPages[1], ref.nomSavoirs + " " + ref.Code)
+                self.nb.SetPageText(self.lstPages[1], getNomSavoirs(ref))
         
         # Il n'y a pas de tronc commun : 0 = TC - 1 = rien
         else:
-            if ref.surnomSavoirs != u"":
-                t = ref.surnomSavoirs
-            else:
-                t = ref.nomSavoirs + " " + ref.Code
-            self.nb.SetPageText(0, t)
+            self.nb.SetPageText(0, getNomSavoirs(ref))
             if self.lstPages[1] != None:
                 self.nb.RemovePage(self.lstPages[1])
                 self.lstPages[1] = None
@@ -8940,9 +8965,10 @@ class ArbreSavoirs(CT.CustomTreeCtrl):
 ####################################################################################
     
 class ArbreCompetences(HTL.HyperTreeList):
-    def __init__(self, parent, ref, pptache = None, agwStyle = CT.TR_HIDE_ROOT|CT.TR_HAS_VARIABLE_ROW_HEIGHT):#|CT.TR_AUTO_CHECK_CHILD):#|HTL.TR_NO_HEADER):
+    def __init__(self, parent, ref, pptache = None, agwStyle = 0):#|CT.TR_AUTO_CHECK_CHILD):#|HTL.TR_NO_HEADER):
         
-        HTL.HyperTreeList.__init__(self, parent, -1, style = wx.WANTS_CHARS, agwStyle = agwStyle)#wx.TR_DEFAULT_STYLE|
+        HTL.HyperTreeList.__init__(self, parent, -1, style = wx.WANTS_CHARS,
+                                   agwStyle = CT.TR_HIDE_ROOT|CT.TR_HAS_VARIABLE_ROW_HEIGHT|agwStyle)#wx.TR_DEFAULT_STYLE|
         
         self.parent = parent
         if pptache == None:
@@ -8957,7 +8983,6 @@ class ArbreCompetences(HTL.HyperTreeList):
         self.SetMainColumn(0) # the one with the tree in it...
         
         self.CreerColonnes()
-        
         
         self.root = self.AddRoot(ref.nomCompetences)
         self.MiseAJourTypeEnseignement(ref)

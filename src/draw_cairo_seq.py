@@ -635,9 +635,21 @@ def Draw(ctx, seq, mouchard = False):
     # Codes objectifs
     #
     lstTexteC = []
+    ref = seq.GetReferentiel()
+    ref_tc = None
+    if ref.tr_com != []:
+        ref_tc = REFERENTIELS[ref.tr_com[0]]
     for c in seq.obj["C"].competences:
 #        print "   ", c
-        lstTexteC.append(seq.GetReferentiel().getCompetence(c)[0])
+        
+        comp = ref.getCompetence(c)
+        if comp is None and ref_tc is not None:
+            comp = ref_tc.getCompetence(c)
+            
+        if comp is not None:
+            lstTexteC.append(comp[0])
+    
+            
 #    print "lstTexteC", lstTexteC
     
     lstTexteS = []
@@ -647,24 +659,24 @@ def Draw(ctx, seq, mouchard = False):
         typ, cod = c[0], c[1:]
 #        print typ, cod
         if typ == "S": # Savoir spécialité STI2D
-            lstTexteS.append(seq.GetReferentiel().getSavoir(cod))
+            lstTexteS.append(ref.getSavoir(cod))
             lstCodes.append(cod)
             lstCoul.append((0,0,0))
         elif typ == "M": # Savoir Math
-            lstTexteS.append(seq.GetReferentiel().getSavoir(cod, gene = "M"))
+            lstTexteS.append(ref.getSavoir(cod, gene = "M"))
             lstCodes.append("Math "+cod)
             lstCoul.append(constantes.COUL_DISCIPLINES['Mat'])
         elif typ == "P": # Savoir Physique
-            lstTexteS.append(seq.GetReferentiel().getSavoir(cod, gene = "P"))
+            lstTexteS.append(ref.getSavoir(cod, gene = "P"))
             lstCodes.append("Phys "+cod)
             lstCoul.append(constantes.COUL_DISCIPLINES['Phy'])
         else:
-            if seq.GetReferentiel().tr_com == []:
-                lstTexteS.append(seq.GetReferentiel().getSavoir(cod))
+            if ref.tr_com == []:
+                lstTexteS.append(ref.getSavoir(cod))
                 lstCodes.append(cod)
             else:
-                lstTexteS.append(REFERENTIELS[seq.GetReferentiel().tr_com[0]].getSavoir(cod))
-                lstCodes.append(seq.GetReferentiel().tr_com[0]+" "+cod)
+                lstTexteS.append(REFERENTIELS[ref.tr_com[0]].getSavoir(cod))
+                lstCodes.append(ref.tr_com[0]+" "+cod)
             lstCoul.append((0.3,0.3,0.3))
             
     h = rect_height+0.0001 * COEF
