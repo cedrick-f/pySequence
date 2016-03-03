@@ -301,7 +301,7 @@ class XMLelem():
                 if isinstance(val1, (str, unicode, int, long, float, bool, list, dict, XMLelem)) :
                     val2 = getattr(ref, attr)
                     if not egal(val1, val2):
-                        print "Différence"
+                        print u"Différence"
                         print "  ", attr
                         print "  ", val1
                         print "  ", val2
@@ -2304,13 +2304,12 @@ def chargerReferentiels():
             a = 0
         return i+a
     
-    print ARBRE_REF.items()
     def comp_per(ref1, ref2):
         k1, r1 = ref1
         k2, r2 = ref2
         return num(k1, r1) - num(k2, r2)
     ARBRE_REF = sorted(ARBRE_REF.items(), cmp = comp_per)
-    print ARBRE_REF
+
     
     
 chargerReferentiels()

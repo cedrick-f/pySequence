@@ -802,8 +802,31 @@ TIP_PB_LIMITE = u"\n(%s caractères maxi)" %str(LONG_MAX_PROBLEMATIQUE)
 #                     u"- sous-ensemble fonctionnel d’un prototype, éléments d’une maquette" \
 #                     u" réelle ou virtuelle ;\n" \
 #                     u"- supports de communication."                             
-                                     
-xmlVide = """<?xml version="1.0" encoding="UTF-8"?>
+      
+#<?xml version="1.0" encoding="utf-8"?>
+BASE_FICHE_HTML = """
+<HTML>
+    <p style="text-align: center;"><font size="12"><b>Elève</b></font></p>
+<p id="nom">Nom-Prénom</p>
+<p id="av"></p>
+<table border="0">
+<tbody>
+<tr id = "ld" align="right" valign="middle">
+<td width="110"><span style="text-decoration: underline;">Durée d'activité :</span></td>
+</tr>
+
+<tr  id = "le" align="right" valign="middle">
+<td><span style="text-decoration: underline;">Evaluabilité :</span></td>
+<td></td>
+</tr>
+{{tableau}}
+</tbody>
+</table>
+</HTML>
+"""
+                               
+xmlVide = """
+<?xml version="1.0" encoding="UTF-8"?>
 <richtext version="1.0.0.0" xmlns="http://www.wxwidgets.org">
   <paragraphlayout textcolor="#000000" fontsize="8" fontstyle="90" fontweight="90" fontunderlined="0" fontface="MS Shell Dlg 2" alignment="1" parspacingafter="10" parspacingbefore="0" linespacing="10">
     <paragraph>
@@ -812,7 +835,8 @@ xmlVide = """<?xml version="1.0" encoding="UTF-8"?>
   </paragraphlayout>
 </richtext>"""
 
-TxtRacineSeance = """<?xml version="1.0" encoding="UTF-8"?>
+TxtRacineSeance = """
+<?xml version="1.0" encoding="UTF-8"?>
 <richtext version="1.0.0.0" xmlns="http://www.wxwidgets.org">
   <paragraphlayout textcolor="#000000" fontsize="8" fontstyle="90" fontweight="90" fontunderlined="0" fontface="MS Shell Dlg 2" alignment="1" parspacingafter="10" parspacingbefore="0" linespacing="10">
     <paragraph fontweight="92" alignment="1" parspacingafter="20" parspacingbefore="0">

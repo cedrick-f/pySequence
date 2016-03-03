@@ -37,14 +37,12 @@ Copyright (C) 2011-2015
 
 """
 
+
 ####################################################################################
 #
 #   Imports minimum et SplashScreen
 #
 ####################################################################################
-
-
-
 #Outils système
 import os, sys
 if sys.platform != "win32":
@@ -52,81 +50,214 @@ if sys.platform != "win32":
     wxversion.select('2.8')
 import wx
 import version
-
-
 # Module de gestion des dossiers, de l'installation et de l'enregistrement
 import util_path
+# Module de gestion des instances d'application
+import app
 
 
-server = None
+####################################################################################
+#
+#   Classe définissant l'application
+#    --> récupération des paramétres passés en ligne de commande
+#
+####################################################################################
+
+class SeqApp(app.SingleInstApp):
+#    def OnInit(self):
+#        wx.Log.SetLogLevel(0) # ?? Pour éviter le plantage de wxpython 3.0 avec Win XP pro ???
+#        self.locale = wx.Locale(wx.LANGUAGE_FRENCH)
+#
+##    def StartApp(self):
+#        fichier = app.GetArgFile()
+#        
+#        self.AddRTCHandlers()
+#        
+#        frame = FenetrePrincipale(None, fichier)
+#        frame.Show()
+#        
+#        if server != None:
+#            server.app = frame
+#        
+#        self.SetTopWindow(frame)
+#        
+#        if self.splash:
+#            self.splash.Destroy()
+#            
+#        return True
+        
+    ######################################################################################  
+    def GetSplash(self):
+        txt = u"Version : "+version.__version__
+        
+        bmp = wx.Bitmap(os.path.join(util_path.PATH, "splash.png"), wx.BITMAP_TYPE_PNG)
+        w, h = bmp.GetWidth(), bmp.GetHeight()
+        if w > 0: # w, h = -1, -1 sous Linux ... allez savoir pourquoi !
+            dc = wx.MemoryDC(bmp)
+            bmpv = wx.EmptyBitmapRGBA(w, h, 0,0,0, 0)
+            dcv = wx.MemoryDC(bmpv)
+            dcv.Clear()
+        #    dcv.SetTextForeground(wx.Colour(255,30,30, 0))
+            dcv.DrawText(txt, 50, 308)
+            
+        #    dc.DrawBitmap(bmpv, 0,0, False)
+            dc.Blit(0,0,w,h,dcv,0,0) 
+            
+            dc.SelectObject(wx.NullBitmap)
+            dcv.SelectObject(wx.NullBitmap)
+        return bmp
+
+
+
+    ######################################################################################  
+    def AfterFlash(self):
+        wx.Log.SetLogLevel(0) # ?? Pour éviter le plantage de wxpython 3.0 avec Win XP pro ???
+        self.locale = wx.Locale(wx.LANGUAGE_FRENCH)
+
+#    def StartApp(self):
+        fichier = app.GetArgFile()
+        
+        self.AddRTCHandlers()
+        
+        self.frame = FenetrePrincipale(None, fichier)
+        self.frame.Show()
+        
+#        if server != None:
+#            server.app = self.frame
+        
+        self.SetTopWindow(self.frame)
+        
+        self.DestroySplashScreen()
+            
+        return True
+    
+    
+    ######################################################################################  
+    def AddRTCHandlers(self):
+        # make sure we haven't already added them.
+        if rt.RichTextBuffer.FindHandlerByType(rt.RICHTEXT_TYPE_HTML) is not None:
+            print u"AddRTCHandlers : déja fait"
+            return
+        
+        # This would normally go in your app's OnInit method.  I'm
+        # not sure why these file handlers are not loaded by
+        # default by the C++ richtext code, I guess it's so you
+        # can change the name or extension if you wanted...
+        rt.RichTextBuffer.AddHandler(rt.RichTextHTMLHandler())
+        rt.RichTextBuffer.AddHandler(rt.RichTextXMLHandler())
+
+        # ...like this
+        rt.RichTextBuffer.AddHandler(rt.RichTextXMLHandler(name="Autre XML",
+                                                           ext="ox",
+                                                           type=99))
+
+        # This is needed for the view as HTML option since we tell it
+        # to store the images in the memory file system.
+        wx.FileSystem.AddHandler(wx.MemoryFSHandler())
+        
+        
+
+    def DoOpenNewWindow(self, arg):
+        """ Interface for subclass to open new window
+            on ipc notification.
+        """
+        print u"DoOpenNewWindow", arg
+        self.frame.AppelOuvrir(arg)
+
+    
+    
+        
+if __name__ == '__main__':
+    appli = SeqApp(False)
+    if appli.splash is None:
+        sys.exit()
+
+
+
+
+
+
+
+#server = None
+
+
+
 
 ####################################################################################
 #
 #   Affichage du Splash
 #
 ####################################################################################
-SHOW_SPLASH = True
-SPLASH_FN = os.path.join(util_path.PATH, "splash.png")
-SPLASH_TIME = 1000
+#SPLASH_FN = os.path.join(util_path.PATH, "splash.png")
+#SHOW_SPLASH = True
 
-SPLASH = None
-def show_splash():
-    global SPLASH
-    # create, show and return the splash screen
-    App = wx.App()
-    txt = u"Version : "+version.__version__
-    
-    bmp = wx.Bitmap(SPLASH_FN, wx.BITMAP_TYPE_PNG)
-    w, h = bmp.GetWidth(), bmp.GetHeight()
-    if w > 0: # w, h = -1, -1 sous Linux ... allez savoir pourquoi !
-        dc = wx.MemoryDC(bmp)
-        bmpv = wx.EmptyBitmapRGBA(w, h, 0,0,0, 0)
-        dcv = wx.MemoryDC(bmpv)
-        dcv.Clear()
-    #    dcv.SetTextForeground(wx.Colour(255,30,30, 0))
-        dcv.DrawText(txt, 50, 308)
-        
-    #    dc.DrawBitmap(bmpv, 0,0, False)
-        dc.Blit(0,0,w,h,dcv,0,0) 
-        
-        dc.SelectObject(wx.NullBitmap)
-        dcv.SelectObject(wx.NullBitmap)
-    
-#    mdc.SetTextForeground('BLACK')
-#    mdc.SetFont(wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_LIGHT))
-#    dc_width, dc_height = mdc.GetSizeTuple()
-#    text_width, text_height, descent, externalLeading = mdc.GetFullTextExtent(txt)
-#    x = (dc_width  - text_width)  / 2
-#    y = (dc_height - text_height)
-#    mdc.DrawText(txt, x, y)
-    
-#    img = wx.Image(SPLASH_FN, wx.BITMAP_TYPE_PNG)
-#    w, h = img.GetWidth(),img.GetHeight()
-##    img.InitAlpha()
-#    for i in range(w/2):
-#        for j in range(h/2):
-#            img.SetAlpha(i,j, 255)
+
+
+
+
+
+#
+#
+#SPLASH_TIME = 1000
+#
+#SPLASH = None
+#def show_splash():
+#    global SPLASH
+#    # create, show and return the splash screen
+#    App = wx.PySimpleApp()
+#    txt = u"Version : "+version.__version__
 #    
-#    bitmap = img.ConvertToBitmap()
-#    dc = wx.MemoryDC(bitmap)
-#    dc.BeginDrawing()
-##    dc.Blit(0,0,bitmap.GetWidth(),bitmap.GetHeight(),wx.ScreenDC(),0,0) 
-##    brush = wx.BrushFromBitmap(bitmap)
-##    dc.SetBackground(brush)
-#    dc.SetTextForeground(wx.Colour(255,30,30))
-##    dc.SetTextBackground(wx.Colour(255,255,255))
-#    dc.DrawText(u"Version : "+version.__version__, 50, 208)#bitmap.GetHeight()-50)
-#    dc.EndDrawing()
-#    dc.SelectObject(wx.NullBitmap)
-    
-    SPLASH = wx.SplashScreen(bmp, wx.SPLASH_CENTRE_ON_SCREEN|wx.SPLASH_NO_TIMEOUT, 3000, None, -1,
-                             style = wx.BORDER_NONE)#|wx.FRAME_NO_TASKBAR|wx.STAY_ON_TOP
-#    SPLASH = AS.AdvancedSplash(None, bitmap = bitmap, timeout = 5000, 
-#                               agwStyle=AS.AS_NOTIMEOUT |
-#                                  AS.AS_CENTER_ON_SCREEN)
-    SPLASH.Show()
-    wx.Yield()
-#    App.MainLoop()
+#    bmp = wx.Bitmap(SPLASH_FN, wx.BITMAP_TYPE_PNG)
+#    w, h = bmp.GetWidth(), bmp.GetHeight()
+#    if w > 0: # w, h = -1, -1 sous Linux ... allez savoir pourquoi !
+#        dc = wx.MemoryDC(bmp)
+#        bmpv = wx.EmptyBitmapRGBA(w, h, 0,0,0, 0)
+#        dcv = wx.MemoryDC(bmpv)
+#        dcv.Clear()
+#    #    dcv.SetTextForeground(wx.Colour(255,30,30, 0))
+#        dcv.DrawText(txt, 50, 308)
+#        
+#    #    dc.DrawBitmap(bmpv, 0,0, False)
+#        dc.Blit(0,0,w,h,dcv,0,0) 
+#        
+#        dc.SelectObject(wx.NullBitmap)
+#        dcv.SelectObject(wx.NullBitmap)
+#    
+##    mdc.SetTextForeground('BLACK')
+##    mdc.SetFont(wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_LIGHT))
+##    dc_width, dc_height = mdc.GetSizeTuple()
+##    text_width, text_height, descent, externalLeading = mdc.GetFullTextExtent(txt)
+##    x = (dc_width  - text_width)  / 2
+##    y = (dc_height - text_height)
+##    mdc.DrawText(txt, x, y)
+#    
+##    img = wx.Image(SPLASH_FN, wx.BITMAP_TYPE_PNG)
+##    w, h = img.GetWidth(),img.GetHeight()
+###    img.InitAlpha()
+##    for i in range(w/2):
+##        for j in range(h/2):
+##            img.SetAlpha(i,j, 255)
+##    
+##    bitmap = img.ConvertToBitmap()
+##    dc = wx.MemoryDC(bitmap)
+##    dc.BeginDrawing()
+###    dc.Blit(0,0,bitmap.GetWidth(),bitmap.GetHeight(),wx.ScreenDC(),0,0) 
+###    brush = wx.BrushFromBitmap(bitmap)
+###    dc.SetBackground(brush)
+##    dc.SetTextForeground(wx.Colour(255,30,30))
+###    dc.SetTextBackground(wx.Colour(255,255,255))
+##    dc.DrawText(u"Version : "+version.__version__, 50, 208)#bitmap.GetHeight()-50)
+##    dc.EndDrawing()
+##    dc.SelectObject(wx.NullBitmap)
+#    
+#    SPLASH = wx.SplashScreen(bmp, wx.SPLASH_CENTRE_ON_SCREEN|wx.SPLASH_NO_TIMEOUT, 3000, None, -1,
+#                             style = wx.BORDER_NONE)#|wx.FRAME_NO_TASKBAR|wx.STAY_ON_TOP
+##    SPLASH = AS.AdvancedSplash(None, bitmap = bitmap, timeout = 5000, 
+##                               agwStyle=AS.AS_NOTIMEOUT |
+##                                  AS.AS_CENTER_ON_SCREEN)
+#    SPLASH.Show()
+#    wx.Yield()
+##    App.MainLoop()
 
 
 #def StartSplash():
@@ -152,48 +283,38 @@ def show_splash():
         
         
 
-if __name__ == '__main__':
-    if sys.platform == "win32":
-        import serveur
-        import socket
-        HOST, PORT = socket.gethostname(), 61955
-        
-        print "HOST  :", HOST
-        # On teste si pySequence est déja ouvert ...
-        #  = demande de connection au client (HOST,PORT) accéptée
-
-        try:
-            if len(sys.argv) > 1:
-                arg = sys.argv[1]
-            else:
-                arg = 'x'
-            serveur.client(HOST, PORT, arg)
-            sys.exit()
-            print "exit"
-            
-        except socket.error: #socket.error: [Errno 10061] Aucune connexion n'a pu être établie car l'ordinateur cible l'a expressément refusée
-            # On démarre une nouvelle instance de pySequence
-            # = La demande de connection au client (HOST,PORT) a été refusée
-            try :
-                server = serveur.start_server(HOST, PORT)
-            except: # socket.error: [Errno 10013] Une tentative d’accès à un socket de manière interdite par ses autorisations d’accès a été tentée 
-                # L'accés a été refusé ... problème de pare-feu ??
-                pass 
-
-            show_splash()
-#            app = SeqApp(False)
-#            app.MainLoop()
-            
-#        except socket.timeout:
+#if __name__ == '__main__':
+#    if sys.platform == "win32":
+#        import serveur
+#        import socket
+#        HOST, PORT = socket.gethostname(), 61955
+#        
+#        print "HOST  :", HOST
+#        # On teste si pySequence est déja ouvert ...
+#        #  = demande de connection au client (HOST,PORT) accéptée
+#
+#        try:
+#            if len(sys.argv) > 1:
+#                arg = sys.argv[1]
+#            else:
+#                arg = 'x'
+#            serveur.client(HOST, PORT, arg)
 #            sys.exit()
-#            print "Unexpected error:", sys.exc_info()[0]
-#            raise
-
-
-    else:
-        show_splash()
-#        app = SeqApp(False)
-#        app.MainLoop()
+#            print "exit"
+#            
+#        except socket.error: #socket.error: [Errno 10061] Aucune connexion n'a pu être établie car l'ordinateur cible l'a expressément refusée
+#            # On démarre une nouvelle instance de pySequence
+#            # = La demande de connection au client (HOST,PORT) a été refusée
+#            try :
+#                server = serveur.start_server(HOST, PORT)
+#            except: # socket.error: [Errno 10013] Une tentative d’accès à un socket de manière interdite par ses autorisations d’accès a été tentée 
+#                # L'accés a été refusé ... problème de pare-feu ??
+#                pass 
+#
+#            show_splash()
+#
+#    else:
+#        show_splash()
 
 
 
@@ -308,13 +429,6 @@ from Referentiel import REFERENTIELS, ARBRE_REF, ACTIVITES
 import Referentiel
 
 from operator import attrgetter
-
-        
-####################################################################################
-#
-#   Import des modules nécessaires
-#
-####################################################################################
 
 # Outils "système"
 import subprocess
@@ -10337,60 +10451,6 @@ def get_key(dic, value, pos = None):
 
 
 
-####################################################################################
-#
-#   Classe définissant l'application
-#    --> récupération des paramétres passés en ligne de commande
-#
-####################################################################################
-class SeqApp(wx.App):
-    def OnInit(self):
-        wx.Log.SetLogLevel(0) # ?? Pour éviter le plantage de wxpython 3.0 avec Win XP pro ???
-        self.locale = wx.Locale(wx.LANGUAGE_FRENCH)
-
-#    def StartApp(self):
-        fichier = ""
-        if len(sys.argv)>1: # un paramétre a été passé
-            parametre = sys.argv[1]
-
-#           # on verifie que le fichier passé en paramétre existe
-            if os.path.isfile(parametre):
-                fichier = unicode(parametre, FILE_ENCODING)
-
-        self.AddRTCHandlers()
-        
-        frame = FenetrePrincipale(None, fichier)
-        frame.Show()
-        
-        if server != None:
-            server.app = frame
-        
-        self.SetTopWindow(frame)
-        if SPLASH:
-            SPLASH.Destroy()
-        return True
-        
-    def AddRTCHandlers(self):
-        # make sure we haven't already added them.
-        if rt.RichTextBuffer.FindHandlerByType(rt.RICHTEXT_TYPE_HTML) is not None:
-            print u"AddRTCHandlers : déja fait"
-            return
-        
-        # This would normally go in your app's OnInit method.  I'm
-        # not sure why these file handlers are not loaded by
-        # default by the C++ richtext code, I guess it's so you
-        # can change the name or extension if you wanted...
-        rt.RichTextBuffer.AddHandler(rt.RichTextHTMLHandler())
-        rt.RichTextBuffer.AddHandler(rt.RichTextXMLHandler())
-
-        # ...like this
-        rt.RichTextBuffer.AddHandler(rt.RichTextXMLHandler(name="Autre XML",
-                                                           ext="ox",
-                                                           type=99))
-
-        # This is needed for the view as HTML option since we tell it
-        # to store the images in the memory file system.
-        wx.FileSystem.AddHandler(wx.MemoryFSHandler())
 
 
 
@@ -10796,7 +10856,7 @@ class PopupInfo2(wx.PopupWindow):
         self.branche = branche
         
         #
-        # Un sizer "tableau", comme éa, on y met ce q'on veut oé on veut ...
+        # Un sizer "tableau", comme ça, on y met ce qu'on veut où on veut ...
         #
         self.sizer = wx.GridBagSizer()
         
@@ -12075,14 +12135,14 @@ class Classe():
         # Référentiel
         #
         def ChargerRefOriginal():
-            print "Réparation = pas référentiel intégré !"
+            print u"Réparation = pas référentiel intégré !"
             if self.GetVersionNum() >= 5:
                 code = self.referentiel.setBrancheCodeV5(brancheRef)
-                print "   Code trouvé dans référentiel :", code
+                print u"   Code trouvé dans référentiel :", code
                 if code != self.typeEnseignement:
                     self.typeEnseignement = code
                     
-            print "   TypeEnseignement :", self.typeEnseignement
+            print u"   TypeEnseignement :", self.typeEnseignement
             if self.typeEnseignement in REFERENTIELS:
                 self.referentiel = REFERENTIELS[self.typeEnseignement]
             else:
@@ -17399,7 +17459,7 @@ class Personne(Objet_sequence):
         # Création du Tip (PopupInfo)
         #
         self.ficheHTML = self.GetFicheHTML()
-
+#        print "***\n", self.ficheHTML
         self.ficheXML = parseString(self.ficheHTML.encode('utf-8', errors="ignore"))
        
         forceID(self.ficheXML)
@@ -18160,8 +18220,8 @@ class Eleve(Personne, Objet_sequence):
             self.arbre.SetItemText(self.branche, t)
             
         self.SetTip()
-        
-        
+
+
     ######################################################################################  
     def GetFicheHTML(self):
 #        print "GetFicheHTML"
@@ -18175,31 +18235,17 @@ class Eleve(Personne, Objet_sequence):
             ligne.append("""<tr  id = "le%(id)s" align="right" valign="middle" >
 <td><font color = "%(coul)s"><em>%(nom)s :</em></font></td>
 </tr>""" %dic)
-        
-        
-        BASE_FICHE_HTML = u"""<?xml version="1.0" encoding="utf-8"?><HTML>
-    <p style="text-align: center;"><font size="12"><b>Elève</b></font></p>
-<p id="nom">Nom-Prénom</p>
-<p id="av"></p>
-<table border="0">
-<tbody>
-<tr id = "ld" align="right" valign="middle">
-<td width="110"><span style="text-decoration: underline;">Durée d'activité :</span></td>
-</tr>
 
-<tr  id = "le" align="right" valign="middle">
-<td><span style="text-decoration: underline;">Evaluabilité :</span></td>
-<td></td>
-</tr>"""
+        ficheHTML = constantes.BASE_FICHE_HTML
+        
+        
+        t = u""
         for l in ligne:
-            BASE_FICHE_HTML += l+"\n"
+            t += l+"\n"
 
-        BASE_FICHE_HTML +="""
-</tbody>
-</table>
-</HTML>
-"""
-        return BASE_FICHE_HTML
+        ficheHTML = ficheHTML.replace('{{tableau}}', t)
+        
+        return ficheHTML
 
 
 
@@ -18396,11 +18442,11 @@ class Prof(Personne):
 
 
 
-
 if __name__ == '__main__':
-    if SPLASH != None:
-        app = SeqApp(False)
-        app.MainLoop()
-    else:
-        sys.exit()
+    
+#    if appli.splash != None:
+    appli.AfterFlash() # Ouverture de la fenêtre principale
+    appli.MainLoop()
+#    else:
+#        sys.exit()
 

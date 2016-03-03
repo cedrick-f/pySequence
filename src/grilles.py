@@ -519,469 +519,469 @@ class PyExcel:
 
 # https://mail.python.org/pipermail/python-win32/2008-January/006676.html
 
-class PyOOo(object):
-
-    wdReplaceNone=0
-    wdReplaceOne=1
-    wdReplaceAll=2
-    wdFindContinue=1
-
-    #pour close/save :
-    wdDoNotSaveChanges=0
-    wdSaveChanges=-1
-
-    wdCharacter=1
-    wdCell=12
-    wdLine=5
-
-    wdAlignLeft=0
-    wdAlignCenter=1
-    wdAlignRight=2
-
-
-
-    def __init__(self, fichier=None, visible=True):
-        self.objServiceManager = win32com.client.Dispatch("com.sun.star.ServiceManager")
-
-        #self.propert=self.objServiceManager.Bridge_GetStruct("com.sun.star.beans.PropertyValue")
-
-        self.w = self.objServiceManager.CreateInstance("com.sun.star.frame.Desktop")
-
-        if fichier!=None:
-            time.sleep(1)
-            self.open(fichier, visible)
-
-
-    def u1252(self, chu):
-        try:
-            if type(chu) is unicode:
-                return chu.encode('cp1252','replace')
-            else:
-                return chu
-        except:
-            return repr(chu)
-
-
-    def open(self, fichier, visible=True):
-        """Ouvre un document word
-        """
-        self.doc=self.w.loadComponentFromURL("file:///"+fichier, "_blank", 0, [])
-        #self.visible(visible)
-
-
-    def wnew(self, visible=True):
-        """Nouveau document writer
-        """
-        self.doc=self.w.loadComponentFromURL("private:factory/swriter", "_blank", 0, [])
-        self.visible(True)
-
-
-    def close(self):
-        """ferme le document, en sauvegardant, sans demander
-        """
-        #---
-        print"close"
-        self.w.store()
-        self.w.Terminate(1)
-
-
-    def docclose(self):
-        """ferme le document, en sauvegardant, sans demander
-        """
-        self.doc.Close(True)  #True ?  False ?
-
-
-    def saveas(self,fichier, typ=0):
-        """Appel de 'Enregistrer sous', avec le nom du fichier
-        """#---
-        self.doc.storeAsURL("file:///"+fichier, [])
-
-
-    def savepdf(self):
-
-        def createStruct(nom):
-            objCoreReflection= self.objServiceManager.createInstance("com.sun.star.reflection.CoreReflection")
-            classSize = objCoreReflection.forName(nom)
-            aStruct=[1,2]
-            classSize.createObject(aStruct)
-            return aStruct
-
-        par=createStruct("com.sun.star.beans.PropertyValue")
-        par.append([])
-        par[0].Name = "URL"
-        par[0].Value = "file:///C:/let01.odt"
-
-        par=["FilterName", "writer_pdf_Export"]
-        self.prop = self.objServiceManager.CreateInstance("com.sun.star.beans.PropertyValue")
-        self.prop[0].Name = "URL"
-        self.prop[0].Value = "file:///C:/let01.odt"
-        self.prop[1].Name = "FilterName"
-        self.prop[1].Value = "writer_pdf_Export"
-        self.doc.storeAsURL("file:///C:/let01.pdf", self.prop)
-
-
-    def saveas2(self,fichier, typ=0):
-
-        def createStruct(nom):
-            objCoreReflection= self.objServiceManager.createInstance("com.sun.star.reflection.CoreReflection")
-            classSize = objCoreReflection.forName(nom)
-            aStruct=[]
-            classSize.createObject(aStruct)
-            return aStruct
-
-        #args1= self.objServiceManager.createInstance("com.sun.star.beans.PropertyValue")
-        #args1 = createStruct("com.sun.star.beans.NamedValue")
-        #print args1
-
-        print "Titre :",self.doc.getDocumentInfo()
-
-        args1=["file:///c:/titi.rtf"]
-
-        self.doc.storeAsURL("",0,args1)
-
-
-        """
-        #args1= 
-self.objServiceManager.createInstance("com.sun.star.beans.PropertyValue")
-        #dispatcher = 
-self.objServiceManager.createInstance('com.sun.star.frame.DispatchHelper')
-        args1=createStruct("com.sun.star.beans.PropertyValue")
-        print len(args1)
-        prop.Name='Pages'
-        prop.Value='3-5'
-        args[0]=prop
-
-        args1[0].Name = "URL"
-        args1[0].Value = "file:///c:/titi.rtf"
-        args1[1].Name = "FilterName"
-        args1[1].Value = "Rich Text Format"
-        args1[4].Name = "SelectionOnly"
-        args1[4].Value = true
-        """
-        #sel=self.doc.SaveAs("",0,args1)
-
-    def quit(self):
-        """Ferme OOoW
-        """
-        self.w.Terminate()
-
-
-    def quitSaveChange(self):
-        """Ferme OooW, en sauvant les changements
-        """
-        self.w.store()
-        self.w.Terminate()
-
-
-    def quitCancel(self):
-        """Ferme word, SANS sauver les changements
-        """
-        self.doc.storeAsURL("file:///C:/null__.odt", [])
-        self.w.Terminate()
-        os.remove("C:/null__.odt")
-
-
-    def visible(self, par=True):
-        """Rend Word visible (True), ou invisible (False) ; True par défaut
-        Note : c'est plus rapide en invisible
-        """
-        """
-        if par:
-            self.objServiceManager.Visible(True)
-        else:
-            self.objServiceManager.Visible=False
-        """
-        win = self.doc.CurrentController.Frame.ContainerWindow
-        if par:
-            win.Visible = True
-        else:
-            win.Visible = False
-
-
-    def hide(self):
-        """Cache Word
-        """
-        win = self.doc.CurrentController.Frame.ContainerWindow
-        win.Visible = False
-
-
-    def show(self):
-        """Montre la fenêtre
-        """
-        win = self.doc.CurrentController.Frame.ContainerWindow
-        win.Visible = True
-
-
-    def wprint(self):
-        """Imprime le document
-        """
-        warg=[]
-        self.doc.Print(warg)
-
-
-    def wprint2(self,printer='PDFCreator'):
-        """Imprime le document
-        """
-        warg=['Name','PDFCreator']
-        self.doc.Print(warg)
-
-# prop.Name='Name'
-# prop.Value='PDFCreator'
-# args[2]=prop
-
-
-    def preview(self):
-        """Pré-visualise le document
-        """
-        self.doc.PrintPreview()
-
-
-    def previewclose(self):
-        """Ferme la prévisdualisation du document
-        """
-        self.doc.ClosePrintPreview()
-
-
-    def text(self, txt):
-        """Remplace le texte sélectionné, par le paramètre
-        """
-        newchaine=txt.replace('\n','\r')
-        self.position.Text = newchaine
-
-
-    def TypeText(self, chaine):
-        """ 'Tape' le texte à la position courante
-        """
-        self.position.TypeText(chaine)
-
-
-    def chExist(self, chaine):
-        """Cherche l'existence d'une chaine dans le document.
-        Retourne True ou False, selon le résultat.
-        """
-        och=self.doc.createSearchDescriptor()
-        och.SearchString=chaine
-        och.SearchWords = False  #mots entiers seulement ?
-        position=self.doc.findFirst(och)
-        if position:
-            return True
-        else:
-            return False
-
-
-    def macroRun(self, name):
-        """Lance la macro-word (VBA) 'name'
-        """
-        print "Non supporté _ àcf"
-        print "Non supporté _ àcf"
-        print "Non supporté _ àcf"
-
-
-    def language(self):
-        """Retourne la langue de Writer
-        """
-        print "Non supporté _ àcf"
-        print "Non supporté _ àcf"
-        print "Non supporté _ àcf"
-
-
-    def filterTxt(self):
-        """Interne - Convertit une sélection en texte
-        """
-        ss=self.u1252(self.doc.GetText().String)
-        ss=ss.replace(chr(7)+chr(13),'   ')
-        ss=ss.replace(chr(13),'\r\n')
-        ss=ss.replace(chr(7),' ')
-        ss=ss.replace(chr(9),'')
-        ss=ss.replace(chr(26),'')
-        return ss
-
-
-    def eSelAll(self):
-        """sélectionne, et retourne, tout le document
-        """
-        sel=self.doc.GetText()
-        return self.filterTxt()
-
-
-    def eSelWord(self, nb=1):
-        """étend la sélection aux nb mots à droite, et retourne la sélection
-        """
-        self.w.Selection.WordRightSel(self.wdWord, nb, self.wdExtend)
-        return self.filterTxt()
-
-
-    def eSelLine(self, nb=1):
-        """étend la sélection aux nb lignes en-dessous, et retourne la 
-            sélection
-        """
-        args2= self.doc.createInstance("com.sun.star.beans.PropertyValue")
-        args2[0].Name= "Count"
-        args2[0].Value= 1
-        args2[1].Name= "Select"
-        args2[1].Value= False
-
-        self.doc.GoDown("", 0, args2)
-        return self.filterTxt()
-
-
-    def eSelEndLine(self):
-        """étend la sélection jusqu'à la fin de la ligne, et retourne la 
-            sélection
-        """
-        self.w.Selection.EndKey(self.wdLine, self.wdExtend)
-        return self.filterTxt()
-
-
-    def chRemplAll(self, oldchaine, newchaine=''):
-        """
-        oldchaine = chaine a remplacer / string to replace
-        newchaine = chaine de remplacement / string for replace
-        """
-        orempl=self.doc.createReplaceDescriptor()
-        orempl.SearchString=oldchaine
-        orempl.ReplaceString=newchaine
-        orempl.SearchWords = False  #mots entiers seulement ?
-        orempl.SearchCaseSensitive = True    #sensible à la casse ?
-        nb = self.doc.replaceAll(orempl)
-
-
-    def chRemplLstAll(self, lst=[[]]):
-        """
-        oldchaine = chaine a remplacer / string to replace
-        newchaine = chaine de remplacement / string for replace
-        """
-        nb=0
-        for oldchaine, newchaine in lst:
-            orempl=self.doc.createReplaceDescriptor()
-            orempl.SearchString=oldchaine
-            orempl.ReplaceString=newchaine
-            orempl.SearchWords = False  #mots entiers seulement ?
-            orempl.SearchCaseSensitive = True    #sensible à la casse ?
-            nb += self.doc.replaceAll(orempl)
-
-
-    def chRemplOne(self, oldchaine, newchaine=''):
-        """
-        oldchaine = chaine a remplacer / string to replace
-        newchaine = chaine de remplacement / string for replace
-        """
-        sel = self.w.Selection
-        #sel.ClearFormatting()
-        sel.Find.Text = oldchaine
-        sel.Find.Forward = True
-        newchaine=newchaine.replace('\n','\r')
-        sel.Find.Execute(oldchaine,False,False,False,False,False,True,self.wdFindContinue,False,newchaine,self.wdReplaceOne)
-        self.position=sel
-
-
-    def chRemplClipboard(self, oldchaine):
-        """
-        oldchaine = chaine a remplacer / string to replace
-        """
-        sel = self.w.Selection
-        #sel.ClearFormatting()
-        sel.Find.Text = oldchaine
-        sel.Find.Forward = True
-
-        sel.Find.Execute(oldchaine,False,False,False,False,False,True,self.wdFindContinue,False,'XXX',self.wdReplaceOne)
-        sel.Paste()
-        self.position=sel
-
-
-    def chRemplGraf(self, oldchaine, fichier):
-        """
-        oldchaine = chaine a remplacer / string to replace
-        """
-        sel = self.w.Selection
-        #sel.ClearFormatting()
-        sel.Find.Text = oldchaine
-        sel.Find.Forward = True
-
-        sel.Find.Execute(oldchaine,False,False,False,False,False,True,self.wdFindContinue,False,'',self.wdReplaceOne)
-        sel.InlineShapes.AddPicture(fichier, False, True)
-        self.position=sel
-
-
-    def TableauInsLigApres(self, oldchaine, nblig=1):
-        """
-        oldchaine = chaine a remplacer / string to replace
-        """
-        sel = self.w.Selection
-        #sel.ClearFormatting()
-        sel.Find.Text = oldchaine
-        sel.Find.Forward = True
-
-        sel.Find.Execute(oldchaine,False,False,False,False,False,True,self.wdFindContinue,False,'',self.wdReplaceOne)
-        sel.InsertRowsBelow(nblig)
-
-
-    def TableauDelLig(self, oldchaine):
-        """
-        oldchaine = chaine a remplacer / string to replace
-        """
-        sel = self.w.Selection
-        #sel.ClearFormatting()
-        sel.Find.Text = oldchaine
-        sel.Find.Forward = True
-
-        sel.Find.Execute(oldchaine,False,False,False,False,False,True,self.wdFindContinue,False,'',self.wdReplaceOne)
-        sel.Rows.Delete()
-
-
-    def MoveRight(self, nb=1):
-        self.position.MoveRight(self.wdCharacter, nb)
-
-
-    def MoveLeft(self, nb=1):
-        self.position.MoveLeft(self.wdCharacter, nb)
-
-
-    def TableauMoveRight(self, nb=1):
-        sel = self.w.Selection
-        sel.MoveRight(self.wdCell, nb)
-
-
-    def TableauMoveLeft(self, nb=1):
-        sel = self.w.Selection
-        sel.MoveLeft(self.wdCell, nb)
-
-
-    def TableauMoveLine(self, nb=1):
-        sel = self.w.Selection
-        if nb>0:
-            sel.MoveDown(self.wdLine, nb)
-        else:
-            sel.MoveUp(self.wdLine, -nb)
-
-
-    def TableauCellule(self, lig=1, col=1, txt='', align=0):
-        tbl = self.doc.Tables[0]
-        cellule = tbl.Cell(lig, col)
-        cellule.Range.Text = txt
-        cellule.Range.ParagraphFormat.Alignment = align  #0,1,2, left, center, right
-
-
-    def landscape(self):
-        """Met le document en mode paysage
-        """
-        self.wdOrientLandscape=1
-        self.wdOrientPortrait=0
-        self.w.ActiveDocument.PageSetup.Orientation = self.wdOrientLandscape
-
-
-    def portrait(self):
-        """Met le document en mode portrait
-        """
-        self.wdOrientLandscape=1
-        self.wdOrientPortrait=0
-        self.w.ActiveDocument.PageSetup.Orientation = self.wdOrientPortrait
-
-
-    def changePrinter(self, printerName):
-        """Change l'imprimante active de Word
-        """
-        self.w.ActivePrinter = printerName
+#class PyOOo(object):
+#
+#    wdReplaceNone=0
+#    wdReplaceOne=1
+#    wdReplaceAll=2
+#    wdFindContinue=1
+#
+#    #pour close/save :
+#    wdDoNotSaveChanges=0
+#    wdSaveChanges=-1
+#
+#    wdCharacter=1
+#    wdCell=12
+#    wdLine=5
+#
+#    wdAlignLeft=0
+#    wdAlignCenter=1
+#    wdAlignRight=2
+#
+#
+#
+#    def __init__(self, fichier=None, visible=True):
+#        self.objServiceManager = win32com.client.Dispatch("com.sun.star.ServiceManager")
+#
+#        #self.propert=self.objServiceManager.Bridge_GetStruct("com.sun.star.beans.PropertyValue")
+#
+#        self.w = self.objServiceManager.CreateInstance("com.sun.star.frame.Desktop")
+#
+#        if fichier!=None:
+#            time.sleep(1)
+#            self.open(fichier, visible)
+#
+#
+#    def u1252(self, chu):
+#        try:
+#            if type(chu) is unicode:
+#                return chu.encode('cp1252','replace')
+#            else:
+#                return chu
+#        except:
+#            return repr(chu)
+#
+#
+#    def open(self, fichier, visible=True):
+#        """Ouvre un document word
+#        """
+#        self.doc=self.w.loadComponentFromURL("file:///"+fichier, "_blank", 0, [])
+#        #self.visible(visible)
+#
+#
+#    def wnew(self, visible=True):
+#        """Nouveau document writer
+#        """
+#        self.doc=self.w.loadComponentFromURL("private:factory/swriter", "_blank", 0, [])
+#        self.visible(True)
+#
+#
+#    def close(self):
+#        """ferme le document, en sauvegardant, sans demander
+#        """
+#        #---
+#        print"close"
+#        self.w.store()
+#        self.w.Terminate(1)
+#
+#
+#    def docclose(self):
+#        """ferme le document, en sauvegardant, sans demander
+#        """
+#        self.doc.Close(True)  #True ?  False ?
+#
+#
+#    def saveas(self,fichier, typ=0):
+#        """Appel de 'Enregistrer sous', avec le nom du fichier
+#        """#---
+#        self.doc.storeAsURL("file:///"+fichier, [])
+#
+#
+#    def savepdf(self):
+#
+#        def createStruct(nom):
+#            objCoreReflection= self.objServiceManager.createInstance("com.sun.star.reflection.CoreReflection")
+#            classSize = objCoreReflection.forName(nom)
+#            aStruct=[1,2]
+#            classSize.createObject(aStruct)
+#            return aStruct
+#
+#        par=createStruct("com.sun.star.beans.PropertyValue")
+#        par.append([])
+#        par[0].Name = "URL"
+#        par[0].Value = "file:///C:/let01.odt"
+#
+#        par=["FilterName", "writer_pdf_Export"]
+#        self.prop = self.objServiceManager.CreateInstance("com.sun.star.beans.PropertyValue")
+#        self.prop[0].Name = "URL"
+#        self.prop[0].Value = "file:///C:/let01.odt"
+#        self.prop[1].Name = "FilterName"
+#        self.prop[1].Value = "writer_pdf_Export"
+#        self.doc.storeAsURL("file:///C:/let01.pdf", self.prop)
+#
+#
+#    def saveas2(self,fichier, typ=0):
+#
+#        def createStruct(nom):
+#            objCoreReflection= self.objServiceManager.createInstance("com.sun.star.reflection.CoreReflection")
+#            classSize = objCoreReflection.forName(nom)
+#            aStruct=[]
+#            classSize.createObject(aStruct)
+#            return aStruct
+#
+#        #args1= self.objServiceManager.createInstance("com.sun.star.beans.PropertyValue")
+#        #args1 = createStruct("com.sun.star.beans.NamedValue")
+#        #print args1
+#
+#        print "Titre :",self.doc.getDocumentInfo()
+#
+#        args1=["file:///c:/titi.rtf"]
+#
+#        self.doc.storeAsURL("",0,args1)
+#
+#
+#        """
+#        #args1= 
+#self.objServiceManager.createInstance("com.sun.star.beans.PropertyValue")
+#        #dispatcher = 
+#self.objServiceManager.createInstance('com.sun.star.frame.DispatchHelper')
+#        args1=createStruct("com.sun.star.beans.PropertyValue")
+#        print len(args1)
+#        prop.Name='Pages'
+#        prop.Value='3-5'
+#        args[0]=prop
+#
+#        args1[0].Name = "URL"
+#        args1[0].Value = "file:///c:/titi.rtf"
+#        args1[1].Name = "FilterName"
+#        args1[1].Value = "Rich Text Format"
+#        args1[4].Name = "SelectionOnly"
+#        args1[4].Value = true
+#        """
+#        #sel=self.doc.SaveAs("",0,args1)
+#
+#    def quit(self):
+#        """Ferme OOoW
+#        """
+#        self.w.Terminate()
+#
+#
+#    def quitSaveChange(self):
+#        """Ferme OooW, en sauvant les changements
+#        """
+#        self.w.store()
+#        self.w.Terminate()
+#
+#
+#    def quitCancel(self):
+#        """Ferme word, SANS sauver les changements
+#        """
+#        self.doc.storeAsURL("file:///C:/null__.odt", [])
+#        self.w.Terminate()
+#        os.remove("C:/null__.odt")
+#
+#
+#    def visible(self, par=True):
+#        """Rend Word visible (True), ou invisible (False) ; True par défaut
+#        Note : c'est plus rapide en invisible
+#        """
+#        """
+#        if par:
+#            self.objServiceManager.Visible(True)
+#        else:
+#            self.objServiceManager.Visible=False
+#        """
+#        win = self.doc.CurrentController.Frame.ContainerWindow
+#        if par:
+#            win.Visible = True
+#        else:
+#            win.Visible = False
+#
+#
+#    def hide(self):
+#        """Cache Word
+#        """
+#        win = self.doc.CurrentController.Frame.ContainerWindow
+#        win.Visible = False
+#
+#
+#    def show(self):
+#        """Montre la fenêtre
+#        """
+#        win = self.doc.CurrentController.Frame.ContainerWindow
+#        win.Visible = True
+#
+#
+#    def wprint(self):
+#        """Imprime le document
+#        """
+#        warg=[]
+#        self.doc.Print(warg)
+#
+#
+#    def wprint2(self,printer='PDFCreator'):
+#        """Imprime le document
+#        """
+#        warg=['Name','PDFCreator']
+#        self.doc.Print(warg)
+#
+## prop.Name='Name'
+## prop.Value='PDFCreator'
+## args[2]=prop
+#
+#
+#    def preview(self):
+#        """Pré-visualise le document
+#        """
+#        self.doc.PrintPreview()
+#
+#
+#    def previewclose(self):
+#        """Ferme la prévisdualisation du document
+#        """
+#        self.doc.ClosePrintPreview()
+#
+#
+#    def text(self, txt):
+#        """Remplace le texte sélectionné, par le paramètre
+#        """
+#        newchaine=txt.replace('\n','\r')
+#        self.position.Text = newchaine
+#
+#
+#    def TypeText(self, chaine):
+#        """ 'Tape' le texte à la position courante
+#        """
+#        self.position.TypeText(chaine)
+#
+#
+#    def chExist(self, chaine):
+#        """Cherche l'existence d'une chaine dans le document.
+#        Retourne True ou False, selon le résultat.
+#        """
+#        och=self.doc.createSearchDescriptor()
+#        och.SearchString=chaine
+#        och.SearchWords = False  #mots entiers seulement ?
+#        position=self.doc.findFirst(och)
+#        if position:
+#            return True
+#        else:
+#            return False
+#
+#
+#    def macroRun(self, name):
+#        """Lance la macro-word (VBA) 'name'
+#        """
+#        print "Non supporté _ àcf"
+#        print "Non supporté _ àcf"
+#        print "Non supporté _ àcf"
+#
+#
+#    def language(self):
+#        """Retourne la langue de Writer
+#        """
+#        print "Non supporté _ àcf"
+#        print "Non supporté _ àcf"
+#        print "Non supporté _ àcf"
+#
+#
+#    def filterTxt(self):
+#        """Interne - Convertit une sélection en texte
+#        """
+#        ss=self.u1252(self.doc.GetText().String)
+#        ss=ss.replace(chr(7)+chr(13),'   ')
+#        ss=ss.replace(chr(13),'\r\n')
+#        ss=ss.replace(chr(7),' ')
+#        ss=ss.replace(chr(9),'')
+#        ss=ss.replace(chr(26),'')
+#        return ss
+#
+#
+#    def eSelAll(self):
+#        """sélectionne, et retourne, tout le document
+#        """
+#        sel=self.doc.GetText()
+#        return self.filterTxt()
+#
+#
+#    def eSelWord(self, nb=1):
+#        """étend la sélection aux nb mots à droite, et retourne la sélection
+#        """
+#        self.w.Selection.WordRightSel(self.wdWord, nb, self.wdExtend)
+#        return self.filterTxt()
+#
+#
+#    def eSelLine(self, nb=1):
+#        """étend la sélection aux nb lignes en-dessous, et retourne la 
+#            sélection
+#        """
+#        args2= self.doc.createInstance("com.sun.star.beans.PropertyValue")
+#        args2[0].Name= "Count"
+#        args2[0].Value= 1
+#        args2[1].Name= "Select"
+#        args2[1].Value= False
+#
+#        self.doc.GoDown("", 0, args2)
+#        return self.filterTxt()
+#
+#
+#    def eSelEndLine(self):
+#        """étend la sélection jusqu'à la fin de la ligne, et retourne la 
+#            sélection
+#        """
+#        self.w.Selection.EndKey(self.wdLine, self.wdExtend)
+#        return self.filterTxt()
+#
+#
+#    def chRemplAll(self, oldchaine, newchaine=''):
+#        """
+#        oldchaine = chaine a remplacer / string to replace
+#        newchaine = chaine de remplacement / string for replace
+#        """
+#        orempl=self.doc.createReplaceDescriptor()
+#        orempl.SearchString=oldchaine
+#        orempl.ReplaceString=newchaine
+#        orempl.SearchWords = False  #mots entiers seulement ?
+#        orempl.SearchCaseSensitive = True    #sensible à la casse ?
+#        nb = self.doc.replaceAll(orempl)
+#
+#
+#    def chRemplLstAll(self, lst=[[]]):
+#        """
+#        oldchaine = chaine a remplacer / string to replace
+#        newchaine = chaine de remplacement / string for replace
+#        """
+#        nb=0
+#        for oldchaine, newchaine in lst:
+#            orempl=self.doc.createReplaceDescriptor()
+#            orempl.SearchString=oldchaine
+#            orempl.ReplaceString=newchaine
+#            orempl.SearchWords = False  #mots entiers seulement ?
+#            orempl.SearchCaseSensitive = True    #sensible à la casse ?
+#            nb += self.doc.replaceAll(orempl)
+#
+#
+#    def chRemplOne(self, oldchaine, newchaine=''):
+#        """
+#        oldchaine = chaine a remplacer / string to replace
+#        newchaine = chaine de remplacement / string for replace
+#        """
+#        sel = self.w.Selection
+#        #sel.ClearFormatting()
+#        sel.Find.Text = oldchaine
+#        sel.Find.Forward = True
+#        newchaine=newchaine.replace('\n','\r')
+#        sel.Find.Execute(oldchaine,False,False,False,False,False,True,self.wdFindContinue,False,newchaine,self.wdReplaceOne)
+#        self.position=sel
+#
+#
+#    def chRemplClipboard(self, oldchaine):
+#        """
+#        oldchaine = chaine a remplacer / string to replace
+#        """
+#        sel = self.w.Selection
+#        #sel.ClearFormatting()
+#        sel.Find.Text = oldchaine
+#        sel.Find.Forward = True
+#
+#        sel.Find.Execute(oldchaine,False,False,False,False,False,True,self.wdFindContinue,False,'XXX',self.wdReplaceOne)
+#        sel.Paste()
+#        self.position=sel
+#
+#
+#    def chRemplGraf(self, oldchaine, fichier):
+#        """
+#        oldchaine = chaine a remplacer / string to replace
+#        """
+#        sel = self.w.Selection
+#        #sel.ClearFormatting()
+#        sel.Find.Text = oldchaine
+#        sel.Find.Forward = True
+#
+#        sel.Find.Execute(oldchaine,False,False,False,False,False,True,self.wdFindContinue,False,'',self.wdReplaceOne)
+#        sel.InlineShapes.AddPicture(fichier, False, True)
+#        self.position=sel
+#
+#
+#    def TableauInsLigApres(self, oldchaine, nblig=1):
+#        """
+#        oldchaine = chaine a remplacer / string to replace
+#        """
+#        sel = self.w.Selection
+#        #sel.ClearFormatting()
+#        sel.Find.Text = oldchaine
+#        sel.Find.Forward = True
+#
+#        sel.Find.Execute(oldchaine,False,False,False,False,False,True,self.wdFindContinue,False,'',self.wdReplaceOne)
+#        sel.InsertRowsBelow(nblig)
+#
+#
+#    def TableauDelLig(self, oldchaine):
+#        """
+#        oldchaine = chaine a remplacer / string to replace
+#        """
+#        sel = self.w.Selection
+#        #sel.ClearFormatting()
+#        sel.Find.Text = oldchaine
+#        sel.Find.Forward = True
+#
+#        sel.Find.Execute(oldchaine,False,False,False,False,False,True,self.wdFindContinue,False,'',self.wdReplaceOne)
+#        sel.Rows.Delete()
+#
+#
+#    def MoveRight(self, nb=1):
+#        self.position.MoveRight(self.wdCharacter, nb)
+#
+#
+#    def MoveLeft(self, nb=1):
+#        self.position.MoveLeft(self.wdCharacter, nb)
+#
+#
+#    def TableauMoveRight(self, nb=1):
+#        sel = self.w.Selection
+#        sel.MoveRight(self.wdCell, nb)
+#
+#
+#    def TableauMoveLeft(self, nb=1):
+#        sel = self.w.Selection
+#        sel.MoveLeft(self.wdCell, nb)
+#
+#
+#    def TableauMoveLine(self, nb=1):
+#        sel = self.w.Selection
+#        if nb>0:
+#            sel.MoveDown(self.wdLine, nb)
+#        else:
+#            sel.MoveUp(self.wdLine, -nb)
+#
+#
+#    def TableauCellule(self, lig=1, col=1, txt='', align=0):
+#        tbl = self.doc.Tables[0]
+#        cellule = tbl.Cell(lig, col)
+#        cellule.Range.Text = txt
+#        cellule.Range.ParagraphFormat.Alignment = align  #0,1,2, left, center, right
+#
+#
+#    def landscape(self):
+#        """Met le document en mode paysage
+#        """
+#        self.wdOrientLandscape=1
+#        self.wdOrientPortrait=0
+#        self.w.ActiveDocument.PageSetup.Orientation = self.wdOrientLandscape
+#
+#
+#    def portrait(self):
+#        """Met le document en mode portrait
+#        """
+#        self.wdOrientLandscape=1
+#        self.wdOrientPortrait=0
+#        self.w.ActiveDocument.PageSetup.Orientation = self.wdOrientPortrait
+#
+#
+#    def changePrinter(self, printerName):
+#        """Change l'imprimante active de Word
+#        """
+#        self.w.ActivePrinter = printerName
 
         
 #def exporterGrille(typeDoc):

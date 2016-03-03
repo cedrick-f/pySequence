@@ -10,7 +10,7 @@
 #############################################################################
 #############################################################################
 
-## Copyright (C) 2012 Cédrick FAURY
+## Copyright (C) 2016 Cédrick FAURY
 
 #    pySequence is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -28,6 +28,9 @@
 
 # Source :
 # http://stackoverflow.com/questions/5520639/single-instance-application-passing-commands
+
+# Cody Precord : "wxPythyon 2.8 Application Development Cookbook - 2010"
+
 
 
 import wx

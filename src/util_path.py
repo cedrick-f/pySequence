@@ -145,5 +145,7 @@ TABLE_PATH = os.path.join(os.path.abspath(os.path.join(PATH, os.pardir)), r'tabl
 
 BO_PATH = os.path.join(os.path.abspath(os.path.join(PATH, os.pardir)), r'BO')
 
+#HTML_PATH = os.path.join(os.path.abspath(os.path.join(PATH, os.pardir)), r'html')
+
 
 #print "programdata", os.environ['ALLUSERSPROFILE']

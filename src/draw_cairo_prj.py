@@ -733,8 +733,11 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
                 orient = "h"
             else:
                 orient = "v"
-            
-            show_text_rect(ctx, prj.GetProjetRef().phases[phase][1], 
+            try:
+                n = prj.GetProjetRef().phases[phase][1]
+            except KeyError:
+                n = ""
+            show_text_rect(ctx, n, 
                            (posZDeroul[0] + ecartX/6, yh[0], 
                             wPhases, yh[1]-yh[0]), 
                            ha = 'c', orient = orient, b = 0.1, le = 0.7,
