@@ -86,6 +86,7 @@ class XMLelem():
         """ Construction et renvoi d'une branche XML
             (enregistrement de fichier)
         """
+#        print "getBranche", self._codeXML, self
         if nomb != "":
             nomb = "_" + nomb
         ref = ET.Element(str(self._codeXML+nomb))
@@ -216,6 +217,19 @@ class XMLelem():
                 nomerr.extend(err)
                 return proj
             
+            elif nom.split("_")[0] == "Savoirs":
+                sbranche = branche.find(nom)
+                sav, err = Savoirs().setBranche(sbranche)
+                nomerr.extend(err)
+                return sav
+            
+            elif nom.split("_")[0] == "Competences":
+                sbranche = branche.find(nom)
+                comp, err = Competences().setBranche(sbranche)
+                nomerr.extend(err)
+                return comp
+            
+            
 
         for attr in dir(self):
             if attr[0] != "_":
@@ -303,8 +317,8 @@ class XMLelem():
                     if not egal(val1, val2):
                         print u"Différence"
                         print "  ", attr
-                        print "  ", val1
-                        print "  ", val2
+                        print "  xml:", val1
+                        print "  xls:", val2
                         break
                         return False
         return True
@@ -519,8 +533,9 @@ class Referentiel(XMLelem):
         #
         # Savoirs ou capacités
         #
-        self.nomSavoirs = u"Savoirs"    # nom donnés aux savoirs : "Savoirs", "Capacités", ...
-        self.surnomSavoirs = u""
+#        self.nomSavoirs = u"Savoirs"    # nom donnés aux savoirs : "Savoirs", "Capacités", ...
+#        self.surnomSavoirs = u""
+        self.listSavoirs = []
         self.dicSavoirs = {}
 
         #
@@ -568,15 +583,15 @@ class Referentiel(XMLelem):
         self.listeEffectifs = []
         self.effectifsSeance = {} #{"" : []}
         
-        self.nomSavoirs_Math = u"Mathématiques"
-        self.dicSavoirs_Math = {}
-        self.objSavoirs_Math = False
-        self.preSavoirs_Math = True
-            
-        self.nomSavoirs_Phys = u"Sciences Physiques"
-        self.dicSavoirs_Phys = {}
-        self.objSavoirs_Phys = False
-        self.preSavoirs_Phys = True
+#        self.nomSavoirs_Math = u"Mathématiques"
+#        self.dicSavoirs_Math = {}
+#        self.objSavoirs_Math = False
+#        self.preSavoirs_Math = True
+#            
+#        self.nomSavoirs_Phys = u"Sciences Physiques"
+#        self.dicSavoirs_Phys = {}
+#        self.objSavoirs_Phys = False
+#        self.preSavoirs_Phys = True
         
         
         
@@ -1106,11 +1121,24 @@ class Referentiel(XMLelem):
            
         #
         # Savoirs
-        #     
-        sh_va = wb.sheet_by_name(u"Savoirs")  
-        self.nomSavoirs =   sh_va.cell(0,0).value 
-        self.surnomSavoirs =   sh_va.cell(1,0).value 
-        self.dicSavoirs = remplir(sh_va, 0, range(2, sh_va.nrows))
+        #
+        for n in wb.sheet_names():
+            if n[:4] == "Sav_":
+                sh_sa = wb.sheet_by_name(n)
+                code = n[4]
+                self.dicSavoirs[code] = Savoirs("Savoirs", sh_sa.cell(2,0).value, sh_sa.cell(2,2).value, sh_sa.cell(2,1).value)
+                self.dicSavoirs[code].dicSavoirs = remplir(sh_sa, 0, range(4, sh_sa.nrows))
+                self.dicSavoirs[code].obj = 'O' in sh_sa.cell(0,5).value
+                self.dicSavoirs[code].pre = 'P' in sh_sa.cell(0,5).value
+                self.listSavoirs.append(code)
+        
+            
+            
+            
+#        sh_va = wb.sheet_by_name(u"Savoirs")  
+#        self.nomSavoirs =   sh_va.cell(0,0).value 
+#        self.surnomSavoirs =   sh_va.cell(1,0).value 
+#        self.dicSavoirs = remplir(sh_va, 0, range(2, sh_va.nrows))
             
         #
         # Compétences
@@ -1243,25 +1271,25 @@ class Referentiel(XMLelem):
             l = l + 3
             self.effectifsSeance[str(sh_g.cell(l,4).value)] = [sh_g.cell(2,c).value for c in range(5,11) if sh_g.cell(l,c).value != u""]
 
-        #
-        # Savoirs Math
-        #
-        if u"Math" in wb.sheet_names():
-            sh_va = wb.sheet_by_name(u"Math")   
-            self.nomSavoirs_Math = sh_va.cell(0,0).value
-            self.dicSavoirs_Math = remplir(sh_va, 0, range(1, sh_va.nrows), debug = False, niveau = 0)
-            self.objSavoirs_Math = 'O' in sh_va.cell(0,5).value
-            self.preSavoirs_Math = 'P' in sh_va.cell(0,5).value
-        
-        #
-        # Savoirs Physique
-        #
-        if u"Phys" in wb.sheet_names():
-            sh_va = wb.sheet_by_name(u"Phys")
-            self.nomSavoirs_Phys = sh_va.cell(0,0).value
-            self.dicSavoirs_Phys = remplir(sh_va, 0, range(1, sh_va.nrows))
-            self.objSavoirs_Phys = 'O' in sh_va.cell(0,5).value
-            self.preSavoirs_Phys = 'P' in sh_va.cell(0,5).value
+#        #
+#        # Savoirs Math
+#        #
+#        if u"Math" in wb.sheet_names():
+#            sh_va = wb.sheet_by_name(u"Math")   
+#            self.nomSavoirs_Math = sh_va.cell(0,0).value
+#            self.dicSavoirs_Math = remplir(sh_va, 0, range(1, sh_va.nrows), debug = False, niveau = 0)
+#            self.objSavoirs_Math = 'O' in sh_va.cell(0,5).value
+#            self.preSavoirs_Math = 'P' in sh_va.cell(0,5).value
+#        
+#        #
+#        # Savoirs Physique
+#        #
+#        if u"Phys" in wb.sheet_names():
+#            sh_va = wb.sheet_by_name(u"Phys")
+#            self.nomSavoirs_Phys = sh_va.cell(0,0).value
+#            self.dicSavoirs_Phys = remplir(sh_va, 0, range(1, sh_va.nrows))
+#            self.objSavoirs_Phys = 'O' in sh_va.cell(0,5).value
+#            self.preSavoirs_Phys = 'P' in sh_va.cell(0,5).value
         
         
         
@@ -1498,28 +1526,34 @@ class Referentiel(XMLelem):
         return r*tailleReference
 
 
-    #########################################################################
-    def getSavoir(self, code, dic = None, c = 1, gene = None):
-#        print "getSavoir", code, 
-        if dic == None:
-            if gene == "M":
-                if self.tr_com != []:
-                    dic = REFERENTIELS[self.tr_com[0]].dicSavoirs_Math
-                else:
-                    dic = self.dicSavoirs_Math
-            elif gene == "P":
-                if self.tr_com != []:
-                    dic = REFERENTIELS[self.tr_com[0]].dicSavoirs_Phys
-                else:
-                    dic = self.dicSavoirs_Phys
-            else:
-                dic = self.dicSavoirs
-#        print dic
-        if dic.has_key(code):
-            return dic[code][0]
-        else:
-            cd = ".".join(code.split(".")[:c])
-            return self.getSavoir(code, dic[cd][1], c+1)
+#    #########################################################################
+#    def getSavoir(self, code, dic = None, c = 1, gene = None):
+#        """ Renvoie un savoir d'après son code
+#            (utilisé dans daw_cairo_seq)
+#        """
+##        print "getSavoir", code, 
+#        if dic == None:
+#            
+#            
+#            
+#            if gene == "M":
+#                if self.tr_com != []:
+#                    dic = REFERENTIELS[self.tr_com[0]].dicSavoirs_Math
+#                else:
+#                    dic = self.dicSavoirs_Math
+#            elif gene == "P":
+#                if self.tr_com != []:
+#                    dic = REFERENTIELS[self.tr_com[0]].dicSavoirs_Phys
+#                else:
+#                    dic = self.dicSavoirs_Phys
+#            else:
+#                dic = self.dicSavoirs
+##        print dic
+#        if dic.has_key(code):
+#            return dic[code][0]
+#        else:
+#            cd = ".".join(code.split(".")[:c])
+#            return self.getSavoir(code, dic[cd][1], c+1)
 
 
     #########################################################################
@@ -2110,17 +2144,45 @@ class Indicateur(XMLelem):
 
 #################################################################################################################################
 #
-#        Compétence
+#        Compétences
 #
 #################################################################################################################################
-class Competence(XMLelem):
-    def __init__(self, intitule = u"", indicateurs = []):
-        self._codeXML = "Competence"
-        self.intitule = intitule
-        self.indicateurs = indicateurs
+class Competences(XMLelem):
+    def __init__(self):
+        self._codeXML = "Competences"
+        self.nomGenerique = "Competences"
+        self.codeDiscipline = ""
+        self.NomDiscipline = u""
+        self.indicateurs = []
 
 
+#################################################################################################################################
+#
+#        Savoirs
+#
+#################################################################################################################################
+class Savoirs(XMLelem):
+    def __init__(self, nomGenerique = "Savoirs", codeDiscipline = "", nomDiscipline = u"", abrDiscipline = u""):
+        self._codeXML = "Savoirs"
+        self.nomGenerique = nomGenerique
+        self.codeDiscipline = codeDiscipline
+        self.nomDiscipline = nomDiscipline
+        self.abrDiscipline = abrDiscipline
+        self.dicSavoirs = {}
+        self.obj = self.pre = True
+        
+    def getSavoir(self, code, dic = None, c = 1):
+        if dic == None:
+            dic = self.dicSavoirs
 
+        if dic.has_key(code):
+            return dic[code][0]
+        else:
+            cd = ".".join(code.split(".")[:c])
+            return self.getSavoir(code, dic[cd][1], c+1)
+
+    
+    
 ##########################################################################################
 ## source : http://stackoverflow.com/questions/5967500/how-to-correctly-sort-a-string-with-a-number-inside
 #import re
@@ -2155,7 +2217,7 @@ def enregistrer(code, nomFichier):
     fichier = file(nomFichier, 'w')
     root = REFERENTIELS[code].getBranche()
     constantes.indent(root)
-    ET.ElementTree(root).write(fichier)
+    ET.ElementTree(root).write(fichier, xml_declaration=False, encoding = constantes.SYSTEM_ENCODING)
     fichier.close()
     
 #enregistrer("SSI", "testSauvRef.xml")
@@ -2205,7 +2267,7 @@ def chargerReferentiels():
 #    print path_ref
     liste = os.listdir(DOSSIER_REF)
     
-    for fich_ref in liste:#["Ref_STS-SN_EC-1.xls", "Ref_SSI.xls"]:#, "Ref_STI2D-EE.xls", "Ref_STI2D-ETT.xls"]:#["Ref_6CLG.xls"]:#
+    for fich_ref in ["Ref_STS-SN_EC.xls", "Ref_SSI.xls", "Ref_STI2D-AC.xls", "Ref_STI2D-SIN.xls", "Ref_STI2D-ITEC.xls", "Ref_STI2D-EE.xls", "Ref_STI2D-ETT.xls"]:#liste:#["Ref_STS-SN_EC-1.xls", "Ref_SSI.xls"]:#, "Ref_STI2D-EE.xls", "Ref_STI2D-ETT.xls"]:#["Ref_6CLG.xls"]:#
         
         if os.path.splitext(fich_ref)[1] == ".xls":
 #            print

@@ -417,6 +417,12 @@ imagesProjet = {"Prj" : images.Icone_projet,
                 "Tac" : images.Icone_projet
                 }
 
+imagesProgression = {"Prg" : images.Icone_progression,
+                    "Elv" : images.Icone_eleve,
+                    'Prf' : images.Icone_prof2,
+                    'Cal' : images.Icone_calendrier,
+                    }
+
 imagesTaches =  {'Sup' : images.Icone_CdCF, 
                  'Ana' : images.Icone_CdCF, 
                  'Con' : images.Icone_conception, 
@@ -668,7 +674,8 @@ def getElementFiltre(filtre):
 #######################################################################################
 FORMAT_FICHIER = {'seqprj' : u"Séquence ou Projet (.seq ou .prj)|*.seq;*.prj|",
                   'seq' : u"Séquence (.seq)|*.seq|",
-                  'prj' : u"Projet (.prj)|*.prj|"}
+                  'prj' : u"Projet (.prj)|*.prj|",
+                  'prg' : u"Progression (.prg)|*.prg|"}
 
 FORMAT_FICHIER_CLASSE = {'cla' : u"Classe pySéquence (.cla)|*.cla|"}
 
@@ -677,17 +684,21 @@ TOUS_FICHIER = u"Tous les fichiers|*.*'"
 
 MESSAGE_ENR = {'seq' : u"Enregistrer la séquence sous ...",
                'prj' : u"Enregistrer le projet sous ...",
+               'prg' : u"Enregistrer la progression sous ...",
                'cla' : u"Enregistrer la classe sous ..."}
 
 MESSAGE_DEJA = {'seq' : u"La séquence est déja ouverte.\n\n%s\n\nVoulez vous ignorer les changements et rouvrir la séquence ?",
                 'prj' : u"Le projet est déja ouvert.\n\n%s\n\nVoulez vous ignorer les changements et rouvrir le projet ?",
+                'prg' : u"La progression est déja ouverte.\n\n%s\n\nVoulez vous ignorer les changements et rouvrir la progression ?",
                 'cla' : u"La classe est déja ouverte.\n\n%s\n\nVoulez vous ignorer les changements et rouvrir la classe ?"}
 
 TITRE_DEFAUT = {'seq' : u"Nouvelle séquence",
-                'prj' : u"Nouveau projet"}
+                'prj' : u"Nouveau projet",
+                'prg' : u"Nouvelle progression"}
 
 MESSAGE_FERMER = {'seq' : u"La séquence a été modifiée.\n\n%s\n\nVoulez vous enregistrer les changements ?",
-                  'prj' : u"Le projet a été modifié.\n\n%s\n\nVoulez vous enregistrer les changements ?"}
+                  'prj' : u"Le projet a été modifié.\n\n%s\n\nVoulez vous enregistrer les changements ?",
+                  'prg' : u"La progression a été modifiée.\n\n%s\n\nVoulez vous enregistrer les changements ?"}
 
 
 
@@ -724,20 +735,26 @@ class Discipline():
         self.coul = coul
         self.domaine = 'all'
 
-DISCIPLINES = ['Tec', 'Phy', 'Mat', 'Svt', 'LV1', 'Phi', 'Spo', 'Aut']#, 'GE', 'CM', 'SA']
+
+# Disciplines "Prof"
+DISCIPLINES = ['SII', 'Tch', 'Phy', 'Mat', 'Svt', 'LV1', 'Phi', 'Spo', 'Aut']#, 'GE', 'CM', 'SA']
 NOM_DISCIPLINES = {'Tec' : u"Sciences Industrielles de l'Ingénieur", 
+                   'SII' : u"Sciences Industrielles de l'Ingénieur", 
+                   'Tch' : u"Technologie", 
                    'Phy' : u"Physique/Chimie", 
                    'Mat' : u"Mathématiques", 
                    'Svt' : u"Sciences de la Vie et de la Terre",
                    'Phi' : u"Philosophie", 
                    'LV1' : u"Langue vivante",
-                   'Spo' : u"Education physique",
+                   'Spo' : u"Education physique et sportive",
                    'Aut' : u"Autre discipline",
                    'GE'  : u"Génie Électrique", 
                    'CM'  : u"Construction Mécanique",
                    'SA'  : u"Sciences Appliquées"}
 
-CODE_DISCIPLINES = {'Tec' : u"", 
+CODE_DISCIPLINES = {'Tec' : u"SII", 
+                    'SII' : u"SII",
+                    'Tch' : u"Techno", 
                    'Phy' : u"PC", 
                    'Mat' : u"M", 
                    'Svt' : u"SVT",
@@ -750,6 +767,8 @@ CODE_DISCIPLINES = {'Tec' : u"",
                    'SA'  : u"SA"}
 
 COUL_DISCIPLINES = {'Tec' : (0, 0, 0), 
+                    'SII' : (0, 0, 0), 
+                    'Tch' : (0, 0, 0), 
                     'Phy' : (0.7, 0.2, 0), 
                     'Mat' : (0, 0.7, 0.2), 
                     'Svt' : (0.1, 0.7, 0.1),

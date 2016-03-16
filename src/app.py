@@ -48,11 +48,16 @@ class SingleInstApp(wx.App):
         
         # Setup (note this will happen after subclass OnInit)
         instid = u"%s-%s" % (self.GetAppName(), wx.GetUserId())
+        print "instid", instid
         self._checker = wx.SingleInstanceChecker(instid)
         if self.IsOnlyInstance():
             # First instance so start IPC server
-            self._ipc = IpcServer(self, instid, 27115)
-            self._ipc.start()
+            try:
+                self._ipc = IpcServer(self, instid, 27115)
+                self._ipc.start()
+            except socket.error:
+                pass
+            
             # Open a window
             self.ShowSplash()
             #self.DoOpenNewWindow()

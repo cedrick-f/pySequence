@@ -570,28 +570,47 @@ def Draw(ctx, seq, mouchard = False):
     lstTexte = []
     lstCodes = []
     lstCoul = []
+    ref = seq.GetReferentiel()
+    if ref.tr_com != []:
+        ref_tc = REFERENTIELS[ref.tr_com[0]]
+    else:
+        ref_tc = None
     for c in seq.prerequis.savoirs:
         typ, cod = c[0], c[1:]
-        if typ == "S": # Savoir spécialité STI2D
-            lstTexte.append(seq.GetReferentiel().getSavoir(cod))
-            lstCodes.append(cod)
-            lstCoul.append((0,0,0))
-        elif typ == "M": # Savoir Math
-            lstTexte.append(seq.GetReferentiel().getSavoir(cod, gene = "M"))
-            lstCodes.append("Math "+cod)
-            lstCoul.append(constantes.COUL_DISCIPLINES['Mat'])
-        elif typ == "P": # Savoir Physique
-            lstTexte.append(seq.GetReferentiel().getSavoir(cod, gene = "P"))
-            lstCodes.append("Phys "+cod)
-            lstCoul.append(constantes.COUL_DISCIPLINES['Phy'])
+        if typ == "B" and ref.tr_com != []: # B = tronc commun --> référentiel
+            savoir = ref_tc.dicSavoirs["S"]
         else:
-            if seq.GetReferentiel().tr_com == []:
-                lstTexte.append(seq.GetReferentiel().getSavoir(cod))
-                lstCodes.append(cod)
-            else:
-                lstTexte.append(REFERENTIELS[seq.GetReferentiel().tr_com[0]].getSavoir(cod))
-                lstCodes.append(seq.GetReferentiel().tr_com[0]+" "+cod)
-            lstCoul.append((0.3,0.3,0.3))
+            if typ in ref.dicSavoirs.keys():
+                savoir = ref.dicSavoirs[typ]
+            elif ref_tc and typ in ref_tc.dicSavoirs.keys():
+                savoir = ref_tc.dicSavoirs[typ]
+                
+        disc = savoir.codeDiscipline
+        lstTexte.append(savoir.getSavoir(cod))
+        lstCodes.append(savoir.abrDiscipline+cod)
+        lstCoul.append(constantes.COUL_DISCIPLINES[disc])
+            
+            
+#        if typ == "S": # Savoir SII ou spécialité STI2D
+#            lstTexte.append(seq.GetReferentiel().getSavoir(cod))
+#            lstCodes.append(cod)
+#            lstCoul.append((0,0,0))
+#        elif typ == "M": # Savoir Math
+#            lstTexte.append(seq.GetReferentiel().getSavoir(cod, gene = "M"))
+#            lstCodes.append("Math "+cod)
+#            lstCoul.append(constantes.COUL_DISCIPLINES['Mat'])
+#        elif typ == "P": # Savoir Physique
+#            lstTexte.append(seq.GetReferentiel().getSavoir(cod, gene = "P"))
+#            lstCodes.append("Phys "+cod)
+#            lstCoul.append(constantes.COUL_DISCIPLINES['Phy'])
+#        else: # B = tronc commun
+#            if seq.GetReferentiel().tr_com == []:
+#                lstTexte.append(seq.GetReferentiel().getSavoir(cod))
+#                lstCodes.append(cod)
+#            else:
+#                lstTexte.append(REFERENTIELS[seq.GetReferentiel().tr_com[0]].getSavoir(cod))
+#                lstCodes.append(seq.GetReferentiel().tr_com[0]+" "+cod)
+#            lstCoul.append((0.3,0.3,0.3))
             
         
     lstTexteS = []   
@@ -651,33 +670,55 @@ def Draw(ctx, seq, mouchard = False):
     
             
 #    print "lstTexteC", lstTexteC
-    
+
     lstTexteS = []
     lstCodes = []
     lstCoul = []
+    ref = seq.GetReferentiel()
+    ref_tc = REFERENTIELS[ref.tr_com[0]]
     for c in seq.obj["S"].savoirs:
         typ, cod = c[0], c[1:]
-#        print typ, cod
-        if typ == "S": # Savoir spécialité STI2D
-            lstTexteS.append(ref.getSavoir(cod))
-            lstCodes.append(cod)
-            lstCoul.append((0,0,0))
-        elif typ == "M": # Savoir Math
-            lstTexteS.append(ref.getSavoir(cod, gene = "M"))
-            lstCodes.append("Math "+cod)
-            lstCoul.append(constantes.COUL_DISCIPLINES['Mat'])
-        elif typ == "P": # Savoir Physique
-            lstTexteS.append(ref.getSavoir(cod, gene = "P"))
-            lstCodes.append("Phys "+cod)
-            lstCoul.append(constantes.COUL_DISCIPLINES['Phy'])
+        if typ == "B" and ref.tr_com != []: # B = tronc commun --> référentiel
+            savoir = ref_tc.dicSavoirs["S"]
         else:
-            if ref.tr_com == []:
-                lstTexteS.append(ref.getSavoir(cod))
-                lstCodes.append(cod)
-            else:
-                lstTexteS.append(REFERENTIELS[ref.tr_com[0]].getSavoir(cod))
-                lstCodes.append(ref.tr_com[0]+" "+cod)
-            lstCoul.append((0.3,0.3,0.3))
+            if typ in ref.dicSavoirs.keys():
+                savoir = ref.dicSavoirs[typ]
+            elif typ in ref_tc.dicSavoirs.keys():
+                savoir = ref_tc.dicSavoirs[typ]
+                
+        disc = savoir.codeDiscipline
+        lstTexteS.append(savoir.getSavoir(cod))
+        lstCodes.append(savoir.abrDiscipline + cod)
+        lstCoul.append(constantes.COUL_DISCIPLINES[disc])
+        
+        
+        
+#    lstTexteS = []
+#    lstCodes = []
+#    lstCoul = []
+#    for c in seq.obj["S"].savoirs:
+#        typ, cod = c[0], c[1:]
+##        print typ, cod
+#        if typ == "S": # Savoir spécialité STI2D
+#            lstTexteS.append(ref.getSavoir(cod))
+#            lstCodes.append(cod)
+#            lstCoul.append((0,0,0))
+#        elif typ == "M": # Savoir Math
+#            lstTexteS.append(ref.getSavoir(cod, gene = "M"))
+#            lstCodes.append("Math "+cod)
+#            lstCoul.append(constantes.COUL_DISCIPLINES['Mat'])
+#        elif typ == "P": # Savoir Physique
+#            lstTexteS.append(ref.getSavoir(cod, gene = "P"))
+#            lstCodes.append("Phys "+cod)
+#            lstCoul.append(constantes.COUL_DISCIPLINES['Phy'])
+#        else:
+#            if ref.tr_com == []:
+#                lstTexteS.append(ref.getSavoir(cod))
+#                lstCodes.append(cod)
+#            else:
+#                lstTexteS.append(REFERENTIELS[ref.tr_com[0]].getSavoir(cod))
+#                lstCodes.append(ref.tr_com[0]+" "+cod)
+#            lstCoul.append((0.3,0.3,0.3))
             
     h = rect_height+0.0001 * COEF
     hC = hS = h/2

@@ -184,7 +184,7 @@ class FenetreBilan(wx.Frame):
 #        print "ConstruireTb"
 
         #############################################################################################
-        # Cr�ation de la barre d'outils
+        # Création de la barre d'outils
         #############################################################################################
         self.tb = self.CreateToolBar(wx.TB_HORIZONTAL | wx.NO_BORDER | wx.TB_FLAT)
         
