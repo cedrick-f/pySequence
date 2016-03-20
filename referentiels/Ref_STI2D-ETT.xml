@@ -1,4 +1,4 @@
-<Referentiel B_CI_BO="False" B_CI_cible="True" B_domaines="False" S_AnneeDebut="Sec6" S_Code="ET" S_Famille="STI" S_FichierLogo="" S_abrevCI="CI" S_nomCI="Centre(s) d'Intérêt" S_nomCompetences="Compétences" S_nomFonctions="Fonctions" S_nomIndicateurs="Indicateurs de performance" S_nomTaches="Tâches">
+<Referentiel B_CI_BO="False" B_CI_cible="True" B_domaines="False" S_AnneeDebut="Sec6" S_Code="ET" S_Famille="STI" S_FichierLogo="" S_abrevCI="CI" S_nomCI="Centre(s) d'Intérêt" S_nomFonctions="Fonctions" S_nomTaches="Tâches">
   <l_BO_URL>
     <l_00 S_00="Programme" S_01="http://www.education.gouv.fr/pid25535/bulletin_officiel.html?cid_bo=82984" />
   </l_BO_URL>
@@ -22,183 +22,193 @@
     <l_P S_00="Projet" S_01="Projet" />
     <l_R S_00="Rés. Problème" S_01="Résolution de problème" />
   </d_demarches>
-  <d_dicCompetences>
-    <l_O8s S_00="Valider des solutions techniques">
-      <d_01>
-        <l_CO8.0 S_00="Justifier des éléments d'une simulation relative au comportement de tout ou partie d'un système et les écarts par rapport au réel">
-          <l_01>
-            <Indicateur_00 S_intitule="Les solutions techniques envisagées sont correctement analysées au regard des résultats d'expérimentations et/ou de tests et/ou de simulations">
-              <d_ligne I_S="0" />
-              <d_poids F_S="66.666667" />
-              <d_revue I_S="0" />
-            </Indicateur_00>
-            <Indicateur_01 S_intitule="L'origine des écarts entre les résultats obtenus et les exigences du cahier des charges est correctement identifiée">
-              <d_ligne I_S="0" />
-              <d_poids F_S="33.333333" />
-              <d_revue I_S="0" />
-            </Indicateur_01>
-          </l_01>
-        </l_CO8.0>
-      </d_01>
-      <d_02 I_S="20" />
-    </l_O8s>
-    <l_O6 S_00="Communiquer une idée, un principe ou une solution technique, un projet, y compris en langue étrangère">
-      <d_01>
-        <l_CO6.3 S_00="Présenter et argumenter des démarches, des résultats, y compris dans une langue étrangère">
-          <l_01>
-            <Indicateur_00 S_intitule="Le choix de la démarche retenue est argumentée">
-              <d_ligne I_S="0" />
-              <d_poids F_S="25.0" />
-              <d_revue I_S="0" />
-            </Indicateur_00>
-            <Indicateur_01 S_intitule="Les résultats sont présentés et commentés de manière claire et concise">
-              <d_ligne I_S="0" />
-              <d_poids F_S="25.0" />
-              <d_revue I_S="0" />
-            </Indicateur_01>
-          </l_01>
-        </l_CO6.3>
-        <l_CO6.2 S_00="Décrire le fonctionnement et/ou l'exploitation d'un système en utilisant l'outil de description le plus pertinent">
-          <l_01>
-            <Indicateur_00 S_intitule="La description du fonctionnement ou de l'exploitation du système est synthétique et correcte">
-              <d_ligne I_S="0" />
-              <d_poids F_S="25.0" />
-              <d_revue I_S="0" />
-            </Indicateur_00>
-          </l_01>
-        </l_CO6.2>
-        <l_CO6.1 S_00="Décrire une idée, un principe, une solution, un projet en utilisant des outils de représentation adaptés">
-          <l_01>
-            <Indicateur_00 S_intitule="La description du principe ou de la solution est synthétique et correcte">
-              <d_ligne I_S="0" />
-              <d_poids F_S="25.0" />
-              <d_revue I_S="0" />
-            </Indicateur_00>
-          </l_01>
-        </l_CO6.1>
-      </d_01>
-      <d_02 I_S="45" />
-    </l_O6>
-    <l_O5 S_00="Utiliser un modèle de comportement pour prédire un fonctionnement ou valider une performance">
-      <d_01>
-        <l_CO5.1 S_00="Expliquer des éléments d'une modélisation proposée relative au comportement de tout ou partie d'un système">
-          <l_01 />
-          <d_02 />
-        </l_CO5.1>
-        <l_CO5.2 S_00="Identifier des variables internes et externes utiles à une modélisation, simuler et valider le comportement du modèle">
-          <l_01 />
-          <d_02 />
-        </l_CO5.2>
-        <l_CO5.3 S_00="Evaluer un écart entre le comportement du réel et le comportement du modèle en fonction des paramètres proposés">
-          <l_01 />
-          <d_02 />
-        </l_CO5.3>
-      </d_01>
-      <d_02 />
-    </l_O5>
-    <l_O4 S_00="Décoder l’organisation fonctionnelle, structurelle et logicielle d’un système">
-      <d_01>
-        <l_CO4.1 S_00="Identifier et caractériser les fonctions et les constituants d'un système ainsi que ses entrées/sorties">
-          <l_01 />
-          <d_02 />
-        </l_CO4.1>
-        <l_CO4.3 S_00="Identifier et caractériser le fonctionnement temporel d'un système">
-          <l_01 />
-          <d_02 />
-        </l_CO4.3>
-        <l_CO4.2 S_00="Identifier et caractériser l'agencement  matériel et/ou logiciel d'un système">
-          <l_01 />
-          <d_02 />
-        </l_CO4.2>
-        <l_CO4.4 S_00="Identifier et caractériser des solutions techniques relatives aux matériaux, à la structure, à l'énergie et aux informations (acquisition, traitement, transmission) d'un système">
-          <l_01 />
-          <d_02 />
-        </l_CO4.4>
-      </d_01>
-      <d_02 />
-    </l_O4>
-    <l_O3 S_00="Identifier les éléments influents du développement d’un système">
-      <d_01>
-        <l_CO3.2 S_00="Evaluer la compétitivité d'un système d'un point de vue technique et économique">
-          <l_01 />
-          <d_02 />
-        </l_CO3.2>
-        <l_CO3.1 S_00="Décoder le cahier des charges fonctionnel d'un système">
-          <l_01 />
-          <d_02 />
-        </l_CO3.1>
-      </d_01>
-      <d_02 />
-    </l_O3>
-    <l_O2 S_00="Identifier les éléments permettant la limitation de l’Impact environnemental d’un système et de ses constituants">
-      <d_01>
-        <l_CO2.2 S_00="Justifier les solutions constructives d'un système au regard des impacts environnementaux et économiques engendrés tout au long de son cycle de vie">
-          <l_01>
-            <Indicateur_00 S_intitule="La relation entre une fonction, des solutions et leur impact environnemental ou sociétal est précisée ">
-              <d_ligne I_S="0" />
-              <d_poids F_S="20.0" />
-              <d_revue I_S="0" />
-            </Indicateur_00>
-            <Indicateur_01 S_intitule="Le compromis technico économique et/ou la prise en compte des normes et réglementations est expliqué ">
-              <d_ligne I_S="0" />
-              <d_poids F_S="20.0" />
-              <d_revue I_S="0" />
-            </Indicateur_01>
-          </l_01>
-        </l_CO2.2>
-        <l_CO2.1 S_00="Identifier les flux et la forme de l'énergie, caractériser ses transformations et/ou modulations et estimer l'efficacité énergétique globale d'un système">
-          <l_01>
-            <Indicateur_00 S_intitule="Les flux et la forme de l'énergie et/ou de l'information sont décrits de façon qualitative">
-              <d_ligne I_S="0" />
-              <d_poids F_S="20.0" />
-              <d_revue I_S="0" />
-            </Indicateur_00>
-            <Indicateur_01 S_intitule="Les caractéristiques d'entrées sorties des transformations ou modulations sont correctement précisées">
-              <d_ligne I_S="0" />
-              <d_poids F_S="20.0" />
-              <d_revue I_S="0" />
-            </Indicateur_01>
-            <Indicateur_02 S_intitule="L'analyse globale d'une chaine (énergie, action, information) est correctement réalisée">
-              <d_ligne I_S="0" />
-              <d_poids F_S="20.0" />
-              <d_revue I_S="0" />
-            </Indicateur_02>
-          </l_01>
-        </l_CO2.1>
-      </d_01>
-      <d_02 I_S="15" />
-    </l_O2>
-    <l_O1 S_00="Caractériser des systèmes privilégiant un usage raisonné du point de vue développement durable">
-      <d_01>
-        <l_CO1.1 S_00="Justifier les choix des matériaux, des structures d'un système et les énergies mises en oeuvre dans une approche de développement durable">
-          <l_01>
-            <Indicateur_00 S_intitule="Le choix des matériaux et/ou des matériels est justifié, des critères d'éco conception sont pris en compte">
-              <d_ligne I_S="0" />
-              <d_poids F_S="33.333333" />
-              <d_revue I_S="0" />
-            </Indicateur_00>
-            <Indicateur_01 S_intitule="La  structure matérielle et/ou informationnelle est correctement justifiée ">
-              <d_ligne I_S="0" />
-              <d_poids F_S="33.333333" />
-              <d_revue I_S="0" />
-            </Indicateur_01>
-          </l_01>
-        </l_CO1.1>
-        <l_CO1.2 S_00="Justifier le choix d'une solution selon des contraintes d'ergonomie et d'effets sur la santé de l'homme et du vivant">
-          <l_01>
-            <Indicateur_00 S_intitule="La justification des paramètres de confort et/ou la réponse apportée par le système aux contraintes de préservation de la santé et du respect de la sécurité sont explicitées">
-              <d_ligne I_S="0" />
-              <d_poids F_S="33.333333" />
-              <d_revue I_S="0" />
-            </Indicateur_00>
-          </l_01>
-        </l_CO1.2>
-      </d_01>
-      <d_02 I_S="20" />
-    </l_O1>
-  </d_dicCompetences>
   <d_dicFonctions />
-  <d_dicSavoirs>
+  <d_dicoCompetences>
+    <Competences_S S_abrDiscipline="ETT" S_codeDiscipline="SII" S_nomDiscipline="STI2D - ETT" S_nomGenerique="Compétences" S_nomGeneriqueIndic="Indicateurs de performance">
+      <d_dicCompetences>
+        <l_O2 S_00="Identifier les éléments permettant la limitation de l’Impact environnemental d’un système et de ses constituants">
+          <d_01>
+            <l_CO2.2 S_00="Justifier les solutions constructives d'un système au regard des impacts environnementaux et économiques engendrés tout au long de son cycle de vie">
+              <l_01>
+                <Indicateur_00 S_intitule="La relation entre une fonction, des solutions et leur impact environnemental ou sociétal est précisée ">
+                  <d_ligne I_S="0" />
+                  <d_poids F_S="20.0" />
+                  <d_revue I_S="0" />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="Le compromis technico économique et/ou la prise en compte des normes et réglementations est expliqué ">
+                  <d_ligne I_S="0" />
+                  <d_poids F_S="20.0" />
+                  <d_revue I_S="0" />
+                </Indicateur_01>
+              </l_01>
+            </l_CO2.2>
+            <l_CO2.1 S_00="Identifier les flux et la forme de l'énergie, caractériser ses transformations et/ou modulations et estimer l'efficacité énergétique globale d'un système">
+              <l_01>
+                <Indicateur_00 S_intitule="Les flux et la forme de l'énergie et/ou de l'information sont décrits de façon qualitative">
+                  <d_ligne I_S="0" />
+                  <d_poids F_S="20.0" />
+                  <d_revue I_S="0" />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="Les caractéristiques d'entrées sorties des transformations ou modulations sont correctement précisées">
+                  <d_ligne I_S="0" />
+                  <d_poids F_S="20.0" />
+                  <d_revue I_S="0" />
+                </Indicateur_01>
+                <Indicateur_02 S_intitule="L'analyse globale d'une chaine (énergie, action, information) est correctement réalisée">
+                  <d_ligne I_S="0" />
+                  <d_poids F_S="20.0" />
+                  <d_revue I_S="0" />
+                </Indicateur_02>
+              </l_01>
+            </l_CO2.1>
+          </d_01>
+          <d_02 I_S="15" />
+        </l_O2>
+        <l_O8s S_00="Valider des solutions techniques">
+          <d_01>
+            <l_CO8.0 S_00="Justifier des éléments d'une simulation relative au comportement de tout ou partie d'un système et les écarts par rapport au réel">
+              <l_01>
+                <Indicateur_00 S_intitule="Les solutions techniques envisagées sont correctement analysées au regard des résultats d'expérimentations et/ou de tests et/ou de simulations">
+                  <d_ligne I_S="0" />
+                  <d_poids F_S="66.666667" />
+                  <d_revue I_S="0" />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="L'origine des écarts entre les résultats obtenus et les exigences du cahier des charges est correctement identifiée">
+                  <d_ligne I_S="0" />
+                  <d_poids F_S="33.333333" />
+                  <d_revue I_S="0" />
+                </Indicateur_01>
+              </l_01>
+            </l_CO8.0>
+          </d_01>
+          <d_02 I_S="20" />
+        </l_O8s>
+        <l_O6 S_00="Communiquer une idée, un principe ou une solution technique, un projet, y compris en langue étrangère">
+          <d_01>
+            <l_CO6.3 S_00="Présenter et argumenter des démarches, des résultats, y compris dans une langue étrangère">
+              <l_01>
+                <Indicateur_00 S_intitule="Le choix de la démarche retenue est argumentée">
+                  <d_ligne I_S="0" />
+                  <d_poids F_S="25.0" />
+                  <d_revue I_S="0" />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="Les résultats sont présentés et commentés de manière claire et concise">
+                  <d_ligne I_S="0" />
+                  <d_poids F_S="25.0" />
+                  <d_revue I_S="0" />
+                </Indicateur_01>
+              </l_01>
+            </l_CO6.3>
+            <l_CO6.2 S_00="Décrire le fonctionnement et/ou l'exploitation d'un système en utilisant l'outil de description le plus pertinent">
+              <l_01>
+                <Indicateur_00 S_intitule="La description du fonctionnement ou de l'exploitation du système est synthétique et correcte">
+                  <d_ligne I_S="0" />
+                  <d_poids F_S="25.0" />
+                  <d_revue I_S="0" />
+                </Indicateur_00>
+              </l_01>
+            </l_CO6.2>
+            <l_CO6.1 S_00="Décrire une idée, un principe, une solution, un projet en utilisant des outils de représentation adaptés">
+              <l_01>
+                <Indicateur_00 S_intitule="La description du principe ou de la solution est synthétique et correcte">
+                  <d_ligne I_S="0" />
+                  <d_poids F_S="25.0" />
+                  <d_revue I_S="0" />
+                </Indicateur_00>
+              </l_01>
+            </l_CO6.1>
+          </d_01>
+          <d_02 I_S="45" />
+        </l_O6>
+        <l_O5 S_00="Utiliser un modèle de comportement pour prédire un fonctionnement ou valider une performance">
+          <d_01>
+            <l_CO5.1 S_00="Expliquer des éléments d'une modélisation proposée relative au comportement de tout ou partie d'un système">
+              <l_01 />
+              <d_02 />
+            </l_CO5.1>
+            <l_CO5.2 S_00="Identifier des variables internes et externes utiles à une modélisation, simuler et valider le comportement du modèle">
+              <l_01 />
+              <d_02 />
+            </l_CO5.2>
+            <l_CO5.3 S_00="Evaluer un écart entre le comportement du réel et le comportement du modèle en fonction des paramètres proposés">
+              <l_01 />
+              <d_02 />
+            </l_CO5.3>
+          </d_01>
+          <d_02 />
+        </l_O5>
+        <l_O4 S_00="Décoder l’organisation fonctionnelle, structurelle et logicielle d’un système">
+          <d_01>
+            <l_CO4.1 S_00="Identifier et caractériser les fonctions et les constituants d'un système ainsi que ses entrées/sorties">
+              <l_01 />
+              <d_02 />
+            </l_CO4.1>
+            <l_CO4.3 S_00="Identifier et caractériser le fonctionnement temporel d'un système">
+              <l_01 />
+              <d_02 />
+            </l_CO4.3>
+            <l_CO4.2 S_00="Identifier et caractériser l'agencement  matériel et/ou logiciel d'un système">
+              <l_01 />
+              <d_02 />
+            </l_CO4.2>
+            <l_CO4.4 S_00="Identifier et caractériser des solutions techniques relatives aux matériaux, à la structure, à l'énergie et aux informations (acquisition, traitement, transmission) d'un système">
+              <l_01 />
+              <d_02 />
+            </l_CO4.4>
+          </d_01>
+          <d_02 />
+        </l_O4>
+        <l_O3 S_00="Identifier les éléments influents du développement d’un système">
+          <d_01>
+            <l_CO3.2 S_00="Evaluer la compétitivité d'un système d'un point de vue technique et économique">
+              <l_01 />
+              <d_02 />
+            </l_CO3.2>
+            <l_CO3.1 S_00="Décoder le cahier des charges fonctionnel d'un système">
+              <l_01 />
+              <d_02 />
+            </l_CO3.1>
+          </d_01>
+          <d_02 />
+        </l_O3>
+        <l_SII S_00="ETT">
+          <l_01 />
+          <d_02 />
+          <d_03 />
+        </l_SII>
+        <l_O1 S_00="Caractériser des systèmes privilégiant un usage raisonné du point de vue développement durable">
+          <d_01>
+            <l_CO1.1 S_00="Justifier les choix des matériaux, des structures d'un système et les énergies mises en oeuvre dans une approche de développement durable">
+              <l_01>
+                <Indicateur_00 S_intitule="Le choix des matériaux et/ou des matériels est justifié, des critères d'éco conception sont pris en compte">
+                  <d_ligne I_S="0" />
+                  <d_poids F_S="33.333333" />
+                  <d_revue I_S="0" />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="La  structure matérielle et/ou informationnelle est correctement justifiée ">
+                  <d_ligne I_S="0" />
+                  <d_poids F_S="33.333333" />
+                  <d_revue I_S="0" />
+                </Indicateur_01>
+              </l_01>
+            </l_CO1.1>
+            <l_CO1.2 S_00="Justifier le choix d'une solution selon des contraintes d'ergonomie et d'effets sur la santé de l'homme et du vivant">
+              <l_01>
+                <Indicateur_00 S_intitule="La justification des paramètres de confort et/ou la réponse apportée par le système aux contraintes de préservation de la santé et du respect de la sécurité sont explicitées">
+                  <d_ligne I_S="0" />
+                  <d_poids F_S="33.333333" />
+                  <d_revue I_S="0" />
+                </Indicateur_00>
+              </l_01>
+            </l_CO1.2>
+          </d_01>
+          <d_02 I_S="20" />
+        </l_O1>
+      </d_dicCompetences>
+      <l_indicateurs />
+    </Competences_S>
+  </d_dicoCompetences>
+  <d_dicoSavoirs>
     <Savoirs_P B_obj="False" B_pre="True" S_abrDiscipline="P-C" S_codeDiscipline="Phy" S_nomDiscipline="Physique - Chimie" S_nomGenerique="Savoirs">
       <d_dicSavoirs>
         <l_1 S_00="Première">
@@ -644,7 +654,7 @@
         </l_T>
       </d_dicSavoirs>
     </Savoirs_M>
-  </d_dicSavoirs>
+  </d_dicoSavoirs>
   <d_effectifs>
     <l_C S_00="Classe entière" S_01="Classe entière" />
     <l_E S_00="Etude ou Projet" S_01="Etude et Projet" />
@@ -666,6 +676,7 @@
     <l_TD S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" />
   </d_effectifsSeance>
   <d_horsClasse />
+  <l_listCompetences S_00="S" />
   <l_listSavoirs S_00="S" S_01="M" S_02="P" />
   <l_listeDemarches S_00="I" S_01="R" S_02="P" />
   <l_listeEffectifs S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />

@@ -1,4 +1,4 @@
-<Referentiel B_CI_BO="True" B_CI_cible="False" B_domaines="False" S_AnneeDebut="Sec6" S_Code="SIN" S_Famille="STI" S_FichierLogo="" S_abrevCI="CI" S_nomCI="Centre(s) d'Intérêt" S_nomCompetences="Compétences" S_nomFonctions="Fonctions" S_nomIndicateurs="Indicateurs de performance" S_nomTaches="Tâches">
+<Referentiel B_CI_BO="True" B_CI_cible="False" B_domaines="False" S_AnneeDebut="Sec6" S_Code="SIN" S_Famille="STI" S_FichierLogo="" S_abrevCI="CI" S_nomCI="Centre(s) d'Intérêt" S_nomFonctions="Fonctions" S_nomTaches="Tâches">
   <l_BO_URL>
     <l_00 S_00="Programme" S_01="http://www.education.gouv.fr/pid25535/bulletin_officiel.html?cid_bo=82984" />
   </l_BO_URL>
@@ -22,249 +22,259 @@
     <l_P S_00="Projet" S_01="Projet" />
     <l_R S_00="Rés. Problème" S_01="Résolution de problème" />
   </d_demarches>
-  <d_dicCompetences>
-    <l_O7 S_00="Imaginer une solution, répondre à un besoin">
-      <d_01>
-        <l_CO7.sin3 S_00="Exprimer le principe de fonctionnement d'un système à partir des diagrammes SysML pertinents. Repérer les constituants de la chaîne d'énergie et d'information">
-          <l_01>
-            <Indicateur_00 S_intitule="Le système est modélisé à l'aide de diagrammes conformes ">
-              <d_ligne I_C="13" />
-              <d_poids F_C="10.0" />
-              <d_revue I_C="0" />
-            </Indicateur_00>
-            <Indicateur_01 S_intitule="Les diagrammes comportementaux permettant d'exprimer le principe de fonctionnement sont correctement utilisés ">
-              <d_ligne I_C="14" />
-              <d_poids F_C="10.0" />
-              <d_revue I_C="0" />
-            </Indicateur_01>
-            <Indicateur_02 S_intitule="Les constituants sont identifiés">
-              <d_ligne I_C="15" />
-              <d_poids F_C="10.0" />
-              <d_revue I_C="0" />
-            </Indicateur_02>
-          </l_01>
-        </l_CO7.sin3>
-        <l_CO7.sin2 S_00="Décoder le cahier des charges fonctionnel décrivant le besoin exprimé, identifier la fonction définie par un besoin exprimé, faire des mesures pour caractériser cette fonction et conclure sur sa conformité">
-          <l_01>
-            <Indicateur_00 S_intitule="Les diagrammes Sysml utilisés sont bien interprétés">
-              <d_ligne I_C="10" />
-              <d_poids F_C="10.0" />
-              <d_revue I_C="0" />
-            </Indicateur_00>
-            <Indicateur_01 S_intitule="Une procédure pertinente est proposée et mise en œuvre">
-              <d_ligne I_C="11" />
-              <d_poids F_C="10.0" />
-              <d_revue I_C="0" />
-            </Indicateur_01>
-            <Indicateur_02 S_intitule="Un rapport de conformité est rédigé">
-              <d_ligne I_C="12" />
-              <d_poids F_C="10.0" />
-              <d_revue I_C="0" />
-            </Indicateur_02>
-          </l_01>
-        </l_CO7.sin2>
-        <l_CO7.sin1 S_00="Décoder la notice technique d'un système, vérifier la conformité du fonctionnement">
-          <l_01>
-            <Indicateur_00 S_intitule="L'interprétation de la notice du système permet de décrire une procédure">
-              <d_ligne I_C="6" />
-              <d_poids F_C="10.0" />
-              <d_revue I_C="0" />
-            </Indicateur_00>
-            <Indicateur_01 S_intitule="Le système est installé et paramétré">
-              <d_ligne I_C="7" />
-              <d_poids F_C="10.0" />
-              <d_revue I_C="0" />
-            </Indicateur_01>
-            <Indicateur_02 S_intitule="Les mesures sont effectuées et comparées aux caractéristiques de la notice technique">
-              <d_ligne I_C="8" />
-              <d_poids F_C="10.0" />
-              <d_revue I_C="0" />
-            </Indicateur_02>
-            <Indicateur_03 S_intitule="Un rapport de mise en œuvre et d'essais est rédigé">
-              <d_ligne I_C="9" />
-              <d_poids F_C="10.0" />
-              <d_revue I_C="0" />
-            </Indicateur_03>
-          </l_01>
-        </l_CO7.sin1>
-      </d_01>
-      <d_02 I_C="40" />
-    </l_O7>
-    <l_O9 S_00="Gérer la vie d'un système">
-      <d_01>
-        <l_CO9.sin4 S_00="Rechercher et choisir de nouveaux constituants d'un système (ou d'un projet finalisé) au regard d'évolutions technologiques, socioéconomiques spécifiées dans un cahier des charges. Organiser le projet permettant de maquettiser la solution choisie">
-          <l_01>
-            <Indicateur_00 S_intitule="Les diagrammes comportementaux sont correctement mis à jour">
-              <d_ligne I_C="41" />
-              <d_poids F_C="7.142857" />
-              <d_revue I_C="0" />
-            </Indicateur_00>
-            <Indicateur_01 S_intitule="Des constituants sont choisis et justifiés">
-              <d_ligne I_C="42" />
-              <d_poids F_C="7.142857" />
-              <d_revue I_C="0" />
-            </Indicateur_01>
-            <Indicateur_02 S_intitule="Le prototypage rapide de la solution est organisée">
-              <d_ligne I_C="43" />
-              <d_poids F_C="7.142857" />
-              <d_revue I_C="0" />
-            </Indicateur_02>
-          </l_01>
-        </l_CO9.sin4>
-        <l_CO9.sin1 S_00="Utiliser les outils adaptés pour planifier un projet (diagramme de Gantt, chemin critique, données économiques, réunions de projet)">
-          <l_01>
-            <Indicateur_00 S_intitule="Le cahier des charges fonctionnel est analysé et reformulé">
-              <d_ligne I_C="30" />
-              <d_poids F_C="7.142857" />
-              <d_revue I_C="0" />
-            </Indicateur_00>
-            <Indicateur_01 S_intitule="Les données économiques sont identifiées">
-              <d_ligne I_C="31" />
-              <d_poids F_C="7.142857" />
-              <d_revue I_C="0" />
-            </Indicateur_01>
-            <Indicateur_02 S_intitule="Les chemins critiques sont mis en évidence et les dates de réunions de projet sont fixées">
-              <d_ligne I_C="32" />
-              <d_poids F_C="7.142857" />
-              <d_revue I_C="0" />
-            </Indicateur_02>
-          </l_01>
-        </l_CO9.sin1>
-        <l_CO9.sin3 S_00="Rechercher des évolutions de constituants dans le cadre d'une démarche de veille technologique, analyser la structure d'un système pour intervenir sur les constituants dans le cadre d'une opération de maintenance">
-          <l_01>
-            <Indicateur_00 S_intitule="Les procédures adaptées d'intervention sur les constituants sont proposées">
-              <d_ligne I_C="38" />
-              <d_poids F_C="7.142857" />
-              <d_revue I_C="0" />
-            </Indicateur_00>
-            <Indicateur_01 S_intitule="L'intervention de maintenance sur le système est planifiée et la continuité de service assurée">
-              <d_ligne I_C="39" />
-              <d_poids F_C="7.142857" />
-              <d_revue I_C="0" />
-            </Indicateur_01>
-            <Indicateur_02 S_intitule="Le rapport d'intervention est établi">
-              <d_ligne I_C="40" />
-              <d_poids F_C="7.142857" />
-              <d_revue I_C="0" />
-            </Indicateur_02>
-          </l_01>
-        </l_CO9.sin3>
-        <l_CO9.sin2 S_00="Installer, configurer et instrumenter un système réel. Mettre en oeuvre la chaîne d'acquisition puis acquérir, traiter, transmettre et restituer l'information">
-          <l_01>
-            <Indicateur_00 S_intitule="La notice du système est correctement interprétée">
-              <d_ligne I_C="33" />
-              <d_poids F_C="7.142857" />
-              <d_revue I_C="0" />
-            </Indicateur_00>
-            <Indicateur_01 S_intitule="Le système est installé et paramétré">
-              <d_ligne I_C="34" />
-              <d_poids F_C="7.142857" />
-              <d_revue I_C="0" />
-            </Indicateur_01>
-            <Indicateur_02 S_intitule="Les grandeurs caractéristiques sont identifiées et les appareils de mesure sont adaptés">
-              <d_ligne I_C="35" />
-              <d_poids F_C="7.142857" />
-              <d_revue I_C="0" />
-            </Indicateur_02>
-            <Indicateur_03 S_intitule="Les grandeurs sont acquises, traitées et transmises">
-              <d_ligne I_C="36" />
-              <d_poids F_C="7.142857" />
-              <d_revue I_C="0" />
-            </Indicateur_03>
-            <Indicateur_04 S_intitule="Les contraintes temporelles et fréquentielles sont respectées, l'information est restituée">
-              <d_ligne I_C="37" />
-              <d_poids F_C="7.142857" />
-              <d_revue I_C="0" />
-            </Indicateur_04>
-          </l_01>
-        </l_CO9.sin2>
-      </d_01>
-      <d_02 I_C="20" />
-    </l_O9>
-    <l_O8 S_00="Valider des solutions techniques">
-      <d_01>
-        <l_CO8.sin2 S_00="Etablir pour une fonction précédemment identifiée, un modèle de comportement à partir de mesures faites sur le sytème">
-          <l_01>
-            <Indicateur_00 S_intitule="Les mesures nécessaires sont effectuées">
-              <d_ligne I_C="20" />
-              <d_poids F_C="8.333333" />
-              <d_revue I_C="0" />
-            </Indicateur_00>
-            <Indicateur_01 S_intitule="Un modèle de comportement pertinent est établi">
-              <d_ligne I_C="21" />
-              <d_poids F_C="8.333333" />
-              <d_revue I_C="0" />
-            </Indicateur_01>
-            <Indicateur_02 S_intitule="Les paramètres du  modèle sont renseignés pour limiter les écarts avec les mesures">
-              <d_ligne I_C="22" />
-              <d_poids F_C="8.333333" />
-              <d_revue I_C="0" />
-            </Indicateur_02>
-          </l_01>
-        </l_CO8.sin2>
-        <l_CO8.sin3 S_00="Traduire sous forme graphique l'architecture de la chaîne d'information identifiée pour un système et définir les paramètres d'utilisation du simulateur">
-          <l_01>
-            <Indicateur_00 S_intitule="La chaîne d'information est modélisée par des diagrammes adaptés (SysML)">
-              <d_ligne I_C="23" />
-              <d_poids F_C="8.333333" />
-              <d_revue I_C="0" />
-            </Indicateur_00>
-            <Indicateur_01 S_intitule="Le diagramme états transitions est programmé">
-              <d_ligne I_C="24" />
-              <d_poids F_C="8.333333" />
-              <d_revue I_C="0" />
-            </Indicateur_01>
-          </l_01>
-        </l_CO8.sin3>
-        <l_CO8.sin1 S_00="Rechercher et choisir une solution logicielle ou matérielle au regard de la définition d'un système">
-          <l_01>
-            <Indicateur_00 S_intitule="La définition du système est exprimée correctement">
-              <d_ligne I_C="17" />
-              <d_poids F_C="8.333333" />
-              <d_revue I_C="0" />
-            </Indicateur_00>
-            <Indicateur_01 S_intitule="Une liste non exhaustive de solutions pertinentes est établie ">
-              <d_ligne I_C="18" />
-              <d_poids F_C="8.333333" />
-              <d_revue I_C="0" />
-            </Indicateur_01>
-            <Indicateur_02 S_intitule="Le choix de la solution est argumenté">
-              <d_ligne I_C="19" />
-              <d_poids F_C="8.333333" />
-              <d_revue I_C="0" />
-            </Indicateur_02>
-          </l_01>
-        </l_CO8.sin1>
-        <l_CO8.sin4 S_00="Identifier les variables simulées et mesurées sur un système pour valider le choix d'une solution">
-          <l_01>
-            <Indicateur_00 S_intitule="Les variables caractéristiques du système simulé sont identifiées">
-              <d_ligne I_C="25" />
-              <d_poids F_C="8.333333" />
-              <d_revue I_C="0" />
-            </Indicateur_00>
-            <Indicateur_01 S_intitule="Les variables caractéristiques du système réel sont mesurables">
-              <d_ligne I_C="26" />
-              <d_poids F_C="8.333333" />
-              <d_revue I_C="0" />
-            </Indicateur_01>
-            <Indicateur_02 S_intitule="Les paramètres du système simulé sont affinés pour réduire les écarts avec le système réel">
-              <d_ligne I_C="27" />
-              <d_poids F_C="8.333333" />
-              <d_revue I_C="0" />
-            </Indicateur_02>
-            <Indicateur_03 S_intitule="Les conditions de simulation sont argumentées pour valider le choix d'une solution">
-              <d_ligne I_C="28" />
-              <d_poids F_C="8.333333" />
-              <d_revue I_C="0" />
-            </Indicateur_03>
-          </l_01>
-        </l_CO8.sin4>
-      </d_01>
-      <d_02 I_C="40" />
-    </l_O8>
-  </d_dicCompetences>
   <d_dicFonctions />
-  <d_dicSavoirs>
+  <d_dicoCompetences>
+    <Competences_S S_abrDiscipline="SIN" S_codeDiscipline="SII" S_nomDiscipline="STI2D - SIN" S_nomGenerique="Compétences" S_nomGeneriqueIndic="Indicateurs de performance">
+      <d_dicCompetences>
+        <l_O7 S_00="Imaginer une solution, répondre à un besoin">
+          <d_01>
+            <l_CO7.sin3 S_00="Exprimer le principe de fonctionnement d'un système à partir des diagrammes SysML pertinents. Repérer les constituants de la chaîne d'énergie et d'information">
+              <l_01>
+                <Indicateur_00 S_intitule="Le système est modélisé à l'aide de diagrammes conformes ">
+                  <d_ligne I_C="13" />
+                  <d_poids F_C="10.0" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="Les diagrammes comportementaux permettant d'exprimer le principe de fonctionnement sont correctement utilisés ">
+                  <d_ligne I_C="14" />
+                  <d_poids F_C="10.0" />
+                  <d_revue I_C="0" />
+                </Indicateur_01>
+                <Indicateur_02 S_intitule="Les constituants sont identifiés">
+                  <d_ligne I_C="15" />
+                  <d_poids F_C="10.0" />
+                  <d_revue I_C="0" />
+                </Indicateur_02>
+              </l_01>
+            </l_CO7.sin3>
+            <l_CO7.sin2 S_00="Décoder le cahier des charges fonctionnel décrivant le besoin exprimé, identifier la fonction définie par un besoin exprimé, faire des mesures pour caractériser cette fonction et conclure sur sa conformité">
+              <l_01>
+                <Indicateur_00 S_intitule="Les diagrammes Sysml utilisés sont bien interprétés">
+                  <d_ligne I_C="10" />
+                  <d_poids F_C="10.0" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="Une procédure pertinente est proposée et mise en œuvre">
+                  <d_ligne I_C="11" />
+                  <d_poids F_C="10.0" />
+                  <d_revue I_C="0" />
+                </Indicateur_01>
+                <Indicateur_02 S_intitule="Un rapport de conformité est rédigé">
+                  <d_ligne I_C="12" />
+                  <d_poids F_C="10.0" />
+                  <d_revue I_C="0" />
+                </Indicateur_02>
+              </l_01>
+            </l_CO7.sin2>
+            <l_CO7.sin1 S_00="Décoder la notice technique d'un système, vérifier la conformité du fonctionnement">
+              <l_01>
+                <Indicateur_00 S_intitule="L'interprétation de la notice du système permet de décrire une procédure">
+                  <d_ligne I_C="6" />
+                  <d_poids F_C="10.0" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="Le système est installé et paramétré">
+                  <d_ligne I_C="7" />
+                  <d_poids F_C="10.0" />
+                  <d_revue I_C="0" />
+                </Indicateur_01>
+                <Indicateur_02 S_intitule="Les mesures sont effectuées et comparées aux caractéristiques de la notice technique">
+                  <d_ligne I_C="8" />
+                  <d_poids F_C="10.0" />
+                  <d_revue I_C="0" />
+                </Indicateur_02>
+                <Indicateur_03 S_intitule="Un rapport de mise en œuvre et d'essais est rédigé">
+                  <d_ligne I_C="9" />
+                  <d_poids F_C="10.0" />
+                  <d_revue I_C="0" />
+                </Indicateur_03>
+              </l_01>
+            </l_CO7.sin1>
+          </d_01>
+          <d_02 I_C="40" />
+        </l_O7>
+        <l_SII S_00="SIN">
+          <l_01 />
+          <d_02 />
+          <d_03 />
+        </l_SII>
+        <l_O9 S_00="Gérer la vie d'un système">
+          <d_01>
+            <l_CO9.sin4 S_00="Rechercher et choisir de nouveaux constituants d'un système (ou d'un projet finalisé) au regard d'évolutions technologiques, socioéconomiques spécifiées dans un cahier des charges. Organiser le projet permettant de maquettiser la solution choisie">
+              <l_01>
+                <Indicateur_00 S_intitule="Les diagrammes comportementaux sont correctement mis à jour">
+                  <d_ligne I_C="41" />
+                  <d_poids F_C="7.142857" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="Des constituants sont choisis et justifiés">
+                  <d_ligne I_C="42" />
+                  <d_poids F_C="7.142857" />
+                  <d_revue I_C="0" />
+                </Indicateur_01>
+                <Indicateur_02 S_intitule="Le prototypage rapide de la solution est organisée">
+                  <d_ligne I_C="43" />
+                  <d_poids F_C="7.142857" />
+                  <d_revue I_C="0" />
+                </Indicateur_02>
+              </l_01>
+            </l_CO9.sin4>
+            <l_CO9.sin1 S_00="Utiliser les outils adaptés pour planifier un projet (diagramme de Gantt, chemin critique, données économiques, réunions de projet)">
+              <l_01>
+                <Indicateur_00 S_intitule="Le cahier des charges fonctionnel est analysé et reformulé">
+                  <d_ligne I_C="30" />
+                  <d_poids F_C="7.142857" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="Les données économiques sont identifiées">
+                  <d_ligne I_C="31" />
+                  <d_poids F_C="7.142857" />
+                  <d_revue I_C="0" />
+                </Indicateur_01>
+                <Indicateur_02 S_intitule="Les chemins critiques sont mis en évidence et les dates de réunions de projet sont fixées">
+                  <d_ligne I_C="32" />
+                  <d_poids F_C="7.142857" />
+                  <d_revue I_C="0" />
+                </Indicateur_02>
+              </l_01>
+            </l_CO9.sin1>
+            <l_CO9.sin3 S_00="Rechercher des évolutions de constituants dans le cadre d'une démarche de veille technologique, analyser la structure d'un système pour intervenir sur les constituants dans le cadre d'une opération de maintenance">
+              <l_01>
+                <Indicateur_00 S_intitule="Les procédures adaptées d'intervention sur les constituants sont proposées">
+                  <d_ligne I_C="38" />
+                  <d_poids F_C="7.142857" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="L'intervention de maintenance sur le système est planifiée et la continuité de service assurée">
+                  <d_ligne I_C="39" />
+                  <d_poids F_C="7.142857" />
+                  <d_revue I_C="0" />
+                </Indicateur_01>
+                <Indicateur_02 S_intitule="Le rapport d'intervention est établi">
+                  <d_ligne I_C="40" />
+                  <d_poids F_C="7.142857" />
+                  <d_revue I_C="0" />
+                </Indicateur_02>
+              </l_01>
+            </l_CO9.sin3>
+            <l_CO9.sin2 S_00="Installer, configurer et instrumenter un système réel. Mettre en oeuvre la chaîne d'acquisition puis acquérir, traiter, transmettre et restituer l'information">
+              <l_01>
+                <Indicateur_00 S_intitule="La notice du système est correctement interprétée">
+                  <d_ligne I_C="33" />
+                  <d_poids F_C="7.142857" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="Le système est installé et paramétré">
+                  <d_ligne I_C="34" />
+                  <d_poids F_C="7.142857" />
+                  <d_revue I_C="0" />
+                </Indicateur_01>
+                <Indicateur_02 S_intitule="Les grandeurs caractéristiques sont identifiées et les appareils de mesure sont adaptés">
+                  <d_ligne I_C="35" />
+                  <d_poids F_C="7.142857" />
+                  <d_revue I_C="0" />
+                </Indicateur_02>
+                <Indicateur_03 S_intitule="Les grandeurs sont acquises, traitées et transmises">
+                  <d_ligne I_C="36" />
+                  <d_poids F_C="7.142857" />
+                  <d_revue I_C="0" />
+                </Indicateur_03>
+                <Indicateur_04 S_intitule="Les contraintes temporelles et fréquentielles sont respectées, l'information est restituée">
+                  <d_ligne I_C="37" />
+                  <d_poids F_C="7.142857" />
+                  <d_revue I_C="0" />
+                </Indicateur_04>
+              </l_01>
+            </l_CO9.sin2>
+          </d_01>
+          <d_02 I_C="20" />
+        </l_O9>
+        <l_O8 S_00="Valider des solutions techniques">
+          <d_01>
+            <l_CO8.sin2 S_00="Etablir pour une fonction précédemment identifiée, un modèle de comportement à partir de mesures faites sur le sytème">
+              <l_01>
+                <Indicateur_00 S_intitule="Les mesures nécessaires sont effectuées">
+                  <d_ligne I_C="20" />
+                  <d_poids F_C="8.333333" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="Un modèle de comportement pertinent est établi">
+                  <d_ligne I_C="21" />
+                  <d_poids F_C="8.333333" />
+                  <d_revue I_C="0" />
+                </Indicateur_01>
+                <Indicateur_02 S_intitule="Les paramètres du  modèle sont renseignés pour limiter les écarts avec les mesures">
+                  <d_ligne I_C="22" />
+                  <d_poids F_C="8.333333" />
+                  <d_revue I_C="0" />
+                </Indicateur_02>
+              </l_01>
+            </l_CO8.sin2>
+            <l_CO8.sin3 S_00="Traduire sous forme graphique l'architecture de la chaîne d'information identifiée pour un système et définir les paramètres d'utilisation du simulateur">
+              <l_01>
+                <Indicateur_00 S_intitule="La chaîne d'information est modélisée par des diagrammes adaptés (SysML)">
+                  <d_ligne I_C="23" />
+                  <d_poids F_C="8.333333" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="Le diagramme états transitions est programmé">
+                  <d_ligne I_C="24" />
+                  <d_poids F_C="8.333333" />
+                  <d_revue I_C="0" />
+                </Indicateur_01>
+              </l_01>
+            </l_CO8.sin3>
+            <l_CO8.sin1 S_00="Rechercher et choisir une solution logicielle ou matérielle au regard de la définition d'un système">
+              <l_01>
+                <Indicateur_00 S_intitule="La définition du système est exprimée correctement">
+                  <d_ligne I_C="17" />
+                  <d_poids F_C="8.333333" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="Une liste non exhaustive de solutions pertinentes est établie ">
+                  <d_ligne I_C="18" />
+                  <d_poids F_C="8.333333" />
+                  <d_revue I_C="0" />
+                </Indicateur_01>
+                <Indicateur_02 S_intitule="Le choix de la solution est argumenté">
+                  <d_ligne I_C="19" />
+                  <d_poids F_C="8.333333" />
+                  <d_revue I_C="0" />
+                </Indicateur_02>
+              </l_01>
+            </l_CO8.sin1>
+            <l_CO8.sin4 S_00="Identifier les variables simulées et mesurées sur un système pour valider le choix d'une solution">
+              <l_01>
+                <Indicateur_00 S_intitule="Les variables caractéristiques du système simulé sont identifiées">
+                  <d_ligne I_C="25" />
+                  <d_poids F_C="8.333333" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="Les variables caractéristiques du système réel sont mesurables">
+                  <d_ligne I_C="26" />
+                  <d_poids F_C="8.333333" />
+                  <d_revue I_C="0" />
+                </Indicateur_01>
+                <Indicateur_02 S_intitule="Les paramètres du système simulé sont affinés pour réduire les écarts avec le système réel">
+                  <d_ligne I_C="27" />
+                  <d_poids F_C="8.333333" />
+                  <d_revue I_C="0" />
+                </Indicateur_02>
+                <Indicateur_03 S_intitule="Les conditions de simulation sont argumentées pour valider le choix d'une solution">
+                  <d_ligne I_C="28" />
+                  <d_poids F_C="8.333333" />
+                  <d_revue I_C="0" />
+                </Indicateur_03>
+              </l_01>
+            </l_CO8.sin4>
+          </d_01>
+          <d_02 I_C="40" />
+        </l_O8>
+      </d_dicCompetences>
+      <l_indicateurs />
+    </Competences_S>
+  </d_dicoCompetences>
+  <d_dicoSavoirs>
     <Savoirs_S B_obj="True" B_pre="True" S_abrDiscipline="SIN" S_codeDiscipline="SII" S_nomDiscipline="STI2D - SIN" S_nomGenerique="Savoirs">
       <d_dicSavoirs>
         <l_1 S_00="Projet technologique">
@@ -312,7 +322,7 @@
         </l_2>
       </d_dicSavoirs>
     </Savoirs_S>
-  </d_dicSavoirs>
+  </d_dicoSavoirs>
   <d_effectifs>
     <l_C S_00="Classe entière" S_01="Classe entière" />
     <l_E S_00="Etude ou Projet" S_01="Etude et Projet" />
@@ -334,6 +344,7 @@
     <l_TD S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" />
   </d_effectifsSeance>
   <d_horsClasse />
+  <l_listCompetences S_00="S" />
   <l_listSavoirs S_00="S" />
   <l_listeDemarches S_00="I" S_01="R" S_02="P" />
   <l_listeEffectifs S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />

@@ -654,42 +654,57 @@ def Draw(ctx, seq, mouchard = False):
     # Codes objectifs
     #
     lstTexteC = []
+    lstCodesC = []
+    lstCoulC = []
     ref = seq.GetReferentiel()
     ref_tc = None
     if ref.tr_com != []:
         ref_tc = REFERENTIELS[ref.tr_com[0]]
     for c in seq.obj["C"].competences:
-#        print "   ", c
+        typ, cod = c[0], c[1:]
+        if typ == "B" and ref.tr_com != []: # B = tronc commun --> référentiel
+            comp = ref_tc.dicoCompetences["S"]
+        else:
+            if typ in ref.dicoCompetences.keys():
+                comp = ref.dicoCompetences[typ]
+            elif ref_tc and typ in ref_tc.dicoCompetences.keys():
+                comp = ref_tc.dicoCompetences[typ]
+                
+        disc = comp.codeDiscipline
+        lstTexteC.append(comp.getCompetence(cod))
+        lstCodesC.append(comp.abrDiscipline + cod)
+        lstCoulC.append(constantes.COUL_DISCIPLINES[disc])
         
-        comp = ref.getCompetence(c)
-        if comp is None and ref_tc is not None:
-            comp = ref_tc.getCompetence(c)
-            
-        if comp is not None:
-            lstTexteC.append(comp[0])
+        
+#        print "   ", c
+#        
+#        comp = ref.getCompetence(c)
+#        if comp is None and ref_tc is not None:
+#            comp = ref_tc.getCompetence(c)
+#            
+#        if comp is not None:
+#            lstTexteC.append(comp[0])
     
             
 #    print "lstTexteC", lstTexteC
 
     lstTexteS = []
-    lstCodes = []
-    lstCoul = []
-    ref = seq.GetReferentiel()
-    ref_tc = REFERENTIELS[ref.tr_com[0]]
+    lstCodesS = []
+    lstCoulS = []
     for c in seq.obj["S"].savoirs:
         typ, cod = c[0], c[1:]
         if typ == "B" and ref.tr_com != []: # B = tronc commun --> référentiel
-            savoir = ref_tc.dicSavoirs["S"]
+            savoir = ref_tc.dicoSavoirs["S"]
         else:
-            if typ in ref.dicSavoirs.keys():
-                savoir = ref.dicSavoirs[typ]
-            elif typ in ref_tc.dicSavoirs.keys():
-                savoir = ref_tc.dicSavoirs[typ]
+            if typ in ref.dicoSavoirs.keys():
+                savoir = ref.dicoSavoirs[typ]
+            elif ref_tc and typ in ref_tc.dicoSavoirs.keys():
+                savoir = ref_tc.dicoSavoirs[typ]
                 
         disc = savoir.codeDiscipline
         lstTexteS.append(savoir.getSavoir(cod))
-        lstCodes.append(savoir.abrDiscipline + cod)
-        lstCoul.append(constantes.COUL_DISCIPLINES[disc])
+        lstCodesS.append(savoir.abrDiscipline + cod)
+        lstCoulS.append(constantes.COUL_DISCIPLINES[disc])
         
         
         
@@ -728,18 +743,19 @@ def Draw(ctx, seq, mouchard = False):
         
         
         ctx.set_source_rgba (COUL_COMPETENCES[0], COUL_COMPETENCES[1], COUL_COMPETENCES[2], COUL_COMPETENCES[3])
-        r = liste_code_texte(ctx, seq.obj["C"].competences, lstTexteC, 
+        r = liste_code_texte(ctx, lstCodesC, lstTexteC, 
                              x0, y0, rect_width, hC, 
-                             0.05*rect_width, 0.1, va = 'c') 
+                             0.05*rect_width, 0.1, 
+                             lstCoul = lstCoulC, va = 'c') 
         seq.obj["C"].pts_caract = getPts(r)
         
         ctx.set_source_rgba (0.0, 0.0, 0.0, 1.0)
 #        r = liste_code_texte(ctx, [s[1:] for s in seq.obj["S"].savoirs], 
 #                             lstTexteS, x0, y0+hC, rect_width, hS, 0.008)
-        r = liste_code_texte(ctx, lstCodes, lstTexteS, 
+        r = liste_code_texte(ctx, lstCodesS, lstTexteS, 
                              x0, y0+hC, rect_width, hS, 
                              0.05*rect_width, 0.1, 
-                             lstCoul = lstCoul, va = 'c')
+                             lstCoul = lstCoulS, va = 'c')
         seq.obj["S"].pts_caract = getPts(r)
     
     seq.obj["C"].rect = [(x0, y0, rect_width, hC)]

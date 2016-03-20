@@ -1,17 +1,18 @@
-<Referentiel B_CI_BO="False" B_CI_cible="False" B_domaines="False" S_AnneeDebut="Sup1" S_Code="STS_SN_EC" S_Famille="STS" S_FichierLogo="Logo_STS_SN_EC.jpg" S_abrevCI="Th " S_nomCI="Thèmes" S_nomFonctions="Fonctions" S_nomTaches="Tâches">
+<Referentiel B_CI_BO="False" B_CI_cible="False" B_domaines="True" S_AnneeDebut="Sec5" S_Code="EE-CIT" S_Famille="2nde" S_FichierLogo="logo_si_cit_2.jpg" S_abrevCI="Th " S_nomCI="Thèmes" S_nomFonctions="Fonctions" S_nomTaches="Tâches">
   <l_BO_URL>
-    <l_00 S_00="Programme" S_01="http://eduscol.education.fr/sti/sites/eduscol.education.fr.sti/files/textes/formations-bts-bts-systemes-numeriques/3321-referentiel-bts-systemes-numeriques.pdf" />
+    <l_00 S_00="Programme SI" S_01="http://media.education.gouv.fr/file/special_4/74/7/sciences_ingenieur_143747.pdf" />
+    <l_01 S_00="Programme CIT" S_01="http://media.education.gouv.fr/file/special_4/75/1/creation_innovation_technologiques_143751.pdf" />
   </l_BO_URL>
-  <l_BO_dossier S_00="STS/SN" />
-  <l_CentresInterets S_00="Mise en service d’un système d’un ouvrage ou d’un équipement" S_01="La distribution de l’énergie électrique" S_02="Comportement des charges mécaniques" S_03="Les différents procédés de transformation de l’énergie" S_04="La réversibilité énergétique" S_05="Dimensionnement énergétique dans les systèmes autonomes et embarqués" S_06="La qualité de l’énergie électrique" S_07="La gestion des coûts" S_08="Asservissement et régulation" S_09="Les équipements communicants" />
-  <l_Enseignement S_00="STS-SN-EC" S_01="BTS - Systèmes Numériques" S_02="STS" />
-  <d_aColNon B_S1="True" B_S2="True" />
+  <l_BO_dossier S_00="2nde" />
+  <l_CentresInterets S_00="La mobilité" S_01="Le sport" S_02="La santé" S_03="L'habitat" S_04="L'énergie" S_05="La communication" S_06="La culture et les loisirs" S_07="Les infrastructures" S_08="La bionique" S_09="La dématérialisation des biens et des services" />
+  <l_Enseignement S_00="EE-CIT" S_01="Enseignement d'exploration 2nde - CIT (beta)--Conception et Innovation Technologique" S_02="2nde" />
+  <d_aColNon B_C="True" />
   <d_activites>
     <l_ED S_00="Etude de dossier" S_01="Activité d'étude de dossier" />
     <l_P S_00="Projet" S_01="Activité de projet" />
     <l_AP S_00="Activité pratique" S_01="Activité pratique" />
   </d_activites>
-  <d_compImposees B_R2="False" B_R3="False" B_S="False" B_S1="False" B_S2="False" />
+  <d_compImposees B_C="False" B_S1="False" B_S2="False" />
   <d_demarcheSeance>
     <l_ED S_00="I" S_01="R" />
     <l_P S_00="I" S_01="R" S_02="P" />
@@ -24,454 +25,84 @@
   </d_demarches>
   <d_dicFonctions />
   <d_dicoCompetences>
-    <Competences_S S_abrDiscipline="GE" S_codeDiscipline="SII" S_nomDiscipline="Génie Électrique" S_nomGenerique="Compétences" S_nomGeneriqueIndic="Indicateurs de performance">
+    <Competences_S S_abrDiscipline="SI" S_codeDiscipline="SII" S_nomDiscipline="Sciences de l'Ingénieur" S_nomGenerique="Compétences" S_nomGeneriqueIndic="Indicateurs de performance">
       <d_dicCompetences>
-        <l_C7.1 S_00="diagnostiquer les causes d’un dysfonctionnement">
+        <l_C3 S_00="mettre en œuvre une démarche de créativité">
           <l_01>
-            <Indicateur_00 S_intitule="Les paramètres sont identifiés.">
-              <d_ligne I_S2="16" />
-              <d_poids F_S2="25.0" />
-              <d_revue I_S2="0" />
+            <Indicateur_00 S_intitule="Les hypothèses sont formulées, hiérarchisées, sélectionnées, explicitées, contextualisées">
+              <d_ligne I_C="16" />
+              <d_poids F_C="33.333333" />
+              <d_revue I_C="0" />
             </Indicateur_00>
-            <Indicateur_01 S_intitule="L’état de fonctionnement de l’appareil est identifié.">
-              <d_ligne I_S2="17" />
-              <d_poids F_S2="25.0" />
-              <d_revue I_S2="0" />
+            <Indicateur_01 S_intitule="Une ou des méthodes de créativité sont mise en œuvre">
+              <d_ligne I_C="17" />
+              <d_poids F_C="33.333333" />
+              <d_revue I_C="0" />
             </Indicateur_01>
-            <Indicateur_02 S_intitule="Un diagnostic est établi.">
-              <d_ligne I_S2="18" />
-              <d_poids F_S2="25.0" />
-              <d_revue I_S2="0" />
+            <Indicateur_02 S_intitule="Une solution innovante est matérialisée">
+              <d_ligne I_C="18" />
+              <d_poids F_C="33.333333" />
+              <d_revue I_C="0" />
             </Indicateur_02>
-            <Indicateur_03 S_intitule="Les composants défectueux sont identifiés et localisés.">
-              <d_ligne I_S2="19" />
-              <d_poids F_S2="25.0" />
-              <d_revue I_S2="0" />
-            </Indicateur_03>
           </l_01>
-          <d_02 I_S2="10" />
-        </l_C7.1>
-        <l_C7.2 S_00=" proposer des corrections ou des améliorations">
+          <d_02 I_C="20" />
+        </l_C3>
+        <l_C2 S_00="communiquer ses intentions">
           <l_01>
-            <Indicateur_00 S_intitule="Une stratégie pour le maintien en condition opérationnelle est mise en place">
-              <d_ligne />
-              <d_poids />
-              <d_revue />
+            <Indicateur_00 S_intitule="Une réflexion, un principe, une idée, une solution technique sont exprimées">
+              <d_ligne I_C="12" />
+              <d_poids F_C="50.0" />
+              <d_revue I_C="0" />
             </Indicateur_00>
-            <Indicateur_01 S_intitule="Des correctifs sont proposés">
-              <d_ligne />
-              <d_poids />
-              <d_revue />
+            <Indicateur_01 S_intitule="La pensée est exprimée à l'aide d'outils de description adaptés, manuels ou numériques">
+              <d_ligne I_C="13" />
+              <d_poids F_C="50.0" />
+              <d_revue I_C="0" />
             </Indicateur_01>
           </l_01>
-          <d_02 />
-        </l_C7.2>
-        <l_C7.3 S_00="dépanner une installation matérielle et/ou logicielle">
-          <l_01>
-            <Indicateur_00 S_intitule="La zone d’intervention est consignée. Les personnes concernées sont averties.">
-              <d_ligne I_S2="21" />
-              <d_poids F_S2="25.0" />
-              <d_revue I_S2="0" />
-            </Indicateur_00>
-            <Indicateur_01 S_intitule="Les composants défectueux sont remplacés et testés.">
-              <d_ligne I_S2="22" />
-              <d_poids F_S2="25.0" />
-              <d_revue I_S2="0" />
-            </Indicateur_01>
-            <Indicateur_02 S_intitule="L’installation est prête à fonctionner normalement.">
-              <d_ligne I_S2="23" />
-              <d_poids F_S2="25.0" />
-              <d_revue I_S2="0" />
-            </Indicateur_02>
-            <Indicateur_03 S_intitule="Les services concernés sont avertis du bon fonctionnement de l’installation.">
-              <d_ligne I_S2="24" />
-              <d_poids F_S2="25.0" />
-              <d_revue I_S2="0" />
-            </Indicateur_03>
-          </l_01>
-          <d_02 I_S2="10" />
-        </l_C7.3>
-        <l_C6.1 S_00="superviser le fonc--tionnement d’un produit matériel/logiciel ">
-          <l_01>
-            <Indicateur_00 S_intitule="Les informations à enregistrer et les alertes à générer sont identifiées et pertinentes.">
-              <d_ligne I_S2="6" />
-              <d_poids F_S2="33.333333" />
-              <d_revue I_S2="0" />
-            </Indicateur_00>
-            <Indicateur_01 S_intitule="L’outil de supervision est configuré pour générer les fichiers de journalisation, de supervision et les alertes.">
-              <d_ligne I_S2="7" />
-              <d_poids F_S2="33.333333" />
-              <d_revue I_S2="0" />
-            </Indicateur_01>
-            <Indicateur_02 S_intitule="Les informations ciblées sont localisées dans les enregistrements des fichiers de supervision.">
-              <d_ligne />
-              <d_poids />
-              <d_revue />
-            </Indicateur_02>
-            <Indicateur_03 S_intitule="Le mécanisme producteur communique avec le système récepteur.">
-              <d_ligne I_S2="9" />
-              <d_poids F_S2="33.333333" />
-              <d_revue I_S2="0" />
-            </Indicateur_03>
-          </l_01>
-          <d_02 I_S2="40" />
-        </l_C6.1>
-        <l_C6.2 S_00="analyser les compte rendus d’exploitation ">
-          <l_01>
-            <Indicateur_00 S_intitule="Les informations utiles à l’exploitation sont accessibles dans le système récepteur.  Les informations issues de l’outil de supervision sont synthétisées et analysées.">
-              <d_ligne I_S2="11" />
-              <d_poids F_S2="25.0" />
-              <d_revue I_S2="0" />
-            </Indicateur_00>
-            <Indicateur_01 S_intitule="Les informations issues de l’outil de supervision relatives aux défauts sont identifiées.">
-              <d_ligne I_S2="12" />
-              <d_poids F_S2="25.0" />
-              <d_revue I_S2="0" />
-            </Indicateur_01>
-            <Indicateur_02 S_intitule="Les causes des défauts sont identifiées et une proposition de solution est avancée.">
-              <d_ligne I_S2="13" />
-              <d_poids F_S2="25.0" />
-              <d_revue I_S2="0" />
-            </Indicateur_02>
-            <Indicateur_03 S_intitule="Le document produit permet une maintenance préventive et curative du système.">
-              <d_ligne I_S2="14" />
-              <d_poids F_S2="25.0" />
-              <d_revue I_S2="0" />
-            </Indicateur_03>
-          </l_01>
-          <d_02 I_S2="20" />
-        </l_C6.2>
-        <l_SII S_00="GE">
+          <d_02 I_C="20" />
+        </l_C2>
+        <l_SII S_00="SI">
           <l_01 />
           <d_02 />
           <d_03 />
         </l_SII>
-        <l_C1.6 S_00="collecter des données commerciales ">
-          <l_01 />
-          <d_02 />
-        </l_C1.6>
-        <l_C1.4 S_00=" s'entretenir d'une problématique professionnelle ">
-          <l_01 />
-          <d_02 />
-        </l_C1.4>
-        <l_C1.5 S_00=" analyser l'expression d'un besoin client ">
-          <l_01 />
-          <d_02 />
-        </l_C1.5>
-        <l_C1.2 S_00=" présenter des informat--ions à des interlocuteurs identifiés ">
-          <l_01 />
-          <d_02 />
-        </l_C1.2>
-        <l_C1.3 S_00="assister des utilisateurs ">
-          <l_01 />
-          <d_02 />
-        </l_C1.3>
-        <l_C1.1 S_00="rechercher et structurer des informations techniques">
-          <l_01 />
-          <d_02 />
-        </l_C1.1>
-        <l_C3.4 S_00=" valider le choix d’une architecture matérielle/logicielle">
-          <l_01 />
-          <d_02 />
-        </l_C3.4>
-        <l_C3.5 S_00=" contribuer à la définition des éléments de recette au regard des contraintes--du cahier des charges ">
+        <l_C1 S_00="Acquérir les bases d'une culture de l'innovation technologique">
           <l_01>
-            <Indicateur_00 S_intitule=" contribuer à la définition des éléments de recette au regard des contraintes--du cahier des charges ">
-              <d_ligne I_R2="0" />
-              <d_poids F_R2="100.0" />
-              <d_revue I_R2="0" />
+            <Indicateur_00 S_intitule="Les évolutions technologiques sont reliées aux innovations qui marquent des ruptures dans les solutions techniques">
+              <d_ligne I_C="6" />
+              <d_poids F_C="20.0" />
+              <d_revue I_C="0" />
             </Indicateur_00>
-          </l_01>
-          <d_02 I_R2="5" />
-        </l_C3.5>
-        <l_C3.6 S_00=" recenser les solutions existantes répondant au cahier des charges">
-          <l_01>
-            <Indicateur_00 S_intitule=" recenser les solutions existantes répondant au cahier des charges">
-              <d_ligne I_R2="0" />
-              <d_poids F_R2="100.0" />
-              <d_revue I_R2="0" />
-            </Indicateur_00>
-          </l_01>
-          <d_02 I_R2="5" />
-        </l_C3.6>
-        <l_C3.7 S_00=" contribuer à la modélisation de tout ou partie d’un produit ">
-          <l_01 />
-          <d_02 />
-        </l_C3.7>
-        <l_C3.1 S_00="analyser un cahier des charges ">
-          <l_01>
-            <Indicateur_00 S_intitule="analyser un cahier des charges ">
-              <d_ligne I_R2="0" />
-              <d_poids F_R2="100.0" />
-              <d_revue I_R2="0" />
-            </Indicateur_00>
-          </l_01>
-          <d_02 I_R2="5" />
-        </l_C3.1>
-        <l_C3.2 S_00="analyser et compléter un dossier de spécifications techniques ">
-          <l_01 />
-          <d_02 />
-        </l_C3.2>
-        <l_C3.3 S_00="définir l’architecture--globale d’un prototype ou d’un système ">
-          <l_01>
-            <Indicateur_00 S_intitule="définir l’architecture--globale d’un prototype ou d’un système ">
-              <d_ligne I_R2="0" />
-              <d_poids F_R2="100.0" />
-              <d_revue I_R2="0" />
-            </Indicateur_00>
-          </l_01>
-          <d_02 I_R2="5" />
-        </l_C3.3>
-        <l_C3.8 S_00=" élaborer le dossier de définition de la solution technique retenue">
-          <l_01>
-            <Indicateur_00 S_intitule=" élaborer le dossier de définition de la solution technique retenue">
-              <d_ligne I_R2="0" />
-              <d_poids F_R2="100.0" />
-              <d_revue I_R2="0" />
-            </Indicateur_00>
-          </l_01>
-          <d_02 I_R2="5" />
-        </l_C3.8>
-        <l_C3.9 S_00=" valider une fonction du système à partir d’une maquette réelle ">
-          <l_01>
-            <Indicateur_00 S_intitule=" valider une fonction du système à partir d’une maquette réelle ">
-              <d_ligne I_R2="0" />
-              <d_poids F_R2="100.0" />
-              <d_revue I_R2="0" />
-            </Indicateur_00>
-          </l_01>
-          <d_02 I_R2="5" />
-        </l_C3.9>
-        <l_C7.4 S_00="assurer la traçabilité">
-          <l_01>
-            <Indicateur_00 S_intitule="Le rapport d’intervention est rédigé.">
-              <d_ligne I_S2="26" />
-              <d_poids F_S2="50.0" />
-              <d_revue I_S2="0" />
-            </Indicateur_00>
-            <Indicateur_01 S_intitule="La base de données est mise à jour.">
-              <d_ligne I_S2="27" />
-              <d_poids F_S2="50.0" />
-              <d_revue I_S2="0" />
+            <Indicateur_01 S_intitule="Le vocabulaire spécifique à l'innovation et à la créativité est utilisé">
+              <d_ligne I_C="7" />
+              <d_poids F_C="20.0" />
+              <d_revue I_C="0" />
             </Indicateur_01>
-          </l_01>
-          <d_02 I_S2="10" />
-        </l_C7.4>
-        <l_C5.2 S_00="mettre en œuvre une solution matérielle/logicielle en situation">
-          <l_01>
-            <Indicateur_00 S_intitule="Les contraintes liées au client (horaires, nuisances sonores, qualité de la relation …) sont respectées.">
-              <d_ligne I_S1="11" />
-              <d_poids F_S1="25.0" />
-              <d_revue I_S1="0" />
-            </Indicateur_00>
-            <Indicateur_01 S_intitule="Les normes métier et les procédures sont respectées.">
-              <d_ligne I_S1="12" />
-              <d_poids F_S1="25.0" />
-              <d_revue I_S1="0" />
-            </Indicateur_01>
-            <Indicateur_02 S_intitule="Les résultats de test sont conformes aux spécifications des procédures d'installation.">
-              <d_ligne I_S1="13" />
-              <d_poids F_S1="25.0" />
-              <d_revue I_S1="0" />
+            <Indicateur_02 S_intitule="Les principes qui régissent la propriété intellectuelle, la normalisation et l'intelligence économique sont identifiés">
+              <d_ligne I_C="8" />
+              <d_poids F_C="20.0" />
+              <d_revue I_C="0" />
             </Indicateur_02>
-            <Indicateur_03 S_intitule="Le système ou le service est conforme aux spécifications du cahier des charges">
-              <d_ligne I_S1="14" />
-              <d_poids F_S1="25.0" />
-              <d_revue I_S1="0" />
+            <Indicateur_03 S_intitule="L'analyse du  cycle de vie d'un produit est réalisée">
+              <d_ligne I_C="9" />
+              <d_poids F_C="20.0" />
+              <d_revue I_C="0" />
             </Indicateur_03>
+            <Indicateur_04 S_intitule="L'analyse de l'impact environnemental d'un objet et de ses constituants est réalisée">
+              <d_ligne I_C="10" />
+              <d_poids F_C="20.0" />
+              <d_revue I_C="0" />
+            </Indicateur_04>
           </l_01>
-          <d_02 I_S1="40" />
-        </l_C5.2>
-        <l_C5.3 S_00="effectuer la r--ecette d’un produit avec le client ">
-          <l_01>
-            <Indicateur_00 S_intitule="La fiche recette est conforme aux spécifications du cahier des charges.">
-              <d_ligne I_S1="16" />
-              <d_poids F_S1="25.0" />
-              <d_revue I_S1="0" />
-            </Indicateur_00>
-            <Indicateur_01 S_intitule="La fiche de recette est suivie, les remarques éventuelles sont prises en compte.">
-              <d_ligne I_S1="17" />
-              <d_poids F_S1="25.0" />
-              <d_revue I_S1="0" />
-            </Indicateur_01>
-            <Indicateur_02 S_intitule="Les documents (mise en route, exploitation et maintenance) sont remis au client.">
-              <d_ligne I_S1="18" />
-              <d_poids F_S1="25.0" />
-              <d_revue I_S1="0" />
-            </Indicateur_02>
-            <Indicateur_03 S_intitule="Le système ou le service fonctionne.">
-              <d_ligne I_S1="19" />
-              <d_poids F_S1="25.0" />
-              <d_revue I_S1="0" />
-            </Indicateur_03>
-          </l_01>
-          <d_02 I_S1="40" />
-        </l_C5.3>
-        <l_C5.1 S_00=" préparer la solution et le plan d’action ">
-          <l_01>
-            <Indicateur_00 S_intitule="L'équipe est constituée et les tâches professionnelles sont attribuées.">
-              <d_ligne I_S1="6" />
-              <d_poids F_S1="25.0" />
-              <d_revue I_S1="0" />
-            </Indicateur_00>
-            <Indicateur_01 S_intitule="Le plan d'action est traduit dans un diagramme de Gantt et indique les jalons.">
-              <d_ligne I_S1="7" />
-              <d_poids F_S1="25.0" />
-              <d_revue I_S1="0" />
-            </Indicateur_01>
-            <Indicateur_02 S_intitule="Le matériel est préparé pour mettre en œuvre la solution.">
-              <d_ligne I_S1="8" />
-              <d_poids F_S1="25.0" />
-              <d_revue I_S1="0" />
-            </Indicateur_02>
-            <Indicateur_03 S_intitule="La procédure d’installation sur site est rédigée.">
-              <d_ligne I_S1="9" />
-              <d_poids F_S1="25.0" />
-              <d_revue I_S1="0" />
-            </Indicateur_03>
-          </l_01>
-          <d_02 I_S1="20" />
-        </l_C5.1>
-        <l_C3.10 S_00=" réaliser la conception dé--taillée d’un module matériel et/ou logiciel ">
-          <l_01>
-            <Indicateur_00 S_intitule=" réaliser la conception dé--taillée d’un module matériel et/ou logiciel ">
-              <d_ligne I_R2="0" />
-              <d_poids F_R2="100.0" />
-              <d_revue I_R2="0" />
-            </Indicateur_00>
-          </l_01>
-          <d_02 I_R2="5" />
-        </l_C3.10>
-        <l_P S_00="Le technicien participe à la tâche mais n'en a pas la maîtrise. Il doit néanmoins comprendre son fondement et apporter ses compétences à l'équipe qui en a la charge.">
-          <l_01 />
-          <d_02 />
-        </l_P>
-        <l_C2.1 S_00="maintenir les informations">
-          <l_01>
-            <Indicateur_00 S_intitule="maintenir les informations">
-              <d_ligne I_R2="0" />
-              <d_poids F_R2="100.0" />
-              <d_revue I_R2="0" />
-            </Indicateur_00>
-          </l_01>
-          <d_02 I_R2="5" />
-        </l_C2.1>
-        <l_C2.3 S_00="organiser et/ou respecter la planification d'un projet">
-          <l_01>
-            <Indicateur_00 S_intitule="organiser et/ou respecter la planification d'un projet">
-              <d_ligne I_R2="0" />
-              <d_poids F_R2="100.0" />
-              <d_revue I_R2="0" />
-            </Indicateur_00>
-          </l_01>
-          <d_02 I_R2="5" />
-        </l_C2.3>
-        <l_C2.2 S_00="formaliser l’expression d’un besoin">
-          <l_01>
-            <Indicateur_00 S_intitule="formaliser l’expression d’un besoin">
-              <d_ligne I_R2="0" />
-              <d_poids F_R2="100.0" />
-              <d_revue I_R2="0" />
-            </Indicateur_00>
-          </l_01>
-          <d_02 I_R2="5" />
-        </l_C2.2>
-        <l_C2.5 S_00=" travailler en équipe ">
-          <l_01>
-            <Indicateur_00 S_intitule=" travailler en équipe ">
-              <d_ligne I_R2="0" />
-              <d_poids F_R2="100.0" />
-              <d_revue I_R2="0" />
-            </Indicateur_00>
-          </l_01>
-          <d_02 I_R2="5" />
-        </l_C2.5>
-        <l_C2.4 S_00="assumer le rôle total ou partiel de chef de projet ">
-          <l_01>
-            <Indicateur_00 S_intitule="assumer le rôle total ou partiel de chef de projet ">
-              <d_ligne I_R2="0" />
-              <d_poids F_R2="100.0" />
-              <d_revue I_R2="0" />
-            </Indicateur_00>
-          </l_01>
-          <d_02 I_R2="5" />
-        </l_C2.4>
-        <l_C4.7 S_00=" documenter une réalisation matérielle et/ou logicielle">
-          <l_01>
-            <Indicateur_00 S_intitule=" documenter une réalisation matérielle et/ou logicielle">
-              <d_ligne I_R2="0" />
-              <d_poids F_R2="100.0" />
-              <d_revue I_R2="0" />
-            </Indicateur_00>
-          </l_01>
-          <d_02 I_R2="5" />
-        </l_C4.7>
-        <l_C4.6 S_00=" produire les documents de fabrication d’un sous ensemble">
-          <l_01>
-            <Indicateur_00 S_intitule=" produire les documents de fabrication d’un sous ensemble">
-              <d_ligne I_R2="0" />
-              <d_poids F_R2="100.0" />
-              <d_revue I_R2="0" />
-            </Indicateur_00>
-          </l_01>
-          <d_02 I_R2="5" />
-        </l_C4.6>
-        <l_C4.5 S_00=" tester et valider--un module logiciel et matériel ">
-          <l_01>
-            <Indicateur_00 S_intitule=" tester et valider--un module logiciel et matériel ">
-              <d_ligne I_R2="0" />
-              <d_poids F_R2="100.0" />
-              <d_revue I_R2="0" />
-            </Indicateur_00>
-          </l_01>
-          <d_02 I_R2="5" />
-        </l_C4.5>
-        <l_C4.4 S_00=" fabriquer un sous-ensemble">
-          <l_01>
-            <Indicateur_00 S_intitule=" fabriquer un sous-ensemble">
-              <d_ligne I_R2="0" />
-              <d_poids F_R2="100.0" />
-              <d_revue I_R2="0" />
-            </Indicateur_00>
-          </l_01>
-          <d_02 I_R2="5" />
-        </l_C4.4>
-        <l_C4.3 S_00=" adapter et/ou configurer une structure logicielle">
-          <l_01>
-            <Indicateur_00 S_intitule=" adapter et/ou configurer une structure logicielle">
-              <d_ligne I_R2="0" />
-              <d_poids F_R2="100.0" />
-              <d_revue I_R2="0" />
-            </Indicateur_00>
-          </l_01>
-          <d_02 I_R2="5" />
-        </l_C4.3>
-        <l_C4.2 S_00="adapter et/ou configurer un matériel">
-          <l_01>
-            <Indicateur_00 S_intitule="adapter et/ou configurer un matériel">
-              <d_ligne I_R2="0" />
-              <d_poids F_R2="100.0" />
-              <d_revue I_R2="0" />
-            </Indicateur_00>
-          </l_01>
-          <d_02 I_R2="5" />
-        </l_C4.2>
-        <l_C4.1 S_00=" câbler et/ou intégrer un matériel ">
-          <l_01>
-            <Indicateur_00 S_intitule=" câbler et/ou intégrer un matériel ">
-              <d_ligne I_R2="0" />
-              <d_poids F_R2="100.0" />
-              <d_revue I_R2="0" />
-            </Indicateur_00>
-          </l_01>
-          <d_02 I_R2="5" />
-        </l_C4.1>
+          <d_02 I_C="20" />
+        </l_C1>
       </d_dicCompetences>
       <l_indicateurs />
     </Competences_S>
   </d_dicoCompetences>
   <d_dicoSavoirs>
-    <Savoirs_P B_obj="True" B_pre="True" S_abrDiscipline="SA" S_codeDiscipline="Phy" S_nomDiscipline="Sciences Appliquées" S_nomGenerique="Savoirs">
+    <Savoirs_P B_obj="True" B_pre="True" S_abrDiscipline="P-C" S_codeDiscipline="Phy" S_nomDiscipline="Physique - Chimie" S_nomGenerique="Savoirs">
       <d_dicSavoirs>
         <l_A S_00="Sciences appliquées à l’électrotechnique :">
           <d_01>
@@ -757,7 +388,7 @@
         </l_H>
       </d_dicSavoirs>
     </Savoirs_P>
-    <Savoirs_S B_obj="True" B_pre="True" S_abrDiscipline="GE" S_codeDiscipline="SII" S_nomDiscipline="Génie Électrique" S_nomGenerique="Savoirs">
+    <Savoirs_S B_obj="True" B_pre="True" S_abrDiscipline="SI" S_codeDiscipline="SII" S_nomDiscipline="Sciences de l'Ingénieur" S_nomGenerique="Savoirs">
       <d_dicSavoirs>
         <l_1 S_00="La conversion de l’énergie électrique dans les applications :">
           <d_01>
@@ -1118,352 +749,198 @@
     </Savoirs_S>
     <Savoirs_M B_obj="False" B_pre="True" S_abrDiscipline="Math" S_codeDiscipline="Mat" S_nomDiscipline="Mathématiques" S_nomGenerique="Savoirs">
       <d_dicSavoirs>
-        <l_10 S_00="Nombre complexes.">
+        <l_1 S_00="Fonctions">
           <d_01>
-            <l_10.1 S_00="Forme algébrique et représentation géométrique">
+            <l_1.4 S_00="Equations">
               <d_01>
-                <l_10.1.1 S_00="Nombres a + ib avec i2 = −1. Égalité, conjugué, somme, produit, quotient.">
+                <l_1.4.1 S_00="Résolution graphique et algébrique d'équations.">
                   <d_01 />
-                </l_10.1.1>
-                <l_10.1.2 S_00="Équations du second degré à coefficients réels.">
-                  <d_01 />
-                </l_10.1.2>
-                <l_10.1.3 S_00="Représentation géométrique.">
-                  <d_01 />
-                </l_10.1.3>
-                <l_10.1.4 S_00="Ensemble de points dont l’affixe a une partie réelle ou imaginaire donnée.">
-                  <d_01 />
-                </l_10.1.4>
+                </l_1.4.1>
               </d_01>
-            </l_10.1>
-            <l_10.3 S_00="Transformations">
+            </l_1.4>
+            <l_1.5 S_00="Fonctions de référence">
               <d_01>
-                <l_10.3.1 S_00="Exemples de transformations géométriques d’écritures complexes suivantes : z -&gt; z + b , z -&gt; az , z -&gt; z et z -&gt; z/1 -&gt; , où a et b sont des nombres réels.">
-                  <l_01 S_00=" " />
-                </l_10.3.1>
+                <l_1.5.1 S_00="Fonctions linéaires et fonctions affines">
+                  <d_01 />
+                </l_1.5.1>
+                <l_1.5.2 S_00="Variations de la fonction carré, de la fonction inverse.">
+                  <d_01 />
+                </l_1.5.2>
               </d_01>
-            </l_10.3>
-            <l_10.2 S_00="Forme trigonométrique, forme exponentielle">
+            </l_1.5>
+            <l_1.6 S_00="Etudes de fonctions">
               <d_01>
-                <l_10.2.3 S_00="Ensemble de points dont l’affixe z vérifie z − a = k ou arg(z − a) = k , où a désigne un nombre complexe et k un nombre réel.">
+                <l_1.6.2 S_00="Fonctions homographiques">
                   <d_01 />
-                </l_10.2.3>
-                <l_10.2.2 S_00="Forme exponentielle et forme trigonométrique d’un nombre complexe.">
+                </l_1.6.2>
+                <l_1.6.1 S_00="Fonctions polynômes de degré 2.">
                   <d_01 />
-                </l_10.2.2>
-                <l_10.2.1 S_00="Module d’un nombre complexe, arguments d’un nombre complexe non nul.">
-                  <d_01 />
-                </l_10.2.1>
+                </l_1.6.1>
               </d_01>
-            </l_10.2>
-          </d_01>
-        </l_10>
-        <l_1 S_00="Suites numériques">
-          <d_01>
-            <l_1.1 S_00="Mode de génération d'une suite et comportement global">
+            </l_1.6>
+            <l_1.7 S_00="Inéquations">
               <d_01>
-                <l_1.1.1 S_00="Exemples de génération d'une suite.">
-                  <l_01 S_00="Suites croissantes, suites décroissantes." />
+                <l_1.7.1 S_00="Résolution graphique et algébrique d'inéquations.">
+                  <d_01 />
+                </l_1.7.1>
+              </d_01>
+            </l_1.7>
+            <l_1.1 S_00="Fonctions">
+              <d_01>
+                <l_1.1.1 S_00="Image, antécédent, courbe représentative">
+                  <d_01 />
                 </l_1.1.1>
               </d_01>
             </l_1.1>
-            <l_1.2 S_00="Suites arithmétiques et géométriques">
+            <l_1.2 S_00="Etude qualitative de fonctions">
               <d_01>
-                <l_1.2.1 S_00="Expression du terme général.">
+                <l_1.2.1 S_00="Fonction croissante, fonction décroissante, maximum, minimum d'une fonction sur un intervalle">
                   <d_01 />
                 </l_1.2.1>
               </d_01>
             </l_1.2>
-            <l_1.3 S_00="Limite d'une suite">
+            <l_1.3 S_00="Expressions algébriques">
               <d_01>
-                <l_1.3.1 S_00="Limite d’une suite géométrique">
+                <l_1.3.1 S_00="Transformations d'expressions algébriques en vue d'une résolution de problème.">
                   <d_01 />
                 </l_1.3.1>
               </d_01>
             </l_1.3>
+            <l_1.8 S_00="Trigonométrie">
+              <d_01>
+                <l_1.8.1 S_00="Enroulement de la droite numérique sur le cercle trigonométrique et définition du sinus et du cosinus d'un nombre réel.">
+                  <l_01 />
+                </l_1.8.1>
+              </d_01>
+            </l_1.8>
           </d_01>
         </l_1>
-        <l_3 S_00="Fonctions d'une variable réelle et modélisation du signal.">
+        <l_3 S_00="Statistiques et probabilités">
           <d_01>
-            <l_3.2 S_00="Compléments sur les fonctions">
+            <l_3.2 S_00="Echantillonnage">
               <d_01>
-                <l_3.2.4 S_00="décomposition en éléments simples.">
+                <l_3.2.1 S_00="Notion d'échantillon">
                   <d_01 />
-                </l_3.2.4>
-                <l_3.2.1 S_00="Fonction paire, fonction impaire, fonction périodique :">
-                  <l_01 S_00="– définition ;" S_01="– interprétation graphique." />
                 </l_3.2.1>
-                <l_3.2.2 S_00="Calculs de dérivées :">
+                <l_3.2.2 S_00="Intervalle de fluctuation d'une fréquence au seuil de 95%">
                   <d_01 />
                 </l_3.2.2>
-                <l_3.2.3 S_00="Fonctions rationnelles :">
+                <l_3.2.3 S_00="Réalisation d'une simulation">
                   <d_01 />
                 </l_3.2.3>
               </d_01>
             </l_3.2>
-            <l_3.3 S_00="Approximation globale d’une fonction sur un intervalle">
+            <l_3.3 S_00="Probabilité sur un ensemble fini">
               <d_01>
-                <l_3.3.1 S_00="Approche de la notion à partir d’exemples.">
+                <l_3.3.1 S_00="Probabilité d'un évènement">
                   <d_01 />
                 </l_3.3.1>
+                <l_3.3.2 S_00="Réunion et intersection de deux évènements">
+                  <d_01 />
+                </l_3.3.2>
               </d_01>
             </l_3.3>
-            <l_3.1 S_00="Fonctions de référence">
+            <l_3.1 S_00="Statistique descriptive, analyse de données">
               <d_01>
-                <l_3.1.1 S_00="Fonctions tangente et arctangente.">
+                <l_3.1.1 S_00="Caractéristiques de position et de dispersion : médiane, quartiles, moyenne">
                   <d_01 />
                 </l_3.1.1>
               </d_01>
             </l_3.1>
           </d_01>
         </l_3>
-        <l_2 S_00="Fonctions d'une variable réelle">
+        <l_2 S_00="Géométrie">
           <d_01>
-            <l_2.3 S_00="Limites de fonctions">
+            <l_2.3 S_00="Droites">
               <d_01>
-                <l_2.3.1 S_00="Limite infinie d’une fonction à l’infini. Cas d'une asymptote oblique.">
+                <l_2.3.1 S_00="Droite comme courbe représentative d'une fonction affine.">
                   <d_01 />
                 </l_2.3.1>
-                <l_2.3.2 S_00="Limites et opérations.">
+                <l_2.3.2 S_00="Equations de droites">
                   <d_01 />
                 </l_2.3.2>
-                <l_2.3.3 S_00="limite infinie d’une fonction en un point.">
+                <l_2.3.3 S_00="Droites parallèles, sécantes.">
                   <d_01 />
                 </l_2.3.3>
               </d_01>
             </l_2.3>
-            <l_2.2 S_00="Dérivation">
+            <l_2.2 S_00="Configurations du plan">
               <d_01>
-                <l_2.2.1 S_00="Dérivée des fonctions de référence.">
+                <l_2.2.1 S_00="Triangles, quadrilatères, cercles">
                   <d_01 />
                 </l_2.2.1>
-                <l_2.2.3 S_00="Dérivée de fonctions de la forme : un (x) avec n entier naturel non nul.">
-                  <d_01 />
-                </l_2.2.3>
-                <l_2.2.2 S_00="Dérivée d’une somme, d’un produit et d’un quotient.">
-                  <d_01 />
-                </l_2.2.2>
               </d_01>
             </l_2.2>
-            <l_2.1 S_00="Fonctions de référence">
+            <l_2.1 S_00="Coordonnées d'un point du plan">
               <d_01>
-                <l_2.1.2 S_00="Fonctions polynômes de degré 2.">
+                <l_2.1.2 S_00="Distance de deux points du plan.">
                   <d_01 />
                 </l_2.1.2>
-                <l_2.1.3 S_00="Fonctions logarithme népérien et exponentielle de base e.">
+                <l_2.1.3 S_00="Milieu d'un segment">
                   <d_01 />
                 </l_2.1.3>
-                <l_2.1.1 S_00="Fonctions affines.">
+                <l_2.1.1 S_00="Abscisse et ordonnée d'un point dans le plan rapporté à un repère orthonormé.">
                   <d_01 />
                 </l_2.1.1>
-                <l_2.1.4 S_00="Fonction racine carrée.">
-                  <d_01 />
-                </l_2.1.4>
-                <l_2.1.5 S_00="Fonctions sinus et cosinus.">
-                  <d_01 />
-                </l_2.1.5>
               </d_01>
             </l_2.1>
-            <l_2.5 S_00="Courbes paramétrées">
+            <l_2.5 S_00="Géométrie dans l'espace">
               <d_01>
-                <l_2.5.1 S_00="Exemples de courbes paramétrées définies par des fonctions polynomiales.">
+                <l_2.5.2 S_00="Droites et plans, positions relatives.">
+                  <d_01 />
+                </l_2.5.2>
+                <l_2.5.3 S_00="Droites et plans parallèles">
+                  <d_01 />
+                </l_2.5.3>
+                <l_2.5.1 S_00="Les solides usuels étudiés au collège : parallèlépipède rectangle, pyramides, cônes et cylindre de révolution, sphère.">
                   <d_01 />
                 </l_2.5.1>
               </d_01>
             </l_2.5>
-            <l_2.4 S_00="Approximation locale d'une fonction">
+            <l_2.4 S_00="Vecteurs">
               <d_01>
-                <l_2.4.2 S_00="Développement limité en 0 et tangente à la courbe représentative d’une fonction.">
+                <l_2.4.3 S_00="Coordonnées d'un vecteur dans un repère">
+                  <d_01 />
+                </l_2.4.3>
+                <l_2.4.2 S_00="Egalité de deux vecteurs">
                   <d_01 />
                 </l_2.4.2>
-                <l_2.4.1 S_00="Développement limité en 0 d’une fonction.">
+                <l_2.4.1 S_00="Définition de la translation">
                   <d_01 />
                 </l_2.4.1>
+                <l_2.4.6 S_00="Relation de Chasles">
+                  <d_01 />
+                </l_2.4.6>
+                <l_2.4.5 S_00="Produit d'un vecteur par nombre réel">
+                  <d_01 />
+                </l_2.4.5>
+                <l_2.4.4 S_00="Somme de deux vecteurs">
+                  <d_01 />
+                </l_2.4.4>
               </d_01>
             </l_2.4>
           </d_01>
         </l_2>
-        <l_5 S_00="Équations différentielles.">
+        <l_5 S_00="Notations et raisonnement mathématiques">
           <d_01>
-            <l_5.1 S_00="Équations linéaires du premier ordre">
-              <d_01>
-                <l_5.1.1 S_00="Équation différentielle ay′+by = c(t) où a, b sont des constantes réelles et c une fonction continue à valeurs réelles.">
-                  <d_01 />
-                </l_5.1.1>
-              </d_01>
+            <l_5.1 S_00="Notations mathématiques">
+              <d_01 />
             </l_5.1>
-            <l_5.2 S_00="Nombres complexes">
-              <d_01>
-                <l_5.2.2 S_00="Équation du second degré à coefficients réels.">
-                  <d_01 />
-                </l_5.2.2>
-                <l_5.2.1 S_00="Forme algébrique d’un nombre complexe : somme, produit, conjugué.">
-                  <d_01 />
-                </l_5.2.1>
-              </d_01>
+            <l_5.2 S_00="raisonnement logique">
+              <d_01 />
             </l_5.2>
-            <l_5.3 S_00="Équations linéaires du second ordre à coefficients réels constants">
-              <d_01>
-                <l_5.3.1 S_00="Équation différentielle ay′′+by′+cy = d(t) où a, b et c sont des constantes réelles et d une fonction continue à valeurs réelles.">
-                  <d_01 />
-                </l_5.3.1>
-              </d_01>
-            </l_5.3>
           </d_01>
         </l_5>
-        <l_4 S_00="Calcul intégral">
+        <l_4 S_00="Algorithmique">
           <d_01>
-            <l_4.1 S_00="Primitives">
-              <d_01>
-                <l_4.1.1 S_00="Primitives de fonctions de référence, opérations algébriques.">
-                  <d_01 />
-                </l_4.1.1>
-                <l_4.1.2 S_00="Complément : primitives de cos (ωt + ϕ) et sin(ωt + ϕ), ω et ϕ étant réels.">
-                  <d_01 />
-                </l_4.1.2>
-              </d_01>
+            <l_4.1 S_00="Instructions élémentaires">
+              <d_01 />
             </l_4.1>
-            <l_4.3 S_00="Valeur moyenne d’une fonction sur un intervalle : définition, interprétation géométrique.">
-              <d_01>
-                <l_4.3.1 S_00="Formule d’intégration par parties.">
-                  <d_01 />
-                </l_4.3.1>
-              </d_01>
-            </l_4.3>
-            <l_4.2 S_00="Intégration">
-              <d_01>
-                <l_4.2.3 S_00="Calcul d’aires.">
-                  <d_01 />
-                </l_4.2.3>
-                <l_4.2.2 S_00="Propriétés de l’intégrale : relation de Chasles, linéarité et positivité.">
-                  <d_01 />
-                </l_4.2.2>
-                <l_4.2.1 S_00="Calcul intégral : f (x) dx = F(b) – F(a) où F est une primitive de f .">
-                  <d_01 />
-                </l_4.2.1>
-              </d_01>
+            <l_4.2 S_00="Boucle et itération, instruction conditionnelle">
+              <d_01 />
             </l_4.2>
           </d_01>
         </l_4>
-        <l_7 S_00="Transformation de Laplace.">
-          <d_01>
-            <l_7.2 S_00="Transformée de Laplace d’une dérivée.">
-              <d_01 />
-            </l_7.2>
-            <l_7.3 S_00="Transformée de Laplace d’une primitive.">
-              <d_01 />
-            </l_7.3>
-            <l_7.1 S_00="Transformation de Laplace">
-              <d_01>
-                <l_7.1.4 S_00="Théorème de la valeur initiale et théorème de la valeur finale.">
-                  <d_01 />
-                </l_7.1.4>
-                <l_7.1.3 S_00="Propriétés de la transformation de Laplace :">
-                  <l_01 S_00="– linéarité ;" S_01="– effet d’une translation ou d’un changement d’échelle sur la variable ;" S_02="– effet de la multiplication par e −at ." />
-                </l_7.1.3>
-                <l_7.1.2 S_00="Transformée de Laplace des fonctions causales usuelles.">
-                  <d_01 />
-                </l_7.1.2>
-                <l_7.1.1 S_00="Transformée de Laplace d’une fonction causale f.">
-                  <d_01 />
-                </l_7.1.1>
-              </d_01>
-            </l_7.1>
-          </d_01>
-        </l_7>
-        <l_6 S_00="Série de fourier">
-          <d_01>
-            <l_6.2 S_00="Séries de Fourier">
-              <d_01>
-                <l_6.2.1 S_00="Série de Fourier associée à une fonction T-périodique continue par morceaux sur R.">
-                  <d_01 />
-                </l_6.2.1>
-                <l_6.2.3 S_00="Convergence d’une série de Fourier lorsque f est de classe C1 par morceaux sur R (conditions de Dirichlet).">
-                  <d_01 />
-                </l_6.2.3>
-                <l_6.2.2 S_00="Cas d’une fonction paire, impaire.">
-                  <d_01 />
-                </l_6.2.2>
-                <l_6.2.4 S_00="Formule de Parseval">
-                  <d_01 />
-                </l_6.2.4>
-              </d_01>
-            </l_6.2>
-            <l_6.1 S_00="Exemples de séries numériques">
-              <d_01>
-                <l_6.1.2 S_00="Séries de Riemann : convergence.">
-                  <d_01 />
-                </l_6.1.2>
-                <l_6.1.1 S_00="Séries géométriques : convergence, somme.">
-                  <d_01 />
-                </l_6.1.1>
-              </d_01>
-            </l_6.1>
-          </d_01>
-        </l_6>
-        <l_9 S_00="Calcul vectoriel">
-          <d_01>
-            <l_9.1 S_00="Décomposition d’un vecteur dans une base du plan ou de l’espace">
-              <d_01 />
-            </l_9.1>
-            <l_9.2 S_00="Produit scalaire">
-              <d_01>
-                <l_9.2.1 S_00="Expressions du produit scalaire :">
-                  <l_01 S_00="– à l’aide d’une projection orthogonale ;" S_01="– à l’aide des normes et d’un angle ;" S_02="– à l’aide des coordonnées." />
-                </l_9.2.1>
-              </d_01>
-            </l_9.2>
-          </d_01>
-        </l_9>
-        <l_8 S_00="Probabilités 1.">
-          <d_01>
-            <l_8.1 S_00="Conditionnement et indépendance">
-              <d_01>
-                <l_8.1.1 S_00="Conditionnement par un événement de probabilité non nulle. Notation PA(B).">
-                  <d_01 />
-                </l_8.1.1>
-                <l_8.1.2 S_00="Indépendance de deux événements.">
-                  <d_01 />
-                </l_8.1.2>
-              </d_01>
-            </l_8.1>
-            <l_8.3 S_00="Exemples de lois à densité">
-              <d_01>
-                <l_8.3.2 S_00="Espérance, variance et écart type de la loi binomiale.">
-                  <d_01 />
-                </l_8.3.2>
-                <l_8.3.3 S_00="Loi normale d’espérance μ et d’écart type σ .">
-                  <d_01 />
-                </l_8.3.3>
-                <l_8.3.1 S_00="Loi uniforme sur [a, b].">
-                  <d_01 />
-                </l_8.3.1>
-                <l_8.3.6 S_00="Théorème de la limite centrée.">
-                  <d_01 />
-                </l_8.3.6>
-                <l_8.3.4 S_00="Approximation d’une loi binomiale par une loi normale.">
-                  <d_01 />
-                </l_8.3.4>
-                <l_8.3.5 S_00="Espérance et variance des lois de aX + b, X + Y, X – Y dans le cas où X et Y sont des variables aléatoires indépendantes.">
-                  <d_01 />
-                </l_8.3.5>
-              </d_01>
-            </l_8.3>
-            <l_8.2 S_00="Exemple de loi discrète">
-              <d_01>
-                <l_8.2.3 S_00="Espérance, variance et écart type de la loi binomiale.">
-                  <d_01 />
-                </l_8.2.3>
-                <l_8.2.2 S_00="Loi binomiale.">
-                  <d_01 />
-                </l_8.2.2>
-                <l_8.2.1 S_00="Variable aléatoire associée au nombre de succès dans un schéma de Bernoulli.">
-                  <d_01 />
-                </l_8.2.1>
-              </d_01>
-            </l_8.2>
-          </d_01>
-        </l_8>
       </d_dicSavoirs>
     </Savoirs_M>
   </d_dicoSavoirs>
@@ -1501,372 +978,252 @@
   <l_listeTypeHorsClasse S_00="HC" S_01="ST" />
   <l_listeTypeSeance S_00="ED" S_01="AP" S_02="P" S_03="HC" S_04="ST" S_05="C" S_06="TD" S_07="SA" S_08="SS" S_09="E" S_10="R" S_11="S" />
   <d_options />
-  <d_parties S_R2="Revue 2" S_R3="Revue 3" S_S="Soutenance" S_S1="Situation 1" S_S2="Situation 2" />
+  <d_parties S_C="PRJ2" S_S1="PRJ1" S_S2="PRJ3" />
   <l_periodes>
-    <l_00 I_01="2" S_00="1_ère année" />
-    <l_01 I_01="3" S_00="2_ème année" />
+    <l_00 I_01="3" S_00="1_ère année" />
   </l_periodes>
   <l_positions_CI />
   <d_projets>
-    <Projet_CCF1 B_tachesOnce="False" I_duree="12" I_maxEleves="5" I_minEleves="3" S_code="CCF1" S_ficheValid="STS_SN_EC_Sit1.html" S_intitule="CCF1">
+    <Projet_PRJ1 B_tachesOnce="False" I_duree="12" I_maxEleves="5" I_minEleves="3" S_code="PRJ1" S_ficheValid="STS-EE _ Dossier projet.html" S_intitule="Projet début d'année">
       <d_attributs>
-        <l_SRC S_00="" S_01="" S_02="" S_03="" />
-        <l_PAR S_00="" S_01="" S_02="" S_03="" />
-        <l_DEC S_00="Description de l'intervention" S_01="" S_02="" S_03="" />
-        <l_OBJ S_00="Description de l'intervention" S_01="Identification de la valeur ajoutée.--Enjeux." S_02="" S_03="" />
+        <l_SRC S_00="Source de financement" S_01="" S_02="" S_03="" />
+        <l_PAR S_00="Partenaires du projet" S_01="" S_02="" S_03="" />
+        <l_DEC S_00="" S_01="" S_02="" S_03="" />
+        <l_OBJ S_00="Objectif" S_01="Identification de la valeur ajoutée.--Enjeux." S_02="" S_03="" />
         <l_TIT S_00="Titre du projet" S_01="Titre du projet" S_02="" S_03="" />
-        <l_SYN S_00="" S_01="" S_02="" S_03="" />
-        <l_PB S_00="" S_01="" S_02="" S_03="" />
+        <l_SYN S_00="Synoptique" S_01="• Identification des procédés et de leurs agencements.--• Description du ou des processus." S_02="" S_03="" />
+        <l_PB S_00="Présentation du projet" S_01="Indiquer :-- - description du contexte dans lequel l’objet du projet va être intégré ;-- - fonctionnalités de cet objet ;-- - caractéristiques fonctionnelles et techniques." S_02="" S_03="" />
         <l_ORI S_00="" S_01="" S_02="" S_03="" />
-        <l_CCF S_00="Présentation du support" S_01="Indiquer :-- - description du contexte dans lequel l’objet du projet va être intégré ;-- - fonctionnalités de cet objet ;-- - caractéristiques fonctionnelles et techniques." S_02="" S_03="" />
-        <l_TYP S_00="Typologie" S_01="" S_02="Télécommunication, téléphonie et réseaux téléphonique--Informatique, réseaux et infrastructures--Multimédia, son et image, radio et télédiffusion--Mobilité et systèmes embarqués--Electronique et informatique médicale--Mesure, instrumentation et microsystèmes--Automatique et robotique" S_03="" />
-        <l_PRX S_00="" S_01="" S_02="" S_03="" />
+        <l_CCF S_00="Cahier des charges" S_01="" S_02="" S_03="" />
+        <l_TYP S_00="Typologie" S_01="" S_02="Construction ou rénovation d'un système inclus dans une chaîne de fabrication.--Construction ou rénovation d'une machine de production.--Conception ou modification d'une installation électrique d'une infrastructure.--Conception ou modification d'une installation électrique d'un bâtiment tertiaire ou industriel.--Conception ou amélioration d'un produit de consommation.--Élaboration ou amélioration de services." S_03="" />
+        <l_PRX S_00="Montant estimé du projet" S_01="" S_02="" S_03="" />
       </d_attributs>
       <d_cellulesInfo>
         <d_S1>
           <l_Pre>
-            <l_00 S_00="Identification Projet" S_02="">
-              <l_01 I_00="5" I_01="8" I_02="0" />
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="12" I_01="2" I_02="0" />
             </l_00>
           </l_Pre>
           <l_Nom>
-            <l_00 S_00="Identification Projet" S_02="">
-              <l_01 I_00="5" I_01="4" I_02="0" />
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="11" I_01="2" I_02="0" />
             </l_00>
           </l_Nom>
+          <l_NON>
+            <l_00 S_00="Notation Candidat" S_02="">
+              <l_01 I_00="0" I_01="4" I_02="0" />
+            </l_00>
+          </l_NON>
+          <l_Tit>
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="4" I_01="2" I_02="0" />
+            </l_00>
+          </l_Tit>
+          <l_Des>
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="23" I_01="1" I_02="0" />
+            </l_00>
+          </l_Des>
           <l_Etab>
-            <l_00 S_00="Identification Projet" S_02="">
-              <l_01 I_00="4" I_01="3" I_02="0" />
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="6" I_01="2" I_02="0" />
             </l_00>
           </l_Etab>
           <l_Prof>
-            <l_00 S_00="Identification Projet" S_02="">
-              <l_01 I_00="10" I_01="4" I_02="0" />
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="0" I_01="0" I_02="0" />
             </l_00>
           </l_Prof>
         </d_S1>
       </d_cellulesInfo>
       <d_grilles>
-        <l_S1 S_00="Grille BTS SN EC_Sit.xlsx" S_01="I" />
+        <l_S1 S_00="Grille 2nde.xlsx" S_01="I" />
       </d_grilles>
-      <l_listPhases S_00="Ana" S_01="Con" S_02="DCo" S_03="Rea" S_04="XXX" S_05="R1" S_06="R2" S_07="R3" S_08="S" />
-      <l_listPhasesEval S_00="R1" S_01="R2" S_02="R3" S_03="S" />
+      <l_listPhases S_00="Ana" S_01="Con" S_02="DCo" S_03="Rea" S_04="XXX" S_05="Rev" S_06="R1" S_07="R2" S_08="R3" S_09="S" />
+      <l_listPhasesEval S_00="Rev" S_01="R1" S_02="R2" S_03="R3" S_04="S" />
       <l_listTaches />
       <l_listeParties S_00="S1" />
-      <d_parties S_S1="Situation 1" />
-      <l_periode I_00="2" />
+      <d_parties S_S1="PRJ1" />
+      <l_periode I_00="1" />
       <d_phases>
-        <l_DCo S_00="Recette" S_01="Recette" S_02="recet" />
-        <l_R1 S_00="Revue n°1" S_01="Revue de projet n°1" S_02="R1" />
-        <l_R2 S_00="Revue n°2" S_01="Revue de projet n°2" S_02="R2" />
-        <l_R3 S_00="Revue n°3" S_01="Revue de projet n°3" S_02="R3" />
-        <l_XXX S_00="Synth et com" S_01="Synthèse et communication" S_02="SC" />
-        <l_S S_00="Soutenance" S_01="Soutenance finale" S_02="S" />
-        <l_Con S_00="Mise en œuvre" S_01="Mise en œuvre" S_02="mis oeu" />
-        <l_Rea S_00="Installation" S_01="Installation" S_02="inst" />
-        <l_Ana S_00="Preparation" S_01="Preparation" S_02="prepa" />
-      </d_phases>
-      <d_posRevues>
-        <l__02 S_00="Con" S_01="Rea" />
-        <l__03 S_00="Ana" S_01="Con" S_02="Rea" />
-      </d_posRevues>
-      <d_taches />
-    </Projet_CCF1>
-    <Projet_CCF2 B_tachesOnce="False" I_duree="12" I_maxEleves="5" I_minEleves="3" S_code="CCF2" S_ficheValid="STS_SN_EC_Sit2.html" S_intitule="CCF2">
-      <d_attributs>
-        <l_SRC S_00="" S_01="" S_02="" S_03="" />
-        <l_PAR S_00="" S_01="" S_02="" S_03="" />
-        <l_DEC S_00="Description de l'intervention" S_01="" S_02="" S_03="" />
-        <l_OBJ S_00="Description de l'intervention" S_01="Identification de la valeur ajoutée.--Enjeux." S_02="" S_03="" />
-        <l_TIT S_00="Titre du projet" S_01="Titre du projet" S_02="" S_03="" />
-        <l_SYN S_00="" S_01="" S_02="" S_03="" />
-        <l_PB S_00="" S_01="" S_02="" S_03="" />
-        <l_ORI S_00="" S_01="" S_02="" S_03="" />
-        <l_CCF S_00="Présentation du support" S_01="Indiquer :-- - description du contexte dans lequel l’objet du projet va être intégré ;-- - fonctionnalités de cet objet ;-- - caractéristiques fonctionnelles et techniques." S_02="" S_03="" />
-        <l_TYP S_00="Typologie" S_01="" S_02="Télécommunication, téléphonie et réseaux téléphonique--Informatique, réseaux et infrastructures--Multimédia, son et image, radio et télédiffusion--Mobilité et systèmes embarqués--Electronique et informatique médicale--Mesure, instrumentation et microsystèmes--Automatique et robotique" S_03="" />
-        <l_PRX S_00="" S_01="" S_02="" S_03="" />
-      </d_attributs>
-      <d_cellulesInfo>
-        <d_S2>
-          <l_Tit>
-            <l_00 S_00="Identification projet" S_02="">
-              <l_01 I_00="0" I_01="0" I_02="0" />
-            </l_00>
-          </l_Tit>
-          <l_Nom>
-            <l_00 S_00="Identification projet" S_02="">
-              <l_01 I_00="0" I_01="0" I_02="0" />
-            </l_00>
-          </l_Nom>
-          <l_Des>
-            <l_00 S_00="Identification projet" S_02="">
-              <l_01 I_00="0" I_01="0" I_02="0" />
-            </l_00>
-          </l_Des>
-          <l_Pre>
-            <l_00 S_00="Identification projet" S_02="">
-              <l_01 I_00="0" I_01="0" I_02="0" />
-            </l_00>
-          </l_Pre>
-          <l_Etab>
-            <l_00 S_00="Identification projet" S_02="">
-              <l_01 I_00="0" I_01="0" I_02="0" />
-            </l_00>
-          </l_Etab>
-        </d_S2>
-      </d_cellulesInfo>
-      <d_grilles>
-        <l_S2 S_00="Grille BTS SN EC_Sit1.xlsx" S_01="I" />
-      </d_grilles>
-      <l_listPhases S_00="Sup" S_01="Ana" S_02="Con" S_03="Rea" S_04="Val" S_05="XXX" S_06="Rev" S_07="R1" S_08="R2" S_09="R3" S_10="S" />
-      <l_listPhasesEval S_00="Rev" S_01="R1" S_02="R2" S_03="R3" S_04="S" />
-      <l_listTaches />
-      <l_listeParties S_00="S2" />
-      <d_parties S_S2="Situation 2" />
-      <l_periode I_00="3" />
-      <d_phases>
-        <l_Ana S_00="Analyser" S_01="Analyser" S_02="ana" />
-        <l_Val S_00="Traçabilité" S_01="Assurer la traçabilité" S_02="trac" />
+        <l_DCo S_00="Maint" S_01="Maintenance" S_02="maint" />
+        <l_Ana S_00="Install" S_01="Installation" S_02="inst" />
         <l_R2 S_00="Revue n°2" S_01="Revue de projet n°2" S_02="R2" />
         <l_R3 S_00="Revue n°3" S_01="Revue de projet n°3" S_02="R3" />
         <l_XXX S_00="Synth et com" S_01="Synthèse et communication" S_02="SC" />
         <l_Rev S_00="Revue inter" S_01="Revue intermédiaire" S_02="Ri" />
         <l_R1 S_00="Revue n°1" S_01="Revue de projet n°1" S_02="R1" />
         <l_S S_00="Soutenance" S_01="Soutenance finale" S_02="S" />
-        <l_Sup S_00="Superviser" S_01="Superviser" S_02="superv" />
-        <l_Rea S_00="Depanner" S_01="Depanner" S_02="dep" />
-        <l_Con S_00="Diagnostiquer" S_01="Diagnostiquer" S_02="diag" />
-      </d_phases>
-      <d_posRevues>
-        <l__02 S_00="Sup" S_01="Ana" />
-        <l__03 S_00="Sup" S_01="Ana" S_02="Con" />
-      </d_posRevues>
-      <d_taches />
-    </Projet_CCF2>
-    <Projet_PRJ B_tachesOnce="True" I_duree="50" I_maxEleves="5" I_minEleves="3" S_code="PRJ" S_ficheValid="STS_SN_EC_projet_E6.html" S_intitule="Projet de fin d'année">
-      <d_attributs>
-        <l_SRC S_00="Inventaire des matériels" S_01="Désignation" S_02="" S_03="" />
-        <l_PAR S_00="Partenaires du projet" S_01="" S_02="" S_03="" />
-        <l_DEC S_00="Description de l'intervention" S_01="" S_02="" S_03="" />
-        <l_OBJ S_00="Enoncé des tâches" S_01="" S_02="" S_03="" />
-        <l_TIT S_00="Titre du projet" S_01="Titre du projet" S_02="" S_03="" />
-        <l_SYN S_00="" S_01="" S_02="" S_03="" />
-        <l_PB S_00="Problématique" S_01="" S_02="" S_03="" />
-        <l_ORI S_00="Analyse de l'existant" S_01="" S_02="" S_03="" />
-        <l_CCF S_00="Expression du besoin" S_01="Indiquer :-- - description du contexte dans lequel l’objet du projet va être intégré ;-- - fonctionnalités de cet objet ;-- - caractéristiques fonctionnelles et techniques." S_02="" S_03="" />
-        <l_TYP S_00="Reprise d'un projet" S_01="" S_02="oui--non" S_03="" />
-        <l_PRX S_00="Description structurelle du système" S_01="Principaux constituants" S_02="" S_03="" />
-      </d_attributs>
-      <d_cellulesInfo>
-        <d_S>
-          <l_Tit>
-            <l_00 S_00="Identification projet" S_02="">
-              <l_01 I_00="6" I_01="3" I_02="0" />
-            </l_00>
-          </l_Tit>
-          <l_Nom>
-            <l_00 S_00="Identification projet" S_02="">
-              <l_01 I_00="3" I_01="7" I_02="0" />
-            </l_00>
-          </l_Nom>
-          <l_Des>
-            <l_00 S_00="Identification projet" S_02="">
-              <l_01 I_00="0" I_01="0" I_02="0" />
-            </l_00>
-          </l_Des>
-          <l_Pre>
-            <l_00 S_00="Identification projet" S_02="">
-              <l_01 I_00="4" I_01="7" I_02="0" />
-            </l_00>
-          </l_Pre>
-          <l_Etab>
-            <l_00 S_00="Identification projet" S_02="">
-              <l_01 I_00="7" I_01="2" I_02="0" />
-            </l_00>
-          </l_Etab>
-        </d_S>
-        <d_R2>
-          <l_Pre>
-            <l_00 S_00="Identification projet" S_02="">
-              <l_01 I_00="4" I_01="7" I_02="0" />
-            </l_00>
-          </l_Pre>
-          <l_Nom>
-            <l_00 S_00="Identification projet" S_02="">
-              <l_01 I_00="3" I_01="7" I_02="0" />
-            </l_00>
-          </l_Nom>
-          <l_NON>
-            <l_00 S_00="Identification projet" S_02="">
-              <l_01 I_00="7" I_01="5" I_02="0" />
-            </l_00>
-          </l_NON>
-          <l_Tit>
-            <l_00 S_00="Identification projet" S_02="">
-              <l_01 I_00="6" I_01="3" I_02="0" />
-            </l_00>
-          </l_Tit>
-          <l_Des>
-            <l_00 S_00="Identification projet" S_02="">
-              <l_01 I_00="0" I_01="0" I_02="0" />
-            </l_00>
-          </l_Des>
-          <l_Etab>
-            <l_00 S_00="Identification projet" S_02="">
-              <l_01 I_00="7" I_01="2" I_02="0" />
-            </l_00>
-          </l_Etab>
-          <l_Prof>
-            <l_00 S_00="Identification projet" S_02="">
-              <l_01 I_00="7" I_01="6" I_02="0" />
-            </l_00>
-          </l_Prof>
-        </d_R2>
-        <d_R3>
-          <l_Pre>
-            <l_00 S_00="Identification projet" S_02="">
-              <l_01 I_00="4" I_01="7" I_02="0" />
-            </l_00>
-          </l_Pre>
-          <l_Nom>
-            <l_00 S_00="Identification projet" S_02="">
-              <l_01 I_00="3" I_01="7" I_02="0" />
-            </l_00>
-          </l_Nom>
-          <l_NON>
-            <l_00 S_00="Identification projet" S_02="">
-              <l_01 I_00="7" I_01="5" I_02="0" />
-            </l_00>
-          </l_NON>
-          <l_Tit>
-            <l_00 S_00="Identification projet" S_02="">
-              <l_01 I_00="6" I_01="3" I_02="0" />
-            </l_00>
-          </l_Tit>
-          <l_Des>
-            <l_00 S_00="Identification projet" S_02="">
-              <l_01 I_00="0" I_01="0" I_02="0" />
-            </l_00>
-          </l_Des>
-          <l_Etab>
-            <l_00 S_00="Identification projet" S_02="">
-              <l_01 I_00="7" I_01="2" I_02="0" />
-            </l_00>
-          </l_Etab>
-          <l_Prof>
-            <l_00 S_00="Identification projet" S_02="">
-              <l_01 I_00="7" I_01="6" I_02="0" />
-            </l_00>
-          </l_Prof>
-        </d_R3>
-      </d_cellulesInfo>
-      <d_grilles>
-        <l_S S_00="Grille BTS SN EC_E62_Sout.xlsx" S_01="I" />
-        <l_R2 S_00="Grille BTS SN EC_E62_R2.xlsx" S_01="I" />
-        <l_R3 S_00="Grille BTS SN EC_E62_R3.xlsx" S_01="I" />
-      </d_grilles>
-      <l_listPhases S_00="Ana" S_01="Con" S_02="DCo" S_03="Rea" S_04="Rev" S_05="R1" S_06="R2" S_07="R3" S_08="S" />
-      <l_listPhasesEval S_00="Rev" S_01="R1" S_02="R2" S_03="R3" S_04="S" />
-      <l_listTaches S_00="T1.4" S_01="T2.1" S_02="T2.3" S_03="T3.1" S_04="T3.3" S_05="T3.4" S_06="T4.1" S_07="T4.2" S_08="T4.3" S_09="T5.1" S_10="T5.4" S_11="T6.1" S_12="T6.2" S_13="T6.3" S_14="T7.1" S_15="T7.2" S_16="T7.3" S_17="T8.1" S_18="T8.2" S_19="T9.2" S_20="T10.3" S_21="T11.3" S_22="T12.1" S_23="T12.2" S_24="T9.1" S_25="T10.4" />
-      <l_listeParties S_00="R2" S_01="R3" S_02="S" />
-      <d_parties S_R2="Revue 2" S_R3="Revue 3" S_S="Soutenance" />
-      <l_periode I_00="4" I_01="5" />
-      <d_phases>
-        <l_DCo S_00="Réal" S_01="Réalisation" S_02="Réal" />
-        <l_Ana S_00="Besoin" S_01="Expression fonctionnelle du besoin" S_02="Expr" />
-        <l_R2 S_00="Revue n°2" S_01="Revue de projet n°2" S_02="R2" />
-        <l_R3 S_00="Revue n°3" S_01="Revue de projet n°3" S_02="R3" />
-        <l_Rev S_00="Revue inter" S_01="Revue intermédiaire" S_02="Ri" />
-        <l_S S_00="Soutenance" S_01="Soutenance finale" S_02="S" />
-        <l_Con S_00="Concept" S_01="Conception" S_02="Conc" />
-        <l_Rea S_00="Vérif" S_01="Vérification des performances attendues" S_02="Verif" />
-        <l_R1 S_00="Revue n°1" S_01="Revue de projet n°1" S_02="R1" />
+        <l_Rea S_00="Expérimentations" S_01="Réalisation d'expérimentations" S_02="Re" />
+        <l_Con S_00="Expl" S_01="Exploitation" S_02="expl" />
       </d_phases>
       <d_posRevues>
         <l__02 S_00="Ana" S_01="Con" />
         <l__03 S_00="Ana" S_01="Con" S_02="DCo" />
       </d_posRevues>
-      <d_taches>
-        <l_T12.2 S_00="DCo" S_01="Animer une équipe">
-          <l_02 S_00="C2.1" S_01="C2.3" S_02="C2.5" />
-        </l_T12.2>
-        <l_T12.1 S_00="DCo" S_01="Organiser le travail de l'équipe">
-          <l_02 S_00="C2.3" S_01="C2.4" S_02="C2.5" />
-        </l_T12.1>
-        <l_T8.2 S_00="DCo" S_01="Définir une organisation ou un processus de maintenance curative">
-          <l_02 S_00="C2.1" />
-        </l_T8.2>
-        <l_T8.1 S_00="DCo" S_01="Définir une organisation ou un processus de maintenance préventive">
-          <l_02 S_00="C2.1" />
-        </l_T8.1>
-        <l_T9.2 S_00="DCo" S_01="Installer un système ou un service">
-          <l_02 S_00="C2.5" />
-        </l_T9.2>
-        <l_T9.1 S_00="Rea" S_01="Finaliser le cahier de recette">
-          <l_02 S_00="C3.1" S_01="C3.5" S_02="C4.5" />
-        </l_T9.1>
-        <l_T2.1 S_00="Ana" S_01="Collecter les informations nécessaires à l'élaboration du cahier des charges préliminaire">
-          <l_02 S_00="C2.2" />
-        </l_T2.1>
-        <l_T4.2 S_00="Con" S_01="Traduire les éléments du cahier des charges sous la forme de modèles">
-          <l_02 S_00="C3.1" />
-        </l_T4.2>
-        <l_T4.3 S_00="Con" S_01="Rédiger le document de recette">
-          <l_02 S_00="C3.1" S_01="C3.6" />
-        </l_T4.3>
-        <l_T4.1 S_00="Con" S_01="Identifier le comportement d'un constituant">
-          <l_02 S_00="C4.1" />
-        </l_T4.1>
-        <l_T7.1 S_00="DCo" S_01="Réaliser la conception détaillée du matériel et/ou du logiciel">
-          <l_02 S_00="C3.1" S_01="C3.3" S_02="C3.6" S_03="C3.8" S_04="C3.10" />
-        </l_T7.1>
-        <l_T7.3 S_00="DCo" S_01="Valider le prototype">
-          <l_02 S_00="C3.5" S_01="C4.5" />
-        </l_T7.3>
-        <l_T7.2 S_00="DCo" S_01="Produire un prototype logiciel et/ou matériel">
-          <l_02 S_00="C3.9" S_01="C4.2" S_02="C4.3" S_03="C4.4" S_04="C4.6" S_05="C4.7" />
-        </l_T7.2>
-        <l_T6.1 S_00="Con" S_01="Prendre connaissance des fonctions associées au projet et définir les tâches professionnelles correspondantes dans le respect du budget">
-          <l_02 S_00="C2.4" S_01="C2.5" />
-        </l_T6.1>
-        <l_T6.2 S_00="Con" S_01="Définir et valider un planning">
-          <l_02 S_00="C2.3" S_01="C2.4" S_02="C2.5" />
-        </l_T6.2>
-        <l_T6.3 S_00="Con" S_01="Assurer le suivi du planning et du budget">
-          <l_02 S_00="C2.1" S_01="C2.3" S_02="C2.4" S_03="C2.5" />
-        </l_T6.3>
-        <l_T5.1 S_00="Con" S_01="Identifier les solutions existantes de l'entreprise">
-          <l_02 S_00="C3.5" />
-        </l_T5.1>
-        <l_T1.4 S_00="Ana" S_01="Vérifier la pérennité des informations et les mettre à jour">
-          <l_02 S_00="C2.1" />
-        </l_T1.4>
-        <l_T5.4 S_00="Con" S_01="Sélectionner et/ou adapter une ou des solutions selon le contexte technico-économique">
-          <l_02 S_00="C3.8" />
-        </l_T5.4>
-        <l_T10.4 S_00="Rea" S_01="Proposer des solutions d'amélioration du système ou du service">
-          <l_02 S_00="C3.6" />
-        </l_T10.4>
-        <l_T11.3 S_00="DCo" S_01="Assurer la formation du client">
-          <l_02 S_00="C2.2" S_01="C2.5" />
-        </l_T11.3>
-        <l_T10.3 S_00="DCo" S_01="Exécuter et/ou planifier les tâches professionnelles de MCO">
-          <l_02 S_00="C2.3" />
-        </l_T10.3>
-        <l_T3.4 S_00="Ana" S_01="Négocier et rechercher la validation du client">
-          <l_02 S_00="C2.4" />
-        </l_T3.4>
-        <l_T2.3 S_00="Ana" S_01="Formaliser le cahier des charges">
-          <l_02 S_00="C2.3" S_01="C2.4" />
-        </l_T2.3>
-        <l_T3.1 S_00="Ana" S_01="S'approprier le cahier des charges">
-          <l_02 S_00="C3.1" />
-        </l_T3.1>
-        <l_T3.3 S_00="Ana" S_01="Elaborer le cahier de recette">
-          <l_02 S_00="C3.5" />
-        </l_T3.3>
-      </d_taches>
-    </Projet_PRJ>
+      <d_taches />
+    </Projet_PRJ1>
+    <Projet_PRJ2 B_tachesOnce="False" I_duree="12" I_maxEleves="5" I_minEleves="3" S_code="PRJ2" S_ficheValid="STS-EE _ Dossier projet.html" S_intitule="Projet">
+      <d_attributs>
+        <l_SRC S_00="Source de financement" S_01="" S_02="" S_03="" />
+        <l_PAR S_00="Partenaires du projet" S_01="" S_02="" S_03="" />
+        <l_DEC S_00="" S_01="" S_02="" S_03="" />
+        <l_OBJ S_00="Objectif" S_01="Identification de la valeur ajoutée.--Enjeux." S_02="" S_03="" />
+        <l_TIT S_00="Titre du projet" S_01="Titre du projet" S_02="" S_03="" />
+        <l_SYN S_00="Synoptique" S_01="• Identification des procédés et de leurs agencements.--• Description du ou des processus." S_02="" S_03="" />
+        <l_PB S_00="Présentation du projet" S_01="Indiquer :-- - description du contexte dans lequel l’objet du projet va être intégré ;-- - fonctionnalités de cet objet ;-- - caractéristiques fonctionnelles et techniques." S_02="" S_03="" />
+        <l_ORI S_00="" S_01="" S_02="" S_03="" />
+        <l_CCF S_00="Cahier des charges" S_01="" S_02="" S_03="" />
+        <l_TYP S_00="Typologie" S_01="" S_02="Construction ou rénovation d'un système inclus dans une chaîne de fabrication.--Construction ou rénovation d'une machine de production.--Conception ou modification d'une installation électrique d'une infrastructure.--Conception ou modification d'une installation électrique d'un bâtiment tertiaire ou industriel.--Conception ou amélioration d'un produit de consommation.--Élaboration ou amélioration de services." S_03="" />
+        <l_PRX S_00="Montant estimé du projet" S_01="" S_02="" S_03="" />
+      </d_attributs>
+      <d_cellulesInfo>
+        <d_C>
+          <l_Pre>
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="12" I_01="2" I_02="0" />
+            </l_00>
+          </l_Pre>
+          <l_Nom>
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="11" I_01="2" I_02="0" />
+            </l_00>
+          </l_Nom>
+          <l_NON>
+            <l_00 S_00="Notation Candidat" S_02="">
+              <l_01 I_00="0" I_01="4" I_02="0" />
+            </l_00>
+          </l_NON>
+          <l_Tit>
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="4" I_01="2" I_02="0" />
+            </l_00>
+          </l_Tit>
+          <l_Des>
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="23" I_01="1" I_02="0" />
+            </l_00>
+          </l_Des>
+          <l_Etab>
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="6" I_01="2" I_02="0" />
+            </l_00>
+          </l_Etab>
+          <l_Prof>
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="0" I_01="0" I_02="0" />
+            </l_00>
+          </l_Prof>
+        </d_C>
+      </d_cellulesInfo>
+      <d_grilles>
+        <l_C S_00="Grille 2nde.xlsx" S_01="I" />
+      </d_grilles>
+      <l_listPhases S_00="Ana" S_01="Con" S_02="DCo" S_03="Rea" S_04="XXX" S_05="Rev" S_06="R1" S_07="R2" S_08="R3" S_09="S" />
+      <l_listPhasesEval S_00="Rev" S_01="R1" S_02="R2" S_03="R3" S_04="S" />
+      <l_listTaches />
+      <l_listeParties S_00="C" />
+      <d_parties S_C="PRJ2" />
+      <l_periode I_00="2" />
+      <d_phases>
+        <l_DCo S_00="Maint" S_01="Maintenance" S_02="maint" />
+        <l_Ana S_00="Install" S_01="Installation" S_02="inst" />
+        <l_R2 S_00="Revue n°2" S_01="Revue de projet n°2" S_02="R2" />
+        <l_R3 S_00="Revue n°3" S_01="Revue de projet n°3" S_02="R3" />
+        <l_XXX S_00="Synth et com" S_01="Synthèse et communication" S_02="SC" />
+        <l_Rev S_00="Revue inter" S_01="Revue intermédiaire" S_02="Ri" />
+        <l_R1 S_00="Revue n°1" S_01="Revue de projet n°1" S_02="R1" />
+        <l_S S_00="Soutenance" S_01="Soutenance finale" S_02="S" />
+        <l_Rea S_00="Expérimentations" S_01="Réalisation d'expérimentations" S_02="Re" />
+        <l_Con S_00="Expl" S_01="Exploitation" S_02="expl" />
+      </d_phases>
+      <d_posRevues>
+        <l__02 S_00="Ana" S_01="Con" />
+        <l__03 S_00="Ana" S_01="Con" S_02="DCo" />
+      </d_posRevues>
+      <d_taches />
+    </Projet_PRJ2>
+    <Projet_PRJ3 B_tachesOnce="False" I_duree="50" I_maxEleves="5" I_minEleves="3" S_code="PRJ3" S_ficheValid="STS-EE _ Dossier projet.html" S_intitule="Projet de fin d'année">
+      <d_attributs>
+        <l_SRC S_00="Source de financement" S_01="" S_02="" S_03="" />
+        <l_PAR S_00="Partenaires du projet" S_01="" S_02="" S_03="" />
+        <l_DEC S_00="" S_01="" S_02="" S_03="" />
+        <l_OBJ S_00="Objectif" S_01="Identification de la valeur ajoutée.--Enjeux." S_02="" S_03="" />
+        <l_TIT S_00="Titre du projet" S_01="Titre du projet" S_02="" S_03="" />
+        <l_SYN S_00="Synoptique" S_01="• Identification des procédés et de leurs agencements.--• Description du ou des processus." S_02="" S_03="" />
+        <l_PB S_00="Présentation du projet" S_01="Indiquer :-- - description du contexte dans lequel l’objet du projet va être intégré ;-- - fonctionnalités de cet objet ;-- - caractéristiques fonctionnelles et techniques." S_02="" S_03="" />
+        <l_ORI S_00="" S_01="" S_02="" S_03="" />
+        <l_CCF S_00="Cahier des charges" S_01="" S_02="" S_03="" />
+        <l_TYP S_00="Typologie" S_01="" S_02="Construction ou rénovation d'un système inclus dans une chaîne de fabrication.--Construction ou rénovation d'une machine de production.--Conception ou modification d'une installation électrique d'une infrastructure.--Conception ou modification d'une installation électrique d'un bâtiment tertiaire ou industriel.--Conception ou amélioration d'un produit de consommation.--Élaboration ou amélioration de services." S_03="" />
+        <l_PRX S_00="Montant estimé du projet" S_01="" S_02="" S_03="" />
+      </d_attributs>
+      <d_cellulesInfo>
+        <d_S2>
+          <l_Pre>
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="12" I_01="2" I_02="0" />
+            </l_00>
+          </l_Pre>
+          <l_Nom>
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="11" I_01="2" I_02="0" />
+            </l_00>
+          </l_Nom>
+          <l_NON>
+            <l_00 S_00="Notation Candidat" S_02="">
+              <l_01 I_00="0" I_01="4" I_02="0" />
+            </l_00>
+          </l_NON>
+          <l_Tit>
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="4" I_01="2" I_02="0" />
+            </l_00>
+          </l_Tit>
+          <l_Des>
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="23" I_01="1" I_02="0" />
+            </l_00>
+          </l_Des>
+          <l_Etab>
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="6" I_01="2" I_02="0" />
+            </l_00>
+          </l_Etab>
+          <l_Prof>
+            <l_00 S_00="Identification projet" S_02="">
+              <l_01 I_00="0" I_01="0" I_02="0" />
+            </l_00>
+          </l_Prof>
+        </d_S2>
+      </d_cellulesInfo>
+      <d_grilles>
+        <l_S2 S_00="Grille 2nde.xlsx" S_01="I" />
+      </d_grilles>
+      <l_listPhases S_00="Ana" S_01="Con" S_02="DCo" S_03="Rea" S_04="XXX" S_05="Rev" S_06="R1" S_07="R2" S_08="R3" S_09="S" />
+      <l_listPhasesEval S_00="Rev" S_01="R1" S_02="R2" S_03="R3" S_04="S" />
+      <l_listTaches />
+      <l_listeParties S_00="S2" />
+      <d_parties S_S2="PRJ3" />
+      <l_periode I_00="3" />
+      <d_phases>
+        <l_DCo S_00="Maint" S_01="Maintenance" S_02="maint" />
+        <l_Ana S_00="Install" S_01="Installation" S_02="inst" />
+        <l_R2 S_00="Revue n°2" S_01="Revue de projet n°2" S_02="R2" />
+        <l_R3 S_00="Revue n°3" S_01="Revue de projet n°3" S_02="R3" />
+        <l_XXX S_00="Synth et com" S_01="Synthèse et communication" S_02="SC" />
+        <l_Rev S_00="Revue inter" S_01="Revue intermédiaire" S_02="Ri" />
+        <l_R1 S_00="Revue n°1" S_01="Revue de projet n°1" S_02="R1" />
+        <l_S S_00="Soutenance" S_01="Soutenance finale" S_02="S" />
+        <l_Rea S_00="Expérimentations" S_01="Réalisation d'expérimentations" S_02="Re" />
+        <l_Con S_00="Expl" S_01="Exploitation" S_02="expl" />
+      </d_phases>
+      <d_posRevues>
+        <l__02 S_00="Ana" S_01="Con" />
+        <l__03 S_00="Ana" S_01="Con" S_02="DCo" />
+      </d_posRevues>
+      <d_taches />
+    </Projet_PRJ3>
   </d_projets>
   <d_seances>
     <l_C S_00="Cours" S_01="Cours" />

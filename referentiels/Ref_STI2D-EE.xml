@@ -1,4 +1,4 @@
-<Referentiel B_CI_BO="True" B_CI_cible="False" B_domaines="False" S_AnneeDebut="Sec6" S_Code="EE" S_Famille="STI" S_FichierLogo="" S_abrevCI="CI" S_nomCI="Centre(s) d'Intérêt" S_nomCompetences="Compétences" S_nomFonctions="Fonctions" S_nomIndicateurs="Indicateurs" S_nomTaches="Tâches">
+<Referentiel B_CI_BO="True" B_CI_cible="False" B_domaines="False" S_AnneeDebut="Sec6" S_Code="EE" S_Famille="STI" S_FichierLogo="" S_abrevCI="CI" S_nomCI="Centre(s) d'Intérêt" S_nomFonctions="Fonctions" S_nomTaches="Tâches">
   <l_BO_URL>
     <l_00 S_00="Programme" S_01="http://www.education.gouv.fr/pid25535/bulletin_officiel.html?cid_bo=82984" />
   </l_BO_URL>
@@ -22,234 +22,244 @@
     <l_P S_00="Projet" S_01="Projet" />
     <l_R S_00="Rés. Problème" S_01="Résolution de problème" />
   </d_demarches>
-  <d_dicCompetences>
-    <l_O7 S_00="Imaginer une solution, répondre à un besoin">
-      <d_01>
-        <l_CO7.ee2 S_00="Justifier une solution retenue en intégrant les conséquences des choix sur le triptyque Matériau - Energie - Information">
-          <l_01>
-            <Indicateur_00 S_intitule="Les caractéristiques comportementales de la solution retenue répondent au cahier des charges">
-              <d_ligne I_C="10" />
-              <d_poids F_C="9.090909" />
-              <d_revue I_C="0" />
-            </Indicateur_00>
-            <Indicateur_01 S_intitule="Les choix sont explicités et la solution justifiée en intégrant les conséquences sur le triptyque MEI">
-              <d_ligne I_C="11" />
-              <d_poids F_C="9.090909" />
-              <d_revue I_C="0" />
-            </Indicateur_01>
-          </l_01>
-        </l_CO7.ee2>
-        <l_CO7.ee3 S_00="Définir la structure, la constitution d'un système en fonction des caractéristiques technico-économiques et environnementales attendues">
-          <l_01>
-            <Indicateur_00 S_intitule="Les croquis et schémas à main levée sont utilisés à bon escient">
-              <d_ligne I_C="12" />
-              <d_poids F_C="9.090909" />
-              <d_revue I_C="0" />
-            </Indicateur_00>
-            <Indicateur_01 S_intitule="Les moyens numériques de description sont correctement utilisés">
-              <d_ligne I_C="13" />
-              <d_poids F_C="9.090909" />
-              <d_revue I_C="0" />
-            </Indicateur_01>
-            <Indicateur_02 S_intitule="La solution choisie pour la gestion de l'énergie est pertinente et adaptée aux exigences">
-              <d_ligne I_C="14" />
-              <d_poids F_C="9.090909" />
-              <d_revue I_C="0" />
-            </Indicateur_02>
-            <Indicateur_03 S_intitule="Les grandes étapes d'une démarche de créativité sont franchies de manière cohérente">
-              <d_ligne I_C="15" />
-              <d_poids F_C="9.090909" />
-              <d_revue I_C="0" />
-            </Indicateur_03>
-            <Indicateur_04 S_intitule="La structure proposée et le choix des composants respectent les exigences">
-              <d_ligne I_C="16" />
-              <d_poids F_C="9.090909" />
-              <d_revue I_C="0" />
-            </Indicateur_04>
-          </l_01>
-        </l_CO7.ee3>
-        <l_CO7.ee1 S_00="Participer à une démarche de conception dans le but de proposer plusieurs solutions possibles à un problème technique identifié en lien avec un enjeu énergétique">
-          <l_01>
-            <Indicateur_00 S_intitule="Le besoin relatif au projet et les fonctions sont identifiés et justifiés">
-              <d_ligne I_C="6" />
-              <d_poids F_C="9.090909" />
-              <d_revue I_C="0" />
-            </Indicateur_00>
-            <Indicateur_01 S_intitule="Les critères du cahier des charges sont décodés et les principaux points de vigilance relatifs au projet sont identifiés">
-              <d_ligne I_C="7" />
-              <d_poids F_C="9.090909" />
-              <d_revue I_C="0" />
-            </Indicateur_01>
-            <Indicateur_02 S_intitule="Les contraintes de normes, propriété industrielle, brevets sont identifiées">
-              <d_ligne I_C="8" />
-              <d_poids F_C="9.090909" />
-              <d_revue I_C="0" />
-            </Indicateur_02>
-            <Indicateur_03 S_intitule="La démarche d'analyse du problème est pertinente ">
-              <d_ligne I_C="9" />
-              <d_poids F_C="9.090909" />
-              <d_revue I_C="0" />
-            </Indicateur_03>
-          </l_01>
-        </l_CO7.ee1>
-        <l_CO7.ee4 S_00="Définir les modifications de la structure, les choix de constituants et du type de système de gestion d'une chaîne d'énergie afin de répondre à une évolution d'un cahier des charges">
-          <l_01>
-            <Indicateur_00 S_intitule="idem CO7.ee3">
-              <d_ligne I_C="0" />
-              <d_poids I_C="1" />
-              <d_revue I_C="0" />
-            </Indicateur_00>
-          </l_01>
-        </l_CO7.ee4>
-      </d_01>
-      <d_02 I_C="40" />
-    </l_O7>
-    <l_O9 S_00="Gérer la vie du produit">
-      <d_01>
-        <l_CO9.ee1 S_00="Expérimenter des procédés de stockage, de production, de transport, de transformation, d'énergie pour aider à la conception d'une chaîne d'énergie">
-          <l_01>
-            <Indicateur_00 S_intitule="Les paramètres significatifs à observer sont identifiés">
-              <d_ligne I_C="31" />
-              <d_poids F_C="11.111111" />
-              <d_revue I_C="0" />
-            </Indicateur_00>
-            <Indicateur_01 S_intitule="Le protocole d'expérimentation est adapté à l'objectif">
-              <d_ligne I_C="32" />
-              <d_poids F_C="11.111111" />
-              <d_revue I_C="0" />
-            </Indicateur_01>
-            <Indicateur_02 S_intitule="Les caractéristiques principales et leurs conséquences constructives sont identifiées">
-              <d_ligne I_C="33" />
-              <d_poids F_C="11.111111" />
-              <d_revue I_C="0" />
-            </Indicateur_02>
-          </l_01>
-        </l_CO9.ee1>
-        <l_CO9.ee2 S_00="Réaliser et valider un prototype obtenu en réponse à tout ou partie du cahier des charges initial">
-          <l_01>
-            <Indicateur_00 S_intitule="Le prototype choisi et sa réalisation, respecte le diagramme des exigences">
-              <d_ligne I_C="34" />
-              <d_poids F_C="11.111111" />
-              <d_revue I_C="0" />
-            </Indicateur_00>
-            <Indicateur_01 S_intitule="Les caractéristiques à valider sont identifiées et permettent de valider les exigences">
-              <d_ligne I_C="35" />
-              <d_poids F_C="11.111111" />
-              <d_revue I_C="0" />
-            </Indicateur_01>
-          </l_01>
-        </l_CO9.ee2>
-        <l_CO9.ee3 S_00="Intégrer un prototype dans un système à modifier pour valider son comportement et ses performances">
-          <l_01>
-            <Indicateur_00 S_intitule="Le prototype s'insère dans le système">
-              <d_ligne I_C="36" />
-              <d_poids F_C="11.111111" />
-              <d_revue I_C="0" />
-            </Indicateur_00>
-            <Indicateur_01 S_intitule="Un protocole d'essai pertinent est défini">
-              <d_ligne I_C="37" />
-              <d_poids F_C="11.111111" />
-              <d_revue I_C="0" />
-            </Indicateur_01>
-            <Indicateur_02 S_intitule="L'essai respecte le protocole et le comportement du système est relevé">
-              <d_ligne I_C="38" />
-              <d_poids F_C="11.111111" />
-              <d_revue I_C="0" />
-            </Indicateur_02>
-            <Indicateur_03 S_intitule="Les mesures et leurs interprétations montrent des résultats cohérents ">
-              <d_ligne I_C="39" />
-              <d_poids F_C="11.111111" />
-              <d_revue I_C="0" />
-            </Indicateur_03>
-          </l_01>
-        </l_CO9.ee3>
-      </d_01>
-      <d_02 I_C="20" />
-    </l_O9>
-    <l_O8 S_00="Valider des solutions techniques">
-      <d_01>
-        <l_CO8.ee1 S_00="Renseigner un logiciel de simulation du comportement énergétique avec les caractéristiques du système et les paramètres externes pour un point de fonctionnement donné">
-          <l_01>
-            <Indicateur_00 S_intitule="Les variables et les paramètres du modèle sont identifiés">
-              <d_ligne I_C="18" />
-              <d_poids F_C="8.333333" />
-              <d_revue I_C="0" />
-            </Indicateur_00>
-            <Indicateur_01 S_intitule="Leurs influences respectives sont identifiées">
-              <d_ligne I_C="19" />
-              <d_poids F_C="8.333333" />
-              <d_revue I_C="0" />
-            </Indicateur_01>
-          </l_01>
-        </l_CO8.ee1>
-        <l_CO8.ee3 S_00="Comparer et interpréter le résultat d'une simulation d'un comportement d'un système avec un comportement réel">
-          <l_01>
-            <Indicateur_00 S_intitule="Les résultats de la simulation et les mesures sont corrélés">
-              <d_ligne I_C="24" />
-              <d_poids F_C="8.333333" />
-              <d_revue I_C="0" />
-            </Indicateur_00>
-            <Indicateur_01 S_intitule="L'analyse des écarts est méthodique">
-              <d_ligne I_C="25" />
-              <d_poids F_C="8.333333" />
-              <d_revue I_C="0" />
-            </Indicateur_01>
-            <Indicateur_02 S_intitule="L'interprétation des résultats est cohérente et pertinente">
-              <d_ligne I_C="26" />
-              <d_poids F_C="8.333333" />
-              <d_revue I_C="0" />
-            </Indicateur_02>
-          </l_01>
-        </l_CO8.ee3>
-        <l_CO8.ee2 S_00="Interpréter les résultats d'une simulation afin de valider une solution ou l'optimiser">
-          <l_01>
-            <Indicateur_00 S_intitule="Les scénarios de simulation sont identifiés">
-              <d_ligne I_C="20" />
-              <d_poids F_C="8.333333" />
-              <d_revue I_C="0" />
-            </Indicateur_00>
-            <Indicateur_01 S_intitule="Les paramètres influents sont identifiés">
-              <d_ligne I_C="21" />
-              <d_poids F_C="8.333333" />
-              <d_revue I_C="0" />
-            </Indicateur_01>
-            <Indicateur_02 S_intitule="L'interprétation des résultats de la simulation est pertinente">
-              <d_ligne I_C="22" />
-              <d_poids F_C="8.333333" />
-              <d_revue I_C="0" />
-            </Indicateur_02>
-            <Indicateur_03 S_intitule="Les modifications proposées sont cohérentes">
-              <d_ligne I_C="23" />
-              <d_poids F_C="8.333333" />
-              <d_revue I_C="0" />
-            </Indicateur_03>
-          </l_01>
-        </l_CO8.ee2>
-        <l_CO8.ee4 S_00="Mettre en oeuvre un protocole d'essais et de mesures sur le prototype d'une chaîne d'énergie, interpréter les résultats">
-          <l_01>
-            <Indicateur_00 S_intitule="le protocole d'essai est justifié et adapté à l'objectif">
-              <d_ligne I_C="27" />
-              <d_poids F_C="8.333333" />
-              <d_revue I_C="0" />
-            </Indicateur_00>
-            <Indicateur_01 S_intitule="Les observations et mesures sont méthodiquement menés et les incertitudes de mesures estimées">
-              <d_ligne I_C="28" />
-              <d_poids F_C="8.333333" />
-              <d_revue I_C="0" />
-            </Indicateur_01>
-            <Indicateur_02 S_intitule="L'interprétation des résultats est cohérente et pertinente">
-              <d_ligne I_C="29" />
-              <d_poids F_C="8.333333" />
-              <d_revue I_C="0" />
-            </Indicateur_02>
-          </l_01>
-        </l_CO8.ee4>
-      </d_01>
-      <d_02 I_C="40" />
-    </l_O8>
-  </d_dicCompetences>
   <d_dicFonctions />
-  <d_dicSavoirs>
+  <d_dicoCompetences>
+    <Competences_S S_abrDiscipline="EE" S_codeDiscipline="SII" S_nomDiscipline="STI2D-EE" S_nomGenerique="Compétences" S_nomGeneriqueIndic="Indicateurs">
+      <d_dicCompetences>
+        <l_O7 S_00="Imaginer une solution, répondre à un besoin">
+          <d_01>
+            <l_CO7.ee2 S_00="Justifier une solution retenue en intégrant les conséquences des choix sur le triptyque Matériau - Energie - Information">
+              <l_01>
+                <Indicateur_00 S_intitule="Les caractéristiques comportementales de la solution retenue répondent au cahier des charges">
+                  <d_ligne I_C="10" />
+                  <d_poids F_C="9.090909" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="Les choix sont explicités et la solution justifiée en intégrant les conséquences sur le triptyque MEI">
+                  <d_ligne I_C="11" />
+                  <d_poids F_C="9.090909" />
+                  <d_revue I_C="0" />
+                </Indicateur_01>
+              </l_01>
+            </l_CO7.ee2>
+            <l_CO7.ee3 S_00="Définir la structure, la constitution d'un système en fonction des caractéristiques technico-économiques et environnementales attendues">
+              <l_01>
+                <Indicateur_00 S_intitule="Les croquis et schémas à main levée sont utilisés à bon escient">
+                  <d_ligne I_C="12" />
+                  <d_poids F_C="9.090909" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="Les moyens numériques de description sont correctement utilisés">
+                  <d_ligne I_C="13" />
+                  <d_poids F_C="9.090909" />
+                  <d_revue I_C="0" />
+                </Indicateur_01>
+                <Indicateur_02 S_intitule="La solution choisie pour la gestion de l'énergie est pertinente et adaptée aux exigences">
+                  <d_ligne I_C="14" />
+                  <d_poids F_C="9.090909" />
+                  <d_revue I_C="0" />
+                </Indicateur_02>
+                <Indicateur_03 S_intitule="Les grandes étapes d'une démarche de créativité sont franchies de manière cohérente">
+                  <d_ligne I_C="15" />
+                  <d_poids F_C="9.090909" />
+                  <d_revue I_C="0" />
+                </Indicateur_03>
+                <Indicateur_04 S_intitule="La structure proposée et le choix des composants respectent les exigences">
+                  <d_ligne I_C="16" />
+                  <d_poids F_C="9.090909" />
+                  <d_revue I_C="0" />
+                </Indicateur_04>
+              </l_01>
+            </l_CO7.ee3>
+            <l_CO7.ee1 S_00="Participer à une démarche de conception dans le but de proposer plusieurs solutions possibles à un problème technique identifié en lien avec un enjeu énergétique">
+              <l_01>
+                <Indicateur_00 S_intitule="Le besoin relatif au projet et les fonctions sont identifiés et justifiés">
+                  <d_ligne I_C="6" />
+                  <d_poids F_C="9.090909" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="Les critères du cahier des charges sont décodés et les principaux points de vigilance relatifs au projet sont identifiés">
+                  <d_ligne I_C="7" />
+                  <d_poids F_C="9.090909" />
+                  <d_revue I_C="0" />
+                </Indicateur_01>
+                <Indicateur_02 S_intitule="Les contraintes de normes, propriété industrielle, brevets sont identifiées">
+                  <d_ligne I_C="8" />
+                  <d_poids F_C="9.090909" />
+                  <d_revue I_C="0" />
+                </Indicateur_02>
+                <Indicateur_03 S_intitule="La démarche d'analyse du problème est pertinente ">
+                  <d_ligne I_C="9" />
+                  <d_poids F_C="9.090909" />
+                  <d_revue I_C="0" />
+                </Indicateur_03>
+              </l_01>
+            </l_CO7.ee1>
+            <l_CO7.ee4 S_00="Définir les modifications de la structure, les choix de constituants et du type de système de gestion d'une chaîne d'énergie afin de répondre à une évolution d'un cahier des charges">
+              <l_01>
+                <Indicateur_00 S_intitule="idem CO7.ee3">
+                  <d_ligne I_C="0" />
+                  <d_poids I_C="1" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+              </l_01>
+            </l_CO7.ee4>
+          </d_01>
+          <d_02 I_C="40" />
+        </l_O7>
+        <l_SII S_00="EE">
+          <l_01 />
+          <d_02 />
+          <d_03 />
+        </l_SII>
+        <l_O9 S_00="Gérer la vie du produit">
+          <d_01>
+            <l_CO9.ee1 S_00="Expérimenter des procédés de stockage, de production, de transport, de transformation, d'énergie pour aider à la conception d'une chaîne d'énergie">
+              <l_01>
+                <Indicateur_00 S_intitule="Les paramètres significatifs à observer sont identifiés">
+                  <d_ligne I_C="31" />
+                  <d_poids F_C="11.111111" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="Le protocole d'expérimentation est adapté à l'objectif">
+                  <d_ligne I_C="32" />
+                  <d_poids F_C="11.111111" />
+                  <d_revue I_C="0" />
+                </Indicateur_01>
+                <Indicateur_02 S_intitule="Les caractéristiques principales et leurs conséquences constructives sont identifiées">
+                  <d_ligne I_C="33" />
+                  <d_poids F_C="11.111111" />
+                  <d_revue I_C="0" />
+                </Indicateur_02>
+              </l_01>
+            </l_CO9.ee1>
+            <l_CO9.ee2 S_00="Réaliser et valider un prototype obtenu en réponse à tout ou partie du cahier des charges initial">
+              <l_01>
+                <Indicateur_00 S_intitule="Le prototype choisi et sa réalisation, respecte le diagramme des exigences">
+                  <d_ligne I_C="34" />
+                  <d_poids F_C="11.111111" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="Les caractéristiques à valider sont identifiées et permettent de valider les exigences">
+                  <d_ligne I_C="35" />
+                  <d_poids F_C="11.111111" />
+                  <d_revue I_C="0" />
+                </Indicateur_01>
+              </l_01>
+            </l_CO9.ee2>
+            <l_CO9.ee3 S_00="Intégrer un prototype dans un système à modifier pour valider son comportement et ses performances">
+              <l_01>
+                <Indicateur_00 S_intitule="Le prototype s'insère dans le système">
+                  <d_ligne I_C="36" />
+                  <d_poids F_C="11.111111" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="Un protocole d'essai pertinent est défini">
+                  <d_ligne I_C="37" />
+                  <d_poids F_C="11.111111" />
+                  <d_revue I_C="0" />
+                </Indicateur_01>
+                <Indicateur_02 S_intitule="L'essai respecte le protocole et le comportement du système est relevé">
+                  <d_ligne I_C="38" />
+                  <d_poids F_C="11.111111" />
+                  <d_revue I_C="0" />
+                </Indicateur_02>
+                <Indicateur_03 S_intitule="Les mesures et leurs interprétations montrent des résultats cohérents ">
+                  <d_ligne I_C="39" />
+                  <d_poids F_C="11.111111" />
+                  <d_revue I_C="0" />
+                </Indicateur_03>
+              </l_01>
+            </l_CO9.ee3>
+          </d_01>
+          <d_02 I_C="20" />
+        </l_O9>
+        <l_O8 S_00="Valider des solutions techniques">
+          <d_01>
+            <l_CO8.ee1 S_00="Renseigner un logiciel de simulation du comportement énergétique avec les caractéristiques du système et les paramètres externes pour un point de fonctionnement donné">
+              <l_01>
+                <Indicateur_00 S_intitule="Les variables et les paramètres du modèle sont identifiés">
+                  <d_ligne I_C="18" />
+                  <d_poids F_C="8.333333" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="Leurs influences respectives sont identifiées">
+                  <d_ligne I_C="19" />
+                  <d_poids F_C="8.333333" />
+                  <d_revue I_C="0" />
+                </Indicateur_01>
+              </l_01>
+            </l_CO8.ee1>
+            <l_CO8.ee3 S_00="Comparer et interpréter le résultat d'une simulation d'un comportement d'un système avec un comportement réel">
+              <l_01>
+                <Indicateur_00 S_intitule="Les résultats de la simulation et les mesures sont corrélés">
+                  <d_ligne I_C="24" />
+                  <d_poids F_C="8.333333" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="L'analyse des écarts est méthodique">
+                  <d_ligne I_C="25" />
+                  <d_poids F_C="8.333333" />
+                  <d_revue I_C="0" />
+                </Indicateur_01>
+                <Indicateur_02 S_intitule="L'interprétation des résultats est cohérente et pertinente">
+                  <d_ligne I_C="26" />
+                  <d_poids F_C="8.333333" />
+                  <d_revue I_C="0" />
+                </Indicateur_02>
+              </l_01>
+            </l_CO8.ee3>
+            <l_CO8.ee2 S_00="Interpréter les résultats d'une simulation afin de valider une solution ou l'optimiser">
+              <l_01>
+                <Indicateur_00 S_intitule="Les scénarios de simulation sont identifiés">
+                  <d_ligne I_C="20" />
+                  <d_poids F_C="8.333333" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="Les paramètres influents sont identifiés">
+                  <d_ligne I_C="21" />
+                  <d_poids F_C="8.333333" />
+                  <d_revue I_C="0" />
+                </Indicateur_01>
+                <Indicateur_02 S_intitule="L'interprétation des résultats de la simulation est pertinente">
+                  <d_ligne I_C="22" />
+                  <d_poids F_C="8.333333" />
+                  <d_revue I_C="0" />
+                </Indicateur_02>
+                <Indicateur_03 S_intitule="Les modifications proposées sont cohérentes">
+                  <d_ligne I_C="23" />
+                  <d_poids F_C="8.333333" />
+                  <d_revue I_C="0" />
+                </Indicateur_03>
+              </l_01>
+            </l_CO8.ee2>
+            <l_CO8.ee4 S_00="Mettre en oeuvre un protocole d'essais et de mesures sur le prototype d'une chaîne d'énergie, interpréter les résultats">
+              <l_01>
+                <Indicateur_00 S_intitule="le protocole d'essai est justifié et adapté à l'objectif">
+                  <d_ligne I_C="27" />
+                  <d_poids F_C="8.333333" />
+                  <d_revue I_C="0" />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="Les observations et mesures sont méthodiquement menés et les incertitudes de mesures estimées">
+                  <d_ligne I_C="28" />
+                  <d_poids F_C="8.333333" />
+                  <d_revue I_C="0" />
+                </Indicateur_01>
+                <Indicateur_02 S_intitule="L'interprétation des résultats est cohérente et pertinente">
+                  <d_ligne I_C="29" />
+                  <d_poids F_C="8.333333" />
+                  <d_revue I_C="0" />
+                </Indicateur_02>
+              </l_01>
+            </l_CO8.ee4>
+          </d_01>
+          <d_02 I_C="40" />
+        </l_O8>
+      </d_dicCompetences>
+      <l_indicateurs />
+    </Competences_S>
+  </d_dicoCompetences>
+  <d_dicoSavoirs>
     <Savoirs_S B_obj="True" B_pre="True" S_abrDiscipline="EE" S_codeDiscipline="SII" S_nomDiscipline="STI2D-EE" S_nomGenerique="Savoirs">
       <d_dicSavoirs>
         <l_1 S_00="Projet technologique">
@@ -326,7 +336,7 @@
         </l_4>
       </d_dicSavoirs>
     </Savoirs_S>
-  </d_dicSavoirs>
+  </d_dicoSavoirs>
   <d_effectifs>
     <l_C S_00="Classe entière" S_01="Classe entière" />
     <l_E S_00="Etude ou Projet" S_01="Etude et Projet" />
@@ -348,6 +358,7 @@
     <l_TD S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" />
   </d_effectifsSeance>
   <d_horsClasse />
+  <l_listCompetences S_00="S" />
   <l_listSavoirs S_00="S" />
   <l_listeDemarches S_00="I" S_01="R" S_02="P" />
   <l_listeEffectifs S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />

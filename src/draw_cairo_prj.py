@@ -502,12 +502,10 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
     prj.support.pts_caract.append(posSup)
 
 
-#    print "intro", time.time() - tps
+
     #
     #  Tableau des compétenecs
     #    
-#    tps = time.time()
-        
     competences = regrouperLst(prj, prj.GetCompetencesUtil())
     prj.pt_caract_comp = []
     
@@ -586,7 +584,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
         # Barres d'évaluabilité
         #
         for i, e in enumerate(prj.eleves):
-            ev = e.GetEvaluabilite()[1]
+            ev = e.GetEvaluabilite(compil = True)[1]
             y = posZElevesH[1] + i*hEleves
 #            wr = tailleZElevesH[0]*r
 #            ws = tailleZElevesH[0]*s
@@ -1372,31 +1370,31 @@ def DrawLigne(ctx, x, y, gras = False):
 ######################################################################################  
 def regrouperDic(obj, dicIndicateurs):
 #    print "regrouperDic", dicIndicateurs
-#    print "   _dicCompetences_prj", obj.GetReferentiel()._dicCompetences_prj
+#    print "   _dicoCompetences", obj.GetProjetRef()._dicoCompetences
     if obj.GetProjetRef()._niveau == 3:
         dic = {}
         typ = {}
-        tousIndicateurs = obj.GetProjetRef()._dicCompetences
-        for k0, v0 in tousIndicateurs.items():
-            for k1, v1 in v0[1].items():
-                dic[k1] = []
-                typ[k1] = []
-                lk2 = v1[1].keys()
-                lk2.sort()
-#                print "  ", lk2
-                for k2 in lk2:
-                    if k2 in dicIndicateurs.keys():
-                        dic[k1].extend(dicIndicateurs[k2])
-#                        print "   **", v1[1][k2]
-                        typ[k1].extend([p.poids for p in v1[1][k2][1]])
-                    else:
-                        l = len(v1[1][k2][1])
-                        dic[k1].extend([False]*l)
-                        typ[k1].extend(['']*l)
-                
-                if dic[k1] == [] or not (True in dic[k1]):
-                    del dic[k1]
-                    del typ[k1]
+        for disc, tousIndicateurs in obj.GetProjetRef()._dicoCompetences.items():
+            for k0, v0 in tousIndicateurs.items():
+                for k1, v1 in v0[1].items():
+                    dic[disc+k1] = []
+                    typ[disc+k1] = []
+                    lk2 = v1[1].keys()
+                    lk2.sort()
+    #                print "  ", lk2
+                    for k2 in lk2:
+                        if disc+k2 in dicIndicateurs.keys():
+                            dic[disc+k1].extend(dicIndicateurs[disc+k2])
+    #                        print "   **", v1[1][k2]
+                            typ[disc+k1].extend([p.poids for p in v1[1][k2][1]])
+                        else:
+                            l = len(v1[1][k2][1])
+                            dic[disc+k1].extend([False]*l)
+                            typ[disc+k1].extend(['']*l)
+                    
+                    if dic[disc+k1] == [] or not (True in dic[disc+k1]):
+                        del dic[disc+k1]
+                        del typ[disc+k1]
                     
 #        print "  >>", dic
 #        print "    ", typ
@@ -1411,22 +1409,22 @@ def regrouperDic(obj, dicIndicateurs):
 ######################################################################################  
 def regrouperLst(obj, lstCompetences):
 #    print "regrouperLst", lstCompetences
-#    print "   _dicCompetences_prj", obj.GetReferentiel()._dicCompetences_prj
+#    print "   _dicoCompetences", obj.GetProjetRef()._dicoCompetences["S"]
     lstCompetences.sort()
     if obj.GetProjetRef()._niveau == 3:
-        dic = []
-        tousIndicateurs = obj.GetProjetRef()._dicCompetences
-        for k0, v0 in tousIndicateurs.items():
-            for k1, v1 in v0[1].items():
-                lk2 = v1[1].keys()
-                lk2.sort()
-                for k2 in lk2:
-                    if k2 in lstCompetences:
-                        dic.append(k1)
-        dic = list(set(dic))
-        dic.sort()
+        lstGrpCompetences = []
+        for disc, tousIndicateurs in obj.GetProjetRef()._dicoCompetences.items():
+            dic = []
+            for k0, v0 in tousIndicateurs.items():
+                for k1, v1 in v0[1].items():
+                    for k2 in sorted(v1[1].keys()):
+                        if disc+k2 in lstCompetences:
+                            dic.append(disc+k1)
+            dic = list(set(dic))
+            dic.sort()
+        lstGrpCompetences.extend(dic)
 #        print "  >>", dic
-        return dic
+        return lstGrpCompetences
     else:
         return lstCompetences
     
