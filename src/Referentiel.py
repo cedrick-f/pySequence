@@ -1612,7 +1612,7 @@ class Referentiel(XMLelem):
 class Projet(XMLelem):
     def __init__(self, parent, code = "", intitule = u"", duree = 0, periode = [], importer = None):
         self._codeXML = "Projet"
-        self._parent = parent
+        self._parent = parent # un référentiel
         self.code = code
         self.intitule = intitule
         self.duree = duree
@@ -1699,17 +1699,17 @@ class Projet(XMLelem):
     
     #########################################################################
     def getIndicateur(self, codeIndic):
-        typ, cod = codeIndic[0], codeIndic[1:]
+        disc, cod = codeIndic[0], codeIndic[1:]
         if '_' in cod:
             code, i = cod.split('_')
             i = int(i)
-            if code in self._dicoIndicateurs_simple[typ].keys():
-                indics = self._dicoIndicateurs_simple[typ][code]
+            if code in self._dicoIndicateurs_simple[disc].keys():
+                indics = self._dicoIndicateurs_simple[disc][code]
                 if len(indics) >= i:
                     indic = indics[i-1]
                     return indic
         else:
-            comp = self.getCompetence(cod)
+            comp = self.getCompetence(disc, cod)
             if type(comp[1]) == dict:
                 return self.getPremierEtDernierNiveauArbre(comp[1])
             else: 
@@ -1727,11 +1727,15 @@ class Projet(XMLelem):
         
     
     #########################################################################
-    def getCompetence(self, comp):
-        if comp in self._dicCompetences.keys():
-            return self._dicCompetences[comp]
+    def getCompetence(self, disc, comp):
+#        print "getCompetence", comp
+#        print "   ", self._dicoCompetences[disc]
+#        competences = self._parent._dicoCompetences[disc]
+#        return competences.getCompetence(comp)
+        if comp in self._dicoCompetences[disc].keys():
+            return self._dicoCompetences[disc][comp]
         else:
-            for k0, v0 in self._dicCompetences.items():
+            for k0, v0 in self._dicoCompetences[disc].items():
                 if type(v0[1]) == dict:
                     if comp in v0[1].keys():
                         return v0[1][comp]

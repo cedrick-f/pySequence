@@ -17560,12 +17560,14 @@ class Tache(Objet_sequence):
 #                                try:
 #                                    print "******",self.GetReferentiel().dicIndicateurs_prj[code][indic]
                             # si le type d'enseignement ne colle pas avec les indicateurs (pb lors de l'enregistrement)
-                            if not code in self.GetProjetRef()._dicIndicateurs_simple.keys():
-                                print "Erreur 3", code, "<>", self.GetProjetRef()._dicIndicateurs_simple.keys()
-                                if not constantes.Erreur(constantes.ERR_PRJ_T_TYPENS) in err:
-                                    err.append(constantes.Erreur(constantes.ERR_PRJ_T_TYPENS))
-                            else:
-                                self.indicateursEleve[0].append(codeindic)
+                            for disc, dic in self.GetProjetRef()._dicoIndicateurs_simple.items():
+                                if code[0] == disc:
+                                    if not code[1:] in dic.keys():
+                                        print "Erreur 3", code, "<>", self.GetProjetRef()._dicoIndicateurs_simple[disc]
+                                        if not constantes.Erreur(constantes.ERR_PRJ_T_TYPENS) in err:
+                                            err.append(constantes.Erreur(constantes.ERR_PRJ_T_TYPENS))
+                                    else:
+                                        self.indicateursEleve[0].append(codeindic)
                     
 #        print self.indicateursEleve
         if not self.estPredeterminee():
