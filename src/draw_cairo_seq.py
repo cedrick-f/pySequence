@@ -578,12 +578,12 @@ def Draw(ctx, seq, mouchard = False):
     for c in seq.prerequis.savoirs:
         typ, cod = c[0], c[1:]
         if typ == "B" and ref.tr_com != []: # B = tronc commun --> référentiel
-            savoir = ref_tc.dicSavoirs["S"]
+            savoir = ref_tc.dicoSavoirs["S"]
         else:
-            if typ in ref.dicSavoirs.keys():
-                savoir = ref.dicSavoirs[typ]
-            elif ref_tc and typ in ref_tc.dicSavoirs.keys():
-                savoir = ref_tc.dicSavoirs[typ]
+            if typ in ref.dicoSavoirs.keys():
+                savoir = ref.dicoSavoirs[typ]
+            elif ref_tc and typ in ref_tc.dicoSavoirs.keys():
+                savoir = ref_tc.dicoSavoirs[typ]
                 
         disc = savoir.codeDiscipline
         lstTexte.append(savoir.getSavoir(cod))

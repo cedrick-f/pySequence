@@ -6363,21 +6363,22 @@ class PanelPropriete_Competences(PanelPropriete):
             for s in self.competence.competences:
                 if s in arbre.items.keys():
                     arbre.CheckItem2(arbre.items[s])
-          
-        checkArbre(self.arbre)  
+        
+        for arbre in self.arbres.values():
+            checkArbre(arbre)  
 #        self.arbre.UnselectAll()
 #        for s in self.competence.competences:
 #            if s in self.arbre.items.keys():
 #                self.arbre.CheckItem2(self.arbre.items[s])
                     
                     
-        if hasattr(self, 'arbreSpe'):
-            checkArbre(self.arbreSpe)  
-            
-        
-        if hasattr(self, 'arbreFct'):
-            checkArbre(self.arbreFct)  
-            
+#        if hasattr(self, 'arbreSpe'):
+#            checkArbre(self.arbreSpe)  
+#            
+#        
+#        if hasattr(self, 'arbreFct'):
+#            checkArbre(self.arbreFct)  
+#            
             
 #        for s in self.competence.competences:
 #            
@@ -15942,6 +15943,7 @@ class Savoirs(Objet_sequence):
 
                 self.savoirs.append(code)
                 
+        self.GetPanelPropriete().construire()
         self.GetPanelPropriete().MiseAJour()
         
     ######################################################################################  
