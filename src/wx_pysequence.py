@@ -3574,7 +3574,8 @@ class FicheProjet(BaseFiche):
                 x, y = self.ClientToScreen((x, y))
 #                type_ens = self.projet.classe.typeEnseignement
                 prj = self.projet.GetProjetRef()
-                competence = prj.getCompetence(kComp)
+                print kComp
+                competence = prj.getCompetence(kComp[0], kComp[1:])
                         
                 intituleComp = competence[0]
                 
@@ -7356,12 +7357,13 @@ class PanelPropriete_Tache(PanelPropriete):
             #
             self.arbres = {}
             self.pagesComp = []
-            for code, comp in ref.dicoCompetences.items():
+            
+            for code, dicComp in prj._dicoCompetences.items():
                 self.pagesComp.append(wx.Panel(nb, -1))
-                
+                comp = ref.dicoCompetences[code]
                 pageComsizer = wx.BoxSizer(wx.HORIZONTAL)
                 
-                self.arbres[code] = ArbreCompetencesPrj(self.pagesComp[-1], code, comp, self,
+                self.arbres[code] = ArbreCompetencesPrj(self.pagesComp[-1], code, dicComp, comp, self,
                                                  revue = self.tache.phase in TOUTES_REVUES_SOUT, 
                                                  eleves = (self.tache.phase in TOUTES_REVUES_EVAL_SOUT \
                                                            or self.tache.estPredeterminee()))
@@ -9672,7 +9674,7 @@ class ArbreSavoirs(CT.CustomTreeCtrl):
 ####################################################################################
     
 class ArbreCompetences(HTL.HyperTreeList):
-    def __init__(self, parent, typ, competences, pptache = None, agwStyle = 0):#|CT.TR_AUTO_CHECK_CHILD):#|HTL.TR_NO_HEADER):
+    def __init__(self, parent, typ, dicCompetences, competences, pptache = None, agwStyle = 0):#|CT.TR_AUTO_CHECK_CHILD):#|HTL.TR_NO_HEADER):
         
         HTL.HyperTreeList.__init__(self, parent, -1, style = wx.WANTS_CHARS,
                                    agwStyle = CT.TR_HIDE_ROOT|CT.TR_HAS_VARIABLE_ROW_HEIGHT|agwStyle)#wx.TR_DEFAULT_STYLE|
@@ -9694,7 +9696,7 @@ class ArbreCompetences(HTL.HyperTreeList):
         self.CreerColonnes()
         
         self.root = self.AddRoot(competences.nomDiscipline)
-        self.MiseAJourTypeEnseignement(competences)
+        self.MiseAJourTypeEnseignement(dicCompetences)
         
         self.ExpandAll()
         
@@ -9727,7 +9729,7 @@ class ArbreCompetences(HTL.HyperTreeList):
         event.Skip()
         
     #############################################################################
-    def MiseAJourTypeEnseignement(self, competences):
+    def MiseAJourTypeEnseignement(self, dicCompetences):
 #        print "MiseAJourTypeEnseignement"
        
  
@@ -9739,7 +9741,7 @@ class ArbreCompetences(HTL.HyperTreeList):
                     wnd.Destroy()
 
         self.items = {}
-        self.Construire(self.root, dic = competences.dicCompetences)
+        self.Construire(self.root, dic = dicCompetences)
 
         self.ExpandAll()
 
@@ -9896,7 +9898,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
         <revue> : vrai si la tâche est une revue
         <eleves> : vrai s'il faut afficher une colonne supplémentaire pour distinguer les compétences pour chaque éleve
     """
-    def __init__(self, parent, typ, competences,  pptache, revue = False, eleves = False, 
+    def __init__(self, parent, typ, dicCompetences, competences,  pptache, revue = False, eleves = False, 
                  agwStyle = CT.TR_HIDE_ROOT|CT.TR_HAS_VARIABLE_ROW_HEIGHT|\
                             CT.TR_ROW_LINES|CT.TR_ALIGN_WINDOWS| \
                             CT.TR_AUTO_CHECK_PARENT|CT.TR_AUTO_TOGGLE_CHILD):
@@ -9904,7 +9906,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
         self.eleves = eleves
         self.typ = typ
         
-        ArbreCompetences.__init__(self, parent, typ, competences, pptache,
+        ArbreCompetences.__init__(self, parent, typ, dicCompetences, competences, pptache,
                                   agwStyle = agwStyle)#|CT.TR_ELLIPSIZE_LONG_ITEMS)#|CT.TR_TOOLTIP_ON_LONG_ITEMS)#
         self.Bind(wx.EVT_SIZE, self.OnSize2)
         self.Bind(CT.EVT_TREE_ITEM_GETTOOLTIP, self.OnToolTip)
@@ -9976,7 +9978,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
 
     ####################################################################################
     def Construire(self, branche = None, dic = None):
-#        print "Construire compétences prj", self.GetTache().intitule
+        print "Construire compétences prj", self.GetTache().intitule
 #        if competences == None:
 #            competences = self.competences
         
@@ -9985,13 +9987,14 @@ class ArbreCompetencesPrj(ArbreCompetences):
         
         tache = self.GetTache()
         prj = tache.GetProjetRef()
-        if dic == None: # Construction de la racine
-            dic = self.competences.dicCompetences
-#            dic = prj._dicoCompetences[self.code]
+        print " prj", prj, self.typ
+#        if dic == None: # Construction de la racine
+##            dic = self.competences.dicCompetences
+#            dic = prj._dicoCompetences[self.typ]
             
         
 #        print "   ProjetRef", prj
-#        print "  dicCompetences", dic
+        print "  dicCompetences", dic
 #        if tache.estPredeterminee(): print prj.taches[tache.intitule][2]
         
         font = wx.Font(10, wx.DEFAULT, wx.FONTSTYLE_ITALIC, wx.NORMAL, False)
@@ -10153,7 +10156,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
             
             
         # Démarrage de la récursion
-        const(dic, branche, debug = False)
+        const(dic, branche, debug = True)
         
         
 #        if self.eleves:
@@ -17203,12 +17206,14 @@ class Tache(Objet_sequence):
                   valeur = liste [True False ...] des indicateurs à mobiliser
         """
 #        print "GetDicIndicateurs", self, ":", self.indicateursEleve
+#        print self.GetProjetRef()._dicoIndicateurs_simple
         tousIndicateurs = {}
         for disc, dic in self.GetProjetRef()._dicoIndicateurs_simple.items():
             for k, i in dic.items():
                 tousIndicateurs[disc+k] = i
-        indicateurs = {}
+#        print "  >", tousIndicateurs
         
+        indicateurs = {}
         for i in self.indicateursEleve[0]:
 #            print "   ", i
             cci = i.split('_')

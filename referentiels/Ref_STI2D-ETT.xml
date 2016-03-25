@@ -26,44 +26,6 @@
   <d_dicoCompetences>
     <Competences_S S_abrDiscipline="ETT" S_codeDiscipline="SII" S_nomDiscipline="STI2D - ETT" S_nomGenerique="Compétences" S_nomGeneriqueIndic="Indicateurs de performance">
       <d_dicCompetences>
-        <l_O2 S_00="Identifier les éléments permettant la limitation de l’Impact environnemental d’un système et de ses constituants">
-          <d_01>
-            <l_CO2.2 S_00="Justifier les solutions constructives d'un système au regard des impacts environnementaux et économiques engendrés tout au long de son cycle de vie">
-              <l_01>
-                <Indicateur_00 S_intitule="La relation entre une fonction, des solutions et leur impact environnemental ou sociétal est précisée ">
-                  <d_ligne I_S="0" />
-                  <d_poids F_S="20.0" />
-                  <d_revue I_S="0" />
-                </Indicateur_00>
-                <Indicateur_01 S_intitule="Le compromis technico économique et/ou la prise en compte des normes et réglementations est expliqué ">
-                  <d_ligne I_S="0" />
-                  <d_poids F_S="20.0" />
-                  <d_revue I_S="0" />
-                </Indicateur_01>
-              </l_01>
-            </l_CO2.2>
-            <l_CO2.1 S_00="Identifier les flux et la forme de l'énergie, caractériser ses transformations et/ou modulations et estimer l'efficacité énergétique globale d'un système">
-              <l_01>
-                <Indicateur_00 S_intitule="Les flux et la forme de l'énergie et/ou de l'information sont décrits de façon qualitative">
-                  <d_ligne I_S="0" />
-                  <d_poids F_S="20.0" />
-                  <d_revue I_S="0" />
-                </Indicateur_00>
-                <Indicateur_01 S_intitule="Les caractéristiques d'entrées sorties des transformations ou modulations sont correctement précisées">
-                  <d_ligne I_S="0" />
-                  <d_poids F_S="20.0" />
-                  <d_revue I_S="0" />
-                </Indicateur_01>
-                <Indicateur_02 S_intitule="L'analyse globale d'une chaine (énergie, action, information) est correctement réalisée">
-                  <d_ligne I_S="0" />
-                  <d_poids F_S="20.0" />
-                  <d_revue I_S="0" />
-                </Indicateur_02>
-              </l_01>
-            </l_CO2.1>
-          </d_01>
-          <d_02 I_S="15" />
-        </l_O2>
         <l_O8s S_00="Valider des solutions techniques">
           <d_01>
             <l_CO8.0 S_00="Justifier des éléments d'une simulation relative au comportement de tout ou partie d'un système et les écarts par rapport au réel">
@@ -171,11 +133,44 @@
           </d_01>
           <d_02 />
         </l_O3>
-        <l_SII S_00="ETT">
-          <l_01 />
-          <d_02 />
-          <d_03 />
-        </l_SII>
+        <l_O2 S_00="Identifier les éléments permettant la limitation de l’Impact environnemental d’un système et de ses constituants">
+          <d_01>
+            <l_CO2.2 S_00="Justifier les solutions constructives d'un système au regard des impacts environnementaux et économiques engendrés tout au long de son cycle de vie">
+              <l_01>
+                <Indicateur_00 S_intitule="La relation entre une fonction, des solutions et leur impact environnemental ou sociétal est précisée ">
+                  <d_ligne I_S="0" />
+                  <d_poids F_S="20.0" />
+                  <d_revue I_S="0" />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="Le compromis technico économique et/ou la prise en compte des normes et réglementations est expliqué ">
+                  <d_ligne I_S="0" />
+                  <d_poids F_S="20.0" />
+                  <d_revue I_S="0" />
+                </Indicateur_01>
+              </l_01>
+            </l_CO2.2>
+            <l_CO2.1 S_00="Identifier les flux et la forme de l'énergie, caractériser ses transformations et/ou modulations et estimer l'efficacité énergétique globale d'un système">
+              <l_01>
+                <Indicateur_00 S_intitule="Les flux et la forme de l'énergie et/ou de l'information sont décrits de façon qualitative">
+                  <d_ligne I_S="0" />
+                  <d_poids F_S="20.0" />
+                  <d_revue I_S="0" />
+                </Indicateur_00>
+                <Indicateur_01 S_intitule="Les caractéristiques d'entrées sorties des transformations ou modulations sont correctement précisées">
+                  <d_ligne I_S="0" />
+                  <d_poids F_S="20.0" />
+                  <d_revue I_S="0" />
+                </Indicateur_01>
+                <Indicateur_02 S_intitule="L'analyse globale d'une chaine (énergie, action, information) est correctement réalisée">
+                  <d_ligne I_S="0" />
+                  <d_poids F_S="20.0" />
+                  <d_revue I_S="0" />
+                </Indicateur_02>
+              </l_01>
+            </l_CO2.1>
+          </d_01>
+          <d_02 I_S="15" />
+        </l_O2>
         <l_O1 S_00="Caractériser des systèmes privilégiant un usage raisonné du point de vue développement durable">
           <d_01>
             <l_CO1.1 S_00="Justifier les choix des matériaux, des structures d'un système et les énergies mises en oeuvre dans une approche de développement durable">

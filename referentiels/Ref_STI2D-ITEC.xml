@@ -107,11 +107,6 @@
           </d_01>
           <d_02 I_C="40" />
         </l_O7>
-        <l_SII S_00="ITEC">
-          <l_01 />
-          <d_02 />
-          <d_03 />
-        </l_SII>
         <l_O9 S_00="Gérer la vie du produit">
           <d_01>
             <l_CO9.itec1 S_00="Expérimenter des procédés pour caractériser les paramètres de transformation de la matière et leurs conséquences sur la définition et l'obtention de pièces">

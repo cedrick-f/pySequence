@@ -78,7 +78,7 @@ def includeElem(pl, gl):
 
 
 
-                                
+                           
                                 
 class XMLelem():
     ######################################################################################  
@@ -1047,10 +1047,10 @@ class Referentiel(XMLelem):
         #
         col = [c  for c in range(1, sh_g.ncols) if sh_g.cell(24,c).value != u""]
         for c in col:
-            self.projets[sh_g.cell(25,c).value] = Projet(self, sh_g.cell(25,c).value,
-                                                         intitule = sh_g.cell(24,c).value, 
-                                                         duree = int0(sh_g.cell(26,c).value), 
-                                                         periode = [int(i) for i in sh_g.cell(27,c).value.split()])
+            self.projets[sh_g.cell(25,c).value] = Projet(self, sh_g.cell(25,c).value,           # Code
+                                                         intitule = sh_g.cell(24,c).value,      # Nom
+                                                         duree = int0(sh_g.cell(26,c).value),   # Durée
+                                                         periode = [int(i) for i in sh_g.cell(27,c).value.split()])     # Période
         if debug: print "  projets :", self.projets
         
         #
@@ -1148,7 +1148,11 @@ class Referentiel(XMLelem):
             if n[:5] == "Comp_":
                 sh_co = wb.sheet_by_name(n)
                 code = n[5]
-                self.dicoCompetences[code] = Competences(sh_co.cell(0,0).value, sh_co.cell(2,0).value, sh_co.cell(2,2).value, sh_co.cell(2,1).value, sh_co.cell(0,5).value)
+                self.dicoCompetences[code] = Competences(sh_co.cell(0,0).value,     # Nom générique ("Compétence", ...)
+                                                         sh_co.cell(2,0).value,     # Code discipline "enseignant"
+                                                         sh_co.cell(2,2).value,     # Code discipline "enseignement"
+                                                         sh_co.cell(2,1).value,     # Nom discipline
+                                                         sh_co.cell(0,5).value)     # Nom générique indicateur ("Indicateur de performance", ...)
                 self.listCompetences.append(code)
                 #
                 # Décomposition des projets en parties
@@ -1182,7 +1186,7 @@ class Referentiel(XMLelem):
             #            print "  importer", self, p
                         p.importer(wb)
                 
-                self.dicoCompetences[code].dicCompetences = getArbre(sh_co, range(2, sh_co.nrows), 0, prems = True, debug = False)
+                self.dicoCompetences[code].dicCompetences = getArbre(sh_co, range(4, sh_co.nrows), 0, prems = True, debug = False)
 
 
 
@@ -1830,8 +1834,9 @@ class Projet(XMLelem):
 
     ##################################################################################################################
     def postTraiter(self, ref):
-        debug = False#ref.Code == "STS_SN_IR"
-        if debug: print " postTraiter",  ref, self, self.parties
+        debug = False#ref.Code == "E"self._parent.Code == "EE-SI"
+        if self._parent.Code == "EE-SI":
+            print "postTraiter",  ref, self, self.parties
         
         
 #        ###########################################################
@@ -1917,7 +1922,11 @@ class Projet(XMLelem):
         
         for code, comp in itemComp:
             self._dicoCompetences[code] = self.getArbreProjet(comp.dicCompetences, self, debug = debug)
-        
+            if self._parent.Code == "EE-SI": 
+                print "+++", self
+                print "   ", code, self._dicoCompetences
+                
+                
             if debug: print "   >", code, self._dicoCompetences[code]
     #        print ">> _dicCompetences prj", self._dicCompetences
             
@@ -1940,10 +1949,16 @@ class Projet(XMLelem):
             self.normaliserPoids(self._dicoIndicateurs[code], debug = False)
     #        print "                   ", self._dicIndicateurs_prj
             
+            
             self._niveau = 0
             self._dicoIndicateurs_famille[code] = self.getDeuxiemeNiveauArbre(self._dicoCompetences[code])
-    
+            
             self._dicoIndicateurs_simple[code] = self.getDernierNiveauArbre2(self._dicoIndicateurs_famille[code])
+            if debug:
+                print code, comp
+                print self._dicoIndicateurs[code]
+                print self._dicoIndicateurs_famille[code]
+                print self._dicoIndicateurs_simple[code]
     #        print "_dicIndicateurs_prj_simple", self._dicIndicateurs_prj_simple
         
         
@@ -1986,8 +2001,10 @@ class Projet(XMLelem):
     def completer(self, ref):
         """ Complète le projet
         """
-#        print " completer", ref, self
-#        print " ", self._dicCompetences
+        if self._parent.Code == "EE-SI":
+            print "completer", ref, self
+            print "     ", self._dicoCompetences
+            
         
         ###########################################################
         def aplatir(dic, niv=1):
@@ -2075,7 +2092,9 @@ class Projet(XMLelem):
             for p in self.parties.keys():
                 self._dicoGrpIndicateur[code][p] = list(set(self._dicoGrpIndicateur[code][p]))
 
-    
+        if self._parent.Code == "EE-SI":
+            print "     ", self._dicoCompetences
+            print
 #        if ref.tr_com != []:
 #            self.grilles.update(REFERENTIELS[ref.tr_com[0]].projets[self.code].grilles)
                 
@@ -2197,7 +2216,11 @@ class Savoirs(XMLelem):
             return self.getSavoir(code, dic[cd][1], c+1)
 
     
-    
+objets = {"Indicateur" : Indicateur,
+          "Projet" : Projet,
+          "Savoirs" : Savoirs,
+          "Competences" : Competences}     
+
 ##########################################################################################
 ## source : http://stackoverflow.com/questions/5967500/how-to-correctly-sort-a-string-with-a-number-inside
 #import re
