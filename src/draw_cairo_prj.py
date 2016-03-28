@@ -297,6 +297,10 @@ def calculCoefCalcH(prj, ctx, hm):
         a = (tailleZTaches[1] - hFixe - b*nt) / h
 
     
+
+    
+    
+    
 ######################################################################################  
 def getCoulComp(partie, alpha = 1.0):
     if partie in ICoulComp.keys():

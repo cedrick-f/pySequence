@@ -1835,8 +1835,8 @@ class Projet(XMLelem):
     ##################################################################################################################
     def postTraiter(self, ref):
         debug = False#ref.Code == "E"self._parent.Code == "EE-SI"
-        if self._parent.Code == "EE-SI":
-            print "postTraiter",  ref, self, self.parties
+#        if self._parent.Code == "EE-SI":
+#            print "postTraiter",  ref, self, self.parties
         
         
 #        ###########################################################
@@ -1922,9 +1922,9 @@ class Projet(XMLelem):
         
         for code, comp in itemComp:
             self._dicoCompetences[code] = self.getArbreProjet(comp.dicCompetences, self, debug = debug)
-            if self._parent.Code == "EE-SI": 
-                print "+++", self
-                print "   ", code, self._dicoCompetences
+#            if self._parent.Code == "EE-SI": 
+#                print "+++", self
+#                print "   ", code, self._dicoCompetences
                 
                 
             if debug: print "   >", code, self._dicoCompetences[code]
@@ -2001,9 +2001,9 @@ class Projet(XMLelem):
     def completer(self, ref):
         """ Complète le projet
         """
-        if self._parent.Code == "EE-SI":
-            print "completer", ref, self
-            print "     ", self._dicoCompetences
+#        if self._parent.Code == "EE-SI":
+#            print "completer", ref, self
+#            print "     ", self._dicoCompetences
             
         
         ###########################################################
@@ -2112,7 +2112,7 @@ class Indicateur(XMLelem):
         self.poids = poids
         self.ligne = ligne
         self.intitule = intitule
-        self.revue = revue
+        self.revue = revue          # Revue à laquelle cet indicateur doit être évalué (si imposé par le référentiel) - 0 = pas imposé
 
     def estProjet(self):
         return self.getType() != 'E'
@@ -2163,16 +2163,16 @@ class Competences(XMLelem):
         self._codeXML = "Competences"
         self.nomGenerique = nomGenerique
         self.codeDiscipline = codeDiscipline
-        self.nomDiscipline = nomDiscipline
-        self.abrDiscipline = abrDiscipline
+        self.nomDiscipline = nomDiscipline          # Nom discipline
+        self.abrDiscipline = abrDiscipline          # Abréviation discipline
         self.nomGeneriqueIndic = nomGeneriqueIndic
         self.dicCompetences = {}
         self.indicateurs = []
 
     #########################################################################
     def getCompetence(self, comp):
-#        print "getCompetence", comp
-#        print "   ", self.dicCompetences
+        print "getCompetence", comp
+        print "   ", self.dicCompetences
         if comp in self.dicCompetences.keys():
 #            print "   1>>"
             return self.dicCompetences[comp]
