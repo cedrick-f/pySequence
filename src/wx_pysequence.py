@@ -7644,7 +7644,7 @@ class PanelPropriete_Tache(PanelPropriete):
                 
                 pageComsizer.Add(self.arbres[code], 1, flag = wx.EXPAND)
                 self.pagesComp[-1].SetSizer(pageComsizer)
-                self.nb.AddPage(self.pagesComp[-1], comp.nomGenerique + u" à mobiliser :" + comp.abrDiscipline) 
+                self.nb.AddPage(self.pagesComp[-1], comp.nomGenerique + u" à mobiliser : " + comp.abrDiscipline) 
                 
                 self.pageComsizer = pageComsizer
             
@@ -9794,6 +9794,8 @@ class ArbreCompetences(HTL.HyperTreeList):
         if dicCompetences is None:
             dicCompetences = competences.dicCompetences
             
+        self.dicCompetences = dicCompetences
+        
         self.items = {}
       
         self.AddColumn(competences.nomDiscipline)
@@ -9852,11 +9854,7 @@ class ArbreCompetences(HTL.HyperTreeList):
         self.ExpandAll()
 
 
-    #############################################################################
-    def MiseAJourPhase(self, phase):
-        self.DeleteChildren(self.root)
-        self.Construire(self.root)
-        self.ExpandAll()
+    
         
     
     ####################################################################################
@@ -10096,9 +10094,9 @@ class ArbreCompetencesPrj(ArbreCompetences):
         tache = self.GetTache()
         prj = tache.GetProjetRef()
 #        print " prj", prj, self.typ
-#        if dic == None: # Construction de la racine
-##            dic = self.competences.dicCompetences
-#            dic = prj._dicoCompetences[self.typ]
+        if dic == None: # Construction de la racine
+#            dic = self.competences.dicCompetences
+            dic = self.dicCompetences
             
         
 #        print "   ProjetRef", prj
@@ -10274,6 +10272,13 @@ class ArbreCompetencesPrj(ArbreCompetences):
         
         self.Refresh()
 
+
+    #############################################################################
+    def MiseAJourPhase(self, phase):
+        self.DeleteChildren(self.root)
+        self.Construire(self.root)
+        self.ExpandAll()
+        
     
     #############################################################################
     def GetCasesEleves(self, codeIndic):
@@ -15324,7 +15329,7 @@ class Projet(BaseDoc, Objet_sequence):
             if t.phase in TOUTES_REVUES_EVAL and (True in self.GetReferentiel().compImposees.values()):
                 t.GetPanelPropriete().Destroy()
                 t.panelPropriete = PanelPropriete_Tache(t.panelParent, t)
-            t.MiseAJourTypeEnseignement(self.classe.referentiel)
+#            t.MiseAJourTypeEnseignement(self.classe.referentiel)
         
         for e in self.eleves:
             e.MiseAJourTypeEnseignement()
