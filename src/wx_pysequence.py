@@ -8493,7 +8493,7 @@ class PanelSelectionGrille(wx.Panel):
         self.codeGrille = codeGrille
         titre = wx.StaticText(self, -1, eleve.GetProjetRef().parties[codeGrille])
         self.SelectGrille = URLSelectorCombo(self, eleve.grille[codeGrille], 
-                                             eleve.projet.GetPath(), 
+                                             eleve.GetDocument().GetPath(), 
                                              dossier = False, ext = "Classeur Excel (*.xls*)|*.xls*")
         self.btnlien = wx.Button(self, -1, u"Ouvrir")
         self.btnlien.Show(self.eleve.grille[self.codeGrille].path != "")
@@ -12695,6 +12695,8 @@ class Objet_sequence():
             cl = self.sequence.classe
         elif hasattr(self, 'parent'):
             cl = self.parent.classe
+        elif hasattr(self, 'GetDocument'):
+            cl = self.GetDocument().classe
         else:
             cl = self.classe
         return cl
@@ -18834,16 +18836,16 @@ def supprime_accent(ligne):
 #
 ####################################################################################
 class Eleve(Personne, Objet_sequence):
-    def __init__(self, projet, panelParent, ident = 0):
+    def __init__(self, doc, panelParent, ident = 0):
         
         self.titre = u"élève"
         self.code = "Elv"
         
         self.grille = {} #[Lien(typ = 'f'), Lien(typ = 'f')]
-        for k in projet.GetProjetRef().parties.keys():
+        for k in doc.GetProjetRef().parties.keys():
             self.grille[k] = Lien(typ = 'f')
         
-        Personne.__init__(self, projet, panelParent, ident)
+        Personne.__init__(self, doc, panelParent, ident)
  
         
         
@@ -18854,13 +18856,13 @@ class Eleve(Personne, Objet_sequence):
         d = 0.0
         p = 0
         if not total and phase != None:
-            for i, t in enumerate(self.projet.taches):
+            for i, t in enumerate(self.GetDocument().taches):
                 if t.phase == phase:
                     break
                 if t.phase in TOUTES_REVUES_EVAL_SOUT:
                     p = i
         
-        for t in self.projet.taches[p:]:
+        for t in self.GetDocument().taches[p:]:
             if t.phase == phase:
                 break
             if not t.phase in TOUTES_REVUES_SOUT:
@@ -18873,12 +18875,12 @@ class Eleve(Personne, Objet_sequence):
         d = 0
         p = 0
         if depuis != None:
-            for i, t in enumerate(self.projet.taches):
+            for i, t in enumerate(self.GetDocument().taches):
                 if t == depuis:
                     break
                 p = i
         
-        for t in self.projet.taches[p:]:
+        for t in self.GetDocument().taches[p:]:
             if t == tache:
                 break
             if not t.phase in TOUTES_REVUES_SOUT:
@@ -18889,7 +18891,7 @@ class Eleve(Personne, Objet_sequence):
     ######################################################################################  
     def OuvrirGrille(self, k):
         try:
-            self.grille[k].Afficher(self.projet.GetPath())#os.startfile(self.grille[num])
+            self.grille[k].Afficher(self.GetDocument().GetPath())#os.startfile(self.grille[num])
         except:
             messageErreur(None, u"Ouverture impossible",
                           u"Impossible d'ouvrir le fichier\n\n%s!\n" %toSystemEncoding(self.grille[k].path))
@@ -18905,7 +18907,7 @@ class Eleve(Personne, Objet_sequence):
         
     ######################################################################################  
     def getNomFichierDefaut(self, prefixe):
-        return getNomFichier(prefixe, self.GetNomPrenom()+"_"+self.projet.intitule[:20])
+        return getNomFichier(prefixe, self.GetNomPrenom()+"_"+self.GetDocument().intitule[:20])
 
         
     ######################################################################################  
@@ -18913,7 +18915,7 @@ class Eleve(Personne, Objet_sequence):
         """ Renvoie les noms des fichiers grilles à générer
         """
 #        print "GetNomGrilles"
-        prj = self.projet.GetProjetRef()
+        prj = self.GetDocument().GetProjetRef()
 #        print prj
 #        print prj.grilles
         #
@@ -18921,7 +18923,7 @@ class Eleve(Personne, Objet_sequence):
         #
         # Par défaut = chemin du fichier .prj
         if path == None:
-            path = os.path.dirname(self.projet.GetApp().fichierCourant)
+            path = os.path.dirname(self.GetDocument().GetApp().fichierCourant)
             
         nomFichiers = {} 
         for part, g in prj.parties.items():
@@ -18933,7 +18935,7 @@ class Eleve(Personne, Objet_sequence):
                 extention = grilles.EXT_EXCEL
                 
                 if gr[1] == 'C': # fichier "Collectif"
-                    nomFichiers[part] = os.path.join(path, self.projet.getNomFichierDefaut(prefixe)) + extention
+                    nomFichiers[part] = os.path.join(path, self.GetDocument().getNomFichierDefaut(prefixe)) + extention
                 else:
                     nomFichiers[part] = os.path.join(path, self.getNomFichierDefaut(prefixe)) + extention
 #        print "   >", nomFichiers
@@ -18946,12 +18948,12 @@ class Eleve(Personne, Objet_sequence):
 #        print "  ", nomFichiers
         if nomFichiers == None:
             nomFichiers = self.GetNomGrilles(path)
-            if not self.projet.TesterExistanceGrilles({0:nomFichiers}):
+            if not self.GetDocument().TesterExistanceGrilles({0:nomFichiers}):
                 return []
             
 #        print "  Fichiers :", nomFichiers
         
-        prj = self.projet.GetProjetRef()
+        prj = self.GetDocument().GetProjetRef()
         
         #
         # Ouverture (et pré-sauvegarde) des fichiers grilles "source" (tableaux Excel)
@@ -18959,15 +18961,15 @@ class Eleve(Personne, Objet_sequence):
         tableaux = {}
         for k, f in nomFichiers.items():
             if os.path.isfile(f):
-                tableaux[k] = grilles.getTableau(self.projet.GetApp(), f)
+                tableaux[k] = grilles.getTableau(self.GetDocument().GetApp(), f)
             else:
                 if os.path.isfile(grilles.getFullNameGrille(prj.grilles[k][0])):
-                    tableaux[k] = grilles.getTableau(self.projet.GetApp(),
+                    tableaux[k] = grilles.getTableau(self.GetDocument().GetApp(),
                                                      prj.grilles[k][0])
                 else: # fichier original de grille non trouvé ==> nouvelle tentative avec les noms du référentiel par défaut
-                    prjdef = REFERENTIELS[self.projet.GetTypeEnseignement()].getProjetDefaut()
+                    prjdef = REFERENTIELS[self.GetDocument().GetTypeEnseignement()].getProjetDefaut()
                     tableaux[k] = None
-                    messageErreur(self.projet.GetApp(), u"Fichier non trouvé !",
+                    messageErreur(self.GetDocument().GetApp(), u"Fichier non trouvé !",
                                   u"Le fichier original de la grille,\n    " + prjdef.grilles[k][0] + u"\n" \
                                   u"n'a pas été trouvé ! \n")
                         
@@ -18977,7 +18979,7 @@ class Eleve(Personne, Objet_sequence):
                 try:
                     tableaux[k].save(f, ConflictResolution = 2)
                 except:
-                    messageErreur(self.projet.GetApp(), u"Erreur !",
+                    messageErreur(self.GetDocument().GetApp(), u"Erreur !",
                                   u"Impossible d'enregistrer le fichier\n\n%s\nVérifier :\n" \
                                   u" - qu'aucun fichier portant le même nom n'est déja ouvert\n" \
                                   u" - que le dossier choisi n'est pas protégé en écriture"%f)
@@ -18990,12 +18992,12 @@ class Eleve(Personne, Objet_sequence):
         #
         log = []
         if "beta" in version.__version__:
-            log = grilles.modifierGrille(self.projet, tableaux, self)
+            log = grilles.modifierGrille(self.GetDocument(), tableaux, self)
         else:
             try:
-                log = grilles.modifierGrille(self.projet, tableaux, self)
+                log = grilles.modifierGrille(self.GetDocument(), tableaux, self)
             except:
-                messageErreur(self.projet.GetApp(), u"Erreur !",
+                messageErreur(self.GetDocument().GetApp(), u"Erreur !",
                               u"Impossible de modifier les grilles !") 
 
 
@@ -19006,7 +19008,7 @@ class Eleve(Personne, Objet_sequence):
             try:
                 t.save()
             except:
-                messageErreur(self.projet.GetApp(), u"Erreur !",
+                messageErreur(self.GetDocument().GetApp(), u"Erreur !",
                               u"Impossible d'enregistrer le fichier\n\n%s\nVérifier :\n" \
                               u" - qu'aucun fichier portant le même nom n'est déja ouvert\n" \
                               u" - que le dossier choisi n'est pas protégé en écriture" %f)
@@ -19035,7 +19037,7 @@ class Eleve(Personne, Objet_sequence):
             else:
                 t += u"des erreurs :\n"
                 t += u"\n".join(log)
-            messageInfo(self.projet.GetApp(), t, u"Génération terminée")
+            messageInfo(self.GetDocument().GetApp(), t, u"Génération terminée")
             
         
         self.GetPanelPropriete().MiseAJour()
@@ -19193,7 +19195,7 @@ class Eleve(Personne, Objet_sequence):
     ######################################################################################  
     def GetCompetences(self):
         lst = []
-        for t in self.projet.taches:
+        for t in self.GetDocument().taches:
             if self.id in t.eleves:
                 lst.extend(t.competences)
         lst = list(set(lst))
@@ -19209,7 +19211,7 @@ class Eleve(Personne, Objet_sequence):
         """
         indicateurs = {}
 #        print " GetDicIndicateurs", self.id
-        for t in self.projet.taches: # Toutes les tâches du projet
+        for t in self.GetDocument().taches: # Toutes les tâches du projet
             if not t.phase in TOUTES_REVUES_SOUT:
                 if self.id in t.eleves:     # L'élève est concerné par cette tâche
                     if t.estPredeterminee():
@@ -19236,7 +19238,7 @@ class Eleve(Personne, Objet_sequence):
         """
         indicateurs = {}
 #        print " GetDicIndicateurs", self.id
-        for t in self.projet.taches: # Toutes les tâches du projet
+        for t in self.GetDocument().taches: # Toutes les tâches du projet
             if t.code == revue:
                 break
             if self.id in t.eleves:     # L'élève est concerné par cette tâche
@@ -19255,7 +19257,7 @@ class Eleve(Personne, Objet_sequence):
     ######################################################################################  
     def GetTaches(self, revues = False):
         lst = []
-        for t in self.projet.taches:
+        for t in self.GetDocument().taches:
             if revues and t.phase in TOUTES_REVUES_EVAL:
                 lst.append(t)
             elif self.id in t.eleves:
@@ -19554,13 +19556,13 @@ class Eleve(Personne, Objet_sequence):
 #
 ####################################################################################
 class Prof(Personne):
-    def __init__(self, projet, panelParent, ident = 0):
+    def __init__(self, doc, panelParent, ident = 0):
         self.titre = u"prof"
         self.code = "Prf"
         self.discipline = "Tec"
         self.referent = False
         
-        Personne.__init__(self, projet, panelParent, ident)
+        Personne.__init__(self, doc, panelParent, ident)
         
         
     ######################################################################################  
@@ -19589,8 +19591,8 @@ class Prof(Personne):
     ######################################################################################  
     def AfficherMenuContextuel(self, itemArbre):
         if itemArbre == self.branche:
-            self.projet.app.AfficherMenuContextuel([[u"Supprimer", 
-                                                     functools.partial(self.projet.SupprimerProf, item = itemArbre), 
+            self.GetDocument().app.AfficherMenuContextuel([[u"Supprimer", 
+                                                     functools.partial(self.GetDocument().SupprimerProf, item = itemArbre), 
                                                      images.Icone_suppr_prof.GetBitmap()]])
         
     ######################################################################################  
