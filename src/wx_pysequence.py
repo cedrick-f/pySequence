@@ -795,12 +795,17 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                                     images.Icone_ajout_seance.GetBitmap(), 
                                     shortHelp=u"Ajout d'une séance dans la séquence", 
                                     longHelp=u"Ajout d'une séance dans la séquence"),
-
-                  61 : BoutonToolBar(u"Ajouter un système", 
-                                     images.Icone_ajout_systeme.GetBitmap(), 
-                                     shortHelp=u"Ajout d'un système", 
-                                     longHelp=u"Ajout d'un système")
-                  }
+                    
+                    62 : BoutonToolBar(u"Ajouter un professeur", 
+                                       images.Icone_ajout_prof.GetBitmap(), 
+                                       shortHelp = u"Ajout d'un professeur à l'équipe pédagogique", 
+                                       longHelp = u"Ajout d'un professeur à l'équipe pédagogique"),
+                    
+                    61 : BoutonToolBar(u"Ajouter un système", 
+                                       images.Icone_ajout_systeme.GetBitmap(), 
+                                       shortHelp=u"Ajout d'un système", 
+                                       longHelp=u"Ajout d'un système")
+                      }
             
         elif typ == 'prg':
             return {70 : BoutonToolBar(u"Ajouter un élève",
@@ -940,10 +945,13 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     def supprimerOutils(self):
         self.tb.RemoveTool(60)
         self.tb.RemoveTool(61)
+        self.tb.RemoveTool(62)
+        
         self.tb.RemoveTool(50)
         self.tb.RemoveTool(51)
         self.tb.RemoveTool(52)
         self.tb.RemoveTool(53)
+        
         self.tb.RemoveTool(70)
         self.tb.RemoveTool(71)
         self.tb.RemoveTool(72)
@@ -1442,6 +1450,10 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             elif fenDoc.typ == "seq":
                 self.Bind(wx.EVT_TOOL, fenDoc.sequence.AjouterSeance,   id=60)
                 self.Bind(wx.EVT_TOOL, fenDoc.sequence.AjouterSysteme,  id=61)
+                self.Bind(wx.EVT_TOOL, fenDoc.sequence.AjouterProf,     id=62)
+                
+            elif fenDoc.typ == "prg":
+                self.Bind(wx.EVT_TOOL, fenDoc.progression.AjouterProf,     id=71)
     
             if fenDoc.typ == "prj":
                 self.tool_menu.Enable(18, True)
@@ -1450,6 +1462,12 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                 self.file_menu.Enable(20, True)
                 
             elif fenDoc.typ == "seq":
+                self.tool_menu.Enable(18, True)
+                self.file_menu.Enable(17, False)
+                self.file_menu.Enable(19, False)
+                self.file_menu.Enable(20, False)
+                
+            elif fenDoc.typ == "prg":
                 self.tool_menu.Enable(18, True)
                 self.file_menu.Enable(17, False)
                 self.file_menu.Enable(19, False)
@@ -2149,52 +2167,35 @@ class FenetreSequence(FenetreDocument):
         #
         self.arbre.DeleteAllItems()
         root = self.arbre.AddRoot("")
-        t1 = time.time()
-        print "  ", t1-t0
         
         self.classe.ConstruireArbre(self.arbre, root)
-        t2 = time.time()
-        print "  ", t2-t1
         
         self.sequence.ConstruireArbre(self.arbre, root)
-        t3 = time.time()
-        print "  ", t3-t2
         
         self.sequence.CI.SetNum()
-        t4 = time.time()
-        print "  ", t4-t3
         
         self.sequence.SetCodes()
-        t5 = time.time()
-        print "  ", t5-t4
         
         self.sequence.PubDescription()
-        t6 = time.time()
-        print "  ", t6-t5
         
         self.sequence.SetLiens()
-        t7 = time.time()
-        print "  ", t7-t6
+        
+        self.sequence.MiseAJourNomProfs()
         
         self.sequence.VerifPb()
-        t8 = time.time()
-        print "  ", t8-t7
+
 
         self.sequence.Verrouiller()
-        t9 = time.time()
-        print "  ", t9-t8
+
         
         self.arbre.SelectItem(self.classe.branche)
-        t10 = time.time()
-        print "  ", t10-t9
-        
+
         self.arbre.Layout()
         self.arbre.ExpandAll()
         self.arbre.CalculatePositions()
         
         self.fiche.Redessiner()
-        t11 = time.time()
-        print "  ", t11-t10
+
         self.parent.miseAJourUndo()
         
         
@@ -8367,7 +8368,7 @@ class PanelPropriete_Personne(PanelPropriete):
             
     #############################################################################            
     def GetDocument(self):
-        return self.personne.projet
+        return self.personne.GetDocument()
     
     
     #############################################################################            
@@ -8425,7 +8426,7 @@ class PanelPropriete_Personne(PanelPropriete):
             self.personne.SetNom(event.GetString())
         else:
             self.personne.SetPrenom(event.GetString())
-        self.personne.projet.MiseAJourNomsEleves()
+        self.personne.GetDocument().MiseAJourNomsEleves()
         
         modif = u"Modification du nom de la personne"
         if self.onUndoRedo():
@@ -8444,7 +8445,7 @@ class PanelPropriete_Personne(PanelPropriete):
         
     #############################################################################            
     def EvtCheckBox(self, event):
-        self.personne.projet.SetReferent(self.personne, event.IsChecked())
+        self.personne.GetDocument().SetReferent(self.personne, event.IsChecked())
         self.sendEvent(modif = u"Changement de status (référent) du professeur")
         
     #############################################################################            
@@ -13197,7 +13198,51 @@ class BaseDoc():
     def MiseAJourListeSystemesClasse(self):
         return
     
+    ######################################################################################  
+    def AjouterProf(self, event = None):
+        if len(self.equipe) < 5:
+            e = Prof(self, self.panelParent, len(self.equipe))
+            self.equipe.append(e)
+            e.ConstruireArbre(self.arbre, self.branchePrf)
+            self.arbre.Expand(self.branchePrf)
+            self.GetPanelPropriete().sendEvent(modif = u"Ajout d'un professeur")
+            self.arbre.SelectItem(e.branche)
+
     
+    ######################################################################################  
+    def SupprimerProf(self, event = None, item = None):
+        e = self.arbre.GetItemPyData(item)
+#        i = self.equipe.index(e)
+        self.equipe.remove(e)
+        self.arbre.Delete(item)
+        self.GetPanelPropriete().sendEvent(modif = u"Suppression d'un professeur")
+
+
+    ######################################################################################  
+    def MiseAJourNomProfs(self):
+        for e in self.equipe:
+            e.SetCode()
+            e.MiseAJourCodeBranche()
+            
+            
+    ######################################################################################  
+    def MiseAJourNomsEleves(self):
+        pass
+            
+    
+    ######################################################################################  
+    def SetReferent(self, personne, referent):
+        for p in self.equipe:
+            if p == personne:
+                p.referent = referent
+            else:
+                if referent:
+                    p.referent = False
+#            p.panelPropriete.MiseAJour()
+        self.MiseAJourNomProfs()
+            
+            
+            
     
 ####################################################################################################          
 class Sequence(BaseDoc, Objet_sequence):
@@ -13211,11 +13256,14 @@ class Sequence(BaseDoc, Objet_sequence):
             self.panelSeances = PanelPropriete_Racine(panelParent, constantes.TxtRacineSeance)
             self.panelObjectifs = PanelPropriete_Racine(panelParent, constantes.TxtRacineObjectif)
             self.panelSystemes = PanelPropriete_Racine(panelParent, constantes.TxtRacineSysteme)
+            self.panelEquipe = PanelPropriete_Racine(panelParent, constantes.TxtRacineEquipe)
         
         self.prerequis = Savoirs(self, panelParent, prerequis = True)
         self.prerequisSeance = []
         
         self.pasVerouille = True
+        
+        self.equipe = []
         
         self.domaine = ""   # M E I
         
@@ -13349,6 +13397,10 @@ class Sequence(BaseDoc, Objet_sequence):
 
         sequence.set("Position", str(self.position))
 
+        equipe = ET.SubElement(sequence, "Equipe")
+        for p in self.equipe:
+            equipe.append(p.getBranche())
+            
         sequence.append(self.CI.getBranche())
         
         prerequis = ET.SubElement(sequence, "Prerequis")
@@ -13388,6 +13440,14 @@ class Sequence(BaseDoc, Objet_sequence):
         
         self.position = eval(branche.get("Position", "0"))
 
+        brancheEqu = branche.find("Equipe")
+        self.equipe = []
+        if brancheEqu != None:
+            for e in list(brancheEqu):
+                prof = Prof(self, self.panelParent)
+                Ok = prof.setBranche(e)
+                self.equipe.append(prof)
+            
         brancheCI = branche.find("CentresInteret")
         if brancheCI != None:
             self.CI.setBranche(brancheCI)
@@ -13770,6 +13830,14 @@ class Sequence(BaseDoc, Objet_sequence):
                                            image = self.arbre.images["Sav"])
         for ps in self.prerequisSeance:
             ps.ConstruireArbre(arbre, self.branchePre)
+        
+        #
+        # L'équipe pédagogique
+        #
+        self.branchePrf = arbre.AppendItem(self.branche, Titres[10], data = self.panelEquipe)
+        for e in self.equipe:
+            e.ConstruireArbre(arbre, self.branchePrf) 
+        
         #
         # Les objectifs
         #
@@ -13786,6 +13854,8 @@ class Sequence(BaseDoc, Objet_sequence):
             self.brancheSys = arbre.AppendItem(self.branche, Titres[4], image = self.arbre.images["Sys"], data = self.panelSystemes)
             for sy in self.systemes:
                 sy.ConstruireArbre(arbre, self.brancheSys)    
+        
+        
         
         
         
@@ -13820,6 +13890,9 @@ class Sequence(BaseDoc, Objet_sequence):
         
 #        elif isinstance(self.arbre.GetItemPyData(itemArbre), Competences):
 #            self.arbre.GetItemPyData(itemArbre).AfficherMenuContextuel(itemArbre)
+
+        elif isinstance(self.arbre.GetItemPyData(itemArbre), Prof):
+            self.arbre.GetItemPyData(itemArbre).AfficherMenuContextuel(itemArbre)
             
         elif isinstance(self.arbre.GetItemPyData(itemArbre), Seance):
             self.arbre.GetItemPyData(itemArbre).AfficherMenuContextuel(itemArbre)
@@ -13863,7 +13936,12 @@ class Sequence(BaseDoc, Objet_sequence):
             self.app.AfficherMenuContextuel([[u"Ajouter une séquence", self.AjouterSequencePre, 
                                               images.Icone_ajout_seq.GetBitmap()], 
                                              ])
-         
+        
+        elif self.arbre.GetItemText(itemArbre) == Titres[10]: # Eleve
+            self.app.AfficherMenuContextuel([[u"Ajouter un professeur", self.AjouterProf, images.Icone_ajout_prof.GetBitmap()]])
+            
+            
+            
             
     ######################################################################################       
     def GetSystemesUtilises(self):
@@ -14569,16 +14647,7 @@ class Projet(BaseDoc, Objet_sequence):
         self.problematique = pb
 
 
-    ######################################################################################  
-    def SetReferent(self, personne, referent):
-        for p in self.equipe:
-            if p == personne:
-                p.referent = referent
-            else:
-                if referent:
-                    p.referent = False
-#            p.panelPropriete.MiseAJour()
-        self.MiseAJourNomProfs()
+    
         
         
         
@@ -14629,11 +14698,7 @@ class Projet(BaseDoc, Objet_sequence):
             e.MiseAJourCodeBranche()
     
     
-    ######################################################################################  
-    def MiseAJourNomProfs(self):
-        for e in self.equipe:
-            e.SetCode()
-            e.MiseAJourCodeBranche()
+    
             
     ######################################################################################  
     def MiseAJourNbrRevues(self):
@@ -14985,24 +15050,7 @@ class Projet(BaseDoc, Objet_sequence):
         return i
     
 
-    ######################################################################################  
-    def AjouterProf(self, event = None):
-        if len(self.equipe) < 5:
-            e = Prof(self, self.panelParent, len(self.equipe))
-            self.equipe.append(e)
-            e.ConstruireArbre(self.arbre, self.branchePrf)
-            self.arbre.Expand(self.branchePrf)
-            self.GetPanelPropriete().sendEvent(modif = u"Ajout d'un professeur")
-            self.arbre.SelectItem(e.branche)
-
     
-    ######################################################################################  
-    def SupprimerProf(self, event = None, item = None):
-        e = self.arbre.GetItemPyData(item)
-#        i = self.equipe.index(e)
-        self.equipe.remove(e)
-        self.arbre.Delete(item)
-        self.GetPanelPropriete().sendEvent(modif = u"Suppression d'un professeur")
         
     
     ######################################################################################  
@@ -15022,8 +15070,8 @@ class Projet(BaseDoc, Objet_sequence):
         #
         # Le support
         #
-        
         self.support.ConstruireArbre(arbre, self.branche)
+        
         #
         # Les profs
         #
@@ -18566,8 +18614,8 @@ class Support(ElementDeSequence, Objet_sequence):
 #
 ####################################################################################
 class Personne(Objet_sequence):
-    def __init__(self, projet, panelParent, Id = 0):
-        self.projet = projet
+    def __init__(self, doc, panelParent, Id = 0):
+        self.doc = doc
         self.nom = u""
         self.prenom = u""
         self.avatar = None
@@ -18581,7 +18629,7 @@ class Personne(Objet_sequence):
         self.ficheXML = parseString(self.ficheHTML.encode('utf-8', errors="ignore"))
        
         forceID(self.ficheXML)
-        self.tip = PopupInfo(self.projet.app, self.ficheHTML)
+        self.tip = PopupInfo(self.GetDocument().app, self.ficheHTML)
 #        self.tip_nom = self.tip.CreerTexte((1,0), flag = wx.ALIGN_LEFT|wx.TOP)
 #        self.tip_nom.SetFont(wx.Font(10, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD))
         
@@ -18600,12 +18648,12 @@ class Personne(Objet_sequence):
 
     ######################################################################################  
     def GetApp(self):
-        return self.projet.GetApp()
+        return self.doc.GetApp()
         
         
     ######################################################################################  
     def GetDocument(self):
-        return self.projet
+        return self.doc
     
     
     ######################################################################################  

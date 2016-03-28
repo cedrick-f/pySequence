@@ -408,7 +408,8 @@ imagesSeance = {"R" : images.Icone_rotation,
                 "SA" : images.Icone_synthese_Act,
                 "SS" : images.Icone_synthese_Seq,
                 "HC": images.Icone_maison,
-                "ST" : images.Icone_usine}
+                "ST" : images.Icone_usine,
+                'Prf' : images.Icone_prof2}
 
 imagesProjet = {"Prj" : images.Icone_projet,
                 "Elv" : images.Icone_eleve,

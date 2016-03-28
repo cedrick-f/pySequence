@@ -2092,9 +2092,9 @@ class Projet(XMLelem):
             for p in self.parties.keys():
                 self._dicoGrpIndicateur[code][p] = list(set(self._dicoGrpIndicateur[code][p]))
 
-        if self._parent.Code == "EE-SI":
-            print "     ", self._dicoCompetences
-            print
+#        if self._parent.Code == "EE-SI":
+#            print "     ", self._dicoCompetences
+#            print
 #        if ref.tr_com != []:
 #            self.grilles.update(REFERENTIELS[ref.tr_com[0]].projets[self.code].grilles)
                 
@@ -2171,8 +2171,8 @@ class Competences(XMLelem):
 
     #########################################################################
     def getCompetence(self, comp):
-        print "getCompetence", comp
-        print "   ", self.dicCompetences
+#        print "getCompetence", comp
+#        print "   ", self.dicCompetences
         if comp in self.dicCompetences.keys():
 #            print "   1>>"
             return self.dicCompetences[comp]
