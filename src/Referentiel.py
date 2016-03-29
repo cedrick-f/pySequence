@@ -2305,8 +2305,8 @@ def chargerReferentiels():
 #    print path_ref
     liste = os.listdir(DOSSIER_REF)
     
-    for fich_ref in ["Ref_STS-SN_EC.xls", "Ref_SSI.xls", "Ref_STI2D-AC.xls", "Ref_STI2D-SIN.xls", "Ref_STI2D-ITEC.xls", "Ref_STI2D-EE.xls", "Ref_STI2D-ETT.xls",
-                     "Ref_2nde-EE-CIT.xls", "Ref_2nde-EE-DIT.xls", "Ref_2nde-EE-SI.xls"]:#liste:#["Ref_STS-SN_EC-1.xls", "Ref_SSI.xls"]:#, "Ref_STI2D-EE.xls", "Ref_STI2D-ETT.xls"]:#["Ref_6CLG.xls"]:#
+    for fich_ref in [r for r in liste if r[0] != "_"]:# ["Ref_STS-SN_EC.xls", "Ref_SSI.xls", "Ref_STI2D-AC.xls", "Ref_STI2D-SIN.xls", "Ref_STI2D-ITEC.xls", "Ref_STI2D-EE.xls", "Ref_STI2D-ETT.xls",
+#                     "Ref_2nde-EE-CIT.xls", "Ref_2nde-EE-DIT.xls", "Ref_2nde-EE-SI.xls"]:#liste:#["Ref_STS-SN_EC-1.xls", "Ref_SSI.xls"]:#, "Ref_STI2D-EE.xls", "Ref_STI2D-ETT.xls"]:#["Ref_6CLG.xls"]:#
         
         if os.path.splitext(fich_ref)[1] == ".xls":
 #            print
