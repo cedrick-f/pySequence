@@ -422,6 +422,7 @@ imagesProgression = {"Prg" : images.Icone_progression,
                     "Elv" : images.Icone_eleve,
                     'Prf' : images.Icone_prof2,
                     'Cal' : images.Icone_calendrier,
+                    "Seq" : images.Icone_sequence,
                     }
 
 imagesTaches =  {'Sup' : images.Icone_CdCF, 

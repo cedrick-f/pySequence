@@ -67,7 +67,7 @@ import  wx.lib.mixins.listctrl  as  listmix
 class FenetreBilan(wx.Frame):
     def __init__(self, parent, dossierCourant = util_path.PATH, 
                  referentiel = None):
-        wx.Frame.__init__(self, parent, -1, u"Synthèse pédagogique", style = wx.DEFAULT_FRAME_STYLE|wx.STAY_ON_TOP)
+        wx.Frame.__init__(self, parent, -1, u"Import de séquence", style = wx.DEFAULT_FRAME_STYLE|wx.STAY_ON_TOP)
         
         self.pourProjet = False
         self.lastPath = None

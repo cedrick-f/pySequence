@@ -683,8 +683,8 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             
         self.Bind(wx.EVT_MENU, self.genererFicheValidation, id=19)
         
-        if sys.platform == "win32":
-            self.Bind(wx.EVT_MENU, self.etablirBilan, id=18)
+#        if sys.platform == "win32":
+#            self.Bind(wx.EVT_MENU, self.etablirBilan, id=18)
             
         self.Bind(wx.EVT_MENU, self.OnClose, id=wx.ID_EXIT)
         
@@ -1078,9 +1078,9 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
         tool_menu = wx.Menu()
         
-        if sys.platform == "win32":
-            tool_menu.Append(18, u"&Générer une Synthése pédagogique\tCtrl+B")
-            tool_menu.AppendSeparator()
+#        if sys.platform == "win32":
+#            tool_menu.Append(18, u"&Générer une Synthése pédagogique\tCtrl+B")
+#            tool_menu.AppendSeparator()
         
         if sys.platform == "win32" and util_path.INSTALL_PATH != None:
     #        tool_menu.Append(31, u"Options")
@@ -1381,24 +1381,24 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         if page != None:
             page.genererFicheValidation(event)
     
-    #############################################################################
-    def etablirBilan(self, event = None):
-        for w in self.GetChildren():
-            if isinstance(w, synthesePeda.FenetreBilan):
-                w.SetFocus()
-                return
-#        if self.GetFenetreActive() != None:
-        if self.GetFenetreActive():
-            dossier = self.GetFenetreActive().DossierSauvegarde
-            if isinstance(self.GetFenetreActive(), FenetreSequence):
-                ref = self.GetFenetreActive().sequence.GetReferentiel()
-            else:
-                ref = None
-        else:
-            dossier = util_path.INSTALL_PATH
-            ref = None
-        win = synthesePeda.FenetreBilan(self, dossier, ref)
-        win.Show()
+#    #############################################################################
+#    def etablirBilan(self, event = None):
+#        for w in self.GetChildren():
+#            if isinstance(w, synthesePeda.FenetreBilan):
+#                w.SetFocus()
+#                return
+##        if self.GetFenetreActive() != None:
+#        if self.GetFenetreActive():
+#            dossier = self.GetFenetreActive().DossierSauvegarde
+#            if isinstance(self.GetFenetreActive(), FenetreSequence):
+#                ref = self.GetFenetreActive().sequence.GetReferentiel()
+#            else:
+#                ref = None
+#        else:
+#            dossier = util_path.INSTALL_PATH
+#            ref = None
+#        win = synthesePeda.FenetreBilan(self, dossier, ref)
+#        win.Show()
 #        win.Destroy()
         
         
@@ -1456,19 +1456,16 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                 self.Bind(wx.EVT_TOOL, fenDoc.progression.AjouterProf,     id=71)
     
             if fenDoc.typ == "prj":
-                self.tool_menu.Enable(18, True)
                 self.file_menu.Enable(17, True)
                 self.file_menu.Enable(19, True)
                 self.file_menu.Enable(20, True)
                 
             elif fenDoc.typ == "seq":
-                self.tool_menu.Enable(18, True)
                 self.file_menu.Enable(17, False)
                 self.file_menu.Enable(19, False)
                 self.file_menu.Enable(20, False)
                 
             elif fenDoc.typ == "prg":
-                self.tool_menu.Enable(18, True)
                 self.file_menu.Enable(17, False)
                 self.file_menu.Enable(19, False)
                 self.file_menu.Enable(20, False)
@@ -3028,6 +3025,12 @@ class FenetreProgression(FenetreDocument):
         wx.CallAfter(self.Thaw)
         self.nb.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
 
+
+    ###############################################################################################
+    def GetDocument(self):
+        return self.progression
+    
+    
     ###############################################################################################
     def OnPageChanged(self, event):
         new = event.GetSelection()
@@ -3700,7 +3703,7 @@ class FicheProgression(BaseFiche):
             
     ######################################################################################################
     def OnMove(self, evt):
-        
+        return
         if hasattr(self, 'tip'):
             self.tip.Show(False)
             self.call.Stop()
@@ -4134,6 +4137,10 @@ class PanelPropriete_Projet(PanelPropriete):
         
 #        self.Fit()
         
+    #############################################################################            
+    def GetDocument(self):
+        return self.projet
+    
     #############################################################################            
     def GetPageNum(self, win):
         for np in range(self.nb.GetPageCount()):
@@ -4636,9 +4643,7 @@ class PanelPropriete_Projet(PanelPropriete):
             self.sendEvent()
 
 
-    #############################################################################            
-    def GetDocument(self):
-        return self.projet
+    
 
 
     ######################################################################################  
@@ -4646,7 +4651,156 @@ class PanelPropriete_Projet(PanelPropriete):
         self.position.Enable(etat)
         
         
+####################################################################################
+#
+#   Classe définissant le panel de propriété de la progression
+#
+####################################################################################
+class PanelPropriete_Progression(PanelPropriete):
+    def __init__(self, parent, progression):
+        PanelPropriete.__init__(self, parent)
+        
+        self.progression = progression
+        
+        self.nb = wx.Notebook(self, -1,  size = (21,21), style= wx.BK_DEFAULT)
+        
+        self.construire()
+        
+        self.sizer.Add(self.nb, (0,0), flag = wx.EXPAND)
+        self.sizer.AddGrowableCol(0)
+        self.sizer.AddGrowableRow(0)
+#        self.sizer.Layout()
+        
+        self.Layout()
+        self.FitInside()
+        wx.CallAfter(self.PostSizeEvent)
+        
+     
+        self.MiseAJour()
+        
+        self.Show()
+        
+#        self.Fit()
+        
+    #############################################################################            
+    def GetDocument(self):
+        return self.progression
     
+    
+    
+    #############################################################################            
+    def construire(self):
+        self.pages = {}
+        
+        #
+        # La page "Généralités"
+        #
+        pageGen = PanelPropriete(self.nb)
+        bg_color = self.Parent.GetBackgroundColour()
+        pageGen.SetBackgroundColour(bg_color)
+        self.pageGen = pageGen
+        self.nb.AddPage(pageGen, u"Propriétés générales")
+
+
+        #
+        # Intitulé de la progression (TIT)
+        #
+        self.titre = wx.StaticBox(pageGen, -1, u"")
+        sb = wx.StaticBoxSizer(self.titre)
+        textctrl = TextCtrl_Help(pageGen, u"")
+        sb.Add(textctrl, 1, flag = wx.EXPAND)
+        self.textctrl = textctrl
+        pageGen.sizer.Add(sb, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.EXPAND, border = 2)
+#        pageGen.Bind(stc.EVT_STC_MODIFIED, self.EvtText)
+#        pageGen.Bind(wx.EVT_TEXT, self.EvtText, textctrl)
+        pageGen.Bind(stc.EVT_STC_MODIFIED, self.EvtText, self.textctrl)
+
+        pageGen.sizer.Add(sb, (1,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.EXPAND|wx.LEFT, border = 2)
+       
+
+        #
+        # Année scolaire et Position dans l'année
+        #
+        titre = wx.StaticBox(pageGen, -1, u"Année et Position")
+        sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
+        
+        self.annee = Variable(u"Année scolaire", lstVal = self.GetDocument().annee, 
+                                   typ = VAR_ENTIER_POS, bornes = [2012,2100])
+        self.ctrlAnnee = VariableCtrl(pageGen, self.annee, coef = 1, signeEgal = False,
+                                      help = u"Année scolaire", sizeh = 40, 
+                                      unite = str(self.GetDocument().annee+1),
+                                      sliderAGauche = True)
+        self.Bind(EVT_VAR_CTRL, self.EvtVariable, self.ctrlAnnee)
+        sb.Add(self.ctrlAnnee)
+        
+        
+#        #
+#        # Organisation (nombre et positions des revues)
+#        #
+#        self.panelOrga = PanelOrganisation(pageGen, self, self.projet)
+#        pageGen.sizer.Add(self.panelOrga, (0,2), (2,1), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.EXPAND|wx.LEFT, border = 2)
+#        pageGen.sizer.AddGrowableRow(0)
+
+        
+    
+        
+        
+    #############################################################################            
+    def MiseAJour(self, sendEvt = False):
+#        print "MiseAJour Progression", sendEvt
+
+        
+        # La page "Généralités"
+        self.textctrl.SetValue(self.GetDocument().intitule, False)
+        
+        
+        self.Layout()
+        
+        if sendEvt:
+            self.sendEvent()
+
+    
+    
+    #############################################################################            
+    def EvtText(self, event):
+#        print "EvtText",
+        if event.GetEventObject() == self.textctrl:
+#            nt = event.GetString()
+            nt = self.textctrl.GetText()
+#            if nt == u"":
+#                nt = self.projet.support.nom
+            self.GetDocument().SetText(nt)
+            self.textctrl.ChangeValue(nt)
+            maj = True
+            obj = 'intit'
+        
+
+        modif = u"Modification des propriétés de la progression"
+        if self.onUndoRedo():
+            self.sendEvent(modif = modif)
+        else:
+            if not self.eventAttente:
+#                print "   modif", obj
+                wx.CallLater(DELAY, self.sendEvent, 
+                             modif = modif,
+                             draw = maj)
+                self.eventAttente = True
+    
+    
+    
+    #############################################################################            
+    def EvtVariable(self, event):
+        var = event.GetVar()
+        if var == self.annee:
+            self.projet.annee = var.v[0]
+            self.ctrlAnnee.unite.SetLabel(str(self.GetDocument().annee+1)) 
+        self.Refresh()
+        
+        
+        
+    
+    
+###################################################################################################
 class PanelOrganisation(wx.Panel):    
     def __init__(self, parent, panel, objet):
         wx.Panel.__init__(self, parent, -1)
@@ -8913,6 +9067,22 @@ class ArbreDoc(CT.CustomTreeCtrl):
             
         evt.Skip()
 
+
+    ####################################################################################
+    def OnRightDown(self, event):
+        item = event.GetItem()
+        self.doc.AfficherMenuContextuel(item)
+        
+        
+    ####################################################################################
+    def OnLeftDClick(self, event):
+        pt = event.GetPosition()
+        item = self.HitTest(pt)[0]
+        if item:
+            self.doc.AfficherLien(item)
+        event.Skip()    
+        
+        
     ######################################################################################  
     def GetPanelPropriete(self, parent, code):
         if code == "Sea":
@@ -8927,6 +9097,8 @@ class ArbreDoc(CT.CustomTreeCtrl):
             return PanelPropriete_Racine(parent, constantes.TxtRacineTache)
         elif code == "Ele":
             return PanelPropriete_Racine(parent, constantes.TxtRacineEleve)
+        elif code == "Seq":
+            return PanelPropriete_Racine(parent, constantes.xmlVide)
         return 
     
     
@@ -8950,10 +9122,11 @@ class ArbreDoc(CT.CustomTreeCtrl):
             panelPropriete = data.GetPanelPropriete(self.panelProp)
         elif isinstance(data, str): # 
             panelPropriete = self.GetPanelPropriete(self.panelProp, data)
-                
-        print "> panelPropriete", panelPropriete
-        self.panelProp.AfficherPanel(panelPropriete)
-        self.parent.Refresh()
+        
+        if panelPropriete:
+            print "> panelPropriete", panelPropriete
+            self.panelProp.AfficherPanel(panelPropriete)
+            self.parent.Refresh()
         
         #
         # On centre la fiche sur l'objet
@@ -9020,53 +9193,39 @@ class ArbreSequence(ArbreDoc):
 
             
         
-    ####################################################################################
-    def AjouterObjectif(self, event = None):
-        self.sequence.AjouterObjectif()
+#    ####################################################################################
+#    def AjouterObjectif(self, event = None):
+#        self.sequence.AjouterObjectif()
         
         
-    ####################################################################################
-    def SupprimerObjectif(self, event = None, item = None):
-        self.sequence.SupprimerObjectif(item)
+#    ####################################################################################
+#    def SupprimerObjectif(self, event = None, item = None):
+#        self.sequence.SupprimerObjectif(item)
 
             
-    ####################################################################################
-    def AjouterSeance(self, event = None):
-        seance = self.sequence.AjouterSeance()
-        self.lstSeances.append(self.AppendItem(self.seances, u"Séance :", data = seance))
+#    ####################################################################################
+#    def AjouterSeance(self, event = None):
+#        seance = self.sequence.AjouterSeance()
+#        self.lstSeances.append(self.AppendItem(self.seances, u"Séance :", data = seance))
         
-    ####################################################################################
-    def AjouterRotation(self, event = None, item = None):
-        seance = self.sequence.AjouterRotation(self.GetItemPyData(item))
-        self.SetItemText(item, u"Rotation")
-        self.lstSeances.append(self.AppendItem(item, u"Séance :", data = seance))
+#    ####################################################################################
+#    def AjouterRotation(self, event = None, item = None):
+#        seance = self.sequence.AjouterRotation(self.GetItemPyData(item))
+#        self.SetItemText(item, u"Rotation")
+#        self.lstSeances.append(self.AppendItem(item, u"Séance :", data = seance))
         
-    ####################################################################################
-    def AjouterSerie(self, event = None, item = None):
-        seance = self.sequence.AjouterRotation(self.GetItemPyData(item))
-        self.SetItemText(item, u"Rotation")
-        self.lstSeances.append(self.AppendItem(item, u"Séance :", data = seance))
+#    ####################################################################################
+#    def AjouterSerie(self, event = None, item = None):
+#        seance = self.sequence.AjouterRotation(self.GetItemPyData(item))
+#        self.SetItemText(item, u"Rotation")
+#        self.lstSeances.append(self.AppendItem(item, u"Séance :", data = seance))
         
     ####################################################################################
     def SupprimerSeance(self, event = None, item = None):
         if self.sequence.SupprimerSeance(self.GetItemPyData(item)):
             self.lstSeances.remove(item)
             self.Delete(item)
-
-
-    ####################################################################################
-    def OnRightDown(self, event):
-        item = event.GetItem()
-        self.sequence.AfficherMenuContextuel(item)
-
-    
-    ####################################################################################
-    def OnLeftDClick(self, event):
-        pt = event.GetPosition()
-        item = self.HitTest(pt)[0]
-        if item:
-            self.sequence.AfficherLien(item)
-        event.Skip()                
+            
         
 
     ####################################################################################
@@ -9416,20 +9575,7 @@ class ArbreProjet(ArbreDoc):
     ####################################################################################
     def Ordonner(self, item):
         self.SortChildren(item)
-
-    ####################################################################################
-    def OnRightDown(self, event):
-        item = event.GetItem()
-        self.projet.AfficherMenuContextuel(item)
-
-    
-    ####################################################################################
-    def OnLeftDClick(self, event):
-        pt = event.GetPosition()
-        item = self.HitTest(pt)[0]
-        if item:
-            self.projet.AfficherLien(item)
-        event.Skip()                
+             
         
 
     ####################################################################################
@@ -9553,20 +9699,9 @@ class ArbreProgression(ArbreDoc):
         self.CurseurInsertApres = wx.CursorFromImage(constantes.images.Curseur_InsererApres.GetImage())
         self.CurseurInsertDans = wx.CursorFromImage(constantes.images.Curseur_InsererDans.GetImage())
  
-    
-    ####################################################################################
-    def OnRightDown(self, event):
-        item = event.GetItem()
-        self.projet.AfficherMenuContextuel(item)
 
     
-    ####################################################################################
-    def OnLeftDClick(self, event):
-        pt = event.GetPosition()
-        item = self.HitTest(pt)[0]
-        if item:
-            self.projet.AfficherLien(item)
-        event.Skip()                
+                
         
 
     ####################################################################################
@@ -12443,7 +12578,8 @@ Titres = [u"Séquence pédagogique",
           u"Support",
           u"Tâches",
           u"Projet", 
-          u"Equipe pédagogique"]
+          u"Equipe pédagogique",
+          u"Séquences"]
 
 class ElementDeSequence():
     def __init__(self):
@@ -12523,6 +12659,13 @@ class LienSequence():
         self.tip_titre = self.tip.CreerTexte((1,0))
         self.tip_titrelien, self.tip_ctrllien = self.tip.CreerLien((2,0))
         self.tip_image = self.tip.CreerImage((3,0))
+    
+    
+    ######################################################################################  
+    def GetPanelPropriete(self, parent):
+        return None
+        return PanelPropriete_Sequence(parent, self)
+    
     
     ######################################################################################  
     def getBranche(self):
@@ -13596,11 +13739,10 @@ class Sequence(BaseDoc, Objet_sequence):
             lst = list(branchePre)
             lst.remove(savoirs)
             self.prerequisSeance = []
-            if hasattr(self, 'panelPropriete'):
-                for bsp in lst:
-                    sp = LienSequence(self, self.panelParent)
-                    sp.setBranche(bsp)
-                    self.prerequisSeance.append(sp)
+            for bsp in lst:
+                sp = LienSequence(self)
+                sp.setBranche(bsp)
+                self.prerequisSeance.append(sp)
         
 #        t2 = time.time()
 #        print "  t2", t2-t1
@@ -15712,7 +15854,7 @@ class Progression(BaseDoc, Objet_sequence):
         BaseDoc.__init__(self, app, classe, intitule)
 #        Objet_sequence.__init__(self)
         self.undoStack = UndoStack(self)
-        self.sequences = []
+        self.sequences = []     # liste de LienSequence
         self.calendriers = []
         self.eleves = []
         self.equipe = []
@@ -15751,14 +15893,14 @@ class Progression(BaseDoc, Objet_sequence):
         #
         # Les profs
         #
-        self.branchePrf = arbre.AppendItem(self.branche, Titres[10])
+        self.branchePrf = arbre.AppendItem(self.branche, Titres[10], data = "Equ")
         for e in self.equipe:
             e.ConstruireArbre(arbre, self.branchePrf) 
         
         #
         # Les séquences
         #
-        self.brancheSeq = arbre.AppendItem(self.branche, Titres[10])
+        self.brancheSeq = arbre.AppendItem(self.branche, Titres[11], data = "Seq")
         for e in self.sequences:
             e.ConstruireArbre(arbre, self.brancheSeq, simple = True) 
     
@@ -15852,7 +15994,69 @@ class Progression(BaseDoc, Objet_sequence):
         return err
     
     
+    ######################################################################################  
+    def AfficherMenuContextuel(self, itemArbre):    
+        """ Affiche le menu contextuel associé à la progression
+            ... ou bien celui de itemArbre concerné ...
+        """
+        if itemArbre == self.branche:
+            self.app.AfficherMenuContextuel([[u"Enregistrer", self.app.commandeEnregistrer,
+                                              getIconeFileSave()],
+#                                             [u"Ouvrir", self.app.commandeOuvrir],
+                                             [u"Exporter la fiche (PDF ou SVG)", self.app.exporterFiche, None],
+                                            ])
             
+#        [u"Séquence pédagogique",
+#          u"Prérequis",
+#          u"Objectifs pédagogiques",
+#          u"Séances",
+#          u"Systèmes"]
+        
+#        elif isinstance(self.arbre.GetItemPyData(itemArbre), Competences):
+#            self.arbre.GetItemPyData(itemArbre).AfficherMenuContextuel(itemArbre)
+            
+            
+        elif isinstance(self.arbre.GetItemPyData(itemArbre), Prof):
+            self.arbre.GetItemPyData(itemArbre).AfficherMenuContextuel(itemArbre)
+            
+        elif isinstance(self.arbre.GetItemPyData(itemArbre), LienSequence):
+            self.arbre.GetItemPyData(itemArbre).AfficherMenuContextuel(itemArbre)           
+                             
+        elif self.arbre.GetItemText(itemArbre) == Titres[10]: # Prof
+            self.app.AfficherMenuContextuel([[u"Ajouter un professeur", self.AjouterProf, images.Icone_ajout_prof.GetBitmap()]])
+            
+        elif self.arbre.GetItemText(itemArbre) == Titres[11]: # Séquence
+            self.app.AfficherMenuContextuel([[u"Ajouter une séquence", self.AjouterSequence, images.Icone_ajout_seq.GetBitmap()],
+                                             [u"Importer des séquences", self.ImporterSequences, images.Icone_cherch_seq.GetBitmap()]])
+
+
+    
+    
+    ######################################################################################  
+    def AjouterSequence(self, event = None):
+        ps = LienSequence(self, self.panelParent)
+        self.sequences.append(ps)
+        ps.ConstruireArbre(self.arbre, self.brancheSeq)
+        self.GetApp().sendEvent(modif = u"Ajout d'une Séquence")
+        self.arbre.SelectItem(ps.branche)
+    
+    
+    ######################################################################################  
+    def ImporterSequences(self, event = None):
+        dossier = self.GetPath()
+        if dossier == r"":
+            messageInfo(None, u"Progression non enregistrée", 
+                                  u"La progression %s n'a pas encore été enregistrée.\n\n"\
+                                  u"L'importation est prévue pour rechercher des fichier \"Séquence\" (.seq)" \
+                                  u"dans le même dossier que le fichier \"Progression\" (.prg)." %self.intitule)
+            return
+        
+        ref = self.GetReferentiel()
+        
+        win = synthesePeda.FenetreBilan(self, dossier, ref)
+        win.Show()
+        
+    
     ########################################################################################################
     def OuvrirFichierSeq(self, nomFichier):
         fichier = open(nomFichier,'r')

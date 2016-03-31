@@ -47,7 +47,7 @@ typesImg = {".bmp" : wx.BITMAP_TYPE_BMP,
             ".ico" : wx.BITMAP_TYPE_ICO}
 
 
-from stcspellcheck import RTCSpellCheck
+#from stcspellcheck import RTCSpellCheck
         
 class RichTextPanel(wx.Panel):
     def __init__(self, parent, objet, toolBar = False, size = wx.DefaultSize):
