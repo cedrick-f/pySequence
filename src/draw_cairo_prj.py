@@ -297,6 +297,10 @@ def calculCoefCalcH(prj, ctx, hm):
         a = (tailleZTaches[1] - hFixe - b*nt) / h
 
     
+
+    
+    
+    
 ######################################################################################  
 def getCoulComp(partie, alpha = 1.0):
     if partie in ICoulComp.keys():
@@ -1524,10 +1528,10 @@ def DrawBoutonCompetence(ctx, objet, dicIndic, y, h = None):
 #                              cairo.FONT_WEIGHT_BOLD)
         
         rect = (x, y-h/2, wColComp, h, objet)
-        if s in objet.projet.rectComp.keys() and objet.projet.rectComp[s] != None:
-            objet.projet.rectComp[s].append(rect)
+        if s in objet.GetDocument().rectComp.keys() and objet.GetDocument().rectComp[s] != None:
+            objet.GetDocument().rectComp[s].append(rect)
         else:
-            objet.projet.rectComp[s] = [rect]
+            objet.GetDocument().rectComp[s] = [rect]
         
         objet.pts_caract.append((x,y))
         

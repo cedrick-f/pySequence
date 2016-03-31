@@ -93,11 +93,6 @@
           </d_01>
           <d_02 I_C="40" />
         </l_O7>
-        <l_SII S_00="SIN">
-          <l_01 />
-          <d_02 />
-          <d_03 />
-        </l_SII>
         <l_O9 S_00="Gérer la vie d'un système">
           <d_01>
             <l_CO9.sin4 S_00="Rechercher et choisir de nouveaux constituants d'un système (ou d'un projet finalisé) au regard d'évolutions technologiques, socioéconomiques spécifiées dans un cahier des charges. Organiser le projet permettant de maquettiser la solution choisie">

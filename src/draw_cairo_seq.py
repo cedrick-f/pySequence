@@ -662,6 +662,7 @@ def Draw(ctx, seq, mouchard = False):
         ref_tc = REFERENTIELS[ref.tr_com[0]]
     for c in seq.obj["C"].competences:
         typ, cod = c[0], c[1:]
+        
         if typ == "B" and ref.tr_com != []: # B = tronc commun --> référentiel
             comp = ref_tc.dicoCompetences["S"]
         else:
@@ -671,7 +672,7 @@ def Draw(ctx, seq, mouchard = False):
                 comp = ref_tc.dicoCompetences[typ]
                 
         disc = comp.codeDiscipline
-        lstTexteC.append(comp.getCompetence(cod))
+        lstTexteC.append(comp.getCompetence(cod)[0])
         lstCodesC.append(comp.abrDiscipline + cod)
         lstCoulC.append(constantes.COUL_DISCIPLINES[disc])
         

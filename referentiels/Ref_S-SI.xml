@@ -118,11 +118,98 @@
           </d_01>
           <d_02 I_S="30" />
         </l_A>
-        <l_SII S_00="SI">
-          <l_01 />
-          <d_02 />
-          <d_03 />
-        </l_SII>
+        <l_C S_00="Expérimenter">
+          <d_01>
+            <l_C2 S_00="Mettre en oeuvre un protocole expérimental">
+              <d_01>
+                <l_C2.1 S_00="conduire les essais en respectant les consignes de sécurité à partir d’un protocole fourni">
+                  <l_01>
+                    <Indicateur_00 S_intitule="Le système est correctement mis en œuvre">
+                      <d_ligne I_C="17" />
+                      <d_poids F_C="12.5" />
+                      <d_revue I_C="0" />
+                    </Indicateur_00>
+                    <Indicateur_01 S_intitule="Les capteurs et les appareils de mesure sont correctement mis en œuvre">
+                      <d_ligne I_C="18" />
+                      <d_poids F_C="12.5" />
+                      <d_revue I_C="0" />
+                    </Indicateur_01>
+                    <Indicateur_02 S_intitule="Le protocole d'essai est respecté ">
+                      <d_ligne I_C="19" />
+                      <d_poids F_C="12.5" />
+                      <d_revue I_C="0" />
+                    </Indicateur_02>
+                    <Indicateur_03 S_intitule="Les règles de sécurité sont connues et respectées">
+                      <d_ligne I_C="20" />
+                      <d_poids F_C="12.5" />
+                      <d_revue I_C="0" />
+                    </Indicateur_03>
+                  </l_01>
+                </l_C2.1>
+                <l_C2.2 S_00="traiter les données mesurées en vue d’analyser les écarts">
+                  <l_01>
+                    <Indicateur_00 S_intitule="Les méthodes et outils de traitement sont cohérents avec le problème posé">
+                      <d_ligne I_C="21" />
+                      <d_poids F_C="12.5" />
+                      <d_revue I_C="0" />
+                    </Indicateur_00>
+                    <Indicateur_01 S_intitule="Les résultats expérimentaux sont traités et présentés clairement">
+                      <d_ligne I_S="0" />
+                      <d_poids F_S="35.0" />
+                      <d_revue I_S="0" />
+                    </Indicateur_01>
+                  </l_01>
+                </l_C2.2>
+              </d_01>
+            </l_C2>
+            <l_C1 S_00="Justifier le choix d’un protocole expérimental">
+              <d_01>
+                <l_C1.4 S_00="justifier le choix des essais réalisés">
+                  <l_01>
+                    <Indicateur_00 S_intitule="Un protocole expérimental adapté est décrit">
+                      <d_ligne I_S="0" />
+                      <d_poids F_S="35.0" />
+                      <d_revue I_S="0" />
+                    </Indicateur_00>
+                  </l_01>
+                </l_C1.4>
+                <l_C1.2 S_00="décrire une chaîne d’acquisition">
+                  <l_01>
+                    <Indicateur_00 S_intitule="Les éléments de la chaîne d'acquisition sont correctement identifiés">
+                      <d_ligne I_C="15" />
+                      <d_poids F_C="12.5" />
+                      <d_revue I_C="0" />
+                    </Indicateur_00>
+                    <Indicateur_01 S_intitule="Les choix et réglages des capteurs et appareils de mesure sont correctement explicités">
+                      <d_ligne I_C="16" />
+                      <d_poids F_C="12.5" />
+                      <d_revue I_C="0" />
+                    </Indicateur_01>
+                  </l_01>
+                </l_C1.2>
+                <l_C1.3 S_00="identifier le comportement des composants">
+                  <l_01>
+                    <Indicateur_00 S_intitule="Le comportement est précisément décrit">
+                      <d_ligne I_S="0" />
+                      <d_poids F_S="30.0" />
+                      <d_revue I_S="0" />
+                    </Indicateur_00>
+                  </l_01>
+                </l_C1.3>
+                <l_C1.1 S_00="identifier les grandeurs physiques à mesurer">
+                  <l_01>
+                    <Indicateur_00 S_intitule="Les grandeurs à mesurer sont bien identifiées, leur nature et caractéristiques bien définies">
+                      <d_ligne I_C="14" />
+                      <d_poids F_C="12.5" />
+                      <d_revue I_C="0" />
+                    </Indicateur_00>
+                  </l_01>
+                </l_C1.1>
+              </d_01>
+            </l_C1>
+          </d_01>
+          <d_02 I_C="50" I_S="30" />
+        </l_C>
         <l_B S_00="Modéliser">
           <d_01>
             <l_B4 S_00="Valider un modèle">
@@ -224,98 +311,6 @@
           </d_01>
           <d_02 I_C="40" />
         </l_B>
-        <l_C S_00="Expérimenter">
-          <d_01>
-            <l_C2 S_00="Mettre en oeuvre un protocole expérimental">
-              <d_01>
-                <l_C2.1 S_00="conduire les essais en respectant les consignes de sécurité à partir d’un protocole fourni">
-                  <l_01>
-                    <Indicateur_00 S_intitule="Le système est correctement mis en œuvre">
-                      <d_ligne I_C="17" />
-                      <d_poids F_C="12.5" />
-                      <d_revue I_C="0" />
-                    </Indicateur_00>
-                    <Indicateur_01 S_intitule="Les capteurs et les appareils de mesure sont correctement mis en œuvre">
-                      <d_ligne I_C="18" />
-                      <d_poids F_C="12.5" />
-                      <d_revue I_C="0" />
-                    </Indicateur_01>
-                    <Indicateur_02 S_intitule="Le protocole d'essai est respecté ">
-                      <d_ligne I_C="19" />
-                      <d_poids F_C="12.5" />
-                      <d_revue I_C="0" />
-                    </Indicateur_02>
-                    <Indicateur_03 S_intitule="Les règles de sécurité sont connues et respectées">
-                      <d_ligne I_C="20" />
-                      <d_poids F_C="12.5" />
-                      <d_revue I_C="0" />
-                    </Indicateur_03>
-                  </l_01>
-                </l_C2.1>
-                <l_C2.2 S_00="traiter les données mesurées en vue d’analyser les écarts">
-                  <l_01>
-                    <Indicateur_00 S_intitule="Les méthodes et outils de traitement sont cohérents avec le problème posé">
-                      <d_ligne I_C="21" />
-                      <d_poids F_C="12.5" />
-                      <d_revue I_C="0" />
-                    </Indicateur_00>
-                    <Indicateur_01 S_intitule="Les résultats expérimentaux sont traités et présentés clairement">
-                      <d_ligne I_S="0" />
-                      <d_poids F_S="35.0" />
-                      <d_revue I_S="0" />
-                    </Indicateur_01>
-                  </l_01>
-                </l_C2.2>
-              </d_01>
-            </l_C2>
-            <l_C1 S_00="Justifier le choix d’un protocole expérimental">
-              <d_01>
-                <l_C1.4 S_00="justifier le choix des essais réalisés">
-                  <l_01>
-                    <Indicateur_00 S_intitule="Un protocole expérimental adapté est décrit">
-                      <d_ligne I_S="0" />
-                      <d_poids F_S="35.0" />
-                      <d_revue I_S="0" />
-                    </Indicateur_00>
-                  </l_01>
-                </l_C1.4>
-                <l_C1.2 S_00="décrire une chaîne d’acquisition">
-                  <l_01>
-                    <Indicateur_00 S_intitule="Les éléments de la chaîne d'acquisition sont correctement identifiés">
-                      <d_ligne I_C="15" />
-                      <d_poids F_C="12.5" />
-                      <d_revue I_C="0" />
-                    </Indicateur_00>
-                    <Indicateur_01 S_intitule="Les choix et réglages des capteurs et appareils de mesure sont correctement explicités">
-                      <d_ligne I_C="16" />
-                      <d_poids F_C="12.5" />
-                      <d_revue I_C="0" />
-                    </Indicateur_01>
-                  </l_01>
-                </l_C1.2>
-                <l_C1.3 S_00="identifier le comportement des composants">
-                  <l_01>
-                    <Indicateur_00 S_intitule="Le comportement est précisément décrit">
-                      <d_ligne I_S="0" />
-                      <d_poids F_S="30.0" />
-                      <d_revue I_S="0" />
-                    </Indicateur_00>
-                  </l_01>
-                </l_C1.3>
-                <l_C1.1 S_00="identifier les grandeurs physiques à mesurer">
-                  <l_01>
-                    <Indicateur_00 S_intitule="Les grandeurs à mesurer sont bien identifiées, leur nature et caractéristiques bien définies">
-                      <d_ligne I_C="14" />
-                      <d_poids F_C="12.5" />
-                      <d_revue I_C="0" />
-                    </Indicateur_00>
-                  </l_01>
-                </l_C1.1>
-              </d_01>
-            </l_C1>
-          </d_01>
-          <d_02 I_C="50" I_S="30" />
-        </l_C>
         <l_D S_00="Communiquer">
           <d_01>
             <l_D2 S_00="Mettre en oeuvre une communication">

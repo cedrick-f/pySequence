@@ -980,11 +980,16 @@ def show_lignes(ctx, lignes, x, y, w, h, \
 
 
 
+
+#########################################################################################################  
+#
+#    Représentation des périodes d'un enseignement (années, trimestres, ...)
+#
+######################################################################################################### 
 BcoulPos = (0.1, 0.1, 0.25, 1)
 AcoulPos = (1, 0.4, 0, 1)
 IcoulPos = (0.8, 0.8, 1, 0.85)
-fontPos = 0.014 * COEF
-######################################################################################  
+fontPos = 0.014 * COEF 
 def DrawPeriodes(ctx, rect, pos = None, periodes = [[u"Année", 5]], projets = {}, tailleTypeEns = 0):
 #    print "DrawPeriodes", pos
 #    print "   ", periodes, periodes_prj
@@ -1123,7 +1128,23 @@ def DrawPeriodes(ctx, rect, pos = None, periodes = [[u"Année", 5]], projets = {
             
     return rect
 
+########################################################################################
+#
+#    Image des périodes de l'enseignement , position et projets
+#          
+########################################################################################            
+def getBitmapPeriode(larg, position, periodes, projets = {}, prop = 7):
+#        print "getBitmapPeriode"
+#        print "  ", self.projet.position
+#        print "  ", self.projet.GetReferentiel().periodes
+#        print "  ", self.projet.GetReferentiel().periode_prj
+    w, h = 0.04*prop * COEF, 0.04 * COEF
+    imagesurface = cairo.ImageSurface(cairo.FORMAT_ARGB32,  larg, int(h/w*larg))#cairo.FORMAT_ARGB32,cairo.FORMAT_RGB24
+    ctx = cairo.Context(imagesurface)
+    ctx.scale(larg/w, larg/w) 
+    DrawPeriodes(ctx, (0,0,w,h), position, periodes, projets)
 
+    return imagesurface
 
 
             
