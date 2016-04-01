@@ -3814,11 +3814,12 @@ class PanelConteneur(wx.Panel):
         # Destruction de l'ancien panel
         #
         if self.panel is not None:
-            try:
-                self.bsizer.Remove(self.panel)
-                self.panel.Destroy()
-            except:
-                pass
+#            print "Destroy", self.panel
+#            try:
+#            self.bsizer.Remove(self.panel)
+            self.panel.Destroy()
+#            except:
+#                print "erreur AfficherPanel"
         
 #        if self.panel != None:
 #            self.bsizer.Detach(self.panel)
@@ -4675,7 +4676,7 @@ class PanelPropriete_Progression(PanelPropriete):
         self.FitInside()
         wx.CallAfter(self.PostSizeEvent)
         
-     
+        self.MiseAJourTypeEnseignement()
         self.MiseAJour()
         
         self.Show()
@@ -4715,7 +4716,6 @@ class PanelPropriete_Progression(PanelPropriete):
 #        pageGen.Bind(wx.EVT_TEXT, self.EvtText, textctrl)
         pageGen.Bind(stc.EVT_STC_MODIFIED, self.EvtText, self.textctrl)
 
-        pageGen.sizer.Add(sb, (1,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.EXPAND|wx.LEFT, border = 2)
        
 
         #
@@ -4732,7 +4732,10 @@ class PanelPropriete_Progression(PanelPropriete):
                                       sliderAGauche = True)
         self.Bind(EVT_VAR_CTRL, self.EvtVariable, self.ctrlAnnee)
         sb.Add(self.ctrlAnnee)
+        pageGen.sizer.Add(sb, (1,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.EXPAND|wx.LEFT, border = 2)
         
+        pageGen.sizer.AddGrowableCol(0)
+        pageGen.sizer.AddGrowableRow(0)
         
 #        #
 #        # Organisation (nombre et positions des revues)
@@ -4742,7 +4745,21 @@ class PanelPropriete_Progression(PanelPropriete):
 #        pageGen.sizer.AddGrowableRow(0)
 
         
-    
+    #############################################################################            
+    def MiseAJourTypeEnseignement(self, sendEvt = False):
+        
+        ref = self.progression.GetProjetRef()
+#        print "MiseAJourTypeEnseignement projet", ref.code
+        
+        CloseFenHelp()
+        
+        #
+        # Page "Généralités"
+        #
+        self.titre.SetLabel(ref.attributs['TIT'][0])
+        self.textctrl.MiseAJour(ref.attributs['TIT'][0], ref.attributs['TIT'][3])
+   
+
         
         
     #############################################################################            
@@ -8390,10 +8407,10 @@ class PanelPropriete_Systeme(PanelPropriete):
 
     ######################################################################################  
     def estVerrouille(self):
-        print "estVerrouille", self.systeme
-        print "   ", self.parent
-        print "   ", self.systeme.parent
-        classe = self.systeme.GetClasse()
+#        print "estVerrouille", self.systeme
+#        print "   ", self.parent
+#        print "   ", self.systeme.parent
+#        classe = self.systeme.GetClasse()
         if isinstance(self.systeme.parent, Classe): # Cas du système édité depuis le panel propriété de la Classe
             return False
         if self.systeme.lienClasse is not None:
@@ -9016,8 +9033,8 @@ class ArbreDoc(CT.CustomTreeCtrl):
         #
         # On instancie un panel de propriétés vide pour les éléments qui n'ont pas de propriétés
         #
-        self.panelVide = PanelPropriete(self.panelProp)
-        self.panelVide.Hide()
+#        self.panelVide = PanelPropriete(self.panelProp)
+#        self.panelVide.Hide()
         
         #
         # Construction de l'arbre
@@ -9124,9 +9141,11 @@ class ArbreDoc(CT.CustomTreeCtrl):
             panelPropriete = self.GetPanelPropriete(self.panelProp, data)
         
         if panelPropriete:
-            print "> panelPropriete", panelPropriete
+#            print "> panelPropriete", panelPropriete
             self.panelProp.AfficherPanel(panelPropriete)
             self.parent.Refresh()
+        else:
+            print "rien", panelPropriete
         
         #
         # On centre la fiche sur l'objet
@@ -12579,7 +12598,8 @@ Titres = [u"Séquence pédagogique",
           u"Tâches",
           u"Projet", 
           u"Equipe pédagogique",
-          u"Séquences"]
+          u"Séquences", 
+          u"Progression"]
 
 class ElementDeSequence():
     def __init__(self):
@@ -15858,6 +15878,7 @@ class Progression(BaseDoc, Objet_sequence):
         self.calendriers = []
         self.eleves = []
         self.equipe = []
+        self.code = self.GetReferentiel().getCodeProjetDefaut()
         
         self.version = ""
         # Année Scolaire
@@ -15878,6 +15899,21 @@ class Progression(BaseDoc, Objet_sequence):
     def GetType(self):
         return 'prg'
     
+    
+    ######################################################################################  
+    def GetProjetRef(self):
+        """ Renvoie le projet (Referentiel.Projet) de référence
+        """
+#        print "GetProjetRef", self.code
+        if self.code == None:
+            return self.GetReferentiel().getProjetDefaut()
+        else:
+            if self.code in self.GetReferentiel().projets.keys():
+                return self.GetReferentiel().projets[self.code]
+            else:
+                return None
+            
+            
     ######################################################################################  
     def GetPanelPropriete(self, parent):
         return PanelPropriete_Progression(parent, self)
@@ -15885,7 +15921,7 @@ class Progression(BaseDoc, Objet_sequence):
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
         self.arbre = arbre
-        self.branche = arbre.AppendItem(branche, Titres[9], data = self, image = self.arbre.images["Prg"])
+        self.branche = arbre.AppendItem(branche, Titres[12], data = self, image = self.arbre.images["Prg"])
         if hasattr(self, 'tip'):
             self.tip.SetBranche(self.branche)
             
@@ -16083,6 +16119,16 @@ class Progression(BaseDoc, Objet_sequence):
             return None, None
         finally:
             fichier.close()
+        
+    #############################################################################
+    def MiseAJourTypeEnseignement(self, ancienRef = None, ancienneFam = None):#, changeFamille = False):
+#        print "MiseAJourTypeEnseignement projet", ancienRef, ">>", self.GetReferentiel()
+        
+        self.app.SetTitre()
+        
+        self.code = self.GetReferentiel().getCodeProjetDefaut()
+        
+        
         
     ########################################################################################################
     def GetSequences(self, event = None):       
