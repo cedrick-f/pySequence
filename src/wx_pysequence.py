@@ -15964,14 +15964,14 @@ class Progression(BaseDoc, Objet_sequence):
             eleves.append(e.getBranche())
             
         progression.set("Dossier", self.dossier.getBranche(progression))
-        
-        sequences = ET.SubElement(progression, "Sequences")
-        for seq in self.sequences:
-            sequences.append(seq.nomFichier)
+#        
+#        sequences = ET.SubElement(progression, "Sequences")
+#        for seq in self.sequences:
+#            sequences.append(seq.nomFichier)
             
-        calendriers = ET.SubElement(progression, "Calendriers")
-        for cal in self.calendriers:
-            calendriers.append(cal.getBranche())
+#        calendriers = ET.SubElement(progression, "Calendriers")
+#        for cal in self.calendriers:
+#            calendriers.append(cal.getBranche())
             
         
         

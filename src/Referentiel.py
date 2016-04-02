@@ -315,7 +315,7 @@ class XMLelem():
                 if isinstance(val1, (str, unicode, int, long, float, bool, list, dict, XMLelem)) :
                     val2 = getattr(ref, attr)
                     if not egal(val1, val2):
-                        print u"Différence"
+                        print u"Différence", ""
                         print "  ", attr
                         print "  xml:", val1
                         print "  xls:", val2
@@ -849,7 +849,7 @@ class Referentiel(XMLelem):
                     
     ######################################################################################  
     def importer(self, nomFichier):
-        """
+        """ Procédure d'import de Référentiel depuis un fichier Excel
         """
         
 #        print "IMPORTER" , 
@@ -960,11 +960,11 @@ class Referentiel(XMLelem):
                             lignes = {}
                             revues = {}
                             for p, c in self._colParties:
-                                v = int0(sh.cell(ll,c).value)
+                                v = int0(sh.cell(ll,c).value)                   # Colonne code partie projet
                                 if v > 0:
                                     poids[p] = v
-                                    lignes[p] = int0(sh.cell(ll,c+1).value)
-                                    revues[p] = int0(sh.cell(ll,c+2).value)
+                                    lignes[p] = int0(sh.cell(ll,c+1).value)     # Colonne "l"
+                                    revues[p] = int0(sh.cell(ll,c+2).value)     # Colonne "r"
                                     if lignes[p] != 0:
                                         self.aColNon[p] = True
                                     if revues[p] != 0:
@@ -1169,7 +1169,7 @@ class Referentiel(XMLelem):
                         
                         for j in range((n-c)/3):
                             cp = c+j*3
-                            part = sh_co.cell(3,cp).value
+                            part = str(sh_co.cell(3,cp).value)
                             self._colParties.append((part, cp))
                             t = sh_co.cell(1,c).value
                             for p in self.projets.values():
@@ -1187,7 +1187,7 @@ class Referentiel(XMLelem):
                         p.importer(wb)
                 
                 self.dicoCompetences[code].dicCompetences = getArbre(sh_co, range(4, sh_co.nrows), 0, prems = True, debug = False)
-
+                
 
 
 
@@ -2310,7 +2310,7 @@ def chargerReferentiels():
         
         if os.path.splitext(fich_ref)[1] == ".xls":
 #            print
-#            print fich_ref
+            
             ref = Referentiel(os.path.join(DOSSIER_REF, fich_ref))
             ref.postTraiter()
             REFERENTIELS[ref.Code] = ref
@@ -2337,6 +2337,7 @@ def chargerReferentiels():
 #                print "<<", f
 #                for p in ref.projets.values():
 #                    print p.grilles
+                
                 if ref == r:
                     dicOk[k] = True
             else:

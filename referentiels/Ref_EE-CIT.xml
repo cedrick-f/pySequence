@@ -6,7 +6,7 @@
   <l_BO_dossier S_00="2nde" />
   <l_CentresInterets S_00="La mobilité" S_01="Le sport" S_02="La santé" S_03="L'habitat" S_04="L'énergie" S_05="La communication" S_06="La culture et les loisirs" S_07="Les infrastructures" S_08="La bionique" S_09="La dématérialisation des biens et des services" />
   <l_Enseignement S_00="EE-CIT" S_01="Enseignement d'exploration 2nde - CIT (beta)--Conception et Innovation Technologique" S_02="2nde" />
-  <d_aColNon B_C="True" />
+  <d_aColNon B_C="True" B_S1="True" B_S2="True" />
   <d_activites>
     <l_ED S_00="Etude de dossier" S_01="Activité d'étude de dossier" />
     <l_P S_00="Projet" S_01="Activité de projet" />
@@ -30,67 +30,67 @@
         <l_C3 S_00="mettre en œuvre une démarche de créativité">
           <l_01>
             <Indicateur_00 S_intitule="Les hypothèses sont formulées, hiérarchisées, sélectionnées, explicitées, contextualisées">
-              <d_ligne I_C="16" />
-              <d_poids F_C="33.333333" />
-              <d_revue I_C="0" />
+              <d_ligne I_C="16" I_S1="16" I_S2="16" />
+              <d_poids F_C="33.333333" F_S1="33.333333" F_S2="33.333333" />
+              <d_revue I_C="0" I_S1="0" I_S2="0" />
             </Indicateur_00>
             <Indicateur_01 S_intitule="Une ou des méthodes de créativité sont mise en œuvre">
-              <d_ligne I_C="17" />
-              <d_poids F_C="33.333333" />
-              <d_revue I_C="0" />
+              <d_ligne I_C="17" I_S1="17" I_S2="17" />
+              <d_poids F_C="33.333333" F_S1="33.333333" F_S2="33.333333" />
+              <d_revue I_C="0" I_S1="0" I_S2="0" />
             </Indicateur_01>
             <Indicateur_02 S_intitule="Une solution innovante est matérialisée">
-              <d_ligne I_C="18" />
-              <d_poids F_C="33.333333" />
-              <d_revue I_C="0" />
+              <d_ligne I_C="18" I_S1="18" I_S2="18" />
+              <d_poids F_C="33.333333" F_S1="33.333333" F_S2="33.333333" />
+              <d_revue I_C="0" I_S1="0" I_S2="0" />
             </Indicateur_02>
           </l_01>
-          <d_02 I_C="20" />
+          <d_02 I_C="20" I_S1="20" I_S2="20" />
         </l_C3>
         <l_C2 S_00="communiquer ses intentions">
           <l_01>
             <Indicateur_00 S_intitule="Une réflexion, un principe, une idée, une solution technique sont exprimées">
-              <d_ligne I_C="12" />
-              <d_poids F_C="50.0" />
-              <d_revue I_C="0" />
+              <d_ligne I_C="12" I_S1="12" I_S2="12" />
+              <d_poids F_C="50.0" F_S1="50.0" F_S2="50.0" />
+              <d_revue I_C="0" I_S1="0" I_S2="0" />
             </Indicateur_00>
             <Indicateur_01 S_intitule="La pensée est exprimée à l'aide d'outils de description adaptés, manuels ou numériques">
-              <d_ligne I_C="13" />
-              <d_poids F_C="50.0" />
-              <d_revue I_C="0" />
+              <d_ligne I_C="13" I_S1="13" I_S2="13" />
+              <d_poids F_C="50.0" F_S1="50.0" F_S2="50.0" />
+              <d_revue I_C="0" I_S1="0" I_S2="0" />
             </Indicateur_01>
           </l_01>
-          <d_02 I_C="20" />
+          <d_02 I_C="20" I_S1="20" I_S2="20" />
         </l_C2>
         <l_C1 S_00="Acquérir les bases d'une culture de l'innovation technologique">
           <l_01>
             <Indicateur_00 S_intitule="Les évolutions technologiques sont reliées aux innovations qui marquent des ruptures dans les solutions techniques">
-              <d_ligne I_C="6" />
-              <d_poids F_C="20.0" />
-              <d_revue I_C="0" />
+              <d_ligne I_C="6" I_S1="6" I_S2="6" />
+              <d_poids F_C="20.0" F_S1="20.0" F_S2="20.0" />
+              <d_revue I_C="0" I_S1="0" I_S2="0" />
             </Indicateur_00>
             <Indicateur_01 S_intitule="Le vocabulaire spécifique à l'innovation et à la créativité est utilisé">
-              <d_ligne I_C="7" />
-              <d_poids F_C="20.0" />
-              <d_revue I_C="0" />
+              <d_ligne I_C="7" I_S1="7" I_S2="7" />
+              <d_poids F_C="20.0" F_S1="20.0" F_S2="20.0" />
+              <d_revue I_C="0" I_S1="0" I_S2="0" />
             </Indicateur_01>
             <Indicateur_02 S_intitule="Les principes qui régissent la propriété intellectuelle, la normalisation et l'intelligence économique sont identifiés">
-              <d_ligne I_C="8" />
-              <d_poids F_C="20.0" />
-              <d_revue I_C="0" />
+              <d_ligne I_C="8" I_S1="8" I_S2="8" />
+              <d_poids F_C="20.0" F_S1="20.0" F_S2="20.0" />
+              <d_revue I_C="0" I_S1="0" I_S2="0" />
             </Indicateur_02>
             <Indicateur_03 S_intitule="L'analyse du  cycle de vie d'un produit est réalisée">
-              <d_ligne I_C="9" />
-              <d_poids F_C="20.0" />
-              <d_revue I_C="0" />
+              <d_ligne I_C="9" I_S1="9" I_S2="9" />
+              <d_poids F_C="20.0" F_S1="20.0" F_S2="20.0" />
+              <d_revue I_C="0" I_S1="0" I_S2="0" />
             </Indicateur_03>
             <Indicateur_04 S_intitule="L'analyse de l'impact environnemental d'un objet et de ses constituants est réalisée">
-              <d_ligne I_C="10" />
-              <d_poids F_C="20.0" />
-              <d_revue I_C="0" />
+              <d_ligne I_C="10" I_S1="10" I_S2="10" />
+              <d_poids F_C="20.0" F_S1="20.0" F_S2="20.0" />
+              <d_revue I_C="0" I_S1="0" I_S2="0" />
             </Indicateur_04>
           </l_01>
-          <d_02 I_C="20" />
+          <d_02 I_C="20" I_S1="20" I_S2="20" />
         </l_C1>
       </d_dicCompetences>
       <l_indicateurs />
@@ -979,7 +979,7 @@
   </l_periodes>
   <l_positions_CI />
   <d_projets>
-    <Projet_PRJ1 B_tachesOnce="False" I_duree="12" I_maxEleves="5" I_minEleves="3" S_code="PRJ1" S_ficheValid="STS-EE _ Dossier projet.html" S_intitule="Projet début d'année">
+    <Projet_PRJ1 B_tachesOnce="False" I_duree="12" I_maxEleves="5" I_minEleves="3" S_code="PRJ1" S_ficheValid="" S_intitule="Projet début d'année">
       <d_attributs>
         <l_SRC S_00="Source de financement" S_01="" S_02="" S_03="" />
         <l_PAR S_00="Partenaires du projet" S_01="" S_02="" S_03="" />
@@ -1059,7 +1059,7 @@
       </d_posRevues>
       <d_taches />
     </Projet_PRJ1>
-    <Projet_PRJ2 B_tachesOnce="False" I_duree="12" I_maxEleves="5" I_minEleves="3" S_code="PRJ2" S_ficheValid="STS-EE _ Dossier projet.html" S_intitule="Projet">
+    <Projet_PRJ2 B_tachesOnce="False" I_duree="12" I_maxEleves="5" I_minEleves="3" S_code="PRJ2" S_ficheValid="" S_intitule="Projet">
       <d_attributs>
         <l_SRC S_00="Source de financement" S_01="" S_02="" S_03="" />
         <l_PAR S_00="Partenaires du projet" S_01="" S_02="" S_03="" />
@@ -1139,7 +1139,7 @@
       </d_posRevues>
       <d_taches />
     </Projet_PRJ2>
-    <Projet_PRJ3 B_tachesOnce="False" I_duree="50" I_maxEleves="5" I_minEleves="3" S_code="PRJ3" S_ficheValid="STS-EE _ Dossier projet.html" S_intitule="Projet de fin d'année">
+    <Projet_PRJ3 B_tachesOnce="False" I_duree="50" I_maxEleves="5" I_minEleves="3" S_code="PRJ3" S_ficheValid="" S_intitule="Projet de fin d'année">
       <d_attributs>
         <l_SRC S_00="Source de financement" S_01="" S_02="" S_03="" />
         <l_PAR S_00="Partenaires du projet" S_01="" S_02="" S_03="" />

@@ -6,7 +6,7 @@
   <l_BO_dossier S_00="2nde" />
   <l_CentresInterets S_00="La mobilité" S_01="Le sport" S_02="La santé" S_03="L'habitat" S_04="L'énergie" S_05="La communication" S_06="La culture et les loisirs" S_07="Les infrastructures" S_08="La bionique" S_09="La dématérialisation des biens et des services" />
   <l_Enseignement S_00="EE-DIT" S_01="Enseignement d'exploration 2nde - DIT(beta)--Design et Innovation Technologique" S_02="2nde" />
-  <d_aColNon B_C="True" />
+  <d_aColNon B_C="True" B_S1="True" B_S2="True" />
   <d_activites>
     <l_ED S_00="Etude de dossier" S_01="Activité d'étude de dossier" />
     <l_P S_00="Projet" S_01="Activité de projet" />
@@ -30,67 +30,67 @@
         <l_C3 S_00="mettre en œuvre une démarche de création">
           <l_01>
             <Indicateur_00 S_intitule="Le projet de design, individuel ou collectif est conçu et réalisé">
-              <d_ligne I_C="16" />
-              <d_poids F_C="25.0" />
-              <d_revue I_C="0" />
+              <d_ligne I_C="16" I_S1="16" I_S2="16" />
+              <d_poids F_C="25.0" F_S1="25.0" F_S2="25.0" />
+              <d_revue I_C="0" I_S1="0" I_S2="0" />
             </Indicateur_00>
             <Indicateur_01 S_intitule="Intention et réalisation sont confrontées dans la conduite d'un projet pour l'adapter et l'orienter, la dimension créative est présente">
-              <d_ligne I_C="17" />
-              <d_poids F_C="25.0" />
-              <d_revue I_C="0" />
+              <d_ligne I_C="17" I_S1="17" I_S2="17" />
+              <d_poids F_C="25.0" F_S1="25.0" F_S2="25.0" />
+              <d_revue I_C="0" I_S1="0" I_S2="0" />
             </Indicateur_01>
             <Indicateur_02 S_intitule="Le projet est conduit de manière autonome avec initiative, engagement et esprit critique">
-              <d_ligne I_C="18" />
-              <d_poids F_C="25.0" />
-              <d_revue I_C="0" />
+              <d_ligne I_C="18" I_S1="18" I_S2="18" />
+              <d_poids F_C="25.0" F_S1="25.0" F_S2="25.0" />
+              <d_revue I_C="0" I_S1="0" I_S2="0" />
             </Indicateur_02>
             <Indicateur_03 S_intitule="la production individuelle dans le cadre d'un projet est conduite à son terme">
-              <d_ligne I_C="19" />
-              <d_poids F_C="25.0" />
-              <d_revue I_C="0" />
+              <d_ligne I_C="19" I_S1="19" I_S2="19" />
+              <d_poids F_C="25.0" F_S1="25.0" F_S2="25.0" />
+              <d_revue I_C="0" I_S1="0" I_S2="0" />
             </Indicateur_03>
           </l_01>
-          <d_02 I_C="20" />
+          <d_02 I_C="20" I_S1="20" I_S2="20" />
         </l_C3>
         <l_C2 S_00="Technologie">
           <l_01>
             <Indicateur_00 S_intitule="Le vocabulaire spécifique à l'innovation et la créativité est utilisé">
-              <d_ligne I_C="12" />
-              <d_poids F_C="50.0" />
-              <d_revue I_C="0" />
+              <d_ligne I_C="12" I_S1="12" I_S2="12" />
+              <d_poids F_C="50.0" F_S1="50.0" F_S2="50.0" />
+              <d_revue I_C="0" I_S1="0" I_S2="0" />
             </Indicateur_00>
             <Indicateur_01 S_intitule="Les principes qui régissent la propriété intellectuelle, la normalisation et l'intelligence économique sont identifiés">
-              <d_ligne I_C="13" />
-              <d_poids F_C="50.0" />
-              <d_revue I_C="0" />
+              <d_ligne I_C="13" I_S1="13" I_S2="13" />
+              <d_poids F_C="50.0" F_S1="50.0" F_S2="50.0" />
+              <d_revue I_C="0" I_S1="0" I_S2="0" />
             </Indicateur_01>
           </l_01>
-          <d_02 I_C="20" />
+          <d_02 I_C="20" I_S1="20" I_S2="20" />
         </l_C2>
         <l_C1 S_00="Approfondir la culture design">
           <l_01>
             <Indicateur_00 S_intitule="Un objet est associé à une grande période de la conception, des arts aux design industriel">
-              <d_ligne I_C="6" />
-              <d_poids F_C="25.0" />
-              <d_revue I_C="0" />
+              <d_ligne I_C="6" I_S1="6" I_S2="6" />
+              <d_poids F_C="25.0" F_S1="25.0" F_S2="25.0" />
+              <d_revue I_C="0" I_S1="0" I_S2="0" />
             </Indicateur_00>
             <Indicateur_01 S_intitule="un objet est observé d'un point de vue description, communication et représentation">
-              <d_ligne I_C="7" />
-              <d_poids F_C="25.0" />
-              <d_revue I_C="0" />
+              <d_ligne I_C="7" I_S1="7" I_S2="7" />
+              <d_poids F_C="25.0" F_S1="25.0" F_S2="25.0" />
+              <d_revue I_C="0" I_S1="0" I_S2="0" />
             </Indicateur_01>
             <Indicateur_02 S_intitule="Le contexte est identifié (culturel, écologique, économique, sociétal, technologique)">
-              <d_ligne I_C="8" />
-              <d_poids F_C="25.0" />
-              <d_revue I_C="0" />
+              <d_ligne I_C="8" I_S1="8" I_S2="8" />
+              <d_poids F_C="25.0" F_S1="25.0" F_S2="25.0" />
+              <d_revue I_C="0" I_S1="0" I_S2="0" />
             </Indicateur_02>
             <Indicateur_03 S_intitule="Les fonctions de besoins et d'usages sont identifiées">
-              <d_ligne I_C="9" />
-              <d_poids F_C="25.0" />
-              <d_revue I_C="0" />
+              <d_ligne I_C="9" I_S1="9" I_S2="9" />
+              <d_poids F_C="25.0" F_S1="25.0" F_S2="25.0" />
+              <d_revue I_C="0" I_S1="0" I_S2="0" />
             </Indicateur_03>
           </l_01>
-          <d_02 I_C="20" />
+          <d_02 I_C="20" I_S1="20" I_S2="20" />
         </l_C1>
       </d_dicCompetences>
       <l_indicateurs />
