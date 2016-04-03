@@ -27,40 +27,60 @@
   <d_dicoCompetences>
     <Competences_S S_abrDiscipline="SI" S_codeDiscipline="SII" S_nomDiscipline="Sciences de l'Ingénieur" S_nomGenerique="Compétences" S_nomGeneriqueIndic="Indicateurs de performance">
       <d_dicCompetences>
-        <l_C3 S_00="mettre en œuvre une démarche de créativité">
+        <l_C3 S_00="Représenter, communiquer">
+          <l_01>
+            <Indicateur_00 S_intitule="Une réflexion, un principe, une idée, une solution technique sont exprimées">
+              <d_ligne I_C="16" I_S1="16" I_S2="16" />
+              <d_poids F_C="16.666667" F_S1="16.666667" F_S2="16.666667" />
+              <d_revue I_C="0" I_S1="0" I_S2="0" />
+            </Indicateur_00>
+            <Indicateur_01 S_intitule="La pensée est exprimée à l'aide d'outils de description adaptés, manuels ou numériques">
+              <d_ligne I_C="17" I_S1="17" I_S2="17" />
+              <d_poids F_C="16.666667" F_S1="16.666667" F_S2="16.666667" />
+              <d_revue I_C="0" I_S1="0" I_S2="0" />
+            </Indicateur_01>
+            <Indicateur_02 S_intitule="Les outils et les langages sont adaptés à la description">
+              <d_ligne I_C="18" I_S1="18" I_S2="18" />
+              <d_poids F_C="16.666667" F_S1="16.666667" F_S2="16.666667" />
+              <d_revue I_C="0" I_S1="0" I_S2="0" />
+            </Indicateur_02>
+            <Indicateur_03 S_intitule="Les résultats expérimentaux sont interprétés, une conclusion argumentée est formulée et communiquée">
+              <d_ligne I_C="19" I_S1="19" I_S2="19" />
+              <d_poids F_C="16.666667" F_S1="16.666667" F_S2="16.666667" />
+              <d_revue I_C="0" I_S1="0" I_S2="0" />
+            </Indicateur_03>
+            <Indicateur_04 S_intitule="Le vocabulaire spécifique à l'innovation et la créativité est utilisé">
+              <d_ligne I_C="20" I_S1="20" I_S2="20" />
+              <d_poids F_C="16.666667" F_S1="16.666667" F_S2="16.666667" />
+              <d_revue I_C="0" I_S1="0" I_S2="0" />
+            </Indicateur_04>
+            <Indicateur_05 S_intitule="Les principes qui régissent la propriété intellectuelle, la normalisation et l'intelligence économique sont identifiés">
+              <d_ligne I_C="21" I_S1="21" I_S2="21" />
+              <d_poids F_C="16.666667" F_S1="16.666667" F_S2="16.666667" />
+              <d_revue I_C="0" I_S1="0" I_S2="0" />
+            </Indicateur_05>
+          </l_01>
+          <d_02 I_C="20" I_S1="20" I_S2="20" />
+        </l_C3>
+        <l_C2 S_00="mettre en œuvre une démarche de créativité">
           <l_01>
             <Indicateur_00 S_intitule="Les hypothèses sont formulées, hiérarchisées, sélectionnées, explicitées, contextualisées">
-              <d_ligne I_C="16" I_S1="16" I_S2="16" />
+              <d_ligne I_C="12" I_S1="12" I_S2="12" />
               <d_poids F_C="33.333333" F_S1="33.333333" F_S2="33.333333" />
               <d_revue I_C="0" I_S1="0" I_S2="0" />
             </Indicateur_00>
             <Indicateur_01 S_intitule="Une ou des méthodes de créativité sont mise en œuvre">
-              <d_ligne I_C="17" I_S1="17" I_S2="17" />
+              <d_ligne I_C="13" I_S1="13" I_S2="13" />
               <d_poids F_C="33.333333" F_S1="33.333333" F_S2="33.333333" />
               <d_revue I_C="0" I_S1="0" I_S2="0" />
             </Indicateur_01>
             <Indicateur_02 S_intitule="Une solution innovante est matérialisée">
-              <d_ligne I_C="18" I_S1="18" I_S2="18" />
+              <d_ligne I_C="14" I_S1="14" I_S2="14" />
               <d_poids F_C="33.333333" F_S1="33.333333" F_S2="33.333333" />
               <d_revue I_C="0" I_S1="0" I_S2="0" />
             </Indicateur_02>
           </l_01>
-          <d_02 I_C="20" I_S1="20" I_S2="20" />
-        </l_C3>
-        <l_C2 S_00="communiquer ses intentions">
-          <l_01>
-            <Indicateur_00 S_intitule="Une réflexion, un principe, une idée, une solution technique sont exprimées">
-              <d_ligne I_C="12" I_S1="12" I_S2="12" />
-              <d_poids F_C="50.0" F_S1="50.0" F_S2="50.0" />
-              <d_revue I_C="0" I_S1="0" I_S2="0" />
-            </Indicateur_00>
-            <Indicateur_01 S_intitule="La pensée est exprimée à l'aide d'outils de description adaptés, manuels ou numériques">
-              <d_ligne I_C="13" I_S1="13" I_S2="13" />
-              <d_poids F_C="50.0" F_S1="50.0" F_S2="50.0" />
-              <d_revue I_C="0" I_S1="0" I_S2="0" />
-            </Indicateur_01>
-          </l_01>
-          <d_02 I_C="20" I_S1="20" I_S2="20" />
+          <d_02 I_C="40" I_S1="40" I_S2="40" />
         </l_C2>
         <l_C1 S_00="Acquérir les bases d'une culture de l'innovation technologique">
           <l_01>
@@ -90,7 +110,7 @@
               <d_revue I_C="0" I_S1="0" I_S2="0" />
             </Indicateur_04>
           </l_01>
-          <d_02 I_C="20" I_S1="20" I_S2="20" />
+          <d_02 I_C="40" I_S1="40" I_S2="40" />
         </l_C1>
       </d_dicCompetences>
       <l_indicateurs />
@@ -975,7 +995,7 @@
   <d_options />
   <d_parties S_C="PRJ2" S_S1="PRJ1" S_S2="PRJ3" />
   <l_periodes>
-    <l_00 I_01="3" S_00="1_ère année" />
+    <l_00 I_01="3" S_00="2_nde" />
   </l_periodes>
   <l_positions_CI />
   <d_projets>
@@ -1006,7 +1026,7 @@
             </l_00>
           </l_Nom>
           <l_NON>
-            <l_00 S_00="Notation Candidat" S_02="">
+            <l_00 S_00="Evaluation CIT" S_02="">
               <l_01 I_00="0" I_01="4" I_02="0" />
             </l_00>
           </l_NON>
@@ -1033,7 +1053,7 @@
         </d_S1>
       </d_cellulesInfo>
       <d_grilles>
-        <l_S1 S_00="Grille 2nde.xlsx" S_01="I" />
+        <l_S1 S_00="Grille 2nde2016.xlsx" S_01="I" />
       </d_grilles>
       <l_listPhases S_00="Ana" S_01="Con" S_02="DCo" S_03="Rea" S_04="XXX" S_05="Rev" S_06="R1" S_07="R2" S_08="R3" S_09="S" />
       <l_listPhasesEval S_00="Rev" S_01="R1" S_02="R2" S_03="R3" S_04="S" />
@@ -1042,16 +1062,16 @@
       <d_parties S_S1="PRJ1" />
       <l_periode I_00="1" />
       <d_phases>
-        <l_DCo S_00="Maint" S_01="Maintenance" S_02="maint" />
-        <l_Ana S_00="Install" S_01="Installation" S_02="inst" />
+        <l_DCo S_00="ConceptDet" S_01="Conception détaillée" S_02="Cd" />
+        <l_Ana S_00="Analyse" S_01="Analyse du besoin" S_02="inst" />
         <l_R2 S_00="Revue n°2" S_01="Revue de projet n°2" S_02="R2" />
         <l_R3 S_00="Revue n°3" S_01="Revue de projet n°3" S_02="R3" />
         <l_XXX S_00="Synth et com" S_01="Synthèse et communication" S_02="SC" />
         <l_Rev S_00="Revue inter" S_01="Revue intermédiaire" S_02="Ri" />
         <l_R1 S_00="Revue n°1" S_01="Revue de projet n°1" S_02="R1" />
         <l_S S_00="Soutenance" S_01="Soutenance finale" S_02="S" />
-        <l_Rea S_00="Expérimentations" S_01="Réalisation d'expérimentations" S_02="Re" />
-        <l_Con S_00="Expl" S_01="Exploitation" S_02="expl" />
+        <l_Rea S_00="Réalisation" S_01="Réalisation" S_02="R" />
+        <l_Con S_00="Conceptpre" S_01="Conception préliminaire" S_02="Cp" />
       </d_phases>
       <d_posRevues>
         <l__02 S_00="Ana" S_01="Con" />
@@ -1086,7 +1106,7 @@
             </l_00>
           </l_Nom>
           <l_NON>
-            <l_00 S_00="Notation Candidat" S_02="">
+            <l_00 S_00="Evaluation CIT" S_02="">
               <l_01 I_00="0" I_01="4" I_02="0" />
             </l_00>
           </l_NON>
@@ -1113,7 +1133,7 @@
         </d_C>
       </d_cellulesInfo>
       <d_grilles>
-        <l_C S_00="Grille 2nde.xlsx" S_01="I" />
+        <l_C S_00="Grille 2nde2016.xlsx" S_01="I" />
       </d_grilles>
       <l_listPhases S_00="Ana" S_01="Con" S_02="DCo" S_03="Rea" S_04="XXX" S_05="Rev" S_06="R1" S_07="R2" S_08="R3" S_09="S" />
       <l_listPhasesEval S_00="Rev" S_01="R1" S_02="R2" S_03="R3" S_04="S" />
@@ -1122,16 +1142,16 @@
       <d_parties S_C="PRJ2" />
       <l_periode I_00="2" />
       <d_phases>
-        <l_DCo S_00="Maint" S_01="Maintenance" S_02="maint" />
-        <l_Ana S_00="Install" S_01="Installation" S_02="inst" />
+        <l_DCo S_00="ConceptDet" S_01="Conception détaillée" S_02="Cd" />
+        <l_Ana S_00="Analyse" S_01="Analyse du besoin" S_02="inst" />
         <l_R2 S_00="Revue n°2" S_01="Revue de projet n°2" S_02="R2" />
         <l_R3 S_00="Revue n°3" S_01="Revue de projet n°3" S_02="R3" />
         <l_XXX S_00="Synth et com" S_01="Synthèse et communication" S_02="SC" />
         <l_Rev S_00="Revue inter" S_01="Revue intermédiaire" S_02="Ri" />
         <l_R1 S_00="Revue n°1" S_01="Revue de projet n°1" S_02="R1" />
         <l_S S_00="Soutenance" S_01="Soutenance finale" S_02="S" />
-        <l_Rea S_00="Expérimentations" S_01="Réalisation d'expérimentations" S_02="Re" />
-        <l_Con S_00="Expl" S_01="Exploitation" S_02="expl" />
+        <l_Rea S_00="Réalisation" S_01="Réalisation" S_02="R" />
+        <l_Con S_00="Conceptpre" S_01="Conception préliminaire" S_02="Cp" />
       </d_phases>
       <d_posRevues>
         <l__02 S_00="Ana" S_01="Con" />
@@ -1166,7 +1186,7 @@
             </l_00>
           </l_Nom>
           <l_NON>
-            <l_00 S_00="Notation Candidat" S_02="">
+            <l_00 S_00="Evaluation CIT" S_02="">
               <l_01 I_00="0" I_01="4" I_02="0" />
             </l_00>
           </l_NON>
@@ -1193,7 +1213,7 @@
         </d_S2>
       </d_cellulesInfo>
       <d_grilles>
-        <l_S2 S_00="Grille 2nde.xlsx" S_01="I" />
+        <l_S2 S_00="Grille 2nde2016.xlsx" S_01="I" />
       </d_grilles>
       <l_listPhases S_00="Ana" S_01="Con" S_02="DCo" S_03="Rea" S_04="XXX" S_05="Rev" S_06="R1" S_07="R2" S_08="R3" S_09="S" />
       <l_listPhasesEval S_00="Rev" S_01="R1" S_02="R2" S_03="R3" S_04="S" />
@@ -1202,16 +1222,16 @@
       <d_parties S_S2="PRJ3" />
       <l_periode I_00="3" />
       <d_phases>
-        <l_DCo S_00="Maint" S_01="Maintenance" S_02="maint" />
-        <l_Ana S_00="Install" S_01="Installation" S_02="inst" />
+        <l_DCo S_00="ConceptDet" S_01="Conception détaillée" S_02="Cd" />
+        <l_Ana S_00="Analyse" S_01="Analyse du besoin" S_02="inst" />
         <l_R2 S_00="Revue n°2" S_01="Revue de projet n°2" S_02="R2" />
         <l_R3 S_00="Revue n°3" S_01="Revue de projet n°3" S_02="R3" />
         <l_XXX S_00="Synth et com" S_01="Synthèse et communication" S_02="SC" />
         <l_Rev S_00="Revue inter" S_01="Revue intermédiaire" S_02="Ri" />
         <l_R1 S_00="Revue n°1" S_01="Revue de projet n°1" S_02="R1" />
         <l_S S_00="Soutenance" S_01="Soutenance finale" S_02="S" />
-        <l_Rea S_00="Expérimentations" S_01="Réalisation d'expérimentations" S_02="Re" />
-        <l_Con S_00="Expl" S_01="Exploitation" S_02="expl" />
+        <l_Rea S_00="Réalisation" S_01="Réalisation" S_02="R" />
+        <l_Con S_00="Conceptpre" S_01="Conception préliminaire" S_02="Cp" />
       </d_phases>
       <d_posRevues>
         <l__02 S_00="Ana" S_01="Con" />
