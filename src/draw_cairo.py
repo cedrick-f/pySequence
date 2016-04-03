@@ -1640,13 +1640,33 @@ def get_apercu(doc, mult = 3):
         sous la forme d'une cairo.ImageSurface
     
     """
+    print "get_apercu", doc.draw
     imagesurface = cairo.ImageSurface(cairo.FORMAT_ARGB32,  210*mult, 297*mult)#cairo.FORMAT_ARGB32,cairo.FORMAT_RGB24
     ctx = cairo.Context(imagesurface)
     ctx.scale(297*mult, 297*mult) 
     doc.draw.Draw(ctx, doc)
+    
+    del ctx
+         
     return imagesurface
 
-
+#def get_apercu_bmp(doc, mult = 3):
+#    """ Renvoi un apercu du document <doc>
+#        sous la forme d'une cairo.ImageSurface
+#    
+#    """
+#    print "get_apercu", doc.draw
+#    imagesurface = cairo.ImageSurface(cairo.FORMAT_ARGB32,  210*mult, 297*mult)#cairo.FORMAT_ARGB32,cairo.FORMAT_RGB24
+#    ctx = cairo.Context(imagesurface)
+#    ctx.scale(297*mult, 297*mult) 
+#    doc.draw.Draw(ctx, doc)
+#    bmp = wx.lib.wxcairo.BitmapFromImageSurface(imagesurface)
+#        
+#    # On fait une copie sinon ça s'efface ...
+#    img = bmp.ConvertToImage()
+#    bmp = img.ConvertToBitmap()
+#        
+#    return imagesurface
 
 ##########################################################################################
 #

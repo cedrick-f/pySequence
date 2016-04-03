@@ -674,7 +674,7 @@ def getElementFiltre(filtre):
 #    Données pour la gestion des fichiers .seq et .prj
 #
 #######################################################################################
-FORMAT_FICHIER = {'seqprj' : u"Séquence ou Projet (.seq ou .prj)|*.seq;*.prj|",
+FORMAT_FICHIER = {'seqprj' : u"Fichier pySéquence (.seq .prj . prg)|*.seq;*.prj;*.prg|",
                   'seq' : u"Séquence (.seq)|*.seq|",
                   'prj' : u"Projet (.prj)|*.prj|",
                   'prg' : u"Progression (.prg)|*.prg|"}

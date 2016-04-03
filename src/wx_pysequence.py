@@ -3111,6 +3111,7 @@ class FenetreProgression(FenetreDocument):
         
         fichier = open(nomFichier,'r')
         self.definirNomFichierCourant(nomFichier)
+        
     
         #################################################################################################
         def get_err_message(err):
@@ -3134,7 +3135,7 @@ class FenetreProgression(FenetreDocument):
             Annuler = False
                    
             # La progression
-            progression = root.find("Projet")
+            progression = root.find("Progression")
             if progression == None:
                 self.progression.setBranche(root)
             else:
@@ -3151,12 +3152,13 @@ class FenetreProgression(FenetreDocument):
                 message += u"\n"
                 
                 
-                # Le projet
+                # Le progression
                 message += u"Construction de la structure de la progression...\t"
 #                dlg.top()
                 dlg.Update(count, message)
                 count += 1
                 
+                err = self.progression.setBranche(progression)
                 
                 if len(err) > 0 :
                     Ok = False
@@ -3188,7 +3190,7 @@ class FenetreProgression(FenetreDocument):
         # Erreur fatale d'ouverture
         #
         if Annuler:
-            message += u"\n\nLa progression n'a pas pu être ouvert !\n\n"
+            message += u"\n\nLa progression n'a pas pu être ouverte !\n\n"
             if len(err) > 0:
                 message += u"\n   L'erreur concerne :"
                 message += get_err_message(err)
@@ -3205,6 +3207,7 @@ class FenetreProgression(FenetreDocument):
 #            wx.CallAfter(self.fiche.Show)
 #            wx.CallAfter(self.fiche.Redessiner)
             return
+        
         
         liste_actions = [[self.classe.ConstruireArbre, [self.arbre, root], {},
                          u"Construction de l'arborescence de la classe...\t"],
@@ -3261,6 +3264,8 @@ class FenetreProgression(FenetreDocument):
             dlg.Close() 
     
         self.SetTitre()
+#        self.progression.MiseAJourTypeEnseignement()
+        
         wx.CallAfter(self.fiche.Show)
         wx.CallAfter(self.fiche.Redessiner)
         
@@ -6281,10 +6286,11 @@ class PanelPropriete_LienSequence(PanelPropriete):
     def __init__(self, parent, lien):
         PanelPropriete.__init__(self, parent)
         self.lien = lien
-        self.sequence = None
+        self.sequence = self.lien.sequence
         self.classe = None
         self.construire()
         self.parent = parent
+        self.MiseAJour()
         
         
     #############################################################################            
@@ -6298,7 +6304,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
         #
         sb0 = wx.StaticBox(self, -1, u"Fichier de la séquence", size = (200,-1))
         sbs0 = wx.StaticBoxSizer(sb0,wx.HORIZONTAL)
-        self.texte = wx.TextCtrl(self, -1, self.lien.path, size = (300, -1),
+        self.texte = wx.TextCtrl(self, -1, toSystemEncoding(self.lien.path), size = (300, -1),
                                  style = wx.TE_PROCESS_ENTER)
         bt2 =wx.BitmapButton(self, 101, wx.ArtProvider_GetBitmap(wx.ART_NORMAL_FILE))
         bt2.SetToolTipString(u"Sélectionner un fichier")
@@ -6309,9 +6315,9 @@ class PanelPropriete_LienSequence(PanelPropriete):
         sbs0.Add(bt2)
         
         #
-        # Aperéu de la séquence
+        # Aperçu de la séquence
         #
-        sb1 = wx.StaticBox(self, -1, u"Aperéu de la séquence", size = (210,297))
+        sb1 = wx.StaticBox(self, -1, u"Aperçu de la séquence", size = (210,297))
         sbs1 = wx.StaticBoxSizer(sb1,wx.HORIZONTAL)
         sbs1.SetMinSize((210,297))
         self.apercu = wx.StaticBitmap(self, -1, wx.NullBitmap)
@@ -6350,15 +6356,20 @@ class PanelPropriete_LienSequence(PanelPropriete):
         self.lien.path = event.GetString()
         self.MiseAJour()
         event.Skip()     
+
                             
-    def OnLoseFocus(self, event):  
-        self.lien.path = self.texte.GetValue()
+    #############################################################################            
+    def OnLoseFocus(self, event):
+        return  
+        self.lien.path = toFileEncoding(self.texte.GetValue())
         self.MiseAJour()
         event.Skip()   
-                   
+
+                 
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
-        self.texte.SetValue(self.lien.path)
+        print "MiseAJour PanelPropriete_LienSequence", self.lien
+        self.texte.SetValue(toSystemEncoding(self.lien.path))
 
 #        try:
         if os.path.isfile(self.lien.path):
@@ -6371,6 +6382,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
                 self.texte.SetBackgroundColour("pink")
                 self.texte.SetToolTipString(u"Le fichier Séquence est introuvable !")
                 return False
+        
         self.texte.SetBackgroundColour("white")
         self.texte.SetToolTipString(u"Lien vers un fichier Séquence")
 #        except:
@@ -6385,43 +6397,38 @@ class PanelPropriete_LienSequence(PanelPropriete):
 #            self.texte.SetToolTipString(u"Le lien vers le fichier Séquence est rompu !")
 #            return False
         
-        classe = Classe(self.lien.parent.app.parent)
-        self.sequence = Sequence(self.lien.parent.app, classe)
-        classe.SetDocument(self.sequence)
+#        classe = Classe(self.lien.parent.app.parent)
+        
+#        self.sequence = Sequence(self.lien.parent.app, classe)
+        
+        
         
 #        try:
-        root = ET.parse(fichier).getroot()
+        
         
         # La séquence
-        sequence = root.find("Sequence")
-        if sequence == None:
-            self.sequence.setBranche(root)
-        else:
-            self.sequence.setBranche(sequence)
-        
-            # La classe
-            classe = root.find("Classe")
-            self.sequence.classe.setBranche(classe)
-            self.sequence.SetCodes()
-            self.sequence.SetLiens()
-            self.sequence.VerifPb()
+        if self.sequence is None:
+            classe = Classe(self.lien.GetApp())
+            self.sequence = Sequence(self.lien.GetApp(), classe)
+            classe.SetDocument(self.sequence)
+            root = ET.parse(fichier).getroot()
+            sequence = root.find("Sequence")
+            if sequence == None:
+                self.sequence.setBranche(root)
+            else:
+                self.sequence.setBranche(sequence)
             
-        fichier.close()
-        
-#        except:
-#            self.sequence = None
-##            dlg = wx.MessageDialog(self, u"Le fichier %s\nn'a pas pu étre ouvert !" %self.lien.path,
-##                               u"Erreur d'ouverture du fichier",
-##                               wx.OK | wx.ICON_WARNING
-##                               #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
-##                               )
-##            dlg.ShowModal()
-##            dlg.Destroy()
-#            self.texte.SetBackgroundColour("pink")
-#            self.texte.SetToolTipString(u"Fichier Séquence corrompu !")
+                # La classe
+                classe = root.find("Classe")
+                self.sequence.classe.setBranche(classe)
+                self.sequence.SetCodes()
+                self.sequence.SetLiens()
+                self.sequence.VerifPb()
+            fichier.close()
 
     
         if self.sequence:
+            print "bmp", self.sequence
             bmp = self.sequence.GetApercu().ConvertToImage().Scale(210, 297).ConvertToBitmap()
             self.apercu.SetBitmap(bmp)
             self.lien.SetLabel()
@@ -7095,6 +7102,8 @@ class PanelPropriete_Seance(PanelPropriete):
         self.edition = False  
         
         self.sizer.SetEmptyCellSize((0,0))
+        
+        self.MiseAJour()
         
         #
         # Mise en place
@@ -12669,8 +12678,8 @@ class LienSequence():
     def __init__(self, parent, path = ""):
         self.path = path
         self.parent = parent
-#        self.panelPropriete = PanelPropriete_LienSequence(panelParent, self)
-#        self.panelParent = panelParent
+
+        self.sequence = None
         
         #
         # Création du Tip (PopupInfo)
@@ -12680,11 +12689,17 @@ class LienSequence():
         self.tip_titrelien, self.tip_ctrllien = self.tip.CreerLien((2,0))
         self.tip_image = self.tip.CreerImage((3,0))
     
+    ######################################################################################  
+    def __eq__(self, lien):
+        return os.path.normpath(self.path) == os.path.normpath(lien.path)
+    
+    ######################################################################################  
+    def GetApp(self):
+        return self.parent.GetApp()
     
     ######################################################################################  
     def GetPanelPropriete(self, parent):
-        return None
-        return PanelPropriete_Sequence(parent, self)
+        return PanelPropriete_LienSequence(parent, self)
     
     
     ######################################################################################  
@@ -12704,7 +12719,11 @@ class LienSequence():
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
         self.arbre = arbre
-        self.codeBranche = CodeBranche(self.arbre, u"")
+        if self.sequence is not None:
+            code = self.sequence.intitule
+        else:
+            code = u""
+        self.codeBranche = CodeBranche(self.arbre, code)
         self.branche = arbre.AppendItem(branche, u"Séquence :", wnd = self.codeBranche, data = self,
                                         image = self.arbre.images["Seq"])
         if hasattr(self, 'tip'):
@@ -12714,14 +12733,17 @@ class LienSequence():
     def AfficherMenuContextuel(self, itemArbre):
         if itemArbre == self.branche:
             self.parent.app.AfficherMenuContextuel([[u"Supprimer", 
-                                                     functools.partial(self.parent.SupprimerSequencePre, item = itemArbre), 
-                                                     images.Icone_suppr_seq.GetBitmap()]
+                                                     functools.partial(self.parent.SupprimerLienSequence, item = itemArbre), 
+                                                     images.Icone_suppr_seq.GetBitmap()],
+                                                    [u"Ouvrir", 
+                                                     functools.partial(self.parent.OuvrirSequence, item = itemArbre), 
+                                                     wx.ArtProvider.GetBitmap(wx.ART_FILE_OPEN, wx.ART_TOOLBAR, (20,20))]
                                                     ])
             
     ######################################################################################  
     def SetLabel(self):
         if hasattr(self, 'codeBranche'):
-            self.codeBranche.SetLabel(self.GetNomFichier())
+            self.codeBranche.SetLabel(self.sequence.intitule)
         
     ######################################################################################  
     def SetImage(self, bmp):
@@ -13053,12 +13075,18 @@ class Classe(Objet_sequence):
         return PanelPropriete_Classe(parent, self)
     
     ######################################################################################  
+    def GetApp(self):
+        return self.app
+    
+    ######################################################################################  
     def GetPath(self):
         return r""
     
     ######################################################################################  
     def MiseAJourTypeEnseignement(self):
+        
         if hasattr(self, 'codeBranche'):
+            print "MiseAJourTypeEnseignement classe", self.GetReferentiel().Enseignement[0]
             self.codeBranche.SetLabel(self.GetReferentiel().Enseignement[0])
         
 #        self.CI = self.options.optClasse["CentresInteret"]
@@ -13094,12 +13122,12 @@ class Classe(Objet_sequence):
     def Initialise(self, pourProjet, defaut = False):
         
         # Força "défaut" ou pas de fichier Classe dans les options
-        if defaut or self.app.parent.options.optClasse["FichierClasse"] == r"":
+        if defaut or self.GetApp().parent.options.optClasse["FichierClasse"] == r"":
             self.setDefaut()
             
         else:
             # Impossible de charger le fichier Classe
-            if not self.ouvrir(self.app.parent.options.optClasse["FichierClasse"]):
+            if not self.ouvrir(self.GetApp().parent.options.optClasse["FichierClasse"]):
                 self.setDefaut()
             
             
@@ -13351,6 +13379,7 @@ class Classe(Objet_sequence):
         
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
+        print "ConstruireArbre", self.GetReferentiel().Enseignement[0]
         self.arbre = arbre
         self.codeBranche = CodeBranche(self.arbre, rallonge(self.GetReferentiel().Enseignement[0]))
         self.branche = arbre.AppendItem(branche, Titres[5]+" :", wnd = self.codeBranche, data = self)#, image = self.arbre.images["Seq"])
@@ -13422,7 +13451,7 @@ class BaseDoc():
     def __init__(self, app, classe = None, panelParent = None, intitule = ""):
         self.intitule = intitule
         self.classe = classe
-        self.app = app
+        self.app = app  # de type Fenentre Document
         self.centrer = True
         
         self.position = 0
@@ -13450,6 +13479,9 @@ class BaseDoc():
 #        ctx.scale(297*mult, 297*mult) 
 #        self.draw.Draw(ctx, self)
         bmp = getBitmapFromImageSurface(imagesurface)
+        
+    
+    
         return bmp
     
     ######################################################################################  
@@ -13975,11 +14007,11 @@ class Sequence(BaseDoc, Objet_sequence):
             self.SupprimerSysteme(item = item)
             
         elif isinstance(data, LienSequence):
-            self.SupprimerSequencePre(item = item)           
+            self.SupprimerLienSequence(item = item)           
         
     
     ######################################################################################  
-    def SupprimerSequencePre(self, event = None, item = None):
+    def SupprimerLienSequence(self, event = None, item = None):
         ps = self.arbre.GetItemPyData(item)
         self.prerequisSeance.remove(ps)
         self.arbre.Delete(item)
@@ -14363,10 +14395,10 @@ class Sequence(BaseDoc, Objet_sequence):
         if hasattr(self, 'CI') \
             and (self.CI.numCI != [] or self.prerequis.savoirs != [] \
                  or self.obj['C'].competences != [] or self.obj['S'].savoirs != []):
-            self.classe.Verrouiller(False)
+            self.classe.Verrouiller(True)
         else:
             if self.classe != None:
-                self.classe.Verrouiller(True)
+                self.classe.Verrouiller(False)
 
 
 
@@ -15252,11 +15284,11 @@ class Projet(BaseDoc, Objet_sequence):
             self.SupprimerProf(item = item)
             
 #        elif isinstance(data, LienSequence):
-#            self.SupprimerSequencePre(item = item)           
+#            self.SupprimerLienSequence(item = item)           
         
     
 #    ######################################################################################  
-#    def SupprimerSequencePre(self, event = None, item = None):
+#    def SupprimerLienSequence(self, event = None, item = None):
 #        ps = self.arbre.GetItemPyData(item)
 #        self.prerequisSeance.remove(ps)
 #        self.arbre.Delete(item)
@@ -15885,7 +15917,7 @@ class Progression(BaseDoc, Objet_sequence):
         self.annee = constantes.getAnneeScolaire()
         # Le module de dessin
         self.draw = draw_cairo_prg
-        self.dossier = Lien()
+#        self.dossier = Lien()
         
         
         self.undoStack.do(u"Création de la progression")
@@ -15945,6 +15977,7 @@ class Progression(BaseDoc, Objet_sequence):
     def getBranche(self):
         """ Renvoie la branche XML de la séquence pour enregistrement
         """
+        print "getBranche progression"
         # Création de la racine
         progression = ET.Element("Progression")
         
@@ -15963,7 +15996,7 @@ class Progression(BaseDoc, Objet_sequence):
         for e in self.eleves:
             eleves.append(e.getBranche())
             
-        progression.set("Dossier", self.dossier.getBranche(progression))
+#        progression.set("Dossier", self.dossier)
 #        
 #        sequences = ET.SubElement(progression, "Sequences")
 #        for seq in self.sequences:
@@ -15972,8 +16005,6 @@ class Progression(BaseDoc, Objet_sequence):
 #        calendriers = ET.SubElement(progression, "Calendriers")
 #        for cal in self.calendriers:
 #            calendriers.append(cal.getBranche())
-            
-        
         
         return progression
 
@@ -15982,7 +16013,7 @@ class Progression(BaseDoc, Objet_sequence):
     def setBranche(self, branche):
         """ Lecture d'une branche XML de progression
         """
-#        print "setBranche séquence"
+#        print "setBranche progression"
 #        t0 = time.time()
         err = []
         
@@ -15992,39 +16023,44 @@ class Progression(BaseDoc, Objet_sequence):
         
         brancheEqu = branche.find("Equipe")
         self.equipe = []
-        for e in list(brancheEqu):
-            prof = Prof(self)
-            Ok = prof.setBranche(e)
-            if not Ok : 
-                err.append(constantes.Erreur(constantes.ERR_PRJ_EQUIPE))
-            self.equipe.append(prof)
+        if brancheEqu is not None:
+            for e in list(brancheEqu):
+                prof = Prof(self)
+                Ok = prof.setBranche(e)
+                if not Ok : 
+                    err.append(constantes.Erreur(constantes.ERR_PRJ_EQUIPE))
+                self.equipe.append(prof)
         
         brancheEle = branche.find("Eleves")
         self.eleves = []
-        for e in list(brancheEle):
-            eleve = Eleve(self)
-            Ok = eleve.setBranche(e)
-            if not Ok : 
-                err.append(constantes.Erreur(constantes.ERR_PRJ_ELEVES))
+        if brancheEle is not None:
+            for e in list(brancheEle):
+                eleve = Eleve(self)
+                Ok = eleve.setBranche(e)
+                if not Ok : 
+                    err.append(constantes.Erreur(constantes.ERR_PRJ_ELEVES))
+                
+                self.eleves.append(eleve)
             
-            self.eleves.append(eleve)
-            
-        brancheDossier = branche.find("Dossier")
-        self.dossier.setBranche(brancheDossier)
+#        brancheDossier = branche.find("Dossier")
+#        self.dossier.setBranche(brancheDossier)
         
         
         brancheSeq = branche.find("Sequences")
         self.sequences = []
-        for f in list(brancheSeq):
-            classe, sequence = self.OuvrirFichierSeq(f)
-            self.sequences.append(sequence)
+        if brancheSeq is not None:
+            for f in list(brancheSeq):
+                sp = LienSequence(self)
+                sp.setBranche(f)
+                self.sequences.append(sp)
             
         brancheCal = branche.find("Calendriers")
         self.calendriers = []
-        for c in list(brancheCal):
-            calendrier = Calendrier(self)
-            calendrier.setBranche(c)
-            self.calendriers.append(calendrier)
+        if brancheCal is not None:
+            for c in list(brancheCal):
+                calendrier = Calendrier(self)
+                calendrier.setBranche(c)
+                self.calendriers.append(calendrier)
 
 
         return err
@@ -16066,7 +16102,23 @@ class Progression(BaseDoc, Objet_sequence):
                                              [u"Importer des séquences", self.ImporterSequences, images.Icone_cherch_seq.GetBitmap()]])
 
 
+    ######################################################################################  
+    def SupprimerItem(self, item):
+        self.SupprimerLienSequence(item = item)
     
+    ######################################################################################  
+    def SupprimerLienSequence(self, event = None, item = None):
+        l = self.arbre.GetItemPyData(item)
+        i = self.sequences.index(l)
+        self.sequences.remove(l)
+        self.arbre.Delete(item)
+#        self.SupprimerSystemeSeance(i)
+        self.GetApp().sendEvent(modif = u"Suppression d'une Séquence")
+
+    ######################################################################################  
+    def OuvrirSequence(self, event = None, item = None):
+        l = self.arbre.GetItemPyData(item)
+        self.GetApp().parent.ouvrir(l.path)
     
     ######################################################################################  
     def AjouterSequence(self, event = None):
@@ -16087,18 +16139,24 @@ class Progression(BaseDoc, Objet_sequence):
                                   u"dans le même dossier que le fichier \"Progression\" (.prg)." %self.intitule)
             return
         
-        ref = self.GetReferentiel()
         
-        win = synthesePeda.FenetreBilan(self, dossier, ref)
-        win.Show()
+        sequences = self.GetSequencesDossier()
+#        print "sequences", sequences
+        for s in sequences:
+            if not s in self.sequences:
+                self.sequences.append(s)
+                s.ConstruireArbre(self.arbre, self.brancheSeq)
+        
+        
+       
         
     
     ########################################################################################################
     def OuvrirFichierSeq(self, nomFichier):
         fichier = open(nomFichier,'r')
 
-        classe = Classe(self.app)
-        sequence = Sequence(self, classe)
+        classe = Classe(self.GetApp())
+        sequence = Sequence(self.GetApp(), classe)
         classe.SetDocument(sequence)
 
         try:
@@ -16125,31 +16183,38 @@ class Progression(BaseDoc, Objet_sequence):
 #        print "MiseAJourTypeEnseignement projet", ancienRef, ">>", self.GetReferentiel()
         
         self.app.SetTitre()
+        self.classe.MiseAJourTypeEnseignement()
         
-        self.code = self.GetReferentiel().getCodeProjetDefaut()
+#        self.code = self.GetReferentiel().getCodeProjetDefaut()
         
+        
+#    ########################################################################################################
+#    def GetSequences(self, event = None): 
+#        for s 
         
         
     ########################################################################################################
-    def GetSequences(self, event = None):       
-        
+    def GetSequencesDossier(self, event = None):       
+        print "GetSequencesDossier"
         wx.BeginBusyCursor()
         
+        #
+        # On cherche tous les fichiers .seq
+        #
         l = []
-        if self.recurs:
-            for dossier in self.dossiers:
-                for root, dirs, files in os.walk(dossier):
-#                        print files
-                    l.extend([os.path.join(root, f) for f in files if os.path.splitext(f)[1] == '.seq'])
+        if True:
+            for root, dirs, files in os.walk(self.GetPath()):
+                l.extend([os.path.join(root, f) for f in files if os.path.splitext(f)[1] == '.seq'])
         else:
-            for dossier in self.dossiers:
-                l.extend(glob.glob(os.path.join(dossier, "*.seq")))
+            l.extend(glob.glob(os.path.join(self.GetPath(), "*.seq")))
             
-
+        #
+        # Un ProgressDialog pour patienter ...
+        #
         dlg =    wx.ProgressDialog(u"Recherche des séquences",
                                    u"",
                                    maximum = len(l),
-                                   parent=self.Parent,
+                                   parent=self.GetApp(),
                                    style = 0
                                     | wx.PD_APP_MODAL
                                     #| wx.PD_CAN_ABORT
@@ -16159,40 +16224,46 @@ class Progression(BaseDoc, Objet_sequence):
                                     | wx.PD_REMAINING_TIME
                                     | wx.PD_AUTO_HIDE
                                     )
-#            print "l =", l
-        self.sequences = []
+#        print "l =", l
+        
+        #
+        # On ouvre tous les fichiers .seq pour vérifier leur compatibilité
+        #
+        sequences = []
         count = 0
         for f in l:
-            try:
-                dlg.Update(count, f)
-            except:
-                print "Erreur", f
+#            try:
+            dlg.Update(count, toSystemEncoding(f))
+#            except:
+#                print "Erreur", f
             
             classe, sequence = self.OuvrirFichierSeq(f)
 #                print classe.typeEnseignement ,  self.referentiel.Code
             if classe != None and classe.typeEnseignement == self.GetReferentiel().Code:
-                sequence.nomFichier = f
-                self.sequences.append(sequence)
+                lienSequence = LienSequence(self,  os.path.relpath(f, self.GetPath()))
+                lienSequence.sequence = sequence
+                sequences.append(lienSequence)
             count += 1
         
-#            print "self.sequences AVANT", self.sequences
+#            print "sequences AVANT", self.sequences
+#        
 #        listeCI = self.getCIcommuns(self.sequences)
 #        if len(listeCI) > 1:
 #            dlgc = DialogChoixCI(self, listeCI, self.referentiel)
 #            dlgc.ShowModal()
 #            choix = dlgc.choix
-#            self.sequences = listeCI[choix][0]
+#            sequences = listeCI[choix][0]
 #    
 #            dlgc.Destroy()
-        
-#            print "self.sequences APRES", self.sequences
-        
-        self.tb.RemoveTool(20)
-#            self.tb.Realize()
+#        
+#            print "sequences APRES", self.sequences
+
         
         dlg.Update(count, u"Terminé")
         dlg.Destroy()
         wx.EndBusyCursor()
+        
+        return sequences
             
             
 ####################################################################################
@@ -18557,7 +18628,8 @@ class Systeme(ElementDeSequence, Objet_sequence):
         #
         # Création du Tip (PopupInfo)
         #
-        self.tip = PopupInfo2(self.parent.app, u"Système ou matériel")
+#        self.tip = PopupInfo2(self.parent.app, u"Système ou matériel")
+        self.tip = PopupInfo2(self.GetApp(), u"Système ou matériel")
         self.tip_nom = self.tip.CreerTexte((1,0))
         self.tip_nombre, self.tip_ctrllien = self.tip.CreerLien((2,0))
         self.tip_image = self.tip.CreerImage((3,0))
