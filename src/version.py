@@ -40,7 +40,7 @@ import urllib2
 import json
 import webbrowser
 import wx
-from widgets import messageErreur
+
 
 
 __appname__= "pySequence"
@@ -160,6 +160,7 @@ def GetNewVersion(win):
             try:
                 webbrowser.open("https://github.com/cedrick-f/pySequence/releases/latest",new=2)
             except:
+                from widgets import messageErreur
                 messageErreur(None, u"Ouverture impossible",
                               u"Impossible d'ouvrir l'url\n\n%s\n" %url)
 
