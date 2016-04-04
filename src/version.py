@@ -39,8 +39,9 @@ Copyright (C) 2011-2015
 import urllib2
 import json
 import webbrowser
-from widgets import messageErreur
 import wx
+from widgets import messageErreur
+
 
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"

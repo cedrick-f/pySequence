@@ -140,11 +140,11 @@ class MDFrame(wx.Frame):
 
 
 
-if __name__ == '__main__':
-    
-    
-    app = wx.App()
-    app.frame = MDFrame()
-    app.frame.Show()
-    app.MainLoop()
+#if __name__ == '__main__':
+#    
+#    
+#    app = wx.App()
+#    app.frame = MDFrame()
+#    app.frame.Show()
+#    app.MainLoop()
         
