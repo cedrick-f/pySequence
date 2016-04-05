@@ -335,7 +335,7 @@ import glob
 import images
 from wx.lib.embeddedimage import PyEmbeddedImage
 
-import synthesePeda
+#import synthesePeda
 
 
 # Pour enregistrer en xml
@@ -3096,7 +3096,7 @@ class FenetreProgression(FenetreDocument):
         tps1 = time.clock()
         Ok = True
         Annuler = False
-        nbr_etapes = 11
+        nbr_etapes = 6
         
         # Pour le suivi de l'ouverture
         nomCourt = os.path.splitext(os.path.split(nomFichier)[1])[0]
@@ -3211,6 +3211,8 @@ class FenetreProgression(FenetreDocument):
         
         liste_actions = [[self.classe.ConstruireArbre, [self.arbre, root], {},
                          u"Construction de l'arborescence de la classe...\t"],
+                         [self.progression.ChargerSequences, [], {},
+                          u"Construction de l'arborescence de la progression...\t"],
                          [self.progression.ConstruireArbre, [self.arbre, root], {},
                           u"Construction de l'arborescence de la progression...\t"],
 #                         [self.projet.OrdonnerTaches, [], {},
@@ -3238,7 +3240,7 @@ class FenetreProgression(FenetreDocument):
                 message += constantes.Erreur(constantes.ERR_INCONNUE).getMessage() + u"\n"
             
 
-#        self.progression.Verrouiller()
+        self.progression.Verrouiller()
 
         message += u"Tracé de la fiche...\t"
         dlg.Update(count, message)
@@ -4711,7 +4713,7 @@ class PanelPropriete_Progression(PanelPropriete):
         #
         # Intitulé de la progression (TIT)
         #
-        self.titre = wx.StaticBox(pageGen, -1, u"")
+        self.titre = wx.StaticBox(pageGen, -1, u"Intitulé")
         sb = wx.StaticBoxSizer(self.titre)
         textctrl = TextCtrl_Help(pageGen, u"")
         sb.Add(textctrl, 1, flag = wx.EXPAND)
@@ -4753,16 +4755,13 @@ class PanelPropriete_Progression(PanelPropriete):
     #############################################################################            
     def MiseAJourTypeEnseignement(self, sendEvt = False):
         
-        ref = self.progression.GetProjetRef()
-#        print "MiseAJourTypeEnseignement projet", ref.code
-        
         CloseFenHelp()
         
         #
         # Page "Généralités"
         #
-        self.titre.SetLabel(ref.attributs['TIT'][0])
-        self.textctrl.MiseAJour(ref.attributs['TIT'][0], ref.attributs['TIT'][3])
+#        self.titre.SetLabel()
+#        self.textctrl.MiseAJour(self.GetDocument().intitule)
    
 
         
@@ -6296,7 +6295,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
     #############################################################################            
     def GetDocument(self):
         return self.lien.parent
-        
+
     #############################################################################            
     def construire(self):
         #
@@ -12707,17 +12706,19 @@ class LienSequence():
         """ Renvoie la branche XML du lien de sequence pour enregistrement
         """
         root = ET.Element("Sequence")
-        root.set("dir", self.path)
+        root.set("dir", toSystemEncoding(self.path))
         return root
     
     ######################################################################################  
     def setBranche(self, branche):
-        self.path = branche.get("dir", "")
+        print "setBranche LienSequence", self
+        self.path = toFileEncoding(branche.get("dir", ""))
 #        if hasattr(self, 'panelPropriete'):
 #            self.panelPropriete.MiseAJour()
 
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
+        print "ConstruireArbre"
         self.arbre = arbre
         if self.sequence is not None:
             code = self.sequence.intitule
@@ -15970,14 +15971,14 @@ class Progression(BaseDoc, Objet_sequence):
         #
         self.brancheSeq = arbre.AppendItem(self.branche, Titres[11], data = "Seq")
         for e in self.sequences:
-            e.ConstruireArbre(arbre, self.brancheSeq, simple = True) 
+            e.ConstruireArbre(arbre, self.brancheSeq) 
     
     
     ######################################################################################  
     def getBranche(self):
         """ Renvoie la branche XML de la séquence pour enregistrement
         """
-        print "getBranche progression"
+#        print "getBranche progression"
         # Création de la racine
         progression = ET.Element("Progression")
         
@@ -15998,9 +15999,9 @@ class Progression(BaseDoc, Objet_sequence):
             
 #        progression.set("Dossier", self.dossier)
 #        
-#        sequences = ET.SubElement(progression, "Sequences")
-#        for seq in self.sequences:
-#            sequences.append(seq.nomFichier)
+        sequences = ET.SubElement(progression, "Sequences")
+        for seq in self.sequences:
+            sequences.append(seq.getBranche())
             
 #        calendriers = ET.SubElement(progression, "Calendriers")
 #        for cal in self.calendriers:
@@ -16121,6 +16122,18 @@ class Progression(BaseDoc, Objet_sequence):
         self.GetApp().parent.ouvrir(l.path)
     
     ######################################################################################  
+    def ChargerSequences(self):
+#        print "ChargerSequences", self.sequences
+        for s in self.sequences:
+#            print "   ", s
+            if s.sequence is None:
+                classe, sequence = self.OuvrirFichierSeq(s.path)
+#                print classe.typeEnseignement ,  self.GetReferentiel().Code
+                if classe != None and classe.typeEnseignement == self.GetReferentiel().Code:
+                    s.sequence = sequence
+                
+    
+    ######################################################################################  
     def AjouterSequence(self, event = None):
         ps = LienSequence(self, self.panelParent)
         self.sequences.append(ps)
@@ -16192,10 +16205,14 @@ class Progression(BaseDoc, Objet_sequence):
 #    def GetSequences(self, event = None): 
 #        for s 
         
+    #############################################################################
+    def Verrouiller(self):
+        self.classe.Verrouiller(len(self.sequences) != 0)
+        
         
     ########################################################################################################
     def GetSequencesDossier(self, event = None):       
-        print "GetSequencesDossier"
+#        print "GetSequencesDossier"
         wx.BeginBusyCursor()
         
         #
