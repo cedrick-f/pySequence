@@ -35,8 +35,12 @@ Created on 26 oct. 2011
 '''
 # Pour débuggage
 #import time
+import sys
 
+#import rsvg
 import cairo
+
+
 from draw_cairo import LargeurTotale, font_family, curve_rect_titre, show_text_rect_fix, show_text_rect, \
                         boule, getHoraireTxt, liste_code_texte, rectangle_plein, barreH, tableauV, minFont, maxFont, tableauH, \
                         DrawPeriodes, COEF, info
@@ -161,11 +165,8 @@ ecartTacheY = None  # Ecartement entre les tâches de phase différente
 # paramètres pour la fonction qui calcule la hauteur des tâches 
 # en fonction de leur durée
 a = b = None
-def calcH_tache(tache):
-    if (tache.phase in ["R1", "R2", "R3", "S"] and tache.DiffereSuivantEleve()):
-        return max(len(tache.projet.eleves) * hRevue, hRevue)
-    else:
-        return calcH(tache.GetDuree())
+def calcH_tache(sequence):
+    return calcH(sequence.GetDuree())
         
 
 def calcH(t):
@@ -206,7 +207,7 @@ ecartYElevesTaches = 0.05 * COEF
 
 
 ######################################################################################  
-def DefinirZones(prj, ctx):
+def DefinirZones(prg, ctx):
     """ Calcule les positions et dimensions des différentes zones de tracé
         en fonction du nombre d'éléments (élèves, tâches, compétences)
     """
@@ -215,25 +216,28 @@ def DefinirZones(prj, ctx):
     #
     # Zone du tableau des compétences - X
     #
-
-#    wColComp = prj.GetReferentiel().calculerLargeurCompetences(wColCompBase)
-    competences = regrouperLst(prj, prj.GetCompetencesUtil())
+    ref = prg.classe.referentiel
+    competences = ref._dicoCompetences_simple["S"]
+    print "competences", competences
     tailleZComp[0] = wColComp * len(competences)
     posZComp[0] = posZOrganis[0] + tailleZOrganis[0] - tailleZComp[0]
-    for i, s in enumerate(competences):
+    for i, s in enumerate(competences.keys()):
         xComp[s] = posZComp[0] + (i+0.5) * wColComp
     
+    
+    
+    
     #
-    # Zone du tableau des élèves
+    # Zone du tableau des thèmes ??
     #
-    tailleZElevesV[0] = wEleves * len(prj.eleves)
-    tailleZElevesH[1] = hEleves * len(prj.eleves)
+    tailleZElevesV[0] = wEleves * len(prg.themes)
+    tailleZElevesH[1] = hEleves * len(prg.themes)
     posZElevesV[0] = posZComp[0] - tailleZElevesV[0] - ecartX/2
     tailleZElevesH[0] = posZElevesV[0]-posZElevesH[0]- ecartX/2
     tailleZElevesV[1] = posZOrganis[1] + tailleZOrganis[1] - posZElevesV[1]
     xEleves = []
     yEleves = []
-    for i in range(len(prj.eleves)):
+    for i in range(len(prg.themes)):
         xEleves.append(posZElevesV[0] + (i+0.5) * wEleves)
         yEleves.append(posZElevesH[1] + (i+0.5) * hEleves)
 
@@ -243,28 +247,28 @@ def DefinirZones(prj, ctx):
     tailleZComp[1] = ecartYElevesTaches            
                  
                  
-    # Zone de déroulement du projet
+    # Zone de déroulement de la progression
     posZDeroul[1] = posZElevesH[1] + tailleZElevesH[1] + tailleZComp[1] - ecartY/2
     tailleZDeroul[0] = posZElevesV[0] - posZDeroul[0] - ecartX/2
     tailleZDeroul[1] = posZOrganis[1] + tailleZOrganis[1] - posZDeroul[1]
     
     
-    # Zone des tâches
+    # Zone des séquences
     yTaches = []
     posZTaches[1] = posZDeroul[1] + ecartY/2
     tailleZTaches[0] = posZDeroul[0] + tailleZDeroul[0] - posZTaches[0] - ecartX/2
     tailleZTaches[1] = tailleZDeroul[1] - ecartY/2 - 0.04 * COEF    # écart pour la durée totale
     
-    calculCoefCalcH(prj, ctx, hTacheMini)
+    calculCoefCalcH(prg, ctx, hTacheMini)
     if a < 0:
-        calculCoefCalcH(prj, ctx, hTacheMini/2)
+        calculCoefCalcH(prg, ctx, hTacheMini/2)
 
 
 
-def calculCoefCalcH(prj, ctx, hm):
+def calculCoefCalcH(prg, ctx, hm):
     global ecartTacheY, a, b
     ecartTacheY = ecartY/3
-    sommeEcarts = (prj.GetNbrPhases()-1)*ecartTacheY
+    sommeEcarts = (prg.GetNbrPeriodes()-1)*ecartTacheY
     
     # Calcul des paramètres de la fonction hauteur = f(durée)
     # hauteur = a * log(durée) + b
@@ -274,15 +278,9 @@ def calculCoefCalcH(prj, ctx, hm):
     nt = 0 # nombre de tâches de hauteur variable ( = calculée par calcH() )
     hrv = 0 # Hauteur totale des revues différenciant les élèves
     hrf = 0 # Hauteur totale des revues de taille fixe
-    for t in prj.taches:
-        if t.phase in ["R1", "R2", "R3", "S"]:
-            if t.DiffereSuivantEleve():
-                hrv += max(len(t.projet.eleves) * hRevue, hRevue)
-            else:
-                hrf += hRevue
-        else:
-            h += calcH(t.GetDuree())
-            nt += 1
+    for t in prg.sequences:
+        h += calcH(t.sequence.GetDuree())
+        nt += 1
     
 #    hr = (prj.nbrRevues+1)*len(prj.eleves)*hRevue
     
@@ -311,12 +309,12 @@ def getPts(lst_rect):
         return lst
     
 ######################################################################################  
-def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
-    """ Dessine une fiche de séquence de la séquence <prj>
+def Draw(ctx, prg, mouchard = False):
+    """ Dessine une fiche de progression <prg>
         dans un contexte cairo <ctx>
     """
-    return
-#        print "Draw séquence"
+
+#        print "Draw progression"
 #    InitCurseur()
     
 #    tps = time.time()
@@ -329,18 +327,27 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
     options.set_hint_metrics(cairo.HINT_METRICS_OFF)#cairo.HINT_METRICS_ON)#
     ctx.set_font_options(options)
     
-    DefinirZones(prj, ctx)
+    DefinirZones(prg, ctx)
 
-#    print "     1 ", time.time() - tps
-    prj.pt_caract = []
-    prj.rect = []
-    prj.rectComp = {}
+    #
+    #    pour stocker des zones caractéristiques (à cliquer, ...)
+    #
+    prg.pt_caract = []
+    prg.rect = []
+    prg.rectComp = {}
+    
+    
+    #
+    # variables locales
+    #
+    ref = prg.classe.referentiel
+    classe = prg.classe
     
     #
     # Type d'enseignement
     #
     tailleTypeEns = taillePro[0]/2
-    t = prj.classe.referentiel.Enseignement[0]
+    t = ref.Enseignement[0]
     ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                        cairo.FONT_WEIGHT_BOLD)
     ctx.set_source_rgb (0.6, 0.6, 0.9)
@@ -351,35 +358,39 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
                    fontsizeMinMax = (-1, -1), fontsizePref = -1, wrap = True, couper = False,
                    bordure = (0, 0, 0))
     
-    t = prj.classe.referentiel.Enseignement[1]
+    t = ref.Enseignement[1]
     ctx.set_source_rgb (0.3, 0.3, 0.8)
     show_text_rect(ctx, t, (posPro[0] , posPos[1] + h, tailleTypeEns, taillePos[1] - h), 
                    va = 'c', ha = 'g', b = 0, orient = 'h', 
                    fontsizeMinMax = (-1, -1), fontsizePref = -1, wrap = True, couper = False)
-    
+
+
+
+
 
     #
-    # Position dans l'année
+    # Positions dans l'année
     #
-#    posPos[0] = posEqu[0] + tailleEqu[0] + ecartX + tailleTypeEns
     posPos[0] = posNom[0] + tailleNom[0] + ecartX + tailleTypeEns
-#    taillePos[0] =  0.72414 - posPos[0] - margeX
+
     taillePos[0] = taillePro[0]/2
     ctx.set_line_width (0.0015 * COEF)
     r = (posPos[0], posPos[1], taillePos[0], taillePos[1])
-    prj.rectPos = DrawPeriodes(ctx, r, prj.position, prj.classe.referentiel.periodes,
+    prg.rectPos = DrawPeriodes(ctx, r, prg.GetPositions(), ref.periodes,
 #                               [p.periode for p in prj.classe.referentiel.projets.values()],  
-                               prj.classe.referentiel.projets,
+                               ref.projets,
                                tailleTypeEns = tailleTypeEns)
-    prj.rect.append(posPos+taillePos)
+    prg.rect.append(posPos+taillePos)
+
+
 
 
 
     #
     # Etablissement
     #
-    if prj.classe.etablissement != u"":
-        t = prj.classe.etablissement + u" (" + prj.classe.ville + u")"
+    if classe.etablissement != u"":
+        t = classe.etablissement + u" (" + classe.ville + u")"
         ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                           cairo.FONT_WEIGHT_NORMAL)
         show_text_rect(ctx, t, (posPos[0] , posPos[1]+taillePos[1], taillePos[0], posPro[1]-posPos[1]-taillePos[1]), 
@@ -391,9 +402,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
     #
     # Image
     #
-    prj.support.rect = []
-    prj.support.pts_caract = []
-    bmp = prj.support.image
+    bmp = prg.image
     if bmp != None:
         ctx.save()
         tfname = tempfile.mktemp()
@@ -413,9 +422,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
         ctx.set_source_surface(image, 0, 0)
         ctx.paint ()
         ctx.restore()
-        
-        prj.support.rect.append(posImg + tailleImg)
-        prj.support.pts_caract.append(posImg)
+
     
 
 
@@ -423,96 +430,99 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
     #  Equipe
     #
     rectEqu = posEqu + tailleEqu
-    prj.pt_caract.append(curve_rect_titre(ctx, u"Equipe pédagogique",  rectEqu, 
+    prg.pt_caract.append(curve_rect_titre(ctx, u"Equipe pédagogique",  rectEqu, 
                                           BcoulEqu, IcoulEqu, fontEqu))
     
     lstTexte = []
     g = None
     c = []
-    for i, p in enumerate(prj.equipe):
+    for i, p in enumerate(prg.equipe):
         lstTexte.append(p.GetNomPrenom(disc = constantes.AFFICHER_DISC_FICHE))
         if p.referent:
             g = i
         c.append(constantes.COUL_DISCIPLINES[p.discipline])
     lstCodes = [u" \u25CF"] * len(lstTexte)
 
-   
     if len(lstTexte) > 0:
         r = liste_code_texte(ctx, lstCodes, lstTexte, 
                              posEqu[0], posEqu[1], tailleEqu[0], tailleEqu[1]+0.0001 * COEF,
                              0.1*tailleEqu[1]+0.0001 * COEF, 0.1,
                              gras = g, lstCoul = c, va = 'c')
 
-        
-    for i, p in enumerate(prj.equipe):
+    for i, p in enumerate(prg.equipe):
         p.rect = [r[i]]
 #        prj.pts_caract.append(getPts(r))
     
 #    print "     5 ", time.time() - tps
 
+
+
+
     #
-    #  Problématique
+    #  Calendrier ???
     #
-    prj.pt_caract.append(posPro)
+    prg.pt_caract.append(posPro)
     rectPro = posPro + taillePro
-    prj.pt_caract.append(curve_rect_titre(ctx, u"Problématique",  rectPro, BcoulPro, IcoulPro, fontPro))
+    prg.pt_caract.append(curve_rect_titre(ctx, u"Calendrier ?",  rectPro, BcoulPro, IcoulPro, fontPro))
     ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                        cairo.FONT_WEIGHT_NORMAL)
-    show_text_rect(ctx, constantes.ellipsizer(prj.problematique, constantes.LONG_MAX_PROBLEMATIQUE), 
+    show_text_rect(ctx, constantes.ellipsizer(u"", constantes.LONG_MAX_PROBLEMATIQUE), 
                    rectPro, ha = 'g', b = 0.5,
                    fontsizeMinMax = (-1, 0.016 * COEF))
-    prj.rect.append(rectPro)
-    
-#    print "     6 ", time.time() - tps
+    prg.rect.append(rectPro)
+
+
+
 
 
     #
-    #  Projet
+    #  Années
     #
-    prj.pt_caract = []
-    prj.pts_caract = []
+    prg.pt_caract = []
+    prg.pts_caract = []
     rectNom = posNom+tailleNom
-    prj.pts_caract.append(curve_rect_titre(ctx, prj.GetCode(),  
+    prg.pts_caract.append(curve_rect_titre(ctx, u"Années scolaires",  
                                                    rectNom, BcoulNom, IcoulNom, fontNom))
     ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                        cairo.FONT_WEIGHT_NORMAL)
-    show_text_rect(ctx, prj.GetNom(), 
+    show_text_rect(ctx, prg.GetAnnee(), 
                    rectNom, ha = 'c', b = 0.2,
                    fontsizeMinMax = (-1, 0.016 * COEF))
     
-    prj.rect.append(rectNom)
-    prj.pts_caract.append(posNom)
+    prg.rect.append(rectNom)
+    prg.pts_caract.append(posNom)
+
+
 
     
     
     #
-    #  Support
+    #  divers???
     #
-    prj.support.pt_caract = []
+    prg.pt_caract = []
     rectSup = posSup+tailleSup
-    prj.support.pts_caract.append(curve_rect_titre(ctx, prj.support.GetCode(),  
-                                                   rectSup, BcoulSup, IcoulSup, fontSup))
+    prg.pts_caract.append(curve_rect_titre(ctx, "divers",  
+                                           rectSup, BcoulSup, IcoulSup, fontSup))
     ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                        cairo.FONT_WEIGHT_NORMAL)
-    show_text_rect(ctx, prj.support.GetNom(), 
+    show_text_rect(ctx, "", 
                    rectSup, ha = 'c', b = 0.2,
                    fontsizeMinMax = (-1, 0.016 * COEF))
     
-    prj.support.rect.append(rectSup)
-    prj.support.pts_caract.append(posSup)
+    prg.rect.append(rectSup)
+    prg.pts_caract.append(posSup)
 
 
-#    print "intro", time.time() - tps
+
+
     #
     #  Tableau des compétenecs
     #    
-#    tps = time.time()
-        
-    competences = regrouperLst(prj, prj.GetCompetencesUtil())
-    prj.pt_caract_comp = []
+
+    competences = ref._dicoCompetences_simple["S"]
+    prg.pt_caract_comp = []
     
     if competences != []:
-        
         ctx.set_line_width(0.001 * COEF)
         wc = tailleZComp[0]/len(competences)
         _x = posZComp[0]
@@ -546,13 +556,15 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
                 tailleZComp[0], tailleZComp[1], 
                 0, nlignes = 0, va = 'c', ha = 'g', orient = 'v', coul = BCoulCompS)
         
-        prj.pt_caract_comp = getPts(p)
+        prg.pt_caract_comp = getPts(p)
 
-#    print "compétences", time.time() - tps
+
+
+
 
 
     #
-    #  Tableau des élèves
+    #  Tableau des Thèmes ?
     #   
 #    tps = time.time()
     ctx.select_font_face(font_family, cairo.FONT_SLANT_NORMAL,
@@ -560,26 +572,23 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
     ctx.set_source_rgb(0, 0, 0)
     ctx.set_line_width(0.001 * COEF)
     l=[]
-    for i,e in enumerate(prj.eleves) : 
+    for i,e in enumerate(prg.themes) : 
         e.pts_caract = []
-        if pourDossierValidation:
-            l.append(u"Elève "+str(i+1))
-        else:
-            l.append(e.GetNomPrenom())
+        l.append(e.GetNomPrenom())
     
-    
+
+
+
+
     #
     # Graduation
     #
     y = posZElevesH[1] + tailleZElevesH[1]
     w = tailleZElevesH[0]
     h = hEleves/2
-    for t, ha in [("0%", 'g'), ("50%", 'c'), ("100%", 'd')]:
-        show_text_rect(ctx, t, 
-                       (posZElevesH[0], y, w, h), ha = ha, b = 0.1,
-                       fontsizeMinMax = (-1, 0.016 * COEF))
     
-    prj.pt_caract_eleve = []
+    
+    prg.pt_caract_eleve = []
     if len(l) > 0:
         
         #
@@ -655,175 +664,73 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
             ctx.move_to(xEleves[i]-e, yEleves[i]+e)
             ctx.line_to(xEleves[i]-e, y)
         ctx.stroke()
+
     
-#    print "élèves", time.time() - tps
+    
+    
+    
+    
     
     #
-    #  Tâches
+    #  Séquences
     #
-#    tps = time.time()
-    curve_rect_titre(ctx, u"Tâches à réaliser",  
+    curve_rect_titre(ctx, u"Séquences",  
                      (posZDeroul[0], posZDeroul[1], 
                       tailleZDeroul[0], tailleZDeroul[1]), 
                      BcoulZDeroul, IcoulZDeroul, fontZDeroul)
     
     y = posZTaches[1] - ecartTacheY
     
-    # Les positions en Y haut et bas des phases
-    yh_phase = {'Sup' : [[], []], 
-                'Ana' : [[], []],
-                'Con' : [[], []], 
-                'DCo' : [[], []],
-                'Rea' : [[], []], 
-                'Val' : [[], []],
-                'XXX' : [[], []]}
+    # Les positions en Y haut et bas des périodes
+    yh_phase = {c:[[], []] for c in range(prg.GetNbrPeriodes())}
 
-    phase = None
-    y1 = y2 = y3 = 0   # juste pour éviter une erreur en cas d'echec d'ouverture.
-    for t in prj.taches:
-        if t.phase == "R1":
-            y1 = y
-        elif t.phase == "R2":
-            y2 = y
-        elif t.phase == "R3":
-            y3 = y
-            
-        if phase != t.phase:
+    position = None
+    for t in prg.sequences:
+        seq = t.sequence
+        if position != seq.position:
             y += ecartTacheY
 
-        if t.phase != '':  
-            yb = DrawTacheRacine(ctx, t, y)
-            if t.phase in ["Ana", "Con", "DCo", "Rea", "Val", 'XXX'] :
-                yh_phase[t.phase][0].append(y)
-                yh_phase[t.phase][1].append(yb)
-            y = yb
-            
+        yb = DrawTacheRacine(ctx, seq, y)
+        yh_phase[seq.position][0].append(y)
+        yh_phase[seq.position][1].append(yb)
+        y = yb
         
-        phase = t.phase
-#    print "    ", time.time() - tps
+        position = seq.position
+
+
+
+
     #
-    # Les lignes horizontales en face des taches
-    # et les croisements Tâche/Competences
+    # Les lignes horizontales en face des sequences
+    # et les croisements Séquences/Competences
     #
     x = posZTaches[0] + tailleZTaches[0]
-    for t, y in yTaches: 
-        if not t.phase in ["R1", "R2", "R3", "S", "Rev"]:
-            DrawLigne(ctx, x, y)
-        if (t.phase in ["R1", "R2", "R3", "S"] and t.DiffereSuivantEleve()) or t.estPredeterminee():
-            dy = hRevue
-            y = y - ((len(prj.eleves)-1)*dy)/2
-#            print "phase = ", t.phase
-            h = 0.006 * COEF
-            for eleve in prj.eleves:
-                DrawCroisementsCompetencesRevue(ctx, t, eleve, y, h)
-                y += dy
-        else:
-            DrawCroisementsCompetencesTaches(ctx, t, y)
+    for seq, y in yTaches: 
+        DrawLigne(ctx, x, y)
+        DrawCroisementsCompetencesTaches(ctx, seq, y)
     
-    # Nom des phases
+    # Nom des Séquences
     for phase, yh in yh_phase.items():
-#        print phase, yh
         if len(yh[0]) > 0:
             yh[0] = min(yh[0])
             yh[1] = max(yh[1])
-            ctx.set_source_rgb(BCoulTache[phase][0],BCoulTache[phase][1],BCoulTache[phase][2])
+            ctx.set_source_rgb(BCoulTache['Sup'][0],BCoulTache['Sup'][1],BCoulTache['Sup'][2])
             ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
                                                 cairo.FONT_WEIGHT_NORMAL)
             if wPhases > yh[1]-yh[0]:
                 orient = "h"
             else:
                 orient = "v"
-            try:
-                n = prj.GetProjetRef().phases[phase][1]
-            except KeyError:
-                n = ""
-            show_text_rect(ctx, n, 
+          
+            show_text_rect(ctx, str(phase), 
                            (posZDeroul[0] + ecartX/6, yh[0], 
                             wPhases, yh[1]-yh[0]), 
                            ha = 'c', orient = orient, b = 0.1, le = 0.7,
                            couper = False) 
-            
-#            show_text_rect(ctx, constantes.NOM_PHASE_TACHE[prj.GetTypeEnseignement(True)][phase], 
-#                           (posZDeroul[0] + ecartX/6, yh[0], 
-#                            wPhases, yh[1]-yh[0]), 
-#                           ha = 'c', orient = orient, b = 0,
-#                           couper = False) 
 
-#    print "taches", time.time() - tps
     
-    #
-    # Durées élève entre revues (uniquement en période "terminale")
-    #
-#    tps = time.time()
-    posEpreuve = prj.GetProjetRef().periode[0] - 1
-    if prj.position == posEpreuve:
-        y0 = posZTaches[1]
-        y4 = y1+len(prj.eleves) * hRevue + 2*ecartTacheY
-#        y4 = y1+2*ecartTacheY + 0.015
-#        y5 = y2+2*ecartTacheY + 0.015
-        y5 = y2+len(prj.eleves) * hRevue + 2*ecartTacheY
-        md1 = md2 = md3 = 0
-        for i, e in enumerate(prj.eleves):
-            md1 = max(e.GetDuree(phase = "R1"), md1)
-            md2 = max(e.GetDuree(phase = "R2"), md2)
-            md3 = max(e.GetDuree(phase = "R3"), md3)
-            
-        for i, e in enumerate(prj.eleves):
-            d1 = e.GetDuree(phase = "R1")
-            d2 = e.GetDuree(phase = "R2")
-            d3 = e.GetDuree(phase = "R3")
-            Ic = constantes.COUL_ELEVES[i][0]
-            ctx.set_source_rgb(Ic[0],Ic[1],Ic[2])
-            ctx.set_line_width(0.005 * COEF)
-            if md1 > 0:
-                ctx.move_to(xEleves[i], y0)
-                ctx.line_to(xEleves[i], y0+(y1-y0)*d1/md1)
-                ctx.stroke()
-            if md2 > 0:
-                ctx.move_to(xEleves[i], y4)
-                ctx.line_to(xEleves[i], y4+(y2-y4)*d2/md2)
-                ctx.stroke()
-            if md3 > 0:
-                ctx.move_to(xEleves[i], y5)
-                ctx.line_to(xEleves[i], y5+(y3-y5)*d3/md3)
-                ctx.stroke()
-    
-#    print "durées", time.time() - tps
-    
-    
-    
-    #
-    # Croisements élèves/tâches
-    #
-#    tps = time.time()
-    for t, y in yTaches: 
-        DrawCroisementsElevesTaches(ctx, t, y)
-        
-#    print "CroisementsElevesTaches", time.time() - tps
-    
-    #
-    # Durées du projet (durées élèves)
-    #
-#    tps = time.time()
-    for i, e in enumerate(prj.eleves):
-#        x = posZElevesV[0]+i*tailleZElevesV[0]/len(prj.eleves)-wEleves/2
-        x = xEleves[i]-wEleves*3/4
-        y = posZTaches[1] + tailleZTaches[1] + (i % 2)*(ecartY/2)+ecartY/2
-        d = e.GetDuree()
-        dureeRef = prj.GetProjetRef().duree
-        taux = abs((d-dureeRef)/dureeRef)*100
-#        print "   duree", d, "/", dureeRef
-#        print "   taux", taux
-        if taux < constantes.DELTA_DUREE:
-            ctx.set_source_rgb(0.1,1,0.1)
-        elif taux < constantes.DELTA_DUREE2:
-            ctx.set_source_rgb(1,0.6,0.1)
-        else:
-            ctx.set_source_rgb(1,0.1,0.1)
-        show_text_rect(ctx, getHoraireTxt(d), 
-                       (x, y, wEleves*3/2, ecartY/2), ha = 'c', b = 0)
-    
-#    print "dureeProjet", time.time() - tps
+
+
     #
     # Informations
     #
@@ -1212,96 +1119,66 @@ def DrawLigneEff(ctx, x, y):
                
     
 ######################################################################################  
-def DrawTacheRacine(ctx, tache, y):
+def DrawTacheRacine(ctx, seq, y):
     global yTaches
     
-    h = calcH_tache(tache)
+    h = calcH_tache(seq)
     
     #
-    # Flèche verticale indiquant la durée de la tâche
+    # Flèche verticale indiquant la durée de la séquence
     #
-    if not tache.phase in ["R1", "R2", "R3", "S", "Rev"]:
-#        fleche_verticale(ctx, posZTaches[0] - wDuree/2 - ecartX/4, y, 
-#                         h, wDuree, (0.9,0.8,0.8,0.5))
-        
-        ctx.set_source_rgba (0.9,0.8,0.8,0.5)
-        x = posZTaches[0] - wDuree - ecartX/4
-        ctx.rectangle(x, y, wDuree, h)
-        ctx.fill_preserve ()    
-        ctx.set_source_rgba(0.4,  0.4,  0.4,  1)
-        ctx.set_line_width(0.0006 * COEF)
-        ctx.stroke ()
-        
-        ctx.set_source_rgb(0.5,0.8,0.8)
-        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-                                  cairo.FONT_WEIGHT_BOLD)
-        
-        if h > wDuree:
-            show_text_rect(ctx, getHoraireTxt(tache.GetDuree()), 
-                       (x, y, wDuree, h), 
-                       orient = 'v', b = 0.1)
-        else:
-            show_text_rect(ctx, getHoraireTxt(tache.GetDuree()), 
-                       (x, y, wDuree, h), 
-                       orient = 'h', b = 0.1)
+    ctx.set_source_rgba (0.9,0.8,0.8,0.5)
+    x = posZTaches[0] - wDuree - ecartX/4
+    ctx.rectangle(x, y, wDuree, h)
+    ctx.fill_preserve ()    
+    ctx.set_source_rgba(0.4,  0.4,  0.4,  1)
+    ctx.set_line_width(0.0006 * COEF)
+    ctx.stroke ()
     
-    #
-    # Indication du délai pour revue
-    #
-    elif tache.phase in ["R1", "R2", "R3", "Rev"]:
-        ctx.set_source_rgba (0.9,0.8,0.8,0.5)
-        if tache.phase == "Rev":
-            x = posZTaches[0] - wDuree - ecartX/4
-            w = wDuree*3
-        else:
-            x = posZTaches[0] - wDuree*4 - ecartX/4
-            w = wDuree*3
-        ctx.rectangle(x, y, w, h)
-        ctx.fill_preserve ()    
-        ctx.set_source_rgba(0.4,  0.4,  0.4,  1)
-        ctx.set_line_width(0.0006 * COEF)
-        ctx.stroke ()
-        
-        ctx.set_source_rgb(0.5,0.8,0.8)
-        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-                                  cairo.FONT_WEIGHT_BOLD)
-        show_text_rect(ctx, getHoraireTxt(tache.GetDelai(), constantes.CHAR_FLECHE), 
-                       (x, y, w, h), 
-                       orient = 'h', fontsizeMinMax = (minFont, 0.015 * COEF), b = 0.1, couper = False)
+    ctx.set_source_rgb(0.5,0.8,0.8)
+    ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+                              cairo.FONT_WEIGHT_BOLD)
     
+    if h > wDuree:
+        show_text_rect(ctx, getHoraireTxt(seq.GetDuree()), 
+                   (x, y, wDuree, h), 
+                   orient = 'v', b = 0.1)
+    else:
+        show_text_rect(ctx, getHoraireTxt(seq.GetDuree()), 
+                   (x, y, wDuree, h), 
+                   orient = 'h', b = 0.1)
+    
+   
 
     
     #
     # Rectangles actifs et points caractéristiques : initialisation
     #
-    tache.pts_caract = []
-    tache.rect = []
+    seq.pts_caract = []
+    seq.rect = []
     
-    
+
+
+
+
     #
     # Tracé du cadre de la tâche
     #
-    if tache.phase == "Rev":
-        x = posZTaches[0] + wDuree*2
-        w = posZComp[0] + tailleZComp[0] + ecartX/4 - x
-    elif not tache.phase in ["R1", "R2", "R3", "S"]:
-        x = posZTaches[0]
-        w = tailleZTaches[0]
-    else:
-        x = posZTaches[0] - wDuree/2 - ecartX/4
-        w = posZComp[0] + tailleZComp[0] + ecartX/4 - x
+    x = posZTaches[0]
+    w = tailleZTaches[0]
 
-    tache.pts_caract.append((x, y))
+
+    seq.pts_caract.append((x, y))
         
     ctx.set_line_width(0.002 * COEF)
     rectangle_plein(ctx, x, y, w, h, 
-                    BCoulTache[tache.phase], ICoulTache[tache.phase], ICoulTache[tache.phase][3])
+                    BCoulTache['Sup'], ICoulTache['Sup'], ICoulTache['Sup'][3])
     
     
     #
     # Affichage du code de la tâche
     #
-    if hasattr(tache, 'code'):
+    if hasattr(seq, 'code'):
         ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                               cairo.FONT_WEIGHT_BOLD)
         ctx.set_source_rgb (0,0,0)
@@ -1314,34 +1191,29 @@ def DrawTacheRacine(ctx, tache, y):
             hc = h
         show_text_rect(ctx, t, (x, y, tailleZTaches[0], hc), ha = 'g', 
                        wrap = False, fontsizeMinMax = (minFont, 0.02 * COEF), b = 0.2)
-    
+    hc=h
     
     #
     # Affichage de l'intitulé de la tâche
     #
-    if tache.intituleDansDeroul and tache.intitule != "" and not tache.phase in ["R1", "R2", "R3", "S"]:
-        ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
-                              cairo.FONT_WEIGHT_NORMAL)
-        ctx.set_source_rgb (0,0,0)
-        
-        # Si on ne peut pas afficher l'intitulé dessous, on le met à coté
-        if h-hc < minFont:
-            width = ctx.text_extents(t)[2]*1.2
-            rect = (x + width, y, tailleZTaches[0] - width, hc)
-        else:
-            rect = (x, y + hc, tailleZTaches[0], h-hc)
-        if rect[2] > 0:
-            show_text_rect(ctx, tache.GetIntit(), rect, 
-                           ha = 'g', fontsizeMinMax = (minFont, 0.015 * COEF))
-        
+    ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
+                          cairo.FONT_WEIGHT_NORMAL)
+    ctx.set_source_rgb (0,0,0)
     
-    tache.rect.append([x, y, tailleZTaches[0], h])
+    # Si on ne peut pas afficher l'intitulé dessous, on le met à coté
+    rect = (x, y, tailleZTaches[0], h)
+    if rect[2] > 0:
+        show_text_rect(ctx, seq.intitule, rect, 
+                       ha = 'g', fontsizeMinMax = (minFont, 0.015 * COEF))
+    
+    
+    seq.rect.append([x, y, tailleZTaches[0], h])
         
         
     #
     # Tracé des croisements "Tâches" et "Eleves"
     #
-    yTaches.append([tache, y+h/2])
+    yTaches.append([seq, y+h/2])
 #    DrawCroisementsCompetencesTaches(ctx, tache, y + h/2)
     
     
@@ -1431,15 +1303,10 @@ def regrouperLst(obj, lstCompetences):
         return lstCompetences
     
 ######################################################################################  
-def DrawCroisementsCompetencesTaches(ctx, tache, y):
-    DrawBoutonCompetence(ctx, tache, regrouperDic(tache, tache.GetDicIndicateurs()), y)
+def DrawCroisementsCompetencesTaches(ctx, seq, y):
+    DrawBoutonCompetence(ctx, seq, seq.GetCompetencesVisees(), y)
     
 
-######################################################################################  
-def DrawCroisementsCompetencesRevue(ctx, revue, eleve, y, h):
-#    print "DrawCroisementsCompetencesRevue", eleve, revue.phase
-#    print "   ", revue.GetDicIndicateursEleve(eleve)
-    DrawBoutonCompetence(ctx, revue, regrouperDic(revue, revue.GetDicIndicateursEleve(eleve)), y, h)
     
 #####################################################################################  
 def DrawCroisementsElevesTaches(ctx, tache, y):
@@ -1496,71 +1363,32 @@ def DrawCroisementsElevesCompetences(ctx, eleve, y):
 
     
 ######################################################################################  
-def DrawBoutonCompetence(ctx, objet, dicIndic, y, h = None):
+def DrawBoutonCompetence(ctx, seq, listComp, y, h = None):
     """ Dessine les petits rectangles des indicateurs (en couleurs R et S)
          ... avec un petit décalage vertical pour que ce soit lisible en version N&B
     """
-#    print "DrawBoutonCompetence", objet, dicIndic
+    print "DrawBoutonCompetence", seq, listComp
     if h == None: # Toujours sauf pour les revues
         r = wColComp/3
         h = 2*r
     
-    # Un petit décalage pour distinguer R et S en N&B    
-    dh = h/10
     ctx.set_line_width (0.0004 * COEF)
-    dicIndic, dictype = dicIndic
- 
-    for s in dicIndic.keys():
+    seq.rectComp = {}
+    
+    for s in listComp:
+        x = xComp[s[1:]] - wColComp/2
         
-        x = xComp[s]-wColComp/2
-#        ctx.arc(x, y, r, 0, 2*pi)
-#        if True:#estCompetenceRevue(objet.parent.classe.typeEnseignement, s):
-##        if len(constantes.dicCompetences_prj_simple[tache.parent.classe.typeEnseignement][s]) > 2:
-#            ctx.set_source_rgba (ICoulComp['S'][0],ICoulComp['S'][1],ICoulComp['S'][2],1.0)
-#        else:
-#            ctx.set_source_rgba (ICoulComp['C'][0],ICoulComp['C'][1],ICoulComp['C'][2],1.0)
-#        ctx.fill_preserve ()
-#        ctx.set_source_rgba (0,0,0,1)
-#        ctx.stroke ()
-#        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-#                              cairo.FONT_WEIGHT_BOLD)
+        rect = (x, y-h/2, wColComp, h, seq)
+        seq.rectComp[s] = [rect]
+        seq.pts_caract.append((x,y))
         
-        rect = (x, y-h/2, wColComp, h, objet)
-        if s in objet.projet.rectComp.keys() and objet.projet.rectComp[s] != None:
-            objet.projet.rectComp[s].append(rect)
-        else:
-            objet.projet.rectComp[s] = [rect]
-        
-        objet.pts_caract.append((x,y))
-        
-        indic = dicIndic[s]
 #            dangle = 2*pi/len(indic)
-        dx = wColComp/len(indic)
-        for a, i in enumerate(indic):
-            if i: # Rose ou bleu
-#                print "   ", s, a
-                part = dictype[s][a].keys()[0]
-                if part == 'S':
-#                if dictype[s][a][1] != 0:   #objet.projet.classe.GetReferentiel().getTypeIndicateur(s+'_'+str(a+1)) == "C": # Conduite     #dicIndicateurs_prj[s][a][1]:
-                    d = -1
-                else:
-                    d = 1
-                ctx.set_source_rgba (*getCoulComp(part))
-            else: # Rien => Transparent
-                d = 0
-                ctx.set_source_rgba (1, 1, 1, 0)
-            if d != 0:
-                ctx.rectangle(x+a*dx, y-h/2+d*dh, dx, h-dh)
-                ctx.fill_preserve ()
-            else:
-                ctx.move_to(x+a*dx, y-h/2+dh)
-                ctx.rel_line_to(0, h-4*dh)
-                ctx.move_to(x+a*dx+dx, y-h/2+dh)
-                ctx.rel_line_to(0, h-4*dh)
-
-            
-            ctx.set_source_rgba (0, 0 , 0, 1)
-            ctx.stroke()
+        dx = wColComp
+        ctx.set_source_rgba (1, 1, 1, 0)
+        ctx.rectangle(x+a*dx, y-h/2, dx, h)
+        ctx.fill_preserve ()
+        ctx.set_source_rgba (0, 0 , 0, 1)
+        ctx.stroke()
 
 
        

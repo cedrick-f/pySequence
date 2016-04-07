@@ -43,7 +43,10 @@ import  wx
 import  wx.html
 import  wx.lib.wxpTag
 
-import markdown
+try:
+    import markdown as md
+except:
+    import mistune as md
 
 
 texte = u"""
@@ -80,7 +83,7 @@ class SimpleHtmlWindow(wx.html.HtmlWindow):
         if "gtk2" in wx.PlatformInfo or "gtk3" in wx.PlatformInfo:
             self.SetStandardFonts()
         
-        html = markdown.markdown(texte)
+        html = md.markdown(texte)
         self.SetPage(html)
 
     def OnLinkClicked(self, linkinfo):
@@ -125,14 +128,14 @@ class MD_editor(wx.Panel):
         
     def OnText(self, evt = None):
         print "OnText"
-        html = markdown.markdown(self.texteMD.GetValue())
+        html = md.markdown(self.texteMD.GetValue())
         self.texteHTML.SetPage(html)
 
 class MDFrameEditor(wx.Frame):
     def __init__(self):
         wx.Frame.__init__(self, None, -1)
         self.html = MD_editor(self, texte)
-        
+
 class MDFrame(wx.Frame):
     def __init__(self, parent, titre, texte, pos = wx.DefaultPosition, size = wx.DefaultSize):
         wx.Frame.__init__(self, parent, -1, titre, pos, size)

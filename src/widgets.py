@@ -902,7 +902,7 @@ class StaticBoxButton(wx.StaticBox, BaseGestionFenHelp):
 import  wx.lib.buttons  as  buttons
         
 import orthographe
-import md_util
+#import md_util
 class TextCtrl_Help(orthographe.STC_ortho, BaseGestionFenHelp):
     def __init__(self, parent, titre = u"", md = u""):
         orthographe.STC_ortho.__init__(self, parent, -1)#, u"", style=wx.TE_MULTILINE)

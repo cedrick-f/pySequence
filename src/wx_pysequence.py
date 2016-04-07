@@ -45,6 +45,10 @@ Copyright (C) 2011-2015
 ####################################################################################
 #Outils système
 import os, sys
+print sys.version_info
+#import rsvg
+#sys.path.append('C:\\Python27\\lib\\site-packages\\gtk-2.0')
+#print sys.path
 if sys.platform != "win32":
     import wxversion
     wxversion.select('2.8')
@@ -447,7 +451,7 @@ import functools
 import pyperclip
 
 
-import md_util
+#import md_util
 
 
 if sys.platform == "win32" :
@@ -3020,6 +3024,24 @@ class FenetreProgression(FenetreDocument):
         self.pageBO = Panel_BO(self.nb)
         self.nb.AddPage(self.pageBO, u"Bulletins Officiels")
         
+        
+        #
+        # html
+        #
+        
+        self.pageHTML = html.HtmlWindow(self.nb, -1, size = (100,100),style=wx.NO_FULL_REPAINT_ON_RESIZE|html.HW_SCROLLBAR_NEVER)
+        self.pageHTML.SetPage("""<!DOCTYPE html>
+<html>
+<body>
+
+<canvas id="myCanvas" width="200" height="100" style="border:1px solid #000000;">
+Your browser does not support the HTML5 canvas tag.
+</canvas>
+
+</body>
+</html>""")
+        self.nb.AddPage(self.pageHTML, u"HTML")
+        
         self.miseEnPlace()
         
         wx.CallAfter(self.Thaw)
@@ -3419,9 +3441,7 @@ class BaseFiche(wx.ScrolledWindow):
             ctx = wx.lib.wxcairo.ContextFromDC(dc)
             dc.BeginDrawing()
             self.normalize(ctx)
-            
             self.Draw(ctx)
-            
     #        b = Thread(None, self.Draw, None, (ctx,))
     #        b.start()
             
@@ -14265,10 +14285,17 @@ class Sequence(BaseDoc, Objet_sequence):
         
         elif self.arbre.GetItemText(itemArbre) == Titres[10]: # Eleve
             self.app.AfficherMenuContextuel([[u"Ajouter un professeur", self.AjouterProf, images.Icone_ajout_prof.GetBitmap()]])
-            
-            
-            
-            
+
+
+
+    ######################################################################################       
+    def GetCompetencesVisees(self):
+        """ Renvoie la liste des compétences visées (objectifs) 
+        """
+        return self.obj["C"].competences
+
+
+
     ######################################################################################       
     def GetSystemesUtilises(self):
         """ Renvoie la liste des systèmes utilisés pendant la séquence
@@ -14283,8 +14310,9 @@ class Sequence(BaseDoc, Objet_sequence):
             if n > 0:
                 lst.append(s)
         return lst
-    
-            
+
+
+
     ######################################################################################  
     def GetNbreSeances(self):
         n = 0
@@ -14293,8 +14321,9 @@ class Sequence(BaseDoc, Objet_sequence):
                 n += len(s.seances)
             n += 1
         return n
-    
-    
+
+
+
     ######################################################################################  
     def GetToutesSeances(self):
         l = []
@@ -14304,6 +14333,8 @@ class Sequence(BaseDoc, Objet_sequence):
                 l.extend(s.GetToutesSeances())
             
         return l 
+
+
 
     ######################################################################################  
     def GetNbrSystemes(self):
@@ -14318,8 +14349,9 @@ class Sequence(BaseDoc, Objet_sequence):
                 else:
                     dic[k] = v
         return dic
-                    
-        
+
+
+
     ######################################################################################  
     def GetIntituleSeances(self):
         nomsSeances = []
@@ -14329,12 +14361,9 @@ class Sequence(BaseDoc, Objet_sequence):
                 nomsSeances.append(s.code)
                 intSeances.append(s.intitule)
         return nomsSeances, intSeances
-        
-        
 
-        
 
-        
+
     ######################################################################################  
     def HitTest(self, x, y):     
         if self.CI.HitTest(x, y):
@@ -14366,16 +14395,18 @@ class Sequence(BaseDoc, Objet_sequence):
                     return self.branche
                 
             return branche
-        
+
+
+
     ######################################################################################  
     def HitTestPosition(self, x, y):
         if hasattr(self, 'rectPos'):
             for i, rectPos in enumerate(self.rectPos):
                 if dansRectangle(x, y, (rectPos,))[0]:
                     return i
-                    
-                                    
-                                    
+
+
+
     #############################################################################
     def MiseAJourTypeEnseignement(self, ancienRef = False, ancienneFam = False):
         self.app.SetTitre()
@@ -14387,10 +14418,9 @@ class Sequence(BaseDoc, Objet_sequence):
         self.prerequis.MiseAJourTypeEnseignement()
         for s in self.seances:
             s.MiseAJourTypeEnseignement()
-#        self.GetPanelPropriete().MiseAJourTypeEnseignement()
-#        self.GetPanelPropriete().MiseAJour()
-        
-        
+
+
+
     #############################################################################
     def Verrouiller(self):
         if hasattr(self, 'CI') \
@@ -14400,6 +14430,7 @@ class Sequence(BaseDoc, Objet_sequence):
         else:
             if self.classe != None:
                 self.classe.Verrouiller(False)
+
 
 
 
@@ -15907,10 +15938,12 @@ class Progression(BaseDoc, Objet_sequence):
         BaseDoc.__init__(self, app, classe, intitule)
 #        Objet_sequence.__init__(self)
         self.undoStack = UndoStack(self)
+        self.image = None
         self.sequences = []     # liste de LienSequence
         self.calendriers = []
         self.eleves = []
         self.equipe = []
+        self.themes = []
         self.code = self.GetReferentiel().getCodeProjetDefaut()
         
         self.version = ""
@@ -15932,6 +15965,15 @@ class Progression(BaseDoc, Objet_sequence):
     def GetType(self):
         return 'prg'
     
+    ######################################################################################  
+    def GetAnnee(self):
+        return "%s - %s" %(self.annee, self.annee + len(self.GetReferentiel().periodes))
+    
+    ######################################################################################  
+    def GetNbrPeriodes(self):
+        return sum([p for a, p in self.GetReferentiel().periodes])
+        
+    
     
     ######################################################################################  
     def GetProjetRef(self):
@@ -15945,12 +15987,22 @@ class Progression(BaseDoc, Objet_sequence):
                 return self.GetReferentiel().projets[self.code]
             else:
                 return None
-            
-            
+
+
+    ######################################################################################  
+    def GetPositions(self):
+        l = []
+        for seq in [s.sequence for s in self.sequences]:
+            l.append(seq.position)
+        return list(set(l))
+
+
+
     ######################################################################################  
     def GetPanelPropriete(self, parent):
         return PanelPropriete_Progression(parent, self)
-    
+
+
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
         self.arbre = arbre

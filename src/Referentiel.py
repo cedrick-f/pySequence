@@ -408,6 +408,45 @@ class XMLelem():
                         sdic[k0] = [v0[0], lst]
         return sdic
     
+    
+    
+    ###########################################################
+    def getArbre(self, dic, prj = None, debug = False):
+#        print "getArbreProjet", self.parties.keys()
+        sdic = {}
+        for k0, v0 in dic.items():
+            if debug: print k0
+            if len(v0) > 1 and type(v0[1]) == dict:
+                if debug: print "   ", v0
+                if len(v0) == 2:
+                    sdic[k0] = [v0[0], self.getArbreProjet(v0[1], prj = prj,  debug = debug)]
+                else:
+                    if debug: print "   prem's", v0[2]
+                    
+                    if includeElem(self.parties.keys(), v0[2].keys()):
+#                        if len(v0[2]) > 0 and not v0[2].keys() == ['E']:
+#                        if v0[2][1] != 0 or v0[2][2] != 0: # Conduite ou Soutenance
+                        sdic[k0] = [v0[0], self.getArbreProjet(v0[1], prj = prj, debug = debug), v0[2]]
+            else:
+                lst = []
+                for l in v0[1]:
+                    if debug: print l, l.getType(), l.poids, l.estProjet(), prj
+#                    print v0
+                    if l.estProjet(): # Conduite ou Soutenance
+                        if prj == None or len([p for p in l.poids.keys() if p in prj.parties.keys()]) > 0:#or l.getType() in prj.parties.keys():
+#                        if l.getType() == v0[2].keys():
+                            lst.append(l)
+                if lst != []:
+                    if len(v0) > 2:
+                        sdic[k0] = [v0[0], lst, v0[2]]
+                    else:
+                        sdic[k0] = [v0[0], lst]
+        return sdic
+    
+    
+    
+    
+    
     ###########################################################
     def getDernierNiveauArbre2(self, dic):
         sdic = {}
@@ -1349,6 +1388,7 @@ class Referentiel(XMLelem):
             self._dicoIndicateurs = {}
             self._dicoIndicateurs_famille = {}
             self._dicoIndicateurs_simple = {}
+            self._dicoCompetences_simple = {}
             
             itemComp = self.dicoCompetences.items()
             if self.tr_com != []:
@@ -1357,6 +1397,13 @@ class Referentiel(XMLelem):
             
             for code, comp in itemComp:
                 self._dicoCompetences[code] = self.getArbreProjet(self.dicoCompetences[code].dicCompetences, debug = debug)
+                
+                d = self.getArbreProjet(self.dicoCompetences[code].dicCompetences, debug = debug)
+#                print "self.dicoCompetences[code].dicCompetences", self.dicoCompetences[code].dicCompetences
+                self._dicoCompetences_simple[code] = self.getDernierNiveauArbre(self.dicoCompetences[code].dicCompetences)
+                for comp, value in self._dicoCompetences_simple[code].items():
+                    self._dicoCompetences_simple[code][comp] = self._dicoCompetences_simple[code][comp][0]
+#                print "_dicoCompetences_simple", code, self._dicoCompetences_simple[code]
                 
                 self._dicoIndicateurs[code] = self.getPremierEtDernierNiveauArbre(self._dicoCompetences[code])
                 
@@ -1373,20 +1420,19 @@ class Referentiel(XMLelem):
             
         for p in self.projets.values():
             p.completer(self) 
-        
-        
-        
-        
-    
+
+
 
     #########################################################################
     def getNbrRevuesDefaut(self, codePrj):
         return self.projets[codePrj].getNbrRevuesDefaut()
-    
+
+
     #########################################################################
     def getPosRevuesDefaut(self, codePrj):
         return self.projets[codePrj].getPosRevuesDefaut()
-    
+
+
     #########################################################################
     def getIntituleIndicateur(self, comp):
         sep = "\n\t"+constantes.CHAR_POINT
@@ -1405,8 +1451,8 @@ class Referentiel(XMLelem):
         for p in self.periodes:
             n += p[1]
         return n
-    
-    
+
+
     #############################################################################
     def getPeriodeEval(self, codePrj):
         return self.projets[codePrj].getPeriodeEval()
@@ -1421,6 +1467,7 @@ class Referentiel(XMLelem):
             n += p[1]
         return
 
+
     #############################################################################
     def getProjetEval(self, position):
         """ Renvoie l'épreuve de projet (évaluation)
@@ -1431,6 +1478,7 @@ class Referentiel(XMLelem):
 #            print "   ", p.periode
             if position in p.periode:
                 return k
+
 
     #############################################################################
     def getCodeProjetDefaut(self):
@@ -1443,21 +1491,22 @@ class Referentiel(XMLelem):
             prj.append(k)
             pos.append(max(p.periode))
         return prj[pos.index(max(pos))]
-    
+
+
     #############################################################################
     def getProjetDefaut(self):
         """ Renvoie l'épreuve de projet (évaluation)
             par défaut (pour les projets d'"entrainement" en cours d'année)
         """
         return self.projets[self.getCodeProjetDefaut()]
-        
-        
+
+
     #############################################################################
     def estPeriodeEval(self, position):
         pp = self.periode_prj
         return position+1 in range(pp[0], pp[1]+1)
-    
-    
+
+
     #########################################################################
     def getIntituleCompetence(self, comp, sousComp = False):
         sep = "\n\t"+constantes.CHAR_POINT
@@ -1467,8 +1516,7 @@ class Referentiel(XMLelem):
         else:
             competence
 
-    
-        
+
 
 #    #########################################################################
 #    def getCompetence(self, comp):
