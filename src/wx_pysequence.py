@@ -2275,6 +2275,7 @@ class FenetreSequence(FenetreDocument):
         self.arbre.Layout()
         self.arbre.ExpandAll()
         self.arbre.CalculatePositions()
+        self.arbre.SelectItem(self.arbre.classe.branche)
         
         fichier.close()
         
@@ -2676,6 +2677,7 @@ class FenetreProjet(FenetreDocument):
         self.arbre.Layout()
         self.arbre.ExpandAll()
         self.arbre.CalculatePositions()
+        self.arbre.SelectItem(self.arbre.classe.branche)
         
         fichier.close()
     
@@ -2702,6 +2704,10 @@ class FenetreProjet(FenetreDocument):
         self.classe.undoStack.do(u"Ouverture de la Classe")
         self.projet.undoStack.do(u"Ouverture du Projet")
         self.parent.miseAJourUndo()
+
+
+        
+        
 #        wx.CallAfter(dlg.Raise)
 
     #############################################################################
@@ -3274,6 +3280,7 @@ Your browser does not support the HTML5 canvas tag.
         self.arbre.Layout()
         self.arbre.ExpandAll()
         self.arbre.CalculatePositions()
+        self.arbre.SelectItem(self.arbre.classe.branche)
         
         fichier.close()
         
@@ -9148,7 +9155,7 @@ class ArbreDoc(CT.CustomTreeCtrl):
     
     
     ####################################################################################
-    def OnSelChanged(self, event):
+    def OnSelChanged(self, event = None, item = None):
         """ Fonction appelée lorsque la selection a été changée dans l'arbre
             ---> affichage du panel de Propriétés associé
         """
@@ -9160,7 +9167,10 @@ class ArbreDoc(CT.CustomTreeCtrl):
         #
         # On récupère les données associées à la branche cliquée ...
         #
-        self.item = event.GetItem()
+        if item is None:
+            self.item = event.GetItem()
+        else:
+            self.item = item
         data = self.GetItemPyData(self.item)
         
         if hasattr(data, 'GetPanelPropriete'):
@@ -9182,7 +9192,8 @@ class ArbreDoc(CT.CustomTreeCtrl):
             self.classe.doc.GetApp().fiche.CentrerSur(data)
         self.classe.doc.centrer = True
         
-        event.Skip()
+        if event is not None:
+            event.Skip()
         
     ####################################################################################
     def OnBeginDrag(self, event):
