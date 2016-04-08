@@ -1373,6 +1373,16 @@ class Referentiel(XMLelem):
             return
         
 #        print "completer ref :", self, self.options
+
+        itemComp = self.dicoCompetences.items()
+
+        self._dicoCompetences_simple = {}
+        for code, comp in itemComp:
+            self._dicoCompetences_simple[code] = self.getDernierNiveauArbre(self.dicoCompetences[code].dicCompetences)
+            for comp, value in self._dicoCompetences_simple[code].items():
+                self._dicoCompetences_simple[code][comp] = self._dicoCompetences_simple[code][comp][0]
+        
+        
         
         if len(self.options) != 0:
             self.parties = {}
@@ -1388,9 +1398,9 @@ class Referentiel(XMLelem):
             self._dicoIndicateurs = {}
             self._dicoIndicateurs_famille = {}
             self._dicoIndicateurs_simple = {}
-            self._dicoCompetences_simple = {}
             
-            itemComp = self.dicoCompetences.items()
+            
+            
             if self.tr_com != []:
                 ref_tc = REFERENTIELS[self.tr_com[0]]
                 itemComp.insert(1, ("B", ref_tc.dicoCompetences["S"]))
@@ -1398,11 +1408,9 @@ class Referentiel(XMLelem):
             for code, comp in itemComp:
                 self._dicoCompetences[code] = self.getArbreProjet(self.dicoCompetences[code].dicCompetences, debug = debug)
                 
-                d = self.getArbreProjet(self.dicoCompetences[code].dicCompetences, debug = debug)
+                
 #                print "self.dicoCompetences[code].dicCompetences", self.dicoCompetences[code].dicCompetences
-                self._dicoCompetences_simple[code] = self.getDernierNiveauArbre(self.dicoCompetences[code].dicCompetences)
-                for comp, value in self._dicoCompetences_simple[code].items():
-                    self._dicoCompetences_simple[code][comp] = self._dicoCompetences_simple[code][comp][0]
+                
 #                print "_dicoCompetences_simple", code, self._dicoCompetences_simple[code]
                 
                 self._dicoIndicateurs[code] = self.getPremierEtDernierNiveauArbre(self._dicoCompetences[code])
@@ -1516,7 +1524,14 @@ class Referentiel(XMLelem):
         else:
             competence
 
-
+    #########################################################################
+    def getCompetence(self, comp):
+        for disc, dic in self.dicoCompetences.items():
+            for c in dic.values():
+                cc = c.getCompetence(comp)
+                if cc is not None:
+                    return cc
+            
 
 #    #########################################################################
 #    def getCompetence(self, comp):
@@ -1962,6 +1977,7 @@ class Projet(XMLelem):
         self._dicoIndicateurs = {}
         self._dicoIndicateurs_famille = {}
         self._dicoIndicateurs_simple = {}
+#        self._dicoCompetences_simple = {}
         
         itemComp = ref.dicoCompetences.items()
 #        if ref.tr_com != []:
@@ -1970,6 +1986,13 @@ class Projet(XMLelem):
         
         for code, comp in itemComp:
             self._dicoCompetences[code] = self.getArbreProjet(comp.dicCompetences, self, debug = debug)
+            
+            
+#            self._dicoCompetences_simple[code] = self.getDernierNiveauArbre(self.dicoCompetences[code].dicCompetences)
+#            for comp, value in self._dicoCompetences_simple[code].items():
+#                self._dicoCompetences_simple[code][comp] = self._dicoCompetences_simple[code][comp][0]
+                    
+                    
 #            if self._parent.Code == "EE-SI": 
 #                print "+++", self
 #                print "   ", code, self._dicoCompetences

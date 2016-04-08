@@ -3400,11 +3400,7 @@ class BaseFiche(wx.ScrolledWindow):
             #
             position = self.GetDoc().HitTestPosition(xx, yy)
             if position != None:
-                if hasattr(self, 'projet'):
-                    self.projet.SetPosition(position)
-                else:
-                    self.sequence.SetPosition(position)
-#                    self.GetDoc().GetPanelPropriete().SetBitmapPosition(bougerSlider = position)
+                self.GetDoc().SetPosition(position)
             
         return branche
     
@@ -3737,7 +3733,6 @@ class FicheProgression(BaseFiche):
             
     ######################################################################################################
     def OnMove(self, evt):
-        return
         if hasattr(self, 'tip'):
             self.tip.Show(False)
             self.call.Stop()
@@ -3750,7 +3745,7 @@ class FicheProgression(BaseFiche):
         #
         # Cas général
         #
-        branche = self.projet.HitTest(xx, yy)
+        branche = self.GetDoc().HitTest(xx, yy)
         if branche != None:
             elem = branche.GetData()
             if hasattr(elem, 'tip'):
@@ -3764,7 +3759,7 @@ class FicheProgression(BaseFiche):
         #
         # Cas particulier des compétences
         #
-        kCompObj = self.projet.HitTestCompetence(xx, yy)
+        kCompObj = self.GetDoc().HitTestCompetence(xx, yy)
         if kCompObj != None:
             kComp, obj = kCompObj
             if hasattr(self, 'popup'):
@@ -3773,8 +3768,8 @@ class FicheProgression(BaseFiche):
 #                self.tip_indic = []
                 x, y = self.ClientToScreen((x, y))
 #                type_ens = self.projet.classe.typeEnseignement
-                prj = self.projet.GetProjetRef()
-                competence = prj.getCompetence(kComp)
+         
+                competence = self.GetDoc().GetReferentiel().getCompetence(kComp)
                         
                 intituleComp = competence[0]
                 
@@ -6341,6 +6336,16 @@ class PanelPropriete_LienSequence(PanelPropriete):
         sbs0.Add(bt2)
         
         #
+        # Position de la séquence
+        #
+        titre = wx.StaticBox(self, -1, u"Position")
+        sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
+        self.bmp = wx.StaticBitmap(self, -1, self.getBitmapPeriode(300))
+        sb.Add(self.bmp)
+        
+        
+        
+        #
         # Aperçu de la séquence
         #
         sb1 = wx.StaticBox(self, -1, u"Aperçu de la séquence", size = (210,297))
@@ -6349,7 +6354,9 @@ class PanelPropriete_LienSequence(PanelPropriete):
         self.apercu = wx.StaticBitmap(self, -1, wx.NullBitmap)
         sbs1.Add(self.apercu, 1)
         
+        
         self.sizer.Add(sbs0, (0,0), flag = wx.EXPAND)
+        self.sizer.Add(sb, (1,0), flag = wx.ALIGN_TOP|wx.ALIGN_LEFT|wx.LEFT, border = 2)
         self.sizer.Add(sbs1, (0,1), (2,1))#, flag = wx.EXPAND)
         
         self.sizer.Layout()
@@ -6468,7 +6475,19 @@ class PanelPropriete_LienSequence(PanelPropriete):
             self.sendEvent()
             
         return True
-            
+    
+    
+    #############################################################################            
+    def getBitmapPeriode(self, larg):
+        imagesurface = draw_cairo_seq.getBitmapPeriode(larg, self.sequence.position,
+                                                       self.sequence.GetReferentiel().periodes, 
+                                                       prop = 5)
+        return getBitmapFromImageSurface(imagesurface)
+    
+    
+    
+    
+    
 ####################################################################################
 #
 #   Classe définissant le panel de propriété de la compétence
@@ -12724,6 +12743,12 @@ class LienSequence():
         return os.path.normpath(self.path) == os.path.normpath(lien.path)
     
     ######################################################################################  
+    def comp(self, lienSeq):
+        """
+        """
+        return self.sequence.position > lienSeq.sequence.position
+    
+    ######################################################################################  
     def GetApp(self):
         return self.parent.GetApp()
     
@@ -12749,7 +12774,7 @@ class LienSequence():
 
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
-        print "ConstruireArbre"
+#        print "ConstruireArbre"
         self.arbre = arbre
         if self.sequence is not None:
             code = self.sequence.intitule
@@ -13456,7 +13481,7 @@ class Classe(Objet_sequence):
     
     ######################################################################################  
     def Verrouiller(self, etat):
-        print "verrouiller classe", etat
+#        print "verrouiller classe", etat
         self.verrouillee = etat
 #        self.GetPanelPropriete().Verrouiller(etat)
         if not etat:
@@ -16179,11 +16204,13 @@ class Progression(BaseDoc, Objet_sequence):
 #        self.SupprimerSystemeSeance(i)
         self.GetApp().sendEvent(modif = u"Suppression d'une Séquence")
 
+
     ######################################################################################  
     def OuvrirSequence(self, event = None, item = None):
         l = self.arbre.GetItemPyData(item)
         self.GetApp().parent.ouvrir(l.path)
-    
+
+
     ######################################################################################  
     def ChargerSequences(self):
 #        print "ChargerSequences", self.sequences
@@ -16194,13 +16221,25 @@ class Progression(BaseDoc, Objet_sequence):
 #                print classe.typeEnseignement ,  self.GetReferentiel().Code
                 if classe != None and classe.typeEnseignement == self.GetReferentiel().Code:
                     s.sequence = sequence
-                
+        self.OrdonnerSequences()
+
+
+    
+    ######################################################################################  
+    def OrdonnerSequences(self):
+#        print "OrdonnerSequences"
+        self.sequences.sort(key= lambda s : s.sequence.position)
+        
+        self.brancheSeq.DeleteChildren(self.arbre)
+        for e in self.sequences:
+            e.ConstruireArbre(self.arbre, self.brancheSeq) 
+    
     
     ######################################################################################  
     def AjouterSequence(self, event = None):
         ps = LienSequence(self, self.panelParent)
         self.sequences.append(ps)
-        ps.ConstruireArbre(self.arbre, self.brancheSeq)
+        self.OrdonnerSequences()
         self.GetApp().sendEvent(modif = u"Ajout d'une Séquence")
         self.arbre.SelectItem(ps.branche)
     
@@ -16222,11 +16261,11 @@ class Progression(BaseDoc, Objet_sequence):
             if not s in self.sequences:
                 self.sequences.append(s)
                 s.ConstruireArbre(self.arbre, self.brancheSeq)
-        
-        
-       
-        
-    
+
+        self.OrdonnerSequences()
+
+
+
     ########################################################################################################
     def OuvrirFichierSeq(self, nomFichier):
         fichier = open(nomFichier,'r')
@@ -16344,7 +16383,51 @@ class Progression(BaseDoc, Objet_sequence):
         wx.EndBusyCursor()
         
         return sequences
+    
+    
+    ######################################################################################  
+    def HitTest(self, x, y):
+#        print "HitTest Progression"  
+        if False:#dansRectangle(x, y, (draw_cairo_prg.posPre + draw_cairo_prg.taillePre,))[0]:
+            for ls in self.prerequisSeance:
+                h = ls.HitTest(x,y)
+                if h != None:
+                    return h
+            return self.branchePre
+        
+        else:
+            branche = None
+            autresZones = self.sequences + self.equipe
+            continuer = True
+            i = 0
+            while continuer:
+                if i >= len(autresZones):
+                    continuer = False
+                else:
+                    branche = autresZones[i].HitTest(x, y)
+                    if branche:
+                        continuer = False
+                i += 1
             
+            if branche == None:
+                if hasattr(self, 'rect') and dansRectangle(x, y, self.rect)[0]:
+                    return self.branche
+                
+            return branche
+
+
+    ######################################################################################  
+    def HitTestCompetence(self, x, y):
+        if hasattr(self, 'rectComp'):
+            for k, ro in self.rectComp.items():
+                rect = [r[:-1] for r in ro]
+                obj = [o[-1] for o in ro]
+                ok, i = dansRectangle(x, y, rect)
+                if ok:
+                    return k, obj[i]
+
+
+
             
 ####################################################################################
 #

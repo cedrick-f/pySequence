@@ -174,6 +174,8 @@ def calcH(t):
     return 2*ecartTacheY
 
 
+
+
 BCoulTache = {'Sup' : (0.3,0.4,0.4), 
               'Ana' : (0.3,0.5,0.5), 
               'Con' : (0.5,0.3,0.5), 

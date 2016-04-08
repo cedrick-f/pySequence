@@ -986,14 +986,24 @@ def show_lignes(ctx, lignes, x, y, w, h, \
 #    Représentation des périodes d'un enseignement (années, trimestres, ...)
 #
 ######################################################################################################### 
-BcoulPos = (0.1, 0.1, 0.25, 1)
-AcoulPos = (1, 0.4, 0, 1)
-IcoulPos = (0.8, 0.8, 1, 0.85)
+BcoulPos = []
+IcoulPos = []
 fontPos = 0.014 * COEF 
+import color
+
+######################################################################################  
+def DefinirCouleurs(n):
+    global IcoulPos, BcoulPos
+    color.generate(IcoulPos, [0xFFC3D0E2, 0xFFF2C5B5], n)
+    color.generate(BcoulPos, [0xFF82AAE0, 0xFFEF825D], n)
+    
+    
 def DrawPeriodes(ctx, rect, pos = None, periodes = [[u"Année", 5]], projets = {}, tailleTypeEns = 0):
 #    print "DrawPeriodes", pos
 #    print "   ", periodes, periodes_prj
     ctx.set_line_width (0.001 * COEF)
+    
+    DefinirCouleurs(sum([p for a, p in periodes]))
 #    if origine:
 #        x = 0
 #        y = 0
@@ -1114,11 +1124,13 @@ def DrawPeriodes(ctx, rect, pos = None, periodes = [[u"Année", 5]], projets = {
         ctx.rectangle (xc[0], y+ht/2+dx, w, h)
         rect.append((xc[0], y+ht/2+dx, w, h))
         if xc[1]:
-            ctx.set_source_rgba (AcoulPos[0], AcoulPos[1], AcoulPos[2], AcoulPos[3])
+            ctx.set_source_rgba (BcoulPos[p][0], BcoulPos[p][1], BcoulPos[p][2], BcoulPos[p][3])
+            ctx.fill_preserve ()
+            ctx.set_source_rgba (0, 0, 0, 1)
         else:
-            ctx.set_source_rgba (IcoulPos[0], IcoulPos[1], IcoulPos[2], IcoulPos[3])
-        ctx.fill_preserve ()
-        ctx.set_source_rgba (BcoulPos[0], BcoulPos[1], BcoulPos[2], BcoulPos[3])
+            ctx.set_source_rgba (IcoulPos[p][0], IcoulPos[p][1], IcoulPos[p][2], IcoulPos[p][3])
+            ctx.fill_preserve ()
+            ctx.set_source_rgba (BcoulPos[p][0], BcoulPos[p][1], BcoulPos[p][2], BcoulPos[p][3])
         ctx.stroke ()    
         
         if xc[3] != "":

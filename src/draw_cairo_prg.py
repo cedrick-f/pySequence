@@ -43,7 +43,7 @@ import cairo
 
 from draw_cairo import LargeurTotale, font_family, curve_rect_titre, show_text_rect_fix, show_text_rect, \
                         boule, getHoraireTxt, liste_code_texte, rectangle_plein, barreH, tableauV, minFont, maxFont, tableauH, \
-                        DrawPeriodes, COEF, info
+                        DrawPeriodes, COEF, info, BcoulPos, IcoulPos, DefinirCouleurs
 
 from math import log
 
@@ -142,7 +142,7 @@ yEleves = []
 # Zone du tableau des compétences
 posZComp = [None, None]
 tailleZComp = [None, None]
-wColCompBase = 0.018 * COEF
+wColCompBase = 0.010 * COEF
 wColComp = wColCompBase
 xComp = {}
 ICoulComp = {'C' : (1, 0.6, 0.7, 0.2),      # couleur "Revue"
@@ -175,36 +175,13 @@ def calcH(t):
     return 2*ecartTacheY
 
 
-BCoulTache = {'Sup' : (0.3,0.4,0.4), 
-              'Ana' : (0.3,0.5,0.5), 
-              'Con' : (0.5,0.3,0.5), 
-              'DCo' : (0.55,0.3,0.45),
-              'Rea' : (0.5,0.5,0.3), 
-              'Val' : (0.3,0.3,0.7),
-              'XXX' : (0.3,0.3,0.7),
-              'Rev' : (0.6,0.3,0.3),
-              'R1'  : (0.8,0.3,0.2),
-              'R2'  : (0.8,0.3,0.2),
-              'R3'  : (0.8,0.3,0.2),
-              'S'   : (0.3,0.1,0.8)}
-
-ICoulTache = {'Sup' : (0.6, 0.7, 0.7,1),
-              'Ana' : (0.6, 0.8, 0.8,1), 
-              'Con' : (0.8, 0.6, 0.8,1),
-              'DCo' : (0.9, 0.6, 0.7,1),
-              'Rea' : (0.8, 0.8, 0.6,1), 
-              'Val' : (0.6, 0.6, 1.0,1),
-              'XXX' : (0.6, 0.6, 1.0,1),
-              'Rev' : (0.9,0.6,0.6,0.8),
-              'R1'  : (1,0.6,0.5,0.8),
-              'R2'  : (1,0.6,0.5,0.8),
-              'R3'  : (1,0.6,0.5,0.8),
-              'S'   : (0.6,0.5,1,0.8)}
 
 
 ecartYElevesTaches = 0.05 * COEF
 
 
+    
+    
 
 ######################################################################################  
 def DefinirZones(prg, ctx):
@@ -218,7 +195,7 @@ def DefinirZones(prg, ctx):
     #
     ref = prg.classe.referentiel
     competences = ref._dicoCompetences_simple["S"]
-    print "competences", competences
+#    print "competences", competences
     tailleZComp[0] = wColComp * len(competences)
     posZComp[0] = posZOrganis[0] + tailleZOrganis[0] - tailleZComp[0]
     for i, s in enumerate(competences.keys()):
@@ -328,6 +305,8 @@ def Draw(ctx, prg, mouchard = False):
     ctx.set_font_options(options)
     
     DefinirZones(prg, ctx)
+    DefinirCouleurs(prg.GetNbrPeriodes())
+#    print "DefinirCouleurs", IcoulPos
 
     #
     #    pour stocker des zones caractéristiques (à cliquer, ...)
@@ -591,33 +570,6 @@ def Draw(ctx, prg, mouchard = False):
     prg.pt_caract_eleve = []
     if len(l) > 0:
         
-        #
-        # Barres d'évaluabilité
-        #
-        for i, e in enumerate(prj.eleves):
-            ev = e.GetEvaluabilite()[1]
-            y = posZElevesH[1] + i*hEleves
-#            wr = tailleZElevesH[0]*r
-#            ws = tailleZElevesH[0]*s
-            hb = hEleves/(len(prj.GetProjetRef().parties)+1)
-#            y = posZElevesH[1] + (2*i*hb)+hb/2
-            
-
-            
-            for j, part in enumerate(prj.GetProjetRef().parties.keys()):
-                
-                barreH(ctx, posZElevesH[0], y+(j+1)*hb, tailleZElevesH[0], ev[part][0], ev[part][1], hb, 
-                       (1, 0, 0, 0.7), (0, 1, 0, 0.7), 
-                       getCoulComp(part))
-            
-            
-#            barreH(ctx, posZElevesH[0], y+hb, tailleZElevesH[0], ev['R'][0], ev['R'][1], hb, 
-#                   (1, 0, 0, 0.7), (0, 1, 0, 0.7), 
-#                   (ICoulComp['C'][0], ICoulComp['C'][1], ICoulComp['C'][2], 1))
-#            
-#            barreH(ctx, posZElevesH[0], y+2*hb, tailleZElevesH[0], ev['S'][0], ev['S'][1], hb, 
-#                   (1, 0, 0, 0.7), (0, 1, 0, 0.7), 
-#                   (ICoulComp['S'][0], ICoulComp['S'][1], ICoulComp['S'][2], 1))
 
         rec = tableauH(ctx, l, posZElevesH[0], posZElevesH[1], 
                      tailleZElevesH[0], 0, tailleZElevesH[1], 
@@ -690,7 +642,7 @@ def Draw(ctx, prg, mouchard = False):
         if position != seq.position:
             y += ecartTacheY
 
-        yb = DrawTacheRacine(ctx, seq, y)
+        yb = DrawTacheRacine(ctx, prg, t, y)
         yh_phase[seq.position][0].append(y)
         yh_phase[seq.position][1].append(yb)
         y = yb
@@ -707,14 +659,16 @@ def Draw(ctx, prg, mouchard = False):
     x = posZTaches[0] + tailleZTaches[0]
     for seq, y in yTaches: 
         DrawLigne(ctx, x, y)
-        DrawCroisementsCompetencesTaches(ctx, seq, y)
+        DrawCroisementsCompetencesTaches(ctx, prg, seq, y)
     
-    # Nom des Séquences
+    # Nom des périodes
+#    print "yh_phase", yh_phase
     for phase, yh in yh_phase.items():
         if len(yh[0]) > 0:
             yh[0] = min(yh[0])
             yh[1] = max(yh[1])
-            ctx.set_source_rgb(BCoulTache['Sup'][0],BCoulTache['Sup'][1],BCoulTache['Sup'][2])
+            c = BcoulPos[phase]
+            ctx.set_source_rgb(c[0],c[1],c[2])
             ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
                                                 cairo.FONT_WEIGHT_NORMAL)
             if wPhases > yh[1]-yh[0]:
@@ -1119,9 +1073,9 @@ def DrawLigneEff(ctx, x, y):
                
     
 ######################################################################################  
-def DrawTacheRacine(ctx, seq, y):
+def DrawTacheRacine(ctx, prg, lienSeq, y):
     global yTaches
-    
+    seq = lienSeq.sequence
     h = calcH_tache(seq)
     
     #
@@ -1154,8 +1108,8 @@ def DrawTacheRacine(ctx, seq, y):
     #
     # Rectangles actifs et points caractéristiques : initialisation
     #
-    seq.pts_caract = []
-    seq.rect = []
+    lienSeq.pts_caract = []
+    lienSeq.rect = []
     
 
 
@@ -1168,11 +1122,14 @@ def DrawTacheRacine(ctx, seq, y):
     w = tailleZTaches[0]
 
 
-    seq.pts_caract.append((x, y))
+    lienSeq.pts_caract.append((x, y))
         
     ctx.set_line_width(0.002 * COEF)
+#    print "BcoulPos", BcoulPos
     rectangle_plein(ctx, x, y, w, h, 
-                    BCoulTache['Sup'], ICoulTache['Sup'], ICoulTache['Sup'][3])
+                    BcoulPos[seq.position], 
+                    IcoulPos[seq.position], 
+                    IcoulPos[seq.position][3])
     
     
     #
@@ -1207,7 +1164,7 @@ def DrawTacheRacine(ctx, seq, y):
                        ha = 'g', fontsizeMinMax = (minFont, 0.015 * COEF))
     
     
-    seq.rect.append([x, y, tailleZTaches[0], h])
+    lienSeq.rect.append([x, y, tailleZTaches[0], h])
         
         
     #
@@ -1303,8 +1260,8 @@ def regrouperLst(obj, lstCompetences):
         return lstCompetences
     
 ######################################################################################  
-def DrawCroisementsCompetencesTaches(ctx, seq, y):
-    DrawBoutonCompetence(ctx, seq, seq.GetCompetencesVisees(), y)
+def DrawCroisementsCompetencesTaches(ctx, prg, seq, y):
+    DrawBoutonCompetence(ctx, prg, seq, seq.GetCompetencesVisees(), y)
     
 
     
@@ -1354,16 +1311,16 @@ def DrawCroisementsElevesTaches(ctx, tache, y):
         
 
 ######################################################################################  
-def DrawCroisementsElevesCompetences(ctx, eleve, y):
+def DrawCroisementsElevesCompetences(ctx, prg, eleve, y):
     #
     # Boutons
     #
-    DrawBoutonCompetence(ctx, eleve, regrouperDic(eleve, eleve.GetDicIndicateurs()), y)
+    DrawBoutonCompetence(ctx, prg, eleve, regrouperDic(eleve, eleve.GetDicIndicateurs()), y)
     
 
     
 ######################################################################################  
-def DrawBoutonCompetence(ctx, seq, listComp, y, h = None):
+def DrawBoutonCompetence(ctx, prg, seq, listComp, y, h = None):
     """ Dessine les petits rectangles des indicateurs (en couleurs R et S)
          ... avec un petit décalage vertical pour que ce soit lisible en version N&B
     """
@@ -1373,14 +1330,14 @@ def DrawBoutonCompetence(ctx, seq, listComp, y, h = None):
         h = 2*r
     
     ctx.set_line_width (0.0004 * COEF)
-    seq.rectComp = {}
+    
     
     for s in listComp:
         x = xComp[s[1:]] - wColComp/2
         
         rect = (x, y-h/2, wColComp, h, seq)
-        seq.rectComp[s] = [rect]
-        seq.pts_caract.append((x,y))
+        prg.rectComp[s] = [rect]
+        prg.pts_caract.append((x,y))
         
 #            dangle = 2*pi/len(indic)
         dx = wColComp
