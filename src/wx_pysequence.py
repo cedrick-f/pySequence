@@ -337,6 +337,8 @@ import glob
 
 # Chargement des images
 import images
+
+
 from wx.lib.embeddedimage import PyEmbeddedImage
 
 #import synthesePeda
@@ -393,8 +395,14 @@ from constantes import calculerEffectifs, \
                         _S, _Rev, _R1, _R2, _R3, \
                         revCalculerEffectifs, getSingulierPluriel,\
                         COUL_OK, COUL_NON, COUL_BOF, COUL_BIEN, \
-                        toList, COUL_COMPETENCES, Str2Couleur, Couleur2Str
+                        toList, COUL_COMPETENCES
 import constantes
+
+
+from couleur import Str2Couleur, Couleur2Str
+import couleur
+
+
 
 # Graphiques vectoriels
 import draw_cairo_seq, draw_cairo_prj, draw_cairo_prg, draw_cairo
@@ -3698,32 +3706,31 @@ class FicheProgression(BaseFiche):
         #
         l = 0
         popup = PopupInfo2(self.progression.GetApp(), u"Compétence")
-#        popup.sizer.SetItemSpan(popup.titre, (1,2)) 
-#        l += 1
+        popup.sizer.SetItemSpan(popup.titre, (1,2)) 
+        l += 1
+        
+        self.tip_comp = popup.CreerTexte((l,0), (1,2), flag = wx.ALL)
+        self.tip_comp.SetForegroundColour("CHARTREUSE4")
+        self.tip_comp.SetFont(wx.Font(11, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.NORMAL))
+        l += 1
+        
+        
+        
+        self.lab_legend = {}
+        for i, (part , tit) in enumerate(self.progression.GetProjetRef().parties.items()):
+            self.lab_legend[part] = popup.CreerTexte((l,i), txt = tit, flag = wx.ALIGN_RIGHT|wx.RIGHT)
+            self.lab_legend[part].SetFont(wx.Font(8, wx.SWISS, wx.FONTSTYLE_ITALIC, wx.NORMAL))
+            self.lab_legend[part].SetForegroundColour(constantes.getCoulPartie(part))
+            
+            
+#        self.lab_legend1 = popup.CreerTexte((l,0), txt = u"Conduite", flag = wx.ALIGN_RIGHT|wx.RIGHT)
+#        self.lab_legend1.SetFont(wx.Font(8, wx.SWISS, wx.FONTSTYLE_ITALIC, wx.NORMAL))
+#        self.lab_legend1.SetForegroundColour(constantes.COUL_PARTIE['C'])
 #        
-#        self.tip_comp = popup.CreerTexte((l,0), (1,2), flag = wx.ALL)
-#        self.tip_comp.SetForegroundColour("CHARTREUSE4")
-#        self.tip_comp.SetFont(wx.Font(11, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.NORMAL))
-#        l += 1
-#        
-#        self.tip_arbre = popup.CreerArbre((l,0), (1,2), projet.GetReferentiel(), flag = wx.ALL)
-#        l += 1
-#        
-#        self.lab_legend = {}
-#        for i, (part , tit) in enumerate(self.projet.GetProjetRef().parties.items()):
-#            self.lab_legend[part] = popup.CreerTexte((l,i), txt = tit, flag = wx.ALIGN_RIGHT|wx.RIGHT)
-#            self.lab_legend[part].SetFont(wx.Font(8, wx.SWISS, wx.FONTSTYLE_ITALIC, wx.NORMAL))
-#            self.lab_legend[part].SetForegroundColour(constantes.getCoulPartie(part))
-#            
-#            
-##        self.lab_legend1 = popup.CreerTexte((l,0), txt = u"Conduite", flag = wx.ALIGN_RIGHT|wx.RIGHT)
-##        self.lab_legend1.SetFont(wx.Font(8, wx.SWISS, wx.FONTSTYLE_ITALIC, wx.NORMAL))
-##        self.lab_legend1.SetForegroundColour(constantes.COUL_PARTIE['C'])
-##        
-##        self.lab_legend2 = popup.CreerTexte((l,1), txt = u"Soutenance", flag = wx.ALIGN_LEFT|wx.LEFT)
-##        self.lab_legend2.SetFont(wx.Font(8, wx.SWISS, wx.FONTSTYLE_ITALIC, wx.NORMAL))
-##        self.lab_legend2.SetForegroundColour(constantes.COUL_PARTIE['S'])
-#        
+#        self.lab_legend2 = popup.CreerTexte((l,1), txt = u"Soutenance", flag = wx.ALIGN_LEFT|wx.LEFT)
+#        self.lab_legend2.SetFont(wx.Font(8, wx.SWISS, wx.FONTSTYLE_ITALIC, wx.NORMAL))
+#        self.lab_legend2.SetForegroundColour(constantes.COUL_PARTIE['S'])
+        
         self.popup = popup
 #        self.MiseAJourTypeEnseignement(self.projet.classe.typeEnseignement)
         
@@ -3784,12 +3791,7 @@ class FicheProgression(BaseFiche):
              
                 self.popup.SetTexte(intituleComp, self.tip_comp)
                 
-                self.tip_arbre.DeleteChildren(self.tip_arbre.root)
-                if type(competence[1]) == dict:  
-                    indicEleve = obj.GetDicIndicateurs()
-                else:
-                    indicEleve = obj.GetDicIndicateurs()[kComp]
-                self.tip_arbre.Construire(competence[1], indicEleve, prj)
+         
                 
                 self.popup.Fit()
 
@@ -5482,7 +5484,7 @@ class PanelPropriete_Classe(PanelPropriete):
 #                self.classe.familleEnseignement = constantes.FamilleEnseignement[self.classe.typeEnseignement]
 #                break
         
-        self.classe.MiseAJourTypeEnseignement()
+#        self.classe.MiseAJourTypeEnseignement()
         self.classe.doc.MiseAJourTypeEnseignement(ancienRef, ancienneFam)
         self.classe.doc.SetPosition(self.classe.doc.position)
 #        self.classe.doc.MiseAJourTypeEnseignement(fam != self.classe.familleEnseignement)
@@ -5713,14 +5715,14 @@ class PanelEffectifsClasse(wx.Panel):
         #
         boxClasse = wx.StaticBox(self, -1, u"Découpage de la classe")
 
-        coulClasse = constantes.GetCouleurWx(constantes.CouleursGroupes['C'])
+        coulClasse = couleur.GetCouleurWx(constantes.CouleursGroupes['C'])
 #        boxClasse.SetOwnForegroundColour(coulClasse)
         
-        self.coulEffRed = constantes.GetCouleurWx(constantes.CouleursGroupes['G'])
+        self.coulEffRed = couleur.GetCouleurWx(constantes.CouleursGroupes['G'])
 
-        self.coulEP = constantes.GetCouleurWx(constantes.CouleursGroupes['E'])
+        self.coulEP = couleur.GetCouleurWx(constantes.CouleursGroupes['E'])
     
-        self.coulAP = constantes.GetCouleurWx(constantes.CouleursGroupes['P'])
+        self.coulAP = couleur.GetCouleurWx(constantes.CouleursGroupes['P'])
         
 #        self.boxClasse = boxClasse
         bsizerClasse = wx.StaticBoxSizer(boxClasse, wx.VERTICAL)
@@ -7243,7 +7245,7 @@ class PanelPropriete_Seance(PanelPropriete):
     #############################################################################            
     def OnSelectColour(self, event):
         print event.GetValue()
-        self.seance.couleur = constantes.Wx2Couleur(event.GetValue())
+        self.seance.couleur = couleur.Wx2Couleur(event.GetValue())
         self.sendEvent(modif = u"Mofification de la couleur de la séance")
         
     #############################################################################            
@@ -7437,7 +7439,7 @@ class PanelPropriete_Seance(PanelPropriete):
         self.textctrl.ChangeValue(self.seance.intitule)
         self.vcDuree.mofifierValeursSsEvt()
         
-        self.coulCtrl.SetColour(constantes.Couleur2Wx(self.seance.couleur))
+        self.coulCtrl.SetColour(couleur.Couleur2Wx(self.seance.couleur))
         
         if self.cbEff.IsShown():#self.cbEff.IsEnabled() and 
             self.cbEff.SetSelection(ref.findEffectif(self.cbEff.GetStrings(), self.seance.effectif))
@@ -15989,6 +15991,7 @@ class Progression(BaseDoc, Objet_sequence):
         self.draw = draw_cairo_prg
 #        self.dossier = Lien()
         
+        self.MiseAJourTypeEnseignement()
         
         self.undoStack.do(u"Création de la progression")
         
@@ -16295,10 +16298,12 @@ class Progression(BaseDoc, Objet_sequence):
         
     #############################################################################
     def MiseAJourTypeEnseignement(self, ancienRef = None, ancienneFam = None):#, changeFamille = False):
-#        print "MiseAJourTypeEnseignement projet", ancienRef, ">>", self.GetReferentiel()
-        
+#        print "MiseAJourTypeEnseignement Progression"
+#        print self.GetReferentiel()._listesCompetences_simple["S"]
         self.app.SetTitre()
         self.classe.MiseAJourTypeEnseignement()
+        draw_cairo.DefinirCouleurs(self.GetNbrPeriodes(),
+                                   len(self.GetReferentiel()._listesCompetences_simple["S"]))
         
 #        self.code = self.GetReferentiel().getCodeProjetDefaut()
         
@@ -16686,7 +16691,7 @@ class Competences(Objet_sequence):
         t = self.GetReferentiel().dicoCompetences["S"].nomGenerique
         self.branche = arbre.AppendItem(branche, t, wnd = self.codeBranche, data = self,
                                         image = self.arbre.images["Com"])
-        self.arbre.SetItemTextColour(self.branche, constantes.GetCouleurWx(COUL_COMPETENCES))
+        self.arbre.SetItemTextColour(self.branche, couleur.GetCouleurWx(COUL_COMPETENCES))
         if hasattr(self, 'tip'):
             self.tip.SetBranche(self.branche)
         
@@ -20097,7 +20102,7 @@ class Eleve(Personne, Objet_sequence):
         dic = {}
         ligne = []
         for ph in self.GetProjetRef().listeParties:
-            dic['coul'] = constantes.GetCouleurHTML(getCoulPartie(ph))
+            dic['coul'] = couleur.GetCouleurHTML(getCoulPartie(ph))
             dic['nom'] = self.GetProjetRef().parties[ph]
             dic['id'] = ph
             ligne.append("""<tr  id = "le%(id)s" align="right" valign="middle" >
@@ -20125,8 +20130,8 @@ class Eleve(Personne, Objet_sequence):
         if hasattr(self, 'tip'):
             
 #            self.tip.SetTexte(self.GetNomPrenom(), self.tip_nom)
-            coulOK = constantes.GetCouleurHTML(COUL_OK)
-            coulNON = constantes.GetCouleurHTML(COUL_NON)
+            coulOK = couleur.GetCouleurHTML(COUL_OK)
+            coulNON = couleur.GetCouleurHTML(COUL_NON)
             
             #
             # Durée
@@ -20136,7 +20141,7 @@ class Eleve(Personne, Objet_sequence):
             if abs(duree-70) < constantes.DELTA_DUREE:
                 coul = coulOK
             elif abs(duree-70) < constantes.DELTA_DUREE2:
-                coul = constantes.GetCouleurHTML(COUL_BOF)
+                coul = couleur.GetCouleurHTML(COUL_BOF)
             else:
                 coul = coulNON
             XML_AjouterCol(self.ficheXML, "ld", lab, coul, bold = True)
@@ -20193,7 +20198,7 @@ class Eleve(Personne, Objet_sequence):
                             else:
                                 coul = None
                         XML_AjouterCol(self.ficheXML, "le"+part, l, coul,
-                                       constantes.GetCouleurHTML(getCoulPartie(part)), size, bold)
+                                       couleur.GetCouleurHTML(getCoulPartie(part)), size, bold)
 
             for disc in prj._dicoIndicateurs.keys():
                 for t in keys[disc]:
@@ -20274,11 +20279,11 @@ class Prof(Personne):
         self.arbre.SetItemBold(self.branche, self.referent)
         if self.discipline <> 'Tec':
             self.codeBranche.SetLabel(u" "+constantes.CODE_DISCIPLINES[self.discipline]+u" ")
-            self.codeBranche.SetBackgroundColour(constantes.GetCouleurWx(constantes.COUL_DISCIPLINES[self.discipline]))
+            self.codeBranche.SetBackgroundColour(couleur.GetCouleurWx(constantes.COUL_DISCIPLINES[self.discipline]))
             self.codeBranche.SetToolTipString(constantes.NOM_DISCIPLINES[self.discipline])
         else:
             self.codeBranche.SetLabel(u"")
-            self.codeBranche.SetBackgroundColour(constantes.GetCouleurWx(constantes.COUL_DISCIPLINES[self.discipline]))
+            self.codeBranche.SetBackgroundColour(couleur.GetCouleurWx(constantes.COUL_DISCIPLINES[self.discipline]))
             self.codeBranche.SetToolTipString(constantes.NOM_DISCIPLINES[self.discipline])
         
         self.codeBranche.LayoutFit()
@@ -20287,7 +20292,7 @@ class Prof(Personne):
     def SetTip2(self):
         if hasattr(self, 'tip'):
             if self.discipline != 'Tec':
-                coul = constantes.GetCouleurHTML(constantes.COUL_DISCIPLINES[self.discipline])
+                coul = couleur.GetCouleurHTML(constantes.COUL_DISCIPLINES[self.discipline])
             else:
                 coul = None
             XML_AjouterCol(self.ficheXML, "spe", constantes.NOM_DISCIPLINES[self.discipline], bcoul = coul)

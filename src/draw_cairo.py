@@ -988,14 +988,18 @@ def show_lignes(ctx, lignes, x, y, w, h, \
 ######################################################################################################### 
 BcoulPos = []
 IcoulPos = []
+ICoulComp = []
 fontPos = 0.014 * COEF 
-import color
+import couleur
 
 ######################################################################################  
-def DefinirCouleurs(n):
+def DefinirCouleurs(n1, n2):
     global IcoulPos, BcoulPos
-    color.generate(IcoulPos, [0xFFC3D0E2, 0xFFF2C5B5], n)
-    color.generate(BcoulPos, [0xFF82AAE0, 0xFFEF825D], n)
+    couleur.generate(IcoulPos, [0xFFC3D0E2, 0xFFF2C5B5], n1)
+    couleur.generate(BcoulPos, [0xFF82AAE0, 0xFFEF825D], n1)
+    
+    couleur.generate(ICoulComp, [0xFFFF6666, 0xFFFFFF66, 0xFF75FF66, 0xFF66FFF9, 0xFFFF66F4], n2)
+    
     
     
 def DrawPeriodes(ctx, rect, pos = None, periodes = [[u"Année", 5]], projets = {}, tailleTypeEns = 0):
@@ -1003,7 +1007,7 @@ def DrawPeriodes(ctx, rect, pos = None, periodes = [[u"Année", 5]], projets = {
 #    print "   ", periodes, periodes_prj
     ctx.set_line_width (0.001 * COEF)
     
-    DefinirCouleurs(sum([p for a, p in periodes]))
+#    DefinirCouleurs(sum([p for a, p in periodes]))
 #    if origine:
 #        x = 0
 #        y = 0
@@ -1246,7 +1250,7 @@ def curve_rect(ctx, x0, y0, rect_width, rect_height, radius, ouverture = 0):
 
 
     
-def tableauV(ctx, titres, x, y, w, ht, hl, nlignes = 0, va = 'c', ha = 'c', orient = 'h', coul = (0.9,0.9,0.9)):
+def tableauV(ctx, titres, x, y, w, ht, hl, nlignes = 0, va = 'c', ha = 'c', orient = 'h', coul = (0.9,0.9,0.9), b = 0.2):
     
     rect = []
     wc = w/len(titres)
@@ -1258,8 +1262,8 @@ def tableauV(ctx, titres, x, y, w, ht, hl, nlignes = 0, va = 'c', ha = 'c', orie
         ctx.rectangle(_x, y, wc, ht)
         ctx.set_source_rgb (coul[0], coul[1], coul[2])
         ctx.fill_preserve ()
-        ctx.set_source_rgba (_coul[0], _coul[1], _coul[2], _coul[3])
-        show_text_rect(ctx, titre, (_x, y, wc, ht), va = va, ha = ha, b = 0.2, orient = orient)
+        ctx.set_source_rgba (*_coul)
+        show_text_rect(ctx, titre, (_x, y, wc, ht), va = va, ha = ha, b = b, orient = orient)
         if orient == 'h':
             rect.append((_x, y, wc, ht))
         else:
@@ -1294,9 +1298,9 @@ def tableauH(ctx, titres, x, y, wt, wc, h, nCol = 0, va = 'c', ha = 'c', orient 
                 col = coul[i]
             else:
                 col = coul
-        ctx.set_source_rgba (col[0][0], col[0][1], col[0][2], col[0][3])
+        ctx.set_source_rgba (*col[0])
         ctx.fill_preserve ()
-        ctx.set_source_rgba (_coul[0], _coul[1], _coul[2], _coul[3])
+        ctx.set_source_rgba (*_coul)
         show_text_rect(ctx, titre, (x, _y, wt, hc), va = va, ha = ha, b = 0.2, orient = orient)
         rect.append((x, _y, wt, hc))
         ctx.stroke ()
@@ -1352,7 +1356,7 @@ def tableauH_var(ctx, titres, x, y, wt, wc, hl, taille, nCol = 0, va = 'c', ha =
             col = coul
         ctx.set_source_rgb (col[0], col[1], col[2])
         ctx.fill_preserve ()
-        ctx.set_source_rgba (_coul[0], _coul[1], _coul[2], _coul[3])
+        ctx.set_source_rgba (*_coul[0])
         show_text_rect(ctx, titre, (x, _y, wt, hl[i]), va = va, ha = ha, orient = orient, fontsizeMinMax = (-1, taille))
         ctx.stroke ()
         _y += hl[i]

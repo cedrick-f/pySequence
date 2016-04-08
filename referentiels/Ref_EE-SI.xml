@@ -62,6 +62,26 @@
           </l_01>
           <d_02 I_C="20" I_S1="20" I_S2="20" />
         </l_C3>
+        <l_C2 S_00="Simuler, mesurer un comportement">
+          <l_01>
+            <Indicateur_00 S_intitule="Les grandeurs sont mesurées de manière directe ou indirecte">
+              <d_ligne I_C="11" I_S1="11" I_S2="11" />
+              <d_poids F_C="33.333333" F_S1="33.333333" F_S2="33.333333" />
+              <d_revue I_C="0" I_S1="0" I_S2="0" />
+            </Indicateur_00>
+            <Indicateur_01 S_intitule="Les résultats expérimentaux sont interprétés, une conclusion est formulée">
+              <d_ligne I_C="12" I_S1="12" I_S2="12" />
+              <d_poids F_C="33.333333" F_S1="33.333333" F_S2="33.333333" />
+              <d_revue I_C="0" I_S1="0" I_S2="0" />
+            </Indicateur_01>
+            <Indicateur_02 S_intitule="La structure et/ou le comportement d'un objet est simulée numériquement">
+              <d_ligne I_C="13" I_S1="13" I_S2="13" />
+              <d_poids F_C="33.333333" F_S1="33.333333" F_S2="33.333333" />
+              <d_revue I_C="0" I_S1="0" I_S2="0" />
+            </Indicateur_02>
+          </l_01>
+          <d_02 I_C="40" I_S1="40" I_S2="40" />
+        </l_C2>
         <l_C1 S_00="Approfondir la culture technologique">
           <l_01>
             <Indicateur_00 S_intitule="Des contraintes associées à une norme sont identifiées">

@@ -529,10 +529,6 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
             ctx.line_to(_x, _y1)
             ctx.stroke()
             ctx.set_source_rgba(0.5, 0.5, 0.5, 0.2)
-#            if True :#estCompetenceRevue(prj.classe.typeEnseignement, s):
-#                ctx.set_source_rgba(ICoulComp['S'][0], ICoulComp['S'][1], ICoulComp['S'][2], 0.2)
-#            else:
-#                ctx.set_source_rgba(ICoulComp['C'][0], ICoulComp['C'][1], ICoulComp['C'][2], 0.2)
             ctx.rectangle(_x, _y0,  
                           wc, _y1-_y0)
             ctx.fill()
@@ -606,13 +602,6 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
                        getCoulComp(part))
             
             
-#            barreH(ctx, posZElevesH[0], y+hb, tailleZElevesH[0], ev['R'][0], ev['R'][1], hb, 
-#                   (1, 0, 0, 0.7), (0, 1, 0, 0.7), 
-#                   (ICoulComp['C'][0], ICoulComp['C'][1], ICoulComp['C'][2], 1))
-#            
-#            barreH(ctx, posZElevesH[0], y+2*hb, tailleZElevesH[0], ev['S'][0], ev['S'][1], hb, 
-#                   (1, 0, 0, 0.7), (0, 1, 0, 0.7), 
-#                   (ICoulComp['S'][0], ICoulComp['S'][1], ICoulComp['S'][2], 1))
 
         rec = tableauH(ctx, l, posZElevesH[0], posZElevesH[1], 
                      tailleZElevesH[0], 0, tailleZElevesH[1], 
@@ -1517,17 +1506,6 @@ def DrawBoutonCompetence(ctx, objet, dicIndic, y, h = None):
     for s in dicIndic.keys():
         
         x = xComp[s]-wColComp/2
-#        ctx.arc(x, y, r, 0, 2*pi)
-#        if True:#estCompetenceRevue(objet.parent.classe.typeEnseignement, s):
-##        if len(constantes.dicCompetences_prj_simple[tache.parent.classe.typeEnseignement][s]) > 2:
-#            ctx.set_source_rgba (ICoulComp['S'][0],ICoulComp['S'][1],ICoulComp['S'][2],1.0)
-#        else:
-#            ctx.set_source_rgba (ICoulComp['C'][0],ICoulComp['C'][1],ICoulComp['C'][2],1.0)
-#        ctx.fill_preserve ()
-#        ctx.set_source_rgba (0,0,0,1)
-#        ctx.stroke ()
-#        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-#                              cairo.FONT_WEIGHT_BOLD)
         
         rect = (x, y-h/2, wColComp, h, objet)
         if s in objet.GetDocument().rectComp.keys() and objet.GetDocument().rectComp[s] != None:
@@ -1568,45 +1546,3 @@ def DrawBoutonCompetence(ctx, objet, dicIndic, y, h = None):
 
 
        
-#######################################################################################  
-#def DrawBoutonCompetence2(ctx, objet, dicIndic, y):
-##    print "DrawBoutonCompetence", objet, dicIndic
-#    r = wColComp/3
-#    ctx.set_line_width (0.001)
-#    for s in dicIndic.keys():
-#        x = xComp[s]
-#        ctx.arc(x, y, r, 0, 2*pi)
-#        if True:#estCompetenceRevue(objet.parent.classe.typeEnseignement, s):
-##        if len(constantes.dicCompetences_prj_simple[tache.parent.classe.typeEnseignement][s]) > 2:
-#            ctx.set_source_rgba (ICoulComp['S'][0],ICoulComp['S'][1],ICoulComp['S'][2],1.0)
-#        else:
-#            ctx.set_source_rgba (ICoulComp['C'][0],ICoulComp['C'][1],ICoulComp['C'][2],1.0)
-#        ctx.fill_preserve ()
-#        ctx.set_source_rgba (0,0,0,1)
-#        ctx.stroke ()
-#        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-#                              cairo.FONT_WEIGHT_BOLD)
-#        if s in objet.parent.rectComp.keys() and objet.parent.rectComp[s] != None:
-#            objet.parent.rectComp[s].append((x-r, y-r, 2*r, 2*r, objet))
-#        else:
-#            objet.parent.rectComp[s] = [(x-r, y-r, 2*r, 2*r, objet)]
-#        
-#        objet.pts_caract.append((x,y))
-#        
-#        if True:#objet.GetTypeEnseignement() != "SSI":
-#            indic = dicIndic[s]
-#            dangle = 2*pi/len(indic)
-#            for a, i in enumerate(indic):
-#    #            ctx.move_to (x, y)
-#    #            ctx.rel_line_to (r*cos(dangle*a)+pi/2, r*sin(dangle*a)+pi/2)
-#    
-#                if i:
-#                    ctx.set_source_rgba (0,0,0,1)
-#                else:
-#                    ctx.set_source_rgba (1,1,1,1)
-#                ctx.arc(x+r*cos(-dangle*a-pi/2)/2, y+r*sin(-dangle*a-pi/2)/2, r/4, 0, 2*pi)
-#                ctx.fill()
-#                ctx.stroke()
-#
-#        else:
-#            show_text_rect_fix(ctx, str(dicIndic[s]), x-r, y-r, 2*r, 2*r, 0.006, 1, va = 'c', ha = 'c')

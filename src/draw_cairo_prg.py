@@ -43,7 +43,8 @@ import cairo
 
 from draw_cairo import LargeurTotale, font_family, curve_rect_titre, show_text_rect_fix, show_text_rect, \
                         boule, getHoraireTxt, liste_code_texte, rectangle_plein, barreH, tableauV, minFont, maxFont, tableauH, \
-                        DrawPeriodes, COEF, info, BcoulPos, IcoulPos, DefinirCouleurs
+                        DrawPeriodes, COEF, info, \
+                        BcoulPos, IcoulPos, ICoulComp, DefinirCouleurs
 
 from math import log
 
@@ -145,13 +146,33 @@ tailleZComp = [None, None]
 wColCompBase = 0.010 * COEF
 wColComp = wColCompBase
 xComp = {}
-ICoulComp = {'C' : (1, 0.6, 0.7, 0.2),      # couleur "Revue"
-             'S' : (0.598, 0.7, 1, 0.2),
-             ''  : (0.598, 0.7, 0.7, 0.2)}    # couleur "Soutenance"
-#ICoulComp['S'] = (0.598, 0.7, 1, 0.2)      
-#ICoulComp['C'] = (1, 0.6, 0.7, 0.2)      
-#BCoulCompR = (0.3, 0.2, 0.4, 1)      # couleur "Revue"
-BCoulCompS = (0.7, 0.7, 0.7, 0.2)      # couleur "Soutenance"
+cComp = {}
+
+#BCoulComp = [(0.3,0.4,0.4), 
+#              (0.3,0.5,0.5), 
+#              (0.5,0.3,0.5), 
+#              (0.55,0.3,0.45),
+#              (0.5,0.5,0.3), 
+#              (0.3,0.3,0.7),
+#              (0.3,0.3,0.7),
+#              (0.6,0.3,0.3),
+#              (0.8,0.3,0.2),
+#              (0.8,0.3,0.2),
+#              (0.8,0.3,0.2),
+#              (0.3,0.1,0.8)]
+#
+#ICoulComp =  [(0.6, 0.7, 0.7, 0.8),
+#              (0.6, 0.8, 0.8, 0.8), 
+#              (0.8, 0.6, 0.8, 0.8),
+#              (0.9, 0.6, 0.7, 0.8),
+#              (0.8, 0.8, 0.6, 0.8), 
+#              (0.6, 0.6, 1.0, 0.8),
+#              (0.6, 0.6, 1.0, 0.8),
+#              (0.9, 0.6, 0.6, 0.8),
+#              (1.0, 0.6, 0.5, 0.8),
+#              (1.0, 0.6, 0.5, 0.8),
+#              (1.0, 0.6, 0.5, 0.8),
+#              (0.6, 0.5, 1.0, 0.8)]
 
 
 # Zone des tâches
@@ -194,14 +215,25 @@ def DefinirZones(prg, ctx):
     # Zone du tableau des compétences - X
     #
     ref = prg.classe.referentiel
-    competences = ref._dicoCompetences_simple["S"]
-#    print "competences", competences
-    tailleZComp[0] = wColComp * len(competences)
+    competences = ref._listesCompetences_simple["S"]
+    tailleZComp[0] = 0
+    for i, (k1, h1, l1) in enumerate(competences):
+        dx = wColComp/3
+        if len(l1) == 0:
+            l1 = [[k1, h1]]
+            dx = 0
+            
+        for k2, h2 in l1:
+            xComp[k2] = tailleZComp[0] #- 0.5 * wColComp  # position "gauche" de la colonne (relative)
+            cComp[k2] = i
+            tailleZComp[0] += wColComp
+        tailleZComp[0] += dx
+        
+    tailleZComp[0] -= dx
     posZComp[0] = posZOrganis[0] + tailleZOrganis[0] - tailleZComp[0]
-    for i, s in enumerate(competences.keys()):
-        xComp[s] = posZComp[0] + (i+0.5) * wColComp
     
-    
+    for s in xComp.keys():
+        xComp[s] += posZComp[0] # positions -> absolues
     
     
     #
@@ -305,7 +337,7 @@ def Draw(ctx, prg, mouchard = False):
     ctx.set_font_options(options)
     
     DefinirZones(prg, ctx)
-    DefinirCouleurs(prg.GetNbrPeriodes())
+#    DefinirCouleurs(prg.GetNbrPeriodes())
 #    print "DefinirCouleurs", IcoulPos
 
     #
@@ -498,46 +530,62 @@ def Draw(ctx, prg, mouchard = False):
     #  Tableau des compétenecs
     #    
 
-    competences = ref._dicoCompetences_simple["S"]
+    competences = ref._listesCompetences_simple["S"]
     prg.pt_caract_comp = []
     
-    if competences != []:
-        ctx.set_line_width(0.001 * COEF)
-        wc = tailleZComp[0]/len(competences)
-        _x = posZComp[0]
-        _y0, _y1 = posZElevesH[1], posZDeroul[1] + tailleZDeroul[1]
+    ctx.set_line_width(0.001 * COEF)
+    _x = _x0 = posZComp[0]
+    _y0, _y1 = posZElevesH[1], posZDeroul[1] + tailleZDeroul[1]
+    
+    prg.pt_caract_comp = []
+    
+#    print "competences", competences
+    for i, g1 in enumerate(competences):
+        k1, h1, l1 = g1
+        dx = wColComp/3
+        if len(l1) == 0:
+            l1 = [[k1, h1]]
+            dx = 0
         
-        for s in competences:
-#            s.rect=((_x, _y, wc, posZTaches[1] - posZComp[1]),)
+        coul = list(ICoulComp[i][:3])+[0.2]
+        for k2, h2 in l1:
+            #
+            # Lignes verticales et rectangles gris clair
+            #
             ctx.set_source_rgb(0, 0, 0)
-            ctx.move_to(_x, _y0)# + posZTaches[1] - posZComp[1])
+            ctx.move_to(_x, _y0)
             ctx.line_to(_x, _y1)
             ctx.stroke()
-            ctx.set_source_rgba(0.5, 0.5, 0.5, 0.2)
-#            if True :#estCompetenceRevue(prj.classe.typeEnseignement, s):
-#                ctx.set_source_rgba(ICoulComp['S'][0], ICoulComp['S'][1], ICoulComp['S'][2], 0.2)
-#            else:
-#                ctx.set_source_rgba(ICoulComp['C'][0], ICoulComp['C'][1], ICoulComp['C'][2], 0.2)
-            ctx.rectangle(_x, _y0,  
-                          wc, _y1-_y0)
+            ctx.set_source_rgba(*coul)
+            ctx.rectangle(_x, _y0, wColComp, _y1 -_y0)
             ctx.fill()
-            _x += wc
+            _x += wColComp
+        
+        # Dernière ligne
         ctx.set_source_rgb(0, 0, 0)
-        ctx.move_to(_x, _y0)# + posZTaches[1] - posZComp[1])
+        ctx.move_to(_x, _y0)
         ctx.line_to(_x, _y1)   
         ctx.stroke()
-        
+
         ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                               cairo.FONT_WEIGHT_NORMAL)
         ctx.set_source_rgb(0, 0, 0)
         ctx.set_line_width(0.001 * COEF)
-        p = tableauV(ctx, competences, posZComp[0], posZComp[1], 
-                tailleZComp[0], tailleZComp[1], 
-                0, nlignes = 0, va = 'c', ha = 'g', orient = 'v', coul = BCoulCompS)
         
-        prg.pt_caract_comp = getPts(p)
-
-
+#        # Titre famille de compétences
+#        ht = tailleZComp[1] / 4
+#        show_text_rect(ctx, k1, (_x0, posZComp[1], _x-_x0, ht), va = 'c', ha = 'c', b = 0.3, orient = 'h')
+        
+        l = [k2[0]  for k2 in l1]
+        p = tableauV(ctx, l, _x0, posZComp[1], 
+                     _x-_x0, tailleZComp[1], 
+                     0, nlignes = 0, va = 'c', ha = 'g', orient = 'v', 
+                     coul = ICoulComp[i], b = 0.3)
+        prg.pt_caract_comp.extend(getPts(p))
+            
+        _x += dx
+        _x0 = _x
+        
 
 
 
@@ -1324,70 +1372,25 @@ def DrawBoutonCompetence(ctx, prg, seq, listComp, y, h = None):
     """ Dessine les petits rectangles des indicateurs (en couleurs R et S)
          ... avec un petit décalage vertical pour que ce soit lisible en version N&B
     """
-    print "DrawBoutonCompetence", seq, listComp
+#    print "DrawBoutonCompetence", seq, listComp
     if h == None: # Toujours sauf pour les revues
         r = wColComp/3
         h = 2*r
     
     ctx.set_line_width (0.0004 * COEF)
     
-    
     for s in listComp:
-        x = xComp[s[1:]] - wColComp/2
+        x = xComp[s[1:]] #- wColComp/2
         
         rect = (x, y-h/2, wColComp, h, seq)
         prg.rectComp[s] = [rect]
         prg.pts_caract.append((x,y))
         
-#            dangle = 2*pi/len(indic)
-        dx = wColComp
-        ctx.set_source_rgba (1, 1, 1, 0)
-        ctx.rectangle(x+a*dx, y-h/2, dx, h)
+        ctx.set_source_rgba(*ICoulComp[cComp[s[1:]]])
+        ctx.rectangle(*rect[:4])
         ctx.fill_preserve ()
-        ctx.set_source_rgba (0, 0 , 0, 1)
+        ctx.set_source_rgba(0, 0, 0, 1)
         ctx.stroke()
 
 
        
-#######################################################################################  
-#def DrawBoutonCompetence2(ctx, objet, dicIndic, y):
-##    print "DrawBoutonCompetence", objet, dicIndic
-#    r = wColComp/3
-#    ctx.set_line_width (0.001)
-#    for s in dicIndic.keys():
-#        x = xComp[s]
-#        ctx.arc(x, y, r, 0, 2*pi)
-#        if True:#estCompetenceRevue(objet.parent.classe.typeEnseignement, s):
-##        if len(constantes.dicCompetences_prj_simple[tache.parent.classe.typeEnseignement][s]) > 2:
-#            ctx.set_source_rgba (ICoulComp['S'][0],ICoulComp['S'][1],ICoulComp['S'][2],1.0)
-#        else:
-#            ctx.set_source_rgba (ICoulComp['C'][0],ICoulComp['C'][1],ICoulComp['C'][2],1.0)
-#        ctx.fill_preserve ()
-#        ctx.set_source_rgba (0,0,0,1)
-#        ctx.stroke ()
-#        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-#                              cairo.FONT_WEIGHT_BOLD)
-#        if s in objet.parent.rectComp.keys() and objet.parent.rectComp[s] != None:
-#            objet.parent.rectComp[s].append((x-r, y-r, 2*r, 2*r, objet))
-#        else:
-#            objet.parent.rectComp[s] = [(x-r, y-r, 2*r, 2*r, objet)]
-#        
-#        objet.pts_caract.append((x,y))
-#        
-#        if True:#objet.GetTypeEnseignement() != "SSI":
-#            indic = dicIndic[s]
-#            dangle = 2*pi/len(indic)
-#            for a, i in enumerate(indic):
-#    #            ctx.move_to (x, y)
-#    #            ctx.rel_line_to (r*cos(dangle*a)+pi/2, r*sin(dangle*a)+pi/2)
-#    
-#                if i:
-#                    ctx.set_source_rgba (0,0,0,1)
-#                else:
-#                    ctx.set_source_rgba (1,1,1,1)
-#                ctx.arc(x+r*cos(-dangle*a-pi/2)/2, y+r*sin(-dangle*a-pi/2)/2, r/4, 0, 2*pi)
-#                ctx.fill()
-#                ctx.stroke()
-#
-#        else:
-#            show_text_rect_fix(ctx, str(dicIndic[s]), x-r, y-r, 2*r, 2*r, 0.006, 1, va = 'c', ha = 'c')

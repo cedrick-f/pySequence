@@ -1315,16 +1315,7 @@ class Referentiel(XMLelem):
             return [[u"1_ère", 5], [u"T_ale", 5]]
         return [[u"Année", 6]]
 
-#    ###########################################################
-#    def getNbrPeriodes(self):
-#        if self.Famille == 'CLG':
-#            return 5
-#        elif self.Famille in ['STI', 'SSI']:
-#            return 10
-#        return 10
-        
-    
-        
+
     
     
     
@@ -1333,23 +1324,7 @@ class Referentiel(XMLelem):
         """ Complète les données selon que le référentiel ait un tronc commun ou des options
             
             --> le "_" évite que les attributs ne soient sauvegardés dans les XML
-            
         """
-#        print "postTraiter", self, self.parties
-        
-#        self._parties = []
-#        for proj in self.projets.values():
-#            for part in proj.parties:
-#                if not part in self._parties:
-#                    self._parties.append(part)
-                    
-                    
-        
-            
-        
-        
-        
-                    
         for p in self.projets.values():
             p.postTraiter(self)
                     
@@ -1362,7 +1337,6 @@ class Referentiel(XMLelem):
             Exécuté lorsque tous les référentiels sont chargés !
             
             --> le "_" évite que les attributs ne soient sauvegardés dans les XML
-            
         """
         
         debug = False#self.Code == "STS_SN_IR"
@@ -1376,11 +1350,28 @@ class Referentiel(XMLelem):
 
         itemComp = self.dicoCompetences.items()
 
-        self._dicoCompetences_simple = {}
+        self._listesCompetences_simple = {}
+        
+        print "ref", self
         for code, comp in itemComp:
-            self._dicoCompetences_simple[code] = self.getDernierNiveauArbre(self.dicoCompetences[code].dicCompetences)
-            for comp, value in self._dicoCompetences_simple[code].items():
-                self._dicoCompetences_simple[code][comp] = self._dicoCompetences_simple[code][comp][0]
+#            print "   comp", code
+            dic = self.getPremierEtDernierNiveauArbre(self.dicoCompetences[code].dicCompetences)
+            liste = []
+#            print "    dic", dic
+            for k1, h1 in dic.items():
+#                print "      h1", h1
+                liste.append([k1, h1[0], []])
+                if type(h1[1]) == dict:
+                    for k2, h2 in h1[1].items(): 
+                        liste[-1][2].append([k2, h2[0]])
+                    liste[-1][2].sort()
+                    
+            liste.sort()
+            self._listesCompetences_simple[code] = liste
+        print "self._listesCompetences_simple", self._listesCompetences_simple['S']
+#            self._dicoCompetences_simple[code] = self.getDernierNiveauArbre(self.dicoCompetences[code].dicCompetences)
+#            for comp, value in self._dicoCompetences_simple[code].items():
+#                self._dicoCompetences_simple[code][comp] = self._dicoCompetences_simple[code][comp][0]
         
         
         
@@ -1526,11 +1517,13 @@ class Referentiel(XMLelem):
 
     #########################################################################
     def getCompetence(self, comp):
-        for disc, dic in self.dicoCompetences.items():
-            for c in dic.values():
-                cc = c.getCompetence(comp)
-                if cc is not None:
-                    return cc
+        print "getCompetence", comp
+        print self.dicoCompetences
+        return self.dicoCompetences[comp[0]].getCompetence(comp[1:])
+#        for disc, comp in self.dicoCompetences.items():
+#            cc = comp.getCompetence(comp)
+#            if cc is not None:
+#                return cc
             
 
 #    #########################################################################

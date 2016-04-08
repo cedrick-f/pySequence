@@ -33,6 +33,8 @@ code from :
 http://www.eerock.com/blog/learn-python-color-gradient-generator/
 '''
 
+import wx
+
 # the baseline list of colors to generate the gradient from...
 base_colors = [
     0xFFC3D6E5,
@@ -74,8 +76,8 @@ def run():
 
 # generate the gradient and returns the list of colors as packed ints.
 def generate(gradient, base_colors, desired_gradient_length):
-    print "generate", base_colors, desired_gradient_length
-    colors_per_step = 2*desired_gradient_length / len(base_colors)
+#    print "generate", base_colors, desired_gradient_length
+    colors_per_step = max(2, 2*desired_gradient_length / len(base_colors))
     
     # get the 'corrected' length of the gradient...
     num_colors = int(colors_per_step) * len(base_colors)
@@ -101,12 +103,31 @@ def generate(gradient, base_colors, desired_gradient_length):
             r = (1.0 - t) * r1 + t * r2
             g = (1.0 - t) * g1 + t * g2
             b = (1.0 - t) * b1 + t * b2
-            print '   0x{0:x},'.format(pack(r, g, b, a))
+#            print '   0x{0:x},'.format(pack(r, g, b, a))
 #            gradient.append(pack(a, r, g, b))
             gradient.append((r, g, b, a))
     
 
+def GetCouleurWx(C):
+    if type(C) == str:
+        return wx.NamedColour(C)
+    else:
+        return wx.Colour(C[0]*255, C[1]*255, C[2]*255)
 
+def GetCouleurHTML(C):
+    return GetCouleurWx(C).GetAsString(wx.C2S_CSS_SYNTAX)
+
+def Couleur2Str(C):
+    return ';'.join([str(c) for c in C])
+    
+def Str2Couleur(s):
+    return tuple([float(c) for c in s.split(';')])
+
+def Wx2Couleur(Wx):
+    return (float(Wx.Red())/255, float(Wx.Green())/255, float(Wx.Blue())/255, float(Wx.Alpha())/255)
+
+def Couleur2Wx(C):
+    return wx.Colour(C[0]*255, C[1]*255, C[2]*255, C[3]*255)
 
 # main entry point
 if __name__ == '__main__':
