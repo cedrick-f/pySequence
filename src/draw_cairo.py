@@ -1130,13 +1130,13 @@ def DrawPeriodes(ctx, rect, pos = None, periodes = [[u"Année", 5]], projets = {
         ctx.rectangle (xc[0], y+ht/2+dx, w, h)
         rects.append((xc[0], y+ht/2+dx, w, h))
         if xc[1]:
-            ctx.set_source_rgba (BcoulPos[p][0], BcoulPos[p][1], BcoulPos[p][2], BcoulPos[p][3])
+            ctx.set_source_rgba(*BcoulPos[p])
             ctx.fill_preserve ()
-            ctx.set_source_rgba (0, 0, 0, 1)
+            ctx.set_source_rgba(0, 0, 0, 1)
         else:
-            ctx.set_source_rgba (IcoulPos[p][0], IcoulPos[p][1], IcoulPos[p][2], IcoulPos[p][3])
+            ctx.set_source_rgba(*(IcoulPos[p]))
             ctx.fill_preserve ()
-            ctx.set_source_rgba (BcoulPos[p][0], BcoulPos[p][1], BcoulPos[p][2], BcoulPos[p][3])
+            ctx.set_source_rgba(*BcoulPos[p])
         ctx.stroke ()    
         
         if xc[3] != "":
@@ -1203,9 +1203,9 @@ def curve_rect_titre(ctx, titre, rect, coul_bord, coul_int, taille_font = 0.01 *
     c = curve_rect(ctx, x0, y0, rect_width, rect_height, rayon, 
                ouverture = min(width + fheight, rect_width-2*rayon))
     
-    ctx.set_source_rgba (coul_int[0], coul_int[1], coul_int[2], coul_int[3])
+    ctx.set_source_rgba (*coul_int)
     ctx.fill_preserve ()
-    ctx.set_source_rgba (coul_bord[0], coul_bord[1], coul_bord[2], coul_bord[3])
+    ctx.set_source_rgba (*coul_bord)
     ctx.stroke ()
     
     xc = x0 + rayon
