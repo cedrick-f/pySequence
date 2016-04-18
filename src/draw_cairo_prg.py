@@ -43,7 +43,7 @@ import cairo
 
 from draw_cairo import LargeurTotale, font_family, curve_rect_titre, show_text_rect_fix, show_text_rect, \
                         boule, getHoraireTxt, liste_code_texte, rectangle_plein, barreH, tableauV, minFont, maxFont, tableauH, \
-                        DrawPeriodes, COEF, info, \
+                        DrawPeriodes, COEF, info, Zone, \
                         BcoulPos, IcoulPos, ICoulComp, DefinirCouleurs
 
 from math import log
@@ -304,11 +304,11 @@ def calculCoefCalcH(prg, ctx, hm):
         a = (tailleZTaches[1] - hFixe - b*nt) / h
 
     
-######################################################################################  
-def getCoulComp(partie, alpha = 1.0):
-    if partie in ICoulComp.keys():
-        return (ICoulComp[partie][0], ICoulComp[partie][1], ICoulComp[partie][2], alpha)  
-    return (ICoulComp[''][0], ICoulComp[''][1], ICoulComp[''][2], alpha)
+#######################################################################################  
+#def getCoulComp(partie, alpha = 1.0):
+#    if partie in ICoulComp.keys():
+#        return (ICoulComp[partie][0], ICoulComp[partie][1], ICoulComp[partie][2], alpha)  
+#    return (ICoulComp[''][0], ICoulComp[''][1], ICoulComp[''][2], alpha)
     
 ######################################################################################  
 def getPts(lst_rect):
@@ -343,9 +343,10 @@ def Draw(ctx, prg, mouchard = False):
     #
     #    pour stocker des zones caractéristiques (à cliquer, ...)
     #
+    prg.zones_sens = []
     prg.pt_caract = []
-    prg.rect = []
-    prg.rectComp = {}
+#    prg.rect = []
+#    prg.rectComp = {}
     
     
     #
@@ -387,11 +388,16 @@ def Draw(ctx, prg, mouchard = False):
     taillePos[0] = taillePro[0]/2
     ctx.set_line_width (0.0015 * COEF)
     r = (posPos[0], posPos[1], taillePos[0], taillePos[1])
-    prg.rectPos = DrawPeriodes(ctx, r, prg.GetPositions(), ref.periodes,
+    rects = DrawPeriodes(ctx, r, prg.GetPositions(), ref.periodes,
 #                               [p.periode for p in prj.classe.referentiel.projets.values()],  
                                ref.projets,
                                tailleTypeEns = tailleTypeEns)
-    prg.rect.append(posPos+taillePos)
+#    prg.rect.append(posPos+taillePos)
+    
+    for i, r in enumerate(rects):
+        prg.zones_sens.append(Zone([r], param = "POS"+str(i)))
+    prg.zones_sens.append(Zone([r], param = "POS"))
+    
 
 
 
@@ -461,18 +467,16 @@ def Draw(ctx, prg, mouchard = False):
                              gras = g, lstCoul = c, va = 'c')
 
     for i, p in enumerate(prg.equipe):
-        p.rect = [r[i]]
+        prg.zones_sens.append(Zone([r[i]], obj = p))
+    prg.zones_sens.append(Zone([rectEqu], param = "EQU"))
+#        p.rect = [r[i]]
 #        prj.pts_caract.append(getPts(r))
-    
-#    print "     5 ", time.time() - tps
-
-
 
 
     #
     #  Calendrier ???
     #
-    prg.pt_caract.append(posPro)
+#    prg.pt_caract.append(posPro)
     rectPro = posPro + taillePro
     prg.pt_caract.append(curve_rect_titre(ctx, u"Calendrier ?",  rectPro, BcoulPro, IcoulPro, fontPro))
     ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
@@ -480,7 +484,8 @@ def Draw(ctx, prg, mouchard = False):
     show_text_rect(ctx, constantes.ellipsizer(u"", constantes.LONG_MAX_PROBLEMATIQUE), 
                    rectPro, ha = 'g', b = 0.5,
                    fontsizeMinMax = (-1, 0.016 * COEF))
-    prg.rect.append(rectPro)
+#    prg.rect.append(rectPro)
+    prg.zones_sens.append(Zone([rectPro], param = "CAL"))
 
 
 
@@ -489,10 +494,10 @@ def Draw(ctx, prg, mouchard = False):
     #
     #  Années
     #
-    prg.pt_caract = []
-    prg.pts_caract = []
+#    prg.pt_caract = []
+#    prg.pts_caract = []
     rectNom = posNom+tailleNom
-    prg.pts_caract.append(curve_rect_titre(ctx, u"Années scolaires",  
+    prg.pt_caract.append(curve_rect_titre(ctx, u"Années scolaires",  
                                                    rectNom, BcoulNom, IcoulNom, fontNom))
     ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                        cairo.FONT_WEIGHT_NORMAL)
@@ -500,8 +505,8 @@ def Draw(ctx, prg, mouchard = False):
                    rectNom, ha = 'c', b = 0.2,
                    fontsizeMinMax = (-1, 0.016 * COEF))
     
-    prg.rect.append(rectNom)
-    prg.pts_caract.append(posNom)
+    prg.zones_sens.append(Zone([rectNom], param = "ANN"))
+#    prg.pt_caract.append(posNom)
 
 
 
@@ -510,18 +515,19 @@ def Draw(ctx, prg, mouchard = False):
     #
     #  divers???
     #
-    prg.pt_caract = []
+#    prg.pt_caract = []
     rectSup = posSup+tailleSup
-    prg.pts_caract.append(curve_rect_titre(ctx, "divers",  
-                                           rectSup, BcoulSup, IcoulSup, fontSup))
+    pt = curve_rect_titre(ctx, "divers",  
+                          rectSup, BcoulSup, IcoulSup, fontSup)
     ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                        cairo.FONT_WEIGHT_NORMAL)
     show_text_rect(ctx, "", 
                    rectSup, ha = 'c', b = 0.2,
                    fontsizeMinMax = (-1, 0.016 * COEF))
     
-    prg.rect.append(rectSup)
-    prg.pts_caract.append(posSup)
+    prg.zones_sens.append(Zone([rectSup], pt_caract = pt, param = 'DIV'))
+#    prg.rect.append(rectSup)
+#    prg.pts_caract.append(posSup)
 
 
 
@@ -531,13 +537,10 @@ def Draw(ctx, prg, mouchard = False):
     #    
 
     competences = ref._listesCompetences_simple["S"]
-    prg.pt_caract_comp = []
     
     ctx.set_line_width(0.001 * COEF)
     _x = _x0 = posZComp[0]
     _y0, _y1 = posZElevesH[1], posZDeroul[1] + tailleZDeroul[1]
-    
-    prg.pt_caract_comp = []
     
 #    print "competences", competences
     for i, g1 in enumerate(competences):
@@ -552,14 +555,21 @@ def Draw(ctx, prg, mouchard = False):
             #
             # Lignes verticales et rectangles gris clair
             #
+            rect = (_x, _y0, wColComp, _y1 -_y0)
             ctx.set_source_rgb(0, 0, 0)
             ctx.move_to(_x, _y0)
             ctx.line_to(_x, _y1)
             ctx.stroke()
             ctx.set_source_rgba(*coul)
-            ctx.rectangle(_x, _y0, wColComp, _y1 -_y0)
+            ctx.rectangle(*rect[:4])
             ctx.fill()
+
+#            prg.zones_sens.append(Zone([rect], param = k2))
+#            prg.rectComp[k2] = [rect]
+#            prg.pts_caract.append((_x,_y0))
+            
             _x += wColComp
+            
         
         # Dernière ligne
         ctx.set_source_rgb(0, 0, 0)
@@ -577,11 +587,16 @@ def Draw(ctx, prg, mouchard = False):
 #        show_text_rect(ctx, k1, (_x0, posZComp[1], _x-_x0, ht), va = 'c', ha = 'c', b = 0.3, orient = 'h')
         
         l = [k2[0]  for k2 in l1]
-        p = tableauV(ctx, l, _x0, posZComp[1], 
-                     _x-_x0, tailleZComp[1], 
-                     0, nlignes = 0, va = 'c', ha = 'g', orient = 'v', 
-                     coul = ICoulComp[i], b = 0.3)
-        prg.pt_caract_comp.extend(getPts(p))
+        rects = tableauV(ctx, l, _x0, posZComp[1], 
+                         _x-_x0, tailleZComp[1], 
+                         0, nlignes = 0, va = 'c', ha = 'g', orient = 'v', 
+                         coul = ICoulComp[i], b = 0.3)
+        
+        for i, r in enumerate(rects):
+            prg.zones_sens.append(Zone([r], param = l[i]))
+        
+        
+#        prg.pt_caract_comp.extend(getPts(p))
             
         _x += dx
         _x0 = _x
@@ -615,7 +630,7 @@ def Draw(ctx, prg, mouchard = False):
     h = hEleves/2
     
     
-    prg.pt_caract_eleve = []
+#    prg.pt_caract_eleve = []
     if len(l) > 0:
         
 
@@ -1156,21 +1171,18 @@ def DrawTacheRacine(ctx, prg, lienSeq, y):
     #
     # Rectangles actifs et points caractéristiques : initialisation
     #
-    lienSeq.pts_caract = []
-    lienSeq.rect = []
+#    lienSeq.pts_caract = []
+#    lienSeq.rect = []
     
-
-
-
-
+    
     #
     # Tracé du cadre de la tâche
     #
     x = posZTaches[0]
     w = tailleZTaches[0]
 
-
-    lienSeq.pts_caract.append((x, y))
+    
+#    lienSeq.pts_caract.append((x, y))
         
     ctx.set_line_width(0.002 * COEF)
 #    print "BcoulPos", BcoulPos
@@ -1212,8 +1224,8 @@ def DrawTacheRacine(ctx, prg, lienSeq, y):
                        ha = 'g', fontsizeMinMax = (minFont, 0.015 * COEF))
     
     
-    lienSeq.rect.append([x, y, tailleZTaches[0], h])
-        
+#    lienSeq.rect.append([x, y, tailleZTaches[0], h])
+    prg.zones_sens.append(Zone([rect], obj = lienSeq))
         
     #
     # Tracé des croisements "Tâches" et "Eleves"
@@ -1382,12 +1394,11 @@ def DrawBoutonCompetence(ctx, prg, seq, listComp, y, h = None):
     for s in listComp:
         x = xComp[s[1:]] #- wColComp/2
         
-        rect = (x, y-h/2, wColComp, h, seq)
-        prg.rectComp[s] = [rect]
-        prg.pts_caract.append((x,y))
+        rect = (x, y-h/2, wColComp, h)
+        prg.zones_sens.append(Zone([rect], obj = seq, param = s[1:]))
         
         ctx.set_source_rgba(*ICoulComp[cComp[s[1:]]])
-        ctx.rectangle(*rect[:4])
+        ctx.rectangle(*rect)
         ctx.fill_preserve ()
         ctx.set_source_rgba(0, 0, 0, 1)
         ctx.stroke()

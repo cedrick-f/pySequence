@@ -806,7 +806,7 @@ TIP_PB_LIMITE = u"\n(%s caractères maxi)" %str(LONG_MAX_PROBLEMATIQUE)
 #                     u"- supports de communication."                             
       
 #<?xml version="1.0" encoding="utf-8"?>
-BASE_FICHE_HTML = """
+BASE_FICHE_HTML_ELEVE = """
 <HTML>
     <p style="text-align: center;"><font size="12"><b>Elève</b></font></p>
 <p id="nom">Nom-Prénom</p>
@@ -826,7 +826,21 @@ BASE_FICHE_HTML = """
 </table>
 </HTML>
 """
-                               
+
+BASE_FICHE_HTML_SEQ = """
+<HTML>
+    <p style="text-align: center;"><font size="12"><b>Séquence</b></font></p>
+<p id="nom">Intitulé</p>
+<p id="ap"></p>
+</HTML>
+"""
+   
+BASE_FICHE_HTML = """
+<HTML>
+</HTML>
+"""
+
+                            
 xmlVide = """
 <?xml version="1.0" encoding="UTF-8"?>
 <richtext version="1.0.0.0" xmlns="http://www.wxwidgets.org">

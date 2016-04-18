@@ -68,8 +68,8 @@ import app
 ####################################################################################
 
 class SeqApp(app.SingleInstApp):
-#    def OnInit(self):
-#        wx.Log.SetLogLevel(0) # ?? Pour éviter le plantage de wxpython 3.0 avec Win XP pro ???
+    def OnInit(self):
+        wx.Log.SetLogLevel(0) # ?? Pour éviter le plantage de wxpython 3.0 avec Win XP pro ???
 #        self.locale = wx.Locale(wx.LANGUAGE_FRENCH)
 #
 ##    def StartApp(self):
@@ -88,7 +88,7 @@ class SeqApp(app.SingleInstApp):
 #        if self.splash:
 #            self.splash.Destroy()
 #            
-#        return True
+        return True
         
     ######################################################################################  
     def GetSplash(self):
@@ -418,9 +418,9 @@ except ImportError:
 # des widgets wx évolués "faits maison"
 from widgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_ENTIER_POS, \
                     messageErreur, getNomFichier, pourCent2, testRel, \
-                    rallonge, remplaceCode2LF, \
+                    rallonge, remplaceCode2LF, dansRectangle, \
                     StaticBoxButton, TextCtrl_Help, CloseFenHelp, \
-                    remplaceLF2Code, dansRectangle, messageInfo, messageYesNo#, chronometrer
+                    remplaceLF2Code, messageInfo, messageYesNo#, chronometrer
 
 import Options
 
@@ -3076,7 +3076,7 @@ Your browser does not support the HTML5 canvas tag.
       
             
         if new == 2: # On vient de cliquer sur la page "Bulletins Officiels"
-            self.pageBO.Construire(REFERENTIELS[self.projet.classe.typeEnseignement])
+            self.pageBO.Construire(REFERENTIELS[self.progression.classe.typeEnseignement])
 
         elif new == 0: # On vient de cliquer sur la fiche
             self.fiche.Redessiner()
@@ -3346,8 +3346,8 @@ class BaseFiche(wx.ScrolledWindow):
     def OnLeave(self, evt = None):
         if hasattr(self, 'call') and self.call.IsRunning():
             self.call.Stop()
-#        if hasattr(self, 'tip') 
-#            self.tip.Show(False)
+        if hasattr(self, 'tip'):
+            self.tip.Show(False)
 
     ######################################################################################################
     def OnEnter(self, event):
@@ -3737,12 +3737,16 @@ class FicheProgression(BaseFiche):
     ######################################################################################################
     def GetDoc(self):
         return self.progression
+    
+    ######################################################################################################
+    def OnLeave(self, evt = None):
+        self.GetDoc().HideTip()
             
     ######################################################################################################
     def OnMove(self, evt):
-        if hasattr(self, 'tip'):
-            self.tip.Show(False)
-            self.call.Stop()
+#        if hasattr(self, 'tip'):
+#            self.tip.Show(False)
+#            self.call.Stop()
         
         x, y = evt.GetPosition()
         _x, _y = self.CalcUnscrolledPosition(x, y)
@@ -3752,52 +3756,56 @@ class FicheProgression(BaseFiche):
         #
         # Cas général
         #
-        branche = self.GetDoc().HitTest(xx, yy)
-        if branche != None:
-            elem = branche.GetData()
-            if hasattr(elem, 'tip'):
-                x, y = self.ClientToScreen((x, y))
-                elem.tip.Position((x+1,y+1), (0,0))
-                self.call = wx.CallLater(500, elem.tip.Show, True)
-                self.tip = elem.tip
-                evt.Skip()
-                return    
+        zone = self.GetDoc().HitTest(xx, yy)
+        if zone is not None:
+            x, y = self.ClientToScreen((x, y))
+            self.GetDoc().Move(zone, x, y)
+        else:
+            self.GetDoc().HideTip()
+#            elem = branche.GetData()
+#            if hasattr(elem, 'tip'):
+#                x, y = self.ClientToScreen((x, y))
+#                elem.tip.Position((x+1,y+1), (0,0))
+#                self.call = wx.CallLater(500, elem.tip.Show, True)
+#                self.tip = elem.tip
+#                evt.Skip()
+#                return    
         
         #
         # Cas particulier des compétences
         #
-        kCompObj = self.GetDoc().HitTestCompetence(xx, yy)
-        if kCompObj != None:
-            kComp, obj = kCompObj
-            if hasattr(self, 'popup'):
-#                for tip in self.tip_indic:
-#                    tip.Destroy()
-#                self.tip_indic = []
-                x, y = self.ClientToScreen((x, y))
-#                type_ens = self.projet.classe.typeEnseignement
-         
-                competence = self.GetDoc().GetReferentiel().getCompetence(kComp)
-                        
-                intituleComp = competence[0]
-                
-                k = kComp.split(u"\n")
-                if len(k) > 1:
-                    titre = u"Compétences\n"+u"\n".join(k)
-                else:
-                    titre = u"Compétence\n"+k[0]
-                self.popup.SetTitre(titre)
-             
-                intituleComp = "\n".join([textwrap.fill(ind, 50) for ind in intituleComp.split(u"\n")]) 
-             
-                self.popup.SetTexte(intituleComp, self.tip_comp)
-                
-         
-                
-                self.popup.Fit()
-
-                self.popup.Position((x,y), (0,0))
-                self.call = wx.CallLater(500, self.popup.Show, True)
-                self.tip = self.popup
+#        kCompObj = self.GetDoc().HitTestCompetence(xx, yy)
+#        if kCompObj != None:
+#            kComp, obj = kCompObj
+#            if hasattr(self, 'popup'):
+##                for tip in self.tip_indic:
+##                    tip.Destroy()
+##                self.tip_indic = []
+#                x, y = self.ClientToScreen((x, y))
+##                type_ens = self.projet.classe.typeEnseignement
+#         
+#                competence = self.GetDoc().GetReferentiel().getCompetence(kComp)
+#                        
+#                intituleComp = competence[0]
+#                
+#                k = kComp.split(u"\n")
+#                if len(k) > 1:
+#                    titre = u"Compétences\n"+u"\n".join(k)
+#                else:
+#                    titre = u"Compétence\n"+k[0]
+#                self.popup.SetTitre(titre)
+#             
+#                intituleComp = "\n".join([textwrap.fill(ind, 50) for ind in intituleComp.split(u"\n")]) 
+#             
+#                self.popup.SetTexte(intituleComp, self.tip_comp)
+#                
+#         
+#                
+#                self.popup.Fit()
+#
+#                self.popup.Position((x,y), (0,0))
+#                self.call = wx.CallLater(500, self.popup.Show, True)
+#                self.tip = self.popup
             
         evt.Skip()
 
@@ -4095,7 +4103,7 @@ class PanelPropriete_Sequence(PanelPropriete):
         self.position.SetMax(self.sequence.GetReferentiel().getNbrPeriodes()-1)
         self.sequence.position = min(self.sequence.position, self.sequence.GetReferentiel().getNbrPeriodes()-1)
         self.position.SetValue(self.sequence.position)
-        self.bmp.SetBitmap(self.getBitmapPeriode(250))
+        self.bmp.SetBitmap(self.sequence.getBitmapPeriode(250))
         
         if self.sequence.GetReferentiel().domaines:
             for cb, t in [(self.cbM, "M"), (self.cbE, "E"), (self.cbI, "I")]:
@@ -6322,8 +6330,17 @@ class PanelPropriete_LienSequence(PanelPropriete):
 
     #############################################################################            
     def construire(self):
+        
         #
-        # Sélection du ficier de séquence
+        # Intitulé de la séquence
+        #
+        sbi = wx.StaticBox(self, -1, u"Intitulé de la séquence", size = (200,-1))
+        sbsi = wx.StaticBoxSizer(sbi,wx.HORIZONTAL)
+        self.intit = wx.StaticText(self, -1, u"")
+        sbsi.Add(self.intit)
+        
+        #
+        # Sélection du fichier de séquence
         #
         sb0 = wx.StaticBox(self, -1, u"Fichier de la séquence", size = (200,-1))
         sbs0 = wx.StaticBoxSizer(sb0,wx.HORIZONTAL)
@@ -6342,7 +6359,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
         #
         titre = wx.StaticBox(self, -1, u"Position")
         sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
-        self.bmp = wx.StaticBitmap(self, -1, self.getBitmapPeriode(300))
+        self.bmp = wx.StaticBitmap(self, -1, self.sequence.getBitmapPeriode(300))
         sb.Add(self.bmp)
         
         
@@ -6353,16 +6370,18 @@ class PanelPropriete_LienSequence(PanelPropriete):
         sb1 = wx.StaticBox(self, -1, u"Aperçu de la séquence", size = (210,297))
         sbs1 = wx.StaticBoxSizer(sb1,wx.HORIZONTAL)
         sbs1.SetMinSize((210,297))
-        self.apercu = wx.StaticBitmap(self, -1, wx.NullBitmap)
+        self.apercu = wx.StaticBitmap(self, -1, self.sequence.GetApercu(210))
         sbs1.Add(self.apercu, 1)
         
         
-        self.sizer.Add(sbs0, (0,0), flag = wx.EXPAND)
-        self.sizer.Add(sb, (1,0), flag = wx.ALIGN_TOP|wx.ALIGN_LEFT|wx.LEFT, border = 2)
-        self.sizer.Add(sbs1, (0,1), (2,1))#, flag = wx.EXPAND)
+        self.sizer.Add(sbsi, (0,0), flag = wx.EXPAND)
+        self.sizer.Add(sbs0, (1,0), flag = wx.EXPAND)
+        self.sizer.Add(sb, (2,0), flag = wx.ALIGN_TOP|wx.ALIGN_LEFT|wx.LEFT|wx.EXPAND, border = 2)
+        self.sizer.Add(sbs1, (0,1), (3,1), flag = wx.EXPAND)
         
         self.sizer.Layout()
         
+
     #############################################################################            
     def OnClick(self, event):
         mesFormats = u"Séquence (.seq)|*.seq|" \
@@ -6404,8 +6423,13 @@ class PanelPropriete_LienSequence(PanelPropriete):
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
         print "MiseAJour PanelPropriete_LienSequence", self.lien
+        
+        
+        self.intit.SetLabel(self.sequence.intitule)
+        
         self.texte.SetValue(toSystemEncoding(self.lien.path))
 
+    
 #        try:
         if os.path.isfile(self.lien.path):
             fichier = open(self.lien.path,'r')
@@ -6442,34 +6466,34 @@ class PanelPropriete_LienSequence(PanelPropriete):
         
         
         # La séquence
-        if self.sequence is None:
-            classe = Classe(self.lien.GetApp())
-            self.sequence = Sequence(self.lien.GetApp(), classe)
-            classe.SetDocument(self.sequence)
-            root = ET.parse(fichier).getroot()
-            sequence = root.find("Sequence")
-            if sequence == None:
-                self.sequence.setBranche(root)
-            else:
-                self.sequence.setBranche(sequence)
-            
-                # La classe
-                classe = root.find("Classe")
-                self.sequence.classe.setBranche(classe)
-                self.sequence.SetCodes()
-                self.sequence.SetLiens()
-                self.sequence.VerifPb()
-            fichier.close()
+#        if self.sequence is None:
+#            classe = Classe(self.lien.GetApp())
+#            self.sequence = Sequence(self.lien.GetApp(), classe)
+#            classe.SetDocument(self.sequence)
+#            root = ET.parse(fichier).getroot()
+#            sequence = root.find("Sequence")
+#            if sequence == None:
+#                self.sequence.setBranche(root)
+#            else:
+#                self.sequence.setBranche(sequence)
+#            
+#                # La classe
+#                classe = root.find("Classe")
+#                self.sequence.classe.setBranche(classe)
+#                self.sequence.SetCodes()
+#                self.sequence.SetLiens()
+#                self.sequence.VerifPb()
+#            fichier.close()
 
     
-        if self.sequence:
-            print "bmp", self.sequence
-            bmp = self.sequence.GetApercu().ConvertToImage().Scale(210, 297).ConvertToBitmap()
-            self.apercu.SetBitmap(bmp)
-            self.lien.SetLabel()
-            self.lien.SetImage(bmp)
-            self.lien.SetLien()
-            self.lien.SetTitre(self.sequence.intitule)
+#        if self.sequence:
+        print "bmp", self.sequence
+        bmp = self.sequence.GetApercu(210)
+        self.apercu.SetBitmap(bmp)
+        self.lien.SetLabel()
+#            self.lien.SetImage(bmp)
+#            self.lien.SetLien()
+#            self.lien.SetTitre(self.sequence.intitule)
 
         self.Layout()
         
@@ -6479,12 +6503,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
         return True
     
     
-    #############################################################################            
-    def getBitmapPeriode(self, larg):
-        imagesurface = draw_cairo_seq.getBitmapPeriode(larg, self.sequence.position,
-                                                       self.sequence.GetReferentiel().periodes, 
-                                                       prop = 5)
-        return getBitmapFromImageSurface(imagesurface)
+    
     
     
     
@@ -12735,10 +12754,10 @@ class LienSequence():
         #
         # Création du Tip (PopupInfo)
         #
-        self.tip = PopupInfo2(self.parent.app, u"Séquence requise")
-        self.tip_titre = self.tip.CreerTexte((1,0))
-        self.tip_titrelien, self.tip_ctrllien = self.tip.CreerLien((2,0))
-        self.tip_image = self.tip.CreerImage((3,0))
+        self.ficheHTML = self.GetFicheHTML()
+        self.tip = PopupInfo(self.parent.app, self.ficheHTML)
+
+        
     
     ######################################################################################  
     def __eq__(self, lien):
@@ -12769,7 +12788,7 @@ class LienSequence():
     
     ######################################################################################  
     def setBranche(self, branche):
-        print "setBranche LienSequence", self
+#        print "setBranche LienSequence", self
         self.path = toFileEncoding(branche.get("dir", ""))
 #        if hasattr(self, 'panelPropriete'):
 #            self.panelPropriete.MiseAJour()
@@ -12804,26 +12823,53 @@ class LienSequence():
         if hasattr(self, 'codeBranche'):
             self.codeBranche.SetLabel(self.sequence.intitule)
         
-    ######################################################################################  
-    def SetImage(self, bmp):
-        self.tip.SetImage(bmp, self.tip_image)
+#    ######################################################################################  
+#    def SetImage(self, bmp):
+#        self.tip.SetImage(bmp, self.tip_image)
+#
+#
+#    ######################################################################################  
+#    def SetLien(self):
+#        self.tip.SetLien(Lien(self.path, 's'), self.tip_titrelien, self.tip_ctrllien)
 
-    ######################################################################################  
-    def SetLien(self):
-        self.tip.SetLien(Lien(self.path, 's'), self.tip_titrelien, self.tip_ctrllien)
-    
-    ######################################################################################  
-    def SetTitre(self, titre):
-        self.tip.SetTexte(titre, self.tip_titre)
-        
+
+#    ######################################################################################  
+#    def SetTitre(self, titre):
+#        self.tip.SetTexte(titre, self.tip_titre)
+
+
     ######################################################################################  
     def GetNomFichier(self):
         return os.path.splitext(os.path.basename(self.path))[0]
-     
+
+
     ######################################################################################  
     def HitTest(self, x, y):
         if hasattr(self, 'rect') and dansRectangle(x, y, self.rect)[0]:
             return self.branche
+
+
+    ######################################################################################  
+    def GetFicheHTML(self):
+        return constantes.BASE_FICHE_HTML_SEQ
+
+
+    ######################################################################################  
+    def SetTip(self):
+        # Tip
+        seq = self.sequence
+        self.ficheHTML = self.GetFicheHTML()
+        self.ficheXML = parseString(self.ficheHTML.encode('utf-8', errors="ignore"))
+        forceID(self.ficheXML)
+        SetWholeText(self.ficheXML, "nom", seq.intitule)
+        
+        self.tip.XML_AjouterImg(self.ficheXML, "ap", self.sequence.GetApercu(300)) 
+        
+        self.tip.SetPage(self.ficheXML.toxml())
+
+
+
+
 
 
 
@@ -13531,17 +13577,9 @@ class BaseDoc():
             return r""
     
     ######################################################################################  
-    def GetApercu(self, mult = 3):
-        imagesurface = self.draw.get_apercu(self, mult)
-#        imagesurface = cairo.ImageSurface(cairo.FORMAT_ARGB32,  210*mult, 297*mult)#cairo.FORMAT_ARGB32,cairo.FORMAT_RGB24
-#        ctx = cairo.Context(imagesurface)
-#        ctx.scale(297*mult, 297*mult) 
-#        self.draw.Draw(ctx, self)
-        bmp = getBitmapFromImageSurface(imagesurface)
-        
-    
-    
-        return bmp
+    def GetApercu(self, w = 210):
+        imagesurface = self.draw.get_apercu(self, w)
+        return getBitmapFromImageSurface(imagesurface).ConvertToImage().Scale(w, w*1.414).ConvertToBitmap()
     
     ######################################################################################  
     def restaurer(self, root):
@@ -14443,6 +14481,12 @@ class Sequence(BaseDoc, Objet_sequence):
                 if dansRectangle(x, y, (rectPos,))[0]:
                     return i
 
+    #############################################################################            
+    def getBitmapPeriode(self, larg):
+        imagesurface = draw_cairo_seq.getBitmapPeriode(larg, self.position,
+                                                       self.GetReferentiel().periodes, 
+                                                       prop = 5)
+        return getBitmapFromImageSurface(imagesurface)
 
 
     #############################################################################
@@ -15993,6 +16037,16 @@ class Progression(BaseDoc, Objet_sequence):
         
         self.MiseAJourTypeEnseignement()
         
+        #
+        # Création du Tip (PopupInfo)
+        #
+        self.ficheHTML = self.GetFicheHTML()
+#        print "***\n", self.ficheHTML
+        self.ficheXML = parseString(self.ficheHTML.encode('utf-8', errors="ignore"))
+       
+        forceID(self.ficheXML)
+        self.tip = PopupInfo(self.GetApp(), self.ficheHTML)
+        
         self.undoStack.do(u"Création de la progression")
         
     ######################################################################################  
@@ -16391,8 +16445,68 @@ class Progression(BaseDoc, Objet_sequence):
     
     
     ######################################################################################  
+    def HideTip(self):
+        if hasattr(self, 'tip'):
+            self.tip.Show(False)
+        if hasattr(self, 'call'):
+            self.call.Stop()
+    
+    ######################################################################################  
+    def Move(self, zone, x, y):
+#        print "Move", zone
+        self.HideTip()
+            
+        if zone.obj is not None:
+            if hasattr(zone.obj, "branche"):
+                elem = zone.obj.branche.GetData()
+#                print "  elem :", elem
+                if hasattr(elem, 'tip'):
+                    elem.SetTip()
+                    elem.tip.Position((x+1,y+1), (0,0))
+                    self.call = wx.CallLater(500, elem.tip.Show, True)
+                    self.tip = elem.tip
+                    return
+                
+            elif isinstance(zone.obj, LienSequence):
+                if hasattr(self, 'popup'):
+    #                for tip in self.tip_indic:
+    #                    tip.Destroy()
+    #                self.tip_indic = []
+             
+                    competence = self.GetReferentiel().getCompetence(zone.param)
+                    intituleComp = competence[0]
+                    
+                    k = zone.param.split(u"\n")
+                    if len(k) > 1:
+                        titre = u"Compétences\n"+u"\n".join(k)
+                    else:
+                        titre = u"Compétence\n"+k[0]
+                    self.popup.SetTitre(titre)
+                 
+                    intituleComp = "\n".join([textwrap.fill(ind, 50) for ind in intituleComp.split(u"\n")]) 
+                 
+                    self.popup.SetTexte(intituleComp, self.tip_comp)
+
+                    self.popup.Fit()
+    
+                    self.popup.Position((x,y), (0,0))
+                    self.call = wx.CallLater(500, self.popup.Show, True)
+                    self.tip = self.popup
+                
+        elif zone.param == "EQU":
+            pass
+            
+            
+            
+    ######################################################################################  
     def HitTest(self, x, y):
-#        print "HitTest Progression"  
+#        print "HitTest Progression"
+        for z in self.zones_sens:
+            if z.dansRectangle(x, y):
+#                print "   xxx", z
+                return z
+        return
+        
         if False:#dansRectangle(x, y, (draw_cairo_prg.posPre + draw_cairo_prg.taillePre,))[0]:
             for ls in self.prerequisSeance:
                 h = ls.HitTest(x,y)
@@ -16425,13 +16539,19 @@ class Progression(BaseDoc, Objet_sequence):
     def HitTestCompetence(self, x, y):
         if hasattr(self, 'rectComp'):
             for k, ro in self.rectComp.items():
-                rect = [r[:-1] for r in ro]
+                rect = [r[:4] for r in ro]
                 obj = [o[-1] for o in ro]
                 ok, i = dansRectangle(x, y, rect)
                 if ok:
                     return k, obj[i]
 
 
+    ######################################################################################  
+    def GetFicheHTML(self):
+
+        ficheHTML = constantes.BASE_FICHE_HTML
+        
+        return ficheHTML
 
             
 ####################################################################################
@@ -20109,7 +20229,7 @@ class Eleve(Personne, Objet_sequence):
 <td><font color = "%(coul)s"><em>%(nom)s :</em></font></td>
 </tr>""" %dic)
 
-        ficheHTML = constantes.BASE_FICHE_HTML
+        ficheHTML = constantes.BASE_FICHE_HTML_ELEVE
         
         
         t = u""

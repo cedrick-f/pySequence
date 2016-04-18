@@ -31,6 +31,9 @@
 '''
 code from :
 http://www.eerock.com/blog/learn-python-color-gradient-generator/
+
+choix des couleurs :
+http://www.colorzilla.com/gradient-editor/
 '''
 
 import wx

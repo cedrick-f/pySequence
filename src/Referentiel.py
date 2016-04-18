@@ -1352,7 +1352,7 @@ class Referentiel(XMLelem):
 
         self._listesCompetences_simple = {}
         
-        print "ref", self
+#        print "ref", self
         for code, comp in itemComp:
 #            print "   comp", code
             dic = self.getPremierEtDernierNiveauArbre(self.dicoCompetences[code].dicCompetences)
@@ -1368,7 +1368,7 @@ class Referentiel(XMLelem):
                     
             liste.sort()
             self._listesCompetences_simple[code] = liste
-        print "self._listesCompetences_simple", self._listesCompetences_simple['S']
+#        print "self._listesCompetences_simple", self._listesCompetences_simple['S']
 #            self._dicoCompetences_simple[code] = self.getDernierNiveauArbre(self.dicoCompetences[code].dicCompetences)
 #            for comp, value in self._dicoCompetences_simple[code].items():
 #                self._dicoCompetences_simple[code][comp] = self._dicoCompetences_simple[code][comp][0]
@@ -1517,7 +1517,7 @@ class Referentiel(XMLelem):
 
     #########################################################################
     def getCompetence(self, comp):
-        print "getCompetence", comp
+#        print "getCompetence", comp
         print self.dicoCompetences
         return self.dicoCompetences[comp[0]].getCompetence(comp[1:])
 #        for disc, comp in self.dicoCompetences.items():

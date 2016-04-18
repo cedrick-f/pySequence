@@ -337,7 +337,7 @@ def Draw(ctx, seq, mouchard = False):
     """ Dessine une fiche de séquence de la séquence <seq>
         dans un contexte cairo <ctx>
     """
-#        print "Draw séquence"
+#    print "Draw séquence"
     InitCurseur()
     
     

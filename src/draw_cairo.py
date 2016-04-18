@@ -1003,6 +1003,9 @@ def DefinirCouleurs(n1, n2):
     
     
 def DrawPeriodes(ctx, rect, pos = None, periodes = [[u"Année", 5]], projets = {}, tailleTypeEns = 0):
+    """ Dessine les périodes de l'enseignements
+         >> Renvoie la liste des rectangles des positions
+    """
 #    print "DrawPeriodes", pos
 #    print "   ", periodes, periodes_prj
     ctx.set_line_width (0.001 * COEF)
@@ -1014,10 +1017,9 @@ def DrawPeriodes(ctx, rect, pos = None, periodes = [[u"Année", 5]], projets = {
 #        wt = 0.04*7
 #        ht = 0.04
 #    else:
-    x = rect[0]# + ecartX
-    y = rect[1]
-    wt = rect[2]# - ecartX
-    ht = rect[3]
+
+    
+    x, y, wt, ht = rect
     
     # Toutes le périodes de projet
     periodes_prj = [p.periode for p in projets.values()]
@@ -1047,7 +1049,7 @@ def DrawPeriodes(ctx, rect, pos = None, periodes = [[u"Année", 5]], projets = {
     h = ht/2-2*dx
     
     # Les rectangles à cliquer
-    rect = []
+    rects = []
     
     # Les différentes positions des cases
     posc = []
@@ -1126,7 +1128,7 @@ def DrawPeriodes(ctx, rect, pos = None, periodes = [[u"Année", 5]], projets = {
         
 
         ctx.rectangle (xc[0], y+ht/2+dx, w, h)
-        rect.append((xc[0], y+ht/2+dx, w, h))
+        rects.append((xc[0], y+ht/2+dx, w, h))
         if xc[1]:
             ctx.set_source_rgba (BcoulPos[p][0], BcoulPos[p][1], BcoulPos[p][2], BcoulPos[p][3])
             ctx.fill_preserve ()
@@ -1139,10 +1141,10 @@ def DrawPeriodes(ctx, rect, pos = None, periodes = [[u"Année", 5]], projets = {
         
         if xc[3] != "":
             show_text_rect(ctx, xc[3], 
-                           rect[-1], ha = 'c', b = 0.2, wrap = False, couper = False)
+                           rects[-1], ha = 'c', b = 0.2, wrap = False, couper = False)
             ctx.stroke ()
             
-    return rect
+    return rects
 
 ########################################################################################
 #
@@ -1150,11 +1152,12 @@ def DrawPeriodes(ctx, rect, pos = None, periodes = [[u"Année", 5]], projets = {
 #          
 ########################################################################################            
 def getBitmapPeriode(larg, position, periodes, projets = {}, prop = 7):
-#        print "getBitmapPeriode"
+#    print "getBitmapPeriode", larg, 
 #        print "  ", self.projet.position
 #        print "  ", self.projet.GetReferentiel().periodes
 #        print "  ", self.projet.GetReferentiel().periode_prj
     w, h = 0.04*prop * COEF, 0.04 * COEF
+#    print w, h
     imagesurface = cairo.ImageSurface(cairo.FORMAT_ARGB32,  larg, int(h/w*larg))#cairo.FORMAT_ARGB32,cairo.FORMAT_RGB24
     ctx = cairo.Context(imagesurface)
     ctx.scale(larg/w, larg/w) 
@@ -1163,8 +1166,31 @@ def getBitmapPeriode(larg, position, periodes, projets = {}, prop = 7):
     return imagesurface
 
 
+def get_apercu(doc, larg, prop = 0.7071):
+    """ Renvoi un apercu du document <doc>
+        sous la forme d'une cairo.ImageSurface
+    
+    """
+#    print "get_apercu", larg, prop
+#    w, h = 0.04*prop * COEF, 0.04 * COEF
+    imagesurface = cairo.ImageSurface(cairo.FORMAT_ARGB32,  larg, int(1.0*larg/prop))#cairo.FORMAT_ARGB32,cairo.FORMAT_RGB24
+    ctx = cairo.Context(imagesurface)
+    s = 1.0*larg/prop/COEF
+    ctx.scale(s, s) 
+#    ctx.scale(mult, mult) 
+    doc.draw.Draw(ctx, doc)
+    
+    del ctx
+         
+    return imagesurface
+
+
             
 def curve_rect_titre(ctx, titre, rect, coul_bord, coul_int, taille_font = 0.01 * COEF, rayon = 0.02 * COEF, epaiss = 0.002 * COEF):
+    """    Dessine une zone de texte aux bords arrondis
+            avec un titre au dessus
+            >> Renvoie le point caractéristique (svg)
+    """
     ctx.set_line_width(epaiss)
     x0, y0, rect_width, rect_height = rect
     
@@ -1204,6 +1230,9 @@ def curve_rect_titre(ctx, titre, rect, coul_bord, coul_int, taille_font = 0.01 *
 
 
 def curve_rect(ctx, x0, y0, rect_width, rect_height, radius, ouverture = 0):
+    """    Dessine une zone de texte aux bords arrondis
+            >> Renvoie le point caractéristique (svg)
+    """
     x1=x0+rect_width
     y1=y0+rect_height
     #if (!rect_width || !rect_height)
@@ -1251,7 +1280,9 @@ def curve_rect(ctx, x0, y0, rect_width, rect_height, radius, ouverture = 0):
 
     
 def tableauV(ctx, titres, x, y, w, ht, hl, nlignes = 0, va = 'c', ha = 'c', orient = 'h', coul = (0.9,0.9,0.9), b = 0.2):
-    
+    """    Dessine un tableau vertical (entêtes à l'horizontale)
+            >> Renvoie la liste des rectangles des entêtes
+    """
     rect = []
     wc = w/len(titres)
     _x = x
@@ -1536,7 +1567,7 @@ def liste_code_texte(ctx, lstCodes, lstTexte, x, y, w, h,
             ...
         eh : écart horizontal entre le code et le texte
         b : bordure latérale totale (en relatif : 0 à 1)
-        
+        >> Renvoie une liste de rectangles
     """
     #
     # Réduction du rectangle
@@ -1651,20 +1682,6 @@ def drange(start, stop, step):
         yield r
         r += step    
     
-def get_apercu(doc, mult = 3):
-    """ Renvoi un apercu du document <doc>
-        sous la forme d'une cairo.ImageSurface
-    
-    """
-    print "get_apercu", doc.draw
-    imagesurface = cairo.ImageSurface(cairo.FORMAT_ARGB32,  210*mult, 297*mult)#cairo.FORMAT_ARGB32,cairo.FORMAT_RGB24
-    ctx = cairo.Context(imagesurface)
-    ctx.scale(297*mult, 297*mult) 
-    doc.draw.Draw(ctx, doc)
-    
-    del ctx
-         
-    return imagesurface
 
 #def get_apercu_bmp(doc, mult = 3):
 #    """ Renvoi un apercu du document <doc>
@@ -2318,6 +2335,36 @@ def wordwrap(ctx, text, width, pte, breakLongWords=True):
     return wrapped_lines
 
 
+
+
+##########################################################################################
+#
+#  Une zone active sur le dessin
+#
+##########################################################################################
+class Zone():
+    def __init__(self, rect, pt_caract = None, obj = None, param = None):
+        self.rect = rect                # Le(s) rectangle(s) sensible(s) (liste)
+        if pt_caract == None:
+            pt_caract = self.rect[:2]
+        self.pt_caract = pt_caract      # Un point caractéristique (pour identification svg)
+        self.obj = obj                  # L'objet concerné
+        self.param = param              # Paramètre(s) supplémentaire(s)
+        
+    def __repr__(self): 
+        return "%s (%s)" %(self.obj, self.param)
+    
+    def dansRectangle(self, X, Y):
+        """ Renvoie True si le point X, Y est dans la zone
+        """
+        for r in self.rect:
+            x, y, w, h = r
+            if X > x and Y > y and X < x + w and Y < y + h:
+                return True
+        return False
+    
+    
+    
 #def testRapport(ctx):
 #    f = open("testRapport.txt", 'w')
 #    for i in drange(0.008, 0.1, 0.0001):

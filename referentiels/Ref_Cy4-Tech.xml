@@ -4,7 +4,7 @@
   </l_BO_URL>
   <l_BO_dossier S_00="collège" />
   <l_CentresInterets S_00="Matière, mouvement, énergie, information" S_01="Le vivant, sa diversité et les fonctions qui le caractérisent" S_02="Matériaux et objets techniques" S_03="La planète Terre. Les êtres vivants dans leur environnement" />
-  <l_Enseignement S_00="Cy3-ST" S_01="Cycle 3 - Sciences et technologie" S_02="Cy3-ST" />
+  <l_Enseignement S_00="Cy4-Tech" S_01="Cycle 4 - Technologie" S_02="Cy3-ST" />
   <d_aColNon />
   <d_activites>
     <l_ED S_00="Etude de dossier" S_01="Activité d'étude de dossier" />
@@ -224,11 +224,13 @@
   <d_options />
   <d_parties S_C="Conduite" S_S="Soutenance" />
   <l_periodes>
-    <l_00 I_01="3" S_00="6_ème" />
+    <l_00 I_01="3" S_00="5_ème" />
+    <l_01 I_01="3" S_00="4_ème" />
+    <l_02 I_01="3" S_00="3_ème" />
   </l_periodes>
   <l_positions_CI />
   <d_projets>
-    <Projet_PRJ B_tachesOnce="False" I_duree="70" I_maxEleves="5" I_minEleves="3" S_code="PRJ" S_ficheValid="" S_intitule="Projet de fin d'année">
+    <Projet_PRJ B_tachesOnce="False" I_duree="0" I_maxEleves="5" I_minEleves="3" S_code="PRJ" S_ficheValid="" S_intitule="Projet de fin d'année">
       <d_attributs>
         <l_SRC S_00="" S_01="" S_02="" S_03="" />
         <l_PAR S_00="" S_01="" S_02="" S_03="" />
@@ -317,7 +319,7 @@
       <l_listTaches />
       <l_listeParties S_00="C" S_01="S" />
       <d_parties S_C="Conduite" S_S="Soutenance" />
-      <l_periode I_00="1" />
+      <l_periode />
       <d_phases>
         <l_Ana S_00="Appropriation" S_01="Appropriation" S_02="Ap" />
         <l_R2 S_00="Revue n°2" S_01="Revue de projet n°2" S_02="R2" />
