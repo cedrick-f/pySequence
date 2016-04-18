@@ -30,7 +30,7 @@
 import os, sys
 if sys.platform != "win32":
     import wxversion
-    wxversion.select('2.8')
+#    wxversion.select('2.8')
 import wx
 import wx.richtext as rt
 import images
