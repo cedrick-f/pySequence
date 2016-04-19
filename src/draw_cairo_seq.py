@@ -352,6 +352,12 @@ def Draw(ctx, seq, mouchard = False):
     
     DefinirZones(seq, ctx)
     
+    #
+    #    pour stocker des zones caractéristiques (à cliquer, ...)
+    #
+    seq.zones_sens = []
+    seq.pt_caract = []
+    
     
     #
     # Flèche
@@ -366,17 +372,19 @@ def Draw(ctx, seq, mouchard = False):
     #
     #  Cadre et Intitulé de la séquence
     #
-    seq.rect = [(posZOrganis[0]-bordureZOrganis, posZOrganis[1], 
-                 tailleZOrganis[0]+bordureZOrganis*2, tailleZOrganis[1]+bordureZOrganis)]
-    seq.pt_caract = curve_rect_titre(ctx, seq.intitule,  
-                                     seq.rect[0], 
+    rect = (posZOrganis[0]-bordureZOrganis, posZOrganis[1], 
+                                 tailleZOrganis[0]+bordureZOrganis*2, tailleZOrganis[1]+bordureZOrganis)
+#    seq.zones_sens.append(Zone([rect], param = "INT"))
+    seq.pt_caract = curve_rect_titre(ctx, seq.intitule, rect, 
                                      BcoulIntitule, IcoulIntitule, FontIntitule)
 
     #
     #    Domaines
     #
-    DrawDomaines(ctx, seq.domaine, posZOrganis[0]-bordureZOrganis+ecartX/2, posZOrganis[1]-ecartY/2)
-    
+    DrawDomaines(ctx, seq.domaine, 
+                 posZOrganis[0]-bordureZOrganis+ecartX/2, posZOrganis[1]-ecartY/2)
+
+
     #
     # Type d'enseignement
     #
@@ -407,10 +415,14 @@ def Draw(ctx, seq, mouchard = False):
     taillePos[0] =  LargeurTotale - posPos[0] - margeX
     ctx.set_line_width (0.0015 * COEF)
     r = (posPos[0], posPos[1], taillePos[0], taillePos[1])
-    seq.rectPos = DrawPeriodes(ctx, r, seq.position, 
+    rects = DrawPeriodes(ctx, r, seq.position, 
                                seq.classe.referentiel.periodes,
                                tailleTypeEns = tailleTypeEns)
-    seq.rect.append(posPos+taillePos)
+    
+    for i, re in enumerate(rects):
+        seq.zones_sens.append(Zone([re], param = "POS"+str(i)))
+    seq.zones_sens.append(Zone([r], param = "POS"))
+
 
 
     #
@@ -429,7 +441,7 @@ def Draw(ctx, seq, mouchard = False):
     #
     # Cible ou Logo
     #
-    seq.CI.rect = []
+#    seq.CI.rect = []
     
     # Affichage du Logo
     tfname = tempfile.mktemp()
@@ -451,8 +463,9 @@ def Draw(ctx, seq, mouchard = False):
         
     # Affichage des CI sur la cible
     if seq.classe.referentiel.CI_cible:
-        seq.CI.rect.append((posCib+tailleCib))
-        
+        seq.zones_sens.append(Zone([posCib+tailleCib], obj = seq.CI))
+#        seq.CI.rect.append(())
+
         rayons = {"F" : tailleCib[0] * 0.28, 
                   "S" : tailleCib[0] * 0.19, 
                   "C" : tailleCib[0] * 0.1,
@@ -562,7 +575,8 @@ def Draw(ctx, seq, mouchard = False):
                                                 (x0, y0, rect_width, rect_height), BcoulPre, IcoulPre, fontPre),
                                'pre')
     
-    
+
+
     #
     # Codes prerequis
     #
@@ -590,26 +604,6 @@ def Draw(ctx, seq, mouchard = False):
         lstCoul.append(constantes.COUL_DISCIPLINES[disc])
             
             
-#        if typ == "S": # Savoir SII ou spécialité STI2D
-#            lstTexte.append(seq.GetReferentiel().getSavoir(cod))
-#            lstCodes.append(cod)
-#            lstCoul.append((0,0,0))
-#        elif typ == "M": # Savoir Math
-#            lstTexte.append(seq.GetReferentiel().getSavoir(cod, gene = "M"))
-#            lstCodes.append("Math "+cod)
-#            lstCoul.append(constantes.COUL_DISCIPLINES['Mat'])
-#        elif typ == "P": # Savoir Physique
-#            lstTexte.append(seq.GetReferentiel().getSavoir(cod, gene = "P"))
-#            lstCodes.append("Phys "+cod)
-#            lstCoul.append(constantes.COUL_DISCIPLINES['Phy'])
-#        else: # B = tronc commun
-#            if seq.GetReferentiel().tr_com == []:
-#                lstTexte.append(seq.GetReferentiel().getSavoir(cod))
-#                lstCodes.append(cod)
-#            else:
-#                lstTexte.append(REFERENTIELS[seq.GetReferentiel().tr_com[0]].getSavoir(cod))
-#                lstCodes.append(seq.GetReferentiel().tr_com[0]+" "+cod)
-#            lstCoul.append((0.3,0.3,0.3))
             
         
     lstTexteS = []   
@@ -631,12 +625,14 @@ def Draw(ctx, seq, mouchard = False):
         lstRect = liste_code_texte(ctx, ["Seq."]*len(lstTexteS), lstTexteS, 
                                    x0, y0+hC, rect_width, hS, 
                                    0.05*rect_width, 0.1, va = 'c')
-        for i, c in enumerate(seq.prerequisSeance): 
-            c.rect = [lstRect[i]]
+        for i, c in enumerate(seq.prerequisSeance):
+            seq.zones_sens.append(Zone([lstRect[i]]), obj = c)
+#            c.rect = [lstRect[i]]
     else:
         show_text_rect(ctx, u"Aucun", (x0, y0, rect_width, hl), fontsizeMinMax = (-1, 0.015 * COEF))
     
-    
+
+
     #
     #  Objectifs
     #
@@ -675,18 +671,6 @@ def Draw(ctx, seq, mouchard = False):
         lstCodesC.append(comp.abrDiscipline + cod)
         lstCoulC.append(constantes.COUL_DISCIPLINES[disc])
         
-        
-#        print "   ", c
-#        
-#        comp = ref.getCompetence(c)
-#        if comp is None and ref_tc is not None:
-#            comp = ref_tc.getCompetence(c)
-#            
-#        if comp is not None:
-#            lstTexteC.append(comp[0])
-    
-            
-#    print "lstTexteC", lstTexteC
 
     lstTexteS = []
     lstCodesS = []
@@ -705,42 +689,12 @@ def Draw(ctx, seq, mouchard = False):
         lstTexteS.append(savoir.getSavoir(cod))
         lstCodesS.append(savoir.abrDiscipline + cod)
         lstCoulS.append(constantes.COUL_DISCIPLINES[disc])
-        
-        
-        
-#    lstTexteS = []
-#    lstCodes = []
-#    lstCoul = []
-#    for c in seq.obj["S"].savoirs:
-#        typ, cod = c[0], c[1:]
-##        print typ, cod
-#        if typ == "S": # Savoir spécialité STI2D
-#            lstTexteS.append(ref.getSavoir(cod))
-#            lstCodes.append(cod)
-#            lstCoul.append((0,0,0))
-#        elif typ == "M": # Savoir Math
-#            lstTexteS.append(ref.getSavoir(cod, gene = "M"))
-#            lstCodes.append("Math "+cod)
-#            lstCoul.append(constantes.COUL_DISCIPLINES['Mat'])
-#        elif typ == "P": # Savoir Physique
-#            lstTexteS.append(ref.getSavoir(cod, gene = "P"))
-#            lstCodes.append("Phys "+cod)
-#            lstCoul.append(constantes.COUL_DISCIPLINES['Phy'])
-#        else:
-#            if ref.tr_com == []:
-#                lstTexteS.append(ref.getSavoir(cod))
-#                lstCodes.append(cod)
-#            else:
-#                lstTexteS.append(REFERENTIELS[ref.tr_com[0]].getSavoir(cod))
-#                lstCodes.append(ref.tr_com[0]+" "+cod)
-#            lstCoul.append((0.3,0.3,0.3))
             
     h = rect_height+0.0001 * COEF
     hC = hS = h/2
     if len(lstTexteS) > 0 or len(lstTexteC) > 0:
         hC = h*len(lstTexteC)/(len(lstTexteC) + len(lstTexteS))
         hS = h*len(lstTexteS)/(len(lstTexteC) + len(lstTexteS))
-        
         
         ctx.set_source_rgba (COUL_COMPETENCES[0], COUL_COMPETENCES[1], COUL_COMPETENCES[2], COUL_COMPETENCES[3])
         r = liste_code_texte(ctx, lstCodesC, lstTexteC, 
@@ -758,15 +712,17 @@ def Draw(ctx, seq, mouchard = False):
                              lstCoul = lstCoulS, va = 'c')
         seq.obj["S"].pts_caract = getPts(r)
     
-    seq.obj["C"].rect = [(x0, y0, rect_width, hC)]
-    seq.obj["S"].rect = [(x0, y0+hC, rect_width, hS)]
+    seq.zones_sens.append(Zone([(x0, y0, rect_width, hC)], obj = seq.obj["C"]))
+    seq.zones_sens.append(Zone([(x0, y0+hC, rect_width, hS)], obj = seq.obj["S"]))
+#    seq.obj["C"].rect = 
+#    seq.obj["S"].rect = [(x0, y0+hC, rect_width, hS)]
     
     
     #
     #  CI
     #
 #    Draw_CI(ctx, seq.classe.ci_ET)
-    Draw_CI(ctx, seq.CI)
+    Draw_CI(ctx, seq.CI, seq)
     
     
     #
@@ -797,7 +753,9 @@ def Draw(ctx, seq, mouchard = False):
         _x = posZSysteme[0]
         _y = posZSysteme[1]
         for s in systemes:
-            s.rect=((_x, _y, wc, posZSeances[1] - posZSysteme[1]),)
+#            s.rect=((_x, _y, wc, posZSeances[1] - posZSysteme[1]),)
+            seq.zones_sens.append(Zone([(_x, _y, wc, posZSeances[1] - posZSysteme[1])],
+                                       obj = s))
             ctx.set_source_rgb(0, 0, 0)
             ctx.move_to(_x, _y + posZSeances[1] - posZSysteme[1])
             ctx.line_to(_x, _y + tailleZDemarche[1])
@@ -837,12 +795,12 @@ def Draw(ctx, seq, mouchard = False):
         ctx.move_to(posZDemarche[0]+tailleZDemarche[0], posZDemarche[1] + posZSeances[1] - posZSysteme[1])
         ctx.line_to(posZDemarche[0]+tailleZDemarche[0], posZDemarche[1] + tailleZDemarche[1])
         ctx.stroke()
-    
+
+
+
     #
     #  Tableau des séances (en bas)
     #
-#    nomsSeances, intSeances = seq.GetIntituleSeances()
-#        print nomsSeances
     if intituleSeances[0] != []:
         ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                               cairo.FONT_WEIGHT_NORMAL)
@@ -859,7 +817,8 @@ def Draw(ctx, seq, mouchard = False):
     info(ctx, margeX, margeY)
     
     
-    
+
+
 
 ######################################################################################  
 def DrawLigneEff(ctx, x, y):
@@ -876,131 +835,7 @@ def DrawLigneEff(ctx, x, y):
     ctx.stroke()
     ctx.set_dash([], 0)
 
-#######################################################################################  
-#def DrawPeriodes(ctx, pos = None, periodes = [[u"Année", 5]], tailleTypeEns = 0, origine = False):
-#    ctx.set_line_width (0.001)
-#    if origine:
-#        x = 0
-#        y = 0
-#        wt = 0.04*5
-#        ht = 0.04
-#    else:
-#        x = posPos[0]# + ecartX
-#        y = posPos[1]
-#        wt = taillePos[0]# - ecartX
-#        ht = taillePos[1]
-#    
-#    pat = cairo.LinearGradient (x, y,  x + wt, y)
-#    pat.add_color_stop_rgba (1, 0.90, 0.55, 0.65, 1)
-#    pat.add_color_stop_rgba (0, 0.98, 0.88, 0.98, 1)
-#    ctx.rectangle (x, y, wt, ht)
-#    src = ctx.get_source()
-#    ctx.set_source (pat)
-#    ctx.fill ()
-#    ctx.set_source(src)
-#    
-#    ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-#                                       cairo.FONT_WEIGHT_NORMAL)
-#    
-#    dx = 0.02 * wt
-#    h = ht/2-2*dx
-#    
-#    rect = []
-##    print "Périodes", periodes
-##    wi = wt/len(periodes) - dx*(len(periodes)-1)
-#    wi = (wt+dx)/len(periodes) - dx
-#    pa = 0
-#    for i, (an, np) in enumerate(periodes):
-#        annee = an.split("_")
-##        print "   ", annee
-#        ctx.set_font_size(fontPos)
-#        w0, h0 = ctx.text_extents(annee[0])[2:4]
-#        xi = x + wi/2 + (dx+wi)*i
-##        print "   ", w0, h0, xi
-#        if len(annee) > 1:
-#            ctx.set_font_size(fontPos*0.9)
-#            w1, h1 = ctx.text_extents(annee[1])[2:4]
-##            print "   ", w1, h1
-#            show_text_rect_fix(ctx, annee[0], xi-(w0+w1)/2, y, w0, ht*2/3, fontPos, 1)
-#            ctx.stroke ()
-#            show_text_rect_fix(ctx, annee[1], xi-(w0+w1)/2 + w0 + 0.01, y, w1, ht/3, fontPos*0.9, 1, ha = 'g')
-#            ctx.stroke ()
-#        else:
-#            show_text_rect_fix(ctx, annee[0], xi-w0/2, y, w0, ht*2/3, fontPos, 1)
-#            ctx.stroke ()
-#        
-#        w = (wi-dx)/np-dx
-#        xi = x + (dx+wi)*i + dx
-#        for p in range(np):
-#            pa += 1
-#            ctx.rectangle (xi, y+ht/2+dx, w, h)
-#            rect.append((xi, y+ht/2+dx, w, h))
-#            if pos == pa - 1:
-#                ctx.set_source_rgba (AcoulPos[0], AcoulPos[1], AcoulPos[2], AcoulPos[3])
-#            else:
-#                ctx.set_source_rgba (IcoulPos[0], IcoulPos[1], IcoulPos[2], IcoulPos[3])
-#            ctx.fill_preserve ()
-#            ctx.set_source_rgba (BcoulPos[0], BcoulPos[1], BcoulPos[2], BcoulPos[3])
-#            ctx.stroke ()
-##            if p == 3:
-##                x += dx
-#            xi += dx + w
-            
-#    if niv == 'lyc':
-#        pm = show_text_rect_fix(ctx, u"1", x, y, wt/2, ht*2/3, fontPos, 1)#, outPosMax = True)
-#     
-#        ctx.stroke ()
-#        show_text_rect_fix(ctx, u"ère", pm+0.002, y, wt/2, ht/3, fontPos*0.9, 1, ha = 'g')
-#        ctx.stroke ()
-#        
-#        pm = show_text_rect_fix(ctx, u"T", x+wt/2, y, wt/2, ht*2/3, fontPos, 1)#, outPosMax = True)
-#    
-#        ctx.stroke ()
-#        show_text_rect_fix(ctx, u"ale", pm+0.002, y, wt/2, ht/3, fontPos*0.9, 1, ha = 'g')
-#        ctx.stroke ()
-#        
-#        dx = wt/4 / (nbr+2) # Ecart entre les cases
-#        x += dx
-#        h = ht/2-2*dx
-#        w = 3*wt/4 / nbr
-#        rect = []
-#        for p in range(10):
-#            ctx.rectangle(x, y+ht/2+dx, w, h)
-#            rect.append((x, y+ht/2+dx, w, h))
-#            if pos == p:
-#                ctx.set_source_rgba (AcoulPos[0], AcoulPos[1], AcoulPos[2], AcoulPos[3])
-#            else:
-#                ctx.set_source_rgba (IcoulPos[0], IcoulPos[1], IcoulPos[2], IcoulPos[3])
-#            ctx.fill_preserve ()
-#            ctx.set_source_rgba (BcoulPos[0], BcoulPos[1], BcoulPos[2], BcoulPos[3])
-#            ctx.stroke ()
-#            if p == nbr/2-1:
-#                x += dx
-#            x+= dx + w
-#    
-#    else:
-#        dx = wt/4 / (nbr+1) # Ecart entre les cases
-#        x += dx
-#        h = ht/2-2*dx
-#        w = 3*wt/4 / nbr
-#        rect = []
-#        for p in range(5):
-#            pm = show_text_rect_fix(ctx, str(p+1), x, y, w, ht*2/3, fontPos, 1)#, outPosMax = True)
-#            ctx.stroke ()
-#        
-#            ctx.rectangle (x, y+ht/2+dx, w, h)
-#            rect.append((x, y+ht/2+dx, w, h))
-#            if pos == p:
-#                ctx.set_source_rgba (AcoulPos[0], AcoulPos[1], AcoulPos[2], AcoulPos[3])
-#            else:
-#                ctx.set_source_rgba (IcoulPos[0], IcoulPos[1], IcoulPos[2], IcoulPos[3])
-#            ctx.fill_preserve ()
-#            ctx.set_source_rgba (BcoulPos[0], BcoulPos[1], BcoulPos[2], BcoulPos[3])
-#            ctx.stroke ()
-#            
-#            x+= dx + w
-            
-#    return rect
+
     
 ######################################################################################  
 def H_code():
@@ -1010,22 +845,17 @@ def H_code():
             
               
 ######################################################################################  
-def Draw_CI(ctx, CI):
+def Draw_CI(ctx, CI, seq):
     # Rectangle arrondi
     x0, y0 = posCI
     rect_width, rect_height  = tailleCI
     t = getSingulierPluriel(CI.GetReferentiel().nomCI, len(CI.numCI) > 1)
     
-    
-    
-#    if len(CI.numCI) <= 1:
-#        t = u"Centre d'intérêt"
-#    else:
-#        t = u"Centres d'intérêt"
-    CI.pt_caract = (curve_rect_titre(ctx, t,  (x0, y0, rect_width, rect_height), BcoulCI, IcoulCI, fontCI), 
+    rect = (x0, y0, rect_width, rect_height)
+    CI.pt_caract = (curve_rect_titre(ctx, t, rect, BcoulCI, IcoulCI, fontCI), 
                     'CI')
-    
-    CI.rect.append((x0, y0, rect_width, rect_height))
+    seq.zones_sens.append(Zone([rect], obj = CI))
+#    CI.rect.append()
     
     
     #
@@ -1046,6 +876,7 @@ def Draw_CI(ctx, CI):
 
 
 
+######################################################################################  
 class Cadre():  
     """ Plus petit élément de séance :
          - 1 cadre
@@ -1062,7 +893,7 @@ class Cadre():
         self.y = None   # Position en Y du cadre
         self.dy = None  # Position en Y relative de la ligne
         self.nf = 0     # Nombre de "frères" (pour calcul rayon boule
-        self.seance.rect = []
+#        self.seance.rect = []
         self.signEgal = signEgal
         
     def __repr__(self):
@@ -1140,13 +971,15 @@ class Cadre():
         self.xd = x+self.w
         self.y = y
         
-        self.seance.rect.append([x, y, self.w, self.h])
+        self.seance.GetDocument().zones_sens.append(Zone([(x, y, self.w, self.h)], obj = self.seance))
+#        self.seance.rect.append([x, y, self.w, self.h])
         
         return x + self.w, y + self.h
 
 
 
 
+######################################################################################  
 class Bloc():
     """ Ensemble de cadres.
         contenu = [[], [], ...]
@@ -1157,9 +990,6 @@ class Bloc():
         self.x = None
         self.y = None
         
-#    def __repr__(self):
-#        print self.contenu
-#        return ""
     
     def Draw(self, x, y):
 #        print self.contenu
@@ -1245,7 +1075,9 @@ class Bloc():
                     r = min(0.008*COEF, cadreOk.h/(cadreOk.nf+1)/3)
                     DrawCroisementSystemes(cadreOk.ctx, cadreOk.seance, cadre.xd, cadreOk.y + cadreOk.dy, NS, r)
             
-    
+
+
+
 ######################################################################################  
 def DrawSeanceRacine(ctx, seance):
     global cursY
@@ -1274,32 +1106,6 @@ def DrawSeanceRacine(ctx, seance):
                        (posZDeroul[0]-e/2, cursY, e, h-he), 
                        orient = o, b = 0.2)
 
-#    #
-#    # Fonction pour obtenir les lignes de séances du bloc
-#    #
-#    def getLigne(s, hc, filigrane = False):
-#        l = []
-##        if s.typeSeance == "S":
-##            for j,ss in enumerate(s.sousSeances):
-##                if ss.typeSeance != '':
-##                    ss.pts_caract = []
-##                    for i in range(int(ss.nombre.v[0])):
-##                        l.append(Cadre(ctx, ss, hc, filigrane = filigrane, signEgal = (i>0)))
-##                    
-##                    # On en profite pour calculer les positions des lignes de croisement
-##                    if not filigrane:
-##                        l[-1].dy = (j+1) * l[-1].h/(len(s.sousSeances)+1)
-##        
-##        else:
-#        if s.typeSeance != '':
-#            s.pts_caract = []
-##            for i in range(int(s.nombre.v[0])):
-#            l.append(Cadre(ctx, s, hc, filigrane = filigrane))#, signEgal = (i>0)))
-#            
-#            # On en profite pour calculer les positions des lignes de croisement
-#            if not filigrane:
-#                l[-1].dy = l[-1].h/2
-#        return l
     
 
     #
@@ -1326,20 +1132,11 @@ def DrawSeanceRacine(ctx, seance):
                     l[-1].nf = 0
                 else:
                     l[-1].dy = hc + decal * (l[-1].h - hc)
-#                    l[-1].dy = decal * (l[-1].h)
                     l[-1].nf = nbr
             else:
                 l[-1].dy = hc + decal * (l[-1].h - hc)
-#                l[-1].dy = decal * (l[-1].h)
                 l[-1].nf = nbr
-#            else:
-#                bloc.contenu.append([Cadre(ctx, seance, h, filigrane = filigrane)])
-#                if not filigrane:
-#                    bloc.contenu[0][-1].dy = decal * bloc.contenu[0][-1].h
-#            # On en profite pour calculer les positions des lignes de croisement
-#            if not filigrane:
-#                bloc.contenu.dy = bloc.contenu.h/2
-                
+        
             return bloc
             
             
@@ -1442,7 +1239,10 @@ def DrawCroisementSystemes(ctx, seance, x, y, ns, r):
                                       cairo.FONT_WEIGHT_BOLD)
                 show_text_rect(ctx, str(n), (x-r, y-r, 2*r, 2*r),
                                wrap = False, couper = False)
-                seance.rect.append((x-r, y-r, 2*r, 2*r))
+                
+                seance.GetDocument().zones_sens.append(Zone([(x-r, y-r, 2*r, 2*r)],
+                                                                 obj = seance))
+#                seance.rect.append((x-r, y-r, 2*r, 2*r))
     else:
         for s, n in ns.items():
             if n > 0:
@@ -1454,8 +1254,11 @@ def DrawCroisementSystemes(ctx, seance, x, y, ns, r):
                     ctx.fill_preserve ()
                     ctx.set_source_rgba (0,0,0,1)
                 ctx.stroke ()
-
-                seance.rect.append((x-wColSysteme/2, y-r, wColSysteme, 2*r))
+                
+                seance.GetDocument().zones_sens.append(Zone([(x-wColSysteme/2, y-r, wColSysteme, 2*r)],
+                                                                 obj = seance))
+                
+#                seance.rect.append((x-wColSysteme/2, y-r, wColSysteme, 2*r))
         
         
 
@@ -1488,7 +1291,12 @@ def DrawCroisementsDemarche(ctx, seance, y, r):
 #        if self.typeSeance in ["AP", "ED", "P"]:
 #    r = 0.008 * COEF
     boule(ctx, _x, y, r)
-    seance.rect.append((_x -r , y - r, 2*r, 2*r))
+    
+    seance.GetDocument().zones_sens.append(Zone([(_x -r , y - r, 2*r, 2*r)],
+                                                                 obj = seance))
+    
+    
+#    seance.rect.append((_x -r , y - r, 2*r, 2*r))
 
 
 #####################################################################################  

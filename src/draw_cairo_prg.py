@@ -394,8 +394,8 @@ def Draw(ctx, prg, mouchard = False):
                                tailleTypeEns = tailleTypeEns)
 #    prg.rect.append(posPos+taillePos)
     
-    for i, r in enumerate(rects):
-        prg.zones_sens.append(Zone([r], param = "POS"+str(i)))
+    for i, re in enumerate(rects):
+        prg.zones_sens.append(Zone([re], param = "POS"+str(i)))
     prg.zones_sens.append(Zone([r], param = "POS"))
     
 

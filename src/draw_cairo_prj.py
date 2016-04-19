@@ -37,9 +37,10 @@ Created on 26 oct. 2011
 #import time
 
 import cairo
-from draw_cairo import LargeurTotale, font_family, curve_rect_titre, show_text_rect_fix, show_text_rect, \
-                        boule, getHoraireTxt, liste_code_texte, rectangle_plein, barreH, tableauV, minFont, maxFont, tableauH, \
-                        DrawPeriodes, COEF, info
+from draw_cairo import *
+#from draw_cairo import LargeurTotale, font_family, curve_rect_titre, show_text_rect_fix, show_text_rect, \
+#                        boule, getHoraireTxt, liste_code_texte, rectangle_plein, barreH, tableauV, minFont, maxFont, tableauH, \
+#                        DrawPeriodes, COEF, info
 
 from math import log
 
@@ -337,10 +338,12 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
     
     DefinirZones(prj, ctx)
 
-#    print "     1 ", time.time() - tps
+    #
+    #    pour stocker des zones caractéristiques (à cliquer, ...)
+    #
+    prj.zones_sens = []
     prj.pt_caract = []
-    prj.rect = []
-    prj.rectComp = {}
+
     
     #
     # Type d'enseignement
@@ -373,11 +376,14 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
     taillePos[0] = taillePro[0]/2
     ctx.set_line_width (0.0015 * COEF)
     r = (posPos[0], posPos[1], taillePos[0], taillePos[1])
-    prj.rectPos = DrawPeriodes(ctx, r, prj.position, prj.classe.referentiel.periodes,
+    rects = DrawPeriodes(ctx, r, prj.position, prj.classe.referentiel.periodes,
 #                               [p.periode for p in prj.classe.referentiel.projets.values()],  
                                prj.classe.referentiel.projets,
                                tailleTypeEns = tailleTypeEns)
-    prj.rect.append(posPos+taillePos)
+    
+    for i, re in enumerate(rects):
+        prj.zones_sens.append(Zone([re], param = "POS"+str(i)))
+    prj.zones_sens.append(Zone([r], param = "POS"))
 
 
 
@@ -397,7 +403,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
     #
     # Image
     #
-    prj.support.rect = []
+#    prj.support.rect = []
     prj.support.pts_caract = []
     bmp = prj.support.image
     if bmp != None:
@@ -420,7 +426,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
         ctx.paint ()
         ctx.restore()
         
-        prj.support.rect.append(posImg + tailleImg)
+        prj.zones_sens.append(Zone([posImg + tailleImg], obj = prj.support))
         prj.support.pts_caract.append(posImg)
     
 
@@ -449,12 +455,11 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
                              0.1*tailleEqu[1]+0.0001 * COEF, 0.1,
                              gras = g, lstCoul = c, va = 'c')
 
-        
-    for i, p in enumerate(prj.equipe):
-        p.rect = [r[i]]
-#        prj.pts_caract.append(getPts(r))
     
-#    print "     5 ", time.time() - tps
+    for i, p in enumerate(prj.equipe):
+        prj.zones_sens.append(Zone([r[i]], obj = p))
+    prj.zones_sens.append(Zone([rectEqu], param = "EQU"))
+    
 
     #
     #  Problématique
@@ -467,7 +472,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
     show_text_rect(ctx, constantes.ellipsizer(prj.problematique, constantes.LONG_MAX_PROBLEMATIQUE), 
                    rectPro, ha = 'g', b = 0.5,
                    fontsizeMinMax = (-1, 0.016 * COEF))
-    prj.rect.append(rectPro)
+    prj.zones_sens.append(Zone([rectPro], param = "PB"))
     
 #    print "     6 ", time.time() - tps
 
@@ -486,7 +491,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
                    rectNom, ha = 'c', b = 0.2,
                    fontsizeMinMax = (-1, 0.016 * COEF))
     
-    prj.rect.append(rectNom)
+    prj.zones_sens.append(Zone([rectNom], obj = prj))
     prj.pts_caract.append(posNom)
 
     
@@ -504,7 +509,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
                    rectSup, ha = 'c', b = 0.2,
                    fontsizeMinMax = (-1, 0.016 * COEF))
     
-    prj.support.rect.append(rectSup)
+    prj.zones_sens.append(Zone([rectSup], obj = prj.support))
     prj.support.pts_caract.append(posSup)
 
 
@@ -613,7 +618,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
         # Lignes horizontales
         #
         for i, e in enumerate(prj.eleves):
-            e.rect = [rec[i]]
+            prj.zones_sens.append(Zone([rec[i]], obj = e))
             Ic = constantes.COUL_ELEVES[i][0]
             
             ctx.set_source_rgb(Ic[0],Ic[1],Ic[2])
@@ -1268,7 +1273,7 @@ def DrawTacheRacine(ctx, tache, y):
     # Rectangles actifs et points caractéristiques : initialisation
     #
     tache.pts_caract = []
-    tache.rect = []
+    
     
     
     #
@@ -1327,8 +1332,8 @@ def DrawTacheRacine(ctx, tache, y):
             show_text_rect(ctx, tache.GetIntit(), rect, 
                            ha = 'g', fontsizeMinMax = (minFont, 0.015 * COEF))
         
-    
-    tache.rect.append([x, y, tailleZTaches[0], h])
+    tache.GetDocument().zones_sens.append(Zone([(x, y, tailleZTaches[0], h)], obj = tache))
+#    tache.rect.append([x, y, tailleZTaches[0], h])
         
         
     #
@@ -1474,7 +1479,11 @@ def DrawCroisementsElevesTaches(ctx, tache, y):
         boule(ctx, _x, y, r, 
               color0 = color0, color1 = color1,
               transparent = False)
-        tache.projet.eleves[i].rect.append((_x -r , y - r, 2*r, 2*r))
+        
+        tache.GetDocument().zones_sens.append(Zone([(_x -r , y - r, 2*r, 2*r)], 
+                                                   obj = [tache.projet.eleves[i], tache]))
+        
+#        tache.projet.eleves[i].rect.append((_x -r , y - r, 2*r, 2*r))
         tache.projet.eleves[i].pts_caract.append((_x,y))
         y += dy
         
@@ -1507,11 +1516,14 @@ def DrawBoutonCompetence(ctx, objet, dicIndic, y, h = None):
         
         x = xComp[s]-wColComp/2
         
-        rect = (x, y-h/2, wColComp, h, objet)
-        if s in objet.GetDocument().rectComp.keys() and objet.GetDocument().rectComp[s] != None:
-            objet.GetDocument().rectComp[s].append(rect)
-        else:
-            objet.GetDocument().rectComp[s] = [rect]
+        rect = (x, y-h/2, wColComp, h)
+        
+        objet.GetDocument().zones_sens.append(Zone([rect], obj = objet, param = s))
+        
+#        if s in objet.GetDocument().rectComp.keys() and objet.GetDocument().rectComp[s] != None:
+#            objet.GetDocument().rectComp[s].append(rect)
+#        else:
+#            objet.GetDocument().rectComp[s] = [rect]
         
         objet.pts_caract.append((x,y))
         

@@ -117,8 +117,8 @@ def GetCouleurWx(C):
     else:
         return wx.Colour(C[0]*255, C[1]*255, C[2]*255)
 
-def GetCouleurHTML(C):
-    return GetCouleurWx(C).GetAsString(wx.C2S_CSS_SYNTAX)
+def GetCouleurHTML(C, syntax = wx.C2S_CSS_SYNTAX):
+    return GetCouleurWx(C).GetAsString(syntax)
 
 def Couleur2Str(C):
     return ';'.join([str(c) for c in C])

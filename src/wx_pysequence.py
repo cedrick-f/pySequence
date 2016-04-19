@@ -173,10 +173,6 @@ import webbrowser
 # Chargement des images
 import images
 
-
-
-
-
 #####################################################################################
 #   Tout ce qui concerne le GUI
 #####################################################################################
@@ -257,7 +253,6 @@ if sys.platform == "win32" :
     import register
     
 
-
 import genpdf
 
 from rapport import FrameRapport, RapportRTF
@@ -271,8 +266,8 @@ import Referentiel
 import error
 
 
-
 from pysequence import *
+import pysequence
 
 
     
@@ -1408,7 +1403,8 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         # Un NoteBook comme conteneur de la fiche
         #
         self.nb = wx.Notebook(self.pnl, -1)
-        
+
+
     #########################################################################################################
     def sendEvent(self, doc = None, modif = u"", draw = True, obj = None):
 #        print "sendEvent", modif
@@ -1914,8 +1910,9 @@ class FenetreSequence(FenetreDocument):
             
     ###############################################################################################
     def OnDocModified(self, event):
+        print "OnDocModified", event.GetModif()
         if event.GetModif() != u"":
-#            print "OnDocModified", event.GetModif()
+            
             self.classe.undoStack.do(event.GetModif())
             self.sequence.undoStack.do(event.GetModif())
         
@@ -2364,7 +2361,6 @@ class FenetreProjet(FenetreDocument):
 #                dlg.top()
                 dlg.Update(count, message)
                 
-                
                 count += 1
                 
                 self.projet.code = self.projet.GetReferentiel().getCodeProjetDefaut()
@@ -2375,7 +2371,7 @@ class FenetreProjet(FenetreDocument):
                     self.classe.setBranche(classe, reparer = True)
                     
 #                self.projet.creerTachesRevue()
-                
+                self.projet.MiseAJourTypeEnseignement()
                 err = self.projet.setBranche(projet)
 #                dlg.top()
                 
@@ -2446,8 +2442,8 @@ class FenetreProjet(FenetreDocument):
                           u"Construction de l'arborescence du projet...\t"],
                          [self.projet.OrdonnerTaches, [], {},
                           u"Ordonnancement des tâches...\t"],
-                         [self.projet.PubDescription, [], {},
-                          u"Traitement des descriptions...\t"],
+#                         [self.projet.PubDescription, [], {},
+#                          u"Traitement des descriptions...\t"],
                          [self.projet.SetLiens, [], {},
                           u"Construction des liens...\t"],
                          [self.projet.MiseAJourDureeEleves, [], {},
@@ -2461,12 +2457,16 @@ class FenetreProjet(FenetreDocument):
             dlg.Update(count, message)
 #            dlg.top()
             count += 1
-            try :
+            if "beta" in version.__version__:
                 fct(*arg, **karg)
                 message += u"Ok\n"
-            except:
-                Ok = False
-                message += constantes.Erreur(constantes.ERR_INCONNUE).getMessage() + u"\n"
+            else:
+                try :
+                    fct(*arg, **karg)
+                    message += u"Ok\n"
+                except:
+                    Ok = False
+                    message += constantes.Erreur(constantes.ERR_INCONNUE).getMessage() + u"\n"
             
 
         self.projet.Verrouiller()
@@ -3140,10 +3140,8 @@ class BaseFiche(wx.ScrolledWindow):
 
     ######################################################################################################
     def OnLeave(self, evt = None):
-        if hasattr(self, 'call') and self.call.IsRunning():
-            self.call.Stop()
-        if hasattr(self, 'tip'):
-            self.tip.Show(False)
+        self.GetDoc().HideTip()
+
 
     ######################################################################################################
     def OnEnter(self, event):
@@ -3166,7 +3164,70 @@ class BaseFiche(wx.ScrolledWindow):
     def OnScroll(self, evt):
         self.Refresh()
 
-
+    
+    ######################################################################################################
+    def OnMove(self, evt):
+        self.GetDoc().HideTip()
+        x, y = evt.GetPosition()
+        _x, _y = self.CalcUnscrolledPosition(x, y)
+        xx, yy = self.ctx.device_to_user(_x, _y)
+        evt.Skip()
+        
+        #
+        # Cas général
+        #
+        zone = self.GetDoc().HitTest(xx, yy)
+        if zone is not None:
+            x, y = self.ClientToScreen((x, y))
+            self.GetDoc().Move(zone, x, y)
+        else:
+            self.GetDoc().HideTip()
+#            elem = branche.GetData()
+#            if hasattr(elem, 'tip'):
+#                x, y = self.ClientToScreen((x, y))
+#                elem.tip.Position((x+1,y+1), (0,0))
+#                self.call = wx.CallLater(500, elem.tip.Show, True)
+#                self.tip = elem.tip
+#                evt.Skip()
+#                return    
+        
+        #
+        # Cas particulier des compétences
+        #
+#        kCompObj = self.GetDoc().HitTestCompetence(xx, yy)
+#        if kCompObj != None:
+#            kComp, obj = kCompObj
+#            if hasattr(self, 'popup'):
+##                for tip in self.tip_indic:
+##                    tip.Destroy()
+##                self.tip_indic = []
+#                x, y = self.ClientToScreen((x, y))
+##                type_ens = self.projet.classe.typeEnseignement
+#         
+#                competence = self.GetDoc().GetReferentiel().getCompetence(kComp)
+#                        
+#                intituleComp = competence[0]
+#                
+#                k = kComp.split(u"\n")
+#                if len(k) > 1:
+#                    titre = u"Compétences\n"+u"\n".join(k)
+#                else:
+#                    titre = u"Compétence\n"+k[0]
+#                self.popup.SetTitre(titre)
+#             
+#                intituleComp = "\n".join([textwrap.fill(ind, 50) for ind in intituleComp.split(u"\n")]) 
+#             
+#                self.popup.SetTexte(intituleComp, self.tip_comp)
+#                
+#         
+#                
+#                self.popup.Fit()
+#
+#                self.popup.Position((x,y), (0,0))
+#                self.call = wx.CallLater(500, self.popup.Show, True)
+#                self.tip = self.popup
+            
+        evt.Skip()
 
     #############################################################################            
     def OnPaint(self, evt):
@@ -3297,23 +3358,23 @@ class FicheSequence(BaseFiche):
     def GetDoc(self):
         return self.sequence
        
-    ######################################################################################################
-    def OnMove(self, evt):
-        if hasattr(self, 'tip'):
-            self.tip.Show(False)
-            self.call.Stop()
-        x, y = evt.GetPosition()
-        _x, _y = self.CalcUnscrolledPosition(x, y)
-        xx, yy = self.ctx.device_to_user(_x, _y)
-        branche = self.sequence.HitTest(xx, yy)
-        if branche != None:
-            elem = branche.GetData()
-            if hasattr(elem, 'tip'):
-                x, y = self.ClientToScreen((x, y))
-                elem.tip.Position((x,y), (0,0))
-                self.call = wx.CallLater(500, elem.tip.Show, True)
-                self.tip = elem.tip
-        evt.Skip()
+#    ######################################################################################################
+#    def OnMove(self, evt):
+#        if hasattr(self, 'tip'):
+#            self.tip.Show(False)
+#            self.call.Stop()
+#        x, y = evt.GetPosition()
+#        _x, _y = self.CalcUnscrolledPosition(x, y)
+#        xx, yy = self.ctx.device_to_user(_x, _y)
+#        branche = self.sequence.HitTest(xx, yy)
+#        if branche != None:
+#            elem = branche.GetData()
+#            if hasattr(elem, 'tip'):
+#                x, y = self.ClientToScreen((x, y))
+#                elem.tip.Position((x,y), (0,0))
+#                self.call = wx.CallLater(500, elem.tip.Show, True)
+#                self.tip = elem.tip
+#        evt.Skip()
 
 
 #    #############################################################################            
@@ -3361,113 +3422,113 @@ class FicheProjet(BaseFiche):
         BaseFiche.__init__(self, parent)
         self.projet = projet
         
-        #
-        # Création du Tip (PopupInfo) pour les compétences
-        #
-        l = 0
-        popup = PopupInfo2(self.projet.GetApp(), u"Compétence")
-        popup.sizer.SetItemSpan(popup.titre, (1,2)) 
-        l += 1
-        
-        self.tip_comp = popup.CreerTexte((l,0), (1,2), flag = wx.ALL)
-        self.tip_comp.SetForegroundColour("CHARTREUSE4")
-        self.tip_comp.SetFont(wx.Font(11, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.NORMAL))
-        l += 1
-        
-        self.tip_arbre = popup.CreerArbre((l,0), (1,2), projet.GetReferentiel(), flag = wx.ALL)
-        l += 1
-        
-        self.lab_legend = {}
-        for i, (part , tit) in enumerate(self.projet.GetProjetRef().parties.items()):
-            self.lab_legend[part] = popup.CreerTexte((l,i), txt = tit, flag = wx.ALIGN_RIGHT|wx.RIGHT)
-            self.lab_legend[part].SetFont(wx.Font(8, wx.SWISS, wx.FONTSTYLE_ITALIC, wx.NORMAL))
-            self.lab_legend[part].SetForegroundColour(constantes.getCoulPartie(part))
-            
-            
-#        self.lab_legend1 = popup.CreerTexte((l,0), txt = u"Conduite", flag = wx.ALIGN_RIGHT|wx.RIGHT)
-#        self.lab_legend1.SetFont(wx.Font(8, wx.SWISS, wx.FONTSTYLE_ITALIC, wx.NORMAL))
-#        self.lab_legend1.SetForegroundColour(constantes.COUL_PARTIE['C'])
+#        #
+#        # Création du Tip (PopupInfo) pour les compétences
+#        #
+#        l = 0
+#        popup = PopupInfo2(self.projet.GetApp(), u"Compétence")
+#        popup.sizer.SetItemSpan(popup.titre, (1,2)) 
+#        l += 1
 #        
-#        self.lab_legend2 = popup.CreerTexte((l,1), txt = u"Soutenance", flag = wx.ALIGN_LEFT|wx.LEFT)
-#        self.lab_legend2.SetFont(wx.Font(8, wx.SWISS, wx.FONTSTYLE_ITALIC, wx.NORMAL))
-#        self.lab_legend2.SetForegroundColour(constantes.COUL_PARTIE['S'])
-        
-        self.popup = popup
-#        self.MiseAJourTypeEnseignement(self.projet.classe.typeEnseignement)
+#        self.tip_comp = popup.CreerTexte((l,0), (1,2), flag = wx.ALL)
+#        self.tip_comp.SetForegroundColour("CHARTREUSE4")
+#        self.tip_comp.SetFont(wx.Font(11, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.NORMAL))
+#        l += 1
+#        
+#        self.tip_arbre = popup.CreerArbre((l,0), (1,2), projet.GetReferentiel(), flag = wx.ALL)
+#        l += 1
+#        
+#        self.lab_legend = {}
+#        for i, (part , tit) in enumerate(self.projet.GetProjetRef().parties.items()):
+#            self.lab_legend[part] = popup.CreerTexte((l,i), txt = tit, flag = wx.ALIGN_RIGHT|wx.RIGHT)
+#            self.lab_legend[part].SetFont(wx.Font(8, wx.SWISS, wx.FONTSTYLE_ITALIC, wx.NORMAL))
+#            self.lab_legend[part].SetForegroundColour(constantes.getCoulPartie(part))
+#            
+#            
+##        self.lab_legend1 = popup.CreerTexte((l,0), txt = u"Conduite", flag = wx.ALIGN_RIGHT|wx.RIGHT)
+##        self.lab_legend1.SetFont(wx.Font(8, wx.SWISS, wx.FONTSTYLE_ITALIC, wx.NORMAL))
+##        self.lab_legend1.SetForegroundColour(constantes.COUL_PARTIE['C'])
+##        
+##        self.lab_legend2 = popup.CreerTexte((l,1), txt = u"Soutenance", flag = wx.ALIGN_LEFT|wx.LEFT)
+##        self.lab_legend2.SetFont(wx.Font(8, wx.SWISS, wx.FONTSTYLE_ITALIC, wx.NORMAL))
+##        self.lab_legend2.SetForegroundColour(constantes.COUL_PARTIE['S'])
+#        
+#        self.popup = popup
+##        self.MiseAJourTypeEnseignement(self.projet.classe.typeEnseignement)
         
     ######################################################################################################
     def GetDoc(self):
         return self.projet
             
-    ######################################################################################################
-    def OnMove(self, evt):
-        
-        if hasattr(self, 'tip'):
-            self.tip.Show(False)
-            self.call.Stop()
-        
-        x, y = evt.GetPosition()
-        _x, _y = self.CalcUnscrolledPosition(x, y)
-        xx, yy = self.ctx.device_to_user(_x, _y)
-        evt.Skip()
-        
-        #
-        # Cas général
-        #
-        branche = self.projet.HitTest(xx, yy)
-        if branche != None:
-            elem = branche.GetData()
-            if hasattr(elem, 'tip'):
-                x, y = self.ClientToScreen((x, y))
-                elem.tip.Position((x+1,y+1), (0,0))
-                self.call = wx.CallLater(500, elem.tip.Show, True)
-                self.tip = elem.tip
-                evt.Skip()
-                return    
-        
-        #
-        # Cas particulier des compétences
-        #
-        kCompObj = self.projet.HitTestCompetence(xx, yy)
-        if kCompObj != None:
-            kComp, obj = kCompObj
-            if hasattr(self, 'popup'):
-#                for tip in self.tip_indic:
-#                    tip.Destroy()
-#                self.tip_indic = []
-                x, y = self.ClientToScreen((x, y))
-#                type_ens = self.projet.classe.typeEnseignement
-                prj = self.projet.GetProjetRef()
-                
-                competence = prj.getCompetence(kComp[0], kComp[1:])
-                        
-                intituleComp = competence[0]
-                
-                k = kComp.split(u"\n")
-                if len(k) > 1:
-                    titre = u"Compétences\n"+u"\n".join(k)
-                else:
-                    titre = u"Compétence\n"+k[0]
-                self.popup.SetTitre(titre)
-             
-                intituleComp = "\n".join([textwrap.fill(ind, 50) for ind in intituleComp.split(u"\n")]) 
-             
-                self.popup.SetTexte(intituleComp, self.tip_comp)
-                
-                self.tip_arbre.DeleteChildren(self.tip_arbre.root)
-                if type(competence[1]) == dict:  
-                    indicEleve = obj.GetDicIndicateurs()
-                else:
-                    indicEleve = obj.GetDicIndicateurs()[kComp]
-                self.tip_arbre.Construire(competence[1], indicEleve, prj)
-                
-                self.popup.Fit()
-
-                self.popup.Position((x,y), (0,0))
-                self.call = wx.CallLater(500, self.popup.Show, True)
-                self.tip = self.popup
-            
-        evt.Skip()
+#    ######################################################################################################
+#    def OnMove(self, evt):
+#        
+#        if hasattr(self, 'tip'):
+#            self.tip.Show(False)
+#            self.call.Stop()
+#        
+#        x, y = evt.GetPosition()
+#        _x, _y = self.CalcUnscrolledPosition(x, y)
+#        xx, yy = self.ctx.device_to_user(_x, _y)
+#        evt.Skip()
+#        
+#        #
+#        # Cas général
+#        #
+#        branche = self.projet.HitTest(xx, yy)
+#        if branche != None:
+#            elem = branche.GetData()
+#            if hasattr(elem, 'tip'):
+#                x, y = self.ClientToScreen((x, y))
+#                elem.tip.Position((x+1,y+1), (0,0))
+#                self.call = wx.CallLater(500, elem.tip.Show, True)
+#                self.tip = elem.tip
+#                evt.Skip()
+#                return    
+#        
+#        #
+#        # Cas particulier des compétences
+#        #
+#        kCompObj = self.projet.HitTestCompetence(xx, yy)
+#        if kCompObj != None:
+#            kComp, obj = kCompObj
+#            if hasattr(self, 'popup'):
+##                for tip in self.tip_indic:
+##                    tip.Destroy()
+##                self.tip_indic = []
+#                x, y = self.ClientToScreen((x, y))
+##                type_ens = self.projet.classe.typeEnseignement
+#                prj = self.projet.GetProjetRef()
+#                
+#                competence = prj.getCompetence(kComp[0], kComp[1:])
+#                        
+#                intituleComp = competence[0]
+#                
+#                k = kComp.split(u"\n")
+#                if len(k) > 1:
+#                    titre = u"Compétences\n"+u"\n".join(k)
+#                else:
+#                    titre = u"Compétence\n"+k[0]
+#                self.popup.SetTitre(titre)
+#             
+#                intituleComp = "\n".join([textwrap.fill(ind, 50) for ind in intituleComp.split(u"\n")]) 
+#             
+#                self.popup.SetTexte(intituleComp, self.tip_comp)
+#                
+#                self.tip_arbre.DeleteChildren(self.tip_arbre.root)
+#                if type(competence[1]) == dict:  
+#                    indicEleve = obj.GetDicIndicateurs()
+#                else:
+#                    indicEleve = obj.GetDicIndicateurs()[kComp]
+#                self.tip_arbre.Construire(competence[1], indicEleve, prj)
+#                
+#                self.popup.Fit()
+#
+#                self.popup.Position((x,y), (0,0))
+#                self.call = wx.CallLater(500, self.popup.Show, True)
+#                self.tip = self.popup
+#            
+#        evt.Skip()
 
 
     #############################################################################
@@ -3497,37 +3558,37 @@ class FicheProgression(BaseFiche):
         BaseFiche.__init__(self, parent)
         self.progression = progression
         
-        #
-        # Création du Tip (PopupInfo) pour les compétences
-        #
-        l = 0
-        popup = PopupInfo2(self.progression.GetApp(), u"Compétence")
-        popup.sizer.SetItemSpan(popup.titre, (1,2)) 
-        l += 1
-        
-        self.tip_comp = popup.CreerTexte((l,0), (1,2), flag = wx.ALL)
-        self.tip_comp.SetForegroundColour("CHARTREUSE4")
-        self.tip_comp.SetFont(wx.Font(11, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.NORMAL))
-        l += 1
-        
-        
-        
-        self.lab_legend = {}
-        for i, (part , tit) in enumerate(self.progression.GetProjetRef().parties.items()):
-            self.lab_legend[part] = popup.CreerTexte((l,i), txt = tit, flag = wx.ALIGN_RIGHT|wx.RIGHT)
-            self.lab_legend[part].SetFont(wx.Font(8, wx.SWISS, wx.FONTSTYLE_ITALIC, wx.NORMAL))
-            self.lab_legend[part].SetForegroundColour(constantes.getCoulPartie(part))
-            
-            
-#        self.lab_legend1 = popup.CreerTexte((l,0), txt = u"Conduite", flag = wx.ALIGN_RIGHT|wx.RIGHT)
-#        self.lab_legend1.SetFont(wx.Font(8, wx.SWISS, wx.FONTSTYLE_ITALIC, wx.NORMAL))
-#        self.lab_legend1.SetForegroundColour(constantes.COUL_PARTIE['C'])
+#        #
+#        # Création du Tip (PopupInfo) pour les compétences
+#        #
+#        l = 0
+#        popup = PopupInfo2(self.progression.GetApp(), u"Compétence")
+#        popup.sizer.SetItemSpan(popup.titre, (1,2)) 
+#        l += 1
 #        
-#        self.lab_legend2 = popup.CreerTexte((l,1), txt = u"Soutenance", flag = wx.ALIGN_LEFT|wx.LEFT)
-#        self.lab_legend2.SetFont(wx.Font(8, wx.SWISS, wx.FONTSTYLE_ITALIC, wx.NORMAL))
-#        self.lab_legend2.SetForegroundColour(constantes.COUL_PARTIE['S'])
-        
-        self.popup = popup
+#        self.tip_comp = popup.CreerTexte((l,0), (1,2), flag = wx.ALL)
+#        self.tip_comp.SetForegroundColour("CHARTREUSE4")
+#        self.tip_comp.SetFont(wx.Font(11, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.NORMAL))
+#        l += 1
+#        
+#        
+#        
+#        self.lab_legend = {}
+#        for i, (part , tit) in enumerate(self.progression.GetProjetRef().parties.items()):
+#            self.lab_legend[part] = popup.CreerTexte((l,i), txt = tit, flag = wx.ALIGN_RIGHT|wx.RIGHT)
+#            self.lab_legend[part].SetFont(wx.Font(8, wx.SWISS, wx.FONTSTYLE_ITALIC, wx.NORMAL))
+#            self.lab_legend[part].SetForegroundColour(constantes.getCoulPartie(part))
+#            
+#            
+##        self.lab_legend1 = popup.CreerTexte((l,0), txt = u"Conduite", flag = wx.ALIGN_RIGHT|wx.RIGHT)
+##        self.lab_legend1.SetFont(wx.Font(8, wx.SWISS, wx.FONTSTYLE_ITALIC, wx.NORMAL))
+##        self.lab_legend1.SetForegroundColour(constantes.COUL_PARTIE['C'])
+##        
+##        self.lab_legend2 = popup.CreerTexte((l,1), txt = u"Soutenance", flag = wx.ALIGN_LEFT|wx.LEFT)
+##        self.lab_legend2.SetFont(wx.Font(8, wx.SWISS, wx.FONTSTYLE_ITALIC, wx.NORMAL))
+##        self.lab_legend2.SetForegroundColour(constantes.COUL_PARTIE['S'])
+#        
+#        self.popup = popup
 #        self.MiseAJourTypeEnseignement(self.projet.classe.typeEnseignement)
         
     ######################################################################################################
@@ -3538,72 +3599,7 @@ class FicheProgression(BaseFiche):
     def OnLeave(self, evt = None):
         self.GetDoc().HideTip()
             
-    ######################################################################################################
-    def OnMove(self, evt):
-#        if hasattr(self, 'tip'):
-#            self.tip.Show(False)
-#            self.call.Stop()
-        
-        x, y = evt.GetPosition()
-        _x, _y = self.CalcUnscrolledPosition(x, y)
-        xx, yy = self.ctx.device_to_user(_x, _y)
-        evt.Skip()
-        
-        #
-        # Cas général
-        #
-        zone = self.GetDoc().HitTest(xx, yy)
-        if zone is not None:
-            x, y = self.ClientToScreen((x, y))
-            self.GetDoc().Move(zone, x, y)
-        else:
-            self.GetDoc().HideTip()
-#            elem = branche.GetData()
-#            if hasattr(elem, 'tip'):
-#                x, y = self.ClientToScreen((x, y))
-#                elem.tip.Position((x+1,y+1), (0,0))
-#                self.call = wx.CallLater(500, elem.tip.Show, True)
-#                self.tip = elem.tip
-#                evt.Skip()
-#                return    
-        
-        #
-        # Cas particulier des compétences
-        #
-#        kCompObj = self.GetDoc().HitTestCompetence(xx, yy)
-#        if kCompObj != None:
-#            kComp, obj = kCompObj
-#            if hasattr(self, 'popup'):
-##                for tip in self.tip_indic:
-##                    tip.Destroy()
-##                self.tip_indic = []
-#                x, y = self.ClientToScreen((x, y))
-##                type_ens = self.projet.classe.typeEnseignement
-#         
-#                competence = self.GetDoc().GetReferentiel().getCompetence(kComp)
-#                        
-#                intituleComp = competence[0]
-#                
-#                k = kComp.split(u"\n")
-#                if len(k) > 1:
-#                    titre = u"Compétences\n"+u"\n".join(k)
-#                else:
-#                    titre = u"Compétence\n"+k[0]
-#                self.popup.SetTitre(titre)
-#             
-#                intituleComp = "\n".join([textwrap.fill(ind, 50) for ind in intituleComp.split(u"\n")]) 
-#             
-#                self.popup.SetTexte(intituleComp, self.tip_comp)
-#                
-#         
-#                
-#                self.popup.Fit()
-#
-#                self.popup.Position((x,y), (0,0))
-#                self.call = wx.CallLater(500, self.popup.Show, True)
-#                self.tip = self.popup
-            
-        evt.Skip()
+
 
 
     #############################################################################
@@ -3718,20 +3714,23 @@ class PanelPropriete(scrolled.ScrolledPanel):
     
     #########################################################################################################
     def sendEvent(self, doc = None, modif = u"", draw = True, obj = None):
+        self.GetDocument().GetApp().sendEvent(doc, modif, draw, obj)
 #        print "sendEvent", modif
-        self.eventAttente = False
-        evt = SeqEvent(myEVT_DOC_MODIFIED, self.GetId())
-        if doc != None:
-            evt.SetDocument(doc)
-        else:
-            evt.SetDocument(self.GetDocument())
-        
-        if modif != u"":
-            evt.SetModif(modif)
-            
-        evt.SetDraw(draw)
-        
-        self.GetEventHandler().ProcessEvent(evt)
+#        self.eventAttente = False
+#        evt = SeqEvent(myEVT_DOC_MODIFIED, self.GetId())
+#        
+#        if doc != None:
+#            evt.SetDocument(doc)
+#        else:
+#            evt.SetDocument(self.GetDocument())
+#        
+#        if modif != u"":
+#            evt.SetModif(modif)
+#            
+#        evt.SetDraw(draw)
+#        
+#        print "evt", evt
+#        self.GetEventHandler().ProcessEvent(evt)
         
     
     #########################################################################################################
@@ -4040,7 +4039,8 @@ class PanelPropriete_Projet(PanelPropriete):
 #        self.commctrl = wx.TextCtrl(pageGen, -1, u"", style=wx.TE_MULTILINE)
         self.commctrl = TextCtrl_Help(pageGen, u"")
         sb.Add(self.commctrl, 1, flag = wx.EXPAND)
-        pageGen.sizer.Add(sb, (0,1), (2,1),  flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.EXPAND, border = 2)
+        pageGen.sizer.Add(sb, (0,1), (2,1),
+                          flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.EXPAND, border = 2)
 #        pageGen.Bind(wx.EVT_TEXT, self.EvtText, self.commctrl)
         pageGen.Bind(stc.EVT_STC_MODIFIED, self.EvtText, self.commctrl)
         pageGen.sizer.AddGrowableCol(1)
@@ -4981,7 +4981,7 @@ class PanelPropriete_Classe(PanelPropriete):
         self.btnSupprimerSys.SetToolTipString(u"Supprimer le système de la liste")
         self.Bind(wx.EVT_BUTTON, self.EvtButtonSupprSyst, self.btnSupprimerSys)
         
-        s = Systeme(self.classe)
+        s = pysequence.Systeme(self.classe)
         self.panelSys = s.GetPanelPropriete(pageSys)
         self.panelSys.Show()
     
@@ -5224,7 +5224,7 @@ class PanelPropriete_Classe(PanelPropriete):
 #                break
 
 #        s = self.panelSys.systeme.Copie()
-        s = Systeme(self.classe, nom)
+        s = pysequence.Systeme(self.classe, nom)
 #        print "   +++", s.nom
         self.lstSys.Append(s.nom)
         self.classe.systemes.append(s)
@@ -6973,7 +6973,7 @@ class PanelPropriete_Seance(PanelPropriete):
         
     #############################################################################            
     def OnSelectColour(self, event):
-        print event.GetValue()
+#        print "OnSelectColour", event.GetValue()
         self.seance.couleur = couleur.Wx2Couleur(event.GetValue())
         self.sendEvent(modif = u"Mofification de la couleur de la séance")
         
@@ -6990,7 +6990,7 @@ class PanelPropriete_Seance(PanelPropriete):
     def EvtTextIntitule(self, event):
         self.seance.SetIntitule(self.textctrl.GetValue())
         event.Skip()
-        
+        print "EvtTextIntitule", self.onUndoRedo()
         modif = u"Modification de l'intitulé de la Séance"
         if self.onUndoRedo():
             self.sendEvent(modif = modif)
@@ -7030,6 +7030,7 @@ class PanelPropriete_Seance(PanelPropriete):
         
     #############################################################################            
     def EvtComboBox(self, event):
+#        print "EvtComboBox"
         if self.seance.typeSeance in ["R", "S"] and self.GetReferentiel().listeTypeSeance[event.GetSelection()] not in ["R", "S"]:
             dlg = wx.MessageDialog(self, u"Modifier le type de cette séance entrainera la suppression de toutes les sous séances !\n" \
                                          u"Voulez-vous continuer ?",
@@ -7045,7 +7046,8 @@ class PanelPropriete_Seance(PanelPropriete):
                 self.seance.SupprimerSousSeances()
         
         deja = self.seance.typeSeance in ACTIVITES
-        
+#        print self.GetReferentiel().seances
+#        print self.cbType.GetStringSelection()
         self.seance.SetType(get_key(self.GetReferentiel().seances, self.cbType.GetStringSelection(), 1))
         self.seance.parent.OrdonnerSeances()
         
@@ -7062,6 +7064,7 @@ class PanelPropriete_Seance(PanelPropriete):
         self.AdapterAuType()
         self.ConstruireListeSystemes()
         self.Layout()
+#        print "ok"
         self.sendEvent(modif = u"Modification du type de Séance")
        
         
@@ -7993,7 +7996,7 @@ class PanelPropriete_Systeme(PanelPropriete):
         self.sizer.Add(titre, (0,0), (1,1), flag = wx.ALIGN_TOP|wx.TOP|wx.BOTTOM|wx.LEFT, border = 3)
         
         
-        if isinstance(systeme.parent, Sequence):
+        if isinstance(systeme.parent, pysequence.Sequence):
             self.cbListSys = wx.ComboBox(self, -1, u"",
                                          choices = [u"défini localement"],
                                          style = wx.CB_DROPDOWN
@@ -8196,7 +8199,7 @@ class PanelPropriete_Systeme(PanelPropriete):
 #        print "   ", self.parent
 #        print "   ", self.systeme.parent
 #        classe = self.systeme.GetClasse()
-        if isinstance(self.systeme.parent, Classe): # Cas du système édité depuis le panel propriété de la Classe
+        if isinstance(self.systeme.parent, pysequence.Classe): # Cas du système édité depuis le panel propriété de la Classe
             return False
         if self.systeme.lienClasse is not None:
             return True                             # C'est un système qui appartient à la classe
@@ -8243,7 +8246,7 @@ class PanelPropriete_Systeme(PanelPropriete):
         
         self.SetImage()
         
-        if isinstance(self.systeme.parent, Sequence):
+        if isinstance(self.systeme.parent, pysequence.Sequence):
             if sendEvt:
                 self.sendEvent()
         
@@ -11563,7 +11566,7 @@ class myProgressDialog(wx.ProgressDialog):
 
 #############################################################################################################
 #
-# Information PopUp
+# Information PopUp (format HTML)
 # 
 #############################################################################################################
 import cStringIO
@@ -11574,7 +11577,8 @@ class PopupInfo(wx.PopupWindow):
         wx.PopupWindow.__init__(self, parent, wx.BORDER_SIMPLE)
         self.parent = parent
       
-        self.html = html.HtmlWindow(self, -1, size = (100,100),style=wx.NO_FULL_REPAINT_ON_RESIZE|html.HW_SCROLLBAR_NEVER)
+        self.html = html.HtmlWindow(self, -1, size = (100,100),
+                                    style=wx.NO_FULL_REPAINT_ON_RESIZE|html.HW_SCROLLBAR_NEVER)
         self.SetPage(page)
         self.SetAutoLayout(False)
         
@@ -11620,12 +11624,8 @@ class PopupInfo(wx.PopupWindow):
 
         self.SetClientSize((ir.GetWidth(), ir.GetHeight()))
 
-        self.html.SetSize( (ir.GetWidth(), ir.GetHeight()) )
+        self.html.SetSize((ir.GetWidth(), ir.GetHeight()))
 
-        
-#        self.SetClientSize(self.html.GetSize())
-#        self.SetSize(self.html.GetSize())
-        
         
     ##########################################################################################
     def OnLeave(self, event):
@@ -11639,177 +11639,177 @@ class PopupInfo(wx.PopupWindow):
         
         
         
-class PopupInfo2(wx.PopupWindow):
-    def __init__(self, parent, titre = "", doc = None, branche = None):
-        wx.PopupWindow.__init__(self, parent, wx.BORDER_SIMPLE)
-        self.parent = parent
-        self.doc = doc
-        self.branche = branche
-        
-        #
-        # Un sizer "tableau", comme ça, on y met ce qu'on veut où on veut ...
-        #
-        self.sizer = wx.GridBagSizer()
-        
-        #
-        # Un titre
-        #
-        self.titre = wx.StaticText(self, -1, titre)
-        font = wx.Font(15, wx.SWISS, wx.NORMAL, wx.NORMAL)
-        self.titre.SetFont(font)
-        self.sizer.Add(self.titre, (0,0), flag = wx.ALL|wx.ALIGN_CENTER, border = 5)
-        
-        self.SetSizerAndFit(self.sizer)
-        self.Bind(wx.EVT_LEAVE_WINDOW, self.OnLeave)
-        self.Bind(wx.EVT_LEFT_UP, self.OnClick)
-        
-    ##########################################################################################
-    def SetBranche(self, branche):
-        self.branche = branche
-        
-    ##########################################################################################
-    def OnClick(self, event):
-        if self.doc != None and self.branche != None:
-            self.doc.SelectItem(self.branche)
-            self.Show(False)
-            
-    ##########################################################################################
-    def OnLeave(self, event):
-        x, y = event.GetPosition()
-        w, h = self.GetSize()
-        if not ( x > 0 and y > 0 and x < w and y < h):
-            self.Show(False)
-        event.Skip()
-
-
-    ##########################################################################################
-    def SetTitre(self, titre):
-        self.titre.SetLabel(titre)
-        
-        
-    ##########################################################################################
-    def CreerLien(self, position = (3,0), span = (1,1)):
-        titreLien = wx.StaticText(self, -1, "")
-        ctrlLien = wx.BitmapButton(self, -1, wx.NullBitmap)
-        ctrlLien.Show(False)
-        self.Bind(wx.EVT_BUTTON, self.OnClickLien, ctrlLien)
-        sizerLien = wx.BoxSizer(wx.HORIZONTAL)
-        sizerLien.Add(titreLien, flag = wx.ALIGN_CENTER_VERTICAL)
-        sizerLien.Add(ctrlLien)
-        self.sizer.Add(sizerLien, position, span, flag = wx.ALL, border = 5)
-        return titreLien, ctrlLien
-
-    ##########################################################################################
-    def SetLien(self, lien, titreLien, ctrlLien):
-        self.lien = lien # ATTENTION ! Cette faéon de faire n'autorise qu'un seul lien par PopupInfo !
-        if lien.type == "":
-            ctrlLien.Show(False)
-            titreLien.Show(False)
-            ctrlLien.SetToolTipString(toSystemEncoding(lien.path))
-        else:
-            ctrlLien.SetToolTipString(toSystemEncoding(lien.path))
-            if lien.type == "f":
-                titreLien.SetLabel(u"Fichier :")
-                ctrlLien.SetBitmapLabel(wx.ArtProvider_GetBitmap(wx.ART_NORMAL_FILE))
-                ctrlLien.Show(True)
-            elif lien.type == 'd':
-                titreLien.SetLabel(u"Dossier :")
-                ctrlLien.SetBitmapLabel(wx.ArtProvider_GetBitmap(wx.ART_FOLDER))
-                ctrlLien.Show(True)
-            elif lien.type == 'u':
-                titreLien.SetLabel(u"Lien web :")
-                ctrlLien.SetBitmapLabel(images.Icone_web.GetBitmap())
-                ctrlLien.Show(True)
-            elif lien.type == 's':
-                titreLien.SetLabel(u"Fichier séquence :")
-                ctrlLien.SetBitmapLabel(images.Icone_sequence.GetBitmap())
-                ctrlLien.Show(True)
-            self.Layout()
-            self.Fit()
-        
-    ##########################################################################################
-    def OnClickLien(self, evt):
-        if self.parent.typ == 'seq':
-            path = self.parent.sequence.GetPath()
-        else:
-            path = self.parent.projet.GetPath()
-        self.lien.Afficher(path, fenSeq = self.parent.parent)
-        
-    ##########################################################################################
-    def CreerImage(self, position = (4,0), span = (1,1), flag = wx.ALIGN_CENTER):
-        image = wx.StaticBitmap(self, -1, wx.NullBitmap)
-        image.Show(False)
-        self.sizer.Add(image, position, span, flag = flag|wx.ALL, border = 5)
-        return image
-    
-    ##########################################################################################
-    def SetImage(self, image, ctrlImage):
-        if image == None:
-            ctrlImage.Show(False)
-        else:
-            ctrlImage.SetBitmap(image)
-            ctrlImage.Show(True)
-        self.Layout()
-        self.Fit()
-        
-    
-    ##########################################################################################
-    def CreerTexte(self, position = (1,0), span = (1,1), txt = u"", flag = wx.ALIGN_CENTER, font = None):
-        if font == None:
-            font = getFont_9()
-        ctrlTxt = wx.StaticText(self, -1, txt)
-        ctrlTxt.SetFont(font)
-        self.sizer.Add(ctrlTxt, position, span, flag = flag|wx.ALL, border = 5)
-        self.Layout()
-        self.Fit()
-        return ctrlTxt
-    
-    ##########################################################################################
-    def CreerArbre(self, position = (1,0), span = (1,1), ref = None, dic = {}, flag = wx.ALIGN_CENTER):
-        arbre = ArbreCompetencesPopup(self)
-        self.sizer.Add(arbre, position, span, flag = flag|wx.ALL|wx.EXPAND, border = 5)
-        self.Layout()
-        self.Fit()
-        return arbre
-    
-    ##########################################################################################
-    def SetTexte(self, texte, ctrlTxt):
-        if texte == "":
-            ctrlTxt.Show(False)
-        else:
-            if hasattr(ctrlTxt, 'SetLabelMarkup'):
-                ctrlTxt.SetLabelMarkup(texte)
-            else:
-                ctrlTxt.SetLabel(texte.replace('<b>', '').replace('</b>', '') )
-            ctrlTxt.Show(True)
-            self.Layout()
-            self.Fit()
-    
-    ##########################################################################################
-    def CreerRichTexte(self, objet, position = (6,0), span = (1,1)):
-        self.objet = objet # ATTENTION ! Cette faéon de faire n'autorise qu'un seul objet par PopupInfo !
-        self.rtp = richtext.RichTextPanel(self, objet, size = (300, 200))
-        self.sizer.Add(self.rtp, position, span, flag = wx.ALL|wx.EXPAND, border = 5)
-        self.SetRichTexte()
-        return self.rtp
-    
-    ##########################################################################################
-    def SetRichTexte(self):
-        self.rtp.Show(self.objet.description != None)
-        self.rtp.Ouvrir()
-        self.Layout()
-        self.Fit()
-        
-    ##########################################################################################
-    def DeplacerItem(self, item, pos = None, span = None):
-        if item == None:
-            item = self.titre
-        if pos != None:
-            self.sizer.SetItemPosition(item, pos) 
-        if span != None:
-            self.sizer.SetItemSpan(item, span) 
-        
-        
+#class PopupInfo2(wx.PopupWindow):
+#    def __init__(self, parent, titre = "", doc = None, branche = None):
+#        wx.PopupWindow.__init__(self, parent, wx.BORDER_SIMPLE)
+#        self.parent = parent
+#        self.doc = doc
+#        self.branche = branche
+#        
+#        #
+#        # Un sizer "tableau", comme ça, on y met ce qu'on veut où on veut ...
+#        #
+#        self.sizer = wx.GridBagSizer()
+#        
+#        #
+#        # Un titre
+#        #
+#        self.titre = wx.StaticText(self, -1, titre)
+#        font = wx.Font(15, wx.SWISS, wx.NORMAL, wx.NORMAL)
+#        self.titre.SetFont(font)
+#        self.sizer.Add(self.titre, (0,0), flag = wx.ALL|wx.ALIGN_CENTER, border = 5)
+#        
+#        self.SetSizerAndFit(self.sizer)
+#        self.Bind(wx.EVT_LEAVE_WINDOW, self.OnLeave)
+#        self.Bind(wx.EVT_LEFT_UP, self.OnClick)
+#        
+#    ##########################################################################################
+#    def SetBranche(self, branche):
+#        self.branche = branche
+#        
+#    ##########################################################################################
+#    def OnClick(self, event):
+#        if self.doc != None and self.branche != None:
+#            self.doc.SelectItem(self.branche)
+#            self.Show(False)
+#            
+#    ##########################################################################################
+#    def OnLeave(self, event):
+#        x, y = event.GetPosition()
+#        w, h = self.GetSize()
+#        if not ( x > 0 and y > 0 and x < w and y < h):
+#            self.Show(False)
+#        event.Skip()
+#
+#
+#    ##########################################################################################
+#    def SetTitre(self, titre):
+#        self.titre.SetLabel(titre)
+#        
+#        
+#    ##########################################################################################
+#    def CreerLien(self, position = (3,0), span = (1,1)):
+#        titreLien = wx.StaticText(self, -1, "")
+#        ctrlLien = wx.BitmapButton(self, -1, wx.NullBitmap)
+#        ctrlLien.Show(False)
+#        self.Bind(wx.EVT_BUTTON, self.OnClickLien, ctrlLien)
+#        sizerLien = wx.BoxSizer(wx.HORIZONTAL)
+#        sizerLien.Add(titreLien, flag = wx.ALIGN_CENTER_VERTICAL)
+#        sizerLien.Add(ctrlLien)
+#        self.sizer.Add(sizerLien, position, span, flag = wx.ALL, border = 5)
+#        return titreLien, ctrlLien
+#
+#    ##########################################################################################
+#    def SetLien(self, lien, titreLien, ctrlLien):
+#        self.lien = lien # ATTENTION ! Cette faéon de faire n'autorise qu'un seul lien par PopupInfo !
+#        if lien.type == "":
+#            ctrlLien.Show(False)
+#            titreLien.Show(False)
+#            ctrlLien.SetToolTipString(toSystemEncoding(lien.path))
+#        else:
+#            ctrlLien.SetToolTipString(toSystemEncoding(lien.path))
+#            if lien.type == "f":
+#                titreLien.SetLabel(u"Fichier :")
+#                ctrlLien.SetBitmapLabel(wx.ArtProvider_GetBitmap(wx.ART_NORMAL_FILE))
+#                ctrlLien.Show(True)
+#            elif lien.type == 'd':
+#                titreLien.SetLabel(u"Dossier :")
+#                ctrlLien.SetBitmapLabel(wx.ArtProvider_GetBitmap(wx.ART_FOLDER))
+#                ctrlLien.Show(True)
+#            elif lien.type == 'u':
+#                titreLien.SetLabel(u"Lien web :")
+#                ctrlLien.SetBitmapLabel(images.Icone_web.GetBitmap())
+#                ctrlLien.Show(True)
+#            elif lien.type == 's':
+#                titreLien.SetLabel(u"Fichier séquence :")
+#                ctrlLien.SetBitmapLabel(images.Icone_sequence.GetBitmap())
+#                ctrlLien.Show(True)
+#            self.Layout()
+#            self.Fit()
+#        
+#    ##########################################################################################
+#    def OnClickLien(self, evt):
+#        if self.parent.typ == 'seq':
+#            path = self.parent.sequence.GetPath()
+#        else:
+#            path = self.parent.projet.GetPath()
+#        self.lien.Afficher(path, fenSeq = self.parent.parent)
+#        
+#    ##########################################################################################
+#    def CreerImage(self, position = (4,0), span = (1,1), flag = wx.ALIGN_CENTER):
+#        image = wx.StaticBitmap(self, -1, wx.NullBitmap)
+#        image.Show(False)
+#        self.sizer.Add(image, position, span, flag = flag|wx.ALL, border = 5)
+#        return image
+#    
+#    ##########################################################################################
+#    def SetImage(self, image, ctrlImage):
+#        if image == None:
+#            ctrlImage.Show(False)
+#        else:
+#            ctrlImage.SetBitmap(image)
+#            ctrlImage.Show(True)
+#        self.Layout()
+#        self.Fit()
+#        
+#    
+#    ##########################################################################################
+#    def CreerTexte(self, position = (1,0), span = (1,1), txt = u"", flag = wx.ALIGN_CENTER, font = None):
+#        if font == None:
+#            font = getFont_9()
+#        ctrlTxt = wx.StaticText(self, -1, txt)
+#        ctrlTxt.SetFont(font)
+#        self.sizer.Add(ctrlTxt, position, span, flag = flag|wx.ALL, border = 5)
+#        self.Layout()
+#        self.Fit()
+#        return ctrlTxt
+#    
+#    ##########################################################################################
+#    def CreerArbre(self, position = (1,0), span = (1,1), ref = None, dic = {}, flag = wx.ALIGN_CENTER):
+#        arbre = ArbreCompetencesPopup(self)
+#        self.sizer.Add(arbre, position, span, flag = flag|wx.ALL|wx.EXPAND, border = 5)
+#        self.Layout()
+#        self.Fit()
+#        return arbre
+#    
+#    ##########################################################################################
+#    def SetTexte(self, texte, ctrlTxt):
+#        if texte == "":
+#            ctrlTxt.Show(False)
+#        else:
+#            if hasattr(ctrlTxt, 'SetLabelMarkup'):
+#                ctrlTxt.SetLabelMarkup(texte)
+#            else:
+#                ctrlTxt.SetLabel(texte.replace('<b>', '').replace('</b>', '') )
+#            ctrlTxt.Show(True)
+#            self.Layout()
+#            self.Fit()
+#    
+#    ##########################################################################################
+#    def CreerRichTexte(self, objet, position = (6,0), span = (1,1)):
+#        self.objet = objet # ATTENTION ! Cette faéon de faire n'autorise qu'un seul objet par PopupInfo !
+#        self.rtp = richtext.RichTextPanel(self, objet, size = (300, 200))
+#        self.sizer.Add(self.rtp, position, span, flag = wx.ALL|wx.EXPAND, border = 5)
+#        self.SetRichTexte()
+#        return self.rtp
+#    
+#    ##########################################################################################
+#    def SetRichTexte(self):
+#        self.rtp.Show(self.objet.description != None)
+#        self.rtp.Ouvrir()
+#        self.Layout()
+#        self.Fit()
+#        
+#    ##########################################################################################
+#    def DeplacerItem(self, item, pos = None, span = None):
+#        if item == None:
+#            item = self.titre
+#        if pos != None:
+#            self.sizer.SetItemPosition(item, pos) 
+#        if span != None:
+#            self.sizer.SetItemSpan(item, span) 
+#        
+#        
 
 
 

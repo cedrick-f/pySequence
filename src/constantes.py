@@ -827,16 +827,116 @@ BASE_FICHE_HTML_ELEVE = """
 </HTML>
 """
 
+
+BASE_FICHE_HTML_SEANCE = """
+<HTML>
+    <p style="text-align: center;"><font size="12"><b>Séance</b></font></p>
+<p id="int">_</p>
+<p id="typ">_</p>
+
+</HTML>
+"""
+
+BASE_FICHE_HTML_CI = """
+<HTML>
+    <p style="text-align: center;"><font size="12"><b>CI</b></font></p>
+    <dl id = "ci">
+    </dl> 
+
+</HTML>
+"""
+
+BASE_FICHE_HTML_COMP = """
+<HTML>
+    <p style="text-align: center;"><font size="12"><b>Compétence</b></font></p>
+    <dl id = "list">
+    </dl> 
+
+</HTML>
+"""
+
+BASE_FICHE_HTML_COMP_PRJ = """
+<HTML>
+    <font size="12" color="green"><b><h1 id = "titre" style="text-align: center;">_</h1></b></font>
+    <p id="int">_</p>
+    <ul id = "indic">
+    </ul> 
+    <ul id = "leg">
+    </ul> 
+</HTML>
+"""
+
+BASE_FICHE_HTML_SAV = """
+<HTML>
+    <p style="text-align: center;"><font size="12"><b>Savoir</b></font></p>
+    <dl id = "list">
+    </dl> 
+
+</HTML>
+"""
+
+BASE_FICHE_HTML_SYSTEME = """
+<HTML>
+    <p style="color:blue;text-align: center;font-size: 16">Système</p>
+<p id="nom">_</p>
+<p id="nbr">_</p>
+<p id="img">_</p>
+
+</HTML>
+"""
+
+
+BASE_FICHE_HTML_SUPPORT = """
+<HTML>
+    <font size="12"><b><h1 style="text-align: center;">Support</h1></b></font>
+<p id="nom">_</p>
+<p id="des">_</p>
+<p id="img">_</p>
+
+</HTML>
+"""
+
+BASE_FICHE_HTML_PROB = """
+<HTML>
+<font size="12" color="green"><b><h1 id = "titre" style="text-align: center;">Problématique</h1></b></font>
+
+<p id="txt">_</p>
+<p id="int">_</p>
+
+</HTML>
+"""
+
+BASE_FICHE_HTML_PROJET = """
+<HTML>
+<font size="12" color="darkred"><b><h1 id = "titre" style="text-align: center;">Projet</h1></b></font>
+
+<p id="int">_</p>
+
+</HTML>
+"""
+
+
+BASE_FICHE_HTML_TACHE = """
+<HTML>
+<font size="12" color="green"><b><h1 id = "titre" style="text-align: center;">_</h1></b></font>
+
+<p id="txt">_</p>
+<p id="int">_</p>
+
+</HTML>
+"""
+
 BASE_FICHE_HTML_SEQ = """
 <HTML>
     <p style="text-align: center;"><font size="12"><b>Séquence</b></font></p>
 <p id="nom">Intitulé</p>
-<p id="ap"></p>
+<p id="ap">_</p>
 </HTML>
 """
    
 BASE_FICHE_HTML = """
 <HTML>
+    <p id = "titre" style="text-align: center;"><font size="12"><b>_</b></font></p>
 </HTML>
 """
 
