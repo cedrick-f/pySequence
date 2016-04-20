@@ -3145,7 +3145,6 @@ class BaseFiche(wx.ScrolledWindow):
 
     ######################################################################################################
     def OnEnter(self, event):
-#        print "OnEnter Fiche"
         self.SetFocus()
         event.Skip()
         

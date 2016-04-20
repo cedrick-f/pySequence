@@ -536,7 +536,7 @@ class Referentiel(XMLelem):
         #
         self.Famille = u""
         self.Code = u""
-        self.Enseignement = [u""    ,   u"",    u""]
+        self.Enseignement = [u""    ,   u"",    u"", u""]
         self.options = {}               # options de l'enseignement : {Code : nomFichier}
         self.tr_com = []                # tronc commun de l'enseignement : [Code, nomFichier]
         self.AnneeDebut = ""            # Position de l'enseignement dans la scolarité (PERIODE+Année)
@@ -1060,20 +1060,18 @@ class Referentiel(XMLelem):
         self.Famille = sh_g.cell(2,0).value
         self.Code = sh_g.cell(2,1).value
         self.AnneeDebut = sh_g.cell(2,2).value
-        self.Enseignement[0] = sh_g.cell(6,0).value #Abréviation    
-        self.Enseignement[1] = sh_g.cell(6,1).value #Nom complet    
-        self.Enseignement[2] = sh_g.cell(6,2).value #Famille
+        self.Enseignement[0] = sh_g.cell(6,0).value # Abréviation    
+        self.Enseignement[1] = sh_g.cell(6,1).value # Nom complet    
+        self.Enseignement[2] = sh_g.cell(6,2).value # Famille : abréviation
+        self.Enseignement[3] = sh_g.cell(6,3).value # Famille : Nom complet
         debug = False#self.Code == "STS_SN_IR"
-        if debug: print "code :", self.Code
-#        print self.Code
-        
-        
+
         if sh_g.ncols > 3:
             lig = [l  for l in range(10, 17) if sh_g.cell(l,3).value != u""]
             for l in lig:
                 self.periodes.append([sh_g.cell(l,2).value, int(sh_g.cell(l,3).value)])
             
-        self.FichierLogo = sh_g.cell(6,3).value
+        self.FichierLogo = sh_g.cell(19,1).value
         
         #
         #

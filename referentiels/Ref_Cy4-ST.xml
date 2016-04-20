@@ -1,10 +1,10 @@
-<Referentiel B_CI_BO="True" B_CI_cible="False" B_domaines="False" S_AnneeDebut="Sec1" S_Code="ScTec" S_Famille="ScTec" S_FichierLogo="" S_abrevCI="CI" S_nomCI="Centre(s) d'Intérêt/Thémes/Thématiques" S_nomFonctions="Fonctions" S_nomTaches="Tâches">
+<Referentiel B_CI_BO="True" B_CI_cible="False" B_domaines="False" S_AnneeDebut="Sec2" S_Code="Cy4-ST" S_Famille="ScTec" S_FichierLogo="" S_abrevCI="CI" S_nomCI="Centre(s) d'Intérêt/Thémes/Thématiques" S_nomFonctions="Fonctions" S_nomTaches="Tâches">
   <l_BO_URL>
     <l_00 S_00="Programme" S_01="http://www.education.gouv.fr/pid285/bulletin_officiel.html?cid_bo=94708" />
   </l_BO_URL>
   <l_BO_dossier S_00="collège" />
   <l_CentresInterets S_00="Matière, mouvement, énergie, information" S_01="Le vivant, sa diversité et les fonctions qui le caractérisent" S_02="Matériaux et objets techniques" S_03="La planète Terre. Les êtres vivants dans leur environnement" />
-  <l_Enseignement S_00="Cy4-Tech" S_01="Cycle 4 - Technologie" S_02="Cy3-ST" />
+  <l_Enseignement S_00="Cy4-ST" S_01="Cycle 4 - Sciences et technologie" S_02="ST - Collège" S_03="Sciences et Technologie - Collège" />
   <d_aColNon />
   <d_activites>
     <l_ED S_00="Etude de dossier" S_01="Activité d'étude de dossier" />

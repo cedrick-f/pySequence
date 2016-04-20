@@ -6,7 +6,7 @@
   </l_BO_URL>
   <l_BO_dossier S_00="SSI" />
   <l_CentresInterets S_00="Analyser un système fonctionnellement et structurellement" S_01="Expérimenter et mesurer sur un système réel pour évaluer ses performances" S_02="Analyser des constituants d’un système réel d’un point de vue structurel et comportemental" S_03="Concevoir et utiliser un modèle relatif à un système en vue d’évaluer les performances de la chaîne d’information" S_04="Concevoir et utiliser un modèle relatif à un système en vue d’évaluer les performances de la chaîne d’énergie" />
-  <l_Enseignement S_00="S-SI" S_01="Bac S - Sciences de l'ingénieur" S_02="S-SI" />
+  <l_Enseignement S_00="S-SI" S_01="Bac S - Sciences de l'ingénieur" S_02="S-SI" S_03="Sciences de l'ingénieur" />
   <d_aColNon B_C="True" />
   <d_activites>
     <l_ED S_00="Etude de dossier" S_01="Activité d'étude de dossier" />

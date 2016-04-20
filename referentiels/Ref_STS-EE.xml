@@ -1,10 +1,10 @@
-<Referentiel B_CI_BO="False" B_CI_cible="False" B_domaines="False" S_AnneeDebut="Sup1" S_Code="STS_EE" S_Famille="STS" S_FichierLogo="Logo_STS_EL.jpg" S_abrevCI="Th " S_nomCI="Thèmes" S_nomFonctions="Activités professionnelles" S_nomTaches="Compétences associées">
+<Referentiel B_CI_BO="False" B_CI_cible="False" B_domaines="False" S_AnneeDebut="Sup1" S_Code="STS_EE" S_Famille="STS" S_FichierLogo="" S_abrevCI="Th " S_nomCI="Thèmes" S_nomFonctions="Activités professionnelles" S_nomTaches="Compétences associées">
   <l_BO_URL>
     <l_00 S_00="Programme" S_01="http://www.education.gouv.fr/pid25535/bulletin_officiel.html?cid_bo=82979" />
   </l_BO_URL>
   <l_BO_dossier S_00="STS/EE" />
   <l_CentresInterets S_00="Mise en service d’un système d’un ouvrage ou d’un équipement" S_01="La distribution de l’énergie électrique" S_02="Comportement des charges mécaniques" S_03="Les différents procédés de transformation de l’énergie" S_04="La réversibilité énergétique" S_05="Dimensionnement énergétique dans les systèmes autonomes et embarqués" S_06="La qualité de l’énergie électrique" S_07="La gestion des coûts" S_08="Asservissement et régulation" S_09="Les équipements communicants" />
-  <l_Enseignement S_00="STS-EE" S_01="BTS - Electrotechnique (beta)" S_02="STS" />
+  <l_Enseignement S_00="STS-EE" S_01="BTS - Electrotechnique (beta)" S_02="STS" S_03="Section de Technicien Supérieur" />
   <d_aColNon />
   <d_activites>
     <l_ED S_00="Etude de dossier" S_01="Activité d'étude de dossier" />

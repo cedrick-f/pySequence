@@ -4,7 +4,7 @@
   </l_BO_URL>
   <l_BO_dossier S_00="STI2D" />
   <l_CentresInterets S_00="Configuration et performances du traitement de l'information" S_01="Instrumentation/Acquisition et restitution de grandeurs physiques" S_02="Communication de l'information/Au sein d'un système" S_03="Gestion de l'information/Structures matérielles et logicielles associées au traitement de l'information" S_04="Communication entre systèmes" S_05="Traitement analogique de l'information" S_06="Cycle de vie d'un produit" />
-  <l_Enseignement S_00="STI2D-SIN" S_01="STI2D : Systèmes d'Information et Numérique" S_02="STI2D" />
+  <l_Enseignement S_00="STI2D-SIN" S_01="STI2D : Systèmes d'Information et Numérique" S_02="STI2D" S_03="Sciences et Technologies de l'Industrie et du Développement Durable" />
   <d_aColNon B_C="True" />
   <d_activites>
     <l_ED S_00="Etude de dossier" S_01="Activité d'étude de dossier" />

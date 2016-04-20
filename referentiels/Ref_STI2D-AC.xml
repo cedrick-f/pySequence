@@ -4,7 +4,7 @@
   </l_BO_URL>
   <l_BO_dossier S_00="STI2D" />
   <l_CentresInterets S_00="Participation à une étude architecturale" S_01="Vérification de la résistance" S_02="Protection" S_03="Le confort" S_04="Organisation de réalisation" S_05="Vie en oeuvre" S_06="Reconditionnement de l'ouvrage" S_07="Valorisation de la fin de vie de l'ouvrage" />
-  <l_Enseignement S_00="STI2D-AC" S_01="STI2D : Architecture et Construction" S_02="STI2D" />
+  <l_Enseignement S_00="STI2D-AC" S_01="STI2D : Architecture et Construction" S_02="STI2D" S_03="Sciences et Technologies de l'Industrie et du Développement Durable" />
   <d_aColNon B_C="True" />
   <d_activites>
     <l_ED S_00="Etude de dossier" S_01="Activité d'étude de dossier" />

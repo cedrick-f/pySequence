@@ -1,11 +1,11 @@
-<Referentiel B_CI_BO="False" B_CI_cible="False" B_domaines="True" S_AnneeDebut="Sec5" S_Code="EE-DIT" S_Famille="2nde" S_FichierLogo="logo_si_cit_2.jpg" S_abrevCI="Th " S_nomCI="Thèmes" S_nomFonctions="Fonctions" S_nomTaches="Tâches">
+<Referentiel B_CI_BO="False" B_CI_cible="False" B_domaines="True" S_AnneeDebut="Sec5" S_Code="EE-DIT" S_Famille="2nde" S_FichierLogo="" S_abrevCI="Th " S_nomCI="Thèmes" S_nomFonctions="Fonctions" S_nomTaches="Tâches">
   <l_BO_URL>
     <l_00 S_00="Programme SI" S_01="http://media.education.gouv.fr/file/special_4/74/7/sciences_ingenieur_143747.pdf" />
     <l_01 S_00="Programme CIT" S_01="http://media.education.gouv.fr/file/special_4/75/1/creation_innovation_technologiques_143751.pdf" />
   </l_BO_URL>
   <l_BO_dossier S_00="2nde" />
   <l_CentresInterets S_00="La mobilité" S_01="Le sport" S_02="La santé" S_03="L'habitat" S_04="L'énergie" S_05="La communication" S_06="La culture et les loisirs" S_07="Les infrastructures" S_08="La bionique" S_09="La dématérialisation des biens et des services" />
-  <l_Enseignement S_00="EE-DIT" S_01="Enseignement d'exploration 2nde - DIT(beta)--Design et Innovation Technologique" S_02="2nde" />
+  <l_Enseignement S_00="EE-DIT" S_01="Enseignement d'exploration 2nde - DIT(beta)--Design et Innovation Technologique" S_02="EE - 2nde" S_03="Enseignement d'Exploration Seconde" />
   <d_aColNon B_C="True" B_S1="True" B_S2="True" />
   <d_activites>
     <l_ED S_00="Etude de dossier" S_01="Activité d'étude de dossier" />

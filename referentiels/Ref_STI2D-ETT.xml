@@ -4,7 +4,7 @@
   </l_BO_URL>
   <l_BO_dossier S_00="STI2D" />
   <l_CentresInterets S_00="Développement durable et compétitivité des produits" S_01="Design, créativité et innovation" S_02="Caractéristiques des matériaux et structures" S_03="Solutions constructives des matériaux et des structures" S_04="Dimensionnement des structures et choix des matériaux" S_05="Efficacité énergétique liée au comportement des matériaux et des structures" S_06="Formes et caractéristiques de l'énergie" S_07="Organisation structurelle et solutions constructives des chaînes d'énergie" S_08="Amélioration de l'efficacité énergétique dans les chaînes d'énergie" S_09="Amélioration de la gestion de l'énergie" S_10="Formes et caractéristiques de l'information" S_11="Organisation structurelle et solutions constructives des chaînes d'information" S_12="Commande temporelle des systèmes" S_13="Informations liées au comportement des matériaux et des structures" S_14="Optimisation des paramètres par simulation globale" />
-  <l_Enseignement S_00="STI2D-ETT" S_01="STI2D : Enseignement Technologique Transversal" S_02="STI2D" />
+  <l_Enseignement S_00="STI2D-ETT" S_01="STI2D : Enseignement Technologique Transversal" S_02="STI2D" S_03="Sciences et Technologies de l'Industrie et du Développement Durable" />
   <d_aColNon />
   <d_activites>
     <l_ED S_00="Etude de dossier" S_01="Activité d'étude de dossier" />
