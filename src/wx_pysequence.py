@@ -10746,13 +10746,15 @@ class ArbreTypeEnseignement(CT.CustomTreeCtrl):
         
         CT.CustomTreeCtrl.__init__(self, parent, -1, pos, (150, -1), style, 
                                    agwStyle = CT.TR_HIDE_ROOT|CT.TR_FULL_ROW_HIGHLIGHT\
-                                   |CT.TR_HAS_VARIABLE_ROW_HEIGHT|CT.TR_HAS_BUTTONS)#CT.TR_ALIGN_WINDOWS|CCT.TR_NO_HEADER|T.TR_AUTO_TOGGLE_CHILD|\CT.TR_AUTO_CHECK_CHILD|\CT.TR_AUTO_CHECK_PARENT|
+                                   |CT.TR_HAS_VARIABLE_ROW_HEIGHT|CT.TR_HAS_BUTTONS\
+                                   |CT.TR_TOOLTIP_ON_LONG_ITEMS)#CT.TR_ALIGN_WINDOWS|CCT.TR_NO_HEADER|T.TR_AUTO_TOGGLE_CHILD|\CT.TR_AUTO_CHECK_CHILD|\CT.TR_AUTO_CHECK_PARENT|
         self.Unbind(wx.EVT_KEY_DOWN)
         self.panelParent = panelParent
 #        self.SetBackgroundColour(wx.WHITE)
         self.SetToolTip(wx.ToolTip(u"Choisir le type d'enseignement"))
         
         self.Bind(wx.EVT_TREE_SEL_CHANGED, self.OnClick)
+        self.Bind(wx.EVT_TREE_ITEM_GETTOOLTIP, self.OnToolTip)
 #        self.Bind(wx.EVT_TREE_ITEM_COLLAPSING, self.OnItemCollapsed)
         
 #        self.AddColumn(u"")
@@ -10775,7 +10777,8 @@ class ArbreTypeEnseignement(CT.CustomTreeCtrl):
 #            print "   ", t, st, self.panelParent.pourProjet
             
             if t[0] == "_" or (self.panelParent.pourProjet and len(REFERENTIELS[t].projets) == 0):
-                branche = self.AppendItem(racine, REFERENTIELS[st[0]].Enseignement[2])
+                branche = self.AppendItem(racine, REFERENTIELS[st[0]].Enseignement[2], 
+                                          data = REFERENTIELS[st[0]].Enseignement[3])
             else:
                 branche = self.AppendItem(racine, u"")#, ct_type=2)#, image = self.arbre.images["Seq"])
                 rb = wx.RadioButton(self, -1, REFERENTIELS[t].Enseignement[0])
@@ -10816,6 +10819,16 @@ class ArbreTypeEnseignement(CT.CustomTreeCtrl):
                 rb.GetWindow().SetValue(True)
           
       
+    ######################################################################################              
+    def OnToolTip(self, event = None, item = None):
+        node = event.GetItem()
+        data = self.GetPyData(node)
+        if isinstance(data, unicode) or isinstance(data, str):
+            event.SetToolTip(wx.ToolTip(data))
+        else:
+            event.Skip()
+    
+    
     ######################################################################################              
     def OnClick(self, event = None, item = None):
 #        print "OnClick"
