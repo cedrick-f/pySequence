@@ -3170,7 +3170,6 @@ class BaseFiche(wx.ScrolledWindow):
         x, y = evt.GetPosition()
         _x, _y = self.CalcUnscrolledPosition(x, y)
         xx, yy = self.ctx.device_to_user(_x, _y)
-        evt.Skip()
         
         #
         # Cas général
@@ -3247,27 +3246,37 @@ class BaseFiche(wx.ScrolledWindow):
     
     #############################################################################            
     def OnClick(self, evt):
-        _x, _y = self.CalcUnscrolledPosition(evt.GetX(), evt.GetY())
+        self.GetDoc().HideTip()
+        x, y = evt.GetPosition()
+        _x, _y = self.CalcUnscrolledPosition(x, y)
         xx, yy = self.ctx.device_to_user(_x, _y)
         
         #
-        # Changement de branche sur l'arbre
+        # Cas général
         #
-        branche = self.GetDoc().HitTest(xx, yy)
-        if branche != None:
-            self.GetDoc().SelectItem(branche, depuisFiche = True)
+        zone = self.GetDoc().HitTest(xx, yy)
+        if zone is not None:
+            x, y = self.ClientToScreen((x, y))
+            self.GetDoc().Click(zone, x, y)
+        else:
+            self.GetDoc().HideTip()
             
+        
+        
+#        if branche != None:
+#            self.GetDoc().SelectItem(branche, depuisFiche = True)
+#            
+#            
+#        if not self.GetDoc().classe.verrouillee:
+#            #
+#            # Autres actions
+#            #
+#            position = self.GetDoc().HitTestPosition(xx, yy)
+#            if position != None:
+#                self.GetDoc().SetPosition(position)
             
-        if not self.GetDoc().classe.verrouillee:
-            #
-            # Autres actions
-            #
-            position = self.GetDoc().HitTestPosition(xx, yy)
-            if position != None:
-                self.GetDoc().SetPosition(position)
-            
-        return branche
-    
+        
+        evt.Skip()
     
     #############################################################################            
     def OnDClick(self, evt):

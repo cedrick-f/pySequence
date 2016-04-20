@@ -1515,8 +1515,6 @@ class Referentiel(XMLelem):
 
     #########################################################################
     def getCompetence(self, comp):
-#        print "getCompetence", comp
-        print self.dicoCompetences
         return self.dicoCompetences[comp[0]].getCompetence(comp[1:])
 #        for disc, comp in self.dicoCompetences.items():
 #            cc = comp.getCompetence(comp)
@@ -1559,11 +1557,12 @@ class Referentiel(XMLelem):
         return r*tailleReference
 
 
-#    #########################################################################
-#    def getSavoir(self, code, dic = None, c = 1, gene = None):
-#        """ Renvoie un savoir d'après son code
-#            (utilisé dans daw_cairo_seq)
-#        """
+    #########################################################################
+    def getSavoir(self, code):
+        """ Renvoie un savoir d'après son code
+        """
+        return self.dicoSavoirs[code[0]].getSavoir(code[1:])
+    
 ##        print "getSavoir", code, 
 #        if dic == None:
 #            

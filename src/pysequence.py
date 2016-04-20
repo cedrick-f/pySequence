@@ -1191,7 +1191,23 @@ class BaseDoc():
                 return z
         return
     
-    
+    ######################################################################################  
+    def Click(self, zone, x, y):
+        print "Click", zone
+        self.HideTip()
+        
+        if zone.obj is not None:
+            if hasattr(zone.obj, "branche"):
+                self.SelectItem(zone.obj.branche, depuisFiche = True)
+            
+        elif zone.param is not None and zone.param[:3] == "POS" and len(zone.param) == 4:
+            if not self.classe.verrouillee:
+                self.SetPosition(int(zone.param[3]))
+            
+
+            
+            
+            
     ######################################################################################  
     def Move(self, zone, x, y):
 #        print "Move", zone
@@ -1576,6 +1592,28 @@ class Sequence(BaseDoc, Objet_sequence):
         for sy in self.systemes:
             sy.SetLien()  
 
+    ######################################################################################  
+    def GetTip(self, param, obj):
+        
+        self.tip.SetPage(self.GetFicheXML().toxml())
+        
+        if param is None:
+            print obj
+        else:
+            if param[:3] == "POS":
+                print param
+                
+            elif param == "EQU":
+                print param
+                
+            elif type(obj) == list:
+                print "liste", obj
+                
+            else:
+                print "obj", obj
+                
+        
+        return self.tip
         
     ######################################################################################  
     def VerifPb(self):
@@ -2820,11 +2858,15 @@ class Projet(BaseDoc, Objet_sequence):
                 if competence is not None:
                     self.ficheXML = self.GetFicheXML(constantes.BASE_FICHE_HTML_COMP_PRJ)
                     
+                    nc = self.GetReferentiel().dicoCompetences["S"].nomGenerique
+                    if len(self.competences) > 1:
+                        nc += "s"
+            
                     k = param[1:].split(u"\n")
                     if len(k) > 1:
-                        titre = u"Compétences "+u" - ".join(k)
+                        titre = nc + u" - ".join(k)
                     else:
-                        titre = u"Compétence "+k[0]
+                        titre = nc + k[0]
                     SetWholeText(self.ficheXML, "titre", titre)
                     
                     intituleComp = competence[0]
@@ -4608,22 +4650,26 @@ class Competences(Objet_sequence):
         return self.competences[num]
     
     ######################################################################################  
+    def GetNomGenerique(self):
+        return self.GetReferentiel().dicoCompetences["S"].nomGenerique
+    
+    ######################################################################################  
     def GetIntit(self, num):
-        return REFERENTIELS[self.parent.typeEnseignement].getCompetence(self.competences[num])[0]
+        return self.GetReferentiel().getCompetence(self.competences[num])[0]
 
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
         self.arbre = arbre
         self.codeBranche = CodeBranche(self.arbre, u"")
 #        self.codeBranche.SetBackgroundColour(wx.Colour(COUL_COMPETENCES[0]*255, COUL_COMPETENCES[1]*255, COUL_COMPETENCES[2]*255))
-        t = self.GetReferentiel().dicoCompetences["S"].nomGenerique
+        t = self.GetNomGenerique()
         self.branche = arbre.AppendItem(branche, t, wnd = self.codeBranche, data = self,
                                         image = self.arbre.images["Com"])
         self.arbre.SetItemTextColour(self.branche, couleur.GetCouleurWx(COUL_COMPETENCES))
         
     #############################################################################
     def MiseAJourTypeEnseignement(self):
-        self.arbre.SetItemText(self.branche, self.GetReferentiel().dicoCompetences["S"].nomGenerique)
+        self.arbre.SetItemText(self.branche, self.GetNomGenerique())
 #        if hasattr(self, 'panelPropriete'):
 #            self.GetPanelPropriete().Destroy()
 #            self.panelPropriete = PanelPropriete_Competences(self.panelParent, self)
@@ -4638,15 +4684,17 @@ class Competences(Objet_sequence):
     ######################################################################################  
     def SetTip(self):
         self.ficheXML = self.GetFicheXML()
+
+        nc = self.GetNomGenerique()
+        if len(self.competences) > 1:
+            nc += "s"
+        SetWholeText(self.ficheXML, "titre", nc)
         
         for i, c in enumerate(self.competences):
             XML_AjouterElemListe(self.ficheXML, "list", self.GetCode(i), self.GetIntit(i))
       
-#        self.tip.SetPage(self.ficheXML.toxml())
-#    ######################################################################################  
-#    def AfficherMenuContextuel(self, itemArbre):
-#        if itemArbre == self.branche:
-#            self.parent.app.AfficherMenuContextuel([[u"Supprimer", functools.partial(self.parent.SupprimerObjectif, item = itemArbre)]])
+        self.tip.SetPage(self.ficheXML.toxml())
+
             
             
 ####################################################################################
@@ -4729,11 +4777,13 @@ class Savoirs(Objet_sequence):
     def GetCode(self, num):
         return self.savoirs[num]
     
-    
     ######################################################################################  
     def GetTypCode(self, num):
         return self.savoirs[num][0], self.savoirs[num][1:]
     
+    ######################################################################################  
+    def GetNomGenerique(self):
+        return self.GetReferentiel().dicoSavoirs["S"].nomGenerique
     
     ######################################################################################  
     def GetIntit(self, num):
@@ -4744,7 +4794,7 @@ class Savoirs(Objet_sequence):
         
         self.arbre = arbre
         self.codeBranche = CodeBranche(self.arbre, u"")
-        t = self.GetReferentiel().dicoSavoirs["S"].nomGenerique
+        t = self.GetNomGenerique()
         self.branche = arbre.AppendItem(branche, t, wnd = self.codeBranche, data = self,
                                         image = self.arbre.images["Sav"])
         
@@ -4752,7 +4802,7 @@ class Savoirs(Objet_sequence):
     #############################################################################
     def MiseAJourTypeEnseignement(self):
         if hasattr(self, 'arbre'):
-            self.arbre.SetItemText(self.branche, self.GetReferentiel().dicoSavoirs["S"].nomGenerique)
+            self.arbre.SetItemText(self.branche, self.GetNomGenerique())
 #        self.GetPanelPropriete().MiseAJourTypeEnseignement()
 #            self.panelPropriete.construire()
     
@@ -4766,6 +4816,11 @@ class Savoirs(Objet_sequence):
     ######################################################################################  
     def SetTip(self):
         self.ficheXML = self.GetFicheXML()
+        
+        nc = self.GetNomGenerique()
+        if len(self.savoirs) > 1:
+            nc += "s"
+        SetWholeText(self.ficheXML, "titre", nc)
         
         for i, c in enumerate(self.savoirs):
             XML_AjouterElemListe(self.ficheXML, "list", self.GetCode(i), self.GetIntit(i))

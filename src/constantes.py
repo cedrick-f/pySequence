@@ -848,7 +848,7 @@ BASE_FICHE_HTML_CI = """
 
 BASE_FICHE_HTML_COMP = """
 <HTML>
-    <p style="text-align: center;"><font size="12"><b>Compétence</b></font></p>
+    <font size="12" color="green"><b><h1 id = "titre" style="text-align: center;">_</h1></b></font>
     <dl id = "list">
     </dl> 
 
@@ -868,7 +868,7 @@ BASE_FICHE_HTML_COMP_PRJ = """
 
 BASE_FICHE_HTML_SAV = """
 <HTML>
-    <p style="text-align: center;"><font size="12"><b>Savoir</b></font></p>
+    <font size="12" color="green"><b><h1 id = "titre" style="text-align: center;">_</h1></b></font>
     <dl id = "list">
     </dl> 
 
