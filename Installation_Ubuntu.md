@@ -8,15 +8,25 @@ pySéquence fonctionne sous Ubuntu avec les restrictions suivantes :
 ## Ubuntu 15.10 (et probablement les versions suivantes) ##
 
 ### pour utiliser pySéquence ###
+```bash
 sudo apt-get install python-pip
+
 sudo apt-get install python-wxgtk3.0
+
 sudo pip install pyenchant
+
 sudo apt-get install python-reportlab
+
 sudo pip install xhtml2pdf
+
 sudo pip install xlrd
+
 sudo pip install xlwt
+
 sudo pip install comtypes
+
 sudo pip install pyperclip
+```
 
 ### pour générer un paquet RPM ###
 sudo apt-get install cx-freeze
