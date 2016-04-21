@@ -45,7 +45,7 @@ import wx
 
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "7.0-beta.1"
+__version__ = "7.0-beta.2"
 print __version__
 
 
@@ -117,6 +117,11 @@ def GetAppnameVersion():
 def GetNewVersion(win):
     print "Recherche nouvelle version ..."
     url = "https://api.github.com/repos/cedrick-f/pySequence/releases/latest"
+    proxy_handler = urllib2.ProxyHandler()
+    opener = urllib2.build_opener(proxy_handler)
+    urllib2.install_opener(opener)
+    print proxy_handler.proxies
+    print dir(proxy_handler)
     req = urllib2.Request(url)
     try:
         handler = urllib2.urlopen(req)
