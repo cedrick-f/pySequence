@@ -868,7 +868,7 @@ BASE_FICHE_HTML_COMP_PRJ = """
 
 BASE_FICHE_HTML_SAV = """
 <HTML>
-    <font size="12" color="green"><b><h1 id = "titre" style="text-align: center;">_</h1></b></font>
+    <font size="12" color="blue"><b><h1 id = "titre" style="text-align: center;">_</h1></b></font>
     <dl id = "list">
     </dl> 
 

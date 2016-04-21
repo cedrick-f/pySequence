@@ -1203,6 +1203,8 @@ class BaseDoc():
         if zone.obj is not None:
             if hasattr(zone.obj, "branche"):
                 self.SelectItem(zone.obj.branche, depuisFiche = True)
+            elif hasattr(zone.obj, "branchePre"):
+                self.SelectItem(zone.obj.branchePre, depuisFiche = True)
             
         elif zone.param is not None and len(zone.param) > 3 and zone.param[:3] == "POS" :
             if not self.classe.verrouillee:
@@ -1337,23 +1339,18 @@ class Sequence(BaseDoc, Objet_sequence):
     ######################################################################################  
     def __repr__(self):
         return u"Séquence" + self.intitule
-#        t = u"Séquence :"+ + "\n"
-#        t += "   " + self.CI.__repr__() + "\n"
-#        for c in self.obj.values():
-#            t += "   " + c.__repr__() + "\n"
-#        for s in self.seances:
-#            t += "   " + s.__repr__() + "\n"
-#        return t
 
 
     ######################################################################################  
     def GetType(self):
         return 'seq'
-    
+
+
     ######################################################################################  
     def GetPanelPropriete(self, parent):
         return PanelPropriete_Sequence(parent, self)
-    
+
+
     ######################################################################################  
     def Initialise(self):
         self.AjouterListeSystemes(self.classe.systemes)
@@ -1909,6 +1906,7 @@ class Sequence(BaseDoc, Objet_sequence):
         self.branchePre = arbre.AppendItem(self.branche, Titres[1], 
                                            data = self.prerequis, 
                                            image = self.arbre.images["Sav"])
+        self.prerequis.branche = self.branchePre
         for ps in self.prerequisSeance:
             ps.ConstruireArbre(arbre, self.branchePre)
         
@@ -2211,18 +2209,7 @@ class Projet(BaseDoc, Objet_sequence):
 
         # Année Scolaire
         self.annee = constantes.getAnneeScolaire()
-        
-#        self.pasVerouille = True
-        
-        # Par défaut, la revue 1 est après la Conception détaillée
-#        self.R1apresConception = False
-        
-#        if panelParent:
-#            self.panelPropriete = PanelPropriete_Projet(panelParent, self)
-#            self.panelEleves = PanelPropriete_Racine(panelParent, constantes.TxtRacineEleve)
-#            self.panelTaches = PanelPropriete_Racine(panelParent, constantes.TxtRacineTache)
-#            self.panelEquipe = PanelPropriete_Racine(panelParent, constantes.TxtRacineEquipe)
-        
+                
         self.eleves = []
         
         self.taches = self.creerTachesRevue()
@@ -2873,13 +2860,10 @@ class Projet(BaseDoc, Objet_sequence):
                 competence = prj.getCompetence(param[0], param[1:])
                 if competence is not None:
                     self.ficheXML = self.GetFicheXML(constantes.BASE_FICHE_HTML_COMP_PRJ)
-                    
-                    nc = self.GetReferentiel().dicoCompetences["S"].nomGenerique
-                    if len(self.competences) > 1:
-                        nc += "s"
-            
                     k = param[1:].split(u"\n")
+                    nc = self.GetReferentiel().dicoCompetences["S"].nomGenerique
                     if len(k) > 1:
+                        nc += "s"
                         titre = nc + u" - ".join(k)
                     else:
                         titre = nc + k[0]
@@ -3522,67 +3506,17 @@ class Projet(BaseDoc, Objet_sequence):
         self.app.SetTitre()
         
         self.code = self.GetReferentiel().getCodeProjetDefaut()
-#        print "   ", self.code
 
-#        if ancienRef != None:
-##            print "   anciennePos", self.position
-#            anciennePos = self.position
-#            
-#            kprj = ancienRef.getProjetEval(anciennePos+1)
-##            print "   ancien prj", kprj, self.GetReferentiel().projets.keys()
-#            if kprj in self.GetReferentiel().projets.keys():
-#                self.code = kprj
-#                self.position = self.GetProjetRef().getPeriodeEval()
-#            else:
-#                posRel = 1.0*anciennePos/ancienRef.getNbrPeriodes()
-#                self.position = int(round(self.GetReferentiel().getNbrPeriodes()*posRel)-1)
-#                self.code = self.GetReferentiel().getProjetEval(self.position+1)
-#            
-#        else:
         self.position = self.GetProjetRef().getPeriodeEval()
-
-#        print "   ", self.position, self.code
-        
-#        for t in self.taches:
-#            if t.phase in TOUTES_REVUES_EVAL and (True in self.GetReferentiel().compImposees.values()):
-#                t.GetPanelPropriete().Destroy()
-#                t.panelPropriete = PanelPropriete_Tache(t.panelParent, t)
-#            t.MiseAJourTypeEnseignement(self.classe.referentiel)
-        
-        
-        
+       
         self.SetCompetencesRevuesSoutenance()
-        
         
         for e in self.eleves:
             e.MiseAJourTypeEnseignement()
         
-
         draw_cairo.DefinirCouleurs(self.GetNbrPeriodes(),
                                    len(self.GetReferentiel()._listesCompetences_simple["S"]))
-            
-#            self.GetPanelPropriete().MiseAJourTypeEnseignement()
-        
-        
-    
 
-#    #############################################################################
-#    def MiseAJourCompetencesRevues(self):
-#        print "MiseAJourCompetencesRevues"
-#        #
-#        # Gestion des compétences "Revues"
-#        #
-#        self.SetCompetencesRevuesSoutenance()
-#        for t in [t for t in self.taches if t.phase in TOUTES_REVUES_EVAL_SOUT]:
-#            pp = t.GetPanelPropriete()
-#            if pp:
-##                print "  ", t.phase
-#                pp.ConstruireCompetences()
-#                pp.ConstruireListeEleves()
-#                pp.MiseAJourDuree()
-#                pp.MiseAJour()
-                
-                
                 
     #############################################################################
     def initRevues(self):
@@ -3596,21 +3530,7 @@ class Projet(BaseDoc, Objet_sequence):
     def Verrouiller(self):
         self.classe.Verrouiller(len(self.GetCompetencesUtil()) != 0 or len(self.taches) != self.nbrRevues+1)
 #        self.GetPanelPropriete().Verrouiller(self.pasVerouille)
-        
-#    #############################################################################
-#    def CorrigerIndicateursEleve(self):
-#        """
-#        """
-#        return
-#        if self.nbrRevues == 2:
-#            lstR = [_R1]
-#        else:
-#            lstR = [_R1, _R2]
-#        for t in self.taches:
-#            if t.phase in lstR:
-#                for i, e in enumerate(self.eleves):
-#                    pass
-        
+
     
     ######################################################################################  
     def TesterExistanceGrilles(self, nomFichiers):
@@ -5167,6 +5087,8 @@ class Seance(ElementDeSequence, Objet_sequence):
             8 = G
             16 = C
         """
+#        print "SetEffectif", val, self.GetReferentiel().effectifs.keys()
+        codeEff = None
         if type(val) == int:
             if self.typeSeanc == "R":
                 for s in self.seances:
@@ -5618,7 +5540,7 @@ class Seance(ElementDeSequence, Objet_sequence):
         
         self.GetApp().sendEvent(modif = u"Collé d'un élément")
         
-        self.arbre.SelectItem(seance.branche)        
+        wx.CallAfter(self.arbre.SelectItem, seance.branche)        
 
 
     ######################################################################################  
@@ -5626,7 +5548,7 @@ class Seance(ElementDeSequence, Objet_sequence):
         """ Ajoute une séance é la séance
             !! Uniquement pour les séances de type "Rotation" ou "Serie" !!
         """
-        seance = Seance(self, self.panelParent)
+        seance = Seance(self)
         if self.typeSeance in ["R", "S"] : # Séances en Rotation ou  Parallèle
             self.seances.append(seance)
             
@@ -5641,7 +5563,7 @@ class Seance(ElementDeSequence, Objet_sequence):
         else:
             seance.SetDuree(self.GetDuree())
         
-        self.arbre.SelectItem(seance.branche)
+        wx.CallAfter(self.arbre.SelectItem, seance.branche)
 
 
     ######################################################################################  
@@ -7050,26 +6972,18 @@ class Support(ElementDeSequence, Objet_sequence):
     ######################################################################################  
     def GetNom(self):
         return self.nom
-        
-#    ######################################################################################  
-#    def PubDescription(self):
-#        """ Publie toutes les descriptions de séance
-#            (à l'ouverture)
-#        """
-#        self.tip.SetRichTexte()
-##        self.GetPanelPropriete().rtc.Ouvrir()
-        
-                
     
             
     ######################################################################################  
     def GetCode(self, i = None):
         return u"Support"
 
+
     ######################################################################################  
     def GetIntit(self, i = None):
         return self.nom
-    
+
+
     ######################################################################################  
     def SetCode(self):
 #        if hasattr(self, 'codeBranche'):
@@ -7087,9 +7001,9 @@ class Support(ElementDeSequence, Objet_sequence):
 #            self.tip.SetTexte(u"Nom : "+self.nom, self.tip_nom)
             
 
-    ######################################################################################  
-    def SetImage(self):
-        self.tip.SetImage(self.image, self.tip_image)
+#    ######################################################################################  
+#    def SetImage(self):
+#        self.tip.SetImage(self.image, self.tip_image)
         
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
@@ -7097,8 +7011,8 @@ class Support(ElementDeSequence, Objet_sequence):
         image = self.arbre.images["Sup"]
         self.branche = arbre.AppendItem(branche, u"Support", data = self,#, wnd = self.codeBranche
                                         image = image)
-        if hasattr(self, 'tip'):
-            self.tip.SetBranche(self.branche)
+#        if hasattr(self, 'tip'):
+#            self.tip.SetBranche(self.branche)
 
         
     ######################################################################################  
@@ -7123,7 +7037,11 @@ class Support(ElementDeSequence, Objet_sequence):
         
         self.tip.SetPage(self.ficheXML.toxml())
     
-    
+
+
+
+
+
     
 ####################################################################################
 #
@@ -8030,8 +7948,8 @@ class Eleve(Personne, Objet_sequence):
 #            image = self.image.ConvertToImage().Scale(20, 20).ConvertToBitmap()
         self.branche = arbre.AppendItem(branche, "", data = self, wnd = self.codeBranche,
                                         image = image)
-        if hasattr(self, 'tip'):
-            self.tip.SetBranche(self.branche)
+#        if hasattr(self, 'tip'):
+#            self.tip.SetBranche(self.branche)
         
         self.SetCode()
         

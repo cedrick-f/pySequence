@@ -631,7 +631,7 @@ def Draw(ctx, seq, mouchard = False):
             
     else:
         show_text_rect(ctx, u"Aucun", (x0, y0, rect_width, hl), fontsizeMinMax = (-1, 0.015 * COEF))
-    
+        seq.zones_sens.append(Zone([(x0, y0, rect_width, hl)], obj = seq.prerequis))
 
     
 

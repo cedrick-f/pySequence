@@ -2130,6 +2130,7 @@ class FenetreProjet(FenetreDocument):
         #
         self.projet = Projet(self, self.classe)
         self.classe.SetDocument(self.projet)
+        self.projet.MiseAJourTypeEnseignement()
         
         #
         # Arbre de structure du projet
@@ -7077,8 +7078,10 @@ class PanelPropriete_Seance(PanelPropriete):
         deja = self.seance.typeSeance in ACTIVITES
 #        print self.GetReferentiel().seances
 #        print self.cbType.GetStringSelection()
-        self.seance.SetType(get_key(self.GetReferentiel().seances, self.cbType.GetStringSelection(), 1))
-        self.seance.parent.OrdonnerSeances()
+        self.seance.SetType(get_key(self.GetReferentiel().seances, 
+                                    self.cbType.GetStringSelection(), 1))
+#        self.seance.parent.OrdonnerSeances()
+        self.AdapterAuType()
         
         if self.seance.typeSeance in ACTIVITES:
             if not deja:
@@ -7087,10 +7090,11 @@ class PanelPropriete_Seance(PanelPropriete):
         else:
             self.seance.systemes = []
             
-        if self.cbEff.IsEnabled() and self.cbEff.IsShown():
-            self.seance.SetEffectif(self.cbEff.GetStringSelection())
+#        if self.cbEff.IsEnabled() and self.cbEff.IsShown():
+        
+        self.seance.SetEffectif(self.cbEff.GetStringSelection())
 
-        self.AdapterAuType()
+        
         self.ConstruireListeSystemes()
         self.Layout()
 #        print "ok"
@@ -8880,6 +8884,11 @@ class ArbreDoc(CT.CustomTreeCtrl):
         self.Bind(wx.EVT_ENTER_WINDOW, self.OnEnter)
         
     ######################################################################################################
+    def GetApp(self):
+        return self.doc.GetApp()
+    
+    
+    ######################################################################################################
     def OnEnter(self, event):
         self.SetFocus()
         event.Skip()
@@ -9214,7 +9223,7 @@ class ArbreSequence(ArbreDoc):
             
             self.sequence.OrdonnerSeances()
             self.sequence.reconstruireBrancheSeances(dataSource.parent, dataTarget)
-            self.panelVide.sendEvent(self.sequence, modif = tx) # Solution pour déclencher un "redessiner"
+            self.GetApp().sendEvent(self.sequence, modif = tx) # Solution pour déclencher un "redessiner"
         elif a == 2:
             lst = dataSource.parent.seances
             s = lst.index(dataSource)
@@ -9222,7 +9231,7 @@ class ArbreSequence(ArbreDoc):
                
             self.sequence.OrdonnerSeances() 
             self.SortChildren(self.GetItemParent(self.item))
-            self.panelVide.sendEvent(self.sequence, modif = tx) # Solution pour déclencher un "redessiner"
+            self.GetApp().sendEvent(self.sequence, modif = tx) # Solution pour déclencher un "redessiner"
         elif a == 3:
             lstT = dataTarget.parent.seances
             lstS = dataSource.parent.seances
@@ -9235,7 +9244,7 @@ class ArbreSequence(ArbreDoc):
             
             self.sequence.OrdonnerSeances()
             self.sequence.reconstruireBrancheSeances(dataTarget.parent, p)
-            self.panelVide.sendEvent(self.sequence, modif = t) # Solution pour déclencher un "redessiner"
+            self.GetApp().sendEvent(self.sequence, modif = tx) # Solution pour déclencher un "redessiner"
         elif a == 4:
             lst = dataTarget.parent.seances
             s = lst.index(dataSource)
@@ -9248,7 +9257,7 @@ class ArbreSequence(ArbreDoc):
                
             self.sequence.OrdonnerSeances() 
             self.SortChildren(self.GetItemParent(self.item))
-            self.panelVide.sendEvent(self.sequence, modif = tx) # Solution pour déclencher un "redessiner"
+            self.GetApp().sendEvent(self.sequence, modif = tx) # Solution pour déclencher un "redessiner"
         
         
 #        if isinstance(dataSource, Seance) and dataTarget != dataSource:

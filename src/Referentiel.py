@@ -1649,6 +1649,7 @@ class Referentiel(XMLelem):
     
     #########################################################################    
     def findEffectif(self, lst, eff):
+#        print "findEffectif", lst, eff
         continuer = True
         i = 0
         while continuer:
