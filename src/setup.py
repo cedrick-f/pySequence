@@ -41,9 +41,8 @@ if sys.platform == "win32":
 
 # Inculsion des fichiers de données
 #################################################################################################
-if sys.platform == "win32":
-    includefiles = [('D:/Developpement/Microsoft.VC90.CRT', "Microsoft.VC90.CRT"),]
-includefiles.extend(['LICENSE.txt', 
+
+includefiles = ['LICENSE.txt', 
                      'fichier_prj.ico', 
                      'fichier_seq.ico',
                      'etablissements.xml',
@@ -55,8 +54,10 @@ includefiles.extend(['LICENSE.txt',
 #                     ('C:\\Python27\\lib\\site-packages\\enchant\\*.dll', ''),
 #                     ('C:\\Python27\\lib\\site-packages\\enchant\\share\\enchant\\ispell', 'share/enchant/ispell'),
 #                     ('C:\\Python27\\lib\\site-packages\\enchant\\lib\\enchant\\*.dll', 'lib/enchant'),
-                     ])
- 
+                     ]
+if sys.platform == "win32":
+    includefiles.extend([('D:/Developpement/Microsoft.VC90.CRT', "Microsoft.VC90.CRT"),])
+    
 includefiles.extend(enchant_files)
 
 #includefiles.extend(glob(r"*.xlsx"))
