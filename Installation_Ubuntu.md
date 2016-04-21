@@ -28,7 +28,7 @@ sudo pip install comtypes
 sudo pip install pyperclip
 ```
 
-### pour générer un paquet .deb ###
+### pour générer un paquet .deb (je n'y arrive pas ! avis aux volontaires) ###
 ```bash
 sudo apt-get install python-stdeb
 ```
