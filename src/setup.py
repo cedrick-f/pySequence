@@ -189,6 +189,7 @@ else:
             long_description = long_description,
             license = license,
             scripts=["wx_pysequence.py"],
+            package_dir = {'':''},
             packages = find_packages(),
             install_requires=['python-wxgtk3.0',
                               'python-reportlab',
