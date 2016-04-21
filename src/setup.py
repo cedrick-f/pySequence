@@ -179,18 +179,7 @@ if sys.platform == "win32":
 
 else:
     from setuptools import setup, find_packages
-
-    cible = Executable( script = "wx_pysequence.py",
-                        targetName="pySequence.rpm",
-                        base = base,
-                        compress = True,
-                        icon = os.path.join("", 'logo.ico'),
-                        initScript = None,
-                        copyDependentFiles = True,
-                        appendScriptToExe = False,
-                        appendScriptToLibrary = False
-                        )
-    
+    print "PACKAGES", find_packages()
     setup(  name = name,
             version = version,
             author = author,
@@ -201,5 +190,13 @@ else:
             license = license,
             scripts=["wx_pysequence.py"],
             packages = find_packages(),
+            install_requires=['python-wxgtk3.0',
+                              'python-reportlab',
+                              'pyenchant',
+                              'xhtml2pdf',
+                              'xlrd',
+                              'xlwt',
+                              'comtypes',
+                              'pyperclip']
             )
 
