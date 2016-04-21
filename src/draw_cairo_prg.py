@@ -497,11 +497,11 @@ def Draw(ctx, prg, mouchard = False):
 #    prg.pt_caract = []
 #    prg.pts_caract = []
     rectNom = posNom+tailleNom
-    prg.pt_caract.append(curve_rect_titre(ctx, u"Années scolaires",  
+    prg.pt_caract.append(curve_rect_titre(ctx, u"Progression pédagogique",  
                                                    rectNom, BcoulNom, IcoulNom, fontNom))
     ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                        cairo.FONT_WEIGHT_NORMAL)
-    show_text_rect(ctx, prg.GetAnnee(), 
+    show_text_rect(ctx, u"Années scolaires " + prg.GetAnnee(), 
                    rectNom, ha = 'c', b = 0.2,
                    fontsizeMinMax = (-1, 0.016 * COEF))
     

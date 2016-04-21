@@ -839,7 +839,7 @@ BASE_FICHE_HTML_SEANCE = """
 
 BASE_FICHE_HTML_CI = """
 <HTML>
-    <p style="text-align: center;"><font size="12"><b>CI</b></font></p>
+    <font size="12" color="red"><b><h1 id = "titre" style="text-align: center;">_</h1></b></font>
     <dl id = "ci">
     </dl> 
 

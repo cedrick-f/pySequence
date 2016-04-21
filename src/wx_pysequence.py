@@ -240,7 +240,7 @@ except ImportError:
 # des widgets wx évolués "faits maison"
 from widgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_ENTIER_POS, \
                     messageErreur, getNomFichier, pourCent2, testRel, \
-                    rallonge, remplaceCode2LF, dansRectangle, \
+                    rallonge, remplaceCode2LF, dansRectangle, isstring, \
                     StaticBoxButton, TextCtrl_Help, CloseFenHelp, \
                     remplaceLF2Code, messageInfo, messageYesNo#, chronometrer
 
@@ -1018,10 +1018,13 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                 
         if ext == 'seq':
             child = FenetreSequence(self, ouverture)
+            child.SetIcon(constantes.dicimages["Seq"].GetIcon())
         elif ext == 'prj':
             child = FenetreProjet(self)
+            child.SetIcon(constantes.imagesProjet["Prj"].GetIcon())
         elif ext == 'prg':
             child = FenetreProgression(self)
+            child.SetIcon(constantes.imagesProgression["Prg"].GetIcon())
         else:
             child = None
         
@@ -1862,6 +1865,7 @@ class FenetreSequence(FenetreDocument):
         self.fiche = FicheSequence(self.nb, self.sequence)
         self.nb.AddPage(self.fiche, u"Fiche Séquence")
         
+        
         #
         # Détails
         #
@@ -1877,7 +1881,7 @@ class FenetreSequence(FenetreDocument):
         self.nb.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
         
         self.miseEnPlace()
-        
+        self.fiche.Redessiner()
     
     ###############################################################################################
     def ajouterOutils(self):
@@ -2164,6 +2168,7 @@ class FenetreProjet(FenetreDocument):
         self.nb.AddPage(self.pageBO, u"Bulletins Officiels")
         
         self.miseEnPlace()
+        self.fiche.Redessiner()
         
         wx.CallAfter(self.Thaw)
         self.nb.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
@@ -2853,6 +2858,7 @@ Your browser does not support the HTML5 canvas tag.
         self.nb.AddPage(self.pageHTML, u"HTML")
         
         self.miseEnPlace()
+        self.fiche.Redessiner()
         
         wx.CallAfter(self.Thaw)
         self.nb.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
@@ -3043,10 +3049,10 @@ Your browser does not support the HTML5 canvas tag.
         
         liste_actions = [[self.classe.ConstruireArbre, [self.arbre, root], {},
                          u"Construction de l'arborescence de la classe...\t"],
-                         [self.progression.ChargerSequences, [], {},
-                          u"Construction de l'arborescence de la progression...\t"],
                          [self.progression.ConstruireArbre, [self.arbre, root], {},
                           u"Construction de l'arborescence de la progression...\t"],
+                         [self.progression.ChargerSequences, [], {},
+                          u"Chargement des séquences...\t"],
 #                         [self.projet.OrdonnerTaches, [], {},
 #                          u"Ordonnancement des tâches...\t"],
 #                         [self.projet.PubDescription, [], {},
@@ -3060,16 +3066,21 @@ Your browser does not support the HTML5 canvas tag.
                          ]
         
         for fct, arg, karg, msg in liste_actions:
+            print "+++", msg
             message += msg
             dlg.Update(count, message)
 #            dlg.top()
             count += 1
-            try :
+            if "beta" in version.__version__:
                 fct(*arg, **karg)
                 message += u"Ok\n"
-            except:
-                Ok = False
-                message += constantes.Erreur(constantes.ERR_INCONNUE).getMessage() + u"\n"
+            else:
+                try :
+                    fct(*arg, **karg)
+                    message += u"Ok\n"
+                except:
+                    Ok = False
+                    message += constantes.Erreur(constantes.ERR_INCONNUE).getMessage() + u"\n"
             
 
         self.progression.Verrouiller()
@@ -3127,6 +3138,15 @@ class BaseFiche(wx.ScrolledWindow):
         self.enCours = False
         
         self.Bind(wx.EVT_PAINT, self.OnPaint)
+
+        self.InitBuffer()
+        
+        wx.CallAfter(self.connect)
+
+
+    ######################################################################################################
+    def connect(self):
+        
         self.Bind(wx.EVT_SIZE, self.OnResize)
         self.Bind(wx.EVT_LEFT_UP, self.OnClick)
         self.Bind(wx.EVT_LEFT_DCLICK, self.OnDClick)
@@ -3135,9 +3155,10 @@ class BaseFiche(wx.ScrolledWindow):
         self.Bind(wx.EVT_LEAVE_WINDOW, self.OnLeave)
         self.Bind(wx.EVT_MOTION, self.OnMove)
 #        self.Bind(wx.EVT_SCROLLWIN, self.OnScroll)
-        
-        self.InitBuffer()
 
+#        self.Redessiner()
+
+     
     ######################################################################################################
     def OnLeave(self, evt = None):
         self.GetDoc().HideTip()
@@ -3797,7 +3818,7 @@ class PanelPropriete_Sequence(PanelPropriete):
         PanelPropriete.__init__(self, parent)
         self.sequence = sequence
         
-        titre = wx.StaticBox(self, -1, u"Intitulé de la séquence")
+        titre = myStaticBox(self, -1, u"Intitulé de la séquence")
         sb = wx.StaticBoxSizer(titre)
         textctrl = wx.TextCtrl(self, -1, u"", style=wx.TE_MULTILINE)
         sb.Add(textctrl, 1, flag = wx.EXPAND)
@@ -3806,7 +3827,7 @@ class PanelPropriete_Sequence(PanelPropriete):
 #        self.sizer.Add(textctrl, (0,1), flag = wx.EXPAND)
         self.Bind(wx.EVT_TEXT, self.EvtText, textctrl)
 
-        titre = wx.StaticBox(self, -1, u"Commentaires")
+        titre = myStaticBox(self, -1, u"Commentaires")
         sb = wx.StaticBoxSizer(titre)
         commctrl = wx.TextCtrl(self, -1, u"", style=wx.TE_MULTILINE)
         sb.Add(commctrl, 1, flag = wx.EXPAND)
@@ -3817,7 +3838,7 @@ class PanelPropriete_Sequence(PanelPropriete):
         self.sizer.AddGrowableCol(2)
         self.sizer.SetEmptyCellSize((0, 0))
         
-        titre = wx.StaticBox(self, -1, u"Position")
+        titre = myStaticBox(self, -1, u"Position")
         sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
         self.bmp = wx.StaticBitmap(self, -1, self.getBitmapPeriode(250))
         position = wx.Slider(self, -1, self.sequence.position, 0, self.sequence.GetReferentiel().getNbrPeriodes()-1, (30, 60), (250, -1), 
@@ -3928,7 +3949,7 @@ class PanelPropriete_Sequence(PanelPropriete):
         if self.sequence.GetReferentiel().domaines:
 #            print self.sizer.FindItemAtPosition((1,0))
             if self.sizer.FindItemAtPosition((0,1)) is None:
-                titre = wx.StaticBox(self, -1, u"Domaines")
+                titre = myStaticBox(self, -1, u"Domaines")
                 self.sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
                 self.cbM = wx.CheckBox(self, -1, u"Matériaux et Structures")
                 self.cbE = wx.CheckBox(self, -1, u"Energie")
@@ -4028,7 +4049,7 @@ class PanelPropriete_Projet(PanelPropriete):
         #
         # Intitulé du projet (TIT)
         #
-        self.titre = wx.StaticBox(pageGen, -1, u"")
+        self.titre = myStaticBox(pageGen, -1, u"")
         sb = wx.StaticBoxSizer(self.titre)
         textctrl = TextCtrl_Help(pageGen, u"")
         sb.Add(textctrl, 1, flag = wx.EXPAND)
@@ -4042,7 +4063,7 @@ class PanelPropriete_Projet(PanelPropriete):
         #
         # Problématique (PB)
         #
-        self.tit_pb = wx.StaticBox(pageGen, -1, u"")
+        self.tit_pb = myStaticBox(pageGen, -1, u"")
         sb = wx.StaticBoxSizer(self.tit_pb)
 #        self.commctrl = wx.TextCtrl(pageGen, -1, u"", style=wx.TE_MULTILINE)
         self.commctrl = TextCtrl_Help(pageGen, u"")
@@ -4057,7 +4078,7 @@ class PanelPropriete_Projet(PanelPropriete):
         #
         # Année scolaire et Position dans l'année
         #
-        titre = wx.StaticBox(pageGen, -1, u"Année et Position")
+        titre = myStaticBox(pageGen, -1, u"Année et Position")
         sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
         
         self.annee = Variable(u"Année scolaire", lstVal = self.projet.annee, 
@@ -4344,7 +4365,7 @@ class PanelPropriete_Projet(PanelPropriete):
                 self.Bind(EVT_VAR_CTRL, self.EvtVariable, self.ctrlNbrParties)
                 self.pages['DEC'].sizer.Add(self.ctrlNbrParties, (0,0), flag = wx.EXPAND|wx.ALL, border = 2)
                 
-                titreInt = wx.StaticBox(self.pages['DEC'], -1, u"Intitulés des différentes parties")
+                titreInt = myStaticBox(self.pages['DEC'], -1, u"Intitulés des différentes parties")
                 sb = wx.StaticBoxSizer(titreInt)
                 
                 self.intctrl = TextCtrl_Help(self.pages['DEC'], u"", ref.attributs['DEC'][1])#, u"", style=wx.TE_MULTILINE)
@@ -4356,7 +4377,7 @@ class PanelPropriete_Projet(PanelPropriete):
                 sb.Add(self.intctrl, 1, flag = wx.EXPAND)
                 self.pages['DEC'].sizer.Add(sb, (1,0), flag = wx.EXPAND|wx.ALL, border = 2)
                 
-                titreInt = wx.StaticBox(self.pages['DEC'], -1, u"Enoncés du besoin des différentes parties du projet")
+                titreInt = myStaticBox(self.pages['DEC'], -1, u"Enoncés du besoin des différentes parties du projet")
                 sb = wx.StaticBoxSizer(titreInt)
                 self.enonctrl = TextCtrl_Help(self.pages['DEC'], u"", ref.attributs['DEC'][3])#, u"", style=wx.TE_MULTILINE)
                 self.enonctrl.SetToolTipString(u"Enoncés du besoin des parties du projet confiées à chaque groupe")
@@ -4415,7 +4436,7 @@ class PanelPropriete_Projet(PanelPropriete):
                 self.nb.AddPage(self.pages['PAR'], ref.attributs['PAR'][0])
                 
                 for i, k in enumerate(['PAR', 'PRX', 'SRC']):
-                    titreInt = wx.StaticBox(self.pages['PAR'], -1, ref.attributs[k][0])
+                    titreInt = myStaticBox(self.pages['PAR'], -1, ref.attributs[k][0])
                     sb = wx.StaticBoxSizer(titreInt)
                 
                     self.parctrl[k] = orthographe.STC_ortho(self.pages['PAR'], -1)#, u"", style=wx.TE_MULTILINE)
@@ -4551,7 +4572,7 @@ class PanelPropriete_Progression(PanelPropriete):
         #
         # Intitulé de la progression (TIT)
         #
-        self.titre = wx.StaticBox(pageGen, -1, u"Intitulé")
+        self.titre = myStaticBox(pageGen, -1, u"Intitulé")
         sb = wx.StaticBoxSizer(self.titre)
         textctrl = TextCtrl_Help(pageGen, u"")
         sb.Add(textctrl, 1, flag = wx.EXPAND)
@@ -4566,7 +4587,7 @@ class PanelPropriete_Progression(PanelPropriete):
         #
         # Année scolaire et Position dans l'année
         #
-        titre = wx.StaticBox(pageGen, -1, u"Année et Position")
+        titre = myStaticBox(pageGen, -1, u"Année et Position")
         sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
         
         self.annee = Variable(u"Année scolaire", lstVal = self.GetDocument().annee, 
@@ -4668,7 +4689,7 @@ class PanelOrganisation(wx.Panel):
         
         sizer = wx.BoxSizer()
         gbsizer = wx.GridBagSizer()
-        titre = wx.StaticBox(self, -1, u"Organisation")
+        titre = myStaticBox(self, -1, u"Organisation")
         sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
 
         self.nbrRevues = Variable(u"Nombre de revues",  
@@ -4860,7 +4881,7 @@ class PanelPropriete_Classe(PanelPropriete):
         # Type d'enseignement
         #
         self.pourProjet = self.GetDocument().estProjet()
-        titre = wx.StaticBox(pageGen, -1, u"Type d'enseignement")
+        titre = myStaticBox(pageGen, -1, u"Type d'enseignement")
         titre.SetMinSize((180, 100))
         sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
         te = ArbreTypeEnseignement(pageGen, self)
@@ -4889,7 +4910,7 @@ class PanelPropriete_Classe(PanelPropriete):
         #
         # Etablissement
         #
-        titre = wx.StaticBox(pageGen, -1, u"Etablissement")
+        titre = myStaticBox(pageGen, -1, u"Etablissement")
         sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
         sh = wx.BoxSizer(wx.HORIZONTAL)
         t = wx.StaticText(pageGen, -1, u"Académie :")
@@ -4956,7 +4977,7 @@ class PanelPropriete_Classe(PanelPropriete):
         #
         # Accés au BO
         #
-        titre = wx.StaticBox(pageGen, -1, u"Documents Officiels en ligne")
+        titre = myStaticBox(pageGen, -1, u"Documents Officiels en ligne")
         self.bo = []
         sbBO = wx.StaticBoxSizer(titre, wx.VERTICAL)
         pageGen.sizer.Add(sbBO, (1,2), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.ALL|wx.EXPAND, border = 2)
@@ -5527,7 +5548,7 @@ class PanelEffectifsClasse(wx.Panel):
         #
         # Box "Classe"
         #
-        boxClasse = wx.StaticBox(self, -1, u"Découpage de la classe")
+        boxClasse = myStaticBox(self, -1, u"Découpage de la classe")
 
         coulClasse = couleur.GetCouleurWx(constantes.CouleursGroupes['C'])
 #        boxClasse.SetOwnForegroundColour(coulClasse)
@@ -5568,7 +5589,7 @@ class PanelEffectifsClasse(wx.Panel):
         #
         # Boxes Effectif Réduit
         #
-        boxEffRed = wx.StaticBox(self, -1, u"")
+        boxEffRed = myStaticBox(self, -1, u"")
         boxEffRed.SetOwnForegroundColour(self.coulEffRed)
         self.boxEffRed = boxEffRed
         bsizerEffRed = wx.StaticBoxSizer(boxEffRed, wx.HORIZONTAL)
@@ -5588,7 +5609,7 @@ class PanelEffectifsClasse(wx.Panel):
         self.Bind(EVT_VAR_CTRL, self.EvtVariableEff, self.cNbEtPr)
         self.sizerEffRed_g.Add(self.cNbEtPr, 0, wx.TOP|wx.BOTTOM|wx.LEFT, 3)
         
-#        self.BoxEP = wx.StaticBox(self, -1, u"", size = (30, -1))
+#        self.BoxEP = myStaticBox(self, -1, u"", size = (30, -1))
 #        self.BoxEP.SetOwnForegroundColour(self.coulEP)
 #        self.BoxEP.SetMinSize((30, -1))     
 #        bsizer = wx.StaticBoxSizer(self.BoxEP, wx.VERTICAL)
@@ -5603,7 +5624,7 @@ class PanelEffectifsClasse(wx.Panel):
         self.Bind(EVT_VAR_CTRL, self.EvtVariableEff, self.cNbActP)
         self.sizerEffRed_d.Add(self.cNbActP, 0, wx.TOP|wx.BOTTOM|wx.LEFT, 3)
         
-#        self.BoxAP = wx.StaticBox(self, -1, u"", size = (30, -1))
+#        self.BoxAP = myStaticBox(self, -1, u"", size = (30, -1))
 #        self.BoxAP.SetOwnForegroundColour(self.coulAP)
 #        self.BoxAP.SetMinSize((30, -1))     
 #        bsizer = wx.StaticBoxSizer(self.BoxAP, wx.VERTICAL)
@@ -5655,7 +5676,7 @@ class PanelEffectifsClasse(wx.Panel):
 #        self.lstBoxAP = []    
 #        
 #        for g in range(self.classe.nbrGroupes['G'] - 1):
-#            box = wx.StaticBox(self, -1, u"Eff Red", size = (30, -1))
+#            box = myStaticBox(self, -1, u"Eff Red", size = (30, -1))
 #            box.SetOwnForegroundColour(self.coulEffRed)
 #            box.SetMinSize((30, -1))
 #            self.lstBoxEffRed.append(box)
@@ -5664,7 +5685,7 @@ class PanelEffectifsClasse(wx.Panel):
 #            self.sizerClasse_b.Add(bsizer, flag = wx.EXPAND)
 #        
 #        for g in range(self.classe.nbrGroupes['E']):
-#            box = wx.StaticBox(self, -1, u"E/P", size = (30, -1))
+#            box = myStaticBox(self, -1, u"E/P", size = (30, -1))
 #            box.SetOwnForegroundColour(self.coulEP)
 #            box.SetMinSize((30, -1))
 #            self.lstBoxEP.append(box)
@@ -5674,7 +5695,7 @@ class PanelEffectifsClasse(wx.Panel):
 #            
 #        
 #        for g in range(self.classe.nbrGroupes['P']):
-#            box = wx.StaticBox(self, -1, u"AP", size = (30, -1))
+#            box = myStaticBox(self, -1, u"AP", size = (30, -1))
 #            box.SetOwnForegroundColour(self.coulAP)
 #            box.SetMinSize((30, -1))
 #            self.lstBoxAP.append(box)
@@ -6140,7 +6161,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
         #
         # Intitulé de la séquence
         #
-        sbi = wx.StaticBox(self, -1, u"Intitulé de la séquence", size = (200,-1))
+        sbi = myStaticBox(self, -1, u"Intitulé de la séquence", size = (200,-1))
         sbsi = wx.StaticBoxSizer(sbi,wx.HORIZONTAL)
         self.intit = wx.StaticText(self, -1, u"")
         sbsi.Add(self.intit)
@@ -6148,7 +6169,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
         #
         # Sélection du fichier de séquence
         #
-        sb0 = wx.StaticBox(self, -1, u"Fichier de la séquence", size = (200,-1))
+        sb0 = myStaticBox(self, -1, u"Fichier de la séquence", size = (200,-1))
         sbs0 = wx.StaticBoxSizer(sb0,wx.HORIZONTAL)
         self.texte = wx.TextCtrl(self, -1, toSystemEncoding(self.lien.path), size = (300, -1),
                                  style = wx.TE_PROCESS_ENTER)
@@ -6163,7 +6184,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
         #
         # Position de la séquence
         #
-        titre = wx.StaticBox(self, -1, u"Position")
+        titre = myStaticBox(self, -1, u"Position")
         sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
         self.bmp = wx.StaticBitmap(self, -1, self.sequence.getBitmapPeriode(300))
         sb.Add(self.bmp)
@@ -6173,17 +6194,17 @@ class PanelPropriete_LienSequence(PanelPropriete):
         #
         # Aperçu de la séquence
         #
-        sb1 = wx.StaticBox(self, -1, u"Aperçu de la séquence", size = (210,297))
+        sb1 = myStaticBox(self, -1, u"Aperçu de la séquence", size = (210,297))
         sbs1 = wx.StaticBoxSizer(sb1,wx.HORIZONTAL)
         sbs1.SetMinSize((210,297))
         self.apercu = wx.StaticBitmap(self, -1, self.sequence.GetApercu(210))
         sbs1.Add(self.apercu, 1)
         
         
-        self.sizer.Add(sbsi, (0,0), flag = wx.EXPAND)
-        self.sizer.Add(sbs0, (1,0), flag = wx.EXPAND)
+        self.sizer.Add(sbsi, (0,0), flag = wx.EXPAND|wx.ALL, border = 2)
+        self.sizer.Add(sbs0, (1,0), flag = wx.EXPAND|wx.ALL, border = 2)
         self.sizer.Add(sb, (2,0), flag = wx.ALIGN_TOP|wx.ALIGN_LEFT|wx.LEFT|wx.EXPAND, border = 2)
-        self.sizer.Add(sbs1, (0,1), (3,1), flag = wx.EXPAND)
+        self.sizer.Add(sbs1, (0,1), (3,1), flag = wx.EXPAND|wx.ALL, border = 2)
         
         self.sizer.Layout()
         
@@ -6727,7 +6748,7 @@ class PanelPropriete_Seance(PanelPropriete):
         #
         # Intitulé de la séance
         #
-        box = wx.StaticBox(self, -1, u"Intitulé")
+        box = myStaticBox(self, -1, u"Intitulé")
         bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
         textctrl = wx.TextCtrl(self, -1, u"", style=wx.TE_MULTILINE)
         bsizer.Add(textctrl, 1, flag = wx.EXPAND)
@@ -6754,7 +6775,7 @@ class PanelPropriete_Seance(PanelPropriete):
         #
         # Organisation
         #
-        box2 = wx.StaticBox(self, -1, u"Organisation")
+        box2 = myStaticBox(self, -1, u"Organisation")
         bsizer2 = wx.StaticBoxSizer(box2, wx.VERTICAL)
         
         # Durée de la séance
@@ -6813,7 +6834,7 @@ class PanelPropriete_Seance(PanelPropriete):
         #
         # Apparence
         #
-        box2 = wx.StaticBox(self, -1, u"Apparence")
+        box2 = myStaticBox(self, -1, u"Apparence")
         bsizer3 = wx.StaticBoxSizer(box2, wx.VERTICAL)
         
         b = csel.ColourSelect(self, -1, u"Couleur", couleur.GetCouleurWx(self.seance.couleur))
@@ -6847,7 +6868,7 @@ class PanelPropriete_Seance(PanelPropriete):
         #
         # Systémes
         #
-        self.box = wx.StaticBox(self, -1, u"Systèmes ou matériels nécessaires", size = (200,200))
+        self.box = myStaticBox(self, -1, u"Systèmes ou matériels nécessaires", size = (200,200))
         self.box.SetMinSize((200,200))
         self.bsizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
         self.systemeCtrl = []
@@ -6858,7 +6879,7 @@ class PanelPropriete_Seance(PanelPropriete):
         #
         # Lien
         #
-        box = wx.StaticBox(self, -1, u"Lien externe")
+        box = myStaticBox(self, -1, u"Lien externe")
         bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
         self.selec = URLSelectorCombo(self, self.seance.lien, self.seance.GetPath())
         bsizer.Add(self.selec, flag = wx.EXPAND)
@@ -6872,7 +6893,7 @@ class PanelPropriete_Seance(PanelPropriete):
         #
         # Description de la séance
         #
-        dbox = wx.StaticBox(self, -1, u"Description")
+        dbox = myStaticBox(self, -1, u"Description")
         dbsizer = wx.StaticBoxSizer(dbox, wx.VERTICAL)
 #        bd = wx.Button(self, -1, u"Editer")
         tc = richtext.RichTextPanel(self, self.seance, toolBar = True)
@@ -7302,7 +7323,7 @@ class PanelPropriete_Tache(PanelPropriete):
         # Intitulé de la tache
         #
         if not tache.phase in TOUTES_REVUES_EVAL_SOUT:
-            box = wx.StaticBox(pageGen, -1, u"Intitulé de la tâche")
+            box = myStaticBox(pageGen, -1, u"Intitulé de la tâche")
             bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
             self.boxInt = box
             if not tache.estPredeterminee():
@@ -7339,7 +7360,7 @@ class PanelPropriete_Tache(PanelPropriete):
         # Eléves impliqués
         #
         if not tache.phase in TOUTES_REVUES_EVAL_SOUT:
-            self.box = wx.StaticBox(pageGen, -1, u"Eléves impliqués")
+            self.box = myStaticBox(pageGen, -1, u"Eléves impliqués")
 #            self.box.SetMinSize((150,-1))
             self.bsizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
             self.elevesCtrl = []
@@ -7352,7 +7373,7 @@ class PanelPropriete_Tache(PanelPropriete):
         #
         # Description de la tâche
         #
-        dbox = wx.StaticBox(pageGen, -1, u"Description détaillée de la tâche")
+        dbox = myStaticBox(pageGen, -1, u"Description détaillée de la tâche")
         dbsizer = wx.StaticBoxSizer(dbox, wx.VERTICAL)
 #        bd = wx.Button(pageGen, -1, u"Editer")
         tc = richtext.RichTextPanel(pageGen, self.tache, toolBar = True)
@@ -8031,7 +8052,7 @@ class PanelPropriete_Systeme(PanelPropriete):
         #
         # Image
         #
-        box = wx.StaticBox(self, -1, u"Image du système")
+        box = myStaticBox(self, -1, u"Image du système")
         bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
         image = wx.StaticBitmap(self, -1, wx.NullBitmap)
         self.image = image
@@ -8048,7 +8069,7 @@ class PanelPropriete_Systeme(PanelPropriete):
         #
         # Lien
         #
-        box = wx.StaticBox(self, -1, u"Lien externe")
+        box = myStaticBox(self, -1, u"Lien externe")
         bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
         self.selec = URLSelectorCombo(self, self.systeme.lien, self.systeme.GetPath())
         bsizer.Add(self.selec, flag = wx.EXPAND)
@@ -8294,7 +8315,7 @@ class PanelPropriete_Personne(PanelPropriete):
         #
         # Nom
         #
-        box = wx.StaticBox(self, -1, u"Identité")
+        box = myStaticBox(self, -1, u"Identité")
         bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
         titre = wx.StaticText(self, -1, u"Nom :")
         textctrl = wx.TextCtrl(self, 1, u"")
@@ -8326,7 +8347,7 @@ class PanelPropriete_Personne(PanelPropriete):
         # Référent
         #
         if hasattr(self.personne, 'referent'):
-            box = wx.StaticBox(self, -1, u"Fonction")
+            box = myStaticBox(self, -1, u"Fonction")
             bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
             cb = wx.CheckBox(self, -1, u"Référent")#, style=wx.ALIGN_RIGHT)
             cb.SetValue(self.personne.referent)
@@ -8362,7 +8383,7 @@ class PanelPropriete_Personne(PanelPropriete):
         # Grilles d'évaluation
         #
         if hasattr(self.personne, 'grille'):
-            self.boxGrille = wx.StaticBox(self, -1, u"Grilles d'évaluation")
+            self.boxGrille = myStaticBox(self, -1, u"Grilles d'évaluation")
             self.bsizer = wx.StaticBoxSizer(self.boxGrille, wx.VERTICAL)
             self.sizer.Add(self.bsizer, (1,0), (1,2), flag = wx.EXPAND|wx.TOP|wx.BOTTOM|wx.LEFT, border = 2)
             self.ConstruireSelectGrille()
@@ -8371,7 +8392,7 @@ class PanelPropriete_Personne(PanelPropriete):
         #
         # Avatar
         #
-        box = wx.StaticBox(self, -1, u"Portrait")
+        box = myStaticBox(self, -1, u"Portrait")
         bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
         image = wx.StaticBitmap(self, -1, wx.NullBitmap)
         self.image = image
@@ -8594,7 +8615,7 @@ class PanelPropriete_Support(PanelPropriete):
         #
         # Nom
         #
-        box = wx.StaticBox(self, -1, u"Nom du support :")
+        box = myStaticBox(self, -1, u"Nom du support :")
         bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
         textctrl = wx.TextCtrl(self, -1, u"")
         self.textctrl = textctrl
@@ -8605,7 +8626,7 @@ class PanelPropriete_Support(PanelPropriete):
         #
         # Lien
         #
-        box = wx.StaticBox(self, -1, u"Lien externe")
+        box = myStaticBox(self, -1, u"Lien externe")
         bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
         self.selec = URLSelectorCombo(self, self.support.lien, self.support.GetPath())
         bsizer.Add(self.selec, flag = wx.EXPAND)
@@ -8619,7 +8640,7 @@ class PanelPropriete_Support(PanelPropriete):
         #
         # Image
         #
-        box = wx.StaticBox(self, -1, u"Image du support")
+        box = myStaticBox(self, -1, u"Image du support")
         bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
         image = wx.StaticBitmap(self, -1, wx.NullBitmap)
         image.Bind(wx.EVT_RIGHT_UP, self.OnRClickImage)
@@ -8636,7 +8657,7 @@ class PanelPropriete_Support(PanelPropriete):
         #
         # Description du support
         #
-        dbox = wx.StaticBox(self, -1, u"Description")
+        dbox = myStaticBox(self, -1, u"Description")
         dbsizer = wx.StaticBoxSizer(dbox, wx.VERTICAL)
 #        bd = wx.Button(self, -1, u"Editer")
         tc = richtext.RichTextPanel(self, self.support, toolBar = True)
@@ -8851,6 +8872,7 @@ class ArbreDoc(CT.CustomTreeCtrl):
         self.Bind(wx.EVT_MOTION, self.OnMove)
         self.Bind(wx.EVT_LEFT_DCLICK, self.OnLeftDClick)
         self.Bind(wx.EVT_KEY_DOWN, self.OnKey)
+        self.Bind(wx.EVT_TREE_ITEM_GETTOOLTIP, self.OnToolTip)
 #        self.Bind(wx.EVT_CHAR, self.OnChar)
         
         self.ExpandAll()
@@ -8965,9 +8987,20 @@ class ArbreDoc(CT.CustomTreeCtrl):
             event.Allow()
 
         
+    ######################################################################################              
+    def OnToolTip(self, event):
+        node = event.GetItem()
+        data = self.GetPyData(node)
+        if (hasattr(data, 'toolTip') and isstring(data.toolTip)):
+            event.SetToolTip(wx.ToolTip(data.toolTip))
+        elif isstring(data):
+            event.SetToolTip(wx.ToolTip(data))
+        else:
+            event.Skip()
         
-        
-        
+
+
+
 
 ####################################################################################
 #
@@ -9544,6 +9577,8 @@ class ArbreProgression(ArbreDoc):
 
     ####################################################################################
     def OnMove(self, event):
+        event.Skip()
+        return
         if self.itemDrag != None:
             item = self.HitTest(wx.Point(event.GetX(), event.GetY()))[0]
             if item != None:
@@ -9597,11 +9632,11 @@ class ArbreProgression(ArbreDoc):
 
     
     ####################################################################################
-    def OnToolTip(self, event):
-
-        item = event.GetItem()
-        if item:
-            event.SetToolTip(wx.ToolTip(self.GetItemText(item)))
+#    def OnToolTip(self, event):
+#
+#        item = event.GetItem()
+#        if item:
+#            event.SetToolTip(wx.ToolTip(self.GetItemText(item)))
 
 
             
@@ -10832,7 +10867,7 @@ class ArbreTypeEnseignement(CT.CustomTreeCtrl):
     def OnToolTip(self, event = None, item = None):
         node = event.GetItem()
         data = self.GetPyData(node)
-        if isinstance(data, unicode) or isinstance(data, str):
+        if isstring(data):
             event.SetToolTip(wx.ToolTip(data))
         else:
             event.Skip()
@@ -11518,6 +11553,14 @@ class A_propos(wx.Dialog):
         
         self.SetSizerAndFit(sizer)
 
+
+
+class myStaticBox(wx.StaticBox):
+    def __init__(self, *args, **kargs):
+        wx.StaticBox.__init__(self, *args, **kargs)
+        self.SetForegroundColour(wx.NamedColour("DIM GREY"))
+        
+        
 #############################################################################################################
 #
 # ProgressDialog personnalisé
@@ -11609,9 +11652,9 @@ class PopupInfo(wx.PopupWindow):
 
         self.Bind(wx.EVT_WINDOW_DESTROY, self.OnDestroy)
     
-    ##########################################################################################
-    def SetBranche(self, branche):
-        self.branche = branche
+#    ##########################################################################################
+#    def SetBranche(self, branche):
+#        self.branche = branche
         
     ##########################################################################################
     def XML_AjouterImg(self, node, item, bmp):
@@ -11957,7 +12000,8 @@ class Panel_BO(wx.Panel):
 
         wx.EndBusyCursor()
 
-              
+
+
 ##########################################################################################################
 #
 #  CodeBranche : conteneur du code d'un élément à faire figurer dans un arbre
@@ -11971,7 +12015,23 @@ class CodeBranche(wx.Panel):
         sz.Add(self.code)
         self.SetSizerAndFit(sz)
         self.comp = {}
-
+        self.code.Bind(wx.EVT_LEFT_DOWN, self.OnClick)
+        
+    def OnClick(self, event):
+        print "OnClick"
+        if hasattr(self, 'branche'):
+            self.Parent.SelectItem(self.branche)
+#        self.Parent.OnSelChanged(item = self.branche)
+        return
+#        evt = wx.Event(-1, CT.EVT_TREE_SEL_CHANGED)
+        evt = wx.PyCommandEvent(CT.EVT_TREE_SEL_CHANGED.typeId, self.GetId())
+        print dir(evt)
+        evt.SetItem(self.branche)
+        self.Parent.GetEventHandler().ProcessEvent(evt)
+        
+    def SetBranche(self, branche): 
+        self.branche = branche
+                
     def Add(self, clef, text = u""):
         self.comp[clef] = wx.StaticText(self, -1, "")
         self.GetSizer().Add(self.comp[clef])
@@ -11981,6 +12041,9 @@ class CodeBranche(wx.Panel):
         
     def SetBackgroundColour(self, color):
         self.code.SetBackgroundColour(color)
+        
+    def SetForegroundColour(self, color):
+        self.code.SetForegroundColour(color)
     
     def SetToolTipString(self, text):
         self.code.SetToolTipString(text)

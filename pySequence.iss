@@ -19,9 +19,9 @@
 
 [ISPP]
 #define AppName "pySequence"
-#define AppVersion "6.3"
-#define AppVersionInfo "6.3.4"
-#define AppVersionBase "6"
+#define AppVersion "7.0"
+#define AppVersionInfo "7.0.2"
+#define AppVersionBase "7"
 
 #define AppURL "https://github.com/cedrick-f/pySequence"
 
@@ -83,12 +83,14 @@ fr.uninstall=Désinstaller
 fr.gpl_licence=Prendre connaissance du contrat de licence pour le logiciel
 fr.fdl_licence=Prendre connaissance du contrat de licence pour la documentation associée
 fr.CreateDesktopIcon=Créer un raccourci sur le bureau vers
-fr.AssocFileExtension=&Associer le programme pySequence aux extensions .seq et .prj
+fr.AssocFileExtension=&Associer le programme pySequence aux extensions .seq, .prj et .prg
 fr.CreateQuickLaunchIcon=Créer un icône dans la barre de lancement rapide
 fr.FileExtensionNameSeq=Fiche de Séquence pédagogique
 fr.FileExtensionSeq=pySequence.sequence
 fr.FileExtensionNamePrj=Fiche de validation de Projet
 fr.FileExtensionPrj=pySequence.projet
+fr.FileExtensionNamePrg=Fiche de Progression
+fr.FileExtensionPrg=pySequence.progression
 fr.InstallFor=Installer pour :
 fr.AllUsers=Tous les utilisateurs
 fr.JustMe=Seulement moi
@@ -140,18 +142,24 @@ Use7zip=true
 
 
 [Registry]
-; Tout ce qui concerne les fichiers .seq et .prj
+; Tout ce qui concerne les fichiers .seq, .prj et .prg
 Root: HKCR; SubKey: "{cm:FileExtensionSeq}"; ValueType: string;  ValueName: ""; ValueData: "{cm:FileExtensionNameSeq}";  Flags: uninsdeletekey
 Root: HKCR; Subkey: "{cm:FileExtensionSeq}\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\bin\fichier_seq.ico,0"; Flags: uninsdeletekey
 Root: HKCR; SubKey: "{cm:FileExtensionSeq}\Shell\Open"; ValueType: string; ValueName: "Icon"; ValueData: "{app}\bin\Sequence.exe"; Flags: uninsdeletekey
 Root: HKCR; SubKey: "{cm:FileExtensionSeq}\Shell\Open\Command"; ValueType: string; ValueName: ""; ValueData: """{app}\bin\Sequence.exe"" ""%1"""; Flags: uninsdeletekey
 Root: HKCR; Subkey: ".seq"; ValueType: string; ValueName: ""; ValueData: "{cm:FileExtensionSeq}"; Flags: uninsdeletevalue
 
-Root: HKCR; SubKey: .prj; ValueType: string; ValueData: {cm:FileExtensionPrj}; Flags: uninsdeletevalue
-Root: HKCR; SubKey: {cm:FileExtensionPrj}; ValueType: string; ValueData: "{cm:FileExtensionNamePrj}";  Flags: uninsdeletekey 
-Root: HKCR; SubKey: {cm:FileExtensionPrj}\Shell\Open\Command; ValueType: string; ValueData: """{app}\bin\Sequence.exe"" ""%1"""; Flags: uninsdeletekey
-Root: HKCR; Subkey: {cm:FileExtensionPrj}\DefaultIcon; ValueType: string; ValueData: "{app}\bin\fichier_prj.ico,0"; Flags: uninsdeletekey
+Root: HKCR; SubKey: "{cm:FileExtensionPrj}"; ValueType: string; ValueData: "{cm:FileExtensionNamePrj}";  Flags: uninsdeletekey 
+Root: HKCR; Subkey: "{cm:FileExtensionPrj}\DefaultIcon"; ValueType: string; ValueData: "{app}\bin\fichier_prj.ico,0"; Flags: uninsdeletekey
+Root: HKCR; SubKey: "{cm:FileExtensionPrj}\Shell\Open"; ValueType: string; ValueName: "Icon"; ValueData: "{app}\bin\Sequence.exe"; Flags: uninsdeletekey
+Root: HKCR; SubKey: "{cm:FileExtensionPrj}\Shell\Open\Command"; ValueType: string; ValueData: """{app}\bin\Sequence.exe"" ""%1"""; Flags: uninsdeletekey
+Root: HKCR; SubKey: ".prj"; ValueType: string; ValueData: {cm:FileExtensionPrj}; Flags: uninsdeletevalue
 
+Root: HKCR; SubKey: "{cm:FileExtensionPrg}"; ValueType: string; ValueData: "{cm:FileExtensionNamePrg}";  Flags: uninsdeletekey 
+Root: HKCR; Subkey: "{cm:FileExtensionPrg}\DefaultIcon"; ValueType: string; ValueData: "{app}\bin\fichier_prg.ico,0"; Flags: uninsdeletekey
+Root: HKCR; SubKey: "{cm:FileExtensionPrg}\Shell\Open"; ValueType: string; ValueName: "Icon"; ValueData: "{app}\bin\Sequence.exe"; Flags: uninsdeletekey
+Root: HKCR; SubKey: "{cm:FileExtensionPrg}\Shell\Open\Command"; ValueType: string; ValueData: """{app}\bin\Sequence.exe"" ""%1"""; Flags: uninsdeletekey
+Root: HKCR; SubKey: ".prg"; ValueType: string; ValueData: {cm:FileExtensionPrg}; Flags: uninsdeletevalue
 
 ; Pour stocker le style d'installation : "All users" ou "Current user"
 Root: HKLM; Subkey: SOFTWARE\{#AppName}; Flags: uninsdeletekey

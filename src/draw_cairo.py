@@ -1009,7 +1009,8 @@ def DrawPeriodes(ctx, rect, pos = None, periodes = [[u"Année", 5]], projets = {
 #    print "DrawPeriodes", pos
 #    print "   ", periodes, periodes_prj
     ctx.set_line_width (0.001 * COEF)
-    
+    if not isinstance(pos, list):
+        pos = [pos]
 #    DefinirCouleurs(sum([p for a, p in periodes]))
 #    if origine:
 #        x = 0
@@ -1103,7 +1104,7 @@ def DrawPeriodes(ctx, rect, pos = None, periodes = [[u"Année", 5]], projets = {
                 n = noms_prj[pa]
             else:
                 n = ""
-            xcs.append((xi + c*(w+dx) + dx, pos == pa-1, i, n))
+            xcs.append((xi + c*(w+dx) + dx, (pa-1) in pos, i, n))
             
         xi += np*w + (np+1)*dx
         

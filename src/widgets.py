@@ -30,6 +30,12 @@ import wx
 import time, os
 import  wx.lib.scrolledpanel as scrolled
 
+
+######################################################################################  
+def isstring(s):
+    return isinstance(s, str) or isinstance(s, unicode)
+
+
 ######################################################################################  
 def getNomFichier(prefixe, intitule, extension = r""):
     nomFichier = prefixe+"_"+intitule
