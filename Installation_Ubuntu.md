@@ -1,5 +1,28 @@
 #Installation de pySéquence sous Ubuntu
-**testé avec Ubuntu 14.04LT**
+pySéquence fonctionne sous Ubuntu avec les restrictions suivantes :
+ * n'a pas encore été testé en profondeur : il y a sans doute pas mal de bugs
+ * impossibilité de générer les grilles d'évaluation (elles sont au format Excel !)
+ * des problèmes avec l'affichage des PDF
+ * 
+
+## Ubuntu 15.10 (et probablement les versions suivantes) ##
+
+### pour utiliser pySéquence ###
+sudo apt-get install python-pip
+sudo apt-get install python-wxgtk3.0
+sudo pip install pyenchant
+sudo apt-get install python-reportlab
+sudo pip install xhtml2pdf
+sudo pip install xlrd
+sudo pip install xlwt
+sudo pip install comtypes
+sudo pip install pyperclip
+
+### pour générer un paquet RPM ###
+sudo apt-get install cx-freeze
+
+
+## Ubuntu 14.04LT (ne fonctionne pas - adaptation non terminée) ##
 
 ##Python 2.7##
 déja installé
