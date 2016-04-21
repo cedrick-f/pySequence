@@ -17,7 +17,7 @@ else:
 print sys.getdefaultencoding()
 
 from glob import glob
-from cx_Freeze import setup, Executable
+
 from version import __version__, GetVersion_cxFreeze    
     
     
@@ -152,6 +152,7 @@ long_description = u"aide à la création de séquences pédagogiques et à la v
 license = "GPL"
 
 if sys.platform == "win32":
+    from cx_Freeze import setup, Executable
     cible = Executable( script = "wx_pysequence.py",
                         targetName="Sequence.exe",
                         base = base,
@@ -177,6 +178,8 @@ if sys.platform == "win32":
             executables = [cible])
 
 else:
+    from setuptools import setup, find_packages
+
     cible = Executable( script = "wx_pysequence.py",
                         targetName="pySequence.rpm",
                         base = base,
@@ -197,6 +200,6 @@ else:
             long_description = long_description,
             license = license,
             scripts=["wx_pysequence.py"],
-            executables = [cible],
+            packages = find_packages(),
             )
 
