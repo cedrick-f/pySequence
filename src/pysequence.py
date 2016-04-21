@@ -4783,7 +4783,7 @@ class Savoirs(Objet_sequence):
     
     ######################################################################################  
     def GetFicheHTML(self):
-        return constantes.BASE_FICHE_HTML_COMP
+        return constantes.BASE_FICHE_HTML_SAV
 
     
     ######################################################################################  

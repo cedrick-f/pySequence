@@ -1184,47 +1184,6 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         page = self.GetNotebook().GetCurrentPage()
         if page != None:
             page.genererFicheValidation(event)
-    
-#    #############################################################################
-#    def etablirBilan(self, event = None):
-#        for w in self.GetChildren():
-#            if isinstance(w, synthesePeda.FenetreBilan):
-#                w.SetFocus()
-#                return
-##        if self.GetFenetreActive() != None:
-#        if self.GetFenetreActive():
-#            dossier = self.GetFenetreActive().DossierSauvegarde
-#            if isinstance(self.GetFenetreActive(), FenetreSequence):
-#                ref = self.GetFenetreActive().sequence.GetReferentiel()
-#            else:
-#                ref = None
-#        else:
-#            dossier = util_path.INSTALL_PATH
-#            ref = None
-#        win = synthesePeda.FenetreBilan(self, dossier, ref)
-#        win.Show()
-#        win.Destroy()
-        
-        
-        
-#    #############################################################################
-#    def OnOptions(self, event, page = 0):
-#        options = self.options.copie()
-#        dlg = Options.FenOptions(self, options)
-#        dlg.CenterOnScreen()
-#        dlg.nb.SetSelection(page)
-#
-#        # this does not return until the dialog is closed.
-#        val = dlg.ShowModal()
-#    
-#        if val == wx.ID_OK:
-#            self.DefinirOptions(options)
-#            self.AppliquerOptions()
-#            
-#        else:
-#            pass
-#
-#        dlg.Destroy()
             
         
     ###############################################################################################
@@ -1260,19 +1219,19 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                 self.Bind(wx.EVT_TOOL, fenDoc.progression.AjouterProf,     id=71)
     
             if fenDoc.typ == "prj":
-                self.file_menu.Enable(17, True)
-                self.file_menu.Enable(19, True)
-                self.file_menu.Enable(20, True)
+                for i in [17, 19, 20]:
+                    if self.file_menu.FindItem(i) is not None:
+                        self.file_menu.Enable(i, True)
                 
             elif fenDoc.typ == "seq":
-                self.file_menu.Enable(17, False)
-                self.file_menu.Enable(19, False)
-                self.file_menu.Enable(20, False)
+                for i in [17, 19, 20]:
+                    if self.file_menu.FindItem(i) is not None:
+                        self.file_menu.Enable(i, False)
                 
             elif fenDoc.typ == "prg":
-                self.file_menu.Enable(17, False)
-                self.file_menu.Enable(19, False)
-                self.file_menu.Enable(20, False)
+                for i in [17, 19, 20]:
+                    if self.file_menu.FindItem(i) is not None:
+                        self.file_menu.Enable(i, False)
                 
         self.miseAJourUndo()
            
@@ -1291,10 +1250,6 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             self.commandeRedo(evt)
             
         evt.Skip()
-        
-
-        
-    
     
                 
     #############################################################################

@@ -197,7 +197,7 @@ def modifierGrille(doc, tableaux, eleve):
         if part in ref.aColNon.keys() and ref.aColNon[part]:
             feuilNON = dicInfo["NON"][0][0]
             dicIndic = eleve.GetDicIndicateurs()
-            dicNon = doc.GetProjetRef()._dicIndicateurs_simple
+            dicNon = doc.GetProjetRef()._dicoIndicateurs_simple['S']
 #            print dicInfo["NON"]
             colNON = dicInfo["NON"][0][1][1]
             
