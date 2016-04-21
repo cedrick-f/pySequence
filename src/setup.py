@@ -35,7 +35,8 @@ if sys.platform == "win32":
                 le.append((f, os.path.join(d, os.path.split(f)[1])))
             else:
                 le.append((f, os.path.join('..',d, os.path.split(f)[1])))
-    enchant_files = le
+enchant_files = le
+
 #enchant_files = [([r.replace("\\", "/") for r in a], b.replace("\\", "/")) for b, a in enchant_files]
 #print enchant_files
 
