@@ -96,7 +96,10 @@ for p in ['C:\\Python27\\Lib\site-packages\\html5lib',
 #            'C:\\Python27\\Lib\\site-packages\\xhtml2pdf',
 #            'C:\\Python27\\Lib\\site-packages\\Pillow-2.7.0-py2.7-win32\\PIL']
 
-
+# pour que les bibliotheques binaires de /usr/lib soient recopiees aussi sous Linux
+binpathincludes = []
+if sys.platform == "linux2":
+    binpathincludes += ["/usr/lib"]
 
 # Dependencies are automatically detected, but it might need fine tuning.
 build_exe_options = {'build_exe': 'build/bin',
@@ -117,18 +120,19 @@ build_exe_options = {'build_exe': 'build/bin',
                                   "numpy",
                                   ],
                      "include_files": includefiles,
+                     "bin_path_includes": binpathincludes,
                      'bin_excludes' : ['libgdk-win32-2.0-0.dll', 'libgobject-2.0-0.dll', 'tcl85.dll',
                                               'tk85.dll', "UxTheme.dll", "mswsock.dll", "POWRPROF.dll",
                                               "QtCore4.dll", "QtGui4.dll" ]}
 
 
-bdist_rpm_options = {'bdist_rpm': 'build/bin',
-                     "packages": ["os", "xhtml2pdf","html5lib", "enchant", "reportlab"], 
-                     "includes": ["xhtml2pdf", "xhtml2pdf.pisa","html5lib", "xhtml2pdf.w3c", "encodings.ascii"],
-                     "optimize" : 0,
-                     "namespace_packages" : ["xhtml2pdf", "html5lib", "xhtml2pdf.w3c"],
-                     "include_files": includefiles,
-                     }
+#bdist_rpm_options = {'bdist_rpm': 'build/bin',
+#                     "packages": ["os", "xhtml2pdf","html5lib", "enchant", "reportlab"], 
+#                     "includes": ["xhtml2pdf", "xhtml2pdf.pisa","html5lib", "xhtml2pdf.w3c", "encodings.ascii"],
+#                     "optimize" : 0,
+#                     "namespace_packages" : ["xhtml2pdf", "html5lib", "xhtml2pdf.w3c"],
+#                     "include_files": includefiles,
+#                     }
 
 # GUI applications require a different base on Windows (the default is for a
 # console application).
@@ -138,7 +142,7 @@ if not "beta" in __version__:
         base = "Win32GUI"
 
 
-name = u"pySequence",
+name = u"pySequence"
 version = GetVersion_cxFreeze()
 author = u"Cédrick FAURY & Jean-Claude FRICOU"
 author_email = "cedrick.faury@ac-clermont.fr"
@@ -168,12 +172,22 @@ if sys.platform == "win32":
             description = description,
             long_description = long_description,
             license = license,
-            options = {"build_exe": build_exe_options,
-                       "bdist_rpm": bdist_rpm_options},
+            options = {"build_exe": build_exe_options},
     #        include-msvcr = True,
             executables = [cible])
 
 else:
+    cible = Executable( script = "wx_pysequence.py",
+                        targetName="pySequence.rpm",
+                        base = base,
+                        compress = True,
+                        icon = os.path.join("", 'logo.ico'),
+                        initScript = None,
+                        copyDependentFiles = True,
+                        appendScriptToExe = False,
+                        appendScriptToLibrary = False
+                        )
+    
     setup(  name = name,
             version = version,
             author = author,
@@ -183,5 +197,6 @@ else:
             long_description = long_description,
             license = license,
             scripts=["wx_pysequence.py"],
+            executables = [cible],
             )
 
