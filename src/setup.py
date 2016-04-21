@@ -182,8 +182,6 @@ else:
             description = description,
             long_description = long_description,
             license = license,
-            options = {"build_exe": build_exe_options,
-                       "bdist_rpm": bdist_rpm_options},
             scripts=["wx_pysequence.py"],
             )
 
