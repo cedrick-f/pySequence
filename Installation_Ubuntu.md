@@ -28,9 +28,9 @@ sudo pip install comtypes
 sudo pip install pyperclip
 ```
 
-### pour générer un paquet RPM ###
+### pour générer un paquet .deb ###
 ```bash
-sudo apt-get install cx-freeze
+sudo apt-get install python-stdeb
 ```
 
 
