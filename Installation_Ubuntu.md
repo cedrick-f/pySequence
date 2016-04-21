@@ -29,7 +29,9 @@ sudo pip install pyperclip
 ```
 
 ### pour générer un paquet RPM ###
+```bash
 sudo apt-get install cx-freeze
+```
 
 
 ## Ubuntu 14.04LT (ne fonctionne pas - adaptation non terminée) ##
