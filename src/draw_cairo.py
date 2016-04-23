@@ -169,7 +169,7 @@ def show_text_rect(ctx, texte, rect, \
                    va = 'c', ha = 'c', le = 0.8, pe = 1.0, \
                    b = 0.4, orient = 'h', \
                    fontsizeMinMax = (-1, -1), fontsizePref = -1, wrap = True, couper = True, 
-                   bordure = None):
+                   coulBord = None, tracer = True):
     """ Affiche un texte en adaptant la taille de police et sa position
         pour qu'il rentre dans le rectangle
         x, y, w, h : position et dimensions du rectangle
@@ -200,7 +200,7 @@ def show_text_rect(ctx, texte, rect, \
         r = (-y-h, x, h, w)
         fontSize, maxw, r = show_text_rect(ctx, texte, r, va, ha, le, pe, 
                                            b, fontsizeMinMax = fontsizeMinMax, fontsizePref = fontsizePref,
-                                           wrap = wrap, couper = couper, bordure = bordure)
+                                           wrap = wrap, couper = couper, coulBord = coulBord, tracer = tracer)
         ctx.rotate(pi/2)
         return fontSize, maxw, r
     
@@ -229,15 +229,15 @@ def show_text_rect(ctx, texte, rect, \
     
     
     
-    
+    #
     # On vérifie dans le cache qu'on n'a pas déja fait le boulot
+    #
     calculer = False
     if texte in CACHE.keys():
         www, hhh, ttt, fff, mmm = CACHE[texte]
         if www == w and hhh == h:
             lt, ratio, maxw = ttt, fff, mmm
         else:
-            
             calculer = True
     else:
 #        print " pas cache",texte
@@ -246,8 +246,7 @@ def show_text_rect(ctx, texte, rect, \
     if calculer:
         lt, ratio, maxw = ajuster_texte(ctx, texte, w, h, le, pe, b, wrap, couper)
         CACHE[texte] = (w, h, lt, ratio, maxw)
-#    else:
-#        print "CACHE", texte[:10]
+
     
     if lt == []:
         return 0, 0, 0
@@ -296,9 +295,12 @@ def show_text_rect(ctx, texte, rect, \
             fontSize = max(fontsizeMinMax[1] * fontsizePref/100, fontsizeMinMax[0])
         else:
             fontSize = fontsizeMinMax[1]
+        if not tracer:
+            return fontSize
+        
         wc, yh = show_text_rect_fix(ctx, texte, x, y, w, h, 
                                     fontSize, None, va = va, ha = ha, le = le, pe = pe,
-                                    bordure = bordure, wrap = wrap)
+                                    coulBord = coulBord, wrap = wrap)
         return fontSize, wc, yh
     
     fontSize = min(fontSize, fontsizeMinMax[1])
@@ -306,9 +308,12 @@ def show_text_rect(ctx, texte, rect, \
     
     if fontSize < fontsizeMinMax[0]:
         if debug: print "   fontSize mini !"
+        if not tracer:
+            return fontSize
+#        print "xxx", texte, nLignesMaxi
         wc, yh = show_text_rect_fix(ctx, texte, x, y, w, h, 
                                     fontsizeMinMax[0], nLignesMaxi, va = va, ha = ha, le = le, pe = pe,
-                                    bordure = bordure, wrap = wrap)
+                                    coulBord = coulBord, wrap = wrap)
         return fontSize, wc, yh
             
 #    if debug: print "   nLignes :", nLignes
@@ -328,9 +333,12 @@ def show_text_rect(ctx, texte, rect, \
         fontSize = max(fontSize * fontsizePref/100, fontsizeMinMax[0])
     if debug: print "   fontSize 4 :", fontSize, va
     
+    if not tracer:
+        return fontSize
+
     ctx.set_font_size(fontSize)
     wc, yh = show_lignes(ctx, lt, x, y, w, h, 
-                         va = va, ha = ha, le = le, pe = pe, bordure = bordure)
+                         va = va, ha = ha, le = le, pe = pe, coulBord = coulBord)
     
     return fontSize, wc, yh
 
@@ -702,12 +710,12 @@ def show_text_rect(ctx, texte, rect, \
 
 def decoupe_text(ctx, texte, w, nLignesMax):
     """ Découpe un texte en une liste de lignes
-        de telle sorte qu'il rentre dans la largeur w
-        et tronquage à nLignesMax lignes maximum
+        de telle sorte qu'il rentre dans la largeur <w> (unités cairo)
+        et tronquage à <nLignesMax> lignes maximum
     """
     
-    # Découpages du texte en lignes
-    lignes = texte.splitlines()#("\n")
+    # Découpage du texte en lignes
+    lignes = texte.splitlines()
     
     # Longueur maxi des lignes (nbr de caractères)
     wmax = max([len(l) for l in lignes])
@@ -716,12 +724,10 @@ def decoupe_text(ctx, texte, w, nLignesMax):
     continuer = len(texte) > 0
     while continuer:
         i += 1
-
         if wmax <= 0:
             continuer = False
             
         else:
-            
             if i > 1:
                 lt = []
                 # On fait une découpe à "wmax" ...
@@ -744,7 +750,6 @@ def decoupe_text(ctx, texte, w, nLignesMax):
             else: # Ca ne rentre pas --> on coupe plus ras.
                 wmax -= 1
 
-            
     return lt
 
 
@@ -792,118 +797,55 @@ def decoupe_text(ctx, texte, w, nLignesMax):
 #    return lt
 ##########################################################################################################################
 def show_text_rect_fix(ctx, texte, x, y, w, h, fontSize, \
-                       Nlignes = None, va = 'c', ha = 'c', le = 0.8, pe = 1.0, 
-                       bordure = None, wrap = True):#, outPosMax = False):
-    """ Affiche un texte en tronquant sa longueur
-        pour qu'il rentre dans le rectangle
+                       Nlignes = 1, va = 'c', ha = 'c', le = 0.8, pe = 1.0, 
+                       coulBord = None, wrap = True):#, outPosMax = False):
+    """ Affiche un texte 
+            (en tronquant sa longueur s'il le faut
+             pour qu'il rentre dans le rectangle)
+             
         x, y, w, h : position et dimensions du rectangle
+        fontSize : taille de la police
         va, ha : alignements vertical et horizontal ('h', 'c', 'b' et 'g', 'c', 'd')
-        
-        Nlignes : nombre maximum de lignes
+        coulBord : coulBord = couleur de la bordure (pas de bordure si None)
+        Nlignes : coupe le texte en Nlignes maxi (None pour "pas de limite")
         
         Retourne : Position horizontale maximum, Position verticale de la première ligne
     """
-#    if texte == "Th 10":
-#        print "show_text_rect_fix", fontSize, Nlignes, text
-    
-    
+
     if texte == "":
-        return 0, 0
-         
+        return x, y
+
     ctx.set_font_size(fontSize)
 
-#    print ctx.font_extents(),  fontSize
-    
     #
     # Découpage du texte en lignes, de telle sorte qu'il rentre dans la largeur w
     # et tronquage en même temps
     #
     if wrap:
         lt = decoupe_text(ctx, texte, w, Nlignes)
-#        # Longueur maxi des lignes (nbr de caractères)
-#        wmax = 0
-#        for l in texte.split("\n"):
-#            wmax = max(wmax, len(l))
-#        i = 0
-#        
-#        continuer = len(texte) > 0
-#        while continuer:
-#            i += 1
-#            # On fait une découpe à "wmax" ...
-#            lt = []
-#            for l in texte.split("\n"):
-#                if wmax > 0:
-#                    lt.extend(textwrap.wrap(l, wmax))
-#                else:
-#                    lt.extend(l)
-#            
-#            # On teste si ça rentre ...
-#            maxw = 0
-#            for t in lt:
-#                width = ctx.text_extents(t)[2]
-#                maxw = max(maxw, width)
-#        
-#            if maxw <= w: # Ca rentre !
-#                continuer = False
-#            else: # Ca ne rentre pas --> on coupe plus ras.
-#                wmax += -1
     else:
         lt = [texte]
-        
-#    wrap += 1
-#    lt = []
-#    for l in texte.split("\n"):
-#        lt.extend(textwrap.wrap(l, wrap))
-#    print lt
-#    print w
     
-    #
-    # Tronquage du texte
-    #
-#    if Nlignes != None and len(lt) > Nlignes:
-#        dl = lt[Nlignes-1]
-#        continuer = True
-#        while continuer:
-##            print "   ", dl
-#            width = ctx.text_extents(dl+" ...")[2]
-#            if width <= w:
-#                continuer = False
-#            else:
-#                dll = dl.split()
-#                if len(dll) > 1:
-#                    dl = " ".join(dll[:-1])
-#                else:
-#                    continuer = False
-#                
-#        lt[Nlignes-1] = dl + " ..."
-#        
-#    lt = lt[:Nlignes]
-    
-#    show_lignes(ctx, lt, x, y, w, h, ha, va)
-    
-#    
-#    if outPosMax: 
     return show_lignes(ctx, lt, x, y, w, h, 
-                       va, ha, le, pe)
-#    else:
-#        return x, y
-    
-     
-   
+                       va, ha, le, pe, coulBord = coulBord)
 
 
 
-
+#########################################################################################################################
 def show_lignes(ctx, lignes, x, y, w, h, \
                 va = 'h', ha = 'g', le = 0.8, pe = 1.0, \
-                bordure = None, echelle = 1.0):
+                coulBord = None, echelle = 1.0):
     """ Affiche une série de lignes de texte
-        Renvoie la position la plus extrème à droite (pour éventuellement écrire une suite au texte)
+        Renvoie la position la plus extrème à droite
+            (pour éventuellement écrire une suite au texte)
         
         x, y, w, h : position et dimensions du rectangle
         va, ha : alignements vertical et horizontal ('h', 'c', 'b' et 'g', 'c', 'd')
         le = espacement vertical des lignes (1.0 = "normal")
         pe = espacement vertical des paragraphes (1.0 = "normal")
+        coulBord = couleur de la bordure (pas de bordure si None)
+        
+        La taille de la police doit être définie au préalable.
         
         Retourne : Position horizontale maximum, Position verticale de la première ligne
     """
@@ -914,7 +856,7 @@ def show_lignes(ctx, lignes, x, y, w, h, \
     ctx.save()
     ctx.scale(echelle, echelle)
     
-    # Caractéristiques verticales de la font
+    # Caractéristiques verticales de la police
     fascent, fdescent, fheight = ctx.font_extents()[:3]
     
     # Espacement vertical entre les lignes
@@ -927,24 +869,12 @@ def show_lignes(ctx, lignes, x, y, w, h, \
         dy = h-hl*len(lignes)
     else:
         dy = 0
-        
-    
-    
-    
-#    # Un rectangle invisible pour la séléction
-#    e = ctx.get_line_width ()
-#    ctx.set_line_width(0.0001)
-#    ctx.rectangle(x, y, w, h)
-#    ctx.stroke()
-#    ctx.set_line_width(e)
-#    
+ 
      
     #
     # On dessine toutes les lignes de texte
     #
     posmax = x
-#    print "dy", dy
-#    print "show_lignes", lignes
     for l, t in enumerate(lignes):
 #        print "  ",t
         xbearing, ybearing, width, height, xadvance, yadvance = ctx.text_extents(t)
@@ -960,17 +890,16 @@ def show_lignes(ctx, lignes, x, y, w, h, \
         ctx.move_to(xt, yt)
         
         
-        if bordure == None:
+        if coulBord == None:
     #        print t
             ctx.show_text(t)
         else:
             ctx.text_path(t)
             ctx.fill_preserve()
-            ctx.set_source_rgb(bordure[0], bordure[1], bordure[2])
+            ctx.set_source_rgb(*coulBord)
             ctx.set_line_width(fheight/30)
            
         posmax = max(posmax, xt + width)
-    
     
     ctx.stroke()
     ctx.restore()
@@ -989,19 +918,25 @@ def show_lignes(ctx, lignes, x, y, w, h, \
 BcoulPos = []
 IcoulPos = []
 ICoulComp = []
+CoulAltern = []
 fontPos = 0.014 * COEF 
 import couleur
 
 ######################################################################################  
-def DefinirCouleurs(n1, n2):
-    global IcoulPos, BcoulPos
+def DefinirCouleurs(n1, n2, n3):
+    global IcoulPos, BcoulPos, CoulAltern
     couleur.generate(IcoulPos, [0xFFC3D0E2, 0xFFF2C5B5], n1)
     couleur.generate(BcoulPos, [0xFF82AAE0, 0xFFEF825D], n1)
     
     couleur.generate(ICoulComp, [0xFFFF6666, 0xFFFFFF66, 0xFF75FF66, 0xFF66FFF9, 0xFFFF66F4], n2)
     
-    
-    
+    del CoulAltern[:]
+    for n in range(n3//2+1):
+        CoulAltern += [((0.85, 0.85, 0.95, 0.3),    (0, 0, 0, 1)),
+                       ((0.7,  0.7,  0.8,  0.2),    (0, 0, 0, 1))]
+
+
+######################################################################################  
 def DrawPeriodes(ctx, rect, pos = None, periodes = [[u"Année", 5]], projets = {}, tailleTypeEns = 0):
     """ Dessine les périodes de l'enseignements
          >> Renvoie la liste des rectangles des positions
@@ -1314,30 +1249,42 @@ def tableauV(ctx, titres, x, y, w, ht, hl, nlignes = 0, va = 'c', ha = 'c', orie
     return rect
     
 def tableauH(ctx, titres, x, y, wt, wc, h, nCol = 0, va = 'c', ha = 'c', orient = 'h', 
-             coul = (0.9,0.9,0.9), contenu = []):
+             coul = (0.9,0.9,0.9), contenu = [], tailleFixe = False):
     
     rect = []
     hc = h/len(titres)
     _y = y
     _coul = ctx.get_source().get_rgba()
 
+    taillesFont = []
     for i, titre in enumerate(titres):
         ctx.rectangle(x, _y, wt, hc)
         if type(coul) == dict :
             col = coul[titre.rstrip("1234567890.")]
+        elif type(coul[0]) == tuple:
+            col = coul[i]
         else:
-            if type(coul[0]) == tuple:
-                col = coul[i]
-            else:
-                col = coul
+            col = coul
         ctx.set_source_rgba (*col[0])
         ctx.fill_preserve ()
         ctx.set_source_rgba (*_coul)
-        show_text_rect(ctx, titre, (x, _y, wt, hc), va = va, ha = ha, b = 0.2, orient = orient)
+        taillesFont.append(show_text_rect(ctx, titre, (x, _y, wt, hc), va = va, ha = ha, 
+                                          b = 0.2, orient = orient, tracer = not tailleFixe))
+        
         rect.append((x, _y, wt, hc))
         ctx.stroke ()
         _y += hc
     
+    
+    if tailleFixe: # Tracé en différé
+        tailleFont = min(taillesFont)
+        _y = y
+        for i, titre in enumerate(titres):
+            ctx.set_source_rgba (*_coul)
+            show_text_rect(ctx, titre, (x, _y, wt, hc), va = va, ha = ha, 
+                            b = 0.2, orient = orient, fontsizeMinMax = (tailleFont, tailleFont))
+            _y += hc
+
     _x = x+wt
     _y = y
     for c in range(nCol):
@@ -1389,7 +1336,8 @@ def tableauH_var(ctx, titres, x, y, wt, wc, hl, taille, nCol = 0, va = 'c', ha =
         ctx.set_source_rgb (col[0], col[1], col[2])
         ctx.fill_preserve ()
         ctx.set_source_rgba (*_coul[0])
-        show_text_rect(ctx, titre, (x, _y, wt, hl[i]), va = va, ha = ha, orient = orient, fontsizeMinMax = (-1, taille))
+        show_text_rect(ctx, titre, (x, _y, wt, hl[i]), va = va, ha = ha, 
+                       orient = orient, fontsizeMinMax = (-1, taille))
         ctx.stroke ()
         _y += hl[i]
     
@@ -1626,7 +1574,8 @@ def liste_code_texte(ctx, lstCodes, lstTexte, x, y, w, h,
             fm, wc, yh = show_text_rect(ctx, lstTexte[i], 
                                         (x + wt + eh, y+i*hl, 
                                          w - wt - eh, hl), 
-                                        b = 0, ha = 'g', va = va, fontsizeMinMax = (-1, maxFontSize))
+                                        b = 0, ha = 'g', va = va, 
+                                        fontsizeMinMax = (-1, maxFontSize))
             ly.append(y+i*hl)
             
             rect = (x, y+i*hl, w, hl)
@@ -2248,16 +2197,21 @@ def ajuster_texte(ctx, texte, w, h, le = 0.8, pe = 1.0, b = 0.4, wrap = True, co
             
         
     else:
-        lt = texte.splitlines()#("\n")
+        lt = texte.splitlines()
         maxw = max([ctx.text_extents(t)[2] for t in lt])
         c = max(maxw/w, hl*len(lt)/h)
         ratioRect = (w*c-ecart)/(h*c-ecart)
 #        fontSize = min(w/maxw, h/hl) * COEF
     
     if debug: print "   >>", i
+    
     return lt, ratioRect, maxw
 
 
+
+
+
+#########################################################################################################################
 def info(ctx, margeX, margeY):
     #
     # Informations

@@ -4020,7 +4020,7 @@ class Progression(BaseDoc, Objet_sequence):
                 ps.ChargerSequence()
             self.sequences.append(ps)
             self.OrdonnerSequences()
-            self.GetApp().sendEvent(modif = u"Ajout d'une Séquence à la progression")
+            self.GetApp().sendEvent(modif = u"Ajout d'une Séquence à la Progression")
             self.arbre.SelectItem(ps.branche)
     
     
