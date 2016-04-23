@@ -350,14 +350,6 @@ def getCoulPartie(partie):
 #COUL_REVUE = "DEEPPINK2"#"FIREBRICK"
 #COUL_SOUT = "BLUEVIOLET"#"MEDIUMBLUE"
 COUL_ABS = "GREY"#"MEDIUMBLUE"
-
-COUL_ELEVES = [((0.85,0.85,0.95,0.3), (0,0,0,1)),
-               ((0.7,0.7,0.8,0.2), (0,0,0,1)),
-               ((0.85,0.85,0.95,0.3), (0,0,0,1)),
-               ((0.7,0.7,0.8,0.2), (0,0,0,1)),
-               ((0.85,0.85,0.95,0.3), (0,0,0,1)),
-               ((0.7,0.7,0.8,0.2), (0,0,0,1))]
-
 COUL_COMPETENCES = (0.6, 0.0, 0.0, 1.0)
 
 

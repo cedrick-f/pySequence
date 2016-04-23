@@ -1023,7 +1023,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             child = FenetreProjet(self)
             child.SetIcon(constantes.imagesProjet["Prj"].GetIcon())
         elif ext == 'prg':
-            child = FenetreProgression(self)
+            child = FenetreProgression(self, ouverture)
             child.SetIcon(constantes.imagesProgression["Prg"].GetIcon())
         else:
             child = None
@@ -1220,17 +1220,17 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     
             if fenDoc.typ == "prj":
                 for i in [17, 19, 20]:
-                    if self.file_menu.FindItem(i) is not None:
+                    if self.file_menu.FindItemById(i) is not None:
                         self.file_menu.Enable(i, True)
                 
             elif fenDoc.typ == "seq":
                 for i in [17, 19, 20]:
-                    if self.file_menu.FindItem(i) is not None:
+                    if self.file_menu.FindItemById(i) is not None:
                         self.file_menu.Enable(i, False)
                 
             elif fenDoc.typ == "prg":
                 for i in [17, 19, 20]:
-                    if self.file_menu.FindItem(i) is not None:
+                    if self.file_menu.FindItemById(i) is not None:
                         self.file_menu.Enable(i, False)
                 
         self.miseAJourUndo()
@@ -1793,12 +1793,12 @@ class FenetreSequence(FenetreDocument):
         #
         # La classe
         #
-        self.classe = Classe(self, ouverture = ouverture, typedoc = self.typ)
+        self.classe = Classe(self, typedoc = self.typ)
         
         #
         # La séquence
         #
-        self.sequence = Sequence(self, self.classe)
+        self.sequence = Sequence(self, self.classe, ouverture = ouverture)
         self.classe.SetDocument(self.sequence)
       
         #
@@ -1980,7 +1980,7 @@ class FenetreSequence(FenetreDocument):
         
     ###############################################################################################
     def ouvrir(self, nomFichier, redessiner = True, reparer = False):
-#        print "ouvrir sequence"
+#        print "ouvrir sequence", nomFichier
         if not os.path.isfile(nomFichier):
             return
         
@@ -2014,7 +2014,7 @@ class FenetreSequence(FenetreDocument):
             self.sequence.PubDescription()
             self.sequence.SetLiens()
             self.sequence.VerifPb()
-    
+            self.sequence.MiseAJourTypeEnseignement()
             self.sequence.Verrouiller()
             self.arbre.SelectItem(self.classe.branche)
 
@@ -2068,7 +2068,7 @@ class FenetreSequence(FenetreDocument):
 #
 ########################################################################################
 class FenetreProjet(FenetreDocument):
-    def __init__(self, parent):
+    def __init__(self, parent, ouverture = False):
         self.typ = 'prj'
 #        print "__init__ FenetreProjet"
         FenetreDocument.__init__(self, parent)
@@ -2330,11 +2330,9 @@ class FenetreProjet(FenetreDocument):
                 if self.projet.GetProjetRef() == None:
                     print u"Pas bon référentiel"
                     self.classe.setBranche(classe, reparer = True)
-                    
-#                self.projet.creerTachesRevue()
-                self.projet.MiseAJourTypeEnseignement()
+                
                 err = self.projet.setBranche(projet)
-#                dlg.top()
+                self.projet.MiseAJourTypeEnseignement()
                 
                 if len(err) > 0 :
                     Ok = False
@@ -2343,19 +2341,6 @@ class FenetreProjet(FenetreDocument):
                 
             self.arbre.DeleteAllItems()
             root = self.arbre.AddRoot("")
-            
-#            message += u"Traitement des revues...\t"
-#            dlg.Update(count, message)
-##            dlg.top()
-#            count += 1
-#            try:
-#                self.projet.SetCompetencesRevuesSoutenance()
-#                message += u"Ok\n"
-#            except:
-#                Ok = False
-#                Annuler = True
-#                message += u"Erreur !\n"
-#                print "Erreur 4"
                         
             return root, message, count, Ok, Annuler
         
@@ -2750,7 +2735,7 @@ class FenetreProjet(FenetreDocument):
 #
 ########################################################################################
 class FenetreProgression(FenetreDocument):
-    def __init__(self, parent):
+    def __init__(self, parent, ouverture = False):
         self.typ = 'prg'
 #        print "__init__ FenetreProjet"
         FenetreDocument.__init__(self, parent)
@@ -2814,6 +2799,7 @@ Your browser does not support the HTML5 canvas tag.
         self.nb.AddPage(self.pageHTML, u"HTML")
         
         self.miseEnPlace()
+        
         self.fiche.Redessiner()
         
         wx.CallAfter(self.Thaw)
@@ -2860,7 +2846,62 @@ Your browser does not support the HTML5 canvas tag.
         
         self.parent.miseAJourUndo()
         
-    
+    ###############################################################################################
+    def ProposerEnregistrer(self, sequence, pathProg):
+        wx.BeginBusyCursor()
+        
+        dlg = wx.TextEntryDialog(self, u"Nom du fichier séquence\n\n"\
+                                 u"La séquence sera engegistrée dans le dossier de la progression :\n" + toSystemEncoding(pathProg),
+                                 u"Enregistrement de la séquence", u"")
+
+        if dlg.ShowModal() == wx.ID_OK:
+            nomFichier = dlg.GetValue()
+            dlg.Destroy()
+            nomFichier = os.path.splitext(os.path.basename(nomFichier))[0]+'.seq'
+            nomFichier = os.path.join(pathProg, nomFichier)
+            
+            if os.path.isfile(nomFichier):
+                dlg = wx.MessageDialog(self, u"Un fichier séquence portant ce nom existe déja.\n\n"\
+                                             u"Voulez-vous :\n"\
+                                             u" - l'ouvrir comme nouvelle Séquence de la Progression : OUI\n"\
+                                             u" - écraser le fichier existant (toutes les données seront perdues) : NON\n"\
+                                             u" - choisir un autre nom pour la séquence : ANNULER",
+                                       u"Séquence existante",
+                                       wx.YES_NO | wx.CANCEL | wx.ICON_QUESTION |wx.YES_DEFAULT
+                                       )
+                res = dlg.ShowModal()
+                dlg.Destroy()
+                if res == wx.ID_YES:
+                    wx.EndBusyCursor()
+                    return 1, os.path.relpath(nomFichier, pathProg)
+                elif res == wx.ID_NO:
+                    pass
+                else:
+                    wx.EndBusyCursor()
+                    return 2, ""
+                             
+            path = os.path.relpath(nomFichier, pathProg)
+            
+            # La séquence
+            bsequence = sequence.getBranche()
+            bclasse = self.classe.getBranche()
+            
+            # La racine
+            root = ET.Element("Sequence_Classe")
+            root.append(bsequence)
+            root.append(bclasse)
+            constantes.indent(root)
+            self.enregistrer_root(root, nomFichier)
+            wx.EndBusyCursor()
+            
+            return 0, path
+        
+        else:
+            dlg.Destroy()
+        
+        return 3, ""
+        
+        
     ###############################################################################################
     def enregistrer(self, nomFichier):
 
@@ -2946,13 +2987,14 @@ Your browser does not support the HTML5 canvas tag.
                 message += u"\n"
                 
                 
-                # Le progression
+                # La progression
                 message += u"Construction de la structure de la progression...\t"
 #                dlg.top()
                 dlg.Update(count, message)
                 count += 1
                 
                 err = self.progression.setBranche(progression)
+                self.progression.MiseAJourTypeEnseignement()
                 
                 if len(err) > 0 :
                     Ok = False
@@ -2963,8 +3005,8 @@ Your browser does not support the HTML5 canvas tag.
             root = self.arbre.AddRoot("")
             
             return root, message, count, Ok, Annuler
-        
-        
+
+
         ################################################################################################
         if "beta" in version.__version__:
 #            print "beta"
@@ -3022,7 +3064,7 @@ Your browser does not support the HTML5 canvas tag.
                          ]
         
         for fct, arg, karg, msg in liste_actions:
-            print "+++", msg
+#            print "+++", msg
             message += msg
             dlg.Update(count, message)
 #            dlg.top()
@@ -6150,10 +6192,11 @@ class PanelPropriete_LienSequence(PanelPropriete):
         #
         # Aperçu de la séquence
         #
-        sb1 = myStaticBox(self, -1, u"Aperçu de la séquence", size = (210,297))
+        sb1 = myStaticBox(self, -1, u"Aperçu de la séquence", size = (141,200))
         sbs1 = wx.StaticBoxSizer(sb1,wx.HORIZONTAL)
-        sbs1.SetMinSize((210,297))
-        self.apercu = wx.StaticBitmap(self, -1, self.sequence.GetApercu(210))
+        sbs1.SetMinSize((141,200))
+        self.apercu = StaticBitmapZoom(self, -1, size = (141,200))
+        self.apercu.SetLargeBitmap(self.sequence.GetApercu(1000))
         sbs1.Add(self.apercu, 1)
         
         
@@ -6205,7 +6248,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
                  
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
-        print "MiseAJour PanelPropriete_LienSequence", self.lien
+#        print "MiseAJour PanelPropriete_LienSequence", self.lien
         
         
         self.intit.SetLabel(self.sequence.intitule)
@@ -6270,7 +6313,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
 
     
 #        if self.sequence:
-        print "bmp", self.sequence
+#        print "bmp", self.sequence
         bmp = self.sequence.GetApercu(210)
         self.apercu.SetBitmap(bmp)
         self.lien.SetLabel()
@@ -11517,7 +11560,31 @@ class A_propos(wx.Dialog):
         
         self.SetSizerAndFit(sizer)
 
+class StaticBitmapZoom(wx.StaticBitmap):
+    def __init__(self, *args, **kargs):
+        wx.StaticBitmap.__init__(self, *args, **kargs)
+        
+        self.Bind(wx.EVT_MOTION, self.OnMove)
+        self.Bind(wx.EVT_LEAVE_WINDOW, self.OnLeave)
 
+    def SetLargeBitmap(self, largeBitmap):
+        self.largeBitmap = largeBitmap
+        self.W, self.H = largeBitmap.GetWidth(), largeBitmap.GetHeight()
+        self.OnLeave()
+    
+    def OnLeave(self, event = None):
+        self.SetBitmap(self.largeBitmap.ConvertToImage().Scale(*self.GetSize()).ConvertToBitmap())
+        
+    def OnMove(self, event):
+        x, y = event.GetPosition()
+        w, h = self.GetSize()
+        x, y = (w-self.W)*x/w, (h-self.H)*y/h
+        
+        
+#        self.popup = wx.PopupTransientWindow(self)
+        img = self.largeBitmap.ConvertToImage().Resize(self.GetSize(), (x, y))
+        self.SetBitmap(img.ConvertToBitmap())
+        self.Refresh()
 
 class myStaticBox(wx.StaticBox):
     def __init__(self, *args, **kargs):

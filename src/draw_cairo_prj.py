@@ -259,7 +259,7 @@ def DefinirZones(prj, ctx):
     tailleZTaches[1] = tailleZDeroul[1] - ecartY/2 - 0.04 * COEF    # écart pour la durée totale
     
     calculCoefCalcH(prj, ctx, hTacheMini)
-    if a < 0:
+    if a < 0:   # Trop de tâches -> on réduit !
         calculCoefCalcH(prj, ctx, hTacheMini/2)
 
 
@@ -358,7 +358,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
     show_text_rect(ctx, t, (posPro[0] , posPos[1], tailleTypeEns, h), 
                    va = 'c', ha = 'g', b = 0, orient = 'h', 
                    fontsizeMinMax = (-1, -1), fontsizePref = -1, wrap = True, couper = False,
-                   bordure = (0, 0, 0))
+                   coulBord = (0, 0, 0))
     
     t = prj.classe.referentiel.Enseignement[1]
     ctx.set_source_rgb (0.3, 0.3, 0.8)
@@ -397,7 +397,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
         show_text_rect(ctx, t, (posPos[0] , posPos[1]+taillePos[1], taillePos[0], posPro[1]-posPos[1]-taillePos[1]), 
                        va = 'c', ha = 'g', b = 0.2, orient = 'h', 
                        fontsizeMinMax = (-1, -1), fontsizePref = -1, wrap = True, couper = False,
-                       bordure = (0, 0, 0))
+                       coulBord = (0, 0, 0))
 
     
     #
@@ -610,7 +610,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
 
         rec = tableauH(ctx, l, posZElevesH[0], posZElevesH[1], 
                      tailleZElevesH[0], 0, tailleZElevesH[1], 
-                     va = 'c', ha = 'd', orient = 'h', coul = constantes.COUL_ELEVES)
+                     va = 'c', ha = 'd', orient = 'h', coul = CoulAltern)
         
         prj.pt_caract_eleve = getPts(rec)
         
@@ -619,7 +619,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
         #
         for i, e in enumerate(prj.eleves):
             prj.zones_sens.append(Zone([rec[i]], obj = e))
-            Ic = constantes.COUL_ELEVES[i][0]
+            Ic = CoulAltern[i][0]
             
             ctx.set_source_rgb(Ic[0],Ic[1],Ic[2])
             ctx.set_line_width(0.003 * COEF)
@@ -631,7 +631,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
         # Lignes verticales
         #
         for i, e in enumerate(prj.eleves):
-            Ic = constantes.COUL_ELEVES[i][0]
+            Ic = CoulAltern[i][0]
             
             ctx.set_source_rgb(Ic[0],Ic[1],Ic[2])
             ctx.set_line_width(0.003 * COEF)
@@ -770,7 +770,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
             d1 = e.GetDuree(phase = "R1")
             d2 = e.GetDuree(phase = "R2")
             d3 = e.GetDuree(phase = "R3")
-            Ic = constantes.COUL_ELEVES[i][0]
+            Ic = CoulAltern[i][0]
             ctx.set_source_rgb(Ic[0],Ic[1],Ic[2])
             ctx.set_line_width(0.005 * COEF)
             if md1 > 0:
@@ -845,369 +845,9 @@ def DrawLigneEff(ctx, x, y):
     ctx.stroke()
     ctx.set_dash([], 0)
 
-#######################################################################################  
-#def DrawPeriodes(ctx, pos = None, periodes = [[u"Année", 5]], projets = {}, tailleTypeEns = 0, origine = False):
-##    print "DrawPeriodes", pos
-##    print "   ", periodes, periodes_prj
-#    ctx.set_line_width (0.001)
-#    if origine:
-#        x = 0
-#        y = 0
-#        wt = 0.04*7
-#        ht = 0.04
-#    else:
-#        x = posPos[0]# + ecartX
-#        y = posPos[1]
-#        wt = taillePos[0]# - ecartX
-#        ht = taillePos[1]
-#    
-#    # Toutes le périodes de projet
-#    periodes_prj = [p.periode for p in projets.values()]
-#    
-#    # Les noms des projets par période
-#    noms_prj = {}
-#    for n, p in projets.items():
-#        for per in p.periode:
-#            noms_prj[per] = n
-#    
-#    
-#    pat = cairo.LinearGradient (x, y,  x + wt, y)
-#    pat.add_color_stop_rgba (1, 0.90, 0.55, 0.65, 1)
-#    pat.add_color_stop_rgba (0, 0.98, 0.88, 0.98, 1)
-#    ctx.rectangle (x, y, wt, ht)
-#    src = ctx.get_source()
-#    ctx.set_source (pat)
-#    ctx.fill ()
-#    ctx.set_source(src)
-#    
-#    ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-#                                       cairo.FONT_WEIGHT_NORMAL)
-#    
-#    # Ecart entre les cases
-#    dx = 0.02 * wt
-#    # Hauteur des cases
-#    h = ht/2-2*dx
-#    
-#    # Les rectangles à cliquer
-#    rect = []
-#    
-#    # Les différentes positions des cases
-#    posc = []
-#
-#    # Nombre d'années
-#    na = len(periodes)
-#    
-#    # Nombre total de périodes
-#    nt = 0
-#    for a in periodes:
-#        nt += a[1]
-#        
-#    # Largeur d'une case "simple"
-#    w = (wt-(nt+na)*dx)/nt
-#    
-##    # Largeur d'une année
-##    wi = (wt+dx)/len(periodes) - dx
-#    
-#    pa = 0
-#    
-#    # Abscisses des cases "simples"
-#    xcs = []
-#    
-#    # Curseur "année"
-#    xi = x
-#    for i, (an, np) in enumerate(periodes):
-#        # Largeur de l'année
-#        wa = np*w + (np+1) * dx
-#        
-#        # Nom de l'année
-#        annee = an.split("_")
-#        ctx.set_font_size(fontPos)
-#        w0 = ctx.text_extents(annee[0])[2]
-##        xi = x + wi/2 + (dx+wi)*i
-#        if len(annee) > 1:
-#            ctx.set_font_size(fontPos*0.9)
-#            w1 = ctx.text_extents(annee[1])[2]
-#            show_text_rect_fix(ctx, annee[0], xi+wa/2-(w0+w1)/2, y, w0, ht*2/3, fontPos, 1)
-#            ctx.stroke ()
-#            show_text_rect_fix(ctx, annee[1], xi+wa/2-(w0+w1)/2 + w0 +0.01, y, w1, ht/3, fontPos*0.9, 1, ha = 'c')
-#            ctx.stroke ()
-#        else:
-#            show_text_rect_fix(ctx, annee[0], xi+wa/2-w0/2, y, w0, ht*2/3, fontPos, 1)
-#            ctx.stroke ()
-#        
-#        for c in range(np):
-#            pa += 1
-#            if pa in noms_prj.keys():
-#                n = noms_prj[pa]
-#            else:
-#                n = ""
-#            xcs.append((xi + c*(w+dx) + dx, pos == pa-1, i, n))
-#            
-#        xi += np*w + (np+1)*dx
-#        
-#    # Liste des positions qui fusionnent avec leur position précédente
-#    lstGrp = []
-#    for periode_prj in periodes_prj:  
-#        lstGrp.extend(range(periode_prj[0]+1, periode_prj[-1]+1))
-##    print lstGrp
-#    
-#    for p in reversed(sorted(lstGrp)):
-#        del xcs[p-1]
-#        
-#
-#    for p, xc in enumerate(xcs):
-#        
-#        if p < len(xcs)-1:
-#            w = xcs[p+1][0] - xc[0] - dx
-#            if xcs[p+1][2] != xc[2]:
-#                w -= dx
-#        else:
-#            w = x+wt - xc[0] - dx
-#        
-#
-#        ctx.rectangle (xc[0], y+ht/2+dx, w, h)
-#        rect.append((xc[0], y+ht/2+dx, w, h))
-#        if xc[1]:
-#            ctx.set_source_rgba (AcoulPos[0], AcoulPos[1], AcoulPos[2], AcoulPos[3])
-#        else:
-#            ctx.set_source_rgba (IcoulPos[0], IcoulPos[1], IcoulPos[2], IcoulPos[3])
-#        ctx.fill_preserve ()
-#        ctx.set_source_rgba (BcoulPos[0], BcoulPos[1], BcoulPos[2], BcoulPos[3])
-#        ctx.stroke ()    
-#        
-#        if xc[3] != "":
-#            show_text_rect(ctx, xc[3], 
-#                           rect[-1], ha = 'c', b = 0.2, wrap = False, couper = False)
-#            ctx.stroke ()
-            
-            
-            
-            
-        
-#        # largeur des cases
-#        w = (wi-dx)/np-dx
-#        
-        # abscisse de l'année
-#        xi = x + (dx+wi)*i + dx
-#        for p in range(np):
-#            pa += 1
-#
-#            
-##            print pa , range(periode_prj[0], periode_prj[1]+1)
-#            for periode_prj in periodes_prj:
-#                if len(periode_prj) != 2 or not pa in range(periode_prj[0], periode_prj[1]+1):
-#                    ctx.rectangle (xi, y+ht/2+dx, w, h)
-#                    rect.append((xi, y+ht/2+dx, w, h))
-#                    if pos == pa-1:
-#                        ctx.set_source_rgba (AcoulPos[0], AcoulPos[1], AcoulPos[2], AcoulPos[3])
-#                    else:
-#                        ctx.set_source_rgba (IcoulPos[0], IcoulPos[1], IcoulPos[2], IcoulPos[3])
-#                    ctx.fill_preserve ()
-#                    ctx.set_source_rgba (BcoulPos[0], BcoulPos[1], BcoulPos[2], BcoulPos[3])
-#                    ctx.stroke ()
-#                else:
-#                    xa.append(xi)
-##            if p == 3:
-##                x += dx
-#            xi += dx + w
-#        
-#    
-#    if len(periode_prj) == 2:
-##        print "projet"
-#        
-#        xi = xa[0]
-#        
-##        xi = x + (dx+wi)*(periode_prj[0]-1) + dx*len(periodes)
-#        wi = (dx+w)*(periode_prj[1]-periode_prj[0]+1) - dx
-#        ctx.rectangle (xi, y+ht/2+dx, wi, h)
-#        rect.append((xi, y+ht/2+dx, wi, h))
-#        if pos == periode_prj[0]-1:
-#            ctx.set_source_rgba (AcoulPos[0], AcoulPos[1], AcoulPos[2], AcoulPos[3])
-#        else:
-#            ctx.set_source_rgba (IcoulPos[0], IcoulPos[1], IcoulPos[2], IcoulPos[3])
-#        ctx.fill_preserve ()
-#        ctx.set_source_rgba (BcoulPos[0], BcoulPos[1], BcoulPos[2], BcoulPos[3])
-#        ctx.stroke ()
-            
-#    print "fin"
     
-    
-#    if ens == 'lyc':
-#        pm = show_text_rect_fix(ctx, u"1", x, y, wt/2, ht*2/3, fontPos, 1)#, outPosMax = True)
-#     
-#        ctx.stroke ()
-#        show_text_rect_fix(ctx, u"ère", pm+0.002, y, wt/2, ht/3, fontPos*0.9, 1, ha = 'g')
-#        ctx.stroke ()
-#        
-#        pm = show_text_rect_fix(ctx, u"T", x+wt/2, y, wt/2, ht*2/3, fontPos, 1)#, outPosMax = True)
-#    
-#        ctx.stroke ()
-#        show_text_rect_fix(ctx, u"ale", pm+0.002, y, wt/2, ht/3, fontPos*0.9, 1, ha = 'g')
-#        ctx.stroke ()
-#        
-#        dx = 0.005
-#        x += dx
-#        h = ht/2-2*dx
-#        w = (wt - 10 * dx)/8
-#        rect = []
-#        for p in range(5):
-#            ctx.rectangle (x, y+ht/2+dx, w, h)
-#            rect.append((x, y+ht/2+dx, w, h))
-#            if pos == p:
-#                ctx.set_source_rgba (AcoulPos[0], AcoulPos[1], AcoulPos[2], AcoulPos[3])
-#            else:
-#                ctx.set_source_rgba (IcoulPos[0], IcoulPos[1], IcoulPos[2], IcoulPos[3])
-#            ctx.fill_preserve ()
-#            ctx.set_source_rgba (BcoulPos[0], BcoulPos[1], BcoulPos[2], BcoulPos[3])
-#            ctx.stroke ()
-#            if p == 3:
-#                x += dx
-#            x+= dx + w
-#            
-#        p = 5
-#        ctx.rectangle (x, y+ht/2+dx, w*3+dx*2, h)
-#        rect.append((x, y+ht/2+dx, w*3+dx*2, h))
-#        if pos == p:
-#            ctx.set_source_rgba (AcoulPos[0], AcoulPos[1], AcoulPos[2], AcoulPos[3])
-#        else:
-#            ctx.set_source_rgba (IcoulPos[0], IcoulPos[1], IcoulPos[2], IcoulPos[3])
-#        ctx.fill_preserve ()
-#        ctx.set_source_rgba (BcoulPos[0], BcoulPos[1], BcoulPos[2], BcoulPos[3])
-#        ctx.stroke ()
-#    
-#    
-#    else:
-#        show_text_rect_fix(ctx, u"T1", x, y, wt/3, ht*2/3, fontPos, 1)#, outPosMax = True)
-#        ctx.stroke ()
-#        show_text_rect_fix(ctx, u"T2", x+wt/3, y, wt/3, ht*2/3, fontPos, 1)#, outPosMax = True)
-#        ctx.stroke ()
-#        show_text_rect_fix(ctx, u"T3", x+2*wt/3, y, wt/3, ht*2/3, fontPos, 1)#, outPosMax = True)
-#        ctx.stroke ()
-#        
-#        
-#        dx = wt/20 #0.005
-#        x += dx
-#        h = ht/2-2*dx
-#        w = (wt - 10 * dx)/8
-#        rect = []
-#        for p in range(6):
-#            ctx.rectangle (x, y+ht/2+dx, w, h)
-#            rect.append((x, y+ht/2+dx, w, h))
-#            if pos == p:
-#                ctx.set_source_rgba (AcoulPos[0], AcoulPos[1], AcoulPos[2], AcoulPos[3])
-#            else:
-#                ctx.set_source_rgba (IcoulPos[0], IcoulPos[1], IcoulPos[2], IcoulPos[3])
-#            ctx.fill_preserve ()
-#            ctx.set_source_rgba (BcoulPos[0], BcoulPos[1], BcoulPos[2], BcoulPos[3])
-#            ctx.stroke ()
-#            if p == 3:
-#                x += dx
-#            x+= dx + w
-        
-#    return rect
-    
-    
-#######################################################################################  
-#def Draw_CI(ctx, CI):
-#    # Rectangle arrondi
-#    x0, y0 = posSup
-#    rect_width, rect_height  = tailleSup
-##    if len(CI.numCI) <= 1:
-##        t = u"Centre d'intérêt"
-##    else:
-#    t = u"Centre%s d'intérêt" %"s"*len(CI.numCI) > 1
-#    CI.pt_caract = (curve_rect_titre(ctx, t,  (x0, y0, rect_width, rect_height), BcoulSup, IcoulSup, fontSup), 
-#                    'CI')
-#    
-#    CI.rect.append((x0, y0, rect_width, rect_height))
-#    
-#    
-#    #
-#    # code et intitulé des CI
-#    #
-#    lstCodes = []
-#    lstIntit = []
-#    for i in range(len(CI.numCI)):
-#        lstCodes.append(CI.GetCode(i))
-#        lstIntit.append(CI.GetIntit(i))
-#        
-#    if CI.numCI != []:
-#        e = 0.008 * COEF
-#        r = liste_code_texte(ctx, lstCodes, lstIntit, x0, y0+0.0001 * COEF, rect_width, rect_height, e)
-#        CI.pts_caract = getPts(r)
-        
 
 
-
-#class Cadre():  
-#    def __init__(self, ctx, tache): 
-#        self.tache = tache
-#        self.ctx = ctx
-#        self.w = wTache
-#        self.h = hHoraire * tache.GetDureeGraph()
-#        self.xd = None
-#        self.y = None
-#        self.dy = None
-#        self.tache.rect = []
-#        
-#        
-#    def __repr__(self):
-#        return self.tache.code
-#    
-#    def Draw(self, x, y):
-#        
-#        alpha = 1
-#        self.tache.pts_caract.append((x, y))
-#            
-#        self.ctx.set_line_width(0.002)
-#        rectangle_plein(self.ctx, x, y, self.w, self.h, 
-#                        BCoulTache[self.tache.phase], ICoulTache[self.tache.phase], alpha)
-#        
-#        if hasattr(self.tache, 'code'):
-#            self.ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-#                                  cairo.FONT_WEIGHT_BOLD)
-#            self.ctx.set_source_rgb (0,0,0)
-#            hc = max(hHoraire/4, 0.01)
-#            show_text_rect(self.ctx, self.tache.code, (x, y, wTache, hc), ha = 'g', 
-#                           wrap = False, fontsizeMinMax = (minFont, -1), b = 0.2)
-#        
-#        if self.tache.intituleDansDeroul and self.tache.intitule != "":
-#            self.ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
-#                                  cairo.FONT_WEIGHT_NORMAL)
-#            self.ctx.set_source_rgb (0,0,0)
-#            show_text_rect(self.ctx, self.tache.intitule, (x, y + hc, 
-#                           self.w, self.h-hc), ha = 'g', fontsizeMinMax = (minFont, 0.015))
-#            
-#        # Sauvegarde de la position du bord droit pour les lignes de croisement
-#        self.xd = x+self.w
-#        self.y = y
-#        
-#        self.tache.rect.append([x, y, self.w, self.h])
-#        
-
-#class Bloc():
-#    def __init__(self):
-#        self.contenu = []
-#        
-#        
-#    def Draw(self, y):
-#        
-#        for ligne in self.contenu:
-#            x = posZTaches[0]
-#            for cadre in ligne:
-#                cadre.Draw(x, y)
-#                x += cadre.w
-#            if len(ligne) > 0:
-#                y += cadre.h
-#        y += ecartTacheY
-#        return y
-#    
-#    def DrawCoisement(self):
-#        for ligne in self.contenu:
-#            for cadre in ligne:
-#                DrawCroisementsEleves(cadre.ctx, cadre.tache, cadre.xd, cadre.y + cadre.dy)
-#                DrawCroisementsCompetences(cadre.ctx, cadre.tache, cadre.y + cadre.dy) 
-               
     
 ######################################################################################  
 def DrawTacheRacine(ctx, tache, y):
@@ -1472,8 +1112,8 @@ def DrawCroisementsElevesTaches(ctx, tache, y):
             color1 = BCoulTache[tache.phase]
             color0 = (1, 1, 1, 1)
         else:
-            color0 = constantes.COUL_ELEVES[i][0]
-            color1 = constantes.COUL_ELEVES[i][1]
+            color0 = CoulAltern[i][0]
+            color1 = CoulAltern[i][1]
 
         _x = xEleves[i]
         boule(ctx, _x, y, r, 

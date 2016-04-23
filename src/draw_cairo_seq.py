@@ -399,7 +399,7 @@ def Draw(ctx, seq, mouchard = False):
     show_text_rect(ctx, t, (posObj[0] , posPos[1], tailleTypeEns, h), 
                    va = 'c', ha = 'g', b = 0, orient = 'h', 
                    fontsizeMinMax = (-1, -1), fontsizePref = -1, wrap = True, couper = False,
-                   bordure = (0, 0, 0))
+                   coulBord = (0, 0, 0))
 
     t = seq.classe.referentiel.Enseignement[1]
     ctx.set_source_rgb (0.3, 0.3, 0.8)
@@ -436,7 +436,7 @@ def Draw(ctx, seq, mouchard = False):
         show_text_rect(ctx, t, (posPos[0] , posPos[1]+taillePos[1], taillePos[0], posObj[1]-posPos[1]-taillePos[1]), 
                        va = 'c', ha = 'g', b = 0.15, orient = 'h', 
                        fontsizeMinMax = (-1, -1), fontsizePref = -1, wrap = True, couper = False,
-                       bordure = (0, 0, 0))
+                       coulBord = (0, 0, 0))
     
     
     #

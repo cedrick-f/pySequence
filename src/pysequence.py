@@ -625,8 +625,10 @@ class Objet_sequence():
     def GetClasse(self):
         if hasattr(self, 'projet'):
             cl = self.projet.classe
-        elif hasattr(self, 'sequence'):
+        elif hasattr(self, 'sequence') and self.sequence is not None:
             cl = self.sequence.classe
+        elif hasattr(self, 'progression'):
+            cl = self.progression.classe
         elif hasattr(self, 'parent'):
             if isinstance(self.parent, Classe):
                 cl = self.parent
@@ -683,7 +685,7 @@ class Objet_sequence():
 
 class Classe(Objet_sequence):
     def __init__(self, app, intitule = u"", 
-                 pourProjet = False, ouverture = False, typedoc = ''):
+                 pourProjet = False, typedoc = ''):
         self.app = app
         Objet_sequence.__init__(self)
         
@@ -707,14 +709,6 @@ class Classe(Objet_sequence):
         self.Initialise(pourProjet)
         
         self.undoStack.do(u"Création de la Classe")
-        
-        
-        
-#        if panelParent:
-#            self.panelPropriete = PanelPropriete_Classe(panelParent, self, pourProjet, 
-#                                                        ouverture = ouverture, typedoc = typedoc)
-#            if ouverture:
-#                self.panelPropriete.MiseAJour()
             
         
 
@@ -739,7 +733,7 @@ class Classe(Objet_sequence):
     def MiseAJourTypeEnseignement(self):
         
         if hasattr(self, 'codeBranche'):
-            print "MiseAJourTypeEnseignement classe", self.GetReferentiel().Enseignement[0]
+#            print "MiseAJourTypeEnseignement classe", self.GetReferentiel().Enseignement[0]
             self.codeBranche.SetLabel(self.GetReferentiel().Enseignement[0])
         
 #        self.CI = self.options.optClasse["CentresInteret"]
@@ -1308,7 +1302,8 @@ class BaseDoc():
     
 ####################################################################################################          
 class Sequence(BaseDoc, Objet_sequence):
-    def __init__(self, app, classe = None, intitule = u"Intitulé de la séquence pédagogique"):
+    def __init__(self, app, classe = None, intitule = u"Intitulé de la séquence pédagogique",
+                 ouverture = False):
         BaseDoc.__init__(self, app, classe, intitule)
         Objet_sequence.__init__(self)
         
@@ -1331,6 +1326,9 @@ class Sequence(BaseDoc, Objet_sequence):
         self.systemes = []
         self.seances = [Seance(self)]
 
+        if not ouverture:
+            self.MiseAJourTypeEnseignement()
+            
         # Le module de dessin
         self.draw = draw_cairo_seq
         
@@ -2159,7 +2157,8 @@ class Sequence(BaseDoc, Objet_sequence):
             s.MiseAJourTypeEnseignement()
         
         draw_cairo.DefinirCouleurs(self.GetNbrPeriodes(),
-                                   len(self.GetReferentiel()._listesCompetences_simple["S"]))
+                                   len(self.GetReferentiel()._listesCompetences_simple["S"]),
+                                   len(self.GetReferentiel().CentresInterets))
 
 
 
@@ -2183,7 +2182,7 @@ class Sequence(BaseDoc, Objet_sequence):
 #
 ####################################################################################################
 class Projet(BaseDoc, Objet_sequence):
-    def __init__(self, app, classe = None, intitule = u""):
+    def __init__(self, app, classe = None, intitule = u"", ouverture = False):
         BaseDoc.__init__(self, app, classe, intitule)
         Objet_sequence.__init__(self)
         
@@ -2238,7 +2237,8 @@ class Projet(BaseDoc, Objet_sequence):
         self.montant = u""
         self.src_finance = u""
         
-        
+        if not ouverture:
+            self.MiseAJourTypeEnseignement()
 #        self.SetPosition(self.position, first = True)
         
         # Le module de dessin
@@ -3500,8 +3500,8 @@ class Projet(BaseDoc, Objet_sequence):
 
 
     #############################################################################
-    def MiseAJourTypeEnseignement(self, ancienRef = None, ancienneFam = None):#, changeFamille = False):
-#        print "MiseAJourTypeEnseignement projet", ancienRef, ">>", self.GetReferentiel()
+    def MiseAJourTypeEnseignement(self):#, changeFamille = False):
+        print "MiseAJourTypeEnseignement projet"
         
         self.app.SetTitre()
         
@@ -3515,7 +3515,8 @@ class Projet(BaseDoc, Objet_sequence):
             e.MiseAJourTypeEnseignement()
         
         draw_cairo.DefinirCouleurs(self.GetNbrPeriodes(),
-                                   len(self.GetReferentiel()._listesCompetences_simple["S"]))
+                                   len(self.GetReferentiel()._listesCompetences_simple["S"]),
+                                   len(self.eleves))
 
                 
     #############################################################################
@@ -3727,7 +3728,7 @@ class Projet(BaseDoc, Objet_sequence):
 #
 ####################################################################################################
 class Progression(BaseDoc, Objet_sequence):
-    def __init__(self, app, classe = None, intitule = u""):
+    def __init__(self, app, classe = None, intitule = u"", ouverture = False):
         BaseDoc.__init__(self, app, classe, intitule)
         Objet_sequence.__init__(self)
         
@@ -3747,12 +3748,13 @@ class Progression(BaseDoc, Objet_sequence):
         self.version = ""
         # Année Scolaire
         self.annee = constantes.getAnneeScolaire()
+        
+        if not ouverture:
+            self.MiseAJourTypeEnseignement()
+            
         # Le module de dessin
         self.draw = draw_cairo_prg
-#        self.dossier = Lien()
-        
-        self.MiseAJourTypeEnseignement()
-        
+
         self.undoStack.do(u"Création de la progression")
         
     ######################################################################################  
@@ -3843,11 +3845,11 @@ class Progression(BaseDoc, Objet_sequence):
         for e in self.eleves:
             eleves.append(e.getBranche())
             
-#        progression.set("Dossier", self.dossier)
+
 #        
         sequences = ET.SubElement(progression, "Sequences")
-        for seq in self.sequences:
-            sequences.append(seq.getBranche())
+        for lienseq in self.sequences:
+            sequences.append(lienseq.getBranche())
             
 #        calendriers = ET.SubElement(progression, "Calendriers")
 #        for cal in self.calendriers:
@@ -3966,19 +3968,18 @@ class Progression(BaseDoc, Objet_sequence):
     ######################################################################################  
     def OuvrirSequence(self, event = None, item = None):
         l = self.arbre.GetItemPyData(item)
-        self.GetApp().parent.ouvrir(l.path)
+        self.GetApp().parent.ouvrir(toSystemEncoding(l.path))
 
-
+    
+    
     ######################################################################################  
     def ChargerSequences(self):
 #        print "ChargerSequences", self.sequences
-        for s in self.sequences:
+        for lienSeq in self.sequences:
 #            print "   ", s
-            if s.sequence is None:
-                classe, sequence = self.OuvrirFichierSeq(s.path)
-#                print classe.typeEnseignement ,  self.GetReferentiel().Code
-                if classe != None and classe.typeEnseignement == self.GetReferentiel().Code:
-                    s.sequence = sequence
+            if lienSeq.sequence is None:
+                lienSeq.ChargerSequence()
+                
         self.OrdonnerSequences()
 
 
@@ -3993,24 +3994,56 @@ class Progression(BaseDoc, Objet_sequence):
             
         self.VerifPb()
 
-    
     ######################################################################################  
-    def AjouterSequence(self, event = None):
-        ps = LienSequence(self, self.panelParent)
-        self.sequences.append(ps)
-        self.OrdonnerSequences()
-        self.GetApp().sendEvent(modif = u"Ajout d'une Séquence")
-        self.arbre.SelectItem(ps.branche)
-    
-    
-    ######################################################################################  
-    def ImporterSequences(self, event = None):
+    def DossierDefini(self):
         dossier = self.GetPath()
         if dossier == r"":
             messageInfo(None, u"Progression non enregistrée", 
                                   u"La progression %s n'a pas encore été enregistrée.\n\n"\
                                   u"L'importation est prévue pour rechercher des fichier \"Séquence\" (.seq)" \
                                   u"dans le même dossier que le fichier \"Progression\" (.prg)." %self.intitule)
+            return False
+        return True
+        
+    ######################################################################################  
+    def AjouterSequence(self, event = None):
+        if not self.DossierDefini():
+            return
+        
+        sequence, path = self.CreerSequence(self.classe, self.GetPath())
+        if path is not None:
+            ps = LienSequence(self)
+            ps.path = path
+            if sequence is not None:
+                ps.sequence = sequence
+            else:
+                ps.ChargerSequence()
+            self.sequences.append(ps)
+            self.OrdonnerSequences()
+            self.GetApp().sendEvent(modif = u"Ajout d'une Séquence à la progression")
+            self.arbre.SelectItem(ps.branche)
+    
+    
+    ######################################################################################  
+    def CreerSequence(self, classe, pathProg):
+        sequence = Sequence(self.GetApp(), classe)
+        res = self.GetApp().ProposerEnregistrer(sequence, pathProg)
+        
+        if res[0] == 2:
+            return self.CreerSequence(classe, pathProg)
+        elif res[0] == 1:
+            return None, res[1]
+        elif res[0] == 0:
+            return sequence, res[1]
+        else:
+            return None, None
+        
+        
+    
+        
+    ######################################################################################  
+    def ImporterSequences(self, event = None):
+        if not self.DossierDefini():
             return
         
         sequences = self.GetSequencesDossier()
@@ -4042,7 +4075,7 @@ class Progression(BaseDoc, Objet_sequence):
         fichier = open(nomFichier,'r')
 
         classe = Classe(self.GetApp())
-        sequence = Sequence(self.GetApp(), classe)
+        sequence = Sequence(self.GetApp(), classe, ouverture = True)
         classe.SetDocument(sequence)
 
         try:
@@ -4067,12 +4100,17 @@ class Progression(BaseDoc, Objet_sequence):
 
     #############################################################################
     def MiseAJourTypeEnseignement(self, ancienRef = None, ancienneFam = None):#, changeFamille = False):
-#        print "MiseAJourTypeEnseignement Progression"
+        print "MiseAJourTypeEnseignement Progression"
 #        print self.GetReferentiel()._listesCompetences_simple["S"]
         self.app.SetTitre()
         self.classe.MiseAJourTypeEnseignement()
+        
+        
+        
+        
         draw_cairo.DefinirCouleurs(self.GetNbrPeriodes(),
-                                   len(self.GetReferentiel()._listesCompetences_simple["S"]))
+                                   len(self.GetReferentiel()._listesCompetences_simple["S"]),
+                                   len(self.GetReferentiel().CentresInterets))
         
 #        self.code = self.GetReferentiel().getCodeProjetDefaut()
 
@@ -4241,7 +4279,7 @@ class Progression(BaseDoc, Objet_sequence):
 
 
 class LienSequence(Objet_sequence):
-    def __init__(self, parent, path = ""):
+    def __init__(self, parent, path = r""):
         self.path = path
         self.parent = parent
         Objet_sequence.__init__(self)
@@ -4272,6 +4310,10 @@ class LienSequence(Objet_sequence):
         return self.parent.GetApp()
     
     ######################################################################################  
+    def GetDocument(self):    
+        return self.parent
+    
+    ######################################################################################  
     def GetPanelPropriete(self, parent):
         return PanelPropriete_LienSequence(parent, self)
     
@@ -4291,6 +4333,9 @@ class LienSequence(Objet_sequence):
 #        if hasattr(self, 'panelPropriete'):
 #            self.panelPropriete.MiseAJour()
 
+    
+        
+        
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
         if self.sequence is None:
@@ -4314,7 +4359,11 @@ class LienSequence(Objet_sequence):
 #            self.tip.SetBranche(self.branche)
 
     
-        
+    ######################################################################################  
+    def ChargerSequence(self):
+        classe, sequence = self.GetDocument().OuvrirFichierSeq(self.path)
+        if classe != None and classe.typeEnseignement == self.GetReferentiel().Code:
+            self.sequence = sequence
         
     ######################################################################################  
     def SignalerPb(self, pb):
@@ -4535,7 +4584,8 @@ class CentreInteret(Objet_sequence):
         
     #############################################################################
     def MiseAJourTypeEnseignement(self):
-        self.arbre.SetItemText(self.branche, getSingulierPluriel(self.GetReferentiel().nomCI, True)+u" :")
+        if hasattr(self, 'arbre'):
+            self.arbre.SetItemText(self.branche, getSingulierPluriel(self.GetReferentiel().nomCI, True)+u" :")
 #        self.GetPanelPropriete().construire()
 
     
@@ -4638,7 +4688,8 @@ class Competences(Objet_sequence):
         
     #############################################################################
     def MiseAJourTypeEnseignement(self):
-        self.arbre.SetItemText(self.branche, self.GetNomGenerique())
+        if hasattr(self, 'arbre'):
+            self.arbre.SetItemText(self.branche, self.GetNomGenerique())
 #        if hasattr(self, 'panelPropriete'):
 #            self.GetPanelPropriete().Destroy()
 #            self.panelPropriete = PanelPropriete_Competences(self.panelParent, self)
