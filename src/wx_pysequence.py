@@ -2923,7 +2923,7 @@ Your browser does not support the HTML5 canvas tag.
             root.append(bsequence)
             root.append(bclasse)
             constantes.indent(root)
-            self.enregistrer_root(root, nomFichier)
+            sequence.enregistrer_root(root, nomFichier)
             
             wx.EndBusyCursor()
             return 0, path

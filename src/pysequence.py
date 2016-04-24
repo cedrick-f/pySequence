@@ -4123,7 +4123,7 @@ class Progression(BaseDoc, Objet_sequence):
         sequence, path = self.CreerSequence(self.classe, self.GetPath())
         if path is not None:
             ps = LienSequence(self)
-            ps.path = path
+            ps.path = toFileEncoding(path)
             if sequence is not None:
                 ps.sequence = sequence
             else:
