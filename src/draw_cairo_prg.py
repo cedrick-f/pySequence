@@ -46,7 +46,7 @@ from draw_cairo import LargeurTotale, font_family, curve_rect_titre, show_text_r
                         DrawPeriodes, COEF, info, Zone, \
                         BcoulPos, IcoulPos, ICoulComp, CoulAltern
 
-from math import log
+from math import log, pi
 
 
 #from constantes import Effectifs, NomsEffectifs, listeDemarches, Demarches, getSavoir, getCompetence, \
@@ -78,8 +78,8 @@ ecartY = 0.02 * COEF
 # Nom du projet
 tailleNom = (0.29 * COEF, 0.04 * COEF)
 posNom = (margeX, margeY)
-IcoulNom = (0.9, 0.8, 0.8, 0.85)
-BcoulNom = (0.3, 0.2, 0.25, 1)
+IcoulNom = (0.85, 0.8, 0.8, 0.85)
+BcoulNom = (0.28, 0.2, 0.25, 1)
 fontNom = 0.014 * COEF
 
 # Equipe pédagogique
@@ -165,13 +165,13 @@ ecartTacheY = None  # Ecartement entre les tâches de phase différente
 # paramètres pour la fonction qui calcule la hauteur des tâches 
 # en fonction de leur durée
 a = b = None
-def calcH_tache(sequence):
+def calcH_seq(sequence):
     return calcH(sequence.GetDuree())
         
 
 def calcH(t):
     if t != 0:
-        return a*log(t/constantes.DUREE_REVUES)+b
+        return a*log(t)+b
     return 2*ecartTacheY
 
 
@@ -245,8 +245,8 @@ def DefinirZones(prg, ctx):
     yTaches = []
     posZTaches[1] = posZDeroul[1] + ecartY/2
     tailleZTaches[0] = posZDeroul[0] + tailleZDeroul[0] - posZTaches[0] - ecartX/2
-    tailleZTaches[1] = tailleZDeroul[1] - ecartY/2 - 0.04 * COEF    # écart pour la durée totale
-    
+    tailleZTaches[1] = tailleZDeroul[1] - ecartY/2 - 0.04 * COEF    # écart fixe pour la durée totale
+
     calculCoefCalcH(prg, ctx, hTacheMini)
     if a < 0: # Trop de séquences -> on réduit !
         calculCoefCalcH(prg, ctx, hTacheMini/2)
@@ -260,19 +260,18 @@ def calculCoefCalcH(prg, ctx, hm):
     
     # Calcul des paramètres de la fonction hauteur = f(durée)
     # hauteur = a * log(durée) + b
-    b = 0
-    a = 1
-    h = 0 #ecartTacheY
+    b = 0.0
+    a = 1.0
+    h = 0.0 #ecartTacheY
     nt = 0 # nombre de tâches de hauteur variable ( = calculée par calcH() )
 
     for t in prg.sequences:
-        h += calcH(t.sequence.GetDuree())
+        h += calcH_seq(t.sequence)
         nt += 1
 
     b = hm # Hauteur mini
     
     hFixe = sommeEcarts
-
     if h != 0:
         a = (tailleZTaches[1] - hFixe - b*nt) / h
 
@@ -405,7 +404,9 @@ def Draw(ctx, prg, mouchard = False):
         h = image.get_height()*1.1
         
         s = min(tailleImg[0]/w, tailleImg[1]/h)
-        ctx.translate(posImg[0], posImg[1])
+        dx = (tailleImg[0] - s*image.get_width())/2
+        dy = (tailleImg[1] - s*image.get_height())/2
+        ctx.translate(posImg[0] + dx, posImg[1] + dy)
         ctx.scale(s, s)
         ctx.set_source_surface(image, 0, 0)
         ctx.paint ()
@@ -472,7 +473,7 @@ def Draw(ctx, prg, mouchard = False):
                                                    rectNom, BcoulNom, IcoulNom, fontNom))
     ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                        cairo.FONT_WEIGHT_NORMAL)
-    show_text_rect(ctx, u"Années scolaires " + prg.GetAnnee(), 
+    show_text_rect(ctx, u"Années scolaires " + prg.GetAnnees(), 
                    rectNom, ha = 'c', b = 0.2,
                    fontsizeMinMax = (-1, 0.016 * COEF))
     
@@ -669,6 +670,7 @@ def Draw(ctx, prg, mouchard = False):
     for seq, y in yTaches: 
         DrawLigne(ctx, x, y)
         DrawCroisementsCompetencesTaches(ctx, prg, seq, y)
+        DrawCroisementsCISeq(ctx, prg, seq, y)
     
     # Nom des périodes
 #    print "yh_phase", yh_phase
@@ -690,7 +692,7 @@ def Draw(ctx, prg, mouchard = False):
             ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
                                   cairo.FONT_WEIGHT_NORMAL)
             
-            show_text_rect(ctx, str(phase), 
+            show_text_rect(ctx, str(phase+1), 
                            (posZDeroul[0] + ecartX/6, y[i], 
                             wPhases, h[i]), fontsizeMinMax = (fontsize, fontsize),
                            ha = 'c', orient = "h", b = 0.1, le = 0.7,
@@ -731,7 +733,7 @@ def DrawLigneEff(ctx, x, y):
 def DrawTacheRacine(ctx, prg, lienSeq, y):
     global yTaches
     seq = lienSeq.sequence
-    h = calcH_tache(seq)
+    h = calcH_seq(seq)
     
     #
     # Flèche verticale indiquant la durée de la séquence
@@ -823,6 +825,7 @@ def DrawTacheRacine(ctx, prg, lienSeq, y):
     # Tracé des croisements "Tâches" et "Eleves"
     #
     yTaches.append([seq, y+h/2])
+    
 #    DrawCroisementsCompetencesTaches(ctx, tache, y + h/2)
     
     
@@ -918,47 +921,37 @@ def DrawCroisementsCompetencesTaches(ctx, prg, seq, y):
 
     
 #####################################################################################  
-def DrawCroisementsElevesTaches(ctx, tache, y):
-    """ Dessine les "boules"
+def DrawCroisementsCISeq(ctx, prg, seq, y):
+    """ Dessine les "ronds" à cliquer
     """ 
     #
-    # Croisements Tâche/Eleves
+    # Croisements Sequence/CI
     #
-    if tache.phase in ["R1", "R2", "R3", "S"]:
-        differeSuivantEleve = tache.DiffereSuivantEleve()
-    else:
-        differeSuivantEleve = tache.estPredeterminee()
+    lstCI = seq.GetReferentiel().CentresInterets
+#    print "DrawCroisementsCISeq", lstCI
+    dy = 0
+    r = 0.006 * COEF
         
-#    if tache.phase in ["R1", "R2", "R3", "S"] and differeSuivantEleve: 
-    if differeSuivantEleve: 
-        lstElv = range(len(tache.projet.eleves))
-    else:
-        lstElv = tache.eleves
-    
-#    if tache.phase in ["R1", "R2", "R3", "S"] and differeSuivantEleve:
-    if differeSuivantEleve: 
-        dy = hRevue
-        y = y - ((len(tache.projet.eleves)-1)*dy)/2
-        r = 0.005 * COEF
-    else:
-        dy = 0
-        r = 0.006 * COEF
-        
-    for i in lstElv:
-#        if tache.phase in ["R1", "R2", "R3", "S"] and differeSuivantEleve:
-        if differeSuivantEleve: 
-            color1 = BCoulTache[tache.phase]
-            color0 = (1, 1, 1, 1)
-        else:
-            color0 = CoulAltern[i][0]
-            color1 = CoulAltern[i][1]
+    for CI in range(len(lstCI)):
+        color0 = CoulAltern[CI][0]
+        color1 = CoulAltern[CI][1]
 
-        _x = xEleves[i]
-        boule(ctx, _x, y, r, 
-              color0 = color0, color1 = color1,
-              transparent = False)
-        tache.projet.eleves[i].rect.append((_x -r , y - r, 2*r, 2*r))
-        tache.projet.eleves[i].pts_caract.append((_x,y))
+        _x = xEleves[CI]
+        
+        if CI in seq.CI.numCI:
+            boule(ctx, _x, y, r, 
+                  color0 = color0, color1 = color1,
+                  transparent = False)
+        else:
+            ctx.set_source_rgba (0,0,0,1)
+            ctx.arc (_x, y, r, 0, 2*pi)
+            ctx.stroke()
+            boule(ctx, _x, y, r, 
+                  color0 = color0, color1 = (1,1,1),
+                  transparent = False)
+        prg.zones_sens.append(Zone([(_x -r , y - r, 2*r, 2*r)], obj = seq, param = "CI"+str(CI)))
+#        tache.projet.eleves[i].rect.append((_x -r , y - r, 2*r, 2*r))
+#        tache.projet.eleves[i].pts_caract.append((_x,y))
         y += dy
         
 

@@ -829,6 +829,15 @@ BASE_FICHE_HTML_SEANCE = """
 </HTML>
 """
 
+BASE_FICHE_HTML_CALENDRIER = """
+<HTML>
+    <font size="12"><b><h1 id = "titre" style="text-align: center;">Calendrier</h1></b></font>
+<p id="int">_</p>
+<p id="typ">_</p>
+
+</HTML>
+"""
+
 BASE_FICHE_HTML_CI = """
 <HTML>
     <font size="12" color="red"><b><h1 id = "titre" style="text-align: center;">_</h1></b></font>
@@ -928,7 +937,8 @@ BASE_FICHE_HTML_SEQ = """
    
 BASE_FICHE_HTML = """
 <HTML>
-    <p id = "titre" style="text-align: center;"><font size="12"><b>_</b></font></p>
+    <font size="11"><b><h1 id = "titre" style="text-align: center;">_</h1></b></font>
+ 
 </HTML>
 """
 

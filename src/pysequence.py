@@ -664,13 +664,13 @@ class Objet_sequence():
 
 
     ######################################################################################  
-    def GetFicheHTML(self):
+    def GetFicheHTML(self, param = None):
         return constantes.BASE_FICHE_HTML
 
 
     ######################################################################################  
-    def GetFicheXML(self):
-        ficheHTML = self.GetFicheHTML()
+    def GetFicheXML(self, param = None):
+        ficheHTML = self.GetFicheHTML(param)
         ficheXML = parseString(ficheHTML.encode('utf-8', errors="ignore"))
         forceID(ficheXML)
         return ficheXML
@@ -1101,11 +1101,12 @@ class BaseDoc():
         self.app = app  # de type FenentreDocument
         self.centrer = True
         
-        self.position = 0
+        self.position = 0   # Position de la séquence/projet dans la période d'enseignement
         
         self.commentaires = u""
         
-#        self.panelParent = panelParent
+        self.dependants = [] # Liste de documents dépendants (à enregistrer aussi)
+
         
         #
         # Création du Tip (PopupInfo)
@@ -1195,16 +1196,32 @@ class BaseDoc():
         self.HideTip()
         
         if zone.obj is not None:
-            if hasattr(zone.obj, "branche"):
-                self.SelectItem(zone.obj.branche, depuisFiche = True)
-            elif hasattr(zone.obj, "branchePre"):
-                self.SelectItem(zone.obj.branchePre, depuisFiche = True)
+            if zone.param is None:
+                if hasattr(zone.obj, "branche"):
+                    self.SelectItem(zone.obj.branche, depuisFiche = True)
+                elif hasattr(zone.obj, "branchePre"):
+                    self.SelectItem(zone.obj.branchePre, depuisFiche = True)
             
-        elif zone.param is not None and len(zone.param) > 3 and zone.param[:3] == "POS" :
-            if not self.classe.verrouillee:
-                self.SetPosition(int(zone.param[3]))
-                self.GetApp().sendEvent(modif = u"Changement de position "+ self.article_obj + " " + self.nom_obj,
-                       obj = self)
+            else:
+                if isinstance(zone.obj, Sequence) and len(zone.param) > 2 and zone.param[:2] == "CI":
+                    ref = self.GetReferentiel()
+                    zone.obj.CI.ToogleNum(int(zone.param[2]))
+                    zone.obj.GetApp().sendEvent(modif = u"Modification des "+ ref.nomCI + " de la Séquence",
+                                            obj = self)
+                    if self.GetApp() == zone.obj.GetApp(): # la séquence est n'est pas ouverte dans une autre fenêtre
+                        self.dependants.append(zone.obj)
+                    else:
+                        self.GetApp().sendEvent(modif = u"Modification des "+ ref.nomCI + " de la Séquence",
+                                            obj = self)
+        
+        elif zone.param is not None:
+            if len(zone.param) > 3 and zone.param[:3] == "POS" :
+                if not self.classe.verrouillee:
+                    self.SetPosition(int(zone.param[3]))
+                    self.GetApp().sendEvent(modif = u"Changement de position "+ self.article_obj + " " + self.nom_obj,
+                                            obj = self)
+            
+            
             
 
     ######################################################################################  
@@ -1237,9 +1254,9 @@ class BaseDoc():
             
             
     ######################################################################################  
-    def GetFicheXML(self, html = None):
+    def GetFicheXML(self, html = None, param = None):
         if html is None:
-            ficheHTML = self.GetFicheHTML()
+            ficheHTML = self.GetFicheHTML(param)
         else:
             ficheHTML = html
         ficheXML = parseString(ficheHTML.encode('utf-8', errors="ignore"))
@@ -1295,6 +1312,24 @@ class BaseDoc():
         self.MiseAJourNomProfs()
             
             
+    ##################################################################################################    
+    def enregistrer_root(self, root, nomFichier):
+        fichier = file(nomFichier, 'w')
+        try:
+            ET.ElementTree(root).write(fichier, xml_declaration=False, encoding = SYSTEM_ENCODING)
+        except IOError:
+            messageErreur(None, u"Accés refusé", 
+                                  u"L'accés au fichier %s a été refusé !\n\n"\
+                                  u"Essayer de faire \"Enregistrer sous...\"" %nomFichier)
+        except UnicodeDecodeError:
+            messageErreur(None, u"Erreur d'encodage", 
+                                  u"Un caractére spécial empéche l'enregistrement du fichier !\n\n"\
+                                  u"Essayer de le localiser et de le supprimer.\n"\
+                                  u"Merci de reporter cette erreur au développeur.")
+        fichier.close()
+        
+
+    
 
 
 
@@ -1434,6 +1469,10 @@ class Sequence(BaseDoc, Objet_sequence):
             duree = min(duree, s.GetDureeGraphMini())
         return duree
     
+    
+    
+            
+
     ######################################################################################  
     def getBranche(self):
         """ Renvoie la branche XML de la séquence pour enregistrement
@@ -1605,16 +1644,19 @@ class Sequence(BaseDoc, Objet_sequence):
     ######################################################################################  
     def GetTip(self, param, obj):
         
-        self.tip.SetPage(self.GetFicheXML().toxml())
+        self.ficheXML = self.GetFicheXML(param = param)
         
         if param is None:
             pass
         else:
-            if param[:3] == "POS":
-                pass
+            if param == "POS":
+                SetWholeText(self.ficheXML, "titre", u"Découpage de la formation en périodes")
                 
-            elif param == "EQU":
-                pass
+            elif param[:3] == "POS":
+                SetWholeText(self.ficheXML, "titre", u"Période de formation : %s" %(int(param[3])+1))
+                
+            elif param[:3] == "EQU":
+                SetWholeText(self.ficheXML, "titre", u"Equipe pédagogique impliquée dans la Progression")
                 
             elif type(obj) == list:
                 pass
@@ -1622,7 +1664,7 @@ class Sequence(BaseDoc, Objet_sequence):
             else:
                 pass
                 
-        
+        self.tip.SetPage(self.ficheXML.toxml())
         return self.tip
         
     ######################################################################################  
@@ -1932,8 +1974,14 @@ class Sequence(BaseDoc, Objet_sequence):
             for sy in self.systemes:
                 sy.ConstruireArbre(arbre, self.brancheSys)    
         
-        
-        
+    
+    ######################################################################################  
+    def Rafraichir(self):
+        self.arbre.Delete(self.branche)
+        self.ConstruireArbre(self.arbre, self.arbre.GetRootItem())
+        self.arbre.ExpandAll()
+        if self.arbre.GetSelection() is None:
+            self.arbre.SelectItem(self.branche)
         
         
     ######################################################################################  
@@ -1943,8 +1991,7 @@ class Sequence(BaseDoc, Objet_sequence):
             sce.ConstruireArbre(self.arbre, self.brancheSce) 
         self.arbre.Expand(b1.branche)
         self.arbre.Expand(b2.branche)
-#        
-    
+
         
     ######################################################################################  
     def AfficherMenuContextuel(self, itemArbre):    
@@ -2094,41 +2141,6 @@ class Sequence(BaseDoc, Objet_sequence):
         return nomsSeances, intSeances
 
 
-
-#    ######################################################################################  
-#    def HitTest(self, x, y):     
-#        if self.CI.HitTest(x, y):
-#            return self.CI.HitTest(x, y)
-#
-#        elif dansRectangle(x, y, (draw_cairo_seq.posPre + draw_cairo_seq.taillePre,))[0]:
-#            for ls in self.prerequisSeance:
-#                h = ls.HitTest(x,y)
-#                if h != None:
-#                    return h
-#            return self.branchePre
-#        
-#        else:
-#            branche = None
-#            autresZones = self.seances + self.systemes + self.obj.values()
-#            continuer = True
-#            i = 0
-#            while continuer:
-#                if i >= len(autresZones):
-#                    continuer = False
-#                else:
-#                    branche = autresZones[i].HitTest(x, y)
-#                    if branche:
-#                        continuer = False
-#                i += 1
-#            
-#            if branche == None:
-#                if hasattr(self, 'rect') and dansRectangle(x, y, self.rect)[0]:
-#                    return self.branche
-#                
-#            return branche
-
-
-
     ######################################################################################  
     def HitTestPosition(self, x, y):
         if hasattr(self, 'rectPos'):
@@ -2173,7 +2185,19 @@ class Sequence(BaseDoc, Objet_sequence):
                 self.classe.Verrouiller(False)
 
 
-
+    #############################################################################
+    def enregistrer(self, nomFichier):
+                # La séquence
+        sequence = self.getBranche()
+        classe = self.classe.getBranche()
+        
+        # La racine
+        root = ET.Element("Sequence_Classe")
+        root.append(sequence)
+        root.append(classe)
+        constantes.indent(root)
+        
+        self.enregistrer_root(root, nomFichier)
 
 
 ####################################################################################################
@@ -2481,8 +2505,8 @@ class Projet(BaseDoc, Objet_sequence):
         
     ######################################################################################  
     def setBranche(self, branche):
-        print "setBranche projet", 
-        print self.GetReferentiel()
+#        print "setBranche projet", 
+#        print self.GetReferentiel()
         
         err = []
         
@@ -2751,7 +2775,7 @@ class Projet(BaseDoc, Objet_sequence):
         self.support.SetLien()  
 
     ######################################################################################  
-    def GetFicheHTML(self):
+    def GetFicheHTML(self, param = None):
         return constantes.BASE_FICHE_HTML_PROJET
 
     
@@ -2766,8 +2790,7 @@ class Projet(BaseDoc, Objet_sequence):
 
     ######################################################################################  
     def GetTip(self, param, obj):
-        
-        self.tip.SetPage(self.GetFicheXML().toxml())
+        self.ficheXML = self.GetFicheXML(param = param)
         
         ####################################################################################
         def Construire(dic , dicIndicateurs, prj, node):
@@ -2834,9 +2857,6 @@ class Projet(BaseDoc, Objet_sequence):
                 ajouteIndic(ul, dic, dicIndicateurs)
 
         
-        
-        
-        
         prj = self.GetProjetRef()
         if param is None:
             pass
@@ -2845,13 +2865,15 @@ class Projet(BaseDoc, Objet_sequence):
                 self.ficheXML = self.GetFicheXML(constantes.BASE_FICHE_HTML_PROB)
                 SetWholeText(self.ficheXML, "titre", prj.attributs['PB'][0])
                 SetWholeText(self.ficheXML, "txt", self.problematique)
-                self.tip.SetPage(self.ficheXML.toxml())
+            
+            elif param == "POS":
+                SetWholeText(self.ficheXML, "titre", u"Découpage de la formation en périodes")
                 
             elif param[:3] == "POS":
-                pass
+                SetWholeText(self.ficheXML, "titre", u"Période de formation : %s" %(int(param[3])+1))
                 
             elif param[:3] == "EQU":
-                pass
+                SetWholeText(self.ficheXML, "titre", u"Equipe pédagogique impliquée dans la Progression")
                 
             elif type(obj) == list:
                 pass
@@ -2879,8 +2901,10 @@ class Projet(BaseDoc, Objet_sequence):
                         indicEleve = obj.GetDicIndicateurs()[param]
                     Construire(competence[1], indicEleve, prj, self.ficheXML)
                 
-                    self.tip.SetPage(self.ficheXML.toxml())
+                    
         
+        
+        self.tip.SetPage(self.ficheXML.toxml())
         return self.tip
         
         
@@ -3718,7 +3742,22 @@ class Projet(BaseDoc, Objet_sequence):
                 t.ActualiserDicIndicateurs()
 
 
+    #############################################################################
+    def enregistrer(self, nomFichier):
+        # Le projet
+        projet = self.getBranche()
+        classe = self.classe.getBranche()
+        
+        # La racine
+        root = ET.Element("Projet_Classe")
+        root.append(projet)
+        root.append(classe)
+        constantes.indent(root)
+        
+        self.enregistrer_root(root, nomFichier)
 #                        
+
+
 
 
 
@@ -3767,10 +3806,15 @@ class Progression(BaseDoc, Objet_sequence):
         return 'prg'
     
     ######################################################################################  
-    def GetAnnee(self):
-        return "%s - %s" %(self.annee, self.annee + len(self.GetReferentiel().periodes))
+    def GetAnnees(self):
+        return "%s - %s" %(self.annee, self.GetAnneeFin())
     
     
+    ######################################################################################  
+    def GetAnneeFin(self):
+        return self.annee + len(self.GetReferentiel().periodes)
+
+
     ######################################################################################  
     def GetProjetRef(self):
         """ Renvoie le projet (Referentiel.Projet) de référence
@@ -3803,10 +3847,7 @@ class Progression(BaseDoc, Objet_sequence):
     def ConstruireArbre(self, arbre, branche):
         self.arbre = arbre
         self.branche = arbre.AppendItem(branche, Titres[12], data = self, image = self.arbre.images["Prg"])
-#        if hasattr(self, 'tip'):
-#            self.tip.SetBranche(self.branche)
-            
-        
+
         #
         # Les profs
         #
@@ -3821,6 +3862,15 @@ class Progression(BaseDoc, Objet_sequence):
         for e in self.sequences:
             e.ConstruireArbre(arbre, self.brancheSeq) 
     
+    ######################################################################################  
+    def Rafraichir(self):
+        self.OrdonnerSequences()
+        self.arbre.DeleteChildren(self.brancheSeq)
+        for e in self.sequences:
+            e.ConstruireArbre(self.arbre, self.brancheSeq)
+        self.arbre.ExpandAll()
+        if self.arbre.GetSelection() is None:
+            self.arbre.SelectItem(self.branche)
     
     ######################################################################################  
     def getBranche(self):
@@ -3831,6 +3881,9 @@ class Progression(BaseDoc, Objet_sequence):
         progression = ET.Element("Progression")
         
         progression.set("Intitule", self.intitule)
+        
+        if self.image != None:
+            progression.set("Image", img2str(self.image.ConvertToImage()))
 
         if self.commentaires != u"":
             progression.set("Commentaires", self.commentaires)
@@ -3870,6 +3923,14 @@ class Progression(BaseDoc, Objet_sequence):
         
         self.commentaires = branche.get("Commentaires", u"")
         
+        data = branche.get("Image", "")
+        if data != "":
+            try:
+                self.image = PyEmbeddedImage(data).GetBitmap()
+            except:
+                Ok = False
+                self.image = None
+                
         brancheEqu = branche.find("Equipe")
         self.equipe = []
         if brancheEqu is not None:
@@ -3947,8 +4008,9 @@ class Progression(BaseDoc, Objet_sequence):
             self.app.AfficherMenuContextuel([[u"Ajouter un professeur", self.AjouterProf, images.Icone_ajout_prof.GetBitmap()]])
             
         elif self.arbre.GetItemText(itemArbre) == Titres[11]: # Séquence
-            self.app.AfficherMenuContextuel([[u"Ajouter une séquence", self.AjouterSequence, images.Icone_ajout_seq.GetBitmap()],
-                                             [u"Importer des séquences", self.ImporterSequences, images.Icone_cherch_seq.GetBitmap()]])
+            self.app.AfficherMenuContextuel([[u"Créer une nouvelle Séquence", self.AjouterNouvelleSequence, images.Icone_ajout_seq.GetBitmap()],
+                                             [u"Importer une Séquence existante", self.AjouterSequence, images.Icone_import_seq.GetBitmap()],
+                                             [u"Importer toutes les Séquences compatibles du dossier", self.ImporterSequences, images.Icone_cherch_seq.GetBitmap()]])
 
 
     ######################################################################################  
@@ -3956,11 +4018,16 @@ class Progression(BaseDoc, Objet_sequence):
         self.SupprimerLienSequence(item = item)
     
     ######################################################################################  
-    def SupprimerLienSequence(self, event = None, item = None):
-        l = self.arbre.GetItemPyData(item)
-        i = self.sequences.index(l)
+    def SupprimerLienSequence(self, event = None, item = None, lienSeq = None):
+        if lienSeq is None:
+            l = self.arbre.GetItemPyData(item)
+        else:
+            l = lienSeq
+
         self.sequences.remove(l)
-        self.arbre.Delete(item)
+        
+        if item is not None:
+            self.arbre.Delete(item)
 #        self.SupprimerSystemeSeance(i)
         self.GetApp().sendEvent(modif = u"Suppression d'une Séquence")
 
@@ -3968,18 +4035,61 @@ class Progression(BaseDoc, Objet_sequence):
     ######################################################################################  
     def OuvrirSequence(self, event = None, item = None):
         l = self.arbre.GetItemPyData(item)
-        self.GetApp().parent.ouvrir(toSystemEncoding(l.path))
+#        self.GetApp().parent.ouvrir(toSystemEncoding(l.path))
+        self.GetApp().parent.ouvrirDoc(l.sequence)
 
     
     
     ######################################################################################  
     def ChargerSequences(self):
-#        print "ChargerSequences", self.sequences
+        print "ChargerSequences", self.sequences
+        aSupprimer = []
         for lienSeq in self.sequences:
-#            print "   ", s
             if lienSeq.sequence is None:
-                lienSeq.ChargerSequence()
-                
+                if not os.path.isfile(lienSeq.path):
+                    dlg = wx.MessageDialog(self.GetApp(), u"Le fichier Séquence suivant n'a pas été trouvé.\n\n"\
+                                                 u"\t%s\n\n"
+                                                 u"Voulez-vous le chercher manuellement ?\n" %toSystemEncoding(lienSeq.path),
+                                           u"Fichier non trouvé",
+                                           wx.YES_NO | wx.ICON_QUESTION |wx.YES_DEFAULT
+                                           )
+                    res = dlg.ShowModal()
+                    dlg.Destroy()
+                    if res == wx.ID_YES:
+                        fichiers_sequences = self.GetFichiersSequencesDossier(exclureExistant = True)
+                        fichiers, sequences = zip(*fichiers_sequences)
+                        fichiers = [os.path.relpath(f, self.GetPath()) for f in fichiers]
+                        
+                        dlg = wx.SingleChoiceDialog(self.GetApp(), u"Choisir parmi les fichiers ci-dessous\n"\
+                                                                   u"celui qui doit remplacer %s." %toSystemEncoding(lienSeq.path), 
+                                                    u"Fichiers Séquences disponibles",
+                                                    [toSystemEncoding(f) for f in fichiers], 
+                                                    wx.CHOICEDLG_STYLE
+                                                    )
+                        
+                        if dlg.ShowModal() == wx.ID_OK:
+                            i = dlg.GetSelection() 
+                            lienSeq.path = fichiers[i]
+                            lienSeq.sequence = sequences[i]
+                            self.GetApp().MarquerFichierCourantModifie()
+
+                        else:
+                            aSupprimer.append(lienSeq)
+                            
+                        dlg.Destroy()
+                    
+                    elif res == wx.ID_NO:
+                        aSupprimer.append(lienSeq)
+                        continue
+                else: 
+                    lienSeq.ChargerSequence()
+        
+        #
+        # On supprime les lienSequences à supprimer
+        #
+        for s in aSupprimer:
+            self.SupprimerLienSequence(lienSeq = s)
+            
         self.OrdonnerSequences()
 
 
@@ -4006,7 +4116,7 @@ class Progression(BaseDoc, Objet_sequence):
         return True
         
     ######################################################################################  
-    def AjouterSequence(self, event = None):
+    def AjouterNouvelleSequence(self, event = None):
         if not self.DossierDefini():
             return
         
@@ -4020,9 +4130,38 @@ class Progression(BaseDoc, Objet_sequence):
                 ps.ChargerSequence()
             self.sequences.append(ps)
             self.OrdonnerSequences()
-            self.GetApp().sendEvent(modif = u"Ajout d'une Séquence à la Progression")
+            self.GetApp().sendEvent(modif = u"Ajout d'une nouvelle Séquence à la Progression")
             self.arbre.SelectItem(ps.branche)
     
+    
+    ######################################################################################  
+    def AjouterSequence(self, event = None):
+        if not self.DossierDefini():
+            return
+        
+        fichiers_sequences = self.GetFichiersSequencesDossier(exclureExistant = True)
+        fichiers, sequences = zip(*fichiers_sequences)
+        fichiers = [os.path.relpath(f, self.GetPath()) for f in fichiers]
+        
+        dlg = wx.SingleChoiceDialog(self.GetApp(), u"Choisir parmi les fichiers ci-dessous\n", 
+                                    u"Fichiers Séquences disponibles",
+                                    [toSystemEncoding(f) for f in fichiers], 
+                                    wx.CHOICEDLG_STYLE
+                                    )
+        
+        if dlg.ShowModal() == wx.ID_OK:
+            i = dlg.GetSelection() 
+            lienSeq = LienSequence(self)
+            lienSeq.path = fichiers[i]
+            lienSeq.sequence = sequences[i]
+            self.sequences.append(lienSeq)
+            self.OrdonnerSequences()
+            self.GetApp().sendEvent(modif = u"Ajout d'une Séquence à la Progression")
+            self.arbre.SelectItem(lienSeq.branche)
+        
+        dlg.Destroy()
+        
+        
     
     ######################################################################################  
     def CreerSequence(self, classe, pathProg):
@@ -4072,8 +4211,18 @@ class Progression(BaseDoc, Objet_sequence):
             
     ########################################################################################################
     def OuvrirFichierSeq(self, nomFichier):
-        fichier = open(nomFichier,'r')
+        
 
+        path2 = os.path.normpath(os.path.abspath(toSystemEncoding(nomFichier)))
+        for seq in self.GetApp().parent.GetDocumentsOuverts('seq'):
+            path1 = os.path.normpath(os.path.abspath(seq[1]))
+            if path1 == path2:  # La séquence est déja ouverte
+                sequence = seq[0]
+                classe = sequence.classe
+                return classe, sequence
+        
+        
+        fichier = open(nomFichier,'r')
         classe = Classe(self.GetApp())
         sequence = Sequence(self.GetApp(), classe, ouverture = True)
         classe.SetDocument(sequence)
@@ -4100,14 +4249,11 @@ class Progression(BaseDoc, Objet_sequence):
 
     #############################################################################
     def MiseAJourTypeEnseignement(self, ancienRef = None, ancienneFam = None):#, changeFamille = False):
-        print "MiseAJourTypeEnseignement Progression"
+#        print "MiseAJourTypeEnseignement Progression"
 #        print self.GetReferentiel()._listesCompetences_simple["S"]
         self.app.SetTitre()
         self.classe.MiseAJourTypeEnseignement()
-        
-        
-        
-        
+
         draw_cairo.DefinirCouleurs(self.GetNbrPeriodes(),
                                    len(self.GetReferentiel()._listesCompetences_simple["S"]),
                                    len(self.GetReferentiel().CentresInterets))
@@ -4119,9 +4265,27 @@ class Progression(BaseDoc, Objet_sequence):
     def Verrouiller(self):
         self.classe.Verrouiller(len(self.sequences) != 0)
         
-        
+    
     ########################################################################################################
-    def GetSequencesDossier(self, event = None):       
+    def GetListeFichiersSequences(self):
+        """
+        """
+        return [l.path for l in self.sequences]
+
+
+    ########################################################################################################
+    def GetSequencesDossier(self, event = None):
+        sequences = []
+        listeFichiersSequences = self.GetFichiersSequencesDossier()
+        for fichier, sequence in listeFichiersSequences:
+            lienSequence = LienSequence(self,  os.path.relpath(fichier, self.GetPath()))
+            lienSequence.sequence = sequence
+            sequences.append(lienSequence)
+        return sequences
+
+
+    ########################################################################################################
+    def GetFichiersSequencesDossier(self, event = None, exclureExistant = False):       
 #        print "GetSequencesDossier"
         wx.BeginBusyCursor()
         
@@ -4144,32 +4308,31 @@ class Progression(BaseDoc, Objet_sequence):
                                    parent=self.GetApp(),
                                    style = 0
                                     | wx.PD_APP_MODAL
-                                    #| wx.PD_CAN_ABORT
-                                    #| wx.PD_CAN_SKIP
-                                    #| wx.PD_ELAPSED_TIME
                                     | wx.PD_ESTIMATED_TIME
                                     | wx.PD_REMAINING_TIME
                                     | wx.PD_AUTO_HIDE
                                     )
-#        print "l =", l
-        
+        #
+        # On enlève les fichiers qui sont déja dans la liste des fichiers Sequence de la progression
+        #
+        if exclureExistant:
+            lf = [os.path.abspath(ls.path) for ls in self.sequences] # Existant
+            l = [ls for ls in l if not ls in lf]
+            
         #
         # On ouvre tous les fichiers .seq pour vérifier leur compatibilité
         #
-        sequences = []
+        fichiers_sequences = []
         count = 0
         for f in l:
-#            try:
             dlg.Update(count, toSystemEncoding(f))
-#            except:
-#                print "Erreur", f
-            
+      
             classe, sequence = self.OuvrirFichierSeq(f)
 #                print classe.typeEnseignement ,  self.referentiel.Code
             if classe != None and classe.typeEnseignement == self.GetReferentiel().Code:
-                lienSequence = LienSequence(self,  os.path.relpath(f, self.GetPath()))
-                lienSequence.sequence = sequence
-                sequences.append(lienSequence)
+#                lienSequence = LienSequence(self,  os.path.relpath(f, self.GetPath()))
+#                lienSequence.sequence = sequence
+                fichiers_sequences.append((f, sequence))
             count += 1
         
 #            print "sequences AVANT", self.sequences
@@ -4190,7 +4353,7 @@ class Progression(BaseDoc, Objet_sequence):
         dlg.Destroy()
         wx.EndBusyCursor()
         
-        return sequences
+        return fichiers_sequences
     
     
     
@@ -4241,18 +4404,12 @@ class Progression(BaseDoc, Objet_sequence):
 
 
     ######################################################################################  
-    def GetFicheHTML(self):
-        return constantes.BASE_FICHE_HTML
-    
-    ######################################################################################  
-    def GetTip(self, param, obj):
-        self.tip.SetPage(self.GetFicheXML().toxml())
-        
+    def GetFicheHTML(self, param = None):
         if param is None:
-            pass
+            return constantes.BASE_FICHE_HTML
         else:
             if param == "CAL":
-                pass
+                return constantes.BASE_FICHE_HTML_CALENDRIER
                 
             elif param == "ANN":
                 pass
@@ -4262,22 +4419,82 @@ class Progression(BaseDoc, Objet_sequence):
                 
             elif param[:3] == "EQU":
                 pass
+            
+            elif param[:2] == "CI":
+                return constantes.BASE_FICHE_HTML_CI
                 
+            else:
+                pass
+            
+        return constantes.BASE_FICHE_HTML
+
+
+    ######################################################################################  
+    def GetTip(self, param, obj):
+#        print "GetTip", param
+        self.ficheXML = self.GetFicheXML(param = param)
+        
+        if param is None:
+            pass
+        else:
+            if param == "CAL":
+                SetWholeText(self.ficheXML, "titre", u"Calendrier de la Progression")
+                
+            elif param == "ANN":
+                SetWholeText(self.ficheXML, "titre", u"Années scolaires de la Progression")
+                
+            elif param == "POS":
+                SetWholeText(self.ficheXML, "titre", u"Découpage de la formation en périodes")
+                
+            elif param[:3] == "POS":
+                SetWholeText(self.ficheXML, "titre", u"Période de formation : %s" %(int(param[3])+1))
+                
+            elif param[:3] == "EQU":
+                SetWholeText(self.ficheXML, "titre", u"Equipe pédagogique impliquée dans la Progression")
+            
+            elif param[:2] == "CI":
+                SetWholeText(self.ficheXML, "titre", self.GetReferentiel().nomCI)
+                numCI = int(param[2])
+                code = self.GetReferentiel().abrevCI+str(numCI+1)
+                intit = self.GetReferentiel().CentresInterets[numCI]
+                XML_AjouterElemListe(self.ficheXML, "ci", code, intit)
+            
             elif type(obj) == list:
                 pass
                 
             else:
                 pass
-
+            
+        self.tip.SetPage(self.ficheXML.toxml())
         return self.tip
 
 
 
+    ##################################################################################################    
+    def enregistrer(self, nomFichier):
+        # La progression
+        progression = self.getBranche()
+        classe = self.classe.getBranche()
+        
+        # La racine
+        root = ET.Element("Progression_Classe")
+        root.append(progression)
+        root.append(classe)
+        constantes.indent(root)
+        
+        self.enregistrer_root(root, nomFichier)
+
+        for lienSeq in self.sequences:
+            if lienSeq.sequence in self.dependants:
+                lienSeq.sequence.enregistrer(lienSeq.path)
+
+        del self.dependants[:]
 
 
 
 
-
+#########################################################################################################
+#########################################################################################################
 class LienSequence(Objet_sequence):
     def __init__(self, parent, path = r""):
         self.path = path
@@ -4402,7 +4619,7 @@ class LienSequence(Objet_sequence):
 
 
     ######################################################################################  
-    def GetFicheHTML(self):
+    def GetFicheHTML(self, param = None):
         return constantes.BASE_FICHE_HTML_SEQ
 
 
@@ -4513,13 +4730,23 @@ class CentreInteret(Objet_sequence):
         del self.poids[i]
         self.SetNum()
         
+        
+    ######################################################################################  
+    def ToogleNum(self, num):
+        if num in self.numCI:
+            self.DelNum(num)
+        else:
+            self.AddNum(num)
+            
+            
     ######################################################################################  
     def SetNum(self, numCI = None, poids = 1):
 #        print "SetNum", numCI
         if numCI != None:
             self.numCI = numCI
 #            self.poids = poids
-            
+        self.numCI.sort()
+        
         if hasattr(self, 'arbre'):
             self.MaJArbre()
         
@@ -4590,7 +4817,7 @@ class CentreInteret(Objet_sequence):
 
     
     ######################################################################################  
-    def GetFicheHTML(self):
+    def GetFicheHTML(self, param = None):
         return constantes.BASE_FICHE_HTML_CI
     
     
@@ -4697,7 +4924,7 @@ class Competences(Objet_sequence):
     
     
     ######################################################################################  
-    def GetFicheHTML(self):
+    def GetFicheHTML(self, param = None):
         return constantes.BASE_FICHE_HTML_COMP
 
     
@@ -4833,7 +5060,7 @@ class Savoirs(Objet_sequence):
 
     
     ######################################################################################  
-    def GetFicheHTML(self):
+    def GetFicheHTML(self, param = None):
         return constantes.BASE_FICHE_HTML_SAV
 
     
@@ -5810,7 +6037,7 @@ class Seance(ElementDeSequence, Objet_sequence):
 
 
     ######################################################################################  
-    def GetFicheHTML(self):
+    def GetFicheHTML(self, param = None):
         return constantes.BASE_FICHE_HTML_SEANCE
 
     
@@ -6575,7 +6802,7 @@ class Tache(Objet_sequence):
         
 
     ######################################################################################  
-    def GetFicheHTML(self):
+    def GetFicheHTML(self, param = None):
         return constantes.BASE_FICHE_HTML_TACHE
     
 
@@ -6807,7 +7034,7 @@ class Systeme(ElementDeSequence, Objet_sequence):
             
     
     ######################################################################################  
-    def GetFicheHTML(self):
+    def GetFicheHTML(self, param = None):
         return constantes.BASE_FICHE_HTML_SYSTEME
     
     
@@ -7072,7 +7299,7 @@ class Support(ElementDeSequence, Objet_sequence):
             self.parent.app.AfficherMenuContextuel([[u"Créer un lien", self.CreerLien, None]])
             
     ######################################################################################  
-    def GetFicheHTML(self):
+    def GetFicheHTML(self, param = None):
         return constantes.BASE_FICHE_HTML_SUPPORT
 
     
@@ -7873,7 +8100,7 @@ class Eleve(Personne, Objet_sequence):
 
 
     ######################################################################################  
-    def GetFicheHTML(self):
+    def GetFicheHTML(self, param = None):
 #        print "GetFicheHTML"
 #        print self.GetProjetRef().listeParties
         dic = {}
@@ -8022,7 +8249,7 @@ class Prof(Personne):
         
         
     ######################################################################################  
-    def GetFicheHTML(self):
+    def GetFicheHTML(self, param = None):
         return """<HTML>
         <p style="text-align: center;"><font size="12"><b>Professeur</b></font></p>
         <p id="nom">NomPrénom</p>

@@ -1035,21 +1035,51 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
 
 
     ###############################################################################################
+    def ouvrirDoc(self, doc):
+        print "ouvrirDoc", doc
+        child = FenetreSequence(self, sequence = doc)
+        
+        child.SetIcon(constantes.dicimages["Seq"].GetIcon())
+        child.finaliserOuverture()
+        child.SetTitre()
+        wx.CallAfter(child.Activate)
+    
+    
+    ###############################################################################################
     def ouvrir(self, nomFichier, reparer = False):
         self.Freeze()
         wx.BeginBusyCursor()
         
+        doc = None
+
         if nomFichier != '':
             ext = os.path.splitext(nomFichier)[1].lstrip('.')
             
-            # Fichier pas déja ouvert
+            #
+            # Le Fichier n'est pas déja ouvert
+            #
             if not nomFichier in self.GetNomsFichiers():
+                if ext == "seq":
+                    #
+                    # On vérifie si la Séquence fait partie d'une Progression ouverte
+                    #
+                    path2 = os.path.normpath(os.path.abspath(nomFichier))
+                    for prog in self.GetDocumentsOuverts('prg'):
+                        for lienSeq in prog[0].sequences:
+                            path1 = os.path.normpath(os.path.abspath(lienSeq.path))
+                            if path1 == path2:  # La séquence fait partie d'une progression ouverte
+                                print "Dans prog :", path2
+                                self.ouvrirDoc(lienSeq.sequence)
+                                wx.EndBusyCursor()
+                                self.Thaw()
+                                return lienSeq.sequence
                 
                 child = self.commandeNouveau(ext = ext, ouverture = True)
                 if child != None:
-                    child.ouvrir(nomFichier, reparer = reparer)
-                
-            # Fichier déja ouvert
+                    doc = child.ouvrir(nomFichier, reparer = reparer)
+                    
+                    
+            # Le Fichier est déja ouvert
             else:
                 child = self.GetChild(nomFichier)
                 texte = constantes.MESSAGE_DEJA[ext] % child.fichierCourant
@@ -1060,13 +1090,14 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                                           u"Confirmation", wx.YES_NO | wx.ICON_WARNING)
                 retCode = dialog.ShowModal()
                 if retCode == wx.ID_YES:
-                    child.ouvrir(nomFichier, reparer = reparer)
+                    doc = child.ouvrir(nomFichier, reparer = reparer)
             
             if not reparer:
                 self.filehistory.AddFileToHistory(nomFichier)
             
         wx.EndBusyCursor()
         self.Thaw()
+        return doc
 
 
     ###############################################################################################
@@ -1190,6 +1221,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     def OnDocChanged(self, evt):
         """ Opérations de modification du menu et des barres d'outils 
             en fonction du type de document en cours
+            Et rafraichissement des séquences de la fenêtre de Progression
         """
 #        print "OnDocChanged"
 #        print dir(self.GetClientWindow().GetAuiManager().GetManagedWindow())
@@ -1233,6 +1265,11 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                     if self.file_menu.FindItemById(i) is not None:
                         self.file_menu.Enable(i, False)
                 
+            if fenDoc.typ == "prg":
+                fenDoc.Rafraichir()
+            elif fenDoc.typ == "seq":
+                fenDoc.Rafraichir()
+            
         self.miseAJourUndo()
            
         
@@ -1284,6 +1321,15 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         return lst
     
     
+    #############################################################################
+    def GetDocumentsOuverts(self, typ):
+        prog = []
+        if self.GetNotebook() != None:
+            for p in range(self.GetNotebook().GetPageCount()):
+                page = self.GetNotebook().GetPage(p)
+                if page.typ == typ:
+                    prog.append((page.GetDocument(), page.fichierCourant))
+        return prog
     
     
     #############################################################################
@@ -1381,24 +1427,13 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         self.GetEventHandler().ProcessEvent(evt)
         
         
-    ##################################################################################################    
-    def enregistrer_root(self, root, nomFichier):
-        fichier = file(nomFichier, 'w')
-        try:
-            ET.ElementTree(root).write(fichier, xml_declaration=False, encoding = SYSTEM_ENCODING)
-        except IOError:
-            messageErreur(None, u"Accés refusé", 
-                                  u"L'accés au fichier %s a été refusé !\n\n"\
-                                  u"Essayer de faire \"Enregistrer sous...\"" %nomFichier)
-        except UnicodeDecodeError:
-            messageErreur(None, u"Erreur d'encodage", 
-                                  u"Un caractére spécial empéche l'enregistrement du fichier !\n\n"\
-                                  u"Essayer de le localiser et de le supprimer.\n"\
-                                  u"Merci de reporter cette erreur au développeur.")
-        fichier.close()
-        
+    
+    ###############################################################################################
+    def Rafraichir(self):
+        self.GetDocument().Rafraichir()
         
             
+    ###############################################################################################
     def miseEnPlace(self):
         
         #############################################################################################
@@ -1579,8 +1614,8 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         self.dialogEnregistrer()
     
     #############################################################################
-    def SetTitre(self, modif = False):
-#        print "SetTitre",
+    def SetTitre(self, modif = None):
+#        print "SetTitre", modif
         t = self.classe.typeEnseignement
 
         t = REFERENTIELS[t].Enseignement[0]
@@ -1589,6 +1624,10 @@ class FenetreDocument(aui.AuiMDIChildFrame):
             t += u" - "+constantes.TITRE_DEFAUT[self.typ]
         else:
             t += u" - "+os.path.splitext(os.path.basename(self.fichierCourant))[0]
+        
+        if modif is None:
+            modif = self.fichierCourantModifie
+            
         if modif :
             t += " **"
         self.SetTitle(t)#toSystemEncoding(t))
@@ -1786,20 +1825,27 @@ def Dialog_ErreurAccesFichier(nomFichier):
 #
 ########################################################################################
 class FenetreSequence(FenetreDocument):
-    def __init__(self, parent, ouverture = False):
+    def __init__(self, parent, ouverture = False, sequence = None):
         self.typ = 'seq'
         FenetreDocument.__init__(self, parent)
         
-        #
-        # La classe
-        #
-        self.classe = Classe(self, typedoc = self.typ)
+        if sequence is None:
+            #
+            # La classe
+            #
+            self.classe = Classe(self, typedoc = self.typ)
         
-        #
-        # La séquence
-        #
-        self.sequence = Sequence(self, self.classe, ouverture = ouverture)
-        self.classe.SetDocument(self.sequence)
+            #
+            # La séquence
+            #
+            self.sequence = Sequence(self, self.classe, ouverture = ouverture)
+            self.classe.SetDocument(self.sequence)
+        
+        else:
+            self.sequence = sequence
+            self.classe = self.sequence.classe
+            self.sequence.app = self
+        
       
         #
         # Arbre de structure de la séquence (à gauche)
@@ -1837,7 +1883,8 @@ class FenetreSequence(FenetreDocument):
         
         self.miseEnPlace()
         self.fiche.Redessiner()
-    
+
+
     ###############################################################################################
     def ajouterOutils(self):
         self.parent.supprimerOutils()
@@ -1892,22 +1939,10 @@ class FenetreSequence(FenetreDocument):
         
     ###############################################################################################
     def enregistrer(self, nomFichier):
-
         wx.BeginBusyCursor()
         
-        
-        # La séquence
-        sequence = self.sequence.getBranche()
-        classe = self.classe.getBranche()
-        
-        # La racine
-        root = ET.Element("Sequence_Classe")
-        root.append(sequence)
-        root.append(classe)
-        constantes.indent(root)
-        
-        self.enregistrer_root(root, nomFichier)
-        
+        self.sequence.enregistrer(nomFichier)
+
         self.definirNomFichierCourant(nomFichier)
         self.MarquerFichierCourantModifie(False)
         wx.EndBusyCursor()
@@ -1977,13 +2012,28 @@ class FenetreSequence(FenetreDocument):
         self.parent.miseAJourUndo()
         
         
+    ###############################################################################################
+    def finaliserOuverture(self):
+        self.arbre.DeleteAllItems()
+        root = self.arbre.AddRoot("")
+        self.classe.ConstruireArbre(self.arbre, root)
+        self.sequence.ConstruireArbre(self.arbre, root)
+        self.sequence.CI.SetNum()
+        self.sequence.SetCodes()
+        self.sequence.PubDescription()
+        self.sequence.SetLiens()
+        self.sequence.VerifPb()
+        self.sequence.MiseAJourTypeEnseignement()
+        self.sequence.Verrouiller()
+        self.arbre.SelectItem(self.classe.branche)
+        
         
     ###############################################################################################
     def ouvrir(self, nomFichier, redessiner = True, reparer = False):
 #        print "ouvrir sequence", nomFichier
         if not os.path.isfile(nomFichier):
             return
-        
+                    
         fichier = open(nomFichier,'r')
         self.definirNomFichierCourant(nomFichier)
     
@@ -2005,18 +2055,7 @@ class FenetreSequence(FenetreDocument):
             if reparer:
                 self.VerifierReparation()
                 
-            self.arbre.DeleteAllItems()
-            root = self.arbre.AddRoot("")
-            self.classe.ConstruireArbre(self.arbre, root)
-            self.sequence.ConstruireArbre(self.arbre, root)
-            self.sequence.CI.SetNum()
-            self.sequence.SetCodes()
-            self.sequence.PubDescription()
-            self.sequence.SetLiens()
-            self.sequence.VerifPb()
-            self.sequence.MiseAJourTypeEnseignement()
-            self.sequence.Verrouiller()
-            self.arbre.SelectItem(self.classe.branche)
+            self.finaliserOuverture()
 
 
         if "beta" in version.__version__:
@@ -2026,7 +2065,7 @@ class FenetreSequence(FenetreDocument):
                 ouvre()
             except:
                 nomCourt = os.path.splitext(os.path.split(nomFichier)[1])[0]
-                messageErreur(self,u"Erreur d'ouverture",
+                messageErreur(self, u"Erreur d'ouverture",
                               u"La séquence pédagogique\n    %s\n n'a pas pu étre ouverte !" %nomCourt)
                 fichier.close()
                 self.Close()
@@ -2192,20 +2231,9 @@ class FenetreProjet(FenetreDocument):
         
     ###############################################################################################
     def enregistrer(self, nomFichier):
-
         wx.BeginBusyCursor()
         
-        # Le projet
-        projet = self.projet.getBranche()
-        classe = self.classe.getBranche()
-        
-        # La racine
-        root = ET.Element("Projet_Classe")
-        root.append(projet)
-        root.append(classe)
-        constantes.indent(root)
-        
-        self.enregistrer_root(root, nomFichier)
+        self.projet.enregistrer(nomFichier)
         
         self.definirNomFichierCourant(nomFichier)
         self.MarquerFichierCourantModifie(False)
@@ -2845,7 +2873,11 @@ Your browser does not support the HTML5 canvas tag.
             self.MarquerFichierCourantModifie()
         
         self.parent.miseAJourUndo()
-        
+
+   
+    
+
+
     ###############################################################################################
     def ProposerEnregistrer(self, sequence, pathProg):
         wx.BeginBusyCursor()
@@ -2892,32 +2924,22 @@ Your browser does not support the HTML5 canvas tag.
             root.append(bclasse)
             constantes.indent(root)
             self.enregistrer_root(root, nomFichier)
-            wx.EndBusyCursor()
             
+            wx.EndBusyCursor()
             return 0, path
         
         else:
             dlg.Destroy()
         
+        wx.EndBusyCursor()
         return 3, ""
         
         
     ###############################################################################################
     def enregistrer(self, nomFichier):
-
         wx.BeginBusyCursor()
         
-        # La progression
-        progression = self.progression.getBranche()
-        classe = self.classe.getBranche()
-        
-        # La racine
-        root = ET.Element("Progression_Classe")
-        root.append(progression)
-        root.append(classe)
-        constantes.indent(root)
-        
-        self.enregistrer_root(root, nomFichier)
+        self.progression.enregistrer(nomFichier)
         
         self.definirNomFichierCourant(nomFichier)
         self.MarquerFichierCourantModifie(False)
@@ -3118,6 +3140,7 @@ Your browser does not support the HTML5 canvas tag.
         self.progression.undoStack.do(u"Ouverture de la Progression")
         self.parent.miseAJourUndo()
     
+        return self.progression
     
     
 ####################################################################################
@@ -3742,6 +3765,7 @@ class PanelPropriete(scrolled.ScrolledPanel):
     #########################################################################################################
     def sendEvent(self, doc = None, modif = u"", draw = True, obj = None):
         self.GetDocument().GetApp().sendEvent(doc, modif, draw, obj)
+        self.eventAttente = False
 #        print "sendEvent", modif
 #        self.eventAttente = False
 #        evt = SeqEvent(myEVT_DOC_MODIFIED, self.GetId())
@@ -4592,7 +4616,7 @@ class PanelPropriete_Progression(PanelPropriete):
                                    typ = VAR_ENTIER_POS, bornes = [2012,2100])
         self.ctrlAnnee = VariableCtrl(pageGen, self.annee, coef = 1, signeEgal = False,
                                       help = u"Année scolaire", sizeh = 40, 
-                                      unite = str(self.GetDocument().annee+1),
+                                      unite = str(self.GetDocument().GetAnneeFin()),
                                       sliderAGauche = True)
         self.Bind(EVT_VAR_CTRL, self.EvtVariable, self.ctrlAnnee)
         sb.Add(self.ctrlAnnee)
@@ -4600,6 +4624,26 @@ class PanelPropriete_Progression(PanelPropriete):
         
         pageGen.sizer.AddGrowableCol(0)
         pageGen.sizer.AddGrowableRow(0)
+        
+        #
+        # Image
+        #
+        box = myStaticBox(pageGen, -1, u"Image")
+        bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
+        image = wx.StaticBitmap(pageGen, -1, wx.NullBitmap)
+        self.image = image
+        self.SetImage()
+        bsizer.Add(image, flag = wx.EXPAND)
+        
+        bt = wx.Button(pageGen, -1, u"Changer l'image")
+        bt.SetToolTipString(u"Cliquer ici pour sélectionner un fichier image")
+        bsizer.Add(bt, flag = wx.EXPAND|wx.ALIGN_BOTTOM)
+        self.Bind(wx.EVT_BUTTON, self.OnClick, bt)
+        pageGen.sizer.Add(bsizer, (0,2), (2,1), flag =  wx.EXPAND|wx.ALIGN_RIGHT|wx.TOP|wx.BOTTOM|wx.LEFT, border = 2)#wx.ALIGN_CENTER_VERTICAL |
+
+        pageGen.sizer.Layout()
+        
+        self.Layout()
         
 #        #
 #        # Organisation (nombre et positions des revues)
@@ -4638,7 +4682,43 @@ class PanelPropriete_Progression(PanelPropriete):
             self.sendEvent()
 
     
+    #############################################################################            
+    def SetImage(self):
+        if self.progression.image != None:
+            w, h = self.progression.image.GetSize()
+            wf, hf = 200.0, 100.0
+            r = max(w/wf, h/hf)
+            _w, _h = w/r, h/r
+            self.progression.image = self.progression.image.ConvertToImage().Scale(_w, _h).ConvertToBitmap()
+            self.image.SetBitmap(self.progression.image)
+        self.pageGen.Layout()
+        
     
+    #############################################################################            
+    def OnClick(self, event):
+        mesFormats = u"Fichier Image|*.bmp;*.png;*.jpg;*.jpeg;*.gif;*.pcx;*.pnm;*.tif;*.tiff;*.tga;*.iff;*.xpm;*.ico;*.ico;*.cur;*.ani|" \
+                       u"Tous les fichiers|*.*'"
+        
+        dlg = wx.FileDialog(
+                            self, message=u"Ouvrir une image",
+#                            defaultDir = self.DossierSauvegarde, 
+                            defaultFile = "",
+                            wildcard = mesFormats,
+                            style=wx.OPEN | wx.MULTIPLE | wx.CHANGE_DIR
+                            )
+            
+        # Show the dialog and retrieve the user response. If it is the OK response, 
+        # process the data.
+        if dlg.ShowModal() == wx.ID_OK:
+            # This returns a Python list of files that were selected.
+            paths = dlg.GetPaths()
+            nomFichier = paths[0]
+            self.progression.image = wx.Image(nomFichier).ConvertToBitmap()
+            self.SetImage()
+            self.sendEvent(modif = u"Modification de l'image de la Progression")
+            
+        dlg.Destroy()
+        
     #############################################################################            
     def EvtText(self, event):
 #        print "EvtText",
@@ -5655,7 +5735,7 @@ class PanelEffectifsClasse(wx.Panel):
             self.classe.nbrGroupes['P'] = var.v[0]
         calculerEffectifs(self.classe)
             
-        self.Parent.sendEvent(self.classe, modif = u"Modification du découpage de la Classe",
+        self.classe.GetApp().sendEvent(self.classe, modif = u"Modification du découpage de la Classe",
                               obj = self.classe)
 #        self.AjouterGroupesVides()
         self.MiseAJourNbrEleve()
@@ -5743,6 +5823,7 @@ class PanelPropriete_CI(PanelPropriete):
         PanelPropriete.__init__(self, parent)
         self.CI = CI       
         self.construire()
+        self.MiseAJour()
         
 
     #############################################################################            
@@ -5755,13 +5836,14 @@ class PanelPropriete_CI(PanelPropriete):
         
     #############################################################################            
     def construire(self):
+#        print "construire CI"
         self.group_ctrls = []
         self.DestroyChildren()
         if hasattr(self, 'grid1'):
             self.sizer.Remove(self.grid1)
             
         #
-        # Cas oé les CI sont sur une cible MEI
+        # Cas où les CI sont sur une cible MEI
         #
         abrevCI = self.CI.parent.classe.referentiel.abrevCI
         if self.CI.GetReferentiel().CI_cible:
@@ -5815,7 +5897,7 @@ class PanelPropriete_CI(PanelPropriete):
             self.sizer.Layout()
         
         #
-        # Cas oé les CI ne sont pas sur une cible
+        # Cas où les CI ne sont pas sur une cible
         #  
         else:
             
