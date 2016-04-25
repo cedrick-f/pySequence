@@ -851,7 +851,10 @@ def Draw_CI(ctx, CI, seq):
     # Rectangle arrondi
     x0, y0 = posCI
     rect_width, rect_height  = tailleCI
-    t = getSingulierPluriel(CI.GetReferentiel().nomCI, len(CI.numCI) > 1)
+    
+    ref = CI.GetReferentiel()
+    
+    t = getSingulierPluriel(ref.nomCI, len(CI.numCI) > 1)
     
     rect = (x0, y0, rect_width, rect_height)
     CI.pt_caract = (curve_rect_titre(ctx, t, rect, BcoulCI, IcoulCI, fontCI), 
@@ -868,7 +871,11 @@ def Draw_CI(ctx, CI, seq):
     for i, c in enumerate(CI.numCI):
         lstCodes.append(CI.GetCode(i))
         lstIntit.append(CI.GetIntit(i))
-        
+    
+    for j, c in enumerate(CI.CI_perso):
+        lstCodes.append(ref.abrevCI+str(len(ref.CentresInterets)+j+1))
+        lstIntit.append(c)
+    
     if CI.numCI != []:
         r = liste_code_texte(ctx, lstCodes, lstIntit, 
                              x0, y0+0.0001 * COEF, rect_width, rect_height, 

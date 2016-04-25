@@ -4674,8 +4674,11 @@ class CentreInteret(Objet_sequence):
         self.parent = parent
         Objet_sequence.__init__(self)
         
-        self.numCI = []
+        self.numCI = []     # Numéros des CI du Référentiel
         self.poids = []
+        
+        self.CI_perso = []  # Centres d'Intérêt personnalisés
+        
         self.SetNum(self.numCI)
         self.max2CI = True
         
@@ -4700,13 +4703,13 @@ class CentreInteret(Objet_sequence):
         for i, num in enumerate(self.numCI):
             root.set("C"+str(i), str(num))
             root.set("P"+str(i), str(self.poids[i]))
+        
+        # Centres d'Intérêt personnalisés
+        CI_perso = ET.SubElement(root, "CI_perso")
+        for i, ci in enumerate(self.CI_perso):
+            CI_perso.set("CI_"+str(i), ci)
+ 
         return root
-    
-        if hasattr(self, 'code'):
-            if self.code == "":
-                self.code = "_"
-            root = ET.Element(self.code)
-            return root
         
     
     ######################################################################################  
@@ -4731,12 +4734,20 @@ class CentreInteret(Objet_sequence):
                     num = eval(code[2:])-1
                     self.AddNum(num)
         
+        # Centres d'Intérêt personnalisés
+        self.CI_perso = []
+        CI_perso = branche.find("CI_perso")
+        if CI_perso != None:
+            i = 0
+            continuer = True
+            while continuer:
+                t = CI_perso.get("CI_"+str(i), u"")
+                if t == u"":
+                    continuer = False
+                else:
+                    self.CI_perso.append(t)
+                    i += 1
 
-#        self.GetPanelPropriete().MiseAJour()
-
-
-    
-    
     
     
     ######################################################################################  

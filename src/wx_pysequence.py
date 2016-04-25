@@ -53,6 +53,7 @@ if sys.platform != "win32":
     import wxversion
 #    wxversion.select('2.8')
 import wx
+import  wx.gizmos   as  gizmos
 import version
 # Module de gestion des dossiers, de l'installation et de l'enregistrement
 import util_path
@@ -5842,10 +5843,11 @@ class PanelPropriete_CI(PanelPropriete):
         if hasattr(self, 'grid1'):
             self.sizer.Remove(self.grid1)
             
+        ref = self.CI.parent.classe.referentiel
         #
         # Cas où les CI sont sur une cible MEI
         #
-        abrevCI = self.CI.parent.classe.referentiel.abrevCI
+        abrevCI = ref.abrevCI
         if self.CI.GetReferentiel().CI_cible:
             self.panel_cible = Panel_Cible(self, self.CI)
             self.sizer.Add(self.panel_cible, (0,0), (2,1), flag = wx.EXPAND)
@@ -5855,7 +5857,7 @@ class PanelPropriete_CI(PanelPropriete):
             
             
 #            for i, ci in enumerate(constantes.CentresInterets[self.CI.GetTypeEnseignement()]):
-            for i, ci in enumerate(self.CI.parent.classe.referentiel.CentresInterets):
+            for i, ci in enumerate(ref.CentresInterets):
                 r = wx.CheckBox(self, 200+i, "")
                 t = wx.StaticText(self, -1, abrevCI+str(i+1)+" : "+ci)
                 p = wx.TextCtrl(self, -1, u"1")
@@ -5864,7 +5866,7 @@ class PanelPropriete_CI(PanelPropriete):
                 p.SetMinSize((30, -1))
                 self.group_ctrls.append((r, t, p))
                 self.grid1.Add( r, 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_LEFT|wx.LEFT|wx.RIGHT|wx.TOP, 2 )
-                self.grid1.Add( t, 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_LEFT|wx.LEFT|wx.RIGHT|wx.EXPAND, 5 )
+                self.grid1.Add( t, 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_LEFT|wx.LEFT|wx.RIGHT, 5 )#|wx.EXPAND
                 self.grid1.Add( p, 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_RIGHT|wx.LEFT|wx.RIGHT, 5 )
             for radio, text, poids in self.group_ctrls:
                 self.Bind(wx.EVT_CHECKBOX, self.OnCheck, radio )
@@ -5894,16 +5896,14 @@ class PanelPropriete_CI(PanelPropriete):
                     self.sizer.AddGrowableCol(1)
                 except:
                     pass
-            self.sizer.Layout()
         
         #
         # Cas où les CI ne sont pas sur une cible
         #  
         else:
-            
             self.grid1 = wx.FlexGridSizer( 0, 2, 0, 0 )
             
-            for i, ci in enumerate(self.CI.parent.classe.referentiel.CentresInterets):
+            for i, ci in enumerate(ref.CentresInterets):
     #            if i == 0 : s = wx.RB_GROUP
     #            else: s = 0
                 r = wx.CheckBox(self, 200+i, abrevCI+str(i+1), style = wx.RB_GROUP )
@@ -5913,28 +5913,54 @@ class PanelPropriete_CI(PanelPropriete):
                 self.group_ctrls.append((r, t))
             self.sizer.Add(self.grid1, (0,0), flag = wx.EXPAND)
             for radio, text in self.group_ctrls:
-                self.Bind(wx.EVT_CHECKBOX, self.OnCheck, radio )
-#            btn = wx.Button(self, -1, u"Effacer")
-#            self.Bind(wx.EVT_BUTTON, self.OnClick, btn)
-#            self.sizer.Add(btn, (0,1))
+                self.Bind(wx.EVT_CHECKBOX, self.OnCheck, radio)
             
-            self.sizer.Layout()
-        
+            
+        #
+        # Cas des CI personnalisés
+        #
+        self.elb = gizmos.EditableListBox(
+                    self, -1, ref.nomCI + u" personnalisés",
+                    style=gizmos.EL_ALLOW_NEW | gizmos.EL_ALLOW_EDIT | gizmos.EL_ALLOW_DELETE)
+        self.sizer.Add(self.elb, (0,3), (2, 1), flag = wx.EXPAND)
+        self.elb.Bind(wx.EVT_LIST_END_LABEL_EDIT, self.OnChangeCI_perso)
+        self.Bind(wx.EVT_LIST_DELETE_ITEM, self.OnChangeCI_perso)
+#        self.Bind(wx.EVT_LIST_INSERT_ITEM, self.OnChangeCI_perso)
+#        self.Bind(wx.EVT_LIST_BEGIN_LABEL_EDIT, self.OnChangeCI_perso)
+        self.sizer.Layout()
+
+
     #############################################################################            
     def OnAide(self, event):
         dlg = MessageAideCI(self)
         dlg.ShowModal()
         dlg.Destroy()
 
+
     #############################################################################            
     def OnOption(self, event):
         self.CI.max2CI = not self.CI.max2CI
         self.MiseAJour()
-        
+
+
     #############################################################################            
     def OnPoids(self, event):
         pass
-    
+
+
+    #############################################################################            
+    def MAJ_CI_perso(self, event = None):
+        self.CI.CI_perso = self.elb.GetStrings()
+        ref = self.CI.parent.classe.referentiel
+        self.sendEvent(modif = u"Modification des %s personnalisés" %getSingulierPluriel(ref.nomCI, True))
+        
+        
+    #############################################################################            
+    def OnChangeCI_perso(self, event):
+        wx.CallAfter(self.MAJ_CI_perso)
+        event.Skip()
+
+
     #############################################################################            
     def OnCheck(self, event):
         button_selected = event.GetEventObject().GetId()-200 
@@ -5954,10 +5980,12 @@ class PanelPropriete_CI(PanelPropriete):
         
             if hasattr(self, 'b2CI'):
                 self.b2CI.Enable(len(self.CI.numCI) <= 2)
-            
+        
         self.Layout()
-        self.sendEvent(modif = u"Modification du nombre de CI sélectionnables")
-    
+        ref = self.CI.parent.classe.referentiel
+        self.sendEvent(modif = u"Modification des %s abordés" %getSingulierPluriel(ref.nomCI, True))
+
+
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
 #        if self.CI.GetTypeEnseignement() == 'ET':
@@ -5972,16 +6000,12 @@ class PanelPropriete_CI(PanelPropriete):
                 if len(self.group_ctrls[num]) > 2:
                     self.group_ctrls[num][2].SetValue(self.CI.poids[i])
             self.Layout()
-            
+
+        self.elb.SetStrings(self.CI.CI_perso)
+        
         if sendEvt:
             self.sendEvent()
-            
-#    #############################################################################            
-#    def OnClick(self, event):
-#        if self.CI.num != None:
-#            self.group_ctrls[self.CI.num][0].SetValue(False)
-#            self.CI.SetNum(None)
-#            self.sendEvent()
+
 
     #############################################################################            
     def GererCases(self, liste, appuyer = False):
