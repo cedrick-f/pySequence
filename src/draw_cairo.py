@@ -1217,6 +1217,10 @@ def curve_rect(ctx, x0, y0, rect_width, rect_height, radius, ouverture = 0):
     
 def tableauV(ctx, titres, x, y, w, ht, hl, nlignes = 0, va = 'c', ha = 'c', orient = 'h', coul = (0.9,0.9,0.9), b = 0.2):
     """    Dessine un tableau vertical (entêtes à l'horizontale)
+            x, y = position du coin haut-gauche
+            ht = hauteur de la ligne d'entête
+            hl = hauteur de chaque ligne
+            
             >> Renvoie la liste des rectangles des entêtes
     """
     rect = []
@@ -1231,15 +1235,17 @@ def tableauV(ctx, titres, x, y, w, ht, hl, nlignes = 0, va = 'c', ha = 'c', orie
         ctx.fill_preserve ()
         ctx.set_source_rgba (*_coul)
         show_text_rect(ctx, titre, (_x, y, wc, ht), va = va, ha = ha, b = b, orient = orient)
-        if orient == 'h':
-            rect.append((_x, y, wc, ht))
-        else:
-            rect.append((-y, _x, wc, ht))
+        
+#        if orient == 'h':
+        rect.append((_x, y, wc, ht))
+#        else:
+#            rect.append((-y, _x, wc, ht))
         ctx.stroke ()
         _x += wc
     
     _x = x
     _y = y+ht
+    
     for l in range(nlignes):
         ctx.rectangle(_x, _y, wc, hl)
         _x += wc
@@ -1247,7 +1253,12 @@ def tableauV(ctx, titres, x, y, w, ht, hl, nlignes = 0, va = 'c', ha = 'c', orie
         
     ctx.stroke ()
     return rect
-    
+
+
+
+
+
+
 def tableauH(ctx, titres, x, y, wt, wc, h, nCol = 0, va = 'c', ha = 'c', orient = 'h', 
              coul = (0.9,0.9,0.9), contenu = [], tailleFixe = False):
     
@@ -1392,7 +1403,9 @@ def rectangle_plein(ctx, x, y, w, h, coulBord, coulInter, alpha = 1):
     ctx.fill_preserve ()
     ctx.set_source_rgba (coulBord[0], coulBord[1], coulBord[2], alpha)
     ctx.stroke ()
-    
+
+
+
 def boule(ctx, x, y, r, 
           color0 = (1, 1, 1, 1), color1 = (0, 0, 0, 1), 
           transparent = True):
@@ -1409,7 +1422,64 @@ def boule(ctx, x, y, r,
     ctx.set_source (pat)
     ctx.arc (x, y, r, 0, 2*pi)
     ctx.fill ()
-      
+
+
+
+def relief(ctx, (x, y, w, h), e,
+          color = (1, 1, 1, 1), bosse = True):
+    
+    if bosse:
+        k = [1.3, 1.5, 0.7, 0.5, 1.0]
+    else:
+        k = [0.5, 0.5, 1.3, 1.5, 1.0]
+    
+    
+    
+    coul = [c*k[0] for c in color[:3]]+[color[3]]
+    ctx.set_source_rgba(*coul)
+    
+    ctx.move_to(x, y)
+    ctx.line_to(x+e, y+e)
+    ctx.line_to(x+e, y+h-e)
+    ctx.line_to(x, y+h)
+    ctx.line_to(x, y)
+    ctx.fill()
+    
+    coul = [c*k[1] for c in color[:3]]+[color[3]]
+    ctx.set_source_rgba(*coul)
+    ctx.move_to(x, y)
+    ctx.line_to(x+e, y+e)
+    ctx.line_to(x+w-e, y+e)
+    ctx.line_to(x+w, y)
+    ctx.line_to(x, y)
+    ctx.fill()
+    
+    coul = [c*k[2] for c in color[:3]]+[color[3]]
+    ctx.set_source_rgba(*coul)
+    ctx.move_to(x+w, y)
+    ctx.line_to(x+w-e, y+e)
+    ctx.line_to(x+w-e, y+h-e)
+    ctx.line_to(x+w, y+h)
+    ctx.line_to(x+w, y)
+    ctx.fill()
+    
+    coul = [c*k[3] for c in color[:3]]+[color[3]]
+    ctx.set_source_rgba(*coul)
+    ctx.move_to(x+w, y+h)
+    ctx.line_to(x+w-e, y+h-e)
+    ctx.line_to(x+e, y+h-e)
+    ctx.line_to(x, y+h)
+    ctx.line_to(x+w, y+h)
+    ctx.fill()
+    
+    coul = [c*k[4] for c in color[:3]]+[color[3]]
+    ctx.set_source_rgba(*coul)
+    ctx.rectangle(x+e, y+e, w-2*e, h-2*e)
+    ctx.fill()
+
+
+
+
 def barreH(ctx, x, y, w, r, a, e, coul0, coul1, coul):
     """ Dessine une barre horizontale de poucentage/progression
         x, y : position

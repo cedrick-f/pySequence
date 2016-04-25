@@ -43,7 +43,7 @@ import cairo
 
 from draw_cairo import LargeurTotale, font_family, curve_rect_titre, show_text_rect, \
                         boule, getHoraireTxt, liste_code_texte, rectangle_plein, barreH, tableauV, minFont, maxFont, tableauH, \
-                        DrawPeriodes, COEF, info, Zone, \
+                        DrawPeriodes, COEF, info, Zone, relief, \
                         BcoulPos, IcoulPos, ICoulComp, CoulAltern
 
 from math import log, pi
@@ -75,12 +75,12 @@ margeY = 0.04 * COEF
 ecartX = 0.02 * COEF
 ecartY = 0.02 * COEF
 
-# Nom du projet
+# Titre de la progression
 tailleNom = (0.29 * COEF, 0.04 * COEF)
 posNom = (margeX, margeY)
 IcoulNom = (0.85, 0.8, 0.8, 0.85)
 BcoulNom = (0.28, 0.2, 0.25, 1)
-fontNom = 0.014 * COEF
+fontNom = 0.016 * COEF
 
 # Equipe pédagogique
 tailleEqu = (0.17 * COEF, 0.07 * COEF)
@@ -110,7 +110,7 @@ posPro = [posNom[0] + tailleNom[0] + ecartX/2, margeY + taillePos[1] + ecartY/2]
 taillePro = [LargeurTotale - margeX - posPro[0], posEqu[1] + tailleEqu[1] - posPro[1]]
 IcoulPro = (0.8, 0.9, 0.8, 0.85)
 BcoulPro = (0.25, 0.3, 0.2, 1)
-fontPro = 0.014 * COEF
+fontPro = 0.012 * COEF
 
 # Image du support
 posImg = [posEqu[0] + tailleEqu[0] + ecartX/4, posNom[1] + tailleNom[1] + ecartY]
@@ -130,7 +130,7 @@ posZDeroul = [margeX, None]
 tailleZDeroul = [None, None]
 IcoulZDeroul = (1, 1, 0.7, 0.85)
 BcoulZDeroul = (0.4, 0.4, 0.03, 1)
-fontZDeroul = 0.014 * COEF
+fontZDeroul = 0.016 * COEF
 wPhases = 0.04 * COEF      # Taille du label "phases"
 wDuree = 0.012 * COEF       # Taille de la fleche "duree"
 
@@ -230,13 +230,13 @@ def DefinirZones(prg, ctx):
         yEleves.append(posZElevesH[1] + (i+0.5) * hEleves)
 
 
-    # Zone du tableau des compétences - Y
+    # Zone du tableau des compétences (entête - uniquement selon y)
     posZComp[1] = posZElevesH[1] + tailleZElevesH[1]
     tailleZComp[1] = ecartYElevesTaches            
                  
                  
     # Zone de déroulement de la progression (cadre arrondi)
-    posZDeroul[1] = posZElevesH[1] + tailleZElevesH[1] + tailleZComp[1] - ecartY
+    posZDeroul[1] = posZElevesH[1] + tailleZElevesH[1] + tailleZComp[1]
     tailleZDeroul[0] = posZElevesV[0] - posZDeroul[0] - ecartX/2
     tailleZDeroul[1] = posZOrganis[1] + tailleZOrganis[1] - posZDeroul[1]
     
@@ -445,6 +445,8 @@ def Draw(ctx, prg, mouchard = False):
 #        prj.pts_caract.append(getPts(r))
 
 
+
+
     #
     #  Calendrier ???
     #
@@ -490,7 +492,9 @@ def Draw(ctx, prg, mouchard = False):
     
     ctx.set_line_width(0.001 * COEF)
     _x = _x0 = posZComp[0]
-    _y0, _y1 = posZElevesH[1], posZDeroul[1] + tailleZDeroul[1]
+    _y0, _y1 = posZElevesH[1] - ecartY/2, posZDeroul[1] + tailleZDeroul[1]
+    
+    lcomp = []
     
 #    print "competences", competences
     for i, g1 in enumerate(competences):
@@ -503,7 +507,7 @@ def Draw(ctx, prg, mouchard = False):
         coul = list(ICoulComp[i][:3])+[0.2]
         for k2, h2 in l1:
             #
-            # Lignes verticales et rectangles gris clair
+            # Lignes verticales et rectangles clairs
             #
             rect = (_x, _y0, wColComp, _y1 -_y0)
             ctx.set_source_rgb(0, 0, 0)
@@ -543,8 +547,9 @@ def Draw(ctx, prg, mouchard = False):
                          coul = ICoulComp[i], b = 0.3)
         
         for i, r in enumerate(rects):
-            prg.zones_sens.append(Zone([r], param = l[i]))
+            prg.zones_sens.append(Zone([r], param = "CMP"+l[i]))
         
+        lcomp.extend(l)
         
 #        prg.pt_caract_comp.extend(getPts(p))
             
@@ -669,7 +674,7 @@ def Draw(ctx, prg, mouchard = False):
     x = posZTaches[0] + tailleZTaches[0]
     for seq, y in yTaches: 
         DrawLigne(ctx, x, y)
-        DrawCroisementsCompetencesTaches(ctx, prg, seq, y)
+        DrawCroisementsCompetencesTaches(ctx, prg, seq, lcomp, y)
         DrawCroisementsCISeq(ctx, prg, seq, y)
     
     # Nom des périodes
@@ -915,8 +920,8 @@ def regrouperLst(obj, lstCompetences):
         return lstCompetences
     
 ######################################################################################  
-def DrawCroisementsCompetencesTaches(ctx, prg, seq, y):
-    DrawBoutonCompetence(ctx, prg, seq, seq.GetCompetencesVisees(), y)
+def DrawCroisementsCompetencesTaches(ctx, prg, seq, l, y):
+    DrawBoutonCompetence(ctx, prg, seq, seq.GetCompetencesVisees(), l, y)
     
 
     
@@ -965,28 +970,41 @@ def DrawCroisementsElevesCompetences(ctx, prg, ci, y):
 
     
 ######################################################################################  
-def DrawBoutonCompetence(ctx, prg, seq, listComp, y, h = None):
-    """ Dessine les petits rectangles des indicateurs (en couleurs R et S)
-         ... avec un petit décalage vertical pour que ce soit lisible en version N&B
+def DrawBoutonCompetence(ctx, prg, seq, listComp, l, y, h = None):
+    """ Dessine les petits rectangles des compétences
+         
+        l = liste des codes de compétence (situés en entête)
+    
     """
 #    print "DrawBoutonCompetence", seq, listComp
+
+    
     if h == None: # Toujours sauf pour les revues
         r = wColComp/3
         h = 2*r
     
-    ctx.set_line_width (0.0004 * COEF)
-    
-    for s in listComp:
-        x = xComp[s[1:]] #- wColComp/2
+    ctx.set_line_width(0.0004 * COEF)
+    listComp = [k[1:] for k in listComp]
+    for s in l:
+        x = xComp[s] #- wColComp/2
+        e = h/5
+#        print "h", h
+        rect = (x+e/2, y-h/2+e/2, wColComp-e, h-e)
+        prg.zones_sens.append(Zone([rect], obj = seq, param = "CMP"+s))
         
-        rect = (x, y-h/2, wColComp, h)
-        prg.zones_sens.append(Zone([rect], obj = seq, param = s[1:]))
+        ctx.set_source_rgba(*ICoulComp[cComp[s]])
         
-        ctx.set_source_rgba(*ICoulComp[cComp[s[1:]]])
-        ctx.rectangle(*rect)
-        ctx.fill_preserve ()
-        ctx.set_source_rgba(0, 0, 0, 1)
-        ctx.stroke()
+        coul = [c*0.6 for c in ICoulComp[cComp[s]][:3]]+[0.4]
+        
+        if s in listComp:
+            relief(ctx, rect, e, color = ICoulComp[cComp[s]])
+        else:
+#            ctx.set_source_rgba (0,0,0,1)
+#            ctx.rectangle(*rect)
+#            ctx.stroke()
+            relief(ctx, rect, e, color = coul, bosse = False)
+#        ctx.set_source_rgba(0, 0, 0, 1)
+#        ctx.stroke()
 
 
        

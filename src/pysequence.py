@@ -1206,13 +1206,23 @@ class BaseDoc():
                 if isinstance(zone.obj, Sequence) and len(zone.param) > 2 and zone.param[:2] == "CI":
                     ref = self.GetReferentiel()
                     zone.obj.CI.ToogleNum(int(zone.param[2]))
-                    zone.obj.GetApp().sendEvent(modif = u"Modification des "+ ref.nomCI + " de la Séquence",
-                                            obj = self)
+                    t = u"Modification des "+ ref.nomCI + " de la Séquence"
+                    zone.obj.GetApp().sendEvent(modif = t, obj = self)
                     if self.GetApp() == zone.obj.GetApp(): # la séquence est n'est pas ouverte dans une autre fenêtre
                         self.dependants.append(zone.obj)
                     else:
-                        self.GetApp().sendEvent(modif = u"Modification des "+ ref.nomCI + " de la Séquence",
-                                            obj = self)
+                        self.GetApp().sendEvent(modif = t, obj = self)
+                
+                elif isinstance(zone.obj, Sequence) and len(zone.param) > 3 and zone.param[:3] == "CMP":
+                    ref = self.GetReferentiel()
+                    zone.obj.obj['C'].ToogleCode("S"+zone.param[3:])
+                    t = u"Modification des "+ ref.dicoCompetences["S"].nomGenerique + " visées par la Séquence"
+                    zone.obj.GetApp().sendEvent(modif = t, obj = self)
+                    if self.GetApp() == zone.obj.GetApp(): # la séquence est n'est pas ouverte dans une autre fenêtre
+                        self.dependants.append(zone.obj)
+                    else:
+                        self.GetApp().sendEvent(modif = t, obj = self)
+                        
         
         elif zone.param is not None:
             if len(zone.param) > 3 and zone.param[:3] == "POS" :
@@ -4459,6 +4469,19 @@ class Progression(BaseDoc, Objet_sequence):
                 intit = self.GetReferentiel().CentresInterets[numCI]
                 XML_AjouterElemListe(self.ficheXML, "ci", code, intit)
             
+            elif param[:3] == "CMP":
+                competence = self.GetReferentiel().getCompetence("S"+param[3:])
+                if competence is not None:
+                    self.ficheXML = self.GetFicheXML(constantes.BASE_FICHE_HTML_COMP_PRJ)
+                    k = param[3:]
+                    nc = self.GetReferentiel().dicoCompetences["S"].nomGenerique
+                    titre = nc + " " + k
+                    SetWholeText(self.ficheXML, "titre", titre)
+                    
+                    intituleComp = competence[0]
+                    intituleComp = "\n".join([textwrap.fill(ind, 50) for ind in intituleComp.split(u"\n")]) 
+                    SetWholeText(self.ficheXML, "int", intituleComp)
+            
             elif type(obj) == list:
                 pass
                 
@@ -4882,7 +4905,13 @@ class Competences(Objet_sequence):
         
 #        self.GetPanelPropriete().MiseAJour()
     
-    
+    ######################################################################################  
+    def ToogleCode(self, code):
+        if code in self.competences:
+            self.competences.remove(code)
+        else:
+            self.competences.append(code)
+            
     ######################################################################################  
     def GetCode(self, num):
         return self.competences[num]

@@ -1348,7 +1348,7 @@ class Referentiel(XMLelem):
 
         itemComp = self.dicoCompetences.items()
 
-        self._listesCompetences_simple = {}
+        self._listesCompetences_simple = {}  # format : [[code compétence, intitulé compétence, [ sous compétences ]]]
         
 #        print "ref", self
         for code, comp in itemComp:
