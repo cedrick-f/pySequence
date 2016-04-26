@@ -1,4 +1,4 @@
-<Referentiel B_CI_BO="True" B_CI_cible="False" B_domaines="False" S_AnneeDebut="Sec2" S_Code="Cy4-ST" S_Famille="ScTec" S_FichierLogo="" S_abrevCI="CI" S_nomCI="Thèmes" S_nomFonctions="Fonctions" S_nomTaches="Tâches">
+<Referentiel B_CI_BO="True" B_CI_cible="False" B_domaines="False" S_AnneeDebut="Sec2" S_Code="Cy4-ST" S_Famille="ScTec" S_FichierLogo="" S_abrevCI="CI" S_nomCI="Thèmes" S_nomFonctions="Fonction(s)" S_nomPb="Problématiques" S_nomTaches="Tâche(s)">
   <l_BO_URL>
     <l_00 S_00="Programme" S_01="http://www.education.gouv.fr/pid285/bulletin_officiel.html?cid_bo=94708" />
   </l_BO_URL>
@@ -215,6 +215,20 @@
   </d_effectifsSeance>
   <d_horsClasse />
   <l_listCompetences S_00="S" S_01="C" />
+  <l_listProblematiques>
+    <l_00 />
+    <l_01 S_00="Comment aménager une salle de spectacle accueillant tout public et en toute sécurité ?" S_01="Comment aménager un terrain de camping avec des mobilhomes ?" S_02="Comment aménager un stade ?" S_03="Comment aménager un espace urbain ?" S_04="Comment raccorder une route secondaire à une voie rapide ?" S_05="Comment intégrer un ouvrage bruyant en milieu urbain ?" />
+    <l_02 S_00="Comment programmer un éclairage automatique ?" S_01="Comment assurer la régulation d'une température ?" S_02="Comment contrôler un habitat à distance, gérer l’énergie et assurer la sécurité ?" S_03="Comment assurer la protection d'un bien par un système anti-intrusion ?" S_04="Comment assurer la sécurité incendie dans une habitation ?" />
+    <l_03 S_00="Quelles sont les particularités de l'habitat régional ?" S_01="Quelles sont les particularités d'un éco-quartier ?" S_02="Comment concevoir une ligne ferroviaire ?" S_03="Quels sont les ouvrages qui permettent de capter, traiter et distribuer l'eau ?" S_04="Comment fonctionne une écluse ?" />
+    <l_04 S_00="Comment réaliser un mur de soutainement ?" S_01="Comment assurer la stabilité d'un voute ?" S_02="Pourquoi concevoir une structure en treillis ?" S_03="Comment rendre robuste et stable un pont ?" S_04="Comment intégrer un ouvrage virtuel dans son environnement réel ?" />
+    <l_05 S_00="Comment produire et stocker de l'énergie électrique ?" S_01="Comment transformer la ressource solaire en énergie électrique ou thermique ?" S_02="Quel est le cheminement de l'énergie dans un système ?" S_03="Comment est alimenté le TGV ?" S_04="Comment une voiture hybride fonctionne-t-elle ?" S_05="Comment prélever et utiliser l'énergie géothermique ?" />
+    <l_06 S_00="Comment le choix d'un matériau permet-il de réduire l'impact environnemental ?" S_01="Comment limiter l'impact  des eaux usées sur l'environnement ?" S_02="Comment traiter et utiliser les eaux pluviales ?" S_03="Comment optimiser l'apport solaire dans l'architecture d'une maison ?" />
+    <l_07 S_00="Par quoi et comment programmer un objet technique ?" S_01="Comment travailler dans un milieu hostile à la place de l'homme ?" S_02="Comment rendre automatique le fonctionnement d'un système ?" S_03="Comment piloter un objet technique avec un smartphone ?" />
+    <l_08 S_00="Comment créer un réseau de données ?" S_01="Comment les objets techniques communiquent-ils sur Internet ?" S_02="Comment calculer les temps d'une course sportive ?" />
+    <l_09 S_00="Comment la reconnaissance gestuelle assiste-t-elle l'homme ?" S_01="Quelles fonctions supplémentaires apporte un textile intelligent ?" S_02="Comment la technologie facilite t'elle notre alimentation ?" />
+    <l_10 S_00="Comment le contexte historique et géographique influe-t-il sur la conception ?" S_01="De quelle façon les objets techniques évoluent dans le temps ?" S_02="Comment le confort et la sécurité font évoluer les objets techniques ?" />
+    <l_11 S_00="Comment la sustentation d'un avion est-elle réalisée ?" S_01="Comment un objet technique permet d'augmenter notre vitesse de déplacement ?" S_02="Comment se développent les transports maritimes et fluviaux ?" />
+  </l_listProblematiques>
   <l_listSavoirs S_00="S" />
   <l_listeDemarches S_00="I" S_01="R" S_02="P" />
   <l_listeEffectifs S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />

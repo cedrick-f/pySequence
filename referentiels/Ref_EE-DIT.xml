@@ -1,4 +1,4 @@
-<Referentiel B_CI_BO="False" B_CI_cible="False" B_domaines="True" S_AnneeDebut="Sec5" S_Code="EE-DIT" S_Famille="2nde" S_FichierLogo="" S_abrevCI="Th " S_nomCI="Thèmes" S_nomFonctions="Fonctions" S_nomTaches="Tâches">
+<Referentiel B_CI_BO="False" B_CI_cible="False" B_domaines="True" S_AnneeDebut="Sec5" S_Code="EE-DIT" S_Famille="2nde" S_FichierLogo="" S_abrevCI="Th " S_nomCI="Thèmes" S_nomFonctions="Fonction(s)" S_nomPb="Problématique(s)" S_nomTaches="Tâche(s)">
   <l_BO_URL>
     <l_00 S_00="Programme SI" S_01="http://media.education.gouv.fr/file/special_4/74/7/sciences_ingenieur_143747.pdf" />
     <l_01 S_00="Programme CIT" S_01="http://media.education.gouv.fr/file/special_4/75/1/creation_innovation_technologiques_143751.pdf" />
@@ -986,6 +986,7 @@
     <l_ST S_00="Stage" S_01="Stage" />
   </d_horsClasse>
   <l_listCompetences S_00="S" />
+  <l_listProblematiques />
   <l_listSavoirs S_00="S" S_01="M" S_02="P" />
   <l_listeDemarches S_00="I" S_01="R" S_02="P" />
   <l_listeEffectifs S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />

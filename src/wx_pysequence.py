@@ -3729,17 +3729,18 @@ DELAY = 100 # Delai en millisecondes avant de rafraichir l'affichage suite à un
 class PanelPropriete(scrolled.ScrolledPanel):
     def __init__(self, parent, titre = u"", objet = None, style = wx.VSCROLL | wx.RETAINED):
         scrolled.ScrolledPanel.__init__(self, parent, -1, style = style)#|wx.BORDER_SIMPLE)
-        
-        
-        
+
         self.sizer = wx.GridBagSizer()
-        self.Hide()  # utilité ?? à priori cause des erreurs au lancement (linux en autres)
+#        self.Hide()  # utilité ?? à priori cause des erreurs au lancement (linux en autres)
 #        self.SetMinSize((400, 200))
+        
         self.SetSizer(self.sizer)
         self.SetAutoLayout(True)
 #        self.SetScrollRate(20,20)
-#        self.SetupScrolling() # Cause des problémes 
-#        self.EnableScrolling(True, True)
+        self.EnableScrolling(False, True)
+#        self.SetupScrolling(scroll_x = False) # Cause des problèmes (wx._core.PyDeadObjectError)
+        
+
         self.eventAttente = False
         self.Bind(wx.EVT_ENTER_WINDOW, self.OnEnter)
 #        wx.CallAfter(self.Show)
@@ -3755,34 +3756,13 @@ class PanelPropriete(scrolled.ScrolledPanel):
     def onUndoRedo(self):
         """ Renvoie True si on est en phase de Undo/Redo
         """
-        
-#        if hasattr(self.GetDocument(), 'undoStack'):
-#            return self.objet.undoStack.onUndoRedo
-#        else:
         return self.GetDocument().undoStack.onUndoRedo or self.GetDocument().classe.undoStack.onUndoRedo
-#        return False
     
     
     #########################################################################################################
     def sendEvent(self, doc = None, modif = u"", draw = True, obj = None):
         self.GetDocument().GetApp().sendEvent(doc, modif, draw, obj)
         self.eventAttente = False
-#        print "sendEvent", modif
-#        self.eventAttente = False
-#        evt = SeqEvent(myEVT_DOC_MODIFIED, self.GetId())
-#        
-#        if doc != None:
-#            evt.SetDocument(doc)
-#        else:
-#            evt.SetDocument(self.GetDocument())
-#        
-#        if modif != u"":
-#            evt.SetModif(modif)
-#            
-#        evt.SetDraw(draw)
-#        
-#        print "evt", evt
-#        self.GetEventHandler().ProcessEvent(evt)
         
     
     #########################################################################################################
@@ -5850,7 +5830,7 @@ class PanelPropriete_CI(PanelPropriete):
         abrevCI = ref.abrevCI
         if self.CI.GetReferentiel().CI_cible:
             self.panel_cible = Panel_Cible(self, self.CI)
-            self.sizer.Add(self.panel_cible, (0,0), (2,1), flag = wx.EXPAND)
+            self.sizer.Add(self.panel_cible, (0,0), (3,1), flag = wx.EXPAND)
             
             self.grid1 = wx.FlexGridSizer( 0, 3, 0, 0 )
             self.grid1.AddGrowableCol(1)
@@ -5868,6 +5848,7 @@ class PanelPropriete_CI(PanelPropriete):
                 self.grid1.Add( r, 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_LEFT|wx.LEFT|wx.RIGHT|wx.TOP, 2 )
                 self.grid1.Add( t, 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_LEFT|wx.LEFT|wx.RIGHT, 5 )#|wx.EXPAND
                 self.grid1.Add( p, 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_RIGHT|wx.LEFT|wx.RIGHT, 5 )
+            
             for radio, text, poids in self.group_ctrls:
                 self.Bind(wx.EVT_CHECKBOX, self.OnCheck, radio )
                 self.Bind(wx.EVT_TEXT, self.OnPoids, poids )
@@ -5911,7 +5892,7 @@ class PanelPropriete_CI(PanelPropriete):
                 self.grid1.Add( r, 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_LEFT|wx.LEFT|wx.RIGHT|wx.TOP, 2 )
                 self.grid1.Add( t, 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_LEFT|wx.LEFT|wx.RIGHT, 5 )
                 self.group_ctrls.append((r, t))
-            self.sizer.Add(self.grid1, (0,0), flag = wx.EXPAND)
+            self.sizer.Add(self.grid1, (0,1), flag = wx.EXPAND)
             for radio, text in self.group_ctrls:
                 self.Bind(wx.EVT_CHECKBOX, self.OnCheck, radio)
             
@@ -5920,13 +5901,16 @@ class PanelPropriete_CI(PanelPropriete):
         # Cas des CI personnalisés
         #
         self.elb = gizmos.EditableListBox(
-                    self, -1, ref.nomCI + u" personnalisés",
+                    self, -1, ref.nomCI + u" personnalisés", size = (-1, 90),
                     style=gizmos.EL_ALLOW_NEW | gizmos.EL_ALLOW_EDIT | gizmos.EL_ALLOW_DELETE)
-        self.sizer.Add(self.elb, (0,3), (2, 1), flag = wx.EXPAND)
+        self.sizer.Add(self.elb, (2,1), (1, 1), flag = wx.EXPAND)
+        
         self.elb.Bind(wx.EVT_LIST_END_LABEL_EDIT, self.OnChangeCI_perso)
         self.Bind(wx.EVT_LIST_DELETE_ITEM, self.OnChangeCI_perso)
 #        self.Bind(wx.EVT_LIST_INSERT_ITEM, self.OnChangeCI_perso)
 #        self.Bind(wx.EVT_LIST_BEGIN_LABEL_EDIT, self.OnChangeCI_perso)
+
+        self.SetupScrolling(scroll_x = False)
         self.sizer.Layout()
 
 

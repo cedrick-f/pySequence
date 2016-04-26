@@ -1,4 +1,4 @@
-<Referentiel B_CI_BO="False" B_CI_cible="False" B_domaines="False" S_AnneeDebut="Sup1" S_Code="STS_EE" S_Famille="STS" S_FichierLogo="" S_abrevCI="Th " S_nomCI="Thèmes" S_nomFonctions="Activités professionnelles" S_nomTaches="Compétences associées">
+<Referentiel B_CI_BO="False" B_CI_cible="False" B_domaines="False" S_AnneeDebut="Sup1" S_Code="STS_EE" S_Famille="STS" S_FichierLogo="" S_abrevCI="Th " S_nomCI="Thèmes" S_nomFonctions="Activités professionnelles" S_nomPb="Problématique(s)" S_nomTaches="Compétences associées">
   <l_BO_URL>
     <l_00 S_00="Programme" S_01="http://www.education.gouv.fr/pid25535/bulletin_officiel.html?cid_bo=82979" />
   </l_BO_URL>
@@ -1650,6 +1650,7 @@
   </d_effectifsSeance>
   <d_horsClasse />
   <l_listCompetences S_00="S" />
+  <l_listProblematiques />
   <l_listSavoirs S_00="S" S_01="M" S_02="P" />
   <l_listeDemarches />
   <l_listeEffectifs S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
