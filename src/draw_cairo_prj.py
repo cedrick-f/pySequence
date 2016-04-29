@@ -753,8 +753,8 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False):
     # Durées élève entre revues (uniquement en période "terminale")
     #
 #    tps = time.time()
-    posEpreuve = prj.GetProjetRef().periode[0] - 1
-    if prj.position == posEpreuve:
+    posEpreuve = prj.GetProjetRef().getPeriodeEval()
+    if posEpreuve is not None and prj.position == posEpreuve:
         y0 = posZTaches[1]
         y4 = y1+len(prj.eleves) * hRevue + 2*ecartTacheY
 #        y4 = y1+2*ecartTacheY + 0.015

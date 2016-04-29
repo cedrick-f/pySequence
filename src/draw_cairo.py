@@ -942,7 +942,7 @@ def DrawPeriodes(ctx, rect, pos = None, periodes = [[u"Année", 5]], projets = {
          >> Renvoie la liste des rectangles des positions
     """
 #    print "DrawPeriodes", pos
-#    print "   ", periodes, periodes_prj
+    
     ctx.set_line_width (0.001 * COEF)
     if not isinstance(pos, list):
         pos = [pos]
@@ -959,6 +959,7 @@ def DrawPeriodes(ctx, rect, pos = None, periodes = [[u"Année", 5]], projets = {
     
     # Toutes le périodes de projet
     periodes_prj = [p.periode for p in projets.values()]
+#    print "   ", periodes, periodes_prj
     
     # Les noms des projets par période
     noms_prj = {}
@@ -1045,8 +1046,9 @@ def DrawPeriodes(ctx, rect, pos = None, periodes = [[u"Année", 5]], projets = {
         
     # Liste des positions qui fusionnent avec leur position précédente
     lstGrp = []
-    for periode_prj in periodes_prj:  
-        lstGrp.extend(range(periode_prj[0]+1, periode_prj[-1]+1))
+    for periode_prj in periodes_prj:
+        if len(periode_prj) > 0:
+            lstGrp.extend(range(periode_prj[0]+1, periode_prj[-1]+1))
 #    print lstGrp
     
     for p in reversed(sorted(lstGrp)):

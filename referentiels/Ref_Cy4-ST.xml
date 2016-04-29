@@ -244,7 +244,7 @@
   </l_periodes>
   <l_positions_CI />
   <d_projets>
-    <Projet_PRJ B_tachesOnce="False" I_duree="0" I_maxEleves="5" I_minEleves="3" S_code="PRJ" S_ficheValid="" S_intitule="Projet de fin d'année">
+    <Projet_PRJ B_tachesOnce="False" I_duree="0" I_maxEleves="5" I_minEleves="3" S_code="PRJ" S_ficheValid="" S_intitule="Projet">
       <d_attributs>
         <l_SRC S_00="" S_01="" S_02="" S_03="" />
         <l_PAR S_00="" S_01="" S_02="" S_03="" />

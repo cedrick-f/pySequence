@@ -1505,7 +1505,7 @@ class Referentiel(XMLelem):
         prj = []
         for k, p in self.projets.items():
             prj.append(k)
-            pos.append(max(p.periode))
+            pos.append(max(p.periode, 0))
         return prj[pos.index(max(pos))]
 
 
@@ -1771,8 +1771,23 @@ class Projet(XMLelem):
         return self.posRevues[self.getNbrRevuesDefaut()]
     
     #############################################################################
+    def getNbrPeriodes(self):
+        if len(self.periode) >0 :
+            return self.GetProjetRef().periode[-1] - self.GetProjetRef().periode[0]
+        return 0
+        
+    #############################################################################
     def getPeriodeEval(self):
-        return self.periode[0]-1
+        if len(self.periode) > 0:
+            return self.periode[0]-1
+        return None
+    
+    #############################################################################
+    def getPeriodeDefaut(self):
+        p = self.getPeriodeEval()
+        if p is None:
+            return 0
+        return p
     
     #########################################################################
     def getIndicateur(self, codeIndic):

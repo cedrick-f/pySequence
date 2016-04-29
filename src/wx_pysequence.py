@@ -4055,7 +4055,7 @@ class PanelPropriete_Projet(PanelPropriete):
         self.titre = myStaticBox(pageGen, -1, u"")
         sb = wx.StaticBoxSizer(self.titre)
         textctrl = TextCtrl_Help(pageGen, u"")
-        sb.Add(textctrl, 1, flag = wx.EXPAND)
+        sb.Add(textctrl, 0, flag = wx.EXPAND)
         self.textctrl = textctrl
         pageGen.sizer.Add(sb, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.EXPAND, border = 2)
 #        pageGen.Bind(stc.EVT_STC_MODIFIED, self.EvtText)
@@ -4081,116 +4081,55 @@ class PanelPropriete_Projet(PanelPropriete):
         #
         # Année scolaire et Position dans l'année
         #
-        titre = myStaticBox(pageGen, -1, u"Année et Position")
+        titre = myStaticBox(pageGen, -1, u"Années et Position")
         sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
         
         self.annee = Variable(u"Année scolaire", lstVal = self.projet.annee, 
                                    typ = VAR_ENTIER_POS, bornes = [2012,2100])
         self.ctrlAnnee = VariableCtrl(pageGen, self.annee, coef = 1, signeEgal = False,
-                                      help = u"Année scolaire", sizeh = 40, 
+                                      help = u"Années scolaires", sizeh = 40, 
                                       unite = str(self.projet.annee+1),
                                       sliderAGauche = True)
         self.Bind(EVT_VAR_CTRL, self.EvtVariable, self.ctrlAnnee)
         sb.Add(self.ctrlAnnee)
         
         self.bmp = wx.StaticBitmap(pageGen, -1, self.getBitmapPeriode(250))
-        position = wx.Slider(pageGen, -1, self.projet.position, 0, 5, (30, 60), (190, -1), 
-            wx.SL_HORIZONTAL | wx.SL_TOP)#wx.SL_AUTOTICKS |
-        sb.Add(self.bmp)
-        sb.Add(position)
-        self.position = position
-        pageGen.sizer.Add(sb, (1,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.EXPAND|wx.LEFT, border = 2)
-        position.Bind(wx.EVT_SCROLL_CHANGED, self.onChanged)
         
+        
+        
+        ref = self.projet.GetReferentiel()
+        self.position = PositionCtrl(pageGen, self.projet.position, ref.periodes, ref.projets)#wx.SL_AUTOTICKS |
+        sb.Add(self.bmp)
+        sb.Add(self.position, flag = wx.EXPAND)
+        
+        pageGen.sizer.Add(sb, (1,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.EXPAND|wx.LEFT, border = 2)
+        self.Bind(wx.EVT_RADIOBUTTON, self.onChanged)
+#        self.position.Bind(wx.EVT_RADIOBUTTON, self.onChanged)
+
+
         #
         # Organisation (nombre et positions des revues)
         #
         self.panelOrga = PanelOrganisation(pageGen, self, self.projet)
         pageGen.sizer.Add(self.panelOrga, (0,2), (2,1), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.EXPAND|wx.LEFT, border = 2)
         pageGen.sizer.AddGrowableRow(0)
-
-        
-        
-        #
-        # La page "Enoncé général du besoin" ('ORI')
-        #
-#        self.pages['ORI'] = self.creerPageSimple(self.EvtText)
-#        self.pageBG = PanelPropriete(self.nb)
-#        self.pageBG.SetBackgroundColour(bg_color)
-#        self.nb.AddPage(self.pageBG, u"")
-#        self.bgctrl = wx.TextCtrl(self.pageBG, -1, u"", style=wx.TE_MULTILINE)
-#        self.pageBG.Bind(wx.EVT_TEXT, self.EvtText, self.bgctrl)
-#        self.pageBG.sizer.Add(self.bgctrl, (0,0), flag = wx.EXPAND)
-#        self.pageBG.sizer.AddGrowableCol(0)
-#        self.pageBG.sizer.AddGrowableRow(0)  
-#        self.pageBG.sizer.Layout()
-        
-        
-        #
-        # La page "Contraintes Imposées" (CCF)
-        #
-#        self.pages['CCF'] = self.creerPageSimple(self.EvtText)
-#        self.pageCont = PanelPropriete(self.nb)
-#        self.pageCont.SetBackgroundColour(bg_color)
-#        self.nb.AddPage(self.pageCont, u"")  
-#        self.contctrl = wx.TextCtrl(self.pageCont, -1, u"", style=wx.TE_MULTILINE)
-#        self.pageCont.Bind(wx.EVT_TEXT, self.EvtText, self.contctrl)
-#        self.pageCont.sizer.Add(self.contctrl, (0,0), flag = wx.EXPAND)
-#        self.pageCont.sizer.AddGrowableCol(0)
-#        self.pageCont.sizer.AddGrowableRow(0)  
-#        self.pageCont.sizer.Layout()
-        
-        
-        
-        
-        
-        #
-        # La page "Production attendue" ('OBJ')
-        #
-#        self.pages['OBJ'] = self.creerPageSimple(self.EvtText)
-#        self.pageProd = PanelPropriete(self.nb)
-#        self.pageProd.SetBackgroundColour(bg_color)
-#        self.nb.AddPage(self.pageProd, u"")
-#        self.prodctrl = wx.TextCtrl(self.pageProd, -1, u"", style=wx.TE_MULTILINE)
-#        self.pageProd.Bind(wx.EVT_TEXT, self.EvtText, self.prodctrl)
-#        self.pageProd.sizer.Add(self.prodctrl, (0,0), flag = wx.EXPAND)
-#        self.pageProd.sizer.AddGrowableCol(0)
-#        self.pageProd.sizer.AddGrowableRow(0)  
-#        self.pageProd.sizer.Layout()
-    
-        
+     
         
     #############################################################################            
     def getBitmapPeriode(self, larg):
-#        print "getBitmapPeriode"
-#        print "  ", self.projet.position
-#        print "  ", self.projet.GetReferentiel().periodes
-#        print "  ", self.projet.GetReferentiel().periode_prj
-#        w, h = 0.04*7 * draw_cairo.COEF, 0.04 * draw_cairo.COEF
-#        imagesurface = cairo.ImageSurface(cairo.FORMAT_ARGB32,  larg, int(h/w*larg))#cairo.FORMAT_ARGB32,cairo.FORMAT_RGB24
-#        ctx = cairo.Context(imagesurface)
-#        ctx.scale(larg/w, larg/w) 
-#        draw_cairo_prj.DrawPeriodes(ctx, (0,0,w,h), self.projet.position, 
-#                                    self.projet.GetReferentiel().periodes ,
-#                                    self.projet.GetReferentiel().projets)
-        
+#        print "getBitmapPeriode"       
         imagesurface = draw_cairo.getBitmapPeriode(larg, self.projet.position, 
                                                        self.projet.GetReferentiel().periodes ,
                                                        self.projet.GetReferentiel().projets, 
                                                        prop = 7)
-#        bmp = wx.lib.wxcairo.BitmapFromImageSurface(imagesurface)
-#        
-#        # On fait une copie sinon éa s'efface ...
-#        img = bmp.ConvertToImage()
-#        bmp = img.ConvertToBitmap()
-
         return getBitmapFromImageSurface(imagesurface)
          
     
     #############################################################################            
-    def onChanged(self, evt):
-        self.projet.SetPosition(evt.EventObject.GetValue())
-#        self.SetBitmapPosition()
+    def onChanged(self, event):
+#        print "onChanged", event.GetSelection(), event.GetEventObject()
+        self.projet.SetPosition(event.GetEventObject().GetId()-1)
+        self.SetBitmapPosition()
         
         
         
@@ -4462,7 +4401,7 @@ class PanelPropriete_Projet(PanelPropriete):
     #############################################################################            
     def MiseAJourPosition(self, sendEvt = False):
         self.bmp.SetBitmap(self.getBitmapPeriode(250))
-        self.position.SetRange(0, self.projet.GetLastPosition())
+#        self.position.SetRange(0, self.projet.GetLastPosition())
         self.position.SetValue(self.projet.position)
     
 
@@ -4513,12 +4452,55 @@ class PanelPropriete_Projet(PanelPropriete):
             self.sendEvent()
 
 
-    
-
-
     ######################################################################################  
     def Verrouiller(self, etat):
         self.position.Enable(etat)
+        
+
+
+
+class PositionCtrl(wx.Panel):
+    def __init__(self, parent, position, periodes, projets = {}):
+        wx.Panel.__init__(self, parent, -1)
+        self.sizer = wx.BoxSizer(wx.HORIZONTAL)
+        radio = []
+        periodes_prj = [p.periode for p in projets.values()]
+        
+#        print "periodes_prj", periodes_prj
+        num = 1
+        for i, (an, np) in enumerate(periodes):
+            p = 1
+            while p <= np:
+                if num == 0:
+                    s = wx.RB_GROUP
+                else:
+                    s = 0
+                
+                l = 1
+                for pr in periodes_prj:
+                    if num == pr[0]:
+                        l = pr[-1] - pr[0] +1
+                        break
+                    
+                radio.append(wx.RadioButton(self, num, "", style = s))
+                radio[-1].SetToolTipString(an)
+                self.sizer.Add(radio[-1], l, flag = wx.ALIGN_CENTER)
+                self.Bind(wx.EVT_RADIOBUTTON, self.OnRadio, radio[-1] )
+                num += l
+                p += l
+        self.radio = radio
+        self.SetSizer(self.sizer)
+        
+        
+    def OnRadio(self, event):
+        wx.PostEvent(self.Parent, event)
+        
+
+    def SetValue(self, pos):
+        self.radio[pos].SetValue(True)
+        
+        
+        
         
         
 ####################################################################################
@@ -5379,7 +5361,7 @@ class PanelPropriete_Classe(PanelPropriete):
 #                break
         
 #        self.classe.MiseAJourTypeEnseignement()
-        self.classe.doc.MiseAJourTypeEnseignement(ancienRef, ancienneFam)
+        self.classe.doc.MiseAJourTypeEnseignement()
         self.classe.doc.SetPosition(self.classe.doc.position)
 #        self.classe.doc.MiseAJourTypeEnseignement(fam != self.classe.familleEnseignement)
 #        self.MiseAJourType()

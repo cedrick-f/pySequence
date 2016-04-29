@@ -2233,8 +2233,8 @@ class Projet(BaseDoc, Objet_sequence):
 #        print "   ", self.GetReferentiel()
         self.code = self.GetReferentiel().getCodeProjetDefaut()
   
-        self.position = self.GetProjetRef().getPeriodeEval()
-        
+        self.position = self.GetProjetRef().getPeriodeDefaut()
+#        print "position0", self.position
         self.nbrParties = 1
         
         # Organisation des revues du projet
@@ -2672,7 +2672,7 @@ class Projet(BaseDoc, Objet_sequence):
         n = 0
         for p in self.GetReferentiel().periodes:
             n+=p[1]
-        n = n - (self.GetProjetRef().periode[-1] - self.GetProjetRef().periode[0])
+        n = n - (self.GetProjetRef().getNbrPeriodes())
         return n-1
     
     
@@ -3541,8 +3541,8 @@ class Projet(BaseDoc, Objet_sequence):
         
         self.code = self.GetReferentiel().getCodeProjetDefaut()
 
-        self.position = self.GetProjetRef().getPeriodeEval()
-       
+        self.position = self.GetProjetRef().getPeriodeDefaut()
+#        print "position", self.position
         self.SetCompetencesRevuesSoutenance()
         
         for e in self.eleves:

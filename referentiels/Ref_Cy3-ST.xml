@@ -229,7 +229,7 @@
   </l_periodes>
   <l_positions_CI />
   <d_projets>
-    <Projet_PRJ B_tachesOnce="False" I_duree="70" I_maxEleves="5" I_minEleves="3" S_code="PRJ" S_ficheValid="" S_intitule="Projet de fin d'année">
+    <Projet_PRJ B_tachesOnce="False" I_duree="0" I_maxEleves="5" I_minEleves="3" S_code="PRJ" S_ficheValid="" S_intitule="Projet">
       <d_attributs>
         <l_SRC S_00="" S_01="" S_02="" S_03="" />
         <l_PAR S_00="" S_01="" S_02="" S_03="" />
@@ -318,7 +318,7 @@
       <l_listTaches />
       <l_listeParties S_00="C" S_01="S" />
       <d_parties S_C="Conduite" S_S="Soutenance" />
-      <l_periode I_00="1" />
+      <l_periode />
       <d_phases>
         <l_Ana S_00="Appropriation" S_01="Appropriation" S_02="Ap" />
         <l_R2 S_00="Revue n°2" S_01="Revue de projet n°2" S_02="R2" />
