@@ -1266,10 +1266,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                     if self.file_menu.FindItemById(i) is not None:
                         self.file_menu.Enable(i, False)
                 
-            if fenDoc.typ == "prg":
-                fenDoc.Rafraichir()
-            elif fenDoc.typ == "seq":
-                fenDoc.Rafraichir()
+            fenDoc.Rafraichir()
             
         self.miseAJourUndo()
            

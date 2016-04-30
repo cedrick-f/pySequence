@@ -946,15 +946,7 @@ def DrawPeriodes(ctx, rect, pos = None, periodes = [[u"Année", 5]], projets = {
     ctx.set_line_width (0.001 * COEF)
     if not isinstance(pos, list):
         pos = [pos]
-#    DefinirCouleurs(sum([p for a, p in periodes]))
-#    if origine:
-#        x = 0
-#        y = 0
-#        wt = 0.04*7
-#        ht = 0.04
-#    else:
 
-    
     x, y, wt, ht = rect
     
     # Toutes le périodes de projet
@@ -1072,7 +1064,6 @@ def DrawPeriodes(ctx, rect, pos = None, periodes = [[u"Année", 5]], projets = {
             ctx.fill_preserve ()
             ctx.set_source_rgba(0, 0, 0, 1)
         else:
-#            print "****", IcoulPos
             ctx.set_source_rgba(*(IcoulPos[p]))
             ctx.fill_preserve ()
             ctx.set_source_rgba(*BcoulPos[p])

@@ -1995,6 +1995,10 @@ class Sequence(BaseDoc, Objet_sequence):
         self.arbre.Delete(self.branche)
         self.ConstruireArbre(self.arbre, self.arbre.GetRootItem())
         self.arbre.ExpandAll()
+        draw_cairo.DefinirCouleurs(self.GetNbrPeriodes(),
+                                   len(self.GetReferentiel()._listesCompetences_simple["S"]),
+                                   len(self.GetReferentiel().CentresInterets))
+        
         if self.arbre.GetSelection() is None:
             self.arbre.SelectItem(self.branche)
         
@@ -2172,7 +2176,8 @@ class Sequence(BaseDoc, Objet_sequence):
 
 
     #############################################################################
-    def MiseAJourTypeEnseignement(self, ancienRef = False, ancienneFam = False):
+    def MiseAJourTypeEnseignement(self):
+        print "MiseAJourTypeEnseignement Sequence", self.GetNbrPeriodes()
         self.app.SetTitre()
         self.classe.MiseAJourTypeEnseignement()
         self.CI.MiseAJourTypeEnseignement()
@@ -3537,6 +3542,13 @@ class Projet(BaseDoc, Objet_sequence):
 #                if dansRectangle(x, y, (rectPos,))[0]:
 #                    return i
 
+    ######################################################################################  
+    def Rafraichir(self):
+        draw_cairo.DefinirCouleurs(self.GetNbrPeriodes(),
+                                   len(self.GetReferentiel()._listesCompetences_simple["S"]),
+                                   len(self.eleves))
+        
+        
 
     #############################################################################
     def MiseAJourTypeEnseignement(self):#, changeFamille = False):
@@ -3884,6 +3896,9 @@ class Progression(BaseDoc, Objet_sequence):
         for e in self.sequences:
             e.ConstruireArbre(self.arbre, self.brancheSeq)
         self.arbre.ExpandAll()
+        draw_cairo.DefinirCouleurs(self.GetNbrPeriodes(),
+                                   len(self.GetReferentiel()._listesCompetences_simple["S"]),
+                                   len(self.GetReferentiel().CentresInterets))
         if self.arbre.GetSelection() is None:
             self.arbre.SelectItem(self.branche)
     
