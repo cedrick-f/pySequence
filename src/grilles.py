@@ -28,8 +28,7 @@
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 # Dossier contenant les grilles
-from constantes import toFileEncoding
-from util_path import TABLE_PATH
+from util_path import TABLE_PATH, toFileEncoding
 
 # Caractère utilisé pour cocher les cases :
 COCHE = u"X"

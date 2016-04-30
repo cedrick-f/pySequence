@@ -75,13 +75,14 @@ from undo import UndoStack
 from constantes import calculerEffectifs, \
                         strEffectifComplet, getElementFiltre, \
                         CHAR_POINT, COUL_PARTIE, getCoulPartie, COUL_ABS, \
-                        toFileEncoding, toSystemEncoding, FILE_ENCODING, SYSTEM_ENCODING, \
                         TOUTES_REVUES_EVAL, TOUTES_REVUES_EVAL_SOUT, TOUTES_REVUES_SOUT, TOUTES_REVUES, \
                         _S, _Rev, _R1, _R2, _R3, \
                         revCalculerEffectifs, getSingulierPluriel,\
                         COUL_OK, COUL_NON, COUL_BOF, COUL_BIEN, \
                         toList, COUL_COMPETENCES
 import constantes
+
+from util_path import toFileEncoding, toSystemEncoding, FILE_ENCODING, SYSTEM_ENCODING
 
 # Widgets partagés
 # des widgets wx évolués "faits maison"
@@ -1122,7 +1123,7 @@ class BaseDoc():
     ######################################################################################  
     def GetPath(self):
         if hasattr(self.app, 'fichierCourant'):
-            return os.path.split(toFileEncoding(self.app.fichierCourant))[0]
+            return os.path.split(self.app.fichierCourant)[0]
         else:
             return r""
     
@@ -1414,7 +1415,9 @@ class Sequence(BaseDoc, Objet_sequence):
             
     ######################################################################################  
     def SetPath(self, fichierCourant):
-        pathseq = toFileEncoding(os.path.split(fichierCourant)[0])
+        """  <fichierCourant> encodé en FileEncoding
+        """
+        pathseq = os.path.split(fichierCourant)[0]
         for sce in self.seances:
             sce.SetPathSeq(pathseq)    
         for sy in self.systemes:
@@ -4074,7 +4077,7 @@ class Progression(BaseDoc, Objet_sequence):
     def OuvrirSequence(self, event = None, item = None):
         l = self.arbre.GetItemPyData(item)
 #        self.GetApp().parent.ouvrir(toSystemEncoding(l.path))
-        self.GetApp().parent.ouvrirDoc(l.sequence, toSystemEncoding(l.path))
+        self.GetApp().parent.ouvrirDoc(l.sequence, l.path)
     
     
     ######################################################################################  
@@ -4083,7 +4086,10 @@ class Progression(BaseDoc, Objet_sequence):
         aSupprimer = []
         for lienSeq in self.sequences:
             if lienSeq.sequence is None:
-                if not os.path.isfile(lienSeq.path):
+                print "   ", lienSeq.path
+                path = os.path.join(self.GetPath(), lienSeq.path)
+                print "   ", path
+                if not os.path.isfile(path):
                     dlg = wx.MessageDialog(self.GetApp(), u"Le fichier Séquence suivant n'a pas été trouvé.\n\n"\
                                                  u"\t%s\n\n"
                                                  u"Voulez-vous le chercher manuellement ?\n" %toSystemEncoding(lienSeq.path),
@@ -4248,17 +4254,19 @@ class Progression(BaseDoc, Objet_sequence):
             
     ########################################################################################################
     def OuvrirFichierSeq(self, nomFichier):
-        
-
-        path2 = os.path.normpath(os.path.abspath(toSystemEncoding(nomFichier)))
+#        print "///", nomFichier
+        nomFichier = os.path.join(self.GetPath(), nomFichier)
+#        path2 = os.path.normpath(os.path.abspath(toSystemEncoding(nomFichier)))
         for seq in self.GetApp().parent.GetDocumentsOuverts('seq'):
-            path1 = os.path.normpath(os.path.abspath(seq[1]))
-            if path1 == path2:  # La séquence est déja ouverte
+#            print "   :", seq[1]
+#            path1 = os.path.normpath(os.path.abspath(seq[1]))
+            path1 = os.path.join(self.GetPath(), seq[1])
+            if path1 == nomFichier:  # La séquence est déja ouverte
                 sequence = seq[0]
                 classe = sequence.classe
                 return classe, sequence
         
-        
+#        print "///", nomFichier
         fichier = open(nomFichier,'r')
         classe = Classe(self.GetApp())
         sequence = Sequence(self.GetApp(), classe, ouverture = True)
@@ -4632,7 +4640,8 @@ class LienSequence(Objet_sequence):
         classe, sequence = self.GetDocument().OuvrirFichierSeq(self.path)
         if classe != None and classe.typeEnseignement == self.GetReferentiel().Code:
             self.sequence = sequence
-        
+
+
     ######################################################################################  
     def SignalerPb(self, pb):
         if hasattr(self, 'branche'):
@@ -4759,8 +4768,11 @@ class CentreInteret(Objet_sequence):
                     num = []
                     self.AddNum(num)
                 else:
-                    num = eval(code[2:])-1
-                    self.AddNum(num)
+                    try:
+                        num = eval(code[2:])-1
+                        self.AddNum(num)
+                    except:
+                        pass
         
         # Centres d'Intérêt personnalisés
         self.CI_perso = []

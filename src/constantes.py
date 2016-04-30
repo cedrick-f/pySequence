@@ -41,43 +41,6 @@ import time
 
 import sys
 
-#######################################################################################  
-#
-#    Tout ce qui concerne l'encodage des caractères
-#
-#######################################################################################  
-#print "defaultencoding", sys.getdefaultencoding()
-#print "stdin, stdout", sys.stdin.encoding,sys.stdout.encoding
-
-if hasattr(sys, 'setdefaultencoding'):
-    sys.setdefaultencoding('utf8')
-else:
-    reload(sys)  # Reload does the trick!
-    sys.setdefaultencoding('utf-8')
-
-FILE_ENCODING = sys.getfilesystemencoding() 
-SYSTEM_ENCODING = sys.getdefaultencoding()#sys.stdout.encoding#
-print "FILE_ENCODING", FILE_ENCODING
-print "SYSTEM_ENCODING", SYSTEM_ENCODING
-  
-######################################################################################  
-def toSystemEncoding(path): 
-#        try:
-    path = path.decode(FILE_ENCODING)
-    path = path.encode(SYSTEM_ENCODING)
-    return path  
-#        except:
-#            return self.path    
-    
-######################################################################################  
-def toFileEncoding(path):
-#    try:
-    path = path.decode(SYSTEM_ENCODING)
-    return path.encode(FILE_ENCODING)
-#    except:
-#        return path
-    
-    
 
 
 

@@ -1625,7 +1625,7 @@ class Referentiel(XMLelem):
             elif self.Code == "SSI":
                 self._bmp = constantes.images.SSI_ASR.GetBitmap()
             elif self.FichierLogo != r"":
-                self._bmp = wx.Bitmap(os.path.join(DOSSIER_REF, constantes.toFileEncoding(self.FichierLogo)))
+                self._bmp = wx.Bitmap(os.path.join(DOSSIER_REF, util_path.toFileEncoding(self.FichierLogo)))
 #                try:
 #                    self._bmp = wx.Bitmap(os.path.join(constantes.PATH, r"..", DOSSIER_REF, self.FichierLogo))
 #                except:
@@ -2429,7 +2429,7 @@ def chargerReferentiels():
     if not SAUVEGARDE:
         dicOk = {}
         for k, r in REFERENTIELS.items():
-            f = os.path.join(DOSSIER_REF, constantes.toFileEncoding(r"Ref_"+r.Enseignement[0]+r".xml"))
+            f = os.path.join(DOSSIER_REF, util_path.toFileEncoding(r"Ref_"+r.Enseignement[0]+r".xml"))
             dicOk[k] = False
             if os.path.exists(f):
 #                print ">>",f

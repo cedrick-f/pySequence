@@ -137,6 +137,59 @@ def samefile(path1, path2):
     return os.path.normcase(os.path.normpath(os.path.abspath(path1))) == \
            os.path.normcase(os.path.normpath(os.path.abspath(path2)))
 
+
+
+#######################################################################################  
+#
+#    Tout ce qui concerne l'encodage des caractères
+#
+#######################################################################################  
+#print "defaultencoding", sys.getdefaultencoding()
+#print "stdin, stdout", sys.stdin.encoding,sys.stdout.encoding
+
+if hasattr(sys, 'setdefaultencoding'):
+    sys.setdefaultencoding('utf8')
+else:
+    reload(sys)  # Reload does the trick!
+    sys.setdefaultencoding('utf-8')
+
+FILE_ENCODING = sys.getfilesystemencoding() 
+SYSTEM_ENCODING = sys.getdefaultencoding()#sys.stdout.encoding#
+print "FILE_ENCODING", FILE_ENCODING
+print "SYSTEM_ENCODING", SYSTEM_ENCODING
+  
+######################################################################################  
+def toSystemEncoding(path): 
+    return path
+#        try:
+    path = path.decode(FILE_ENCODING)
+    path = path.encode(SYSTEM_ENCODING)
+    return path  
+#        except:
+#            return self.path    
+    
+######################################################################################  
+def toFileEncoding(path):
+    return path
+#    try:
+    path = path.decode(SYSTEM_ENCODING)
+    return path.encode(FILE_ENCODING)
+#    except:
+#        return path
+    
+    
+######################################################################################  
+def nomCourt(nomFichier):
+    """ Renvoie le nom du fichier au format court (pour affichage = encodé en SystemEncoding)
+        <nomFichier> encodé en FileEncoding
+    """
+    return toSystemEncoding(os.path.splitext(os.path.split(nomFichier)[1])[0])
+
+
+
+
+
+
 print u"Dossier COMMUN pour les données :", APP_DATA_PATH
 print u"Dossier USER pour les données :", APP_DATA_PATH_USER
 
