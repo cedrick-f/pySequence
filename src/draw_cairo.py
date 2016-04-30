@@ -1072,6 +1072,7 @@ def DrawPeriodes(ctx, rect, pos = None, periodes = [[u"Année", 5]], projets = {
             ctx.fill_preserve ()
             ctx.set_source_rgba(0, 0, 0, 1)
         else:
+#            print "****", IcoulPos
             ctx.set_source_rgba(*(IcoulPos[p]))
             ctx.fill_preserve ()
             ctx.set_source_rgba(*BcoulPos[p])

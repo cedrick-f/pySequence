@@ -44,6 +44,7 @@ class STC_ortho(stc.StyledTextCtrl):
         self.spell = STCSpellCheck(self, language="fr_FR")
         self.SetMarginType(0, stc.STC_MARGIN_NUMBER)
         self.SetMarginWidth(1, 0)
+        self.SetMinSize((200, 30))
 #        self.SetScrollWidth(0)
 #        self.SetUseHorizontalScrollBar(False)
         self.SetWrapMode(stc.STC_WRAP_WORD)
@@ -57,7 +58,7 @@ class STC_ortho(stc.StyledTextCtrl):
         
         self.Bind(wx.EVT_CONTEXT_MENU, self.OnContextMenu)
         
-        self.Bind(wx.EVT_MENU, self._OnMenu)
+#        self.Bind(wx.EVT_MENU, self._OnMenu)
 
         
         self.Bind(wx.EVT_IDLE, self.OnIdle)
@@ -65,9 +66,9 @@ class STC_ortho(stc.StyledTextCtrl):
 
 
 
-    def _OnMenu(self,evt):
-        print 'OnMenu'
-        evt.Skip()
+#    def _OnMenu(self,evt):
+##        print 'OnMenu'
+#        evt.Skip()
 
     def OnContextMenu(self,evt):
         pos = evt.GetPosition()

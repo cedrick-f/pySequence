@@ -1411,6 +1411,10 @@ class FenetreDocument(aui.AuiMDIChildFrame):
 
 
     #########################################################################################################
+    def GetPanelProp(self):
+        return self.panelProp.panel
+
+    #########################################################################################################
     def sendEvent(self, doc = None, modif = u"", draw = True, obj = None):
 #        print "sendEvent", modif
         self.eventAttente = False
@@ -3823,35 +3827,40 @@ class PanelPropriete_Sequence(PanelPropriete):
         
         titre = myStaticBox(self, -1, u"Intitulé de la séquence")
         sb = wx.StaticBoxSizer(titre)
-        textctrl = wx.TextCtrl(self, -1, u"", style=wx.TE_MULTILINE)
+        textctrl = TextCtrl_Help(self, u"")
         sb.Add(textctrl, 1, flag = wx.EXPAND)
         self.textctrl = textctrl
         self.sizer.Add(sb, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.EXPAND, border = 2)
 #        self.sizer.Add(textctrl, (0,1), flag = wx.EXPAND)
         self.Bind(wx.EVT_TEXT, self.EvtText, textctrl)
 
+
         titre = myStaticBox(self, -1, u"Commentaires")
         sb = wx.StaticBoxSizer(titre)
-        commctrl = wx.TextCtrl(self, -1, u"", style=wx.TE_MULTILINE)
+        commctrl = TextCtrl_Help(self, u"")
         sb.Add(commctrl, 1, flag = wx.EXPAND)
         self.commctrl = commctrl
         self.sizer.Add(sb, (0,2), (2,1),  flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.EXPAND, border = 2)
 #        self.sizer.Add(commctrl, (1,1), flag = wx.EXPAND)
         self.Bind(wx.EVT_TEXT, self.EvtText, commctrl)
-        self.sizer.AddGrowableCol(2)
-        self.sizer.SetEmptyCellSize((0, 0))
+        
         
         titre = myStaticBox(self, -1, u"Position")
         sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
         self.bmp = wx.StaticBitmap(self, -1, self.getBitmapPeriode(250))
-        position = wx.Slider(self, -1, self.sequence.position, 0, self.sequence.GetReferentiel().getNbrPeriodes()-1, (30, 60), (250, -1), 
-            wx.SL_HORIZONTAL | wx.SL_AUTOTICKS |wx.SL_TOP 
-            )
-        sb.Add(self.bmp)
-        sb.Add(position)
-        self.position = position
-        self.sizer.Add(sb, (1,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT, border = 2)
-        position.Bind(wx.EVT_SCROLL_CHANGED, self.onChanged)
+        self.position = PositionCtrl(self, self.sequence.position, 
+                                     self.sequence.GetReferentiel().periodes)
+        self.Bind(wx.EVT_RADIOBUTTON, self.onChanged)
+        sb.Add(self.bmp, flag = wx.ALIGN_CENTER|wx.EXPAND)
+        sb.Add(self.position, flag = wx.ALIGN_CENTER|wx.EXPAND)
+        
+        self.sizer.Add(sb, (1,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.EXPAND, border = 2)
+        
+        
+        self.sizer.SetEmptyCellSize((0, 0))
+        self.sizer.AddGrowableRow(0)
+        self.sizer.AddGrowableCol(2)
+        
         
         self.CreerCBDomaine() # Permet de créer les Checkbox "Domaine"
         
@@ -3866,39 +3875,27 @@ class PanelPropriete_Sequence(PanelPropriete):
     
     #############################################################################            
     def getBitmapPeriode(self, larg):
-#        w, h = 0.04*5 * draw_cairo.COEF, 0.04 * draw_cairo.COEF
-#        imagesurface = cairo.ImageSurface(cairo.FORMAT_ARGB32,  larg, int(h/w*larg))#cairo.FORMAT_ARGB32,cairo.FORMAT_RGB24
-#        ctx = cairo.Context(imagesurface)
-#        ctx.scale(larg/w, larg/w) 
-#        draw_cairo_seq.DrawPeriodes(ctx, (0,0,w,h), self.sequence.position,
-#                                    self.sequence.GetReferentiel().periodes)
-
         imagesurface = draw_cairo_seq.getBitmapPeriode(larg, self.sequence.position,
                                                        self.sequence.GetReferentiel().periodes, 
                                                        prop = 5)
-#        bmp = wx.lib.wxcairo.BitmapFromImageSurface(imagesurface)
-#        
-#        # On fait une copie sinon ça s'efface ...
-#        img = bmp.ConvertToImage()
-#        bmp = img.ConvertToBitmap()
-        
+
         return getBitmapFromImageSurface(imagesurface)
          
     
     #############################################################################            
     def onChanged(self, evt):
-        self.sequence.SetPosition(evt.EventObject.GetValue())
+        self.sequence.SetPosition(evt.GetEventObject().GetId()-1)
         self.SetBitmapPosition()
+        self.sendEvent(modif = u"Changement de position de la séquence",
+                       obj = self.sequence)
         
         
     #############################################################################            
     def SetBitmapPosition(self, bougerSlider = None):
-        self.sendEvent(modif = u"Changement de position de la séquence",
-                       obj = self.sequence)
         self.bmp.SetBitmap(self.getBitmapPeriode(250))
-        if bougerSlider != None:
-            self.position.SetValue(bougerSlider)
-        
+        self.position.SetValue(self.sequence.position)
+
+
     #############################################################################            
     def EvtCheckBox(self, event):
         cb = event.GetEventObject()
@@ -3922,29 +3919,29 @@ class PanelPropriete_Sequence(PanelPropriete):
             if not self.eventAttente:
                 wx.CallLater(DELAY, self.sendEvent, modif = t)
                 self.eventAttente = True
-        
+
+
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
 #        print "Miseàjour"
         
         self.textctrl.ChangeValue(self.sequence.intitule)
         
-        self.position.SetMax(self.sequence.GetReferentiel().getNbrPeriodes()-1)
-        self.sequence.position = min(self.sequence.position, self.sequence.GetReferentiel().getNbrPeriodes()-1)
+        ref = self.sequence.GetReferentiel()
+#        self.position.SetMax(ref.getNbrPeriodes()-1)
+        self.sequence.position = min(self.sequence.position, ref.getNbrPeriodes()-1)
         self.position.SetValue(self.sequence.position)
         self.bmp.SetBitmap(self.sequence.getBitmapPeriode(250))
         
-        if self.sequence.GetReferentiel().domaines:
+        if ref.domaines:
             for cb, t in [(self.cbM, "M"), (self.cbE, "E"), (self.cbI, "I")]:
                 cb.SetValue(t in self.sequence.domaine)
-            
-        
+
         self.Layout()
-        
-        
         
         if sendEvt:
             self.sendEvent()
+
 
     #############################################################################            
     def CreerCBDomaine(self):
@@ -3973,7 +3970,11 @@ class PanelPropriete_Sequence(PanelPropriete):
     #############################################################################            
     def GetDocument(self):
         return self.sequence
-    
+
+
+
+
+
     
 ####################################################################################
 #
@@ -4055,7 +4056,7 @@ class PanelPropriete_Projet(PanelPropriete):
         self.titre = myStaticBox(pageGen, -1, u"")
         sb = wx.StaticBoxSizer(self.titre)
         textctrl = TextCtrl_Help(pageGen, u"")
-        sb.Add(textctrl, 0, flag = wx.EXPAND)
+        sb.Add(textctrl, 1, flag = wx.EXPAND)
         self.textctrl = textctrl
         pageGen.sizer.Add(sb, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.EXPAND, border = 2)
 #        pageGen.Bind(stc.EVT_STC_MODIFIED, self.EvtText)
@@ -4075,7 +4076,7 @@ class PanelPropriete_Projet(PanelPropriete):
                           flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.EXPAND, border = 2)
 #        pageGen.Bind(wx.EVT_TEXT, self.EvtText, self.commctrl)
         pageGen.Bind(stc.EVT_STC_MODIFIED, self.EvtText, self.commctrl)
-        pageGen.sizer.AddGrowableCol(1)
+        
         
 
         #
@@ -4096,7 +4097,6 @@ class PanelPropriete_Projet(PanelPropriete):
         self.bmp = wx.StaticBitmap(pageGen, -1, self.getBitmapPeriode(250))
         
         
-        
         ref = self.projet.GetReferentiel()
         self.position = PositionCtrl(pageGen, self.projet.position, ref.periodes, ref.projets)#wx.SL_AUTOTICKS |
         sb.Add(self.bmp)
@@ -4112,8 +4112,13 @@ class PanelPropriete_Projet(PanelPropriete):
         #
         self.panelOrga = PanelOrganisation(pageGen, self, self.projet)
         pageGen.sizer.Add(self.panelOrga, (0,2), (2,1), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.EXPAND|wx.LEFT, border = 2)
+        
+        
         pageGen.sizer.AddGrowableRow(0)
-     
+        pageGen.sizer.AddGrowableCol(1)
+    
+
+
         
     #############################################################################            
     def getBitmapPeriode(self, larg):
@@ -4130,16 +4135,15 @@ class PanelPropriete_Projet(PanelPropriete):
 #        print "onChanged", event.GetSelection(), event.GetEventObject()
         self.projet.SetPosition(event.GetEventObject().GetId()-1)
         self.SetBitmapPosition()
-        
+        self.sendEvent(modif = u"Changement de position du projet",
+                       obj = self.projet)
         
         
     #############################################################################            
     def SetBitmapPosition(self, bougerSlider = None):
-        self.sendEvent(modif = u"Changement de position du projet",
-                       obj = self.projet)
         self.bmp.SetBitmap(self.getBitmapPeriode(250))
-        if bougerSlider != None:
-            self.position.SetValue(bougerSlider)
+#        if bougerSlider != None:
+        self.position.SetValue(self.projet.position)
 
         
     #############################################################################            
@@ -4401,7 +4405,7 @@ class PanelPropriete_Projet(PanelPropriete):
     #############################################################################            
     def MiseAJourPosition(self, sendEvt = False):
         self.bmp.SetBitmap(self.getBitmapPeriode(250))
-#        self.position.SetRange(0, self.projet.GetLastPosition())
+##        self.position.SetRange(0, self.projet.GetLastPosition())
         self.position.SetValue(self.projet.position)
     
 
@@ -4478,13 +4482,15 @@ class PositionCtrl(wx.Panel):
                 
                 l = 1
                 for pr in periodes_prj:
-                    if num == pr[0]:
+                    if len(pr) > 0 and num == pr[0]:
                         l = pr[-1] - pr[0] +1
                         break
                     
                 radio.append(wx.RadioButton(self, num, "", style = s))
+                sizer = wx.BoxSizer(wx.VERTICAL)
+                sizer.Add(radio[-1], flag = wx.ALIGN_CENTER_HORIZONTAL)
                 radio[-1].SetToolTipString(an)
-                self.sizer.Add(radio[-1], l, flag = wx.ALIGN_CENTER)
+                self.sizer.Add(sizer, l, flag = wx.ALIGN_RIGHT|wx.EXPAND)
                 self.Bind(wx.EVT_RADIOBUTTON, self.OnRadio, radio[-1] )
                 num += l
                 p += l
@@ -8576,7 +8582,7 @@ class PanelPropriete_Personne(PanelPropriete):
             self.personne.SetNom(event.GetString())
         else:
             self.personne.SetPrenom(event.GetString())
-        self.personne.GetDocument().MiseAJourNomsEleves()
+#        self.personne.GetDocument().MiseAJourNomsEleves()
         
         modif = u"Modification du nom de la personne"
         if self.onUndoRedo():
@@ -8592,12 +8598,14 @@ class PanelPropriete_Personne(PanelPropriete):
         self.personne.SetDiscipline(get_key(constantes.NOM_DISCIPLINES, self.cbPhas.GetStringSelection()))
         self.Layout()
         self.sendEvent(modif = u"Modification de la discipline du professeur")
-        
+
+
     #############################################################################            
     def EvtCheckBox(self, event):
         self.personne.GetDocument().SetReferent(self.personne, event.IsChecked())
         self.sendEvent(modif = u"Changement de status (référent) du professeur")
-        
+
+
     #############################################################################            
     def MiseAJourTypeEnseignement(self):
         if hasattr(self.personne, 'grille'):
@@ -8691,10 +8699,10 @@ class PanelPropriete_Support(PanelPropriete):
         #
         box = myStaticBox(self, -1, u"Nom du support :")
         bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
-        textctrl = wx.TextCtrl(self, -1, u"")
+        textctrl = TextCtrl_Help(self, u"")
         self.textctrl = textctrl
         bsizer.Add(textctrl, flag = wx.EXPAND)
-        self.sizer.Add(bsizer, (0,0), flag = wx.EXPAND|wx.TOP|wx.BOTTOM|wx.LEFT, border = 3)
+        self.sizer.Add(bsizer, (0,0), flag = wx.EXPAND|wx.ALL, border = 2)
 
         
         #
@@ -8708,7 +8716,7 @@ class PanelPropriete_Support(PanelPropriete):
         self.btnlien.Hide()
         self.Bind(wx.EVT_BUTTON, self.OnClick, self.btnlien)
         bsizer.Add(self.btnlien)
-        self.sizer.Add(bsizer, (1,0), flag = wx.EXPAND|wx.LEFT, border = 3)
+        self.sizer.Add(bsizer, (1,0), flag = wx.EXPAND|wx.ALL, border = 2)
         
         
         #
@@ -8725,7 +8733,7 @@ class PanelPropriete_Support(PanelPropriete):
         bt.SetToolTipString(u"Cliquer ici pour sélectionner un fichier image")
         bsizer.Add(bt, flag = wx.EXPAND)
         self.Bind(wx.EVT_BUTTON, self.OnClick, bt)
-        self.sizer.Add(bsizer, (0,1), (2,1), flag = wx.EXPAND|wx.TOP|wx.BOTTOM|wx.LEFT, border = 3)#wx.ALIGN_CENTER_VERTICAL |
+        self.sizer.Add(bsizer, (0,1), (2,1), flag = wx.EXPAND|wx.ALL, border = 2)#wx.ALIGN_CENTER_VERTICAL |
 
         
         #
@@ -8739,13 +8747,13 @@ class PanelPropriete_Support(PanelPropriete):
 #        dbsizer.Add(bd, flag = wx.EXPAND)
         dbsizer.Add(tc, 1, flag = wx.EXPAND)
 #        self.Bind(wx.EVT_BUTTON, self.EvtClick, bd)
-        self.sizer.Add(dbsizer, (0,2), (2, 1), flag = wx.EXPAND|wx.TOP|wx.BOTTOM|wx.LEFT, border = 3)
+        self.sizer.Add(dbsizer, (0,2), (2, 1), flag = wx.EXPAND|wx.ALL, border = 2)
         self.rtc = tc
         # Pour indiquer qu'une édition est déja en cours ...
         self.edition = False  
         
         self.MiseAJour()
-        self.sizer.AddGrowableRow(1)
+        self.sizer.AddGrowableRow(0)
         self.sizer.AddGrowableCol(2)
         
         self.sizer.Layout()
@@ -8824,7 +8832,7 @@ class PanelPropriete_Support(PanelPropriete):
             _w, _h = w/r, h/r
 #            self.support.image = self.support.image.ConvertToImage().Scale(_w, _h).ConvertToBitmap()
             self.image.SetBitmap(self.support.image.ConvertToImage().Scale(_w, _h).ConvertToBitmap())
-        self.support.SetImage()
+#        self.support.SetImage()
         self.Layout()
         
         if sendEvt:
@@ -8835,7 +8843,7 @@ class PanelPropriete_Support(PanelPropriete):
     #############################################################################            
     def collerImage(self, sendEvt = False):
         self.support.image = self.x.GetBitmap()
-        self.SetImage(True)
+#        self.SetImage(True)
     
 
     #############################################################################            

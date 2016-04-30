@@ -953,7 +953,8 @@ class TextCtrl_Help(orthographe.STC_ortho, BaseGestionFenHelp):
         if evt.x > w-3 or evt.y < 2:
             self.bouton.Hide()
         evt.Skip()
-        
+
+
     def OnSize(self, evt):
         w, h = self.GetSize()
 #        print self.md

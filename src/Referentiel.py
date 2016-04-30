@@ -1463,6 +1463,8 @@ class Referentiel(XMLelem):
 
     #########################################################################
     def getNbrPeriodes(self):
+        """ Renvoie le nombre de périodes  du Référentiel.
+        """
         n = 0
         for p in self.periodes:
             n += p[1]
@@ -1693,9 +1695,9 @@ class Projet(XMLelem):
         self.code = code
         self.intitule = intitule
         self.duree = duree
-        self.periode = periode
+        self.periode = periode  # une liste [début, fin] ou [debut-fin] ou [] en unité "période" de Référentiel
         self.parties = {}       # Le dictionnaire des parties (code, nom)
-        self.listeParties = [] # La liste ordonnée des parties
+        self.listeParties = []  # La liste ordonnée des parties
         
         #
         # grilles d'évaluation de projet
@@ -1772,9 +1774,11 @@ class Projet(XMLelem):
     
     #############################################################################
     def getNbrPeriodes(self):
+        """ Renvoie la durée (en nombre de périodes "référentiel") du projet.
+        """
         if len(self.periode) >0 :
-            return self.GetProjetRef().periode[-1] - self.GetProjetRef().periode[0]
-        return 0
+            return self.periode[-1] - self.periode[0] + 1
+        return 1
         
     #############################################################################
     def getPeriodeEval(self):

@@ -1228,6 +1228,11 @@ class BaseDoc():
             if len(zone.param) > 3 and zone.param[:3] == "POS" :
                 if not self.classe.verrouillee:
                     self.SetPosition(int(zone.param[3]))
+#                    self.GetPanelPropriete().SetBitmapPosition()
+                    pp = self.GetApp().GetPanelProp()
+                    if hasattr(pp, "SetBitmapPosition"):
+                        pp.SetBitmapPosition()
+#                    self.GetApp().arbre.OnSelChanged()
                     self.GetApp().sendEvent(modif = u"Changement de position "+ self.article_obj + " " + self.nom_obj,
                                             obj = self)
             
@@ -2667,13 +2672,13 @@ class Projet(BaseDoc, Objet_sequence):
  
         return err
         
-    ######################################################################################  
-    def GetLastPosition(self):
-        n = 0
-        for p in self.GetReferentiel().periodes:
-            n+=p[1]
-        n = n - (self.GetProjetRef().getNbrPeriodes())
-        return n-1
+#    ######################################################################################  
+#    def GetLastPosition(self):
+#        n = 0
+#        for p in self.GetReferentiel().periodes:
+#            n+=p[1]
+#        n = n - (self.GetProjetRef().getNbrPeriodes())
+#        return n-1
     
     
     
@@ -2924,13 +2929,13 @@ class Projet(BaseDoc, Objet_sequence):
         return
 
         
-    ######################################################################################  
-    def MiseAJourNomsEleves(self):
-        """ Met à jour les noms des élèves après une modification
-            dans les panelPropriété des tâches
-        """
-        for t in self.taches:
-            t.MiseAJourNomsEleves()
+#    ######################################################################################  
+#    def MiseAJourNomsEleves(self):
+#        """ Met à jour les noms des élèves après une modification
+#            dans les panelPropriété des tâches
+#        """
+#        for t in self.taches:
+#            t.MiseAJourNomsEleves()
         
         
     ######################################################################################  
@@ -7534,7 +7539,7 @@ class Personne(Objet_sequence):
     ######################################################################################  
     def SetImage(self):
         self.SetTip()
-        return
+#        return
 #        self.tip.SetImage(self.avatar, self.tip_avatar)
 #        self.SetTip()
         
