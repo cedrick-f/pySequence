@@ -44,7 +44,7 @@ class STC_ortho(stc.StyledTextCtrl):
         self.spell = STCSpellCheck(self, language="fr_FR")
         self.SetMarginType(0, stc.STC_MARGIN_NUMBER)
         self.SetMarginWidth(1, 0)
-        self.SetMinSize((200, 30))
+        self.SetMinSize((200, 22))
 #        self.SetScrollWidth(0)
 #        self.SetUseHorizontalScrollBar(False)
         self.SetWrapMode(stc.STC_WRAP_WORD)

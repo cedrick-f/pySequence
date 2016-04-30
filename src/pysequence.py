@@ -1189,7 +1189,20 @@ class BaseDoc():
 #                print "   xxx", z
                 return z
         return
-    
+
+
+    ######################################################################################  
+    def GererDependants(self, obj, t):
+        """ Gestion des documents qui dépendent du présent document
+        """
+        print "GererDependants", self.GetApp(), obj.GetApp()
+        obj.GetApp().sendEvent(modif = t, obj = self)
+        if self.GetApp() == obj.GetApp(): # la séquence n'est pas ouverte dans une autre fenêtre
+            self.dependants.append(obj)
+        else:
+            self.GetApp().sendEvent(modif = t, obj = self)
+        
+        
     ######################################################################################  
     def Click(self, zone, x, y):
         print "Click", zone
@@ -1207,21 +1220,14 @@ class BaseDoc():
                     ref = self.GetReferentiel()
                     zone.obj.CI.ToogleNum(int(zone.param[2]))
                     t = u"Modification des "+ ref.nomCI + " de la Séquence"
-                    zone.obj.GetApp().sendEvent(modif = t, obj = self)
-                    if self.GetApp() == zone.obj.GetApp(): # la séquence est n'est pas ouverte dans une autre fenêtre
-                        self.dependants.append(zone.obj)
-                    else:
-                        self.GetApp().sendEvent(modif = t, obj = self)
+                    
+                    self.GererDependants(zone.obj, t)
                 
                 elif isinstance(zone.obj, Sequence) and len(zone.param) > 3 and zone.param[:3] == "CMP":
                     ref = self.GetReferentiel()
                     zone.obj.obj['C'].ToogleCode("S"+zone.param[3:])
                     t = u"Modification des "+ ref.dicoCompetences["S"].nomGenerique + " visées par la Séquence"
-                    zone.obj.GetApp().sendEvent(modif = t, obj = self)
-                    if self.GetApp() == zone.obj.GetApp(): # la séquence est n'est pas ouverte dans une autre fenêtre
-                        self.dependants.append(zone.obj)
-                    else:
-                        self.GetApp().sendEvent(modif = t, obj = self)
+                    self.GererDependants(zone.obj, t)
                         
         
         elif zone.param is not None:
@@ -3889,6 +3895,7 @@ class Progression(BaseDoc, Objet_sequence):
         for e in self.sequences:
             e.ConstruireArbre(arbre, self.brancheSeq) 
     
+    
     ######################################################################################  
     def Rafraichir(self):
         self.OrdonnerSequences()
@@ -3901,7 +3908,8 @@ class Progression(BaseDoc, Objet_sequence):
                                    len(self.GetReferentiel().CentresInterets))
         if self.arbre.GetSelection() is None:
             self.arbre.SelectItem(self.branche)
-    
+
+
     ######################################################################################  
     def getBranche(self):
         """ Renvoie la branche XML de la séquence pour enregistrement
@@ -4066,8 +4074,7 @@ class Progression(BaseDoc, Objet_sequence):
     def OuvrirSequence(self, event = None, item = None):
         l = self.arbre.GetItemPyData(item)
 #        self.GetApp().parent.ouvrir(toSystemEncoding(l.path))
-        self.GetApp().parent.ouvrirDoc(l.sequence)
-
+        self.GetApp().parent.ouvrirDoc(l.sequence, toSystemEncoding(l.path))
     
     
     ######################################################################################  
@@ -4593,7 +4600,9 @@ class LienSequence(Objet_sequence):
 #        if hasattr(self, 'panelPropriete'):
 #            self.panelPropriete.MiseAJour()
 
-    
+    ######################################################################################  
+    def MiseAJourArbre(self):
+        self.arbre.SetItemText(self.branche, self.sequence.intitule)
         
         
     ######################################################################################  
@@ -4602,13 +4611,12 @@ class LienSequence(Objet_sequence):
             return
 #        print "ConstruireArbre"
         self.arbre = arbre
-        code = self.sequence.intitule
             
         coul = draw_cairo.BcoulPos[self.sequence.position]
         coul = [int(200*c) for c in coul]
 #        self.codeBranche = CodeBranche(self.arbre, code)
 #        self.codeBranche.SetForegroundColour(coul)
-        self.branche = arbre.AppendItem(branche, code, #wnd = self.codeBranche, 
+        self.branche = arbre.AppendItem(branche, self.sequence.intitule, #wnd = self.codeBranche, 
                                         data = self,
                                         image = self.arbre.images["Seq"])
         self.arbre.SetItemTextColour(self.branche, coul)

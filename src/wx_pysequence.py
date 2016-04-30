@@ -1036,13 +1036,13 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
 
 
     ###############################################################################################
-    def ouvrirDoc(self, doc):
+    def ouvrirDoc(self, doc, nomFichier):
         print "ouvrirDoc", doc
         child = FenetreSequence(self, sequence = doc)
         
         child.SetIcon(constantes.dicimages["Seq"].GetIcon())
         child.finaliserOuverture()
-        child.SetTitre()
+        child.definirNomFichierCourant(nomFichier)
         wx.CallAfter(child.Activate)
     
     
@@ -1269,8 +1269,8 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             fenDoc.Rafraichir()
             
         self.miseAJourUndo()
-           
-        
+
+
     ###############################################################################################
     def OnKey(self, evt):
         keycode = evt.GetKeyCode()
@@ -1279,7 +1279,6 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             
         elif evt.ControlDown() and keycode == 90: # Ctrl-Z
             self.commandeUndo(evt)
-
 
         elif evt.ControlDown() and keycode == 89: # Ctrl-Y
             self.commandeRedo(evt)
@@ -1999,7 +1998,6 @@ class FenetreSequence(FenetreDocument):
         
         self.sequence.VerifPb()
 
-
         self.sequence.Verrouiller()
 
         
@@ -2027,6 +2025,7 @@ class FenetreSequence(FenetreDocument):
         self.sequence.VerifPb()
         self.sequence.MiseAJourTypeEnseignement()
         self.sequence.Verrouiller()
+        self.arbre.ExpandAll()
         self.arbre.SelectItem(self.classe.branche)
         
         
@@ -3829,7 +3828,8 @@ class PanelPropriete_Sequence(PanelPropriete):
         self.textctrl = textctrl
         self.sizer.Add(sb, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.EXPAND, border = 2)
 #        self.sizer.Add(textctrl, (0,1), flag = wx.EXPAND)
-        self.Bind(wx.EVT_TEXT, self.EvtText, textctrl)
+#        self.Bind(wx.EVT_TEXT, self.EvtText, textctrl)
+        self.Bind(stc.EVT_STC_MODIFIED, self.EvtText, self.textctrl)
 
 
         titre = myStaticBox(self, -1, u"Commentaires")
@@ -3839,7 +3839,8 @@ class PanelPropriete_Sequence(PanelPropriete):
         self.commctrl = commctrl
         self.sizer.Add(sb, (0,2), (2,1),  flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.EXPAND, border = 2)
 #        self.sizer.Add(commctrl, (1,1), flag = wx.EXPAND)
-        self.Bind(wx.EVT_TEXT, self.EvtText, commctrl)
+#        self.Bind(wx.EVT_TEXT, self.EvtText, commctrl)
+        self.Bind(stc.EVT_STC_MODIFIED, self.EvtText, commctrl)
         
         
         titre = myStaticBox(self, -1, u"Position")
@@ -3904,11 +3905,11 @@ class PanelPropriete_Sequence(PanelPropriete):
     #############################################################################            
     def EvtText(self, event):
         if event.GetEventObject() == self.textctrl:
-            self.sequence.SetText(event.GetString())
-            t = u"Modification de l'intitulé de la séquence"
+            self.sequence.SetText(self.textctr.GetText())
+            t = u"Modification de l'intitulé de la Séquence"
         else:
-            self.sequence.SetCommentaire(event.GetString())
-            t = u"Modification du commentaire de la séquence"
+            self.sequence.SetCommentaire(self.commctrl.GetText())
+            t = u"Modification du commentaire de la Séquence"
         
         if self.onUndoRedo():
             self.sendEvent(modif = t)
@@ -3922,7 +3923,9 @@ class PanelPropriete_Sequence(PanelPropriete):
     def MiseAJour(self, sendEvt = False):
 #        print "Miseàjour"
         
-        self.textctrl.ChangeValue(self.sequence.intitule)
+        self.textctrl.SetValue(self.sequence.intitule, False)
+        self.commctrl.SetValue(self.sequence.commentaires, False)
+#        self.textctrl.ChangeValue(self.sequence.intitule)
         
         ref = self.sequence.GetReferentiel()
 #        self.position.SetMax(ref.getNbrPeriodes()-1)
@@ -6236,8 +6239,10 @@ class PanelPropriete_LienSequence(PanelPropriete):
         #
         sbi = myStaticBox(self, -1, u"Intitulé de la séquence", size = (200,-1))
         sbsi = wx.StaticBoxSizer(sbi,wx.HORIZONTAL)
-        self.intit = wx.StaticText(self, -1, u"")
-        sbsi.Add(self.intit)
+        self.intit = TextCtrl_Help(self, u"")
+        sbsi.Add(self.intit,1, flag = wx.EXPAND)
+#        self.Bind(wx.EVT_TEXT, self.EvtText, self.intit)
+        self.Bind(stc.EVT_STC_MODIFIED, self.EvtText, self.intit)
         
         #
         # Sélection du fichier de séquence
@@ -6251,9 +6256,10 @@ class PanelPropriete_LienSequence(PanelPropriete):
         self.Bind(wx.EVT_BUTTON, self.OnClick, bt2)
         self.Bind(wx.EVT_TEXT_ENTER, self.OnText, self.texte)
         self.texte.Bind(wx.EVT_KILL_FOCUS, self.OnLoseFocus)
-        sbs0.Add(self.texte)#, flag = wx.EXPAND)
+        sbs0.Add(self.texte, flag = wx.ALIGN_CENTER)
         sbs0.Add(bt2)
-        
+
+
         #
         # Position de la séquence
         #
@@ -6308,11 +6314,28 @@ class PanelPropriete_LienSequence(PanelPropriete):
         
     #############################################################################            
     def OnText(self, event):
+        """ Modification du nom du fichier du LienSequence
+        """
         self.lien.path = event.GetString()
         self.MiseAJour()
         event.Skip()     
 
-                            
+    #############################################################################            
+    def EvtText(self, event):
+        print "EvtText"
+        if event.GetEventObject() == self.intit:
+            self.sequence.SetText(self.intit.GetText())
+            self.lien.MiseAJourArbre()
+            t = u"Modification de l'intitulé de la séquence"
+            self.GetDocument().GererDependants(self.sequence, t)
+            
+        if self.onUndoRedo():
+            self.sendEvent(modif = t)
+        else:
+            if not self.eventAttente:
+                wx.CallLater(DELAY, self.sendEvent, modif = t)
+                self.eventAttente = True
+                             
     #############################################################################            
     def OnLoseFocus(self, event):
         return  
@@ -6324,9 +6347,9 @@ class PanelPropriete_LienSequence(PanelPropriete):
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
 #        print "MiseAJour PanelPropriete_LienSequence", self.lien
-        
-        
-        self.intit.SetLabel(self.sequence.intitule)
+
+#        self.intit.SetLabel(self.sequence.intitule)
+        self.intit.SetValue(self.sequence.intitule, False)
         
         self.texte.SetValue(toSystemEncoding(self.lien.path))
 

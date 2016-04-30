@@ -980,8 +980,7 @@ def DrawBoutonCompetence(ctx, prg, seq, listComp, l, y, h = None):
 
     
     if h == None: # Toujours sauf pour les revues
-        r = wColComp/3
-        h = 2*r
+        h = 1.5*wColComp
     
     ctx.set_line_width(0.0004 * COEF)
     listComp = [k[1:] for k in listComp]
