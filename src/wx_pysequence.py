@@ -57,6 +57,8 @@ import  wx.gizmos   as  gizmos
 import version
 # Module de gestion des dossiers, de l'installation et de l'enregistrement
 import util_path
+from util_path import toFileEncoding, toSystemEncoding, FILE_ENCODING, SYSTEM_ENCODING, nomCourt
+
 # Module de gestion des instances d'application
 import app
 
@@ -215,7 +217,6 @@ except ImportError: # if it's not there locally, try the wxPython lib.
 from constantes import calculerEffectifs, \
                         strEffectifComplet, getElementFiltre, \
                         CHAR_POINT, COUL_PARTIE, getCoulPartie, COUL_ABS, \
-                        toFileEncoding, toSystemEncoding, FILE_ENCODING, SYSTEM_ENCODING, \
                         TOUTES_REVUES_EVAL, TOUTES_REVUES_EVAL_SOUT, TOUTES_REVUES_SOUT, TOUTES_REVUES, \
                         _S, _Rev, _R1, _R2, _R3, \
                         revCalculerEffectifs, getSingulierPluriel,\
@@ -917,6 +918,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     #############################################################################
     def DefinirOptions(self, options):
         for f in reversed(options.optFichiers["FichiersRecents"]):
+            print "Ajout3", f
             try:
                 self.filehistory.AddFileToHistory(toFileEncoding(f))
             except:
@@ -1037,6 +1039,9 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
 
     ###############################################################################################
     def ouvrirDoc(self, doc, nomFichier):
+        """ Ouvre un document à partir de sa version "pySequence"
+            <nomFichier> encodé en FileEncoding
+        """
         print "ouvrirDoc", doc
         child = FenetreSequence(self, sequence = doc)
         
@@ -1070,7 +1075,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                             path1 = os.path.normpath(os.path.abspath(lienSeq.path))
                             if path1 == path2:  # La séquence fait partie d'une progression ouverte
                                 print "Dans prog :", path2
-                                self.ouvrirDoc(lienSeq.sequence)
+                                self.ouvrirDoc(lienSeq.sequence, nomFichier)
                                 wx.EndBusyCursor()
                                 self.Thaw()
                                 return lienSeq.sequence
@@ -1094,6 +1099,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                     doc = child.ouvrir(nomFichier, reparer = reparer)
             
             if not reparer:
+#                print "Ajout1", nomFichier
                 self.filehistory.AddFileToHistory(nomFichier)
             
         wx.EndBusyCursor()
@@ -1121,8 +1127,9 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             if dlg.ShowModal() == wx.ID_OK:
                 paths = dlg.GetPaths()
                 nomFichier = paths[0]
+
             else:
-                nomFichier = ''
+                nomFichier = r''
             
             dlg.Destroy()
         
@@ -1134,10 +1141,12 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         # get the file based on the menu ID
         fileNum = evt.GetId() - wx.ID_FILE1
         path = self.filehistory.GetHistoryFile(fileNum)
-#        print "You selected %s\n" % path
+        print "You selected %s\n" % path
         if os.path.isfile(path):
             # add it back to the history so it will be moved up the list
+#            print "Ajout2", path
             self.filehistory.AddFileToHistory(path)
+            
             self.commandeOuvrir(nomFichier = path)
 
 
@@ -1308,6 +1317,8 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     
     #############################################################################
     def GetNomsFichiers(self):
+        """ Renvoie la liste des noms de fichier Séquence ouverts
+        """
         lst = []
         for m in self.GetChildren():
             if isinstance(m, aui.AuiMDIClientWindow):
@@ -1502,7 +1513,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
 
         self.mgr.Update()
 
-        self.definirNomFichierCourant('')
+        self.definirNomFichierCourant(r'')
     
         sizer = wx.BoxSizer()
         sizer.Add(self.pnl, 1, wx.EXPAND)
@@ -1613,26 +1624,26 @@ class FenetreDocument(aui.AuiMDIChildFrame):
     #############################################################################
     def commandeEnregistrerSous(self, event = None):
         self.dialogEnregistrer()
-    
+
+
     #############################################################################
     def SetTitre(self, modif = None):
 #        print "SetTitre", modif
-        t = self.classe.typeEnseignement
-
-        t = REFERENTIELS[t].Enseignement[0]
+        t = REFERENTIELS[self.classe.typeEnseignement].Enseignement[0]
 
         if self.fichierCourant == '':
             t += u" - "+constantes.TITRE_DEFAUT[self.typ]
         else:
-            t += u" - "+os.path.splitext(os.path.basename(self.fichierCourant))[0]
+            t += u" - "+os.path.splitext(os.path.basename(toSystemEncoding(self.fichierCourant)))[0]
         
         if modif is None:
             modif = self.fichierCourantModifie
             
         if modif :
             t += " **"
-        self.SetTitle(t)#toSystemEncoding(t))
-        
+        self.SetTitle(t)
+
+
     #############################################################################
     def exporterFichePDF(self, nomFichier, pourDossierValidation = False):
         try:
@@ -1660,7 +1671,8 @@ class FenetreDocument(aui.AuiMDIChildFrame):
                      "svg (.svg)|*.svg"
 #                     "swf (.swf)|*.swf"
         dlg = wx.FileDialog(
-            self, message=u"Enregistrer la fiche sous ...", defaultDir=toSystemEncoding(self.DossierSauvegarde) , 
+            self, message=u"Enregistrer la fiche sous ...", 
+            defaultDir=toSystemEncoding(self.DossierSauvegarde) , 
             defaultFile = os.path.splitext(self.fichierCourant)[0]+".pdf", 
             wildcard=mesFormats, style=wx.SAVE|wx.OVERWRITE_PROMPT|wx.CHANGE_DIR
             )
@@ -1805,7 +1817,9 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         f.close
 
     #############################################################################
-    def definirNomFichierCourant(self, nomFichier = ''):
+    def definirNomFichierCourant(self, nomFichier = r''):
+        """ <nomFichier> encodé en FileEncoding
+        """
         self.fichierCourant = nomFichier
 #        self.projet.SetPath(nomFichier)
         self.SetTitre()
@@ -1940,6 +1954,8 @@ class FenetreSequence(FenetreDocument):
         
     ###############################################################################################
     def enregistrer(self, nomFichier):
+        """ <nomFichier> encodé en FileEncoding
+        """
         wx.BeginBusyCursor()
         
         self.sequence.enregistrer(nomFichier)
@@ -2031,6 +2047,8 @@ class FenetreSequence(FenetreDocument):
         
     ###############################################################################################
     def ouvrir(self, nomFichier, redessiner = True, reparer = False):
+        """ <nomFichier> encodé en FileEncoding
+        """
 #        print "ouvrir sequence", nomFichier
         if not os.path.isfile(nomFichier):
             return
@@ -2065,9 +2083,8 @@ class FenetreSequence(FenetreDocument):
             try:
                 ouvre()
             except:
-                nomCourt = os.path.splitext(os.path.split(nomFichier)[1])[0]
                 messageErreur(self, u"Erreur d'ouverture",
-                              u"La séquence pédagogique\n    %s\n n'a pas pu étre ouverte !" %nomCourt)
+                              u"La séquence pédagogique\n    %s\n n'a pas pu étre ouverte !" %nomCourt(nomFichier))
                 fichier.close()
                 self.Close()
                 return
@@ -2088,7 +2105,9 @@ class FenetreSequence(FenetreDocument):
         
 
     #############################################################################
-    def definirNomFichierCourant(self, nomFichier = ''):
+    def definirNomFichierCourant(self, nomFichier = r''):
+        """ <nomFichier> encodé en FileEncoding
+        """
         self.fichierCourant = nomFichier
         self.sequence.SetPath(nomFichier)
         self.SetTitre()
@@ -2232,6 +2251,8 @@ class FenetreProjet(FenetreDocument):
         
     ###############################################################################################
     def enregistrer(self, nomFichier):
+        """ <nomFichier> encodé en FileEncoding
+        """
         wx.BeginBusyCursor()
         
         self.projet.enregistrer(nomFichier)
@@ -2282,6 +2303,8 @@ class FenetreProjet(FenetreDocument):
         
     ###############################################################################################
     def ouvrir(self, nomFichier, redessiner = True, reparer = False):
+        """ <nomFichier> encodé en FileEncoding
+        """
         print "Ouverture projet", nomFichier
         tps1 = time.clock()
         Ok = True
@@ -2289,7 +2312,7 @@ class FenetreProjet(FenetreDocument):
         nbr_etapes = 10
         
         # Pour le suivi de l'ouverture
-        nomCourt = os.path.splitext(os.path.split(nomFichier)[1])[0]
+        nomCourt = toSystemEncoding(os.path.splitext(os.path.split(nomFichier)[1])[0])
         
         message = nomCourt+"\n"
         dlg = myProgressDialog(u"Ouverture d'un projet",
@@ -2315,7 +2338,7 @@ class FenetreProjet(FenetreDocument):
                 messageErreur(wx.GetTopLevelParent(self), u"Fichier corrompu", 
                                   u"Le fichier suivant est corrompu !!\n\n"\
                                   u"%s\n\n" \
-                                  u"Il est probablement tronqué suite à un echec d'enregistrement." %nomFichier)
+                                  u"Il est probablement tronqué suite à un echec d'enregistrement." %toSystemEncoding(nomFichier))
                 Annuler = True
                 return None, u"", 0, False, Annuler
              
@@ -2938,6 +2961,8 @@ Your browser does not support the HTML5 canvas tag.
         
     ###############################################################################################
     def enregistrer(self, nomFichier):
+        """ <nomFichier> encodé en FileEncoding
+        """
         wx.BeginBusyCursor()
         
         self.progression.enregistrer(nomFichier)
@@ -2950,6 +2975,8 @@ Your browser does not support the HTML5 canvas tag.
         
     ###############################################################################################
     def ouvrir(self, nomFichier, redessiner = True, reparer = False):
+        """ <nomFichier> encodé en FileEncoding
+        """
         print "Ouverture progression", nomFichier
         tps1 = time.clock()
         Ok = True
@@ -2957,9 +2984,7 @@ Your browser does not support the HTML5 canvas tag.
         nbr_etapes = 6
         
         # Pour le suivi de l'ouverture
-        nomCourt = os.path.splitext(os.path.split(nomFichier)[1])[0]
-        
-        message = nomCourt+"\n"
+        message = nomCourt(nomFichier)+"\n"
         dlg = myProgressDialog(u"Ouverture d'une progression",
                                    message,
                                    nbr_etapes,
@@ -2984,7 +3009,7 @@ Your browser does not support the HTML5 canvas tag.
                 messageErreur(wx.GetTopLevelParent(self), u"Fichier corrompu", 
                                   u"Le fichier suivant est corrompu !!\n\n"\
                                   u"%s\n\n" \
-                                  u"Il est probablement tronqué suite à un echec d'enregistrement." %nomFichier)
+                                  u"Il est probablement tronqué suite à un echec d'enregistrement." %toSystemEncoding(nomFichier))
                 Annuler = True
                 return None, u"", 0, False, Annuler
              
@@ -6322,7 +6347,6 @@ class PanelPropriete_LienSequence(PanelPropriete):
 
     #############################################################################            
     def EvtText(self, event):
-        print "EvtText"
         if event.GetEventObject() == self.intit:
             self.sequence.SetText(self.intit.GetText())
             self.lien.MiseAJourArbre()
@@ -6339,14 +6363,14 @@ class PanelPropriete_LienSequence(PanelPropriete):
     #############################################################################            
     def OnLoseFocus(self, event):
         return  
-        self.lien.path = toFileEncoding(self.texte.GetValue())
-        self.MiseAJour()
-        event.Skip()   
+#        self.lien.path = toFileEncoding(self.texte.GetValue())
+#        self.MiseAJour()
+#        event.Skip()   
 
                  
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
-#        print "MiseAJour PanelPropriete_LienSequence", self.lien
+        print "MiseAJour PanelPropriete_LienSequence", self.lien
 
 #        self.intit.SetLabel(self.sequence.intitule)
         self.intit.SetValue(self.sequence.intitule, False)
@@ -6357,6 +6381,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
 #        try:
         if os.path.isfile(self.lien.path):
             fichier = open(self.lien.path,'r')
+            
         else:
             abspath = os.path.join(self.GetDocument().GetPath(), self.lien.path)
             if os.path.isfile(abspath):
@@ -6368,6 +6393,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
         
         self.texte.SetBackgroundColour("white")
         self.texte.SetToolTipString(u"Lien vers un fichier Séquence")
+        
 #        except:
 #            dlg = wx.MessageDialog(self, u"Le fichier %s\nn'a pas pu étre trouvé !" %self.lien.path,
 #                               u"Erreur d'ouverture du fichier",
@@ -6379,6 +6405,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
 #            self.texte.SetBackgroundColour("pink")
 #            self.texte.SetToolTipString(u"Le lien vers le fichier Séquence est rompu !")
 #            return False
+#        
         
 #        classe = Classe(self.lien.parent.app.parent)
         
