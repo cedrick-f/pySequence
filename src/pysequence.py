@@ -103,8 +103,8 @@ import xml.etree.ElementTree as ET
 Element = type(ET.Element(None))
 
 from wx_pysequence import CodeBranche, PopupInfo, getIconeFileSave, getIconeCopy, \
-                            getBitmapFromImageSurface, getFont_9S, img2str, getIconePaste, \
-                            FenetreSequence, PanelPropriete_Progression, \
+                            getBitmapFromImageSurface, img2str, getIconePaste, \
+                            PanelPropriete_Progression, \
                             PanelPropriete_CI, PanelPropriete_LienSequence,\
                             PanelPropriete_Classe, PanelPropriete_Sequence, \
                             PanelPropriete_Projet, PanelPropriete_Competences, \
@@ -432,7 +432,7 @@ class Objet_sequence():
         #
         # Création du Tip (PopupInfo)
         #
-        self.tip = PopupInfo(self.GetApp(), self.GetFicheXML().toxml())
+        self.tip = PopupInfo(self.GetApp().parent, self.GetFicheXML().toxml())
         
         self.toolTip = None
 
@@ -1112,7 +1112,7 @@ class BaseDoc():
         #
         # Création du Tip (PopupInfo)
         #
-        self.tip = PopupInfo(self.GetApp(), self.GetFicheXML().toxml())
+        self.tip = PopupInfo(self.GetApp().parent, self.GetFicheXML().toxml())
         
         
           
@@ -2180,13 +2180,13 @@ class Sequence(BaseDoc, Objet_sequence):
     def getBitmapPeriode(self, larg):
         imagesurface = draw_cairo_seq.getBitmapPeriode(larg, self.position,
                                                        self.GetReferentiel().periodes, 
-                                                       prop = 5)
+                                                       prop = 7)
         return getBitmapFromImageSurface(imagesurface)
 
 
     #############################################################################
     def MiseAJourTypeEnseignement(self):
-        print "MiseAJourTypeEnseignement Sequence", self.GetNbrPeriodes()
+#        print "MiseAJourTypeEnseignement Sequence", self.GetNbrPeriodes()
         self.app.SetTitre()
         self.classe.MiseAJourTypeEnseignement()
         self.CI.MiseAJourTypeEnseignement()
@@ -4077,7 +4077,8 @@ class Progression(BaseDoc, Objet_sequence):
     def OuvrirSequence(self, event = None, item = None):
         l = self.arbre.GetItemPyData(item)
 #        self.GetApp().parent.ouvrir(toSystemEncoding(l.path))
-        self.GetApp().parent.ouvrirDoc(l.sequence, l.path)
+        app = self.GetApp().parent.ouvrirDoc(l.sequence, l.path)
+#        l.sequence.app = app
     
     
     ######################################################################################  
@@ -4086,9 +4087,9 @@ class Progression(BaseDoc, Objet_sequence):
         aSupprimer = []
         for lienSeq in self.sequences:
             if lienSeq.sequence is None:
-                print "   ", lienSeq.path
+#                print "   ", lienSeq.path
                 path = os.path.join(self.GetPath(), lienSeq.path)
-                print "   ", path
+#                print "   ", path
                 if not os.path.isfile(path):
                     dlg = wx.MessageDialog(self.GetApp(), u"Le fichier Séquence suivant n'a pas été trouvé.\n\n"\
                                                  u"\t%s\n\n"
@@ -4147,6 +4148,7 @@ class Progression(BaseDoc, Objet_sequence):
             
         self.VerifPb()
 
+
     ######################################################################################  
     def DossierDefini(self):
         dossier = self.GetPath()
@@ -4157,7 +4159,8 @@ class Progression(BaseDoc, Objet_sequence):
                                   u"dans le même dossier que le fichier \"Progression\" (.prg)." %self.intitule)
             return False
         return True
-        
+
+
     ######################################################################################  
     def AjouterNouvelleSequence(self, event = None):
         if not self.DossierDefini():
@@ -4183,6 +4186,11 @@ class Progression(BaseDoc, Objet_sequence):
             return
         
         fichiers_sequences = self.GetFichiersSequencesDossier(exclureExistant = True)
+        if len(fichiers_sequences) == 0:
+            messageInfo(None, u"Aucune Séquence trouvée", 
+                        u"Aucune Séquence compatible à la progression n'a été trouvée.\n\n")
+            return
+        
         fichiers, sequences = zip(*fichiers_sequences)
         fichiers = [os.path.relpath(f, self.GetPath()) for f in fichiers]
         
@@ -4326,11 +4334,18 @@ class Progression(BaseDoc, Objet_sequence):
             lienSequence = LienSequence(self,  os.path.relpath(fichier, self.GetPath()))
             lienSequence.sequence = sequence
             sequences.append(lienSequence)
+        
+        self.GetApp().sendEvent(modif = u"Import de Séquences compatibles") 
+        
         return sequences
 
 
     ########################################################################################################
-    def GetFichiersSequencesDossier(self, event = None, exclureExistant = False):       
+    def GetFichiersSequencesDossier(self, event = None, exclureExistant = False):    
+        """ Recherche tous les fichiers Séquence compatibles avec la progression
+        
+        >> Renvoie une liste [(nomFichier, Sequence)]
+        """   
 #        print "GetSequencesDossier"
         wx.BeginBusyCursor()
         
@@ -4564,7 +4579,7 @@ class LienSequence(Objet_sequence):
         #
         # Création du Tip (PopupInfo)
         #
-        self.tip = PopupInfo(self.GetApp(), self.GetFicheXML().toxml())
+        self.tip = PopupInfo(self.GetApp().parent, self.GetFicheXML().toxml())
 #        self.ficheHTML = self.GetFicheHTML()
 #        self.tip = PopupInfo(self.parent.app, self.ficheHTML)
 

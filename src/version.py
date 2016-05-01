@@ -115,13 +115,13 @@ def GetAppnameVersion():
 
 ###############################################################################################
 def GetNewVersion(win):
-    print "Recherche nouvelle version ..."
+    print "Recherche nouvelle version (hormis beta)..."
     url = "https://api.github.com/repos/cedrick-f/pySequence/releases/latest"
     proxy_handler = urllib2.ProxyHandler()
     opener = urllib2.build_opener(proxy_handler)
     urllib2.install_opener(opener)
-    print proxy_handler.proxies
-    print dir(proxy_handler)
+    print "  proxies :",proxy_handler.proxies
+
     req = urllib2.Request(url)
     try:
         handler = urllib2.urlopen(req)
@@ -136,8 +136,8 @@ def GetNewVersion(win):
     # Version actuelle
     a = __version__.split('.')
     
-    print "  actuelle :", __version__
-    print "  nouvelle :",latest
+    print "   locale  :", __version__
+    print "   serveur :", latest
     
     # Comparaison
     new = False

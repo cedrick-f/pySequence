@@ -918,7 +918,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     #############################################################################
     def DefinirOptions(self, options):
         for f in reversed(options.optFichiers["FichiersRecents"]):
-            print "Ajout3", f
+#            print "Ajout3", f
             try:
                 self.filehistory.AddFileToHistory(toFileEncoding(f))
             except:
@@ -1041,14 +1041,17 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     def ouvrirDoc(self, doc, nomFichier):
         """ Ouvre un document à partir de sa version "pySequence"
             <nomFichier> encodé en FileEncoding
+            
+            note : pour l'instant, que pour des Séquences
         """
-        print "ouvrirDoc", doc
+#        print "ouvrirDoc", doc
         child = FenetreSequence(self, sequence = doc)
         
         child.SetIcon(constantes.dicimages["Seq"].GetIcon())
         child.finaliserOuverture()
         child.definirNomFichierCourant(nomFichier)
         wx.CallAfter(child.Activate)
+        return child
     
     
     ###############################################################################################
@@ -6274,9 +6277,9 @@ class PanelPropriete_LienSequence(PanelPropriete):
         #
         sb0 = myStaticBox(self, -1, u"Fichier de la séquence", size = (200,-1))
         sbs0 = wx.StaticBoxSizer(sb0,wx.HORIZONTAL)
-        self.texte = wx.TextCtrl(self, -1, toSystemEncoding(self.lien.path), size = (300, -1),
+        self.texte = wx.TextCtrl(self, -1, toSystemEncoding(self.lien.path), size = (250, -1),
                                  style = wx.TE_PROCESS_ENTER)
-        bt2 =wx.BitmapButton(self, 101, wx.ArtProvider_GetBitmap(wx.ART_NORMAL_FILE))
+        bt2 = wx.BitmapButton(self, 101, wx.ArtProvider_GetBitmap(wx.ART_NORMAL_FILE))
         bt2.SetToolTipString(u"Sélectionner un fichier")
         self.Bind(wx.EVT_BUTTON, self.OnClick, bt2)
         self.Bind(wx.EVT_TEXT_ENTER, self.OnText, self.texte)
@@ -6291,7 +6294,15 @@ class PanelPropriete_LienSequence(PanelPropriete):
         titre = myStaticBox(self, -1, u"Position")
         sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
         self.bmp = wx.StaticBitmap(self, -1, self.sequence.getBitmapPeriode(300))
-        sb.Add(self.bmp)
+        self.position = PositionCtrl(self, self.sequence.position, 
+                                     self.sequence.GetReferentiel().periodes)
+        self.Bind(wx.EVT_RADIOBUTTON, self.onChanged)
+        sb.Add(self.bmp, flag = wx.ALIGN_CENTER|wx.EXPAND)
+        sb.Add(self.position, flag = wx.ALIGN_CENTER|wx.EXPAND)
+        
+        
+        
+        
         
         
         
@@ -6314,6 +6325,16 @@ class PanelPropriete_LienSequence(PanelPropriete):
         self.sizer.Layout()
         
 
+    #############################################################################            
+    def onChanged(self, evt):
+        self.sequence.SetPosition(evt.GetEventObject().GetId()-1)
+        self.SetBitmapPosition()
+        self.GetDocument().OrdonnerSequences()
+        t = u"Changement de position de la séquence"
+        self.GetDocument().GererDependants(self.sequence, t)
+        
+        
+        
     #############################################################################            
     def OnClick(self, event):
         mesFormats = u"Séquence (.seq)|*.seq|" \
@@ -6345,6 +6366,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
         self.MiseAJour()
         event.Skip()     
 
+
     #############################################################################            
     def EvtText(self, event):
         if event.GetEventObject() == self.intit:
@@ -6367,10 +6389,15 @@ class PanelPropriete_LienSequence(PanelPropriete):
 #        self.MiseAJour()
 #        event.Skip()   
 
-                 
+    #############################################################################            
+    def SetBitmapPosition(self, bougerSlider = None):
+        self.bmp.SetBitmap(self.sequence.getBitmapPeriode(300))
+        self.position.SetValue(self.sequence.position)
+        
+        
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
-        print "MiseAJour PanelPropriete_LienSequence", self.lien
+#        print "MiseAJour PanelPropriete_LienSequence", self.lien
 
 #        self.intit.SetLabel(self.sequence.intitule)
         self.intit.SetValue(self.sequence.intitule, False)

@@ -678,28 +678,36 @@ def Draw(ctx, prg, mouchard = False):
         DrawCroisementsCISeq(ctx, prg, seq, y)
     
     # Nom des périodes
-#    print "yh_phase", yh_phase
-    h = []
-    y = []
-    for phase, yh in yh_phase.items():
-        if len(yh[0]) > 0:
-            _y = min(yh[0])
-            yh[1] = max(yh[1])
-            y.append(_y)
-            h.append(yh[1]-_y)
+    print "yh_phase", yh_phase
+#    h = []
+#    y = []
+#    for phase, yh in yh_phase.items():
+#        if len(yh[0]) > 0:
+#            _y = min(yh[0])
+#            print "yh[1]",yh[1]
+#            yh[1] = max(yh[1])
+#            y.append(_y)
+#            h.append(yh[1]-_y)
     
     fontsize = wPhases
-    
+     
     for i, (phase, yh) in enumerate(yh_phase.items()):
         if len(yh[0]) > 0:
+            
+            _y = min(yh[0])
+            yh[1] = max(yh[1])
+            y=_y
+            h=yh[1]-_y
+            
+            
             c = BcoulPos[phase]
             ctx.set_source_rgb(c[0],c[1],c[2])
             ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
                                   cairo.FONT_WEIGHT_NORMAL)
             
             show_text_rect(ctx, str(phase+1), 
-                           (posZDeroul[0] + ecartX/6, y[i], 
-                            wPhases, h[i]), fontsizeMinMax = (fontsize, fontsize),
+                           (posZDeroul[0] + ecartX/6, y, 
+                            wPhases, h), fontsizeMinMax = (fontsize, fontsize),
                            ha = 'c', orient = "h", b = 0.1, le = 0.7,
                            couper = False) 
 
