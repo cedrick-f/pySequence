@@ -1219,15 +1219,20 @@ class BaseDoc():
             else:
                 if isinstance(zone.obj, Sequence) and len(zone.param) > 2 and zone.param[:2] == "CI":
                     ref = self.GetReferentiel()
-                    zone.obj.CI.ToogleNum(int(zone.param[2]))
+                    zone.obj.CI.ToogleNum(int(zone.param[2:]))
                     t = u"Modification des "+ ref.nomCI + " de la Séquence"
-                    
+                    pp = self.GetApp().GetPanelProp()
+                    if hasattr(pp, "MiseAJourApercu"):
+                        pp.MiseAJourApercu()
                     self.GererDependants(zone.obj, t)
                 
                 elif isinstance(zone.obj, Sequence) and len(zone.param) > 3 and zone.param[:3] == "CMP":
                     ref = self.GetReferentiel()
                     zone.obj.obj['C'].ToogleCode("S"+zone.param[3:])
                     t = u"Modification des "+ ref.dicoCompetences["S"].nomGenerique + " visées par la Séquence"
+                    pp = self.GetApp().GetPanelProp()
+                    if hasattr(pp, "MiseAJourApercu"):
+                        pp.MiseAJourApercu()
                     self.GererDependants(zone.obj, t)
                         
         
@@ -4514,7 +4519,7 @@ class Progression(BaseDoc, Objet_sequence):
             
             elif param[:2] == "CI":
                 SetWholeText(self.ficheXML, "titre", self.GetReferentiel().nomCI)
-                numCI = int(param[2])
+                numCI = int(param[2:])
                 code = self.GetReferentiel().abrevCI+str(numCI+1)
                 intit = self.GetReferentiel().CentresInterets[numCI]
                 XML_AjouterElemListe(self.ficheXML, "ci", code, intit)

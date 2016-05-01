@@ -678,16 +678,7 @@ def Draw(ctx, prg, mouchard = False):
         DrawCroisementsCISeq(ctx, prg, seq, y)
     
     # Nom des périodes
-    print "yh_phase", yh_phase
-#    h = []
-#    y = []
-#    for phase, yh in yh_phase.items():
-#        if len(yh[0]) > 0:
-#            _y = min(yh[0])
-#            print "yh[1]",yh[1]
-#            yh[1] = max(yh[1])
-#            y.append(_y)
-#            h.append(yh[1]-_y)
+#    print "yh_phase", yh_phase
     
     fontsize = wPhases
      
@@ -962,6 +953,7 @@ def DrawCroisementsCISeq(ctx, prg, seq, y):
             boule(ctx, _x, y, r, 
                   color0 = color0, color1 = (1,1,1),
                   transparent = False)
+        
         prg.zones_sens.append(Zone([(_x -r , y - r, 2*r, 2*r)], obj = seq, param = "CI"+str(CI)))
 #        tache.projet.eleves[i].rect.append((_x -r , y - r, 2*r, 2*r))
 #        tache.projet.eleves[i].pts_caract.append((_x,y))

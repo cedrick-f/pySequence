@@ -6248,6 +6248,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
     def __init__(self, parent, lien):
         PanelPropriete.__init__(self, parent)
         self.lien = lien
+        self.maxX = 800 # Largeur de l'image "aperçu" zoomée
         self.sequence = self.lien.sequence
         self.classe = None
         self.construire()
@@ -6303,19 +6304,17 @@ class PanelPropriete_LienSequence(PanelPropriete):
         
         
         
-        
-        
-        
         #
         # Aperçu de la séquence
         #
-        sb1 = myStaticBox(self, -1, u"Aperçu de la séquence", size = (141,200))
+        size = (141,200) # Rapport A4
+        sb1 = myStaticBox(self, -1, u"Aperçu de la séquence", size = size)
         sbs1 = wx.StaticBoxSizer(sb1,wx.HORIZONTAL)
-        sbs1.SetMinSize((141,200))
-        self.apercu = StaticBitmapZoom(self, -1, size = (141,200))
-        self.apercu.SetLargeBitmap(self.sequence.GetApercu(1000))
+        sbs1.SetMinSize(size)
+        self.apercu = StaticBitmapZoom(self, -1, size = size)
+        self.apercu.SetLargeBitmap(self.sequence.GetApercu(self.maxX))
         sbs1.Add(self.apercu, 1)
-        
+        self.size = size
         
         self.sizer.Add(sbsi, (0,0), flag = wx.EXPAND|wx.ALL, border = 2)
         self.sizer.Add(sbs0, (1,0), flag = wx.EXPAND|wx.ALL, border = 2)
@@ -6421,57 +6420,23 @@ class PanelPropriete_LienSequence(PanelPropriete):
         self.texte.SetBackgroundColour("white")
         self.texte.SetToolTipString(u"Lien vers un fichier Séquence")
         
-#        except:
-#            dlg = wx.MessageDialog(self, u"Le fichier %s\nn'a pas pu étre trouvé !" %self.lien.path,
-#                               u"Erreur d'ouverture du fichier",
-#                               wx.OK | wx.ICON_WARNING
-#                               #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
-#                               )
-#            dlg.ShowModal()
-#            dlg.Destroy()
-#            self.texte.SetBackgroundColour("pink")
-#            self.texte.SetToolTipString(u"Le lien vers le fichier Séquence est rompu !")
-#            return False
-#        
         
-#        classe = Classe(self.lien.parent.app.parent)
+        self.MiseAJourApercu()
         
-#        self.sequence = Sequence(self.lien.parent.app, classe)
-        
-        
-        
-#        try:
-        
-        
-        # La séquence
-#        if self.sequence is None:
-#            classe = Classe(self.lien.GetApp())
-#            self.sequence = Sequence(self.lien.GetApp(), classe)
-#            classe.SetDocument(self.sequence)
-#            root = ET.parse(fichier).getroot()
-#            sequence = root.find("Sequence")
-#            if sequence == None:
-#                self.sequence.setBranche(root)
-#            else:
-#                self.sequence.setBranche(sequence)
-#            
-#                # La classe
-#                classe = root.find("Classe")
-#                self.sequence.classe.setBranche(classe)
-#                self.sequence.SetCodes()
-#                self.sequence.SetLiens()
-#                self.sequence.VerifPb()
-#            fichier.close()
-
+        if sendEvt:
+            self.sendEvent()
+            
+        return True
     
-#        if self.sequence:
-#        print "bmp", self.sequence
-        bmp = self.sequence.GetApercu(210)
-        self.apercu.SetBitmap(bmp)
+    
+    #############################################################################            
+    def MiseAJourApercu(self, sendEvt = False):
+        #
+        # Aperçu
+        #
+        bmp = self.sequence.GetApercu(self.maxX)
+        self.apercu.SetLargeBitmap(bmp)
         self.lien.SetLabel()
-#            self.lien.SetImage(bmp)
-#            self.lien.SetLien()
-#            self.lien.SetTitre(self.sequence.intitule)
 
         self.Layout()
         
