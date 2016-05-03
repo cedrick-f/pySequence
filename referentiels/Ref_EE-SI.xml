@@ -1,4 +1,4 @@
-<Referentiel B_CI_BO="False" B_CI_cible="False" B_domaines="True" S_AnneeDebut="Sec5" S_Code="EE-SI" S_Famille="2nde" S_FichierLogo="" S_abrevCI="Th " S_nomCI="Thèmes" S_nomFonctions="Fonction(s)" S_nomPb="Problématique(s)" S_nomTaches="Tâche(s)">
+<Referentiel B_CI_BO="False" B_CI_cible="False" B_domaines="True" S_AnneeDebut="Sec5" S_Code="EE-SI" S_Famille="2nde" S_FichierLogo="" S_abrevCI="Th " S_nomCI="Thème(s)" S_nomFonctions="Fonction(s)" S_nomPb="Problématique(s)" S_nomTaches="Tâche(s)">
   <l_BO_URL>
     <l_00 S_00="Programme SI" S_01="http://media.education.gouv.fr/file/special_4/74/7/sciences_ingenieur_143747.pdf" />
     <l_01 S_00="Programme CIT" S_01="http://media.education.gouv.fr/file/special_4/75/1/creation_innovation_technologiques_143751.pdf" />
@@ -25,7 +25,7 @@
   </d_demarches>
   <d_dicFonctions />
   <d_dicoCompetences>
-    <Competences_S S_abrDiscipline="SI" S_codeDiscipline="SII" S_nomDiscipline="Sciences de l'Ingénieur" S_nomGenerique="Compétences" S_nomGeneriqueIndic="Indicateurs de performance">
+    <Competences_S S_abrDiscipline="SI" S_codeDiscipline="SII" S_nomDiscipline="Sciences de l'Ingénieur" S_nomGenerique="Compétence(s)" S_nomGeneriqueIndic="Indicateurs de performance">
       <d_dicCompetences>
         <l_C3 S_00="Représenter, communiquer">
           <l_01>

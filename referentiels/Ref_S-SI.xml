@@ -26,7 +26,7 @@
   </d_demarches>
   <d_dicFonctions />
   <d_dicoCompetences>
-    <Competences_S S_abrDiscipline="SI" S_codeDiscipline="SII" S_nomDiscipline="Sciences de l'Ingénieur" S_nomGenerique="Compétences" S_nomGeneriqueIndic="Indicateurs de performance">
+    <Competences_S S_abrDiscipline="SI" S_codeDiscipline="SII" S_nomDiscipline="Sciences de l'Ingénieur" S_nomGenerique="Compétence(s)" S_nomGeneriqueIndic="Indicateurs de performance">
       <d_dicCompetences>
         <l_A S_00="Analyser">
           <d_01>

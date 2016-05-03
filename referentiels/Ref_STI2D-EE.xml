@@ -24,7 +24,7 @@
   </d_demarches>
   <d_dicFonctions />
   <d_dicoCompetences>
-    <Competences_S S_abrDiscipline="EE" S_codeDiscipline="SII" S_nomDiscipline="STI2D-EE" S_nomGenerique="Compétences" S_nomGeneriqueIndic="Indicateurs">
+    <Competences_S S_abrDiscipline="EE" S_codeDiscipline="SII" S_nomDiscipline="STI2D-EE" S_nomGenerique="Compétence(s)" S_nomGeneriqueIndic="Indicateurs">
       <d_dicCompetences>
         <l_O7 S_00="Imaginer une solution, répondre à un besoin">
           <d_01>

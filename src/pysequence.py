@@ -95,10 +95,9 @@ from widgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_ENTI
 from Referentiel import REFERENTIELS, ARBRE_REF, ACTIVITES
 import Referentiel
 
-# Pour enregistrer en xml
-from xml.dom.minidom import parseString 
-import xml.dom
 
+
+# Pour enregistrer en xml
 import xml.etree.ElementTree as ET
 Element = type(ET.Element(None))
 
@@ -116,66 +115,96 @@ from wx_pysequence import CodeBranche, PopupInfo, getIconeFileSave, getIconeCopy
 
 
 
-######################################################################################  
-def forceID(xml):
-    for node in xml.childNodes:
-        if hasattr(node, 'hasAttribute'):
-            if node.hasAttribute("id"):
-                node.setIdAttribute('id')
-            if node.hasChildNodes():
-                forceID(node)
-
-#####################################################################################
-#####################################################################################
-def SetWholeText(node, Id, text):
-    """ 
-    """
-    nom = node.getElementById(Id)
-    if nom != None:
-        for txtNode in nom.childNodes:
-            if txtNode.nodeType==xml.dom.Node.TEXT_NODE:
-                txtNode.replaceWholeText(text)
-
-def XML_AjouterElemListe(node, idListe, dt, dd):
-    liste = node.getElementById(idListe)
-    if liste != None:
-        _dt = node.createElement("dt")
-        txt = node.createTextNode(dt)
-        _dt.appendChild(txt)
-        liste.appendChild(_dt)
-        
-        _dd = node.createElement("dd")
-        txt = node.createTextNode(dd)
-        _dd.appendChild(txt)
-        liste.appendChild(_dd)
+#######################################################################################  
+#def forceID(xml):
+#    for node in xml.childNodes:
+#        if hasattr(node, 'hasAttribute'):
+#            if node.hasAttribute("id"):
+#                node.setIdAttribute('id')
+#            if node.hasChildNodes():
+#                forceID(node)
+#
+######################################################################################
+######################################################################################
+#def SetWholeText(node, Id, text):
+#    """ 
+#    """
+#    print "SetWholeText", Id
+#    tag = node.find(id=Id)
+#    print tag
+#    tag.string.replace_with(text)
+#    
+    
+#    nom = node.getElementById(Id)
+#    if nom != None:
+#        for txtNode in nom.childNodes:
+#            if txtNode.nodeType==xml.dom.Node.TEXT_NODE:
+#                txtNode.replaceWholeText(text)
 
 
-#####################################################################################
-def XML_AjouterCol(node, idLigne, text, bcoul = None, fcoul = "black", size = None, bold = False):
-    """<td id="rc1" style="background-color: #ff6347;"><font id="r1" size="2">1</font></td>"""
-    ligne = node.getElementById(idLigne)
-    if ligne != None:
-        td = node.createElement("td")
+######################################################################################
+#def XML_AjouterElemListe(node, idListe, dt, dd):
+#    liste = node.find(id = idListe)
+#    print "liste", liste
+#    if len(liste.find_all('dt')) == 1:
+#        liste.dt.string = dt
+#        liste.dd.string = dd
+#    else:
+#        tag_dt = copy.copy(liste.dt)
+#        tag_dd = copy.copy(liste.dd)
+#        liste.append(tag_dt)
+#        liste.append(tag_dd)
         
-        ligne.appendChild(td)
+#    liste = node.getElementById(idListe)
+#    if liste != None:
+#        _dt = node.createElement("dt")
+#        txt = node.createTextNode(dt)
+#        _dt.appendChild(txt)
+#        liste.appendChild(_dt)
+#        
+#        _dd = node.createElement("dd")
+#        txt = node.createTextNode(dd)
+#        _dd.appendChild(txt)
+#        liste.appendChild(_dd)
+
+
+######################################################################################
+#def XML_AjouterElemListeUL(node, idListe, li):
+#    liste = node.find(id = idListe)
+#    print "liste", liste
+#    if len(liste.find_all('li')) == 1:
+#        liste.li.string = li
+#    else:
+#        tag_li = copy.copy(liste.li)
+#        liste.append(tag_li)
+    
+    
+    
+    
+#    liste = node.getElementById(idListe)
+#    if liste != None:
+#        _dt = node.createElement("li")
+#        txt = node.createTextNode(li)
+#        _dt.appendChild(txt)
+#        liste.appendChild(_dt)
         
-        if bcoul != None:
-            td.setAttribute("style", "background-color: "+bcoul+";")
-        
-        if size != None:
-            tc = node.createElement("font")
-            tc.setAttribute("size", str(size))
-#            tc.setAttribute("color", fcoul)
-            td.appendChild(tc)
-            td = tc
-        
-        if bold:
-            tc = node.createElement("b")
-            td.appendChild(tc)
-            td = tc
+
+#def XML_AjouterImg(node, item, bmp):
+##        print "XML_AjouterImg"
+#
+#    img = node.find(id = item)
+#    try:
+#        bmp.SaveFile(self.tfname, wx.BITMAP_TYPE_PNG)
+#    except:
+#        return
+#    
+#    img = node.getElementById(item)
+#    if img != None:
+#        td = node.createElement("img")
+#        img.appendChild(td)
+#        td.setAttribute("src", self.tfname)
             
-        txt = node.createTextNode(text)
-        td.appendChild(txt)
+
         
 
     
@@ -432,7 +461,7 @@ class Objet_sequence():
         #
         # Création du Tip (PopupInfo)
         #
-        self.tip = PopupInfo(self.GetApp().parent, self.GetFicheXML().toxml())
+        self.tip = PopupInfo(self.GetApp().parent, "")
         
         self.toolTip = None
 
@@ -667,14 +696,6 @@ class Objet_sequence():
     ######################################################################################  
     def GetFicheHTML(self, param = None):
         return constantes.BASE_FICHE_HTML
-
-
-    ######################################################################################  
-    def GetFicheXML(self, param = None):
-        ficheHTML = self.GetFicheHTML(param)
-        ficheXML = parseString(ficheHTML.encode('utf-8', errors="ignore"))
-        forceID(ficheXML)
-        return ficheXML
         
         
     ######################################################################################  
@@ -1112,7 +1133,7 @@ class BaseDoc():
         #
         # Création du Tip (PopupInfo)
         #
-        self.tip = PopupInfo(self.GetApp().parent, self.GetFicheXML().toxml())
+        self.tip = PopupInfo(self.GetApp().parent, "")
         
         
           
@@ -1229,7 +1250,7 @@ class BaseDoc():
                 elif isinstance(zone.obj, Sequence) and len(zone.param) > 3 and zone.param[:3] == "CMP":
                     ref = self.GetReferentiel()
                     zone.obj.obj['C'].ToogleCode("S"+zone.param[3:])
-                    t = u"Modification des "+ ref.dicoCompetences["S"].nomGenerique + " visées par la Séquence"
+                    t = u"Modification des "+ getSingulierPluriel(ref.dicoCompetences["S"].nomGenerique, True) + " visées par la Séquence"
                     pp = self.GetApp().GetPanelProp()
                     if hasattr(pp, "MiseAJourApercu"):
                         pp.MiseAJourApercu()
@@ -1278,17 +1299,6 @@ class BaseDoc():
             tip.Position((x+1,y+1), (0,0))
             self.call = wx.CallLater(500, tip.Show, True)
             self.tip = tip
-            
-            
-    ######################################################################################  
-    def GetFicheXML(self, html = None, param = None):
-        if html is None:
-            ficheHTML = self.GetFicheHTML(param)
-        else:
-            ficheHTML = html
-        ficheXML = parseString(ficheHTML.encode('utf-8', errors="ignore"))
-        forceID(ficheXML)
-        return ficheXML
 
    
     ######################################################################################  
@@ -1672,20 +1682,18 @@ class Sequence(BaseDoc, Objet_sequence):
 
     ######################################################################################  
     def GetTip(self, param, obj):
-        
-        self.ficheXML = self.GetFicheXML(param = param)
-        
+        self.tip.SetHTML(self.GetFicheHTML(param = param))
         if param is None:
             pass
         else:
             if param == "POS":
-                SetWholeText(self.ficheXML, "titre", u"Découpage de la formation en périodes")
+                self.tip.SetWholeText("titre", u"Découpage de la formation en périodes")
                 
             elif param[:3] == "POS":
-                SetWholeText(self.ficheXML, "titre", u"Période de formation : %s" %(int(param[3])+1))
+                self.tip.SetWholeText("titre", u"Période de formation : %s" %(int(param[3])+1))
                 
             elif param[:3] == "EQU":
-                SetWholeText(self.ficheXML, "titre", u"Equipe pédagogique impliquée dans la Progression")
+                self.tip.SetWholeText("titre", u"Equipe pédagogique impliquée dans la Progression")
                 
             elif type(obj) == list:
                 pass
@@ -1693,7 +1701,7 @@ class Sequence(BaseDoc, Objet_sequence):
             else:
                 pass
                 
-        self.tip.SetPage(self.ficheXML.toxml())
+        self.tip.SetPage()
         return self.tip
         
     ######################################################################################  
@@ -2815,99 +2823,32 @@ class Projet(BaseDoc, Objet_sequence):
     
     ######################################################################################  
     def SetTip(self):
-        self.ficheXML = self.GetFicheXML()
-        
-        SetWholeText(self.ficheXML, "int", self.intitule)
-
-        self.tip.SetPage(self.ficheXML.toxml())
+        self.tip.SetHTML(self.GetFicheHTML())
+        self.tip.SetWholeText("int", self.intitule)
+        self.tip.SetPage()
 
 
     ######################################################################################  
     def GetTip(self, param, obj):
-        self.ficheXML = self.GetFicheXML(param = param)
-        
-        ####################################################################################
-        def Construire(dic , dicIndicateurs, prj, node):
-            
-            def const(d, ul):
-                ks = d.keys()
-                ks.sort()
-                for k in ks:
-                    v = d[k]
-                    if len(v) > 1 and type(v[1]) == dict:
-                        li = node.createElement("li")
-                        txt = node.createTextNode(textwrap.fill(k+" "+v[0], 50))
-                        li.appendChild(txt)
-                        ul.appendChild(li)
-                        
-#                        if len(v) != 2:
-#                            self.SetItemBold(b, True)
-                            
-                        nul = node.createElement("ul")
-                        li.appendChild(nul)
-                        const(v[1], nul)
-                            
-                    else:   # Indicateur
-                        cc = [cd+ " " + it for cd, it in zip(k.split(u"\n"), v[0].split(u"\n"))] 
-                        
-                        li = node.createElement("li")
-                        txt = node.createTextNode(textwrap.fill(u"\n ".join(cc), 50))
-                        li.appendChild(txt)
-                        ul.appendChild(li)
-                        
-                        nul = node.createElement("ul")
-                        li.appendChild(nul)
-                        
-                        if k in dicIndicateurs.keys():
-                            ajouteIndic(nul, v[1], dicIndicateurs[k])
-                        else:
-                            ajouteIndic(nul, v[1], None)
-                return
-            
-            def ajouteIndic(ul, listIndic, listIndicUtil):
-                for i, indic in enumerate(listIndic):
-                    
-                    li = node.createElement("li")
-                    font = node.createElement("font")
-                    txt = node.createTextNode(textwrap.fill(indic.intitule, 50))
-                    li.appendChild(font)
-                    font.appendChild(txt)
-                    ul.appendChild(li)
-                    ul.attributes['type']="none"
-                        
-                    for j, part in enumerate(prj.parties.keys()):
-                        if part in indic.poids.keys():
-                            if listIndicUtil == None or not listIndicUtil[i]:
-                                c = COUL_ABS
-                            else:
-                                c = getCoulPartie(part)
-                    font.attributes['color'] = couleur.GetCouleurHTML(c, wx.C2S_HTML_SYNTAX)
-            
-            ul = node.getElementById("indic")
-            
-            if type(dic) == dict:  
-                const(dic, ul)
-            else:
-                ajouteIndic(ul, dic, dicIndicateurs)
+        self.tip.SetHTML(self.GetFicheHTML(param = param))
 
-        
         prj = self.GetProjetRef()
         if param is None:
             pass
         else:
             if param == "PB":
-                self.ficheXML = self.GetFicheXML(constantes.BASE_FICHE_HTML_PROB)
-                SetWholeText(self.ficheXML, "titre", prj.attributs['PB'][0])
-                SetWholeText(self.ficheXML, "txt", self.problematique)
+                self.tip.SetHTML(constantes.BASE_FICHE_HTML_PROB)
+                self.tip.SetWholeText( "titre", prj.attributs['PB'][0])
+                self.tip.SetWholeText("txt", self.problematique)
             
             elif param == "POS":
-                SetWholeText(self.ficheXML, "titre", u"Découpage de la formation en périodes")
+                self.tip.SetWholeText("titre", u"Découpage de la formation en périodes")
                 
             elif param[:3] == "POS":
-                SetWholeText(self.ficheXML, "titre", u"Période de formation : %s" %(int(param[3])+1))
+                self.tip.SetWholeText("titre", u"Période de formation : %s" %(int(param[3])+1))
                 
             elif param[:3] == "EQU":
-                SetWholeText(self.ficheXML, "titre", u"Equipe pédagogique impliquée dans la Progression")
+                self.tip.SetWholeText("titre", u"Equipe pédagogique impliquée dans la Progression")
                 
             elif type(obj) == list:
                 pass
@@ -2915,30 +2856,28 @@ class Projet(BaseDoc, Objet_sequence):
             else:
                 competence = prj.getCompetence(param[0], param[1:])
                 if competence is not None:
-                    self.ficheXML = self.GetFicheXML(constantes.BASE_FICHE_HTML_COMP_PRJ)
+                    self.tip.SetHTML(constantes.BASE_FICHE_HTML_COMP_PRJ)
+                    
                     k = param[1:].split(u"\n")
-                    nc = self.GetReferentiel().dicoCompetences["S"].nomGenerique
+                    nc = getSingulierPluriel(self.GetReferentiel().dicoCompetences["S"].nomGenerique, False)
                     if len(k) > 1:
                         nc += "s"
                         titre = nc + u" - ".join(k)
                     else:
                         titre = nc + k[0]
-                    SetWholeText(self.ficheXML, "titre", titre)
+                    self.tip.SetWholeText("titre", titre)
                     
                     intituleComp = competence[0]
                     intituleComp = "\n".join([textwrap.fill(ind, 50) for ind in intituleComp.split(u"\n")]) 
-                    SetWholeText(self.ficheXML, "int", intituleComp)
+                    self.tip.SetWholeText( "int", intituleComp)
                     
                     if type(competence[1]) == dict:  
                         indicEleve = obj.GetDicIndicateurs()
                     else:
                         indicEleve = obj.GetDicIndicateurs()[param]
-                    Construire(competence[1], indicEleve, prj, self.ficheXML)
+                    self.tip.Construire(competence[1], indicEleve, prj)
                 
-                    
-        
-        
-        self.tip.SetPage(self.ficheXML.toxml())
+        self.tip.SetPage()
         return self.tip
         
         
@@ -4480,7 +4419,7 @@ class Progression(BaseDoc, Objet_sequence):
                 pass
                 
             elif param[:3] == "POS":
-                pass
+                return constantes.BASE_FICHE_HTML_PERIODES
                 
             elif param[:3] == "EQU":
                 pass
@@ -4497,45 +4436,57 @@ class Progression(BaseDoc, Objet_sequence):
     ######################################################################################  
     def GetTip(self, param, obj):
 #        print "GetTip", param
-        self.ficheXML = self.GetFicheXML(param = param)
+        self.tip.SetHTML(self.GetFicheHTML(param = param))
+        
         
         if param is None:
             pass
         else:
             if param == "CAL":
-                SetWholeText(self.ficheXML, "titre", u"Calendrier de la Progression")
+                self.tip.SetWholeText("titre", u"Calendrier de la Progression")
                 
             elif param == "ANN":
-                SetWholeText(self.ficheXML, "titre", u"Années scolaires de la Progression")
+                self.tip.SetWholeText("titre", u"Années scolaires de la Progression")
+                self.tip.SetWholeText("txt", self.GetAnnees())
                 
             elif param == "POS":
-                SetWholeText(self.ficheXML, "titre", u"Découpage de la formation en périodes")
+                self.tip.SetWholeText("titre", u"Découpage de la formation en périodes")
+                self.tip.SetWholeText("txt", u"Périodes occupées pendant la Progression")
+                self.tip.XML_AjouterImg("img", self.getBitmapPeriode(300)) 
                 
             elif param[:3] == "POS":
-                SetWholeText(self.ficheXML, "titre", u"Période de formation : %s" %(int(param[3])+1))
+                ref = self.GetReferentiel()
+                self.tip.SetWholeText("titre", u"Période de formation")
+                self.tip.SetWholeText("txt", ref.getPeriodesListe()[int(param[3])] + " - " + str(int(param[3])+1))
                 
             elif param[:3] == "EQU":
-                SetWholeText(self.ficheXML, "titre", u"Equipe pédagogique impliquée dans la Progression")
+                self.tip.SetWholeText("titre", u"Equipe pédagogique impliquée dans la Progression")
             
             elif param[:2] == "CI":
-                SetWholeText(self.ficheXML, "titre", self.GetReferentiel().nomCI)
+                ref = self.GetReferentiel()
+                self.tip.SetWholeText("titre", getSingulierPluriel(ref.nomCI, False))  
                 numCI = int(param[2:])
-                code = self.GetReferentiel().abrevCI+str(numCI+1)
-                intit = self.GetReferentiel().CentresInterets[numCI]
-                XML_AjouterElemListe(self.ficheXML, "ci", code, intit)
+                code = ref.abrevCI+str(numCI+1)
+                intit = ref.CentresInterets[numCI]
+                self.tip.XML_AjouterElemListe("ci", code, intit)
+                if len(ref.listProblematiques[numCI]) > 0:
+                    self.tip.SetWholeText("nomPb", getSingulierPluriel(ref.nomPb, True))  
+                for pb in ref.listProblematiques[numCI]:
+                    self.tip.XML_AjouterElemListeUL("pb", pb)
             
             elif param[:3] == "CMP":
-                competence = self.GetReferentiel().getCompetence("S"+param[3:])
+                ref = self.GetReferentiel()
+                competence = ref.getCompetence("S"+param[3:])
                 if competence is not None:
-                    self.ficheXML = self.GetFicheXML(constantes.BASE_FICHE_HTML_COMP_PRJ)
+                    self.tip.SetHTML(constantes.BASE_FICHE_HTML_COMP_PRJ)
                     k = param[3:]
-                    nc = self.GetReferentiel().dicoCompetences["S"].nomGenerique
+                    nc = getSingulierPluriel(ref.dicoCompetences["S"].nomGenerique, False)
                     titre = nc + " " + k
-                    SetWholeText(self.ficheXML, "titre", titre)
+                    self.tip.SetWholeText("titre", titre)
                     
                     intituleComp = competence[0]
                     intituleComp = "\n".join([textwrap.fill(ind, 50) for ind in intituleComp.split(u"\n")]) 
-                    SetWholeText(self.ficheXML, "int", intituleComp)
+                    self.tip.SetWholeText("int", intituleComp)
             
             elif type(obj) == list:
                 pass
@@ -4543,9 +4494,17 @@ class Progression(BaseDoc, Objet_sequence):
             else:
                 pass
             
-        self.tip.SetPage(self.ficheXML.toxml())
+        self.tip.SetPage()
         return self.tip
 
+    
+    
+    #############################################################################            
+    def getBitmapPeriode(self, larg):
+        imagesurface = draw_cairo.getBitmapPeriode(larg, self.GetPositions(),
+                                                       self.GetReferentiel().periodes, 
+                                                       prop = 7)
+        return getBitmapFromImageSurface(imagesurface)
 
 
     ##################################################################################################    
@@ -4584,7 +4543,7 @@ class LienSequence(Objet_sequence):
         #
         # Création du Tip (PopupInfo)
         #
-        self.tip = PopupInfo(self.GetApp().parent, self.GetFicheXML().toxml())
+        self.tip = PopupInfo(self.GetApp().parent, "")
 #        self.ficheHTML = self.GetFicheHTML()
 #        self.tip = PopupInfo(self.parent.app, self.ficheHTML)
 
@@ -4707,14 +4666,11 @@ class LienSequence(Objet_sequence):
     def SetTip(self):
         # Tip
         seq = self.sequence
-        self.ficheHTML = self.GetFicheHTML()
-        self.ficheXML = parseString(self.ficheHTML.encode('utf-8', errors="ignore"))
-        forceID(self.ficheXML)
-        SetWholeText(self.ficheXML, "nom", seq.intitule)
+        self.tip.SetHTML(self.GetFicheHTML())
+        self.tip.SetWholeText("nom", seq.intitule)
+        self.tip.XML_AjouterImg("ap", seq.GetApercu(300)) 
         
-        self.tip.XML_AjouterImg(self.ficheXML, "ap", self.sequence.GetApercu(300)) 
-        
-        self.tip.SetPage(self.ficheXML.toxml())
+        self.tip.SetPage()
 
 
 
@@ -4917,14 +4873,13 @@ class CentreInteret(Objet_sequence):
     
     ######################################################################################  
     def SetTip(self):
-        self.ficheXML = self.GetFicheXML()
-        
-        SetWholeText(self.ficheXML, "titre", self.GetReferentiel().nomCI)
+        self.tip.SetHTML(self.GetFicheHTML())
+        self.tip.SetWholeText("titre", self.GetReferentiel().nomCI)
         
         for i, c in enumerate(self.numCI):
-            XML_AjouterElemListe(self.ficheXML, "ci", self.GetCode(i), self.GetIntit(i))
+            self.tip.XML_AjouterElemListe("ci", self.GetCode(i), self.GetIntit(i))
       
-        self.tip.SetPage(self.ficheXML.toxml())
+        self.tip.SetPage()
         
         
 ####################################################################################
@@ -5030,17 +4985,16 @@ class Competences(Objet_sequence):
     
     ######################################################################################  
     def SetTip(self):
-        self.ficheXML = self.GetFicheXML()
-
+        self.tip.SetHTML(self.GetFicheHTML())
         nc = self.GetNomGenerique()
-        SetWholeText(self.ficheXML, "titre", nc)
+        self.tip.SetWholeText("titre", nc)
         
         for i, c in enumerate(self.competences):
-            XML_AjouterElemListe(self.ficheXML, "list", 
+            self.tip.XML_AjouterElemListe("list", 
                                  self.GetDiscipline(i) +" " + self.GetTypCode(i)[0], 
                                  self.GetIntit(i))
       
-        self.tip.SetPage(self.ficheXML.toxml())
+        self.tip.SetPage()
 
             
             
@@ -5166,17 +5120,16 @@ class Savoirs(Objet_sequence):
     
     ######################################################################################  
     def SetTip(self):
-        self.ficheXML = self.GetFicheXML()
-        
+        self.tip.SetHTML(self.GetFicheHTML())
         nc = self.GetNomGenerique()
-        SetWholeText(self.ficheXML, "titre", nc)
+        self.tip.SetWholeText("titre", nc)
         
         for i, c in enumerate(self.savoirs):
-            XML_AjouterElemListe(self.ficheXML, "list", 
+            self.tip.XML_AjouterElemListe("list", 
                                  self.GetDiscipline(i) + " " + self.GetTypCode(i)[1], 
                                  self.GetIntit(i))
       
-        self.tip.SetPage(self.ficheXML.toxml())
+        self.tip.SetPage()
         
          
             
@@ -6143,16 +6096,15 @@ class Seance(ElementDeSequence, Objet_sequence):
     
     ######################################################################################  
     def SetTip(self):
-        self.ficheXML = self.GetFicheXML()
-        
-        SetWholeText(self.ficheXML, "int", self.intitule)
+        self.tip.SetHTML(self.GetFicheHTML())
+        self.tip.SetWholeText("int", self.intitule)
         if self.typeSeance != "":
             t = u"Type : "+ self.GetReferentiel().seances[self.typeSeance][1]
         else:
             t = u""
-        SetWholeText(self.ficheXML, "typ", t)
+        self.tip.SetWholeText("typ", t)
 
-        self.tip.SetPage(self.ficheXML.toxml())
+        self.tip.SetPage()
         
         
 
@@ -6908,13 +6860,7 @@ class Tache(Objet_sequence):
 
     ######################################################################################  
     def SetTip(self):
-        self.ficheXML = self.GetFicheXML()
-        
-#        if self.typeSeance != "":
-#            t = u"Type : "+ self.GetReferentiel().seances[self.typeSeance][1]
-#        else:
-#            t = u""
-#        SetWholeText(self.ficheXML, "typ", t)
+        self.tip.SetHTML(self.GetFicheHTML())
         
         if self.phase in TOUTES_REVUES_SOUT:
             titre = self.GetProjetRef().phases[self.phase][1]
@@ -6933,8 +6879,8 @@ class Tache(Objet_sequence):
                 t = u""
             texte = t
 
-        SetWholeText(self.ficheXML, "titre", titre)
-        SetWholeText(self.ficheXML, "txt", texte)
+        self.tip.SetWholeText("titre", titre)
+        self.tip.SetWholeText("txt", texte)
         
         if not self.phase in TOUTES_REVUES_EVAL_SOUT:
             if self.intitule != "":
@@ -6944,9 +6890,9 @@ class Tache(Objet_sequence):
                     t = textwrap.fill(self.intitule, 50)
             else:
                 t = u""
-            SetWholeText(self.ficheXML, "int", t)
+            self.tip.SetWholeText("int", t)
         
-        self.tip.SetPage(self.ficheXML.toxml())
+        self.tip.SetPage()
         
         
         
@@ -7140,14 +7086,14 @@ class Systeme(ElementDeSequence, Objet_sequence):
     
     ######################################################################################  
     def SetTip(self):
-        self.ficheXML = self.GetFicheXML()
+        self.tip.SetHTML(self.GetFicheHTML())
         
-        SetWholeText(self.ficheXML, "nom", self.nom)
-        SetWholeText(self.ficheXML, "nbr", u"Nombre disponible : " + str(self.nbrDispo.v[0]))
+        self.tip.SetWholeText("nom", self.nom)
+        self.tip.SetWholeText("nbr", u"Nombre disponible : " + str(self.nbrDispo.v[0]))
         
-        self.tip.XML_AjouterImg(self.ficheXML, "img", self.image) 
+        self.tip.XML_AjouterImg("img", self.image) 
         
-        self.tip.SetPage(self.ficheXML.toxml())
+        self.tip.SetPage()
         
                
                
@@ -7405,15 +7351,13 @@ class Support(ElementDeSequence, Objet_sequence):
     
     ######################################################################################  
     def SetTip(self):
-        self.ficheXML = self.GetFicheXML()
+        self.tip.SetHTML(self.GetFicheHTML())
         
-        SetWholeText(self.ficheXML, "nom", self.nom)
-        SetWholeText(self.ficheXML, "des", self.description)
-#        SetWholeText(self.ficheXML, "nbr", u"Nombre disponible : " + str(self.nbrDispo.v[0]))
+        self.tip.SetWholeText("nom", self.nom)
+        self.tip.SetWholeText("des", self.description)       
+        self.tip.XML_AjouterImg("img", self.image) 
         
-        self.tip.XML_AjouterImg(self.ficheXML, "img", self.image) 
-        
-        self.tip.SetPage(self.ficheXML.toxml())
+        self.tip.SetPage()
     
 
 
@@ -7577,12 +7521,9 @@ class Personne(Objet_sequence):
         
     ######################################################################################  
     def SetTip(self):
-        self.ficheHTML = self.GetFicheHTML()
-        self.ficheXML = parseString(self.ficheHTML.encode('utf-8', errors="ignore"))
-        forceID(self.ficheXML)
-        SetWholeText(self.ficheXML, "nom", self.GetNomPrenom())
-        
-        self.tip.XML_AjouterImg(self.ficheXML, "av", self.avatar) 
+        self.tip.SetHTML(self.GetFicheHTML())
+        self.tip.SetWholeText("nom", self.GetNomPrenom())
+        self.tip.XML_AjouterImg("av", self.avatar) 
         
         self.SetTip2()
         
@@ -8248,9 +8189,8 @@ class Eleve(Personne, Objet_sequence):
                 coul = couleur.GetCouleurHTML(COUL_BOF)
             else:
                 coul = coulNON
-            XML_AjouterCol(self.ficheXML, "ld", lab, coul, bold = True)
-#            SetWholeText(self.ficheXML, "d", lab)
-#            self.tip.SetTexte(rallonge(lab), self.tip_duree)
+            self.tip.XML_AjouterCol("ld", lab, coul, bold = True)
+
             
             #
             # Evaluabilité
@@ -8301,14 +8241,14 @@ class Eleve(Personne, Objet_sequence):
                                 coul = coulNON
                             else:
                                 coul = None
-                        XML_AjouterCol(self.ficheXML, "le"+part, l, coul,
+                        self.tip.XML_AjouterCol("le"+part, l, coul,
                                        couleur.GetCouleurHTML(getCoulPartie(part)), size, bold)
 
             for disc in prj._dicoIndicateurs.keys():
                 for t in keys[disc]:
-                    XML_AjouterCol(self.ficheXML, "le", t, size = 2) 
-            #print "   ", self.ficheXML.toxml()
-            self.tip.SetPage(self.ficheXML.toxml())
+                    self.tip.XML_AjouterCol("le", t, size = 2) 
+
+            self.tip.SetPage()
             
 
             
@@ -8399,8 +8339,8 @@ class Prof(Personne):
                 coul = couleur.GetCouleurHTML(constantes.COUL_DISCIPLINES[self.discipline])
             else:
                 coul = None
-            XML_AjouterCol(self.ficheXML, "spe", constantes.NOM_DISCIPLINES[self.discipline], bcoul = coul)
-            self.tip.SetPage(self.ficheXML.toxml())
+            self.tip.XML_AjouterCol("spe", constantes.NOM_DISCIPLINES[self.discipline], bcoul = coul)
+            self.tip.SetPage()
         
         
     ######################################################################################  

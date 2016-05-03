@@ -1168,8 +1168,8 @@ class Referentiel(XMLelem):
             shp = wb.sheet_by_name(shnt)
             self.nomPb = shp.cell(0,0).value
             for l in range(2, shp.nrows) :
-                self.listProblematiques[int(shp.cell(l,1).value)].append(shp.cell(l,0).value)
-                
+                self.listProblematiques[int(shp.cell(l,1).value)-1].append(shp.cell(l,0).value)
+#            print "listProblematiques", self.listProblematiques
         
         
         
@@ -1476,6 +1476,13 @@ class Referentiel(XMLelem):
         return self.projets[codePrj].getPeriodeEval()
 
 
+    #############################################################################
+    def getPeriodesListe(self):
+        l = []
+        for p in self.periodes:
+            l.extend([p[0]]*p[1])
+        return l
+            
     #############################################################################
     def getAnnee(self, position):
         n = 0
@@ -2355,7 +2362,7 @@ def enregistrer(code, nomFichier):
     fichier = file(nomFichier, 'w')
     root = REFERENTIELS[code].getBranche()
     constantes.indent(root)
-    ET.ElementTree(root).write(fichier, xml_declaration=False, encoding = constantes.SYSTEM_ENCODING)
+    ET.ElementTree(root).write(fichier, xml_declaration=False, encoding = util_path.SYSTEM_ENCODING)
     fichier.close()
     
 #enregistrer("SSI", "testSauvRef.xml")

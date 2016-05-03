@@ -24,7 +24,7 @@
   </d_demarches>
   <d_dicFonctions />
   <d_dicoCompetences>
-    <Competences_S S_abrDiscipline="ETT" S_codeDiscipline="SII" S_nomDiscipline="STI2D - ETT" S_nomGenerique="Compétences" S_nomGeneriqueIndic="Indicateurs de performance">
+    <Competences_S S_abrDiscipline="ETT" S_codeDiscipline="SII" S_nomDiscipline="STI2D - ETT" S_nomGenerique="Compétence(s)" S_nomGeneriqueIndic="Indicateurs de performance">
       <d_dicCompetences>
         <l_O8s S_00="Valider des solutions techniques">
           <d_01>

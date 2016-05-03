@@ -2840,18 +2840,18 @@ class FenetreProgression(FenetreDocument):
         # html
         #
         
-        self.pageHTML = html.HtmlWindow(self.nb, -1, size = (100,100),style=wx.NO_FULL_REPAINT_ON_RESIZE|html.HW_SCROLLBAR_NEVER)
-        self.pageHTML.SetPage("""<!DOCTYPE html>
-<html>
-<body>
-
-<canvas id="myCanvas" width="200" height="100" style="border:1px solid #000000;">
-Your browser does not support the HTML5 canvas tag.
-</canvas>
-
-</body>
-</html>""")
-        self.nb.AddPage(self.pageHTML, u"HTML")
+#        self.pageHTML = html.HtmlWindow(self.nb, -1, size = (100,100),style=wx.NO_FULL_REPAINT_ON_RESIZE|html.HW_SCROLLBAR_NEVER)
+#        self.pageHTML.SetPage("""<!DOCTYPE html>
+#<html>
+#<body>
+#
+#<canvas id="myCanvas" width="200" height="100" style="border:1px solid #000000;">
+#Your browser does not support the HTML5 canvas tag.
+#</canvas>
+#
+#</body>
+#</html>""")
+#        self.nb.AddPage(self.pageHTML, u"HTML")
         
         self.miseEnPlace()
         
@@ -7796,7 +7796,7 @@ class PanelPropriete_Tache(PanelPropriete):
                 
                 pageComsizer.Add(self.arbres[code], 1, flag = wx.EXPAND)
                 self.pagesComp[-1].SetSizer(pageComsizer)
-                self.nb.AddPage(self.pagesComp[-1], comp.nomGenerique + u" à mobiliser : " + comp.abrDiscipline) 
+                self.nb.AddPage(self.pagesComp[-1], getSingulierPluriel(comp.nomGenerique, True) + u" à mobiliser : " + comp.abrDiscipline) 
                 
                 self.pageComsizer = pageComsizer
             
@@ -10237,7 +10237,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
         self.Bind(wx.EVT_SIZE, self.OnSize2)
         self.Bind(CT.EVT_TREE_ITEM_GETTOOLTIP, self.OnToolTip)
         
-        self.SetColumnText(0, competences.nomGenerique + u" et " + competences.nomGeneriqueIndic)
+        self.SetColumnText(0, getSingulierPluriel(competences.nomGenerique, True) + u" et " + competences.nomGeneriqueIndic)
         
         tache = self.GetTache()
         prj = tache.GetProjetRef()
@@ -11785,60 +11785,216 @@ class myProgressDialog(wx.ProgressDialog):
 #############################################################################################################
 import cStringIO
 import  wx.html as  html
+import wx.html2 as webview
+try: 
+    from BeautifulSoup import BeautifulSoup
+except ImportError:
+    from bs4 import BeautifulSoup
+import copy
 
 class PopupInfo(wx.PopupWindow):
-    def __init__(self, parent, page):
+    def __init__(self, parent, page, mode = "H", size=(400, 300)):
         wx.PopupWindow.__init__(self, parent, wx.BORDER_SIMPLE)
         self.parent = parent
-      
-        self.html = html.HtmlWindow(self, -1, size = (100,100),
-                                    style=wx.NO_FULL_REPAINT_ON_RESIZE|html.HW_SCROLLBAR_NEVER)
-        self.SetPage(page)
-        self.SetAutoLayout(False)
+        sizer = wx.BoxSizer(wx.VERTICAL)
+        
+        #
+        self.mode = mode
+        if mode == "H":
+            self.html = html.HtmlWindow(self, -1, size = size,
+                                        style=wx.NO_FULL_REPAINT_ON_RESIZE|html.HW_SCROLLBAR_NEVER)
+        else:
+            self.html = webview.WebView.New(self, size = size)
+            self.SetClientSize(size)
+        
+        self.SetHTML(page)
+        self.SetPage()
+        self.SetAutoLayout(True)
         
         # Un fichier temporaire pour mettre une image ...
         self.tfname = tempfile.mktemp()
         #'<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">'+
-
+        sizer.Add(self.html)
+        
+        self.SetSizer(sizer)
+        
         self.Bind(wx.EVT_WINDOW_DESTROY, self.OnDestroy)
     
 #    ##########################################################################################
 #    def SetBranche(self, branche):
 #        self.branche = branche
-        
+
+    #####################################################################################
+    def SetHTML(self, ficheHTML):
+        self.soup = BeautifulSoup(ficheHTML.decode('utf-8'), "html5lib")
+#.encode('utf-8', errors="ignore"), from_encoding="utf-8"
+
+    #####################################################################################
+    def SetWholeText(self, Id, text):
+        """ 
+        """
+#        print "SetWholeText", text
+        if text is None:
+            return
+        tag = self.soup.find(id=Id)
+#        print tag
+        tag.string.replace_with(text)
+    
     ##########################################################################################
-    def XML_AjouterImg(self, node, item, bmp):
-#        print "XML_AjouterImg"
+    def XML_AjouterImg(self, item, bmp):
+        img = self.soup.find(id = item)
         try:
             bmp.SaveFile(self.tfname, wx.BITMAP_TYPE_PNG)
         except:
             return
-        
-        img = node.getElementById(item)
-        if img != None:
-            td = node.createElement("img")
-            img.appendChild(td)
-            td.setAttribute("src", self.tfname)
+#        print "img", img
+        img['src'] = self.tfname
+#        img = node.getElementById(item)
+#        if img != None:
+#            td = node.createElement("img")
+#            img.appendChild(td)
+#            td.setAttribute("src", self.tfname)
 
+    #####################################################################################
+    def XML_AjouterElemListeUL(self, idListe, li):
+        liste = self.soup.find(id = idListe)
+#        print "liste", liste,liste.find_all('li')
+        if len(liste.find_all('li')) == 1 and liste.li.string == " ":
+            liste.li.string = li
+        else:
+            tag_li = copy.copy(liste.li)
+            liste.append(tag_li)
         
+    #####################################################################################
+    def XML_AjouterElemListe(self, idListe, dt, dd):
+        liste = self.soup.find(id = idListe)
+#        print "liste", liste,liste.find_all('dt')
+        if len(liste.find_all('dt')) == 1 and liste.dt.string == " ":
+            liste.dt.string = dt
+            liste.dd.string = dd
+        else:
+            tag_dt = copy.copy(liste.dt)
+            tag_dd = copy.copy(liste.dd)
+            liste.append(tag_dt)
+            liste.append(tag_dd)
+        
+    #####################################################################################
+    def XML_AjouterCol(self, idLigne, text, bcoul = None, fcoul = "black", size = None, bold = False):
+        """<td id="rc1" style="background-color: #ff6347;"><font id="r1" size="2">1</font></td>"""
+        ligne = self.soup.find(id = idLigne)
+        if ligne != None:
+            td = self.soup.new_tag("td")
+            
+            ligne.append(td)
+            
+            if bcoul != None:
+                td["style"] = "background-color: "+bcoul
+            
+            if size != None:
+                tc = self.soup.new_tag("font", size = str(size))
+                td.append(tc)
+                td = tc
+            
+            if bold:
+                tc = self.soup.new_tag("b")
+                td.append(tc)
+                td = tc
+
+            td.append(text)
+            
+    ####################################################################################
+    def Construire(self, dic , dicIndicateurs, prj):
+        
+        def const(d, ul):
+            ks = d.keys()
+            ks.sort()
+            for k in ks:
+                v = d[k]
+                if len(v) > 1 and type(v[1]) == dict:
+                    
+                    li = self.soup.new_tag("li")
+                    li.append(textwrap.fill(k+" "+v[0], 50))
+                    ul.append(li)
+                    
+#                        if len(v) != 2:
+#                            self.SetItemBold(b, True)
+                        
+                    nul = self.soup.new_tag("ul")
+                    li.append(nul)
+                    const(v[1], nul)
+                        
+                else:   # Indicateur
+                    cc = [cd+ " " + it for cd, it in zip(k.split(u"\n"), v[0].split(u"\n"))] 
+                    
+                    li = self.soup.new_tag("li")
+                    li.append(textwrap.fill(u"\n ".join(cc), 50))
+                    ul.append(li)
+                    
+                    nul = self.soup.new_tag("ul")
+                    li.append(nul)
+                    
+                    if k in dicIndicateurs.keys():
+                        ajouteIndic(nul, v[1], dicIndicateurs[k])
+                    else:
+                        ajouteIndic(nul, v[1], None)
+            return
+        
+        def ajouteIndic(ul, listIndic, listIndicUtil):
+            for i, indic in enumerate(listIndic):
+                
+                li = self.soup.new_tag("li")
+                font = self.soup.new_tag("font")
+                li.append(font)
+                font.append(textwrap.fill(indic.intitule, 50))
+                ul.append(li)
+                ul['type']="none"
+                    
+                for j, part in enumerate(prj.parties.keys()):
+                    if part in indic.poids.keys():
+                        if listIndicUtil == None or not listIndicUtil[i]:
+                            c = COUL_ABS
+                        else:
+                            c = getCoulPartie(part)
+                font['color'] = couleur.GetCouleurHTML(c, wx.C2S_HTML_SYNTAX)
+        
+        ul = self.soup.find(id = "indic")
+        
+        
+        if type(dic) == dict:  
+            const(dic, ul)
+        else:
+            ajouteIndic(ul, dic, dicIndicateurs)
+                
+                
+                
     ##########################################################################################
     def OnDestroy(self, evt):
         if os.path.exists(self.tfname):
             os.remove(self.tfname)
             
     ##########################################################################################
-    def SetPage(self, page):
+    def SetPage(self):
 #        self.SetSize((10,1000))
 #        self.SetClientSize((100,1000))
 #        self.html.SetSize( (100, 100) )
 #        self.SetClientSize(self.html.GetSize())
         
-        self.html.SetPage(page)
-        ir = self.html.GetInternalRepresentation()
-
-        self.SetClientSize((ir.GetWidth(), ir.GetHeight()))
-
-        self.html.SetSize((ir.GetWidth(), ir.GetHeight()))
+        
+#        print self.GetClientSize()
+#        print self.html.GetSize()
+#        print self.html.GetClientSize()
+        
+#        self.SetClientSize(self.html.GetClientSize())
+#        self.Fit()
+        if self.mode == "H":
+            self.html.SetPage(self.soup.prettify())
+            ir = self.html.GetInternalRepresentation()
+    
+            self.SetClientSize((ir.GetWidth(), ir.GetHeight()))
+    
+            self.html.SetSize((ir.GetWidth(), ir.GetHeight()))
+        else:
+            self.html.SetPage(self.soup.prettify(), "")
 
         
     ##########################################################################################
@@ -11850,185 +12006,7 @@ class PopupInfo(wx.PopupWindow):
         event.Skip()
         
         
-        
-        
-        
-#class PopupInfo2(wx.PopupWindow):
-#    def __init__(self, parent, titre = "", doc = None, branche = None):
-#        wx.PopupWindow.__init__(self, parent, wx.BORDER_SIMPLE)
-#        self.parent = parent
-#        self.doc = doc
-#        self.branche = branche
-#        
-#        #
-#        # Un sizer "tableau", comme ça, on y met ce qu'on veut où on veut ...
-#        #
-#        self.sizer = wx.GridBagSizer()
-#        
-#        #
-#        # Un titre
-#        #
-#        self.titre = wx.StaticText(self, -1, titre)
-#        font = wx.Font(15, wx.SWISS, wx.NORMAL, wx.NORMAL)
-#        self.titre.SetFont(font)
-#        self.sizer.Add(self.titre, (0,0), flag = wx.ALL|wx.ALIGN_CENTER, border = 5)
-#        
-#        self.SetSizerAndFit(self.sizer)
-#        self.Bind(wx.EVT_LEAVE_WINDOW, self.OnLeave)
-#        self.Bind(wx.EVT_LEFT_UP, self.OnClick)
-#        
-#    ##########################################################################################
-#    def SetBranche(self, branche):
-#        self.branche = branche
-#        
-#    ##########################################################################################
-#    def OnClick(self, event):
-#        if self.doc != None and self.branche != None:
-#            self.doc.SelectItem(self.branche)
-#            self.Show(False)
-#            
-#    ##########################################################################################
-#    def OnLeave(self, event):
-#        x, y = event.GetPosition()
-#        w, h = self.GetSize()
-#        if not ( x > 0 and y > 0 and x < w and y < h):
-#            self.Show(False)
-#        event.Skip()
-#
-#
-#    ##########################################################################################
-#    def SetTitre(self, titre):
-#        self.titre.SetLabel(titre)
-#        
-#        
-#    ##########################################################################################
-#    def CreerLien(self, position = (3,0), span = (1,1)):
-#        titreLien = wx.StaticText(self, -1, "")
-#        ctrlLien = wx.BitmapButton(self, -1, wx.NullBitmap)
-#        ctrlLien.Show(False)
-#        self.Bind(wx.EVT_BUTTON, self.OnClickLien, ctrlLien)
-#        sizerLien = wx.BoxSizer(wx.HORIZONTAL)
-#        sizerLien.Add(titreLien, flag = wx.ALIGN_CENTER_VERTICAL)
-#        sizerLien.Add(ctrlLien)
-#        self.sizer.Add(sizerLien, position, span, flag = wx.ALL, border = 5)
-#        return titreLien, ctrlLien
-#
-#    ##########################################################################################
-#    def SetLien(self, lien, titreLien, ctrlLien):
-#        self.lien = lien # ATTENTION ! Cette faéon de faire n'autorise qu'un seul lien par PopupInfo !
-#        if lien.type == "":
-#            ctrlLien.Show(False)
-#            titreLien.Show(False)
-#            ctrlLien.SetToolTipString(toSystemEncoding(lien.path))
-#        else:
-#            ctrlLien.SetToolTipString(toSystemEncoding(lien.path))
-#            if lien.type == "f":
-#                titreLien.SetLabel(u"Fichier :")
-#                ctrlLien.SetBitmapLabel(wx.ArtProvider_GetBitmap(wx.ART_NORMAL_FILE))
-#                ctrlLien.Show(True)
-#            elif lien.type == 'd':
-#                titreLien.SetLabel(u"Dossier :")
-#                ctrlLien.SetBitmapLabel(wx.ArtProvider_GetBitmap(wx.ART_FOLDER))
-#                ctrlLien.Show(True)
-#            elif lien.type == 'u':
-#                titreLien.SetLabel(u"Lien web :")
-#                ctrlLien.SetBitmapLabel(images.Icone_web.GetBitmap())
-#                ctrlLien.Show(True)
-#            elif lien.type == 's':
-#                titreLien.SetLabel(u"Fichier séquence :")
-#                ctrlLien.SetBitmapLabel(images.Icone_sequence.GetBitmap())
-#                ctrlLien.Show(True)
-#            self.Layout()
-#            self.Fit()
-#        
-#    ##########################################################################################
-#    def OnClickLien(self, evt):
-#        if self.parent.typ == 'seq':
-#            path = self.parent.sequence.GetPath()
-#        else:
-#            path = self.parent.projet.GetPath()
-#        self.lien.Afficher(path, fenSeq = self.parent.parent)
-#        
-#    ##########################################################################################
-#    def CreerImage(self, position = (4,0), span = (1,1), flag = wx.ALIGN_CENTER):
-#        image = wx.StaticBitmap(self, -1, wx.NullBitmap)
-#        image.Show(False)
-#        self.sizer.Add(image, position, span, flag = flag|wx.ALL, border = 5)
-#        return image
-#    
-#    ##########################################################################################
-#    def SetImage(self, image, ctrlImage):
-#        if image == None:
-#            ctrlImage.Show(False)
-#        else:
-#            ctrlImage.SetBitmap(image)
-#            ctrlImage.Show(True)
-#        self.Layout()
-#        self.Fit()
-#        
-#    
-#    ##########################################################################################
-#    def CreerTexte(self, position = (1,0), span = (1,1), txt = u"", flag = wx.ALIGN_CENTER, font = None):
-#        if font == None:
-#            font = getFont_9()
-#        ctrlTxt = wx.StaticText(self, -1, txt)
-#        ctrlTxt.SetFont(font)
-#        self.sizer.Add(ctrlTxt, position, span, flag = flag|wx.ALL, border = 5)
-#        self.Layout()
-#        self.Fit()
-#        return ctrlTxt
-#    
-#    ##########################################################################################
-#    def CreerArbre(self, position = (1,0), span = (1,1), ref = None, dic = {}, flag = wx.ALIGN_CENTER):
-#        arbre = ArbreCompetencesPopup(self)
-#        self.sizer.Add(arbre, position, span, flag = flag|wx.ALL|wx.EXPAND, border = 5)
-#        self.Layout()
-#        self.Fit()
-#        return arbre
-#    
-#    ##########################################################################################
-#    def SetTexte(self, texte, ctrlTxt):
-#        if texte == "":
-#            ctrlTxt.Show(False)
-#        else:
-#            if hasattr(ctrlTxt, 'SetLabelMarkup'):
-#                ctrlTxt.SetLabelMarkup(texte)
-#            else:
-#                ctrlTxt.SetLabel(texte.replace('<b>', '').replace('</b>', '') )
-#            ctrlTxt.Show(True)
-#            self.Layout()
-#            self.Fit()
-#    
-#    ##########################################################################################
-#    def CreerRichTexte(self, objet, position = (6,0), span = (1,1)):
-#        self.objet = objet # ATTENTION ! Cette faéon de faire n'autorise qu'un seul objet par PopupInfo !
-#        self.rtp = richtext.RichTextPanel(self, objet, size = (300, 200))
-#        self.sizer.Add(self.rtp, position, span, flag = wx.ALL|wx.EXPAND, border = 5)
-#        self.SetRichTexte()
-#        return self.rtp
-#    
-#    ##########################################################################################
-#    def SetRichTexte(self):
-#        self.rtp.Show(self.objet.description != None)
-#        self.rtp.Ouvrir()
-#        self.Layout()
-#        self.Fit()
-#        
-#    ##########################################################################################
-#    def DeplacerItem(self, item, pos = None, span = None):
-#        if item == None:
-#            item = self.titre
-#        if pos != None:
-#            self.sizer.SetItemPosition(item, pos) 
-#        if span != None:
-#            self.sizer.SetItemSpan(item, span) 
-#        
-#        
-
-
-
-
-
+    
 
 
 #############################################################################################################

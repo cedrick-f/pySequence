@@ -1,4 +1,4 @@
-<Referentiel B_CI_BO="False" B_CI_cible="False" B_domaines="False" S_AnneeDebut="Sup1" S_Code="STS_SN_IR" S_Famille="STS" S_FichierLogo="" S_abrevCI="Th " S_nomCI="Thèmes" S_nomFonctions="Fonction(s)" S_nomPb="Problématique(s)" S_nomTaches="Tâche(s)">
+<Referentiel B_CI_BO="False" B_CI_cible="False" B_domaines="False" S_AnneeDebut="Sup1" S_Code="STS_SN_IR" S_Famille="STS" S_FichierLogo="" S_abrevCI="Th " S_nomCI="Thème(s)" S_nomFonctions="Fonction(s)" S_nomPb="Problématique(s)" S_nomTaches="Tâche(s)">
   <l_BO_URL>
     <l_00 S_00="Programme" S_01="http://eduscol.education.fr/sti/sites/eduscol.education.fr.sti/files/textes/formations-bts-bts-systemes-numeriques/3321-referentiel-bts-systemes-numeriques.pdf" />
   </l_BO_URL>
@@ -24,7 +24,7 @@
   </d_demarches>
   <d_dicFonctions />
   <d_dicoCompetences>
-    <Competences_S S_abrDiscipline="GE" S_codeDiscipline="SII" S_nomDiscipline="Génie Électrique" S_nomGenerique="Compétences" S_nomGeneriqueIndic="Indicateurs de performance">
+    <Competences_S S_abrDiscipline="GE" S_codeDiscipline="SII" S_nomDiscipline="Génie Électrique" S_nomGenerique="Compétence(s)" S_nomGeneriqueIndic="Indicateurs de performance">
       <d_dicCompetences>
         <l_C7.1 S_00="diagnostiquer les causes d’un dysfonctionnement">
           <l_01>

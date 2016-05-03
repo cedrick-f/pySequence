@@ -1,4 +1,4 @@
-<Referentiel B_CI_BO="False" B_CI_cible="False" B_domaines="False" S_AnneeDebut="Sup1" S_Code="STS_EE" S_Famille="STS" S_FichierLogo="" S_abrevCI="Th " S_nomCI="Thèmes" S_nomFonctions="Activités professionnelles" S_nomPb="Problématique(s)" S_nomTaches="Compétences associées">
+<Referentiel B_CI_BO="False" B_CI_cible="False" B_domaines="False" S_AnneeDebut="Sup1" S_Code="STS_EE" S_Famille="STS" S_FichierLogo="" S_abrevCI="Th " S_nomCI="Thème(s)" S_nomFonctions="Activités professionnelles" S_nomPb="Problématique(s)" S_nomTaches="Compétences associées">
   <l_BO_URL>
     <l_00 S_00="Programme" S_01="http://www.education.gouv.fr/pid25535/bulletin_officiel.html?cid_bo=82979" />
   </l_BO_URL>
@@ -176,7 +176,7 @@
     </l_F7>
   </d_dicFonctions>
   <d_dicoCompetences>
-    <Competences_S S_abrDiscipline="S6" S_codeDiscipline="SII" S_nomDiscipline="Génie Électrique" S_nomGenerique="Compétences" S_nomGeneriqueIndic="Indicateurs de performance">
+    <Competences_S S_abrDiscipline="S6" S_codeDiscipline="SII" S_nomDiscipline="Génie Électrique" S_nomGenerique="Compétence(s)" S_nomGeneriqueIndic="Indicateurs de performance">
       <d_dicCompetences>
         <l_C19 S_00="Identifier les paramètres de réglage">
           <l_01>

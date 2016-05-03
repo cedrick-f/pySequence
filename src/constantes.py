@@ -761,7 +761,7 @@ TIP_PB_LIMITE = u"\n(%s caractères maxi)" %str(LONG_MAX_PROBLEMATIQUE)
 #                     u"- supports de communication."                             
       
 #<?xml version="1.0" encoding="utf-8"?>
-BASE_FICHE_HTML_ELEVE = """
+BASE_FICHE_HTML_ELEVE = u"""
 <HTML>
     <p style="text-align: center;"><font size="12"><b>Elève</b></font></p>
 <p id="nom">Nom-Prénom</p>
@@ -783,7 +783,7 @@ BASE_FICHE_HTML_ELEVE = """
 """
 
 
-BASE_FICHE_HTML_SEANCE = """
+BASE_FICHE_HTML_SEANCE = u"""
 <HTML>
     <p style="text-align: center;"><font size="12"><b>Séance</b></font></p>
 <p id="int">_</p>
@@ -792,7 +792,7 @@ BASE_FICHE_HTML_SEANCE = """
 </HTML>
 """
 
-BASE_FICHE_HTML_CALENDRIER = """
+BASE_FICHE_HTML_CALENDRIER = u"""
 <HTML>
     <font size="12"><b><h1 id = "titre" style="text-align: center;">Calendrier</h1></b></font>
 <p id="int">_</p>
@@ -801,45 +801,52 @@ BASE_FICHE_HTML_CALENDRIER = """
 </HTML>
 """
 
-BASE_FICHE_HTML_CI = """
+BASE_FICHE_HTML_CI = u"""
 <HTML>
-    <font size="12" color="red"><b><h1 id = "titre" style="text-align: center;">_</h1></b></font>
+    <font size=11><font color="red"><b><h1 id = "titre" style="text-align: center;">_</h1></b></font></font>
     <dl id = "ci">
-    </dl> 
+        <dt> </dt> <dd> </dd>
+    </dl>
+    <font size=8><font color="dark red"><b><p id="nomPb"> </p></b></font></font>
+    <ul id = "pb">
+        <li> </li>
+    </ul>
 
 </HTML>
 """
 
-BASE_FICHE_HTML_COMP = """
+BASE_FICHE_HTML_COMP = u"""
 <HTML>
     <font size="12" color="green"><b><h1 id = "titre" style="text-align: center;">_</h1></b></font>
     <dl id = "list">
+        <dt> </dt> <dd> </dd>
     </dl> 
-
 </HTML>
 """
 
-BASE_FICHE_HTML_COMP_PRJ = """
+BASE_FICHE_HTML_COMP_PRJ = u"""
 <HTML>
     <font size="12" color="green"><b><h1 id = "titre" style="text-align: center;">_</h1></b></font>
     <p id="int">_</p>
     <ul id = "indic">
+    <li> </li>
     </ul> 
     <ul id = "leg">
     </ul> 
 </HTML>
 """
 
-BASE_FICHE_HTML_SAV = """
+BASE_FICHE_HTML_SAV = u"""
 <HTML>
     <font size="12" color="blue"><b><h1 id = "titre" style="text-align: center;">_</h1></b></font>
     <dl id = "list">
+    <dt> </dt> <dd> </dd>
     </dl> 
 
 </HTML>
 """
 
-BASE_FICHE_HTML_SYSTEME = """
+BASE_FICHE_HTML_SYSTEME = u"""
 <HTML>
     <p style="color:blue;text-align: center;font-size: 16">Système</p>
 <p id="nom">_</p>
@@ -850,7 +857,7 @@ BASE_FICHE_HTML_SYSTEME = """
 """
 
 
-BASE_FICHE_HTML_SUPPORT = """
+BASE_FICHE_HTML_SUPPORT = u"""
 <HTML>
     <font size="12"><b><h1 style="text-align: center;">Support</h1></b></font>
 <p id="nom">_</p>
@@ -860,7 +867,7 @@ BASE_FICHE_HTML_SUPPORT = """
 </HTML>
 """
 
-BASE_FICHE_HTML_PROB = """
+BASE_FICHE_HTML_PROB = u"""
 <HTML>
 <font size="12" color="green"><b><h1 id = "titre" style="text-align: center;">Problématique</h1></b></font>
 
@@ -870,7 +877,7 @@ BASE_FICHE_HTML_PROB = """
 </HTML>
 """
 
-BASE_FICHE_HTML_PROJET = """
+BASE_FICHE_HTML_PROJET = u"""
 <HTML>
 <font size="12" color="darkred"><b><h1 id = "titre" style="text-align: center;">Projet</h1></b></font>
 
@@ -880,28 +887,40 @@ BASE_FICHE_HTML_PROJET = """
 """
 
 
-BASE_FICHE_HTML_TACHE = """
+BASE_FICHE_HTML_TACHE = u"""
 <HTML>
 <font size="12" color="green"><b><h1 id = "titre" style="text-align: center;">_</h1></b></font>
 
-<p id="txt">_</p>
-<p id="int">_</p>
+<p id="txt"> </p>
+<p id="int"> </p>
 
 </HTML>
 """
 
-BASE_FICHE_HTML_SEQ = """
+BASE_FICHE_HTML_SEQ = u"""
 <HTML>
     <p style="text-align: center;"><font size="12"><b>Séquence</b></font></p>
 <p id="nom">Intitulé</p>
-<p id="ap">_</p>
+<p id="ap"> </p>
 </HTML>
 """
-   
-BASE_FICHE_HTML = """
+
+
+BASE_FICHE_HTML_PERIODES = u"""
+<HTML>
+    <font size=11><b><h1 id = "titre" style="text-align: center;">_</h1></b></font>
+    <p id="txt"> </p>
+    <img id="img" src="" alt=""> 
+    
+</HTML>
+"""
+
+
+BASE_FICHE_HTML = u"""
 <HTML>
     <font size="11"><b><h1 id = "titre" style="text-align: center;">_</h1></b></font>
- 
+    <p id="txt"> </p>
+    <p id="img"> </p>
 </HTML>
 """
 

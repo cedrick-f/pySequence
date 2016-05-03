@@ -1,4 +1,4 @@
-<Referentiel B_CI_BO="True" B_CI_cible="False" B_domaines="False" S_AnneeDebut="Sec1" S_Code="Cy3-ST" S_Famille="ScTec" S_FichierLogo="" S_abrevCI="CI" S_nomCI="Centre(s) d'Intérêt/Thémes/Thématiques" S_nomFonctions="Fonction(s)" S_nomPb="Problématique(s)" S_nomTaches="Tâche(s)">
+<Referentiel B_CI_BO="True" B_CI_cible="False" B_domaines="False" S_AnneeDebut="Sec1" S_Code="Cy3-ST" S_Famille="ScTec" S_FichierLogo="" S_abrevCI="Th" S_nomCI="Thème(s)" S_nomFonctions="Fonction(s)" S_nomPb="Problématique(s)" S_nomTaches="Tâche(s)">
   <l_BO_URL>
     <l_00 S_00="Programme" S_01="http://www.education.gouv.fr/pid285/bulletin_officiel.html?cid_bo=94708" />
   </l_BO_URL>
@@ -24,7 +24,7 @@
   </d_demarches>
   <d_dicFonctions />
   <d_dicoCompetences>
-    <Competences_S S_abrDiscipline="ScTec" S_codeDiscipline="Tch" S_nomDiscipline="Sciences et technologie" S_nomGenerique="Compétences" S_nomGeneriqueIndic="Indicateurs de performance">
+    <Competences_S S_abrDiscipline="ScTec" S_codeDiscipline="Tch" S_nomDiscipline="Sciences et technologie" S_nomGenerique="Compétence(s)" S_nomGeneriqueIndic="Indicateurs de performance">
       <d_dicCompetences>
         <l_A S_00="Décrire les états et la constitution de la matière à l'echelle macroscopique">
           <d_01>
@@ -59,7 +59,7 @@
       </d_dicCompetences>
       <l_indicateurs />
     </Competences_S>
-    <Competences_C S_abrDiscipline="ScTec" S_codeDiscipline="Tch" S_nomDiscipline="Sciences et technologie" S_nomGenerique="Compétences" S_nomGeneriqueIndic="Indicateurs de performance">
+    <Competences_C S_abrDiscipline="ScTec" S_codeDiscipline="Tch" S_nomDiscipline="Sciences et technologie" S_nomGenerique="Compétence(s)" S_nomGeneriqueIndic="Indicateurs de performance">
       <d_dicCompetences>
         <l_CT4 S_00="Pratiquer des langages">
           <d_01>
