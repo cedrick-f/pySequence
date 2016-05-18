@@ -109,7 +109,7 @@ from wx_pysequence import CodeBranche, PopupInfo, getIconeFileSave, getIconeCopy
                             PanelPropriete_Projet, PanelPropriete_Competences, \
                             PanelPropriete_Savoirs, PanelPropriete_Seance, \
                             PanelPropriete_Tache, PanelPropriete_Systeme, \
-                            PanelPropriete_Support, \
+                            PanelPropriete_Support, PanelPropriete_LienProjet,\
                             PanelPropriete_Personne
 
 
@@ -189,8 +189,8 @@ from wx_pysequence import CodeBranche, PopupInfo, getIconeFileSave, getIconeCopy
 #        liste.appendChild(_dt)
         
 
-#def XML_AjouterImg(node, item, bmp):
-##        print "XML_AjouterImg"
+#def AjouterImg(node, item, bmp):
+##        print "AjouterImg"
 #
 #    img = node.find(id = item)
 #    try:
@@ -374,7 +374,7 @@ Titres = [u"Séquence pédagogique",
           u"Tâches",
           u"Projet", 
           u"Equipe pédagogique",
-          u"Séquences", 
+          u"Séquences et Projets", 
           u"Progression"]
 
 class ElementDeSequence():
@@ -1366,8 +1366,23 @@ class BaseDoc():
         fichier.close()
         
 
-    
 
+    ##################################################################################################    
+    def Tip_POS(self, p = None):
+        if p == None:
+            self.tip.SetWholeText("titre", u"Découpage de la formation en périodes")
+            self.tip.SetWholeText("txt", u"Périodes occupées pendant la Progression")
+            self.tip.AjouterImg("img", self.getBitmapPeriode(300))
+        else:
+            ref = self.GetReferentiel()
+            self.tip.SetWholeText("titre", u"Période de formation")
+            self.tip.SetWholeText("txt", ref.getPeriodesListe()[p] + " - " + str(p+1))
+                
+
+
+    ##################################################################################################    
+    def Tip_EQU(self, typeDoc):
+        self.tip.SetWholeText("titre", u"Equipe pédagogique impliquée dans " + typeDoc)
 
 
 
@@ -1687,13 +1702,13 @@ class Sequence(BaseDoc, Objet_sequence):
             pass
         else:
             if param == "POS":
-                self.tip.SetWholeText("titre", u"Découpage de la formation en périodes")
+                self.Tip_POS()
                 
             elif param[:3] == "POS":
-                self.tip.SetWholeText("titre", u"Période de formation : %s" %(int(param[3])+1))
+                self.Tip_POS(int(param[3])) 
                 
             elif param[:3] == "EQU":
-                self.tip.SetWholeText("titre", u"Equipe pédagogique impliquée dans la Progression")
+                self.Tip_EQU("la Séquence")
                 
             elif type(obj) == list:
                 pass
@@ -1990,14 +2005,16 @@ class Sequence(BaseDoc, Objet_sequence):
         #
         # L'équipe pédagogique
         #
-        self.branchePrf = arbre.AppendItem(self.branche, Titres[10], data = "Equ")
+        self.branchePrf = arbre.AppendItem(self.branche, Titres[10], 
+                                           data = u"Equ")
         for e in self.equipe:
             e.ConstruireArbre(arbre, self.branchePrf) 
         
         #
         # Les objectifs
         #
-        self.brancheObj = arbre.AppendItem(self.branche, Titres[2], image = self.arbre.images["Obj"], data = "Obj")
+        self.brancheObj = arbre.AppendItem(self.branche, Titres[2], image = self.arbre.images["Obj"], 
+                                           data = "Obj")
         for obj in self.obj.values():
             obj.ConstruireArbre(arbre, self.brancheObj)
             
@@ -2011,15 +2028,21 @@ class Sequence(BaseDoc, Objet_sequence):
             for sy in self.systemes:
                 sy.ConstruireArbre(arbre, self.brancheSys)    
         
-    
+
+    ######################################################################################  
+    def DefinirCouleurs(self):
+        draw_cairo.DefinirCouleurs(self.GetNbrPeriodes(),
+                                   len(self.GetReferentiel()._listesCompetences_simple["S"]),
+                                   len(self.GetReferentiel().CentresInterets))
+
+
     ######################################################################################  
     def Rafraichir(self):
         self.arbre.Delete(self.branche)
         self.ConstruireArbre(self.arbre, self.arbre.GetRootItem())
         self.arbre.ExpandAll()
-        draw_cairo.DefinirCouleurs(self.GetNbrPeriodes(),
-                                   len(self.GetReferentiel()._listesCompetences_simple["S"]),
-                                   len(self.GetReferentiel().CentresInterets))
+        
+        self.DefinirCouleurs()
         
         if self.arbre.GetSelection() is None:
             self.arbre.SelectItem(self.branche)
@@ -2254,6 +2277,7 @@ class Projet(BaseDoc, Objet_sequence):
         
         self.nom_obj = "Projet"
         self.article_obj = "du"
+        self.article_obj2 = "le"
         
 #        Objet_sequence.__init__(self)
         self.undoStack = UndoStack(self)
@@ -2842,13 +2866,13 @@ class Projet(BaseDoc, Objet_sequence):
                 self.tip.SetWholeText("txt", self.problematique)
             
             elif param == "POS":
-                self.tip.SetWholeText("titre", u"Découpage de la formation en périodes")
+                self.Tip_POS()
                 
             elif param[:3] == "POS":
-                self.tip.SetWholeText("titre", u"Période de formation : %s" %(int(param[3])+1))
+                self.Tip_POS(int(param[3])) 
                 
             elif param[:3] == "EQU":
-                self.tip.SetWholeText("titre", u"Equipe pédagogique impliquée dans la Progression")
+                self.Tip_EQU("le Projet")
                 
             elif type(obj) == list:
                 pass
@@ -3496,13 +3520,25 @@ class Projet(BaseDoc, Objet_sequence):
 #                    return i
 
     ######################################################################################  
-    def Rafraichir(self):
+    def DefinirCouleurs(self):
         draw_cairo.DefinirCouleurs(self.GetNbrPeriodes(),
                                    len(self.GetReferentiel()._listesCompetences_simple["S"]),
                                    len(self.eleves))
         
+     
+    ######################################################################################  
+    def Rafraichir(self):
+        self.DefinirCouleurs()
         
-
+        
+    #############################################################################            
+    def getBitmapPeriode(self, larg):
+        imagesurface = draw_cairo_prj.getBitmapPeriode(larg, self.position,
+                                                       self.GetReferentiel().periodes, 
+                                                       prop = 7)
+        return getBitmapFromImageSurface(imagesurface)
+    
+    
     #############################################################################
     def MiseAJourTypeEnseignement(self):#, changeFamille = False):
         print "MiseAJourTypeEnseignement projet"
@@ -3757,7 +3793,10 @@ class Progression(BaseDoc, Objet_sequence):
 #        Objet_sequence.__init__(self)
         self.undoStack = UndoStack(self)
         self.image = None
+        
         self.sequences = []     # liste de LienSequence
+        self.projets = []       # liste de LienProjet
+        
         self.calendriers = []
         self.eleves = []
         self.equipe = []
@@ -3841,18 +3880,27 @@ class Progression(BaseDoc, Objet_sequence):
         self.brancheSeq = arbre.AppendItem(self.branche, Titres[11], data = "Seq")
         for e in self.sequences:
             e.ConstruireArbre(arbre, self.brancheSeq) 
-    
-    
+        for e in self.projets:
+            e.ConstruireArbre(arbre, self.brancheSeq) 
+            
+        
+    ######################################################################################  
+    def DefinirCouleurs(self):
+        draw_cairo.DefinirCouleurs(self.GetNbrPeriodes(),
+                                   len(self.GetReferentiel()._listesCompetences_simple["S"]),
+                                   len(self.GetReferentiel().CentresInterets))
+        
+
     ######################################################################################  
     def Rafraichir(self):
-        self.OrdonnerSequences()
+        self.Ordonner()
         self.arbre.DeleteChildren(self.brancheSeq)
         for e in self.sequences:
             e.ConstruireArbre(self.arbre, self.brancheSeq)
         self.arbre.ExpandAll()
-        draw_cairo.DefinirCouleurs(self.GetNbrPeriodes(),
-                                   len(self.GetReferentiel()._listesCompetences_simple["S"]),
-                                   len(self.GetReferentiel().CentresInterets))
+        
+        self.DefinirCouleurs()
+        
         if self.arbre.GetSelection() is None:
             self.arbre.SelectItem(self.branche)
 
@@ -3993,9 +4041,25 @@ class Progression(BaseDoc, Objet_sequence):
             self.app.AfficherMenuContextuel([[u"Ajouter un professeur", self.AjouterProf, images.Icone_ajout_prof.GetBitmap()]])
             
         elif self.arbre.GetItemText(itemArbre) == Titres[11]: # Séquence
-            self.app.AfficherMenuContextuel([[u"Créer une nouvelle Séquence", self.AjouterNouvelleSequence, images.Icone_ajout_seq.GetBitmap()],
-                                             [u"Importer une Séquence existante", self.AjouterSequence, images.Icone_import_seq.GetBitmap()],
-                                             [u"Importer toutes les Séquences compatibles du dossier", self.ImporterSequences, images.Icone_cherch_seq.GetBitmap()]])
+            self.app.AfficherMenuContextuel([[u"Créer une nouvelle Séquence", 
+                                              self.AjouterNouvelleSequence, 
+                                              images.Icone_ajout_seq.GetBitmap()],
+                                             [u"Importer une Séquence existante", 
+                                              self.AjouterSequence, 
+                                              images.Icone_import_seq.GetBitmap()],
+                                             [u"Importer toutes les Séquences compatibles du dossier", 
+                                              self.ImporterSequences, 
+                                              images.Icone_cherch_seq.GetBitmap()],
+                                             
+                                             [u"Créer un nouveau Projet", 
+                                              self.AjouterNouveauProjet, 
+                                              images.Icone_ajout_prj.GetBitmap()],
+                                             [u"Importer un Projet existant", 
+                                              self.AjouterProjet, 
+                                              images.Icone_import_prj.GetBitmap()],
+                                             [u"Importer tous les Projets compatibles du dossier", 
+                                              self.ImporterProjets, 
+                                              images.Icone_cherch_prj.GetBitmap()]])
 
 
     ######################################################################################  
@@ -4078,20 +4142,24 @@ class Progression(BaseDoc, Objet_sequence):
         for s in aSupprimer:
             self.SupprimerLienSequence(lienSeq = s)
             
-        self.OrdonnerSequences()
+        self.Ordonner()
 
 
     ######################################################################################  
-    def OrdonnerSequences(self):
-#        print "OrdonnerSequences"
-        self.sequences.sort(key= lambda s : s.sequence.position)
+    def Ordonner(self):
+#        print "Ordonner"
+    
+        listeSeqPrj = self.sequences+self.projets
+                
+        listeSeqPrj.sort(key= lambda s : s.GetDocument().position)
         
         self.brancheSeq.DeleteChildren(self.arbre)
-        for e in self.sequences:
+        for e in listeSeqPrj:
             e.ConstruireArbre(self.arbre, self.brancheSeq) 
             
         self.VerifPb()
 
+    
 
     ######################################################################################  
     def DossierDefini(self):
@@ -4119,11 +4187,28 @@ class Progression(BaseDoc, Objet_sequence):
             else:
                 ps.ChargerSequence()
             self.sequences.append(ps)
-            self.OrdonnerSequences()
+            self.Ordonner()
             self.GetApp().sendEvent(modif = u"Ajout d'une nouvelle Séquence à la Progression")
             self.arbre.SelectItem(ps.branche)
     
-    
+    ######################################################################################  
+    def AjouterNouveauProjet(self, event = None):
+        if not self.DossierDefini():
+            return
+        
+        projet, path = self.CreerProjet(self.classe, self.GetPath())
+        if path is not None:
+            ps = LienProjet(self)
+            ps.path = toFileEncoding(path)
+            if projet is not None:
+                ps.projet = projet
+            else:
+                ps.ChargerProjet()
+            self.projets.append(ps)
+            self.Ordonner()
+            self.GetApp().sendEvent(modif = u"Ajout d'un nouveau Projet à la Progression")
+            self.arbre.SelectItem(ps.branche)
+            
     ######################################################################################  
     def AjouterSequence(self, event = None):
         if not self.DossierDefini():
@@ -4150,14 +4235,45 @@ class Progression(BaseDoc, Objet_sequence):
             lienSeq.path = fichiers[i]
             lienSeq.sequence = sequences[i]
             self.sequences.append(lienSeq)
-            self.OrdonnerSequences()
+            self.Ordonner()
             self.GetApp().sendEvent(modif = u"Ajout d'une Séquence à la Progression")
             self.arbre.SelectItem(lienSeq.branche)
         
         dlg.Destroy()
         
+    ######################################################################################  
+    def AjouterProjet(self, event = None):
+        if not self.DossierDefini():
+            return
         
-    
+        fichiers_projets = self.GetFichiersProjetsDossier(exclureExistant = True)
+        if len(fichiers_projets) == 0:
+            messageInfo(None, u"Aucun Projet trouvé", 
+                        u"Aucun Projet compatible à la progression n'a été trouvé.\n\n")
+            return
+        
+        fichiers, projets = zip(*fichiers_projets)
+        fichiers = [os.path.relpath(f, self.GetPath()) for f in fichiers]
+        
+        dlg = wx.SingleChoiceDialog(self.GetApp(), u"Choisir parmi les fichiers ci-dessous\n", 
+                                    u"Fichiers Projets disponibles",
+                                    [toSystemEncoding(f) for f in fichiers], 
+                                    wx.CHOICEDLG_STYLE
+                                    )
+        
+        if dlg.ShowModal() == wx.ID_OK:
+            i = dlg.GetSelection() 
+            lienPrj = LienProjet(self)
+            lienPrj.path = fichiers[i]
+            lienPrj.projet = projets[i]
+            self.projets.append(lienPrj)
+            self.Ordonner()
+            self.GetApp().sendEvent(modif = u"Ajout d'un Projet à la Progression")
+            self.arbre.SelectItem(lienPrj.branche)
+        
+        dlg.Destroy()
+
+ 
     ######################################################################################  
     def CreerSequence(self, classe, pathProg):
         sequence = Sequence(self.GetApp(), classe)
@@ -4173,6 +4289,19 @@ class Progression(BaseDoc, Objet_sequence):
             return None, None
         
         
+    ######################################################################################  
+    def CreerProjet(self, classe, pathProg):
+        projet = Projet(self.GetApp(), classe)
+        res = self.GetApp().ProposerEnregistrer(projet, pathProg)
+        
+        if res[0] == 2:
+            return self.CreerProjet(classe, pathProg)
+        elif res[0] == 1:
+            return None, res[1]
+        elif res[0] == 0:
+            return projet, res[1]
+        else:
+            return None, None
     
         
     ######################################################################################  
@@ -4186,7 +4315,19 @@ class Progression(BaseDoc, Objet_sequence):
             if not s in self.sequences:
                 self.sequences.append(s)
 #                s.ConstruireArbre(self.arbre, self.brancheSeq)
-        self.OrdonnerSequences()
+        self.Ordonner()
+
+    ######################################################################################  
+    def ImporterProjets(self, event = None):
+        if not self.DossierDefini():
+            return
+        
+        projets = self.GetProjetsDossier()
+        for s in projets:
+            if not s in self.projets:
+                self.projets.append(s)
+#                s.ConstruireArbre(self.arbre, self.brancheSeq)
+        self.Ordonner()
 
 
     ######################################################################################  
@@ -4450,17 +4591,14 @@ class Progression(BaseDoc, Objet_sequence):
                 self.tip.SetWholeText("txt", self.GetAnnees())
                 
             elif param == "POS":
-                self.tip.SetWholeText("titre", u"Découpage de la formation en périodes")
-                self.tip.SetWholeText("txt", u"Périodes occupées pendant la Progression")
-                self.tip.XML_AjouterImg("img", self.getBitmapPeriode(300)) 
+                self.Tip_POS() 
                 
             elif param[:3] == "POS":
-                ref = self.GetReferentiel()
-                self.tip.SetWholeText("titre", u"Période de formation")
-                self.tip.SetWholeText("txt", ref.getPeriodesListe()[int(param[3])] + " - " + str(int(param[3])+1))
-                
+                self.Tip_POS(int(param[3])) 
+                            
             elif param[:3] == "EQU":
-                self.tip.SetWholeText("titre", u"Equipe pédagogique impliquée dans la Progression")
+                self.Tip_EQU("la Progression")
+                
             
             elif param[:2] == "CI":
                 ref = self.GetReferentiel()
@@ -4468,11 +4606,11 @@ class Progression(BaseDoc, Objet_sequence):
                 numCI = int(param[2:])
                 code = ref.abrevCI+str(numCI+1)
                 intit = ref.CentresInterets[numCI]
-                self.tip.XML_AjouterElemListe("ci", code, intit)
+                self.tip.AjouterElemListeDL("ci", code, intit)
                 if len(ref.listProblematiques[numCI]) > 0:
                     self.tip.SetWholeText("nomPb", getSingulierPluriel(ref.nomPb, True))  
                 for pb in ref.listProblematiques[numCI]:
-                    self.tip.XML_AjouterElemListeUL("pb", pb)
+                    self.tip.AjouterElemListeUL("pb", pb)
             
             elif param[:3] == "CMP":
                 ref = self.GetReferentiel()
@@ -4668,9 +4806,158 @@ class LienSequence(Objet_sequence):
         seq = self.sequence
         self.tip.SetHTML(self.GetFicheHTML())
         self.tip.SetWholeText("nom", seq.intitule)
-        self.tip.XML_AjouterImg("ap", seq.GetApercu(300)) 
+        self.tip.AjouterImg("ap", seq.GetApercu(300)) 
         
         self.tip.SetPage()
+
+
+
+
+
+
+
+#########################################################################################################
+#########################################################################################################
+class LienProjet(Objet_sequence):
+    def __init__(self, parent, path = r""):
+        self.path = path
+        self.parent = parent
+        Objet_sequence.__init__(self)
+        
+        self.projet = None
+        
+        #
+        # Création du Tip (PopupInfo)
+        #
+        self.tip = PopupInfo(self.GetApp().parent, "")
+#        self.ficheHTML = self.GetFicheHTML()
+#        self.tip = PopupInfo(self.parent.app, self.ficheHTML)
+
+        
+    
+    ######################################################################################  
+    def __eq__(self, lien):
+        return os.path.normpath(self.path) == os.path.normpath(lien.path)
+    
+    ######################################################################################  
+    def comp(self, lienSeq):
+        """
+        """
+        return self.projet.position > lienSeq.projet.position
+    
+    ######################################################################################  
+    def GetApp(self):
+        return self.parent.GetApp()
+    
+    ######################################################################################  
+    def GetDocument(self):    
+        return self.parent
+    
+    ######################################################################################  
+    def GetPanelPropriete(self, parent):
+        return PanelPropriete_LienProjet(parent, self)
+    
+    
+    ######################################################################################  
+    def getBranche(self):
+        """ Renvoie la branche XML du lien de projet pour enregistrement
+        """
+        root = ET.Element("Projet")
+        root.set("dir", toSystemEncoding(self.path))
+        return root
+    
+    ######################################################################################  
+    def setBranche(self, branche):
+#        print "setBranche LienSequence", self
+        self.path = toFileEncoding(branche.get("dir", ""))
+#        if hasattr(self, 'panelPropriete'):
+#            self.panelPropriete.MiseAJour()
+
+    ######################################################################################  
+    def MiseAJourArbre(self):
+        self.arbre.SetItemText(self.branche, self.projet.intitule)
+        
+        
+    ######################################################################################  
+    def ConstruireArbre(self, arbre, branche):
+        if self.projet is None:
+            return
+#        print "ConstruireArbre"
+        self.arbre = arbre
+            
+        coul = draw_cairo.BcoulPos[self.projet.position]
+        coul = [int(200*c) for c in coul]
+#        self.codeBranche = CodeBranche(self.arbre, code)
+#        self.codeBranche.SetForegroundColour(coul)
+        self.branche = arbre.AppendItem(branche, self.projet.intitule, #wnd = self.codeBranche, 
+                                        data = self,
+                                        image = self.arbre.images["Prj"])
+        self.arbre.SetItemTextColour(self.branche, coul)
+
+#        self.codeBranche.SetBranche(self.branche)
+        
+#        if hasattr(self, 'tip'):
+#            self.tip.SetBranche(self.branche)
+
+    
+    ######################################################################################  
+    def ChargerSequence(self):
+        classe, projet = self.GetDocument().OuvrirFichierPrj(self.path)
+        if classe != None and classe.typeEnseignement == self.GetReferentiel().Code:
+            self.projet = projet
+
+
+    ######################################################################################  
+    def SignalerPb(self, pb):
+        if hasattr(self, 'branche'):
+            bg_color = self.arbre.GetBackgroundColour()
+            if len(pb) == 0:
+                self.arbre.SetItemBackgroundColour(self.branche, bg_color)
+                self.SetToolTip(self.projet.intitule)
+            else:
+                self.arbre.SetItemBackgroundColour(self.branche, wx.NamedColour("LIGHT PINK"))
+                message = u""
+                self.SetToolTip(message + u" - ".join(pb))
+                
+            
+    ######################################################################################  
+    def AfficherMenuContextuel(self, itemArbre):
+        if itemArbre == self.branche:
+            self.parent.app.AfficherMenuContextuel([[u"Supprimer", 
+                                                     functools.partial(self.parent.SupprimerLienProjet, item = itemArbre), 
+                                                     images.Icone_suppr_prj.GetBitmap()],
+                                                    [u"Ouvrir", 
+                                                     functools.partial(self.parent.OuvrirProjet, item = itemArbre), 
+                                                     wx.ArtProvider.GetBitmap(wx.ART_FILE_OPEN, wx.ART_TOOLBAR, (20,20))]
+                                                    ])
+
+
+    ######################################################################################  
+    def SetLabel(self):
+        if hasattr(self, 'codeBranche'):
+            self.codeBranche.SetLabel(self.projet.intitule)
+        
+
+    ######################################################################################  
+    def GetNomFichier(self):
+        return os.path.splitext(os.path.basename(self.path))[0]
+
+
+    ######################################################################################  
+    def GetFicheHTML(self, param = None):
+        return constantes.BASE_FICHE_HTML_SEQ
+
+
+    ######################################################################################  
+    def SetTip(self):
+        # Tip
+        seq = self.projet
+        self.tip.SetHTML(self.GetFicheHTML())
+        self.tip.SetWholeText("nom", seq.intitule)
+        self.tip.AjouterImg("ap", seq.GetApercu(300)) 
+        
+        self.tip.SetPage()
+
 
 
 
@@ -4691,6 +4978,7 @@ class CentreInteret(Objet_sequence):
         self.poids = []
         
         self.CI_perso = []  # Centres d'Intérêt personnalisés
+        self.Pb = u""  # Problématique
         
         self.SetNum(self.numCI)
         self.max2CI = True
@@ -4722,6 +5010,10 @@ class CentreInteret(Objet_sequence):
         for i, ci in enumerate(self.CI_perso):
             CI_perso.set("CI_"+str(i), ci)
  
+        # Problématiques personnalisées
+        root.set("Pb", self.Pb)
+            
+            
         return root
         
     
@@ -4764,6 +5056,8 @@ class CentreInteret(Objet_sequence):
                     self.CI_perso.append(t)
                     i += 1
 
+        # Problématique
+        self.Pb = branche.get("Pb", "")
     
     
     ######################################################################################  
@@ -4803,17 +5097,33 @@ class CentreInteret(Objet_sequence):
 #        if len(self.numCI) > 0 :
         self.parent.Verrouiller()
         
+
+    ######################################################################################  
+    def GetListCIref(self):
+        """ Renvoie la liste des CI du Référentiel
+        """
+        if self.GetReferentiel().CI_cible:
+            return self.parent.classe.referentiel.CentresInterets
+        else:
+            return self.GetReferentiel().CentresInterets
+        
+        
     ######################################################################################  
     def GetIntit(self, num):
-        if self.GetReferentiel().CI_cible:
-            lstCI = self.parent.classe.referentiel.CentresInterets
-        else:
-            lstCI = self.GetReferentiel().CentresInterets
+        lstCI = self.GetListCIref()
         if self.numCI[num] < len(lstCI):
             return lstCI[self.numCI[num]]
             
     
-    
+    ######################################################################################  
+    def GetNomCIs(self):
+        lstCI = self.GetListCIref()
+        l = []
+        for n in self.numCI:
+            l.append(lstCI[n])
+        return l + self.CI_perso
+
+
     ######################################################################################  
     def GetCode(self, num = None):
         if num == None:
@@ -4826,7 +5136,8 @@ class CentreInteret(Objet_sequence):
         
         else :
             return self.GetReferentiel().abrevCI+str(self.numCI[num]+1)
-    
+
+
     ######################################################################################  
     def GetPosCible(self, num):
         if self.GetReferentiel().CI_cible:
@@ -4877,11 +5188,14 @@ class CentreInteret(Objet_sequence):
         self.tip.SetWholeText("titre", self.GetReferentiel().nomCI)
         
         for i, c in enumerate(self.numCI):
-            self.tip.XML_AjouterElemListe("ci", self.GetCode(i), self.GetIntit(i))
+            self.tip.AjouterElemListeDL("ci", self.GetCode(i), self.GetIntit(i))
       
+        self.tip.SupprimerTag("pb")
         self.tip.SetPage()
         
-        
+
+
+
 ####################################################################################
 #
 #   Classe définissant les propriétés d'une compétence
@@ -4990,7 +5304,7 @@ class Competences(Objet_sequence):
         self.tip.SetWholeText("titre", nc)
         
         for i, c in enumerate(self.competences):
-            self.tip.XML_AjouterElemListe("list", 
+            self.tip.AjouterElemListeDL("list", 
                                  self.GetDiscipline(i) +" " + self.GetTypCode(i)[0], 
                                  self.GetIntit(i))
       
@@ -5125,7 +5439,7 @@ class Savoirs(Objet_sequence):
         self.tip.SetWholeText("titre", nc)
         
         for i, c in enumerate(self.savoirs):
-            self.tip.XML_AjouterElemListe("list", 
+            self.tip.AjouterElemListeDL("list", 
                                  self.GetDiscipline(i) + " " + self.GetTypCode(i)[1], 
                                  self.GetIntit(i))
       
@@ -7091,7 +7405,7 @@ class Systeme(ElementDeSequence, Objet_sequence):
         self.tip.SetWholeText("nom", self.nom)
         self.tip.SetWholeText("nbr", u"Nombre disponible : " + str(self.nbrDispo.v[0]))
         
-        self.tip.XML_AjouterImg("img", self.image) 
+        self.tip.AjouterImg("img", self.image) 
         
         self.tip.SetPage()
         
@@ -7355,7 +7669,7 @@ class Support(ElementDeSequence, Objet_sequence):
         
         self.tip.SetWholeText("nom", self.nom)
         self.tip.SetWholeText("des", self.description)       
-        self.tip.XML_AjouterImg("img", self.image) 
+        self.tip.AjouterImg("img", self.image) 
         
         self.tip.SetPage()
     
@@ -7523,7 +7837,7 @@ class Personne(Objet_sequence):
     def SetTip(self):
         self.tip.SetHTML(self.GetFicheHTML())
         self.tip.SetWholeText("nom", self.GetNomPrenom())
-        self.tip.XML_AjouterImg("av", self.avatar) 
+        self.tip.AjouterImg("av", self.avatar) 
         
         self.SetTip2()
         
@@ -8189,7 +8503,7 @@ class Eleve(Personne, Objet_sequence):
                 coul = couleur.GetCouleurHTML(COUL_BOF)
             else:
                 coul = coulNON
-            self.tip.XML_AjouterCol("ld", lab, coul, bold = True)
+            self.tip.AjouterCol("ld", lab, coul, bold = True)
 
             
             #
@@ -8241,12 +8555,12 @@ class Eleve(Personne, Objet_sequence):
                                 coul = coulNON
                             else:
                                 coul = None
-                        self.tip.XML_AjouterCol("le"+part, l, coul,
+                        self.tip.AjouterCol("le"+part, l, coul,
                                        couleur.GetCouleurHTML(getCoulPartie(part)), size, bold)
 
             for disc in prj._dicoIndicateurs.keys():
                 for t in keys[disc]:
-                    self.tip.XML_AjouterCol("le", t, size = 2) 
+                    self.tip.AjouterCol("le", t, size = 2) 
 
             self.tip.SetPage()
             
@@ -8339,7 +8653,7 @@ class Prof(Personne):
                 coul = couleur.GetCouleurHTML(constantes.COUL_DISCIPLINES[self.discipline])
             else:
                 coul = None
-            self.tip.XML_AjouterCol("spe", constantes.NOM_DISCIPLINES[self.discipline], bcoul = coul)
+            self.tip.AjouterCol("spe", constantes.NOM_DISCIPLINES[self.discipline], bcoul = coul)
             self.tip.SetPage()
         
         

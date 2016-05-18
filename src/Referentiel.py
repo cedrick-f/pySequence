@@ -569,6 +569,7 @@ class Referentiel(XMLelem):
         self.positions_CI = []              # positions sur la cible MEI FSC
         self.listProblematiques = []        # problématiques (associées à un CI)
         self.nomPb = u"Problématique(s)"    # nom pour désigner les problématiques
+        self.abrevPb = "Pb"
         
         #
         # Savoirs ou capacités
@@ -1167,6 +1168,7 @@ class Referentiel(XMLelem):
             self.listProblematiques = [[] for ci in self.CentresInterets]
             shp = wb.sheet_by_name(shnt)
             self.nomPb = shp.cell(0,0).value
+            self.abrevPb = sh_ci.cell(0,1).value
             for l in range(2, shp.nrows) :
                 self.listProblematiques[int(shp.cell(l,1).value)-1].append(shp.cell(l,0).value)
 #            print "listProblematiques", self.listProblematiques

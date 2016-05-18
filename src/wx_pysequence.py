@@ -1044,10 +1044,13 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             
             note : pour l'instant, que pour des Séquences
         """
-#        print "ouvrirDoc", doc
-        child = FenetreSequence(self, sequence = doc)
-        
-        child.SetIcon(constantes.dicimages["Seq"].GetIcon())
+        print "ouvrirDoc", doc
+        if doc.GetType() == 'seq':
+            child = FenetreSequence(self, sequence = doc)
+            child.SetIcon(constantes.dicimages["Seq"].GetIcon())
+        elif doc.GetType() == 'prj':
+            child = FenetreProjet(self, projet = doc)
+            child.SetIcon(constantes.dicimages["Prj"].GetIcon())
         child.finaliserOuverture()
         child.definirNomFichierCourant(nomFichier)
         wx.CallAfter(child.Activate)
@@ -2906,26 +2909,33 @@ class FenetreProgression(FenetreDocument):
 
 
     ###############################################################################################
-    def ProposerEnregistrer(self, sequence, pathProg):
+    def ProposerEnregistrer(self, doc, pathProg):
         wx.BeginBusyCursor()
-        
-        dlg = wx.TextEntryDialog(self, u"Nom du fichier séquence\n\n"\
-                                 u"La séquence sera engegistrée dans le dossier de la progression :\n" + toSystemEncoding(pathProg),
-                                 u"Enregistrement de la séquence", u"")
+        if doc.GetType() == 'seq':
+            t = u"La %s sera engegistrée" %doc.nom_obj
+            n = u"nouvelle"
+            e = '.seq'
+        elif doc.GetType() == 'prj':
+            t = u"Le %s sera engegistré" %doc.nom_obj
+            n = u"nouveau"
+            e = '.prj'
+        dlg = wx.TextEntryDialog(self, u"Nom du fichier %s\n\n"\
+                                 u"%s dans le dossier de la progression :\n" %(doc.nom_obj, t) + toSystemEncoding(pathProg),
+                                 u"Enregistrement %s %s" %(doc.article_obj,doc.nom_obj) , u"")
 
         if dlg.ShowModal() == wx.ID_OK:
             nomFichier = dlg.GetValue()
             dlg.Destroy()
-            nomFichier = os.path.splitext(os.path.basename(nomFichier))[0]+'.seq'
+            nomFichier = os.path.splitext(os.path.basename(nomFichier))[0]+e
             nomFichier = os.path.join(pathProg, nomFichier)
             
             if os.path.isfile(nomFichier):
-                dlg = wx.MessageDialog(self, u"Un fichier séquence portant ce nom existe déja.\n\n"\
+                dlg = wx.MessageDialog(self, u"Un fichier %s portant ce nom existe déja.\n\n"\
                                              u"Voulez-vous :\n"\
-                                             u" - l'ouvrir comme nouvelle Séquence de la Progression : OUI\n"\
+                                             u" - l'ouvrir comme %s %s de la Progression : OUI\n"\
                                              u" - écraser le fichier existant (toutes les données seront perdues) : NON\n"\
-                                             u" - choisir un autre nom pour la séquence : ANNULER",
-                                       u"Séquence existante",
+                                             u" - choisir un autre nom pour la %s : ANNULER" %(doc.nom_obj, n, doc.nom_obj, doc.nom_obj),
+                                       u"%s existante" %doc.nom_obj,
                                        wx.YES_NO | wx.CANCEL | wx.ICON_QUESTION |wx.YES_DEFAULT
                                        )
                 res = dlg.ShowModal()
@@ -2942,15 +2952,18 @@ class FenetreProgression(FenetreDocument):
             path = os.path.relpath(nomFichier, pathProg)
             
             # La séquence
-            bsequence = sequence.getBranche()
+            bdoc = doc.getBranche()
             bclasse = self.classe.getBranche()
             
             # La racine
-            root = ET.Element("Sequence_Classe")
-            root.append(bsequence)
+            if doc.GetType() == 'seq':
+                root = ET.Element("Sequence_Classe")
+            elif doc.GetType() == 'prj':
+                root = ET.Element("Projet_Classe")
+            root.append(bdoc)
             root.append(bclasse)
             constantes.indent(root)
-            sequence.enregistrer_root(root, nomFichier)
+            doc.enregistrer_root(root, nomFichier)
             
             wx.EndBusyCursor()
             return 0, path
@@ -3417,6 +3430,7 @@ class BaseFiche(wx.ScrolledWindow):
         
     #############################################################################            
     def Draw(self, ctx):
+        self.GetDoc().DefinirCouleurs()
         self.GetDoc().draw.Draw(ctx, self.GetDoc())
         
         
@@ -5840,6 +5854,7 @@ class PanelPropriete_CI(PanelPropriete):
             self.sizer.Remove(self.grid1)
             
         ref = self.CI.parent.classe.referentiel
+        
         #
         # Cas où les CI sont sur une cible MEI
         #
@@ -5873,7 +5888,7 @@ class PanelPropriete_CI(PanelPropriete):
             aide = wx.BitmapButton(self, -1, images.Bouton_Aide.GetBitmap())
             aide.SetToolTipString(u"Informations à propos de la cible "+abrevCI)
             self.sizer.Add(aide, (0,2), flag = wx.ALL, border = 2)
-            self.Bind(wx.EVT_BUTTON, self.OnAide, aide )
+            self.Bind(wx.EVT_BUTTON, self.OnAide, aide)
             
             b = wx.ToggleButton(self, -1, "")
             b.SetValue(self.CI.max2CI)
@@ -5895,7 +5910,7 @@ class PanelPropriete_CI(PanelPropriete):
                     pass
         
         #
-        # Cas où les CI ne sont pas sur une cible
+        # Cas où les CI ne sont PAS sur une cible
         #  
         else:
             self.grid1 = wx.FlexGridSizer( 0, 2, 0, 0 )
@@ -5919,13 +5934,31 @@ class PanelPropriete_CI(PanelPropriete):
         self.elb = gizmos.EditableListBox(
                     self, -1, ref.nomCI + u" personnalisés", size = (-1, 90),
                     style=gizmos.EL_ALLOW_NEW | gizmos.EL_ALLOW_EDIT | gizmos.EL_ALLOW_DELETE)
-        self.sizer.Add(self.elb, (2,1), (1, 1), flag = wx.EXPAND)
         
+        self.sizer.Add(self.elb, (2,1), (1, 1), flag = wx.EXPAND)
         self.elb.Bind(wx.EVT_LIST_END_LABEL_EDIT, self.OnChangeCI_perso)
         self.Bind(wx.EVT_LIST_DELETE_ITEM, self.OnChangeCI_perso)
 #        self.Bind(wx.EVT_LIST_INSERT_ITEM, self.OnChangeCI_perso)
 #        self.Bind(wx.EVT_LIST_BEGIN_LABEL_EDIT, self.OnChangeCI_perso)
+        
+        
+        
+        #
+        # Les Problématiques
+        #
+        sbpb = myStaticBox(self, -1, getSingulierPluriel(ref.nomPb), size = (200,-1))
+        sbspb = wx.StaticBoxSizer(sbpb,wx.HORIZONTAL)
 
+        self.panelPb = PanelProblematiques(self, self.CI)
+        sbspb.Add(self.panelPb,1, flag = wx.EXPAND)
+        self.sizer.Add(sbspb, (0,3), (3, 1), flag = wx.EXPAND)
+        
+        self.sizer.AddGrowableCol(3)
+
+
+        #
+        # Mise en place
+        #
         self.SetupScrolling(scroll_x = False)
         self.sizer.Layout()
 
@@ -5948,21 +5981,13 @@ class PanelPropriete_CI(PanelPropriete):
         pass
 
 
-    #############################################################################            
-    def MAJ_CI_perso(self, event = None):
-        self.CI.CI_perso = self.elb.GetStrings()
-        ref = self.CI.parent.classe.referentiel
-        self.sendEvent(modif = u"Modification des %s personnalisés" %getSingulierPluriel(ref.nomCI, True))
-        
-        
-    #############################################################################            
-    def OnChangeCI_perso(self, event):
-        wx.CallAfter(self.MAJ_CI_perso)
-        event.Skip()
+    
 
 
     #############################################################################            
     def OnCheck(self, event):
+        """ Selection d'un CI
+        """
         button_selected = event.GetEventObject().GetId()-200 
         
         if event.GetEventObject().IsChecked():
@@ -5980,6 +6005,8 @@ class PanelPropriete_CI(PanelPropriete):
         
             if hasattr(self, 'b2CI'):
                 self.b2CI.Enable(len(self.CI.numCI) <= 2)
+        
+        self.panelPb.ReConstruire()
         
         self.Layout()
         ref = self.CI.parent.classe.referentiel
@@ -6022,6 +6049,18 @@ class PanelPropriete_CI(PanelPropriete):
             for i, b in enumerate(self.group_ctrls):
                 b[0].SetValue(i in self.CI.numCI)
                 
+    
+    #############################################################################            
+    def MAJ_CI_perso(self, event = None):
+        self.CI.CI_perso = self.elb.GetStrings()
+        ref = self.CI.parent.classe.referentiel
+        self.sendEvent(modif = u"Modification des %s personnalisés" %getSingulierPluriel(ref.nomCI, True))
+        
+        
+    #############################################################################            
+    def OnChangeCI_perso(self, event):
+        wx.CallAfter(self.MAJ_CI_perso)
+        event.Skip()
                     
 ####################################################################################
 #
@@ -6263,6 +6302,9 @@ class PanelPropriete_LienSequence(PanelPropriete):
     #############################################################################            
     def construire(self):
         
+        ref = self.sequence.GetReferentiel()
+        
+        
         #
         # Intitulé de la séquence
         #
@@ -6296,7 +6338,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
         sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
         self.bmp = wx.StaticBitmap(self, -1, self.sequence.getBitmapPeriode(300))
         self.position = PositionCtrl(self, self.sequence.position, 
-                                     self.sequence.GetReferentiel().periodes)
+                                     ref.periodes)
         self.Bind(wx.EVT_RADIOBUTTON, self.onChanged)
         sb.Add(self.bmp, flag = wx.ALIGN_CENTER|wx.EXPAND)
         sb.Add(self.position, flag = wx.ALIGN_CENTER|wx.EXPAND)
@@ -6316,10 +6358,25 @@ class PanelPropriete_LienSequence(PanelPropriete):
         sbs1.Add(self.apercu, 1)
         self.size = size
         
+        
+        
+        #
+        # Problématiques associées à(aux) CI/Thème(s)
+        #
+        sbp = myStaticBox(self, -1, getSingulierPluriel(ref.nomPb, True), size = (200,-1))
+        sbsp = wx.StaticBoxSizer(sbp,wx.VERTICAL)
+        
+        self.panelPb = PanelProblematiques(self, self.CI)
+        
+        sbsp.Add(self.panelPb,1, flag = wx.EXPAND)
+        
+        
+        
         self.sizer.Add(sbsi, (0,0), flag = wx.EXPAND|wx.ALL, border = 2)
         self.sizer.Add(sbs0, (1,0), flag = wx.EXPAND|wx.ALL, border = 2)
         self.sizer.Add(sb, (2,0), flag = wx.ALIGN_TOP|wx.ALIGN_LEFT|wx.LEFT|wx.EXPAND, border = 2)
         self.sizer.Add(sbs1, (0,1), (3,1), flag = wx.EXPAND|wx.ALL, border = 2)
+        self.sizer.Add(sbsp, (0,2), (3,1), flag = wx.EXPAND|wx.ALL, border = 2)
         
         self.sizer.Layout()
         
@@ -6328,7 +6385,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
     def onChanged(self, evt):
         self.sequence.SetPosition(evt.GetEventObject().GetId()-1)
         self.SetBitmapPosition()
-        self.GetDocument().OrdonnerSequences()
+        self.GetDocument().Ordonner()
         t = u"Changement de position de la séquence"
         self.GetDocument().GererDependants(self.sequence, t)
         
@@ -6365,6 +6422,35 @@ class PanelPropriete_LienSequence(PanelPropriete):
         self.MiseAJour()
         event.Skip()     
 
+    
+
+    #############################################################################            
+    def OnCheck(self, event):
+        """ Selection d'une problématique
+        """
+        button_selected = event.GetEventObject().GetId()-200 
+        
+        if event.GetEventObject().IsChecked():
+            self.CI.AddNum(button_selected)
+        else:
+            self.CI.DelNum(button_selected)
+        
+        if len(self.group_ctrls[button_selected]) > 2:
+            self.group_ctrls[button_selected][2].Show(event.GetEventObject().IsChecked())
+        
+#        self.panel_cible.bouton[button_selected].SetState(event.GetEventObject().IsChecked())
+#        if self.CI.GetTypeEnseignement() == 'ET':
+        if self.CI.GetReferentiel().CI_cible:
+            self.panel_cible.GererBoutons(True)
+        
+            if hasattr(self, 'b2CI'):
+                self.b2CI.Enable(len(self.CI.numCI) <= 2)
+        
+        self.Layout()
+        ref = self.CI.parent.classe.referentiel
+        self.sendEvent(modif = u"Modification des %s abordés" %getSingulierPluriel(ref.nomCI, True))
+
+
 
     #############################################################################            
     def EvtText(self, event):
@@ -6393,6 +6479,8 @@ class PanelPropriete_LienSequence(PanelPropriete):
         self.bmp.SetBitmap(self.sequence.getBitmapPeriode(300))
         self.position.SetValue(self.sequence.position)
         
+    
+    
         
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
@@ -6447,8 +6535,214 @@ class PanelPropriete_LienSequence(PanelPropriete):
     
     
     
+
+
+####################################################################################
+#
+#   Classe définissant le panel de propriété d'un lien vers une séquence
+#
+####################################################################################
+class PanelPropriete_LienProjet(PanelPropriete):
+    def __init__(self, parent, lien):
+        PanelPropriete.__init__(self, parent)
+        self.lien = lien
+        self.maxX = 800 # Largeur de l'image "aperçu" zoomée
+        self.projet = self.lien.projet
+        self.classe = None
+        self.construire()
+        self.parent = parent
+        self.MiseAJour()
+        
+        
+    #############################################################################            
+    def GetDocument(self):
+        return self.lien.parent
+
+    #############################################################################            
+    def construire(self):
+        
+        #
+        # Intitulé du Projet
+        #
+        sbi = myStaticBox(self, -1, u"Intitulé du Projet", size = (200,-1))
+        sbsi = wx.StaticBoxSizer(sbi,wx.HORIZONTAL)
+        self.intit = TextCtrl_Help(self, u"")
+        sbsi.Add(self.intit,1, flag = wx.EXPAND)
+#        self.Bind(wx.EVT_TEXT, self.EvtText, self.intit)
+        self.Bind(stc.EVT_STC_MODIFIED, self.EvtText, self.intit)
+        
+        #
+        # Sélection du fichier de Projet
+        #
+        sb0 = myStaticBox(self, -1, u"Fichier du Projet", size = (200,-1))
+        sbs0 = wx.StaticBoxSizer(sb0,wx.HORIZONTAL)
+        self.texte = wx.TextCtrl(self, -1, toSystemEncoding(self.lien.path), size = (250, -1),
+                                 style = wx.TE_PROCESS_ENTER)
+        bt2 = wx.BitmapButton(self, 101, wx.ArtProvider_GetBitmap(wx.ART_NORMAL_FILE))
+        bt2.SetToolTipString(u"Sélectionner un fichier")
+        self.Bind(wx.EVT_BUTTON, self.OnClick, bt2)
+        self.Bind(wx.EVT_TEXT_ENTER, self.OnText, self.texte)
+        self.texte.Bind(wx.EVT_KILL_FOCUS, self.OnLoseFocus)
+        sbs0.Add(self.texte, flag = wx.ALIGN_CENTER)
+        sbs0.Add(bt2)
+
+
+        #
+        # Position du Projet
+        #
+        titre = myStaticBox(self, -1, u"Position")
+        sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
+        self.bmp = wx.StaticBitmap(self, -1, self.projet.getBitmapPeriode(300))
+        self.position = PositionCtrl(self, self.projet.position, 
+                                     self.projet.GetReferentiel().periodes)
+        self.Bind(wx.EVT_RADIOBUTTON, self.onChanged)
+        sb.Add(self.bmp, flag = wx.ALIGN_CENTER|wx.EXPAND)
+        sb.Add(self.position, flag = wx.ALIGN_CENTER|wx.EXPAND)
+        
+        
+        
+        
+        #
+        # Aperçu du Projet
+        #
+        size = (141,200) # Rapport A4
+        sb1 = myStaticBox(self, -1, u"Aperçu du Projet", size = size)
+        sbs1 = wx.StaticBoxSizer(sb1,wx.HORIZONTAL)
+        sbs1.SetMinSize(size)
+        self.apercu = StaticBitmapZoom(self, -1, size = size)
+        self.apercu.SetLargeBitmap(self.projet.GetApercu(self.maxX))
+        sbs1.Add(self.apercu, 1)
+        self.size = size
+        
+        self.sizer.Add(sbsi, (0,0), flag = wx.EXPAND|wx.ALL, border = 2)
+        self.sizer.Add(sbs0, (1,0), flag = wx.EXPAND|wx.ALL, border = 2)
+        self.sizer.Add(sb, (2,0), flag = wx.ALIGN_TOP|wx.ALIGN_LEFT|wx.LEFT|wx.EXPAND, border = 2)
+        self.sizer.Add(sbs1, (0,1), (3,1), flag = wx.EXPAND|wx.ALL, border = 2)
+        
+        self.sizer.Layout()
+        
+
+    #############################################################################            
+    def onChanged(self, evt):
+        self.projet.SetPosition(evt.GetEventObject().GetId()-1)
+        self.SetBitmapPosition()
+        self.GetDocument().Ordonner()
+        t = u"Changement de position du Projet"
+        self.GetDocument().GererDependants(self.projet, t)
+        
+        
+        
+    #############################################################################            
+    def OnClick(self, event):
+        mesFormats = constantes.FORMAT_FICHIER['prj'] + constantes.TOUS_FICHIER
+        dlg = wx.FileDialog(self, u"Sélectionner un fichier Projet",
+                            defaultFile = "",
+                            wildcard = mesFormats,
+#                           defaultPath = globdef.DOSSIER_EXEMPLES,
+                            style = wx.DD_DEFAULT_STYLE
+                            #| wx.DD_DIR_MUST_EXIST
+                            #| wx.DD_CHANGE_DIR
+                            )
+
+        if dlg.ShowModal() == wx.ID_OK:
+            self.lien.path = testRel(dlg.GetPath(), 
+                                     self.GetDocument().GetPath())
+            self.MiseAJour(sendEvt = True)
+        dlg.Destroy()
+        
+        self.SetFocus()
+        
+        
+    #############################################################################            
+    def OnText(self, event):
+        """ Modification du nom du fichier du LienProjet
+        """
+        self.lien.path = event.GetString()
+        self.MiseAJour()
+        event.Skip()     
+
+
+    #############################################################################            
+    def EvtText(self, event):
+        if event.GetEventObject() == self.intit:
+            self.projet.SetText(self.intit.GetText())
+            self.lien.MiseAJourArbre()
+            t = u"Modification de l'intitulé du projet"
+            self.GetDocument().GererDependants(self.projet, t)
+            
+        if self.onUndoRedo():
+            self.sendEvent(modif = t)
+        else:
+            if not self.eventAttente:
+                wx.CallLater(DELAY, self.sendEvent, modif = t)
+                self.eventAttente = True
+                             
+    #############################################################################            
+    def OnLoseFocus(self, event):
+        return  
+#        self.lien.path = toFileEncoding(self.texte.GetValue())
+#        self.MiseAJour()
+#        event.Skip()   
+
+    #############################################################################            
+    def SetBitmapPosition(self, bougerSlider = None):
+        self.bmp.SetBitmap(self.projet.getBitmapPeriode(300))
+        self.position.SetValue(self.projet.position)
+        
+        
+    #############################################################################            
+    def MiseAJour(self, sendEvt = False):
+#        print "MiseAJour PanelPropriete_LienSequence", self.lien
+
+#        self.intit.SetLabel(self.sequence.intitule)
+        self.intit.SetValue(self.projet.intitule, False)
+        
+        self.texte.SetValue(toSystemEncoding(self.lien.path))
+
+    
+#        try:
+        if os.path.isfile(self.lien.path):
+            fichier = open(self.lien.path,'r')
+            
+        else:
+            abspath = os.path.join(self.GetDocument().GetPath(), self.lien.path)
+            if os.path.isfile(abspath):
+                fichier = open(abspath,'r')
+            else:
+                self.texte.SetBackgroundColour("pink")
+                self.texte.SetToolTipString(u"Le fichier Projet est introuvable !")
+                return False
+        
+        self.texte.SetBackgroundColour("white")
+        self.texte.SetToolTipString(u"Lien vers un fichier Projet")
+        
+        
+        self.MiseAJourApercu()
+        
+        if sendEvt:
+            self.sendEvent()
+            
+        return True
     
     
+    #############################################################################            
+    def MiseAJourApercu(self, sendEvt = False):
+        #
+        # Aperçu
+        #
+        bmp = self.projet.GetApercu(self.maxX)
+        self.apercu.SetLargeBitmap(bmp)
+        self.lien.SetLabel()
+
+        self.Layout()
+        
+        if sendEvt:
+            self.sendEvent()
+            
+        return True
+    
+    
+      
     
     
     
@@ -9120,7 +9414,7 @@ class ArbreDoc(CT.CustomTreeCtrl):
         if (hasattr(data, 'toolTip') and isstring(data.toolTip)):
             event.SetToolTip(wx.ToolTip(data.toolTip))
         elif isstring(data):
-            event.SetToolTip(wx.ToolTip(data))
+            event.SetToolTip(wx.ToolTip(self.GetItemText(node)))
         else:
             event.Skip()
         
@@ -11031,7 +11325,126 @@ class ArbreTypeEnseignement(CT.CustomTreeCtrl):
 #        self.GetMainWindow().Layout()
 
 
+####################################################################################
+#
+#   Classe définissant l'arbre de sélection d'une problematique
+#
+####################################################################################*
 
+class PanelProblematiques(wx.Panel):
+    def __init__(self, parent, CI, 
+                 pos = wx.DefaultPosition,
+                 size = wx.DefaultSize,
+                 style = wx.WANTS_CHARS):#|wx.BORDER_SIMPLE):
+        self.CI = CI
+        
+        wx.Panel.__init__(self, parent, -1, pos, size)
+        self.sizer = wx.BoxSizer(wx.VERTICAL)
+        self.arbre = CT.CustomTreeCtrl(self, -1, pos, (150, -1), style, 
+                                   agwStyle = CT.TR_HIDE_ROOT|CT.TR_FULL_ROW_HIGHLIGHT\
+                                   |CT.TR_HAS_VARIABLE_ROW_HEIGHT|CT.TR_HAS_BUTTONS\
+                                   |CT.TR_TOOLTIP_ON_LONG_ITEMS)#CT.TR_ALIGN_WINDOWS|CCT.TR_NO_HEADER|T.TR_AUTO_TOGGLE_CHILD|\CT.TR_AUTO_CHECK_CHILD|\CT.TR_AUTO_CHECK_PARENT|
+        self.Unbind(wx.EVT_KEY_DOWN)
+        
+        
+        #
+        # Cas des Problématiques personalisées
+        #
+        self.PbPerso = TextCtrl_Help(self, u"")
+
+        self.Bind(stc.EVT_STC_MODIFIED, self.EvtText, self.PbPerso)
+        self.sizer.Add(self.PbPerso, flag = wx.EXPAND)
+        self.sizer.Add(self.arbre, 1, flag = wx.EXPAND)
+        
+        
+        
+#        self.SetBackgroundColour(wx.WHITE)
+        self.SetToolTip(wx.ToolTip(u"Ppppb"))
+        
+        self.Bind(wx.EVT_TREE_SEL_CHANGED, self.OnClick)
+#        self.Bind(wx.EVT_TREE_ITEM_GETTOOLTIP, self.OnToolTip)
+#        self.Bind(wx.EVT_TREE_ITEM_COLLAPSING, self.OnItemCollapsed)
+        
+#        self.AddColumn(u"")
+#        self.SetMainColumn(0)
+        self.root = self.arbre.AddRoot("r")
+        self.Construire()
+        self.SetSizer(self.sizer)
+        
+        self.MiseAJour()
+        
+        
+
+    ######################################################################################              
+    def Construire(self):
+        print "Construire ArbreProblematiques"
+        ref = self.CI.GetReferentiel()
+        
+        self.branche = []
+#        self.ExpandAll()
+        for n, ci in enumerate(self.CI.GetNomCIs()):
+            branche = self.arbre.AppendItem(self.root, ci)
+            self.arbre.SetItemBold(branche, True)
+            if n < len(self.CI.numCI):
+                for pb in ref.listProblematiques[self.CI.numCI[n]]:
+                    sbranche = self.arbre.AppendItem(branche, pb, ct_type=2)
+                    self.Bind(CT.EVT_TREE_ITEM_CHECKED, self.EvtRadioBox)
+                    self.branche.append(sbranche)
+        
+        self.arbre.ExpandAll()
+
+
+    ####################################################################################
+    def ReConstruire(self):
+#        print "ReConstruire"
+        self.arbre.DeleteChildren(self.root)
+        self.Construire()
+        self.arbre.ExpandAll()
+
+    ####################################################################################
+    def MiseAJour(self):
+        self.PbPerso.SetValue(u"")
+        for b in self.branche:
+            self.arbre.CheckItem2(b, False)
+            if self.arbre.GetItemText(b) == self.CI.Pb:
+                self.arbre.CheckItem2(b)
+                return
+        self.PbPerso.SetValue(self.CI.Pb)
+
+
+        
+    #############################################################################            
+    def EvtText(self, event):
+        for b in self.branche:
+            self.arbre.CheckItem2(b, False)
+        ref = self.CI.GetReferentiel()
+        self.CI.Pb = self.PbPerso.GetText()
+        self.Parent.sendEvent(modif = u"Modification de la %s" %getSingulierPluriel(ref.nomPb, False))
+                
+                
+    
+    ######################################################################################              
+    def OnToolTip(self, event = None, item = None):
+        return
+        print "OnToolTip"
+
+
+    ######################################################################################              
+    def OnClick(self, event = None, item = None):
+        print "OnClick"
+
+
+    ######################################################################################              
+    def EvtRadioBox(self, event):
+        ref = self.CI.GetReferentiel()
+        item = event.GetItem()
+        self.CI.Pb = self.arbre.GetItemText(item)
+        self.Parent.sendEvent(modif = u"Modification de la %s" %getSingulierPluriel(ref.nomPb, False))
+
+    
+
+    
+        
 
 ###########################################################################################################
 #
@@ -11056,7 +11469,7 @@ class TreeCtrlComboBook(wx.Panel):
         sizer.Add(self.texte, 1, flag = wx.EXPAND|wx.RIGHT, border = 10)
         
         self.SetSizerAndFit(sizer)
-    
+
     
     def SetLabel(self, texte):
         self.texte.SetLabel(wordwrap(texte, self.texte.GetSize()[0], wx.ClientDC(self)))
@@ -11839,9 +12252,10 @@ class PopupInfo(wx.PopupWindow):
         tag = self.soup.find(id=Id)
 #        print tag
         tag.string.replace_with(text)
-    
+
+
     ##########################################################################################
-    def XML_AjouterImg(self, item, bmp):
+    def AjouterImg(self, item, bmp):
         img = self.soup.find(id = item)
         try:
             bmp.SaveFile(self.tfname, wx.BITMAP_TYPE_PNG)
@@ -11855,18 +12269,21 @@ class PopupInfo(wx.PopupWindow):
 #            img.appendChild(td)
 #            td.setAttribute("src", self.tfname)
 
+
     #####################################################################################
-    def XML_AjouterElemListeUL(self, idListe, li):
+    def AjouterElemListeUL(self, idListe, li):
         liste = self.soup.find(id = idListe)
 #        print "liste", liste,liste.find_all('li')
         if len(liste.find_all('li')) == 1 and liste.li.string == " ":
             liste.li.string = li
         else:
             tag_li = copy.copy(liste.li)
+            tag_li.string = li
             liste.append(tag_li)
-        
+
+
     #####################################################################################
-    def XML_AjouterElemListe(self, idListe, dt, dd):
+    def AjouterElemListeDL(self, idListe, dt, dd):
         liste = self.soup.find(id = idListe)
 #        print "liste", liste,liste.find_all('dt')
         if len(liste.find_all('dt')) == 1 and liste.dt.string == " ":
@@ -11875,11 +12292,14 @@ class PopupInfo(wx.PopupWindow):
         else:
             tag_dt = copy.copy(liste.dt)
             tag_dd = copy.copy(liste.dd)
+            tag_dt.string = dt
+            tag_dd.string = dd
             liste.append(tag_dt)
             liste.append(tag_dd)
-        
+
+
     #####################################################################################
-    def XML_AjouterCol(self, idLigne, text, bcoul = None, fcoul = "black", size = None, bold = False):
+    def AjouterCol(self, idLigne, text, bcoul = None, fcoul = "black", size = None, bold = False):
         """<td id="rc1" style="background-color: #ff6347;"><font id="r1" size="2">1</font></td>"""
         ligne = self.soup.find(id = idLigne)
         if ligne != None:
@@ -11901,7 +12321,14 @@ class PopupInfo(wx.PopupWindow):
                 td = tc
 
             td.append(text)
-            
+
+
+    ####################################################################################
+    def SupprimerTag(self, idTag):
+        tag = self.soup.find(id = idTag)
+        tag.decompose()
+
+
     ####################################################################################
     def Construire(self, dic , dicIndicateurs, prj):
         
@@ -11971,7 +12398,8 @@ class PopupInfo(wx.PopupWindow):
     def OnDestroy(self, evt):
         if os.path.exists(self.tfname):
             os.remove(self.tfname)
-            
+
+
     ##########################################################################################
     def SetPage(self):
 #        self.SetSize((10,1000))

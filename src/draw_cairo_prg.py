@@ -582,6 +582,7 @@ def Draw(ctx, prg, mouchard = False):
     x, y = posZElevesH[0] + ecartX /2, posZElevesH[1] + ecartY /2
     w, h = tailleZElevesH[0] - ecartX, tailleZElevesH[1] - ecartY
     
+
 #    prg.pt_caract_eleve = []
     if len(l) > 0:
         rec = tableauH(ctx, l, x, y, 
@@ -710,7 +711,7 @@ def Draw(ctx, prg, mouchard = False):
     #
     info(ctx, margeX, margeY)
     
-    
+
     
 
 ######################################################################################  
