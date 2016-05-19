@@ -4608,9 +4608,9 @@ class Progression(BaseDoc, Objet_sequence):
                 intit = ref.CentresInterets[numCI]
                 self.tip.AjouterElemListeDL("ci", code, intit)
                 if len(ref.listProblematiques[numCI]) > 0:
-                    self.tip.SetWholeText("nomPb", getSingulierPluriel(ref.nomPb, True))  
-                for pb in ref.listProblematiques[numCI]:
-                    self.tip.AjouterElemListeUL("pb", pb)
+                    self.tip.SetWholeText("nomPb", getSingulierPluriel(ref.nomPb, True) + " envisageables")  
+                    for pb in ref.listProblematiques[numCI]:
+                        self.tip.AjouterElemListeUL("pb", pb)
             
             elif param[:3] == "CMP":
                 ref = self.GetReferentiel()
@@ -5185,12 +5185,20 @@ class CentreInteret(Objet_sequence):
     ######################################################################################  
     def SetTip(self):
         self.tip.SetHTML(self.GetFicheHTML())
-        self.tip.SetWholeText("titre", self.GetReferentiel().nomCI)
+        
+        ref = self.GetReferentiel()
+        plusieurs = len(self.numCI)+len(self.CI_perso) > 0
+        self.tip.SetWholeText("titre", getSingulierPluriel(ref.nomCI, plusieurs))
         
         for i, c in enumerate(self.numCI):
             self.tip.AjouterElemListeDL("ci", self.GetCode(i), self.GetIntit(i))
-      
-        self.tip.SupprimerTag("pb")
+        
+        if len(self.Pb) > 0:
+            self.tip.SetWholeText("nomPb", getSingulierPluriel(ref.nomPb, False))  
+            self.tip.AjouterElemListeUL("pb", self.Pb)
+        else:
+            self.tip.SupprimerTag("pb")             
+                        
         self.tip.SetPage()
         
 

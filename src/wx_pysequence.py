@@ -6030,6 +6030,8 @@ class PanelPropriete_CI(PanelPropriete):
 
         self.elb.SetStrings(self.CI.CI_perso)
         
+        self.panelPb.MiseAJour()
+        
         if sendEvt:
             self.sendEvent()
 
@@ -6363,21 +6365,20 @@ class PanelPropriete_LienSequence(PanelPropriete):
         #
         # Problématiques associées à(aux) CI/Thème(s)
         #
-        sbp = myStaticBox(self, -1, getSingulierPluriel(ref.nomPb, True), size = (200,-1))
+        sbp = myStaticBox(self, -1, getSingulierPluriel(ref.nomPb, False), size = (200,-1))
         sbsp = wx.StaticBoxSizer(sbp,wx.VERTICAL)
         
-        self.panelPb = PanelProblematiques(self, self.CI)
+        self.panelPb = PanelProblematiques(self, self.sequence.CI)
         
         sbsp.Add(self.panelPb,1, flag = wx.EXPAND)
-        
-        
+
         
         self.sizer.Add(sbsi, (0,0), flag = wx.EXPAND|wx.ALL, border = 2)
         self.sizer.Add(sbs0, (1,0), flag = wx.EXPAND|wx.ALL, border = 2)
         self.sizer.Add(sb, (2,0), flag = wx.ALIGN_TOP|wx.ALIGN_LEFT|wx.LEFT|wx.EXPAND, border = 2)
         self.sizer.Add(sbs1, (0,1), (3,1), flag = wx.EXPAND|wx.ALL, border = 2)
         self.sizer.Add(sbsp, (0,2), (3,1), flag = wx.EXPAND|wx.ALL, border = 2)
-        
+        self.sizer.AddGrowableCol(2)
         self.sizer.Layout()
         
 
@@ -6431,23 +6432,23 @@ class PanelPropriete_LienSequence(PanelPropriete):
         button_selected = event.GetEventObject().GetId()-200 
         
         if event.GetEventObject().IsChecked():
-            self.CI.AddNum(button_selected)
+            self.sequence.CI.AddNum(button_selected)
         else:
-            self.CI.DelNum(button_selected)
+            self.sequence.CI.DelNum(button_selected)
         
         if len(self.group_ctrls[button_selected]) > 2:
             self.group_ctrls[button_selected][2].Show(event.GetEventObject().IsChecked())
         
 #        self.panel_cible.bouton[button_selected].SetState(event.GetEventObject().IsChecked())
 #        if self.CI.GetTypeEnseignement() == 'ET':
-        if self.CI.GetReferentiel().CI_cible:
+        if self.sequenceCI.GetReferentiel().CI_cible:
             self.panel_cible.GererBoutons(True)
         
             if hasattr(self, 'b2CI'):
-                self.b2CI.Enable(len(self.CI.numCI) <= 2)
+                self.b2CI.Enable(len(self.sequenceCI.numCI) <= 2)
         
         self.Layout()
-        ref = self.CI.parent.classe.referentiel
+        ref = self.sequenceCI.parent.classe.referentiel
         self.sendEvent(modif = u"Modification des %s abordés" %getSingulierPluriel(ref.nomCI, True))
 
 
@@ -6508,6 +6509,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
         self.texte.SetBackgroundColour("white")
         self.texte.SetToolTipString(u"Lien vers un fichier Séquence")
         
+        self.panelPb.MiseAJour()
         
         self.MiseAJourApercu()
         
@@ -11337,6 +11339,7 @@ class PanelProblematiques(wx.Panel):
                  size = wx.DefaultSize,
                  style = wx.WANTS_CHARS):#|wx.BORDER_SIMPLE):
         self.CI = CI
+        ref = self.CI.GetReferentiel()
         
         wx.Panel.__init__(self, parent, -1, pos, size)
         self.sizer = wx.BoxSizer(wx.VERTICAL)
@@ -11351,7 +11354,8 @@ class PanelProblematiques(wx.Panel):
         # Cas des Problématiques personalisées
         #
         self.PbPerso = TextCtrl_Help(self, u"")
-
+        self.PbPerso.SetToolTipString(u"Exprimer ici la %s abordée\n" \
+                                      u"ou choisir une parmi les % envisageables." %(getSingulierPluriel(ref.nomPb, False), getSingulierPluriel(ref.nomPb, True)))
         self.Bind(stc.EVT_STC_MODIFIED, self.EvtText, self.PbPerso)
         self.sizer.Add(self.PbPerso, flag = wx.EXPAND)
         self.sizer.Add(self.arbre, 1, flag = wx.EXPAND)
@@ -11377,19 +11381,23 @@ class PanelProblematiques(wx.Panel):
 
     ######################################################################################              
     def Construire(self):
-        print "Construire ArbreProblematiques"
+#        print "Construire ArbreProblematiques"
         ref = self.CI.GetReferentiel()
+#        print "  ", ref.Code
+#        print "  ", ref.listProblematiques
         
         self.branche = []
 #        self.ExpandAll()
         for n, ci in enumerate(self.CI.GetNomCIs()):
             branche = self.arbre.AppendItem(self.root, ci)
             self.arbre.SetItemBold(branche, True)
+#            print "    ", n
             if n < len(self.CI.numCI):
-                for pb in ref.listProblematiques[self.CI.numCI[n]]:
-                    sbranche = self.arbre.AppendItem(branche, pb, ct_type=2)
-                    self.Bind(CT.EVT_TREE_ITEM_CHECKED, self.EvtRadioBox)
-                    self.branche.append(sbranche)
+                if self.CI.numCI[n] < len(ref.listProblematiques):
+                    for pb in ref.listProblematiques[self.CI.numCI[n]]:
+                        sbranche = self.arbre.AppendItem(branche, pb, ct_type=2)
+                        self.Bind(CT.EVT_TREE_ITEM_CHECKED, self.EvtRadioBox)
+                        self.branche.append(sbranche)
         
         self.arbre.ExpandAll()
 
