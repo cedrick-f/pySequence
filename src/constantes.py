@@ -902,7 +902,7 @@ BASE_FICHE_HTML_SEQ = u"""
 <HTML>
     <p style="text-align: center;"><font size="12"><b>Séquence</b></font></p>
 <p id="nom">Intitulé</p>
-<p id="ap"> </p>
+<img id="ap" src="" alt=""> 
 </HTML>
 """
 
@@ -921,7 +921,7 @@ BASE_FICHE_HTML = u"""
 <HTML>
     <font size="11"><b><h1 id = "titre" style="text-align: center;">_</h1></b></font>
     <p id="txt"> </p>
-    <p id="img"> </p>
+    <img id="img" src="" alt=""> 
 </HTML>
 """
 

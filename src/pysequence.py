@@ -1629,12 +1629,15 @@ class Sequence(BaseDoc, Objet_sequence):
 #            self.obj.append(comp)
         self.obj["C"].setBranche(list(brancheObj)[0])
         self.obj["S"].setBranche(list(brancheObj)[1])
+        
         brancheSys = branche.find("Systemes")
         self.systemes = []
         for sy in list(brancheSys):
             systeme = Systeme(self)
             systeme.setBranche(sy)
-            self.systemes.append(systeme)    
+            # On évite les systèmes redondants (correction d'un bug)
+            if systeme.lienClasse == None or  not systeme.lienClasse in [s.lienClasse for s in self.systemes]:
+                self.systemes.append(systeme)    
 
 #        t3 = time.time()
 #        print "  t3", t3-t2
@@ -1905,11 +1908,12 @@ class Sequence(BaseDoc, Objet_sequence):
             
 #            nom = unicode(s)
 #            sy = Systeme(self, self.panelParent, nom = nom)
-            
-            self.systemes.append(sy)
-            nouvListe.append(sy.nom)
-            sy.ConstruireArbre(self.arbre, self.brancheSys)
-            sy.SetCode()
+            # On évite les systèmes redondants (correction d'un bug)
+            if sy.lienClasse == None or  not sy.lienClasse in [s.lienClasse for s in self.systemes]:  
+                self.systemes.append(sy)
+                nouvListe.append(sy.nom)
+                sy.ConstruireArbre(self.arbre, self.brancheSys)
+                sy.SetCode()
 #            sy.nbrDispo.v[0] = eval(n)
 #            sy.panelPropriete.MiseAJour()
         
@@ -4995,6 +4999,10 @@ class CentreInteret(Objet_sequence):
     ######################################################################################  
     def GetApp(self):
         return self.parent.GetApp()
+    
+    ######################################################################################  
+    def GetDocument(self):    
+        return self.parent
     
     ######################################################################################  
     def getBranche(self):

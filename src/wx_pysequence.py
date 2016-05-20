@@ -1859,7 +1859,7 @@ class FenetreSequence(FenetreDocument):
             #
             # La séquence
             #
-            self.sequence = Sequence(self, self.classe, ouverture = ouverture)
+            self.sequence = pysequence.Sequence(self, self.classe, ouverture = ouverture)
             self.classe.SetDocument(self.sequence)
         
         else:
@@ -1877,7 +1877,7 @@ class FenetreSequence(FenetreDocument):
         self.arbre.ExpandAll()
         
         #
-        # Permet d'ajouter automatiquement les systèmes des préférences
+        # Permet d'ajouter automatiquement les systèmes des préférences (dans la Classe)
         #
         self.sequence.Initialise()
         
@@ -4511,6 +4511,7 @@ class PositionCtrl(wx.Panel):
         self.sizer = wx.BoxSizer(wx.HORIZONTAL)
         radio = []
         periodes_prj = [p.periode for p in projets.values()]
+        self.position = position
         
 #        print "periodes_prj", periodes_prj
         num = 1
@@ -4548,9 +4549,12 @@ class PositionCtrl(wx.Panel):
         self.radio[pos].SetValue(True)
         
         
+    def MiseAJour(self):
+        self.SetValue(self.position)
         
-        
-        
+
+
+
 ####################################################################################
 #
 #   Classe définissant le panel de propriété de la progression
@@ -6372,7 +6376,6 @@ class PanelPropriete_LienSequence(PanelPropriete):
         
         sbsp.Add(self.panelPb,1, flag = wx.EXPAND)
 
-        
         self.sizer.Add(sbsi, (0,0), flag = wx.EXPAND|wx.ALL, border = 2)
         self.sizer.Add(sbs0, (1,0), flag = wx.EXPAND|wx.ALL, border = 2)
         self.sizer.Add(sb, (2,0), flag = wx.ALIGN_TOP|wx.ALIGN_LEFT|wx.LEFT|wx.EXPAND, border = 2)
@@ -6509,6 +6512,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
         self.texte.SetBackgroundColour("white")
         self.texte.SetToolTipString(u"Lien vers un fichier Séquence")
         
+        self.position.MiseAJour()
         self.panelPb.MiseAJour()
         
         self.MiseAJourApercu()
@@ -8437,7 +8441,7 @@ class PanelPropriete_Systeme(PanelPropriete):
         textctrl = wx.TextCtrl(self, -1, u"")
         self.textctrl = textctrl
         
-        self.sizer.Add(titre, (0,0), (1,1), flag = wx.ALIGN_TOP|wx.TOP|wx.BOTTOM|wx.LEFT, border = 3)
+        self.sizer.Add(titre, (0,0), (1,1), flag = wx.ALIGN_CENTER_VERTICAL|wx.ALL, border = 3)
         
         
         if isinstance(systeme.parent, pysequence.Sequence):
@@ -8521,7 +8525,7 @@ class PanelPropriete_Systeme(PanelPropriete):
 
     #############################################################################            
     def GetDocument(self):
-        if isinstance(self.systeme.parent, Sequence):
+        if isinstance(self.systeme.parent, pysequence.Sequence):
             return self.systeme.parent
         elif isinstance(self.systeme.parent, Classe):
             return self.systeme.parent.GetDocument()
@@ -8540,7 +8544,7 @@ class PanelPropriete_Systeme(PanelPropriete):
 #            self.Verrouiller(True)
         
         self.systeme.SetNom(evt.GetString())
-        if isinstance(self.systeme.parent, Sequence):
+        if isinstance(self.systeme.parent, pysequence.Sequence):
             self.systeme.parent.MiseAJourNomsSystemes()
             modif = u"Modification des systèmes nécessaires"
             if self.onUndoRedo():
@@ -8609,7 +8613,7 @@ class PanelPropriete_Systeme(PanelPropriete):
         """
         self.systeme.SetNom(event.GetString())
 #        print "EvtText", event.GetString()
-        if isinstance(self.systeme.parent, Sequence):
+        if isinstance(self.systeme.parent, pysequence.Sequence):
             self.systeme.parent.MiseAJourNomsSystemes()         # mise à jour dans l'arbre de la Séquence
             modif = u"Modification du nom du Système"
             if self.onUndoRedo():
@@ -8628,7 +8632,7 @@ class PanelPropriete_Systeme(PanelPropriete):
     def EvtVar(self, event):
         self.systeme.SetNombre()
         
-        if isinstance(self.systeme.parent, Sequence):
+        if isinstance(self.systeme.parent, pysequence.Sequence):
             modif = u"Modification du nombre de Systèmes disponibles"
             if self.onUndoRedo():
                 self.sendEvent(modif = modif)
@@ -8682,7 +8686,7 @@ class PanelPropriete_Systeme(PanelPropriete):
     def MiseAJour(self, sendEvt = False):
         """
         """
-#        print "MiseAJour panelPropriete Systeme"
+        print "MiseAJour panelPropriete Systeme"
 #        print "MiseAJour", self.systeme
             
         self.textctrl.ChangeValue(self.systeme.nom)
@@ -8693,7 +8697,8 @@ class PanelPropriete_Systeme(PanelPropriete):
         if isinstance(self.systeme.parent, pysequence.Sequence):
             if sendEvt:
                 self.sendEvent()
-        
+            
+        self.MiseAJourListeSys(self.systeme.nom)
         self.MiseAJourLien()
         
         
@@ -8706,9 +8711,10 @@ class PanelPropriete_Systeme(PanelPropriete):
 
     #############################################################################            
     def MiseAJourListeSys(self, nom = None):
-        self.cbListSys.Set([u""]+[s.nom for s in self.systeme.parent.classe.systemes])
-        if nom != None:
-            self.cbListSys.SetSelection(self.cbListSys.FindString(nom))
+        if hasattr(self, 'cbListSys'):
+            self.cbListSys.Set([u""]+[s.nom for s in self.systeme.parent.classe.systemes])
+            if nom != None:
+                self.cbListSys.SetSelection(self.cbListSys.FindString(nom))
 
 
 
@@ -11355,7 +11361,7 @@ class PanelProblematiques(wx.Panel):
         #
         self.PbPerso = TextCtrl_Help(self, u"")
         self.PbPerso.SetToolTipString(u"Exprimer ici la %s abordée\n" \
-                                      u"ou choisir une parmi les % envisageables." %(getSingulierPluriel(ref.nomPb, False), getSingulierPluriel(ref.nomPb, True)))
+                                      u"ou choisir une parmi les %s envisageables." %(getSingulierPluriel(ref.nomPb, False), getSingulierPluriel(ref.nomPb, True)))
         self.Bind(stc.EVT_STC_MODIFIED, self.EvtText, self.PbPerso)
         self.sizer.Add(self.PbPerso, flag = wx.EXPAND)
         self.sizer.Add(self.arbre, 1, flag = wx.EXPAND)
@@ -11427,8 +11433,17 @@ class PanelProblematiques(wx.Panel):
             self.arbre.CheckItem2(b, False)
         ref = self.CI.GetReferentiel()
         self.CI.Pb = self.PbPerso.GetText()
-        self.Parent.sendEvent(modif = u"Modification de la %s" %getSingulierPluriel(ref.nomPb, False))
+        t = u"Modification de la %s" %getSingulierPluriel(ref.nomPb, False)
+        self.Parent.GetDocument().GererDependants(self.CI.parent, t)
+            
+        if self.Parent.onUndoRedo():
+            self.Parent.sendEvent(modif = t)
+        else:
+            if not self.Parent.eventAttente:
+                wx.CallLater(DELAY, self.Parent.sendEvent, modif = t)
+                self.Parent.eventAttente = True
                 
+        
                 
     
     ######################################################################################              
