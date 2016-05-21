@@ -653,7 +653,7 @@ class Objet_sequence():
            
     ######################################################################################     
     def GetClasse(self):
-        if hasattr(self, 'projet'):
+        if hasattr(self, 'projet') and self.projet is not None:
             cl = self.projet.classe
         elif hasattr(self, 'sequence') and self.sequence is not None:
             cl = self.sequence.classe
@@ -1151,16 +1151,23 @@ class BaseDoc():
     ######################################################################################  
     def GetNbrPeriodes(self):
         return sum([p for a, p in self.GetReferentiel().periodes])
-    
+
+
     ######################################################################################  
     def estProjet(self):
         return isinstance(self, Projet)
     
+
     ######################################################################################  
-    def GetApercu(self, w = 210):
+    def GetApercu(self, w = 210, h = -1):
         imagesurface = self.draw.get_apercu(self, w)
-        return getBitmapFromImageSurface(imagesurface).ConvertToImage().Scale(w, w*1.414).ConvertToBitmap()
-    
+        img = getBitmapFromImageSurface(imagesurface).ConvertToImage().Scale(w, w*1.414)
+        if h == -1:
+            return img.ConvertToBitmap()
+        else:
+            return img.Resize((w, h), (0,0)).ConvertToBitmap()
+
+
     ######################################################################################  
     def restaurer(self, root):
         if self.panelParent != None:
@@ -1360,7 +1367,7 @@ class BaseDoc():
                                   u"Essayer de faire \"Enregistrer sous...\"" %nomFichier)
         except UnicodeDecodeError:
             messageErreur(None, u"Erreur d'encodage", 
-                                  u"Un caractére spécial empéche l'enregistrement du fichier !\n\n"\
+                                  u"Un caractère spécial empêche l'enregistrement du fichier !\n\n"\
                                   u"Essayer de le localiser et de le supprimer.\n"\
                                   u"Merci de reporter cette erreur au développeur.")
         fichier.close()
@@ -3394,6 +3401,12 @@ class Projet(BaseDoc, Objet_sequence):
         return lst
 
     
+    ######################################################################################       
+    def GetCompetencesVisees(self):
+        """ Renvoie la liste des compétences visées (objectifs) 
+        """
+        return self.GetCompetencesUtil()
+    
     ######################################################################################  
     def GetNbrPhases(self):
         """ Renvoie le nombre de phases dans le projet, y compris les revues
@@ -3798,8 +3811,8 @@ class Progression(BaseDoc, Objet_sequence):
         self.undoStack = UndoStack(self)
         self.image = None
         
-        self.sequences = []     # liste de LienSequence
-        self.projets = []       # liste de LienProjet
+        self.sequences_projets = []     # liste de LienSequence et de LienProjet
+        
         
         self.calendriers = []
         self.eleves = []
@@ -3855,8 +3868,8 @@ class Progression(BaseDoc, Objet_sequence):
     ######################################################################################  
     def GetPositions(self):
         l = []
-        for seq in [s.sequence for s in self.sequences]:
-            l.append(seq.position)
+        for doc in [s.GetDoc() for s in self.sequences_projets]:
+            l.append(doc.position)
         return list(set(l))
 
 
@@ -3870,7 +3883,7 @@ class Progression(BaseDoc, Objet_sequence):
     def ConstruireArbre(self, arbre, branche):
         self.arbre = arbre
         self.branche = arbre.AppendItem(branche, Titres[12], data = self, image = self.arbre.images["Prg"])
-
+        
         #
         # Les profs
         #
@@ -3882,10 +3895,9 @@ class Progression(BaseDoc, Objet_sequence):
         # Les séquences
         #
         self.brancheSeq = arbre.AppendItem(self.branche, Titres[11], data = "Seq")
-        for e in self.sequences:
+        for e in self.sequences_projets:
             e.ConstruireArbre(arbre, self.brancheSeq) 
-        for e in self.projets:
-            e.ConstruireArbre(arbre, self.brancheSeq) 
+
             
         
     ######################################################################################  
@@ -3896,15 +3908,18 @@ class Progression(BaseDoc, Objet_sequence):
         
 
     ######################################################################################  
-    def Rafraichir(self):
+    def Rafraichir(self, event = None):
         self.Ordonner()
         self.arbre.DeleteChildren(self.brancheSeq)
-        for e in self.sequences:
+        
+        for e in self.sequences_projets:
             e.ConstruireArbre(self.arbre, self.brancheSeq)
+            
         self.arbre.ExpandAll()
         
         self.DefinirCouleurs()
         
+        self.VerifPb()
         if self.arbre.GetSelection() is None:
             self.arbre.SelectItem(self.branche)
 
@@ -3937,10 +3952,12 @@ class Progression(BaseDoc, Objet_sequence):
             
 
 #        
-        sequences = ET.SubElement(progression, "Sequences")
-        for lienseq in self.sequences:
-            sequences.append(lienseq.getBranche())
+        sequences_projets = ET.SubElement(progression, "Sequences_Projets")
+        for lienseq in self.sequences_projets:
+            sequences_projets.append(lienseq.getBranche())
             
+            
+        
 #        calendriers = ET.SubElement(progression, "Calendriers")
 #        for cal in self.calendriers:
 #            calendriers.append(cal.getBranche())
@@ -3993,14 +4010,36 @@ class Progression(BaseDoc, Objet_sequence):
 #        self.dossier.setBranche(brancheDossier)
         
         
+        self.sequences_projets = []
+        # Provisoire ... pendant développement
         brancheSeq = branche.find("Sequences")
-        self.sequences = []
         if brancheSeq is not None:
             for f in list(brancheSeq):
                 sp = LienSequence(self)
                 sp.setBranche(f)
-                self.sequences.append(sp)
+                self.sequences_projets.append(sp)
             
+        # Provisoire ... pendant développement
+        branchePrj = branche.find("Projets")
+        if branchePrj is not None:
+            for f in list(branchePrj):
+                sp = LienProjet(self)
+                sp.setBranche(f)
+                self.sequences_projets.append(sp)
+                
+        # Solution définitive
+        branchePrj = branche.find("Sequences_Projets")
+        if branchePrj is not None:
+            for f in list(branchePrj):
+                if f.find("Projet") is not None:
+                    sp = LienProjet(self)
+                else:
+                    sp = LienSequence(self)
+                sp.setBranche(f)
+                self.sequences_projets.append(sp)
+                
+                
+                
         brancheCal = branche.find("Calendriers")
         self.calendriers = []
         if brancheCal is not None:
@@ -4068,36 +4107,39 @@ class Progression(BaseDoc, Objet_sequence):
 
     ######################################################################################  
     def SupprimerItem(self, item):
-        self.SupprimerLienSequence(item = item)
+        self.SupprimerLien(item = item)
     
     ######################################################################################  
-    def SupprimerLienSequence(self, event = None, item = None, lienSeq = None):
-        if lienSeq is None:
+    def SupprimerLien(self, event = None, item = None, lien = None):
+        if lien is None:
             l = self.arbre.GetItemPyData(item)
         else:
-            l = lienSeq
+            l = lien
 
-        self.sequences.remove(l)
+        self.sequences_projets.remove(l)
         
         if item is not None:
             self.arbre.Delete(item)
-#        self.SupprimerSystemeSeance(i)
-        self.GetApp().sendEvent(modif = u"Suppression d'une Séquence")
 
+        if isinstance(item, LienSequence):
+            self.GetApp().sendEvent(modif = u"Suppression d'une Séquence")
+        else:
+            self.GetApp().sendEvent(modif = u"Suppression d'un Projet")
+        
 
-    ######################################################################################  
-    def OuvrirSequence(self, event = None, item = None):
-        l = self.arbre.GetItemPyData(item)
-#        self.GetApp().parent.ouvrir(toSystemEncoding(l.path))
-        app = self.GetApp().parent.ouvrirDoc(l.sequence, l.path)
-#        l.sequence.app = app
+#    ######################################################################################  
+#    def OuvrirSequence(self, event = None, item = None):
+#        l = self.arbre.GetItemPyData(item)
+##        self.GetApp().parent.ouvrir(toSystemEncoding(l.path))
+#        app = self.GetApp().parent.ouvrirDoc(l.sequence, l.path)
+##        l.sequence.app = app
     
     
     ######################################################################################  
     def ChargerSequences(self):
-        print "ChargerSequences", self.sequences
+        print "ChargerSequences", self.sequences_projets
         aSupprimer = []
-        for lienSeq in self.sequences:
+        for lienSeq in [s for s in self.sequences_projets if isinstance(s, LienSequence)]:
             if lienSeq.sequence is None:
 #                print "   ", lienSeq.path
                 path = os.path.join(self.GetPath(), lienSeq.path)
@@ -4144,16 +4186,72 @@ class Progression(BaseDoc, Objet_sequence):
         # On supprime les lienSequences à supprimer
         #
         for s in aSupprimer:
-            self.SupprimerLienSequence(lienSeq = s)
+            self.SupprimerLien(lienSeq = s)
             
-        self.Ordonner()
+        
 
+    
+    ######################################################################################  
+    def ChargerProjets(self):
+        print "ChargerProjets", self.sequences_projets
+        aSupprimer = []
+        for lienPrj in [s for s in self.sequences_projets if isinstance(s, LienProjet)]:
+            if lienPrj.projet is None:
+#                print "   ", lienSeq.path
+                path = os.path.join(self.GetPath(), lienPrj.path)
+#                print "   ", path
+                if not os.path.isfile(path):
+                    dlg = wx.MessageDialog(self.GetApp(), u"Le fichier Projet suivant n'a pas été trouvé.\n\n"\
+                                                 u"\t%s\n\n"
+                                                 u"Voulez-vous le chercher manuellement ?\n" %toSystemEncoding(lienPrj.path),
+                                           u"Fichier non trouvé",
+                                           wx.YES_NO | wx.ICON_QUESTION |wx.YES_DEFAULT
+                                           )
+                    res = dlg.ShowModal()
+                    dlg.Destroy()
+                    if res == wx.ID_YES:
+                        fichiers_projets = self.GetFichiersProjetsDossier(exclureExistant = True)
+                        fichiers, projets = zip(*fichiers_projets)
+                        fichiers = [os.path.relpath(f, self.GetPath()) for f in fichiers]
+                        
+                        dlg = wx.SingleChoiceDialog(self.GetApp(), u"Choisir parmi les fichiers ci-dessous\n"\
+                                                                   u"celui qui doit remplacer %s." %toSystemEncoding(lienPrj.path), 
+                                                    u"Fichiers Projet disponibles",
+                                                    [toSystemEncoding(f) for f in fichiers], 
+                                                    wx.CHOICEDLG_STYLE
+                                                    )
+                        
+                        if dlg.ShowModal() == wx.ID_OK:
+                            i = dlg.GetSelection() 
+                            lienPrj.path = fichiers[i]
+                            lienPrj.projet = projets[i]
+                            self.GetApp().MarquerFichierCourantModifie()
 
+                        else:
+                            aSupprimer.append(lienPrj)
+                            
+                        dlg.Destroy()
+                    
+                    elif res == wx.ID_NO:
+                        aSupprimer.append(lienPrj)
+                        continue
+                else: 
+                    lienPrj.ChargerProjet()
+        
+        #
+        # On supprime les lienSequences à supprimer
+        #
+        for s in aSupprimer:
+            self.SupprimerLien(lienPrj = s)
+            
+        
+        
+        
     ######################################################################################  
     def Ordonner(self):
 #        print "Ordonner"
     
-        listeSeqPrj = self.sequences+self.projets
+        listeSeqPrj = self.sequences_projets
                 
         listeSeqPrj.sort(key= lambda s : s.GetDocument().position)
         
@@ -4190,11 +4288,12 @@ class Progression(BaseDoc, Objet_sequence):
                 ps.sequence = sequence
             else:
                 ps.ChargerSequence()
-            self.sequences.append(ps)
+            self.sequences_projets.append(ps)
             self.Ordonner()
             self.GetApp().sendEvent(modif = u"Ajout d'une nouvelle Séquence à la Progression")
             self.arbre.SelectItem(ps.branche)
-    
+
+
     ######################################################################################  
     def AjouterNouveauProjet(self, event = None):
         if not self.DossierDefini():
@@ -4208,7 +4307,7 @@ class Progression(BaseDoc, Objet_sequence):
                 ps.projet = projet
             else:
                 ps.ChargerProjet()
-            self.projets.append(ps)
+            self.sequences_projets.append(ps)
             self.Ordonner()
             self.GetApp().sendEvent(modif = u"Ajout d'un nouveau Projet à la Progression")
             self.arbre.SelectItem(ps.branche)
@@ -4238,7 +4337,7 @@ class Progression(BaseDoc, Objet_sequence):
             lienSeq = LienSequence(self)
             lienSeq.path = fichiers[i]
             lienSeq.sequence = sequences[i]
-            self.sequences.append(lienSeq)
+            self.sequences_projets.append(lienSeq)
             self.Ordonner()
             self.GetApp().sendEvent(modif = u"Ajout d'une Séquence à la Progression")
             self.arbre.SelectItem(lienSeq.branche)
@@ -4270,7 +4369,7 @@ class Progression(BaseDoc, Objet_sequence):
             lienPrj = LienProjet(self)
             lienPrj.path = fichiers[i]
             lienPrj.projet = projets[i]
-            self.projets.append(lienPrj)
+            self.sequences_projets.append(lienPrj)
             self.Ordonner()
             self.GetApp().sendEvent(modif = u"Ajout d'un Projet à la Progression")
             self.arbre.SelectItem(lienPrj.branche)
@@ -4310,26 +4409,30 @@ class Progression(BaseDoc, Objet_sequence):
         
     ######################################################################################  
     def ImporterSequences(self, event = None):
+        """ Importe automatiquement toutes les Séquences compatibles du dossier
+        """
         if not self.DossierDefini():
             return
         
         sequences = self.GetSequencesDossier()
 #        print "sequences", sequences
         for s in sequences:
-            if not s in self.sequences:
-                self.sequences.append(s)
+            if not s in self.sequences_projets:
+                self.sequences_projets.append(s)
 #                s.ConstruireArbre(self.arbre, self.brancheSeq)
         self.Ordonner()
 
     ######################################################################################  
     def ImporterProjets(self, event = None):
+        """ Importe automatiquement touts les Projets compatibles du dossier
+        """
         if not self.DossierDefini():
             return
         
         projets = self.GetProjetsDossier()
         for s in projets:
-            if not s in self.projets:
-                self.projets.append(s)
+            if not s in self.sequences_projets:
+                self.sequences_projets.append(s)
 #                s.ConstruireArbre(self.arbre, self.brancheSeq)
         self.Ordonner()
 
@@ -4337,7 +4440,7 @@ class Progression(BaseDoc, Objet_sequence):
     ######################################################################################  
     def VerifPb(self):
         obj = []
-        for lienseq in self.sequences:
+        for lienseq in [s for s in self.sequences_projets if isinstance(s, LienSequence)]:
             pb = []
             seq = lienseq.sequence
             prerequis = seq.prerequis.savoirs
@@ -4388,6 +4491,45 @@ class Progression(BaseDoc, Objet_sequence):
         finally:
             fichier.close()
 
+    
+    ########################################################################################################
+    def OuvrirFichierPrj(self, nomFichier):
+#        print "///", nomFichier
+        nomFichier = os.path.join(self.GetPath(), nomFichier)
+        for prj in self.GetApp().parent.GetDocumentsOuverts('prj'):
+#            print "   :", seq[1]
+#            path1 = os.path.normpath(os.path.abspath(seq[1]))
+            path1 = os.path.join(self.GetPath(), prj[1])
+            if path1 == nomFichier:  # La séquence est déja ouverte
+                projet = prj[0]
+                classe = projet.classe
+                return classe, projet
+        
+#        print "///", nomFichier
+        fichier = open(nomFichier,'r')
+        classe = Classe(self.GetApp())
+        projet = Projet(self.GetApp(), classe, ouverture = True)
+        classe.SetDocument(projet)
+
+        try:
+            root = ET.parse(fichier).getroot()
+            rprojet = root.find("Projet")
+            rclasse = root.find("Classe")
+            if rclasse is not None:
+                classe.setBranche(rclasse)
+            if rprojet is not None:
+                projet.setBranche(rprojet)
+            else:   # Ancienne version , forcément STI2D-ETT !!
+                classe.typeEnseignement, self.classe.familleEnseignement = ('ET', 'STI')
+                classe.referentiel = REFERENTIELS[classe.typeEnseignement]
+                projet.setBranche(root)
+            return classe, projet
+        except:
+            print u"Le fichier n'a pas pu être ouvert :",nomFichier
+            return None, None
+        finally:
+            fichier.close()
+
 
     #############################################################################
     def MiseAJourTypeEnseignement(self, ancienRef = None, ancienneFam = None):#, changeFamille = False):
@@ -4405,14 +4547,14 @@ class Progression(BaseDoc, Objet_sequence):
         
     #############################################################################
     def Verrouiller(self):
-        self.classe.Verrouiller(len(self.sequences) != 0)
+        self.classe.Verrouiller(len(self.sequences_projets) != 0)
         
     
     ########################################################################################################
     def GetListeFichiersSequences(self):
         """
         """
-        return [l.path for l in self.sequences]
+        return [l.path for l in self.sequences_projets]
 
 
     ########################################################################################################
@@ -4427,6 +4569,8 @@ class Progression(BaseDoc, Objet_sequence):
         self.GetApp().sendEvent(modif = u"Import de Séquences compatibles") 
         
         return sequences
+
+
 
 
     ########################################################################################################
@@ -4465,7 +4609,7 @@ class Progression(BaseDoc, Objet_sequence):
         # On enlève les fichiers qui sont déja dans la liste des fichiers Sequence de la progression
         #
         if exclureExistant:
-            lf = [os.path.abspath(ls.path) for ls in self.sequences] # Existant
+            lf = [os.path.abspath(ls.path) for ls in self.sequences_projets] # Existant
             l = [ls for ls in l if not ls in lf]
             
         #
@@ -4483,73 +4627,74 @@ class Progression(BaseDoc, Objet_sequence):
 #                lienSequence.sequence = sequence
                 fichiers_sequences.append((f, sequence))
             count += 1
-        
-#            print "sequences AVANT", self.sequences
-#        
-#        listeCI = self.getCIcommuns(self.sequences)
-#        if len(listeCI) > 1:
-#            dlgc = DialogChoixCI(self, listeCI, self.referentiel)
-#            dlgc.ShowModal()
-#            choix = dlgc.choix
-#            sequences = listeCI[choix][0]
-#    
-#            dlgc.Destroy()
-#        
-#            print "sequences APRES", self.sequences
 
-        
         dlg.Update(count, u"Terminé")
         dlg.Destroy()
         wx.EndBusyCursor()
         
         return fichiers_sequences
-    
-    
-    
-    
-    
-            
-            
-            
-    
+
+
+
+    ########################################################################################################
+    def GetFichiersProjetsDossier(self, event = None, exclureExistant = False):    
+        """ Recherche tous les fichiers Projet compatibles avec la progression
         
-#        if False:#dansRectangle(x, y, (draw_cairo_prg.posPre + draw_cairo_prg.taillePre,))[0]:
-#            for ls in self.prerequisSeance:
-#                h = ls.HitTest(x,y)
-#                if h != None:
-#                    return h
-#            return self.branchePre
-#        
-#        else:
-#            branche = None
-#            autresZones = self.sequences + self.equipe
-#            continuer = True
-#            i = 0
-#            while continuer:
-#                if i >= len(autresZones):
-#                    continuer = False
-#                else:
-#                    branche = autresZones[i].HitTest(x, y)
-#                    if branche:
-#                        continuer = False
-#                i += 1
-#            
-#            if branche == None:
-#                if hasattr(self, 'rect') and dansRectangle(x, y, self.rect)[0]:
-#                    return self.branche
-#                
-#            return branche
+        >> Renvoie une liste [(nomFichier, Projet)]
+        """   
+#        print "GetSequencesDossier"
+        wx.BeginBusyCursor()
+        
+        #
+        # On cherche tous les fichiers .seq
+        #
+        l = []
+        if True:
+            for root, dirs, files in os.walk(self.GetPath()):
+                l.extend([os.path.join(root, f) for f in files if os.path.splitext(f)[1] == '.prj'])
+        else:
+            l.extend(glob.glob(os.path.join(self.GetPath(), "*.prj")))
+            
+        #
+        # Un ProgressDialog pour patienter ...
+        #
+        dlg =    wx.ProgressDialog(u"Recherche des Projets",
+                                   u"",
+                                   maximum = len(l),
+                                   parent=self.GetApp(),
+                                   style = 0
+                                    | wx.PD_APP_MODAL
+                                    | wx.PD_ESTIMATED_TIME
+                                    | wx.PD_REMAINING_TIME
+                                    | wx.PD_AUTO_HIDE
+                                    )
+        #
+        # On enlève les fichiers qui sont déja dans la liste des fichiers Projet de la progression
+        #
+        if exclureExistant:
+            lf = [os.path.abspath(ls.path) for ls in self.sequences_projets] # Existant
+            l = [ls for ls in l if not ls in lf]
+            
+        #
+        # On ouvre tous les fichiers .prj pour vérifier leur compatibilité
+        #
+        fichiers_projets = []
+        count = 0
+        for f in l:
+            dlg.Update(count, toSystemEncoding(f))
+      
+            classe, projet = self.OuvrirFichierPrj(f)
 
+            if classe != None and classe.typeEnseignement == self.GetReferentiel().Code:
+                fichiers_projets.append((f, projet))
+            count += 1
 
-#    ######################################################################################  
-#    def HitTestCompetence(self, x, y):
-#        if hasattr(self, 'rectComp'):
-#            for k, ro in self.rectComp.items():
-#                rect = [r[:4] for r in ro]
-#                obj = [o[-1] for o in ro]
-#                ok, i = dansRectangle(x, y, rect)
-#                if ok:
-#                    return k, obj[i]
+        dlg.Update(count, u"Terminé")
+        dlg.Destroy()
+        wx.EndBusyCursor()
+        
+        return fichiers_projets
+
 
 
     ######################################################################################  
@@ -4663,9 +4808,13 @@ class Progression(BaseDoc, Objet_sequence):
         
         self.enregistrer_root(root, nomFichier)
 
-        for lienSeq in self.sequences:
+        for lienSeq in [s for s in self.sequences_projets if isinstance(s, LienSequence)]:
             if lienSeq.sequence in self.dependants:
                 lienSeq.sequence.enregistrer(lienSeq.path)
+        
+        for lienPrj in [s for s in self.sequences_projets if isinstance(s, LienProjet)]:
+            if lienPrj.projet in self.dependants:
+                lienPrj.projet.enregistrer(lienPrj.path)
 
         del self.dependants[:]
 
@@ -4713,6 +4862,13 @@ class LienSequence(Objet_sequence):
     def GetPanelPropriete(self, parent):
         return PanelPropriete_LienSequence(parent, self)
     
+    ######################################################################################  
+    def GetDoc(self):
+        return self.sequence
+    
+    ######################################################################################  
+    def GetPosition(self):
+        return self.sequence.position
     
     ######################################################################################  
     def getBranche(self):
@@ -4780,7 +4936,7 @@ class LienSequence(Objet_sequence):
     def AfficherMenuContextuel(self, itemArbre):
         if itemArbre == self.branche:
             self.parent.app.AfficherMenuContextuel([[u"Supprimer", 
-                                                     functools.partial(self.parent.SupprimerLienSequence, item = itemArbre), 
+                                                     functools.partial(self.parent.SupprimerLien, item = itemArbre), 
                                                      images.Icone_suppr_seq.GetBitmap()],
                                                     [u"Ouvrir", 
                                                      functools.partial(self.parent.OuvrirSequence, item = itemArbre), 
@@ -4810,7 +4966,7 @@ class LienSequence(Objet_sequence):
         seq = self.sequence
         self.tip.SetHTML(self.GetFicheHTML())
         self.tip.SetWholeText("nom", seq.intitule)
-        self.tip.AjouterImg("ap", seq.GetApercu(300)) 
+        self.tip.AjouterImg("ap", seq.GetApercu(600, 250)) 
         
         self.tip.SetPage()
 
@@ -4858,9 +5014,16 @@ class LienProjet(Objet_sequence):
         return self.parent
     
     ######################################################################################  
+    def GetDoc(self):
+        return self.projet
+    
+    ######################################################################################  
     def GetPanelPropriete(self, parent):
         return PanelPropriete_LienProjet(parent, self)
     
+    ######################################################################################  
+    def GetPosition(self):
+        return self.projet.position
     
     ######################################################################################  
     def getBranche(self):
@@ -4905,7 +5068,7 @@ class LienProjet(Objet_sequence):
 
     
     ######################################################################################  
-    def ChargerSequence(self):
+    def ChargerProjet(self):
         classe, projet = self.GetDocument().OuvrirFichierPrj(self.path)
         if classe != None and classe.typeEnseignement == self.GetReferentiel().Code:
             self.projet = projet
@@ -4928,7 +5091,7 @@ class LienProjet(Objet_sequence):
     def AfficherMenuContextuel(self, itemArbre):
         if itemArbre == self.branche:
             self.parent.app.AfficherMenuContextuel([[u"Supprimer", 
-                                                     functools.partial(self.parent.SupprimerLienProjet, item = itemArbre), 
+                                                     functools.partial(self.parent.SupprimerLien, item = itemArbre), 
                                                      images.Icone_suppr_prj.GetBitmap()],
                                                     [u"Ouvrir", 
                                                      functools.partial(self.parent.OuvrirProjet, item = itemArbre), 
@@ -4949,7 +5112,7 @@ class LienProjet(Objet_sequence):
 
     ######################################################################################  
     def GetFicheHTML(self, param = None):
-        return constantes.BASE_FICHE_HTML_SEQ
+        return constantes.BASE_FICHE_HTML_PRJ
 
 
     ######################################################################################  
@@ -4958,7 +5121,7 @@ class LienProjet(Objet_sequence):
         seq = self.projet
         self.tip.SetHTML(self.GetFicheHTML())
         self.tip.SetWholeText("nom", seq.intitule)
-        self.tip.AjouterImg("ap", seq.GetApercu(300)) 
+        self.tip.AjouterImg("ap", seq.GetApercu(600, 250)) 
         
         self.tip.SetPage()
 

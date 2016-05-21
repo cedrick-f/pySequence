@@ -165,13 +165,14 @@ ecartTacheY = None  # Ecartement entre les tâches de phase différente
 # paramètres pour la fonction qui calcule la hauteur des tâches 
 # en fonction de leur durée
 a = b = None
-def calcH_seq(sequence):
-    return calcH(sequence.GetDuree())
+def calcH_doc(doc):
+#    print "calcH_doc", doc, doc.GetDuree()
+    return calcH(doc.GetDuree())
         
 
 def calcH(t):
     if t != 0:
-        return a*log(t)+b
+        return a*log(t+0.5)*log(2)+b
     return 2*ecartTacheY
 
 
@@ -251,13 +252,15 @@ def DefinirZones(prg, ctx):
     if a < 0: # Trop de séquences -> on réduit !
         calculCoefCalcH(prg, ctx, hTacheMini/2)
 
+    
 
 
 def calculCoefCalcH(prg, ctx, hm):
     global ecartTacheY, a, b
+#    print "calculCoefCalcH", hm
     ecartTacheY = ecartY/3
     sommeEcarts = (prg.GetNbrPeriodes()-1)*ecartTacheY
-    
+#    print "sommeEcarts", sommeEcarts
     # Calcul des paramètres de la fonction hauteur = f(durée)
     # hauteur = a * log(durée) + b
     b = 0.0
@@ -265,8 +268,9 @@ def calculCoefCalcH(prg, ctx, hm):
     h = 0.0 #ecartTacheY
     nt = 0 # nombre de tâches de hauteur variable ( = calculée par calcH() )
 
-    for t in prg.sequences:
-        h += calcH_seq(t.sequence)
+    for t in prg.sequences_projets:
+        h += calcH_doc(t.GetDoc())
+#        print "    ", t, t.GetDoc().GetDuree(), h
         nt += 1
 
     b = hm # Hauteur mini
@@ -275,6 +279,8 @@ def calculCoefCalcH(prg, ctx, hm):
     if h != 0:
         a = (tailleZTaches[1] - hFixe - b*nt) / h
 
+    print ">>> a,b :", a, b
+    
     
 #######################################################################################  
 #def getCoulComp(partie, alpha = 1.0):
@@ -653,17 +659,18 @@ def Draw(ctx, prg, mouchard = False):
     yh_phase = {c:[[], []] for c in range(prg.GetNbrPeriodes())}
 
     position = None
-    for t in prg.sequences:
-        seq = t.sequence
-        if position != seq.position:
+    for t in prg.sequences_projets:
+        pos = t.GetPosition()
+        
+        if position != pos:
             y += ecartTacheY
 
         yb = DrawTacheRacine(ctx, prg, t, y)
-        yh_phase[seq.position][0].append(y)
-        yh_phase[seq.position][1].append(yb)
+        yh_phase[pos][0].append(y)
+        yh_phase[pos][1].append(yb)
         y = yb
         
-        position = seq.position
+        position = pos
 
 
 
@@ -673,10 +680,11 @@ def Draw(ctx, prg, mouchard = False):
     # et les croisements Séquences/Competences
     #
     x = posZTaches[0] + tailleZTaches[0]
-    for seq, y in yTaches: 
+    for doc, y in yTaches: 
         DrawLigne(ctx, x, y)
-        DrawCroisementsCompetencesTaches(ctx, prg, seq, lcomp, y)
-        DrawCroisementsCISeq(ctx, prg, seq, y)
+        DrawCroisementsCompetencesTaches(ctx, prg, doc, lcomp, y)
+        if hasattr(doc, 'CI'):
+            DrawCroisementsCISeq(ctx, prg, doc, y)
     
     # Nom des périodes
 #    print "yh_phase", yh_phase
@@ -735,10 +743,10 @@ def DrawLigneEff(ctx, x, y):
 
 
 ######################################################################################  
-def DrawTacheRacine(ctx, prg, lienSeq, y):
+def DrawTacheRacine(ctx, prg, lienDoc, y):
     global yTaches
-    seq = lienSeq.sequence
-    h = calcH_seq(seq)
+    doc = lienDoc.GetDoc()
+    h = calcH_doc(doc)
     
     #
     # Flèche verticale indiquant la durée de la séquence
@@ -756,11 +764,11 @@ def DrawTacheRacine(ctx, prg, lienSeq, y):
                               cairo.FONT_WEIGHT_BOLD)
     
     if h > wDuree:
-        show_text_rect(ctx, getHoraireTxt(seq.GetDuree()), 
+        show_text_rect(ctx, getHoraireTxt(doc.GetDuree()), 
                    (x, y, wDuree, h), 
                    orient = 'v', b = 0.1)
     else:
-        show_text_rect(ctx, getHoraireTxt(seq.GetDuree()), 
+        show_text_rect(ctx, getHoraireTxt(doc.GetDuree()), 
                    (x, y, wDuree, h), 
                    orient = 'h', b = 0.1)
     
@@ -786,27 +794,27 @@ def DrawTacheRacine(ctx, prg, lienSeq, y):
     ctx.set_line_width(0.002 * COEF)
 #    print "BcoulPos", BcoulPos
     rectangle_plein(ctx, x, y, w, h, 
-                    BcoulPos[seq.position], 
-                    IcoulPos[seq.position], 
-                    IcoulPos[seq.position][3])
+                    BcoulPos[doc.position], 
+                    IcoulPos[doc.position], 
+                    IcoulPos[doc.position][3])
     
     
     #
     # Affichage du code de la tâche
     #
-    if hasattr(seq, 'code'):
-        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-                              cairo.FONT_WEIGHT_BOLD)
-        ctx.set_source_rgb (0,0,0)
-        
-        if not tache.phase in ["R1", "R2", "R3", "S"]:
-            t = tache.code
-            hc = max(hTacheMini/2, 0.01 * COEF)
-        else:
-            t = tache.intitule
-            hc = h
-        show_text_rect(ctx, t, (x, y, tailleZTaches[0], hc), ha = 'g', 
-                       wrap = False, fontsizeMinMax = (minFont, 0.02 * COEF), b = 0.2)
+#    if hasattr(doc, 'code'):
+#        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+#                              cairo.FONT_WEIGHT_BOLD)
+#        ctx.set_source_rgb (0,0,0)
+#        
+#        if not tache.phase in ["R1", "R2", "R3", "S"]:
+#            t = tache.code
+#            hc = max(hTacheMini/2, 0.01 * COEF)
+#        else:
+#            t = tache.intitule
+#            hc = h
+#        show_text_rect(ctx, t, (x, y, tailleZTaches[0], hc), ha = 'g', 
+#                       wrap = False, fontsizeMinMax = (minFont, 0.02 * COEF), b = 0.2)
     hc=h
     
     #
@@ -819,17 +827,17 @@ def DrawTacheRacine(ctx, prg, lienSeq, y):
     # Si on ne peut pas afficher l'intitulé dessous, on le met à coté
     rect = (x, y, tailleZTaches[0], h)
     if rect[2] > 0:
-        show_text_rect(ctx, seq.intitule, rect, 
+        show_text_rect(ctx, doc.intitule, rect, 
                        ha = 'g', fontsizeMinMax = (minFont, 0.015 * COEF))
     
     
 #    lienSeq.rect.append([x, y, tailleZTaches[0], h])
-    prg.zones_sens.append(Zone([rect], obj = lienSeq))
+    prg.zones_sens.append(Zone([rect], obj = lienDoc))
         
     #
     # Tracé des croisements "Tâches" et "Eleves"
     #
-    yTaches.append([seq, y+h/2])
+    yTaches.append([doc, y+h/2])
     
 #    DrawCroisementsCompetencesTaches(ctx, tache, y + h/2)
     

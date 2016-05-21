@@ -808,7 +808,7 @@ BASE_FICHE_HTML_CI = u"""
     <dl id = "ci">
         <dt> </dt> <dd> </dd>
     </dl>
-    <font size=8><font color="dark red"><b><p id="nomPb"> </p></b></font></font>
+    <font size=8 color="dark red"><b><p id="nomPb"> </p></b></font>
     <ul id = "pb">
         <li> </li>
     </ul>
@@ -906,6 +906,13 @@ BASE_FICHE_HTML_SEQ = u"""
 </HTML>
 """
 
+BASE_FICHE_HTML_PRJ = u"""
+<HTML>
+    <p style="text-align: center;"><font size="12"><b>Projet</b></font></p>
+<p id="nom">Intitulé</p>
+<img id="ap" src="" alt=""> 
+</HTML>
+"""
 
 BASE_FICHE_HTML_PERIODES = u"""
 <HTML>

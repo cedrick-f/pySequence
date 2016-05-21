@@ -611,20 +611,26 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                       }
             
         elif typ == 'prg':
-            return {70 : BoutonToolBar(u"Ajouter un élève",
-                                   images.Icone_ajout_eleve.GetBitmap(), 
-                                   shortHelp = u"Ajout d'un élève à la classe", 
-                                   longHelp = u"Ajout d'un élève à la classe"),
-                
+            return {70 : BoutonToolBar(u"Actualiser la Progression", 
+                                       images.Bouton_Actualiser.GetBitmap(), 
+                                       shortHelp = u"Actualiser la Progression", 
+                                       longHelp = u"Actualiser la Progression"),
+                    
                     71 : BoutonToolBar(u"Ajouter un professeur", 
                                        images.Icone_ajout_prof.GetBitmap(), 
                                        shortHelp = u"Ajout d'un professeur à l'équipe pédagogique", 
                                        longHelp = u"Ajout d'un professeur à l'équipe pédagogique"),
                     
-                    72 : BoutonToolBar(u"Actualiser la liste des séquences", 
-                                       images.Bouton_Actualiser.GetBitmap(), 
-                                       shortHelp = u"Actualiser la liste des séquences", 
-                                       longHelp = u"Actualiser la liste des séquences"),
+                    72 : BoutonToolBar(u"Ajouter une Séquence",
+                                   images.Icone_ajout_seq.GetBitmap(), 
+                                   shortHelp = u"Ajout d'une Séquence à la Progression", 
+                                   longHelp = u"Ajout d'une Séquence à la Progression"),
+                    
+                    73 : BoutonToolBar(u"Ajouter un Projet",
+                                   images.Icone_ajout_prj.GetBitmap(), 
+                                   shortHelp = u"Ajout d'un Projet à la Progression", 
+                                   longHelp = u"Ajout d'un Projet à la Progression"),
+                    
                   }
             
             
@@ -758,6 +764,8 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         self.tb.RemoveTool(70)
         self.tb.RemoveTool(71)
         self.tb.RemoveTool(72)
+        self.tb.RemoveTool(73)
+
 
     ###############################################################################################
     def ajouterOutils(self, typ):
@@ -1264,7 +1272,10 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                 self.Bind(wx.EVT_TOOL, fenDoc.sequence.AjouterProf,     id=62)
                 
             elif fenDoc.typ == "prg":
+                self.Bind(wx.EVT_TOOL, fenDoc.progression.Rafraichir,     id=70)
                 self.Bind(wx.EVT_TOOL, fenDoc.progression.AjouterProf,     id=71)
+                self.Bind(wx.EVT_TOOL, fenDoc.progression.AjouterNouvelleSequence,     id=72)
+                self.Bind(wx.EVT_TOOL, fenDoc.progression.AjouterNouveauProjet,     id=73)
     
             if fenDoc.typ == "prj":
                 for i in [17, 19, 20]:
@@ -2997,7 +3008,7 @@ class FenetreProgression(FenetreDocument):
         tps1 = time.clock()
         Ok = True
         Annuler = False
-        nbr_etapes = 6
+        nbr_etapes = 8
         
         # Pour le suivi de l'ouverture
         message = nomCourt(nomFichier)+"\n"
@@ -3114,7 +3125,11 @@ class FenetreProgression(FenetreDocument):
                          [self.progression.ConstruireArbre, [self.arbre, root], {},
                           u"Construction de l'arborescence de la progression...\t"],
                          [self.progression.ChargerSequences, [], {},
-                          u"Chargement des séquences...\t"],
+                          u"Chargement des Séquences...\t"],
+                         [self.progression.ChargerProjets, [], {},
+                          u"Chargement des Projets...\t"],
+                         [self.progression.Ordonner, [], {},
+                          u"Classement...\t"],
 #                         [self.projet.OrdonnerTaches, [], {},
 #                          u"Ordonnancement des tâches...\t"],
 #                         [self.projet.PubDescription, [], {},
@@ -6722,6 +6737,7 @@ class PanelPropriete_LienProjet(PanelPropriete):
         self.texte.SetBackgroundColour("white")
         self.texte.SetToolTipString(u"Lien vers un fichier Projet")
         
+        self.position.MiseAJour()
         
         self.MiseAJourApercu()
         
@@ -9409,8 +9425,6 @@ class ArbreDoc(CT.CustomTreeCtrl):
     ####################################################################################
     def OnBeginDrag(self, event):
         self.itemDrag = event.GetItem()
-#        print self.GetItemPyData(self.itemDrag).GetNiveau(), 
-#        print self.GetItemPyData(self.itemDrag).GetProfondeur()
         if self.item:
             event.Allow()
 
@@ -10002,36 +10016,82 @@ class ArbreProgression(ArbreDoc):
 #                else:
 #                    return -1
         
+    ####################################################################################
+    def EstMovable(self, obj):
+        return isinstance(obj, LienSequence) \
+            or isinstance(obj, LienProjet) \
+            or isinstance(obj, Prof)
+
+
+    ####################################################################################
+    def EstMemeCategorie(self, obj1, obj2):
+        return (isinstance(obj1, Prof) and isinstance(obj2, Prof)) \
+            or (isinstance(obj1, LienSequence) and isinstance(obj2, LienProjet)) \
+            or (isinstance(obj2, LienSequence) and isinstance(obj1, LienProjet))
+
 
     ####################################################################################
     def OnMove(self, event):
         event.Skip()
-        return
+        
         if self.itemDrag != None:
             item = self.HitTest(wx.Point(event.GetX(), event.GetY()))[0]
             if item != None:
                 dataTarget = self.GetItemPyData(item)
                 dataSource = self.GetItemPyData(self.itemDrag)
-                if not isinstance(dataSource, Tache):
+                
+                if not self.EstMovable(dataSource) or not self.EstMemeCategorie(dataSource, dataTarget):
                     self.SetCursor(wx.StockCursor(wx.CURSOR_NO_ENTRY))
+                
                 else:
-                    if not isinstance(dataTarget, Tache) \
-                        or (dataTarget.phase != dataSource.phase and dataSource.phase !="Rev"):
-                        self.SetCursor(wx.StockCursor(wx.CURSOR_NO_ENTRY))
-                    else:
-                        if dataTarget != dataSource:# and dataTarget.parent == dataSource.parent:
-                            self.SetCursor(self.CurseurInsertApres)
-                        else:
-                            self.SetCursor(wx.StockCursor(wx.CURSOR_ARROW))
+                    if isinstance(dataTarget, Prof) and dataTarget != dataSource:
+                        self.SetCursor(self.CurseurInsertApres)
+                            
+                    elif dataTarget.position <= dataSource.position:
+                        self.SetCursor(self.CurseurInsertApres)
                         
+                    else:
+                        self.SetCursor(wx.StockCursor(wx.CURSOR_NO_ENTRY))
+
         event.Skip()
-        
-        
+
+
     ####################################################################################
     def OnEndDrag(self, event):
         self.item = event.GetItem()
         dataTarget = self.GetItemPyData(self.item)
         dataSource = self.GetItemPyData(self.itemDrag)
+        
+        if self.EstMemeCategorie(dataSource, dataTarget):
+            if isinstance(dataTarget, Prof) and dataTarget != dataSource:
+                lst = self.progression.equipe
+                s = lst.index(dataSource)
+                t = lst.index(dataTarget)
+                if t > s:
+                    lst.insert(t, lst.pop(s))
+                else:
+                    lst.insert(t+1, lst.pop(s))
+                
+                self.panelVide.sendEvent(self.progression, modif = u"Changement de position d'un professeur") # Solution pour déclencher un "redessiner"
+
+            elif dataTarget.position <= dataSource.position:
+                lst = self.progression.sequences_projets
+                s = lst.index(dataSource)
+                t = lst.index(dataTarget)
+                if t > s:
+                    lst.insert(t, lst.pop(s))
+                else:
+                    lst.insert(t+1, lst.pop(s))
+                
+                if isinstance(dataSource, LienSequence):
+                    self.panelVide.sendEvent(self.progression, modif = u"Changement de position d'une Séquence") # Solution pour déclencher un "redessiner"
+                else:
+                    self.panelVide.sendEvent(self.progression, modif = u"Changement de position d'un Projet") # Solution pour déclencher un "redessiner"
+
+
+
+
+
         if not isinstance(dataSource, Tache):
             pass
         else:
@@ -10051,20 +10111,15 @@ class ArbreProgression(ArbreDoc):
                         lst.insert(t+1, lst.pop(s))
                     dataTarget.projet.SetOrdresTaches()
                     self.SortChildren(self.GetItemParent(self.item))
-                    self.panelVide.sendEvent(self.projet, modif = u"Changement de position de la Tâche") # Solution pour déclencher un "redessiner"
-    
+                    
                 else:
                     pass
         self.itemDrag = None
         event.Skip()            
 
     
-    ####################################################################################
-#    def OnToolTip(self, event):
-#
-#        item = event.GetItem()
-#        if item:
-#            event.SetToolTip(wx.ToolTip(self.GetItemText(item)))
+
+
 
 
             
