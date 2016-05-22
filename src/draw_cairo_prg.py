@@ -39,7 +39,8 @@ import sys
 
 #import rsvg
 import cairo
-
+import wx.lib.wxcairo
+import images
 
 from draw_cairo import LargeurTotale, font_family, curve_rect_titre, show_text_rect, \
                         boule, getHoraireTxt, liste_code_texte, rectangle_plein, barreH, tableauV, minFont, maxFont, tableauH, \
@@ -157,7 +158,7 @@ cComp = {}
 # Zone des tâches
 posZTaches = [posZDeroul[0] + wPhases + wDuree + ecartX*3/6, None]
 tailleZTaches = [None, None]
-hTacheMini = ecartY/2
+hTacheMini = ecartY
 hRevue = ecartY/3
 yTaches = []
 ecartTacheY = None  # Ecartement entre les tâches de phase différente
@@ -279,7 +280,7 @@ def calculCoefCalcH(prg, ctx, hm):
     if h != 0:
         a = (tailleZTaches[1] - hFixe - b*nt) / h
 
-    print ">>> a,b :", a, b
+#    print ">>> a,b :", a, b
     
     
 #######################################################################################  
@@ -665,7 +666,7 @@ def Draw(ctx, prg, mouchard = False):
         if position != pos:
             y += ecartTacheY
 
-        yb = DrawTacheRacine(ctx, prg, t, y)
+        yb = DrawSequenceProjet(ctx, prg, t, y)
         yh_phase[pos][0].append(y)
         yh_phase[pos][1].append(yb)
         y = yb
@@ -743,13 +744,13 @@ def DrawLigneEff(ctx, x, y):
 
 
 ######################################################################################  
-def DrawTacheRacine(ctx, prg, lienDoc, y):
+def DrawSequenceProjet(ctx, prg, lienDoc, y):
     global yTaches
     doc = lienDoc.GetDoc()
     h = calcH_doc(doc)
     
     #
-    # Flèche verticale indiquant la durée de la séquence
+    # Flèche verticale indiquant la durée de la séquence/Projet
     #
     ctx.set_source_rgba (0.9,0.8,0.8,0.5)
     x = posZTaches[0] - wDuree - ecartX/4
@@ -772,15 +773,6 @@ def DrawTacheRacine(ctx, prg, lienDoc, y):
                    (x, y, wDuree, h), 
                    orient = 'h', b = 0.1)
     
-   
-
-    
-    #
-    # Rectangles actifs et points caractéristiques : initialisation
-    #
-#    lienSeq.pts_caract = []
-#    lienSeq.rect = []
-    
     
     #
     # Tracé du cadre de la tâche
@@ -798,7 +790,22 @@ def DrawTacheRacine(ctx, prg, lienDoc, y):
                     IcoulPos[doc.position], 
                     IcoulPos[doc.position][3])
     
+    #
+    # Icone du type de document
+    #
+    ctx.save()
+    if doc.nom_obj == u"Séquence":
+        bmp = images.Icone_sequence.GetBitmap()
+    else:
+        bmp = images.Icone_projet.GetBitmap()
     
+    image = wx.lib.wxcairo.ImageSurfaceFromBitmap(bmp) 
+    ctx.translate(x+ecartX/5, y+ecartY/5)
+    ctx.scale(hTacheMini/30, hTacheMini/30)
+    ctx.set_source_surface(image, 0, 0)
+    ctx.paint ()
+    ctx.restore()
+        
     #
     # Affichage du code de la tâche
     #

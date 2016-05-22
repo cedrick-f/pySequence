@@ -1052,7 +1052,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             
             note : pour l'instant, que pour des Séquences
         """
-        print "ouvrirDoc", doc
+#        print "ouvrirDoc", doc
         if doc.GetType() == 'seq':
             child = FenetreSequence(self, sequence = doc)
             child.SetIcon(constantes.dicimages["Seq"].GetIcon())
@@ -1062,6 +1062,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         child.finaliserOuverture()
         child.definirNomFichierCourant(nomFichier)
         wx.CallAfter(child.Activate)
+        self.OnDocChanged()
         return child
     
     
@@ -1213,7 +1214,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     def exporterFiche(self, event = None):
         page = self.GetNotebook().GetCurrentPage()
         if page != None:
-            page.exporterFiche(event)
+            page.exporterFiche()
               
     #############################################################################
     def exporterDetails(self, event = None):
@@ -1242,7 +1243,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             
         
     ###############################################################################################
-    def OnDocChanged(self, evt):
+    def OnDocChanged(self, evt = None):
         """ Opérations de modification du menu et des barres d'outils 
             en fonction du type de document en cours
             Et rafraichissement des séquences de la fenêtre de Progression
@@ -1663,13 +1664,14 @@ class FenetreDocument(aui.AuiMDIChildFrame):
 
     #############################################################################
     def exporterFichePDF(self, nomFichier, pourDossierValidation = False):
+        # Le décodage/réencodage est obligatoire sous peine de crash !!
         try:
-            PDFsurface = cairo.PDFSurface(nomFichier, 595, 842)
+            PDFsurface = cairo.PDFSurface(nomFichier.decode(SYSTEM_ENCODING).encode(FILE_ENCODING), 595, 842)
         except IOError:
             Dialog_ErreurAccesFichier(nomFichier)
             wx.EndBusyCursor()
             return
-        
+
         ctx = cairo.Context(PDFsurface)
         ctx.scale(820 / draw_cairo.COEF, 820/ draw_cairo.COEF) 
         if self.typ == 'seq':
@@ -2106,10 +2108,10 @@ class FenetreSequence(FenetreDocument):
                 self.Close()
                 return
 
-        self.arbre.Layout()
-        self.arbre.ExpandAll()
-        self.arbre.CalculatePositions()
-        self.arbre.SelectItem(self.arbre.classe.branche)
+#        self.arbre.Layout()
+#        self.arbre.ExpandAll()
+#        self.arbre.CalculatePositions()
+#        self.arbre.SelectItem(self.arbre.classe.branche)
         
         fichier.close()
         
@@ -2144,24 +2146,34 @@ class FenetreSequence(FenetreDocument):
 #
 ########################################################################################
 class FenetreProjet(FenetreDocument):
-    def __init__(self, parent, ouverture = False):
+    def __init__(self, parent, ouverture = False, projet = None):
         self.typ = 'prj'
 #        print "__init__ FenetreProjet"
         FenetreDocument.__init__(self, parent)
         
-        self.Freeze()
+        self.Freeze() 
         
-        #
-        # La classe
-        #
-        self.classe = Classe(self, pourProjet = True, typedoc = self.typ)
+        if projet is None:
+            #
+            # La classe
+            #
+            self.classe = Classe(self, pourProjet = True, typedoc = self.typ)
         
-        #
-        # Le projet
-        #
-        self.projet = Projet(self, self.classe)
-        self.classe.SetDocument(self.projet)
-        self.projet.MiseAJourTypeEnseignement()
+            #
+            # Le projet
+            #
+            self.projet = Projet(self, self.classe)
+            self.classe.SetDocument(self.projet)
+            self.projet.MiseAJourTypeEnseignement()
+        
+        else:
+            self.projet = projet
+            self.classe = self.projet.classe
+            self.projet.app = self
+        
+        
+
+#        self.projet.MiseAJourTypeEnseignement()
         
         #
         # Arbre de structure du projet
@@ -2316,8 +2328,58 @@ class FenetreProjet(FenetreDocument):
 
         self.parent.miseAJourUndo()
 
+    
+    ###############################################################################################
+    def finaliserOuverture(self, dlg = None, message = "", count = 0):
+        self.arbre.DeleteAllItems()
+        root = self.arbre.AddRoot("")
         
+        self.projet.MiseAJourTypeEnseignement()
         
+        liste_actions = [[self.classe.ConstruireArbre, [self.arbre, root], {},
+                         u"Construction de l'arborescence de la classe...\t"],
+                         [self.projet.ConstruireArbre, [self.arbre, root], {},
+                          u"Construction de l'arborescence du projet...\t"],
+                         [self.projet.OrdonnerTaches, [], {},
+                          u"Ordonnancement des tâches...\t"],
+#                         [self.projet.PubDescription, [], {},
+#                          u"Traitement des descriptions...\t"],
+                         [self.projet.SetLiens, [], {},
+                          u"Construction des liens...\t"],
+                         [self.projet.MiseAJourDureeEleves, [], {},
+                          u"Ajout des durées/évaluabilités dans l'arbre...\t"],
+                         [self.projet.MiseAJourNomProfs, [], {},
+                          u"Ajout des disciplines dans l'arbre...\t"],
+                         ]
+        
+        for fct, arg, karg, msg in liste_actions:
+            message += msg
+            if dlg is not None:
+                dlg.Update(count, message)
+            count += 1
+            if "beta" in version.__version__:
+                fct(*arg, **karg)
+                message += u"Ok\n"
+            
+            else:
+                try :
+                    fct(*arg, **karg)
+                    message += u"Ok\n"
+                except:
+                    Ok = False
+                    message += constantes.Erreur(constantes.ERR_INCONNUE).getMessage() + u"\n"
+                    
+        self.projet.Verrouiller()
+        self.projet.VerifierVersionGrilles()
+
+        self.arbre.Layout()
+        self.arbre.ExpandAll()
+        self.arbre.CalculatePositions()
+        self.arbre.SelectItem(self.arbre.classe.branche)
+        
+        return message, count
+    
+    
     ###############################################################################################
     def ouvrir(self, nomFichier, redessiner = True, reparer = False):
         """ <nomFichier> encodé en FileEncoding
@@ -2401,15 +2463,13 @@ class FenetreProjet(FenetreDocument):
                     self.classe.setBranche(classe, reparer = True)
                 
                 err = self.projet.setBranche(projet)
-                self.projet.MiseAJourTypeEnseignement()
                 
                 if len(err) > 0 :
                     Ok = False
                     message += get_err_message(err)
                 message += u"\n"
                 
-            self.arbre.DeleteAllItems()
-            root = self.arbre.AddRoot("")
+            
                         
             return root, message, count, Ok, Annuler
         
@@ -2451,40 +2511,44 @@ class FenetreProjet(FenetreDocument):
 #            wx.CallAfter(self.fiche.Redessiner)
             return
         
-        liste_actions = [[self.classe.ConstruireArbre, [self.arbre, root], {},
-                         u"Construction de l'arborescence de la classe...\t"],
-                         [self.projet.ConstruireArbre, [self.arbre, root], {},
-                          u"Construction de l'arborescence du projet...\t"],
-                         [self.projet.OrdonnerTaches, [], {},
-                          u"Ordonnancement des tâches...\t"],
-#                         [self.projet.PubDescription, [], {},
-#                          u"Traitement des descriptions...\t"],
-                         [self.projet.SetLiens, [], {},
-                          u"Construction des liens...\t"],
-                         [self.projet.MiseAJourDureeEleves, [], {},
-                          u"Ajout des durées/évaluabilités dans l'arbre...\t"],
-                         [self.projet.MiseAJourNomProfs, [], {},
-                          u"Ajout des disciplines dans l'arbre...\t"],
-                         ]
+        fichier.close()
         
-        for fct, arg, karg, msg in liste_actions:
-            message += msg
-            dlg.Update(count, message)
-#            dlg.top()
-            count += 1
-            if "beta" in version.__version__:
-                fct(*arg, **karg)
-                message += u"Ok\n"
-            else:
-                try :
-                    fct(*arg, **karg)
-                    message += u"Ok\n"
-                except:
-                    Ok = False
-                    message += constantes.Erreur(constantes.ERR_INCONNUE).getMessage() + u"\n"
+        
+#        liste_actions = [[self.classe.ConstruireArbre, [self.arbre, root], {},
+#                         u"Construction de l'arborescence de la classe...\t"],
+#                         [self.projet.ConstruireArbre, [self.arbre, root], {},
+#                          u"Construction de l'arborescence du projet...\t"],
+#                         [self.projet.OrdonnerTaches, [], {},
+#                          u"Ordonnancement des tâches...\t"],
+##                         [self.projet.PubDescription, [], {},
+##                          u"Traitement des descriptions...\t"],
+#                         [self.projet.SetLiens, [], {},
+#                          u"Construction des liens...\t"],
+#                         [self.projet.MiseAJourDureeEleves, [], {},
+#                          u"Ajout des durées/évaluabilités dans l'arbre...\t"],
+#                         [self.projet.MiseAJourNomProfs, [], {},
+#                          u"Ajout des disciplines dans l'arbre...\t"],
+#                         ]
+#        
+#        for fct, arg, karg, msg in liste_actions:
+#            message += msg
+#            dlg.Update(count, message)
+##            dlg.top()
+#            count += 1
+#            if "beta" in version.__version__:
+#                fct(*arg, **karg)
+#                message += u"Ok\n"
+#            else:
+#                try :
+#                    fct(*arg, **karg)
+#                    message += u"Ok\n"
+#                except:
+#                    Ok = False
+#                    message += constantes.Erreur(constantes.ERR_INCONNUE).getMessage() + u"\n"
             
+        message, count = self.finaliserOuverture()
 
-        self.projet.Verrouiller()
+#        self.projet.Verrouiller()
 
         message += u"Tracé de la fiche...\t"
         dlg.Update(count, message)
@@ -2493,17 +2557,17 @@ class FenetreProjet(FenetreDocument):
 
 #        self.arbre.SelectItem(self.classe.branche)
 
-        self.arbre.Layout()
-        self.arbre.ExpandAll()
-        self.arbre.CalculatePositions()
-        self.arbre.SelectItem(self.arbre.classe.branche)
+#        self.arbre.Layout()
+#        self.arbre.ExpandAll()
+#        self.arbre.CalculatePositions()
+#        self.arbre.SelectItem(self.arbre.classe.branche)
         
-        fichier.close()
+        
     
         #
         # Vérification de la version des grilles
         #
-        self.projet.VerifierVersionGrilles()
+#        self.projet.VerifierVersionGrilles()
         
         tps2 = time.clock() 
         print "Ouverture :", tps2 - tps1
@@ -2518,16 +2582,15 @@ class FenetreProjet(FenetreDocument):
         self.SetTitre()
         wx.CallAfter(self.fiche.Show)
         wx.CallAfter(self.fiche.Redessiner)
-        
+
+
+        #
         # Mise en liste undo/redo
+        #
         self.classe.undoStack.do(u"Ouverture de la Classe")
         self.projet.undoStack.do(u"Ouverture du Projet")
         self.parent.miseAJourUndo()
 
-
-        
-        
-#        wx.CallAfter(dlg.Raise)
 
     #############################################################################
     def genererGrilles(self, event = None):
@@ -3417,6 +3480,7 @@ class BaseFiche(wx.ScrolledWindow):
             dc.BeginDrawing()
             self.normalize(ctx)
             self.Draw(ctx)
+#            ctx.show_page()
     #        b = Thread(None, self.Draw, None, (ctx,))
     #        b.start()
             
@@ -6582,6 +6646,8 @@ class PanelPropriete_LienProjet(PanelPropriete):
     #############################################################################            
     def construire(self):
         
+        ref = self.projet.GetReferentiel()
+        
         #
         # Intitulé du Projet
         #
@@ -6635,10 +6701,23 @@ class PanelPropriete_LienProjet(PanelPropriete):
         sbs1.Add(self.apercu, 1)
         self.size = size
         
+        
+        #
+        # Problématiques associées à(aux) CI/Thème(s)
+        #
+        sbp = myStaticBox(self, -1, getSingulierPluriel(ref.nomPb, False), size = (200,-1))
+        sbsp = wx.StaticBoxSizer(sbp,wx.VERTICAL)
+        self.panelPb = TextCtrl_Help(self, u"")
+        self.Bind(stc.EVT_STC_MODIFIED, self.EvtText, self.panelPb)
+        sbsp.Add(self.panelPb,1, flag = wx.EXPAND)
+
+        
         self.sizer.Add(sbsi, (0,0), flag = wx.EXPAND|wx.ALL, border = 2)
         self.sizer.Add(sbs0, (1,0), flag = wx.EXPAND|wx.ALL, border = 2)
         self.sizer.Add(sb, (2,0), flag = wx.ALIGN_TOP|wx.ALIGN_LEFT|wx.LEFT|wx.EXPAND, border = 2)
         self.sizer.Add(sbs1, (0,1), (3,1), flag = wx.EXPAND|wx.ALL, border = 2)
+        self.sizer.Add(sbsp, (0,2), (3,1), flag = wx.EXPAND|wx.ALL, border = 2)
+        self.sizer.AddGrowableCol(2)
         
         self.sizer.Layout()
         
@@ -6690,6 +6769,12 @@ class PanelPropriete_LienProjet(PanelPropriete):
             self.lien.MiseAJourArbre()
             t = u"Modification de l'intitulé du projet"
             self.GetDocument().GererDependants(self.projet, t)
+        
+        elif event.GetEventObject() == self.panelPb:
+            self.projet.SetProblematique(self.panelPb.GetText())
+            self.lien.MiseAJourArbre()
+            t = u"Modification de la promblématique du projet"
+            self.GetDocument().GererDependants(self.projet, t)
             
         if self.onUndoRedo():
             self.sendEvent(modif = t)
@@ -6717,11 +6802,9 @@ class PanelPropriete_LienProjet(PanelPropriete):
 
 #        self.intit.SetLabel(self.sequence.intitule)
         self.intit.SetValue(self.projet.intitule, False)
-        
+        self.panelPb.SetValue(self.projet.problematique, False)
         self.texte.SetValue(toSystemEncoding(self.lien.path))
 
-    
-#        try:
         if os.path.isfile(self.lien.path):
             fichier = open(self.lien.path,'r')
             
@@ -9349,6 +9432,7 @@ class ArbreDoc(CT.CustomTreeCtrl):
 
     ####################################################################################
     def OnRightDown(self, event):
+#        print "OnRightDown", self.doc
         item = event.GetItem()
         self.doc.AfficherMenuContextuel(item)
         
@@ -9657,6 +9741,7 @@ class ArbreSequence(ArbreDoc):
             self.sequence.OrdonnerSeances()
             self.sequence.reconstruireBrancheSeances(dataSource.parent, dataTarget)
             self.GetApp().sendEvent(self.sequence, modif = tx) # Solution pour déclencher un "redessiner"
+        
         elif a == 2:
             lst = dataSource.parent.seances
             s = lst.index(dataSource)
@@ -9665,6 +9750,7 @@ class ArbreSequence(ArbreDoc):
             self.sequence.OrdonnerSeances() 
             self.SortChildren(self.GetItemParent(self.item))
             self.GetApp().sendEvent(self.sequence, modif = tx) # Solution pour déclencher un "redessiner"
+        
         elif a == 3:
             lstT = dataTarget.parent.seances
             lstS = dataSource.parent.seances
@@ -9678,6 +9764,7 @@ class ArbreSequence(ArbreDoc):
             self.sequence.OrdonnerSeances()
             self.sequence.reconstruireBrancheSeances(dataTarget.parent, p)
             self.GetApp().sendEvent(self.sequence, modif = tx) # Solution pour déclencher un "redessiner"
+        
         elif a == 4:
             lst = dataTarget.parent.seances
             s = lst.index(dataSource)
@@ -9691,105 +9778,10 @@ class ArbreSequence(ArbreDoc):
             self.sequence.OrdonnerSeances() 
             self.SortChildren(self.GetItemParent(self.item))
             self.GetApp().sendEvent(self.sequence, modif = tx) # Solution pour déclencher un "redessiner"
-        
-        
-#        if isinstance(dataSource, Seance) and dataTarget != dataSource:
-#            
-#            # Insérer "dans"  (racine ou "R" ou "S")
-#            if dataTarget == self.sequence.panelSeances \
-#               or (isinstance(dataTarget, Seance) and dataTarget.typeSeance in ["R","S"]):
-#                if not dataSource in dataTarget.seances:    # changement de parent
-#                    
-#                else:
-#                    
-#            
-#            # Insérer "aprés"
-#            else:
-#                print "Insérer aprés"
-#                if dataTarget.parent != dataSource.parent:
-#                    
-#                else:
-#                    print "  méme parent"
                     
-            
         self.itemDrag = None
         event.Skip()
         
-        
-        
-#    ####################################################################################
-#    def OnEndDrag2(self, event):
-#        """ Gestion des glisser-déposer
-#        """
-#        self.item = event.GetItem() 
-#        dataTarget = self.GetItemPyData(self.item)
-#        dataSource = self.GetItemPyData(self.itemDrag)
-#        if dataTarget == self.sequence.panelSeances: # racine des séances
-#            dataTarget = self.sequence.seances[0]
-#            self.item = self.GetFirstChild(self.item)[0]
-#            root = True
-#        else:
-#            root = False
-#            
-#        if isinstance(dataSource, Seance) and isinstance(dataTarget, Seance)  and dataTarget != dataSource:
-#            
-#            # source et target ont le méme parent (méme niveau dans l'arbre)
-#            if dataTarget.parent == dataSource.parent:
-#                
-#                if dataTarget.typeSeance in ["R","S"]:          # rotation ou parallele
-#                    if not dataSource in dataTarget.seances:    # changement de parent
-#                        lstS = dataSource.parent.seances
-#                        lstT = dataTarget.seances
-#                        s = lstS.index(dataSource)
-#                        lstT.insert(0, lstS.pop(s))
-#                        dataSource.parent = dataTarget
-#                        
-#                        self.sequence.OrdonnerSeances()
-#                        self.sequence.reconstruireBrancheSeances(dataSource.parent, dataTarget)
-#                        self.panelVide.sendEvent(self.sequence) # Solution pour déclencher un "redessiner"
-#                    
-#                else:
-#                    lst = dataTarget.parent.seances
-#
-#                    s = lst.index(dataSource)
-#                    if root:
-#                        t = -1
-#                    else:
-#                        t = lst.index(dataTarget)
-#                    
-#                    if t > s:
-#                        lst.insert(t, lst.pop(s))
-#                    else:
-#                        lst.insert(t+1, lst.pop(s))
-#                       
-#                    self.sequence.OrdonnerSeances() 
-#                    self.SortChildren(self.GetItemParent(self.item))
-#                    self.panelVide.sendEvent(self.sequence) # Solution pour déclencher un "redessiner"
-#            
-#            # source et target ont des parents différents
-#            elif dataTarget.parent != dataSource.parent:
-#                lstT = dataTarget.parent.seances
-#                lstS = dataSource.parent.seances
-#
-#                s = lstS.index(dataSource)
-#                if root:
-#                    t = -1
-#                else:
-#                    t = lstT.index(dataTarget)
-#                lstT[t+1:t+1] = [dataSource]
-#                del lstS[s]
-#                p = dataSource.parent
-#                dataSource.parent = dataTarget.parent
-#                
-#                self.sequence.OrdonnerSeances()
-#                self.sequence.reconstruireBrancheSeances(dataTarget.parent, p)
-#                self.panelVide.sendEvent(self.sequence) # Solution pour déclencher un "redessiner"
-#            else:
-#                pass
-#            
-#        self.itemDrag = None
-#        event.Skip()            
-
     
     ####################################################################################
     def OnToolTip(self, event):
@@ -9798,7 +9790,11 @@ class ArbreSequence(ArbreDoc):
         if item:
             event.SetToolTip(wx.ToolTip(self.GetItemText(item)))
 
-        
+
+
+
+
+
     
 ####################################################################################
 #
@@ -10002,7 +9998,11 @@ class ArbreProgression(ArbreDoc):
     def OnCompareItems(self, item1, item2):
         i1 = self.GetItemPyData(item1)
         i2 = self.GetItemPyData(item2)
-        return int(i1.ordre - i2.ordre)
+        prog = self.doc
+        if isinstance(i1, Prof):
+            return int(prog.equipe.index(i1) - prog.equipe.index(i2))
+        else:
+            return int(prog.sequences_projets.index(i1) - prog.sequences_projets.index(i2))
 #        if i1.phase == i2.phase:
 #            
 #        else:
@@ -10040,14 +10040,17 @@ class ArbreProgression(ArbreDoc):
                 dataTarget = self.GetItemPyData(item)
                 dataSource = self.GetItemPyData(self.itemDrag)
                 
-                if not self.EstMovable(dataSource) or not self.EstMemeCategorie(dataSource, dataTarget):
+                if dataTarget == dataSource:
+                    self.SetCursor(wx.StockCursor(wx.CURSOR_ARROW))
+                
+                elif not self.EstMovable(dataSource) or not self.EstMemeCategorie(dataSource, dataTarget):
                     self.SetCursor(wx.StockCursor(wx.CURSOR_NO_ENTRY))
                 
                 else:
                     if isinstance(dataTarget, Prof) and dataTarget != dataSource:
                         self.SetCursor(self.CurseurInsertApres)
                             
-                    elif dataTarget.position <= dataSource.position:
+                    elif dataTarget.GetPosition() <= dataSource.GetPosition():
                         self.SetCursor(self.CurseurInsertApres)
                         
                     else:
@@ -10062,7 +10065,10 @@ class ArbreProgression(ArbreDoc):
         dataTarget = self.GetItemPyData(self.item)
         dataSource = self.GetItemPyData(self.itemDrag)
         
-        if self.EstMemeCategorie(dataSource, dataTarget):
+        if dataTarget == dataSource:
+            pass
+        
+        elif self.EstMemeCategorie(dataSource, dataTarget):
             if isinstance(dataTarget, Prof) and dataTarget != dataSource:
                 lst = self.progression.equipe
                 s = lst.index(dataSource)
@@ -10072,9 +10078,9 @@ class ArbreProgression(ArbreDoc):
                 else:
                     lst.insert(t+1, lst.pop(s))
                 
-                self.panelVide.sendEvent(self.progression, modif = u"Changement de position d'un professeur") # Solution pour déclencher un "redessiner"
+                self.GetApp().sendEvent(self.progression, modif = u"Changement de position d'un professeur") # Solution pour déclencher un "redessiner"
 
-            elif dataTarget.position <= dataSource.position:
+            elif dataTarget.GetPosition() <= dataSource.GetPosition():
                 lst = self.progression.sequences_projets
                 s = lst.index(dataSource)
                 t = lst.index(dataTarget)
@@ -10084,36 +10090,13 @@ class ArbreProgression(ArbreDoc):
                     lst.insert(t+1, lst.pop(s))
                 
                 if isinstance(dataSource, LienSequence):
-                    self.panelVide.sendEvent(self.progression, modif = u"Changement de position d'une Séquence") # Solution pour déclencher un "redessiner"
+                    self.GetApp().sendEvent(self.progression, modif = u"Changement de position d'une Séquence") # Solution pour déclencher un "redessiner"
                 else:
-                    self.panelVide.sendEvent(self.progression, modif = u"Changement de position d'un Projet") # Solution pour déclencher un "redessiner"
-
-
-
-
-
-        if not isinstance(dataSource, Tache):
-            pass
-        else:
-            if not isinstance(dataTarget, Tache):
-                pass
-            else:
-                if dataTarget != dataSource \
-                    and (dataTarget.phase == dataSource.phase or dataSource.phase =="Rev"):
-                    lst = dataTarget.projet.taches
-
-                    s = lst.index(dataSource)
-                    t = lst.index(dataTarget)
-                    
-                    if t > s:
-                        lst.insert(t, lst.pop(s))
-                    else:
-                        lst.insert(t+1, lst.pop(s))
-                    dataTarget.projet.SetOrdresTaches()
-                    self.SortChildren(self.GetItemParent(self.item))
-                    
-                else:
-                    pass
+                    self.GetApp().sendEvent(self.progression, modif = u"Changement de position d'un Projet") # Solution pour déclencher un "redessiner"
+        
+        
+            self.SortChildren(self.GetItemParent(self.item))
+        
         self.itemDrag = None
         event.Skip()            
 
@@ -12409,50 +12392,54 @@ class PopupInfo(wx.PopupWindow):
 
     ####################################################################################
     def Construire(self, dic , dicIndicateurs, prj):
-        
+        """ Construit l'arborescence des Compétences et Indicateurs.
+            Deux formats possibles pour <dicIndicateurs> :
+            
+        """
+#        print "Construire", dicIndicateurs
+#        print dic
         def const(d, ul):
             ks = d.keys()
             ks.sort()
             for k in ks:
+#                print "  k:", k
                 v = d[k]
+                li = self.soup.new_tag("li")
+                ul.append(li)
+                
+                nul = self.soup.new_tag("ul")
+                
                 if len(v) > 1 and type(v[1]) == dict:
-                    
-                    li = self.soup.new_tag("li")
+#                    font = self.soup.new_tag("font")
+
                     li.append(textwrap.fill(k+" "+v[0], 50))
-                    ul.append(li)
-                    
-#                        if len(v) != 2:
-#                            self.SetItemBold(b, True)
-                        
-                    nul = self.soup.new_tag("ul")
-                    li.append(nul)
                     const(v[1], nul)
                         
                 else:   # Indicateur
                     cc = [cd+ " " + it for cd, it in zip(k.split(u"\n"), v[0].split(u"\n"))] 
                     
-                    li = self.soup.new_tag("li")
                     li.append(textwrap.fill(u"\n ".join(cc), 50))
-                    ul.append(li)
-                    
-                    nul = self.soup.new_tag("ul")
-                    li.append(nul)
-                    
-                    if k in dicIndicateurs.keys():
-                        ajouteIndic(nul, v[1], dicIndicateurs[k])
+
+                    if "S"+k in dicIndicateurs.keys():
+                        ajouteIndic(nul, v[1], dicIndicateurs["S"+k])
                     else:
                         ajouteIndic(nul, v[1], None)
-            return
-        
-        def ajouteIndic(ul, listIndic, listIndicUtil):
-            for i, indic in enumerate(listIndic):
                 
+                li.append(nul)
+                
+            return
+
+
+        def ajouteIndic(ul, listIndic, listIndicUtil):
+#            print "ajouteIndic", listIndicUtil
+            for i, indic in enumerate(listIndic):
+#                print "  i:", indic
                 li = self.soup.new_tag("li")
                 font = self.soup.new_tag("font")
                 li.append(font)
                 font.append(textwrap.fill(indic.intitule, 50))
                 ul.append(li)
-                ul['type']="none"
+                ul['type']="circle"
                     
                 for j, part in enumerate(prj.parties.keys()):
                     if part in indic.poids.keys():
@@ -12461,9 +12448,8 @@ class PopupInfo(wx.PopupWindow):
                         else:
                             c = getCoulPartie(part)
                 font['color'] = couleur.GetCouleurHTML(c, wx.C2S_HTML_SYNTAX)
-        
+
         ul = self.soup.find(id = "indic")
-        
         
         if type(dic) == dict:  
             const(dic, ul)

@@ -333,7 +333,7 @@ def InitCurseur():
     
     
 ######################################################################################  
-def Draw(ctx, seq, mouchard = False):
+def Draw(ctx, seq, mouchard = False, entete = False):
     """ Dessine une fiche de séquence de la séquence <seq>
         dans un contexte cairo <ctx>
     """
@@ -372,11 +372,12 @@ def Draw(ctx, seq, mouchard = False):
     #
     #  Cadre et Intitulé de la séquence
     #
-    rect = (posZOrganis[0]-bordureZOrganis, posZOrganis[1], 
-                                 tailleZOrganis[0]+bordureZOrganis*2, tailleZOrganis[1]+bordureZOrganis)
-#    seq.zones_sens.append(Zone([rect], param = "INT"))
-    seq.pt_caract = curve_rect_titre(ctx, seq.intitule, rect, 
-                                     BcoulIntitule, IcoulIntitule, FontIntitule)
+    if not entete:
+        rect = (posZOrganis[0]-bordureZOrganis, posZOrganis[1], 
+                                     tailleZOrganis[0]+bordureZOrganis*2, tailleZOrganis[1]+bordureZOrganis)
+    #    seq.zones_sens.append(Zone([rect], param = "INT"))
+        seq.pt_caract = curve_rect_titre(ctx, seq.intitule, rect, 
+                                         BcoulIntitule, IcoulIntitule, FontIntitule)
 
     #
     #    Domaines
@@ -509,16 +510,16 @@ def Draw(ctx, seq, mouchard = False):
 
 
 
-
     #
     # Durée de la séquence
     #
-    ctx.set_source_rgb(0.5,0.8,0.8)
-    ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-                                       cairo.FONT_WEIGHT_BOLD)
-    show_text_rect(ctx, getHoraireTxt(seq.GetDuree()), 
-                   (posZDeroul[0]-0.01 * COEF, posZDemarche[1] + tailleZDemarche[1] , #- 0.015
-                   0.1 * COEF, 0.015 * COEF), ha = 'g', b = 0)
+    if not entete:
+        ctx.set_source_rgb(0.5,0.8,0.8)
+        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+                                           cairo.FONT_WEIGHT_BOLD)
+        show_text_rect(ctx, getHoraireTxt(seq.GetDuree()), 
+                       (posZDeroul[0]-0.01 * COEF, posZDemarche[1] + tailleZDemarche[1] , #- 0.015
+                       0.1 * COEF, 0.015 * COEF), ha = 'g', b = 0)
 
 
 
@@ -526,20 +527,21 @@ def Draw(ctx, seq, mouchard = False):
     #
     # Commentaires
     #
-    if tailleComm[1] > 0:
-        ctx.set_source_rgb(0.1,0.1,0.1)
-        ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
-                                          cairo.FONT_WEIGHT_NORMAL)
-        ctx.set_font_size(fontIntComm)
-        _x, _y = posComm
-        fascent, fdescent, fheight, fxadvance, fyadvance = ctx.font_extents()
-        #
-        # On dessine toutes les lignes de texte
-        #
-        for i, t in enumerate(intComm):
-            yt = _y + (fascent+fdescent)*i  + fheight #- fdescent
-            ctx.move_to(_x, yt)
-            ctx.show_text(t)
+    if not entete:
+        if tailleComm[1] > 0:
+            ctx.set_source_rgb(0.1,0.1,0.1)
+            ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
+                                              cairo.FONT_WEIGHT_NORMAL)
+            ctx.set_font_size(fontIntComm)
+            _x, _y = posComm
+            fascent, fdescent, fheight, fxadvance, fyadvance = ctx.font_extents()
+            #
+            # On dessine toutes les lignes de texte
+            #
+            for i, t in enumerate(intComm):
+                yt = _y + (fascent+fdescent)*i  + fheight #- fdescent
+                ctx.move_to(_x, yt)
+                ctx.show_text(t)
 
 
 
@@ -547,19 +549,20 @@ def Draw(ctx, seq, mouchard = False):
     # 
     # Effectifs
     #
-    for i, e in enumerate(["C", "G", "D", "E", "P"]):
-        x = posZSeances[0]
-        h = (posZSeances[1]-posZDemarche[1]-0.01 * COEF) / 5
-        y = posZDemarche[1] + i * h
-        w = wEff[e]
-        ctx.set_line_width(0.001 * COEF)
-        ctx.set_source_rgb(0.8, 0.9, 0.8)
-        ctx.rectangle(x, y, w, h)
-        ctx.stroke()
-        ctx.set_source_rgb(0.6, 0.8, 0.6)
-        show_text_rect(ctx, seq.GetReferentiel().effectifs[e][1], (x, y, w, h), b=0.2)
-        ctx.stroke()
-        DrawLigneEff(ctx, x+w, y+h)
+    if not entete:
+        for i, e in enumerate(["C", "G", "D", "E", "P"]):
+            x = posZSeances[0]
+            h = (posZSeances[1]-posZDemarche[1]-0.01 * COEF) / 5
+            y = posZDemarche[1] + i * h
+            w = wEff[e]
+            ctx.set_line_width(0.001 * COEF)
+            ctx.set_source_rgb(0.8, 0.9, 0.8)
+            ctx.rectangle(x, y, w, h)
+            ctx.stroke()
+            ctx.set_source_rgb(0.6, 0.8, 0.6)
+            show_text_rect(ctx, seq.GetReferentiel().effectifs[e][1], (x, y, w, h), b=0.2)
+            ctx.stroke()
+            DrawLigneEff(ctx, x+w, y+h)
 
 
 
@@ -730,93 +733,97 @@ def Draw(ctx, seq, mouchard = False):
     #
     #  Séances
     #
-    for s in seq.seances:
-#        Draw_seance(ctx, s, curseur)
-        DrawSeanceRacine(ctx, s)
+    if not entete:
+        for s in seq.seances:
+    #        Draw_seance(ctx, s, curseur)
+            DrawSeanceRacine(ctx, s)
         
     #
     #  Tableau des systèmes
     #    
-    
-    nomsSystemes = []
-    systemes = seq.GetSystemesUtilises()
-    for s in systemes:
-        nomsSystemes.append(s.nom)
-    if nomsSystemes != []:
-        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-                              cairo.FONT_WEIGHT_NORMAL)
-        ctx.set_source_rgb(0, 0, 0)
-        ctx.set_line_width(0.001 * COEF)
-        tableauV(ctx, nomsSystemes, posZSysteme[0], posZSysteme[1], 
-                tailleZSysteme[0], posZSeances[1] - posZSysteme[1], 
-                0, nlignes = 0, va = 'c', ha = 'g', orient = 'v', coul = (0.8,0.8,0.8))
-        
-        wc = tailleZSysteme[0]/len(nomsSystemes)
-        _x = posZSysteme[0]
-        _y = posZSysteme[1]
+    if not entete:
+        nomsSystemes = []
+        systemes = seq.GetSystemesUtilises()
         for s in systemes:
-#            s.rect=((_x, _y, wc, posZSeances[1] - posZSysteme[1]),)
-            seq.zones_sens.append(Zone([(_x, _y, wc, posZSeances[1] - posZSysteme[1])],
-                                       obj = s))
+            nomsSystemes.append(s.nom)
+        if nomsSystemes != []:
+            ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+                                  cairo.FONT_WEIGHT_NORMAL)
+            ctx.set_source_rgb(0, 0, 0)
+            ctx.set_line_width(0.001 * COEF)
+            tableauV(ctx, nomsSystemes, posZSysteme[0], posZSysteme[1], 
+                    tailleZSysteme[0], posZSeances[1] - posZSysteme[1], 
+                    0, nlignes = 0, va = 'c', ha = 'g', orient = 'v', coul = (0.8,0.8,0.8))
+            
+            wc = tailleZSysteme[0]/len(nomsSystemes)
+            _x = posZSysteme[0]
+            _y = posZSysteme[1]
+            for s in systemes:
+    #            s.rect=((_x, _y, wc, posZSeances[1] - posZSysteme[1]),)
+                seq.zones_sens.append(Zone([(_x, _y, wc, posZSeances[1] - posZSysteme[1])],
+                                           obj = s))
+                ctx.set_source_rgb(0, 0, 0)
+                ctx.move_to(_x, _y + posZSeances[1] - posZSysteme[1])
+                ctx.line_to(_x, _y + tailleZDemarche[1])
+                ctx.stroke()
+                
+                ctx.set_source_rgba(0.8,0.8,0.8, 0.2)
+                ctx.rectangle(_x, _y+ posZSeances[1] - posZSysteme[1], 
+                              wc, tailleZDemarche[1]-posZSeances[1] + posZSysteme[1])
+                ctx.fill()
+                _x += wc
             ctx.set_source_rgb(0, 0, 0)
             ctx.move_to(_x, _y + posZSeances[1] - posZSysteme[1])
-            ctx.line_to(_x, _y + tailleZDemarche[1])
+            ctx.line_to(_x, _y + tailleZDemarche[1])   
             ctx.stroke()
-            
-            ctx.set_source_rgba(0.8,0.8,0.8, 0.2)
-            ctx.rectangle(_x, _y+ posZSeances[1] - posZSysteme[1], 
-                          wc, tailleZDemarche[1]-posZSeances[1] + posZSysteme[1])
-            ctx.fill()
-            _x += wc
-        ctx.set_source_rgb(0, 0, 0)
-        ctx.move_to(_x, _y + posZSeances[1] - posZSysteme[1])
-        ctx.line_to(_x, _y + tailleZDemarche[1])   
-        ctx.stroke()
 
 
     #
     #  Tableau des démarches
     #
-    if len(seq.GetReferentiel().listeDemarches) > 0:  
-        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-                              cairo.FONT_WEIGHT_NORMAL)
-        ctx.set_source_rgb(0, 0, 0)
-        ctx.set_line_width(0.001 * COEF)
-        l=[]
-        for d in seq.GetReferentiel().listeDemarches : 
-            l.append(seq.GetReferentiel().demarches[d][0])
-        tableauV(ctx, l, posZDemarche[0], posZDemarche[1], 
-                tailleZDemarche[0], posZSeances[1] - posZSysteme[1], 
-                0, nlignes = 0, va = 'c', ha = 'g', orient = 'v', coul = (0.8,0.75,0.9))
-        ctx.move_to(posZDemarche[0], posZDemarche[1] + posZSeances[1] - posZSysteme[1])
-        ctx.line_to(posZDemarche[0], posZDemarche[1] + tailleZDemarche[1])
-        ctx.move_to(posZDemarche[0]+tailleZDemarche[0]/3, posZDemarche[1] + posZSeances[1] - posZSysteme[1])
-        ctx.line_to(posZDemarche[0]+tailleZDemarche[0]/3, posZDemarche[1] + tailleZDemarche[1])
-        ctx.move_to(posZDemarche[0]+tailleZDemarche[0]*2/3, posZDemarche[1] + posZSeances[1] - posZSysteme[1])
-        ctx.line_to(posZDemarche[0]+tailleZDemarche[0]*2/3, posZDemarche[1] + tailleZDemarche[1])
-        ctx.move_to(posZDemarche[0]+tailleZDemarche[0], posZDemarche[1] + posZSeances[1] - posZSysteme[1])
-        ctx.line_to(posZDemarche[0]+tailleZDemarche[0], posZDemarche[1] + tailleZDemarche[1])
-        ctx.stroke()
+    if not entete:
+        if len(seq.GetReferentiel().listeDemarches) > 0:  
+            ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+                                  cairo.FONT_WEIGHT_NORMAL)
+            ctx.set_source_rgb(0, 0, 0)
+            ctx.set_line_width(0.001 * COEF)
+            l=[]
+            for d in seq.GetReferentiel().listeDemarches : 
+                l.append(seq.GetReferentiel().demarches[d][0])
+            tableauV(ctx, l, posZDemarche[0], posZDemarche[1], 
+                    tailleZDemarche[0], posZSeances[1] - posZSysteme[1], 
+                    0, nlignes = 0, va = 'c', ha = 'g', orient = 'v', coul = (0.8,0.75,0.9))
+            ctx.move_to(posZDemarche[0], posZDemarche[1] + posZSeances[1] - posZSysteme[1])
+            ctx.line_to(posZDemarche[0], posZDemarche[1] + tailleZDemarche[1])
+            ctx.move_to(posZDemarche[0]+tailleZDemarche[0]/3, posZDemarche[1] + posZSeances[1] - posZSysteme[1])
+            ctx.line_to(posZDemarche[0]+tailleZDemarche[0]/3, posZDemarche[1] + tailleZDemarche[1])
+            ctx.move_to(posZDemarche[0]+tailleZDemarche[0]*2/3, posZDemarche[1] + posZSeances[1] - posZSysteme[1])
+            ctx.line_to(posZDemarche[0]+tailleZDemarche[0]*2/3, posZDemarche[1] + tailleZDemarche[1])
+            ctx.move_to(posZDemarche[0]+tailleZDemarche[0], posZDemarche[1] + posZSeances[1] - posZSysteme[1])
+            ctx.line_to(posZDemarche[0]+tailleZDemarche[0], posZDemarche[1] + tailleZDemarche[1])
+            ctx.stroke()
 
 
 
     #
     #  Tableau des séances (en bas)
     #
-    if intituleSeances[0] != []:
-        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-                              cairo.FONT_WEIGHT_NORMAL)
-        ctx.set_source_rgb(0, 0, 0)
-        ctx.set_line_width(0.001 * COEF)
-        tableauH_var(ctx, intituleSeances[0], posZIntSeances[0], posZIntSeances[1], 
-                0.05* COEF, tailleZIntSeances[0]-0.05 * COEF, intituleSeances[2], fontIntSeances, 
-                nCol = 1, va = 'c', ha = 'g', orient = 'h', coul = ICoulSeance, 
-                contenu = [intituleSeances[1]])
+    if not entete:
+        if intituleSeances[0] != []:
+            ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+                                  cairo.FONT_WEIGHT_NORMAL)
+            ctx.set_source_rgb(0, 0, 0)
+            ctx.set_line_width(0.001 * COEF)
+            tableauH_var(ctx, intituleSeances[0], posZIntSeances[0], posZIntSeances[1], 
+                    0.05* COEF, tailleZIntSeances[0]-0.05 * COEF, intituleSeances[2], fontIntSeances, 
+                    nCol = 1, va = 'c', ha = 'g', orient = 'h', coul = ICoulSeance, 
+                    contenu = [intituleSeances[1]])
         
     #
     # Informations
     #
-    info(ctx, margeX, margeY)
+    if not entete:
+        info(ctx, margeX, margeY)
     
     
 

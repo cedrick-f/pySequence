@@ -695,7 +695,32 @@ class Objet_sequence():
 
     ######################################################################################  
     def GetFicheHTML(self, param = None):
+        if param is None:
+            return constantes.BASE_FICHE_HTML
+        else:
+            if param == "CAL":
+                return constantes.BASE_FICHE_HTML_CALENDRIER
+            
+            elif param == "PB":
+                return constantes.BASE_FICHE_HTML_PROB
+                
+            elif param == "ANN":
+                pass
+                
+            elif param[:3] == "POS":
+                return constantes.BASE_FICHE_HTML_PERIODES
+                
+            elif param[:3] == "EQU":
+                pass
+            
+            elif param[:2] == "CI":
+                return constantes.BASE_FICHE_HTML_CI
+                
+            else:
+                pass
+            
         return constantes.BASE_FICHE_HTML
+
         
         
     ######################################################################################  
@@ -1159,8 +1184,8 @@ class BaseDoc():
     
 
     ######################################################################################  
-    def GetApercu(self, w = 210, h = -1):
-        imagesurface = self.draw.get_apercu(self, w)
+    def GetApercu(self, w = 210, h = -1, entete = False):
+        imagesurface = self.draw.get_apercu(self, w, entete = entete)
         img = getBitmapFromImageSurface(imagesurface).ConvertToImage().Scale(w, w*1.414)
         if h == -1:
             return img.ConvertToBitmap()
@@ -1281,12 +1306,12 @@ class BaseDoc():
 
     ######################################################################################  
     def Move(self, zone, x, y):
-#        print "Move", zone
+        print "Move", zone, self
         self.HideTip()
             
         tip = None 
         if zone.obj is not None and zone.param is None and type(zone.obj) != list:
-#            print "Move elem :", zone.obj
+            print "    elem :", zone.obj
             if hasattr(zone.obj, 'tip'):
                 zone.obj.SetTip()
                 tip = zone.obj.tip
@@ -1299,8 +1324,9 @@ class BaseDoc():
 #                    tip = elem.tip
         
         else:
-            tip = self.GetTip(zone.param, zone.obj)
-#            print "Move Zone", zone.param
+            print "    zone", zone.param
+            tip = self.SetTip(zone.param, zone.obj)
+#            
             
         if tip != None:
             tip.Position((x+1,y+1), (0,0))
@@ -1401,7 +1427,7 @@ class Sequence(BaseDoc, Objet_sequence):
         BaseDoc.__init__(self, app, classe, intitule)
         Objet_sequence.__init__(self)
         
-        self.nom_obj = "Séquence"
+        self.nom_obj = u"Séquence"
         self.article_obj = "de la"
         
         self.undoStack = UndoStack(self)
@@ -1705,12 +1731,18 @@ class Sequence(BaseDoc, Objet_sequence):
         for sy in self.systemes:
             sy.SetLien()  
 
+
     ######################################################################################  
-    def GetTip(self, param, obj):
-        self.tip.SetHTML(self.GetFicheHTML(param = param))
-        if param is None:
-            pass
-        else:
+    def SetTip(self, param = None, obj = None):
+        """ Mise à jour du TIP (popup)
+        """
+        
+        if param is None:   # la Séquence elle-même
+            self.tip.SetHTML(constantes.BASE_FICHE_HTML_SEQ)
+            self.tip.SetWholeText("int", self.intitule)
+        
+        else:               # Un autre élément de la Séquence
+            self.tip.SetHTML(self.GetFicheHTML(param = param))
             if param == "POS":
                 self.Tip_POS()
                 
@@ -1728,13 +1760,15 @@ class Sequence(BaseDoc, Objet_sequence):
                 
         self.tip.SetPage()
         return self.tip
-        
+
+
     ######################################################################################  
     def VerifPb(self):
 #        print "VerifPb"
         for s in self.seances:
             s.VerifPb()
-        
+
+
     ######################################################################################  
     def MiseAJourNomsSystemes(self):
         for s in self.seances:
@@ -2851,28 +2885,47 @@ class Projet(BaseDoc, Objet_sequence):
 
         self.support.SetLien()  
 
+#    ######################################################################################  
+#    def GetFicheHTML(self, param = None):
+#        if param is None:
+#            return constantes.BASE_FICHE_HTML_PROJET
+#        else:
+#            if param == "CAL":
+#                return constantes.BASE_FICHE_HTML_CALENDRIER
+#                
+#            elif param == "ANN":
+#                pass
+#                
+#            elif param[:3] == "POS":
+#                return constantes.BASE_FICHE_HTML_PERIODES
+#                
+#            elif param[:3] == "EQU":
+#                pass
+#            
+#            elif param[:2] == "CI":
+#                return constantes.BASE_FICHE_HTML_CI
+#                
+#            else:
+#                pass
+#    
+#        return constantes.BASE_FICHE_HTML_PROJET
+
+
     ######################################################################################  
-    def GetFicheHTML(self, param = None):
-        return constantes.BASE_FICHE_HTML_PROJET
-
-    
-    ######################################################################################  
-    def SetTip(self):
-        self.tip.SetHTML(self.GetFicheHTML())
-        self.tip.SetWholeText("int", self.intitule)
-        self.tip.SetPage()
-
-
-    ######################################################################################  
-    def GetTip(self, param, obj):
-        self.tip.SetHTML(self.GetFicheHTML(param = param))
-
-        prj = self.GetProjetRef()
-        if param is None:
-            pass
-        else:
+    def SetTip(self, param = None, obj = None):
+        """ Mise à jour du TIP (popup)
+        """
+        
+        if param is None:   # le Projet lui-même
+            self.tip.SetHTML(constantes.BASE_FICHE_HTML_PROJET)
+            self.tip.SetWholeText("int", self.intitule)
+        
+        else:               # Un autre élément du Projet
+#            print "  *** ", param
+            prj = self.GetProjetRef()
+            self.tip.SetHTML(self.GetFicheHTML(param = param))
             if param == "PB":
-                self.tip.SetHTML(constantes.BASE_FICHE_HTML_PROB)
+#                self.tip.SetHTML(constantes.BASE_FICHE_HTML_PROB)
                 self.tip.SetWholeText( "titre", prj.attributs['PB'][0])
                 self.tip.SetWholeText("txt", self.problematique)
             
@@ -2894,16 +2947,15 @@ class Projet(BaseDoc, Objet_sequence):
                     self.tip.SetHTML(constantes.BASE_FICHE_HTML_COMP_PRJ)
                     
                     k = param[1:].split(u"\n")
-                    nc = getSingulierPluriel(self.GetReferentiel().dicoCompetences["S"].nomGenerique, False)
+                    nc = getSingulierPluriel(self.GetReferentiel().dicoCompetences["S"].nomGenerique, 
+                                             len(competence[1]) > 1)
                     if len(k) > 1:
-                        nc += "s"
                         titre = nc + u" - ".join(k)
                     else:
-                        titre = nc + k[0]
+                        titre = nc + " " + k[0]
                     self.tip.SetWholeText("titre", titre)
                     
-                    intituleComp = competence[0]
-                    intituleComp = "\n".join([textwrap.fill(ind, 50) for ind in intituleComp.split(u"\n")]) 
+                    intituleComp = "\n".join([textwrap.fill(ind, 50) for ind in competence[0].split(u"\n")]) 
                     self.tip.SetWholeText( "int", intituleComp)
                     
                     if type(competence[1]) == dict:  
@@ -4031,7 +4083,7 @@ class Progression(BaseDoc, Objet_sequence):
         branchePrj = branche.find("Sequences_Projets")
         if branchePrj is not None:
             for f in list(branchePrj):
-                if f.find("Projet") is not None:
+                if f.tag == "Projet":
                     sp = LienProjet(self)
                 else:
                     sp = LienSequence(self)
@@ -4078,6 +4130,9 @@ class Progression(BaseDoc, Objet_sequence):
             self.arbre.GetItemPyData(itemArbre).AfficherMenuContextuel(itemArbre)
             
         elif isinstance(self.arbre.GetItemPyData(itemArbre), LienSequence):
+            self.arbre.GetItemPyData(itemArbre).AfficherMenuContextuel(itemArbre)
+            
+        elif isinstance(self.arbre.GetItemPyData(itemArbre), LienProjet):
             self.arbre.GetItemPyData(itemArbre).AfficherMenuContextuel(itemArbre)           
                              
         elif self.arbre.GetItemText(itemArbre) == Titres[10]: # Prof
@@ -4127,17 +4182,23 @@ class Progression(BaseDoc, Objet_sequence):
             self.GetApp().sendEvent(modif = u"Suppression d'un Projet")
         
 
-#    ######################################################################################  
-#    def OuvrirSequence(self, event = None, item = None):
-#        l = self.arbre.GetItemPyData(item)
-##        self.GetApp().parent.ouvrir(toSystemEncoding(l.path))
-#        app = self.GetApp().parent.ouvrirDoc(l.sequence, l.path)
-##        l.sequence.app = app
-    
+    ######################################################################################  
+    def OuvrirSequence(self, event = None, item = None):
+        l = self.arbre.GetItemPyData(item)
+#        self.GetApp().parent.ouvrir(toSystemEncoding(l.path))
+        app = self.GetApp().parent.ouvrirDoc(l.sequence, l.path)
+#        l.sequence.app = app
     
     ######################################################################################  
+    def OuvrirProjet(self, event = None, item = None):
+        l = self.arbre.GetItemPyData(item)
+#        self.GetApp().parent.ouvrir(toSystemEncoding(l.path))
+        app = self.GetApp().parent.ouvrirDoc(l.projet, l.path)
+#        l.sequence.app = app
+
+    ######################################################################################  
     def ChargerSequences(self):
-        print "ChargerSequences", self.sequences_projets
+#        print "ChargerSequences", self.sequences_projets
         aSupprimer = []
         for lienSeq in [s for s in self.sequences_projets if isinstance(s, LienSequence)]:
             if lienSeq.sequence is None:
@@ -4186,14 +4247,14 @@ class Progression(BaseDoc, Objet_sequence):
         # On supprime les lienSequences à supprimer
         #
         for s in aSupprimer:
-            self.SupprimerLien(lienSeq = s)
+            self.SupprimerLien(lien = s)
             
         
 
     
     ######################################################################################  
     def ChargerProjets(self):
-        print "ChargerProjets", self.sequences_projets
+#        print "ChargerProjets", self.sequences_projets
         aSupprimer = []
         for lienPrj in [s for s in self.sequences_projets if isinstance(s, LienProjet)]:
             if lienPrj.projet is None:
@@ -4239,21 +4300,21 @@ class Progression(BaseDoc, Objet_sequence):
                     lienPrj.ChargerProjet()
         
         #
-        # On supprime les lienSequences à supprimer
+        # On supprime les lienProjet à supprimer
         #
         for s in aSupprimer:
-            self.SupprimerLien(lienPrj = s)
+            self.SupprimerLien(lien = s)
             
         
         
         
     ######################################################################################  
     def Ordonner(self):
-#        print "Ordonner"
+        print "Ordonner"
     
         listeSeqPrj = self.sequences_projets
                 
-        listeSeqPrj.sort(key= lambda s : s.GetDocument().position)
+        listeSeqPrj.sort(key= lambda s : s.GetDoc().position)
         
         self.brancheSeq.DeleteChildren(self.arbre)
         for e in listeSeqPrj:
@@ -4697,41 +4758,42 @@ class Progression(BaseDoc, Objet_sequence):
 
 
 
-    ######################################################################################  
-    def GetFicheHTML(self, param = None):
-        if param is None:
-            return constantes.BASE_FICHE_HTML
-        else:
-            if param == "CAL":
-                return constantes.BASE_FICHE_HTML_CALENDRIER
-                
-            elif param == "ANN":
-                pass
-                
-            elif param[:3] == "POS":
-                return constantes.BASE_FICHE_HTML_PERIODES
-                
-            elif param[:3] == "EQU":
-                pass
-            
-            elif param[:2] == "CI":
-                return constantes.BASE_FICHE_HTML_CI
-                
-            else:
-                pass
-            
-        return constantes.BASE_FICHE_HTML
+#    ######################################################################################  
+#    def GetFicheHTML(self, param = None):
+#        if param is None:
+#            return constantes.BASE_FICHE_HTML
+#        else:
+#            if param == "CAL":
+#                return constantes.BASE_FICHE_HTML_CALENDRIER
+#                
+#            elif param == "ANN":
+#                pass
+#                
+#            elif param[:3] == "POS":
+#                return constantes.BASE_FICHE_HTML_PERIODES
+#                
+#            elif param[:3] == "EQU":
+#                pass
+#            
+#            elif param[:2] == "CI":
+#                return constantes.BASE_FICHE_HTML_CI
+#                
+#            else:
+#                pass
+#            
+#        return constantes.BASE_FICHE_HTML
 
-
     ######################################################################################  
-    def GetTip(self, param, obj):
-#        print "GetTip", param
-        self.tip.SetHTML(self.GetFicheHTML(param = param))
+    def SetTip(self, param = None, obj = None):
+        """ Mise à jour du TIP (popup)
+        """
         
+        if param is None:   # la Progression elle-même
+            self.tip.SetHTML(constantes.BASE_FICHE_HTML)
+            
         
-        if param is None:
-            pass
-        else:
+        else:               # Un autre élément de la Progression
+            self.tip.SetHTML(self.GetFicheHTML(param = param))
             if param == "CAL":
                 self.tip.SetWholeText("titre", u"Calendrier de la Progression")
                 
@@ -4966,7 +5028,7 @@ class LienSequence(Objet_sequence):
         seq = self.sequence
         self.tip.SetHTML(self.GetFicheHTML())
         self.tip.SetWholeText("nom", seq.intitule)
-        self.tip.AjouterImg("ap", seq.GetApercu(600, 250)) 
+        self.tip.AjouterImg("ap", seq.GetApercu(600, 265, entete = True)) 
         
         self.tip.SetPage()
 
@@ -5089,6 +5151,7 @@ class LienProjet(Objet_sequence):
             
     ######################################################################################  
     def AfficherMenuContextuel(self, itemArbre):
+#        print "AfficherMenuContextuel"
         if itemArbre == self.branche:
             self.parent.app.AfficherMenuContextuel([[u"Supprimer", 
                                                      functools.partial(self.parent.SupprimerLien, item = itemArbre), 
@@ -5121,7 +5184,7 @@ class LienProjet(Objet_sequence):
         seq = self.projet
         self.tip.SetHTML(self.GetFicheHTML())
         self.tip.SetWholeText("nom", seq.intitule)
-        self.tip.AjouterImg("ap", seq.GetApercu(600, 250)) 
+        self.tip.AjouterImg("ap", seq.GetApercu(600, 200 , entete = True)) 
         
         self.tip.SetPage()
 
@@ -8855,5 +8918,5 @@ class Prof(Personne):
 #        if hasattr(self, 'tip'):
 #            self.tip.SetBranche(self.branche)
         self.SetCode()
-
+        self.MiseAJourCodeBranche()
 

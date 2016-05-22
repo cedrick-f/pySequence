@@ -1096,7 +1096,7 @@ def getBitmapPeriode(larg, position, periodes, projets = {}, prop = 7):
     return imagesurface
 
 
-def get_apercu(doc, larg, prop = 0.7071):
+def get_apercu(doc, larg, prop = 0.7071, entete = False):
     """ Renvoi un apercu du document <doc>
         sous la forme d'une cairo.ImageSurface
     
@@ -1108,7 +1108,7 @@ def get_apercu(doc, larg, prop = 0.7071):
     s = 1.0*larg/prop/COEF
     ctx.scale(s, s) 
 #    ctx.scale(mult, mult) 
-    doc.draw.Draw(ctx, doc)
+    doc.draw.Draw(ctx, doc, entete = entete)
     
     del ctx
          

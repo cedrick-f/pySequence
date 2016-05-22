@@ -324,6 +324,7 @@ COUL_COMPETENCES = (0.6, 0.0, 0.0, 1.0)
 #
 ####################################################################################
 dicimages =   {"Seq" : images.Icone_sequence,
+               "Prj" : images.Icone_projet,
                "Cla" : images.Icone_classe,
                "Com" : images.Icone_competence,
                "Sav" : images.Icone_savoirs,
@@ -818,7 +819,7 @@ BASE_FICHE_HTML_CI = u"""
 
 BASE_FICHE_HTML_COMP = u"""
 <HTML>
-    <font size="12" color="green"><b><h1 id = "titre" style="text-align: center;">_</h1></b></font>
+    <font size="12" color="green"><b><h1 id = "titre" style="text-align: center;"> </h1></b></font>
     <dl id = "list">
         <dt> </dt> <dd> </dd>
     </dl> 
@@ -827,10 +828,9 @@ BASE_FICHE_HTML_COMP = u"""
 
 BASE_FICHE_HTML_COMP_PRJ = u"""
 <HTML>
-    <font size="12" color="green"><b><h1 id = "titre" style="text-align: center;">_</h1></b></font>
-    <p id="int">_</p>
+    <font size="12" color="green"><b><h1 id = "titre" style="text-align: center;"> </h1></b></font>
+    <p style="font-size:11px" id="int"> </p>
     <ul id = "indic">
-    <li> </li>
     </ul> 
     <ul id = "leg">
     </ul> 
@@ -841,7 +841,7 @@ BASE_FICHE_HTML_SAV = u"""
 <HTML>
     <font size="12" color="blue"><b><h1 id = "titre" style="text-align: center;">_</h1></b></font>
     <dl id = "list">
-    <dt> </dt> <dd> </dd>
+        <dt> </dt> <dd> </dd>
     </dl> 
 
 </HTML>
@@ -861,9 +861,9 @@ BASE_FICHE_HTML_SYSTEME = u"""
 BASE_FICHE_HTML_SUPPORT = u"""
 <HTML>
     <font size="12"><b><h1 style="text-align: center;">Support</h1></b></font>
-<p id="nom">_</p>
-<p id="des">_</p>
-<p id="img">_</p>
+<p id="nom"> </p>
+<p id="des"> </p>
+<p id="img"> </p>
 
 </HTML>
 """
@@ -872,8 +872,8 @@ BASE_FICHE_HTML_PROB = u"""
 <HTML>
 <font size="12" color="green"><b><h1 id = "titre" style="text-align: center;">Problématique</h1></b></font>
 
-<p id="txt">_</p>
-<p id="int">_</p>
+<p id="txt"> </p>
+<p id="int"> </p>
 
 </HTML>
 """
