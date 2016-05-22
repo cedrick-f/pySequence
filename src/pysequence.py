@@ -1306,12 +1306,12 @@ class BaseDoc():
 
     ######################################################################################  
     def Move(self, zone, x, y):
-        print "Move", zone, self
+#        print "Move", zone, self
         self.HideTip()
             
         tip = None 
         if zone.obj is not None and zone.param is None and type(zone.obj) != list:
-            print "    elem :", zone.obj
+#            print "    elem :", zone.obj
             if hasattr(zone.obj, 'tip'):
                 zone.obj.SetTip()
                 tip = zone.obj.tip
@@ -1324,7 +1324,7 @@ class BaseDoc():
 #                    tip = elem.tip
         
         else:
-            print "    zone", zone.param
+#            print "    zone", zone.param
             tip = self.SetTip(zone.param, zone.obj)
 #            
             
