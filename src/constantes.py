@@ -693,7 +693,7 @@ ETABLISSEMENTS = getEtab.ouvrir()
 
 
 JOURS_FERIES = getEtab.ouvrir_jours_feries()
-print "JOURS_FERIES", JOURS_FERIES
+#print "JOURS_FERIES", JOURS_FERIES
 
 class Discipline():
     def __init__(self, Id, nom, code, coul):

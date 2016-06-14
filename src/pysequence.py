@@ -4320,7 +4320,7 @@ class Progression(BaseDoc, Objet_sequence):
         
     ######################################################################################  
     def Ordonner(self):
-        print "Ordonner"
+#        print "Ordonner"
     
         listeSeqPrj = self.sequences_projets
                 
