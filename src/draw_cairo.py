@@ -37,6 +37,7 @@ import textwrap
 from math import sqrt, pi, cos, sin
 import cairo
 import time
+import constantes
 
 from widgets import getHoraireTxt
 
@@ -169,7 +170,7 @@ def show_text_rect(ctx, texte, rect, \
                    va = 'c', ha = 'c', le = 0.8, pe = 1.0, \
                    b = 0.4, orient = 'h', \
                    fontsizeMinMax = (-1, -1), fontsizePref = -1, wrap = True, couper = True, 
-                   coulBord = None, tracer = True):
+                   coulBord = None, tracer = True, ext = "..."):
     """ Affiche un texte en adaptant la taille de police et sa position
         pour qu'il rentre dans le rectangle
         x, y, w, h : position et dimensions du rectangle
@@ -300,7 +301,7 @@ def show_text_rect(ctx, texte, rect, \
         
         wc, yh = show_text_rect_fix(ctx, texte, x, y, w, h, 
                                     fontSize, None, va = va, ha = ha, le = le, pe = pe,
-                                    coulBord = coulBord, wrap = wrap)
+                                    coulBord = coulBord, wrap = wrap, ext = ext)
         return fontSize, wc, yh
     
     fontSize = min(fontSize, fontsizeMinMax[1])
@@ -313,7 +314,7 @@ def show_text_rect(ctx, texte, rect, \
 #        print "xxx", texte, nLignesMaxi
         wc, yh = show_text_rect_fix(ctx, texte, x, y, w, h, 
                                     fontsizeMinMax[0], nLignesMaxi, va = va, ha = ha, le = le, pe = pe,
-                                    coulBord = coulBord, wrap = wrap)
+                                    coulBord = coulBord, wrap = wrap, ext = ext)
         return fontSize, wc, yh
             
 #    if debug: print "   nLignes :", nLignes
@@ -708,7 +709,7 @@ def show_text_rect(ctx, texte, rect, \
 
     
 
-def decoupe_text(ctx, texte, w, nLignesMax):
+def decoupe_text(ctx, texte, w, nLignesMax, ext = "..."):
     """ Découpe un texte en une liste de lignes
         de telle sorte qu'il rentre dans la largeur <w> (unités cairo)
         et tronquage à <nLignesMax> lignes maximum
@@ -743,7 +744,7 @@ def decoupe_text(ctx, texte, w, nLignesMax):
             # On teste si ça rentre ...
             if nLignesMax != None and len(lt) > nLignesMax:
                 lt = lt[:nLignesMax]
-                lt[-1] += "..."
+                lt[-1] += ext
             maxw = max([ctx.text_extents(t)[2] for t in lt])
             if maxw <= w: # Ca rentre !
                 continuer = False
@@ -798,7 +799,7 @@ def decoupe_text(ctx, texte, w, nLignesMax):
 ##########################################################################################################################
 def show_text_rect_fix(ctx, texte, x, y, w, h, fontSize, \
                        Nlignes = 1, va = 'c', ha = 'c', le = 0.8, pe = 1.0, 
-                       coulBord = None, wrap = True):#, outPosMax = False):
+                       coulBord = None, wrap = True, ext = "..."):#, outPosMax = False):
     """ Affiche un texte 
             (en tronquant sa longueur s'il le faut
              pour qu'il rentre dans le rectangle)
@@ -822,7 +823,7 @@ def show_text_rect_fix(ctx, texte, x, y, w, h, fontSize, \
     # et tronquage en même temps
     #
     if wrap:
-        lt = decoupe_text(ctx, texte, w, Nlignes)
+        lt = decoupe_text(ctx, texte, w, Nlignes, ext = ext)
     else:
         lt = [texte]
     
@@ -936,6 +937,212 @@ def DefinirCouleurs(n1, n2, n3):
                        ((0.7,  0.7,  0.8,  0.2),    (0, 0, 0, 1))]
 
 
+import calendar
+from datetime import date
+
+######################################################################################  
+def est_ferie(Date, creneaux):
+    for c in creneaux:
+        if c[0] < Date < c[1]:
+            return True
+    return False
+
+
+######################################################################################  
+def DrawCalendrier(ctx, rect, calendrier):
+    """ Dessine un calendrier
+         >> Renvoie la liste des rectangles des semaines
+    """
+    x, y, wt, ht = rect
+    ctx.set_line_width (0.0005 * wt)
+        
+    # Les rectangles à cliquer
+    rects = []
+    
+    cal = calendar.Calendar()
+    
+    # Espace pour les noms des années
+    ha = 0.12 * ht
+    
+    # Espace pour les noms des jours
+    wj = 0.02 * wt
+    
+    # Espace pour le nom des mois
+    hm = 0.08 * ht
+    
+    # Ecart entre les années
+    ea = 0.02 * wt
+    wt = wt - 2*ea
+    x += ea
+    
+    # Ecart vertical
+    ey = 0.02 * ht
+    ht -= 2*ey
+    y += ey
+    
+    # Ecart "vacances"
+    ev = 0.005 * wt
+    
+    # Période entre deux années
+    dx_a = (wt-wj)/calendrier.nbr_annees + ea
+    
+    # liste des années
+    lannees = [calendrier.annee + i for i in range(calendrier.nbr_annees+1)]
+    
+    # listes des mois
+    lmois = {}
+    nmois = 0
+    for ia, annee in enumerate(lannees):
+        if ia == 0:
+            lmois[annee] = [range(9, 13)]
+            nmois += 4
+        elif ia == calendrier.nbr_annees:
+            lmois[annee] = [range(1,7)]
+            nmois += 6
+        else:
+            lmois[annee] = [range(1,7), range(9, 13)]
+            nmois += 10
+    
+    # Période entre deux mois
+    dx_m = (wt - wj - (calendrier.nbr_annees-1)*ev - calendrier.nbr_annees*ea) / nmois
+    
+    # Période entre deux jours
+    dy_j = (ht-ha-hm) / 31
+    
+    # largueur des zones année
+    wa = {}
+    for ia, annee in enumerate(lannees):
+        if ia == 0:
+            wa[annee] = dx_m*4
+        elif ia == calendrier.nbr_annees:
+            wa[annee] = dx_m*6
+        else:
+            wa[annee] = dx_m*10+ev
+    
+    #
+    # Les noms des années, mois et jours
+    #
+    X = x
+    
+    jours_feries = constantes.JOURS_FERIES
+    lstAcad = sorted([a[0] for a in constantes.ETABLISSEMENTS.values()])
+    creneaux = []
+    
+    for ia, annee in enumerate(lannees):
+
+        if annee in jours_feries.keys():
+            list_zones, list_crenaux = jours_feries[annee]
+            acad = calendrier.GetClasse().academie
+            
+            try:
+                num_acad = lstAcad.index(acad)
+            except:
+                num_acad = None
+
+            
+            zone = None
+            if num_acad is not None:
+                for z, l in list_zones.items():
+                    if num_acad in l:
+                        zone = z
+                        break
+
+            if zone in list_crenaux.keys():
+                creneaux.extend(list_crenaux[zone])
+        
+        
+        
+        show_text_rect(ctx, str(annee), 
+                       (X+wj, y, wa[annee], ha), 
+                       orient = 'h', ha = 'c', va = 'c', b = 0.1)
+        
+        Y = y+ha+hm
+        for jour in range(31):
+            show_text_rect(ctx, str(jour+1), 
+                           (X, Y, ea, dy_j), 
+                           orient = 'h', ha = 'd', va = 'c', b = 0.1)
+            Y += dy_j
+        
+        for per in lmois[annee]:
+            for mois in per:
+                show_text_rect(ctx, constantes.MOIS[mois-1], 
+                               (X+wj, y+ha, dx_m, hm), 
+                               orient = 'h', ha = 'c', va = 'c', b = 0.1, ext = "")
+                X += dx_m
+            X += ev
+        
+        X += ea-ev
+        
+    for c in creneaux:
+        if type(c[0]) == list :
+            c[0] = date(*c[0])
+        if type(c[1]) == list:
+            c[1] = date(*c[1])
+    
+    #
+    # Les cases des jours
+    #
+    X = x+wj
+    S = 0   # Numéro de la semaine
+    for annee in lannees:
+        
+                
+        for per in lmois[annee]:
+            for mois in per:
+                Y = y+ha+hm
+                for semaine in cal.monthdayscalendar(annee, mois):
+                    lj = [j for j in semaine if j != 0]
+                    if len(lj) > 3 or len(rects) == 0:
+                        rects.append((X, Y, dx_m, len(lj)*dy_j))
+                        hs = dx_m*0.6
+                        ys = Y+(len(lj)*dy_j - hs)/2
+                        rs = (X, ys, dx_m, hs)
+                        
+                        # Numéro de la semaine
+                        ctx.set_source_rgba(0.4,  0.6,  0.4,  1)
+                        show_text_rect(ctx, str(S+1), 
+                                       rs, couper = False, ext = "",
+                                       orient = 'h', ha = 'c', va = 'c', b = 0.1)
+                    
+                    for jour in semaine:
+                        if jour != 0:
+                            ctx.set_source_rgba(1, 0.9, 1, 0.5)
+                            if est_ferie(date(annee, mois, jour), creneaux):
+                                ctx.set_source_rgba(0.3, 0.3, 0.3, 1)
+                            if calendar.weekday(annee, mois, jour) > 5:
+                                ctx.set_source_rgba(0, 0, 0, 1)
+                                
+                            ctx.rectangle (X, Y, dx_m, dy_j)
+                            ctx.fill_preserve ()
+                            ctx.set_source_rgba(0, 0, 0, 1)
+                            ctx.stroke()
+                            Y += dy_j
+                            if calendar.weekday(annee, mois, jour) == 6:
+                                S += 1
+                    
+                X += dx_m
+            X += ev
+        X += ea-ev
+    return rects
+
+
+def getBitmapCalendrier(larg, calendrier):
+#    print "getBitmapPeriode", larg, 
+#        print "  ", self.projet.position
+#        print "  ", self.projet.GetReferentiel().periodes
+#        print "  ", self.projet.GetReferentiel().periode_prj
+    prop = calendrier.nbr_annees
+    w, h = 0.04*prop * COEF, 0.04 * COEF
+#    print w, h
+    imagesurface = cairo.ImageSurface(cairo.FORMAT_ARGB32,  larg, int(h/w*larg))#cairo.FORMAT_ARGB32,cairo.FORMAT_RGB24
+    ctx = cairo.Context(imagesurface)
+    ctx.scale(larg/w, larg/w) 
+    DrawCalendrier(ctx, (0,0,w,h), calendrier)
+
+    return imagesurface
+
+
+                 
 ######################################################################################  
 def DrawPeriodes(ctx, rect, pos = None, periodes = [[u"Année", 5]], projets = {}, tailleTypeEns = 0):
     """ Dessine les périodes de l'enseignements
@@ -1075,6 +1282,10 @@ def DrawPeriodes(ctx, rect, pos = None, periodes = [[u"Année", 5]], projets = {
             ctx.stroke ()
             
     return rects
+
+
+
+
 
 ########################################################################################
 #

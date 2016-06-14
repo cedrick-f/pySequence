@@ -42,6 +42,101 @@ import os
 
 
 #############################################################################################
+def GetFeries():
+    print "GetFeries"
+    from bs4 import BeautifulSoup
+    import urllib2
+
+    MOIS = [u'janvier', u'février', u'mars', u'avril', u'mai', u'juin', 
+        u'juillet', u'août', u'septembre', u'octobre', u'novembre', u'décembre']
+    
+    ETABLISSEMENTS = ouvrir()
+    lstAcad = sorted([a[0] for a in ETABLISSEMENTS.values()])
+    
+    
+    urlCal = 'http://www.education.gouv.fr/pid25058/le-calendrier-scolaire.html' #?annee=160&search_input=cancale'
+    try:
+        downloadPage = BeautifulSoup(urllib2.urlopen(urlCal, timeout = 10), "html5lib")
+    except IOError:
+        print "pas d'accès Internet"
+        return   
+    
+    list_feries = {}
+    
+    
+    annees = {}
+    tag_annee = downloadPage.find(id="annee")
+    for a in tag_annee.find_all('option'):
+#        print "     a:", a['label'].split("-")[0].split()[-1], annee
+        annees[int(a['label'].split("-")[0].split()[-1])] = a['value']
+            
+    print "  annees:", annees
+
+    for annee, code in annees.items():
+        list_crenaux = {"A" : [], "B" : [], "C" : []} # Les créneaux de jours féries
+        list_zones = {"A" : [], "B" : [], "C" : []} # Les académies rangées par zone
+    
+        url = urlCal + '?annee=%s' %code
+    
+        page = BeautifulSoup(urllib2.urlopen(url, timeout = 10), "html5lib")
+        
+        tag_cal = page.find(id="calendrier-v2-detail")
+        for z, tag_acad in enumerate(tag_cal.find_all(headers="academie")):
+            for i, acad in enumerate(lstAcad):
+                if tag_acad.text is not None and acad in tag_acad.text:
+                    list_zones[chr(65+z)].append(i)
+        print "  zones:", list_zones
+
+
+        for tr in tag_cal.find_all('tr'):
+            creneaux = tr.find_all('td', headers="creneau")
+            for z, creneau in enumerate(creneaux):
+                for p in creneau.find_all('p'):
+                    l = p.text.split("\n")
+                    l = [t.strip() for t in l]
+                    l = [t for t in l if len(t) > 0]
+                    
+                    if len(l) == 1:
+                        if l[0][0] == "R":
+                            l = ["", l [0]]
+                        else:
+                            l = [l [0],  ""]
+                    l = [t.split(":")[-1].strip() for t in l]
+                    v = []
+                    for d in l:
+                        
+                        if d == "":
+                            v.append([])
+                        else:
+                            js, j, m, a = d.split()
+                            a = int(a)
+                            m = MOIS.index(m)+1
+                            if j == "1er":
+                                j = 1
+                            else:
+                                j = int(j)
+                            v.append([a, m, j])
+                    
+                    if v[0] == []:
+                        v[0] = [v[1][0], 7, 31]
+                    elif v[1] == []:
+                        v[1] = [v[0][0], 7, 31]
+                            
+                    list_crenaux[chr(65+z)].append(v)
+                    if len(creneaux) == 1:
+                        list_crenaux["B"].append(v)
+                        list_crenaux["C"].append(v)
+        
+        print "   crenaux:",list_crenaux
+        list_feries[annee] = [list_zones, list_crenaux]
+    
+    print list_feries
+    return list_feries
+
+
+
+
+#############################################################################################
 def GetEtablissements():
     
     from bs4 import BeautifulSoup
@@ -174,44 +269,47 @@ def GetEtablissements():
 #    print liste_etab
     return liste_etab
         
+
 ######################################################################################  
-def getBranche(item):
+def insert_branche(branche, val, nom):
+    nom = nom.replace("\n", "--")
+#        print nom, type(val)
+    if type(val) == str or type(val) == unicode:
+        branche.set("S_"+nom, val.replace("\n", "--"))
+    elif type(val) == int:
+        branche.set("I_"+nom, str(val))
+    elif type(val) == long:
+        branche.set("L_"+nom, str(val))
+    elif type(val) == float:
+        branche.set("F_"+nom, str(val))
+    elif type(val) == bool:
+        branche.set("B_"+nom, str(val))
+    elif type(val) == list:
+        sub = ET.SubElement(branche, "l_"+nom)
+        for i, sv in enumerate(val):
+            insert_branche(sub, sv, nom+format(i, "02d"))
+    elif type(val) == dict:
+        sub = ET.SubElement(branche, "d_"+nom)
+        for k, sv in val.items():
+            if type(k) != str and type(k) != unicode:
+                k = "_"+format(k, "03d")
+            insert_branche(sub, sv, k)
+
+
+######################################################################################  
+def getBranche(item, titre = "Etablissements"):
     """ Construction et renvoi d'une branche XML
         (enregistrement de fichier)
     """
-    ref = ET.Element("Etablissements")
+    ref = ET.Element(titre)
 
-    def sauv(branche, val, nom = None):
-        nom = nom.replace("\n", "--")
-#        print nom, type(val)
-        if type(val) == str or type(val) == unicode:
-            branche.set("S_"+nom, val.replace("\n", "--"))
-        elif type(val) == int:
-            branche.set("I_"+nom, str(val))
-        elif type(val) == long:
-            branche.set("L_"+nom, str(val))
-        elif type(val) == float:
-            branche.set("F_"+nom, str(val))
-        elif type(val) == bool:
-            branche.set("B_"+nom, str(val))
-        elif type(val) == list:
-            sub = ET.SubElement(branche, "l_"+nom)
-            for i, sv in enumerate(val):
-                sauv(sub, sv, nom+format(i, "02d"))
-        elif type(val) == dict:
-            sub = ET.SubElement(branche, "d_"+nom)
-            for k, sv in val.items():
-                if type(k) != str and type(k) != unicode:
-                    k = "_"+format(k, "03d")
-                sauv(sub, sv, k)
-    
-    sauv(ref, item, "Etablissement")
+    insert_branche(ref, item, "Etablissement")
         
     return ref
 
 
 ######################################################################################
-def setBranche(branche):
+def setBranche(branche, nom = "d_Etablissement"):
     """ Lecture de la branche XML
         (ouverture de fichier)
     """
@@ -273,7 +371,7 @@ def setBranche(branche):
                     d[_k] = lect(sbranche, k)
             return d
 
-    return lect(branche, "d_Etablissement")
+    return lect(branche, nom)
 
 
 def ouvrir():
@@ -282,6 +380,14 @@ def ouvrir():
     ETABLISSEMENTS = setBranche(root)
     fichier.close()
     return ETABLISSEMENTS
+
+def ouvrir_jours_feries():
+    fichier = open(os.path.join(util_path.PATH, r"JoursFeries.xml"),'r')
+    root = ET.parse(fichier).getroot()
+    JOURS_FERIES = setBranche(root, "d_Jours_feries")
+    fichier.close()
+    return JOURS_FERIES
+
 
 #    
 # Fonction pour indenter les XML générés par ElementTree
@@ -302,13 +408,26 @@ def indent(elem, level=0):
             elem.tail = i
 
 if __name__ == '__main__':
-    liste_etab = GetEtablissements()
-    print liste_etab
-    fichier = file("Etablissements.xml", 'w')
-    root = getBranche(liste_etab)
+    
+    
+    
+    fichier = file("JoursFeries.xml", 'w')
+    root = ET.Element("Jours_feries")
+    list_feries = GetFeries()
+    insert_branche(root, list_feries, "Jours_feries")
+    
     indent(root)
+#    print ET.tostring(root, encoding='utf8', method='xml')
     ET.ElementTree(root).write(fichier)
     fichier.close()
+
+#    liste_etab = GetEtablissements()
+#    print liste_etab
+#    fichier = file("Etablissements.xml", 'w')
+#    root = getBranche(liste_etab)
+#    indent(root)
+#    ET.ElementTree(root).write(fichier)
+#    fichier.close()
     
     
     

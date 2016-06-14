@@ -532,7 +532,7 @@ class Objet_sequence():
             self.description = description
             if hasattr(self, 'panelPropriete'):
                 self.GetApp().sendEvent(modif = u" ".join([u"Modification de la description", 
-                                                                 self.article_obj, self.nom_obj]))
+                                                                 self.article_c_obj, self.nom_obj]))
             self.tip.SetRichTexte()
 
     ######################################################################################  
@@ -1077,6 +1077,7 @@ class Classe(Objet_sequence):
         self.arbre = arbre
         self.codeBranche = CodeBranche(self.arbre, rallonge(self.GetReferentiel().Enseignement[0]))
         self.branche = arbre.AppendItem(branche, Titres[5]+" :", wnd = self.codeBranche, data = self)#, image = self.arbre.images["Seq"])
+        self.codeBranche.SetBranche(self.branche)
 #        if hasattr(self, 'tip'):
 #            self.tip.SetBranche(self.branche)
     
@@ -1298,7 +1299,7 @@ class BaseDoc():
                     if hasattr(pp, "SetBitmapPosition"):
                         pp.SetBitmapPosition()
 #                    self.GetApp().arbre.OnSelChanged()
-                    self.GetApp().sendEvent(modif = u"Changement de position "+ self.article_obj + " " + self.nom_obj,
+                    self.GetApp().sendEvent(modif = u"Changement de position "+ self.article_c_obj + " " + self.nom_obj,
                                             obj = self)
             
             
@@ -1410,7 +1411,7 @@ class BaseDoc():
             ref = self.GetReferentiel()
             self.tip.SetWholeText("titre", u"Période de formation")
             self.tip.SetWholeText("txt", ref.getPeriodesListe()[p] + " - " + str(p+1))
-                
+            self.tip.Supprime('img')
 
 
     ##################################################################################################    
@@ -1428,7 +1429,8 @@ class Sequence(BaseDoc, Objet_sequence):
         Objet_sequence.__init__(self)
         
         self.nom_obj = u"Séquence"
-        self.article_obj = "de la"
+        self.article_c_obj = "de la"
+        self.article_obj = "la"
         
         self.undoStack = UndoStack(self)
         
@@ -2321,8 +2323,8 @@ class Projet(BaseDoc, Objet_sequence):
         Objet_sequence.__init__(self)
         
         self.nom_obj = "Projet"
-        self.article_obj = "du"
-        self.article_obj2 = "le"
+        self.article_c_obj = "du"
+        self.article_obj = "le"
         
 #        Objet_sequence.__init__(self)
         self.undoStack = UndoStack(self)
@@ -2636,7 +2638,7 @@ class Projet(BaseDoc, Objet_sequence):
             if self.position == 5:
                 print "Correction position"
                 self.position = ref.getPeriodeEval()
-        
+#        print "position", self.position
         self.code = self.GetReferentiel().getProjetEval(self.position+1)
         
         self.nbrRevues = eval(branche.get("NbrRevues", str(ref.getNbrRevuesDefaut())))
@@ -3609,23 +3611,28 @@ class Projet(BaseDoc, Objet_sequence):
     
     
     #############################################################################
-    def MiseAJourTypeEnseignement(self):#, changeFamille = False):
-        print "MiseAJourTypeEnseignement projet"
-        
+    def MiseAJour(self):
         self.app.SetTitre()
+        draw_cairo.DefinirCouleurs(self.GetNbrPeriodes(),
+                                   len(self.GetReferentiel()._listesCompetences_simple["S"]),
+                                   len(self.eleves))
+        self.SetCompetencesRevuesSoutenance()
         
+        
+    #############################################################################
+    def MiseAJourTypeEnseignement(self):#, changeFamille = False):
+#        print "MiseAJourTypeEnseignement projet"
+
         self.code = self.GetReferentiel().getCodeProjetDefaut()
 
         self.position = self.GetProjetRef().getPeriodeDefaut()
 #        print "position", self.position
-        self.SetCompetencesRevuesSoutenance()
+        
         
         for e in self.eleves:
             e.MiseAJourTypeEnseignement()
         
-        draw_cairo.DefinirCouleurs(self.GetNbrPeriodes(),
-                                   len(self.GetReferentiel()._listesCompetences_simple["S"]),
-                                   len(self.eleves))
+        self.MiseAJour()
 
                 
     #############################################################################
@@ -3857,7 +3864,8 @@ class Progression(BaseDoc, Objet_sequence):
         Objet_sequence.__init__(self)
         
         self.nom_obj = "Progression"
-        self.article_obj = "de la"
+        self.article_c_obj = "de la"
+        self.article_obj = "la"
         
 #        Objet_sequence.__init__(self)
         self.undoStack = UndoStack(self)
@@ -3865,8 +3873,10 @@ class Progression(BaseDoc, Objet_sequence):
         
         self.sequences_projets = []     # liste de LienSequence et de LienProjet
         
+        self.annee = constantes.getAnneeScolaire()
         
         self.calendriers = []
+        self.calendrier = Calendrier(self)
         self.eleves = []
         self.equipe = []
         self.themes = []
@@ -3874,7 +3884,7 @@ class Progression(BaseDoc, Objet_sequence):
         
         self.version = ""
         # Année Scolaire
-        self.annee = constantes.getAnneeScolaire()
+        
         
         if not ouverture:
             self.MiseAJourTypeEnseignement()
@@ -4598,7 +4608,7 @@ class Progression(BaseDoc, Objet_sequence):
 #        print self.GetReferentiel()._listesCompetences_simple["S"]
         self.app.SetTitre()
         self.classe.MiseAJourTypeEnseignement()
-
+        self.calendrier.MiseAJourTypeEnseignement()
         draw_cairo.DefinirCouleurs(self.GetNbrPeriodes(),
                                    len(self.GetReferentiel()._listesCompetences_simple["S"]),
                                    len(self.GetReferentiel().CentresInterets))
@@ -4796,10 +4806,12 @@ class Progression(BaseDoc, Objet_sequence):
             self.tip.SetHTML(self.GetFicheHTML(param = param))
             if param == "CAL":
                 self.tip.SetWholeText("titre", u"Calendrier de la Progression")
+                self.tip.AjouterImg("img", self.getBitmapCalendrier(1000))
                 
             elif param == "ANN":
                 self.tip.SetWholeText("titre", u"Années scolaires de la Progression")
                 self.tip.SetWholeText("txt", self.GetAnnees())
+                self.tip.Supprime('img')
                 
             elif param == "POS":
                 self.Tip_POS() 
@@ -4856,6 +4868,12 @@ class Progression(BaseDoc, Objet_sequence):
         return getBitmapFromImageSurface(imagesurface)
 
 
+    #############################################################################            
+    def getBitmapCalendrier(self, larg):
+        imagesurface = draw_cairo.getBitmapCalendrier(larg, self.calendrier)
+        return getBitmapFromImageSurface(imagesurface)
+    
+    
     ##################################################################################################    
     def enregistrer(self, nomFichier):
         # La progression
@@ -4961,11 +4979,12 @@ class LienSequence(Objet_sequence):
             
         coul = draw_cairo.BcoulPos[self.sequence.position]
         coul = [int(200*c) for c in coul]
-#        self.codeBranche = CodeBranche(self.arbre, code)
+        self.codeBranche = CodeBranche(self.arbre)
 #        self.codeBranche.SetForegroundColour(coul)
         self.branche = arbre.AppendItem(branche, self.sequence.intitule, #wnd = self.codeBranche, 
                                         data = self,
                                         image = self.arbre.images["Seq"])
+        self.codeBranche.SetBranche(self.branche)
         self.arbre.SetItemTextColour(self.branche, coul)
 
 #        self.codeBranche.SetBranche(self.branche)
@@ -5116,11 +5135,12 @@ class LienProjet(Objet_sequence):
             
         coul = draw_cairo.BcoulPos[self.projet.position]
         coul = [int(200*c) for c in coul]
-#        self.codeBranche = CodeBranche(self.arbre, code)
+        self.codeBranche = CodeBranche(self.arbre)
 #        self.codeBranche.SetForegroundColour(coul)
         self.branche = arbre.AppendItem(branche, self.projet.intitule, #wnd = self.codeBranche, 
                                         data = self,
                                         image = self.arbre.images["Prj"])
+        self.codeBranche.SetBranche(self.branche)
         self.arbre.SetItemTextColour(self.branche, coul)
 
 #        self.codeBranche.SetBranche(self.branche)
@@ -5391,6 +5411,7 @@ class CentreInteret(Objet_sequence):
         self.branche = arbre.AppendItem(branche, getSingulierPluriel(self.GetReferentiel().nomCI, True)+u" :", 
                                         wnd = self.codeBranche, data = self,
                                         image = self.arbre.images["Ci"])
+        self.codeBranche.SetBranche(self.branche)
 #        if hasattr(self, 'tip'):
 #            self.tip.SetBranche(self.branche)
 
@@ -5522,6 +5543,7 @@ class Competences(Objet_sequence):
         t = self.GetNomGenerique()
         self.branche = arbre.AppendItem(branche, t, wnd = self.codeBranche, data = self,
                                         image = self.arbre.images["Com"])
+        self.codeBranche.SetBranche(self.branche)
         self.arbre.SetItemTextColour(self.branche, couleur.GetCouleurWx(COUL_COMPETENCES))
         
     #############################################################################
@@ -5658,6 +5680,7 @@ class Savoirs(Objet_sequence):
         t = self.GetNomGenerique()
         self.branche = arbre.AppendItem(branche, t, wnd = self.codeBranche, data = self,
                                         image = self.arbre.images["Sav"])
+        self.codeBranche.SetBranche(self.branche)
         
         
     #############################################################################
@@ -5707,7 +5730,8 @@ class Seance(ElementDeSequence, Objet_sequence):
                                                             2 = séance "parallèle"
         """
         self.nom_obj = "Séance"
-        self.article_obj = "de la"
+        self.article_c_obj = "de la"
+        self.article_obj = "la"
         
         self.parent = parent
         ElementDeSequence.__init__(self)
@@ -6351,7 +6375,8 @@ class Seance(ElementDeSequence, Objet_sequence):
         
         self.branche = arbre.AppendItem(branche, u"Séance :", wnd = self.codeBranche, 
                                             data = self, image = image)
-            
+        self.codeBranche.SetBranche(self.branche)
+        
         if hasattr(self, 'branche'):
             self.SetCodeBranche()
             
@@ -6684,7 +6709,8 @@ class Tache(Objet_sequence):
         """
 #        print "__init__ tâche", phaseTache
         self.nom_obj = "Tâche"
-        self.article_obj = "de la"
+        self.article_c_obj = "de la"
+        self.article_obj = "la"
         
         self.projet = projet
         Objet_sequence.__init__(self)
@@ -7206,11 +7232,16 @@ class Tache(Objet_sequence):
     ######################################################################################  
     def SetIntitule(self, text):           
         self.intitule = text
-        if self.intitule != "":
-            t = u"Intitulé : "+ "\n".join(textwrap.wrap(self.intitule, 40))
-        else:
-            t = u""
-        self.tip.SetTexte(t, self.tip_intitule)
+        self.SetCode()
+#        if self.intitule != "":
+#            t = u"Intitulé : "+ "\n".join(textwrap.wrap(self.intitule, 40))
+#        else:
+#            t = u""
+            
+            
+        
+            
+#        self.tip.SetTexte(t, self.tip_intitule)
         
     ######################################################################################  
     def GetProchaineRevue(self):
@@ -7275,18 +7306,23 @@ class Tache(Objet_sequence):
         if hasattr(self, 'codeBranche') and self.phase != "":
             if self.phase in TOUTES_REVUES_EVAL_SOUT:
                 self.codeBranche.SetLabel(u"")
-                t = self.GetProjetRef().phases[self.phase][1]
+                code = self.GetProjetRef().phases[self.phase][1]
             else:
                 if self.estPredeterminee():
-                    t = self.intitule
-                    self.codeBranche.SetLabel(self.GetProjetRef().taches[self.intitule][1])
-                    self.codeBranche.SetToolTipString(self.GetProjetRef().taches[self.intitule][1])
+                    code = self.intitule
+                    intitule = self.GetProjetRef().taches[self.intitule][1]
+                    
                 else:
-                    t = self.code
-                    self.codeBranche.SetLabel(self.intitule)
-                    self.codeBranche.SetToolTipString(self.intitule)
-                t += u" :"
-            self.arbre.SetItemText(self.branche, t)#self.GetProjetRef().phases[self.phase][1]+
+                    code = self.code
+                    intitule = self.intitule
+                    
+                i = intitule[:constantes.LONGUEUR_INTITULE_ARBRE]
+                if len(intitule) != len(i):
+                    i += "..."
+                self.codeBranche.SetLabel(i)
+                self.codeBranche.SetToolTipString(intitule)
+                code += u" :"
+            self.arbre.SetItemText(self.branche, code)#self.GetProjetRef().phases[self.phase][1]+
             self.codeBranche.LayoutFit()
             
         
@@ -7304,7 +7340,7 @@ class Tache(Objet_sequence):
             
         self.branche = arbre.AppendItem(branche, u"Tâche :", wnd = self.codeBranche, 
                                         data = self, image = image)
-            
+        self.codeBranche.SetBranche(self.branche)
         if self.phase in TOUTES_REVUES_EVAL:
             arbre.SetItemTextColour(self.branche, "red")
         elif self.phase == "Rev":
@@ -7665,7 +7701,8 @@ class Seance_EDT(ElementDeSequence, Objet_sequence):
     def __init__(self, parent, nom = u""):
         
         self.nom_obj = "Séance"
-        self.article_obj = "de"
+        self.article_c_obj = "de la"
+        self.article_obj = "la"
         
         self.parent = parent
         ElementDeSequence.__init__(self)
@@ -7705,7 +7742,8 @@ class EDT(ElementDeSequence, Objet_sequence):
     def __init__(self, parent, nom = u""):
         
         self.nom_obj = "Emploi du temps"
-        self.article_obj = "d'"
+        self.article_c_obj = "d'"
+        self.article_obj = "l'"
         
         self.parent = parent
         ElementDeSequence.__init__(self)
@@ -7722,7 +7760,8 @@ class Calendrier(ElementDeSequence, Objet_sequence):
     def __init__(self, parent, nom = u""):
         
         self.nom_obj = "Calendrier"
-        self.article_obj = "de"
+        self.article_c_obj = "du"
+        self.article_obj = "le"
         
         self.parent = parent
         ElementDeSequence.__init__(self)
@@ -7733,9 +7772,9 @@ class Calendrier(ElementDeSequence, Objet_sequence):
         
         self.image = None
         
-        self.annee = constantes.getAnneeScolaire()
+        self.MiseAJourTypeEnseignement()
         
-        self.EDT = EDT()
+        #self.EDT = EDT()
         
         self.seances = []
         
@@ -7744,6 +7783,9 @@ class Calendrier(ElementDeSequence, Objet_sequence):
         self.J_absent = []
         
         
+    ######################################################################################  
+    def GetApp(self):
+        return self.parent.GetApp()
         
     
     ######################################################################################  
@@ -7759,7 +7801,13 @@ class Calendrier(ElementDeSequence, Objet_sequence):
     ######################################################################################  
     def setBranche(self, branche):
         self.intitule = branche.get("Intitule", u"")
-    
+
+
+    #############################################################################
+    def MiseAJourTypeEnseignement(self):
+        self.annee = self.parent.annee
+        self.anneefin = self.parent.GetAnneeFin()
+        self.nbr_annees = self.anneefin - self.annee
     
 
 
@@ -7772,7 +7820,8 @@ class Support(ElementDeSequence, Objet_sequence):
     def __init__(self, parent, nom = u""):
         
         self.nom_obj = "Support"
-        self.article_obj = "du"
+        self.article_c_obj = "du"
+        self.article_obj = "le"
         
         self.parent = parent
         ElementDeSequence.__init__(self)
@@ -7960,7 +8009,7 @@ class Personne(Objet_sequence):
         """ Renvoie la branche XML de la compétence pour enregistrement
         """
 #        print "getBranche", supprime_accent(self.titre)
-        root = ET.Element(toSystemEncoding(supprime_accent(self.titre).capitalize()))
+        root = ET.Element(toSystemEncoding(constantes.supprime_accent(self.titre).capitalize()))
         
         root.set("Id", str(self.id))
         root.set("Nom", self.nom)
@@ -8074,12 +8123,24 @@ class Personne(Objet_sequence):
          
         self.SetTip()
         
-        
+    
+    ######################################################################################  
+    def GetAvatar(self):
+        if self.avatar is None:
+            return constantes.AVATAR_DEFAUT
+        else:
+            return self.avatar
+
+
     ######################################################################################  
     def SetTip(self):
         self.tip.SetHTML(self.GetFicheHTML())
-        self.tip.SetWholeText("nom", self.GetNomPrenom())
-        self.tip.AjouterImg("av", self.avatar) 
+        if hasattr(self, 'referent'):
+            bold = self.referent
+        else:
+            bold = True
+        self.tip.SetWholeText("nom", self.GetNomPrenom(), bold = bold, size=5)
+        self.tip.AjouterImg("av", self.GetAvatar()) 
         
         self.SetTip2()
         
@@ -8098,18 +8159,7 @@ class Personne(Objet_sequence):
     
 
 
-######################################################################################  
-def supprime_accent(ligne):
-    """ supprime les accents du texte source """
-    accents = { u'a': [u'à', u'ã', u'á', u'â'],
-                u'e': [u'é', u'è', u'ê', u'ë'],
-                u'i': [u'î', u'ï'],
-                u'u': [u'ù', u'ü', u'û'],
-                u'o': [u'ô', u'ö'] }
-    for (char, accented_chars) in accents.iteritems():
-        for accented_char in accented_chars:
-            ligne = ligne.replace(accented_char, char)
-    return ligne
+
 
 ####################################################################################
 #
@@ -8132,6 +8182,7 @@ class Eleve(Personne, Objet_sequence):
             
     ######################################################################################  
     def GetDuree(self, phase = None, total = False):
+#        print "GetDuree", phase
         d = 0.0
         p = 0
         if not total and phase != None:
@@ -8147,6 +8198,7 @@ class Eleve(Personne, Objet_sequence):
             if not t.phase in TOUTES_REVUES_SOUT:
                 if self.id in t.eleves:
                     d += t.GetDuree()
+#        print "   >>>", d
         return d
 
 
@@ -8822,6 +8874,7 @@ class Eleve(Personne, Objet_sequence):
 #            image = self.image.ConvertToImage().Scale(20, 20).ConvertToBitmap()
         self.branche = arbre.AppendItem(branche, "", data = self, wnd = self.codeBranche,
                                         image = image)
+        self.codeBranche.SetBranche(self.branche)
 #        if hasattr(self, 'tip'):
 #            self.tip.SetBranche(self.branche)
         
@@ -8846,19 +8899,7 @@ class Prof(Personne):
         
     ######################################################################################  
     def GetFicheHTML(self, param = None):
-        return """<HTML>
-        <p style="text-align: center;"><font size="12"><b>Professeur</b></font></p>
-        <p id="nom">NomPrénom</p>
-        <p id="av"></p>
-        <table border="0" width="300">
-        <tbody>
-        <tr id="spe" align="right" valign="top">
-        <td width="110"><span style="text-decoration: underline;">Spécialité :</span></td>
-        </tr>
-        </tbody>
-        </table>
-        </HTML>
-        """
+        return constantes.BASE_FICHE_HTML_PROF
         
         
     ######################################################################################  
@@ -8895,7 +8936,9 @@ class Prof(Personne):
                 coul = couleur.GetCouleurHTML(constantes.COUL_DISCIPLINES[self.discipline])
             else:
                 coul = None
-            self.tip.AjouterCol("spe", constantes.NOM_DISCIPLINES[self.discipline], bcoul = coul)
+            self.tip.SetWholeText("spe", constantes.NOM_DISCIPLINES[self.discipline], fcoul = coul)
+            
+#            self.tip.AjouterCol("spe", constantes.NOM_DISCIPLINES[self.discipline], bcoul = coul)
             self.tip.SetPage()
         
         
@@ -8915,6 +8958,7 @@ class Prof(Personne):
 #            image = self.image.ConvertToImage().Scale(20, 20).ConvertToBitmap()
         self.branche = arbre.AppendItem(branche, "", data = self, wnd = self.codeBranche,
                                         image = image)
+        self.codeBranche.SetBranche(self.branche)
 #        if hasattr(self, 'tip'):
 #            self.tip.SetBranche(self.branche)
         self.SetCode()

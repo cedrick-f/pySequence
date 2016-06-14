@@ -699,7 +699,9 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False, entete = Fal
                     yh_phase[t.phase][1].append(yb)
                 y = yb
                 
-            
+            if y3 == 0 and t == prj.taches[-1]:
+                y3 = y
+
             phase = t.phase
     #    print "    ", time.time() - tps
         #
@@ -764,6 +766,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False, entete = Fal
     #        y4 = y1+2*ecartTacheY + 0.015
     #        y5 = y2+2*ecartTacheY + 0.015
             y5 = y2+len(prj.eleves) * hRevue + 2*ecartTacheY
+#            print y0, y1, y2, y3, y4, y5
             md1 = md2 = md3 = 0
             for i, e in enumerate(prj.eleves):
                 md1 = max(e.GetDuree(phase = "R1"), md1)

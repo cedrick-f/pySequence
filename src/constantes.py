@@ -227,7 +227,10 @@ class Erreur():
         else:
             return ERREURS[self.num]
         
-    
+MOIS = [u'Janvier', u'Février', u'Mars', u'Avril', u'Mai', u'Juin', 
+        u'Juillet', u'Août', u'Septembre', u'Octobre', u'Novembre', u'Décembre']
+JOURS = [u'Lundi', u'Mardi', u'Mercredi', u'Jeudi', u'Vendredi', u'Samedi', u'Dimanche']
+
 ####################################################################################
 #
 #   Quelques fonctions ...
@@ -283,6 +286,19 @@ def ellipsizer(txt, lg):
 
 def lettreCol(num):
     return chr(65+num)
+
+######################################################################################  
+def supprime_accent(ligne):
+    """ supprime les accents du texte source """
+    accents = { u'a': [u'à', u'ã', u'á', u'â'],
+                u'e': [u'é', u'è', u'ê', u'ë'],
+                u'i': [u'î', u'ï'],
+                u'u': [u'ù', u'ü', u'û'],
+                u'o': [u'ô', u'ö'] }
+    for (char, accented_chars) in accents.iteritems():
+        for accented_char in accented_chars:
+            ligne = ligne.replace(accented_char, char)
+    return ligne
 
 ####################################################################################
 #
@@ -382,9 +398,17 @@ imagesCI = [images.CI_1, images.CI_2, images.CI_3, images.CI_4,
             images.CI_9, images.CI_10, images.CI_11, images.CI_12,
             images.CI_13, images.CI_14, images.CI_15, images.CI_16]             
 
+# Avatar
+TAILLE_AVATAR = ()
+def ReSize_avatar(img):
+    w, h = img.GetSize()
+    wf, hf = 200.0, 100.0
+    r = max(w/wf, h/hf)
+    _w, _h = w/r, h/r
+    return img.ConvertToImage().Scale(_w, _h).ConvertToBitmap()
 
-
-
+AVATAR_DEFAUT = ReSize_avatar(images.avatar.GetBitmap())            
+            
 ####################################################################################
 #
 #   Les constantes valables pour tous les enseignements
@@ -641,6 +665,7 @@ MESSAGE_FERMER = {'seq' : u"La séquence a été modifiée.\n\n%s\n\nVoulez vous
                   'prg' : u"La progression a été modifiée.\n\n%s\n\nVoulez vous enregistrer les changements ?"}
 
 
+LONGUEUR_INTITULE_ARBRE = 30
 
 DELTA_DUREE = 5 # Tolérance (+-) pour la durée du projet (en %)
 DELTA_DUREE2 = 15
@@ -665,7 +690,10 @@ DELTA_DUREE2 = 15
 # La liste complète des établissements scolaires en France !!
 import getEtab
 ETABLISSEMENTS = getEtab.ouvrir()
-#print "ETABLISSEMENTS", ETABLISSEMENTS
+
+
+JOURS_FERIES = getEtab.ouvrir_jours_feries()
+print "JOURS_FERIES", JOURS_FERIES
 
 class Discipline():
     def __init__(self, Id, nom, code, coul):
@@ -767,7 +795,7 @@ BASE_FICHE_HTML_ELEVE = u"""
 <HTML>
     <p style="text-align: center;"><font size="12"><b>Elève</b></font></p>
 <p id="nom">Nom-Prénom</p>
-<p id="av"></p>
+<img id="av" src="" alt=" ">
 <table border="0">
 <tbody>
 <tr id = "ld" align="right" valign="middle">
@@ -788,8 +816,8 @@ BASE_FICHE_HTML_ELEVE = u"""
 BASE_FICHE_HTML_SEANCE = u"""
 <HTML>
     <p style="text-align: center;"><font size="12"><b>Séance</b></font></p>
-<p id="int">_</p>
-<p id="typ">_</p>
+    <p id="int">_</p>
+    <p id="typ">_</p>
 
 </HTML>
 """
@@ -797,9 +825,7 @@ BASE_FICHE_HTML_SEANCE = u"""
 BASE_FICHE_HTML_CALENDRIER = u"""
 <HTML>
     <font size="12"><b><h1 id = "titre" style="text-align: center;">Calendrier</h1></b></font>
-<p id="int">_</p>
-<p id="typ">_</p>
-
+    <img id="img" src="" alt=""> 
 </HTML>
 """
 
@@ -909,17 +935,35 @@ BASE_FICHE_HTML_SEQ = u"""
 BASE_FICHE_HTML_PRJ = u"""
 <HTML>
     <p style="text-align: center;"><font size="12"><b>Projet</b></font></p>
-<p id="nom">Intitulé</p>
-<img id="ap" src="" alt=""> 
+    <p id="nom">Intitulé</p>
+    <img id="ap" src=" " alt=" "> 
 </HTML>
 """
+
+BASE_FICHE_HTML_PROF = u"""
+<HTML>
+    <p style="text-align: center;"><font size="12"><b>Professeur</b></font></p>
+    <table border="0" width="300">
+        <tbody>
+        <tr align="right" valign="top">
+            <td width="200"><p id="nom">Nom Prénom</p></td>
+            <td rowspan=2><img id="av" src=" " alt=" "></td>
+        </tr>
+        <tr align="right" valign="top">
+            <td><p id="spe"> </p></td>
+        </tr>
+        </tbody>
+    </table>
+</HTML>
+"""
+
+
 
 BASE_FICHE_HTML_PERIODES = u"""
 <HTML>
     <font size=11><b><h1 id = "titre" style="text-align: center;">_</h1></b></font>
     <p id="txt"> </p>
-    <img id="img" src="" alt=""> 
-    
+    <img id="img" src=" " alt=" "> 
 </HTML>
 """
 
@@ -928,7 +972,7 @@ BASE_FICHE_HTML = u"""
 <HTML>
     <font size="11"><b><h1 id = "titre" style="text-align: center;">_</h1></b></font>
     <p id="txt"> </p>
-    <img id="img" src="" alt=""> 
+    <img id="img" src="" alt="i"> 
 </HTML>
 """
 

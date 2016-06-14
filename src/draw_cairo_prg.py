@@ -44,7 +44,7 @@ import images
 
 from draw_cairo import LargeurTotale, font_family, curve_rect_titre, show_text_rect, \
                         boule, getHoraireTxt, liste_code_texte, rectangle_plein, barreH, tableauV, minFont, maxFont, tableauH, \
-                        DrawPeriodes, COEF, info, Zone, relief, \
+                        DrawPeriodes, DrawCalendrier, COEF, info, Zone, relief, \
                         BcoulPos, IcoulPos, ICoulComp, CoulAltern
 
 from math import log, pi
@@ -465,6 +465,7 @@ def Draw(ctx, prg, mouchard = False):
     show_text_rect(ctx, constantes.ellipsizer(u"", constantes.LONG_MAX_PROBLEMATIQUE), 
                    rectPro, ha = 'g', b = 0.5,
                    fontsizeMinMax = (-1, 0.016 * COEF))
+    DrawCalendrier(ctx, rectPro, prg.calendrier)
 #    prg.rect.append(rectPro)
     prg.zones_sens.append(Zone([rectPro], param = "CAL"))
 
