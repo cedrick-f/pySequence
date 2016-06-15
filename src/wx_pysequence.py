@@ -4849,6 +4849,10 @@ class PanelPropriete_Progression(PanelPropriete):
         if var == self.annee:
             self.projet.annee = var.v[0]
             self.ctrlAnnee.unite.SetLabel(str(self.GetDocument().annee+1)) 
+            
+            modif = u"Modification de l'année scolaire de la Progression"
+            self.sendEvent(modif = modif)
+            
         self.Refresh()
         
         
@@ -9936,7 +9940,7 @@ class ArbreProjet(ArbreDoc):
                         lst.insert(t+1, lst.pop(s))
                     dataTarget.projet.SetOrdresTaches()
                     self.SortChildren(self.GetItemParent(self.item))
-                    self.panelVide.sendEvent(self.projet, modif = u"Changement de position de la Tâche") # Solution pour déclencher un "redessiner"
+                    self.GetApp().sendEvent(self.projet, modif = u"Changement de position de la Tâche") # Solution pour déclencher un "redessiner"
     
                 else:
                     pass
@@ -12314,6 +12318,19 @@ class PopupInfo(wx.PopupWindow):
 
 
     #####################################################################################
+    def AjouterHTML(self, Id, text):
+        """ Ajoute un texte au format HTML
+        """
+        if text is None:
+            return
+        tag = self.soup.find(id=Id)
+        t = BeautifulSoup(text, "html5lib")
+        for c in t.contents:
+            tag.append(c)
+        
+        
+        
+    #####################################################################################
     def SetWholeText(self, Id, text, bcoul = None, fcoul = "black", 
                      bold = False, italic = False, size = 0):
         """ 
@@ -12322,7 +12339,6 @@ class PopupInfo(wx.PopupWindow):
         if text is None:
             return
         tag = self.soup.find(id=Id)
-
         tag.string.replace_with(text)
         if fcoul != None or size != 0:     
             f = self.soup.new_tag("font")
@@ -12330,19 +12346,21 @@ class PopupInfo(wx.PopupWindow):
                 f["color"] = fcoul
             if size != 0:
                 f["size"] = size
+
             tag.string.wrap(f)
         
-        if bold:     
-            tag.string.wrap(self.soup.new_tag("b"))
-        
+        if bold:   
+            tag.wrap(self.soup.new_tag("b"))
+
         if italic:     
-            tag.string.wrap(self.soup.new_tag("i"))
+            tag.wrap(self.soup.new_tag("i"))
+
             
 #        print tag
 
 
     ##########################################################################################
-    def AjouterImg(self, item, bmp):
+    def AjouterImg(self, item, bmp, width = None):
         try:
             bmp.SaveFile(self.tfname, wx.BITMAP_TYPE_PNG)
         except:
@@ -12350,6 +12368,11 @@ class PopupInfo(wx.PopupWindow):
         img = self.soup.find(id = item)
 #        print "img", img
         img['src'] = self.tfname
+        
+        if width is not None:
+            img['width'] = str(width)
+            img['height'] = str(int(width*bmp.GetHeight()/bmp.GetWidth()))
+
 #        img = node.getElementById(item)
 #        if img != None:
 #            td = node.createElement("img")
@@ -12504,6 +12527,7 @@ class PopupInfo(wx.PopupWindow):
         
 #        self.SetClientSize(self.html.GetClientSize())
 #        self.Fit()
+
         if self.mode == "H":
             self.html.SetPage(self.soup.prettify())
             ir = self.html.GetInternalRepresentation()

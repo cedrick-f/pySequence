@@ -182,7 +182,8 @@ class RichTextPanel(wx.Panel):
         out.seek(0)
         handler.LoadStream(buff, out)
         self.rtc.Refresh()
-        
+
+
     def Sauver(self, evt = None):
         if self.rtc.GetValue() == "":
             if hasattr(self.objet, "description"):
@@ -190,18 +191,47 @@ class RichTextPanel(wx.Panel):
             else:
                 self.objet[0]=u""
         else:
-            handler = rt.RichTextXMLHandler()
-            handler.SetFlags(rt.RICHTEXT_HANDLER_SAVE_IMAGES_TO_MEMORY)
-            stream = cStringIO.StringIO()
-            if not handler.SaveStream(self.rtc.GetBuffer(), stream):
+            texte = self.GetXML()
+            if texte is None:
                 return
             if hasattr(self.objet, "description"):
-                self.objet.SetDescription(stream.getvalue())
+                self.objet.SetDescription(texte)
             else:
-                self.objet[0]=stream.getvalue()
+                self.objet[0]=texte
+            
         if evt != None:
             evt.Skip()
+
+
+    def GetHTML(self):
+        # Get an instance of the html file handler, use it to save the
+        # document to a StringIO stream
+        handler = rt.RichTextHTMLHandler()
+        handler.SetFlags(rt.RICHTEXT_HANDLER_SAVE_IMAGES_TO_MEMORY)
+        handler.SetFontSizeMapping([7,9,11,12,14,22,100])
+
+        stream = cStringIO.StringIO()
+        if not handler.SaveStream(self.rtc.GetBuffer(), stream):
+            return
+
+        return stream.getvalue()
+
+
+
+    def GetXML(self):
+        # Get an instance of the html file handler, use it to save the
+        # document to a StringIO stream
+        handler = rt.RichTextXMLHandler()
+        handler.SetFlags(rt.RICHTEXT_HANDLER_SAVE_IMAGES_TO_MEMORY)
         
+        stream = cStringIO.StringIO()
+        if not handler.SaveStream(self.rtc.GetBuffer(), stream):
+            return
+
+        return stream.getvalue()
+
+
+
     def InsertImage(self):
         wildcard= "Fichier image (bmp, gif, jpeg, png, tiff, tga, pnm, pcx, ico, xpm)|(*.bmp; *.gif; *.jpg; *.jpeg; *.png; *.tif; *.tiff; *.tga; *.xpm ; *.ico ; *.pcx ; *.pnm)"
         dlg = wx.FileDialog(self, u"Choisir un fichier image",
@@ -215,7 +245,8 @@ class RichTextPanel(wx.Panel):
                     img = wx.Image(path) 
                     self.rtc.WriteImage(img)#, typesImg[ext])
         dlg.Destroy()
-        
+
+
     def ApplyBoldToSelection(self):
         self.rtc.ApplyBoldToSelection()
         
@@ -560,6 +591,59 @@ class RichTextPanel(wx.Panel):
         
     def OnURL(self, evt):
         self.InsertURL()
+
+
+
+
+try: 
+    from BeautifulSoup import BeautifulSoup
+except ImportError:
+    from bs4 import BeautifulSoup
+
+def XMLtoHTML(texteXML):
+        """ Converti un texte au format RichText (XML)
+            en HTML 
+        """
+        if texteXML is None:
+            return
+        
+        out = cStringIO.StringIO()
+        handler = rt.RichTextXMLHandler()
+        buff = rt.RichTextBuffer()
+        out.write(texteXML)
+        out.seek(0)
+        handler.LoadStream(buff, out)
+    
+        # Get an instance of the html file handler, use it to save the
+        # document to a StringIO stream
+        handler2 = rt.RichTextHTMLHandler()
+        handler2.SetFlags(rt.RICHTEXT_HANDLER_SAVE_IMAGES_TO_MEMORY)
+        handler2.SetFontSizeMapping([7,9,11,12,14,22,100])
+
+        stream = cStringIO.StringIO()
+        if not handler2.SaveStream(buff, stream):
+            return
+        
+        soup = BeautifulSoup(stream.getvalue().decode('utf-8'), "html5lib")
+
+        return soup.html.body.prettify()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #----------------------------------------------------------------------
 _rt_alignleft = PyEmbeddedImage(
     "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAEJJ"

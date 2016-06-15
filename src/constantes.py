@@ -794,21 +794,21 @@ TIP_PB_LIMITE = u"\n(%s caractères maxi)" %str(LONG_MAX_PROBLEMATIQUE)
 BASE_FICHE_HTML_ELEVE = u"""
 <HTML>
     <p style="text-align: center;"><font size="12"><b>Elève</b></font></p>
-<p id="nom">Nom-Prénom</p>
-<img id="av" src="" alt=" ">
-<table border="0">
-<tbody>
-<tr id = "ld" align="right" valign="middle">
-<td width="110"><span style="text-decoration: underline;">Durée d'activité :</span></td>
-</tr>
-
-<tr  id = "le" align="right" valign="middle">
-<td><span style="text-decoration: underline;">Evaluabilité :</span></td>
-<td></td>
-</tr>
-{{tableau}}
-</tbody>
-</table>
+    <p id="nom">Nom-Prénom</p>
+    <img id="av" src="" alt=" ">
+    <table border="0">
+        <tbody>
+            <tr id = "ld" align="right" valign="middle">
+            <td width="110"><span style="text-decoration: underline;">Durée d'activité :</span></td>
+            </tr>
+            
+            <tr  id = "le" align="right" valign="middle">
+            <td><span style="text-decoration: underline;">Evaluabilité :</span></td>
+            <td></td>
+            </tr>
+            {{tableau}}
+        </tbody>
+    </table>
 </HTML>
 """
 
@@ -876,9 +876,9 @@ BASE_FICHE_HTML_SAV = u"""
 BASE_FICHE_HTML_SYSTEME = u"""
 <HTML>
     <p style="color:blue;text-align: center;font-size: 16">Système</p>
-<p id="nom">_</p>
-<p id="nbr">_</p>
-<p id="img">_</p>
+    <p id="nom">_</p>
+    <p id="nbr">_</p>
+    <img id="img">
 
 </HTML>
 """
@@ -887,9 +887,19 @@ BASE_FICHE_HTML_SYSTEME = u"""
 BASE_FICHE_HTML_SUPPORT = u"""
 <HTML>
     <font size="12"><b><h1 style="text-align: center;">Support</h1></b></font>
-<p id="nom"> </p>
-<p id="des"> </p>
-<p id="img"> </p>
+    <p id="nom"> </p>
+    
+    <table border="0" width="500">
+        <tbody>
+        <tr  valign="top">
+            <td align="left" valign="top" width="300"><div id="des"> </div></td>
+            <td alig="right" valign="top"><img id="img" src=" " alt=" "></td>
+        </tr>
+        
+        </tbody>
+    </table>
+    
+    
 
 </HTML>
 """
@@ -908,7 +918,7 @@ BASE_FICHE_HTML_PROJET = u"""
 <HTML>
 <font size="12" color="darkred"><b><h1 id = "titre" style="text-align: center;">Projet</h1></b></font>
 
-<p id="int">_</p>
+    <p id="int">_</p>
 
 </HTML>
 """
@@ -917,9 +927,20 @@ BASE_FICHE_HTML_PROJET = u"""
 BASE_FICHE_HTML_TACHE = u"""
 <HTML>
 <font size="12" color="green"><b><h1 id = "titre" style="text-align: center;">_</h1></b></font>
-
-<p id="txt"> </p>
-<p id="int"> </p>
+    <table border="0" width="400">
+        <tbody>
+        <tr align="right" valign="top">
+            <td><p id="txt"> </p></td>
+            <td width = "20"><img id="icon" src="" alt=" "></td>
+        </tr>
+        <tr align="left" valign="top">
+            <td colspan=2><p id="int"> </p></td>
+        </tr>
+        <tr align="left" valign="top" bgcolor="#f0f0f0">
+            <td colspan=2><p id="des"> </p></td>
+        </tr>
+        </tbody>
+    </table>
 
 </HTML>
 """
@@ -927,8 +948,8 @@ BASE_FICHE_HTML_TACHE = u"""
 BASE_FICHE_HTML_SEQ = u"""
 <HTML>
     <p style="text-align: center;"><font size="12"><b>Séquence</b></font></p>
-<p id="nom">Intitulé</p>
-<img id="ap" src="" alt=""> 
+    <p id="nom">Intitulé</p>
+    <img id="ap" src="" alt=" "> 
 </HTML>
 """
 

@@ -96,6 +96,7 @@ from Referentiel import REFERENTIELS, ARBRE_REF, ACTIVITES
 import Referentiel
 
 
+from richtext import XMLtoHTML
 
 # Pour enregistrer en xml
 import xml.etree.ElementTree as ET
@@ -528,12 +529,11 @@ class Objet_sequence():
     ######################################################################################  
     def SetDescription(self, description):
         if self.description != description:
-            print "SetDescription", self.nom_obj, self
+#            print "SetDescription", self.nom_obj, self
             self.description = description
-            if hasattr(self, 'panelPropriete'):
-                self.GetApp().sendEvent(modif = u" ".join([u"Modification de la description", 
+            self.GetApp().sendEvent(modif = u" ".join([u"Modification de la description", 
                                                                  self.article_c_obj, self.nom_obj]))
-            self.tip.SetRichTexte()
+#            self.tip.SetRichTexte()
 
     ######################################################################################  
     def EnrichiSVG(self, doc, seance = False):
@@ -1302,8 +1302,10 @@ class BaseDoc():
                     self.GetApp().sendEvent(modif = u"Changement de position "+ self.article_c_obj + " " + self.nom_obj,
                                             obj = self)
             
+            elif zone.param == "PB":
+                self.SelectItem(self.branche, depuisFiche = True)
             
-            
+
 
     ######################################################################################  
     def Move(self, zone, x, y):
@@ -7316,7 +7318,8 @@ class Tache(Objet_sequence):
                     code = self.code
                     intitule = self.intitule
                     
-                i = intitule[:constantes.LONGUEUR_INTITULE_ARBRE]
+                i = intitule.replace("\n", " - ")
+                i = i[:constantes.LONGUEUR_INTITULE_ARBRE]
                 if len(intitule) != len(i):
                     i += "..."
                 self.codeBranche.SetLabel(i)
@@ -7341,6 +7344,7 @@ class Tache(Objet_sequence):
         self.branche = arbre.AppendItem(branche, u"Tâche :", wnd = self.codeBranche, 
                                         data = self, image = image)
         self.codeBranche.SetBranche(self.branche)
+        
         if self.phase in TOUTES_REVUES_EVAL:
             arbre.SetItemTextColour(self.branche, "red")
         elif self.phase == "Rev":
@@ -7472,7 +7476,12 @@ class Tache(Objet_sequence):
             texte = t
 
         self.tip.SetWholeText("titre", titre)
-        self.tip.SetWholeText("txt", texte)
+        if self.phase != "":
+            
+            self.tip.AjouterImg("icon", constantes.imagesTaches[self.phase].GetBitmap())
+        else:
+            self.tip.Supprime('icon')
+        self.tip.SetWholeText("txt", texte, italic = True, size = 3)
         
         if not self.phase in TOUTES_REVUES_EVAL_SOUT:
             if self.intitule != "":
@@ -7482,7 +7491,10 @@ class Tache(Objet_sequence):
                     t = textwrap.fill(self.intitule, 50)
             else:
                 t = u""
-            self.tip.SetWholeText("int", t)
+            self.tip.SetWholeText("int", t, size = 4)
+        
+        if hasattr(self, 'description'):
+            self.tip.AjouterHTML("des", XMLtoHTML(self.description))    
         
         self.tip.SetPage()
         
@@ -7958,10 +7970,10 @@ class Support(ElementDeSequence, Objet_sequence):
     def SetTip(self):
         self.tip.SetHTML(self.GetFicheHTML())
         
-        self.tip.SetWholeText("nom", self.nom)
-        self.tip.SetWholeText("des", self.description)       
-        self.tip.AjouterImg("img", self.image) 
-        
+        self.tip.SetWholeText("nom", self.nom, size=5)
+        self.tip.AjouterHTML("des", XMLtoHTML(self.description))       
+        self.tip.AjouterImg("img", self.image, width = 200) 
+        #self.tip.Supprime('img')
         self.tip.SetPage()
     
 
