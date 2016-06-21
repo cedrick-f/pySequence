@@ -936,8 +936,12 @@ BASE_FICHE_HTML_TACHE = u"""
         <tr align="left" valign="top">
             <td colspan=2><p id="int"> </p></td>
         </tr>
-        <tr align="left" valign="top" bgcolor="#f0f0f0">
-            <td colspan=2><p id="des"> </p></td>
+        
+        <tr id = "ldes" align="left" valign="top" bgcolor="#f0f0f0">
+            <td colspan=2>
+                <b>Description détaillée de la tâche"</b>
+                <span id="des"> </span>
+            </td>
         </tr>
         </tbody>
     </table>

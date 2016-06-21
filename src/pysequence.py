@@ -7487,15 +7487,17 @@ class Tache(Objet_sequence):
             if self.intitule != "":
                 if self.estPredeterminee():
                     t = textwrap.fill(self.GetProjetRef().taches[self.intitule][1], 50)
+                    t = self.GetProjetRef().taches[self.intitule][1]
                 else:
-                    t = textwrap.fill(self.intitule, 50)
+                    t = self.intitule
             else:
                 t = u""
-            self.tip.SetWholeText("int", t, size = 4)
+            self.tip.AjouterTxt("int", t, size = 4)
         
         if hasattr(self, 'description'):
             self.tip.AjouterHTML("des", XMLtoHTML(self.description))    
-        
+        else:
+            self.tip.Supprime('ldes')
         self.tip.SetPage()
         
         

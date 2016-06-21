@@ -458,7 +458,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         #############################################################################################
         # Quelques variables ...
         #############################################################################################
-        self.fichierClasse = r""
+        self.fichierClasse = u""
         self.pleinEcran = False
         # Element placé dans le "presse papier"
         self.elementCopie = None
@@ -2667,7 +2667,7 @@ class FenetreProjet(FenetreDocument):
              - demande d'un nom de fichier -
         """
         mesFormats = u"PDF (.pdf)|*.pdf"
-        nomFichier = getNomFichier("Grilles", self.projet.intitule[:20], r".pdf")
+        nomFichier = getNomFichier("Grilles", self.projet.intitule[:20], u".pdf")
         dlg = wx.FileDialog(self, u"Enregistrer les grilles d'évaluation",
                             defaultFile = nomFichier,
                             wildcard = mesFormats,
@@ -2789,7 +2789,7 @@ class FenetreProjet(FenetreDocument):
 #            return nomFichier+".pdf"
         
         mesFormats = u"PDF (.pdf)|*.pdf"
-        nomFichier = getNomFichier("FicheValidation", self.projet.intitule[:20], r".pdf")
+        nomFichier = getNomFichier("FicheValidation", self.projet.intitule[:20], u".pdf")
         dlg = wx.FileDialog(self, u"Enregistrer le dossier de validation",
                             defaultFile = nomFichier,
                             wildcard = mesFormats,
@@ -4028,7 +4028,7 @@ class PanelPropriete_Sequence(PanelPropriete):
     #############################################################################            
     def EvtText(self, event):
         if event.GetEventObject() == self.textctrl:
-            self.sequence.SetText(self.textctr.GetText())
+            self.sequence.SetText(self.textctrl.GetText())
             t = u"Modification de l'intitulé de la Séquence"
         else:
             self.sequence.SetCommentaire(self.commctrl.GetText())
@@ -12268,9 +12268,9 @@ import cStringIO
 import  wx.html as  html
 import wx.html2 as webview
 try: 
-    from BeautifulSoup import BeautifulSoup
+    from BeautifulSoup import BeautifulSoup, NavigableString
 except ImportError:
-    from bs4 import BeautifulSoup
+    from bs4 import BeautifulSoup, NavigableString
 import copy
 
 class PopupInfo(wx.PopupWindow):
@@ -12307,7 +12307,7 @@ class PopupInfo(wx.PopupWindow):
 
     #####################################################################################
     def SetHTML(self, ficheHTML):
-        self.soup = BeautifulSoup(ficheHTML.decode('utf-8'), "html5lib")
+        self.soup = BeautifulSoup(ficheHTML, "html5lib")#.decode('utf-8')
 #.encode('utf-8', errors="ignore"), from_encoding="utf-8"
 
 
@@ -12321,6 +12321,7 @@ class PopupInfo(wx.PopupWindow):
     def AjouterHTML(self, Id, text):
         """ Ajoute un texte au format HTML
         """
+        print "AjouterHTML", text
         if text is None:
             return
         tag = self.soup.find(id=Id)
@@ -12350,12 +12351,47 @@ class PopupInfo(wx.PopupWindow):
             tag.string.wrap(f)
         
         if bold:   
-            tag.wrap(self.soup.new_tag("b"))
+            tag.string.wrap(self.soup.new_tag("b"))
 
         if italic:     
-            tag.wrap(self.soup.new_tag("i"))
+            tag.string.wrap(self.soup.new_tag("i"))
 
             
+#        print tag
+
+    
+    ##########################################################################################
+    def AjouterTxt(self, Id, texte, bcoul = None, fcoul = "black", 
+                     bold = False, italic = False, size = 0):
+#        print "AjouterTxt", texte
+        tag = self.soup.find(id = Id)
+        
+        if fcoul != None or size != 0:     
+            f = self.soup.new_tag("font")
+            if fcoul != None:
+                f["color"] = fcoul
+            if size != 0:
+                f["size"] = size
+
+            tag.append(f)
+            tag = f
+            
+        if bold:   
+            b = self.soup.new_tag("b")
+            tag.append(b)
+            tag = b
+
+        if italic:     
+            i = self.soup.new_tag("i")
+            tag.append(i)
+            tag = i
+            
+        lignes = texte.split("\n")
+        for i, l in enumerate(lignes):
+            if i > 0:
+                br = self.soup.new_tag('br')
+                tag.append(br)
+            tag.append(NavigableString(l))
 #        print tag
 
 
@@ -12650,7 +12686,7 @@ class Panel_BO(wx.Panel):
             path = os.path.join(util_path.BO_PATH, toFileEncoding(d))
             for root, dirs, files in os.walk(path):
                 for f in files:
-                    if os.path.splitext(f)[1] == r".pdf":
+                    if os.path.splitext(f)[1] == u".pdf":
                         lst_pdf.append(os.path.join(root, f))
             
       

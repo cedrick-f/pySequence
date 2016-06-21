@@ -47,7 +47,7 @@ Element = type(ET.Element(None))
 
 import util_path
 #########################################################################################
-DOSSIER_REF = os.path.join(util_path.PATH, r"..", r"referentiels")
+DOSSIER_REF = os.path.join(util_path.PATH, u"..", u"referentiels")
 REFERENTIELS = {}
 ARBRE_REF = {}
 
@@ -496,14 +496,14 @@ class XMLelem():
 #################################################################################################################################
 class Referentiel(XMLelem):
     
-    def __init__(self, nomFichier = r""):
+    def __init__(self, nomFichier = u""):
         # Enseignement       Famille,    Nom    , Nom complet
         
         self._codeXML = "Referentiel"
         self.initParam()
         self._bmp = None
         
-        if nomFichier != r"":
+        if nomFichier != u"":
             self.importer(nomFichier)
 
     ######################################################################################  
@@ -542,7 +542,7 @@ class Referentiel(XMLelem):
         self.AnneeDebut = ""            # Position de l'enseignement dans la scolarité (PERIODE+Année)
         
         self.periodes = []              # découpage de l'enseignement en années/périodes
-        self.FichierLogo = r""          # Fichier désignant l'image du Logo de l'enseignement
+        self.FichierLogo = u""          # Fichier désignant l'image du Logo de l'enseignement
         
         
         #
@@ -1633,7 +1633,7 @@ class Referentiel(XMLelem):
                 self._bmp = constantes.images.ImageEE.GetBitmap()
             elif self.Code == "SSI":
                 self._bmp = constantes.images.SSI_ASR.GetBitmap()
-            elif self.FichierLogo != r"":
+            elif self.FichierLogo != u"":
                 self._bmp = wx.Bitmap(os.path.join(DOSSIER_REF, util_path.toFileEncoding(self.FichierLogo)))
 #                try:
 #                    self._bmp = wx.Bitmap(os.path.join(constantes.PATH, r"..", DOSSIER_REF, self.FichierLogo))
@@ -1738,7 +1738,7 @@ class Projet(XMLelem):
         #
         # Généralités sur le projet
         #
-        self.ficheValid = r""
+        self.ficheValid = u""
         self.attributs = {}
         
         
@@ -2438,7 +2438,8 @@ def chargerReferentiels():
     if not SAUVEGARDE:
         dicOk = {}
         for k, r in REFERENTIELS.items():
-            f = os.path.join(DOSSIER_REF, util_path.toFileEncoding(r"Ref_"+r.Enseignement[0]+r".xml"))
+            print DOSSIER_REF
+            f = os.path.join(DOSSIER_REF, util_path.toFileEncoding(u"Ref_"+r.Enseignement[0]+u".xml"))
             dicOk[k] = False
             if os.path.exists(f):
 #                print ">>",f

@@ -40,14 +40,20 @@ if hasattr(sys, 'setdefaultencoding'):
 else:
     reload(sys)  # Reload does the trick!
     sys.setdefaultencoding('utf-8')
-    
+
+FILE_ENCODING = sys.getfilesystemencoding() 
+SYSTEM_ENCODING = sys.getdefaultencoding()#sys.stdout.encoding#
+# sys.getfilesystemencoding = lambda: 'UTF-8'
+print "FILE_ENCODING", FILE_ENCODING
+print "SYSTEM_ENCODING", SYSTEM_ENCODING
+
 
 #
 # Les deuxlignes suivantes permettent de lancer le script .py depuis n'importe
 # quel répertoire  sans que l'utilisation de chemins
 # relatifs ne soit perturbée
 #
-PATH = os.path.dirname(os.path.abspath(sys.argv[0]))
+PATH = os.path.dirname(os.path.abspath(sys.argv[0])).decode(FILE_ENCODING)
 #PATH = os.path.split(PATH)[0]
 os.chdir(PATH)
 sys.path.append(PATH)
@@ -147,22 +153,13 @@ def samefile(path1, path2):
 #print "defaultencoding", sys.getdefaultencoding()
 #print "stdin, stdout", sys.stdin.encoding,sys.stdout.encoding
 
-if hasattr(sys, 'setdefaultencoding'):
-    sys.setdefaultencoding('utf8')
-else:
-    reload(sys)  # Reload does the trick!
-    sys.setdefaultencoding('utf-8')
-
-FILE_ENCODING = sys.getfilesystemencoding() 
-SYSTEM_ENCODING = sys.getdefaultencoding()#sys.stdout.encoding#
-print "FILE_ENCODING", FILE_ENCODING
-print "SYSTEM_ENCODING", SYSTEM_ENCODING
   
 ######################################################################################  
 def toSystemEncoding(path): 
-    return path
+    
 #        try:
     path = path.decode(FILE_ENCODING)
+    return path
     path = path.encode(SYSTEM_ENCODING)
     return path  
 #        except:
