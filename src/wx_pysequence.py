@@ -12321,7 +12321,7 @@ class PopupInfo(wx.PopupWindow):
     def AjouterHTML(self, Id, text):
         """ Ajoute un texte au format HTML
         """
-        print "AjouterHTML", text
+#         print "AjouterHTML", text
         if text is None:
             return
         tag = self.soup.find(id=Id)

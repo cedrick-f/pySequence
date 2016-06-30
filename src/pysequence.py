@@ -1107,12 +1107,17 @@ class Classe(Objet_sequence):
     ######################################################################################  
     def GetVersion(self):
         if hasattr(self, 'version'):
-            return self.version
+            v = self.version
         elif hasattr(self, 'doc'):
-            return self.doc.version
+            v = self.doc.version
+        if v == '':
+            return version.__version__
+        else:
+            return v
         
     ######################################################################################  
     def GetVersionNum(self):
+#         print "GetVersionNum", self.GetVersion()
         return int(self.GetVersion().split(".")[0].split("beta")[0])
     
     
@@ -3086,9 +3091,13 @@ class Projet(BaseDoc, Objet_sequence):
         """ Colle la tâche présente dans le presse-papier (branche <btache>)
             après la tâche désignée par l'item d'arbre <item>
         """
-        tache_avant = self.arbre.GetItemPyData(item)
-        if not isinstance(tache_avant, Tache):
-            return
+        print "CollerElem"
+        if self.arbre.GetItemText(item) == Titres[8]: # racine des Taches
+            tache_avant = 0
+        else:
+            tache_avant = self.arbre.GetItemPyData(item)
+            if not isinstance(tache_avant, Tache):
+                return
         
         if btache == None:
             btache = GetObjectFromClipBoard("Tache")
@@ -3096,21 +3105,39 @@ class Projet(BaseDoc, Objet_sequence):
                 return
         
         phase = btache.get("Phase", "")
-        if tache_avant.phase != phase and tache_avant.GetSuivante().phase != phase : # la phase est la même
+        if tache_avant != 0 and tache_avant.phase != phase and tache_avant.GetPhaseSuivante() != phase : # la phase est la même
             return
-#
-#         or tache_avant.phase != btache.get("Phase", ""): # la phase est la même
-#            return
         
         tache = Tache(self, phaseTache = "", branche = btache)
         
-        tache.ordre = tache_avant.ordre+1
-        for t in self.taches[tache_avant.ordre:]:
-            t.ordre += 1
-        self.taches.insert(tache_avant.ordre, tache)
+        if tache_avant != 0: 
+            t = tache_avant.GetTachePrecedente()
+            if t is not None:
+                ordre = t.ordre
+            else:
+                ordre = 0
+        else:
+            ordre = 0
+        tache.ordre = ordre+1
+        
+        # On enlève les élèves en trop
+        i = 0
+        while i < len(tache.eleves):
+            e = tache.eleves[i]
+            if e >= len(self.eleves):
+                del tache.eleves[i]
+            else:
+                i += 1
+        
+#         for t in self.taches[ordre:]:
+#             t.ordre += 1
+        self.taches.insert(ordre, tache)
+        
+        self.OrdonnerTaches()
+        
 #        self.taches.sort(key=attrgetter('ordre'))
-        for t in self.taches[tache_avant.ordre:]:
-            t.SetCode()
+#         for t in self.taches[ordre:]:
+#             t.SetCode()
 
             
         tache.ConstruireArbre(self.arbre, self.brancheTac)
@@ -3121,6 +3148,7 @@ class Projet(BaseDoc, Objet_sequence):
         self.GetApp().sendEvent(modif = u"Collé d'un élément")
         self.arbre.SelectItem(tache.branche)
             
+        print "   >", self.taches
         self.Verrouiller()
 #        print "Tache", tache, u"collée"
         
@@ -3436,8 +3464,18 @@ class Projet(BaseDoc, Objet_sequence):
             self.app.AfficherMenuContextuel([[u"Ajouter un élève", self.AjouterEleve, images.Icone_ajout_eleve.GetBitmap()]])
             
         elif self.arbre.GetItemText(itemArbre) == Titres[8]: # Tache
-            self.app.AfficherMenuContextuel([[u"Ajouter une tâche", self.AjouterTache, images.Icone_ajout_tache.GetBitmap()]])
-         
+            listItems = [[u"Ajouter une tâche", self.AjouterTache, images.Icone_ajout_tache.GetBitmap()]]
+            elementCopie = GetObjectFromClipBoard('Tache')
+            if elementCopie is not None:
+                phase = elementCopie.get("Phase", "")
+                if phase == self.GetListePhases()[0]: # C'est bien une tâche de la première phase
+#                 if self.phase == phase or self.GetPhaseSuivante() == phase : # la phase est la même
+                    listItems.append([u"Coller après", functools.partial(self.CollerElem, 
+                                                                         item = itemArbre, 
+                                                                         btache = elementCopie),
+                                      getIconePaste()])
+            self.app.AfficherMenuContextuel(listItems)
+            
         elif self.arbre.GetItemText(itemArbre) == Titres[10]: # Eleve
             self.app.AfficherMenuContextuel([[u"Ajouter un professeur", self.AjouterProf, images.Icone_ajout_prof.GetBitmap()]])
                                              
@@ -7413,10 +7451,36 @@ class Tache(Objet_sequence):
         return self.GetDocument().classe
     
     ######################################################################################  
-    def GetSuivante(self):
-        i = self.projet.taches.index(self)
-        if len(self.projet.taches) > i:
-            return self.projet.taches[i+1]
+    def GetPhaseSuivante(self):
+        """ Renvoie la phase de la tâche juste suivante
+        """
+#         print "GetPhaseSuivante", self.projet.taches
+        
+        if self.phase in TOUTES_REVUES:   # On est sur une revue
+            lstPhases = self.projet.GetListePhases()
+            i = lstPhases.index(self.phase)
+            return lstPhases[i+1]
+        
+        else:
+            i = self.projet.taches.index(self)
+            if len(self.projet.taches) > i+1:   # On est sur une tâche
+                return self.projet.taches[i+1].phase
+
+
+    ######################################################################################  
+    def GetTachePrecedente(self):
+        """ Renvoie la tâche (pas revue) juste précédente
+            "self" si self est déja une tâche
+        """
+        t = self
+        while t.phase in TOUTES_REVUES:
+            i = self.projet.taches.index(t)
+            if i > 0:
+                t = self.projet.taches[i-1]
+            else:
+                return
+        return t
+            
     
     ######################################################################################  
     def AfficherMenuContextuel(self, itemArbre):
@@ -7430,16 +7494,16 @@ class Tache(Objet_sequence):
             listItems.append([u"Insérer une revue après", 
                               functools.partial(self.projet.InsererRevue, item = itemArbre), 
                               images.Icone_ajout_revue.GetBitmap()])
-#            listItems.append([u"Copier", functools.partial(self.projet.CopierTache, item = itemArbre)])
-            listItems.append([u"Copier", 
-                              self.CopyToClipBoard, 
-                              getIconeCopy()])
+
+            if self.phase not in TOUTES_REVUES_EVAL_SOUT:
+                listItems.append([u"Copier", 
+                                  self.CopyToClipBoard, 
+                                  getIconeCopy()])
  
-#            elementCopie = self.GetApp().parent.elementCopie
             elementCopie = GetObjectFromClipBoard('Tache')
             if elementCopie is not None:
                 phase = elementCopie.get("Phase", "")
-                if self.phase == phase or self.GetSuivante().phase == phase : # la phase est la même
+                if self.phase == phase or self.GetPhaseSuivante() == phase : # la phase est la même
                     listItems.append([u"Coller après", functools.partial(self.projet.CollerElem, 
                                                                          item = itemArbre, 
                                                                          btache = elementCopie),
