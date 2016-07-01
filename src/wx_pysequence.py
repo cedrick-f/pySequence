@@ -43,21 +43,23 @@ Copyright (C) 2011-2015
 #   Imports minimum et SplashScreen
 #
 ####################################################################################
-#Outils système
+# Outils système
 import os, sys
 print sys.version_info
-#import rsvg
-#sys.path.append('C:\\Python27\\lib\\site-packages\\gtk-2.0')
-#print sys.path
-if sys.platform != "win32":
-    import wxversion
+
+# à décommenter pour forcer l'utilisation de wxpython 2.8 (ubuntu 14)
+# if sys.platform != "win32":
+#     import wxversion
 #    wxversion.select('2.8')
+
 import wx
 import  wx.gizmos   as  gizmos
 import version
+
 # Module de gestion des dossiers, de l'installation et de l'enregistrement
-import util_path
+
 from util_path import toFileEncoding, toSystemEncoding, FILE_ENCODING, SYSTEM_ENCODING, nomCourt
+import util_path
 
 # Module de gestion des instances d'application
 import app
@@ -469,7 +471,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         #############################################################################################
         self.CreateMenuBar()
         
-        # !!! cette ligne pose probléme à la fermeture : mystére
+        # !!! cette ligne pose probléme à la fermeture : mystère
         self.renommerWindow()
         
         self.Bind(wx.EVT_MENU, self.commandeNouveau, id=10)
@@ -772,7 +774,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         self.supprimerOutils()
 
         d = 8 # Position à changer selon le nombre d'outils "communs"
-        for i, tool in self.tools[typ].items():
+        for tool in self.tools[typ].values():
             self.tb.InsertToolItem(d,tool)
             d += 1
         
@@ -2009,7 +2011,7 @@ class FenetreSequence(FenetreDocument):
         """
         
         self.sequence.MiseAJourTypeEnseignement()
-        t0 = time.time()
+#         t0 = time.time()
         
         #
         # Réinitialisation de l'arbre
@@ -2367,7 +2369,7 @@ class FenetreProjet(FenetreDocument):
                     fct(*arg, **karg)
                     message += u"Ok\n"
                 except:
-                    Ok = False
+#                     Ok = False
                     message += constantes.Erreur(constantes.ERR_INCONNUE).getMessage() + u"\n"
                     
         self.projet.Verrouiller()
@@ -4019,7 +4021,7 @@ class PanelPropriete_Sequence(PanelPropriete):
 
     #############################################################################            
     def EvtCheckBox(self, event):
-        cb = event.GetEventObject()
+#         cb = event.GetEventObject()
         self.sequence.domaine = "".join([t for cb, t in [(self.cbM, "M"), (self.cbE, "E"), (self.cbI, "I")] if cb.IsChecked()])
 
         self.sendEvent(modif = u"Modification du domaine de la séquence")
@@ -4292,57 +4294,57 @@ class PanelPropriete_Projet(PanelPropriete):
             self.projet.SetText(nt)
             self.textctrl.ChangeValue(nt)
             maj = True
-            obj = 'intit'
+#             obj = 'intit'
             
         elif 'ORI' in self.pages.keys() and event.GetEventObject() == self.pages['ORI'][1]:
             self.projet.origine = self.pages['ORI'][1].GetText()
             maj = False
-            obj = 'ORI'
+#             obj = 'ORI'
             
         elif 'CCF' in self.pages.keys() and event.GetEventObject() == self.pages['CCF'][1]:
             self.projet.contraintes = self.pages['CCF'][1].GetText()
             maj = False
-            obj = 'CCF'
+#             obj = 'CCF'
             
         elif 'OBJ' in self.pages.keys() and event.GetEventObject() == self.pages['OBJ'][1]:
             self.projet.production = self.pages['OBJ'][1].GetText()
             maj = False
-            obj = 'OBJ'
+#             obj = 'OBJ'
             
         elif 'SYN' in self.pages.keys() and event.GetEventObject() == self.pages['SYN'][1]:
             self.projet.synoptique = self.pages['SYN'][1].GetText()
             maj = False
-            obj = 'SYN'
+#             obj = 'SYN'
         
         elif hasattr(self, 'intctrl') and event.GetEventObject() == self.intctrl:
             self.projet.intituleParties = self.intctrl.GetText()
             maj = False
-            obj = 'intctrl'
+#             obj = 'intctrl'
         
         elif hasattr(self, 'enonctrl') and event.GetEventObject() == self.enonctrl:
             self.projet.besoinParties = self.enonctrl.GetText()
             maj = False
-            obj = 'enonctrl'
+#             obj = 'enonctrl'
             
         elif event.GetEventObject() == self.commctrl:
             self.projet.SetProblematique(self.commctrl.GetText())
             maj = True
-            obj = 'commctrl'
+#             obj = 'commctrl'
             
         elif 'PAR' in self.parctrl.keys() and event.GetEventObject() == self.parctrl['PAR']:
             self.projet.partenariat = self.parctrl['PAR'].GetText()
             maj = False
-            obj = 'PAR'
+#             obj = 'PAR'
             
         elif 'PRX' in self.parctrl.keys() and event.GetEventObject() == self.parctrl['PRX']:
             self.projet.montant = self.parctrl['PRX'].GetText()
             maj = False
-            obj = 'PRX'
+#             obj = 'PRX'
             
         elif 'SRC' in self.parctrl.keys() and event.GetEventObject() == self.parctrl['SRC']:
             self.projet.src_finance = self.parctrl['SRC'].GetText()
             maj = False
-            obj = 'SRC'
+#             obj = 'SRC'
         
 #        else:
 #            maj = False
@@ -4597,7 +4599,7 @@ class PositionCtrl(wx.Panel):
         
 #        print "periodes_prj", periodes_prj
         num = 1
-        for i, (an, np) in enumerate(periodes):
+        for an, np in periodes:
             p = 1
             while p <= np:
                 if num == 0:
@@ -4827,7 +4829,7 @@ class PanelPropriete_Progression(PanelPropriete):
             self.GetDocument().SetText(nt)
             self.textctrl.ChangeValue(nt)
             maj = True
-            obj = 'intit'
+#             obj = 'intit'
         
 
         modif = u"Modification des propriétés de la progression"
@@ -5487,8 +5489,8 @@ class PanelPropriete_Classe(PanelPropriete):
         
         
 #        fam = self.classe.familleEnseignement
-        ancienRef = self.classe.referentiel
-        ancienneFam = self.classe.familleEnseignement
+#         ancienRef = self.classe.referentiel
+#         ancienneFam = self.classe.familleEnseignement
         self.classe.typeEnseignement, self.classe.familleEnseignement = CodeFam
         self.classe.referentiel = REFERENTIELS[self.classe.typeEnseignement]
         
@@ -6584,12 +6586,14 @@ class PanelPropriete_LienSequence(PanelPropriete):
     
 #        try:
         if os.path.isfile(self.lien.path):
-            fichier = open(self.lien.path,'r')
+#             fichier = open(self.lien.path,'r')
+            pass
             
         else:
             abspath = os.path.join(self.GetDocument().GetPath(), self.lien.path)
             if os.path.isfile(abspath):
-                fichier = open(abspath,'r')
+#                 fichier = open(abspath,'r')
+                pass
             else:
                 self.texte.SetBackgroundColour("pink")
                 self.texte.SetToolTipString(u"Le fichier Séquence est introuvable !")
@@ -6813,12 +6817,14 @@ class PanelPropriete_LienProjet(PanelPropriete):
         self.texte.SetValue(toSystemEncoding(self.lien.path))
 
         if os.path.isfile(self.lien.path):
-            fichier = open(self.lien.path,'r')
+#             fichier = open(self.lien.path,'r')
+            pass
             
         else:
             abspath = os.path.join(self.GetDocument().GetPath(), self.lien.path)
             if os.path.isfile(abspath):
-                fichier = open(abspath,'r')
+#                 fichier = open(abspath,'r')
+                pass
             else:
                 self.texte.SetBackgroundColour("pink")
                 self.texte.SetToolTipString(u"Le fichier Projet est introuvable !")
@@ -7879,19 +7885,48 @@ class PanelPropriete_Tache(PanelPropriete):
             pageGen.Bind(EVT_VAR_CTRL, self.EvtText, vcDuree)
             self.vcDuree = vcDuree
             pageGen.sizer.Add(vcDuree, (2,0), (1, 2), flag = wx.EXPAND|wx.ALL, border = 2)
-        
-        
+
+
         #
-        # Eléves impliqués
+        # Icones
         #
         if not tache.phase in TOUTES_REVUES_EVAL_SOUT:
-            self.box = myStaticBox(pageGen, -1, u"Eléves impliqués")
+            ib = myStaticBox(pageGen, -1, u"Icônes")
+            ibsizer = wx.StaticBoxSizer(ib, wx.VERTICAL)
+            ims = wx.WrapSizer()
+            
+#             ims.SetSize((100,-1))
+            self.icones = []
+            for i, (nom, img) in enumerate(constantes.ICONES_TACHES.items()):
+                ico = img.ConvertToImage().Scale(20, 20).ConvertToBitmap()
+                btn = wx.BitmapButton(pageGen, 100+i, ico)
+                btn.SetToolTipString(nom)
+                self.icones.append(nom)
+                ims.Add(btn, flag = wx.ALL, border = 2)
+                btn.Refresh()
+                self.Bind(wx.EVT_BUTTON, self.OnIconeClick, btn)
+            
+            ibsizer.Add(ims)
+            
+            self.btn_no_icon = wx.Button(pageGen, -1, u"Aucune")
+            ibsizer.Add(self.btn_no_icon)
+            self.Bind(wx.EVT_BUTTON, self.OnIconeClick, self.btn_no_icon)
+            
+            pageGen.sizer.Add(ibsizer, (0,2), (4, 1), 
+                              flag = wx.EXPAND|wx.LEFT|wx.RIGHT, border = 4)
+            pageGen.sizer.AddGrowableCol(2)
+
+        #
+        # Elèves impliqués
+        #
+        if not tache.phase in TOUTES_REVUES_EVAL_SOUT:
+            self.box = myStaticBox(pageGen, -1, u"Elèves impliqués")
 #            self.box.SetMinSize((150,-1))
             self.bsizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
             self.elevesCtrl = []
             self.ConstruireListeEleves()
-            pageGen.sizer.Add(self.bsizer, (0,2), (4, 1), flag = wx.EXPAND|wx.LEFT|wx.RIGHT, border = 4)
-        
+            pageGen.sizer.Add(self.bsizer, (0,3), (4, 1), flag = wx.EXPAND|wx.LEFT|wx.RIGHT, border = 4)
+            pageGen.sizer.AddGrowableCol(3)
         
         
         
@@ -7919,8 +7954,8 @@ class PanelPropriete_Tache(PanelPropriete):
             pageGen.sizer.Add(dbsizer, (1,0), (3, 2), flag = wx.EXPAND)
             pageGen.sizer.AddGrowableCol(0)
         else:
-            pageGen.sizer.Add(dbsizer, (0,3), (4, 1), flag = wx.EXPAND)
-            pageGen.sizer.AddGrowableCol(3)
+            pageGen.sizer.Add(dbsizer, (0,4), (4, 1), flag = wx.EXPAND)
+            pageGen.sizer.AddGrowableCol(4)
         self.rtc = tc
         # Pour indiquer qu'une édition est déja en cours ...
         self.edition = False  
@@ -8299,9 +8334,15 @@ class PanelPropriete_Tache(PanelPropriete):
 #        self.sendEvent(modif = u"Modification ")
 #        
         
-    
+    #############################################################################            
+    def OnIconeClick(self, event):
+        if event.GetId() == self.btn_no_icon.GetId():
+            self.tache.icone = None
+        else:
+            self.tache.icone = constantes.ICONES_TACHES[self.icones[event.GetId()-100]]
+        self.sendEvent(modif = u"Modification de l'icône de la tâche") 
 
-        
+
     #############################################################################            
     def EvtCheckEleve(self, event):
         lst = []
@@ -10608,7 +10649,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
         tache = self.GetTache()
         prj = tache.GetProjetRef()
         
-        for i, part in enumerate(prj.parties.keys()):
+        for i in range(len(prj.parties.keys())):
             self.AddColumn(u"")
             self.SetColumnWidth(i+1, 0)
         
@@ -10649,6 +10690,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
         self.ConstruireCasesEleve()
         self.ExpandAll()
         self.OnSize2()
+
 
     ####################################################################################
     def Construire(self, branche = None, dic = None):
@@ -11097,7 +11139,7 @@ class ArbreCompetencesPopup(CT.CustomTreeCtrl):
         def ajouteIndic(branche, listIndic, listIndicUtil):
             for i, indic in enumerate(listIndic):
                 b = self.AppendItem(branche, textwrap.fill(indic.intitule, 50))
-                for j, part in enumerate(prj.parties.keys()):
+                for part in prj.parties.keys():
                     if part in indic.poids.keys():
 #                for j, p in enumerate(indic.poids[1:]):
 #                    if p != 0:
@@ -11368,7 +11410,7 @@ class ArbreTypeEnseignement(CT.CustomTreeCtrl):
     ######################################################################################              
     def CollapseAll(self):
 #        print "CollapseAll"
-        (child, cookie) = self.GetFirstChild(self.root)
+        child = self.GetFirstChild(self.root)[0]
         while child:
             self.Collapse(child)
 #            self.CalculatePositions()
@@ -11545,7 +11587,7 @@ class TreeCtrlComboBook(wx.Panel):
     
     def OnSize(self, evt):
         self.texte.SetSize(self.GetSize())
-        w, h = self.GetSize()
+        w = self.GetSize()[0]
         x, y = self.GetPositionTuple()
         self.Bouton.Move((x+w-10, y-20))
         self.Refresh()
@@ -11698,7 +11740,7 @@ class TreeCtrlComboPopup(wx.PopupTransientWindow):
         else:
             margin = 30
             
-        w, h = self.tree.GetSize()
+        w = self.tree.GetSize()[0]
         item, cookie = self.tree.GetFirstChild(parentItem)
         while item:
             text = self.tree.GetItemText(item).replace(u"\n", u"")
@@ -12526,7 +12568,7 @@ class PopupInfo(wx.PopupWindow):
                 ul.append(li)
                 ul['type']="circle"
                     
-                for j, part in enumerate(prj.parties.keys()):
+                for part in prj.parties.keys():
                     if part in indic.poids.keys():
                         if listIndicUtil == None or not listIndicUtil[i]:
                             c = COUL_ABS
@@ -12774,7 +12816,7 @@ class SlimSelector(wx.ComboBox):
     def SlimResize(self):
         choices = self.GetStrings()
         if choices:
-            width, height = self.GetSize()
+            height = self.GetSize()[1]
             dc = wx.ClientDC (self)
             tsize = max ( (dc.GetTextExtent (c)[0] for c in choices) )
             self.SetMinSize ( (tsize+25, height) )     

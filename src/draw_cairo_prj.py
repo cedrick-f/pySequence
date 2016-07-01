@@ -992,6 +992,30 @@ def DrawTacheRacine(ctx, tache, y):
 #    DrawCroisementsCompetencesTaches(ctx, tache, y + h/2)
     
     
+    #
+    # Icone de la tâche
+    #
+    bmp = tache.icone
+    if bmp != None:
+        ctx.save()
+        tfname = tempfile.mktemp()
+        try:
+            bmp.SaveFile(tfname, wx.BITMAP_TYPE_PNG)
+            image = cairo.ImageSurface.create_from_png(tfname)
+        finally:
+            if os.path.exists(tfname):
+                os.remove(tfname)  
+                
+        wi = image.get_width()*1.1
+        hi = image.get_height()*1.1
+        
+        d = min(hTacheMini * 3, h)
+        s = min(d/wi, d/hi)
+        ctx.translate(x+w-d, y)
+        ctx.scale(s, s)
+        ctx.set_source_surface(image, 0, 0)
+        ctx.paint()
+        ctx.restore()
     
     y += h
     return y

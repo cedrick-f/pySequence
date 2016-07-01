@@ -158,7 +158,7 @@ def samefile(path1, path2):
 def toSystemEncoding(path): 
     
 #        try:
-    path = path.decode(FILE_ENCODING)
+#     path = path.decode(FILE_ENCODING)
     return path
     path = path.encode(SYSTEM_ENCODING)
     return path  
@@ -194,7 +194,7 @@ TABLE_PATH = os.path.join(os.path.abspath(os.path.join(PATH, os.pardir)), r'tabl
 #print u"Dossier des tableaux Excel :", TABLE_PATH
 
 BO_PATH = os.path.join(os.path.abspath(os.path.join(PATH, os.pardir)), r'BO')
-
+DOSSIER_ICONES = os.path.join(os.path.abspath(os.path.join(PATH, os.pardir)), r'icones')
 #HTML_PATH = os.path.join(os.path.abspath(os.path.join(PATH, os.pardir)), r'html')
 
 

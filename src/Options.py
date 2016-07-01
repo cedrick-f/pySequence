@@ -161,14 +161,18 @@ class Options:
         """
         print "Ouverture Options:", self.fichierOpt
         config = ConfigParser.ConfigParser()
-        try :
-            with io.open(self.fichierOpt, 'r', encoding=encoding) as fp:
-                config.readfp(fp)
-        except:
-#            print "  err"
-            with io.open(self.fichierOpt, 'r', encoding='utf_8_sig') as fp:
-                config.readfp(fp)
-        config.read(self.fichierOpt)
+        
+        with io.open(self.fichierOpt, 'r', encoding=encoding) as fp:
+            config.readfp(fp)
+            
+#         try :
+#             with io.open(self.fichierOpt, 'r', encoding=encoding) as fp:
+#                 config.readfp(fp)
+#         except:
+# #            print "  err"
+#             with io.open(self.fichierOpt, 'r', encoding='utf_8_sig') as fp:
+#                 config.readfp(fp)
+#         config.read(self.fichierOpt)
         
         
         

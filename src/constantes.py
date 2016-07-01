@@ -39,78 +39,9 @@ import images
 
 import time
 
-import sys
+import sys, os
 
-
-
-
-
-#print sys.argv
-#PATH = os.path.dirname(os.path.abspath(sys.argv[0]))
-##PATH = os.path.split(PATH)[0]
-#os.chdir(PATH)
-#sys.path.append(PATH)
-#print u"Dossier de l'application :",PATH
-#
-#
-## 
-## On récupère là le dossier "Application data" 
-## où devra être enregistré le fichier .cfg de pySequence
-##
-#
-## On récupère le répertoire d'installation de pySequence
-#try:
-#    import _winreg
-#    regkey = _winreg.OpenKey( _winreg.HKEY_CLASSES_ROOT, 'pySequence.sequence\\DefaultIcon',0, _winreg.KEY_READ)
-#    (value,keytype) = _winreg.QueryValueEx(regkey , '') 
-#    INSTALL_PATH = os.path.dirname(value.encode(FILE_ENCODING))
-#except:
-#    INSTALL_PATH = '' # Pas installé sur cet ordi
-#    
-#
-#PORTABLE = not(os.path.abspath(INSTALL_PATH) == os.path.abspath(PATH))
-
-
-#TABLE_PATH = os.path.join(os.path.abspath(os.path.join(PATH, os.pardir)), r'tables')
-##print u"Dossier des tableaux Excel :", TABLE_PATH
-#
-#BO_PATH = os.path.join(os.path.abspath(os.path.join(PATH, os.pardir)), r'BO')
-#
-#if not PORTABLE: # Ce n'est pas une version portable qui tourne
-#    # On lit la clef de registre indiquant le type d'installation
-#    try: # Machine 32 bits
-#        regkey = _winreg.OpenKey(_winreg.HKEY_LOCAL_MACHINE, 'SOFTWARE\\pySequence', 0, _winreg.KEY_READ )
-#    except: # Machine 64 bits
-#        try :
-#            regkey = _winreg.OpenKey(_winreg.HKEY_LOCAL_MACHINE, 'SOFTWARE\\Wow6432Node\\pySequence', 0, _winreg.KEY_READ )
-#        except:
-#            PORTABLE = True # en fait, pySequence n'est pas installé !!!
-#    
-#if not PORTABLE:
-#    try:
-#        (value,keytype) = _winreg.QueryValueEx(regkey, 'DataFolder' ) 
-#        APP_DATA_PATH = value
-#    except:
-#        dlg = wx.MessageDialog(None, u"L'installation de pySequence est incorrecte !\nVeuillez désinstaller pySequence puis le réinstaller." ,
-#                               u"Installation incorrecte",
-#                               wx.OK | wx.ICON_WARNING
-#                               #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
-#                               )
-#        dlg.ShowModal()
-#        dlg.Destroy()
-#        APP_DATA_PATH = PATH
-#        
-#    if not os.path.exists(APP_DATA_PATH):
-#        os.mkdir(APP_DATA_PATH)    
-#    print "Dossier d'installation :", INSTALL_PATH
-#    
-#else: # C'est une version portable qui tourne
-#    APP_DATA_PATH = PATH
-#    print "Version portable !!"
-#        
-#print u"Dossier pour les données :", APP_DATA_PATH
-
-
+from util_path import DOSSIER_ICONES
 
     
 ####################################################################################
@@ -397,6 +328,19 @@ imagesCI = [images.CI_1, images.CI_2, images.CI_3, images.CI_4,
             images.CI_5, images.CI_6, images.CI_7, images.CI_8,
             images.CI_9, images.CI_10, images.CI_11, images.CI_12,
             images.CI_13, images.CI_14, images.CI_15, images.CI_16]             
+
+
+
+ICONES_TACHES = {}
+liste = os.listdir(DOSSIER_ICONES)
+for fich_img in liste:
+    try:
+        bmp = wx.Bitmap(os.path.join(DOSSIER_ICONES, fich_img),
+                        wx.BITMAP_TYPE_ANY ).ConvertToImage().Scale(200, 200).ConvertToBitmap()
+        ICONES_TACHES[os.path.splitext(fich_img)[0]] = bmp
+    except:
+        pass
+
 
 # Avatar
 TAILLE_AVATAR = ()
@@ -939,7 +883,7 @@ BASE_FICHE_HTML_TACHE = u"""
         
         <tr id = "ldes" align="left" valign="top" bgcolor="#f0f0f0">
             <td colspan=2>
-                <b>Description détaillée de la tâche"</b>
+                <b>Description détaillée de la tâche</b>
                 <span id="des"> </span>
             </td>
         </tr>

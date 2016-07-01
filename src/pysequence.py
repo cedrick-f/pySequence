@@ -3091,7 +3091,7 @@ class Projet(BaseDoc, Objet_sequence):
         """ Colle la tâche présente dans le presse-papier (branche <btache>)
             après la tâche désignée par l'item d'arbre <item>
         """
-        print "CollerElem"
+#         print "CollerElem"
         if self.arbre.GetItemText(item) == Titres[8]: # racine des Taches
             tache_avant = 0
         else:
@@ -3148,10 +3148,11 @@ class Projet(BaseDoc, Objet_sequence):
         self.GetApp().sendEvent(modif = u"Collé d'un élément")
         self.arbre.SelectItem(tache.branche)
             
-        print "   >", self.taches
+#         print "   >", self.taches
         self.Verrouiller()
 #        print "Tache", tache, u"collée"
-        
+
+
     ######################################################################################  
     def InsererRevue(self, event = None, item = None):
         if item == None:
@@ -3174,7 +3175,8 @@ class Projet(BaseDoc, Objet_sequence):
         self.arbre.SelectItem(tache.branche)
             
         self.Verrouiller()
-        
+
+
     ######################################################################################  
     def SupprimerTache(self, event = None, item = None, verrouiller = True, doUndo = True):
         tache = self.arbre.GetItemPyData(item)
@@ -6772,6 +6774,9 @@ class Tache(Objet_sequence):
         # La description de la tâche
         self.description = None
 
+        # Une icône pour illustrer la tâche
+        self.icone = None
+        
         # Les autres données
         
 #        self.panelParent = panelParent
@@ -6949,7 +6954,10 @@ class Tache(Objet_sequence):
 
         if self.description != None:
             root.set("Description", self.description)
-
+        
+        if self.icone != None:
+            root.set("Icone", img2str(self.icone.ConvertToImage()))
+            
         root.set("Duree", str(self.duree.v[0]))
         
         brancheElv = ET.Element("Eleves")
@@ -7009,6 +7017,14 @@ class Tache(Objet_sequence):
 
         self.description = branche.get("Description", None)
         
+        data = branche.get("Icone", "")
+        if data != "":
+            try:
+                self.icone = PyEmbeddedImage(data).GetBitmap()
+            except:
+                self.icone = None
+                
+                
         if not self.phase in TOUTES_REVUES_EVAL_SOUT:
             self.duree.v[0] = eval(branche.get("Duree", "1"))
         else:

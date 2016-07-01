@@ -370,7 +370,7 @@ def Draw(ctx, seq, mouchard = False, entete = False):
     
     
     #
-    #  Cadre et Intitulé de la séquence
+    # Cadre et Intitulé de la séquence
     #
     if not entete:
         rect = (posZOrganis[0]-bordureZOrganis, posZOrganis[1], 
@@ -380,7 +380,7 @@ def Draw(ctx, seq, mouchard = False, entete = False):
                                          BcoulIntitule, IcoulIntitule, FontIntitule)
 
     #
-    #    Domaines
+    # Domaines
     #
     DrawDomaines(ctx, seq.domaine, 
                  posZOrganis[0]-bordureZOrganis+ecartX/2, posZOrganis[1]-ecartY/2)

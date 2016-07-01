@@ -2438,7 +2438,7 @@ def chargerReferentiels():
     if not SAUVEGARDE:
         dicOk = {}
         for k, r in REFERENTIELS.items():
-            print DOSSIER_REF
+#             print DOSSIER_REF
             f = os.path.join(DOSSIER_REF, util_path.toFileEncoding(u"Ref_"+r.Enseignement[0]+u".xml"))
             dicOk[k] = False
             if os.path.exists(f):

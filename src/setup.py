@@ -51,6 +51,7 @@ includefiles = ['LICENSE.txt',
                      'splash.png',
                      ('../tables', "../tables"),
                      ('../BO', "../BO"),
+                     ('../icones', "../icones"),
                      ('../referentiels', "../referentiels"),
 #                     ('C:\\Python27\\lib\\site-packages\\enchant\\share\\enchant\\myspell', 'share/enchant/myspell'), 
 #                     ('C:\\Python27\\lib\\site-packages\\enchant\\*.dll', ''),
@@ -58,7 +59,7 @@ includefiles = ['LICENSE.txt',
 #                     ('C:\\Python27\\lib\\site-packages\\enchant\\lib\\enchant\\*.dll', 'lib/enchant'),
                      ]
 if sys.platform == "win32":
-    includefiles.extend([('D:/Developpement/Microsoft.VC90.CRT', "Microsoft.VC90.CRT"),])
+    includefiles.extend([('C:\Users\Cedrick\Documents\Developp\Microsoft.VC90.CRT', "Microsoft.VC90.CRT"),])
     
 includefiles.extend(enchant_files)
 
