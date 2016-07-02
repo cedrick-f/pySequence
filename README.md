@@ -36,6 +36,13 @@ et potentiellement [n'importe quel programme d'enseignement](https://github.com/
 
 [Quelques exemples de fiches de projet](https://github.com/cedrick-f/pySequence/wiki/ExemplesProjets)
 
+### Construction de progressions pédagogiques (beta)
+ * Insertion de séquences pédagogique dans un cycle d'apprentissage
+ * Analyse de la cohérence compétences/prérequis
+ * Présentation sous forme de fiche de progresion cliquable
+
+
+
 
 ---
 
