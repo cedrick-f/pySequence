@@ -1255,7 +1255,7 @@ class BaseDoc():
     def GererDependants(self, obj, t):
         """ Gestion des documents qui dépendent du présent document
         """
-        print "GererDependants", self.GetApp(), obj.GetApp()
+        print "GererDependants", t
         obj.GetApp().sendEvent(modif = t, obj = self)
         if self.GetApp() == obj.GetApp(): # la séquence n'est pas ouverte dans une autre fenêtre
             self.dependants.append(obj)
@@ -4872,11 +4872,13 @@ class Progression(BaseDoc, Objet_sequence):
                 code = ref.abrevCI+str(numCI+1)
                 intit = ref.CentresInterets[numCI]
                 self.tip.AjouterElemListeDL("ci", code, intit)
-                if len(ref.listProblematiques[numCI]) > 0:
+                if len(ref.listProblematiques) > numCI and len(ref.listProblematiques[numCI]) > 0:
                     self.tip.SetWholeText("nomPb", getSingulierPluriel(ref.nomPb, True) + " envisageables")  
                     for pb in ref.listProblematiques[numCI]:
                         self.tip.AjouterElemListeUL("pb", pb)
-            
+                else:
+                    self.tip.Supprime('pb')
+                              
             elif param[:3] == "CMP":
                 ref = self.GetReferentiel()
                 competence = ref.getCompetence("S"+param[3:])

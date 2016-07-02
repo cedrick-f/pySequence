@@ -54,6 +54,7 @@ class STC_ortho(stc.StyledTextCtrl):
         self.remplace = False
         
         self.Bind(stc.EVT_STC_MODIFIED, self.OnModified)
+#         self.Bind(stc.EVT_STC_CHANGE, self.OnModified)
 #        self.Bind(stc.EVT_STC_CHANGE, self.OnChange)
         
         self.Bind(wx.EVT_CONTEXT_MENU, self.OnContextMenu)
@@ -121,7 +122,7 @@ class STC_ortho(stc.StyledTextCtrl):
         
         
     def SetValue(self, text, event = True):
-#        print "SetValue", text[:10], "..."
+#         print "SetValue", text[:10], "..."
         self.toutVerifier = True
         self.skipEvt = event
         wx.CallAfter(self.SetText, text)
@@ -129,6 +130,7 @@ class STC_ortho(stc.StyledTextCtrl):
         
  
     def OnModified(self, evt):
+#         print "OnModified", self.skipEvt
         # NOTE: on really big insertions, evt.GetText can cause a
         # MemoryError on MSW, so I've commented this dprint out.
         mod = evt.GetModificationType()

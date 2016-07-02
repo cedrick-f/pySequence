@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from _winreg import SetValue
 
 ##This file is part of pySequence
 #############################################################################
@@ -1088,7 +1089,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                     #
                     path2 = os.path.normpath(os.path.abspath(nomFichier))
                     for prog in self.GetDocumentsOuverts('prg'):
-                        for lienSeq in prog[0].sequences:
+                        for lienSeq in prog[0].sequences_projets:
                             path1 = os.path.normpath(os.path.abspath(lienSeq.path))
                             if path1 == path2:  # La séquence fait partie d'une progression ouverte
                                 print "Dans prog :", path2
@@ -1952,7 +1953,7 @@ class FenetreSequence(FenetreDocument):
             
     ###############################################################################################
     def OnDocModified(self, event):
-        print "OnDocModified", event.GetModif()
+#         print "OnDocModified", event.GetModif()
         if event.GetModif() != u"":
             
             self.classe.undoStack.do(event.GetModif())
@@ -3954,7 +3955,8 @@ class PanelPropriete_Sequence(PanelPropriete):
         self.sizer.Add(sb, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.EXPAND, border = 2)
 #        self.sizer.Add(textctrl, (0,1), flag = wx.EXPAND)
 #        self.Bind(wx.EVT_TEXT, self.EvtText, textctrl)
-        self.Bind(stc.EVT_STC_CHANGE, self.EvtText, self.textctrl)
+#         self.Bind(stc.EVT_STC_CHANGE, self.EvtText, self.textctrl)
+        self.Bind(stc.EVT_STC_MODIFIED, self.EvtText, self.textctrl)
 
 
         titre = myStaticBox(self, -1, u"Commentaires")
@@ -3965,7 +3967,8 @@ class PanelPropriete_Sequence(PanelPropriete):
         self.sizer.Add(sb, (0,2), (2,1),  flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.EXPAND, border = 2)
 #        self.sizer.Add(commctrl, (1,1), flag = wx.EXPAND)
 #        self.Bind(wx.EVT_TEXT, self.EvtText, commctrl)
-        self.Bind(stc.EVT_STC_CHANGE, self.EvtText, commctrl)
+#         self.Bind(stc.EVT_STC_CHANGE, self.EvtText, commctrl)
+        self.Bind(stc.EVT_STC_MODIFIED, self.EvtText, commctrl)
         
         
         titre = myStaticBox(self, -1, u"Position")
@@ -4024,7 +4027,7 @@ class PanelPropriete_Sequence(PanelPropriete):
 #         cb = event.GetEventObject()
         self.sequence.domaine = "".join([t for cb, t in [(self.cbM, "M"), (self.cbE, "E"), (self.cbI, "I")] if cb.IsChecked()])
 
-        self.sendEvent(modif = u"Modification du domaine de la séquence")
+        self.sendEvent(modif = u"Modification du domaine de la Séquence")
         
             
     #############################################################################            
@@ -4150,7 +4153,8 @@ class PanelPropriete_Projet(PanelPropriete):
         self.nb.AddPage(page, u"")
 #        ctrl = orthographe.STC_ortho(page, -1)#, u"", style=wx.TE_MULTILINE)
         ctrl = TextCtrl_Help(page, titre, helpText)
-        page.Bind(stc.EVT_STC_CHANGE, fct, ctrl)
+#         page.Bind(stc.EVT_STC_CHANGE, fct, ctrl)
+        page.Bind(stc.EVT_STC_MODIFIED, fct, ctrl)
 #        page.Bind(wx.EVT_TEXT, fct, ctrl)
         page.sizer.Add(ctrl, (0,0), flag = wx.EXPAND)
         page.sizer.AddGrowableCol(0)
@@ -4186,7 +4190,8 @@ class PanelPropriete_Projet(PanelPropriete):
         pageGen.sizer.Add(sb, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.EXPAND, border = 2)
 #        pageGen.Bind(stc.EVT_STC_CHANGE, self.EvtText)
 #        pageGen.Bind(wx.EVT_TEXT, self.EvtText, textctrl)
-        pageGen.Bind(stc.EVT_STC_CHANGE, self.EvtText, self.textctrl)
+#         pageGen.Bind(stc.EVT_STC_CHANGE, self.EvtText, self.textctrl)
+        pageGen.Bind(stc.EVT_STC_MODIFIED, self.EvtText, self.textctrl)
         
 
         
@@ -4202,7 +4207,8 @@ class PanelPropriete_Projet(PanelPropriete):
                           flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.EXPAND, border = 2)
 #        pageGen.Bind(wx.EVT_TEXT, self.EvtText, self.commctrl)
 #        pageGen.Bind(stc.EVT_STC_CHANGE, self.EvtText, self.commctrl)
-        pageGen.Bind(stc.EVT_STC_CHANGE, self.EvtText, self.commctrl)
+#         pageGen.Bind(stc.EVT_STC_CHANGE, self.EvtText, self.commctrl)
+        pageGen.Bind(stc.EVT_STC_MODIFIED, self.EvtText, self.commctrl)
         
 
         #
@@ -4445,7 +4451,8 @@ class PanelPropriete_Projet(PanelPropriete):
                                               u"Les groupes d'élèves sont désignés par des lettres (A, B, C, ...)\n" \
                                               u"et leur effectif est indiqué.")
 #                self.pages['DEC'].Bind(wx.EVT_TEXT, self.EvtText, self.intctrl)
-                self.pages['DEC'].Bind(stc.EVT_STC_CHANGE, self.EvtText, self.intctrl)
+#                 self.pages['DEC'].Bind(stc.EVT_STC_CHANGE, self.EvtText, self.intctrl)
+                self.pages['DEC'].Bind(stc.EVT_STC_MODIFIED, self.EvtText, self.intctrl)
                 sb.Add(self.intctrl, 1, flag = wx.EXPAND)
                 self.pages['DEC'].sizer.Add(sb, (1,0), flag = wx.EXPAND|wx.ALL, border = 2)
                 
@@ -4454,7 +4461,8 @@ class PanelPropriete_Projet(PanelPropriete):
                 self.enonctrl = TextCtrl_Help(self.pages['DEC'], u"", ref.attributs['DEC'][3])#, u"", style=wx.TE_MULTILINE)
                 self.enonctrl.SetToolTipString(u"Enoncés du besoin des parties du projet confiées à chaque groupe")
 #                self.pages['DEC'].Bind(wx.EVT_TEXT, self.EvtText, self.enonctrl)
-                self.pages['DEC'].Bind(stc.EVT_STC_CHANGE, self.EvtText, self.enonctrl)
+#                 self.pages['DEC'].Bind(stc.EVT_STC_CHANGE, self.EvtText, self.enonctrl)
+                self.pages['DEC'].Bind(stc.EVT_STC_MODIFIED, self.EvtText, self.enonctrl)
                 sb.Add(self.enonctrl, 1, flag = wx.EXPAND)
                 self.pages['DEC'].sizer.Add(sb, (0,1), (2,1), flag = wx.EXPAND|wx.ALL, border = 2)
                 
@@ -4514,7 +4522,8 @@ class PanelPropriete_Projet(PanelPropriete):
                     self.parctrl[k] = orthographe.STC_ortho(self.pages['PAR'], -1)#, u"", style=wx.TE_MULTILINE)
                     self.parctrl[k].SetToolTipString(ref.attributs[k][1])
 #                    self.pages['PAR'].Bind(wx.EVT_TEXT, self.EvtText, self.parctrl[k])
-                    self.pages['PAR'].Bind(stc.EVT_STC_CHANGE, self.EvtText, self.parctrl[k])
+#                     self.pages['PAR'].Bind(stc.EVT_STC_CHANGE, self.EvtText, self.parctrl[k])
+                    self.pages['PAR'].Bind(stc.EVT_STC_MODIFIED, self.EvtText, self.parctrl[k])
                     sb.Add(self.parctrl[k], 1, flag = wx.EXPAND)
                     self.pages['PAR'].sizer.Add(sb, (0,i), flag = wx.EXPAND|wx.ALL, border = 2)
                 
@@ -4701,8 +4710,8 @@ class PanelPropriete_Progression(PanelPropriete):
         pageGen.sizer.Add(sb, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.EXPAND, border = 2)
 #        pageGen.Bind(stc.EVT_STC_CHANGE, self.EvtText)
 #        pageGen.Bind(wx.EVT_TEXT, self.EvtText, textctrl)
-        pageGen.Bind(stc.EVT_STC_CHANGE, self.EvtText, self.textctrl)
-
+#         pageGen.Bind(stc.EVT_STC_CHANGE, self.EvtText, self.textctrl)
+        pageGen.Bind(stc.EVT_STC_MODIFIED, self.EvtText, self.textctrl)
        
 
         #
@@ -4773,7 +4782,6 @@ class PanelPropriete_Progression(PanelPropriete):
         
         # La page "Généralités"
         self.textctrl.SetValue(self.GetDocument().intitule, False)
-        
         
         self.Layout()
         
@@ -6407,7 +6415,8 @@ class PanelPropriete_LienSequence(PanelPropriete):
         self.intit = TextCtrl_Help(self, u"")
         sbsi.Add(self.intit,1, flag = wx.EXPAND)
 #        self.Bind(wx.EVT_TEXT, self.EvtText, self.intit)
-        self.Bind(stc.EVT_STC_CHANGE, self.EvtText, self.intit)
+#         self.Bind(stc.EVT_STC_CHANGE, self.EvtText, self.intit)
+        self.Bind(stc.EVT_STC_MODIFIED, self.EvtText, self.intit)
         
         #
         # Sélection du fichier de séquence
@@ -6546,6 +6555,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
 
     #############################################################################            
     def EvtText(self, event):
+#         print "EvtText"
         if event.GetEventObject() == self.intit:
             self.sequence.SetText(self.intit.GetText())
             self.lien.MiseAJourArbre()
@@ -6579,7 +6589,10 @@ class PanelPropriete_LienSequence(PanelPropriete):
 #        print "MiseAJour PanelPropriete_LienSequence", self.lien
 
 #        self.intit.SetLabel(self.sequence.intitule)
+        
         self.intit.SetValue(self.sequence.intitule, False)
+#         SetValue  : voir orthographe.STC_ortho
+#         ChangeValue ?
         
         self.texte.SetValue(toSystemEncoding(self.lien.path))
 
@@ -6607,7 +6620,9 @@ class PanelPropriete_LienSequence(PanelPropriete):
         
         self.MiseAJourApercu()
         
+       
         if sendEvt:
+            print "sendEvent !"
             self.sendEvent()
             
         return True
@@ -6667,7 +6682,8 @@ class PanelPropriete_LienProjet(PanelPropriete):
         self.intit = TextCtrl_Help(self, u"")
         sbsi.Add(self.intit,1, flag = wx.EXPAND)
 #        self.Bind(wx.EVT_TEXT, self.EvtText, self.intit)
-        self.Bind(stc.EVT_STC_CHANGE, self.EvtText, self.intit)
+#         self.Bind(stc.EVT_STC_CHANGE, self.EvtText, self.intit)
+        self.Bind(stc.EVT_STC_MODIFIED, self.EvtText, self.intit)
         
         #
         # Sélection du fichier de Projet
@@ -6719,7 +6735,8 @@ class PanelPropriete_LienProjet(PanelPropriete):
         sbp = myStaticBox(self, -1, getSingulierPluriel(ref.nomPb, False), size = (200,-1))
         sbsp = wx.StaticBoxSizer(sbp,wx.VERTICAL)
         self.panelPb = TextCtrl_Help(self, u"")
-        self.Bind(stc.EVT_STC_CHANGE, self.EvtText, self.panelPb)
+#         self.Bind(stc.EVT_STC_CHANGE, self.EvtText, self.panelPb)
+        self.Bind(stc.EVT_STC_MODIFIED, self.EvtText, self.panelPb)
         sbsp.Add(self.panelPb,1, flag = wx.EXPAND)
 
         
@@ -7008,13 +7025,13 @@ class PanelPropriete_Competences(PanelPropriete):
     ######################################################################################  
     def SetCompetences(self): 
         self.competence.parent.Verrouiller()
-        self.sendEvent(modif = u"Ajout/suppression d'une compétance")
+        self.sendEvent(modif = u"Ajout/suppression d'une compétence")
         
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
         """ On coche tout ce qui doit l'être dans les différents arbres
         """
-#        print "MiseAJour compétences"
+        print "MiseAJour compétences"
 #        print "  ", self.arbre.items.keys()
 #        print "   ", self.competence.competences
 
@@ -9187,7 +9204,8 @@ class PanelPropriete_Support(PanelPropriete):
         self.textctrl = textctrl
         bsizer.Add(textctrl, flag = wx.EXPAND)
         self.sizer.Add(bsizer, (0,0), flag = wx.EXPAND|wx.ALL, border = 2)
-        self.Bind(stc.EVT_STC_CHANGE, self.EvtText, textctrl)
+#         self.Bind(stc.EVT_STC_CHANGE, self.EvtText, textctrl)
+        self.Bind(stc.EVT_STC_MODIFIED, self.EvtText, textctrl)
         
         
         #
@@ -9538,7 +9556,7 @@ class ArbreDoc(CT.CustomTreeCtrl):
             panelPropriete = self.GetPanelPropriete(self.panelProp, data)
         
         if panelPropriete:
-#            print "> panelPropriete", panelPropriete
+#             print "> panelPropriete", panelPropriete
             self.panelProp.AfficherPanel(panelPropriete)
             self.parent.Refresh()
         else:
@@ -9553,7 +9571,8 @@ class ArbreDoc(CT.CustomTreeCtrl):
         
         if event is not None:
             event.Skip()
-        
+
+
     ####################################################################################
     def OnBeginDrag(self, event):
         self.itemDrag = event.GetItem()
@@ -11449,7 +11468,8 @@ class PanelProblematiques(wx.Panel):
         self.PbPerso = TextCtrl_Help(self, u"")
         self.PbPerso.SetToolTipString(u"Exprimer ici la %s abordée\n" \
                                       u"ou choisir une parmi les %s envisageables." %(getSingulierPluriel(ref.nomPb, False), getSingulierPluriel(ref.nomPb, True)))
-        self.Bind(stc.EVT_STC_CHANGE, self.EvtText, self.PbPerso)
+#         self.Bind(stc.EVT_STC_CHANGE, self.EvtText, self.PbPerso)
+        self.Bind(stc.EVT_STC_MODIFIED, self.EvtText, self.PbPerso)
         self.sizer.Add(self.PbPerso, flag = wx.EXPAND)
         self.sizer.Add(self.arbre, 1, flag = wx.EXPAND)
         
