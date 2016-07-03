@@ -984,10 +984,10 @@ def DrawCalendrier(ctx, rect, calendrier):
     ev = 0.005 * wt
     
     # Période entre deux années
-    dx_a = (wt-wj)/calendrier.nbr_annees + ea
+    dx_a = (wt-wj)/calendrier.GetNbrAnnees() + ea
     
     # liste des années
-    lannees = [calendrier.annee + i for i in range(calendrier.nbr_annees+1)]
+    lannees = [calendrier.annee + i for i in range(calendrier.GetNbrAnnees()+1)]
     
     # listes des mois
     lmois = {}
@@ -996,7 +996,7 @@ def DrawCalendrier(ctx, rect, calendrier):
         if ia == 0:
             lmois[annee] = [range(9, 13)]
             nmois += 4
-        elif ia == calendrier.nbr_annees:
+        elif ia == calendrier.GetNbrAnnees():
             lmois[annee] = [range(1,7)]
             nmois += 6
         else:
@@ -1004,7 +1004,7 @@ def DrawCalendrier(ctx, rect, calendrier):
             nmois += 10
     
     # Période entre deux mois
-    dx_m = (wt - wj - (calendrier.nbr_annees-1)*ev - calendrier.nbr_annees*ea) / nmois
+    dx_m = (wt - wj - (calendrier.GetNbrAnnees()-1)*ev - calendrier.GetNbrAnnees()*ea) / nmois
     
     # Période entre deux jours
     dy_j = (ht-ha-hm) / 31
@@ -1014,7 +1014,7 @@ def DrawCalendrier(ctx, rect, calendrier):
     for ia, annee in enumerate(lannees):
         if ia == 0:
             wa[annee] = dx_m*4
-        elif ia == calendrier.nbr_annees:
+        elif ia == calendrier.GetNbrAnnees():
             wa[annee] = dx_m*6
         else:
             wa[annee] = dx_m*10+ev
@@ -1127,11 +1127,8 @@ def DrawCalendrier(ctx, rect, calendrier):
 
 
 def getBitmapCalendrier(larg, calendrier):
-#    print "getBitmapPeriode", larg, 
-#        print "  ", self.projet.position
-#        print "  ", self.projet.GetReferentiel().periodes
-#        print "  ", self.projet.GetReferentiel().periode_prj
-    prop = calendrier.nbr_annees
+
+    prop = calendrier.GetNbrAnnees()
     w, h = 0.04*prop * COEF, 0.04 * COEF
 #    print w, h
     imagesurface = cairo.ImageSurface(cairo.FORMAT_ARGB32,  larg, int(h/w*larg))#cairo.FORMAT_ARGB32,cairo.FORMAT_RGB24

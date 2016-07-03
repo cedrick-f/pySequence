@@ -4720,11 +4720,11 @@ class PanelPropriete_Progression(PanelPropriete):
         titre = myStaticBox(pageGen, -1, u"Année et Position")
         sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
         
-        self.annee = Variable(u"Année scolaire", lstVal = self.GetDocument().annee, 
+        self.annee = Variable(u"Année scolaire", lstVal = self.GetDocument().calendrier.annee, 
                                    typ = VAR_ENTIER_POS, bornes = [2012,2100])
         self.ctrlAnnee = VariableCtrl(pageGen, self.annee, coef = 1, signeEgal = False,
                                       help = u"Année scolaire", sizeh = 40, 
-                                      unite = str(self.GetDocument().GetAnneeFin()),
+                                      unite = str(self.GetDocument().calendrier.GetAnneeFin()),
                                       sliderAGauche = True)
         self.Bind(EVT_VAR_CTRL, self.EvtVariable, self.ctrlAnnee)
         sb.Add(self.ctrlAnnee)
@@ -4857,8 +4857,9 @@ class PanelPropriete_Progression(PanelPropriete):
     def EvtVariable(self, event):
         var = event.GetVar()
         if var == self.annee:
-            self.projet.annee = var.v[0]
-            self.ctrlAnnee.unite.SetLabel(str(self.GetDocument().annee+1)) 
+            cal = self.GetDocument().calendrier
+            cal.annee = var.v[0]
+            self.ctrlAnnee.unite.SetLabel(str(cal.annee + cal.GetNbrAnnees())) 
             
             modif = u"Modification de l'année scolaire de la Progression"
             self.sendEvent(modif = modif)
@@ -4984,7 +4985,8 @@ class PanelOrganisation(wx.Panel):
         self.ctrlNbrRevues.setValeur(prj.getNbrRevuesDefaut())
         self.liste.Set(self.objet.GetListeNomsPhases())
         self.Layout()
-        
+
+
     #############################################################################            
     def EvtVariable(self, event):
         var = event.GetVar()
@@ -5364,6 +5366,9 @@ class PanelPropriete_Classe(PanelPropriete):
         self.cbv.SlimResize()
 #        self.cbv.SetSize((self.cbv.GetSizeFromTextSize(),-1))
         self.cbv.Refresh()
+        
+        self.sendEvent(modif = u"Modification de l'académie",
+                       obj = self.classe)
             
     
     ######################################################################################  
@@ -5387,6 +5392,10 @@ class PanelPropriete_Classe(PanelPropriete):
         
         self.cbe.Set(lst)
         self.cbe.Refresh()
+        
+        self.sendEvent(modif = u"Modification de la ville",
+                       obj = self.classe)
+        
             
         
     ######################################################################################  

@@ -3915,10 +3915,10 @@ class Progression(BaseDoc, Objet_sequence):
         
         self.sequences_projets = []     # liste de LienSequence et de LienProjet
         
-        self.annee = constantes.getAnneeScolaire()
+#         self.annee = constantes.getAnneeScolaire()
         
-        self.calendriers = []
-        self.calendrier = Calendrier(self)
+#         self.calendriers = []
+        self.calendrier = Calendrier(self, constantes.getAnneeScolaire())
         self.eleves = []
         self.equipe = []
         self.themes = []
@@ -3947,12 +3947,7 @@ class Progression(BaseDoc, Objet_sequence):
     
     ######################################################################################  
     def GetAnnees(self):
-        return "%s - %s" %(self.annee, self.GetAnneeFin())
-    
-    
-    ######################################################################################  
-    def GetAnneeFin(self):
-        return self.annee + len(self.GetReferentiel().periodes)
+        return "%s - %s" %(self.calendrier.annee, self.calendrier.GetAnneeFin())
 
 
     ######################################################################################  
@@ -4043,8 +4038,6 @@ class Progression(BaseDoc, Objet_sequence):
 
         if self.commentaires != u"":
             progression.set("Commentaires", self.commentaires)
-        
-        progression.set("Annee", str(self.annee))
         
         equipe = ET.SubElement(progression, "Equipe")
         for p in self.equipe:
@@ -4650,7 +4643,7 @@ class Progression(BaseDoc, Objet_sequence):
 #        print self.GetReferentiel()._listesCompetences_simple["S"]
         self.app.SetTitre()
         self.classe.MiseAJourTypeEnseignement()
-        self.calendrier.MiseAJourTypeEnseignement()
+#         self.calendrier.MiseAJourTypeEnseignement()
         draw_cairo.DefinirCouleurs(self.GetNbrPeriodes(),
                                    len(self.GetReferentiel()._listesCompetences_simple["S"]),
                                    len(self.GetReferentiel().CentresInterets))
@@ -7853,7 +7846,7 @@ class EDT(ElementDeSequence, Objet_sequence):
 #
 ####################################################################################
 class Calendrier(ElementDeSequence, Objet_sequence):
-    def __init__(self, parent, nom = u""):
+    def __init__(self, parent, annee, nom = u""):
         
         self.nom_obj = "Calendrier"
         self.article_c_obj = "du"
@@ -7868,9 +7861,10 @@ class Calendrier(ElementDeSequence, Objet_sequence):
         
         self.image = None
         
-        self.MiseAJourTypeEnseignement()
+#         self.MiseAJourTypeEnseignement()
         
         #self.EDT = EDT()
+        self.annee = annee
         
         self.seances = []
         
@@ -7891,19 +7885,31 @@ class Calendrier(ElementDeSequence, Objet_sequence):
         # Création de la racine
         calendrier = ET.Element("Calendrier")
         calendrier.set("Intitule", self.intitule)
+        calendrier.set("Annee", str(self.annee))
+        
         return calendrier
     
     
     ######################################################################################  
     def setBranche(self, branche):
         self.intitule = branche.get("Intitule", u"")
+        self.annee = eval(branche.get("Annee", str(constantes.getAnneeScolaire())))
+
+    
+    ######################################################################################  
+    def GetAnneeFin(self):
+        return self.annee + len(self.GetReferentiel().periodes)
 
 
-    #############################################################################
-    def MiseAJourTypeEnseignement(self):
-        self.annee = self.parent.annee
-        self.anneefin = self.parent.GetAnneeFin()
-        self.nbr_annees = self.anneefin - self.annee
+    ######################################################################################  
+    def GetNbrAnnees(self):
+        return self.GetAnneeFin() - self.annee
+
+#     #############################################################################
+#     def MiseAJourTypeEnseignement(self):
+# #         self.annee = self.parent.annee
+# #         self.anneefin = self.parent.GetAnneeFin()
+#         self.nbr_annees = self.anneefin - self.annee
     
 
 
