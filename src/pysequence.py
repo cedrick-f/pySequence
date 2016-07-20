@@ -90,7 +90,7 @@ from widgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_ENTI
                     messageErreur, getNomFichier, pourCent2, testRel, \
                     rallonge, remplaceCode2LF, dansRectangle, \
                     StaticBoxButton, TextCtrl_Help, CloseFenHelp, \
-                    remplaceLF2Code, messageInfo, messageYesNo#, chronometrer
+                    remplaceLF2Code, messageInfo, messageYesNo, enregistrer_root#, chronometrer
                     
 from Referentiel import REFERENTIELS, ARBRE_REF, ACTIVITES
 import Referentiel
@@ -1310,6 +1310,9 @@ class BaseDoc():
             elif zone.param == "PB":
                 self.SelectItem(self.branche, depuisFiche = True)
             
+            elif zone.param == "EQU":
+                self.SelectItem(self.branchePrf, depuisFiche = True)
+            
 
 
     ######################################################################################  
@@ -1390,21 +1393,7 @@ class BaseDoc():
         self.MiseAJourNomProfs()
             
             
-    ##################################################################################################    
-    def enregistrer_root(self, root, nomFichier):
-        fichier = file(nomFichier, 'w')
-        try:
-            ET.ElementTree(root).write(fichier, xml_declaration=False, encoding = SYSTEM_ENCODING)
-        except IOError:
-            messageErreur(None, u"Accés refusé", 
-                                  u"L'accés au fichier %s a été refusé !\n\n"\
-                                  u"Essayer de faire \"Enregistrer sous...\"" %nomFichier)
-        except UnicodeDecodeError:
-            messageErreur(None, u"Erreur d'encodage", 
-                                  u"Un caractère spécial empêche l'enregistrement du fichier !\n\n"\
-                                  u"Essayer de le localiser et de le supprimer.\n"\
-                                  u"Merci de reporter cette erreur au développeur.")
-        fichier.close()
+    
         
 
 
@@ -2316,7 +2305,7 @@ class Sequence(BaseDoc, Objet_sequence):
         root.append(classe)
         constantes.indent(root)
         
-        self.enregistrer_root(root, nomFichier)
+        enregistrer_root(root, nomFichier)
 
 
 ####################################################################################################
@@ -3888,7 +3877,7 @@ class Projet(BaseDoc, Objet_sequence):
         root.append(classe)
         constantes.indent(root)
         
-        self.enregistrer_root(root, nomFichier)
+        enregistrer_root(root, nomFichier)
 #                        
 
 
@@ -4054,10 +4043,8 @@ class Progression(BaseDoc, Objet_sequence):
             sequences_projets.append(lienseq.getBranche())
             
             
-        
-#        calendriers = ET.SubElement(progression, "Calendriers")
-#        for cal in self.calendriers:
-#            calendriers.append(cal.getBranche())
+        calendrier = ET.SubElement(progression, "Calendrier")
+        calendrier.append(self.calendrier.getBranche())
         
         return progression
 
@@ -4137,13 +4124,10 @@ class Progression(BaseDoc, Objet_sequence):
                 
                 
                 
-        brancheCal = branche.find("Calendriers")
-        self.calendriers = []
+        brancheCal = branche.find("Calendrier")
         if brancheCal is not None:
             for c in list(brancheCal):
-                calendrier = Calendrier(self)
-                calendrier.setBranche(c)
-                self.calendriers.append(calendrier)
+                self.calendrier.setBranche(c)
 
 
         return err
@@ -4923,7 +4907,7 @@ class Progression(BaseDoc, Objet_sequence):
         root.append(classe)
         constantes.indent(root)
         
-        self.enregistrer_root(root, nomFichier)
+        enregistrer_root(root, nomFichier)
 
         for lienSeq in [s for s in self.sequences_projets if isinstance(s, LienSequence)]:
             if lienSeq.sequence in self.dependants:
@@ -5562,7 +5546,7 @@ class Competences(Objet_sequence):
     
     ######################################################################################  
     def GetNomGenerique(self):
-        return self.GetReferentiel().dicoCompetences["S"].nomGenerique
+        return getSingulierPluriel(self.GetReferentiel().dicoCompetences["S"].nomGenerique, True)
     
     ######################################################################################  
     def GetDiscipline(self, num):
@@ -5699,7 +5683,7 @@ class Savoirs(Objet_sequence):
     
     ######################################################################################  
     def GetNomGenerique(self):
-        return self.GetReferentiel().dicoSavoirs["S"].nomGenerique
+        return getSingulierPluriel(self.GetReferentiel().dicoSavoirs["S"].nomGenerique, True)
     
     ######################################################################################  
     def GetDiscipline(self, num):
@@ -7884,7 +7868,7 @@ class Calendrier(ElementDeSequence, Objet_sequence):
         """
         # Création de la racine
         calendrier = ET.Element("Calendrier")
-        calendrier.set("Intitule", self.intitule)
+#         calendrier.set("Intitule", self.intitule)
         calendrier.set("Annee", str(self.annee))
         
         return calendrier
@@ -7905,6 +7889,44 @@ class Calendrier(ElementDeSequence, Objet_sequence):
     def GetNbrAnnees(self):
         return self.GetAnneeFin() - self.annee
 
+
+    ######################################################################################  
+    def GetListeAnnees(self):
+        return [self.annee + i for i in range(self.GetNbrAnnees()+1)]
+
+
+    ######################################################################################  
+    def GetCreneauxFeries(self):
+        creneaux = []
+        jours_feries = constantes.JOURS_FERIES
+        lstAcad = sorted([a[0] for a in constantes.ETABLISSEMENTS.values()])
+        acad = self.GetClasse().academie
+        
+        try:
+            num_acad = lstAcad.index(acad)
+        except:
+            num_acad = None      
+                        
+        for annee in self.GetListeAnnees():
+            if annee in jours_feries.keys():
+                list_zones, list_crenaux = jours_feries[annee]
+                
+                zone = None
+                if num_acad is not None:
+                    for z, l in list_zones.items():
+                        if num_acad in l:
+                            zone = z
+                            break
+                
+                if zone in list_crenaux.keys():
+                    creneaux.extend(list_crenaux[zone])
+            
+        return creneaux
+        
+        
+        
+        
+        
 #     #############################################################################
 #     def MiseAJourTypeEnseignement(self):
 # #         self.annee = self.parent.annee
@@ -8086,16 +8108,23 @@ class Personne(Objet_sequence):
         self.prenom = u""
         self.avatar = None
         self.id = Id # Un identifiant unique = nombre > 0
-        
 
+
+    ######################################################################################  
+    def __eq__(self, personne):
+        return self.GetNom() == personne.GetNom() and self.GetPrenom() == personne.GetPrenom()
+    
+    
     ######################################################################################  
     def GetApp(self):
         return self.doc.GetApp()
-        
+
+
     ######################################################################################  
     def GetPanelPropriete(self, parent):
         return PanelPropriete_Personne(parent, self)
-        
+
+
     ######################################################################################  
     def GetDocument(self):
         return self.doc

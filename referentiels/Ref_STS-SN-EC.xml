@@ -171,7 +171,7 @@
         </l_C3.4>
         <l_C3.5 S_00=" contribuer à la définition des éléments de recette au regard des contraintes--du cahier des charges ">
           <l_01>
-            <Indicateur_00 S_intitule=" contribuer à la définition des éléments de recette au regard des contraintes--du cahier des charges ">
+            <Indicateur_00 S_intitule="Le cahier de recette est rédigé">
               <d_ligne I_R2="0" />
               <d_poids F_R2="100.0" />
               <d_revue I_R2="0" />
@@ -181,7 +181,7 @@
         </l_C3.5>
         <l_C3.6 S_00=" recenser les solutions existantes répondant au cahier des charges">
           <l_01>
-            <Indicateur_00 S_intitule=" recenser les solutions existantes répondant au cahier des charges">
+            <Indicateur_00 S_intitule="Un tableau comparatif des coûts totaux est édité">
               <d_ligne I_R2="0" />
               <d_poids F_R2="100.0" />
               <d_revue I_R2="0" />
@@ -195,11 +195,26 @@
         </l_C3.7>
         <l_C3.1 S_00="analyser un cahier des charges ">
           <l_01>
-            <Indicateur_00 S_intitule="analyser un cahier des charges ">
+            <Indicateur_00 S_intitule="Un compte rendu est rédigé avec la validation des jalons, les documents contractuels, les actions à réaliser pour les jalons non respectés">
               <d_ligne I_R2="0" />
-              <d_poids F_R2="100.0" />
+              <d_poids F_R2="25.0" />
               <d_revue I_R2="0" />
             </Indicateur_00>
+            <Indicateur_01 S_intitule="Les diagrammes SysML (contexte, cas d'utilisation et séquence) sont construits">
+              <d_ligne I_R2="0" />
+              <d_poids F_R2="25.0" />
+              <d_revue I_R2="0" />
+            </Indicateur_01>
+            <Indicateur_02 S_intitule="Un diagramme d'exigence est fourni">
+              <d_ligne I_R2="0" />
+              <d_poids F_R2="25.0" />
+              <d_revue I_R2="0" />
+            </Indicateur_02>
+            <Indicateur_03 S_intitule="Les normes à respecter sont inventoriées">
+              <d_ligne I_R2="0" />
+              <d_poids F_R2="25.0" />
+              <d_revue I_R2="0" />
+            </Indicateur_03>
           </l_01>
           <d_02 I_R2="5" />
         </l_C3.1>
@@ -209,7 +224,7 @@
         </l_C3.2>
         <l_C3.3 S_00="définir l’architecture--globale d’un prototype ou d’un système ">
           <l_01>
-            <Indicateur_00 S_intitule="définir l’architecture--globale d’un prototype ou d’un système ">
+            <Indicateur_00 S_intitule="Les diagrammes de définition de blocs et le digramme de blocs internes sont définis">
               <d_ligne I_R2="0" />
               <d_poids F_R2="100.0" />
               <d_revue I_R2="0" />
@@ -219,7 +234,7 @@
         </l_C3.3>
         <l_C3.8 S_00=" élaborer le dossier de définition de la solution technique retenue">
           <l_01>
-            <Indicateur_00 S_intitule=" élaborer le dossier de définition de la solution technique retenue">
+            <Indicateur_00 S_intitule="Le dossier de conception est complet">
               <d_ligne I_R2="0" />
               <d_poids F_R2="100.0" />
               <d_revue I_R2="0" />
@@ -229,11 +244,16 @@
         </l_C3.8>
         <l_C3.9 S_00=" valider une fonction du système à partir d’une maquette réelle ">
           <l_01>
-            <Indicateur_00 S_intitule=" valider une fonction du système à partir d’une maquette réelle ">
+            <Indicateur_00 S_intitule="Les procédures et les résultats de mesures (valeurs, chronogrammes, spectres, etc.) sont rédigés">
               <d_ligne I_R2="0" />
-              <d_poids F_R2="100.0" />
+              <d_poids F_R2="50.0" />
               <d_revue I_R2="0" />
             </Indicateur_00>
+            <Indicateur_01 S_intitule="Un rapport de validation est rédigé">
+              <d_ligne I_R2="0" />
+              <d_poids F_R2="50.0" />
+              <d_revue I_R2="0" />
+            </Indicateur_01>
           </l_01>
           <d_02 I_R2="5" />
         </l_C3.9>
@@ -329,11 +349,26 @@
         </l_C5.1>
         <l_C3.10 S_00=" réaliser la conception dé--taillée d’un module matériel et/ou logiciel ">
           <l_01>
-            <Indicateur_00 S_intitule=" réaliser la conception dé--taillée d’un module matériel et/ou logiciel ">
+            <Indicateur_00 S_intitule="Le schémas structurels sont établis">
               <d_ligne I_R2="0" />
-              <d_poids F_R2="100.0" />
+              <d_poids F_R2="25.0" />
               <d_revue I_R2="0" />
             </Indicateur_00>
+            <Indicateur_01 S_intitule="L'algorithme est établi">
+              <d_ligne I_R2="0" />
+              <d_poids F_R2="25.0" />
+              <d_revue I_R2="0" />
+            </Indicateur_01>
+            <Indicateur_02 S_intitule="Les programmes sont commentés">
+              <d_ligne I_R2="0" />
+              <d_poids F_R2="25.0" />
+              <d_revue I_R2="0" />
+            </Indicateur_02>
+            <Indicateur_03 S_intitule="Le résultat de compilation est fourni">
+              <d_ligne I_R2="0" />
+              <d_poids F_R2="25.0" />
+              <d_revue I_R2="0" />
+            </Indicateur_03>
           </l_01>
           <d_02 I_R2="5" />
         </l_C3.10>
@@ -343,27 +378,77 @@
         </l_P>
         <l_C2.1 S_00="maintenir les informations">
           <l_01>
-            <Indicateur_00 S_intitule="maintenir les informations">
+            <Indicateur_00 S_intitule="Les modifications apportées sont clairement documentées">
               <d_ligne I_R2="0" />
-              <d_poids F_R2="100.0" />
+              <d_poids F_R2="50.0" />
               <d_revue I_R2="0" />
             </Indicateur_00>
+            <Indicateur_01 S_intitule="Les documents archivés sont copiés sur les serveurs et dans la base de données dédiés au projet">
+              <d_ligne I_R2="0" />
+              <d_poids F_R2="50.0" />
+              <d_revue I_R2="0" />
+            </Indicateur_01>
           </l_01>
           <d_02 I_R2="5" />
         </l_C2.1>
         <l_C2.3 S_00="organiser et/ou respecter la planification d'un projet">
           <l_01>
-            <Indicateur_00 S_intitule="organiser et/ou respecter la planification d'un projet">
+            <Indicateur_00 S_intitule="Les tâches professionnelles à effectuer sont identifiés">
               <d_ligne I_R2="0" />
-              <d_poids F_R2="100.0" />
+              <d_poids F_R2="25.0" />
               <d_revue I_R2="0" />
             </Indicateur_00>
+            <Indicateur_01 S_intitule="La charge de travail, les moyens humains et techniques à monopoliser sont identifés">
+              <d_ligne I_R2="0" />
+              <d_poids F_R2="25.0" />
+              <d_revue I_R2="0" />
+            </Indicateur_01>
+            <Indicateur_02 S_intitule="Les délais et jalons sont identifiés">
+              <d_ligne I_R2="0" />
+              <d_poids F_R2="25.0" />
+              <d_revue I_R2="0" />
+            </Indicateur_02>
+            <Indicateur_03 S_intitule="Les documents de planification du projet sont consultés">
+              <d_ligne I_R2="0" />
+              <d_poids F_R2="25.0" />
+              <d_revue I_R2="0" />
+            </Indicateur_03>
+            <Indicateur_04 S_intitule="Les documents de planification du projet sont modifiés en respect de son niveau de responsabilité">
+              <d_ligne />
+              <d_poids />
+              <d_revue />
+            </Indicateur_04>
+            <Indicateur_05 S_intitule="Les tâches professionnelles réalisées sont reportées">
+              <d_ligne />
+              <d_poids />
+              <d_revue />
+            </Indicateur_05>
+            <Indicateur_06 S_intitule="Les alarmes liées aux tâches professionnelles ne respectant pas la planification sont reportées">
+              <d_ligne />
+              <d_poids />
+              <d_revue />
+            </Indicateur_06>
+            <Indicateur_07 S_intitule="L'estimation des retards est quantifiée">
+              <d_ligne />
+              <d_poids />
+              <d_revue />
+            </Indicateur_07>
+            <Indicateur_08 S_intitule="Les documents contractuels d'avancement du projet sont remis au maître d'ouvrage">
+              <d_ligne />
+              <d_poids />
+              <d_revue />
+            </Indicateur_08>
+            <Indicateur_09 S_intitule="Les directives sur l'avancement du projet sont mises à jour">
+              <d_ligne />
+              <d_poids />
+              <d_revue />
+            </Indicateur_09>
           </l_01>
           <d_02 I_R2="5" />
         </l_C2.3>
         <l_C2.2 S_00="formaliser l’expression d’un besoin">
           <l_01>
-            <Indicateur_00 S_intitule="formaliser l’expression d’un besoin">
+            <Indicateur_00 S_intitule="Le cahier des charges est rédigé">
               <d_ligne I_R2="0" />
               <d_poids F_R2="100.0" />
               <d_revue I_R2="0" />
@@ -373,27 +458,117 @@
         </l_C2.2>
         <l_C2.5 S_00=" travailler en équipe ">
           <l_01>
-            <Indicateur_00 S_intitule=" travailler en équipe ">
+            <Indicateur_00 S_intitule="Les intervenants au projet sont identifiés et choisis">
               <d_ligne I_R2="0" />
-              <d_poids F_R2="100.0" />
+              <d_poids F_R2="25.0" />
               <d_revue I_R2="0" />
             </Indicateur_00>
+            <Indicateur_01 S_intitule="Les fiches contrats sont rédigées et assignées">
+              <d_ligne I_R2="0" />
+              <d_poids F_R2="25.0" />
+              <d_revue I_R2="0" />
+            </Indicateur_01>
+            <Indicateur_02 S_intitule="Une présentation de l'état du projet est faite au maître d'œuvre ou à son représentant">
+              <d_ligne I_R2="0" />
+              <d_poids F_R2="25.0" />
+              <d_revue I_R2="0" />
+            </Indicateur_02>
+            <Indicateur_03 S_intitule="Les nouvelles directives sont comprises">
+              <d_ligne I_R2="0" />
+              <d_poids F_R2="25.0" />
+              <d_revue I_R2="0" />
+            </Indicateur_03>
+            <Indicateur_04 S_intitule="Les tâches professionnelles à réaliser et les interactions avec les membres de l'équipe sont identifiées">
+              <d_ligne />
+              <d_poids />
+              <d_revue />
+            </Indicateur_04>
+            <Indicateur_05 S_intitule="Les tâches professionnelles confiées sont réalisées">
+              <d_ligne />
+              <d_poids />
+              <d_revue />
+            </Indicateur_05>
+            <Indicateur_06 S_intitule="Les problèmes dans la réalisation des tâches professionnelles confiées sont remontés">
+              <d_ligne />
+              <d_poids />
+              <d_revue />
+            </Indicateur_06>
+            <Indicateur_07 S_intitule="Les alertes sont envoyées au chef de projet">
+              <d_ligne />
+              <d_poids />
+              <d_revue />
+            </Indicateur_07>
+            <Indicateur_08 S_intitule="Une cellule de médiation est mis en place pour les conflits collectifs">
+              <d_ligne />
+              <d_poids />
+              <d_revue />
+            </Indicateur_08>
+            <Indicateur_09 S_intitule="Un arbitrage lié à ces responsabilités est donné">
+              <d_ligne />
+              <d_poids />
+              <d_revue />
+            </Indicateur_09>
+            <Indicateur_10 S_intitule="Les tâches professionnelles confiées sont adaptées au contrat de travail de l'employé">
+              <d_ligne />
+              <d_poids />
+              <d_revue />
+            </Indicateur_10>
+            <Indicateur_11 S_intitule="Les tâches professionnelles confiées répondent au code du travail, les règles sur le temps de travail et la sécurité sont respectées">
+              <d_ligne />
+              <d_poids />
+              <d_revue />
+            </Indicateur_11>
+            <Indicateur_12 S_intitule="Les risques liésaux activités confiées sont identifiés">
+              <d_ligne />
+              <d_poids />
+              <d_revue />
+            </Indicateur_12>
+            <Indicateur_13 S_intitule="Les règles liées à la sécurisation de l'intervention sont données">
+              <d_ligne />
+              <d_poids />
+              <d_revue />
+            </Indicateur_13>
           </l_01>
           <d_02 I_R2="5" />
         </l_C2.5>
         <l_C2.4 S_00="assumer le rôle total ou partiel de chef de projet ">
           <l_01>
-            <Indicateur_00 S_intitule="assumer le rôle total ou partiel de chef de projet ">
+            <Indicateur_00 S_intitule="Les moyens sont réservés et libérés">
               <d_ligne I_R2="0" />
-              <d_poids F_R2="100.0" />
+              <d_poids F_R2="50.0" />
               <d_revue I_R2="0" />
             </Indicateur_00>
+            <Indicateur_01 S_intitule="Les charges de travail et la durée des tâches professionnelles sont définies">
+              <d_ligne I_R2="0" />
+              <d_poids F_R2="50.0" />
+              <d_revue I_R2="0" />
+            </Indicateur_01>
+            <Indicateur_02 S_intitule="Les commandes et approvisionnements sont gérés">
+              <d_ligne />
+              <d_poids />
+              <d_revue />
+            </Indicateur_02>
+            <Indicateur_03 S_intitule="Le cahier de suivi de projet, le compte rendu de revues, les réunions, les contacts clients/fournisseurs, etc. sont complétés">
+              <d_ligne />
+              <d_poids />
+              <d_revue />
+            </Indicateur_03>
+            <Indicateur_04 S_intitule="Les tâches professionnelles à réaliser sont identifiées">
+              <d_ligne />
+              <d_poids />
+              <d_revue />
+            </Indicateur_04>
+            <Indicateur_05 S_intitule="Les ressources nécessaires sont évaluées">
+              <d_ligne />
+              <d_poids />
+              <d_revue />
+            </Indicateur_05>
           </l_01>
           <d_02 I_R2="5" />
         </l_C2.4>
         <l_C4.7 S_00=" documenter une réalisation matérielle et/ou logicielle">
           <l_01>
-            <Indicateur_00 S_intitule=" documenter une réalisation matérielle et/ou logicielle">
+            <Indicateur_00 S_intitule="Le dossier est synthétisé">
               <d_ligne I_R2="0" />
               <d_poids F_R2="100.0" />
               <d_revue I_R2="0" />
@@ -403,61 +578,146 @@
         </l_C4.7>
         <l_C4.6 S_00=" produire les documents de fabrication d’un sous ensemble">
           <l_01>
-            <Indicateur_00 S_intitule=" produire les documents de fabrication d’un sous ensemble">
+            <Indicateur_00 S_intitule="Les documents de fabrication sont rédigés">
               <d_ligne I_R2="0" />
-              <d_poids F_R2="100.0" />
+              <d_poids F_R2="50.0" />
               <d_revue I_R2="0" />
             </Indicateur_00>
+            <Indicateur_01 S_intitule="Le dossier avec le diagramme des phases de fabrication est rédigé">
+              <d_ligne I_R2="0" />
+              <d_poids F_R2="50.0" />
+              <d_revue I_R2="0" />
+            </Indicateur_01>
           </l_01>
           <d_02 I_R2="5" />
         </l_C4.6>
         <l_C4.5 S_00=" tester et valider--un module logiciel et matériel ">
           <l_01>
-            <Indicateur_00 S_intitule=" tester et valider--un module logiciel et matériel ">
+            <Indicateur_00 S_intitule="La procédure de tests est définie">
               <d_ligne I_R2="0" />
-              <d_poids F_R2="100.0" />
+              <d_poids F_R2="50.0" />
               <d_revue I_R2="0" />
             </Indicateur_00>
+            <Indicateur_01 S_intitule="L'équipement ou le produit est certifié">
+              <d_ligne I_R2="0" />
+              <d_poids F_R2="50.0" />
+              <d_revue I_R2="0" />
+            </Indicateur_01>
+            <Indicateur_02 S_intitule="Le compte rendu du résultat des tests est produit">
+              <d_ligne />
+              <d_poids />
+              <d_revue />
+            </Indicateur_02>
+            <Indicateur_03 S_intitule="Un rapport de test et de conformité est fourni">
+              <d_ligne />
+              <d_poids />
+              <d_revue />
+            </Indicateur_03>
           </l_01>
           <d_02 I_R2="5" />
         </l_C4.5>
         <l_C4.4 S_00=" fabriquer un sous-ensemble">
           <l_01>
-            <Indicateur_00 S_intitule=" fabriquer un sous-ensemble">
+            <Indicateur_00 S_intitule="Le dossier de fabrication produit est conforme aux contraintes">
               <d_ligne I_R2="0" />
-              <d_poids F_R2="100.0" />
+              <d_poids F_R2="50.0" />
               <d_revue I_R2="0" />
             </Indicateur_00>
+            <Indicateur_01 S_intitule="La carte est montée dans les règles de l'art">
+              <d_ligne I_R2="0" />
+              <d_poids F_R2="50.0" />
+              <d_revue I_R2="0" />
+            </Indicateur_01>
           </l_01>
           <d_02 I_R2="5" />
         </l_C4.4>
         <l_C4.3 S_00=" adapter et/ou configurer une structure logicielle">
           <l_01>
-            <Indicateur_00 S_intitule=" adapter et/ou configurer une structure logicielle">
+            <Indicateur_00 S_intitule="La structure logicielle est délimitée">
               <d_ligne I_R2="0" />
-              <d_poids F_R2="100.0" />
+              <d_poids F_R2="50.0" />
               <d_revue I_R2="0" />
             </Indicateur_00>
+            <Indicateur_01 S_intitule="Un compte rendu d'analyse est produit">
+              <d_ligne I_R2="0" />
+              <d_poids F_R2="50.0" />
+              <d_revue I_R2="0" />
+            </Indicateur_01>
+            <Indicateur_02 S_intitule="Un compte rendu des modifications à apporter est rédigé">
+              <d_ligne />
+              <d_poids />
+              <d_revue />
+            </Indicateur_02>
+            <Indicateur_03 S_intitule="Les modifications sont validées">
+              <d_ligne />
+              <d_poids />
+              <d_revue />
+            </Indicateur_03>
           </l_01>
           <d_02 I_R2="5" />
         </l_C4.3>
         <l_C4.2 S_00="adapter et/ou configurer un matériel">
           <l_01>
-            <Indicateur_00 S_intitule="adapter et/ou configurer un matériel">
+            <Indicateur_00 S_intitule="Le matériel est fonctionnel dans son environnement">
               <d_ligne I_R2="0" />
-              <d_poids F_R2="100.0" />
+              <d_poids F_R2="33.333333" />
               <d_revue I_R2="0" />
             </Indicateur_00>
+            <Indicateur_01 S_intitule="Un compte rendu des informations pertinentes est établi">
+              <d_ligne I_R2="0" />
+              <d_poids F_R2="33.333333" />
+              <d_revue I_R2="0" />
+            </Indicateur_01>
+            <Indicateur_02 S_intitule="Le schéma structurel est produit">
+              <d_ligne I_R2="0" />
+              <d_poids F_R2="33.333333" />
+              <d_revue I_R2="0" />
+            </Indicateur_02>
+            <Indicateur_03 S_intitule="Les choix technologiques sont justifiés">
+              <d_ligne />
+              <d_poids />
+              <d_revue />
+            </Indicateur_03>
+            <Indicateur_04 S_intitule="Un rapport est écrit">
+              <d_ligne />
+              <d_poids />
+              <d_revue />
+            </Indicateur_04>
+            <Indicateur_05 S_intitule="Le logiciel est configuré">
+              <d_ligne />
+              <d_poids />
+              <d_revue />
+            </Indicateur_05>
           </l_01>
           <d_02 I_R2="5" />
         </l_C4.2>
         <l_C4.1 S_00=" câbler et/ou intégrer un matériel ">
           <l_01>
-            <Indicateur_00 S_intitule=" câbler et/ou intégrer un matériel ">
+            <Indicateur_00 S_intitule="Le matériel est fonctionnel dans son environnement">
               <d_ligne I_R2="0" />
-              <d_poids F_R2="100.0" />
+              <d_poids F_R2="33.333333" />
               <d_revue I_R2="0" />
             </Indicateur_00>
+            <Indicateur_01 S_intitule="Un plan d'installation et de câblage est fourni">
+              <d_ligne I_R2="0" />
+              <d_poids F_R2="33.333333" />
+              <d_revue I_R2="0" />
+            </Indicateur_01>
+            <Indicateur_02 S_intitule="Le matériel est en situation">
+              <d_ligne I_R2="0" />
+              <d_poids F_R2="33.333333" />
+              <d_revue I_R2="0" />
+            </Indicateur_02>
+            <Indicateur_03 S_intitule="Le matériel est connecté suivant les spécifications et les règles de l'art">
+              <d_ligne />
+              <d_poids />
+              <d_revue />
+            </Indicateur_03>
+            <Indicateur_04 S_intitule="L'installation est conforme au protocole d'installation">
+              <d_ligne />
+              <d_poids />
+              <d_revue />
+            </Indicateur_04>
           </l_01>
           <d_02 I_R2="5" />
         </l_C4.1>

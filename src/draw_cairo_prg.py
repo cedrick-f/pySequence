@@ -221,7 +221,10 @@ def DefinirZones(prg, ctx):
     # Zone du tableau des thèmes/CI
     #
     tailleZElevesV[0] = wEleves * len(ref.CentresInterets)
-    tailleZElevesH[1] = hEleves * len(ref.CentresInterets) + ecartY
+    if len(ref.CentresInterets) == 0:
+        tailleZElevesH[1] = 0
+    else:
+        tailleZElevesH[1] = hEleves * len(ref.CentresInterets) + ecartY
     posZElevesV[0] = posZComp[0] - tailleZElevesV[0] - ecartX/2
     tailleZElevesH[0] = posZElevesV[0]-posZElevesH[0]- ecartX/2
     tailleZElevesV[1] = posZOrganis[1] + tailleZOrganis[1] - posZElevesV[1]
@@ -455,11 +458,11 @@ def Draw(ctx, prg, mouchard = False):
 
 
     #
-    #  Calendrier ???
+    #  Calendrier
     #
 #    prg.pt_caract.append(posPro)
     rectPro = posPro + taillePro
-    prg.pt_caract.append(curve_rect_titre(ctx, u"Calendrier ?",  rectPro, BcoulPro, IcoulPro, fontPro))
+    prg.pt_caract.append(curve_rect_titre(ctx, u"Calendrier",  rectPro, BcoulPro, IcoulPro, fontPro))
     ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                        cairo.FONT_WEIGHT_NORMAL)
     show_text_rect(ctx, constantes.ellipsizer(u"", constantes.LONG_MAX_PROBLEMATIQUE), 
@@ -571,75 +574,76 @@ def Draw(ctx, prg, mouchard = False):
     #
     #  Tableau des CI/Thèmes ?
     #   
-    rectCI = (posZElevesH[0], posZElevesH[1], 
-              tailleZElevesH[0], tailleZElevesH[1])
-    curve_rect_titre(ctx, ref.nomCI, rectCI, BcoulCI, IcoulCI, fontCI)
-    
-    ctx.select_font_face(font_family, cairo.FONT_SLANT_NORMAL,
-                         cairo.FONT_WEIGHT_NORMAL)
-    ctx.set_source_rgb(0, 0, 0)
-    ctx.set_line_width(0.0005 * COEF)
-    l=[]
-    for i,e in enumerate(ref.CentresInterets) : 
-#        e.pts_caract = []
-        l.append(e)
-
-    #
-    # Croisements divers
-    #
-    x, y = posZElevesH[0] + ecartX /2, posZElevesH[1] + ecartY /2
-    w, h = tailleZElevesH[0] - ecartX, tailleZElevesH[1] - ecartY
-    
-
-#    prg.pt_caract_eleve = []
-    if len(l) > 0:
-        rec = tableauH(ctx, l, x, y, 
-                     w, 0, h, 
-                     va = 'c', ha = 'd', orient = 'h', coul = CoulAltern,
-                     tailleFixe = True)
+    if len(ref.CentresInterets) > 0:
+        rectCI = (posZElevesH[0], posZElevesH[1], 
+                  tailleZElevesH[0], tailleZElevesH[1])
+        curve_rect_titre(ctx, ref.nomCI, rectCI, BcoulCI, IcoulCI, fontCI)
         
-#        prj.pt_caract_eleve = getPts(rec)
+        ctx.select_font_face(font_family, cairo.FONT_SLANT_NORMAL,
+                             cairo.FONT_WEIGHT_NORMAL)
+        ctx.set_source_rgb(0, 0, 0)
+        ctx.set_line_width(0.0005 * COEF)
+        l=[]
+        for i,e in enumerate(ref.CentresInterets) : 
+    #        e.pts_caract = []
+            l.append(e)
+    
+        #
+        # Croisements divers
+        #
+        x, y = posZElevesH[0] + ecartX /2, posZElevesH[1] + ecartY /2
+        w, h = tailleZElevesH[0] - ecartX, tailleZElevesH[1] - ecartY
         
-        #
-        # Lignes horizontales
-        #
-        for i, e in enumerate(ref.CentresInterets):
-            prg.zones_sens.append(Zone([rec[i]], param = "CI"+str(i)))
+    
+    #    prg.pt_caract_eleve = []
+        if len(l) > 0:
+            rec = tableauH(ctx, l, x, y, 
+                         w, 0, h, 
+                         va = 'c', ha = 'd', orient = 'h', coul = CoulAltern,
+                         tailleFixe = True)
             
-            Ic = CoulAltern[i][0]
+    #        prj.pt_caract_eleve = getPts(rec)
             
-            ctx.set_source_rgb(Ic[0],Ic[1],Ic[2])
+            #
+            # Lignes horizontales
+            #
+            for i, e in enumerate(ref.CentresInterets):
+                prg.zones_sens.append(Zone([rec[i]], param = "CI"+str(i)))
+                
+                Ic = CoulAltern[i][0]
+                
+                ctx.set_source_rgb(Ic[0],Ic[1],Ic[2])
+                ctx.set_line_width(0.003 * COEF)
+                ctx.move_to(posZElevesH[0]+tailleZElevesH[0]- ecartX /2, yEleves[i]+ ecartY /2)
+                ctx.line_to(posZComp[0]+tailleZComp[0], yEleves[i]+ ecartY /2)
+                ctx.stroke()
+            
+            #
+            # Lignes verticales
+            #
+            for i, e in enumerate(ref.CentresInterets):
+                Ic = CoulAltern[i][0]
+                
+                ctx.set_source_rgb(Ic[0],Ic[1],Ic[2])
+                ctx.set_line_width(0.003 * COEF)
+                ctx.move_to(xEleves[i], yEleves[i]+ ecartY /2)
+                ctx.line_to(xEleves[i], posZTaches[1] + tailleZTaches[1] + (i % 2)*(ecartY/2) + ecartY/2)
+                ctx.stroke()    
+    #            DrawCroisementsElevesCompetences(ctx, prg, e, yEleves[i])
+            
+            #
+            # Ombres des lignes verticales
+            #
+            e = 0.003 * COEF
             ctx.set_line_width(0.003 * COEF)
-            ctx.move_to(posZElevesH[0]+tailleZElevesH[0]- ecartX /2, yEleves[i]+ ecartY /2)
-            ctx.line_to(posZComp[0]+tailleZComp[0], yEleves[i]+ ecartY /2)
+            for i in range(len(ref.CentresInterets)) :
+                y = posZTaches[1] + tailleZTaches[1] + (i % 2)*(ecartY/2) + ecartY/2
+                ctx.set_source_rgb(1,1,1)
+                ctx.move_to(xEleves[i]+e, yEleves[i]+e+ ecartY /2)
+                ctx.line_to(xEleves[i]+e, y)
+                ctx.move_to(xEleves[i]-e, yEleves[i]+e+ ecartY /2)
+                ctx.line_to(xEleves[i]-e, y)
             ctx.stroke()
-        
-        #
-        # Lignes verticales
-        #
-        for i, e in enumerate(ref.CentresInterets):
-            Ic = CoulAltern[i][0]
-            
-            ctx.set_source_rgb(Ic[0],Ic[1],Ic[2])
-            ctx.set_line_width(0.003 * COEF)
-            ctx.move_to(xEleves[i], yEleves[i]+ ecartY /2)
-            ctx.line_to(xEleves[i], posZTaches[1] + tailleZTaches[1] + (i % 2)*(ecartY/2) + ecartY/2)
-            ctx.stroke()    
-#            DrawCroisementsElevesCompetences(ctx, prg, e, yEleves[i])
-        
-        #
-        # Ombres des lignes verticales
-        #
-        e = 0.003 * COEF
-        ctx.set_line_width(0.003 * COEF)
-        for i in range(len(ref.CentresInterets)) :
-            y = posZTaches[1] + tailleZTaches[1] + (i % 2)*(ecartY/2) + ecartY/2
-            ctx.set_source_rgb(1,1,1)
-            ctx.move_to(xEleves[i]+e, yEleves[i]+e+ ecartY /2)
-            ctx.line_to(xEleves[i]+e, y)
-            ctx.move_to(xEleves[i]-e, yEleves[i]+e+ ecartY /2)
-            ctx.line_to(xEleves[i]-e, y)
-        ctx.stroke()
 
     
     

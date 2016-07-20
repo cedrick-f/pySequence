@@ -1645,7 +1645,7 @@ class Referentiel(XMLelem):
 
     #########################################################################
     def getTypeEtab(self):
-        if self.Famille in ["STI", "SSI", "STS", "2nde"]:
+        if self.Famille in ["STI", "SSI", "STS", "2nde", "ISN"]:
             return 'L'  # Lycée
         else:
             return 'C'  # Collège

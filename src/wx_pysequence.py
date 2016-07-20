@@ -1211,7 +1211,9 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     def commandeEnregistrerSous(self, event = None):
         page = self.GetNotebook().GetCurrentPage()
         if page != None:
-            page.commandeEnregistrerSous(event)
+            nomFichier = page.commandeEnregistrerSous(event)
+            if nomFichier is not None:
+                self.filehistory.AddFileToHistory(nomFichier)
     
     #############################################################################
     def exporterFiche(self, event = None):
@@ -1595,6 +1597,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
             dlg.Destroy()
             self.enregistrer(path)
             self.DossierSauvegarde = os.path.split(path)[0]
+            return path
         else:
             dlg.Destroy()
     
@@ -1644,7 +1647,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
             
     #############################################################################
     def commandeEnregistrerSous(self, event = None):
-        self.dialogEnregistrer()
+        return self.dialogEnregistrer()
 
 
     #############################################################################
@@ -1953,7 +1956,7 @@ class FenetreSequence(FenetreDocument):
             
     ###############################################################################################
     def OnDocModified(self, event):
-#         print "OnDocModified", event.GetModif()
+        print "OnDocModified", event.GetModif()
         if event.GetModif() != u"":
             
             self.classe.undoStack.do(event.GetModif())
@@ -1984,6 +1987,7 @@ class FenetreSequence(FenetreDocument):
 
         self.definirNomFichierCourant(nomFichier)
         self.MarquerFichierCourantModifie(False)
+        
         wx.EndBusyCursor()
         
         
@@ -2263,7 +2267,7 @@ class FenetreProjet(FenetreDocument):
     ###############################################################################################
     def OnDocModified(self, event):
         if event.GetModif() != u"":
-#            print "OnDocModified", event.GetModif()
+#             print "OnDocModified", event.GetModif()
             self.classe.undoStack.do(event.GetModif())
             self.projet.undoStack.do(event.GetModif())
             
@@ -4228,7 +4232,6 @@ class PanelPropriete_Projet(PanelPropriete):
         
         self.bmp = wx.StaticBitmap(pageGen, -1, self.getBitmapPeriode(250))
         
-        
         ref = self.projet.GetReferentiel()
         self.position = PositionCtrl(pageGen, self.projet.position, ref.periodes, ref.projets)#wx.SL_AUTOTICKS |
         sb.Add(self.bmp)
@@ -4291,7 +4294,6 @@ class PanelPropriete_Projet(PanelPropriete):
               
     #############################################################################            
     def EvtText(self, event):
-#        print "EvtText",
         if event.GetEventObject() == self.textctrl:
 #            nt = event.GetString()
             nt = self.textctrl.GetText()
@@ -4355,8 +4357,8 @@ class PanelPropriete_Projet(PanelPropriete):
 #        else:
 #            maj = False
             
-#        print obj
-        modif = u"Modification des propriétés du projet"
+#         print obj
+        modif = u"Modification des propriétés du Projet"
         if self.onUndoRedo():
             self.sendEvent(modif = modif)
         else:
@@ -4399,6 +4401,7 @@ class PanelPropriete_Projet(PanelPropriete):
         self.tit_pb.SetLabel(ref.attributs['PB'][0])
         self.commctrl.MiseAJour(ref.attributs['PB'][0], ref.attributs['PB'][3])
         self.commctrl.SetToolTipString(ref.attributs['PB'][1] + constantes.TIP_PB_LIMITE)
+        
         
         self.MiseAJourPosition()
         self.panelOrga.MiseAJourListe()
@@ -5344,7 +5347,7 @@ class PanelPropriete_Classe(PanelPropriete):
             
             
     ######################################################################################  
-    def EvtComboAcad(self, evt = None):
+    def EvtComboAcad(self, evt = None, modif = True):
 #        print "EvtComboAcad"
         if evt != None:
             self.classe.academie = evt.GetString()
@@ -5367,12 +5370,13 @@ class PanelPropriete_Classe(PanelPropriete):
 #        self.cbv.SetSize((self.cbv.GetSizeFromTextSize(),-1))
         self.cbv.Refresh()
         
-        self.sendEvent(modif = u"Modification de l'académie",
-                       obj = self.classe)
+        if modif:
+            self.sendEvent(modif = u"Modification de l'académie",
+                           obj = self.classe)
             
     
     ######################################################################################  
-    def EvtComboVille(self, evt = None):
+    def EvtComboVille(self, evt = None, modif = True):
 #        print "EvtComboVille"
         if evt != None:
             self.classe.ville = evt.GetString()
@@ -5393,8 +5397,9 @@ class PanelPropriete_Classe(PanelPropriete):
         self.cbe.Set(lst)
         self.cbe.Refresh()
         
-        self.sendEvent(modif = u"Modification de la ville",
-                       obj = self.classe)
+        if modif:
+            self.sendEvent(modif = u"Modification de la ville",
+                           obj = self.classe)
         
             
         
@@ -5561,9 +5566,9 @@ class PanelPropriete_Classe(PanelPropriete):
         
         
         self.cba.SetValue(self.classe.academie)
-        self.EvtComboAcad()
+        self.EvtComboAcad(modif = False)
         self.cbv.SetValue(self.classe.ville)
-        self.EvtComboVille()
+        self.EvtComboVille(modif = False)
         self.cbe.SetValue(self.classe.etablissement)
         
 #        print "   ", self.classe.systemes
@@ -8984,7 +8989,7 @@ class PanelPropriete_Personne(PanelPropriete):
             
             
         #
-        # Avatar
+        # Portrait
         #
         box = myStaticBox(self, -1, u"Portrait")
         bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
@@ -8999,7 +9004,19 @@ class PanelPropriete_Personne(PanelPropriete):
         self.Bind(wx.EVT_BUTTON, self.OnClick, bt)
         self.sizer.Add(bsizer, (0,2), (2,1), flag =  wx.EXPAND|wx.ALIGN_RIGHT|wx.TOP|wx.BOTTOM|wx.LEFT, border = 2)#wx.ALIGN_CENTER_VERTICAL |
         
-        
+        #
+        # Boutons Charger/Sauvegarder
+        #
+        if self.personne.titre == u"prof":
+            bt_sizer = wx.BoxSizer(wx.HORIZONTAL)
+            bt_c = wx.Button(self, -1, u"Charger")
+            self.Bind(wx.EVT_BUTTON, self.OnCharge, bt_c)
+            bt_s = wx.Button(self, -1, u"Sauvegarder")
+            self.Bind(wx.EVT_BUTTON, self.OnSauv, bt_s)
+            bt_sizer.Add(bt_c)
+            bt_sizer.Add(bt_s)
+            self.sizer.Add(bt_sizer, (1,0), (1,2), flag =  wx.EXPAND|wx.ALIGN_RIGHT|wx.TOP|wx.BOTTOM|wx.LEFT, border = 2)
+            
         self.MiseAJour()
         
         self.sizer.AddGrowableRow(0)
@@ -9039,8 +9056,96 @@ class PanelPropriete_Personne(PanelPropriete):
     #############################################################################            
     def GetDocument(self):
         return self.personne.GetDocument()
+
+
+    #############################################################################            
+    def GetListProfs(self):
+        nomFichier = os.path.join(util_path.APP_DATA_PATH, constantes.FICHIER_PROFS)
+        if not os.path.exists(nomFichier):
+            return ET.Element("Professeurs"), []
+        
+        fichier = open(nomFichier,'r')
+        try:
+            root = ET.parse(fichier).getroot()
+        except ET.ParseError:
+            messageErreur(wx.GetTopLevelParent(self), u"Fichier corrompu", 
+                              u"Le fichier %s est corrompu !!\n\n"\
+                              u"Réparez-le ou supprimez-le pour continuer à utiliser cette fonctionnalité" %nomFichier)
+            fichier.close()
+            return
+        
+        list_p = []
+
+        for b in root:
+            p = pysequence.Prof(self.personne.GetDocument())
+            p.setBranche(b)
+            list_p.append(p)
+     
+        
+        list_p.sort(key = lambda prof : prof.nom)
+        
+        fichier.close()
+        
+        return root, list_p
+
+
+    #############################################################################            
+    def OnCharge(self, event):
+
+        root, list_p = self.GetListProfs()
+        if len(list_p)>0:
+            dlg = wx.SingleChoiceDialog(
+                    self, u'Sélectionner un Professeur\ndans la liste ci-dessous :',
+                    u'Liste des Professeurs enregistrés',
+                    [p.GetNomPrenom() for p in list_p], 
+                    style = wx.CHOICEDLG_STYLE
+                    )
     
-    
+            if dlg.ShowModal() == wx.ID_OK:
+                self.personne.setBranche(root[dlg.GetSelection()])
+                modif = u"Chargement d'un Professeur"
+                self.MiseAJour()
+                self.sendEvent(modif = modif)
+                self.personne.SetCode()
+            dlg.Destroy()
+            
+        else:
+            messageInfo(self, u"Aucun professeur", 
+                    u"La liste des Professeurs enregistrés est vide." %self.personne.GetNomPrenom())
+
+        
+       
+        
+        
+    #############################################################################            
+    def OnSauv(self, event):
+        
+        root, list_p = self.GetListProfs()
+        
+        if self.personne in list_p:
+            dlg = wx.MessageDialog(self, u"Le professeur %s existe déja dans la liste\n\n" \
+                                           u"Voulez-vous le remplacer ?" %(self.personne.GetNomPrenom()),
+                                             u"Professeur existant",
+                                             wx.ICON_INFORMATION | wx.YES_NO | wx.CANCEL
+                                             )
+            res = dlg.ShowModal()
+            dlg.Destroy()
+            if res == wx.ID_YES:
+                for child in root:
+                    p = pysequence.Prof(self.personne.GetDocument())
+                    p.setBranche(child)
+                    if p == self.personne:
+                        root.remove(child)
+            else:
+                return
+            
+        root.append(self.personne.getBranche())
+        constantes.indent(root)
+        enregistrer_root(root, os.path.join(util_path.APP_DATA_PATH, constantes.FICHIER_PROFS))
+        messageInfo(self, u"Enregistrement réussi", 
+                    u"Le professeur %s a bien été ajouté." %self.personne.GetNomPrenom())
+
+
     #############################################################################            
     def OnClick(self, event):
 #        for k, g in self.personne.grille.items():

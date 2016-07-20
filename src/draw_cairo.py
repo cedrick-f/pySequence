@@ -987,7 +987,7 @@ def DrawCalendrier(ctx, rect, calendrier):
     dx_a = (wt-wj)/calendrier.GetNbrAnnees() + ea
     
     # liste des années
-    lannees = [calendrier.annee + i for i in range(calendrier.GetNbrAnnees()+1)]
+    lannees = calendrier.GetListeAnnees()
     
     # listes des mois
     lmois = {}
@@ -1026,31 +1026,32 @@ def DrawCalendrier(ctx, rect, calendrier):
     
     jours_feries = constantes.JOURS_FERIES
     lstAcad = sorted([a[0] for a in constantes.ETABLISSEMENTS.values()])
-    creneaux = []
+    creneaux = calendrier.GetCreneauxFeries()
+#     print "creneaux", creneaux
     
     for ia, annee in enumerate(lannees):
 
-        if annee in jours_feries.keys():
-            list_zones, list_crenaux = jours_feries[annee]
-            acad = calendrier.GetClasse().academie
+#         if annee in jours_feries.keys():
+#             list_zones, list_crenaux = jours_feries[annee]
+#             acad = calendrier.GetClasse().academie
+#             
+#             try:
+#                 num_acad = lstAcad.index(acad)
+#             except:
+#                 num_acad = None
+# 
+#             
+#             zone = None
+#             if num_acad is not None:
+#                 for z, l in list_zones.items():
+#                     if num_acad in l:
+#                         zone = z
+#                         break
+# 
+#             if zone in list_crenaux.keys():
+#                 creneaux.extend(list_crenaux[zone])
+#         
             
-            try:
-                num_acad = lstAcad.index(acad)
-            except:
-                num_acad = None
-
-            
-            zone = None
-            if num_acad is not None:
-                for z, l in list_zones.items():
-                    if num_acad in l:
-                        zone = z
-                        break
-
-            if zone in list_crenaux.keys():
-                creneaux.extend(list_crenaux[zone])
-        
-        
         
         show_text_rect(ctx, str(annee), 
                        (X+wj, y, wa[annee], ha), 
@@ -1072,7 +1073,9 @@ def DrawCalendrier(ctx, rect, calendrier):
             X += ev
         
         X += ea-ev
-        
+    
+    
+    
     for c in creneaux:
         if type(c[0]) == list :
             c[0] = date(*c[0])

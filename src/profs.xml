@@ -1,0 +1,4 @@
+<Professeurs>
+  <Prof Discipline="Tec" Id="0" Nom="FAURY" Prenom="Cédrick" Referent="True" />
+  <Prof Discipline="Phy" Id="1" Nom="TRAGIN" Prenom="Thierry" Referent="False" />
+</Professeurs>

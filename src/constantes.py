@@ -353,6 +353,8 @@ def ReSize_avatar(img):
 
 AVATAR_DEFAUT = ReSize_avatar(images.avatar.GetBitmap())            
             
+FICHIER_PROFS = "profs.xml"
+
 ####################################################################################
 #
 #   Les constantes valables pour tous les enseignements
@@ -361,7 +363,7 @@ AVATAR_DEFAUT = ReSize_avatar(images.avatar.GetBitmap())
 TYPE_ENSEIGNEMENT_DEFAUT = "SSI"
 
 # Le fichier contenant les CI STI2D ETT par académie
-FICHIER_CI_STI2D_ETT = "CI_STI2D_ETT.xml"
+#FICHIER_CI_STI2D_ETT = "CI_STI2D_ETT.xml"
 
 
 ####################################################################################
@@ -637,7 +639,7 @@ ETABLISSEMENTS = getEtab.ouvrir()
 
 
 JOURS_FERIES = getEtab.ouvrir_jours_feries()
-#print "JOURS_FERIES", JOURS_FERIES
+print "JOURS_FERIES", JOURS_FERIES
 
 class Discipline():
     def __init__(self, Id, nom, code, coul):
@@ -649,9 +651,10 @@ class Discipline():
 
 
 # Disciplines "Prof"
-DISCIPLINES = ['SII', 'Tch', 'Phy', 'Mat', 'Svt', 'LV1', 'Phi', 'Spo', 'Aut']#, 'GE', 'CM', 'SA']
+DISCIPLINES = ['SII', 'Tch', 'ISN', 'Phy', 'Mat', 'Svt', 'LV1', 'Phi', 'Spo', 'Aut']#, 'GE', 'CM', 'SA']
 NOM_DISCIPLINES = {'Tec' : u"Sciences Industrielles de l'Ingénieur", 
-                   'SII' : u"Sciences Industrielles de l'Ingénieur", 
+                   'SII' : u"Sciences Industrielles de l'Ingénieur",
+                   'ISN' : u"Informatique et Sciences du Numérique ",
                    'Tch' : u"Technologie", 
                    'Phy' : u"Physique/Chimie", 
                    'Mat' : u"Mathématiques", 
@@ -666,6 +669,7 @@ NOM_DISCIPLINES = {'Tec' : u"Sciences Industrielles de l'Ingénieur",
 
 CODE_DISCIPLINES = {'Tec' : u"SII", 
                     'SII' : u"SII",
+                    'ISN' : u"ISN",
                     'Tch' : u"Techno", 
                    'Phy' : u"PC", 
                    'Mat' : u"M", 
@@ -680,6 +684,7 @@ CODE_DISCIPLINES = {'Tec' : u"SII",
 
 COUL_DISCIPLINES = {'Tec' : (0, 0, 0), 
                     'SII' : (0, 0, 0), 
+                    'ISN' : (0, 0, 0), 
                     'Tch' : (0, 0, 0), 
                     'Phy' : (0.7, 0.2, 0), 
                     'Mat' : (0, 0.7, 0.2), 

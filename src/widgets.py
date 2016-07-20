@@ -923,6 +923,7 @@ class TextCtrl_Help(orthographe.STC_ortho, BaseGestionFenHelp):
         self.md = md
         self.titre = titre
         self.Bind(wx.EVT_ENTER_WINDOW, self.OnEnter)
+        self.Bind(wx.EVT_MOTION, self.OnMotion)
         self.Bind(wx.EVT_LEAVE_WINDOW, self.OnLeave)
         self.Bind(wx.EVT_SIZE, self.OnSize)
         self.Bind(wx.EVT_BUTTON, self.OnButton, self.bouton)
@@ -937,7 +938,22 @@ class TextCtrl_Help(orthographe.STC_ortho, BaseGestionFenHelp):
         if len(self.md) > 0:
             self.bouton.Show()
         evt.Skip()
-
+        
+        
+    def OnMotion(self, evt):
+        t = self.GetToolTip()
+        if t is not None:
+            print "OnMotion"
+            t.SetAutoPop(0)
+            t.SetAutoPop(3)
+#         t = self.GetToolTipString()
+#         self.SetToolTipString(t)
+            print dir(t)
+            print t.Tip
+            
+        evt.Skip()
+        
+        
     def OnLeave(self, evt):
         w, h = self.GetSize()
         if evt.x > w-3 or evt.y < 2 or evt.x < 2 or evt.y > h-2:
@@ -967,7 +983,23 @@ class TextCtrl_Help(orthographe.STC_ortho, BaseGestionFenHelp):
         evt.Skip()
 
 
-
+import xml.etree.ElementTree as ET
+from util_path import SYSTEM_ENCODING
+##################################################################################################    
+def enregistrer_root(root, nomFichier):
+    fichier = file(nomFichier, 'w')
+    try:
+        ET.ElementTree(root).write(fichier, xml_declaration=False, encoding = SYSTEM_ENCODING)
+    except IOError:
+        messageErreur(None, u"Accés refusé", 
+                              u"L'accés au fichier %s a été refusé !\n\n"\
+                              u"Essayer de faire \"Enregistrer sous...\"" %nomFichier)
+    except UnicodeDecodeError:
+        messageErreur(None, u"Erreur d'encodage", 
+                              u"Un caractère spécial empêche l'enregistrement du fichier !\n\n"\
+                              u"Essayer de le localiser et de le supprimer.\n"\
+                              u"Merci de reporter cette erreur au développeur.")
+    fichier.close()
     
 #############################################################################################################
 def messageErreur(parent, titre, message, icon = wx.ICON_WARNING):
