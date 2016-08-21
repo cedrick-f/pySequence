@@ -1,7 +1,7 @@
 *******************************
-*  Package pySéquence Ubuntu  *
+*  Package pySÃ©quence Ubuntu  *
 *******************************
-testé sur un pcDuino3B :)
+testÃ© sur un pcDuino3B :)
 
 wxpython 3.0.2.0 :
 ------------------
@@ -20,9 +20,13 @@ A partir de Synaptic Package Installer :
  * python-bs4
  * (xclip)
  * (python-pypdf)
- 
- Depuis un terminal :
- --------------------
+
+Depuis un terminal :
+--------------------
+
   $ sudo pip install wxpython
+
   $ sudo pip install pyperclip
+  
   $ sudo pip install pypdf2
+  
