@@ -11,7 +11,7 @@ from _winreg import SetValue
 #############################################################################
 #############################################################################
 
-## Copyright (C) 2014 Cédrick FAURY - Jean-Claude FRICOU
+## Copyright (C) 2011-2016 Cédrick FAURY - Jean-Claude FRICOU
 
 #    pySequence is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@ wx_pysequence.py
 pySéquence : aide à la réalisation de fiches de séquence pédagogiques
 et à la validation de projets
 
-Copyright (C) 2011-2015
+Copyright (C) 2011-2016
 @author: Cedrick FAURY
 
 """
@@ -10294,7 +10294,8 @@ class ArbreSavoirs(CT.CustomTreeCtrl):
     def __init__(self, parent, typ, savoir, savoirs, prerequis, et = False):
 
         CT.CustomTreeCtrl.__init__(self, parent, -1, 
-                                   agwStyle = wx.TR_DEFAULT_STYLE|wx.TR_MULTIPLE|wx.TR_HIDE_ROOT|CT.TR_AUTO_CHECK_CHILD|CT.TR_AUTO_CHECK_PARENT)
+                                   agwStyle = wx.TR_DEFAULT_STYLE|wx.TR_MULTIPLE|wx.TR_HIDE_ROOT|CT.TR_AUTO_CHECK_CHILD|\
+                                   CT.TR_AUTO_CHECK_PARENT|CT.TR_HAS_VARIABLE_ROW_HEIGHT) # << le dernier pour accepter les texte multiligne (ça marche mais pas débuggé)
         
         self.parent = parent
         self.savoirs = savoirs # Les savoirs sélectrionnés

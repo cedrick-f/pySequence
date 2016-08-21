@@ -1,0 +1,1029 @@
+<Referentiel B_CI_BO="False" B_CI_cible="True" B_domaines="True" S_AnneeDebut="Sup1" S_Code="MPSI" S_Famille="MPSI" S_FichierLogo="" S_abrevCI="CI" S_abrevPb="Pb" S_nomCI="Centre(s) d'Intérêt" S_nomFonctions="Fonction(s)" S_nomPb="Problématique(s)" S_nomTaches="Tâche(s)">
+  <l_BO_URL>
+    <l_00 S_00="Programme" S_01="http://www.education.gouv.fr/cid53329/mene1019619a.html" />
+    <l_01 S_00="Epreuves" S_01="http://www.education.gouv.fr/pid25535/bulletin_officiel.html?cid_bo=82979" />
+    <l_02 S_00="Ressources" S_01="http://eduscol.education.fr/cid66419/ressources-pour-le-cycle-terminal.html" />
+  </l_BO_URL>
+  <l_BO_dossier S_00="SSI" />
+  <l_CentresInterets S_00="Analyser un système fonctionnellement et structurellement" S_01="Expérimenter et mesurer sur un système réel pour évaluer ses performances" S_02="Analyser des constituants d’un système réel d’un point de vue structurel et comportemental" S_03="Concevoir et utiliser un modèle relatif à un système en vue d’évaluer les performances de la chaîne d’information" S_04="Concevoir et utiliser un modèle relatif à un système en vue d’évaluer les performances de la chaîne d’énergie" />
+  <l_Enseignement S_00="MPSI" S_01="Mathématiques Physique et Sciences de l'Ingénieur" S_02="CPGE" S_03="Classe Préparatoire aux Grandes Ecoles" />
+  <d_aColNon B_C="True" />
+  <d_activites>
+    <l_ED S_00="Etude de dossier" S_01="Activité d'étude de dossier" />
+    <l_P S_00="Projet" S_01="Activité de projet" />
+    <l_AP S_00="Activité pratique" S_01="Activité pratique" />
+  </d_activites>
+  <d_compImposees B_C="False" B_S="False" />
+  <d_demarcheSeance>
+    <l_ED S_00="I" S_01="R" />
+    <l_P S_00="I" S_01="R" S_02="P" />
+    <l_AP S_00="I" S_01="R" />
+  </d_demarcheSeance>
+  <d_demarches>
+    <l_I S_00="Investigation" S_01="Investigation" />
+    <l_P S_00="Projet" S_01="Projet" />
+    <l_R S_00="Rés. Problème" S_01="Résolution de problème" />
+  </d_demarches>
+  <d_dicFonctions />
+  <d_dicoCompetences>
+    <Competences_S S_abrDiscipline="SI" S_codeDiscipline="SII" S_nomDiscipline="Sciences de l'Ingénieur" S_nomGenerique="Compétence(s)" S_nomGeneriqueIndic="Indicateurs de performance">
+      <d_dicCompetences>
+        <l_A S_00="Analyser">
+          <d_01>
+            <l_A1 S_00="Analyser le besoin">
+              <d_01>
+                <l_A1.4 S_00="traduire un besoin fonctionnel en problématique technique">
+                  <l_01>
+                    <Indicateur_00 S_intitule="Le problème technique est bien décrit">
+                      <d_ligne I_S="0" />
+                      <d_poids F_S="20.0" />
+                      <d_revue I_S="0" />
+                    </Indicateur_00>
+                  </l_01>
+                </l_A1.4>
+                <l_A1.1 S_00="définir le besoin">
+                  <l_01>
+                    <Indicateur_00 S_intitule="Le besoin et la fonction globale sont bien définis">
+                      <d_ligne I_S="0" />
+                      <d_poids F_S="20.0" />
+                      <d_revue I_S="0" />
+                    </Indicateur_00>
+                  </l_01>
+                </l_A1.1>
+                <l_A1.2 S_00="définir les fonctions de service">
+                  <l_01 />
+                  <d_02 />
+                </l_A1.2>
+                <l_A1.3 S_00="identifier les contraintes">
+                  <l_01 />
+                  <d_02 />
+                </l_A1.3>
+              </d_01>
+            </l_A1>
+            <l_A3 S_00="Caractériser des écarts">
+              <d_01>
+                <l_A3.2 S_00="comparer les résultats expérimentaux avec les critères du cahier des charges et interpréter les écarts">
+                  <l_01>
+                    <Indicateur_00 S_intitule="Les écarts constatés sont expliqués">
+                      <d_ligne I_S="0" />
+                      <d_poids F_S="20.0" />
+                      <d_revue I_S="0" />
+                    </Indicateur_00>
+                  </l_01>
+                </l_A3.2>
+                <l_A3.3 S_00="comparer les résultats simulés avec les critères du cahier des charges et interpréter les écarts">
+                  <l_01>
+                    <Indicateur_00 S_intitule="Les écarts constatés sont expliqués">
+                      <d_ligne I_S="0" />
+                      <d_poids F_S="20.0" />
+                      <d_revue I_S="0" />
+                    </Indicateur_00>
+                  </l_01>
+                </l_A3.3>
+                <l_A3.1 S_00="comparer les résultats expérimentaux avec les résultats simulés et interpréter les écarts">
+                  <l_01>
+                    <Indicateur_00 S_intitule="Les écarts constatés sont expliqués">
+                      <d_ligne I_S="0" />
+                      <d_poids F_S="20.0" />
+                      <d_revue I_S="0" />
+                    </Indicateur_00>
+                  </l_01>
+                </l_A3.1>
+              </d_01>
+            </l_A3>
+            <l_A2 S_00="Analyser le système">
+              <d_01>
+                <l_A2.3 S_00="décrire les liaisons entre les blocs fonctionnels">
+                  <l_01 />
+                  <d_02 />
+                </l_A2.3>
+                <l_A2.2 S_00="identifier les éléments transformés et les flux">
+                  <l_01 />
+                  <d_02 />
+                </l_A2.2>
+                <l_A2.1 S_00="identifier et ordonner les fonctions techniques qui réalisent les fonctions de services et respectent les contraintes">
+                  <l_01 />
+                  <d_02 />
+                </l_A2.1>
+                <l_A2.5 S_00="identifier les matériaux des constituants et leurs propriétés en relation avec les fonctions et les contraintes">
+                  <l_01 />
+                  <d_02 />
+                </l_A2.5>
+                <l_A2.4 S_00="identifier l’organisation structurelle">
+                  <l_01 />
+                  <d_02 />
+                </l_A2.4>
+              </d_01>
+            </l_A2>
+          </d_01>
+          <d_02 I_S="30" />
+        </l_A>
+        <l_C S_00="Expérimenter">
+          <d_01>
+            <l_C2 S_00="Mettre en oeuvre un protocole expérimental">
+              <d_01>
+                <l_C2.1 S_00="conduire les essais en respectant les consignes de sécurité à partir d’un protocole fourni">
+                  <l_01>
+                    <Indicateur_00 S_intitule="Le système est correctement mis en œuvre">
+                      <d_ligne I_C="17" />
+                      <d_poids F_C="12.5" />
+                      <d_revue I_C="0" />
+                    </Indicateur_00>
+                    <Indicateur_01 S_intitule="Les capteurs et les appareils de mesure sont correctement mis en œuvre">
+                      <d_ligne I_C="18" />
+                      <d_poids F_C="12.5" />
+                      <d_revue I_C="0" />
+                    </Indicateur_01>
+                    <Indicateur_02 S_intitule="Le protocole d'essai est respecté ">
+                      <d_ligne I_C="19" />
+                      <d_poids F_C="12.5" />
+                      <d_revue I_C="0" />
+                    </Indicateur_02>
+                    <Indicateur_03 S_intitule="Les règles de sécurité sont connues et respectées">
+                      <d_ligne I_C="20" />
+                      <d_poids F_C="12.5" />
+                      <d_revue I_C="0" />
+                    </Indicateur_03>
+                  </l_01>
+                </l_C2.1>
+                <l_C2.2 S_00="traiter les données mesurées en vue d’analyser les écarts">
+                  <l_01>
+                    <Indicateur_00 S_intitule="Les méthodes et outils de traitement sont cohérents avec le problème posé">
+                      <d_ligne I_C="21" />
+                      <d_poids F_C="12.5" />
+                      <d_revue I_C="0" />
+                    </Indicateur_00>
+                    <Indicateur_01 S_intitule="Les résultats expérimentaux sont traités et présentés clairement">
+                      <d_ligne I_S="0" />
+                      <d_poids F_S="35.0" />
+                      <d_revue I_S="0" />
+                    </Indicateur_01>
+                  </l_01>
+                </l_C2.2>
+              </d_01>
+            </l_C2>
+            <l_C1 S_00="Justifier le choix d’un protocole expérimental">
+              <d_01>
+                <l_C1.4 S_00="justifier le choix des essais réalisés">
+                  <l_01>
+                    <Indicateur_00 S_intitule="Un protocole expérimental adapté est décrit">
+                      <d_ligne I_S="0" />
+                      <d_poids F_S="35.0" />
+                      <d_revue I_S="0" />
+                    </Indicateur_00>
+                  </l_01>
+                </l_C1.4>
+                <l_C1.2 S_00="décrire une chaîne d’acquisition">
+                  <l_01>
+                    <Indicateur_00 S_intitule="Les éléments de la chaîne d'acquisition sont correctement identifiés">
+                      <d_ligne I_C="15" />
+                      <d_poids F_C="12.5" />
+                      <d_revue I_C="0" />
+                    </Indicateur_00>
+                    <Indicateur_01 S_intitule="Les choix et réglages des capteurs et appareils de mesure sont correctement explicités">
+                      <d_ligne I_C="16" />
+                      <d_poids F_C="12.5" />
+                      <d_revue I_C="0" />
+                    </Indicateur_01>
+                  </l_01>
+                </l_C1.2>
+                <l_C1.3 S_00="identifier le comportement des composants">
+                  <l_01>
+                    <Indicateur_00 S_intitule="Le comportement est précisément décrit">
+                      <d_ligne I_S="0" />
+                      <d_poids F_S="30.0" />
+                      <d_revue I_S="0" />
+                    </Indicateur_00>
+                  </l_01>
+                </l_C1.3>
+                <l_C1.1 S_00="identifier les grandeurs physiques à mesurer">
+                  <l_01>
+                    <Indicateur_00 S_intitule="Les grandeurs à mesurer sont bien identifiées, leur nature et caractéristiques bien définies">
+                      <d_ligne I_C="14" />
+                      <d_poids F_C="12.5" />
+                      <d_revue I_C="0" />
+                    </Indicateur_00>
+                  </l_01>
+                </l_C1.1>
+              </d_01>
+            </l_C1>
+          </d_01>
+          <d_02 I_C="50" I_S="30" />
+        </l_C>
+        <l_B S_00="Modéliser">
+          <d_01>
+            <l_B4 S_00="Valider un modèle">
+              <d_01>
+                <l_B4.4 S_00="valider un modèle optimisé fourni">
+                  <l_01>
+                    <Indicateur_00 S_intitule="Les résultats obtenus, en amplitude et variation, sont conformes aux attendus du cahier des charges">
+                      <d_ligne I_C="11" />
+                      <d_poids F_C="12.5" />
+                      <d_revue I_C="0" />
+                    </Indicateur_00>
+                    <Indicateur_01 S_intitule="Les résultats obtenus, en amplitude et variation, sont conformes aux résultats expérimentaux">
+                      <d_ligne I_C="12" />
+                      <d_poids F_C="12.5" />
+                      <d_revue I_C="0" />
+                    </Indicateur_01>
+                  </l_01>
+                </l_B4.4>
+                <l_B4.1 S_00="interpréter les résultats obtenus">
+                  <l_01>
+                    <Indicateur_00 S_intitule="Les résultats obtenus sont bien interprétés, en amplitude et variation, de façon conforme aux lois et principes d'évolution des grandeurs physiques">
+                      <d_ligne I_C="7" />
+                      <d_poids F_C="12.5" />
+                      <d_revue I_C="0" />
+                    </Indicateur_00>
+                  </l_01>
+                </l_B4.1>
+                <l_B4.2 S_00="préciser les limites de validité du modèle utilisé">
+                  <l_01>
+                    <Indicateur_00 S_intitule="Les principales limites sont explicitées">
+                      <d_ligne I_C="8" />
+                      <d_poids F_C="12.5" />
+                      <d_revue I_C="0" />
+                    </Indicateur_00>
+                  </l_01>
+                </l_B4.2>
+                <l_B4.3 S_00="modifier les paramètres du modèle pour répondre au cahier des charges ou aux résultats expérimentaux">
+                  <l_01>
+                    <Indicateur_00 S_intitule="Les paramètres modifiés sont pertinents et font évoluer  les résultats simulés vers ceux attendus au cahier des charges">
+                      <d_ligne I_C="9" />
+                      <d_poids F_C="12.5" />
+                      <d_revue I_C="0" />
+                    </Indicateur_00>
+                    <Indicateur_01 S_intitule="Les paramètres modifiés sont pertinents et font évoluer les résultats simulés vers les résultats expérimentaux">
+                      <d_ligne I_C="10" />
+                      <d_poids F_C="12.5" />
+                      <d_revue I_C="0" />
+                    </Indicateur_01>
+                  </l_01>
+                </l_B4.3>
+              </d_01>
+            </l_B4>
+            <l_B1 S_00="Identifier et caractériser les grandeurs agissant sur un système">
+              <d_01>
+                <l_B1.1 S_00="définir, justifier la frontière de tout ou partie d’un système et répertorier les interactions">
+                  <l_01 />
+                  <d_02 />
+                </l_B1.1>
+                <l_B1.2 S_00="choisir les grandeurs et les paramètres influents en vue de les modéliser">
+                  <l_01 />
+                  <d_02 />
+                </l_B1.2>
+              </d_01>
+            </l_B1>
+            <l_B2 S_00="Proposer ou justifier un modèle">
+              <d_01>
+                <l_B2.2 S_00="préciser ou justifier les limites de validité du modèle envisagé">
+                  <l_01 />
+                  <d_02 />
+                </l_B2.2>
+                <l_B2.1 S_00="associer un modèle à un système ou à son comportement">
+                  <l_01 />
+                  <d_02 />
+                </l_B2.1>
+              </d_01>
+            </l_B2>
+            <l_B3 S_00="Résoudre et simuler">
+              <d_01>
+                <l_B3.2 S_00="simuler le fonctionnement de tout ou partie d’un système à l’aide d’un modèle fourni">
+                  <l_01>
+                    <Indicateur_00 S_intitule="Les paramètres de simulation sont adaptés aux grandeurs simulées">
+                      <d_ligne I_C="5" />
+                      <d_poids F_C="12.5" />
+                      <d_revue I_C="0" />
+                    </Indicateur_00>
+                    <Indicateur_01 S_intitule="Les plages de simulation retenues sont correctement définies">
+                      <d_ligne I_C="6" />
+                      <d_poids F_C="12.5" />
+                      <d_revue I_C="0" />
+                    </Indicateur_01>
+                  </l_01>
+                </l_B3.2>
+                <l_B3.1 S_00="choisir et mettre en oeuvre une méthode de résolution">
+                  <l_01 />
+                  <d_02 />
+                </l_B3.1>
+              </d_01>
+            </l_B3>
+          </d_01>
+          <d_02 I_C="40" />
+        </l_B>
+        <l_D S_00="Communiquer">
+          <d_01>
+            <l_D2 S_00="Mettre en oeuvre une communication">
+              <d_01>
+                <l_D2.1 S_00="choisir un support de communication et un média adapté, argumenter">
+                  <l_01>
+                    <Indicateur_00 S_intitule="Le support est bien choisi et adapté à l'objectif de présentation">
+                      <d_ligne I_S="0" />
+                      <d_poids F_S="20.0" />
+                      <d_revue I_S="0" />
+                    </Indicateur_00>
+                  </l_01>
+                </l_D2.1>
+                <l_D2.2 S_00="produire un support de communication">
+                  <l_01>
+                    <Indicateur_00 S_intitule="Un document multimédia est bien réalisé et scénarisé">
+                      <d_ligne I_S="0" />
+                      <d_poids F_S="30.0" />
+                      <d_revue I_S="0" />
+                    </Indicateur_00>
+                  </l_01>
+                </l_D2.2>
+                <l_D2.3 S_00="adapter sa stratégie de communication au contexte">
+                  <l_01>
+                    <Indicateur_00 S_intitule="La production respecte le cahier des charges (écrit/oral, texte/vidéo, durée, public visé, …)">
+                      <d_ligne I_S="0" />
+                      <d_poids F_S="30.0" />
+                      <d_revue I_S="0" />
+                    </Indicateur_00>
+                  </l_01>
+                </l_D2.3>
+              </d_01>
+            </l_D2>
+            <l_D1 S_00="Rechercher et traiter des informations">
+              <d_01>
+                <l_D1.2 S_00="analyser, choisir et classer des informations">
+                  <l_01>
+                    <Indicateur_00 S_intitule="Les informations sont traitées selon des critères pertinents">
+                      <d_ligne I_C="25" />
+                      <d_poids F_C="25.0" />
+                      <d_revue I_C="0" />
+                    </Indicateur_00>
+                    <Indicateur_01 S_intitule="Les informations sont vérifiées et mises à jour">
+                      <d_ligne I_C="26" />
+                      <d_poids F_C="25.0" />
+                      <d_revue I_C="0" />
+                    </Indicateur_01>
+                    <Indicateur_02 S_intitule="Les informations présentées sont bien choisies">
+                      <d_ligne I_S="0" />
+                      <d_poids F_S="20.0" />
+                      <d_revue I_S="0" />
+                    </Indicateur_02>
+                  </l_01>
+                </l_D1.2>
+                <l_D1.1 S_00="rechercher des informations">
+                  <l_01>
+                    <Indicateur_00 S_intitule="Les outils de recherche documentaire sont bien choisis et maîtrisés. ">
+                      <d_ligne I_C="23" />
+                      <d_poids F_C="25.0" />
+                      <d_revue I_C="0" />
+                    </Indicateur_00>
+                    <Indicateur_01 S_intitule="Une synthèse des informations collectées est correctement réalisée">
+                      <d_ligne I_C="24" />
+                      <d_poids F_C="25.0" />
+                      <d_revue I_C="0" />
+                    </Indicateur_01>
+                  </l_01>
+                </l_D1.1>
+              </d_01>
+            </l_D1>
+          </d_01>
+          <d_02 I_C="10" I_S="40" />
+        </l_D>
+      </d_dicCompetences>
+      <l_indicateurs />
+    </Competences_S>
+  </d_dicoCompetences>
+  <d_dicoSavoirs>
+    <Savoirs_P B_obj="False" B_pre="True" S_abrDiscipline="P-C" S_codeDiscipline="Phy" S_nomDiscipline="Physique - Chimie" S_nomGenerique="Connaissances &amp; Capacités">
+      <d_dicSavoirs>
+        <l_1 S_00="Première">
+          <d_01>
+            <l_1.1 S_00="Observer : couleurs et images">
+              <d_01>
+                <l_1.1.1 S_00="L’œil; modèle de l’œil réduit">
+                  <l_01 S_00="Lentilles minces convergentes: images réelle et virtuelle" S_01="Distance focale, vergence" S_02="Relation de conjugaison ; grandissement" S_03="Accommodation" S_04="Fonctionnements comparés de l’œil et d’un appareil photographique" />
+                </l_1.1.1>
+                <l_1.1.3 S_00="Sources de lumière colorée">
+                  <l_01 S_00="Différentes sources de lumière: étoiles, lampes variées, laser, DEL, etc" S_01="Domaines des ondes électromagnétiques" S_02="Couleur des corps chauffés. Loi de Wien" S_03="Interaction lumière-matière: émission et absorption" S_04="Quantification des niveaux d’énergie de la matière" S_05="Modèle corpusculaire de la lumière: le photon. Énergie d’un photon" S_06="Relation dans les échanges d’énergie" S_07="Spectre solaire" />
+                </l_1.1.3>
+                <l_1.1.2 S_00="Couleur des objets">
+                  <l_01 S_00="Synthèse additive, synthèse soustractive" S_01="Absorption, diffusion, transmission" S_02="Vision des couleurs et trichromie. Daltonisme" S_03="Principe de la restitution des couleurs par un écran plat (ordinateur, téléphone portable, etc.)               " />
+                </l_1.1.2>
+                <l_1.1.4 S_00="Matières colorées">
+                  <l_01 S_00="Synthèse soustractive" S_01="Colorants, pigments ; extraction et synthèse" S_02="Réaction chimique: réactif limitant, stœchiométrie, notion d’avancement" S_03="Dosage de solutions colorées par étalonnage. Loi de Beer-Lambert" S_04="Molécules organiques colorées: structures moléculaires, molécules à liaisons conjuguées" S_05="Indicateurs colorés" S_06="Liaison covalente" S_07="Formules de Lewis; géométrie des molécules" S_08="Rôle des doublets non liants" S_09="Isomérie Z/E" />
+                </l_1.1.4>
+              </d_01>
+            </l_1.1>
+            <l_1.2 S_00="Comprendre : lois et modèles">
+              <d_01>
+                <l_1.2.2 S_00="Champs et forces">
+                  <l_01 S_00="Exemples de champs scalaires et vectoriels: pression, température, vitesse dans un fluide" S_01="Champ magnétique: sources de champ magnétique (Terre, aimant, courant)" S_02="Champ électrostatique" S_03="Champ de pesanteur local" S_04="Loi de la gravitation ; champ de gravitation" S_05="Lien entre le champ de gravitation et le champ de pesanteur" />
+                </l_1.2.2>
+                <l_1.2.3 S_00="Formes et principe de conservation de l’énergie">
+                  <l_01 S_00="Énergie d’un point matériel en mouvement dans le champ de pesanteur uniforme: énergie cinétique, énergie potentielle de pesanteur, conservation ou non conservation de l’énergie mécanique" S_01="Frottements ; transferts thermiques ; dissipation d’énergie" S_02="Formes d’énergie" S_03="Principe de conservation de l’énergie" />
+                </l_1.2.3>
+                <l_1.2.1 S_00="Cohésion et transformations de la matière">
+                  <l_01 S_00="La matière à différentes échelles: du noyau à la galaxie" S_01="Particules élémentaires: électrons, neutrons, protons. Charge élémentaire e" S_02="Interactions fondamentales: interactions forte et faible, électromagnétique, gravitationnelle" S_03="Cohésion du noyau, stabilité" S_04="Radioactivité naturelle et artificielle. Activité" S_05="Réactions de fission et de fusion" S_06="Lois deconservation dans les réactions nucléaires" S_07="Défaut de masse, énergie libérée" S_08="Réactions nucléaires et aspects énergétiques associés" S_09="Ordre de grandeur des énergies mises en jeu" S_10="Solide ionique. Interaction de Van der Waals, liaison hydrogène" S_11="Electronégativité" S_12="Effet du caractère polaire d'un solvant lors d'une dissolution" S_13="Variation de température et transformation physique d'un système par transfert thermique" S_14="Nomenclature des alcanes et des alcools ; formule semi-développée" S_15="Lien entre les températures de changement d'état et la structure moléculaire dans le cas de l'eau, des alcools et des alcanes" S_16="Miscibilité des alcools avec l'eau" S_17="Réactions chimiques et aspects énergétiques associés" />
+                </l_1.2.1>
+              </d_01>
+            </l_1.2>
+            <l_1.3 S_00="Agir : défis du XXIème siècle">
+              <d_01>
+                <l_1.3.3 S_00="Synthétiser des molécules et fabriquer de nouveaux matériaux">
+                  <l_01 S_00="Nanochimie" S_01="Synthèse ou hémisynthèse de molécules complexes, biologiquement actives" S_02="Alcools, aldéhydes, cétones: nomenclature, oxydations" S_03="Acides carboxyliques: nomenclature, caractère acide,solubilité et pH" S_04="Obtention d’un acide carboxylique ou d’une cétone; rendement d’une synthèse" S_05="Synthèses et propriétés de matériaux amorphes (verres), de matériaux organisés (solides cristallins, céramiques) et de matières plastiques" />
+                </l_1.3.3>
+                <l_1.3.2 S_00="Stockage et conversion de l’énergie chimique">
+                  <l_01 S_00="Énergie libérée lors de la combustion d’un hydrocarbure ou d’un alcool" S_01="Piles salines, piles alcalines, piles à combustible. Accumulateurs" S_02="Polarité des électrodes, réactions aux électrodes" S_03="Oxydant, réducteur, couple oxydant/réducteur, réaction d’oxydo-réduction" S_04="Modèle par transfert d’électrons" />
+                </l_1.3.2>
+                <l_1.3.1 S_00="Convertir l’énergie et économiser les ressources">
+                  <l_01 S_00="Ressources énergétiques renouvelables ou non ; durées caractéristiques associées" S_01="Transport et stockage de l’énergie ; énergie électrique" S_02="Production de l’énergie électrique ; puissance" S_03="Conversion d’énergie dans un générateur, un récepteur" S_04="Loi d’Ohm. Effet Joule" S_05="Notion de rendement de conversion" />
+                </l_1.3.1>
+                <l_1.3.4 S_00="Créer et innover">
+                  <l_01 S_00="Culture scientifique et technique" S_01="Relation science-société" S_02="Métiers de l’activité scientifique (partenariat avec une institution de recherche, une entreprise, etc.)" />
+                </l_1.3.4>
+              </d_01>
+            </l_1.3>
+          </d_01>
+        </l_1>
+        <l_T S_00="Terminale">
+          <d_01>
+            <l_T.4 S_00="Agir : défis du XXIème siècle">
+              <d_01>
+                <l_T.4.5 S_00="Transmettre et stocker de l’information">
+                  <l_01 S_00="Chaîne de transmission d’informations" S_01="Images numériques" S_02="Signal analogique et signal numérique" S_03="Propriétés physiques de transmission" S_04="Stockage optique" />
+                </l_T.4.5>
+                <l_T.4.4 S_00="Synthétiser des molécules, fabriquer de nouveaux matériaux">
+                  <l_01 S_00="Stratégie de la synthèse organique" S_01="Sélectivité en chimie organique" />
+                </l_T.4.4>
+                <l_T.4.6 S_00="Créer et innover">
+                  <l_01 S_00="Culture scientifique et technique ; relation science-société" S_01="Métiers de l’activité scientifique (partenariat avec une institution de recherche, une entreprise, etc.)" />
+                </l_T.4.6>
+                <l_T.4.1 S_00="Enjeux énergétiques">
+                  <l_01 S_00="Nouvelles chaînes énergétiques" S_01="Économies d’énergie" />
+                </l_T.4.1>
+                <l_T.4.3 S_00="Contrôle de qualité par dosage">
+                  <l_01 S_00="Dosage par étalonnage" S_01="Dosage par titrage direct" />
+                </l_T.4.3>
+                <l_T.4.2 S_00="Apport de la chimie au respect de l’environnement">
+                  <l_01 S_00="Chimie durable" S_01="Valorisation du dioxyde de carbone" />
+                </l_T.4.2>
+              </d_01>
+            </l_T.4>
+            <l_T.1 S_00="Mesure et incertitude">
+              <d_01>
+                <l_T.1.1 S_00="Erreurs et notions associées">
+                  <l_01 />
+                </l_T.1.1>
+                <l_T.1.2 S_00="Incertitudes et notions associées">
+                  <l_01 />
+                </l_T.1.2>
+                <l_T.1.3 S_00="Expression et acceptabilité du résultat">
+                  <l_01 />
+                </l_T.1.3>
+              </d_01>
+            </l_T.1>
+            <l_T.3 S_00="Comprendre : lois et modèles">
+              <d_01>
+                <l_T.3.10 S_00="Transfert quantites d'énergie">
+                  <l_01 S_00="Emission et absorbtion quantiques" S_01="Émission stimulée et amplification d’une onde lumineuse" S_02="Oscillateur optique : principe du laser" S_03="Transition d'énergie : electronique, vibratoire" />
+                </l_T.3.10>
+                <l_T.3.11 S_00="Dualité onde-particule">
+                  <l_01 S_00="Photon et onde lumineuse" S_01="Particule matérielle et onde de matière ; relation de de Broglie" S_02="Interférences photon par photon, particule de matière par particule de matière" />
+                </l_T.3.11>
+                <l_T.3.6 S_00="Transformation en chimie organique">
+                  <l_01 S_00="Aspect macroscopique" S_01="Aspect microscopique" />
+                </l_T.3.6>
+                <l_T.3.7 S_00="Réaction chimique par échange de proton">
+                  <l_01 S_00="Le pH: définition, mesure" S_01="Théorie de Brönsted" S_02="Réactions quasi-totales en faveur des produits" S_03="Réaction entre un acide fort et une base forte" S_04="Contrôle du pH: solution tampon ; rôle en milieu biologique" />
+                </l_T.3.7>
+                <l_T.3.4 S_00="Temps et évolution chimique: cinétique et catalyse">
+                  <l_01 S_00="Réactions lentes, rapides ; durée d'une réaction chimique" S_01="Facteurs cinétiques. Évolution d'une quantité de matière au cours du temps" S_02="Temps de demi-réaction" S_03="Catalyse homogène, hétérogène et enzymatique" />
+                </l_T.3.4>
+                <l_T.3.5 S_00="Représentation spatiale des molécules">
+                  <l_01 S_00="Chiralité: définition, approche historique" S_01="Représentation de Cram" S_02="Carbone asymétrique" S_03="Chiralité des acides α-aminés" S_04="Énantiomérie, mélange racémique, diastéréoisomérie" S_05="Conformation: rotation autour d’une liaison simple ; conformation la plus stable" S_06="Formule topologique des molécules organiques" S_07="Propriétés biologiques et stéréoisomérie" />
+                </l_T.3.5>
+                <l_T.3.2 S_00="Mesure du temps et oscillateur, amortissement">
+                  <l_01 S_00="Travail d’une force" S_01="Force conservative; énergie potentielle" S_02="Forces non conservatives : exemple des frottements" S_03="Énergie mécanique" S_04="Étude énergétique des oscillations libres d’un système mécanique" S_05="Dissipation d’énergie" S_06="Définition du temps atomique" />
+                </l_T.3.2>
+                <l_T.3.3 S_00="Temps et relativité restreinte">
+                  <l_01 S_00="Invariance de la vitesse de la lumière et caractère relatif du temps" S_01="Postulat d’Einstein. Tests expérimentaux de l’invariance de la vitesse de la lumière" S_02="Notion d’événement. Temps propre" S_03="Dilatation des durées" S_04="Preuves expérimentales" />
+                </l_T.3.3>
+                <l_T.3.1 S_00="Temps, cinématique et dynamique newtoniennes">
+                  <l_01 S_00="Description du mouvement d’un point au cours du temps: vecteurs position, vitesse et accélération" S_01="Référentiel galiléen" S_02="Lois de Newton : principe d’inertie et principe des actions réciproques" S_03="Conservation de la quantité de mouvement d’un système isolé" S_04="Mouvement d’un satellite" S_05="Révolution de la Terre autour du Soleil" S_06="Lois de Kepler" />
+                </l_T.3.1>
+                <l_T.3.8 S_00="Du macroscopique au microscopique">
+                  <l_01 S_00="Constante d’Avogadro" />
+                </l_T.3.8>
+                <l_T.3.9 S_00="Transferts d'énergie entre systèmes macroscopiques">
+                  <l_01 S_00="Notions de système et d’énergie interne ; interprétation microscopique" S_01="Capacité thermique" S_02="Transferts thermiques : conduction, convection, rayonnement" S_03="Flux thermique ; Résistance thermique" S_04="Notion d'irréversibilité" S_05="Bilan d'énergie" />
+                </l_T.3.9>
+              </d_01>
+            </l_T.3>
+            <l_T.2 S_00="Observer : ondes et matière">
+              <d_01>
+                <l_T.2.3 S_00="Détecteurs d'ondes et de particules">
+                  <l_01 S_00="Ondes mécaniques et electromagnétiques" S_01="Photons, particules élémentaires ou non" />
+                </l_T.2.3>
+                <l_T.2.2 S_00="Les ondes dans la matière">
+                  <l_01 S_00="Houle, ondes sismiques, ondes sonores" S_01="Magnitude d'un séisme sur l'echelle de Richter" S_02="Niveau d'intensité sonore" />
+                </l_T.2.2>
+                <l_T.2.1 S_00="Rayonnements dans l'univers">
+                  <l_01 S_00="Absorbtion de rayonnements par l'atmosphère terrestre" />
+                </l_T.2.1>
+                <l_T.2.6 S_00="Analyse spectrale">
+                  <l_01 S_00="Spectres UV-visible" S_01="Spectres IR" S_02="Spectres RMN du proton" />
+                </l_T.2.6>
+                <l_T.2.5 S_00="Propriétés des ondes">
+                  <l_01 S_00="Diffraction" S_01="Influence relative de la taille de l’ouverture ou de l’obstacle et de la longueur d’onde sur le phénomène de diffraction" S_02="Cas des ondes lumineuses monochromatiques, cas de la lumière blanche" S_03="Interférences" S_04="Cas des ondes lumineuses monochromatiques, cas de la lumière blanche. Couleurs interférentielles" S_05="Effet Doppler" />
+                </l_T.2.5>
+                <l_T.2.4 S_00="Caractéristiques des ondes">
+                  <l_01 S_00="Ondes progressives, grandeurs physiques associées" S_01="Retard" S_02="Ondes progressives périodiques, ondes sinusoïdales" S_03="Ondes sonores et ultrasonores" S_04="Analyse spectrale. Hauteur et timbre" />
+                </l_T.2.4>
+              </d_01>
+            </l_T.2>
+          </d_01>
+        </l_T>
+      </d_dicSavoirs>
+    </Savoirs_P>
+    <Savoirs_S B_obj="True" B_pre="True" S_abrDiscipline="SI" S_codeDiscipline="SII" S_nomDiscipline="Sciences de l'Ingénieur" S_nomGenerique="Connaissances &amp; Capacités">
+      <d_dicSavoirs>
+        <l_E1 S_00="S'approprier le fonctionnement d'un système pluritechnologique">
+          <d_01>
+            <l_E1.1 S_00="(OPT) Chaine d’énergie">
+              <l_01 S_00="Extraire les informations utiles d’un dossier technique" />
+            </l_E1.1>
+            <l_E1.2 S_00="(OPT) Chaine d’information">
+              <l_01 S_00="Repérer  les--d’information--" />
+            </l_E1.2>
+            <l_E1.3 S_00="(OPT) Paramètres influents">
+              <l_01 S_00="Régler   les   paramètres   de   fonctionnement   d’un système" S_01="Mettre en évidence l’influence des paramètres sur les performances du système" />
+            </l_E1.3>
+          </d_01>
+        </l_E1>
+        <l_A1 S_00="Identifier le besoin et les exigences">
+          <d_01>
+            <l_A1.1 S_00="Cahier des charges (diagramme des exigences, diagramme des cas d’utilisation)----">
+              <l_01 S_00="Décrire le besoin" S_01="Traduire un besoin fonctionnel en exigences " S_02="Présenter la fonction globale" S_03="Définir les domaines d’application, les critères technico-économiques" S_04="Identifier les contraintes" S_05="Identifier et caractériser les fonctions" S_06="Qualifier et quantifier les exigences (critère, niveau)" />
+            </l_A1.1>
+            <l_A1.2 S_00="Impact environnemental">
+              <l_01 S_00="Évaluer l’impact environnemental (matériaux, énergies, nuisances)" />
+            </l_A1.2>
+          </d_01>
+        </l_A1>
+        <l_A3 S_00="Appréhender les analyses fonctionnelle et structurelle">
+          <d_01>
+            <l_A3.2 S_00="Chaîne d’information et d'énergie (diagramme de blocs internes, diagramme paramétrique)--">
+              <l_01 S_00="Identifier et décrire la chaîne d’information et la chaine d'énergie du système--" S_01="Identifier les liens entre la chaîne d’énergie et la chaine d'information" S_02="Identifier les constituants de la chaîne d'information réalisant les fonctions acquérir, coder, communiquer,--mémoriser, restituer, traiter--" S_03="Identifier les constituants de la chaîne d'énergie réalisant les fonctions agir, alimenter, convertir, moduler, transmettre, stocker--" />
+            </l_A3.2>
+            <l_A3.3 S_00="Systèmes à événements discrets (diagramme de séquences,  diagramme d’états)----">
+              <l_01 S_00="Interpréter tout ou partie de l’évolution temporelle d’un système" />
+            </l_A3.3>
+            <l_A3.1 S_00="Architectures fonctionnelle et structurelle (diagrammes de définition de blocs, chaîne directe, système asservi, commande)--">
+              <l_01 S_00="Analyser les architectures fonctionnelle et structurelle" S_01="Identifier les fonctions des différents constituants " S_02="Identifier et positionner les perturbations" S_03=" Différencier régulation et poursuite" S_04="(OPT) Repérer  les  constituants  dédiés  aux  fonctions  d’un système--" />
+            </l_A3.1>
+          </d_01>
+        </l_A3>
+        <l_A2 S_00="Définir les frontières de l'analyse">
+          <d_01>
+            <l_A2.2 S_00="Flux échangés">
+              <l_01 S_00="Identifier   la   nature   des   flux   échangés   (matière, énergie, information) traversant la frontière d’étude--" />
+            </l_A2.2>
+            <l_A2.1 S_00="Frontière d’étude - Milieu extérieur">
+              <l_01 S_00="Isoler un système et justifier l’isolement" S_01="Définir les éléments influents du milieu extérieur" />
+            </l_A2.1>
+          </d_01>
+        </l_A2>
+        <l_A5 S_00="Apprécier la pertinence et la validité des résultats">
+          <d_01>
+            <l_A5.1 S_00="Grandeurs utilisées (unités du système international, homogénéité des grandeurs)--">
+              <l_01 S_00="Utiliser des symboles et des unités adéquates" S_01="Vérifier l’homogénéité des résultats" />
+            </l_A5.1>
+          </d_01>
+        </l_A5>
+        <l_A4 S_00="Caractériser des écarts">
+          <d_01>
+            <l_A4.1 S_00="Identification des écarts">
+              <l_01 S_00="(OPT) Traiter  des  données  de  mesures  et en extraire les caractéristiques statistiques" />
+            </l_A4.1>
+            <l_A4.3 S_00="Interprétation des écarts obtenus--">
+              <l_01 S_00="(OPT) Vérifier la cohérence des résultats d’expérimentation avec les valeurs souhaitées du cahier des charges " S_01="(OPT) Vérifier  la  cohérence  du  modèle  choisi  avec  des résultats d’expérimentation" />
+            </l_A4.3>
+          </d_01>
+        </l_A4>
+        <l_B2 S_00="Proposer un modèle de connaissance et de comportement">
+          <d_01>
+            <l_B2.2 S_00="Systèmes linéaires continus et invariants (modélisation par équations différentielles, calcul symbolique, fonction de transfert , gain, ordre, classe, pôles et zéros)--">
+              <l_01 S_00="Déterminer les fonctions de transfert à partir d’équations physiques (modèle de connaissance)--" />
+            </l_B2.2>
+            <l_B2.3 S_00="Signaux canoniques d’entrée (impulsion, échelon, rampe, signaux sinusoïdaux)--">
+              <l_01 S_00="Caractériser les signaux canoniques d’entrée" />
+            </l_B2.3>
+            <l_B2.12 S_00="Liaisons (géométrie des contacts entre deux solides, définition du contact ponctuel entre deux solides :--roulement, pivotement, glissement, condition cinématique de maintien du contact, définition d’une liaison, liaisons normalisées entre solides, caractéristiques géométriques et repères d’expression privilégiés, torseur cinématique des liaisons normalisées, torseur des actions, mécaniques transmissibles dans les liaisons normalisées, associations de liaisons en série et en parallèle, liaisons cinématiquement équivalentes)--">
+              <l_01 S_00="Proposer  une  modélisation  des  liaisons  avec  une définition précise de leurs caractéristiques géométriques--" S_01="Associer le paramétrage au modèle retenu " S_02="Associer à chaque liaison son torseur cinématique" S_03="Associer   à   chaque   liaison   son   torseur   d’actions mécaniques transmissibles" />
+            </l_B2.12>
+            <l_B2.1 S_00="Chaîne d’énergie et d'information">
+              <l_01 S_00="(OPT) Construire un modèle multiphysique simple " S_01="(OPT) Définir les paramètres du modèle" />
+            </l_B2.1>
+            <l_B2.6 S_00="Modèles de comportement">
+              <l_01 S_00="Renseigner les paramètres caractéristiques d’un modèle de comportement (premier ordre, deuxième ordre, dérivateur, intégrateur, gain, retard)--" />
+            </l_B2.6>
+            <l_B2.7 S_00="Solide indéformable (définition, référentiel, repère, équivalence solide/référentiel, degrés de liberté, vecteur-vitesse angulaire de deux référentiels en mouvement l’un par rapport à l’autre)--">
+              <l_01 S_00="Paramétrer les mouvements d’un solide indéformable" S_01="Associer un repère à un solide" S_02="Identifier les degrés de liberté d’un solide par rapport à un autre solide" />
+            </l_B2.7>
+            <l_B2.4 S_00="Schéma-bloc (fonction de transfert en chaîne directe, fonction de transfert en boucle ouverte et en boucle fermée)--">
+              <l_01 S_00="Analyser ou établir le schéma-bloc du système" S_01="Déterminer les fonctions de transfert" />
+            </l_B2.4>
+            <l_B2.11 S_00="Actions mécaniques (modélisation locale, actions à distance et de contact, modélisation globale, torseur associé, lois de Coulomb ; adhérence et glissement, résistance au roulement et au pivotement)--">
+              <l_01 S_00="Associer un modèle à une action mécanique " S_01="Déterminer  la  relation  entre  le  modèle  local  et  le modèle global" />
+            </l_B2.11>
+            <l_B2.8 S_00="Modélisation plane">
+              <l_01 S_00="Préciser et justifier les conditions et les limites de la modélisation plane--" />
+            </l_B2.8>
+            <l_B2.9 S_00="Torseur cinématique">
+              <l_01 S_00="Déterminer  le  torseur  cinématique  d’un  solide  par rapport à un autre solide--" />
+            </l_B2.9>
+            <l_B2.13 S_00="Systèmes logiques (codage de l’information, binaire naturel, binaire réfléchi, représentation hexadécimale, table de vérité, opérateurs logiques fondamentaux (ET, OU, NON))--">
+              <l_01 S_00="Coder une information" S_01="Exprimer un fonctionnement logiques" />
+            </l_B2.13>
+            <l_B2.14 S_00="Systèmes à événements discrets, Chronogramme----">
+              <l_01 S_00="Représenter tout ou partie de l’évolution temporelle" />
+            </l_B2.14>
+            <l_B2.15 S_00="Structures algorithmiques (variables,  boucles, conditions, transitions conditionnelles)--">
+              <l_01 S_00="Décrire et compléter un algorithme représenté sous forme graphique" />
+            </l_B2.15>
+          </d_01>
+        </l_B2>
+        <l_B3 S_00="Valider un modèle">
+          <d_01>
+            <l_B3.2 S_00="(OPT) Grandeurs influentes d’un modèle">
+              <l_01 S_00="Déterminer les grandeurs influentes" S_01="Modifier les paramètres et enrichir le modèle pour minimiser l’écart entre les résultats simulés et les réponses mesurées" />
+            </l_B3.2>
+          </d_01>
+        </l_B3>
+        <l_C3 S_00="Procéder à la mise en œuvre d’une démarche de résolution numérique">
+          <d_01>
+            <l_C3.1 S_00="(OPT) Paramètres de résolution numérique (durée de calcul, pas de calcul)--">
+              <l_01 S_00="Choisir les valeurs des paramètres de la résolution numérique" />
+            </l_C3.1>
+            <l_C3.2 S_00="(OPT) Grandeurs simulées">
+              <l_01 S_00="Choisir les grandeurs physiques tracées" />
+            </l_C3.2>
+          </d_01>
+        </l_C3>
+        <l_C2 S_00="Procéder à la mise en œuvre d’une démarche de résolution analytique">
+          <d_01>
+            <l_C2.1 S_00="Réponses temporelle et fréquentielle (systèmes du 1er et du 2e ordre, intégrateur)--">
+              <l_01 S_00="Déterminer la réponse temporelle" S_01="Déterminer la réponse fréquentielle" S_02="Tracer le diagramme asymptotique de Bode" />
+            </l_C2.1>
+            <l_C2.8 S_00="Principe fondamental de la statique, Équilibre d’un solide, d’un ensemble de solides, Théorème des actions réciproques, Modèles avec frottement : arc- boutement--">
+              <l_01 S_00="Déterminer les inconnues de liaison" S_01="Déterminer la valeur des paramètres conduisant à des positions d'équilibre (par exemple l'arc- boutement)" />
+            </l_C2.8>
+            <l_C2.3 S_00="Rapidité des SLCI (temps de réponse à 5 %, bande passante)--">
+              <l_01 S_00="Prévoir les performances en termes de rapidité" S_01="Relier la rapidité aux caractéristiques fréquentielles" />
+            </l_C2.3>
+            <l_C2.7 S_00="Dérivée temporelle d’un vecteur par rapport à un référentiel, Relation entre les dérivées temporelles d’un vecteur par rapport à deux référentiels distincts, Loi entrée – sortie cinématique, Composition des vitesses angulaires, Composition des vitesses--">
+              <l_01 S_00=" Déterminer les relations de fermeture de la chaine cinématique--" S_01="Déterminer la loi entrée - sortie cinématique d’une chaine cinématique" />
+            </l_C2.7>
+            <l_C2.6 S_00="Loi entrée – sortie géométrique">
+              <l_01 S_00="Déterminer la loi entrée - sortie géométrique d’une chaîne cinématique" />
+            </l_C2.6>
+          </d_01>
+        </l_C2>
+        <l_D1 S_00="Rechercher et traiter des informations">
+          <d_01>
+            <l_D1.3 S_00="Langage SysML">
+              <l_01 S_00="Lire et décoder un diagramme" />
+            </l_D1.3>
+            <l_D1.1 S_00="Informations techniques">
+              <l_01 S_00="Extraire les informations utiles d’un dossier technique" />
+            </l_D1.1>
+          </d_01>
+        </l_D1>
+        <l_D2 S_00="Mettre en oeuvre une communication">
+          <d_01>
+            <l_D2.1 S_00="(OPT) Outils de communication">
+              <l_01 S_00="Choisir  les  outils  de  communication  adaptés  par rapport à l’interlocuteur" S_01="Faire preuve d’écoute et confronter des points de vue " S_02="Présenter les étapes de son travail" S_03="Présenter de manière argumentée une synthèse des résultats" />
+            </l_D2.1>
+            <l_D2.3 S_00="Schémas cinématique, électrique">
+              <l_01 S_00="Réaliser un schéma cinématique " S_01="Réaliser un schéma électrique" />
+            </l_D2.3>
+          </d_01>
+        </l_D2>
+        <l_E2 S_00="Proposer et justifier un protocole expérimental">
+          <d_01>
+            <l_E2.2 S_00="(OPT) Protocoles expérimentaux">
+              <l_01 S_00="Choisir les configurations matérielles du système en fonction de l’objectif visé----" S_01="Choisir la grandeur physique à mesurer ou justifier son choix" S_02="Choisir  les  entrées  à  imposer  pour  identifier  un modèle de comportement" />
+            </l_E2.2>
+            <l_E2.1 S_00="(OPT) Modèles de comportement d’un système">
+              <l_01 S_00="Prévoir l’allure de la réponse attendue " S_01="Prévoir l’ordre de grandeur de la mesure" />
+            </l_E2.1>
+          </d_01>
+        </l_E2>
+        <l_E3 S_00="Mettre en œuvre un protocole expérimental">
+          <d_01>
+            <l_E3.2 S_00="(OPT) Paramètres de configuration du système--">
+              <l_01 S_00="Choisir les configurations matérielles du système en fonction de l’objectif visé----" />
+            </l_E3.2>
+            <l_E3.3 S_00="(OPT) Routines, procédures, Systèmes logiques à événements discrets----">
+              <l_01 S_00="Générer   un   programmeet l’implanter   dans   le système cible --" />
+            </l_E3.3>
+            <l_E3.1 S_00="(OPT) Règles de sécurité élémentaires">
+              <l_01 S_00="Mettre en œuvre un système complexe en respectant les règles de sécurité" />
+            </l_E3.1>
+            <l_E3.6 S_00="(OPT) Identification fréquentielle d’un modèle de comportement--">
+              <l_01 S_00="Identifier    les    paramètres    caractéristiques    d’un modèle de comportement à partir de sa réponse fréquentielle--" S_01="Associer un modèle de comportement (premier ordre, deuxième ordre, intégrateur, gain) à partir de sa réponse fréquentielle" />
+            </l_E3.6>
+            <l_E3.4 S_00="(OPT) Modèles de comportement--">
+              <l_01 S_00="Extraire les grandeurs désirées et les traiter" />
+            </l_E3.4>
+            <l_E3.5 S_00="(OPT) Identification temporelle d’un modèle de comportement----">
+              <l_01 S_00="Identifier les paramètres caractéristiques d’un modèle du premier ordre ou du deuxième ordre à partir de sa réponse indicielle--" />
+            </l_E3.5>
+          </d_01>
+        </l_E3>
+        <l_B1 S_00="Identifier et caractériser les grandeurs physiques">
+          <d_01>
+            <l_B1.1 S_00="Caractéristiques des grandeurs physiques (nature physique, caractéristiques fréquentielles, caractéristiques temporelles)--">
+              <l_01 S_00="Qualifier les grandeurs d’entrée et de sortie d’un système isolé" S_01="Identifier la nature (grandeur effort, grandeur flux)" S_02="Décrire les lois d’évolution des grandeurs" />
+            </l_B1.1>
+            <l_B1.2 S_00="Flux d'énergie, Flux d’information">
+              <l_01 S_00=" Identifier la nature de l’information et la nature du signal" S_01=" Qualifier la nature des matières, quantifier les volumes et les masses" />
+            </l_B1.2>
+          </d_01>
+        </l_B1>
+      </d_dicSavoirs>
+    </Savoirs_S>
+    <Savoirs_M B_obj="False" B_pre="True" S_abrDiscipline="Math" S_codeDiscipline="Mat" S_nomDiscipline="Mathématiques" S_nomGenerique="Connaissances &amp; Capacités">
+      <d_dicSavoirs>
+        <l_1 S_00="Première">
+          <d_01>
+            <l_1.1 S_00="Analyse">
+              <d_01>
+                <l_1.1.1 S_00="Second degré">
+                  <l_01 S_00="Forme canonique d’une fonction polynôme de degré deux" S_01="Équation du second degré, discriminant" S_02="Signe du trinôme" />
+                </l_1.1.1>
+                <l_1.1.3 S_00="Dérivation">
+                  <l_01 S_00="Nombre dérivé d’une fonction en un point" S_01="Tangente à la courbe représentative d’une fonction dérivable en un point" S_02="Fonction dérivée" S_03="Dérivée des fonctions usuelles" S_04="Dérivée d’une somme, d’un produit et d’un quotient" S_05="Lien entre signe de la dérivée et sens de variation" S_06="Extremum d’une fonction" />
+                </l_1.1.3>
+                <l_1.1.2 S_00="Étude de fonctions">
+                  <l_01 S_00="Fonctions de référence" S_01="Sens de variation des fonctions                " />
+                </l_1.1.2>
+                <l_1.1.5 S_00="Étude de fonctions">
+                  <l_01 S_00="Fonctions de référence" S_01="Sens de variation des fonctions " />
+                </l_1.1.5>
+                <l_1.1.4 S_00="Suites">
+                  <l_01 S_00="Modes de génération d’une suite numérique" S_01="Suites arithmétiques et suites géométriques" S_02="Sens de variation d’une suite numérique" S_03="Approche de la notion de limite d’une suite à partir d’exemples" />
+                </l_1.1.4>
+              </d_01>
+            </l_1.1>
+            <l_1.2 S_00="Géométrie">
+              <d_01>
+                <l_1.2.2 S_00="Trigonométrie">
+                  <l_01 S_00="Cercle trigonométrique" S_01="Radian" S_02="Mesure d’un angle orienté, mesure principale" />
+                </l_1.2.2>
+                <l_1.2.3 S_00="Produit scalaire dans le plan">
+                  <l_01 S_00="Définition, propriétés" S_01="Vecteur normal à une droite" S_02="Applications du produit scalaire : calculs d’angles et de longueurs ; formules d’addition et de duplication des cosinus et sinus" />
+                </l_1.2.3>
+                <l_1.2.1 S_00="Géométrie plane">
+                  <l_01 S_00="Condition de colinéarité de deux vecteurs" S_01="Vecteur directeur d’une droite" S_02="Équation cartésienne d’une droite" S_03="Expression d’un vecteur du plan en fonction de deux vecteurs non colinéaires" />
+                </l_1.2.1>
+              </d_01>
+            </l_1.2>
+            <l_1.3 S_00="Statistiques et probabilités">
+              <d_01>
+                <l_1.3.3 S_00="Échantillonnage">
+                  <l_01 S_00="Utilisation de la loi binomiale pour une prise de décision à partir d’une fréquence" />
+                </l_1.3.3>
+                <l_1.3.2 S_00="Probabilités">
+                  <l_01 S_00="Variable aléatoire discrète et loi de probabilité" S_01="Espérance, variance et écart-type" S_02="Modèle de la répétition d’expériences identiques et indépendantes à deux ou trois issues" S_03="Épreuve de Bernoulli, loi de Bernoulli" S_04="Schéma de Bernoulli, loi binomiale (loi du nombre de succès)" S_05="Coefficients binomiaux, triangle de Pascal" S_06="Espérance, variance et écart-type de la loi binomiale" />
+                </l_1.3.2>
+                <l_1.3.1 S_00="Statistique descriptive, analyse de données">
+                  <l_01 S_00="Caractéristiques de dispersion : variance, écart-type" S_01="Diagramme en boîte" />
+                </l_1.3.1>
+              </d_01>
+            </l_1.3>
+          </d_01>
+        </l_1>
+        <l_A S_00="Algorithmique">
+          <l_01 S_00="Instructions élémentaires" S_01="Boucle et itérateur, instruction conditionnelle" />
+        </l_A>
+        <l_T S_00="Terminale">
+          <d_01>
+            <l_T.1 S_00="Analyse">
+              <d_01>
+                <l_T.1.4 S_00="Calculs de dérivées : compléments">
+                  <d_01 />
+                </l_T.1.4>
+                <l_T.1.5 S_00="Fonctions sinus et cosinus">
+                  <d_01 />
+                </l_T.1.5>
+                <l_T.1.6 S_00="Fonction exponentielle">
+                  <d_01 />
+                </l_T.1.6>
+                <l_T.1.7 S_00="Fonction logarithme népérien">
+                  <d_01 />
+                </l_T.1.7>
+                <l_T.1.1 S_00="Suites ">
+                  <l_01 S_00="Raisonnement par récurrence" S_01="Limite finie ou infinie d’une suite" S_02="Limites et comparaison" S_03="Opérations sur les limites" S_04="Comportement à l’infini de la suite q^n" S_05="Suite majorée, minorée, bornée" />
+                </l_T.1.1>
+                <l_T.1.2 S_00="Limites de fonctions">
+                  <l_01 S_00="Limite finie ou infinie d'une fonction à l'infini" S_01="Limite infinie d’une fonction en un point" S_02="Limites d'une somme, d'un produit, d'un quotient ou d'une composée de deux fonctions" S_03="Limites et comparaisons" S_04="Asymptote parallèle à l'un des axes de coordonnées" />
+                </l_T.1.2>
+                <l_T.1.3 S_00="Continuité sur un intervalle, théorème des valeurs intermédiaires">
+                  <d_01 />
+                </l_T.1.3>
+                <l_T.1.8 S_00="Intégration">
+                  <l_01 S_00="Définition de l'intégrale d'une fonction continue et positive sur[a,b comme aire sous la courbe" S_01="Notation" S_02="Primitive d’une fonction continue sur un intervalle" S_03="Théorème : toute fonction continue sur un intervalle admet des primitives" S_04="Intégrale d’une fonction continue de signe quelconque" S_05="Linéarité, positivité, relation de Chasles" S_06="Valeur moyenne" />
+                </l_T.1.8>
+              </d_01>
+            </l_T.1>
+            <l_T.3 S_00="Probabilités et statistique">
+              <d_01>
+                <l_T.3.4 S_00="Estimation">
+                  <l_01 S_00="Intervalle de confiance" S_01="Niveau de confiance" />
+                </l_T.3.4>
+                <l_T.3.2 S_00="Notion de loi à densité">
+                  <l_01 S_00="Loi à densité sur un intervalle" S_01="Loi uniforme sur [a,b" S_02="Espérance d’une variable aléatoire suivant une loi uniforme" S_03="Lois exponentielles" S_04="Espérance d’une variable aléatoire suivant une loi exponentielle" S_05="Loi normale centrée réduite" S_06="Théorème de Moivre Laplace" />
+                </l_T.3.2>
+                <l_T.3.3 S_00="Intervalle de fluctuation">
+                  <l_01 S_00="                                    " />
+                </l_T.3.3>
+                <l_T.3.1 S_00="Conditionnement, indépendance ">
+                  <l_01 S_00="Conditionnement par un événement de probabilité non nulle" S_01="Indépendance de deux événements" />
+                </l_T.3.1>
+              </d_01>
+            </l_T.3>
+            <l_T.2 S_00="Géométrie">
+              <d_01>
+                <l_T.2.3 S_00="Géométrie vectorielle">
+                  <l_01 S_00="Caractérisation d'un plan" S_01="Vecteurs coplanaires" S_02="Décomposition d'un vecteur" S_03="Repérage" S_04="Représentation paramétrique d'une droite&quot;" />
+                </l_T.2.3>
+                <l_T.2.2 S_00="Droites et plans">
+                  <l_01 S_00="Positions relatives de droites et de plans : intersection et parallélisme" S_01="Orthogonalité : de deux droites ; d’une droite et d’un plan&quot;" />
+                </l_T.2.2>
+                <l_T.2.1 S_00="Nombres complexes">
+                  <l_01 S_00="Forme algébrique, conjugué" S_01="Somme, produit, quotient" S_02="Équation du second degré à coefficients réels" S_03="Représentation géométrique" S_04="Affixe d'un point, d'un vecteur" S_05="Forme trigonométrique" />
+                </l_T.2.1>
+                <l_T.2.4 S_00="Produit scalaire">
+                  <l_01 S_00="Produit scalaire de deux vecteurs dans l’espace" S_01="Vecteur normal à un plan" S_02="Équation cartésienne d’un plan" />
+                </l_T.2.4>
+              </d_01>
+            </l_T.2>
+          </d_01>
+        </l_T>
+      </d_dicSavoirs>
+    </Savoirs_M>
+  </d_dicoSavoirs>
+  <d_effectifs>
+    <l_C S_00="Classe entière" S_01="Classe entière" />
+    <l_E S_00="Etude ou Projet" S_01="Etude et Projet" />
+    <l_D S_00="Demi-groupe" S_01="Demi-groupe" />
+    <l_G S_00="Effectif réduit" S_01="Effectif réduit" />
+    <l_I S_00="Individuel" S_01="Individuel" />
+    <l_P S_00="Act. Pra." S_01="Activité Pratique" />
+  </d_effectifs>
+  <d_effectifsSeance>
+    <l_C S_00="C" />
+    <l_E S_00="C" />
+    <l_AP S_00="E" S_01="P" />
+    <l_SS S_00="C" />
+    <l_ED S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" />
+    <l_P S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" />
+    <l_S />
+    <l_R />
+    <l_SA S_00="C" S_01="G" />
+    <l_TD S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" />
+  </d_effectifsSeance>
+  <d_horsClasse />
+  <l_listCompetences S_00="S" />
+  <l_listProblematiques />
+  <l_listSavoirs S_00="S" S_01="M" S_02="P" />
+  <l_listeDemarches S_00="I" S_01="R" S_02="P" />
+  <l_listeEffectifs S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
+  <l_listeTypeActivite S_00="ED" S_01="AP" S_02="P" />
+  <l_listeTypeHorsClasse />
+  <l_listeTypeSeance S_00="ED" S_01="AP" S_02="P" S_03="C" S_04="TD" S_05="SA" S_06="SS" S_07="E" S_08="R" S_09="S" />
+  <d_options />
+  <d_parties S_C="Conduite" S_S="Soutenance" />
+  <l_periodes>
+    <l_00 I_01="2" S_00="Semestre 1" />
+    <l_01 I_01="3" S_00="Semestre 2" />
+  </l_periodes>
+  <l_positions_CI S_00="MEI_FS " S_01="MEI_  C" S_02="M  _ SC" S_03="  I_  C" S_04=" E _  C" />
+  <d_projets>
+    <Projet_PRJ B_tachesOnce="False" I_duree="70" I_maxEleves="5" I_minEleves="3" S_code="PRJ" S_ficheValid="" S_intitule="Projet de fin d'année">
+      <d_attributs>
+        <l_SRC S_00="" S_01="" S_02="" S_03="" />
+        <l_PAR S_00="" S_01="" S_02="" S_03="" />
+        <l_DEC S_00="Découpage du projet" S_01="" S_02="" S_03="" />
+        <l_OBJ S_00="Production finale attendue" S_01="Indiquer :-- - documents de formalisation des solutions proposées ;-- - sous-ensemble fonctionnel d’un prototype, éléments d’une maquette réelle ou virtuelle ;-- - supports de communication." S_02="" S_03="" />
+        <l_TIT S_00="Intitulé du projet" S_01="Intitulé du projet" S_02="" S_03="" />
+        <l_SYN S_00="" S_01="" S_02="" S_03="" />
+        <l_PB S_00="Problématique - Énoncé général du besoin" S_01="Indiquer :-- - description du contexte dans lequel l’objet du projet va être intégré ;-- - fonctionnalités de cet objet ;-- - caractéristiques fonctionnelles et techniques." S_02="" S_03="" />
+        <l_ORI S_00="Origine" S_01="Partenariat, thématique, concours…" S_02="" S_03="" />
+        <l_CCF S_00="Contraintes imposées" S_01="Indiquer :-- - coût maximal ;-- - nature d’une ou des solutions techniques ou de familles de matériels, de constituants ou de composants ;-- - environnement." S_02="" S_03="" />
+        <l_TYP S_00="" S_01="" S_02="" S_03="" />
+        <l_PRX S_00="" S_01="" S_02="" S_03="" />
+      </d_attributs>
+      <d_cellulesInfo>
+        <d_C>
+          <l_Pre>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="10" I_01="2" I_02="0" />
+            </l_00>
+          </l_Pre>
+          <l_Nom>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="9" I_01="2" I_02="0" />
+            </l_00>
+          </l_Nom>
+          <l_NON>
+            <l_00 S_00="Conduite de projet" S_02="">
+              <l_01 I_00="5" I_01="8" I_02="0" />
+            </l_00>
+          </l_NON>
+          <l_Tit>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="12" I_01="2" I_02="0" />
+            </l_00>
+          </l_Tit>
+          <l_Des>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="14" I_01="1" I_02="0" />
+            </l_00>
+          </l_Des>
+          <l_Etab>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="7" I_01="2" I_02="0" />
+            </l_00>
+          </l_Etab>
+          <l_Prof>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="18" I_01="2" I_02="1" />
+            </l_00>
+          </l_Prof>
+        </d_C>
+        <d_S>
+          <l_Tit>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="12" I_01="2" I_02="0" />
+            </l_00>
+          </l_Tit>
+          <l_Nom>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="9" I_01="2" I_02="0" />
+            </l_00>
+          </l_Nom>
+          <l_Des>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="14" I_01="1" I_02="0" />
+            </l_00>
+          </l_Des>
+          <l_Pre>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="10" I_01="2" I_02="0" />
+            </l_00>
+          </l_Pre>
+          <l_Etab>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="7" I_01="2" I_02="0" />
+            </l_00>
+          </l_Etab>
+        </d_S>
+      </d_cellulesInfo>
+      <d_grilles>
+        <l_C S_00="Grille-conduite de projet-S-SI.xlsx" S_01="I" />
+        <l_S S_00="Grille-présentation du projet-S-SI.xlsx" S_01="I" />
+      </d_grilles>
+      <l_listPhases S_00="Ana" S_01="Rea" S_02="XXX" S_03="Rev" S_04="R1" S_05="R2" S_06="R3" S_07="S" />
+      <l_listPhasesEval S_00="Rev" S_01="R1" S_02="R2" S_03="R3" S_04="S" />
+      <l_listTaches />
+      <l_listeParties S_00="C" S_01="S" />
+      <d_parties S_C="Conduite" S_S="Soutenance" />
+      <l_periode I_00="7" I_01="10" />
+      <d_phases>
+        <l_Ana S_00="Appropriation" S_01="Appropriation" S_02="Ap" />
+        <l_R2 S_00="Revue n°2" S_01="Revue de projet n°2" S_02="R2" />
+        <l_R3 S_00="Revue n°3" S_01="Revue de projet n°3" S_02="R3" />
+        <l_XXX S_00="Synth et com" S_01="Synthèse et communication" S_02="SC" />
+        <l_Rev S_00="Revue inter" S_01="Revue intermédiaire" S_02="Ri" />
+        <l_S S_00="Soutenance" S_01="Soutenance finale" S_02="S" />
+        <l_Rea S_00="Expérimentations" S_01="Réalisation d'expérimentations" S_02="Re" />
+        <l_R1 S_00="Revue n°1" S_01="Revue de projet n°1" S_02="R1" />
+      </d_phases>
+      <d_posRevues>
+        <l__02 S_00="Ana" S_01="Rea" />
+        <l__03 S_00="Ana" S_01="Rea" S_02="XXX" />
+      </d_posRevues>
+      <d_taches />
+    </Projet_PRJ>
+  </d_projets>
+  <d_seances>
+    <l_C S_00="Cours" S_01="Cours" />
+    <l_E S_00="Evaluation" S_01="Evaluation" />
+    <l_P S_00="Projet" S_01="Activité de projet" />
+    <l_SS S_00="Synt. séquence" S_01="Synthèse de séquence" />
+    <l_ED S_00="Etude de dossier" S_01="Activité d'étude de dossier" />
+    <l_AP S_00="Activité pratique" S_01="Activité pratique" />
+    <l_S S_00="Parallèle" S_01="Activités en parallèle" />
+    <l_R S_00="Rotation" S_01="Rotation d'activités" />
+    <l_TD S_00="TD" S_01="Travaux Dirigés" />
+    <l_SA S_00="Synt. activité" S_01="Synthèse d'activité" />
+  </d_seances>
+  <l_tr_com />
+</Referentiel>
