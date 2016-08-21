@@ -6,8 +6,9 @@ _**pySequence**_ est un logiciel **[libre](http://www.gnu.org/licenses/gpl.html)
 _**pySequence**_ s'adresse particulièrement aux professeurs de _**[Sciences Industrielles de l'Ingénieur](http://fr.wikipedia.org/wiki/Sciences_de_l%27ing%C3%A9nieur)**_ enseignant dans les filières :
   * **STI2D** (_enseignements technologiques transversaux_ et de _spécialité_)
   * **S-SI** (_Sciences de l'ingénieur_ du bac S)
-  * **Technologie collège**
+  * **Technologie collège** (nouveau programme en travaux)
   * **STS Electrotechnique** et **STS Systèmes Numériques** (en travaux !)
+  * **MPSI** (en travaux) 
   * .......
 
 et potentiellement [n'importe quel programme d'enseignement](https://github.com/cedrick-f/pySequence/wiki/Nouveau_programme).
@@ -39,7 +40,7 @@ et potentiellement [n'importe quel programme d'enseignement](https://github.com/
 ### Construction de progressions pédagogiques (beta)
  * Insertion de séquences pédagogique dans un cycle d'apprentissage
  * Analyse de la cohérence compétences/prérequis
- * Présentation sous forme de fiche de progresion cliquable
+ * Présentation sous forme d'une fiche de progresion cliquable
 
 
 
