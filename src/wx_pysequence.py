@@ -457,6 +457,9 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         self.tabmgr = self.GetClientWindow().GetAuiManager()
         self.tabmgr.GetManagedWindow().Bind(aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.OnDocChanged)
         
+        file_drop_target = MyFileDropTarget(self)
+        
+        self.tabmgr.GetManagedWindow().SetDropTarget(file_drop_target)
         
         #############################################################################################
         # Quelques variables ...
@@ -1049,6 +1052,12 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
 
 
     ###############################################################################################
+    def dropFiles(self, file_list):
+        for path in file_list:
+            self.ouvrir(path)
+            
+            
+    ###############################################################################################
     def ouvrirDoc(self, doc, nomFichier):
         """ Ouvre un document à partir de sa version "pySequence"
             <nomFichier> encodé en FileEncoding
@@ -1398,8 +1407,33 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             sys.exit()
 #            self.Destroy()
 
-        
-        
+
+
+########################################################################################
+#
+#
+#  Gestion des drag & drop de fichiers
+#     pour ouverture ...
+#
+#
+########################################################################################
+class MyFileDropTarget(wx.FileDropTarget):
+    """"""
+ 
+    #----------------------------------------------------------------------
+    def __init__(self, window):
+        """Constructor"""
+        wx.FileDropTarget.__init__(self)
+        self.window = window
+ 
+    #----------------------------------------------------------------------
+    def OnDropFiles(self, x, y, filenames):
+        """
+        When files are dropped, update the display
+        """
+        self.window.dropFiles(filenames)
+
+
 ########################################################################################
 #
 #
@@ -12271,7 +12305,9 @@ class A_propos(wx.Dialog):
                       (u"Référentiels : ",(u"Thierry VALETTE (STS EE)", \
                                            u"Jean-Claude FRICOU (STS SN)", \
                                            u"Emmanuel VIGNAUD (Ede SI-CIT-DIT 2nde)", \
-                                           u"Arnaud BULCKE (Techno Collège)")), \
+                                           u"Arnaud BULCKE (Techno Collège)", \
+                                           u"Laurent Moutoussamy (MPSI)")), \
+                      
                       (u"Remerciements : ",(u"un grand merci aux très nombreux", \
                                             u"utilisateurs qui ont pris le temps", \
                                             u"de nous signaler les dysfonctionnements,", \
