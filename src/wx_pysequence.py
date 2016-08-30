@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from _winreg import SetValue
+from test.test_imageop import SIZES
 
 ##This file is part of pySequence
 #############################################################################
@@ -447,10 +448,18 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         #
         # Taille et position de la fenétre
         #
+        displays = (wx.Display(i) for i in range(wx.Display.GetCount()))
+        sizes = [display.ClientArea for display in displays]
+        x, y, w, h = sizes[0]
+        #print wx.GetDisplaySize()
+        
+        self.SetPosition((w/2, y))
+        self.SetSize((w/2,h))
+        
         self.SetMinSize((800,570)) # Taille mini d'écran : 800x600
-        self.SetSize((1024,738)) # Taille pour écran 1024x768
+        #self.SetSize((1024,738)) # Taille pour écran 1024x768
         # On centre la fenétre dans l'écran ...
-        self.CentreOnScreen(wx.BOTH)
+        #self.CentreOnScreen(wx.BOTH)
         
         self.SetIcon(images.getlogoIcon())
         
