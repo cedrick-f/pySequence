@@ -445,6 +445,26 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
 #        except:
 #            print "Erreur à l'ouverture de configFiche.cfg" 
 
+        #############################################################################################
+        # Instanciation et chargement des options
+        #############################################################################################
+        options = Options.Options()
+        if options.fichierExiste():
+#            options.ouvrir(DEFAUT_ENCODING)
+            try :
+                options.ouvrir(SYSTEM_ENCODING)
+            except:
+                print "Fichier d'options corrompus ou inexistant !! Initialisation ..."
+                options.defaut()
+        else:
+            options.defaut()
+        self.options = options
+#        print options
+        
+        # On applique les options ...
+        self.DefinirOptions(options)
+        
+        
         #
         # Taille et position de la fenétre
         #
@@ -453,8 +473,22 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         x, y, w, h = sizes[0]
         #print wx.GetDisplaySize()
         
-        self.SetPosition((w/2, y))
-        self.SetSize((w/2,h))
+        pos, siz = self.options.optFenetre["Position"], self.options.optFenetre["Taille"]
+        
+#         print pos, siz
+#         print len(pos), len(siz)
+#         print x, y, w, h
+        
+        if len(pos) == 2 \
+            and len(siz) == 2 \
+            and pos[0] < w \
+            and pos[1] < h:
+            print "eee"
+            self.SetPosition(pos)
+            self.SetSize(siz)
+        else:
+            self.SetPosition((w/2, y))
+            self.SetSize((w/2,h))
         
         self.SetMinSize((800,570)) # Taille mini d'écran : 800x600
         #self.SetSize((1024,738)) # Taille pour écran 1024x768
@@ -533,24 +567,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         self.ConstruireTb()
         
         
-        #############################################################################################
-        # Instanciation et chargement des options
-        #############################################################################################
-        options = Options.Options()
-        if options.fichierExiste():
-#            options.ouvrir(DEFAUT_ENCODING)
-            try :
-                options.ouvrir(SYSTEM_ENCODING)
-            except:
-                print "Fichier d'options corrompus ou inexistant !! Initialisation ..."
-                options.defaut()
-        else:
-            options.defaut()
-        self.options = options
-#        print options
         
-        # On applique les options ...
-        self.DefinirOptions(options)
         
 #        #################################################################################################################
 #        #

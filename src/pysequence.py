@@ -1265,7 +1265,7 @@ class BaseDoc():
         
     ######################################################################################  
     def Click(self, zone, x, y):
-        print "Click", zone
+#         print "Click", zone
         self.HideTip()
         
         if zone.obj is not None:

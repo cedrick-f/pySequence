@@ -52,7 +52,7 @@ class Options:
         # Avec leurs valeurs par défaut.
         #
         self.optClasse = {}
-#        self.optSystemes = {}
+        self.optFenetre = {}
         self.optProjet = {}
         self.optFichiers = {}
 #        self.optGenerales = {}
@@ -68,7 +68,7 @@ class Options:
                              #u"Systèmes" : self.optSystemes,
                              u"Projet" : self.optProjet,
                              u"Fichiers" : self.optFichiers,
-#                             u"Couleurs" : self.optCouleurs,
+                             u"Fenetre" : self.optFenetre,
 #                             u"Impression" : self.optImpression,
                              }
         
@@ -119,7 +119,7 @@ class Options:
 
         
         def sav(nom, val):
-            if type(val) == list:
+            if type(val) == list or type(val) == tuple:
                 for i,v in enumerate(val):
                     sav(nom+"_"+format(i, "02d"), v)
        
@@ -383,10 +383,10 @@ class Options:
 #        self.optClasse["PositionRevue"] = constantes.POSITIONS_REVUES[self.optClasse["TypeEnseignement"]][self.optClasse["NombreRevues"]]
         
         #
-        # Systèmes
+        # Position et taille de la fenetre
         #
-#        self.optSystemes["Systemes"] = []
-#        self.optSystemes["Nombres"] = []
+        self.optFenetre["Position"] = []
+        self.optFenetre["Taille"] = []
 
         
         #
@@ -448,7 +448,15 @@ class Options:
         self.optFichiers["FichiersRecents"] = app.GetFichiersRecents()
         
         
+        #
+        # Position et taille de la fenetre
+        #
+        self.optFenetre["Position"] = list(app.GetPosition())
+        self.optFenetre["Taille"] = list(app.GetSize())
         
+
+
+
     ############################################################################
     def validerSystemes(self, sequence):
         for syst, nbr in sequence.GetNbrSystemes().items():
@@ -467,7 +475,8 @@ class Options:
                 p = i
         self.repertoireCourant = chemin[:p+1]
         return chemin[:p+1]
-        
+
+
         
 ##############################################################################
 #     Fenêtre Options     #
