@@ -445,6 +445,13 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
 #        except:
 #            print "Erreur à l'ouverture de configFiche.cfg" 
 
+
+        #############################################################################################
+        # Création du menu
+        #############################################################################################
+        self.CreateMenuBar()
+        
+        
         #############################################################################################
         # Instanciation et chargement des options
         #############################################################################################
@@ -465,9 +472,13 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         self.DefinirOptions(options)
         
         
-        #
+        
+        
+        
+        
+        ##############################################################################################
         # Taille et position de la fenétre
-        #
+        ##############################################################################################
         displays = (wx.Display(i) for i in range(wx.Display.GetCount()))
         sizes = [display.ClientArea for display in displays]
         x, y, w, h = sizes[0]
@@ -483,7 +494,6 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             and len(siz) == 2 \
             and pos[0] < w \
             and pos[1] < h:
-            print "eee"
             self.SetPosition(pos)
             self.SetSize(siz)
         else:
@@ -513,10 +523,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         self.elementCopie = None
         
         
-        #############################################################################################
-        # Création du menu
-        #############################################################################################
-        self.CreateMenuBar()
+        
         
         # !!! cette ligne pose probléme à la fermeture : mystère
         self.renommerWindow()
@@ -9139,20 +9146,20 @@ class PanelPropriete_Personne(PanelPropriete):
         for b in root:
             p = pysequence.Prof(self.personne.GetDocument())
             p.setBranche(b)
-            list_p.append(p)
-     
+            list_p.append((p, b))
         
-        list_p.sort(key = lambda prof : prof.nom)
+        
+        list_p.sort(key = lambda prof : prof[0].nom)
         
         fichier.close()
         
-        return root, list_p
+        return list_p
 
 
     #############################################################################            
     def OnCharge(self, event):
-
-        root, list_p = self.GetListProfs()
+        
+        list_p, root = zip(*self.GetListProfs())
         if len(list_p)>0:
             dlg = wx.SingleChoiceDialog(
                     self, u'Sélectionner un Professeur\ndans la liste ci-dessous :',
@@ -9162,7 +9169,9 @@ class PanelPropriete_Personne(PanelPropriete):
                     )
     
             if dlg.ShowModal() == wx.ID_OK:
+                referent = self.personne.referent
                 self.personne.setBranche(root[dlg.GetSelection()])
+                self.personne.referent = referent # Ca évite des conflits ...
                 modif = u"Chargement d'un Professeur"
                 self.MiseAJour()
                 self.sendEvent(modif = modif)
@@ -9170,7 +9179,7 @@ class PanelPropriete_Personne(PanelPropriete):
             dlg.Destroy()
             
         else:
-            messageInfo(self, u"Aucun professeur", 
+            messageInfo(self, u"Aucun Professeur", 
                     u"La liste des Professeurs enregistrés est vide." %self.personne.GetNomPrenom())
 
         
@@ -9180,7 +9189,8 @@ class PanelPropriete_Personne(PanelPropriete):
     #############################################################################            
     def OnSauv(self, event):
         
-        root, list_p = self.GetListProfs()
+        
+        list_p, root = zip(self.GetListProfs())
         
         if self.personne in list_p:
             dlg = wx.MessageDialog(self, u"Le professeur %s existe déja dans la liste\n\n" \
@@ -9300,6 +9310,7 @@ class PanelPropriete_Personne(PanelPropriete):
             self.cbPhas.SetStringSelection(constantes.NOM_DISCIPLINES[self.personne.discipline])
         if hasattr(self, 'cbInt'):
             self.cbInt.SetValue(self.personne.referent)
+            self.personne.GetDocument().SetReferent(self.personne, self.cbInt.IsChecked())
         if hasattr(self, 'SelectGrille'):
             for k, select in self.SelectGrille.items():
                 select.SetPath(toSystemEncoding(self.personne.grille[k].path), marquerModifier = marquerModifier)

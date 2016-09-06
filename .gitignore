@@ -8,6 +8,7 @@ ressources/
 releases/
 *.cfg
 src/sequence.cfg
+profs.xml
 
 #################
 ## Eclipse
