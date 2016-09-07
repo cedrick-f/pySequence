@@ -91,6 +91,28 @@ def dansRectangle(x, y, rect):
     return False, 0
 
 
+def getAncreFenetre(x, y, w, h, W, H, e = 0):
+    """ Renvoie la meilleure position (maximum de visibilité dans l'écran)
+        x, y : position de référence (pointeur, ...)
+        w, h : dimension de la fenêtre à afficher
+        W, H : dimension de l'écran
+        e : ecart (pour que x, y soit à l'intérieur de la fenêtre
+    """
+    if w-x < x+w-W:
+        X = x-w +e
+    else:
+        X = x -e
+        
+        
+    if h-y < y+h-H:
+        Y = y-h +e
+    else:
+        Y = y -e
+        
+    return X, Y
+
+
+
 
 #########################################################################################################
 #########################################################################################################
@@ -943,13 +965,13 @@ class TextCtrl_Help(orthographe.STC_ortho, BaseGestionFenHelp):
     def OnMotion(self, evt):
         t = self.GetToolTip()
         if t is not None:
-            print "OnMotion"
+#             print "OnMotion"
             t.SetAutoPop(0)
             t.SetAutoPop(3)
 #         t = self.GetToolTipString()
 #         self.SetToolTipString(t)
-            print dir(t)
-            print t.Tip
+#             print dir(t)
+#             print t.Tip
             
         evt.Skip()
         

@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+
 ##This file is part of pySequence
 #############################################################################
 #############################################################################
@@ -90,7 +91,8 @@ from widgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_ENTI
                     messageErreur, getNomFichier, pourCent2, testRel, \
                     rallonge, remplaceCode2LF, dansRectangle, \
                     StaticBoxButton, TextCtrl_Help, CloseFenHelp, \
-                    remplaceLF2Code, messageInfo, messageYesNo, enregistrer_root#, chronometrer
+                    remplaceLF2Code, messageInfo, messageYesNo, enregistrer_root, \
+                    getAncreFenetre#, chronometrer
                     
 from Referentiel import REFERENTIELS, ARBRE_REF, ACTIVITES
 import Referentiel
@@ -111,7 +113,7 @@ from wx_pysequence import CodeBranche, PopupInfo, getIconeFileSave, getIconeCopy
                             PanelPropriete_Savoirs, PanelPropriete_Seance, \
                             PanelPropriete_Tache, PanelPropriete_Systeme, \
                             PanelPropriete_Support, PanelPropriete_LienProjet,\
-                            PanelPropriete_Personne
+                            PanelPropriete_Personne, getDisplayPosSize
 
 
 
@@ -1232,8 +1234,15 @@ class BaseDoc():
 
     
     ######################################################################################  
-    def HideTip(self):
+    def HideTip(self, pos = None):
         if hasattr(self, 'tip'):
+            if pos is not None:
+                x, y = pos
+#                 print x, y
+                X, Y, W, H = self.tip.GetRect()
+#                 print X, Y, W, H
+                if x > X and x < X+W and y > Y and y < Y+H:
+                    return
             self.tip.Show(False)
         if hasattr(self, 'call'):
             self.call.Stop()
@@ -1317,12 +1326,12 @@ class BaseDoc():
 
     ######################################################################################  
     def Move(self, zone, x, y):
-#        print "Move", zone, self
+#         print "Move", x, y
         self.HideTip()
             
         tip = None 
         if zone.obj is not None and zone.param is None and type(zone.obj) != list:
-#            print "    elem :", zone.obj
+#             print "    elem :", zone.obj
             if hasattr(zone.obj, 'tip'):
                 zone.obj.SetTip()
                 tip = zone.obj.tip
@@ -1335,12 +1344,16 @@ class BaseDoc():
 #                    tip = elem.tip
         
         else:
-#            print "    zone", zone.param
+#             print "    zone", zone.param
             tip = self.SetTip(zone.param, zone.obj)
-#            
             
         if tip != None:
-            tip.Position((x+1,y+1), (0,0))
+            X, Y, W, H = getDisplayPosSize()
+
+#             print "  tip", x, y, tip.GetSize()
+
+            w, h = tip.GetSize()
+            tip.Position(getAncreFenetre(x, y, w, h, W, H, 10), (0,0))
             self.call = wx.CallLater(500, tip.Show, True)
             self.tip = tip
 

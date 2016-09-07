@@ -408,6 +408,13 @@ def getBitmapFromImageSurface(imagesurface):
     return bmp
 
 
+def getDisplayPosSize():
+    """ Renvoie la positio et la taille de l'écran : x, y, w, h
+    """
+    displays = (wx.Display(i) for i in range(wx.Display.GetCount()))
+    sizes = [display.ClientArea for display in displays]
+    return sizes[0]
+
 
 
 ####################################################################################
@@ -479,9 +486,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         ##############################################################################################
         # Taille et position de la fenétre
         ##############################################################################################
-        displays = (wx.Display(i) for i in range(wx.Display.GetCount()))
-        sizes = [display.ClientArea for display in displays]
-        x, y, w, h = sizes[0]
+        x, y, w, h = getDisplayPosSize()
         #print wx.GetDisplaySize()
         
         pos, siz = self.options.optFenetre["Position"], self.options.optFenetre["Taille"]
@@ -3378,14 +3383,16 @@ class BaseFiche(wx.ScrolledWindow):
      
     ######################################################################################################
     def OnLeave(self, evt = None):
-        self.GetDoc().HideTip()
+        x, y = evt.GetPosition()
+        x, y = self.ClientToScreen((x, y))
+        self.GetDoc().HideTip((x, y))
 
 
     ######################################################################################################
     def OnEnter(self, event):
         self.SetFocus()
         event.Skip()
-        
+         
         
     #############################################################################            
     def OnResize(self, evt):
@@ -3413,6 +3420,7 @@ class BaseFiche(wx.ScrolledWindow):
         # Cas général
         #
         zone = self.GetDoc().HitTest(xx, yy)
+#         print zone
         if zone is not None:
             x, y = self.ClientToScreen((x, y))
             self.GetDoc().Move(zone, x, y)
@@ -3472,7 +3480,7 @@ class BaseFiche(wx.ScrolledWindow):
         dc = wx.PaintDC(self)
         self.PrepareDC(dc)
         dc.DrawBitmap(self.buffer, 0,0) 
-        
+
         
     #############################################################################            
     def CentrerSur(self, obj):
@@ -3606,56 +3614,6 @@ class FicheSequence(BaseFiche):
     def GetDoc(self):
         return self.sequence
        
-#    ######################################################################################################
-#    def OnMove(self, evt):
-#        if hasattr(self, 'tip'):
-#            self.tip.Show(False)
-#            self.call.Stop()
-#        x, y = evt.GetPosition()
-#        _x, _y = self.CalcUnscrolledPosition(x, y)
-#        xx, yy = self.ctx.device_to_user(_x, _y)
-#        branche = self.sequence.HitTest(xx, yy)
-#        if branche != None:
-#            elem = branche.GetData()
-#            if hasattr(elem, 'tip'):
-#                x, y = self.ClientToScreen((x, y))
-#                elem.tip.Position((x,y), (0,0))
-#                self.call = wx.CallLater(500, elem.tip.Show, True)
-#                self.tip = elem.tip
-#        evt.Skip()
-
-
-#    #############################################################################            
-#    def Draw(self, ctx):
-#        draw_cairo_seq.Draw(ctx, self.sequence)
-        
-        
-#    #############################################################################            
-#    def OnClick(self, evt):
-#        x, y = evt.GetX(), evt.GetY()
-#        _x, _y = self.CalcUnscrolledPosition(x, y)
-#        xx, yy = self.ctx.device_to_user(_x, _y)
-#        
-#        #
-#        # Changement de branche sur l'arbre
-#        #
-#        branche = self.sequence.HitTest(xx, yy)
-#        if branche != None:
-#            self.sequence.arbre.SelectItem(branche)
-#
-#
-#        #
-#        # Autres actions
-#        #
-#        position = self.sequence.HitTestPosition(xx, yy)
-#        if position != None:
-#            self.sequence.SetPosition(position)
-#            if hasattr(self.sequence, 'panelPropriete'):
-#                self.sequence.panelPropriete.SetBitmapPosition(bougerSlider = position)
-#            
-#        return branche
-    
-    
 
 
 
@@ -12522,7 +12480,16 @@ try:
 except ImportError:
     from bs4 import BeautifulSoup, NavigableString
 import copy
+import webbrowser
 
+class myHtmlWindow(html.HtmlWindow):
+    def __init__(self, *arg, **kargs):
+        html.HtmlWindow.__init__(self, *arg, **kargs)
+        
+    def OnLinkClicked(self, evt):
+        webbrowser.open_new((evt.GetHref()))
+        self.Parent.Show(False)
+    
 class PopupInfo(wx.PopupWindow):
     def __init__(self, parent, page, mode = "H", size=(400, 300)):
         wx.PopupWindow.__init__(self, parent, wx.BORDER_SIMPLE)
@@ -12532,7 +12499,7 @@ class PopupInfo(wx.PopupWindow):
         #
         self.mode = mode
         if mode == "H":
-            self.html = html.HtmlWindow(self, -1, size = size,
+            self.html = myHtmlWindow(self, -1, size = size,
                                         style=wx.NO_FULL_REPAINT_ON_RESIZE|html.HW_SCROLLBAR_NEVER)
         else:
             self.html = webview.WebView.New(self, size = size)
@@ -12549,8 +12516,12 @@ class PopupInfo(wx.PopupWindow):
         
         self.SetSizer(sizer)
         
+        self.html.Bind(wx.EVT_LEAVE_WINDOW, self.OnLeave)
+#         self.Bind(wx.EVT_MOTION, self.OnLeave)
         self.Bind(wx.EVT_WINDOW_DESTROY, self.OnDestroy)
-    
+        
+
+
 #    ##########################################################################################
 #    def SetBranche(self, branche):
 #        self.branche = branche
@@ -12827,6 +12798,7 @@ class PopupInfo(wx.PopupWindow):
         
     ##########################################################################################
     def OnLeave(self, event):
+#         print "Leave Tip"
         x, y = event.GetPosition()
         w, h = self.GetSize()
         if not ( x > 0 and y > 0 and x < w and y < h):
