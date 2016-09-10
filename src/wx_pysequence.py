@@ -7854,9 +7854,8 @@ class PanelPropriete_Tache(PanelPropriete):
             pageGen = PanelPropriete(self.nb)
             bg_color = self.Parent.GetBackgroundColour()
             pageGen.SetBackgroundColour(bg_color)
-            self.pageGen = pageGen
             self.nb.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
-            self.nb.AddPage(self.pageGen, u"Propriétés générales")
+            self.nb.AddPage(pageGen, u"Propriétés générales")
             self.sizer.Add(self.nb, (0,0), flag = wx.EXPAND)
             self.sizer.AddGrowableCol(0)
             self.sizer.AddGrowableRow(0)
@@ -7866,7 +7865,8 @@ class PanelPropriete_Tache(PanelPropriete):
             # Pas de book pour la revue 2 et la soutenance
             #
             pageGen = self
-            self.pageGen = pageGen
+            
+        self.pageGen = pageGen
             
         
         #
@@ -7931,13 +7931,14 @@ class PanelPropriete_Tache(PanelPropriete):
 
             pageGen.sizer.Add(bsizer, (1,0), (1,2), 
                                flag = wx.EXPAND|wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.RIGHT, border = 4)    
-        
+
+
         #
         # Durée de la tache
         #
         if not tache.phase in TOUTES_REVUES_EVAL_SOUT:
             vcDuree = VariableCtrl(pageGen, tache.duree, coef = 0.5, signeEgal = True, slider = False,
-                                   help = u"Volume horaire de la tâche en heures", sizeh = 60)
+                                   help = u"Volume horaire de la tâche, en heures")#, sizeh = 60)
             pageGen.Bind(EVT_VAR_CTRL, self.EvtText, vcDuree)
             self.vcDuree = vcDuree
             pageGen.sizer.Add(vcDuree, (2,0), (1, 2), flag = wx.EXPAND|wx.ALL, border = 2)
@@ -7968,7 +7969,7 @@ class PanelPropriete_Tache(PanelPropriete):
             ibsizer.Add(self.btn_no_icon)
             self.Bind(wx.EVT_BUTTON, self.OnIconeClick, self.btn_no_icon)
             
-            pageGen.sizer.Add(ibsizer, (0,2), (4, 1), 
+            pageGen.sizer.Add(ibsizer, (0,2), (3, 1), 
                               flag = wx.EXPAND|wx.LEFT|wx.RIGHT, border = 4)
             pageGen.sizer.AddGrowableCol(2)
 
@@ -7981,7 +7982,7 @@ class PanelPropriete_Tache(PanelPropriete):
             self.bsizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
             self.elevesCtrl = []
             self.ConstruireListeEleves()
-            pageGen.sizer.Add(self.bsizer, (0,3), (4, 1), flag = wx.EXPAND|wx.LEFT|wx.RIGHT, border = 4)
+            pageGen.sizer.Add(self.bsizer, (0,3), (3, 1), flag = wx.EXPAND|wx.LEFT|wx.RIGHT, border = 4)
             pageGen.sizer.AddGrowableCol(3)
         
         
@@ -8007,10 +8008,10 @@ class PanelPropriete_Tache(PanelPropriete):
 #        dbsizer.Add(bd, flag = wx.EXPAND)
 #        pageGen.Bind(wx.EVT_BUTTON, self.EvtClick, bd)
         if tache.phase in TOUTES_REVUES_EVAL_SOUT:
-            pageGen.sizer.Add(dbsizer, (1,0), (3, 2), flag = wx.EXPAND)
+            pageGen.sizer.Add(dbsizer, (1,0), (2, 2), flag = wx.EXPAND)
             pageGen.sizer.AddGrowableCol(0)
         else:
-            pageGen.sizer.Add(dbsizer, (0,4), (4, 1), flag = wx.EXPAND)
+            pageGen.sizer.Add(dbsizer, (0,4), (3, 1), flag = wx.EXPAND)
             pageGen.sizer.AddGrowableCol(4)
         self.rtc = tc
         # Pour indiquer qu'une édition est déja en cours ...
@@ -8323,6 +8324,14 @@ class PanelPropriete_Tache(PanelPropriete):
                 self.pageGen.Bind(wx.EVT_CHECKBOX, self.EvtCheckEleve, v)
                 self.bsizer.Add(v, flag = wx.ALIGN_LEFT|wx.ALL, border = 3)#|wx.EXPAND) 
                 self.elevesCtrl.append(v)
+            
+            self.bsizer.Add(wx.StaticLine(self.pageGen, -1, size = (100,3)), flag = wx.ALIGN_LEFT|wx.ALL, border = 3)#|wx.EXPAND) 
+            
+            self.tousElevesCtrl = wx.CheckBox(self.pageGen, -1, u"tous")
+            self.tousElevesCtrl.SetValue(all([b.IsChecked() for b in self.elevesCtrl]))
+            self.bsizer.Add(self.tousElevesCtrl, flag = wx.ALIGN_LEFT|wx.ALL, border = 3)#|wx.EXPAND) 
+            self.pageGen.Bind(wx.EVT_CHECKBOX, self.EvtCheckEleve, self.tousElevesCtrl)
+            
             self.bsizer.Layout()
             
             if len(self.GetDocument().eleves) > 0:
@@ -8401,11 +8410,19 @@ class PanelPropriete_Tache(PanelPropriete):
 
     #############################################################################            
     def EvtCheckEleve(self, event):
+        if event.GetEventObject() == self.tousElevesCtrl:
+            for b in self.elevesCtrl:       # On coche tout
+                b.SetValue(self.tousElevesCtrl.IsChecked())
+        else:
+            self.tousElevesCtrl.SetValue(all([b.IsChecked() for b in self.elevesCtrl]))
+        
         lst = []
         for i in range(len(self.GetDocument().eleves)):
             if self.elevesCtrl[i].IsChecked():
                 lst.append(i)
+        
         self.tache.eleves = lst
+        
         self.GetDocument().MiseAJourDureeEleves()
 #        self.GetDocument().MiseAJourTachesEleves()
         
@@ -11978,7 +11995,7 @@ class ChoixCompetenceEleve(wx.Panel):
         """ Active/désactive les cases à cocher
             selon que les élèves ont à mobiliser cette compétence/indicateur
         """
-        print "MiseAJour ChoixCompetenceEleve", self.tache, self.indic
+#         print "MiseAJour ChoixCompetenceEleve", self.tache, self.indic
         for i, e in enumerate(self.projet.eleves): 
             dicIndic = e.GetDicIndicateursRevue(self.tache.phase)
 #            print "    ", dicIndic
@@ -12795,7 +12812,7 @@ class PopupInfo(wx.PopupWindow):
         else:
             self.html.SetPage(self.soup.prettify(), "")
 
-        
+ 
     ##########################################################################################
     def OnLeave(self, event):
 #         print "Leave Tip"
@@ -12805,7 +12822,7 @@ class PopupInfo(wx.PopupWindow):
             self.Show(False)
         event.Skip()
         
-        
+
     
 
 
