@@ -4322,12 +4322,13 @@ class PanelPropriete_Projet(PanelPropriete):
         if event.GetEventObject() == self.textctrl:
 #            nt = event.GetString()
             nt = self.textctrl.GetText()
+            print nt
 #            if nt == u"":
 #                nt = self.projet.support.nom
             self.projet.SetText(nt)
-            self.textctrl.ChangeValue(nt)
+            #self.textctrl.ChangeValue(nt)
             maj = True
-#             obj = 'intit'
+            obj = 'intit'
             
         elif 'ORI' in self.pages.keys() and event.GetEventObject() == self.pages['ORI'][1]:
             self.projet.origine = self.pages['ORI'][1].GetText()
@@ -4388,7 +4389,6 @@ class PanelPropriete_Projet(PanelPropriete):
             self.sendEvent(modif = modif)
         else:
             if not self.eventAttente:
-#                print "   modif", obj
                 wx.CallLater(DELAY, self.sendEvent, 
                              modif = modif,
                              draw = maj)

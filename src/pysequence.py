@@ -1244,6 +1244,7 @@ class BaseDoc():
                 if x > X and x < X+W and y > Y and y < Y+H:
                     return
             self.tip.Show(False)
+        
         if hasattr(self, 'call'):
             self.call.Stop()
             
@@ -3342,19 +3343,24 @@ class Projet(BaseDoc, Objet_sequence):
     
     ######################################################################################  
     def SupprimerEleve(self, event = None, item = None):
-#        print "SupprimerEleve",
+#         print "SupprimerEleve",
         e = self.arbre.GetItemPyData(item)
-        i = self.eleves.index(e)
-        self.eleves.remove(e)
+
+#         i = self.eleves.index(e)
+        i = e.id
+
+#         self.eleves.remove(e)
+        del self.eleves[i]
+
         self.OrdonnerEleves()
-        
+
         self.arbre.Delete(item)
         self.SupprimerEleveDansPanelTache(i)
-        
+
         # On fait ça car supprimer un élève a un impact sur les noms des éleves "sans nom"
         for i, e in enumerate(self.eleves):
             e.SetCode()
-            
+
         self.GetApp().sendEvent(modif = u"Suppression d'un Elève")
     
     ######################################################################################  
@@ -8145,7 +8151,7 @@ class Personne(Objet_sequence):
     
     ######################################################################################  
     def __repr__(self):
-        return self.GetNomPrenom()
+        return self.GetNomPrenom()+" ("+str(self.id)+")"
 
 
     ######################################################################################  
