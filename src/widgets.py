@@ -852,6 +852,54 @@ class VariableCtrl(wx.Panel):
         self.spin.Enable(etat)
         
 
+#########################################################################################################
+#########################################################################################################
+#
+#  Tootip évolué utilisé dans divers TxtCtrl et dérivés
+#
+#########################################################################################################
+#########################################################################################################  
+import wx.lib.agw.balloontip as BT
+
+class ToolTip:
+
+    def __init__(self):
+        self.tip = BT.BalloonTip(topicon=None, toptitle=u"",
+                                   message=u"a",
+                                   shape=BT.BT_RECTANGLE,
+                                   tipstyle=BT.BT_LEAVE)
+
+        # Set the BalloonTip target
+        self.tip.SetTarget(self)
+        # Set the BalloonTip background colour
+        self.tip.SetBalloonColour(wx.WHITE)
+        # Set the font for the balloon title
+        self.tip.SetTitleFont(wx.Font(9, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False))
+        # Set the colour for the balloon title
+        self.tip.SetTitleColour(wx.BLACK)
+        # Leave the message font as default
+        self.tip.SetMessageFont()
+        # Set the message (tip) foreground colour
+        self.tip.SetMessageColour(wx.NamedColour("SLATEGREY"))
+        # Set the start delay for the BalloonTip
+        self.tip.SetStartDelay(800)
+        # Set the time after which the BalloonTip is destroyed
+        self.tip.SetEndDelay(3000)
+
+
+    def SetToolTipString(self, message):
+        """ Surcharge de la fonction du TextCtrl
+        """
+        self.tip.SetBalloonMessage(message)
+
+    def SetTitre(self, titre):
+        self.tip.SetBalloonTitle(titre)
+
+
+    def OnWidgetMotion(self, event):
+        self.tip.Destroy()
+    
+
 ##################################################################################################################################################################
 #
 #    Des widgets avec un bouton Help
@@ -930,10 +978,19 @@ class StaticBoxButton(wx.StaticBox, BaseGestionFenHelp):
         
         
 import  wx.lib.buttons  as  buttons
-        
+
+
+#########################################################################################################
+#########################################################################################################
+#
+#  Un TextCrtl avec bouton d'aide détaiilé apparaissant quand la souris est dans le ctrl
+#
+#########################################################################################################
+#########################################################################################################  
+
 import orthographe
 #import md_util
-class TextCtrl_Help(orthographe.STC_ortho, BaseGestionFenHelp):
+class TextCtrl_Help(orthographe.STC_ortho, BaseGestionFenHelp, ToolTip):
     def __init__(self, parent, titre = u"", md = u""):
         orthographe.STC_ortho.__init__(self, parent, -1)#, u"", style=wx.TE_MULTILINE)
         img = GetImgHelp()
@@ -1003,6 +1060,12 @@ class TextCtrl_Help(orthographe.STC_ortho, BaseGestionFenHelp):
             d = 22
         self.bouton.SetPosition((w-d, 2))
         evt.Skip()
+
+
+
+
+
+
 
 
 import xml.etree.ElementTree as ET

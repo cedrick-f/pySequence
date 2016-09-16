@@ -25,6 +25,7 @@ import wx
 import os
 import  wx.stc  as  stc
 import functools
+from widgets import ToolTip
 
 from stcspellcheck import STCSpellCheck
 
@@ -38,9 +39,12 @@ ID_TO_UPPER = 6
 ID_TO_LOWER = 7
 ID_SELECTALL = 8
 
-class STC_ortho(stc.StyledTextCtrl):
+class STC_ortho(ToolTip, stc.StyledTextCtrl):
     def __init__(self, *args, **kwargs):
+        
         stc.StyledTextCtrl.__init__(self, *args, **kwargs)
+        ToolTip.__init__(self)
+        
         self.spell = STCSpellCheck(self, language="fr_FR")
         self.SetMarginType(0, stc.STC_MARGIN_NUMBER)
         self.SetMarginWidth(1, 0)

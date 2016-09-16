@@ -5547,7 +5547,7 @@ class PanelPropriete_Classe(PanelPropriete):
 #                self.classe.familleEnseignement = constantes.FamilleEnseignement[self.classe.typeEnseignement]
 #                break
         
-#        self.classe.MiseAJourTypeEnseignement()
+        self.classe.MiseAJourTypeEnseignement()
         self.classe.doc.MiseAJourTypeEnseignement()
         self.classe.doc.SetPosition(self.classe.doc.position)
 #        self.classe.doc.MiseAJourTypeEnseignement(fam != self.classe.familleEnseignement)
@@ -7915,6 +7915,7 @@ class PanelPropriete_Tache(PanelPropriete):
             self.boxInt = box
             if not tache.estPredeterminee():
                 textctrl = orthographe.STC_ortho(pageGen, -1)#, u"", style=wx.TE_MULTILINE)
+                textctrl.SetTitre(u"Intitulé de la tâche")
                 textctrl.SetToolTipString(u"Donner l'intitulé de la tâche\n"\
                                           u" = un simple résumé !\n" \
                                           u"les détails doivent figurer dans la zone\n" \
@@ -7994,6 +7995,7 @@ class PanelPropriete_Tache(PanelPropriete):
         dbsizer = wx.StaticBoxSizer(dbox, wx.VERTICAL)
 #        bd = wx.Button(pageGen, -1, u"Editer")
         tc = richtext.RichTextPanel(pageGen, self.tache, toolBar = True)
+        tc.SetTitre(u"Description détaillée de la tâche")
         tc.SetToolTipString(u"Donner une description détaillée de la tâche :\n" \
                             u" - les conditions nécessaires\n" \
                             u" - ce qui est fourni\n" \
@@ -12976,6 +12978,7 @@ class CodeBranche(wx.Panel):
         
     def SetBranche(self, branche): 
         self.branche = branche
+        
                 
     def Add(self, clef, text = u""):
         self.comp[clef] = wx.StaticText(self, -1, "")
@@ -12983,6 +12986,7 @@ class CodeBranche(wx.Panel):
         
     def SetLabel(self, text):
         self.code.SetLabel(text)
+        self.LayoutFit()
         
     def SetBackgroundColour(self, color):
         self.code.SetBackgroundColour(color)

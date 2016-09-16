@@ -18,6 +18,7 @@ import cStringIO
 from constantes import xmlVide
 import webbrowser
 import images
+from widgets import ToolTip
 #from urlparse import urlparse
 #from rfc3987 import parse
 
@@ -49,6 +50,12 @@ typesImg = {".bmp" : wx.BITMAP_TYPE_BMP,
 
 #from stcspellcheck import RTCSpellCheck
         
+        
+class RichTextCtrl(ToolTip, rt.RichTextCtrl): 
+    def __init__(self, *args, **kargs):
+        rt.RichTextCtrl.__init__(self, *args, **kargs)
+        ToolTip.__init__(self)
+        
 class RichTextPanel(wx.Panel):
     def __init__(self, parent, objet, toolBar = False, size = wx.DefaultSize):
         wx.Panel.__init__(self, parent, -1, style = wx.BORDER_SUNKEN)
@@ -63,7 +70,7 @@ class RichTextPanel(wx.Panel):
             if self.tbar != None:
                 self.sizer.Add(self.tbar, flag = wx.EXPAND)
             
-        self.rtc = rt.RichTextCtrl(self, size = size, style=wx.VSCROLL|wx.HSCROLL|wx.NO_BORDER|wx.WANTS_CHARS);
+        self.rtc = RichTextCtrl(self, size = size, style=wx.VSCROLL|wx.HSCROLL|wx.NO_BORDER|wx.WANTS_CHARS);
 #        self.spell = RTCSpellCheck(self.rtc, language="fr_FR")
         self.toutVerifier = False
         
@@ -158,6 +165,9 @@ class RichTextPanel(wx.Panel):
     
     def SetToolTipString(self, txt):
         self.rtc.SetToolTipString(txt)
+        
+    def SetTitre(self, txt):
+        self.rtc.SetTitre(txt)
         
     def setObjet(self, objet):
         self.objet = objet
