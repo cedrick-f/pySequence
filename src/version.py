@@ -31,7 +31,7 @@ version.py
 Aide à la réalisation de fiches  de séquence pédagogiques
 et à la validation de projets
 
-Copyright (C) 2011-2015
+Copyright (C) 2011-2016
 @author: Cedrick FAURY
 
 """

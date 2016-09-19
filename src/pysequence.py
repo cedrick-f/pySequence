@@ -1162,6 +1162,7 @@ class BaseDoc():
         
         self.dependants = [] # Liste de documents dépendants (à enregistrer aussi)
 
+        self.undoStack = UndoStack(self)
         
         #
         # Création du Tip (PopupInfo)
@@ -1358,11 +1359,12 @@ class BaseDoc():
             self.call = wx.CallLater(500, tip.Show, True)
             self.tip = tip
 
-   
+
     ######################################################################################  
     def MiseAJourListeSystemesClasse(self):
         return
-    
+
+
     ######################################################################################  
     def AjouterProf(self, event = None):
         if len(self.equipe) < 5:
@@ -1439,10 +1441,8 @@ class Sequence(BaseDoc, Objet_sequence):
         Objet_sequence.__init__(self)
         
         self.nom_obj = u"Séquence"
-        self.article_c_obj = "de la"
-        self.article_obj = "la"
-        
-        self.undoStack = UndoStack(self)
+        self.article_c_obj = u"de la"
+        self.article_obj = u"la"
         
         self.prerequis = Savoirs(self, prerequis = True)
         self.prerequisSeance = []
@@ -1465,7 +1465,8 @@ class Sequence(BaseDoc, Objet_sequence):
         self.draw = draw_cairo_seq
         
         self.undoStack.do(u"Création de la Séquence")
-        
+
+
     ######################################################################################  
     def __repr__(self):
         return u"Séquence" + self.intitule
@@ -2332,12 +2333,9 @@ class Projet(BaseDoc, Objet_sequence):
         BaseDoc.__init__(self, app, classe, intitule)
         Objet_sequence.__init__(self)
         
-        self.nom_obj = "Projet"
-        self.article_c_obj = "du"
-        self.article_obj = "le"
-        
-#        Objet_sequence.__init__(self)
-        self.undoStack = UndoStack(self)
+        self.nom_obj = u"Projet"
+        self.article_c_obj = u"du"
+        self.article_obj = u"le"
         
         self.version = "" # version de pySéquence avec laquelle le fichier a été sauvegardé
         
@@ -3913,17 +3911,13 @@ class Progression(BaseDoc, Objet_sequence):
         BaseDoc.__init__(self, app, classe, intitule)
         Objet_sequence.__init__(self)
         
-        self.nom_obj = "Progression"
-        self.article_c_obj = "de la"
-        self.article_obj = "la"
-        
-#        Objet_sequence.__init__(self)
-        self.undoStack = UndoStack(self)
+        self.nom_obj = u"Progression"
+        self.article_c_obj = u"de la"
+        self.article_obj = u"la"
+
         self.image = None
         
         self.sequences_projets = []     # liste de LienSequence et de LienProjet
-        
-#         self.annee = constantes.getAnneeScolaire()
         
 #         self.calendriers = []
         self.calendrier = Calendrier(self, constantes.getAnneeScolaire())
@@ -3933,8 +3927,6 @@ class Progression(BaseDoc, Objet_sequence):
         self.code = self.GetReferentiel().getCodeProjetDefaut()
         
         self.version = ""
-        # Année Scolaire
-        
         
         if not ouverture:
             self.MiseAJourTypeEnseignement()
@@ -3943,7 +3935,8 @@ class Progression(BaseDoc, Objet_sequence):
         self.draw = draw_cairo_prg
 
         self.undoStack.do(u"Création de la progression")
-        
+
+
     ######################################################################################  
     def __repr__(self):
         return "Projet "+ self.intitule
@@ -4882,8 +4875,7 @@ class Progression(BaseDoc, Objet_sequence):
                     self.tip.SetHTML(constantes.BASE_FICHE_HTML_COMP_PRJ)
                     k = param[3:]
                     nc = getSingulierPluriel(ref.dicoCompetences["S"].nomGenerique, False)
-                    titre = nc + " " + k
-                    self.tip.SetWholeText("titre", titre)
+                    self.tip.SetWholeText("titre", nc + " " + k)
                     
                     intituleComp = competence[0]
                     intituleComp = "\n".join([textwrap.fill(ind, 50) for ind in intituleComp.split(u"\n")]) 

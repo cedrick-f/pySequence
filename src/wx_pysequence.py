@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from _winreg import SetValue
-from test.test_imageop import SIZES
+
 
 ##This file is part of pySequence
 #############################################################################
@@ -3801,9 +3800,9 @@ class FicheProgression(BaseFiche):
     def GetDoc(self):
         return self.progression
     
-    ######################################################################################################
-    def OnLeave(self, evt = None):
-        self.GetDoc().HideTip()
+#     ######################################################################################################
+#     def OnLeave(self, evt = None):
+#         self.GetDoc().HideTip()
             
 
 
@@ -9858,11 +9857,18 @@ class ArbreSequence(ArbreDoc):
     def OnMove(self, event):
         if self.itemDrag != None:
             item = self.HitTest(wx.Point(event.GetX(), event.GetY()))[0]
-            print "item", item
+            
             if item != None:
                 dataTarget = self.GetItemPyData(item)
-                if isinstance(dataTarget, PanelPropriete_Racine):
+                if dataTarget == "Sea":
                     dataTarget = self.sequence
+                
+#                 print "dataTarget", dataTarget
+                
+#                 if isinstance(dataTarget, PanelPropriete_Racine):
+                
+#                     print "       >>", dataTarget
+                    
                 dataSource = self.GetItemPyData(self.itemDrag)
                 a = self.getActionDnD(dataSource, dataTarget)
                 if a == 0:
@@ -9903,6 +9909,9 @@ class ArbreSequence(ArbreDoc):
                 2 : 
                 3 : 
         """
+        
+        
+            
         if isinstance(dataSource, Seance) and dataTarget != dataSource:
             if not hasattr(dataTarget, 'GetNiveau') or dataTarget.GetNiveau() + dataSource.GetProfondeur() > 2:
 #                print "0.1"
@@ -9912,6 +9921,7 @@ class ArbreSequence(ArbreDoc):
             # Insérer "dans"  (racine ou "R" ou "S")  .panelSeances
             if dataTarget == self.sequence \
                or (isinstance(dataTarget, Seance) and dataTarget.typeSeance in ["R","S"]):
+
                 if not dataSource in dataTarget.seances:    # parents différents
 #                    print dataSource.typeSeance, dataTarget.seances[0].GetListeTypes()
                     if dataTarget.GetNiveau() + dataSource.GetProfondeur() > 1:
@@ -9931,9 +9941,18 @@ class ArbreSequence(ArbreDoc):
             else:
                 if dataTarget.parent != dataSource.parent:  # parents différents
 #                    print dataSource.typeSeance, dataTarget.GetListeTypes()
-                    if not dataSource.typeSeance in dataTarget.GetListeTypes():
+                    if hasattr(dataSource.parent, 'typeSeance') \
+                      and dataSource.parent.typeSeance in ["R","S"] \
+                      and len(dataSource.parent.seances) == 1:  # On ne peut pas supprimer la dernière séance d'une rotation ou série
+                        return 0
+                        
+                    elif not dataSource.typeSeance in dataTarget.GetListeTypes():
 #                        print "0-4"
                         return 0
+                    
+                    elif dataTarget.parent == dataSource:
+                        return 0
+                    
                     else:
 #                        print "3"
                         return 3
@@ -9968,59 +9987,67 @@ class ArbreSequence(ArbreDoc):
         """ Gestion des glisser-déposer
         """
         self.item = event.GetItem() 
-        dataTarget = self.GetItemPyData(self.item)
-        if isinstance(dataTarget, PanelPropriete_Racine):
-            dataTarget = self.sequence
-        dataSource = self.GetItemPyData(self.itemDrag)
-        tx = u"Changement de position de la Séance"
-        a = self.getActionDnD(dataSource, dataTarget)
-        if a == 1:
-            lstS = dataSource.parent.seances
-            lstT = dataTarget.seances
-            s = lstS.index(dataSource)
-            lstT.insert(0, lstS.pop(s))
-            dataSource.parent = dataTarget
+        if self.item is not None:
+            dataTarget = self.GetItemPyData(self.item)
+            if dataTarget == "Sea":
+                dataTarget = self.sequence
+    #         if isinstance(dataTarget, PanelPropriete_Racine):
+    #             dataTarget = self.sequence
             
-            self.sequence.OrdonnerSeances()
-            self.sequence.reconstruireBrancheSeances(dataSource.parent, dataTarget)
-            self.GetApp().sendEvent(self.sequence, modif = tx) # Solution pour déclencher un "redessiner"
-        
-        elif a == 2:
-            lst = dataSource.parent.seances
-            s = lst.index(dataSource)
-            lst.insert(0, lst.pop(s))
-               
-            self.sequence.OrdonnerSeances() 
-            self.SortChildren(self.GetItemParent(self.item))
-            self.GetApp().sendEvent(self.sequence, modif = tx) # Solution pour déclencher un "redessiner"
-        
-        elif a == 3:
-            lstT = dataTarget.parent.seances
-            lstS = dataSource.parent.seances
-            s = lstS.index(dataSource)
-            t = lstT.index(dataTarget)
-            lstT[t+1:t+1] = [dataSource]
-            del lstS[s]
-            p = dataSource.parent
-            dataSource.parent = dataTarget.parent
+            dataSource = self.GetItemPyData(self.itemDrag)
+            tx = u"Changement de position de la Séance"
+            a = self.getActionDnD(dataSource, dataTarget)
+#             print "OnEndDrag", a
+            if a == 1:
+                lstS = dataSource.parent.seances
+                lstT = dataTarget.seances
+                s = lstS.index(dataSource)
+                lstT.insert(0, lstS.pop(s))
+                dataSource.parent = dataTarget
+                
+                self.sequence.OrdonnerSeances()
+                self.sequence.reconstruireBrancheSeances(dataSource.parent, dataTarget)
+                self.GetApp().sendEvent(self.sequence, modif = tx) # Solution pour déclencher un "redessiner"
             
-            self.sequence.OrdonnerSeances()
-            self.sequence.reconstruireBrancheSeances(dataTarget.parent, p)
-            self.GetApp().sendEvent(self.sequence, modif = tx) # Solution pour déclencher un "redessiner"
-        
-        elif a == 4:
-            lst = dataTarget.parent.seances
-            s = lst.index(dataSource)
-            t = lst.index(dataTarget)
+            elif a == 2:
+                lst = dataSource.parent.seances
+                s = lst.index(dataSource)
+                lst.insert(0, lst.pop(s))
+                   
+                self.sequence.OrdonnerSeances() 
+                if dataTarget == self.sequence:
+                    self.SortChildren(self.item)
+                else:
+                    self.SortChildren(self.GetItemParent(self.item))
+                self.GetApp().sendEvent(self.sequence, modif = tx) # Solution pour déclencher un "redessiner"
             
-            if t > s:
-                lst.insert(t, lst.pop(s))
-            else:
-                lst.insert(t+1, lst.pop(s))
-               
-            self.sequence.OrdonnerSeances() 
-            self.SortChildren(self.GetItemParent(self.item))
-            self.GetApp().sendEvent(self.sequence, modif = tx) # Solution pour déclencher un "redessiner"
+            elif a == 3:
+                lstT = dataTarget.parent.seances
+                lstS = dataSource.parent.seances
+                s = lstS.index(dataSource)
+                t = lstT.index(dataTarget)
+                lstT[t+1:t+1] = [dataSource]
+                del lstS[s]
+                p = dataSource.parent
+                dataSource.parent = dataTarget.parent
+                
+                self.sequence.OrdonnerSeances()
+                self.sequence.reconstruireBrancheSeances(dataTarget.parent, p)
+                self.GetApp().sendEvent(self.sequence, modif = tx) # Solution pour déclencher un "redessiner"
+            
+            elif a == 4:
+                lst = dataTarget.parent.seances
+                s = lst.index(dataSource)
+                t = lst.index(dataTarget)
+                
+                if t > s:
+                    lst.insert(t, lst.pop(s))
+                else:
+                    lst.insert(t+1, lst.pop(s))
+                   
+                self.sequence.OrdonnerSeances() 
+                self.SortChildren(self.GetItemParent(self.item))
+                self.GetApp().sendEvent(self.sequence, modif = tx) # Solution pour déclencher un "redessiner"
                     
         self.itemDrag = None
         event.Skip()

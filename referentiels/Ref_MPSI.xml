@@ -548,17 +548,17 @@
               <l_01 S_00="Extraire les informations utiles d’un dossier technique" />
             </l_E1.1>
             <l_E1.2 S_00="(OPT) Chaine d’information">
-              <l_01 S_00="Repérer  les--d’information--" />
+              <l_01 S_00="Repérer  les … d’information--" />
             </l_E1.2>
             <l_E1.3 S_00="(OPT) Paramètres influents">
-              <l_01 S_00="Régler   les   paramètres   de   fonctionnement   d’un système" S_01="Mettre en évidence l’influence des paramètres sur les performances du système" />
+              <l_01 S_00="Régler les paramètres de fonctionnement d’un système" S_01="Mettre en évidence l’influence des paramètres sur les performances du système" />
             </l_E1.3>
           </d_01>
         </l_E1>
         <l_A1 S_00="Identifier le besoin et les exigences">
           <d_01>
-            <l_A1.1 S_00="Cahier des charges (diagramme des exigences, diagramme des cas d’utilisation)----">
-              <l_01 S_00="Décrire le besoin" S_01="Traduire un besoin fonctionnel en exigences " S_02="Présenter la fonction globale" S_03="Définir les domaines d’application, les critères technico-économiques" S_04="Identifier les contraintes" S_05="Identifier et caractériser les fonctions" S_06="Qualifier et quantifier les exigences (critère, niveau)" />
+            <l_A1.1 S_00="Cahier des charges (diagramme des exigences, diagramme des cas d’utilisation)">
+              <l_01 S_00="Décrire le besoin" S_01="Traduire un besoin fonctionnel en exigences" S_02="Présenter la fonction globale" S_03="Définir les domaines d’application, les critères technico-économiques" S_04="Identifier les contraintes" S_05="Identifier et caractériser les fonctions" S_06="Qualifier et quantifier les exigences (critère, niveau)" />
             </l_A1.1>
             <l_A1.2 S_00="Impact environnemental">
               <l_01 S_00="Évaluer l’impact environnemental (matériaux, énergies, nuisances)" />
@@ -567,21 +567,21 @@
         </l_A1>
         <l_A3 S_00="Appréhender les analyses fonctionnelle et structurelle">
           <d_01>
-            <l_A3.2 S_00="Chaîne d’information et d'énergie (diagramme de blocs internes, diagramme paramétrique)--">
-              <l_01 S_00="Identifier et décrire la chaîne d’information et la chaine d'énergie du système--" S_01="Identifier les liens entre la chaîne d’énergie et la chaine d'information" S_02="Identifier les constituants de la chaîne d'information réalisant les fonctions acquérir, coder, communiquer,--mémoriser, restituer, traiter--" S_03="Identifier les constituants de la chaîne d'énergie réalisant les fonctions agir, alimenter, convertir, moduler, transmettre, stocker--" />
+            <l_A3.2 S_00="Chaîne d’information et d'énergie (diagramme de blocs internes, diagramme paramétrique)">
+              <l_01 S_00="Identifier et décrire la chaîne d’information et la chaine d'énergie du système" S_01="Identifier les liens entre la chaîne d’énergie et la chaine d'information" S_02="Identifier les constituants de la chaîne d'information réalisant les fonctions acquérir, coder, communiquer,--mémoriser, restituer, traiter" S_03="Identifier les constituants de la chaîne d'énergie réalisant les fonctions agir, alimenter, convertir, moduler, transmettre, stocker" />
             </l_A3.2>
-            <l_A3.3 S_00="Systèmes à événements discrets (diagramme de séquences,  diagramme d’états)----">
+            <l_A3.3 S_00="Systèmes à événements discrets (diagramme de séquences,  diagramme d’états)">
               <l_01 S_00="Interpréter tout ou partie de l’évolution temporelle d’un système" />
             </l_A3.3>
-            <l_A3.1 S_00="Architectures fonctionnelle et structurelle (diagrammes de définition de blocs, chaîne directe, système asservi, commande)--">
-              <l_01 S_00="Analyser les architectures fonctionnelle et structurelle" S_01="Identifier les fonctions des différents constituants " S_02="Identifier et positionner les perturbations" S_03=" Différencier régulation et poursuite" S_04="(OPT) Repérer  les  constituants  dédiés  aux  fonctions  d’un système--" />
+            <l_A3.1 S_00="Architectures fonctionnelle et structurelle (diagrammes de définition de blocs, chaîne directe, système asservi, commande)">
+              <l_01 S_00="Analyser les architectures fonctionnelle et structurelle" S_01="Identifier les fonctions des différents constituants" S_02="Identifier et positionner les perturbations" S_03="Différencier régulation et poursuite" S_04="(OPT) Repérer  les  constituants  dédiés  aux  fonctions  d’un système" />
             </l_A3.1>
           </d_01>
         </l_A3>
         <l_A2 S_00="Définir les frontières de l'analyse">
           <d_01>
             <l_A2.2 S_00="Flux échangés">
-              <l_01 S_00="Identifier   la   nature   des   flux   échangés   (matière, énergie, information) traversant la frontière d’étude--" />
+              <l_01 S_00="Identifier la nature des flux échangés (matière, énergie, information) traversant la frontière d’étude" />
             </l_A2.2>
             <l_A2.1 S_00="Frontière d’étude - Milieu extérieur">
               <l_01 S_00="Isoler un système et justifier l’isolement" S_01="Définir les éléments influents du milieu extérieur" />
@@ -590,7 +590,7 @@
         </l_A2>
         <l_A5 S_00="Apprécier la pertinence et la validité des résultats">
           <d_01>
-            <l_A5.1 S_00="Grandeurs utilisées (unités du système international, homogénéité des grandeurs)--">
+            <l_A5.1 S_00="Grandeurs utilisées (unités du système international, homogénéité des grandeurs)">
               <l_01 S_00="Utiliser des symboles et des unités adéquates" S_01="Vérifier l’homogénéité des résultats" />
             </l_A5.1>
           </d_01>
@@ -600,50 +600,50 @@
             <l_A4.1 S_00="Identification des écarts">
               <l_01 S_00="(OPT) Traiter  des  données  de  mesures  et en extraire les caractéristiques statistiques" />
             </l_A4.1>
-            <l_A4.3 S_00="Interprétation des écarts obtenus--">
-              <l_01 S_00="(OPT) Vérifier la cohérence des résultats d’expérimentation avec les valeurs souhaitées du cahier des charges " S_01="(OPT) Vérifier  la  cohérence  du  modèle  choisi  avec  des résultats d’expérimentation" />
+            <l_A4.3 S_00="Interprétation des écarts obtenus">
+              <l_01 S_00="(OPT) Vérifier la cohérence des résultats d’expérimentation avec les valeurs souhaitées du cahier des charges" S_01="(OPT) Vérifier  la  cohérence  du  modèle  choisi  avec  des résultats d’expérimentation" />
             </l_A4.3>
           </d_01>
         </l_A4>
         <l_B2 S_00="Proposer un modèle de connaissance et de comportement">
           <d_01>
-            <l_B2.2 S_00="Systèmes linéaires continus et invariants (modélisation par équations différentielles, calcul symbolique, fonction de transfert , gain, ordre, classe, pôles et zéros)--">
-              <l_01 S_00="Déterminer les fonctions de transfert à partir d’équations physiques (modèle de connaissance)--" />
+            <l_B2.2 S_00="Systèmes linéaires continus et invariants (modélisation par équations différentielles, calcul symbolique, fonction de transfert , gain, ordre, classe, pôles et zéros)">
+              <l_01 S_00="Déterminer les fonctions de transfert à partir d’équations physiques (modèle de connaissance)" />
             </l_B2.2>
-            <l_B2.3 S_00="Signaux canoniques d’entrée (impulsion, échelon, rampe, signaux sinusoïdaux)--">
+            <l_B2.3 S_00="Signaux canoniques d’entrée (impulsion, échelon, rampe, signaux sinusoïdaux)">
               <l_01 S_00="Caractériser les signaux canoniques d’entrée" />
             </l_B2.3>
-            <l_B2.12 S_00="Liaisons (géométrie des contacts entre deux solides, définition du contact ponctuel entre deux solides :--roulement, pivotement, glissement, condition cinématique de maintien du contact, définition d’une liaison, liaisons normalisées entre solides, caractéristiques géométriques et repères d’expression privilégiés, torseur cinématique des liaisons normalisées, torseur des actions, mécaniques transmissibles dans les liaisons normalisées, associations de liaisons en série et en parallèle, liaisons cinématiquement équivalentes)--">
-              <l_01 S_00="Proposer  une  modélisation  des  liaisons  avec  une définition précise de leurs caractéristiques géométriques--" S_01="Associer le paramétrage au modèle retenu " S_02="Associer à chaque liaison son torseur cinématique" S_03="Associer   à   chaque   liaison   son   torseur   d’actions mécaniques transmissibles" />
+            <l_B2.12 S_00="Liaisons (géométrie des contacts entre deux solides, définition du contact ponctuel entre deux solides :--roulement, pivotement, glissement, condition cinématique de maintien du contact, définition d’une liaison, liaisons normalisées entre solides, caractéristiques géométriques et repères d’expression privilégiés, torseur cinématique des liaisons normalisées, torseur des actions, mécaniques transmissibles dans les liaisons normalisées, associations de liaisons en série et en parallèle, liaisons cinématiquement équivalentes)">
+              <l_01 S_00="Proposer  une  modélisation  des  liaisons  avec  une définition précise de leurs caractéristiques géométriques" S_01="Associer le paramétrage au modèle retenu" S_02="Associer à chaque liaison son torseur cinématique" S_03="Associer à chaque liaison son torseur d’actions mécaniques transmissibles" />
             </l_B2.12>
             <l_B2.1 S_00="Chaîne d’énergie et d'information">
-              <l_01 S_00="(OPT) Construire un modèle multiphysique simple " S_01="(OPT) Définir les paramètres du modèle" />
+              <l_01 S_00="(OPT) Construire un modèle multiphysique simple" S_01="(OPT) Définir les paramètres du modèle" />
             </l_B2.1>
             <l_B2.6 S_00="Modèles de comportement">
-              <l_01 S_00="Renseigner les paramètres caractéristiques d’un modèle de comportement (premier ordre, deuxième ordre, dérivateur, intégrateur, gain, retard)--" />
+              <l_01 S_00="Renseigner les paramètres caractéristiques d’un modèle de comportement (premier ordre, deuxième ordre, dérivateur, intégrateur, gain, retard)" />
             </l_B2.6>
-            <l_B2.7 S_00="Solide indéformable (définition, référentiel, repère, équivalence solide/référentiel, degrés de liberté, vecteur-vitesse angulaire de deux référentiels en mouvement l’un par rapport à l’autre)--">
+            <l_B2.7 S_00="Solide indéformable (définition, référentiel, repère, équivalence solide/référentiel, degrés de liberté, vecteur-vitesse angulaire de deux référentiels en mouvement l’un par rapport à l’autre)">
               <l_01 S_00="Paramétrer les mouvements d’un solide indéformable" S_01="Associer un repère à un solide" S_02="Identifier les degrés de liberté d’un solide par rapport à un autre solide" />
             </l_B2.7>
-            <l_B2.4 S_00="Schéma-bloc (fonction de transfert en chaîne directe, fonction de transfert en boucle ouverte et en boucle fermée)--">
+            <l_B2.4 S_00="Schéma-bloc (fonction de transfert en chaîne directe, fonction de transfert en boucle ouverte et en boucle fermée)">
               <l_01 S_00="Analyser ou établir le schéma-bloc du système" S_01="Déterminer les fonctions de transfert" />
             </l_B2.4>
-            <l_B2.11 S_00="Actions mécaniques (modélisation locale, actions à distance et de contact, modélisation globale, torseur associé, lois de Coulomb ; adhérence et glissement, résistance au roulement et au pivotement)--">
-              <l_01 S_00="Associer un modèle à une action mécanique " S_01="Déterminer  la  relation  entre  le  modèle  local  et  le modèle global" />
+            <l_B2.11 S_00="Actions mécaniques (modélisation locale, actions à distance et de contact, modélisation globale, torseur associé, lois de Coulomb ; adhérence et glissement, résistance au roulement et au pivotement)">
+              <l_01 S_00="Associer un modèle à une action mécanique" S_01="Déterminer  la  relation  entre  le  modèle  local  et  le modèle global" />
             </l_B2.11>
             <l_B2.8 S_00="Modélisation plane">
-              <l_01 S_00="Préciser et justifier les conditions et les limites de la modélisation plane--" />
+              <l_01 S_00="Préciser et justifier les conditions et les limites de la modélisation plane" />
             </l_B2.8>
             <l_B2.9 S_00="Torseur cinématique">
-              <l_01 S_00="Déterminer  le  torseur  cinématique  d’un  solide  par rapport à un autre solide--" />
+              <l_01 S_00="Déterminer  le  torseur  cinématique  d’un  solide  par rapport à un autre solide" />
             </l_B2.9>
-            <l_B2.13 S_00="Systèmes logiques (codage de l’information, binaire naturel, binaire réfléchi, représentation hexadécimale, table de vérité, opérateurs logiques fondamentaux (ET, OU, NON))--">
+            <l_B2.13 S_00="Systèmes logiques (codage de l’information, binaire naturel, binaire réfléchi, représentation hexadécimale, table de vérité, opérateurs logiques fondamentaux (ET, OU, NON))">
               <l_01 S_00="Coder une information" S_01="Exprimer un fonctionnement logiques" />
             </l_B2.13>
-            <l_B2.14 S_00="Systèmes à événements discrets, Chronogramme----">
+            <l_B2.14 S_00="Systèmes à événements discrets, Chronogramme">
               <l_01 S_00="Représenter tout ou partie de l’évolution temporelle" />
             </l_B2.14>
-            <l_B2.15 S_00="Structures algorithmiques (variables,  boucles, conditions, transitions conditionnelles)--">
+            <l_B2.15 S_00="Structures algorithmiques (variables,  boucles, conditions, transitions conditionnelles)">
               <l_01 S_00="Décrire et compléter un algorithme représenté sous forme graphique" />
             </l_B2.15>
           </d_01>
@@ -657,7 +657,7 @@
         </l_B3>
         <l_C3 S_00="Procéder à la mise en œuvre d’une démarche de résolution numérique">
           <d_01>
-            <l_C3.1 S_00="(OPT) Paramètres de résolution numérique (durée de calcul, pas de calcul)--">
+            <l_C3.1 S_00="(OPT) Paramètres de résolution numérique (durée de calcul, pas de calcul)">
               <l_01 S_00="Choisir les valeurs des paramètres de la résolution numérique" />
             </l_C3.1>
             <l_C3.2 S_00="(OPT) Grandeurs simulées">
@@ -667,17 +667,17 @@
         </l_C3>
         <l_C2 S_00="Procéder à la mise en œuvre d’une démarche de résolution analytique">
           <d_01>
-            <l_C2.1 S_00="Réponses temporelle et fréquentielle (systèmes du 1er et du 2e ordre, intégrateur)--">
+            <l_C2.1 S_00="Réponses temporelle et fréquentielle (systèmes du 1er et du 2e ordre, intégrateur)">
               <l_01 S_00="Déterminer la réponse temporelle" S_01="Déterminer la réponse fréquentielle" S_02="Tracer le diagramme asymptotique de Bode" />
             </l_C2.1>
-            <l_C2.8 S_00="Principe fondamental de la statique, Équilibre d’un solide, d’un ensemble de solides, Théorème des actions réciproques, Modèles avec frottement : arc- boutement--">
+            <l_C2.8 S_00="Principe fondamental de la statique, Équilibre d’un solide, d’un ensemble de solides, Théorème des actions réciproques, Modèles avec frottement : arc- boutement">
               <l_01 S_00="Déterminer les inconnues de liaison" S_01="Déterminer la valeur des paramètres conduisant à des positions d'équilibre (par exemple l'arc- boutement)" />
             </l_C2.8>
-            <l_C2.3 S_00="Rapidité des SLCI (temps de réponse à 5 %, bande passante)--">
+            <l_C2.3 S_00="Rapidité des SLCI (temps de réponse à 5 %, bande passante)">
               <l_01 S_00="Prévoir les performances en termes de rapidité" S_01="Relier la rapidité aux caractéristiques fréquentielles" />
             </l_C2.3>
-            <l_C2.7 S_00="Dérivée temporelle d’un vecteur par rapport à un référentiel, Relation entre les dérivées temporelles d’un vecteur par rapport à deux référentiels distincts, Loi entrée – sortie cinématique, Composition des vitesses angulaires, Composition des vitesses--">
-              <l_01 S_00=" Déterminer les relations de fermeture de la chaine cinématique--" S_01="Déterminer la loi entrée - sortie cinématique d’une chaine cinématique" />
+            <l_C2.7 S_00="Dérivée temporelle d’un vecteur par rapport à un référentiel, Relation entre les dérivées temporelles d’un vecteur par rapport à deux référentiels distincts, Loi entrée – sortie cinématique, Composition des vitesses angulaires, Composition des vitesses">
+              <l_01 S_00="Déterminer les relations de fermeture de la chaine cinématique" S_01="Déterminer la loi entrée - sortie cinématique d’une chaine cinématique" />
             </l_C2.7>
             <l_C2.6 S_00="Loi entrée – sortie géométrique">
               <l_01 S_00="Déterminer la loi entrée - sortie géométrique d’une chaîne cinématique" />
@@ -697,52 +697,52 @@
         <l_D2 S_00="Mettre en oeuvre une communication">
           <d_01>
             <l_D2.1 S_00="(OPT) Outils de communication">
-              <l_01 S_00="Choisir  les  outils  de  communication  adaptés  par rapport à l’interlocuteur" S_01="Faire preuve d’écoute et confronter des points de vue " S_02="Présenter les étapes de son travail" S_03="Présenter de manière argumentée une synthèse des résultats" />
+              <l_01 S_00="Choisir  les  outils  de  communication  adaptés  par rapport à l’interlocuteur" S_01="Faire preuve d’écoute et confronter des points de vue" S_02="Présenter les étapes de son travail" S_03="Présenter de manière argumentée une synthèse des résultats" />
             </l_D2.1>
             <l_D2.3 S_00="Schémas cinématique, électrique">
-              <l_01 S_00="Réaliser un schéma cinématique " S_01="Réaliser un schéma électrique" />
+              <l_01 S_00="Réaliser un schéma cinématique" S_01="Réaliser un schéma électrique" />
             </l_D2.3>
           </d_01>
         </l_D2>
         <l_E2 S_00="Proposer et justifier un protocole expérimental">
           <d_01>
             <l_E2.2 S_00="(OPT) Protocoles expérimentaux">
-              <l_01 S_00="Choisir les configurations matérielles du système en fonction de l’objectif visé----" S_01="Choisir la grandeur physique à mesurer ou justifier son choix" S_02="Choisir  les  entrées  à  imposer  pour  identifier  un modèle de comportement" />
+              <l_01 S_00="Choisir les configurations matérielles du système en fonction de l’objectif visé" S_01="Choisir la grandeur physique à mesurer ou justifier son choix" S_02="Choisir  les  entrées  à  imposer  pour  identifier  un modèle de comportement" />
             </l_E2.2>
             <l_E2.1 S_00="(OPT) Modèles de comportement d’un système">
-              <l_01 S_00="Prévoir l’allure de la réponse attendue " S_01="Prévoir l’ordre de grandeur de la mesure" />
+              <l_01 S_00="Prévoir l’allure de la réponse attendue" S_01="Prévoir l’ordre de grandeur de la mesure" />
             </l_E2.1>
           </d_01>
         </l_E2>
         <l_E3 S_00="Mettre en œuvre un protocole expérimental">
           <d_01>
-            <l_E3.2 S_00="(OPT) Paramètres de configuration du système--">
-              <l_01 S_00="Choisir les configurations matérielles du système en fonction de l’objectif visé----" />
+            <l_E3.2 S_00="(OPT) Paramètres de configuration du système">
+              <l_01 S_00="Choisir les configurations matérielles du système en fonction de l’objectif visé" />
             </l_E3.2>
-            <l_E3.3 S_00="(OPT) Routines, procédures, Systèmes logiques à événements discrets----">
-              <l_01 S_00="Générer   un   programmeet l’implanter   dans   le système cible --" />
+            <l_E3.3 S_00="(OPT) Routines, procédures, Systèmes logiques à événements discrets">
+              <l_01 S_00="Générer   un   programmeet l’implanter   dans   le système cible" />
             </l_E3.3>
             <l_E3.1 S_00="(OPT) Règles de sécurité élémentaires">
               <l_01 S_00="Mettre en œuvre un système complexe en respectant les règles de sécurité" />
             </l_E3.1>
-            <l_E3.6 S_00="(OPT) Identification fréquentielle d’un modèle de comportement--">
-              <l_01 S_00="Identifier    les    paramètres    caractéristiques    d’un modèle de comportement à partir de sa réponse fréquentielle--" S_01="Associer un modèle de comportement (premier ordre, deuxième ordre, intégrateur, gain) à partir de sa réponse fréquentielle" />
+            <l_E3.6 S_00="(OPT) Identification fréquentielle d’un modèle de comportement">
+              <l_01 S_00="Identifier les paramètres caractéristiques d’un modèle de comportement à partir de sa réponse fréquentielle" S_01="Associer un modèle de comportement (premier ordre, deuxième ordre, intégrateur, gain) à partir de sa réponse fréquentielle" />
             </l_E3.6>
-            <l_E3.4 S_00="(OPT) Modèles de comportement--">
+            <l_E3.4 S_00="(OPT) Modèles de comportement">
               <l_01 S_00="Extraire les grandeurs désirées et les traiter" />
             </l_E3.4>
-            <l_E3.5 S_00="(OPT) Identification temporelle d’un modèle de comportement----">
-              <l_01 S_00="Identifier les paramètres caractéristiques d’un modèle du premier ordre ou du deuxième ordre à partir de sa réponse indicielle--" />
+            <l_E3.5 S_00="(OPT) Identification temporelle d’un modèle de comportement">
+              <l_01 S_00="Identifier les paramètres caractéristiques d’un modèle du premier ordre ou du deuxième ordre à partir de sa réponse indicielle" />
             </l_E3.5>
           </d_01>
         </l_E3>
         <l_B1 S_00="Identifier et caractériser les grandeurs physiques">
           <d_01>
-            <l_B1.1 S_00="Caractéristiques des grandeurs physiques (nature physique, caractéristiques fréquentielles, caractéristiques temporelles)--">
+            <l_B1.1 S_00="Caractéristiques des grandeurs physiques (nature physique, caractéristiques fréquentielles, caractéristiques temporelles)">
               <l_01 S_00="Qualifier les grandeurs d’entrée et de sortie d’un système isolé" S_01="Identifier la nature (grandeur effort, grandeur flux)" S_02="Décrire les lois d’évolution des grandeurs" />
             </l_B1.1>
             <l_B1.2 S_00="Flux d'énergie, Flux d’information">
-              <l_01 S_00=" Identifier la nature de l’information et la nature du signal" S_01=" Qualifier la nature des matières, quantifier les volumes et les masses" />
+              <l_01 S_00="Identifier la nature de l’information et la nature du signal" S_01="Qualifier la nature des matières, quantifier les volumes et les masses" />
             </l_B1.2>
           </d_01>
         </l_B1>
