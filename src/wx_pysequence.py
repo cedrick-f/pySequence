@@ -7212,12 +7212,14 @@ class PanelPropriete_Savoirs(PanelPropriete):
         ref = self.GetDocument().GetReferentiel()
 #        print "   ", ref.listSavoirs
         # On reconstruit ...
-        dicSavoirs = [(c, ref.dicoSavoirs[c]) for c in ref.listSavoirs]
-        if ref.tr_com != []:
-            # Il y a un tronc comun (ETT pour Spécialité STI2D par exemple)
-            r = REFERENTIELS[ref.tr_com[0]]
-            dicSavoirs.insert(1, ("B", r.dicoSavoirs["S"]))
-            dicSavoirs.extend([(c, r.dicoSavoirs[c]) for c in r.dicoSavoirs.keys() if c != "S"])
+#         dicSavoirs = [(c, ref.dicoSavoirs[c]) for c in ref.listSavoirs]
+#         if ref.tr_com != []:
+#             # Il y a un tronc comun (ETT pour Spécialité STI2D par exemple)
+#             r = REFERENTIELS[ref.tr_com[0]]
+#             dicSavoirs.insert(1, ("B", r.dicoSavoirs["S"]))
+#             dicSavoirs.extend([(c, r.dicoSavoirs[c]) for c in r.dicoSavoirs.keys() if c != "S"])
+        
+        dicSavoirs = ref.getTousSavoirs()
         
         for code, savoir in dicSavoirs:
             if (self.prerequis and savoir.pre) or (not self.prerequis and savoir.obj):
@@ -7450,7 +7452,7 @@ class PanelPropriete_Seance(PanelPropriete):
 
         
         #
-        # Systémes
+        # Systèmes
         #
         self.box = myStaticBox(self, -1, u"Systèmes ou matériels nécessaires", size = (200,200))
         self.box.SetMinSize((200,200))
@@ -9363,6 +9365,10 @@ class PanelPropriete_Support(PanelPropriete):
         box = myStaticBox(self, -1, u"Nom du support :")
         bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
         textctrl = TextCtrl_Help(self, u"")
+        textctrl.SetTitre(u"Nom du support")
+        textctrl.SetToolTipString(u"Le support est le matériel ou logiciel\n" \
+                                  u"sur lequel les élèves réalisent\n" \
+                                  u"les modélisations et expérimentations.")
         self.textctrl = textctrl
         bsizer.Add(textctrl, flag = wx.EXPAND)
         self.sizer.Add(bsizer, (0,0), flag = wx.EXPAND|wx.ALL, border = 2)
@@ -9404,10 +9410,17 @@ class PanelPropriete_Support(PanelPropriete):
         #
         # Description du support
         #
-        dbox = myStaticBox(self, -1, u"Description")
+        dbox = myStaticBox(self, -1, u"Description du support")
         dbsizer = wx.StaticBoxSizer(dbox, wx.VERTICAL)
 #        bd = wx.Button(self, -1, u"Editer")
         tc = richtext.RichTextPanel(self, self.support, toolBar = True)
+        tc.SetTitre(u"Description du support")
+        tc.SetToolTipString(u"Description du support :\n" \
+                            u" - modèle\n" \
+                            u" - documentation\n" \
+                            u" - liens Internet\n" \
+                            u" - ..."
+                            )
         tc.SetMaxSize((-1, 150))
 #        dbsizer.Add(bd, flag = wx.EXPAND)
         dbsizer.Add(tc, 1, flag = wx.EXPAND)
@@ -9845,6 +9858,7 @@ class ArbreSequence(ArbreDoc):
     def OnMove(self, event):
         if self.itemDrag != None:
             item = self.HitTest(wx.Point(event.GetX(), event.GetY()))[0]
+            print "item", item
             if item != None:
                 dataTarget = self.GetItemPyData(item)
                 if isinstance(dataTarget, PanelPropriete_Racine):

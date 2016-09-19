@@ -5706,7 +5706,13 @@ class Savoirs(Objet_sequence):
     
     ######################################################################################  
     def GetDiscipline(self, num):
-        return self.GetReferentiel().dicoSavoirs[self.savoirs[num][0]].abrDiscipline
+#         print "dicoSavoirs", self.GetReferentiel().dicoSavoirs
+        ref = self.GetReferentiel()
+        dicSavoirs = ref.getTousSavoirs()
+        for code, savoirs in dicSavoirs:
+            if code == self.GetCode(num)[0]:
+                return savoirs.abrDiscipline
+#         return ref.dicoSavoirs[self.savoirs[num][0]].abrDiscipline
     
     ######################################################################################  
     def GetIntit(self, num):

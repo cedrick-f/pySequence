@@ -1551,7 +1551,20 @@ class Referentiel(XMLelem):
 #            if cc is not None:
 #                return cc
             
-
+    #########################################################################
+    def getTousSavoirs(self):
+        """ Renvoie sous la forme [(code, Referentiel.Savoirs), ]
+            tous les savoirs concernés par cet enseignement
+        """
+        dicSavoirs = [(c, self.dicoSavoirs[c]) for c in self.listSavoirs]
+        if self.tr_com != []:
+            # Il y a un tronc comun (ETT pour Spécialité STI2D par exemple)
+            r = REFERENTIELS[self.tr_com[0]]
+            dicSavoirs.insert(1, ("B", r.dicoSavoirs["S"]))
+            dicSavoirs.extend([(c, r.dicoSavoirs[c]) for c in r.dicoSavoirs.keys() if c != "S"])
+            
+        return dicSavoirs
+            
 #    #########################################################################
 #    def getCompetence(self, comp):
 ##        print "getCompetence", comp
@@ -1591,7 +1604,11 @@ class Referentiel(XMLelem):
     def getSavoir(self, code):
         """ Renvoie un savoir d'après son code
         """
-        return self.dicoSavoirs[code[0]].getSavoir(code[1:])
+        
+        for codeDiscipline, savoirs in self.getTousSavoirs():
+            if codeDiscipline == code[0]:
+                return savoirs.getSavoir(code[1:])
+#         return self.dicoSavoirs[code[0]].getSavoir(code[1:])
     
 ##        print "getSavoir", code, 
 #        if dic == None:
