@@ -7075,10 +7075,12 @@ class PanelPropriete_Competences(PanelPropriete):
 
 
         def checkArbre(arbre):
+#             print arbre.items.keys()
             arbre.UnselectAll()
             for s in self.competence.competences:
-                if s in arbre.items.keys():
-                    arbre.CheckItem2(arbre.items[s])
+#                 print "  ", s
+                if s[1:] in arbre.items.keys():
+                    arbre.CheckItem2(arbre.items[s[1:]])
         
         for arbre in self.arbres.values():
             checkArbre(arbre)  
@@ -7662,6 +7664,9 @@ class PanelPropriete_Seance(PanelPropriete):
         deja = self.seance.typeSeance in ACTIVITES
 #        print self.GetReferentiel().seances
 #        print self.cbType.GetStringSelection()
+
+        
+
         self.seance.SetType(get_key(self.GetReferentiel().seances, 
                                     self.cbType.GetStringSelection(), 1))
 #        self.seance.parent.OrdonnerSeances()
@@ -7675,8 +7680,8 @@ class PanelPropriete_Seance(PanelPropriete):
             self.seance.systemes = []
             
 #        if self.cbEff.IsEnabled() and self.cbEff.IsShown():
-        
         self.seance.SetEffectif(self.cbEff.GetStringSelection())
+        
 
         
         self.ConstruireListeSystemes()
@@ -9726,8 +9731,10 @@ class ArbreDoc(CT.CustomTreeCtrl):
         
         if hasattr(data, 'GetPanelPropriete'):
             panelPropriete = data.GetPanelPropriete(self.panelProp)
-        elif isinstance(data, str): # 
+        elif isinstance(data, (str, unicode)): # 
             panelPropriete = self.GetPanelPropriete(self.panelProp, data)
+        else:
+            print "err : ", data
         
         if panelPropriete:
 #             print "> panelPropriete", panelPropriete
@@ -9921,8 +9928,12 @@ class ArbreSequence(ArbreDoc):
             # Insérer "dans"  (racine ou "R" ou "S")  .panelSeances
             if dataTarget == self.sequence \
                or (isinstance(dataTarget, Seance) and dataTarget.typeSeance in ["R","S"]):
-
-                if not dataSource in dataTarget.seances:    # parents différents
+                if hasattr(dataSource.parent, 'typeSeance') \
+                      and dataSource.parent.typeSeance in ["R","S"] \
+                      and len(dataSource.parent.seances) == 1:  # On ne peut pas supprimer la dernière séance d'une rotation ou série
+                        return 0
+                    
+                elif not dataSource in dataTarget.seances:    # parents différents
 #                    print dataSource.typeSeance, dataTarget.seances[0].GetListeTypes()
                     if dataTarget.GetNiveau() + dataSource.GetProfondeur() > 1:
 #                        print "0-2"

@@ -2064,7 +2064,7 @@ class Sequence(BaseDoc, Objet_sequence):
         # L'équipe pédagogique
         #
         self.branchePrf = arbre.AppendItem(self.branche, Titres[10], 
-                                           data = u"Equ")
+                                           data = "Equ")
         for e in self.equipe:
             e.ConstruireArbre(arbre, self.branchePrf) 
         
@@ -6006,6 +6006,7 @@ class Seance(ElementDeSequence, Objet_sequence):
         """ Renvoie l'effectif de la séance
             n : portion de classe
         """
+        print "GetEffectif", self, self.effectif
         eff = 0
         if self.typeSeance in ["R", "S"]:
             for sce in self.seances:
@@ -6036,7 +6037,7 @@ class Seance(ElementDeSequence, Objet_sequence):
             8 = G
             16 = C
         """
-#        print "SetEffectif", val, self.GetReferentiel().effectifs.keys()
+        print "SetEffectif", val, self.GetReferentiel().effectifs.keys()
         codeEff = None
         if type(val) == int:
             if self.typeSeanc == "R":
@@ -6143,7 +6144,7 @@ class Seance(ElementDeSequence, Objet_sequence):
             elif etatEff == 1 :
                 message = u"Tout le groupe \"effectif réduit\" n'est pas occupé"
             elif etatEff == 2:
-                message = u"Effectif de la séance supperieur à celui du groupe \"effectif réduit\""
+                message = u"Effectif de la Séance supérieur à celui du groupe \"effectif réduit\""
             elif etatEff == 3:
                 message = u"Séances en rotation d'effectifs différents !!"
                 
@@ -6324,7 +6325,7 @@ class Seance(ElementDeSequence, Objet_sequence):
         
     ######################################################################################  
     def SetType(self, typ):
-#        print "SetType", typ
+#         print "SetType", typ
         if type(typ) == str or type(typ) == unicode:
             self.typeSeance = typ
         else:
@@ -6343,7 +6344,10 @@ class Seance(ElementDeSequence, Objet_sequence):
             
         
         if self.EstSousSeance() and self.parent.typeSeance in ["R","S"]:
-            self.parent.SignalerPb(self.parent.IsEffectifOk(), 0)
+            try: # Pas terrible mais pas trouvé mieux
+                self.parent.SignalerPb(self.parent.IsEffectifOk(), 0)
+            except:
+                pass
         
         if self.typeSeance in ["AP","ED"]:
             self.SignalerPb(0, self.IsNSystemesOk())

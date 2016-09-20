@@ -45,7 +45,7 @@ import wx
 
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "7.0-beta.9"
+__version__ = "7.0-beta.10"
 print __version__
 
 
