@@ -209,12 +209,12 @@ def modifierGrille(doc, tableaux, eleve):
             for i, indics in dicNon.items():
 #                print "   ", indics
                 lignes = [ind.ligne[part] for ind in indics if part in ind.ligne.keys() and ind.ligne[part] != 0]
-                
+#                 print "keys", part, dicIndic.keys() 
                 for j, ligne in enumerate(lignes):
-#                    print "    ", ligne
+#                     print "    ", i
                     # indic = l'indicateur "i" doit être évalué
-                    if i in dicIndic.keys():
-                        indic = dicIndic[i][j]
+                    if 'S'+i in dicIndic.keys():
+                        indic = dicIndic['S'+i][j]
                     else:
                         indic = False
                     if part in tableaux.keys() and tableaux[part] != None:

@@ -2478,7 +2478,7 @@ class FenetreProjet(FenetreDocument):
                                    nbr_etapes,
                                    wx.GetTopLevelParent(self))
         
-        self.fiche.Hide()
+#         self.fiche.Hide()
         
         fichier = open(nomFichier,'r')
         self.definirNomFichierCourant(nomFichier)
@@ -2659,7 +2659,7 @@ class FenetreProjet(FenetreDocument):
             dlg.Close() 
     
 #        self.SetTitre()
-        wx.CallAfter(self.fiche.Show)
+#         wx.CallAfter(self.fiche.Show)
         wx.CallAfter(self.fiche.Redessiner)
 
 
@@ -7895,7 +7895,7 @@ class PanelPropriete_Tache(PanelPropriete):
             self.txtPhas = txtPhas
             
         else:
-            cbPhas = wx.combo.BitmapComboBox(pageGen, -1, u"Selectionner la phase",
+            cbPhas = wx.combo.BitmapComboBox(pageGen, -1, u"Sélectionner la phase",
                                  choices = lstPhases,
                                  style = wx.CB_DROPDOWN
                                  | wx.TE_PROCESS_ENTER
@@ -8064,10 +8064,10 @@ class PanelPropriete_Tache(PanelPropriete):
         #
         # Mise en place
         #
-        self.Layout()
-        self.FitInside()
+#         self.Layout()
+#         self.FitInside()
 #        wx.CallAfter(self.PostSizeEvent)
-        self.Show()
+#         self.Show()
         self.Refresh()
 #        wx.CallAfter(self.Layout)
         

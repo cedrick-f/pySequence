@@ -595,6 +595,7 @@ class PdfPanel(wx.Panel):
         
         if NOT_USE_ADOBE:
             self.pdf = wx.StaticText(self, -1, u"Cette fonctionnalité n'est disponible qu'avec Adobe Acrobat Reader\n")
+            self.pdf.Bind(wx.EVT_CLOSE, self.OnClose)
 #            from wx.lib.pdfviewer import pdfViewer
 #            self.pdf = pdfViewer( self, wx.NewId(), wx.DefaultPosition,
 #                                wx.DefaultSize, wx.HSCROLL|wx.VSCROLL|wx.SUNKEN_BORDER)
@@ -629,8 +630,15 @@ class PdfPanel(wx.Panel):
 
 
     ######################################################################################################
+    def OnClose(self, evt):
+        print "OnClose pdf"
+#         self.pdf Unbind(wx.EVT_ENTER_WINDOW)
+        self.pdf.Destroy()
+        evt.Skip()
+
+    ######################################################################################################
     def OnEnter(self, event):
-        print "OnEnter PDF"
+#         print "OnEnter PDF"
         self.pdf.SetFocus()
         event.Skip()
         
