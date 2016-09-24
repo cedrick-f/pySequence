@@ -6006,7 +6006,7 @@ class Seance(ElementDeSequence, Objet_sequence):
         """ Renvoie l'effectif de la séance
             n : portion de classe
         """
-        print "GetEffectif", self, self.effectif
+#         print "GetEffectif", self, self.effectif
         eff = 0
         if self.typeSeance in ["R", "S"]:
             for sce in self.seances:

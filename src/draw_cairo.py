@@ -1539,7 +1539,7 @@ def tableauH_var(ctx, titres, x, y, wt, wc, hl, taille, nCol = 0, va = 'c', ha =
 #    hc = h/len(titres)
     _y = y
     _coul = ctx.get_source().get_rgba()
-#    print "tableauH", _coul
+#     print "tableauH", _coul
     for i, titre in enumerate(titres):
         ctitre = titre.rstrip("1234567890.")
 #        print "    ",ctitre
@@ -1551,7 +1551,7 @@ def tableauH_var(ctx, titres, x, y, wt, wc, hl, taille, nCol = 0, va = 'c', ha =
             col = coul
         ctx.set_source_rgb (col[0], col[1], col[2])
         ctx.fill_preserve ()
-        ctx.set_source_rgba (*_coul[0])
+        ctx.set_source_rgba (*_coul)
         show_text_rect(ctx, titre, (x, _y, wt, hl[i]), va = va, ha = ha, 
                        orient = orient, fontsizeMinMax = (-1, taille))
         ctx.stroke ()
