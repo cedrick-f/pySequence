@@ -5,12 +5,12 @@
 #############################################################################
 #############################################################################
 ##                                                                         ##
-##                               md_util                               ##
+##                                 md_util                                 ##
 ##                                                                         ##
 #############################################################################
 #############################################################################
 
-## Copyright (C) 2014 Cédrick FAURY - Jean-Claude FRICOU
+## Copyright (C) 2014-2016 Cédrick FAURY - Jean-Claude FRICOU
 
 #    pySequence is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -37,16 +37,22 @@ Created on 13 déc. 2015
 #import sys
 #print sys.path
 #sys.path.insert(4,'C:\Python27\Lib\site-packages\Markdown-2.6.5-py2.7.egg-info')
-
-
+AS_MD = True
+try:
+    import markdown as md
+except:
+    print "Erreur import markdown"
+    try:
+        import mistune as md
+    except:
+        AS_MD = False
+        
 import  wx
 import  wx.html
 import  wx.lib.wxpTag
 
-try:
-    import markdown as md
-except:
-    import mistune as md
+
+
 
 
 texte = u"""
@@ -83,8 +89,9 @@ class SimpleHtmlWindow(wx.html.HtmlWindow):
         if "gtk2" in wx.PlatformInfo or "gtk3" in wx.PlatformInfo:
             self.SetStandardFonts()
         
-        html = md.markdown(texte)
-        self.SetPage(html)
+        if AS_MD:
+            html = md.markdown(texte)
+            self.SetPage(html)
 
     def OnLinkClicked(self, linkinfo):
 #        self.log.WriteText('OnLinkClicked: %s\n' % linkinfo.GetHref())
@@ -128,8 +135,9 @@ class MD_editor(wx.Panel):
         
     def OnText(self, evt = None):
         print "OnText"
-        html = md.markdown(self.texteMD.GetValue())
-        self.texteHTML.SetPage(html)
+        if AS_MD:
+            html = md.markdown(self.texteMD.GetValue())
+            self.texteHTML.SetPage(html)
 
 class MDFrameEditor(wx.Frame):
     def __init__(self):

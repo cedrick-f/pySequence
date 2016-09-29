@@ -54,7 +54,7 @@ typesImg = {".bmp" : wx.BITMAP_TYPE_BMP,
 class RichTextCtrl(ToolTip, rt.RichTextCtrl): 
     def __init__(self, *args, **kargs):
         rt.RichTextCtrl.__init__(self, *args, **kargs)
-        ToolTip.__init__(self)
+        self.initToolTip()
         
 class RichTextPanel(wx.Panel):
     def __init__(self, parent, objet, toolBar = False, size = wx.DefaultSize):

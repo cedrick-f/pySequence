@@ -43,7 +43,7 @@ class STC_ortho(ToolTip, stc.StyledTextCtrl):
     def __init__(self, *args, **kwargs):
         
         stc.StyledTextCtrl.__init__(self, *args, **kwargs)
-        ToolTip.__init__(self)
+        self.initToolTip()
         
         self.spell = STCSpellCheck(self, language="fr_FR")
         self.SetMarginType(0, stc.STC_MARGIN_NUMBER)

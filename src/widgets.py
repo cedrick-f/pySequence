@@ -859,46 +859,137 @@ class VariableCtrl(wx.Panel):
 #
 #########################################################################################################
 #########################################################################################################  
-import wx.lib.agw.balloontip as BT
+# import wx.lib.agw.balloontip as BT
+#  
+# class ToolTip:
+#  
+#     def __init__(self):
+#         self.tip = BT.BalloonTip(topicon=None, toptitle=u"",
+#                                    message=u"a",
+#                                    shape=BT.BT_RECTANGLE,
+#                                    tipstyle=BT.BT_LEAVE)
+#  
+#         # Set the BalloonTip target
+#         self.tip.SetTarget(self)
+#         # Set the BalloonTip background colour
+#         self.tip.SetBalloonColour(wx.WHITE)
+#         # Set the font for the balloon title
+#         self.tip.SetTitleFont(wx.Font(9, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False))
+#         # Set the colour for the balloon title
+#         self.tip.SetTitleColour(wx.BLACK)
+#         # Leave the message font as default
+#         self.tip.SetMessageFont()
+#         # Set the message (tip) foreground colour
+#         self.tip.SetMessageColour(wx.NamedColour("SLATEGREY"))
+#         # Set the start delay for the BalloonTip
+#         self.tip.SetStartDelay(800)
+#         # Set the time after which the BalloonTip is destroyed
+#         self.tip.SetEndDelay(3000)
+#  
+#          
+#  
+#     def SetToolTipString(self, message):
+#         """ Surcharge de la fonction du TextCtrl
+#         """
+# #         print message, len(message)
+#         if len(message.strip()) == 0:
+#             message = u"_"
+#          
+#         self.tip.SetBalloonMessage(message)
+#  
+#     def SetTitre(self, titre, bmp = None):
+#         self.tip.SetBalloonTitle(titre)
+#  
+#  
+#     def OnWidgetMotion(self, event):
+#         self.tip.Destroy()
+#          
+#     def OnKey(self, event):
+#         self.tip.Destroy()
+#         event.Skip()
 
-class ToolTip:
 
-    def __init__(self):
-        self.tip = BT.BalloonTip(topicon=None, toptitle=u"",
-                                   message=u"a",
-                                   shape=BT.BT_RECTANGLE,
-                                   tipstyle=BT.BT_LEAVE)
 
-        # Set the BalloonTip target
+
+import wx.lib.agw.supertooltip as STT
+
+class ToolTip():
+    # ATTENTION il faut modifier supertooltip.py
+    # ligne 499 : rajouter event.Skip()
+
+    def initToolTip(self):
+        
+        self.tip = STT.SuperToolTip(u"")
+        
+
+
+#         self.tip.SetBodyImage(bodyImage)  
+#         self.tip.SetFooter(footerText)
+#         self.tip.SetFooterBitmap(footerBmp)
+                    
         self.tip.SetTarget(self)
-        # Set the BalloonTip background colour
-        self.tip.SetBalloonColour(wx.WHITE)
-        # Set the font for the balloon title
-        self.tip.SetTitleFont(wx.Font(9, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False))
-        # Set the colour for the balloon title
-        self.tip.SetTitleColour(wx.BLACK)
-        # Leave the message font as default
-        self.tip.SetMessageFont()
-        # Set the message (tip) foreground colour
-        self.tip.SetMessageColour(wx.NamedColour("SLATEGREY"))
-        # Set the start delay for the BalloonTip
-        self.tip.SetStartDelay(800)
-        # Set the time after which the BalloonTip is destroyed
-        self.tip.SetEndDelay(3000)
+#         self.tip.SetDrawHeaderLine(drawHLine)
+#         self.tip.SetDrawFooterLine(drawFLine)
+# 
+#         self.tip.SetDropShadow(self.dropShadow.GetValue())
+#         self.tip.SetUseFade(self.useFade.GetValue())
+#         self.tip.SetEndDelay(self.endTimer.GetValue())
+#         
+#         if self.stylesRadio.GetValue():
+        self.tip.ApplyStyle('Office 2007 Blue')
+        self.tip.SetEndDelay(3)
+#         else:
+#             self.tip.SetTopGradientColour(topColour)
+#             self.tip.SetMiddleGradientColour(middleColour)
+#             self.tip.SetBottomGradientColour(bottomColour)
+#         self.Bind(wx.EVT_KILL_FOCUS, self.OnKillFocus)
+#         # Set the BalloonTip target
+#         self.tip.SetTarget(self)
+#         # Set the BalloonTip background colour
+#         self.tip.SetBalloonColour(wx.WHITE)
+#         # Set the font for the balloon title
+#         self.tip.SetTitleFont(wx.Font(9, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False))
+#         # Set the colour for the balloon title
+#         self.tip.SetTitleColour(wx.BLACK)
+#         # Leave the message font as default
+#         self.tip.SetMessageFont()
+#         # Set the message (tip) foreground colour
+#         self.tip.SetMessageColour(wx.NamedColour("SLATEGREY"))
+#         # Set the start delay for the BalloonTip
+#         self.tip.SetStartDelay(800)
+#         # Set the time after which the BalloonTip is destroyed
+#         self.tip.SetEndDelay(3000)
 
-
+#     def OnKillFocus(self, event):
+#         print "OnKillFocus"
+#         event.Skip()
+# 
     def SetToolTipString(self, message):
         """ Surcharge de la fonction du TextCtrl
         """
-        self.tip.SetBalloonMessage(message)
+#         print message, len(message)
+#         if len(message.strip()) == 0:
+#             message = u"_"
+         
+        self.tip.SetMessage(message)
+         
 
-    def SetTitre(self, titre):
-        self.tip.SetBalloonTitle(titre)
+ 
+    def SetTitre(self, titre, bmp = None):
+        if len(titre.strip()) == 0:
+            titre = u"_"
+        self.tip.SetHeader(titre)
+        if bmp is not None:
+            self.tip.SetHeaderBitmap(bmp)
+
+#     def OnWidgetMotion(self, event):
+#         self.tip.Destroy()
+        
+#     def OnKey(self, event):
+#         self.tip.Destroy()
+#         event.Skip()
 
 
-    def OnWidgetMotion(self, event):
-        self.tip.Destroy()
-    
 
 ##################################################################################################################################################################
 #
@@ -989,10 +1080,11 @@ import  wx.lib.buttons  as  buttons
 #########################################################################################################  
 
 import orthographe
-#import md_util
-class TextCtrl_Help(orthographe.STC_ortho, BaseGestionFenHelp, ToolTip):
+import md_util
+class TextCtrl_Help(orthographe.STC_ortho, BaseGestionFenHelp):
     def __init__(self, parent, titre = u"", md = u""):
         orthographe.STC_ortho.__init__(self, parent, -1)#, u"", style=wx.TE_MULTILINE)
+        
         img = GetImgHelp()
         img.SetMaskColour("white")
         self.bouton = wx.BitmapButton(self, -1, img, style=wx.BORDER_NONE)
@@ -1138,4 +1230,9 @@ def getHoraireTxt(v, prefixe = u""):
     else:
         return prefixe+h+"h"+m
     
-    
+#############################################################################################################
+def rognerImage(image, wf = 200.0 , hf = 100.0): 
+    w, h = image.GetSize()
+    r = max(w/wf, h/hf)
+    _w, _h = w/r, h/r
+    return image.ConvertToImage().Scale(_w, _h).ConvertToBitmap()

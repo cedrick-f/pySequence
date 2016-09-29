@@ -247,7 +247,7 @@ def show_text_rect(ctx, texte, rect, \
     if calculer:
         lt, ratio, maxw = ajuster_texte(ctx, texte, w, h, le, pe, b, wrap, couper)
         CACHE[texte] = (w, h, lt, ratio, maxw)
-
+#         print "Pas CACHE", texte[:10]
     
     if lt == []:
         return 0, 0, 0

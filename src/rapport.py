@@ -33,6 +33,8 @@ if sys.platform != "win32":
 #    wxversion.select('2.8')
 import wx
 import wx.richtext as rt
+import richtext
+
 import images
 import cStringIO
 
@@ -855,13 +857,16 @@ class RapportRTF(rt.RichTextCtrl):
             self.EndStyle()
 #            self.Newline()
         
-        if tache.description != None and hasattr(tache, 'panelPropriete'):
+        if tache.description != None:
 #            self.BeginUnderline()
 #            self.WriteText(u"Description :")
 #            self.BeginLeftIndent(60)
 #            self.EndUnderline()
             self.Newline()
-            self.AddDescription(tache.panelPropriete.rtc.rtc)
+            rtc = richtext.RichTextPanel(self.parent, tache, toolBar = False)
+            rtc.Show(False)
+            self.AddDescription(rtc.rtc)
+            rtc.Destroy()
             self.EndStyle()
 
 ##            self.BeginLeftIndent(60)
@@ -920,11 +925,13 @@ class RapportRTF(rt.RichTextCtrl):
     def AddDescription(self, rtc):
         """ Ajoute une description contenue dans un RichTextCtrl
         """
-#        print "AddDescription"
+#         print "AddDescription"
 #        par = rtc.GetFocusObject()
 #        par = rtc.GetSelectionAnchorObject()
         par = rtc.GetBuffer()
         pos = self.GetInsertionPoint()
+#         print "   ", rtc.GetBuffer()
+#         print "   ", pos
         
         self.GetBuffer().InsertParagraphsWithUndo(pos, par, self)
         

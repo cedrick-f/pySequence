@@ -53,7 +53,11 @@ print sys.version_info
 #     import wxversion
 #    wxversion.select('2.8')
 
+
+
 import wx
+
+
 import  wx.gizmos   as  gizmos
 import version
 
@@ -173,6 +177,8 @@ if __name__ == '__main__':
 #
 ####################################################################################
 
+import richtext
+
 import time
 import webbrowser
 
@@ -205,7 +211,7 @@ import wx.lib.platebtn as platebtn
 import wx.lib.colourdb
 import  wx.lib.colourselect as  csel
 # Pour les descriptions
-import richtext
+
 import orthographe
 import wx.stc  as  stc
 
@@ -247,7 +253,7 @@ from widgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_ENTI
                     messageErreur, getNomFichier, pourCent2, testRel, \
                     rallonge, remplaceCode2LF, dansRectangle, isstring, \
                     StaticBoxButton, TextCtrl_Help, CloseFenHelp, \
-                    remplaceLF2Code, messageInfo, messageYesNo#, chronometrer
+                    remplaceLF2Code, messageInfo, messageYesNo, rognerImage#, chronometrer
 
 import Options
 
@@ -1205,7 +1211,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         # get the file based on the menu ID
         fileNum = evt.GetId() - wx.ID_FILE1
         path = self.filehistory.GetHistoryFile(fileNum)
-        print "You selected %s\n" % path
+#         print "You selected %s\n" % path
         if os.path.isfile(path):
             # add it back to the history so it will be moved up the list
 #            print "Ajout2", path
@@ -1724,7 +1730,10 @@ class FenetreDocument(aui.AuiMDIChildFrame):
     #############################################################################
     def SetTitre(self, modif = None):
 #        print "SetTitre", modif
-        t = REFERENTIELS[self.classe.typeEnseignement].Enseignement[0]
+        try:
+            t = REFERENTIELS[self.classe.typeEnseignement].Enseignement[0]
+        except:
+            t = u"???"
 
         if self.fichierCourant == '':
             t += u" - "+constantes.TITRE_DEFAUT[self.typ]
@@ -2027,7 +2036,7 @@ class FenetreSequence(FenetreDocument):
             
     ###############################################################################################
     def OnDocModified(self, event):
-        print "OnDocModified", event.GetModif()
+#         print "OnDocModified", event.GetModif()
         if event.GetModif() != u"":
             
             self.classe.undoStack.do(event.GetModif())
@@ -2553,6 +2562,28 @@ class FenetreProjet(FenetreDocument):
             return root, message, count, Ok, Annuler
         
         
+        #################################################################################################
+        def annuleTout(message):
+            message += u"\n\nLe projet n'a pas pu être ouvert !\n\n"
+            if len(err) > 0:
+                message += u"\n   L'erreur concerne :"
+                message += get_err_message(err)
+            fichier.close()
+            self.Close()
+            count = nbr_etapes
+#            dlg.UpdateWindowUI()
+##            wx.GetTopLevelParent(self).SetFocus()
+#            dlg.top()
+            dlg.Update(count, message)
+            
+#            dlg.Raise()
+            wx.CallAfter(dlg.Destroy)
+#            wx.CallAfter(self.fiche.Show)
+#            wx.CallAfter(self.fiche.Redessiner)
+            return
+        
+        
+        
         ################################################################################################
         if "beta" in version.__version__:
 #            print "beta"
@@ -2572,22 +2603,7 @@ class FenetreProjet(FenetreDocument):
         # Erreur fatale d'ouverture
         #
         if Annuler:
-            message += u"\n\nLe projet n'a pas pu être ouvert !\n\n"
-            if len(err) > 0:
-                message += u"\n   L'erreur concerne :"
-                message += get_err_message(err)
-            fichier.close()
-            self.Close()
-            count = nbr_etapes
-#            dlg.UpdateWindowUI()
-##            wx.GetTopLevelParent(self).SetFocus()
-#            dlg.top()
-            dlg.Update(count, message)
-            
-#            dlg.Raise()
-            wx.CallAfter(dlg.Destroy)
-#            wx.CallAfter(self.fiche.Show)
-#            wx.CallAfter(self.fiche.Redessiner)
+            annuleTout(message)
             return
         
         fichier.close()
@@ -2624,8 +2640,12 @@ class FenetreProjet(FenetreDocument):
 #                except:
 #                    Ok = False
 #                    message += constantes.Erreur(constantes.ERR_INCONNUE).getMessage() + u"\n"
+        try:
+            message, count = self.finaliserOuverture()
+        except:
+            annuleTout(message)
+            return
             
-        message, count = self.finaliserOuverture()
 
 #        self.projet.Verrouiller()
 
@@ -3975,9 +3995,12 @@ class PanelPropriete_Sequence(PanelPropriete):
         PanelPropriete.__init__(self, parent)
         self.sequence = sequence
         
-        titre = myStaticBox(self, -1, u"Intitulé de la séquence")
+        titre = myStaticBox(self, -1, u"Intitulé de la Séquence")
         sb = wx.StaticBoxSizer(titre)
         textctrl = TextCtrl_Help(self, u"")
+        textctrl.SetTitre(u"Intitulé de la Séquence", sequence.getIcone())
+        textctrl.SetToolTipString(u"")
+                    
         sb.Add(textctrl, 1, flag = wx.EXPAND)
         self.textctrl = textctrl
         self.sizer.Add(sb, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.EXPAND, border = 2)
@@ -3990,6 +4013,9 @@ class PanelPropriete_Sequence(PanelPropriete):
         titre = myStaticBox(self, -1, u"Commentaires")
         sb = wx.StaticBoxSizer(titre)
         commctrl = TextCtrl_Help(self, u"")
+        commctrl.SetTitre(u"Commentaires sur la Séquence", sequence.getIcone())
+        commctrl.SetToolTipString(u"")
+                    
         sb.Add(commctrl, 1, flag = wx.EXPAND)
         self.commctrl = commctrl
         self.sizer.Add(sb, (0,2), (2,1),  flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.EXPAND, border = 2)
@@ -4195,8 +4221,8 @@ class PanelPropriete_Projet(PanelPropriete):
     def construire(self):
 #        ref = self.projet.GetReferentiel()
         self.pages = {}
-        
-        
+
+
         #
         # La page "Généralités"
         #
@@ -4213,6 +4239,7 @@ class PanelPropriete_Projet(PanelPropriete):
         self.titre = myStaticBox(pageGen, -1, u"")
         sb = wx.StaticBoxSizer(self.titre)
         textctrl = TextCtrl_Help(pageGen, u"")
+        
         sb.Add(textctrl, 1, flag = wx.EXPAND)
         self.textctrl = textctrl
         pageGen.sizer.Add(sb, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.EXPAND, border = 2)
@@ -4230,6 +4257,8 @@ class PanelPropriete_Projet(PanelPropriete):
         sb = wx.StaticBoxSizer(self.tit_pb)
 #        self.commctrl = wx.TextCtrl(pageGen, -1, u"", style=wx.TE_MULTILINE)
         self.commctrl = TextCtrl_Help(pageGen, u"")
+                                              
+                                              
         sb.Add(self.commctrl, 1, flag = wx.EXPAND)
         pageGen.sizer.Add(sb, (0,1), (2,1),
                           flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.EXPAND, border = 2)
@@ -4321,7 +4350,7 @@ class PanelPropriete_Projet(PanelPropriete):
         if event.GetEventObject() == self.textctrl:
 #            nt = event.GetString()
             nt = self.textctrl.GetText()
-            print nt
+#             print nt
 #            if nt == u"":
 #                nt = self.projet.support.nom
             self.projet.SetText(nt)
@@ -4421,11 +4450,13 @@ class PanelPropriete_Projet(PanelPropriete):
         #
         self.titre.SetLabel(ref.attributs['TIT'][0])
         self.textctrl.MiseAJour(ref.attributs['TIT'][0], ref.attributs['TIT'][3])
+        self.textctrl.SetToolTipString(u"Titre, résumé, intitulé, description synthétique du projet")
+        self.textctrl.SetTitre(ref.attributs['TIT'][0])
         
         self.tit_pb.SetLabel(ref.attributs['PB'][0])
         self.commctrl.MiseAJour(ref.attributs['PB'][0], ref.attributs['PB'][3])
         self.commctrl.SetToolTipString(ref.attributs['PB'][1] + constantes.TIP_PB_LIMITE)
-        
+        self.commctrl.SetTitre(ref.attributs['PB'][0])
         
         self.MiseAJourPosition()
         self.panelOrga.MiseAJourListe()
@@ -4442,6 +4473,7 @@ class PanelPropriete_Projet(PanelPropriete):
                     self.pages[k][1].MiseAJour(ref.attributs[k][0], ref.attributs[k][3])
                 self.nb.SetPageText(self.GetPageNum(self.pages[k][0]), ref.attributs[k][0])
                 self.pages[k][1].SetToolTipString(ref.attributs[k][1])
+                self.pages[k][1].SetTitre(ref.attributs[k][0])
             else:
                 if k in self.pages.keys():
                     self.nb.DeletePage(self.GetPageNum(self.pages[k][0]))
@@ -4474,6 +4506,7 @@ class PanelPropriete_Projet(PanelPropriete):
                 sb = wx.StaticBoxSizer(titreInt)
                 
                 self.intctrl = TextCtrl_Help(self.pages['DEC'], u"", ref.attributs['DEC'][1])#, u"", style=wx.TE_MULTILINE)
+                self.intctrl.SetTitre(u"Intitulés des différentes parties")
                 self.intctrl.SetToolTipString(u"Intitulés des parties du projet confiées à chaque groupe.\n" \
                                               u"Les groupes d'élèves sont désignés par des lettres (A, B, C, ...)\n" \
                                               u"et leur effectif est indiqué.")
@@ -4485,8 +4518,10 @@ class PanelPropriete_Projet(PanelPropriete):
                 
                 titreInt = myStaticBox(self.pages['DEC'], -1, u"Enoncés du besoin des différentes parties du projet")
                 sb = wx.StaticBoxSizer(titreInt)
-                self.enonctrl = TextCtrl_Help(self.pages['DEC'], u"", ref.attributs['DEC'][3])#, u"", style=wx.TE_MULTILINE)
+                self.enonctrl = TextCtrl_Help(self.pages['DEC'], u"", ref.attributs['DEC'][3])#, u"", style=wx.TE_MULTILINE)       
                 self.enonctrl.SetToolTipString(u"Enoncés du besoin des parties du projet confiées à chaque groupe")
+                self.enonctrl.SetTitre(u"Enoncés du besoin des différentes parties du projet")
+        
 #                self.pages['DEC'].Bind(wx.EVT_TEXT, self.EvtText, self.enonctrl)
 #                 self.pages['DEC'].Bind(stc.EVT_STC_CHANGE, self.EvtText, self.enonctrl)
                 self.pages['DEC'].Bind(stc.EVT_STC_MODIFIED, self.EvtText, self.enonctrl)
@@ -4547,6 +4582,9 @@ class PanelPropriete_Projet(PanelPropriete):
                     sb = wx.StaticBoxSizer(titreInt)
                 
                     self.parctrl[k] = orthographe.STC_ortho(self.pages['PAR'], -1)#, u"", style=wx.TE_MULTILINE)
+                    
+                    self.parctrl[k].SetTitre(ref.attributs['PAR'][0])
+
                     self.parctrl[k].SetToolTipString(ref.attributs[k][1])
 #                    self.pages['PAR'].Bind(wx.EVT_TEXT, self.EvtText, self.parctrl[k])
 #                     self.pages['PAR'].Bind(stc.EVT_STC_CHANGE, self.EvtText, self.parctrl[k])
@@ -4729,9 +4767,11 @@ class PanelPropriete_Progression(PanelPropriete):
         #
         # Intitulé de la progression (TIT)
         #
-        self.titre = myStaticBox(pageGen, -1, u"Intitulé")
+        self.titre = myStaticBox(pageGen, -1, u"Intitulé de la Progression")
         sb = wx.StaticBoxSizer(self.titre)
         textctrl = TextCtrl_Help(pageGen, u"")
+        textctrl.SetTitre(u"Intitulé de la Progression", self.progression.getIcone())
+        textctrl.SetToolTipString(u"")
         sb.Add(textctrl, 1, flag = wx.EXPAND)
         self.textctrl = textctrl
         pageGen.sizer.Add(sb, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.EXPAND, border = 2)
@@ -4819,11 +4859,14 @@ class PanelPropriete_Progression(PanelPropriete):
     #############################################################################            
     def SetImage(self):
         if self.progression.image != None:
-            w, h = self.progression.image.GetSize()
-            wf, hf = 200.0, 100.0
-            r = max(w/wf, h/hf)
-            _w, _h = w/r, h/r
-            self.progression.image = self.progression.image.ConvertToImage().Scale(_w, _h).ConvertToBitmap()
+            
+            self.progression.image = rognerImage(self.progression.image)
+            
+#             w, h = self.progression.image.GetSize()
+#             wf, hf = 200.0, 100.0
+#             r = max(w/wf, h/hf)
+#             _w, _h = w/r, h/r
+#             self.progression.image = self.progression.image.ConvertToImage().Scale(_w, _h).ConvertToBitmap()
             self.image.SetBitmap(self.progression.image)
         self.pageGen.Layout()
         
@@ -6297,6 +6340,7 @@ class Panel_Cible(wx.Panel):
             pos = (centre[0] + ray * sin(ang*pi/180) ,
                    centre[1] - ray * cos(ang*pi/180))
             bmp = constantes.imagesCI[i].GetBitmap()
+
 #                bmp.SetMaskColour(self.backGround)
 #                mask = wx.Mask(bmp, self.backGround)
 #                bmp.SetMask(mask)
@@ -6448,9 +6492,11 @@ class PanelPropriete_LienSequence(PanelPropriete):
         #
         # Intitulé de la séquence
         #
-        sbi = myStaticBox(self, -1, u"Intitulé de la séquence", size = (200,-1))
+        sbi = myStaticBox(self, -1, u"Intitulé de la Séquence", size = (200,-1))
         sbsi = wx.StaticBoxSizer(sbi,wx.HORIZONTAL)
         self.intit = TextCtrl_Help(self, u"")
+        self.intit.SetTitre(u"Intitulé de la Séquence", self.sequence.getIcone())
+        self.intit.SetToolTipString(u"")
         sbsi.Add(self.intit,1, flag = wx.EXPAND)
 #        self.Bind(wx.EVT_TEXT, self.EvtText, self.intit)
 #         self.Bind(stc.EVT_STC_CHANGE, self.EvtText, self.intit)
@@ -6459,7 +6505,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
         #
         # Sélection du fichier de séquence
         #
-        sb0 = myStaticBox(self, -1, u"Fichier de la séquence", size = (200,-1))
+        sb0 = myStaticBox(self, -1, u"Fichier de la Séquence", size = (200,-1))
         sbs0 = wx.StaticBoxSizer(sb0,wx.HORIZONTAL)
         self.texte = wx.TextCtrl(self, -1, toSystemEncoding(self.lien.path), size = (250, -1),
                                  style = wx.TE_PROCESS_ENTER)
@@ -6718,6 +6764,9 @@ class PanelPropriete_LienProjet(PanelPropriete):
         sbi = myStaticBox(self, -1, u"Intitulé du Projet", size = (200,-1))
         sbsi = wx.StaticBoxSizer(sbi,wx.HORIZONTAL)
         self.intit = TextCtrl_Help(self, u"")
+        self.intit.SetTitre(u"Intitulé du Projet", self.projet.getIcone())
+        self.intit.SetToolTipString(u"")
+        
         sbsi.Add(self.intit,1, flag = wx.EXPAND)
 #        self.Bind(wx.EVT_TEXT, self.EvtText, self.intit)
 #         self.Bind(stc.EVT_STC_CHANGE, self.EvtText, self.intit)
@@ -6773,6 +6822,9 @@ class PanelPropriete_LienProjet(PanelPropriete):
         sbp = myStaticBox(self, -1, getSingulierPluriel(ref.nomPb, False), size = (200,-1))
         sbsp = wx.StaticBoxSizer(sbp,wx.VERTICAL)
         self.panelPb = TextCtrl_Help(self, u"")
+        self.panelPb.SetTitre(ref.nomPb)
+        self.panelPb.SetToolTipString(u"")
+        
 #         self.Bind(stc.EVT_STC_CHANGE, self.EvtText, self.panelPb)
         self.Bind(stc.EVT_STC_MODIFIED, self.EvtText, self.panelPb)
         sbsp.Add(self.panelPb,1, flag = wx.EXPAND)
@@ -7335,13 +7387,20 @@ class PanelPropriete_Seance(PanelPropriete):
         #
         # Intitulé de la séance
         #
-        box = myStaticBox(self, -1, u"Intitulé")
+        box = myStaticBox(self, -1, u"Intitulé de la Séance")
         bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
-        textctrl = wx.TextCtrl(self, -1, u"", style=wx.TE_MULTILINE)
+#         textctrl = wx.TextCtrl(self, -1, u"", style=wx.TE_MULTILINE)
+        textctrl = orthographe.STC_ortho(self, -1)
+        textctrl.SetTitre(u"Intitulé de la Séance")
+        textctrl.SetToolTipString(u"")
+        
+        
         bsizer.Add(textctrl, 1, flag = wx.EXPAND)
         self.textctrl = textctrl
 #        self.Bind(wx.EVT_TEXT, self.EvtTextIntitule, textctrl)
+#         self.textctrl.Bind(wx.EVT_LEAVE_WINDOW, self.EvtTextIntitule)
         self.textctrl.Bind(wx.EVT_KILL_FOCUS, self.EvtTextIntitule)
+        
         
         cb = wx.CheckBox(self, -1, u"Afficher dans la zone de déroulement")
         cb.SetToolTipString(u"Décocher pour afficher l'intitulé\nen dessous de la zone de déroulement de la séquence")
@@ -7484,6 +7543,8 @@ class PanelPropriete_Seance(PanelPropriete):
         dbsizer = wx.StaticBoxSizer(dbox, wx.VERTICAL)
 #        bd = wx.Button(self, -1, u"Editer")
         tc = richtext.RichTextPanel(self, self.seance, toolBar = True)
+        tc.SetTitre(u"Description détaillée de la Séance")
+        tc.SetToolTipString(u"")
 #        tc.SetMaxSize((-1, 150))
 #        dbsizer.Add(bd, flag = wx.EXPAND)
         dbsizer.Add(tc, 1, flag = wx.EXPAND)
@@ -7577,15 +7638,6 @@ class PanelPropriete_Seance(PanelPropriete):
     ############################################################################            
     def GetDocument(self):
         return self.seance.GetDocument()
-    
-#    #############################################################################            
-#    def EvtClick(self, event):
-#        if not self.edition:
-#            self.win = richtext.RichTextFrame(u"Description de la séance "+ self.seance.code, self.seance)
-#            self.edition = True
-#            self.win.Show(True)
-#        else:
-#            self.win.SetFocus()
         
     #############################################################################            
     def OnSelectColour(self, event):
@@ -7606,7 +7658,7 @@ class PanelPropriete_Seance(PanelPropriete):
     def EvtTextIntitule(self, event):
         self.seance.SetIntitule(self.textctrl.GetValue())
         event.Skip()
-        print "EvtTextIntitule", self.onUndoRedo()
+#         print "EvtTextIntitule", self.textctrl.GetValue()
         modif = u"Modification de l'intitulé de la Séance"
         if self.onUndoRedo():
             self.sendEvent(modif = modif)
@@ -7641,13 +7693,14 @@ class PanelPropriete_Seance(PanelPropriete):
             if not self.eventAttente:
                 wx.CallLater(DELAY, self.sendEvent, modif = t)
                 self.eventAttente = True
-            
-   
-        
+
     #############################################################################            
     def EvtComboBox(self, event):
 #        print "EvtComboBox"
-        if self.seance.typeSeance in ["R", "S"] and self.GetReferentiel().listeTypeSeance[event.GetSelection()] not in ["R", "S"]:
+
+        # On s'apprète à changer une séance Rotation ou Série en séance "Normale"
+        if self.seance.typeSeance in ["R", "S"] \
+          and self.GetReferentiel().listeTypeSeance[event.GetSelection()] not in ["R", "S"]:
             dlg = wx.MessageDialog(self, u"Modifier le type de cette séance entrainera la suppression de toutes les sous séances !\n" \
                                          u"Voulez-vous continuer ?",
                                     u"Modification du type de séance",
@@ -7665,11 +7718,9 @@ class PanelPropriete_Seance(PanelPropriete):
 #        print self.GetReferentiel().seances
 #        print self.cbType.GetStringSelection()
 
-        
-
         self.seance.SetType(get_key(self.GetReferentiel().seances, 
                                     self.cbType.GetStringSelection(), 1))
-#        self.seance.parent.OrdonnerSeances()
+        self.seance.GetDocument().OrdonnerSeances()
         self.AdapterAuType()
         
         if self.seance.typeSeance in ACTIVITES:
@@ -7790,7 +7841,8 @@ class PanelPropriete_Seance(PanelPropriete):
         ref = self.GetReferentiel()
         if self.seance.typeSeance != "" and ref.seances[self.seance.typeSeance][1] in self.cbType.GetStrings():
             self.cbType.SetSelection(self.cbType.GetStrings().index(ref.seances[self.seance.typeSeance][1]))
-        self.textctrl.ChangeValue(self.seance.intitule)
+#         self.textctrl.ChangeValue(self.seance.intitule)
+        self.textctrl.SetValue(self.seance.intitule)
         self.vcDuree.mofifierValeursSsEvt()
         
         self.coulCtrl.SetColour(couleur.Couleur2Wx(self.seance.couleur))
@@ -7921,13 +7973,15 @@ class PanelPropriete_Tache(PanelPropriete):
             self.boxInt = box
             if not tache.estPredeterminee():
                 textctrl = orthographe.STC_ortho(pageGen, -1)#, u"", style=wx.TE_MULTILINE)
-                textctrl.SetTitre(u"Intitulé de la tâche")
+                
+                textctrl.SetTitre(u"Intitulé de la tâche", tache.getIcone())
                 textctrl.SetToolTipString(u"Donner l'intitulé de la tâche\n"\
-                                          u" = un simple résumé !\n" \
+                                          u" = un simple résumé !\n\n" \
                                           u"les détails doivent figurer dans la zone\n" \
                                           u"\"Description détaillée de la tâche\"")
                 bsizer.Add(textctrl,1, flag = wx.EXPAND)
                 self.textctrl = textctrl
+#                 self.textctrl.Bind(wx.EVT_LEAVE_WINDOW, self.EvtTextIntitule)
                 self.textctrl.Bind(wx.EVT_KILL_FOCUS, self.EvtTextIntitule)
                 
                 
@@ -8001,15 +8055,16 @@ class PanelPropriete_Tache(PanelPropriete):
         dbsizer = wx.StaticBoxSizer(dbox, wx.VERTICAL)
 #        bd = wx.Button(pageGen, -1, u"Editer")
         tc = richtext.RichTextPanel(pageGen, self.tache, toolBar = True)
-        tc.SetTitre(u"Description détaillée de la tâche")
         tc.SetToolTipString(u"Donner une description détaillée de la tâche :\n" \
                             u" - les conditions nécessaires\n" \
                             u" - ce qui est fourni\n" \
                             u" - les résultats attendus\n" \
                             u" - les différentes étapes\n" \
                             u" - la répartition du travail entre les élèves\n"\
-                            u" - ..."
-                            )
+                            u" - ...")
+        tc.SetTitre(u"Description détaillée de la tâche")
+     
+
 #        tc.SetMaxSize((-1, 150))
 #        tc.SetMinSize((150, 60))
         dbsizer.Add(tc,1, flag = wx.EXPAND)
@@ -8440,6 +8495,7 @@ class PanelPropriete_Tache(PanelPropriete):
 
     #############################################################################            
     def EvtTextIntitule(self, event):
+#         print "EvtTextIntitule"
         txt = self.textctrl.GetValue()
         
         if self.tache.intitule != txt:
@@ -8816,11 +8872,14 @@ class PanelPropriete_Systeme(PanelPropriete):
     def SetImage(self):
 #        print "SetImage", self.systeme
         if self.systeme.image != None:
-            w, h = self.systeme.image.GetSize()
-            wf, hf = 200.0, 100.0
-            r = max(w/wf, h/hf)
-            _w, _h = w/r, h/r
-            self.systeme.image = self.systeme.image.ConvertToImage().Scale(_w, _h).ConvertToBitmap()
+            
+            self.systeme.image = rognerImage(self.systeme.image)
+            
+#             w, h = self.systeme.image.GetSize()
+#             wf, hf = 200.0, 100.0
+#             r = max(w/wf, h/hf)
+#             _w, _h = w/r, h/r
+#             self.systeme.image = self.systeme.image.ConvertToImage().Scale(_w, _h).ConvertToBitmap()
             self.image.SetBitmap(self.systeme.image)
         else:
 #            print "NullBitmap"
@@ -9508,12 +9567,15 @@ class PanelPropriete_Support(PanelPropriete):
     #############################################################################            
     def SetImage(self, sendEvt = False):
         if self.support.image != None:
-            w, h = self.support.image.GetSize()
-            wf, hf = 200.0, 100.0
-            r = max(w/wf, h/hf)
-            _w, _h = w/r, h/r
-#            self.support.image = self.support.image.ConvertToImage().Scale(_w, _h).ConvertToBitmap()
-            self.image.SetBitmap(self.support.image.ConvertToImage().Scale(_w, _h).ConvertToBitmap())
+            
+            self.support.image = rognerImage(self.support.image)
+            
+#             w, h = self.support.image.GetSize()
+#             wf, hf = 200.0, 100.0
+#             r = max(w/wf, h/hf)
+#             _w, _h = w/r, h/r
+# #            self.support.image = self.support.image.ConvertToImage().Scale(_w, _h).ConvertToBitmap()
+            self.image.SetBitmap(self.support.image)
 #        self.support.SetImage()
         self.Layout()
         
@@ -11681,6 +11743,7 @@ class PanelProblematiques(wx.Panel):
         # Cas des Problématiques personalisées
         #
         self.PbPerso = TextCtrl_Help(self, u"")
+        self.PbPerso.SetTitre(u"Problématiques personalisées")
         self.PbPerso.SetToolTipString(u"Exprimer ici la %s abordée\n" \
                                       u"ou choisir une parmi les %s envisageables." %(getSingulierPluriel(ref.nomPb, False), getSingulierPluriel(ref.nomPb, True)))
 #         self.Bind(stc.EVT_STC_CHANGE, self.EvtText, self.PbPerso)
@@ -12270,7 +12333,7 @@ class URLSelectorCombo(wx.Panel):
         if event.GetId() == 100:
             dlg = wx.DirDialog(self, u"Sélectionner un dossier",
                           style=wx.DD_DEFAULT_STYLE,
-                          defaultPath = constantes.toSystemEncoding(self.pathseq)
+                          defaultPath = toSystemEncoding(self.pathseq)
                            #| wx.DD_DIR_MUST_EXIST
                            #| wx.DD_CHANGE_DIR
                            )
@@ -12282,7 +12345,7 @@ class URLSelectorCombo(wx.Panel):
         else:
             dlg = wx.FileDialog(self, u"Sélectionner un fichier",
                                 wildcard = self.ext,
-                                defaultDir = constantes.toSystemEncoding(self.pathseq),
+                                defaultDir = toSystemEncoding(self.pathseq),
     #                           defaultPath = globdef.DOSSIER_EXEMPLES,
                                style = wx.DD_DEFAULT_STYLE
                                #| wx.DD_DIR_MUST_EXIST
@@ -12588,6 +12651,7 @@ class PopupInfo(wx.PopupWindow):
         self.SetSizer(sizer)
         
         self.html.Bind(wx.EVT_LEAVE_WINDOW, self.OnLeave)
+        self.Bind(wx.EVT_LEAVE_WINDOW, self.OnLeave)
 #         self.Bind(wx.EVT_MOTION, self.OnLeave)
         self.Bind(wx.EVT_WINDOW_DESTROY, self.OnDestroy)
         
@@ -12869,10 +12933,11 @@ class PopupInfo(wx.PopupWindow):
  
     ##########################################################################################
     def OnLeave(self, event):
-#         print "Leave Tip"
+#         print "Leave Tip",
         x, y = event.GetPosition()
         w, h = self.GetSize()
-        if not ( x > 0 and y > 0 and x < w and y < h):
+#         print y, h
+        if not ( x > 0 and y > 0 and x < w-2 and y < h-2):
             self.Show(False)
         event.Skip()
         

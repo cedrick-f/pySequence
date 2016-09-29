@@ -498,7 +498,10 @@ class Objet_sequence():
             self.getBranche_AUTO(root, e, getattr(self, e))
         return root
 
-
+    ######################################################################################  
+    def getIcone(self):
+        return wx.NullBitmap
+    
     ######################################################################################  
     def getBranche_AUTO(self, branche, nom, v):
         if hasattr(v, 'getBranche'):
@@ -1869,7 +1872,12 @@ class Sequence(BaseDoc, Objet_sequence):
     
     ######################################################################################  
     def OrdonnerSeances(self):
-#        print "OrdonnerSeances"
+        """ Redefinir completement les codes des séances et sous séances
+            de manière à avoir des codes ordonnés (chronologiquement)
+            et uniques.
+        """
+#         print "OrdonnerSeances"
+#         print "   ", self.seances
         listeTypeSeance = self.GetReferentiel().listeTypeSeance
         dicType = {k:0 for k in listeTypeSeance}
         dicType[''] = 0
@@ -1887,6 +1895,7 @@ class Sequence(BaseDoc, Objet_sequence):
                 sce.OrdonnerSeances()
         
         self.SetCodes()
+#         print "   ", self.seances
     
 #    ######################################################################################  
 #    def AjouterObjectif(self, event = None):
@@ -4946,7 +4955,7 @@ class LienSequence(Objet_sequence):
         #
         # Création du Tip (PopupInfo)
         #
-        self.tip = PopupInfo(self.GetApp().parent, "")
+#         self.tip = PopupInfo(self.GetApp().parent, "")
 #        self.ficheHTML = self.GetFicheHTML()
 #        self.tip = PopupInfo(self.parent.app, self.ficheHTML)
 
@@ -5102,7 +5111,7 @@ class LienProjet(Objet_sequence):
         #
         # Création du Tip (PopupInfo)
         #
-        self.tip = PopupInfo(self.GetApp().parent, "")
+#         self.tip = PopupInfo(self.GetApp().parent, "")
 #        self.ficheHTML = self.GetFicheHTML()
 #        self.tip = PopupInfo(self.parent.app, self.ficheHTML)
 
@@ -5836,7 +5845,14 @@ class Seance(ElementDeSequence, Objet_sequence):
     def GetApp(self):
         return self.parent.GetApp()
     
-
+    
+    ######################################################################################  
+    def GetDocument(self):    
+        if self.EstSousSeance():
+            return self.parent.GetDocument()
+        else:
+            return self.parent
+    
     ######################################################################################  
     def EstSousSeance(self):
         return not isinstance(self.parent, Sequence)
@@ -6037,7 +6053,7 @@ class Seance(ElementDeSequence, Objet_sequence):
             8 = G
             16 = C
         """
-        print "SetEffectif", val, self.GetReferentiel().effectifs.keys()
+#         print "SetEffectif", val, self.GetReferentiel().effectifs.keys()
         codeEff = None
         if type(val) == int:
             if self.typeSeanc == "R":
@@ -6472,13 +6488,13 @@ class Seance(ElementDeSequence, Objet_sequence):
         
         if seance_avant.typeSeance in ['R', 'S']:
 #            print "     dans :"
-            seance = Seance(seance_avant, self.panelParent, typeSeance = typeSeance,
+            seance = Seance(seance_avant, typeSeance = typeSeance,
                             branche = bseance)
             seance_avant.seances.insert(0, seance)
             
         else:
 #            print "     après :"
-            seance = Seance(self.parent, self.panelParent, typeSeance = typeSeance,
+            seance = Seance(self.parent, typeSeance = typeSeance,
                             branche = bseance)
             i = seance_avant.parent.seances.index(seance_avant)
             seance_avant.parent.seances.insert(i+1, seance)
@@ -6618,13 +6634,7 @@ class Seance(ElementDeSequence, Objet_sequence):
                 s.AjouterListeSystemes(lstSys, lstNSys) 
                 
                 
-    ######################################################################################  
-    def GetDocument(self):    
-        if self.EstSousSeance():
-            sequence = self.parent.GetDocument()
-        else:
-            sequence = self.parent
-        return sequence
+    
     
     ######################################################################################  
     def GetReferentiel(self):
@@ -6720,17 +6730,29 @@ class Seance(ElementDeSequence, Objet_sequence):
     ######################################################################################  
     def SetTip(self):
         self.tip.SetHTML(self.GetFicheHTML())
-        self.tip.SetWholeText("int", self.intitule)
+        
+        titre = u"Séance "+ self.code
+        self.tip.SetWholeText("titre", titre)
+        
+        self.tip.AjouterImg("icon", constantes.imagesSeance[self.typeSeance].GetBitmap())
+        
         if self.typeSeance != "":
             t = u"Type : "+ self.GetReferentiel().seances[self.typeSeance][1]
         else:
             t = u""
-        self.tip.SetWholeText("typ", t)
-
+        
+        self.tip.SetWholeText("txt", t, italic = True, size = 3)
+        
+        self.tip.SetWholeText("int", self.intitule)
+        
+        if hasattr(self, 'description'):
+            self.tip.AjouterHTML("des", XMLtoHTML(self.description))    
+        else:
+            self.tip.Supprime('ldes')
+        
         self.tip.SetPage()
         
         
-
 
 
 

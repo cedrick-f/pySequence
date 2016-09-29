@@ -639,7 +639,7 @@ ETABLISSEMENTS = getEtab.ouvrir()
 
 
 JOURS_FERIES = getEtab.ouvrir_jours_feries()
-print "JOURS_FERIES", JOURS_FERIES
+# print "JOURS_FERIES", JOURS_FERIES
 
 class Discipline():
     def __init__(self, Id, nom, code, coul):
@@ -764,12 +764,33 @@ BASE_FICHE_HTML_ELEVE = u"""
 
 BASE_FICHE_HTML_SEANCE = u"""
 <HTML>
-    <p style="text-align: center;"><font size="12"><b>Séance</b></font></p>
-    <p id="int">_</p>
-    <p id="typ">_</p>
+<font size="12" color="green"><b><h1 id = "titre" style="text-align: center;">Séance</h1></b></font>
+    <table border="0" width="400">
+        <tbody>
+        <tr align="right" valign="top">
+            <td><p id="txt"> </p></td>
+            <td width = "20"><img id="icon" src="" alt=" "></td>
+        </tr>
+        <tr align="left" valign="top">
+            <td colspan=2><p id="int"> </p></td>
+        </tr>
+        
+        <tr id = "ldes" align="left" valign="top" bgcolor="#f0f0f0">
+            <td colspan=2>
+                <b>Description détaillée de la séance</b>
+                <span id="des"> </span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 
 </HTML>
 """
+
+
+
+
+
 
 BASE_FICHE_HTML_CALENDRIER = u"""
 <HTML>
