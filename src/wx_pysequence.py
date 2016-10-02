@@ -235,7 +235,7 @@ import constantes
 
 import couleur
 
-
+from xml.dom.minidom import parse
 
 # Graphiques vectoriels
 import draw_cairo_seq, draw_cairo_prj, draw_cairo_prg, draw_cairo
@@ -1107,19 +1107,42 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             
             note : pour l'instant, que pour des Séquences
         """
-#        print "ouvrirDoc", doc
+        print "ouvrirDoc", doc
         if doc.GetType() == 'seq':
             child = FenetreSequence(self, sequence = doc)
             child.SetIcon(constantes.dicimages["Seq"].GetIcon())
+            doc
         elif doc.GetType() == 'prj':
             child = FenetreProjet(self, projet = doc)
             child.SetIcon(constantes.dicimages["Prj"].GetIcon())
         child.finaliserOuverture()
+        
         child.definirNomFichierCourant(nomFichier)
         wx.CallAfter(child.Activate)
         self.OnDocChanged()
         return child
     
+#     root = ET.parse(fichier).getroot()
+#             
+#             # La séquence
+#             sequence = root.find("Sequence")
+#             if sequence == None: # Ancienne version , forcément STI2D-ETT !!
+# #                self.classe.GetPanelPropriete().EvtRadioBox(CodeFam = ('ET', 'STI'))
+#                 self.sequence.setBranche(root)
+#             else:
+#                 # La classe
+#                 classe = root.find("Classe")
+#                 self.classe.setBranche(classe, reparer = reparer)
+#                 self.sequence.MiseAJourTypeEnseignement()
+#                 self.sequence.setBranche(sequence)  
+# 
+#             if reparer:
+#                 self.VerifierReparation()
+#                 
+#             self.finaliserOuverture()
+            
+            
+            
     
     ###############################################################################################
     def ouvrir(self, nomFichier, reparer = False):
@@ -2162,6 +2185,7 @@ class FenetreSequence(FenetreDocument):
         fichier = open(nomFichier,'r')
         self.definirNomFichierCourant(nomFichier)
     
+        ###############################################################################################################
         def ouvre():
             root = ET.parse(fichier).getroot()
             
@@ -2182,6 +2206,10 @@ class FenetreSequence(FenetreDocument):
                 
             self.finaliserOuverture()
 
+
+        ###############################################################################################################
+        ###############################################################################################################
+        
 
         if "beta" in version.__version__:
             ouvre()
@@ -5558,7 +5586,7 @@ class PanelPropriete_Classe(PanelPropriete):
         
     ######################################################################################  
     def MiseAJourListeSys(self, nom = u""):
-        print "MiseAJourListeSys", nom, self.lstSys.GetSelection()
+#         print "MiseAJourListeSys", nom, self.lstSys.GetSelection()
 #        if nom == u"":
 #            nom = u"Système sans nom"
             
@@ -7121,7 +7149,7 @@ class PanelPropriete_Competences(PanelPropriete):
     def MiseAJour(self, sendEvt = False):
         """ On coche tout ce qui doit l'être dans les différents arbres
         """
-        print "MiseAJour compétences"
+#         print u"MiseAJour compétences"
 #        print "  ", self.arbre.items.keys()
 #        print "   ", self.competence.competences
 
@@ -7991,7 +8019,7 @@ class PanelPropriete_Tache(PanelPropriete):
                 self.cbTache = cc
 
             pageGen.sizer.Add(bsizer, (1,0), (1,2), 
-                               flag = wx.EXPAND|wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.RIGHT, border = 4)    
+                               flag = wx.EXPAND|wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.RIGHT, border = 2)    
 
 
         #

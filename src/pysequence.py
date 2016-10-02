@@ -2541,8 +2541,11 @@ class Projet(BaseDoc, Objet_sequence):
             t += u"Durée d'activité : "+draw_cairo.getHoraireTxt(e.GetDuree())+"\n"
             t += u"Evaluabilité :\n"
             ev_tot = e.GetEvaluabilite()[1]
-            for ph, nomph in self.GetProjetRef().parties.items():
-                t += nomph + pourCent2(ev_tot[ph][0], True)+"\n"
+#             print ev_tot
+            for disc, dic in self.GetProjetRef()._dicoGrpIndicateur.items():
+                for ph, nomph in self.GetProjetRef().parties.items():
+#                     print "  ", ph
+                    t += nomph + pourCent2(ev_tot[disc][ph][0], True)+"\n"
             
 #            t += u"\tconduite : "+pourCent2(ev_tot['R'][0], True)+"\n"
 #            t += u"\tsoutenance : "+pourCent2(ev_tot['S'][0], True)+"\n"
