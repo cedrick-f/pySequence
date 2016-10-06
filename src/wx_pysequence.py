@@ -2002,7 +2002,7 @@ class FenetreSequence(FenetreDocument):
         # Permet d'ajouter automatiquement les systèmes des préférences (dans la Classe)
         #
         self.sequence.Initialise()
-        
+       
         #
         # Zone graphique de la fiche de séquence (au centre)
         #

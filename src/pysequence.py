@@ -1950,15 +1950,17 @@ class Sequence(BaseDoc, Objet_sequence):
     
     ######################################################################################  
     def AjouterListeSystemes(self, syst = []):
-#        print "AjouterListeSystemes séquence"
+#         print "AjouterListeSystemes séquence"
         nouvListe = []
         for s in syst:
-#            print "   ",s
+#             print "   ",s
             
             if not isinstance(s, Systeme):
+#                 print 1
                 sy = Systeme(self)
                 sy.setBranche(ET.fromstring(s))
             else:
+#                 print 2
                 sy = s.Copie(self)
                 sy.lienClasse = s
 #                sy.GetPanelPropriete().Verrouiller(False)
@@ -1973,6 +1975,7 @@ class Sequence(BaseDoc, Objet_sequence):
 #            sy = Systeme(self, self.panelParent, nom = nom)
             # On évite les systèmes redondants (correction d'un bug)
             if sy.lienClasse == None or  not sy.lienClasse in [s.lienClasse for s in self.systemes]:  
+#                 print "   ", sy
                 self.systemes.append(sy)
                 nouvListe.append(sy.nom)
                 sy.ConstruireArbre(self.arbre, self.brancheSys)
@@ -2092,6 +2095,7 @@ class Sequence(BaseDoc, Objet_sequence):
                 sce.ConstruireArbre(arbre, self.brancheSce) 
                 
             self.brancheSys = arbre.AppendItem(self.branche, Titres[4], image = self.arbre.images["Sys"], data = "Sys")
+            
             for sy in self.systemes:
                 sy.ConstruireArbre(arbre, self.brancheSys)    
         
@@ -7740,18 +7744,20 @@ class Systeme(ElementDeSequence, Objet_sequence):
         if hasattr(self, 'arbre'):
             self.SetCode()
 
+    ######################################################################################  
+    def GetNom(self):
+        if self.nom != "":
+            return self.nom
+        else:
+            return u"Système ou matériel"
 
     ######################################################################################  
     def SetCode(self):
 #        if hasattr(self, 'codeBranche'):
 #            self.codeBranche.SetLabel(self.nom)
-        if self.nom != "":
-            t = self.nom
-        else:
-            t = u"Système ou matériel"
         
         if hasattr(self, 'arbre'):
-            self.arbre.SetItemText(self.branche, t)
+            self.arbre.SetItemText(self.branche, self.GetNom())
             
 #        # Tip
 #        if hasattr(self, 'tip'):
@@ -7774,7 +7780,7 @@ class Systeme(ElementDeSequence, Objet_sequence):
         image = self.arbre.images["Sys"]
 #        else:
 #            image = self.image.ConvertToImage().Scale(20, 20).ConvertToBitmap()
-        self.branche = arbre.AppendItem(branche, u"Système ou matériel", data = self,#, wnd = self.codeBranche
+        self.branche = arbre.AppendItem(branche, self.GetNom(), data = self,#, wnd = self.codeBranche
                                         image = image)
 #        if hasattr(self, 'tip'):
 #            self.tip.SetBranche(self.branche)
