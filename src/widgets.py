@@ -1231,8 +1231,8 @@ def getHoraireTxt(v, prefixe = u""):
         return prefixe+h+"h"+m
     
 #############################################################################################################
-def rognerImage(image, wf = 200.0 , hf = 100.0): 
+def rognerImage(image, wf = 800.0 , hf = 600.0): 
     w, h = image.GetSize()
-    r = max(w/wf, h/hf)
+    r = max(w/float(wf), h/float(hf))
     _w, _h = w/r, h/r
     return image.ConvertToImage().Scale(_w, _h).ConvertToBitmap()

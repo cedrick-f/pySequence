@@ -8130,7 +8130,7 @@ class Support(ElementDeSequence, Objet_sequence):
         
         self.tip.SetWholeText("nom", self.nom, size=5)
         self.tip.AjouterHTML("des", XMLtoHTML(self.description))       
-        self.tip.AjouterImg("img", self.image, width = 200) 
+        self.tip.AjouterImg("img", self.image, width = 300) 
         #self.tip.Supprime('img')
         self.tip.SetPage()
     

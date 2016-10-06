@@ -45,7 +45,7 @@ import wx
 
 __appname__= "pySequence"
 __author__ = u"Cédrick FAURY"
-__version__ = "7.0-beta.11"
+__version__ = "7.0-beta.12"
 print __version__
 
 
@@ -116,45 +116,79 @@ def GetAppnameVersion():
 ###############################################################################################
 def GetNewVersion(win):
     print "Recherche nouvelle version (hormis beta)..."
-    url = "https://api.github.com/repos/cedrick-f/pySequence/releases/latest"
+    
+    # getsion des proxies
     proxy_handler = urllib2.ProxyHandler()
     opener = urllib2.build_opener(proxy_handler)
     urllib2.install_opener(opener)
     print "  proxies :",proxy_handler.proxies
+    
+    
+    url1 = "https://api.github.com/repos/cedrick-f/pySequence/releases/latest"
+    url2 = "https://api.github.com/repos/cedrick-f/pySequence/releases"
+    
+    ##########################################################################################
+    def getVerNumId(url):
+        req = urllib2.Request(url)
+        try:
+            handler = urllib2.urlopen(req)
+        except:
+            print u"Pas d'accès à Internet"
+            return
+        
+        dic = json.loads(handler.read())
+        if type(dic) == list:
+            dic = dic[0]
+        
+        id = dic['id']
+        ver = dic['tag_name'].lstrip('v')
+        return ver, id
 
-    req = urllib2.Request(url)
-    try:
-        handler = urllib2.urlopen(req)
-    except:
-        print u"Pas d'accès à Internet"
-        return
+
+    #########################################################################################
+    def sup(v1, v2):
+        for i, l in enumerate(v1.split('.')):
+            nl = int(l.rstrip("-beta"))
+            na = int(v2[i].rstrip("-beta"))
+
+            if nl > na:
+                return True
+            elif nl < na:
+                break
+
+        return False
+
     
-    dic = json.loads(handler.read())
-    
-    latest = dic['tag_name'].lstrip('v')
+    #########################################################################################
+    latest, id1 = getVerNumId(url1)
+    last_ver, id2 = getVerNumId(url2)
     
     # Version actuelle
     a = __version__.split('.')
     
     print "   locale  :", __version__
     print "   serveur :", latest
+    print "   serveur_beta :", last_ver
     
     # Comparaison
-    new = False
-    for i, l in enumerate(latest.split('.')):
-        nl = int(l.rstrip("-beta"))
-        na = int(a[i].rstrip("-beta"))
-#        print nl,na
-        if nl > na:
-            new = True
-            break
-        elif nl < na:
-            break
-    if new:
-        print latest
-    else:
-        print
+#     new = False
+#     for i, l in enumerate(latest.split('.')):
+#         nl = int(l.rstrip("-beta"))
+#         na = int(a[i].rstrip("-beta"))
+# #        print nl,na
+#         if nl > na:
+#             new = True
+#             break
+#         elif nl < na:
+#             break
+#     if new:
+#         print latest
+#     else:
+#         print
 
+    new = sup(latest, a)
+    newbeta = sup(last_ver, a)
+    
     if new:
         dialog = wx.MessageDialog(win, u"Une nouvelle version de pySéquence est disponible\n\n" \
                                         u"\t%s\n\n" \
@@ -163,13 +197,29 @@ def GetNewVersion(win):
         retCode = dialog.ShowModal()
         if retCode == wx.ID_YES:
             try:
-                webbrowser.open("https://github.com/cedrick-f/pySequence/releases/latest",new=2)
+                url = "https://github.com/cedrick-f/pySequence/releases/latest"
+                webbrowser.open(url,new=2)
             except:
                 from widgets import messageErreur
                 messageErreur(None, u"Ouverture impossible",
                               u"Impossible d'ouvrir l'url\n\n%s\n" %url)
 
-
+    elif newbeta:
+        dialog = wx.MessageDialog(win, u"Une nouvelle version de pySéquence est disponible\n\n" \
+                                        u"\t%s\n\n" \
+                                        u"... Il s'agit d'une version beta ...\n\n" \
+                                        u"Voulez-vous visiter la page de téléchargement ?" % last_ver, 
+                                      u"Nouvelle version beta", wx.YES_NO | wx.ICON_INFORMATION)
+        retCode = dialog.ShowModal()
+        if retCode == wx.ID_YES:
+            try:
+                url = "https://github.com/cedrick-f/pySequence/releases/tag/v"+last_ver
+                webbrowser.open(url,new=2)
+            except:
+                from widgets import messageErreur
+                messageErreur(None, u"Ouverture impossible",
+                              u"Impossible d'ouvrir l'url\n\n%s\n" %url)
+                
     return
 
 
@@ -205,7 +255,8 @@ def test():
 #    print repoItem
     
 
-    
+if __name__ == '__main__':
+    GetNewVersion(None)
 
     
     

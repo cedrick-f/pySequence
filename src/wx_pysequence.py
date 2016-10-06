@@ -4888,14 +4888,14 @@ class PanelPropriete_Progression(PanelPropriete):
     def SetImage(self):
         if self.progression.image != None:
             
-            self.progression.image = rognerImage(self.progression.image)
+#             self.progression.image = rognerImage(self.progression.image)
             
 #             w, h = self.progression.image.GetSize()
 #             wf, hf = 200.0, 100.0
 #             r = max(w/wf, h/hf)
 #             _w, _h = w/r, h/r
 #             self.progression.image = self.progression.image.ConvertToImage().Scale(_w, _h).ConvertToBitmap()
-            self.image.SetBitmap(self.progression.image)
+            self.image.SetBitmap(rognerImage(self.progression.image, 200,200))
         self.pageGen.Layout()
         
     
@@ -4918,7 +4918,7 @@ class PanelPropriete_Progression(PanelPropriete):
             # This returns a Python list of files that were selected.
             paths = dlg.GetPaths()
             nomFichier = paths[0]
-            self.progression.image = wx.Image(nomFichier).ConvertToBitmap()
+            self.progression.image = rognerImage(wx.Image(nomFichier).ConvertToBitmap())
             self.SetImage()
             self.sendEvent(modif = u"Modification de l'image de la Progression")
             
@@ -5875,7 +5875,7 @@ class PanelEffectifsClasse(wx.Panel):
         sizerClasse_h.Add(self.cEffClas, 0, wx.TOP|wx.BOTTOM|wx.LEFT, 5)
         
         # Nombre de groupes à effectif réduits
-        self.vNbERed = Variable(u"Nbr de groupes\né effectif réduit",  
+        self.vNbERed = Variable(u"Nbr de groupes\nà effectif réduit",  
                                 lstVal = classe.nbrGroupes['G'], 
                                 typ = VAR_ENTIER_POS, bornes = [1,4])
         self.cNbERed = VariableCtrl(self, self.vNbERed, coef = 1, signeEgal = False,
@@ -8889,7 +8889,7 @@ class PanelPropriete_Systeme(PanelPropriete):
                 # This returns a Python list of files that were selected.
                 paths = dlg.GetPaths()
                 nomFichier = paths[0]
-                self.systeme.image = wx.Image(nomFichier).ConvertToBitmap()
+                self.systeme.image = rognerImage(wx.Image(nomFichier).ConvertToBitmap())
                 self.SetImage()
             
             
@@ -9314,7 +9314,7 @@ class PanelPropriete_Personne(PanelPropriete):
             # This returns a Python list of files that were selected.
             paths = dlg.GetPaths()
             nomFichier = paths[0]
-            self.personne.avatar = wx.Image(nomFichier).ConvertToBitmap()
+            self.personne.avatar = rognerImage(wx.Image(nomFichier).ConvertToBitmap())
             self.SetImage()
             self.sendEvent(modif = u"Modification du portrait de la personne")
             
@@ -9461,7 +9461,7 @@ class PanelPropriete_Support(PanelPropriete):
                                   u"sur lequel les élèves réalisent\n" \
                                   u"les modélisations et expérimentations.")
         self.textctrl = textctrl
-        bsizer.Add(textctrl, flag = wx.EXPAND)
+        bsizer.Add(textctrl, 1, flag = wx.EXPAND)
         self.sizer.Add(bsizer, (0,0), flag = wx.EXPAND|wx.ALL, border = 2)
 #         self.Bind(stc.EVT_STC_CHANGE, self.EvtText, textctrl)
         self.Bind(stc.EVT_STC_MODIFIED, self.EvtText, textctrl)
@@ -9584,10 +9584,8 @@ class PanelPropriete_Support(PanelPropriete):
                 # This returns a Python list of files that were selected.
                 paths = dlg.GetPaths()
                 nomFichier = paths[0]
-                self.support.image = wx.Image(nomFichier).ConvertToBitmap()
+                self.support.image = rognerImage(wx.Image(nomFichier).ConvertToBitmap())
                 self.SetImage(True)
-            
-            
             
             dlg.Destroy()
 
@@ -9596,14 +9594,14 @@ class PanelPropriete_Support(PanelPropriete):
     def SetImage(self, sendEvt = False):
         if self.support.image != None:
             
-            self.support.image = rognerImage(self.support.image)
+#             img = rognerImage(self.support.image)
             
 #             w, h = self.support.image.GetSize()
 #             wf, hf = 200.0, 100.0
 #             r = max(w/wf, h/hf)
 #             _w, _h = w/r, h/r
 # #            self.support.image = self.support.image.ConvertToImage().Scale(_w, _h).ConvertToBitmap()
-            self.image.SetBitmap(self.support.image)
+            self.image.SetBitmap(rognerImage(self.support.image, 200,200))
 #        self.support.SetImage()
         self.Layout()
         
