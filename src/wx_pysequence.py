@@ -12280,7 +12280,7 @@ class URLDialog(wx.Dialog):
 
         box = wx.BoxSizer(wx.HORIZONTAL)
 
-        label = wx.StaticText(self, -1, "Lien :")
+        label = wx.StaticText(self, -1, u"Lien :")
 #        label.SetHelpText("This is the help text for the label")
         box.Add(label, 0, wx.ALIGN_CENTRE|wx.ALL, 5)
 
@@ -13122,7 +13122,10 @@ class CodeBranche(wx.Panel):
     def SetBranche(self, branche): 
         self.branche = branche
         
-                
+    def SetItalic(self, italic = True):
+        font = self.code.GetFont().Italic()
+        self.code.SetFont(font)
+         
     def Add(self, clef, text = u""):
         self.comp[clef] = wx.StaticText(self, -1, "")
         self.GetSizer().Add(self.comp[clef])

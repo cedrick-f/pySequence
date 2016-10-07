@@ -9101,14 +9101,19 @@ class Prof(Personne):
     ######################################################################################  
     def MiseAJourCodeBranche(self):
         self.arbre.SetItemBold(self.branche, self.referent)
-        if self.discipline <> 'Tec':
-            self.codeBranche.SetLabel(u" "+constantes.CODE_DISCIPLINES[self.discipline]+u" ")
+        self.codeBranche.SetItalic()
+#         if self.discipline <> 'Tec':
+        self.codeBranche.SetLabel(u" "+constantes.CODE_DISCIPLINES[self.discipline]+u" ")
+        self.codeBranche.SetToolTipString(constantes.NOM_DISCIPLINES[self.discipline])
+        
+        
+        if sum(constantes.COUL_DISCIPLINES[self.discipline]) > 1.5:
             self.codeBranche.SetBackgroundColour(couleur.GetCouleurWx(constantes.COUL_DISCIPLINES[self.discipline]))
-            self.codeBranche.SetToolTipString(constantes.NOM_DISCIPLINES[self.discipline])
+            self.codeBranche.SetForeroundColour(wx.BLACK)
         else:
-            self.codeBranche.SetLabel(u"")
-            self.codeBranche.SetBackgroundColour(couleur.GetCouleurWx(constantes.COUL_DISCIPLINES[self.discipline]))
-            self.codeBranche.SetToolTipString(constantes.NOM_DISCIPLINES[self.discipline])
+            self.codeBranche.SetBackgroundColour(wx.WHITE)
+            self.codeBranche.SetForegroundColour(couleur.GetCouleurWx(constantes.COUL_DISCIPLINES[self.discipline]))
+            
         
         self.codeBranche.LayoutFit()
     
