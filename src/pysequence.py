@@ -1819,7 +1819,7 @@ class Sequence(BaseDoc, Objet_sequence):
         
         typeSeance = bseance.get("Type", "")
         
-        seance = Seance(self, self.panelParent, typeSeance = typeSeance,
+        seance = Seance(self, typeSeance = typeSeance,
                         branche = bseance)
         self.seances.insert(0, seance)
         
