@@ -113,7 +113,7 @@ from wx_pysequence import CodeBranche, PopupInfo, getIconeFileSave, getIconeCopy
                             PanelPropriete_Savoirs, PanelPropriete_Seance, \
                             PanelPropriete_Tache, PanelPropriete_Systeme, \
                             PanelPropriete_Support, PanelPropriete_LienProjet,\
-                            PanelPropriete_Personne, getDisplayPosSize
+                            PanelPropriete_Personne, getDisplayPosSize, URLDialog
 
 
 
