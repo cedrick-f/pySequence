@@ -1068,7 +1068,29 @@ class StaticBoxButton(wx.StaticBox, BaseGestionFenHelp):
     
         
         
-import  wx.lib.buttons  as  buttons
+# import  wx.lib.buttons  as  buttons
+
+
+class PlaceholderTextCtrl(wx.TextCtrl):
+    def __init__(self,*args,**kwargs):
+        print kwargs
+        self.default_text = kwargs.pop("placeholder","")
+        kwargs["value"] = self.default_text
+        print ">>", kwargs
+        wx.TextCtrl.__init__(self,*args,**kwargs)
+        self.Bind(wx.EVT_SET_FOCUS, self.OnFocus)
+        self.Bind(wx.EVT_KILL_FOCUS, self.OnKillFocus)
+    
+    def OnFocus(self,evt):
+        if self.GetValue() == self.default_text:
+            self.SetValue("")
+        evt.Skip()
+    
+    def OnKillFocus(self,evt):
+        if self.GetValue().strip() == "":
+            self.SetValue(self.default_text)
+        evt.Skip()
+
 
 
 #########################################################################################################

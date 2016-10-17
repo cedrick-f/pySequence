@@ -253,7 +253,7 @@ from widgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_ENTI
                     messageErreur, getNomFichier, pourCent2, testRel, \
                     rallonge, remplaceCode2LF, dansRectangle, isstring, \
                     StaticBoxButton, TextCtrl_Help, CloseFenHelp, \
-                    remplaceLF2Code, messageInfo, messageYesNo, rognerImage#, chronometrer
+                    remplaceLF2Code, messageInfo, messageYesNo, rognerImage, PlaceholderTextCtrl#, chronometrer
 
 import Options
 
@@ -3945,9 +3945,18 @@ class PanelPropriete(scrolled.ScrolledPanel):
 
         self.eventAttente = False
         self.Bind(wx.EVT_ENTER_WINDOW, self.OnEnter)
+        
+        self.Bind(wx.EVT_SIZE, self.OnResize)
+        
 #        wx.CallAfter(self.Show)
 
 
+    ######################################################################################              
+    def OnResize(self, evt):
+        self.Refresh()
+        evt.Skip()
+            
+            
     ######################################################################################################
     def OnEnter(self, event):
 #        print "OnEnter PanelPropriete"
@@ -8072,7 +8081,7 @@ class PanelPropriete_Tache(PanelPropriete):
             self.elevesCtrl = []
             self.ConstruireListeEleves()
             pageGen.sizer.Add(self.bsizer, (0,3), (3, 1), flag = wx.EXPAND|wx.LEFT|wx.RIGHT, border = 4)
-            pageGen.sizer.AddGrowableCol(3)
+#             pageGen.sizer.AddGrowableCol(3)
         
         
         
@@ -8398,7 +8407,7 @@ class PanelPropriete_Tache(PanelPropriete):
              - sur la page "Proprietes générale"
              - sur les pages "Compétences" : cas des revues (sauf dernière(s)) et des compétences prédéterminées
         """
-#        print "ConstruireListeEleves", self.tache
+#         print "ConstruireListeEleves", self.tache
         if hasattr(self, 'elevesCtrl'):
             
             self.pageGen.Freeze()
@@ -8408,15 +8417,17 @@ class PanelPropriete_Tache(PanelPropriete):
                 ss.Destroy()
                 
             self.elevesCtrl = []
+
             for i, e in enumerate(self.GetDocument().eleves):
                 v = wx.CheckBox(self.pageGen, 100+i, e.GetNomPrenom())
-                v.SetMinSize((200,-1))
+#                 v.SetMinSize((200,-1))
                 v.SetValue(i in self.tache.eleves)
                 self.pageGen.Bind(wx.EVT_CHECKBOX, self.EvtCheckEleve, v)
                 self.bsizer.Add(v, flag = wx.ALIGN_LEFT|wx.ALL, border = 3)#|wx.EXPAND) 
                 self.elevesCtrl.append(v)
             
-            self.bsizer.Add(wx.StaticLine(self.pageGen, -1, size = (100,3)), flag = wx.ALIGN_LEFT|wx.ALL, border = 3)#|wx.EXPAND) 
+            line = wx.StaticLine(self.pageGen)
+            self.bsizer.Add(line, 0, flag = wx.ALIGN_LEFT|wx.ALL|wx.EXPAND, border = 3)#)  size = (100,3))
             
             self.tousElevesCtrl = wx.CheckBox(self.pageGen, -1, u"tous")
             self.tousElevesCtrl.SetValue(all([b.IsChecked() for b in self.elevesCtrl]))
@@ -8431,8 +8442,10 @@ class PanelPropriete_Tache(PanelPropriete):
                 self.box.Hide()
     
 #            self.box.SetMinSize((200,200))
-            self.pageGen.Layout()
+            self.bsizer.Layout()
             self.pageGen.Thaw()
+#             print [cb.GetSize()[0] for cb in self.elevesCtrl]
+#             line.SetSize((max([cb.GetSize()[0] for cb in self.elevesCtrl]), 3))
             
         self.ConstruireCasesEleve()
         
@@ -9053,8 +9066,9 @@ class PanelPropriete_Personne(PanelPropriete):
         #
         box = myStaticBox(self, -1, u"Identité")
         bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
-        titre = wx.StaticText(self, -1, u"Nom :")
-        textctrl = wx.TextCtrl(self, 1, u"")
+        bsizer.SetMinSize((300,-1))
+        titre = wx.StaticText(self, -1, u"Nom : ")
+        textctrl = wx.TextCtrl(self, 1)
         self.textctrln = textctrl
         
         nsizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -9065,8 +9079,8 @@ class PanelPropriete_Personne(PanelPropriete):
         #
         # Prénom
         #
-        titre = wx.StaticText(self, -1, u"Prénom :")
-        textctrl = wx.TextCtrl(self, 2, u"")
+        titre = wx.StaticText(self, -1, u"Prénom : ")
+        textctrl = wx.TextCtrl(self, 2)
         self.textctrlp = textctrl
         
         psizer = wx.BoxSizer(wx.HORIZONTAL)
