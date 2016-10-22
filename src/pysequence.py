@@ -6408,6 +6408,7 @@ class Seance(ElementDeSequence, Objet_sequence):
         if hasattr(self, 'codeBranche') and self.typeSeance != "":
             self.codeBranche.SetLabel(self.code)
             self.arbre.SetItemText(self.branche, self.GetReferentiel().seances[self.typeSeance][0])
+            self.codeBranche.SetToolTipString(self.intitule)
             
                   
     ######################################################################################  
@@ -7753,8 +7754,8 @@ class Systeme(ElementDeSequence, Objet_sequence):
 
     ######################################################################################  
     def SetCode(self):
-#        if hasattr(self, 'codeBranche'):
-#            self.codeBranche.SetLabel(self.nom)
+        if hasattr(self, 'codeBranche'):
+            self.codeBranche.SetToolTipString(self.GetNom() + u"\nNombre disponible : " + str(self.nbrDispo.v[0]))
         
         if hasattr(self, 'arbre'):
             self.arbre.SetItemText(self.branche, self.GetNom())

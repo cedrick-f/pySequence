@@ -8951,7 +8951,7 @@ class PanelPropriete_Systeme(PanelPropriete):
                     wx.CallLater(DELAY, self.sendEvent, modif = modif)
                     self.eventAttente = True
         
-        elif isinstance(self.systeme.parent, Classe):
+        elif isinstance(self.systeme.parent, pysequence.Classe):
 #            print "  ***", self.systeme.parent
             self.GetPanelPropriete().MiseAJourListeSys(self.systeme.nom)
 
@@ -9212,8 +9212,9 @@ class PanelPropriete_Personne(PanelPropriete):
     #############################################################################            
     def GetListProfs(self):
         nomFichier = os.path.join(util_path.APP_DATA_PATH, constantes.FICHIER_PROFS)
+        
         if not os.path.exists(nomFichier):
-            return ET.Element("Professeurs"), []
+            return [], ET.Element("Professeurs")
         
         fichier = open(nomFichier,'r')
         try:
@@ -9237,13 +9238,13 @@ class PanelPropriete_Personne(PanelPropriete):
         
         fichier.close()
         
-        return list_p
+        return zip(*list_p)
 
 
     #############################################################################            
     def OnCharge(self, event):
         
-        list_p, root = zip(*self.GetListProfs())
+        list_p, root = self.GetListProfs()
         if len(list_p)>0:
             dlg = wx.SingleChoiceDialog(
                     self, u'Sélectionner un Professeur\ndans la liste ci-dessous :',
@@ -9264,7 +9265,7 @@ class PanelPropriete_Personne(PanelPropriete):
             
         else:
             messageInfo(self, u"Aucun Professeur", 
-                    u"La liste des Professeurs enregistrés est vide." %self.personne.GetNomPrenom())
+                    u"La liste des Professeurs enregistrés est vide.")
 
         
        
@@ -9272,9 +9273,11 @@ class PanelPropriete_Personne(PanelPropriete):
         
     #############################################################################            
     def OnSauv(self, event):
+        """ 
+        """
+#         print "OnSauv", self.GetListProfs()
         
-        
-        list_p, root = zip(self.GetListProfs())
+        list_p, root = self.GetListProfs()
         
         if self.personne in list_p:
             dlg = wx.MessageDialog(self, u"Le professeur %s existe déja dans la liste\n\n" \
