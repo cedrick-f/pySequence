@@ -323,6 +323,10 @@ imagesTaches =  {'Sup' : images.Icone_CdCF,
                  'R3'  : images.Icone_revue,
                  'S'  : images.Icone_soutenance}
                 
+imagesDemarches =  {'R' : images.Dem_res_pb, 
+                    'P' : images.Dem_proj, 
+                    'I' : images.Dem_investig
+                    }
 
 imagesCI = [images.CI_1, images.CI_2, images.CI_3, images.CI_4,
             images.CI_5, images.CI_6, images.CI_7, images.CI_8,

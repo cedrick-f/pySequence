@@ -407,24 +407,32 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False, entete = Fal
     prj.support.pts_caract = []
     bmp = prj.support.image
     if bmp != None:
-        ctx.save()
-        tfname = tempfile.mktemp()
-        try:
-            bmp.SaveFile(tfname, wx.BITMAP_TYPE_PNG)
-            image = cairo.ImageSurface.create_from_png(tfname)
-        finally:
-            if os.path.exists(tfname):
-                os.remove(tfname)  
-                
-        w = image.get_width()*1.1
-        h = image.get_height()*1.1
+        image(ctx,
+              posImg[0], posImg[1], tailleImg[0], tailleImg[1],
+              bmp)
         
-        s = min(tailleImg[0]/w, tailleImg[1]/h)
-        ctx.translate(posImg[0], posImg[1])
-        ctx.scale(s, s)
-        ctx.set_source_surface(image, 0, 0)
-        ctx.paint ()
-        ctx.restore()
+        
+        
+        
+        
+#         ctx.save()
+#         tfname = tempfile.mktemp()
+#         try:
+#             bmp.SaveFile(tfname, wx.BITMAP_TYPE_PNG)
+#             image = cairo.ImageSurface.create_from_png(tfname)
+#         finally:
+#             if os.path.exists(tfname):
+#                 os.remove(tfname)  
+#                 
+#         w = image.get_width()*1.1
+#         h = image.get_height()*1.1
+#         
+#         s = min(tailleImg[0]/w, tailleImg[1]/h)
+#         ctx.translate(posImg[0], posImg[1])
+#         ctx.scale(s, s)
+#         ctx.set_source_surface(image, 0, 0)
+#         ctx.paint ()
+#         ctx.restore()
         
         prj.zones_sens.append(Zone([posImg + tailleImg], obj = prj.support))
         prj.support.pts_caract.append(posImg)
@@ -997,25 +1005,29 @@ def DrawTacheRacine(ctx, tache, y):
     #
     bmp = tache.icone
     if bmp != None:
-        ctx.save()
-        tfname = tempfile.mktemp()
-        try:
-            bmp.SaveFile(tfname, wx.BITMAP_TYPE_PNG)
-            image = cairo.ImageSurface.create_from_png(tfname)
-        finally:
-            if os.path.exists(tfname):
-                os.remove(tfname)  
-                
-        wi = image.get_width()*1.1
-        hi = image.get_height()*1.1
-        
         d = min(hTacheMini * 3, h)
-        s = min(d/wi, d/hi)
-        ctx.translate(x+w-d, y)
-        ctx.scale(s, s)
-        ctx.set_source_surface(image, 0, 0)
-        ctx.paint()
-        ctx.restore()
+        image(ctx, x+w-d, y, d, d, bmp)
+        
+        
+#         ctx.save()
+#         tfname = tempfile.mktemp()
+#         try:
+#             bmp.SaveFile(tfname, wx.BITMAP_TYPE_PNG)
+#             image = cairo.ImageSurface.create_from_png(tfname)
+#         finally:
+#             if os.path.exists(tfname):
+#                 os.remove(tfname)  
+#                 
+#         wi = image.get_width()*1.1
+#         hi = image.get_height()*1.1
+#         
+#         d = min(hTacheMini * 3, h)
+#         s = min(d/wi, d/hi)
+#         ctx.translate(x+w-d, y)
+#         ctx.scale(s, s)
+#         ctx.set_source_surface(image, 0, 0)
+#         ctx.paint()
+#         ctx.restore()
     
     y += h
     return y

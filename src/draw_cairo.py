@@ -40,6 +40,11 @@ import cairo
 import time
 import constantes
 
+## Pour afficher des images
+import os
+import tempfile
+import wx
+
 from widgets import getHoraireTxt
 
 #
@@ -1365,7 +1370,7 @@ def DrawClasse(ctx, rect, classe):
     def rectanglePlein(x, y, w, h, coul):
         ctx.set_line_width(e)
         ctx.rectangle(x, y, w, h)
-        ctx.set_source_rgb(*[c*2.0 for c in coul])
+        ctx.set_source_rgb(*[c*3.0 for c in coul])
         ctx.fill_preserve ()
         ctx.set_source_rgb(*coul)      
         ctx.stroke()
@@ -1588,6 +1593,32 @@ def curve_rect(ctx, x0, y0, rect_width, rect_height, radius, ouverture = 0):
     return x0 + radius + ouverture, y0 # Renvoie les coordonnées du 1er point = caractéristique du path SVG
 
 
+def image(ctx, x, y, w, h, bmp, marge = 0):
+    """ Dessine une image
+    
+    """
+    
+    x = x + marge*w
+    y = y + marge*h
+    w = w - 2*marge*w
+    h = h - 2*marge*h
+    
+    tfname = tempfile.mktemp()
+    try:
+        bmp.SaveFile(tfname, wx.BITMAP_TYPE_PNG)
+        image = cairo.ImageSurface.create_from_png(tfname)
+    finally:
+        if os.path.exists(tfname):
+            os.remove(tfname)  
+    W = image.get_width()
+    H = image.get_height()
+    s = min(w/W, h/H)
+    ctx.save()
+    ctx.translate(x, y)
+    ctx.scale(s, s)
+    ctx.set_source_surface(image, 0, 0)
+    ctx.paint ()
+    ctx.restore()
 
     
 def tableauV(ctx, titres, x, y, w, ht, hl, nlignes = 0, va = 'c', ha = 'c', orient = 'h', coul = (0.9,0.9,0.9), b = 0.2):

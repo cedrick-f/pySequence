@@ -50,7 +50,7 @@ from Referentiel import REFERENTIELS, ACTIVITES
 import Referentiel
 
 
-## Pour dessiner la cible ...
+## Pour afficher des images
 import os
 import tempfile
 import wx
@@ -132,10 +132,10 @@ xSystemes = {}
 
 # Zone du tableau des démarches
 posZDemarche = [None, posZSysteme[1]]
-tailleZDemarche = [0.07 * COEF, None]
-xDemarche = {"I" : None,
-             "R" : None,
-             "P" : None}
+tailleZDemarche = [0.02 * COEF, None]
+# xDemarche = {"I" : None,
+#              "R" : None,
+#              "P" : None}
 
 # Zone des intitulés des séances
 fontIntSeances = 0.01 * COEF
@@ -256,12 +256,12 @@ def DefinirZones(seq, ctx):
     
     # Zone du tableau des démarches
     if len(seq.classe.GetReferentiel().listeDemarches) > 0:
-        tailleZDemarche[0] = 0.07 * COEF
+        tailleZDemarche[0] = 0.02 * COEF
         posZDemarche[0] = posZSysteme[0] - tailleZDemarche[0] - ecartX
         tailleZDemarche[1] = tailleZSysteme[1]
-        xDemarche["I"] = posZDemarche[0] + tailleZDemarche[0]/6
-        xDemarche["R"] = posZDemarche[0] + tailleZDemarche[0]*3/6
-        xDemarche["P"] = posZDemarche[0] + tailleZDemarche[0]*5/6
+#         xDemarche["I"] = posZDemarche[0] + tailleZDemarche[0]/6
+#         xDemarche["R"] = posZDemarche[0] + tailleZDemarche[0]*3/6
+#         xDemarche["P"] = posZDemarche[0] + tailleZDemarche[0]*5/6
     else:
         tailleZDemarche[0] = 0
         tailleZDemarche[1] = tailleZSysteme[1]
@@ -445,22 +445,25 @@ def Draw(ctx, seq, mouchard = False, entete = False):
     #
     
     # Affichage du Logo
-    tfname = tempfile.mktemp()
-    bmp = seq.classe.referentiel.getLogo()
-    try:
-        bmp.SaveFile(tfname, wx.BITMAP_TYPE_PNG)
-        image = cairo.ImageSurface.create_from_png(tfname)
-    finally:
-        if os.path.exists(tfname):
-            os.remove(tfname)  
-    w = image.get_width()
-    h = image.get_height()
-    ctx.save()
-    ctx.translate(posCib[0], posCib[1])
-    ctx.scale(tailleCib[0]/w, tailleCib[0]/w)
-    ctx.set_source_surface(image, 0, 0)
-    ctx.paint ()
-    ctx.restore()
+    image(ctx, 
+          posCib[0], posCib[1], tailleCib[0], tailleCib[1],
+          seq.classe.referentiel.getLogo())
+#     tfname = tempfile.mktemp()
+#     bmp = seq.classe.referentiel.getLogo()
+#     try:
+#         bmp.SaveFile(tfname, wx.BITMAP_TYPE_PNG)
+#         image = cairo.ImageSurface.create_from_png(tfname)
+#     finally:
+#         if os.path.exists(tfname):
+#             os.remove(tfname)  
+#     w = image.get_width()
+#     h = image.get_height()
+#     ctx.save()
+#     ctx.translate(posCib[0], posCib[1])
+#     ctx.scale(tailleCib[0]/w, tailleCib[0]/w)
+#     ctx.set_source_surface(image, 0, 0)
+#     ctx.paint ()
+#     ctx.restore()
         
     # Affichage des CI sur la cible
     if seq.classe.referentiel.CI_cible:
@@ -784,26 +787,38 @@ def Draw(ctx, seq, mouchard = False, entete = False):
     #  Tableau des démarches
     #
     if not entete:
-        if len(seq.GetReferentiel().listeDemarches) > 0:  
+        if len(seq.GetReferentiel().listeDemarches) > 0:
             ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                   cairo.FONT_WEIGHT_NORMAL)
             ctx.set_source_rgb(0, 0, 0)
-            ctx.set_line_width(0.001 * COEF)
-            l=[]
-            for d in seq.GetReferentiel().listeDemarches : 
-                l.append(seq.GetReferentiel().demarches[d][0])
-            tableauV(ctx, l, posZDemarche[0], posZDemarche[1], 
-                    tailleZDemarche[0], posZSeances[1] - posZSysteme[1], 
-                    0, nlignes = 0, va = 'c', ha = 'g', orient = 'v', coul = (0.8,0.75,0.9))
-            ctx.move_to(posZDemarche[0], posZDemarche[1] + posZSeances[1] - posZSysteme[1])
-            ctx.line_to(posZDemarche[0], posZDemarche[1] + tailleZDemarche[1])
-            ctx.move_to(posZDemarche[0]+tailleZDemarche[0]/3, posZDemarche[1] + posZSeances[1] - posZSysteme[1])
-            ctx.line_to(posZDemarche[0]+tailleZDemarche[0]/3, posZDemarche[1] + tailleZDemarche[1])
-            ctx.move_to(posZDemarche[0]+tailleZDemarche[0]*2/3, posZDemarche[1] + posZSeances[1] - posZSysteme[1])
-            ctx.line_to(posZDemarche[0]+tailleZDemarche[0]*2/3, posZDemarche[1] + tailleZDemarche[1])
-            ctx.move_to(posZDemarche[0]+tailleZDemarche[0], posZDemarche[1] + posZSeances[1] - posZSysteme[1])
-            ctx.line_to(posZDemarche[0]+tailleZDemarche[0], posZDemarche[1] + tailleZDemarche[1])
-            ctx.stroke()
+            show_text_rect(ctx, u"Démarche",
+                           (posZDemarche[0], posZDemarche[1],
+                            tailleZDemarche[0], posZSeances[1] - posZSysteme[1]), \
+                   va = 'b', ha = 'g', le = 0.8, pe = 1.0, \
+                   b = 0.3, orient = 'v', \
+                   fontsizeMinMax = (-1, -1), fontsizePref = -1, wrap = True, couper = False, 
+                   coulBord = None, tracer = True, ext = "...")
+            
+            
+#             ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+#                                   cairo.FONT_WEIGHT_NORMAL)
+#             ctx.set_source_rgb(0, 0, 0)
+#             ctx.set_line_width(0.001 * COEF)
+#             l=[]
+#             for d in seq.GetReferentiel().listeDemarches : 
+#                 l.append(seq.GetReferentiel().demarches[d][0])
+#             tableauV(ctx, l, posZDemarche[0], posZDemarche[1], 
+#                     tailleZDemarche[0], posZSeances[1] - posZSysteme[1], 
+#                     0, nlignes = 0, va = 'c', ha = 'g', orient = 'v', coul = (0.8,0.75,0.9))
+#             ctx.move_to(posZDemarche[0], posZDemarche[1] + posZSeances[1] - posZSysteme[1])
+#             ctx.line_to(posZDemarche[0], posZDemarche[1] + tailleZDemarche[1])
+#             ctx.move_to(posZDemarche[0]+tailleZDemarche[0]/3, posZDemarche[1] + posZSeances[1] - posZSysteme[1])
+#             ctx.line_to(posZDemarche[0]+tailleZDemarche[0]/3, posZDemarche[1] + tailleZDemarche[1])
+#             ctx.move_to(posZDemarche[0]+tailleZDemarche[0]*2/3, posZDemarche[1] + posZSeances[1] - posZSysteme[1])
+#             ctx.line_to(posZDemarche[0]+tailleZDemarche[0]*2/3, posZDemarche[1] + tailleZDemarche[1])
+#             ctx.move_to(posZDemarche[0]+tailleZDemarche[0], posZDemarche[1] + posZSeances[1] - posZSysteme[1])
+#             ctx.line_to(posZDemarche[0]+tailleZDemarche[0], posZDemarche[1] + tailleZDemarche[1])
+#             ctx.stroke()
 
 
 
@@ -1033,14 +1048,14 @@ class Bloc():
         return x, y
     
     
-    def DrawCoisement(self, estRotation):
+    def DrawCroisement(self, estRotation):
         """ Dessine les différents croisement :
              - séance/système  : rond avec nbr syst
              - séance/démarche : boule
             et un trait en pointillé ._._.
         """
         
-#        print "DrawCoisement", estRotation
+#        print "DrawCroisement", estRotation
         for ligne in self.contenu:
             for cadre in ligne:
                 
@@ -1055,21 +1070,23 @@ class Bloc():
                                       cadre.seance.couleur)
     
                         #
-                        # La boule "démarche"
+                        # L'icone "démarche"
                         #
-                        r = min(0.008*COEF, cadre.h/(cadre.nf+1)/3)
+                        r = min(tailleZDemarche[0], cadre.h/(cadre.nf+1))
                         if len(cadre.seance.GetReferentiel().listeDemarches) > 0:
                             DrawCroisementsDemarche(cadre.ctx, cadre.seance, cadre.y + cadre.dy, r)
-                            
+                        
+                        
                         #
                         # Le rond "nombre de systèmes nécessaires"
                         #
+                        r = min(wColSysteme, cadre.h/(cadre.nf+1))
                         if not estRotation: # Cas des rotations traité plus bas ...
                             DrawCroisementSystemes(cadre.ctx, cadre.seance, cadre.xd, cadre.y + cadre.dy, 
                                                    cadre.seance.GetNbrSystemes(), r)
                 
                 else:
-                    cadre.DrawCoisement(estRotation)
+                    cadre.DrawCroisement(estRotation)
             
             #
             # Cas des rotations :
@@ -1087,11 +1104,12 @@ class Bloc():
 #                            print cadre.dy
                             cadreOk = cadre
                     else:
-                        cadre.DrawCoisement(estRotation)
+                        cadre.DrawCroisement(estRotation)
                 if cadreOk:
 #                    print "!!!"
-                    r = min(0.008*COEF, cadreOk.h/(cadreOk.nf+1)/3)
-                    DrawCroisementSystemes(cadreOk.ctx, cadreOk.seance, cadre.xd, cadreOk.y + cadreOk.dy, NS, r)
+                    r = min(wColSysteme, cadreOk.h/(cadreOk.nf+1)/3)
+                    DrawCroisementSystemes(cadreOk.ctx, cadreOk.seance, cadre.xd, cadreOk.y + cadreOk.dy,
+                                           NS, r)
             
 
 
@@ -1208,7 +1226,7 @@ def DrawSeanceRacine(ctx, seance):
 #    print "  ", cursY,
 #    y = cursY
     x, cursY = bloc.Draw(posZSeances[0], cursY)
-    bloc.DrawCoisement(seance.typeSeance == "R") 
+    bloc.DrawCroisement(seance.typeSeance == "R") 
 #    for lbloc in blocs:
 #        
 #        x = posZSeances[0]
@@ -1219,7 +1237,7 @@ def DrawSeanceRacine(ctx, seance):
 #            x += xf
 #            
 #            # Tracé des croisements "Démarche" et "Systèmes"
-#            bloc.DrawCoisement(seance.typeSeance == "R")
+#            bloc.DrawCroisement(seance.typeSeance == "R")
 #        print "..", yf, 
 #        y = yf
 #    print 
@@ -1231,7 +1249,7 @@ def DrawSeanceRacine(ctx, seance):
 
 
 ######################################################################################  
-def DrawCroisementSystemes(ctx, seance, x, y, ns, r):
+def DrawCroisementSystemes(ctx, seance, x, y, ns, w):
 #        if self.typeSeance in ["AP", "ED", "P"]:
 #            and not (self.EstSousSeance() and self.parent.typeSeance == "S"):
 #    #
@@ -1239,44 +1257,65 @@ def DrawCroisementSystemes(ctx, seance, x, y, ns, r):
 #    #
 #    if seance.typeSeance in ACTIVITES:
 #        DrawLigne(ctx, x, y, seance.couleur)
-        
-    #
-    # Cercle avec nombre de systèmes dedans
-    #
-    if r >= wColSysteme/4:
-    #    ns = seance.GetNbrSystemes(posDansRot = posDansRot)
-        for s, n in ns.items():
-            if n > 0:
-                x = xSystemes[s]
-                ctx.arc(x, y, r, 0, 2*pi)
-                ctx.set_source_rgba (1,0.2,0.2,1.0)
-                ctx.fill_preserve ()
-                ctx.set_source_rgba (0,0,0,1)
-                ctx.stroke ()
-                ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-                                      cairo.FONT_WEIGHT_BOLD)
-                show_text_rect(ctx, str(n), (x-r, y-r, 2*r, 2*r),
-                               wrap = False, couper = False)
+    
+    ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+                          cairo.FONT_WEIGHT_BOLD)
+
+    for s, n in ns.items():
+        if n > 0:
+            x = xSystemes[s]
+            rect = (x-w/2, y-w/2, w, w)
+            ctx.rectangle(*rect)
+            ctx.set_source_rgba(1,1,1, 0.5)
+            ctx.fill()
+            ctx.set_source_rgba(*seance.couleur)
+            show_text_rect(ctx, str(n), rect,
+                           wrap = False, couper = False)
+            
+            seance.GetDocument().zones_sens.append(Zone([rect],
+                                                             obj = seance))
                 
-                seance.GetDocument().zones_sens.append(Zone([(x-r, y-r, 2*r, 2*r)],
-                                                                 obj = seance))
-#                seance.rect.append((x-r, y-r, 2*r, 2*r))
-    else:
-        for s, n in ns.items():
-            if n > 0:
-                x = xSystemes[s] - wColSysteme/2
-                p = wColSysteme/n
-                for i in range(n):
-                    ctx.arc(x+p*i+p/2, y, r, 0, 2*pi)
-                    ctx.set_source_rgba (1,0.2,0.2,1.0)
-                    ctx.fill_preserve ()
-                    ctx.set_source_rgba (0,0,0,1)
-                ctx.stroke ()
-                
-                seance.GetDocument().zones_sens.append(Zone([(x-wColSysteme/2, y-r, wColSysteme, 2*r)],
-                                                                 obj = seance))
-                
-#                seance.rect.append((x-wColSysteme/2, y-r, wColSysteme, 2*r))
+    return
+    
+    
+    
+#     #
+#     # Cercle avec nombre de systèmes dedans
+#     #
+#     if r >= wColSysteme/4:
+#     #    ns = seance.GetNbrSystemes(posDansRot = posDansRot)
+#         for s, n in ns.items():
+#             if n > 0:
+#                 x = xSystemes[s]
+#                 ctx.arc(x, y, r, 0, 2*pi)
+#                 ctx.set_source_rgba (1,0.2,0.2,1.0)
+#                 ctx.fill_preserve ()
+#                 ctx.set_source_rgba (0,0,0,1)
+#                 ctx.stroke ()
+#                 ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+#                                       cairo.FONT_WEIGHT_BOLD)
+#                 show_text_rect(ctx, str(n), (x-r, y-r, 2*r, 2*r),
+#                                wrap = False, couper = False)
+#                 
+#                 seance.GetDocument().zones_sens.append(Zone([(x-r, y-r, 2*r, 2*r)],
+#                                                                  obj = seance))
+# #                seance.rect.append((x-r, y-r, 2*r, 2*r))
+#     else:
+#         for s, n in ns.items():
+#             if n > 0:
+#                 x = xSystemes[s] - wColSysteme/2
+#                 p = wColSysteme/n
+#                 for i in range(n):
+#                     ctx.arc(x+p*i+p/2, y, r, 0, 2*pi)
+#                     ctx.set_source_rgba (1,0.2,0.2,1.0)
+#                     ctx.fill_preserve ()
+#                     ctx.set_source_rgba (0,0,0,1)
+#                 ctx.stroke ()
+#                 
+#                 seance.GetDocument().zones_sens.append(Zone([(x-wColSysteme/2, y-r, wColSysteme, 2*r)],
+#                                                                  obj = seance))
+#                 
+# #                seance.rect.append((x-wColSysteme/2, y-r, wColSysteme, 2*r))
         
         
 
@@ -1300,18 +1339,20 @@ def DrawLigne(ctx, x, y, c = (0, 0.0, 0.2, 0.6)):
           
 
 #####################################################################################  
-def DrawCroisementsDemarche(ctx, seance, y, r):
+def DrawCroisementsDemarche(ctx, seance, y, w):
         
     #
     # Croisements Séance/Démarche
     #
-    _x = xDemarche[seance.demarche]
-#        if self.typeSeance in ["AP", "ED", "P"]:
-#    r = 0.008 * COEF
-    boule(ctx, _x, y, r)
+    bmp = constantes.imagesDemarches[seance.demarche].GetBitmap()
+    rect = (posZDemarche[0] , y - w/2, w, w)
+    image(ctx, posZDemarche[0], y - w/2, w, w, bmp, marge = 0.1)
+#     _x = xDemarche[seance.demarche]
+# #        if self.typeSeance in ["AP", "ED", "P"]:
+# #    r = 0.008 * COEF
+#     boule(ctx, _x, y, r)
     
-    seance.GetDocument().zones_sens.append(Zone([(_x -r , y - r, 2*r, 2*r)],
-                                                                 obj = seance))
+    seance.GetDocument().zones_sens.append(Zone([rect], obj = seance))
     
     
 #    seance.rect.append((_x -r , y - r, 2*r, 2*r))
