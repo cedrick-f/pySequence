@@ -544,25 +544,27 @@ def Draw(ctx, seq, mouchard = False, entete = False):
                 ctx.show_text(t)
 
 
-
-
     # 
     # Effectifs
     #
     if not entete:
+        wEff, rects = DrawClasse(ctx, (posZSeances[0], posZDemarche[1],
+                                       tailleZSeances[0], posZSeances[1]-posZDemarche[1]-0.01 * COEF),
+                                 seq.classe)
+        
         for i, e in enumerate(["C", "G", "D", "E", "P"]):
             x = posZSeances[0]
             h = (posZSeances[1]-posZDemarche[1]-0.01 * COEF) / 5
-            y = posZDemarche[1] + i * h
+            y = posZDemarche[1] + 4 * h
             w = wEff[e]
-            ctx.set_line_width(0.001 * COEF)
-            ctx.set_source_rgb(0.8, 0.9, 0.8)
-            ctx.rectangle(x, y, w, h)
-            ctx.stroke()
-            ctx.set_source_rgb(0.6, 0.8, 0.6)
-            show_text_rect(ctx, seq.GetReferentiel().effectifs[e][1], (x, y, w, h), b=0.2)
-            ctx.stroke()
-            DrawLigneEff(ctx, x+w, y+h)
+#             ctx.set_line_width(0.001 * COEF)
+
+#             ctx.rectangle(x, y, w, h)
+#             ctx.stroke()
+#             ctx.set_source_rgb(0.6, 0.8, 0.6)
+#             show_text_rect(ctx, seq.GetReferentiel().effectifs[e][1], (x, y, w, h), b=0.2)
+#             ctx.stroke()
+            DrawLigneEff(ctx, x+w, y+h, constantes.CouleursGroupes[e])
 
 
 
@@ -830,13 +832,13 @@ def Draw(ctx, seq, mouchard = False, entete = False):
 
 
 ######################################################################################  
-def DrawLigneEff(ctx, x, y):
+def DrawLigneEff(ctx, x, y, coul):
     dashes = [ 0.010 * COEF,   # ink
                0.002 * COEF,   # skip
                0.005 * COEF,   # ink
                0.002 * COEF,   # skip
                ]
-    ctx.set_source_rgba (0.6, 0.8, 0.6)
+    ctx.set_source_rgba (*coul)
     ctx.set_line_width (0.001 * COEF)
     ctx.set_dash(dashes, 0)
     ctx.move_to(x, posZDemarche[1] + tailleZDemarche[1])

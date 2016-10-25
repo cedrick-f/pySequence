@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from lib.analogclock.helpers import Dyer
 
 ##This file is part of pySequence
 #############################################################################
@@ -1262,7 +1263,6 @@ def DrawPeriodes(ctx, rect, pos = None, periodes = [[u"Année", 5]], projets = {
                 w -= dx
         else:
             w = x+wt - xc[0] - dx
-        
 
         ctx.rectangle (xc[0], y+ht/2+dx, w, h)
         rects.append((xc[0], y+ht/2+dx, w, h))
@@ -1307,6 +1307,176 @@ def getBitmapPeriode(larg, position, periodes, projets = {}, prop = 7):
     return imagesurface
 
 
+
+
+
+######################################################################################  
+def DrawClasse(ctx, rect, classe):
+    """ Dessine la répartition des élèves dans la classe
+         >> Renvoie la liste des rectangles des groupes
+    """
+#     print "DrawClasse"
+#     print classe.effectifs
+#     print classe.nbrGroupes
+    
+    ctx.set_line_width (0.001 * COEF)
+    
+    x, y, wt, ht = rect 
+    
+    ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+                                       cairo.FONT_WEIGHT_NORMAL)
+    
+    # Ecart entre les cases
+    dy = 0.01 * ht
+    dx = 0.05 * wt
+    d = 0.03 * ht
+    
+    # Espace pour écrire le texte sur les cotés
+    wtxt = wt*1/10
+    
+    # Taille de la police
+    f = wt/50
+    
+    # Epaisseur de ligne
+    e = wt/500
+    
+    wEff = {"C" : wt,
+             "G" : wt*6/7,
+             "D" : wt*5/7,
+             "E" : wt/classe.nbrGroupes['E']*6/7,
+             "P" : wt/classe.nbrGroupes['P']*6/7
+             }
+    
+    # Les rectangles à cliquer
+    rects = []
+    
+    def empiler(texte, x, y, w, h, nbr, coul):
+        W = w - (nbr-1)*dx
+        H = h - (nbr-1)*dy
+        for n in range(nbr-1, -1, -1):
+            X = x + n*dx
+            Y = y + n*dy
+            rectanglePlein(X, Y, W, H, coul)
+        show_text_rect_fix(ctx, texte, 
+                           X, Y, W, H,
+                           f)
+        
+            
+    def rectanglePlein(x, y, w, h, coul):
+        ctx.set_line_width(e)
+        ctx.rectangle(x, y, w, h)
+        ctx.set_source_rgb(*[c*2.0 for c in coul])
+        ctx.fill_preserve ()
+        ctx.set_source_rgb(*coul)      
+        ctx.stroke()
+    
+    # Classe entière
+    X = x + d
+    Y = y + d
+    W = wt - 2*d
+    H = ht - 2*d
+        
+    ctx.set_line_width(e)
+    coul = constantes.CouleursGroupes["C"]
+    rectanglePlein(X, Y, W, H, coul)
+    rects.append((X, Y, W, H))
+
+    show_text_rect_fix(ctx, classe.GetReferentiel().effectifs["C"][1], 
+                           X+W-wtxt , Y, wtxt, H,
+                           f, Nlignes = 2)
+    
+    
+        
+    # Effectif réduit
+    n = classe.nbrGroupes["G"]
+    X = X + d
+    Y = Y + d
+    W = W - wtxt - 2*d
+    H = H - 2*d
+    
+    wEff["G"] = W - (n-1) * dx
+    
+    ctx.set_line_width(e)
+    coul = constantes.CouleursGroupes["G"]
+    empiler("", X, Y, W, H, n, coul)
+    rects.append((X, Y, W, H))
+    
+    show_text_rect_fix(ctx, classe.GetReferentiel().effectifs["G"][1], 
+                           X+wEff["G"]-wtxt, Y, wtxt, H,
+                           f, Nlignes = 2)
+    
+    
+    # Nombre total de groupes à loger
+    N = 2+classe.nbrGroupes["E"]+classe.nbrGroupes["P"]
+    
+    # Hauteurs des cases
+    Hc = (H-(n-1)*d - 4*d - (N-3) * dy)/3
+    
+    # Demi groupe
+    X = X + d
+    Y = Y + d
+    W = wEff["G"] - wtxt - 2*d
+    h = Hc + dy
+    
+    
+    wEff["D"] = wEff["G"] /2 
+    
+    ctx.set_line_width(e)
+    coul = constantes.CouleursGroupes["D"]
+    empiler(classe.GetReferentiel().effectifs["D"][1],
+             X, Y, W, h, 2, coul)
+    rects.append((X, Y, W, h))
+    
+    
+    # Etudes et Projets
+    n = classe.nbrGroupes["E"]
+    dx = min(dx, (W - wt/ 7) / n)
+    Y = Y + h + d
+    h = Hc + (n-1)*dy
+    
+    ctx.set_line_width(e)
+    coul = constantes.CouleursGroupes["E"]
+    empiler(classe.GetReferentiel().effectifs["E"][1],
+             X, Y, W, h, n, coul)
+    rects.append((X, Y, W, h))
+    wEff["E"] = wEff["G"] / n
+    
+    
+    # Activités Pratiques
+    n = classe.nbrGroupes["P"]
+    dx = min(dx, (W - wt/ 7) / n)
+    Y = Y + h + d
+    h = Hc + (n-1)*dy
+    
+    ctx.set_line_width(e)
+    coul = constantes.CouleursGroupes["P"]
+    empiler(classe.GetReferentiel().effectifs["P"][1],
+             X, Y, W, h, n, coul)
+    rects.append((X, Y, W, h))
+    wEff["P"] = wEff["G"] / n
+    
+    
+    return wEff, rects
+
+
+
+
+
+
+def getBitmapClasse(larg, classe):
+
+    prop = 7.0
+    w, h = 0.04*prop * COEF, 0.04 * COEF
+#    print w, h
+    imagesurface = cairo.ImageSurface(cairo.FORMAT_ARGB32,  larg, int(h/w*larg))#cairo.FORMAT_ARGB32,cairo.FORMAT_RGB24
+    ctx = cairo.Context(imagesurface)
+    ctx.scale(larg/w, larg/w) 
+    DrawClasse(ctx, (0,0,w,h), classe)
+
+    return imagesurface
+
+
+##########################################################################################
 def get_apercu(doc, larg, prop = 0.7071, entete = False):
     """ Renvoi un apercu du document <doc>
         sous la forme d'une cairo.ImageSurface

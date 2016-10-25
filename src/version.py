@@ -134,7 +134,7 @@ def GetNewVersion(win):
             handler = urllib2.urlopen(req)
         except:
             print u"Pas d'accès à Internet"
-            return
+            return None, None
         
         dic = json.loads(handler.read())
         if type(dic) == list:
@@ -162,6 +162,9 @@ def GetNewVersion(win):
     #########################################################################################
     latest, id1 = getVerNumId(url1)
     last_ver, id2 = getVerNumId(url2)
+    
+    if latest == None:
+        return
     
     # Version actuelle
     a = __version__.split('.')

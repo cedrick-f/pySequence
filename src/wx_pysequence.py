@@ -5287,6 +5287,7 @@ class PanelPropriete_Classe(PanelPropriete):
         # Effectifs
         #
         self.ec = PanelEffectifsClasse(pageGen, classe)
+        
         pageGen.sizer.Add(self.ec, (0,3), (2,1), flag = wx.ALL|wx.EXPAND, border = 2)#|wx.ALIGN_RIGHT
 
         pageGen.sizer.AddGrowableRow(0)
@@ -5339,6 +5340,9 @@ class PanelPropriete_Classe(PanelPropriete):
             evt.Skip()
     
 
+    
+    
+    
     ###############################################################################################
     def commandeOuvrir(self, event = None, nomFichier = None):
         mesFormats = constantes.FORMAT_FICHIER_CLASSE['cla'] + constantes.TOUS_FICHIER
@@ -5938,6 +5942,10 @@ class PanelEffectifsClasse(wx.Panel):
 #        self.sizerEffRed_d.Add(bsizer, flag = wx.EXPAND|wx.LEFT|wx.RIGHT, border = 5)
         
         
+        # Illistration de la répartiion
+        self.bmp = wx.StaticBitmap(self, -1)
+        bsizerClasse.Add(self.bmp, flag = wx.EXPAND)
+        
         self.lstBoxEffRed = []
         self.lstBoxEP = []
         self.lstBoxAP = []
@@ -5950,6 +5958,12 @@ class PanelEffectifsClasse(wx.Panel):
         border.Add(bsizerClasse, 1, wx.EXPAND)
         self.SetSizer(border)
 
+    
+    #############################################################################            
+    def getBitmapClasse(self, larg):
+        imagesurface = draw_cairo.getBitmapClasse(larg, self.classe)
+
+        return getBitmapFromImageSurface(imagesurface)
     
     
     def EvtVariableEff(self, event):
@@ -6018,6 +6032,10 @@ class PanelEffectifsClasse(wx.Panel):
             self.boxEffRed.SetLabelText(strEffectifComplet(self.classe, 'G', -1))
         else:
             self.boxEffRed.SetLabel(strEffectifComplet(self.classe, 'G', -1))
+            
+        self.bmp.SetBitmap(self.getBitmapClasse(320))
+        
+        
 #        t = u"groupes de "
 #        self.BoxEP.SetLabelText(t+strEffectif(self.classe, 'E', -1))
 #        self.BoxAP.SetLabelText(t+strEffectif(self.classe, 'P', -1))

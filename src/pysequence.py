@@ -9107,7 +9107,7 @@ class Prof(Personne):
         self.codeBranche.SetLabel(u" "+constantes.CODE_DISCIPLINES[self.discipline]+u" ")
         self.codeBranche.SetToolTipString(constantes.NOM_DISCIPLINES[self.discipline])
         
-        
+        # Réglage de du mode d'affichage de la couleur de la discipline
         if sum(constantes.COUL_DISCIPLINES[self.discipline]) > 1.5:
             self.codeBranche.SetBackgroundColour(couleur.GetCouleurWx(constantes.COUL_DISCIPLINES[self.discipline]))
             self.codeBranche.SetForeroundColour(wx.BLACK)
