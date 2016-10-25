@@ -105,7 +105,7 @@ fontPro = 0.014 * COEF
 
 # Image du support
 posImg = [posSup[0] + tailleSup[0] + ecartX/4, posNom[1] + tailleNom[1] + ecartY]
-tailleImg = [posPro[0] - posSup[0] - tailleSup[0], None]
+tailleImg = [posPro[0] - posImg[0] - ecartX/4, None]
 tailleImg[1] = posEqu[1] + tailleEqu[1] - posSup[1]
 IcoulImg = (0.8, 0.8, 1, 0.85)
 BcoulImg = (0.1, 0.1, 0.25, 1)
@@ -410,7 +410,8 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False, entete = Fal
         image(ctx,
               posImg[0], posImg[1], tailleImg[0], tailleImg[1],
               bmp)
-        
+#         ctx.rectangle(posImg[0], posImg[1], tailleImg[0], tailleImg[1])
+#         ctx.stroke()
         
         
         

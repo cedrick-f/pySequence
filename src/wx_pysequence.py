@@ -5942,8 +5942,8 @@ class PanelEffectifsClasse(wx.Panel):
 #        self.sizerEffRed_d.Add(bsizer, flag = wx.EXPAND|wx.LEFT|wx.RIGHT, border = 5)
         
         
-        # Illistration de la répartiion
-        self.bmp = wx.StaticBitmap(self, -1)
+        # Illistration de la répartition
+        self.bmp = StaticBitmapZoom(self, -1, size = (320, 46))
         bsizerClasse.Add(self.bmp, flag = wx.EXPAND)
         
         self.lstBoxEffRed = []
@@ -6033,7 +6033,7 @@ class PanelEffectifsClasse(wx.Panel):
         else:
             self.boxEffRed.SetLabel(strEffectifComplet(self.classe, 'G', -1))
             
-        self.bmp.SetBitmap(self.getBitmapClasse(320))
+        self.bmp.SetLargeBitmap(self.getBitmapClasse(640))
         
         
 #        t = u"groupes de "
@@ -12705,7 +12705,9 @@ class PopupInfo(wx.PopupWindow):
         self.SetAutoLayout(True)
         
         # Un fichier temporaire pour mettre une image ...
-        self.tfname = tempfile.mktemp()
+        self.tfname = []
+        
+        
         #'<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">'+
         sizer.Add(self.html)
         
@@ -12760,12 +12762,13 @@ class PopupInfo(wx.PopupWindow):
         tag.string.replace_with(text)
         if fcoul != None or size != 0:     
             f = self.soup.new_tag("font")
-            if fcoul != None:
+            if fcoul != "black":
                 f["color"] = fcoul
             if size != 0:
                 f["size"] = size
 
             tag.string.wrap(f)
+        
         
         if bold:   
             tag.string.wrap(self.soup.new_tag("b"))
@@ -12815,12 +12818,13 @@ class PopupInfo(wx.PopupWindow):
     ##########################################################################################
     def AjouterImg(self, item, bmp, width = None):
         try:
-            bmp.SaveFile(self.tfname, wx.BITMAP_TYPE_PNG)
+            self.tfname.append(tempfile.mktemp())
+            bmp.SaveFile(self.tfname[-1], wx.BITMAP_TYPE_PNG)
         except:
             return
         img = self.soup.find(id = item)
 #        print "img", img
-        img['src'] = self.tfname
+        img['src'] = self.tfname[-1]
         
         if width is not None:
             img['width'] = str(width)
@@ -12962,8 +12966,9 @@ class PopupInfo(wx.PopupWindow):
                 
     ##########################################################################################
     def OnDestroy(self, evt):
-        if os.path.exists(self.tfname):
-            os.remove(self.tfname)
+        for f in self.tfname:
+            if os.path.exists(f):
+                os.remove(f)
 
 
     ##########################################################################################

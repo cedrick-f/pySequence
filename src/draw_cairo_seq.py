@@ -148,13 +148,13 @@ intituleSeances = []
 largeFlecheDuree = 0.02 * COEF
 posZSeances = (margeX+ecartX+largeFlecheDuree, posZOrganis[1]+0.08 * COEF)
 tailleZSeances = [None, None]
-wEff =  {"C" : None,
-         "G" : None,
-         "D" : None,
-         "E" : None,
-         "P" : None,
-         "I" : None
-         }
+# wEff =  {"C" : None,
+#          "G" : None,
+#          "D" : None,
+#          "E" : None,
+#          "P" : None,
+#          "I" : None
+#          }
 #hHoraire = None
 ecartSeanceY = None
 BCoulSeance = {"ED" : (0.3,0.5,0.5), 
@@ -794,7 +794,7 @@ def Draw(ctx, seq, mouchard = False, entete = False):
             show_text_rect(ctx, u"Démarche",
                            (posZDemarche[0], posZDemarche[1],
                             tailleZDemarche[0], posZSeances[1] - posZSysteme[1]), \
-                   va = 'b', ha = 'g', le = 0.8, pe = 1.0, \
+                   va = 'h', ha = 'g', le = 0.8, pe = 1.0, \
                    b = 0.3, orient = 'v', \
                    fontsizeMinMax = (-1, -1), fontsizePref = -1, wrap = True, couper = False, 
                    coulBord = None, tracer = True, ext = "...")

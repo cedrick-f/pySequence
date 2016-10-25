@@ -1613,11 +1613,15 @@ def image(ctx, x, y, w, h, bmp, marge = 0):
     W = image.get_width()
     H = image.get_height()
     s = min(w/W, h/H)
+    
+    dx = max(0,(w-s*W)/2)
+    dy = max(0,(h-s*H)/2)
+    
     ctx.save()
     ctx.translate(x, y)
     ctx.scale(s, s)
-    ctx.set_source_surface(image, 0, 0)
-    ctx.paint ()
+    ctx.set_source_surface(image, dx, dy)
+    ctx.paint()
     ctx.restore()
 
     

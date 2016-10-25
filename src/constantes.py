@@ -771,16 +771,22 @@ BASE_FICHE_HTML_SEANCE = u"""
 <font size="12" color="green"><b><h1 id = "titre" style="text-align: center;">Séance</h1></b></font>
     <table border="0" width="400">
         <tbody>
-        <tr align="right" valign="top">
-            <td><p id="txt"> </p></td>
-            <td width = "20"><img id="icon" src="" alt=" "></td>
+        <tr>
+            <td width = "20" rowspan="2" valign="top"><img id="icon" src="" alt=" "></td>
+            <td valign="top"><p id="txt"> </p></td>
+            <td width = "64" rowspan="2" valign="bottom"><img id="icon2" src="" alt=" "></td>
         </tr>
+        
+        <tr>
+            <td align="right" valign="bottom"><p id="txt2"> </p></td>
+        </tr>
+        
         <tr align="left" valign="top">
-            <td colspan=2><p id="int"> </p></td>
+            <td colspan=3><p id="int"> </p></td>
         </tr>
         
         <tr id = "ldes" align="left" valign="top" bgcolor="#f0f0f0">
-            <td colspan=2>
+            <td colspan=3>
                 <b>Description détaillée de la séance</b>
                 <span id="des"> </span>
             </td>
@@ -903,16 +909,19 @@ BASE_FICHE_HTML_TACHE = u"""
 <font size="12" color="green"><b><h1 id = "titre" style="text-align: center;">_</h1></b></font>
     <table border="0" width="400">
         <tbody>
-        <tr align="right" valign="top">
-            <td><p id="txt"> </p></td>
-            <td width = "20"><img id="icon" src="" alt=" "></td>
+        
+        <tr>
+            <td width = "20" valign="top"><img id="icon" src="" alt=" "></td>
+            <td valign="top"><p id="txt"> </p></td>
+            <td width = "64" valign="top"><img id="icon2" src="" alt=" "></td>
         </tr>
+
         <tr align="left" valign="top">
             <td colspan=2><p id="int"> </p></td>
         </tr>
         
         <tr id = "ldes" align="left" valign="top" bgcolor="#f0f0f0">
-            <td colspan=2>
+            <td colspan=3>
                 <b>Description détaillée de la tâche</b>
                 <span id="des"> </span>
             </td>

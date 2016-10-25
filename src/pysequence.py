@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from draw_cairo_seq import BCoulSeance
 
 
 ##This file is part of pySequence
@@ -6738,20 +6739,31 @@ class Seance(ElementDeSequence, Objet_sequence):
     ######################################################################################  
     def SetTip(self):
         self.tip.SetHTML(self.GetFicheHTML())
-        
+        ref = self.GetReferentiel()
         titre = u"Séance "+ self.code
         self.tip.SetWholeText("titre", titre)
         
-        self.tip.AjouterImg("icon", constantes.imagesSeance[self.typeSeance].GetBitmap())
-        
+        # Type de séance
         if self.typeSeance != "":
-            t = u"Type : "+ self.GetReferentiel().seances[self.typeSeance][1]
+            self.tip.AjouterImg("icon", constantes.imagesSeance[self.typeSeance].GetBitmap())
+            self.tip.SetWholeText("txt", ref.seances[self.typeSeance][1], 
+                                  bold = True, size = 3,
+                                  fcoul = couleur.GetCouleurHTML(BCoulSeance[self.typeSeance]))
+        
         else:
-            t = u""
+            self.tip.Supprime('icon')
         
-        self.tip.SetWholeText("txt", t, italic = True, size = 3)
         
-        self.tip.SetWholeText("int", self.intitule)
+        
+        # Démarche
+        if len(ref.listeDemarches) > 0:
+            self.tip.AjouterImg("icon2", constantes.imagesDemarches[self.demarche].GetBitmap(), width = 64)
+            self.tip.SetWholeText("txt2", ref.demarches[self.demarche][1], italic = True, size = 3)
+        else:
+            self.tip.Supprime('icon2')
+        
+        # Intitulé
+        self.tip.SetWholeText("int", self.intitule, size = 5)
         
         if hasattr(self, 'description'):
             self.tip.AjouterHTML("des", XMLtoHTML(self.description))    
@@ -7586,13 +7598,21 @@ class Tache(Objet_sequence):
             texte = t
 
         self.tip.SetWholeText("titre", titre)
+        
+        # Phase
         if self.phase != "":
-            
             self.tip.AjouterImg("icon", constantes.imagesTaches[self.phase].GetBitmap())
+            
         else:
             self.tip.Supprime('icon')
         self.tip.SetWholeText("txt", texte, italic = True, size = 3)
         
+        # Icône
+        if self.icone is not None:
+            self.tip.AjouterImg("icon2", self.icone, width = 64)
+        else:
+            self.tip.Supprime('icon2')
+            
         if not self.phase in TOUTES_REVUES_EVAL_SOUT:
             if self.intitule != "":
                 if self.estPredeterminee():
