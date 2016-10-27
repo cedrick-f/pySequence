@@ -48,7 +48,9 @@ import os, sys
 if sys.platform == "win32" :
     # Pour lire les classeurs Excel
     import recup_excel
-    
+
+
+
 import version
 import textwrap
 import grilles
@@ -60,6 +62,8 @@ import images
 # Graphiques vectoriels
 import draw_cairo_seq, draw_cairo_prj, draw_cairo_prg, draw_cairo
 
+
+
 # Pour passer des arguments aux callback
 import functools
 
@@ -70,6 +74,8 @@ import pyperclip
 import subprocess
 
 from operator import attrgetter
+
+
 
 from undo import UndoStack
 
@@ -97,6 +103,7 @@ from widgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_ENTI
                     
 from Referentiel import REFERENTIELS, ARBRE_REF, ACTIVITES
 import Referentiel
+
 
 
 from richtext import XMLtoHTML
@@ -2945,7 +2952,13 @@ class Projet(BaseDoc, Objet_sequence):
         
         if param is None:   # le Projet lui-même
             self.tip.SetHTML(constantes.BASE_FICHE_HTML_PROJET)
-            self.tip.SetWholeText("int", self.intitule)
+            self.tip.SetWholeText("int", self.intitule, size = 4)
+            self.tip.SetWholeText("ori", self.origine)
+            self.tip.SetWholeText("con", self.contraintes)
+            self.tip.SetWholeText("pro", self.production)
+            self.tip.SetWholeText("dec", self.intituleParties)
+            self.tip.SetWholeText("par", self.besoinParties)
+            
         
         else:               # Un autre élément du Projet
 #            print "  *** ", param

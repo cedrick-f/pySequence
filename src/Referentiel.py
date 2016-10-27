@@ -2543,6 +2543,7 @@ def chargerReferentiels():
     
 chargerReferentiels()
 
+
 def sauvegarderOriginaux():
     global SAUVEGARDE
     SAUVEGARDE = True

@@ -185,6 +185,7 @@ import webbrowser
 # Chargement des images
 import images
 
+
 #####################################################################################
 #   Tout ce qui concerne le GUI
 #####################################################################################
@@ -271,6 +272,7 @@ from rapport import FrameRapport, RapportRTF
 from math import sin, cos, pi
 
 from Referentiel import REFERENTIELS, ARBRE_REF, ACTIVITES
+
 import Referentiel
 
 # Gestion des messages d'erreur
@@ -12758,6 +12760,7 @@ class PopupInfo(wx.PopupWindow):
 #        print "SetWholeText", text
         if text is None:
             return
+        text = text.replace("\n", "<br/>")
         tag = self.soup.find(id=Id)
         tag.string.replace_with(text)
         if fcoul != None or size != 0:     

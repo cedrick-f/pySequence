@@ -36,12 +36,19 @@ Copyright (C) 2011-2015
 @author: Cedrick FAURY
 
 """
+
 import traceback
+
 import sys
+
 from widgets import messageErreur
+
 import wx
+
 import version
+
 import time
+
 
 def MyExceptionHook(etype, value, trace):
     """

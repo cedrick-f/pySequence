@@ -100,22 +100,44 @@ def getTableau(parent, nomFichier):
         print "Erreur", err
 
 
-
+import threading
+import pythoncom
 
 def getExentionExcel():
-    xlApp = win32com.client.DispatchEx('Excel.Application')
+    global EXT_EXCEL
+    pythoncom.CoInitialize()
+    xlApp = win32com.client.Dispatch('Excel.Application')
+    print xlApp,
+    
     if xlApp.Version < 12:
-        ext = ".xls"
+        EXT_EXCEL = ".xls"
     else:
-        ext = ".xlsx"
+        EXT_EXCEL = ".xlsx"
+    
     del xlApp
-    return ext
 
+    print EXT_EXCEL
+
+
+#  
+# def delApp(app):
+#     pythoncom.CoInitialize() 
+#     print app
+#     del app
+#     print "del"
+#     print app
+
+
+EXT_EXCEL = None
 try:
-    EXT_EXCEL = getExentionExcel()
+#     EXT_EXCEL = getExentionExcel()
+    a = threading.Thread(None, getExentionExcel, None)
+    a.start()
+    
 except:
     EXT_EXCEL = None # ya pas Excel !
-print "Extension Excel :", EXT_EXCEL
+
+# print "Extension Excel :", EXT_EXCEL
 
 
 def getTableaux(parent, doc):
@@ -295,6 +317,7 @@ def modifierGrille(doc, tableaux, eleve):
 
 ###############################################################################################################################
 import shutil
+
 def copierClasseurs(doc, nomFichiers):
 #    typ = doc.GetTypeEnseignement()
 #    ref = doc.GetReferentiel()

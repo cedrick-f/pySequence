@@ -897,9 +897,47 @@ BASE_FICHE_HTML_PROB = u"""
 BASE_FICHE_HTML_PROJET = u"""
 <HTML>
 <font size="12" color="darkred"><b><h1 id = "titre" style="text-align: center;">Projet</h1></b></font>
-
-    <p id="int">_</p>
-
+    <table border="0" width="400">
+        <tbody>
+        
+        <tr align="center" valign="top">
+            <td colspan=2><p id="int"> </p></td>
+        </tr>
+        
+        <tr id = "ldes" align="left" valign="top" bgcolor="#f0f0f0">
+            <td colspan=2>
+                <b>Origine</b>
+                <p id="ori"> </p>
+            </td>
+        </tr>
+        
+        <tr id = "ldes" align="left" valign="top" bgcolor="#c0f0f0">
+            <td colspan=2>
+                <b>Contraintes imposées</b>
+                <p id="con"> </p>
+            </td>
+        </tr>
+        
+        <tr id = "ldes" align="left" valign="top" bgcolor="#f0c0f0">
+            <td colspan=2>
+                <b>Production finale attendue</b>
+                <p id="pro"> </p>
+            </td>
+        </tr>
+        
+        <tr id = "ldes" align="left" valign="top" bgcolor="#f0f0c0">
+            <td>
+                <b>Parties</b>
+                <p id="par"> </p>
+            </td>
+            <td>
+                <b>Enoncé du besoin</b>
+                <p id="dec"> </p>
+            </td>
+        </tr>
+        
+        </tbody>
+    </table>
 </HTML>
 """
 

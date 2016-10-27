@@ -115,7 +115,7 @@ def GetAppnameVersion():
 
 ###############################################################################################
 def GetNewVersion(win):
-    print "Recherche nouvelle version (hormis beta)..."
+    print "Recherche nouvelle version ..."
     
     # getsion des proxies
     proxy_handler = urllib2.ProxyHandler()

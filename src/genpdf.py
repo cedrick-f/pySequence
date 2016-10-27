@@ -41,7 +41,6 @@ from reportlab.lib.enums import TA_CENTER,TA_LEFT
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
 
-    
 
 # workaround
 from reportlab.pdfbase import _fontdata_widths_courier
@@ -70,6 +69,7 @@ from reportlab.pdfbase import _fontdata_enc_macexpert
 
 from widgets import messageErreur
 import time
+
 
 #
 # Elements HTML
@@ -141,6 +141,8 @@ def table_taches(taches, eleves, projet):
 #
 #######################################################################################################################
 import logging
+
+
 class PisaNullHandler(logging.Handler):
     def emit(self, record):
         pass
@@ -162,6 +164,8 @@ logging.getLogger("xhtml2pdf").addHandler(PisaNullHandler())
 import sys
 
 from xhtml2pdf import pisa
+
+
 #if sys.platform == "win32" :
 #    from xhtml2pdf import pisa
 #else:
@@ -425,7 +429,9 @@ def genererFicheValidation(nomFichier, projet):
 #genererFicheValidation(u"Intitulé du projet")
     
 from Referentiel import DOSSIER_REF
+
 import constantes
+
 def genererDossierValidation(nomFichier, projet, fenDoc):
     dosstemp = tempfile.mkdtemp()
     fichertempV = os.path.join(dosstemp, "pdfvalid.pdf")
@@ -466,6 +472,7 @@ def genererDossierValidation(nomFichier, projet, fenDoc):
 
 
 import grilles
+
 def genererGrillePDF(nomFichier, grilles_feuilles):
 #    print "genererGrillePDF" 
 #    print grilles_feuilles
@@ -530,6 +537,7 @@ def genererGrillePDF(nomFichier, grilles_feuilles):
 
 import wx
 
+
 # Détermination du lecteur de PDF à utiliser
 ADOBE_VERSION = None
 if  wx.PlatformInfo[1] == 'wxMSW':
@@ -573,6 +581,7 @@ else:
 
 
 
+
 #if wx.Platform == '__WXMSW__':
 #    from wx.lib.pdfwin import PDFWindow, get_min_adobe_version
 #elif wx.Platform == '__WXMAC__':
@@ -582,6 +591,7 @@ else:
 import tempfile
 import shutil
 from PyPDF2 import PdfFileMerger
+
 
 
 def getPDFViewer():
