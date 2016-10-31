@@ -1748,6 +1748,9 @@
     <l_HC S_00="Hors classe" S_01="Temps hors classe" />
     <l_ST S_00="Stage" S_01="Stage" />
   </d_horsClasse>
+  <d_labels>
+    <l_SEQINT S_00="Intitulé de la Séquence" S_01="Intitulé de la Séquence pédagogique" />
+  </d_labels>
   <l_listCompetences S_00="S" />
   <l_listProblematiques />
   <l_listSavoirs S_00="S" S_01="M" S_02="P" />

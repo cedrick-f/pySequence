@@ -557,6 +557,7 @@ class Referentiel(XMLelem):
         #
         #
         self.domaines = False
+        self.labels = {}
         
         #
         # Centre d'intérêt
@@ -882,6 +883,13 @@ class Referentiel(XMLelem):
             elif self.Famille == "CLG":
                 self.AnneeDebut = "Sec1"
             print "Correction AnneeDebut:", self.AnneeDebut
+        
+        
+        for k, v in REFERENTIELS[self.Code].labels.items():  # à partir de 7.0-beta12
+            if not k in self.labels.keys():
+                self.labels[k] = v
+        
+        
         return
         
     
@@ -1117,17 +1125,25 @@ class Referentiel(XMLelem):
         #
         # Bulletins Officiels
         #
+        Pligne = 30 # Numéro de ligne du titre "BO"
+      
 #        print self.Code, sh_g.nrows
-        self.BO_dossier = [sh_g.cell(l,0).value for l in range(31, sh_g.nrows) if sh_g.cell(l,0).value != u""]
-        self.BO_URL = [[sh_g.cell(l,1).value, sh_g.cell(l,2).value] for l in range(32, sh_g.nrows) if sh_g.cell(l,1).value != u""]
-        
-#        self.BO_URL = sh_g.cell(29,1).value
-#        
-#        if sh_g.nrows > 28:
-#            self.BO_dossier = [sh_g.cell(ll,0).value for l in [29, 30, 31]]
-#            self.BO_URL = sh_g.cell(29,1).value
-        
-        
+        self.BO_dossier = [sh_g.cell(l,0).value for l in range(Pligne+1, sh_g.nrows) if sh_g.cell(l,0).value != u""]
+        self.BO_URL = [[sh_g.cell(l,1).value, sh_g.cell(l,2).value] for l in range(Pligne+2, sh_g.nrows) if sh_g.cell(l,1).value != u""]
+
+
+
+        #
+        # Labels divers
+        #
+        if u"Labels" in wb.sheet_names():
+            sh_lb = wb.sheet_by_name(u"Labels")
+            for l in range(2, sh_lb.nrows):
+                if sh_lb.cell(l,0).value != u"":
+                    self.labels[str(sh_lb.cell(l,0).value)] = [sh_lb.cell(l,1).value, sh_lb.cell(l,2).value]
+
+
+            
         #
         # CI
         #

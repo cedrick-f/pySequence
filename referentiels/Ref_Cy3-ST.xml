@@ -214,6 +214,9 @@
     <l_TD S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" />
   </d_effectifsSeance>
   <d_horsClasse />
+  <d_labels>
+    <l_SEQINT S_00="Intitulé de la Séquence" S_01="Intitulé de la Séquence pédagogique" />
+  </d_labels>
   <l_listCompetences S_00="S" S_01="C" />
   <l_listProblematiques>
     <l_00 S_00="Comment aménager une salle de spectacle accueillant tout public et en toute sécurité ?" S_01="Comment aménager un terrain de camping avec des mobilhomes ?" S_02="Comment aménager un stade ?" S_03="Comment aménager un espace urbain ?" S_04="Comment raccorder une route secondaire à une voie rapide ?" S_05="Comment intégrer un ouvrage bruyant en milieu urbain ?" />

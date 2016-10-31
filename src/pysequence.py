@@ -1009,19 +1009,19 @@ class Classe(Objet_sequence):
                     ChargerRefOriginal()
                     RecupCI()
                 else:
-                    try:
-                        self.referentiel.initParam()
-                        errr = self.referentiel.setBranche(brancheRef)[1]
-    #                        print "errr", errr
-                        self.referentiel.corrigerVersion(errr)
-                        self.referentiel.postTraiter()
-                        self.referentiel.completer(forcer = True)
+#                     try:
+                    self.referentiel.initParam()
+                    errr = self.referentiel.setBranche(brancheRef)[1]
+#                        print "errr", errr
+                    self.referentiel.corrigerVersion(errr)
+                    self.referentiel.postTraiter()
+                    self.referentiel.completer(forcer = True)
 
-                    except:
-                        self.referentiel.initParam()
-                        self.referentiel.setBrancheV5(brancheRef)
-                        ChargerRefOriginal()
-                        RecupCI()
+#                     except:
+#                         self.referentiel.initParam()
+#                         self.referentiel.setBrancheV5(brancheRef)
+#                         ChargerRefOriginal()
+#                         RecupCI()
 
 
 
@@ -1446,7 +1446,7 @@ class BaseDoc():
     
 ####################################################################################################          
 class Sequence(BaseDoc, Objet_sequence):
-    def __init__(self, app, classe = None, intitule = u"Intitulé de la séquence pédagogique",
+    def __init__(self, app, classe = None, intitule = u"",
                  ouverture = False):
         BaseDoc.__init__(self, app, classe, intitule)
         Objet_sequence.__init__(self)
@@ -8338,7 +8338,7 @@ class Personne(Objet_sequence):
         if hasattr(self, 'arbre'):
             self.arbre.SetItemText(self.branche, t)
          
-        self.SetTip()
+#         self.SetTip()
         
     
     ######################################################################################  
@@ -8962,7 +8962,7 @@ class Eleve(Personne, Objet_sequence):
         if hasattr(self, 'arbre'):
             self.arbre.SetItemText(self.branche, t)
             
-        self.SetTip()
+#         self.SetTip()
 
 
     ######################################################################################  

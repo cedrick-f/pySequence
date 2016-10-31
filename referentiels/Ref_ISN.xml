@@ -356,6 +356,9 @@
     <l_TD S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" />
   </d_effectifsSeance>
   <d_horsClasse />
+  <d_labels>
+    <l_SEQINT S_00="Intitulé de la Séquence" S_01="Intitulé de la Séquence pédagogique" />
+  </d_labels>
   <l_listCompetences S_00="S" />
   <l_listProblematiques />
   <l_listSavoirs S_00="S" />

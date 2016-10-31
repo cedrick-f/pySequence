@@ -106,26 +106,22 @@ import pythoncom
 def getExentionExcel():
     global EXT_EXCEL
     pythoncom.CoInitialize()
-    xlApp = win32com.client.Dispatch('Excel.Application')
-    print xlApp,
+    try:
+        xlApp = win32com.client.Dispatch('Excel.Application')
+        print xlApp,
+    except :
+        print "pas Excel"
+        return
     
     if xlApp.Version < 12:
         EXT_EXCEL = ".xls"
     else:
         EXT_EXCEL = ".xlsx"
     
-    del xlApp
+    
+    del xlApp       # Parfois très lent, d'où le thread ...
 
     print EXT_EXCEL
-
-
-#  
-# def delApp(app):
-#     pythoncom.CoInitialize() 
-#     print app
-#     del app
-#     print "del"
-#     print app
 
 
 EXT_EXCEL = None
@@ -137,7 +133,6 @@ try:
 except:
     EXT_EXCEL = None # ya pas Excel !
 
-# print "Extension Excel :", EXT_EXCEL
 
 
 def getTableaux(parent, doc):

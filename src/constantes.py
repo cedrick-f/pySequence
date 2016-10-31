@@ -911,21 +911,21 @@ BASE_FICHE_HTML_PROJET = u"""
             </td>
         </tr>
         
-        <tr id = "ldes" align="left" valign="top" bgcolor="#c0f0f0">
+        <tr id = "ldes" align="left" valign="top" bgcolor="#e0f0f0">
             <td colspan=2>
                 <b>Contraintes imposées</b>
                 <p id="con"> </p>
             </td>
         </tr>
         
-        <tr id = "ldes" align="left" valign="top" bgcolor="#f0c0f0">
+        <tr id = "ldes" align="left" valign="top" bgcolor="#f0e0f0">
             <td colspan=2>
                 <b>Production finale attendue</b>
                 <p id="pro"> </p>
             </td>
         </tr>
         
-        <tr id = "ldes" align="left" valign="top" bgcolor="#f0f0c0">
+        <tr id = "ldes" align="left" valign="top" bgcolor="#f0f0e0">
             <td>
                 <b>Parties</b>
                 <p id="par"> </p>
@@ -944,7 +944,7 @@ BASE_FICHE_HTML_PROJET = u"""
 
 BASE_FICHE_HTML_TACHE = u"""
 <HTML>
-<font size="12" color="green"><b><h1 id = "titre" style="text-align: center;">_</h1></b></font>
+<font size="12" color="green"><b><h1 id = "titre" style="text-align: center;"> </h1></b></font>
     <table border="0" width="400">
         <tbody>
         

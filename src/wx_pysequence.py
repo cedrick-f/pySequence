@@ -2616,7 +2616,7 @@ class FenetreProjet(FenetreDocument):
         
         ################################################################################################
         if "beta" in version.__version__:
-#            print "beta"
+            print "beta"
             root, message, count, Ok, Annuler = ouvre(fichier, message)
             err = []
         else:
@@ -2670,11 +2670,16 @@ class FenetreProjet(FenetreDocument):
 #                except:
 #                    Ok = False
 #                    message += constantes.Erreur(constantes.ERR_INCONNUE).getMessage() + u"\n"
-        try:
+        
+        if "beta" in version.__version__:
             message, count = self.finaliserOuverture()
-        except:
-            annuleTout(message)
-            return
+        else:
+            
+            try:
+                message, count = self.finaliserOuverture()
+            except:
+                annuleTout(message)
+                return
             
 
 #        self.projet.Verrouiller()
@@ -4034,10 +4039,12 @@ class PanelPropriete_Sequence(PanelPropriete):
         PanelPropriete.__init__(self, parent)
         self.sequence = sequence
         
-        titre = myStaticBox(self, -1, u"Intitulé de la Séquence")
+        ref = self.sequence.GetReferentiel()
+        
+        titre = myStaticBox(self, -1, ref.labels["SEQINT"][0])
         sb = wx.StaticBoxSizer(titre)
         textctrl = TextCtrl_Help(self, u"")
-        textctrl.SetTitre(u"Intitulé de la Séquence", sequence.getIcone())
+        textctrl.SetTitre(ref.labels["SEQINT"][1], sequence.getIcone())
         textctrl.SetToolTipString(u"")
                     
         sb.Add(textctrl, 1, flag = wx.EXPAND)
@@ -7424,6 +7431,8 @@ class PanelPropriete_Seance(PanelPropriete):
         PanelPropriete.__init__(self, parent)
         self.seance = seance
 
+        
+        
         #
         # Type de séance
         #
@@ -7444,6 +7453,7 @@ class PanelPropriete_Seance(PanelPropriete):
         #
         # Intitulé de la séance
         #
+       
         box = myStaticBox(self, -1, u"Intitulé de la Séance")
         bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
 #         textctrl = wx.TextCtrl(self, -1, u"", style=wx.TE_MULTILINE)
@@ -12760,27 +12770,32 @@ class PopupInfo(wx.PopupWindow):
 #        print "SetWholeText", text
         if text is None:
             return
-        text = text.replace("\n", "<br/>")
+        
+#         text = text.replace("\n", "<br/>")
         tag = self.soup.find(id=Id)
-        tag.string.replace_with(text)
-        if fcoul != None or size != 0:     
+        
+        li = text.split("\n")
+        for i, t in enumerate(li):
             f = self.soup.new_tag("font")
+            f.string = t
+            
             if fcoul != "black":
                 f["color"] = fcoul
+                
             if size != 0:
                 f["size"] = size
-
-            tag.string.wrap(f)
-        
-        
-        if bold:   
-            tag.string.wrap(self.soup.new_tag("b"))
-
-        if italic:     
-            tag.string.wrap(self.soup.new_tag("i"))
-
+                
+            if bold:   
+                f.string.wrap(self.soup.new_tag("b"))
+    
+            if italic:     
+                f.string.wrap(self.soup.new_tag("i"))
             
-#        print tag
+            tag.append(f)
+            if i < len(li) -1:
+                br = self.soup.new_tag('br')
+                tag.append(br)
+
 
     
     ##########################################################################################
@@ -12990,6 +13005,7 @@ class PopupInfo(wx.PopupWindow):
 #        self.Fit()
 
         if self.mode == "H":
+#             print self.soup.prettify()
             self.html.SetPage(self.soup.prettify())
             ir = self.html.GetInternalRepresentation()
     
