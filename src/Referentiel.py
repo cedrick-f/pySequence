@@ -554,9 +554,11 @@ class Referentiel(XMLelem):
         self.parties = {}
         
         #
+        # Domaines
         #
-        #
-        self.domaines = False
+        self.domaines = {}
+        self.listeDomaines = []
+        
         self.labels = {}
         
         #
@@ -1057,10 +1059,29 @@ class Referentiel(XMLelem):
                 ddic.update(v0[1])
             return ddic
         
+        
+        ###########################################################
+        def getbgcoul(wb, sh, l, c):
+            xfx = sh.cell_xf_index(l, c)
+            xf = wb.xf_list[xfx]
+            bgx = xf.background.pattern_colour_index
+            color_map = wb.colour_map[bgx]
+#             if color_map and (color_map[0] != 255 or color_map[1] != 255 or color_map[2] != 255):
+#                 print "coul", bgx
+#                 print "coul", color_map
+#             else:
+                
+#             print "coul", bgx
+#             print "map", color_map
+            if color_map is None:
+                return (0,0,0)
+            else:
+                return color_map
+        
         #
         # Ouverture fichier EXCEL
         #
-        wb = open_workbook(nomFichier)
+        wb = open_workbook(nomFichier, formatting_info = True)
 #        sh = wb.sheets()
         
         #
@@ -1082,11 +1103,6 @@ class Referentiel(XMLelem):
                 self.periodes.append([sh_g.cell(l,2).value, int(sh_g.cell(l,3).value)])
             
         self.FichierLogo = sh_g.cell(19,1).value
-        
-        #
-        #
-        #
-        self.domaines = sh_g.cell(17,3).value[0].upper() == "O"
         
         
         #
@@ -1279,6 +1295,22 @@ class Referentiel(XMLelem):
 
 
         #
+        # Domaines  ########################################################################################
+        #
+        sh_g = wb.sheet_by_name(u"Domaines")
+        
+        for l in range(2, sh_g.nrows):
+            code = str(sh_g.cell(l,0).value)
+            if code == "":
+                l += 3
+                break
+            if sh_g.cell(l,1).value != u"":
+                self.domaines[code] = [sh_g.cell(l,1).value, sh_g.cell(l,2).value, 
+                                        sh_g.cell(l,3).value, getbgcoul(wb, sh_g, l, 4)]
+                self.listeDomaines.append(code)
+                
+                
+        #
         # Séances  ########################################################################################
         #
         sh_g = wb.sheet_by_name(u"Séance")
@@ -1291,7 +1323,7 @@ class Referentiel(XMLelem):
                 break
             if sh_g.cell(l,1).value != u"":
                 self.demarches[code] = [sh_g.cell(l,1).value, sh_g.cell(l,2).value, 
-                                        sh_g.cell(l,3).value, sh_g.cell(l,4).value]
+                                        sh_g.cell(l,3).value, getbgcoul(wb, sh_g, l, 4)]
                 self.listeDemarches.append(code)
 
 
@@ -1303,7 +1335,7 @@ class Referentiel(XMLelem):
                 break
             if sh_g.cell(l,1).value != u"":
                 self.activites[code] = [sh_g.cell(l,1).value, sh_g.cell(l,2).value,
-                                        sh_g.cell(l,3).value, sh_g.cell(l,4).value]
+                                        sh_g.cell(l,3).value, getbgcoul(wb, sh_g, l, 4)]
                 self.listeTypeActivite.append(code)
                 self.demarcheSeance[code] = sh_g.cell(l,6).value.split()
                 self.effectifsSeance[code] = sh_g.cell(l,5).value.split()
@@ -1318,7 +1350,7 @@ class Referentiel(XMLelem):
                 break
             if sh_g.cell(l,1).value != u"":
                 self.horsClasse[code] = [sh_g.cell(l,1).value, sh_g.cell(l,2).value,
-                                         sh_g.cell(l,3).value, sh_g.cell(l,4).value]
+                                         sh_g.cell(l,3).value, getbgcoul(wb, sh_g, l, 4)]
                 self.listeTypeHorsClasse.append(code)
         self.seances.update(self.horsClasse)
                 
@@ -1331,7 +1363,7 @@ class Referentiel(XMLelem):
                 break
             if sh_g.cell(l,1).value != u"":
                 self.seances[code] = [sh_g.cell(l,1).value, sh_g.cell(l,2).value,
-                                      sh_g.cell(l,3).value, sh_g.cell(l,4).value]
+                                      sh_g.cell(l,3).value, getbgcoul(wb, sh_g, l, 4)]
                 self.listeTypeSeance.append(code)
                 self.effectifsSeance[code] = sh_g.cell(l,5).value.split()
                 
@@ -1343,7 +1375,7 @@ class Referentiel(XMLelem):
                 break
             if sh_g.cell(l,0).value != u"":
                 self.effectifs[code] = [sh_g.cell(l,1).value, sh_g.cell(l,2).value,
-                                        sh_g.cell(l,3).value, sh_g.cell(l,4).value]
+                                        sh_g.cell(l,3).value, getbgcoul(wb, sh_g, l, 4)]
                 self.listeEffectifs.append(code)
 
 

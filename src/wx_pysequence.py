@@ -231,7 +231,7 @@ from constantes import calculerEffectifs, \
                         _S, _Rev, _R1, _R2, _R3, \
                         revCalculerEffectifs, getSingulierPluriel,\
                         COUL_OK, COUL_NON, COUL_BOF, COUL_BIEN, \
-                        toList, COUL_COMPETENCES
+                        toList, COUL_COMPETENCES, bmp
 import constantes
 
 import couleur
@@ -253,7 +253,7 @@ except ImportError:
 from widgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_ENTIER_POS, \
                     messageErreur, getNomFichier, pourCent2, testRel, \
                     rallonge, remplaceCode2LF, dansRectangle, isstring, \
-                    StaticBoxButton, TextCtrl_Help, CloseFenHelp, \
+                    StaticBoxButton, TextCtrl_Help, CloseFenHelp, ImageButtonTransparent, \
                     remplaceLF2Code, messageInfo, messageYesNo, rognerImage, PlaceholderTextCtrl#, chronometrer
 
 import Options
@@ -4087,7 +4087,7 @@ class PanelPropriete_Sequence(PanelPropriete):
         self.sizer.AddGrowableRow(0)
         self.sizer.AddGrowableCol(2)
         
-        
+        self.cbD = {}
         self.CreerCBDomaine() # Permet de créer les Checkbox "Domaine"
         
         self.MiseAJour()
@@ -4124,9 +4124,11 @@ class PanelPropriete_Sequence(PanelPropriete):
 
     #############################################################################            
     def EvtCheckBox(self, event):
+        
 #         cb = event.GetEventObject()
-        self.sequence.domaine = "".join([t for cb, t in [(self.cbM, "M"), (self.cbE, "E"), (self.cbI, "I")] if cb.IsChecked()])
-
+        self.sequence.domaine = "".join([t for t, cb in self.cbD.items() if cb.IsChecked()])
+        self.sequence.classe.Verrouiller(len(self.sequence.domaine) > 0)
+        
         self.sendEvent(modif = u"Modification du domaine de la Séquence")
         
             
@@ -4161,9 +4163,8 @@ class PanelPropriete_Sequence(PanelPropriete):
         self.position.SetValue(self.sequence.position)
         self.bmp.SetBitmap(self.sequence.getBitmapPeriode(250))
         
-        if ref.domaines:
-            for cb, t in [(self.cbM, "M"), (self.cbE, "E"), (self.cbI, "I")]:
-                cb.SetValue(t in self.sequence.domaine)
+        for t, cb in self.cbD.items():
+            cb.SetValue(t in self.sequence.domaine)
 
         self.Layout()
         
@@ -4173,26 +4174,48 @@ class PanelPropriete_Sequence(PanelPropriete):
 
     #############################################################################            
     def CreerCBDomaine(self):
-#        print "MiseAJourTypeEnseignement"
-        if self.sequence.GetReferentiel().domaines:
-#            print self.sizer.FindItemAtPosition((1,0))
-            if self.sizer.FindItemAtPosition((0,1)) is None:
-                titre = myStaticBox(self, -1, u"Domaines")
-                self.sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
-                self.cbM = wx.CheckBox(self, -1, u"Matériaux et Structures")
-                self.cbE = wx.CheckBox(self, -1, u"Energie")
-                self.cbI = wx.CheckBox(self, -1, u"Information")
-                self.Bind(wx.EVT_CHECKBOX, self.EvtCheckBox, self.cbM)
-                self.Bind(wx.EVT_CHECKBOX, self.EvtCheckBox, self.cbE)
-                self.Bind(wx.EVT_CHECKBOX, self.EvtCheckBox, self.cbI)
-                self.sb.AddMany([self.cbM, self.cbE, self.cbI])
-                self.sizer.Add(self.sb, (0,1), (2, 1), flag = wx.ALIGN_TOP | wx.ALIGN_RIGHT|wx.LEFT, border = 2)
-        else:
-            if self.sizer.FindItemAtPosition((0,1)) is not None:
-                self.cbM.Destroy()
-                self.cbE.Destroy()
-                self.cbI.Destroy()
-                self.sizer.RemovePos(self.sb)
+        if self.sizer.FindItemAtPosition((0,1)) is not None:
+            for cb in self.cbD.values():
+                cb.Destroy()
+            self.sizer.RemovePos(self.sb)
+            
+        self.cbD = {}
+        if self.sizer.FindItemAtPosition((0,1)) is None:
+            titre = myStaticBox(self, -1, u"Domaines")
+            self.sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
+            ref = self.sequence.GetReferentiel()
+            for dom in ref.listeDomaines:
+                cb = wx.CheckBox(self, -1, ref.domaines[dom][0])
+                cb.SetToolTipString(ref.domaines[dom][1])
+                self.Bind(wx.EVT_CHECKBOX, self.EvtCheckBox, cb)
+                self.sb.Add(cb)
+                self.cbD[dom] = cb
+            
+            self.sizer.Add(self.sb, (0,1), (2, 1), flag = wx.ALIGN_TOP | wx.ALIGN_RIGHT|wx.LEFT, border = 2)
+
+        
+            
+        
+# #        print "MiseAJourTypeEnseignement"
+#         if self.sequence.GetReferentiel().domainesMEI:
+# #            print self.sizer.FindItemAtPosition((1,0))
+#             if self.sizer.FindItemAtPosition((0,1)) is None:
+#                 titre = myStaticBox(self, -1, u"Domaines")
+#                 self.sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
+#                 self.cbM = wx.CheckBox(self, -1, u"Matériaux et Structures")
+#                 self.cbE = wx.CheckBox(self, -1, u"Energie")
+#                 self.cbI = wx.CheckBox(self, -1, u"Information")
+#                 self.Bind(wx.EVT_CHECKBOX, self.EvtCheckBox, self.cbM)
+#                 self.Bind(wx.EVT_CHECKBOX, self.EvtCheckBox, self.cbE)
+#                 self.Bind(wx.EVT_CHECKBOX, self.EvtCheckBox, self.cbI)
+#                 self.sb.AddMany([self.cbM, self.cbE, self.cbI])
+#                 self.sizer.Add(self.sb, (0,1), (2, 1), flag = wx.ALIGN_TOP | wx.ALIGN_RIGHT|wx.LEFT, border = 2)
+#         else:
+#             if self.sizer.FindItemAtPosition((0,1)) is not None:
+#                 self.cbM.Destroy()
+#                 self.cbE.Destroy()
+#                 self.cbI.Destroy()
+#                 self.sizer.RemovePos(self.sb)
             
     
     #############################################################################            
@@ -6372,9 +6395,10 @@ class Panel_Cible(wx.Panel):
                   "I" : -120,
                   "_" : -100}
         
-
-        for i in range(len(self.CI.parent.classe.referentiel.CentresInterets)):
-            mei, fsc = self.CI.parent.classe.referentiel.positions_CI[i].split("_")
+        ref = self.CI.GetReferentiel()
+        
+        for i in range(len(ref.CentresInterets)):
+            mei, fsc = ref.positions_CI[i].split("_")
             mei = mei.replace(" ", "")
             fsc = fsc.replace(" ", "")
             
@@ -6410,9 +6434,21 @@ class Panel_Cible(wx.Panel):
 #                bmp.SetMask(mask)
 #                bmp.SetMaskColour(wx.NullColour)
 #                r = CustomCheckBox(self, 100+i, pos = pos, style = wx.NO_BORDER)
+            
+            
+#             r = wx.ToggleButton(self, 100+i, "", pos = pos, style = wx.BU_EXACTFIT|wx.NO_BORDER)
+#             r.SetBitmap(bmp)
+#             r.SetInitialSize()
+            
+#             r = ImageButtonTransparent(self, 100+i, bmp, pos = pos)
+#             r.Bind(wx.EVT_LEFT_UP, self.OnButton)
+
+            
             r = platebtn.PlateButton(self, 100+i, "", bmp, pos = pos, 
                                      style=platebtn.PB_STYLE_GRADIENT|platebtn.PB_STYLE_TOGGLE|platebtn.PB_STYLE_NOBG)#platebtn.PB_STYLE_DEFAULT|
             r.SetPressColor(wx.Colour(245, 55, 245))
+            
+            
             self.bouton.append(r)
 #                r = buttons.GenBitmapToggleButton(self, 100+i, bmp, pos = pos, style=wx.BORDER_NONE)
 #                r.SetBackgroundColour(wx.NullColour)
@@ -6487,12 +6523,13 @@ class Panel_Cible(wx.Panel):
             <appuyer> : pour initialisation : si vrai = appuie sur les boutons
         """
 #        print "GererBoutons"
+        ref = self.CI.GetReferentiel()
         if len(self.CI.numCI) == 0 or not self.CI.max2CI:
-            l = range(len(self.CI.parent.classe.referentiel.CentresInterets))
+            l = range(len(ref.CentresInterets))
             
         elif len(self.CI.numCI) == 1:
             l = []
-            for i,p in enumerate(self.CI.parent.classe.referentiel.positions_CI):
+            for i,p in enumerate(ref.positions_CI):
                 p = p[:3].strip()
                 c = self.CI.GetPosCible(0)[:3].strip()
 
@@ -6516,6 +6553,7 @@ class Panel_Cible(wx.Panel):
                 
         if appuyer:
             for i, b in enumerate(self.bouton):
+#                 b.SetValue(i in self.CI.numCI)
                 if hasattr(b, '_SetState'):
                     if i in self.CI.numCI:
                         b._SetState(platebtn.PLATE_PRESSED)

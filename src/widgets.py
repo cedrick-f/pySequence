@@ -1065,8 +1065,40 @@ class StaticBoxButton(wx.StaticBox, BaseGestionFenHelp):
         self.bouton.SetPosition((w-22, 2))
         
 
-    
+class ImageButtonTransparent(wx.StaticBitmap):
+    def __init__(self, parent, Id, bmp, bmp2 = wx.NullBitmap, pos = wx.DefaultPosition):
+        wx.StaticBitmap.__init__(self, parent, Id, bmp, pos = pos)
+        self.bmp = bmp
+        self.bmp2 = bmp2
         
+        if self.bmp2 == wx.NullBitmap:
+            self.bmp2 = self.bmp.ConvertToImage().ConvertToGreyscale().ConvertToBitmap()
+            
+        self.state = False
+        self.Bind(wx.EVT_LEFT_UP, self.OnClick)
+        self.Bind(wx.EVT_ENTER_WINDOW, self.enter)
+        self.Bind(wx.EVT_LEAVE_WINDOW, self.leave)
+        
+    def OnClick(self, event):
+        self.state = not self.state
+        event.Skip()
+        
+    def SetValue(self, state):
+        self.state = state
+        
+    def MaJImage(self):
+        if self.state:
+            self.SetBitmap(self.bmp2)
+        else:
+            self.SetBitmap(self.bmp)
+                
+    def enter(self, event):
+        self.SetCursor(wx.StockCursor(wx.CURSOR_HAND))
+        self.SetBitmap(self.bmp.ConvertToImage().Scale(self.bmp.GetWidth()*1.1, self.bmp.GetHeight()*1.1).ConvertToBitmap())
+        
+    def leave(self, event):
+        self.SetCursor(wx.StockCursor(wx.CURSOR_DEFAULT))
+        self.SetBitmap(self.bmp)
         
 # import  wx.lib.buttons  as  buttons
 

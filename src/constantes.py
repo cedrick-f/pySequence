@@ -854,7 +854,7 @@ BASE_FICHE_HTML_COMP_PRJ = u"""
 
 BASE_FICHE_HTML_SAV = u"""
 <HTML>
-    <font size="12" color="blue"><b><h1 id = "titre" style="text-align: center;">_</h1></b></font>
+    <font size="12" color="blue"><b><h1 id = "titre" style="text-align: center;"> </h1></b></font>
     <dl id = "list">
         <dt> </dt> <dd> </dd>
     </dl> 
