@@ -6141,7 +6141,7 @@ class Seance(ElementDeSequence, Objet_sequence):
 #                            continuer = False
 #                        i += 1
             
-        elif self.typeSeance in ["AP", "ED"] and not self.EstSousSeance():
+        elif self.typeSeance in self.GetReferentiel().listeTypeActivite and not self.EstSousSeance():
             if self.GetEffectif() < self.GetClasse().GetEffectifNorm('G'):
                 ok = 1 # Tout le groupe "effectif réduit" n'est pas occupé
         
@@ -6154,7 +6154,7 @@ class Seance(ElementDeSequence, Objet_sequence):
         """ Teste s'il y a un problème de nombre de systèmes disponibles
         """
         ok = 0 # pas de problème
-        if self.typeSeance in ["AP", "ED"]:
+        if self.typeSeance in self.GetReferentiel().listeTypeActivite:#["AP", "ED"]:
             n = self.GetNbrSystemes()
             seq = self.GetApp().sequence
             for s in seq.systemes:
@@ -6386,7 +6386,7 @@ class Seance(ElementDeSequence, Objet_sequence):
             except:
                 pass
         
-        if self.typeSeance in ["AP","ED"]:
+        if self.typeSeance in self.GetReferentiel().listeTypeActivite:#["AP","ED"]:
             self.SignalerPb(0, self.IsNSystemesOk())
             
         if hasattr(self, 'arbre'):

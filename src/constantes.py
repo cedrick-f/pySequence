@@ -289,6 +289,7 @@ imagesSeance = {"R" : images.Icone_rotation,
                 "AP" : images.Icone_AP,
                 "TD" : images.Icone_TD,
                 "P"  : images.Icone_projet,
+                "EPI" : images.Icone_projet,
                 "SA" : images.Icone_synthese_Act,
                 "SS" : images.Icone_synthese_Seq,
                 "HC": images.Icone_maison,
@@ -325,7 +326,12 @@ imagesTaches =  {'Sup' : images.Icone_CdCF,
                 
 imagesDemarches =  {'R' : images.Dem_res_pb, 
                     'P' : images.Dem_proj, 
-                    'I' : images.Dem_investig
+                    'I' : images.Dem_investig,
+                    'EF' : images.Icone_evaluation,
+                    'ES' : images.Icone_evaluation,
+                    'AE' : images.Icone_evaluation,
+                    'EC' : images.Icone_evaluation,
+                    
                     }
 
 imagesCI = [images.CI_1, images.CI_2, images.CI_3, images.CI_4,
@@ -355,7 +361,10 @@ def ReSize_avatar(img):
     _w, _h = w/r, h/r
     return img.ConvertToImage().Scale(_w, _h).ConvertToBitmap()
 
-AVATAR_DEFAUT = ReSize_avatar(images.avatar.GetBitmap())            
+try:
+    AVATAR_DEFAUT = ReSize_avatar(images.avatar.GetBitmap())
+except wx._core.PyNoAppError:
+    pass
             
 FICHIER_PROFS = "profs.xml"
 

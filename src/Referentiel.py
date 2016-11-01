@@ -1064,7 +1064,7 @@ class Referentiel(XMLelem):
 #        sh = wb.sheets()
         
         #
-        # Généralités
+        # Généralités ##############################################################################
         #
         sh_g = wb.sheet_by_name(u"Généralités")
         self.Famille = sh_g.cell(2,0).value
@@ -1103,7 +1103,7 @@ class Referentiel(XMLelem):
         #
         # options
         #
-        sh_g = wb.sheet_by_name(u"Généralités")
+        
         lig = [l  for l in range(10, 17) if sh_g.cell(l,0).value != u""]
         for l in lig:
             self.options[str(sh_g.cell(l,0).value)] = sh_g.cell(l,1).value
@@ -1134,7 +1134,7 @@ class Referentiel(XMLelem):
 
 
         #
-        # Labels divers
+        # Labels #############################################################################
         #
         if u"Labels" in wb.sheet_names():
             sh_lb = wb.sheet_by_name(u"Labels")
@@ -1145,7 +1145,7 @@ class Referentiel(XMLelem):
 
             
         #
-        # CI
+        # CI  #################################################################################
         #
         sh_ci = wb.sheet_by_name(u"CI")
         self.CI_BO = sh_ci.cell(0,1).value[0].upper() == "O"
@@ -1177,7 +1177,7 @@ class Referentiel(XMLelem):
         
         
         #
-        # Problématiques
+        # Problématiques #########################################################################
         #
         shnt = u"Pb"
         if shnt in [s.name for s in wb.sheets()]:
@@ -1195,7 +1195,7 @@ class Referentiel(XMLelem):
         
         
         #
-        # Savoirs
+        # Savoirs  ##############################################################################
         #
         for n in wb.sheet_names():
             if n[:4] == "Sav_":
@@ -1216,7 +1216,7 @@ class Referentiel(XMLelem):
 
             
         #
-        # Compétences
+        # Compétences  ###############################################################################
         #
         for n in wb.sheet_names():
             if n[:5] == "Comp_":
@@ -1268,7 +1268,7 @@ class Referentiel(XMLelem):
 
 
         #
-        # Fonctions
+        # Fonctions  ######################################################################################
         #
         if u"Fonctions" in wb.sheet_names():
             sh_va = wb.sheet_by_name(u"Fonctions")
@@ -1279,58 +1279,129 @@ class Referentiel(XMLelem):
 
 
         #
-        # Pratique pédagogiques
+        # Séances  ########################################################################################
         #
-        sh_g = wb.sheet_by_name(u"Activité-Démarche")
+        sh_g = wb.sheet_by_name(u"Séance")
         
         # Démarches
-        for l in range(2, 5):
+        for l in range(2, sh_g.nrows):
+            code = str(sh_g.cell(l,0).value)
+            if code == "":
+                l += 3
+                break
             if sh_g.cell(l,1).value != u"":
-                self.demarches[str(sh_g.cell(l,0).value)] = [sh_g.cell(l,1).value, sh_g.cell(l,2).value]
-                self.listeDemarches.append(sh_g.cell(l,0).value)
+                self.demarches[code] = [sh_g.cell(l,1).value, sh_g.cell(l,2).value, 
+                                        sh_g.cell(l,3).value, sh_g.cell(l,4).value]
+                self.listeDemarches.append(code)
+
 
         # Activités
-        for l in range(8, 11):
-            if sh_g.cell(l,0).value != u"":
-                self.activites[str(sh_g.cell(l,0).value)] = [sh_g.cell(l,1).value, sh_g.cell(l,2).value]
-                self.listeTypeActivite.append(sh_g.cell(l,0).value)
-        self.seances.update(self.activites)
+        for l in range(l, sh_g.nrows):
+            code = str(sh_g.cell(l,0).value)
+            if code == "":
+                l += 3
+                break
+            if sh_g.cell(l,1).value != u"":
+                self.activites[code] = [sh_g.cell(l,1).value, sh_g.cell(l,2).value,
+                                        sh_g.cell(l,3).value, sh_g.cell(l,4).value]
+                self.listeTypeActivite.append(code)
+                self.demarcheSeance[code] = sh_g.cell(l,6).value.split()
+                self.effectifsSeance[code] = sh_g.cell(l,5).value.split()
                 
-        # Hors classe
-        for l in range(24, 26):
-            if l < sh_g.nrows and sh_g.cell(l,0).value != u"":
-                self.horsClasse[str(sh_g.cell(l,0).value)] = [sh_g.cell(l,1).value, sh_g.cell(l,2).value]
-                self.listeTypeHorsClasse.append(sh_g.cell(l,0).value)
-        self.seances.update(self.horsClasse)
+        self.seances.update(self.activites)
         
+        # Hors classe
+        for l in range(l, sh_g.nrows):
+            code = str(sh_g.cell(l,0).value)
+            if code == "":
+                l += 3
+                break
+            if sh_g.cell(l,1).value != u"":
+                self.horsClasse[code] = [sh_g.cell(l,1).value, sh_g.cell(l,2).value,
+                                         sh_g.cell(l,3).value, sh_g.cell(l,4).value]
+                self.listeTypeHorsClasse.append(code)
+        self.seances.update(self.horsClasse)
+                
         # Autres Séances
         self.listeTypeSeance = self.listeTypeActivite[:] + self.listeTypeHorsClasse[:]
-        for l in range(14, 21):
+        for l in range(l, sh_g.nrows):
+            code = str(sh_g.cell(l,0).value)
+            if code == "":
+                l += 3
+                break
+            if sh_g.cell(l,1).value != u"":
+                self.seances[code] = [sh_g.cell(l,1).value, sh_g.cell(l,2).value,
+                                      sh_g.cell(l,3).value, sh_g.cell(l,4).value]
+                self.listeTypeSeance.append(code)
+                self.effectifsSeance[code] = sh_g.cell(l,5).value.split()
+                
+        # Effectifs
+        for l in range(l, sh_g.nrows):
+            code = str(sh_g.cell(l,0).value)
+            if code == "":
+                l += 3
+                break
             if sh_g.cell(l,0).value != u"":
-                self.seances[str(sh_g.cell(l,0).value)] = [sh_g.cell(l,1).value, sh_g.cell(l,2).value]
-                self.listeTypeSeance.append(sh_g.cell(l,0).value)
+                self.effectifs[code] = [sh_g.cell(l,1).value, sh_g.cell(l,2).value,
+                                        sh_g.cell(l,3).value, sh_g.cell(l,4).value]
+                self.listeEffectifs.append(code)
+
+
+
+
+
+#         #
+#         # Pratique pédagogiques
+#         #
+#         sh_g = wb.sheet_by_name(u"Activité-Démarche")
+#         
+#         # Démarches
+#         for l in range(2, 5):
+#             if sh_g.cell(l,1).value != u"":
+#                 self.demarches[str(sh_g.cell(l,0).value)] = [sh_g.cell(l,1).value, sh_g.cell(l,2).value]
+#                 self.listeDemarches.append(sh_g.cell(l,0).value)
+# 
+#         # Activités
+#         for l in range(8, 11):
+#             if sh_g.cell(l,0).value != u"":
+#                 self.activites[str(sh_g.cell(l,0).value)] = [sh_g.cell(l,1).value, sh_g.cell(l,2).value]
+#                 self.listeTypeActivite.append(sh_g.cell(l,0).value)
+#         self.seances.update(self.activites)
+#                 
+#         # Hors classe
+#         for l in range(24, 26):
+#             if l < sh_g.nrows and sh_g.cell(l,0).value != u"":
+#                 self.horsClasse[str(sh_g.cell(l,0).value)] = [sh_g.cell(l,1).value, sh_g.cell(l,2).value]
+#                 self.listeTypeHorsClasse.append(sh_g.cell(l,0).value)
+#         self.seances.update(self.horsClasse)
+#         
+#         # Autres Séances
+#         self.listeTypeSeance = self.listeTypeActivite[:] + self.listeTypeHorsClasse[:]
+#         for l in range(14, 21):
+#             if sh_g.cell(l,0).value != u"":
+#                 self.seances[str(sh_g.cell(l,0).value)] = [sh_g.cell(l,1).value, sh_g.cell(l,2).value]
+#                 self.listeTypeSeance.append(sh_g.cell(l,0).value)
         
 #        print self, self.listeTypeSeance
         # Croisement démarche/activité
-        for l, s in enumerate(self.listeTypeActivite):
-            l = l + 3
-#            print l
-            self.demarcheSeance[str(s)] = [sh_g.cell(2,c).value for c in range(5,8) if sh_g.cell(l,c).value != u""]
+#         for l, s in enumerate(self.listeTypeActivite):
+#             l = l + 3
+# #            print l
+#             self.demarcheSeance[str(s)] = [sh_g.cell(2,c).value for c in range(5,8) if sh_g.cell(l,c).value != u""]
 
 
-        #
-        # effectifs
-        #
-        sh_g = wb.sheet_by_name(u"Activité-Effectif")
-        for l in range(2, 8):
-            if sh_g.cell(l,0).value != u"":
-                self.effectifs[str(sh_g.cell(l,0).value)] = [sh_g.cell(l,1).value, sh_g.cell(l,2).value]
-                self.listeEffectifs.append(sh_g.cell(l,0).value)
-    
-        
-        for l, s in enumerate(self.listeTypeSeance):
-            l = l + 3
-            self.effectifsSeance[str(sh_g.cell(l,4).value)] = [sh_g.cell(2,c).value for c in range(5,11) if sh_g.cell(l,c).value != u""]
+#         #
+#         # effectifs
+#         #
+#         sh_g = wb.sheet_by_name(u"Activité-Effectif")
+#         for l in range(2, 8):
+#             if sh_g.cell(l,0).value != u"":
+#                 self.effectifs[str(sh_g.cell(l,0).value)] = [sh_g.cell(l,1).value, sh_g.cell(l,2).value]
+#                 self.listeEffectifs.append(sh_g.cell(l,0).value)
+
+#         for l, s in enumerate(self.listeTypeSeance):
+#             l = l + 3
+#             self.effectifsSeance[str(sh_g.cell(l,4).value)] = [sh_g.cell(2,c).value for c in range(5,11) if sh_g.cell(l,c).value != u""]
 
         
         
@@ -2493,7 +2564,26 @@ def chargerReferentiels():
     # Construction de la structure en arbre
     #
     
+    # Tri des items par période scolaire (AnneeDebut)
+    def num(k, r):
+        if len(r) > 0:
+            p = REFERENTIELS[r[0]].AnneeDebut
+        else:
+            p = REFERENTIELS[k].AnneeDebut
+        if p[:3] in PERIODES:
+            i = (PERIODES.index(p[:3])+1) * 100
+        else:
+            i = 0
+        try:
+            a = int(p[3:])
+        except:
+            a = 0
+        return i+a
     
+    def comp_per(ref1, ref2):
+        k1, r1 = ref1
+        k2, r2 = ref2
+        return num(k1, r1) - num(k2, r2)
     
     
     #  Types d'enseignement qui n'ont pas de tronc commun (parents)
@@ -2529,30 +2619,13 @@ def chargerReferentiels():
                         del ARBRE_REF[k]
                         break
         r.sort()
-        r.reverse()
+#         r = sorted(r.items(), cmp = comp_per)
+#         r.reverse()
     
     
     
-    # Tri des items par période scolaire (AnneeDebut)
-    def num(k, r):
-        if len(r) > 0:
-            p = REFERENTIELS[r[0]].AnneeDebut
-        else:
-            p = REFERENTIELS[k].AnneeDebut
-        if p[:3] in PERIODES:
-            i = (PERIODES.index(p[:3])+1) * 100
-        else:
-            i = 0
-        try:
-            a = int(p[3:])
-        except:
-            a = 0
-        return i+a
     
-    def comp_per(ref1, ref2):
-        k1, r1 = ref1
-        k2, r2 = ref2
-        return num(k1, r1) - num(k2, r2)
+    
     ARBRE_REF = sorted(ARBRE_REF.items(), cmp = comp_per)
 
     

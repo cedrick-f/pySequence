@@ -7888,7 +7888,7 @@ class PanelPropriete_Seance(PanelPropriete):
 
 
         # Nombre
-        self.vcNombre.Show(self.seance.typeSeance in ["AP", "ED"])
+        self.vcNombre.Show(self.seance.typeSeance in ref.listeTypeActivite)#["AP", "ED"])
             
         self.cbDem.Clear()
         for s in listDem:
