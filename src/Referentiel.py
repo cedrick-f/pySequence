@@ -41,6 +41,8 @@ import os
  
 import wx   # Juste pour la fonction GetBitmap()
 
+from version import __version__, sup
+
 # Pour enregistrer en xml
 import xml.etree.ElementTree as ET
 Element = type(ET.Element(None))
@@ -103,7 +105,7 @@ class XMLelem():
                 branche.set("F_"+nom, str(val))
             elif type(val) == bool:
                 branche.set("B_"+nom, str(val))
-            elif type(val) == list:
+            elif type(val) == list or type(val) == tuple:
                 sub = ET.SubElement(branche, "l_"+nom)
                 for i, sv in enumerate(val):
                     sauv(sub, sv, format(i, "02d"))
@@ -164,20 +166,31 @@ class XMLelem():
                 sbranche = branche.find(nom)
                 if sbranche == None: return []
                 dic = {}
+                
+                # éléments "simples" : dans les items
                 for k, sb in sbranche.items():
-                    _k = k[2:]
+#                     _k = k[2:]
+                    _k = k.split("_")[-1]
                     if isinstance(_k, (str, unicode)) and "--" in _k:
                         _k = _k.replace("--", "\n")
                     dic[_k] = lect(sbranche, k)
+                
+                
+                
+                # éléments plus complexes : comme sous-élément
                 for sb in list(sbranche):
                     k = sb.tag
-                    _k = k[2:]
+#                     _k = k[2:]
+                    _k = k.split("_")[-1]
                     if isinstance(_k, (str, unicode)) and "--" in _k:
                         _k = _k.replace("--", "\n")
                     dic[_k] = lect(sbranche, k)
-#                print dic.values()
+                    
                 liste = [dic[v] for v in sorted(dic)]
-#                print " >", liste
+#                 print nom, liste
+#                 print "   ", sorted(dic)
+                
+          
                 return liste
 #                liste = [lect(sbranche, k) for k, sb in sbranche.items()]
 #                return liste + [lect(sb, k) for k, sb in list(sbranche)]
@@ -226,6 +239,12 @@ class XMLelem():
             elif nom.split("_")[0] == "Competences":
                 sbranche = branche.find(nom)
                 comp, err = Competences().setBranche(sbranche)
+                nomerr.extend(err)
+                return comp
+            
+            elif nom.split("_")[0] == "Competence":
+                sbranche = branche.find(nom)
+                comp, err = Competence().setBranche(sbranche)
                 nomerr.extend(err)
                 return comp
             
@@ -285,21 +304,26 @@ class XMLelem():
                 if len(val1) != len(val2):
 #                    print "Erreur list: xml =", val1, "      xls =", val2
                     return False
-                e = True
-                for sval1, sval2 in zip(val1, val2):
-                    e = e and egal(sval1, sval2)
-                return e
+                
+                return all([egal(sval1, sval2) for sval1, sval2 in zip(val1, val2)])
+                
+#                 e = True
+#                 for sval1, sval2 in zip(val1, val2):
+#                     e = e and egal(sval1, sval2)
+#                 return e
             
             elif type(val1) == dict and type(val2) == dict:
                 if not egal(sorted(val1), sorted(val2)):
 #                    print "Erreur dict : xml =", val1, "      xls =", val2
                     return False
-                e = True
-                for k, v in val1.items():
-#                    if isinstance(k, (str, unicode)):
-#                        k = k.replace("--", "\n")
-                    e = e and egal(v, val2[k])
-                return e
+                return all([egal(v, val2[k]) for k, v in val1.items()])
+                
+#                 e = True
+#                 for k, v in val1.items():
+# #                    if isinstance(k, (str, unicode)):
+# #                        k = k.replace("--", "\n")
+#                     e = e and egal(v, val2[k])
+#                 return e
             
             elif isinstance(val1, XMLelem) and isinstance(val2, XMLelem):
 #                print "XMLelem", val1 == val2
@@ -327,20 +351,20 @@ class XMLelem():
 
     ###########################################################
     def normaliserPoids(self, dic, debug = False):
-        for k0, v0 in dic.items():
-            if len(v0) > 2:
+        for k0, competence in dic.items():
+            if competence.poids != {}:
     #                    print self.parties.keys()
                 tot = {}
                 for p in self.parties.keys():
                     tot[p] = 0
                     
-                if type(v0[1]) == dict :
+                if competence.sousComp != {} :
                     lstindic = []
-                    for v1 in v0[1].values():
-                        for ii in v1[1]:
+                    for v1 in competence.sousComp.values():
+                        for ii in v1.indicateurs:
                             lstindic.append(ii)
                 else:
-                    lstindic = v0[1]
+                    lstindic = competence.indicateurs
                     
                 if debug: print "   ", lstindic
                 
@@ -364,14 +388,16 @@ class XMLelem():
     ###########################################################
     def getPremierEtDernierNiveauArbre(self, dic):
         sdic = {}
-        for k0, v0 in dic.items():
-            if len(v0) > 1 and  type(v0[1]) == dict:
-                if len(v0) == 3: # premier niveau = [intitule, dict ou liste, poids]
-                    sdic[k0] = [v0[0], self.getDernierNiveauArbre(v0[1]), v0[2]]
+        for k0, competence in dic.items():
+            if competence.sousComp != {}:
+                if competence.poids != {}: # premier niveau = [intitule, dict ou liste, poids]
+                    sdic[k0] = competence.copie()
+                    sdic[k0].sousComp = self.getDernierNiveauArbre(competence.sousComp)
+#                     sdic[k0] = [v0[0], self.getDernierNiveauArbre(competence.sousComp), v0[2]]
                 else:
-                    sdic.update(self.getDernierNiveauArbre(v0[1]))
+                    sdic.update(self.getDernierNiveauArbre(competence.sousComp))
             else:
-                sdic[k0] = v0
+                sdic[k0] = competence.copie()
         return sdic
     
     
@@ -381,80 +407,97 @@ class XMLelem():
         sdic = {}
         for k0, v0 in dic.items():
             if debug: print k0
-            if len(v0) > 1 and type(v0[1]) == dict:
-                if debug: print "   ", v0
-                if len(v0) == 2:
-                    sdic[k0] = [v0[0], self.getArbreProjet(v0[1], prj = prj,  debug = debug)]
+            competence = v0
+#             print k0, v0
+            if competence.sousComp != {}:
+#             if len(v0) > 1 and type(v0[1]) == dict:
+                if debug: print "   ", competence
+                if competence.poids == {}:
+#                 if len(v0) == 2:
+                    sdic[k0] = competence.copie()
+                    sdic[k0].sousComp = self.getArbreProjet(competence.sousComp, prj = prj,  debug = debug)
+#                     sdic[k0] = [competence, self.getArbreProjet(competence.sousComp, prj = prj,  debug = debug)]
                 else:
-                    if debug: print "   prem's", v0[2]
+                    if debug: print "   prem's", competence.poids
                     
-                    if includeElem(self.parties.keys(), v0[2].keys()):
+                    if includeElem(self.parties.keys(), competence.poids.keys()):
 #                        if len(v0[2]) > 0 and not v0[2].keys() == ['E']:
 #                        if v0[2][1] != 0 or v0[2][2] != 0: # Conduite ou Soutenance
-                        sdic[k0] = [v0[0], self.getArbreProjet(v0[1], prj = prj, debug = debug), v0[2]]
-            else:
+                        sdic[k0] = competence.copie()
+                        sdic[k0].sousComp = self.getArbreProjet(competence.sousComp, prj = prj,  debug = debug)
+#                         sdic[k0] = [competence, self.getArbreProjet(competence.sousComp, prj = prj, debug = debug)]
+            
+            elif competence.indicateurs != []:
                 lst = []
-                for l in v0[1]:
+                for l in competence.indicateurs:
                     if debug: print l, l.getType(), l.poids, l.estProjet(), prj
 #                    print v0
                     if l.estProjet(): # Conduite ou Soutenance
                         if prj == None or len([p for p in l.poids.keys() if p in prj.parties.keys()]) > 0:#or l.getType() in prj.parties.keys():
 #                        if l.getType() == v0[2].keys():
                             lst.append(l)
+                
+                
                 if lst != []:
-                    if len(v0) > 2:
-                        sdic[k0] = [v0[0], lst, v0[2]]
-                    else:
-                        sdic[k0] = [v0[0], lst]
+                    sdic[k0] = competence.copie()
+                    sdic[k0].indicateurs = lst 
+#                     sdic[k0] = [competence, lst]
+#                     if competence.poids is not None:
+# #                     if len(v0) > 2:
+#                         sdic[k0] = [v0[0], lst, v0[2]]
+#                     else:
+#                         sdic[k0] = [v0[0], lst]
         return sdic
     
     
     
-    ###########################################################
-    def getArbre(self, dic, prj = None, debug = False):
-#        print "getArbreProjet", self.parties.keys()
-        sdic = {}
-        for k0, v0 in dic.items():
-            if debug: print k0
-            if len(v0) > 1 and type(v0[1]) == dict:
-                if debug: print "   ", v0
-                if len(v0) == 2:
-                    sdic[k0] = [v0[0], self.getArbreProjet(v0[1], prj = prj,  debug = debug)]
-                else:
-                    if debug: print "   prem's", v0[2]
-                    
-                    if includeElem(self.parties.keys(), v0[2].keys()):
-#                        if len(v0[2]) > 0 and not v0[2].keys() == ['E']:
-#                        if v0[2][1] != 0 or v0[2][2] != 0: # Conduite ou Soutenance
-                        sdic[k0] = [v0[0], self.getArbreProjet(v0[1], prj = prj, debug = debug), v0[2]]
-            else:
-                lst = []
-                for l in v0[1]:
-                    if debug: print l, l.getType(), l.poids, l.estProjet(), prj
-#                    print v0
-                    if l.estProjet(): # Conduite ou Soutenance
-                        if prj == None or len([p for p in l.poids.keys() if p in prj.parties.keys()]) > 0:#or l.getType() in prj.parties.keys():
-#                        if l.getType() == v0[2].keys():
-                            lst.append(l)
-                if lst != []:
-                    if len(v0) > 2:
-                        sdic[k0] = [v0[0], lst, v0[2]]
-                    else:
-                        sdic[k0] = [v0[0], lst]
-        return sdic
-    
+#     ###########################################################
+#     def getArbre(self, dic, prj = None, debug = False):
+# #        print "getArbreProjet", self.parties.keys()
+#         sdic = {}
+#         for k0, v0 in dic.items():
+#             if debug: print k0
+#             if len(v0) > 1 and type(v0[1]) == dict:
+#                 if debug: print "   ", v0
+#                 if len(v0) == 2:
+#                     sdic[k0] = [v0[0], self.getArbreProjet(v0[1], prj = prj,  debug = debug)]
+#                 else:
+#                     if debug: print "   prem's", v0[2]
+#                     
+#                     if includeElem(self.parties.keys(), v0[2].keys()):
+# #                        if len(v0[2]) > 0 and not v0[2].keys() == ['E']:
+# #                        if v0[2][1] != 0 or v0[2][2] != 0: # Conduite ou Soutenance
+#                         sdic[k0] = [v0[0], self.getArbreProjet(v0[1], prj = prj, debug = debug), v0[2]]
+#             else:
+#                 lst = []
+#                 for l in v0[1]:
+#                     if debug: print l, l.getType(), l.poids, l.estProjet(), prj
+# #                    print v0
+#                     if l.estProjet(): # Conduite ou Soutenance
+#                         if prj == None or len([p for p in l.poids.keys() if p in prj.parties.keys()]) > 0:#or l.getType() in prj.parties.keys():
+# #                        if l.getType() == v0[2].keys():
+#                             lst.append(l)
+#                 if lst != []:
+#                     if len(v0) > 2:
+#                         sdic[k0] = [v0[0], lst, v0[2]]
+#                     else:
+#                         sdic[k0] = [v0[0], lst]
+#         return sdic
+#     
     
     
     
     
     ###########################################################
     def getDernierNiveauArbre2(self, dic):
+        """ Renvoie un dictionnaire de listes d'Indicateurs
+        """
         sdic = {}
-        for k0, v0 in dic.items():
-            if type(v0) == dict:
-                sdic.update(self.getDernierNiveauArbre(v0))
+        for k0, competence in dic.items():
+            if competence.sousComp != {}:
+                sdic.update(self.getDernierNiveauArbre2(competence.sousComp))
             else:
-                sdic[k0] = v0
+                sdic[k0] = competence.indicateurs
         return sdic
     
     
@@ -462,32 +505,50 @@ class XMLelem():
     def getDeuxiemeNiveauArbre(self, dic):
         sdic = {}
 #            if len(dic) > 0 and type(dic.values()[0][1]) == dict:
-        for k0, v0 in dic.items():
-            if type(v0[1]) == dict:
-                for k1, v1 in v0[1].items():
-                    if len(v1) > 1 and  type(v1[1]) == dict: # pas fini = 3ème niveau
+        for k0, competence in dic.items():
+            if competence.sousComp != {}:
+                for k1, sousComp in competence.sousComp.items():
+                    if sousComp.sousComp != {} : # pas fini = 3ème niveau
                         self._niveau = 3
-                        sdic[k1] = {}
-                        for k2, v2 in v1[1].items():
-                            sdic[k1][k2] = v2[1]
+                        sdic[k1] = sousComp.copie()
+                        sdic[k1].sousComp = sousComp.sousComp
+#                         sdic[k1]
+# #                         sdic[k1] = {}
+#                         for k2, v2 in sousComp.sousComp.items():
+# #                             sdic[k1][k2]
+#                             sdic[k1][k2] = v2.copie()
                     else:   # Niveau "indicateur"
                         self._niveau = 2
-                        sdic[k1] = v1[1]
+                        sdic[k1] = sousComp.copie()
+#                         sdic[k1].indicateurs = sousComp.sousComp
             else:
-                sdic[k0] = v0[1]
+                sdic[k0] = competence.copie()
+#                 sdic[k0].indicateurs = competence.indicateurs
 #            else:
 #                return dic
         return sdic
-    
+
+
     ###########################################################
     def getDernierNiveauArbre(self, dic):
-        sdic = {}
-        for k0, v0 in dic.items():
-            if len(v0) > 1 and  type(v0[1]) == dict:
-                sdic.update(self.getDernierNiveauArbre(v0[1]))
+        dicIndic = {}
+        for k0, competence in dic.items():
+            if competence.sousComp != {}:
+                dicIndic.update(self.getDernierNiveauArbre(competence.sousComp))
             else:
-                sdic[k0] = v0
-        return sdic
+                dicIndic[k0] = competence
+        
+        
+        return dicIndic
+        
+        
+#         sdic = {}
+#         for k0, competence in dic.items():
+#             if competence.sousComp != {}:
+#                 sdic.update(self.getDernierNiveauArbre(competence.sousComp))
+#             else:
+#                 sdic[k0] = competence
+#         return sdic
     
 #################################################################################################################################
 #
@@ -559,7 +620,18 @@ class Referentiel(XMLelem):
         self.domaines = {}
         self.listeDomaines = []
         
+        
+        #
+        # Thématiques
+        #
+        self.thematiques = {}
+        self.listeThematiques = []
+        
+        #
+        # Labels (
+        #
         self.labels = {}
+        
         
         #
         # Centre d'intérêt
@@ -892,6 +964,32 @@ class Referentiel(XMLelem):
                 self.labels[k] = v
         
         
+        # à partir de 7.1
+        
+            
+        def corriger(dic):
+            sdic = {}
+            for k0, v0 in dic.items():
+                sdic[k0] = Competence(v0[0])
+                if len(v0) > 1 and type(v0[1]) == dict:
+                    
+                    sdic[k0].sousComp = corriger(v0[1])
+                    if len(v0) > 2:
+                        sdic[k0].poids = v0[2]
+
+                else:
+                    sdic[k0].indicateurs = v0[1]
+            return sdic
+
+        itemComp = self.dicoCompetences.items()
+        for code, comp in itemComp: #
+            dic = self.dicoCompetences[code]
+            if len(dic.dicCompetences) > 0 and not isinstance(dic.dicCompetences.values()[0], Competence):
+                print "Corriger compétences"
+                print "  ", self.dicoCompetences[code].dicCompetences
+                self.dicoCompetences[code].dicCompetences = corriger(self.dicoCompetences[code].dicCompetences)
+                print ">>", self.dicoCompetences[code].dicCompetences
+        
         return
         
     
@@ -960,10 +1058,20 @@ class Referentiel(XMLelem):
         
             
         ###########################################################
-        def getArbre(sh, rng, col, prems = False, fonction = False, debug = False):
-            """ Construit la structure en arbre des "compétences"
+        def getArbreComp(sh, rng, col, prems = False, debug = False):
+            """ Construit la structure en arbre :
+                    utilisé pour les Compétences
+                (fonction récursive)
+                
+                <rng> : liste des lignes
+                <col> : numéro de la colonne traitée (=0 au lancement)
+                <prems> : racine de l'arbre (=True au lancement)
+                <fonction> : cas spécifique du traitement des Fonctions
             """
             dic = {}
+            
+            ci = 8 # colonne "I" des indicateurs (cas des Compétences uniquement)
+            
             # Liste des lignes comportant un code dans la colonne <col>, dans l'intervalle <rng>
             lstLig = [l  for l in rng if sh.cell(l,col).value != u""]
             if debug: print "  **",lstLig
@@ -971,6 +1079,9 @@ class Referentiel(XMLelem):
             for i, l in enumerate(lstLig):
                 code = str(sh.cell(l,col).value)
                 intitule = unicode(sh.cell(l,col+1).value)
+                competence = Competence(intitule)
+                dic[code] = competence
+                
                 if debug: print "-> ",l, code, intitule
                 
                 # Toutes les lignes entre chaque code
@@ -982,72 +1093,102 @@ class Referentiel(XMLelem):
 
                 # Il y a encore des items à droite ...
                 if len(ssRng) > 0 and col < 2 and [li  for li in ssRng if sh.cell(li,col+1).value != u""] != []:
-                    dic[code] = [intitule, getArbre(sh, ssRng, col+1, fonction = fonction, debug = debug)]
-                    if not fonction:
-                        if prems:
-                            poids = {}
-                            for p, c in self._colParties:
-                                v = int0(sh.cell(l,c).value)
-                                if v > 0:
-                                    poids[p] = v
-#                            poids = [int0(sh.cell(l,7).value),  # poids Ecrit
-#                                     int0(sh.cell(l,8).value),  # poids Conduite projet
-#                                     int0(sh.cell(l,9).value)]  # poids Soutenance projet
-                            dic[code].append(poids)
-                    else:
-                        lstComp = [sh.cell(1,co).value for co in range(5, sh.ncols) if sh.cell(l,co).value != u""]
+                    
+                    sdic = getArbreComp(sh, ssRng, col+1, debug = debug)
+#                     dic[code] = [intitule, getArbre(sh, ssRng, col+1, fonction = fonction, debug = debug)]
+
+                    competence.sousComp = sdic
+                    if prems:
+                        poids = {}
+                        for p, c in self._colParties:
+                            v = int0(sh.cell(l,c).value)
+                            if v > 0:
+                                poids[p] = v
+
+                        competence.poids = poids
+                    
+                    
+
+                # Il n'y a plus d'item à droite => Indicateur()
+                else:
+                    for ll in [l] + ssRng:
+                        indic = unicode(sh.cell(ll,ci).value)
+   
+                        poids = {}
+                        lignes = {}
+                        revues = {}
+                        for p, c in self._colParties:
+                            v = int0(sh.cell(ll,c).value)                   # Colonne code partie projet
+                            if v > 0:
+                                poids[p] = v
+                                lignes[p] = int0(sh.cell(ll,c+1).value)     # Colonne "l"
+                                revues[p] = int0(sh.cell(ll,c+2).value)     # Colonne "r"
+                                if lignes[p] != 0:
+                                    self.aColNon[p] = True
+                                if revues[p] != 0:
+                                    self.compImposees[p] = True
+
+                        if indic != u"":
+                            competence.indicateurs.append(Indicateur(indic, poids, lignes, revues))
+
+            
+            if debug: print 
+            return dic
+
+        
+        ###########################################################
+        def getArbreFonc(sh, rng, col, prems = False, debug = False):
+            """ Construit la structure en arbre :
+                    utilisé pour les Fonctions
+                (fonction récursive)
+                
+                <rng> : liste des lignes
+                <col> : numéro de la colonne traitée (=0 au lancement)
+                <prems> : racine de l'arbre (=True au lancement)
+                <fonction> : cas spécifique du traitement des Fonctions
+            """
+            dic = {}
+            
+            ci = 8 # colonne "I" des indicateurs (cas des Compétences uniquement)
+            
+            # Liste des lignes comportant un code dans la colonne <col>, dans l'intervalle <rng>
+            lstLig = [l  for l in rng if sh.cell(l,col).value != u""]
+            if debug: print "  **",lstLig
+            
+            for i, l in enumerate(lstLig):
+                code = str(sh.cell(l,col).value)
+                intitule = unicode(sh.cell(l,col+1).value)
+                
+                if debug: print "-> ",l, code, intitule
+                
+                # Toutes les lignes entre chaque code
+                if i < len(lstLig)-1:
+                    ssRng = range(l+1, lstLig[i+1])
+                else:
+                    ssRng = range(l+1, rng[-1]+1)
+                if debug: print "   ", ssRng
+
+                # Il y a encore des items à droite ...
+                if len(ssRng) > 0 and col < 2 and [li  for li in ssRng if sh.cell(li,col+1).value != u""] != []:
+
+                    dic[code] = [intitule, getArbreFonc(sh, ssRng, col+1, debug = debug)]
+                    lstComp = [sh.cell(1,co).value for co in range(5, sh.ncols) if sh.cell(l,co).value != u""]
 #                        print "   lstComp1 =", lstComp
-                        dic[code].append(lstComp)
+                    dic[code].append(lstComp)
                         
 
                 # Il n'y a plus d'item à droite => Indicateur()
                 else:
                     dic[code] = [intitule, []]
                     for ll in [l] + ssRng:
-                        indic = unicode(sh.cell(ll,5).value)
-                        
-                        if not fonction:
-                            poids = {}
-                            lignes = {}
-                            revues = {}
-                            for p, c in self._colParties:
-                                v = int0(sh.cell(ll,c).value)                   # Colonne code partie projet
-                                if v > 0:
-                                    poids[p] = v
-                                    lignes[p] = int0(sh.cell(ll,c+1).value)     # Colonne "l"
-                                    revues[p] = int0(sh.cell(ll,c+2).value)     # Colonne "r"
-                                    if lignes[p] != 0:
-                                        self.aColNon[p] = True
-                                    if revues[p] != 0:
-                                        self.compImposees[p] = True
-                                        
-#                            poids = [int0(sh.cell(ll,7).value),  # poids Ecrit
-#                                     int0(sh.cell(ll,8).value),  # poids Conduite projet
-#                                     int0(sh.cell(ll,9).value)]  # poids Soutenance projet
-                            if indic == u"":
-    #                            print "code", code, poids
-                                dic[code].append(poids)
-                            else:
-#                                ligne = int0(sh.cell(ll,10).value)   # ligne dans la grille
-#                                if ligne != 0:
-#                                    if poids[1] != 0:
-#                                        self.aColNon['R'] = True
-#                                    elif poids[2] != 0:
-#                                        self.aColNon['S'] = True
-#                                revue = 0
-#                                if sh.ncols > 11:
-#                                    revue = int0(sh.cell(ll,11).value)
-                                
-                                dic[code][1].append(Indicateur(indic, poids, lignes, revues))
-                        else:
-                            lstComp = [sh.cell(1,co).value for co in range(5, sh.ncols) if sh.cell(ll,co).value != u""]
+                        lstComp = [sh.cell(1,co).value for co in range(5, sh.ncols) if sh.cell(ll,co).value != u""]
 #                            print "   lstComp2 =", lstComp
-                            dic[code][1] = lstComp
+                        dic[code][1] = lstComp
             
             if debug: print 
             return dic
 
-                
+        
         ###########################################################
         def listItemCol(sh, col, rng):
             return [[l, sh.cell(l,col).value]    for l in rng    if sh.cell(l,col).value != u""]
@@ -1223,11 +1364,6 @@ class Referentiel(XMLelem):
                 self.dicoSavoirs[code].pre = 'P' in sh_sa.cell(0,5).value
                 self.listSavoirs.append(code)
 
-#        sh_va = wb.sheet_by_name(u"Savoirs")  
-#        self.nomSavoirs =   sh_va.cell(0,0).value 
-#        self.surnomSavoirs =   sh_va.cell(1,0).value 
-#        self.dicSavoirs = remplir(sh_va, 0, range(2, sh_va.nrows))
-
 
 
             
@@ -1244,11 +1380,14 @@ class Referentiel(XMLelem):
                                                          sh_co.cell(2,1).value,     # Nom discipline
                                                          sh_co.cell(0,5).value)     # Nom générique indicateur ("Indicateur de performance", ...)
                 self.listCompetences.append(code)
+                
                 #
                 # Décomposition des projets en parties
+                #    colonne de départ : 11 (colonne "L")
+                #
                 if code == "S": # Page principale des compétences = définition du découpage "projet"
                     self._colParties = []
-                    col = [c  for c in range(8, sh_co.ncols) if sh_co.cell(1,c).value != u""]
+                    col = [c  for c in range(11, sh_co.ncols) if sh_co.cell(1,c).value != u""]
                     if debug: print ">>>", col
                     
                     for i, c in enumerate(col):
@@ -1276,10 +1415,8 @@ class Referentiel(XMLelem):
             #            print "  importer", self, p
                         p.importer(wb)
                 
-                self.dicoCompetences[code].dicCompetences = getArbre(sh_co, range(4, sh_co.nrows), 0, prems = True, debug = False)
-                
-
-
+                self.dicoCompetences[code].dicCompetences = getArbreComp(sh_co, range(4, sh_co.nrows), 0, prems = True, debug = False)
+                if self.Code == "SSI": print self.dicoCompetences[code].dicCompetences
 
 
 
@@ -1290,7 +1427,7 @@ class Referentiel(XMLelem):
             sh_va = wb.sheet_by_name(u"Fonctions")
             self.nomFonctions =   sh_va.cell(0,0).value
             self.nomTaches = sh_va.cell(0,5).value
-            self.dicFonctions = getArbre(sh_va, range(2, sh_va.nrows), 0, prems = True, fonction = True, debug = False)
+            self.dicFonctions = getArbreFonc(sh_va, range(2, sh_va.nrows), 0, prems = True, debug = False)
 #            print "dicFonctions", self.dicFonctions
 
 
@@ -1308,6 +1445,22 @@ class Referentiel(XMLelem):
                 self.domaines[code] = [sh_g.cell(l,1).value, sh_g.cell(l,2).value, 
                                         sh_g.cell(l,3).value, getbgcoul(wb, sh_g, l, 4)]
                 self.listeDomaines.append(code)
+                
+                
+        #
+        # Thématiques  ########################################################################################
+        #
+        sh_g = wb.sheet_by_name(u"Thématiques")
+        
+        for l in range(2, sh_g.nrows):
+            code = str(sh_g.cell(l,0).value)
+            if code == "":
+                l += 3
+                break
+            if sh_g.cell(l,1).value != u"":
+                self.thematiques[code] = [sh_g.cell(l,1).value, sh_g.cell(l,2).value, 
+                                          sh_g.cell(l,3).value, getbgcoul(wb, sh_g, l, 4)]
+                self.listeThematiques.append(code)
                 
                 
         #
@@ -1382,58 +1535,6 @@ class Referentiel(XMLelem):
 
 
 
-#         #
-#         # Pratique pédagogiques
-#         #
-#         sh_g = wb.sheet_by_name(u"Activité-Démarche")
-#         
-#         # Démarches
-#         for l in range(2, 5):
-#             if sh_g.cell(l,1).value != u"":
-#                 self.demarches[str(sh_g.cell(l,0).value)] = [sh_g.cell(l,1).value, sh_g.cell(l,2).value]
-#                 self.listeDemarches.append(sh_g.cell(l,0).value)
-# 
-#         # Activités
-#         for l in range(8, 11):
-#             if sh_g.cell(l,0).value != u"":
-#                 self.activites[str(sh_g.cell(l,0).value)] = [sh_g.cell(l,1).value, sh_g.cell(l,2).value]
-#                 self.listeTypeActivite.append(sh_g.cell(l,0).value)
-#         self.seances.update(self.activites)
-#                 
-#         # Hors classe
-#         for l in range(24, 26):
-#             if l < sh_g.nrows and sh_g.cell(l,0).value != u"":
-#                 self.horsClasse[str(sh_g.cell(l,0).value)] = [sh_g.cell(l,1).value, sh_g.cell(l,2).value]
-#                 self.listeTypeHorsClasse.append(sh_g.cell(l,0).value)
-#         self.seances.update(self.horsClasse)
-#         
-#         # Autres Séances
-#         self.listeTypeSeance = self.listeTypeActivite[:] + self.listeTypeHorsClasse[:]
-#         for l in range(14, 21):
-#             if sh_g.cell(l,0).value != u"":
-#                 self.seances[str(sh_g.cell(l,0).value)] = [sh_g.cell(l,1).value, sh_g.cell(l,2).value]
-#                 self.listeTypeSeance.append(sh_g.cell(l,0).value)
-        
-#        print self, self.listeTypeSeance
-        # Croisement démarche/activité
-#         for l, s in enumerate(self.listeTypeActivite):
-#             l = l + 3
-# #            print l
-#             self.demarcheSeance[str(s)] = [sh_g.cell(2,c).value for c in range(5,8) if sh_g.cell(l,c).value != u""]
-
-
-#         #
-#         # effectifs
-#         #
-#         sh_g = wb.sheet_by_name(u"Activité-Effectif")
-#         for l in range(2, 8):
-#             if sh_g.cell(l,0).value != u"":
-#                 self.effectifs[str(sh_g.cell(l,0).value)] = [sh_g.cell(l,1).value, sh_g.cell(l,2).value]
-#                 self.listeEffectifs.append(sh_g.cell(l,0).value)
-
-#         for l, s in enumerate(self.listeTypeSeance):
-#             l = l + 3
-#             self.effectifsSeance[str(sh_g.cell(l,4).value)] = [sh_g.cell(2,c).value for c in range(5,11) if sh_g.cell(l,c).value != u""]
 
         
         
@@ -1477,7 +1578,7 @@ class Referentiel(XMLelem):
             --> le "_" évite que les attributs ne soient sauvegardés dans les XML
         """
         
-        debug = False#self.Code == "STS_SN_IR"
+        debug = False#self.Code == "SSI"
         if debug: print "completer", self.Code, self.tr_com
 
         # C'est une option (il y a un tronc commun) ==> on complète plus tard
@@ -1496,12 +1597,12 @@ class Referentiel(XMLelem):
             dic = self.getPremierEtDernierNiveauArbre(self.dicoCompetences[code].dicCompetences)
             liste = []
 #            print "    dic", dic
-            for k1, h1 in dic.items():
+            for k1, competence in dic.items():
 #                print "      h1", h1
-                liste.append([k1, h1[0], []])
-                if type(h1[1]) == dict:
-                    for k2, h2 in h1[1].items(): 
-                        liste[-1][2].append([k2, h2[0]])
+                liste.append([k1, competence.intitule, []])
+                if competence.sousComp != {}:
+                    for k2, sousComp in competence.sousComp.items(): 
+                        liste[-1][2].append([k2, sousComp.intitule])
                     liste[-1][2].sort()
                     
             liste.sort()
@@ -1535,8 +1636,10 @@ class Referentiel(XMLelem):
                 itemComp.insert(1, ("B", ref_tc.dicoCompetences["S"]))
             
             for code, comp in itemComp:
-                self._dicoCompetences[code] = self.getArbreProjet(self.dicoCompetences[code].dicCompetences, debug = debug)
                 
+                self._dicoCompetences[code] = self.getArbreProjet(self.dicoCompetences[code].dicCompetences, debug = debug)
+                if debug:
+                    print self._dicoCompetences[code]
                 
 #                print "self.dicoCompetences[code].dicCompetences", self.dicoCompetences[code].dicCompetences
                 
@@ -1940,7 +2043,11 @@ class Projet(XMLelem):
     
     #########################################################################
     def getIndicateur(self, codeIndic):
+#         print "getIndicateur", codeIndic
+        
         disc, cod = codeIndic[0], codeIndic[1:]
+#         print self._dicoIndicateurs_simple[disc]
+        
         if '_' in cod:
             code, i = cod.split('_')
             i = int(i)
@@ -1951,10 +2058,10 @@ class Projet(XMLelem):
                     return indic
         else:
             comp = self.getCompetence(disc, cod)
-            if type(comp[1]) == dict:
-                return self.getPremierEtDernierNiveauArbre(comp[1])
+            if comp.sousComp != {}: #type(comp[1]) == dict:
+                return self.getPremierEtDernierNiveauArbre(comp.sousComp)
             else: 
-                return comp[1]
+                return comp.indicateurs
             
     #########################################################################
     def getTypeIndicateur(self, codeIndic):
@@ -1969,21 +2076,41 @@ class Projet(XMLelem):
     
     #########################################################################
     def getCompetence(self, disc, comp):
-#        print "getCompetence", comp
-#        print "   ", self._dicoCompetences[disc]
+#         print "getCompetence", comp
+        
 #        competences = self._parent._dicoCompetences[disc]
 #        return competences.getCompetence(comp)
-        if comp in self._dicoCompetences[disc].keys():
-            return self._dicoCompetences[disc][comp]
-        else:
-            for k0, v0 in self._dicoCompetences[disc].items():
-                if type(v0[1]) == dict:
-                    if comp in v0[1].keys():
-                        return v0[1][comp]
-                    else:
-                        for k1, v1 in v0[1].items():
-                            if type(v1[1]) == dict and comp in v1[1].keys():
-                                return v1[1][comp]
+        
+        def getComp(dic):
+#             print "   ", dic
+            if comp in dic.keys():
+                return dic[comp]
+            else:
+                for k, competence in dic.items():
+                    c = getComp(competence.sousComp)
+                    if c is not None: 
+#                         print "   ", k, "!!!!!"
+                        return c
+
+        return getComp(self._dicoCompetences[disc])
+         
+        
+#         if comp in dic.keys():
+#             return dic[comp]
+#         else:
+#             for k, sousComp in dic.items():
+#                 c = self.
+#             
+#             
+#             
+#             for k0, v0 in self._dicoCompetences[disc].items():
+#                 if v0.sousComp != {}: #type(v0[1]) == dict:
+#                     if comp in v0.sousComp.keys():
+#                         return v0.sousComp[comp]
+#                     else:
+#                         for k1, v1 in v0.sousComp.items():
+#                             if v1.sousComp != {}:
+#                                 return v1.sousComp[comp]
 
 
         
@@ -2071,9 +2198,9 @@ class Projet(XMLelem):
 
     ##################################################################################################################
     def postTraiter(self, ref):
-        debug = False#ref.Code == "E"self._parent.Code == "EE-SI"
+        debug = False #ref.Code == "SSI"
 #        if self._parent.Code == "EE-SI":
-#            print "postTraiter",  ref, self, self.parties
+        if debug: print "postTraiter",  ref, self, self.parties
         
         
 #        ###########################################################
@@ -2109,16 +2236,16 @@ class Projet(XMLelem):
         ###########################################################
         def chercherIndicIdem(dic, debug = False):
             ii = None
-            for k0, v0 in dic.items():
+            for k0, competence in dic.items():
                 if debug: print k0
-                if len(v0) > 1 and type(v0[1]) == dict:
-                    if debug: print "   ", v0[0]
-                    ii = chercherIndicIdem(v0[1], debug = debug)
+                if competence.sousComp != {}:
+                    if debug: print "   ", competence
+                    ii = chercherIndicIdem(competence.sousComp, debug = debug)
                     if debug: print "   ii", ii
                     if ii != None : return ii
                 else:
                     lst = []
-                    for l in v0[1]:
+                    for l in competence.indicateurs:
                         if isinstance(l, Indicateur) and "idem" in l.intitule:
                             if debug: print l.intitule
                             if debug: print "    idem"
@@ -2130,14 +2257,16 @@ class Projet(XMLelem):
         
         ###########################################################
         def chercherDicIndic(dic, code, debug = False):
+            """ Renvoie le dictionnaire de compétences qui contient le <code>
+            """
             if code in dic.keys():
                 return dic
             else:
-                for k0, v0 in dic.items():
+                for k0, competence in dic.items():
                     if debug: print k0
-                    if len(v0) > 1 and type(v0[1]) == dict:
-                        if debug: print "   ", v0[0]
-                        sdic = chercherDicIndic(v0[1], code, debug = debug)
+                    if competence.sousComp != {}:
+                        if debug: print "   ", competence
+                        sdic = chercherDicIndic(competence.sousComp, code, debug = debug)
                         if sdic != None : return sdic
             return
             
@@ -2145,7 +2274,7 @@ class Projet(XMLelem):
                                 
                                 
        
-        if debug: print "    ", ref.dicCompetences                   
+                        
 #        print "dicCompetences ref", ref.dicCompetences
         self._dicoCompetences = {}
         self._dicoIndicateurs = {}
@@ -2159,7 +2288,9 @@ class Projet(XMLelem):
 #            itemComp.insert(1, ("B", ref_tc.dicoCompetences["S"]))
         
         for code, comp in itemComp:
-            self._dicoCompetences[code] = self.getArbreProjet(comp.dicCompetences, self, debug = debug)
+            if debug: print code,
+            if debug: print "    ", comp.dicCompetences   
+            self._dicoCompetences[code] = self.getArbreProjet(comp.dicCompetences, self, debug = False)
             
             
 #            self._dicoCompetences_simple[code] = self.getDernierNiveauArbre(self.dicoCompetences[code].dicCompetences)
@@ -2172,37 +2303,47 @@ class Projet(XMLelem):
 #                print "   ", code, self._dicoCompetences
                 
                 
-            if debug: print "   >", code, self._dicoCompetences[code]
+            if debug: print "   >", self._dicoCompetences[code]
     #        print ">> _dicCompetences prj", self._dicCompetences
             
             # On regroupe les compétences qui ont les mêmes indicateurs dans la grille (cas de STI2D EE !!)
             lst_codeindic = chercherIndicIdem(self._dicoCompetences[code], debug = False)
-    #        print "lst_codeindic", lst_codeindic
             if type(lst_codeindic) == tuple:
+                if debug: print "    lst_codeindic", lst_codeindic
+                
                 dic = chercherDicIndic(self._dicoCompetences[code], lst_codeindic[2])
+                
+                newCompetence = dic[lst_codeindic[2]].copie()
+                newCompetence.intitule = dic[lst_codeindic[1]].intitule+"\n"+dic[lst_codeindic[2]].intitule
+                newCompetence.sousComp = dic[lst_codeindic[2]].sousComp
+                
     #            print "   >>", dic
-                new_code = lst_codeindic[1]+"\n"+lst_codeindic[2]
-                dic[new_code] = [dic[lst_codeindic[1]][0]+"\n"+dic[lst_codeindic[2]][0], dic[lst_codeindic[1]][1]]
+#                 new_code = lst_codeindic[1]+"\n"+lst_codeindic[2]
+#                 dic[new_code] = [dic[lst_codeindic[1]].intitule+"\n"+dic[lst_codeindic[2]].intitule, dic[lst_codeindic[1]][1]]
+                
                 del dic[lst_codeindic[2]]
                 del dic[lst_codeindic[1]]
     
             
             self._dicoIndicateurs[code] = ref.getPremierEtDernierNiveauArbre(self._dicoCompetences[code])
             
-            
+
                         
             self.normaliserPoids(self._dicoIndicateurs[code], debug = False)
     #        print "                   ", self._dicIndicateurs_prj
-            
+            if debug:
+                print self._dicoIndicateurs[code]
             
             self._niveau = 0
             self._dicoIndicateurs_famille[code] = self.getDeuxiemeNiveauArbre(self._dicoCompetences[code])
+            if debug:
+                print self._dicoIndicateurs_famille[code]
             
             self._dicoIndicateurs_simple[code] = self.getDernierNiveauArbre2(self._dicoIndicateurs_famille[code])
+            
+            
+            
             if debug:
-                print code, comp
-                print self._dicoIndicateurs[code]
-                print self._dicoIndicateurs_famille[code]
                 print self._dicoIndicateurs_simple[code]
     #        print "_dicIndicateurs_prj_simple", self._dicIndicateurs_prj_simple
         
@@ -2268,33 +2409,41 @@ class Projet(XMLelem):
         
 
         ###########################################################
-        def getListeIndic(dic):
+        def getListeIndic(competence):
 #            print "getListeIndic"
 #            print dic
-            
-            if type(dic) == dict:
-                l = []
-                sdic = {}
-                for k0, v0 in dic.items():
-                    if type(v0) == dict:
-                        sdic.update(getDernierNiveauArbre(v0))
-                    else:
-                        sdic[k0] = v0
-                        
-                for indics in sdic.values():
-                    for indic in indics[1]:
-                        l.append(indic)
-
-
-#                l = [indics[1] for indics in sdic.values()]
-            
-            else:
-                l = []
-                for i, v0 in enumerate(dic):
-                    l.append(v0)
-                    
-#            print "  >>>", l
+            l = competence.indicateurs
+            if competence.sousComp != {}:
+                for sousComp in competence.sousComp.values():
+                    l.extend(getListeIndic(sousComp))
             return l
+            
+            
+#             
+#             if competence.sousComp != {}:
+#                 l = []
+#                 sdic = {}
+#                 for k0, sousComp in competence.sousComp.items():
+#                     if sousComp.sousComp != {}:
+#                         sdic.update(getDernierNiveauArbre(sousComp))
+#                     else:
+#                         sdic[k0] = v0
+#                         
+#                 for indics in sdic.values():
+#                     for indic in indics[1]:
+#                         l.append(indic)
+# 
+# 
+# #                l = [indics[1] for indics in sdic.values()]
+#             
+#             else:
+#                 l.extend(competence.indicateurs)
+# #                 l = []
+# #                 for i, v0 in enumerate(dic):
+# #                     l.append(v0)
+#                     
+# #            print "  >>>", l
+#             return l
             
             
         ###########################################################
@@ -2328,8 +2477,8 @@ class Projet(XMLelem):
             for p in self.parties.keys():
                 self._dicoGrpIndicateur[code][p] = []
     
-            for comp, dic in self._dicoIndicateurs[code].items():
-                for indic in getListeIndic(dic[1]):
+            for comp, competence in self._dicoIndicateurs[code].items():
+                for indic in getListeIndic(competence):
                     for part in indic.poids.keys():
                         if part in self._dicoGrpIndicateur[code].keys():
                             self._dicoGrpIndicateur[code][part].append(comp)
@@ -2397,9 +2546,35 @@ class Indicateur(XMLelem):
 #        print self.getTypes(), self.revue
         return 'R'+str(self.revue[self.getTypes()[0]])
 
+
 #################################################################################################################################
 #
-#        Compétences
+#        Compétence
+#
+#################################################################################################################################
+class Competence(XMLelem):
+    def __init__(self, intitule = u"", poids = {}):
+        self._codeXML = "Competence"
+        self.intitule = intitule
+        self.domaines = []
+        self.thematiques = []
+        self.poids = poids
+        self.indicateurs = []
+        self.sousComp = {}
+
+    def __repr__(self):
+        return "Competence : " + self.intitule[:10] + "..."
+    
+    def copie(self):
+        c = Competence(self.intitule, self.poids)
+        c.domaines = self.domaines[:]
+        c.thematiques = self.thematiques[:]
+        c.indicateurs = self.indicateurs[:]
+        return c
+
+#################################################################################################################################
+#
+#        Compétences (toutes)
 #
 #################################################################################################################################
 class Competences(XMLelem):
@@ -2411,8 +2586,8 @@ class Competences(XMLelem):
         self.nomDiscipline = nomDiscipline          # Nom discipline
         self.abrDiscipline = abrDiscipline          # Abréviation discipline
         self.nomGeneriqueIndic = nomGeneriqueIndic
-        self.dicCompetences = {}
-        self.indicateurs = []
+        self.dicCompetences = {} # Dictionnaire de Compétences (arborescence)
+#         self.indicateurs = []
 
     #########################################################################
     def getCompetence(self, comp):
@@ -2578,7 +2753,7 @@ def chargerReferentiels():
             f = os.path.join(DOSSIER_REF, util_path.toFileEncoding(u"Ref_"+r.Enseignement[0]+u".xml"))
             dicOk[k] = False
             if os.path.exists(f):
-#                print ">>",f
+#                 print ">>",f
                 ref = ouvrir(f)
 #                print "<<", f
 #                for p in ref.projets.values():

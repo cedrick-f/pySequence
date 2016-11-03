@@ -1055,26 +1055,26 @@ def DrawLigne(ctx, x, y, gras = False):
     
 ######################################################################################  
 def regrouperDic(obj, dicIndicateurs):
-#    print "regrouperDic", dicIndicateurs
-#    print "   _dicoCompetences", obj.GetProjetRef()._dicoCompetences
+#     print "regrouperDic", dicIndicateurs
+#     print "   _dicoCompetences", obj.GetProjetRef()._dicoCompetences
     if obj.GetProjetRef()._niveau == 3:
         dic = {}
         typ = {}
         for disc, tousIndicateurs in obj.GetProjetRef()._dicoCompetences.items():
-            for k0, v0 in tousIndicateurs.items():
-                for k1, v1 in v0[1].items():
+            for k0, competence in tousIndicateurs.items():
+                for k1, sousComp in competence.sousComp.items():
                     dic[disc+k1] = []
                     typ[disc+k1] = []
-                    lk2 = v1[1].keys()
+                    lk2 = sousComp.sousComp.keys()
                     lk2.sort()
     #                print "  ", lk2
                     for k2 in lk2:
                         if disc+k2 in dicIndicateurs.keys():
                             dic[disc+k1].extend(dicIndicateurs[disc+k2])
     #                        print "   **", v1[1][k2]
-                            typ[disc+k1].extend([p.poids for p in v1[1][k2][1]])
+                            typ[disc+k1].extend([p.poids for p in sousComp.sousComp[k2].indicateurs])
                         else:
-                            l = len(v1[1][k2][1])
+                            l = len(sousComp.sousComp[k2].indicateurs)
                             dic[disc+k1].extend([False]*l)
                             typ[disc+k1].extend(['']*l)
                     
@@ -1082,14 +1082,16 @@ def regrouperDic(obj, dicIndicateurs):
                         del dic[disc+k1]
                         del typ[disc+k1]
                     
-#        print "  >>", dic
-#        print "    ", typ
+#         print "  >>", dic
+#         print "    ", typ
         return dic, typ
     else:
         typ = {}
         for k in dicIndicateurs.keys():
+#             print obj.GetProjetRef().getIndicateur(k)
             typ[k] = [p.poids for p in obj.GetProjetRef().getIndicateur(k)]
-#        print "  >>>", dicIndicateurs, typ
+#         print "  >>>", dicIndicateurs
+#         print "     ", typ
         return dicIndicateurs, typ
      
 ######################################################################################  
@@ -1101,9 +1103,9 @@ def regrouperLst(obj, lstCompetences):
         lstGrpCompetences = []
         for disc, tousIndicateurs in obj.GetProjetRef()._dicoCompetences.items():
             dic = []
-            for k0, v0 in tousIndicateurs.items():
-                for k1, v1 in v0[1].items():
-                    for k2 in sorted(v1[1].keys()):
+            for k0, competence in tousIndicateurs.items():
+                for k1, sousComp in competence.sousComp.items():
+                    for k2 in sorted(sousComp.sousComp.keys()):
                         if disc+k2 in lstCompetences:
                             dic.append(disc+k1)
             dic = list(set(dic))
@@ -1188,7 +1190,7 @@ def DrawBoutonCompetence(ctx, objet, dicIndic, y, h = None):
     """ Dessine les petits rectangles des indicateurs (en couleurs R et S)
          ... avec un petit décalage vertical pour que ce soit lisible en version N&B
     """
-#    print "DrawBoutonCompetence", objet, dicIndic
+#     print "DrawBoutonCompetence", objet, dicIndic
     if h == None: # Toujours sauf pour les revues
         r = wColComp/3
         h = 2*r
@@ -1218,7 +1220,7 @@ def DrawBoutonCompetence(ctx, objet, dicIndic, y, h = None):
         dx = wColComp/len(indic)
         for a, i in enumerate(indic):
             if i: # Rose ou bleu
-#                print "   ", s, a
+#                 print "   ", s, a
                 part = dictype[s][a].keys()[0]
                 if part == 'S':
 #                if dictype[s][a][1] != 0:   #objet.projet.classe.GetReferentiel().getTypeIndicateur(s+'_'+str(a+1)) == "C": # Conduite     #dicIndicateurs_prj[s][a][1]:

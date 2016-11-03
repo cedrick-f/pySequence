@@ -820,7 +820,7 @@ BASE_FICHE_HTML_CALENDRIER = u"""
 
 BASE_FICHE_HTML_CI = u"""
 <HTML>
-    <font size=11><font color="red"><b><h1 id = "titre" style="text-align: center;">_</h1></b></font></font>
+    <font size=11><font color="red"><b><h1 id = "titre" style="text-align: center;"> </h1></b></font></font>
     <dl id = "ci">
         <dt> </dt> <dd> </dd>
     </dl>

@@ -10805,7 +10805,7 @@ class ArbreCompetences(HTL.HyperTreeList):
             self.pptache = pptache
         
         self.typ = typ
-        self.competences = competences
+        self.competences = competences # Objet Referentiel.Competences
         
         if dicCompetences is None:
             dicCompetences = competences.dicCompetences
@@ -10914,19 +10914,33 @@ class ArbreCompetences(HTL.HyperTreeList):
     def Construire(self, branche, dic = None, ct_type = 0):
         if dic == None:
             dic = self.competences.dicCompetences
-            
+
         clefs = dic.keys()
         clefs.sort()
         for k in clefs:
-            if type(dic[k]) == list and type(dic[k][1]) == dict:
-                b = self.AppendItem(branche, k+" "+dic[k][0], ct_type=ct_type, data = k)
-                self.Construire(b, dic[k][1], ct_type = 1)
+            if dic[k].sousComp != {}:
+                b = self.AppendItem(branche, k+" "+dic[k].intitule, ct_type=ct_type, data = k)
+                self.Construire(b, dic[k].sousComp, ct_type = 1)
             else:
-                b = self.AppendItem(branche, k+" "+dic[k][0], ct_type = 1, data = k)
+                b = self.AppendItem(branche, k+" "+dic[k].intitule, ct_type = 1, data = k)
             self.items[k] = b
             
             if ct_type == 0:
                 self.SetItemBold(b, True)
+            
+            
+            
+            
+#             
+#             if type(dic[k]) == list and type(dic[k][1]) == dict:
+#                 b = self.AppendItem(branche, k+" "+dic[k][0].intitule, ct_type=ct_type, data = k)
+#                 self.Construire(b, dic[k][1], ct_type = 1)
+#             else:
+#                 b = self.AppendItem(branche, k+" "+dic[k][0].intitule, ct_type = 1, data = k)
+#             self.items[k] = b
+#             
+#             if ct_type == 0:
+#                 self.SetItemBold(b, True)
         
     ####################################################################################
     def OnItemCheck(self, event, item = None):
@@ -11101,7 +11115,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
 
     ####################################################################################
     def Construire(self, branche = None, dic = None):
-#        print "Construire compétences prj", self.GetTache().intitule, self.eleves
+#         print "Construire compétences prj", self.GetTache().intitule, self.eleves
 #        if competences == None:
 #            competences = self.competences
         
@@ -11117,7 +11131,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
             
         
 #        print "   ProjetRef", prj
-#        print "  dicCompetences", dic
+#         print "  dicCompetences", dic
 #        if tache.estPredeterminee(): print prj.taches[tache.intitule][2]
         
         font = wx.Font(10, wx.DEFAULT, wx.FONTSTYLE_ITALIC, wx.NORMAL, False)
@@ -11131,29 +11145,33 @@ class ArbreCompetencesPrj(ArbreCompetences):
             ks.sort()
             for k in ks:
                 if debug: print "****", k
-                v = d[k]
+#                 v = d[k]
+                competence = d[k]
 #                print "****", k#, prj.taches[tache.intitule][2]
 
                 #
                 # Groupe de compétences
                 #
-                if len(v) > 1 and type(v[1]) == dict:
+                if competence.sousComp != {}:
+#                 if len(v) > 1 and type(v[1]) == dict:
                     
-                    if debug: print "   ", v[0]
+                    if debug: print "   ", competence.intitule
                     
-                    if len(v) == 2: # Compétence 
+                    if competence.poids == {}: # Compétence 
+#                     if len(v) == 2: # Compétence 
                         if not tache.estPredeterminee() or k in prj.taches[tache.intitule][2]:
-                            b = self.AppendItem(br, k+" "+v[0])
+                            b = self.AppendItem(br, k+" "+competence.intitule)
                         else:
                             b = None
+                    
                     else:   # Groupe de compétences - avec poids 
-                        if debug: print "   prem's", v[2]
-                        b = self.AppendItem(br, k+" "+v[0])
+                        if debug: print "   prem's", competence.poids
+                        b = self.AppendItem(br, k+" "+competence.intitule)
 #                        print " * ",v[2]
                         
                         for i, part in enumerate(prj.parties.keys()):
-                            if part in v[2].keys():
-                                self.SetItemText(b, pourCent2(0.01*v[2][part]), i+1)
+                            if part in competence.poids.keys():
+                                self.SetItemText(b, pourCent2(0.01*competence.poids[part]), i+1)
                         
 #                        for i, p in enumerate(v[2][1:]):
 #                            if p != 0:
@@ -11162,7 +11180,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
                     
                     if b is not None:
                         self.items[k] = b
-                        const(v[1], b, debug = debug)
+                        const(competence.sousComp, b, debug = debug)
                         
                 #
                 # Compétence avec indicateur(s)
@@ -11172,19 +11190,20 @@ class ArbreCompetencesPrj(ArbreCompetences):
                     tous = True
                     
                     if not tache.estPredeterminee() or (tache.intitule in prj.taches.keys() and k in prj.taches[tache.intitule][2]):
-                        cc = [cd+ " " + it for cd, it in zip(k.split(u"\n"), v[0].split(u"\n"))]
+                        cc = [cd+ " " + it for cd, it in zip(k.split(u"\n"), competence.intitule.split(u"\n"))]
                         comp = self.AppendItem(br, u"\n ".join(cc))
                         
                         #
                         # Compétence "racine" - avec poids
                         #
-                        if len(v) == 3: # 
-                            if debug: print "   prem's", v[2]
+                        if competence.poids != {}: # 
+#                         if len(v) == 3: # 
+                            if debug: print "   prem's", competence.poids
                             for j, part in enumerate(prj.parties.keys()):
-                                if part in v[2].keys():
+                                if part in competence.poids.keys():
     #                        for i, p in enumerate(v[2][1:]):
     #                            if p != 0:
-                                    self.SetItemText(comp, pourCent2(0.01*v[2][part]), j+1)
+                                    self.SetItemText(comp, pourCent2(0.01*competence.poids[part]), j+1)
                             self.SetItemBold(comp, True)
                                     
     #                    comp = self.AppendItem(br, k+" "+v[0])
@@ -11194,7 +11213,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
                         #
                         # Ajout des indicateurs
                         #
-                        for i, indic in enumerate(v[1]):
+                        for i, indic in enumerate(competence.indicateurs):
                             codeIndic = str(k+'_'+str(i+1))
                             if debug:
     #                            print not tache.phase in [_R1, "Rev", tache.projet.getCodeLastRevue()]
@@ -11206,7 +11225,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
                             if tache == None:
                                 b = self.AppendItem(comp, indic.intitule, data = codeIndic)
                                 for j, part in enumerate(prj.parties.keys()):
-                                    if part in v[2].keys():
+                                    if part in competence.poids.keys():
     #                            for j, p in enumerate(indic.poids[1:]):
     #                                if p != 0:
                                         if j == 0:  coul = 'C'
@@ -12965,27 +12984,27 @@ class PopupInfo(wx.PopupWindow):
             ks.sort()
             for k in ks:
 #                print "  k:", k
-                v = d[k]
+                competence = d[k]
                 li = self.soup.new_tag("li")
                 ul.append(li)
                 
                 nul = self.soup.new_tag("ul")
                 
-                if len(v) > 1 and type(v[1]) == dict:
+                if competence.sousComp != {}: #len(v) > 1 and type(v[1]) == dict:
 #                    font = self.soup.new_tag("font")
 
-                    li.append(textwrap.fill(k+" "+v[0], 50))
-                    const(v[1], nul)
+                    li.append(textwrap.fill(k+" "+competence.intitule, 50))
+                    const(competence.sousComp, nul)
                         
                 else:   # Indicateur
-                    cc = [cd+ " " + it for cd, it in zip(k.split(u"\n"), v[0].split(u"\n"))] 
+                    cc = [cd+ " " + it for cd, it in zip(k.split(u"\n"), competence.intitule.split(u"\n"))] 
                     
                     li.append(textwrap.fill(u"\n ".join(cc), 50))
 
                     if "S"+k in dicIndicateurs.keys():
-                        ajouteIndic(nul, v[1], dicIndicateurs["S"+k])
+                        ajouteIndic(nul, competence.indicateurs, dicIndicateurs["S"+k])
                     else:
-                        ajouteIndic(nul, v[1], None)
+                        ajouteIndic(nul, competence.indicateurs, None)
                 
                 li.append(nul)
                 

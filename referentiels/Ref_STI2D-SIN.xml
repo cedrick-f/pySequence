@@ -1,4 +1,4 @@
-<Referentiel B_CI_BO="True" B_CI_cible="False" B_domaines="False" S_AnneeDebut="Sec6" S_Code="SIN" S_Famille="STI" S_FichierLogo="" S_abrevCI="CI" S_abrevPb="Pb" S_nomCI="Centre(s) d'Intérêt" S_nomFonctions="Fonction(s)" S_nomPb="Problématique(s)" S_nomTaches="Tâche(s)">
+<Referentiel B_CI_BO="True" B_CI_cible="False" S_AnneeDebut="Sec6" S_Code="SIN" S_Famille="STI" S_FichierLogo="" S_abrevCI="CI" S_abrevPb="Pb" S_nomCI="Centre(s) d'Intérêt" S_nomFonctions="Fonction(s)" S_nomPb="Problématique(s)" S_nomTaches="Tâche(s)">
   <l_BO_URL>
     <l_00 S_00="Programme" S_01="http://www.education.gouv.fr/pid25535/bulletin_officiel.html?cid_bo=82984" />
   </l_BO_URL>
@@ -7,9 +7,15 @@
   <l_Enseignement S_00="STI2D-SIN" S_01="STI2D : Systèmes d'Information et Numérique" S_02="STI2D" S_03="Sciences et Technologies de l'Industrie et du Développement Durable" />
   <d_aColNon B_C="True" />
   <d_activites>
-    <l_ED S_00="Etude de dossier" S_01="Activité d'étude de dossier" />
-    <l_P S_00="Projet" S_01="Activité de projet" />
-    <l_AP S_00="Activité pratique" S_01="Activité pratique" />
+    <l_ED S_00="Etude de dossier" S_01="Activité d'étude de dossier" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_ED>
+    <l_P S_00="Projet" S_01="Activité de projet" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_P>
+    <l_AP S_00="Activité pratique" S_01="Activité pratique" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_AP>
   </d_activites>
   <d_compImposees B_C="False" B_S="False" />
   <d_demarcheSeance>
@@ -18,18 +24,28 @@
     <l_AP S_00="I" S_01="R" />
   </d_demarcheSeance>
   <d_demarches>
-    <l_I S_00="Investigation" S_01="Investigation" />
-    <l_P S_00="Projet" S_01="Projet" />
-    <l_R S_00="Rés. Problème" S_01="Résolution de problème" />
+    <l_I S_00="Investigation" S_01="Investigation" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_I>
+    <l_P S_00="Projet" S_01="Projet" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_P>
+    <l_R S_00="Rés. Problème" S_01="Résolution de problème" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_R>
   </d_demarches>
   <d_dicFonctions />
   <d_dicoCompetences>
-    <Competences_S S_abrDiscipline="SIN" S_codeDiscipline="SII" S_nomDiscipline="STI2D - SIN" S_nomGenerique="Compétence(s)" S_nomGeneriqueIndic="Indicateurs de performance">
+    <Competences_S S_abrDiscipline="SIN" S_codeDiscipline="SII" S_nomDiscipline="STI2D - SIN" S_nomGenerique="Compétence(s)" S_nomGeneriqueIndic="">
       <d_dicCompetences>
-        <l_O7 S_00="Imaginer une solution, répondre à un besoin">
-          <d_01>
-            <l_CO7.sin3 S_00="Exprimer le principe de fonctionnement d'un système à partir des diagrammes SysML pertinents. Repérer les constituants de la chaîne d'énergie et d'information">
-              <l_01>
+        <Competence_O7 S_intitule="Imaginer une solution, répondre à un besoin">
+          <l_domaines />
+          <l_indicateurs />
+          <d_poids I_C="40" />
+          <d_sousComp>
+            <Competence_CO7.sin3 S_intitule="Exprimer le principe de fonctionnement d'un système à partir des diagrammes SysML pertinents. Repérer les constituants de la chaîne d'énergie et d'information">
+              <l_domaines />
+              <l_indicateurs>
                 <Indicateur_00 S_intitule="Le système est modélisé à l'aide de diagrammes conformes ">
                   <d_ligne I_C="13" />
                   <d_poids F_C="10.0" />
@@ -45,10 +61,14 @@
                   <d_poids F_C="10.0" />
                   <d_revue I_C="0" />
                 </Indicateur_02>
-              </l_01>
-            </l_CO7.sin3>
-            <l_CO7.sin2 S_00="Décoder le cahier des charges fonctionnel décrivant le besoin exprimé, identifier la fonction définie par un besoin exprimé, faire des mesures pour caractériser cette fonction et conclure sur sa conformité">
-              <l_01>
+              </l_indicateurs>
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CO7.sin3>
+            <Competence_CO7.sin2 S_intitule="Décoder le cahier des charges fonctionnel décrivant le besoin exprimé, identifier la fonction définie par un besoin exprimé, faire des mesures pour caractériser cette fonction et conclure sur sa conformité">
+              <l_domaines />
+              <l_indicateurs>
                 <Indicateur_00 S_intitule="Les diagrammes Sysml utilisés sont bien interprétés">
                   <d_ligne I_C="10" />
                   <d_poids F_C="10.0" />
@@ -64,10 +84,14 @@
                   <d_poids F_C="10.0" />
                   <d_revue I_C="0" />
                 </Indicateur_02>
-              </l_01>
-            </l_CO7.sin2>
-            <l_CO7.sin1 S_00="Décoder la notice technique d'un système, vérifier la conformité du fonctionnement">
-              <l_01>
+              </l_indicateurs>
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CO7.sin2>
+            <Competence_CO7.sin1 S_intitule="Décoder la notice technique d'un système, vérifier la conformité du fonctionnement">
+              <l_domaines />
+              <l_indicateurs>
                 <Indicateur_00 S_intitule="L'interprétation de la notice du système permet de décrire une procédure">
                   <d_ligne I_C="6" />
                   <d_poids F_C="10.0" />
@@ -88,15 +112,22 @@
                   <d_poids F_C="10.0" />
                   <d_revue I_C="0" />
                 </Indicateur_03>
-              </l_01>
-            </l_CO7.sin1>
-          </d_01>
-          <d_02 I_C="40" />
-        </l_O7>
-        <l_O9 S_00="Gérer la vie d'un système">
-          <d_01>
-            <l_CO9.sin4 S_00="Rechercher et choisir de nouveaux constituants d'un système (ou d'un projet finalisé) au regard d'évolutions technologiques, socioéconomiques spécifiées dans un cahier des charges. Organiser le projet permettant de maquettiser la solution choisie">
-              <l_01>
+              </l_indicateurs>
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CO7.sin1>
+          </d_sousComp>
+          <l_thematiques />
+        </Competence_O7>
+        <Competence_O9 S_intitule="Gérer la vie d'un système">
+          <l_domaines />
+          <l_indicateurs />
+          <d_poids I_C="20" />
+          <d_sousComp>
+            <Competence_CO9.sin4 S_intitule="Rechercher et choisir de nouveaux constituants d'un système (ou d'un projet finalisé) au regard d'évolutions technologiques, socioéconomiques spécifiées dans un cahier des charges. Organiser le projet permettant de maquettiser la solution choisie">
+              <l_domaines />
+              <l_indicateurs>
                 <Indicateur_00 S_intitule="Les diagrammes comportementaux sont correctement mis à jour">
                   <d_ligne I_C="41" />
                   <d_poids F_C="7.142857" />
@@ -112,10 +143,14 @@
                   <d_poids F_C="7.142857" />
                   <d_revue I_C="0" />
                 </Indicateur_02>
-              </l_01>
-            </l_CO9.sin4>
-            <l_CO9.sin1 S_00="Utiliser les outils adaptés pour planifier un projet (diagramme de Gantt, chemin critique, données économiques, réunions de projet)">
-              <l_01>
+              </l_indicateurs>
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CO9.sin4>
+            <Competence_CO9.sin1 S_intitule="Utiliser les outils adaptés pour planifier un projet (diagramme de Gantt, chemin critique, données économiques, réunions de projet)">
+              <l_domaines />
+              <l_indicateurs>
                 <Indicateur_00 S_intitule="Le cahier des charges fonctionnel est analysé et reformulé">
                   <d_ligne I_C="30" />
                   <d_poids F_C="7.142857" />
@@ -131,10 +166,14 @@
                   <d_poids F_C="7.142857" />
                   <d_revue I_C="0" />
                 </Indicateur_02>
-              </l_01>
-            </l_CO9.sin1>
-            <l_CO9.sin3 S_00="Rechercher des évolutions de constituants dans le cadre d'une démarche de veille technologique, analyser la structure d'un système pour intervenir sur les constituants dans le cadre d'une opération de maintenance">
-              <l_01>
+              </l_indicateurs>
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CO9.sin1>
+            <Competence_CO9.sin3 S_intitule="Rechercher des évolutions de constituants dans le cadre d'une démarche de veille technologique, analyser la structure d'un système pour intervenir sur les constituants dans le cadre d'une opération de maintenance">
+              <l_domaines />
+              <l_indicateurs>
                 <Indicateur_00 S_intitule="Les procédures adaptées d'intervention sur les constituants sont proposées">
                   <d_ligne I_C="38" />
                   <d_poids F_C="7.142857" />
@@ -150,10 +189,14 @@
                   <d_poids F_C="7.142857" />
                   <d_revue I_C="0" />
                 </Indicateur_02>
-              </l_01>
-            </l_CO9.sin3>
-            <l_CO9.sin2 S_00="Installer, configurer et instrumenter un système réel. Mettre en oeuvre la chaîne d'acquisition puis acquérir, traiter, transmettre et restituer l'information">
-              <l_01>
+              </l_indicateurs>
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CO9.sin3>
+            <Competence_CO9.sin2 S_intitule="Installer, configurer et instrumenter un système réel. Mettre en oeuvre la chaîne d'acquisition puis acquérir, traiter, transmettre et restituer l'information">
+              <l_domaines />
+              <l_indicateurs>
                 <Indicateur_00 S_intitule="La notice du système est correctement interprétée">
                   <d_ligne I_C="33" />
                   <d_poids F_C="7.142857" />
@@ -179,15 +222,22 @@
                   <d_poids F_C="7.142857" />
                   <d_revue I_C="0" />
                 </Indicateur_04>
-              </l_01>
-            </l_CO9.sin2>
-          </d_01>
-          <d_02 I_C="20" />
-        </l_O9>
-        <l_O8 S_00="Valider des solutions techniques">
-          <d_01>
-            <l_CO8.sin2 S_00="Etablir pour une fonction précédemment identifiée, un modèle de comportement à partir de mesures faites sur le sytème">
-              <l_01>
+              </l_indicateurs>
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CO9.sin2>
+          </d_sousComp>
+          <l_thematiques />
+        </Competence_O9>
+        <Competence_O8 S_intitule="Valider des solutions techniques">
+          <l_domaines />
+          <l_indicateurs />
+          <d_poids I_C="40" />
+          <d_sousComp>
+            <Competence_CO8.sin2 S_intitule="Etablir pour une fonction précédemment identifiée, un modèle de comportement à partir de mesures faites sur le sytème">
+              <l_domaines />
+              <l_indicateurs>
                 <Indicateur_00 S_intitule="Les mesures nécessaires sont effectuées">
                   <d_ligne I_C="20" />
                   <d_poids F_C="8.333333" />
@@ -203,10 +253,14 @@
                   <d_poids F_C="8.333333" />
                   <d_revue I_C="0" />
                 </Indicateur_02>
-              </l_01>
-            </l_CO8.sin2>
-            <l_CO8.sin3 S_00="Traduire sous forme graphique l'architecture de la chaîne d'information identifiée pour un système et définir les paramètres d'utilisation du simulateur">
-              <l_01>
+              </l_indicateurs>
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CO8.sin2>
+            <Competence_CO8.sin3 S_intitule="Traduire sous forme graphique l'architecture de la chaîne d'information identifiée pour un système et définir les paramètres d'utilisation du simulateur">
+              <l_domaines />
+              <l_indicateurs>
                 <Indicateur_00 S_intitule="La chaîne d'information est modélisée par des diagrammes adaptés (SysML)">
                   <d_ligne I_C="23" />
                   <d_poids F_C="8.333333" />
@@ -217,10 +271,14 @@
                   <d_poids F_C="8.333333" />
                   <d_revue I_C="0" />
                 </Indicateur_01>
-              </l_01>
-            </l_CO8.sin3>
-            <l_CO8.sin1 S_00="Rechercher et choisir une solution logicielle ou matérielle au regard de la définition d'un système">
-              <l_01>
+              </l_indicateurs>
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CO8.sin3>
+            <Competence_CO8.sin1 S_intitule="Rechercher et choisir une solution logicielle ou matérielle au regard de la définition d'un système">
+              <l_domaines />
+              <l_indicateurs>
                 <Indicateur_00 S_intitule="La définition du système est exprimée correctement">
                   <d_ligne I_C="17" />
                   <d_poids F_C="8.333333" />
@@ -236,10 +294,14 @@
                   <d_poids F_C="8.333333" />
                   <d_revue I_C="0" />
                 </Indicateur_02>
-              </l_01>
-            </l_CO8.sin1>
-            <l_CO8.sin4 S_00="Identifier les variables simulées et mesurées sur un système pour valider le choix d'une solution">
-              <l_01>
+              </l_indicateurs>
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CO8.sin1>
+            <Competence_CO8.sin4 S_intitule="Identifier les variables simulées et mesurées sur un système pour valider le choix d'une solution">
+              <l_domaines />
+              <l_indicateurs>
                 <Indicateur_00 S_intitule="Les variables caractéristiques du système simulé sont identifiées">
                   <d_ligne I_C="25" />
                   <d_poids F_C="8.333333" />
@@ -260,13 +322,15 @@
                   <d_poids F_C="8.333333" />
                   <d_revue I_C="0" />
                 </Indicateur_03>
-              </l_01>
-            </l_CO8.sin4>
-          </d_01>
-          <d_02 I_C="40" />
-        </l_O8>
+              </l_indicateurs>
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CO8.sin4>
+          </d_sousComp>
+          <l_thematiques />
+        </Competence_O8>
       </d_dicCompetences>
-      <l_indicateurs />
     </Competences_S>
   </d_dicoCompetences>
   <d_dicoSavoirs>
@@ -318,25 +382,38 @@
       </d_dicSavoirs>
     </Savoirs_S>
   </d_dicoSavoirs>
+  <d_domaines />
   <d_effectifs>
-    <l_C S_00="Classe entière" S_01="Classe entière" />
-    <l_E S_00="Etude ou Projet" S_01="Etude et Projet" />
-    <l_D S_00="Demi-groupe" S_01="Demi-groupe" />
-    <l_G S_00="Effectif réduit" S_01="Effectif réduit" />
-    <l_I S_00="Individuel" S_01="Individuel" />
-    <l_P S_00="Act. Pra." S_01="Activité Pratique" />
+    <l_C S_00="Classe entière" S_01="Classe entière" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_C>
+    <l_E S_00="Etude ou Projet" S_01="Etude et Projet" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_E>
+    <l_D S_00="Demi-groupe" S_01="Demi-groupe" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_D>
+    <l_G S_00="Effectif réduit" S_01="Effectif réduit" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_G>
+    <l_I S_00="Individuel" S_01="Individuel" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_I>
+    <l_P S_00="Act. Pra." S_01="Activité Pratique" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_P>
   </d_effectifs>
   <d_effectifsSeance>
     <l_C S_00="C" />
     <l_E S_00="C" />
     <l_AP S_00="E" S_01="P" />
     <l_SS S_00="C" />
-    <l_ED S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" />
-    <l_P S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" />
+    <l_ED S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
+    <l_P S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
     <l_S />
     <l_R />
     <l_SA S_00="C" S_01="G" />
-    <l_TD S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" />
+    <l_TD S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
   </d_effectifsSeance>
   <d_horsClasse />
   <d_labels>
@@ -346,7 +423,9 @@
   <l_listProblematiques />
   <l_listSavoirs S_00="S" />
   <l_listeDemarches S_00="I" S_01="R" S_02="P" />
+  <l_listeDomaines />
   <l_listeEffectifs S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
+  <l_listeThematiques />
   <l_listeTypeActivite S_00="ED" S_01="AP" S_02="P" />
   <l_listeTypeHorsClasse />
   <l_listeTypeSeance S_00="ED" S_01="AP" S_02="P" S_03="C" S_04="TD" S_05="SA" S_06="SS" S_07="E" S_08="R" S_09="S" />
@@ -474,16 +553,37 @@
     </Projet_PRJ>
   </d_projets>
   <d_seances>
-    <l_C S_00="Cours" S_01="Cours" />
-    <l_E S_00="Evaluation" S_01="Evaluation" />
-    <l_P S_00="Projet" S_01="Activité de projet" />
-    <l_SS S_00="Synt. séquence" S_01="Synthèse de séquence" />
-    <l_ED S_00="Etude de dossier" S_01="Activité d'étude de dossier" />
-    <l_AP S_00="Activité pratique" S_01="Activité pratique" />
-    <l_S S_00="Parallèle" S_01="Activités en parallèle" />
-    <l_R S_00="Rotation" S_01="Rotation d'activités" />
-    <l_TD S_00="TD" S_01="Travaux Dirigés" />
-    <l_SA S_00="Synt. activité" S_01="Synthèse d'activité" />
+    <l_C S_00="Cours" S_01="Cours" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_C>
+    <l_E S_00="Evaluation" S_01="Evaluation" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_E>
+    <l_P S_00="Projet" S_01="Activité de projet" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_P>
+    <l_SS S_00="Synt. séquence" S_01="Synthèse de séquence (hors Activités)" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_SS>
+    <l_ED S_00="Etude de dossier" S_01="Activité d'étude de dossier" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_ED>
+    <l_AP S_00="Activité pratique" S_01="Activité pratique" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_AP>
+    <l_S S_00="Parallèle" S_01="Activités en parallèle" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_S>
+    <l_R S_00="Rotation" S_01="Rotation d'activités" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_R>
+    <l_TD S_00="TD" S_01="Travaux Dirigés" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_TD>
+    <l_SA S_00="Synt. activité" S_01="Synthèse d'activité" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_SA>
   </d_seances>
+  <d_thematiques />
   <l_tr_com S_00="ET" S_01="Ref_STI2D-ETT.xls" />
 </Referentiel>

@@ -112,7 +112,20 @@ def GetAppnameVersion():
 #
 #
 #    return
+#########################################################################################
+def sup(v1, v2):
+    for i, l in enumerate(v1.split('.')):
+        nl = int(l.rstrip("-beta"))
+        na = int(v2[i].rstrip("-beta"))
 
+        if nl > na:
+            return True
+        elif nl < na:
+            break
+
+    return False
+    
+    
 ###############################################################################################
 def GetNewVersion(win):
     print "Recherche nouvelle version ..."
@@ -145,18 +158,7 @@ def GetNewVersion(win):
         return ver, id
 
 
-    #########################################################################################
-    def sup(v1, v2):
-        for i, l in enumerate(v1.split('.')):
-            nl = int(l.rstrip("-beta"))
-            na = int(v2[i].rstrip("-beta"))
-
-            if nl > na:
-                return True
-            elif nl < na:
-                break
-
-        return False
+    
 
     
     #########################################################################################

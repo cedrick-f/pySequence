@@ -2984,25 +2984,28 @@ class Projet(BaseDoc, Objet_sequence):
             else:
                 competence = prj.getCompetence(param[0], param[1:])
                 if competence is not None:
+#                     print "TIP", param, competence.indicateurs, competence.sousComp
                     self.tip.SetHTML(constantes.BASE_FICHE_HTML_COMP_PRJ)
                     
                     k = param[1:].split(u"\n")
                     nc = getSingulierPluriel(self.GetReferentiel().dicoCompetences["S"].nomGenerique, 
-                                             len(competence[1]) > 1)
+                                             len(competence.sousComp) > 1)
                     if len(k) > 1:
                         titre = nc + u" - ".join(k)
                     else:
                         titre = nc + " " + k[0]
                     self.tip.SetWholeText("titre", titre)
                     
-                    intituleComp = "\n".join([textwrap.fill(ind, 50) for ind in competence[0].split(u"\n")]) 
+                    intituleComp = "\n".join([textwrap.fill(ind, 50) for ind in competence.intitule.split(u"\n")]) 
                     self.tip.SetWholeText( "int", intituleComp)
                     
-                    if type(competence[1]) == dict:  
+                    if competence.sousComp != {}: #type(competence[1]) == dict:  
                         indicEleve = obj.GetDicIndicateurs()
                     else:
                         indicEleve = obj.GetDicIndicateurs()[param]
-                    self.tip.Construire(competence[1], indicEleve, prj)
+#                     print "indicEleve", indicEleve
+#                     print "competence.indicateurs", competence.indicateurs
+                    self.tip.Construire(competence.sousComp, indicEleve, prj)
                 
         self.tip.SetPage()
         return self.tip
@@ -5523,7 +5526,7 @@ class CentreInteret(Objet_sequence):
 
 ####################################################################################
 #
-#   Classe définissant les propriétés d'une compétence
+#   Classe définissant les propriétés des compétences de la Séquence (objectifs)
 #
 ####################################################################################
 class Competences(Objet_sequence):
@@ -8602,12 +8605,12 @@ class Eleve(Personne, Objet_sequence):
             
             compil = renvoie des dictionnaire plus simples
         """ 
-#        print "GetEvaluabilite", self
+#         print "GetEvaluabilite", self
         prj = self.GetProjetRef()
 #        dicPoids = self.GetReferentiel().dicoPoidsIndicateurs_prj
         dicIndicateurs = self.GetDicIndicateurs()
-#        print "dicIndicateurs", dicIndicateurs
-#        print "_dicoGrpIndicateur", prj._dicoGrpIndicateur
+#         print "dicIndicateurs", dicIndicateurs
+#         print "_dicoGrpIndicateur", prj._dicoGrpIndicateur
 #        tousIndicateurs = prj._dicIndicateurs
 #        lstGrpIndicateur = {'R' : prj._dicGrpIndicateur['R'],
 #                            'S' : self.GetProjetRef()._dicGrpIndicateur['S']}
@@ -8627,22 +8630,29 @@ class Eleve(Personne, Objet_sequence):
             for ph in dic.keys():
                 lers[disc][ph] = {}
                 rs[disc][ph] = 0
-#        print "   init :", rs, lers
+#         print "   init :", rs, lers
         
-        def getPoids(listIndic, comp, poidsGrp):
-            """ 
-            """
-#            print "getPoids", listIndic, comp, poidsGrp
+        
+        def getPoids(competence, code, poidsGrp):
+#             print "getPoids", code
+            if competence.sousComp != {}:
+                for k, c in competence.sousComp.items():
+                    getPoids(c, k, poidsGrp)
+            
+#             if competence.poids != {}:
             for disc, dic in prj._dicoGrpIndicateur.items():
                 for ph in dic.keys():
                     if grp in dic[ph]:
-                        for i, indic in enumerate(listIndic):
-                            if disc+comp in dicIndicateurs.keys():
-                                if dicIndicateurs[disc+comp][i]:
-    #                                print "  comp", grp, comp, i, indic.poids, ph
+#                         print "_", dic[ph]
+                        for i, indic in enumerate(competence.indicateurs):
+                            
+                            if disc+code in dicIndicateurs.keys():
+                                if dicIndicateurs[disc+code][i]:
+#                                     print "  comp", code, i, indic.poids, ph
                                     poids = indic.poids
                                     if ph in poids.keys():
                                         p = 1.0*poids[ph]/100
+                                        
                                         rs[disc][ph] += p * poidsGrp[ph]/100
                                         if grp in lers[disc][ph].keys():
                                             lers[disc][ph][grp] += p
@@ -8653,31 +8663,63 @@ class Eleve(Personne, Objet_sequence):
                                     lers[disc][ph][grp] = 0
                             
             return
+            
+            
+        
+#         def getPoids(listIndic, comp, poidsGrp):
+#             """ 
+#             """
+# #            print "getPoids", listIndic, comp, poidsGrp
+#             if type(listIndic)
+# 
+#             for disc, dic in prj._dicoGrpIndicateur.items():
+#                 for ph in dic.keys():
+#                     if grp in dic[ph]:
+#                         for i, indic in enumerate(listIndic):
+#                             if disc+comp in dicIndicateurs.keys():
+#                                 if dicIndicateurs[disc+comp][i]:
+#     #                                print "  comp", grp, comp, i, indic.poids, ph
+#                                     poids = indic.poids
+#                                     if ph in poids.keys():
+#                                         p = 1.0*poids[ph]/100
+#                                         rs[disc][ph] += p * poidsGrp[ph]/100
+#                                         if grp in lers[disc][ph].keys():
+#                                             lers[disc][ph][grp] += p
+#                                         else:
+#                                             lers[disc][ph][grp] = p
+#                             else:
+#                                 if not grp in lers[disc][ph].keys():
+#                                     lers[disc][ph][grp] = 0
+#                             
+#             return
         
         for typi, dico in prj._dicoIndicateurs.items():
             for grp, grpComp in dico.items():
-                if len(grpComp) > 2 :
-                    titre, dicComp, poidsGrp = grpComp
-                else:
-                    titre, dicComp = grpComp
-                    poidsGrp = 1
-    #            print "    ", grp, poidsGrp
+                getPoids(grpComp, grp, grpComp.poids)
                 
-                if type(dicComp) == list:                       # 1 niveau
-                    getPoids(dicComp, grp, poidsGrp)
-                else:
-                    for comp, lstIndic in dicComp.items():
-    #                    print "      ", comp
-                        if type(lstIndic[1]) == list:           # 2 niveaux
-                            getPoids(lstIndic[1], comp, poidsGrp)    
-                        else:                                   # 3 niveaux
-                            for scomp, lstIndic2 in lstIndic.items():
-                                getPoids(lstIndic2[1], scomp, poidsGrp)
+                
+                
+                
+                
+#                 titre = grpComp.intitule
+#                 dicComp = grpComp.sousComp
+#                 poidsGrp = grpComp.poids
+#                 
+#                 if type(dicComp) == list:                       # 1 niveau
+#                     getPoids(dicComp, grp, poidsGrp)
+#                 else:
+#                     for comp, lstIndic in dicComp.items():
+#     #                    print "      ", comp
+#                         if type(lstIndic[1]) == list:           # 2 niveaux
+#                             getPoids(lstIndic[1], comp, poidsGrp)    
+#                         else:                                   # 3 niveaux
+#                             for scomp, lstIndic2 in lstIndic.items():
+#                                 getPoids(lstIndic2[1], scomp, poidsGrp)
                                 
                                                                
 #        r, s = rs
 #        ler, les = lers
-#        print "   eval :", rs, lers
+#         print "   eval :", rs, lers
          
         # On corrige s'il n'y a qu'une seule grille (cas SSI jusqu'à 2014)
 #        if len(self.GetReferentiel().grilles_prj) == 1: 
@@ -8759,7 +8801,7 @@ class Eleve(Personne, Objet_sequence):
                 valeur = liste [True False ...] des indicateurs à mobiliser
         """
         indicateurs = {}
-#        print " GetDicIndicateurs", self.id
+#         print " GetDicIndicateurs", self.id
         for t in self.GetDocument().taches: # Toutes les tâches du projet
             if not t.phase in TOUTES_REVUES_SOUT:
                 if self.id in t.eleves:     # L'élève est concerné par cette tâche
@@ -8772,7 +8814,7 @@ class Eleve(Personne, Objet_sequence):
                             indicateurs[c] = [x or y for x, y in zip(indicateurs[c], i)]
                         else:
                             indicateurs[c] = i
-#        print "  ", indicateurs
+#         print "  ", indicateurs
         return indicateurs
         
         

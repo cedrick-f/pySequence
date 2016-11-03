@@ -1,4 +1,4 @@
-<Referentiel B_CI_BO="False" B_CI_cible="False" B_domaines="False" S_AnneeDebut="Sup1" S_Code="STS_SN_EC" S_Famille="STS" S_FichierLogo="" S_abrevCI="Th " S_abrevPb="Pb" S_nomCI="Thème(s)" S_nomFonctions="Fonction(s)" S_nomPb="Problématique(s)" S_nomTaches="Tâche(s)">
+<Referentiel B_CI_BO="False" B_CI_cible="False" S_AnneeDebut="Sup1" S_Code="STS_SN_EC" S_Famille="STS" S_FichierLogo="" S_abrevCI="Th " S_abrevPb="Pb" S_nomCI="Thème(s)" S_nomFonctions="Fonction(s)" S_nomPb="Problématique(s)" S_nomTaches="Tâche(s)">
   <l_BO_URL>
     <l_00 S_00="Programme" S_01="http://eduscol.education.fr/sti/sites/eduscol.education.fr.sti/files/textes/formations-bts-bts-systemes-numeriques/3321-referentiel-bts-systemes-numeriques.pdf" />
   </l_BO_URL>
@@ -7,9 +7,15 @@
   <l_Enseignement S_00="STS-SN-EC" S_01="BTS - Systèmes Numériques" S_02="STS" S_03="Section de Technicien Supérieur" />
   <d_aColNon B_S1="True" B_S2="True" />
   <d_activites>
-    <l_ED S_00="Etude de dossier" S_01="Activité d'étude de dossier" />
-    <l_P S_00="Projet" S_01="Activité de projet" />
-    <l_AP S_00="Activité pratique" S_01="Activité pratique" />
+    <l_ED S_00="Etude de dossier" S_01="Activité d'étude de dossier" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_ED>
+    <l_P S_00="Projet" S_01="Activité de projet" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_P>
+    <l_AP S_00="Activité pratique" S_01="Activité pratique" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_AP>
   </d_activites>
   <d_compImposees B_R2="False" B_R3="False" B_S="False" B_S1="False" B_S2="False" />
   <d_demarcheSeance>
@@ -18,41 +24,51 @@
     <l_AP S_00="I" S_01="R" />
   </d_demarcheSeance>
   <d_demarches>
-    <l_I S_00="Investigation" S_01="Investigation" />
-    <l_P S_00="Projet" S_01="Projet" />
-    <l_R S_00="Rés. Problème" S_01="Résolution de problème" />
+    <l_I S_00="Investigation" S_01="Investigation" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_I>
+    <l_P S_00="Projet" S_01="Projet" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_P>
+    <l_R S_00="Rés. Problème" S_01="Résolution de problème" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_R>
   </d_demarches>
   <d_dicFonctions />
   <d_dicoCompetences>
-    <Competences_S S_abrDiscipline="GE" S_codeDiscipline="SII" S_nomDiscipline="Génie Électrique" S_nomGenerique="Compétence(s)" S_nomGeneriqueIndic="Indicateurs de performance">
+    <Competences_S S_abrDiscipline="GE" S_codeDiscipline="SII" S_nomDiscipline="Génie Électrique" S_nomGenerique="Compétence(s)" S_nomGeneriqueIndic="">
       <d_dicCompetences>
-        <l_C7.1 S_00="diagnostiquer les causes d’un dysfonctionnement">
-          <l_01>
+        <Competence_C7.1 S_intitule="diagnostiquer les causes d’un dysfonctionnement">
+          <l_domaines />
+          <l_indicateurs>
             <Indicateur_00 S_intitule="Les paramètres sont identifiés.">
               <d_ligne I_S2="16" />
-              <d_poids F_S2="25.0" />
+              <d_poids I_S2="1" />
               <d_revue I_S2="0" />
             </Indicateur_00>
             <Indicateur_01 S_intitule="L’état de fonctionnement de l’appareil est identifié.">
               <d_ligne I_S2="17" />
-              <d_poids F_S2="25.0" />
+              <d_poids I_S2="1" />
               <d_revue I_S2="0" />
             </Indicateur_01>
             <Indicateur_02 S_intitule="Un diagnostic est établi.">
               <d_ligne I_S2="18" />
-              <d_poids F_S2="25.0" />
+              <d_poids I_S2="1" />
               <d_revue I_S2="0" />
             </Indicateur_02>
             <Indicateur_03 S_intitule="Les composants défectueux sont identifiés et localisés.">
               <d_ligne I_S2="19" />
-              <d_poids F_S2="25.0" />
+              <d_poids I_S2="1" />
               <d_revue I_S2="0" />
             </Indicateur_03>
-          </l_01>
-          <d_02 I_S2="10" />
-        </l_C7.1>
-        <l_C7.2 S_00=" proposer des corrections ou des améliorations">
-          <l_01>
+          </l_indicateurs>
+          <d_poids />
+          <d_sousComp />
+          <l_thematiques />
+        </Competence_C7.1>
+        <Competence_C7.2 S_intitule=" proposer des corrections ou des améliorations">
+          <l_domaines />
+          <l_indicateurs>
             <Indicateur_00 S_intitule="Une stratégie pour le maintien en condition opérationnelle est mise en place">
               <d_ligne />
               <d_poids />
@@ -63,44 +79,50 @@
               <d_poids />
               <d_revue />
             </Indicateur_01>
-          </l_01>
-          <d_02 />
-        </l_C7.2>
-        <l_C7.3 S_00="dépanner une installation matérielle et/ou logicielle">
-          <l_01>
+          </l_indicateurs>
+          <d_poids />
+          <d_sousComp />
+          <l_thematiques />
+        </Competence_C7.2>
+        <Competence_C7.3 S_intitule="dépanner une installation matérielle et/ou logicielle">
+          <l_domaines />
+          <l_indicateurs>
             <Indicateur_00 S_intitule="La zone d’intervention est consignée. Les personnes concernées sont averties.">
               <d_ligne I_S2="21" />
-              <d_poids F_S2="25.0" />
+              <d_poids I_S2="1" />
               <d_revue I_S2="0" />
             </Indicateur_00>
             <Indicateur_01 S_intitule="Les composants défectueux sont remplacés et testés.">
               <d_ligne I_S2="22" />
-              <d_poids F_S2="25.0" />
+              <d_poids I_S2="1" />
               <d_revue I_S2="0" />
             </Indicateur_01>
             <Indicateur_02 S_intitule="L’installation est prête à fonctionner normalement.">
               <d_ligne I_S2="23" />
-              <d_poids F_S2="25.0" />
+              <d_poids I_S2="1" />
               <d_revue I_S2="0" />
             </Indicateur_02>
             <Indicateur_03 S_intitule="Les services concernés sont avertis du bon fonctionnement de l’installation.">
               <d_ligne I_S2="24" />
-              <d_poids F_S2="25.0" />
+              <d_poids I_S2="1" />
               <d_revue I_S2="0" />
             </Indicateur_03>
-          </l_01>
-          <d_02 I_S2="10" />
-        </l_C7.3>
-        <l_C6.1 S_00="superviser le fonc--tionnement d’un produit matériel/logiciel ">
-          <l_01>
+          </l_indicateurs>
+          <d_poids />
+          <d_sousComp />
+          <l_thematiques />
+        </Competence_C7.3>
+        <Competence_C6.1 S_intitule="superviser le fonc--tionnement d’un produit matériel/logiciel ">
+          <l_domaines />
+          <l_indicateurs>
             <Indicateur_00 S_intitule="Les informations à enregistrer et les alertes à générer sont identifiées et pertinentes.">
               <d_ligne I_S2="6" />
-              <d_poids F_S2="33.333333" />
+              <d_poids I_S2="1" />
               <d_revue I_S2="0" />
             </Indicateur_00>
             <Indicateur_01 S_intitule="L’outil de supervision est configuré pour générer les fichiers de journalisation, de supervision et les alertes.">
               <d_ligne I_S2="7" />
-              <d_poids F_S2="33.333333" />
+              <d_poids I_S2="1" />
               <d_revue I_S2="0" />
             </Indicateur_01>
             <Indicateur_02 S_intitule="Les informations ciblées sont localisées dans les enregistrements des fichiers de supervision.">
@@ -110,307 +132,379 @@
             </Indicateur_02>
             <Indicateur_03 S_intitule="Le mécanisme producteur communique avec le système récepteur.">
               <d_ligne I_S2="9" />
-              <d_poids F_S2="33.333333" />
+              <d_poids I_S2="1" />
               <d_revue I_S2="0" />
             </Indicateur_03>
-          </l_01>
-          <d_02 I_S2="40" />
-        </l_C6.1>
-        <l_C6.2 S_00="analyser les compte rendus d’exploitation ">
-          <l_01>
+          </l_indicateurs>
+          <d_poids />
+          <d_sousComp />
+          <l_thematiques />
+        </Competence_C6.1>
+        <Competence_C6.2 S_intitule="analyser les compte rendus d’exploitation ">
+          <l_domaines />
+          <l_indicateurs>
             <Indicateur_00 S_intitule="Les informations utiles à l’exploitation sont accessibles dans le système récepteur.  Les informations issues de l’outil de supervision sont synthétisées et analysées.">
               <d_ligne I_S2="11" />
-              <d_poids F_S2="25.0" />
+              <d_poids I_S2="1" />
               <d_revue I_S2="0" />
             </Indicateur_00>
             <Indicateur_01 S_intitule="Les informations issues de l’outil de supervision relatives aux défauts sont identifiées.">
               <d_ligne I_S2="12" />
-              <d_poids F_S2="25.0" />
+              <d_poids I_S2="1" />
               <d_revue I_S2="0" />
             </Indicateur_01>
             <Indicateur_02 S_intitule="Les causes des défauts sont identifiées et une proposition de solution est avancée.">
               <d_ligne I_S2="13" />
-              <d_poids F_S2="25.0" />
+              <d_poids I_S2="1" />
               <d_revue I_S2="0" />
             </Indicateur_02>
             <Indicateur_03 S_intitule="Le document produit permet une maintenance préventive et curative du système.">
               <d_ligne I_S2="14" />
-              <d_poids F_S2="25.0" />
+              <d_poids I_S2="1" />
               <d_revue I_S2="0" />
             </Indicateur_03>
-          </l_01>
-          <d_02 I_S2="20" />
-        </l_C6.2>
-        <l_C1.6 S_00="collecter des données commerciales ">
-          <l_01 />
-          <d_02 />
-        </l_C1.6>
-        <l_C1.4 S_00=" s'entretenir d'une problématique professionnelle ">
-          <l_01 />
-          <d_02 />
-        </l_C1.4>
-        <l_C1.5 S_00=" analyser l'expression d'un besoin client ">
-          <l_01 />
-          <d_02 />
-        </l_C1.5>
-        <l_C1.2 S_00=" présenter des informat--ions à des interlocuteurs identifiés ">
-          <l_01 />
-          <d_02 />
-        </l_C1.2>
-        <l_C1.3 S_00="assister des utilisateurs ">
-          <l_01 />
-          <d_02 />
-        </l_C1.3>
-        <l_C1.1 S_00="rechercher et structurer des informations techniques">
-          <l_01 />
-          <d_02 />
-        </l_C1.1>
-        <l_C3.4 S_00=" valider le choix d’une architecture matérielle/logicielle">
-          <l_01 />
-          <d_02 />
-        </l_C3.4>
-        <l_C3.5 S_00=" contribuer à la définition des éléments de recette au regard des contraintes--du cahier des charges ">
-          <l_01>
+          </l_indicateurs>
+          <d_poids />
+          <d_sousComp />
+          <l_thematiques />
+        </Competence_C6.2>
+        <Competence_C1.6 S_intitule="collecter des données commerciales ">
+          <l_domaines />
+          <l_indicateurs />
+          <d_poids />
+          <d_sousComp />
+          <l_thematiques />
+        </Competence_C1.6>
+        <Competence_C1.4 S_intitule=" s'entretenir d'une problématique professionnelle ">
+          <l_domaines />
+          <l_indicateurs />
+          <d_poids />
+          <d_sousComp />
+          <l_thematiques />
+        </Competence_C1.4>
+        <Competence_C1.5 S_intitule=" analyser l'expression d'un besoin client ">
+          <l_domaines />
+          <l_indicateurs />
+          <d_poids />
+          <d_sousComp />
+          <l_thematiques />
+        </Competence_C1.5>
+        <Competence_C1.2 S_intitule=" présenter des informat--ions à des interlocuteurs identifiés ">
+          <l_domaines />
+          <l_indicateurs />
+          <d_poids />
+          <d_sousComp />
+          <l_thematiques />
+        </Competence_C1.2>
+        <Competence_C1.3 S_intitule="assister des utilisateurs ">
+          <l_domaines />
+          <l_indicateurs />
+          <d_poids />
+          <d_sousComp />
+          <l_thematiques />
+        </Competence_C1.3>
+        <Competence_C1.1 S_intitule="rechercher et structurer des informations techniques">
+          <l_domaines />
+          <l_indicateurs />
+          <d_poids />
+          <d_sousComp />
+          <l_thematiques />
+        </Competence_C1.1>
+        <Competence_C3.4 S_intitule=" valider le choix d’une architecture matérielle/logicielle">
+          <l_domaines />
+          <l_indicateurs />
+          <d_poids />
+          <d_sousComp />
+          <l_thematiques />
+        </Competence_C3.4>
+        <Competence_C3.5 S_intitule=" contribuer à la définition des éléments de recette au regard des contraintes--du cahier des charges ">
+          <l_domaines />
+          <l_indicateurs>
             <Indicateur_00 S_intitule="Le cahier de recette est rédigé">
               <d_ligne I_R2="0" />
-              <d_poids F_R2="100.0" />
+              <d_poids I_R2="1" />
               <d_revue I_R2="0" />
             </Indicateur_00>
-          </l_01>
-          <d_02 I_R2="5" />
-        </l_C3.5>
-        <l_C3.6 S_00=" recenser les solutions existantes répondant au cahier des charges">
-          <l_01>
+          </l_indicateurs>
+          <d_poids />
+          <d_sousComp />
+          <l_thematiques />
+        </Competence_C3.5>
+        <Competence_C3.6 S_intitule=" recenser les solutions existantes répondant au cahier des charges">
+          <l_domaines />
+          <l_indicateurs>
             <Indicateur_00 S_intitule="Un tableau comparatif des coûts totaux est édité">
               <d_ligne I_R2="0" />
-              <d_poids F_R2="100.0" />
+              <d_poids I_R2="1" />
               <d_revue I_R2="0" />
             </Indicateur_00>
-          </l_01>
-          <d_02 I_R2="5" />
-        </l_C3.6>
-        <l_C3.7 S_00=" contribuer à la modélisation de tout ou partie d’un produit ">
-          <l_01 />
-          <d_02 />
-        </l_C3.7>
-        <l_C3.1 S_00="analyser un cahier des charges ">
-          <l_01>
+          </l_indicateurs>
+          <d_poids />
+          <d_sousComp />
+          <l_thematiques />
+        </Competence_C3.6>
+        <Competence_C3.7 S_intitule=" contribuer à la modélisation de tout ou partie d’un produit ">
+          <l_domaines />
+          <l_indicateurs />
+          <d_poids />
+          <d_sousComp />
+          <l_thematiques />
+        </Competence_C3.7>
+        <Competence_C3.1 S_intitule="analyser un cahier des charges ">
+          <l_domaines />
+          <l_indicateurs>
             <Indicateur_00 S_intitule="Un compte rendu est rédigé avec la validation des jalons, les documents contractuels, les actions à réaliser pour les jalons non respectés">
               <d_ligne I_R2="0" />
-              <d_poids F_R2="25.0" />
+              <d_poids I_R2="1" />
               <d_revue I_R2="0" />
             </Indicateur_00>
             <Indicateur_01 S_intitule="Les diagrammes SysML (contexte, cas d'utilisation et séquence) sont construits">
               <d_ligne I_R2="0" />
-              <d_poids F_R2="25.0" />
+              <d_poids I_R2="1" />
               <d_revue I_R2="0" />
             </Indicateur_01>
             <Indicateur_02 S_intitule="Un diagramme d'exigence est fourni">
               <d_ligne I_R2="0" />
-              <d_poids F_R2="25.0" />
+              <d_poids I_R2="1" />
               <d_revue I_R2="0" />
             </Indicateur_02>
             <Indicateur_03 S_intitule="Les normes à respecter sont inventoriées">
               <d_ligne I_R2="0" />
-              <d_poids F_R2="25.0" />
+              <d_poids I_R2="1" />
               <d_revue I_R2="0" />
             </Indicateur_03>
-          </l_01>
-          <d_02 I_R2="5" />
-        </l_C3.1>
-        <l_C3.2 S_00="analyser et compléter un dossier de spécifications techniques ">
-          <l_01 />
-          <d_02 />
-        </l_C3.2>
-        <l_C3.3 S_00="définir l’architecture--globale d’un prototype ou d’un système ">
-          <l_01>
+          </l_indicateurs>
+          <d_poids />
+          <d_sousComp />
+          <l_thematiques />
+        </Competence_C3.1>
+        <Competence_C3.2 S_intitule="analyser et compléter un dossier de spécifications techniques ">
+          <l_domaines />
+          <l_indicateurs />
+          <d_poids />
+          <d_sousComp />
+          <l_thematiques />
+        </Competence_C3.2>
+        <Competence_C3.3 S_intitule="définir l’architecture--globale d’un prototype ou d’un système ">
+          <l_domaines />
+          <l_indicateurs>
             <Indicateur_00 S_intitule="Les diagrammes de définition de blocs et le digramme de blocs internes sont définis">
               <d_ligne I_R2="0" />
-              <d_poids F_R2="100.0" />
+              <d_poids I_R2="1" />
               <d_revue I_R2="0" />
             </Indicateur_00>
-          </l_01>
-          <d_02 I_R2="5" />
-        </l_C3.3>
-        <l_C3.8 S_00=" élaborer le dossier de définition de la solution technique retenue">
-          <l_01>
+          </l_indicateurs>
+          <d_poids />
+          <d_sousComp />
+          <l_thematiques />
+        </Competence_C3.3>
+        <Competence_C3.8 S_intitule=" élaborer le dossier de définition de la solution technique retenue">
+          <l_domaines />
+          <l_indicateurs>
             <Indicateur_00 S_intitule="Le dossier de conception est complet">
               <d_ligne I_R2="0" />
-              <d_poids F_R2="100.0" />
+              <d_poids I_R2="1" />
               <d_revue I_R2="0" />
             </Indicateur_00>
-          </l_01>
-          <d_02 I_R2="5" />
-        </l_C3.8>
-        <l_C3.9 S_00=" valider une fonction du système à partir d’une maquette réelle ">
-          <l_01>
+          </l_indicateurs>
+          <d_poids />
+          <d_sousComp />
+          <l_thematiques />
+        </Competence_C3.8>
+        <Competence_C3.9 S_intitule=" valider une fonction du système à partir d’une maquette réelle ">
+          <l_domaines />
+          <l_indicateurs>
             <Indicateur_00 S_intitule="Les procédures et les résultats de mesures (valeurs, chronogrammes, spectres, etc.) sont rédigés">
               <d_ligne I_R2="0" />
-              <d_poids F_R2="50.0" />
+              <d_poids I_R2="1" />
               <d_revue I_R2="0" />
             </Indicateur_00>
             <Indicateur_01 S_intitule="Un rapport de validation est rédigé">
               <d_ligne I_R2="0" />
-              <d_poids F_R2="50.0" />
+              <d_poids I_R2="1" />
               <d_revue I_R2="0" />
             </Indicateur_01>
-          </l_01>
-          <d_02 I_R2="5" />
-        </l_C3.9>
-        <l_C7.4 S_00="assurer la traçabilité">
-          <l_01>
+          </l_indicateurs>
+          <d_poids />
+          <d_sousComp />
+          <l_thematiques />
+        </Competence_C3.9>
+        <Competence_C7.4 S_intitule="assurer la traçabilité">
+          <l_domaines />
+          <l_indicateurs>
             <Indicateur_00 S_intitule="Le rapport d’intervention est rédigé.">
               <d_ligne I_S2="26" />
-              <d_poids F_S2="50.0" />
+              <d_poids I_S2="1" />
               <d_revue I_S2="0" />
             </Indicateur_00>
             <Indicateur_01 S_intitule="La base de données est mise à jour.">
               <d_ligne I_S2="27" />
-              <d_poids F_S2="50.0" />
+              <d_poids I_S2="1" />
               <d_revue I_S2="0" />
             </Indicateur_01>
-          </l_01>
-          <d_02 I_S2="10" />
-        </l_C7.4>
-        <l_C5.2 S_00="mettre en œuvre une solution matérielle/logicielle en situation">
-          <l_01>
+          </l_indicateurs>
+          <d_poids />
+          <d_sousComp />
+          <l_thematiques />
+        </Competence_C7.4>
+        <Competence_C5.2 S_intitule="mettre en œuvre une solution matérielle/logicielle en situation">
+          <l_domaines />
+          <l_indicateurs>
             <Indicateur_00 S_intitule="Les contraintes liées au client (horaires, nuisances sonores, qualité de la relation …) sont respectées.">
               <d_ligne I_S1="11" />
-              <d_poids F_S1="25.0" />
+              <d_poids I_S1="1" />
               <d_revue I_S1="0" />
             </Indicateur_00>
             <Indicateur_01 S_intitule="Les normes métier et les procédures sont respectées.">
               <d_ligne I_S1="12" />
-              <d_poids F_S1="25.0" />
+              <d_poids I_S1="1" />
               <d_revue I_S1="0" />
             </Indicateur_01>
             <Indicateur_02 S_intitule="Les résultats de test sont conformes aux spécifications des procédures d'installation.">
               <d_ligne I_S1="13" />
-              <d_poids F_S1="25.0" />
+              <d_poids I_S1="1" />
               <d_revue I_S1="0" />
             </Indicateur_02>
             <Indicateur_03 S_intitule="Le système ou le service est conforme aux spécifications du cahier des charges">
               <d_ligne I_S1="14" />
-              <d_poids F_S1="25.0" />
+              <d_poids I_S1="1" />
               <d_revue I_S1="0" />
             </Indicateur_03>
-          </l_01>
-          <d_02 I_S1="40" />
-        </l_C5.2>
-        <l_C5.3 S_00="effectuer la r--ecette d’un produit avec le client ">
-          <l_01>
+          </l_indicateurs>
+          <d_poids />
+          <d_sousComp />
+          <l_thematiques />
+        </Competence_C5.2>
+        <Competence_C5.3 S_intitule="effectuer la r--ecette d’un produit avec le client ">
+          <l_domaines />
+          <l_indicateurs>
             <Indicateur_00 S_intitule="La fiche recette est conforme aux spécifications du cahier des charges.">
               <d_ligne I_S1="16" />
-              <d_poids F_S1="25.0" />
+              <d_poids I_S1="1" />
               <d_revue I_S1="0" />
             </Indicateur_00>
             <Indicateur_01 S_intitule="La fiche de recette est suivie, les remarques éventuelles sont prises en compte.">
               <d_ligne I_S1="17" />
-              <d_poids F_S1="25.0" />
+              <d_poids I_S1="1" />
               <d_revue I_S1="0" />
             </Indicateur_01>
             <Indicateur_02 S_intitule="Les documents (mise en route, exploitation et maintenance) sont remis au client.">
               <d_ligne I_S1="18" />
-              <d_poids F_S1="25.0" />
+              <d_poids I_S1="1" />
               <d_revue I_S1="0" />
             </Indicateur_02>
             <Indicateur_03 S_intitule="Le système ou le service fonctionne.">
               <d_ligne I_S1="19" />
-              <d_poids F_S1="25.0" />
+              <d_poids I_S1="1" />
               <d_revue I_S1="0" />
             </Indicateur_03>
-          </l_01>
-          <d_02 I_S1="40" />
-        </l_C5.3>
-        <l_C5.1 S_00=" préparer la solution et le plan d’action ">
-          <l_01>
+          </l_indicateurs>
+          <d_poids />
+          <d_sousComp />
+          <l_thematiques />
+        </Competence_C5.3>
+        <Competence_C5.1 S_intitule=" préparer la solution et le plan d’action ">
+          <l_domaines />
+          <l_indicateurs>
             <Indicateur_00 S_intitule="L'équipe est constituée et les tâches professionnelles sont attribuées.">
               <d_ligne I_S1="6" />
-              <d_poids F_S1="25.0" />
+              <d_poids I_S1="1" />
               <d_revue I_S1="0" />
             </Indicateur_00>
             <Indicateur_01 S_intitule="Le plan d'action est traduit dans un diagramme de Gantt et indique les jalons.">
               <d_ligne I_S1="7" />
-              <d_poids F_S1="25.0" />
+              <d_poids I_S1="1" />
               <d_revue I_S1="0" />
             </Indicateur_01>
             <Indicateur_02 S_intitule="Le matériel est préparé pour mettre en œuvre la solution.">
               <d_ligne I_S1="8" />
-              <d_poids F_S1="25.0" />
+              <d_poids I_S1="1" />
               <d_revue I_S1="0" />
             </Indicateur_02>
             <Indicateur_03 S_intitule="La procédure d’installation sur site est rédigée.">
               <d_ligne I_S1="9" />
-              <d_poids F_S1="25.0" />
+              <d_poids I_S1="1" />
               <d_revue I_S1="0" />
             </Indicateur_03>
-          </l_01>
-          <d_02 I_S1="20" />
-        </l_C5.1>
-        <l_C3.10 S_00=" réaliser la conception dé--taillée d’un module matériel et/ou logiciel ">
-          <l_01>
+          </l_indicateurs>
+          <d_poids />
+          <d_sousComp />
+          <l_thematiques />
+        </Competence_C5.1>
+        <Competence_C3.10 S_intitule=" réaliser la conception dé--taillée d’un module matériel et/ou logiciel ">
+          <l_domaines />
+          <l_indicateurs>
             <Indicateur_00 S_intitule="Le schémas structurels sont établis">
               <d_ligne I_R2="0" />
-              <d_poids F_R2="25.0" />
+              <d_poids I_R2="1" />
               <d_revue I_R2="0" />
             </Indicateur_00>
             <Indicateur_01 S_intitule="L'algorithme est établi">
               <d_ligne I_R2="0" />
-              <d_poids F_R2="25.0" />
+              <d_poids I_R2="1" />
               <d_revue I_R2="0" />
             </Indicateur_01>
             <Indicateur_02 S_intitule="Les programmes sont commentés">
               <d_ligne I_R2="0" />
-              <d_poids F_R2="25.0" />
+              <d_poids I_R2="1" />
               <d_revue I_R2="0" />
             </Indicateur_02>
             <Indicateur_03 S_intitule="Le résultat de compilation est fourni">
               <d_ligne I_R2="0" />
-              <d_poids F_R2="25.0" />
+              <d_poids I_R2="1" />
               <d_revue I_R2="0" />
             </Indicateur_03>
-          </l_01>
-          <d_02 I_R2="5" />
-        </l_C3.10>
-        <l_P S_00="Le technicien participe à la tâche mais n'en a pas la maîtrise. Il doit néanmoins comprendre son fondement et apporter ses compétences à l'équipe qui en a la charge.">
-          <l_01 />
-          <d_02 />
-        </l_P>
-        <l_C2.1 S_00="maintenir les informations">
-          <l_01>
+          </l_indicateurs>
+          <d_poids />
+          <d_sousComp />
+          <l_thematiques />
+        </Competence_C3.10>
+        <Competence_P S_intitule="Le technicien participe à la tâche mais n'en a pas la maîtrise. Il doit néanmoins comprendre son fondement et apporter ses compétences à l'équipe qui en a la charge.">
+          <l_domaines />
+          <l_indicateurs />
+          <d_poids />
+          <d_sousComp />
+          <l_thematiques />
+        </Competence_P>
+        <Competence_C2.1 S_intitule="maintenir les informations">
+          <l_domaines />
+          <l_indicateurs>
             <Indicateur_00 S_intitule="Les modifications apportées sont clairement documentées">
               <d_ligne I_R2="0" />
-              <d_poids F_R2="50.0" />
+              <d_poids I_R2="1" />
               <d_revue I_R2="0" />
             </Indicateur_00>
             <Indicateur_01 S_intitule="Les documents archivés sont copiés sur les serveurs et dans la base de données dédiés au projet">
               <d_ligne I_R2="0" />
-              <d_poids F_R2="50.0" />
+              <d_poids I_R2="1" />
               <d_revue I_R2="0" />
             </Indicateur_01>
-          </l_01>
-          <d_02 I_R2="5" />
-        </l_C2.1>
-        <l_C2.3 S_00="organiser et/ou respecter la planification d'un projet">
-          <l_01>
+          </l_indicateurs>
+          <d_poids />
+          <d_sousComp />
+          <l_thematiques />
+        </Competence_C2.1>
+        <Competence_C2.3 S_intitule="organiser et/ou respecter la planification d'un projet">
+          <l_domaines />
+          <l_indicateurs>
             <Indicateur_00 S_intitule="Les tâches professionnelles à effectuer sont identifiés">
               <d_ligne I_R2="0" />
-              <d_poids F_R2="25.0" />
+              <d_poids I_R2="1" />
               <d_revue I_R2="0" />
             </Indicateur_00>
             <Indicateur_01 S_intitule="La charge de travail, les moyens humains et techniques à monopoliser sont identifés">
               <d_ligne I_R2="0" />
-              <d_poids F_R2="25.0" />
+              <d_poids I_R2="1" />
               <d_revue I_R2="0" />
             </Indicateur_01>
             <Indicateur_02 S_intitule="Les délais et jalons sont identifiés">
               <d_ligne I_R2="0" />
-              <d_poids F_R2="25.0" />
+              <d_poids I_R2="1" />
               <d_revue I_R2="0" />
             </Indicateur_02>
             <Indicateur_03 S_intitule="Les documents de planification du projet sont consultés">
               <d_ligne I_R2="0" />
-              <d_poids F_R2="25.0" />
+              <d_poids I_R2="1" />
               <d_revue I_R2="0" />
             </Indicateur_03>
             <Indicateur_04 S_intitule="Les documents de planification du projet sont modifiés en respect de son niveau de responsabilité">
@@ -443,39 +537,45 @@
               <d_poids />
               <d_revue />
             </Indicateur_09>
-          </l_01>
-          <d_02 I_R2="5" />
-        </l_C2.3>
-        <l_C2.2 S_00="formaliser l’expression d’un besoin">
-          <l_01>
+          </l_indicateurs>
+          <d_poids />
+          <d_sousComp />
+          <l_thematiques />
+        </Competence_C2.3>
+        <Competence_C2.2 S_intitule="formaliser l’expression d’un besoin">
+          <l_domaines />
+          <l_indicateurs>
             <Indicateur_00 S_intitule="Le cahier des charges est rédigé">
               <d_ligne I_R2="0" />
-              <d_poids F_R2="100.0" />
+              <d_poids I_R2="1" />
               <d_revue I_R2="0" />
             </Indicateur_00>
-          </l_01>
-          <d_02 I_R2="5" />
-        </l_C2.2>
-        <l_C2.5 S_00=" travailler en équipe ">
-          <l_01>
+          </l_indicateurs>
+          <d_poids />
+          <d_sousComp />
+          <l_thematiques />
+        </Competence_C2.2>
+        <Competence_C2.5 S_intitule=" travailler en équipe ">
+          <l_domaines />
+          <l_indicateurs>
             <Indicateur_00 S_intitule="Les intervenants au projet sont identifiés et choisis">
               <d_ligne I_R2="0" />
-              <d_poids F_R2="25.0" />
+              <d_poids I_R2="1" />
               <d_revue I_R2="0" />
             </Indicateur_00>
             <Indicateur_01 S_intitule="Les fiches contrats sont rédigées et assignées">
               <d_ligne I_R2="0" />
-              <d_poids F_R2="25.0" />
+              <d_poids I_R2="1" />
               <d_revue I_R2="0" />
             </Indicateur_01>
             <Indicateur_02 S_intitule="Une présentation de l'état du projet est faite au maître d'œuvre ou à son représentant">
               <d_ligne I_R2="0" />
-              <d_poids F_R2="25.0" />
+              <d_poids I_R2="1" />
               <d_revue I_R2="0" />
             </Indicateur_02>
             <Indicateur_03 S_intitule="Les nouvelles directives sont comprises">
               <d_ligne I_R2="0" />
-              <d_poids F_R2="25.0" />
+              <d_poids I_R2="1" />
               <d_revue I_R2="0" />
             </Indicateur_03>
             <Indicateur_04 S_intitule="Les tâches professionnelles à réaliser et les interactions avec les membres de l'équipe sont identifiées">
@@ -528,19 +628,22 @@
               <d_poids />
               <d_revue />
             </Indicateur_13>
-          </l_01>
-          <d_02 I_R2="5" />
-        </l_C2.5>
-        <l_C2.4 S_00="assumer le rôle total ou partiel de chef de projet ">
-          <l_01>
+          </l_indicateurs>
+          <d_poids />
+          <d_sousComp />
+          <l_thematiques />
+        </Competence_C2.5>
+        <Competence_C2.4 S_intitule="assumer le rôle total ou partiel de chef de projet ">
+          <l_domaines />
+          <l_indicateurs>
             <Indicateur_00 S_intitule="Les moyens sont réservés et libérés">
               <d_ligne I_R2="0" />
-              <d_poids F_R2="50.0" />
+              <d_poids I_R2="1" />
               <d_revue I_R2="0" />
             </Indicateur_00>
             <Indicateur_01 S_intitule="Les charges de travail et la durée des tâches professionnelles sont définies">
               <d_ligne I_R2="0" />
-              <d_poids F_R2="50.0" />
+              <d_poids I_R2="1" />
               <d_revue I_R2="0" />
             </Indicateur_01>
             <Indicateur_02 S_intitule="Les commandes et approvisionnements sont gérés">
@@ -563,44 +666,53 @@
               <d_poids />
               <d_revue />
             </Indicateur_05>
-          </l_01>
-          <d_02 I_R2="5" />
-        </l_C2.4>
-        <l_C4.7 S_00=" documenter une réalisation matérielle et/ou logicielle">
-          <l_01>
+          </l_indicateurs>
+          <d_poids />
+          <d_sousComp />
+          <l_thematiques />
+        </Competence_C2.4>
+        <Competence_C4.7 S_intitule=" documenter une réalisation matérielle et/ou logicielle">
+          <l_domaines />
+          <l_indicateurs>
             <Indicateur_00 S_intitule="Le dossier est synthétisé">
               <d_ligne I_R2="0" />
-              <d_poids F_R2="100.0" />
+              <d_poids I_R2="1" />
               <d_revue I_R2="0" />
             </Indicateur_00>
-          </l_01>
-          <d_02 I_R2="5" />
-        </l_C4.7>
-        <l_C4.6 S_00=" produire les documents de fabrication d’un sous ensemble">
-          <l_01>
+          </l_indicateurs>
+          <d_poids />
+          <d_sousComp />
+          <l_thematiques />
+        </Competence_C4.7>
+        <Competence_C4.6 S_intitule=" produire les documents de fabrication d’un sous ensemble">
+          <l_domaines />
+          <l_indicateurs>
             <Indicateur_00 S_intitule="Les documents de fabrication sont rédigés">
               <d_ligne I_R2="0" />
-              <d_poids F_R2="50.0" />
+              <d_poids I_R2="1" />
               <d_revue I_R2="0" />
             </Indicateur_00>
             <Indicateur_01 S_intitule="Le dossier avec le diagramme des phases de fabrication est rédigé">
               <d_ligne I_R2="0" />
-              <d_poids F_R2="50.0" />
+              <d_poids I_R2="1" />
               <d_revue I_R2="0" />
             </Indicateur_01>
-          </l_01>
-          <d_02 I_R2="5" />
-        </l_C4.6>
-        <l_C4.5 S_00=" tester et valider--un module logiciel et matériel ">
-          <l_01>
+          </l_indicateurs>
+          <d_poids />
+          <d_sousComp />
+          <l_thematiques />
+        </Competence_C4.6>
+        <Competence_C4.5 S_intitule=" tester et valider--un module logiciel et matériel ">
+          <l_domaines />
+          <l_indicateurs>
             <Indicateur_00 S_intitule="La procédure de tests est définie">
               <d_ligne I_R2="0" />
-              <d_poids F_R2="50.0" />
+              <d_poids I_R2="1" />
               <d_revue I_R2="0" />
             </Indicateur_00>
             <Indicateur_01 S_intitule="L'équipement ou le produit est certifié">
               <d_ligne I_R2="0" />
-              <d_poids F_R2="50.0" />
+              <d_poids I_R2="1" />
               <d_revue I_R2="0" />
             </Indicateur_01>
             <Indicateur_02 S_intitule="Le compte rendu du résultat des tests est produit">
@@ -613,34 +725,40 @@
               <d_poids />
               <d_revue />
             </Indicateur_03>
-          </l_01>
-          <d_02 I_R2="5" />
-        </l_C4.5>
-        <l_C4.4 S_00=" fabriquer un sous-ensemble">
-          <l_01>
+          </l_indicateurs>
+          <d_poids />
+          <d_sousComp />
+          <l_thematiques />
+        </Competence_C4.5>
+        <Competence_C4.4 S_intitule=" fabriquer un sous-ensemble">
+          <l_domaines />
+          <l_indicateurs>
             <Indicateur_00 S_intitule="Le dossier de fabrication produit est conforme aux contraintes">
               <d_ligne I_R2="0" />
-              <d_poids F_R2="50.0" />
+              <d_poids I_R2="1" />
               <d_revue I_R2="0" />
             </Indicateur_00>
             <Indicateur_01 S_intitule="La carte est montée dans les règles de l'art">
               <d_ligne I_R2="0" />
-              <d_poids F_R2="50.0" />
+              <d_poids I_R2="1" />
               <d_revue I_R2="0" />
             </Indicateur_01>
-          </l_01>
-          <d_02 I_R2="5" />
-        </l_C4.4>
-        <l_C4.3 S_00=" adapter et/ou configurer une structure logicielle">
-          <l_01>
+          </l_indicateurs>
+          <d_poids />
+          <d_sousComp />
+          <l_thematiques />
+        </Competence_C4.4>
+        <Competence_C4.3 S_intitule=" adapter et/ou configurer une structure logicielle">
+          <l_domaines />
+          <l_indicateurs>
             <Indicateur_00 S_intitule="La structure logicielle est délimitée">
               <d_ligne I_R2="0" />
-              <d_poids F_R2="50.0" />
+              <d_poids I_R2="1" />
               <d_revue I_R2="0" />
             </Indicateur_00>
             <Indicateur_01 S_intitule="Un compte rendu d'analyse est produit">
               <d_ligne I_R2="0" />
-              <d_poids F_R2="50.0" />
+              <d_poids I_R2="1" />
               <d_revue I_R2="0" />
             </Indicateur_01>
             <Indicateur_02 S_intitule="Un compte rendu des modifications à apporter est rédigé">
@@ -653,24 +771,27 @@
               <d_poids />
               <d_revue />
             </Indicateur_03>
-          </l_01>
-          <d_02 I_R2="5" />
-        </l_C4.3>
-        <l_C4.2 S_00="adapter et/ou configurer un matériel">
-          <l_01>
+          </l_indicateurs>
+          <d_poids />
+          <d_sousComp />
+          <l_thematiques />
+        </Competence_C4.3>
+        <Competence_C4.2 S_intitule="adapter et/ou configurer un matériel">
+          <l_domaines />
+          <l_indicateurs>
             <Indicateur_00 S_intitule="Le matériel est fonctionnel dans son environnement">
               <d_ligne I_R2="0" />
-              <d_poids F_R2="33.333333" />
+              <d_poids I_R2="1" />
               <d_revue I_R2="0" />
             </Indicateur_00>
             <Indicateur_01 S_intitule="Un compte rendu des informations pertinentes est établi">
               <d_ligne I_R2="0" />
-              <d_poids F_R2="33.333333" />
+              <d_poids I_R2="1" />
               <d_revue I_R2="0" />
             </Indicateur_01>
             <Indicateur_02 S_intitule="Le schéma structurel est produit">
               <d_ligne I_R2="0" />
-              <d_poids F_R2="33.333333" />
+              <d_poids I_R2="1" />
               <d_revue I_R2="0" />
             </Indicateur_02>
             <Indicateur_03 S_intitule="Les choix technologiques sont justifiés">
@@ -688,24 +809,27 @@
               <d_poids />
               <d_revue />
             </Indicateur_05>
-          </l_01>
-          <d_02 I_R2="5" />
-        </l_C4.2>
-        <l_C4.1 S_00=" câbler et/ou intégrer un matériel ">
-          <l_01>
+          </l_indicateurs>
+          <d_poids />
+          <d_sousComp />
+          <l_thematiques />
+        </Competence_C4.2>
+        <Competence_C4.1 S_intitule=" câbler et/ou intégrer un matériel ">
+          <l_domaines />
+          <l_indicateurs>
             <Indicateur_00 S_intitule="Le matériel est fonctionnel dans son environnement">
               <d_ligne I_R2="0" />
-              <d_poids F_R2="33.333333" />
+              <d_poids I_R2="1" />
               <d_revue I_R2="0" />
             </Indicateur_00>
             <Indicateur_01 S_intitule="Un plan d'installation et de câblage est fourni">
               <d_ligne I_R2="0" />
-              <d_poids F_R2="33.333333" />
+              <d_poids I_R2="1" />
               <d_revue I_R2="0" />
             </Indicateur_01>
             <Indicateur_02 S_intitule="Le matériel est en situation">
               <d_ligne I_R2="0" />
-              <d_poids F_R2="33.333333" />
+              <d_poids I_R2="1" />
               <d_revue I_R2="0" />
             </Indicateur_02>
             <Indicateur_03 S_intitule="Le matériel est connecté suivant les spécifications et les règles de l'art">
@@ -718,11 +842,12 @@
               <d_poids />
               <d_revue />
             </Indicateur_04>
-          </l_01>
-          <d_02 I_R2="5" />
-        </l_C4.1>
+          </l_indicateurs>
+          <d_poids />
+          <d_sousComp />
+          <l_thematiques />
+        </Competence_C4.1>
       </d_dicCompetences>
-      <l_indicateurs />
     </Competences_S>
   </d_dicoCompetences>
   <d_dicoSavoirs>
@@ -1722,31 +1847,46 @@
       </d_dicSavoirs>
     </Savoirs_M>
   </d_dicoSavoirs>
+  <d_domaines />
   <d_effectifs>
-    <l_C S_00="Classe entière" S_01="Classe entière" />
-    <l_E S_00="Etude ou Projet" S_01="Etude et Projet" />
-    <l_D S_00="Demi-groupe" S_01="Demi-groupe" />
-    <l_G S_00="Effectif réduit" S_01="Effectif réduit" />
-    <l_I S_00="Individuel" S_01="Individuel" />
-    <l_P S_00="Act. Pra." S_01="Activité Pratique" />
+    <l_C S_00="Classe entière" S_01="Classe entière" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_C>
+    <l_E S_00="Etude ou Projet" S_01="Etude et Projet" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_E>
+    <l_D S_00="Demi-groupe" S_01="Demi-groupe" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_D>
+    <l_G S_00="Effectif réduit" S_01="Effectif réduit" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_G>
+    <l_I S_00="Individuel" S_01="Individuel" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_I>
+    <l_P S_00="Act. Pra." S_01="Activité Pratique" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_P>
   </d_effectifs>
   <d_effectifsSeance>
     <l_C S_00="C" />
     <l_E S_00="C" />
     <l_AP S_00="E" S_01="P" />
     <l_SS S_00="C" />
-    <l_ED S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" />
-    <l_ST S_00="I" />
-    <l_P S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" />
+    <l_ED S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
+    <l_P S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
     <l_S />
     <l_R />
-    <l_HC S_00="I" />
     <l_SA S_00="C" S_01="G" />
-    <l_TD S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" />
+    <l_TD S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
   </d_effectifsSeance>
   <d_horsClasse>
-    <l_HC S_00="Hors classe" S_01="Temps hors classe" />
-    <l_ST S_00="Stage" S_01="Stage" />
+    <l_HC S_00="Hors classe" S_01="Temps hors classe" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_HC>
+    <l_ST S_00="Stage" S_01="Stage" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_ST>
   </d_horsClasse>
   <d_labels>
     <l_SEQINT S_00="Intitulé de la Séquence" S_01="Intitulé de la Séquence pédagogique" />
@@ -1755,7 +1895,9 @@
   <l_listProblematiques />
   <l_listSavoirs S_00="S" S_01="M" S_02="P" />
   <l_listeDemarches S_00="I" S_01="R" S_02="P" />
+  <l_listeDomaines />
   <l_listeEffectifs S_00="C" S_01="G" S_02="D" S_03="E" S_04="P" S_05="I" />
+  <l_listeThematiques />
   <l_listeTypeActivite S_00="ED" S_01="AP" S_02="P" />
   <l_listeTypeHorsClasse S_00="HC" S_01="ST" />
   <l_listeTypeSeance S_00="ED" S_01="AP" S_02="P" S_03="HC" S_04="ST" S_05="C" S_06="TD" S_07="SA" S_08="SS" S_09="E" S_10="R" S_11="S" />
@@ -2128,18 +2270,43 @@
     </Projet_PRJ>
   </d_projets>
   <d_seances>
-    <l_C S_00="Cours" S_01="Cours" />
-    <l_E S_00="Evaluation" S_01="Evaluation" />
-    <l_P S_00="Projet" S_01="Activité de projet" />
-    <l_SS S_00="Synt. séquence" S_01="Synthèse de séquence" />
-    <l_ED S_00="Etude de dossier" S_01="Activité d'étude de dossier" />
-    <l_ST S_00="Stage" S_01="Stage" />
-    <l_AP S_00="Activité pratique" S_01="Activité pratique" />
-    <l_S S_00="Parallèle" S_01="Activités en parallèle" />
-    <l_R S_00="Rotation" S_01="Rotation d'activités" />
-    <l_HC S_00="Hors classe" S_01="Temps hors classe" />
-    <l_TD S_00="TD" S_01="Travaux Dirigés" />
-    <l_SA S_00="Synt. activité" S_01="Synthèse d'activité" />
+    <l_C S_00="Cours" S_01="Cours" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_C>
+    <l_E S_00="Evaluation" S_01="Evaluation" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_E>
+    <l_P S_00="Projet" S_01="Activité de projet" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_P>
+    <l_SS S_00="Synt. séquence" S_01="Synthèse de séquence (hors Activités)" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_SS>
+    <l_ED S_00="Etude de dossier" S_01="Activité d'étude de dossier" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_ED>
+    <l_ST S_00="Stage" S_01="Stage" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_ST>
+    <l_AP S_00="Activité pratique" S_01="Activité pratique" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_AP>
+    <l_S S_00="Parallèle" S_01="Activités en parallèle" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_S>
+    <l_R S_00="Rotation" S_01="Rotation d'activités" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_R>
+    <l_HC S_00="Hors classe" S_01="Temps hors classe" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_HC>
+    <l_TD S_00="TD" S_01="Travaux Dirigés" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_TD>
+    <l_SA S_00="Synt. activité" S_01="Synthèse d'activité" S_02="">
+      <l_03 I_00="0" I_01="0" I_02="0" />
+    </l_SA>
   </d_seances>
+  <d_thematiques />
   <l_tr_com />
 </Referentiel>
