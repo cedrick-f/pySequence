@@ -33,7 +33,7 @@ import  wx.lib.scrolledpanel as scrolled
 
 ######################################################################################  
 def isstring(s):
-    return isinstance(s, str) or isinstance(s, unicode)
+    return isinstance(s, (str, unicode))
 
 
 ######################################################################################  
@@ -72,12 +72,7 @@ def remplaceCode2LF(txt):
     return txt.replace("##13##", "\n")#&#13")
     
 
-######################################################################################  
-def testRel(lien, path):
-    try:
-        return os.path.relpath(lien,path)
-    except:
-        return lien
+
     
 #
 # Fonction pour vérifier si un point x, y est dans un rectangle (x0, y0, x1, y1)

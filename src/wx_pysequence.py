@@ -63,7 +63,8 @@ import version
 
 # Module de gestion des dossiers, de l'installation et de l'enregistrement
 
-from util_path import toFileEncoding, toSystemEncoding, FILE_ENCODING, SYSTEM_ENCODING, nomCourt
+from util_path import toFileEncoding, toSystemEncoding, FILE_ENCODING, SYSTEM_ENCODING, \
+                        testRel, nomCourt
 import util_path
 
 # Module de gestion des instances d'application
@@ -251,7 +252,7 @@ except ImportError:
 # Widgets partagés
 # des widgets wx évolués "faits maison"
 from widgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_ENTIER_POS, \
-                    messageErreur, getNomFichier, pourCent2, testRel, \
+                    messageErreur, getNomFichier, pourCent2, \
                     rallonge, remplaceCode2LF, dansRectangle, isstring, \
                     StaticBoxButton, TextCtrl_Help, CloseFenHelp, ImageButtonTransparent, \
                     remplaceLF2Code, messageInfo, messageYesNo, rognerImage, PlaceholderTextCtrl#, chronometrer

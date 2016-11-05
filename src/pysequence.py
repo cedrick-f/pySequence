@@ -90,12 +90,12 @@ from constantes import calculerEffectifs, \
                         toList, COUL_COMPETENCES
 import constantes
 
-from util_path import toFileEncoding, toSystemEncoding, FILE_ENCODING, SYSTEM_ENCODING
+from util_path import toFileEncoding, toSystemEncoding, FILE_ENCODING, SYSTEM_ENCODING, testRel
 
 # Widgets partagés
 # des widgets wx évolués "faits maison"
 from widgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_ENTIER_POS, \
-                    messageErreur, getNomFichier, pourCent2, testRel, \
+                    messageErreur, getNomFichier, pourCent2, \
                     rallonge, remplaceCode2LF, dansRectangle, \
                     StaticBoxButton, TextCtrl_Help, CloseFenHelp, \
                     remplaceLF2Code, messageInfo, messageYesNo, enregistrer_root, \
@@ -104,7 +104,7 @@ from widgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_ENTI
 from Referentiel import REFERENTIELS, ARBRE_REF, ACTIVITES
 import Referentiel
 
-
+import webbrowser
 
 from richtext import XMLtoHTML
 
@@ -258,8 +258,9 @@ class Lien():
         """ Lance l'affichage du contenu du lien
             <pathseq> = chemin de l'application pour déterminer le chemin absolu
         """
+#         print "Afficher", self.type, self.path
         path = self.GetAbsPath(pathseq)
-#        print "Afficher", path
+#         print "   ", path
         
         if self.type == "f":
             try:
@@ -291,6 +292,7 @@ class Lien():
   
     ######################################################################################  
     def EvalTypeLien(self, pathseq):
+#         print "EvalTypeLien", self, pathseq
         path = self.GetAbsPath(pathseq)
         
         if os.path.exists(path):
@@ -310,6 +312,8 @@ class Lien():
             et change self.path (FILE_ENCODING)
             <pathseq> doit être en FILE_ENCODING
         """
+#         print "EvalLien", path, pathseq
+        
         if path == "" or path.split() == []:
             self.path = r""
             self.type = ""
@@ -318,24 +322,30 @@ class Lien():
         path = toFileEncoding(path)
 #        pathseq = toFileEncoding(pathseq)
         abspath = self.GetAbsPath(pathseq, path)
+#         print "   ", abspath
         
         relpath = testRel(abspath, pathseq)
-        if os.path.exists(relpath):
-            if os.path.isfile(relpath):
+#         print "   ", relpath
+#         
+#         print "   ", os.getcwd()
+#         print "   ", os.curdir
+        if os.path.exists(abspath):
+            if os.path.isfile(abspath):
                 self.type = 'f'
                 self.path = relpath
-            elif os.path.isdir(relpath):
+            elif os.path.isdir(abspath):
                 self.type = 'd'
                 self.path = relpath
         else:
             self.type = 'u'
             self.path = path
         
+        print " >>", self
               
     ######################################################################################  
     def GetAbsPath(self, pathseq, path = None):
         """ Renvoie le chemin absolu du lien
-            grace au chemin de l'application <pathseq>
+            grace au chemin du document <pathseq>
         """
         if path == None:
             path = self.path
@@ -8243,7 +8253,7 @@ class Personne(Objet_sequence):
         if hasattr(self, 'discipline'):
             root.set("Discipline", str(self.discipline))
             
-        if hasattr(self, 'grille'):
+        if hasattr(self, 'grille'): # Cas des élèves (et pas des profs)
             for k, g in self.grille.items():
                 root.set("Grille"+k, toSystemEncoding(g.path))       
             
@@ -8275,7 +8285,7 @@ class Personne(Objet_sequence):
             for k in self.GetProjetRef().parties.keys():
                 self.grille[k] = Lien(typ = "f")
                 self.grille[k].path = toFileEncoding(branche.get("Grille"+k, r""))
-#                print self.grille
+            print "grilles", self.grille
 #            self.grille[0].path = branche.get("Grille0", u"")
 #            self.grille[1].path = branche.get("Grille1", u"")
             
@@ -8440,21 +8450,23 @@ class Eleve(Personne, Objet_sequence):
                     d += t.GetDuree()
         return d
     
-    ######################################################################################  
-    def OuvrirGrille(self, k):
-        try:
-            self.grille[k].Afficher(self.GetDocument().GetPath())#os.startfile(self.grille[num])
-        except:
-            messageErreur(None, u"Ouverture impossible",
-                          u"Impossible d'ouvrir le fichier\n\n%s!\n" %toSystemEncoding(self.grille[k].path))
-            
-            
-    ######################################################################################  
-    def OuvrirGrilles(self, event):
-        for k in self.grille.keys():
-            self.OuvrirGrille(k)
-#        if self.GetTypeEnseignement(simple = True) == "STI2D":
-#            self.OuvrirGrille(1)
+#     ######################################################################################  
+#     def OuvrirGrille(self, k):
+#         print "OuvrirGrille", k
+#         self.grille[k].Afficher(self.GetDocument().GetPath())
+# #         try:
+# #             self.grille[k].Afficher(self.GetDocument().GetPath())#os.startfile(self.grille[num])
+# #         except:
+# #             messageErreur(None, u"Ouverture impossible",
+# #                           u"Impossible d'ouvrir le fichier\n\n%s!\n" %toSystemEncoding(self.grille[k].path))
+#             
+#             
+#     ######################################################################################  
+#     def OuvrirGrilles(self, event):
+#         for k in self.grille.keys():
+#             self.OuvrirGrille(k)
+# #        if self.GetTypeEnseignement(simple = True) == "STI2D":
+# #            self.OuvrirGrille(1)
         
         
     ######################################################################################  
