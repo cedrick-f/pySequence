@@ -480,11 +480,14 @@ def genererGrillePDF(nomFichier, grilles_feuilles):
     wx.BeginBusyCursor()
     dosstemp = tempfile.mkdtemp()
     merger = PdfFileMerger()
+#     print "temp :", dosstemp
     
     Ok = True
+    g = []
     for i, grille_feuille in enumerate(grilles_feuilles):
         grille, feuille = grille_feuille
         grille = grilles.PyExcel(grille)
+        g.append(grille)
         if feuille is None:
             feuille = grille.getSheets()[-1]
 #        print "   ", feuille
@@ -499,7 +502,7 @@ def genererGrillePDF(nomFichier, grilles_feuilles):
         # Génération de la grille en PDF
         try:
             grille.save_pdf(fichertempV)
-            grille.close()
+#             grille.close()
         except:
             Ok = False
             print "Erreur save_pdf 1"
@@ -511,6 +514,13 @@ def genererGrillePDF(nomFichier, grilles_feuilles):
             Ok = False
             print "Erreur save_pdf 2"  
         
+    for grille in g:
+        try:
+            grille.close()
+        except:
+            pass
+        
+        
         
     if not Ok:
         shutil.rmtree(dosstemp)
@@ -521,8 +531,12 @@ def genererGrillePDF(nomFichier, grilles_feuilles):
     
     output = open(nomFichier, "wb")
     merger.write(output)
-
-    shutil.rmtree(dosstemp)
+    
+    try:
+        shutil.rmtree(dosstemp)
+    except:
+        print u"Grilles temporaires non supprimées :", dosstemp
+        
     wx.EndBusyCursor()
     return True
     # read PDF files (.pdf) with wxPython

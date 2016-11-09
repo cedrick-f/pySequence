@@ -2591,6 +2591,22 @@ class Competences(XMLelem):
 
     #########################################################################
     def getCompetence(self, comp):
+        def getComp(dic):
+#             print "   ", dic
+            if comp in dic.keys():
+                return dic[comp]
+            else:
+                for k, competence in dic.items():
+                    c = getComp(competence.sousComp)
+                    if c is not None: 
+#                         print "   ", k, "!!!!!"
+                        return c
+
+        return getComp(self.dicCompetences)
+        
+        
+        
+        
 #        print "getCompetence", comp
 #        print "   ", self.dicCompetences
         if comp in self.dicCompetences.keys():

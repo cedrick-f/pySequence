@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from itertools import count
 
 
 ##This file is part of pySequence
@@ -2512,7 +2513,7 @@ class FenetreProjet(FenetreDocument):
         # Pour le suivi de l'ouverture
         nomCourt = toSystemEncoding(os.path.splitext(os.path.split(nomFichier)[1])[0])
         
-        message = nomCourt+"\n"
+        message = nomCourt+"\n\n"
         dlg = myProgressDialog(u"Ouverture d'un projet",
                                    message,
                                    nbr_etapes,
@@ -2540,7 +2541,7 @@ class FenetreProjet(FenetreDocument):
                 Annuler = True
                 return None, u"", 0, False, Annuler
              
-            count = 0
+            count = 1
             Ok = True
             Annuler = False
                    
@@ -2673,11 +2674,11 @@ class FenetreProjet(FenetreDocument):
 #                    message += constantes.Erreur(constantes.ERR_INCONNUE).getMessage() + u"\n"
         
         if "beta" in version.__version__:
-            message, count = self.finaliserOuverture()
+            message, count = self.finaliserOuverture(dlg= dlg, message = message, count = count)
         else:
             
             try:
-                message, count = self.finaliserOuverture()
+                message, count = self.finaliserOuverture(dlg= dlg, message = message, count = count)
             except:
                 annuleTout(message)
                 return
@@ -2708,6 +2709,7 @@ class FenetreProjet(FenetreDocument):
         print "Ouverture :", tps2 - tps1
 
         if Ok:
+            
             dlg.Destroy()
         else:
             dlg.Update(nbr_etapes, message)
@@ -2716,8 +2718,8 @@ class FenetreProjet(FenetreDocument):
     
 #        self.SetTitre()
 #         wx.CallAfter(self.fiche.Show)
-        wx.CallAfter(self.fiche.Redessiner)
-
+#         wx.CallAfter(self.fiche.Redessiner)
+        self.fiche.Redessiner()
 
         #
         # Mise en liste undo/redo
@@ -2817,11 +2819,11 @@ class FenetreProjet(FenetreDocument):
             dlgb = myProgressDialog(u"Génération des grilles",
                                         u"",
                                         maximum = len(self.projet.eleves)+1,
-                                        parent=self,
-                                        style = 0
-                                        | wx.PD_APP_MODAL
-                                        | wx.PD_CAN_ABORT
-                                        | wx.STAY_ON_TOP
+                                        parent=self
+#                                         style = 0
+#                                         | wx.PD_APP_MODAL
+#                                         | wx.PD_CAN_ABORT
+#                                         | wx.STAY_ON_TOP
                                         #| wx.PD_CAN_SKIP
                                         #| wx.PD_ELAPSED_TIME
     #                                    | wx.PD_ESTIMATED_TIME
@@ -2830,7 +2832,7 @@ class FenetreProjet(FenetreDocument):
                                         )
             
             
-            count = 0
+            count = 1
             
             pathprj = self.projet.GetPath()
 #            print "pathprj", pathprj
@@ -2866,7 +2868,7 @@ class FenetreProjet(FenetreDocument):
             for e in self.projet.eleves:
                 dlgb.Update(count, u"Traitement de la grille de \n\n"+e.GetNomPrenom())
 #                dlgb.top()
-                dlgb.Refresh()
+#                 dlgb.Refresh()
                     
                 if e.id in nomFichiers.keys():
                     e.GenererGrille(nomFichiers = nomFichiers[e.id], messageFin = False)
@@ -2888,12 +2890,12 @@ class FenetreProjet(FenetreDocument):
                     lst_grilles.append((grille, feuille))
                 
                 count += 1
-                dlgb.Refresh()
+#                 dlgb.Refresh()
             
             dlgb.Update(count, u"Compilation des grilles ...\n\n")
 #            dlgb.top()
-            count += 1
-            dlgb.Refresh()
+#             count += 1
+#             dlgb.Refresh()
                 
             genpdf.genererGrillePDF(nomFichier, lst_grilles)
             
@@ -2904,7 +2906,7 @@ class FenetreProjet(FenetreDocument):
             except:
                 pass
             
-            dlgb.Destroy()
+#             dlgb.Destroy()
                 
                 
         else:
@@ -9142,7 +9144,7 @@ class PanelPropriete_Personne(PanelPropriete):
         
         nsizer = wx.BoxSizer(wx.HORIZONTAL)
         nsizer.Add(titre, flag = wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM|wx.LEFT, border = 3)
-        nsizer.Add(textctrl, flag = wx.ALIGN_RIGHT|wx.EXPAND|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM|wx.RIGHT, border = 3)
+        nsizer.Add(textctrl, 1, flag = wx.EXPAND|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM|wx.RIGHT, border = 3)
         self.Bind(wx.EVT_TEXT, self.EvtText, textctrl)
         
         #
@@ -9154,11 +9156,11 @@ class PanelPropriete_Personne(PanelPropriete):
         
         psizer = wx.BoxSizer(wx.HORIZONTAL)
         psizer.Add(titre, flag = wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM|wx.LEFT, border = 3)
-        psizer.Add(textctrl, flag = wx.ALIGN_RIGHT|wx.EXPAND|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM|wx.RIGHT, border = 3)
+        psizer.Add(textctrl, 1, flag = wx.EXPAND|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM|wx.RIGHT, border = 3)
         self.Bind(wx.EVT_TEXT, self.EvtText, textctrl)
         
-        bsizer.Add(nsizer, flag = wx.ALIGN_RIGHT|wx.EXPAND)
-        bsizer.Add(psizer, flag = wx.ALIGN_RIGHT|wx.EXPAND)
+        bsizer.Add(nsizer, flag = wx.EXPAND)
+        bsizer.Add(psizer, flag = wx.EXPAND)
         self.sizer.Add(bsizer, (0,0), flag = wx.EXPAND|wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM|wx.LEFT, border = 2)
         
         
@@ -12673,7 +12675,7 @@ class myStaticBox(wx.StaticBox):
 if sys.platform == "win32":
     import win32gui
 #    import win32con
-class myProgressDialog(wx.ProgressDialog):
+class myProgressDialog2(wx.ProgressDialog):
     def __init__(self, titre, message, maximum, parent, style = 0):
         wx.ProgressDialog.__init__(self, titre,
                                    message,
@@ -12730,6 +12732,127 @@ class myProgressDialog(wx.ProgressDialog):
     def OnClose(self, event):
 #        print "Close dlg"
         self.Destroy()        
+
+
+
+
+
+class myProgressDialog(wx.Frame):
+    def __init__(self, titre, message, maximum, parent, style = 0, 
+                 btnAnnul = True, msgAnnul = u"Annuler l'opération"):
+
+        wx.Frame.__init__(self, parent, -1, titre, size = (400, 200),
+                          style = wx.FRAME_FLOAT_ON_PARENT| wx.CAPTION | wx.FRAME_TOOL_WINDOW | wx.STAY_ON_TOP)
+#         pre = wx.PreDialog()
+#         pre.Create(parent, -1, titre)
+#         self.PostCreate(pre)
+#         print "myProgressDialog", maximum
+
+        panel = wx.Panel(self, -1)
+        panel.SetBackgroundColour(wx.WHITE)
+        
+        mainsizer = wx.BoxSizer(wx.VERTICAL)
+        
+        self.count = 0
+        self.maximum = maximum
+        
+        sizer = wx.BoxSizer(wx.VERTICAL)
+
+        self.titre = wx.StaticText(panel, -1)
+#         self.titre.SetLabelMarkup(u"<big><span fgcolor='blue'>%s</span></big>" %t)
+        self.titre.SetFont(wx.Font(11, wx.SWISS, wx.FONTSTYLE_NORMAL, wx.NORMAL))
+        self.titre.SetForegroundColour((50,50,200))
+        sizer.Add(self.titre, 0, wx.ALIGN_LEFT|wx.ALL|wx.EXPAND, 20)
+
+        self.message = wx.StaticText(panel, -1)
+        sizer.Add(self.message, 1, wx.ALIGN_LEFT|wx.LEFT|wx.RIGHT|wx.EXPAND, 15)
+        
+        self.SetMessage(message)
+        
+        
+        self.gauge = wx.Gauge(panel, -1, maximum)
+        sizer.Add(self.gauge, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL|wx.EXPAND, 5)
+        
+        line = wx.StaticLine(panel, -1, size=(20,-1), style=wx.LI_HORIZONTAL)
+        sizer.Add(line, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL|wx.EXPAND, 5)
+
+        self.btn = wx.Button(panel, -1, u"Annuler")
+        self.btn.SetHelpText(msgAnnul)
+        self.btn.Enable(btnAnnul)
+        self.Bind(wx.EVT_BUTTON, self.OnClick, self.btn)
+        
+        sizer.Add(self.btn, 0, wx.ALIGN_RIGHT|wx.ALL, 5)
+
+        mainsizer.Add(panel, 1, flag = wx.EXPAND)
+        
+        panel.SetSizer(sizer)
+        panel.Layout()
+        self.panel = panel
+        self.SetSizer(mainsizer)
+#         sizer.Fit(self)
+        
+        self.sizer = sizer
+
+        self.Bind(wx.EVT_WINDOW_DESTROY, self.OnDestroy)
+        
+        self.CenterOnParent()
+        self.SetMinSize((400, -1))
+        self.GetParent().Enable(False)
+        wx.Frame.Show(self)
+        
+        
+#         self.Show()#WindowModal()
+#         print "fini"
+
+#     def Show(self):
+#         self.CenterOnParent()
+#         self.GetParent().Enable(False)
+#         wx.Frame.Show(self)
+#         self.Raise()
+        
+        
+
+
+
+    def OnDestroy(self, event):
+        self.GetParent().Enable(True)
+        event.Skip()
+    
+    def Update(self, count, message):
+#         print "Update", count
+        self.SetMessage(message)
+        self.count = count
+        
+        if self.count >= self.maximum or self.count < 0:
+            self.GetParent().Enable(True)
+            self.btn.SetLabel(u"Ok")
+        self.panel.Layout()
+        self.Fit()
+
+        wx.Frame.Update(self)
+        self.gauge.SetValue(self.count)
+        wx.Yield()
+        time.sleep(.01)
+        self.Refresh()
+        
+        
+
+    def SetMessage(self, message):
+        m = message.split(u"\n\n")
+        if len(m) > 1:
+            t, m = m[0], u"".join(m[1:])
+        else:
+            t, m = m[0], u""
+            
+        self.titre.SetLabel(t)
+        self.message.SetLabel(m)
+        
+    
+    def OnClick(self, event):
+        self.GetParent().Enable(True)
+        self.Destroy()
+
+
 
 
 #############################################################################################################

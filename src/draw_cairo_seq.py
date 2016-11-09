@@ -681,7 +681,7 @@ def Draw(ctx, seq, mouchard = False, entete = False):
                 comp = ref_tc.dicoCompetences[typ]
                 
         disc = comp.codeDiscipline
-        lstTexteC.append(comp.getCompetence(cod)[0])
+        lstTexteC.append(comp.getCompetence(cod).intitule)
         lstCodesC.append(comp.abrDiscipline + " " + cod)
         lstCoulC.append(constantes.COUL_DISCIPLINES[disc])
         

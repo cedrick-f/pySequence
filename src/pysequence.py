@@ -340,7 +340,7 @@ class Lien():
             self.type = 'u'
             self.path = path
         
-        print " >>", self
+#         print " >>", self
               
     ######################################################################################  
     def GetAbsPath(self, pathseq, path = None):
@@ -1177,6 +1177,8 @@ class BaseDoc():
         self.app = app  # de type FenentreDocument
         self.centrer = True
         
+        # Année Scolaire
+        self.annee = constantes.getAnneeScolaire()
         self.position = 0   # Position de la séquence/projet dans la période d'enseignement
         
         self.commentaires = u""
@@ -1203,6 +1205,11 @@ class BaseDoc():
         else:
             return r""
     
+    ######################################################################################  
+    def GetAnnees(self):
+        return "%s - %s" %(self.annee, self.annee+1)
+
+
     ######################################################################################  
     def GetNbrPeriodes(self):
         return sum([p for a, p in self.GetReferentiel().periodes])
@@ -2381,9 +2388,6 @@ class Projet(BaseDoc, Objet_sequence):
         
         # Organisation des revues du projet
         self.initRevues()
-
-        # Année Scolaire
-        self.annee = constantes.getAnneeScolaire()
                 
         self.eleves = []
         
@@ -5608,7 +5612,7 @@ class Competences(Objet_sequence):
     
     ######################################################################################  
     def GetIntit(self, num):
-        return self.GetReferentiel().getCompetence(self.competences[num])[0]
+        return self.GetReferentiel().getCompetence(self.competences[num]).intitule
 
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
@@ -8285,7 +8289,7 @@ class Personne(Objet_sequence):
             for k in self.GetProjetRef().parties.keys():
                 self.grille[k] = Lien(typ = "f")
                 self.grille[k].path = toFileEncoding(branche.get("Grille"+k, r""))
-            print "grilles", self.grille
+#             print "grilles", self.grille
 #            self.grille[0].path = branche.get("Grille0", u"")
 #            self.grille[1].path = branche.get("Grille1", u"")
             

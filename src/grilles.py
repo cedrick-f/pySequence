@@ -254,7 +254,8 @@ def modifierGrille(doc, tableaux, eleve):
              "Nom" : eleve.GetNom(),
              "Pre" : eleve.GetPrenom(),
              "Etab": doc.classe.etablissement,
-             "N-P" : eleve.GetNomPrenom()
+             "N-P" : eleve.GetNomPrenom(),
+             "Sess": str(doc.annee+1)
              }
 
     
@@ -303,6 +304,29 @@ def modifierGrille(doc, tableaux, eleve):
                     l += p
             else:
                 log.append(u"Feuille " + f + u" non trouvée")
+        
+        if "EtabPrf" in dicInfo.keys() and part in tableaux.keys() and tableaux[part] != None:
+            f, lcp , pre = dicInfo["EtabPrf"][0] 
+            l, c, p = lcp # ligne, colonne, période
+            if grille[1] == 'C': # fichier "Collectif"
+                f = f+str(eleve.id+1)
+            if f in tableaux[part].getSheets():
+                nf = tableaux[part].getSheetNum(f)
+                profs = [doc.classe.etablissement for pr in doc.equipe]
+                for i in range(5):
+                    try:
+                        if i < len(profs):
+                            tableaux[part].setCell(nf, l, c, profs[i])
+                        else:
+                            tableaux[part].setCell(nf, l, c, '')
+                    except:
+                        pass
+#                        log.append(u"Impossible d'écrire dans la cellule "\
+#                                   + part + str(nf) + " " + str(l) + " " + str(c))
+                    l += p
+            else:
+                log.append(u"Feuille " + f + u" non trouvée")
+                
 #    print "log",log
     return list(set(log))
     
@@ -396,7 +420,7 @@ class PyExcel:
                                Filename=nomFichier, 
                                Quality=xlQualityStandard,
                                IncludeDocProperties=True,
-                               IgnorePrintAreas=False,
+                               IgnorePrintAreas= False,
                                OpenAfterPublish=False)
         
         

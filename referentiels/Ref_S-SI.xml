@@ -1172,6 +1172,11 @@
               <l_01 I_00="5" I_01="8" I_02="0" />
             </l_00>
           </l_NON>
+          <l_EtabPrf>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="18" I_01="3" I_02="1" />
+            </l_00>
+          </l_EtabPrf>
           <l_Tit>
             <l_00 S_00="Identification" S_02="">
               <l_01 I_00="12" I_01="2" I_02="0" />
@@ -1182,6 +1187,11 @@
               <l_01 I_00="14" I_01="1" I_02="0" />
             </l_00>
           </l_Des>
+          <l_Sess>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="8" I_01="2" I_02="0" />
+            </l_00>
+          </l_Sess>
           <l_Etab>
             <l_00 S_00="Identification" S_02="">
               <l_01 I_00="7" I_01="2" I_02="0" />
@@ -1194,26 +1204,31 @@
           </l_Prof>
         </d_C>
         <d_S>
-          <l_Tit>
-            <l_00 S_00="Identification" S_02="">
-              <l_01 I_00="12" I_01="2" I_02="0" />
-            </l_00>
-          </l_Tit>
-          <l_Nom>
-            <l_00 S_00="Identification" S_02="">
-              <l_01 I_00="9" I_01="2" I_02="0" />
-            </l_00>
-          </l_Nom>
-          <l_Des>
-            <l_00 S_00="Identification" S_02="">
-              <l_01 I_00="14" I_01="1" I_02="0" />
-            </l_00>
-          </l_Des>
           <l_Pre>
             <l_00 S_00="Identification" S_02="">
               <l_01 I_00="10" I_01="2" I_02="0" />
             </l_00>
           </l_Pre>
+          <l_Nom>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="9" I_01="2" I_02="0" />
+            </l_00>
+          </l_Nom>
+          <l_Sess>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="8" I_01="2" I_02="0" />
+            </l_00>
+          </l_Sess>
+          <l_Tit>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="12" I_01="2" I_02="0" />
+            </l_00>
+          </l_Tit>
+          <l_Des>
+            <l_00 S_00="Identification" S_02="">
+              <l_01 I_00="14" I_01="1" I_02="0" />
+            </l_00>
+          </l_Des>
           <l_Etab>
             <l_00 S_00="Identification" S_02="">
               <l_01 I_00="7" I_01="2" I_02="0" />
