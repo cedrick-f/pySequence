@@ -1119,6 +1119,14 @@ class PlaceholderTextCtrl(wx.TextCtrl):
         evt.Skip()
 
 
+# Utilisé dans PopupInfo
+class CheckBoxValue(wx.CheckBox):
+    def __init__(self, *args, **kargs):
+        value = eval(kargs["value"])
+        del kargs["value"]
+        wx.CheckBox.__init__(self, *args, **kargs)
+        self.SetValue(value)
+
 
 #########################################################################################################
 #########################################################################################################

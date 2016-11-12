@@ -1078,7 +1078,8 @@ def regrouperDic(obj, dicIndicateurs):
                             dic[disc+k1].extend([False]*l)
                             typ[disc+k1].extend(['']*l)
                     
-                    if dic[disc+k1] == [] or not (True in dic[disc+k1]):
+                    if not disc+k1 in xComp.keys():
+#                     if dic[disc+k1] == [] or not (True in dic[disc+k1]):
                         del dic[disc+k1]
                         del typ[disc+k1]
                     
@@ -1202,47 +1203,48 @@ def DrawBoutonCompetence(ctx, objet, dicIndic, y, h = None):
  
     for s in dicIndic.keys():
         
-        x = xComp[s]-wColComp/2
-        
-        rect = (x, y-h/2, wColComp, h)
-        
-        objet.GetDocument().zones_sens.append(Zone([rect], obj = objet, param = s))
-        
-#        if s in objet.GetDocument().rectComp.keys() and objet.GetDocument().rectComp[s] != None:
-#            objet.GetDocument().rectComp[s].append(rect)
-#        else:
-#            objet.GetDocument().rectComp[s] = [rect]
-        
-        objet.pts_caract.append((x,y))
-        
-        indic = dicIndic[s]
-#            dangle = 2*pi/len(indic)
-        dx = wColComp/len(indic)
-        for a, i in enumerate(indic):
-            if i: # Rose ou bleu
-#                 print "   ", s, a
-                part = dictype[s][a].keys()[0]
-                if part == 'S':
-#                if dictype[s][a][1] != 0:   #objet.projet.classe.GetReferentiel().getTypeIndicateur(s+'_'+str(a+1)) == "C": # Conduite     #dicIndicateurs_prj[s][a][1]:
-                    d = -1
-                else:
-                    d = 1
-                ctx.set_source_rgba (*getCoulComp(part))
-            else: # Rien => Transparent
-                d = 0
-                ctx.set_source_rgba (1, 1, 1, 0)
-            if d != 0:
-                ctx.rectangle(x+a*dx, y-h/2+d*dh, dx, h-dh)
-                ctx.fill_preserve ()
-            else:
-                ctx.move_to(x+a*dx, y-h/2+dh)
-                ctx.rel_line_to(0, h-4*dh)
-                ctx.move_to(x+a*dx+dx, y-h/2+dh)
-                ctx.rel_line_to(0, h-4*dh)
-
+        if s in dicIndic.keys():
+            x = xComp[s]-wColComp/2
             
-            ctx.set_source_rgba (0, 0 , 0, 1)
-            ctx.stroke()
+            rect = (x, y-h/2, wColComp, h)
+            
+            objet.GetDocument().zones_sens.append(Zone([rect], obj = objet, param = s))
+            
+    #        if s in objet.GetDocument().rectComp.keys() and objet.GetDocument().rectComp[s] != None:
+    #            objet.GetDocument().rectComp[s].append(rect)
+    #        else:
+    #            objet.GetDocument().rectComp[s] = [rect]
+            
+            objet.pts_caract.append((x,y))
+            
+            indic = dicIndic[s]
+    #            dangle = 2*pi/len(indic)
+            dx = wColComp/len(indic)
+            for a, i in enumerate(indic):
+                if i: # Rose ou bleu
+    #                 print "   ", s, a
+                    part = dictype[s][a].keys()[0]
+                    if part == 'S':
+    #                if dictype[s][a][1] != 0:   #objet.projet.classe.GetReferentiel().getTypeIndicateur(s+'_'+str(a+1)) == "C": # Conduite     #dicIndicateurs_prj[s][a][1]:
+                        d = -1
+                    else:
+                        d = 1
+                    ctx.set_source_rgba (*getCoulComp(part))
+                else: # Rien => Transparent
+                    d = 0
+                    ctx.set_source_rgba (1, 1, 1, 0)
+                if d != 0:
+                    ctx.rectangle(x+a*dx, y-h/2+d*dh, dx, h-dh)
+                    ctx.fill_preserve ()
+                else:
+                    ctx.move_to(x+a*dx, y-h/2+dh)
+                    ctx.rel_line_to(0, h-4*dh)
+                    ctx.move_to(x+a*dx+dx, y-h/2+dh)
+                    ctx.rel_line_to(0, h-4*dh)
+    
+                
+                ctx.set_source_rgba (0, 0 , 0, 1)
+                ctx.stroke()
 
 
        

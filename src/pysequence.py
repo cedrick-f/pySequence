@@ -3014,12 +3014,15 @@ class Projet(BaseDoc, Objet_sequence):
                     self.tip.SetWholeText( "int", intituleComp)
                     
                     if competence.sousComp != {}: #type(competence[1]) == dict:  
+                        code = None
                         indicEleve = obj.GetDicIndicateurs()
                     else:
-                        indicEleve = obj.GetDicIndicateurs()[param]
+                        code = param
+                        indicEleve = obj.GetDicIndicateurs()#[param]
 #                     print "indicEleve", indicEleve
 #                     print "competence.indicateurs", competence.indicateurs
-                    self.tip.Construire(competence.sousComp, indicEleve, prj)
+                    self.tip.Construire(competence.sousComp, obj, prj, code = code, 
+                                        check = isinstance(obj, Tache))
                 
         self.tip.SetPage()
         return self.tip
@@ -6908,7 +6911,17 @@ class Tache(Objet_sequence):
     def estPredeterminee(self):
         return len(self.GetProjetRef().taches) > 0 
             
-        
+    
+    ######################################################################################  
+    def estACocherIndic(self, codeIndic):
+        """ Renvoie True si l'indicateur <codeIndic> doit être "à cocher"
+        """
+        prj = self.GetProjetRef()
+        return ((not self.phase in [_R1,_R2, _Rev, self.projet.getCodeLastRevue()]) \
+                 or (codeIndic in self.indicateursMaxiEleve[0])) \
+               and (prj.getTypeIndicateur(codeIndic) == "S" or self.phase != 'XXX')
+
+
     ######################################################################################  
     def GetDicIndicateurs(self):
         """ Renvoie l'ensemble des indicateurs de compétences à mobiliser pour cette tâche
@@ -7524,7 +7537,78 @@ class Tache(Objet_sequence):
 #        self.GetPanelPropriete().ConstruireListeEleves()
         
 
+    ######################################################################################  
+    def AjouterCompetence(self, code, propag = True):
+#         print "AjouterCompetence !!", self, code
+        if not code in self.indicateursEleve[0] and not self.estPredeterminee():
+            self.indicateursEleve[0].append(code)
+
+        if propag:
+            for i in range(len(self.projet.eleves)):
+                if not self.estPredeterminee() or i in self.eleves:
+                    self.AjouterCompetenceEleve(code, i+1)
+       
+#        if not self.estPredeterminee():
+        self.projet.SetCompetencesRevuesSoutenance()
+        
+        
+    ######################################################################################  
+    def EnleverCompetence(self, code, propag = True):
+#         print "EnleverCompetence", self, code
+        if code in self.indicateursEleve[0]:
+            self.indicateursEleve[0].remove(code)
+        # on recommence : pour corriger un bug
+        if code in self.indicateursEleve[0]:
+            self.indicateursEleve[0].remove(code)
+        
+        if propag:
+            for i in range(len(self.projet.eleves)):
+                self.EnleverCompetenceEleve(code, i+1)
     
+        self.projet.SetCompetencesRevuesSoutenance()
+    
+    
+    ######################################################################################  
+    def AjouterCompetenceEleve(self, code, eleve):
+#         print "AjouterCompetenceEleve", code, self.phase
+        if hasattr(self, 'indicateursEleve'):
+            
+            if self.estPredeterminee():
+                self.indicateursEleve[eleve].append(code)
+                
+            else:
+                dicIndic = self.projet.eleves[eleve-1].GetDicIndicateursRevue(self.phase)
+                comp = code.split("_")[0]
+                if comp in dicIndic.keys():
+                    if comp != code: # Indicateur seul
+                        indic = eval(code.split("_")[1])
+                        ok = dicIndic[comp][indic-1]
+                else:
+                    ok = False
+                    
+                if ok and not code in self.indicateursEleve[eleve]:
+                    self.indicateursEleve[eleve].append(code)
+            
+#            print "  ", self.tache.indicateursEleve
+#                self.tache.ActualiserDicIndicateurs()
+            
+        
+    ######################################################################################  
+    def EnleverCompetenceEleve(self, code, eleve):
+#        print "EnleverCompetenceEleve", self, code
+        
+        if hasattr(self, 'indicateursEleve'):
+#            print "  ", self.tache.indicateursEleve
+            if code in self.indicateursEleve[eleve]:
+                self.indicateursEleve[eleve].remove(code)
+            # on recommence : pour corriger un bug
+            if code in self.indicateursEleve[eleve]:
+                self.indicateursEleve[eleve].remove(code)
+#            self.tache.ActualiserDicIndicateurs()
+#            print "  ", self.tache.indicateursEleve
+
+
+
     ######################################################################################  
     def MiseAJourPoidsCompetences(self, code = None):
         return

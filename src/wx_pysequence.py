@@ -252,6 +252,7 @@ except ImportError:
 
 # Widgets partagés
 # des widgets wx évolués "faits maison"
+import widgets
 from widgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_ENTIER_POS, \
                     messageErreur, getNomFichier, pourCent2, \
                     rallonge, remplaceCode2LF, dansRectangle, isstring, \
@@ -7511,6 +7512,7 @@ class PanelPropriete_Seance(PanelPropriete):
         
         
         cb = wx.CheckBox(self, -1, u"Afficher dans la zone de déroulement")
+#         print "+++", cb.Value
         cb.SetToolTipString(u"Décocher pour afficher l'intitulé\nen dessous de la zone de déroulement de la séquence")
         cb.SetValue(self.seance.intituleDansDeroul)
         bsizer.Add(cb, flag = wx.EXPAND)
@@ -8344,73 +8346,77 @@ class PanelPropriete_Tache(PanelPropriete):
 
     ######################################################################################  
     def AjouterCompetence(self, code, propag = True):
-#        print "AjouterCompetence !!", self, code
-        if not code in self.tache.indicateursEleve[0] and not self.tache.estPredeterminee():
-            self.tache.indicateursEleve[0].append(code)
-
-        if propag:
-            for i in range(len(self.tache.projet.eleves)):
-                if not self.tache.estPredeterminee() or i in self.tache.eleves:
-                    self.AjouterCompetenceEleve(code, i+1)
-       
-#        if not self.tache.estPredeterminee():
-        self.tache.projet.SetCompetencesRevuesSoutenance()
-        
+        self.tache.AjouterCompetence(code, propag)
+# #        print "AjouterCompetence !!", self, code
+#         if not code in self.tache.indicateursEleve[0] and not self.tache.estPredeterminee():
+#             self.tache.indicateursEleve[0].append(code)
+# 
+#         if propag:
+#             for i in range(len(self.tache.projet.eleves)):
+#                 if not self.tache.estPredeterminee() or i in self.tache.eleves:
+#                     self.AjouterCompetenceEleve(code, i+1)
+#        
+# #        if not self.tache.estPredeterminee():
+#         self.tache.projet.SetCompetencesRevuesSoutenance()
+#         
         
     ######################################################################################  
     def EnleverCompetence(self, code, propag = True):
-#        print "EnleverCompetence", self, code
-        if code in self.tache.indicateursEleve[0]:
-            self.tache.indicateursEleve[0].remove(code)
-        # on recommence : pour corriger un bug
-        if code in self.tache.indicateursEleve[0]:
-            self.tache.indicateursEleve[0].remove(code)
-        
-        if propag:
-            for i in range(len(self.tache.projet.eleves)):
-                self.EnleverCompetenceEleve(code, i+1)
-    
-        self.tache.projet.SetCompetencesRevuesSoutenance()
+        self.tache.EnleverCompetence(code, propag)
+# #        print "EnleverCompetence", self, code
+#         if code in self.tache.indicateursEleve[0]:
+#             self.tache.indicateursEleve[0].remove(code)
+#         # on recommence : pour corriger un bug
+#         if code in self.tache.indicateursEleve[0]:
+#             self.tache.indicateursEleve[0].remove(code)
+#         
+#         if propag:
+#             for i in range(len(self.tache.projet.eleves)):
+#                 self.EnleverCompetenceEleve(code, i+1)
+#     
+#         self.tache.projet.SetCompetencesRevuesSoutenance()
     
     
     ######################################################################################  
     def AjouterCompetenceEleve(self, code, eleve):
-#        print "AjouterCompetenceEleve", code, self.tache.phase
-        if hasattr(self.tache, 'indicateursEleve'):
-            
-            if self.tache.estPredeterminee():
-                self.tache.indicateursEleve[eleve].append(code)
-                
-            else:
-                dicIndic = self.tache.projet.eleves[eleve-1].GetDicIndicateursRevue(self.tache.phase)
-                comp = code.split("_")[0]
-                if comp in dicIndic.keys():
-                    if comp != code: # Indicateur seul
-                        indic = eval(code.split("_")[1])
-                        ok = dicIndic[comp][indic-1]
-                else:
-                    ok = False
-                    
-                if ok and not code in self.tache.indicateursEleve[eleve]:
-                    self.tache.indicateursEleve[eleve].append(code)
-            
-#            print "  ", self.tache.indicateursEleve
-#                self.tache.ActualiserDicIndicateurs()
+        self.tache.AjouterCompetenceEleve(code, eleve)
+# #        print "AjouterCompetenceEleve", code, self.tache.phase
+#         if hasattr(self.tache, 'indicateursEleve'):
+#             
+#             if self.tache.estPredeterminee():
+#                 self.tache.indicateursEleve[eleve].append(code)
+#                 
+#             else:
+#                 dicIndic = self.tache.projet.eleves[eleve-1].GetDicIndicateursRevue(self.tache.phase)
+#                 comp = code.split("_")[0]
+#                 if comp in dicIndic.keys():
+#                     if comp != code: # Indicateur seul
+#                         indic = eval(code.split("_")[1])
+#                         ok = dicIndic[comp][indic-1]
+#                 else:
+#                     ok = False
+#                     
+#                 if ok and not code in self.tache.indicateursEleve[eleve]:
+#                     self.tache.indicateursEleve[eleve].append(code)
+#             
+# #            print "  ", self.tache.indicateursEleve
+# #                self.tache.ActualiserDicIndicateurs()
             
         
     ######################################################################################  
     def EnleverCompetenceEleve(self, code, eleve):
-#        print "EnleverCompetenceEleve", self, code
-        
-        if hasattr(self.tache, 'indicateursEleve'):
-#            print "  ", self.tache.indicateursEleve
-            if code in self.tache.indicateursEleve[eleve]:
-                self.tache.indicateursEleve[eleve].remove(code)
-            # on recommence : pour corriger un bug
-            if code in self.tache.indicateursEleve[eleve]:
-                self.tache.indicateursEleve[eleve].remove(code)
-#            self.tache.ActualiserDicIndicateurs()
-#            print "  ", self.tache.indicateursEleve
+        self.tache.EnleverCompetenceEleve(code, eleve)
+# #        print "EnleverCompetenceEleve", self, code
+#         
+#         if hasattr(self.tache, 'indicateursEleve'):
+# #            print "  ", self.tache.indicateursEleve
+#             if code in self.tache.indicateursEleve[eleve]:
+#                 self.tache.indicateursEleve[eleve].remove(code)
+#             # on recommence : pour corriger un bug
+#             if code in self.tache.indicateursEleve[eleve]:
+#                 self.tache.indicateursEleve[eleve].remove(code)
+# #            self.tache.ActualiserDicIndicateurs()
+# #            print "  ", self.tache.indicateursEleve
 
 
     ############################################################################            
@@ -10957,11 +10963,13 @@ class ArbreCompetences(HTL.HyperTreeList):
             event.Skip()
 
         wx.CallAfter(self.pptache.SetCompetences)
-        
+
+
     ####################################################################################
     def getCode(self, item):
         return self.typ+self.GetItemPyData(item)
-    
+
+
     ####################################################################################
     def AjouterEnleverCompetencesItem(self, item, propag = True):
 
@@ -10972,6 +10980,7 @@ class ArbreCompetences(HTL.HyperTreeList):
 
         else:       # une compétence compléte séléctionnée
             self.AjouterEnleverCompetences(item.GetChildren(), propag)
+
 
     ####################################################################################
     def AjouterEnleverCompetences(self, lstitem, propag = True):
@@ -11236,10 +11245,10 @@ class ArbreCompetencesPrj(ArbreCompetences):
                                 self.SetItemTextColour(b, COUL_PARTIE[coul])
                                 self.SetItemFont(b, font)
                             
-
-                            if tache != None and ((not tache.phase in [_R1,_R2, _Rev, tache.projet.getCodeLastRevue()]) \
-                                                  or (self.typ+codeIndic in tache.indicateursMaxiEleve[0])) \
-                                             and (prj.getTypeIndicateur(self.typ+codeIndic) == "S" or tache.phase != 'XXX'):#and (indic.revue[self.typ] == 0 or indic.revue[self.typ] >= tache.GetProchaineRevue()) \ # à revoir !!
+                            if tache != None and tache.estACocherIndic(self.typ+codeIndic):
+#                             if tache != None and ((not tache.phase in [_R1,_R2, _Rev, tache.projet.getCodeLastRevue()]) \
+#                                                   or (self.typ+codeIndic in tache.indicateursMaxiEleve[0])) \
+#                                              and (prj.getTypeIndicateur(self.typ+codeIndic) == "S" or tache.phase != 'XXX'):#and (indic.revue[self.typ] == 0 or indic.revue[self.typ] >= tache.GetProchaineRevue()) \ # à revoir !!
                                 
                                 b = self.AppendItem(comp, indic.intitule, ct_type=1, data = codeIndic) # Avec case à cocher
                                 
@@ -12772,6 +12781,7 @@ class myProgressDialog(wx.Frame):
         
         self.gauge = wx.Gauge(panel, -1, maximum)
         sizer.Add(self.gauge, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL|wx.EXPAND, 5)
+#         print dir(self.gauge)
         
         line = wx.StaticLine(panel, -1, size=(20,-1), style=wx.LI_HORIZONTAL)
         sizer.Add(line, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL|wx.EXPAND, 5)
@@ -12830,10 +12840,16 @@ class myProgressDialog(wx.Frame):
         self.Fit()
 
         wx.Frame.Update(self)
-        self.gauge.SetValue(self.count)
+        wx.CallAfter(self.gauge.SetValue, self.count)
+#         self.gauge.SetValue(self.count)
+        self.gauge.Update()
+        self.gauge.Refresh()
+        
         wx.Yield()
-        time.sleep(.01)
-        self.Refresh()
+        self.gauge.UpdateWindowUI()
+        self.gauge.Refresh()
+#         time.sleep(.1)
+#         self.Refresh()
         
         
 
@@ -12844,6 +12860,7 @@ class myProgressDialog(wx.Frame):
         else:
             t, m = m[0], u""
             
+        
         self.titre.SetLabel(t)
         self.message.SetLabel(m)
         
@@ -12877,7 +12894,24 @@ class myHtmlWindow(html.HtmlWindow):
     def OnLinkClicked(self, evt):
         webbrowser.open_new((evt.GetHref()))
         self.Parent.Show(False)
-    
+        
+    def OnCellClicked(self, cell, x, y, evt):
+        print 'OnCellClicked: %s, (%d %d)\n' % (cell, x, y)
+        if isinstance(cell, html.HtmlWordCell):
+            sel = html.HtmlSelection()
+            print '     %s\n' % cell.ConvertToText(sel)
+        super(myHtmlWindow, self).OnCellClicked(cell, x, y, evt)
+
+
+class CheckBoxValue(wx.CheckBox):
+    def __init__(self, *args, **kargs):
+#     def __init__(self, *args, **kwargs, value = value):
+        wx.CheckBox.__init__(self, *args, **kargs)
+#         self.SetValue(value)
+
+
+
+
 class PopupInfo(wx.PopupWindow):
     def __init__(self, parent, page, mode = "H", size=(400, 300)):
         wx.PopupWindow.__init__(self, parent, wx.BORDER_SIMPLE)
@@ -12910,7 +12944,7 @@ class PopupInfo(wx.PopupWindow):
         self.Bind(wx.EVT_LEAVE_WINDOW, self.OnLeave)
 #         self.Bind(wx.EVT_MOTION, self.OnLeave)
         self.Bind(wx.EVT_WINDOW_DESTROY, self.OnDestroy)
-        
+        self.Bind(wx.EVT_CHECKBOX, self.OnCheck)
 
 
 #    ##########################################################################################
@@ -13096,13 +13130,18 @@ class PopupInfo(wx.PopupWindow):
 
 
     ####################################################################################
-    def Construire(self, dic , dicIndicateurs, prj):
+    def Construire(self, dic , tache, prj, code = None, check = False):
         """ Construit l'arborescence des Compétences et Indicateurs.
             Deux formats possibles pour <dicIndicateurs> :
             
         """
 #        print "Construire", dicIndicateurs
 #        print dic
+        self.tache = tache
+        self.dic = dic
+        self.prj = prj
+        self.code = code
+        dicIndicateurs = tache.GetDicIndicateurs()
         def const(d, ul):
             ks = d.keys()
             ks.sort()
@@ -13112,57 +13151,145 @@ class PopupInfo(wx.PopupWindow):
                 li = self.soup.new_tag("li")
                 ul.append(li)
                 
-                nul = self.soup.new_tag("ul")
-                
                 if competence.sousComp != {}: #len(v) > 1 and type(v[1]) == dict:
 #                    font = self.soup.new_tag("font")
-
+                    nul = self.soup.new_tag("ul")
                     li.append(textwrap.fill(k+" "+competence.intitule, 50))
                     const(competence.sousComp, nul)
-                        
-                else:   # Indicateur
-                    cc = [cd+ " " + it for cd, it in zip(k.split(u"\n"), competence.intitule.split(u"\n"))] 
+                    li.append(nul)
                     
+                else:   # Indicateur
+                    nul = self.soup.new_tag("ul")
+                    cc = [cd+ " " + it for cd, it in zip(k.split(u"\n"), competence.intitule.split(u"\n"))] 
+                    nul['type']="1"
                     li.append(textwrap.fill(u"\n ".join(cc), 50))
 
-                    if "S"+k in dicIndicateurs.keys():
-                        ajouteIndic(nul, competence.indicateurs, dicIndicateurs["S"+k])
-                    else:
-                        ajouteIndic(nul, competence.indicateurs, None)
+                    ajouteIndic(nul, competence.indicateurs, "S"+k, )
                 
-                li.append(nul)
+                    li.append(nul)
                 
             return
 
+        
+                
+                
+        def ajouteIndic(fm, listIndic, code):
+            if code in dicIndicateurs.keys():
+                listIndicUtil = dicIndicateurs[code]
+            else:
+                listIndicUtil = None
 
-        def ajouteIndic(ul, listIndic, listIndicUtil):
-#            print "ajouteIndic", listIndicUtil
             for i, indic in enumerate(listIndic):
-#                print "  i:", indic
-                li = self.soup.new_tag("li")
-                font = self.soup.new_tag("font")
-                li.append(font)
-                font.append(textwrap.fill(indic.intitule, 50))
-                ul.append(li)
-                ul['type']="circle"
+                
+                if i > 0:
+                    br = self.soup.new_tag("br")   
+                    fm.append(br)
+                
+                codeIndic = code+"_"+str(i+1)
+                
+                coche = check and tache.estACocherIndic(codeIndic)
+                if coche:
+                    li = self.soup.new_tag("wxp")
+                    li["module"] = "widgets"
+                    li["class"] = "CheckBoxValue"
+                    param  = self.soup.new_tag("param")
+                    param["name"] = "id"
+                    param["value"] = str(100+i)
+                    li.append(param)
                     
+                    param  = self.soup.new_tag("param")
+                    param["name"] = "name"
+                    param["value"] = codeIndic
+                    li.append(param)
+                    
+                    param  = self.soup.new_tag("param")
+                    param["name"] = "value"
+                    li.append(param)
+                    
+                    fm.append(li)
+                    
+                font = self.soup.new_tag("font")    
+#                 li.append(font)
+                font.append(textwrap.fill(indic.intitule, 50))
+                
+                
+                
+                fm.append(font)
+#                 li['type']="1"
+                
                 for part in prj.parties.keys():
                     if part in indic.poids.keys():
                         if listIndicUtil == None or not listIndicUtil[i]:
                             c = COUL_ABS
+                            if coche:
+                                param["value"] = "False"
                         else:
                             c = getCoulPartie(part)
-                font['color'] = couleur.GetCouleurHTML(c, wx.C2S_HTML_SYNTAX)
+                            if coche:
+                                param["value"] = "True"
 
-        ul = self.soup.find(id = "indic")
+                font['color'] = couleur.GetCouleurHTML(c, wx.C2S_HTML_SYNTAX)
         
-        if type(dic) == dict:  
+        if type(dic) == dict:
+            ul = self.soup.find(id = "comp")
             const(dic, ul)
         else:
-            ajouteIndic(ul, dic, dicIndicateurs)
-                
-                
-                
+            fm = self.soup.find(id = "comp")
+            ajouteIndic(fm, dic, code)
+    
+    
+    #########################################################################################################
+    def GetDocument(self):
+        return self.tache.GetDocument()
+    
+    
+    
+    #########################################################################################################
+    def onUndoRedo(self):
+        """ Renvoie True si on est en phase de Undo/Redo
+        """
+        return self.GetDocument().undoStack.onUndoRedo or self.GetDocument().classe.undoStack.onUndoRedo
+
+     
+    #########################################################################################################
+    def sendEvent(self, doc = None, modif = u"", draw = True, obj = None):
+        self.GetDocument().GetApp().sendEvent(doc, modif, draw, obj)
+        self.eventAttente = False
+        
+        
+    ############################################################################            
+    def SetCompetences(self):
+#        print "SetCompetences"
+        
+        self.GetDocument().MiseAJourDureeEleves()
+        
+        modif = u"Ajout/Suppression d'une compétence à la Tâche"
+        if self.onUndoRedo():
+            self.sendEvent(modif = modif)
+        else:
+            wx.CallAfter(self.sendEvent, modif = modif)
+        self.tache.projet.Verrouiller()
+        
+        ul = self.soup.find(id = "comp")
+        ul.clear()
+        self.Construire(self.dic , self.tache, self.prj, self.code, check = True)
+        self.SetPage()
+        self.Update()
+        
+    
+    ##########################################################################################
+    def OnCheck(self, evt):
+        cb = evt.GetEventObject()
+        code = cb.GetName()
+#         print "OnCheck", cb.GetValue(), cb.GetName()
+        if cb.GetValue():
+            self.tache.AjouterCompetence(code)
+        else:
+            self.tache.EnleverCompetence(code)
+      
+        wx.CallAfter(self.SetCompetences)
+    
+    
     ##########################################################################################
     def OnDestroy(self, evt):
         for f in self.tfname:

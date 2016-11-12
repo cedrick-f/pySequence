@@ -844,11 +844,9 @@ BASE_FICHE_HTML_COMP = u"""
 BASE_FICHE_HTML_COMP_PRJ = u"""
 <HTML>
     <font size="12" color="green"><b><h1 id = "titre" style="text-align: center;"> </h1></b></font>
-    <p style="font-size:11px" id="int"> </p>
-    <ul id = "indic">
-    </ul> 
-    <ul id = "leg">
-    </ul> 
+    <h4 style="font-size:11px" id="int"> </h4>
+    <ul id = "comp">
+    </ul>
 </HTML>
 """
 
