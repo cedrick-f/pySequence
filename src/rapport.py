@@ -735,6 +735,7 @@ class RapportRTF(rt.RichTextCtrl):
                 self.AddTache(t, revue = t.phase in ["R1", "R2", "R3", "Rev"])
             
             self.eleve = eleve
+            self.projet = doc
 
         else:
             self.AddTitreSeance(doc)
@@ -1370,7 +1371,10 @@ class RapportRTF(rt.RichTextCtrl):
 #        if couleur is not None:
 #            Styles[style].SetTextColour(cs)
     
-    
+    ######################################################################################################
+    def getNomFichierDefaut(self):
+        f = u"Tâches détaillées _ " + self.eleve.GetNomPrenom() + u".rtf"
+        return os.path.join(self.projet.GetPath(), f)
     
     ######################################################################################################
     def Enregistrer(self, titre, nomFichierDefaut = u""): 

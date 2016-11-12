@@ -705,6 +705,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         new_bmp =  wx.ArtProvider.GetBitmap(wx.ART_NEW, wx.ART_TOOLBAR, tsize)
         open_bmp = wx.ArtProvider.GetBitmap(wx.ART_FILE_OPEN, wx.ART_TOOLBAR, tsize)
         save_bmp =  wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE, wx.ART_TOOLBAR, tsize)
+        saveall_bmp =  images.Icone_saveall.GetBitmap()
         saveas_bmp = wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE_AS, wx.ART_TOOLBAR, tsize)
         undo_bmp = wx.ArtProvider.GetBitmap(wx.ART_UNDO, wx.ART_TOOLBAR, tsize)
         redo_bmp = wx.ArtProvider.GetBitmap(wx.ART_REDO, wx.ART_TOOLBAR, tsize)
@@ -724,6 +725,10 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                              shortHelp=u"Enregistrement du document courant sous son nom actuel", 
                              longHelp=u"Enregistrement du document courant sous son nom actuel")
         
+        self.tb.AddLabelTool(14, u"Enregistrer tout", saveall_bmp, 
+                             shortHelp=u"Enregistrement de tous les documents sous leurs noms actuels", 
+                             longHelp=u"Enregistrement de tous les documents sous leurs noms actuels")
+        
 
         self.tb.AddLabelTool(13, u"Enregistrer sous...", saveas_bmp, 
                              shortHelp=u"Enregistrement du document courant sous un nom différent", 
@@ -733,6 +738,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         self.Bind(wx.EVT_TOOL, self.commandeOuvrir, id=11)
         self.Bind(wx.EVT_TOOL, self.commandeEnregistrer, id=12)
         self.Bind(wx.EVT_TOOL, self.commandeEnregistrerSous, id=13)
+        self.Bind(wx.EVT_TOOL, self.commandeEnregistrerTout, id=14)
         
         
         self.tb.AddSeparator()
@@ -1285,6 +1291,12 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     def commandeEnregistrer(self, event = None):
         page = self.GetNotebook().GetCurrentPage()
         if page != None:
+            page.commandeEnregistrer(event)
+        
+    #############################################################################
+    def commandeEnregistrerTout(self, event = None):
+        for page in [self.GetNotebook().GetPage(i) for i in range(self.GetNotebook().GetPageCount())]:
+#         for page in self.GetNotebook().GetPages():
             page.commandeEnregistrer(event)
         
     #############################################################################
@@ -13531,12 +13543,17 @@ class Panel_Details(wx.Panel):
         edit_bmp = images.document_edit.GetBitmap()
         save_bmp =  wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE, wx.ART_TOOLBAR, tsize)
         saveas_bmp = wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE_AS, wx.ART_TOOLBAR, tsize)
+        saveall_bmp =  images.Icone_saveall.GetBitmap()
         
         self.tb.SetToolBitmapSize(tsize)
         
         self.tb.AddLabelTool(10, u"Enregistrer", save_bmp, 
                              shortHelp=u"Enregistrement de la fiche courante sous son nom actuel", 
                              longHelp=u"Enregistrement de la fiche courante sous son nom actuel")
+        
+        self.tb.AddLabelTool(12, u"Enregistrer tout", saveall_bmp, 
+                             shortHelp=u"Enregistrement de tous les documents sous leurs noms actuels", 
+                             longHelp=u"Enregistrement de tous les documents sous leurs noms actuels")
         
 
         self.tb.AddLabelTool(11, u"Enregistrer sous...", saveas_bmp, 
@@ -13545,15 +13562,16 @@ class Panel_Details(wx.Panel):
         
         self.Bind(wx.EVT_TOOL, self.commandeEnregistrer, id=10)
         self.Bind(wx.EVT_TOOL, self.commandeEnregistrerSous, id=11)
+        self.Bind(wx.EVT_TOOL, self.commandeEnregistrerTout, id=12)
         
         
         self.tb.AddSeparator()
         
-        self.tb.AddLabelTool(12, u"Editer", edit_bmp, 
+        self.tb.AddLabelTool(13, u"Editer", edit_bmp, 
                              shortHelp=u"Editer la fiche", 
                              longHelp=u"Editer la fiche")
         
-        self.Bind(wx.EVT_TOOL, self.commandeEditer, id=12)
+        self.Bind(wx.EVT_TOOL, self.commandeEditer, id=13)
         
         #################################################################################################################
         #
@@ -13572,26 +13590,32 @@ class Panel_Details(wx.Panel):
             win.Show()
         
     
-    ######################################################################################################
-    def getNomFichierDefaut(self):
-        page = self.nb.GetCurrentPage()
-        if page != None:
-            f = u"Tâches détaillées _ " + page.eleve.GetNomPrenom() + u".rtf"
-            return os.path.join(self.projet.GetPath(), f)
+#     ######################################################################################################
+#     def getNomFichierDefaut(self):
+#         page = self.nb.GetCurrentPage()
+#         if page != None:
+#             f = u"Tâches détaillées _ " + page.eleve.GetNomPrenom() + u".rtf"
+#             return os.path.join(self.projet.GetPath(), f)
 
 
     ######################################################################################################
     def commandeEnregistrer(self, evt):
         page = self.nb.GetCurrentPage()
         if page != None:
-            page.Enregistrer(u"Enregistrer les détails", self.getNomFichierDefaut())
+            page.Enregistrer(u"Enregistrer les détails", page.getNomFichierDefaut())
+
+
+    ######################################################################################################
+    def commandeEnregistrerTout(self, evt):
+        for page in [self.nb.GetPage(i) for i in range(self.nb.GetPageCount())]:
+            page.Enregistrer(u"Enregistrer les détails", page.getNomFichierDefaut())
 
 
     ######################################################################################################
     def commandeEnregistrerSous(self, evt):
         page = self.nb.GetCurrentPage()
         if page != None:
-            page.EnregistrerSous(u"Enregistrer les détails", self.getNomFichierDefaut())
+            page.EnregistrerSous(u"Enregistrer les détails", page.getNomFichierDefaut())
             
             
         
