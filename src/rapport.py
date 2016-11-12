@@ -35,6 +35,9 @@ import wx
 import wx.richtext as rt
 import richtext
 
+from widgets import messageErreur
+from util_path import toSystemEncoding
+
 import images
 import cStringIO
 
@@ -221,60 +224,64 @@ class FrameRapport(wx.Frame):
         
     ######################################################################################################
     def OnFileSave(self, evt):
-        if not self.rtc.GetFilename():
-            self.OnFileSaveAs(evt)
-            return
-        self.rtc.SaveFile()
+        self.rtc.Enregistrer(u"Enregistrer les détails")
+#         if not self.rtc.GetFilename():
+#             self.OnFileSaveAs(evt)
+#             return
+#         self.rtc.SaveFile()
 
     ######################################################################################################
     def OnFileSaveAs(self, evt):
-        wildcard =  u"Rich Text Format (.rtf)|*.rtf|" \
-                    u"Format HTML (.html)|*.html|" \
-                    u"Fichier texte (.txt)|*.txt"
-        types = [0, 3, 2]
-        dlg = wx.FileDialog(self, u"Enregistrer les détails",
-                            wildcard=wildcard,
-                            style=wx.SAVE)
+        self.rtc.EnregistrerSous(u"Enregistrer les détails")
         
-        if dlg.ShowModal() == wx.ID_OK:
-            path = dlg.GetPath()
-            ext = os.path.splitext(path)[1].lstrip('.')
-            
-            if os.path.exists(path):
-                dlg = wx.MessageDialog(self, u"Le fichier existe déja !\n\n"\
-                                       u"Voulez-vous l'écraser ?", 
-                                       u"Fichier existant",
-                                       wx.ICON_WARNING | wx.YES_NO | wx.CANCEL)
-                res = dlg.ShowModal()
-                dlg.Destroy() 
-                if res != wx.ID_YES:
-                    return
-                    
-            if path:
-                if ext == 'txt':
-                    wildcard, types = rt.RichTextBuffer.GetExtWildcard(save=True)
-                    fileType = 1
-                    ext = rt.RichTextBuffer.FindHandlerByType(fileType).GetExtension()
-                    if not path.endswith(ext):
-                        path += '.' + ext
-                    self.rtc.SaveFile(path, 1)
-                elif ext == 'html':
-                    handler = rt.RichTextHTMLHandler()
-                    handler.SetFlags(rt.RICHTEXT_HANDLER_SAVE_IMAGES_TO_MEMORY)
-                    handler.SetFontSizeMapping([7,9,11,12,14,22,100])
-                    stream = cStringIO.StringIO()
-                    if handler.SaveStream(self.rtc.GetBuffer(), stream):
-                        f = open(path, 'w')
-                        f.write(prefixeHTML+stream.getvalue())#.encode(sys.getdefaultencoding()))
-                        f.close()
-                elif ext == 'rtf':
-                    import PyRTFParser
-                    # Use the custom RTF Handler
-                    handler = PyRTFParser.PyRichTextRTFHandler()
-                    # Save the file with the custom RTF Handler.
-                    # The custom RTF Handler can take either a wxRichTextCtrl or a wxRichTextBuffer argument.
-                    handler.SaveFile(self.rtc.GetBuffer(), path)
-        dlg.Destroy()
+        
+#         wildcard =  u"Rich Text Format (.rtf)|*.rtf|" \
+#                     u"Format HTML (.html)|*.html|" \
+#                     u"Fichier texte (.txt)|*.txt"
+#         types = [0, 3, 2]
+#         dlg = wx.FileDialog(self, u"Enregistrer les détails",
+#                             wildcard=wildcard,
+#                             style=wx.SAVE)
+#         
+#         if dlg.ShowModal() == wx.ID_OK:
+#             path = dlg.GetPath()
+#             ext = os.path.splitext(path)[1].lstrip('.')
+#             
+#             if os.path.exists(path):
+#                 dlg = wx.MessageDialog(self, u"Le fichier existe déja !\n\n"\
+#                                        u"Voulez-vous l'écraser ?", 
+#                                        u"Fichier existant",
+#                                        wx.ICON_WARNING | wx.YES_NO | wx.CANCEL)
+#                 res = dlg.ShowModal()
+#                 dlg.Destroy() 
+#                 if res != wx.ID_YES:
+#                     return
+#                     
+#             if path:
+#                 if ext == 'txt':
+#                     wildcard, types = rt.RichTextBuffer.GetExtWildcard(save=True)
+#                     fileType = 1
+#                     ext = rt.RichTextBuffer.FindHandlerByType(fileType).GetExtension()
+#                     if not path.endswith(ext):
+#                         path += '.' + ext
+#                     self.rtc.SaveFile(path, 1)
+#                 elif ext == 'html':
+#                     handler = rt.RichTextHTMLHandler()
+#                     handler.SetFlags(rt.RICHTEXT_HANDLER_SAVE_IMAGES_TO_MEMORY)
+#                     handler.SetFontSizeMapping([7,9,11,12,14,22,100])
+#                     stream = cStringIO.StringIO()
+#                     if handler.SaveStream(self.rtc.GetBuffer(), stream):
+#                         f = open(path, 'w')
+#                         f.write(prefixeHTML+stream.getvalue())#.encode(sys.getdefaultencoding()))
+#                         f.close()
+#                 elif ext == 'rtf':
+#                     import PyRTFParser
+#                     # Use the custom RTF Handler
+#                     handler = PyRTFParser.PyRichTextRTFHandler()
+#                     # Save the file with the custom RTF Handler.
+#                     # The custom RTF Handler can take either a wxRichTextCtrl or a wxRichTextBuffer argument.
+#                     handler.SaveFile(self.rtc.GetBuffer(), path)
+#         dlg.Destroy()
               
     def OnApplyStyle(self, evt):
 #        self.rtc.ApplyStyle(Styles[evt.GetString()])
@@ -726,7 +733,8 @@ class RapportRTF(rt.RichTextCtrl):
                     phase = t.phase
                     self.AddPhase(t, doc.GetTypeEnseignement(simple = True))
                 self.AddTache(t, revue = t.phase in ["R1", "R2", "R3", "Rev"])
-
+            
+            self.eleve = eleve
 
         else:
             self.AddTitreSeance(doc)
@@ -1361,8 +1369,104 @@ class RapportRTF(rt.RichTextCtrl):
         
 #        if couleur is not None:
 #            Styles[style].SetTextColour(cs)
+    
+    
+    
+    ######################################################################################################
+    def Enregistrer(self, titre, nomFichierDefaut = u""): 
+        if not self.GetFilename():
+            if self.Ecraser(nomFichierDefaut):
+                self.SetFilename(nomFichierDefaut)
+                self.SaveFile()
+            else:
+                return
+        else:
+            self.SaveFile()
+           
+        if nomFichierDefaut:
+            ext = os.path.splitext(nomFichierDefaut)[1].lstrip('.')
+            if ext == 'txt':
+                wildcard, types = rt.RichTextBuffer.GetExtWildcard(save=True)
+                fileType = 1
+                ext = rt.RichTextBuffer.FindHandlerByType(fileType).GetExtension()
+                if not nomFichierDefaut.endswith(ext):
+                    nomFichierDefaut += '.' + ext
+                self.SaveFile(nomFichierDefaut, 1)
+                
+            elif ext == 'html':
+                handler = rt.RichTextHTMLHandler()
+                handler.SetFlags(rt.RICHTEXT_HANDLER_SAVE_IMAGES_TO_MEMORY)
+                handler.SetFontSizeMapping([7,9,11,12,14,22,100])
+                stream = cStringIO.StringIO()
+                if handler.SaveStream(self.GetBuffer(), stream):
+                    f = open(nomFichierDefaut, 'w')
+                    f.write(prefixeHTML+stream.getvalue())#.encode(sys.getdefaultencoding()))
+                    f.close()
+                    
+            elif ext == 'rtf':
+                import PyRTFParser
+                # Use the custom RTF Handler
+                handler = PyRTFParser.PyRichTextRTFHandler()
+                # Save the file with the custom RTF Handler.
+                # The custom RTF Handler can take either a wxRichTextCtrl or a wxRichTextBuffer argument.
+                handler.SaveFile(self.GetBuffer(), nomFichierDefaut)
         
- 
+
+        dlg = wx.MessageDialog(self, u"Le fichier a bien été enregistré\n\n%s\n\n"\
+                                   u"Voulez-vous l'ouvrir ?" %self.GetFilename(), 
+                                   u"Fichier enregistré",
+                                   wx.ICON_INFORMATION | wx.YES_NO | wx.CANCEL)
+        res = dlg.ShowModal()
+        if res == wx.ID_YES:
+            try:
+                os.startfile(self.GetFilename())
+            except:
+                messageErreur(None, u"Ouverture impossible",
+                              u"Impossible d'ouvrir le fichier\n\n%s\n" %toSystemEncoding(self.GetFilename()))
+        dlg.Destroy()
+
+
+
+    ######################################################################################################
+    def Ecraser(self, nomFichier):
+        if os.path.exists(nomFichier):
+            dlg = wx.MessageDialog(self, u"Le fichier existe déja !\n\n%s\n\n"\
+                                   u"Voulez-vous l'écraser ?" %nomFichier, 
+                                   u"Fichier existant",
+                                   wx.ICON_WARNING | wx.YES_NO | wx.CANCEL)
+            res = dlg.ShowModal()
+            dlg.Destroy()
+            return res == wx.ID_YES
+        return True
+        
+        
+        
+        
+    ######################################################################################################
+    def EnregistrerSous(self, titre, nomFichierDefaut = u""):
+        wildcard =  u"Rich Text Format (.rtf)|*.rtf|" \
+                    u"Format HTML (.html)|*.html|" \
+                    u"Fichier texte (.txt)|*.txt"
+        types = [0, 3, 2]
+        dlg = wx.FileDialog(self, titre,
+                            wildcard=wildcard,
+                            defaultFile = nomFichierDefaut,
+                            style=wx.SAVE)
+        
+        if dlg.ShowModal() == wx.ID_OK:
+            path = dlg.GetPath()
+
+            self.Enregistrer(titre, path)
+
+        dlg.Destroy()
+        
+        
+        
+        
+        
+        
+        
+        
 class RTPrinting(rt.RichTextPrinting):
     def __init__(self, parent):
         rt.RichTextPrinting.__init__(self, "", parent)

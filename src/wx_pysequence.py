@@ -12684,66 +12684,66 @@ class myStaticBox(wx.StaticBox):
 # ProgressDialog personnalisé
 # 
 #############################################################################################################
-if sys.platform == "win32":
-    import win32gui
-#    import win32con
-class myProgressDialog2(wx.ProgressDialog):
-    def __init__(self, titre, message, maximum, parent, style = 0):
-        wx.ProgressDialog.__init__(self, titre,
-                                   message,
-                                   maximum = maximum,
-                                   parent = parent,
-                                   style = style
-                                    | wx.PD_APP_MODAL
-                                    | wx.STAY_ON_TOP
-                                    | wx.FRAME_FLOAT_ON_PARENT
-                                    #| wx.PD_CAN_ABORT
-                                    #| wx.PD_CAN_SKIP
-                                    #| wx.PD_ELAPSED_TIME
-                                    | wx.PD_ESTIMATED_TIME
-                                    | wx.PD_REMAINING_TIME
-                                    #| wx.PD_AUTO_HIDE
-                                    )
-
-#        hwnd = self.GetHandle()
-#        exstyle = win32api.GetWindowLong(hwnd, win32con.GWL_EXSTYLE)
-#        theStyle = win32con.HWND_TOPMOST
-#        win32gui.SetWindowPos(hwnd, theStyle, 0, 0, 0, 0, win32con.SWP_NOSIZE|win32con.SWP_NOMOVE)
-        
-        self.Bind(wx.EVT_UPDATE_UI, self.OnUpdate)
-        self.Bind(wx.EVT_CLOSE, self.OnClose)
-        
-        wx.CallAfter(self.top)
-        
-    def OnUpdate(self,evt):
-        self.top()
-        evt.Skip()
-        
-        
-    def top(self):
-        if sys.platform == "win32":
-            try:
-                win32gui.SetForegroundWindow(self.GetHandle())
-            except:
-                pass
-        else:
-            self.RequestUserAttention()
-            self.Iconize(False)
-            self.Raise()
-        return
-        
-        
-#        return
-#        if sys.platform != "win32":
-#            return
-#        hwnd = self.GetHandle()
-#        win32gui.SetWindowPos(hwnd, win32con.HWND_TOPMOST, 0, 0, 0, 0,
-#                              win32con.SWP_NOSIZE | win32con.SWP_NOMOVE
-#                              ) 
-        
-    def OnClose(self, event):
-#        print "Close dlg"
-        self.Destroy()        
+# if sys.platform == "win32":
+#     import win32gui
+# #    import win32con
+# class myProgressDialog2(wx.ProgressDialog):
+#     def __init__(self, titre, message, maximum, parent, style = 0):
+#         wx.ProgressDialog.__init__(self, titre,
+#                                    message,
+#                                    maximum = maximum,
+#                                    parent = parent,
+#                                    style = style
+#                                     | wx.PD_APP_MODAL
+#                                     | wx.STAY_ON_TOP
+#                                     | wx.FRAME_FLOAT_ON_PARENT
+#                                     #| wx.PD_CAN_ABORT
+#                                     #| wx.PD_CAN_SKIP
+#                                     #| wx.PD_ELAPSED_TIME
+#                                     | wx.PD_ESTIMATED_TIME
+#                                     | wx.PD_REMAINING_TIME
+#                                     #| wx.PD_AUTO_HIDE
+#                                     )
+# 
+# #        hwnd = self.GetHandle()
+# #        exstyle = win32api.GetWindowLong(hwnd, win32con.GWL_EXSTYLE)
+# #        theStyle = win32con.HWND_TOPMOST
+# #        win32gui.SetWindowPos(hwnd, theStyle, 0, 0, 0, 0, win32con.SWP_NOSIZE|win32con.SWP_NOMOVE)
+#         
+#         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdate)
+#         self.Bind(wx.EVT_CLOSE, self.OnClose)
+#         
+#         wx.CallAfter(self.top)
+#         
+#     def OnUpdate(self,evt):
+#         self.top()
+#         evt.Skip()
+#         
+#         
+#     def top(self):
+#         if sys.platform == "win32":
+#             try:
+#                 win32gui.SetForegroundWindow(self.GetHandle())
+#             except:
+#                 pass
+#         else:
+#             self.RequestUserAttention()
+#             self.Iconize(False)
+#             self.Raise()
+#         return
+#         
+#         
+# #        return
+# #        if sys.platform != "win32":
+# #            return
+# #        hwnd = self.GetHandle()
+# #        win32gui.SetWindowPos(hwnd, win32con.HWND_TOPMOST, 0, 0, 0, 0,
+# #                              win32con.SWP_NOSIZE | win32con.SWP_NOMOVE
+# #                              ) 
+#         
+#     def OnClose(self, event):
+# #        print "Close dlg"
+#         self.Destroy()        
 
 
 
@@ -13465,10 +13465,14 @@ class Panel_Details(wx.Panel):
         wx.Panel.__init__(self, parent, -1)
         self.sizer = wx.BoxSizer(wx.VERTICAL)
         
+        self.ConstruireTb()
+        
         self.nb = wx.Notebook(self, -1)
         self.sizer.Add(self.nb, proportion=1, flag = wx.EXPAND)
         
         self.nb.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
+        
+        
         
         self.SetSizer(self.sizer)
         
@@ -13489,6 +13493,9 @@ class Panel_Details(wx.Panel):
     def Construire(self, fichierCourant, projet, typ):
         wx.BeginBusyCursor()
         
+        self.fichierCourant = fichierCourant
+        self.projet = projet
+        
         # Suppression des pages
         for index in reversed(range(self.nb.GetPageCount())):
             try:
@@ -13504,6 +13511,90 @@ class Panel_Details(wx.Panel):
             self.nb.AddPage(page, e.GetNomPrenom())
 
         wx.EndBusyCursor()
+
+    
+    ###############################################################################################
+    def ConstruireTb(self):
+        """ Construction de la ToolBar
+        """
+#        print "ConstruireTb"
+
+        #############################################################################################
+        # Création de la barre d'outils
+        #############################################################################################
+#         self.tb = self.CreateToolBar(wx.TB_HORIZONTAL | wx.NO_BORDER | wx.TB_FLAT)
+        self.tb = wx.ToolBar(self, -1, wx.DefaultPosition, wx.DefaultSize,
+                                   wx.TB_HORIZONTAL | wx.NO_BORDER | wx.TB_FLAT)
+        
+        tsize = (24,24)
+        
+        edit_bmp = images.document_edit.GetBitmap()
+        save_bmp =  wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE, wx.ART_TOOLBAR, tsize)
+        saveas_bmp = wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE_AS, wx.ART_TOOLBAR, tsize)
+        
+        self.tb.SetToolBitmapSize(tsize)
+        
+        self.tb.AddLabelTool(10, u"Enregistrer", save_bmp, 
+                             shortHelp=u"Enregistrement de la fiche courante sous son nom actuel", 
+                             longHelp=u"Enregistrement de la fiche courante sous son nom actuel")
+        
+
+        self.tb.AddLabelTool(11, u"Enregistrer sous...", saveas_bmp, 
+                             shortHelp=u"Enregistrement de la fiche courante sous un nom différent", 
+                             longHelp=u"Enregistrement de la fiche courante sous un nom différent")
+        
+        self.Bind(wx.EVT_TOOL, self.commandeEnregistrer, id=10)
+        self.Bind(wx.EVT_TOOL, self.commandeEnregistrerSous, id=11)
+        
+        
+        self.tb.AddSeparator()
+        
+        self.tb.AddLabelTool(12, u"Editer", edit_bmp, 
+                             shortHelp=u"Editer la fiche", 
+                             longHelp=u"Editer la fiche")
+        
+        self.Bind(wx.EVT_TOOL, self.commandeEditer, id=12)
+        
+        #################################################################################################################
+        #
+        # Mise en place
+        #
+        #################################################################################################################
+        self.tb.Realize()
+        self.sizer.Add(self.tb, flag = wx.EXPAND)
+
+    
+    ###############################################################################################
+    def commandeEditer(self, event):
+        page = self.nb.GetCurrentPage()
+        if page != None:
+            win = FrameRapport(self, self.fichierCourant, self.projet, 'prj', page.eleve)
+            win.Show()
+        
+    
+    ######################################################################################################
+    def getNomFichierDefaut(self):
+        page = self.nb.GetCurrentPage()
+        if page != None:
+            f = u"Tâches détaillées _ " + page.eleve.GetNomPrenom() + u".rtf"
+            return os.path.join(self.projet.GetPath(), f)
+
+
+    ######################################################################################################
+    def commandeEnregistrer(self, evt):
+        page = self.nb.GetCurrentPage()
+        if page != None:
+            page.Enregistrer(u"Enregistrer les détails", self.getNomFichierDefaut())
+
+
+    ######################################################################################################
+    def commandeEnregistrerSous(self, evt):
+        page = self.nb.GetCurrentPage()
+        if page != None:
+            page.EnregistrerSous(u"Enregistrer les détails", self.getNomFichierDefaut())
+            
+            
+        
 
 
 
