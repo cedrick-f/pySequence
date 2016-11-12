@@ -2011,7 +2011,11 @@ class Projet(XMLelem):
                     l[1] = REFERENTIELS[codeRef].projets[self.code].attributs[k][1]
 #                print "  >>", l
         
+        if not "FIC" in self.attributs.keys():
+            self.attributs["FIC"] = [u"", u"", u"", u""]
         
+
+
     #########################################################################
     def getNbrRevuesDefaut(self):
         return min(self.posRevues.keys())
@@ -2185,14 +2189,17 @@ class Projet(XMLelem):
         #         
         shp = wb.sheet_by_name(u"Généralités_"+self.code)
         if shp.nrows > 16:
-            self.ficheValid = shp.cell(16,0).value
-        for l in range(2, 13):
+            self.ficheValid = shp.cell(18,0).value
+        for l in range(2, 15):
             try:
                 aide = shp.cell(l,4).value
             except:
                 aide = u""
-            self.attributs[str(shp.cell(l,0).value)] = [shp.cell(l,1).value, shp.cell(l,2).value, shp.cell(l,3).value, aide]
-                            
+            self.attributs[str(shp.cell(l,0).value)] = [shp.cell(l,1).value, 
+                                                        shp.cell(l,2).value, 
+                                                        shp.cell(l,3).value, 
+                                                        aide]
+                           
 
 
 
@@ -2367,6 +2374,13 @@ class Projet(XMLelem):
                     lt.append(t)
         self.listTaches = lt
                     
+                    
+        #
+        #
+        #
+        if self.attributs["FIC"][0] == u"":
+            self.attributs["FIC"][0] = u"Fiche de lots de travaux" # Noms des "fiches de lots de travaux" ou "tâches détaillées"
+
 #        lst.extend()
 
 

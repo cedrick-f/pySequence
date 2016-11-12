@@ -1674,6 +1674,7 @@
   <d_projets>
     <Projet_CCF1 B_tachesOnce="False" I_duree="12" I_maxEleves="5" I_minEleves="3" S_code="CCF1" S_ficheValid="STS_SN_IR_Sit1.html" S_intitule="CCF1">
       <d_attributs>
+        <l_ S_00="" S_01="" S_02="" S_03="" />
         <l_SRC S_00="" S_01="" S_02="" S_03="" />
         <l_PAR S_00="" S_01="" S_02="" S_03="" />
         <l_DEC S_00="" S_01="" S_02="" S_03="" />
@@ -1681,6 +1682,7 @@
         <l_TIT S_00="Titre du projet" S_01="Titre du projet" S_02="" S_03="" />
         <l_SYN S_00="" S_01="" S_02="" S_03="" />
         <l_PB S_00="" S_01="" S_02="" S_03="" />
+        <l_FIC S_00="Fiche de lots de travaux" S_01="" S_02="" S_03="" />
         <l_ORI S_00="" S_01="" S_02="" S_03="" />
         <l_CCF S_00="Présentation du support" S_01="Indiquer :-- - description du contexte dans lequel l’objet du projet va être intégré ;-- - fonctionnalités de cet objet ;-- - caractéristiques fonctionnelles et techniques." S_02="" S_03="" />
         <l_TYP S_00="Typologie" S_01="" S_02="Télécommunication, téléphonie et réseaux téléphonique--Informatique, réseaux et infrastructures--Multimédia, son et image, radio et télédiffusion--Mobilité et systèmes embarqués--Electronique et informatique médicale--Mesure, instrumentation et microsystèmes--Automatique et robotique" S_03="" />
@@ -1739,6 +1741,7 @@
     </Projet_CCF1>
     <Projet_CCF2 B_tachesOnce="False" I_duree="12" I_maxEleves="5" I_minEleves="3" S_code="CCF2" S_ficheValid="STS_SN_IR_Sit2.html" S_intitule="CCF2">
       <d_attributs>
+        <l_ S_00="" S_01="" S_02="" S_03="" />
         <l_SRC S_00="" S_01="" S_02="" S_03="" />
         <l_PAR S_00="" S_01="" S_02="" S_03="" />
         <l_DEC S_00="" S_01="" S_02="" S_03="" />
@@ -1746,6 +1749,7 @@
         <l_TIT S_00="Titre du projet" S_01="Titre du projet" S_02="" S_03="" />
         <l_SYN S_00="" S_01="" S_02="" S_03="" />
         <l_PB S_00="" S_01="" S_02="" S_03="" />
+        <l_FIC S_00="Fiche de lots de travaux" S_01="" S_02="" S_03="" />
         <l_ORI S_00="" S_01="" S_02="" S_03="" />
         <l_CCF S_00="Présentation du support" S_01="Indiquer :-- - description du contexte dans lequel l’objet du projet va être intégré ;-- - fonctionnalités de cet objet ;-- - caractéristiques fonctionnelles et techniques." S_02="" S_03="" />
         <l_TYP S_00="Typologie" S_01="" S_02="Télécommunication, téléphonie et réseaux téléphonique--Informatique, réseaux et infrastructures--Multimédia, son et image, radio et télédiffusion--Mobilité et systèmes embarqués--Electronique et informatique médicale--Mesure, instrumentation et microsystèmes--Automatique et robotique" S_03="" />
@@ -1810,6 +1814,7 @@
     </Projet_CCF2>
     <Projet_PRJ B_tachesOnce="True" I_duree="50" I_maxEleves="5" I_minEleves="3" S_code="PRJ" S_ficheValid="STS_SN_IR_projet_E6.html" S_intitule="Projet de fin d'année">
       <d_attributs>
+        <l_ S_00="" S_01="" S_02="" S_03="" />
         <l_SRC S_00="Inventaire des matériels" S_01="Désignation" S_02="" S_03="" />
         <l_PAR S_00="Partenaires du projet" S_01="" S_02="" S_03="" />
         <l_DEC S_00="Description de l'intervention" S_01="" S_02="" S_03="" />
@@ -1817,6 +1822,7 @@
         <l_TIT S_00="Titre du projet" S_01="Titre du projet" S_02="" S_03="" />
         <l_SYN S_00="" S_01="" S_02="" S_03="" />
         <l_PB S_00="Problématique" S_01="" S_02="" S_03="" />
+        <l_FIC S_00="Fiche de lots de travaux" S_01="" S_02="" S_03="" />
         <l_ORI S_00="Analyse de l'existant" S_01="" S_02="" S_03="" />
         <l_CCF S_00="Expression du besoin" S_01="Indiquer :-- - description du contexte dans lequel l’objet du projet va être intégré ;-- - fonctionnalités de cet objet ;-- - caractéristiques fonctionnelles et techniques." S_02="" S_03="" />
         <l_TYP S_00="Reprise d'un projet" S_01="" S_02="oui--non" S_03="" />

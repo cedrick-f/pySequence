@@ -160,7 +160,7 @@ class StyleDeTexte:
 
 #########################################################################################
 class FrameRapport(wx.Frame):
-    def __init__(self, parent, fichierCourant, doc, typ):
+    def __init__(self, parent, fichierCourant, doc, typ, eleve):
         wx.Frame.__init__(self, parent, -1, u"Tâches élèves détaillées",
                             size=(700, 500))#,
 #                            style = wx.DEFAULT_FRAME_STYLE)
@@ -187,7 +187,7 @@ class FrameRapport(wx.Frame):
         #
         # On rempli le rapport
         #
-        self.rtc.Remplir(fichierCourant, doc, typ)
+        self.rtc.Remplir(fichierCourant, doc, typ, eleve)
     
 
         
@@ -707,7 +707,7 @@ class RapportRTF(rt.RichTextCtrl):
         
         
     ######################################################################################################
-    def Remplir(self, fichierCourant, doc, typ):
+    def Remplir(self, fichierCourant, doc, typ, eleve = None):
         isEditable = self.IsEditable()
         self.SetEditable(True)
         
@@ -719,23 +719,22 @@ class RapportRTF(rt.RichTextCtrl):
         #
         phase = ''
         if typ == 'prj':
-            for e in doc.eleves:
-                self.AddTitreProjet(e)
-                for t in doc.OrdonnerListeTaches(e.GetTaches(revues = True)):
-                    if t.phase != phase and t.phase != '':
-                        phase = t.phase
-                        self.AddPhase(t, doc.GetTypeEnseignement(simple = True))
-                    self.AddTache(t, revue = t.phase in ["R1", "R2", "R3", "Rev"])
+#             for e in doc.eleves:
+            self.AddTitreProjet(eleve, doc.GetProjetRef().attributs["FIC"][0])
+            for t in doc.OrdonnerListeTaches(eleve.GetTaches(revues = True)):
+                if t.phase != phase and t.phase != '':
+                    phase = t.phase
+                    self.AddPhase(t, doc.GetTypeEnseignement(simple = True))
+                self.AddTache(t, revue = t.phase in ["R1", "R2", "R3", "Rev"])
 
-            self.AddPieds(fichierCourant)
-            
+
         else:
             self.AddTitreSeance(doc)
     
             for s in doc.seances:
                 self.AddSeance(s)
             
-            self.AddPieds(fichierCourant)
+        self.AddPieds(fichierCourant)
         
         self.SetEditable(isEditable)
         self.ScrollIntoView(0, wx.WXK_HOME)
@@ -755,14 +754,14 @@ class RapportRTF(rt.RichTextCtrl):
         
         
     ######################################################################################################
-    def AddTitreProjet(self, eleve):
+    def AddTitreProjet(self, eleve, titre):
 #        print self.GetCaretPosition()
         if self.GetCaretPosition() == -1:
             Styles["Titre"].SetPageBreak(pageBreak=False)
         else:
             Styles["Titre"].SetPageBreak(pageBreak=True)
 #        
-        parag = self.AddParagraph(u"Fiche de lot de travaux\n")
+        parag = self.AddParagraph(titre + u"\n")
         self.MoveEnd()
         self.Newline()
         

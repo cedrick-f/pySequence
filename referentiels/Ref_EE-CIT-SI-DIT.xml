@@ -1144,6 +1144,7 @@
   <d_projets>
     <Projet_PRJ1 B_tachesOnce="False" I_duree="12" I_maxEleves="5" I_minEleves="3" S_code="PRJ1" S_ficheValid="" S_intitule="Projet début d'année">
       <d_attributs>
+        <l_ S_00="" S_01="" S_02="" S_03="" />
         <l_SRC S_00="Source de financement" S_01="" S_02="" S_03="" />
         <l_PAR S_00="Partenaires du projet" S_01="" S_02="" S_03="" />
         <l_DEC S_00="" S_01="" S_02="" S_03="" />
@@ -1151,6 +1152,7 @@
         <l_TIT S_00="Titre du projet" S_01="Titre du projet" S_02="" S_03="" />
         <l_SYN S_00="Synoptique" S_01="• Identification des procédés et de leurs agencements.--• Description du ou des processus." S_02="" S_03="" />
         <l_PB S_00="Présentation du projet" S_01="Indiquer :-- - description du contexte dans lequel l’objet du projet va être intégré ;-- - fonctionnalités de cet objet ;-- - caractéristiques fonctionnelles et techniques." S_02="" S_03="" />
+        <l_FIC S_00="Fiche de lots de travaux" S_01="" S_02="" S_03="" />
         <l_ORI S_00="" S_01="" S_02="" S_03="" />
         <l_CCF S_00="Cahier des charges" S_01="" S_02="" S_03="" />
         <l_TYP S_00="Typologie" S_01="" S_02="Construction ou rénovation d'un système inclus dans une chaîne de fabrication.--Construction ou rénovation d'une machine de production.--Conception ou modification d'une installation électrique d'une infrastructure.--Conception ou modification d'une installation électrique d'un bâtiment tertiaire ou industriel.--Conception ou amélioration d'un produit de consommation.--Élaboration ou amélioration de services." S_03="" />
@@ -1224,6 +1226,7 @@
     </Projet_PRJ1>
     <Projet_PRJ2 B_tachesOnce="False" I_duree="12" I_maxEleves="5" I_minEleves="3" S_code="PRJ2" S_ficheValid="" S_intitule="Projet">
       <d_attributs>
+        <l_ S_00="" S_01="" S_02="" S_03="" />
         <l_SRC S_00="Source de financement" S_01="" S_02="" S_03="" />
         <l_PAR S_00="Partenaires du projet" S_01="" S_02="" S_03="" />
         <l_DEC S_00="" S_01="" S_02="" S_03="" />
@@ -1231,6 +1234,7 @@
         <l_TIT S_00="Titre du projet" S_01="Titre du projet" S_02="" S_03="" />
         <l_SYN S_00="Synoptique" S_01="• Identification des procédés et de leurs agencements.--• Description du ou des processus." S_02="" S_03="" />
         <l_PB S_00="Présentation du projet" S_01="Indiquer :-- - description du contexte dans lequel l’objet du projet va être intégré ;-- - fonctionnalités de cet objet ;-- - caractéristiques fonctionnelles et techniques." S_02="" S_03="" />
+        <l_FIC S_00="Fiche de lots de travaux" S_01="" S_02="" S_03="" />
         <l_ORI S_00="" S_01="" S_02="" S_03="" />
         <l_CCF S_00="Cahier des charges" S_01="" S_02="" S_03="" />
         <l_TYP S_00="Typologie" S_01="" S_02="Construction ou rénovation d'un système inclus dans une chaîne de fabrication.--Construction ou rénovation d'une machine de production.--Conception ou modification d'une installation électrique d'une infrastructure.--Conception ou modification d'une installation électrique d'un bâtiment tertiaire ou industriel.--Conception ou amélioration d'un produit de consommation.--Élaboration ou amélioration de services." S_03="" />
@@ -1304,6 +1308,7 @@
     </Projet_PRJ2>
     <Projet_PRJ3 B_tachesOnce="False" I_duree="50" I_maxEleves="5" I_minEleves="3" S_code="PRJ3" S_ficheValid="" S_intitule="Projet de fin d'année">
       <d_attributs>
+        <l_ S_00="" S_01="" S_02="" S_03="" />
         <l_SRC S_00="Source de financement" S_01="" S_02="" S_03="" />
         <l_PAR S_00="Partenaires du projet" S_01="" S_02="" S_03="" />
         <l_DEC S_00="" S_01="" S_02="" S_03="" />
@@ -1311,6 +1316,7 @@
         <l_TIT S_00="Titre du projet" S_01="Titre du projet" S_02="" S_03="" />
         <l_SYN S_00="Synoptique" S_01="• Identification des procédés et de leurs agencements.--• Description du ou des processus." S_02="" S_03="" />
         <l_PB S_00="Présentation du projet" S_01="Indiquer :-- - description du contexte dans lequel l’objet du projet va être intégré ;-- - fonctionnalités de cet objet ;-- - caractéristiques fonctionnelles et techniques." S_02="" S_03="" />
+        <l_FIC S_00="Fiche de lots de travaux" S_01="" S_02="" S_03="" />
         <l_ORI S_00="" S_01="" S_02="" S_03="" />
         <l_CCF S_00="Cahier des charges" S_01="" S_02="" S_03="" />
         <l_TYP S_00="Typologie" S_01="" S_02="Construction ou rénovation d'un système inclus dans une chaîne de fabrication.--Construction ou rénovation d'une machine de production.--Conception ou modification d'une installation électrique d'une infrastructure.--Conception ou modification d'une installation électrique d'un bâtiment tertiaire ou industriel.--Conception ou amélioration d'un produit de consommation.--Élaboration ou amélioration de services." S_03="" />

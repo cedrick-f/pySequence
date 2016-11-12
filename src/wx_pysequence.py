@@ -1856,8 +1856,9 @@ class FenetreDocument(aui.AuiMDIChildFrame):
     #############################################################################
     def exporterDetails(self, event = None):
         if hasattr(self, 'projet'):
-            win = FrameRapport(self, self.fichierCourant, self.projet, 'prj')
-            win.Show()
+            for e in self.projet.eleves:
+                win = FrameRapport(self, self.fichierCourant, self.projet, 'prj', e)
+                win.Show()
         elif hasattr(self, 'sequence'):
             win = FrameRapport(self, self.fichierCourant, self.sequence, 'seq')
             win.Show()
@@ -2316,7 +2317,8 @@ class FenetreProjet(FenetreDocument):
         #
         # Détails
         #
-        self.pageDetails = RapportRTF(self.nb, rt.RE_READONLY)
+#         self.pageDetails = RapportRTF(self.nb, rt.RE_READONLY)
+        self.pageDetails = Panel_Details(self.nb)
         self.nb.AddPage(self.pageDetails, u"Tâches élèves détaillées")
         
         #
@@ -2365,7 +2367,8 @@ class FenetreProjet(FenetreDocument):
         new = event.GetSelection()
         event.Skip()
         if new == 1: # On vient de cliquer sur la page "détails"
-            self.pageDetails.Remplir(self.fichierCourant, self.projet, self.typ)
+            self.pageDetails.Construire(self.fichierCourant, self.projet, self.typ)
+#             self.pageDetails.Remplir(self.fichierCourant, self.projet, self.typ)
         
         elif new == 2: # On vient de cliquer sur la page "dossier de validation"
             self.pageValid.MiseAJour(self.projet, self)
@@ -12903,13 +12906,6 @@ class myHtmlWindow(html.HtmlWindow):
         super(myHtmlWindow, self).OnCellClicked(cell, x, y, evt)
 
 
-class CheckBoxValue(wx.CheckBox):
-    def __init__(self, *args, **kargs):
-#     def __init__(self, *args, **kwargs, value = value):
-        wx.CheckBox.__init__(self, *args, **kargs)
-#         self.SetValue(value)
-
-
 
 
 class PopupInfo(wx.PopupWindow):
@@ -13394,7 +13390,7 @@ class DialogChoixDoc(wx.Dialog):
 #import pywintypes
 
 
-        
+
 ##########################################################################################################
 #
 #  Panel pour l'affichage des BO
@@ -13454,6 +13450,58 @@ class Panel_BO(wx.Panel):
             page = genpdf.PdfPanel(self.nb)
             page.chargerFichierPDF(f)
             self.nb.AddPage(page, os.path.split(os.path.splitext(f)[0])[1])
+
+        wx.EndBusyCursor()
+        
+        
+        
+##########################################################################################################
+#
+#  Panel pour l'affichage des tâches détailles par élève
+#
+##########################################################################################################
+class Panel_Details(wx.Panel):
+    def __init__(self, parent):
+        wx.Panel.__init__(self, parent, -1)
+        self.sizer = wx.BoxSizer(wx.VERTICAL)
+        
+        self.nb = wx.Notebook(self, -1)
+        self.sizer.Add(self.nb, proportion=1, flag = wx.EXPAND)
+        
+        self.nb.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
+        
+        self.SetSizer(self.sizer)
+        
+        self.Bind(wx.EVT_ENTER_WINDOW, self.OnEnter)
+
+
+    ######################################################################################################
+    def OnEnter(self, event):
+        self.SetFocus()
+        event.Skip()
+        
+        
+    ######################################################################################################
+    def OnPageChanged(self, event):
+        pass
+    
+    ######################################################################################################
+    def Construire(self, fichierCourant, projet, typ):
+        wx.BeginBusyCursor()
+        
+        # Suppression des pages
+        for index in reversed(range(self.nb.GetPageCount())):
+            try:
+                self.nb.DeletePage(index)
+            except:
+                print "raté :", index
+#        self.dataNoteBook.SendSizeEvent()
+        
+        # Recréation des pages
+        for e in projet.eleves:
+            page = RapportRTF(self.nb, rt.RE_READONLY)
+            page.Remplir(fichierCourant, projet, typ, e)
+            self.nb.AddPage(page, e.GetNomPrenom())
 
         wx.EndBusyCursor()
 
