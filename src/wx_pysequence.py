@@ -571,6 +571,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             self.Bind(wx.EVT_MENU, self.OnRegister, id=32)
         
         self.Bind(wx.EVT_MENU, self.OnReparer, id=33)
+        self.Bind(wx.EVT_MENU, self.OnRecupEtab, id=34)
         
         self.Bind(EVT_APPEL_OUVRIR, self.OnAppelOuvrir)
         
@@ -958,6 +959,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             self.menuReg = tool_menu.Append(32, u"a")
             self.MiseAJourMenu()
         self.menuRep = tool_menu.Append(33, u"Ouvrir et réparer un fichier")
+        tool_menu.Append(34, u"Récupérer les noms d'établissement")
 
         self.tool_menu = tool_menu
         
@@ -1041,6 +1043,48 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             self.commandeOuvrir(reparer = True)
             
 
+
+    #############################################################################
+    def OnRecupEtab(self, event):
+        dlg = wx.MessageDialog(self, u"Récupérer les noms d'établissement\n\n" \
+                               u"L'opération qui va suivre permet de récupérer sur Internet\n" \
+                               u"la liste officielle des collèges et lycées Français.\n\n" \
+                               u"Cette opération ne se justifie que s'il manque\n" \
+                               u"un(des) établissement(s) dans le fichier fourni avec pySéquence.\n\n" \
+                               u"Il est conseillé de faire une sauvegarde du fichier\n" \
+                               u"\t    etablissements.xml\n"\
+                               u"qui sera remplacé par un nouveau.\n\n"\
+                               u"L'opération peut durer plusieurs minutes\n" \
+                               u"et nécessite une connexion à Internet !!\n\n"\
+                               u"Voulez-vous continuer ?",
+                                 u"Récupérer les noms d'établissement",
+                                 wx.ICON_INFORMATION | wx.YES_NO | wx.CANCEL
+                                 )
+        res = dlg.ShowModal()
+        dlg.Destroy() 
+        if res == wx.ID_YES:
+            import getEtab
+            fileName = getEtab.SauvEtablissements(self, util_path.APP_DATA_PATH)
+            if fileName is not None:
+                dlg = wx.MessageDialog(self, u"Le fichier a bien été enregistré\n\n%s\n\n"\
+                                       u"Voulez-vous l'ouvrir ?" %fileName, 
+                                       u"Fichier enregistré",
+                                       wx.ICON_INFORMATION | wx.YES_NO | wx.CANCEL)
+                res = dlg.ShowModal()
+                if res == wx.ID_YES:
+                    try:
+                        os.startfile(fileName)
+                    except:
+                        messageErreur(None, u"Ouverture impossible",
+                                      u"Impossible d'ouvrir le fichier\n\n%s\n" %toSystemEncoding(fileName))
+            else:
+                dlg = wx.MessageDialog(self, u"Opération annulée\n\n", 
+                                       u"Opération annulée",
+                                       wx.ICON_ERROR | wx.OK)
+                res = dlg.ShowModal()
+            
+            dlg.Destroy()
+        
          
                 
     #############################################################################
@@ -2656,43 +2700,9 @@ class FenetreProjet(FenetreDocument):
         
         fichier.close()
         
-        
-#        liste_actions = [[self.classe.ConstruireArbre, [self.arbre, root], {},
-#                         u"Construction de l'arborescence de la classe...\t"],
-#                         [self.projet.ConstruireArbre, [self.arbre, root], {},
-#                          u"Construction de l'arborescence du projet...\t"],
-#                         [self.projet.OrdonnerTaches, [], {},
-#                          u"Ordonnancement des tâches...\t"],
-##                         [self.projet.PubDescription, [], {},
-##                          u"Traitement des descriptions...\t"],
-#                         [self.projet.SetLiens, [], {},
-#                          u"Construction des liens...\t"],
-#                         [self.projet.MiseAJourDureeEleves, [], {},
-#                          u"Ajout des durées/évaluabilités dans l'arbre...\t"],
-#                         [self.projet.MiseAJourNomProfs, [], {},
-#                          u"Ajout des disciplines dans l'arbre...\t"],
-#                         ]
-#        
-#        for fct, arg, karg, msg in liste_actions:
-#            message += msg
-#            dlg.Update(count, message)
-##            dlg.top()
-#            count += 1
-#            if "beta" in version.__version__:
-#                fct(*arg, **karg)
-#                message += u"Ok\n"
-#            else:
-#                try :
-#                    fct(*arg, **karg)
-#                    message += u"Ok\n"
-#                except:
-#                    Ok = False
-#                    message += constantes.Erreur(constantes.ERR_INCONNUE).getMessage() + u"\n"
-        
         if "beta" in version.__version__:
             message, count = self.finaliserOuverture(dlg= dlg, message = message, count = count)
         else:
-            
             try:
                 message, count = self.finaliserOuverture(dlg= dlg, message = message, count = count)
             except:
@@ -2724,6 +2734,8 @@ class FenetreProjet(FenetreDocument):
         tps2 = time.clock() 
         print "Ouverture :", tps2 - tps1
 
+        self.fiche.Redessiner()
+
         if Ok:
             
             dlg.Destroy()
@@ -2735,7 +2747,7 @@ class FenetreProjet(FenetreDocument):
 #        self.SetTitre()
 #         wx.CallAfter(self.fiche.Show)
 #         wx.CallAfter(self.fiche.Redessiner)
-        self.fiche.Redessiner()
+        
 
         #
         # Mise en liste undo/redo
@@ -12779,6 +12791,7 @@ class myProgressDialog(wx.Frame):
         
         self.count = 0
         self.maximum = maximum
+        self.stop = False # Pour opération "Annuler"
         
         sizer = wx.BoxSizer(wx.VERTICAL)
 
@@ -12788,7 +12801,8 @@ class myProgressDialog(wx.Frame):
         self.titre.SetForegroundColour((50,50,200))
         sizer.Add(self.titre, 0, wx.ALIGN_LEFT|wx.ALL|wx.EXPAND, 20)
 
-        self.message = wx.StaticText(panel, -1)
+        self.message = wx.TextCtrl(panel, -1, size = (-1, 200), 
+                                   style = wx.TE_MULTILINE|wx.TE_READONLY|wx.VSCROLL|wx.TE_NOHIDESEL)
         sizer.Add(self.message, 1, wx.ALIGN_LEFT|wx.LEFT|wx.RIGHT|wx.EXPAND, 15)
         
         self.SetMessage(message)
@@ -12797,7 +12811,9 @@ class myProgressDialog(wx.Frame):
         self.gauge = wx.Gauge(panel, -1, maximum)
         sizer.Add(self.gauge, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL|wx.EXPAND, 5)
 #         print dir(self.gauge)
-        
+        if maximum < 0:
+            self.gauge.Pulse()
+            
         line = wx.StaticLine(panel, -1, size=(20,-1), style=wx.LI_HORIZONTAL)
         sizer.Add(line, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL|wx.EXPAND, 5)
 
@@ -12848,20 +12864,26 @@ class myProgressDialog(wx.Frame):
         self.SetMessage(message)
         self.count = count
         
-        if self.count >= self.maximum or self.count < 0:
+        if self.maximum >= 0 and (self.count >= self.maximum or self.count < 0):
             self.GetParent().Enable(True)
             self.btn.SetLabel(u"Ok")
         self.panel.Layout()
         self.Fit()
 
         wx.Frame.Update(self)
-        wx.CallAfter(self.gauge.SetValue, self.count)
-#         self.gauge.SetValue(self.count)
-        self.gauge.Update()
-        self.gauge.Refresh()
         
-        wx.Yield()
-        self.gauge.UpdateWindowUI()
+        if self.maximum >= 0:
+            wx.CallAfter(self.gauge.SetValue, self.count)
+    #         self.gauge.SetValue(self.count)
+            self.gauge.Update()
+            self.gauge.Refresh()
+            
+            wx.Yield()
+            try:
+                self.gauge.UpdateWindowUI()
+            except:
+                pass
+            
         self.gauge.Refresh()
 #         time.sleep(.1)
 #         self.Refresh()
@@ -12871,18 +12893,23 @@ class myProgressDialog(wx.Frame):
     def SetMessage(self, message):
         m = message.split(u"\n\n")
         if len(m) > 1:
-            t, m = m[0], u"".join(m[1:])
+            t, m = m[0], u"\n\n".join(m[1:])
         else:
             t, m = m[0], u""
             
-        
         self.titre.SetLabel(t)
-        self.message.SetLabel(m)
+        self.message.ChangeValue(m)
+#         self.message.ScrollLines(-1)
+#         self.message.ScrollPages(1) 
+        self.message.ShowPosition(self.message.GetLastPosition ())
         
     
     def OnClick(self, event):
         self.GetParent().Enable(True)
-        self.Destroy()
+        if event.GetEventObject().GetLabel()[0] == u"A":
+            self.stop = True
+        else:
+            self.Destroy()
 
 
 
