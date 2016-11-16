@@ -1,4 +1,4 @@
-<Referentiel B_CI_BO="False" B_CI_cible="False" S_AnneeDebut="Sup1" S_Code="STS_SN_EC" S_Famille="STS" S_FichierLogo="" S_abrevCI="Th " S_abrevPb="Pb" S_nomCI="Thème(s)" S_nomFonctions="Fonction(s)" S_nomPb="Problématique(s)" S_nomTaches="Tâche(s)">
+<Referentiel B_CI_BO="False" B_CI_cible="False" S_AnneeDebut="Sup1" S_Code="STS_SN_EC" S_Famille="STS" S_FichierLogo="" S_abrevCI="Th " S_abrevPb="Pb" S_nomCI="Thème(s)" S_nomFonctions="Fonction(s)" S_nomPb="Problématique(s)" S_nomTaches="Tâche(s)" S_nomTh="">
   <l_BO_URL>
     <l_00 S_00="Programme" S_01="http://eduscol.education.fr/sti/sites/eduscol.education.fr.sti/files/textes/formations-bts-bts-systemes-numeriques/3321-referentiel-bts-systemes-numeriques.pdf" />
   </l_BO_URL>

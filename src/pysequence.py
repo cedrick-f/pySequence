@@ -4703,6 +4703,20 @@ class Progression(BaseDoc, Objet_sequence):
         
     
     ########################################################################################################
+    def GetListeCI(self):
+        """
+        """
+        return self.GetReferentiel().CentresInterets
+    
+    
+    ########################################################################################################
+    def GetListeTh(self):
+        """
+        """
+        return self.GetReferentiel().listeThematiques
+    
+    
+    ########################################################################################################
     def GetListeFichiersSequences(self):
         """
         """

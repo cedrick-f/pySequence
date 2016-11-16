@@ -53,6 +53,7 @@ from math import log, pi
 #from constantes import Effectifs, NomsEffectifs, listeDemarches, Demarches, getSavoir, getCompetence, \
 #                        DemarchesCourt, estCompetenceRevue
 import constantes
+from constantes import getSingulierPluriel
 
 # Les constantes partagées
 from Referentiel import REFERENTIELS
@@ -115,7 +116,7 @@ fontPro = 0.012 * COEF
 
 # Image du support
 posImg = [posEqu[0] + tailleEqu[0] + ecartX/4, posNom[1] + tailleNom[1] + ecartY]
-tailleImg = [posPro[0] - posEqu[0] - tailleEqu[0], None]
+tailleImg = [posPro[0] - posImg[0] - ecartX/4, None]
 tailleImg[1] = posEqu[1] + tailleEqu[1] - posEqu[1]
 IcoulImg = (0.8, 0.8, 1, 0.85)
 BcoulImg = (0.1, 0.1, 0.25, 1)
@@ -136,15 +137,30 @@ wPhases = 0.04 * COEF      # Taille du label "phases"
 wDuree = 0.012 * COEF       # Taille de la fleche "duree"
 
 
-# Zones des tableaux des éléves
-posZElevesV = [None, posZOrganis[1]-ecartY/2]
-tailleZElevesV = [None, None]
-posZElevesH = [posZDeroul[0], posZElevesV[1]]
-tailleZElevesH = [None, None]
-wEleves = 0.015 * COEF
-hEleves = 0.020 * COEF
-xEleves = []
-yEleves = []
+
+# Zones des tableaux Thématiques
+posZThV = [None, posZOrganis[1]]
+tailleZThV = [None, None]
+posZThH = [posZDeroul[0], posZThV[1]]
+tailleZThH = [None, None]
+wTh = 0.015 * COEF
+hTh = 0.020 * COEF
+xTh = []
+yTh = []
+
+
+
+# Zones des tableaux des CI/thèmes de séquence
+posZCIV = [None, None]
+tailleZCIV = [None, None]
+posZCIH = [posZDeroul[0], None]
+tailleZCIH = [None, None]
+wCI = 0.015 * COEF
+hCI = 0.020 * COEF
+xCI = []
+yCI = []
+
+
 
 # Zone du tableau des compétences
 posZComp = [None, None]
@@ -179,7 +195,7 @@ def calcH(t):
 
 
 
-ecartYElevesTaches = 0.05 * COEF
+ecartyCITaches = 0.05 * COEF
 
 
     
@@ -190,7 +206,7 @@ def DefinirZones(prg, ctx):
     """ Calcule les positions et dimensions des différentes zones de tracé
         en fonction du nombre d'éléments (élèves, tâches, compétences)
     """
-    global ecartTacheY, intituleTaches, fontIntTaches, xEleves, yEleves, a, b, yTaches, wColComp
+    global ecartTacheY, intituleTaches, fontIntTaches, xCI, yCI, a, b, yTaches, wColComp, xTh, yTh
     
     #
     # Zone du tableau des compétences - X
@@ -218,31 +234,55 @@ def DefinirZones(prg, ctx):
     
     
     #
+    # Zone du tableau des Thématiques
+    #
+    lstTh = prg.GetListeTh()
+    tailleZThV[0] = wTh * len(lstTh)
+    if len(lstTh) == 0:
+        tailleZThH[1] = 0
+        e = 0
+    else:
+        tailleZThH[1] = hTh * len(lstTh) + ecartY
+        e = 1
+    posZThV[0] = posZComp[0] - tailleZThV[0] - ecartX/2
+    tailleZThH[0] = posZThV[0]-posZThH[0]- ecartX/2
+    tailleZThV[1] = posZOrganis[1] + tailleZOrganis[1] - posZThV[1]
+    xTh = []
+    yTh = []
+    for i in range(len(lstTh)):
+        xTh.append(posZThV[0] + (i+0.5) * wTh)
+        yTh.append(posZThH[1] + (i+0.5) * hTh)
+        
+        
+    #
     # Zone du tableau des thèmes/CI
     #
-    tailleZElevesV[0] = wEleves * len(ref.CentresInterets)
-    if len(ref.CentresInterets) == 0:
-        tailleZElevesH[1] = 0
+    lstCI = prg.GetListeCI()
+    tailleZCIV[0] = wCI * len(lstCI)
+    if len(lstCI) == 0:
+        tailleZCIH[1] = 0
     else:
-        tailleZElevesH[1] = hEleves * len(ref.CentresInterets) + ecartY
-    posZElevesV[0] = posZComp[0] - tailleZElevesV[0] - ecartX/2
-    tailleZElevesH[0] = posZElevesV[0]-posZElevesH[0]- ecartX/2
-    tailleZElevesV[1] = posZOrganis[1] + tailleZOrganis[1] - posZElevesV[1]
-    xEleves = []
-    yEleves = []
-    for i in range(len(ref.CentresInterets)):
-        xEleves.append(posZElevesV[0] + (i+0.5) * wEleves)
-        yEleves.append(posZElevesH[1] + (i+0.5) * hEleves)
+        tailleZCIH[1] = hCI * len(lstCI) + ecartY
+    posZCIV[0] = posZComp[0] - tailleZCIV[0] - tailleZThV[0] - ecartX/2
+    posZCIV[1] = posZThH[1] + tailleZThH[1] + ecartY/2 * e
+    posZCIH[1] = posZCIV[1]
+    tailleZCIH[0] = posZCIV[0] - posZCIH[0] - ecartX/2
+    tailleZCIV[1] = posZOrganis[1] + tailleZOrganis[1] - posZCIV[1]
+    xCI = []
+    yCI = []
+    for i in range(len(lstCI)):
+        xCI.append(posZCIV[0] + (i+0.5) * wCI)
+        yCI.append(posZCIV[1] + (i+0.5) * hCI)
 
 
     # Zone du tableau des compétences (entête - uniquement selon y)
-    posZComp[1] = posZElevesH[1] + tailleZElevesH[1]
-    tailleZComp[1] = ecartYElevesTaches            
+    posZComp[1] = posZThV[1] + tailleZThH[1] + tailleZCIH[1]
+    tailleZComp[1] = ecartyCITaches            
                  
                  
     # Zone de déroulement de la progression (cadre arrondi)
-    posZDeroul[1] = posZElevesH[1] + tailleZElevesH[1] + tailleZComp[1]
-    tailleZDeroul[0] = posZElevesV[0] - posZDeroul[0] - ecartX/2
+    posZDeroul[1] = posZThV[1] + tailleZThH[1] + tailleZCIH[1] + tailleZComp[1]
+    tailleZDeroul[0] = posZCIV[0] - posZDeroul[0] - ecartX/2
     tailleZDeroul[1] = posZOrganis[1] + tailleZOrganis[1] - posZDeroul[1]
     
     
@@ -319,6 +359,9 @@ def Draw(ctx, prg, mouchard = False):
     ctx.set_font_options(options)
     
     DefinirZones(prg, ctx)
+    
+    gabarit() # à virer (pour générer image gabarit
+    
 #    DefinirCouleurs(prg.GetNbrPeriodes())
 #    print "DefinirCouleurs", IcoulPos
 
@@ -503,7 +546,7 @@ def Draw(ctx, prg, mouchard = False):
     
     ctx.set_line_width(0.001 * COEF)
     _x = _x0 = posZComp[0]
-    _y0, _y1 = posZElevesH[1] - ecartY/2, posZDeroul[1] + tailleZDeroul[1]
+    _y0, _y1 = posZCIV[1] - ecartY/2, posZDeroul[1] + tailleZDeroul[1]
     
     lcomp = []
     
@@ -568,31 +611,32 @@ def Draw(ctx, prg, mouchard = False):
         _x0 = _x
         
 
-
-
-
+    
     #
-    #  Tableau des CI/Thèmes ?
+    #  Tableau des Thématiques
     #   
-    if len(ref.CentresInterets) > 0:
-        rectCI = (posZElevesH[0], posZElevesH[1], 
-                  tailleZElevesH[0], tailleZElevesH[1])
-        curve_rect_titre(ctx, ref.nomCI, rectCI, BcoulCI, IcoulCI, fontCI)
+    lstTh = prg.GetListeTh()
+    
+    if len(lstTh) > 0:
+        rectTh = (posZThH[0], posZThV[1], 
+                  tailleZThH[0], tailleZThH[1])
+        curve_rect_titre(ctx, getSingulierPluriel(ref.nomTh, False),
+                         rectTh, BcoulCI, IcoulCI, fontCI)
         
         ctx.select_font_face(font_family, cairo.FONT_SLANT_NORMAL,
                              cairo.FONT_WEIGHT_NORMAL)
         ctx.set_source_rgb(0, 0, 0)
         ctx.set_line_width(0.0005 * COEF)
         l=[]
-        for i,e in enumerate(ref.CentresInterets) : 
+        for i,e in enumerate(lstTh) : 
     #        e.pts_caract = []
             l.append(e)
     
         #
         # Croisements divers
         #
-        x, y = posZElevesH[0] + ecartX /2, posZElevesH[1] + ecartY /2
-        w, h = tailleZElevesH[0] - ecartX, tailleZElevesH[1] - ecartY
+        x, y = posZThV[0] + ecartX /2, posZThV[1] + ecartY /2
+        w, h = tailleZThH[0] - ecartX, tailleZThH[1] - ecartY
         
     
     #    prg.pt_caract_eleve = []
@@ -607,42 +651,124 @@ def Draw(ctx, prg, mouchard = False):
             #
             # Lignes horizontales
             #
-            for i, e in enumerate(ref.CentresInterets):
-                prg.zones_sens.append(Zone([rec[i]], param = "CI"+str(i)))
+            for i, e in enumerate(lstTh):
+                prg.zones_sens.append(Zone([rec[i]], param = "Th"+str(i)))
                 
                 Ic = CoulAltern[i][0]
                 
                 ctx.set_source_rgb(Ic[0],Ic[1],Ic[2])
                 ctx.set_line_width(0.003 * COEF)
-                ctx.move_to(posZElevesH[0]+tailleZElevesH[0]- ecartX /2, yEleves[i]+ ecartY /2)
-                ctx.line_to(posZComp[0]+tailleZComp[0], yEleves[i]+ ecartY /2)
+                ctx.move_to(posZThV[0]+tailleZThH[0]- ecartX /2, yTh[i]+ ecartY /2)
+                ctx.line_to(posZComp[0]+tailleZComp[0], yTh[i]+ ecartY /2)
                 ctx.stroke()
             
             #
             # Lignes verticales
             #
-            for i, e in enumerate(ref.CentresInterets):
+            for i, e in enumerate(lstTh):
                 Ic = CoulAltern[i][0]
                 
                 ctx.set_source_rgb(Ic[0],Ic[1],Ic[2])
                 ctx.set_line_width(0.003 * COEF)
-                ctx.move_to(xEleves[i], yEleves[i]+ ecartY /2)
-                ctx.line_to(xEleves[i], posZTaches[1] + tailleZTaches[1] + (i % 2)*(ecartY/2) + ecartY/2)
+                ctx.move_to(xTh[i], yTh[i]+ ecartY /2)
+                ctx.line_to(xTh[i], posZTaches[1] + tailleZTaches[1] + (i % 2)*(ecartY/2) + ecartY/2)
                 ctx.stroke()    
-    #            DrawCroisementsElevesCompetences(ctx, prg, e, yEleves[i])
+    #            DrawCroisementsElevesCompetences(ctx, prg, e, yCI[i])
             
             #
             # Ombres des lignes verticales
             #
             e = 0.003 * COEF
             ctx.set_line_width(0.003 * COEF)
-            for i in range(len(ref.CentresInterets)) :
+            for i in range(len(lstTh)) :
                 y = posZTaches[1] + tailleZTaches[1] + (i % 2)*(ecartY/2) + ecartY/2
                 ctx.set_source_rgb(1,1,1)
-                ctx.move_to(xEleves[i]+e, yEleves[i]+e+ ecartY /2)
-                ctx.line_to(xEleves[i]+e, y)
-                ctx.move_to(xEleves[i]-e, yEleves[i]+e+ ecartY /2)
-                ctx.line_to(xEleves[i]-e, y)
+                ctx.move_to(xTh[i]+e, yTh[i]+e+ ecartY /2)
+                ctx.line_to(xTh[i]+e, y)
+                ctx.move_to(xTh[i]-e, yTh[i]+e+ ecartY /2)
+                ctx.line_to(xTh[i]-e, y)
+            ctx.stroke()
+
+
+
+
+    #
+    #  Tableau des CI/Thèmes de séquence
+    #   
+    lstCI = prg.GetListeCI()
+    
+    if len(lstCI) > 0:
+        rectCI = (posZCIH[0], posZCIH[1], 
+                  tailleZCIH[0], tailleZCIH[1])
+        curve_rect_titre(ctx, getSingulierPluriel(ref.nomCI, False),
+                         rectCI, BcoulCI, IcoulCI, fontCI)
+        
+        ctx.select_font_face(font_family, cairo.FONT_SLANT_NORMAL,
+                             cairo.FONT_WEIGHT_NORMAL)
+        ctx.set_source_rgb(0, 0, 0)
+        ctx.set_line_width(0.0005 * COEF)
+        l=[]
+        for i,e in enumerate(lstCI) : 
+    #        e.pts_caract = []
+            l.append(e)
+    
+        #
+        # Croisements divers
+        #
+        x, y = posZCIH[0] + ecartX /2, posZCIH[1] + ecartY /2
+        w, h = tailleZCIH[0] - ecartX, tailleZCIH[1] - ecartY
+        
+    
+    #    prg.pt_caract_eleve = []
+        if len(l) > 0:
+            rec = tableauH(ctx, l, x, y, 
+                         w, 0, h, 
+                         va = 'c', ha = 'd', orient = 'h', coul = CoulAltern,
+                         tailleFixe = True)
+            
+    #        prj.pt_caract_eleve = getPts(rec)
+            
+            #
+            # Lignes horizontales
+            #
+            for i, e in enumerate(lstCI):
+                prg.zones_sens.append(Zone([rec[i]], param = "CI"+str(i)))
+                
+                Ic = CoulAltern[i][0]
+                
+                ctx.set_source_rgb(Ic[0],Ic[1],Ic[2])
+                ctx.set_line_width(0.003 * COEF)
+                ctx.move_to(posZCIV[0]+tailleZCIH[0]- ecartX /2, 
+                            yCI[i]+ ecartY /2)
+                ctx.line_to(posZComp[0]+tailleZComp[0], 
+                            yCI[i]+ ecartY /2)
+                ctx.stroke()
+            
+            #
+            # Lignes verticales
+            #
+            for i, e in enumerate(lstCI):
+                Ic = CoulAltern[i][0]
+                
+                ctx.set_source_rgb(Ic[0],Ic[1],Ic[2])
+                ctx.set_line_width(0.003 * COEF)
+                ctx.move_to(xCI[i], yCI[i]+ ecartY /2)
+                ctx.line_to(xCI[i], posZTaches[1] + tailleZTaches[1] + (i % 2)*(ecartY/2) + ecartY/2)
+                ctx.stroke()    
+    #            DrawCroisementsElevesCompetences(ctx, prg, e, yCI[i])
+            
+            #
+            # Ombres des lignes verticales
+            #
+            e = 0.003 * COEF
+            ctx.set_line_width(0.003 * COEF)
+            for i in range(len(lstCI)) :
+                y = posZTaches[1] + tailleZTaches[1] + (i % 2)*(ecartY/2) + ecartY/2
+                ctx.set_source_rgb(1,1,1)
+                ctx.move_to(xCI[i]+e, yCI[i]+e+ ecartY /2)
+                ctx.line_to(xCI[i]+e, y)
+                ctx.move_to(xCI[i]-e, yCI[i]+e+ ecartY /2)
+                ctx.line_to(xCI[i]-e, y)
             ctx.stroke()
 
     
@@ -738,7 +864,7 @@ def DrawLigneEff(ctx, x, y):
     ctx.set_source_rgba (0.6, 0.8, 0.6)
     ctx.set_line_width (0.001 * COEF)
     ctx.set_dash(dashes, 0)
-    ctx.move_to(x, posZElevesV[1] + tailleZElevesV[1])
+    ctx.move_to(x, posZCIV[1] + tailleZCIV[1])
     ctx.line_to(x, y)
     ctx.stroke()
     ctx.set_dash([], 0)
@@ -961,7 +1087,7 @@ def DrawCroisementsCISeq(ctx, prg, seq, y):
         color0 = CoulAltern[CI][0]
         color1 = CoulAltern[CI][1]
 
-        _x = xEleves[CI]
+        _x = xCI[CI]
         
         if CI in seq.CI.numCI:
             boule(ctx, _x, y, r, 
@@ -1027,4 +1153,48 @@ def DrawBoutonCompetence(ctx, prg, seq, listComp, l, y, h = None):
 #        ctx.stroke()
 
 
-       
+
+
+
+def gabarit():
+    
+    print "Génération du gabarit ...", 
+    import draw_cairo_prg
+    imagesurface = cairo.ImageSurface(cairo.FORMAT_ARGB32,  2100, 2970)#cairo.FORMAT_ARGB32,cairo.FORMAT_RGB24
+    ctx = cairo.Context(imagesurface)
+    
+    e = 29.7
+    ctx.scale(e, e) 
+    
+    
+#     print dir(draw_cairo_prj)
+    pos = {}
+    taille = {}
+    for attr in dir(draw_cairo_prg):
+        if attr[:3] == 'pos':
+            pos[attr[3:]] = attr
+        if attr[:6] == 'taille':
+            taille[attr[6:]] = attr
+    
+    print pos, taille
+    
+    ctx.set_line_width(5.0/e)
+    
+    for k, p in pos.items():
+        if k in taille.keys():
+            x, y = getattr(draw_cairo_prg, p)
+            w, h = getattr(draw_cairo_prg, taille[k])
+            
+            txt = k+"\n"+",".join([str(t) for t in [x, y, w, h]])
+            try:
+                ctx.rectangle(x, y, w, h)
+                ctx.stroke()
+                show_text_rect(ctx, txt, 
+                               (x, y, w, h), fontsizeMinMax = (-1, 30.0/e),
+                               wrap = False, couper = False,
+                               va = 'h', ha = 'g' )
+            except:
+                print "   ", k, " : ", x, y, w, h
+    
+    
+    imagesurface.write_to_png('gabarit_prg.png')

@@ -624,6 +624,7 @@ class Referentiel(XMLelem):
         #
         # Thématiques
         #
+        self.nomTh = u"Thématique(s)"
         self.thematiques = {}
         self.listeThematiques = []
         
@@ -1454,6 +1455,7 @@ class Referentiel(XMLelem):
         
         for l in range(2, sh_g.nrows):
             code = str(sh_g.cell(l,0).value)
+            self.nomTh = sh_g.cell(2,0).value
             if code == "":
                 l += 3
                 break

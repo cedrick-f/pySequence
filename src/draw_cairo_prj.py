@@ -337,7 +337,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False, entete = Fal
     ctx.set_font_options(options)
     
     DefinirZones(prj, ctx)
-
+#     gabarit()
     #
     #    pour stocker des zones caractéristiques (à cliquer, ...)
     #
@@ -1247,4 +1247,43 @@ def DrawBoutonCompetence(ctx, objet, dicIndic, y, h = None):
                 ctx.stroke()
 
 
+def gabarit():
+    
+    print "Génération du gabarit ...", 
+    import draw_cairo_prj
+    imagesurface = cairo.ImageSurface(cairo.FORMAT_ARGB32,  2100, 2970)#cairo.FORMAT_ARGB32,cairo.FORMAT_RGB24
+    ctx = cairo.Context(imagesurface)
+    
+    e = 29
+    ctx.scale(e, e) 
+    
+    
+#     print dir(draw_cairo_prj)
+    pos = {}
+    taille = {}
+    for attr in dir(draw_cairo_prj):
+        if attr[:3] == 'pos':
+            pos[attr[3:]] = attr
+        if attr[:6] == 'taille':
+            taille[attr[6:]] = attr
+    
+    print pos, taille
+    
+    ctx.set_line_width(5.0/e)
+    
+    for k, p in pos.items():
+        if k in taille.keys():
+            x, y = getattr(draw_cairo_prj, p)
+            w, h = getattr(draw_cairo_prj, taille[k])
+            
+            try:
+                ctx.rectangle(x, y, w, h)
+                ctx.stroke()
+                show_text_rect(ctx, k, (x, y, w, h), fontsizeMinMax = (-1, 30.0/e),
+                               wrap = False, couper = False)
+            except:
+                print "   ", k, " : ", x, y, w, h
+    
+    
+    imagesurface.write_to_png('gabarit_prj.png')
        

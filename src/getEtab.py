@@ -491,7 +491,7 @@ def indent(elem, level=0):
 def SauvEtablissements(win, path):
     liste_etab = GetEtablissements(win)
     if len(liste_etab) > 0:
-        nomF = os.path.join(path, "Etablissements2.xml")
+        nomF = os.path.join(path, "Etablissements.xml")
         fichier = file(nomF, 'w')
         root = getBranche(liste_etab)
         indent(root)

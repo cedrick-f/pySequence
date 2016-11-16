@@ -526,7 +526,6 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         self.tabmgr.GetManagedWindow().Bind(aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.OnDocChanged)
         
         file_drop_target = MyFileDropTarget(self)
-        
         self.tabmgr.GetManagedWindow().SetDropTarget(file_drop_target)
         
         #############################################################################################
@@ -1246,7 +1245,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                 if retCode == wx.ID_YES:
                     doc = child.ouvrir(nomFichier, reparer = reparer)
             
-            if not reparer:
+            if not reparer and doc is not None:
 #                print "Ajout1", nomFichier
                 self.filehistory.AddFileToHistory(nomFichier)
             
@@ -7718,6 +7717,8 @@ class PanelPropriete_Seance(PanelPropriete):
     def OnPathModified(self, lien, marquerModifier = True):
         self.seance.OnPathModified()
         self.btnlien.Show(self.seance.lien.path != "")
+        if marquerModifier:
+            self.seance.GetApp().MarquerFichierCourantModifie()
         self.Layout()
         self.Refresh()
         
@@ -8011,7 +8012,8 @@ class PanelPropriete_Seance(PanelPropriete):
         
     #############################################################################            
     def MiseAJourLien(self):
-        self.selec.SetPath(toSystemEncoding(self.seance.lien.path))
+        self.selec.SetPath(toSystemEncoding(self.seance.lien.path), 
+                           marquerModifier = False)
         self.btnlien.Show(self.seance.lien.path != "")
         self.sizer.Layout()
         
@@ -8947,6 +8949,8 @@ class PanelPropriete_Systeme(PanelPropriete):
 #        print "OnPathModified", self.systeme.lien.path, lien.path
         self.systeme.OnPathModified()
         self.systeme.propagerChangements()
+        if marquerModifier:
+            self.systeme.GetApp().MarquerFichierCourantModifie()
         self.btnlien.Show(self.systeme.lien.path != "")
         self.Layout()
         self.Refresh()
@@ -9136,7 +9140,8 @@ class PanelPropriete_Systeme(PanelPropriete):
         
     #############################################################################            
     def MiseAJourLien(self):
-        self.selec.SetPath(toSystemEncoding(self.systeme.lien.path))
+        self.selec.SetPath(toSystemEncoding(self.systeme.lien.path),
+                           marquerModifier = False)
         self.btnlien.Show(len(self.systeme.lien.path) > 0)
         self.Layout()
 
@@ -9662,6 +9667,8 @@ class PanelPropriete_Support(PanelPropriete):
     ######################################################################################  
     def OnPathModified(self, lien, marquerModifier = True):
         self.support.OnPathModified()
+        if marquerModifier:
+            self.support.GetApp().MarquerFichierCourantModifie()
         self.btnlien.Show(self.support.lien.path != "")
         self.Layout()
         self.Refresh()
@@ -12478,6 +12485,7 @@ class URLSelectorCombo(wx.Panel):
         sizer = wx.BoxSizer(wx.HORIZONTAL)
         
         self.texte = wx.TextCtrl(self, -1, toSystemEncoding(lien.path), size = (-1, 16))
+        self.texte.SetToolTipString(u"Saisir un nom de fichier/dossir\nou faire glisser un fichier")
         if dossier:
             bt1 =wx.BitmapButton(self, 100, wx.ArtProvider_GetBitmap(wx.ART_FOLDER, wx.ART_OTHER, (16, 16)))
             bt1.SetToolTipString(u"Sélectionner un dossier")
@@ -12489,6 +12497,11 @@ class URLSelectorCombo(wx.Panel):
         self.Bind(wx.EVT_TEXT, self.EvtText, self.texte)
         
         self.ext = ext
+        
+        # Pour drag&drop direct de fichiers !! (expérimental)
+        file_drop_target = MyFileDropTarget(self)
+        self.SetDropTarget(file_drop_target)
+        
         
         sizer.Add(bt2)
         sizer.Add(self.texte,1,flag = wx.EXPAND)
@@ -12529,6 +12542,12 @@ class URLSelectorCombo(wx.Panel):
         self.SetFocus()
 
 
+    ###############################################################################################
+    def dropFiles(self, file_list):
+        for path in file_list:
+            self.SetPath(path)
+            return
+            
     ##########################################################################################
     def EvtText(self, event):
         self.SetPath(event.GetString())
@@ -12544,6 +12563,7 @@ class URLSelectorCombo(wx.Panel):
         """ lien doit étre de type 'String' encodé en SYSTEM_ENCODING
             
         """
+#         print t
         self.lien.EvalLien(lien, self.pathseq)
         
         try:
