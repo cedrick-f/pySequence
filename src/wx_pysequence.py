@@ -577,7 +577,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
         
         # Interception des frappes clavier
-        self.Bind(wx.EVT_KEY_DOWN, self.OnKey)
+#         self.Bind(wx.EVT_KEY_DOWN, self.OnKey)
         
         # Interception de la demande de fermeture
         self.Bind(wx.EVT_CLOSE, self.OnClose)
@@ -1317,7 +1317,12 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         evt = AppelEvent(myEVT_APPEL_OUVRIR, self.GetId())
         evt.SetFile(nomFichier)
         self.GetEventHandler().ProcessEvent(evt)
-        
+    
+    
+    #############################################################################
+    def commandeDelete(self, event = None):    
+        print "Suppr"
+    
     #############################################################################
     def commandeUndo(self, event = None):
         page = self.GetNotebook().GetCurrentPage()
@@ -1438,19 +1443,23 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         self.miseAJourUndo()
 
 
-    ###############################################################################################
-    def OnKey(self, evt):
-        keycode = evt.GetKeyCode()
-        if keycode == wx.WXK_ESCAPE and self.pleinEcran:
-            self.commandePleinEcran(evt)
-            
-        elif evt.ControlDown() and keycode == 90: # Ctrl-Z
-            self.commandeUndo(evt)
-
-        elif evt.ControlDown() and keycode == 89: # Ctrl-Y
-            self.commandeRedo(evt)
-            
-        evt.Skip()
+#     ###############################################################################################
+#     def OnKey(self, evt):
+#         keycode = evt.GetKeyCode()
+#         print "!!", keycode
+#         if keycode == wx.WXK_ESCAPE and self.pleinEcran:
+#             self.commandePleinEcran(evt)
+#              
+#         elif evt.ControlDown() and keycode == 90: # Ctrl-Z
+#             self.commandeUndo(evt)
+#  
+#         elif evt.ControlDown() and keycode == 89: # Ctrl-Y
+#             self.commandeRedo(evt)
+#              
+#         elif keycode == 46: # Suppr
+#             self.commandeDelete(evt)
+#              
+#         evt.Skip()
     
                 
     #############################################################################
@@ -9877,7 +9886,7 @@ class ArbreDoc(CT.CustomTreeCtrl):
     def OnKey(self, evt):
         keycode = evt.GetKeyCode()
         item = self.GetSelection()
-        
+        print keycode
         if keycode == wx.WXK_DELETE:
             self.doc.SupprimerItem(item)
             
