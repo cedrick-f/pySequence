@@ -1,4 +1,4 @@
-<Referentiel B_CI_BO="False" B_CI_cible="False" S_AnneeDebut="Sec6" S_Code="ISN" S_Famille="ISN" S_FichierLogo="" S_abrevCI="Th" S_abrevPb="Pb" S_nomCI="Thème(s)" S_nomFonctions="Fonction(s)" S_nomPb="Problématique(s)" S_nomTaches="Tâche(s)" S_nomTh="">
+<Referentiel B_CI_BO="False" B_CI_cible="False" S_AnneeDebut="Sec6" S_Code="ISN" S_Famille="ISN" S_FichierLogo="" S_abrevCI="Th" S_abrevPb="Pb" S_nomCI="Thème(s)" S_nomDom="Domaine(s) du socle" S_nomFonctions="Fonction(s)" S_nomPb="Problématique(s)" S_nomTaches="Tâche(s)" S_nomTh="Thématique(s)">
   <l_BO_URL>
     <l_00 S_00="Programme" S_01="http://www.education.gouv.fr/pid25535/bulletin_officiel.html?cid_bo=57572" />
     <l_01 S_00="Epreuves" S_01="http://www.education.gouv.fr/pid25535/bulletin_officiel.html?cid_bo=57489" />
@@ -482,11 +482,6 @@
               <l_01 I_00="9" I_01="2" I_02="0" />
             </l_00>
           </l_Nom>
-          <l_NON>
-            <l_00 S_00="Conduite de projet" S_02="">
-              <l_01 I_00="5" I_01="8" I_02="0" />
-            </l_00>
-          </l_NON>
           <l_Tit>
             <l_00 S_00="Identification" S_02="">
               <l_01 I_00="12" I_01="2" I_02="0" />
@@ -537,8 +532,8 @@
         </d_S>
       </d_cellulesInfo>
       <d_grilles>
-        <l_C S_00="Grille-conduite de projet-S-SI.xlsx" S_01="I" />
-        <l_S S_00="Grille-présentation du projet-S-SI.xlsx" S_01="I" />
+        <l_C S_00="Grille-ISN.xlsx" S_01="I" />
+        <l_S S_00="Grille-ISN.xlsx" S_01="I" />
       </d_grilles>
       <l_listPhases S_00="Ana" S_01="Rea" S_02="XXX" S_03="Rev" S_04="R1" S_05="R2" S_06="R3" S_07="S" />
       <l_listPhasesEval S_00="Rev" S_01="R1" S_02="R2" S_03="R3" S_04="S" />

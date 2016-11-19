@@ -850,6 +850,16 @@ BASE_FICHE_HTML_COMP_PRJ = u"""
 </HTML>
 """
 
+BASE_FICHE_HTML_DOM = u"""
+<HTML>
+    <font size="12" color="GRAY"><b><h1 id = "titre" style="text-align: center;"></h1></b></font>
+    <h4 style="font-size:11px" id="int"> </h4>
+    <ul id = "dom">
+    <li> </li>
+    </ul>
+</HTML>
+"""
+
 BASE_FICHE_HTML_SAV = u"""
 <HTML>
     <font size="12" color="blue"><b><h1 id = "titre" style="text-align: center;"> </h1></b></font>
@@ -1014,7 +1024,7 @@ BASE_FICHE_HTML_PROF = u"""
 
 BASE_FICHE_HTML_PERIODES = u"""
 <HTML>
-    <font size=11><b><h1 id = "titre" style="text-align: center;">_</h1></b></font>
+    <font size=11><b><h1 id = "titre" style="text-align: center;"></h1></b></font>
     <p id="txt"> </p>
     <img id="img" src=" " alt=" "> 
 </HTML>

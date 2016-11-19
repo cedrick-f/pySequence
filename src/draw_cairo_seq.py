@@ -76,7 +76,7 @@ BcoulCI = (0.3, 0.2, 0.25, 1)
 fontCI = 0.014 * COEF
 
 # Rectangle des prerequis
-taillePre = (0.29 * COEF, 0.18 * COEF - tailleCI[1] - ecartY)
+taillePre = (0.28 * COEF, 0.18 * COEF - tailleCI[1] - ecartY)
 posPre = (margeX, posCI[1] + tailleCI[1] + ecartY)
 IcoulPre = (0.8, 0.8, 0.9, 0.85)
 BcoulPre = (0.2, 0.25, 0.3, 1)
@@ -113,15 +113,15 @@ posZOrganis = (margeX+bordureZOrganis, 0.24 * COEF)
 tailleZOrganis = [LargeurTotale-2*(margeX+bordureZOrganis), None]
 
 
-# Rectangle de l'intitulé
-tailleIntitule = [0.4 * COEF, 0.04 * COEF]
-posIntitule = [(LargeurTotale-tailleIntitule[0])/2, posZOrganis[1]-tailleIntitule[1]]
+# # Rectangle de l'intitulé
+# tailleIntitule = [0.4 * COEF, 0.04 * COEF]
+# posIntitule = [(LargeurTotale-tailleIntitule[0])/2, posZOrganis[1]-tailleIntitule[1]]
 IcoulIntitule = (0.98, 0.99, 0.98, 0.8)
 BcoulIntitule = (0.2, 0.8, 0.2, 1)
 FontIntitule = 0.02 * COEF
 
 # Zone de déroulement de la séquence
-posZDeroul = (margeX+ecartX, posZOrganis[1]+0.06 * COEF)
+posZDeroul = (margeX+ecartX/2, posZOrganis[1]+0.06 * COEF)
 tailleZDeroul = [None, None]
 
 # Zone du tableau des Systèmes
@@ -146,7 +146,7 @@ intituleSeances = []
 
 # Zone des séances
 largeFlecheDuree = 0.02 * COEF
-posZSeances = (margeX+ecartX+largeFlecheDuree, posZOrganis[1]+0.08 * COEF)
+posZSeances = (posZDeroul[0] + largeFlecheDuree, posZOrganis[1]+0.08 * COEF)
 tailleZSeances = [None, None]
 # wEff =  {"C" : None,
 #          "G" : None,
@@ -227,8 +227,8 @@ def DefinirZones(seq, ctx):
     # Zone d'organisation de la séquence (grand cadre)
     tailleZOrganis[1] = posComm[1]-posZOrganis[1]-bordureZOrganis
 
-    # Rectangle de l'intitulé
-    posIntitule[1] = posZOrganis[1]-tailleIntitule[1]
+#     # Rectangle de l'intitulé
+#     posIntitule[1] = posZOrganis[1]-tailleIntitule[1]
 
     # Zone des intitulés des séances
 #    print "Zone des intitulés des séances"
@@ -260,7 +260,7 @@ def DefinirZones(seq, ctx):
     # Zone du tableau des démarches
     if len(seq.classe.GetReferentiel().listeDemarches) > 0:
         tailleZDemarche[0] = 0.02 * COEF
-        posZDemarche[0] = posZSysteme[0] - tailleZDemarche[0] - ecartX
+        posZDemarche[0] = posZSysteme[0] - tailleZDemarche[0] - ecartX/2
         tailleZDemarche[1] = tailleZSysteme[1]
 #         xDemarche["I"] = posZDemarche[0] + tailleZDemarche[0]/6
 #         xDemarche["R"] = posZDemarche[0] + tailleZDemarche[0]*3/6
@@ -268,11 +268,11 @@ def DefinirZones(seq, ctx):
     else:
         tailleZDemarche[0] = 0
         tailleZDemarche[1] = tailleZSysteme[1]
-        posZDemarche[0] = posZSysteme[0] - tailleZDemarche[0] - ecartX
+        posZDemarche[0] = posZSysteme[0] - tailleZDemarche[0] - ecartX/2
                  
     # Zone de déroulement de la séquence
-    tailleZDeroul[0] = posZDemarche[0] - posZDeroul[0] - ecartX
-    tailleZDeroul[1] = tailleZSysteme[1]
+    tailleZDeroul[0] = posZDemarche[0] - posZDeroul[0] - ecartX/2
+    tailleZDeroul[1] = tailleZOrganis[1] - posZDeroul[1] + posZOrganis[1] - ecartY/2
     
     
     # Zone des séances
@@ -355,6 +355,7 @@ def Draw(ctx, seq, mouchard = False, entete = False):
     
     DefinirZones(seq, ctx)
     
+#     gabarit()
     #
     #    pour stocker des zones caractéristiques (à cliquer, ...)
     #
@@ -377,16 +378,20 @@ def Draw(ctx, seq, mouchard = False, entete = False):
     #
     if not entete:
         rect = (posZOrganis[0]-bordureZOrganis, posZOrganis[1], 
-                                     tailleZOrganis[0]+bordureZOrganis*2, tailleZOrganis[1]+bordureZOrganis)
+                tailleZOrganis[0]+bordureZOrganis*2, tailleZOrganis[1]+bordureZOrganis)
     #    seq.zones_sens.append(Zone([rect], param = "INT"))
-        seq.pt_caract = curve_rect_titre(ctx, seq.intitule, rect, 
+        if len(seq.intitule) == 0:
+            t = u"Séquence sans nom"
+        else:
+            t = seq.intitule
+        seq.pt_caract = curve_rect_titre(ctx, t, rect, 
                                          BcoulIntitule, IcoulIntitule, FontIntitule)
 
     #
     # Domaines
     #
     DrawDomaines(ctx, seq, 
-                 (posZSeances[0] + posZOrganis[0])/2,
+                 (posZSeances[0] + posZOrganis[0]-bordureZOrganis)/2,
                  posZOrganis[1] + ecartY/2)
 
 
@@ -1131,7 +1136,7 @@ def DrawSeanceRacine(ctx, seance):
     if seance.GetDureeGraph() > 0:
         
         e = largeFlecheDuree
-        fleche_verticale(ctx, posZDeroul[0], cursY, 
+        fleche_verticale(ctx, posZDeroul[0]+e/4, cursY, 
                          h, e, (0.9,0.8,0.8,0.5))
         ctx.set_source_rgb(0.5,0.8,0.8)
         ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
@@ -1143,7 +1148,7 @@ def DrawSeanceRacine(ctx, seance):
         else:
             o = 'v'
         show_text_rect(ctx, getHoraireTxt(seance.GetDuree()), 
-                       (posZDeroul[0]-e/2, cursY, e, h-he), 
+                       (posZDeroul[0]-e/4, cursY, e, h-he), 
                        orient = o, b = 0.2)
 
     
@@ -1266,7 +1271,7 @@ def DrawCroisementSystemes(ctx, seance, x, y, ns, w):
                           cairo.FONT_WEIGHT_BOLD)
 
     for s, n in ns.items():
-        if n > 0:
+        if n > 0 and s in xSystemes.keys():
             x = xSystemes[s]
             rect = (x-w/2, y-w/2, w, w)
             ctx.rectangle(*rect)
@@ -1348,15 +1353,18 @@ def DrawCroisementsDemarche(ctx, seance, y, w):
     #
     # Croisements Séance/Démarche
     #
-    bmp = constantes.imagesDemarches[seance.demarche].GetBitmap()
-    rect = (posZDemarche[0] , y - w/2, w, w)
-    image(ctx, posZDemarche[0], y - w/2, w, w, bmp, marge = 0.1)
+    ref = seance.GetReferentiel()
+    if seance.typeSeance in ref.activites.keys():
+        if len(ref.demarches) > 0: 
+            bmp = constantes.imagesDemarches[seance.demarche].GetBitmap()
+            rect = (posZDemarche[0] , y - w/2, w, w)
+            image(ctx, posZDemarche[0], y - w/2, w, w, bmp, marge = 0.1)
 #     _x = xDemarche[seance.demarche]
 # #        if self.typeSeance in ["AP", "ED", "P"]:
 # #    r = 0.008 * COEF
 #     boule(ctx, _x, y, r)
     
-    seance.GetDocument().zones_sens.append(Zone([rect], obj = seance))
+            seance.GetDocument().zones_sens.append(Zone([rect], obj = seance))
     
     
 #    seance.rect.append((_x -r , y - r, 2*r, 2*r))
@@ -1364,6 +1372,10 @@ def DrawCroisementsDemarche(ctx, seance, y, w):
 
 #####################################################################################  
 def DrawDomaines(ctx, seq, x, y, r = 0.008 * COEF):
+    """ Tracé des logos des Domaines
+        x : centre de la zone
+        y : haut de la zone
+    """
     p = 0.8
     ctx.set_line_width (0.0006 * COEF)
     y += r
@@ -1386,20 +1398,54 @@ def DrawDomaines(ctx, seq, x, y, r = 0.008 * COEF):
         c = 2 * (i//3) + (i%3 + 1)//2
         Y = y + c*dy
         draw(X, Y, d, ref.domaines[d][3])
+    
+    if len(seq.domaine) > 0:
+        rect = x-r-dx, y-r, 2*(r+dx), Y-y+2*r
+        seq.zones_sens.append(Zone([rect], param = "DOM"))
+        
+        
+        
 
-#     return
-#     
-#     
-#     d = {"M": (0.0,1.0,0.0),
-#          "E": (0.0,0.0,1.0),
-#          "I": (1.0,0.0,0.0)}
-#     
-#     if len(dom) == 3:
-#         draw(x, y-p*r, "M", d["M"])
-#         draw(x-p*r*0.866, y+p*r*0.5, "E", d["E"])
-#         draw(x+p*r*0.866, y+p*r*0.5, "I", d["I"])
-#     elif len(dom) == 2:
-#         draw(x-p*r*0.866, y, dom[0], d[dom[0]])
-#         draw(x+p*r*0.866, y, dom[1], d[dom[1]])
-#     elif len(dom) == 1:
-#         draw(x, y, dom, d[dom])
+def gabarit():
+    print "Génération du gabarit ...", 
+    import draw_cairo_seq
+    imagesurface = cairo.ImageSurface(cairo.FORMAT_ARGB32,  2100, 2970)#cairo.FORMAT_ARGB32,cairo.FORMAT_RGB24
+    ctx = cairo.Context(imagesurface)
+    
+    e = 28
+    ctx.scale(e, e) 
+    
+#     print dir(draw_cairo_prj)
+    pos = {}
+    taille = {}
+    for attr in dir(draw_cairo_seq):
+        if attr[:3] == 'pos':
+            pos[attr[3:]] = attr
+        if attr[:6] == 'taille':
+            taille[attr[6:]] = attr
+    
+    print pos, taille
+    
+    ctx.set_line_width(5.0/e)
+    
+    for k, p in pos.items():
+        if k in taille.keys():
+            x, y = getattr(draw_cairo_seq, p)
+            w, h = getattr(draw_cairo_seq, taille[k])
+            
+            txt = k+"\n"+",".join([str(t) for t in [x, y, w, h]])
+            try:
+                ctx.rectangle(x, y, w, h)
+                ctx.stroke()
+                show_text_rect(ctx, txt, 
+                               (x, y, w, h), fontsizeMinMax = (-1, 30.0/e),
+                               wrap = False, couper = False,
+                               va = 'h', ha = 'g' )
+            except:
+                print "   ", k, " : ", x, y, w, h
+    
+    
+    imagesurface.write_to_png('gabarit_seq.png')
+
+
+

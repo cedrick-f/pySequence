@@ -257,7 +257,8 @@ from widgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_ENTI
                     messageErreur, getNomFichier, pourCent2, \
                     rallonge, remplaceCode2LF, dansRectangle, isstring, \
                     StaticBoxButton, TextCtrl_Help, CloseFenHelp, ImageButtonTransparent, \
-                    remplaceLF2Code, messageInfo, messageYesNo, rognerImage, PlaceholderTextCtrl#, chronometrer
+                    remplaceLF2Code, messageInfo, messageYesNo, rognerImage, PlaceholderTextCtrl
+                    #, chronometrer
 
 import Options
 
@@ -4112,7 +4113,7 @@ class PanelPropriete_Sequence(PanelPropriete):
         
         titre = myStaticBox(self, -1, u"Position")
         sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
-        self.bmp = wx.StaticBitmap(self, -1, self.getBitmapPeriode(250))
+        self.bmp = wx.StaticBitmap(self, -1, self.getBitmapPeriode())
         self.position = PositionCtrl(self, self.sequence.position, 
                                      self.sequence.GetReferentiel().periodes)
         self.Bind(wx.EVT_RADIOBUTTON, self.onChanged)
@@ -4139,25 +4140,21 @@ class PanelPropriete_Sequence(PanelPropriete):
         
     
     #############################################################################            
-    def getBitmapPeriode(self, larg):
-        imagesurface = draw_cairo_seq.getBitmapPeriode(larg, self.sequence.position,
-                                                       self.sequence.GetReferentiel().periodes, 
-                                                       prop = 5)
-
-        return getBitmapFromImageSurface(imagesurface)
+    def getBitmapPeriode(self, larg = 250):
+        return self.sequence.getBitmapPeriode(larg)
          
     
     #############################################################################            
     def onChanged(self, evt):
         self.sequence.SetPosition(evt.GetEventObject().GetId()-1)
         self.SetBitmapPosition()
-        self.sendEvent(modif = u"Changement de position de la séquence",
+        self.sendEvent(modif = u"Changement de position de la Séquence",
                        obj = self.sequence)
         
         
     #############################################################################            
     def SetBitmapPosition(self, bougerSlider = None):
-        self.bmp.SetBitmap(self.getBitmapPeriode(250))
+        self.bmp.SetBitmap(self.getBitmapPeriode())
         self.position.SetValue(self.sequence.position)
 
 
@@ -4200,7 +4197,7 @@ class PanelPropriete_Sequence(PanelPropriete):
 #        self.position.SetMax(ref.getNbrPeriodes()-1)
         self.sequence.position = min(self.sequence.position, ref.getNbrPeriodes()-1)
         self.position.SetValue(self.sequence.position)
-        self.bmp.SetBitmap(self.sequence.getBitmapPeriode(250))
+        self.bmp.SetBitmap(self.getBitmapPeriode())
         
         for t, cb in self.cbD.items():
             cb.SetValue(t in self.sequence.domaine)
@@ -4220,9 +4217,10 @@ class PanelPropriete_Sequence(PanelPropriete):
             
         self.cbD = {}
         if self.sizer.FindItemAtPosition((0,1)) is None:
-            titre = myStaticBox(self, -1, u"Domaines")
-            self.sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
             ref = self.sequence.GetReferentiel()
+            titre = myStaticBox(self, -1, getSingulierPluriel(ref.nomDom, len(self.sequence.domaine)>0))
+            self.sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
+            
             for dom in ref.listeDomaines:
                 cb = wx.CheckBox(self, -1, ref.domaines[dom][0])
                 cb.SetToolTipString(ref.domaines[dom][1])
@@ -4798,7 +4796,7 @@ class PositionCtrl(wx.Panel):
                 radio.append(wx.RadioButton(self, num, "", style = s))
                 sizer = wx.BoxSizer(wx.VERTICAL)
                 sizer.Add(radio[-1], flag = wx.ALIGN_CENTER_HORIZONTAL)
-                radio[-1].SetToolTipString(an)
+                radio[-1].SetToolTipString(an+' '+str(p))
                 self.sizer.Add(sizer, l, flag = wx.ALIGN_RIGHT|wx.EXPAND)
                 self.Bind(wx.EVT_RADIOBUTTON, self.OnRadio, radio[-1] )
                 num += l
@@ -5597,6 +5595,8 @@ class PanelPropriete_Classe(PanelPropriete):
 
     ######################################################################################  
     def EvtListBoxSyst(self, event = None, num = 0):
+        """ Actions réalisées après avoir cliqué dans la liste de systèmes
+        """
 #        print "EvtListBoxSyst"
         if event != None:
             n = event.GetSelection()
@@ -5618,12 +5618,19 @@ class PanelPropriete_Classe(PanelPropriete):
         #
         # Définition du nouveau nom
         #
-        nom0 = u"Nouveau système"
-        nom = nom0
-        i = 1
-        while nom in [s.nom for s in self.classe.systemes]:
-            nom = nom0 + u" " + str(i)
-            i += 1
+        
+        nom = u"Nouveau système"
+        if nom in [s.nom for s in self.classe.systemes]:
+            return
+        
+        self.panelSys.Enable(True)
+#         nom0 = self.panelSys.textctrl.GetValue().strip()
+#         if len(nom0) > 0:
+#         nom = nom0
+#         i = 1
+#         while nom in [s.nom for s in self.classe.systemes]:
+#             nom = nom0 + u" " + str(i)
+#             i += 1
 #        print "EvtButtonSyst"
 #        print self.classe.systemes
 #        print self.panelSys.systeme
@@ -5648,6 +5655,7 @@ class PanelPropriete_Classe(PanelPropriete):
         
         if hasattr(self.classe, 'doc'):
             self.classe.doc.MiseAJourListeSystemesClasse()
+            
 #        print "   >>>",self.classe.systemes
 
     ######################################################################################  
@@ -5667,17 +5675,22 @@ class PanelPropriete_Classe(PanelPropriete):
     def MiseAJourBoutonsSystem(self):
         self.btnSupprimerSys.Enable(self.lstSys.GetCount() > 1)
         
-        
+    
     ######################################################################################  
     def MiseAJourListeSys(self, nom = u""):
 #         print "MiseAJourListeSys", nom, self.lstSys.GetSelection()
+#         print "   ", [s.nom for s in self.classe.systemes]
 #        if nom == u"":
 #            nom = u"Système sans nom"
             
         n = self.lstSys.GetSelection()
         if n != wx.NOT_FOUND:
-            self.lstSys.SetString(n, nom)
-            self.lstSys.SetSelection(self.lstSys.FindString(nom))
+#             lst = [self.lstSys.GetItem(idx).GetText() for idx in range(self.lstSys.GetCount())]
+        
+        
+            if not nom in self.lstSys.GetStrings():
+                self.lstSys.SetString(n, nom)
+                self.lstSys.SetSelection(self.lstSys.FindString(nom))
 
 
     ######################################################################################  
@@ -5735,7 +5748,7 @@ class PanelPropriete_Classe(PanelPropriete):
         
     ######################################################################################  
     def MiseAJour(self):
-#        print "MiseAJour panelPropriete Classe"
+#         print "MiseAJour panelPropriete Classe"
 #        self.MiseAJourType()
         
         
@@ -5750,17 +5763,20 @@ class PanelPropriete_Classe(PanelPropriete):
         self.EvtComboVille(modif = False)
         self.cbe.SetValue(self.classe.etablissement)
         
-#        print "   ", self.classe.systemes
+#         print "   ", self.classe.systemes
         
         self.lstSys.Set([])
         
+        
         if len(self.classe.systemes) == 0:
-            # On crée un système vide
-            self.EvtButtonSyst()
-#            print "   +++", self.classe.systemes
-            self.EvtListBoxSyst()
-#            self.MiseAJourListeSys()
+            self.panelSys.Enable(False)
+#             # On crée un système vide
+#             self.EvtButtonSyst()
+# #            print "   +++", self.classe.systemes
+#             self.EvtListBoxSyst()
+# #            self.MiseAJourListeSys()
         else:
+            self.panelSys.Enable(True)
             self.lstSys.Set([s.nom for s in self.classe.systemes])
             self.lstSys.SetSelection(0)
             self.EvtListBoxSyst()
@@ -7507,13 +7523,17 @@ class PanelPropriete_Seance(PanelPropriete):
     def __init__(self, parent, seance):
         PanelPropriete.__init__(self, parent)
         self.seance = seance
-
+        
+        ref = self.seance.GetReferentiel()
         
         
         #
         # Type de séance
         #
         titre = wx.StaticText(self, -1, u"Type : ")
+        listType = self.seance.GetListeTypes()
+        listTypeS = [(ref.seances[t][1], constantes.imagesSeance[t].GetBitmap()) for t in listType] 
+        
         cbType = wx.combo.BitmapComboBox(self, -1, u"Choisir un type de séance",
                              choices = [], size = (-1,25),
                              style = wx.CB_DROPDOWN
@@ -7521,8 +7541,13 @@ class PanelPropriete_Seance(PanelPropriete):
                              | wx.CB_READONLY
                              #| wx.CB_SORT
                              )
-        self.Bind(wx.EVT_COMBOBOX, self.EvtComboBox, cbType)
+        
         self.cbType = cbType
+        for s in listTypeS:
+            self.cbType.Append(s[0], s[1])
+            
+        self.Bind(wx.EVT_COMBOBOX, self.EvtComboBox, cbType)
+        
         self.sizer.Add(titre, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.ALL, border = 2)
         self.sizer.Add(cbType, (0,1), flag = wx.EXPAND|wx.ALL, border = 2)
         
@@ -7572,13 +7597,14 @@ class PanelPropriete_Seance(PanelPropriete):
         # Durée de la séance
         vcDuree = VariableCtrl(self, seance.duree, coef = 0.25, signeEgal = True, slider = False, sizeh = 30,
                                help = u"Durée de la séance en heures", unite = u"h")
-#        textctrl = wx.TextCtrl(self, -1, u"1")
         self.Bind(EVT_VAR_CTRL, self.EvtText, vcDuree)
         self.vcDuree = vcDuree
         bsizer2.Add(vcDuree, flag = wx.EXPAND|wx.ALL, border = 2)
         
+        
         # Effectif
         titre = wx.StaticText(self, -1, u"Effectif : ")
+        listEff = ref.effectifsSeance[self.seance.typeSeance]
         cbEff = wx.ComboBox(self, -1, u"",
                          choices = [],
                          style = wx.CB_DROPDOWN
@@ -7588,6 +7614,11 @@ class PanelPropriete_Seance(PanelPropriete):
                          )
         self.Bind(wx.EVT_COMBOBOX, self.EvtComboBoxEff, cbEff)
         self.cbEff = cbEff
+        
+        for s in listEff:
+            self.cbEff.Append(strEffectifComplet(self.seance.GetDocument().classe, s, -1))
+
+
         self.titreEff = titre
         
         bsizer2.Add(titre, flag = wx.ALIGN_CENTER_VERTICAL|wx.ALL, border = 2)
@@ -7639,21 +7670,29 @@ class PanelPropriete_Seance(PanelPropriete):
         #
         # Démarche
         #
-        titre = wx.StaticText(self, -1, u"Démarche : ")
-        cbDem = wx.ComboBox(self, -1, u"",
-                         choices = [],
-                         style = wx.CB_DROPDOWN
-                         | wx.TE_PROCESS_ENTER
-                         | wx.CB_READONLY
-                         #| wx.CB_SORT
-                         )
-        self.Bind(wx.EVT_COMBOBOX, self.EvtComboBoxDem, cbDem)
-        self.cbDem = cbDem
-        self.titreDem = titre
         
-        
-        self.sizer.Add(titre, (1,0), flag = wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT|wx.ALL, border = 2)
-        self.sizer.Add(cbDem, (1,1), flag = wx.EXPAND|wx.ALL, border = 2)
+        if self.seance.typeSeance in ref.activites.keys():
+            if len(ref.demarches) > 0:
+                listDem = ref.demarcheSeance[self.seance.typeSeance]
+                titre = wx.StaticText(self, -1, u"Démarche : ")
+                cbDem = wx.ComboBox(self, -1, u"",
+                                 choices = [],
+                                 style = wx.CB_DROPDOWN
+                                 | wx.TE_PROCESS_ENTER
+                                 | wx.CB_READONLY
+                                 #| wx.CB_SORT
+                                 )
+                self.Bind(wx.EVT_COMBOBOX, self.EvtComboBoxDem, cbDem)
+                self.cbDem = cbDem
+                
+                for s in listDem:
+                    self.cbDem.Append(ref.demarches[s][1])
+
+                self.titreDem = titre
+                
+                
+                self.sizer.Add(titre, (1,0), flag = wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT|wx.ALL, border = 2)
+                self.sizer.Add(cbDem, (1,1), flag = wx.EXPAND|wx.ALL, border = 2)
 
         
         #
@@ -7918,15 +7957,15 @@ class PanelPropriete_Seance(PanelPropriete):
         #
         ref = self.GetReferentiel()
 
-        listType = self.seance.GetListeTypes()
-        listTypeS = [(ref.seances[t][1], constantes.imagesSeance[t].GetBitmap()) for t in listType] 
-        
-        n = self.cbType.GetSelection()   
-        self.cbType.Clear()
-        for s in listTypeS:
-            self.cbType.Append(s[0], s[1])
-        self.cbType.SetSelection(n)
-        self.cbType.Layout()
+#         listType = self.seance.GetListeTypes()
+#         listTypeS = [(ref.seances[t][1], constantes.imagesSeance[t].GetBitmap()) for t in listType] 
+#         
+#         n = self.cbType.GetSelection()   
+#         self.cbType.Clear()
+#         for s in listTypeS:
+#             self.cbType.Append(s[0], s[1])
+#         self.cbType.SetSelection(n)
+#         self.cbType.Layout()
         
         #
         # Durée
@@ -7937,43 +7976,43 @@ class PanelPropriete_Seance(PanelPropriete):
         #
         # Effectif
         #
-        if self.seance.typeSeance == "":
-            listEff = []
-        else:
-            listEff = ref.effectifsSeance[self.seance.typeSeance]
+#         if self.seance.typeSeance == "":
+#             listEff = []
+#         else:
+#             listEff = ref.effectifsSeance[self.seance.typeSeance]
 #        print "  ", listEff
         
-        self.cbEff.Show(len(listEff) > 0)
-        self.titreEff.Show(len(listEff) > 0)
+#         self.cbEff.Show(len(listEff) > 0)
+#         self.titreEff.Show(len(listEff) > 0)
             
             
         self.vcNombreRot.Show(self.seance.typeSeance == "R")
         
-        self.cbEff.Clear()
-        for s in listEff:
-            self.cbEff.Append(strEffectifComplet(self.seance.GetDocument().classe, s, -1))
-        self.cbEff.SetSelection(0)
+#         self.cbEff.Clear()
+#         for s in listEff:
+#             self.cbEff.Append(strEffectifComplet(self.seance.GetDocument().classe, s, -1))
+#         self.cbEff.SetSelection(0)
         
         
         # Démarche       
-        if self.seance.typeSeance in ref.activites.keys():
-            listDem = ref.demarcheSeance[self.seance.typeSeance]
-            dem = len(ref.demarches) > 0
-            self.cbDem.Show(dem)
-            self.titreDem.Show(dem)
-        else:
-            self.cbDem.Show(False)
-            self.titreDem.Show(False)
-            listDem = []
+#         if self.seance.typeSeance in ref.activites.keys():
+#             listDem = ref.demarcheSeance[self.seance.typeSeance]
+#             dem = len(ref.demarches) > 0
+#             self.cbDem.Show(dem)
+#             self.titreDem.Show(dem)
+#         else:
+#             self.cbDem.Show(False)
+#             self.titreDem.Show(False)
+#             listDem = []
 
 
         # Nombre
         self.vcNombre.Show(self.seance.typeSeance in ref.listeTypeActivite)#["AP", "ED"])
             
-        self.cbDem.Clear()
-        for s in listDem:
-            self.cbDem.Append(ref.demarches[s][1])
-        self.cbDem.SetSelection(0)
+#         self.cbDem.Clear()
+#         for s in listDem:
+#             self.cbDem.Append(ref.demarches[s][1])
+#         self.cbDem.SetSelection(0)
         
         
     #############################################################################            
@@ -7994,13 +8033,15 @@ class PanelPropriete_Seance(PanelPropriete):
         
         self.coulCtrl.SetColour(couleur.Couleur2Wx(self.seance.couleur))
         
-        if self.cbEff.IsShown():#self.cbEff.IsEnabled() and 
+#         if self.cbEff.IsShown():#self.cbEff.IsEnabled() and 
+        if hasattr(self, 'cbEff'):
             self.cbEff.SetSelection(ref.findEffectif(self.cbEff.GetStrings(), self.seance.effectif))
         
-        if self.cbDem.IsShown():#self.cbDem.IsEnabled() and :
+#         if self.cbDem.IsShown():#self.cbDem.IsEnabled() and :
 #            print ref.demarches[self.seance.demarche][1]
 #            print self.cbDem.GetStrings()
 #            print self.seance
+        if hasattr(self, 'cbDem'):
             self.cbDem.SetSelection(self.cbDem.GetStrings().index(ref.demarches[self.seance.demarche][1]))
             
         if self.seance.typeSeance in ACTIVITES:
@@ -9050,15 +9091,28 @@ class PanelPropriete_Systeme(PanelPropriete):
     #############################################################################            
     def GetPanelPropriete(self):
         return self.parent.Parent.Parent
+
+
+    #############################################################################            
+    def MarquerNomValide(self, etat = True):
+        if etat:
+            self.textctrl.SetBackgroundColour("white")
+            self.textctrl.SetToolTipString(u"Saisir le nom du Système")
+        else:
+            self.textctrl.SetBackgroundColour("pink")
+            self.textctrl.SetToolTipString(u"Un autre Système porte déja ce nom !")
+        self.textctrl.Refresh()
+        
         
 
     #############################################################################            
     def EvtText(self, event):
         """ Modification du nom du système
         """
-        self.systeme.SetNom(event.GetString())
+        
 #        print "EvtText", event.GetString()
         if isinstance(self.systeme.parent, pysequence.Sequence):
+            self.systeme.SetNom(event.GetString())
             self.systeme.parent.MiseAJourNomsSystemes()         # mise à jour dans l'arbre de la Séquence
             modif = u"Modification du nom du Système"
             if self.onUndoRedo():
@@ -9069,9 +9123,16 @@ class PanelPropriete_Systeme(PanelPropriete):
                     self.eventAttente = True
         
         elif isinstance(self.systeme.parent, pysequence.Classe):
+            classe = self.systeme.parent
+            if event.GetString() in [s.nom for s in classe.systemes]:
+                self.MarquerNomValide(False)
+                return
+            self.MarquerNomValide(True)
+            self.systeme.SetNom(event.GetString())
 #            print "  ***", self.systeme.parent
             self.GetPanelPropriete().MiseAJourListeSys(self.systeme.nom)
-
+            if isinstance(classe.GetDocument(), pysequence.Sequence):
+                classe.GetDocument().MiseAJourNomsSystemes()
 
     #############################################################################            
     def EvtVar(self, event):
@@ -9886,7 +9947,7 @@ class ArbreDoc(CT.CustomTreeCtrl):
     def OnKey(self, evt):
         keycode = evt.GetKeyCode()
         item = self.GetSelection()
-        print keycode
+#         print keycode
         if keycode == wx.WXK_DELETE:
             self.doc.SupprimerItem(item)
             

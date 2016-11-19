@@ -1293,3 +1293,17 @@ def rognerImage(image, wf = 800.0 , hf = 600.0):
     r = max(w/float(wf), h/float(hf))
     _w, _h = w/r, h/r
     return image.ConvertToImage().Scale(_w, _h).ConvertToBitmap()
+
+
+
+#############################################################################################################
+import textwrap
+def tronquer(texte, taille):
+    ligne1 = textwrap.wrap(texte, taille, break_long_words = False)[0]
+    if len(ligne1) > taille:
+        ligne1 = ligne1[:taille-3]+'...'
+    return ligne1
+
+
+
+

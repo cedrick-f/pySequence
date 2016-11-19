@@ -360,7 +360,7 @@ def Draw(ctx, prg, mouchard = False):
     
     DefinirZones(prg, ctx)
     
-    gabarit() # à virer (pour générer image gabarit
+#     gabarit() # à virer (pour générer image gabarit
     
 #    DefinirCouleurs(prg.GetNbrPeriodes())
 #    print "DefinirCouleurs", IcoulPos

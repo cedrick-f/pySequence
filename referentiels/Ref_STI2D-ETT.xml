@@ -1,4 +1,4 @@
-<Referentiel B_CI_BO="False" B_CI_cible="True" S_AnneeDebut="Sec6" S_Code="ET" S_Famille="STI" S_FichierLogo="" S_abrevCI="CI" S_abrevPb="Pb" S_nomCI="Centre(s) d'Intérêt" S_nomFonctions="Fonction(s)" S_nomPb="Problématique(s)" S_nomTaches="Tâche(s)" S_nomTh="">
+<Referentiel B_CI_BO="False" B_CI_cible="True" S_AnneeDebut="Sec6" S_Code="ET" S_Famille="STI" S_FichierLogo="" S_abrevCI="CI" S_abrevPb="Pb" S_nomCI="Centre(s) d'Intérêt" S_nomDom="Domaine(s) du socle" S_nomFonctions="Fonction(s)" S_nomPb="Problématique(s)" S_nomTaches="Tâche(s)" S_nomTh="Thématique(s)">
   <l_BO_URL>
     <l_00 S_00="Programme" S_01="http://www.education.gouv.fr/pid25535/bulletin_officiel.html?cid_bo=82984" />
   </l_BO_URL>

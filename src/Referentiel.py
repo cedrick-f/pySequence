@@ -617,6 +617,7 @@ class Referentiel(XMLelem):
         #
         # Domaines
         #
+        self.nomDom = u"Domaine(s)"
         self.domaines = {}
         self.listeDomaines = []
         
@@ -966,8 +967,12 @@ class Referentiel(XMLelem):
         
         
         # à partir de 7.1
-        
+#         print self.nomDom
+        if self.nomDom == "None":
+            self.nomDom = u"Domaine(s)"
             
+            
+        
         def corriger(dic):
             sdic = {}
             for k0, v0 in dic.items():
@@ -1436,9 +1441,10 @@ class Referentiel(XMLelem):
         # Domaines  ########################################################################################
         #
         sh_g = wb.sheet_by_name(u"Domaines")
-        
+        self.nomDom = sh_g.cell(0,0).value
         for l in range(2, sh_g.nrows):
             code = str(sh_g.cell(l,0).value)
+            
             if code == "":
                 l += 3
                 break
@@ -1452,10 +1458,9 @@ class Referentiel(XMLelem):
         # Thématiques  ########################################################################################
         #
         sh_g = wb.sheet_by_name(u"Thématiques")
-        
+        self.nomTh = sh_g.cell(0,0).value
         for l in range(2, sh_g.nrows):
             code = str(sh_g.cell(l,0).value)
-            self.nomTh = sh_g.cell(2,0).value
             if code == "":
                 l += 3
                 break

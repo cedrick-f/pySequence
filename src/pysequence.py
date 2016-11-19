@@ -99,7 +99,7 @@ from widgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_ENTI
                     rallonge, remplaceCode2LF, dansRectangle, \
                     StaticBoxButton, TextCtrl_Help, CloseFenHelp, \
                     remplaceLF2Code, messageInfo, messageYesNo, enregistrer_root, \
-                    getAncreFenetre#, chronometrer
+                    getAncreFenetre, tronquer#, chronometrer
                     
 from Referentiel import REFERENTIELS, ARBRE_REF, ACTIVITES
 import Referentiel
@@ -729,6 +729,9 @@ class Objet_sequence():
                 
             elif param == "ANN":
                 pass
+            
+            elif param == "DOM":
+                return constantes.BASE_FICHE_HTML_DOM
                 
             elif param[:3] == "POS":
                 return constantes.BASE_FICHE_HTML_PERIODES
@@ -869,6 +872,9 @@ class Classe(Objet_sequence):
     def SetDocument(self, doc):   
         self.doc = doc 
 
+    ######################################################################################  
+    def GetDocument(self):   
+        return self.doc 
 
     ###############################################################################################
     def ouvrir(self, nomFichier):
@@ -1088,7 +1094,7 @@ class Classe(Objet_sequence):
                 systeme.setBranche(sy)
                 self.systemes.append(systeme)    
             self.systemes.sort(key=attrgetter('nom'))
-            
+#         print "systèmes Classe :", self.systemes
 #        self.GetPanelPropriete().MiseAJour()
             
         return err
@@ -1458,7 +1464,8 @@ class BaseDoc():
     def Tip_EQU(self, typeDoc):
         self.tip.SetWholeText("titre", u"Equipe pédagogique impliquée dans " + typeDoc)
 
-
+    
+    
 
     
 ####################################################################################################          
@@ -1509,7 +1516,7 @@ class Sequence(BaseDoc, Objet_sequence):
     def GetPanelPropriete(self, parent):
         return PanelPropriete_Sequence(parent, self)
 
-
+    
     ######################################################################################  
     def Initialise(self):
         self.AjouterListeSystemes(self.classe.systemes)
@@ -1774,6 +1781,18 @@ class Sequence(BaseDoc, Objet_sequence):
 
 
     ######################################################################################  
+    def Tip_DOM(self, p = None):
+#         print "Tip_DOM", self.domaine
+        ref = self.GetReferentiel()
+        self.tip.SetWholeText("titre", getSingulierPluriel(ref.nomDom, len(self.domaine)>1))
+        ld = [ref.domaines[d][1] for d in self.domaine]
+
+        for d in ld:
+            self.tip.AjouterElemListeUL("dom", d)
+        
+    
+    
+    ######################################################################################  
     def SetTip(self, param = None, obj = None):
         """ Mise à jour du TIP (popup)
         """
@@ -1792,6 +1811,9 @@ class Sequence(BaseDoc, Objet_sequence):
                 
             elif param[:3] == "EQU":
                 self.Tip_EQU("la Séquence")
+                
+            elif param[:3] == "DOM":
+                self.Tip_DOM()
                 
             elif type(obj) == list:
                 pass
@@ -5856,6 +5878,7 @@ class Seance(ElementDeSequence, Objet_sequence):
         self.taille = Variable(u"Taille des caractères", lstVal = 100, nomNorm = "", typ = VAR_ENTIER_POS, 
                               bornes = [10,100], modeLog = False,
                               expression = None, multiple = False)
+        
         self.nombre = Variable(u"Nombre", lstVal = 1, nomNorm = "", typ = VAR_ENTIER_POS, 
                               bornes = [1,10], modeLog = False,
                               expression = None, multiple = False)
@@ -5960,7 +5983,7 @@ class Seance(ElementDeSequence, Objet_sequence):
             for i, s in enumerate(self.systemes):
                 bs = ET.SubElement(root, "Systemes"+str(i))
                 self.branchesSys.append(bs)
-                bs.set("Nom", s.n)
+#                 bs.set("Nom", s.n) # Spprimé depuis v7.1 (liée à la liste des systèmes de la Séquence)
                 bs.set("Nombre", str(s.v[0]))
         else:
             root.set("Duree", str(self.duree.v[0]))
@@ -6008,26 +6031,43 @@ class Seance(ElementDeSequence, Objet_sequence):
 #            self.lien.setBranche(branche)
             
             # Les systèmes nécessaires
-            lstSys = []
-            lstNSys = []
+            lstNSys = [] # Liste des quantité de systèmes nécessaires à la séance
+                         # liée à la liste des systèmes de la Séquence
+                         # Nouveau depuis v7.1
             for s in list(branche):
-                nom = s.get("Nom", "")
-                if nom != "":
-                    lstSys.append(nom)
-                    lstNSys.append(eval(s.get("Nombre", "")))
-                    
-#            print "lstSys", lstSys
-            # Correction d'un bug versions <5.5
-            # "manque des systèmes dans les séances lors de l'enregistrement"
-            for s in self.GetDocument().systemes:
-#                print "nom syst :", s.nom
-                if not s.nom in lstSys:
-                    lstSys.append(s.nom)
-                    lstNSys.append(0)
+                lstNSys.append(eval(s.get("Nombre", "")))  
+                
+#                 # pour version < 7.1 : 
+#                 nom = s.get("Nom", "")
+#                 if nom != "":
+#                     lstSys.append(nom)
+#             
+#             
+#             
+#             
+#             
+#             
+#             
+#             lstSys = []
+#             lstNSys = []
+#             for s in list(branche):
+#                 nom = s.get("Nom", "")
+#                 if nom != "":
+#                     lstSys.append(nom)
+#                     lstNSys.append(eval(s.get("Nombre", "")))
+#                     
+#             print "lstSys", lstSys
+#             # Correction d'un bug versions <5.5
+#             # "manque des systèmes dans les séances lors de l'enregistrement"
+#             for s in self.GetDocument().systemes:
+#                 print "nom syst :", s.nom
+#                 if not s.nom in lstSys:
+#                     lstSys.append(s.nom)
+#                     lstNSys.append(0)
                     
                 
-            self.AjouterListeSystemes(lstSys, lstNSys)
-            
+            self.AjouterListeSystemes(lstNSys)#lstSys, 
+#             print "   >", lstSys
             # Durée
             self.duree.v[0] = eval(branche.get("Duree", "1"))
         else:
@@ -6641,7 +6681,7 @@ class Seance(ElementDeSequence, Objet_sequence):
         if self.typeSeance in ACTIVITES:
             sequence = self.GetDocument()
             for i, s in enumerate(sequence.systemes):
-                self.systemes[i].n = s.nom
+                self.systemes[i].n = tronquer(s.nom, 20)
 #            self.nSystemes = len(sequence.systemes)
 #            self.GetPanelPropriete().MiseAJourListeSystemes()
                                  
@@ -6661,9 +6701,9 @@ class Seance(ElementDeSequence, Objet_sequence):
         
         
     ######################################################################################  
-    def AjouterSysteme(self, nom = "", nombre = 0, construire = True):
+    def AjouterSysteme(self, nom = u"Nouveau système", nombre = 0, construire = True):
         if self.typeSeance in ACTIVITES:
-            self.systemes.append(Variable(nom, lstVal = nombre, nomNorm = "", typ = VAR_ENTIER_POS, 
+            self.systemes.append(Variable(tronquer(nom, 20), lstVal = nombre, nomNorm = "", typ = VAR_ENTIER_POS, 
                                           bornes = [0,9], modeLog = False,
                                           expression = None, multiple = False))
 #            if construire:
@@ -6675,19 +6715,22 @@ class Seance(ElementDeSequence, Objet_sequence):
     
     
     ######################################################################################  
-    def AjouterListeSystemes(self, lstSys, lstNSys = None):
+    def AjouterListeSystemes(self, lstNSys = None):
+        """
+        """
 #        print "  AjouterListeSystemes", self.typeSeance
+        lstSys = self.GetDocument().systemes
         if self.typeSeance in ACTIVITES:
             if lstNSys == None:
                 lstNSys = [0]*len(lstSys)
             for i, s in enumerate(lstSys):
 #                print "    ", s
-                self.AjouterSysteme(s, lstNSys[i], construire = False)
+                self.AjouterSysteme(s.nom, lstNSys[i], construire = False)
 #            self.GetPanelPropriete().ConstruireListeSystemes()
             
         elif self.typeSeance in ["R", "S"] : # Séances en Rotation ou  Parallèle
             for s in self.seances:
-                s.AjouterListeSystemes(lstSys, lstNSys) 
+                s.AjouterListeSystemes(lstNSys) 
                 
                 
     
@@ -6803,7 +6846,7 @@ class Seance(ElementDeSequence, Objet_sequence):
         
         
         # Démarche
-        if len(ref.listeDemarches) > 0:
+        if self.typeSeance in ref.activites.keys() and len(ref.listeDemarches) > 0:
             self.tip.AjouterImg("icon2", constantes.imagesDemarches[self.demarche].GetBitmap(), width = 64)
             self.tip.SetWholeText("txt2", ref.demarches[self.demarche][1], italic = True, size = 3)
         else:
