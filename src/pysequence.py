@@ -6860,6 +6860,8 @@ class Seance(ElementDeSequence, Objet_sequence):
         else:
             self.tip.Supprime('ldes')
         
+        self.tip.AjouterLien('lien', self.lien, self)
+        
         self.tip.SetPage()
         
         
@@ -7799,6 +7801,9 @@ class Tache(Objet_sequence):
             self.tip.AjouterHTML("des", XMLtoHTML(self.description))    
         else:
             self.tip.Supprime('ldes')
+        
+        self.tip.AjouterLien('lien', self.lien, self)
+        
         self.tip.SetPage()
         
         

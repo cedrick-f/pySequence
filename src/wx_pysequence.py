@@ -7604,7 +7604,7 @@ class PanelPropriete_Seance(PanelPropriete):
         
         # Effectif
         titre = wx.StaticText(self, -1, u"Effectif : ")
-        listEff = ref.effectifsSeance[self.seance.typeSeance]
+        
         cbEff = wx.ComboBox(self, -1, u"",
                          choices = [],
                          style = wx.CB_DROPDOWN
@@ -7615,8 +7615,10 @@ class PanelPropriete_Seance(PanelPropriete):
         self.Bind(wx.EVT_COMBOBOX, self.EvtComboBoxEff, cbEff)
         self.cbEff = cbEff
         
-        for s in listEff:
-            self.cbEff.Append(strEffectifComplet(self.seance.GetDocument().classe, s, -1))
+        if self.seance.typeSeance in ref.effectifsSeance.keys():
+            listEff = ref.effectifsSeance[self.seance.typeSeance]
+            for s in listEff:
+                self.cbEff.Append(strEffectifComplet(self.seance.GetDocument().classe, s, -1))
 
 
         self.titreEff = titre
@@ -13070,6 +13072,7 @@ class PopupInfo(wx.PopupWindow):
 #         self.Bind(wx.EVT_MOTION, self.OnLeave)
         self.Bind(wx.EVT_WINDOW_DESTROY, self.OnDestroy)
         self.Bind(wx.EVT_CHECKBOX, self.OnCheck)
+        self.Bind(wx.EVT_BUTTON, self.OnClick)
 
 
 #    ##########################################################################################
@@ -13137,6 +13140,41 @@ class PopupInfo(wx.PopupWindow):
                 tag.append(br)
 
 
+    ##########################################################################################
+    def AjouterLien(self, Id, lien, elem):
+
+        tag = self.soup.find(id = Id)
+        
+        if lien.type == 'u':
+            a = self.soup.new_tag("a")
+            a.string = lien.path
+            a["href"] = lien.path
+            tag.append(a)
+            
+        elif lien.type in ["f", "d"]:
+            self.elem = elem
+            b = self.soup.new_tag("wxp")
+            b["module"] = "wx"
+            b["class"] = "Button"
+            
+            param  = self.soup.new_tag("param")
+            param["name"] = "id"
+            param["value"] = "-1"
+            b.append(param)
+            
+            param  = self.soup.new_tag("param")
+            param["name"] = "label"
+            param["value"] = os.path.split(lien.path)[1]
+            b.append(param)
+            
+#             param  = self.soup.new_tag("param")
+#             param["name"] = "name"
+#             param["value"] = "Bouton"
+#             b.append(param)
+            
+            tag.append(b)
+            
+        
     
     ##########################################################################################
     def AjouterTxt(self, Id, texte, bcoul = None, fcoul = "black", 
@@ -13176,7 +13214,7 @@ class PopupInfo(wx.PopupWindow):
     ##########################################################################################
     def AjouterImg(self, item, bmp, width = None):
         try:
-            self.tfname.append(tempfile.mktemp())
+            self.tfname.append(tempfile.mktemp()+".png")
             bmp.SaveFile(self.tfname[-1], wx.BITMAP_TYPE_PNG)
         except:
             return
@@ -13414,12 +13452,20 @@ class PopupInfo(wx.PopupWindow):
       
         wx.CallAfter(self.SetCompetences)
     
-    
     ##########################################################################################
-    def OnDestroy(self, evt):
-        for f in self.tfname:
-            if os.path.exists(f):
-                os.remove(f)
+    def OnClick(self, evt):
+        b = evt.GetEventObject()
+        n = b.GetName()
+#         print "OnCheck", cb.GetValue(), cb.GetName()
+        self.elem.lien.Afficher(self.elem.GetDocument().GetPath())
+
+        
+    ##########################################################################################
+    def OnDestroy(self, evt): 
+        if isinstance(evt.GetWindow(), wx.PopupWindow):
+            for f in self.tfname:
+                if os.path.exists(f):
+                    os.remove(f)
 
 
     ##########################################################################################

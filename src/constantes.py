@@ -800,8 +800,11 @@ BASE_FICHE_HTML_SEANCE = u"""
                 <span id="des"> </span>
             </td>
         </tr>
+        
         </tbody>
     </table>
+    <center id="lien">
+    </center>
 
 </HTML>
 """
