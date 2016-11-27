@@ -1929,7 +1929,7 @@ class Referentiel(XMLelem):
         continuer = True
         i = 0
         while continuer:
-            if i > len(lst):
+            if i >= len(lst):
                 continuer = False
             else:
                 if lst[i][:2] == self.effectifs[eff][0][:2]:

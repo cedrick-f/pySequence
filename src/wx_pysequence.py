@@ -7592,68 +7592,10 @@ class PanelPropriete_Seance(PanelPropriete):
         # Organisation
         #
         box2 = myStaticBox(self, -1, u"Organisation")
-        bsizer2 = wx.StaticBoxSizer(box2, wx.VERTICAL)
+        self.bsizer2 = wx.StaticBoxSizer(box2, wx.VERTICAL)
+        self.sizer.Add(self.bsizer2, (0,2), (3,1), flag =wx.ALL|wx.EXPAND, border = 2)
         
-        # Durée de la séance
-        vcDuree = VariableCtrl(self, seance.duree, coef = 0.25, signeEgal = True, slider = False, sizeh = 30,
-                               help = u"Durée de la séance en heures", unite = u"h")
-        self.Bind(EVT_VAR_CTRL, self.EvtText, vcDuree)
-        self.vcDuree = vcDuree
-        bsizer2.Add(vcDuree, flag = wx.EXPAND|wx.ALL, border = 2)
-        
-        
-        # Effectif
-        titre = wx.StaticText(self, -1, u"Effectif : ")
-        
-        cbEff = wx.ComboBox(self, -1, u"",
-                         choices = [],
-                         style = wx.CB_DROPDOWN
-                         | wx.TE_PROCESS_ENTER
-                         | wx.CB_READONLY
-                         #| wx.CB_SORT
-                         )
-        self.Bind(wx.EVT_COMBOBOX, self.EvtComboBoxEff, cbEff)
-        self.cbEff = cbEff
-        
-        if self.seance.typeSeance in ref.effectifsSeance.keys():
-            listEff = ref.effectifsSeance[self.seance.typeSeance]
-            for s in listEff:
-                self.cbEff.Append(strEffectifComplet(self.seance.GetDocument().classe, s, -1))
-
-
-        self.titreEff = titre
-        
-        bsizer2.Add(titre, flag = wx.ALIGN_CENTER_VERTICAL|wx.ALL, border = 2)
-        bsizer2.Add(cbEff, flag = wx.EXPAND|wx.LEFT, border = 2)
-#        self.sizer.AddGrowableRow(3)
-#        self.sizer.Add(self.nombre, (3,2))
-        
-        # Nombre de séances en paralléle
-        vcNombre = VariableCtrl(self, seance.nombre, signeEgal = True, slider = False, sizeh = 30,
-                                help = u"Nombre de groupes réalisant simultanément la même séance")
-        self.Bind(EVT_VAR_CTRL, self.EvtText, vcNombre)
-        self.vcNombre = vcNombre
-        bsizer2.Add(vcNombre, flag = wx.EXPAND|wx.ALL, border = 2)
-#        self.sizer.AddGrowableRow(5)
-        
-        # Nombre de rotations
-        vcNombreRot = VariableCtrl(self, seance.nbrRotations, signeEgal = True, slider = False, sizeh = 30,
-                                help = u"Nombre de rotations successives")
-        self.Bind(EVT_VAR_CTRL, self.EvtText, vcNombreRot)
-        self.vcNombreRot = vcNombreRot
-        bsizer2.Add(vcNombreRot, flag = wx.EXPAND|wx.ALL, border = 2)
-        
-        self.sizer.Add(bsizer2, (0,2), (3,1), flag =wx.ALL|wx.EXPAND, border = 2)
-        
-        # Nombre de groupes
-#        vcNombreGrp = VariableCtrl(self, seance.nbrGroupes, signeEgal = True, slider = False, sizeh = 30,
-#                                help = u"Nombre de groupes occupés simultanément")
-#        self.Bind(EVT_VAR_CTRL, self.EvtText, vcNombreRot)
-#        self.vcNombreGrp = vcNombreGrp
-#        bsizer2.Add(vcNombreGrp, flag = wx.EXPAND|wx.ALL, border = 2)
-#        
-#        self.sizer.Add(bsizer2, (0,2), (4,1), flag =wx.ALL|wx.EXPAND, border = 2)
-
+        # Déplacé dans AdapterAuType()
 
         #
         # Apparence
@@ -7673,29 +7615,8 @@ class PanelPropriete_Seance(PanelPropriete):
         # Démarche
         #
         
-        if self.seance.typeSeance in ref.activites.keys():
-            if len(ref.demarches) > 0:
-                listDem = ref.demarcheSeance[self.seance.typeSeance]
-                titre = wx.StaticText(self, -1, u"Démarche : ")
-                cbDem = wx.ComboBox(self, -1, u"",
-                                 choices = [],
-                                 style = wx.CB_DROPDOWN
-                                 | wx.TE_PROCESS_ENTER
-                                 | wx.CB_READONLY
-                                 #| wx.CB_SORT
-                                 )
-                self.Bind(wx.EVT_COMBOBOX, self.EvtComboBoxDem, cbDem)
-                self.cbDem = cbDem
-                
-                for s in listDem:
-                    self.cbDem.Append(ref.demarches[s][1])
-
-                self.titreDem = titre
-                
-                
-                self.sizer.Add(titre, (1,0), flag = wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT|wx.ALL, border = 2)
-                self.sizer.Add(cbDem, (1,1), flag = wx.EXPAND|wx.ALL, border = 2)
-
+        # Déplacé dans AdapterAuType()
+        
         
         #
         # Systèmes
@@ -7742,6 +7663,7 @@ class PanelPropriete_Seance(PanelPropriete):
         
         self.sizer.SetEmptyCellSize((0,0))
         
+        self.AdapterAuType()
         self.MiseAJour()
         
         #
@@ -7889,7 +7811,8 @@ class PanelPropriete_Seance(PanelPropriete):
         # On s'apprète à changer une séance Rotation ou Série en séance "Normale"
         if self.seance.typeSeance in ["R", "S"] \
           and self.GetReferentiel().listeTypeSeance[event.GetSelection()] not in ["R", "S"]:
-            dlg = wx.MessageDialog(self, u"Modifier le type de cette séance entrainera la suppression de toutes les sous séances !\n" \
+            dlg = wx.MessageDialog(self, u"Cette Séance contient des sous-séances !\n\n" \
+                                   u"Modifier le type de cette séance entrainera la suppression de toutes les sous séances !\n" \
                                          u"Voulez-vous continuer ?",
                                     u"Modification du type de séance",
                                     wx.YES_NO | wx.ICON_EXCLAMATION
@@ -7953,11 +7876,12 @@ class PanelPropriete_Seance(PanelPropriete):
     def AdapterAuType(self):
         """ Adapte le panel au type de séance
         """
-#        print "AdapterAuType", self.seance
+#         print "AdapterAuType", self.seance
         #
         # Type de parent
         #
         ref = self.GetReferentiel()
+        
 
 #         listType = self.seance.GetListeTypes()
 #         listTypeS = [(ref.seances[t][1], constantes.imagesSeance[t].GetBitmap()) for t in listType] 
@@ -7969,15 +7893,125 @@ class PanelPropriete_Seance(PanelPropriete):
 #         self.cbType.SetSelection(n)
 #         self.cbType.Layout()
         
-        #
-        # Durée
-        #
-        if self.seance.typeSeance in ["R", "S"]:
-            self.vcDuree.Activer(False)
         
         #
-        # Effectif
+        # Organisation
         #
+        
+        # Durée de la séance
+        
+        if hasattr(self, 'vcDuree'):
+            try:
+                self.bsizer2.Detach(self.vcDuree)
+            except:
+                pass
+            self.vcDuree.Destroy()
+            del self.vcDuree
+        
+        if not self.seance.typeSeance in ["R", "S"]:
+            vcDuree = VariableCtrl(self, self.seance.duree, coef = 0.25, 
+                                   signeEgal = True, slider = False, sizeh = 30,
+                                   help = u"Durée de la séance en heures", unite = u"h")
+            self.Bind(EVT_VAR_CTRL, self.EvtText, vcDuree)
+            self.vcDuree = vcDuree
+            self.bsizer2.Add(vcDuree, flag = wx.EXPAND|wx.ALL, border = 2)
+
+        
+        
+        # Effectif
+        
+        if hasattr(self, 'cbEff'):
+            try:
+                self.bsizer2.Detach(self.cbEff)
+                self.bsizer2.Detach(self.titreEff)
+            except:
+                pass
+            self.cbEff.Destroy()
+            self.titreEff.Destroy()
+            del self.cbEff
+            del self.titreEff
+        
+        if self.seance.typeSeance in ref.effectifsSeance.keys():
+            titre = wx.StaticText(self, -1, u"Effectif : ")
+            
+            cbEff = wx.ComboBox(self, -1, u"",
+                             choices = [],
+                             style = wx.CB_DROPDOWN
+                             | wx.TE_PROCESS_ENTER
+                             | wx.CB_READONLY
+                             #| wx.CB_SORT
+                             )
+            self.Bind(wx.EVT_COMBOBOX, self.EvtComboBoxEff, cbEff)
+            self.cbEff = cbEff
+            self.cbEff.Clear()
+            listEff = ref.effectifsSeance[self.seance.typeSeance]
+            for s in listEff:
+                self.cbEff.Append(strEffectifComplet(self.seance.GetDocument().classe, s, -1))
+            self.cbEff.SetSelection(0)
+            
+            self.titreEff = titre
+            
+            self.bsizer2.Add(self.titreEff, flag = wx.ALIGN_CENTER_VERTICAL|wx.ALL, border = 2)
+            self.bsizer2.Add(cbEff, flag = wx.EXPAND|wx.LEFT, border = 2)
+            
+    
+        
+        # Nombre de séances en parallèle
+        
+        if hasattr(self, 'vcNombre'):
+            try:
+                self.bsizer2.Detach(self.vcNombre)
+            except:
+                pass
+            self.vcNombre.Destroy()
+            del self.vcNombre
+            
+                
+        if self.seance.typeSeance in ref.listeTypeActivite:
+            vcNombre = VariableCtrl(self, self.seance.nombre, signeEgal = True, slider = False, sizeh = 30,
+                                    help = u"Nombre de groupes réalisant simultanément la même séance")
+            self.Bind(EVT_VAR_CTRL, self.EvtText, vcNombre)
+            self.vcNombre = vcNombre
+            self.bsizer2.Add(vcNombre, flag = wx.EXPAND|wx.ALL, border = 2)
+            
+                
+            
+        # Nombre de rotations
+        
+        if hasattr(self, 'vcNombreRot'):
+            try:
+                self.bsizer2.Detach(self.vcNombreRot)
+                
+            except:
+                pass
+            self.vcNombreRot.Destroy()
+            del self.vcNombreRot
+            
+            
+        if self.seance.typeSeance == "R":
+            vcNombreRot = VariableCtrl(self, self.seance.nbrRotations, signeEgal = True, slider = False, sizeh = 30,
+                                    help = u"Nombre de rotations successives")
+            self.Bind(EVT_VAR_CTRL, self.EvtText, vcNombreRot)
+            self.vcNombreRot = vcNombreRot
+            self.bsizer2.Add(vcNombreRot, flag = wx.EXPAND|wx.ALL, border = 2)
+
+            
+                
+                
+        
+        
+        # Nombre de groupes
+#        vcNombreGrp = VariableCtrl(self, seance.nbrGroupes, signeEgal = True, slider = False, sizeh = 30,
+#                                help = u"Nombre de groupes occupés simultanément")
+#        self.Bind(EVT_VAR_CTRL, self.EvtText, vcNombreRot)
+#        self.vcNombreGrp = vcNombreGrp
+#        bsizer2.Add(vcNombreGrp, flag = wx.EXPAND|wx.ALL, border = 2)
+#        
+#        self.sizer.Add(bsizer2, (0,2), (4,1), flag =wx.ALL|wx.EXPAND, border = 2)
+        
+        
+        
+          
 #         if self.seance.typeSeance == "":
 #             listEff = []
 #         else:
@@ -7987,16 +8021,55 @@ class PanelPropriete_Seance(PanelPropriete):
 #         self.cbEff.Show(len(listEff) > 0)
 #         self.titreEff.Show(len(listEff) > 0)
             
-            
-        self.vcNombreRot.Show(self.seance.typeSeance == "R")
+
         
 #         self.cbEff.Clear()
 #         for s in listEff:
 #             self.cbEff.Append(strEffectifComplet(self.seance.GetDocument().classe, s, -1))
 #         self.cbEff.SetSelection(0)
         
+        #
+        # Démarche      
+        #
         
-        # Démarche       
+        if hasattr(self, 'cbDem'):
+            try:
+                self.sizer.Detach(self.cbDem)
+                self.sizer.Detach(self.titreDem)
+            except:
+                pass
+            self.cbDem.Destroy()
+            self.titreDem.Destroy()
+            del self.cbDem
+            del self.titreDem
+        
+        if self.seance.typeSeance in ref.activites.keys():
+            if len(ref.demarches) > 0:
+                listDem = ref.demarcheSeance[self.seance.typeSeance]
+                titre = wx.StaticText(self, -1, u"Démarche : ")
+                cbDem = wx.ComboBox(self, -1, u"",
+                                 choices = [],
+                                 style = wx.CB_DROPDOWN
+                                 | wx.TE_PROCESS_ENTER
+                                 | wx.CB_READONLY
+                                 #| wx.CB_SORT
+                                 )
+                self.Bind(wx.EVT_COMBOBOX, self.EvtComboBoxDem, cbDem)
+                self.cbDem = cbDem
+                
+                for s in listDem:
+                    self.cbDem.Append(ref.demarches[s][1])
+
+                self.titreDem = titre
+                
+                
+                self.sizer.Add(titre, (1,0), flag = wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT|wx.ALL, border = 2)
+                self.sizer.Add(cbDem, (1,1), flag = wx.EXPAND|wx.ALL, border = 2)
+ 
+
+                
+        self.sizer.Layout()
+        
 #         if self.seance.typeSeance in ref.activites.keys():
 #             listDem = ref.demarcheSeance[self.seance.typeSeance]
 #             dem = len(ref.demarches) > 0
@@ -8009,7 +8082,7 @@ class PanelPropriete_Seance(PanelPropriete):
 
 
         # Nombre
-        self.vcNombre.Show(self.seance.typeSeance in ref.listeTypeActivite)#["AP", "ED"])
+       
             
 #         self.cbDem.Clear()
 #         for s in listDem:
@@ -8025,13 +8098,14 @@ class PanelPropriete_Seance(PanelPropriete):
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
 #        print "MiseAJour PP séance"
-        self.AdapterAuType()
+#         self.AdapterAuType()
         ref = self.GetReferentiel()
         if self.seance.typeSeance != "" and ref.seances[self.seance.typeSeance][1] in self.cbType.GetStrings():
             self.cbType.SetSelection(self.cbType.GetStrings().index(ref.seances[self.seance.typeSeance][1]))
 #         self.textctrl.ChangeValue(self.seance.intitule)
         self.textctrl.SetValue(self.seance.intitule)
-        self.vcDuree.mofifierValeursSsEvt()
+        if hasattr(self, 'vcDuree'):
+            self.vcDuree.mofifierValeursSsEvt()
         
         self.coulCtrl.SetColour(couleur.Couleur2Wx(self.seance.couleur))
         
@@ -8047,9 +8121,11 @@ class PanelPropriete_Seance(PanelPropriete):
             self.cbDem.SetSelection(self.cbDem.GetStrings().index(ref.demarches[self.seance.demarche][1]))
             
         if self.seance.typeSeance in ACTIVITES:
-            self.vcNombre.mofifierValeursSsEvt()
+            if hasattr(self, 'vcNombre'):
+                self.vcNombre.mofifierValeursSsEvt()
         elif self.seance.typeSeance == "R":
-            self.vcNombreRot.mofifierValeursSsEvt()
+            if hasattr(self, 'vcNombreRot'):
+                self.vcNombreRot.mofifierValeursSsEvt()
         
         self.vcTaille.mofifierValeursSsEvt()
         
@@ -8069,14 +8145,7 @@ class PanelPropriete_Seance(PanelPropriete):
         self.btnlien.Show(self.seance.lien.path != "")
         self.sizer.Layout()
         
-        
-    
-#    def MiseAJourDuree(self):
-#        self.vcDuree.mofifierValeursSsEvt()
-    
-    
-    
-    
+
     
     
     
@@ -13462,6 +13531,7 @@ class PopupInfo(wx.PopupWindow):
         
     ##########################################################################################
     def OnDestroy(self, evt): 
+#         print "OnDestroy", evt.GetWindow()
         if isinstance(evt.GetWindow(), wx.PopupWindow):
             for f in self.tfname:
                 if os.path.exists(f):

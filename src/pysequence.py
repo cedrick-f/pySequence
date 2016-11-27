@@ -1114,7 +1114,7 @@ class Classe(Objet_sequence):
 
     ######################################################################################  
     def GetEffectifNorm(self, eff):
-        """ Renvoie les effectifs des groupes sous forme normalisée
+        """ Renvoie les effectifs des groupes sous forme normalisée (de 0.0 à 1.0)
             (portion de classe entière)
         """
         if eff == 'C':
@@ -1127,6 +1127,8 @@ class Classe(Objet_sequence):
             return self.GetEffectifNorm('G') / self.nbrGroupes['E']
         elif eff == 'P':
             return self.GetEffectifNorm('G') / self.nbrGroupes['P']
+#         else:
+#             print "ERREUR", eff
         
         
     ######################################################################################  
@@ -6174,6 +6176,7 @@ class Seance(ElementDeSequence, Objet_sequence):
             for k, v in self.GetReferentiel().effectifs.items():
                 if v[0][:2] == val[:2]: # On ne compare que les 2 premières lettres
                     codeEff = k
+        
         self.effectif = codeEff
         
 
@@ -6436,7 +6439,7 @@ class Seance(ElementDeSequence, Objet_sequence):
         
     ######################################################################################  
     def SetType(self, typ):
-#         print "SetType", typ
+#         print "SetType", typ, self.seances
         if type(typ) == str or type(typ) == unicode:
             self.typeSeance = typ
         else:
@@ -6666,6 +6669,7 @@ class Seance(ElementDeSequence, Objet_sequence):
     ######################################################################################  
     def SupprimerSousSeances(self):
         self.arbre.DeleteChildren(self.branche)
+        self.seances = []
 
     
     #############################################################################
