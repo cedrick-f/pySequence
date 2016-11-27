@@ -1999,7 +1999,7 @@ class Sequence(BaseDoc, Objet_sequence):
     
     ######################################################################################  
     def AjouterListeSystemes(self, syst = []):
-#         print "AjouterListeSystemes séquence"
+        print "AjouterListeSystemes séquence"
         nouvListe = []
         for s in syst:
 #             print "   ",s
@@ -2031,7 +2031,7 @@ class Sequence(BaseDoc, Objet_sequence):
                 sy.SetCode()
 #            sy.nbrDispo.v[0] = eval(n)
 #            sy.panelPropriete.MiseAJour()
-        
+        print "nouvListe", nouvListe
         self.arbre.Expand(self.brancheSys)
         self.AjouterListeSystemesSeance(nouvListe)
         self.GetApp().sendEvent(modif = u"Ajout d'une liste de Systèmes")
@@ -4965,7 +4965,7 @@ class Progression(BaseDoc, Objet_sequence):
                     nc = getSingulierPluriel(ref.dicoCompetences["S"].nomGenerique, False)
                     self.tip.SetWholeText("titre", nc + " " + k)
                     
-                    intituleComp = competence[0]
+                    intituleComp = competence.intitule
                     intituleComp = "\n".join([textwrap.fill(ind, 50) for ind in intituleComp.split(u"\n")]) 
                     self.tip.SetWholeText("int", intituleComp)
             
@@ -6725,7 +6725,7 @@ class Seance(ElementDeSequence, Objet_sequence):
 #        print "  AjouterListeSystemes", self.typeSeance
         lstSys = self.GetDocument().systemes
         if self.typeSeance in ACTIVITES:
-            if lstNSys == None:
+            if lstNSys == [] or lstNSys == None:
                 lstNSys = [0]*len(lstSys)
             for i, s in enumerate(lstSys):
 #                print "    ", s
