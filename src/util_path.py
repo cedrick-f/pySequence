@@ -58,6 +58,10 @@ PATH = os.path.dirname(os.path.abspath(sys.argv[0])).decode(FILE_ENCODING)
 os.chdir(PATH)
 sys.path.append(PATH)
 
+
+
+
+
 if sys.platform == 'win32':
     #On récupèreﾠ le dossier "Application data" 
     #On lit la clef de registre indiquant le type d'installation

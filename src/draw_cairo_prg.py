@@ -226,6 +226,7 @@ def DefinirZones(prg, ctx):
             tailleZComp[0] += wColComp
         tailleZComp[0] += dx
         
+        
     tailleZComp[0] -= dx
     posZComp[0] = posZOrganis[0] + tailleZOrganis[0] - tailleZComp[0]
     
@@ -391,15 +392,15 @@ def Draw(ctx, prg, mouchard = False):
     
     h = taillePos[1] * 0.8
     show_text_rect(ctx, t, (posPro[0] , posPos[1], tailleTypeEns, h), 
-                   va = 'c', ha = 'g', b = 0, orient = 'h', 
-                   fontsizeMinMax = (-1, -1), fontsizePref = -1, wrap = True, couper = False,
+                   va = 'c', ha = 'c', b = 0, orient = 'h', 
+                   fontsizeMinMax = (-1, -1), fontsizePref = -1, wrap = False, couper = False,
                    coulBord = (0, 0, 0))
     
     t = ref.Enseignement[1]
     ctx.set_source_rgb (0.3, 0.3, 0.8)
     show_text_rect(ctx, t, (posPro[0] , posPos[1] + h, tailleTypeEns, taillePos[1] - h), 
-                   va = 'c', ha = 'g', b = 0, orient = 'h', 
-                   fontsizeMinMax = (-1, -1), fontsizePref = -1, wrap = True, couper = False)
+                   va = 'c', ha = 'c', b = 0, orient = 'h', 
+                   fontsizeMinMax = (-1, -1), fontsizePref = -1, wrap = False, couper = False)
 
 
 
@@ -526,12 +527,12 @@ def Draw(ctx, prg, mouchard = False):
 #    prg.pts_caract = []
     rectNom = posNom+tailleNom
     prg.pt_caract.append(curve_rect_titre(ctx, u"Progression pédagogique",  
-                                                   rectNom, BcoulNom, IcoulNom, fontNom))
+                                          rectNom, BcoulNom, IcoulNom, fontNom))
     ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                        cairo.FONT_WEIGHT_NORMAL)
     show_text_rect(ctx, u"Années scolaires " + prg.GetAnnees(), 
                    rectNom, ha = 'c', b = 0.2,
-                   fontsizeMinMax = (-1, 0.016 * COEF))
+                   fontsizeMinMax = (-1, 0.017 * COEF))
     
     prg.zones_sens.append(Zone([rectNom], param = "ANN"))
 #    prg.pt_caract.append(posNom)

@@ -1299,6 +1299,8 @@ def rognerImage(image, wf = 800.0 , hf = 600.0):
 #############################################################################################################
 import textwrap
 def tronquer(texte, taille):
+    if len(texte) == 0:
+        return texte
     ligne1 = textwrap.wrap(texte, taille, break_long_words = False)[0]
     if len(ligne1) > taille:
         ligne1 = ligne1[:taille-3]+'...'

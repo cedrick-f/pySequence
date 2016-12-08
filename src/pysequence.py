@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from draw_cairo_seq import BCoulSeance
+
 
 
 ##This file is part of pySequence
@@ -405,7 +405,7 @@ class ElementDeSequence():
     
     ######################################################################################  
     def GetPath(self):
-        return self.parent.GetPath()
+        return self.GetDocument().GetPath()
     
     ######################################################################################  
     def GetLien(self):
@@ -1999,7 +1999,7 @@ class Sequence(BaseDoc, Objet_sequence):
     
     ######################################################################################  
     def AjouterListeSystemes(self, syst = []):
-        print "AjouterListeSystemes séquence"
+#         print "AjouterListeSystemes séquence"
         nouvListe = []
         for s in syst:
 #             print "   ",s
@@ -2031,7 +2031,7 @@ class Sequence(BaseDoc, Objet_sequence):
                 sy.SetCode()
 #            sy.nbrDispo.v[0] = eval(n)
 #            sy.panelPropriete.MiseAJour()
-        print "nouvListe", nouvListe
+#         print "nouvListe", nouvListe
         self.arbre.Expand(self.brancheSys)
         self.AjouterListeSystemesSeance(nouvListe)
         self.GetApp().sendEvent(modif = u"Ajout d'une liste de Systèmes")
@@ -6842,7 +6842,7 @@ class Seance(ElementDeSequence, Objet_sequence):
             self.tip.AjouterImg("icon", constantes.imagesSeance[self.typeSeance].GetBitmap())
             self.tip.SetWholeText("txt", ref.seances[self.typeSeance][1], 
                                   bold = True, size = 3,
-                                  fcoul = couleur.GetCouleurHTML(BCoulSeance[self.typeSeance]))
+                                  fcoul = couleur.GetCouleurHTML(draw_cairo_seq.BCoulSeance[self.typeSeance]))
         
         else:
             self.tip.Supprime('icon')
@@ -6879,7 +6879,7 @@ class Seance(ElementDeSequence, Objet_sequence):
 #   Classe définissant les propriétés d'une compétence
 #
 ####################################################################################
-class Tache(Objet_sequence):
+class Tache(ElementDeSequence, Objet_sequence):
     
                   
     def __init__(self, projet, intitule = u"", phaseTache = "", duree = 1.0, branche = None):
@@ -6893,7 +6893,10 @@ class Tache(Objet_sequence):
         self.article_obj = "la"
         
         self.projet = projet
+        ElementDeSequence.__init__(self)
         Objet_sequence.__init__(self)
+
+        
         
         # Les données sauvegardées
         self.ordre = 100
@@ -7100,6 +7103,8 @@ class Tache(Objet_sequence):
         root.set("Phase", self.phase)
         root.set("Intitule", self.intitule)
 
+        self.lien.getBranche(root)
+        
         if self.description != None:
             root.set("Description", self.description)
         
@@ -7164,6 +7169,8 @@ class Tache(Objet_sequence):
 #                self.phase = 'Rea'
 
         self.description = branche.get("Description", None)
+        
+        self.lien.setBranche(branche, self.GetPath())
         
         data = branche.get("Icone", "")
         if data != "":
@@ -7838,6 +7845,10 @@ class Systeme(ElementDeSequence, Objet_sequence):
         return self.parent.GetApp()
         
     ######################################################################################  
+    def GetDocument(self):    
+        return self.parent
+    
+    ######################################################################################  
     def __repr__(self):
         if self.image != None:
             i = img2str(self.image.ConvertToImage())[:20]
@@ -8213,7 +8224,11 @@ class Support(ElementDeSequence, Objet_sequence):
     ######################################################################################  
     def GetApp(self):
         return self.parent.GetApp()
-        
+    
+    ######################################################################################  
+    def GetDocument(self):    
+        return self.parent
+    
     ######################################################################################  
     def GetPanelPropriete(self, parent):
         return PanelPropriete_Support(parent, self)

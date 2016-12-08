@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from itertools import count
-
 
 ##This file is part of pySequence
 #############################################################################
@@ -3211,7 +3209,7 @@ class FenetreProgression(FenetreDocument):
             root.append(bdoc)
             root.append(bclasse)
             constantes.indent(root)
-            doc.enregistrer_root(root, nomFichier)
+            enregistrer_root(root, nomFichier)
             
             wx.EndBusyCursor()
             return 0, path
