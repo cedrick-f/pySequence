@@ -2372,6 +2372,7 @@ class Sequence(BaseDoc, Objet_sequence):
 
     #############################################################################
     def enregistrer(self, nomFichier):
+        print "enregistrer", nomFichier
                 # La séquence
         sequence = self.getBranche()
         classe = self.classe.getBranche()
@@ -4996,6 +4997,8 @@ class Progression(BaseDoc, Objet_sequence):
     
     ##################################################################################################    
     def enregistrer(self, nomFichier):
+        
+        print "enregistrer", nomFichier
         # La progression
         progression = self.getBranche()
         classe = self.classe.getBranche()
@@ -5010,11 +5013,13 @@ class Progression(BaseDoc, Objet_sequence):
 
         for lienSeq in [s for s in self.sequences_projets if isinstance(s, LienSequence)]:
             if lienSeq.sequence in self.dependants:
-                lienSeq.sequence.enregistrer(lienSeq.path)
+                nomFichier = os.path.join(self.GetPath(), lienSeq.path)
+                lienSeq.sequence.enregistrer(nomFichier)
         
         for lienPrj in [s for s in self.sequences_projets if isinstance(s, LienProjet)]:
             if lienPrj.projet in self.dependants:
-                lienPrj.projet.enregistrer(lienPrj.path)
+                nomFichier = os.path.join(self.GetPath(), lienSeq.path)
+                lienPrj.projet.enregistrer(nomFichier)
 
         del self.dependants[:]
 

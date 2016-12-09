@@ -3234,7 +3234,6 @@ class FenetreProgression(FenetreDocument):
         wx.EndBusyCursor()
         
         
-        
     ###############################################################################################
     def ouvrir(self, nomFichier, redessiner = True, reparer = False):
         """ <nomFichier> encodé en FileEncoding
@@ -3246,7 +3245,7 @@ class FenetreProgression(FenetreDocument):
         nbr_etapes = 8
         
         # Pour le suivi de l'ouverture
-        message = nomCourt(nomFichier)+"\n"
+        message = nomCourt(nomFichier)+"\n\n"
         dlg = myProgressDialog(u"Ouverture d'une progression",
                                    message,
                                    nbr_etapes,

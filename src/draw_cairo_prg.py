@@ -133,7 +133,7 @@ tailleZDeroul = [None, None]
 IcoulZDeroul = (1, 1, 0.7, 0.85)
 BcoulZDeroul = (0.4, 0.4, 0.03, 1)
 fontZDeroul = 0.016 * COEF
-wPhases = 0.04 * COEF      # Taille du label "phases"
+wPhases = 0.03 * COEF      # Taille du label "phases"
 wDuree = 0.012 * COEF       # Taille de la fleche "duree"
 
 
@@ -159,7 +159,6 @@ wCI = 0.015 * COEF
 hCI = 0.020 * COEF
 xCI = []
 yCI = []
-
 
 
 # Zone du tableau des compétences
@@ -287,7 +286,7 @@ def DefinirZones(prg, ctx):
     tailleZDeroul[1] = posZOrganis[1] + tailleZOrganis[1] - posZDeroul[1]
     
     
-    # Zone des séquences
+    # Zone des séquences et Projets
     yTaches = []
     posZTaches[1] = posZDeroul[1] + ecartY/2
     tailleZTaches[0] = posZDeroul[0] + tailleZDeroul[0] - posZTaches[0] - ecartX/2
@@ -532,7 +531,8 @@ def Draw(ctx, prg, mouchard = False):
                                        cairo.FONT_WEIGHT_NORMAL)
     show_text_rect(ctx, u"Années scolaires " + prg.GetAnnees(), 
                    rectNom, ha = 'c', b = 0.2,
-                   fontsizeMinMax = (-1, 0.017 * COEF))
+                   fontsizeMinMax = (-1, 0.017 * COEF),
+                   wrap = False, couper = False)
     
     prg.zones_sens.append(Zone([rectNom], param = "ANN"))
 #    prg.pt_caract.append(posNom)
@@ -938,26 +938,9 @@ def DrawSequenceProjet(ctx, prg, lienDoc, y):
     ctx.paint ()
     ctx.restore()
         
-    #
-    # Affichage du code de la tâche
-    #
-#    if hasattr(doc, 'code'):
-#        ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-#                              cairo.FONT_WEIGHT_BOLD)
-#        ctx.set_source_rgb (0,0,0)
-#        
-#        if not tache.phase in ["R1", "R2", "R3", "S"]:
-#            t = tache.code
-#            hc = max(hTacheMini/2, 0.01 * COEF)
-#        else:
-#            t = tache.intitule
-#            hc = h
-#        show_text_rect(ctx, t, (x, y, tailleZTaches[0], hc), ha = 'g', 
-#                       wrap = False, fontsizeMinMax = (minFont, 0.02 * COEF), b = 0.2)
-    hc=h
     
     #
-    # Affichage de l'intitulé de la tâche
+    # Affichage de l'intitulé de la Séquence ou du Projet
     #
     ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
                           cairo.FONT_WEIGHT_NORMAL)
@@ -979,8 +962,6 @@ def DrawSequenceProjet(ctx, prg, lienDoc, y):
     yTaches.append([doc, y+h/2])
     
 #    DrawCroisementsCompetencesTaches(ctx, tache, y + h/2)
-    
-    
     
     y += h
     return y
@@ -1004,7 +985,8 @@ def DrawLigne(ctx, x, y, gras = False):
     ctx.line_to(x, y)
     ctx.stroke()
     ctx.set_dash([], 0)       
-    
+
+
 ######################################################################################  
 def regrouperDic(obj, dicIndicateurs):
 #    print "regrouperDic", dicIndicateurs
