@@ -3973,9 +3973,16 @@ class PanelConteneur(wx.Panel):
 ####################################################################################
 DELAY = 100 # Delai en millisecondes avant de rafraichir l'affichage suite à un saisie au clavier
 class PanelPropriete(scrolled.ScrolledPanel):
-    def __init__(self, parent, titre = u"", objet = None, style = wx.VSCROLL | wx.RETAINED):
+    def __init__(self, parent, titre = u"", objet = None,
+                 panelRacine = None,
+                 style = wx.VSCROLL | wx.RETAINED):
         scrolled.ScrolledPanel.__init__(self, parent, -1, style = style)#|wx.BORDER_SIMPLE)
 
+        if panelRacine is not None:
+            self.panelRacine = panelRacine
+        else:
+            self.panelRacine = self
+        
         self.sizer = wx.GridBagSizer()
 #        self.Hide()  # utilité ?? à priori cause des erreurs au lancement (linux en autres)
 #        self.SetMinSize((400, 200))
@@ -3999,8 +4006,13 @@ class PanelPropriete(scrolled.ScrolledPanel):
     def OnResize(self, evt):
         self.Refresh()
         evt.Skip()
-            
-            
+    
+    
+    ######################################################################################################
+    def GetPanelRacine(self):
+        return self.panelRacine
+    
+    
     ######################################################################################################
     def OnEnter(self, event):
 #        print "OnEnter PanelPropriete"
@@ -4852,7 +4864,16 @@ class PanelPropriete_Progression(PanelPropriete):
         return self.progression
     
     
-    
+    ######################################################################################  
+    def OnPathModified(self, lien, marquerModifier = True):
+        print "OnPathModified", self.progression.lien
+        self.progression.OnPathModified()
+        self.btnlien.Show(self.progression.lien.path != "")
+        if marquerModifier:
+            self.progression.GetApp().MarquerFichierCourantModifie()
+        self.pageGen.Layout()
+        self.pageGen.Refresh()
+        
     #############################################################################            
     def construire(self):
         self.pages = {}
@@ -4860,7 +4881,7 @@ class PanelPropriete_Progression(PanelPropriete):
         #
         # La page "Généralités"
         #
-        pageGen = PanelPropriete(self.nb)
+        pageGen = PanelPropriete(self.nb, panelRacine = self)
         bg_color = self.Parent.GetBackgroundColour()
         pageGen.SetBackgroundColour(bg_color)
         self.pageGen = pageGen
@@ -4883,7 +4904,23 @@ class PanelPropriete_Progression(PanelPropriete):
 #         pageGen.Bind(stc.EVT_STC_CHANGE, self.EvtText, self.textctrl)
         pageGen.Bind(stc.EVT_STC_MODIFIED, self.EvtText, self.textctrl)
        
-
+        
+        
+        #
+        # Lien
+        #
+        box = myStaticBox(pageGen, -1, u"Lien externe")
+        bsizer = wx.StaticBoxSizer(box, wx.HORIZONTAL)
+        self.selec = URLSelectorCombo(pageGen, self.progression.lien, self.progression.GetPath())
+        bsizer.Add(self.selec, 1, flag = wx.EXPAND)
+        self.btnlien = wx.Button(pageGen, -1, u"Ouvrir le lien externe")
+#        self.btnlien.SetMaxSize((-1,30))
+        self.btnlien.Show(self.progression.lien.path != "")
+        pageGen.Bind(wx.EVT_BUTTON, self.OnClickLien, self.btnlien)
+        bsizer.Add(self.btnlien,  flag = wx.EXPAND)
+        pageGen.sizer.Add(bsizer, (1,0), (1, 1), flag = wx.EXPAND|wx.ALL, border = 2)
+        
+        
         #
         # Année scolaire et Position dans l'année
         #
@@ -4898,7 +4935,7 @@ class PanelPropriete_Progression(PanelPropriete):
                                       sliderAGauche = True)
         self.Bind(EVT_VAR_CTRL, self.EvtVariable, self.ctrlAnnee)
         sb.Add(self.ctrlAnnee)
-        pageGen.sizer.Add(sb, (1,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.EXPAND|wx.LEFT, border = 2)
+        pageGen.sizer.Add(sb, (2,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.EXPAND|wx.LEFT, border = 2)
         
         pageGen.sizer.AddGrowableCol(0)
         pageGen.sizer.AddGrowableRow(0)
@@ -4916,8 +4953,8 @@ class PanelPropriete_Progression(PanelPropriete):
         bt = wx.Button(pageGen, -1, u"Changer l'image")
         bt.SetToolTipString(u"Cliquer ici pour sélectionner un fichier image")
         bsizer.Add(bt, flag = wx.EXPAND|wx.ALIGN_BOTTOM)
-        self.Bind(wx.EVT_BUTTON, self.OnClick, bt)
-        pageGen.sizer.Add(bsizer, (0,2), (2,1), flag =  wx.EXPAND|wx.ALIGN_RIGHT|wx.TOP|wx.BOTTOM|wx.LEFT, border = 2)#wx.ALIGN_CENTER_VERTICAL |
+        pageGen.Bind(wx.EVT_BUTTON, self.OnClick, bt)
+        pageGen.sizer.Add(bsizer, (0,2), (3,1), flag =  wx.EXPAND|wx.ALIGN_RIGHT|wx.TOP|wx.BOTTOM|wx.LEFT, border = 2)#wx.ALIGN_CENTER_VERTICAL |
 
         pageGen.sizer.Layout()
         
@@ -4973,7 +5010,10 @@ class PanelPropriete_Progression(PanelPropriete):
             self.image.SetBitmap(rognerImage(self.progression.image, 200,200))
         self.pageGen.Layout()
         
-    
+    #############################################################################            
+    def OnClickLien(self, event):
+        self.progression.lien.Afficher(self.GetDocument().GetPath())
+        
     #############################################################################            
     def OnClick(self, event):
         mesFormats = u"Fichier Image|*.bmp;*.png;*.jpg;*.jpeg;*.gif;*.pcx;*.pnm;*.tif;*.tiff;*.tga;*.iff;*.xpm;*.ico;*.ico;*.cur;*.ani|" \
@@ -12712,7 +12752,7 @@ class URLSelectorCombo(wx.Panel):
 #            self.texte.SetBackgroundColour(("white"))
 #        else:
 #            self.texte.SetBackgroundColour(("pink"))
-        self.Parent.OnPathModified(self.lien, marquerModifier = marquerModifier)
+        self.Parent.GetPanelRacine().OnPathModified(self.lien, marquerModifier = marquerModifier)
         
         
     ##########################################################################################

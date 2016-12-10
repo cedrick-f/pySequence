@@ -846,7 +846,7 @@ def show_text_rect_fix(ctx, texte, x, y, w, h, fontSize, \
         
         Retourne : Position horizontale maximum, Position verticale de la première ligne
     """
-
+                       
     if texte == "":
         return x, y
 
@@ -863,6 +863,8 @@ def show_text_rect_fix(ctx, texte, x, y, w, h, fontSize, \
     
     return show_lignes(ctx, lt, x, y, w, h, 
                        va, ha, le, pe, coulBord = coulBord)
+
+
 
 
 
@@ -1089,19 +1091,21 @@ def DrawCalendrier(ctx, rect, calendrier):
         
         show_text_rect(ctx, str(annee), 
                        (X+wj, y, wa[annee], ha), 
+                       wrap = False,
                        orient = 'h', ha = 'c', va = 'c', b = 0.1)
         
         Y = y+ha+hm
         for jour in range(31):
             show_text_rect(ctx, str(jour+1), 
                            (X, Y, ea, dy_j), 
+                           wrap = False,
                            orient = 'h', ha = 'd', va = 'c', b = 0.1)
             Y += dy_j
         
         for per in lmois[annee]:
             for mois in per:
                 show_text_rect(ctx, constantes.MOIS[mois-1], 
-                               (X+wj, y+ha, dx_m, hm), 
+                               (X+wj, y+ha, dx_m, hm),
                                orient = 'h', ha = 'c', va = 'c', b = 0.1, ext = "")
                 X += dx_m
             X += ev
@@ -1138,7 +1142,7 @@ def DrawCalendrier(ctx, rect, calendrier):
                         # Numéro de la semaine
                         ctx.set_source_rgba(0.4,  0.6,  0.4,  1)
                         show_text_rect(ctx, str(S+1), 
-                                       rs, couper = False, ext = "",
+                                       rs, couper = False, wrap = False, ext = "",
                                        orient = 'h', ha = 'c', va = 'c', b = 0.1)
                     
                     for jour in semaine:

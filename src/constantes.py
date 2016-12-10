@@ -816,7 +816,7 @@ BASE_FICHE_HTML_SEANCE = u"""
 
 BASE_FICHE_HTML_CALENDRIER = u"""
 <HTML>
-    <font size="12"><b><h1 id = "titre" style="text-align: center;">Calendrier</h1></b></font>
+    <font size="12"><b><h1 id = "titre" style="text-align: center;"> </h1></b></font>
     <img id="img" src="" alt=""> 
 </HTML>
 """
@@ -847,7 +847,8 @@ BASE_FICHE_HTML_COMP = u"""
 BASE_FICHE_HTML_COMP_PRJ = u"""
 <HTML>
     <font size="12" color="green"><b><h1 id = "titre" style="text-align: center;"> </h1></b></font>
-    <h4 style="font-size:11px" id="int"> </h4>
+    <h2 style="font-size:11px" id="grp"> </h2>
+    <h4 style="font-size:10px" id="int"> </h4>
     <ul id = "comp">
     </ul>
 </HTML>
@@ -1036,7 +1037,7 @@ BASE_FICHE_HTML_PERIODES = u"""
 
 BASE_FICHE_HTML = u"""
 <HTML>
-    <font size="11"><b><h1 id = "titre" style="text-align: center;">_</h1></b></font>
+    <font size="11"><b><h1 id = "titre" style="text-align: center;"> </h1></b></font>
     <p id="txt"> </p>
     <img id="img" src="" alt="i"> 
 </HTML>

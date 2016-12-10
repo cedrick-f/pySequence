@@ -1779,7 +1779,12 @@ class Referentiel(XMLelem):
 #            cc = comp.getCompetence(comp)
 #            if cc is not None:
 #                return cc
-            
+           
+    #########################################################################
+    def getCompetenceEtGroupe(self, comp):
+        return self.dicoCompetences[comp[0]].getCompetenceEtGroupe(comp[1:])
+    
+    
     #########################################################################
     def getTousSavoirs(self):
         """ Renvoie sous la forme [(code, Referentiel.Savoirs), ]
@@ -2625,26 +2630,46 @@ class Competences(XMLelem):
 
         return getComp(self.dicCompetences)
         
-        
-        
-        
-#        print "getCompetence", comp
-#        print "   ", self.dicCompetences
-        if comp in self.dicCompetences.keys():
-#            print "   1>>"
-            return self.dicCompetences[comp]
-        else:
-            for k0, v0 in self.dicCompetences.items():
-#                print "  ", k0, type(v0[1])
-                if type(v0[1]) == dict:
-                    if comp in v0[1].keys():
-#                        print "   2>>"
-                        return v0[1][comp]
-                    else:
-                        for k1, v1 in v0[1].items():
-                            if type(v1[1]) == dict and comp in v1[1].keys():
-#                                print "   3>>"
-                                return v1[1][comp]
+    #########################################################################
+    def getCompetenceEtGroupe(self, comp):
+        grp = [None]
+        def getComp(dic, prem = False):
+#             print "   ", dic
+            
+            if comp in dic.keys():
+                if prem:
+                    grp[0] = dic[comp]
+                return dic[comp]
+            else:
+                for k, competence in dic.items():
+                    if prem:
+                        grp[0] = dic[k]
+                    c = getComp(competence.sousComp)
+                    
+                    if c is not None:
+                        return c
+        cmp = getComp(self.dicCompetences, prem = True)
+        return grp[0], cmp
+    
+#         
+#         
+# #        print "getCompetence", comp
+# #        print "   ", self.dicCompetences
+#         if comp in self.dicCompetences.keys():
+# #            print "   1>>"
+#             return self.dicCompetences[comp]
+#         else:
+#             for k0, v0 in self.dicCompetences.items():
+# #                print "  ", k0, type(v0[1])
+#                 if type(v0[1]) == dict:
+#                     if comp in v0[1].keys():
+# #                        print "   2>>"
+#                         return v0[1][comp]
+#                     else:
+#                         for k1, v1 in v0[1].items():
+#                             if type(v1[1]) == dict and comp in v1[1].keys():
+# #                                print "   3>>"
+#                                 return v1[1][comp]
                             
                             
 #################################################################################################################################

@@ -258,7 +258,7 @@ class Lien():
         """ Lance l'affichage du contenu du lien
             <pathseq> = chemin de l'application pour déterminer le chemin absolu
         """
-#         print "Afficher", self.type, self.path
+        print "Afficher", self.type, self.path
         path = self.GetAbsPath(pathseq)
 #         print "   ", path
         
@@ -1471,10 +1471,11 @@ class BaseDoc():
 
     
 ####################################################################################################          
-class Sequence(BaseDoc, Objet_sequence):
+class Sequence(BaseDoc, Objet_sequence, ElementDeSequence):
     def __init__(self, app, classe = None, intitule = u"",
                  ouverture = False):
         BaseDoc.__init__(self, app, classe, intitule)
+        ElementDeSequence.__init__(self)
         Objet_sequence.__init__(self)
         
         self.nom_obj = u"Séquence"
@@ -1548,11 +1549,13 @@ class Sequence(BaseDoc, Objet_sequence):
     ######################################################################################  
     def GetProfondeur(self):
         return max([s.GetProfondeur() for s in self.seances])
-         
+
+
     ######################################################################################  
     def GetNiveau(self):
         return 0
-                  
+
+
     ######################################################################################  
     def GetPtCaract(self): 
         """ Renvoie la liste des points caractéristiques des zones actives de la fiche
@@ -1618,6 +1621,8 @@ class Sequence(BaseDoc, Objet_sequence):
         sequence = ET.Element("Sequence")
         
         sequence.set("Intitule", self.intitule)
+        
+        self.lien.getBranche(sequence)
 
         if self.commentaires != u"":
             sequence.set("Commentaires", self.commentaires)
@@ -1662,6 +1667,8 @@ class Sequence(BaseDoc, Objet_sequence):
 #        print "setBranche séquence"
 #        t0 = time.time()
         self.intitule = branche.get("Intitule", u"")
+        
+        self.lien.setBranche(branche, self.GetPath())
         
         self.commentaires = branche.get("Commentaires", u"")
         
@@ -2391,9 +2398,10 @@ class Sequence(BaseDoc, Objet_sequence):
 #        Projet
 #
 ####################################################################################################
-class Projet(BaseDoc, Objet_sequence):
+class Projet(BaseDoc, Objet_sequence, ElementDeSequence):
     def __init__(self, app, classe = None, intitule = u"", ouverture = False):
         BaseDoc.__init__(self, app, classe, intitule)
+        ElementDeSequence.__init__(self)
         Objet_sequence.__init__(self)
         
         self.nom_obj = u"Projet"
@@ -2633,6 +2641,8 @@ class Projet(BaseDoc, Objet_sequence):
         
         projet.set("Intitule", self.intitule)
         
+        self.lien.getBranche(projet)
+        
         projet.set("Problematique", remplaceLF2Code(self.problematique))
 #        print "   ", self.problematique
 #
@@ -2695,6 +2705,8 @@ class Projet(BaseDoc, Objet_sequence):
         err = []
         
         self.intitule = branche.get("Intitule", u"")
+        
+        self.lien.setBranche(branche, self.GetPath())
         
         self.version = branche.get("Version", "")       # A partir de la version 5.7 !
 
@@ -3981,9 +3993,10 @@ class Projet(BaseDoc, Objet_sequence):
 #        Projet
 #
 ####################################################################################################
-class Progression(BaseDoc, Objet_sequence):
+class Progression(BaseDoc, Objet_sequence, ElementDeSequence):
     def __init__(self, app, classe = None, intitule = u"", ouverture = False):
         BaseDoc.__init__(self, app, classe, intitule)
+        ElementDeSequence.__init__(self)
         Objet_sequence.__init__(self)
         
         self.nom_obj = u"Progression"
@@ -4042,11 +4055,50 @@ class Progression(BaseDoc, Objet_sequence):
 
     ######################################################################################  
     def GetPositions(self):
+        """ Renvoie la liste de toutes les positions occupées par les Séquences et le Projets
+        """
         l = []
         for doc in [s.GetDoc() for s in self.sequences_projets]:
             l.append(doc.position)
         return list(set(l))
 
+
+    ######################################################################################  
+    def GetNbrPeriodesEffectif(self):
+        """ Renvoie le nombre de périodes occupées par les Séquences et le Projets
+        """
+        return len(self.GetPositions())
+
+
+    ######################################################################################  
+    def GetDuree(self):
+        """ Renvoie la durée totale des Séquence et des Projets de la Progression
+        """
+        return sum([sp.GetDoc().GetDuree() for sp in self.sequences_projets])
+
+
+    ######################################################################################  
+    def GetCompetencesAbordees(self):
+        """ Renvoie un bilan des compétences abordées dans les Séquence et les Projets de la Progression
+            sous la forme {CodeGroupe : [Liste de True/False], ...}
+            sur la base de ref._listesCompetences_simple["S"]
+        """
+#         print "GetCompetencesAbordees"
+        ref = self.GetReferentiel()
+        competences = ref._listesCompetences_simple["S"]
+        dicComp = {}
+#         print [sp.GetDoc().GetCompetencesVisees() for sp in self.sequences_projets]
+        for i, g1 in enumerate(competences):
+            k1, h1, l1 = g1
+            l = []
+            
+            for k2, h2 in l1:
+                
+                l.append(any(["S" + k2 in sp.GetDoc().GetCompetencesVisees() for sp in self.sequences_projets]))
+            dicComp[k1] = l
+            
+#         print dicComp
+        return dicComp
 
 
     ######################################################################################  
@@ -4109,6 +4161,8 @@ class Progression(BaseDoc, Objet_sequence):
         
         progression.set("Intitule", self.intitule)
         
+        self.lien.getBranche(progression)
+        
         if self.image != None:
             progression.set("Image", img2str(self.image.ConvertToImage()))
 
@@ -4145,6 +4199,8 @@ class Progression(BaseDoc, Objet_sequence):
         err = []
         
         self.intitule = branche.get("Intitule", u"")
+        
+        self.lien.setBranche(branche, self.GetPath())
         
         self.commentaires = branche.get("Commentaires", u"")
         
@@ -4959,15 +5015,20 @@ class Progression(BaseDoc, Objet_sequence):
                               
             elif param[:3] == "CMP":
                 ref = self.GetReferentiel()
-                competence = ref.getCompetence("S"+param[3:])
+                groupe, competence = ref.getCompetenceEtGroupe("S"+param[3:])
                 if competence is not None:
                     self.tip.SetHTML(constantes.BASE_FICHE_HTML_COMP_PRJ)
                     k = param[3:]
                     nc = getSingulierPluriel(ref.dicoCompetences["S"].nomGenerique, False)
                     self.tip.SetWholeText("titre", nc + " " + k)
                     
+                    self.tip.SetWholeText("grp", groupe.intitule)
+                    
+                    
                     intituleComp = competence.intitule
-                    intituleComp = "\n".join([textwrap.fill(ind, 50) for ind in intituleComp.split(u"\n")]) 
+                    
+#                     intituleComp = "\n".join([textwrap.fill(ind, 50) for ind in intituleComp.split(u"\n")]) 
+                    
                     self.tip.SetWholeText("int", intituleComp)
             
             elif type(obj) == list:

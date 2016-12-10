@@ -107,14 +107,14 @@ fontCI = 0.013 * COEF
 posPos = [None, margeY - ecartY/2]
 taillePos = [None, 0.03 * COEF]
 
-# Problématique
+# Calendrier
 posPro = [posNom[0] + tailleNom[0] + ecartX/2, margeY + taillePos[1] + ecartY/2]
-taillePro = [LargeurTotale - margeX - posPro[0], posEqu[1] + tailleEqu[1] - posPro[1]]
+taillePro = [LargeurTotale - margeX - posPro[0], 0.19 * COEF - posPro[1]]
 IcoulPro = (0.8, 0.9, 0.8, 0.85)
 BcoulPro = (0.25, 0.3, 0.2, 1)
 fontPro = 0.012 * COEF
 
-# Image du support
+# Image
 posImg = [posEqu[0] + tailleEqu[0] + ecartX/4, posNom[1] + tailleNom[1] + ecartY]
 tailleImg = [posPro[0] - posImg[0] - ecartX/4, None]
 tailleImg[1] = posEqu[1] + tailleEqu[1] - posEqu[1]
@@ -122,8 +122,8 @@ IcoulImg = (0.8, 0.8, 1, 0.85)
 BcoulImg = (0.1, 0.1, 0.25, 1)
 centreImg = (posImg[0] + tailleImg[0] / 2 + 0.0006 * COEF, posImg[1] + tailleImg[0] / 2 - 0.004 * COEF)
 
-# Zone d'organisation du projet (grand cadre)
-posZOrganis = (margeX, 0.20 * COEF)
+# Zone d'organisation (grand cadre)
+posZOrganis = (margeX, 0.19 * COEF)
 bordureZOrganis = 0.01 * COEF
 tailleZOrganis = (LargeurTotale-2*margeX, 1 * COEF-ecartY-posZOrganis[1]-bordureZOrganis)
 
@@ -133,7 +133,7 @@ tailleZDeroul = [None, None]
 IcoulZDeroul = (1, 1, 0.7, 0.85)
 BcoulZDeroul = (0.4, 0.4, 0.03, 1)
 fontZDeroul = 0.016 * COEF
-wPhases = 0.03 * COEF      # Taille du label "phases"
+wPhases = 0.02 * COEF      # Taille du label "phases"
 wDuree = 0.012 * COEF       # Taille de la fleche "duree"
 
 
@@ -290,7 +290,7 @@ def DefinirZones(prg, ctx):
     yTaches = []
     posZTaches[1] = posZDeroul[1] + ecartY/2
     tailleZTaches[0] = posZDeroul[0] + tailleZDeroul[0] - posZTaches[0] - ecartX/2
-    tailleZTaches[1] = tailleZDeroul[1] - ecartY/2 - 0.04 * COEF    # écart fixe pour la durée totale
+    tailleZTaches[1] = tailleZDeroul[1] - ecartY/2 - 0.03 * COEF    # écart fixe pour la durée totale
 
     calculCoefCalcH(prg, ctx, hTacheMini)
     if a < 0: # Trop de séquences -> on réduit !
@@ -303,7 +303,7 @@ def calculCoefCalcH(prg, ctx, hm):
     global ecartTacheY, a, b
 #    print "calculCoefCalcH", hm
     ecartTacheY = ecartY/3
-    sommeEcarts = (prg.GetNbrPeriodes()-1)*ecartTacheY
+    sommeEcarts = (prg.GetNbrPeriodesEffectif()-1)*ecartTacheY
 #    print "sommeEcarts", sommeEcarts
     # Calcul des paramètres de la fonction hauteur = f(durée)
     # hauteur = a * log(durée) + b
@@ -500,6 +500,7 @@ def Draw(ctx, prg, mouchard = False):
 
 
 
+
     #
     #  Calendrier
     #
@@ -514,6 +515,7 @@ def Draw(ctx, prg, mouchard = False):
     DrawCalendrier(ctx, rectPro, prg.calendrier)
 #    prg.rect.append(rectPro)
     prg.zones_sens.append(Zone([rectPro], param = "CAL"))
+
 
 
 
@@ -540,18 +542,23 @@ def Draw(ctx, prg, mouchard = False):
 
 
 
+
+
     #
     #  Tableau des compétenecs
     #    
     competences = ref._listesCompetences_simple["S"]
+    print "competences", competences
+    print cComp
+    dicComp = prg.GetCompetencesAbordees()
     
     ctx.set_line_width(0.001 * COEF)
     _x = _x0 = posZComp[0]
-    _y0, _y1 = posZCIV[1] - ecartY/2, posZDeroul[1] + tailleZDeroul[1]
+    _y0, _y1 = posZComp[1], posZDeroul[1] + tailleZDeroul[1]
+    h = 1.5*wColComp
     
     lcomp = []
     
-#    print "competences", competences
     for i, g1 in enumerate(competences):
         k1, h1, l1 = g1
         dx = wColComp/3
@@ -560,6 +567,7 @@ def Draw(ctx, prg, mouchard = False):
             dx = 0
         
         coul = list(ICoulComp[i][:3])+[0.2]
+        n = 0
         for k2, h2 in l1:
             #
             # Lignes verticales et rectangles clairs
@@ -573,10 +581,23 @@ def Draw(ctx, prg, mouchard = False):
             ctx.rectangle(*rect[:4])
             ctx.fill()
 
+            #
+            # Bilan
+            #
+#             ctx.set_source_rgba(*ICoulComp[cComp[k2]])
+            if dicComp[k1][n]:
+                rect = (_x, _y1-h, wColComp, h)
+                prg.zones_sens.append(Zone([rect], param = "CMP"+k2))
+                relief(ctx, rect, h/5, color = ICoulComp[cComp[k2]])
+                
+#                 
+#                 ctx.rectangle(*rect[:4])
+#                 ctx.fill()
+
 #            prg.zones_sens.append(Zone([rect], param = k2))
 #            prg.rectComp[k2] = [rect]
 #            prg.pts_caract.append((_x,_y0))
-            
+            n += 1
             _x += wColComp
             
         
@@ -610,6 +631,10 @@ def Draw(ctx, prg, mouchard = False):
             
         _x += dx
         _x0 = _x
+        
+        
+        
+        
         
 
     
@@ -672,7 +697,7 @@ def Draw(ctx, prg, mouchard = False):
                 ctx.set_source_rgb(Ic[0],Ic[1],Ic[2])
                 ctx.set_line_width(0.003 * COEF)
                 ctx.move_to(xTh[i], yTh[i]+ ecartY /2)
-                ctx.line_to(xTh[i], posZTaches[1] + tailleZTaches[1] + (i % 2)*(ecartY/2) + ecartY/2)
+                ctx.line_to(xTh[i], posZTaches[1] + tailleZTaches[1])
                 ctx.stroke()    
     #            DrawCroisementsElevesCompetences(ctx, prg, e, yCI[i])
             
@@ -739,9 +764,9 @@ def Draw(ctx, prg, mouchard = False):
                 
                 ctx.set_source_rgb(Ic[0],Ic[1],Ic[2])
                 ctx.set_line_width(0.003 * COEF)
-                ctx.move_to(posZCIV[0]+tailleZCIH[0]- ecartX /2, 
+                ctx.move_to(posZCIH[0]+tailleZCIH[0]- ecartX /2, 
                             yCI[i]+ ecartY /2)
-                ctx.line_to(posZComp[0]+tailleZComp[0], 
+                ctx.line_to(xCI[i], 
                             yCI[i]+ ecartY /2)
                 ctx.stroke()
             
@@ -754,7 +779,7 @@ def Draw(ctx, prg, mouchard = False):
                 ctx.set_source_rgb(Ic[0],Ic[1],Ic[2])
                 ctx.set_line_width(0.003 * COEF)
                 ctx.move_to(xCI[i], yCI[i]+ ecartY /2)
-                ctx.line_to(xCI[i], posZTaches[1] + tailleZTaches[1] + (i % 2)*(ecartY/2) + ecartY/2)
+                ctx.line_to(xCI[i], posZTaches[1] + tailleZTaches[1])
                 ctx.stroke()    
     #            DrawCroisementsElevesCompetences(ctx, prg, e, yCI[i])
             
@@ -764,7 +789,7 @@ def Draw(ctx, prg, mouchard = False):
             e = 0.003 * COEF
             ctx.set_line_width(0.003 * COEF)
             for i in range(len(lstCI)) :
-                y = posZTaches[1] + tailleZTaches[1] + (i % 2)*(ecartY/2) + ecartY/2
+                y = posZTaches[1] + tailleZTaches[1]
                 ctx.set_source_rgb(1,1,1)
                 ctx.move_to(xCI[i]+e, yCI[i]+e+ ecartY /2)
                 ctx.line_to(xCI[i]+e, y)
@@ -842,9 +867,29 @@ def Draw(ctx, prg, mouchard = False):
                            (posZDeroul[0] + ecartX/6, y, 
                             wPhases, h), fontsizeMinMax = (fontsize, fontsize),
                            ha = 'c', orient = "h", b = 0.1, le = 0.7,
-                           couper = False) 
+                           ) 
+
+
+
+
 
     
+    #
+    # Durée Totale
+    #
+    ctx.set_source_rgb(0.5,0.8,0.8)
+    ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+                              cairo.FONT_WEIGHT_BOLD)
+    
+    show_text_rect(ctx, getHoraireTxt(prg.GetDuree()), 
+                   (posZDeroul[0], posZTaches[1]+tailleZTaches[1],
+                    posZTaches[0]-posZDeroul[0], posZDeroul[1]+tailleZDeroul[1] - posZTaches[1]-tailleZTaches[1]), 
+                   ha = 'c', 
+                   orient = 'h', b = 0.3, couper = False)
+
+
+
+
 
 
     #
@@ -1090,12 +1135,6 @@ def DrawCroisementsCISeq(ctx, prg, seq, y):
         y += dy
         
 
-######################################################################################  
-def DrawCroisementsElevesCompetences(ctx, prg, ci, y):
-    #
-    # Boutons
-    #
-    DrawBoutonCompetence(ctx, prg, ci, regrouperDic(eleve, eleve.GetDicIndicateurs()), y)
     
 
     
