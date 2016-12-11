@@ -45,7 +45,7 @@ import images
 from draw_cairo import LargeurTotale, font_family, curve_rect_titre, show_text_rect, \
                         boule, getHoraireTxt, liste_code_texte, rectangle_plein, barreH, tableauV, minFont, maxFont, tableauH, \
                         DrawPeriodes, DrawCalendrier, COEF, info, Zone, relief, \
-                        BcoulPos, IcoulPos, ICoulComp, CoulAltern
+                        BcoulPos, IcoulPos, ICoulComp, CoulAltern, ligne
 
 from math import log, pi
 
@@ -109,7 +109,7 @@ taillePos = [None, 0.03 * COEF]
 
 # Calendrier
 posPro = [posNom[0] + tailleNom[0] + ecartX/2, margeY + taillePos[1] + ecartY/2]
-taillePro = [LargeurTotale - margeX - posPro[0], 0.19 * COEF - posPro[1]]
+taillePro = [LargeurTotale - margeX - posPro[0], 0.19 * COEF - posPro[1] - ecartY/2]
 IcoulPro = (0.8, 0.9, 0.8, 0.85)
 BcoulPro = (0.25, 0.3, 0.2, 1)
 fontPro = 0.012 * COEF
@@ -164,8 +164,8 @@ yCI = []
 # Zone du tableau des compétences
 posZComp = [None, None]
 tailleZComp = [None, None]
-wColCompBase = 0.010 * COEF
-wColComp = wColCompBase
+wColCompBase = 0.018 * COEF
+
 xComp = {}
 cComp = {}
 
@@ -211,19 +211,39 @@ def DefinirZones(prg, ctx):
     # Zone du tableau des compétences - X
     #
     ref = prg.classe.referentiel
-    competences = ref._listesCompetences_simple["S"]
+#     competences = ref._listesCompetences_simple["S"]
+    competences = ref.dicoCompetences["S"].get2Niveaux()
+    
+    if ref.dicoCompetences["S"].getProfondeur() == 3:
+        wColComp = wColCompBase
+    else:
+        wColComp = wColCompBase/2
+    
     tailleZComp[0] = 0
-    for i, (k1, h1, l1) in enumerate(competences):
+    for i, (k1, l1) in enumerate(competences):
         dx = wColComp/3
         if len(l1) == 0:
-            l1 = [[k1, h1]]
+            l1 = [k1]
             dx = 0
             
-        for k2, h2 in l1:
+        for k2 in l1:
             xComp[k2] = tailleZComp[0] #- 0.5 * wColComp  # position "gauche" de la colonne (relative)
             cComp[k2] = i
             tailleZComp[0] += wColComp
         tailleZComp[0] += dx
+        
+#     tailleZComp[0] = 0
+#     for i, (k1, h1, l1) in enumerate(competences):
+#         dx = wColComp/3
+#         if len(l1) == 0:
+#             l1 = [[k1, h1]]
+#             dx = 0
+#             
+#         for k2, h2 in l1:
+#             xComp[k2] = tailleZComp[0] #- 0.5 * wColComp  # position "gauche" de la colonne (relative)
+#             cComp[k2] = i
+#             tailleZComp[0] += wColComp
+#         tailleZComp[0] += dx
         
         
     tailleZComp[0] -= dx
@@ -545,12 +565,26 @@ def Draw(ctx, prg, mouchard = False):
 
 
     #
-    #  Tableau des compétenecs
+    #  Tableau des compétences
     #    
-    competences = ref._listesCompetences_simple["S"]
-    print "competences", competences
-    print cComp
-    dicComp = prg.GetCompetencesAbordees()
+    
+    # Titre
+    htitre = 0.017 * COEF
+    show_text_rect(ctx, getSingulierPluriel(ref.dicoCompetences["S"].nomGenerique, True),
+                   (posZComp[0], posZOrganis[1] + ecartY/2,
+                    tailleZComp[0], htitre), 
+                   va = 'c', ha = 'c', b = 0, orient = 'h', 
+                   fontsizeMinMax = (-1, -1), fontsizePref = -1, wrap = False, couper = False,
+                   coulBord = (0, 0, 0))
+    
+    
+#     competences = ref._listesCompetences_simple["S"]
+    competences = ref.dicoCompetences["S"].get2Niveaux()
+#     print "competences", competences
+    
+    
+    
+    
     
     ctx.set_line_width(0.001 * COEF)
     _x = _x0 = posZComp[0]
@@ -559,24 +593,22 @@ def Draw(ctx, prg, mouchard = False):
     
     lcomp = []
     
+    
     for i, g1 in enumerate(competences):
-        k1, h1, l1 = g1
+        k1, l1 = g1
         dx = wColComp/3
         if len(l1) == 0:
-            l1 = [[k1, h1]]
+            l1 = [k1]
             dx = 0
         
         coul = list(ICoulComp[i][:3])+[0.2]
         n = 0
-        for k2, h2 in l1:
+        for k2 in l1:
             #
             # Lignes verticales et rectangles clairs
             #
             rect = (_x, _y0, wColComp, _y1 -_y0)
-            ctx.set_source_rgb(0, 0, 0)
-            ctx.move_to(_x, _y0)
-            ctx.line_to(_x, _y1)
-            ctx.stroke()
+            ligne(ctx, _x, _y0, _x, _y1, (0, 0, 0))
             ctx.set_source_rgba(*coul)
             ctx.rectangle(*rect[:4])
             ctx.fill()
@@ -584,28 +616,17 @@ def Draw(ctx, prg, mouchard = False):
             #
             # Bilan
             #
-#             ctx.set_source_rgba(*ICoulComp[cComp[k2]])
-            if dicComp[k1][n]:
-                rect = (_x, _y1-h, wColComp, h)
-                prg.zones_sens.append(Zone([rect], param = "CMP"+k2))
-                relief(ctx, rect, h/5, color = ICoulComp[cComp[k2]])
+#             if dicComp[k1][n]:
+#                 rect = (_x, _y1-h, wColComp, h)
+#                 prg.zones_sens.append(Zone([rect], param = "CMP"+k2))
+#                 relief(ctx, rect, h/5, color = ICoulComp[cComp[k2]])
                 
-#                 
-#                 ctx.rectangle(*rect[:4])
-#                 ctx.fill()
-
-#            prg.zones_sens.append(Zone([rect], param = k2))
-#            prg.rectComp[k2] = [rect]
-#            prg.pts_caract.append((_x,_y0))
             n += 1
             _x += wColComp
             
         
         # Dernière ligne
-        ctx.set_source_rgb(0, 0, 0)
-        ctx.move_to(_x, _y0)
-        ctx.line_to(_x, _y1)   
-        ctx.stroke()
+        ligne(ctx, _x, _y0, _x, _y1, (0, 0, 0))
 
         ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                               cairo.FONT_WEIGHT_NORMAL)
@@ -616,21 +637,89 @@ def Draw(ctx, prg, mouchard = False):
 #        ht = tailleZComp[1] / 4
 #        show_text_rect(ctx, k1, (_x0, posZComp[1], _x-_x0, ht), va = 'c', ha = 'c', b = 0.3, orient = 'h')
         
-        l = [k2[0]  for k2 in l1]
-        rects = tableauV(ctx, l, _x0, posZComp[1], 
+#         l = [k2[0]  for k2 in l1]
+        rects = tableauV(ctx, l1, _x0, posZComp[1], 
                          _x-_x0, tailleZComp[1], 
                          0, nlignes = 0, va = 'c', ha = 'g', orient = 'v', 
                          coul = ICoulComp[i], b = 0.3)
         
         for i, r in enumerate(rects):
-            prg.zones_sens.append(Zone([r], param = "CMP"+l[i]))
+            prg.zones_sens.append(Zone([r], param = "CMP"+l1[i]))
         
-        lcomp.extend(l)
+        lcomp.extend(l1)
         
 #        prg.pt_caract_comp.extend(getPts(p))
             
         _x += dx
         _x0 = _x
+        
+    #
+    # Bilan des compétences abordées
+    #
+    dicComp, nbrComp = prg.GetCompetencesAbordees()
+    
+    DrawBoutonCompetence(ctx, prg, None, dicComp, (posZComp[1] + htitre + posZOrganis[1])/2 , 
+                         h = posZComp[1] - posZOrganis[1] - ecartY*3/2 - htitre, nbr = nbrComp)
+        
+#     dicComp = prg.GetCompetencesAbordees()
+#     for i, g1 in enumerate(competences):
+#         k1, h1, l1 = g1
+#         dx = wColComp/3
+#         if len(l1) == 0:
+#             l1 = [[k1, h1]]
+#             dx = 0
+#         
+#         coul = list(ICoulComp[i][:3])+[0.2]
+#         n = 0
+#         for k2, h2 in l1:
+#             #
+#             # Lignes verticales et rectangles clairs
+#             #
+#             rect = (_x, _y0, wColComp, _y1 -_y0)
+#             ligne(ctx, _x, _y0, _x, _y1, (0, 0, 0))
+#             ctx.set_source_rgba(*coul)
+#             ctx.rectangle(*rect[:4])
+#             ctx.fill()
+# 
+#             #
+#             # Bilan
+#             #
+#             if dicComp[k1][n]:
+#                 rect = (_x, _y1-h, wColComp, h)
+#                 prg.zones_sens.append(Zone([rect], param = "CMP"+k2))
+#                 relief(ctx, rect, h/5, color = ICoulComp[cComp[k2]])
+#                 
+#             n += 1
+#             _x += wColComp
+#             
+#         
+#         # Dernière ligne
+#         ligne(ctx, _x, _y0, _x, _y1, (0, 0, 0))
+# 
+#         ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+#                               cairo.FONT_WEIGHT_NORMAL)
+#         ctx.set_source_rgb(0, 0, 0)
+#         ctx.set_line_width(0.001 * COEF)
+#         
+# #        # Titre famille de compétences
+# #        ht = tailleZComp[1] / 4
+# #        show_text_rect(ctx, k1, (_x0, posZComp[1], _x-_x0, ht), va = 'c', ha = 'c', b = 0.3, orient = 'h')
+#         
+#         l = [k2[0]  for k2 in l1]
+#         rects = tableauV(ctx, l, _x0, posZComp[1], 
+#                          _x-_x0, tailleZComp[1], 
+#                          0, nlignes = 0, va = 'c', ha = 'g', orient = 'v', 
+#                          coul = ICoulComp[i], b = 0.3)
+#         
+#         for i, r in enumerate(rects):
+#             prg.zones_sens.append(Zone([r], param = "CMP"+l[i]))
+#         
+#         lcomp.extend(l)
+#         
+# #        prg.pt_caract_comp.extend(getPts(p))
+#             
+#         _x += dx
+#         _x0 = _x
         
         
         
@@ -682,23 +771,21 @@ def Draw(ctx, prg, mouchard = False):
                 
                 Ic = CoulAltern[i][0]
                 
-                ctx.set_source_rgb(Ic[0],Ic[1],Ic[2])
                 ctx.set_line_width(0.003 * COEF)
-                ctx.move_to(posZThV[0]+tailleZThH[0]- ecartX /2, yTh[i]+ ecartY /2)
-                ctx.line_to(posZComp[0]+tailleZComp[0], yTh[i]+ ecartY /2)
-                ctx.stroke()
+                ligne(ctx, posZThV[0]+tailleZThH[0]- ecartX /2, yTh[i]+ ecartY /2,
+                      posZComp[0]+tailleZComp[0], yTh[i]+ ecartY /2, Ic)
             
             #
             # Lignes verticales
             #
             for i, e in enumerate(lstTh):
                 Ic = CoulAltern[i][0]
-                
-                ctx.set_source_rgb(Ic[0],Ic[1],Ic[2])
                 ctx.set_line_width(0.003 * COEF)
-                ctx.move_to(xTh[i], yTh[i]+ ecartY /2)
-                ctx.line_to(xTh[i], posZTaches[1] + tailleZTaches[1])
-                ctx.stroke()    
+                
+                ligne(ctx, xTh[i], yTh[i]+ ecartY /2,
+                      xTh[i], posZTaches[1] + tailleZTaches[1],
+                      Ic)
+
     #            DrawCroisementsElevesCompetences(ctx, prg, e, yCI[i])
             
             #
@@ -760,27 +847,18 @@ def Draw(ctx, prg, mouchard = False):
             for i, e in enumerate(lstCI):
                 prg.zones_sens.append(Zone([rec[i]], param = "CI"+str(i)))
                 
-                Ic = CoulAltern[i][0]
-                
-                ctx.set_source_rgb(Ic[0],Ic[1],Ic[2])
                 ctx.set_line_width(0.003 * COEF)
-                ctx.move_to(posZCIH[0]+tailleZCIH[0]- ecartX /2, 
-                            yCI[i]+ ecartY /2)
-                ctx.line_to(xCI[i], 
-                            yCI[i]+ ecartY /2)
-                ctx.stroke()
+                ligne(ctx, posZCIH[0]+tailleZCIH[0]- ecartX /2, yCI[i]+ ecartY /2,
+                      xCI[i], yCI[i]+ ecartY /2, CoulAltern[i][0])
             
             #
             # Lignes verticales
             #
             for i, e in enumerate(lstCI):
-                Ic = CoulAltern[i][0]
-                
-                ctx.set_source_rgb(Ic[0],Ic[1],Ic[2])
                 ctx.set_line_width(0.003 * COEF)
-                ctx.move_to(xCI[i], yCI[i]+ ecartY /2)
-                ctx.line_to(xCI[i], posZTaches[1] + tailleZTaches[1])
-                ctx.stroke()    
+                ligne(ctx, xCI[i], yCI[i]+ ecartY /2, 
+                      xCI[i], posZTaches[1] + tailleZTaches[1], CoulAltern[i][0])
+                 
     #            DrawCroisementsElevesCompetences(ctx, prg, e, yCI[i])
             
             #
@@ -840,7 +918,7 @@ def Draw(ctx, prg, mouchard = False):
     x = posZTaches[0] + tailleZTaches[0]
     for doc, y in yTaches: 
         DrawLigne(ctx, x, y)
-        DrawCroisementsCompetencesTaches(ctx, prg, doc, lcomp, y)
+        DrawCroisementsCompetencesTaches(ctx, prg, doc, y)
         if hasattr(doc, 'CI'):
             DrawCroisementsCISeq(ctx, prg, doc, y)
     
@@ -907,12 +985,10 @@ def DrawLigneEff(ctx, x, y):
                0.005 * COEF,   # ink
                0.002 * COEF,   # skip
                ]
-    ctx.set_source_rgba (0.6, 0.8, 0.6)
     ctx.set_line_width (0.001 * COEF)
     ctx.set_dash(dashes, 0)
-    ctx.move_to(x, posZCIV[1] + tailleZCIV[1])
-    ctx.line_to(x, y)
-    ctx.stroke()
+    ligne(ctx, x, posZCIV[1] + tailleZCIV[1],
+          x, y, (0.6, 0.8, 0.6))
     ctx.set_dash([], 0)
          
             
@@ -1020,15 +1096,14 @@ def DrawLigne(ctx, x, y, gras = False):
                0.002 * COEF,   # ink
                0.002 * COEF,   # skip
                ]
-    ctx.set_source_rgba (0, 0.0, 0.2, 0.6)
+    
     if gras:
         ctx.set_line_width (0.002 * COEF)
     else:
         ctx.set_line_width (0.001 * COEF)
     ctx.set_dash(dashes, 0)
-    ctx.move_to(posZOrganis[0]+tailleZOrganis[0], y)
-    ctx.line_to(x, y)
-    ctx.stroke()
+    ligne(ctx, posZOrganis[0]+tailleZOrganis[0], y,
+          x, y, (0, 0.0, 0.2, 0.6))
     ctx.set_dash([], 0)       
 
 
@@ -1072,30 +1147,13 @@ def regrouperDic(obj, dicIndicateurs):
         return dicIndicateurs, typ
      
 ######################################################################################  
-def regrouperLst(obj, lstCompetences):
-#    print "regrouperLst", lstCompetences
-#    print "   _dicCompetences_prj", obj.GetReferentiel()._dicCompetences_prj
-    lstCompetences.sort()
-    if obj.GetProjetRef()._niveau == 3:
-        dic = []
-        tousIndicateurs = obj.GetProjetRef()._dicCompetences
-        for k0, v0 in tousIndicateurs.items():
-            for k1, v1 in v0[1].items():
-                lk2 = v1[1].keys()
-                lk2.sort()
-                for k2 in lk2:
-                    if k2 in lstCompetences:
-                        dic.append(k1)
-        dic = list(set(dic))
-        dic.sort()
-#        print "  >>", dic
-        return dic
-    else:
-        return lstCompetences
+def regrouperLst(ref, competences):
+    return competences.get2Niveaux()
+    
     
 ######################################################################################  
-def DrawCroisementsCompetencesTaches(ctx, prg, seq, l, y):
-    DrawBoutonCompetence(ctx, prg, seq, seq.GetCompetencesVisees(), l, y)
+def DrawCroisementsCompetencesTaches(ctx, prg, seq, y):
+    DrawBoutonCompetence(ctx, prg, seq, seq.GetCompetencesVisees(), y)
     
 
     
@@ -1139,40 +1197,100 @@ def DrawCroisementsCISeq(ctx, prg, seq, y):
 
     
 ######################################################################################  
-def DrawBoutonCompetence(ctx, prg, seq, listComp, l, y, h = None):
-    """ Dessine les petits rectangles des compétences
-         
-        l = liste des codes de compétence (situés en entête)
-    
+def DrawBoutonCompetence(ctx, prg, seq, listComp, y, h = None, nbr = None):
+    """ Dessine les petits rectangles des compétences abordées dans la Séquence
     """
-#    print "DrawBoutonCompetence", seq, listComp
-
+#     print "DrawBoutonCompetence", seq, listComp
+    
+    if len(listComp) == 0:
+        return
     
     if h == None: # Toujours sauf pour les revues
         h = 1.5*wColComp
+        
+    if nbr == None:
+        nbr = [1] * len(listComp)
+        lig = True
+    else:
+        lig = False
+        
+    dh = h / max(nbr)    
     
     ctx.set_line_width(0.0004 * COEF)
     listComp = [k[1:] for k in listComp]
-    for s in l:
-        x = xComp[s] #- wColComp/2
-        e = h/5
-#        print "h", h
-        rect = (x+e/2, y-h/2+e/2, wColComp-e, h-e)
-        prg.zones_sens.append(Zone([rect], obj = seq, param = "CMP"+s))
+    
+    ref = prg.GetReferentiel()
+    structComp = ref.dicoCompetences["S"].get2Niveaux()
+    dicoComp = ref.dicoCompetences["S"]
+    
+    for i, (k1, l1) in enumerate(structComp):
+        if len(l1) == 0:
+            l1 = [k1]
         
-        ctx.set_source_rgba(*ICoulComp[cComp[s]])
-        
-        coul = [c*0.6 for c in ICoulComp[cComp[s]][:3]]+[0.4]
-        
-        if s in listComp:
-            relief(ctx, rect, e, color = ICoulComp[cComp[s]])
-        else:
-#            ctx.set_source_rgba (0,0,0,1)
-#            ctx.rectangle(*rect)
-#            ctx.stroke()
-            relief(ctx, rect, e, color = coul, bosse = False)
-#        ctx.set_source_rgba(0, 0, 0, 1)
-#        ctx.stroke()
+        for k2 in l1:
+            x = xComp[k2]
+                
+            comp = dicoComp.dicCompetences[k1].sousComp[k2] 
+            if len(comp.sousComp) > 0:
+                lc = sorted(comp.sousComp.keys())
+            else:
+                lc = [k2]
+                
+            dx = wColComp/len(lc)
+            for a, i in enumerate(lc):
+                if i in listComp:
+                    H = nbr[listComp.index(i)] * dh
+                    rect = (x+a*dx, y+h/2-H, dx, H)
+                    ctx.set_source_rgba(*ICoulComp[cComp[k2]])
+                    ctx.rectangle(*rect)
+                    ctx.fill_preserve ()
+                    ctx.set_source_rgba (0, 0 , 0, 1)
+                    ctx.stroke()
+                else:
+                    if lig:
+                        rect = (x+a*dx, y-h/2, dx, h)
+                        ctx.set_source_rgba (1, 1, 1, 0)
+                        ctx.move_to(rect[0], rect[1])
+                        ctx.rel_line_to(0, rect[3])
+                        ctx.move_to(rect[0]+rect[2], rect[1])
+                        ctx.rel_line_to(0, rect[3])
+                        ctx.set_source_rgba (0, 0 , 0, 1)
+                        ctx.stroke()
+                
+                prg.zones_sens.append(Zone([rect], obj = seq, param = "CMP"+i))
+                
+    
+    
+    return
+    
+    
+    
+    
+    
+    
+#     
+#     ctx.set_line_width(0.0004 * COEF)
+#     listComp = [k[1:] for k in listComp]
+#     for s in l:
+#         x = xComp[s] #- wColComp/2
+#         e = h/5
+# #        print "h", h
+#         rect = (x+e/2, y-h/2+e/2, wColComp-e, h-e)
+#         prg.zones_sens.append(Zone([rect], obj = seq, param = "CMP"+s))
+#         
+#         ctx.set_source_rgba(*ICoulComp[cComp[s]])
+#         
+#         coul = [c*0.6 for c in ICoulComp[cComp[s]][:3]]+[0.4]
+#         
+#         if s in listComp:
+#             relief(ctx, rect, e, color = ICoulComp[cComp[s]])
+#         else:
+# #            ctx.set_source_rgba (0,0,0,1)
+# #            ctx.rectangle(*rect)
+# #            ctx.stroke()
+#             relief(ctx, rect, e, color = coul, bosse = False)
+# #        ctx.set_source_rgba(0, 0, 0, 1)
+# #        ctx.stroke()
 
 
 

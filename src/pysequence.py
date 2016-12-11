@@ -2261,7 +2261,23 @@ class Sequence(BaseDoc, Objet_sequence, ElementDeSequence):
     def GetCompetencesVisees(self):
         """ Renvoie la liste des compétences visées (objectifs) 
         """
-        return self.obj["C"].competences
+        
+        ref = self.GetReferentiel()
+        
+        def ajouter(k, l, comp):
+            if len(comp.sousComp) > 0:
+                for k2, c2 in comp.sousComp.items():
+                    ajouter("S"+k2, l, c2)
+            else:
+                l.append(k)
+            
+        lstCompS = [c for c in self.obj["C"].competences if c[0] == "S"]
+        l = []
+        for k in lstCompS:
+            ajouter(k, l, ref.getCompetence(k))
+            
+            
+        return l
 
 
 
@@ -4076,29 +4092,49 @@ class Progression(BaseDoc, Objet_sequence, ElementDeSequence):
         """
         return sum([sp.GetDoc().GetDuree() for sp in self.sequences_projets])
 
+#     ######################################################################################  
+#     def GetCompetencesAbordees(self):
+#         """ Renvoie un bilan des compétences abordées dans les Séquence et les Projets de la Progression
+#             sous la forme {CodeGroupe : [Liste de True/False], ...}
+#             sur la base de ref._listesCompetences_simple["S"]
+#         """
+# #         print "GetCompetencesAbordees"
+#         ref = self.GetReferentiel()
+#         competences = ref._listesCompetences_simple["S"]
+#         dicComp = {}
+#         
+# #         print [sp.GetDoc().GetCompetencesVisees() for sp in self.sequences_projets]
+#         for i, g1 in enumerate(competences):
+#             k1, h1, l1 = g1
+#             l = []
+#             
+#             for k2, h2 in l1:
+#                 
+#                 l.append(any(["S" + k2 in sp.GetDoc().GetCompetencesVisees() for sp in self.sequences_projets]))
+#             dicComp[k1] = l
+#             
+# #         print dicComp
+#         return dicComp
 
     ######################################################################################  
     def GetCompetencesAbordees(self):
         """ Renvoie un bilan des compétences abordées dans les Séquence et les Projets de la Progression
-            sous la forme {CodeGroupe : [Liste de True/False], ...}
-            sur la base de ref._listesCompetences_simple["S"]
+            sous la forme d'une liste de tuples (code, nombre d'occurences)
+            
         """
 #         print "GetCompetencesAbordees"
-        ref = self.GetReferentiel()
-        competences = ref._listesCompetences_simple["S"]
-        dicComp = {}
-#         print [sp.GetDoc().GetCompetencesVisees() for sp in self.sequences_projets]
-        for i, g1 in enumerate(competences):
-            k1, h1, l1 = g1
-            l = []
-            
-            for k2, h2 in l1:
+        lstComp = []
+        for sp in self.sequences_projets:
+            lstComp.extend(sp.GetDoc().GetCompetencesVisees())
+ 
+        l = [(k, lstComp.count(k)) for k in lstComp]
+        if l != []:
+            l, c = zip(*list(set(l)))
+            return l, c
+        else:
+            return [], []
                 
-                l.append(any(["S" + k2 in sp.GetDoc().GetCompetencesVisees() for sp in self.sequences_projets]))
-            dicComp[k1] = l
-            
-#         print dicComp
-        return dicComp
+
 
 
     ######################################################################################  
@@ -5015,21 +5051,41 @@ class Progression(BaseDoc, Objet_sequence, ElementDeSequence):
                               
             elif param[:3] == "CMP":
                 ref = self.GetReferentiel()
-                groupe, competence = ref.getCompetenceEtGroupe("S"+param[3:])
-                if competence is not None:
+                competences = ref.getCompetenceEtGroupe("S"+param[3:])
+                groupe, competence = competences[0], competences[-1]
+                
+                if len(competences) > 0:
                     self.tip.SetHTML(constantes.BASE_FICHE_HTML_COMP_PRJ)
                     k = param[3:]
+                    code, groupe = competences[0]
                     nc = getSingulierPluriel(ref.dicoCompetences["S"].nomGenerique, False)
                     self.tip.SetWholeText("titre", nc + " " + k)
-                    
-                    self.tip.SetWholeText("grp", groupe.intitule)
-                    
-                    
-                    intituleComp = competence.intitule
-                    
-#                     intituleComp = "\n".join([textwrap.fill(ind, 50) for ind in intituleComp.split(u"\n")]) 
-                    
-                    self.tip.SetWholeText("int", intituleComp)
+                    self.tip.SetWholeText("grp", code + "  " + groupe.intitule)
+#                     print "***", competences
+                    if len(competences) >= 2:
+                        codec, competence = competences[1]
+                        self.tip.SetWholeText("int", codec + " " + competence.intitule)
+                        if len(competence.sousComp) > 0:
+#                             print competence.sousComp.items()
+                            lc = sorted(competence.sousComp.items(), key = lambda c:c[0])
+                            for k, v in lc:
+                                self.tip.AjouterElemListeDL('comp', k, v.intitule)
+#                     elif len(competences) == 3:
+#                         
+#                 
+#                 
+#                 
+#                 
+#                 if competence is not None:
+#                     
+#                     nc = getSingulierPluriel(ref.dicoCompetences["S"].nomGenerique, False)
+#                     self.tip.SetWholeText("titre", nc + " " + k)
+#                     self.tip.SetWholeText("grp", groupe.intitule)
+#                     self.tip.SetWholeText("int", competence.intitule)
+#                     if len(competence.sousComp) > 0:
+#                         print competence.sousComp.items()
+#                         for k, v in competence.sousComp.items():
+#                             self.tip.AjouterElemListeDL('comp', k, v.intitule)
             
             elif type(obj) == list:
                 pass

@@ -1937,7 +1937,7 @@ def barreH(ctx, x, y, w, r, a, e, coul0, coul1, coul):
     else:
         coulEtat = coul0
         
-    ctx.set_source_rgba(coul[0],  coul[1],  coul[2],  coul[3])
+    ctx.set_source_rgba(*coul)
     ctx.rectangle (x, y-e/2, w*r, e)
     ctx.fill_preserve ()    
     ctx.set_source_rgba(0.4,  0.4,  0.4,  1)
@@ -1970,10 +1970,15 @@ def barreH(ctx, x, y, w, r, a, e, coul0, coul1, coul):
 #    ctx.fill ()
 #    ctx.set_source(src)
     
-    
+def ligne(ctx, x1, y1, x2, y2, coul):
+    ctx.set_source_rgba(*coul)
+    ctx.move_to(x1, y1)# + posZTaches[1] - posZComp[1])
+    ctx.line_to(x2, y2)
+    ctx.stroke()
+
         
 def fleche_verticale(ctx, x, y, h, e, coul):
-    ctx.set_source_rgba (coul[0], coul[1], coul[2], coul[3])
+    ctx.set_source_rgba (*coul)
     he = min(e/2, h/3)
     ctx.move_to(x-e/2, y)
     ctx.line_to(x-e/2, y+h-he)

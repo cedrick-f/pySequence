@@ -220,7 +220,7 @@ def DefinirZones(prj, ctx):
     #
 
 #    wColComp = prj.GetReferentiel().calculerLargeurCompetences(wColCompBase)
-    competences = regrouperLst(prj, prj.GetCompetencesUtil())
+    competences = regrouperLst(prj.GetProjetRef(), prj.GetCompetencesUtil())
     tailleZComp[0] = wColComp * len(competences)
     posZComp[0] = posZOrganis[0] + tailleZOrganis[0] - tailleZComp[0]
     for i, s in enumerate(competences):
@@ -410,30 +410,6 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False, entete = Fal
         image(ctx,
               posImg[0], posImg[1], tailleImg[0], tailleImg[1],
               bmp)
-#         ctx.rectangle(posImg[0], posImg[1], tailleImg[0], tailleImg[1])
-#         ctx.stroke()
-        
-        
-        
-        
-#         ctx.save()
-#         tfname = tempfile.mktemp()
-#         try:
-#             bmp.SaveFile(tfname, wx.BITMAP_TYPE_PNG)
-#             image = cairo.ImageSurface.create_from_png(tfname)
-#         finally:
-#             if os.path.exists(tfname):
-#                 os.remove(tfname)  
-#                 
-#         w = image.get_width()*1.1
-#         h = image.get_height()*1.1
-#         
-#         s = min(tailleImg[0]/w, tailleImg[1]/h)
-#         ctx.translate(posImg[0], posImg[1])
-#         ctx.scale(s, s)
-#         ctx.set_source_surface(image, 0, 0)
-#         ctx.paint ()
-#         ctx.restore()
         
         prj.zones_sens.append(Zone([posImg + tailleImg], obj = prj.support))
         prj.support.pts_caract.append(posImg)
@@ -527,7 +503,8 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False, entete = Fal
     #  Tableau des compétenecs
     #
     if not entete:
-        competences = regrouperLst(prj, prj.GetCompetencesUtil())
+        competences = regrouperLst(prj.GetProjetRef(), prj.GetCompetencesUtil())
+        print "competences", competences
         prj.pt_caract_comp = []
         
         if competences != []:
@@ -539,19 +516,14 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False, entete = Fal
             
             for s in competences:
     #            s.rect=((_x, _y, wc, posZTaches[1] - posZComp[1]),)
-                ctx.set_source_rgb(0, 0, 0)
-                ctx.move_to(_x, _y0)# + posZTaches[1] - posZComp[1])
-                ctx.line_to(_x, _y1)
-                ctx.stroke()
+                ligne(ctx, _x, _y0, _x, _y1, (0, 0, 0))
                 ctx.set_source_rgba(0.5, 0.5, 0.5, 0.2)
                 ctx.rectangle(_x, _y0,  
                               wc, _y1-_y0)
                 ctx.fill()
                 _x += wc
-            ctx.set_source_rgb(0, 0, 0)
-            ctx.move_to(_x, _y0)# + posZTaches[1] - posZComp[1])
-            ctx.line_to(_x, _y1)   
-            ctx.stroke()
+            
+            ligne(ctx, _x, _y0, _x, _y1, (0, 0, 0))
             
             ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                   cairo.FONT_WEIGHT_NORMAL)
@@ -632,11 +604,11 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False, entete = Fal
                 prj.zones_sens.append(Zone([rec[i]], obj = e))
                 Ic = CoulAltern[i][0]
                 
-                ctx.set_source_rgb(Ic[0],Ic[1],Ic[2])
                 ctx.set_line_width(0.003 * COEF)
-                ctx.move_to(posZElevesH[0]+tailleZElevesH[0], yEleves[i])
-                ctx.line_to(posZComp[0]+tailleZComp[0], yEleves[i])
-                ctx.stroke()
+                
+                ligne(ctx, posZElevesH[0]+tailleZElevesH[0], yEleves[i],
+                      posZComp[0]+tailleZComp[0], yEleves[i],
+                      Ic)
             
             #
             # Lignes verticales
@@ -644,11 +616,11 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False, entete = Fal
             for i, e in enumerate(prj.eleves):
                 Ic = CoulAltern[i][0]
                 
-                ctx.set_source_rgb(Ic[0],Ic[1],Ic[2])
                 ctx.set_line_width(0.003 * COEF)
-                ctx.move_to(xEleves[i], yEleves[i])
-                ctx.line_to(xEleves[i], posZTaches[1] + tailleZTaches[1] + (i % 2)*(ecartY/2) + ecartY/2)
-                ctx.stroke()    
+                ligne(ctx, xEleves[i], yEleves[i],
+                      xEleves[i], posZTaches[1] + tailleZTaches[1] + (i % 2)*(ecartY/2) + ecartY/2,
+                      Ic)
+                
                 DrawCroisementsElevesCompetences(ctx, e, yEleves[i])
             
             #
@@ -786,8 +758,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False, entete = Fal
                 d1 = e.GetDuree(phase = "R1")
                 d2 = e.GetDuree(phase = "R2")
                 d3 = e.GetDuree(phase = "R3")
-                Ic = CoulAltern[i][0]
-                ctx.set_source_rgb(Ic[0],Ic[1],Ic[2])
+                ctx.set_source_rgba(*CoulAltern[i][0])
                 ctx.set_line_width(0.005 * COEF)
                 if md1 > 0:
                     ctx.move_to(xEleves[i], y0)
@@ -855,12 +826,11 @@ def DrawLigneEff(ctx, x, y):
                0.005 * COEF,   # ink
                0.002 * COEF,   # skip
                ]
-    ctx.set_source_rgba (0.6, 0.8, 0.6)
+    
     ctx.set_line_width (0.001 * COEF)
     ctx.set_dash(dashes, 0)
-    ctx.move_to(x, posZElevesV[1] + tailleZElevesV[1])
-    ctx.line_to(x, y)
-    ctx.stroke()
+    ligne(ctx, x, posZElevesV[1] + tailleZElevesV[1],
+          x, y, (0.6, 0.8, 0.6))
     ctx.set_dash([], 0)
 
     
@@ -1042,15 +1012,14 @@ def DrawLigne(ctx, x, y, gras = False):
                0.002 * COEF,   # ink
                0.002 * COEF,   # skip
                ]
-    ctx.set_source_rgba (0, 0.0, 0.2, 0.6)
+    
     if gras:
         ctx.set_line_width (0.002 * COEF)
     else:
         ctx.set_line_width (0.001 * COEF)
     ctx.set_dash(dashes, 0)
-    ctx.move_to(posZOrganis[0]+tailleZOrganis[0], y)
-    ctx.line_to(x, y)
-    ctx.stroke()
+    ligne(ctx, posZOrganis[0]+tailleZOrganis[0], y,
+          x, y, (0, 0.0, 0.2, 0.6))
     ctx.set_dash([], 0)       
     
 ######################################################################################  
@@ -1096,13 +1065,13 @@ def regrouperDic(obj, dicIndicateurs):
         return dicIndicateurs, typ
      
 ######################################################################################  
-def regrouperLst(obj, lstCompetences):
+def regrouperLst(prjRef, lstCompetences):
 #    print "regrouperLst", lstCompetences
 #    print "   _dicoCompetences", obj.GetProjetRef()._dicoCompetences["S"]
     lstCompetences.sort()
-    if obj.GetProjetRef()._niveau == 3:
+    if prjRef._niveau == 3:
         lstGrpCompetences = []
-        for disc, tousIndicateurs in obj.GetProjetRef()._dicoCompetences.items():
+        for disc, tousIndicateurs in prjRef._dicoCompetences.items():
             dic = []
             for k0, competence in tousIndicateurs.items():
                 for k1, sousComp in competence.sousComp.items():

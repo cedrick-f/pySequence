@@ -4940,6 +4940,7 @@ class PanelPropriete_Progression(PanelPropriete):
         pageGen.sizer.AddGrowableCol(0)
         pageGen.sizer.AddGrowableRow(0)
         
+        
         #
         # Image
         #

@@ -2630,48 +2630,77 @@ class Competences(XMLelem):
 
         return getComp(self.dicCompetences)
         
+        
     #########################################################################
     def getCompetenceEtGroupe(self, comp):
-        grp = [None]
-        def getComp(dic, prem = False):
+#         print "getCompetenceEtGroupe", comp
+        grp = []
+        def getComp(dic):
 #             print "   ", dic
-            
             if comp in dic.keys():
-                if prem:
-                    grp[0] = dic[comp]
                 return dic[comp]
             else:
                 for k, competence in dic.items():
-                    if prem:
-                        grp[0] = dic[k]
                     c = getComp(competence.sousComp)
-                    
                     if c is not None:
+                        grp.insert(0, (k,competence))
                         return c
-        cmp = getComp(self.dicCompetences, prem = True)
-        return grp[0], cmp
+        grp.append((comp, getComp(self.dicCompetences)))
+#         print ">>>", grp
+        return grp
+
+#     #########################################################################
+#     def getCompetenceEtGroupe(self, comp):
+#         grp = [None]
+#         def getComp(dic, prem = False):
+# #             print "   ", dic
+#             if comp in dic.keys():
+#                 if prem:
+#                     grp[0] = dic[comp]
+#                 return dic[comp]
+#             else:
+#                 for k, competence in dic.items():
+#                     if prem:
+#                         grp[0] = dic[k]
+#                     c = getComp(competence.sousComp)
+#                     
+#                     if c is not None:
+#                         return c
+#         cmp = getComp(self.dicCompetences, prem = True)
+#         return grp[0], cmp
+#     
     
-#         
-#         
-# #        print "getCompetence", comp
-# #        print "   ", self.dicCompetences
-#         if comp in self.dicCompetences.keys():
-# #            print "   1>>"
-#             return self.dicCompetences[comp]
-#         else:
-#             for k0, v0 in self.dicCompetences.items():
-# #                print "  ", k0, type(v0[1])
-#                 if type(v0[1]) == dict:
-#                     if comp in v0[1].keys():
-# #                        print "   2>>"
-#                         return v0[1][comp]
-#                     else:
-#                         for k1, v1 in v0[1].items():
-#                             if type(v1[1]) == dict and comp in v1[1].keys():
-# #                                print "   3>>"
-#                                 return v1[1][comp]
-                            
-                            
+    #########################################################################
+    def get2Niveaux(self):
+        """ Renvoie une liste de listes (2 premiers niveaux)
+            format :
+            [['A', ['A1', 'A2', 'A3']],
+             ['B', ['B1', 'B2']],
+             ...]
+        """
+        lst0 = []
+        for k0, v0 in self.dicCompetences.items():
+            lst1 = []
+            for k1, v1 in v0.sousComp.items():
+                lst1.append(k1)
+            lst1.sort()
+            lst0.append([k0, lst1])
+        lst0.sort(key = lambda c:c[0])
+        return lst0
+            
+    #########################################################################
+    def getProfondeur(self):
+        for k0, v0 in self.dicCompetences.items():
+            for k1, v1 in v0.sousComp.items():
+                if len(v1.sousComp) > 0:
+                    return 3
+                else:
+                    return 2
+            return 1
+
+
+
+
 #################################################################################################################################
 #
 #        Savoirs
