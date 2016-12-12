@@ -1971,14 +1971,16 @@ def barreH(ctx, x, y, w, r, a, e, coul0, coul1, coul):
 #    ctx.set_source(src)
     
 def ligne(ctx, x1, y1, x2, y2, coul):
+#     if len(coul) < 4:
+#         coul = list(coul)+[1]
     ctx.set_source_rgba(*coul)
-    ctx.move_to(x1, y1)# + posZTaches[1] - posZComp[1])
+    ctx.move_to(x1, y1)
     ctx.line_to(x2, y2)
     ctx.stroke()
 
         
 def fleche_verticale(ctx, x, y, h, e, coul):
-    ctx.set_source_rgba (*coul)
+    ctx.set_source_rgba(*coul)
     he = min(e/2, h/3)
     ctx.move_to(x-e/2, y)
     ctx.line_to(x-e/2, y+h-he)
@@ -2001,7 +2003,7 @@ def fleche_ronde(ctx, x, y, r, a0, a1, e, f, coul):
         f = taille du bout de flèche
     """
     ctx.set_line_width (e)
-    ctx.set_source_rgba (coul[0], coul[1], coul[2], coul[3])
+    ctx.set_source_rgba (*coul)
 #    a0 = (90-a/2) * pi/180 + f/r/2
 #    a1 = (90+a/2) * pi/180 + f/r/2
     a2 = (90-a0) * pi/180

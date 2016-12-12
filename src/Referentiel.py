@@ -1835,6 +1835,15 @@ class Referentiel(XMLelem):
 
 
     #########################################################################
+    def getSousSavoirs(self, code):
+#         print "getSousSavoirs", code
+        for codeDiscipline, savoirs in self.getTousSavoirs():
+#             print "   ", codeDiscipline, savoirs
+            if codeDiscipline == code[0]:
+                return savoirs.getSousSavoirs(code[1:]) 
+    
+    
+    #########################################################################
     def getSavoir(self, code):
         """ Renvoie un savoir d'après son code
         """
@@ -2715,7 +2724,8 @@ class Savoirs(XMLelem):
         self.abrDiscipline = abrDiscipline
         self.dicSavoirs = {}
         self.obj = self.pre = True
-        
+    
+    
     def getSavoir(self, code, dic = None, c = 1):
         if dic == None:
             dic = self.dicSavoirs
@@ -2726,6 +2736,15 @@ class Savoirs(XMLelem):
             cd = ".".join(code.split(".")[:c])
             return self.getSavoir(code, dic[cd][1], c+1)
 
+    def getSousSavoirs(self, code):
+        """ Renvoie la liste des code des sous-savoirs
+            [] si on est au bout de la branche
+        """
+        
+        if code in self.dicSavoirs.keys() and len(self.dicSavoirs[code]) > 1:
+            return self.dicSavoirs[code][1].keys()
+        return []
+    
     
 objets = {"Indicateur" : Indicateur,
           "Projet" : Projet,

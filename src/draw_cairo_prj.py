@@ -504,7 +504,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False, entete = Fal
     #
     if not entete:
         competences = regrouperLst(prj.GetProjetRef(), prj.GetCompetencesUtil())
-        print "competences", competences
+#         print "competences", competences
         prj.pt_caract_comp = []
         
         if competences != []:
@@ -602,24 +602,20 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False, entete = Fal
             #
             for i, e in enumerate(prj.eleves):
                 prj.zones_sens.append(Zone([rec[i]], obj = e))
-                Ic = CoulAltern[i][0]
-                
                 ctx.set_line_width(0.003 * COEF)
                 
                 ligne(ctx, posZElevesH[0]+tailleZElevesH[0], yEleves[i],
                       posZComp[0]+tailleZComp[0], yEleves[i],
-                      Ic)
+                      CoulAltern[i][0][:-1])
             
             #
             # Lignes verticales
             #
             for i, e in enumerate(prj.eleves):
-                Ic = CoulAltern[i][0]
-                
                 ctx.set_line_width(0.003 * COEF)
                 ligne(ctx, xEleves[i], yEleves[i],
                       xEleves[i], posZTaches[1] + tailleZTaches[1] + (i % 2)*(ecartY/2) + ecartY/2,
-                      Ic)
+                      CoulAltern[i][0][:-1])
                 
                 DrawCroisementsElevesCompetences(ctx, e, yEleves[i])
             

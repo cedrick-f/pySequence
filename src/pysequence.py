@@ -1522,7 +1522,7 @@ class Sequence(BaseDoc, Objet_sequence, ElementDeSequence):
     
     ######################################################################################  
     def Initialise(self):
-        self.AjouterListeSystemes(self.classe.systemes)
+#         self.AjouterListeSystemes(self.classe.systemes)
         self.MiseAJourTypeEnseignement()
 #        self.AjouterListeSystemes(self.options.optSystemes["Systemes"])
             
@@ -2006,7 +2006,7 @@ class Sequence(BaseDoc, Objet_sequence, ElementDeSequence):
     
     ######################################################################################  
     def AjouterListeSystemes(self, syst = []):
-#         print "AjouterListeSystemes séquence"
+        print "AjouterListeSystemes séquence", syst
         nouvListe = []
         for s in syst:
 #             print "   ",s
@@ -2038,7 +2038,7 @@ class Sequence(BaseDoc, Objet_sequence, ElementDeSequence):
                 sy.SetCode()
 #            sy.nbrDispo.v[0] = eval(n)
 #            sy.panelPropriete.MiseAJour()
-#         print "nouvListe", nouvListe
+        print "  nouvListe :", nouvListe
         self.arbre.Expand(self.brancheSys)
         self.AjouterListeSystemesSeance(nouvListe)
         self.GetApp().sendEvent(modif = u"Ajout d'une liste de Systèmes")
@@ -2261,7 +2261,6 @@ class Sequence(BaseDoc, Objet_sequence, ElementDeSequence):
     def GetCompetencesVisees(self):
         """ Renvoie la liste des compétences visées (objectifs) 
         """
-        
         ref = self.GetReferentiel()
         
         def ajouter(k, l, comp):
@@ -2276,9 +2275,33 @@ class Sequence(BaseDoc, Objet_sequence, ElementDeSequence):
         for k in lstCompS:
             ajouter(k, l, ref.getCompetence(k))
             
-            
         return l
 
+
+    ######################################################################################       
+    def GetSavoirsVises(self):
+        """ Renvoie la liste des Savoirs visés (objectifs) 
+        """
+        print "GetSavoirsVises", self
+        ref = self.GetReferentiel()
+        
+        def ajouter(k, l):
+            ss = ref.getSousSavoirs(k)
+            if len(ss) > 0:
+                for k2 in ss:
+                    ajouter("S"+k2, l)
+            else:
+                l.append(k)
+            
+        lstCompS = [c for c in self.obj["S"].savoirs if c[0] == "S"]
+        print "   ", lstCompS
+        
+        l = []
+        for k in lstCompS:
+            ajouter(k, l)
+            
+        print "   ", l
+        return l+lstCompS
 
 
     ######################################################################################       
@@ -4518,10 +4541,11 @@ class Progression(BaseDoc, Objet_sequence, ElementDeSequence):
         
     ######################################################################################  
     def Ordonner(self):
-#        print "Ordonner"
+#         print "Ordonner"
     
         listeSeqPrj = self.sequences_projets
                 
+#         print "  ", listeSeqPrj
         listeSeqPrj.sort(key= lambda s : s.GetDoc().position)
         
         self.brancheSeq.DeleteChildren(self.arbre)
@@ -4708,12 +4732,17 @@ class Progression(BaseDoc, Objet_sequence, ElementDeSequence):
 
     ######################################################################################  
     def VerifPb(self):
+        """ Vérification des conflits de prérequis (en termes de Savoirs)
+        """
         obj = []
         for lienseq in [s for s in self.sequences_projets if isinstance(s, LienSequence)]:
             pb = []
             seq = lienseq.sequence
             prerequis = seq.prerequis.savoirs
-            objectifs = seq.obj['S'].savoirs
+            
+#             objectifs = seq.obj['S'].savoirs
+            objectifs = seq.GetSavoirsVises()
+            
             for p in prerequis:
                 if not p in obj:
                     pb.append(p)
@@ -5221,12 +5250,12 @@ class LienSequence(Objet_sequence):
             
         coul = draw_cairo.BcoulPos[self.sequence.position]
         coul = [int(200*c) for c in coul]
-        self.codeBranche = CodeBranche(self.arbre)
+#         self.codeBranche = CodeBranche(self.arbre)
 #        self.codeBranche.SetForegroundColour(coul)
         self.branche = arbre.AppendItem(branche, self.sequence.intitule, #wnd = self.codeBranche, 
                                         data = self,
                                         image = self.arbre.images["Seq"])
-        self.codeBranche.SetBranche(self.branche)
+#         self.codeBranche.SetBranche(self.branche)
         self.arbre.SetItemTextColour(self.branche, coul)
 
 #        self.codeBranche.SetBranche(self.branche)
@@ -5377,12 +5406,12 @@ class LienProjet(Objet_sequence):
             
         coul = draw_cairo.BcoulPos[self.projet.position]
         coul = [int(200*c) for c in coul]
-        self.codeBranche = CodeBranche(self.arbre)
+#         self.codeBranche = CodeBranche(self.arbre)
 #        self.codeBranche.SetForegroundColour(coul)
-        self.branche = arbre.AppendItem(branche, self.projet.intitule, #wnd = self.codeBranche, 
+        self.branche = arbre.AppendItem(branche, self.projet.intitule, # wnd = self.codeBranche, 
                                         data = self,
                                         image = self.arbre.images["Prj"])
-        self.codeBranche.SetBranche(self.branche)
+#         self.codeBranche.SetBranche(self.branche)
         self.arbre.SetItemTextColour(self.branche, coul)
 
 #        self.codeBranche.SetBranche(self.branche)
@@ -6844,8 +6873,9 @@ class Seance(ElementDeSequence, Objet_sequence):
     def AjouterListeSystemes(self, lstNSys = None):
         """
         """
-#        print "  AjouterListeSystemes", self.typeSeance
+#         print "  AjouterListeSystemes", self.typeSeance, lstNSys
         lstSys = self.GetDocument().systemes
+#         print "    ", lstSys
         if self.typeSeance in ACTIVITES:
             if lstNSys == [] or lstNSys == None:
                 lstNSys = [0]*len(lstSys)

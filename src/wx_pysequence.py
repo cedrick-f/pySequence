@@ -1220,7 +1220,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                         for lienSeq in prog[0].sequences_projets:
                             path1 = os.path.normpath(os.path.abspath(lienSeq.path))
                             if path1 == path2:  # La séquence fait partie d'une progression ouverte
-                                print "Dans prog :", path2
+#                                 print "Dans prog :", path2
                                 self.ouvrirDoc(lienSeq.sequence, nomFichier)
                                 wx.EndBusyCursor()
                                 self.Thaw()
@@ -9526,13 +9526,15 @@ class PanelPropriete_Personne(PanelPropriete):
         
         fichier.close()
         
-        return zip(*list_p)
+        list_p, root = zip(*list_p)
+        return list_p, list(root)
 
 
     #############################################################################            
     def OnCharge(self, event):
         
         list_p, root = self.GetListProfs()
+      
         if len(list_p)>0:
             dlg = wx.SingleChoiceDialog(
                     self, u'Sélectionner un Professeur\ndans la liste ci-dessous :',

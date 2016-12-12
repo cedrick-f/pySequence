@@ -155,7 +155,7 @@ posZCIV = [None, None]
 tailleZCIV = [None, None]
 posZCIH = [posZDeroul[0], None]
 tailleZCIH = [None, None]
-wCI = 0.015 * COEF
+wCI = 0.010 * COEF
 hCI = 0.020 * COEF
 xCI = []
 yCI = []
@@ -582,17 +582,10 @@ def Draw(ctx, prg, mouchard = False):
     competences = ref.dicoCompetences["S"].get2Niveaux()
 #     print "competences", competences
     
-    
-    
-    
-    
     ctx.set_line_width(0.001 * COEF)
     _x = _x0 = posZComp[0]
     _y0, _y1 = posZComp[1], posZDeroul[1] + tailleZDeroul[1]
     h = 1.5*wColComp
-    
-    lcomp = []
-    
     
     for i, g1 in enumerate(competences):
         k1, l1 = g1
@@ -612,14 +605,6 @@ def Draw(ctx, prg, mouchard = False):
             ctx.set_source_rgba(*coul)
             ctx.rectangle(*rect[:4])
             ctx.fill()
-
-            #
-            # Bilan
-            #
-#             if dicComp[k1][n]:
-#                 rect = (_x, _y1-h, wColComp, h)
-#                 prg.zones_sens.append(Zone([rect], param = "CMP"+k2))
-#                 relief(ctx, rect, h/5, color = ICoulComp[cComp[k2]])
                 
             n += 1
             _x += wColComp
@@ -636,8 +621,7 @@ def Draw(ctx, prg, mouchard = False):
 #        # Titre famille de compétences
 #        ht = tailleZComp[1] / 4
 #        show_text_rect(ctx, k1, (_x0, posZComp[1], _x-_x0, ht), va = 'c', ha = 'c', b = 0.3, orient = 'h')
-        
-#         l = [k2[0]  for k2 in l1]
+
         rects = tableauV(ctx, l1, _x0, posZComp[1], 
                          _x-_x0, tailleZComp[1], 
                          0, nlignes = 0, va = 'c', ha = 'g', orient = 'v', 
@@ -645,10 +629,6 @@ def Draw(ctx, prg, mouchard = False):
         
         for i, r in enumerate(rects):
             prg.zones_sens.append(Zone([r], param = "CMP"+l1[i]))
-        
-        lcomp.extend(l1)
-        
-#        prg.pt_caract_comp.extend(getPts(p))
             
         _x += dx
         _x0 = _x
@@ -661,68 +641,7 @@ def Draw(ctx, prg, mouchard = False):
     DrawBoutonCompetence(ctx, prg, None, dicComp, (posZComp[1] + htitre + posZOrganis[1])/2 , 
                          h = posZComp[1] - posZOrganis[1] - ecartY*3/2 - htitre, nbr = nbrComp)
         
-#     dicComp = prg.GetCompetencesAbordees()
-#     for i, g1 in enumerate(competences):
-#         k1, h1, l1 = g1
-#         dx = wColComp/3
-#         if len(l1) == 0:
-#             l1 = [[k1, h1]]
-#             dx = 0
-#         
-#         coul = list(ICoulComp[i][:3])+[0.2]
-#         n = 0
-#         for k2, h2 in l1:
-#             #
-#             # Lignes verticales et rectangles clairs
-#             #
-#             rect = (_x, _y0, wColComp, _y1 -_y0)
-#             ligne(ctx, _x, _y0, _x, _y1, (0, 0, 0))
-#             ctx.set_source_rgba(*coul)
-#             ctx.rectangle(*rect[:4])
-#             ctx.fill()
-# 
-#             #
-#             # Bilan
-#             #
-#             if dicComp[k1][n]:
-#                 rect = (_x, _y1-h, wColComp, h)
-#                 prg.zones_sens.append(Zone([rect], param = "CMP"+k2))
-#                 relief(ctx, rect, h/5, color = ICoulComp[cComp[k2]])
-#                 
-#             n += 1
-#             _x += wColComp
-#             
-#         
-#         # Dernière ligne
-#         ligne(ctx, _x, _y0, _x, _y1, (0, 0, 0))
-# 
-#         ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-#                               cairo.FONT_WEIGHT_NORMAL)
-#         ctx.set_source_rgb(0, 0, 0)
-#         ctx.set_line_width(0.001 * COEF)
-#         
-# #        # Titre famille de compétences
-# #        ht = tailleZComp[1] / 4
-# #        show_text_rect(ctx, k1, (_x0, posZComp[1], _x-_x0, ht), va = 'c', ha = 'c', b = 0.3, orient = 'h')
-#         
-#         l = [k2[0]  for k2 in l1]
-#         rects = tableauV(ctx, l, _x0, posZComp[1], 
-#                          _x-_x0, tailleZComp[1], 
-#                          0, nlignes = 0, va = 'c', ha = 'g', orient = 'v', 
-#                          coul = ICoulComp[i], b = 0.3)
-#         
-#         for i, r in enumerate(rects):
-#             prg.zones_sens.append(Zone([r], param = "CMP"+l[i]))
-#         
-#         lcomp.extend(l)
-#         
-# #        prg.pt_caract_comp.extend(getPts(p))
-#             
-#         _x += dx
-#         _x0 = _x
-        
-        
-        
+      
         
         
 
@@ -848,16 +767,18 @@ def Draw(ctx, prg, mouchard = False):
                 prg.zones_sens.append(Zone([rec[i]], param = "CI"+str(i)))
                 
                 ctx.set_line_width(0.003 * COEF)
-                ligne(ctx, posZCIH[0]+tailleZCIH[0]- ecartX /2, yCI[i]+ ecartY /2,
-                      xCI[i], yCI[i]+ ecartY /2, CoulAltern[i][0])
+                ligne(ctx, posZCIH[0]+tailleZCIH[0] - ecartX/2, yCI[i] + ecartY/2,
+                           xCI[i], yCI[i] + ecartY/2,
+                      CoulAltern[i][0][:-1])
             
             #
             # Lignes verticales
             #
             for i, e in enumerate(lstCI):
                 ctx.set_line_width(0.003 * COEF)
-                ligne(ctx, xCI[i], yCI[i]+ ecartY /2, 
-                      xCI[i], posZTaches[1] + tailleZTaches[1], CoulAltern[i][0])
+                ligne(ctx, xCI[i], yCI[i] + ecartY /2, 
+                           xCI[i], posZTaches[1] + tailleZTaches[1], 
+                      CoulAltern[i][0][:-1])
                  
     #            DrawCroisementsElevesCompetences(ctx, prg, e, yCI[i])
             
@@ -1167,7 +1088,7 @@ def DrawCroisementsCISeq(ctx, prg, seq, y):
     lstCI = seq.GetReferentiel().CentresInterets
 #    print "DrawCroisementsCISeq", lstCI
     dy = 0
-    r = 0.006 * COEF
+    r = 0.004 * COEF
         
     for CI in range(len(lstCI)):
         color0 = CoulAltern[CI][0]
