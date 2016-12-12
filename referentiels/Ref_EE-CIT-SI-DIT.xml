@@ -41,198 +41,422 @@
       <d_dicCompetences>
         <Competence_C3 S_intitule="Approfondir la culture design">
           <l_domaines />
-          <l_indicateurs>
-            <Indicateur_00 S_intitule="Un objet est associé à une grande période de la conception, des arts aux design industriel">
-              <d_ligne I_C="17" I_S1="17" I_S2="17" />
-              <d_poids I_C="1" I_S1="1" I_S2="1" />
-              <d_revue I_C="0" I_S1="0" I_S2="0" />
-            </Indicateur_00>
-            <Indicateur_01 S_intitule="un objet est observé d'un point de vue description, communication et représentation">
-              <d_ligne I_C="18" I_S1="18" I_S2="18" />
-              <d_poids I_C="1" I_S1="1" I_S2="1" />
-              <d_revue I_C="0" I_S1="0" I_S2="0" />
-            </Indicateur_01>
-            <Indicateur_02 S_intitule="Le contexte est identifié (culturel, écologique, économique, sociétal, technologique)">
-              <d_ligne I_C="19" I_S1="19" I_S2="19" />
-              <d_poids I_C="1" I_S1="1" I_S2="1" />
-              <d_revue I_C="0" I_S1="0" I_S2="0" />
-            </Indicateur_02>
-            <Indicateur_03 S_intitule="Les fonctions de besoins et d'usages sont identifiées">
-              <d_ligne I_C="20" I_S1="20" I_S2="20" />
-              <d_poids I_C="1" I_S1="1" I_S2="1" />
-              <d_revue I_C="0" I_S1="0" I_S2="0" />
-            </Indicateur_03>
-          </l_indicateurs>
-          <d_poids />
-          <d_sousComp />
+          <l_indicateurs />
+          <d_poids I_C="15" I_S1="15" I_S2="15" />
+          <d_sousComp>
+            <Competence_C3.4 S_intitule="Les fonctions de besoins et d'usages sont identifiées">
+              <l_domaines />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Les fonctions de besoins et d'usages sont identifiées">
+                  <d_ligne I_C="20" I_S1="20" I_S2="20" />
+                  <d_poids F_C="25.0" F_S1="25.0" F_S2="25.0" />
+                  <d_revue I_C="0" I_S1="0" I_S2="0" />
+                </Indicateur_00>
+              </l_indicateurs>
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C3.4>
+            <Competence_C3.1 S_intitule="Un objet est associé à une grande période de la conception, des arts aux design industriel">
+              <l_domaines />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Un objet est associé à une grande période de la conception, des arts aux design industriel">
+                  <d_ligne I_C="17" I_S1="17" I_S2="17" />
+                  <d_poids F_C="25.0" F_S1="25.0" F_S2="25.0" />
+                  <d_revue I_C="0" I_S1="0" I_S2="0" />
+                </Indicateur_00>
+              </l_indicateurs>
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C3.1>
+            <Competence_C3.2 S_intitule="un objet est observé d'un point de vue description, communication et représentation">
+              <l_domaines />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="un objet est observé d'un point de vue description, communication et représentation">
+                  <d_ligne I_C="18" I_S1="18" I_S2="18" />
+                  <d_poids F_C="25.0" F_S1="25.0" F_S2="25.0" />
+                  <d_revue I_C="0" I_S1="0" I_S2="0" />
+                </Indicateur_00>
+              </l_indicateurs>
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C3.2>
+            <Competence_C3.3 S_intitule="Le contexte est identifié (culturel, écologique, économique, sociétal, technologique)">
+              <l_domaines />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Le contexte est identifié (culturel, écologique, économique, sociétal, technologique)">
+                  <d_ligne I_C="19" I_S1="19" I_S2="19" />
+                  <d_poids F_C="25.0" F_S1="25.0" F_S2="25.0" />
+                  <d_revue I_C="0" I_S1="0" I_S2="0" />
+                </Indicateur_00>
+              </l_indicateurs>
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C3.3>
+          </d_sousComp>
           <l_thematiques />
         </Competence_C3>
         <Competence_C2 S_intitule="Approfondir la culture technologique">
           <l_domaines />
-          <l_indicateurs>
-            <Indicateur_00 S_intitule="Des contraintes associées à une norme sont identifiées">
-              <d_ligne I_C="12" I_S1="12" I_S2="12" />
-              <d_poids I_C="1" I_S1="1" I_S2="1" />
-              <d_revue I_C="0" I_S1="0" I_S2="0" />
-            </Indicateur_00>
-            <Indicateur_01 S_intitule="La dimension sensible ou esthétique est identifiée">
-              <d_ligne I_C="13" I_S1="13" I_S2="13" />
-              <d_poids I_C="1" I_S1="1" I_S2="1" />
-              <d_revue I_C="0" I_S1="0" I_S2="0" />
-            </Indicateur_01>
-            <Indicateur_02 S_intitule="Les fonctions d'un système technique sont identifiées">
-              <d_ligne I_C="14" I_S1="14" I_S2="14" />
-              <d_poids I_C="1" I_S1="1" I_S2="1" />
-              <d_revue I_C="0" I_S1="0" I_S2="0" />
-            </Indicateur_02>
-            <Indicateur_03 S_intitule="Les matériaux, flux d'énergie et d'information sont identifiés">
-              <d_ligne I_C="15" I_S1="15" I_S2="15" />
-              <d_poids I_C="1" I_S1="1" I_S2="1" />
-              <d_revue I_C="0" I_S1="0" I_S2="0" />
-            </Indicateur_03>
-          </l_indicateurs>
-          <d_poids />
-          <d_sousComp />
+          <l_indicateurs />
+          <d_poids I_C="15" I_S1="15" I_S2="15" />
+          <d_sousComp>
+            <Competence_C2.1 S_intitule="Des contraintes associées à une norme sont identifiées">
+              <l_domaines />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Des contraintes associées à une norme sont identifiées">
+                  <d_ligne I_C="12" I_S1="12" I_S2="12" />
+                  <d_poids F_C="25.0" F_S1="25.0" F_S2="25.0" />
+                  <d_revue I_C="0" I_S1="0" I_S2="0" />
+                </Indicateur_00>
+              </l_indicateurs>
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C2.1>
+            <Competence_C2.3 S_intitule="Les fonctions d'un système technique sont identifiées">
+              <l_domaines />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Les fonctions d'un système technique sont identifiées">
+                  <d_ligne I_C="14" I_S1="14" I_S2="14" />
+                  <d_poids F_C="25.0" F_S1="25.0" F_S2="25.0" />
+                  <d_revue I_C="0" I_S1="0" I_S2="0" />
+                </Indicateur_00>
+              </l_indicateurs>
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C2.3>
+            <Competence_C2.2 S_intitule="La dimension sensible ou esthétique est identifiée">
+              <l_domaines />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="La dimension sensible ou esthétique est identifiée">
+                  <d_ligne I_C="13" I_S1="13" I_S2="13" />
+                  <d_poids F_C="25.0" F_S1="25.0" F_S2="25.0" />
+                  <d_revue I_C="0" I_S1="0" I_S2="0" />
+                </Indicateur_00>
+              </l_indicateurs>
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C2.2>
+            <Competence_C2.4 S_intitule="Les matériaux, flux d'énergie et d'information sont identifiés">
+              <l_domaines />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Les matériaux, flux d'énergie et d'information sont identifiés">
+                  <d_ligne I_C="15" I_S1="15" I_S2="15" />
+                  <d_poids F_C="25.0" F_S1="25.0" F_S2="25.0" />
+                  <d_revue I_C="0" I_S1="0" I_S2="0" />
+                </Indicateur_00>
+              </l_indicateurs>
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C2.4>
+          </d_sousComp>
           <l_thematiques />
         </Competence_C2>
         <Competence_C1 S_intitule="Acquérir les bases d'une culture de l'innovation technologique">
           <l_domaines />
-          <l_indicateurs>
-            <Indicateur_00 S_intitule="Les évolutions technologiques sont reliées aux innovations qui marquent des ruptures dans les solutions techniques">
-              <d_ligne I_C="6" I_S1="6" I_S2="6" />
-              <d_poids I_C="1" I_S1="1" I_S2="1" />
-              <d_revue I_C="0" I_S1="0" I_S2="0" />
-            </Indicateur_00>
-            <Indicateur_01 S_intitule="Le vocabulaire spécifique à l'innovation et à la créativité est utilisé">
-              <d_ligne I_C="7" I_S1="7" I_S2="7" />
-              <d_poids I_C="1" I_S1="1" I_S2="1" />
-              <d_revue I_C="0" I_S1="0" I_S2="0" />
-            </Indicateur_01>
-            <Indicateur_02 S_intitule="Les principes qui régissent la propriété intellectuelle, la normalisation et l'intelligence économique sont identifiés">
-              <d_ligne I_C="8" I_S1="8" I_S2="8" />
-              <d_poids I_C="1" I_S1="1" I_S2="1" />
-              <d_revue I_C="0" I_S1="0" I_S2="0" />
-            </Indicateur_02>
-            <Indicateur_03 S_intitule="L'analyse du  cycle de vie d'un produit est réalisée">
-              <d_ligne I_C="9" I_S1="9" I_S2="9" />
-              <d_poids I_C="1" I_S1="1" I_S2="1" />
-              <d_revue I_C="0" I_S1="0" I_S2="0" />
-            </Indicateur_03>
-            <Indicateur_04 S_intitule="L'analyse de l'impact environnemental d'un objet et de ses constituants est réalisée">
-              <d_ligne I_C="10" I_S1="10" I_S2="10" />
-              <d_poids I_C="1" I_S1="1" I_S2="1" />
-              <d_revue I_C="0" I_S1="0" I_S2="0" />
-            </Indicateur_04>
-          </l_indicateurs>
-          <d_poids />
-          <d_sousComp />
+          <l_indicateurs />
+          <d_poids I_C="15" I_S1="15" I_S2="15" />
+          <d_sousComp>
+            <Competence_C1.4 S_intitule="L'analyse du  cycle de vie d'un produit est réalisée">
+              <l_domaines />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="L'analyse du  cycle de vie d'un produit est réalisée">
+                  <d_ligne I_C="9" I_S1="9" I_S2="9" />
+                  <d_poids F_C="20.0" F_S1="20.0" F_S2="20.0" />
+                  <d_revue I_C="0" I_S1="0" I_S2="0" />
+                </Indicateur_00>
+              </l_indicateurs>
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C1.4>
+            <Competence_C1.5 S_intitule="L'analyse de l'impact environnemental d'un objet et de ses constituants est réalisée">
+              <l_domaines />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="L'analyse de l'impact environnemental d'un objet et de ses constituants est réalisée">
+                  <d_ligne I_C="10" I_S1="10" I_S2="10" />
+                  <d_poids F_C="20.0" F_S1="20.0" F_S2="20.0" />
+                  <d_revue I_C="0" I_S1="0" I_S2="0" />
+                </Indicateur_00>
+              </l_indicateurs>
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C1.5>
+            <Competence_C1.2 S_intitule="Le vocabulaire spécifique à l'innovation et à la créativité est utilisé">
+              <l_domaines />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Le vocabulaire spécifique à l'innovation et à la créativité est utilisé">
+                  <d_ligne I_C="7" I_S1="7" I_S2="7" />
+                  <d_poids F_C="20.0" F_S1="20.0" F_S2="20.0" />
+                  <d_revue I_C="0" I_S1="0" I_S2="0" />
+                </Indicateur_00>
+              </l_indicateurs>
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C1.2>
+            <Competence_C1.3 S_intitule="Les principes qui régissent la propriété intellectuelle, la normalisation et l'intelligence économique sont identifiés">
+              <l_domaines />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Les principes qui régissent la propriété intellectuelle, la normalisation et l'intelligence économique sont identifiés">
+                  <d_ligne I_C="8" I_S1="8" I_S2="8" />
+                  <d_poids F_C="20.0" F_S1="20.0" F_S2="20.0" />
+                  <d_revue I_C="0" I_S1="0" I_S2="0" />
+                </Indicateur_00>
+              </l_indicateurs>
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C1.3>
+            <Competence_C1.1 S_intitule="Les évolutions technologiques sont reliées aux innovations qui marquent des ruptures dans les solutions techniques">
+              <l_domaines />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Les évolutions technologiques sont reliées aux innovations qui marquent des ruptures dans les solutions techniques">
+                  <d_ligne I_C="6" I_S1="6" I_S2="6" />
+                  <d_poids F_C="20.0" F_S1="20.0" F_S2="20.0" />
+                  <d_revue I_C="0" I_S1="0" I_S2="0" />
+                </Indicateur_00>
+              </l_indicateurs>
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C1.1>
+          </d_sousComp>
           <l_thematiques />
         </Competence_C1>
         <Competence_C7 S_intitule="Représenter, communiquer">
           <l_domaines />
-          <l_indicateurs>
-            <Indicateur_00 S_intitule="Une réflexion, un principe, une idée, une solution technique sont exprimées">
-              <d_ligne I_C="35" I_S1="35" I_S2="35" />
-              <d_poids I_C="1" I_S1="1" I_S2="1" />
-              <d_revue I_C="0" I_S1="0" I_S2="0" />
-            </Indicateur_00>
-            <Indicateur_01 S_intitule="La pensée est exprimée à l'aide d'outils de description adaptés, manuels ou numériques">
-              <d_ligne I_C="36" I_S1="36" I_S2="36" />
-              <d_poids I_C="1" I_S1="1" I_S2="1" />
-              <d_revue I_C="0" I_S1="0" I_S2="0" />
-            </Indicateur_01>
-            <Indicateur_02 S_intitule="Les outils et les langages sont adaptés à la description">
-              <d_ligne I_C="37" I_S1="37" I_S2="37" />
-              <d_poids I_C="1" I_S1="1" I_S2="1" />
-              <d_revue I_C="0" I_S1="0" I_S2="0" />
-            </Indicateur_02>
-            <Indicateur_03 S_intitule="Les résultats expérimentaux sont interprétés, une conclusion argumentée est formulée et communiquée">
-              <d_ligne I_C="38" I_S1="38" I_S2="38" />
-              <d_poids I_C="1" I_S1="1" I_S2="1" />
-              <d_revue I_C="0" I_S1="0" I_S2="0" />
-            </Indicateur_03>
-            <Indicateur_04 S_intitule="Le vocabulaire spécifique à l'innovation et la créativité est utilisé">
-              <d_ligne I_C="39" I_S1="39" I_S2="39" />
-              <d_poids I_C="1" I_S1="1" I_S2="1" />
-              <d_revue I_C="0" I_S1="0" I_S2="0" />
-            </Indicateur_04>
-          </l_indicateurs>
-          <d_poids />
-          <d_sousComp />
+          <l_indicateurs />
+          <d_poids I_C="15" I_S1="10" I_S2="15" />
+          <d_sousComp>
+            <Competence_C7.1 S_intitule="Une réflexion, un principe, une idée, une solution technique sont exprimées">
+              <l_domaines />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Une réflexion, un principe, une idée, une solution technique sont exprimées">
+                  <d_ligne I_C="35" I_S1="35" I_S2="35" />
+                  <d_poids F_C="20.0" F_S1="20.0" F_S2="20.0" />
+                  <d_revue I_C="0" I_S1="0" I_S2="0" />
+                </Indicateur_00>
+              </l_indicateurs>
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C7.1>
+            <Competence_C7.2 S_intitule="La pensée est exprimée à l'aide d'outils de description adaptés, manuels ou numériques">
+              <l_domaines />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="La pensée est exprimée à l'aide d'outils de description adaptés, manuels ou numériques">
+                  <d_ligne I_C="36" I_S1="36" I_S2="36" />
+                  <d_poids F_C="20.0" F_S1="20.0" F_S2="20.0" />
+                  <d_revue I_C="0" I_S1="0" I_S2="0" />
+                </Indicateur_00>
+              </l_indicateurs>
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C7.2>
+            <Competence_C7.3 S_intitule="Les outils et les langages sont adaptés à la description">
+              <l_domaines />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Les outils et les langages sont adaptés à la description">
+                  <d_ligne I_C="37" I_S1="37" I_S2="37" />
+                  <d_poids F_C="20.0" F_S1="20.0" F_S2="20.0" />
+                  <d_revue I_C="0" I_S1="0" I_S2="0" />
+                </Indicateur_00>
+              </l_indicateurs>
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C7.3>
+            <Competence_C7.4 S_intitule="Les résultats expérimentaux sont interprétés, une conclusion argumentée est formulée et communiquée">
+              <l_domaines />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Les résultats expérimentaux sont interprétés, une conclusion argumentée est formulée et communiquée">
+                  <d_ligne I_C="38" I_S1="38" I_S2="38" />
+                  <d_poids F_C="20.0" F_S1="20.0" F_S2="20.0" />
+                  <d_revue I_C="0" I_S1="0" I_S2="0" />
+                </Indicateur_00>
+              </l_indicateurs>
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C7.4>
+            <Competence_C7.5 S_intitule="Le vocabulaire spécifique à l'innovation et la créativité est utilisé">
+              <l_domaines />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Le vocabulaire spécifique à l'innovation et la créativité est utilisé">
+                  <d_ligne I_C="39" I_S1="39" I_S2="39" />
+                  <d_poids F_C="20.0" F_S1="20.0" F_S2="20.0" />
+                  <d_revue I_C="0" I_S1="0" I_S2="0" />
+                </Indicateur_00>
+              </l_indicateurs>
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C7.5>
+          </d_sousComp>
           <l_thematiques />
         </Competence_C7>
         <Competence_C6 S_intitule="Simuler, mesurer un comportement">
           <l_domaines />
-          <l_indicateurs>
-            <Indicateur_00 S_intitule="Les grandeurs sont mesurées de manière directe ou indirecte">
-              <d_ligne I_C="31" I_S1="31" I_S2="31" />
-              <d_poids I_C="1" I_S1="1" I_S2="1" />
-              <d_revue I_C="0" I_S1="0" I_S2="0" />
-            </Indicateur_00>
-            <Indicateur_01 S_intitule="Les résultats expérimentaux sont interprétés, une conclusion est formulée">
-              <d_ligne I_C="32" I_S1="32" I_S2="32" />
-              <d_poids I_C="1" I_S1="1" I_S2="1" />
-              <d_revue I_C="0" I_S1="0" I_S2="0" />
-            </Indicateur_01>
-            <Indicateur_02 S_intitule="La structure et/ou le comportement d'un objet est simulée numériquement">
-              <d_ligne I_C="33" I_S1="33" I_S2="33" />
-              <d_poids I_C="1" I_S1="1" I_S2="1" />
-              <d_revue I_C="0" I_S1="0" I_S2="0" />
-            </Indicateur_02>
-          </l_indicateurs>
-          <d_poids />
-          <d_sousComp />
+          <l_indicateurs />
+          <d_poids I_C="15" I_S1="15" I_S2="15" />
+          <d_sousComp>
+            <Competence_C6.1 S_intitule="Les grandeurs sont mesurées de manière directe ou indirecte">
+              <l_domaines />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Les grandeurs sont mesurées de manière directe ou indirecte">
+                  <d_ligne I_C="31" I_S1="31" I_S2="31" />
+                  <d_poids F_C="33.333333" F_S1="33.333333" F_S2="33.333333" />
+                  <d_revue I_C="0" I_S1="0" I_S2="0" />
+                </Indicateur_00>
+              </l_indicateurs>
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C6.1>
+            <Competence_C6.3 S_intitule="La structure et/ou le comportement d'un objet est simulée numériquement">
+              <l_domaines />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="La structure et/ou le comportement d'un objet est simulée numériquement">
+                  <d_ligne I_C="33" I_S1="33" I_S2="33" />
+                  <d_poids F_C="33.333333" F_S1="33.333333" F_S2="33.333333" />
+                  <d_revue I_C="0" I_S1="0" I_S2="0" />
+                </Indicateur_00>
+              </l_indicateurs>
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C6.3>
+            <Competence_C6.2 S_intitule="Les résultats expérimentaux sont interprétés, une conclusion est formulée">
+              <l_domaines />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Les résultats expérimentaux sont interprétés, une conclusion est formulée">
+                  <d_ligne I_C="32" I_S1="32" I_S2="32" />
+                  <d_poids F_C="33.333333" F_S1="33.333333" F_S2="33.333333" />
+                  <d_revue I_C="0" I_S1="0" I_S2="0" />
+                </Indicateur_00>
+              </l_indicateurs>
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C6.2>
+          </d_sousComp>
           <l_thematiques />
         </Competence_C6>
         <Competence_C5 S_intitule="mettre en œuvre une démarche de création">
           <l_domaines />
-          <l_indicateurs>
-            <Indicateur_00 S_intitule="Le projet de design, individuel ou collectif est conçu et réalisé">
-              <d_ligne I_C="26" I_S1="26" I_S2="26" />
-              <d_poids I_C="1" I_S1="1" I_S2="1" />
-              <d_revue I_C="0" I_S1="0" I_S2="0" />
-            </Indicateur_00>
-            <Indicateur_01 S_intitule="Intention et réalisation sont confrontées dans la conduite d'un projet pour l'adapter et l'orienter, la dimension créative est présente">
-              <d_ligne I_C="27" I_S1="27" I_S2="27" />
-              <d_poids I_C="1" I_S1="1" I_S2="1" />
-              <d_revue I_C="0" I_S1="0" I_S2="0" />
-            </Indicateur_01>
-            <Indicateur_02 S_intitule="Le projet est conduit de manière autonome avec initiative, engagement et esprit critique">
-              <d_ligne I_C="28" I_S1="28" I_S2="28" />
-              <d_poids I_C="1" I_S1="1" I_S2="1" />
-              <d_revue I_C="0" I_S1="0" I_S2="0" />
-            </Indicateur_02>
-            <Indicateur_03 S_intitule="la production individuelle dans le cadre d'un projet est conduite à son terme">
-              <d_ligne I_C="29" I_S1="29" I_S2="29" />
-              <d_poids I_C="1" I_S1="1" I_S2="1" />
-              <d_revue I_C="0" I_S1="0" I_S2="0" />
-            </Indicateur_03>
-          </l_indicateurs>
-          <d_poids />
-          <d_sousComp />
+          <l_indicateurs />
+          <d_poids I_C="15" I_S1="15" I_S2="15" />
+          <d_sousComp>
+            <Competence_C5.2 S_intitule="Intention et réalisation sont confrontées dans la conduite d'un projet pour l'adapter et l'orienter, la dimension créative est présente">
+              <l_domaines />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Intention et réalisation sont confrontées dans la conduite d'un projet pour l'adapter et l'orienter, la dimension créative est présente">
+                  <d_ligne I_C="27" I_S1="27" I_S2="27" />
+                  <d_poids F_C="25.0" F_S1="25.0" F_S2="25.0" />
+                  <d_revue I_C="0" I_S1="0" I_S2="0" />
+                </Indicateur_00>
+              </l_indicateurs>
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C5.2>
+            <Competence_C5.3 S_intitule="Le projet est conduit de manière autonome avec initiative, engagement et esprit critique">
+              <l_domaines />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Le projet est conduit de manière autonome avec initiative, engagement et esprit critique">
+                  <d_ligne I_C="28" I_S1="28" I_S2="28" />
+                  <d_poids F_C="25.0" F_S1="25.0" F_S2="25.0" />
+                  <d_revue I_C="0" I_S1="0" I_S2="0" />
+                </Indicateur_00>
+              </l_indicateurs>
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C5.3>
+            <Competence_C5.1 S_intitule="Le projet de design, individuel ou collectif est conçu et réalisé">
+              <l_domaines />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Le projet de design, individuel ou collectif est conçu et réalisé">
+                  <d_ligne I_C="26" I_S1="26" I_S2="26" />
+                  <d_poids F_C="25.0" F_S1="25.0" F_S2="25.0" />
+                  <d_revue I_C="0" I_S1="0" I_S2="0" />
+                </Indicateur_00>
+              </l_indicateurs>
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C5.1>
+            <Competence_C5.4 S_intitule="la production individuelle dans le cadre d'un projet est conduite à son terme">
+              <l_domaines />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="la production individuelle dans le cadre d'un projet est conduite à son terme">
+                  <d_ligne I_C="29" I_S1="29" I_S2="29" />
+                  <d_poids F_C="25.0" F_S1="25.0" F_S2="25.0" />
+                  <d_revue I_C="0" I_S1="0" I_S2="0" />
+                </Indicateur_00>
+              </l_indicateurs>
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C5.4>
+          </d_sousComp>
           <l_thematiques />
         </Competence_C5>
         <Competence_C4 S_intitule="mettre en œuvre une démarche de créativité">
           <l_domaines />
-          <l_indicateurs>
-            <Indicateur_00 S_intitule="Les hypothèses sont formulées, hiérarchisées, sélectionnées, explicitées, contextualisées">
-              <d_ligne I_C="22" I_S1="22" I_S2="22" />
-              <d_poids I_C="1" I_S1="1" I_S2="1" />
-              <d_revue I_C="0" I_S1="0" I_S2="0" />
-            </Indicateur_00>
-            <Indicateur_01 S_intitule="Une ou des méthodes de créativité sont mise en œuvre">
-              <d_ligne I_C="23" I_S1="23" I_S2="23" />
-              <d_poids I_C="1" I_S1="1" I_S2="1" />
-              <d_revue I_C="0" I_S1="0" I_S2="0" />
-            </Indicateur_01>
-            <Indicateur_02 S_intitule="Une solution innovante est matérialisée">
-              <d_ligne I_C="24" I_S1="24" I_S2="24" />
-              <d_poids I_C="1" I_S1="1" I_S2="1" />
-              <d_revue I_C="0" I_S1="0" I_S2="0" />
-            </Indicateur_02>
-          </l_indicateurs>
-          <d_poids />
-          <d_sousComp />
+          <l_indicateurs />
+          <d_poids I_C="15" I_S1="15" I_S2="15" />
+          <d_sousComp>
+            <Competence_C4.3 S_intitule="Une solution innovante est matérialisée">
+              <l_domaines />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Une solution innovante est matérialisée">
+                  <d_ligne I_C="24" I_S1="24" I_S2="24" />
+                  <d_poids F_C="33.333333" F_S1="33.333333" F_S2="33.333333" />
+                  <d_revue I_C="0" I_S1="0" I_S2="0" />
+                </Indicateur_00>
+              </l_indicateurs>
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C4.3>
+            <Competence_C4.2 S_intitule="Une ou des méthodes de créativité sont mise en œuvre">
+              <l_domaines />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Une ou des méthodes de créativité sont mise en œuvre">
+                  <d_ligne I_C="23" I_S1="23" I_S2="23" />
+                  <d_poids F_C="33.333333" F_S1="33.333333" F_S2="33.333333" />
+                  <d_revue I_C="0" I_S1="0" I_S2="0" />
+                </Indicateur_00>
+              </l_indicateurs>
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C4.2>
+            <Competence_C4.1 S_intitule="Les hypothèses sont formulées, hiérarchisées, sélectionnées, explicitées, contextualisées">
+              <l_domaines />
+              <l_indicateurs>
+                <Indicateur_00 S_intitule="Les hypothèses sont formulées, hiérarchisées, sélectionnées, explicitées, contextualisées">
+                  <d_ligne I_C="22" I_S1="22" I_S2="22" />
+                  <d_poids F_C="33.333333" F_S1="33.333333" F_S2="33.333333" />
+                  <d_revue I_C="0" I_S1="0" I_S2="0" />
+                </Indicateur_00>
+              </l_indicateurs>
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_C4.1>
+          </d_sousComp>
           <l_thematiques />
         </Competence_C4>
       </d_dicCompetences>

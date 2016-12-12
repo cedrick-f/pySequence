@@ -398,6 +398,7 @@ class XMLelem():
                     sdic.update(self.getDernierNiveauArbre(competence.sousComp))
             else:
                 sdic[k0] = competence.copie()
+                
         return sdic
     
     
@@ -1105,12 +1106,16 @@ class Referentiel(XMLelem):
 
                     competence.sousComp = sdic
                     if prems:
+                        if debug:
+                            print "prems", 
                         poids = {}
                         for p, c in self._colParties:
+                            if debug: print p, c, "--", 
                             v = int0(sh.cell(l,c).value)
+                            if debug: print v
                             if v > 0:
                                 poids[p] = v
-
+                        if debug: print poids
                         competence.poids = poids
                     
                     
@@ -1376,6 +1381,7 @@ class Referentiel(XMLelem):
         #
         # Compétences  ###############################################################################
         #
+#         debug = self.Code == "EE-CIT-SI-DIT"
         for n in wb.sheet_names():
             if n[:5] == "Comp_":
                 sh_co = wb.sheet_by_name(n)
@@ -1421,9 +1427,15 @@ class Referentiel(XMLelem):
             #            print "  importer", self, p
                         p.importer(wb)
                 
-                self.dicoCompetences[code].dicCompetences = getArbreComp(sh_co, range(4, sh_co.nrows), 0, prems = True, debug = False)
-                if self.Code == "SSI": print self.dicoCompetences[code].dicCompetences
-
+                self.dicoCompetences[code].dicCompetences = getArbreComp(sh_co, range(4, sh_co.nrows), 0, 
+                                                                         prems = True, 
+                                                                         debug = debug)
+                if debug: 
+                    print self.dicoCompetences[code].dicCompetences
+                    for typi, dico in self.dicoCompetences[code].dicCompetences.items():
+                        print " _poids :", dico.poids
+                    
+                
 
 
         #
@@ -2226,7 +2238,7 @@ class Projet(XMLelem):
 
     ##################################################################################################################
     def postTraiter(self, ref):
-        debug = False #ref.Code == "SSI"
+        debug = False #ref.Code == "EE-CIT-SI-DIT"
 #        if self._parent.Code == "EE-SI":
         if debug: print "postTraiter",  ref, self, self.parties
         
@@ -2317,7 +2329,10 @@ class Projet(XMLelem):
         
         for code, comp in itemComp:
             if debug: print code,
-            if debug: print "    ", comp.dicCompetences   
+            if debug: 
+                print "    ", comp.dicCompetences   
+                for typi, dico in comp.dicCompetences.items():
+                    print "  typi", typi, " poids :", dico.poids
             self._dicoCompetences[code] = self.getArbreProjet(comp.dicCompetences, self, debug = False)
             
             
@@ -2331,7 +2346,9 @@ class Projet(XMLelem):
 #                print "   ", code, self._dicoCompetences
                 
                 
-            if debug: print "   >", self._dicoCompetences[code]
+            if debug: 
+                print "   >", self._dicoCompetences[code]
+                
     #        print ">> _dicCompetences prj", self._dicCompetences
             
             # On regroupe les compétences qui ont les mêmes indicateurs dans la grille (cas de STI2D EE !!)
@@ -2355,12 +2372,15 @@ class Projet(XMLelem):
             
             self._dicoIndicateurs[code] = ref.getPremierEtDernierNiveauArbre(self._dicoCompetences[code])
             
-
+            if debug:
+                print self._dicoIndicateurs[code]
+                for typi, dico in self._dicoIndicateurs.items():
+                    for grp, grpComp in dico.items():
+                        print "  poids :", grpComp.poids
                         
             self.normaliserPoids(self._dicoIndicateurs[code], debug = False)
     #        print "                   ", self._dicIndicateurs_prj
-            if debug:
-                print self._dicoIndicateurs[code]
+            
             
             self._niveau = 0
             self._dicoIndicateurs_famille[code] = self.getDeuxiemeNiveauArbre(self._dicoCompetences[code])

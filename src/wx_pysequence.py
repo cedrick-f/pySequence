@@ -1199,6 +1199,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     
     ###############################################################################################
     def ouvrir(self, nomFichier, reparer = False):
+#         print "ouvrir", nomFichier, reparer
         self.Freeze()
         wx.BeginBusyCursor()
         
@@ -1244,8 +1245,9 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                 if retCode == wx.ID_YES:
                     doc = child.ouvrir(nomFichier, reparer = reparer)
             
+
             if not reparer and doc is not None:
-#                print "Ajout1", nomFichier
+#                 print "Ajout1", nomFichier
                 self.filehistory.AddFileToHistory(nomFichier)
             
         wx.EndBusyCursor()
@@ -2306,6 +2308,8 @@ class FenetreSequence(FenetreDocument):
         self.sequence.undoStack.do(u"Ouverture de la Séquence")
         self.parent.miseAJourUndo()
         
+        return self.sequence
+        
 
     #############################################################################
     def definirNomFichierCourant(self, nomFichier = r''):
@@ -2762,6 +2766,8 @@ class FenetreProjet(FenetreDocument):
         self.classe.undoStack.do(u"Ouverture de la Classe")
         self.projet.undoStack.do(u"Ouverture du Projet")
         self.parent.miseAJourUndo()
+        
+        return self.projet
 
 
     #############################################################################
@@ -9726,6 +9732,11 @@ class PanelSelectionGrille(wx.Panel):
         self.Layout()
         self.SetSizerAndFit(sizer)
 
+    
+    ######################################################################################################
+    def GetPanelRacine(self):
+        return self.Parent.GetPanelRacine()
+
 
     #############################################################################            
     def OnClick(self, event):
@@ -12751,10 +12762,7 @@ class URLSelectorCombo(wx.Panel):
             self.texte.ChangeValue(self.lien.path)
         except:
             self.texte.ChangeValue(toSystemEncoding(self.lien.path)) # On le met en SYSTEM_ENCODING
-#        self.texte.ChangeValue(self.lien.path) 
-#            self.texte.SetBackgroundColour(("white"))
-#        else:
-#            self.texte.SetBackgroundColour(("pink"))
+
         self.Parent.GetPanelRacine().OnPathModified(self.lien, marquerModifier = marquerModifier)
         
         

@@ -8922,16 +8922,16 @@ class Eleve(Personne, Objet_sequence):
             else:
                 t += u"des erreurs :\n"
                 t += u"\n".join(log)
-            messageInfo(self.GetDocument().GetApp(), t, u"Génération terminée")
+            messageInfo(self.GetDocument().GetApp(), u"Génération terminée", t)
             
         
-#        self.GetPanelPropriete().MiseAJour()
+        self.GetPanelPropriete().MiseAJour()
         return log
         
         
     ######################################################################################  
     def GetEvaluabilite(self, complet = False, compil = False):
-        """ Renvoie l'évaluabilité
+        """ Renvoie l'évaluabilité de l'élève
             % conduite
             % soutenance
             ev, ev_tot, seuil
@@ -8954,7 +8954,8 @@ class Eleve(Personne, Objet_sequence):
         
 #        rs = [0, 0]
 #        lers = [{}, {}]
-        
+#         print prj._dicoGrpIndicateur
+#         print prj._dicoIndicateurs
         rs = {}
         lers = {}
         for disc, dic in prj._dicoGrpIndicateur.items():
@@ -8967,7 +8968,7 @@ class Eleve(Personne, Objet_sequence):
         
         
         def getPoids(competence, code, poidsGrp):
-#             print "getPoids", code
+#             print "  getPoids", code
             if competence.sousComp != {}:
                 for k, c in competence.sousComp.items():
                     getPoids(c, k, poidsGrp)
@@ -8975,6 +8976,7 @@ class Eleve(Personne, Objet_sequence):
 #             if competence.poids != {}:
             for disc, dic in prj._dicoGrpIndicateur.items():
                 for ph in dic.keys():
+#                     print "      ", ph
                     if grp in dic[ph]:
 #                         print "_", dic[ph]
                         for i, indic in enumerate(competence.indicateurs):
@@ -9028,6 +9030,7 @@ class Eleve(Personne, Objet_sequence):
         
         for typi, dico in prj._dicoIndicateurs.items():
             for grp, grpComp in dico.items():
+#                 print "  poids :", grpComp.poids
                 getPoids(grpComp, grp, grpComp.poids)
                 
                 
