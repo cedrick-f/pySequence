@@ -1195,6 +1195,8 @@ class BaseDoc():
 
         self.undoStack = UndoStack(self)
         
+        self.path = u""
+        
         #
         # Création du Tip (PopupInfo)
         #
@@ -1207,11 +1209,16 @@ class BaseDoc():
         return self.app
     
     ######################################################################################  
+    def SetPath(self, path):
+        self.path = path
+        
+    
+    ######################################################################################  
     def GetPath(self):
         if hasattr(self.app, 'fichierCourant'):
             return os.path.split(self.app.fichierCourant)[0]
         else:
-            return r""
+            return self.path
     
     ######################################################################################  
     def GetAnnees(self):
@@ -2418,7 +2425,7 @@ class Sequence(BaseDoc, Objet_sequence, ElementDeSequence):
 
     #############################################################################
     def enregistrer(self, nomFichier):
-        print "enregistrer", nomFichier
+        print "enregistrer", nomFichier, self.GetPath()
                 # La séquence
         sequence = self.getBranche()
         classe = self.classe.getBranche()
@@ -4195,6 +4202,7 @@ class Progression(BaseDoc, Objet_sequence, ElementDeSequence):
 
     ######################################################################################  
     def Rafraichir(self, event = None):
+        print "Rafraichir progression"
         self.Ordonner()
         self.arbre.DeleteChildren(self.brancheSeq)
         
@@ -4206,6 +4214,7 @@ class Progression(BaseDoc, Objet_sequence, ElementDeSequence):
         self.DefinirCouleurs()
         
         self.VerifPb()
+        
         if self.arbre.GetSelection() is None:
             self.arbre.SelectItem(self.branche)
 
@@ -4416,15 +4425,17 @@ class Progression(BaseDoc, Objet_sequence, ElementDeSequence):
     ######################################################################################  
     def OuvrirSequence(self, event = None, item = None):
         l = self.arbre.GetItemPyData(item)
+        nomFichier = os.path.join(self.GetPath(), l.path)
 #        self.GetApp().parent.ouvrir(toSystemEncoding(l.path))
-        app = self.GetApp().parent.ouvrirDoc(l.sequence, l.path)
+        app = self.GetApp().parent.ouvrirDoc(l.sequence, nomFichier)
 #        l.sequence.app = app
     
     ######################################################################################  
     def OuvrirProjet(self, event = None, item = None):
         l = self.arbre.GetItemPyData(item)
+        nomFichier = os.path.join(self.GetPath(), l.path)
 #        self.GetApp().parent.ouvrir(toSystemEncoding(l.path))
-        app = self.GetApp().parent.ouvrirDoc(l.projet, l.path)
+        app = self.GetApp().parent.ouvrirDoc(l.projet, nomFichier)
 #        l.sequence.app = app
 
     ######################################################################################  
@@ -5144,7 +5155,8 @@ class Progression(BaseDoc, Objet_sequence, ElementDeSequence):
     ##################################################################################################    
     def enregistrer(self, nomFichier):
         
-        print "enregistrer", nomFichier
+        print "enregistrer", nomFichier, 
+        print "   ", self.dependants
         # La progression
         progression = self.getBranche()
         classe = self.classe.getBranche()
@@ -5160,6 +5172,7 @@ class Progression(BaseDoc, Objet_sequence, ElementDeSequence):
         for lienSeq in [s for s in self.sequences_projets if isinstance(s, LienSequence)]:
             if lienSeq.sequence in self.dependants:
                 nomFichier = os.path.join(self.GetPath(), lienSeq.path)
+                print "++", self.GetPath(), lienSeq.path
                 lienSeq.sequence.enregistrer(nomFichier)
         
         for lienPrj in [s for s in self.sequences_projets if isinstance(s, LienProjet)]:

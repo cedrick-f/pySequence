@@ -632,12 +632,15 @@ def Draw(ctx, prg, mouchard = False):
             
         _x += dx
         _x0 = _x
-        
+    
+    
+    
+    
+    
     #
     # Bilan des compétences abordées
     #
     dicComp, nbrComp = prg.GetCompetencesAbordees()
-    
     DrawBoutonCompetence(ctx, prg, None, dicComp, (posZComp[1] + htitre + posZOrganis[1])/2 , 
                          h = posZComp[1] - posZOrganis[1] - ecartY*3/2 - htitre, nbr = nbrComp)
         
@@ -865,7 +868,8 @@ def Draw(ctx, prg, mouchard = False):
             show_text_rect(ctx, str(phase+1), 
                            (posZDeroul[0] + ecartX/6, y, 
                             wPhases, h), fontsizeMinMax = (fontsize, fontsize),
-                           ha = 'c', orient = "h", b = 0.1, le = 0.7,
+                           ha = 'c', orient = "h", b = 0.2, le = 0.7,
+                           wrap = False, couper = False
                            ) 
 
 
@@ -927,7 +931,7 @@ def DrawSequenceProjet(ctx, prg, lienDoc, y):
     # Flèche verticale indiquant la durée de la séquence/Projet
     #
     ctx.set_source_rgba (0.9,0.8,0.8,0.5)
-    x = posZTaches[0] - wDuree - ecartX/4
+    x = posZTaches[0] - wDuree - ecartX/6
     ctx.rectangle(x, y, wDuree, h)
     ctx.fill_preserve ()    
     ctx.set_source_rgba(0.4,  0.4,  0.4,  1)
@@ -989,7 +993,7 @@ def DrawSequenceProjet(ctx, prg, lienDoc, y):
     ctx.set_source_rgb (0,0,0)
     
     # Si on ne peut pas afficher l'intitulé dessous, on le met à coté
-    rect = (x, y, tailleZTaches[0], h)
+    rect = (x + hTacheMini, y, tailleZTaches[0], h)
     if rect[2] > 0:
         show_text_rect(ctx, doc.intitule, rect, 
                        ha = 'g', fontsizeMinMax = (minFont, 0.015 * COEF))

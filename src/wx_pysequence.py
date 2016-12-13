@@ -1160,7 +1160,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             
             note : pour l'instant, que pour des Séquences
         """
-        print "ouvrirDoc", doc
+        print "ouvrirDoc", nomFichier
         if doc.GetType() == 'seq':
             child = FenetreSequence(self, sequence = doc)
             child.SetIcon(constantes.dicimages["Seq"].GetIcon())
@@ -1205,6 +1205,8 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
         doc = None
 
+#         nomFichier = os.path.join(self.GetDocument(), nomFichier)
+        
         if nomFichier != '':
             ext = os.path.splitext(nomFichier)[1].lstrip('.')
             
@@ -1636,6 +1638,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
     ###############################################################################################
     def Rafraichir(self):
         self.GetDocument().Rafraichir()
+        wx.CallAfter(self.fiche.Redessiner)
         
             
     ###############################################################################################
@@ -2020,7 +2023,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         """ <nomFichier> encodé en FileEncoding
         """
         self.fichierCourant = nomFichier
-#        self.projet.SetPath(nomFichier)
+        self.GetDocument().SetPath(nomFichier)
         self.SetTitre()
 
 
