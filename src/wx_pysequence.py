@@ -229,7 +229,7 @@ from constantes import calculerEffectifs, \
                         CHAR_POINT, COUL_PARTIE, getCoulPartie, COUL_ABS, \
                         TOUTES_REVUES_EVAL, TOUTES_REVUES_EVAL_SOUT, TOUTES_REVUES_SOUT, TOUTES_REVUES, \
                         _S, _Rev, _R1, _R2, _R3, \
-                        revCalculerEffectifs, getSingulierPluriel,\
+                        revCalculerEffectifs, getSingulier, getPluriel, getSingulierPluriel, \
                         COUL_OK, COUL_NON, COUL_BOF, COUL_BIEN, \
                         toList, COUL_COMPETENCES, bmp
 import constantes
@@ -252,7 +252,7 @@ except ImportError:
 # des widgets wx évolués "faits maison"
 import widgets
 from widgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_ENTIER_POS, \
-                    messageErreur, getNomFichier, pourCent2, \
+                    messageErreur, getNomFichier, pourCent2, RangeSlider, \
                     rallonge, remplaceCode2LF, dansRectangle, isstring, \
                     StaticBoxButton, TextCtrl_Help, CloseFenHelp, ImageButtonTransparent, \
                     remplaceLF2Code, messageInfo, messageYesNo, rognerImage, PlaceholderTextCtrl
@@ -4134,7 +4134,8 @@ class PanelPropriete_Sequence(PanelPropriete):
         self.bmp = wx.StaticBitmap(self, -1, self.getBitmapPeriode())
         self.position = PositionCtrl(self, self.sequence.position, 
                                      self.sequence.GetReferentiel().periodes)
-        self.Bind(wx.EVT_RADIOBUTTON, self.onChanged)
+#         self.Bind(wx.EVT_RADIOBUTTON, self.onChanged)
+        self.Bind(wx.EVT_SLIDER, self.onChanged)
         sb.Add(self.bmp, flag = wx.ALIGN_CENTER|wx.EXPAND)
         sb.Add(self.position, flag = wx.ALIGN_CENTER|wx.EXPAND)
         
@@ -4164,7 +4165,7 @@ class PanelPropriete_Sequence(PanelPropriete):
     
     #############################################################################            
     def onChanged(self, evt):
-        self.sequence.SetPosition(evt.GetEventObject().GetId()-1)
+        self.sequence.SetPosition(self.position.GetRange())
         self.SetBitmapPosition()
         self.sendEvent(modif = u"Changement de position de la Séquence",
                        obj = self.sequence)
@@ -4213,7 +4214,7 @@ class PanelPropriete_Sequence(PanelPropriete):
         
         ref = self.sequence.GetReferentiel()
 #        self.position.SetMax(ref.getNbrPeriodes()-1)
-        self.sequence.position = min(self.sequence.position, ref.getNbrPeriodes()-1)
+        self.sequence.position[1] = min(self.sequence.position[1], ref.getNbrPeriodes()-1)
         self.position.SetValue(self.sequence.position)
         self.bmp.SetBitmap(self.getBitmapPeriode())
         
@@ -4415,7 +4416,8 @@ class PanelPropriete_Projet(PanelPropriete):
         sb.Add(self.position, flag = wx.EXPAND)
         
         pageGen.sizer.Add(sb, (1,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.EXPAND|wx.LEFT, border = 2)
-        self.Bind(wx.EVT_RADIOBUTTON, self.onChanged)
+#         self.Bind(wx.EVT_RADIOBUTTON, self.onChanged)
+        self.Bind(wx.EVT_SLIDER, self.onChanged)
 #        self.position.Bind(wx.EVT_RADIOBUTTON, self.onChanged)
 
 
@@ -4434,18 +4436,15 @@ class PanelPropriete_Projet(PanelPropriete):
         
     #############################################################################            
     def getBitmapPeriode(self, larg):
+        return self.projet.getBitmapPeriode(larg)
 #        print "getBitmapPeriode"       
-        imagesurface = draw_cairo.getBitmapPeriode(larg, self.projet.position, 
-                                                       self.projet.GetReferentiel().periodes ,
-                                                       self.projet.GetReferentiel().projets, 
-                                                       prop = 7)
-        return getBitmapFromImageSurface(imagesurface)
+        
          
     
     #############################################################################            
     def onChanged(self, event):
 #        print "onChanged", event.GetSelection(), event.GetEventObject()
-        self.projet.SetPosition(event.GetEventObject().GetId()-1)
+        self.projet.SetPosition(self.position.GetRange())
         self.SetBitmapPosition()
         self.sendEvent(modif = u"Changement de position du projet",
                        obj = self.projet)
@@ -4785,55 +4784,83 @@ class PanelPropriete_Projet(PanelPropriete):
         self.position.Enable(etat)
         
 
-
+# class PositionCtrl(wx.Panel):
+#     def __init__(self, parent, position, periodes, projets = {}):
+#         wx.Panel.__init__(self, parent, -1)
+#         self.sizer = wx.BoxSizer(wx.HORIZONTAL)
+#         radio = []
+#         periodes_prj = [p.periode for p in projets.values()]
+#         self.position = position
+#         
+# #        print "periodes_prj", periodes_prj
+#         num = 1
+#         for an, np in periodes:
+#             p = 1
+#             while p <= np:
+#                 if num == 0:
+#                     s = wx.RB_GROUP
+#                 else:
+#                     s = 0
+#                 
+#                 l = 1
+#                 for pr in periodes_prj:
+#                     if len(pr) > 0 and num == pr[0]:
+#                         l = pr[-1] - pr[0] +1
+#                         break
+#                     
+#                 radio.append(wx.RadioButton(self, num, "", style = s))
+#                 sizer = wx.BoxSizer(wx.VERTICAL)
+#                 sizer.Add(radio[-1], flag = wx.ALIGN_CENTER_HORIZONTAL)
+#                 radio[-1].SetToolTipString(an+' '+str(p))
+#                 self.sizer.Add(sizer, l, flag = wx.ALIGN_RIGHT|wx.EXPAND)
+#                 self.Bind(wx.EVT_RADIOBUTTON, self.OnRadio, radio[-1] )
+#                 num += l
+#                 p += l
+#         self.radio = radio
+#         self.SetSizer(self.sizer)
+#         
+#         
+#     def OnRadio(self, event):
+#         wx.PostEvent(self.Parent, event)
+#         
+# 
+#     def SetValue(self, pos):
+#         self.radio[pos].SetValue(True)
+#         
+#         
+#     def MiseAJour(self):
+#         self.SetValue(self.position)
 
 class PositionCtrl(wx.Panel):
     def __init__(self, parent, position, periodes, projets = {}):
         wx.Panel.__init__(self, parent, -1)
-        self.sizer = wx.BoxSizer(wx.HORIZONTAL)
-        radio = []
-        periodes_prj = [p.periode for p in projets.values()]
         self.position = position
-        
-#        print "periodes_prj", periodes_prj
-        num = 1
-        for an, np in periodes:
-            p = 1
-            while p <= np:
-                if num == 0:
-                    s = wx.RB_GROUP
-                else:
-                    s = 0
-                
-                l = 1
-                for pr in periodes_prj:
-                    if len(pr) > 0 and num == pr[0]:
-                        l = pr[-1] - pr[0] +1
-                        break
-                    
-                radio.append(wx.RadioButton(self, num, "", style = s))
-                sizer = wx.BoxSizer(wx.VERTICAL)
-                sizer.Add(radio[-1], flag = wx.ALIGN_CENTER_HORIZONTAL)
-                radio[-1].SetToolTipString(an+' '+str(p))
-                self.sizer.Add(sizer, l, flag = wx.ALIGN_RIGHT|wx.EXPAND)
-                self.Bind(wx.EVT_RADIOBUTTON, self.OnRadio, radio[-1] )
-                num += l
-                p += l
-        self.radio = radio
+        self.sizer = wx.BoxSizer(wx.HORIZONTAL)
+        projets = [[x-1 for x in p.periode] for p in projets.values()]
+        self.sel = RangeSlider(self, position, 0, sum(p[1] for p in periodes)-1, projets)
+        self.sizer.Add(self.sel, 1, flag = wx.ALIGN_RIGHT|wx.EXPAND)
         self.SetSizer(self.sizer)
+        self.Bind(wx.EVT_SLIDER, self.OnSlide)
+        
+        return
         
         
-    def OnRadio(self, event):
+    def OnSlide(self, event):
         wx.PostEvent(self.Parent, event)
         
 
     def SetValue(self, pos):
-        self.radio[pos].SetValue(True)
+        self.sel.SetValue(pos)
+        
+    
+    def GetRange(self):
+        return self.sel.GetRange()
         
         
     def MiseAJour(self):
         self.SetValue(self.position)
         
+
 
 
 
@@ -6316,7 +6343,7 @@ class PanelPropriete_CI(PanelPropriete):
         #
         # Les Problématiques
         #
-        sbpb = myStaticBox(self, -1, getSingulierPluriel(ref.nomPb), size = (200,-1))
+        sbpb = myStaticBox(self, -1, getSingulier(ref.nomPb), size = (200,-1))
         sbspb = wx.StaticBoxSizer(sbpb,wx.HORIZONTAL)
 
         self.panelPb = PanelProblematiques(self, self.CI)
@@ -6380,7 +6407,7 @@ class PanelPropriete_CI(PanelPropriete):
         
         self.Layout()
         ref = self.CI.parent.classe.referentiel
-        self.sendEvent(modif = u"Modification des %s abordés" %getSingulierPluriel(ref.nomCI, True))
+        self.sendEvent(modif = u"Modification des %s abordés" %getPluriel(ref.nomCI))
 
 
     #############################################################################            
@@ -6426,7 +6453,7 @@ class PanelPropriete_CI(PanelPropriete):
     def MAJ_CI_perso(self, event = None):
         self.CI.CI_perso = self.elb.GetStrings()
         ref = self.CI.parent.classe.referentiel
-        self.sendEvent(modif = u"Modification des %s personnalisés" %getSingulierPluriel(ref.nomCI, True))
+        self.sendEvent(modif = u"Modification des %s personnalisés" %getPluriel(ref.nomCI))
         
         
     #############################################################################            
@@ -6730,7 +6757,8 @@ class PanelPropriete_LienSequence(PanelPropriete):
         self.bmp = wx.StaticBitmap(self, -1, self.sequence.getBitmapPeriode(300))
         self.position = PositionCtrl(self, self.sequence.position, 
                                      ref.periodes)
-        self.Bind(wx.EVT_RADIOBUTTON, self.onChanged)
+#         self.Bind(wx.EVT_RADIOBUTTON, self.onChanged)
+        self.Bind(wx.EVT_SLIDER, self.onChanged)
         sb.Add(self.bmp, flag = wx.ALIGN_CENTER|wx.EXPAND)
         sb.Add(self.position, flag = wx.ALIGN_CENTER|wx.EXPAND)
         
@@ -6754,7 +6782,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
         #
         # Problématiques associées à(aux) CI/Thème(s)
         #
-        sbp = myStaticBox(self, -1, getSingulierPluriel(ref.nomPb, False), size = (200,-1))
+        sbp = myStaticBox(self, -1, getSingulier(ref.nomPb), size = (200,-1))
         sbsp = wx.StaticBoxSizer(sbp,wx.VERTICAL)
         
         self.panelPb = PanelProblematiques(self, self.sequence.CI)
@@ -6837,7 +6865,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
         
         self.Layout()
         ref = self.sequenceCI.parent.classe.referentiel
-        self.sendEvent(modif = u"Modification des %s abordés" %getSingulierPluriel(ref.nomCI, True))
+        self.sendEvent(modif = u"Modification des %s abordés" %getPluriel(ref.nomCI))
 
 
 
@@ -7000,7 +7028,8 @@ class PanelPropriete_LienProjet(PanelPropriete):
         self.bmp = wx.StaticBitmap(self, -1, self.projet.getBitmapPeriode(300))
         self.position = PositionCtrl(self, self.projet.position, 
                                      self.projet.GetReferentiel().periodes)
-        self.Bind(wx.EVT_RADIOBUTTON, self.onChanged)
+#         self.Bind(wx.EVT_RADIOBUTTON, self.onChanged)
+        self.Bind(wx.EVT_SLIDER, self.onChanged)
         sb.Add(self.bmp, flag = wx.ALIGN_CENTER|wx.EXPAND)
         sb.Add(self.position, flag = wx.ALIGN_CENTER|wx.EXPAND)
         
@@ -7023,7 +7052,7 @@ class PanelPropriete_LienProjet(PanelPropriete):
         #
         # Problématiques associées à(aux) CI/Thème(s)
         #
-        sbp = myStaticBox(self, -1, getSingulierPluriel(ref.nomPb, False), size = (200,-1))
+        sbp = myStaticBox(self, -1, getSingulier(ref.nomPb), size = (200,-1))
         sbsp = wx.StaticBoxSizer(sbp,wx.VERTICAL)
         self.panelPb = TextCtrl_Help(self, u"")
         self.panelPb.SetTitre(ref.nomPb)
@@ -8668,7 +8697,7 @@ class PanelPropriete_Tache(PanelPropriete):
                 
                 pageComsizer.Add(self.arbres[code], 1, flag = wx.EXPAND)
                 self.pagesComp[-1].SetSizer(pageComsizer)
-                self.nb.AddPage(self.pagesComp[-1], getSingulierPluriel(comp.nomGenerique, True) + u" à mobiliser : " + comp.abrDiscipline) 
+                self.nb.AddPage(self.pagesComp[-1], getPluriel(comp.nomGenerique) + u" à mobiliser : " + comp.abrDiscipline) 
                 
                 self.pageComsizer = pageComsizer
             
@@ -11287,7 +11316,7 @@ class ArbreCompetencesPrj(ArbreCompetences):
         self.Bind(wx.EVT_SIZE, self.OnSize2)
         self.Bind(CT.EVT_TREE_ITEM_GETTOOLTIP, self.OnToolTip)
         
-        self.SetColumnText(0, getSingulierPluriel(competences.nomGenerique, True) + u" et " + competences.nomGeneriqueIndic)
+        self.SetColumnText(0, getPluriel(competences.nomGenerique) + u" et " + competences.nomGeneriqueIndic)
         
         tache = self.GetTache()
         prj = tache.GetProjetRef()
@@ -12116,7 +12145,7 @@ class PanelProblematiques(wx.Panel):
         self.PbPerso = TextCtrl_Help(self, u"")
         self.PbPerso.SetTitre(u"Problématiques personalisées")
         self.PbPerso.SetToolTipString(u"Exprimer ici la %s abordée\n" \
-                                      u"ou choisir une parmi les %s envisageables." %(getSingulierPluriel(ref.nomPb, False), getSingulierPluriel(ref.nomPb, True)))
+                                      u"ou choisir une parmi les %s envisageables." %(getSingulier(ref.nomPb), getPluriel(ref.nomPb)))
 #         self.Bind(stc.EVT_STC_CHANGE, self.EvtText, self.PbPerso)
         self.Bind(stc.EVT_STC_MODIFIED, self.EvtText, self.PbPerso)
         self.sizer.Add(self.PbPerso, flag = wx.EXPAND)
@@ -12189,7 +12218,7 @@ class PanelProblematiques(wx.Panel):
             self.arbre.CheckItem2(b, False)
         ref = self.CI.GetReferentiel()
         self.CI.Pb = self.PbPerso.GetText()
-        t = u"Modification de la %s" %getSingulierPluriel(ref.nomPb, False)
+        t = u"Modification de la %s" %getSingulier(ref.nomPb)
         self.Parent.GetDocument().GererDependants(self.CI.parent, t)
             
         if self.Parent.onUndoRedo():
@@ -12218,7 +12247,7 @@ class PanelProblematiques(wx.Panel):
         ref = self.CI.GetReferentiel()
         item = event.GetItem()
         self.CI.Pb = self.arbre.GetItemText(item)
-        self.Parent.sendEvent(modif = u"Modification de la %s" %getSingulierPluriel(ref.nomPb, False))
+        self.Parent.sendEvent(modif = u"Modification de la %s" %getSingulier(ref.nomPb))
 
     
 

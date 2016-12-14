@@ -53,7 +53,7 @@ from math import log, pi
 #from constantes import Effectifs, NomsEffectifs, listeDemarches, Demarches, getSavoir, getCompetence, \
 #                        DemarchesCourt, estCompetenceRevue
 import constantes
-from constantes import getSingulierPluriel
+from constantes import getSingulier, getPluriel, getSingulierPluriel
 
 # Les constantes partagées
 from Referentiel import REFERENTIELS
@@ -570,7 +570,7 @@ def Draw(ctx, prg, mouchard = False):
     
     # Titre
     htitre = 0.017 * COEF
-    show_text_rect(ctx, getSingulierPluriel(ref.dicoCompetences["S"].nomGenerique, True),
+    show_text_rect(ctx, getPluriel(ref.dicoCompetences["S"].nomGenerique),
                    (posZComp[0], posZOrganis[1] + ecartY/2,
                     tailleZComp[0], htitre), 
                    va = 'c', ha = 'c', b = 0, orient = 'h', 
@@ -657,7 +657,7 @@ def Draw(ctx, prg, mouchard = False):
     if len(lstTh) > 0:
         rectTh = (posZThH[0], posZThV[1], 
                   tailleZThH[0], tailleZThH[1])
-        curve_rect_titre(ctx, getSingulierPluriel(ref.nomTh, False),
+        curve_rect_titre(ctx, getSingulier(ref.nomTh),
                          rectTh, BcoulCI, IcoulCI, fontCI)
         
         ctx.select_font_face(font_family, cairo.FONT_SLANT_NORMAL,
@@ -735,7 +735,7 @@ def Draw(ctx, prg, mouchard = False):
     if len(lstCI) > 0:
         rectCI = (posZCIH[0], posZCIH[1], 
                   tailleZCIH[0], tailleZCIH[1])
-        curve_rect_titre(ctx, getSingulierPluriel(ref.nomCI, False),
+        curve_rect_titre(ctx, getSingulier(ref.nomCI),
                          rectCI, BcoulCI, IcoulCI, fontCI)
         
         ctx.select_font_face(font_family, cairo.FONT_SLANT_NORMAL,
@@ -820,7 +820,7 @@ def Draw(ctx, prg, mouchard = False):
 
     position = None
     for t in prg.sequences_projets:
-        pos = t.GetPosition()
+        pos = t.GetPosition()[0]
         
         if position != pos:
             y += ecartTacheY
@@ -964,9 +964,9 @@ def DrawSequenceProjet(ctx, prg, lienDoc, y):
     ctx.set_line_width(0.002 * COEF)
 #    print "BcoulPos", BcoulPos
     rectangle_plein(ctx, x, y, w, h, 
-                    BcoulPos[doc.position], 
-                    IcoulPos[doc.position], 
-                    IcoulPos[doc.position][3])
+                    BcoulPos[doc.position[0]], 
+                    IcoulPos[doc.position[0]], 
+                    IcoulPos[doc.position[0]][3])
     
     #
     # Icone du type de document

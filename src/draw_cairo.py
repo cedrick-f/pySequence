@@ -1334,6 +1334,7 @@ def getBitmapPeriode(larg, position, periodes, projets = {}, prop = 7):
 #        print "  ", self.projet.position
 #        print "  ", self.projet.GetReferentiel().periodes
 #        print "  ", self.projet.GetReferentiel().periode_prj
+    
     w, h = 0.04*prop * COEF, 0.04 * COEF
 #    print w, h
     imagesurface = cairo.ImageSurface(cairo.FORMAT_ARGB32,  larg, int(h/w*larg))#cairo.FORMAT_ARGB32,cairo.FORMAT_RGB24

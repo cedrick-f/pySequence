@@ -181,13 +181,19 @@ def getAnneeScolaire():
 def getAnneeScolaireStr():
     annee = getAnneeScolaire()
     return str(annee)+"-"+str(annee+1)
-    
-def getSingulierPluriel(txt, pluriel = False):
-    if pluriel:
-        return txt.replace("(", "").replace(")", "")
-    else:
-        return txt.replace("(s)", "").replace("(x)", "")
 
+def getSingulierPluriel(txt, pluriel):
+    if pluriel:
+        return getPluriel(txt)
+    else:
+        return getSingulier(txt)
+
+def getPluriel(txt):
+    return txt.replace("(", "").replace(")", "")
+
+
+def getSingulier(txt):
+    return txt.replace("(s)", "").replace("(x)", "")
     
     
 #    

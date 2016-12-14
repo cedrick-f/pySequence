@@ -426,7 +426,8 @@ def Draw(ctx, seq, mouchard = False, entete = False):
     taillePos[0] =  LargeurTotale - posPos[0] - margeX
     ctx.set_line_width (0.0015 * COEF)
     r = (posPos[0], posPos[1], taillePos[0], taillePos[1])
-    rects = DrawPeriodes(ctx, r, seq.position, 
+    
+    rects = DrawPeriodes(ctx, r, seq.getRangePeriode(), 
                                seq.classe.referentiel.periodes,
                                tailleTypeEns = tailleTypeEns)
     
@@ -740,7 +741,6 @@ def Draw(ctx, seq, mouchard = False, entete = False):
     #
     #  CI
     #
-#    Draw_CI(ctx, seq.classe.ci_ET)
     Draw_CI(ctx, seq.CI, seq)
     
     

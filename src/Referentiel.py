@@ -2068,14 +2068,14 @@ class Projet(XMLelem):
     #############################################################################
     def getPeriodeEval(self):
         if len(self.periode) > 0:
-            return self.periode[0]-1
+            return [self.periode[0]-1, self.periode[-1]-1]
         return None
     
     #############################################################################
     def getPeriodeDefaut(self):
         p = self.getPeriodeEval()
         if p is None:
-            return 0
+            return [0, 0]
         return p
     
     #########################################################################

@@ -376,7 +376,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False, entete = Fal
     taillePos[0] = taillePro[0]/2
     ctx.set_line_width (0.0015 * COEF)
     r = (posPos[0], posPos[1], taillePos[0], taillePos[1])
-    rects = DrawPeriodes(ctx, r, prj.position, prj.classe.referentiel.periodes,
+    rects = DrawPeriodes(ctx, r, prj.getRangePeriode(), prj.classe.referentiel.periodes,
 #                               [p.periode for p in prj.classe.referentiel.projets.values()],  
                                prj.classe.referentiel.projets,
                                tailleTypeEns = tailleTypeEns)

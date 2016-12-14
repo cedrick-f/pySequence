@@ -85,7 +85,7 @@ from constantes import calculerEffectifs, \
                         CHAR_POINT, COUL_PARTIE, getCoulPartie, COUL_ABS, \
                         TOUTES_REVUES_EVAL, TOUTES_REVUES_EVAL_SOUT, TOUTES_REVUES_SOUT, TOUTES_REVUES, \
                         _S, _Rev, _R1, _R2, _R3, \
-                        revCalculerEffectifs, getSingulierPluriel,\
+                        revCalculerEffectifs, getSingulier, getPluriel, getSingulierPluriel,\
                         COUL_OK, COUL_NON, COUL_BOF, COUL_BIEN, \
                         toList, COUL_COMPETENCES
 import constantes
@@ -1187,7 +1187,7 @@ class BaseDoc():
         
         # Année Scolaire
         self.annee = constantes.getAnneeScolaire()
-        self.position = 0   # Position de la séquence/projet dans la période d'enseignement
+        self.position = [0, 0]   # Position de la séquence/projet dans la période d'enseignement
         
         self.commentaires = u""
         
@@ -1229,6 +1229,11 @@ class BaseDoc():
     def GetNbrPeriodes(self):
         return sum([p for a, p in self.GetReferentiel().periodes])
 
+    
+    #############################################################################            
+    def getRangePeriode(self):
+        return list(range(self.position[0], self.position[1]+1))
+    
 
     ######################################################################################  
     def estProjet(self):
@@ -1256,7 +1261,7 @@ class BaseDoc():
     
     ######################################################################################  
     def SetPosition(self, pos):
-        self.position = pos  
+        self.position = pos
         
     ######################################################################################  
     def SetCommentaire(self, text):
@@ -1352,7 +1357,12 @@ class BaseDoc():
         elif zone.param is not None:
             if len(zone.param) > 3 and zone.param[:3] == "POS" :
                 if not self.classe.verrouillee:
-                    self.SetPosition(int(zone.param[3]))
+                    p = int(zone.param[3])
+                    if p-self.position[0] > self.position[1]-p+1:
+#                     if p > self.position[0]:
+                        self.SetPosition([self.position[0], p])
+                    else:
+                        self.SetPosition([p, self.position[1]])
 #                    self.GetPanelPropriete().SetBitmapPosition()
                     pp = self.GetApp().GetPanelProp()
                     if hasattr(pp, "SetBitmapPosition"):
@@ -1636,7 +1646,7 @@ class Sequence(BaseDoc, Objet_sequence, ElementDeSequence):
         
         sequence.set("Domaine", self.domaine)
 
-        sequence.set("Position", str(self.position))
+        sequence.set("Position", "_".join([str(p) for p in self.position]))
 
         equipe = ET.SubElement(sequence, "Equipe")
         for p in self.equipe:
@@ -1681,7 +1691,12 @@ class Sequence(BaseDoc, Objet_sequence, ElementDeSequence):
         
         self.domaine = branche.get("Domaine", "")
         
-        self.position = eval(branche.get("Position", "0"))
+#         self.position = eval(branche.get("Position", "0"))
+        sp = branche.get("Position", "0_0")
+        sp = sp.split("_")
+        if len(sp) == 1:
+            sp = [sp[0], sp[0]]
+        self.position = [int(sp[0]), int(sp[1])]
 
         brancheEqu = branche.find("Equipe")
         self.equipe = []
@@ -2289,7 +2304,7 @@ class Sequence(BaseDoc, Objet_sequence, ElementDeSequence):
     def GetSavoirsVises(self):
         """ Renvoie la liste des Savoirs visés (objectifs) 
         """
-        print "GetSavoirsVises", self
+#         print "GetSavoirsVises", self
         ref = self.GetReferentiel()
         
         def ajouter(k, l):
@@ -2301,13 +2316,13 @@ class Sequence(BaseDoc, Objet_sequence, ElementDeSequence):
                 l.append(k)
             
         lstCompS = [c for c in self.obj["S"].savoirs if c[0] == "S"]
-        print "   ", lstCompS
+#         print "   ", lstCompS
         
         l = []
         for k in lstCompS:
             ajouter(k, l)
             
-        print "   ", l
+#         print "   ", l
         return l+lstCompS
 
 
@@ -2385,9 +2400,13 @@ class Sequence(BaseDoc, Objet_sequence, ElementDeSequence):
                 if dansRectangle(x, y, (rectPos,))[0]:
                     return i
 
+
+    
+    
+    
     #############################################################################            
     def getBitmapPeriode(self, larg):
-        imagesurface = draw_cairo_seq.getBitmapPeriode(larg, self.position,
+        imagesurface = draw_cairo_seq.getBitmapPeriode(larg, self.getRangePeriode(),
                                                        self.GetReferentiel().periodes, 
                                                        prop = 7)
         return getBitmapFromImageSurface(imagesurface)
@@ -2425,7 +2444,7 @@ class Sequence(BaseDoc, Objet_sequence, ElementDeSequence):
 
     #############################################################################
     def enregistrer(self, nomFichier):
-        print "enregistrer", nomFichier, self.GetPath()
+#         print "enregistrer", nomFichier, self.GetPath()
                 # La séquence
         sequence = self.getBranche()
         classe = self.classe.getBranche()
@@ -2695,7 +2714,7 @@ class Projet(BaseDoc, Objet_sequence, ElementDeSequence):
         if self.commentaires != u"":
             projet.set("Commentaires", self.commentaires)
 
-        projet.set("Position", str(self.position))
+        projet.set("Position", "_".join([str(p) for p in self.position]))
         projet.set("Annee", str(self.annee))
         
         # Organisation
@@ -2762,13 +2781,19 @@ class Projet(BaseDoc, Objet_sequence, ElementDeSequence):
         self.commentaires = branche.get("Commentaires", u"")
         
         ref = self.GetProjetRef()
-        self.position = eval(branche.get("Position", "0"))
+        
+        sp = branche.get("Position", "0_0")
+        sp = sp.split("_")
+        if len(sp) == 1:
+            sp = [sp[0], sp[0]]
+        self.position = [int(sp[0]), int(sp[1])]
+        
         if self.version == "": # Enregistré avec une version de pySequence > 5.7
-            if self.position == 5:
+            if self.position[0] == 5:
                 print "Correction position"
                 self.position = ref.getPeriodeEval()
 #        print "position", self.position
-        self.code = self.GetReferentiel().getProjetEval(self.position+1)
+        self.code = self.GetReferentiel().getProjetEval(self.position[0]+1)
         
         self.nbrRevues = eval(branche.get("NbrRevues", str(ref.getNbrRevuesDefaut())))
         if not self.nbrRevues in ref.posRevues.keys():
@@ -2914,7 +2939,7 @@ class Projet(BaseDoc, Objet_sequence, ElementDeSequence):
 #        print "SetPosition", pos
 #        print "  position actuelle :", self.position
 #        posEpreuve = self.GetProjetRef().getPeriodeEval()
-        kproj = self.GetReferentiel().getProjetEval(pos+1)
+        kproj = self.GetReferentiel().getProjetEval(pos[0]+1)
 #        print "  >", kproj
 #        print "  posEpreuve", posEpreuve
     
@@ -3093,8 +3118,8 @@ class Projet(BaseDoc, Objet_sequence, ElementDeSequence):
                         titre = nc + " " + k[0]
                     self.tip.SetWholeText("titre", titre)
                     
-                    intituleComp = "\n".join([textwrap.fill(ind, 50) for ind in competence.intitule.split(u"\n")]) 
-                    self.tip.SetWholeText( "int", intituleComp)
+#                     intituleComp = "\n".join([textwrap.fill(ind, 50) for ind in competence.intitule.split(u"\n")]) 
+                    self.tip.SetWholeText( "int", competence.intitule)
                     
                     if competence.sousComp != {}: #type(competence[1]) == dict:  
                         code = None
@@ -3785,11 +3810,11 @@ class Projet(BaseDoc, Objet_sequence, ElementDeSequence):
         
     #############################################################################            
     def getBitmapPeriode(self, larg):
-        imagesurface = draw_cairo_prj.getBitmapPeriode(larg, self.position,
-                                                       self.GetReferentiel().periodes, 
+        imagesurface = draw_cairo.getBitmapPeriode(larg, self.getRangePeriode(), 
+                                                       self.GetReferentiel().periodes ,
+                                                       self.GetReferentiel().projets, 
                                                        prop = 7)
         return getBitmapFromImageSurface(imagesurface)
-    
     
     #############################################################################
     def MiseAJour(self):
@@ -4105,7 +4130,7 @@ class Progression(BaseDoc, Objet_sequence, ElementDeSequence):
         """
         l = []
         for doc in [s.GetDoc() for s in self.sequences_projets]:
-            l.append(doc.position)
+            l.extend(doc.position)
         return list(set(l))
 
 
@@ -5077,13 +5102,13 @@ class Progression(BaseDoc, Objet_sequence, ElementDeSequence):
             
             elif param[:2] == "CI":
                 ref = self.GetReferentiel()
-                self.tip.SetWholeText("titre", getSingulierPluriel(ref.nomCI, False))  
+                self.tip.SetWholeText("titre", getSingulier(ref.nomCI))  
                 numCI = int(param[2:])
                 code = ref.abrevCI+str(numCI+1)
                 intit = ref.CentresInterets[numCI]
                 self.tip.AjouterElemListeDL("ci", code, intit)
                 if len(ref.listProblematiques) > numCI and len(ref.listProblematiques[numCI]) > 0:
-                    self.tip.SetWholeText("nomPb", getSingulierPluriel(ref.nomPb, True) + " envisageables")  
+                    self.tip.SetWholeText("nomPb", getPluriel(ref.nomPb) + " envisageables")  
                     for pb in ref.listProblematiques[numCI]:
                         self.tip.AjouterElemListeUL("pb", pb)
                 else:
@@ -5098,7 +5123,7 @@ class Progression(BaseDoc, Objet_sequence, ElementDeSequence):
                     self.tip.SetHTML(constantes.BASE_FICHE_HTML_COMP_PRJ)
                     k = param[3:]
                     code, groupe = competences[0]
-                    nc = getSingulierPluriel(ref.dicoCompetences["S"].nomGenerique, False)
+                    nc = getSingulier(ref.dicoCompetences["S"].nomGenerique)
                     self.tip.SetWholeText("titre", nc + " " + k)
                     self.tip.SetWholeText("grp", code + "  " + groupe.intitule)
 #                     print "***", competences
@@ -5212,7 +5237,7 @@ class LienSequence(Objet_sequence):
     def comp(self, lienSeq):
         """
         """
-        return self.sequence.position > lienSeq.sequence.position
+        return self.sequence.position[0] > lienSeq.sequence.position[0]
     
     ######################################################################################  
     def GetApp(self):
@@ -5261,7 +5286,7 @@ class LienSequence(Objet_sequence):
 #        print "ConstruireArbre"
         self.arbre = arbre
             
-        coul = draw_cairo.BcoulPos[self.sequence.position]
+        coul = draw_cairo.BcoulPos[self.sequence.position[0]]
         coul = [int(200*c) for c in coul]
 #         self.codeBranche = CodeBranche(self.arbre)
 #        self.codeBranche.SetForegroundColour(coul)
@@ -5368,7 +5393,7 @@ class LienProjet(Objet_sequence):
     def comp(self, lienSeq):
         """
         """
-        return self.projet.position > lienSeq.projet.position
+        return self.projet.position[0] > lienSeq.projet.position[0]
     
     ######################################################################################  
     def GetApp(self):
@@ -5692,7 +5717,7 @@ class CentreInteret(Objet_sequence):
     def ConstruireArbre(self, arbre, branche):
         self.arbre = arbre
         self.codeBranche = CodeBranche(self.arbre)
-        self.branche = arbre.AppendItem(branche, getSingulierPluriel(self.GetReferentiel().nomCI, True)+u" :", 
+        self.branche = arbre.AppendItem(branche, getPluriel(self.GetReferentiel().nomCI)+u" :", 
                                         wnd = self.codeBranche, data = self,
                                         image = self.arbre.images["Ci"])
         self.codeBranche.SetBranche(self.branche)
@@ -5712,7 +5737,7 @@ class CentreInteret(Objet_sequence):
     #############################################################################
     def MiseAJourTypeEnseignement(self):
         if hasattr(self, 'arbre'):
-            self.arbre.SetItemText(self.branche, getSingulierPluriel(self.GetReferentiel().nomCI, True)+u" :")
+            self.arbre.SetItemText(self.branche, getPluriel(self.GetReferentiel().nomCI)+u" :")
 #        self.GetPanelPropriete().construire()
 
     
@@ -5733,7 +5758,7 @@ class CentreInteret(Objet_sequence):
             self.tip.AjouterElemListeDL("ci", self.GetCode(i), self.GetIntit(i))
         
         if len(self.Pb) > 0:
-            self.tip.SetWholeText("nomPb", getSingulierPluriel(ref.nomPb, False))  
+            self.tip.SetWholeText("nomPb", getSingulier(ref.nomPb))  
             self.tip.AjouterElemListeUL("pb", self.Pb)
         else:
             self.tip.SupprimerTag("pb")             
@@ -5809,7 +5834,7 @@ class Competences(Objet_sequence):
     
     ######################################################################################  
     def GetNomGenerique(self):
-        return getSingulierPluriel(self.GetReferentiel().dicoCompetences["S"].nomGenerique, True)
+        return getPluriel(self.GetReferentiel().dicoCompetences["S"].nomGenerique)
     
     ######################################################################################  
     def GetDiscipline(self, num):
@@ -5946,7 +5971,7 @@ class Savoirs(Objet_sequence):
     
     ######################################################################################  
     def GetNomGenerique(self):
-        return getSingulierPluriel(self.GetReferentiel().dicoSavoirs["S"].nomGenerique, True)
+        return getPluriel(self.GetReferentiel().dicoSavoirs["S"].nomGenerique)
     
     ######################################################################################  
     def GetDiscipline(self, num):
