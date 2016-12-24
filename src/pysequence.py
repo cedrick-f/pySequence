@@ -1203,7 +1203,14 @@ class BaseDoc():
         self.tip = PopupInfo(self.GetApp().parent, "")
         
         
-          
+    ######################################################################################  
+    def __lt__(self, doc):
+        if self.GetPosition()[0] == doc.GetPosition()[0]:
+            return self.GetPosition()[-1]-self.GetPosition()[0] < doc.GetPosition()[-1]-doc.GetPosition()[0]
+        else:
+            return self.GetPosition()[0] < doc.GetPosition()[0]
+        
+        
     ######################################################################################  
     def GetApp(self):
         return self.app
@@ -1346,8 +1353,10 @@ class BaseDoc():
                 
                 elif isinstance(zone.obj, Sequence) and len(zone.param) > 3 and zone.param[:3] == "CMP":
                     ref = self.GetReferentiel()
+                    print "Click : S"+zone.param[3:]
+                    print zone.obj.obj['C']
                     zone.obj.obj['C'].ToogleCode("S"+zone.param[3:])
-                    t = u"Modification des "+ getSingulierPluriel(ref.dicoCompetences["S"].nomGenerique, True) + " visées par la Séquence"
+                    t = u"Modification des "+ getPluriel(ref.dicoCompetences["S"].nomGenerique) + " visées par la Séquence"
                     pp = self.GetApp().GetPanelProp()
                     if hasattr(pp, "MiseAJourApercu"):
                         pp.MiseAJourApercu()
@@ -4076,7 +4085,7 @@ class Progression(BaseDoc, Objet_sequence, ElementDeSequence):
 
         self.image = None
         
-        self.sequences_projets = []     # liste de LienSequence et de LienProjet
+        self.sequences_projets = []     # liste de LienSequence et de LienProjet et de Referentiel.Projet
         
 #         self.calendriers = []
         self.calendrier = Calendrier(self, constantes.getAnneeScolaire())
@@ -4190,8 +4199,33 @@ class Progression(BaseDoc, Objet_sequence, ElementDeSequence):
             return [], []
                 
 
+    ######################################################################################  
+    def GetOrganisation(self):
+        """ Renvoie une structure organisé des Séquences et Projets
+            une liste de colones, avec des Séquences/Projets
+            Minimisation du nombre de colonnes ?
+        """
+        print "GetOrganisation"
+        orga = []
+        liste = self.GetAllSequencesProjets()
+        print "   ", liste
+        
+        liste.sort(key = lambda s:s.GetPosition()[-1]-s.GetPosition()[0], reverse = True)
+        liste.sort(key = lambda s:s.GetPosition()[0])
+        print " >>", liste
+        
+#         for d in liste()
+        
+        
+        return orga
 
 
+
+    ######################################################################################  
+    def GetAllSequencesProjets(self):
+        return self.sequences_projets[:] + self.GetReferentiel().projets.values()
+    
+    
     ######################################################################################  
     def GetPanelPropriete(self, parent):
         return PanelPropriete_Progression(parent, self)
@@ -5210,13 +5244,44 @@ class Progression(BaseDoc, Objet_sequence, ElementDeSequence):
 
 
 
+
+
 #########################################################################################################
 #########################################################################################################
-class LienSequence(Objet_sequence):
+class ElementProgression():
     def __init__(self, parent, path = r""):
         self.path = path
+
+
+    
+    ######################################################################################  
+    def __eq__(self, lien):
+        return os.path.normpath(self.path) == os.path.normpath(lien.path)
+    
+    
+    ######################################################################################  
+    def __lt__(self, doc):
+        return self.GetDoc() < doc.GetDoc()
+
+
+    ######################################################################################  
+    def GetApp(self):
+        return self.parent.GetApp()
+    
+    ######################################################################################  
+    def GetDocument(self):    
+        return self.parent
+
+
+
+#########################################################################################################
+#########################################################################################################
+class LienSequence(Objet_sequence, ElementProgression):
+    def __init__(self, parent, path = r""):
+        
         self.parent = parent
         Objet_sequence.__init__(self)
+        ElementProgression.__init__(self, path)
         
         self.sequence = None
         
@@ -5227,25 +5292,19 @@ class LienSequence(Objet_sequence):
 #        self.ficheHTML = self.GetFicheHTML()
 #        self.tip = PopupInfo(self.parent.app, self.ficheHTML)
 
-        
-    
     ######################################################################################  
-    def __eq__(self, lien):
-        return os.path.normpath(self.path) == os.path.normpath(lien.path)
+    def __repr__(self):
+        return "Seq :"+str(self.GetPosition()[0])+" > "+str(self.GetPosition()[-1]-self.GetPosition()[0])
     
+
+        
     ######################################################################################  
     def comp(self, lienSeq):
         """
         """
         return self.sequence.position[0] > lienSeq.sequence.position[0]
     
-    ######################################################################################  
-    def GetApp(self):
-        return self.parent.GetApp()
-    
-    ######################################################################################  
-    def GetDocument(self):    
-        return self.parent
+
     
     ######################################################################################  
     def GetPanelPropriete(self, parent):
@@ -5368,11 +5427,11 @@ class LienSequence(Objet_sequence):
 
 #########################################################################################################
 #########################################################################################################
-class LienProjet(Objet_sequence):
+class LienProjet(Objet_sequence, ElementProgression):
     def __init__(self, parent, path = r""):
-        self.path = path
         self.parent = parent
         Objet_sequence.__init__(self)
+        ElementProgression.__init__(self, path)
         
         self.projet = None
         
@@ -5384,24 +5443,21 @@ class LienProjet(Objet_sequence):
 #        self.tip = PopupInfo(self.parent.app, self.ficheHTML)
 
         
-    
     ######################################################################################  
-    def __eq__(self, lien):
-        return os.path.normpath(self.path) == os.path.normpath(lien.path)
-    
+    def __repr__(self):
+        return "Prj :"+str(self.GetPosition()[0])+" > "+str(self.GetPosition()[-1]-self.GetPosition()[0])
+
+
+
+        
+        
     ######################################################################################  
     def comp(self, lienSeq):
         """
         """
         return self.projet.position[0] > lienSeq.projet.position[0]
     
-    ######################################################################################  
-    def GetApp(self):
-        return self.parent.GetApp()
-    
-    ######################################################################################  
-    def GetDocument(self):    
-        return self.parent
+
     
     ######################################################################################  
     def GetDoc(self):
@@ -5817,13 +5873,84 @@ class Competences(Objet_sequence):
         
 #        self.GetPanelPropriete().MiseAJour()
     
+    
+    
     ######################################################################################  
     def ToogleCode(self, code):
+        self.Etendre()
         if code in self.competences:
             self.competences.remove(code)
         else:
             self.competences.append(code)
+        self.Condenser()
             
+    ######################################################################################       
+    def Etendre(self):
+        """ Etend la liste des compétences :
+            A1
+                >>>
+                    A1
+                    A1.1
+                    A1.2
+                    A1.3
+        """
+#         print "Etendre"
+#         print "   ", self.competences
+        ref = self.GetReferentiel()
+        
+        def ajouter(k, l, comp):
+            if len(comp.sousComp) > 0:
+                for k2, c2 in comp.sousComp.items():
+                    ajouter("S"+k2, l, c2)
+            else:
+                l.append(k)
+            
+        lstCompS = [c for c in self.competences if c[0] == "S"]
+        l = []
+        for k in lstCompS:
+            ajouter(k, l, ref.getCompetence(k))
+            
+        self.competences = l
+#         print "   ", self.competences
+
+
+
+    ######################################################################################       
+    def Condenser(self):
+        """ Condense la liste des compétences :
+            A1.1
+            A1.2
+            A1.3
+                >>>
+                    A1
+        """
+#         print "Condenser"
+#         print "   ", self.competences
+        ref = self.GetReferentiel()
+        s = set(self.competences)
+        
+        def condense(d, k, comp):
+            if len(comp.sousComp) > 0:
+#                 print " +++ ", comp.sousComp.keys()
+                lk = [d+kk for kk in comp.sousComp.keys()]
+                if set(lk).issubset(s):
+                    for sk in lk:
+                        s.remove(sk)
+                    s.add(d+k)
+                    
+                for k1, v1 in comp.sousComp.items():
+                    condense(d, k1, v1)
+                
+        for d, competences in ref.dicoCompetences.items():
+            dicCompetences = competences.dicCompetences
+            for k, v in dicCompetences.items():
+                condense(d, k, v)
+            
+        self.competences = list(s)
+#         print "   ", self.competences
+        
+        
+        
     ######################################################################################  
     def GetCode(self, num):
         return self.competences[num]

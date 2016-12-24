@@ -608,7 +608,7 @@ class Referentiel(XMLelem):
         
         
         #
-        # Projets
+        # Projets "obligatoires" (au BO)
         #
         self.projets = {}
         self.aColNon = {}               # Pour indiquer si les différentes parties d'un projet ont une colonne "NON" dans leur grille
@@ -2021,8 +2021,24 @@ class Projet(XMLelem):
 
     ##################################################################################################################
     def __repr__(self):
-        return self.code + " : " + self.intitule + u" (" + str(self.duree) + u"h)"
+        return "Prj_ :"+str(self.GetPosition()[0])+" > "+str(self.GetPosition()[-1]-self.GetPosition()[0])
 
+#         return self.code + " : " + self.intitule + u" (" + str(self.duree) + u"h)"
+    
+    
+    ######################################################################################  
+    def __lt__(self, doc):
+        if self.GetPosition()[0] == doc.GetPosition()[0]:
+            return self.GetPosition()[-1]-self.GetPosition()[0] < doc.GetPosition()[-1]-doc.GetPosition()[0]
+        else:
+            return self.GetPosition()[0] < doc.GetPosition()[0]
+        
+        
+    ##################################################################################################################
+    def GetPosition(self):
+        return self.periode
+    
+    
     ######################################################################################
     def corrigerVersion(self, nomerr, codeRef):
         """ Correction d'erreur de lecture de la branche XML

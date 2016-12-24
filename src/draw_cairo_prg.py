@@ -380,6 +380,8 @@ def Draw(ctx, prg, mouchard = False):
     
     DefinirZones(prg, ctx)
     
+    prg.GetOrganisation()
+    
 #     gabarit() # à virer (pour générer image gabarit
     
 #    DefinirCouleurs(prg.GetNbrPeriodes())
@@ -1125,16 +1127,16 @@ def DrawCroisementsCISeq(ctx, prg, seq, y):
 def DrawBoutonCompetence(ctx, prg, seq, listComp, y, h = None, nbr = None):
     """ Dessine les petits rectangles des compétences abordées dans la Séquence
     """
-#     print "DrawBoutonCompetence", seq, listComp
+#     print "DrawBoutonCompetence", seq, listComp, nbr
     
-    if len(listComp) == 0:
+    if seq == None and len(listComp) == 0:
         return
     
     if h == None: # Toujours sauf pour les revues
         h = 1.5*wColComp
         
     if nbr == None:
-        nbr = [1] * len(listComp)
+        nbr = [1] * (len(listComp)+1)
         lig = True
     else:
         lig = False

@@ -6800,7 +6800,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
 
     #############################################################################            
     def onChanged(self, evt):
-        self.sequence.SetPosition(evt.GetEventObject().GetId()-1)
+        self.sequence.SetPosition(self.position.GetRange())
         self.SetBitmapPosition()
         self.GetDocument().Ordonner()
         t = u"Changement de position de la séquence"
@@ -7075,7 +7075,7 @@ class PanelPropriete_LienProjet(PanelPropriete):
 
     #############################################################################            
     def onChanged(self, evt):
-        self.projet.SetPosition(evt.GetEventObject().GetId()-1)
+        self.projet.SetPosition(self.position.GetRange())
         self.SetBitmapPosition()
         self.GetDocument().Ordonner()
         t = u"Changement de position du Projet"
