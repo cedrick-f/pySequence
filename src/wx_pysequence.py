@@ -3986,7 +3986,8 @@ class PanelPropriete(scrolled.ScrolledPanel):
                  panelRacine = None,
                  style = wx.VSCROLL | wx.RETAINED):
         scrolled.ScrolledPanel.__init__(self, parent, -1, style = style)#|wx.BORDER_SIMPLE)
-
+        self.objet = objet
+        
         if panelRacine is not None:
             self.panelRacine = panelRacine
         else:
@@ -4045,8 +4046,77 @@ class PanelPropriete(scrolled.ScrolledPanel):
     def GetFenetreDoc(self):
         return self.GetDocument().app
 
+    #########################################################################################################
+    def CreateImageSelect(self, parent, titre = u"Image", defaut = wx.NullBitmap):
+        box = myStaticBox(parent, -1, titre)
+        bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
+        image = wx.StaticBitmap(parent, -1, defaut)
+        self.image = image
+        self.SetImage()
+        bsizer.Add(image, flag = wx.EXPAND)
+        
+        bt = wx.Button(parent, -1, u"Changer l'image")
+        bt.SetToolTipString(u"Cliquer ici pour sélectionner un fichier image")
+        bsizer.Add(bt, flag = wx.EXPAND)
+        self.Bind(wx.EVT_BUTTON, self.OnClickImage, bt)
+        self.btImg = bt
+        
+        return bsizer
+        
+    #############################################################################            
+    def OnClickImage(self, event):
+        mesFormats = u"Fichier Image|*.bmp;*.png;*.jpg;*.jpeg;*.gif;*.pcx;*.pnm;*.tif;*.tiff;*.tga;*.iff;*.xpm;*.ico;*.ico;*.cur;*.ani|" \
+                       u"Tous les fichiers|*.*'"
+        
+        dlg = wx.FileDialog(
+                            self, message=u"Ouvrir une image",
+#                            defaultDir = self.DossierSauvegarde, 
+                            defaultFile = "",
+                            wildcard = mesFormats,
+                            style=wx.OPEN | wx.MULTIPLE | wx.CHANGE_DIR
+                            )
+            
+        # Show the dialog and retrieve the user response. If it is the OK response, 
+        # process the data.
+        if dlg.ShowModal() == wx.ID_OK:
+            # This returns a Python list of files that were selected.
+            paths = dlg.GetPaths()
+            nomFichier = paths[0]
+            self.objet.image = rognerImage(wx.Image(nomFichier).ConvertToBitmap())
+            self.SetImage(True)
+        
+        dlg.Destroy()
 
 
+    #############################################################################            
+    def SetImage(self, sendEvt = False):
+        if self.objet.image != None:
+            self.image.SetBitmap(rognerImage(self.objet.image, 200,200))
+        self.Layout()
+        
+        if sendEvt:
+            self.sendEvent(modif = u"Modification de l'illustration "+self.objet.article_c_obj+u" "+self.objet.nom_obj,
+                           obj = self)
+            
+            
+    #############################################################################            
+    def CreateLienSelect(self, parent):
+        box = myStaticBox(parent, -1, u"Lien externe")
+        bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
+        self.selec = URLSelectorCombo(parent, self.objet.lien, self.objet.GetPath())
+        bsizer.Add(self.selec, flag = wx.EXPAND)
+        self.btnlien = wx.Button(parent, -1, u"Ouvrir le lien externe")
+#        self.btnlien.SetMaxSize((-1,30))
+        self.btnlien.Show(self.objet.lien.path != "")
+        self.Bind(wx.EVT_BUTTON, self.OnClickLien, self.btnlien)
+        bsizer.Add(self.btnlien, 1,  flag = wx.EXPAND)
+        
+        return bsizer
+    
+    
+    #############################################################################            
+    def OnClickLien(self, event):
+        self.objet.lien.Afficher(self.GetDocument().GetPath())
 
 
 
@@ -4094,11 +4164,15 @@ class PanelPropriete_Racine(wx.Panel):
 ####################################################################################
 class PanelPropriete_Sequence(PanelPropriete):
     def __init__(self, parent, sequence):
-        PanelPropriete.__init__(self, parent)
         self.sequence = sequence
+        PanelPropriete.__init__(self, parent, objet = self.sequence)
+        
         
         ref = self.sequence.GetReferentiel()
         
+        #
+        # Intitulé
+        #
         titre = myStaticBox(self, -1, ref.labels["SEQINT"][0])
         sb = wx.StaticBoxSizer(titre)
         textctrl = TextCtrl_Help(self, u"")
@@ -4113,7 +4187,9 @@ class PanelPropriete_Sequence(PanelPropriete):
 #         self.Bind(stc.EVT_STC_CHANGE, self.EvtText, self.textctrl)
         self.Bind(stc.EVT_STC_MODIFIED, self.EvtText, self.textctrl)
 
-
+        #
+        # Commentaires
+        #
         titre = myStaticBox(self, -1, u"Commentaires")
         sb = wx.StaticBoxSizer(titre)
         commctrl = TextCtrl_Help(self, u"")
@@ -4122,13 +4198,15 @@ class PanelPropriete_Sequence(PanelPropriete):
                     
         sb.Add(commctrl, 1, flag = wx.EXPAND)
         self.commctrl = commctrl
-        self.sizer.Add(sb, (0,2), (2,1),  flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.EXPAND, border = 2)
+        self.sizer.Add(sb, (0,2), (1,1),  flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.EXPAND, border = 2)
 #        self.sizer.Add(commctrl, (1,1), flag = wx.EXPAND)
 #        self.Bind(wx.EVT_TEXT, self.EvtText, commctrl)
 #         self.Bind(stc.EVT_STC_CHANGE, self.EvtText, commctrl)
         self.Bind(stc.EVT_STC_MODIFIED, self.EvtText, commctrl)
         
-        
+        #
+        # Position
+        #
         titre = myStaticBox(self, -1, u"Position")
         sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
         self.bmp = wx.StaticBitmap(self, -1, self.getBitmapPeriode())
@@ -4141,6 +4219,12 @@ class PanelPropriete_Sequence(PanelPropriete):
         
         self.sizer.Add(sb, (1,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.EXPAND, border = 2)
         
+        #
+        # Lien externe
+        #
+        lsizer = self.CreateLienSelect(self)
+        self.sizer.Add(lsizer, (1,2), (1,1),  flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.EXPAND, border = 2)
+
         
         self.sizer.SetEmptyCellSize((0, 0))
         self.sizer.AddGrowableRow(0)
@@ -4235,19 +4319,20 @@ class PanelPropriete_Sequence(PanelPropriete):
             self.sizer.RemovePos(self.sb)
             
         self.cbD = {}
-        if self.sizer.FindItemAtPosition((0,1)) is None:
-            ref = self.sequence.GetReferentiel()
-            titre = myStaticBox(self, -1, getSingulierPluriel(ref.nomDom, len(self.sequence.domaine)>0))
-            self.sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
-            
-            for dom in ref.listeDomaines:
-                cb = wx.CheckBox(self, -1, ref.domaines[dom][0])
-                cb.SetToolTipString(ref.domaines[dom][1])
-                self.Bind(wx.EVT_CHECKBOX, self.EvtCheckBox, cb)
-                self.sb.Add(cb)
-                self.cbD[dom] = cb
-            
-            self.sizer.Add(self.sb, (0,1), (2, 1), flag = wx.ALIGN_TOP | wx.ALIGN_RIGHT|wx.LEFT, border = 2)
+        if len(self.sequence.domaine) > 1:
+            if self.sizer.FindItemAtPosition((0,1)) is None:
+                ref = self.sequence.GetReferentiel()
+                titre = myStaticBox(self, -1, getSingulierPluriel(ref.nomDom, len(self.sequence.domaine)>1))
+                self.sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
+                
+                for dom in ref.listeDomaines:
+                    cb = wx.CheckBox(self, -1, ref.domaines[dom][0])
+                    cb.SetToolTipString(ref.domaines[dom][1])
+                    self.Bind(wx.EVT_CHECKBOX, self.EvtCheckBox, cb)
+                    self.sb.Add(cb)
+                    self.cbD[dom] = cb
+                
+                self.sizer.Add(self.sb, (0,1), (2, 1), flag = wx.ALIGN_TOP | wx.ALIGN_RIGHT|wx.LEFT|wx.EXPAND, border = 2)
 
         
             
@@ -4290,9 +4375,10 @@ class PanelPropriete_Sequence(PanelPropriete):
 ####################################################################################
 class PanelPropriete_Projet(PanelPropriete):
     def __init__(self, parent, projet):
-        PanelPropriete.__init__(self, parent)
-        
         self.projet = projet
+        PanelPropriete.__init__(self, parent, objet = self.projet)
+        
+        
         
         self.nb = wx.Notebook(self, -1,  size = (21,21), style= wx.BK_DEFAULT)
         
@@ -4327,7 +4413,7 @@ class PanelPropriete_Projet(PanelPropriete):
     #############################################################################            
     def creerPageSimple(self, fct, titre = u"", helpText = u""):
         bg_color = self.Parent.GetBackgroundColour()
-        page = PanelPropriete(self.nb)
+        page = PanelPropriete(self.nb, objet = self.GetDocument())
         page.SetBackgroundColour(bg_color)
         self.nb.AddPage(page, u"")
 #        ctrl = orthographe.STC_ortho(page, -1)#, u"", style=wx.TE_MULTILINE)
@@ -4351,7 +4437,7 @@ class PanelPropriete_Projet(PanelPropriete):
         #
         # La page "Généralités"
         #
-        pageGen = PanelPropriete(self.nb)
+        pageGen = PanelPropriete(self.nb, objet = self.GetDocument())
         bg_color = self.Parent.GetBackgroundColour()
         pageGen.SetBackgroundColour(bg_color)
         self.pageGen = pageGen
@@ -4611,7 +4697,7 @@ class PanelPropriete_Projet(PanelPropriete):
         
         if ref.attributs['DEC'][0] != "":
             if not 'DEC' in self.pages.keys():
-                self.pages['DEC'] = PanelPropriete(self.nb)
+                self.pages['DEC'] = PanelPropriete(self.nb, objet = self.GetDocument())
                 bg_color = self.Parent.GetBackgroundColour()
                 self.pages['DEC'].SetBackgroundColour(bg_color)
                 
@@ -4668,7 +4754,7 @@ class PanelPropriete_Projet(PanelPropriete):
         
         if ref.attributs['TYP'][0] != "":
             if not 'TYP' in self.pages.keys():
-                self.pages['TYP'] = PanelPropriete(self.nb)
+                self.pages['TYP'] = PanelPropriete(self.nb, objet = self.GetDocument())
                 bg_color = self.Parent.GetBackgroundColour()
                 self.pages['TYP'].SetBackgroundColour(bg_color)
                 
@@ -4694,7 +4780,7 @@ class PanelPropriete_Projet(PanelPropriete):
         if ref.attributs['PAR'][0] != "":
             if not 'PAR' in self.pages.keys():
                 self.parctrl = {}
-                self.pages['PAR'] = PanelPropriete(self.nb)
+                self.pages['PAR'] = PanelPropriete(self.nb, objet = self.GetDocument())
                 bg_color = self.Parent.GetBackgroundColour()
                 self.pages['PAR'].SetBackgroundColour(bg_color)
                 
@@ -4871,9 +4957,10 @@ class PositionCtrl(wx.Panel):
 ####################################################################################
 class PanelPropriete_Progression(PanelPropriete):
     def __init__(self, parent, progression):
-        PanelPropriete.__init__(self, parent)
-        
         self.progression = progression
+        PanelPropriete.__init__(self, parent, objet = self.progression)
+        
+        
         
         self.nb = wx.Notebook(self, -1,  size = (21,21), style= wx.BK_DEFAULT)
         
@@ -4917,7 +5004,7 @@ class PanelPropriete_Progression(PanelPropriete):
         #
         # La page "Généralités"
         #
-        pageGen = PanelPropriete(self.nb, panelRacine = self)
+        pageGen = PanelPropriete(self.nb, panelRacine = self, objet = self.GetDocument())
         bg_color = self.Parent.GetBackgroundColour()
         pageGen.SetBackgroundColour(bg_color)
         self.pageGen = pageGen
@@ -4945,17 +5032,20 @@ class PanelPropriete_Progression(PanelPropriete):
         #
         # Lien
         #
-        box = myStaticBox(pageGen, -1, u"Lien externe")
-        bsizer = wx.StaticBoxSizer(box, wx.HORIZONTAL)
-        self.selec = URLSelectorCombo(pageGen, self.progression.lien, self.progression.GetPath())
-        bsizer.Add(self.selec, 1, flag = wx.EXPAND)
-        self.btnlien = wx.Button(pageGen, -1, u"Ouvrir le lien externe")
-#        self.btnlien.SetMaxSize((-1,30))
-        self.btnlien.Show(self.progression.lien.path != "")
-        pageGen.Bind(wx.EVT_BUTTON, self.OnClickLien, self.btnlien)
-        bsizer.Add(self.btnlien,  flag = wx.EXPAND)
-        pageGen.sizer.Add(bsizer, (1,0), (1, 1), flag = wx.EXPAND|wx.ALL, border = 2)
+        lsizer = self.CreateLienSelect(pageGen)
+        pageGen.sizer.Add(lsizer, (1,0), (1, 1), flag = wx.EXPAND|wx.ALL, border = 2)
         
+#         box = myStaticBox(pageGen, -1, u"Lien externe")
+#         bsizer = wx.StaticBoxSizer(box, wx.HORIZONTAL)
+#         self.selec = URLSelectorCombo(pageGen, self.progression.lien, self.progression.GetPath())
+#         bsizer.Add(self.selec, 1, flag = wx.EXPAND)
+#         self.btnlien = wx.Button(pageGen, -1, u"Ouvrir le lien externe")
+# #        self.btnlien.SetMaxSize((-1,30))
+#         self.btnlien.Show(self.progression.lien.path != "")
+#         pageGen.Bind(wx.EVT_BUTTON, self.OnClickLien, self.btnlien)
+#         bsizer.Add(self.btnlien,  flag = wx.EXPAND)
+#         pageGen.sizer.Add(bsizer, (1,0), (1, 1), flag = wx.EXPAND|wx.ALL, border = 2)
+#         
         
         #
         # Année scolaire et Position dans l'année
@@ -4980,22 +5070,27 @@ class PanelPropriete_Progression(PanelPropriete):
         #
         # Image
         #
-        box = myStaticBox(pageGen, -1, u"Image")
-        bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
-        image = wx.StaticBitmap(pageGen, -1, wx.NullBitmap)
-        self.image = image
-        self.SetImage()
-        bsizer.Add(image, flag = wx.EXPAND)
-        
-        bt = wx.Button(pageGen, -1, u"Changer l'image")
-        bt.SetToolTipString(u"Cliquer ici pour sélectionner un fichier image")
-        bsizer.Add(bt, flag = wx.EXPAND|wx.ALIGN_BOTTOM)
-        pageGen.Bind(wx.EVT_BUTTON, self.OnClick, bt)
-        pageGen.sizer.Add(bsizer, (0,2), (3,1), flag =  wx.EXPAND|wx.ALIGN_RIGHT|wx.TOP|wx.BOTTOM|wx.LEFT, border = 2)#wx.ALIGN_CENTER_VERTICAL |
+        isizer = self.CreateImageSelect(pageGen, titre = u"Image")
+        pageGen.sizer.Add(isizer, (0,2), (3,1), flag =  wx.EXPAND|wx.ALIGN_RIGHT|wx.TOP|wx.BOTTOM|wx.LEFT, border = 2)#wx.ALIGN_CENTER_VERTICAL |
 
-        pageGen.sizer.Layout()
         
-        self.Layout()
+        
+#         box = myStaticBox(pageGen, -1, u"Image")
+#         bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
+#         image = wx.StaticBitmap(pageGen, -1, wx.NullBitmap)
+#         self.image = image
+#         self.SetImage()
+#         bsizer.Add(image, flag = wx.EXPAND)
+#         
+#         bt = wx.Button(pageGen, -1, u"Changer l'image")
+#         bt.SetToolTipString(u"Cliquer ici pour sélectionner un fichier image")
+#         bsizer.Add(bt, flag = wx.EXPAND|wx.ALIGN_BOTTOM)
+#         pageGen.Bind(wx.EVT_BUTTON, self.OnClick, bt)
+#         pageGen.sizer.Add(bsizer, (0,2), (3,1), flag =  wx.EXPAND|wx.ALIGN_RIGHT|wx.TOP|wx.BOTTOM|wx.LEFT, border = 2)#wx.ALIGN_CENTER_VERTICAL |
+# 
+#         pageGen.sizer.Layout()
+#         
+#         self.Layout()
         
 #        #
 #        # Organisation (nombre et positions des revues)
@@ -5033,48 +5128,48 @@ class PanelPropriete_Progression(PanelPropriete):
             self.sendEvent()
 
     
-    #############################################################################            
-    def SetImage(self):
-        if self.progression.image != None:
-            
-#             self.progression.image = rognerImage(self.progression.image)
-            
-#             w, h = self.progression.image.GetSize()
-#             wf, hf = 200.0, 100.0
-#             r = max(w/wf, h/hf)
-#             _w, _h = w/r, h/r
-#             self.progression.image = self.progression.image.ConvertToImage().Scale(_w, _h).ConvertToBitmap()
-            self.image.SetBitmap(rognerImage(self.progression.image, 200,200))
-        self.pageGen.Layout()
+#     #############################################################################            
+#     def SetImage(self):
+#         if self.progression.image != None:
+#             
+# #             self.progression.image = rognerImage(self.progression.image)
+#             
+# #             w, h = self.progression.image.GetSize()
+# #             wf, hf = 200.0, 100.0
+# #             r = max(w/wf, h/hf)
+# #             _w, _h = w/r, h/r
+# #             self.progression.image = self.progression.image.ConvertToImage().Scale(_w, _h).ConvertToBitmap()
+#             self.image.SetBitmap(rognerImage(self.progression.image, 200,200))
+#         self.pageGen.Layout()
         
-    #############################################################################            
-    def OnClickLien(self, event):
-        self.progression.lien.Afficher(self.GetDocument().GetPath())
+#     #############################################################################            
+#     def OnClickLien(self, event):
+#         self.progression.lien.Afficher(self.GetDocument().GetPath())
         
-    #############################################################################            
-    def OnClick(self, event):
-        mesFormats = u"Fichier Image|*.bmp;*.png;*.jpg;*.jpeg;*.gif;*.pcx;*.pnm;*.tif;*.tiff;*.tga;*.iff;*.xpm;*.ico;*.ico;*.cur;*.ani|" \
-                       u"Tous les fichiers|*.*'"
-        
-        dlg = wx.FileDialog(
-                            self, message=u"Ouvrir une image",
-#                            defaultDir = self.DossierSauvegarde, 
-                            defaultFile = "",
-                            wildcard = mesFormats,
-                            style=wx.OPEN | wx.MULTIPLE | wx.CHANGE_DIR
-                            )
-            
-        # Show the dialog and retrieve the user response. If it is the OK response, 
-        # process the data.
-        if dlg.ShowModal() == wx.ID_OK:
-            # This returns a Python list of files that were selected.
-            paths = dlg.GetPaths()
-            nomFichier = paths[0]
-            self.progression.image = rognerImage(wx.Image(nomFichier).ConvertToBitmap())
-            self.SetImage()
-            self.sendEvent(modif = u"Modification de l'image de la Progression")
-            
-        dlg.Destroy()
+#     #############################################################################            
+#     def OnClick(self, event):
+#         mesFormats = u"Fichier Image|*.bmp;*.png;*.jpg;*.jpeg;*.gif;*.pcx;*.pnm;*.tif;*.tiff;*.tga;*.iff;*.xpm;*.ico;*.ico;*.cur;*.ani|" \
+#                        u"Tous les fichiers|*.*'"
+#         
+#         dlg = wx.FileDialog(
+#                             self, message=u"Ouvrir une image",
+# #                            defaultDir = self.DossierSauvegarde, 
+#                             defaultFile = "",
+#                             wildcard = mesFormats,
+#                             style=wx.OPEN | wx.MULTIPLE | wx.CHANGE_DIR
+#                             )
+#             
+#         # Show the dialog and retrieve the user response. If it is the OK response, 
+#         # process the data.
+#         if dlg.ShowModal() == wx.ID_OK:
+#             # This returns a Python list of files that were selected.
+#             paths = dlg.GetPaths()
+#             nomFichier = paths[0]
+#             self.progression.image = rognerImage(wx.Image(nomFichier).ConvertToBitmap())
+#             self.SetImage()
+#             self.sendEvent(modif = u"Modification de l'image de la Progression")
+#             
+#         dlg.Destroy()
         
     #############################################################################            
     def EvtText(self, event):
@@ -5257,15 +5352,16 @@ class PanelOrganisation(wx.Panel):
 ####################################################################################
 class PanelPropriete_Classe(PanelPropriete):
     def __init__(self, parent, classe, ouverture = False, typedoc = ''):
+        self.classe = classe
 #        print "__init__ PanelPropriete_Classe"
-        PanelPropriete.__init__(self, parent)
+        PanelPropriete.__init__(self, parent, objet = self.classe)
 #        self.BeginRepositioningChildren()
         
         #
         # La page "Généralités"
         #
         nb = wx.Notebook(self, -1,  style= wx.BK_DEFAULT)
-        pageGen = PanelPropriete(nb)
+        pageGen = PanelPropriete(nb, objet = classe)
         bg_color = self.Parent.GetBackgroundColour()
         pageGen.SetBackgroundColour(bg_color)
         self.pageGen = pageGen
@@ -5276,7 +5372,7 @@ class PanelPropriete_Classe(PanelPropriete):
         #
         # la page "Systèmes"
         #
-        pageSys = PanelPropriete(nb)
+        pageSys = PanelPropriete(nb, objet = classe)
         pageSys.SetBackgroundColour(bg_color)
         nb.AddPage(pageSys, u"Systèmes techniques et Matériel")
         self.pageSys = pageSys
@@ -5285,7 +5381,7 @@ class PanelPropriete_Classe(PanelPropriete):
         self.nb = nb
         self.sizer.AddGrowableCol(1)
 
-        self.classe = classe
+        
 
         #
         # La barre d'outils
@@ -6228,8 +6324,9 @@ class PanelEffectifsClasse(wx.Panel):
 ####################################################################################
 class PanelPropriete_CI(PanelPropriete):
     def __init__(self, parent, CI):
-        PanelPropriete.__init__(self, parent)
         self.CI = CI       
+        PanelPropriete.__init__(self, parent, objet = self.CI)
+        
         self.construire()
         self.MiseAJour()
         
@@ -6700,8 +6797,9 @@ class Panel_Cible(wx.Panel):
 ####################################################################################
 class PanelPropriete_LienSequence(PanelPropriete):
     def __init__(self, parent, lien):
-        PanelPropriete.__init__(self, parent)
         self.lien = lien
+        PanelPropriete.__init__(self, parent, objet = self.lien)
+        
         self.maxX = 800 # Largeur de l'image "aperçu" zoomée
         self.sequence = self.lien.sequence
         self.classe = None
@@ -6796,7 +6894,8 @@ class PanelPropriete_LienSequence(PanelPropriete):
         self.sizer.Add(sbsp, (0,2), (3,1), flag = wx.EXPAND|wx.ALL, border = 2)
         self.sizer.AddGrowableCol(2)
         self.sizer.Layout()
-        
+    
+    
 
     #############################################################################            
     def onChanged(self, evt):
@@ -6971,8 +7070,9 @@ class PanelPropriete_LienSequence(PanelPropriete):
 ####################################################################################
 class PanelPropriete_LienProjet(PanelPropriete):
     def __init__(self, parent, lien):
-        PanelPropriete.__init__(self, parent)
         self.lien = lien
+        PanelPropriete.__init__(self, parent, objet = self.lien)
+        
         self.maxX = 800 # Largeur de l'image "aperçu" zoomée
         self.projet = self.lien.projet
         self.classe = None
@@ -7214,7 +7314,7 @@ class PanelPropriete_Competences(PanelPropriete):
         
         self.competence = competence
         
-        PanelPropriete.__init__(self, parent)
+        PanelPropriete.__init__(self, parent, objet = self.competence)
         
         self.nb = wx.Notebook(self, -1,  size = (21,21), style= wx.BK_DEFAULT)
         
@@ -7441,7 +7541,7 @@ class PanelPropriete_Savoirs(PanelPropriete):
         self.savoirs = savoirs
         self.prerequis = savoirs.prerequis
         
-        PanelPropriete.__init__(self, parent)
+        PanelPropriete.__init__(self, parent, objet = self.savoirs)
         
         self.nb = wx.Notebook(self, -1, size = (21,21), style= wx.BK_DEFAULT)
         
@@ -7478,7 +7578,7 @@ class PanelPropriete_Savoirs(PanelPropriete):
     ######################################################################################  
     def CreerPage(self, nom):
         bg_color = self.Parent.GetBackgroundColour()
-        page = PanelPropriete(self.nb)
+        page = PanelPropriete(self.nb, objet = self.savoirs)
         page.SetBackgroundColour(bg_color)
         self.nb.AddPage(page, nom)
         return page
@@ -7597,20 +7697,58 @@ class PanelPropriete_Savoirs(PanelPropriete):
 ####################################################################################
 class PanelPropriete_Seance(PanelPropriete):
     def __init__(self, parent, seance):
-        PanelPropriete.__init__(self, parent)
         self.seance = seance
+        PanelPropriete.__init__(self, parent, objet = self.seance)
+        
         
         ref = self.seance.GetReferentiel()
+        
+        #
+        # Un notebook pour les différentes catégories de propriété
+        #
+        self.nb = wx.Notebook(self, -1,  size = (21,21), style= wx.BK_DEFAULT)
+        pageGen = PanelPropriete(self.nb, panelRacine = self, objet = self.seance)
+        self.pageGen = pageGen
+        bg_color = self.Parent.GetBackgroundColour()
+        pageGen.SetBackgroundColour(bg_color)
+#         self.nb.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
+        self.nb.AddPage(pageGen, u"Propriétés générales")
+        self.sizer.Add(self.nb, (0,0), flag = wx.EXPAND)
+        self.sizer.AddGrowableCol(0)
+        self.sizer.AddGrowableRow(0)
+        
+        
+         
+        
+        #
+        # Intitulé de la séance
+        #
+        box = myStaticBox(pageGen, -1, u"Intitulé "+self.seance.article_c_obj+u" "+self.seance.nom_obj)
+        bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
+#         textctrl = wx.TextCtrl(self, -1, u"", style=wx.TE_MULTILINE)
+        textctrl = orthographe.STC_ortho(pageGen, -1)
+        textctrl.SetTitre(u"Intitulé "+self.seance.article_c_obj+u" "+self.seance.nom_obj)
+        textctrl.SetToolTipString(u"")
+        
+        
+        bsizer.Add(textctrl, 1, flag = wx.EXPAND)
+        self.textctrl = textctrl
+#        self.Bind(wx.EVT_TEXT, self.EvtTextIntitule, textctrl)
+#         self.textctrl.Bind(wx.EVT_LEAVE_WINDOW, self.EvtTextIntitule)
+        self.textctrl.Bind(wx.EVT_KILL_FOCUS, self.EvtTextIntitule)
+        pageGen.sizer.Add(bsizer, (0,0), (2,1), flag = wx.ALIGN_RIGHT|wx.ALL|wx.EXPAND, border = 2)    
+        
+        
         
         
         #
         # Type de séance
         #
-        titre = wx.StaticText(self, -1, u"Type : ")
+        titre = wx.StaticText(pageGen, -1, u"Type de %s :" %self.seance.nom_obj)
         listType = self.seance.GetListeTypes()
         listTypeS = [(ref.seances[t][1], constantes.imagesSeance[t].GetBitmap()) for t in listType] 
         
-        cbType = wx.combo.BitmapComboBox(self, -1, u"Choisir un type de séance",
+        cbType = wx.combo.BitmapComboBox(pageGen, -1, u"Choisir un type de %s" %self.seance.nom_obj,
                              choices = [], size = (-1,25),
                              style = wx.CB_DROPDOWN
                              | wx.TE_PROCESS_ENTER
@@ -7624,67 +7762,23 @@ class PanelPropriete_Seance(PanelPropriete):
             
         self.Bind(wx.EVT_COMBOBOX, self.EvtComboBox, cbType)
         
-        self.sizer.Add(titre, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.ALL, border = 2)
-        self.sizer.Add(cbType, (0,1), flag = wx.EXPAND|wx.ALL, border = 2)
-        
-        
-        #
-        # Intitulé de la séance
-        #
+        pageGen.sizer.Add(titre, (2,0), flag = wx.ALIGN_BOTTOM | wx.ALIGN_LEFT|wx.LEFT, border = 2)
+        pageGen.sizer.Add(cbType, (3,0), flag = wx.EXPAND|wx.ALL, border = 2)
        
-        box = myStaticBox(self, -1, u"Intitulé de la Séance")
-        bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
-#         textctrl = wx.TextCtrl(self, -1, u"", style=wx.TE_MULTILINE)
-        textctrl = orthographe.STC_ortho(self, -1)
-        textctrl.SetTitre(u"Intitulé de la Séance")
-        textctrl.SetToolTipString(u"")
-        
-        
-        bsizer.Add(textctrl, 1, flag = wx.EXPAND)
-        self.textctrl = textctrl
-#        self.Bind(wx.EVT_TEXT, self.EvtTextIntitule, textctrl)
-#         self.textctrl.Bind(wx.EVT_LEAVE_WINDOW, self.EvtTextIntitule)
-        self.textctrl.Bind(wx.EVT_KILL_FOCUS, self.EvtTextIntitule)
-        
-        
-        cb = wx.CheckBox(self, -1, u"Afficher dans la zone de déroulement")
-#         print "+++", cb.Value
-        cb.SetToolTipString(u"Décocher pour afficher l'intitulé\nen dessous de la zone de déroulement de la séquence")
-        cb.SetValue(self.seance.intituleDansDeroul)
-        bsizer.Add(cb, flag = wx.EXPAND)
-        
-        vcTaille = VariableCtrl(self, seance.taille, signeEgal = True, slider = False, sizeh = 40,
-                                help = u"Taille des caractères", unite = u"%")
-        self.Bind(EVT_VAR_CTRL, self.EvtText, vcTaille)
-        bsizer.Add(vcTaille, flag = wx.EXPAND)
-        self.vcTaille = vcTaille
-        
-        self.Bind(wx.EVT_CHECKBOX, self.EvtCheckBox, cb)
-        self.cbInt = cb
-        self.sizer.Add(bsizer, (2,0), (2,2), flag = wx.ALIGN_RIGHT|wx.ALL|wx.EXPAND, border = 2)    
-        
-        
+       
+       
+       
+       
         #
         # Organisation
         #
-        box2 = myStaticBox(self, -1, u"Organisation")
+        box2 = myStaticBox(pageGen, -1, u"Organisation")
         self.bsizer2 = wx.StaticBoxSizer(box2, wx.VERTICAL)
-        self.sizer.Add(self.bsizer2, (0,2), (3,1), flag =wx.ALL|wx.EXPAND, border = 2)
+        pageGen.sizer.Add(self.bsizer2, (0,1), (2,1), flag =wx.ALL|wx.EXPAND, border = 2)
         
         # Déplacé dans AdapterAuType()
 
-        #
-        # Apparence
-        #
-        box2 = myStaticBox(self, -1, u"Apparence")
-        bsizer3 = wx.StaticBoxSizer(box2, wx.VERTICAL)
         
-        b = csel.ColourSelect(self, -1, u"Couleur", couleur.GetCouleurWx(self.seance.couleur))
-        bsizer3.Add(b, flag = wx.EXPAND|wx.ALL, border = 2)
-        
-        b.Bind(csel.EVT_COLOURSELECT, self.OnSelectColour)
-        self.coulCtrl = b
-        self.sizer.Add(bsizer3, (3,2), (1,1), flag =wx.ALL|wx.EXPAND, border = 2)
 
 
         #
@@ -7697,60 +7791,277 @@ class PanelPropriete_Seance(PanelPropriete):
         #
         # Systèmes
         #
-        self.box = myStaticBox(self, -1, u"Systèmes ou matériels nécessaires", size = (200,200))
+        self.box = myStaticBox(pageGen, -1, u"Systèmes ou matériels nécessaires", size = (200,200))
         self.box.SetMinSize((200,200))
         self.bsizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
         self.systemeCtrl = []
         self.ConstruireListeSystemes()
-        self.sizer.Add(self.bsizer, (0,3), (4, 1), flag = wx.EXPAND|wx.ALL, border = 2)
+        pageGen.sizer.Add(self.bsizer, (0,2), (4, 1), flag = wx.EXPAND|wx.ALL, border = 2)
     
 
         #
         # Lien
         #
-        box = myStaticBox(self, -1, u"Lien externe")
-        bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
-        self.selec = URLSelectorCombo(self, self.seance.lien, self.seance.GetPath())
-        bsizer.Add(self.selec, flag = wx.EXPAND)
-        self.btnlien = wx.Button(self, -1, u"Ouvrir le lien externe")
-#        self.btnlien.SetMaxSize((-1,30))
-        self.btnlien.Hide()
-        self.Bind(wx.EVT_BUTTON, self.OnClick, self.btnlien)
-        bsizer.Add(self.btnlien, 1,  flag = wx.EXPAND)
-        self.sizer.Add(bsizer, (3,4), (1, 1), flag = wx.EXPAND|wx.ALL, border = 2)
+        lsizer = self.CreateLienSelect(pageGen)
+        pageGen.sizer.Add(lsizer, (2,3), (2, 1), flag = wx.EXPAND|wx.ALL, border = 2)
+        
+#         box = myStaticBox(pageGen, -1, u"Lien externe")
+#         bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
+#         self.selec = URLSelectorCombo(pageGen, self.seance.lien, self.seance.GetPath())
+#         bsizer.Add(self.selec, flag = wx.EXPAND)
+#         self.btnlien = wx.Button(self, -1, u"Ouvrir le lien externe")
+# #        self.btnlien.SetMaxSize((-1,30))
+#         self.btnlien.Hide()
+#         self.Bind(wx.EVT_BUTTON, self.OnClick, self.btnlien)
+#         bsizer.Add(self.btnlien, 1,  flag = wx.EXPAND)
+        
         
         #
         # Description de la séance
         #
-        dbox = myStaticBox(self, -1, u"Description")
+        dbox = myStaticBox(pageGen, -1, u"Description")
         dbsizer = wx.StaticBoxSizer(dbox, wx.VERTICAL)
 #        bd = wx.Button(self, -1, u"Editer")
-        tc = richtext.RichTextPanel(self, self.seance, toolBar = True)
+        tc = richtext.RichTextPanel(pageGen, self.seance, toolBar = True)
         tc.SetTitre(u"Description détaillée de la Séance")
         tc.SetToolTipString(u"")
 #        tc.SetMaxSize((-1, 150))
 #        dbsizer.Add(bd, flag = wx.EXPAND)
         dbsizer.Add(tc, 1, flag = wx.EXPAND)
 #        self.Bind(wx.EVT_BUTTON, self.EvtClick, bd)
-        self.sizer.Add(dbsizer, (0,4), (3, 1), flag = wx.EXPAND|wx.ALL, border = 2)
+        pageGen.sizer.Add(dbsizer, (0,3), (2, 1), flag = wx.EXPAND|wx.ALL, border = 2)
         self.rtc = tc
         # Pour indiquer qu'une édition est déja en cours ...
         self.edition = False  
         
-        self.sizer.SetEmptyCellSize((0,0))
+        pageGen.sizer.SetEmptyCellSize((0,0))
         
+        
+        
+        
+        #
+        # Proprietés d'affichage
+        #
+        pageAff = PanelPropriete(self.nb, panelRacine = self, objet = self.seance)
+        pageAff.SetBackgroundColour(bg_color)
+        self.nb.AddPage(pageAff, u"Apparence")
+        
+        #
+        # Apparence
+        #
+        
+        box2 = myStaticBox(pageAff, -1, u"Affichage de l'intitulé")
+        bsizer3 = wx.StaticBoxSizer(box2, wx.VERTICAL)
+        
+        b = csel.ColourSelect(pageAff, -1, u"Couleur", couleur.GetCouleurWx(self.seance.couleur))
+        bsizer3.Add(b, flag = wx.EXPAND|wx.ALL, border = 2)
+        
+        b.Bind(csel.EVT_COLOURSELECT, self.OnSelectColour)
+        self.coulCtrl = b
+        
+        cb = wx.CheckBox(pageAff, -1, u"Afficher l'intitulé dans la zone de déroulement")
+#         print "+++", cb.Value
+        cb.SetToolTipString(u"Décocher pour afficher l'intitulé\nen dessous de la zone de déroulement de la séquence")
+        cb.SetValue(self.seance.intituleDansDeroul)
+        bsizer3.Add(cb, flag = wx.EXPAND)
+        
+        vcTaille = VariableCtrl(pageAff, seance.taille, signeEgal = True, slider = False, sizeh = 40,
+                                help = u"Taille des caractères", unite = u"%")
+        self.Bind(EVT_VAR_CTRL, self.EvtText, vcTaille)
+        bsizer3.Add(vcTaille, flag = wx.EXPAND)
+        self.vcTaille = vcTaille
+        
+        self.Bind(wx.EVT_CHECKBOX, self.EvtCheckBox, cb)
+        self.cbInt = cb
+        
+        pageAff.sizer.Add(bsizer3, (0,0), (1,1), flag =wx.ALL|wx.EXPAND, border = 2)
+        
+        
+        
+        #
+        # Image
+        #
+        isizer = self.CreateImageSelect(pageAff, 
+                                        titre = u"Illustration "+self.seance.article_c_obj+u" "+self.seance.nom_obj)
+        pageAff.sizer.Add(isizer, (0,2), (1,1), flag =  wx.EXPAND|wx.ALIGN_RIGHT|wx.TOP|wx.LEFT, border = 2)#wx.ALIGN_CENTER_VERTICAL |
+        
+        
+        
+        
+        
+#        self.sizer.Layout()
+#        self.Layout()
+    
         self.AdapterAuType()
         self.MiseAJour()
         
         #
         # Mise en place
         #
-        self.sizer.AddGrowableCol(4)
-        self.sizer.AddGrowableRow(2)
-#        self.sizer.Layout()
-#        self.Layout()
+        pageGen.sizer.AddGrowableCol(3)
+        pageGen.sizer.AddGrowableRow(0)
+
+        pageAff.sizer.AddGrowableCol(0)
+        pageAff.sizer.AddGrowableRow(0)
+        
     
+        #############################################################################            
+    def AdapterAuType(self):
+        """ Adapte le panel au type de séance
+        """
+#         print "AdapterAuType", self.seance
+
+        ref = self.GetReferentiel()
+        
+
+        #
+        # Organisation
+        #
+        
+        # Durée de la séance
+        
+        if hasattr(self, 'vcDuree'):
+            try:
+                self.bsizer2.Detach(self.vcDuree)
+            except:
+                pass
+            self.vcDuree.Destroy()
+            del self.vcDuree
+        
+        if not self.seance.typeSeance in ["R", "S"]:
+            vcDuree = VariableCtrl(self.pageGen, self.seance.duree, coef = 0.25, 
+                                   signeEgal = True, slider = False, sizeh = 30,
+                                   help = u"Durée de la séance en heures", unite = u"h")
+            self.Bind(EVT_VAR_CTRL, self.EvtText, vcDuree)
+            self.vcDuree = vcDuree
+            self.bsizer2.Add(vcDuree, flag = wx.EXPAND|wx.LEFT|wx.BOTTOM, border = 2)
+
+        
+        
+        # Effectif
+        
+        if hasattr(self, 'cbEff'):
+            try:
+                self.bsizer2.Detach(self.cbEff)
+                self.bsizer2.Detach(self.titreEff)
+            except:
+                pass
+            self.cbEff.Destroy()
+            self.titreEff.Destroy()
+            del self.cbEff
+            del self.titreEff
+        
+        if self.seance.typeSeance in ref.effectifsSeance.keys():
+            titre = wx.StaticText(self.pageGen, -1, u"Effectif : ")
+            
+            cbEff = wx.ComboBox(self.pageGen, -1, u"",
+                             choices = [],
+                             style = wx.CB_DROPDOWN
+                             | wx.TE_PROCESS_ENTER
+                             | wx.CB_READONLY
+                             #| wx.CB_SORT
+                             )
+            self.Bind(wx.EVT_COMBOBOX, self.EvtComboBoxEff, cbEff)
+            self.cbEff = cbEff
+            self.cbEff.Clear()
+            listEff = ref.effectifsSeance[self.seance.typeSeance]
+            for s in listEff:
+                self.cbEff.Append(strEffectifComplet(self.seance.GetDocument().classe, s, -1))
+            self.cbEff.SetSelection(0)
+            
+            self.titreEff = titre
+            
+            self.bsizer2.Add(self.titreEff, flag = wx.ALIGN_BOTTOM|wx.LEFT, border = 2)
+            self.bsizer2.Add(cbEff, flag = wx.EXPAND|wx.LEFT, border = 2)
+            
     
+        
+        # Nombre de séances en parallèle
+        
+        if hasattr(self, 'vcNombre'):
+            try:
+                self.bsizer2.Detach(self.vcNombre)
+            except:
+                pass
+            self.vcNombre.Destroy()
+            del self.vcNombre
+            
+                
+        if self.seance.typeSeance in ref.listeTypeActivite:
+            vcNombre = VariableCtrl(self.pageGen, self.seance.nombre, signeEgal = True, slider = False, sizeh = 30,
+                                    help = u"Nombre de groupes réalisant simultanément la même séance")
+            self.Bind(EVT_VAR_CTRL, self.EvtText, vcNombre)
+            self.vcNombre = vcNombre
+            self.bsizer2.Add(vcNombre, flag = wx.EXPAND|wx.ALL, border = 2)
+            
+                
+            
+        # Nombre de rotations
+        
+        if hasattr(self, 'vcNombreRot'):
+            try:
+                self.bsizer2.Detach(self.vcNombreRot)
+                
+            except:
+                pass
+            self.vcNombreRot.Destroy()
+            del self.vcNombreRot
+            
+            
+        if self.seance.typeSeance == "R":
+            vcNombreRot = VariableCtrl(self.pageGen, self.seance.nbrRotations, signeEgal = True, slider = False, sizeh = 30,
+                                    help = u"Nombre de rotations successives")
+            self.Bind(EVT_VAR_CTRL, self.EvtText, vcNombreRot)
+            self.vcNombreRot = vcNombreRot
+            self.bsizer2.Add(vcNombreRot, flag = wx.EXPAND|wx.ALL, border = 2)
+
+            
+
+        
+        #
+        # Démarche      
+        #
+        if hasattr(self, 'cbDem'):
+            try:
+                self.demSizer.Detach(self.cbDem)
+                self.demSizer.Detach(self.titreDem)
+            except:
+                pass
+            self.cbDem.Destroy()
+            self.titreDem.Destroy()
+            del self.cbDem
+            del self.titreDem
+        
+        if self.seance.typeSeance in ref.activites.keys():
+            if len(ref.demarches) > 0:
+                self.demSizer = wx.BoxSizer(wx.VERTICAL)
+                listDem = ref.demarcheSeance[self.seance.typeSeance]
+                titre = wx.StaticText(self.pageGen, -1, u"Démarche :")
+                cbDem = wx.ComboBox(self.pageGen, -1, u"",
+                                 choices = [],
+                                 style = wx.CB_DROPDOWN
+                                 | wx.TE_PROCESS_ENTER
+                                 | wx.CB_READONLY
+                                 #| wx.CB_SORT
+                                 )
+                self.Bind(wx.EVT_COMBOBOX, self.EvtComboBoxDem, cbDem)
+                self.cbDem = cbDem
+                
+                for s in listDem:
+                    self.cbDem.Append(ref.demarches[s][1])
+
+                self.titreDem = titre
+                
+                
+                self.demSizer.Add(titre, flag = wx.ALIGN_BOTTOM|wx.ALIGN_LEFT|wx.LEFT, border = 2)
+                self.demSizer.Add(cbDem, flag = wx.EXPAND|wx.LEFT, border = 2)
+                self.pageGen.sizer.Add(self.demSizer, (2,1), (2,1), flag = wx.EXPAND|wx.ALL, border = 2)
+
+                
+        self.sizer.Layout()
+        
+
+
     ######################################################################################  
     def GetReferentiel(self):
         return self.seance.GetReferentiel()
@@ -7782,7 +8093,7 @@ class PanelPropriete_Seance(PanelPropriete):
             self.systemeCtrl = []
             for s in self.seance.systemes:
 #                print "   ", type(s), "---", s
-                v = VariableCtrl(self, s, signeEgal = False, 
+                v = VariableCtrl(self.pageGen, s, signeEgal = False, 
                                  slider = False, fct = None, help = "", sizeh = 30)
                 self.Bind(EVT_VAR_CTRL, self.EvtVarSysteme, v)
                 self.bsizer.Add(v, flag = wx.ALIGN_RIGHT)#|wx.EXPAND) 
@@ -7943,227 +8254,15 @@ class PanelPropriete_Seance(PanelPropriete):
        
        
         
-    #############################################################################            
-    def OnClick(self, event):
-        self.seance.AfficherLien(self.GetDocument().GetPath())
+#     #############################################################################            
+#     def OnClick(self, event):
+#         self.seance.AfficherLien(self.GetDocument().GetPath())
         
-        
-    #############################################################################            
-    def AdapterAuType(self):
-        """ Adapte le panel au type de séance
-        """
-#         print "AdapterAuType", self.seance
-        #
-        # Type de parent
-        #
-        ref = self.GetReferentiel()
-        
-
-#         listType = self.seance.GetListeTypes()
-#         listTypeS = [(ref.seances[t][1], constantes.imagesSeance[t].GetBitmap()) for t in listType] 
-#         
-#         n = self.cbType.GetSelection()   
-#         self.cbType.Clear()
-#         for s in listTypeS:
-#             self.cbType.Append(s[0], s[1])
-#         self.cbType.SetSelection(n)
-#         self.cbType.Layout()
-        
-        
-        #
-        # Organisation
-        #
-        
-        # Durée de la séance
-        
-        if hasattr(self, 'vcDuree'):
-            try:
-                self.bsizer2.Detach(self.vcDuree)
-            except:
-                pass
-            self.vcDuree.Destroy()
-            del self.vcDuree
-        
-        if not self.seance.typeSeance in ["R", "S"]:
-            vcDuree = VariableCtrl(self, self.seance.duree, coef = 0.25, 
-                                   signeEgal = True, slider = False, sizeh = 30,
-                                   help = u"Durée de la séance en heures", unite = u"h")
-            self.Bind(EVT_VAR_CTRL, self.EvtText, vcDuree)
-            self.vcDuree = vcDuree
-            self.bsizer2.Add(vcDuree, flag = wx.EXPAND|wx.ALL, border = 2)
-
-        
-        
-        # Effectif
-        
-        if hasattr(self, 'cbEff'):
-            try:
-                self.bsizer2.Detach(self.cbEff)
-                self.bsizer2.Detach(self.titreEff)
-            except:
-                pass
-            self.cbEff.Destroy()
-            self.titreEff.Destroy()
-            del self.cbEff
-            del self.titreEff
-        
-        if self.seance.typeSeance in ref.effectifsSeance.keys():
-            titre = wx.StaticText(self, -1, u"Effectif : ")
+    
+    
             
-            cbEff = wx.ComboBox(self, -1, u"",
-                             choices = [],
-                             style = wx.CB_DROPDOWN
-                             | wx.TE_PROCESS_ENTER
-                             | wx.CB_READONLY
-                             #| wx.CB_SORT
-                             )
-            self.Bind(wx.EVT_COMBOBOX, self.EvtComboBoxEff, cbEff)
-            self.cbEff = cbEff
-            self.cbEff.Clear()
-            listEff = ref.effectifsSeance[self.seance.typeSeance]
-            for s in listEff:
-                self.cbEff.Append(strEffectifComplet(self.seance.GetDocument().classe, s, -1))
-            self.cbEff.SetSelection(0)
-            
-            self.titreEff = titre
-            
-            self.bsizer2.Add(self.titreEff, flag = wx.ALIGN_CENTER_VERTICAL|wx.ALL, border = 2)
-            self.bsizer2.Add(cbEff, flag = wx.EXPAND|wx.LEFT, border = 2)
             
     
-        
-        # Nombre de séances en parallèle
-        
-        if hasattr(self, 'vcNombre'):
-            try:
-                self.bsizer2.Detach(self.vcNombre)
-            except:
-                pass
-            self.vcNombre.Destroy()
-            del self.vcNombre
-            
-                
-        if self.seance.typeSeance in ref.listeTypeActivite:
-            vcNombre = VariableCtrl(self, self.seance.nombre, signeEgal = True, slider = False, sizeh = 30,
-                                    help = u"Nombre de groupes réalisant simultanément la même séance")
-            self.Bind(EVT_VAR_CTRL, self.EvtText, vcNombre)
-            self.vcNombre = vcNombre
-            self.bsizer2.Add(vcNombre, flag = wx.EXPAND|wx.ALL, border = 2)
-            
-                
-            
-        # Nombre de rotations
-        
-        if hasattr(self, 'vcNombreRot'):
-            try:
-                self.bsizer2.Detach(self.vcNombreRot)
-                
-            except:
-                pass
-            self.vcNombreRot.Destroy()
-            del self.vcNombreRot
-            
-            
-        if self.seance.typeSeance == "R":
-            vcNombreRot = VariableCtrl(self, self.seance.nbrRotations, signeEgal = True, slider = False, sizeh = 30,
-                                    help = u"Nombre de rotations successives")
-            self.Bind(EVT_VAR_CTRL, self.EvtText, vcNombreRot)
-            self.vcNombreRot = vcNombreRot
-            self.bsizer2.Add(vcNombreRot, flag = wx.EXPAND|wx.ALL, border = 2)
-
-            
-                
-                
-        
-        
-        # Nombre de groupes
-#        vcNombreGrp = VariableCtrl(self, seance.nbrGroupes, signeEgal = True, slider = False, sizeh = 30,
-#                                help = u"Nombre de groupes occupés simultanément")
-#        self.Bind(EVT_VAR_CTRL, self.EvtText, vcNombreRot)
-#        self.vcNombreGrp = vcNombreGrp
-#        bsizer2.Add(vcNombreGrp, flag = wx.EXPAND|wx.ALL, border = 2)
-#        
-#        self.sizer.Add(bsizer2, (0,2), (4,1), flag =wx.ALL|wx.EXPAND, border = 2)
-        
-        
-        
-          
-#         if self.seance.typeSeance == "":
-#             listEff = []
-#         else:
-#             listEff = ref.effectifsSeance[self.seance.typeSeance]
-#        print "  ", listEff
-        
-#         self.cbEff.Show(len(listEff) > 0)
-#         self.titreEff.Show(len(listEff) > 0)
-            
-
-        
-#         self.cbEff.Clear()
-#         for s in listEff:
-#             self.cbEff.Append(strEffectifComplet(self.seance.GetDocument().classe, s, -1))
-#         self.cbEff.SetSelection(0)
-        
-        #
-        # Démarche      
-        #
-        
-        if hasattr(self, 'cbDem'):
-            try:
-                self.sizer.Detach(self.cbDem)
-                self.sizer.Detach(self.titreDem)
-            except:
-                pass
-            self.cbDem.Destroy()
-            self.titreDem.Destroy()
-            del self.cbDem
-            del self.titreDem
-        
-        if self.seance.typeSeance in ref.activites.keys():
-            if len(ref.demarches) > 0:
-                listDem = ref.demarcheSeance[self.seance.typeSeance]
-                titre = wx.StaticText(self, -1, u"Démarche : ")
-                cbDem = wx.ComboBox(self, -1, u"",
-                                 choices = [],
-                                 style = wx.CB_DROPDOWN
-                                 | wx.TE_PROCESS_ENTER
-                                 | wx.CB_READONLY
-                                 #| wx.CB_SORT
-                                 )
-                self.Bind(wx.EVT_COMBOBOX, self.EvtComboBoxDem, cbDem)
-                self.cbDem = cbDem
-                
-                for s in listDem:
-                    self.cbDem.Append(ref.demarches[s][1])
-
-                self.titreDem = titre
-                
-                
-                self.sizer.Add(titre, (1,0), flag = wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT|wx.ALL, border = 2)
-                self.sizer.Add(cbDem, (1,1), flag = wx.EXPAND|wx.ALL, border = 2)
- 
-
-                
-        self.sizer.Layout()
-        
-#         if self.seance.typeSeance in ref.activites.keys():
-#             listDem = ref.demarcheSeance[self.seance.typeSeance]
-#             dem = len(ref.demarches) > 0
-#             self.cbDem.Show(dem)
-#             self.titreDem.Show(dem)
-#         else:
-#             self.cbDem.Show(False)
-#             self.titreDem.Show(False)
-#             listDem = []
-
-
-        # Nombre
-       
-            
-#         self.cbDem.Clear()
-#         for s in listDem:
-#             self.cbDem.Append(ref.demarches[s][1])
-#         self.cbDem.SetSelection(0)
         
         
     #############################################################################            
@@ -8237,7 +8336,7 @@ class PanelPropriete_Tache(PanelPropriete):
         self.tache = tache
         self.revue = revue
         ref = tache.GetReferentiel()
-        PanelPropriete.__init__(self, parent)
+        PanelPropriete.__init__(self, parent, objet = self.tache)
 #        print "init pptache", tache, ref
         if not tache.phase in [tache.projet.getCodeLastRevue(), _S]  \
            and not (tache.phase in TOUTES_REVUES_EVAL and (True in ref.compImposees.values())): #tache.GetReferentiel().compImposees['C']):
@@ -8245,7 +8344,7 @@ class PanelPropriete_Tache(PanelPropriete):
             # La page "Généralités"
             #
             self.nb = wx.Notebook(self, -1,  size = (21,21), style= wx.BK_DEFAULT)
-            pageGen = PanelPropriete(self.nb)
+            pageGen = PanelPropriete(self.nb, objet = self.tache)
             bg_color = self.Parent.GetBackgroundColour()
             pageGen.SetBackgroundColour(bg_color)
             self.nb.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
@@ -9060,7 +9159,7 @@ class PanelPropriete_Systeme(PanelPropriete):
         self.systeme = systeme
         self.parent = parent
         
-        PanelPropriete.__init__(self, parent)
+        PanelPropriete.__init__(self, parent, objet = self.systeme)
         
         #
         # Nom
@@ -9099,33 +9198,39 @@ class PanelPropriete_Systeme(PanelPropriete):
         #
         # Image
         #
-        box = myStaticBox(self, -1, u"Image du système")
-        bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
-        image = wx.StaticBitmap(self, -1, wx.NullBitmap)
-        self.image = image
-        self.SetImage()
-        bsizer.Add(image, flag = wx.EXPAND)
+        isizer = self.CreateImageSelect(self, titre = u"Image du système")
+        self.sizer.Add(isizer, (0,2), (3,1), flag =  wx.EXPAND|wx.ALIGN_RIGHT|wx.TOP|wx.LEFT, border = 2)#wx.ALIGN_CENTER_VERTICAL |
         
-        bt = wx.Button(self, -1, u"Changer l'image")
-        bt.SetToolTipString(u"Cliquer ici pour sélectionner un fichier image")
-        bsizer.Add(bt, flag = wx.EXPAND)
-        self.Bind(wx.EVT_BUTTON, self.OnClick, bt)
-        self.sizer.Add(bsizer, (0,2), (3,1), flag =  wx.EXPAND|wx.ALIGN_RIGHT|wx.TOP|wx.LEFT, border = 2)#wx.ALIGN_CENTER_VERTICAL |
-        self.btImg = bt
+#         box = myStaticBox(self, -1, u"Image du système")
+#         bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
+#         image = wx.StaticBitmap(self, -1, wx.NullBitmap)
+#         self.image = image
+#         self.SetImage()
+#         bsizer.Add(image, flag = wx.EXPAND)
+#         
+#         bt = wx.Button(self, -1, u"Changer l'image")
+#         bt.SetToolTipString(u"Cliquer ici pour sélectionner un fichier image")
+#         bsizer.Add(bt, flag = wx.EXPAND)
+#         self.Bind(wx.EVT_BUTTON, self.OnClick, bt)
+#         self.sizer.Add(bsizer, (0,2), (3,1), flag =  wx.EXPAND|wx.ALIGN_RIGHT|wx.TOP|wx.LEFT, border = 2)#wx.ALIGN_CENTER_VERTICAL |
+#         self.btImg = bt
         
         #
         # Lien
         #
-        box = myStaticBox(self, -1, u"Lien externe")
-        bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
-        self.selec = URLSelectorCombo(self, self.systeme.lien, self.systeme.GetPath())
-        bsizer.Add(self.selec, flag = wx.EXPAND)
-        self.btnlien = wx.Button(self, -1, u"Ouvrir le lien externe")
-        self.btnlien.Hide()
-        self.Bind(wx.EVT_BUTTON, self.OnClick, self.btnlien)
-        bsizer.Add(self.btnlien)
-        self.sizer.Add(bsizer, (0,3), (3, 1), flag = wx.EXPAND|wx.TOP|wx.LEFT, border = 2)
+        lsizer = self.CreateLienSelect(self)
+        self.sizer.Add(lsizer, (0,3), (3, 1), flag = wx.EXPAND|wx.TOP|wx.LEFT, border = 2)
         
+#         box = myStaticBox(self, -1, u"Lien externe")
+#         bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
+#         self.selec = URLSelectorCombo(self, self.systeme.lien, self.systeme.GetPath())
+#         bsizer.Add(self.selec, flag = wx.EXPAND)
+#         self.btnlien = wx.Button(self, -1, u"Ouvrir le lien externe")
+#         self.btnlien.Hide()
+#         self.Bind(wx.EVT_BUTTON, self.OnClick, self.btnlien)
+#         bsizer.Add(self.btnlien)
+#         self.sizer.Add(bsizer, (0,3), (3, 1), flag = wx.EXPAND|wx.TOP|wx.LEFT, border = 2)
+         
         self.MiseAJour()
         self.Verrouiller()
         
@@ -9185,54 +9290,54 @@ class PanelPropriete_Systeme(PanelPropriete):
                     self.eventAttente = True
 
 
-    #############################################################################            
-    def OnClick(self, event):
-        if event.GetId() == self.btnlien.GetId():
-            self.systeme.AfficherLien(self.GetDocument().GetPath())
-        else:
-            mesFormats = u"Fichier Image|*.bmp;*.png;*.jpg;*.jpeg;*.gif;*.pcx;*.pnm;*.tif;*.tiff;*.tga;*.iff;*.xpm;*.ico;*.ico;*.cur;*.ani|" \
-                           u"Tous les fichiers|*.*'"
-            
-            dlg = wx.FileDialog(
-                                self, message=u"Ouvrir une image",
-    #                            defaultDir = self.DossierSauvegarde, 
-                                defaultFile = "",
-                                wildcard = mesFormats,
-                                style=wx.OPEN | wx.MULTIPLE | wx.CHANGE_DIR
-                                )
-                
-            # Show the dialog and retrieve the user response. If it is the OK response, 
-            # process the data.
-            if dlg.ShowModal() == wx.ID_OK:
-                # This returns a Python list of files that were selected.
-                paths = dlg.GetPaths()
-                nomFichier = paths[0]
-                self.systeme.image = rognerImage(wx.Image(nomFichier).ConvertToBitmap())
-                self.SetImage()
-            
-            
-            
-            dlg.Destroy()
-        
-    #############################################################################            
-    def SetImage(self):
-#        print "SetImage", self.systeme
-        if self.systeme.image != None:
-            
-            self.systeme.image = rognerImage(self.systeme.image)
-            
-#             w, h = self.systeme.image.GetSize()
-#             wf, hf = 200.0, 100.0
-#             r = max(w/wf, h/hf)
-#             _w, _h = w/r, h/r
-#             self.systeme.image = self.systeme.image.ConvertToImage().Scale(_w, _h).ConvertToBitmap()
-            self.image.SetBitmap(self.systeme.image)
-        else:
-#            print "NullBitmap"
-            self.image.SetBitmap(wx.NullBitmap)
-            
-        self.systeme.SetImage()
-        self.Layout()
+#     #############################################################################            
+#     def OnClick(self, event):
+#         self.systeme.AfficherLien(self.GetDocument().GetPath())
+#         
+#         else:
+#             mesFormats = u"Fichier Image|*.bmp;*.png;*.jpg;*.jpeg;*.gif;*.pcx;*.pnm;*.tif;*.tiff;*.tga;*.iff;*.xpm;*.ico;*.ico;*.cur;*.ani|" \
+#                            u"Tous les fichiers|*.*'"
+#              
+#             dlg = wx.FileDialog(
+#                                 self, message=u"Ouvrir une image",
+#     #                            defaultDir = self.DossierSauvegarde, 
+#                                 defaultFile = "",
+#                                 wildcard = mesFormats,
+#                                 style=wx.OPEN | wx.MULTIPLE | wx.CHANGE_DIR
+#                                 )
+#                  
+#             # Show the dialog and retrieve the user response. If it is the OK response, 
+#             # process the data.
+#             if dlg.ShowModal() == wx.ID_OK:
+#                 # This returns a Python list of files that were selected.
+#                 paths = dlg.GetPaths()
+#                 nomFichier = paths[0]
+#                 self.systeme.image = rognerImage(wx.Image(nomFichier).ConvertToBitmap())
+#                 self.SetImage()
+#              
+#              
+#              
+#             dlg.Destroy()
+#         
+#     #############################################################################            
+#     def SetImage(self):
+# #        print "SetImage", self.systeme
+#         if self.systeme.image != None:
+#             
+#             self.systeme.image = rognerImage(self.systeme.image)
+#             
+# #             w, h = self.systeme.image.GetSize()
+# #             wf, hf = 200.0, 100.0
+# #             r = max(w/wf, h/hf)
+# #             _w, _h = w/r, h/r
+# #             self.systeme.image = self.systeme.image.ConvertToImage().Scale(_w, _h).ConvertToBitmap()
+#             self.image.SetBitmap(self.systeme.image)
+#         else:
+# #            print "NullBitmap"
+#             self.image.SetBitmap(wx.NullBitmap)
+#             
+#         self.systeme.SetImage()
+#         self.Layout()
 
 
     #############################################################################            
@@ -9385,7 +9490,7 @@ class PanelPropriete_Personne(PanelPropriete):
         self.personne = personne
         self.parent = parent
         
-        PanelPropriete.__init__(self, parent)
+        PanelPropriete.__init__(self, parent, objet = self.personne)
         
         #
         # Nom
@@ -9468,18 +9573,23 @@ class PanelPropriete_Personne(PanelPropriete):
         #
         # Portrait
         #
-        box = myStaticBox(self, -1, u"Portrait")
-        bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
-        image = wx.StaticBitmap(self, -1, constantes.AVATAR_DEFAUT)
-        self.image = image
-        self.SetImage()
-        bsizer.Add(image, flag = wx.EXPAND)
+        isizer = self.CreateImageSelect(self, titre = u"Portrait", defaut = constantes.AVATAR_DEFAUT)
+        self.sizer.Add(isizer, (0,2), (2,1), flag =  wx.EXPAND|wx.ALIGN_RIGHT|wx.TOP|wx.BOTTOM|wx.LEFT, border = 2)#wx.ALIGN_CENTER_VERTICAL |
         
-        bt = wx.Button(self, -1, u"Changer le portrait")
-        bt.SetToolTipString(u"Cliquer ici pour sélectionner un fichier image")
-        bsizer.Add(bt, flag = wx.EXPAND|wx.ALIGN_BOTTOM)
-        self.Bind(wx.EVT_BUTTON, self.OnClick, bt)
-        self.sizer.Add(bsizer, (0,2), (2,1), flag =  wx.EXPAND|wx.ALIGN_RIGHT|wx.TOP|wx.BOTTOM|wx.LEFT, border = 2)#wx.ALIGN_CENTER_VERTICAL |
+        
+#         
+#         box = myStaticBox(self, -1, u"Portrait")
+#         bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
+#         image = wx.StaticBitmap(self, -1, constantes.AVATAR_DEFAUT)
+#         self.image = image
+#         self.SetImage()
+#         bsizer.Add(image, flag = wx.EXPAND)
+#         
+#         bt = wx.Button(self, -1, u"Changer le portrait")
+#         bt.SetToolTipString(u"Cliquer ici pour sélectionner un fichier image")
+#         bsizer.Add(bt, flag = wx.EXPAND|wx.ALIGN_BOTTOM)
+#         self.Bind(wx.EVT_BUTTON, self.OnClick, bt)
+#         self.sizer.Add(bsizer, (0,2), (2,1), flag =  wx.EXPAND|wx.ALIGN_RIGHT|wx.TOP|wx.BOTTOM|wx.LEFT, border = 2)#wx.ALIGN_CENTER_VERTICAL |
         
         #
         # Boutons Charger/Sauvegarder
@@ -9631,48 +9741,48 @@ class PanelPropriete_Personne(PanelPropriete):
                     u"Le professeur %s a bien été ajouté." %self.personne.GetNomPrenom())
 
 
-    #############################################################################            
-    def OnClick(self, event):
-#        for k, g in self.personne.grille.items():
-#            if event.GetId() == self.btnlien[k].GetId():
-#                g.Afficher(self.GetDocument().GetPath())
-##        if event.GetId() == self.btnlien[0].GetId():
-##            self.personne.grille[0].Afficher(self.GetDocument().GetPath())
-##        elif event.GetId() == self.btnlien[1].GetId():
-##            self.personne.grille[1].Afficher(self.GetDocument().GetPath())
-#            
-#        else:
-        mesFormats = u"Fichier Image|*.bmp;*.png;*.jpg;*.jpeg;*.gif;*.pcx;*.pnm;*.tif;*.tiff;*.tga;*.iff;*.xpm;*.ico;*.ico;*.cur;*.ani|" \
-                       u"Tous les fichiers|*.*'"
-        
-        dlg = wx.FileDialog(
-                            self, message=u"Ouvrir une image",
-#                            defaultDir = self.DossierSauvegarde, 
-                            defaultFile = "",
-                            wildcard = mesFormats,
-                            style=wx.OPEN | wx.MULTIPLE | wx.CHANGE_DIR
-                            )
-            
-        # Show the dialog and retrieve the user response. If it is the OK response, 
-        # process the data.
-        if dlg.ShowModal() == wx.ID_OK:
-            # This returns a Python list of files that were selected.
-            paths = dlg.GetPaths()
-            nomFichier = paths[0]
-            self.personne.avatar = rognerImage(wx.Image(nomFichier).ConvertToBitmap())
-            self.SetImage()
-            self.sendEvent(modif = u"Modification du portrait de la personne")
-            
-        dlg.Destroy()
-        
-        
-    #############################################################################            
-    def SetImage(self):
-        if self.personne.avatar != None:
-            self.personne.avatar = constantes.ReSize_avatar(self.personne.avatar)
-            self.image.SetBitmap(self.personne.avatar)
-        self.personne.SetImage()
-        self.Layout()
+#     #############################################################################            
+#     def OnClick(self, event):
+# #        for k, g in self.personne.grille.items():
+# #            if event.GetId() == self.btnlien[k].GetId():
+# #                g.Afficher(self.GetDocument().GetPath())
+# ##        if event.GetId() == self.btnlien[0].GetId():
+# ##            self.personne.grille[0].Afficher(self.GetDocument().GetPath())
+# ##        elif event.GetId() == self.btnlien[1].GetId():
+# ##            self.personne.grille[1].Afficher(self.GetDocument().GetPath())
+# #            
+# #        else:
+#         mesFormats = u"Fichier Image|*.bmp;*.png;*.jpg;*.jpeg;*.gif;*.pcx;*.pnm;*.tif;*.tiff;*.tga;*.iff;*.xpm;*.ico;*.ico;*.cur;*.ani|" \
+#                        u"Tous les fichiers|*.*'"
+#         
+#         dlg = wx.FileDialog(
+#                             self, message=u"Ouvrir une image",
+# #                            defaultDir = self.DossierSauvegarde, 
+#                             defaultFile = "",
+#                             wildcard = mesFormats,
+#                             style=wx.OPEN | wx.MULTIPLE | wx.CHANGE_DIR
+#                             )
+#             
+#         # Show the dialog and retrieve the user response. If it is the OK response, 
+#         # process the data.
+#         if dlg.ShowModal() == wx.ID_OK:
+#             # This returns a Python list of files that were selected.
+#             paths = dlg.GetPaths()
+#             nomFichier = paths[0]
+#             self.personne.avatar = rognerImage(wx.Image(nomFichier).ConvertToBitmap())
+#             self.SetImage()
+#             self.sendEvent(modif = u"Modification du portrait de la personne")
+#             
+#         dlg.Destroy()
+#         
+#         
+#     #############################################################################            
+#     def SetImage(self):
+#         if self.personne.avatar != None:
+#             self.personne.avatar = constantes.ReSize_avatar(self.personne.avatar)
+#             self.image.SetBitmap(self.personne.avatar)
+#         self.personne.SetImage()
+#         self.Layout()
         
         
         
@@ -9798,7 +9908,7 @@ class PanelPropriete_Support(PanelPropriete):
         self.support = support
         self.parent = parent
         
-        PanelPropriete.__init__(self, parent)
+        PanelPropriete.__init__(self, parent, objet = self.support)
         
         #
         # Nom
@@ -9820,32 +9930,38 @@ class PanelPropriete_Support(PanelPropriete):
         #
         # Lien
         #
-        box = myStaticBox(self, -1, u"Lien externe")
-        bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
-        self.selec = URLSelectorCombo(self, self.support.lien, self.support.GetPath())
-        bsizer.Add(self.selec, flag = wx.EXPAND)
-        self.btnlien = wx.Button(self, -1, u"Ouvrir le lien externe")
-        self.btnlien.Hide()
-        self.Bind(wx.EVT_BUTTON, self.OnClick, self.btnlien)
-        bsizer.Add(self.btnlien)
-        self.sizer.Add(bsizer, (1,0), flag = wx.EXPAND|wx.ALL, border = 2)
+        lsizer = self.CreateLienSelect(self)
+        self.sizer.Add(lsizer, (1,0), flag = wx.EXPAND|wx.ALL, border = 2)
+        
+#         box = myStaticBox(self, -1, u"Lien externe")
+#         bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
+#         self.selec = URLSelectorCombo(self, self.support.lien, self.support.GetPath())
+#         bsizer.Add(self.selec, flag = wx.EXPAND)
+#         self.btnlien = wx.Button(self, -1, u"Ouvrir le lien externe")
+#         self.btnlien.Hide()
+#         self.Bind(wx.EVT_BUTTON, self.OnClick, self.btnlien)
+#         bsizer.Add(self.btnlien)
+#         self.sizer.Add(bsizer, (1,0), flag = wx.EXPAND|wx.ALL, border = 2)
         
         
         #
         # Image
         #
-        box = myStaticBox(self, -1, u"Image du support")
-        bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
-        image = wx.StaticBitmap(self, -1, wx.NullBitmap)
-        image.Bind(wx.EVT_RIGHT_UP, self.OnRClickImage)
-        self.image = image
-        self.SetImage()
-        bsizer.Add(image, flag = wx.EXPAND)
-        bt = wx.Button(self, -1, u"Changer l'image")
-        bt.SetToolTipString(u"Cliquer ici pour sélectionner un fichier image")
-        bsizer.Add(bt, flag = wx.EXPAND)
-        self.Bind(wx.EVT_BUTTON, self.OnClick, bt)
-        self.sizer.Add(bsizer, (0,1), (2,1), flag = wx.EXPAND|wx.ALL, border = 2)#wx.ALIGN_CENTER_VERTICAL |
+        isizer = self.CreateImageSelect(self, titre = u"Image du support")
+        self.sizer.Add(isizer, (0,1), (2,1), flag = wx.EXPAND|wx.ALL, border = 2)
+#         
+#         box = myStaticBox(self, -1, u"Image du support")
+#         bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
+#         image = wx.StaticBitmap(self, -1, wx.NullBitmap)
+#         image.Bind(wx.EVT_RIGHT_UP, self.OnRClickImage)
+#         self.image = image
+#         self.SetImage()
+#         bsizer.Add(image, flag = wx.EXPAND)
+#         bt = wx.Button(self, -1, u"Changer l'image")
+#         bt.SetToolTipString(u"Cliquer ici pour sélectionner un fichier image")
+#         bsizer.Add(bt, flag = wx.EXPAND)
+#         self.Bind(wx.EVT_BUTTON, self.OnClick, bt)
+#         self.sizer.Add(bsizer, (0,1), (2,1), flag = wx.EXPAND|wx.ALL, border = 2)#wx.ALIGN_CENTER_VERTICAL |
 
         
         #
@@ -9914,52 +10030,52 @@ class PanelPropriete_Support(PanelPropriete):
                                             ])
             
             
-    #############################################################################            
-    def OnClick(self, event):
-        if event.GetId() == self.btnlien.GetId():
-            self.support.AfficherLien(self.GetDocument().GetPath())
-        else:
-            mesFormats = u"Fichier Image|*.bmp;*.png;*.jpg;*.jpeg;*.gif;*.pcx;*.pnm;*.tif;*.tiff;*.tga;*.iff;*.xpm;*.ico;*.ico;*.cur;*.ani|" \
-                           u"Tous les fichiers|*.*'"
-            
-            dlg = wx.FileDialog(
-                                self, message=u"Ouvrir une image",
-    #                            defaultDir = self.DossierSauvegarde, 
-                                defaultFile = "",
-                                wildcard = mesFormats,
-                                style=wx.OPEN | wx.MULTIPLE | wx.CHANGE_DIR
-                                )
-                
-            # Show the dialog and retrieve the user response. If it is the OK response, 
-            # process the data.
-            if dlg.ShowModal() == wx.ID_OK:
-                # This returns a Python list of files that were selected.
-                paths = dlg.GetPaths()
-                nomFichier = paths[0]
-                self.support.image = rognerImage(wx.Image(nomFichier).ConvertToBitmap())
-                self.SetImage(True)
-            
-            dlg.Destroy()
-
-
-    #############################################################################            
-    def SetImage(self, sendEvt = False):
-        if self.support.image != None:
-            
-#             img = rognerImage(self.support.image)
-            
-#             w, h = self.support.image.GetSize()
-#             wf, hf = 200.0, 100.0
-#             r = max(w/wf, h/hf)
-#             _w, _h = w/r, h/r
-# #            self.support.image = self.support.image.ConvertToImage().Scale(_w, _h).ConvertToBitmap()
-            self.image.SetBitmap(rognerImage(self.support.image, 200,200))
-#        self.support.SetImage()
-        self.Layout()
+#     #############################################################################            
+#     def OnClick(self, event):
+#         self.support.AfficherLien(self.GetDocument().GetPath())
         
-        if sendEvt:
-            self.sendEvent(modif = u"Modification de l'illustration du Support",
-                           obj = self)
+#         else:
+#             mesFormats = u"Fichier Image|*.bmp;*.png;*.jpg;*.jpeg;*.gif;*.pcx;*.pnm;*.tif;*.tiff;*.tga;*.iff;*.xpm;*.ico;*.ico;*.cur;*.ani|" \
+#                            u"Tous les fichiers|*.*'"
+#             
+#             dlg = wx.FileDialog(
+#                                 self, message=u"Ouvrir une image",
+#     #                            defaultDir = self.DossierSauvegarde, 
+#                                 defaultFile = "",
+#                                 wildcard = mesFormats,
+#                                 style=wx.OPEN | wx.MULTIPLE | wx.CHANGE_DIR
+#                                 )
+#                 
+#             # Show the dialog and retrieve the user response. If it is the OK response, 
+#             # process the data.
+#             if dlg.ShowModal() == wx.ID_OK:
+#                 # This returns a Python list of files that were selected.
+#                 paths = dlg.GetPaths()
+#                 nomFichier = paths[0]
+#                 self.support.image = rognerImage(wx.Image(nomFichier).ConvertToBitmap())
+#                 self.SetImage(True)
+#             
+#             dlg.Destroy()
+# 
+# 
+#     #############################################################################            
+#     def SetImage(self, sendEvt = False):
+#         if self.support.image != None:
+#             
+# #             img = rognerImage(self.support.image)
+#             
+# #             w, h = self.support.image.GetSize()
+# #             wf, hf = 200.0, 100.0
+# #             r = max(w/wf, h/hf)
+# #             _w, _h = w/r, h/r
+# # #            self.support.image = self.support.image.ConvertToImage().Scale(_w, _h).ConvertToBitmap()
+#             self.image.SetBitmap(rognerImage(self.support.image, 200,200))
+# #        self.support.SetImage()
+#         self.Layout()
+#         
+#         if sendEvt:
+#             self.sendEvent(modif = u"Modification de l'illustration du Support",
+#                            obj = self)
 
 
     #############################################################################            

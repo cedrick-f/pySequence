@@ -205,7 +205,8 @@ def DefinirZones(prg, ctx):
     """ Calcule les positions et dimensions des différentes zones de tracé
         en fonction du nombre d'éléments (élèves, tâches, compétences)
     """
-    global ecartTacheY, intituleTaches, fontIntTaches, xCI, yCI, a, b, yTaches, wColComp, xTh, yTh
+    global ecartTacheY, intituleTaches, fontIntTaches, xCI, yCI, hCI, hTh, \
+            a, b, yTaches, wColComp, xTh, yTh
     
     #
     # Zone du tableau des compétences - X
@@ -257,6 +258,8 @@ def DefinirZones(prg, ctx):
     # Zone du tableau des Thématiques
     #
     lstTh = prg.GetListeTh()
+    hTh = (-0.001*len(lstTh)+0.025) * COEF
+#     print "hTh", hTh
     tailleZThV[0] = wTh * len(lstTh)
     if len(lstTh) == 0:
         tailleZThH[1] = 0
@@ -278,6 +281,8 @@ def DefinirZones(prg, ctx):
     # Zone du tableau des thèmes/CI
     #
     lstCI = prg.GetListeCI()
+    hCI = (-0.001*len(lstCI)+0.025) * COEF
+#     print "hCI", hCI
     tailleZCIV[0] = wCI * len(lstCI)
     if len(lstCI) == 0:
         tailleZCIH[1] = 0
@@ -659,7 +664,7 @@ def Draw(ctx, prg, mouchard = False):
     if len(lstTh) > 0:
         rectTh = (posZThH[0], posZThV[1], 
                   tailleZThH[0], tailleZThH[1])
-        curve_rect_titre(ctx, getSingulier(ref.nomTh),
+        curve_rect_titre(ctx, getPluriel(ref.nomTh),
                          rectTh, BcoulCI, IcoulCI, fontCI)
         
         ctx.select_font_face(font_family, cairo.FONT_SLANT_NORMAL,
@@ -737,7 +742,7 @@ def Draw(ctx, prg, mouchard = False):
     if len(lstCI) > 0:
         rectCI = (posZCIH[0], posZCIH[1], 
                   tailleZCIH[0], tailleZCIH[1])
-        curve_rect_titre(ctx, getSingulier(ref.nomCI),
+        curve_rect_titre(ctx, getPluriel(ref.nomCI),
                          rectCI, BcoulCI, IcoulCI, fontCI)
         
         ctx.select_font_face(font_family, cairo.FONT_SLANT_NORMAL,

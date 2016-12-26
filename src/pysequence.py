@@ -378,12 +378,12 @@ class Lien():
             self.EvalTypeLien(pathseq)
         return True
 
+
+
+
+
+
     
-####################################################################################
-#
-#   Classe définissant les propriétés d'une séquence ou d'un projet
-#
-####################################################################################
 Titres = [u"Séquence pédagogique",
           u"Prérequis",
           u"Objectifs pédagogiques",
@@ -398,11 +398,20 @@ Titres = [u"Séquence pédagogique",
           u"Séquences et Projets", 
           u"Progression"]
 
-class ElementDeSequence():
+
+
+
+
+
+####################################################################################
+#
+#   Classe définissant les propriétés d'un élément avec lien externe : Lien()
+#
+####################################################################################
+class ElementAvecLien():
     def __init__(self):
         self.lien = Lien()
         
-    
     ######################################################################################  
     def GetPath(self):
         return self.GetDocument().GetPath()
@@ -410,7 +419,7 @@ class ElementDeSequence():
     ######################################################################################  
     def GetLien(self):
         return self.lien.path
-    
+        
     ######################################################################################  
     def GetLienHTML(self):
         if self.lien.type in ['f', 'd', 's']:
@@ -458,25 +467,34 @@ class ElementDeSequence():
 
 
 
-######################################################################################  
+#########################################################################################
 def GetObjectFromClipBoard(instance):
+    """ Récupération d'un objet pySéquence depuis le presse-papier
+        uniquement <instance>
+    """
     try:
         b = ET.fromstring(pyperclip.paste())
     except:
         b = None
 
-    if isinstance(b, Element): # Le presse contient un Element
+    if isinstance(b, Element): # Le presse contient un Element XML
         if b.tag[:len(instance)] == instance: # Le presse contient une instance attendue
             return b
     return None
 
 
+
 ######################################################################################  
 #
-#   Objet_sequence
+#   Element de base pySequence
+#        - TIP
+#        - Enrichissement SVG
+#        - Gestion Presse-papier
+#        - Description détaillée (richText)
+#        - ...
 #
 ######################################################################################  
-class Objet_sequence():
+class ElementBase():
     def __init__(self):
         
         #
@@ -509,36 +527,36 @@ class Objet_sequence():
 #        self.elem.appendChild(p)
 #        return self.elem
 
-    ######################################################################################  
-    def getBranche_TOTAL(self, listElem):
-        root = ET.Element(self.nom_obj)
-        for e in listElem:
-            self.getBranche_AUTO(root, e, getattr(self, e))
-        return root
+#     ######################################################################################  
+#     def getBranche_TOTAL(self, listElem):
+#         root = ET.Element(self.nom_obj)
+#         for e in listElem:
+#             self.getBranche_AUTO(root, e, getattr(self, e))
+#         return root
 
     ######################################################################################  
     def getIcone(self):
         return wx.NullBitmap
     
-    ######################################################################################  
-    def getBranche_AUTO(self, branche, nom, v):
-        if hasattr(v, 'getBranche'):
-            branche.append(v.getBranche())
-        elif isinstance(v, list):
-            self.getBrancheList(branche, nom, v)
-        else:
-            branche.set(nom, v)
+#     ######################################################################################  
+#     def getBranche_AUTO(self, branche, nom, v):
+#         if hasattr(v, 'getBranche'):
+#             branche.append(v.getBranche())
+#         elif isinstance(v, list):
+#             self.getBrancheList(branche, nom, v)
+#         else:
+#             branche.set(nom, v)
         
-    ######################################################################################  
-    def getBrancheList(self, branche, nom, dic):
-        b = ET.SubElement( branche, nom)
-        for obj in dic.values():
-            b.append(obj.getBranche())
+#     ######################################################################################  
+#     def getBrancheList(self, branche, nom, dic):
+#         b = ET.SubElement( branche, nom)
+#         for obj in dic.values():
+#             b.append(obj.getBranche())
+#     
     
-    
-    ######################################################################################  
-    def setBranche_TOTAL(self, branche):   
-        return
+#     ######################################################################################  
+#     def setBranche_TOTAL(self, branche):   
+#         return
 
     
     ######################################################################################  
@@ -756,11 +774,11 @@ class Objet_sequence():
         
         
 
-class Classe(Objet_sequence):
+class Classe(ElementBase):
     def __init__(self, app, intitule = u"", 
                  pourProjet = False, typedoc = ''):
         self.app = app
-        Objet_sequence.__init__(self)
+        ElementBase.__init__(self)
         
         self.intitule = intitule
         
@@ -1178,11 +1196,15 @@ class Classe(Objet_sequence):
 #        héritiers : Sequence et Projet
 #
 ####################################################################################################
-class BaseDoc():   
+class BaseDoc(ElementBase, ElementAvecLien):   
     def __init__(self, app, classe = None, intitule = ""):
+        self.app = app  # de type FenentreDocument
+        ElementBase.__init__(self)
+        ElementAvecLien.__init__(self)
+        
         self.intitule = intitule
         self.classe = classe
-        self.app = app  # de type FenentreDocument
+        
         self.centrer = True
         
         # Année Scolaire
@@ -1193,7 +1215,9 @@ class BaseDoc():
         
         self.dependants = [] # Liste de documents dépendants (à enregistrer aussi)
 
+        # Gestion des Undo/Redo
         self.undoStack = UndoStack(self)
+        wx.CallAfter(self.undoStack.do, u"Création "+self.article_c_obj+u" "+self.nom_obj)
         
         self.path = u""
         
@@ -1497,16 +1521,15 @@ class BaseDoc():
 
     
 ####################################################################################################          
-class Sequence(BaseDoc, Objet_sequence, ElementDeSequence):
+class Sequence(BaseDoc):
     def __init__(self, app, classe = None, intitule = u"",
                  ouverture = False):
-        BaseDoc.__init__(self, app, classe, intitule)
-        ElementDeSequence.__init__(self)
-        Objet_sequence.__init__(self)
         
         self.nom_obj = u"Séquence"
         self.article_c_obj = u"de la"
         self.article_obj = u"la"
+        
+        BaseDoc.__init__(self, app, classe, intitule)
         
         self.prerequis = Savoirs(self, prerequis = True)
         self.prerequisSeance = []
@@ -1528,7 +1551,6 @@ class Sequence(BaseDoc, Objet_sequence, ElementDeSequence):
         # Le module de dessin
         self.draw = draw_cairo_seq
         
-        self.undoStack.do(u"Création de la Séquence")
 
 
     ######################################################################################  
@@ -2472,15 +2494,14 @@ class Sequence(BaseDoc, Objet_sequence, ElementDeSequence):
 #        Projet
 #
 ####################################################################################################
-class Projet(BaseDoc, Objet_sequence, ElementDeSequence):
+class Projet(BaseDoc):
     def __init__(self, app, classe = None, intitule = u"", ouverture = False):
-        BaseDoc.__init__(self, app, classe, intitule)
-        ElementDeSequence.__init__(self)
-        Objet_sequence.__init__(self)
         
         self.nom_obj = u"Projet"
         self.article_c_obj = u"du"
         self.article_obj = u"le"
+        
+        BaseDoc.__init__(self, app, classe, intitule)
         
         self.version = "" # version de pySéquence avec laquelle le fichier a été sauvegardé
         
@@ -2531,7 +2552,7 @@ class Projet(BaseDoc, Objet_sequence, ElementDeSequence):
         # Le module de dessin
         self.draw = draw_cairo_prj
         
-        self.undoStack.do(u"Création du Projet")
+        
         
         
     ######################################################################################  
@@ -4073,17 +4094,19 @@ class Projet(BaseDoc, Objet_sequence, ElementDeSequence):
 #        Projet
 #
 ####################################################################################################
-class Progression(BaseDoc, Objet_sequence, ElementDeSequence):
+class Progression(BaseDoc):
     def __init__(self, app, classe = None, intitule = u"", ouverture = False):
-        BaseDoc.__init__(self, app, classe, intitule)
-        ElementDeSequence.__init__(self)
-        Objet_sequence.__init__(self)
         
         self.nom_obj = u"Progression"
         self.article_c_obj = u"de la"
         self.article_obj = u"la"
-
+        
         self.image = None
+        
+        BaseDoc.__init__(self, app, classe, intitule)
+        
+
+        
         
         self.sequences_projets = []     # liste de LienSequence et de LienProjet et de Referentiel.Projet
         
@@ -4102,7 +4125,6 @@ class Progression(BaseDoc, Objet_sequence, ElementDeSequence):
         # Le module de dessin
         self.draw = draw_cairo_prg
 
-        self.undoStack.do(u"Création de la progression")
 
 
     ######################################################################################  
@@ -5276,11 +5298,11 @@ class ElementProgression():
 
 #########################################################################################################
 #########################################################################################################
-class LienSequence(Objet_sequence, ElementProgression):
+class LienSequence(ElementBase, ElementProgression):
     def __init__(self, parent, path = r""):
         
         self.parent = parent
-        Objet_sequence.__init__(self)
+        ElementBase.__init__(self)
         ElementProgression.__init__(self, path)
         
         self.sequence = None
@@ -5427,10 +5449,10 @@ class LienSequence(Objet_sequence, ElementProgression):
 
 #########################################################################################################
 #########################################################################################################
-class LienProjet(Objet_sequence, ElementProgression):
+class LienProjet(ElementBase, ElementProgression):
     def __init__(self, parent, path = r""):
         self.parent = parent
-        Objet_sequence.__init__(self)
+        ElementBase.__init__(self)
         ElementProgression.__init__(self, path)
         
         self.projet = None
@@ -5584,10 +5606,10 @@ class LienProjet(Objet_sequence, ElementProgression):
 #   Classe définissant les propriétés d'une séquence
 #
 ####################################################################################
-class CentreInteret(Objet_sequence):
+class CentreInteret(ElementBase):
     def __init__(self, parent, numCI = []):
         self.parent = parent
-        Objet_sequence.__init__(self)
+        ElementBase.__init__(self)
         
         self.numCI = []     # Numéros des CI du Référentiel
         self.poids = []
@@ -5829,10 +5851,10 @@ class CentreInteret(Objet_sequence):
 #   Classe définissant les propriétés des compétences de la Séquence (objectifs)
 #
 ####################################################################################
-class Competences(Objet_sequence):
+class Competences(ElementBase):
     def __init__(self, parent, numComp = None):
         self.parent = parent
-        Objet_sequence.__init__(self)
+        ElementBase.__init__(self)
         
         self.num = numComp
         self.competences = []
@@ -6017,10 +6039,10 @@ class Competences(Objet_sequence):
 #   Classe définissant les propriétés de savoirs
 #
 ####################################################################################
-class Savoirs(Objet_sequence):
+class Savoirs(ElementBase):
     def __init__(self, parent, num = None, prerequis = False):
         self.parent = parent        # la séquence
-        Objet_sequence.__init__(self)
+        ElementBase.__init__(self)
         
         self.prerequis = prerequis  # Indique que ce sont des savoirs prérequis
         self.savoirs = []
@@ -6160,7 +6182,7 @@ class Savoirs(Objet_sequence):
 #   Classe définissant les propriétés d'une compétence
 #
 ####################################################################################
-class Seance(ElementDeSequence, Objet_sequence):
+class Seance(ElementAvecLien, ElementBase):
     
                   
     def __init__(self, parent, typeSeance = "", typeParent = 0, branche = None):
@@ -6171,13 +6193,13 @@ class Seance(ElementDeSequence, Objet_sequence):
                                                             1 = séance "Rotation"
                                                             2 = séance "parallèle"
         """
-        self.nom_obj = "Séance"
-        self.article_c_obj = "de la"
-        self.article_obj = "la"
+        self.nom_obj = u"Séance"
+        self.article_c_obj = u"de la"
+        self.article_obj = u"la"
         
         self.parent = parent
-        ElementDeSequence.__init__(self)
-        Objet_sequence.__init__(self)
+        ElementAvecLien.__init__(self)
+        ElementBase.__init__(self)
         
         # Les données sauvegardées
         self.ordre = 0
@@ -6192,6 +6214,11 @@ class Seance(ElementDeSequence, Objet_sequence):
         self.systemes = []
         self.code = u""
         self.couleur = (0,0,0,1)
+        
+        # Une icône et une imagepour illustrer la séance
+        self.icone = None
+        self.image = None
+        
         self.description = None
         self.taille = Variable(u"Taille des caractères", lstVal = 100, nomNorm = "", typ = VAR_ENTIER_POS, 
                               bornes = [10,100], modeLog = False,
@@ -7196,7 +7223,7 @@ class Seance(ElementDeSequence, Objet_sequence):
 #   Classe définissant les propriétés d'une compétence
 #
 ####################################################################################
-class Tache(ElementDeSequence, Objet_sequence):
+class Tache(ElementAvecLien, ElementBase):
     
                   
     def __init__(self, projet, intitule = u"", phaseTache = "", duree = 1.0, branche = None):
@@ -7205,13 +7232,13 @@ class Tache(ElementDeSequence, Objet_sequence):
                 phaseTache = phase de la tache parmi 'Ana', 'Con', 'Rea', 'Val'
         """
 #        print "__init__ tâche", phaseTache
-        self.nom_obj = "Tâche"
-        self.article_c_obj = "de la"
-        self.article_obj = "la"
+        self.nom_obj = u"Tâche"
+        self.article_c_obj = u"de la"
+        self.article_obj = u"la"
         
         self.projet = projet
-        ElementDeSequence.__init__(self)
-        Objet_sequence.__init__(self)
+        ElementAvecLien.__init__(self)
+        ElementBase.__init__(self)
 
         
         
@@ -8142,12 +8169,12 @@ class Tache(ElementDeSequence, Objet_sequence):
 #   Classe définissant les propriétés d'un système
 #
 ####################################################################################
-class Systeme(ElementDeSequence, Objet_sequence):
+class Systeme(ElementAvecLien, ElementBase):
     def __init__(self, parent, nom = u""):
         
         self.parent = parent
-        ElementDeSequence.__init__(self)
-        Objet_sequence.__init__(self)
+        ElementAvecLien.__init__(self)
+        ElementBase.__init__(self)
         
         self.nom = nom
         self.nbrDispo = Variable(u"Nombre dispo", lstVal = 1, nomNorm = "", typ = VAR_ENTIER_POS, 
@@ -8351,16 +8378,16 @@ class Systeme(ElementDeSequence, Objet_sequence):
 #   Classe définissant les propriétés d'une seance d'emploi du temps
 #
 ####################################################################################
-class Seance_EDT(ElementDeSequence, Objet_sequence):
+class Seance_EDT(ElementAvecLien, ElementBase):
     def __init__(self, parent, nom = u""):
         
-        self.nom_obj = "Séance"
-        self.article_c_obj = "de la"
-        self.article_obj = "la"
+        self.nom_obj = u"Séance"
+        self.article_c_obj = u"de la"
+        self.article_obj = u"la"
         
         self.parent = parent
-        ElementDeSequence.__init__(self)
-        Objet_sequence.__init__(self)
+        ElementAvecLien.__init__(self)
+        ElementBase.__init__(self)
         
         
         self.jour = 0       # jour de la semaine (lundi = 0)
@@ -8392,34 +8419,37 @@ class Seance_EDT(ElementDeSequence, Objet_sequence):
 #   Classe définissant les propriétés d'un emploi du temps
 #
 ####################################################################################
-class EDT(ElementDeSequence, Objet_sequence):
+class EDT(ElementAvecLien, ElementBase):
     def __init__(self, parent, nom = u""):
         
-        self.nom_obj = "Emploi du temps"
-        self.article_c_obj = "d'"
-        self.article_obj = "l'"
+        self.nom_obj = u"Emploi du temps"
+        self.article_c_obj = u"d'"
+        self.article_obj = u"l'"
         
         self.parent = parent
-        ElementDeSequence.__init__(self)
-        Objet_sequence.__init__(self)
+        ElementAvecLien.__init__(self)
+        ElementBase.__init__(self)
 
         self.seances = []
+
+
+
 
 ####################################################################################
 #
 #   Classe définissant les propriétés d'un calendrier de progression
 #
 ####################################################################################
-class Calendrier(ElementDeSequence, Objet_sequence):
+class Calendrier(ElementAvecLien, ElementBase):
     def __init__(self, parent, annee, nom = u""):
         
-        self.nom_obj = "Calendrier"
-        self.article_c_obj = "du"
-        self.article_obj = "le"
+        self.nom_obj = u"Calendrier"
+        self.article_c_obj = u"du"
+        self.article_obj = u"le"
         
         self.parent = parent
-        ElementDeSequence.__init__(self)
-        Objet_sequence.__init__(self)
+        ElementAvecLien.__init__(self)
+        ElementBase.__init__(self)
         
         self.nom = nom
         self.description = None
@@ -8521,16 +8551,16 @@ class Calendrier(ElementDeSequence, Objet_sequence):
 #   Classe définissant les propriétés d'un support de projet
 #
 ####################################################################################
-class Support(ElementDeSequence, Objet_sequence):
+class Support(ElementAvecLien, ElementBase):
     def __init__(self, parent, nom = u""):
         
-        self.nom_obj = "Support"
-        self.article_c_obj = "du"
-        self.article_obj = "le"
+        self.nom_obj = u"Support"
+        self.article_c_obj = u"du"
+        self.article_obj = u"le"
         
         self.parent = parent
-        ElementDeSequence.__init__(self)
-        Objet_sequence.__init__(self)
+        ElementAvecLien.__init__(self)
+        ElementBase.__init__(self)
         
         self.nom = nom
         self.description = None
@@ -8684,14 +8714,14 @@ class Support(ElementDeSequence, Objet_sequence):
 #   Classe définissant les propriétés d'une personne
 #
 ####################################################################################
-class Personne(Objet_sequence):
+class Personne(ElementBase):
     def __init__(self, doc, Id = 0):
         self.doc = doc
-        Objet_sequence.__init__(self)
+        ElementBase.__init__(self)
 
         self.nom = u""
         self.prenom = u""
-        self.avatar = None
+        self.image = None
         self.id = Id # Un identifiant unique = nombre > 0
 
 
@@ -8730,8 +8760,8 @@ class Personne(Objet_sequence):
         root.set("Id", str(self.id))
         root.set("Nom", self.nom)
         root.set("Prenom", self.prenom)
-        if self.avatar != None:
-            root.set("Avatar", img2str(self.avatar.ConvertToImage()))
+        if self.image != None:
+            root.set("Avatar", img2str(self.image.ConvertToImage()))
         
         if hasattr(self, 'referent'):
             root.set("Referent", str(self.referent))
@@ -8755,10 +8785,10 @@ class Personne(Objet_sequence):
         data = branche.get("Avatar", "")
         if data != "":
             try:
-                self.avatar = PyEmbeddedImage(data).GetBitmap()
+                self.image = PyEmbeddedImage(data).GetBitmap()
             except:
                 Ok = False
-                self.avatar = None
+                self.image = None
             
         if hasattr(self, 'referent'):   # prof
             self.referent = eval(branche.get("Referent", "False"))
@@ -8842,10 +8872,10 @@ class Personne(Objet_sequence):
     
     ######################################################################################  
     def GetAvatar(self):
-        if self.avatar is None:
+        if self.image is None:
             return constantes.AVATAR_DEFAUT
         else:
-            return self.avatar
+            return self.image
 
 
     ######################################################################################  
@@ -8863,13 +8893,13 @@ class Personne(Objet_sequence):
         # Tip
 #        if hasattr(self, 'tip'):
 #            self.tip.SetTexte(self.GetNomPrenom(), self.tip_nom)
-#            self.tip.SetImage(self.avatar, self.tip_avatar)
+#            self.tip.SetImage(self.image, self.tip_avatar)
 
     ######################################################################################  
     def SetImage(self):
         self.SetTip()
 #        return
-#        self.tip.SetImage(self.avatar, self.tip_avatar)
+#        self.tip.SetImage(self.image, self.tip_avatar)
 #        self.SetTip()
         
     
@@ -8882,7 +8912,7 @@ class Personne(Objet_sequence):
 #   Classe définissant les propriétés d'un élève
 #
 ####################################################################################
-class Eleve(Personne, Objet_sequence):
+class Eleve(Personne, ElementBase):
     def __init__(self, doc, ident = 0):
         
         self.titre = u"élève"
