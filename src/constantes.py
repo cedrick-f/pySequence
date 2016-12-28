@@ -358,6 +358,13 @@ for fich_img in liste:
         pass
 
 
+
+# Dimensions mini fenetres
+WMIN_PROP, HMIN_PROP = 600, 200
+WMIN_STRUC, HMIN_STRUC = 250, 400
+
+
+
 # Avatar
 TAILLE_AVATAR = ()
 def ReSize_avatar(img):

@@ -534,6 +534,42 @@ class ElementBase():
 #             self.getBranche_AUTO(root, e, getattr(self, e))
 #         return root
 
+
+    ######################################################################################  
+    def getBrancheImage(self, root, nom = "Image"):
+        if self.image != None:
+            root.set(nom, img2str(self.image.ConvertToImage()))
+    
+    
+    ######################################################################################  
+    def getBrancheIcone(self, root, nom = "Icone"):
+        if self.icone != None:
+            root.set(nom, img2str(self.icone.ConvertToImage()))
+            
+                    
+    ######################################################################################  
+    def setBrancheImage(self, branche, nom = "Image"):
+        Ok = True
+        data = branche.get(nom, "")
+        if data != "":
+            try:
+                self.image = PyEmbeddedImage(data).GetBitmap()
+            except:
+                Ok = False
+                self.image = None
+        return Ok
+                
+    
+    ######################################################################################  
+    def setBrancheIcone(self, branche, nom = "Icone"):
+        data = branche.get(nom, "")
+        if data != "":
+            try:
+                self.icone = PyEmbeddedImage(data).GetBitmap()
+            except:
+                self.icone = None
+    
+    
     ######################################################################################  
     def getIcone(self):
         return wx.NullBitmap
@@ -4312,8 +4348,7 @@ class Progression(BaseDoc):
         
         self.lien.getBranche(progression)
         
-        if self.image != None:
-            progression.set("Image", img2str(self.image.ConvertToImage()))
+        self.getBrancheImage(progression)
 
         if self.commentaires != u"":
             progression.set("Commentaires", self.commentaires)
@@ -4325,8 +4360,6 @@ class Progression(BaseDoc):
         eleves = ET.SubElement(progression, "Eleves")
         for e in self.eleves:
             eleves.append(e.getBranche())
-            
-
 #        
         sequences_projets = ET.SubElement(progression, "Sequences_Projets")
         for lienseq in self.sequences_projets:
@@ -4353,13 +4386,7 @@ class Progression(BaseDoc):
         
         self.commentaires = branche.get("Commentaires", u"")
         
-        data = branche.get("Image", "")
-        if data != "":
-            try:
-                self.image = PyEmbeddedImage(data).GetBitmap()
-            except:
-                Ok = False
-                self.image = None
+        Ok = self.setBrancheImage(branche)
                 
         brancheEqu = branche.find("Equipe")
         self.equipe = []
@@ -6305,6 +6332,10 @@ class Seance(ElementAvecLien, ElementBase):
         root.set("Intitule", self.intitule)
         root.set("Taille", str(self.taille.v[0]))
         
+        self.getBrancheImage(root)
+        
+        self.getBrancheIcone(root)
+        
         if self.description != None:
             root.set("Description", self.description)
         
@@ -6353,6 +6384,10 @@ class Seance(ElementAvecLien, ElementBase):
         self.couleur = Str2Couleur(branche.get("Couleur", "0;0;0;1"))
         
         self.lien.setBranche(branche, self.GetPath())
+        
+        self.setBrancheIcone(branche)
+        
+        self.setBrancheImage(branche)
         
 #        t1 = time.time()
 #        print "    t1", t1-t0
@@ -7261,6 +7296,7 @@ class Tache(ElementAvecLien, ElementBase):
 
         # Une icône pour illustrer la tâche
         self.icone = None
+        self.image = None
         
         # Les autres données
         
@@ -7452,9 +7488,10 @@ class Tache(ElementAvecLien, ElementBase):
         if self.description != None:
             root.set("Description", self.description)
         
-        if self.icone != None:
-            root.set("Icone", img2str(self.icone.ConvertToImage()))
-            
+        self.getBrancheIcone(root)
+        
+        self.getBrancheImage(root)
+        
         root.set("Duree", str(self.duree.v[0]))
         
         brancheElv = ET.Element("Eleves")
@@ -7516,12 +7553,9 @@ class Tache(ElementAvecLien, ElementBase):
         
         self.lien.setBranche(branche, self.GetPath())
         
-        data = branche.get("Icone", "")
-        if data != "":
-            try:
-                self.icone = PyEmbeddedImage(data).GetBitmap()
-            except:
-                self.icone = None
+        self.setBrancheImage(branche)
+        
+        self.setBrancheIcone(branche)
                 
                 
         if not self.phase in TOUTES_REVUES_EVAL_SOUT:
@@ -8219,8 +8253,7 @@ class Systeme(ElementAvecLien, ElementBase):
             root.set("Nom", self.nom)
             self.lien.getBranche(root)
             root.set("Nbr", str(self.nbrDispo.v[0]))
-            if self.image != None:
-                root.set("Image", img2str(self.image.ConvertToImage()))
+            self.getBrancheImage(root)
         
         return root
     
@@ -8246,11 +8279,8 @@ class Systeme(ElementAvecLien, ElementBase):
     
             self.nbrDispo.v[0] = eval(branche.get("Nbr", "1"))
             
-            data = branche.get("Image", "")
-            if data != "":
-                self.image = PyEmbeddedImage(data).GetBitmap()
-            else:
-                self.image = None
+            self.setBrancheImage(branche)
+            
             
 #        self.GetPanelPropriete().MiseAJour()
 
@@ -8593,8 +8623,8 @@ class Support(ElementAvecLien, ElementBase):
         self.lien.getBranche(root)
         if self.description != None:
             root.set("Description", self.description)
-        if self.image != None:
-            root.set("Image", img2str(self.image.ConvertToImage()))
+        
+        self.getBrancheImage(root)
         
         return root
     
@@ -8603,15 +8633,10 @@ class Support(ElementAvecLien, ElementBase):
         Ok = True
         self.nom  = branche.get("Nom", "")
         self.description = branche.get("Description", None)
+        
         Ok = Ok and self.lien.setBranche(branche, self.GetPath())
 
-        data = branche.get("Image", "")
-        if data != "":
-            try :
-                self.image = PyEmbeddedImage(data).GetBitmap()
-            except:
-                self.image = None
-                Ok = False
+        Ok = Ok and self.setBrancheImage(branche)
         
         return Ok
     
@@ -8760,8 +8785,8 @@ class Personne(ElementBase):
         root.set("Id", str(self.id))
         root.set("Nom", self.nom)
         root.set("Prenom", self.prenom)
-        if self.image != None:
-            root.set("Avatar", img2str(self.image.ConvertToImage()))
+        
+        self.getBrancheImage(root, "Avatar")
         
         if hasattr(self, 'referent'):
             root.set("Referent", str(self.referent))
@@ -8782,14 +8807,9 @@ class Personne(ElementBase):
         self.id  = eval(branche.get("Id", "0"))
         self.nom  = branche.get("Nom", "")
         self.prenom  = branche.get("Prenom", "")
-        data = branche.get("Avatar", "")
-        if data != "":
-            try:
-                self.image = PyEmbeddedImage(data).GetBitmap()
-            except:
-                Ok = False
-                self.image = None
-            
+        
+        Ok = Ok and self.setBrancheImage(branche, "Avatar")
+        
         if hasattr(self, 'referent'):   # prof
             self.referent = eval(branche.get("Referent", "False"))
             

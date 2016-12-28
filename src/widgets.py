@@ -1313,11 +1313,11 @@ class RangeSlider(wx.Panel):
         sizer = wx.BoxSizer(wx.VERTICAL)
         
         self.sldMax = wx.Slider(self, value=pos[1], minValue=minPos, maxValue=maxPos,
-#                                 pos = (10,0), 
+                                size = (-1, 18), 
                                 style=wx.SL_HORIZONTAL | wx.SL_TOP )
-        self.sldMin = wx.Slider (self, value=pos[0], minValue=minPos, maxValue=maxPos,
-#                                  pos = (0,0), 
-                                 style =wx.SL_HORIZONTAL )
+        self.sldMin = wx.Slider(self, value=pos[0], minValue=minPos, maxValue=maxPos,
+                                size = (-1, 18),
+                                style =wx.SL_HORIZONTAL )
 
         self.sldMax.Bind(wx.EVT_SCROLL, self.OnSliderScrollMax)
         self.sldMin.Bind(wx.EVT_SCROLL, self.OnSliderScrollMin)
@@ -1488,9 +1488,12 @@ def getHoraireTxt(v, prefixe = u""):
     
 #############################################################################################################
 def rognerImage(image, wf = 800.0 , hf = 600.0): 
+    print "rognerImage"
     w, h = image.GetSize()
-    r = max(w/float(wf), h/float(hf))
+    print "   ", w, h
+    r = max(w/float(wf), h/float(hf), 1)
     _w, _h = w/r, h/r
+    print "   >>", _w, _h
     return image.ConvertToImage().Scale(_w, _h).ConvertToBitmap()
 
 

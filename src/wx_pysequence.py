@@ -231,7 +231,8 @@ from constantes import calculerEffectifs, \
                         _S, _Rev, _R1, _R2, _R3, \
                         revCalculerEffectifs, getSingulier, getPluriel, getSingulierPluriel, \
                         COUL_OK, COUL_NON, COUL_BOF, COUL_BIEN, \
-                        toList, COUL_COMPETENCES, bmp
+                        toList, COUL_COMPETENCES, bmp, WMIN_PROP, HMIN_PROP, \
+                        WMIN_STRUC, HMIN_STRUC
 import constantes
 
 import couleur
@@ -1396,7 +1397,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             en fonction du type de document en cours
             Et rafraichissement des séquences de la fenêtre de Progression
         """
-#        print "OnDocChanged"
+#         print "OnDocChanged"
 #        print dir(self.GetClientWindow().GetAuiManager().GetManagedWindow())
 #        print self.GetClientWindow().GetAuiManager().GetManagedWindow().GetCurrentPage()
 #        print self.GetClientWindow().GetAuiManager().GetManagedWindow()
@@ -1667,8 +1668,8 @@ class FenetreDocument(aui.AuiMDIChildFrame):
 #                         Name(u"Structure").
                          Left().Layer(1).
 #                         Floatable(False).
-                         BestSize((250, 400)).
-                         MinSize((250, -1)).
+                         BestSize((WMIN_STRUC, HMIN_STRUC)).
+                         MinSize((WMIN_STRUC, -1)).
                          Dockable(True).
 #                         DockFixed().
 #                         Gripper(False).
@@ -1690,8 +1691,8 @@ class FenetreDocument(aui.AuiMDIChildFrame):
                          Bottom().
                          Layer(1).
 #                         Floatable(False).
-                         BestSize((600, 200)).
-                         MinSize((600, 200)).
+                         BestSize((WMIN_PROP, HMIN_PROP)).
+                         MinSize((WMIN_PROP, HMIN_PROP)).
                          MinimizeButton(True).
                          Resizable(True).
 
@@ -4053,11 +4054,11 @@ class PanelPropriete(scrolled.ScrolledPanel):
         image = wx.StaticBitmap(parent, -1, defaut)
         self.image = image
         self.SetImage()
-        bsizer.Add(image, flag = wx.EXPAND)
+        bsizer.Add(image, 1)#, flag = wx.EXPAND)
         
         bt = wx.Button(parent, -1, u"Changer l'image")
         bt.SetToolTipString(u"Cliquer ici pour sélectionner un fichier image")
-        bsizer.Add(bt, flag = wx.EXPAND)
+        bsizer.Add(bt, flag = wx.ALIGN_BOTTOM|wx.EXPAND)
         self.Bind(wx.EVT_BUTTON, self.OnClickImage, bt)
         self.btImg = bt
         
@@ -4091,8 +4092,8 @@ class PanelPropriete(scrolled.ScrolledPanel):
     #############################################################################            
     def SetImage(self, sendEvt = False):
         if self.objet.image != None:
-            self.image.SetBitmap(rognerImage(self.objet.image, 200,200))
-        self.Layout()
+            self.image.SetBitmap(rognerImage(self.objet.image, 200, HMIN_PROP-80))
+        self.sizer.Layout()
         
         if sendEvt:
             self.sendEvent(modif = u"Modification de l'illustration "+self.objet.article_c_obj+u" "+self.objet.nom_obj,
@@ -4105,18 +4106,57 @@ class PanelPropriete(scrolled.ScrolledPanel):
         bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
         self.selec = URLSelectorCombo(parent, self.objet.lien, self.objet.GetPath())
         bsizer.Add(self.selec, flag = wx.EXPAND)
-        self.btnlien = wx.Button(parent, -1, u"Ouvrir le lien externe")
-#        self.btnlien.SetMaxSize((-1,30))
-        self.btnlien.Show(self.objet.lien.path != "")
-        self.Bind(wx.EVT_BUTTON, self.OnClickLien, self.btnlien)
-        bsizer.Add(self.btnlien, 1,  flag = wx.EXPAND)
+        
         
         return bsizer
     
     
+    
+
+
     #############################################################################            
-    def OnClickLien(self, event):
-        self.objet.lien.Afficher(self.GetDocument().GetPath())
+    def CreateIconeSelect(self, parent):
+        ib = myStaticBox(parent, -1, u"Icônes")
+        ibsizer = wx.StaticBoxSizer(ib, wx.VERTICAL)
+        pnl = scrolled.ScrolledPanel(parent, -1, style = wx.VSCROLL)
+#         pnl = wx.VScrolledWindow(parent, -1, style = wx.VSCROLL | wx.EXPAND)
+#         pnl.EnableScrolling(False, True)
+        ims = wx.WrapSizer()
+        pnl.SetSizer(ims)
+        pnl.SetupScrolling()
+        
+ 
+#             ims.SetSize((100,-1))
+        self.icones = []
+        for i, (nom, img) in enumerate(constantes.ICONES_TACHES.items()):
+            ico = img.ConvertToImage().Scale(20, 20).ConvertToBitmap()
+            btn = wx.BitmapButton(pnl, 100+i, ico)
+            btn.SetToolTipString(nom)
+            self.icones.append(nom)
+            ims.Add(btn, 0, flag = wx.ALL, border = 2)
+            btn.Refresh()
+            self.Bind(wx.EVT_BUTTON, self.OnIconeClick, btn)
+        
+        ibsizer.Add(pnl, 1, flag = wx.EXPAND)
+        
+        self.btn_no_icon = wx.Button(parent, -1, u"Aucune")
+        ibsizer.Add(self.btn_no_icon)
+        self.Bind(wx.EVT_BUTTON, self.OnIconeClick, self.btn_no_icon)
+        pnl.FitInside()
+        parent.Layout()
+        return ibsizer
+    
+    
+    #############################################################################            
+    def OnIconeClick(self, event):
+        if event.GetId() == self.btn_no_icon.GetId():
+            self.objet.icone = None
+        else:
+            self.objet.icone = constantes.ICONES_TACHES[self.icones[event.GetId()-100]]
+        self.sendEvent(modif = u"Modification de l'icône "+self.objet.article_c_obj+u" "+self.objet.nom_obj)   
+
+
+
 
 
 
@@ -4989,9 +5029,10 @@ class PanelPropriete_Progression(PanelPropriete):
     
     ######################################################################################  
     def OnPathModified(self, lien, marquerModifier = True):
-        print "OnPathModified", self.progression.lien
+#         print "OnPathModified", self.progression.lien
         self.progression.OnPathModified()
-        self.btnlien.Show(self.progression.lien.path != "")
+#         self.btnlien.Show(self.progression.lien.path != "")
+        self.selec.MiseAJour()
         if marquerModifier:
             self.progression.GetApp().MarquerFichierCourantModifie()
         self.pageGen.Layout()
@@ -5021,7 +5062,7 @@ class PanelPropriete_Progression(PanelPropriete):
         textctrl.SetToolTipString(u"")
         sb.Add(textctrl, 1, flag = wx.EXPAND)
         self.textctrl = textctrl
-        pageGen.sizer.Add(sb, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.LEFT|wx.EXPAND, border = 2)
+        pageGen.sizer.Add(sb, (0,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.ALL|wx.EXPAND, border = 2)
 #        pageGen.Bind(stc.EVT_STC_CHANGE, self.EvtText)
 #        pageGen.Bind(wx.EVT_TEXT, self.EvtText, textctrl)
 #         pageGen.Bind(stc.EVT_STC_CHANGE, self.EvtText, self.textctrl)
@@ -5035,17 +5076,6 @@ class PanelPropriete_Progression(PanelPropriete):
         lsizer = self.CreateLienSelect(pageGen)
         pageGen.sizer.Add(lsizer, (1,0), (1, 1), flag = wx.EXPAND|wx.ALL, border = 2)
         
-#         box = myStaticBox(pageGen, -1, u"Lien externe")
-#         bsizer = wx.StaticBoxSizer(box, wx.HORIZONTAL)
-#         self.selec = URLSelectorCombo(pageGen, self.progression.lien, self.progression.GetPath())
-#         bsizer.Add(self.selec, 1, flag = wx.EXPAND)
-#         self.btnlien = wx.Button(pageGen, -1, u"Ouvrir le lien externe")
-# #        self.btnlien.SetMaxSize((-1,30))
-#         self.btnlien.Show(self.progression.lien.path != "")
-#         pageGen.Bind(wx.EVT_BUTTON, self.OnClickLien, self.btnlien)
-#         bsizer.Add(self.btnlien,  flag = wx.EXPAND)
-#         pageGen.sizer.Add(bsizer, (1,0), (1, 1), flag = wx.EXPAND|wx.ALL, border = 2)
-#         
         
         #
         # Année scolaire et Position dans l'année
@@ -5061,43 +5091,20 @@ class PanelPropriete_Progression(PanelPropriete):
                                       sliderAGauche = True)
         self.Bind(EVT_VAR_CTRL, self.EvtVariable, self.ctrlAnnee)
         sb.Add(self.ctrlAnnee)
-        pageGen.sizer.Add(sb, (2,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.EXPAND|wx.LEFT, border = 2)
-        
-        pageGen.sizer.AddGrowableCol(0)
-        pageGen.sizer.AddGrowableRow(0)
+        pageGen.sizer.Add(sb, (2,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.EXPAND|wx.ALL, border = 2)
         
         
         #
         # Image
         #
         isizer = self.CreateImageSelect(pageGen, titre = u"Image")
-        pageGen.sizer.Add(isizer, (0,2), (3,1), flag =  wx.EXPAND|wx.ALIGN_RIGHT|wx.TOP|wx.BOTTOM|wx.LEFT, border = 2)#wx.ALIGN_CENTER_VERTICAL |
+        pageGen.sizer.Add(isizer, (0,1), (3,1), flag =  wx.EXPAND|wx.ALIGN_RIGHT|wx.ALL, border = 2)#wx.ALIGN_CENTER_VERTICAL |
 
+
+
+        pageGen.sizer.AddGrowableCol(0)
+        pageGen.sizer.AddGrowableRow(0)
         
-        
-#         box = myStaticBox(pageGen, -1, u"Image")
-#         bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
-#         image = wx.StaticBitmap(pageGen, -1, wx.NullBitmap)
-#         self.image = image
-#         self.SetImage()
-#         bsizer.Add(image, flag = wx.EXPAND)
-#         
-#         bt = wx.Button(pageGen, -1, u"Changer l'image")
-#         bt.SetToolTipString(u"Cliquer ici pour sélectionner un fichier image")
-#         bsizer.Add(bt, flag = wx.EXPAND|wx.ALIGN_BOTTOM)
-#         pageGen.Bind(wx.EVT_BUTTON, self.OnClick, bt)
-#         pageGen.sizer.Add(bsizer, (0,2), (3,1), flag =  wx.EXPAND|wx.ALIGN_RIGHT|wx.TOP|wx.BOTTOM|wx.LEFT, border = 2)#wx.ALIGN_CENTER_VERTICAL |
-# 
-#         pageGen.sizer.Layout()
-#         
-#         self.Layout()
-        
-#        #
-#        # Organisation (nombre et positions des revues)
-#        #
-#        self.panelOrga = PanelOrganisation(pageGen, self, self.projet)
-#        pageGen.sizer.Add(self.panelOrga, (0,2), (2,1), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.EXPAND|wx.LEFT, border = 2)
-#        pageGen.sizer.AddGrowableRow(0)
 
         
     #############################################################################            
@@ -7736,7 +7743,7 @@ class PanelPropriete_Seance(PanelPropriete):
 #        self.Bind(wx.EVT_TEXT, self.EvtTextIntitule, textctrl)
 #         self.textctrl.Bind(wx.EVT_LEAVE_WINDOW, self.EvtTextIntitule)
         self.textctrl.Bind(wx.EVT_KILL_FOCUS, self.EvtTextIntitule)
-        pageGen.sizer.Add(bsizer, (0,0), (2,1), flag = wx.ALIGN_RIGHT|wx.ALL|wx.EXPAND, border = 2)    
+        pageGen.sizer.Add(bsizer, (0,0), (3,1), flag = wx.ALIGN_RIGHT|wx.ALL|wx.EXPAND, border = 2)    
         
         
         
@@ -7747,7 +7754,7 @@ class PanelPropriete_Seance(PanelPropriete):
         titre = wx.StaticText(pageGen, -1, u"Type de %s :" %self.seance.nom_obj)
         listType = self.seance.GetListeTypes()
         listTypeS = [(ref.seances[t][1], constantes.imagesSeance[t].GetBitmap()) for t in listType] 
-        
+        tsizer = wx.BoxSizer(wx.VERTICAL)
         cbType = wx.combo.BitmapComboBox(pageGen, -1, u"Choisir un type de %s" %self.seance.nom_obj,
                              choices = [], size = (-1,25),
                              style = wx.CB_DROPDOWN
@@ -7762,11 +7769,12 @@ class PanelPropriete_Seance(PanelPropriete):
             
         self.Bind(wx.EVT_COMBOBOX, self.EvtComboBox, cbType)
         
-        pageGen.sizer.Add(titre, (2,0), flag = wx.ALIGN_BOTTOM | wx.ALIGN_LEFT|wx.LEFT, border = 2)
-        pageGen.sizer.Add(cbType, (3,0), flag = wx.EXPAND|wx.ALL, border = 2)
+        
+        tsizer.Add(titre, flag = wx.ALIGN_BOTTOM | wx.ALIGN_LEFT|wx.LEFT, border = 2)
+        tsizer.Add(cbType, flag = wx.EXPAND|wx.LEFT, border = 2)
+        pageGen.sizer.Add(tsizer, (3,0), flag = wx.EXPAND|wx.ALL, border = 2)
        
-       
-       
+        
        
        
         #
@@ -7805,15 +7813,6 @@ class PanelPropriete_Seance(PanelPropriete):
         lsizer = self.CreateLienSelect(pageGen)
         pageGen.sizer.Add(lsizer, (2,3), (2, 1), flag = wx.EXPAND|wx.ALL, border = 2)
         
-#         box = myStaticBox(pageGen, -1, u"Lien externe")
-#         bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
-#         self.selec = URLSelectorCombo(pageGen, self.seance.lien, self.seance.GetPath())
-#         bsizer.Add(self.selec, flag = wx.EXPAND)
-#         self.btnlien = wx.Button(self, -1, u"Ouvrir le lien externe")
-# #        self.btnlien.SetMaxSize((-1,30))
-#         self.btnlien.Hide()
-#         self.Bind(wx.EVT_BUTTON, self.OnClick, self.btnlien)
-#         bsizer.Add(self.btnlien, 1,  flag = wx.EXPAND)
         
         
         #
@@ -7853,8 +7852,9 @@ class PanelPropriete_Seance(PanelPropriete):
         box2 = myStaticBox(pageAff, -1, u"Affichage de l'intitulé")
         bsizer3 = wx.StaticBoxSizer(box2, wx.VERTICAL)
         
-        b = csel.ColourSelect(pageAff, -1, u"Couleur", couleur.GetCouleurWx(self.seance.couleur))
-        bsizer3.Add(b, flag = wx.EXPAND|wx.ALL, border = 2)
+        b = csel.ColourSelect(pageAff, -1, u"Couleur du texte", couleur.GetCouleurWx(self.seance.couleur), size = (200,-1))
+        
+        bsizer3.Add(b, flag = wx.ALL, border = 2)
         
         b.Bind(csel.EVT_COLOURSELECT, self.OnSelectColour)
         self.coulCtrl = b
@@ -7863,12 +7863,12 @@ class PanelPropriete_Seance(PanelPropriete):
 #         print "+++", cb.Value
         cb.SetToolTipString(u"Décocher pour afficher l'intitulé\nen dessous de la zone de déroulement de la séquence")
         cb.SetValue(self.seance.intituleDansDeroul)
-        bsizer3.Add(cb, flag = wx.EXPAND)
+        bsizer3.Add(cb, flag = wx.EXPAND|wx.ALL, border = 2)
         
         vcTaille = VariableCtrl(pageAff, seance.taille, signeEgal = True, slider = False, sizeh = 40,
                                 help = u"Taille des caractères", unite = u"%")
         self.Bind(EVT_VAR_CTRL, self.EvtText, vcTaille)
-        bsizer3.Add(vcTaille, flag = wx.EXPAND)
+        bsizer3.Add(vcTaille, flag = wx.EXPAND|wx.ALL, border = 2)
         self.vcTaille = vcTaille
         
         self.Bind(wx.EVT_CHECKBOX, self.EvtCheckBox, cb)
@@ -7877,13 +7877,20 @@ class PanelPropriete_Seance(PanelPropriete):
         pageAff.sizer.Add(bsizer3, (0,0), (1,1), flag =wx.ALL|wx.EXPAND, border = 2)
         
         
+        #
+        # Icônes
+        #
+        isizer = self.CreateIconeSelect(pageAff)
+        pageAff.sizer.Add(isizer, (0,1), (1, 1), 
+                          flag = wx.EXPAND|wx.ALL, border = 2)
+        
         
         #
         # Image
         #
         isizer = self.CreateImageSelect(pageAff, 
                                         titre = u"Illustration "+self.seance.article_c_obj+u" "+self.seance.nom_obj)
-        pageAff.sizer.Add(isizer, (0,2), (1,1), flag =  wx.EXPAND|wx.ALIGN_RIGHT|wx.TOP|wx.LEFT, border = 2)#wx.ALIGN_CENTER_VERTICAL |
+        pageAff.sizer.Add(isizer, (0,2), (1,1), flag =  wx.EXPAND|wx.ALIGN_RIGHT|wx.ALL, border = 2)#wx.ALIGN_CENTER_VERTICAL |
         
         
         
@@ -7901,8 +7908,8 @@ class PanelPropriete_Seance(PanelPropriete):
         pageGen.sizer.AddGrowableCol(3)
         pageGen.sizer.AddGrowableRow(0)
 
-        pageAff.sizer.AddGrowableCol(0)
-        pageAff.sizer.AddGrowableRow(0)
+        pageAff.sizer.AddGrowableCol(1)
+        pageAff.sizer.AddGrowableRow(0, 1)
         
     
         #############################################################################            
@@ -8055,7 +8062,7 @@ class PanelPropriete_Seance(PanelPropriete):
                 
                 self.demSizer.Add(titre, flag = wx.ALIGN_BOTTOM|wx.ALIGN_LEFT|wx.LEFT, border = 2)
                 self.demSizer.Add(cbDem, flag = wx.EXPAND|wx.LEFT, border = 2)
-                self.pageGen.sizer.Add(self.demSizer, (2,1), (2,1), flag = wx.EXPAND|wx.ALL, border = 2)
+                self.pageGen.sizer.Add(self.demSizer, (3,1), (1,1), flag = wx.EXPAND|wx.ALL, border = 2)
 
                 
         self.sizer.Layout()
@@ -8075,7 +8082,8 @@ class PanelPropriete_Seance(PanelPropriete):
     ######################################################################################  
     def OnPathModified(self, lien, marquerModifier = True):
         self.seance.OnPathModified()
-        self.btnlien.Show(self.seance.lien.path != "")
+#         self.btnlien.Show(self.seance.lien.path != "")
+        self.selec.MiseAJour()
         if marquerModifier:
             self.seance.GetApp().MarquerFichierCourantModifie()
         self.Layout()
@@ -8153,16 +8161,20 @@ class PanelPropriete_Seance(PanelPropriete):
     
     #############################################################################            
     def EvtTextIntitule(self, event):
-        self.seance.SetIntitule(self.textctrl.GetValue())
-        event.Skip()
-#         print "EvtTextIntitule", self.textctrl.GetValue()
-        modif = u"Modification de l'intitulé de la Séance"
-        if self.onUndoRedo():
-            self.sendEvent(modif = modif)
-        else:
-            if not self.eventAttente:
-                wx.CallLater(DELAY, self.sendEvent, modif = modif)
-                self.eventAttente = True
+        
+        txt = self.textctrl.GetValue()
+        
+        if self.seance.intitule != txt:
+            self.seance.SetIntitule(txt)
+            event.Skip()
+    #         print "EvtTextIntitule", self.textctrl.GetValue()
+            modif = u"Modification de l'intitulé de la Séance"
+            if self.onUndoRedo():
+                self.sendEvent(modif = modif)
+            else:
+                if not self.eventAttente:
+                    wx.CallLater(DELAY, self.sendEvent, modif = modif)
+                    self.eventAttente = True
             
     
     #############################################################################            
@@ -8317,7 +8329,7 @@ class PanelPropriete_Seance(PanelPropriete):
     def MiseAJourLien(self):
         self.selec.SetPath(toSystemEncoding(self.seance.lien.path), 
                            marquerModifier = False)
-        self.btnlien.Show(self.seance.lien.path != "")
+#         self.btnlien.Show(self.seance.lien.path != "")
         self.sizer.Layout()
         
 
@@ -8444,30 +8456,36 @@ class PanelPropriete_Tache(PanelPropriete):
         # Icones
         #
         if not tache.phase in TOUTES_REVUES_EVAL_SOUT:
-            ib = myStaticBox(pageGen, -1, u"Icônes")
-            ibsizer = wx.StaticBoxSizer(ib, wx.VERTICAL)
-            ims = wx.WrapSizer()
-            
-#             ims.SetSize((100,-1))
-            self.icones = []
-            for i, (nom, img) in enumerate(constantes.ICONES_TACHES.items()):
-                ico = img.ConvertToImage().Scale(20, 20).ConvertToBitmap()
-                btn = wx.BitmapButton(pageGen, 100+i, ico)
-                btn.SetToolTipString(nom)
-                self.icones.append(nom)
-                ims.Add(btn, flag = wx.ALL, border = 2)
-                btn.Refresh()
-                self.Bind(wx.EVT_BUTTON, self.OnIconeClick, btn)
-            
-            ibsizer.Add(ims)
-            
-            self.btn_no_icon = wx.Button(pageGen, -1, u"Aucune")
-            ibsizer.Add(self.btn_no_icon)
-            self.Bind(wx.EVT_BUTTON, self.OnIconeClick, self.btn_no_icon)
-            
-            pageGen.sizer.Add(ibsizer, (0,2), (3, 1), 
+            isizer = self.CreateIconeSelect(pageGen)
+            pageGen.sizer.Add(isizer, (0,2), (3, 1), 
                               flag = wx.EXPAND|wx.LEFT|wx.RIGHT, border = 4)
             pageGen.sizer.AddGrowableCol(2)
+
+            
+#             ib = myStaticBox(pageGen, -1, u"Icônes")
+#             ibsizer = wx.StaticBoxSizer(ib, wx.VERTICAL)
+#             ims = wx.WrapSizer()
+#             
+# #             ims.SetSize((100,-1))
+#             self.icones = []
+#             for i, (nom, img) in enumerate(constantes.ICONES_TACHES.items()):
+#                 ico = img.ConvertToImage().Scale(20, 20).ConvertToBitmap()
+#                 btn = wx.BitmapButton(pageGen, 100+i, ico)
+#                 btn.SetToolTipString(nom)
+#                 self.icones.append(nom)
+#                 ims.Add(btn, flag = wx.ALL, border = 2)
+#                 btn.Refresh()
+#                 self.Bind(wx.EVT_BUTTON, self.OnIconeClick, btn)
+#             
+#             ibsizer.Add(ims)
+#             
+#             self.btn_no_icon = wx.Button(pageGen, -1, u"Aucune")
+#             ibsizer.Add(self.btn_no_icon)
+#             self.Bind(wx.EVT_BUTTON, self.OnIconeClick, self.btn_no_icon)
+#             
+#             pageGen.sizer.Add(ibsizer, (0,2), (3, 1), 
+#                               flag = wx.EXPAND|wx.LEFT|wx.RIGHT, border = 4)
+#             pageGen.sizer.AddGrowableCol(2)
 
         #
         # Elèves impliqués
@@ -8905,13 +8923,7 @@ class PanelPropriete_Tache(PanelPropriete):
 #        self.sendEvent(modif = u"Modification ")
 #        
         
-    #############################################################################            
-    def OnIconeClick(self, event):
-        if event.GetId() == self.btn_no_icon.GetId():
-            self.tache.icone = None
-        else:
-            self.tache.icone = constantes.ICONES_TACHES[self.icones[event.GetId()-100]]
-        self.sendEvent(modif = u"Modification de l'icône de la tâche") 
+    
 
 
     #############################################################################            
@@ -9221,15 +9233,6 @@ class PanelPropriete_Systeme(PanelPropriete):
         lsizer = self.CreateLienSelect(self)
         self.sizer.Add(lsizer, (0,3), (3, 1), flag = wx.EXPAND|wx.TOP|wx.LEFT, border = 2)
         
-#         box = myStaticBox(self, -1, u"Lien externe")
-#         bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
-#         self.selec = URLSelectorCombo(self, self.systeme.lien, self.systeme.GetPath())
-#         bsizer.Add(self.selec, flag = wx.EXPAND)
-#         self.btnlien = wx.Button(self, -1, u"Ouvrir le lien externe")
-#         self.btnlien.Hide()
-#         self.Bind(wx.EVT_BUTTON, self.OnClick, self.btnlien)
-#         bsizer.Add(self.btnlien)
-#         self.sizer.Add(bsizer, (0,3), (3, 1), flag = wx.EXPAND|wx.TOP|wx.LEFT, border = 2)
          
         self.MiseAJour()
         self.Verrouiller()
@@ -9253,7 +9256,8 @@ class PanelPropriete_Systeme(PanelPropriete):
         self.systeme.propagerChangements()
         if marquerModifier:
             self.systeme.GetApp().MarquerFichierCourantModifie()
-        self.btnlien.Show(self.systeme.lien.path != "")
+#         self.btnlien.Show(self.systeme.lien.path != "")
+        self.selec.MiseAJour()
         self.Layout()
         self.Refresh()
 
@@ -9464,7 +9468,7 @@ class PanelPropriete_Systeme(PanelPropriete):
     def MiseAJourLien(self):
         self.selec.SetPath(toSystemEncoding(self.systeme.lien.path),
                            marquerModifier = False)
-        self.btnlien.Show(len(self.systeme.lien.path) > 0)
+#         self.btnlien.Show(len(self.systeme.lien.path) > 0)
         self.Layout()
 
 
@@ -9864,12 +9868,12 @@ class PanelSelectionGrille(wx.Panel):
         self.SelectGrille = URLSelectorCombo(self, eleve.grille[codeGrille], 
                                              eleve.GetDocument().GetPath(), 
                                              dossier = False, ext = "Classeur Excel (*.xls*)|*.xls*")
-        self.btnlien = wx.Button(self, -1, u"Ouvrir")
-        self.btnlien.Show(self.eleve.grille[self.codeGrille].path != "")
-        self.Bind(wx.EVT_BUTTON, self.OnClick, self.btnlien)
+#         self.btnlien = wx.Button(self, -1, u"Ouvrir")
+#         self.btnlien.Show(self.eleve.grille[self.codeGrille].path != "")
+#         self.Bind(wx.EVT_BUTTON, self.OnClick, self.btnlien)
         sizer.Add(titre, flag = wx.EXPAND|wx.ALIGN_CENTER_VERTICAL|wx.ALL, border = 3)
         sizer.Add(self.SelectGrille,1, flag = wx.EXPAND|wx.ALIGN_CENTER_VERTICAL|wx.ALL, border = 3)
-        sizer.Add(self.btnlien, flag = wx.EXPAND|wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.ALL, border = 3)
+#         sizer.Add(self.btnlien, flag = wx.EXPAND|wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.ALL, border = 3)
         
         self.Layout()
         self.SetSizerAndFit(sizer)
@@ -9892,7 +9896,8 @@ class PanelSelectionGrille(wx.Panel):
                 
     ######################################################################################  
     def OnPathModified(self, lien = "", marquerModifier = True):
-        self.btnlien.Show(self.eleve.grille[self.codeGrille].path != "")
+#         self.btnlien.Show(self.eleve.grille[self.codeGrille].path != "")
+        self.selec.MiseAJour()
         self.Parent.OnPathModified(lien, marquerModifier)
                 
                 
@@ -9913,7 +9918,7 @@ class PanelPropriete_Support(PanelPropriete):
         #
         # Nom
         #
-        box = myStaticBox(self, -1, u"Nom du support :")
+        box = myStaticBox(self, -1, u"Nom du support")
         bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
         textctrl = TextCtrl_Help(self, u"")
         textctrl.SetTitre(u"Nom du support")
@@ -10009,7 +10014,8 @@ class PanelPropriete_Support(PanelPropriete):
         self.support.OnPathModified()
         if marquerModifier:
             self.support.GetApp().MarquerFichierCourantModifie()
-        self.btnlien.Show(self.support.lien.path != "")
+#         self.btnlien.Show(self.support.lien.path != "")
+        self.selec.MiseAJour()
         self.Layout()
         self.Refresh()
         
@@ -10086,26 +10092,22 @@ class PanelPropriete_Support(PanelPropriete):
 
     #############################################################################            
     def EvtText(self, event):
-#        print "EvtText"
-#        nt = event.GetString()
-        nt = self.textctrl.GetText()
+#         print "EvtText", self.support.nom
+        txt = self.textctrl.GetText()
         
-#        if nt == u"":
-#            nt = self.support.parent.intitule
-#            self.textctrl.ChangeValue(nt)
-#        elif self.support.parent.intitule == self.support.nom:
-#            self.support.parent.SetText(nt)
-#            self.support.parent.panelPropriete.textctrl.ChangeValue(nt)
-        self.support.SetNom(nt)
-#        self.support.parent.MiseAJourNomsSystemes()
-        
-        modif = u"Modification de l'intitulé du Support"
-        if self.onUndoRedo():
-            self.sendEvent(modif = modif)
-        else:
-            if not self.eventAttente:
-                wx.CallLater(DELAY, self.sendEvent, modif = modif)
-                self.eventAttente = True
+        if self.support.nom != txt:
+            event.Skip()
+            self.support.SetNom(txt)
+    #        self.support.parent.MiseAJourNomsSystemes()
+            
+            modif = u"Modification de l'intitulé du Support"
+            print modif
+            if self.onUndoRedo():
+                self.sendEvent(modif = modif)
+            else:
+                if not self.eventAttente:
+                    wx.CallLater(DELAY, self.sendEvent, modif = modif)
+                    self.eventAttente = True
         
 #    #############################################################################            
 #    def EvtClick(self, event):
@@ -10129,8 +10131,9 @@ class PanelPropriete_Support(PanelPropriete):
         
     #############################################################################            
     def MiseAJourLien(self):
-        self.selec.SetPath(toSystemEncoding(self.support.lien.path))
-        self.btnlien.Show(len(self.support.lien.path) > 0)
+        self.selec.SetPath(toSystemEncoding(self.support.lien.path), marquerModifier = False)
+#         self.btnlien.Show(len(self.support.lien.path) > 0)
+        self.selec.MiseAJour()
         self.Layout()
         
         
@@ -12822,11 +12825,28 @@ class URLSelectorCombo(wx.Panel):
     def __init__(self, parent, lien, pathseq, dossier = True, ext = ""):
         wx.Panel.__init__(self, parent, -1)
         self.SetMaxSize((-1,22))
+        
+        self.ext = ext
+        self.dossier = dossier
+        self.lien = lien
+        
+        sizer = wx.BoxSizer(wx.VERTICAL)
+        lsizer = self.CreateSelector()
+        sizer.Add(lsizer, 1, flag = wx.EXPAND)
+        self.SetSizerAndFit(sizer)
+        
+        self.SetPathSeq(pathseq)
+
+    
+    
+    ###############################################################################################
+    def CreateSelector(self):
+        
         sizer = wx.BoxSizer(wx.HORIZONTAL)
         
-        self.texte = wx.TextCtrl(self, -1, toSystemEncoding(lien.path), size = (-1, 16))
-        self.texte.SetToolTipString(u"Saisir un nom de fichier/dossir\nou faire glisser un fichier")
-        if dossier:
+        self.texte = wx.TextCtrl(self, -1, toSystemEncoding(self.lien.path), size = (-1, 16))
+        self.texte.SetToolTipString(u"Saisir un nom de fichier/dossier\nou faire glisser un fichier")
+        if self.dossier:
             bt1 =wx.BitmapButton(self, 100, wx.ArtProvider_GetBitmap(wx.ART_FOLDER, wx.ART_OTHER, (16, 16)))
             bt1.SetToolTipString(u"Sélectionner un dossier")
             self.Bind(wx.EVT_BUTTON, self.OnClick, bt1)
@@ -12836,19 +12856,29 @@ class URLSelectorCombo(wx.Panel):
         self.Bind(wx.EVT_BUTTON, self.OnClick, bt2)
         self.Bind(wx.EVT_TEXT, self.EvtText, self.texte)
         
-        self.ext = ext
+        sizer.Add(bt2)
+        sizer.Add(self.texte,1,flag = wx.EXPAND)
+        
+        self.btnlien = wx.BitmapButton(self, -1, wx.ArtProvider_GetBitmap(wx.ART_FILE_OPEN, wx.ART_OTHER, (16, 16)))
+        self.btnlien.SetToolTipString(u"Ouvrir le lien externe")
+        self.btnlien.Show(self.lien.path != "")
+        self.Bind(wx.EVT_BUTTON, self.OnClickLien, self.btnlien)
+        sizer.Add(self.btnlien)
+         
         
         # Pour drag&drop direct de fichiers !! (expérimental)
         file_drop_target = MyFileDropTarget(self)
         self.SetDropTarget(file_drop_target)
         
-        
-        sizer.Add(bt2)
-        sizer.Add(self.texte,1,flag = wx.EXPAND)
-        self.SetSizerAndFit(sizer)
-        self.lien = lien
-        self.SetPathSeq(pathseq)
+        return sizer
+    
+    
+    #############################################################################            
+    def OnClickLien(self, event):
+        self.lien.Afficher(self.pathseq)
 
+
+    ###############################################################################################
     # Overridden from ComboCtrl, called when the combo button is clicked
     def OnClick(self, event):
         
@@ -12879,7 +12909,14 @@ class URLSelectorCombo(wx.Panel):
     
             dlg.Destroy()
         
+        self.MiseAJour()
+        
         self.SetFocus()
+
+
+    ###############################################################################################
+    def MiseAJour(self):
+        self.btnlien.Show(self.lien.path != "")
 
 
     ###############################################################################################
@@ -12911,6 +12948,8 @@ class URLSelectorCombo(wx.Panel):
         except:
             self.texte.ChangeValue(toSystemEncoding(self.lien.path)) # On le met en SYSTEM_ENCODING
 
+        self.MiseAJour()
+        
         self.Parent.GetPanelRacine().OnPathModified(self.lien, marquerModifier = marquerModifier)
         
         
