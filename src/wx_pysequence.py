@@ -4093,6 +4093,7 @@ class PanelPropriete(scrolled.ScrolledPanel):
     def SetImage(self, sendEvt = False):
         if self.objet.image != None:
             self.image.SetBitmap(rognerImage(self.objet.image, 200, HMIN_PROP-80))
+        
         self.sizer.Layout()
         
         if sendEvt:

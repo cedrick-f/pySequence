@@ -99,7 +99,7 @@ from widgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_ENTI
                     rallonge, remplaceCode2LF, dansRectangle, \
                     StaticBoxButton, TextCtrl_Help, CloseFenHelp, \
                     remplaceLF2Code, messageInfo, messageYesNo, enregistrer_root, \
-                    getAncreFenetre, tronquer#, chronometrer
+                    getAncreFenetre, tronquer, getHoraireTxt#, chronometrer
                     
 from Referentiel import REFERENTIELS, ARBRE_REF, ACTIVITES
 import Referentiel
@@ -5217,7 +5217,7 @@ class Progression(BaseDoc):
 #                             print competence.sousComp.items()
                             lc = sorted(competence.sousComp.items(), key = lambda c:c[0])
                             for k, v in lc:
-                                self.tip.AjouterElemListeDL('comp', k, v.intitule)
+                                self.tip.AjouterElemListeDL('list', k, v.intitule)
 #                     elif len(competences) == 3:
 #                         
 #                 
@@ -7231,13 +7231,27 @@ class Seance(ElementAvecLien, ElementBase):
         # Démarche
         if self.typeSeance in ref.activites.keys() and len(ref.listeDemarches) > 0:
             self.tip.AjouterImg("icon2", constantes.imagesDemarches[self.demarche].GetBitmap(), width = 64)
-            self.tip.SetWholeText("txt2", ref.demarches[self.demarche][1], italic = True, size = 3)
+            self.tip.SetWholeText("dem", ref.demarches[self.demarche][1], italic = True, size = 3)
         else:
             self.tip.Supprime('icon2')
         
         # Intitulé
         self.tip.SetWholeText("int", self.intitule, size = 5)
         
+        
+        # Image
+        if self.image is not None:
+            self.tip.AjouterImg("img", self.image, width = 200)
+        else:
+            self.tip.Supprime('img')
+        
+        # Durée
+        self.tip.SetWholeText("dur", getHoraireTxt(self.GetDuree()), size = 3)
+        
+        # Effectif
+        self.tip.SetWholeText("eff", strEffectifComplet(self.GetDocument().classe, self.effectif), size = 3)
+        
+        # Description
         if hasattr(self, 'description'):
             self.tip.AjouterHTML("des", XMLtoHTML(self.description))    
         else:

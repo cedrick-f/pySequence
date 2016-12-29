@@ -43,6 +43,8 @@ import sys, os
 
 from util_path import DOSSIER_ICONES
 
+from widgets import rognerImage
+
     
 ####################################################################################
 #
@@ -366,16 +368,17 @@ WMIN_STRUC, HMIN_STRUC = 250, 400
 
 
 # Avatar
-TAILLE_AVATAR = ()
-def ReSize_avatar(img):
-    w, h = img.GetSize()
-    wf, hf = 200.0, 100.0
-    r = max(w/wf, h/hf)
-    _w, _h = w/r, h/r
-    return img.ConvertToImage().Scale(_w, _h).ConvertToBitmap()
+# TAILLE_AVATAR = ()
+# def ReSize_avatar(img):
+#     w, h = img.GetSize()
+#     wf, hf = 200.0, 100.0
+#     r = max(w/wf, h/hf)
+#     _w, _h = w/r, h/r
+#     return img.ConvertToImage().Scale(_w, _h).ConvertToBitmap()
 
 try:
-    AVATAR_DEFAUT = ReSize_avatar(images.avatar.GetBitmap())
+#     AVATAR_DEFAUT = ReSize_avatar(images.avatar.GetBitmap())
+    AVATAR_DEFAUT = rognerImage(images.avatar.GetBitmap(), 200, 100)
 except wx._core.PyNoAppError:
     pass
             
@@ -790,25 +793,25 @@ BASE_FICHE_HTML_ELEVE = u"""
 
 BASE_FICHE_HTML_SEANCE = u"""
 <HTML>
-<font size="12" color="green"><b><h1 id = "titre" style="text-align: center;">Séance</h1></b></font>
-    <table border="0" width="400">
+<font size="12" color="green"><b><h1 id = "titre" style="text-align: center;"></h1></b></font>
+    <table border="1" width="500">
         <tbody>
-        <tr>
-            <td width = "20" rowspan="2" valign="top"><img id="icon" src="" alt=" "></td>
-            <td valign="top"><p id="txt"> </p></td>
-            <td width = "64" rowspan="2" valign="bottom"><img id="icon2" src="" alt=" "></td>
+        <tr valign="top">
+            <td><p id="txt"><img id="icon" src="" alt=" "> </p></td>
+            <td rowspan="2"><img id="icon2" src="" alt=" "><p id="dem"> </p></td>
         </tr>
         
         <tr>
-            <td align="right" valign="bottom"><p id="txt2"> </p></td>
+            <td><p id="dur">Durée : </p><p id="eff">Effectif : </p></td>
         </tr>
         
         <tr align="left" valign="top">
-            <td colspan=3><p id="int"> </p></td>
+            <td><p id="int"> </p></td>
+            <td><img id="img" src="" alt=" "></td>
         </tr>
         
         <tr id = "ldes" align="left" valign="top" bgcolor="#f0f0f0">
-            <td colspan=3>
+            <td colspan=2>
                 <b>Description détaillée de la séance</b>
                 <span id="des"> </span>
             </td>
@@ -862,9 +865,11 @@ BASE_FICHE_HTML_COMP_PRJ = u"""
     <font size="12" color="green"><b><h1 id = "titre" style="text-align: center;"> </h1></b></font>
     <h2 style="font-size:11px" id="grp"> </h2>
     <h4 style="font-size:10px" id="int"> </h4>
-    <dl id = "comp">
+    <ul id = "comp">
+    </ul>
+    <dl id = "list">
         <dt> </dt> <dd> </dd>
-    </dl>
+    </dl> 
 </HTML>
 """
 
