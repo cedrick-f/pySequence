@@ -2029,7 +2029,7 @@ def fleche_ronde(ctx, x, y, r, a0, a1, e, f, coul):
     
     
     
-def liste_code_texte(ctx, lstCodes, lstTexte, x, y, w, h, 
+def liste_code_texte(ctx, lstCodes, lstTexte, rect, 
                      eh, b = 0.1, gras = None, lstCoul = None, va = 'h'):
     """ Affiche une liste d'élément sous la forme :
             code texte
@@ -2039,6 +2039,8 @@ def liste_code_texte(ctx, lstCodes, lstTexte, x, y, w, h,
         b : bordure latérale totale (en relatif : 0 à 1)
         >> Renvoie une liste de rectangles
     """
+    x, y, w, h = rect
+    
     #
     # Réduction du rectangle
     #
@@ -2056,10 +2058,6 @@ def liste_code_texte(ctx, lstCodes, lstTexte, x, y, w, h,
     # Equilibrage des tailles de font entre code et texte (approximatif)
 #    nc = [len(c) for c in lstCodes]
 #    nt = [len(t) for t in lstTexte]
-    
-        
-    
-    
     
     hl = h/no
     #

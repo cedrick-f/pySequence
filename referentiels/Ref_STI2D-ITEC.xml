@@ -36,11 +36,12 @@
   </d_demarches>
   <d_dicFonctions />
   <d_dicoCompetences>
-    <Competences_S S_abrDiscipline="ITEC" S_codeDiscipline="SII" S_nomDiscipline="STI2D - ITEC" S_nomGenerique="Compétence(s)" S_nomGeneriqueIndic="">
+    <Competences_S B_obj="True" B_pre="False" S_abrDiscipline="ITEC" S_codeDiscipline="SII" S_nomDiscipline="STI2D - ITEC" S_nomGenerique="Compétence(s)" S_nomGeneriqueIndic="Indicateurs de performance">
       <d_dicCompetences>
         <Competence_O7 S_intitule="Imaginer une solution, répondre à un besoin">
           <l_domaines />
           <l_indicateurs />
+          <l_infos />
           <d_poids I_C="40" />
           <d_sousComp>
             <Competence_CO7.itec4 S_intitule="Définir, à l'aide d'un modeleur numérique, les modifications d'un mécanisme à partir des contraintes fonctionnelles">
@@ -57,6 +58,7 @@
                   <d_revue I_C="0" />
                 </Indicateur_01>
               </l_indicateurs>
+              <l_infos />
               <d_poids />
               <d_sousComp />
               <l_thematiques />
@@ -80,6 +82,7 @@
                   <d_revue I_C="0" />
                 </Indicateur_02>
               </l_indicateurs>
+              <l_infos />
               <d_poids />
               <d_sousComp />
               <l_thematiques />
@@ -108,6 +111,7 @@
                   <d_revue I_C="0" />
                 </Indicateur_03>
               </l_indicateurs>
+              <l_infos />
               <d_poids />
               <d_sousComp />
               <l_thematiques />
@@ -131,6 +135,7 @@
                   <d_revue I_C="0" />
                 </Indicateur_02>
               </l_indicateurs>
+              <l_infos />
               <d_poids />
               <d_sousComp />
               <l_thematiques />
@@ -141,6 +146,7 @@
         <Competence_O9 S_intitule="Gérer la vie du produit">
           <l_domaines />
           <l_indicateurs />
+          <l_infos />
           <d_poids I_C="20" />
           <d_sousComp>
             <Competence_CO9.itec1 S_intitule="Expérimenter des procédés pour caractériser les paramètres de transformation de la matière et leurs conséquences sur la définition et l'obtention de pièces">
@@ -157,6 +163,7 @@
                   <d_revue I_C="0" />
                 </Indicateur_01>
               </l_indicateurs>
+              <l_infos />
               <d_poids />
               <d_sousComp />
               <l_thematiques />
@@ -185,6 +192,7 @@
                   <d_revue I_C="0" />
                 </Indicateur_03>
               </l_indicateurs>
+              <l_infos />
               <d_poids />
               <d_sousComp />
               <l_thematiques />
@@ -208,6 +216,7 @@
                   <d_revue I_C="0" />
                 </Indicateur_02>
               </l_indicateurs>
+              <l_infos />
               <d_poids />
               <d_sousComp />
               <l_thematiques />
@@ -218,6 +227,7 @@
         <Competence_O8 S_intitule="Valider des solutions techniques">
           <l_domaines />
           <l_indicateurs />
+          <l_infos />
           <d_poids I_C="40" />
           <d_sousComp>
             <Competence_CO8.itec1 S_intitule="Paramétrer un logiciel de simulation mécanique pour obtenir les caractéristiques d'une loi d'entrée/sortie d'un mécanisme simple">
@@ -234,6 +244,7 @@
                   <d_revue I_C="0" />
                 </Indicateur_01>
               </l_indicateurs>
+              <l_infos />
               <d_poids />
               <d_sousComp />
               <l_thematiques />
@@ -262,6 +273,7 @@
                   <d_revue I_C="0" />
                 </Indicateur_03>
               </l_indicateurs>
+              <l_infos />
               <d_poids />
               <d_sousComp />
               <l_thematiques />
@@ -285,6 +297,7 @@
                   <d_revue I_C="0" />
                 </Indicateur_02>
               </l_indicateurs>
+              <l_infos />
               <d_poids />
               <d_sousComp />
               <l_thematiques />
@@ -308,6 +321,7 @@
                   <d_revue I_C="0" />
                 </Indicateur_02>
               </l_indicateurs>
+              <l_infos />
               <d_poids />
               <d_sousComp />
               <l_thematiques />

@@ -7318,15 +7318,17 @@ class PanelPropriete_LienProjet(PanelPropriete):
 #
 ####################################################################################
 class PanelPropriete_Competences(PanelPropriete):
-    def __init__(self, parent, competence):
+    def __init__(self, parent, competence, code, compRef):
         
         self.competence = competence
+        self.code = code
+        self.compRef = compRef
         
         PanelPropriete.__init__(self, parent, objet = self.competence)
         
-        self.nb = wx.Notebook(self, -1,  size = (21,21), style= wx.BK_DEFAULT)
+#         self.nb = wx.Notebook(self, -1,  size = (21,21), style= wx.BK_DEFAULT)
         
-        self.sizer.Add(self.nb, (0,0), flag = wx.EXPAND)
+#         self.sizer.Add(self.nb, (0,0), flag = wx.EXPAND)
         self.sizer.AddGrowableCol(0)
         self.sizer.AddGrowableRow(0)
         
@@ -7338,60 +7340,56 @@ class PanelPropriete_Competences(PanelPropriete):
     ######################################################################################  
     def construire(self):
         # On efface tout ...
-        self.nb.DeleteAllPages()
+#         self.nb.DeleteAllPages()
         
         # On reconstruit ...
-        ref = self.competence.GetReferentiel()
-        bg_color = self.Parent.GetBackgroundColour()
-        
-        def getPage():
-            page = wx.Panel(self.nb, -1)
-            page.SetBackgroundColour(bg_color) 
-            pageSizer = wx.BoxSizer(wx.HORIZONTAL)
-            page.SetSizer(pageSizer)
-            return page
+#         ref = self.competence.GetReferentiel()
+#         bg_color = self.Parent.GetBackgroundColour()
+#         
+# #         def getPage():
+# #             page = wx.Panel(self.nb, -1)
+# #             page.SetBackgroundColour(bg_color) 
+# #             pageSizer = wx.BoxSizer(wx.HORIZONTAL)
+# #             page.SetSizer(pageSizer)
+# #             return page
+#             
+#         def getNomComp(r):
+#             return r.nomCompetences + " " + r.Code
+        if self.code == "Fct":
+            self.arbre = ArbreFonctionsPrj(self, self.code, None, 
+                                          self.compRef, self, agwStyle = HTL.TR_NO_HEADER)
+            self.sizer.Add(self.arbre, (0,0), flag = wx.EXPAND)
+#             self.nb.AddPage(self, self.compRef.nomDiscipline) 
             
-        def getNomComp(r):
-            return r.nomCompetences + " " + r.Code
+        else:
+            self.arbre = ArbreCompetences(self, self.code, None, 
+                                          self.compRef, self, agwStyle = HTL.TR_NO_HEADER)
+            self.sizer.Add(self.arbre, (0,0), flag = wx.EXPAND)
+#             self.nb.AddPage(self, self.compRef.nomDiscipline) 
+        
+#         for code, comp in ref.dicoCompetences.items():
+#             self.pagesComp.append(getPage())
+#             self.arbres[code] = ArbreCompetences(self.pagesComp[-1], code, None, comp, self, agwStyle = HTL.TR_NO_HEADER)
+#             self.pagesComp[-1].GetSizer().Add(self.arbres[code], 1, flag = wx.EXPAND)
+#             self.nb.AddPage(self.pagesComp[-1], comp.nomDiscipline) 
+#         
         
         
-        self.pagesComp = []
-        self.arbres = {}
-        
-        #
-        # Les pages "Compétences"
-        #
-        if ref.tr_com != []:        # Il y a un tronc commun : 0 = TC - 1 = Spé
-            ref_tc = REFERENTIELS[ref.tr_com[0]]
-            self.pagesComp.append(getPage())
-            comp = ref_tc.dicoCompetences["S"]
-            self.arbres["B"] = ArbreCompetences(self.pagesComp[-1], "B", None, comp, self, agwStyle = HTL.TR_NO_HEADER)
-            self.pagesComp[-1].GetSizer().Add(self.arbres["B"], 1, flag = wx.EXPAND)
-            self.nb.AddPage(self.pagesComp[-1], comp.nomDiscipline) 
-        
-        for code, comp in ref.dicoCompetences.items():
-            self.pagesComp.append(getPage())
-            self.arbres[code] = ArbreCompetences(self.pagesComp[-1], code, None, comp, self, agwStyle = HTL.TR_NO_HEADER)
-            self.pagesComp[-1].GetSizer().Add(self.arbres[code], 1, flag = wx.EXPAND)
-            self.nb.AddPage(self.pagesComp[-1], comp.nomDiscipline) 
-        
-        
-        
-        if (len(ref.dicFonctions) > 0):
-            #
-            # La page "Fonctions"
-            #
-            pageFct = wx.Panel(self.nb, -1)
-            self.pageFct = pageFct
-            pageFctsizer = wx.BoxSizer(wx.HORIZONTAL)
-
-            self.arbreFct = ArbreFonctionsPrj(pageFct, ref, self)
-            pageFctsizer.Add(self.arbreFct, 1, flag = wx.EXPAND)
-
-            pageFct.SetSizer(pageFctsizer)
-            self.nb.AddPage(pageFct, ref.nomFonctions) 
-
-            self.pageFctsizer = pageFctsizer
+#         if (len(ref.dicFonctions) > 0):
+#             #
+#             # La page "Fonctions"
+#             #
+#             pageFct = wx.Panel(self.nb, -1)
+#             self.pageFct = pageFct
+#             pageFctsizer = wx.BoxSizer(wx.HORIZONTAL)
+# 
+#             self.arbreFct = ArbreFonctionsPrj(pageFct, ref, self)
+#             pageFctsizer.Add(self.arbreFct, 1, flag = wx.EXPAND)
+# 
+#             pageFct.SetSizer(pageFctsizer)
+#             self.nb.AddPage(pageFct, ref.nomFonctions) 
+# 
+#             self.pageFctsizer = pageFctsizer
         
         self.MiseAJour()
         
@@ -7447,6 +7445,7 @@ class PanelPropriete_Competences(PanelPropriete):
         
     ######################################################################################  
     def AjouterCompetence(self, code, propag = None):
+        print "AjouterCompetence", code
         self.competence.competences.append(code)
         
     ######################################################################################  
@@ -7467,16 +7466,17 @@ class PanelPropriete_Competences(PanelPropriete):
 #        print "   ", self.competence.competences
 
 
-        def checkArbre(arbre):
+#         def checkArbre(arbre):
 #             print arbre.items.keys()
-            arbre.UnselectAll()
-            for s in self.competence.competences:
+        self.arbre.UnselectAll()
+        for s in self.competence.competences:
+            if self.code == s[0]:
 #                 print "  ", s
-                if s[1:] in arbre.items.keys():
-                    arbre.CheckItem2(arbre.items[s[1:]])
+                if s[1:] in self.arbre.items.keys():
+                    self.arbre.CheckItem2(self.arbre.items[s[1:]])
         
-        for arbre in self.arbres.values():
-            checkArbre(arbre)  
+#         for arbre in self.arbres.values():
+#             checkArbre(arbre)  
 #        self.arbre.UnselectAll()
 #        for s in self.competence.competences:
 #            if s in self.arbre.items.keys():
@@ -7544,36 +7544,22 @@ class PanelPropriete_Competences(PanelPropriete):
 #
 ####################################################################################
 class PanelPropriete_Savoirs(PanelPropriete):
-    def __init__(self, parent, savoirs):
+    def __init__(self, parent, savoirs, code, savoirRef):
         
         self.savoirs = savoirs
+        self.savoirRef = savoirRef
+        self.code = code
         self.prerequis = savoirs.prerequis
         
         PanelPropriete.__init__(self, parent, objet = self.savoirs)
         
-        self.nb = wx.Notebook(self, -1, size = (21,21), style= wx.BK_DEFAULT)
+#         self.nb = wx.Notebook(self, -1, size = (21,21), style= wx.BK_DEFAULT)
         
-#        self.pagesSavoir = []
-#        self.arbres = {}
-        
-        # Liste des numéros de pages attribués
-        # 0 : savoirs spécifiques de l'enseignement
-        # 1 : savoirs d'un éventuel tronc commun
-        # 2 : Math
-        # 3 : Phys
-#        self.lstPages = [0,1,2,3]
-#        
-#        self.pageSavoir     = self.CreerPage()
-#        self.pageSavoirSpe  = self.CreerPage()
-#        self.pageSavoirM    = self.CreerPage()
-#        self.pageSavoirP    = self.CreerPage()
-            
-#        self.sizer.Add(self.nb, (0,1), (2,1), flag = wx.ALL|wx.ALIGN_RIGHT|wx.EXPAND, border = 1)
-        self.sizer.Add(self.nb, (0,0), flag = wx.EXPAND)
+#         self.sizer.Add(self.nb, (0,0), flag = wx.EXPAND)
         self.sizer.AddGrowableRow(0)
         self.sizer.AddGrowableCol(0)
             
-        self.MiseAJourTypeEnseignement()
+        self.construire()
         
         self.Layout()
 
@@ -7583,27 +7569,27 @@ class PanelPropriete_Savoirs(PanelPropriete):
         return self.savoirs.parent
 
 
-    ######################################################################################  
-    def CreerPage(self, nom):
-        bg_color = self.Parent.GetBackgroundColour()
-        page = PanelPropriete(self.nb, objet = self.savoirs)
-        page.SetBackgroundColour(bg_color)
-        self.nb.AddPage(page, nom)
-        return page
+#     ######################################################################################  
+#     def CreerPage(self, nom):
+#         bg_color = self.Parent.GetBackgroundColour()
+#         page = PanelPropriete(self.nb, objet = self.savoirs)
+#         page.SetBackgroundColour(bg_color)
+#         self.nb.AddPage(page, nom)
+#         return page
 
 
     ######################################################################################  
     def construire(self):
-#        print "Construire Savoirs", self.prerequis
+        print "Construire Savoirs", self.prerequis
 #        print self.GetDocument().GetReferentiel()
         
-        # On efface tout ...
-        self.nb.DeleteAllPages()
+#         # On efface tout ...
+#         self.nb.DeleteAllPages()
+#         
+#         self.pagesSavoir = []
+#         self.arbres = {}
         
-        self.pagesSavoir = []
-        self.arbres = {}
-        
-        ref = self.GetDocument().GetReferentiel()
+#         ref = self.GetDocument().GetReferentiel()
 #        print "   ", ref.listSavoirs
         # On reconstruit ...
 #         dicSavoirs = [(c, ref.dicoSavoirs[c]) for c in ref.listSavoirs]
@@ -7613,28 +7599,28 @@ class PanelPropriete_Savoirs(PanelPropriete):
 #             dicSavoirs.insert(1, ("B", r.dicoSavoirs["S"]))
 #             dicSavoirs.extend([(c, r.dicoSavoirs[c]) for c in r.dicoSavoirs.keys() if c != "S"])
         
-        dicSavoirs = ref.getTousSavoirs()
+#         savoir = ref.getTousSavoirs()[self.code]
         
-        for code, savoir in dicSavoirs:
-            if (self.prerequis and savoir.pre) or (not self.prerequis and savoir.obj):
-                self.pagesSavoir.append(self.CreerPage(savoir.nomDiscipline))
-                self.arbres[code] = ArbreSavoirs(self.pagesSavoir[-1], code, savoir, self.savoirs, self.prerequis)
-                self.pagesSavoir[-1].sizer.Add(self.arbres[code], (0,0), flag = wx.EXPAND)
-                if int(wx.version()[0]) > 2:
-                    if not self.pagesSavoir[-1].sizer.IsColGrowable(0):
-                        self.pagesSavoir[-1].sizer.AddGrowableCol(0)
-                    if not self.pagesSavoir[-1].sizer.IsRowGrowable(0):
-                        self.pagesSavoir[-1].sizer.AddGrowableRow(0)
-                else:
-                    try:
-                        self.pagesSavoir[-1].sizer.AddGrowableCol(0)
-                    except:
-                        pass
-                    try:
-                        self.pagesSavoir[-1].sizer.AddGrowableRow(0)
-                    except:
-                        pass
-                self.pagesSavoir[-1].Layout()
+#         for code, savoir in dicSavoirs:
+        if (self.prerequis and self.savoirRef.pre) or (not self.prerequis and self.savoirRef.obj):
+#                 self.pagesSavoir.append(self.CreerPage(savoir.nomDiscipline))
+            self.arbre = ArbreSavoirs(self, self.code, self.savoirRef, self.savoirs, self.prerequis)
+            self.sizer.Add(self.arbre, (0,0), flag = wx.EXPAND)
+            if int(wx.version()[0]) > 2:
+                if not self.sizer.IsColGrowable(0):
+                    self.sizer.AddGrowableCol(0)
+                if not self.sizer.IsRowGrowable(0):
+                    self.sizer.AddGrowableRow(0)
+            else:
+                try:
+                    self.sizer.AddGrowableCol(0)
+                except:
+                    pass
+                try:
+                    self.sizer.AddGrowableRow(0)
+                except:
+                    pass
+            self.Layout()
         
         self.MiseAJour()
         
@@ -7651,13 +7637,15 @@ class PanelPropriete_Savoirs(PanelPropriete):
         """ Coche tous les savoirs a True de self.savoirs.savoirs 
             dans les différents arbres
         """
-#        print "MiseAJour Savoirs", self.arbres
+#         print "MiseAJour Savoirs", self.arbre
+#         print self.code
 
-        for s in self.savoirs.savoirs:
-            arbre = self.arbres[s[0]]
-            i = arbre.get_item_by_label(s[1:], arbre.GetRootItem())
-            if i.IsOk():
-                arbre.CheckItem2(i)
+        if hasattr(self, 'arbre'):
+            for s in self.savoirs.savoirs:
+                if self.code == s[0]:
+                    i = self.arbre.get_item_by_label(s[1:], self.arbre.GetRootItem())
+                    if i.IsOk():
+                        self.arbre.CheckItem2(i)
                 
 #        for code, arbre in self.arbres.items():
 #            arbre.UnselectAll()
@@ -10267,6 +10255,7 @@ class ArbreDoc(CT.CustomTreeCtrl):
             return PanelPropriete_Racine(parent, constantes.TxtRacineEleve)
         elif code == "Seq":
             return PanelPropriete_Racine(parent, constantes.xmlVide)
+        
         return 
     
     
@@ -10289,7 +10278,9 @@ class ArbreDoc(CT.CustomTreeCtrl):
             self.item = item
         data = self.GetItemPyData(self.item)
         
-        if hasattr(data, 'GetPanelPropriete'):
+        if isinstance(data, tuple) and hasattr(data[0], 'GetPanelPropriete'):
+            panelPropriete = data[0].GetPanelPropriete(self.panelProp, data[1], data[2])
+        elif hasattr(data, 'GetPanelPropriete'):
             panelPropriete = data.GetPanelPropriete(self.panelProp)
         elif isinstance(data, (str, unicode)): # 
             panelPropriete = self.GetPanelPropriete(self.panelProp, data)
@@ -11105,7 +11096,7 @@ class ArbreSavoirs(CT.CustomTreeCtrl):
 #                    if codeparent in self.savoirs.savoirs:
                         
                         
-        self.parent.Parent.Parent.SetSavoirs()
+        self.parent.SetSavoirs()
         event.Skip()
         
         

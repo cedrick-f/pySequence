@@ -282,6 +282,7 @@ dicimages =   {"Seq" : images.Icone_sequence,
                "Prj" : images.Icone_projet,
                "Cla" : images.Icone_classe,
                "Com" : images.Icone_competence,
+               "Fct" : images.Icone_fonction,
                "Sav" : images.Icone_savoirs,
                "Obj" : images.Icone_objectif,
                "Ci"  : images.Icone_centreinteret,
@@ -694,7 +695,8 @@ NOM_DISCIPLINES = {'Tec' : u"Sciences Industrielles de l'Ingénieur",
                    'Aut' : u"Autre discipline",
                    'GE'  : u"Génie Électrique", 
                    'CM'  : u"Construction Mécanique",
-                   'SA'  : u"Sciences Appliquées"}
+                   'SA'  : u"Sciences Appliquées",
+                   'Tra' : u"Enseignement Transversal"}
 
 CODE_DISCIPLINES = {'Tec' : u"SII", 
                     'SII' : u"SII",
@@ -709,7 +711,8 @@ CODE_DISCIPLINES = {'Tec' : u"SII",
                    'Aut' : u"Autre discipline",
                    'GE'  : u"GE", 
                    'CM'  : u"CM",
-                   'SA'  : u"SA"}
+                   'SA'  : u"SA",
+                   'Tra' : u"Tr"}
 
 COUL_DISCIPLINES = {'Tec' : (.1, .1, .1), 
                     'SII' : (.1, .1, .1), 
@@ -724,7 +727,8 @@ COUL_DISCIPLINES = {'Tec' : (.1, .1, .1),
                     'Aut' : (0.5, 0, 0.5),
                     'GE' : (0, 0, 0), 
                     'CM' : (0, 0, 0),
-                    'SA' : (0.7, 0.2, 0)}
+                    'SA' : (0.7, 0.2, 0),
+                    'Tra' : (0.3, 0.3, 0.3)}
 
 AFFICHER_DISC_FICHE = True
 AFFICHER_DISC_ARBRE = True

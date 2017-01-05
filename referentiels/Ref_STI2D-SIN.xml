@@ -36,11 +36,12 @@
   </d_demarches>
   <d_dicFonctions />
   <d_dicoCompetences>
-    <Competences_S S_abrDiscipline="SIN" S_codeDiscipline="SII" S_nomDiscipline="STI2D - SIN" S_nomGenerique="Compétence(s)" S_nomGeneriqueIndic="">
+    <Competences_S B_obj="True" B_pre="False" S_abrDiscipline="SIN" S_codeDiscipline="SII" S_nomDiscipline="STI2D - SIN" S_nomGenerique="Compétence(s)" S_nomGeneriqueIndic="Indicateurs de performance">
       <d_dicCompetences>
         <Competence_O7 S_intitule="Imaginer une solution, répondre à un besoin">
           <l_domaines />
           <l_indicateurs />
+          <l_infos />
           <d_poids I_C="40" />
           <d_sousComp>
             <Competence_CO7.sin3 S_intitule="Exprimer le principe de fonctionnement d'un système à partir des diagrammes SysML pertinents. Repérer les constituants de la chaîne d'énergie et d'information">
@@ -62,6 +63,7 @@
                   <d_revue I_C="0" />
                 </Indicateur_02>
               </l_indicateurs>
+              <l_infos />
               <d_poids />
               <d_sousComp />
               <l_thematiques />
@@ -85,6 +87,7 @@
                   <d_revue I_C="0" />
                 </Indicateur_02>
               </l_indicateurs>
+              <l_infos />
               <d_poids />
               <d_sousComp />
               <l_thematiques />
@@ -113,6 +116,7 @@
                   <d_revue I_C="0" />
                 </Indicateur_03>
               </l_indicateurs>
+              <l_infos />
               <d_poids />
               <d_sousComp />
               <l_thematiques />
@@ -123,6 +127,7 @@
         <Competence_O9 S_intitule="Gérer la vie d'un système">
           <l_domaines />
           <l_indicateurs />
+          <l_infos />
           <d_poids I_C="20" />
           <d_sousComp>
             <Competence_CO9.sin4 S_intitule="Rechercher et choisir de nouveaux constituants d'un système (ou d'un projet finalisé) au regard d'évolutions technologiques, socioéconomiques spécifiées dans un cahier des charges. Organiser le projet permettant de maquettiser la solution choisie">
@@ -144,6 +149,7 @@
                   <d_revue I_C="0" />
                 </Indicateur_02>
               </l_indicateurs>
+              <l_infos />
               <d_poids />
               <d_sousComp />
               <l_thematiques />
@@ -167,6 +173,7 @@
                   <d_revue I_C="0" />
                 </Indicateur_02>
               </l_indicateurs>
+              <l_infos />
               <d_poids />
               <d_sousComp />
               <l_thematiques />
@@ -190,6 +197,7 @@
                   <d_revue I_C="0" />
                 </Indicateur_02>
               </l_indicateurs>
+              <l_infos />
               <d_poids />
               <d_sousComp />
               <l_thematiques />
@@ -223,6 +231,7 @@
                   <d_revue I_C="0" />
                 </Indicateur_04>
               </l_indicateurs>
+              <l_infos />
               <d_poids />
               <d_sousComp />
               <l_thematiques />
@@ -233,6 +242,7 @@
         <Competence_O8 S_intitule="Valider des solutions techniques">
           <l_domaines />
           <l_indicateurs />
+          <l_infos />
           <d_poids I_C="40" />
           <d_sousComp>
             <Competence_CO8.sin2 S_intitule="Etablir pour une fonction précédemment identifiée, un modèle de comportement à partir de mesures faites sur le sytème">
@@ -254,6 +264,7 @@
                   <d_revue I_C="0" />
                 </Indicateur_02>
               </l_indicateurs>
+              <l_infos />
               <d_poids />
               <d_sousComp />
               <l_thematiques />
@@ -272,6 +283,7 @@
                   <d_revue I_C="0" />
                 </Indicateur_01>
               </l_indicateurs>
+              <l_infos />
               <d_poids />
               <d_sousComp />
               <l_thematiques />
@@ -295,6 +307,7 @@
                   <d_revue I_C="0" />
                 </Indicateur_02>
               </l_indicateurs>
+              <l_infos />
               <d_poids />
               <d_sousComp />
               <l_thematiques />
@@ -323,6 +336,7 @@
                   <d_revue I_C="0" />
                 </Indicateur_03>
               </l_indicateurs>
+              <l_infos />
               <d_poids />
               <d_sousComp />
               <l_thematiques />

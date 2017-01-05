@@ -36,11 +36,12 @@
   </d_demarches>
   <d_dicFonctions />
   <d_dicoCompetences>
-    <Competences_S S_abrDiscipline="EE" S_codeDiscipline="SII" S_nomDiscipline="STI2D-EE" S_nomGenerique="Compétence(s)" S_nomGeneriqueIndic="">
+    <Competences_S B_obj="True" B_pre="False" S_abrDiscipline="EE" S_codeDiscipline="SII" S_nomDiscipline="STI2D-EE" S_nomGenerique="Compétence(s)" S_nomGeneriqueIndic="Indicateurs">
       <d_dicCompetences>
         <Competence_O7 S_intitule="Imaginer une solution, répondre à un besoin">
           <l_domaines />
           <l_indicateurs />
+          <l_infos />
           <d_poids I_C="40" />
           <d_sousComp>
             <Competence_CO7.ee2 S_intitule="Justifier une solution retenue en intégrant les conséquences des choix sur le triptyque Matériau - Energie - Information">
@@ -57,6 +58,7 @@
                   <d_revue I_C="0" />
                 </Indicateur_01>
               </l_indicateurs>
+              <l_infos />
               <d_poids />
               <d_sousComp />
               <l_thematiques />
@@ -90,6 +92,7 @@
                   <d_revue I_C="0" />
                 </Indicateur_04>
               </l_indicateurs>
+              <l_infos />
               <d_poids />
               <d_sousComp />
               <l_thematiques />
@@ -118,6 +121,7 @@
                   <d_revue I_C="0" />
                 </Indicateur_03>
               </l_indicateurs>
+              <l_infos />
               <d_poids />
               <d_sousComp />
               <l_thematiques />
@@ -131,6 +135,7 @@
                   <d_revue I_C="0" />
                 </Indicateur_00>
               </l_indicateurs>
+              <l_infos />
               <d_poids />
               <d_sousComp />
               <l_thematiques />
@@ -141,6 +146,7 @@
         <Competence_O9 S_intitule="Gérer la vie du produit">
           <l_domaines />
           <l_indicateurs />
+          <l_infos />
           <d_poids I_C="20" />
           <d_sousComp>
             <Competence_CO9.ee1 S_intitule="Expérimenter des procédés de stockage, de production, de transport, de transformation, d'énergie pour aider à la conception d'une chaîne d'énergie">
@@ -162,6 +168,7 @@
                   <d_revue I_C="0" />
                 </Indicateur_02>
               </l_indicateurs>
+              <l_infos />
               <d_poids />
               <d_sousComp />
               <l_thematiques />
@@ -180,6 +187,7 @@
                   <d_revue I_C="0" />
                 </Indicateur_01>
               </l_indicateurs>
+              <l_infos />
               <d_poids />
               <d_sousComp />
               <l_thematiques />
@@ -208,6 +216,7 @@
                   <d_revue I_C="0" />
                 </Indicateur_03>
               </l_indicateurs>
+              <l_infos />
               <d_poids />
               <d_sousComp />
               <l_thematiques />
@@ -218,6 +227,7 @@
         <Competence_O8 S_intitule="Valider des solutions techniques">
           <l_domaines />
           <l_indicateurs />
+          <l_infos />
           <d_poids I_C="40" />
           <d_sousComp>
             <Competence_CO8.ee1 S_intitule="Renseigner un logiciel de simulation du comportement énergétique avec les caractéristiques du système et les paramètres externes pour un point de fonctionnement donné">
@@ -234,6 +244,7 @@
                   <d_revue I_C="0" />
                 </Indicateur_01>
               </l_indicateurs>
+              <l_infos />
               <d_poids />
               <d_sousComp />
               <l_thematiques />
@@ -257,6 +268,7 @@
                   <d_revue I_C="0" />
                 </Indicateur_02>
               </l_indicateurs>
+              <l_infos />
               <d_poids />
               <d_sousComp />
               <l_thematiques />
@@ -285,6 +297,7 @@
                   <d_revue I_C="0" />
                 </Indicateur_03>
               </l_indicateurs>
+              <l_infos />
               <d_poids />
               <d_sousComp />
               <l_thematiques />
@@ -308,6 +321,7 @@
                   <d_revue I_C="0" />
                 </Indicateur_02>
               </l_indicateurs>
+              <l_infos />
               <d_poids />
               <d_sousComp />
               <l_thematiques />

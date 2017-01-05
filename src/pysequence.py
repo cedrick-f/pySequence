@@ -87,7 +87,7 @@ from constantes import calculerEffectifs, \
                         _S, _Rev, _R1, _R2, _R3, \
                         revCalculerEffectifs, getSingulier, getPluriel, getSingulierPluriel,\
                         COUL_OK, COUL_NON, COUL_BOF, COUL_BIEN, \
-                        toList, COUL_COMPETENCES
+                        toList, COUL_COMPETENCES, COUL_DISCIPLINES
 import constantes
 
 from util_path import toFileEncoding, toSystemEncoding, FILE_ENCODING, SYSTEM_ENCODING, testRel
@@ -1567,7 +1567,8 @@ class Sequence(BaseDoc):
         
         BaseDoc.__init__(self, app, classe, intitule)
         
-        self.prerequis = Savoirs(self, prerequis = True)
+        
+        
         self.prerequisSeance = []
         
         self.equipe = []
@@ -1576,8 +1577,12 @@ class Sequence(BaseDoc):
         
         self.CI = CentreInteret(self)
         
+        self.prerequis = {"C" : Competences(self, prerequis = True),
+                          "S" : Savoirs(self, prerequis = True)}
+        
         self.obj = {"C" : Competences(self),
                     "S" : Savoirs(self)}
+        
         self.systemes = []
         self.seances = [Seance(self)]
 
@@ -1648,7 +1653,7 @@ class Sequence(BaseDoc):
         lst = []
         lst.extend(self.obj["C"].GetPtCaract())
         lst.extend(self.obj["S"].GetPtCaract())
-        lst.extend(self.prerequis.GetPtCaract())
+        lst.extend(self.prerequis["S"].GetPtCaract())
         lst.extend(self.CI.GetPtCaract())
         for s in self.seances:
             lst.extend(s.GetPtCaract())
@@ -1673,7 +1678,7 @@ class Sequence(BaseDoc):
             
         self.obj["C"].EnrichiSVG(doc)
         self.obj["S"].EnrichiSVG(doc)
-        self.prerequis.EnrichiSVG(doc)
+        self.prerequis["S"].EnrichiSVG(doc)
         self.CI.EnrichiSVG(doc)
         for s in self.seances:
             s.EnrichiSVGse(doc)
@@ -1722,7 +1727,7 @@ class Sequence(BaseDoc):
         sequence.append(self.CI.getBranche())
         
         prerequis = ET.SubElement(sequence, "Prerequis")
-        prerequis.append(self.prerequis.getBranche())
+        prerequis.append(self.prerequis["S"].getBranche())
         for ps in self.prerequisSeance:
             prerequis.append(ps.getBranche())
         
@@ -1788,7 +1793,7 @@ class Sequence(BaseDoc):
         branchePre = branche.find("Prerequis")
         if branchePre != None:
             savoirs = branchePre.find("Savoirs")
-            self.prerequis.setBranche(savoirs)
+            self.prerequis["S"].setBranche(savoirs)
             lst = list(branchePre)
             lst.remove(savoirs)
             self.prerequisSeance = []
@@ -2201,6 +2206,7 @@ class Sequence(BaseDoc):
         self.arbre.SetItemBold(self.branche)
 #        if hasattr(self, 'tip'):
 #            self.tip.SetBranche(self.branche)
+        ref = self.GetReferentiel()
         
         #
         # LE centre d'intérêt
@@ -2210,13 +2216,20 @@ class Sequence(BaseDoc):
         #
         # Les prérequis
         #
-        self.branchePre = arbre.AppendItem(self.branche, Titres[1], 
-                                           data = self.prerequis, 
-                                           image = self.arbre.images["Sav"])
-        self.prerequis.branche = self.branchePre
+        self.branchePre = arbre.AppendItem(self.branche, Titres[1], image = self.arbre.images["Sav"], 
+                                           data = "Pre")
+        for pre in self.prerequis.values():
+            pre.ConstruireArbre(arbre, self.branchePre, prerequis = True)
+#         
+#         self.branchePre = arbre.AppendItem(self.branche, Titres[1], 
+#                                            data = self.prerequis["S"], 
+#                                            image = self.arbre.images["Sav"])
+#         self.prerequis["S"].branche = self.branchePre
         for ps in self.prerequisSeance:
             ps.ConstruireArbre(arbre, self.branchePre)
-        
+    
+    
+    
         #
         # L'équipe pédagogique
         #
@@ -2233,12 +2246,21 @@ class Sequence(BaseDoc):
         for obj in self.obj.values():
             obj.ConstruireArbre(arbre, self.brancheObj)
             
+        
+        
+        
         if not simple: ## !!!
+            #
+            # Les Séances
+            #
             self.brancheSce = arbre.AppendItem(self.branche, Titres[3], image = self.arbre.images["Sea"], data = "Sea")
             self.arbre.SetItemBold(self.brancheSce)
             for sce in self.seances:
                 sce.ConstruireArbre(arbre, self.brancheSce) 
-                
+            
+            #
+            # Les systèmes
+            #
             self.brancheSys = arbre.AppendItem(self.branche, Titres[4], image = self.arbre.images["Sys"], data = "Sys")
             
             for sy in self.systemes:
@@ -2483,25 +2505,30 @@ class Sequence(BaseDoc):
     def MiseAJourTypeEnseignement(self):
 #        print "MiseAJourTypeEnseignement Sequence", self.GetNbrPeriodes()
         self.app.SetTitre()
+        
         self.classe.MiseAJourTypeEnseignement()
         self.CI.MiseAJourTypeEnseignement()
-        self.obj['C'].MiseAJourTypeEnseignement()
+#         self.obj['C'].MiseAJourTypeEnseignement()
         for o in self.obj.values():
             o.MiseAJourTypeEnseignement()
-        self.prerequis.MiseAJourTypeEnseignement()
+        for p in self.prerequis.values():
+            p.MiseAJourTypeEnseignement()
         for s in self.seances:
             s.MiseAJourTypeEnseignement()
+        
+        if hasattr(self, 'arbre'):
+            self.Rafraichir()
         
         draw_cairo.DefinirCouleurs(self.GetNbrPeriodes(),
                                    len(self.GetReferentiel()._listesCompetences_simple["S"]),
                                    len(self.GetReferentiel().CentresInterets))
 
-
+        
 
     #############################################################################
     def Verrouiller(self):
         if hasattr(self, 'CI') \
-            and (self.CI.numCI != [] or self.prerequis.savoirs != [] \
+            and (self.CI.numCI != [] or self.prerequis["S"].savoirs != [] \
                  or self.obj['C'].competences != [] or self.obj['S'].savoirs != []):
             self.classe.Verrouiller(True)
         else:
@@ -4857,7 +4884,7 @@ class Progression(BaseDoc):
         for lienseq in [s for s in self.sequences_projets if isinstance(s, LienSequence)]:
             pb = []
             seq = lienseq.sequence
-            prerequis = seq.prerequis.savoirs
+            prerequis = seq.prerequis["S"].savoirs
             
 #             objectifs = seq.obj['S'].savoirs
             objectifs = seq.GetSavoirsVises()
@@ -4978,7 +5005,7 @@ class Progression(BaseDoc):
     def GetListeTh(self):
         """
         """
-        return self.GetReferentiel().listeThematiques
+        return []#self.GetReferentiel().listeThematiques
     
     
     ########################################################################################################
@@ -5198,6 +5225,7 @@ class Progression(BaseDoc):
                     self.tip.Supprime('pb')
                               
             elif param[:3] == "CMP":
+#                 print param
                 ref = self.GetReferentiel()
                 competences = ref.getCompetenceEtGroupe("S"+param[3:])
                 groupe, competence = competences[0], competences[-1]
@@ -5875,16 +5903,18 @@ class CentreInteret(ElementBase):
 
 ####################################################################################
 #
-#   Classe définissant les propriétés des compétences de la Séquence (objectifs)
+#   Classe définissant les propriétés des compétences de la Séquence
 #
 ####################################################################################
 class Competences(ElementBase):
-    def __init__(self, parent, numComp = None):
+    def __init__(self, parent, numComp = None, prerequis = False):
         self.parent = parent
         ElementBase.__init__(self)
         
         self.num = numComp
-        self.competences = []
+        self.competences = []       # Liste des compétences (prérequis ou objectif) de la Séquence
+        self.prerequis = prerequis  # Indique que ce sont des competences prérequises
+        
         
 
     ######################################################################################  
@@ -5896,8 +5926,8 @@ class Competences(ElementBase):
         return self.parent.GetApp()
     
     ######################################################################################  
-    def GetPanelPropriete(self, parent):
-        return PanelPropriete_Competences(parent, self)
+    def GetPanelPropriete(self, parent, code, comp):
+        return PanelPropriete_Competences(parent, self, code, comp)
     
     ######################################################################################  
     def getBranche(self):
@@ -6009,11 +6039,15 @@ class Competences(ElementBase):
         return self.competences[num][0], self.competences[num][1:]
     
     ######################################################################################  
-    def GetNomGenerique(self):
-        return getPluriel(self.GetReferentiel().dicoCompetences["S"].nomGenerique)
+    def GetNomGenerique(self, code = "S"):
+        return getPluriel(self.GetReferentiel().dicoCompetences[code].nomGenerique)
     
     ######################################################################################  
-    def GetDiscipline(self, num):
+    def GetDiscipline(self, code = "S"):
+        return self.GetReferentiel().dicoCompetences[code].codeDiscipline
+
+    ######################################################################################  
+    def GetDisciplineNum(self, num):
         return self.GetReferentiel().dicoCompetences[self.competences[num][0]].abrDiscipline
     
     ######################################################################################  
@@ -6021,20 +6055,55 @@ class Competences(ElementBase):
         return self.GetReferentiel().getCompetence(self.competences[num]).intitule
 
     ######################################################################################  
-    def ConstruireArbre(self, arbre, branche):
-        self.arbre = arbre
-        self.codeBranche = CodeBranche(self.arbre, u"")
-#        self.codeBranche.SetBackgroundColour(wx.Colour(COUL_COMPETENCES[0]*255, COUL_COMPETENCES[1]*255, COUL_COMPETENCES[2]*255))
-        t = self.GetNomGenerique()
-        self.branche = arbre.AppendItem(branche, t, wnd = self.codeBranche, data = self,
-                                        image = self.arbre.images["Com"])
-        self.codeBranche.SetBranche(self.branche)
-        self.arbre.SetItemTextColour(self.branche, couleur.GetCouleurWx(COUL_COMPETENCES))
+    def ConstruireArbre(self, arbre, branche, prerequis = False):
+        ref = self.GetReferentiel()
+        self.branche = branche
+        if prerequis:
+            aff = any([d.pre for d in ref.dicoCompetences.values()])
+        else:
+            aff = any([d.obj for d in ref.dicoCompetences.values()])
+#         print ref.dicoCompetences.values()
         
+        if aff:
+            self.arbre = arbre
+            self.codeBranche = {}
+            self.branches = {}
+            for k, d in ref.dicoCompetences.items():
+                if (prerequis and d.pre) or (not prerequis and d.obj):
+                    self.codeBranche[k] = CodeBranche(self.arbre, u"")
+                    self.branches[k] = arbre.AppendItem(branche, self.GetNomGenerique(k), 
+                                                        wnd = self.codeBranche[k], 
+                                                        data = (self, k, d),
+                                                        image = self.arbre.images["Com"])
+                    self.codeBranche[k].SetBranche(self.branches[k])
+                    self.arbre.SetItemTextColour(self.branches[k], 
+                                                 couleur.GetCouleurWx(COUL_DISCIPLINES[self.GetDiscipline(k)]))
+                    self.arbre.SetItemBold(self.branches[k])
+    
+        
+        #
+        # Les "Fonctions"
+        #
+        if (len(ref.dicFonctions) > 0):
+            self.codeBranche["Fct"] = CodeBranche(self.arbre, u"")
+            self.branches["Fct"] = arbre.AppendItem(branche, ref.nomFonctions, 
+                                                   wnd = self.codeBranche[k], 
+                                                   data = (self, "Fct", ref.dicFonctions),
+                                                   image = self.arbre.images["Fct"])
+            self.codeBranche[k].SetBranche(self.branches["Fct"])
+            self.arbre.SetItemTextColour(self.branches["Fct"], couleur.GetCouleurWx(COUL_COMPETENCES))
+
+
+    
+    
     #############################################################################
     def MiseAJourTypeEnseignement(self):
         if hasattr(self, 'arbre'):
-            self.arbre.SetItemText(self.branche, self.GetNomGenerique())
+            del self.branches
+            self.ConstruireArbre(self.arbre, self.branche, self.prerequis)
+#         if hasattr(self, 'arbre'):
+#             for k, b in self.branche.items():
+#                 self.arbre.SetItemText(b, self.GetNomGenerique(k))
 #        if hasattr(self, 'panelPropriete'):
 #            self.GetPanelPropriete().Destroy()
 #            self.panelPropriete = PanelPropriete_Competences(self.panelParent, self)
@@ -6054,7 +6123,7 @@ class Competences(ElementBase):
         
         for i, c in enumerate(self.competences):
             self.tip.AjouterElemListeDL("list", 
-                                 self.GetDiscipline(i) +" " + self.GetTypCode(i)[0], 
+                                 self.GetDisciplineNum(i) +" " + self.GetTypCode(i)[0], 
                                  self.GetIntit(i))
       
         self.tip.SetPage()
@@ -6072,7 +6141,7 @@ class Savoirs(ElementBase):
         ElementBase.__init__(self)
         
         self.prerequis = prerequis  # Indique que ce sont des savoirs prérequis
-        self.savoirs = []
+        self.savoirs = []       # Liste des savoirs (prérequis ou objectif) de la Séquence
         
                 
     ######################################################################################  
@@ -6084,8 +6153,8 @@ class Savoirs(ElementBase):
         return self.parent.GetApp()
     
     ######################################################################################  
-    def GetPanelPropriete(self, parent):
-        return PanelPropriete_Savoirs(parent, self)
+    def GetPanelPropriete(self, parent, code, savoir):
+        return PanelPropriete_Savoirs(parent, self, code, savoir)
     
     ######################################################################################  
     def getBranche(self):
@@ -6146,11 +6215,27 @@ class Savoirs(ElementBase):
         return self.savoirs[num][0], self.savoirs[num][1:]
     
     ######################################################################################  
-    def GetNomGenerique(self):
-        return getPluriel(self.GetReferentiel().dicoSavoirs["S"].nomGenerique)
+    def GetNomGenerique(self, code = "S"):
+        dic = self.GetReferentiel().getDicTousSavoirs()
+        return getPluriel(dic[code].nomGenerique)
+    
     
     ######################################################################################  
-    def GetDiscipline(self, num):
+    def GetDiscipline(self, code):
+        dic = self.GetReferentiel().getDicTousSavoirs()
+        return dic[code].codeDiscipline
+    
+#     
+# #         print "dicoSavoirs", self.GetReferentiel().dicoSavoirs
+#         ref = self.GetReferentiel()
+#         dicSavoirs = ref.getTousSavoirs()
+#         for code, savoirs in dicSavoirs:
+#             if code == self.GetCode(num)[0]:
+#                 return savoirs.abrDiscipline
+            
+            
+    ######################################################################################  
+    def GetDisciplineNum(self, num):
 #         print "dicoSavoirs", self.GetReferentiel().dicoSavoirs
         ref = self.GetReferentiel()
         dicSavoirs = ref.getTousSavoirs()
@@ -6162,22 +6247,45 @@ class Savoirs(ElementBase):
     ######################################################################################  
     def GetIntit(self, num):
         return self.GetReferentiel().getSavoir(self.GetCode(num))  
-    
+
+
     ######################################################################################  
-    def ConstruireArbre(self, arbre, branche):
+    def ConstruireArbre(self, arbre, branche, prerequis = False):
+#         print "ConstruireArbre Savoirs"
+        self.branche = branche
+        ref = self.GetReferentiel()
+        lst = ref.getTousSavoirs()
+        if prerequis:
+            aff = any([d.pre for k, d in lst])
+        else:
+            aff = any([d.obj for k, d in lst])
         
-        self.arbre = arbre
-        self.codeBranche = CodeBranche(self.arbre, u"")
-        t = self.GetNomGenerique()
-        self.branche = arbre.AppendItem(branche, t, wnd = self.codeBranche, data = self,
-                                        image = self.arbre.images["Sav"])
-        self.codeBranche.SetBranche(self.branche)
+#         print "  pre:", [d.pre for k, d in lst], "   obj:", [d.obj for k, d in lst]
+        if aff:
+            self.arbre = arbre
+            self.codeBranche = {}
+            self.branches = {}
+            for k, d in lst:
+                if (prerequis and d.pre) or (not prerequis and d.obj):
+                    self.codeBranche[k] = CodeBranche(self.arbre, u"")
+                    self.branches[k] = arbre.AppendItem(branche, self.GetNomGenerique(k), 
+                                                       wnd = self.codeBranche[k], 
+                                                       data = (self, k, d),
+                                                       image = self.arbre.images["Sav"])
+                    self.codeBranche[k].SetBranche(self.branches[k])
+                    self.arbre.SetItemTextColour(self.branches[k], 
+                                                 couleur.GetCouleurWx(COUL_DISCIPLINES[self.GetDiscipline(k)]))
         
         
     #############################################################################
     def MiseAJourTypeEnseignement(self):
         if hasattr(self, 'arbre'):
-            self.arbre.SetItemText(self.branche, self.GetNomGenerique())
+            del self.branches
+            self.ConstruireArbre(self.arbre, self.branche, self.prerequis)
+#         if hasattr(self, 'arbre'):
+#             for k, b in self.branche.items():
+#                 self.arbre.SetItemText(b, self.GetNomGenerique(k))
+            
 #        self.GetPanelPropriete().MiseAJourTypeEnseignement()
 #            self.panelPropriete.construire()
     
@@ -6196,7 +6304,7 @@ class Savoirs(ElementBase):
         
         for i, c in enumerate(self.savoirs):
             self.tip.AjouterElemListeDL("list", 
-                                 self.GetDiscipline(i) + " " + self.GetTypCode(i)[1], 
+                                 self.GetDisciplineNum(i) + " " + self.GetTypCode(i)[1], 
                                  self.GetIntit(i))
       
         self.tip.SetPage()
@@ -9167,12 +9275,12 @@ class Eleve(Personne, ElementBase):
             
             compil = renvoie des dictionnaire plus simples
         """ 
-#         print "GetEvaluabilite", self
+        print "GetEvaluabilite", self
         prj = self.GetProjetRef()
 #        dicPoids = self.GetReferentiel().dicoPoidsIndicateurs_prj
         dicIndicateurs = self.GetDicIndicateurs()
-#         print "dicIndicateurs", dicIndicateurs
-#         print "_dicoGrpIndicateur", prj._dicoGrpIndicateur
+        print "   dicIndicateurs", dicIndicateurs
+        print "   _dicoGrpIndicateur", prj._dicoGrpIndicateur
 #        tousIndicateurs = prj._dicIndicateurs
 #        lstGrpIndicateur = {'R' : prj._dicGrpIndicateur['R'],
 #                            'S' : self.GetProjetRef()._dicGrpIndicateur['S']}
@@ -9184,7 +9292,7 @@ class Eleve(Personne, ElementBase):
 #        rs = [0, 0]
 #        lers = [{}, {}]
 #         print prj._dicoGrpIndicateur
-#         print prj._dicoIndicateurs
+        print "   _dicoIndicateurs", prj._dicoIndicateurs
         rs = {}
         lers = {}
         for disc, dic in prj._dicoGrpIndicateur.items():
@@ -9193,11 +9301,11 @@ class Eleve(Personne, ElementBase):
             for ph in dic.keys():
                 lers[disc][ph] = {}
                 rs[disc][ph] = 0
-#         print "   init :", rs, lers
+        print "   xx init :", rs, lers
         
         
         def getPoids(competence, code, poidsGrp):
-#             print "  getPoids", code
+            print "  getPoids", code
             if competence.sousComp != {}:
                 for k, c in competence.sousComp.items():
                     getPoids(c, k, poidsGrp)
@@ -9212,16 +9320,19 @@ class Eleve(Personne, ElementBase):
                             
                             if disc+code in dicIndicateurs.keys():
                                 if dicIndicateurs[disc+code][i]:
-#                                     print "  comp", code, i, indic.poids, ph
+                                    print "  comp", code, i, indic.poids, ph
                                     poids = indic.poids
                                     if ph in poids.keys():
-                                        p = 1.0*poids[ph]/100
-                                        
-                                        rs[disc][ph] += p * poidsGrp[ph]/100
-                                        if grp in lers[disc][ph].keys():
-                                            lers[disc][ph][grp] += p
+                                        if not ph in poidsGrp.keys():
+                                            print u"ERREUR poids", code, u"Faire \"Ouvrir et réparer\""
                                         else:
-                                            lers[disc][ph][grp] = p
+                                            p = 1.0*poids[ph]/100
+                                        
+                                            rs[disc][ph] += p * poidsGrp[ph]/100
+                                            if grp in lers[disc][ph].keys():
+                                                lers[disc][ph][grp] += p
+                                            else:
+                                                lers[disc][ph][grp] = p
                             else:
                                 if not grp in lers[disc][ph].keys():
                                     lers[disc][ph][grp] = 0
@@ -9259,7 +9370,7 @@ class Eleve(Personne, ElementBase):
         
         for typi, dico in prj._dicoIndicateurs.items():
             for grp, grpComp in dico.items():
-#                 print "  poids :", grpComp.poids
+                print "  >>> poids :", grpComp.poids
                 getPoids(grpComp, grp, grpComp.poids)
                 
                 

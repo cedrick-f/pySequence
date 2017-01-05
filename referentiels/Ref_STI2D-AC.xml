@@ -36,11 +36,12 @@
   </d_demarches>
   <d_dicFonctions />
   <d_dicoCompetences>
-    <Competences_S S_abrDiscipline="AC" S_codeDiscipline="SII" S_nomDiscipline="STI2D-AC" S_nomGenerique="Compétence(s)" S_nomGeneriqueIndic="">
+    <Competences_S B_obj="True" B_pre="False" S_abrDiscipline="AC" S_codeDiscipline="SII" S_nomDiscipline="STI2D-AC" S_nomGenerique="Compétence(s)" S_nomGeneriqueIndic="Indicateurs de performance">
       <d_dicCompetences>
         <Competence_O7 S_intitule="Imaginer une solution, répondre à un besoin">
           <l_domaines />
           <l_indicateurs />
+          <l_infos />
           <d_poids I_C="40" />
           <d_sousComp>
             <Competence_CO7.ac1 S_intitule="Participer à une étude architecturale, dans une démarche de développement durable">
@@ -62,6 +63,7 @@
                   <d_revue I_C="0" />
                 </Indicateur_02>
               </l_indicateurs>
+              <l_infos />
               <d_poids />
               <d_sousComp />
               <l_thematiques />
@@ -90,6 +92,7 @@
                   <d_revue I_C="0" />
                 </Indicateur_03>
               </l_indicateurs>
+              <l_infos />
               <d_poids />
               <d_sousComp />
               <l_thematiques />
@@ -118,6 +121,7 @@
                   <d_revue I_C="0" />
                 </Indicateur_03>
               </l_indicateurs>
+              <l_infos />
               <d_poids />
               <d_sousComp />
               <l_thematiques />
@@ -128,6 +132,7 @@
         <Competence_O9 S_intitule="Gérer la vie d'un système">
           <l_domaines />
           <l_indicateurs />
+          <l_infos />
           <d_poids I_C="20" />
           <d_sousComp>
             <Competence_CO9.ac2 S_intitule="Identifier et décrire les causes de désordre dans une construction">
@@ -144,6 +149,7 @@
                   <d_revue I_C="0" />
                 </Indicateur_01>
               </l_indicateurs>
+              <l_infos />
               <d_poids />
               <d_sousComp />
               <l_thematiques />
@@ -162,6 +168,7 @@
                   <d_revue I_C="0" />
                 </Indicateur_01>
               </l_indicateurs>
+              <l_infos />
               <d_poids />
               <d_sousComp />
               <l_thematiques />
@@ -190,6 +197,7 @@
                   <d_revue I_C="0" />
                 </Indicateur_03>
               </l_indicateurs>
+              <l_infos />
               <d_poids />
               <d_sousComp />
               <l_thematiques />
@@ -200,6 +208,7 @@
         <Competence_O8 S_intitule="Valider des solutions techniques">
           <l_domaines />
           <l_indicateurs />
+          <l_infos />
           <d_poids I_C="40" />
           <d_sousComp>
             <Competence_CO8.ac3 S_intitule="Analyser/Valider les choix structurels et de confort">
@@ -226,6 +235,7 @@
                   <d_revue I_C="0" />
                 </Indicateur_03>
               </l_indicateurs>
+              <l_infos />
               <d_poids />
               <d_sousComp />
               <l_thematiques />
@@ -259,6 +269,7 @@
                   <d_revue I_C="0" />
                 </Indicateur_04>
               </l_indicateurs>
+              <l_infos />
               <d_poids />
               <d_sousComp />
               <l_thematiques />
@@ -282,6 +293,7 @@
                   <d_revue I_C="0" />
                 </Indicateur_02>
               </l_indicateurs>
+              <l_infos />
               <d_poids />
               <d_sousComp />
               <l_thematiques />

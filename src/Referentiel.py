@@ -1098,26 +1098,15 @@ class Referentiel(XMLelem):
                     ssRng = range(l+1, rng[-1]+1)
                 if debug: print "   ", ssRng
 
-                # Il y a encore des items à droite ...
+                # Il y a encore des items à droite ... 
                 if len(ssRng) > 0 and col < 2 and [li  for li in ssRng if sh.cell(li,col+1).value != u""] != []:
+                    # Il y a une(des) nouvelle(s) branche(s) (code + intitulé)
+                    if [li  for li in ssRng if sh.cell(li,col+2).value != u""] != []:
+                        competence.sousComp = getArbreComp(sh, ssRng, col+1, debug = debug)
                     
-                    sdic = getArbreComp(sh, ssRng, col+1, debug = debug)
-#                     dic[code] = [intitule, getArbre(sh, ssRng, col+1, fonction = fonction, debug = debug)]
-
-                    competence.sousComp = sdic
-                    if prems:
-                        if debug:
-                            print "prems", 
-                        poids = {}
-                        for p, c in self._colParties:
-                            if debug: print p, c, "--", 
-                            v = int0(sh.cell(l,c).value)
-                            if debug: print v
-                            if v > 0:
-                                poids[p] = v
-                        if debug: print poids
-                        competence.poids = poids
-                    
+                    # Il y a un(des) info(s) seulement
+                    elif [li  for li in ssRng if sh.cell(li,col+1).value != u""] != []:
+                        competence.infos = [sh.cell(li,col+1).value  for li in ssRng]
                     
 
                 # Il n'y a plus d'item à droite => Indicateur()
@@ -1142,6 +1131,18 @@ class Referentiel(XMLelem):
                         if indic != u"":
                             competence.indicateurs.append(Indicateur(indic, poids, lignes, revues))
 
+                if prems:
+                    if debug:
+                        print "prems", 
+                    poids = {}
+                    for p, c in self._colParties:
+                        if debug: print p, c, "--", 
+                        v = int0(sh.cell(l,c).value)
+                        if debug: print v
+                        if v > 0:
+                            poids[p] = v
+                    if debug: print poids
+                    competence.poids = poids
             
             if debug: print 
             return dic
@@ -1247,7 +1248,7 @@ class Referentiel(XMLelem):
         self.Enseignement[1] = sh_g.cell(6,1).value # Nom complet    
         self.Enseignement[2] = sh_g.cell(6,2).value # Famille : abréviation
         self.Enseignement[3] = sh_g.cell(6,3).value # Famille : Nom complet
-        debug = False#self.Code == "STS_SN_IR"
+        debug = False#self.Code == "STS_SN_EC"
 
         if sh_g.ncols > 3:
             lig = [l  for l in range(10, 17) if sh_g.cell(l,3).value != u""]
@@ -1381,7 +1382,7 @@ class Referentiel(XMLelem):
         #
         # Compétences  ###############################################################################
         #
-#         debug = self.Code == "EE-CIT-SI-DIT"
+        debug = False#self.Code == "Cy4-ST"
         for n in wb.sheet_names():
             if n[:5] == "Comp_":
                 sh_co = wb.sheet_by_name(n)
@@ -1390,9 +1391,12 @@ class Referentiel(XMLelem):
                                                          sh_co.cell(2,0).value,     # Code discipline "enseignant"
                                                          sh_co.cell(2,2).value,     # Code discipline "enseignement"
                                                          sh_co.cell(2,1).value,     # Nom discipline
-                                                         sh_co.cell(0,5).value)     # Nom générique indicateur ("Indicateur de performance", ...)
+                                                         sh_co.cell(0,8).value)     # Nom générique indicateur ("Indicateur de performance", ...)
+                self.dicoCompetences[code].obj = 'O' in sh_co.cell(0,6).value
+                self.dicoCompetences[code].pre = 'P' in sh_co.cell(0,6).value
                 self.listCompetences.append(code)
-                
+#                 if debug:
+#                     print "____", code, "obj:", self.dicoCompetences[code].obj, "pre:", self.dicoCompetences[code].pre
                 #
                 # Décomposition des projets en parties
                 #    colonne de départ : 11 (colonne "L")
@@ -1810,6 +1814,42 @@ class Referentiel(XMLelem):
             dicSavoirs.extend([(c, r.dicoSavoirs[c]) for c in r.dicoSavoirs.keys() if c != "S"])
             
         return dicSavoirs
+    
+    
+    #########################################################################
+    def getDicTousSavoirs(self):
+        """ Renvoie sous la forme {code : Referentiel.Savoirs), ...}
+            tous les savoirs concernés par cet enseignement
+        """
+        dicSavoirs = {c : self.dicoSavoirs[c] for c in self.listSavoirs}
+        if self.tr_com != []:
+            # Il y a un tronc comun (ETT pour Spécialité STI2D par exemple)
+            r = REFERENTIELS[self.tr_com[0]]
+            dicSavoirs.update({"B": r.dicoSavoirs["S"]})
+            dicSavoirs.update({c : r.dicoSavoirs[c] for c in r.dicoSavoirs.keys() if c != "S"})
+             
+        return dicSavoirs
+    
+    
+#     #########################################################################
+#     def getSavoirs(self, code):
+#         """ Renvoie sous la forme [(code, Referentiel.Savoirs), ]
+#             tous les savoirs concernés par cet enseignement
+#         """
+#         if code in self.listSavoirs.keys():
+#             return self.listSavoirs[code]
+#         elif self.tr_com != []:
+#             r = REFERENTIELS[self.tr_com[0]]
+#             if code in 
+#             
+#         
+#         if self.tr_com != []:
+#             # Il y a un tronc comun (ETT pour Spécialité STI2D par exemple)
+#             
+#             dicSavoirs.insert(1, ("B", r.dicoSavoirs["S"]))
+#             dicSavoirs.extend([(c, r.dicoSavoirs[c]) for c in r.dicoSavoirs.keys() if c != "S"])
+#             
+#         return savoirs
             
 #    #########################################################################
 #    def getCompetence(self, comp):
@@ -2632,6 +2672,7 @@ class Competence(XMLelem):
         self.poids = poids
         self.indicateurs = []
         self.sousComp = {}
+        self.infos = []  # des informations supplémentaires
 
     def __repr__(self):
         return "Competence : " + self.intitule[:10] + "..."
@@ -2658,10 +2699,17 @@ class Competences(XMLelem):
         self.abrDiscipline = abrDiscipline          # Abréviation discipline
         self.nomGeneriqueIndic = nomGeneriqueIndic
         self.dicCompetences = {} # Dictionnaire de Compétences (arborescence)
+        self.obj = self.pre = True
 #         self.indicateurs = []
 
     #########################################################################
+    def __repr__(self):
+        return "Referentiel.Competences" + str(self.obj)+str(self.pre)
+    
+    
+    #########################################################################
     def getCompetence(self, comp):
+#         print "getCompetence", comp
         def getComp(dic):
 #             print "   ", dic
             if comp in dic.keys():

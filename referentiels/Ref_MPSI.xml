@@ -38,16 +38,18 @@
   </d_demarches>
   <d_dicFonctions />
   <d_dicoCompetences>
-    <Competences_S S_abrDiscipline="SI" S_codeDiscipline="SII" S_nomDiscipline="Sciences de l'Ingénieur" S_nomGenerique="Compétence(s)" S_nomGeneriqueIndic="">
+    <Competences_S B_obj="True" B_pre="False" S_abrDiscipline="SI" S_codeDiscipline="SII" S_nomDiscipline="Sciences de l'Ingénieur" S_nomGenerique="Compétence(s)" S_nomGeneriqueIndic="Indicateurs de performance">
       <d_dicCompetences>
         <Competence_A S_intitule="Analyser">
           <l_domaines />
           <l_indicateurs />
+          <l_infos />
           <d_poids I_S="30" />
           <d_sousComp>
             <Competence_A1 S_intitule="Analyser le besoin">
               <l_domaines />
               <l_indicateurs />
+              <l_infos />
               <d_poids />
               <d_sousComp>
                 <Competence_A1.4 S_intitule="traduire un besoin fonctionnel en problématique technique">
@@ -59,6 +61,7 @@
                       <d_revue I_S="0" />
                     </Indicateur_00>
                   </l_indicateurs>
+                  <l_infos />
                   <d_poids />
                   <d_sousComp />
                   <l_thematiques />
@@ -72,6 +75,7 @@
                       <d_revue I_S="0" />
                     </Indicateur_00>
                   </l_indicateurs>
+                  <l_infos />
                   <d_poids />
                   <d_sousComp />
                   <l_thematiques />
@@ -79,6 +83,7 @@
                 <Competence_A1.2 S_intitule="définir les fonctions de service">
                   <l_domaines />
                   <l_indicateurs />
+                  <l_infos />
                   <d_poids />
                   <d_sousComp />
                   <l_thematiques />
@@ -86,6 +91,7 @@
                 <Competence_A1.3 S_intitule="identifier les contraintes">
                   <l_domaines />
                   <l_indicateurs />
+                  <l_infos />
                   <d_poids />
                   <d_sousComp />
                   <l_thematiques />
@@ -96,6 +102,7 @@
             <Competence_A3 S_intitule="Caractériser des écarts">
               <l_domaines />
               <l_indicateurs />
+              <l_infos />
               <d_poids />
               <d_sousComp>
                 <Competence_A3.2 S_intitule="comparer les résultats expérimentaux avec les critères du cahier des charges et interpréter les écarts">
@@ -107,6 +114,7 @@
                       <d_revue I_S="0" />
                     </Indicateur_00>
                   </l_indicateurs>
+                  <l_infos />
                   <d_poids />
                   <d_sousComp />
                   <l_thematiques />
@@ -120,6 +128,7 @@
                       <d_revue I_S="0" />
                     </Indicateur_00>
                   </l_indicateurs>
+                  <l_infos />
                   <d_poids />
                   <d_sousComp />
                   <l_thematiques />
@@ -133,6 +142,7 @@
                       <d_revue I_S="0" />
                     </Indicateur_00>
                   </l_indicateurs>
+                  <l_infos />
                   <d_poids />
                   <d_sousComp />
                   <l_thematiques />
@@ -143,11 +153,13 @@
             <Competence_A2 S_intitule="Analyser le système">
               <l_domaines />
               <l_indicateurs />
+              <l_infos />
               <d_poids />
               <d_sousComp>
                 <Competence_A2.3 S_intitule="décrire les liaisons entre les blocs fonctionnels">
                   <l_domaines />
                   <l_indicateurs />
+                  <l_infos />
                   <d_poids />
                   <d_sousComp />
                   <l_thematiques />
@@ -155,6 +167,7 @@
                 <Competence_A2.2 S_intitule="identifier les éléments transformés et les flux">
                   <l_domaines />
                   <l_indicateurs />
+                  <l_infos />
                   <d_poids />
                   <d_sousComp />
                   <l_thematiques />
@@ -162,6 +175,7 @@
                 <Competence_A2.1 S_intitule="identifier et ordonner les fonctions techniques qui réalisent les fonctions de services et respectent les contraintes">
                   <l_domaines />
                   <l_indicateurs />
+                  <l_infos />
                   <d_poids />
                   <d_sousComp />
                   <l_thematiques />
@@ -169,6 +183,7 @@
                 <Competence_A2.5 S_intitule="identifier les matériaux des constituants et leurs propriétés en relation avec les fonctions et les contraintes">
                   <l_domaines />
                   <l_indicateurs />
+                  <l_infos />
                   <d_poids />
                   <d_sousComp />
                   <l_thematiques />
@@ -176,6 +191,7 @@
                 <Competence_A2.4 S_intitule="identifier l’organisation structurelle">
                   <l_domaines />
                   <l_indicateurs />
+                  <l_infos />
                   <d_poids />
                   <d_sousComp />
                   <l_thematiques />
@@ -189,11 +205,13 @@
         <Competence_C S_intitule="Expérimenter">
           <l_domaines />
           <l_indicateurs />
+          <l_infos />
           <d_poids I_C="50" I_S="30" />
           <d_sousComp>
             <Competence_C2 S_intitule="Mettre en oeuvre un protocole expérimental">
               <l_domaines />
               <l_indicateurs />
+              <l_infos />
               <d_poids />
               <d_sousComp>
                 <Competence_C2.1 S_intitule="conduire les essais en respectant les consignes de sécurité à partir d’un protocole fourni">
@@ -220,6 +238,7 @@
                       <d_revue I_C="0" />
                     </Indicateur_03>
                   </l_indicateurs>
+                  <l_infos />
                   <d_poids />
                   <d_sousComp />
                   <l_thematiques />
@@ -238,6 +257,7 @@
                       <d_revue I_S="0" />
                     </Indicateur_01>
                   </l_indicateurs>
+                  <l_infos />
                   <d_poids />
                   <d_sousComp />
                   <l_thematiques />
@@ -248,6 +268,7 @@
             <Competence_C1 S_intitule="Justifier le choix d’un protocole expérimental">
               <l_domaines />
               <l_indicateurs />
+              <l_infos />
               <d_poids />
               <d_sousComp>
                 <Competence_C1.4 S_intitule="justifier le choix des essais réalisés">
@@ -259,6 +280,7 @@
                       <d_revue I_S="0" />
                     </Indicateur_00>
                   </l_indicateurs>
+                  <l_infos />
                   <d_poids />
                   <d_sousComp />
                   <l_thematiques />
@@ -277,6 +299,7 @@
                       <d_revue I_C="0" />
                     </Indicateur_01>
                   </l_indicateurs>
+                  <l_infos />
                   <d_poids />
                   <d_sousComp />
                   <l_thematiques />
@@ -290,6 +313,7 @@
                       <d_revue I_S="0" />
                     </Indicateur_00>
                   </l_indicateurs>
+                  <l_infos />
                   <d_poids />
                   <d_sousComp />
                   <l_thematiques />
@@ -303,6 +327,7 @@
                       <d_revue I_C="0" />
                     </Indicateur_00>
                   </l_indicateurs>
+                  <l_infos />
                   <d_poids />
                   <d_sousComp />
                   <l_thematiques />
@@ -316,11 +341,13 @@
         <Competence_B S_intitule="Modéliser">
           <l_domaines />
           <l_indicateurs />
+          <l_infos />
           <d_poids I_C="40" />
           <d_sousComp>
             <Competence_B4 S_intitule="Valider un modèle">
               <l_domaines />
               <l_indicateurs />
+              <l_infos />
               <d_poids />
               <d_sousComp>
                 <Competence_B4.4 S_intitule="valider un modèle optimisé fourni">
@@ -337,6 +364,7 @@
                       <d_revue I_C="0" />
                     </Indicateur_01>
                   </l_indicateurs>
+                  <l_infos />
                   <d_poids />
                   <d_sousComp />
                   <l_thematiques />
@@ -350,6 +378,7 @@
                       <d_revue I_C="0" />
                     </Indicateur_00>
                   </l_indicateurs>
+                  <l_infos />
                   <d_poids />
                   <d_sousComp />
                   <l_thematiques />
@@ -363,6 +392,7 @@
                       <d_revue I_C="0" />
                     </Indicateur_00>
                   </l_indicateurs>
+                  <l_infos />
                   <d_poids />
                   <d_sousComp />
                   <l_thematiques />
@@ -381,6 +411,7 @@
                       <d_revue I_C="0" />
                     </Indicateur_01>
                   </l_indicateurs>
+                  <l_infos />
                   <d_poids />
                   <d_sousComp />
                   <l_thematiques />
@@ -391,11 +422,13 @@
             <Competence_B1 S_intitule="Identifier et caractériser les grandeurs agissant sur un système">
               <l_domaines />
               <l_indicateurs />
+              <l_infos />
               <d_poids />
               <d_sousComp>
                 <Competence_B1.1 S_intitule="définir, justifier la frontière de tout ou partie d’un système et répertorier les interactions">
                   <l_domaines />
                   <l_indicateurs />
+                  <l_infos />
                   <d_poids />
                   <d_sousComp />
                   <l_thematiques />
@@ -403,6 +436,7 @@
                 <Competence_B1.2 S_intitule="choisir les grandeurs et les paramètres influents en vue de les modéliser">
                   <l_domaines />
                   <l_indicateurs />
+                  <l_infos />
                   <d_poids />
                   <d_sousComp />
                   <l_thematiques />
@@ -413,11 +447,13 @@
             <Competence_B2 S_intitule="Proposer ou justifier un modèle">
               <l_domaines />
               <l_indicateurs />
+              <l_infos />
               <d_poids />
               <d_sousComp>
                 <Competence_B2.2 S_intitule="préciser ou justifier les limites de validité du modèle envisagé">
                   <l_domaines />
                   <l_indicateurs />
+                  <l_infos />
                   <d_poids />
                   <d_sousComp />
                   <l_thematiques />
@@ -425,6 +461,7 @@
                 <Competence_B2.1 S_intitule="associer un modèle à un système ou à son comportement">
                   <l_domaines />
                   <l_indicateurs />
+                  <l_infos />
                   <d_poids />
                   <d_sousComp />
                   <l_thematiques />
@@ -435,6 +472,7 @@
             <Competence_B3 S_intitule="Résoudre et simuler">
               <l_domaines />
               <l_indicateurs />
+              <l_infos />
               <d_poids />
               <d_sousComp>
                 <Competence_B3.2 S_intitule="simuler le fonctionnement de tout ou partie d’un système à l’aide d’un modèle fourni">
@@ -451,6 +489,7 @@
                       <d_revue I_C="0" />
                     </Indicateur_01>
                   </l_indicateurs>
+                  <l_infos />
                   <d_poids />
                   <d_sousComp />
                   <l_thematiques />
@@ -458,6 +497,7 @@
                 <Competence_B3.1 S_intitule="choisir et mettre en oeuvre une méthode de résolution">
                   <l_domaines />
                   <l_indicateurs />
+                  <l_infos />
                   <d_poids />
                   <d_sousComp />
                   <l_thematiques />
@@ -471,11 +511,13 @@
         <Competence_D S_intitule="Communiquer">
           <l_domaines />
           <l_indicateurs />
+          <l_infos />
           <d_poids I_C="10" I_S="40" />
           <d_sousComp>
             <Competence_D2 S_intitule="Mettre en oeuvre une communication">
               <l_domaines />
               <l_indicateurs />
+              <l_infos />
               <d_poids />
               <d_sousComp>
                 <Competence_D2.1 S_intitule="choisir un support de communication et un média adapté, argumenter">
@@ -487,6 +529,7 @@
                       <d_revue I_S="0" />
                     </Indicateur_00>
                   </l_indicateurs>
+                  <l_infos />
                   <d_poids />
                   <d_sousComp />
                   <l_thematiques />
@@ -500,6 +543,7 @@
                       <d_revue I_S="0" />
                     </Indicateur_00>
                   </l_indicateurs>
+                  <l_infos />
                   <d_poids />
                   <d_sousComp />
                   <l_thematiques />
@@ -513,6 +557,7 @@
                       <d_revue I_S="0" />
                     </Indicateur_00>
                   </l_indicateurs>
+                  <l_infos />
                   <d_poids />
                   <d_sousComp />
                   <l_thematiques />
@@ -523,6 +568,7 @@
             <Competence_D1 S_intitule="Rechercher et traiter des informations">
               <l_domaines />
               <l_indicateurs />
+              <l_infos />
               <d_poids />
               <d_sousComp>
                 <Competence_D1.2 S_intitule="analyser, choisir et classer des informations">
@@ -544,6 +590,7 @@
                       <d_revue I_S="0" />
                     </Indicateur_02>
                   </l_indicateurs>
+                  <l_infos />
                   <d_poids />
                   <d_sousComp />
                   <l_thematiques />
@@ -562,6 +609,7 @@
                       <d_revue I_C="0" />
                     </Indicateur_01>
                   </l_indicateurs>
+                  <l_infos />
                   <d_poids />
                   <d_sousComp />
                   <l_thematiques />

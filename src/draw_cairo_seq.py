@@ -579,7 +579,9 @@ def Draw(ctx, seq, mouchard = False, entete = False):
 #             ctx.stroke()
             DrawLigneEff(ctx, x+w, y+h, constantes.CouleursGroupes[e])
 
-
+    
+    def taille(lstTxt):
+        return sum([len(t) for t in lstTxt])
 
 
     #
@@ -589,22 +591,64 @@ def Draw(ctx, seq, mouchard = False, entete = False):
     # Rectangle arrondi
     x0, y0 = posPre
     rect_width, rect_height  = taillePre
-    seq.prerequis.pt_caract = (curve_rect_titre(ctx, u"Prérequis",  
-                                                (x0, y0, rect_width, rect_height), BcoulPre, IcoulPre, fontPre),
-                               'pre')
+    curve_rect_titre(ctx, u"Prérequis",  
+                     (x0, y0, rect_width, rect_height),
+                     BcoulPre, IcoulPre, fontPre)
     #
     # Codes prerequis
     #
-    lstTexte = []
-    lstCodes = []
-    lstCoul = []
+    lstTexteC = []
+    lstCodesC = []
+    lstCoulC = []
     
     ref = seq.GetReferentiel()
     if ref.tr_com != []:
         ref_tc = REFERENTIELS[ref.tr_com[0]]
     else:
         ref_tc = None
-    for c in seq.prerequis.savoirs:
+        
+    lstComp = []
+    lstTyp = []
+    for c in seq.prerequis["C"].competences:
+        typ, cod = c[0], c[1:]
+        
+        if typ == "B" and ref.tr_com != []: # B = tronc commun --> référentiel
+            comp = ref_tc.dicoCompetences["S"]
+        else:
+            if typ in ref.dicoCompetences.keys():
+                comp = ref.dicoCompetences[typ]
+            elif ref_tc and typ in ref_tc.dicoCompetences.keys():
+                comp = ref_tc.dicoCompetences[typ]
+        lstComp.append([cod,comp])
+        if not typ in lstTyp:
+            lstTyp.append(typ)
+    
+    multi = len(lstTyp) > 1
+    
+    for cod, comp in lstComp:   
+        disc = comp.codeDiscipline
+        lstTexteC.append(comp.getCompetence(cod).intitule)
+        if multi:
+            lstCodesC.append(comp.abrDiscipline + " " + cod)
+        else:
+            lstCodesC.append(cod)
+        lstCoulC.append(constantes.COUL_DISCIPLINES[disc])
+        
+            
+            
+    lstTexteS = []
+    lstCodesS = []
+    lstCoulS = []
+    
+    ref = seq.GetReferentiel()
+    if ref.tr_com != []:
+        ref_tc = REFERENTIELS[ref.tr_com[0]]
+    else:
+        ref_tc = None
+        
+    lstSav = []
+    lstTyp = []
+    for c in seq.prerequis["S"].savoirs:
         typ, cod = c[0], c[1:]
         if typ == "B" and ref.tr_com != []: # B = tronc commun --> référentiel
             savoir = ref_tc.dicoSavoirs["S"]
@@ -613,45 +657,83 @@ def Draw(ctx, seq, mouchard = False, entete = False):
                 savoir = ref.dicoSavoirs[typ]
             elif ref_tc and typ in ref_tc.dicoSavoirs.keys():
                 savoir = ref_tc.dicoSavoirs[typ]
-        
+        lstSav.append([cod,savoir])
+        if not typ in lstTyp:
+            lstTyp.append(typ)
+    
+    multi = len(lstTyp) > 1
+    
+    for cod, savoir in lstSav:
         disc = savoir.codeDiscipline
-        lstTexte.append(savoir.getSavoir(cod))
-        lstCodes.append(savoir.abrDiscipline+" "+cod)
-        lstCoul.append(constantes.COUL_DISCIPLINES[disc])
-            
-            
-            
+        lstTexteS.append(savoir.getSavoir(cod))
+        if multi:
+            lstCodesS.append(savoir.abrDiscipline+" "+cod)
+        else:
+            lstCodesS.append(savoir.abrDiscipline+" "+cod)
+        lstCoulS.append(constantes.COUL_DISCIPLINES[disc])
         
-    lstTexteS = []   
+        
+    lstTexteSe = []   
     for c in seq.prerequisSeance:
-        lstTexteS.append(c.GetNomFichier())    
+        lstTexteSe.append(c.GetNomFichier())    
         
     hl = rect_height+0.0001 * COEF
     
-    if len(lstTexte) + len(lstTexteS) > 0:
-        hC = hl*len(lstTexte)/(len(lstTexte) + len(lstTexteS))
-        r = liste_code_texte(ctx, lstCodes, lstTexte, 
-                             x0, y0, rect_width, hC, 
+    ltot = taille(lstTexteC) + taille(lstTexteS) + taille(lstTexteSe)
+    if ltot > 0:
+#         hC = hl*len(lstTexteC)/(ltot)
+#         hS = hl*len(lstTexteS)/(ltot)
+#         hSe = hl*len(lstTexteSe)/(ltot)
+#         wC = rect_width
+#         wS = rect_width
+#         wSe = rect_width
+        
+        wC = rect_width*taille(lstTexteC)/(ltot)
+        wS = rect_width*taille(lstTexteS)/(ltot)
+        wSe = rect_width*len(lstTexteSe)/(ltot)
+        rectC = (x0, y0, wC, hl)
+        rectS = (x0+wC, y0, wS, hl)
+        rectSe = (x0+wC+wS, y0, wSe, hl)
+        
+        
+        
+        r = liste_code_texte(ctx, lstCodesC, lstTexteC, 
+                             rectC, 
                              0.05*rect_width, 0.1,
-                             lstCoul = lstCoul, va = 'c')
+                             lstCoul = lstCoulC, va = 'c')
         ctx.set_source_rgba (0.0, 0.0, 0.5, 1.0)
-        seq.prerequis.pts_caract = getPts(r)
-        for i, c in enumerate(seq.prerequis.savoirs): 
-            seq.zones_sens.append(Zone([r[i]], obj = seq.prerequis))
+        seq.prerequis["C"].pts_caract = getPts(r)
+        for i, c in enumerate(seq.prerequis["C"].competences): 
+            seq.zones_sens.append(Zone([r[i]], obj = seq.prerequis["C"]))
 #            print "zzz", seq.zones_sens[-1]
         
-        hS = hl*len(lstTexteS)/(len(lstTexte) + len(lstTexteS))
-        lstRect = liste_code_texte(ctx, ["Seq."]*len(lstTexteS), lstTexteS, 
-                                   x0, y0+hC, rect_width, hS, 
+        
+        
+        r = liste_code_texte(ctx, lstCodesS, lstTexteS, 
+                             rectS, 
+                             0.05*rect_width, 0.1,
+                             lstCoul = lstCoulS, va = 'c')
+        ctx.set_source_rgba (0.0, 0.0, 0.5, 1.0)
+        seq.prerequis["S"].pts_caract = getPts(r)
+        for i, c in enumerate(seq.prerequis["S"].savoirs): 
+            seq.zones_sens.append(Zone([r[i]], obj = seq.prerequis["S"]))
+        
+        
+            
+        lstRect = liste_code_texte(ctx, ["Seq."]*len(lstTexteSe), lstTexteSe, 
+                                   rectSe, 
                                    0.05*rect_width, 0.1, va = 'c')
         for i, c in enumerate(seq.prerequisSeance):
             seq.zones_sens.append(Zone([lstRect[i]], obj = c))
             
     else:
         show_text_rect(ctx, u"Aucun", (x0, y0, rect_width, hl), fontsizeMinMax = (-1, 0.015 * COEF))
-        seq.zones_sens.append(Zone([(x0, y0, rect_width, hl)], obj = seq.prerequis))
+        seq.zones_sens.append(Zone([(x0, y0, rect_width, hl)], obj = seq.prerequis["S"]))
 
-    
+
+
+
+
 
     #
     #  Objectifs
@@ -659,10 +741,11 @@ def Draw(ctx, seq, mouchard = False, entete = False):
     x0, y0 = posObj
 #    tailleObj[0] =  taillePos[0]
     rect_width, rect_height  = tailleObj
-    seq.obj["S"].pt_caract = (curve_rect_titre(ctx, u"Objectifs",  (x0, y0, rect_width, rect_height), BcoulObj, IcoulObj, fontObj),
-                              'obj')
-    seq.obj["C"].pt_caract = seq.obj["S"].pt_caract
-
+    curve_rect_titre(ctx, u"Objectifs", 
+                     (x0, y0, rect_width, rect_height), 
+                     BcoulObj, IcoulObj, fontObj)
+                          
+    
     
     
     #
@@ -675,6 +758,9 @@ def Draw(ctx, seq, mouchard = False, entete = False):
     ref_tc = None
     if ref.tr_com != []:
         ref_tc = REFERENTIELS[ref.tr_com[0]]
+        
+    lstComp = []
+    lstTyp = []
     for c in seq.obj["C"].competences:
         typ, cod = c[0], c[1:]
         
@@ -685,16 +771,29 @@ def Draw(ctx, seq, mouchard = False, entete = False):
                 comp = ref.dicoCompetences[typ]
             elif ref_tc and typ in ref_tc.dicoCompetences.keys():
                 comp = ref_tc.dicoCompetences[typ]
-                
+        lstComp.append([cod,comp])
+        if not typ in lstTyp:
+            lstTyp.append(typ)
+    
+    multi = len(lstTyp) > 1
+    
+    for cod, comp in lstComp:    
         disc = comp.codeDiscipline
+        
         lstTexteC.append(comp.getCompetence(cod).intitule)
-        lstCodesC.append(comp.abrDiscipline + " " + cod)
+        if multi:
+            lstCodesC.append(comp.abrDiscipline + " " + cod)
+        else:
+            lstCodesC.append(cod)
         lstCoulC.append(constantes.COUL_DISCIPLINES[disc])
         
 
     lstTexteS = []
     lstCodesS = []
     lstCoulS = []
+    
+    lstSav = []
+    lstTyp = []
     for c in seq.obj["S"].savoirs:
         typ, cod = c[0], c[1:]
         if typ == "B" and ref.tr_com != []: # B = tronc commun --> référentiel
@@ -704,21 +803,42 @@ def Draw(ctx, seq, mouchard = False, entete = False):
                 savoir = ref.dicoSavoirs[typ]
             elif ref_tc and typ in ref_tc.dicoSavoirs.keys():
                 savoir = ref_tc.dicoSavoirs[typ]
-                
+        lstSav.append([cod,savoir])
+        if not typ in lstTyp:
+            lstTyp.append(typ)
+    
+    multi = len(lstTyp) > 1
+    
+    for cod, savoir in lstSav:
         disc = savoir.codeDiscipline
         lstTexteS.append(savoir.getSavoir(cod))
-        lstCodesS.append(savoir.abrDiscipline + " " + cod)
+        if multi:
+            lstCodesS.append(savoir.abrDiscipline + " " + cod)
+        else:
+            lstCodesS.append(cod)
         lstCoulS.append(constantes.COUL_DISCIPLINES[disc])
             
     h = rect_height+0.0001 * COEF
-    hC = hS = h/2
-    if len(lstTexteS) > 0 or len(lstTexteC) > 0:
-        hC = h*len(lstTexteC)/(len(lstTexteC) + len(lstTexteS))
-        hS = h*len(lstTexteS)/(len(lstTexteC) + len(lstTexteS))
+    
+    ltot = taille(lstTexteC) + taille(lstTexteS)
+    nc = 1*(len(lstTexteC) > 0) + 1*(len(lstTexteS) > 0)
+    if ltot > 0:
+#         hC = h*len(lstTexteC)/(ltot)
+#         hS = h*len(lstTexteS)/(ltot)
+#         wC = rect_width
+#         wS = rect_width
+#     
+        e = rect_width/10
+        wC = (rect_width-e*nc)*taille(lstTexteC)/(ltot)+e
+        wS = (rect_width-e*nc)*taille(lstTexteS)/(ltot)+e
+        rectC = (x0, y0, wC, h)
+        rectS = (x0+wC, y0, wS, h)
+
+        
         
         ctx.set_source_rgba (COUL_COMPETENCES[0], COUL_COMPETENCES[1], COUL_COMPETENCES[2], COUL_COMPETENCES[3])
         r = liste_code_texte(ctx, lstCodesC, lstTexteC, 
-                             x0, y0, rect_width, hC, 
+                             rectC, 
                              0.05*rect_width, 0.1, 
                              lstCoul = lstCoulC, va = 'c') 
         seq.obj["C"].pts_caract = getPts(r)
@@ -727,13 +847,13 @@ def Draw(ctx, seq, mouchard = False, entete = False):
 #        r = liste_code_texte(ctx, [s[1:] for s in seq.obj["S"].savoirs], 
 #                             lstTexteS, x0, y0+hC, rect_width, hS, 0.008)
         r = liste_code_texte(ctx, lstCodesS, lstTexteS, 
-                             x0, y0+hC, rect_width, hS, 
+                             rectS, 
                              0.05*rect_width, 0.1, 
                              lstCoul = lstCoulS, va = 'c')
         seq.obj["S"].pts_caract = getPts(r)
     
-    seq.zones_sens.append(Zone([(x0, y0, rect_width, hC)], obj = seq.obj["C"]))
-    seq.zones_sens.append(Zone([(x0, y0+hC, rect_width, hS)], obj = seq.obj["S"]))
+        seq.zones_sens.append(Zone([rectC], obj = seq.obj["C"]))
+        seq.zones_sens.append(Zone([rectS], obj = seq.obj["S"]))
 #    seq.obj["C"].rect = 
 #    seq.obj["S"].rect = [(x0, y0+hC, rect_width, hS)]
     
@@ -911,7 +1031,7 @@ def Draw_CI(ctx, CI, seq):
     
     if CI.numCI != []:
         r = liste_code_texte(ctx, lstCodes, lstIntit, 
-                             x0, y0+0.0001 * COEF, rect_width, rect_height, 
+                             (x0, y0+0.0001 * COEF, rect_width, rect_height), 
                              0.05*rect_width, 0.1, va = 'c')
         CI.pts_caract = getPts(r)
         

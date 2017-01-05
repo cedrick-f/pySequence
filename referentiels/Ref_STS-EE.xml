@@ -182,28 +182,29 @@
     </l_F7>
   </d_dicFonctions>
   <d_dicoCompetences>
-    <Competences_S S_abrDiscipline="S6" S_codeDiscipline="SII" S_nomDiscipline="Génie Électrique" S_nomGenerique="Compétence(s)" S_nomGeneriqueIndic="">
+    <Competences_S B_obj="True" B_pre="False" S_abrDiscipline="S6" S_codeDiscipline="SII" S_nomDiscipline="Génie Électrique" S_nomGenerique="Compétence(s)" S_nomGeneriqueIndic="Indicateurs de performance">
       <d_dicCompetences>
         <Competence_C19 S_intitule="Identifier les paramètres de réglage">
           <l_domaines />
           <l_indicateurs>
             <Indicateur_00 S_intitule="Les paramètres à régler sur les appareils par le technicien sont définis">
               <d_ligne I_C="0" />
-              <d_poids I_C="1" />
+              <d_poids F_C="33.333333" />
               <d_revue I_C="2" />
             </Indicateur_00>
             <Indicateur_01 S_intitule="Les paramètres de mise au point su système sont définis">
               <d_ligne I_C="0" />
-              <d_poids I_C="1" />
+              <d_poids F_C="33.333333" />
               <d_revue I_C="2" />
             </Indicateur_01>
             <Indicateur_02 S_intitule="L'influence des paramètres sur le système est déterminée">
               <d_ligne I_C="0" />
-              <d_poids I_C="1" />
+              <d_poids F_C="33.333333" />
               <d_revue I_C="2" />
             </Indicateur_02>
           </l_indicateurs>
-          <d_poids />
+          <l_infos />
+          <d_poids I_C="11" />
           <d_sousComp />
           <l_thematiques />
         </Competence_C19>
@@ -212,27 +213,29 @@
           <l_indicateurs>
             <Indicateur_00 S_intitule="Les résultats sont correctement commentés">
               <d_ligne I_C="0" />
-              <d_poids I_C="1" />
+              <d_poids F_C="33.333333" />
               <d_revue I_C="3" />
             </Indicateur_00>
             <Indicateur_01 S_intitule="L'analyse des résultats de mesures permet de valider ou d'invalider un fonctionnement">
               <d_ligne I_C="0" />
-              <d_poids I_C="1" />
+              <d_poids F_C="33.333333" />
               <d_revue I_C="3" />
             </Indicateur_01>
             <Indicateur_02 S_intitule="L'influence des paramètres est démontrée">
               <d_ligne I_C="0" />
-              <d_poids I_C="1" />
+              <d_poids F_C="33.333333" />
               <d_revue I_C="3" />
             </Indicateur_02>
           </l_indicateurs>
-          <d_poids />
+          <l_infos />
+          <d_poids I_C="10" />
           <d_sousComp />
           <l_thematiques />
         </Competence_C18>
         <Competence_C13 S_intitule="Appliquer les normes">
           <l_domaines />
           <l_indicateurs />
+          <l_infos />
           <d_poids />
           <d_sousComp />
           <l_thematiques />
@@ -240,6 +243,7 @@
         <Competence_C12 S_intitule="Concevoir une procédure">
           <l_domaines />
           <l_indicateurs />
+          <l_infos />
           <d_poids />
           <d_sousComp />
           <l_thematiques />
@@ -249,21 +253,22 @@
           <l_indicateurs>
             <Indicateur_00 S_intitule="Le matériel pricipal nécessaire à la réalisation est correctement déterminé">
               <d_ligne I_C="0" />
-              <d_poids I_C="1" />
+              <d_poids F_C="33.333333" />
               <d_revue I_C="1" />
             </Indicateur_00>
             <Indicateur_01 S_intitule="Les références du matériel sont déterminées convenablement">
               <d_ligne I_C="0" />
-              <d_poids I_C="1" />
+              <d_poids F_C="33.333333" />
               <d_revue I_C="1" />
             </Indicateur_01>
             <Indicateur_02 S_intitule="Le coût du matériel et des ressources est estimé (offre de prix, devis, prix catalogue)">
               <d_ligne I_C="0" />
-              <d_poids I_C="1" />
+              <d_poids F_C="33.333333" />
               <d_revue I_C="1" />
             </Indicateur_02>
           </l_indicateurs>
-          <d_poids />
+          <l_infos />
+          <d_poids I_C="8" />
           <d_sousComp />
           <l_thematiques />
         </Competence_C11>
@@ -272,26 +277,27 @@
           <l_indicateurs>
             <Indicateur_00 S_intitule="Les symbloes utilisés dans les représentations graphiques sont conformes aux normes en vigueur">
               <d_ligne I_C="0" />
-              <d_poids I_C="1" />
+              <d_poids F_C="25.0" />
               <d_revue I_C="2" />
             </Indicateur_00>
             <Indicateur_01 S_intitule="Les schémas électriques réalisés sont fonctionnels">
               <d_ligne I_C="0" />
-              <d_poids I_C="1" />
+              <d_poids F_C="25.0" />
               <d_revue I_C="2" />
             </Indicateur_01>
             <Indicateur_02 S_intitule="Les dossiers d'exécution ou de réalisation sont clairement représentés">
               <d_ligne I_C="0" />
-              <d_poids I_C="1" />
+              <d_poids F_C="25.0" />
               <d_revue I_C="2" />
             </Indicateur_02>
             <Indicateur_03 S_intitule="Les graphiques représentant l'organisation des programmes sont clairs et fonctionnels">
               <d_ligne I_C="0" />
-              <d_poids I_C="1" />
+              <d_poids F_C="25.0" />
               <d_revue I_C="2" />
             </Indicateur_03>
           </l_indicateurs>
-          <d_poids />
+          <l_infos />
+          <d_poids I_C="11" />
           <d_sousComp />
           <l_thematiques />
         </Competence_C10>
@@ -300,26 +306,27 @@
           <l_indicateurs>
             <Indicateur_00 S_intitule="Le choix des grandeurs à mesurer est approprié au fonctionnement à valider">
               <d_ligne I_C="0" />
-              <d_poids I_C="1" />
+              <d_poids F_C="25.0" />
               <d_revue I_C="3" />
             </Indicateur_00>
             <Indicateur_01 S_intitule="Le matériel choisi pour faire les mesures est adapté">
               <d_ligne I_C="0" />
-              <d_poids I_C="1" />
+              <d_poids F_C="25.0" />
               <d_revue I_C="3" />
             </Indicateur_01>
             <Indicateur_02 S_intitule="Les mesures sont faites en toute sécurité">
               <d_ligne I_C="0" />
-              <d_poids I_C="1" />
+              <d_poids F_C="25.0" />
               <d_revue I_C="3" />
             </Indicateur_02>
             <Indicateur_03 S_intitule="Le réglage des appareils est adapté aux grandeurs à mesurer">
               <d_ligne I_C="0" />
-              <d_poids I_C="1" />
+              <d_poids F_C="25.0" />
               <d_revue I_C="3" />
             </Indicateur_03>
           </l_indicateurs>
-          <d_poids />
+          <l_infos />
+          <d_poids I_C="10" />
           <d_sousComp />
           <l_thematiques />
         </Competence_C17>
@@ -328,26 +335,27 @@
           <l_indicateurs>
             <Indicateur_00 S_intitule="Le discours est audible et dans un langage approprié">
               <d_ligne I_S="0" />
-              <d_poids I_S="1" />
+              <d_poids F_S="25.0" />
               <d_revue I_S="0" />
             </Indicateur_00>
             <Indicateur_01 S_intitule="Un plan de l'exposé est présenté et respecté">
               <d_ligne I_S="0" />
-              <d_poids I_S="1" />
+              <d_poids F_S="25.0" />
               <d_revue I_S="0" />
             </Indicateur_01>
             <Indicateur_02 S_intitule="Le comportement est respectueux de l'auditoire et le tient en attention">
               <d_ligne I_S="0" />
-              <d_poids I_S="1" />
+              <d_poids F_S="25.0" />
               <d_revue I_S="0" />
             </Indicateur_02>
             <Indicateur_03 S_intitule="Les supports audiovisuels sont de qualité et utilisés à bon excient">
               <d_ligne I_S="0" />
-              <d_poids I_S="1" />
+              <d_poids F_S="25.0" />
               <d_revue I_S="0" />
             </Indicateur_03>
           </l_indicateurs>
-          <d_poids />
+          <l_infos />
+          <d_poids I_S="18" />
           <d_sousComp />
           <l_thematiques />
         </Competence_C16>
@@ -356,26 +364,27 @@
           <l_indicateurs>
             <Indicateur_00 S_intitule="Les différentes tâches du projet sont listées">
               <d_ligne I_C="0" />
-              <d_poids I_C="1" />
+              <d_poids F_C="25.0" />
               <d_revue I_C="1" />
             </Indicateur_00>
             <Indicateur_01 S_intitule="La durée de chaque tâche est estimée">
               <d_ligne I_C="0" />
-              <d_poids I_C="1" />
+              <d_poids F_C="25.0" />
               <d_revue I_C="1" />
             </Indicateur_01>
             <Indicateur_02 S_intitule="Le planning des tâches est correctement établi et montre celles qui sont simultanément réalisables">
               <d_ligne I_C="0" />
-              <d_poids I_C="1" />
+              <d_poids F_C="25.0" />
               <d_revue I_C="1" />
             </Indicateur_02>
             <Indicateur_03 S_intitule="Les tâches sont correctement réparties et représentent l'organisatinon du travail de chacun">
               <d_ligne I_C="0" />
-              <d_poids I_C="1" />
+              <d_poids F_C="25.0" />
               <d_revue I_C="1" />
             </Indicateur_03>
           </l_indicateurs>
-          <d_poids />
+          <l_infos />
+          <d_poids I_C="10" />
           <d_sousComp />
           <l_thematiques />
         </Competence_C15>
@@ -384,22 +393,24 @@
           <l_indicateurs>
             <Indicateur_00 S_intitule="Le mauvais fonctionnement d'un ensemble est expliqué et justifié">
               <d_ligne I_C="0" />
-              <d_poids I_C="1" />
+              <d_poids F_C="50.0" />
               <d_revue I_C="3" />
             </Indicateur_00>
             <Indicateur_01 S_intitule="Les imperfections de fonctionnement sont analysées">
               <d_ligne I_C="0" />
-              <d_poids I_C="1" />
+              <d_poids F_C="50.0" />
               <d_revue I_C="3" />
             </Indicateur_01>
           </l_indicateurs>
-          <d_poids />
+          <l_infos />
+          <d_poids I_C="4" />
           <d_sousComp />
           <l_thematiques />
         </Competence_C14>
         <Competence_C31 S_intitule="Intervenir sur une installation">
           <l_domaines />
           <l_indicateurs />
+          <l_infos />
           <d_poids />
           <d_sousComp />
           <l_thematiques />
@@ -407,6 +418,7 @@
         <Competence_C30 S_intitule="Ordonnancer des opérations de maintenance">
           <l_domaines />
           <l_indicateurs />
+          <l_infos />
           <d_poids />
           <d_sousComp />
           <l_thematiques />
@@ -416,21 +428,22 @@
           <l_indicateurs>
             <Indicateur_00 S_intitule="L'avancé des travaux de chacun est connue de toute l'équipe">
               <d_ligne I_C="0" />
-              <d_poids I_C="1" />
+              <d_poids F_C="33.333333" />
               <d_revue I_C="2" />
             </Indicateur_00>
             <Indicateur_01 S_intitule="Les modifications de conception sont faites en accord avec toute l'équipe">
               <d_ligne I_C="0" />
-              <d_poids I_C="1" />
+              <d_poids F_C="33.333333" />
               <d_revue I_C="2" />
             </Indicateur_01>
             <Indicateur_02 S_intitule="Les mises à jour du planning sont réalisées en commun">
               <d_ligne I_C="0" />
-              <d_poids I_C="1" />
+              <d_poids F_C="33.333333" />
               <d_revue I_C="2" />
             </Indicateur_02>
           </l_indicateurs>
-          <d_poids />
+          <l_infos />
+          <d_poids I_C="6" />
           <d_sousComp />
           <l_thematiques />
         </Competence_C33>
@@ -439,27 +452,29 @@
           <l_indicateurs>
             <Indicateur_00 S_intitule="Le but du projet est nettement identifié">
               <d_ligne I_C="0" />
-              <d_poids I_C="1" />
+              <d_poids F_C="33.333333" />
               <d_revue I_C="1" />
             </Indicateur_00>
             <Indicateur_01 S_intitule="Un synoptique ou un croquis du projet a été clairement représenté">
               <d_ligne I_C="0" />
-              <d_poids I_C="1" />
+              <d_poids F_C="33.333333" />
               <d_revue I_C="1" />
             </Indicateur_01>
             <Indicateur_02 S_intitule="Les explications données sont claires, les commentaires permettent une compréhension aisée de la demande">
               <d_ligne I_C="0" />
-              <d_poids I_C="1" />
+              <d_poids F_C="33.333333" />
               <d_revue I_C="1" />
             </Indicateur_02>
           </l_indicateurs>
-          <d_poids />
+          <l_infos />
+          <d_poids I_C="10" />
           <d_sousComp />
           <l_thematiques />
         </Competence_C32>
         <Competence_C22 S_intitule="Déterminer les différentes tâches">
           <l_domaines />
           <l_indicateurs />
+          <l_infos />
           <d_poids />
           <d_sousComp />
           <l_thematiques />
@@ -467,6 +482,7 @@
         <Competence_C23 S_intitule="Planifier les tâches en tenant compte des réalisations et interventions des autres corps de métier concernés par la performance énergétique">
           <l_domaines />
           <l_indicateurs />
+          <l_infos />
           <d_poids />
           <d_sousComp />
           <l_thematiques />
@@ -476,21 +492,22 @@
           <l_indicateurs>
             <Indicateur_00 S_intitule="Les paramètres sont réglés dans des conditions qui limitent les risques pour les personnes et le matériel">
               <d_ligne I_C="0" />
-              <d_poids I_C="1" />
+              <d_poids F_C="33.333333" />
               <d_revue I_C="3" />
             </Indicateur_00>
             <Indicateur_01 S_intitule="La procédure d'accès aux paramètres est maîtrisée">
               <d_ligne I_C="0" />
-              <d_poids I_C="1" />
+              <d_poids F_C="33.333333" />
               <d_revue I_C="3" />
             </Indicateur_01>
             <Indicateur_02 S_intitule="Les valeurs des paramètres de réglage sont prédéterminées">
               <d_ligne I_C="0" />
-              <d_poids I_C="1" />
+              <d_poids F_C="33.333333" />
               <d_revue I_C="3" />
             </Indicateur_02>
           </l_indicateurs>
-          <d_poids />
+          <l_infos />
+          <d_poids I_C="6" />
           <d_sousComp />
           <l_thematiques />
         </Competence_C20>
@@ -499,32 +516,34 @@
           <l_indicateurs>
             <Indicateur_00 S_intitule="La réalisation est faite dans le respect des règles de l'art">
               <d_ligne I_C="0" />
-              <d_poids I_C="1" />
+              <d_poids F_C="25.0" />
               <d_revue I_C="3" />
             </Indicateur_00>
             <Indicateur_01 S_intitule="La réalisation est conforme au dossier de fabrication, ou les modificatnions apportées sont justifiées.">
               <d_ligne I_C="0" />
-              <d_poids I_C="1" />
+              <d_poids F_C="25.0" />
               <d_revue I_C="3" />
             </Indicateur_01>
             <Indicateur_02 S_intitule="Les normes sont respectées">
               <d_ligne I_C="0" />
-              <d_poids I_C="1" />
+              <d_poids F_C="25.0" />
               <d_revue I_C="3" />
             </Indicateur_02>
             <Indicateur_03 S_intitule="La partie réalisée est fonctionnelle">
               <d_ligne I_C="0" />
-              <d_poids I_C="1" />
+              <d_poids F_C="25.0" />
               <d_revue I_C="3" />
             </Indicateur_03>
           </l_indicateurs>
-          <d_poids />
+          <l_infos />
+          <d_poids I_C="10" />
           <d_sousComp />
           <l_thematiques />
         </Competence_C21>
         <Competence_C26 S_intitule="Contrôler la conformité d'un produit">
           <l_domaines />
           <l_indicateurs />
+          <l_infos />
           <d_poids />
           <d_sousComp />
           <l_thematiques />
@@ -534,16 +553,17 @@
           <l_indicateurs>
             <Indicateur_00 S_intitule="Les délais de livraison sont déterminés">
               <d_ligne I_C="0" />
-              <d_poids I_C="1" />
+              <d_poids F_C="50.0" />
               <d_revue I_C="1" />
             </Indicateur_00>
             <Indicateur_01 S_intitule="L'approvisionnement matériel est planifié">
               <d_ligne I_C="0" />
-              <d_poids I_C="1" />
+              <d_poids F_C="50.0" />
               <d_revue I_C="1" />
             </Indicateur_01>
           </l_indicateurs>
-          <d_poids />
+          <l_infos />
+          <d_poids I_C="4" />
           <d_sousComp />
           <l_thematiques />
         </Competence_C27>
@@ -552,27 +572,29 @@
           <l_indicateurs>
             <Indicateur_00 S_intitule="Les tâches sont réalisées dans l'ordre conformément au planning">
               <d_ligne I_C="0" />
-              <d_poids I_C="1" />
+              <d_poids F_C="33.333333" />
               <d_revue I_C="2" />
             </Indicateur_00>
             <Indicateur_01 S_intitule="Les causes de non respect du planning sont analysées et le planning est ajusté en conséquence">
               <d_ligne I_C="0" />
-              <d_poids I_C="1" />
+              <d_poids F_C="33.333333" />
               <d_revue I_C="2" />
             </Indicateur_01>
             <Indicateur_02 S_intitule="Les difficultés technologiques sont analysées. Des solutions de remplacement ou d'évolution sont envisagées.">
               <d_ligne I_C="0" />
-              <d_poids I_C="1" />
+              <d_poids F_C="33.333333" />
               <d_revue I_C="2" />
             </Indicateur_02>
           </l_indicateurs>
-          <d_poids />
+          <l_infos />
+          <d_poids I_C="6" />
           <d_sousComp />
           <l_thematiques />
         </Competence_C24>
         <Competence_C25 S_intitule="Analyser un planning">
           <l_domaines />
           <l_indicateurs />
+          <l_infos />
           <d_poids />
           <d_sousComp />
           <l_thematiques />
@@ -580,6 +602,7 @@
         <Competence_C28 S_intitule="Communiquer de façon adaptée à la situation">
           <l_domaines />
           <l_indicateurs />
+          <l_infos />
           <d_poids />
           <d_sousComp />
           <l_thematiques />
@@ -587,6 +610,7 @@
         <Competence_C29 S_intitule="Exercer une responsabilité hiérarchique">
           <l_domaines />
           <l_indicateurs />
+          <l_infos />
           <d_poids />
           <d_sousComp />
           <l_thematiques />
@@ -594,6 +618,7 @@
         <Competence_C08 S_intitule="Concevoir une solution technique">
           <l_domaines />
           <l_indicateurs />
+          <l_infos />
           <d_poids />
           <d_sousComp />
           <l_thematiques />
@@ -603,27 +628,29 @@
           <l_indicateurs>
             <Indicateur_00 S_intitule="Le dossier est bien organisé et permet une recherche aisée de l'information">
               <d_ligne I_S="0" />
-              <d_poids I_S="1" />
+              <d_poids F_S="33.333333" />
               <d_revue I_S="0" />
             </Indicateur_00>
             <Indicateur_01 S_intitule="Le dossier contient toutes les informations nécessaires à la compréhension, à la mise en service et à la maintenance du système">
               <d_ligne I_S="0" />
-              <d_poids I_S="1" />
+              <d_poids F_S="33.333333" />
               <d_revue I_S="0" />
             </Indicateur_01>
             <Indicateur_02 S_intitule="Les informations sont compréhensibles et représentés dans un langage compatibles avec les utilisateurs">
               <d_ligne I_S="0" />
-              <d_poids I_S="1" />
+              <d_poids F_S="33.333333" />
               <d_revue I_S="0" />
             </Indicateur_02>
           </l_indicateurs>
-          <d_poids />
+          <l_infos />
+          <d_poids I_S="12" />
           <d_sousComp />
           <l_thematiques />
         </Competence_C09>
         <Competence_C01 S_intitule="Analyser un dossier">
           <l_domaines />
           <l_indicateurs />
+          <l_infos />
           <d_poids />
           <d_sousComp />
           <l_thematiques />
@@ -631,6 +658,7 @@
         <Competence_C02 S_intitule="Choisir une solution technique">
           <l_domaines />
           <l_indicateurs />
+          <l_infos />
           <d_poids />
           <d_sousComp />
           <l_thematiques />
@@ -638,6 +666,7 @@
         <Competence_C03 S_intitule="Analyser une solution technique">
           <l_domaines />
           <l_indicateurs />
+          <l_infos />
           <d_poids />
           <d_sousComp />
           <l_thematiques />
@@ -645,6 +674,7 @@
         <Competence_C04 S_intitule="Rédiger un document de synthèse">
           <l_domaines />
           <l_indicateurs />
+          <l_infos />
           <d_poids />
           <d_sousComp />
           <l_thematiques />
@@ -654,21 +684,22 @@
           <l_indicateurs>
             <Indicateur_00 S_intitule="Une ou plusieurs solutions technologiques conformes à la demande sont présentées">
               <d_ligne I_C="0" />
-              <d_poids I_C="1" />
+              <d_poids F_C="33.333333" />
               <d_revue I_C="1" />
             </Indicateur_00>
             <Indicateur_01 S_intitule="Des ressources humaines sont envisagées et déterminées (aides extérieures sur des sujets non maîtrisés )">
               <d_ligne I_C="0" />
-              <d_poids I_C="1" />
+              <d_poids F_C="33.333333" />
               <d_revue I_C="1" />
             </Indicateur_01>
             <Indicateur_02 S_intitule="Des ressources matérielles sont envisagées et déterminées (sous-traitence, matériels particuliers)">
               <d_ligne I_C="0" />
-              <d_poids I_C="1" />
+              <d_poids F_C="33.333333" />
               <d_revue I_C="1" />
             </Indicateur_02>
           </l_indicateurs>
-          <d_poids />
+          <l_infos />
+          <d_poids I_C="8" />
           <d_sousComp />
           <l_thematiques />
         </Competence_C05>
@@ -677,21 +708,22 @@
           <l_indicateurs>
             <Indicateur_00 S_intitule="La procédure de réception du matériel est respectée">
               <d_ligne I_C="0" />
-              <d_poids I_C="1" />
+              <d_poids F_C="33.333333" />
               <d_revue I_C="2" />
             </Indicateur_00>
             <Indicateur_01 S_intitule="Le matériel reçu est vérifié conformément à une procédure d'assurance qualité">
               <d_ligne I_C="0" />
-              <d_poids I_C="1" />
+              <d_poids F_C="33.333333" />
               <d_revue I_C="2" />
             </Indicateur_01>
             <Indicateur_02 S_intitule="Le travail à réaliser est vérifié et validé pour exécution">
               <d_ligne I_C="0" />
-              <d_poids I_C="1" />
+              <d_poids F_C="33.333333" />
               <d_revue I_C="2" />
             </Indicateur_02>
           </l_indicateurs>
-          <d_poids />
+          <l_infos />
+          <d_poids I_C="6" />
           <d_sousComp />
           <l_thematiques />
         </Competence_C06>
@@ -700,37 +732,39 @@
           <l_indicateurs>
             <Indicateur_00 S_intitule="Les choix réalisés sont clairement développés et justifés">
               <d_ligne I_S="0" />
-              <d_poids I_S="1" />
+              <d_poids F_S="20.0" />
               <d_revue I_S="0" />
             </Indicateur_00>
             <Indicateur_01 S_intitule="La mise en service et le fonctionnement du système sont expliqués">
               <d_ligne I_S="0" />
-              <d_poids I_S="1" />
+              <d_poids F_S="20.0" />
               <d_revue I_S="0" />
             </Indicateur_01>
             <Indicateur_02 S_intitule="Les caractéristiques finales obtenues sont présentées et s'appuient sur des essais">
               <d_ligne I_S="0" />
-              <d_poids I_S="1" />
+              <d_poids F_S="20.0" />
               <d_revue I_S="0" />
             </Indicateur_02>
             <Indicateur_03 S_intitule="Les différences éventuelles par rapport au cahier des charges sont expliquées">
               <d_ligne I_S="0" />
-              <d_poids I_S="1" />
+              <d_poids F_S="20.0" />
               <d_revue I_S="0" />
             </Indicateur_03>
             <Indicateur_04 S_intitule="Les réponses aux quetions sont claires et en rapport avec la demande">
               <d_ligne I_S="0" />
-              <d_poids I_S="1" />
+              <d_poids F_S="20.0" />
               <d_revue I_S="0" />
             </Indicateur_04>
           </l_indicateurs>
-          <d_poids />
+          <l_infos />
+          <d_poids I_S="30" />
           <d_sousComp />
           <l_thematiques />
         </Competence_C07>
         <Competence_P S_intitule="Le technicien participe à la tâche mais n'en a pas la maîtrise. Il doit néanmoins comprendre son fondement et apporter ses compétences à l'équipe qui en a la charge.">
           <l_domaines />
           <l_indicateurs />
+          <l_infos />
           <d_poids />
           <d_sousComp />
           <l_thematiques />
