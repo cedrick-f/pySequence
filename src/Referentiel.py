@@ -648,6 +648,7 @@ class Referentiel(XMLelem):
         self.listProblematiques = []        # problématiques (associées à un CI)
         self.nomPb = u"Problématique(s)"    # nom pour désigner les problématiques
         self.abrevPb = "Pb"
+        self.maxCI = 0                   # Nombre maxi de CI (0 = réglable)
         
         #
         # Savoirs ou capacités
@@ -997,6 +998,17 @@ class Referentiel(XMLelem):
                 self.dicoCompetences[code].dicCompetences = corriger(self.dicoCompetences[code].dicCompetences)
                 print ">>", self.dicoCompetences[code].dicCompetences
         
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         return
         
     
@@ -1321,6 +1333,11 @@ class Referentiel(XMLelem):
         self.CI_cible = sh_ci.cell(1,1).value[0].upper() == "O"
         self.nomCI = sh_ci.cell(2,0).value
         self.abrevCI = sh_ci.cell(2,1).value
+        try:
+            self.maxCI = int(sh_ci.cell(3,1).value)
+        except:
+            self.maxCI = 0
+#         print "maxCI", self.maxCI
         continuer = True
         l = 4
         while continuer:
@@ -1789,8 +1806,13 @@ class Referentiel(XMLelem):
             competence
 
     #########################################################################
-    def getCompetence(self, comp):
-        return self.dicoCompetences[comp[0]].getCompetence(comp[1:])
+    def getCompetence(self, code):
+        if code[0] == "B" and self.tr_com != []: # Compétence de tronc commun
+            r = REFERENTIELS[self.tr_com[0]]
+            return r.dicoCompetences["S"].getCompetence(code[1:])
+        else:
+            return self.dicoCompetences[code[0]].getCompetence(code[1:])
+
 #        for disc, comp in self.dicoCompetences.items():
 #            cc = comp.getCompetence(comp)
 #            if cc is not None:
@@ -1815,6 +1837,19 @@ class Referentiel(XMLelem):
             
         return dicSavoirs
     
+    #########################################################################
+    def getToutesCompetences(self):
+        """ Renvoie sous la forme [(code, Referentiel.Competences), ]
+            toutes les competences concernés par cet enseignement
+        """
+        lstComp = [(c, self.dicoCompetences[c]) for c in self.listCompetences]
+        if self.tr_com != []:
+            # Il y a un tronc comun (ETT pour Spécialité STI2D par exemple)
+            r = REFERENTIELS[self.tr_com[0]]
+            lstComp.insert(1, ("B", r.dicoCompetences["S"]))
+            lstComp.extend([(c, r.dicoCompetences[c]) for c in r.dicoCompetences.keys() if c != "S"])
+            
+        return lstComp
     
     #########################################################################
     def getDicTousSavoirs(self):
@@ -1829,6 +1864,21 @@ class Referentiel(XMLelem):
             dicSavoirs.update({c : r.dicoSavoirs[c] for c in r.dicoSavoirs.keys() if c != "S"})
              
         return dicSavoirs
+    
+    
+    #########################################################################
+    def getDicToutesCompetences(self):
+        """ Renvoie sous la forme {code : Referentiel.Competences), ...}
+            toutes les competences concernés par cet enseignement
+        """
+        dicComp = {c : self.dicoCompetences[c] for c in self.listCompetences}
+        if self.tr_com != []:
+            # Il y a un tronc comun (ETT pour Spécialité STI2D par exemple)
+            r = REFERENTIELS[self.tr_com[0]]
+            dicComp.update({"B": r.dicoCompetences["S"]})
+            dicComp.update({c : r.dicoCompetences[c] for c in r.dicoCompetences.keys() if c != "S"})
+             
+        return dicComp
     
     
 #     #########################################################################
@@ -2959,7 +3009,7 @@ def chargerReferentiels():
                 enregistrer(r.Code, f)
                 dicOk[k] = None
                 
-        print u"Intégrité référentiels :", dicOk
+        print u"Référentiels modifiés :", [k for k, v in dicOk.items() if not v]
     
     #
     # Construction de la structure en arbre

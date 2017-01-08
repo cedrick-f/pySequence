@@ -1,4 +1,4 @@
-<Referentiel B_CI_BO="True" B_CI_cible="False" S_AnneeDebut="Sec6" S_Code="SIN" S_Famille="STI" S_FichierLogo="" S_abrevCI="CI" S_abrevPb="Pb" S_nomCI="Centre(s) d'Intérêt" S_nomDom="Domaine(s) du socle" S_nomFonctions="Fonction(s)" S_nomPb="Problématique(s)" S_nomTaches="Tâche(s)" S_nomTh="Thématique(s)">
+<Referentiel B_CI_BO="True" B_CI_cible="False" I_maxCI="0" S_AnneeDebut="Sec6" S_Code="SIN" S_Famille="STI" S_FichierLogo="" S_abrevCI="CI" S_abrevPb="Pb" S_nomCI="Centre(s) d'Intérêt" S_nomDom="Domaine(s) du socle" S_nomFonctions="Fonction(s)" S_nomPb="Problématique(s)" S_nomTaches="Tâche(s)" S_nomTh="Thématique(s)">
   <l_BO_URL>
     <l_00 S_00="Programme" S_01="http://www.education.gouv.fr/pid25535/bulletin_officiel.html?cid_bo=82984" />
   </l_BO_URL>
@@ -348,7 +348,7 @@
     </Competences_S>
   </d_dicoCompetences>
   <d_dicoSavoirs>
-    <Savoirs_S B_obj="True" B_pre="True" S_abrDiscipline="SIN" S_codeDiscipline="SII" S_nomDiscipline="STI2D - SIN" S_nomGenerique="Savoirs">
+    <Savoirs_S B_obj="True" B_pre="True" S_abrDiscipline="SIN" S_codeDiscipline="SII" S_nomDiscipline="STI2D - SIN" S_nomGenerique="Connaissances">
       <d_dicSavoirs>
         <l_1 S_00="Projet technologique">
           <d_01>

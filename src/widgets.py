@@ -29,6 +29,7 @@ import wx
 
 import time, os
 import  wx.lib.scrolledpanel as scrolled
+from wx.lib.wordwrap import wordwrap
 
 
 ######################################################################################  
@@ -1500,7 +1501,7 @@ def rognerImage(image, wf = 800.0 , hf = 600.0):
 
 #############################################################################################################
 import textwrap
-def tronquer(texte, taille):
+def tronquer_(texte, taille):
     if len(texte) == 0:
         return texte
     ligne1 = textwrap.wrap(texte, taille, break_long_words = False)[0]
@@ -1508,6 +1509,146 @@ def tronquer(texte, taille):
         ligne1 = ligne1[:taille-3]+'...'
     return ligne1
 
+# Source : http://stackoverflow.com/questions/250357/truncate-a-string-without-ending-in-the-middle-of-a-word
+def tronquer(content, length=100, suffix='...'):
+    if len(content) <= length:
+        return content
+    else:
+        return ' '.join(content[:length+1].split(' ')[0:-1]) + suffix
+
+def tronquerDC(texte, taille, wnd, suffix = '...'):
+#     print "tronquerDC", taille
+#     print "   ", texte
+    
+    dc = wx.ClientDC(wnd)
+    t = wordwrap(texte, taille, dc).split(u"\n")[0]
+    if len(t) < len(texte):
+        ts = t + suffix
+    else:
+        return texte
+#     print "   ", ts
+#     print "   >", dc.GetTextExtent(ts)[0]
+    
+    # Vérification
+    if dc.GetTextExtent(ts)[0] > taille:
+#         print "  __", dc.GetTextExtent(t)[0]
+        s = dc.GetTextExtent(suffix)[0]
+        return wordwrap(t, taille-s, dc).split()[0] + suffix
+    else:
+        return ts
+    
 
 
+# Source : http://stackoverflow.com/questions/8302301/limiting-statictext-width
+class EllipticStaticText(wx.StaticText):
 
+    def __init__(self, parent, id=wx.ID_ANY, label='', pos=wx.DefaultPosition, size=wx.DefaultSize,
+                 style=0, name="ellipticstatictext"):
+        """
+        Default class constructor.
+
+        :param `parent`: the L{EllipticStaticText} parent. Must not be ``None``;
+        :param `id`: window identifier. A value of -1 indicates a default value;
+        :param `label`: the text label;
+        :param `pos`: the control position. A value of (-1, -1) indicates a default position,
+         chosen by either the windowing system or wxPython, depending on platform;
+        :param `size`: the control size. A value of (-1, -1) indicates a default size,
+         chosen by either the windowing system or wxPython, depending on platform;
+        :param `style`: the static text style;
+        :param `name`: the window name.
+        """
+
+        wx.StaticText.__init__(self, parent, id, label, pos, size, style, name)
+
+        self.Bind(wx.EVT_SIZE, self.OnSize)
+        self.Bind(wx.EVT_PAINT, self.OnPaint)
+        self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBackground)
+
+
+    def OnSize(self, event):
+        """
+        Handles the ``wx.EVT_SIZE`` event for L{EllipticStaticText}.
+
+        :param `event`: a `wx.SizeEvent` event to be processed.
+        """
+
+        event.Skip()
+        self.Refresh()
+
+
+    def OnEraseBackground(self, event):
+        """
+        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for L{EllipticStaticText}.
+
+        :param `event`: a `wx.EraseEvent` event to be processed.
+
+        :note: This is intentionally empty to reduce flicker.
+        """
+
+        pass
+
+
+    def OnPaint(self, event):
+        """
+        Handles the ``wx.EVT_PAINT`` event for L{EllipticStaticText}.
+
+        :param `event`: a `wx.PaintEvent` to be processed.
+        """
+
+        dc = wx.BufferedPaintDC(self)        
+        width, height = self.GetClientSize()
+
+        if not width or not height:
+            return
+
+        clr = self.GetBackgroundColour()
+
+        backBrush = wx.Brush(clr, wx.SOLID)
+
+        dc.SetBackground(backBrush)
+        dc.Clear()
+
+        if self.IsEnabled():
+            dc.SetTextForeground(self.GetForegroundColour())
+        else:
+            dc.SetTextForeground(wx.SystemSettings.GetColour(wx.SYS_COLOUR_GRAYTEXT))
+
+        dc.SetFont(self.GetFont())
+
+        label = self.GetLabel()
+        text = self.ChopText(dc, label, width)
+
+        dc.DrawText(text, 0, 0)
+
+
+    def ChopText(self, dc, text, max_size):
+        """
+        Chops the input `text` if its size does not fit in `max_size`, by cutting the
+        text and adding ellipsis at the end.
+
+        :param `dc`: a `wx.DC` device context;
+        :param `text`: the text to chop;
+        :param `max_size`: the maximum size in which the text should fit.
+        """
+
+        # first check if the text fits with no problems
+        x, y = dc.GetTextExtent(text)
+
+        if x <= max_size:
+            return text
+
+        textLen = len(text)
+        last_good_length = 0
+
+        for i in xrange(textLen, -1, -1):
+            s = text[0:i]
+            s += "..."
+
+            x, y = dc.GetTextExtent(s)
+            last_good_length = i
+
+            if x < max_size:
+                break
+
+        ret = text[0:last_good_length] + "..."    
+        return ret

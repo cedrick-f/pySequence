@@ -1567,8 +1567,6 @@ class Sequence(BaseDoc):
         
         BaseDoc.__init__(self, app, classe, intitule)
         
-        
-        
         self.prerequisSeance = []
         
         self.equipe = []
@@ -5667,13 +5665,16 @@ class CentreInteret(ElementBase):
         ElementBase.__init__(self)
         
         self.numCI = []     # Numéros des CI du Référentiel
+        self.CI_perso = []  # Centres d'Intérêt personnalisés
         self.poids = []
         
-        self.CI_perso = []  # Centres d'Intérêt personnalisés
-        self.Pb = u""  # Problématique
+        self.Pb = []        # Problématiques proposées
+        self.Pb_perso = []  # Problématiques personnalisées
         
+        self.MiseAJourTypeEnseignement()
+            
         self.SetNum(self.numCI)
-        self.max2CI = True
+
         
         
     ######################################################################################  
@@ -5706,8 +5707,17 @@ class CentreInteret(ElementBase):
         for i, ci in enumerate(self.CI_perso):
             CI_perso.set("CI_"+str(i), ci)
  
+        # Problématiques proposées
+        Pb = ET.SubElement(root, "Problematiques")
+        for i, pb in enumerate(self.Pb):
+            Pb.set("Pb_"+str(i), pb)
+            
         # Problématiques personnalisées
-        root.set("Pb", self.Pb)
+        Pb = ET.SubElement(root, "Pb_Perso")
+        for i, pb in enumerate(self.Pb_perso):
+            Pb.set("PbP_"+str(i), pb)
+            
+#         root.set("Pb", self.Pb)
             
             
         return root
@@ -5752,14 +5762,46 @@ class CentreInteret(ElementBase):
                     self.CI_perso.append(t)
                     i += 1
 
-        # Problématique
-        self.Pb = branche.get("Pb", "")
+        # Problématiques proposées
+        self.Pb = []
+        Pb = branche.find("Problematiques")
+        if Pb != None:
+            i = 0
+            continuer = True
+            while continuer:
+                t = Pb.get("Pb_"+str(i), u"")
+                if t == u"":
+                    continuer = False
+                else:
+                    self.Pb.append(t)
+                    i += 1
+                    
+        # Problématiques personnalisées
+        self.Pb_perso = []
+        Pb = branche.find("Pb_Perso")
+        if Pb != None:
+            i = 0
+            continuer = True
+            while continuer:
+                t = Pb.get("PbP_"+str(i), u"")
+                if t == u"":
+                    continuer = False
+                else:
+                    self.Pb_perso.append(t)
+                    i += 1
+#         self.Pb = branche.get("Pb", "")
     
     
     ######################################################################################  
     def AddNum(self, num, poids = 1): 
         self.numCI.append(num)
         self.poids.append(poids)
+        self.SetNum()
+        
+    ######################################################################################  
+    def Set1Num(self, num, poids = 1): 
+        self.numCI = [num]
+        self.poids = [poids]
         self.SetNum()
     
         
@@ -5850,7 +5892,7 @@ class CentreInteret(ElementBase):
     def ConstruireArbre(self, arbre, branche):
         self.arbre = arbre
         self.codeBranche = CodeBranche(self.arbre)
-        self.branche = arbre.AppendItem(branche, getPluriel(self.GetReferentiel().nomCI)+u" :", 
+        self.branche = arbre.AppendItem(branche, getSingulierPluriel(self.GetReferentiel().nomCI, self.maxCI > 1)+u" :", 
                                         wnd = self.codeBranche, data = self,
                                         image = self.arbre.images["Ci"])
         self.codeBranche.SetBranche(self.branche)
@@ -5869,6 +5911,12 @@ class CentreInteret(ElementBase):
         
     #############################################################################
     def MiseAJourTypeEnseignement(self):
+        maxCIref = self.GetReferentiel().maxCI
+        if maxCIref == 0:
+            self.maxCI = 2
+        else:
+            self.maxCI = maxCIref
+            
         if hasattr(self, 'arbre'):
             self.arbre.SetItemText(self.branche, getPluriel(self.GetReferentiel().nomCI)+u" :")
 #        self.GetPanelPropriete().construire()
@@ -5890,9 +5938,13 @@ class CentreInteret(ElementBase):
         for i, c in enumerate(self.numCI):
             self.tip.AjouterElemListeDL("ci", self.GetCode(i), self.GetIntit(i))
         
-        if len(self.Pb) > 0:
-            self.tip.SetWholeText("nomPb", getSingulier(ref.nomPb))  
-            self.tip.AjouterElemListeUL("pb", self.Pb)
+        for i, c in enumerate(self.CI_perso):
+            self.tip.AjouterElemListeDL("ci", ref.abrevCI+str(len(ref.CentresInterets)+i+1), c)
+        
+        if len(self.Pb + self.Pb_perso) > 0:
+            self.tip.SetWholeText("nomPb", getSingulier(ref.nomPb))
+            for pb in self.Pb + self.Pb_perso:
+                self.tip.AjouterElemListeUL("pb", pb)
         else:
             self.tip.SupprimerTag("pb")             
                         
@@ -5945,8 +5997,39 @@ class Competences(ElementBase):
         for i in range(len(branche.keys())):
             
             codeindic = branche.get("C"+str(i), "")
+            
+            # Avant la version 7, il n'y a pas de préfixe "type" devant le code competence
             if self.GetClasse().GetVersionNum() < 7:
-                codeindic = "S"+codeindic
+#                 print "setBranche", codeindic
+                ref = self.GetReferentiel()
+                ref_tc = None
+                lstComp = [] # liste des "type" Referentiel.Competences compatibles avec "codeindic"
+                if ref.tr_com != []: # B = tronc commun --> référentiel
+                    ref_tc = REFERENTIELS[ref.tr_com[0]]
+                
+                    comp = ref_tc.dicoCompetences["S"]
+                    c = comp.getCompetence(codeindic)
+                    if c is not None:
+                        lstComp.append("B")
+                    
+                for typ in ref.dicoCompetences.keys():
+                    comp = ref.dicoCompetences[typ]
+                    c = comp.getCompetence(codeindic)
+                    if c is not None:
+                        lstComp.append(typ)
+                
+                if ref_tc is not None:
+                    for typ in [k for k in ref_tc.dicoCompetences.keys() if k != "S"]:
+                        comp = ref.dicoCompetences[typ]
+                        c = comp.getCompetence(codeindic)
+                        if c is not None:
+                            lstComp.append(typ)    
+                
+#                 print "lstComp", lstComp
+                if lstComp != []:
+                    codeindic = lstComp[0]+codeindic
+                else:
+                    codeindic = "S"+codeindic
                     
             self.competences.append(codeindic)
         
@@ -6040,35 +6123,50 @@ class Competences(ElementBase):
     
     ######################################################################################  
     def GetNomGenerique(self, code = "S"):
-        return getPluriel(self.GetReferentiel().dicoCompetences[code].nomGenerique)
+        dic = self.GetReferentiel().getDicToutesCompetences()
+        return getPluriel(dic[code].nomGenerique)  + u" ("+ dic[code].abrDiscipline+ u")"
+    
     
     ######################################################################################  
-    def GetDiscipline(self, code = "S"):
-        return self.GetReferentiel().dicoCompetences[code].codeDiscipline
-
+    def GetCodeDiscipline(self, code = "S"):
+        dic = self.GetReferentiel().getDicToutesCompetences()
+        return dic[code].codeDiscipline
+        
+    ######################################################################################  
+    def GetDiscipline(self, code):
+        dic = self.GetReferentiel().getDicToutesCompetences()
+        return dic[code].abrDiscipline
+            
     ######################################################################################  
     def GetDisciplineNum(self, num):
-        return self.GetReferentiel().dicoCompetences[self.competences[num][0]].abrDiscipline
+        ref = self.GetReferentiel()
+        dicComp = ref.getToutesCompetences()
+        for code, comp in dicComp:
+            if code == self.GetCode(num)[0]:
+                return comp.abrDiscipline
+    
+#         return self.GetReferentiel().dicoCompetences[self.competences[num][0]].abrDiscipline
     
     ######################################################################################  
     def GetIntit(self, num):
-        return self.GetReferentiel().getCompetence(self.competences[num]).intitule
+        return self.GetReferentiel().getCompetence(self.GetCode(num)).intitule  
+#         return self.GetReferentiel().getCompetence(self.competences[num]).intitule
 
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche, prerequis = False):
         ref = self.GetReferentiel()
         self.branche = branche
+        lst = ref.getToutesCompetences()
         if prerequis:
-            aff = any([d.pre for d in ref.dicoCompetences.values()])
+            aff = any([d.pre for k, d in lst])
         else:
-            aff = any([d.obj for d in ref.dicoCompetences.values()])
-#         print ref.dicoCompetences.values()
+            aff = any([d.obj for k, d in lst])
         
         if aff:
             self.arbre = arbre
             self.codeBranche = {}
             self.branches = {}
-            for k, d in ref.dicoCompetences.items():
+            for k, d in lst:
                 if (prerequis and d.pre) or (not prerequis and d.obj):
                     self.codeBranche[k] = CodeBranche(self.arbre, u"")
                     self.branches[k] = arbre.AppendItem(branche, self.GetNomGenerique(k), 
@@ -6077,12 +6175,16 @@ class Competences(ElementBase):
                                                         image = self.arbre.images["Com"])
                     self.codeBranche[k].SetBranche(self.branches[k])
                     self.arbre.SetItemTextColour(self.branches[k], 
-                                                 couleur.GetCouleurWx(COUL_DISCIPLINES[self.GetDiscipline(k)]))
+                                                 couleur.GetCouleurWx(COUL_DISCIPLINES[self.GetCodeDiscipline(k)]))
                     self.arbre.SetItemBold(self.branches[k])
+
+        else:
+            if hasattr(self, 'arbre'):
+                del self.arbre
     
         
         #
-        # Les "Fonctions"
+        # Les "Fonctions" (à faire !)
         #
         if (len(ref.dicFonctions) > 0):
             self.codeBranche["Fct"] = CodeBranche(self.arbre, u"")
@@ -6117,14 +6219,19 @@ class Competences(ElementBase):
     
     ######################################################################################  
     def SetTip(self):
+#         print "SetTip Comp"
         self.tip.SetHTML(self.GetFicheHTML())
         nc = self.GetNomGenerique()
         self.tip.SetWholeText("titre", nc)
-        
-        for i, c in enumerate(self.competences):
+#         print self.competences
+#         print sorted(self.competences)
+        for c in sorted(self.competences):
             self.tip.AjouterElemListeDL("list", 
-                                 self.GetDisciplineNum(i) +" " + self.GetTypCode(i)[0], 
-                                 self.GetIntit(i))
+                                 self.GetDiscipline(c[0]) +" " + c[1:], 
+                                 self.GetReferentiel().getCompetence(c).intitule  )
+#             self.tip.AjouterElemListeDL("list", 
+#                                  self.GetDisciplineNum(i) +" " + self.GetTypCode(i)[1], 
+#                                  self.GetIntit(i))
       
         self.tip.SetPage()
 
@@ -6217,7 +6324,7 @@ class Savoirs(ElementBase):
     ######################################################################################  
     def GetNomGenerique(self, code = "S"):
         dic = self.GetReferentiel().getDicTousSavoirs()
-        return getPluriel(dic[code].nomGenerique)
+        return getPluriel(dic[code].nomGenerique) + u" ("+ dic[code].abrDiscipline+ u")"
     
     
     ######################################################################################  
@@ -6280,7 +6387,7 @@ class Savoirs(ElementBase):
     #############################################################################
     def MiseAJourTypeEnseignement(self):
         if hasattr(self, 'arbre'):
-            del self.branches
+#             del self.branches
             self.ConstruireArbre(self.arbre, self.branche, self.prerequis)
 #         if hasattr(self, 'arbre'):
 #             for k, b in self.branche.items():
@@ -6302,7 +6409,7 @@ class Savoirs(ElementBase):
         nc = self.GetNomGenerique()
         self.tip.SetWholeText("titre", nc)
         
-        for i, c in enumerate(self.savoirs):
+        for i, c in enumerate(sorted(self.savoirs)):
             self.tip.AjouterElemListeDL("list", 
                                  self.GetDisciplineNum(i) + " " + self.GetTypCode(i)[1], 
                                  self.GetIntit(i))

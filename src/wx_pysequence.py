@@ -256,7 +256,8 @@ from widgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_ENTI
                     messageErreur, getNomFichier, pourCent2, RangeSlider, \
                     rallonge, remplaceCode2LF, dansRectangle, isstring, \
                     StaticBoxButton, TextCtrl_Help, CloseFenHelp, ImageButtonTransparent, \
-                    remplaceLF2Code, messageInfo, messageYesNo, rognerImage, PlaceholderTextCtrl
+                    remplaceLF2Code, messageInfo, messageYesNo, rognerImage, PlaceholderTextCtrl, \
+                    tronquerDC, EllipticStaticText
                     #, chronometrer
 
 import Options
@@ -6335,9 +6336,13 @@ class PanelPropriete_CI(PanelPropriete):
         self.CI = CI       
         PanelPropriete.__init__(self, parent, objet = self.CI)
         
+        self.sizer = wx.BoxSizer(wx.HORIZONTAL)
+        self.SetSizer(self.sizer)
+        
         self.construire()
         self.MiseAJour()
         
+
 
     #############################################################################            
     def GetDocument(self):
@@ -6352,111 +6357,130 @@ class PanelPropriete_CI(PanelPropriete):
 #        print "construire CI"
         self.group_ctrls = []
         self.DestroyChildren()
-        if hasattr(self, 'grid1'):
-            self.sizer.Remove(self.grid1)
+#         if hasattr(self, 'grid1'):
+#             self.sizer.Remove(self.grid1)
             
-        ref = self.CI.parent.classe.referentiel
+        ref = self.CI.GetReferentiel()
         
         #
         # Cas où les CI sont sur une cible MEI
         #
         abrevCI = ref.abrevCI
-        if self.CI.GetReferentiel().CI_cible:
+        if ref.CI_cible:
             self.panel_cible = Panel_Cible(self, self.CI)
-            self.sizer.Add(self.panel_cible, (0,0), (3,1), flag = wx.EXPAND)
-            
-            self.grid1 = wx.FlexGridSizer( 0, 3, 0, 0 )
-            self.grid1.AddGrowableCol(1)
+            self.sizer.Add(self.panel_cible, flag = wx.EXPAND|wx.ALIGN_TOP)
+#             self.sizer.Add(self.panel_cible, (1,0), (2,2), flag = wx.EXPAND|wx.ALIGN_TOP)
             
             
-#            for i, ci in enumerate(constantes.CentresInterets[self.CI.GetTypeEnseignement()]):
-            for i, ci in enumerate(ref.CentresInterets):
-                r = wx.CheckBox(self, 200+i, "")
-                t = wx.StaticText(self, -1, abrevCI+str(i+1)+" : "+ci)
-                p = wx.TextCtrl(self, -1, u"1")
-                p.SetToolTipString(u"Poids horaire relatif du "+abrevCI)
-                p.Show(False)
-                p.SetMinSize((30, -1))
-                self.group_ctrls.append((r, t, p))
-                self.grid1.Add( r, 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_LEFT|wx.LEFT|wx.RIGHT|wx.TOP, 2 )
-                self.grid1.Add( t, 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_LEFT|wx.LEFT|wx.RIGHT, 5 )#|wx.EXPAND
-                self.grid1.Add( p, 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_RIGHT|wx.LEFT|wx.RIGHT, 5 )
-            
-            for radio, text, poids in self.group_ctrls:
-                self.Bind(wx.EVT_CHECKBOX, self.OnCheck, radio )
-                self.Bind(wx.EVT_TEXT, self.OnPoids, poids )
-            self.sizer.Add(self.grid1, (0,1), (2,1), flag = wx.EXPAND)
-            
-            aide = wx.BitmapButton(self, -1, images.Bouton_Aide.GetBitmap())
-            aide.SetToolTipString(u"Informations à propos de la cible "+abrevCI)
-            self.sizer.Add(aide, (0,2), flag = wx.ALL, border = 2)
-            self.Bind(wx.EVT_BUTTON, self.OnAide, aide)
-            
-            b = wx.ToggleButton(self, -1, "")
-            b.SetValue(self.CI.max2CI)
-            if hasattr(b, 'SetBitmap'): # wxpython 3.0
-                b.SetBitmap(images.Bouton_2CI.GetBitmap())
-            b.SetToolTipString(u"Limite à 2 le nombre de "+abrevCI+" sélectionnables")
-            self.sizer.Add(b, (1,2), flag = wx.ALL, border = 2)
-#            b.SetSize((30,30)) # adjust default size for the bitmap
-            b.SetInitialSize((32,32))
-            self.b2CI = b
-            self.Bind(wx.EVT_TOGGLEBUTTON, self.OnOption, b)
-            if int(wx.version()[0]) > 2:
-                if not self.sizer.IsColGrowable(1):
-                    self.sizer.AddGrowableCol(1)
-            else:
-                try:
-                    self.sizer.AddGrowableCol(1)
-                except:
-                    pass
-        
         #
-        # Cas où les CI ne sont PAS sur une cible
-        #  
+        # La liste des CI à cocher (plus éventuelle selection de poids)
+        #
+        panelCI = wx.Panel(self, -1)#, style = wx.BORDER_SIMPLE)
+            
+        if ref.CI_cible:
+            self.grid1 = wx.FlexGridSizer( 0, 3, 0, 0 )
         else:
             self.grid1 = wx.FlexGridSizer( 0, 2, 0, 0 )
+        
+
+        for i, ci in enumerate(ref.CentresInterets):
+#             hs = wx.BoxSizer(wx.HORIZONTAL)
+#             if self.CI.maxCI == 1:
+#                 if i == 0:
+#                     r = wx.RadioButton(panelCI, 200+i, abrevCI+str(i+1), style = wx.RB_GROUP)
+#                     r.SetValue(False)
+#                 else:
+#                     r = wx.RadioButton(panelCI, 200+i, abrevCI+str(i+1))
+#                 
+#             else:
+            r = wx.CheckBox(panelCI, 200+i, abrevCI+str(i+1))
+            t = EllipticStaticText(panelCI, -1, "")#ci)#tronquerDC(ci, 50, self))
+            r.SetToolTipString(ci)
+            t.SetToolTipString(ci)
+#             hs.Add(r, flag = wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_LEFT|wx.LEFT|wx.RIGHT|wx.TOP, border = 1)
+#             hs.Add(t, flag = wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_LEFT|wx.LEFT|wx.EXPAND, border = 4 )
+            self.grid1.Add( r, 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_LEFT|wx.LEFT|wx.RIGHT|wx.TOP, 1 )
+            self.grid1.Add( t, 1, wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_LEFT|wx.LEFT, 4 )#|wx.EXPAND
             
-            for i, ci in enumerate(ref.CentresInterets):
-    #            if i == 0 : s = wx.RB_GROUP
-    #            else: s = 0
-                r = wx.CheckBox(self, 200+i, abrevCI+str(i+1), style = wx.RB_GROUP )
-                t = wx.StaticText(self, -1, ci)
-                self.grid1.Add( r, 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_LEFT|wx.LEFT|wx.RIGHT|wx.TOP, 2 )
-                self.grid1.Add( t, 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_LEFT|wx.LEFT|wx.RIGHT, 5 )
+            if ref.CI_cible:
+                p = wx.TextCtrl(panelCI, -1, u"1")
+                p.SetToolTipString(u"Poids horaire relatif du "+ getSingulier(ref.nomCI))
+                p.Show(False)
+                p.SetMinSize((30, -1))
+#                 hs.Add( p, flag = wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_RIGHT|wx.LEFT|wx.RIGHT, border = 2)
+                self.grid1.Add( p, 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_RIGHT|wx.LEFT|wx.RIGHT, 2 )
+                self.group_ctrls.append((r, t, p))
+            else:
                 self.group_ctrls.append((r, t))
-            self.sizer.Add(self.grid1, (0,1), flag = wx.EXPAND)
-            for radio, text in self.group_ctrls:
-                self.Bind(wx.EVT_CHECKBOX, self.OnCheck, radio)
+                
+#             self.grid1.Add(hs, flag = wx.EXPAND)
+        
+        for rtp in self.group_ctrls:
+#             if self.CI.maxCI == 1:
+#                 self.Bind(wx.EVT_RADIOBUTTON, self.OnCheck, rtp[0] )
+#             else:
+            self.Bind(wx.EVT_CHECKBOX, self.OnCheck, rtp[0] )
+        
+        if ref.CI_cible:
+            for rtp in self.group_ctrls:
+                self.Bind(wx.EVT_TEXT, self.OnPoids, rtp[2] )
+        
+        
+        
+        #
+        # Séléction du nombre maxi de CI
+        #
+        self.nCI = wx.SpinCtrl(panelCI, -1, u"Nombre maximum de %s" %ref.nomCI, size = (35, -1))
+        self.nCI.SetToolTipString(u"Fixe un nombre maximum de %s sélectionnables.\n" \
+                                  u"0 = pas de limite" %ref.nomCI)
+        self.nCI.SetRange(0,9)
+        self.nCI.SetValue(0)
+        self.Bind(wx.EVT_SPINCTRL, self.OnOption, self.nCI)
+        self.grid1.Add(self.nCI, flag = wx.TOP|wx.ALIGN_CENTER_HORIZONTAL, border = 5)
+#             self.sizer.Add(self.nCI, (0,1), flag = wx.ALL, border = 2)
+        self.nCI.Show(ref.maxCI == 0) # maximum pas imposé par le référentiel
             
-            
+
+
         #
         # Cas des CI personnalisés
         #
-        self.elb = gizmos.EditableListBox(
-                    self, -1, ref.nomCI + u" personnalisés", size = (-1, 90),
-                    style=gizmos.EL_ALLOW_NEW | gizmos.EL_ALLOW_EDIT | gizmos.EL_ALLOW_DELETE)
-        
-        self.sizer.Add(self.elb, (2,1), (1, 1), flag = wx.EXPAND)
+        self.elb = gizmos.EditableListBox(panelCI, -1, 
+                                          getSingulierPluriel(ref.nomCI + u" personnalisé(s)", self.CI.maxCI != 1),
+                                          size = wx.DefaultSize,
+                                          style = gizmos.EL_ALLOW_NEW | gizmos.EL_ALLOW_EDIT | gizmos.EL_ALLOW_DELETE)
         self.elb.Bind(wx.EVT_LIST_END_LABEL_EDIT, self.OnChangeCI_perso)
+        self.elb.SetMinSize((-1, 60))
         self.Bind(wx.EVT_LIST_DELETE_ITEM, self.OnChangeCI_perso)
-#        self.Bind(wx.EVT_LIST_INSERT_ITEM, self.OnChangeCI_perso)
-#        self.Bind(wx.EVT_LIST_BEGIN_LABEL_EDIT, self.OnChangeCI_perso)
+        self.grid1.Add(self.elb, flag = wx.EXPAND)    
+        
+        self.grid1.AddGrowableCol(1)
+        self.grid1.AddGrowableRow(self.grid1.GetEffectiveRowsCount()-1)
+        
+        panelCI.SetSizer(self.grid1)
+        self.panelCI = panelCI
+        self.sizer.Add(panelCI, 1, flag = wx.EXPAND)
+#         self.sizer.Add(panelCI, (0,2), (2,1), flag = wx.EXPAND)
+        
         
         
         
         #
         # Les Problématiques
         #
-        sbpb = myStaticBox(self, -1, getSingulier(ref.nomPb), size = (200,-1))
+        sbpb = myStaticBox(self, -1, getPluriel(ref.nomPb), size = (200,-1))
         sbspb = wx.StaticBoxSizer(sbpb,wx.HORIZONTAL)
 
         self.panelPb = PanelProblematiques(self, self.CI)
         sbspb.Add(self.panelPb,1, flag = wx.EXPAND)
-        self.sizer.Add(sbspb, (0,3), (3, 1), flag = wx.EXPAND)
+        self.sizer.Add(sbspb, 0.5, flag = wx.EXPAND)
+#         self.sizer.Add(sbspb, (0,3), (3, 1), flag = wx.EXPAND)
         
-        self.sizer.AddGrowableCol(3)
+#         self.sizer.AddGrowableCol(2,1)
+#         self.sizer.AddGrowableCol(3,1)
+#         self.sizer.AddGrowableRow(2)
 
+        self.Bind(wx.EVT_SIZE, self.OnSize)
 
         #
         # Mise en place
@@ -6464,17 +6488,55 @@ class PanelPropriete_CI(PanelPropriete):
         self.SetupScrolling(scroll_x = False)
         self.sizer.Layout()
 
-
+        
+    
     #############################################################################            
-    def OnAide(self, event):
-        dlg = MessageAideCI(self)
-        dlg.ShowModal()
-        dlg.Destroy()
+    def OnSize(self, event):
+        event.Skip()
+        self.Freeze()
+        
+#         print "OnSize", 
+#         w = self.GetClientSize()[0]
+# #         print w
+#         if hasattr(self, 'panel_cible'):
+#             w -= self.panel_cible.GetSize()[0]
+            
+#         print ">>", w*2/3
+        
+        ref = self.CI.GetReferentiel()
+#         self.panelCI.SetSize((10,10))
+        
+#         return
+        for i, ci in enumerate(ref.CentresInterets):
+            t = self.group_ctrls[i][1]
+            t.SetLabel(u"")
+#         
+        self.grid1.Layout()
+#         self.sizer.RecalcSizes()
+#         self.panelCI.Fit()
+        self.sizer.Layout()
+#         self.elb.FitInside()
+        
+        
+        l = self.elb.GetSize()[0]
+#         print "  ", l
+        for i, ci in enumerate(ref.CentresInterets):
+            t = self.group_ctrls[i][1]
+            t.SetLabel(tronquerDC(ci, l, self))
+#         self.sizer.Layout()
+        wx.CallAfter(self.Thaw)
+     
+        
+    
 
 
     #############################################################################            
     def OnOption(self, event):
-        self.CI.max2CI = not self.CI.max2CI
+        """ Modification du nombre maxi de CI selectionnables
+            (ne peut se produire que si ce nombre n'est pas fixé par le référentiel)
+        """
+        self.CI.maxCI = self.nCI.GetValue()
+#         self.CI.max2CI = not self.CI.max2CI
         self.MiseAJour()
 
 
@@ -6483,72 +6545,114 @@ class PanelPropriete_CI(PanelPropriete):
         pass
 
 
-    
-
-
     #############################################################################            
     def OnCheck(self, event):
         """ Selection d'un CI
         """
+        ref = self.CI.GetReferentiel()
         button_selected = event.GetEventObject().GetId()-200 
-        
-        if event.GetEventObject().IsChecked():
+#         if self.CI.maxCI == 1: # Des boutons radio
+#             self.CI.Set1Num(button_selected)
+#         else:               # Des checkbox
+        if event.GetEventObject().GetValue():
             self.CI.AddNum(button_selected)
         else:
             self.CI.DelNum(button_selected)
         
-        if len(self.group_ctrls[button_selected]) > 2:
-            self.group_ctrls[button_selected][2].Show(event.GetEventObject().IsChecked())
-        
 #        self.panel_cible.bouton[button_selected].SetState(event.GetEventObject().IsChecked())
 #        if self.CI.GetTypeEnseignement() == 'ET':
-        if self.CI.GetReferentiel().CI_cible:
+        if ref.CI_cible:
             self.panel_cible.GererBoutons(True)
-        
-            if hasattr(self, 'b2CI'):
-                self.b2CI.Enable(len(self.CI.numCI) <= 2)
+        else:
+            if len(self.group_ctrls[button_selected]) > 2: # Il y a un Crtl de poids
+                self.group_ctrls[button_selected][2].Show(event.GetEventObject().GetValue ())
+            
+            l, p = self.GetListeCIActifs()
+            self.GererCases(l, p)
+#             if hasattr(self, 'b2CI'):
+#                 self.b2CI.Enable(len(self.CI.numCI) <= 2)
         
         self.panelPb.ReConstruire()
-        
+        self.panelCI.Layout()
         self.Layout()
-        ref = self.CI.parent.classe.referentiel
+        
+        
+        
         self.sendEvent(modif = u"Modification des %s abordés" %getPluriel(ref.nomCI))
 
 
     #############################################################################            
     def MiseAJour(self, sendEvt = False):
 #        if self.CI.GetTypeEnseignement() == 'ET':
+        self.elb.SetStrings(self.CI.CI_perso)
+        
         if self.CI.GetReferentiel().CI_cible:
             self.panel_cible.GererBoutons(True)
-            if hasattr(self, 'b2CI'):
-                self.b2CI.Enable(len(self.CI.numCI) <= 2)
-        
+
         else:
             for i, num in enumerate(self.CI.numCI):
                 self.group_ctrls[num][0].SetValue(True)
                 if len(self.group_ctrls[num]) > 2:
+                    self.group_ctrls[num][2].Show()
                     self.group_ctrls[num][2].SetValue(self.CI.poids[i])
             self.Layout()
+            
+            l, p = self.GetListeCIActifs()
+            self.GererCases(l, p)
 
-        self.elb.SetStrings(self.CI.CI_perso)
+        if hasattr(self, 'nCI'):
+            self.nCI.SetValue(self.CI.maxCI)
         
+        self.panelPb.ReConstruire()
         self.panelPb.MiseAJour()
+        
+        
         
         if sendEvt:
             self.sendEvent()
 
 
+
     #############################################################################            
-    def GererCases(self, liste, appuyer = False):
+    def GetListeCIActifs(self):
+        """ Renvoie :
+                la liste des indices des boutons "CI" actifs
+                un booléen indiquant si la liste des CI selectionnables est active
+        """
+#         print "GetListeCIActifs", self.CI.numCI , self.CI.CI_perso
+        # Liste des boutons CI à afficher
+        ref = self.CI.GetReferentiel()
+        if len(self.CI.numCI) + len(self.CI.CI_perso) == 0 or self.CI.maxCI == 0:       # Tous les CI
+            l = range(len(ref.CentresInterets))
+            p = True    
+            
+        elif len(self.CI.numCI) + len(self.CI.CI_perso) >= self.CI.maxCI:
+            l = self.CI.numCI
+            p = False
+        
+        else:
+            l = range(len(ref.CentresInterets))
+            p = True
+            
+#         print "  >>" , l, p
+        return l, p
+    
+    
+    
+    #############################################################################            
+    def GererCases(self, liste, perso, appuyer = False):
         """ Permet de cacher les cases des CI au fur et à mesure que l'on selectionne des CI
             <liste> : liste des CI à activer
         """ 
+        print "GererCases", perso
         for i, b in enumerate(self.group_ctrls):
             if i in liste:
                 b[0].Enable(True)
             else:
                 b[0].Enable(False)
                 
+        self.elb.GetNewButton().Enable(perso)
+        
         if appuyer:
             for i, b in enumerate(self.group_ctrls):
                 b[0].SetValue(i in self.CI.numCI)
@@ -6557,7 +6661,11 @@ class PanelPropriete_CI(PanelPropriete):
     #############################################################################            
     def MAJ_CI_perso(self, event = None):
         self.CI.CI_perso = self.elb.GetStrings()
-        ref = self.CI.parent.classe.referentiel
+        
+        l, p = self.GetListeCIActifs()
+        self.GererCases(l, p)
+#         print "MAJ_CI_perso", self.CI.CI_perso
+        ref = self.CI.GetReferentiel()
         self.sendEvent(modif = u"Modification des %s personnalisés" %getPluriel(ref.nomCI))
         
         
@@ -6565,7 +6673,11 @@ class PanelPropriete_CI(PanelPropriete):
     def OnChangeCI_perso(self, event):
         wx.CallAfter(self.MAJ_CI_perso)
         event.Skip()
-                    
+
+
+
+
+   
 ####################################################################################
 #
 #   Classe définissant le panel conteneur d'un calendrier
@@ -6689,13 +6801,44 @@ class Panel_Cible(wx.Panel):
 #                self.group_ctrls.append((r, 0))
 #                self.Bind(wx.EVT_CHECKBOX, self.EvtCheck, r )
         
+        
+        
+        
+        
         self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBackground)
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_TOGGLEBUTTON, self.OnButton)
         bmp = images.Cible.GetBitmap()
+        
+        
+        
+        
+        #
+        # Un bouton d'aide
+        #
+        aide = wx.BitmapButton(self, -1, images.Bouton_Aide.GetBitmap(), pos = (0,0))
+        aide.SetToolTipString(u"Informations à propos de la cible des " + getPluriel(ref.nomCI))
+        self.Bind(wx.EVT_BUTTON, self.OnAide, aide)
+            
+            
+            
         self.SetSize((bmp.GetWidth(), bmp.GetHeight()))
         self.SetMinSize((bmp.GetWidth(), bmp.GetHeight()))
+    
+    
+    
+    #############################################################################            
+    def OnAide(self, event):
+        dlg = MessageAideCI(self)
+        dlg.ShowModal()
+        dlg.Destroy()
         
+    
+    ######################################################################################################
+    def getMaxCI(self):
+        return self.CI.maxCI
+    
+    
     ######################################################################################################
     def OnPaint(self, evt):
         dc = wx.PaintDC(self)
@@ -6758,10 +6901,13 @@ class Panel_Cible(wx.Panel):
         """
 #        print "GererBoutons"
         ref = self.CI.GetReferentiel()
-        if len(self.CI.numCI) == 0 or not self.CI.max2CI:
-            l = range(len(ref.CentresInterets))
+        
+        # Liste des boutons CI à afficher :
+        if len(self.CI.numCI) + len(self.CI.CI_perso) == 0 or self.getMaxCI() == 0:       # Tous les CI
+            l = range(len(ref.CentresInterets))   
+            p = True          
             
-        elif len(self.CI.numCI) == 1:
+        elif len(self.CI.numCI) + len(self.CI.CI_perso) == self.getMaxCI()-1:
             l = []
             for i,p in enumerate(ref.positions_CI):
                 p = p[:3].strip()
@@ -6774,9 +6920,11 @@ class Panel_Cible(wx.Panel):
                         if d in p:  
                             l.append(i)
                             break
-
+            p = True
+            
         else:
             l = self.CI.numCI
+            p = self.getMaxCI() > len(l)
             
                 
         for i, b in enumerate(self.bouton):
@@ -6795,7 +6943,7 @@ class Panel_Cible(wx.Panel):
                         b._SetState(platebtn.PLATE_NORMAL)
                 b._pressed = i in self.CI.numCI
                 
-        self.Parent.GererCases(l, True)    
+        self.Parent.GererCases(l, p, True)    
                     
                     
 ####################################################################################
@@ -12240,41 +12388,52 @@ class PanelProblematiques(wx.Panel):
                  style = wx.WANTS_CHARS):#|wx.BORDER_SIMPLE):
         self.CI = CI
         ref = self.CI.GetReferentiel()
+        hasPb  = len(ref.listProblematiques) > 0
         
         wx.Panel.__init__(self, parent, -1, pos, size)
         self.sizer = wx.BoxSizer(wx.VERTICAL)
-        self.arbre = CT.CustomTreeCtrl(self, -1, pos, (150, -1), style, 
-                                   agwStyle = CT.TR_HIDE_ROOT|CT.TR_FULL_ROW_HIGHLIGHT\
-                                   |CT.TR_HAS_VARIABLE_ROW_HEIGHT|CT.TR_HAS_BUTTONS\
-                                   |CT.TR_TOOLTIP_ON_LONG_ITEMS)#CT.TR_ALIGN_WINDOWS|CCT.TR_NO_HEADER|T.TR_AUTO_TOGGLE_CHILD|\CT.TR_AUTO_CHECK_CHILD|\CT.TR_AUTO_CHECK_PARENT|
-        self.Unbind(wx.EVT_KEY_DOWN)
-        
-        
+        if hasPb:
+            self.arbre = CT.CustomTreeCtrl(self, -1, pos, size, style, 
+                                       agwStyle = CT.TR_HIDE_ROOT|CT.TR_FULL_ROW_HIGHLIGHT\
+                                       |CT.TR_HAS_VARIABLE_ROW_HEIGHT|CT.TR_HAS_BUTTONS\
+                                       |CT.TR_TOOLTIP_ON_LONG_ITEMS)#CT.TR_ALIGN_WINDOWS|CCT.TR_NO_HEADER|T.TR_AUTO_TOGGLE_CHILD|\CT.TR_AUTO_CHECK_CHILD|\CT.TR_AUTO_CHECK_PARENT|
+            self.Unbind(wx.EVT_KEY_DOWN)
+            self.Bind(wx.EVT_TREE_SEL_CHANGED, self.OnClick)
+            self.sizer.Add(self.arbre, flag = wx.EXPAND)
+            self.root = self.arbre.AddRoot("r")
+            self.Construire()
+            
         #
         # Cas des Problématiques personalisées
         #
-        self.PbPerso = TextCtrl_Help(self, u"")
-        self.PbPerso.SetTitre(u"Problématiques personalisées")
-        self.PbPerso.SetToolTipString(u"Exprimer ici la %s abordée\n" \
+        if hasPb:
+            t = getPluriel(ref.nomPb) + u" personnalisées"
+        else:
+            t = getPluriel(ref.nomPb)
+        self.PbPerso = gizmos.EditableListBox(self, -1, t,
+                                              size = wx.DefaultSize,
+                                              style = gizmos.EL_ALLOW_NEW | gizmos.EL_ALLOW_EDIT | gizmos.EL_ALLOW_DELETE)
+        self.PbPerso.SetMinSize((-1, 60))
+        self.PbPerso.SetToolTipString(u"Exprimer ici la(les) %s abordée\n" \
                                       u"ou choisir une parmi les %s envisageables." %(getSingulier(ref.nomPb), getPluriel(ref.nomPb)))
-#         self.Bind(stc.EVT_STC_CHANGE, self.EvtText, self.PbPerso)
-        self.Bind(stc.EVT_STC_MODIFIED, self.EvtText, self.PbPerso)
-        self.sizer.Add(self.PbPerso, flag = wx.EXPAND)
-        self.sizer.Add(self.arbre, 1, flag = wx.EXPAND)
+
+        self.PbPerso.Bind(wx.EVT_LIST_END_LABEL_EDIT, self.EvtText)
+        self.Bind(wx.EVT_LIST_DELETE_ITEM, self.EvtText)
         
+        self.sizer.Add(self.PbPerso, 1, flag = wx.EXPAND)
         
         
 #        self.SetBackgroundColour(wx.WHITE)
         self.SetToolTip(wx.ToolTip(u"Ppppb"))
         
-        self.Bind(wx.EVT_TREE_SEL_CHANGED, self.OnClick)
+        
 #        self.Bind(wx.EVT_TREE_ITEM_GETTOOLTIP, self.OnToolTip)
 #        self.Bind(wx.EVT_TREE_ITEM_COLLAPSING, self.OnItemCollapsed)
         
 #        self.AddColumn(u"")
 #        self.SetMainColumn(0)
-        self.root = self.arbre.AddRoot("r")
-        self.Construire()
+        
+        
         self.SetSizer(self.sizer)
         
         self.MiseAJour()
@@ -12283,7 +12442,7 @@ class PanelProblematiques(wx.Panel):
 
     ######################################################################################              
     def Construire(self):
-#        print "Construire ArbreProblematiques"
+#         print "Construire ArbreProblematiques"
         ref = self.CI.GetReferentiel()
 #        print "  ", ref.Code
 #        print "  ", ref.listProblematiques
@@ -12297,8 +12456,8 @@ class PanelProblematiques(wx.Panel):
             if n < len(self.CI.numCI):
                 if self.CI.numCI[n] < len(ref.listProblematiques):
                     for pb in ref.listProblematiques[self.CI.numCI[n]]:
-                        sbranche = self.arbre.AppendItem(branche, pb, ct_type=2)
-                        self.Bind(CT.EVT_TREE_ITEM_CHECKED, self.EvtRadioBox)
+                        sbranche = self.arbre.AppendItem(branche, pb, ct_type=1)
+                        self.Bind(CT.EVT_TREE_ITEM_CHECKED, self.EvtCheckBox)
                         self.branche.append(sbranche)
         
         self.arbre.ExpandAll()
@@ -12306,29 +12465,45 @@ class PanelProblematiques(wx.Panel):
 
     ####################################################################################
     def ReConstruire(self):
-#        print "ReConstruire"
-        self.arbre.DeleteChildren(self.root)
-        self.Construire()
-        self.arbre.ExpandAll()
+#         print "ReConstruire"
+        if hasattr(self, 'arbre'):
+            self.arbre.DeleteChildren(self.root)
+            self.Construire()
+            self.arbre.ExpandAll()
+
 
     ####################################################################################
     def MiseAJour(self):
-        self.PbPerso.SetValue(u"")
-        for b in self.branche:
-            self.arbre.CheckItem2(b, False)
-            if self.arbre.GetItemText(b) == self.CI.Pb:
-                self.arbre.CheckItem2(b)
-                return
-        self.PbPerso.SetValue(self.CI.Pb)
-
+#         print "MiseAJour Pb"
+#         print self.CI.Pb
+#         self.PbPerso.SetStrings(u"")
+        if hasattr(self, 'arbre'):
+            for b in self.branche:
+                self.arbre.CheckItem2(b, False)
+    #             print self.arbre.GetItemText(b)
+                if self.arbre.GetItemText(b) in self.CI.Pb:
+                    self.arbre.CheckItem2(b)
+                
+        self.PbPerso.SetStrings(self.CI.Pb_perso)
+#         print "  ", self.PbPerso.GetStrings()
 
         
     #############################################################################            
-    def EvtText(self, event):
-        for b in self.branche:
-            self.arbre.CheckItem2(b, False)
+    def EvtText(self, event):      
+        wx.CallAfter(self.MAJ_Pb_perso)
+        event.Skip()
+        
+    #############################################################################            
+    def MAJ_Pb_perso(self):
+#         print "MAJ_Pb_perso"
+#         if hasattr(self, 'arbre'):
+#             for b in self.branche:
+#                 self.arbre.CheckItem2(b, False)
+        
         ref = self.CI.GetReferentiel()
-        self.CI.Pb = self.PbPerso.GetText()
+        self.CI.Pb_perso = self.PbPerso.GetStrings()
+#         print  "  ", self.CI.Pb_perso
+        
         t = u"Modification de la %s" %getSingulier(ref.nomPb)
         self.Parent.GetDocument().GererDependants(self.CI.parent, t)
             
@@ -12340,12 +12515,12 @@ class PanelProblematiques(wx.Panel):
                 self.Parent.eventAttente = True
                 
         
-                
+        
     
     ######################################################################################              
     def OnToolTip(self, event = None, item = None):
         return
-        print "OnToolTip"
+#         print "OnToolTip"
 
 
     ######################################################################################              
@@ -12354,10 +12529,14 @@ class PanelProblematiques(wx.Panel):
 
 
     ######################################################################################              
-    def EvtRadioBox(self, event):
+    def EvtCheckBox(self, event):
         ref = self.CI.GetReferentiel()
         item = event.GetItem()
-        self.CI.Pb = self.arbre.GetItemText(item)
+        pb = self.arbre.GetItemText(item)
+        if pb in self.CI.Pb:
+            self.CI.Pb.remove(pb)
+        else:
+            self.CI.Pb.append(pb)
         self.Parent.sendEvent(modif = u"Modification de la %s" %getSingulier(ref.nomPb))
 
     

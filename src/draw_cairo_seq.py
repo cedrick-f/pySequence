@@ -661,6 +661,8 @@ def Draw(ctx, seq, mouchard = False, entete = False):
         if not typ in lstTyp:
             lstTyp.append(typ)
     
+    lstSav.sort(key = lambda x:x[0])
+    
     multi = len(lstTyp) > 1
     
     for cod, savoir in lstSav:
@@ -763,7 +765,8 @@ def Draw(ctx, seq, mouchard = False, entete = False):
     lstTyp = []
     for c in seq.obj["C"].competences:
         typ, cod = c[0], c[1:]
-        
+        comp = None
+#         print "typ, cod =", typ, cod
         if typ == "B" and ref.tr_com != []: # B = tronc commun --> référentiel
             comp = ref_tc.dicoCompetences["S"]
         else:
@@ -776,6 +779,8 @@ def Draw(ctx, seq, mouchard = False, entete = False):
             lstTyp.append(typ)
     
     multi = len(lstTyp) > 1
+    
+    lstComp.sort(key = lambda x:x[0])
     
     for cod, comp in lstComp:    
         disc = comp.codeDiscipline
@@ -1007,13 +1012,14 @@ def Draw_CI(ctx, CI, seq):
     
     ref = CI.GetReferentiel()
     
-    t = getSingulierPluriel(ref.nomCI, len(CI.numCI) > 1)
+    t = getSingulierPluriel(ref.nomCI, len(CI.numCI)+len(CI.CI_perso) > 1)
     
     rect = (x0, y0, rect_width, rect_height)
     CI.pt_caract = (curve_rect_titre(ctx, t, rect, BcoulCI, IcoulCI, fontCI), 
                     'CI')
     seq.zones_sens.append(Zone([rect], obj = CI))
 #    CI.rect.append()
+    
     
     
     #
@@ -1028,13 +1034,38 @@ def Draw_CI(ctx, CI, seq):
     for j, c in enumerate(CI.CI_perso):
         lstCodes.append(ref.abrevCI+str(len(ref.CentresInterets)+j+1))
         lstIntit.append(c)
-    
-    if CI.numCI != []:
-        r = liste_code_texte(ctx, lstCodes, lstIntit, 
-                             (x0, y0+0.0001 * COEF, rect_width, rect_height), 
-                             0.05*rect_width, 0.1, va = 'c')
-        CI.pts_caract = getPts(r)
+
         
+    #
+    # Problématiques
+    #
+    lstPb = []
+    for c in CI.Pb:
+        lstPb.append(c)
+        
+    for c in CI.Pb_perso:
+        lstPb.append(c)
+    
+
+    #
+    # Affichage
+    #
+    t = len(lstCodes) + len(lstPb)
+    if t > 0:
+        hCI = rect_height * len(lstCodes) / t
+        hPb = rect_height * len(lstPb) / t
+        if len(lstCodes) > 0:
+            r = liste_code_texte(ctx, lstCodes, lstIntit, 
+                                 (x0, y0+0.0001 * COEF, rect_width, hCI), 
+                                 0.05*rect_width, 0.1, va = 'c')
+            CI.pts_caract = getPts(r)
+        
+        ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
+                                           cairo.FONT_WEIGHT_NORMAL)
+        show_text_rect(ctx, u"\n".join(lstPb), 
+                       (x0, y0+0.0001 * COEF + hCI, rect_width, hPb)
+                       )
+
 
 
 

@@ -514,7 +514,7 @@ def Draw(ctx, prg, mouchard = False):
 
     if len(lstTexte) > 0:
         r = liste_code_texte(ctx, lstCodes, lstTexte, 
-                             posEqu[0], posEqu[1], tailleEqu[0], tailleEqu[1]+0.0001 * COEF,
+                             (posEqu[0], posEqu[1], tailleEqu[0], tailleEqu[1]+0.0001 * COEF),
                              0.1*tailleEqu[1]+0.0001 * COEF, 0.1,
                              gras = g, lstCoul = c, va = 'c')
 
