@@ -37,15 +37,25 @@
   <d_dicFonctions />
   <d_dicoCompetences>
     <Competences_S B_obj="True" B_pre="False" S_abrDiscipline="AC" S_codeDiscipline="SII" S_nomDiscipline="STI2D-AC" S_nomGenerique="Compétence(s)" S_nomGeneriqueIndic="Indicateurs de performance">
+      <l_asso_contexte />
+      <l_asso_type />
       <d_dicCompetences>
         <Competence_O7 S_intitule="Imaginer une solution, répondre à un besoin">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
           <d_poids I_C="40" />
           <d_sousComp>
             <Competence_CO7.ac1 S_intitule="Participer à une étude architecturale, dans une démarche de développement durable">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Le besoin relatif au projet et les fonctions principales sont identifiés et justifiés">
                   <d_ligne I_C="6" />
@@ -70,6 +80,10 @@
             </Competence_CO7.ac1>
             <Competence_CO7.ac2 S_intitule="Proposer/Choisir des solutions techniques répondant aux contraintes et attentes d'une construction">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Les moyens conventionnels de représentation des solutions sont correctement utilisés (croquis, schémas, …)">
                   <d_ligne I_C="9" />
@@ -99,6 +113,10 @@
             </Competence_CO7.ac2>
             <Competence_CO7.ac3 S_intitule="Concevoir une organisation de réalisation">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Le phasage des opérations de réalisation est réaliste, le chemin critique est identifié">
                   <d_ligne I_C="13" />
@@ -131,12 +149,20 @@
         </Competence_O7>
         <Competence_O9 S_intitule="Gérer la vie d'un système">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
           <d_poids I_C="20" />
           <d_sousComp>
             <Competence_CO9.ac2 S_intitule="Identifier et décrire les causes de désordre dans une construction">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Une démarche pertinente d'investigation est réalisée pour identifier les désordres et leurs causes">
                   <d_ligne I_C="35" />
@@ -156,6 +182,10 @@
             </Competence_CO9.ac2>
             <Competence_CO9.ac3 S_intitule="Valoriser la fin de vie du produit : déconstruction, gestion des déchets, valorisation des produits">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Une analyse de cycle de vie de tout ou partie d'une construction est menée">
                   <d_ligne I_C="37" />
@@ -175,6 +205,10 @@
             </Competence_CO9.ac3>
             <Competence_CO9.ac1 S_intitule="Améliorer les performances d'une construction du point de vue énergétique, domotique et informationnel">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Un bilan des performances de la construction existante est établi">
                   <d_ligne I_C="31" />
@@ -207,12 +241,20 @@
         </Competence_O9>
         <Competence_O8 S_intitule="Valider des solutions techniques">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
           <d_poids I_C="40" />
           <d_sousComp>
             <Competence_CO8.ac3 S_intitule="Analyser/Valider les choix structurels et de confort">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Une démarche d'analyse de la structure est mise en œuvre">
                   <d_ligne I_C="26" />
@@ -242,6 +284,10 @@
             </Competence_CO8.ac3>
             <Competence_CO8.ac2 S_intitule="Analyser les résultats issus de simulations ou d'essais de laboratoire">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Les conditions de l'essai sont identifiées et justifiées">
                   <d_ligne I_C="21" />
@@ -276,6 +322,10 @@
             </Competence_CO8.ac2>
             <Competence_CO8.ac1 S_intitule="Simuler un comportement structurel, thermique et acoustique de tout ou partie d'une construction">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Les variables et les paramètres des modèles sont identifiés">
                   <d_ligne I_C="18" />

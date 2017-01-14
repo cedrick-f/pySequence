@@ -696,25 +696,14 @@ class Referentiel(XMLelem):
         self.listeTypeHorsClasse = []
                 
         self.demarcheSeance = {}
-        
+    
+    
         #
         # Effectifs
         #
         self.effectifs = {}
         self.listeEffectifs = []
         self.effectifsSeance = {} #{"" : []}
-        
-#        self.nomSavoirs_Math = u"Mathématiques"
-#        self.dicSavoirs_Math = {}
-#        self.objSavoirs_Math = False
-#        self.preSavoirs_Math = True
-#            
-#        self.nomSavoirs_Phys = u"Sciences Physiques"
-#        self.dicSavoirs_Phys = {}
-#        self.objSavoirs_Phys = False
-#        self.preSavoirs_Phys = True
-        
-        
         
         
         #
@@ -1076,88 +1065,7 @@ class Referentiel(XMLelem):
           
         
             
-        ###########################################################
-        def getArbreComp(sh, rng, col, prems = False, debug = False):
-            """ Construit la structure en arbre :
-                    utilisé pour les Compétences
-                (fonction récursive)
-                
-                <rng> : liste des lignes
-                <col> : numéro de la colonne traitée (=0 au lancement)
-                <prems> : racine de l'arbre (=True au lancement)
-                <fonction> : cas spécifique du traitement des Fonctions
-            """
-            dic = {}
-            
-            ci = 8 # colonne "I" des indicateurs (cas des Compétences uniquement)
-            
-            # Liste des lignes comportant un code dans la colonne <col>, dans l'intervalle <rng>
-            lstLig = [l  for l in rng if sh.cell(l,col).value != u""]
-            if debug: print "  **",lstLig
-            
-            for i, l in enumerate(lstLig):
-                code = str(sh.cell(l,col).value)
-                intitule = unicode(sh.cell(l,col+1).value)
-                competence = Competence(intitule)
-                dic[code] = competence
-                
-                if debug: print "-> ",l, code, intitule
-                
-                # Toutes les lignes entre chaque code
-                if i < len(lstLig)-1:
-                    ssRng = range(l+1, lstLig[i+1])
-                else:
-                    ssRng = range(l+1, rng[-1]+1)
-                if debug: print "   ", ssRng
 
-                # Il y a encore des items à droite ... 
-                if len(ssRng) > 0 and col < 2 and [li  for li in ssRng if sh.cell(li,col+1).value != u""] != []:
-                    # Il y a une(des) nouvelle(s) branche(s) (code + intitulé)
-                    if [li  for li in ssRng if sh.cell(li,col+2).value != u""] != []:
-                        competence.sousComp = getArbreComp(sh, ssRng, col+1, debug = debug)
-                    
-                    # Il y a un(des) info(s) seulement
-                    elif [li  for li in ssRng if sh.cell(li,col+1).value != u""] != []:
-                        competence.infos = [sh.cell(li,col+1).value  for li in ssRng]
-                    
-
-                # Il n'y a plus d'item à droite => Indicateur()
-                else:
-                    for ll in [l] + ssRng:
-                        indic = unicode(sh.cell(ll,ci).value)
-   
-                        poids = {}
-                        lignes = {}
-                        revues = {}
-                        for p, c in self._colParties:
-                            v = int0(sh.cell(ll,c).value)                   # Colonne code partie projet
-                            if v > 0:
-                                poids[p] = v
-                                lignes[p] = int0(sh.cell(ll,c+1).value)     # Colonne "l"
-                                revues[p] = int0(sh.cell(ll,c+2).value)     # Colonne "r"
-                                if lignes[p] != 0:
-                                    self.aColNon[p] = True
-                                if revues[p] != 0:
-                                    self.compImposees[p] = True
-
-                        if indic != u"":
-                            competence.indicateurs.append(Indicateur(indic, poids, lignes, revues))
-
-                if prems:
-                    if debug:
-                        print "prems", 
-                    poids = {}
-                    for p, c in self._colParties:
-                        if debug: print p, c, "--", 
-                        v = int0(sh.cell(l,c).value)
-                        if debug: print v
-                        if v > 0:
-                            poids[p] = v
-                    if debug: print poids
-                    competence.poids = poids
-            
-            if debug: print 
-            return dic
 
         
         ###########################################################
@@ -1295,13 +1203,7 @@ class Referentiel(XMLelem):
         if sh_g.cell(21,0).value != u"":
             self.tr_com = [sh_g.cell(21,0).value, sh_g.cell(21,1).value]
            
-#        #
-#        # projet
-#        #
-#        self.projet = sh_g.cell(23,1).value[0].upper() == "O"
-#        if self.projet:
-#            self.duree_prj = int(sh_g.cell(24,1).value)
-#            self.periode_prj = [int(i) for i in sh_g.cell(25,1).value.split()]
+
 
         #
         # Bulletins Officiels
@@ -1399,62 +1301,61 @@ class Referentiel(XMLelem):
         #
         # Compétences  ###############################################################################
         #
-        debug = False#self.Code == "Cy4-ST"
-        for n in wb.sheet_names():
-            if n[:5] == "Comp_":
-                sh_co = wb.sheet_by_name(n)
-                code = n[5]
-                self.dicoCompetences[code] = Competences(sh_co.cell(0,0).value,     # Nom générique ("Compétence", ...)
-                                                         sh_co.cell(2,0).value,     # Code discipline "enseignant"
-                                                         sh_co.cell(2,2).value,     # Code discipline "enseignement"
-                                                         sh_co.cell(2,1).value,     # Nom discipline
-                                                         sh_co.cell(0,8).value)     # Nom générique indicateur ("Indicateur de performance", ...)
-                self.dicoCompetences[code].obj = 'O' in sh_co.cell(0,6).value
-                self.dicoCompetences[code].pre = 'P' in sh_co.cell(0,6).value
-                self.listCompetences.append(code)
-#                 if debug:
-#                     print "____", code, "obj:", self.dicoCompetences[code].obj, "pre:", self.dicoCompetences[code].pre
-                #
-                # Décomposition des projets en parties
-                #    colonne de départ : 11 (colonne "L")
-                #
-                if code == "S": # Page principale des compétences = définition du découpage "projet"
-                    self._colParties = []
-                    col = [c  for c in range(11, sh_co.ncols) if sh_co.cell(1,c).value != u""]
-                    if debug: print ">>>", col
-                    
-                    for i, c in enumerate(col):
-                        if i == len(col)-1:
-                            n = sh_co.ncols
-                        else:
-                            n = col[i+1]
-                        
-                        for j in range((n-c)/3):
-                            cp = c+j*3
-                            part = str(sh_co.cell(3,cp).value)
-                            self._colParties.append((part, cp))
-                            t = sh_co.cell(1,c).value
-                            for p in self.projets.values():
-                                if t == p.intitule:
-                                    p.listeParties.append(part)
-                                    p.parties[part] = sh_co.cell(2,cp).value
-                            self.compImposees[part] = False # Valeur par défaut
-                    
-                    if debug: print "colParties", self._colParties
-                    for part, col in list(set([cp for cp in self._colParties])):
-                        self.parties[part] = sh_co.cell(2,col).value
-                        
-                    for p in self.projets.values():
-            #            print "  importer", self, p
-                        p.importer(wb)
+        debug = self.Code == "Cy4-ST"
+        
+        lst_feuilles_codes = [(wb.sheet_by_name(n), n[5]) for n in wb.sheet_names() if n[:5] == "Comp_"]
+        for sh_co, code in lst_feuilles_codes:
+            self.dicoCompetences[code] = Competences(sh_co.cell(0,0).value,     # Nom générique ("Compétence", ...)
+                                                     sh_co.cell(2,0).value,     # Code discipline "enseignant"
+                                                     sh_co.cell(2,2).value,     # Code discipline "enseignement"
+                                                     sh_co.cell(2,1).value,     # Nom discipline
+                                                     sh_co.cell(0,8).value)     # Nom générique indicateur ("Indicateur de performance", ...)
+            
+            self.listCompetences.append(code)
+            if debug:
+                print "____", code, "obj:", self.dicoCompetences[code].obj, "pre:", self.dicoCompetences[code].pre
+            
+            #
+            # Décomposition des projets en parties
+            #    colonne de départ : 11 (colonne "L")
+            #
+            if code == "S": # Page principale des compétences = définition du découpage "projet"
+                self._colParties = []
+                col = [c  for c in range(11, sh_co.ncols) if sh_co.cell(1,c).value != u""]
+                if debug: print ">>>", col
                 
-                self.dicoCompetences[code].dicCompetences = getArbreComp(sh_co, range(4, sh_co.nrows), 0, 
-                                                                         prems = True, 
-                                                                         debug = debug)
-                if debug: 
-                    print self.dicoCompetences[code].dicCompetences
-                    for typi, dico in self.dicoCompetences[code].dicCompetences.items():
-                        print " _poids :", dico.poids
+                for i, c in enumerate(col):
+                    if i == len(col)-1:
+                        n = sh_co.ncols
+                    else:
+                        n = col[i+1]
+                    
+                    for j in range((n-c)/3):
+                        cp = c+j*3
+                        part = str(sh_co.cell(3,cp).value)
+                        self._colParties.append((part, cp))
+                        t = sh_co.cell(1,c).value
+                        for p in self.projets.values():
+                            if t == p.intitule:
+                                p.listeParties.append(part)
+                                p.parties[part] = sh_co.cell(2,cp).value
+                        self.compImposees[part] = False # Valeur par défaut
+                
+                if debug: print "colParties", self._colParties
+                for part, col in list(set([cp for cp in self._colParties])):
+                    self.parties[part] = sh_co.cell(2,col).value
+                    
+                for p in self.projets.values():
+        #            print "  importer", self, p
+                    p.importer(wb)
+        
+        
+        # On fini l'importation après la création de tous les objets Competences
+        # car références croisées
+        for sh_co, code in lst_feuilles_codes:
+            self.dicoCompetences[code].importer(sh_co, self, debug = debug)
+
+                
                     
                 
 
@@ -1473,7 +1374,7 @@ class Referentiel(XMLelem):
         #
         # Domaines  ########################################################################################
         #
-        sh_g = wb.sheet_by_name(u"Domaines")
+        sh_g = wb.sheet_by_name(u"Dom")
         self.nomDom = sh_g.cell(0,0).value
         for l in range(2, sh_g.nrows):
             code = str(sh_g.cell(l,0).value)
@@ -1483,14 +1384,14 @@ class Referentiel(XMLelem):
                 break
             if sh_g.cell(l,1).value != u"":
                 self.domaines[code] = [sh_g.cell(l,1).value, sh_g.cell(l,2).value, 
-                                        sh_g.cell(l,3).value, getbgcoul(wb, sh_g, l, 4)]
+                                       sh_g.cell(l,3).value, getbgcoul(wb, sh_g, l, 4)]
                 self.listeDomaines.append(code)
-                
-                
+        
+        
         #
         # Thématiques  ########################################################################################
         #
-        sh_g = wb.sheet_by_name(u"Thématiques")
+        sh_g = wb.sheet_by_name(u"Th")
         self.nomTh = sh_g.cell(0,0).value
         for l in range(2, sh_g.nrows):
             code = str(sh_g.cell(l,0).value)
@@ -2717,22 +2618,29 @@ class Competence(XMLelem):
     def __init__(self, intitule = u"", poids = {}):
         self._codeXML = "Competence"
         self.intitule = intitule
-        self.domaines = []
-        self.thematiques = []
+        self.domaines = []              # liste de codes de domaines
+        self.thematiques = []           # liste de codes de thematiques
         self.poids = poids
-        self.indicateurs = []
-        self.sousComp = {}
-        self.infos = []  # des informations supplémentaires
+        self.indicateurs = []           # liste de codes d'indicateurs
+        self.sousComp = {}              # {code : Referentiel.Competences}
+        self.elemAssocies = [[],[]]     # Liste des codes des éléments (sav, th, dom, ...) associées
+        self.infos = []                 # des informations supplémentaires (str)
 
     def __repr__(self):
-        return "Competence : " + self.intitule[:10] + "..."
+        return "Competence : " + self.intitule[:10] + "...\n   " #+ "\n   ".join(self.thematiques)
     
     def copie(self):
         c = Competence(self.intitule, self.poids)
         c.domaines = self.domaines[:]
         c.thematiques = self.thematiques[:]
         c.indicateurs = self.indicateurs[:]
+        c.infos = self.infos[:]
+        for i in range(len(self.elemAssocies)):
+            c.elemAssocies[i] = self.elemAssocies[i][:]
+        
         return c
+
+
 
 #################################################################################################################################
 #
@@ -2748,15 +2656,142 @@ class Competences(XMLelem):
         self.nomDiscipline = nomDiscipline          # Nom discipline
         self.abrDiscipline = abrDiscipline          # Abréviation discipline
         self.nomGeneriqueIndic = nomGeneriqueIndic
-        self.dicCompetences = {} # Dictionnaire de Compétences (arborescence)
+        self.dicCompetences = {}        # Dictionnaire de Compétences (arborescence)
         self.obj = self.pre = True
-#         self.indicateurs = []
+        
+        self.asso_type = []     # liste (2 éléments !) de type d'éléments associés aux compétences
+                                # peut être : Savoirs, Competence, liste de Th ou de Dom
+        self.asso_contexte = []
+        
+
 
     #########################################################################
     def __repr__(self):
-        return "Referentiel.Competences" + str(self.obj)+str(self.pre)
+        competences = u"\n".join([c.__repr__() for c in self.dicCompetences.values()])
+        return "Referentiel.Competences" + competences# str(self.obj)+str(self.pre)
     
+
     
+    #########################################################################
+    def importer(self, feuille, ref, debug = False):
+        
+        ###########################################################
+        def getArbreComp(sh, rng, col, prems = False, debug = False):
+            """ Construit la structure en arbre :
+                    utilisé pour les Compétences
+                (fonction récursive)
+                
+                <rng> : liste des lignes
+                <col> : numéro de la colonne traitée (=0 au lancement)
+                <prems> : racine de l'arbre (=True au lancement)
+                <fonction> : cas spécifique du traitement des Fonctions
+            """
+            dic = {}
+            
+            ci = 8 # colonne "I" des indicateurs (cas des Compétences uniquement)
+            
+            # Liste des lignes comportant un code dans la colonne <col>, dans l'intervalle <rng>
+            lstLig = [l  for l in rng if sh.cell(l,col).value != u""]
+            if debug: print "  **",lstLig
+            
+            for i, l in enumerate(lstLig):
+                code = str(sh.cell(l,col).value)
+                intitule = unicode(sh.cell(l,col+1).value)
+                competence = Competence(intitule)
+                dic[code] = competence
+                
+                if debug: print "-> ",l, code, intitule
+                
+                # Toutes les lignes entre chaque code
+                if i < len(lstLig)-1:
+                    ssRng = range(l+1, lstLig[i+1])
+                else:
+                    ssRng = range(l+1, rng[-1]+1)
+                if debug: print "   ", ssRng
+        
+                # Il y a encore des items à droite ... 
+                if len(ssRng) > 0 and col < 2 and [li  for li in ssRng if sh.cell(li,col+1).value != u""] != []:
+                    # Il y a une(des) nouvelle(s) branche(s) (code + intitulé)
+                    if [li  for li in ssRng if sh.cell(li,col+2).value != u""] != []:
+                        competence.sousComp = getArbreComp(sh, ssRng, col+1, debug = debug)
+                    
+                    # Il y a un(des) info(s) seulement
+                    elif [li  for li in ssRng if sh.cell(li,col+1).value != u""] != []:
+                        competence.infos = [sh.cell(li,col+1).value  for li in ssRng]
+                    
+                    
+        
+                # Il n'y a plus d'item à droite => Indicateur()
+                else:
+                    for ll in [l] + ssRng:
+                        indic = unicode(sh.cell(ll,ci).value)
+        
+                        poids = {}
+                        lignes = {}
+                        revues = {}
+                        for p, c in ref._colParties:
+                            v = int0(sh.cell(ll,c).value)                   # Colonne code partie projet
+                            if v > 0:
+                                poids[p] = v
+                                lignes[p] = int0(sh.cell(ll,c+1).value)     # Colonne "l"
+                                revues[p] = int0(sh.cell(ll,c+2).value)     # Colonne "r"
+                                if lignes[p] != 0:
+                                    ref.aColNon[p] = True
+                                if revues[p] != 0:
+                                    ref.compImposees[p] = True
+        
+                        if indic != u"":
+                            competence.indicateurs.append(Indicateur(indic, poids, lignes, revues))
+        
+                if prems:
+                    if debug:
+                        print "prems", 
+                    poids = {}
+                    for p, c in ref._colParties:
+                        if debug: print p, c, "--", 
+                        v = int0(sh.cell(l,c).value)
+                        if debug: print v
+                        if v > 0:
+                            poids[p] = v
+                    if debug: print poids
+                    competence.poids = poids
+            
+            if debug: print 
+            return dic
+        
+        self.obj = 'O' in feuille.cell(0,6).value
+        self.pre = 'P' in feuille.cell(0,6).value
+        
+        
+        # Eventuels éléments associés à ces compétences
+        if feuille.cell(2,5).value != "" and feuille.cell(3,5).value != "": # il y en a !
+            t = feuille.cell(2,5).value
+            erreur = False
+            if t[:4] == "Comp":
+                self.asso_type.append(ref.dicoCompetences[t[5:]])
+            elif t[:3] == "Sav":
+                self.asso_type.append(ref.dicoSavoirs[t[4:]])
+            elif t == "Th":
+                self.asso_type.append(ref.thematiques)
+            elif t == "Dom":
+                self.asso_type.append(ref.domaines)
+            else:
+                erreur = True
+            
+            if not erreur:
+                self.asso_contexte.append(feuille.cell(3,5).value)
+            
+        
+        self.dicCompetences = getArbreComp(feuille, range(4, feuille.nrows), 0, 
+                                           prems = True, debug = debug)
+
+        if debug: 
+            print self.dicCompetences
+            for typi, dico in self.dicCompetences.items():
+                print " _poids :", dico.poids
+
+        
+        
     #########################################################################
     def getCompetence(self, comp):
 #         print "getCompetence", comp
@@ -2980,9 +3015,12 @@ def chargerReferentiels():
             REFERENTIELS[ref.Code] = ref
 #            print ref.Code
 
-    for r in REFERENTIELS.values():
+    for k, r in REFERENTIELS.items():
 #        print r
         r.completer()
+#         print "############################"+ k
+#         print r.dicoCompetences
+#         print 
 #        if r.Code == "ITEC":
 #        print r
     

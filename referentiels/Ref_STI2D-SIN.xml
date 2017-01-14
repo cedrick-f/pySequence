@@ -37,15 +37,25 @@
   <d_dicFonctions />
   <d_dicoCompetences>
     <Competences_S B_obj="True" B_pre="False" S_abrDiscipline="SIN" S_codeDiscipline="SII" S_nomDiscipline="STI2D - SIN" S_nomGenerique="Compétence(s)" S_nomGeneriqueIndic="Indicateurs de performance">
+      <l_asso_contexte />
+      <l_asso_type />
       <d_dicCompetences>
         <Competence_O7 S_intitule="Imaginer une solution, répondre à un besoin">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
           <d_poids I_C="40" />
           <d_sousComp>
             <Competence_CO7.sin3 S_intitule="Exprimer le principe de fonctionnement d'un système à partir des diagrammes SysML pertinents. Repérer les constituants de la chaîne d'énergie et d'information">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Le système est modélisé à l'aide de diagrammes conformes ">
                   <d_ligne I_C="13" />
@@ -70,6 +80,10 @@
             </Competence_CO7.sin3>
             <Competence_CO7.sin2 S_intitule="Décoder le cahier des charges fonctionnel décrivant le besoin exprimé, identifier la fonction définie par un besoin exprimé, faire des mesures pour caractériser cette fonction et conclure sur sa conformité">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Les diagrammes Sysml utilisés sont bien interprétés">
                   <d_ligne I_C="10" />
@@ -94,6 +108,10 @@
             </Competence_CO7.sin2>
             <Competence_CO7.sin1 S_intitule="Décoder la notice technique d'un système, vérifier la conformité du fonctionnement">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="L'interprétation de la notice du système permet de décrire une procédure">
                   <d_ligne I_C="6" />
@@ -126,12 +144,20 @@
         </Competence_O7>
         <Competence_O9 S_intitule="Gérer la vie d'un système">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
           <d_poids I_C="20" />
           <d_sousComp>
             <Competence_CO9.sin4 S_intitule="Rechercher et choisir de nouveaux constituants d'un système (ou d'un projet finalisé) au regard d'évolutions technologiques, socioéconomiques spécifiées dans un cahier des charges. Organiser le projet permettant de maquettiser la solution choisie">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Les diagrammes comportementaux sont correctement mis à jour">
                   <d_ligne I_C="41" />
@@ -156,6 +182,10 @@
             </Competence_CO9.sin4>
             <Competence_CO9.sin1 S_intitule="Utiliser les outils adaptés pour planifier un projet (diagramme de Gantt, chemin critique, données économiques, réunions de projet)">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Le cahier des charges fonctionnel est analysé et reformulé">
                   <d_ligne I_C="30" />
@@ -180,6 +210,10 @@
             </Competence_CO9.sin1>
             <Competence_CO9.sin3 S_intitule="Rechercher des évolutions de constituants dans le cadre d'une démarche de veille technologique, analyser la structure d'un système pour intervenir sur les constituants dans le cadre d'une opération de maintenance">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Les procédures adaptées d'intervention sur les constituants sont proposées">
                   <d_ligne I_C="38" />
@@ -204,6 +238,10 @@
             </Competence_CO9.sin3>
             <Competence_CO9.sin2 S_intitule="Installer, configurer et instrumenter un système réel. Mettre en oeuvre la chaîne d'acquisition puis acquérir, traiter, transmettre et restituer l'information">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="La notice du système est correctement interprétée">
                   <d_ligne I_C="33" />
@@ -241,12 +279,20 @@
         </Competence_O9>
         <Competence_O8 S_intitule="Valider des solutions techniques">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
           <d_poids I_C="40" />
           <d_sousComp>
             <Competence_CO8.sin2 S_intitule="Etablir pour une fonction précédemment identifiée, un modèle de comportement à partir de mesures faites sur le sytème">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Les mesures nécessaires sont effectuées">
                   <d_ligne I_C="20" />
@@ -271,6 +317,10 @@
             </Competence_CO8.sin2>
             <Competence_CO8.sin3 S_intitule="Traduire sous forme graphique l'architecture de la chaîne d'information identifiée pour un système et définir les paramètres d'utilisation du simulateur">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="La chaîne d'information est modélisée par des diagrammes adaptés (SysML)">
                   <d_ligne I_C="23" />
@@ -290,6 +340,10 @@
             </Competence_CO8.sin3>
             <Competence_CO8.sin1 S_intitule="Rechercher et choisir une solution logicielle ou matérielle au regard de la définition d'un système">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="La définition du système est exprimée correctement">
                   <d_ligne I_C="17" />
@@ -314,6 +368,10 @@
             </Competence_CO8.sin1>
             <Competence_CO8.sin4 S_intitule="Identifier les variables simulées et mesurées sur un système pour valider le choix d'une solution">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Les variables caractéristiques du système simulé sont identifiées">
                   <d_ligne I_C="25" />

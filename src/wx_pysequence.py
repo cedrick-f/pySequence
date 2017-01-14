@@ -7728,7 +7728,7 @@ class PanelPropriete_Savoirs(PanelPropriete):
 
     ######################################################################################  
     def construire(self):
-        print "Construire Savoirs", self.prerequis
+#         print "Construire Savoirs", self.prerequis
 #        print self.GetDocument().GetReferentiel()
         
 #         # On efface tout ...

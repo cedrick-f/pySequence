@@ -183,9 +183,15 @@
   </d_dicFonctions>
   <d_dicoCompetences>
     <Competences_S B_obj="True" B_pre="False" S_abrDiscipline="S6" S_codeDiscipline="SII" S_nomDiscipline="Génie Électrique" S_nomGenerique="Compétence(s)" S_nomGeneriqueIndic="Indicateurs de performance">
+      <l_asso_contexte />
+      <l_asso_type />
       <d_dicCompetences>
         <Competence_C19 S_intitule="Identifier les paramètres de réglage">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs>
             <Indicateur_00 S_intitule="Les paramètres à régler sur les appareils par le technicien sont définis">
               <d_ligne I_C="0" />
@@ -210,6 +216,10 @@
         </Competence_C19>
         <Competence_C18 S_intitule="Interpréter des indicateurs, des résultats de mesure et d'essais">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs>
             <Indicateur_00 S_intitule="Les résultats sont correctement commentés">
               <d_ligne I_C="0" />
@@ -234,6 +244,10 @@
         </Competence_C18>
         <Competence_C13 S_intitule="Appliquer les normes">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
           <d_poids />
@@ -242,6 +256,10 @@
         </Competence_C13>
         <Competence_C12 S_intitule="Concevoir une procédure">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
           <d_poids />
@@ -250,6 +268,10 @@
         </Competence_C12>
         <Competence_C11 S_intitule="Estimer les coûts prévisionnels">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs>
             <Indicateur_00 S_intitule="Le matériel pricipal nécessaire à la réalisation est correctement déterminé">
               <d_ligne I_C="0" />
@@ -274,6 +296,10 @@
         </Competence_C11>
         <Competence_C10 S_intitule="Réaliser les représentations graphiques nécessaires">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs>
             <Indicateur_00 S_intitule="Les symbloes utilisés dans les représentations graphiques sont conformes aux normes en vigueur">
               <d_ligne I_C="0" />
@@ -303,6 +329,10 @@
         </Competence_C10>
         <Competence_C17 S_intitule="Mettre en oeuvre des moyens de mesurage">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs>
             <Indicateur_00 S_intitule="Le choix des grandeurs à mesurer est approprié au fonctionnement à valider">
               <d_ligne I_C="0" />
@@ -332,6 +362,10 @@
         </Competence_C17>
         <Competence_C16 S_intitule="Élaborer un support de formation">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs>
             <Indicateur_00 S_intitule="Le discours est audible et dans un langage approprié">
               <d_ligne I_S="0" />
@@ -361,6 +395,10 @@
         </Competence_C16>
         <Competence_C15 S_intitule="Estimer les délais de réalisation">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs>
             <Indicateur_00 S_intitule="Les différentes tâches du projet sont listées">
               <d_ligne I_C="0" />
@@ -390,6 +428,10 @@
         </Competence_C15>
         <Competence_C14 S_intitule="Analyser les causes de disfonctionnement">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs>
             <Indicateur_00 S_intitule="Le mauvais fonctionnement d'un ensemble est expliqué et justifié">
               <d_ligne I_C="0" />
@@ -409,6 +451,10 @@
         </Competence_C14>
         <Competence_C31 S_intitule="Intervenir sur une installation">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
           <d_poids />
@@ -417,6 +463,10 @@
         </Competence_C31>
         <Competence_C30 S_intitule="Ordonnancer des opérations de maintenance">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
           <d_poids />
@@ -425,6 +475,10 @@
         </Competence_C30>
         <Competence_C33 S_intitule="Animer une réunion">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs>
             <Indicateur_00 S_intitule="L'avancé des travaux de chacun est connue de toute l'équipe">
               <d_ligne I_C="0" />
@@ -449,6 +503,10 @@
         </Competence_C33>
         <Competence_C32 S_intitule="Interpréter la demande du client">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs>
             <Indicateur_00 S_intitule="Le but du projet est nettement identifié">
               <d_ligne I_C="0" />
@@ -473,6 +531,10 @@
         </Competence_C32>
         <Competence_C22 S_intitule="Déterminer les différentes tâches">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
           <d_poids />
@@ -481,6 +543,10 @@
         </Competence_C22>
         <Competence_C23 S_intitule="Planifier les tâches en tenant compte des réalisations et interventions des autres corps de métier concernés par la performance énergétique">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
           <d_poids />
@@ -489,6 +555,10 @@
         </Competence_C23>
         <Competence_C20 S_intitule="Régler les paramètres">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs>
             <Indicateur_00 S_intitule="Les paramètres sont réglés dans des conditions qui limitent les risques pour les personnes et le matériel">
               <d_ligne I_C="0" />
@@ -513,6 +583,10 @@
         </Competence_C20>
         <Competence_C21 S_intitule="Réaliser un ouvrage, un équipement ou un produit">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs>
             <Indicateur_00 S_intitule="La réalisation est faite dans le respect des règles de l'art">
               <d_ligne I_C="0" />
@@ -542,6 +616,10 @@
         </Competence_C21>
         <Competence_C26 S_intitule="Contrôler la conformité d'un produit">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
           <d_poids />
@@ -550,6 +628,10 @@
         </Competence_C26>
         <Competence_C27 S_intitule="Estimer les délais d'approvisionnement">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs>
             <Indicateur_00 S_intitule="Les délais de livraison sont déterminés">
               <d_ligne I_C="0" />
@@ -569,6 +651,10 @@
         </Competence_C27>
         <Competence_C24 S_intitule="Suivre la réalisation">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs>
             <Indicateur_00 S_intitule="Les tâches sont réalisées dans l'ordre conformément au planning">
               <d_ligne I_C="0" />
@@ -593,6 +679,10 @@
         </Competence_C24>
         <Competence_C25 S_intitule="Analyser un planning">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
           <d_poids />
@@ -601,6 +691,10 @@
         </Competence_C25>
         <Competence_C28 S_intitule="Communiquer de façon adaptée à la situation">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
           <d_poids />
@@ -609,6 +703,10 @@
         </Competence_C28>
         <Competence_C29 S_intitule="Exercer une responsabilité hiérarchique">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
           <d_poids />
@@ -617,6 +715,10 @@
         </Competence_C29>
         <Competence_C08 S_intitule="Concevoir une solution technique">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
           <d_poids />
@@ -625,6 +727,10 @@
         </Competence_C08>
         <Competence_C09 S_intitule="Élaborer les dossiers techniques">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs>
             <Indicateur_00 S_intitule="Le dossier est bien organisé et permet une recherche aisée de l'information">
               <d_ligne I_S="0" />
@@ -649,6 +755,10 @@
         </Competence_C09>
         <Competence_C01 S_intitule="Analyser un dossier">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
           <d_poids />
@@ -657,6 +767,10 @@
         </Competence_C01>
         <Competence_C02 S_intitule="Choisir une solution technique">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
           <d_poids />
@@ -665,6 +779,10 @@
         </Competence_C02>
         <Competence_C03 S_intitule="Analyser une solution technique">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
           <d_poids />
@@ -673,6 +791,10 @@
         </Competence_C03>
         <Competence_C04 S_intitule="Rédiger un document de synthèse">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
           <d_poids />
@@ -681,6 +803,10 @@
         </Competence_C04>
         <Competence_C05 S_intitule="Déterminer les ressources et les contraintes">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs>
             <Indicateur_00 S_intitule="Une ou plusieurs solutions technologiques conformes à la demande sont présentées">
               <d_ligne I_C="0" />
@@ -705,6 +831,10 @@
         </Competence_C05>
         <Competence_C06 S_intitule="Respecter une procédure">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs>
             <Indicateur_00 S_intitule="La procédure de réception du matériel est respectée">
               <d_ligne I_C="0" />
@@ -729,6 +859,10 @@
         </Competence_C06>
         <Competence_C07 S_intitule="Argumenter sur la solution technique retenue">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs>
             <Indicateur_00 S_intitule="Les choix réalisés sont clairement développés et justifés">
               <d_ligne I_S="0" />
@@ -763,6 +897,10 @@
         </Competence_C07>
         <Competence_P S_intitule="Le technicien participe à la tâche mais n'en a pas la maîtrise. Il doit néanmoins comprendre son fondement et apporter ses compétences à l'équipe qui en a la charge.">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
           <d_poids />

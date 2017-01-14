@@ -37,15 +37,25 @@
   <d_dicFonctions />
   <d_dicoCompetences>
     <Competences_S B_obj="True" B_pre="False" S_abrDiscipline="EE" S_codeDiscipline="SII" S_nomDiscipline="STI2D-EE" S_nomGenerique="Compétence(s)" S_nomGeneriqueIndic="Indicateurs">
+      <l_asso_contexte />
+      <l_asso_type />
       <d_dicCompetences>
         <Competence_O7 S_intitule="Imaginer une solution, répondre à un besoin">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
           <d_poids I_C="40" />
           <d_sousComp>
             <Competence_CO7.ee2 S_intitule="Justifier une solution retenue en intégrant les conséquences des choix sur le triptyque Matériau - Energie - Information">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Les caractéristiques comportementales de la solution retenue répondent au cahier des charges">
                   <d_ligne I_C="10" />
@@ -65,6 +75,10 @@
             </Competence_CO7.ee2>
             <Competence_CO7.ee3 S_intitule="Définir la structure, la constitution d'un système en fonction des caractéristiques technico-économiques et environnementales attendues">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Les croquis et schémas à main levée sont utilisés à bon escient">
                   <d_ligne I_C="12" />
@@ -99,6 +113,10 @@
             </Competence_CO7.ee3>
             <Competence_CO7.ee1 S_intitule="Participer à une démarche de conception dans le but de proposer plusieurs solutions possibles à un problème technique identifié en lien avec un enjeu énergétique">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Le besoin relatif au projet et les fonctions sont identifiés et justifiés">
                   <d_ligne I_C="6" />
@@ -128,6 +146,10 @@
             </Competence_CO7.ee1>
             <Competence_CO7.ee4 S_intitule="Définir les modifications de la structure, les choix de constituants et du type de système de gestion d'une chaîne d'énergie afin de répondre à une évolution d'un cahier des charges">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="idem CO7.ee3">
                   <d_ligne I_C="0" />
@@ -145,12 +167,20 @@
         </Competence_O7>
         <Competence_O9 S_intitule="Gérer la vie du produit">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
           <d_poids I_C="20" />
           <d_sousComp>
             <Competence_CO9.ee1 S_intitule="Expérimenter des procédés de stockage, de production, de transport, de transformation, d'énergie pour aider à la conception d'une chaîne d'énergie">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Les paramètres significatifs à observer sont identifiés">
                   <d_ligne I_C="31" />
@@ -175,6 +205,10 @@
             </Competence_CO9.ee1>
             <Competence_CO9.ee2 S_intitule="Réaliser et valider un prototype obtenu en réponse à tout ou partie du cahier des charges initial">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Le prototype choisi et sa réalisation, respecte le diagramme des exigences">
                   <d_ligne I_C="34" />
@@ -194,6 +228,10 @@
             </Competence_CO9.ee2>
             <Competence_CO9.ee3 S_intitule="Intégrer un prototype dans un système à modifier pour valider son comportement et ses performances">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Le prototype s'insère dans le système">
                   <d_ligne I_C="36" />
@@ -226,12 +264,20 @@
         </Competence_O9>
         <Competence_O8 S_intitule="Valider des solutions techniques">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
           <d_poids I_C="40" />
           <d_sousComp>
             <Competence_CO8.ee1 S_intitule="Renseigner un logiciel de simulation du comportement énergétique avec les caractéristiques du système et les paramètres externes pour un point de fonctionnement donné">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Les variables et les paramètres du modèle sont identifiés">
                   <d_ligne I_C="18" />
@@ -251,6 +297,10 @@
             </Competence_CO8.ee1>
             <Competence_CO8.ee3 S_intitule="Comparer et interpréter le résultat d'une simulation d'un comportement d'un système avec un comportement réel">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Les résultats de la simulation et les mesures sont corrélés">
                   <d_ligne I_C="24" />
@@ -275,6 +325,10 @@
             </Competence_CO8.ee3>
             <Competence_CO8.ee2 S_intitule="Interpréter les résultats d'une simulation afin de valider une solution ou l'optimiser">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Les scénarios de simulation sont identifiés">
                   <d_ligne I_C="20" />
@@ -304,6 +358,10 @@
             </Competence_CO8.ee2>
             <Competence_CO8.ee4 S_intitule="Mettre en oeuvre un protocole d'essais et de mesures sur le prototype d'une chaîne d'énergie, interpréter les résultats">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="le protocole d'essai est justifié et adapté à l'objectif">
                   <d_ligne I_C="27" />

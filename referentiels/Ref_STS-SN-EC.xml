@@ -37,9 +37,15 @@
   <d_dicFonctions />
   <d_dicoCompetences>
     <Competences_S B_obj="True" B_pre="False" S_abrDiscipline="GE" S_codeDiscipline="SII" S_nomDiscipline="Génie Électrique" S_nomGenerique="Compétence(s)" S_nomGeneriqueIndic="Indicateurs de performance">
+      <l_asso_contexte />
+      <l_asso_type />
       <d_dicCompetences>
         <Competence_C7.1 S_intitule="diagnostiquer les causes d’un dysfonctionnement">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs>
             <Indicateur_00 S_intitule="Les paramètres sont identifiés.">
               <d_ligne I_S2="16" />
@@ -69,6 +75,10 @@
         </Competence_C7.1>
         <Competence_C7.2 S_intitule="proposer des corrections ou des améliorations">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs>
             <Indicateur_00 S_intitule="Une stratégie pour le maintien en condition opérationnelle est mise en place">
               <d_ligne />
@@ -88,6 +98,10 @@
         </Competence_C7.2>
         <Competence_C7.3 S_intitule="dépanner une installation matérielle et/ou logicielle">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs>
             <Indicateur_00 S_intitule="La zone d’intervention est consignée. Les personnes concernées sont averties.">
               <d_ligne I_S2="21" />
@@ -117,6 +131,10 @@
         </Competence_C7.3>
         <Competence_C6.1 S_intitule="superviser le fonctionnement d’un produit matériel/logiciel ">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs>
             <Indicateur_00 S_intitule="Les informations à enregistrer et les alertes à générer sont identifiées et pertinentes.">
               <d_ligne I_S2="6" />
@@ -146,6 +164,10 @@
         </Competence_C6.1>
         <Competence_C6.2 S_intitule="analyser les compte rendus d’exploitation ">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs>
             <Indicateur_00 S_intitule="Les informations utiles à l’exploitation sont accessibles dans le système récepteur.  Les informations issues de l’outil de supervision sont synthétisées et analysées.">
               <d_ligne I_S2="11" />
@@ -175,6 +197,10 @@
         </Competence_C6.2>
         <Competence_C1.6 S_intitule="collecter des données commerciales ">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
           <d_poids />
@@ -183,6 +209,10 @@
         </Competence_C1.6>
         <Competence_C1.4 S_intitule="s'entretenir d'une problématique professionnelle ">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
           <d_poids />
@@ -191,6 +221,10 @@
         </Competence_C1.4>
         <Competence_C1.5 S_intitule="analyser l'expression d'un besoin client ">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
           <d_poids />
@@ -199,6 +233,10 @@
         </Competence_C1.5>
         <Competence_C1.2 S_intitule="présenter des informations à des interlocuteurs identifiés ">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
           <d_poids />
@@ -207,6 +245,10 @@
         </Competence_C1.2>
         <Competence_C1.3 S_intitule="assister des utilisateurs ">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
           <d_poids />
@@ -215,6 +257,10 @@
         </Competence_C1.3>
         <Competence_C1.1 S_intitule="rechercher et structurer des informations techniques">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
           <d_poids />
@@ -223,6 +269,10 @@
         </Competence_C1.1>
         <Competence_C3.4 S_intitule="valider le choix d’une architecture matérielle/logicielle">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
           <d_poids />
@@ -231,6 +281,10 @@
         </Competence_C3.4>
         <Competence_C3.5 S_intitule="contribuer à la définition des éléments de recette au regard des contraintes du cahier des charges ">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs>
             <Indicateur_00 S_intitule="Le cahier de recette est rédigé">
               <d_ligne I_R2="0" />
@@ -245,6 +299,10 @@
         </Competence_C3.5>
         <Competence_C3.6 S_intitule="recenser les solutions existantes répondant au cahier des charges">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs>
             <Indicateur_00 S_intitule="Un tableau comparatif des coûts totaux est édité">
               <d_ligne I_R2="0" />
@@ -259,6 +317,10 @@
         </Competence_C3.6>
         <Competence_C3.7 S_intitule="contribuer à la modélisation de tout ou partie d’un produit ">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
           <d_poids />
@@ -267,6 +329,10 @@
         </Competence_C3.7>
         <Competence_C3.1 S_intitule="analyser un cahier des charges ">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs>
             <Indicateur_00 S_intitule="Un compte rendu est rédigé avec la validation des jalons, les documents contractuels, les actions à réaliser pour les jalons non respectés">
               <d_ligne I_R2="0" />
@@ -296,6 +362,10 @@
         </Competence_C3.1>
         <Competence_C3.2 S_intitule="analyser et compléter un dossier de spécifications techniques ">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
           <d_poids />
@@ -304,6 +374,10 @@
         </Competence_C3.2>
         <Competence_C3.3 S_intitule="définir l’architecture--globale d’un prototype ou d’un système ">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs>
             <Indicateur_00 S_intitule="Les diagrammes de définition de blocs et le digramme de blocs internes sont définis">
               <d_ligne I_R2="0" />
@@ -318,6 +392,10 @@
         </Competence_C3.3>
         <Competence_C3.8 S_intitule="élaborer le dossier de définition de la solution technique retenue">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs>
             <Indicateur_00 S_intitule="Le dossier de conception est complet">
               <d_ligne I_R2="0" />
@@ -332,6 +410,10 @@
         </Competence_C3.8>
         <Competence_C3.9 S_intitule="valider une fonction du système à partir d’une maquette réelle ">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs>
             <Indicateur_00 S_intitule="Les procédures et les résultats de mesures (valeurs, chronogrammes, spectres, etc.) sont rédigés">
               <d_ligne I_R2="0" />
@@ -351,6 +433,10 @@
         </Competence_C3.9>
         <Competence_C7.4 S_intitule="assurer la traçabilité">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs>
             <Indicateur_00 S_intitule="Le rapport d’intervention est rédigé.">
               <d_ligne I_S2="26" />
@@ -370,6 +456,10 @@
         </Competence_C7.4>
         <Competence_C5.2 S_intitule="mettre en œuvre une solution matérielle/logicielle en situation">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs>
             <Indicateur_00 S_intitule="Les contraintes liées au client (horaires, nuisances sonores, qualité de la relation …) sont respectées.">
               <d_ligne I_S1="11" />
@@ -399,6 +489,10 @@
         </Competence_C5.2>
         <Competence_C5.3 S_intitule="effectuer la recette d’un produit avec le client ">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs>
             <Indicateur_00 S_intitule="La fiche recette est conforme aux spécifications du cahier des charges.">
               <d_ligne I_S1="16" />
@@ -428,6 +522,10 @@
         </Competence_C5.3>
         <Competence_C5.1 S_intitule="préparer la solution et le plan d’action ">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs>
             <Indicateur_00 S_intitule="L'équipe est constituée et les tâches professionnelles sont attribuées.">
               <d_ligne I_S1="6" />
@@ -457,6 +555,10 @@
         </Competence_C5.1>
         <Competence_C3.10 S_intitule="réaliser la conception détaillée d’un module matériel et/ou logiciel ">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs>
             <Indicateur_00 S_intitule="Le schémas structurels sont établis">
               <d_ligne I_R2="0" />
@@ -486,6 +588,10 @@
         </Competence_C3.10>
         <Competence_P S_intitule="Le technicien participe à la tâche mais n'en a pas la maîtrise. Il doit néanmoins comprendre son fondement et apporter ses compétences à l'équipe qui en a la charge.">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
           <d_poids />
@@ -494,6 +600,10 @@
         </Competence_P>
         <Competence_C2.1 S_intitule="maintenir les informations">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs>
             <Indicateur_00 S_intitule="Les modifications apportées sont clairement documentées">
               <d_ligne I_R2="0" />
@@ -513,6 +623,10 @@
         </Competence_C2.1>
         <Competence_C2.3 S_intitule="organiser et/ou respecter la planification d'un projet">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs>
             <Indicateur_00 S_intitule="Les tâches professionnelles à effectuer sont identifiés">
               <d_ligne I_R2="0" />
@@ -572,6 +686,10 @@
         </Competence_C2.3>
         <Competence_C2.2 S_intitule="formaliser l’expression d’un besoin">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs>
             <Indicateur_00 S_intitule="Le cahier des charges est rédigé">
               <d_ligne I_R2="0" />
@@ -586,6 +704,10 @@
         </Competence_C2.2>
         <Competence_C2.5 S_intitule="travailler en équipe ">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs>
             <Indicateur_00 S_intitule="Les intervenants au projet sont identifiés et choisis">
               <d_ligne I_R2="0" />
@@ -665,6 +787,10 @@
         </Competence_C2.5>
         <Competence_C2.4 S_intitule="assumer le rôle total ou partiel de chef de projet ">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs>
             <Indicateur_00 S_intitule="Les moyens sont réservés et libérés">
               <d_ligne I_R2="0" />
@@ -704,6 +830,10 @@
         </Competence_C2.4>
         <Competence_C4.7 S_intitule="documenter une réalisation matérielle et/ou logicielle">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs>
             <Indicateur_00 S_intitule="Le dossier est synthétisé">
               <d_ligne I_R2="0" />
@@ -718,6 +848,10 @@
         </Competence_C4.7>
         <Competence_C4.6 S_intitule="produire les documents de fabrication d’un sous ensemble">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs>
             <Indicateur_00 S_intitule="Les documents de fabrication sont rédigés">
               <d_ligne I_R2="0" />
@@ -737,6 +871,10 @@
         </Competence_C4.6>
         <Competence_C4.5 S_intitule="tester et valider un module logiciel et matériel ">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs>
             <Indicateur_00 S_intitule="La procédure de tests est définie">
               <d_ligne I_R2="0" />
@@ -766,6 +904,10 @@
         </Competence_C4.5>
         <Competence_C4.4 S_intitule="fabriquer un sous-ensemble">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs>
             <Indicateur_00 S_intitule="Le dossier de fabrication produit est conforme aux contraintes">
               <d_ligne I_R2="0" />
@@ -785,6 +927,10 @@
         </Competence_C4.4>
         <Competence_C4.3 S_intitule="adapter et/ou configurer une structure logicielle">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs>
             <Indicateur_00 S_intitule="La structure logicielle est délimitée">
               <d_ligne I_R2="0" />
@@ -814,6 +960,10 @@
         </Competence_C4.3>
         <Competence_C4.2 S_intitule="adapter et/ou configurer un matériel">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs>
             <Indicateur_00 S_intitule="Le matériel est fonctionnel dans son environnement">
               <d_ligne I_R2="0" />
@@ -853,6 +1003,10 @@
         </Competence_C4.2>
         <Competence_C4.1 S_intitule="câbler et/ou intégrer un matériel ">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs>
             <Indicateur_00 S_intitule="Le matériel est fonctionnel dans son environnement">
               <d_ligne I_R2="0" />

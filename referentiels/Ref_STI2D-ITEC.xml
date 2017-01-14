@@ -37,15 +37,25 @@
   <d_dicFonctions />
   <d_dicoCompetences>
     <Competences_S B_obj="True" B_pre="False" S_abrDiscipline="ITEC" S_codeDiscipline="SII" S_nomDiscipline="STI2D - ITEC" S_nomGenerique="Compétence(s)" S_nomGeneriqueIndic="Indicateurs de performance">
+      <l_asso_contexte />
+      <l_asso_type />
       <d_dicCompetences>
         <Competence_O7 S_intitule="Imaginer une solution, répondre à un besoin">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
           <d_poids I_C="40" />
           <d_sousComp>
             <Competence_CO7.itec4 S_intitule="Définir, à l'aide d'un modeleur numérique, les modifications d'un mécanisme à partir des contraintes fonctionnelles">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Les modifications respectent les contraintes fonctionnelles">
                   <d_ligne I_C="16" />
@@ -65,6 +75,10 @@
             </Competence_CO7.itec4>
             <Competence_CO7.itec3 S_intitule="Définir, à l'aide d'un modeleur numérique, les formes et dimensions d'une pièce d'un mécanisme à partir des contraintes fonctionnelles, de son principe de réalisation et de son matériau">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="La démarche de création est rationnelle">
                   <d_ligne I_C="13" />
@@ -89,6 +103,10 @@
             </Competence_CO7.itec3>
             <Competence_CO7.itec2 S_intitule="Proposer des solutions à un problème technique identifié en participant à des démarches de créativité, choisir et justifier la solution retenue">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Les grandes étapes d'une démarche de créativité sont franchies de manière cohérente">
                   <d_ligne I_C="9" />
@@ -118,6 +136,10 @@
             </Competence_CO7.itec2>
             <Competence_CO7.itec1 S_intitule="Identifier et justifier un problème technique à partir de l'analyse globale d'un système (approche Matière - Energie - Information)">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Le besoin relatif au projet et les fonctions sont identifiés et justifiés">
                   <d_ligne I_C="6" />
@@ -145,12 +167,20 @@
         </Competence_O7>
         <Competence_O9 S_intitule="Gérer la vie du produit">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
           <d_poids I_C="20" />
           <d_sousComp>
             <Competence_CO9.itec1 S_intitule="Expérimenter des procédés pour caractériser les paramètres de transformation de la matière et leurs conséquences sur la définition et l'obtention de pièces">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Les paramètres significatifs à observer sont identifiés">
                   <d_ligne I_C="31" />
@@ -170,6 +200,10 @@
             </Competence_CO9.itec1>
             <Competence_CO9.itec3 S_intitule="Intégrer les pièces prototypes dans le système à modifier pour valider son comportement et ses performances">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Les pièces prototypes s'insèrent dans le mécanisme">
                   <d_ligne I_C="36" />
@@ -199,6 +233,10 @@
             </Competence_CO9.itec3>
             <Competence_CO9.itec2 S_intitule="Réaliser et valider un prototype obtenu par rapport à tout ou partie du cahier des charges initial">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Le moyen de prototypage retenu d'une pièce est adapté à la partie du CDC à respecter ">
                   <d_ligne I_C="33" />
@@ -226,12 +264,20 @@
         </Competence_O9>
         <Competence_O8 S_intitule="Valider des solutions techniques">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
           <d_poids I_C="40" />
           <d_sousComp>
             <Competence_CO8.itec1 S_intitule="Paramétrer un logiciel de simulation mécanique pour obtenir les caractéristiques d'une loi d'entrée/sortie d'un mécanisme simple">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Les variables et les paramètres du modèle sont identifiés">
                   <d_ligne I_C="18" />
@@ -251,6 +297,10 @@
             </Competence_CO8.itec1>
             <Competence_CO8.itec2 S_intitule="Interpréter les résultats d'une simulation mécanique pour valider une solution ou modifier une pièce ou un mécanisme">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Les scénarios de simulation sont identifiés">
                   <d_ligne I_C="20" />
@@ -280,6 +330,10 @@
             </Competence_CO8.itec2>
             <Competence_CO8.itec3 S_intitule="Mettre en oeuvre un protocole d'essais et de mesures, interpréter les résultats">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="le protocole d'essai est justifié et adapté à l'objectif">
                   <d_ligne I_C="24" />
@@ -304,6 +358,10 @@
             </Competence_CO8.itec3>
             <Competence_CO8.itec4 S_intitule="Comparer et interpréter le résultat d'une simulation d'un comportement mécanique avec un comportement réel">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs>
                 <Indicateur_00 S_intitule="Les résultats de la simulation et les mesures sont corrélés">
                   <d_ligne I_C="27" />

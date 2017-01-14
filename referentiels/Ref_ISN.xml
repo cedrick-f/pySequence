@@ -39,15 +39,25 @@
   <d_dicFonctions />
   <d_dicoCompetences>
     <Competences_S B_obj="True" B_pre="False" S_abrDiscipline="ISN" S_codeDiscipline="ISN" S_nomDiscipline="Informatique et Sciences du Numérique " S_nomGenerique="Compétence(s)" S_nomGeneriqueIndic="Indicateurs de performance">
+      <l_asso_contexte />
+      <l_asso_type />
       <d_dicCompetences>
         <Competence_C3 S_intitule="Collaborer efficacement au sein d'une équipe dans le cadre d'un projet">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
           <d_poids />
           <d_sousComp>
             <Competence_C3.1 S_intitule="Agir au sein d'une équipe dans des rôles bien définis, en interaction avec le professeur.">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs />
               <l_infos />
               <d_poids />
@@ -56,6 +66,10 @@
             </Competence_C3.1>
             <Competence_C3.2 S_intitule="Rechercher et partager une information, une documentation, une explication.">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs />
               <l_infos />
               <d_poids />
@@ -64,6 +78,10 @@
             </Competence_C3.2>
             <Competence_C3.3 S_intitule="Maîtriser l'utilisation d'outils numériques collaboratifs du type ENT, système de gestion de contenu (CMS), groupe de travail, forums…">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs />
               <l_infos />
               <d_poids />
@@ -75,12 +93,20 @@
         </Competence_C3>
         <Competence_C2 S_intitule="Concevoir et réaliser une solution informatique en réponse à un problème">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
           <d_poids />
           <d_sousComp>
             <Competence_C2.1 S_intitule="Analyser un besoin dans un système d'information, le fonctionnement d'un algorithme…">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs />
               <l_infos />
               <d_poids />
@@ -89,6 +115,10 @@
             </Competence_C2.1>
             <Competence_C2.3 S_intitule="Développer une interface logicielle ou une interface homme-machine, un algorithme, un programme, un document ou fichier numérique…">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs />
               <l_infos />
               <d_poids />
@@ -97,6 +127,10 @@
             </Competence_C2.3>
             <Competence_C2.2 S_intitule="Structurer une formule logique, des données, une arborescence, une page web, une approche fonctionnelle en réponse à un besoin…">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs />
               <l_infos />
               <d_poids />
@@ -108,12 +142,20 @@
         </Competence_C2>
         <Competence_C1 S_intitule="Décrire et expliquer une situation, un système ou un programme">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
           <d_poids />
           <d_sousComp>
             <Competence_C1.2 S_intitule="Détailler le déroulement d'une communication numérique, le rôle des constituants d'un système numérique, le rôle des éléments constitutifs d'une page web, ce qu'effectue tout ou partie d'un programme ou de l'algorithme associé, l'enchaînement des événements qui réalisent la fonction attendue par un programme...">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs />
               <l_infos />
               <d_poids />
@@ -122,6 +164,10 @@
             </Competence_C1.2>
             <Competence_C1.1 S_intitule="Justifier dans une situation donnée, un codage numérique ou l'usage d'un format approprié, qu'un programme réalise l'action attendue…">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs />
               <l_infos />
               <d_poids />
@@ -133,12 +179,20 @@
         </Competence_C1>
         <Competence_C5 S_intitule="Faire un usage responsable des sciences du numérique en ayant conscience des problèmes sociétaux induits">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
           <d_poids />
           <d_sousComp>
             <Competence_C5.2 S_intitule="Mesurer les limites et les conséquences de la persistance de l'information numérique, des lois régissant les échanges numériques, du caractère supranational des réseaux.">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs />
               <l_infos />
               <d_poids />
@@ -147,6 +201,10 @@
             </Competence_C5.2>
             <Competence_C5.1 S_intitule="Avoir conscience de l'impact du numérique dans la société notamment de la persistance de l'information numérique, de la non-rivalité des biens immatériels, du caractère supranational des réseaux, de l'importance des licences et du droit.">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs />
               <l_infos />
               <d_poids />
@@ -158,12 +216,20 @@
         </Competence_C5>
         <Competence_C4 S_intitule="Communiquer à l'écrit et à l'oral">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
           <d_poids />
           <d_sousComp>
             <Competence_C4.3 S_intitule="Argumenter les choix relatifs à une solution (choix d'un format, d'un algorithme, d'une interface...).">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs />
               <l_infos />
               <d_poids />
@@ -172,6 +238,10 @@
             </Competence_C4.3>
             <Competence_C4.2 S_intitule="Présenter le cahier des charges relatif à un projet ou un mini-projet, la répartition des tâches au sein de l'équipe, les phases successives mises en œuvre, le déroulement de l'ensemble des opérations…">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs />
               <l_infos />
               <d_poids />
@@ -180,6 +250,10 @@
             </Competence_C4.2>
             <Competence_C4.1 S_intitule="Documenter un projet numérique pour en permettre la communication en cours de réalisation et à l'achèvement, tout en précisant le déroulement et la finalité du projet.">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs />
               <l_infos />
               <d_poids />

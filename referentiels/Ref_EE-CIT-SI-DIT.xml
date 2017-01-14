@@ -38,9 +38,15 @@
   <d_dicFonctions />
   <d_dicoCompetences>
     <Competences_S B_obj="True" B_pre="False" S_abrDiscipline="SI-CIT-DIT" S_codeDiscipline="SII" S_nomDiscipline="E.Exploration" S_nomGenerique="Compétence(s)" S_nomGeneriqueIndic="Indicateurs de performance">
+      <l_asso_contexte />
+      <l_asso_type />
       <d_dicCompetences>
         <Competence_C3 S_intitule="Approfondir la culture design">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs>
             <Indicateur_00 S_intitule="Un objet est associé à une grande période de la conception, des arts aux design industriel">
               <d_ligne I_C="17" I_S1="17" I_S2="17" />
@@ -70,6 +76,10 @@
         </Competence_C3>
         <Competence_C2 S_intitule="Approfondir la culture technologique">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs>
             <Indicateur_00 S_intitule="Des contraintes associées à une norme sont identifiées">
               <d_ligne I_C="12" I_S1="12" I_S2="12" />
@@ -99,6 +109,10 @@
         </Competence_C2>
         <Competence_C1 S_intitule="Acquérir les bases d'une culture de l'innovation technologique">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs>
             <Indicateur_00 S_intitule="Les évolutions technologiques sont reliées aux innovations qui marquent des ruptures dans les solutions techniques">
               <d_ligne I_C="6" I_S1="6" I_S2="6" />
@@ -133,6 +147,10 @@
         </Competence_C1>
         <Competence_C7 S_intitule="Représenter, communiquer">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs>
             <Indicateur_00 S_intitule="Une réflexion, un principe, une idée, une solution technique sont exprimées">
               <d_ligne I_C="35" I_S1="35" I_S2="35" />
@@ -167,6 +185,10 @@
         </Competence_C7>
         <Competence_C6 S_intitule="Simuler, mesurer un comportement">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs>
             <Indicateur_00 S_intitule="Les grandeurs sont mesurées de manière directe ou indirecte">
               <d_ligne I_C="31" I_S1="31" I_S2="31" />
@@ -191,6 +213,10 @@
         </Competence_C6>
         <Competence_C5 S_intitule="mettre en œuvre une démarche de création">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs>
             <Indicateur_00 S_intitule="Le projet de design, individuel ou collectif est conçu et réalisé">
               <d_ligne I_C="26" I_S1="26" I_S2="26" />
@@ -220,6 +246,10 @@
         </Competence_C5>
         <Competence_C4 S_intitule="mettre en œuvre une démarche de créativité">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs>
             <Indicateur_00 S_intitule="Les hypothèses sont formulées, hiérarchisées, sélectionnées, explicitées, contextualisées">
               <d_ligne I_C="22" I_S1="22" I_S2="22" />

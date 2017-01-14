@@ -39,21 +39,35 @@
   <d_dicFonctions />
   <d_dicoCompetences>
     <Competences_S B_obj="True" B_pre="False" S_abrDiscipline="SI" S_codeDiscipline="SII" S_nomDiscipline="Sciences de l'Ingénieur" S_nomGenerique="Compétence(s)" S_nomGeneriqueIndic="Indicateurs de performance">
+      <l_asso_contexte />
+      <l_asso_type />
       <d_dicCompetences>
         <Competence_A S_intitule="Analyser">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
           <d_poids I_S="30" />
           <d_sousComp>
             <Competence_A1 S_intitule="Analyser le besoin">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs />
               <l_infos />
               <d_poids />
               <d_sousComp>
                 <Competence_A1.4 S_intitule="traduire un besoin fonctionnel en problématique technique">
                   <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
                   <l_indicateurs>
                     <Indicateur_00 S_intitule="Le problème technique est bien décrit">
                       <d_ligne I_S="0" />
@@ -68,6 +82,10 @@
                 </Competence_A1.4>
                 <Competence_A1.1 S_intitule="définir le besoin">
                   <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
                   <l_indicateurs>
                     <Indicateur_00 S_intitule="Le besoin et la fonction globale sont bien définis">
                       <d_ligne I_S="0" />
@@ -82,6 +100,10 @@
                 </Competence_A1.1>
                 <Competence_A1.2 S_intitule="définir les fonctions de service">
                   <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
                   <l_indicateurs />
                   <l_infos />
                   <d_poids />
@@ -90,6 +112,10 @@
                 </Competence_A1.2>
                 <Competence_A1.3 S_intitule="identifier les contraintes">
                   <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
                   <l_indicateurs />
                   <l_infos />
                   <d_poids />
@@ -101,12 +127,20 @@
             </Competence_A1>
             <Competence_A3 S_intitule="Caractériser des écarts">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs />
               <l_infos />
               <d_poids />
               <d_sousComp>
                 <Competence_A3.2 S_intitule="comparer les résultats expérimentaux avec les critères du cahier des charges et interpréter les écarts">
                   <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
                   <l_indicateurs>
                     <Indicateur_00 S_intitule="Les écarts constatés sont expliqués">
                       <d_ligne I_S="0" />
@@ -121,6 +155,10 @@
                 </Competence_A3.2>
                 <Competence_A3.3 S_intitule="comparer les résultats simulés avec les critères du cahier des charges et interpréter les écarts">
                   <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
                   <l_indicateurs>
                     <Indicateur_00 S_intitule="Les écarts constatés sont expliqués">
                       <d_ligne I_S="0" />
@@ -135,6 +173,10 @@
                 </Competence_A3.3>
                 <Competence_A3.1 S_intitule="comparer les résultats expérimentaux avec les résultats simulés et interpréter les écarts">
                   <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
                   <l_indicateurs>
                     <Indicateur_00 S_intitule="Les écarts constatés sont expliqués">
                       <d_ligne I_S="0" />
@@ -152,12 +194,20 @@
             </Competence_A3>
             <Competence_A2 S_intitule="Analyser le système">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs />
               <l_infos />
               <d_poids />
               <d_sousComp>
                 <Competence_A2.3 S_intitule="décrire les liaisons entre les blocs fonctionnels">
                   <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
                   <l_indicateurs />
                   <l_infos />
                   <d_poids />
@@ -166,6 +216,10 @@
                 </Competence_A2.3>
                 <Competence_A2.2 S_intitule="identifier les éléments transformés et les flux">
                   <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
                   <l_indicateurs />
                   <l_infos />
                   <d_poids />
@@ -174,6 +228,10 @@
                 </Competence_A2.2>
                 <Competence_A2.1 S_intitule="identifier et ordonner les fonctions techniques qui réalisent les fonctions de services et respectent les contraintes">
                   <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
                   <l_indicateurs />
                   <l_infos />
                   <d_poids />
@@ -182,6 +240,10 @@
                 </Competence_A2.1>
                 <Competence_A2.5 S_intitule="identifier les matériaux des constituants et leurs propriétés en relation avec les fonctions et les contraintes">
                   <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
                   <l_indicateurs />
                   <l_infos />
                   <d_poids />
@@ -190,6 +252,10 @@
                 </Competence_A2.5>
                 <Competence_A2.4 S_intitule="identifier l’organisation structurelle">
                   <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
                   <l_indicateurs />
                   <l_infos />
                   <d_poids />
@@ -204,18 +270,30 @@
         </Competence_A>
         <Competence_C S_intitule="Expérimenter">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
           <d_poids I_C="50" I_S="30" />
           <d_sousComp>
             <Competence_C2 S_intitule="Mettre en oeuvre un protocole expérimental">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs />
               <l_infos />
               <d_poids />
               <d_sousComp>
                 <Competence_C2.1 S_intitule="conduire les essais en respectant les consignes de sécurité à partir d’un protocole fourni">
                   <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
                   <l_indicateurs>
                     <Indicateur_00 S_intitule="Le système est correctement mis en œuvre">
                       <d_ligne I_C="17" />
@@ -245,6 +323,10 @@
                 </Competence_C2.1>
                 <Competence_C2.2 S_intitule="traiter les données mesurées en vue d’analyser les écarts">
                   <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
                   <l_indicateurs>
                     <Indicateur_00 S_intitule="Les méthodes et outils de traitement sont cohérents avec le problème posé">
                       <d_ligne I_C="21" />
@@ -267,12 +349,20 @@
             </Competence_C2>
             <Competence_C1 S_intitule="Justifier le choix d’un protocole expérimental">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs />
               <l_infos />
               <d_poids />
               <d_sousComp>
                 <Competence_C1.4 S_intitule="justifier le choix des essais réalisés">
                   <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
                   <l_indicateurs>
                     <Indicateur_00 S_intitule="Un protocole expérimental adapté est décrit">
                       <d_ligne I_S="0" />
@@ -287,6 +377,10 @@
                 </Competence_C1.4>
                 <Competence_C1.2 S_intitule="décrire une chaîne d’acquisition">
                   <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
                   <l_indicateurs>
                     <Indicateur_00 S_intitule="Les éléments de la chaîne d'acquisition sont correctement identifiés">
                       <d_ligne I_C="15" />
@@ -306,6 +400,10 @@
                 </Competence_C1.2>
                 <Competence_C1.3 S_intitule="identifier le comportement des composants">
                   <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
                   <l_indicateurs>
                     <Indicateur_00 S_intitule="Le comportement est précisément décrit">
                       <d_ligne I_S="0" />
@@ -320,6 +418,10 @@
                 </Competence_C1.3>
                 <Competence_C1.1 S_intitule="identifier les grandeurs physiques à mesurer">
                   <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
                   <l_indicateurs>
                     <Indicateur_00 S_intitule="Les grandeurs à mesurer sont bien identifiées, leur nature et caractéristiques bien définies">
                       <d_ligne I_C="14" />
@@ -340,18 +442,30 @@
         </Competence_C>
         <Competence_B S_intitule="Modéliser">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
           <d_poids I_C="40" />
           <d_sousComp>
             <Competence_B4 S_intitule="Valider un modèle">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs />
               <l_infos />
               <d_poids />
               <d_sousComp>
                 <Competence_B4.4 S_intitule="valider un modèle optimisé fourni">
                   <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
                   <l_indicateurs>
                     <Indicateur_00 S_intitule="Les résultats obtenus, en amplitude et variation, sont conformes aux attendus du cahier des charges">
                       <d_ligne I_C="11" />
@@ -371,6 +485,10 @@
                 </Competence_B4.4>
                 <Competence_B4.1 S_intitule="interpréter les résultats obtenus">
                   <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
                   <l_indicateurs>
                     <Indicateur_00 S_intitule="Les résultats obtenus sont bien interprétés, en amplitude et variation, de façon conforme aux lois et principes d'évolution des grandeurs physiques">
                       <d_ligne I_C="7" />
@@ -385,6 +503,10 @@
                 </Competence_B4.1>
                 <Competence_B4.2 S_intitule="préciser les limites de validité du modèle utilisé">
                   <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
                   <l_indicateurs>
                     <Indicateur_00 S_intitule="Les principales limites sont explicitées">
                       <d_ligne I_C="8" />
@@ -399,6 +521,10 @@
                 </Competence_B4.2>
                 <Competence_B4.3 S_intitule="modifier les paramètres du modèle pour répondre au cahier des charges ou aux résultats expérimentaux">
                   <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
                   <l_indicateurs>
                     <Indicateur_00 S_intitule="Les paramètres modifiés sont pertinents et font évoluer  les résultats simulés vers ceux attendus au cahier des charges">
                       <d_ligne I_C="9" />
@@ -421,12 +547,20 @@
             </Competence_B4>
             <Competence_B1 S_intitule="Identifier et caractériser les grandeurs agissant sur un système">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs />
               <l_infos />
               <d_poids />
               <d_sousComp>
                 <Competence_B1.1 S_intitule="définir, justifier la frontière de tout ou partie d’un système et répertorier les interactions">
                   <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
                   <l_indicateurs />
                   <l_infos />
                   <d_poids />
@@ -435,6 +569,10 @@
                 </Competence_B1.1>
                 <Competence_B1.2 S_intitule="choisir les grandeurs et les paramètres influents en vue de les modéliser">
                   <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
                   <l_indicateurs />
                   <l_infos />
                   <d_poids />
@@ -446,12 +584,20 @@
             </Competence_B1>
             <Competence_B2 S_intitule="Proposer ou justifier un modèle">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs />
               <l_infos />
               <d_poids />
               <d_sousComp>
                 <Competence_B2.2 S_intitule="préciser ou justifier les limites de validité du modèle envisagé">
                   <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
                   <l_indicateurs />
                   <l_infos />
                   <d_poids />
@@ -460,6 +606,10 @@
                 </Competence_B2.2>
                 <Competence_B2.1 S_intitule="associer un modèle à un système ou à son comportement">
                   <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
                   <l_indicateurs />
                   <l_infos />
                   <d_poids />
@@ -471,12 +621,20 @@
             </Competence_B2>
             <Competence_B3 S_intitule="Résoudre et simuler">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs />
               <l_infos />
               <d_poids />
               <d_sousComp>
                 <Competence_B3.2 S_intitule="simuler le fonctionnement de tout ou partie d’un système à l’aide d’un modèle fourni">
                   <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
                   <l_indicateurs>
                     <Indicateur_00 S_intitule="Les paramètres de simulation sont adaptés aux grandeurs simulées">
                       <d_ligne I_C="5" />
@@ -496,6 +654,10 @@
                 </Competence_B3.2>
                 <Competence_B3.1 S_intitule="choisir et mettre en oeuvre une méthode de résolution">
                   <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
                   <l_indicateurs />
                   <l_infos />
                   <d_poids />
@@ -510,18 +672,30 @@
         </Competence_B>
         <Competence_D S_intitule="Communiquer">
           <l_domaines />
+          <l_elemAssocies>
+            <l_00 />
+            <l_01 />
+          </l_elemAssocies>
           <l_indicateurs />
           <l_infos />
           <d_poids I_C="10" I_S="40" />
           <d_sousComp>
             <Competence_D2 S_intitule="Mettre en oeuvre une communication">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs />
               <l_infos />
               <d_poids />
               <d_sousComp>
                 <Competence_D2.1 S_intitule="choisir un support de communication et un média adapté, argumenter">
                   <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
                   <l_indicateurs>
                     <Indicateur_00 S_intitule="Le support est bien choisi et adapté à l'objectif de présentation">
                       <d_ligne I_S="0" />
@@ -536,6 +710,10 @@
                 </Competence_D2.1>
                 <Competence_D2.2 S_intitule="produire un support de communication">
                   <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
                   <l_indicateurs>
                     <Indicateur_00 S_intitule="Un document multimédia est bien réalisé et scénarisé">
                       <d_ligne I_S="0" />
@@ -550,6 +728,10 @@
                 </Competence_D2.2>
                 <Competence_D2.3 S_intitule="adapter sa stratégie de communication au contexte">
                   <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
                   <l_indicateurs>
                     <Indicateur_00 S_intitule="La production respecte le cahier des charges (écrit/oral, texte/vidéo, durée, public visé, …)">
                       <d_ligne I_S="0" />
@@ -567,12 +749,20 @@
             </Competence_D2>
             <Competence_D1 S_intitule="Rechercher et traiter des informations">
               <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
               <l_indicateurs />
               <l_infos />
               <d_poids />
               <d_sousComp>
                 <Competence_D1.2 S_intitule="analyser, choisir et classer des informations">
                   <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
                   <l_indicateurs>
                     <Indicateur_00 S_intitule="Les informations sont traitées selon des critères pertinents">
                       <d_ligne I_C="25" />
@@ -597,6 +787,10 @@
                 </Competence_D1.2>
                 <Competence_D1.1 S_intitule="rechercher des informations">
                   <l_domaines />
+                  <l_elemAssocies>
+                    <l_00 />
+                    <l_01 />
+                  </l_elemAssocies>
                   <l_indicateurs>
                     <Indicateur_00 S_intitule="Les outils de recherche documentaire sont bien choisis et maîtrisés. ">
                       <d_ligne I_C="23" />
