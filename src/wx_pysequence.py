@@ -7921,7 +7921,7 @@ class PanelPropriete_Seance(PanelPropriete):
         self.bsizer2 = wx.StaticBoxSizer(box2, wx.VERTICAL)
         pageGen.sizer.Add(self.bsizer2, (0,1), (2,1), flag =wx.ALL|wx.EXPAND, border = 2)
         
-        # Déplacé dans AdapterAuType()
+        # reste déplacé dans AdapterAuType()
 
         
 
@@ -7929,8 +7929,10 @@ class PanelPropriete_Seance(PanelPropriete):
         #
         # Démarche
         #
+        self.demSizer = wx.BoxSizer(wx.VERTICAL)
+        pageGen.sizer.Add(self.demSizer, (3,1), (1,1), flag = wx.EXPAND|wx.ALL, border = 2)
         
-        # Déplacé dans AdapterAuType()
+        # reste déplacé dans AdapterAuType()
         
         
         #
@@ -8166,11 +8168,11 @@ class PanelPropriete_Seance(PanelPropriete):
         # Démarche      
         #
         if hasattr(self, 'cbDem'):
-            try:
-                self.demSizer.Detach(self.cbDem)
-                self.demSizer.Detach(self.titreDem)
-            except:
-                pass
+#             try:
+            self.demSizer.Detach(self.cbDem)
+            self.demSizer.Detach(self.titreDem)
+#             except:
+#                 pass
             self.cbDem.Destroy()
             self.titreDem.Destroy()
             del self.cbDem
@@ -8178,7 +8180,7 @@ class PanelPropriete_Seance(PanelPropriete):
         
         if self.seance.typeSeance in ref.activites.keys():
             if len(ref.demarches) > 0:
-                self.demSizer = wx.BoxSizer(wx.VERTICAL)
+                
                 listDem = ref.demarcheSeance[self.seance.typeSeance]
                 titre = wx.StaticText(self.pageGen, -1, u"Démarche :")
                 cbDem = wx.ComboBox(self.pageGen, -1, u"",
@@ -8199,10 +8201,13 @@ class PanelPropriete_Seance(PanelPropriete):
                 
                 self.demSizer.Add(titre, flag = wx.ALIGN_BOTTOM|wx.ALIGN_LEFT|wx.LEFT, border = 2)
                 self.demSizer.Add(cbDem, flag = wx.EXPAND|wx.LEFT, border = 2)
-                self.pageGen.sizer.Add(self.demSizer, (3,1), (1,1), flag = wx.EXPAND|wx.ALL, border = 2)
-
+                self.demSizer.Layout()
                 
-        self.sizer.Layout()
+        
+#                 
+#                 
+#         self.bsizer2.Layout()
+        self.pageGen.sizer.Layout()
         
 
 
