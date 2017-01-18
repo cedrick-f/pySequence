@@ -972,19 +972,7 @@
           <l_infos />
           <d_poids />
           <d_sousComp>
-            <Competence_CT 5.4 S_intitule="Piloter un système connecté localement ou à distance.">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 S_00="IP.2.2" />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_CT 5.4>
-            <Competence_CT 5.5 S_intitule="Modifier ou paramétrer le fonctionnement d’un objet communicant.">
+            <Competence_CT5.5 S_intitule="Modifier ou paramétrer le fonctionnement d’un objet communicant.">
               <l_domaines />
               <l_elemAssocies>
                 <l_00 S_00="IP.2.3" />
@@ -995,8 +983,20 @@
               <d_poids />
               <d_sousComp />
               <l_thematiques />
-            </Competence_CT 5.5>
-            <Competence_CT 5.1 S_intitule="Simuler numériquement la structure et/ou le comportement d’un objet.">
+            </Competence_CT5.5>
+            <Competence_CT5.4 S_intitule="Piloter un système connecté localement ou à distance.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 S_00="IP.2.2" />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT5.4>
+            <Competence_CT5.1 S_intitule="Simuler numériquement la structure et/ou le comportement d’un objet.">
               <l_domaines />
               <l_elemAssocies>
                 <l_00 S_00="MSOST.2.2" />
@@ -1007,20 +1007,8 @@
               <d_poids />
               <d_sousComp />
               <l_thematiques />
-            </Competence_CT 5.1>
-            <Competence_CT 5.2 S_intitule="Organiser, structurer et stocker des ressources numériques.">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 S_00="DIC.1.6" />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_CT 5.2>
-            <Competence_CT 5.3 S_intitule="Lire, utiliser et produire des représentations numériques d’objets.">
+            </Competence_CT5.1>
+            <Competence_CT5.3 S_intitule="Lire, utiliser et produire des représentations numériques d’objets.">
               <l_domaines />
               <l_elemAssocies>
                 <l_00 S_00="OTSCIS.2.2" />
@@ -1031,7 +1019,19 @@
               <d_poids />
               <d_sousComp />
               <l_thematiques />
-            </Competence_CT 5.3>
+            </Competence_CT5.3>
+            <Competence_CT5.2 S_intitule="Organiser, structurer et stocker des ressources numériques.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 S_00="DIC.1.6" />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT5.2>
           </d_sousComp>
           <l_thematiques />
         </Competence_CT5>
@@ -1045,19 +1045,7 @@
           <l_infos />
           <d_poids />
           <d_sousComp>
-            <Competence_CT 6.3 S_intitule="Analyser le cycle de vie d’un objet.">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 S_00="OTSCIS.1.1" />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_CT 6.3>
-            <Competence_CT 6.2 S_intitule="Analyser l’impact environnemental d’un objet et de ses constituants.">
+            <Competence_CT6.2 S_intitule="Analyser l’impact environnemental d’un objet et de ses constituants.">
               <l_domaines />
               <l_elemAssocies>
                 <l_00 S_00="OTSCIS.1.2" />
@@ -1068,8 +1056,20 @@
               <d_poids />
               <d_sousComp />
               <l_thematiques />
-            </Competence_CT 6.2>
-            <Competence_CT 6.1 S_intitule="Développer les bonnes pratiques de l’usage des objets communicants.">
+            </Competence_CT6.2>
+            <Competence_CT6.3 S_intitule="Analyser le cycle de vie d’un objet.">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 S_00="OTSCIS.1.1" />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_CT6.3>
+            <Competence_CT6.1 S_intitule="Développer les bonnes pratiques de l’usage des objets communicants.">
               <l_domaines />
               <l_elemAssocies>
                 <l_00 S_00="OTSCIS.1.3" />
@@ -1080,7 +1080,7 @@
               <d_poids />
               <d_sousComp />
               <l_thematiques />
-            </Competence_CT 6.1>
+            </Competence_CT6.1>
           </d_sousComp>
           <l_thematiques />
         </Competence_CT6>
@@ -1094,7 +1094,7 @@
           <l_infos />
           <d_poids />
           <d_sousComp>
-            <Competence_CT 7.2 S_intitule="Relier les évolutions technologiques aux inventions et innovations qui marquent des ruptures dans les solutions techniques. ">
+            <Competence_CT7.2 S_intitule="Relier les évolutions technologiques aux inventions et innovations qui marquent des ruptures dans les solutions techniques.">
               <l_domaines />
               <l_elemAssocies>
                 <l_00 S_00="OTSCIS.1.2" />
@@ -1105,8 +1105,8 @@
               <d_poids />
               <d_sousComp />
               <l_thematiques />
-            </Competence_CT 7.2>
-            <Competence_CT 7.1 S_intitule="Regrouper des objets en familles et lignées.">
+            </Competence_CT7.2>
+            <Competence_CT7.1 S_intitule="Regrouper des objets en familles et lignées.">
               <l_domaines />
               <l_elemAssocies>
                 <l_00 S_00="OTSCIS.1.1" />
@@ -1117,7 +1117,7 @@
               <d_poids />
               <d_sousComp />
               <l_thematiques />
-            </Competence_CT 7.1>
+            </Competence_CT7.1>
           </d_sousComp>
           <l_thematiques />
         </Competence_CT7>
