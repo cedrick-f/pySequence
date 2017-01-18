@@ -339,10 +339,10 @@ class XMLelem():
                 if isinstance(val1, (str, unicode, int, long, float, bool, list, dict, XMLelem)) :
                     val2 = getattr(ref, attr)
                     if not egal(val1, val2):
-                        print u"Différence", ""
-                        print "  ", attr
-                        print "  xml:", val1
-                        print "  xls:", val2
+#                         print u"Différence", ""
+#                         print "  ", attr
+#                         print "  xml:", val1
+#                         print "  xls:", val2
                         break
                         return False
         return True
@@ -1301,7 +1301,7 @@ class Referentiel(XMLelem):
         #
         # Compétences  ###############################################################################
         #
-        debug = self.Code == "Cy4-ST"
+        debug = False#self.Code == "Cy4-ST"
         
         lst_feuilles_codes = [(wb.sheet_by_name(n), n[5]) for n in wb.sheet_names() if n[:5] == "Comp_"]
         for sh_co, code in lst_feuilles_codes:
@@ -1837,6 +1837,28 @@ class Referentiel(XMLelem):
         return r*tailleReference
 
 
+    #########################################################################
+    def getDependant(self, elem, contexte):
+        """ Vérifie si l'élément <elem> (Compétences, Savoir, Thématique, Domaine)
+            est dépendant d'un autre dans le même <contexte>
+            
+            Renvoi l'élément dont il dépend ou None
+        """
+        print "getDependant", contexte, "---", elem
+#         listeTousElem = self.dicoCompetences + self.dicoSavoirs
+#         if isinstance(elem, Competences):
+        for code, comp in self.dicoCompetences.items():
+#                 print "  :::", code, comp.asso_type
+            if comp != elem and elem in comp.asso_type:
+                i = comp.asso_type.index(elem)
+                if contexte in comp.asso_contexte[i]:
+                    print "  >>", i, code, comp
+                    return i, code, comp
+        
+        print "Aucun"
+        return
+    
+    
     #########################################################################
     def getSousSavoirs(self, code):
 #         print "getSousSavoirs", code
@@ -2665,10 +2687,10 @@ class Competences(XMLelem):
         
 
 
-    #########################################################################
-    def __repr__(self):
-        competences = u"\n".join([c.__repr__() for c in self.dicCompetences.values()])
-        return "Referentiel.Competences" + competences# str(self.obj)+str(self.pre)
+#     #########################################################################
+#     def __repr__(self):
+#         competences = u"\n".join([c.__repr__() for c in self.dicCompetences.values()])
+#         return "Referentiel.Competences"# + competences# str(self.obj)+str(self.pre)
     
 
     
@@ -2699,7 +2721,9 @@ class Competences(XMLelem):
                 intitule = unicode(sh.cell(l,col+1).value)
                 competence = Competence(intitule)
                 dic[code] = competence
-                
+                if len(self.asso_type) > 0: # Il y a des éléments associés à ces compétences
+                    competence.elemAssocies[0] = sh.cell(l,5).value.split()
+                    
                 if debug: print "-> ",l, code, intitule
                 
                 # Toutes les lignes entre chaque code
@@ -2718,6 +2742,7 @@ class Competences(XMLelem):
                     # Il y a un(des) info(s) seulement
                     elif [li  for li in ssRng if sh.cell(li,col+1).value != u""] != []:
                         competence.infos = [sh.cell(li,col+1).value  for li in ssRng]
+                    
                     
                     
         

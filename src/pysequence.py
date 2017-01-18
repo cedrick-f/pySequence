@@ -2272,6 +2272,70 @@ class Sequence(BaseDoc):
                                    len(self.GetReferentiel().CentresInterets))
 
 
+    
+    
+    
+    #########################################################################
+    def GetFiltre(self, elem, prerequis):
+        """ Renvoi le "filtre" = liste de codes à afficher dans l'arbre Compétences ou Savoirs
+            pour l'élément <elem> (de type Referentiel.Competences ou Referentiel.Savoirs , ...)
+            
+            None si aucun
+        """
+        ref = self.GetReferentiel()
+        if prerequis:
+            contexte = "P"
+            
+        else:
+            contexte = "O"
+        
+        dep = ref.getDependant(elem, contexte)
+        if dep is None:
+            return
+        
+        
+        i, cod, dep = dep
+        
+        filtre = []
+        if isinstance(dep, Referentiel.Competences):
+            if prerequis:
+                comp = self.prerequis["C"]
+            else:
+                comp = self.obj["C"]
+
+            for code in comp.competences:
+                
+                if code[0] == cod:
+#                     print " +++", code
+                    c = ref.getCompetence(code)
+                    filtre.extend(c.elemAssocies[i])
+                
+        
+        return filtre
+    
+    
+    ########################################################################
+    def GererElementsDependants(self, codeComp, elem_asso, comp):
+        """ Gestion (filtrage) des compétences de <elem_asso> (type Referentiel.Competences, Savoirs, Th ou Dom)
+        """
+#         print "GererElementsDependants SEQ", codeComp
+        filtre = self.GetFiltre(elem_asso, comp.prerequis)
+#         print "   ", filtre
+        if comp.prerequis:
+            d = self.prerequis
+        else:
+            d = self.obj
+        
+        for code in d["C"].competences:
+#             print "    ++", code
+            if codeComp != code[0] and not (code in filtre):
+                d["C"].competences.remove(code)
+                
+#         for code in d["S"].savoirs:
+#             if not (code in filtre):
+#                 d["S"].savoirs.remove(code)   
+    
+    
     ######################################################################################  
     def Rafraichir(self):
         self.arbre.Delete(self.branche)
@@ -5952,6 +6016,297 @@ class CentreInteret(ElementBase):
         
 
 
+####################################################################################
+# #
+# #   Classe définissant les propriétés des Objectifs de la Séquence
+# #
+# ####################################################################################
+# class Objectifs(ElementBase):
+#     def __init__(self, parent, numComp = None, prerequis = False):
+#         self.parent = parent
+#         ElementBase.__init__(self)
+#         
+#         self.objectifs = {"Comp"}       # Liste des Objectifs (Compétences ou Savoirs) de la Séquence
+#         
+#         
+# 
+#     ######################################################################################  
+#     def __repr__(self):
+#         return u"Compétences : "+" ".join(self.competences)
+#         
+#     ######################################################################################  
+#     def GetApp(self):
+#         return self.parent.GetApp()
+#     
+#     ######################################################################################  
+#     def GetPanelPropriete(self, parent, code, comp):
+#         """ Renvoie le PanelPropriete approprié
+#             <comp> est du type Referentiel.Competences
+#         """
+#         ref = self.GetReferentiel()
+#         if self.prerequis:
+#             contexte = "P"
+#         else:
+#             contexte = "O"
+#         dep = ref.getDependant(comp, contexte)
+#         
+#         return PanelPropriete_Competences(parent, self, code, comp, dep = dep)
+#     
+#     ######################################################################################  
+#     def getBranche(self):
+#         """ Renvoie la branche XML de la compétence pour enregistrement
+#         """
+#         root = ET.Element("Competences")
+#         for i, s in enumerate(self.competences):
+#             root.set("C"+str(i), s)
+#         return root
+#     
+#     
+#     ######################################################################################  
+#     def setBranche(self, branche):
+#         self.competences = []
+#         for i in range(len(branche.keys())):
+#             
+#             codeindic = branche.get("C"+str(i), "")
+#             
+#             # Avant la version 7, il n'y a pas de préfixe "type" devant le code competence
+#             if self.GetClasse().GetVersionNum() < 7:
+# #                 print "setBranche", codeindic
+#                 ref = self.GetReferentiel()
+#                 ref_tc = None
+#                 lstComp = [] # liste des "type" Referentiel.Competences compatibles avec "codeindic"
+#                 if ref.tr_com != []: # B = tronc commun --> référentiel
+#                     ref_tc = REFERENTIELS[ref.tr_com[0]]
+#                 
+#                     comp = ref_tc.dicoCompetences["S"]
+#                     c = comp.getCompetence(codeindic)
+#                     if c is not None:
+#                         lstComp.append("B")
+#                     
+#                 for typ in ref.dicoCompetences.keys():
+#                     comp = ref.dicoCompetences[typ]
+#                     c = comp.getCompetence(codeindic)
+#                     if c is not None:
+#                         lstComp.append(typ)
+#                 
+#                 if ref_tc is not None:
+#                     for typ in [k for k in ref_tc.dicoCompetences.keys() if k != "S"]:
+#                         comp = ref.dicoCompetences[typ]
+#                         c = comp.getCompetence(codeindic)
+#                         if c is not None:
+#                             lstComp.append(typ)    
+#                 
+# #                 print "lstComp", lstComp
+#                 if lstComp != []:
+#                     codeindic = lstComp[0]+codeindic
+#                 else:
+#                     codeindic = "S"+codeindic
+#                     
+#             self.competences.append(codeindic)
+#         
+# #        self.GetPanelPropriete().MiseAJour()
+#     
+#     
+#     
+#     ######################################################################################  
+#     def ToogleCode(self, code):
+#         self.Etendre()
+#         if code in self.competences:
+#             self.competences.remove(code)
+#         else:
+#             self.competences.append(code)
+#         self.Condenser()
+#             
+#     ######################################################################################       
+#     def Etendre(self):
+#         """ Etend la liste des compétences :
+#             A1
+#                 >>>
+#                     A1
+#                     A1.1
+#                     A1.2
+#                     A1.3
+#         """
+# #         print "Etendre"
+# #         print "   ", self.competences
+#         ref = self.GetReferentiel()
+#         
+#         def ajouter(k, l, comp):
+#             if len(comp.sousComp) > 0:
+#                 for k2, c2 in comp.sousComp.items():
+#                     ajouter("S"+k2, l, c2)
+#             else:
+#                 l.append(k)
+#             
+#         lstCompS = [c for c in self.competences if c[0] == "S"]
+#         l = []
+#         for k in lstCompS:
+#             ajouter(k, l, ref.getCompetence(k))
+#             
+#         self.competences = l
+# #         print "   ", self.competences
+# 
+# 
+# 
+#     ######################################################################################       
+#     def Condenser(self):
+#         """ Condense la liste des compétences :
+#             A1.1
+#             A1.2
+#             A1.3
+#                 >>>
+#                     A1
+#         """
+# #         print "Condenser"
+# #         print "   ", self.competences
+#         ref = self.GetReferentiel()
+#         s = set(self.competences)
+#         
+#         def condense(d, k, comp):
+#             if len(comp.sousComp) > 0:
+# #                 print " +++ ", comp.sousComp.keys()
+#                 lk = [d+kk for kk in comp.sousComp.keys()]
+#                 if set(lk).issubset(s):
+#                     for sk in lk:
+#                         s.remove(sk)
+#                     s.add(d+k)
+#                     
+#                 for k1, v1 in comp.sousComp.items():
+#                     condense(d, k1, v1)
+#                 
+#         for d, competences in ref.dicoCompetences.items():
+#             dicCompetences = competences.dicCompetences
+#             for k, v in dicCompetences.items():
+#                 condense(d, k, v)
+#             
+#         self.competences = list(s)
+# #         print "   ", self.competences
+#         
+#         
+#         
+#     ######################################################################################  
+#     def GetCode(self, num):
+#         return self.competences[num]
+#     
+#     ######################################################################################  
+#     def GetTypCode(self, num):
+#         return self.competences[num][0], self.competences[num][1:]
+#     
+#     ######################################################################################  
+#     def GetNomGenerique(self, code = "S"):
+#         dic = self.GetReferentiel().getDicToutesCompetences()
+#         return getPluriel(dic[code].nomGenerique)  + u" ("+ dic[code].abrDiscipline+ u")"
+#     
+#     
+#     ######################################################################################  
+#     def GetCodeDiscipline(self, code = "S"):
+#         dic = self.GetReferentiel().getDicToutesCompetences()
+#         return dic[code].codeDiscipline
+#         
+#     ######################################################################################  
+#     def GetDiscipline(self, code):
+#         dic = self.GetReferentiel().getDicToutesCompetences()
+#         return dic[code].abrDiscipline
+#             
+#     ######################################################################################  
+#     def GetDisciplineNum(self, num):
+#         ref = self.GetReferentiel()
+#         dicComp = ref.getToutesCompetences()
+#         for code, comp in dicComp:
+#             if code == self.GetCode(num)[0]:
+#                 return comp.abrDiscipline
+#     
+# #         return self.GetReferentiel().dicoCompetences[self.competences[num][0]].abrDiscipline
+#     
+#     ######################################################################################  
+#     def GetIntit(self, num):
+#         return self.GetReferentiel().getCompetence(self.GetCode(num)).intitule  
+# #         return self.GetReferentiel().getCompetence(self.competences[num]).intitule
+# 
+#     ######################################################################################  
+#     def ConstruireArbre(self, arbre, branche, prerequis = False):
+#         ref = self.GetReferentiel()
+#         self.branche = branche
+#         lst = ref.getToutesCompetences()
+#         if prerequis:
+#             aff = any([d.pre for k, d in lst])
+#         else:
+#             aff = any([d.obj for k, d in lst])
+#         
+#         if aff:
+#             self.arbre = arbre
+#             self.codeBranche = {}
+#             self.branches = {}
+#             for k, d in lst:
+#                 if (prerequis and d.pre) or (not prerequis and d.obj):
+#                     self.codeBranche[k] = CodeBranche(self.arbre, u"")
+#                     self.branches[k] = arbre.AppendItem(branche, self.GetNomGenerique(k), 
+#                                                         wnd = self.codeBranche[k], 
+#                                                         data = (self, k, d),
+#                                                         image = self.arbre.images["Com"])
+#                     self.codeBranche[k].SetBranche(self.branches[k])
+#                     self.arbre.SetItemTextColour(self.branches[k], 
+#                                                  couleur.GetCouleurWx(COUL_DISCIPLINES[self.GetCodeDiscipline(k)]))
+#                     self.arbre.SetItemBold(self.branches[k])
+# 
+#         else:
+#             if hasattr(self, 'arbre'):
+#                 del self.arbre
+#     
+#         
+#         #
+#         # Les "Fonctions" (à faire !)
+#         #
+#         if (len(ref.dicFonctions) > 0):
+#             self.codeBranche["Fct"] = CodeBranche(self.arbre, u"")
+#             self.branches["Fct"] = arbre.AppendItem(branche, ref.nomFonctions, 
+#                                                    wnd = self.codeBranche[k], 
+#                                                    data = (self, "Fct", ref.dicFonctions),
+#                                                    image = self.arbre.images["Fct"])
+#             self.codeBranche[k].SetBranche(self.branches["Fct"])
+#             self.arbre.SetItemTextColour(self.branches["Fct"], couleur.GetCouleurWx(COUL_COMPETENCES))
+# 
+# 
+#     
+#     
+#     #############################################################################
+#     def MiseAJourTypeEnseignement(self):
+#         if hasattr(self, 'arbre'):
+#             del self.branches
+#             self.ConstruireArbre(self.arbre, self.branche, self.prerequis)
+# #         if hasattr(self, 'arbre'):
+# #             for k, b in self.branche.items():
+# #                 self.arbre.SetItemText(b, self.GetNomGenerique(k))
+# #        if hasattr(self, 'panelPropriete'):
+# #            self.GetPanelPropriete().Destroy()
+# #            self.panelPropriete = PanelPropriete_Competences(self.panelParent, self)
+# #            self.panelPropriete.construire()
+#     
+#     
+#     ######################################################################################  
+#     def GetFicheHTML(self, param = None):
+#         return constantes.BASE_FICHE_HTML_COMP
+# 
+#     
+#     ######################################################################################  
+#     def SetTip(self):
+# #         print "SetTip Comp"
+#         self.tip.SetHTML(self.GetFicheHTML())
+#         nc = self.GetNomGenerique()
+#         self.tip.SetWholeText("titre", nc)
+# #         print self.competences
+# #         print sorted(self.competences)
+#         for c in sorted(self.competences):
+#             self.tip.AjouterElemListeDL("list", 
+#                                  self.GetDiscipline(c[0]) +" " + c[1:], 
+#                                  self.GetReferentiel().getCompetence(c).intitule  )
+# #             self.tip.AjouterElemListeDL("list", 
+# #                                  self.GetDisciplineNum(i) +" " + self.GetTypCode(i)[1], 
+# #                                  self.GetIntit(i))
+#       
+#         self.tip.SetPage()
+
+
 
 ####################################################################################
 #
@@ -5965,7 +6320,7 @@ class Competences(ElementBase):
         
         self.num = numComp
         self.competences = []       # Liste des compétences (prérequis ou objectif) de la Séquence
-        self.prerequis = prerequis  # Indique que ce sont des competences prérequises
+        self.prerequis = prerequis  # True si ce sont des competences prérequises
         
         
 
@@ -5979,7 +6334,20 @@ class Competences(ElementBase):
     
     ######################################################################################  
     def GetPanelPropriete(self, parent, code, comp):
-        return PanelPropriete_Competences(parent, self, code, comp)
+        """ Renvoie le PanelPropriete approprié
+            <comp> est du type Referentiel.Competences
+        """
+#         ref = self.GetReferentiel()
+#         if self.prerequis:
+#             contexte = "P"
+#         else:
+#             contexte = "O"
+# #         dep = ref.getDependant(comp, contexte)
+# #         if dep is not None:
+#         seq = self.parent
+        filtre = self.parent.GetFiltre(comp, self.prerequis)
+        print "GetPanelPropriete", filtre
+        return PanelPropriete_Competences(parent, self, code, comp, filtre = filtre)
     
     ######################################################################################  
     def getBranche(self):
@@ -6196,6 +6564,23 @@ class Competences(ElementBase):
             self.arbre.SetItemTextColour(self.branches["Fct"], couleur.GetCouleurWx(COUL_COMPETENCES))
 
 
+    
+    
+    #########################################################################
+    def GererElementsDependants(self, codeComp):
+        """ Gestion des éléments (Competences, Savoirs, Th ou Dom)
+            qui dépendent de la compétence >codeComp>
+        """
+#         print "GererElementsDependants", codeComp
+        seq = self.parent
+        ref = seq.GetReferentiel()
+        compRef = ref.dicoCompetences[codeComp[0]] # type Referentiel.Competences
+        for comp_asso in compRef.asso_type:
+#             print "   ", comp_asso
+            seq.GererElementsDependants(codeComp[0], comp_asso, self)
+                
+                    
+    
     
     
     #############################################################################

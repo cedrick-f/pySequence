@@ -287,9 +287,6 @@ from pysequence import *
 import pysequence
 
 
-    
-
-
 ####################################################################################
 #
 #   Evenement perso pour détecter une modification de la séquence
@@ -7466,11 +7463,15 @@ class PanelPropriete_LienProjet(PanelPropriete):
 #
 ####################################################################################
 class PanelPropriete_Competences(PanelPropriete):
-    def __init__(self, parent, competence, code, compRef):
-        
+    def __init__(self, parent, competence, code, compRef, filtre = None):
+        """ <competence> : type pysequence.Competences
+            <code> : 
+            <compRef> : type Referentiel.Competences
+           
+        """
         self.competence = competence
         self.code = code
-        self.compRef = compRef
+        self.compRef = compRef # du type Referentiel.Competences
         
         PanelPropriete.__init__(self, parent, objet = self.competence)
         
@@ -7480,13 +7481,13 @@ class PanelPropriete_Competences(PanelPropriete):
         self.sizer.AddGrowableCol(0)
         self.sizer.AddGrowableRow(0)
         
-        self.construire()
+        self.construire(filtre)
         
         self.Layout()
         
         
     ######################################################################################  
-    def construire(self):
+    def construire(self, filtre):
         # On efface tout ...
 #         self.nb.DeleteAllPages()
         
@@ -7504,14 +7505,14 @@ class PanelPropriete_Competences(PanelPropriete):
 #         def getNomComp(r):
 #             return r.nomCompetences + " " + r.Code
         if self.code == "Fct":
-            self.arbre = ArbreFonctionsPrj(self, self.code, None, 
-                                          self.compRef, self, agwStyle = HTL.TR_NO_HEADER)
+            self.arbre = ArbreFonctionsPrj(self, self.code, None, self.compRef,
+                                           self, agwStyle = HTL.TR_NO_HEADER)
             self.sizer.Add(self.arbre, (0,0), flag = wx.EXPAND)
 #             self.nb.AddPage(self, self.compRef.nomDiscipline) 
             
         else:
-            self.arbre = ArbreCompetences(self, self.code, None, 
-                                          self.compRef, self, agwStyle = HTL.TR_NO_HEADER)
+            self.arbre = ArbreCompetences(self, self.code, None, self.compRef,
+                                           filtre,  self, agwStyle = HTL.TR_NO_HEADER)
             self.sizer.Add(self.arbre, (0,0), flag = wx.EXPAND)
 #             self.nb.AddPage(self, self.compRef.nomDiscipline) 
         
@@ -7593,15 +7594,18 @@ class PanelPropriete_Competences(PanelPropriete):
         
     ######################################################################################  
     def AjouterCompetence(self, code, propag = None):
-        print "AjouterCompetence", code
+#         print "AjouterCompetence", code
         self.competence.competences.append(code)
+        self.competence.GererElementsDependants(code)
         
     ######################################################################################  
     def EnleverCompetence(self, code, propag = None):
         self.competence.competences.remove(code)
+        self.competence.GererElementsDependants(code)
         
     ######################################################################################  
     def SetCompetences(self): 
+        
         self.competence.parent.Verrouiller()
         self.sendEvent(modif = u"Ajout/suppression d'une compétence")
         
@@ -11324,7 +11328,8 @@ class ArbreSavoirs(CT.CustomTreeCtrl):
 ####################################################################################
     
 class ArbreCompetences(HTL.HyperTreeList):
-    def __init__(self, parent, typ, dicCompetences, competences, pptache = None, agwStyle = 0):#|CT.TR_AUTO_CHECK_CHILD):#|HTL.TR_NO_HEADER):
+    def __init__(self, parent, typ, dicCompetences, competences, 
+                 filtre = None, pptache = None, agwStyle = 0):#|CT.TR_AUTO_CHECK_CHILD):#|HTL.TR_NO_HEADER):
         
         HTL.HyperTreeList.__init__(self, parent, -1, style = wx.WANTS_CHARS,
                                    agwStyle = CT.TR_HIDE_ROOT|CT.TR_HAS_VARIABLE_ROW_HEIGHT|agwStyle)#wx.TR_DEFAULT_STYLE|
@@ -11337,6 +11342,7 @@ class ArbreCompetences(HTL.HyperTreeList):
         
         self.typ = typ
         self.competences = competences # Objet Referentiel.Competences
+        self.filtre = filtre
         
         if dicCompetences is None:
             dicCompetences = competences.dicCompetences
@@ -11449,29 +11455,21 @@ class ArbreCompetences(HTL.HyperTreeList):
         clefs = dic.keys()
         clefs.sort()
         for k in clefs:
+            b = None
             if dic[k].sousComp != {}:
                 b = self.AppendItem(branche, k+" "+dic[k].intitule, ct_type=ct_type, data = k)
                 self.Construire(b, dic[k].sousComp, ct_type = 1)
             else:
-                b = self.AppendItem(branche, k+" "+dic[k].intitule, ct_type = 1, data = k)
-            self.items[k] = b
+                if self.filtre is None or k in self.filtre:
+                    b = self.AppendItem(branche, k+" "+dic[k].intitule, ct_type = 1, data = k)
             
-            if ct_type == 0:
-                self.SetItemBold(b, True)
+            if b is not None:
+                self.items[k] = b
+                
+                if ct_type == 0:
+                    self.SetItemBold(b, True)
             
             
-            
-            
-#             
-#             if type(dic[k]) == list and type(dic[k][1]) == dict:
-#                 b = self.AppendItem(branche, k+" "+dic[k][0].intitule, ct_type=ct_type, data = k)
-#                 self.Construire(b, dic[k][1], ct_type = 1)
-#             else:
-#                 b = self.AppendItem(branche, k+" "+dic[k][0].intitule, ct_type = 1, data = k)
-#             self.items[k] = b
-#             
-#             if ct_type == 0:
-#                 self.SetItemBold(b, True)
         
     ####################################################################################
     def OnItemCheck(self, event, item = None):

@@ -40,7 +40,7 @@
       <l_asso_contexte />
       <l_asso_type />
       <d_dicCompetences>
-        <Competence_CT4 S_intitule="Pratiquer des langages">
+        <Competence_A S_intitule="Décrire les états et la constitution de la matière à l'echelle macroscopique">
           <l_domaines />
           <l_elemAssocies>
             <l_00 />
@@ -50,7 +50,7 @@
           <l_infos />
           <d_poids />
           <d_sousComp>
-            <Competence_CT4.1 S_intitule="Rendre compte des observations, expériences, hypothèses, conclusions en utilisant un vocabulaire précis">
+            <Competence_A1 S_intitule="Mettre en œuvre des observations et des expériences pour caractériser un échantillon de matière">
               <l_domaines />
               <l_elemAssocies>
                 <l_00 />
@@ -61,8 +61,8 @@
               <d_poids />
               <d_sousComp />
               <l_thematiques />
-            </Competence_CT4.1>
-            <Competence_CT4.2 S_intitule="Mettre en oeuvre une communication">
+            </Competence_A1>
+            <Competence_A3 S_intitule="Mettre en œuvre un protocole de séparation de constituants d'un mélange">
               <l_domaines />
               <l_elemAssocies>
                 <l_00 />
@@ -73,11 +73,23 @@
               <d_poids />
               <d_sousComp />
               <l_thematiques />
-            </Competence_CT4.2>
+            </Competence_A3>
+            <Competence_A2 S_intitule="Identifier à partir de ressources documentaires les différents constituants d'un mélange">
+              <l_domaines />
+              <l_elemAssocies>
+                <l_00 />
+                <l_01 />
+              </l_elemAssocies>
+              <l_indicateurs />
+              <l_infos />
+              <d_poids />
+              <d_sousComp />
+              <l_thematiques />
+            </Competence_A2>
           </d_sousComp>
           <l_thematiques />
-        </Competence_CT4>
-        <Competence_CT1 S_intitule="Pratiquer des démarches scientifiques et technologiques">
+        </Competence_A>
+        <Competence_B S_intitule="Observer et décrire différents types de mouvements">
           <l_domaines />
           <l_elemAssocies>
             <l_00 />
@@ -87,7 +99,7 @@
           <l_infos />
           <d_poids />
           <d_sousComp>
-            <Competence_CT1.1 S_intitule="Formuler une question ou une problématique scientifique ou technologique simple">
+            <Competence_B1 S_intitule="Décrire un mouvement et identifier les différences entre mouvements circulaire ou rectiligne">
               <l_domaines />
               <l_elemAssocies>
                 <l_00 />
@@ -98,8 +110,8 @@
               <d_poids />
               <d_sousComp />
               <l_thematiques />
-            </Competence_CT1.1>
-            <Competence_CT1.3 S_intitule="Proposer des expériences simples pour tester une hypothèse">
+            </Competence_B1>
+            <Competence_B2 S_intitule="Elaborer et mettre en œuvre un protocole pour appréhender la notion de mouvement et de mesure de la valeur de la vitesse d'un objet">
               <l_domaines />
               <l_elemAssocies>
                 <l_00 />
@@ -110,204 +122,10 @@
               <d_poids />
               <d_sousComp />
               <l_thematiques />
-            </Competence_CT1.3>
-            <Competence_CT1.2 S_intitule="Proposer une ou des hypothèses pour répondre à une question ou un problème">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_CT1.2>
-            <Competence_CT1.5 S_intitule="Formaliser une partie de sa recherche sous une forme écrite ou orale">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_CT1.5>
-            <Competence_CT1.4 S_intitule="Interpréter un résultat, en tirer une conclusion">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_CT1.4>
+            </Competence_B2>
           </d_sousComp>
           <l_thematiques />
-        </Competence_CT1>
-        <Competence_CT2 S_intitule="Concevoir, créer, réaliser">
-          <l_domaines />
-          <l_elemAssocies>
-            <l_00 />
-            <l_01 />
-          </l_elemAssocies>
-          <l_indicateurs />
-          <l_infos />
-          <d_poids />
-          <d_sousComp>
-            <Competence_CT2.4 S_intitule="Réaliser en équipe tout ou une partie d'un objet technique répondant à un besoin">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_CT2.4>
-            <Competence_CT2.5 S_intitule="repérer et comprendre la communication et la gestion de l'information">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_CT2.5>
-            <Competence_CT2.2 S_intitule="Identifier les principales familles de matériaux">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_CT2.2>
-            <Competence_CT2.3 S_intitule="Décrire le fonctionnement d'objets techniques, leurs fonctions et leurs composants">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_CT2.3>
-            <Competence_CT2.1 S_intitule="Identifier les évolutions des besoins et des objets techniques dans leur contexte">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_CT2.1>
-          </d_sousComp>
-          <l_thematiques />
-        </Competence_CT2>
-        <Competence_CT3 S_intitule="S'approprier des outils et des méthodes">
-          <l_domaines />
-          <l_elemAssocies>
-            <l_00 />
-            <l_01 />
-          </l_elemAssocies>
-          <l_indicateurs />
-          <l_infos />
-          <d_poids />
-          <d_sousComp>
-            <Competence_CT3.3 S_intitule="Garder une trace écrite ou numérique des recherches, des observations et des expériences réalisées">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_CT3.3>
-            <Competence_CT3.2 S_intitule="faire le lien entre la mesure réalisée, les unités et l'outil utilisés">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_CT3.2>
-            <Competence_CT3.1 S_intitule="Choisir ou utiliser le matériel adapté pour mener une observation, effectuer une mesure, réaliser une expérience ou une production">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_CT3.1>
-            <Competence_CT3.6 S_intitule="Utiliser les outils mathématiques adaptés">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_CT3.6>
-            <Competence_CT3.5 S_intitule="Effectuer des recherches bibliographiques simples et ciblées. Extraire les informations pertinentes d'un document et les mettre en relation pour répondre à une question">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_CT3.5>
-            <Competence_CT3.4 S_intitule="Organiser seul ou en groupe un espace de réalisation expérimentale">
-              <l_domaines />
-              <l_elemAssocies>
-                <l_00 />
-                <l_01 />
-              </l_elemAssocies>
-              <l_indicateurs />
-              <l_infos />
-              <d_poids />
-              <d_sousComp />
-              <l_thematiques />
-            </Competence_CT3.4>
-          </d_sousComp>
-          <l_thematiques />
-        </Competence_CT3>
+        </Competence_B>
       </d_dicCompetences>
     </Competences_S>
     <Competences_C B_obj="True" B_pre="False" S_abrDiscipline="ScTec" S_codeDiscipline="Tch" S_nomDiscipline="Sciences et technologie" S_nomGenerique="Compétence(s)" S_nomGeneriqueIndic="Indicateurs de performance">
