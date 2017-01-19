@@ -48,12 +48,14 @@ import os, sys
 if sys.platform == "win32" :
     # Pour lire les classeurs Excel
     import recup_excel
+    # Pour compléter les grilles Excel
+    import grilles
 
 
 
 import version
 import textwrap
-import grilles
+
 
 from couleur import Str2Couleur, Couleur2Str
 import couleur

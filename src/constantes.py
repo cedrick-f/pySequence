@@ -354,9 +354,8 @@ ICONES_TACHES = {}
 liste = os.listdir(DOSSIER_ICONES)
 for fich_img in liste:
     try:
-        bmp = wx.Bitmap(os.path.join(DOSSIER_ICONES, fich_img),
+        ICONES_TACHES[os.path.splitext(fich_img)[0]] = wx.Bitmap(os.path.join(DOSSIER_ICONES, fich_img),
                         wx.BITMAP_TYPE_ANY ).ConvertToImage().Scale(200, 200).ConvertToBitmap()
-        ICONES_TACHES[os.path.splitext(fich_img)[0]] = bmp
     except:
         pass
 

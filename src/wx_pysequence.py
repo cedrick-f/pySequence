@@ -231,8 +231,8 @@ from constantes import calculerEffectifs, \
                         _S, _Rev, _R1, _R2, _R3, \
                         revCalculerEffectifs, getSingulier, getPluriel, getSingulierPluriel, \
                         COUL_OK, COUL_NON, COUL_BOF, COUL_BIEN, \
-                        toList, COUL_COMPETENCES, bmp, WMIN_PROP, HMIN_PROP, \
-                        WMIN_STRUC, HMIN_STRUC
+                        toList, COUL_COMPETENCES, WMIN_PROP, HMIN_PROP, \
+                        WMIN_STRUC, HMIN_STRUC#, bmp
 import constantes
 
 import couleur
@@ -5890,7 +5890,7 @@ class PanelPropriete_Classe(PanelPropriete):
 #                self.classe.familleEnseignement = constantes.FamilleEnseignement[self.classe.typeEnseignement]
 #                break
         
-        self.classe.MiseAJourTypeEnseignement()
+# #         self.classe.MiseAJourTypeEnseignement()
         self.classe.doc.MiseAJourTypeEnseignement()
         self.classe.doc.SetPosition(self.classe.doc.position)
 #        self.classe.doc.MiseAJourTypeEnseignement(fam != self.classe.familleEnseignement)
