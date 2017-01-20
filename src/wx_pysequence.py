@@ -288,7 +288,7 @@ import error
 
 
 # from pysequence import *
-import pysequence
+# import pysequence   # déplacé à la fin
 
 
 ####################################################################################
@@ -14444,7 +14444,7 @@ class MessageAideCI(GMD.GenericMessageDialog):
         
         
         
-
+import pysequence
 
 
 
