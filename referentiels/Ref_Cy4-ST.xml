@@ -486,7 +486,7 @@
         </Competence_IP.2>
       </d_dicCompetences>
     </Competences_A>
-    <Competences_S B_obj="True" B_pre="False" S_abrDiscipline="ScTec" S_codeDiscipline="Tra" S_nomDiscipline="Sciences et technologie" S_nomGenerique="Compétence(s) Travaillée(s)" S_nomGeneriqueIndic="Indicateurs de performance">
+    <Competences_S B_obj="True" B_pre="False" S_abrDiscipline="???" S_codeDiscipline="Tra" S_nomDiscipline="???" S_nomGenerique="Compétence(s) Travaillée(s)" S_nomGeneriqueIndic="Indicateurs de performance">
       <l_asso_contexte S_00="O" />
       <l_asso_type>
         <Competences_00 B_obj="True" B_pre="True" S_abrDiscipline="ScTec" S_codeDiscipline="Tch" S_nomDiscipline="Sciences et technologie" S_nomGenerique="Compétence(s) du programme" S_nomGeneriqueIndic="Indicateurs de performance">

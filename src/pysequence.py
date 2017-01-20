@@ -1526,7 +1526,7 @@ class BaseDoc(ElementBase, ElementAvecLien):
     ##################################################################################################    
     def Tip_EQU(self, typeDoc):
         self.tip.SetWholeText("titre", u"Equipe pédagogique impliquée dans " + typeDoc)
-
+        self.tip.Supprime('img')
     
     
 
@@ -6321,7 +6321,7 @@ class Competences(ElementBase):
 # #         if dep is not None:
 #         seq = self.parent
         filtre = self.parent.GetFiltre(comp, self.prerequis)
-        print "GetPanelPropriete", filtre
+#         print "GetPanelPropriete", filtre
         return PanelPropriete_Competences(parent, self, code, comp, filtre = filtre)
     
     ######################################################################################  
@@ -9312,9 +9312,11 @@ class Support(ElementAvecLien, ElementBase):
         self.tip.SetHTML(self.GetFicheHTML())
         
         self.tip.SetWholeText("nom", self.nom, size=5)
-        self.tip.AjouterHTML("des", XMLtoHTML(self.description))       
-        self.tip.AjouterImg("img", self.image, width = 300) 
-        #self.tip.Supprime('img')
+        self.tip.AjouterHTML("des", XMLtoHTML(self.description))      
+        if self.image is not None:
+            self.tip.AjouterImg("img", self.image, width = 300)
+        else:
+            self.tip.Supprime('img')
         self.tip.SetPage()
     
 

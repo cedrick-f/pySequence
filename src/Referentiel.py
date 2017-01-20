@@ -1844,7 +1844,7 @@ class Referentiel(XMLelem):
             
             Renvoi l'élément dont il dépend ou None
         """
-        print "getDependant", contexte, "---", elem
+#         print "getDependant", contexte, "---", elem
 #         listeTousElem = self.dicoCompetences + self.dicoSavoirs
 #         if isinstance(elem, Competences):
         for code, comp in self.dicoCompetences.items():
@@ -1852,10 +1852,10 @@ class Referentiel(XMLelem):
             if comp != elem and elem in comp.asso_type:
                 i = comp.asso_type.index(elem)
                 if contexte in comp.asso_contexte[i]:
-                    print "  >>", i, code, comp
+#                     print "  >>", i, code, comp
                     return i, code, comp
         
-        print "Aucun"
+#         print "Aucun"
         return
     
     

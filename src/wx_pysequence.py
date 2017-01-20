@@ -7487,7 +7487,7 @@ class PanelPropriete_Competences(PanelPropriete):
             
         else:
             self.arbre = ArbreCompetences(self, self.code, None, self.compRef,
-                                           filtre,  self, agwStyle = HTL.TR_NO_HEADER)
+                                            self, filtre, agwStyle = HTL.TR_NO_HEADER)
             self.sizer.Add(self.arbre, (0,0), flag = wx.EXPAND)
 #             self.nb.AddPage(self, self.compRef.nomDiscipline) 
         
@@ -11301,12 +11301,13 @@ class ArbreSavoirs(CT.CustomTreeCtrl):
     
 class ArbreCompetences(HTL.HyperTreeList):
     def __init__(self, parent, typ, dicCompetences, competences, 
-                 filtre = None, pptache = None, agwStyle = 0):#|CT.TR_AUTO_CHECK_CHILD):#|HTL.TR_NO_HEADER):
+                 pptache = None, filtre = None, agwStyle = 0):#|CT.TR_AUTO_CHECK_CHILD):#|HTL.TR_NO_HEADER):
         
         HTL.HyperTreeList.__init__(self, parent, -1, style = wx.WANTS_CHARS,
                                    agwStyle = CT.TR_HIDE_ROOT|CT.TR_HAS_VARIABLE_ROW_HEIGHT|agwStyle)#wx.TR_DEFAULT_STYLE|
         
         self.parent = parent
+#         print "ArbreCompetences", pptache
         if pptache == None:
             self.pptache = parent
         else:
@@ -11416,7 +11417,7 @@ class ArbreCompetences(HTL.HyperTreeList):
                     
                 text = self.GetItemText(item, 0).replace("\n", "")
                 text = wordwrap(text, W, wx.ClientDC(self))
-    
+             
                 self.SetItemText(item, text, 0)
         
     ####################################################################################
@@ -11545,8 +11546,17 @@ class ArbreCompetencesPrj(ArbreCompetences):
         self.eleves = eleves
         self.typ = typ
         
+#         if pptache == None:
+#             self.pptache = parent
+#         else:
+#             self.pptache = pptache
+            
+#         print "ArbreCompetencesPrj", pptache
         ArbreCompetences.__init__(self, parent, typ, dicCompetences, competences, pptache,
                                   agwStyle = agwStyle)#|CT.TR_ELLIPSIZE_LONG_ITEMS)#|CT.TR_TOOLTIP_ON_LONG_ITEMS)#
+#         print self.pptache
+        
+        
         self.Bind(wx.EVT_SIZE, self.OnSize2)
         self.Bind(CT.EVT_TREE_ITEM_GETTOOLTIP, self.OnToolTip)
         
@@ -11561,9 +11571,11 @@ class ArbreCompetencesPrj(ArbreCompetences):
         
         if eleves:
             self.SetColumnWidth(i+2, 0)
-            
+        
+        
     ####################################################################################
     def GetTache(self):
+#         print "GetTache", self.pptache
         return self.pptache.tache  
         
 #        self.Bind(CT.EVT_TREE_ITEM_GETTOOLTIP, self.OnToolTip)
