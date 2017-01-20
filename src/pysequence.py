@@ -9742,12 +9742,12 @@ class Eleve(Personne, ElementBase):
             
             compil = renvoie des dictionnaire plus simples
         """ 
-        print "GetEvaluabilite", self
+#         print "GetEvaluabilite", self
         prj = self.GetProjetRef()
 #        dicPoids = self.GetReferentiel().dicoPoidsIndicateurs_prj
         dicIndicateurs = self.GetDicIndicateurs()
-        print "   dicIndicateurs", dicIndicateurs
-        print "   _dicoGrpIndicateur", prj._dicoGrpIndicateur
+#         print "   dicIndicateurs", dicIndicateurs
+#         print "   _dicoGrpIndicateur", prj._dicoGrpIndicateur
 #        tousIndicateurs = prj._dicIndicateurs
 #        lstGrpIndicateur = {'R' : prj._dicGrpIndicateur['R'],
 #                            'S' : self.GetProjetRef()._dicGrpIndicateur['S']}
@@ -9759,7 +9759,7 @@ class Eleve(Personne, ElementBase):
 #        rs = [0, 0]
 #        lers = [{}, {}]
 #         print prj._dicoGrpIndicateur
-        print "   _dicoIndicateurs", prj._dicoIndicateurs
+#         print "   _dicoIndicateurs", prj._dicoIndicateurs
         rs = {}
         lers = {}
         for disc, dic in prj._dicoGrpIndicateur.items():
@@ -9768,11 +9768,11 @@ class Eleve(Personne, ElementBase):
             for ph in dic.keys():
                 lers[disc][ph] = {}
                 rs[disc][ph] = 0
-        print "   xx init :", rs, lers
+#         print "   xx init :", rs, lers
         
         
         def getPoids(competence, code, poidsGrp):
-            print "  getPoids", code
+#             print "  getPoids", code
             if competence.sousComp != {}:
                 for k, c in competence.sousComp.items():
                     getPoids(c, k, poidsGrp)
@@ -9787,7 +9787,7 @@ class Eleve(Personne, ElementBase):
                             
                             if disc+code in dicIndicateurs.keys():
                                 if dicIndicateurs[disc+code][i]:
-                                    print "  comp", code, i, indic.poids, ph
+#                                     print "  comp", code, i, indic.poids, ph
                                     poids = indic.poids
                                     if ph in poids.keys():
                                         if not ph in poidsGrp.keys():
@@ -9837,7 +9837,7 @@ class Eleve(Personne, ElementBase):
         
         for typi, dico in prj._dicoIndicateurs.items():
             for grp, grpComp in dico.items():
-                print "  >>> poids :", grpComp.poids
+#                 print "  >>> poids :", grpComp.poids
                 getPoids(grpComp, grp, grpComp.poids)
                 
                 
