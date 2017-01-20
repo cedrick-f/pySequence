@@ -4327,14 +4327,14 @@ class Progression(BaseDoc):
             une liste de colones, avec des Séquences/Projets
             Minimisation du nombre de colonnes ?
         """
-        print "GetOrganisation"
+#         print "GetOrganisation"
         orga = []
         liste = self.GetAllSequencesProjets()
-        print "   ", liste
+#         print "   ", liste
         
         liste.sort(key = lambda s:s.GetPosition()[-1]-s.GetPosition()[0], reverse = True)
         liste.sort(key = lambda s:s.GetPosition()[0])
-        print " >>", liste
+#         print " >>", liste
         
 #         for d in liste()
         
@@ -4383,7 +4383,7 @@ class Progression(BaseDoc):
 
     ######################################################################################  
     def Rafraichir(self, event = None):
-        print "Rafraichir progression"
+#         print "Rafraichir progression"
         self.Ordonner()
         self.arbre.DeleteChildren(self.brancheSeq)
         
