@@ -192,33 +192,6 @@ from wx_pysequence import CodeBranche, PopupInfo, getIconeFileSave, getIconeCopy
 #        liste.append(tag_li)
     
     
-    
-    
-#    liste = node.getElementById(idListe)
-#    if liste != None:
-#        _dt = node.createElement("li")
-#        txt = node.createTextNode(li)
-#        _dt.appendChild(txt)
-#        liste.appendChild(_dt)
-        
-
-#def AjouterImg(node, item, bmp):
-##        print "AjouterImg"
-#
-#    img = node.find(id = item)
-#    try:
-#        bmp.SaveFile(self.tfname, wx.BITMAP_TYPE_PNG)
-#    except:
-#        return
-#    
-#    img = node.getElementById(item)
-#    if img != None:
-#        td = node.createElement("img")
-#        img.appendChild(td)
-#        td.setAttribute("src", self.tfname)
-            
-
-        
 
     
     
@@ -9756,7 +9729,7 @@ class Eleve(Personne, ElementBase):
             messageInfo(self.GetDocument().GetApp(), u"Génération terminée", t)
             
         
-        self.GetPanelPropriete().MiseAJour()
+#         self.GetPanelPropriete().MiseAJour()
         return log
         
         

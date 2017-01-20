@@ -260,6 +260,10 @@ from widgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_ENTI
                     tronquerDC, EllipticStaticText
                     #, chronometrer
 
+
+# Pour enregistrer en xml
+import xml.etree.ElementTree as ET
+
 import Options
 
 import textwrap
@@ -283,7 +287,7 @@ import Referentiel
 import error
 
 
-from pysequence import *
+# from pysequence import *
 import pysequence
 
 
@@ -407,13 +411,9 @@ def getIconeRedo(size = (20,20)):
 def getBitmapFromImageSurface(imagesurface):
     """ Renvoi une wx.Bitmap en fonction d'une cairo.ImageSurface
     """
-    bmp = wx.lib.wxcairo.BitmapFromImageSurface(imagesurface)
         
     # On fait une copie sinon ça s'efface ...
-    img = bmp.ConvertToImage()
-    bmp = img.ConvertToBitmap()
-        
-    return bmp
+    return wx.lib.wxcairo.BitmapFromImageSurface(imagesurface).ConvertToImage().ConvertToBitmap()
 
 
 def getDisplayPosSize():
@@ -2049,7 +2049,7 @@ class FenetreSequence(FenetreDocument):
             #
             # La classe
             #
-            self.classe = Classe(self, typedoc = self.typ)
+            self.classe = pysequence.Classe(self, typedoc = self.typ)
         
             #
             # La séquence
@@ -2347,12 +2347,12 @@ class FenetreProjet(FenetreDocument):
             #
             # La classe
             #
-            self.classe = Classe(self, pourProjet = True, typedoc = self.typ)
+            self.classe = pysequence.Classe(self, pourProjet = True, typedoc = self.typ)
         
             #
             # Le projet
             #
-            self.projet = Projet(self, self.classe)
+            self.projet = pysequence.Projet(self, self.classe)
             self.classe.SetDocument(self.projet)
             self.projet.MiseAJourTypeEnseignement()
         
@@ -3057,12 +3057,12 @@ class FenetreProgression(FenetreDocument):
         #
         # La classe
         #
-        self.classe = Classe(self, pourProjet = True, typedoc = self.typ)
+        self.classe = pysequence.Classe(self, pourProjet = True, typedoc = self.typ)
         
         #
         # La progression
         #
-        self.progression = Progression(self, self.classe)
+        self.progression = pysequence.Progression(self, self.classe)
         self.classe.SetDocument(self.progression)
         
         #
@@ -3217,7 +3217,7 @@ class FenetreProgression(FenetreDocument):
             root.append(bdoc)
             root.append(bclasse)
             constantes.indent(root)
-            enregistrer_root(root, nomFichier)
+            pysequence.enregistrer_root(root, nomFichier)
             
             wx.EndBusyCursor()
             return 0, path
@@ -5665,7 +5665,7 @@ class PanelPropriete_Classe(PanelPropriete):
     #############################################################################            
     def OnDefautPref(self, evt):
 #        self.classe.options.defaut()
-        self.classe.Initialise(isinstance(self.classe.doc, Projet), defaut = True)
+        self.classe.Initialise(isinstance(self.classe.doc, pysequence.Projet), defaut = True)
 #        self.classe.doc.AjouterListeSystemes(self.classe.systemes)
         self.MiseAJour()
         self.sendEvent(modif = u"Réinitialisation des paramètres de Classe",
@@ -6767,27 +6767,12 @@ class Panel_Cible(wx.Panel):
                 
             else:
                 ang = angles[mei[0]]
-                    
-            pos = (centre[0] + ray * sin(ang*pi/180) ,
-                   centre[1] - ray * cos(ang*pi/180))
-            bmp = constantes.imagesCI[i].GetBitmap()
-
-#                bmp.SetMaskColour(self.backGround)
-#                mask = wx.Mask(bmp, self.backGround)
-#                bmp.SetMask(mask)
-#                bmp.SetMaskColour(wx.NullColour)
-#                r = CustomCheckBox(self, 100+i, pos = pos, style = wx.NO_BORDER)
-            
-            
-#             r = wx.ToggleButton(self, 100+i, "", pos = pos, style = wx.BU_EXACTFIT|wx.NO_BORDER)
-#             r.SetBitmap(bmp)
-#             r.SetInitialSize()
-            
-#             r = ImageButtonTransparent(self, 100+i, bmp, pos = pos)
-#             r.Bind(wx.EVT_LEFT_UP, self.OnButton)
 
             
-            r = platebtn.PlateButton(self, 100+i, "", bmp, pos = pos, 
+            r = platebtn.PlateButton(self, 100+i, "", 
+                                     constantes.imagesCI[i].GetBitmap(), 
+                                     pos = (centre[0] + ray * sin(ang*pi/180) ,
+                                            centre[1] - ray * cos(ang*pi/180)), 
                                      style=platebtn.PB_STYLE_GRADIENT|platebtn.PB_STYLE_TOGGLE|platebtn.PB_STYLE_NOBG)#platebtn.PB_STYLE_DEFAULT|
             r.SetPressColor(wx.Colour(245, 55, 245))
             
@@ -6797,17 +6782,11 @@ class Panel_Cible(wx.Panel):
 #                r.SetBackgroundColour(wx.NullColour)
 #                self.group_ctrls.append((r, 0))
 #                self.Bind(wx.EVT_CHECKBOX, self.EvtCheck, r )
-        
-        
-        
-        
+
         
         self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBackground)
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_TOGGLEBUTTON, self.OnButton)
-        bmp = images.Cible.GetBitmap()
-        
-        
         
         
         #
@@ -6818,9 +6797,10 @@ class Panel_Cible(wx.Panel):
         self.Bind(wx.EVT_BUTTON, self.OnAide, aide)
             
             
-            
-        self.SetSize((bmp.GetWidth(), bmp.GetHeight()))
-        self.SetMinSize((bmp.GetWidth(), bmp.GetHeight()))
+        bmp = images.Cible.GetBitmap()
+        size = (bmp.GetWidth(), bmp.GetHeight())    
+        self.SetSize(size)
+        self.SetMinSize(size)
     
     
     
@@ -6841,9 +6821,7 @@ class Panel_Cible(wx.Panel):
         dc = wx.PaintDC(self)
         dc.SetBackground(wx.Brush(self.backGround))
         dc.Clear()
-        bmp = images.Cible.GetBitmap()
-        dc.DrawBitmap(bmp, 0, 0)
-        
+        dc.DrawBitmap(images.Cible.GetBitmap(), 0, 0)
         evt.Skip()
         
         
@@ -6863,8 +6841,7 @@ class Panel_Cible(wx.Panel):
 #        color = wx.SystemSettings.GetColour(wx.SYS_COLOUR_BACKGROUND)
         dc.SetBackground(wx.Brush(self.backGround))
         dc.Clear()
-        bmp = constantes.images.Cible.GetBitmap()
-        dc.DrawBitmap(bmp, 0, 0)    
+        dc.DrawBitmap(images.Cible.GetBitmap(), 0, 0)    
     
     
     #############################################################################            
@@ -7201,8 +7178,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
         #
         # Aperçu
         #
-        bmp = self.sequence.GetApercu(self.maxX)
-        self.apercu.SetLargeBitmap(bmp)
+        self.apercu.SetLargeBitmap(self.sequence.GetApercu(self.maxX))
         self.lien.SetLabel()
 
         self.Layout()
@@ -7441,8 +7417,7 @@ class PanelPropriete_LienProjet(PanelPropriete):
         #
         # Aperçu
         #
-        bmp = self.projet.GetApercu(self.maxX)
-        self.apercu.SetLargeBitmap(bmp)
+        self.apercu.SetLargeBitmap(self.projet.GetApercu(self.maxX))
         self.lien.SetLabel()
 
         self.Layout()
@@ -9412,7 +9387,7 @@ class PanelPropriete_Systeme(PanelPropriete):
     def GetDocument(self):
         if isinstance(self.systeme.parent, pysequence.Sequence):
             return self.systeme.parent
-        elif isinstance(self.systeme.parent, Classe):
+        elif isinstance(self.systeme.parent, pysequence.Classe):
             return self.systeme.parent.GetDocument()
     
     
@@ -9886,7 +9861,7 @@ class PanelPropriete_Personne(PanelPropriete):
             
         root.append(self.personne.getBranche())
         constantes.indent(root)
-        enregistrer_root(root, os.path.join(util_path.APP_DATA_PATH, constantes.FICHIER_PROFS))
+        pysequence.enregistrer_root(root, os.path.join(util_path.APP_DATA_PATH, constantes.FICHIER_PROFS))
         messageInfo(self, u"Enregistrement réussi", 
                     u"Le professeur %s a bien été ajouté." %self.personne.GetNomPrenom())
 
@@ -10627,7 +10602,7 @@ class ArbreSequence(ArbreDoc):
         
         
             
-        if isinstance(dataSource, Seance) and dataTarget != dataSource:
+        if isinstance(dataSource, pysequence.Seance) and dataTarget != dataSource:
             if not hasattr(dataTarget, 'GetNiveau') or dataTarget.GetNiveau() + dataSource.GetProfondeur() > 2:
 #                print "0.1"
                 return 0
@@ -10635,7 +10610,7 @@ class ArbreSequence(ArbreDoc):
 
             # Insérer "dans"  (racine ou "R" ou "S")  .panelSeances
             if dataTarget == self.sequence \
-               or (isinstance(dataTarget, Seance) and dataTarget.typeSeance in ["R","S"]):
+               or (isinstance(dataTarget, pysequence.Seance) and dataTarget.typeSeance in ["R","S"]):
                 if hasattr(dataSource.parent, 'typeSeance') \
                       and dataSource.parent.typeSeance in ["R","S"] \
                       and len(dataSource.parent.seances) == 1:  # On ne peut pas supprimer la dernière séance d'une rotation ou série
@@ -10840,7 +10815,7 @@ class ArbreProjet(ArbreDoc):
     ####################################################################################
     def AjouterTache(self, event = None):
         obj = self.GetItemPyData(self.GetSelection())
-        if not isinstance(obj, Tache):
+        if not isinstance(obj, pysequence.Tache):
             obj = None
         self.projet.AjouterTache(tacheAct = obj)
 #        self.lstTaches.append(self.AppendItem(self.taches, u"Tâche :", data = tache))
@@ -10883,10 +10858,10 @@ class ArbreProjet(ArbreDoc):
             if item != None:
                 dataTarget = self.GetItemPyData(item)
                 dataSource = self.GetItemPyData(self.itemDrag)
-                if not isinstance(dataSource, Tache):
+                if not isinstance(dataSource, pysequence.Tache):
                     self.SetCursor(wx.StockCursor(wx.CURSOR_NO_ENTRY))
                 else:
-                    if not isinstance(dataTarget, Tache) \
+                    if not isinstance(dataTarget, pysequence.Tache) \
                         or (dataTarget.phase != dataSource.phase and dataSource.phase !="Rev"):
                         self.SetCursor(wx.StockCursor(wx.CURSOR_NO_ENTRY))
                     else:
@@ -10903,10 +10878,10 @@ class ArbreProjet(ArbreDoc):
         self.item = event.GetItem()
         dataTarget = self.GetItemPyData(self.item)
         dataSource = self.GetItemPyData(self.itemDrag)
-        if not isinstance(dataSource, Tache):
+        if not isinstance(dataSource, pysequence.Tache):
             pass
         else:
-            if not isinstance(dataTarget, Tache):
+            if not isinstance(dataTarget, pysequence.Tache):
                 pass
             else:
                 if dataTarget != dataSource \
@@ -10979,16 +10954,13 @@ class ArbreProgression(ArbreDoc):
         self.CurseurInsertDans = wx.CursorFromImage(constantes.images.Curseur_InsererDans.GetImage())
  
 
-    
-                
-        
 
     ####################################################################################
     def OnCompareItems(self, item1, item2):
         i1 = self.GetItemPyData(item1)
         i2 = self.GetItemPyData(item2)
         prog = self.doc
-        if isinstance(i1, Prof):
+        if isinstance(i1, pysequence.Prof):
             return int(prog.equipe.index(i1) - prog.equipe.index(i2))
         else:
             return int(prog.sequences_projets.index(i1) - prog.sequences_projets.index(i2))
@@ -11007,16 +10979,16 @@ class ArbreProgression(ArbreDoc):
         
     ####################################################################################
     def EstMovable(self, obj):
-        return isinstance(obj, LienSequence) \
-            or isinstance(obj, LienProjet) \
-            or isinstance(obj, Prof)
+        return isinstance(obj, pysequence.LienSequence) \
+            or isinstance(obj, pysequence.LienProjet) \
+            or isinstance(obj, pysequence.Prof)
 
 
     ####################################################################################
     def EstMemeCategorie(self, obj1, obj2):
-        return (isinstance(obj1, Prof) and isinstance(obj2, Prof)) \
-            or (isinstance(obj1, LienSequence) and isinstance(obj2, LienProjet)) \
-            or (isinstance(obj2, LienSequence) and isinstance(obj1, LienProjet))
+        return (isinstance(obj1, pysequence.Prof) and isinstance(obj2, pysequence.Prof)) \
+            or (isinstance(obj1, pysequence.LienSequence) and isinstance(obj2, pysequence.LienProjet)) \
+            or (isinstance(obj2, pysequence.LienSequence) and isinstance(obj1, pysequence.LienProjet))
 
 
     ####################################################################################
@@ -11036,7 +11008,7 @@ class ArbreProgression(ArbreDoc):
                     self.SetCursor(wx.StockCursor(wx.CURSOR_NO_ENTRY))
                 
                 else:
-                    if isinstance(dataTarget, Prof) and dataTarget != dataSource:
+                    if isinstance(dataTarget, pysequence.Prof) and dataTarget != dataSource:
                         self.SetCursor(self.CurseurInsertApres)
                             
                     elif dataTarget.GetPosition() <= dataSource.GetPosition():
@@ -11058,7 +11030,7 @@ class ArbreProgression(ArbreDoc):
             pass
         
         elif self.EstMemeCategorie(dataSource, dataTarget):
-            if isinstance(dataTarget, Prof) and dataTarget != dataSource:
+            if isinstance(dataTarget, pysequence.Prof) and dataTarget != dataSource:
                 lst = self.progression.equipe
                 s = lst.index(dataSource)
                 t = lst.index(dataTarget)
@@ -11078,7 +11050,7 @@ class ArbreProgression(ArbreDoc):
                 else:
                     lst.insert(t+1, lst.pop(s))
                 
-                if isinstance(dataSource, LienSequence):
+                if isinstance(dataSource, pysequence.LienSequence):
                     self.GetApp().sendEvent(self.progression, modif = u"Changement de position d'une Séquence") # Solution pour déclencher un "redessiner"
                 else:
                     self.GetApp().sendEvent(self.progression, modif = u"Changement de position d'un Projet") # Solution pour déclencher un "redessiner"

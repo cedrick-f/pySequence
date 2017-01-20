@@ -101,10 +101,11 @@ def getTableau(parent, nomFichier):
 
 
 import threading
-import pythoncom
+
 
 def getExentionExcel():
     global EXT_EXCEL
+    import pythoncom
     pythoncom.CoInitialize()
     try:
         xlApp = win32com.client.Dispatch('Excel.Application')

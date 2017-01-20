@@ -470,8 +470,8 @@ def genererDossierValidation(nomFichier, projet, fenDoc):
     wx.EndBusyCursor()
     return True
 
-
-import grilles
+if sys.platform == "win32":  
+    import grilles
 
 def genererGrillePDF(nomFichier, grilles_feuilles):
 #    print "genererGrillePDF" 
