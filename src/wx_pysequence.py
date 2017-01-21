@@ -699,7 +699,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         self.tb = self.CreateToolBar(wx.TB_HORIZONTAL | wx.NO_BORDER | wx.TB_FLAT)
         
         
-        tsize = (24,24)
+        tsize = constantes.IMG_SIZE_TB
         new_bmp =  wx.ArtProvider.GetBitmap(wx.ART_NEW, wx.ART_TOOLBAR, tsize)
         open_bmp = wx.ArtProvider.GetBitmap(wx.ART_FILE_OPEN, wx.ART_TOOLBAR, tsize)
         save_bmp =  wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE, wx.ART_TOOLBAR, tsize)
@@ -5403,7 +5403,7 @@ class PanelPropriete_Classe(PanelPropriete):
         elif typedoc == 'prj':
             t += u" - nombre de revues et positions\n"
     
-        tsize = (24,24)
+        tsize = constantes.IMG_SIZE_TB
         open_bmp = wx.ArtProvider.GetBitmap(wx.ART_FILE_OPEN, wx.ART_TOOLBAR, tsize)
         save_bmp =  wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE, wx.ART_TOOLBAR, tsize)
         
@@ -10481,8 +10481,9 @@ class ArbreSequence(ArbreDoc):
         # Les icones des branches
         #
         self.images = {}
-        il = wx.ImageList(20, 20)
+        il = wx.ImageList(*constantes.IMG_SIZE_TREE)
         for k, i in constantes.dicimages.items() + constantes.imagesSeance.items():
+#             print k, i.GetBitmap().GetWidth(), i.GetBitmap().GetHeight()
             self.images[k] = il.Add(i.GetBitmap())
         self.AssignImageList(il)
         
@@ -10782,7 +10783,7 @@ class ArbreProjet(ArbreDoc):
         # Les icones des branches
         #
         self.images = {}
-        il = wx.ImageList(20, 20)
+        il = wx.ImageList(*constantes.IMG_SIZE_TREE)
         for k, i in constantes.imagesProjet.items() + constantes.imagesTaches.items():
             self.images[k] = il.Add(i.GetBitmap())
         self.AssignImageList(il)
@@ -10937,7 +10938,7 @@ class ArbreProgression(ArbreDoc):
         # Les icones des branches
         #
         self.images = {}
-        il = wx.ImageList(20, 20)
+        il = wx.ImageList(*constantes.IMG_SIZE_TREE)
         for k, i in constantes.imagesProgression.items():
             self.images[k] = il.Add(i.GetBitmap())
         self.AssignImageList(il)
@@ -14164,7 +14165,7 @@ class Panel_Details(wx.Panel):
         self.tb = wx.ToolBar(self, -1, wx.DefaultPosition, wx.DefaultSize,
                                    wx.TB_HORIZONTAL | wx.NO_BORDER | wx.TB_FLAT)
         
-        tsize = (24,24)
+        tsize = constantes.IMG_SIZE_TB
         
         edit_bmp = images.document_edit.GetBitmap()
         save_bmp =  wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE, wx.ART_TOOLBAR, tsize)

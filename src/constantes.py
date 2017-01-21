@@ -278,6 +278,8 @@ COUL_COMPETENCES = (0.6, 0.0, 0.0, 1.0)
 #   Définition des images
 #
 ####################################################################################
+IMG_SIZE_TREE = (20,20)
+IMG_SIZE_TB = (24,24)
 dicimages =   {"Seq" : images.Icone_sequence,
                "Prj" : images.Icone_projet,
                "Cla" : images.Icone_classe,
