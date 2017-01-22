@@ -1188,8 +1188,11 @@ def DrawBoutonCompetence(ctx, prg, seq, listComp, y, h = None, nbr = None):
                         ctx.rel_line_to(0, rect[3])
                         ctx.set_source_rgba (0, 0 , 0, 1)
                         ctx.stroke()
-                
-                prg.zones_sens.append(Zone([rect], obj = seq, param = "CMP"+i))
+                    else:
+                        rect = None
+                        
+                if rect is not None:
+                    prg.zones_sens.append(Zone([rect], obj = seq, param = "CMP"+i))
                 
     
     

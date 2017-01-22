@@ -982,10 +982,10 @@ class Referentiel(XMLelem):
         for code, comp in itemComp: #
             dic = self.dicoCompetences[code]
             if len(dic.dicCompetences) > 0 and not isinstance(dic.dicCompetences.values()[0], Competence):
-                print "Corriger compétences"
-                print "  ", self.dicoCompetences[code].dicCompetences
+#                 print "Corriger compétences"
+#                 print "  ", self.dicoCompetences[code].dicCompetences
                 self.dicoCompetences[code].dicCompetences = corriger(self.dicoCompetences[code].dicCompetences)
-                print ">>", self.dicoCompetences[code].dicCompetences
+#                 print ">>", self.dicoCompetences[code].dicCompetences
         
         
         
