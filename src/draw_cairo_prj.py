@@ -456,7 +456,8 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False, entete = Fal
                                        cairo.FONT_WEIGHT_NORMAL)
     show_text_rect(ctx, constantes.ellipsizer(prj.problematique, constantes.LONG_MAX_PROBLEMATIQUE), 
                    rectPro, ha = 'g', b = 0.5,
-                   fontsizeMinMax = (-1, 0.016 * COEF))
+                   fontsizeMinMax = (-1, 0.016 * COEF),
+                   debug = True)
     prj.zones_sens.append(Zone([rectPro], param = "PB"))
     
 #    print "     6 ", time.time() - tps

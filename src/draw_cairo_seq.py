@@ -530,9 +530,18 @@ def Draw(ctx, seq, mouchard = False, entete = False):
         ctx.set_source_rgb(0.5,0.8,0.8)
         ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                            cairo.FONT_WEIGHT_BOLD)
-        show_text_rect(ctx, getHoraireTxt(seq.GetDuree()), 
-                       (posZDeroul[0]-0.01 * COEF, posZDemarche[1] + tailleZDemarche[1] , #- 0.015
-                       0.1 * COEF, 0.015 * COEF), ha = 'g', b = 0)
+        
+        
+        re = (posZOrganis[0]-bordureZOrganis,
+              posZDemarche[1] + tailleZDemarche[1],
+              posZSeances[0] - posZOrganis[0] + bordureZOrganis,
+              0.015 * COEF)
+        
+        show_text_rect(ctx, getHoraireTxt(seq.GetDuree()),
+                       re,
+#                        (posZDeroul[0]-0.01 * COEF, posZDemarche[1] + tailleZDemarche[1] , #- 0.015
+#                         0.1 * COEF, 0.015 * COEF),
+                       ha = 'c', b = 0.1)
 
 
 
@@ -581,7 +590,7 @@ def Draw(ctx, seq, mouchard = False, entete = False):
 
     
     def taille(lstTxt):
-        return sum([len(t) for t in lstTxt])
+        return 1.0*sum([len(t) for t in lstTxt])
 
 
     #
@@ -826,34 +835,43 @@ def Draw(ctx, seq, mouchard = False, entete = False):
     h = rect_height+0.0001 * COEF
     
     ltot = taille(lstTexteC) + taille(lstTexteS)
+    
+    # Nombre de colonnes
     nc = 1*(len(lstTexteC) > 0) + 1*(len(lstTexteS) > 0)
+    
     if ltot > 0:
-#         hC = h*len(lstTexteC)/(ltot)
-#         hS = h*len(lstTexteS)/(ltot)
-#         wC = rect_width
-#         wS = rect_width
-#     
-        e = rect_width/10
-        wC = (rect_width-e*nc)*taille(lstTexteC)/(ltot)+e
-        wS = (rect_width-e*nc)*taille(lstTexteS)/(ltot)+e
-        rectC = (x0, y0, wC, h)
-        rectS = (x0+wC, y0, wS, h)
+        # Répartition gauche/droite
+        c = [taille(lstTexteC)/ltot, taille(lstTexteS)/ltot]
+        if c[0] > 0 and c[1] > 0:
+            if c[1] < 0.25:
+                c[1] = 0.25
+                c[0] = 0.75
+            elif c[0] < 0.25:
+                c[0] = 0.25
+                c[1] = 0.75
+        wC = rect_width*c[0]
+        wS = rect_width*c[1]
+        
+        # Création des deux zones
+        maxFontSize = 0.011 * COEF
+        ctx.set_font_size(maxFontSize)
+        f = ctx.font_extents()[2]
+        rectC = reduire_rect(x0, y0, wC, h, f, 0.2)
+        rectS = reduire_rect(x0+wC, y0, wS, h, f, 0.2)
 
-        
-        
-        ctx.set_source_rgba (COUL_COMPETENCES[0], COUL_COMPETENCES[1], COUL_COMPETENCES[2], COUL_COMPETENCES[3])
-        r = liste_code_texte(ctx, lstCodesC, lstTexteC, 
+        ctx.set_source_rgba (*COUL_COMPETENCES)
+        r = liste_code_texte2(ctx, lstCodesC, lstTexteC, 
                              rectC, 
-                             0.05*rect_width, 0.1, 
+                             0.03*rect_width, 0.1, 
                              lstCoul = lstCoulC, va = 'c') 
         seq.obj["C"].pts_caract = getPts(r)
         
         ctx.set_source_rgba (0.0, 0.0, 0.0, 1.0)
 #        r = liste_code_texte(ctx, [s[1:] for s in seq.obj["S"].savoirs], 
 #                             lstTexteS, x0, y0+hC, rect_width, hS, 0.008)
-        r = liste_code_texte(ctx, lstCodesS, lstTexteS, 
+        r = liste_code_texte2(ctx, lstCodesS, lstTexteS, 
                              rectS, 
-                             0.05*rect_width, 0.1, 
+                             0.03*rect_width, 0.1, 
                              lstCoul = lstCoulS, va = 'c')
         seq.obj["S"].pts_caract = getPts(r)
     
@@ -862,12 +880,19 @@ def Draw(ctx, seq, mouchard = False, entete = False):
 #    seq.obj["C"].rect = 
 #    seq.obj["S"].rect = [(x0, y0+hC, rect_width, hS)]
     
-    
+
+
+
+
+
     #
     #  CI
     #
     Draw_CI(ctx, seq.CI, seq)
-    
+
+
+
+
     
     #
     #  Séances
@@ -1122,9 +1147,10 @@ class Cadre():
             self.ctx.set_source_rgba (c[0], c[1], c[2], alpha)
 #            hc = max(hHoraire/4, 0.01)
             hc = H_code()
-            f, wc, r = show_text_rect(self.ctx, self.seance.code, (x, y, wEff["P"], hc), ha = 'g', 
-                                   wrap = False, fontsizeMinMax = (minFont, -1), b = 0.2)
-            wc += ecartX/2
+            f, r = show_text_rect(self.ctx, self.seance.code, (x, y, wEff["P"], hc), ha = 'g', 
+                                      wrap = False, fontsizeMinMax = (minFont, -1), b = 0.2)
+            
+            wc = r[2] + ecartX/2
         
         #
         # L'intitulé (si intituleDansDeroul)

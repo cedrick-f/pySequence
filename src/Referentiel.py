@@ -986,16 +986,13 @@ class Referentiel(XMLelem):
 #                 print "  ", self.dicoCompetences[code].dicCompetences
                 self.dicoCompetences[code].dicCompetences = corriger(self.dicoCompetences[code].dicCompetences)
 #                 print ">>", self.dicoCompetences[code].dicCompetences
+
+
+            # à partir de la version 7.1-beta.4
+            if 'B_obj' in nomerr:
+                comp.obj = True
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
+    
         
         
         return
@@ -1301,7 +1298,8 @@ class Referentiel(XMLelem):
         #
         # Compétences  ###############################################################################
         #
-        debug = False#self.Code == "Cy4-ST"
+        debug = False#self.Code == "ITEC"
+        
         
         lst_feuilles_codes = [(wb.sheet_by_name(n), n[5]) for n in wb.sheet_names() if n[:5] == "Comp_"]
         for sh_co, code in lst_feuilles_codes:
@@ -2987,6 +2985,8 @@ def enregistrer(code, nomFichier):
 
 ##########################################################################################
 def ouvrir(nomFichier):
+    """ Ouvre un Referentiel au format .xml
+    """
     fichier = open(nomFichier,'r')
     root = ET.parse(fichier).getroot()
     ref = Referentiel()
@@ -2998,7 +2998,7 @@ def ouvrir(nomFichier):
     fichier.close()
     return ref
     
-#    print REFERENTIELS["SSI"] == ref
+# print REFERENTIELS["SSI"] == ref
     
 #ouvrir("testSauvRef.xml")
 

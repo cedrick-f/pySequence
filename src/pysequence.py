@@ -1057,7 +1057,7 @@ class Classe(ElementBase):
 #                     try:
                     self.referentiel.initParam()
                     errr = self.referentiel.setBranche(brancheRef)[1]
-#                        print "errr", errr
+#                     print "errr", errr
                     self.referentiel.corrigerVersion(errr)
                     self.referentiel.postTraiter()
                     self.referentiel.completer(forcer = True)
@@ -6549,7 +6549,9 @@ class Competences(ElementBase):
 #         print "GererElementsDependants", codeComp
         seq = self.parent
         ref = seq.GetReferentiel()
-        compRef = ref.dicoCompetences[codeComp[0]] # type Referentiel.Competences
+        dicComp = ref.getDicToutesCompetences()
+        compRef = dicComp[codeComp[0]] # type Referentiel.Competences
+#         compRef = ref.dicoCompetences[codeComp[0]] # type Referentiel.Competences
         for comp_asso in compRef.asso_type:
 #             print "   ", comp_asso
             seq.GererElementsDependants(codeComp[0], comp_asso, self)

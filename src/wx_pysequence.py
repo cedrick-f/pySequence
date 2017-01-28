@@ -3682,14 +3682,19 @@ class BaseFiche(wx.ScrolledWindow):
     
     #############################################################################            
     def normalize(self, cr):
-        h = float(self.GetVirtualSize()[1])
+        h = float(self.GetVirtualSize()[1]) / draw_cairo.COEF
         if h <= 0:
-            h = float(100)
-#        print h
-        cr.scale(h / draw_cairo.COEF, h / draw_cairo.COEF) 
+            h = 1.0
+        cr.scale(h, h) 
+        
+#         h = float(self.GetVirtualSize()[1])
+#         if h <= 0:
+#             h = float(100)
+# #        print h
+#         cr.scale(h / draw_cairo.COEF, h / draw_cairo.COEF) 
         
         
-        
+    
     #############################################################################            
     def Draw(self, ctx):
         self.GetDoc().DefinirCouleurs()
@@ -6641,7 +6646,7 @@ class PanelPropriete_CI(PanelPropriete):
         """ Permet de cacher les cases des CI au fur et à mesure que l'on selectionne des CI
             <liste> : liste des CI à activer
         """ 
-        print "GererCases", perso
+#         print "GererCases", perso
         for i, b in enumerate(self.group_ctrls):
             if i in liste:
                 b[0].Enable(True)
