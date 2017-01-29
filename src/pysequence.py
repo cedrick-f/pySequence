@@ -526,6 +526,7 @@ class ElementBase():
     def setBrancheImage(self, branche, nom = "Image"):
         Ok = True
         data = branche.get(nom, "")
+        self.image = None
         if data != "":
             try:
                 self.image = PyEmbeddedImage(data).GetBitmap()
@@ -1914,9 +1915,9 @@ class Sequence(BaseDoc):
             s.MiseAJourNomsSystemes()
     
     ######################################################################################  
-    def AjouterSystemeSeance(self):
+    def AjouterSystemeSeance(self, sy):
         for s in self.seances:
-            s.AjouterSysteme()
+            s.AjouterSysteme(sy)
             
     ######################################################################################  
     def AjouterListeSystemesSeance(self, lstSys):
@@ -2068,7 +2069,7 @@ class Sequence(BaseDoc):
         self.arbre.Expand(self.brancheSys)
         self.GetApp().sendEvent(modif = u"Ajout d'un Système")
         self.arbre.SelectItem(sy.branche)
-        self.AjouterSystemeSeance()
+        self.AjouterSystemeSeance(sy)
         return
     
     ######################################################################################  
@@ -2456,15 +2457,19 @@ class Sequence(BaseDoc):
     def GetSystemesUtilises(self):
         """ Renvoie la liste des systèmes utilisés pendant la séquence
         """
+#         print "GetSystemesUtilises"
         lst = []
         for s in self.systemes:
+#             print "   ", s
             n = 0
             for se in self.seances:
                 ns = se.GetNbrSystemes(complet = True)
+#                 print "   ", ns
                 if s.nom in ns.keys():
                     n += ns[s.nom]
             if n > 0:
                 lst.append(s)
+#         print ">>>", lst
         return lst
 
 
@@ -3234,18 +3239,19 @@ class Projet(BaseDoc):
                 pass
                 
             else:
+                
                 competence = prj.getCompetence(param[0], param[1:])
                 if competence is not None:
 #                     print "TIP", param, competence.indicateurs, competence.sousComp
                     self.tip.SetHTML(constantes.BASE_FICHE_HTML_COMP_PRJ)
                     
                     k = param[1:].split(u"\n")
-                    nc = getSingulierPluriel(self.GetReferentiel().dicoCompetences["S"].nomGenerique, 
+                    titre = getSingulierPluriel(self.GetReferentiel().dicoCompetences["S"].nomGenerique, 
                                              len(competence.sousComp) > 1)
                     if len(k) > 1:
-                        titre = nc + u" - ".join(k)
+                        titre += u" - ".join(k)
                     else:
-                        titre = nc + " " + k[0]
+                        titre += " " + k[0]
                     self.tip.SetWholeText("titre", titre)
                     
 #                     intituleComp = "\n".join([textwrap.fill(ind, 50) for ind in competence.intitule.split(u"\n")]) 
@@ -3253,14 +3259,17 @@ class Projet(BaseDoc):
                     
                     if competence.sousComp != {}: #type(competence[1]) == dict:  
                         code = None
-                        indicEleve = obj.GetDicIndicateurs()
+                        self.tip.Construire(competence.sousComp, obj, prj, code = code, 
+                                        check = isinstance(obj, Tache))
+#                         indicEleve = obj.GetDicIndicateurs()
                     else:
                         code = param
-                        indicEleve = obj.GetDicIndicateurs()#[param]
+                        self.tip.Construire(competence.indicateurs, obj, prj, code = code, 
+                                        check = isinstance(obj, Tache))
+#                         indicEleve = obj.GetDicIndicateurs()#[param]
 #                     print "indicEleve", indicEleve
 #                     print "competence.indicateurs", competence.indicateurs
-                    self.tip.Construire(competence.sousComp, obj, prj, code = code, 
-                                        check = isinstance(obj, Tache))
+                    
                 
         self.tip.SetPage()
         return self.tip
@@ -7660,32 +7669,40 @@ class Seance(ElementAvecLien, ElementBase):
         
         
     ######################################################################################  
-    def AjouterSysteme(self, nom = u"Nouveau système", nombre = 0, construire = True):
+    def AjouterSysteme(self, systeme, nombre = 0, construire = True):
+        """ Ajoute une Variable de gestion du nombre de systèmes nécessaires à la Séance
+            
+            Se propage aux sous Séances ...
+            
+        """
+        #nom = u"Nouveau système"
+        nom = tronquer(systeme.nom, 20)
         if self.typeSeance in ACTIVITES:
-            self.systemes.append(Variable(tronquer(nom, 20), lstVal = nombre, nomNorm = "", typ = VAR_ENTIER_POS, 
+            self.systemes.append(Variable(nom, lstVal = nombre, nomNorm = "", typ = VAR_ENTIER_POS, 
                                           bornes = [0,9], modeLog = False,
-                                          expression = None, multiple = False))
+                                          expression = None, multiple = False,
+                                          data = systeme))
 #            if construire:
 #                self.GetPanelPropriete().ConstruireListeSystemes()
                 
         elif self.typeSeance in ["R", "S"] : # Séances en Rotation ou  Parallèle
             for s in self.seances:
-                s.AjouterSysteme(nom, nombre)
+                s.AjouterSysteme(systeme, nombre)
     
     
     ######################################################################################  
     def AjouterListeSystemes(self, lstNSys = None):
         """
         """
-#         print "  AjouterListeSystemes", self.typeSeance, lstNSys
+        print "  AjouterListeSystemes", self.typeSeance, lstNSys
         lstSys = self.GetDocument().systemes
-#         print "    ", lstSys
+        print "    ", lstSys
         if self.typeSeance in ACTIVITES:
             if lstNSys == [] or lstNSys == None:
                 lstNSys = [0]*len(lstSys)
             for i, s in enumerate(lstSys):
-#                print "    ", s
-                self.AjouterSysteme(s.nom, lstNSys[i], construire = False)
+                print "    ", s.nom
+                self.AjouterSysteme(s, lstNSys[i], construire = False)
 #            self.GetPanelPropriete().ConstruireListeSystemes()
             
         elif self.typeSeance in ["R", "S"] : # Séances en Rotation ou  Parallèle
@@ -7767,16 +7784,17 @@ class Seance(ElementAvecLien, ElementBase):
 
             else:
                 for s in self.systemes:
-                    if s.n <>"":
-                        up(d, s.n, s.v[0]*self.nombre.v[0])
+                    if s.data.nom <>"":
+                        up(d, s.data.nom, s.v[0]*self.nombre.v[0])
 #                        d[s.n] = s.v[0]*self.nombre.v[0]
         else:
             for s in self.systemes:
-                if s.n <>"":
+#                 print "      ", s.data.nom
+                if s.data.nom <>"":
                     if simple:
-                        up(d, s.n, s.v[0])
+                        up(d, s.data.nom, s.v[0])
                     else:
-                        up(d, s.n, s.v[0]*self.nombre.v[0])        
+                        up(d, s.data.nom, s.v[0]*self.nombre.v[0])        
         return d
 
 
@@ -8850,8 +8868,9 @@ class Systeme(ElementAvecLien, ElementBase):
     
     ######################################################################################  
     def setBranche(self, branche):
-#        print "setBranche systeme"
+        print "setBranche systeme",
         nomClasse  = branche.get("NomClasse", "")
+        print nomClasse
         if nomClasse != u"" and isinstance(self.parent, Sequence):
             classe = self.parent.classe
 #            print "   >>", classe

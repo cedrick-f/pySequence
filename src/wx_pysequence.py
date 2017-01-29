@@ -4096,7 +4096,8 @@ class PanelPropriete(scrolled.ScrolledPanel):
     def SetImage(self, sendEvt = False):
         if self.objet.image != None:
             self.image.SetBitmap(rognerImage(self.objet.image, 200, HMIN_PROP-80))
-        
+        else:
+            self.image.SetBitmap(wx.NullBitmap)
         self.sizer.Layout()
         
         if sendEvt:
@@ -9408,7 +9409,11 @@ class PanelPropriete_Systeme(PanelPropriete):
             self.systeme.lienClasse = None
 #            self.Verrouiller(True)
         
-        self.systeme.SetNom(evt.GetString())
+#         self.systeme.SetNom(evt.GetString())
+        
+        self.MiseAJour()
+        
+        
         if isinstance(self.systeme.parent, pysequence.Sequence):
             self.systeme.parent.MiseAJourNomsSystemes()
             modif = u"Modification des systèmes nécessaires"
@@ -9574,9 +9579,8 @@ class PanelPropriete_Systeme(PanelPropriete):
     def MiseAJour(self, sendEvt = False):
         """
         """
-#        print "MiseAJour panelPropriete Systeme"
-#        print "MiseAJour", self.systeme
-            
+        print "MiseAJour panelPropriete Systeme", self.systeme
+        
         self.textctrl.ChangeValue(self.systeme.nom)
         self.vcNombre.mofifierValeursSsEvt()
         

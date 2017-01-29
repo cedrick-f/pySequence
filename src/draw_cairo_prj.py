@@ -456,8 +456,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False, entete = Fal
                                        cairo.FONT_WEIGHT_NORMAL)
     show_text_rect(ctx, constantes.ellipsizer(prj.problematique, constantes.LONG_MAX_PROBLEMATIQUE), 
                    rectPro, ha = 'g', b = 0.5,
-                   fontsizeMinMax = (-1, 0.016 * COEF),
-                   debug = True)
+                   fontsizeMinMax = (-1, 0.016 * COEF))
     prj.zones_sens.append(Zone([rectPro], param = "PB"))
     
 #    print "     6 ", time.time() - tps
@@ -1053,14 +1052,57 @@ def regrouperDic(obj, dicIndicateurs):
 #         print "    ", typ
         return dic, typ
     else:
+        dic = {}
         typ = {}
-        for k in dicIndicateurs.keys():
-#             print obj.GetProjetRef().getIndicateur(k)
-            typ[k] = [p.poids for p in obj.GetProjetRef().getIndicateur(k)]
-#         print "  >>>", dicIndicateurs
-#         print "     ", typ
-        return dicIndicateurs, typ
-     
+        for disc, tousIndicateurs in obj.GetProjetRef()._dicoCompetences.items():
+#             print "-----", disc
+            for k0, competence in tousIndicateurs.items():
+#                 print "     ", k0, competence
+                for k1, sousComp in competence.sousComp.items():
+#                     print "        ", k1, sousComp
+                    dic[disc+k1] = []
+                    typ[disc+k1] = []
+                    
+                    
+                    if disc+k1 in dicIndicateurs.keys():
+                        dic[disc+k1].extend(dicIndicateurs[disc+k1])
+#                        print "   **", v1[1][k2]
+                        typ[disc+k1].extend([p.poids for p in sousComp.indicateurs])
+                    else:
+                        l = len(sousComp.indicateurs)
+                        dic[disc+k1].extend([False]*l)
+                        typ[disc+k1].extend(['']*l)
+                    
+                    
+                    if not disc+k1 in xComp.keys():
+#                     if dic[disc+k1] == [] or not (True in dic[disc+k1]):
+                        del dic[disc+k1]
+                        del typ[disc+k1]
+                    
+#         print "  >>", dic
+#         print "    ", typ
+        return dic, typ
+        
+        
+
+        
+        
+        
+        
+        
+#         typ = {}
+#         for k in dicIndicateurs.keys():
+# #             print obj.GetProjetRef().getIndicateur(k)
+#             typ[k] = [p.poids for p in obj.GetProjetRef().getIndicateur(k)]
+# #         print "  >>>", dicIndicateurs
+# #         print "     ", typ
+#         return dicIndicateurs, typ
+
+
+
+
+
+
 ######################################################################################  
 def regrouperLst(prjRef, lstCompetences):
 #    print "regrouperLst", lstCompetences
@@ -1199,6 +1241,9 @@ def DrawBoutonCompetence(ctx, objet, dicIndic, y, h = None):
                 else: # Rien => Transparent
                     d = 0
                     ctx.set_source_rgba (1, 1, 1, 0)
+                
+#                 print "d", d, (x+a*dx, y-h/2+d*dh, dx, h-dh)
+                
                 if d != 0:
                     ctx.rectangle(x+a*dx, y-h/2+d*dh, dx, h-dh)
                     ctx.fill_preserve ()
@@ -1213,6 +1258,13 @@ def DrawBoutonCompetence(ctx, objet, dicIndic, y, h = None):
                 ctx.stroke()
 
 
+
+
+###########################################################################################
+# 
+# 
+#
+###########################################################################################
 def gabarit():
     
     print "Génération du gabarit ...", 

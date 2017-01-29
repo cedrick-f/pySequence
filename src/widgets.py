@@ -144,7 +144,9 @@ CORRECTEUR_VARI = 1.0#1.000000001
 class Variable:
     def __init__(self, nom, lstVal = [0.0], nomNorm = "", typ = VAR_REEL, 
                  bornes = [None,None], modeLog = True,
-                 expression = None, multiple = False):
+                 expression = None, multiple = False, 
+                 data = None):
+        self.data = data
         self.n = nom
         self.nn = nomNorm
         if type(lstVal) != list:

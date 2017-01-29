@@ -458,23 +458,7 @@ def Draw(ctx, seq, mouchard = False, entete = False):
     image(ctx, 
           posCib[0], posCib[1], tailleCib[0], tailleCib[1],
           seq.classe.referentiel.getLogo())
-#     tfname = tempfile.mktemp()
-#     bmp = seq.classe.referentiel.getLogo()
-#     try:
-#         bmp.SaveFile(tfname, wx.BITMAP_TYPE_PNG)
-#         image = cairo.ImageSurface.create_from_png(tfname)
-#     finally:
-#         if os.path.exists(tfname):
-#             os.remove(tfname)  
-#     w = image.get_width()
-#     h = image.get_height()
-#     ctx.save()
-#     ctx.translate(posCib[0], posCib[1])
-#     ctx.scale(tailleCib[0]/w, tailleCib[0]/w)
-#     ctx.set_source_surface(image, 0, 0)
-#     ctx.paint ()
-#     ctx.restore()
-        
+
     # Affichage des CI sur la cible
     if seq.classe.referentiel.CI_cible:
         seq.zones_sens.append(Zone([posCib+tailleCib], obj = seq.CI))
@@ -579,16 +563,11 @@ def Draw(ctx, seq, mouchard = False, entete = False):
             h = (posZSeances[1]-posZDemarche[1]-0.01 * COEF) / 5
             y = posZDemarche[1] + 4 * h
             w = wEff[e]
-#             ctx.set_line_width(0.001 * COEF)
-
-#             ctx.rectangle(x, y, w, h)
-#             ctx.stroke()
-#             ctx.set_source_rgb(0.6, 0.8, 0.6)
-#             show_text_rect(ctx, seq.GetReferentiel().effectifs[e][1], (x, y, w, h), b=0.2)
-#             ctx.stroke()
             DrawLigneEff(ctx, x+w, y+h, constantes.CouleursGroupes[e])
 
-    
+
+
+
     def taille(lstTxt):
         return 1.0*sum([len(t) for t in lstTxt])
 
@@ -910,6 +889,7 @@ def Draw(ctx, seq, mouchard = False, entete = False):
         systemes = seq.GetSystemesUtilises()
         for s in systemes:
             nomsSystemes.append(s.nom)
+        
         if nomsSystemes != []:
             ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
                                   cairo.FONT_WEIGHT_NORMAL)
