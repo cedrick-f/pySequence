@@ -1141,6 +1141,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
             child = None
         
         self.OnDocChanged(None)
+        
         if child != None:
             wx.CallAfter(child.Activate)
         return child
@@ -1198,7 +1199,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     
     ###############################################################################################
     def ouvrir(self, nomFichier, reparer = False):
-#         print "ouvrir", nomFichier, reparer
+        print "ouvrir", nomFichier, reparer
         self.Freeze()
         wx.BeginBusyCursor()
         
@@ -1229,9 +1230,10 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                                 return lienSeq.sequence
                 
                 child = self.commandeNouveau(ext = ext, ouverture = True)
+                
                 if child != None:
                     doc = child.ouvrir(nomFichier, reparer = reparer)
-                    
+                
                     
             # Le Fichier est déja ouvert
             else:
@@ -2062,13 +2064,14 @@ class FenetreSequence(FenetreDocument):
             self.classe = self.sequence.classe
             self.sequence.app = self
         
-      
+        
         #
         # Arbre de structure de la séquence (à gauche)
         #
         arbre = ArbreSequence(self.pnl, self.sequence, self.classe, self.panelProp)
         self.arbre = arbre
-        self.arbre.SelectItem(self.classe.branche)
+        if sequence is None:
+            self.arbre.SelectItem(self.classe.branche)
         self.arbre.ExpandAll()
         
         #
@@ -2251,10 +2254,10 @@ class FenetreSequence(FenetreDocument):
     def ouvrir(self, nomFichier, redessiner = True, reparer = False):
         """ <nomFichier> encodé en FileEncoding
         """
-#        print "ouvrir sequence", nomFichier
+        print "ouvrir sequence", nomFichier
         if not os.path.isfile(nomFichier):
             return
-                    
+        
         fichier = open(nomFichier,'r')
         self.definirNomFichierCourant(nomFichier)
     
@@ -2276,14 +2279,15 @@ class FenetreSequence(FenetreDocument):
 
             if reparer:
                 self.VerifierReparation()
-                
+            
             self.finaliserOuverture()
+           
 
 
         ###############################################################################################################
         ###############################################################################################################
         
-
+        
         if "beta" in version.__version__:
             ouvre()
         else:
@@ -2303,12 +2307,16 @@ class FenetreSequence(FenetreDocument):
         
         fichier.close()
         
+        
+        
         if redessiner:
             wx.CallAfter(self.fiche.Redessiner)
 
         self.classe.undoStack.do(u"Ouverture de la Classe")
         self.sequence.undoStack.do(u"Ouverture de la Séquence")
         self.parent.miseAJourUndo()
+        
+       
         
         return self.sequence
         
@@ -9294,7 +9302,7 @@ class PanelPropriete_Tache(PanelPropriete):
 ####################################################################################
 class PanelPropriete_Systeme(PanelPropriete):
     def __init__(self, parent, systeme):
-#        print "init", parent
+#         print "init PanelPropriete_Systeme", systeme
         self.systeme = systeme
         self.parent = parent
         
@@ -9308,7 +9316,6 @@ class PanelPropriete_Systeme(PanelPropriete):
         self.textctrl = textctrl
         
         self.sizer.Add(titre, (0,0), (1,1), flag = wx.ALIGN_CENTER_VERTICAL|wx.ALL, border = 3)
-        
         
         if isinstance(systeme.parent, pysequence.Sequence):
             self.cbListSys = wx.ComboBox(self, -1, u"",
@@ -9340,19 +9347,6 @@ class PanelPropriete_Systeme(PanelPropriete):
         isizer = self.CreateImageSelect(self, titre = u"Image du système")
         self.sizer.Add(isizer, (0,2), (3,1), flag =  wx.EXPAND|wx.ALIGN_RIGHT|wx.TOP|wx.LEFT, border = 2)#wx.ALIGN_CENTER_VERTICAL |
         
-#         box = myStaticBox(self, -1, u"Image du système")
-#         bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
-#         image = wx.StaticBitmap(self, -1, wx.NullBitmap)
-#         self.image = image
-#         self.SetImage()
-#         bsizer.Add(image, flag = wx.EXPAND)
-#         
-#         bt = wx.Button(self, -1, u"Changer l'image")
-#         bt.SetToolTipString(u"Cliquer ici pour sélectionner un fichier image")
-#         bsizer.Add(bt, flag = wx.EXPAND)
-#         self.Bind(wx.EVT_BUTTON, self.OnClick, bt)
-#         self.sizer.Add(bsizer, (0,2), (3,1), flag =  wx.EXPAND|wx.ALIGN_RIGHT|wx.TOP|wx.LEFT, border = 2)#wx.ALIGN_CENTER_VERTICAL |
-#         self.btImg = bt
         
         #
         # Lien
@@ -9400,19 +9394,22 @@ class PanelPropriete_Systeme(PanelPropriete):
     #############################################################################            
     def EvtComboBox(self, evt):
         sel = evt.GetSelection()
-        if sel > 0:
+        if sel > 0: # Système
             s = self.systeme.parent.classe.systemes[sel-1]
             self.systeme.setBranche(s.getBranche())
             self.systeme.lienClasse = s
-            self.Verrouiller()
+
         else:
+            p = self.systeme.GetDocument()
+            s = pysequence.Systeme(p)
+            self.systeme.setBranche(s.getBranche())
             self.systeme.lienClasse = None
-#            self.Verrouiller(True)
-        
-#         self.systeme.SetNom(evt.GetString())
-        
+            
+
+        self.Verrouiller()
         self.MiseAJour()
-        
+        self.systeme.SetNom(self.systeme.nom)
+        self.GetDocument().MiseAJourNomsSystemes()
         
         if isinstance(self.systeme.parent, pysequence.Sequence):
             self.systeme.parent.MiseAJourNomsSystemes()
@@ -9497,7 +9494,7 @@ class PanelPropriete_Systeme(PanelPropriete):
         """ Modification du nom du système
         """
         
-#        print "EvtText", event.GetString()
+#         print "EvtText", event.GetString()
         if isinstance(self.systeme.parent, pysequence.Sequence):
             self.systeme.SetNom(event.GetString())
             self.systeme.parent.MiseAJourNomsSystemes()         # mise à jour dans l'arbre de la Séquence
@@ -9536,14 +9533,16 @@ class PanelPropriete_Systeme(PanelPropriete):
 
     ######################################################################################  
     def estVerrouille(self):
-#        print "estVerrouille", self.systeme
+#         print "estVerrouille", self.systeme
 #        print "   ", self.parent
 #        print "   ", self.systeme.parent
 #        classe = self.systeme.GetClasse()
         if isinstance(self.systeme.parent, pysequence.Classe): # Cas du système édité depuis le panel propriété de la Classe
             return False
+        
         if self.systeme.lienClasse is not None:
             return True                             # C'est un système qui appartient à la classe
+        
         return False
    
     #############################################################################            
@@ -9579,7 +9578,7 @@ class PanelPropriete_Systeme(PanelPropriete):
     def MiseAJour(self, sendEvt = False):
         """
         """
-        print "MiseAJour panelPropriete Systeme", self.systeme
+#         print "MiseAJour panelPropriete Systeme", self.systeme
         
         self.textctrl.ChangeValue(self.systeme.nom)
         self.vcNombre.mofifierValeursSsEvt()

@@ -960,7 +960,7 @@ class Classe(ElementBase):
     ######################################################################################  
     def setBranche(self, branche, reparer = False):
         err = []
-#        print "setBranche classe"
+#         print "setBranche classe"
         self.typeEnseignement = branche.get("Type", constantes.TYPE_ENSEIGNEMENT_DEFAUT)
         
         self.version = branche.get("Version", "0")       # A partir de la version 6 !
@@ -1126,7 +1126,7 @@ class Classe(ElementBase):
             self.systemes.sort(key=attrgetter('nom'))
 #         print "systèmes Classe :", self.systemes
 #        self.GetPanelPropriete().MiseAJour()
-            
+        
         return err
         
         
@@ -1727,7 +1727,7 @@ class Sequence(BaseDoc):
     def setBranche(self, branche):
         """ Lecture d'une branche XML de séquence
         """
-#        print "setBranche séquence"
+#         print "setBranche séquence"
 #        t0 = time.time()
         self.intitule = branche.get("Intitule", u"")
         
@@ -6957,7 +6957,7 @@ class Seance(ElementAvecLien, ElementBase):
         
     ######################################################################################  
     def setBranche(self, branche):
-#        print "setBranche séance"
+#         print "setBranche séance"
 #        t0 = time.time()
         
         self.ordre = eval(branche.tag[6:])
@@ -7694,9 +7694,9 @@ class Seance(ElementAvecLien, ElementBase):
     def AjouterListeSystemes(self, lstNSys = None):
         """
         """
-        print "  AjouterListeSystemes", self.typeSeance, lstNSys
+#         print "  AjouterListeSystemes", self.typeSeance, lstNSys
         lstSys = self.GetDocument().systemes
-        print "    ", lstSys
+#         print "    ", lstSys
         if self.typeSeance in ACTIVITES:
             if lstNSys == [] or lstNSys == None:
                 lstNSys = [0]*len(lstSys)
@@ -8868,9 +8868,9 @@ class Systeme(ElementAvecLien, ElementBase):
     
     ######################################################################################  
     def setBranche(self, branche):
-        print "setBranche systeme",
+#         print "setBranche systeme",
         nomClasse  = branche.get("NomClasse", "")
-        print nomClasse
+#         print nomClasse
         if nomClasse != u"" and isinstance(self.parent, Sequence):
             classe = self.parent.classe
 #            print "   >>", classe
