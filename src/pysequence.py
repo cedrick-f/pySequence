@@ -1327,6 +1327,9 @@ class BaseDoc(ElementBase, ElementAvecLien):
     
     ######################################################################################  
     def HideTip(self, pos = None):
+        if hasattr(self, 'call'):
+            self.call.Stop()
+            
         if hasattr(self, 'tip'):
             if pos is not None:
                 x, y = pos
@@ -1337,8 +1340,7 @@ class BaseDoc(ElementBase, ElementAvecLien):
                     return
             self.tip.Show(False)
         
-        if hasattr(self, 'call'):
-            self.call.Stop()
+        
             
             
     ######################################################################################  
@@ -1427,6 +1429,7 @@ class BaseDoc(ElementBase, ElementAvecLien):
     ######################################################################################  
     def Move(self, zone, x, y):
 #         print "Move", x, y
+            
         self.HideTip()
             
         tip = None 
@@ -6838,7 +6841,7 @@ class Seance(ElementAvecLien, ElementBase):
                               expression = None, multiple = False)
         
         self.nombre = Variable(u"Nombre", lstVal = 1, nomNorm = "", typ = VAR_ENTIER_POS, 
-                              bornes = [1,10], modeLog = False,
+                              bornes = [1,50], modeLog = False,
                               expression = None, multiple = False)
         
         self.nbrRotations = Variable(u"Nombre de rotations", lstVal = 1, nomNorm = "", typ = VAR_ENTIER_POS, 
@@ -9140,7 +9143,25 @@ class Calendrier(ElementAvecLien, ElementBase):
     def GetNbrAnnees(self):
         return self.GetAnneeFin() - self.annee
 
-
+    ######################################################################################  
+    def GetMois(self):
+        lmois = {}
+        nmois = 0
+        lannees = self.GetListeAnnees()
+        for ia, annee in enumerate(lannees):
+            if ia == 0:
+                lmois[annee] = [range(9, 13)]
+                nmois += 4
+            elif ia == self.GetNbrAnnees():
+                lmois[annee] = [range(1,7)]
+                nmois += 6
+            else:
+                lmois[annee] = [range(1,7), range(9, 13)]
+                nmois += 10
+            
+        return
+    
+    
     ######################################################################################  
     def GetListeAnnees(self):
         return [self.annee + i for i in range(self.GetNbrAnnees()+1)]

@@ -736,19 +736,9 @@ def DrawCalendrier(ctx, rect, calendrier):
     # liste des années
     lannees = calendrier.GetListeAnnees()
     
-    # listes des mois
-    lmois = {}
-    nmois = 0
-    for ia, annee in enumerate(lannees):
-        if ia == 0:
-            lmois[annee] = [range(9, 13)]
-            nmois += 4
-        elif ia == calendrier.GetNbrAnnees():
-            lmois[annee] = [range(1,7)]
-            nmois += 6
-        else:
-            lmois[annee] = [range(1,7), range(9, 13)]
-            nmois += 10
+    # listes des mois   
+    lmois, nmois = calendrier.GetMois()
+    
     
     # Période entre deux mois
     dx_m = (wt - wj - (calendrier.GetNbrAnnees()-1)*ev - calendrier.GetNbrAnnees()*ea) / nmois
@@ -760,11 +750,11 @@ def DrawCalendrier(ctx, rect, calendrier):
     wa = {}
     for ia, annee in enumerate(lannees):
         if ia == 0:
-            wa[annee] = dx_m*4
+            wa[annee] = dx_m*len(lmois[annee])
         elif ia == calendrier.GetNbrAnnees():
-            wa[annee] = dx_m*6
+            wa[annee] = dx_m*len(lmois[annee])
         else:
-            wa[annee] = dx_m*10+ev
+            wa[annee] = dx_m*len(lmois[annee])+ev
     
     #
     # Les noms des années, mois et jours

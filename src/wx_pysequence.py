@@ -580,6 +580,9 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         # Interception de la demande de fermeture
         self.Bind(wx.EVT_CLOSE, self.OnClose)
         
+        # Sortie de la fenêtre
+        self.Bind(wx.EVT_LEAVE_WINDOW, self.HideTip)
+        
         
         #############################################################################################
         # Création de la barre d'outils
@@ -1482,6 +1485,14 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         if self.GetNotebook() != None and self.GetNotebook().GetCurrentPage() != None:
             return self.GetNotebook().GetCurrentPage().GetDocument()
     
+    
+    #############################################################################
+    def HideTip(self, event = None):
+        print "HideTip principal"
+        self.GetDocActif().HideTip()
+        event.Skip()
+        
+        
     #############################################################################
     def GetFenetreActive(self):
         return self.GetNotebook().GetCurrentPage()
@@ -1613,6 +1624,14 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         self.nb = wx.Notebook(self.pnl, -1)
 
 
+        
+
+    #########################################################################################################
+    def HideTip(self, event = None):
+        print "HideTip document"
+        self.GetDocument().HideTip()
+        
+        
     #########################################################################################################
     def GetPanelProp(self):
         return self.panelProp.panel
@@ -1720,6 +1739,8 @@ class FenetreDocument(aui.AuiMDIChildFrame):
         
         self.Bind(EVT_DOC_MODIFIED, self.OnDocModified)
         self.Bind(wx.EVT_CLOSE, self.quitter)
+        for c in self.GetChildren():
+            c.Bind(wx.EVT_LEAVE_WINDOW, self.HideTip)
         
 
     #############################################################################
