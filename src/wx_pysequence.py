@@ -45,6 +45,8 @@ Copyright (C) 2011-2016
 ####################################################################################
 # Outils système
 import os, sys
+import util_path
+
 print sys.version_info
 
 # à décommenter pour forcer l'utilisation de wxpython 2.8 (ubuntu 14)
@@ -64,7 +66,7 @@ import version
 
 from util_path import toFileEncoding, toSystemEncoding, FILE_ENCODING, SYSTEM_ENCODING, \
                         testRel, nomCourt
-import util_path
+
 
 # Module de gestion des instances d'application
 import app
@@ -537,7 +539,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
         
         
-        # !!! cette ligne pose probléme à la fermeture : mystère
+        # !!! cette ligne pose problème à la fermeture : mystère
         self.renommerWindow()
         
         self.Bind(wx.EVT_MENU, self.commandeNouveau, id=10)
@@ -561,6 +563,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
         self.Bind(wx.EVT_MENU, self.OnAide, id=21)
         self.Bind(wx.EVT_MENU, self.OnAbout, id=22)
+        self.Bind(wx.EVT_MENU, self.OnBug, id=23)
         
 #        self.Bind(wx.EVT_MENU, self.OnOptions, id=31)
         
@@ -965,6 +968,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
         help_menu = wx.Menu()
         help_menu.Append(21, u"&Aide en ligne\tF1")
+        help_menu.Append(23, u"Envoyer un rapport de &bug")
         help_menu.AppendSeparator()
         help_menu.Append(22, u"A propos")
 
@@ -1104,6 +1108,11 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     def OnAbout(self, event):
         win = A_propos(self)
         win.ShowModal()
+        
+    #############################################################################
+    def OnBug(self, event):
+        print a
+        
         
     #############################################################################
     def OnAide(self, event):
@@ -7135,7 +7144,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
 
     #############################################################################            
     def EvtText(self, event):
-#         print "EvtText"
+        print "EvtText"
         if event.GetEventObject() == self.intit:
             self.sequence.SetText(self.intit.GetText())
             self.lien.MiseAJourArbre()

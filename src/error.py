@@ -40,9 +40,10 @@ Copyright (C) 2011-2015
 import traceback
 
 import sys
+import util_path
 
-from widgets import messageErreur
-
+from widgets import messageInfo
+# 
 import wx
 
 import version
@@ -50,10 +51,10 @@ import version
 import time
 
 
-def MyExceptionHook(etype, value, trace):
+def MyExceptionHook1(etype, value, trace):
     """
     Handler for all unhandled exceptions.
- 
+  
     :param `etype`: the exception type (`SyntaxError`, `ZeroDivisionError`, etc...);
     :type `etype`: `Exception`
     :param string `value`: the exception error message;
@@ -61,12 +62,12 @@ def MyExceptionHook(etype, value, trace):
      standard Python header: ``Traceback (most recent call last)``.
     """
     tmp = traceback.format_exception(etype, value, trace)
-    mes = u"pySéquence %s a rencontré une erreur et doit fermer !\n\n"\
+    mes = u"%s %s a rencontré une erreur et doit fermer !\n\n"\
          u"Merci de copier le message ci-dessous\n" \
          u"et de l'envoyer à l'équipe de développement :\n"\
-         u"cedrick point faury arobase ac-clermont point fr\n\n" %version.__version__
+         u"cedrick point faury arobase ac-clermont point fr\n\n" %(version.__appname__, version.__version__)
     exception = mes + "".join(tmp)
-    
+     
     try:
         wx.GetApp().GetTopWindow()
         messageErreur(None, "Erreur !", exception, wx.ICON_ERROR)
@@ -75,8 +76,138 @@ def MyExceptionHook(etype, value, trace):
         time.sleep(6)
     sys.exit()
 
-if not "beta" in version.__version__:
+
+
+
+
+def MyExceptionHook(typ, value, traceb):
+    """
+    Handler for all unhandled exceptions.
+  
+    :param `etype`: the exception type (`SyntaxError`, `ZeroDivisionError`, etc...);
+    :type `etype`: `Exception`
+    :param string `value`: the exception error message;
+    :param string `trace`: the traceback header, if any (otherwise, it prints the
+     standard Python header: ``Traceback (most recent call last)``.
+    """
+#     frame = traceb.tb_frame
+    print >>sys.stderr,"\n"
+    traceback.print_tb(traceb)
+    print >>sys.stderr,"\nType : ",typ,"\n"
+    print >>sys.stderr,"ValueError : ",value
+#     print "".join(traceback.format_exception(typ, value, traceb))
+    SendBugReport()
+#     sys.exit()
+    
+
+
+
+
+
+
+
+class RedirectErr:
+    #
+    # Redirige la sortie des erreurs pour envoyer l'erreur par mail
+    #
+    def __init__(self,stderr):
+        self.stderr=stderr
+        self.content = ""
+        self.error_occured=False
+        self.file_error=None
+
+    def write(self,text):
+        #
+        # A la premiere erreur, on enregistrer la fonction de sortie
+        #
+        if not self.error_occured:
+            #
+            # Première erreur
+            # D'abord on enregistre la fonction atexit
+            import atexit
+            
+            atexit.register(SendBugReport)
+            # puis on ouvre le fichier qui contient les erreurs
+            self.file_error = open(util_path.ERROR_FILE,'w')
+            self.error_occured=True
+        if self.file_error is not None:
+            self.file_error.write(text)
+            self.file_error.flush()
+
+
+# sys.stdout = open(util_path.LOG_FILE, "w")
+# print ("test sys.stdout")
+
+
+if True:#not "beta" in version.__version__:
     sys.excepthook = MyExceptionHook
-    
-    
+#     sys.stderr=RedirectErr(sys.stderr)
+
+
+
+
+
+def SendBugReport():
+    """
+    Fonction qui envoie le rapport de bug par mail.
+    """
+    #
+    # On ouvre le fichier qui contient les erreurs
+    #
+    import webbrowser, datetime
+
+    message= u"%s a rencontré une erreur et doit être fermé.\n\n" \
+             u"Voulez-vous envoyer un rapport d'erreur ?" %version.__appname__
+    dlg=wx.MessageDialog(None,message,"Erreur", wx.YES_NO| wx.ICON_ERROR).ShowModal()
+    if dlg==5103:#YES, on envoie le mail
+        #
+        # Définition du mail
+        #
+        
+        messageInfo(None, u"Rapport d'erreur", 
+                    u"Rédaction du rapport d'erreur\n\n" \
+                    u"Votre logiciel de messagerie va s'ouvrir\n" \
+                    u"pour rédiger un courrier de rapport d'erreur.\n\n" \
+                    u"Merci d'y indiquer le plus précisément possible\n" \
+                    u"comment s'est produit cette erreur\n" \
+                    u"ainsi que le moyen de la reproduire.\n" \
+                    u"Ne pas hesiter à joindre un fichier .prj, .seq ou .prg.\n\n" \
+                    u"L'équipe de développement de %s vous remercie pour votre participation." %version.__appname__)
+        
+        
+        import util_path
+        e_mail="cedrick.faury@ac-clermont.fr"
+        now = str(datetime.datetime.now())
+        subject = version.__appname__ + version.__version__
+        subject += u" : rapport d'erreur" + now
+#        body="<HTML><BODY><P>"
+        
+        body = u"%s a rencontré une erreur le " %version.__appname__ + now
+        body += u"%0ADescription d'une méthode pour reproduire l'erreur :"
+        body += u"%0A%0A%0A%0A%0A"
+        body += u"=================TraceBack===================="
+        #
+        # Parcours du fichier
+        #
+        file_error=open(util_path.ERROR_FILE,'r')
+        for line in file_error.readlines():
+            body+=line+"%0A"
+        file_error.close()
+        body += u"==============================================%0A%0A"
+        
+        sys.stdout.close()
+        file_log = open(util_path.LOG_FILE,'r')
+#         sys.stdout.seek(0, 0)
+        body += u"%0A".join(file_log.readlines())
+        file_log.close()
+        sys.stdout = open(util_path.LOG_FILE, "w")
+
+#         body += u"L'équipe de développement de %s vous remercie pour votre participation." %version.__appname__
+#        body+="</P></BODY></HTML>"
+        file_error.close()
+        to_send="""mailto:%s?subject=%s&body=%s"""%(e_mail,subject,body)
+
+        print "Envoi ...",to_send
+        print webbrowser.open("""mailto:%s?subject=%s&body=%s"""%(e_mail,subject,body))
+
     

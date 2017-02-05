@@ -140,6 +140,7 @@ ERREURS = {ERR_PRJ_EQUIPE :     u"Equipe pédagogique",
            }
 
 
+
 #############################################################################################################
 class Erreur():
     def __init__(self, num = 0, info = None):

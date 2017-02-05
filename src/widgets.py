@@ -146,7 +146,6 @@ class Variable:
                  bornes = [None,None], modeLog = True,
                  expression = None, multiple = False, 
                  data = None):
-        self.data = data
         self.n = nom
         self.nn = nomNorm
         if type(lstVal) != list:

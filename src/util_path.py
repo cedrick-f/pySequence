@@ -129,8 +129,14 @@ else:
     else:
         APP_DATA_PATH = PATH
         
-    
-        
+
+ERROR_FILE = os.path.join(APP_DATA_PATH, 'pySequence.exe' + '.log')
+LOG_FILE = os.path.join(APP_DATA_PATH, 'log' + '.log')
+
+
+sys.stdout = open(LOG_FILE, "w")
+
+
 
 # execution du pySequence "installé"
 if INSTALL_PATH is not None and INSTALL_PATH == PATH:

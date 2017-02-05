@@ -9159,7 +9159,7 @@ class Calendrier(ElementAvecLien, ElementBase):
                 lmois[annee] = [range(1,7), range(9, 13)]
                 nmois += 10
             
-        return
+        return lmois, nmois
     
     
     ######################################################################################  
