@@ -156,7 +156,7 @@ class Variable:
         self.bornes = bornes
         self.modeLog = modeLog
         self.multiple = multiple
-        
+        self.data = data
         # Si la variable fait partie d'une expression
         self.expression = expression
         

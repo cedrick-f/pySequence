@@ -32,6 +32,10 @@ Copyright (C) 2015
 @author: Cedrick FAURY
 
 """
+
+DEBUG = False
+
+
 #import _winreg
 import os, sys
 
@@ -130,11 +134,12 @@ else:
         APP_DATA_PATH = PATH
         
 
+
 ERROR_FILE = os.path.join(APP_DATA_PATH, 'pySequence.exe' + '.log')
 LOG_FILE = os.path.join(APP_DATA_PATH, 'log' + '.log')
-
-
-sys.stdout = open(LOG_FILE, "w")
+    
+if DEBUG:    
+    sys.stdout = open(LOG_FILE, "w")
 
 
 

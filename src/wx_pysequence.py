@@ -37,6 +37,7 @@ Copyright (C) 2011-2016
 
 """
 
+DEBUG = False
 
 ####################################################################################
 #
@@ -286,7 +287,8 @@ from Referentiel import REFERENTIELS, ARBRE_REF, ACTIVITES
 import Referentiel
 
 # Gestion des messages d'erreur
-import error
+if DEBUG:
+    import error
 
 
 # from pysequence import *

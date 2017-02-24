@@ -4903,11 +4903,12 @@ class Progression(BaseDoc):
             return
         
         sequences = self.GetSequencesDossier()
-#        print "sequences", sequences
+        print "sequences trouvées", sequences
         for s in sequences:
             if not s in self.sequences_projets:
                 self.sequences_projets.append(s)
 #                s.ConstruireArbre(self.arbre, self.brancheSeq)
+        print "sequences importées", self.sequences_projets
         self.Ordonner()
 
     ######################################################################################  
@@ -5069,7 +5070,15 @@ class Progression(BaseDoc):
         sequences = []
         listeFichiersSequences = self.GetFichiersSequencesDossier()
         for fichier, sequence in listeFichiersSequences:
-            lienSequence = LienSequence(self,  os.path.relpath(fichier, self.GetPath()))
+            print 
+            print fichier
+            path = os.path.relpath(fichier, self.GetPath())
+            print path
+#             path = os.path.join(path, os.path.split(fichier)[1])
+#             print path
+            lienSequence = LienSequence(self,  path)
+#             print "seq", self.GetPath(), fichier
+#             print "   ", os.path.relpath(self.GetPath(), fichier)
             lienSequence.sequence = sequence
             sequences.append(lienSequence)
         
@@ -5375,7 +5384,7 @@ class Progression(BaseDoc):
 #########################################################################################################
 #########################################################################################################
 class ElementProgression():
-    def __init__(self, parent, path = r""):
+    def __init__(self, path = r""):
         self.path = path
 
 
@@ -5420,7 +5429,7 @@ class LienSequence(ElementBase, ElementProgression):
 
     ######################################################################################  
     def __repr__(self):
-        return "Seq :"+str(self.GetPosition()[0])+" > "+str(self.GetPosition()[-1]-self.GetPosition()[0])
+        return "Seq :"+self.path#str(self.GetPosition()[0])+" > "+str(self.GetPosition()[-1]-self.GetPosition()[0])
     
 
         
@@ -7704,7 +7713,7 @@ class Seance(ElementAvecLien, ElementBase):
             if lstNSys == [] or lstNSys == None:
                 lstNSys = [0]*len(lstSys)
             for i, s in enumerate(lstSys):
-                print "    ", s.nom
+#                 print "    ", s.nom
                 self.AjouterSysteme(s, lstNSys[i], construire = False)
 #            self.GetPanelPropriete().ConstruireListeSystemes()
             
