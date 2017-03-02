@@ -1556,6 +1556,51 @@ def rectangle_plein(ctx, x, y, w, h, coulBord, coulInter, alpha = 1):
     ctx.stroke ()
 
 
+def rectangle_plein_biseau(ctx, x, y, w, h, b, coulBord, coulInter, alpha = 1):
+    ctx.move_to(x+b, y)
+    ctx.line_to(x+w, y)
+    ctx.line_to(x+w-b, y+h)
+    ctx.line_to(x, y+h)
+    ctx.line_to(x+b, y)
+    
+    
+    ctx.set_source_rgba (coulInter[0], coulInter[1], coulInter[2], alpha)
+    ctx.fill_preserve ()
+    ctx.set_source_rgba (coulBord[0], coulBord[1], coulBord[2], alpha)
+    ctx.stroke ()
+    
+    
+def rectangle_plein_fleche(ctx, x, y, w, h, b, coulBord, coulInter, alpha = 1):
+    ctx.move_to(x, y)
+    ctx.line_to(x+w-b, y)
+    ctx.line_to(x+w, y+h/2)
+    ctx.line_to(x+w-b, y+h)
+    ctx.line_to(x, y+h)
+    ctx.line_to(x+b, y+h/2)
+    ctx.line_to(x, y)
+    
+def rectangle_plein_doigt(ctx, x, y, w, h, b, yd, coulBord, coulInter, alpha = 1):
+    if b > h:
+        b = h
+    if yd < b:
+        yd = b
+    elif yd > h-b:
+        yd = h-b
+    ctx.move_to(x,     y)
+    ctx.line_to(x+w-b, y)
+    ctx.line_to(x+w-b, y+yd-b)
+    ctx.line_to(x+w,   y+yd)
+    ctx.line_to(x+w-b, y+yd+b)
+    ctx.line_to(x+w-b, y+h)
+    ctx.line_to(x,     y+h)
+    ctx.line_to(x,     y)
+    
+    
+    ctx.set_source_rgba (coulInter[0], coulInter[1], coulInter[2], alpha)
+    ctx.fill_preserve ()
+    ctx.set_source_rgba (coulBord[0], coulBord[1], coulBord[2], 1)
+    ctx.stroke ()
+
 
 def boule(ctx, x, y, r, 
           color0 = (1, 1, 1, 1), color1 = (0, 0, 0, 1), 

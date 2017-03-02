@@ -1267,6 +1267,10 @@ class BaseDoc(ElementBase, ElementAvecLien):
     def GetAnnees(self):
         return "%s - %s" %(self.annee, self.annee+1)
 
+    ######################################################################################  
+    def GetPositions(self):
+        return list(range(self.position[0], self.position[1]+1))
+    
 
     ######################################################################################  
     def GetNbrPeriodes(self):
@@ -1359,7 +1363,7 @@ class BaseDoc(ElementBase, ElementAvecLien):
     def GererDependants(self, obj, t):
         """ Gestion des documents qui dépendent du présent document
         """
-        print "GererDependants", t
+#         print "GererDependants", t
         obj.GetApp().sendEvent(modif = t, obj = self)
         if self.GetApp() == obj.GetApp(): # la séquence n'est pas ouverte dans une autre fenêtre
             self.dependants.append(obj)
@@ -1676,7 +1680,10 @@ class Sequence(BaseDoc):
         return duree
     
     
-    
+    ######################################################################################  
+    def getIcone(self):
+        return images.Icone_sequence.GetBitmap()
+
             
 
     ######################################################################################  
@@ -1733,7 +1740,7 @@ class Sequence(BaseDoc):
 #         print "setBranche séquence"
 #        t0 = time.time()
         self.intitule = branche.get("Intitule", u"")
-        
+#         print self.intitule
         self.lien.setBranche(branche, self.GetPath())
         
         self.commentaires = branche.get("Commentaires", u"")
@@ -2703,6 +2710,12 @@ class Projet(BaseDoc):
         for t in self.taches:
             duree += t.GetDureeGraph()
         return duree
+    
+    
+    ######################################################################################  
+    def getIcone(self):
+        return images.Icone_projet.GetBitmap()
+    
     
     ######################################################################################  
     def GetPtCaract(self): 
@@ -4218,7 +4231,7 @@ class Progression(BaseDoc):
         BaseDoc.__init__(self, app, classe, intitule)
         
 
-        
+        self.nbrCreneaux = constantes.NBR_CRENEAUX_DEFAUT
         
         self.sequences_projets = []     # liste de LienSequence et de LienProjet et de Referentiel.Projet
         
@@ -4272,8 +4285,11 @@ class Progression(BaseDoc):
         """ Renvoie la liste de toutes les positions occupées par les Séquences et le Projets
         """
         l = []
-        for doc in [s.GetDoc() for s in self.sequences_projets]:
-            l.extend(doc.position)
+#         for doc in [s.GetDoc() for s in self.sequences_projets]:
+        for s in self.sequences_projets:
+            doc = s.GetDoc()
+#             print "  ", s.path
+            l.extend(doc.GetPositions())
         return list(set(l))
 
 
@@ -4422,6 +4438,8 @@ class Progression(BaseDoc):
         
         progression.set("Intitule", self.intitule)
         
+        progression.set("NbrCreneaux", str(self.nbrCreneaux))
+        
         self.lien.getBranche(progression)
         
         self.getBrancheImage(progression)
@@ -4457,6 +4475,8 @@ class Progression(BaseDoc):
         err = []
         
         self.intitule = branche.get("Intitule", u"")
+        
+        self.nbrCreneaux = int(branche.get("NbrCreneaux", str(constantes.NBR_CRENEAUX_DEFAUT)))
         
         self.lien.setBranche(branche, self.GetPath())
         
@@ -4589,7 +4609,7 @@ class Progression(BaseDoc):
         self.SupprimerLien(item = item)
     
     ######################################################################################  
-    def SupprimerLien(self, event = None, item = None, lien = None):
+    def SupprimerLien(self, event = None, item = None, lien = None, sendEvent = True):
         if lien is None:
             l = self.arbre.GetItemPyData(item)
         else:
@@ -4599,11 +4619,12 @@ class Progression(BaseDoc):
         
         if item is not None:
             self.arbre.Delete(item)
-
-        if isinstance(item, LienSequence):
-            self.GetApp().sendEvent(modif = u"Suppression d'une Séquence")
-        else:
-            self.GetApp().sendEvent(modif = u"Suppression d'un Projet")
+        
+        if sendEvent:
+            if isinstance(item, LienSequence):
+                self.GetApp().sendEvent(modif = u"Suppression d'une Séquence")
+            else:
+                self.GetApp().sendEvent(modif = u"Suppression d'un Projet")
         
 
     ######################################################################################  
@@ -4673,7 +4694,7 @@ class Progression(BaseDoc):
         # On supprime les lienSequences à supprimer
         #
         for s in aSupprimer:
-            self.SupprimerLien(lien = s)
+            self.SupprimerLien(lien = s, sendEvent = False)
             
         
 
@@ -4729,7 +4750,7 @@ class Progression(BaseDoc):
         # On supprime les lienProjet à supprimer
         #
         for s in aSupprimer:
-            self.SupprimerLien(lien = s)
+            self.SupprimerLien(lien = s, sendEvent = False)
             
         
         
@@ -4802,6 +4823,9 @@ class Progression(BaseDoc):
             
     ######################################################################################  
     def AjouterSequence(self, event = None):
+        """ Ajoute une Séquence
+            parmi une liste de Séquences compatibles recherchées dans le dossier de la progression
+        """
         if not self.DossierDefini():
             return
         
@@ -4903,13 +4927,15 @@ class Progression(BaseDoc):
             return
         
         sequences = self.GetSequencesDossier()
-        print "sequences trouvées", sequences
+#         print "sequences trouvées", sequences
         for s in sequences:
             if not s in self.sequences_projets:
                 self.sequences_projets.append(s)
 #                s.ConstruireArbre(self.arbre, self.brancheSeq)
-        print "sequences importées", self.sequences_projets
+#         print "sequences importées", self.sequences_projets
         self.Ordonner()
+        self.GetApp().sendEvent(modif = u"Import des Séquences compatibles") 
+        
 
     ######################################################################################  
     def ImporterProjets(self, event = None):
@@ -4924,6 +4950,8 @@ class Progression(BaseDoc):
                 self.sequences_projets.append(s)
 #                s.ConstruireArbre(self.arbre, self.brancheSeq)
         self.Ordonner()
+        
+        self.GetApp().sendEvent(modif = u"Import des Projets compatibles") 
 
 
     ######################################################################################  
@@ -4966,24 +4994,24 @@ class Progression(BaseDoc):
         sequence = Sequence(self.GetApp(), classe, ouverture = True)
         classe.SetDocument(sequence)
 
-        try:
-            root = ET.parse(fichier).getroot()
-            rsequence = root.find("Sequence")
-            rclasse = root.find("Classe")
-            if rclasse is not None:
-                classe.setBranche(rclasse)
-            if rsequence is not None:
-                sequence.setBranche(rsequence)
-            else:   # Ancienne version , forcément STI2D-ETT !!
-                classe.typeEnseignement, self.classe.familleEnseignement = ('ET', 'STI')
-                classe.referentiel = REFERENTIELS[classe.typeEnseignement]
-                sequence.setBranche(root)
-            return classe, sequence
-        except:
-            print u"Le fichier n'a pas pu être ouvert :",nomFichier
-            return None, None
-        finally:
-            fichier.close()
+#         try:
+        root = ET.parse(fichier).getroot()
+        rsequence = root.find("Sequence")
+        rclasse = root.find("Classe")
+        if rclasse is not None:
+            classe.setBranche(rclasse)
+        if rsequence is not None:
+            sequence.setBranche(rsequence)
+        else:   # Ancienne version , forcément STI2D-ETT !!
+            classe.typeEnseignement, self.classe.familleEnseignement = ('ET', 'STI')
+            classe.referentiel = REFERENTIELS[classe.typeEnseignement]
+            sequence.setBranche(root)
+        return classe, sequence
+#         except:
+#             print u"Le fichier n'a pas pu être ouvert :",nomFichier
+#             return None, None
+#         finally:
+#             fichier.close()
 
     
     ########################################################################################################
@@ -5044,6 +5072,18 @@ class Progression(BaseDoc):
         self.classe.Verrouiller(len(self.sequences_projets) != 0)
         
     
+    
+    ########################################################################################################
+    def GetCreneaux(self):
+        """ Renvoie la liste des tous les créneaux utilisés
+        """
+        c = []
+        for e in self.sequences_projets:
+            c.extend(e.GetCrenaux())
+            
+        return sorted(list(set(c)))
+    
+    
     ########################################################################################################
     def GetListeCI(self):
         """
@@ -5070,10 +5110,10 @@ class Progression(BaseDoc):
         sequences = []
         listeFichiersSequences = self.GetFichiersSequencesDossier()
         for fichier, sequence in listeFichiersSequences:
-            print 
-            print fichier
+#             print 
+#             print fichier
             path = os.path.relpath(fichier, self.GetPath())
-            print path
+#             print path
 #             path = os.path.join(path, os.path.split(fichier)[1])
 #             print path
             lienSequence = LienSequence(self,  path)
@@ -5082,7 +5122,7 @@ class Progression(BaseDoc):
             lienSequence.sequence = sequence
             sequences.append(lienSequence)
         
-        self.GetApp().sendEvent(modif = u"Import de Séquences compatibles") 
+        
         
         return sequences
 
@@ -5386,8 +5426,9 @@ class Progression(BaseDoc):
 class ElementProgression():
     def __init__(self, path = r""):
         self.path = path
-
-
+        
+        self.creneaux = [0,self.GetDocument().nbrCreneaux-1]  # Créneau horaire [début, fin]
+        
     
     ######################################################################################  
     def __eq__(self, lien):
@@ -5407,13 +5448,44 @@ class ElementProgression():
     def GetDocument(self):    
         return self.parent
 
+    ######################################################################################  
+    def GetCrenaux(self):
+        return list(range(self.creneaux[0], self.creneaux[1]+1))
+    
+    ######################################################################################  
+    def getBranche(self):
+        """ Renvoie la branche XML du lien de sequence pour enregistrement
+        """
+        root = ET.Element(self.codeXML)
+        root.set("dir", toSystemEncoding(self.path))
+        root.set("creneaux", "_".join([str(p) for p in self.creneaux]))
+        return root
+    
+    ######################################################################################  
+    def setBranche(self, branche):
+#        print "setBranche LienSequence", self
+        self.path = toFileEncoding(branche.get("dir", ""))
+        
+        
+        sp = branche.get("creneaux", "0_"+str(self.GetDocument().nbrCreneaux-1))
+        sp = sp.split("_")
+        if len(sp) == 1:
+            sp = [sp[0], sp[0]]
+        self.creneaux = [int(sp[0]), int(sp[1])]
+        
+#        if hasattr(self, 'panelPropriete'):
+#            self.panelPropriete.MiseAJour()
 
 
 #########################################################################################################
 #########################################################################################################
 class LienSequence(ElementBase, ElementProgression):
     def __init__(self, parent, path = r""):
+        self.nom_obj = u"Séquence"
+        self.article_c_obj = u"de la"
+        self.article_obj = u"la"
         
+        self.codeXML = "Sequence"
         self.parent = parent
         ElementBase.__init__(self)
         ElementProgression.__init__(self, path)
@@ -5453,20 +5525,7 @@ class LienSequence(ElementBase, ElementProgression):
     def GetPosition(self):
         return self.sequence.position
     
-    ######################################################################################  
-    def getBranche(self):
-        """ Renvoie la branche XML du lien de sequence pour enregistrement
-        """
-        root = ET.Element("Sequence")
-        root.set("dir", toSystemEncoding(self.path))
-        return root
     
-    ######################################################################################  
-    def setBranche(self, branche):
-#        print "setBranche LienSequence", self
-        self.path = toFileEncoding(branche.get("dir", ""))
-#        if hasattr(self, 'panelPropriete'):
-#            self.panelPropriete.MiseAJour()
 
     ######################################################################################  
     def MiseAJourArbre(self):
@@ -5498,6 +5557,7 @@ class LienSequence(ElementBase, ElementProgression):
     
     ######################################################################################  
     def ChargerSequence(self):
+        print "ChargerSequence", self.path
         classe, sequence = self.GetDocument().OuvrirFichierSeq(self.path)
         if classe != None and classe.typeEnseignement == self.GetReferentiel().Code:
             self.sequence = sequence
@@ -5564,6 +5624,13 @@ class LienSequence(ElementBase, ElementProgression):
 #########################################################################################################
 class LienProjet(ElementBase, ElementProgression):
     def __init__(self, parent, path = r""):
+        
+        self.nom_obj = u"Projet"
+        self.article_c_obj = u"du"
+        self.article_obj = u"le"
+        
+        self.codeXML = "Projet"
+        
         self.parent = parent
         ElementBase.__init__(self)
         ElementProgression.__init__(self, path)
@@ -5606,20 +5673,7 @@ class LienProjet(ElementBase, ElementProgression):
     def GetPosition(self):
         return self.projet.position
     
-    ######################################################################################  
-    def getBranche(self):
-        """ Renvoie la branche XML du lien de projet pour enregistrement
-        """
-        root = ET.Element("Projet")
-        root.set("dir", toSystemEncoding(self.path))
-        return root
     
-    ######################################################################################  
-    def setBranche(self, branche):
-#        print "setBranche LienSequence", self
-        self.path = toFileEncoding(branche.get("dir", ""))
-#        if hasattr(self, 'panelPropriete'):
-#            self.panelPropriete.MiseAJour()
 
     ######################################################################################  
     def MiseAJourArbre(self):
@@ -5630,10 +5684,10 @@ class LienProjet(ElementBase, ElementProgression):
     def ConstruireArbre(self, arbre, branche):
         if self.projet is None:
             return
-#        print "ConstruireArbre"
+        print "ConstruireArbre", self.projet.position
         self.arbre = arbre
             
-        coul = draw_cairo.BcoulPos[self.projet.position]
+        coul = draw_cairo.BcoulPos[self.projet.position[0]]
         coul = [int(200*c) for c in coul]
 #         self.codeBranche = CodeBranche(self.arbre)
 #        self.codeBranche.SetForegroundColour(coul)
@@ -5651,7 +5705,9 @@ class LienProjet(ElementBase, ElementProgression):
     
     ######################################################################################  
     def ChargerProjet(self):
+        print "ChargerProjet", self.path
         classe, projet = self.GetDocument().OuvrirFichierPrj(self.path)
+        print "   ", classe.typeEnseignement , self.GetReferentiel().Code
         if classe != None and classe.typeEnseignement == self.GetReferentiel().Code:
             self.projet = projet
 

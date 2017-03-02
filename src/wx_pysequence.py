@@ -5033,7 +5033,60 @@ class PositionCtrl(wx.Panel):
         
 
 
+class CreneauCtrl(wx.Panel):
+    def __init__(self, parent, creneaux):
+        wx.Panel.__init__(self, parent, -1)
+        self.creneaux = creneaux
+        self.sizer = wx.BoxSizer(wx.HORIZONTAL)
+        
+        self.cb = []
+        for creneau in range(self.GetDocument().nbrCreneaux):
+            cb = wx.CheckBox(self, 110+creneau, "")
+            self.Bind(wx.EVT_CHECKBOX, self.EvtCheckBox, cb)
+            self.sizer.Add(cb, 1, flag = wx.ALIGN_RIGHT|wx.EXPAND)
+            self.cb.append(cb)
+            
+        self.SetSizer(self.sizer)
 
+        return
+
+    def Verif(self):
+        lst = [c.IsChecked() for c in self.cb]
+        if sum(lst) == 1:
+            self.cb[lst.index(1)].Enable(False)
+        else:
+            for cb in self.cb:
+                cb.Enable(True)
+            
+
+            
+    def GetDocument(self):
+        return self.Parent.GetDocument()
+    
+    
+    def SetCreneaux(self):
+        lst = [c.IsChecked() for c in self.cb]
+        self.creneaux[0] = lst.index(True)
+        lst.reverse()
+        self.creneaux[1] = self.GetDocument().nbrCreneaux-lst.index(True)-1
+        
+            
+        
+    def EvtCheckBox(self, event):
+        self.Verif()
+        self.SetCreneaux()
+        self.MiseAJour()
+        self.Parent.OnChangeCreneau()
+        
+
+    
+    def GetRange(self):
+        return self.sel.GetRange()
+        
+        
+    def MiseAJour(self):
+        for i, cb in enumerate(self.cb):
+            cb.SetValue(self.creneaux[0] <= i <= self.creneaux[1])
 
 ####################################################################################
 #
@@ -5115,12 +5168,6 @@ class PanelPropriete_Progression(PanelPropriete):
        
         
         
-        #
-        # Lien
-        #
-        lsizer = self.CreateLienSelect(pageGen)
-        pageGen.sizer.Add(lsizer, (1,0), (1, 1), flag = wx.EXPAND|wx.ALL, border = 2)
-        
         
         #
         # Année scolaire et Position dans l'année
@@ -5136,14 +5183,38 @@ class PanelPropriete_Progression(PanelPropriete):
                                       sliderAGauche = True)
         self.Bind(EVT_VAR_CTRL, self.EvtVariable, self.ctrlAnnee)
         sb.Add(self.ctrlAnnee)
-        pageGen.sizer.Add(sb, (2,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.EXPAND|wx.ALL, border = 2)
+        pageGen.sizer.Add(sb, (1,0), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.EXPAND|wx.ALL, border = 2)
+        
+        
+        #
+        # Nombre de créneaux horaires
+        #
+        titre = myStaticBox(pageGen, -1, u"Créneaux horaire")
+        sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
+        
+        self.nbrCreneaux = Variable(u"Nombre de créneaux", lstVal = self.GetDocument().nbrCreneaux, 
+                                   typ = VAR_ENTIER_POS, bornes = [1,5])
+        self.ctrlCreneaux = VariableCtrl(pageGen, self.nbrCreneaux, coef = 1, signeEgal = False,
+                                      help = u"Nombre de créneaux horaire", sizeh = 40, 
+                                      sliderAGauche = True)
+        self.Bind(EVT_VAR_CTRL, self.EvtVariable, self.ctrlCreneaux)
+        sb.Add(self.ctrlCreneaux)
+        pageGen.sizer.Add(sb, (1,1), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT|wx.EXPAND|wx.ALL, border = 2)
+        
+        
+        
+        #
+        # Lien
+        #
+        lsizer = self.CreateLienSelect(pageGen)
+        pageGen.sizer.Add(lsizer, (2,0), (1, 2), flag = wx.EXPAND|wx.ALL, border = 2)
         
         
         #
         # Image
         #
         isizer = self.CreateImageSelect(pageGen, titre = u"Image")
-        pageGen.sizer.Add(isizer, (0,1), (3,1), flag =  wx.EXPAND|wx.ALIGN_RIGHT|wx.ALL, border = 2)#wx.ALIGN_CENTER_VERTICAL |
+        pageGen.sizer.Add(isizer, (0,2), (3,1), flag =  wx.EXPAND|wx.ALIGN_RIGHT|wx.ALL, border = 2)#wx.ALIGN_CENTER_VERTICAL |
 
 
 
@@ -5261,9 +5332,17 @@ class PanelPropriete_Progression(PanelPropriete):
             modif = u"Modification de l'année scolaire de la Progression"
             self.sendEvent(modif = modif)
             
+        elif var == self.nbrCreneaux:
+            self.GetDocument().nbrCreneaux = var.v[0]
+            
+            modif = u"Modification du nombre de creneaux de la Progression"
+            self.sendEvent(modif = modif)
+            
         self.Refresh()
         
-        
+    
+    
+    
         
     
     
@@ -7043,7 +7122,7 @@ class PanelPropriete_LienSequence(PanelPropriete):
         # Aperçu de la séquence
         #
         size = (141,200) # Rapport A4
-        sb1 = myStaticBox(self, -1, u"Aperçu de la séquence", size = size)
+        sb1 = myStaticBox(self, -1, u"Aperçu de la Séquence", size = size)
         sbs1 = wx.StaticBoxSizer(sb1,wx.HORIZONTAL)
         sbs1.SetMinSize(size)
         self.apercu = StaticBitmapZoom(self, -1, size = size)
@@ -7052,6 +7131,26 @@ class PanelPropriete_LienSequence(PanelPropriete):
         self.size = size
         
         
+        #
+        # Créneau
+        #
+        sb2 = myStaticBox(self, -1, u"Créneau horaire")
+        sbs2 = wx.StaticBoxSizer(sb2,wx.HORIZONTAL)
+        
+        self.creneauCtrl = CreneauCtrl(self, self.lien.creneaux)
+        sbs2.Add(self.creneauCtrl, 1)
+        self.creneauCtrl.SetToolTip(wx.ToolTip(u"Choisir les créneaux horaire de la Séquence"))
+
+#         self.creneauCtrl = wx.RadioBox(self, -1, u"Créneau horaire", wx.DefaultPosition, wx.DefaultSize,
+#                                        [str(i+1) for i in range(constantes.NBR_CRENEAU)], 
+#                                        constantes.NBR_CRENEAU, wx.RA_SPECIFY_COLS
+#                                        )
+#         
+#         
+#         self.Bind(wx.EVT_RADIOBOX, self.EvtRadioBox, self.creneauCtrl)
+#         #rb.SetBackgroundColour(wx.BLUE)
+#         self.creneauCtrl.SetToolTip(wx.ToolTip(u"Choisir le créneau horaire de la Séquence"))
+                      
         
         #
         # Problématiques associées à(aux) CI/Thème(s)
@@ -7063,11 +7162,15 @@ class PanelPropriete_LienSequence(PanelPropriete):
         
         sbsp.Add(self.panelPb,1, flag = wx.EXPAND)
 
+        #
+        # Mise en place
+        #
         self.sizer.Add(sbsi, (0,0), flag = wx.EXPAND|wx.ALL, border = 2)
         self.sizer.Add(sbs0, (1,0), flag = wx.EXPAND|wx.ALL, border = 2)
         self.sizer.Add(sb, (2,0), flag = wx.ALIGN_TOP|wx.ALIGN_LEFT|wx.LEFT|wx.EXPAND, border = 2)
         self.sizer.Add(sbs1, (0,1), (3,1), flag = wx.EXPAND|wx.ALL, border = 2)
-        self.sizer.Add(sbsp, (0,2), (3,1), flag = wx.EXPAND|wx.ALL, border = 2)
+        self.sizer.Add(sbs2, (0,2), (1,1), flag = wx.EXPAND|wx.ALL, border = 2)
+        self.sizer.Add(sbsp, (1,2), (2,1), flag = wx.EXPAND|wx.ALL, border = 2)
         self.sizer.AddGrowableCol(2)
         self.sizer.Layout()
     
@@ -7114,7 +7217,16 @@ class PanelPropriete_LienSequence(PanelPropriete):
         self.MiseAJour()
         event.Skip()     
 
-    
+#     #############################################################################            
+#     def EvtRadioBox(self, event):
+#         self.lien.creneau = event.GetInt()
+#         self.sendEvent(modif = u"Modification du créneau horaire %s %s" % (self.lien.article_c_obj, self.lien.nom_obj))
+        
+    #############################################################################            
+    def OnChangeCreneau(self):
+        self.sendEvent(modif = u"Modification des créneaux horaire %s %s" % (self.lien.article_c_obj, self.lien.nom_obj))
+
+
 
     #############################################################################            
     def OnCheck(self, event):
@@ -7205,6 +7317,8 @@ class PanelPropriete_LienSequence(PanelPropriete):
         
         self.texte.SetBackgroundColour("white")
         self.texte.SetToolTipString(u"Lien vers un fichier Séquence")
+        
+        self.creneauCtrl.MiseAJour()
         
         self.position.MiseAJour()
         self.panelPb.MiseAJour()
@@ -7323,7 +7437,18 @@ class PanelPropriete_LienProjet(PanelPropriete):
         sbs1.Add(self.apercu, 1)
         self.size = size
         
+        #
+        # Créneau horaire
+        #
+        sb2 = myStaticBox(self, -1, u"Créneau horaire")
+        sbs2 = wx.StaticBoxSizer(sb2,wx.HORIZONTAL)
         
+        self.creneauCtrl = CreneauCtrl(self, self.lien.creneaux)
+        sbs2.Add(self.creneauCtrl, 1)
+        self.creneauCtrl.SetToolTip(wx.ToolTip(u"Choisir les créneaux horaire du projet"))
+
+
+
         #
         # Problématiques associées à(aux) CI/Thème(s)
         #
@@ -7342,7 +7467,8 @@ class PanelPropriete_LienProjet(PanelPropriete):
         self.sizer.Add(sbs0, (1,0), flag = wx.EXPAND|wx.ALL, border = 2)
         self.sizer.Add(sb, (2,0), flag = wx.ALIGN_TOP|wx.ALIGN_LEFT|wx.LEFT|wx.EXPAND, border = 2)
         self.sizer.Add(sbs1, (0,1), (3,1), flag = wx.EXPAND|wx.ALL, border = 2)
-        self.sizer.Add(sbsp, (0,2), (3,1), flag = wx.EXPAND|wx.ALL, border = 2)
+        self.sizer.Add(sbs2, (0,2), (1,1), flag = wx.EXPAND|wx.ALL, border = 2)
+        self.sizer.Add(sbsp, (1,2), (2,1), flag = wx.EXPAND|wx.ALL, border = 2)
         self.sizer.AddGrowableCol(2)
         
         self.sizer.Layout()
@@ -7387,6 +7513,12 @@ class PanelPropriete_LienProjet(PanelPropriete):
         self.MiseAJour()
         event.Skip()     
 
+    #############################################################################            
+    def OnChangeCreneau(self):
+    
+        self.sendEvent(modif = u"Modification des créneaux horaire %s %s" % (self.lien.article_c_obj, self.lien.nom_obj))
+        
+     
 
     #############################################################################            
     def EvtText(self, event):
@@ -7447,6 +7579,8 @@ class PanelPropriete_LienProjet(PanelPropriete):
         
         self.texte.SetBackgroundColour("white")
         self.texte.SetToolTipString(u"Lien vers un fichier Projet")
+        
+        self.creneauCtrl.MiseAJour()
         
         self.position.MiseAJour()
         

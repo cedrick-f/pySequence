@@ -45,7 +45,8 @@ import images
 from draw_cairo import LargeurTotale, font_family, curve_rect_titre, show_text_rect, \
                         boule, getHoraireTxt, liste_code_texte, rectangle_plein, barreH, tableauV, minFont, maxFont, tableauH, \
                         DrawPeriodes, DrawCalendrier, COEF, info, Zone, relief, \
-                        BcoulPos, IcoulPos, ICoulComp, CoulAltern, ligne
+                        BcoulPos, IcoulPos, ICoulComp, CoulAltern, ligne, rectangle_plein_biseau, \
+                        rectangle_plein_fleche, rectangle_plein_doigt
 
 from math import log, pi
 
@@ -175,24 +176,34 @@ posZTaches = [posZDeroul[0] + wPhases + wDuree + ecartX*3/6, None]
 tailleZTaches = [None, None]
 hTacheMini = ecartY
 hRevue = ecartY/3
-yTaches = []
-ecartTacheY = None  # Ecartement entre les tâches de phase différente
+hPeriode = None
+# yTaches = []
+# ecartTacheY = None  
+ecartTacheY = ecartY/3 # Ecartement entre les tâches de phase différente
 
 # paramètres pour la fonction qui calcule la hauteur des tâches 
 # en fonction de leur durée
-a = b = None
-def calcH_doc(doc):
-#    print "calcH_doc", doc, doc.GetDuree()
-    return calcH(doc.GetDuree())
+
+# def calcH_doc(doc, periode):
+#     """ Calcul de la hauteur de la Séquence ou du Projet
+#     """
+#     N = len(doc.getRangePeriode())
+# #     print "calcH_doc", N
+#     if N == 1:
+#         return calcH(doc.GetDuree(), periode)
+#     else:
+#         return N*hPeriode + (N-1)*ecartY/2
         
 
-def calcH(t):
+# def calcH2(t, periode):
+#     if t != 0:
+#         return a[periode]*log(t+0.5)*log(2)+b[periode]
+#     return 2*ecartTacheY
+
+def calcH(t, a, b):
     if t != 0:
-        return a*log(t+0.5)*log(2)+b
-    return 2*ecartTacheY
-
-
-
+        return a*log(t+2)+b
+    return hTacheMini
 
 ecartyCITaches = 0.05 * COEF
 
@@ -206,7 +217,7 @@ def DefinirZones(prg, ctx):
         en fonction du nombre d'éléments (élèves, tâches, compétences)
     """
     global ecartTacheY, intituleTaches, fontIntTaches, xCI, yCI, hCI, hTh, \
-            a, b, yTaches, wColComp, xTh, yTh
+           wColComp, xTh, yTh, hPeriode
     
     #
     # Zone du tableau des compétences - X
@@ -312,41 +323,162 @@ def DefinirZones(prg, ctx):
     
     
     # Zone des séquences et Projets
-    yTaches = []
+#     yTaches = []
     posZTaches[1] = posZDeroul[1] + ecartY/2
     tailleZTaches[0] = posZDeroul[0] + tailleZDeroul[0] - posZTaches[0] - ecartX/2
     tailleZTaches[1] = tailleZDeroul[1] - ecartY/2 - 0.03 * COEF    # écart fixe pour la durée totale
 
-    calculCoefCalcH(prg, ctx, hTacheMini)
-    if a < 0: # Trop de séquences -> on réduit !
-        calculCoefCalcH(prg, ctx, hTacheMini/2)
+    # Hauteur des périodes
+    hPeriode = (tailleZTaches[1]-ecartTacheY)/ref.getNbrPeriodes()-ecartTacheY
+
+#     # Hauteurs des Sequences-Projets par période
+#     a = [0.0]*ref.getNbrPeriodes()
+#     b = a[:]
+
+#     print ref.getPeriodesListe()
+#     for p in range(ref.getNbrPeriodes()):
+#         calculCoefCalcH(prg, ctx, hTacheMini, p)
+#     for creneau in range(constantes.NBR_CRENEAU):
+#         calculCoefCalcH(prg, ctx, hTacheMini, creneau)
+#         if a < 0: # Trop de séquences -> on réduit !
+#             calculCoefCalcH(prg, ctx, hTacheMini/2, creneau)
 
     
+def Arranger(prg):
+    """ Calcul les zones de chaque Séquence/Projet
+        de la Progression <prg>
+    
+        Renvoie :
+         - une liste (ordre des prg.sequences_projets) de rectangles encadrant les prg.sequences_projets
+         - une liste des rectangles encadrant les titres des positions
+    
+    """
+    
+#     doc = lienDoc.GetDoc()
+#     h = calcH_doc(doc, doc.position[0])
+    ref = prg.classe.referentiel
+    
+    # Nombre de creneaux utilisés dans la progression
+    nc = prg.nbrCreneaux
+    
+    # Nombre de périodes utilisés dans la progression
+    np = ref.getNbrPeriodes()
+    
+    # Largeur de chaque colonne (créneau)
+    wc = tailleZTaches[0]/nc
+    
+    # Hauteur de chaque période
+    hp = tailleZTaches[1]/np
+#     print "hp", hp
+#     print "hPeriode", hPeriode
+    
+    # Tableau Creneau/Position contenant des lienDoc
+    tableau = [[[] for p in range(np)] for c in range(nc)]
+    for lienDoc in prg.sequences_projets:
+        doc = lienDoc.GetDoc()
+        tableau[lienDoc.creneaux[0]][doc.position[0]].append(lienDoc)
+        if doc.position[0] != doc.position[1]:
+            tableau[lienDoc.creneaux[0]][doc.position[1]].append(lienDoc)
+#     print 
+    # Tableau Creneau/Position contenant les coef a et b
+    ab = [[getCoefCalcH(tableau[c][p]) for p in range(np)] for c in range(nc)]
+#     print "a,b", ab[0][0]
+    # Tableau Creneau/Position des "piles" de y
+    yc = [[posZTaches[1] + hp*p for p in range(np)] for c in range(nc)]
+
+    rects = []
+    for lienDoc in prg.sequences_projets:
+        doc = lienDoc.GetDoc()
+        c = lienDoc.creneaux[0]
+        p = doc.position[0]
+        x = posZTaches[0] + c * wc
+        w = (lienDoc.creneaux[1]-c+1) * wc - ecartTacheY
+        y = yc[c][p]
+        
+        r = doc.getRangePeriode()
+#         print "r =", r
+#         print tableau[c][p]
+        if len(r) == 1:
+            a, b = ab[c][p]
+            h = calcH(doc.GetDuree(), a, b)
+#             print doc.GetDuree(), h
+            yc[c][p] += h
+        else:
+            n = len(tableau[c][p])
+            h = hPeriode/n
+            yc[c][p] += h
+            yc[c][r[-1]] += hPeriode/len(tableau[c][r[-1]])
+            for pp in r[1:-1]:
+                h += hp
+            h += hp-hPeriode
+            h += hPeriode/len(tableau[c][r[-1]])
+        
+        rects.append((x, y, w, h))
+    
+    
+    rec_pos = [(posZDeroul[0], posZTaches[1] + hp*p,
+                wPhases, hp) for p in range(np)]
+    
+    
+    
+    return rects, rec_pos
 
 
-def calculCoefCalcH(prg, ctx, hm):
-    global ecartTacheY, a, b
-#    print "calculCoefCalcH", hm
-    ecartTacheY = ecartY/3
-    sommeEcarts = (prg.GetNbrPeriodesEffectif()-1)*ecartTacheY
-#    print "sommeEcarts", sommeEcarts
-    # Calcul des paramètres de la fonction hauteur = f(durée)
-    # hauteur = a * log(durée) + b
+def getCoefCalcH(case):
+    """ Renvoie les coef a et b
+        pour une case (creneau/position) donnée
+    """
     b = 0.0
     a = 1.0
-    h = 0.0 #ecartTacheY
-    nt = 0 # nombre de tâches de hauteur variable ( = calculée par calcH() )
-
-    for t in prg.sequences_projets:
-        h += calcH_doc(t.GetDoc())
-#        print "    ", t, t.GetDoc().GetDuree(), h
-        nt += 1
-
-    b = hm # Hauteur mini
     
-    hFixe = sommeEcarts
+    h = 0.0         # hauteur totale de tous les éléments de hauteur variable
+    nt = 0          # nombre d'éléments de hauteur variable ( = calculée par calcH() )
+    hFixe = 0.0     # hauteur totale des éléments de hauteur fixe
+    
+    for lienDoc in case:
+        doc = lienDoc.GetDoc()
+        c = lienDoc.creneaux[0]
+        p = doc.position[0]
+        N = len(doc.getRangePeriode())
+        
+        if N == 1:
+            h += calcH(doc.GetDuree(), a, b)
+            nt += 1
+        else:
+            hFixe += hPeriode/len(case)
+
+    b = hTacheMini # Hauteur mini
     if h != 0:
-        a = (tailleZTaches[1] - hFixe - b*nt) / h
+        a = (hPeriode - hFixe - b*nt) / h
+    return a, b
+
+
+
+
+
+# def calculCoefCalcH2(prg, ctx, hm, periode):
+#     global a, b
+# #    print "calculCoefCalcH", hm
+#     
+# #     sommeEcarts = (prg.GetNbrPeriodesEffectif()-1)*ecartTacheY
+# #    print "sommeEcarts", sommeEcarts
+#     # Calcul des paramètres de la fonction hauteur = f(durée)
+#     # hauteur = a * log(durée) + b
+#     b[periode] = 0.0
+#     a[periode] = 1.0
+#     h = 0.0 #ecartTacheY
+#     nt = 0 # nombre de tâches de hauteur variable ( = calculée par calcH() )
+# 
+#     for t in prg.sequences_projets:
+#         h += calcH_doc(t.GetDoc(), periode)
+# #        print "    ", t, t.GetDoc().GetDuree(), h
+#         nt += 1
+# 
+#     b[periode] = hm # Hauteur mini
+#     
+#     hFixe = 0.0 #sommeEcarts
+#     if h != 0:
+#         a[periode] = (hPeriode - hFixe - b[periode]*nt) / h
 
 #    print ">>> a,b :", a, b
     
@@ -385,7 +517,8 @@ def Draw(ctx, prg, mouchard = False):
     
     DefinirZones(prg, ctx)
     
-    prg.GetOrganisation()
+    # Essai ...
+#     prg.GetOrganisation()
     
 #     gabarit() # à virer (pour générer image gabarit
     
@@ -812,42 +945,71 @@ def Draw(ctx, prg, mouchard = False):
     
     
     
+    ###################################################################################
+    #  Séquences et Projets
     #
-    #  Séquences
-    #
-    curve_rect_titre(ctx, u"Séquences",  
+    
+    curve_rect_titre(ctx, u"Séquences et Projets",  
                      (posZDeroul[0], posZDeroul[1], 
                       tailleZDeroul[0], tailleZDeroul[1]), 
                      BcoulZDeroul, IcoulZDeroul, fontZDeroul)
     
     y = posZTaches[1] - ecartTacheY
+
+    rects, rec_pos = Arranger(prg)
+
+    #
+    # Ligne séparatrices
+    #
+    for rec in rec_pos[1:]:
+        ctx.set_source_rgba(*BcoulZDeroul)
+        ctx.move_to(posZDeroul[0], rec[1] - ecartTacheY/2)
+        ctx.line_to(posZDeroul[0] + tailleZDeroul[0], rec[1]-ecartTacheY/2)
+        ctx.stroke()
+
+    #
+    # Les cadres
+    #
+    yTaches = []
+    for i, lienDoc in enumerate(prg.sequences_projets):
+        y = rects[i][1] + ecartX/5
+#         if len(yTaches) > 0 and y-yTaches[-1] < ecartX/6:
+#             y = yTaches[-1] + ecartX/6
+        yTaches.append(y)
+        yb = DrawSequenceProjet(ctx, prg, lienDoc, rects[i], y)
     
-    # Les positions en Y haut et bas des périodes
-    yh_phase = {c:[[], []] for c in range(prg.GetNbrPeriodes())}
+    # Ajustement des yTaches
+    yt = zip(yTaches, range(len(yTaches)))
 
-    position = None
-    for t in prg.sequences_projets:
-        pos = t.GetPosition()[0]
-        
-        if position != pos:
-            y += ecartTacheY
+    yt.sort(key=lambda x:x[0])
 
-        yb = DrawSequenceProjet(ctx, prg, t, y)
-        yh_phase[pos][0].append(y)
-        yh_phase[pos][1].append(yb)
-        y = yb
-        
-        position = pos
+    
+    i = 1
+    while i < len(yt):
+        if yt[i][0] - yt[i-1][0] < (ecartX/5):
+            yt[i] = (yt[i-1][0] + ecartX/5, yt[i][1])
+        i += 1
+    
+    
+#     for j, (y, i) in enumerate(yt[1:]):
+#         y_1 = yt[j-1][0]
+#         if y - y_1 < (ecartX/5):
+#             print " !! ", y , y_1
+#             yt[j] = (y_1 + ecartX/5, yt[j][1])
+    yt.sort(key=lambda x:x[1])
 
-
-
-
+    try:
+        yTaches, i = zip(*yt)
+    except:
+        pass
+    
     #
     # Les lignes horizontales en face des sequences
     # et les croisements Séquences/Competences
     #
-    x = posZTaches[0] + tailleZTaches[0]
-    for doc, y in yTaches: 
+    for i, y in enumerate(yTaches): 
+        x = rects[i][0] + rects[i][2]
+        doc = prg.sequences_projets[i].GetDoc()
         DrawLigne(ctx, x, y)
         DrawCroisementsCompetencesTaches(ctx, prg, doc, y)
         if hasattr(doc, 'CI'):
@@ -858,26 +1020,18 @@ def Draw(ctx, prg, mouchard = False):
     
     fontsize = wPhases
      
-    for i, (phase, yh) in enumerate(yh_phase.items()):
-        if len(yh[0]) > 0:
-            
-            _y = min(yh[0])
-            yh[1] = max(yh[1])
-            y=_y
-            h=yh[1]-_y
-            
-            
-            c = BcoulPos[phase]
-            ctx.set_source_rgb(c[0],c[1],c[2])
-            ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
-                                  cairo.FONT_WEIGHT_NORMAL)
-            
-            show_text_rect(ctx, str(phase+1), 
-                           (posZDeroul[0] + ecartX/6, y, 
-                            wPhases, h), fontsizeMinMax = (fontsize, fontsize),
-                           ha = 'c', orient = "h", b = 0.2, le = 0.7,
-                           wrap = False, couper = False
-                           ) 
+    for i, rec in enumerate(rec_pos):
+          
+        c = BcoulPos[i]
+        ctx.set_source_rgb(c[0],c[1],c[2])
+        ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
+                              cairo.FONT_WEIGHT_NORMAL)
+        
+        show_text_rect(ctx, str(i+1), 
+                       rec, fontsizeMinMax = (fontsize, fontsize),
+                       ha = 'c', orient = "h", b = 0.2, le = 0.7,
+                       wrap = False, couper = False
+                       ) 
 
 
 
@@ -929,16 +1083,18 @@ def DrawLigneEff(ctx, x, y):
 
 
 ######################################################################################  
-def DrawSequenceProjet(ctx, prg, lienDoc, y):
+def DrawSequenceProjet(ctx, prg, lienDoc, rect, yd):
     global yTaches
     doc = lienDoc.GetDoc()
-    h = calcH_doc(doc)
+    
+    x, y, w, h = rect
+    
     
     #
     # Flèche verticale indiquant la durée de la séquence/Projet
     #
-    ctx.set_source_rgba (0.9,0.8,0.8,0.5)
-    x = posZTaches[0] - wDuree - ecartX/6
+    ctx.set_source_rgba (0.9,0.8,0.8,0.9)
+       
     ctx.rectangle(x, y, wDuree, h)
     ctx.fill_preserve ()    
     ctx.set_source_rgba(0.4,  0.4,  0.4,  1)
@@ -962,28 +1118,29 @@ def DrawSequenceProjet(ctx, prg, lienDoc, y):
     #
     # Tracé du cadre de la tâche
     #
-    x = posZTaches[0]
-    w = tailleZTaches[0]
+    x += wDuree + ecartX/6
+    w -= wDuree + ecartX/6
+    
 
     
 #    lienSeq.pts_caract.append((x, y))
         
     ctx.set_line_width(0.002 * COEF)
 #    print "BcoulPos", BcoulPos
-    rectangle_plein(ctx, x, y, w, h, 
+    rectangle_plein_doigt(ctx, x, y, w, h, ecartX/5, yd-y, 
                     BcoulPos[doc.position[0]], 
                     IcoulPos[doc.position[0]], 
-                    IcoulPos[doc.position[0]][3])
+                    0.9)
     
     #
     # Icone du type de document
     #
     ctx.save()
-    if doc.nom_obj == u"Séquence":
-        bmp = images.Icone_sequence.GetBitmap()
-    else:
-        bmp = images.Icone_projet.GetBitmap()
-    
+#     if doc.nom_obj == u"Séquence":
+#         bmp = images.Icone_sequence.GetBitmap()
+#     else:
+#         bmp = images.Icone_projet.GetBitmap()
+    bmp = doc.getIcone()
     image = wx.lib.wxcairo.ImageSurfaceFromBitmap(bmp) 
     ctx.translate(x+ecartX/5, y+ecartY/5)
     ctx.scale(hTacheMini/30, hTacheMini/30)
@@ -1000,7 +1157,7 @@ def DrawSequenceProjet(ctx, prg, lienDoc, y):
     ctx.set_source_rgb (0,0,0)
     
     # Si on ne peut pas afficher l'intitulé dessous, on le met à coté
-    rect = (x + hTacheMini, y, tailleZTaches[0], h)
+    rect = (x + hTacheMini, y, w, h)
     if rect[2] > 0:
         show_text_rect(ctx, doc.intitule, rect, 
                        ha = 'g', fontsizeMinMax = (minFont, 0.015 * COEF))
@@ -1012,12 +1169,12 @@ def DrawSequenceProjet(ctx, prg, lienDoc, y):
     #
     # Tracé des croisements "Tâches" et "Eleves"
     #
-    yTaches.append([doc, y+h/2])
+#     yTaches.append([doc, y+h/2])
     
 #    DrawCroisementsCompetencesTaches(ctx, tache, y + h/2)
     
-    y += h
-    return y
+#     y += h
+#     return y
         
         
         

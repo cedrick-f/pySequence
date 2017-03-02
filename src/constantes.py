@@ -742,7 +742,8 @@ def getLstDisciplines():
     return lst
 
 
-
+# Nombre de créneaux dans les Progressions
+NBR_CRENEAUX_DEFAUT = 3
 
 
 
