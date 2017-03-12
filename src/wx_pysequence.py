@@ -13328,18 +13328,19 @@ class A_propos(wx.Dialog):
         auteurs = wx.Panel(nb, -1)
         fgs1 = wx.FlexGridSizer(cols=2, vgap=4, hgap=4)
         
-        lstActeurs = ((u"Développement : ",(u"Cédrick FAURY", u"Jean-Claude FRICOU")), \
-                      (u"Référentiels : ",(u"Thierry VALETTE (STS EE)", \
-                                           u"Jean-Claude FRICOU (STS SN)", \
-                                           u"Emmanuel VIGNAUD (Ede SI-CIT-DIT 2nde)", \
-                                           u"Arnaud BULCKE (Techno Collège)", \
-                                           u"Laurent Moutoussamy (MPSI)")), \
+        lstActeurs = ((u"Développement : ", (u"Cédrick FAURY", u"Jean-Claude FRICOU")), \
+                      (u"Référentiels : ",  (u"Thierry VALETTE (STS EE)", \
+                                             u"Jean-Claude FRICOU (STS SN)", \
+                                             u"Emmanuel VIGNAUD (Ede SI-CIT-DIT 2nde)", \
+                                             u"Arnaud BULCKE (Techno Collège)", \
+                                             u"Laurent Moutoussamy (MPSI)")), \
                       
-                      (u"Remerciements : ",(u"un grand merci aux très nombreux", \
-                                            u"utilisateurs qui ont pris le temps", \
-                                            u"de nous signaler les dysfonctionnements,", \
-                                            u"et de nous faire part de leurs remarques.",)))
-
+                      (u"Remerciements : ", (u"un grand merci aux très nombreux", \
+                                             u"utilisateurs qui ont pris le temps", \
+                                             u"de nous signaler les dysfonctionnements,", \
+                                             u"et de nous faire part de leurs remarques.",)),
+                      
+                      (u"Crédits : ",       (u"Icones :\n - https://fr.icons8.com\nwww.iconfinder.com",)))
 
         for ac in lstActeurs:
             t = wx.StaticText(auteurs, -1, ac[0])
