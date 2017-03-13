@@ -101,7 +101,7 @@ from widgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_ENTI
                     rallonge, remplaceCode2LF, dansRectangle, \
                     StaticBoxButton, TextCtrl_Help, CloseFenHelp, \
                     remplaceLF2Code, messageInfo, messageYesNo, enregistrer_root, \
-                    getAncreFenetre, tronquer, getHoraireTxt#, chronometrer
+                    getAncreFenetre, tronquer, getHoraireTxt, scaleImage#, chronometrer
                     
 from Referentiel import REFERENTIELS, ARBRE_REF, ACTIVITES
 import Referentiel
@@ -1133,9 +1133,11 @@ class Classe(ElementBase):
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
 #        print "ConstruireArbre", self.GetReferentiel().Enseignement[0]
+#         print err
         self.arbre = arbre
         self.codeBranche = CodeBranche(self.arbre, rallonge(self.GetReferentiel().Enseignement[0]))
-        self.branche = arbre.AppendItem(branche, Titres[5]+" :", wnd = self.codeBranche, data = self)#, image = self.arbre.images["Seq"])
+        self.branche = arbre.AppendItem(branche, Titres[5]+" :", wnd = self.codeBranche, data = self,
+                                        image = self.arbre.images["Cla"])
         self.codeBranche.SetBranche(self.branche)
 #        if hasattr(self, 'tip'):
 #            self.tip.SetBranche(self.branche)
@@ -2185,8 +2187,10 @@ class Sequence(BaseDoc):
         
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche, simple = False):
+#         print err
         self.arbre = arbre
-        self.branche = arbre.AppendItem(branche, Titres[0], data = self, image = self.arbre.images["Seq"])
+        self.branche = arbre.AppendItem(branche, Titres[0], data = self,
+                                        image = self.arbre.images["Seq"])
         self.arbre.SetItemBold(self.branche)
 #        if hasattr(self, 'tip'):
 #            self.tip.SetBranche(self.branche)
@@ -2200,7 +2204,8 @@ class Sequence(BaseDoc):
         #
         # Les prérequis
         #
-        self.branchePre = arbre.AppendItem(self.branche, Titres[1], image = self.arbre.images["Sav"], 
+        self.branchePre = arbre.AppendItem(self.branche, Titres[1], 
+                                           image = self.arbre.images["Sav"], 
                                            data = "Pre")
         for pre in self.prerequis.values():
             pre.ConstruireArbre(arbre, self.branchePre, prerequis = True)
@@ -2352,7 +2357,8 @@ class Sequence(BaseDoc):
             self.app.AfficherMenuContextuel([[u"Enregistrer", self.app.commandeEnregistrer, 
                                               getIconeFileSave()],
 #                                             [u"Ouvrir", self.app.commandeOuvrir],
-                                             [u"Exporter la fiche (PDF ou SVG)", self.app.exporterFiche, None],
+                                             [u"Exporter la fiche (PDF ou SVG)", self.app.exporterFiche,
+                                              None],
                                             ])
                 
                 
@@ -2384,7 +2390,7 @@ class Sequence(BaseDoc):
         elif self.arbre.GetItemText(itemArbre) == Titres[3]: # Séances
             listItems = [[u"Ajouter une séance", 
                           self.AjouterSeance,
-                          images.Icone_ajout_seance.GetBitmap()]]
+                          scaleImage(images.Icone_ajout_seance.GetBitmap())]]
             
             ################
             elementCopie = GetObjectFromClipBoard('Seance')
@@ -2399,20 +2405,21 @@ class Sequence(BaseDoc):
         elif self.arbre.GetItemText(itemArbre) == Titres[4]: # Système
             self.app.AfficherMenuContextuel([[u"Ajouter un système", 
                                               self.AjouterSysteme,
-                                              images.Icone_ajout_systeme.GetBitmap()], 
+                                              scaleImage(images.Icone_ajout_systeme.GetBitmap())], 
                                              [u"Selectionner depuis un fichier", 
                                               self.SelectSystemes, 
-                                              None],
+                                              scaleImage(images.Icone_import_systeme.GetBitmap())],
 #                                             [u"Sauvegarder la liste dans les préférences", self.SauvSystemes]
                                              ])
          
         elif self.arbre.GetItemText(itemArbre) == Titres[1]: # Prérequis
             self.app.AfficherMenuContextuel([[u"Ajouter une séquence", self.AjouterSequencePre, 
-                                              images.Icone_ajout_seq.GetBitmap()], 
+                                              scaleImage(images.Icone_ajout_seq.GetBitmap())], 
                                              ])
         
         elif self.arbre.GetItemText(itemArbre) == Titres[10]: # Eleve
-            self.app.AfficherMenuContextuel([[u"Ajouter un professeur", self.AjouterProf, images.Icone_ajout_prof.GetBitmap()]])
+            self.app.AfficherMenuContextuel([[u"Ajouter un professeur", self.AjouterProf, 
+                                              scaleImage(images.Icone_ajout_prof.GetBitmap())]])
 
 
 
@@ -3707,7 +3714,8 @@ class Projet(BaseDoc):
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
         self.arbre = arbre
-        self.branche = arbre.AppendItem(branche, Titres[9], data = self, image = self.arbre.images["Prj"])
+        self.branche = arbre.AppendItem(branche, Titres[9], data = self,
+                                        image = self.arbre.images["Prj"])
 #        if hasattr(self, 'tip'):
 #            self.tip.SetBranche(self.branche)
             
@@ -3726,7 +3734,8 @@ class Projet(BaseDoc):
         #
         # Les élèves
         #
-        self.brancheElv = arbre.AppendItem(self.branche, Titres[6], data = "Ele")
+        self.brancheElv = arbre.AppendItem(self.branche, Titres[6], data = "Ele",
+                                           image = self.arbre.images["Grp"])
         for e in self.eleves:
             e.ConstruireArbre(arbre, self.brancheElv) 
             
@@ -3757,7 +3766,8 @@ class Projet(BaseDoc):
             self.app.AfficherMenuContextuel([[u"Enregistrer", self.app.commandeEnregistrer,
                                               getIconeFileSave()],
 #                                             [u"Ouvrir", self.app.commandeOuvrir],
-                                             [u"Exporter la fiche (PDF ou SVG)", self.app.exporterFiche, None],
+                                             [u"Exporter la fiche (PDF ou SVG)", self.app.exporterFiche, 
+                                              None],
                                             ])
             
 #        [u"Séquence pédagogique",
@@ -3782,10 +3792,12 @@ class Projet(BaseDoc):
             self.arbre.GetItemPyData(itemArbre).AfficherMenuContextuel(itemArbre)           
             
         elif self.arbre.GetItemText(itemArbre) == Titres[6]: # Eleve
-            self.app.AfficherMenuContextuel([[u"Ajouter un élève", self.AjouterEleve, images.Icone_ajout_eleve.GetBitmap()]])
+            self.app.AfficherMenuContextuel([[u"Ajouter un élève", self.AjouterEleve, 
+                                              scaleImage(images.Icone_ajout_eleve.GetBitmap())]])
             
         elif self.arbre.GetItemText(itemArbre) == Titres[8]: # Tache
-            listItems = [[u"Ajouter une tâche", self.AjouterTache, images.Icone_ajout_tache.GetBitmap()]]
+            listItems = [[u"Ajouter une tâche", self.AjouterTache, 
+                          scaleImage(images.Icone_ajout_tache.GetBitmap())]]
             elementCopie = GetObjectFromClipBoard('Tache')
             if elementCopie is not None:
                 phase = elementCopie.get("Phase", "")
@@ -3798,7 +3810,8 @@ class Projet(BaseDoc):
             self.app.AfficherMenuContextuel(listItems)
             
         elif self.arbre.GetItemText(itemArbre) == Titres[10]: # Eleve
-            self.app.AfficherMenuContextuel([[u"Ajouter un professeur", self.AjouterProf, images.Icone_ajout_prof.GetBitmap()]])
+            self.app.AfficherMenuContextuel([[u"Ajouter un professeur", self.AjouterProf, 
+                                              scaleImage(images.Icone_ajout_prof.GetBitmap())]])
                                              
          
             
@@ -4580,28 +4593,29 @@ class Progression(BaseDoc):
             self.arbre.GetItemPyData(itemArbre).AfficherMenuContextuel(itemArbre)           
                              
         elif self.arbre.GetItemText(itemArbre) == Titres[10]: # Prof
-            self.app.AfficherMenuContextuel([[u"Ajouter un professeur", self.AjouterProf, images.Icone_ajout_prof.GetBitmap()]])
+            self.app.AfficherMenuContextuel([[u"Ajouter un professeur", self.AjouterProf, 
+                                              scaleImage(images.Icone_ajout_prof.GetBitmap())]])
             
         elif self.arbre.GetItemText(itemArbre) == Titres[11]: # Séquence
             self.app.AfficherMenuContextuel([[u"Créer une nouvelle Séquence", 
                                               self.AjouterNouvelleSequence, 
-                                              images.Icone_ajout_seq.GetBitmap()],
+                                              scaleImage(images.Icone_ajout_seq.GetBitmap())],
                                              [u"Importer une Séquence existante", 
                                               self.AjouterSequence, 
-                                              images.Icone_import_seq.GetBitmap()],
+                                              scaleImage(images.Icone_import_seq.GetBitmap())],
                                              [u"Importer toutes les Séquences compatibles du dossier", 
                                               self.ImporterSequences, 
-                                              images.Icone_cherch_seq.GetBitmap()],
+                                              scaleImage(images.Icone_cherch_seq.GetBitmap())],
                                              
                                              [u"Créer un nouveau Projet", 
                                               self.AjouterNouveauProjet, 
-                                              images.Icone_ajout_prj.GetBitmap()],
+                                              scaleImage(images.Icone_ajout_prj.GetBitmap())],
                                              [u"Importer un Projet existant", 
                                               self.AjouterProjet, 
-                                              images.Icone_import_prj.GetBitmap()],
+                                              scaleImage(images.Icone_import_prj.GetBitmap())],
                                              [u"Importer tous les Projets compatibles du dossier", 
                                               self.ImporterProjets, 
-                                              images.Icone_cherch_prj.GetBitmap()]])
+                                              scaleImage(images.Icone_cherch_prj.GetBitmap())]])
 
 
     ######################################################################################  
@@ -5581,10 +5595,10 @@ class LienSequence(ElementBase, ElementProgression):
         if itemArbre == self.branche:
             self.parent.app.AfficherMenuContextuel([[u"Supprimer", 
                                                      functools.partial(self.parent.SupprimerLien, item = itemArbre), 
-                                                     images.Icone_suppr_seq.GetBitmap()],
+                                                     scaleImage(images.Icone_suppr_seq.GetBitmap())],
                                                     [u"Ouvrir", 
                                                      functools.partial(self.parent.OuvrirSequence, item = itemArbre), 
-                                                     wx.ArtProvider.GetBitmap(wx.ART_FILE_OPEN, wx.ART_TOOLBAR, (20,20))]
+                                                     scaleImage(images.Icone_open.GetBitmap())]
                                                     ])
 
 
@@ -5731,10 +5745,10 @@ class LienProjet(ElementBase, ElementProgression):
         if itemArbre == self.branche:
             self.parent.app.AfficherMenuContextuel([[u"Supprimer", 
                                                      functools.partial(self.parent.SupprimerLien, item = itemArbre), 
-                                                     images.Icone_suppr_prj.GetBitmap()],
+                                                     scaleImage(images.Icone_suppr_prj.GetBitmap())],
                                                     [u"Ouvrir", 
                                                      functools.partial(self.parent.OuvrirProjet, item = itemArbre), 
-                                                     wx.ArtProvider.GetBitmap(wx.ART_FILE_OPEN, wx.ART_TOOLBAR, (20,20))]
+                                                     scaleImage(images.Icone_open.GetBitmap())]
                                                     ])
 
 
@@ -7794,15 +7808,15 @@ class Seance(ElementAvecLien, ElementBase):
         if itemArbre == self.branche:
             listItems = [[u"Supprimer", 
                           functools.partial(self.parent.SupprimerSeance, item = itemArbre), 
-                          images.Icone_suppr_seance.GetBitmap()],
+                          scaleImage(images.Icone_suppr_seance.GetBitmap())],
                          [u"Créer un lien", 
                           self.CreerLien, 
-                          None]]
+                          scaleImage(images.Icone_lien.GetBitmap())]]
             
             if self.typeSeance in ["R", "S"]:
                 listItems.append([u"Ajouter une séance", 
                                   self.AjouterSeance, 
-                                  images.Icone_ajout_seance.GetBitmap()])
+                                  scaleImage(images.Icone_ajout_seance.GetBitmap())])
             
             listItems.append([u"Copier", 
                               self.CopyToClipBoard, 
@@ -8785,12 +8799,12 @@ class Tache(ElementAvecLien, ElementBase):
             if not self.phase in TOUTES_REVUES_EVAL_SOUT:
                 listItems = [[u"Supprimer", 
                               functools.partial(self.projet.SupprimerTache, item = itemArbre), 
-                              images.Icone_suppr_tache.GetBitmap()]]
+                              scaleImage(images.Icone_suppr_tache.GetBitmap())]]
             else:
                 listItems = []
             listItems.append([u"Insérer une revue après", 
                               functools.partial(self.projet.InsererRevue, item = itemArbre), 
-                              images.Icone_ajout_revue.GetBitmap()])
+                              scaleImage(images.Icone_ajout_revue.GetBitmap())])
 
             if self.phase not in TOUTES_REVUES_EVAL_SOUT:
                 listItems.append([u"Copier", 
@@ -9056,8 +9070,9 @@ class Systeme(ElementAvecLien, ElementBase):
         if itemArbre == self.branche:
             self.parent.app.AfficherMenuContextuel([[u"Supprimer", 
                                                      functools.partial(self.parent.SupprimerSysteme, item = itemArbre),
-                                                     images.Icone_suppr_systeme.GetBitmap()],
-                                                    [u"Créer un lien", self.CreerLien, None]])
+                                                     scaleImage(images.Icone_suppr_systeme.GetBitmap())],
+                                                    [u"Créer un lien", self.CreerLien, 
+                                                     scaleImage(images.Icone_lien.GetBitmap())]])
             
     
     ######################################################################################  
@@ -9397,9 +9412,8 @@ class Support(ElementAvecLien, ElementBase):
     ######################################################################################  
     def ConstruireArbre(self, arbre, branche):
         self.arbre = arbre
-        image = self.arbre.images["Sup"]
         self.branche = arbre.AppendItem(branche, u"Support", data = self,#, wnd = self.codeBranche
-                                        image = image)
+                                        image = self.arbre.images["Spp"])
 #        if hasattr(self, 'tip'):
 #            self.tip.SetBranche(self.branche)
 
@@ -9407,7 +9421,8 @@ class Support(ElementAvecLien, ElementBase):
     ######################################################################################  
     def AfficherMenuContextuel(self, itemArbre):
         if itemArbre == self.branche:
-            self.parent.app.AfficherMenuContextuel([[u"Créer un lien", self.CreerLien, None]])
+            self.parent.app.AfficherMenuContextuel([[u"Créer un lien", self.CreerLien, 
+                                                     scaleImage(images.Icone_lien.GetBitmap())]])
             
     ######################################################################################  
     def GetFicheHTML(self, param = None):
@@ -10127,7 +10142,7 @@ class Eleve(Personne, ElementBase):
         if itemArbre == self.branche:
             listItems = [[u"Supprimer", 
                           functools.partial(self.GetDocument().SupprimerEleve, item = itemArbre), 
-                          images.Icone_suppr_eleve.GetBitmap()]]
+                          scaleImage(images.Icone_suppr_eleve.GetBitmap())]]
             if len(self.GetProjetRef().parties) > 0:
                 tg = u"Générer grille"
                 to = u"Ouvrir grille"
@@ -10424,7 +10439,7 @@ class Prof(Personne):
         if itemArbre == self.branche:
             self.GetDocument().app.AfficherMenuContextuel([[u"Supprimer", 
                                                      functools.partial(self.GetDocument().SupprimerProf, item = itemArbre), 
-                                                     images.Icone_suppr_prof.GetBitmap()]])
+                                                     scaleImage(images.Icone_suppr_prof.GetBitmap())]])
         
     ######################################################################################  
     def MiseAJourCodeBranche(self):

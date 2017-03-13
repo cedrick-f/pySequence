@@ -260,7 +260,7 @@ from widgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_ENTI
                     rallonge, remplaceCode2LF, dansRectangle, isstring, \
                     StaticBoxButton, TextCtrl_Help, CloseFenHelp, ImageButtonTransparent, \
                     remplaceLF2Code, messageInfo, messageYesNo, rognerImage, PlaceholderTextCtrl, \
-                    tronquerDC, EllipticStaticText
+                    tronquerDC, EllipticStaticText, scaleImage, scaleIcone
                     #, chronometrer
 
 
@@ -398,24 +398,28 @@ def getFont_9():
 #
 ####################################################################################
 def getIconeFileSave(size = (20,20)):
-    return wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE_AS, wx.ART_TOOLBAR, size)
+    return scaleImage(images.Icone_save.GetBitmap())
+#     return wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE_AS, wx.ART_TOOLBAR, size)
 
 def getIconePaste(size = (20,20)):
-    return wx.ArtProvider.GetBitmap(wx.ART_PASTE, wx.ART_TOOLBAR, size)
+    return scaleImage(images.Icone_paste.GetBitmap())
+#     return wx.ArtProvider.GetBitmap(wx.ART_PASTE, wx.ART_TOOLBAR, size)
 
 def getIconeCopy(size = (20,20)):
-    return wx.ArtProvider.GetBitmap(wx.ART_COPY, wx.ART_TOOLBAR, size)
+    return scaleImage(images.Icone_copy.GetBitmap())
+#     return wx.ArtProvider.GetBitmap(wx.ART_COPY, wx.ART_TOOLBAR, size)
 
 def getIconeUndo(size = (20,20)):
-    return wx.ArtProvider.GetBitmap(wx.ART_UNDO, wx.ART_TOOLBAR, size)
+    return scaleImage(images.Icone_undo.GetBitmap())
+#     return wx.ArtProvider.GetBitmap(wx.ART_UNDO, wx.ART_TOOLBAR, size)
 
 def getIconeRedo(size = (20,20)):
-    return wx.ArtProvider.GetBitmap(wx.ART_REDO, wx.ART_TOOLBAR, size)
+    return scaleImage(images.Icone_redo.GetBitmap())
+#     return wx.ArtProvider.GetBitmap(wx.ART_REDO, wx.ART_TOOLBAR, size)
 
 def getBitmapFromImageSurface(imagesurface):
     """ Renvoi une wx.Bitmap en fonction d'une cairo.ImageSurface
     """
-        
     # On fait une copie sinon ça s'efface ...
     return wx.lib.wxcairo.BitmapFromImageSurface(imagesurface).ConvertToImage().ConvertToBitmap()
 
@@ -633,61 +637,72 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
     def GetTools(self, typ):
         if typ == 'prj':
             return {50 : BoutonToolBar(u"Ajouter un élève",
-                                   images.Icone_ajout_eleve.GetBitmap(), 
+                                   scaleImage(images.Icone_ajout_eleve.GetBitmap(),
+                                                  *constantes.IMG_SIZE_TB), 
                                    shortHelp = u"Ajout d'un élève au projet", 
                                    longHelp = u"Ajout d'un élève au projet"),
                 
                     51 : BoutonToolBar(u"Ajouter un professeur", 
-                                       images.Icone_ajout_prof.GetBitmap(), 
+                                       scaleImage(images.Icone_ajout_prof.GetBitmap(),
+                                                  *constantes.IMG_SIZE_TB), 
                                        shortHelp = u"Ajout d'un professeur à l'équipe pédagogique", 
                                        longHelp = u"Ajout d'un professeur à l'équipe pédagogique"),
                     
                     52 : BoutonToolBar(u"Ajouter une tâche", 
-                                       images.Icone_ajout_tache.GetBitmap(), 
+                                       scaleImage(images.Icone_ajout_tache.GetBitmap(),
+                                                  *constantes.IMG_SIZE_TB), 
                                        shortHelp=u"Ajout d'une tâche au projet", 
                                        longHelp=u"Ajout d'une tâche au projet"),
                     
                     53 : BoutonToolBar(u"Ajouter une revue", 
-                                       images.Icone_ajout_revue.GetBitmap(), 
+                                       scaleImage(images.Icone_ajout_revue.GetBitmap(),
+                                                  *constantes.IMG_SIZE_TB), 
                                        shortHelp = u"Ajout d'une revue au projet", 
                                        longHelp = u"Ajout d'une revue au projet")
                 }
         
         elif typ == 'seq':
             return {60 : BoutonToolBar(u"Ajouter une séance", 
-                                    images.Icone_ajout_seance.GetBitmap(), 
+                                    scaleImage(images.Icone_ajout_seance.GetBitmap(),
+                                                  *constantes.IMG_SIZE_TB), 
                                     shortHelp=u"Ajout d'une séance dans la séquence", 
                                     longHelp=u"Ajout d'une séance dans la séquence"),
                     
                     62 : BoutonToolBar(u"Ajouter un professeur", 
-                                       images.Icone_ajout_prof.GetBitmap(), 
+                                       scaleImage(images.Icone_ajout_prof.GetBitmap(),
+                                                  *constantes.IMG_SIZE_TB), 
                                        shortHelp = u"Ajout d'un professeur à l'équipe pédagogique", 
                                        longHelp = u"Ajout d'un professeur à l'équipe pédagogique"),
                     
                     61 : BoutonToolBar(u"Ajouter un système", 
-                                       images.Icone_ajout_systeme.GetBitmap(), 
+                                       scaleImage(images.Icone_ajout_systeme.GetBitmap(),
+                                                  *constantes.IMG_SIZE_TB), 
                                        shortHelp=u"Ajout d'un système", 
                                        longHelp=u"Ajout d'un système")
                       }
             
         elif typ == 'prg':
             return {70 : BoutonToolBar(u"Actualiser la Progression", 
-                                       images.Bouton_Actualiser.GetBitmap(), 
+                                       scaleImage(images.Bouton_Actualiser.GetBitmap(),
+                                                  *constantes.IMG_SIZE_TB), 
                                        shortHelp = u"Actualiser la Progression", 
                                        longHelp = u"Actualiser la Progression"),
                     
                     71 : BoutonToolBar(u"Ajouter un professeur", 
-                                       images.Icone_ajout_prof.GetBitmap(), 
+                                       scaleImage(images.Icone_ajout_prof.GetBitmap(),
+                                                  *constantes.IMG_SIZE_TB), 
                                        shortHelp = u"Ajout d'un professeur à l'équipe pédagogique", 
                                        longHelp = u"Ajout d'un professeur à l'équipe pédagogique"),
                     
                     72 : BoutonToolBar(u"Ajouter une Séquence",
-                                   images.Icone_ajout_seq.GetBitmap(), 
+                                   scaleImage(images.Icone_ajout_seq.GetBitmap(),
+                                                  *constantes.IMG_SIZE_TB), 
                                    shortHelp = u"Ajout d'une Séquence à la Progression", 
                                    longHelp = u"Ajout d'une Séquence à la Progression"),
                     
                     73 : BoutonToolBar(u"Ajouter un Projet",
-                                   images.Icone_ajout_prj.GetBitmap(), 
+                                   scaleImage(images.Icone_ajout_prj.GetBitmap(),
+                                                  *constantes.IMG_SIZE_TB), 
                                    shortHelp = u"Ajout d'un Projet à la Progression", 
                                    longHelp = u"Ajout d'un Projet à la Progression"),
                     
@@ -708,13 +723,25 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         
         
         tsize = constantes.IMG_SIZE_TB
-        new_bmp =  wx.ArtProvider.GetBitmap(wx.ART_NEW, wx.ART_TOOLBAR, tsize)
-        open_bmp = wx.ArtProvider.GetBitmap(wx.ART_FILE_OPEN, wx.ART_TOOLBAR, tsize)
-        save_bmp =  wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE, wx.ART_TOOLBAR, tsize)
-        saveall_bmp =  images.Icone_saveall.GetBitmap()
-        saveas_bmp = wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE_AS, wx.ART_TOOLBAR, tsize)
-        undo_bmp = wx.ArtProvider.GetBitmap(wx.ART_UNDO, wx.ART_TOOLBAR, tsize)
-        redo_bmp = wx.ArtProvider.GetBitmap(wx.ART_REDO, wx.ART_TOOLBAR, tsize)
+        
+        new_bmp =  scaleImage(images.Icone_new.GetBitmap(), *tsize)
+        open_bmp = scaleImage(images.Icone_open.GetBitmap(), *tsize)
+        save_bmp =  scaleImage(images.Icone_save.GetBitmap(), *tsize)
+        saveall_bmp =  scaleImage(images.Icone_saveall.GetBitmap(), *tsize)
+        saveas_bmp = scaleImage(images.Icone_saveas.GetBitmap(), *tsize)
+        undo_bmp = scaleImage(images.Icone_undo.GetBitmap(), *tsize)
+        redo_bmp = scaleImage(images.Icone_redo.GetBitmap(), *tsize)
+        full_bmp = scaleImage(images.Icone_fullscreen.GetBitmap(), *tsize)
+        
+        
+#         
+#         new_bmp =  wx.ArtProvider.GetBitmap(wx.ART_NEW, wx.ART_TOOLBAR, tsize)
+#         open_bmp = wx.ArtProvider.GetBitmap(wx.ART_FILE_OPEN, wx.ART_TOOLBAR, tsize)
+#         save_bmp =  wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE, wx.ART_TOOLBAR, tsize)
+#         saveall_bmp =  images.Icone_saveall.GetBitmap()
+#         saveas_bmp = wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE_AS, wx.ART_TOOLBAR, tsize)
+#         undo_bmp = wx.ArtProvider.GetBitmap(wx.ART_UNDO, wx.ART_TOOLBAR, tsize)
+#         redo_bmp = wx.ArtProvider.GetBitmap(wx.ART_REDO, wx.ART_TOOLBAR, tsize)
         
         self.tb.SetToolBitmapSize(tsize)
         
@@ -785,8 +812,8 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         # Outils de Visualisation
         #
         #################################################################################################################
-        saveas_bmp = images.Icone_fullscreen.GetBitmap()
-        self.tb.AddLabelTool(100, u"Plein écran", saveas_bmp, 
+        
+        self.tb.AddLabelTool(100, u"Plein écran", full_bmp, 
                              shortHelp=u"Affichage de la fiche en plein écran (Echap pour quitter le mode plein écran)", 
                              longHelp=u"Affichage de la fiche en plein écran (Echap pour quitter le mode plein écran)")
 
@@ -1144,13 +1171,13 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                 
         if ext == 'seq':
             child = FenetreSequence(self, ouverture)
-            child.SetIcon(constantes.dicimages["Seq"].GetIcon())
+            child.SetIcon(scaleIcone(constantes.dicimages["Seq"].GetBitmap()))
         elif ext == 'prj':
             child = FenetreProjet(self)
-            child.SetIcon(constantes.imagesProjet["Prj"].GetIcon())
+            child.SetIcon(scaleIcone(constantes.imagesProjet["Prj"].GetBitmap()))
         elif ext == 'prg':
             child = FenetreProgression(self, ouverture)
-            child.SetIcon(constantes.imagesProgression["Prg"].GetIcon())
+            child.SetIcon(scaleIcone(constantes.imagesProgression["Prg"].GetBitmap()))
         else:
             child = None
         
@@ -5529,8 +5556,11 @@ class PanelPropriete_Classe(PanelPropriete):
             t += u" - nombre de revues et positions\n"
     
         tsize = constantes.IMG_SIZE_TB
-        open_bmp = wx.ArtProvider.GetBitmap(wx.ART_FILE_OPEN, wx.ART_TOOLBAR, tsize)
-        save_bmp =  wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE, wx.ART_TOOLBAR, tsize)
+        open_bmp = scaleImage(images.Icone_open.GetBitmap(), *tsize)
+        save_bmp =  scaleImage(images.Icone_save.GetBitmap(), *tsize)
+        pref_bmp = scaleImage(images.Icone_defaut_pref.GetBitmap(), *tsize)
+#         open_bmp = wx.ArtProvider.GetBitmap(wx.ART_FILE_OPEN, wx.ART_TOOLBAR, tsize)
+#         save_bmp =  wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE, wx.ART_TOOLBAR, tsize)
         
         tb.AddSimpleTool(30, open_bmp, u"Ouvrir un fichier classe")
         self.Bind(wx.EVT_TOOL, self.commandeOuvrir, id=30)
@@ -5538,7 +5568,7 @@ class PanelPropriete_Classe(PanelPropriete):
         tb.AddSimpleTool(32, save_bmp, t)
         self.Bind(wx.EVT_TOOL, self.commandeSauve, id=32)
         
-        tb.AddSimpleTool(31, images.Icone_defaut_pref.GetBitmap(), 
+        tb.AddSimpleTool(31, pref_bmp, 
                          u"Rétablir les paramétres de classe par défaut")
         self.Bind(wx.EVT_TOOL, self.OnDefautPref, id=31)
 
@@ -6917,7 +6947,8 @@ class Panel_Cible(wx.Panel):
         #
         # Un bouton d'aide
         #
-        aide = wx.BitmapButton(self, -1, images.Bouton_Aide.GetBitmap(), pos = (0,0))
+        aide = wx.BitmapButton(self, -1, scaleImage(images.Bouton_Aide.GetBitmap()),
+                               pos = (0,0))
         aide.SetToolTipString(u"Informations à propos de la cible des " + getPluriel(ref.nomCI))
         self.Bind(wx.EVT_BUTTON, self.OnAide, aide)
             
@@ -8049,7 +8080,7 @@ class PanelPropriete_Seance(PanelPropriete):
         #
         titre = wx.StaticText(pageGen, -1, u"Type de %s :" %self.seance.nom_obj)
         listType = self.seance.GetListeTypes()
-        listTypeS = [(ref.seances[t][1], constantes.imagesSeance[t].GetBitmap()) for t in listType] 
+        listTypeS = [(ref.seances[t][1], scaleImage(constantes.imagesSeance[t].GetBitmap())) for t in listType] 
         tsizer = wx.BoxSizer(wx.VERTICAL)
         cbType = wx.combo.BitmapComboBox(pageGen, -1, u"Choisir un type de %s" %self.seance.nom_obj,
                              choices = [], size = (-1,25),
@@ -8704,7 +8735,7 @@ class PanelPropriete_Tache(PanelPropriete):
                                  )
 
             for i, k in enumerate(sorted([k for k in prj.phases.keys() if not k in prj.listPhasesEval])):#ref.listPhases_prj):
-                cbPhas.SetItemBitmap(i, constantes.imagesTaches[k].GetBitmap())
+                cbPhas.SetItemBitmap(i, scaleImage(constantes.imagesTaches[k].GetBitmap()))
             pageGen.Bind(wx.EVT_COMBOBOX, self.EvtComboBox, cbPhas)
             self.cbPhas = cbPhas
             
@@ -10447,6 +10478,7 @@ class PanelPropriete_Support(PanelPropriete):
 ####################################################################################*
 class ArbreDoc(CT.CustomTreeCtrl):
     def __init__(self, parent, classe, panelProp,
+                 imglst = [], 
                  pos = wx.DefaultPosition,
                  size = wx.DefaultSize,
                  style = wx.SUNKEN_BORDER|wx.WANTS_CHARS,
@@ -10467,6 +10499,22 @@ class ArbreDoc(CT.CustomTreeCtrl):
         # La classe 
         #
         self.classe = classe
+        
+        
+        
+        #
+        # Les icones des branches
+        #
+        self.images = {}
+        il = wx.ImageList(*constantes.IMG_SIZE_TREE)
+        for k, i in imglst:
+#             print k, i.GetBitmap().GetWidth(), i.GetBitmap().GetHeight()
+#             self.images[k] = il.Add(i.GetBitmap())
+            self.images[k] = il.Add(scaleImage(i.GetBitmap(), 
+                                               *constantes.IMG_SIZE_TREE))
+        self.AssignImageList(il)
+        
+        
         
         #
         # On instancie un panel de propriétés vide pour les éléments qui n'ont pas de propriétés
@@ -10641,7 +10689,8 @@ class ArbreDoc(CT.CustomTreeCtrl):
 class ArbreSequence(ArbreDoc):
     def __init__(self, parent, sequence, classe, panelProp):
 
-        ArbreDoc.__init__(self, parent, classe, panelProp)
+        ArbreDoc.__init__(self, parent, classe, panelProp,
+                          imglst = constantes.dicimages.items() + constantes.imagesSeance.items())
         
         self.parent = parent
         
@@ -10651,15 +10700,17 @@ class ArbreSequence(ArbreDoc):
         self.sequence = sequence
         self.doc = sequence
         
-        #
-        # Les icones des branches
-        #
-        self.images = {}
-        il = wx.ImageList(*constantes.IMG_SIZE_TREE)
-        for k, i in constantes.dicimages.items() + constantes.imagesSeance.items():
-#             print k, i.GetBitmap().GetWidth(), i.GetBitmap().GetHeight()
-            self.images[k] = il.Add(i.GetBitmap())
-        self.AssignImageList(il)
+#         #
+#         # Les icones des branches
+#         #
+#         self.images = {}
+#         il = wx.ImageList(*constantes.IMG_SIZE_TREE)
+#         for k, i in constantes.dicimages.items() + constantes.imagesSeance.items():
+# #             print k, i.GetBitmap().GetWidth(), i.GetBitmap().GetHeight()
+# #             self.images[k] = il.Add(i.GetBitmap())
+#             self.images[k] = il.Add(scaleImage(i.GetBitmap(), 
+#                                                *constantes.IMG_SIZE_TREE))
+#         self.AssignImageList(il)
         
         
         #
@@ -10943,7 +10994,8 @@ class ArbreSequence(ArbreDoc):
 class ArbreProjet(ArbreDoc):
     def __init__(self, parent, projet, classe, panelProp):
 
-        ArbreDoc.__init__(self, parent, classe, panelProp)
+        ArbreDoc.__init__(self, parent, classe, panelProp,
+                          imglst = constantes.imagesProjet.items() + constantes.imagesTaches.items())
         
         self.parent = parent
         
@@ -10953,20 +11005,23 @@ class ArbreProjet(ArbreDoc):
         self.projet = projet
         self.doc = projet
         
-        #
-        # Les icones des branches
-        #
-        self.images = {}
-        il = wx.ImageList(*constantes.IMG_SIZE_TREE)
-        for k, i in constantes.imagesProjet.items() + constantes.imagesTaches.items():
-            self.images[k] = il.Add(i.GetBitmap())
-        self.AssignImageList(il)
-        
+#         #
+#         # Les icones des branches
+#         #
+#         self.images = {}
+#         il = wx.ImageList(*constantes.IMG_SIZE_TREE)
+#         for k, i in constantes.imagesProjet.items() + constantes.imagesTaches.items():
+# #             self.images[k] = il.Add(i.GetBitmap())
+#             self.images[k] = il.Add(scaleImage(i.GetBitmap(), 
+#                                                *constantes.IMG_SIZE_TREE))
+#             
+#         self.AssignImageList(il)
+
         #
         # Construction de l'arbre
         #
         self.projet.ConstruireArbre(self, self.root)
-        
+     
 #        self.panelProp.AfficherPanel(self.projet.GetPanelPropriete())
 
 #        self.CurseurInsert = wx.CursorFromImage(constantes.images.CurseurInsert.GetImage())
@@ -11098,7 +11153,8 @@ class ArbreProjet(ArbreDoc):
 class ArbreProgression(ArbreDoc):
     def __init__(self, parent, progression, classe, panelProp):
 
-        ArbreDoc.__init__(self, parent, classe, panelProp)
+        ArbreDoc.__init__(self, parent, classe, panelProp,
+                          imglst = constantes.imagesProgression.items())
         
         self.parent = parent
         
@@ -11108,15 +11164,17 @@ class ArbreProgression(ArbreDoc):
         self.progression = progression
         self.doc = progression
         
-        #
-        # Les icones des branches
-        #
-        self.images = {}
-        il = wx.ImageList(*constantes.IMG_SIZE_TREE)
-        for k, i in constantes.imagesProgression.items():
-            self.images[k] = il.Add(i.GetBitmap())
-        self.AssignImageList(il)
-        
+#         #
+#         # Les icones des branches
+#         #
+#         self.images = {}
+#         il = wx.ImageList(*constantes.IMG_SIZE_TREE)
+#         for k, i in constantes.imagesProgression.items():
+# #             self.images[k] = il.Add(i.GetBitmap())
+#             self.images[k] = il.Add(scaleImage(i.GetBitmap(), 
+#                                                *constantes.IMG_SIZE_TREE))
+#         self.AssignImageList(il)
+#         
         #
         # Construction de l'arbre
         #
@@ -14342,10 +14400,16 @@ class Panel_Details(wx.Panel):
         
         tsize = constantes.IMG_SIZE_TB
         
-        edit_bmp = images.document_edit.GetBitmap()
-        save_bmp =  wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE, wx.ART_TOOLBAR, tsize)
-        saveas_bmp = wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE_AS, wx.ART_TOOLBAR, tsize)
-        saveall_bmp =  images.Icone_saveall.GetBitmap()
+        edit_bmp = scaleImage(images.document_edit.GetBitmap(),*tsize)
+        save_bmp =  scaleImage(images.Icone_save.GetBitmap(),*tsize)
+        saveas_bmp = scaleImage(images.Icone_saveas.GetBitmap(),*tsize)
+        saveall_bmp =  scaleImage(images.Icone_saveall.GetBitmap(),*tsize)
+        
+        
+#         edit_bmp = images.document_edit.GetBitmap()
+#         save_bmp =  wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE, wx.ART_TOOLBAR, tsize)
+#         saveas_bmp = wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE_AS, wx.ART_TOOLBAR, tsize)
+#         saveall_bmp =  images.Icone_saveall.GetBitmap()
         
         self.tb.SetToolBitmapSize(tsize)
         

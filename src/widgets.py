@@ -1498,7 +1498,17 @@ def rognerImage(image, wf = 800.0 , hf = 600.0):
 #     print "   >>", _w, _h
     return image.ConvertToImage().Scale(_w, _h).ConvertToBitmap()
 
+#############################################################################################################
+def scaleImage(image, wf = 24 , hf = 24): 
+    return image.ConvertToImage().Scale(wf, hf, quality = wx.IMAGE_QUALITY_HIGH ).ConvertToBitmap()
 
+
+#############################################################################################################
+def scaleIcone(image, wf = 20 , hf = 20): 
+    i = wx.EmptyIcon()
+    bmp = image.ConvertToImage().Scale(wf, hf, quality = wx.IMAGE_QUALITY_HIGH ).ConvertToBitmap()
+    i.CopyFromBitmap(bmp)
+    return i
 
 #############################################################################################################
 import textwrap

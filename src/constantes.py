@@ -290,6 +290,7 @@ dicimages =   {"Seq" : images.Icone_sequence,
                "Obj" : images.Icone_objectif,
                "Ci"  : images.Icone_centreinteret,
                "Sys" : images.Icone_systeme,
+               "Grp" : images.Icone_groupe,
                "Sea" : images.Icone_seance,
 
                        }
@@ -306,21 +307,24 @@ imagesSeance = {"R" : images.Icone_rotation,
                 "SS" : images.Icone_synthese_Seq,
                 "HC": images.Icone_maison,
                 "ST" : images.Icone_usine,
-                'Prf' : images.Icone_prof2}
+                'Prf' : images.Icone_prof}
 
 imagesProjet = {"Prj" : images.Icone_projet,
                 "Elv" : images.Icone_eleve,
-                'Prf' : images.Icone_prof2,
-                "Sup" : images.Icone_support,
-                "Tac" : images.Icone_projet
+                'Prf' : images.Icone_prof,
+                "Spp" : images.Icone_support,
+                "Tac" : images.Icone_Tache,
+                "Cla" : images.Icone_classe,
+                "Grp" : images.Icone_groupe
                 }
 
 imagesProgression = {"Prg" : images.Icone_progression,
                     "Elv" : images.Icone_eleve,
-                    'Prf' : images.Icone_prof2,
+                    'Prf' : images.Icone_prof,
                     'Cal' : images.Icone_calendrier,
                     "Seq" : images.Icone_sequence,
                     "Prj" : images.Icone_projet,
+                    "Cla" : images.Icone_classe
                     }
 
 imagesTaches =  {'Sup' : images.Icone_CdCF, 
@@ -329,8 +333,8 @@ imagesTaches =  {'Sup' : images.Icone_CdCF,
                  'DCo' : images.Icone_conception,
                  'Rea' : images.Icone_fabrication, 
                  'Val' : images.Icone_validation,
-                 'XXX' : images.Icone_preparation,
-                 'Rev' : images.Icone_evaluation,
+                 'XXX' : images.Icone_prep_sout,
+                 'Rev' : images.Icone_soutenance,
                  'R1'  : images.Icone_revue,
                  'R2'  : images.Icone_revue,
                  'R3'  : images.Icone_revue,
