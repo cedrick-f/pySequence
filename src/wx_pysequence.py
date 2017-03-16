@@ -1497,23 +1497,23 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         self.miseAJourUndo()
 
 
-#     ###############################################################################################
-#     def OnKey(self, evt):
-#         keycode = evt.GetKeyCode()
+    ###############################################################################################
+    def OnKey(self, evt):
+        keycode = evt.GetKeyCode()
 #         print "!!", keycode
-#         if keycode == wx.WXK_ESCAPE and self.pleinEcran:
-#             self.commandePleinEcran(evt)
-#              
-#         elif evt.ControlDown() and keycode == 90: # Ctrl-Z
-#             self.commandeUndo(evt)
-#  
-#         elif evt.ControlDown() and keycode == 89: # Ctrl-Y
-#             self.commandeRedo(evt)
-#              
-#         elif keycode == 46: # Suppr
-#             self.commandeDelete(evt)
-#              
-#         evt.Skip()
+        if keycode == wx.WXK_ESCAPE and self.pleinEcran:
+            self.commandePleinEcran(evt)
+              
+        elif evt.ControlDown() and keycode == 90: # Ctrl-Z
+            self.commandeUndo(evt)
+  
+        elif evt.ControlDown() and keycode == 89: # Ctrl-Y
+            self.commandeRedo(evt)
+              
+        elif keycode == 46: # Suppr
+            self.commandeDelete(evt)
+              
+        evt.Skip()
     
                 
     #############################################################################

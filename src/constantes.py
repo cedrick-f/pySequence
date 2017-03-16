@@ -803,6 +803,20 @@ BASE_FICHE_HTML_ELEVE = u"""
 </HTML>
 """
 
+BASE_FICHE_HTML_GROUPE = u"""
+<HTML>
+    <p style="text-align: center;"><font size="12"><b>Groupe</b></font></p>
+    <p id="nom">Nom-Prénom</p>
+    <img id="av" src="" alt=" ">
+    <table border="0">
+        <tbody>
+            <tr id = "ld" align="right" valign="middle">
+            <td width="110"><span style="text-decoration: underline;">Durée d'activité :</span></td>
+            </tr>
+        </tbody>
+    </table>
+</HTML>
+"""
 
 BASE_FICHE_HTML_SEANCE = u"""
 <HTML>

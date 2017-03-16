@@ -2998,13 +2998,14 @@ class Projet(BaseDoc):
             
         brancheGrp = branche.find("Groupes")
         self.groupes = []
-        for e in list(brancheGrp):
-            groupe = Groupe(self)
-            Ok = groupe.setBranche(e)
-            if not Ok : 
-                err.append(constantes.Erreur(constantes.ERR_PRJ_GROUPES))
-            
-            self.groupes.append(groupe)
+        if brancheGrp != None:
+            for e in list(brancheGrp):
+                groupe = Groupe(self)
+                Ok = groupe.setBranche(e)
+                if not Ok : 
+                    err.append(constantes.Erreur(constantes.ERR_PRJ_GROUPES))
+                
+                self.groupes.append(groupe)
         
         #
         # pour la fiche de validation
@@ -11150,7 +11151,7 @@ class Groupe(ElementBase, Eleve):
 <td><font color = "%(coul)s"><em>%(nom)s :</em></font></td>
 </tr>""" %dic)
 
-        ficheHTML = constantes.BASE_FICHE_HTML_ELEVE
+        ficheHTML = constantes.BASE_FICHE_HTML_GROUPE
         
         
         t = u""
@@ -11188,61 +11189,7 @@ class Groupe(ElementBase, Eleve):
             self.tip.AjouterCol("ld", lab, coul, bold = True)
 
             
-            #
-            # Evaluabilité
-            #
-            ev, ev_tot, seuil = self.GetEvaluabilite()
-            prj = self.GetProjetRef()
-            keys = {}
-            for disc, dic in prj._dicoIndicateurs.items():
-                keys[disc] = sorted(dic.keys())
-#            if "O8s" in keys:
-#                keys.remove("O8s")
-            lab = {}
-            for disc, dic in prj._dicoGrpIndicateur.items():
-                lab[disc] = {}
-                for part in dic.keys():
-                    lab[disc][part] = [[pourCent2(ev_tot[disc][part][0], True), True]]
-        #            totalOk = True
-                    for k in keys[disc]:
-                        if k in prj._dicoGrpIndicateur[disc][part]:
-                            if k in ev[disc][part].keys():
-                                
-        #                        totalOk = totalOk and (ler[k] >= 0.5)
-                                lab[disc][part].append([pourCent2(ev[disc][part][k][0], True), ev[disc][part][k][1]]) 
-                            else:
-        #                        totalOk = False
-                                lab[disc][part].append([pourCent2(0, True), False]) 
-                        else:
-                            lab[disc][part].append(["", True])
-                    lab[disc][part][0][1] = ev_tot[disc][part][1]#totalOk and (er >= 0.5)
- 
-            for disc, dic in prj._dicoGrpIndicateur.items():
-                for part in dic.keys():
-    #                print "   ", part
-                    for i, lo in enumerate(lab[disc][part]):
-    #                    print "      ", i, lo
-                        l, o = lo
-                        if i == 0:
-                            size = None
-                            bold = True
-                            if o:
-                                coul = coulOK
-                            else:
-                                coul = coulNON
-                        else:
-                            size = 2
-                            bold = False
-                            if not o:
-                                coul = coulNON
-                            else:
-                                coul = None
-                        self.tip.AjouterCol("le"+part, l, coul,
-                                       couleur.GetCouleurHTML(getCoulPartie(part)), size, bold)
-
-            for disc in prj._dicoIndicateurs.keys():
-                for t in keys[disc]:
-                    self.tip.AjouterCol("le", t, size = 2) 
+            
 
             self.tip.SetPage()
             
