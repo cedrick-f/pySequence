@@ -164,7 +164,7 @@ ecartTacheY = None  # Ecartement entre les tâches de phase différente
 a = b = None
 def calcH_tache(tache):
     if (tache.phase in ["R1", "R2", "R3", "S"] and tache.DiffereSuivantEleve()):
-        return max(len(tache.projet.eleves) * hRevue, hRevue)
+        return max(len(tache.projet.eleves + tache.projet.groupes) * hRevue, hRevue)
     else:
         return calcH(tache.GetDuree())
         
@@ -229,14 +229,14 @@ def DefinirZones(prj, ctx):
     #
     # Zone du tableau des élèves
     #
-    tailleZElevesV[0] = wEleves * len(prj.eleves)
-    tailleZElevesH[1] = hEleves * len(prj.eleves)
+    tailleZElevesV[0] = wEleves * len(prj.eleves + prj.groupes)
+    tailleZElevesH[1] = hEleves * len(prj.eleves + prj.groupes)
     posZElevesV[0] = posZComp[0] - tailleZElevesV[0] - ecartX/2
     tailleZElevesH[0] = posZElevesV[0]-posZElevesH[0]- ecartX/2
     tailleZElevesV[1] = posZOrganis[1] + tailleZOrganis[1] - posZElevesV[1]
     xEleves = []
     yEleves = []
-    for i in range(len(prj.eleves)):
+    for i in range(len(prj.eleves + prj.groupes)):
         xEleves.append(posZElevesV[0] + (i+0.5) * wEleves)
         yEleves.append(posZElevesH[1] + (i+0.5) * hEleves)
 
@@ -280,7 +280,7 @@ def calculCoefCalcH(prj, ctx, hm):
     for t in prj.taches:
         if t.phase in ["R1", "R2", "R3", "S"]:
             if t.DiffereSuivantEleve():
-                hrv += max(len(t.projet.eleves) * hRevue, hRevue)
+                hrv += max(len(t.projet.eleves + t.projet.groupes) * hRevue, hRevue)
             else:
                 hrf += hRevue
         else:
@@ -555,7 +555,10 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False, entete = Fal
             else:
                 l.append(e.GetNomPrenom())
         
-        
+        for i,e in enumerate(prj.groupes) : 
+            e.pts_caract = []
+            l.append(e.GetNomPrenom())
+                
         #
         # Graduation
         #
@@ -573,7 +576,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False, entete = Fal
             #
             # Barres d'évaluabilité
             #
-            for i, e in enumerate(prj.eleves):
+            for i, e in enumerate(prj.eleves + prj.groupes):
                 ev = e.GetEvaluabilite(compil = True)[1]
                 y = posZElevesH[1] + i*hEleves
     #            wr = tailleZElevesH[0]*r
@@ -600,7 +603,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False, entete = Fal
             #
             # Lignes horizontales
             #
-            for i, e in enumerate(prj.eleves):
+            for i, e in enumerate(prj.eleves + prj.groupes):
                 prj.zones_sens.append(Zone([rec[i]], obj = e))
                 ctx.set_line_width(0.003 * COEF)
                 
@@ -611,7 +614,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False, entete = Fal
             #
             # Lignes verticales
             #
-            for i, e in enumerate(prj.eleves):
+            for i, e in enumerate(prj.eleves + prj.groupes):
                 ctx.set_line_width(0.003 * COEF)
                 ligne(ctx, xEleves[i], yEleves[i],
                       xEleves[i], posZTaches[1] + tailleZTaches[1] + (i % 2)*(ecartY/2) + ecartY/2,
@@ -624,7 +627,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False, entete = Fal
             #
             e = 0.003 * COEF
             ctx.set_line_width(0.003 * COEF)
-            for i in range(len(prj.eleves)) :
+            for i in range(len(prj.eleves + prj.groupes)) :
                 y = posZTaches[1] + tailleZTaches[1] + (i % 2)*(ecartY/2) + ecartY/2
                 ctx.set_source_rgb(1,1,1)
                 ctx.move_to(xEleves[i]+e, yEleves[i]+e)
@@ -691,10 +694,10 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False, entete = Fal
                 DrawLigne(ctx, x, y)
             if (t.phase in ["R1", "R2", "R3", "S"] and t.DiffereSuivantEleve()) or t.estPredeterminee():
                 dy = hRevue
-                y = y - ((len(prj.eleves)-1)*dy)/2
+                y = y - ((len(prj.eleves + prj.groupes)-1)*dy)/2
     #            print "phase = ", t.phase
                 h = 0.006 * COEF
-                for eleve in prj.eleves:
+                for eleve in prj.eleves + prj.groupes:
                     DrawCroisementsCompetencesRevue(ctx, t, eleve, y, h)
                     y += dy
             else:
@@ -739,18 +742,18 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False, entete = Fal
         posEpreuve = prj.GetProjetRef().getPeriodeEval()
         if posEpreuve is not None and prj.position == posEpreuve:
             y0 = posZTaches[1]
-            y4 = y1+len(prj.eleves) * hRevue + 2*ecartTacheY
+            y4 = y1+len(prj.eleves + prj.groupes) * hRevue + 2*ecartTacheY
     #        y4 = y1+2*ecartTacheY + 0.015
     #        y5 = y2+2*ecartTacheY + 0.015
-            y5 = y2+len(prj.eleves) * hRevue + 2*ecartTacheY
+            y5 = y2+len(prj.eleves + prj.groupes) * hRevue + 2*ecartTacheY
 #            print y0, y1, y2, y3, y4, y5
             md1 = md2 = md3 = 0
-            for i, e in enumerate(prj.eleves):
+            for i, e in enumerate(prj.eleves + prj.groupes):
                 md1 = max(e.GetDuree(phase = "R1"), md1)
                 md2 = max(e.GetDuree(phase = "R2"), md2)
                 md3 = max(e.GetDuree(phase = "R3"), md3)
                 
-            for i, e in enumerate(prj.eleves):
+            for i, e in enumerate(prj.eleves + prj.groupes):
                 d1 = e.GetDuree(phase = "R1")
                 d2 = e.GetDuree(phase = "R2")
                 d3 = e.GetDuree(phase = "R3")
@@ -787,7 +790,7 @@ def Draw(ctx, prj, mouchard = False, pourDossierValidation = False, entete = Fal
         # Durées du projet (durées élèves)
         #
     #    tps = time.time()
-        for i, e in enumerate(prj.eleves):
+        for i, e in enumerate(prj.eleves + prj.groupes):
     #        x = posZElevesV[0]+i*tailleZElevesV[0]/len(prj.eleves)-wEleves/2
             x = xEleves[i]-wEleves*3/4
             y = posZTaches[1] + tailleZTaches[1] + (i % 2)*(ecartY/2)+ecartY/2
@@ -1150,14 +1153,14 @@ def DrawCroisementsElevesTaches(ctx, tache, y):
         
 #    if tache.phase in ["R1", "R2", "R3", "S"] and differeSuivantEleve: 
     if differeSuivantEleve: 
-        lstElv = range(len(tache.projet.eleves))
+        lstElv = range(len(tache.projet.eleves + tache.projet.groupes))
     else:
         lstElv = tache.eleves
     
 #    if tache.phase in ["R1", "R2", "R3", "S"] and differeSuivantEleve:
     if differeSuivantEleve: 
         dy = hRevue
-        y = y - ((len(tache.projet.eleves)-1)*dy)/2
+        y = y - ((len(tache.projet.eleves + tache.projet.groupes)-1)*dy)/2
         r = 0.005 * COEF
     else:
         dy = 0
@@ -1177,11 +1180,12 @@ def DrawCroisementsElevesTaches(ctx, tache, y):
               color0 = color0, color1 = color1,
               transparent = False)
         
+        eleves_groupes = tache.projet.eleves + tache.projet.groupes
         tache.GetDocument().zones_sens.append(Zone([(_x -r , y - r, 2*r, 2*r)], 
-                                                   obj = [tache.projet.eleves[i], tache]))
+                                                   obj = [eleves_groupes[i], tache]))
         
 #        tache.projet.eleves[i].rect.append((_x -r , y - r, 2*r, 2*r))
-        tache.projet.eleves[i].pts_caract.append((_x,y))
+        eleves_groupes[i].pts_caract.append((_x,y))
         y += dy
         
 

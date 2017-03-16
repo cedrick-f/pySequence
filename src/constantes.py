@@ -126,12 +126,14 @@ ERR_PRJ_TACHES = 8
 ERR_PRJ_T_VERSION = 16
 ERR_PRJ_T_TYPENS = 32
 ERR_PRJ_C_TYPENS = 64 # Code du référentiel non trouvé
+ERR_PRJ_GROUPES = 128
 
 ERR_INCONNUE = 65536
 
 ERREURS = {ERR_PRJ_EQUIPE :     u"Equipe pédagogique",
            ERR_PRJ_SUPPORT :    u"Support",
            ERR_PRJ_ELEVES :     u"Elève",
+           ERR_PRJ_GROUPES :    u"Groupe",
            ERR_PRJ_TACHES :     u"Tâche : %s",
            ERR_PRJ_T_VERSION :  u"Problème de version",
            ERR_PRJ_T_TYPENS :   u"Type d'enseignement incompatible",

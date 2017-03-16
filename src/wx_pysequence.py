@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from nt import lstat
 
 ##This file is part of pySequence
 #############################################################################
@@ -641,6 +642,12 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                                                   *constantes.IMG_SIZE_TB), 
                                    shortHelp = u"Ajout d'un élève au projet", 
                                    longHelp = u"Ajout d'un élève au projet"),
+                    
+                    54 : BoutonToolBar(u"Ajouter un groupe d'élèves",
+                                   scaleImage(images.Icone_ajout_groupe.GetBitmap(),
+                                                  *constantes.IMG_SIZE_TB), 
+                                   shortHelp = u"Ajout d'un groupe d'élèves au projet", 
+                                   longHelp = u"Ajout d'un groupe d'élèves au projet"),
                 
                     51 : BoutonToolBar(u"Ajouter un professeur", 
                                        scaleImage(images.Icone_ajout_prof.GetBitmap(),
@@ -853,6 +860,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         self.tb.RemoveTool(51)
         self.tb.RemoveTool(52)
         self.tb.RemoveTool(53)
+        self.tb.RemoveTool(54)
         
         self.tb.RemoveTool(70)
         self.tb.RemoveTool(71)
@@ -1456,6 +1464,7 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
                 self.Bind(wx.EVT_TOOL, fenDoc.projet.AjouterProf,       id=51)
                 self.Bind(wx.EVT_TOOL, fenDoc.AjouterTache,             id=52)
                 self.Bind(wx.EVT_TOOL, fenDoc.projet.InsererRevue,      id=53)
+                self.Bind(wx.EVT_TOOL, fenDoc.projet.AjouterGroupe,      id=54)
                 
             elif fenDoc.typ == "seq":
                 self.Bind(wx.EVT_TOOL, fenDoc.sequence.AjouterSeance,   id=60)
@@ -9170,7 +9179,7 @@ class PanelPropriete_Tache(PanelPropriete):
                 
             self.elevesCtrl = []
 
-            for i, e in enumerate(self.GetDocument().eleves):
+            for i, e in enumerate(self.GetDocument().eleves + self.GetDocument().groupes):
                 v = wx.CheckBox(self.pageGen, 100+i, e.GetNomPrenom())
 #                 v.SetMinSize((200,-1))
                 v.SetValue(i in self.tache.eleves)
@@ -9188,7 +9197,7 @@ class PanelPropriete_Tache(PanelPropriete):
             
             self.bsizer.Layout()
             
-            if len(self.GetDocument().eleves) > 0:
+            if len(self.GetDocument().eleves + self.GetDocument().groupes) > 0:
                 self.box.Show(True)
             else:
                 self.box.Hide()
@@ -9260,6 +9269,7 @@ class PanelPropriete_Tache(PanelPropriete):
 
     #############################################################################            
     def EvtCheckEleve(self, event):
+#         print "EvtCheckEleve"
         if event.GetEventObject() == self.tousElevesCtrl:
             for b in self.elevesCtrl:       # On coche tout
                 b.SetValue(self.tousElevesCtrl.IsChecked())
@@ -9267,11 +9277,12 @@ class PanelPropriete_Tache(PanelPropriete):
             self.tousElevesCtrl.SetValue(all([b.IsChecked() for b in self.elevesCtrl]))
         
         lst = []
-        for i in range(len(self.GetDocument().eleves)):
+        for i in range(len(self.GetDocument().eleves) + len(self.GetDocument().groupes)):
             if self.elevesCtrl[i].IsChecked():
                 lst.append(i)
         
         self.tache.eleves = lst
+#         print "    ", lst
         
         self.GetDocument().MiseAJourDureeEleves()
 #        self.GetDocument().MiseAJourTachesEleves()
@@ -10181,8 +10192,280 @@ class PanelPropriete_Personne(PanelPropriete):
         self.Refresh()
    
         
+
+
+
+####################################################################################
+#
+#   Classe définissant le panel de propriété d'une personne
+#
+####################################################################################
+class PanelPropriete_Groupe(PanelPropriete):
+    def __init__(self, parent, groupe):
+#        print "PanelPropriete_Personne", personne
+        self.groupe = groupe
+        self.parent = parent
+        
+        PanelPropriete.__init__(self, parent, objet = self.groupe)
+        
+        #
+        # Type d'enseignement
+        #
+        self.pourProjet = self.GetDocument().estProjet()
+        titre = myStaticBox(self, -1, u"Type d'enseignement")
+        titre.SetMinSize((180, 100))
+        sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
+        te = ArbreTypeEnseignement(self, self)
+        self.st_type = wx.StaticText(self, -1, "")
+        self.st_type.Show(False)
+        sb.Add(te, 1, flag = wx.EXPAND)
+        sb.Add(self.st_type, 1, flag = wx.EXPAND)
+
+        self.Bind(wx.EVT_RADIOBUTTON, self.EvtRadioBox, te)
+ 
+        te.SetStringSelection(REFERENTIELS[constantes.TYPE_ENSEIGNEMENT_DEFAUT].Enseignement[0])
+
+        self.sizer.Add(sb, (0,0), (2,1), flag = wx.EXPAND|wx.ALL, border = 2)#
+        self.cb_type = te
         
         
+
+        #
+        # Nom
+        #
+        box = myStaticBox(self, -1, u"Nom du groupe")
+        bsizer = wx.StaticBoxSizer(box, wx.VERTICAL)
+
+        textctrl = wx.TextCtrl(self, 1)
+        self.textctrln = textctrl
+    
+        bsizer.Add(textctrl, 1, flag = wx.EXPAND|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM|wx.RIGHT, border = 3)
+        self.Bind(wx.EVT_TEXT, self.EvtText, textctrl)
+        
+        self.sizer.Add(bsizer, (0,1), (1,1), flag =  wx.EXPAND|wx.ALIGN_RIGHT|wx.TOP|wx.BOTTOM|wx.LEFT, border = 2)#wx.ALIGN_CENTER_VERTICAL |
+        
+        
+        
+        #
+        # Etablissement
+        #
+        titre = myStaticBox(self, -1, u"Etablissement")
+        sb = wx.StaticBoxSizer(titre, wx.VERTICAL)
+        sh = wx.BoxSizer(wx.HORIZONTAL)
+        t = wx.StaticText(self, -1, u"Académie :")
+        sh.Add(t, flag = wx.ALIGN_CENTER_VERTICAL|wx.EXPAND)
+        
+        lstAcad = sorted([a[0] for a in constantes.ETABLISSEMENTS.values()])
+        self.cba = wx.ComboBox(self, -1, u"sélectionner une académie ...", (-1,-1), 
+                         (-1, -1), lstAcad+[u""],
+                         wx.CB_DROPDOWN
+                         |wx.CB_READONLY
+                         #| wx.TE_PROCESS_ENTER
+                         #| wx.CB_SORT
+                         )
+
+        self.Bind(wx.EVT_COMBOBOX, self.EvtComboAcad, self.cba)
+        self.Bind(wx.EVT_TEXT, self.EvtComboAcad, self.cba)
+        sh.Add(self.cba, flag = wx.ALIGN_CENTER_VERTICAL|wx.EXPAND|wx.LEFT, border = 5)
+        sb.Add(sh, flag = wx.EXPAND)
+        
+        sh = wx.BoxSizer(wx.HORIZONTAL)
+        t = wx.StaticText(self, -1, u"Ville :")
+        sh.Add(t, flag = wx.ALIGN_CENTER_VERTICAL|wx.EXPAND)
+     
+        self.cbv = SlimSelector(self, -1, u"sélectionner une ville ...", (-1,-1), 
+                         (-1, -1), [],
+                         wx.CB_DROPDOWN
+                         |wx.CB_READONLY
+                         #| wx.TE_PROCESS_ENTER
+                         #| wx.CB_SORT
+                         )
+
+        self.Bind(wx.EVT_COMBOBOX, self.EvtComboVille, self.cbv)
+        self.Bind(wx.EVT_TEXT, self.EvtComboVille, self.cbv)
+        sh.Add(self.cbv, 1,flag = wx.ALIGN_CENTER_VERTICAL|wx.LEFT, border = 5)
+        sb.Add(sh, flag = wx.EXPAND)
+        
+        t = wx.StaticText(self, -1, u"Etablissement :")
+        sb.Add(t, flag = wx.EXPAND)
+        
+        self.cbe = wx.ComboBox(self, -1, u"sélectionner un établissement ...", (-1,-1), 
+                         (-1, -1), [u"autre ..."],
+                         wx.CB_DROPDOWN
+                         |wx.CB_READONLY
+                         #| wx.TE_PROCESS_ENTER
+                         #| wx.CB_SORT
+                         )
+
+        self.Bind(wx.EVT_COMBOBOX, self.EvtComboEtab, self.cbe)
+        sb.Add(self.cbe, flag = wx.EXPAND)
+        
+        self.sizer.Add(sb, (1,1), (1,1), flag =  wx.EXPAND|wx.ALIGN_RIGHT|wx.TOP|wx.BOTTOM|wx.LEFT, border = 2)#wx.ALIGN_CENTER_VERTICAL |
+        
+        
+        #
+        # Portrait
+        #
+        isizer = self.CreateImageSelect(self, titre = u"Portrait", defaut = constantes.AVATAR_DEFAUT)
+        self.sizer.Add(isizer, (0,2), (2,1), flag =  wx.EXPAND|wx.ALIGN_RIGHT|wx.TOP|wx.BOTTOM|wx.LEFT, border = 2)#wx.ALIGN_CENTER_VERTICAL |
+                      
+        self.MiseAJour()
+        
+        self.sizer.AddGrowableRow(0)
+        self.sizer.AddGrowableCol(1)
+        
+        self.sizer.Layout()
+        
+        self.Layout()
+        
+        
+    
+            
+            
+    #############################################################################            
+    def GetDocument(self):
+        return self.groupe.GetDocument()
+
+
+    
+    
+        ######################################################################################  
+    def EvtComboAcad(self, evt = None, modif = True):
+#        print "EvtComboAcad"
+        if evt != None:
+            self.groupe.academie = evt.GetString()
+
+        lst = []
+        for val in constantes.ETABLISSEMENTS.values():
+            if self.groupe.academie == val[0]:
+                if self.groupe.GetReferentiel().getTypeEtab() == 'L':
+                    lst = val[2]
+                else:
+                    lst = val[1]
+                break
+#        print "   ", lst
+        if len(lst) > 0:
+            lst = sorted(list(set([v for e, v in lst])))
+#        print "Villes", lst
+
+        self.cbv.Set(lst)
+        self.cbv.SlimResize()
+#        self.cbv.SetSize((self.cbv.GetSizeFromTextSize(),-1))
+        self.cbv.Refresh()
+        
+        if modif:
+            self.sendEvent(modif = u"Modification de l'académie",
+                           obj = self.groupe)
+            
+    
+    ######################################################################################  
+    def EvtComboVille(self, evt = None, modif = True):
+#        print "EvtComboVille"
+        if evt != None:
+            self.groupe.ville = evt.GetString()
+#        print "   ", self.classe.ville
+        lst = []
+        for val in constantes.ETABLISSEMENTS.values():
+            if self.groupe.academie == val[0]:
+                if self.groupe.GetReferentiel().getTypeEtab() == 'L':  # Lycée
+                    lst = val[2]
+                else:
+                    lst = val[1]
+                break
+#        print "   ", lst
+        lst = sorted([e for e, v in lst if v == self.cbv.GetStringSelection()])
+#        print "   ", self.cbv.GetStringSelection()
+#        print "   Etab", lst
+        
+        self.cbe.Set(lst)
+        self.cbe.Refresh()
+        
+        if modif:
+            self.sendEvent(modif = u"Modification de la ville",
+                           obj = self.groupe)
+        
+            
+        
+    ######################################################################################  
+    def EvtComboEtab(self, evt):       
+#        if evt.GetSelection() == len(constantes.ETABLISSEMENTS_PDD):
+#            self.classe.etablissement = self.textctrl.GetStringSelection()
+#            self.AfficherAutre(True)
+#        else:
+        self.classe.etablissement = evt.GetString()
+#        self.AfficherAutre(False)
+        
+        self.sendEvent(modif = u"Modification de l'établissement",
+                       obj = self.groupe)
+        
+        
+        
+    
+    #############################################################################            
+    def EvtText(self, event):
+        self.groupe.SetNom(event.GetString())
+        
+        modif = u"Modification du nom du groupe"
+        if self.onUndoRedo():
+            self.sendEvent(modif = modif)
+        else:
+            if not self.eventAttente:
+                wx.CallLater(DELAY, self.sendEvent, modif = modif)
+                self.eventAttente = True             
+                    
+    ######################################################################################  
+    def EvtRadioBox(self, event = None, CodeFam = None):
+        """ Sélection d'un type d'enseignement
+        """
+        if event != None:
+            radio_selected = event.GetEventObject()
+            CodeFam = Referentiel.getEnseignementLabel(radio_selected.GetLabel())
+
+        self.groupe.typeEnseignement = CodeFam[0]
+        
+        self.Refresh()
+        
+        self.groupe.SetCode()
+        
+        self.sendEvent(modif = u"Modification du type d'enseignement",
+                       obj = self.groupe)
+        
+        
+
+    #############################################################################            
+    def MiseAJourTypeEnseignement(self):
+        if hasattr(self.personne, 'grille'):
+#            print "MiseAJourTypeEnseignement eleve", self.personne
+            if hasattr(self, 'SelectGrille'):
+                for sg in self.SelectGrille.values():
+                    self.bsizer.Detach(sg)
+                    sg.Destroy()
+            self.ConstruireSelectGrille()
+    
+    
+    
+    #############################################################################            
+    def MiseAJour(self, sendEvt = False, marquerModifier = True):
+#        print "MiseAJour panelPropriete Personne"
+
+        self.cb_type.SetStringSelection(self.groupe.typeEnseignement)
+        
+        self.textctrln.ChangeValue(self.groupe.nom)
+
+        self.cba.SetValue(self.groupe.academie)
+        self.EvtComboAcad(modif = False)
+        self.cbv.SetValue(self.groupe.ville)
+        self.EvtComboVille(modif = False)
+        self.cbe.SetValue(self.groupe.etablissement)
+        
+        if sendEvt:
+            self.sendEvent()
+
+
+   
+
+         
+###################################################################################
 class PanelSelectionGrille(wx.Panel):
     def __init__(self, parent, eleve, codeGrille):
         wx.Panel.__init__(self, parent, -1)
@@ -11060,13 +11343,14 @@ class ArbreProjet(ArbreDoc):
     def Ordonner(self, item):
         self.SortChildren(item)
              
-        
-
     ####################################################################################
     def OnCompareItems(self, item1, item2):
         i1 = self.GetItemPyData(item1)
         i2 = self.GetItemPyData(item2)
-        return int(i1.ordre - i2.ordre)
+        if hasattr(i1, 'ordre'):   # cas des tâches
+            return int(i1.ordre - i2.ordre)
+        else:                   # cas des élèves/groupes
+            return int(i1.id - i2.id)
 #        if i1.phase == i2.phase:
 #            
 #        else:

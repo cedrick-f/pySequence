@@ -2017,6 +2017,7 @@ class Projet(XMLelem):
         #
         self.maxEleves = 5
         self.minEleves = 3
+        self.maxGroupes = 3
         
         #
         # Généralités sur le projet
