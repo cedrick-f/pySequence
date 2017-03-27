@@ -37,7 +37,7 @@ AppCopyright=Copyright © 2011-2016 Cédrick Faury
 VersionInfoVersion = {#AppVersionInfo}
 
 ;Répertoire de base contenant les fichiers
-SourceDir=D:\Developpement\pySequence
+SourceDir=C:\Users\Cedrick\Documents\Developp\pySequence
 
 ;Repertoire d'installation
 DefaultDirName={pf}\{#AppName}
@@ -53,7 +53,7 @@ SolidCompression=yes
 PrivilegesRequired=none
 
 ;Nom du fichier généré et répertoire de destination
-OutputBaseFilename=setup_pySequence_{#AppVersionInfo}_win32
+OutputBaseFilename=setup_{#AppName}_{#AppVersionInfo}_win32
 OutputDir=releases
 
 UninstallDisplayIcon={app}\logo.ico

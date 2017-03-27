@@ -941,10 +941,146 @@ def Draw(ctx, prg, mouchard = False):
 
     
     
+#     DrawSequencesEtProjets(ctx, prg)
     
     
     
+    ###################################################################################
+    #  Séquences et Projets
+    #
+     
+    curve_rect_titre(ctx, u"Séquences et Projets",  
+                     (posZDeroul[0], posZDeroul[1], 
+                      tailleZDeroul[0], tailleZDeroul[1]), 
+                     BcoulZDeroul, IcoulZDeroul, fontZDeroul)
+     
+    y = posZTaches[1] - ecartTacheY
+ 
+    rects, rec_pos = Arranger(prg)
+ 
+    #
+    # Ligne séparatrices
+    #
+    for rec in rec_pos[1:]:
+        ctx.set_source_rgba(*BcoulZDeroul)
+        ctx.move_to(posZDeroul[0], rec[1] - ecartTacheY/2)
+        ctx.line_to(posZDeroul[0] + tailleZDeroul[0], rec[1]-ecartTacheY/2)
+        ctx.stroke()
+ 
+    #
+    # Les cadres
+    #
+    yTaches = []
+    for i, lienDoc in enumerate(prg.sequences_projets):
+        y = rects[i][1] + ecartX/5
+#         if len(yTaches) > 0 and y-yTaches[-1] < ecartX/6:
+#             y = yTaches[-1] + ecartX/6
+        yTaches.append(y)
+        yb = DrawSequenceProjet(ctx, prg, lienDoc, rects[i], y)
+     
+    # Ajustement des yTaches
+    yt = zip(yTaches, range(len(yTaches)))
+ 
+    yt.sort(key=lambda x:x[0])
+ 
+     
+    i = 1
+    while i < len(yt):
+        if yt[i][0] - yt[i-1][0] < (ecartX/5):
+            yt[i] = (yt[i-1][0] + ecartX/5, yt[i][1])
+        i += 1
+     
+     
+#     for j, (y, i) in enumerate(yt[1:]):
+#         y_1 = yt[j-1][0]
+#         if y - y_1 < (ecartX/5):
+#             print " !! ", y , y_1
+#             yt[j] = (y_1 + ecartX/5, yt[j][1])
+    yt.sort(key=lambda x:x[1])
+ 
+    try:
+        yTaches, i = zip(*yt)
+    except:
+        pass
+     
+    #
+    # Les lignes horizontales en face des sequences
+    # et les croisements Séquences/Competences
+    #
+    for i, y in enumerate(yTaches): 
+        x = rects[i][0] + rects[i][2]
+        doc = prg.sequences_projets[i].GetDoc()
+        DrawLigne(ctx, x, y)
+        DrawCroisementsCompetencesTaches(ctx, prg, doc, y)
+        if hasattr(doc, 'CI'):
+            DrawCroisementsCISeq(ctx, prg, doc, y)
+     
+    # Nom des périodes
+#    print "yh_phase", yh_phase
+     
+    fontsize = wPhases
+      
+    for i, rec in enumerate(rec_pos):
+           
+        c = BcoulPos[i]
+        ctx.set_source_rgb(c[0],c[1],c[2])
+        ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
+                              cairo.FONT_WEIGHT_NORMAL)
+         
+        show_text_rect(ctx, str(i+1), 
+                       rec, fontsizeMinMax = (fontsize, fontsize),
+                       ha = 'c', orient = "h", b = 0.2, le = 0.7,
+                       wrap = False, couper = False
+                       ) 
+ 
+ 
+ 
+
+
     
+    #
+    # Durée Totale
+    #
+    ctx.set_source_rgb(0.5,0.8,0.8)
+    ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+                              cairo.FONT_WEIGHT_BOLD)
+    
+    show_text_rect(ctx, getHoraireTxt(prg.GetDuree()), 
+                   (posZDeroul[0], posZTaches[1]+tailleZTaches[1],
+                    posZTaches[0]-posZDeroul[0], posZDeroul[1]+tailleZDeroul[1] - posZTaches[1]-tailleZTaches[1]), 
+                   ha = 'c', 
+                   orient = 'h', b = 0.3, couper = False)
+
+
+
+
+
+
+    #
+    # Informations
+    #
+    info(ctx, margeX, margeY)
+    
+
+    
+
+######################################################################################  
+def DrawLigneEff(ctx, x, y):
+    dashes = [ 0.010 * COEF,   # ink
+               0.002 * COEF,   # skip
+               0.005 * COEF,   # ink
+               0.002 * COEF,   # skip
+               ]
+    ctx.set_line_width (0.001 * COEF)
+    ctx.set_dash(dashes, 0)
+    ligne(ctx, x, posZCIV[1] + tailleZCIV[1],
+          x, y, (0.6, 0.8, 0.6))
+    ctx.set_dash([], 0)
+         
+            
+            
+######################################################################################  
+def DrawSequencesEtProjets(ctx, prg):
     ###################################################################################
     #  Séquences et Projets
     #
@@ -1035,50 +1171,96 @@ def Draw(ctx, prg, mouchard = False):
 
 
 
-
-
-    
-    #
-    # Durée Totale
-    #
-    ctx.set_source_rgb(0.5,0.8,0.8)
-    ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
-                              cairo.FONT_WEIGHT_BOLD)
-    
-    show_text_rect(ctx, getHoraireTxt(prg.GetDuree()), 
-                   (posZDeroul[0], posZTaches[1]+tailleZTaches[1],
-                    posZTaches[0]-posZDeroul[0], posZDeroul[1]+tailleZDeroul[1] - posZTaches[1]-tailleZTaches[1]), 
-                   ha = 'c', 
-                   orient = 'h', b = 0.3, couper = False)
-
-
-
-
-
-
-    #
-    # Informations
-    #
-    info(ctx, margeX, margeY)
-    
-
-    
-
 ######################################################################################  
-def DrawLigneEff(ctx, x, y):
-    dashes = [ 0.010 * COEF,   # ink
-               0.002 * COEF,   # skip
-               0.005 * COEF,   # ink
-               0.002 * COEF,   # skip
-               ]
-    ctx.set_line_width (0.001 * COEF)
-    ctx.set_dash(dashes, 0)
-    ligne(ctx, x, posZCIV[1] + tailleZCIV[1],
-          x, y, (0.6, 0.8, 0.6))
-    ctx.set_dash([], 0)
-         
-            
-            
+def DrawSequencesEtProjets2(ctx, prg):
+    ###################################################################################
+    #  Séquences et Projets
+    #
+    
+    curve_rect_titre(ctx, u"Séquences et Projets",  
+                     (posZDeroul[0], posZDeroul[1], 
+                      tailleZDeroul[0], tailleZDeroul[1]), 
+                     BcoulZDeroul, IcoulZDeroul, fontZDeroul)
+    
+    y = posZTaches[1] - ecartTacheY
+
+    rects, rec_pos = Arranger(prg)
+
+    #
+    # Ligne séparatrices
+    #
+    for rec in rec_pos[1:]:
+        ctx.set_source_rgba(*BcoulZDeroul)
+        ctx.move_to(posZDeroul[0], rec[1] - ecartTacheY/2)
+        ctx.line_to(posZDeroul[0] + tailleZDeroul[0], rec[1]-ecartTacheY/2)
+        ctx.stroke()
+
+    #
+    # Les cadres
+    #
+    yTaches = []
+    for i, lienDoc in enumerate(prg.sequences_projets):
+        y = rects[i][1] + ecartX/5
+#         if len(yTaches) > 0 and y-yTaches[-1] < ecartX/6:
+#             y = yTaches[-1] + ecartX/6
+        yTaches.append(y)
+        yb = DrawSequenceProjet(ctx, prg, lienDoc, rects[i], y)
+    
+    # Ajustement des yTaches
+    yt = zip(yTaches, range(len(yTaches)))
+
+    yt.sort(key=lambda x:x[0])
+
+    
+    i = 1
+    while i < len(yt):
+        if yt[i][0] - yt[i-1][0] < (ecartX/5):
+            yt[i] = (yt[i-1][0] + ecartX/5, yt[i][1])
+        i += 1
+    
+    
+#     for j, (y, i) in enumerate(yt[1:]):
+#         y_1 = yt[j-1][0]
+#         if y - y_1 < (ecartX/5):
+#             print " !! ", y , y_1
+#             yt[j] = (y_1 + ecartX/5, yt[j][1])
+    yt.sort(key=lambda x:x[1])
+
+    try:
+        yTaches, i = zip(*yt)
+    except:
+        pass
+    
+    #
+    # Les lignes horizontales en face des sequences
+    # et les croisements Séquences/Competences
+    #
+    for i, y in enumerate(yTaches): 
+        x = rects[i][0] + rects[i][2]
+        doc = prg.sequences_projets[i].GetDoc()
+        DrawLigne(ctx, x, y)
+        DrawCroisementsCompetencesTaches(ctx, prg, doc, y)
+        if hasattr(doc, 'CI'):
+            DrawCroisementsCISeq(ctx, prg, doc, y)
+    
+    # Nom des périodes
+#    print "yh_phase", yh_phase
+    
+    fontsize = wPhases
+     
+    for i, rec in enumerate(rec_pos):
+          
+        c = BcoulPos[i]
+        ctx.set_source_rgb(c[0],c[1],c[2])
+        ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
+                              cairo.FONT_WEIGHT_NORMAL)
+        
+        show_text_rect(ctx, str(i+1), 
+                       rec, fontsizeMinMax = (fontsize, fontsize),
+                       ha = 'c', orient = "h", b = 0.2, le = 0.7,
+                       wrap = False, couper = False
+                       ) 
+
 
 
 

@@ -454,7 +454,9 @@ class BoutonToolBar():
 ####################################################################################
 class FenetrePrincipale(aui.AuiMDIParentFrame):
     def __init__(self, parent, fichier):
-        aui.AuiMDIParentFrame.__init__(self, parent, -1, version.GetAppnameVersion(), style=wx.DEFAULT_FRAME_STYLE)
+        aui.AuiMDIParentFrame.__init__(self, parent, -1, 
+                                       version.GetAppnameVersion(), 
+                                       style=wx.DEFAULT_FRAME_STYLE)
         
         self.Freeze()
         wx.lib.colourdb.updateColourDB()

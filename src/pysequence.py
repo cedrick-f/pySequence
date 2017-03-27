@@ -1685,7 +1685,7 @@ class Sequence(BaseDoc):
     
     ######################################################################################  
     def getIcone(self):
-        return images.Icone_sequence.GetBitmap()
+        return scaleImage(images.Icone_sequence.GetBitmap())
 
             
 
@@ -2723,7 +2723,7 @@ class Projet(BaseDoc):
     
     ######################################################################################  
     def getIcone(self):
-        return images.Icone_projet.GetBitmap()
+        return scaleImage(images.Icone_projet.GetBitmap())
     
     
     ######################################################################################  
@@ -5513,7 +5513,7 @@ class Progression(BaseDoc):
         
         for lienPrj in [s for s in self.sequences_projets if isinstance(s, LienProjet)]:
             if lienPrj.projet in self.dependants:
-                nomFichier = os.path.join(self.GetPath(), lienSeq.path)
+                nomFichier = os.path.join(self.GetPath(), lienPrj.path)
                 lienPrj.projet.enregistrer(nomFichier)
 
         del self.dependants[:]
