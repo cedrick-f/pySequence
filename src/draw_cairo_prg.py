@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from cmath import rect
 
 ##This file is part of pySequence
 #############################################################################
@@ -941,98 +942,99 @@ def Draw(ctx, prg, mouchard = False):
 
     
     
-#     DrawSequencesEtProjets(ctx, prg)
+    DrawSequencesEtProjets(ctx, prg)
+#     DrawSequencesEtProjets2(ctx, prg)
     
     
     
-    ###################################################################################
-    #  Séquences et Projets
-    #
-     
-    curve_rect_titre(ctx, u"Séquences et Projets",  
-                     (posZDeroul[0], posZDeroul[1], 
-                      tailleZDeroul[0], tailleZDeroul[1]), 
-                     BcoulZDeroul, IcoulZDeroul, fontZDeroul)
-     
-    y = posZTaches[1] - ecartTacheY
- 
-    rects, rec_pos = Arranger(prg)
- 
-    #
-    # Ligne séparatrices
-    #
-    for rec in rec_pos[1:]:
-        ctx.set_source_rgba(*BcoulZDeroul)
-        ctx.move_to(posZDeroul[0], rec[1] - ecartTacheY/2)
-        ctx.line_to(posZDeroul[0] + tailleZDeroul[0], rec[1]-ecartTacheY/2)
-        ctx.stroke()
- 
-    #
-    # Les cadres
-    #
-    yTaches = []
-    for i, lienDoc in enumerate(prg.sequences_projets):
-        y = rects[i][1] + ecartX/5
-#         if len(yTaches) > 0 and y-yTaches[-1] < ecartX/6:
-#             y = yTaches[-1] + ecartX/6
-        yTaches.append(y)
-        yb = DrawSequenceProjet(ctx, prg, lienDoc, rects[i], y)
-     
-    # Ajustement des yTaches
-    yt = zip(yTaches, range(len(yTaches)))
- 
-    yt.sort(key=lambda x:x[0])
- 
-     
-    i = 1
-    while i < len(yt):
-        if yt[i][0] - yt[i-1][0] < (ecartX/5):
-            yt[i] = (yt[i-1][0] + ecartX/5, yt[i][1])
-        i += 1
-     
-     
-#     for j, (y, i) in enumerate(yt[1:]):
-#         y_1 = yt[j-1][0]
-#         if y - y_1 < (ecartX/5):
-#             print " !! ", y , y_1
-#             yt[j] = (y_1 + ecartX/5, yt[j][1])
-    yt.sort(key=lambda x:x[1])
- 
-    try:
-        yTaches, i = zip(*yt)
-    except:
-        pass
-     
-    #
-    # Les lignes horizontales en face des sequences
-    # et les croisements Séquences/Competences
-    #
-    for i, y in enumerate(yTaches): 
-        x = rects[i][0] + rects[i][2]
-        doc = prg.sequences_projets[i].GetDoc()
-        DrawLigne(ctx, x, y)
-        DrawCroisementsCompetencesTaches(ctx, prg, doc, y)
-        if hasattr(doc, 'CI'):
-            DrawCroisementsCISeq(ctx, prg, doc, y)
-     
-    # Nom des périodes
-#    print "yh_phase", yh_phase
-     
-    fontsize = wPhases
-      
-    for i, rec in enumerate(rec_pos):
-           
-        c = BcoulPos[i]
-        ctx.set_source_rgb(c[0],c[1],c[2])
-        ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
-                              cairo.FONT_WEIGHT_NORMAL)
-         
-        show_text_rect(ctx, str(i+1), 
-                       rec, fontsizeMinMax = (fontsize, fontsize),
-                       ha = 'c', orient = "h", b = 0.2, le = 0.7,
-                       wrap = False, couper = False
-                       ) 
- 
+#     ###################################################################################
+#     #  Séquences et Projets
+#     #
+#      
+#     curve_rect_titre(ctx, u"Séquences et Projets",  
+#                      (posZDeroul[0], posZDeroul[1], 
+#                       tailleZDeroul[0], tailleZDeroul[1]), 
+#                      BcoulZDeroul, IcoulZDeroul, fontZDeroul)
+#      
+#     y = posZTaches[1] - ecartTacheY
+#  
+#     rects, rec_pos = Arranger(prg)
+#  
+#     #
+#     # Ligne séparatrices
+#     #
+#     for rec in rec_pos[1:]:
+#         ctx.set_source_rgba(*BcoulZDeroul)
+#         ctx.move_to(posZDeroul[0], rec[1] - ecartTacheY/2)
+#         ctx.line_to(posZDeroul[0] + tailleZDeroul[0], rec[1]-ecartTacheY/2)
+#         ctx.stroke()
+#  
+#     #
+#     # Les cadres
+#     #
+#     yTaches = []
+#     for i, lienDoc in enumerate(prg.sequences_projets):
+#         y = rects[i][1] + ecartX/5
+# #         if len(yTaches) > 0 and y-yTaches[-1] < ecartX/6:
+# #             y = yTaches[-1] + ecartX/6
+#         yTaches.append(y)
+#         yb = DrawSequenceProjet(ctx, prg, lienDoc, rects[i], y)
+#      
+#     # Ajustement des yTaches
+#     yt = zip(yTaches, range(len(yTaches)))
+#  
+#     yt.sort(key=lambda x:x[0])
+#  
+#      
+#     i = 1
+#     while i < len(yt):
+#         if yt[i][0] - yt[i-1][0] < (ecartX/5):
+#             yt[i] = (yt[i-1][0] + ecartX/5, yt[i][1])
+#         i += 1
+#      
+#      
+# #     for j, (y, i) in enumerate(yt[1:]):
+# #         y_1 = yt[j-1][0]
+# #         if y - y_1 < (ecartX/5):
+# #             print " !! ", y , y_1
+# #             yt[j] = (y_1 + ecartX/5, yt[j][1])
+#     yt.sort(key=lambda x:x[1])
+#  
+#     try:
+#         yTaches, i = zip(*yt)
+#     except:
+#         pass
+#      
+#     #
+#     # Les lignes horizontales en face des sequences
+#     # et les croisements Séquences/Competences
+#     #
+#     for i, y in enumerate(yTaches): 
+#         x = rects[i][0] + rects[i][2]
+#         doc = prg.sequences_projets[i].GetDoc()
+#         DrawLigne(ctx, x, y)
+#         DrawCroisementsCompetencesTaches(ctx, prg, doc, y)
+#         if hasattr(doc, 'CI'):
+#             DrawCroisementsCISeq(ctx, prg, doc, y)
+#      
+#     # Nom des périodes
+# #    print "yh_phase", yh_phase
+#      
+#     fontsize = wPhases
+#       
+#     for i, rec in enumerate(rec_pos):
+#            
+#         c = BcoulPos[i]
+#         ctx.set_source_rgb(c[0],c[1],c[2])
+#         ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
+#                               cairo.FONT_WEIGHT_NORMAL)
+#          
+#         show_text_rect(ctx, str(i+1), 
+#                        rec, fontsizeMinMax = (fontsize, fontsize),
+#                        ha = 'c', orient = "h", b = 0.2, le = 0.7,
+#                        wrap = False, couper = False
+#                        ) 
+#  
  
  
 
@@ -1085,22 +1087,225 @@ def DrawSequencesEtProjets(ctx, prg):
     #  Séquences et Projets
     #
     
+
+    # Nombre de creneaux utilisés dans la progression
+    nc = prg.nbrCreneaux
+#     
+#     # Nombre de périodes utilisés dans la progression
+#     np = ref.getNbrPeriodes()    
+#     
+#     
+# #     rect = []
+# #     l = 0           # Ligne "courante"
+# #     for i, lienDoc in enumerate(prg.sequences_projets):
+# #         r = [None] * 4
+# #         p = lienDoc.GetPeriodes()
+# #         c = lienDoc.GetCrenaux()
+# #         r[0] = c[0]
+# #         r[1] = p[0]
+# #         r[2] = len(c)
+# #         r[3] = len(p)
+# #         
+# #         if i >0 and r[1] <= rect[i-1]:
+# #             l += 
+# #         
+# #         rect.append(r)
+# #          
+# #      
+# #     print "rect", rect    
+#     
+#     
+#     # Grille niveau 1
+#     grille = [[[] for c in range(nc)] for l in range(np)]
+#     for i, lienDoc in enumerate(prg.sequences_projets):
+#         p = lienDoc.GetPosition()   # Première et dernière période
+#         c = lienDoc.GetCrenaux()    # Liste des créneaux
+# 
+#         for lig in p:
+#             for col in c:
+#                 grille[lig][col].append(i)
+#     
+#     
+# #     print grille
+# 
+# #     grille_c = []
+# #     N = range(len(prg.sequences_projets))
+# #     for per in grille:
+# #         p = []
+# #         for lst in per:
+# #             c = []
+# #             for sp in N:
+# #                 if sp in lst:
+# #                     c.append(sp)
+# #                 else:
+# #                     c.append(None)
+# #             p.append(c)
+# #         grille_c.append(p)
+# #         
+#     
+#     
+#     
+# 
+#     N = range(len(prg.sequences_projets))
+#     grilles_p = []
+#     for lig in grille:
+#         lig2 = []
+#         for c, cre in enumerate(lig):
+#             cre2 = []
+#             for n in N:
+#                 if n in cre:
+#                     cre2.append(n)
+#                 else:
+#                     cre2.append(None)
+#             lig2.append(cre2)
+#         lig2 = zip(*lig2)
+#         grilles_p.append([l for l in lig2])# if not all(v is None for v in l)]) 
+#         
+#     
+# #     print "grilles_p", grilles_p
+#     
+#     # Compactage de la grille
+#     for g in grilles_p:
+#         l = 1
+#         while l < len(g):
+#             z = zip(g[l-1], g[l])
+#             if  all(x is None or y is None for x, y in z):
+#                 g[l-1] = tuple(x or y for x, y in z)
+#                 del g[l]
+#             else:
+#                 l+=1
+#     
+# #     print "grilles_p", grilles_p
+#     
+#     
+#     
+# #     # 2ème passage
+# #     for p, g in enumerate(grilles_p[1:-1]):
+# #         if len(g) > 1 and any([None in c for c in g]):
+# #              for c in zip(*g):
+# #                  if not None in 
+#         
+#     
+#     # Rectangles des sequences_projets
+#     rect = [[None,None,0,0] for i in prg.sequences_projets] # Rectangles en mode "lignes/colonnes"
+#     l_per = []                                              # Lignes marquant les débuts des périodes
+#     l = 0
+#     for p in grilles_p:
+#         l_per.append(l) 
+#         for lig in p:
+#            
+#             for c, sp in enumerate(lig):
+#                 if sp is not None:
+#                     if rect[sp][0] is None:      # X
+#                         rect[sp][0] = c
+#                     if rect[sp][1] is None:      # Y
+#                         rect[sp][1] = l
+#                     rect[sp][2] = c - rect[sp][0] + 1
+#                     rect[sp][3] = l - rect[sp][1] + 1
+#             l += 1
+        
+    rect, l_per, y_lig = prg.GetRectangles()[:3]
+
+    
+    # Mise des rectangles à l'échelle de la fiche
+    rects = [[0,0,0,0] for i in prg.sequences_projets]  # Rectangles à l'échelle du dessin
+    for sp, r in enumerate(rect):
+        # suivant X : position, largeur
+        rects[sp][0] = posZTaches[0] + tailleZTaches[0]/nc * r[0]
+        rects[sp][2] = r[2] * tailleZTaches[0]/nc
+        
+        # suivant Y : position, hauteur
+        rects[sp][1] = y_lig[r[1]]
+        rects[sp][3] = y_lig[r[1]+r[3]] - y_lig[r[1]]
+    
+#     print "y_lig", y_lig
+    
+#     # On compte les écarts à insérer
+#     n_ecarts = 0
+#     for l, y_l in enumerate(y_lig[:-1]):
+#         if y_l == y_lig[l+1]:
+#             n_ecarts += 1
+    
+#     print "n_ecarts", n_ecarts
+    
+    # On rabote les cotés (suivant X)
+    for r in rects:
+        r[0] += ecartX / 2
+        r[2] -= ecartX / 2
+        
+       
+    # On ajuste en hauteur 
+#     print "bas:", posZTaches[1] + tailleZTaches[1]
+#     ly = [_y+_h for _x, _y, _w, _h in rects]            # Liste des positions basses de chaque rectangle
+#     if len(ly) >0:
+#         Y = max(ly)
+#         print Y,
+    Y = y_lig[-1]   # Position de la dernière ligne = bas de la zone
+    if Y > 0:
+        a = (tailleZTaches[1] ) / Y  # Coefficient multiplicateur- n_ecarts*ecartY
+        
+        # On met à l'échelle les positions des lignes
+        for l in range(len(y_lig)):
+            y_lig[l] = posZTaches[1] + y_lig[l]*a
+            
+#         print "y_lig", y_lig
+        
+#         # On rajoute les écarts
+#         for l in range(len(y_lig[:-1])):
+#             if y_lig[l] == y_lig[l+1]:
+#                 for i in range(l+1, len(y_lig)):       # On décale les lignes suivantes
+#                     y_lig[i] += ecartY
+   
+        
+#         print "y_lig", y_lig
+        
+        # On met à jour les rectangles (selon Y)
+        for sp, r in enumerate(rects):
+            r[1] = y_lig[rect[sp][1]]
+            r[3] = r[3]*a
+    
+    
+    
+    
+    # Positions des périodes en Y
+    y_per = [y_lig[l] for l in l_per]+[y_lig[-1]]
+#     print rects
+#     print "y_per", y_per
+    
+    
+    
+    i = 1
+    l = []
+    while i < len(y_per)-1:
+        
+        if y_per[i] is None:
+            l.append(i)
+        else:
+            for n, j in enumerate(l):
+                y_per[j] = (n+1)*(y_per[l[-1]+1] - y_per[l[0]-1]) / (len(l)+1) + y_per[l[0]-1]
+            l = []
+        i +=1
+        
+        
+#     print "y_per", y_per        
+#     print        
+    
     curve_rect_titre(ctx, u"Séquences et Projets",  
                      (posZDeroul[0], posZDeroul[1], 
                       tailleZDeroul[0], tailleZDeroul[1]), 
                      BcoulZDeroul, IcoulZDeroul, fontZDeroul)
     
-    y = posZTaches[1] - ecartTacheY
+    
 
-    rects, rec_pos = Arranger(prg)
 
     #
     # Ligne séparatrices
     #
-    for rec in rec_pos[1:]:
+    for rec in y_per[1:]:
+        
         ctx.set_source_rgba(*BcoulZDeroul)
-        ctx.move_to(posZDeroul[0], rec[1] - ecartTacheY/2)
-        ctx.line_to(posZDeroul[0] + tailleZDeroul[0], rec[1]-ecartTacheY/2)
+        ctx.move_to(posZDeroul[0], rec)
+        ctx.line_to(posZDeroul[0] + tailleZDeroul[0], rec)
         ctx.stroke()
 
     #
@@ -1153,21 +1358,26 @@ def DrawSequencesEtProjets(ctx, prg):
     
     # Nom des périodes
 #    print "yh_phase", yh_phase
-    
-    fontsize = wPhases
      
-    for i, rec in enumerate(rec_pos):
-          
+    fontsize = wPhases
+    for i, y_p in enumerate(y_per[:-1]):
+        if y_p is None or y_per[i+1]-y_p <= 0:
+            continue
+        h = y_per[i+1]-y_p
+        r = (posZDeroul[0], y_p,
+             wPhases, h)
         c = BcoulPos[i]
         ctx.set_source_rgb(c[0],c[1],c[2])
         ctx.select_font_face (font_family, cairo.FONT_SLANT_ITALIC,
                               cairo.FONT_WEIGHT_NORMAL)
-        
-        show_text_rect(ctx, str(i+1), 
-                       rec, fontsizeMinMax = (fontsize, fontsize),
-                       ha = 'c', orient = "h", b = 0.2, le = 0.7,
-                       wrap = False, couper = False
-                       ) 
+        if ctx.font_extents()[2] < h:
+            show_text_rect(ctx, str(i+1), 
+                           r, fontsizeMinMax = (fontsize, fontsize),
+                           ha = 'c', orient = "h", b = 0.2, le = 0.7,
+                           wrap = False, couper = False
+                           ) 
+
+
 
 
 
@@ -1184,6 +1394,8 @@ def DrawSequencesEtProjets2(ctx, prg):
     
     y = posZTaches[1] - ecartTacheY
 
+
+    
     rects, rec_pos = Arranger(prg)
 
     #
@@ -1266,11 +1478,17 @@ def DrawSequencesEtProjets2(ctx, prg):
 
 ######################################################################################  
 def DrawSequenceProjet(ctx, prg, lienDoc, rect, yd):
+    """ Dessine le cadre d'une séquence ou d'un projet
+        Avec une petite flèche pour démarrer le croisement avec les compétences
+    """
     global yTaches
     doc = lienDoc.GetDoc()
     
+    e = 0.0015 * COEF   # épaisseur du cadre
     x, y, w, h = rect
     
+    y += e/4
+    h -= e/2
     
     #
     # Flèche verticale indiquant la durée de la séquence/Projet
@@ -1279,22 +1497,22 @@ def DrawSequenceProjet(ctx, prg, lienDoc, rect, yd):
        
     ctx.rectangle(x, y, wDuree, h)
     ctx.fill_preserve ()    
-    ctx.set_source_rgba(0.4,  0.4,  0.4,  1)
+    ctx.set_source_rgba(0.4, 0.4, 0.4, 1)
     ctx.set_line_width(0.0006 * COEF)
     ctx.stroke ()
     
-    ctx.set_source_rgb(0.5,0.8,0.8)
-    ctx.select_font_face (font_family, cairo.FONT_SLANT_NORMAL,
+    ctx.set_source_rgb(0.5, 0.8, 0.8)
+    ctx.select_font_face(font_family, cairo.FONT_SLANT_NORMAL,
                               cairo.FONT_WEIGHT_BOLD)
     
     if h > wDuree:
-        show_text_rect(ctx, getHoraireTxt(doc.GetDuree()), 
-                   (x, y, wDuree, h), 
-                   orient = 'v', b = 0.1)
+        orient = 'v'
     else:
-        show_text_rect(ctx, getHoraireTxt(doc.GetDuree()), 
-                   (x, y, wDuree, h), 
-                   orient = 'h', b = 0.1)
+        orient = 'h'
+        
+    show_text_rect(ctx, getHoraireTxt(doc.GetDuree()), 
+               (x, y, wDuree, h), 
+               orient = orient, b = 0.1)
     
     
     #
@@ -1307,28 +1525,29 @@ def DrawSequenceProjet(ctx, prg, lienDoc, rect, yd):
     
 #    lienSeq.pts_caract.append((x, y))
         
-    ctx.set_line_width(0.002 * COEF)
+    ctx.set_line_width(e)
 #    print "BcoulPos", BcoulPos
     rectangle_plein_doigt(ctx, x, y, w, h, ecartX/5, yd-y, 
-                    BcoulPos[doc.position[0]], 
-                    IcoulPos[doc.position[0]], 
-                    0.9)
+                          BcoulPos[doc.position[0]], 
+                          IcoulPos[doc.position[0]], 
+                          0.9)
     
     #
     # Icone du type de document
     #
-    ctx.save()
-#     if doc.nom_obj == u"Séquence":
-#         bmp = images.Icone_sequence.GetBitmap()
-#     else:
-#         bmp = images.Icone_projet.GetBitmap()
-    bmp = doc.getIcone()
-    image = wx.lib.wxcairo.ImageSurfaceFromBitmap(bmp) 
-    ctx.translate(x+ecartX/5, y+ecartY/5)
-    ctx.scale(hTacheMini/30, hTacheMini/30)
-    ctx.set_source_surface(image, 0, 0)
-    ctx.paint ()
-    ctx.restore()
+    if h > hTacheMini:
+        ctx.save()
+    #     if doc.nom_obj == u"Séquence":
+    #         bmp = images.Icone_sequence.GetBitmap()
+    #     else:
+    #         bmp = images.Icone_projet.GetBitmap()
+        bmp = doc.getIconeDraw()
+        image = wx.lib.wxcairo.ImageSurfaceFromBitmap(bmp) 
+        ctx.translate(x+ecartX/5, y+ecartY/5)
+        ctx.scale(hTacheMini/120, hTacheMini/120)
+        ctx.set_source_surface(image, 0, 0)
+        ctx.paint ()
+        ctx.restore()
         
     
     #

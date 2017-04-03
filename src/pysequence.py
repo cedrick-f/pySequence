@@ -97,7 +97,7 @@ from util_path import toFileEncoding, toSystemEncoding, FILE_ENCODING, SYSTEM_EN
 # Widgets partagés
 # des widgets wx évolués "faits maison"
 from widgets import Variable, VariableCtrl, VAR_REEL_POS, EVT_VAR_CTRL, VAR_ENTIER_POS, \
-                    messageErreur, getNomFichier, pourCent2, \
+                    messageErreur, getNomFichier, pourCent2, pstdev, mean, \
                     rallonge, remplaceCode2LF, dansRectangle, \
                     StaticBoxButton, TextCtrl_Help, CloseFenHelp, \
                     remplaceLF2Code, messageInfo, messageYesNo, enregistrer_root, \
@@ -549,6 +549,10 @@ class ElementBase():
     
     ######################################################################################  
     def getIcone(self):
+        return wx.NullBitmap
+    
+    ######################################################################################  
+    def getIconeDraw(self):
         return wx.NullBitmap
     
 #     ######################################################################################  
@@ -1245,7 +1249,9 @@ class BaseDoc(ElementBase, ElementAvecLien):
     ######################################################################################  
     def __lt__(self, doc):
         if self.GetPosition()[0] == doc.GetPosition()[0]:
-            return self.GetPosition()[-1]-self.GetPosition()[0] < doc.GetPosition()[-1]-doc.GetPosition()[0]
+            dp0 = self.GetPosition()[-1]-self.GetPosition()[0]
+            dp1 = doc.GetPosition()[-1]-doc.GetPosition()[0]
+            return dp0 < dp1
         else:
             return self.GetPosition()[0] < doc.GetPosition()[0]
         
@@ -1687,7 +1693,9 @@ class Sequence(BaseDoc):
     def getIcone(self):
         return scaleImage(images.Icone_sequence.GetBitmap())
 
-            
+    ######################################################################################  
+    def getIconeDraw(self):
+        return scaleImage(images.Icone_sequence.GetBitmap(), 100,100)
 
     ######################################################################################  
     def getBranche(self):
@@ -2725,6 +2733,9 @@ class Projet(BaseDoc):
     def getIcone(self):
         return scaleImage(images.Icone_projet.GetBitmap())
     
+    ######################################################################################  
+    def getIconeDraw(self):
+        return scaleImage(images.Icone_projet.GetBitmap(), 100, 100)
     
     ######################################################################################  
     def GetPtCaract(self): 
@@ -3125,7 +3136,8 @@ class Projet(BaseDoc):
             lst = []
             for t in self.taches:
                 if t.phase in TOUTES_REVUES_EVAL_SOUT:
-                    lst.append(t.branche)
+                    if hasattr(t, 'branche'):
+                        lst.append(t.branche)
             for a in reversed(lst):
                 self.SupprimerTache(item = a, verrouiller = False, doUndo = False)
         
@@ -3741,6 +3753,7 @@ class Projet(BaseDoc):
     ######################################################################################  
     def OrdonnerEleves(self):
 #         print "OrdonnerEleves"
+        i = -1
         for i,e in enumerate(self.eleves):
             e.id = i
 #             print "   e", i
@@ -4400,7 +4413,164 @@ class Progression(BaseDoc):
         """
         return len(self.GetPositions())
 
+    
+    ######################################################################################  
+    def GetRectangles(self):
+        """ Calcul l'arrangement des rectangles représentant les Séquences et les Projets
+            Renvoie la liste des rectangles x, y, w, h
+            Dans une grille : Période-Lignes-Colonnes
+                [
+                [(None, None, None)],      Période 0, Ligne 0
+                
+                [(0, 0, 0),                Période 1, Ligne 1
+                (1, 1, 2)],                Période 1, Ligne 2
+                
+                [(1, 1, 2),                Période 2, Ligne 3
+                (3, 3, 2)],                Période 2, Ligne 4
+                
+                [(None, None, 2)],         Période 3, Ligne 5
+                ]
+                
+                
+            Renvoie :
+            : les rectangles
+            : la liste des lignes correspondant au début d'une période
+            : les positions "horaire" des lignes
+            : un code d'erreur (anomalie détectée)
+        """
+        err = 0
+        
+        
+        ref = self.classe.referentiel
+        
+        # Nombre de creneaux utilisés dans la progression
+        nc = self.nbrCreneaux
+        
+        # Nombre de périodes utilisés dans la progression
+        np = ref.getNbrPeriodes()  
+    
+        # Grille niveau 1
+        grille = [[[] for c in range(nc)] for l in range(np)]
+        for i, lienDoc in enumerate(self.sequences_projets):
+            p = lienDoc.GetPosition()   # Première et dernière période
+            c = lienDoc.GetCrenaux()    # Liste des créneaux
+    
+            for lig in p:
+                for col in c:
+                    grille[lig][col].append(i)
+        
+        
+        # Détection d'anomalie
+        for lig in grille:
+            n = [len(c) for c in lig]
+            if len(set(n)) > 1:
+                err |= 2
+                break
+        
+        
+        # Grille  Périodes-Lignes-Colonnes (brute)
+        N = range(len(self.sequences_projets))
+        grilles_p = []
+        for lig in grille:
+            lig2 = []
+            for c, cre in enumerate(lig):
+                cre2 = []
+                for n in N:
+                    if n in cre:
+                        cre2.append(n)
+                    else: 
+                        cre2.append(None)
+                lig2.append(cre2)
+            lig2 = zip(*lig2)
+            grilles_p.append([l for l in lig2]) 
 
+        
+        # Compactage de la grille
+        for g in grilles_p:
+            l = 1
+            while l < len(g):
+                z = zip(g[l-1], g[l])
+                if  all(x is None or y is None for x, y in z):
+                    g[l-1] = tuple(x or y for x, y in z)
+                    del g[l]
+                else:
+                    l+=1
+
+
+        # Détection d'anomalie
+        for p in grilles_p:
+            for lig in p:
+                if None in lig:
+                    err |= 1
+                    break
+            else:
+                continue
+            break
+        
+        
+        # Rectangles des sequences_projets
+        rect = [[None,None,0,0] for i in self.sequences_projets] # Rectangles en mode "lignes/colonnes"
+        l_per = []                                               # Lignes marquant les débuts des périodes
+        l = 0
+        for p in grilles_p:
+            l_per.append(l) 
+            for lig in p:
+               
+                for c, sp in enumerate(lig):
+                    if sp is not None:
+                        if rect[sp][0] is None:      # X
+                            rect[sp][0] = c
+                        if rect[sp][1] is None:      # Y
+                            rect[sp][1] = l
+                        rect[sp][2] = c - rect[sp][0] + 1
+                        rect[sp][3] = l - rect[sp][1] + 1
+                l += 1
+            
+            
+        # Calcul des positions "horaire" des lignes
+        h_lig = [0]*(l+1)                                   # Positions en "y" des lignes
+        for sp, r in enumerate(rect):
+            h = self.sequences_projets[sp].GetDuree() / r[2] * nc
+            suiv = r[1] + r[3]
+            m = max(h_lig[r[1]]+h, h_lig[suiv])     # Position suivante
+            for i in range(suiv, len(h_lig)-1):     # On "repousse" les lignes suivantes
+                h_lig[i] = m
+            h_lig[-1] = max(m, h_lig[-1])
+
+#         print "h_lig", h_lig
+            
+        # Détection d'anomalie
+        l = 0
+        h_per = [h_lig[l] for l in l_per]+[h_lig[-1]]
+        d_per = [h-h_per[i] for i, h in enumerate(h_per[1:])]
+        m = mean(d_per)
+        if m > 0:
+#             print d_per, " >> ", pstdev(d_per) / m
+            if pstdev(d_per) / m > 0.5:
+                err |= 4
+            
+        
+        
+        return rect, l_per, h_lig, err
+        
+        
+    ######################################################################################  
+    def Analyser(self):
+        """ Analyse la cohérence de la répartition des Séquences et des Projets
+            Renvoie une liste de messages d'erreur
+        """
+        messages = {0 : u"Aucune anomalie détectée.",
+                    1 : u"Certains créneaux horaire ne sont pas utilisés.",
+                    2 : u"Certains Séquences ou Projets se chevauchent.",
+                    4 : u"Important déséquilibre dans la répartition des durées par période."}
+        
+        
+        err = self.GetRectangles()[-1]
+        
+        return [m for e, m in messages.items() if e & err]
+    
+    
+    
     ######################################################################################  
     def GetDuree(self):
         """ Renvoie la durée totale des Séquence et des Projets de la Progression
@@ -5058,7 +5228,9 @@ class Progression(BaseDoc):
 
     ######################################################################################  
     def VerifPb(self):
-        """ Vérification des conflits de prérequis (en termes de Savoirs)
+        """ Vérification d'éventuelles problèmes et anomalies dans la Progression :
+             - conflits de Prérequis de séquence (en termes de Savoirs)
+             - anomalies de répartition des Séquences et Projets
         """
         obj = []
         for lienseq in [s for s in self.sequences_projets if isinstance(s, LienSequence)]:
@@ -5075,7 +5247,27 @@ class Progression(BaseDoc):
             lienseq.SignalerPb(pb)
             obj.extend(objectifs)
 
-            
+
+        self.SignalerPb(self.Analyser())
+        
+        
+    ######################################################################################  
+    def SignalerPb(self, pb):
+        """
+        """
+        if hasattr(self, 'brancheSeq'):
+            bg_color = self.arbre.GetBackgroundColour()
+            if len(pb) == 0:
+                self.arbre.SetItemBackgroundColour(self.brancheSeq, bg_color)
+                self.SetToolTip(self.intitule)
+            else:
+                self.arbre.SetItemBackgroundColour(self.brancheSeq, wx.NamedColour("LIGHT PINK"))
+                message = u"La réparttion des Séquences et des Projets pendant l'année\n" \
+                          u"présente des anomalies :\n"
+                self.SetToolTip(message + u"\n".join([u" - "+p for p in pb]))
+  
+  
+  
     ########################################################################################################
     def OuvrirFichierSeq(self, nomFichier):
 #        print "///", nomFichier
@@ -5539,7 +5731,25 @@ class ElementProgression():
     
     ######################################################################################  
     def __lt__(self, doc):
-        return self.GetDoc() < doc.GetDoc()
+        doc0 = self.GetDoc()
+        doc1 = doc.GetDoc()
+        if doc0.GetPosition()[0] == doc1.GetPosition()[0]:
+            dp0 = doc0.GetPosition()[-1]-doc0.GetPosition()[0]
+            dp1 = doc1.GetPosition()[-1]-doc1.GetPosition()[0]
+            if dp0 == dp1:
+                return dp0.GetNbCrenaux() < dp1.GetNbCrenaux()
+            else:
+                return dp0 < dp1
+        else:
+            return doc0.GetPosition()[0] < doc1.GetPosition()[0]
+        
+    
+
+#     ######################################################################################  
+#     def comp(self, lienSeq):
+#         """
+#         """
+#         return self.GetDoc().position[0] > lienSeq.GetDoc().position[0]
 
 
     ######################################################################################  
@@ -5553,6 +5763,27 @@ class ElementProgression():
     ######################################################################################  
     def GetCrenaux(self):
         return list(range(self.creneaux[0], self.creneaux[1]+1))
+    
+    ######################################################################################  
+    def GetNbCrenaux(self):
+        return len(self.GetCrenaux())
+    
+    ######################################################################################  
+    def GetNbrPeriodes(self):
+        return self.GetDoc().GetNbrPeriodes()
+        
+    ######################################################################################  
+    def GetDuree(self):
+        return self.GetDoc().GetDuree()
+    
+    
+    ######################################################################################  
+    def GetPeriodes(self):
+        return self.GetDoc().GetPositions()
+    
+    ######################################################################################  
+    def GetPosition(self):
+        return self.GetDoc().position
     
     ######################################################################################  
     def getBranche(self):
@@ -5607,11 +5838,7 @@ class LienSequence(ElementBase, ElementProgression):
     
 
         
-    ######################################################################################  
-    def comp(self, lienSeq):
-        """
-        """
-        return self.sequence.position[0] > lienSeq.sequence.position[0]
+    
     
 
     
@@ -5755,12 +5982,6 @@ class LienProjet(ElementBase, ElementProgression):
 
         
         
-    ######################################################################################  
-    def comp(self, lienSeq):
-        """
-        """
-        return self.projet.position[0] > lienSeq.projet.position[0]
-    
 
     
     ######################################################################################  

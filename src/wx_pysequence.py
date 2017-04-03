@@ -1137,8 +1137,8 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         else:
             ok = register.Register(util_path.PATH)
         if not ok:
-            messageErreur(self, u"Accés refusé",
-                          u"Accés à la base de registre refusé !\n\n" \
+            messageErreur(self, u"Accès refusé",
+                          u"Accès à la base de registre refusé !\n\n" \
                           u"Redémarrer pySequence en tant qu'administrateur.")
         else:
             self.MiseAJourMenu()
@@ -6056,7 +6056,7 @@ class PanelPropriete_Classe(PanelPropriete):
 #                self.classe.familleEnseignement = constantes.FamilleEnseignement[self.classe.typeEnseignement]
 #                break
         
-# #         self.classe.MiseAJourTypeEnseignement()
+        self.classe.MiseAJourTypeEnseignement()
         self.classe.doc.MiseAJourTypeEnseignement()
         self.classe.doc.SetPosition(self.classe.doc.position)
 #        self.classe.doc.MiseAJourTypeEnseignement(fam != self.classe.familleEnseignement)
@@ -10953,12 +10953,16 @@ class ArbreDoc(CT.CustomTreeCtrl):
         
     ######################################################################################              
     def OnToolTip(self, event):
+#         print "OnToolTip"
         node = event.GetItem()
         data = self.GetPyData(node)
         if (hasattr(data, 'toolTip') and isstring(data.toolTip)):
             event.SetToolTip(wx.ToolTip(data.toolTip))
         elif isstring(data):
-            event.SetToolTip(wx.ToolTip(self.GetItemText(node)))
+            if data == "Seq":
+                event.SetToolTip(wx.ToolTip(self.doc.toolTip))
+            else:
+                event.SetToolTip(wx.ToolTip(self.GetItemText(node)))
         else:
             event.Skip()
         
