@@ -521,7 +521,7 @@ def Draw(ctx, prg, mouchard = False):
     # Essai ...
 #     prg.GetOrganisation()
     
-#     gabarit() # à virer (pour générer image gabarit
+    gabarit() # à virer (pour générer image gabarit
     
 #    DefinirCouleurs(prg.GetNbrPeriodes())
 #    print "DefinirCouleurs", IcoulPos
@@ -782,7 +782,7 @@ def Draw(ctx, prg, mouchard = False):
     # Bilan des compétences abordées
     #
     dicComp, nbrComp = prg.GetCompetencesAbordees()
-    DrawBoutonCompetence(ctx, prg, None, dicComp, (posZComp[1] + htitre + posZOrganis[1])/2 , 
+    DrawBoutonCompetence(ctx, prg, None, dicComp, posZOrganis[1] + htitre, 
                          h = posZComp[1] - posZOrganis[1] - ecartY*3/2 - htitre, nbr = nbrComp)
         
       
@@ -1689,6 +1689,9 @@ def DrawCroisementsCISeq(ctx, prg, seq, y):
 ######################################################################################  
 def DrawBoutonCompetence(ctx, prg, seq, listComp, y, h = None, nbr = None):
     """ Dessine les petits rectangles des compétences abordées dans la Séquence
+    
+    : nbr : nombre de fois que chaque compétence est abordée (pour bilan seulement)
+    
     """
 #     print "DrawBoutonCompetence", seq, listComp, nbr
     
@@ -1696,7 +1699,7 @@ def DrawBoutonCompetence(ctx, prg, seq, listComp, y, h = None, nbr = None):
         return
     
     if h == None: # Toujours sauf pour les revues
-        h = 1.5*wColComp
+        h = 0.6*wColComp
         
     if nbr == None:
         nbr = [1] * (len(listComp)+1)
@@ -1730,7 +1733,7 @@ def DrawBoutonCompetence(ctx, prg, seq, listComp, y, h = None, nbr = None):
             for a, i in enumerate(lc):
                 if i in listComp:
                     H = nbr[listComp.index(i)] * dh
-                    rect = (x+a*dx, y+h/2-H, dx, H)
+                    rect = (x+a*dx, y+h-H, dx, H)
                     ctx.set_source_rgba(*ICoulComp[cComp[k2]])
                     ctx.rectangle(*rect)
                     ctx.fill_preserve ()
@@ -1738,7 +1741,7 @@ def DrawBoutonCompetence(ctx, prg, seq, listComp, y, h = None, nbr = None):
                     ctx.stroke()
                 else:
                     if lig:
-                        rect = (x+a*dx, y-h/2, dx, h)
+                        rect = (x+a*dx, y, dx, h)
                         ctx.set_source_rgba (1, 1, 1, 0)
                         ctx.move_to(rect[0], rect[1])
                         ctx.rel_line_to(0, rect[3])

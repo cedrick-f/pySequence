@@ -1214,11 +1214,11 @@ class FenetrePrincipale(aui.AuiMDIParentFrame):
         print "ouvrirDoc", nomFichier
         if doc.GetType() == 'seq':
             child = FenetreSequence(self, sequence = doc)
-            child.SetIcon(constantes.dicimages["Seq"].GetIcon())
+            child.SetIcon(scaleIcone(constantes.dicimages["Seq"].GetBitmap()))
             doc
         elif doc.GetType() == 'prj':
             child = FenetreProjet(self, projet = doc)
-            child.SetIcon(constantes.dicimages["Prj"].GetIcon())
+            child.SetIcon(scaleIcone(constantes.dicimages["Prj"].GetBitmap()))
         child.finaliserOuverture()
         
         child.definirNomFichierCourant(nomFichier)
@@ -3223,13 +3223,13 @@ class FenetreProgression(FenetreDocument):
             self.progression.undoStack.do(event.GetModif())
         
         if event.GetDocument() == self.progression:
-#            self.progression.VerifPb()
+            self.progression.VerifPb()
             if event.GetDraw():
                 wx.CallAfter(self.fiche.Redessiner)
             self.MarquerFichierCourantModifie()
             
         elif event.GetDocument() == self.classe:
-#            self.progression.VerifPb()
+            self.progression.VerifPb()
             if event.GetDraw():
                 wx.CallAfter(self.fiche.Redessiner)
             self.MarquerFichierCourantModifie()

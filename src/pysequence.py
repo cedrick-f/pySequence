@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from cmath import rect
 
 
 
@@ -4453,19 +4454,13 @@ class Progression(BaseDoc):
         grille = [[[] for c in range(nc)] for l in range(np)]
         for i, lienDoc in enumerate(self.sequences_projets):
             p = lienDoc.GetPosition()   # Première et dernière période
+            if p[0] == p[-1]:
+                p = [p[0]]
             c = lienDoc.GetCrenaux()    # Liste des créneaux
     
             for lig in p:
                 for col in c:
                     grille[lig][col].append(i)
-        
-        
-        # Détection d'anomalie
-        for lig in grille:
-            n = [len(c) for c in lig]
-            if len(set(n)) > 1:
-                err |= 2
-                break
         
         
         # Grille  Périodes-Lignes-Colonnes (brute)
@@ -4474,16 +4469,18 @@ class Progression(BaseDoc):
         for lig in grille:
             lig2 = []
             for c, cre in enumerate(lig):
-                cre2 = []
-                for n in N:
-                    if n in cre:
-                        cre2.append(n)
-                    else: 
-                        cre2.append(None)
-                lig2.append(cre2)
+                lig2.append([n if n in cre else None for n in N ])
+#                 cre2 = []
+#                 for n in N:
+#                     if n in cre:
+#                         cre2.append(n)
+#                     else: 
+#                         cre2.append(None)
+#                 lig2.append(cre2)
             lig2 = zip(*lig2)
             grilles_p.append([l for l in lig2]) 
 
+#         print "grilles_p", grilles_p
         
         # Compactage de la grille
         for g in grilles_p:
@@ -4491,12 +4488,14 @@ class Progression(BaseDoc):
             while l < len(g):
                 z = zip(g[l-1], g[l])
                 if  all(x is None or y is None for x, y in z):
-                    g[l-1] = tuple(x or y for x, y in z)
+                    g[l-1] = tuple(y or x for x, y in z) # Ne pas inverser x et y car 0 or None renvoie None
                     del g[l]
                 else:
                     l+=1
 
-
+#         print "grilles_p", grilles_p
+        
+        
         # Détection d'anomalie
         for p in grilles_p:
             for lig in p:
@@ -4526,7 +4525,29 @@ class Progression(BaseDoc):
                         rect[sp][3] = l - rect[sp][1] + 1
                 l += 1
             
+#         print "rect", rect
+        
+        
+        # Détection d'anomalie : croisement
+        gr = [[0 for cc in range(nc)] for ll in range(l)]
+        for r in rect:
+            for lg in range(r[1], r[1]+r[3]):
+                for cl in range(r[0], r[0]+r[2]):
+                    gr[lg][cl] += 1
+                    if gr[lg][cl] > 1:
+                        err |= 2
+                        break
+                else:
+                    continue
+                break
+            else:
+                continue
+            break
+                
             
+            
+            
+        
         # Calcul des positions "horaire" des lignes
         h_lig = [0]*(l+1)                                   # Positions en "y" des lignes
         for sp, r in enumerate(rect):
