@@ -1,4 +1,4 @@
-#Installation de pySéquence sous Ubuntu
+# Installation de pySéquence sous Ubuntu #
 pySéquence fonctionne sous Ubuntu avec les restrictions suivantes :
  * n'a pas encore été testé en profondeur : il y a sans doute pas mal de bugs
  * impossibilité de générer les grilles d'évaluation (elles sont au format Microsoft Excel, je n'y peux rien !)
