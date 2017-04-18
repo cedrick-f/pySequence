@@ -4,7 +4,7 @@ _sous Windows, à partir des sources_
 
 
 ## Préparation ##
---
+--------------
 
 Désinstaller toute ancienne version de Python, ainsi que les modules.
 Nettoyer le registre (ex CCleaner)
@@ -29,11 +29,11 @@ http://downloads.sourceforge.net/wxpython/wxPython3.0-win32-3.0.2.0-py27.exe
 
 http://wxpython.org/cairo/py2cairo-1.10.0.win32-py2.7.exe
 
-!!! http://www.salsabeatmachine.org/python/pycairo-win32-packages.html ???
+(en cas de problème, autre version : http://www.salsabeatmachine.org/python/pycairo-win32-packages.html)
 
 Ajouter au PATH (variables d’environnement) :
-•	C:\Python27\Lib\site-packages\wx-3.0-msw
-•	C:\Python27\Lib\site-packages\wx-3.0-msw\wx
+ * C:\Python27\Lib\site-packages\wx-3.0-msw
+ * C:\Python27\Lib\site-packages\wx-3.0-msw\wx
 
 ### pywin32 ###
 220
@@ -45,6 +45,8 @@ https://sourceforge.net/projects/pywin32/files/pywin32/Build%20220/pywin32-220.w
 
 
 ## Installations avec pip ##
+-------------------------
+
 Depuis une fenêtre de commande :
 
     cd c:\python27\scripts
@@ -55,18 +57,18 @@ Depuis une fenêtre de commande :
 
     pip install pyenchant
 
-### reportlab 	pillow ###
-3.3.0	3.2.0
+### reportlab -	pillow ###
+3.3.0   -	3.2.0
 
     pip install reportlab
 
 ### xhtml2pdf 	six	 pyPdf2	 html2lib ###
-0.0.6	 1.10.0	1.25.1	0.99999999
+0.0.6   -	 1.10.0 -    1.25.1-    0.99999999
 
     pip install xhtml2pdf
 
 ### xlrd	xlwt ###
-0.9.4	1.0.0
+0.9.4   -	1.0.0
 
     pip install xlrd
     pip install xlwt
