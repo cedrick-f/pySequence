@@ -52,6 +52,14 @@ Depuis une fenêtre de commande :
     cd c:\python27\scripts
     pip install --upgrade pip
 
+### Beautifulsoup ###
+4.4.1
+
+    pip install beautifulsoup4
+    
+### markdown ###
+    pip install markdown
+
 ### pyenchant ###
 1.6.6
 
@@ -62,10 +70,11 @@ Depuis une fenêtre de commande :
 
     pip install reportlab
 
-### xhtml2pdf 	six	 pyPdf2	 html2lib ###
-0.0.6   -	 1.10.0 -    1.25.1-    0.99999999
+### xhtml2pdf 	six	 pyPdf2	 html5lib ###
+0.0.6   -	 1.10.0 -    1.25.1-    1.0b8
 
     pip install xhtml2pdf
+    pip install html5lib==1.0b8
 
 ### xlrd	xlwt ###
 0.9.4   -	1.0.0
@@ -83,10 +92,7 @@ Depuis une fenêtre de commande :
 
     pip install pyperclip
 
-### Beautifulsoup ###
-4.4.1
 
-    pip install beautifulsoup4
 
 ### rsvg (en cours de développement) ###
 (source : https://github.com/jmcb/python-rsvg-dependencies)
