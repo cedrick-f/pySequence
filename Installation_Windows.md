@@ -12,9 +12,9 @@ Nettoyer le registre (ex CCleaner)
 Package redistribuable Microsoft Visual C++ 2008 (x86)
 https://www.microsoft.com/fr-FR/download/details.aspx?id=29
 
-## Installations avec installeur
+## Installations avec installeurs Windows ##
 ### Python ###
-2.7.11 ou plus
+2.7.11 ou plus (mais pas Python 3 !)
 
 https://www.python.org/downloads/
 
@@ -65,12 +65,12 @@ Depuis une fenêtre de commande :
 
     pip install pyenchant
 
-### reportlab -	pillow ###
+### reportlab (+ pillow) ###
 3.3.0   -	3.2.0
 
     pip install reportlab
 
-### xhtml2pdf 	six	 pyPdf2	 html5lib ###
+### xhtml2pdf 	(+ six, pyPdf2, html5lib) ###
 0.0.6   -	 1.10.0 -    1.25.1-    1.0b8
 
     pip install xhtml2pdf
