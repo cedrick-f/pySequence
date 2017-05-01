@@ -71,7 +71,7 @@ FILE_ENCODING = sys.getfilesystemencoding()
 
 
 class SingleInstApp(wx.App):
-    u"""Application à instance unique
+    u"""Application à instance unique :
         Vérifie qu'aucune autre instance de pySéquence n'est lancée.
         Si une autre instance est déjà lancée
         et qu'un nom de fichier est passé en argument
@@ -254,7 +254,7 @@ class MySplashScreen(wx.SplashScreen):
         bmp = self.GetSplash()
         wx.SplashScreen.__init__(self, bmp,
                                      wx.SPLASH_CENTRE_ON_SCREEN | wx.SPLASH_TIMEOUT,
-                                     50000, None, -1,
+                                     6000, None, -1,
                                      style = wx.BORDER_NONE | wx.STAY_ON_TOP)
         self.Bind(wx.EVT_CLOSE, self.OnClose)
         self.fc = wx.CallLater(2, self.ShowMain)
@@ -441,36 +441,38 @@ def SendMessage(message, port):
         return True
 
 # Pour obtenir les log en cas d'erreur 
-# iCCP: known incorrect sRGB profile
-# Pour corriger :
-# GIMP
-# To remove the embedded profile, go to the menu Image > Mode > Assign Color Profile and set it to RGB workspace(sRGB built-in).
-# To change the embedded profile, go to Image > Mode > Convert to Color Profile where you can choose a profile you already have loaded or load a new one from disk. 
+#  * iCCP: known incorrect sRGB profile
+#         Pour corriger :
+#             GIMP
+#             To remove the embedded profile, go to the menu Image > Mode > Assign Color Profile and set it to RGB workspace(sRGB built-in).
+#             To change the embedded profile, go to Image > Mode > Convert to Color Profile where you can choose a profile you already have loaded or load a new one from disk. 
+#
+#  * ou autre type d'erreur qui n'apparait pas dans le traceback
 
-# import traceback
-# class LogPrintStackStderr(wx.PyLog):
-#     def doPrint( self, *args, **kwargs ):
-#         sys.stderr.write( u': '.join(u'{}'.format(a) for a in args) )
-#         sys.stderr.write( '\n' )
-#         for k, v in kwargs.iteritems():
-#             sys.stderr.write( u'{}: {}\n'.format(k,v) )
-#     
-#     def DoLogText( self, *args, **kwargs ):
-#         sys.stderr.write( '*' * 78 + '\n' )
-#         traceback.print_stack( file=sys.stderr )
-#         self.doPrint( *args, **kwargs )
-# 
-#     def DoLogRecord( self, *args, **kwargs ):
-#         sys.stderr.write( '*' * 78 + '\n' )
-#         traceback.print_stack( file=sys.stderr )
-#         self.doPrint( *args, **kwargs )
-#         
-#     def DoLogTextAtLevel( self, *args, **kwargs ):
-#         sys.stderr.write( '*' * 78 + '\n' )
-#         traceback.print_stack( file=sys.stderr )
-#         self.doPrint( *args, **kwargs )
+import traceback
+class LogPrintStackStderr(wx.PyLog):
+    def doPrint( self, *args, **kwargs ):
+        sys.stderr.write( u': '.join(u'{}'.format(a) for a in args) )
+        sys.stderr.write( '\n' )
+        for k, v in kwargs.iteritems():
+            sys.stderr.write( u'{}: {}\n'.format(k,v) )
+     
+    def DoLogText( self, *args, **kwargs ):
+        sys.stderr.write( '*' * 78 + '\n' )
+        traceback.print_stack( file=sys.stderr )
+        self.doPrint( *args, **kwargs )
+ 
+    def DoLogRecord( self, *args, **kwargs ):
+        sys.stderr.write( '*' * 78 + '\n' )
+        traceback.print_stack( file=sys.stderr )
+        self.doPrint( *args, **kwargs )
+         
+    def DoLogTextAtLevel( self, *args, **kwargs ):
+        sys.stderr.write( '*' * 78 + '\n' )
+        traceback.print_stack( file=sys.stderr )
+        self.doPrint( *args, **kwargs )
         
 if __name__ == '__main__':
     app = SingleInstApp(False)
-#     wx.Log.SetActiveTarget( LogPrintStackStderr() )
+    wx.Log.SetActiveTarget( LogPrintStackStderr() )
     app.MainLoop()

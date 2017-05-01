@@ -596,7 +596,7 @@ class ElementBase():
 
     ######################################################################################  
     def EnrichiSVG(self, doc, seance = False):
-        """ Enrichissement de l'image SVG <doc> (format XML) avec :
+        u""" Enrichissement de l'image SVG <doc> (format XML) avec :
              - mise en surbrillance des éléments actifs
              - infobulles sur les éléments actifs
              - liens 
@@ -2120,7 +2120,7 @@ class Sequence(BaseDoc):
         print "AjouterListeSystemes séquence", syst
         nouvListe = []
         for s in syst:
-#             print "   ",s
+            print "   ",s
             
             if not isinstance(s, Systeme):
 #                 print 1
@@ -2169,18 +2169,19 @@ class Sequence(BaseDoc):
     ######################################################################################  
     def SelectSystemes(self, event = None):
         if recup_excel.ouvrirFichierExcel():
-            res = messageYesNo(self.app, u"Sélection de systèmes depuis Excel\n\n" \
-                                         u"Excel doit à présent être lancé.\n" \
-                                         u"\t- selectionner les cellules contenant les informations,\n" \
-                                         u"\t- puis appuyer sur Ok.\n\n" \
-                                         u"Format attendu de la selection :\n" \
-                                         u"|    colonne 1    |    colonne 2      |    colonne 3    |\n" \
-                                         u"|                         | (optionnelle)    | (optionnelle) |\n" \
-                                         u"|    systèmes     |   nombre dispo | fichiers image|\n" \
-                                         u"|   ...                   |   ...                      |   ...                    |\n",
-                                         u'Sélection de systèmes',
-                                         wx.ICON_INFORMATION | wx.CANCEL
-                                         )
+            res = messageYesNo(self.app, u'Sélection de systèmes',
+                                 u"Sélection de systèmes depuis Excel\n\n" \
+                                 u"Excel doit à présent être lancé.\n" \
+                                 u"\t- selectionner les cellules contenant les informations,\n" \
+                                 u"\t- puis appuyer sur Ok.\n\n" \
+                                 u"Format attendu de la selection :\n" \
+                                 u"|    colonne 1    |    colonne 2      |    colonne 3    |\n" \
+                                 u"|                         | (optionnelle)    | (optionnelle) |\n" \
+                                 u"|    systèmes     |   nombre dispo | fichiers image|\n" \
+                                 u"|   ...                   |   ...                      |   ...                    |\n",
+                                 
+                                 wx.ICON_INFORMATION | wx.CANCEL
+                                 )
             
             if res:
                 ls = recup_excel.getSelectionExcel()
@@ -4450,7 +4451,7 @@ class Progression(BaseDoc):
     
     ######################################################################################  
     def GetRectangles(self):
-        """ Calcul l'arrangement des rectangles représentant les Séquences et les Projets
+        u""" Calcul l'arrangement des rectangles représentant les Séquences et les Projets
             Renvoie la liste des rectangles x, y, w, h
             Dans une grille : Période-Lignes-Colonnes
                 [
@@ -4467,10 +4468,10 @@ class Progression(BaseDoc):
                 
                 
             Renvoie :
-            : les rectangles
-            : la liste des lignes correspondant au début d'une période
-            : les positions "horaire" des lignes
-            : un code d'erreur (anomalie détectée)
+            les rectangles
+            la liste des lignes correspondant au début d'une période
+            les positions "horaire" des lignes
+            un code d'erreur (anomalie détectée)
         """
         err = 0
         

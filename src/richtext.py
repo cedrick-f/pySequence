@@ -13,12 +13,12 @@ from wx.lib.embeddedimage import PyEmbeddedImage
 import os
 import cStringIO
 from constantes import xmlVide
-print 10
+
 import webbrowser
 import images
-print 11
+
 from widgets import ToolTip
-print 12
+
 #from urlparse import urlparse
 #from rfc3987 import parse
 

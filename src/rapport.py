@@ -163,7 +163,7 @@ class StyleDeTexte:
 
 #########################################################################################
 class FrameRapport(wx.Frame):
-    def __init__(self, parent, fichierCourant, doc, typ, eleve):
+    def __init__(self, parent, fichierCourant, doc, typ, eleve = None):
         wx.Frame.__init__(self, parent, -1, u"Tâches élèves détaillées",
                             size=(700, 500))#,
 #                            style = wx.DEFAULT_FRAME_STYLE)

@@ -1,14 +1,16 @@
-************************
-Développement de pySéquence
-************************
+.. highlightlang:: python
 
-Page dédiée aux développeurs de pySéquence.
+*************
+Développement
+*************
+
+Page dédiée aux développeurs de **pySéquence**.
 En cours de réalisation ...
 
 Module pysequence
-===========
+=================
 
-Module définissant les objets de base de pySéquence.
+Module définissant les objets de base de **pySéquence**.
 
 
 .. automodule:: pysequence
@@ -16,10 +18,20 @@ Module définissant les objets de base de pySéquence.
    
 
 Module wx_pysequence
-===========
+====================
 
-Module définissant la base de l'interface graphique de pySéquence.
+Module définissant la base de l'interface graphique de **pySéquence**.
 
 
 .. automodule:: wx_pysequence
+   :members:
+   
+
+Module objects_wx
+=================
+
+Module définissant l'ensemble des objets de l'interface graphique de **pySéquence**.
+
+
+.. automodule:: objects_wx
    :members:

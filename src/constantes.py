@@ -366,7 +366,6 @@ liste = os.listdir(DOSSIER_ICONES)
 
 for fich_img in liste:
     try:
-        print os.path.join(DOSSIER_ICONES, fich_img)
         ICONES_TACHES[os.path.splitext(fich_img)[0]] = wx.Bitmap(os.path.join(DOSSIER_ICONES, fich_img),
                         wx.BITMAP_TYPE_ANY ).ConvertToImage().Scale(200, 200).ConvertToBitmap()
     except:
@@ -1080,8 +1079,7 @@ BASE_FICHE_HTML_PROF = u"""
 
 
 
-BASE_FICHE_HTML_PERIODES = u"""
-<HTML>
+BASE_FICHE_HTML_PERIODES = u"""<HTML>
     <font size=11><b><h1 id = "titre" style="text-align: center;"></h1></b></font>
     <p id="txt"> </p>
     <img id="img" src=" " alt=" "> 
@@ -1098,8 +1096,7 @@ BASE_FICHE_HTML = u"""
 """
 
                             
-xmlVide = u"""
-<?xml version="1.0" encoding="UTF-8"?>
+xmlVide = u"""<?xml version="1.0" encoding="UTF-8"?>
 <richtext version="1.0.0.0" xmlns="http://www.wxwidgets.org">
   <paragraphlayout textcolor="#000000" fontsize="8" fontstyle="90" fontweight="90" fontunderlined="0" fontface="MS Shell Dlg 2" alignment="1" parspacingafter="10" parspacingbefore="0" linespacing="10">
     <paragraph>
@@ -1108,8 +1105,7 @@ xmlVide = u"""
   </paragraphlayout>
 </richtext>"""
 
-TxtRacineSeance = u"""
-<?xml version="1.0" encoding="UTF-8"?>
+TxtRacineSeance = u"""<?xml version="1.0" encoding="UTF-8"?>
 <richtext version="1.0.0.0" xmlns="http://www.wxwidgets.org">
   <paragraphlayout textcolor="#000000" fontsize="8" fontstyle="90" fontweight="90" fontunderlined="0" fontface="MS Shell Dlg 2" alignment="1" parspacingafter="10" parspacingbefore="0" linespacing="10">
     <paragraph fontweight="92" alignment="1" parspacingafter="20" parspacingbefore="0">

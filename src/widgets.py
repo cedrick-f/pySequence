@@ -1660,13 +1660,13 @@ class EllipticStaticText(wx.StaticText):
 
 
     def ChopText(self, dc, text, max_size):
-        """
+        u"""
         Chops the input `text` if its size does not fit in `max_size`, by cutting the
         text and adding ellipsis at the end.
 
-        :param `dc`: a `wx.DC` device context;
-        :param `text`: the text to chop;
-        :param `max_size`: the maximum size in which the text should fit.
+        :param dc: a `wx.DC` device context;
+        :param text: the text to chop;
+        :param max_size: the maximum size in which the text should fit.
         """
 
         # first check if the text fits with no problems
