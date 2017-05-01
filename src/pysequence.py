@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from cmath import rect
-
 
 
 ##This file is part of pySequence
