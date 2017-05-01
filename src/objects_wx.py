@@ -1789,7 +1789,7 @@ class FenetreDocument(aui.AuiMDIChildFrame):
     def fermer(self):
         self.mgr.UnInit()
         del self.mgr
-        self.Destroy()
+#         self.Destroy()
         return True
         
     #############################################################################
@@ -2016,17 +2016,18 @@ class FenetreDocument(aui.AuiMDIChildFrame):
             retCode = dialog.ShowModal()
             if retCode == wx.ID_YES:
                 self.commandeEnregistrer()
+                if event is not None: event.Skip()
                 return self.fermer()
     
             elif retCode == wx.ID_NO:
-                
+                if event is not None: event.Skip()
                 return self.fermer()
                  
             else:
                 return False
         
         else:            
-            
+            if event is not None: event.Skip()
             return self.fermer()
 
 
@@ -10908,6 +10909,8 @@ class ArbreDoc(CT.CustomTreeCtrl):
             return PanelPropriete_Racine(parent, constantes.TxtRacineSeance)
         elif code == "Obj":
             return PanelPropriete_Racine(parent, constantes.TxtRacineObjectif)
+        elif code == "Pre":
+            return PanelPropriete_Racine(parent, constantes.TxtRacinePrerequis)
         elif code == "Sys":
             return PanelPropriete_Racine(parent, constantes.TxtRacineSysteme)
         elif code == "Equ":

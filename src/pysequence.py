@@ -2122,14 +2122,21 @@ class Sequence(BaseDoc):
         for s in syst:
             print "   ",s
             
-            if not isinstance(s, Systeme):
-#                 print 1
-                sy = Systeme(self)
-                sy.setBranche(ET.fromstring(s))
-            else:
-#                 print 2
+            if isinstance(s, Systeme):
                 sy = s.Copie(self)
                 sy.lienClasse = s
+            elif isinstance(s, (str, unicode)):
+                sy = Systeme(self)
+                sy.setBranche(ET.fromstring(s))
+            elif isinstance(s, (list, tuple)) and len(s) > 0:
+                sy = Systeme(self, s[0])
+                if len(s) > 1:
+                    try:
+                        sy.nbrDispo.v[0] = int(s[1])
+                    except:
+                        pass
+#                 print 2
+                
 #                sy.GetPanelPropriete().Verrouiller(False)
 #                sy.GetPanelPropriete().cbListSys.SetSelection(sy.GetPanelPropriete().cbListSys.FindString(s.nom))
 #            try:
